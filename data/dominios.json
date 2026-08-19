@@ -1,0 +1,160 @@
+{
+  "versao": 1,
+  "fonte": "Cartas oficiais em PNG (pt-BR) + livro de regras",
+  "dominios": [
+    {
+      "codigo": "ARCANA",
+      "nome": "Arcana",
+      "aliases": [
+        "Arcano",
+        "Arcanos",
+        "Arcana"
+      ],
+      "cor": "#8a5cf0",
+      "descricao": "Arcana é o domínio da magia inata e instintiva. Aqueles que escolhem esse caminho exploram as forças cruas e enigmáticas dos reinos para manipular sua própria energia e os elementos. A Arcana oferece aos seus portadores um poder volátil, mas é incrivelmente potente quando canalizada corretamente.",
+      "classes": [
+        "Druida",
+        "Feiticeiro"
+      ],
+      "totalCartas": 21,
+      "pasta": "assets/cartas/dominios/ARCANA"
+    },
+    {
+      "codigo": "BLADE",
+      "nome": "Lâmina",
+      "aliases": [
+        "Lâmina",
+        "Lamina",
+        "Blade"
+      ],
+      "cor": "#c0392b",
+      "descricao": "A Lâmina é o domínio da maestria das armas. Seja com aço, arco ou talvez com um braço mais especializado, aqueles que seguem esse caminho têm a habilidade de cortar a vida dos outros. Portadores de lâminas se dedicam a alcançar um poder inexorável sobre a morte.",
+      "classes": [
+        "Guardião",
+        "Guerreiro"
+      ],
+      "totalCartas": 21,
+      "pasta": "assets/cartas/dominios/BLADE"
+    },
+    {
+      "codigo": "BONE",
+      "nome": "Osso",
+      "aliases": [
+        "Osso",
+        "Ossos",
+        "Bone"
+      ],
+      "cor": "#b9a887",
+      "descricao": "Osso é o domínio das táticas e do corpo. Os praticantes desse domínio têm um controle extraordinário sobre suas próprias habilidades físicas e um olho para prever o comportamento dos outros em combate. Os adeptos do Osso obtêm uma compreensão incomparável dos corpos e de seus movimentos.",
+      "classes": [
+        "Patrulheiro",
+        "Guerreiro"
+      ],
+      "totalCartas": 21,
+      "pasta": "assets/cartas/dominios/BONE"
+    },
+    {
+      "codigo": "CODEX",
+      "nome": "Códice",
+      "aliases": [
+        "Códice",
+        "Codice",
+        "Codex"
+      ],
+      "cor": "#3f7fd0",
+      "descricao": "O Códice é o domínio do estudo mágico intensivo. Aqueles que buscam conhecimento mágico se voltam para as equações de poder registradas em livros, escritas em pergaminhos, gravadas em paredes ou tatuadas em corpos. O Códice oferece uma compreensão versátil e dominante da magia para os devotos que buscam conhecimento além dos limites da sabedoria comum.",
+      "classes": [
+        "Bardo",
+        "Mago"
+      ],
+      "totalCartas": 21,
+      "pasta": "assets/cartas/dominios/CODEX"
+    },
+    {
+      "codigo": "GRACE",
+      "nome": "Graça",
+      "aliases": [
+        "Graça",
+        "Graca",
+        "Grace"
+      ],
+      "cor": "#d4519a",
+      "descricao": "A Graça é o domínio do carisma. Por meio de narrativas arrebatadoras, feitiços encantadores ou um manto de mentiras, aqueles que canalizam esse poder definem as realidades de seus adversários, dobrando a percepção à sua vontade. A Graça oferece a seus portadores magnetismo bruto e domínio da linguagem.",
+      "classes": [
+        "Bardo",
+        "Ladino"
+      ],
+      "totalCartas": 21,
+      "pasta": "assets/cartas/dominios/GRACE"
+    },
+    {
+      "codigo": "MIDNIGHT",
+      "nome": "Meia-Noite",
+      "aliases": [
+        "Meia-Noite",
+        "Meia noite",
+        "Meia-noite",
+        "Midnight"
+      ],
+      "cor": "#2f3b6e",
+      "descricao": "A Meia-Noite é o domínio das sombras e do sigilo. Seja por meio de truques inteligentes, magia habilidosa ou pelo manto da noite, aqueles que canalizam essas forças praticam a arte da obscuridade e podem descobrir tesouros sequestrados. A Meia-Noite oferece aos praticantes o poder de controlar e criar enigmas.",
+      "classes": [
+        "Ladino",
+        "Feiticeiro"
+      ],
+      "totalCartas": 21,
+      "pasta": "assets/cartas/dominios/MIDNIGHT"
+    },
+    {
+      "codigo": "SAGE",
+      "nome": "Sábio",
+      "aliases": [
+        "Sábio",
+        "Sabio",
+        "Sálvia",
+        "Salvia",
+        "Saber",
+        "Sage"
+      ],
+      "cor": "#4c9a5b",
+      "descricao": "Sábio é o domínio do mundo natural. Aqueles que trilham esse caminho aproveitam o poder irrestrito da terra e de suas criaturas para liberar a magia bruta. O Sábio concede a seus adeptos a vitalidade de uma flor desabrochando e a ferocidade de um predador voraz.",
+      "classes": [
+        "Druida",
+        "Patrulheiro"
+      ],
+      "totalCartas": 21,
+      "pasta": "assets/cartas/dominios/SAGE"
+    },
+    {
+      "codigo": "SPLENDOR",
+      "nome": "Esplendor",
+      "aliases": [
+        "Esplendor",
+        "Splendor"
+      ],
+      "cor": "#e0b13a",
+      "descricao": "Esplendor é o domínio da vida. Por meio dessa magia, os seguidores adquirem a capacidade de curar e, até certo ponto, controlar a morte. O Esplendor oferece a seus discípulos a magnífica capacidade de dar e acabar com a vida.",
+      "classes": [
+        "Seraph",
+        "Mago"
+      ],
+      "totalCartas": 21,
+      "pasta": "assets/cartas/dominios/SPLENDOR"
+    },
+    {
+      "codigo": "VALOR",
+      "nome": "Valor",
+      "aliases": [
+        "Valor"
+      ],
+      "cor": "#d97e2b",
+      "descricao": "Valor é o domínio da proteção. Seja por meio de ataque ou defesa, aqueles que escolhem essa disciplina canalizam uma força formidável para proteger seus aliados na batalha. O Valor oferece grande poder àqueles que erguem seus escudos em defesa dos outros.",
+      "classes": [
+        "Guardião",
+        "Seraph"
+      ],
+      "totalCartas": 21,
+      "pasta": "assets/cartas/dominios/VALOR"
+    }
+  ]
+}

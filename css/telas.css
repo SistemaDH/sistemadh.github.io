@@ -1,0 +1,250 @@
+/* ==========================================================================
+   telas.css — esqueleto do app e as telas da Parte 1
+   (abertura/login e roster de personagens).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Esqueleto do aplicativo
+   -------------------------------------------------------------------------- */
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.app__topo {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-topo);
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+  min-height: 56px;
+  padding: var(--e2) var(--e4);
+  padding-top: calc(var(--e2) + env(safe-area-inset-top, 0px));
+  border-bottom: 1px solid var(--cor-borda);
+  background: rgba(12, 10, 18, .85);
+  backdrop-filter: blur(10px);
+}
+
+.app__marca {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-md);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--cor-ouro-claro);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app__conteudo {
+  flex: 1;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--e5) var(--e4);
+  /* espaço para o botão flutuante não cobrir o último card */
+  padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+}
+
+.app__rodape {
+  padding: var(--e5) var(--e4);
+  text-align: center;
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-fraco);
+}
+
+/* --------------------------------------------------------------------------
+   Tela de abertura / login
+   -------------------------------------------------------------------------- */
+
+.abertura {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: var(--e6) var(--e4);
+  padding-top: calc(var(--e6) + env(safe-area-inset-top, 0px));
+}
+
+.abertura__miolo {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.abertura__brasao {
+  text-align: center;
+  margin-bottom: var(--e8);
+}
+
+.abertura__losango {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto var(--e4);
+  border: 2px solid var(--cor-ouro);
+  border-radius: 8px;
+  transform: rotate(45deg);
+  background: linear-gradient(135deg, rgba(217, 171, 91, .22), transparent 60%);
+  box-shadow: var(--brilho-ouro);
+}
+
+.abertura__titulo {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-2xl);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--cor-ouro-claro);
+  margin: 0 0 var(--e1);
+}
+
+.abertura__subtitulo {
+  font-size: var(--txt-sm);
+  color: var(--cor-texto-suave);
+  letter-spacing: .04em;
+}
+
+/* Alternador Jogador / Mestre */
+.alternador {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--e1);
+  padding: var(--e1);
+  margin-bottom: var(--e5);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: rgba(0, 0, 0, .3);
+}
+
+.alternador__opcao {
+  min-height: 42px;
+  border: 0;
+  border-radius: var(--raio-sm);
+  background: transparent;
+  color: var(--cor-texto-suave);
+  font-size: var(--txt-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transicao), color var(--transicao);
+}
+
+.alternador__opcao[aria-selected='true'] {
+  background: var(--cor-superficie-alta);
+  color: var(--cor-ouro-claro);
+  box-shadow: inset 0 0 0 1px var(--cor-ouro-escuro);
+}
+
+.abertura__troca {
+  margin-top: var(--e5);
+  text-align: center;
+  font-size: var(--txt-sm);
+  color: var(--cor-texto-suave);
+}
+
+.link-botao {
+  border: 0;
+  background: none;
+  padding: var(--e2);
+  color: var(--cor-ouro-claro);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Roster de personagens
+   -------------------------------------------------------------------------- */
+
+.roster__cabecalho {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--e3);
+  margin-bottom: var(--e5);
+}
+
+.roster__lista {
+  display: grid;
+  gap: var(--e3);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .roster__lista { grid-template-columns: 1fr 1fr; }
+}
+
+.ficha-cartao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+}
+
+.ficha-cartao__topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--e3);
+}
+
+.ficha-cartao__nome {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-lg);
+  color: var(--cor-texto);
+  margin: 0;
+}
+
+.ficha-cartao__linha {
+  font-size: var(--txt-sm);
+  color: var(--cor-texto-suave);
+}
+
+.ficha-cartao__selos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+  margin-top: var(--e1);
+}
+
+/* Botão flutuante de criar personagem */
+.acao-flutuante {
+  position: fixed;
+  right: var(--e4);
+  bottom: calc(var(--e5) + env(safe-area-inset-bottom, 0px));
+  z-index: var(--z-topo);
+  box-shadow: var(--sombra-alta), var(--brilho-ouro);
+}
+
+/* --------------------------------------------------------------------------
+   Menu da conta
+   -------------------------------------------------------------------------- */
+
+.conta {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+}
+
+.conta__nome {
+  font-size: var(--txt-sm);
+  color: var(--cor-texto-suave);
+  max-width: 12ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   Faixa de aviso de conexão
+   -------------------------------------------------------------------------- */
+
+.faixa-offline {
+  padding: var(--e2) var(--e4);
+  text-align: center;
+  font-size: var(--txt-sm);
+  background: var(--cor-medo-fundo);
+  border-bottom: 1px solid var(--cor-medo);
+  color: #e2d3ff;
+}

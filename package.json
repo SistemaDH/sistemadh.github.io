@@ -1,0 +1,16 @@
+{
+  "name": "daggerheart-sistema",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Sistema de fichas de Daggerheart — frontend estático + Google Apps Script",
+  "scripts": {
+    "servir": "node tools/servidor-teste.mjs 8099",
+    "teste": "node tools/testes-backend.mjs",
+    "teste:e2e": "node tools/testes-e2e.mjs",
+    "teste:tudo": "node tools/testes-backend.mjs && node tools/testes-e2e.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.40.0"
+  }
+}
