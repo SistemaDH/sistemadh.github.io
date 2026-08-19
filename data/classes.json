@@ -1,0 +1,1857 @@
+{
+ "versao": 1,
+ "fonte": "Cartas oficiais de subclasse em PNG (pt-BR) para as subclasses + livro de regras para os dados de classe",
+ "classes": [
+  {
+   "id": "bardo",
+   "nome": "Bardo",
+   "nomeLivro": "BARD",
+   "descricao": "Os bardos são as pessoas mais carismáticas de todos os reinos. Os membros dessa classe são mestres em cativar e se especializam em uma variedade de tipos de apresentações, incluindo cantar, tocar instrumentos musicais, tecer contos ou contar piadas. Seja se apresentando para uma plateia ou falando com um indivíduo, os bardos prosperam em situações sociais. Os membros dessa profissão se unem e treinam em escolas ou guildas, mas uma corrente de egoísmo percorre os bardos. Embora possam ser a classe mais propensa a unir as pessoas, um bardo de mau humor pode facilmente destruir um partido.",
+   "dominios": [
+    "GRACE",
+    "CODEX"
+   ],
+   "dominiosNomes": [
+    "Graça",
+    "Códice"
+   ],
+   "evasaoInicial": 10,
+   "pontosDeVidaIniciais": 5,
+   "itensDeClasse": [
+    "Um romance ou uma carta nunca aberta"
+   ],
+   "caracteristicaEsperanca": {
+    "nome": "Faça uma cena",
+    "texto": "Gaste 3 de Esperança para distrair temporariamente um alvo a curta distância, dando a ele uma penalidade de -2 em sua Dificuldade."
+   },
+   "caracteristicasDeClasse": [
+    {
+     "nome": "Rally",
+     "texto": "Uma vez por sessão, descreva como você reúne o grupo e atribua a si mesmo e a cada um de seus aliados um Rally Die. No nível 1, seu Rally Die é um d6. Um PC pode gastar seu Rally Die para rolá-lo, adicionando o resultado à sua rolagem de ação, rolagem de reação, rolagem de dano ou para eliminar um número de Stress igual ao resultado. No final de cada sessão, limpe todos os Rally Dice não gastos. No nível 5, seu Rally Die aumenta para d8."
+    }
+   ],
+   "perguntasDeFundo": [
+    "Quem de sua comunidade lhe ensinou a ter tanta confiança em si mesmo?",
+    "Você já foi apaixonado. Quem você adorou e como ele o magoou?",
+    "Você sempre admirou outro bardo. Quem é ele e por que você o idolatra?"
+   ],
+   "conexoes": [
+    "O que o fez perceber que seríamos tão bons amigos?",
+    "O que eu faço que o incomoda?",
+    "Por que você agarra minha mão à noite?"
+   ],
+   "subclasses": [
+    {
+     "id": "bardo-musico-errante",
+     "nome": "Músico Errante",
+     "nomeCarta": "MÚSICO ERRANTE",
+     "nomeLivro": "Troubadour",
+     "chamada": "Toque o Troubadour se quiser tocar música para fortalecer seus aliados.",
+     "caracteristicaConjuracaoImpressa": "PRESENÇA",
+     "caracteristicaConjuracao": null,
+     "cartas": {
+      "fundacao": {
+       "arquivo": "Músico Errante.png",
+       "imagem": "assets/cartas/subclasses/BARDO/Músico Errante.png",
+       "caracteristicas": [
+        {
+         "nome": "Intérprete Talentoso",
+         "texto": "Descreva como você se apresenta para os outros. Você pode tocar cada música uma vez por descanso longo:\n• Canção Relaxante: Você e todos os aliados em alcance Próximo recuperam 1 Ponto de Vida.\n• Canção Épica: Torne um alvo em alcance Próximo temporariamente Vulnerável.\n• Canção de Coração Partido: Você e todos os aliados em alcance Próximo ganham 1 Esperança."
+        }
+       ],
+       "texto": "BARD\nMÚSICO ERRANTE\nFoundation\nSPELLCAST TRAIT: PRESENCE\nIntérprete Talentoso: Descreva como você se apresenta para os outros. Você pode tocar cada música uma vez por descanso longo:\n• Canção Relaxante: Você e todos os aliados em alcance Próximo recuperam 1 Ponto de Vida.\n• Canção Épica: Torne um alvo em alcance Próximo temporariamente Vulnerável.\n• Canção de Coração Partido: Você e todos os aliados em alcance Próximo ganham 1 Esperança.\nDaggerheart Compatible. Terms at Daggerheart.com",
+       "observacao": "Rótulo do tipo de carta impresso em inglês ('Foundation'); rótulo da classe impresso como 'BARD' e a característica de conjuração impressa como 'SPELLCAST TRAIT' / 'PRESENCE' (inglês).",
+       "doLivro": [
+        {
+         "nome": "Artista talentoso",
+         "texto": "Descreva como você se apresenta para os outros. Você pode tocar cada música uma vez por descanso longo: Canção relaxante: você e todos os aliados a curta distância perdem um ponto de vida. Canção épica: Torna um alvo a curta distância temporariamente vulnerável. Heartbreaking Song (Canção de partir o coração): você e todos os aliados dentro do alcance próximo ganham uma Esperança."
+        }
+       ]
+      },
+      "especializacao": {
+       "arquivo": "Músico Errante(1).png",
+       "imagem": "assets/cartas/subclasses/BARDO/Músico Errante(1).png",
+       "caracteristicas": [
+        {
+         "nome": "Maestro",
+         "texto": "Suas canções de motivação fortalecem a coragem de quem as ouve. Quando você dá um Dado de Reunião a um aliado, ele pode imediatamente ganhar 1 Esperança ou remover 1 Estresse."
+        }
+       ],
+       "texto": "BARD\nMÚSICO ERRANTE\nSpecialization\nSPELLCAST TRAIT: PRESENCE\nMaestro: Suas canções de motivação fortalecem a coragem de quem as ouve. Quando você dá um Dado de Reunião a um aliado, ele pode imediatamente ganhar 1 Esperança ou remover 1 Estresse.\nDaggerheart Compatible. Terms at Daggerheart.com",
+       "observacao": "Rótulo do tipo de carta impresso em inglês ('Specialization'); rótulo da classe impresso como 'BARD' e a característica de conjuração impressa como 'SPELLCAST TRAIT' / 'PRESENCE' (inglês).",
+       "doLivro": [
+        {
+         "nome": "Maestro",
+         "texto": "Suas canções de mobilização fortalecem a coragem daqueles que as ouvem. Quando você dá um Rally Die a um aliado, ele pode ganhar uma Hope (esperança) ou eliminar um Stress (estresse)."
+        }
+       ]
+      },
+      "maestria": {
+       "arquivo": "Músico Errante(2).png",
+       "imagem": "assets/cartas/subclasses/BARDO/Músico Errante(2).png",
+       "caracteristicas": [
+        {
+         "nome": "Virtuoso",
+         "texto": "Você está entre os maiores na sua arte e sua habilidade é ilimitada. Você pode executar cada uma das músicas da sua habilidade Intérprete Talentoso duas vezes ao invés de uma por descanso longo."
+        }
+       ],
+       "texto": "BARD\nMÚSICO ERRANTE\nMastery\nSPELLCAST TRAIT: PRESENCE\nVirtuoso: Você está entre os maiores na sua arte e sua habilidade é ilimitada. Você pode executar cada uma das músicas da sua habilidade Intérprete Talentoso duas vezes ao invés de uma por descanso longo.\nDaggerheart Compatible. Terms at Daggerheart.com",
+       "observacao": "Rótulo do tipo de carta impresso em inglês ('Mastery'); rótulo da classe impresso como 'BARD' e a característica de conjuração impressa como 'SPELLCAST TRAIT' / 'PRESENCE' (inglês).",
+       "doLivro": [
+        {
+         "nome": "Virtuoso",
+         "texto": "Você está entre os melhores em seu ofício e sua habilidade é ilimitada. Você pode executar cada uma das músicas de sua característica \"Gifted Performer\" duas vezes em vez de uma vez por descanso longo."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "bardo-artifice-das-palavras",
+     "nome": "Artífice das Palavras",
+     "nomeCarta": "ARTÍFICE DAS PALAVRAS",
+     "nomeLivro": "Wordsmith",
+     "chamada": "Jogue com o Wordsmith se quiser usar um jogo de palavras inteligente e cativar multidões.",
+     "caracteristicaConjuracaoImpressa": "PRESENÇA",
+     "caracteristicaConjuracao": null,
+     "cartas": {
+      "fundacao": {
+       "arquivo": "Artífice das Palavras.png",
+       "imagem": "assets/cartas/subclasses/BARDO/Artífice das Palavras.png",
+       "caracteristicas": [
+        {
+         "nome": "Discurso Empolgante",
+         "texto": "Uma vez por descanso longo, você pode fazer um discurso inspirador e sincero. Todos os aliados em alcance Longínquo removem 2 Estresses."
+        },
+        {
+         "nome": "Coração de Poeta",
+         "texto": "Após fazer uma jogada de ação para impressionar, persuadir ou ofender alguém, você pode gastar 1 Esperança para adicionar um d4 à jogada."
+        }
+       ],
+       "texto": "BARD\nARTÍFICE DAS PALAVRAS\nFoundation\nSPELLCAST TRAIT: PRESENCE\nDiscurso Empolgante: Uma vez por descanso longo, você pode fazer um discurso inspirador e sincero. Todos os aliados em alcance Longínquo removem 2 Estresses.\nCoração de Poeta: Após fazer uma jogada de ação para impressionar, persuadir ou ofender alguém, você pode gastar 1 Esperança para adicionar um d4 à jogada.\nDaggerheart Compatible. Terms at Daggerheart.com",
+       "observacao": "Rótulo do tipo de carta impresso em inglês ('Foundation'); rótulo da classe impresso como 'BARD' e a característica de conjuração impressa como 'SPELLCAST TRAIT' / 'PRESENCE' (inglês).",
+       "doLivro": [
+        {
+         "nome": "Discurso empolgante",
+         "texto": "Uma vez por descanso longo, você pode fazer um discurso sincero e inspirador. Todos os aliados em um raio de alcance distante recebem 2 de estresse."
+        },
+        {
+         "nome": "Coração de um poeta",
+         "texto": "Depois de fazer um rolamento de ação para impressionar, persuadir ou ofender alguém, você pode gastar uma Esperança para adicionar um d4 ao rolamento."
+        }
+       ]
+      },
+      "especializacao": {
+       "arquivo": "Artífice das Palavras(1).png",
+       "imagem": "assets/cartas/subclasses/BARDO/Artífice das Palavras(1).png",
+       "caracteristicas": [
+        {
+         "nome": "Eloquente",
+         "texto": "Suas palavras inspiradoras podem elevar o moral. Uma vez por sessão, quando você encorajar um aliado, pode fazer uma das seguintes ações:\n• Permitir que ele encontre um objeto ou ferramenta mundana de que precise.\n• Ajudar um aliado sem gastar Esperança.\n• Conceder a ele um movimento de inatividade adicional durante o próximo descanso."
+        }
+       ],
+       "texto": "BARD\nARTÍFICE DAS PALAVRAS\nSpecialization\nSPELLCAST TRAIT: PRESENCE\nEloquente: Suas palavras inspiradoras podem elevar o moral. Uma vez por sessão, quando você encorajar um aliado, pode fazer uma das seguintes ações:\n• Permitir que ele encontre um objeto ou ferramenta mundana de que precise.\n• Ajudar um aliado sem gastar Esperança.\n• Conceder a ele um movimento de inatividade adicional durante o próximo descanso.\nDaggerheart Compatible. Terms at Daggerheart.com",
+       "observacao": "Rótulo do tipo de carta impresso em inglês ('Specialization'); rótulo da classe impresso como 'BARD' e a característica de conjuração impressa como 'SPELLCAST TRAIT' / 'PRESENCE' (inglês).",
+       "doLivro": [
+        {
+         "nome": "Eloquente",
+         "texto": "Suas palavras comoventes aumentam o moral. Uma vez por sessão, ao incentivar um aliado, você pode fazer uma das seguintes ações: Permita que eles encontrem um objeto ou ferramenta comum de que precisem. Ajude um aliado sem gastar com a Hope. Dê a eles um movimento adicional de tempo de inatividade durante seu próximo descanso."
+        }
+       ]
+      },
+      "maestria": {
+       "arquivo": "Artífice das Palavras(2).png",
+       "imagem": "assets/cartas/subclasses/BARDO/Artífice das Palavras(2).png",
+       "caracteristicas": [
+        {
+         "nome": "Poesia Épica",
+         "texto": "Seu Dado de Motivação aumenta para um d10. Além disso, quando você Ajuda um Aliado, pode narrar o momento como se estivesse escrevendo o relato do heroísmo deles em uma memória. Quando fizer isso, role um d10 como seu dado de vantagem."
+        }
+       ],
+       "texto": "BARD\nARTÍFICE DAS PALAVRAS\nMastery\nSPELLCAST TRAIT: PRESENCE\nPoesia Épica: Seu Dado de Motivação aumenta para um d10. Além disso, quando você Ajuda um Aliado, pode narrar o momento como se estivesse escrevendo o relato do heroísmo deles em uma memória. Quando fizer isso, role um d10 como seu dado de vantagem.\nDaggerheart Compatible. Terms at Daggerheart.com",
+       "observacao": "Rótulo do tipo de carta impresso em inglês ('Mastery'); rótulo da classe impresso como 'BARD' e a característica de conjuração impressa como 'SPELLCAST TRAIT' / 'PRESENCE' (inglês).",
+       "doLivro": [
+        {
+         "nome": "Poesia épica",
+         "texto": "Seu Rally Die aumenta para um d10. Além disso, ao ajudar um aliado, você pode narrar o momento como se estivesse escrevendo a história do heroísmo dele em um livro de memórias. Quando fizer isso, role um d10 como seu dado de vantagem."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "problemasDeTraducao": [
+    "O título da classe ficou impresso como 'BARD', não foi traduzido para 'BARDO'.",
+    "O rótulo do campo de domínios ficou 'DOMÉSTICAS' — tradução claramente errada de 'Domains' (deveria ser algo como 'Domínios').",
+    "O nome da subclasse 'Troubadour' não foi traduzido (deveria ser algo como 'Trovador'), embora o parágrafo de introdução das subclasses já diga 'Escolha a subclasse Trovador ou Ferreiro'.",
+    "O nome da subclasse 'Wordsmith' não foi traduzido no título, e na frase de chamada da outra subclasse (Troubadour) essa mesma subclasse é chamada de 'Ferreiro', uma tradução literal e errada de 'Wordsmith' (que se refere a um mestre das palavras, não a um ferreiro/smith de metal).",
+    "Na característica de Domínio 'Virtuoso' (Troubadour), o texto cita a característica de Fundação pelo nome em inglês 'Gifted Performer', mas essa característica foi traduzida no livro como 'Artista talentoso' — nomes inconsistentes entre si.",
+    "O nome de uma das músicas da característica 'Artista talentoso' ficou parcialmente em inglês: 'Heartbreaking Song (Canção de partir o coração)'.",
+    "Os termos de mecânica 'Rally', 'Rally Die' e 'Rally Dice' não foram traduzidos (ficaram em inglês) no recurso de classe 'Rally' do Bardo.",
+    "Os termos 'Hope' e 'Stress' aparecem em inglês (com tradução entre parênteses) na característica de Especialização 'Maestro': 'ganhar uma Hope (esperança) ou eliminar um Stress (estresse)'.",
+    "No recurso de Especialização 'Eloquente' (Wordsmith), aparece o termo em inglês 'Hope' sem tradução: 'Ajude um aliado sem gastar com a Hope'.",
+    "Os nomes dos domínios 'Grace' e 'Codex' (na seção 'Domésticas') não foram traduzidos para o português."
+   ],
+   "pastaCartas": "assets/cartas/subclasses/BARDO"
+  },
+  {
+   "id": "druida",
+   "nome": "Druida",
+   "nomeLivro": "DRUID",
+   "descricao": "Tornar-se um druida é mais do que uma ocupação; é um chamado para aqueles que desejam aprender e proteger a magia da natureza selvagem. Embora alguém possa subestimar um druida gentil que pratica o trabalho frequentemente silencioso de cultivar a flora, os druidas que canalizam as forças indomáveis da natureza são aterrorizantes de se ver. Os druidas cultivam suas habilidades em pequenos grupos, geralmente ligados por um ethos ou local específico, mas alguns optam por trabalhar sozinhos. Com anos de estudo e dedicação, os druidas podem aprender a se transformar em feras e moldar a própria natureza.",
+   "dominios": [
+    "SAGE",
+    "ARCANA"
+   ],
+   "dominiosNomes": [
+    "Sábio",
+    "Arcana"
+   ],
+   "evasaoInicial": 10,
+   "pontosDeVidaIniciais": 6,
+   "itensDeClasse": [
+    "Um pequeno saco de pedras e ossos ou um estranho pingente encontrado na sujeira"
+   ],
+   "caracteristicaEsperanca": {
+    "nome": "Evolução",
+    "texto": "Gaste 3 Hope para se transformar em uma Beastform sem marcar um Stress. Ao fazer isso, escolha uma característica para aumentar em +1 até que você saia dessa Beastform."
+   },
+   "caracteristicasDeClasse": [
+    {
+     "nome": "Forma de fera",
+     "texto": "Marque uma Stress para se transformar magicamente em uma criatura de seu nível ou inferior da lista de Beastform. Você pode sair dessa forma a qualquer momento. Enquanto estiver transformado, você não pode usar armas nem lançar feitiços de cartas de domínio, mas ainda pode usar outros recursos ou habilidades aos quais tem acesso. Os feitiços lançados antes da transformação permanecem ativos e duram a duração normal, e você pode falar e se comunicar normalmente. Além disso, você ganha as características da Beastform, adiciona o bônus de evasão dela para sua Evasão e use a característica especificada em suas estatísticas para seu ataque. Enquanto estiver em uma Beastform, sua armadura se torna parte do seu corpo e você marca os espaços de armadura normalmente; quando você sai de uma Beastform, esses espaços de armadura marcados permanecem marcados. Se você marcar seu último ponto de vida, sairá automaticamente dessa forma."
+    },
+    {
+     "nome": "Wildtouch",
+     "texto": "Você pode realizar efeitos inofensivos e sutis que envolvam a natureza - como fazer uma flor crescer rapidamente, convocar uma leve rajada de vento ou acender uma fogueira - à vontade."
+    }
+   ],
+   "perguntasDeFundo": [
+    "Por que a comunidade em que você cresceu era tão dependente da natureza e de suas criaturas?",
+    "Qual foi o primeiro animal selvagem com o qual você se relacionou? Por que seu vínculo acabou?",
+    "Quem está tentando persegui-lo? O que eles querem de você?"
+   ],
+   "conexoes": [
+    "O que você me confidenciou que me faz correr perigo por você todas as vezes?",
+    "De que animal eu diria que você me lembra?",
+    "Que apelido carinhoso você me deu?"
+   ],
+   "subclasses": [
+    {
+     "id": "druida-guardiao-dos-elementos",
+     "nome": "Guardião dos Elementos",
+     "nomeCarta": "GUARDIÃO DOS ELEMENTOS",
+     "nomeLivro": "DIRETOR DOS ELEMENTOS",
+     "chamada": "Jogue com o Warden of the Elements se você quiser encarnar os elementos naturais da natureza.",
+     "caracteristicaConjuracaoImpressa": "INSTINCT",
+     "caracteristicaConjuracao": "Instinto",
+     "cartas": {
+      "fundacao": {
+       "arquivo": "Guardião dos Elementos.png",
+       "imagem": "assets/cartas/subclasses/DRUIDA/Guardião dos Elementos.png",
+       "caracteristicas": [
+        {
+         "nome": "Encarnar Elemental",
+         "texto": "Marque 1 Estresse para Canalizar um dos seguintes elementos até sofrer dano Severo ou até seu próximo descanso:\n• Fogo: Quando um adversário em alcance Corpo a Corpo causar dano a você, ele sofre 1d10 de dano mágico.\n• Terra: Ganhe um bônus nos seus limiares de dano igual à sua Proficiência.\n• Água: Quando você causar dano a um adversário em alcance Corpo a Corpo, todos os outros adversários em alcance Muito Próximo devem marcar 1 Estresse.\n• Ar: Você pode pairar, ganhando vantagem em Jogadas de Agilidade."
+        }
+       ],
+       "texto": "Encarnar Elemental: Marque 1 Estresse para Canalizar um dos seguintes elementos até sofrer dano Severo ou até seu próximo descanso:\n• Fogo: Quando um adversário em alcance Corpo a Corpo causar dano a você, ele sofre 1d10 de dano mágico.\n• Terra: Ganhe um bônus nos seus limiares de dano igual à sua Proficiência.\n• Água: Quando você causar dano a um adversário em alcance Corpo a Corpo, todos os outros adversários em alcance Muito Próximo devem marcar 1 Estresse.\n• Ar: Você pode pairar, ganhando vantagem em Jogadas de Agilidade.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Foundation\"). O atributo de Conjuração também está impresso em inglês (\"INSTINCT\"). O rótulo de classe no topo da carta também está em inglês (\"DRUID\").",
+       "doLivro": [
+        {
+         "nome": "Encarnação Elemental",
+         "texto": "Marque um Estresse para Canalizar um dos seguintes elementos até sofrer dano Grave ou até seu próximo descanso: Fogo: quando um adversário dentro do alcance corpo a corpo causa dano a você, ele recebe 1d10 de dano mágico. Terra: Ganhe um bônus para seus limites de dano igual à sua proficiência. Água: Quando você causa dano a um adversário dentro do alcance Corpo a Corpo, todos os outros adversários dentro do alcance Muito Próximo devem marcar um Estresse. Ar: Você pode pairar, ganhando vantagem nas jogadas de agilidade."
+        }
+       ]
+      },
+      "especializacao": {
+       "arquivo": "Guardião dos Elementos(1).png",
+       "imagem": "assets/cartas/subclasses/DRUIDA/Guardião dos Elementos(1).png",
+       "caracteristicas": [
+        {
+         "nome": "Aura Elemental",
+         "texto": "Uma vez por descanso, enquanto estiver Canalizando, você pode assumir uma aura correspondente ao seu elemento. A aura afeta alvos em alcance Próximo até o fim da sua Canalização.\n• Fogo: Quando um adversário marcar 1 ou mais Pontos de Vida, ele deve também marcar 1 Estresse.\n• Terra: Seus aliados ganham +1 de bônus em Força.\n• Água: Quando um adversário causar dano a você, pode marcar 1 Estresse para mover esse adversário para qualquer lugar dentro de alcance Muito Próximo de onde ele está.\n• Ar: Quando você ou um aliado sofrer dano de ataque de alcance além do Corpo a Corpo, reduza em 1d8."
+        }
+       ],
+       "texto": "Aura Elemental: Uma vez por descanso, enquanto estiver Canalizando, você pode assumir uma aura correspondente ao seu elemento. A aura afeta alvos em alcance Próximo até o fim da sua Canalização.\n• Fogo: Quando um adversário marcar 1 ou mais Pontos de Vida, ele deve também marcar 1 Estresse.\n• Terra: Seus aliados ganham +1 de bônus em Força.\n• Água: Quando um adversário causar dano a você, pode marcar 1 Estresse para mover esse adversário para qualquer lugar dentro de alcance Muito Próximo de onde ele está.\n• Ar: Quando você ou um aliado sofrer dano de ataque de alcance além do Corpo a Corpo, reduza em 1d8.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Specialization\"). O atributo de Conjuração também está impresso em inglês (\"INSTINCT\"). O rótulo de classe no topo da carta também está em inglês (\"DRUID\").",
+       "doLivro": [
+        {
+         "nome": "Aura elemental",
+         "texto": "uma vez por descanso durante a canalização, você pode assumir uma aura correspondente ao seu elemento. A aura afeta alvos dentro do alcance próximo até o fim da canalização. Fogo: quando um adversário marca 1 ou mais pontos de vida, ele também deve marcar um estresse. Terra: Seus aliados recebem um bônus de +1 em Força. Água: Quando um adversário causa dano a você, você pode marcar um Estresse para movê-lo para qualquer lugar dentro do alcance Muito Próximo de onde ele estiver. Ar: Quando você ou um aliado receber dano de um ataque fora do alcance corpo a corpo, reduza o dano em 1d8."
+        }
+       ]
+      },
+      "maestria": {
+       "arquivo": "Guardião dos Elementos(2).png",
+       "imagem": "assets/cartas/subclasses/DRUIDA/Guardião dos Elementos(2).png",
+       "caracteristicas": [
+        {
+         "nome": "Domínio Elemental",
+         "texto": "Você incorpora ainda mais seu elemento. Enquanto estiver Canalizando, você ganha o seguinte benefício:\n• Fogo: Você ganha +1 de bônus na sua Proficiência para ataques e magias que causem dano.\n• Terra: Quando for marcar Pontos de Vida, role um d6 para cada Ponto de Vida marcado. Para cada resultado 6, reduza em 1 o número de Pontos de Vida que você marca.\n• Água: Quando um ataque contra você for bem-sucedido, pode marcar 1 Estresse para tornar o atacante temporariamente Vulnerável.\n• Ar: Você ganha +1 de bônus em sua Evasão e pode voar."
+        }
+       ],
+       "texto": "Domínio Elemental: Você incorpora ainda mais seu elemento. Enquanto estiver Canalizando, você ganha o seguinte benefício:\n• Fogo: Você ganha +1 de bônus na sua Proficiência para ataques e magias que causem dano.\n• Terra: Quando for marcar Pontos de Vida, role um d6 para cada Ponto de Vida marcado. Para cada resultado 6, reduza em 1 o número de Pontos de Vida que você marca.\n• Água: Quando um ataque contra você for bem-sucedido, pode marcar 1 Estresse para tornar o atacante temporariamente Vulnerável.\n• Ar: Você ganha +1 de bônus em sua Evasão e pode voar.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Mastery\"). O atributo de Conjuração também está impresso em inglês (\"INSTINCT\"). O rótulo de classe no topo da carta também está em inglês (\"DRUID\").",
+       "doLivro": [
+        {
+         "nome": "Domínio Elemental",
+         "texto": "Você encarna ainda mais o seu elemento. Enquanto Canalização, você ganha o seguinte benefício: Fogo: você ganha um bônus de +1 em sua proficiência para ataques e magias que causam dano. Terra: Quando você for marcar pontos de vida, role um d6 por ponto de vida marcado. Para cada resultado de 6, reduza o número de pontos de vida marcados em 1. Água: Quando um ataque contra você é bem-sucedido, você pode marcar um Estresse para tornar o atacante temporariamente vulnerável. Ar: Você ganha um bônus de +1 na sua Evasão e pode voar."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "druida-guardiao-da-renovacao",
+     "nome": "Guardião da Renovação",
+     "nomeCarta": "GUARDIÃO DA RENOVAÇÃO",
+     "nomeLivro": "DIRETOR DE RENOVAÇÃO",
+     "chamada": "Use o Warden of Renewal se quiser usar magia poderosa para curar seu grupo.",
+     "caracteristicaConjuracaoImpressa": "INSTINCT",
+     "caracteristicaConjuracao": "Instinto",
+     "cartas": {
+      "fundacao": {
+       "arquivo": "Guardião da Renovação.png",
+       "imagem": "assets/cartas/subclasses/DRUIDA/Guardião da Renovação.png",
+       "caracteristicas": [
+        {
+         "nome": "Clareza da Natureza",
+         "texto": "Uma vez por descanso longo, você pode criar um espaço de serenidade natural em alcance Próximo. Quando passar alguns minutos descansando dentro desse espaço, remova Estresses igual ao seu Instinto, distribuídos como desejar entre você e seus aliados."
+        },
+        {
+         "nome": "Regeneração",
+         "texto": "Toque uma criatura e gaste 3 Esperanças. Essa criatura recupera 1d4 Pontos de Vida."
+        }
+       ],
+       "texto": "Clareza da Natureza: Uma vez por descanso longo, você pode criar um espaço de serenidade natural em alcance Próximo. Quando passar alguns minutos descansando dentro desse espaço, remova Estresses igual ao seu Instinto, distribuídos como desejar entre você e seus aliados.\n\nRegeneração: Toque uma criatura e gaste 3 Esperanças. Essa criatura recupera 1d4 Pontos de Vida.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Foundation\"). O atributo de Conjuração também está impresso em inglês (\"INSTINCT\"). O rótulo de classe no topo da carta também está em inglês (\"DRUID\").",
+       "doLivro": [
+        {
+         "nome": "Clareza da natureza",
+         "texto": "Uma vez por descanso longo, você pode criar um espaço de serenidade natural a curta distância. Quando passar alguns minutos descansando dentro do espaço, libere Estresse igual ao seu Instinto, distribuído conforme sua escolha entre você e seus aliados."
+        },
+        {
+         "nome": "Regeneração",
+         "texto": "Toque em uma criatura e gaste 3 de Esperança. Essa criatura elimina 1d4 pontos de vida."
+        }
+       ]
+      },
+      "especializacao": {
+       "arquivo": "Guardião da Renovação(1).png",
+       "imagem": "assets/cartas/subclasses/DRUIDA/Guardião da Renovação(1).png",
+       "caracteristicas": [
+        {
+         "nome": "Alcance Regenerativo",
+         "texto": "Você pode atingir criaturas em alcance Muito Próximo com sua habilidade Regeneração."
+        },
+        {
+         "nome": "Proteção do Guardião",
+         "texto": "Uma vez por descanso longo, gaste 2 Esperanças para curar 2 Pontos de Vida em 1d4 aliados dentro de alcance Próximo."
+        }
+       ],
+       "texto": "Alcance Regenerativo: Você pode atingir criaturas em alcance Muito Próximo com sua habilidade Regeneração.\n\nProteção do Guardião: Uma vez por descanso longo, gaste 2 Esperanças para curar 2 Pontos de Vida em 1d4 aliados dentro de alcance Próximo.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Specialization\"). O atributo de Conjuração também está impresso em inglês (\"INSTINCT\"). O rótulo de classe no topo da carta também está em inglês (\"DRUID\").",
+       "doLivro": [
+        {
+         "nome": "Alcance regenerativo",
+         "texto": "Você pode alvejar criaturas a uma distância muito próxima com seu recurso \"Regeneração\"."
+        },
+        {
+         "nome": "Proteção do Guardião",
+         "texto": "Uma vez por descanso longo, gaste 2 de Esperança para eliminar 2 pontos de vida de 1d4 aliados em um raio de alcance próximo."
+        }
+       ]
+      },
+      "maestria": {
+       "arquivo": "Guardião da Renovação(2).png",
+       "imagem": "assets/cartas/subclasses/DRUIDA/Guardião da Renovação(2).png",
+       "caracteristicas": [
+        {
+         "nome": "Defensor",
+         "texto": "Sua transformação animal incorpora um espírito guardião curador. Quando estiver em Forma Bestial e um aliado em alcance Próximo marcar 2 ou mais Pontos de Vida, você pode marcar 1 Estresse para reduzir em 1 o número de Pontos de Vida que ele marcar."
+        }
+       ],
+       "texto": "Defensor: Sua transformação animal incorpora um espírito guardião curador. Quando estiver em Forma Bestial e um aliado em alcance Próximo marcar 2 ou mais Pontos de Vida, você pode marcar 1 Estresse para reduzir em 1 o número de Pontos de Vida que ele marcar.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Mastery\"). O atributo de Conjuração também está impresso em inglês (\"INSTINCT\"). O rótulo de classe no topo da carta também está em inglês (\"DRUID\").",
+       "doLivro": [
+        {
+         "nome": "Defensor",
+         "texto": "Sua transformação animal incorpora um espírito guardião curador. Quando você estiver em Beastform e um aliado a curta distância marcar 2 ou mais pontos de vida, você poderá marcar um estresse para reduzir em 1 o número de pontos de vida que ele marcar."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "problemasDeTraducao": [
+    "O título da classe está impresso como 'DRUID' (inglês), não 'DRUIDA'.",
+    "O cabeçalho que lista os domínios da classe está impresso como 'DOMÉSTICAS' em vez de 'Domínios' — mistradução clara do termo em inglês 'Domains'.",
+    "O termo 'Beastform' (forma de fera/besta) nunca foi traduzido e aparece em inglês em todo o texto (Recurso Esperança, Forma de fera, e nas duas subclasses).",
+    "O termo 'Hope' aparece em inglês na Característica de Esperança ('Gaste 3 Hope'), enquanto em outros trechos do livro o termo é traduzido como 'Esperança'.",
+    "O termo 'Stress' aparece em inglês, sem tradução, em vários pontos ('Marque uma Stress', 'sem marcar um Stress'), enquanto em outros pontos do mesmo texto foi traduzido como 'Estresse' — tradução inconsistente.",
+    "Os nomes das subclasses foram traduzidos de forma inconsistente: a chamada introdutória usa 'Guardião dos Elementos' e 'Guardião da Renovação', mas os títulos das seções usam 'DIRETOR DOS ELEMENTOS' e 'DIRETOR DE RENOVAÇÃO' — tradução errada de 'Warden' (deveria ser 'Guardião', não 'Diretor').",
+    "Nas frases de chamada de cada subclasse, o nome da subclasse permanece em inglês ('Warden of the Elements', 'Warden of Renewal') mesmo com a tradução entre parênteses logo acima.",
+    "Na Fundação do Diretor de Renovação, o texto de 'Regeneração' diz 'Essa criatura elimina 1d4 pontos de vida', frase estranha e provavelmente mal traduzida (o sentido esperado seria curar/remover pontos de vida marcados, não 'eliminar pontos de vida').",
+    "Na Especialização do Diretor de Renovação, 'Proteção do Guardião' repete a mesma construção estranha 'eliminar 2 pontos de vida de 1d4 aliados', com o mesmo problema de tradução do item anterior.",
+    "No texto de 'Forma de fera', a frase 'Você pode sair dessa forma a qualquer momento' apresentava uma renderização estranha no PDF ('dessaforma' colado), possível artefato de OCR/formatação — verificar contra o PDF original se precisão exata for necessária.",
+    "As opções completas de Beastform (lista de criaturas, tiers, estatísticas) ficam em tabelas nas páginas 33 a 36, fora das duas páginas analisadas aqui, e portanto não foram transcritas."
+   ],
+   "pastaCartas": "assets/cartas/subclasses/DRUIDA"
+  },
+  {
+   "id": "feiticeiro",
+   "nome": "Feiticeiro",
+   "nomeLivro": "SORCERER",
+   "descricao": "Nem todos os usuários de magia inata optam por aprimorar sua arte, mas aqueles que o fazem podem se tornar feiticeiros poderosos. Os dons desses portadores são transmitidos pelas famílias, mesmo que elas não saibam ou relutem em praticá-los. As habilidades de um feiticeiro podem variar do elemental ao ilusório e além, e muitos praticantes se unem em coletivos com base em seus talentos. O ato de se tornar um feiticeiro formidável não é a prática de adquirir poder, mas aprender a cultivar e controlar o poder que já se possui. A magia de um feiticeiro mal orientado ou indisciplinado é, de fato, uma força perigosa.",
+   "dominios": [
+    "ARCANA",
+    "MIDNIGHT"
+   ],
+   "dominiosNomes": [
+    "Arcana",
+    "Meia-Noite"
+   ],
+   "evasaoInicial": 10,
+   "pontosDeVidaIniciais": 6,
+   "itensDeClasse": [
+    "Um globo sussurrante",
+    "Uma herança de família"
+   ],
+   "caracteristicaEsperanca": {
+    "nome": "Magia volátil",
+    "texto": "gaste 3 de Esperança para rolar novamente qualquer número de dados de dano em um ataque que cause dano mágico."
+   },
+   "caracteristicasDeClasse": [
+    {
+     "nome": "Sentido Arcano",
+     "texto": "Você pode sentir a presença de pessoas e objetos mágicos a curta distância."
+    },
+    {
+     "nome": "Ilusão menor",
+     "texto": "Faça um lançamento de feitiço (10). Se for bem-sucedido, você criará uma pequena ilusão visual não maior do que você mesmo a curta distância. Essa ilusão é convincente para qualquer pessoa a curta distância ou mais."
+    },
+    {
+     "nome": "Canal Raw Power",
+     "texto": "Uma vez por descanso longo, você pode colocar uma carta de domínio do seu equipamento no seu cofre e escolher entre: Ganhe Esperança igual ao nível da carta. Aprimore um feitiço que causa dano, ganhando um bônus na rolagem de dano igual ao dobro do nível da carta."
+    }
+   ],
+   "perguntasDeFundo": [
+    "O que você fez que deixou as pessoas de sua comunidade desconfiadas de você?",
+    "Que mentor lhe ensinou a controlar sua magia indomável e por que ele não pode mais guiá-lo?",
+    "Você tem um medo profundo que esconde de todos. O que é esse medo e por que ele o assusta?"
+   ],
+   "conexoes": [
+    "Por que você confia tanto em mim?",
+    "O que eu fiz para que você seja cauteloso comigo?",
+    "Por que mantemos nosso passado compartilhado em segredo?"
+   ],
+   "subclasses": [
+    {
+     "id": "feiticeiro-origem-elemental",
+     "nome": "Origem Elemental",
+     "nomeCarta": "ORIGEM ELEMENTAL",
+     "nomeLivro": "Origem Elementar",
+     "chamada": "Jogue a Origem Elemental se quiser canalizar a magia bruta para assumir a forma de um elemento específico.",
+     "caracteristicaConjuracaoImpressa": "INSTINCT",
+     "caracteristicaConjuracao": "Instinto",
+     "cartas": {
+      "fundacao": {
+       "arquivo": "Origem Elemental.png",
+       "imagem": "assets/cartas/subclasses/FEITICEIRO/Origem Elemental.png",
+       "caracteristicas": [
+        {
+         "nome": "Elementalista",
+         "texto": "Escolha um dos seguintes elementos na criação do personagem:\nAr · Terra · Fogo · Raio · Água\nVocê pode moldar esse elemento em efeitos inofensivos. Além disso, gaste 1 Esperança e descreva como seu controle sobre esse elemento ajuda uma jogada de ação que você está prestes a fazer, então ganhe +2 de bônus na jogada ou +3 de bônus no dano da jogada."
+        }
+       ],
+       "texto": "Elementalista: Escolha um dos seguintes elementos na criação do personagem:\nAr · Terra · Fogo · Raio · Água\nVocê pode moldar esse elemento em efeitos inofensivos. Além disso, gaste 1 Esperança e descreva como seu controle sobre esse elemento ajuda uma jogada de ação que você está prestes a fazer, então ganhe +2 de bônus na jogada ou +3 de bônus no dano da jogada.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Foundation\") em vez de português. O rótulo \"SPELLCAST TRAIT\" também está em inglês.",
+       "doLivro": [
+        {
+         "nome": "Elementalista",
+         "texto": "Escolha um dos seguintes elementos na criação do personagem: ar, terra, fogo, raio, água. Você pode moldar esse elemento em efeitos inofensivos. Além disso, gaste uma Esperança e descreva como o seu controle sobre esse elemento ajuda uma rolagem de ação que você está prestes a fazer e, em seguida, ganhe um bônus de +2 na rolagem ou um bônus de +3 no dano da rolagem."
+        }
+       ]
+      },
+      "especializacao": {
+       "arquivo": "Origem Elemental(1).png",
+       "imagem": "assets/cartas/subclasses/FEITICEIRO/Origem Elemental(1).png",
+       "caracteristicas": [
+        {
+         "nome": "Evasão Natural",
+         "texto": "Você pode invocar seu elemento para se proteger do perigo. Quando uma jogada de ataque contra você for bem-sucedida, pode marcar 1 Estresse e descrever como usa seu elemento para se defender. Ao fazer isso, role um d6 e some o resultado à sua Evasão contra o ataque."
+        }
+       ],
+       "texto": "Evasão Natural: Você pode invocar seu elemento para se proteger do perigo. Quando uma jogada de ataque contra você for bem-sucedida, pode marcar 1 Estresse e descrever como usa seu elemento para se defender. Ao fazer isso, role um d6 e some o resultado à sua Evasão contra o ataque.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Specialization\") em vez de português. O rótulo \"SPELLCAST TRAIT\" também está em inglês.",
+       "doLivro": [
+        {
+         "nome": "Evasão natural",
+         "texto": "Você pode invocar seu elemento para protegê-lo de danos. Quando uma rolagem de ataque contra você for bem-sucedida, você pode marcar um Estresse e descrever como usa seu elemento para se defender. Quando fizer isso, role um d6 e adicione o resultado dele à sua Evasão contra o ataque."
+        }
+       ]
+      },
+      "maestria": {
+       "arquivo": "Origem Elemental(2).png",
+       "imagem": "assets/cartas/subclasses/FEITICEIRO/Origem Elemental(2).png",
+       "caracteristicas": [
+        {
+         "nome": "Transcendência",
+         "texto": "Uma vez por descanso longo, você pode se transformar em uma manifestação física do seu elemento. Ao fazer isso, descreva sua transformação e escolha dois dos seguintes benefícios para ganhar até seu próximo descanso:\n• +4 de bônus no seu limiar Severo\n• +1 de bônus em uma característica de personagem à sua escolha\n• +1 de bônus na sua Proficiência\n• +2 de bônus na sua Evasão"
+        }
+       ],
+       "texto": "Transcendência: Uma vez por descanso longo, você pode se transformar em uma manifestação física do seu elemento. Ao fazer isso, descreva sua transformação e escolha dois dos seguintes benefícios para ganhar até seu próximo descanso:\n• +4 de bônus no seu limiar Severo\n• +1 de bônus em uma característica de personagem à sua escolha\n• +1 de bônus na sua Proficiência\n• +2 de bônus na sua Evasão",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Mastery\") em vez de português. O rótulo \"SPELLCAST TRAIT\" também está em inglês. O nome da característica aparece cortado na imagem como \"ranscendência\" (a letra inicial \"T\" está parcialmente cortada na borda da carta); transcrito aqui como \"Transcendência\" por dedução visual do restante da palavra.",
+       "doLivro": [
+        {
+         "nome": "Transcendência",
+         "texto": "Uma vez por descanso longo, você pode se transformar em uma manifestação física do seu elemento. Quando o fizer, descreva sua transformação e escolha dois dos seguintes benefícios a serem obtidos até seu próximo descanso: +4 de bônus no seu limite de gravidade; +1 de bônus em uma característica de caráter de sua escolha; Bônus de +1 para sua proficiência; +2 de bônus para sua Evasão."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "feiticeiro-origem-primal",
+     "nome": "Origem Primal",
+     "nomeCarta": "ORIGEM PRIMAL",
+     "nomeLivro": "Origem Primordial",
+     "chamada": "Use a Origem Primordial se quiser ampliar a versatilidade de seus feitiços de maneira poderosa.",
+     "caracteristicaConjuracaoImpressa": "INSTINCT",
+     "caracteristicaConjuracao": "Instinto",
+     "cartas": {
+      "fundacao": {
+       "arquivo": "Origem Primal.png",
+       "imagem": "assets/cartas/subclasses/FEITICEIRO/Origem Primal.png",
+       "caracteristicas": [
+        {
+         "nome": "Manipular Magia",
+         "texto": "Sua origem primal permite modificar a essência da própria magia. Após lançar uma magia ou fazer um ataque com uma arma que cause dano mágico, você pode marcar 1 Estresse para escolher uma das opções a seguir:\n• Estender o alcance da magia ou ataque em uma faixa\n• Ganhar +2 de bônus no resultado da jogada de ação\n• Dobrar o resultado de um dado de dano à sua escolha\n• Acertar um alvo adicional dentro do alcance"
+        }
+       ],
+       "texto": "Manipular Magia: Sua origem primal permite modificar a essência da própria magia. Após lançar uma magia ou fazer um ataque com uma arma que cause dano mágico, você pode marcar 1 Estresse para escolher uma das opções a seguir:\n• Estender o alcance da magia ou ataque em uma faixa\n• Ganhar +2 de bônus no resultado da jogada de ação\n• Dobrar o resultado de um dado de dano à sua escolha\n• Acertar um alvo adicional dentro do alcance",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Foundation\") em vez de português. O rótulo \"SPELLCAST TRAIT\" também está em inglês.",
+       "doLivro": [
+        {
+         "nome": "Manipular magia",
+         "texto": "Sua origem primordial permite que você modifique a essência da própria magia. Depois de lançar um feitiço ou fazer um ataque usando uma arma que causa dano mágico, você pode marcar um Estresse para fazer uma das seguintes ações: Ampliar o alcance do feitiço ou ataque em um intervalo; Ganhe um bônus de +2 no resultado da rolagem da ação; Dobrar um dado de dano de sua escolha; Atinge um alvo adicional dentro do alcance."
+        }
+       ]
+      },
+      "especializacao": {
+       "arquivo": "Origem Primal(1).png",
+       "imagem": "assets/cartas/subclasses/FEITICEIRO/Origem Primal(1).png",
+       "caracteristicas": [
+        {
+         "nome": "Ajuda Encantada",
+         "texto": "Você pode fortalecer a magia dos outros com sua essência. Quando você ajudar um aliado em uma Jogada de Magia, pode rolar um d8 como seu dado de vantagem. Uma vez por descanso longo, depois que um aliado fizer uma Jogada de Magia com sua ajuda, você pode trocar os resultados dos Dados da Dualidade deles."
+        }
+       ],
+       "texto": "Ajuda Encantada: Você pode fortalecer a magia dos outros com sua essência. Quando você ajudar um aliado em uma Jogada de Magia, pode rolar um d8 como seu dado de vantagem. Uma vez por descanso longo, depois que um aliado fizer uma Jogada de Magia com sua ajuda, você pode trocar os resultados dos Dados da Dualidade deles.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Specialization\") em vez de português. O rótulo \"SPELLCAST TRAIT\" também está em inglês.",
+       "doLivro": [
+        {
+         "nome": "Auxílio encantado",
+         "texto": "Você pode aprimorar a magia dos outros com sua essência. Quando você ajuda um aliado com um lançamento de feitiço, pode rolar um d8 como seu dado de vantagem. Uma vez por descanso longo, depois que um aliado tiver feito um lançamento de feitiço com sua ajuda, você pode trocar os resultados de seus dados de dualidade."
+        }
+       ]
+      },
+      "maestria": {
+       "arquivo": "Origem Primal(2).png",
+       "imagem": "assets/cartas/subclasses/FEITICEIRO/Origem Primal(2).png",
+       "caracteristicas": [
+        {
+         "nome": "Carga Arcana",
+         "texto": "Você pode acumular energia mágica para aprimorar suas habilidades. Quando você sofrer dano mágico, você fica Carregado. Alternativamente, pode gastar 2 Esperanças para ficar Carregado. Quando fizer um ataque bem-sucedido que cause dano mágico enquanto estiver Carregado, pode limpar sua Carga para ganhar +10 de bônus na jogada de dano ou +3 de bônus na Dificuldade de uma jogada de reação que a magia fizer o alvo realizar.\nVocê deixa de estar Carregado no seu próximo descanso longo."
+        }
+       ],
+       "texto": "Carga Arcana: Você pode acumular energia mágica para aprimorar suas habilidades. Quando você sofrer dano mágico, você fica Carregado. Alternativamente, pode gastar 2 Esperanças para ficar Carregado. Quando fizer um ataque bem-sucedido que cause dano mágico enquanto estiver Carregado, pode limpar sua Carga para ganhar +10 de bônus na jogada de dano ou +3 de bônus na Dificuldade de uma jogada de reação que a magia fizer o alvo realizar.\nVocê deixa de estar Carregado no seu próximo descanso longo.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Mastery\") em vez de português. O rótulo \"SPELLCAST TRAIT\" também está em inglês.",
+       "doLivro": [
+        {
+         "nome": "Carga Arcana",
+         "texto": "Você pode reunir energia mágica para aprimorar suas capacidades. Quando recebe dano mágico, você fica carregado. Como alternativa, você pode gastar 2 de Esperança para ficar carregado. Quando fizer um ataque bem-sucedido que cause dano mágico enquanto estiver carregado, você pode liberar sua carga para ganhar um bônus de +10 na rolagem de dano ou um bônus de +3 na dificuldade de uma rolagem de reação que o feitiço faz com que o alvo faça. Você deixa de estar carregado no seu próximo descanso longo."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "problemasDeTraducao": [
+    "Título da classe aparece em inglês: 'SORCERER' (não foi traduzido para 'FEITICEIRO' no título grande da página 47).",
+    "O rótulo 'DOMÉSTICAS' (página 47) é claramente uma má tradução de 'Domains' — deveria ser 'Domínios'. O conteúdo listado ('Arcanos e meia-noite') são os domínios da classe.",
+    "'RECURSO SORCERER'S HOPE' (página 47) mistura inglês e português — 'Sorcerer's Hope' não foi traduzido (deveria ser algo como 'Recurso de Esperança do Feiticeiro').",
+    "Nome da característica de classe 'Canal Raw Power' (página 47) está em inglês/mal traduzido — 'Raw Power' não foi traduzido.",
+    "Inconsistência de nome de subclasse: na introdução ('Escolha a subclasse Origem Elemental ou Origem Primordial') e na chamada de jogo ('Jogue a Origem Elemental...') usa-se 'Origem Elemental', mas o título do box na página 47 está impresso como 'ORIGEM ELEMENTAR' — duas grafias diferentes para a mesma subclasse.",
+    "Inconsistência de nome de subclasse: a segunda subclasse é chamada de 'Origem Primordial' na introdução e no texto da chamada ('Use a Origem Primordial...'), mas o título do box na página 48 está impresso como 'ORIGEM PRIMÁRIA' — nome diferente do usado no restante do texto.",
+    "Na descrição de 'Carga Arcana' (página 48), a frase final sobre a rolagem de reação está com sintaxe estranha/mal traduzida: '...ou um bônus de +3 na dificuldade de uma rolagem de reação que o feitiço faz com que o alvo faça.' — texto confuso, mas transcrito exatamente como impresso."
+   ],
+   "pastaCartas": "assets/cartas/subclasses/FEITICEIRO"
+  },
+  {
+   "id": "guardiao",
+   "nome": "Guardião",
+   "nomeLivro": "GUARDIÃO",
+   "descricao": "O título de guardião representa uma série de profissões marciais, falando mais sobre sua bússola moral e fortaleza inabalável do que sobre os meios pelos quais lutam. Embora muitos guardiões se juntem a grupos de militantes de um país ou de uma causa, é mais provável que eles sigam aqueles com quem realmente se importam, independentemente da maioria. Os guardiões são conhecidos por lutarem com ferocidade notável, mesmo contra probabilidades esmagadoras, defendendo sua coorte acima de tudo. Ai de quem ferir o aliado de um guardião, pois o guardião responderá a esse ferimento na mesma moeda.",
+   "dominios": [
+    "VALOR",
+    "BLADE"
+   ],
+   "dominiosNomes": [
+    "Valor",
+    "Lâmina"
+   ],
+   "evasaoInicial": 9,
+   "pontosDeVidaIniciais": 7,
+   "itensDeClasse": [
+    "Um totem de seu mentor ou uma chave secreta"
+   ],
+   "caracteristicaEsperanca": {
+    "nome": "Tanque de linha de frente",
+    "texto": "Gaste 3 de Esperança para liberar 2 espaços de armadura."
+   },
+   "caracteristicasDeClasse": [
+    {
+     "nome": "Imparável",
+     "texto": "Uma vez por descanso longo, você pode se tornar Imparável. Você ganha um dado imparável. No nível 1, seu Dado Imparável é um d4. Coloque-o em sua ficha de personagem no espaço fornecido, começando com o valor 1 voltado para cima. Depois de fazer uma rolagem de dano que cause 1 ou mais pontos de vida a um alvo, aumente o valor do Unstoppable Die em um. Quando o valor do dado exceder seu valor máximo ou quando a cena terminar, remova o dado e saia do Unstoppable. No nível 5, seu Unstoppable Die aumenta para um d6.\n\nEnquanto estiver imparável, você obtém os seguintes benefícios:\n• Você reduz a gravidade do dano físico em um limite (Grave para Maior, Maior para Menor, Menor para Nenhum).\n• Você adiciona o valor atual do Dado Imparável à sua rolagem de dano.\n• Você não pode ser contido ou vulnerável.\n\nDica: se o seu Dado Imparável for um d4 e o 4 estiver voltado para cima, você removerá o dado na próxima vez que for aumentá-lo. No entanto, se o seu Unstoppable Die tiver aumentado para um d6 e o 4 estiver voltado para cima, você o transformará em 5 na próxima vez que for aumentá-lo. Nesse caso, você removerá o dado depois que precisar aumentá-lo. Nesse caso, você removerá o dado depois que precisar aumentá-lo para mais de 6."
+    }
+   ],
+   "perguntasDeFundo": [
+    "Quem da sua comunidade você deixou de proteger e por que ainda pensa neles?",
+    "Você foi encarregado de proteger algo importante e entregá-lo em um lugar perigoso. O que é e para onde ele precisa ir?",
+    "Você considera um aspecto de si mesmo como uma fraqueza. Qual é esse aspecto e como ele o afetou?"
+   ],
+   "conexoes": [
+    "Como eu salvei sua vida na primeira vez que nos encontramos?",
+    "Que pequeno presente você me deu e percebeu que eu sempre carrego comigo?",
+    "Que mentira você me contou sobre si mesmo em que eu absolutamente acredito?"
+   ],
+   "subclasses": [
+    {
+     "id": "guardiao-robusto",
+     "nome": "Robusto",
+     "nomeCarta": "ROBUSTO",
+     "nomeLivro": "Stalwart",
+     "chamada": "Jogue com o Stalwart se quiser levar golpes pesados e continuar lutando.",
+     "caracteristicaConjuracaoImpressa": null,
+     "caracteristicaConjuracao": null,
+     "cartas": {
+      "fundacao": {
+       "arquivo": "robusto.png",
+       "imagem": "assets/cartas/subclasses/GUARDIÃO/robusto.png",
+       "caracteristicas": [
+        {
+         "nome": "Inabalável",
+         "texto": "Ganhe um bônus permanente de +1 nos seus limiares de dano."
+        },
+        {
+         "nome": "Vontade de Ferro",
+         "texto": "Quando sofrer dano físico, você pode marcar um espaço adicional de Armadura para reduzir a severidade."
+        }
+       ],
+       "texto": "Inabalável: Ganhe um bônus permanente de +1 nos seus limiares de dano.\nVontade de Ferro: Quando sofrer dano físico, você pode marcar um espaço adicional de Armadura para reduzir a severidade.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Foundation\").",
+       "doLivro": [
+        {
+         "nome": "Inabalável",
+         "texto": "Ganhe um bônus permanente de +1 nos seus limites de dano."
+        },
+        {
+         "nome": "Vontade de ferro",
+         "texto": "Ao sofrer dano físico, você pode marcar um Slot de Armadura adicional para reduzir a gravidade."
+        }
+       ]
+      },
+      "especializacao": {
+       "arquivo": "robusto(1).png",
+       "imagem": "assets/cartas/subclasses/GUARDIÃO/robusto(1).png",
+       "caracteristicas": [
+        {
+         "nome": "Implacável",
+         "texto": "Ganhe um bônus permanente de +2 nos seus limiares de dano."
+        },
+        {
+         "nome": "Parceiros de Armas",
+         "texto": "Quando um aliado em alcance Muito Próximo sofrer dano, você pode marcar um Espaço de Armadura para reduzir a severidade em um limiar."
+        }
+       ],
+       "texto": "Implacável: Ganhe um bônus permanente de +2 nos seus limiares de dano.\nParceiros de Armas: Quando um aliado em alcance Muito Próximo sofrer dano, você pode marcar um Espaço de Armadura para reduzir a severidade em um limiar.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Specialization\").",
+       "doLivro": [
+        {
+         "nome": "Incessante",
+         "texto": "Ganhe um bônus permanente de +2 nos seus limites de dano."
+        },
+        {
+         "nome": "Parceiros de armas",
+         "texto": "quando um aliado dentro do alcance Muito próximo recebe dano, você pode marcar um espaço de armadura para reduzir a gravidade em um limiar."
+        }
+       ]
+      },
+      "maestria": {
+       "arquivo": "robusto(2).png",
+       "imagem": "assets/cartas/subclasses/GUARDIÃO/robusto(2).png",
+       "caracteristicas": [
+        {
+         "nome": "Destemido",
+         "texto": "Ganhe um bônus permanente de +3 nos seus limiares de dano."
+        },
+        {
+         "nome": "Protetor Leal",
+         "texto": "Quando um aliado em alcance Próximo tiver 2 ou menos Pontos de Vida e for receber dano, você pode marcar 1 Estresse para correr até o lado dele e sofrer o dano no lugar."
+        }
+       ],
+       "texto": "Destemido: Ganhe um bônus permanente de +3 nos seus limiares de dano.\nProtetor Leal: Quando um aliado em alcance Próximo tiver 2 ou menos Pontos de Vida e for receber dano, você pode marcar 1 Estresse para correr até o lado dele e sofrer o dano no lugar.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Mastery\").",
+       "doLivro": [
+        {
+         "nome": "Destemido",
+         "texto": "Ganhe um bônus permanente de +3 nos seus limites de dano."
+        },
+        {
+         "nome": "Protetor leal",
+         "texto": "Quando um aliado a curta distância tem 2 ou menos pontos de vida e sofreria dano, você pode marcar um estresse para correr para o lado dele e sofrer o dano."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "guardiao-vinganca",
+     "nome": "Vingança",
+     "nomeCarta": "VINGANÇA",
+     "nomeLivro": "Vingança",
+     "chamada": "Use o Vengeance se quiser derrubar inimigos que prejudicam você ou seus aliados.",
+     "caracteristicaConjuracaoImpressa": null,
+     "caracteristicaConjuracao": null,
+     "cartas": {
+      "fundacao": {
+       "arquivo": "Vingança.png",
+       "imagem": "assets/cartas/subclasses/GUARDIÃO/Vingança.png",
+       "caracteristicas": [
+        {
+         "nome": "À Vontade",
+         "texto": "Ganhe um espaço adicional de Estresse."
+        },
+        {
+         "nome": "Vingança",
+         "texto": "Quando um adversário em alcance Corpo a Corpo acertar um ataque contra você, pode marcar 2 Estresses para forçar o atacante a marcar um Ponto de Vida."
+        }
+       ],
+       "texto": "À Vontade: Ganhe um espaço adicional de Estresse.\nVingança: Quando um adversário em alcance Corpo a Corpo acertar um ataque contra você, pode marcar 2 Estresses para forçar o atacante a marcar um Ponto de Vida.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Foundation\").",
+       "doLivro": [
+        {
+         "nome": "Tranquilo",
+         "texto": "ganha um espaço adicional de estresse."
+        },
+        {
+         "nome": "Vingança",
+         "texto": "quando um adversário dentro do alcance corpo a corpo é bem-sucedido em um ataque contra você, você pode marcar 2 de Estresse para forçar o atacante a marcar um Hit Point."
+        }
+       ]
+      },
+      "especializacao": {
+       "arquivo": "Vingança(1).png",
+       "imagem": "assets/cartas/subclasses/GUARDIÃO/Vingança(1).png",
+       "caracteristicas": [
+        {
+         "nome": "Ato de Retaliação",
+         "texto": "Quando um adversário causar dano a um aliado em alcance Corpo a Corpo, você ganha +1 de bônus na sua Proficiência para o próximo ataque bem-sucedido contra esse adversário."
+        }
+       ],
+       "texto": "Ato de Retaliação: Quando um adversário causar dano a um aliado em alcance Corpo a Corpo, você ganha +1 de bônus na sua Proficiência para o próximo ataque bem-sucedido contra esse adversário.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Specialization\").",
+       "doLivro": [
+        {
+         "nome": "Act of Reprisal (Ato de represália)",
+         "texto": "quando um adversário causa dano a um aliado dentro do alcance corpo a corpo, você recebe um bônus de +1 em sua proficiência no próximo ataque bem-sucedido que fizer contra esse adversário."
+        }
+       ]
+      },
+      "maestria": {
+       "arquivo": "Vingança(2).png",
+       "imagem": "assets/cartas/subclasses/GUARDIÃO/Vingança(2).png",
+       "caracteristicas": [
+        {
+         "nome": "Nêmesis",
+         "texto": "Gaste 2 Esperanças para Priorizar um adversário até seu próximo descanso. Quando fizer um ataque contra seu adversário Priorizado, você pode trocar os resultados dos seus Dados de Esperança e Medo. Você só pode Priorizar um adversário por vez."
+        }
+       ],
+       "texto": "Nêmesis: Gaste 2 Esperanças para Priorizar um adversário até seu próximo descanso. Quando fizer um ataque contra seu adversário Priorizado, você pode trocar os resultados dos seus Dados de Esperança e Medo. Você só pode Priorizar um adversário por vez.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Mastery\").",
+       "doLivro": [
+        {
+         "nome": "Nêmesis",
+         "texto": "Gaste 2 de Esperança para priorizar um adversário até seu próximo descanso. Ao fazer um ataque contra o adversário priorizado, você pode trocar os resultados dos dados de Esperança e Medo. Você só pode priorizar um adversário de cada vez."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "problemasDeTraducao": [
+    "O cabeçalho da seção de domínios aparece como 'DOMÉSTICAS' em vez de 'Domínios' (erro de tradução de 'Domains').",
+    "A chamada geral das subclasses usa os nomes em inglês: 'Escolha a subclasse Stalwart ou Vengeance', enquanto os títulos das seções abaixo aparecem como 'STALWART' (não traduzido) e 'VINGANÇA' (traduzido) - inconsistência de tradução.",
+    "Na chamada da subclasse Vingança: 'Use o Vengeance se quiser derrubar inimigos...' mistura o nome em inglês 'Vengeance' dentro da frase em português, mesmo o título da seção estando traduzido como 'VINGANÇA'.",
+    "No recurso de classe 'Imparável', o texto mistura 'Dado Imparável' (traduzido) com 'Unstoppable Die' (mantido em inglês) dentro do mesmo parágrafo.",
+    "No recurso 'Vontade de ferro' (Stalwart), aparece 'Slot de Armadura' usando a palavra inglesa 'Slot', enquanto em outras partes do texto (ex. 'Parceiros de armas') usa-se 'espaço de armadura'.",
+    "No recurso 'Vingança' (subclasse Vingança), o termo 'Hit Point' aparece em inglês, não traduzido para 'Ponto de Vida'.",
+    "O recurso de especialização da subclasse Vingança mantém o nome em inglês 'Act of Reprisal' com a tradução '(Ato de represália)' entre parênteses, em vez de traduzir totalmente o nome do recurso.",
+    "O parágrafo 'Dica' do recurso 'Imparável' termina com uma frase visivelmente repetida/confusa: 'Nesse caso, você removerá o dado depois que precisar aumentá-lo. Nesse caso, você removerá o dado depois que precisar aumentá-lo para mais de 6.' - parece um erro de duplicação/tradução malfeita do texto original."
+   ],
+   "pastaCartas": "assets/cartas/subclasses/GUARDIÃO"
+  },
+  {
+   "id": "guerreiro",
+   "nome": "Guerreiro",
+   "nomeLivro": "GUERREIRO",
+   "descricao": "Para se tornar um guerreiro, são necessários anos, muitas vezes uma vida inteira, de treinamento e dedicação ao domínio das armas e da violência. Enquanto muitos que buscam lutar aprimoram apenas sua força, os guerreiros entendem a importância de um corpo e uma mente ágeis, o que os torna alguns dos lutadores mais procurados em todos os reinos. Frequentemente, os guerreiros encontram emprego em um exército, em um bando de mercenários ou até mesmo em uma guarda real, mas seu potencial é desperdiçado em qualquer posição em que não possam continuar a melhorar e expandir suas habilidades. Os guerreiros são conhecidos por terem uma arma favorita; colocar-se entre eles e sua lâmina seria um erro grave.",
+   "dominios": [
+    "BLADE",
+    "BONE"
+   ],
+   "dominiosNomes": [
+    "Lâmina",
+    "Osso"
+   ],
+   "evasaoInicial": 11,
+   "pontosDeVidaIniciais": 6,
+   "itensDeClasse": [
+    "O desenho de um amante ou uma pedra de afiar"
+   ],
+   "caracteristicaEsperanca": {
+    "nome": "No Mercy (Sem piedade)",
+    "texto": "Gaste 3 de Esperança para ganhar um bônus de +1 nas rolagens de ataque até o próximo descanso."
+   },
+   "caracteristicasDeClasse": [
+    {
+     "nome": "Ataque de oportunidade",
+     "texto": "Se um adversário dentro do alcance corpo a corpo tentar sair desse alcance, faça uma rolagem de reação usando uma característica de sua escolha contra a dificuldade dele. Escolha um efeito se for bem-sucedido, ou dois se for criticamente bem-sucedido: Eles não podem sair de onde estão. Você causa dano a eles igual ao dano de sua arma principal. Você se move com eles."
+    },
+    {
+     "nome": "Treinamento de combate",
+     "texto": "Você ignora o fardo ao equipar armas. Ao causar dano físico, você recebe um bônus para a rolagem de dano igual ao seu nível."
+    }
+   ],
+   "perguntasDeFundo": [
+    "Quem o ensinou a lutar e por que eles ficaram para trás quando você saiu de casa?",
+    "Alguém o derrotou em uma batalha anos atrás e o deixou para morrer. Quem foi e como ele o traiu?",
+    "Que lugar lendário você sempre quis visitar e por que ele é tão especial?"
+   ],
+   "conexoes": [
+    "Nós já nos conhecíamos muito antes dessa festa acontecer. Como?",
+    "Em que tarefa mundana você costuma me ajudar fora do campo de batalha?",
+    "Que medo estou ajudando você a superar?"
+   ],
+   "subclasses": [
+    {
+     "id": "guerreiro-chamada-dos-bravos",
+     "nome": "Chamada dos Bravos",
+     "nomeCarta": "CHAMADA DOS BRAVOS",
+     "nomeLivro": "Chamado dos Bravos",
+     "chamada": "Jogue o Call of the Brave se quiser usar o poder de seus inimigos para alimentar seu próprio poder.",
+     "caracteristicaConjuracaoImpressa": null,
+     "caracteristicaConjuracao": null,
+     "cartas": {
+      "fundacao": {
+       "arquivo": "Chamada dos Bravos.png",
+       "imagem": "assets/cartas/subclasses/GUERREIRO/Chamada dos Bravos.png",
+       "caracteristicas": [
+        {
+         "nome": "Coragem",
+         "texto": "Quando você falhar em uma jogada com Medo, ganha 1 Esperança."
+        },
+        {
+         "nome": "Ritual de Batalha",
+         "texto": "Uma vez por descanso longo, antes de tentar algo extremamente perigoso ou enfrentar um inimigo que claramente é mais forte que você, descreva qual ritual ou preparação realiza. Ao fazer isso, remova 2 Estresses e ganhe 2 Esperanças."
+        }
+       ],
+       "texto": "CHAMADA DOS BRAVOS\nFoundation\n\nCoragem: Quando você falhar em uma jogada com Medo, ganha 1 Esperança.\n\nRitual de Batalha: Uma vez por descanso longo, antes de tentar algo extremamente perigoso ou enfrentar um inimigo que claramente é mais forte que você, descreva qual ritual ou preparação realiza. Ao fazer isso, remova 2 Estresses e ganhe 2 Esperanças.",
+       "observacao": "O rótulo de tipo impresso na carta está em inglês: \"Foundation\" (registrado como \"Fundação\" em tipoCarta).",
+       "doLivro": [
+        {
+         "nome": "Coragem",
+         "texto": "Quando você falha em uma rolagem com Medo, ganha uma Esperança."
+        },
+        {
+         "nome": "Ritual de batalha",
+         "texto": "uma vez por descanso longo, antes de tentar algo incrivelmente perigoso ou de enfrentar um inimigo que claramente o supera, descreva o ritual que você realiza ou os preparativos que faz. Quando fizer isso, elimine 2 de Estresse e ganhe 2 de Esperança."
+        }
+       ]
+      },
+      "especializacao": {
+       "arquivo": "Chamada dos Bravos(1).png",
+       "imagem": "assets/cartas/subclasses/GUERREIRO/Chamada dos Bravos(1).png",
+       "caracteristicas": [
+        {
+         "nome": "Superação do Desafio",
+         "texto": "Você é vigilante diante do perigo crescente. Enquanto tiver 2 ou menos Pontos de Vida não marcados, pode rolar um d20 como seu Dado de Esperança."
+        }
+       ],
+       "texto": "CHAMADA DOS BRAVOS\nSpecialization\n\nSuperação do Desafio: Você é vigilante diante do perigo crescente. Enquanto tiver 2 ou menos Pontos de Vida não marcados, pode rolar um d20 como seu Dado de Esperança.",
+       "observacao": "O rótulo de tipo impresso na carta está em inglês: \"Specialization\" (registrado como \"Especialização\" em tipoCarta).",
+       "doLivro": [
+        {
+         "nome": "Enfrentar o desafio",
+         "texto": "Você está vigilante diante do perigo crescente. Enquanto tiver 2 ou menos pontos de vida não marcados, você pode rolar um d20 como seu Hope Die (dado de esperança)."
+        }
+       ]
+      },
+      "maestria": {
+       "arquivo": "Chamada dos Bravos(2).png",
+       "imagem": "assets/cartas/subclasses/GUERREIRO/Chamada dos Bravos(2).png",
+       "caracteristicas": [
+        {
+         "nome": "Camaradagem",
+         "texto": "Sua coragem inabalável é um ponto de união para seus aliados. Você pode iniciar uma Jogada em Equipe mais 1 vez por sessão. Além disso, quando um aliado iniciar uma Jogada em Equipe com você, ele precisa gastar apenas 2 Esperanças para isso."
+        }
+       ],
+       "texto": "CHAMADA DOS BRAVOS\nMastery\n\nCamaradagem: Sua coragem inabalável é um ponto de união para seus aliados. Você pode iniciar uma Jogada em Equipe mais 1 vez por sessão. Além disso, quando um aliado iniciar uma Jogada em Equipe com você, ele precisa gastar apenas 2 Esperanças para isso.",
+       "observacao": "O rótulo de tipo impresso na carta está em inglês: \"Mastery\" (registrado como \"Maestria\" em tipoCarta).",
+       "doLivro": [
+        {
+         "nome": "Camaradagem",
+         "texto": "Sua bravura inabalável é um ponto de encontro para seus aliados. Você pode iniciar um Tag Team Roll mais uma vez por sessão. Além disso, quando um aliado inicia um Tag Team Roll com você, ele só precisa gastar 2 Hope para fazer isso."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "guerreiro-chamada-do-matador",
+     "nome": "Chamada do Matador",
+     "nomeCarta": "CHAMADA DO MATADOR",
+     "nomeLivro": "Chamado do Matador",
+     "chamada": "Jogue o Call of the Slayer se você quiser derrubar adversários com uma força imensa.",
+     "caracteristicaConjuracaoImpressa": null,
+     "caracteristicaConjuracao": null,
+     "cartas": {
+      "fundacao": {
+       "arquivo": "Chamada do Matador.png",
+       "imagem": "assets/cartas/subclasses/GUERREIRO/Chamada do Matador.png",
+       "caracteristicas": [
+        {
+         "nome": "Matador",
+         "texto": "Você ganha um conjunto de dados chamado Dados de Matador. Em uma jogada com Esperança, você pode colocar um d6 nesta carta em vez de ganhar uma Esperança, adicionando o dado ao conjunto. Você pode armazenar um número de Dados de Matador igual à sua Proficiência. Quando fizer uma jogada de ataque ou de dano, pode gastar qualquer quantidade desses Dados de Matador, rolando-os e somando os resultados à jogada.\n\nAo final de cada sessão, descarte todos os Dados de Matador não usados nesta carta e ganhe 1 Esperança para cada dado descartado."
+        }
+       ],
+       "texto": "CHAMADA DO MATADOR\nFoundation\n\nMatador: Você ganha um conjunto de dados chamado Dados de Matador. Em uma jogada com Esperança, você pode colocar um d6 nesta carta em vez de ganhar uma Esperança, adicionando o dado ao conjunto. Você pode armazenar um número de Dados de Matador igual à sua Proficiência. Quando fizer uma jogada de ataque ou de dano, pode gastar qualquer quantidade desses Dados de Matador, rolando-os e somando os resultados à jogada.\n\nAo final de cada sessão, descarte todos os Dados de Matador não usados nesta carta e ganhe 1 Esperança para cada dado descartado.",
+       "observacao": "O rótulo de tipo impresso na carta está em inglês: \"Foundation\" (registrado como \"Fundação\" em tipoCarta).",
+       "doLivro": [
+        {
+         "nome": "Caçador",
+         "texto": "Você ganha um conjunto de dados chamado Slayer Dice. Em uma rolagem com Esperança, você pode colocar um d6 nessa carta em vez de ganhar uma Esperança, adicionando o dado à reserva. Você pode armazenar um número de Slayer Dice igual à sua Proficiência. Quando você faz um Para obter o resultado de uma rolagem de ataque ou de dano, você pode gastar qualquer número desses Slayer Dice, rolando-os e adicionando o resultado à rolagem. No final de cada sessão, limpe todos os Slayer Dice não gastos nessa carta e ganhe uma Esperança por dado limpo."
+        }
+       ]
+      },
+      "especializacao": {
+       "arquivo": "Chamada do Matador(1).png",
+       "imagem": "assets/cartas/subclasses/GUERREIRO/Chamada do Matador(1).png",
+       "caracteristicas": [
+        {
+         "nome": "Especialista em Armas",
+         "texto": "Você pode manejar várias armas com perigosa facilidade. Quando acertar um ataque, pode gastar 1 Esperança para adicionar um dos dados de dano da sua arma secundária à rolagem de dano.\n\nAlém disso, uma vez por descanso longo, quando rolar seus Dados de Matador, rerrole qualquer resultado 1."
+        }
+       ],
+       "texto": "CHAMADA DO MATADOR\nSpecialization\n\nEspecialista em Armas: Você pode manejar várias armas com perigosa facilidade. Quando acertar um ataque, pode gastar 1 Esperança para adicionar um dos dados de dano da sua arma secundária à rolagem de dano.\n\nAlém disso, uma vez por descanso longo, quando rolar seus Dados de Matador, rerrole qualquer resultado 1.",
+       "observacao": "O rótulo de tipo impresso na carta está em inglês: \"Specialization\" (registrado como \"Especialização\" em tipoCarta).",
+       "doLivro": [
+        {
+         "nome": "Especialista em armas",
+         "texto": "Você pode empunhar várias armas com uma facilidade perigosa. Ao ser bem-sucedido em um ataque, você pode gastar uma Esperança para adicionar um dos dados de dano da sua arma secundária à rolagem de dano. Além disso, uma vez por descanso longo, quando rolar seus dados de Slayer, role novamente qualquer 1s."
+        }
+       ]
+      },
+      "maestria": {
+       "arquivo": "Chamada do Matador(2).png",
+       "imagem": "assets/cartas/subclasses/GUERREIRO/Chamada do Matador(2).png",
+       "caracteristicas": [
+        {
+         "nome": "Preparação Marcial",
+         "texto": "Você é um guerreiro inspirador para todos que viajam com você. Seu grupo ganha acesso ao movimento de tempo livre Preparação Marcial. Para usar esse movimento durante um descanso, descreva como você instrui e treina seu grupo. Você e cada aliado que escolher esse movimento ganham um d6 de Dados de Matador. Um personagem com um Dado de Matador pode gastá-lo para rolar o dado e adicionar o resultado a uma jogada de ataque ou dano à sua escolha."
+        }
+       ],
+       "texto": "CHAMADA DO MATADOR\nMastery\n\nPreparação Marcial: Você é um guerreiro inspirador para todos que viajam com você. Seu grupo ganha acesso ao movimento de tempo livre Preparação Marcial. Para usar esse movimento durante um descanso, descreva como você instrui e treina seu grupo. Você e cada aliado que escolher esse movimento ganham um d6 de Dados de Matador. Um personagem com um Dado de Matador pode gastá-lo para rolar o dado e adicionar o resultado a uma jogada de ataque ou dano à sua escolha.",
+       "observacao": "O rótulo de tipo impresso na carta está em inglês: \"Mastery\" (registrado como \"Maestria\" em tipoCarta).",
+       "doLivro": [
+        {
+         "nome": "Preparação marcial",
+         "texto": "Você é um guerreiro inspirador para todos que viajam com você. Seu grupo ganha acesso ao movimento de tempo de inatividade Preparação Marcial. Para usar esse movimento durante um descanso, descreva como você instrui e treina com seu grupo. Você e cada aliado que escolher esse movimento de tempo de inatividade ganham um d6 de Slayer Dado. Um PC com um Slayer Die pode gastá-lo para rolar o dado e adicionar o resultado a uma rolagem de ataque ou dano de sua escolha."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "problemasDeTraducao": [
+    "O campo que deveria ser 'DOMÍNIOS' (Domains) foi impresso como 'DOMÉSTICAS', um erro de tradução automática; os valores listados abaixo dele ('Lâmina e osso') são na verdade os nomes dos dois domínios da classe.",
+    "A característica de Esperança manteve o nome em inglês 'No Mercy' junto com a tradução '(Sem piedade)' em vez de aparecer só em português.",
+    "O texto de introdução das subclasses diz 'Chamado do Bravo' (singular), mas o título da seção logo abaixo está impresso como 'CHAMADO DOS BRAVOS' (plural) — inconsistência entre as duas formas.",
+    "Frase de chamada da subclasse Chamado dos Bravos ficou parcialmente em inglês: 'Jogue o Call of the Brave se quiser...' (nome da subclasse não traduzido).",
+    "No recurso de Especialização 'Enfrentar o desafio', o termo 'Hope Die' aparece em inglês, com tradução entre parênteses '(dado de esperança)'.",
+    "No recurso de Maestria/Domínio 'Camaradagem', os termos 'Tag Team Roll' (duas vezes) e 'Hope' aparecem em inglês, sem tradução.",
+    "A seção que deveria ser 'Recurso de Maestria' (Mastery) foi rotulada no livro como 'RECURSO DE DOMÍNIO', o que gera confusão com o termo 'Domínios' (Domains) usado para as escolas de magia/habilidades da classe.",
+    "Frase de chamada da subclasse Chamado do Matador ficou parcialmente em inglês: 'Jogue o Call of the Slayer se você quiser...' (nome da subclasse não traduzido).",
+    "O termo 'Slayer Dice' (e variações 'dados de Slayer', 'Slayer Dado', 'Slayer Die') aparece em inglês ou parcialmente traduzido de forma inconsistente em várias partes do texto da subclasse Chamado do Matador.",
+    "No recurso de Fundação 'Caçador' há uma frase visivelmente corrompida/incompleta pela tradução automática: '...Quando você faz um Para obter o resultado de uma rolagem de ataque ou de dano, você pode gastar...' — parece faltar texto ou houve fusão indevida de duas frases; transcrito exatamente como impresso.",
+    "Em 'Preparação marcial', a expressão 'ganham um d6 de Slayer Dado' está gramaticalmente estranha/mal traduzida (mistura literal de 'Slayer Die' com 'Dado'), e logo em seguida o mesmo item volta a usar o termo em inglês 'Slayer Die'."
+   ],
+   "pastaCartas": "assets/cartas/subclasses/GUERREIRO"
+  },
+  {
+   "id": "ladino",
+   "nome": "Ladino",
+   "nomeLivro": "ROGUE",
+   "descricao": "Rogues são canalhas, muitas vezes tanto na atitude quanto na prática. Amplamente conhecidos como mentirosos e ladrões, os melhores dessa classe se movem pelo mundo de forma anônima. Utilizando sua perspicácia e lâminas afiadas, os ladinos enganam seus inimigos por meio da manipulação social com a mesma facilidade com que arrombam fechaduras, escalam janelas ou desferem golpes dissimulados. Esses mestres da arte mágica manipulam a sombra e o movimento, acrescentando uma série de ferramentas úteis e mortais ao seu repertório. Os ladinos frequentemente estabelecem guildas para encontrar futuros cúmplices, contratar trabalhos e aprimorar habilidades secretas, provando que há honra entre os ladrões para aqueles que sabem onde procurar.",
+   "dominios": [
+    "MIDNIGHT",
+    "GRACE"
+   ],
+   "dominiosNomes": [
+    "Meia-Noite",
+    "Graça"
+   ],
+   "evasaoInicial": 12,
+   "pontosDeVidaIniciais": 6,
+   "itensDeClasse": [
+    "Um conjunto de ferramentas de falsificação",
+    "um gancho"
+   ],
+   "caracteristicaEsperanca": {
+    "nome": "Esquiva do Ladino",
+    "texto": "Gaste 3 Hope (Esperança) para ganhar um bônus de +2 em sua Evasão até a próxima vez que um ataque for bem-sucedido contra você. Caso contrário, esse bônus dura até o seu próximo descanso."
+   },
+   "caracteristicasDeClasse": [
+    {
+     "nome": "Camuflado",
+     "texto": "Sempre que você estiver oculto, estará camuflado. Além dos benefícios da condição Hidden (oculto), enquanto estiver camuflado, você permanecerá invisível se estiver parado quando um adversário se mover para onde normalmente o veria. Depois de fazer um ataque ou terminar um movimento dentro da linha de visão de um adversário, você não estará mais camuflado."
+    },
+    {
+     "nome": "Ataque furtivo",
+     "texto": "Quando você for bem-sucedido em um ataque enquanto estiver camuflado ou enquanto um aliado estiver dentro do alcance corpo a corpo do seu alvo, adicione um número de d6s igual ao seu nível à sua rolagem de dano. Nível 1→ Nível 1. Níveis 2-4→ Nível 2. Níveis 5-7→ Nível 3. Níveis 8-10→ Nível 4."
+    }
+   ],
+   "perguntasDeFundo": [
+    "O que você foi pego fazendo que o levou a ser exilado de sua comunidade de origem?",
+    "Você costumava ter uma vida diferente, mas tentou deixá-la para trás. Quem do seu passado ainda está lhe perseguindo?",
+    "De quem do seu passado você ficou mais triste ao se despedir?"
+   ],
+   "conexoes": [
+    "O que eu o convenci a fazer recentemente que nos colocou em apuros?",
+    "O que descobri sobre seu passado que mantive em segredo dos outros?",
+    "Quem você conhece do meu passado e como eles influenciaram seus sentimentos em relação a mim?"
+   ],
+   "subclasses": [
+    {
+     "id": "ladino-caminhante-noturno",
+     "nome": "Caminhante Noturno",
+     "nomeCarta": "CAMINHANTE NOTURNO",
+     "nomeLivro": "Nightwalker",
+     "chamada": "Jogue com o Nightwalker se quiser manipular as sombras para se movimentar pelo ambiente.",
+     "caracteristicaConjuracaoImpressa": "FINESSE",
+     "caracteristicaConjuracao": null,
+     "cartas": {
+      "fundacao": {
+       "arquivo": "Caminhante Noturno.png",
+       "imagem": "assets/cartas/subclasses/LADINO/Caminhante Noturno.png",
+       "caracteristicas": [
+        {
+         "nome": "Passo Sombrio",
+         "texto": "Você pode se mover de sombra em sombra. Quando se mover para uma área de escuridão ou uma sombra projetada por outra criatura ou objeto, pode marcar 1 Estresse para desaparecer de onde está e reaparecer dentro de outra sombra em alcance Longo. Quando reaparecer, você estará Encoberto."
+        }
+       ],
+       "texto": "ROGUE\nCAMINHANTE NOTURNO\nFoundation\nSPELLCAST TRAIT: FINESSE\nPasso Sombrio: Você pode se mover de sombra em sombra. Quando se mover para uma área de escuridão ou uma sombra projetada por outra criatura ou objeto, pode marcar 1 Estresse para desaparecer de onde está e reaparecer dentro de outra sombra em alcance Longo. Quando reaparecer, você estará Encoberto.\nDaggerheart™ Compatible. Terms at Daggerheart.com.",
+       "observacao": "O rótulo do tipo de carta está em inglês (\"Foundation\"). O rótulo da característica de conjuração também está em inglês (\"SPELLCAST TRAIT\"). O rótulo da classe impresso na faixa acima do nome da subclasse está em inglês (\"ROGUE\").",
+       "doLivro": [
+        {
+         "nome": "Shadow Stepper",
+         "texto": "Você pode se mover de sombra em sombra. Ao entrar em uma área de escuridão ou em uma sombra projetada por outra criatura ou objeto, você pode marcar uma corda para desaparecer de onde está e reaparecer em outra área. sombra em um raio de alcance distante. Quando reaparece, você está camuflado."
+        }
+       ]
+      },
+      "especializacao": {
+       "arquivo": "Caminhante Noturno(1).png",
+       "imagem": "assets/cartas/subclasses/LADINO/Caminhante Noturno(1).png",
+       "caracteristicas": [
+        {
+         "nome": "Nuvem Sombria",
+         "texto": "Faça uma Jogada de Magia (15). Em caso de sucesso, crie uma nuvem sombria temporária que cobre qualquer área em alcance Próximo. Quem estiver dentro dessa nuvem não pode ver por fora, e quem estiver fora não pode ver por dentro. Você é considerado Encoberto para qualquer adversário cuja linha de visão seja bloqueada pela nuvem."
+        },
+        {
+         "nome": "Adrenalina",
+         "texto": "Enquanto estiver Vulnerável, adicione seu nível às suas jogadas de dano."
+        }
+       ],
+       "texto": "ROGUE\nCAMINHANTE NOTURNO\nSpecialization\nSPELLCAST TRAIT: FINESSE\nNuvem Sombria: Faça uma Jogada de Magia (15). Em caso de sucesso, crie uma nuvem sombria temporária que cobre qualquer área em alcance Próximo. Quem estiver dentro dessa nuvem não pode ver por fora, e quem estiver fora não pode ver por dentro. Você é considerado Encoberto para qualquer adversário cuja linha de visão seja bloqueada pela nuvem.\nAdrenalina: Enquanto estiver Vulnerável, adicione seu nível às suas jogadas de dano.\nDaggerheart™ Compatible. Terms at Daggerheart.com.",
+       "observacao": "O rótulo do tipo de carta está em inglês (\"Specialization\"). O rótulo da característica de conjuração também está em inglês (\"SPELLCAST TRAIT\"). O rótulo da classe impresso na faixa acima do nome da subclasse está em inglês (\"ROGUE\").",
+       "doLivro": [
+        {
+         "nome": "Nuvem escura",
+         "texto": "Faça uma rolagem de conjuração (15). Se for bem-sucedido, crie uma nuvem escura temporária que cubra qualquer área dentro do alcance de perto. Qualquer pessoa dentro dessa nuvem não pode ver fora dela, e qualquer pessoa fora dela não pode ver dentro dela. Você é considerado camuflado em relação a qualquer adversário para o qual a nuvem bloqueie a linha de visão."
+        },
+        {
+         "nome": "Adrenalina",
+         "texto": "Enquanto estiver vulnerável, adicione seu nível às rolagens de dano."
+        }
+       ]
+      },
+      "maestria": {
+       "arquivo": "Caminhante Noturno(2).png",
+       "imagem": "assets/cartas/subclasses/LADINO/Caminhante Noturno(2).png",
+       "caracteristicas": [
+        {
+         "nome": "Sombra Fugaz",
+         "texto": "Ganhe um bônus permanente de +1 em sua Evasão. Você pode usar sua habilidade Passo Sombrio para se mover em alcance Muito Longo."
+        },
+        {
+         "nome": "Ato de Desaparecimento",
+         "texto": "Marque 1 Estresse para ficar Encoberto a qualquer momento. Enquanto estiver Encoberto por essa habilidade, você automaticamente remove a condição Imobilizado, se estiver com ela. Você permanece Encoberto dessa forma até rolar com Medo ou até seu próximo descanso."
+        }
+       ],
+       "texto": "ROGUE\nCAMINHANTE NOTURNO\nMastery\nSPELLCAST TRAIT: FINESSE\nSombra Fugaz: Ganhe um bônus permanente de +1 em sua Evasão. Você pode usar sua habilidade Passo Sombrio para se mover em alcance Muito Longo.\nAto de Desaparecimento: Marque 1 Estresse para ficar Encoberto a qualquer momento. Enquanto estiver Encoberto por essa habilidade, você automaticamente remove a condição Imobilizado, se estiver com ela. Você permanece Encoberto dessa forma até rolar com Medo ou até seu próximo descanso.\nDaggerheart™ Compatible. Terms at Daggerheart.com.",
+       "observacao": "O rótulo do tipo de carta está em inglês (\"Mastery\"). O rótulo da característica de conjuração também está em inglês (\"SPELLCAST TRAIT\"). O rótulo da classe impresso na faixa acima do nome da subclasse está em inglês (\"ROGUE\").",
+       "doLivro": [
+        {
+         "nome": "Fleeting Shadow (Sombra fugaz)",
+         "texto": "ganhe um bônus permanente de +1 na sua Evasão. Você pode usar seu recurso \"Shadow Stepper\" para se mover dentro do alcance de Very Far."
+        },
+        {
+         "nome": "Ato de desaparecimento",
+         "texto": "Marque um Estresse para ficar camuflado a qualquer momento. Quando estiver camuflado por esse recurso, você automaticamente elimina a condição de Restrição, se a tiver. Você permanece camuflado dessa forma até rolar com Medo ou até seu próximo descanso."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "ladino-sindicato",
+     "nome": "Sindicato",
+     "nomeCarta": "SINDICATO",
+     "nomeLivro": "Sindicato",
+     "chamada": "Jogue no Syndicate se quiser ter uma rede de contatos em todos os lugares que for.",
+     "caracteristicaConjuracaoImpressa": "FINESSE",
+     "caracteristicaConjuracao": null,
+     "cartas": {
+      "fundacao": {
+       "arquivo": "Sindicato.png",
+       "imagem": "assets/cartas/subclasses/LADINO/Sindicato.png",
+       "caracteristicas": [
+        {
+         "nome": "Bem Conectado",
+         "texto": "Quando chegar a uma cidade ou ambiente importante, você conhece alguém que considera esse lugar seu lar. Dê um nome a essa pessoa, anote como acha que ela pode ser útil e escolha um dos fatos a seguir:\n• Ela me deve um favor, mas será difícil de encontrar.\n• Vai pedir algo em troca.\n• Está sempre em muitos problemas.\n• Já fomos parceiros. É uma longa história.\n• Nos separamos em maus termos."
+        }
+       ],
+       "texto": "ROGUE\nSINDICATO\nFoundation\nSPELLCAST TRAIT: FINESSE\nBem Conectado: Quando chegar a uma cidade ou ambiente importante, você conhece alguém que considera esse lugar seu lar. Dê um nome a essa pessoa, anote como acha que ela pode ser útil e escolha um dos fatos a seguir:\n• Ela me deve um favor, mas será difícil de encontrar.\n• Vai pedir algo em troca.\n• Está sempre em muitos problemas.\n• Já fomos parceiros. É uma longa história.\n• Nos separamos em maus termos.\nDaggerheart™ Compatible. Terms at Daggerheart.com.",
+       "observacao": "O rótulo do tipo de carta está em inglês (\"Foundation\"). O rótulo da característica de conjuração também está em inglês (\"SPELLCAST TRAIT\"). O rótulo da classe impresso na faixa acima do nome da subclasse está em inglês (\"ROGUE\").",
+       "doLivro": [
+        {
+         "nome": "Bem conectado",
+         "texto": "Ao chegar a uma cidade ou ambiente de destaque, você conhece alguém que mora nesse lugar. Dê um nome a essa pessoa, observe como acha que ela poderia ser útil e escolha um fato da lista a seguir: Eles me devem um favor, mas será difícil encontrá-los. Eles vão pedir algo em troca. Eles estão sempre em um grande problema. Nós costumávamos ficar juntos. É uma longa história. Não nos separamos em bons termos."
+        }
+       ]
+      },
+      "especializacao": {
+       "arquivo": "Sindicato(1).png",
+       "imagem": "assets/cartas/subclasses/LADINO/Sindicato(1).png",
+       "caracteristicas": [
+        {
+         "nome": "Contatos em Todo Lugar",
+         "texto": "Uma vez por sessão, você pode chamar brevemente um contato sombrio. Escolha um dos benefícios a seguir e descreva o que a ajuda pode fazer neste momento:\n• Eles fornecem 1 punhado de ouro, uma ferramenta única ou um objeto mundano que a situação exigir.\n• Na sua próxima jogada de ação, a ajuda deles concede +3 de bônus no resultado do seu Dado de Esperança ou Medo.\n• Na próxima vez que causar dano, eles atacam das sombras, adicionando 2d8 à jogada de dano."
+        }
+       ],
+       "texto": "ROGUE\nSINDICATO\nSpecialization\nSPELLCAST TRAIT: FINESSE\nContatos em Todo Lugar: Uma vez por sessão, você pode chamar brevemente um contato sombrio. Escolha um dos benefícios a seguir e descreva o que a ajuda pode fazer neste momento:\n• Eles fornecem 1 punhado de ouro, uma ferramenta única ou um objeto mundano que a situação exigir.\n• Na sua próxima jogada de ação, a ajuda deles concede +3 de bônus no resultado do seu Dado de Esperança ou Medo.\n• Na próxima vez que causar dano, eles atacam das sombras, adicionando 2d8 à jogada de dano.\nDaggerheart™ Compatible. Terms at Daggerheart.com.",
+       "observacao": "O rótulo do tipo de carta está em inglês (\"Specialization\"). O rótulo da característica de conjuração também está em inglês (\"SPELLCAST TRAIT\"). O rótulo da classe impresso na faixa acima do nome da subclasse está em inglês (\"ROGUE\").",
+       "doLivro": [
+        {
+         "nome": "Contatos em todos os lugares",
+         "texto": "Uma vez por sessão, você pode chamar brevemente um contato obscuro. Escolha um dos benefícios a seguir e descreva o que o trouxe aqui para ajudá-lo neste momento: Eles fornecem 1 punhado de ouro, uma ferramenta exclusiva ou um objeto mundano que a situação exige. Em sua próxima rolagem de ação, a ajuda deles fornece um +3 de bônus no resultado do seu dado de esperança ou medo. Na próxima vez em que você causar dano, eles atacam das sombras, adicionando 2d8 à sua rolagem de dano."
+        }
+       ]
+      },
+      "maestria": {
+       "arquivo": "Sindicato(2).png",
+       "imagem": "assets/cartas/subclasses/LADINO/Sindicato(2).png",
+       "caracteristicas": [
+        {
+         "nome": "Apoio Confiável",
+         "texto": "Você pode usar sua habilidade Contatos em Todo Lugar três vezes por sessão. As opções a seguir são adicionadas à lista de benefícios que você pode escolher ao usar essa habilidade:\n• Quando você marcar 1 ou mais Pontos de Vida, eles podem correr para protegê-lo, reduzindo os Pontos de Vida marcados em 1.\n• Quando fizer uma jogada de Presença em uma conversa, eles te apoiam. Você pode rolar um d20 com seu Dado de Esperança."
+        }
+       ],
+       "texto": "ROGUE\nSINDICATO\nMastery\nSPELLCAST TRAIT: FINESSE\nApoio Confiável: Você pode usar sua habilidade Contatos em Todo Lugar três vezes por sessão. As opções a seguir são adicionadas à lista de benefícios que você pode escolher ao usar essa habilidade:\n• Quando você marcar 1 ou mais Pontos de Vida, eles podem correr para protegê-lo, reduzindo os Pontos de Vida marcados em 1.\n• Quando fizer uma jogada de Presença em uma conversa, eles te apoiam. Você pode rolar um d20 com seu Dado de Esperança.\nDaggerheart™ Compatible. Terms at Daggerheart.com.",
+       "observacao": "O rótulo do tipo de carta está em inglês (\"Mastery\"). O rótulo da característica de conjuração também está em inglês (\"SPELLCAST TRAIT\"). O rótulo da classe impresso na faixa acima do nome da subclasse está em inglês (\"ROGUE\").",
+       "doLivro": [
+        {
+         "nome": "Backup confiável",
+         "texto": "Você pode usar seus \"Contatos em qualquer lugar\" três vezes por sessão. As seguintes opções são adicionadas à lista de benefícios que você pode escolher de quando você usa esse recurso: Quando você marca 1 ou mais pontos de vida, eles podem correr para protegê-lo, reduzindo os pontos de vida marcados em 1. Quando você faz uma rolagem de presença em uma conversa, eles o apoiam. Você pode rolar um d20 como seu Hope Die."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "problemasDeTraducao": [
+    "Título da classe impresso em inglês: 'ROGUE' (não 'Ladino').",
+    "No parágrafo de descrição, a palavra 'Rogues' aparece em inglês ('Rogues são canalhas...'), misturada com 'ladinos' no resto do texto.",
+    "'DOMÉSTICAS' é uma tradução claramente errada de 'Domains' (deveria ser 'Domínios'); os domínios em si ('Meia-noite e Graça') parecem corretos.",
+    "'CARACTERÍSTICA DE FEITIÇO' traz o valor 'Finesse' em inglês, não traduzido (deveria ser algo como 'Presteza' ou similar).",
+    "No recurso de Fundação do Nightwalker ('Shadow Stepper'), o texto está incoerente/quebrado: 'você pode marcar uma corda para desaparecer de onde está e reaparecer em outra área. sombra em um raio de alcance distante.' — 'marcar uma corda' não faz sentido (provavelmente deveria ser 'marcar um Estresse', como no recurso equivalente do Syndicate) e a frase sobre 'sombra em um raio de alcance distante' parece um fragmento cortado/deslocado do texto original.",
+    "O próprio nome do recurso 'Shadow Stepper' não foi traduzido para português.",
+    "No recurso de Maestria 'Fleeting Shadow (Sombra fugaz)', a expressão de alcance 'Very Far' foi deixada em inglês (deveria ser 'Muito Longe').",
+    "Cabeçalho da segunda subclasse impresso como 'SINDICATO', mas o texto de chamada logo abaixo diz 'Jogue no Syndicate...', mantendo o nome em inglês — inconsistência entre título e corpo do texto.",
+    "A frase de chamada do Syndicate está com português estranho/mal formado: 'se quiser ter uma rede de contatos em todos os lugares que for.'",
+    "O nome do recurso de Especialização do Syndicate é 'Contatos em todos os lugares', mas no recurso de Maestria ele é referenciado como 'Contatos em qualquer lugar' — inconsistência de nome entre as duas seções.",
+    "No recurso de Maestria do Syndicate, a expressão 'Hope Die' foi deixada em inglês, não traduzida (deveria ser algo como 'dado de Esperança').",
+    "A tabela de progressão do Ataque furtivo está claramente mal traduzida/incoerente: 'Nível 1→ Nível 1', 'Níveis 2-4→ Nível 2', 'Níveis 5-7→ Nível 3', 'Níveis 8-10→ Nível 4' — o lado direito deveria mostrar a quantidade de d6 (ex.: 1d6, 2d6, 3d6, 4d6), não repetir 'Nível X'.",
+    "A característica de classe 'Cloaked' do original em inglês foi traduzida aqui como 'Camuflado', e não como 'Encapuzado' — nome divergente do esperado para conferência com a errata oficial."
+   ],
+   "pastaCartas": "assets/cartas/subclasses/LADINO"
+  },
+  {
+   "id": "mago",
+   "nome": "Mago",
+   "nomeLivro": "WIZARD",
+   "descricao": "Seja por meio de uma instituição ou de estudo individual, aqueles conhecidos como magos adquirem e aprimoram um imenso poder mágico ao longo de anos de aprendizado usando uma variedade de ferramentas, incluindo livros, pedras, poções e ervas. Alguns magos dedicam suas vidas a dominar uma determinada escola de magia, enquanto outros aprendem em uma ampla variedade de disciplinas. Muitos magos se tornam figuras sábias e poderosas em suas comunidades, aconselhando governantes, fornecendo remédios e curas e até mesmo liderando conselhos de guerra. Embora todos esses magos trabalhem com o objetivo comum de coletar conhecimento mágico, os magos costumam ter mais conflitos dentro de suas próprias fileiras, pois a aquisição, a manutenção e o compartilhamento de segredos poderosos é um tópico de intenso debate que resultou em inúmeras mortes.",
+   "dominios": [
+    "CODEX",
+    "SPLENDOR"
+   ],
+   "dominiosNomes": [
+    "Códice",
+    "Esplendor"
+   ],
+   "evasaoInicial": 11,
+   "pontosDeVidaIniciais": 5,
+   "itensDeClasse": [
+    "Um livro que você está tentando traduzir",
+    "um pequeno e inofensivo animal de estimação elemental"
+   ],
+   "caracteristicaEsperanca": {
+    "nome": "Desta vez não",
+    "texto": "gaste 3 de Esperança para forçar um adversário dentro do alcance de Longe a rolar novamente uma rolagem de ataque ou dano."
+   },
+   "caracteristicasDeClasse": [
+    {
+     "nome": "Prestidigitação",
+     "texto": "Você pode realizar efeitos mágicos inofensivos e sutis à vontade. Por exemplo, você pode mudar a cor de um objeto, criar um cheiro, acender uma vela, fazer um pequeno objeto flutuar, iluminar uma sala ou consertar um pequeno objeto."
+    },
+    {
+     "nome": "Padrões estranhos",
+     "texto": "Escolha um número entre 1 e 12. Quando rolar esse número em um dado de Dualidade, ganhe uma Esperança ou elimine uma Estresse. Você pode alterar esse número quando fizer um descanso longo."
+    }
+   ],
+   "perguntasDeFundo": [
+    "Para quais responsabilidades sua comunidade contava com você? Como você os decepcionou?",
+    "Você passou a vida procurando por um livro ou objeto de grande significado. O que é e por que é tão importante para você?",
+    "Você tem um rival poderoso. Quem é ele e por que você está tão determinado a derrotá-lo?"
+   ],
+   "conexoes": [
+    "Que favor eu lhe pedi que você não tem certeza se pode cumprir?",
+    "Que hobby estranho ou fascínio estranho nós dois compartilhamos?",
+    "Que segredo seu você confiou somente a mim?"
+   ],
+   "subclasses": [
+    {
+     "id": "mago-escola-do-conhecimento",
+     "nome": "Escola do Conhecimento",
+     "nomeCarta": "ESCOLA DO CONHECIMENTO",
+     "nomeLivro": "Escola de Conhecimento",
+     "chamada": "Jogue a School of Knowledge se quiser ter uma compreensão profunda do mundo ao seu redor.",
+     "caracteristicaConjuracaoImpressa": "KNOWLEDGE",
+     "caracteristicaConjuracao": "Conhecimento",
+     "cartas": {
+      "fundacao": {
+       "arquivo": "Escola do Conhecimento.png",
+       "imagem": "assets/cartas/subclasses/MAGO/Escola do Conhecimento.png",
+       "caracteristicas": [
+        {
+         "nome": "Preparado",
+         "texto": "Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso."
+        },
+        {
+         "nome": "Adepto",
+         "texto": "Quando utilizar uma Experiência, você pode marcar 1 Estresse em vez de gastar uma Esperança. Se fizer isso, dobre seu modificador de Experiência para essa jogada."
+        }
+       ],
+       "texto": "WIZARD\nESCOLA DO CONHECIMENTO\nFoundation\nPreparado: Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso.\nAdepto: Quando utilizar uma Experiência, você pode marcar 1 Estresse em vez de gastar uma Esperança. Se fizer isso, dobre seu modificador de Experiência para essa jogada.",
+       "observacao": "Esta carta não possui a linha \"SPELLCAST TRAIT\" impressa (diferente das cartas de Escola da Guerra). O rótulo do tipo de carta está em inglês (\"Foundation\") e o rótulo da classe (\"WIZARD\") também está em inglês. | Corrigido após reconferência visual: a linha SPELLCAST TRAIT: KNOWLEDGE existe nesta carta (a primeira leitura tinha registrado ausência).",
+       "doLivro": [
+        {
+         "nome": "Preparado",
+         "texto": "Pegue uma carta de domínio adicional do seu nível ou inferior de um domínio ao qual você tenha acesso."
+        },
+        {
+         "nome": "Adepto",
+         "texto": "Ao utilizar uma Experiência, você pode marcar um Estresse em vez de gastar uma Esperança. Se fizer isso, dobre seu modificador de Experiência para essa rolagem."
+        }
+       ]
+      },
+      "especializacao": {
+       "arquivo": "Escola do Conhecimento(1).png",
+       "imagem": "assets/cartas/subclasses/MAGO/Escola do Conhecimento(1).png",
+       "caracteristicas": [
+        {
+         "nome": "Realizado",
+         "texto": "Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso."
+        },
+        {
+         "nome": "Memória Perfeita",
+         "texto": "Uma vez por descanso, quando você recuperar uma carta de domínio em seu cofre, pode reduzir o Custo de Recuperação dela em 1."
+        }
+       ],
+       "texto": "WIZARD\nESCOLA DO CONHECIMENTO\nSpecialization\nRealizado: Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso.\nMemória Perfeita: Uma vez por descanso, quando você recuperar uma carta de domínio em seu cofre, pode reduzir o Custo de Recuperação dela em 1.",
+       "observacao": "Esta carta não possui a linha \"SPELLCAST TRAIT\" impressa. O rótulo do tipo de carta está em inglês (\"Specialization\") e o rótulo da classe (\"WIZARD\") também está em inglês. | Corrigido após reconferência visual: a linha SPELLCAST TRAIT: KNOWLEDGE existe nesta carta (a primeira leitura tinha registrado ausência).",
+       "doLivro": [
+        {
+         "nome": "Realizado",
+         "texto": "Pegue uma carta de domínio adicional do seu nível ou inferior de um domínio ao qual você tenha acesso."
+        },
+        {
+         "nome": "Recordação perfeita",
+         "texto": "Uma vez por descanso, ao chamar de volta um card de domínio em seu cofre, você pode reduzir o custo de chamada dele em 1."
+        }
+       ]
+      },
+      "maestria": {
+       "arquivo": "Escola do Conhecimento(2).png",
+       "imagem": "assets/cartas/subclasses/MAGO/Escola do Conhecimento(2).png",
+       "caracteristicas": [
+        {
+         "nome": "Brilhante",
+         "texto": "Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso."
+        },
+        {
+         "nome": "Especialização Apurada",
+         "texto": "Quando usar uma Experiência, role um d6. Com um resultado de 5 ou mais, você pode usá-la sem gastar Esperança."
+        }
+       ],
+       "texto": "WIZARD\nESCOLA DO CONHECIMENTO\nMastery\nBrilhante: Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso.\nEspecialização Apurada: Quando usar uma Experiência, role um d6. Com um resultado de 5 ou mais, você pode usá-la sem gastar Esperança.",
+       "observacao": "Esta carta não possui a linha \"SPELLCAST TRAIT\" impressa. O rótulo do tipo de carta está em inglês (\"Mastery\") e o rótulo da classe (\"WIZARD\") também está em inglês. | Corrigido após reconferência visual: a linha SPELLCAST TRAIT: KNOWLEDGE existe nesta carta (a primeira leitura tinha registrado ausência).",
+       "doLivro": [
+        {
+         "nome": "Brilhante",
+         "texto": "Pegue uma carta de domínio adicional do seu nível ou inferior de um domínio ao qual você tenha acesso."
+        },
+        {
+         "nome": "Experiência aprimorada",
+         "texto": "Quando você usar uma Experiência, role um d6. Se o resultado for 5 ou mais, você poderá usá-la sem gastar Esperança."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "mago-escola-da-guerra",
+     "nome": "Escola da Guerra",
+     "nomeCarta": "ESCOLA DA GUERRA",
+     "nomeLivro": "Escola de Guerra",
+     "chamada": "Jogue a School of War se quiser utilizar a magia treinada para a violência.",
+     "caracteristicaConjuracaoImpressa": "KNOWLEDGE",
+     "caracteristicaConjuracao": "Conhecimento",
+     "cartas": {
+      "fundacao": {
+       "arquivo": "Escola da Guerra.png",
+       "imagem": "assets/cartas/subclasses/MAGO/Escola da Guerra.png",
+       "caracteristicas": [
+        {
+         "nome": "Mago de Batalha",
+         "texto": "Você focou seus estudos para se tornar uma força invencível no campo de batalha. Ganhe um espaço adicional de Pontos de Vida."
+        },
+        {
+         "nome": "Enfrente Seu Medo",
+         "texto": "Quando você acertar uma jogada de ataque com Medo, cause 1d10 de dano mágico extra."
+        }
+       ],
+       "texto": "WIZARD\nESCOLA DA GUERRA\nFoundation\nSPELLCAST TRAIT: KNOWLEDGE\nMago de Batalha: Você focou seus estudos para se tornar uma força invencível no campo de batalha. Ganhe um espaço adicional de Pontos de Vida.\nEnfrente Seu Medo: Quando você acertar uma jogada de ataque com Medo, cause 1d10 de dano mágico extra.",
+       "observacao": "O rótulo do tipo de carta está em inglês (\"Foundation\"). O rótulo da classe (\"WIZARD\") e o rótulo \"SPELLCAST TRAIT\" com o valor \"KNOWLEDGE\" também estão impressos em inglês na carta, não traduzidos para \"MAGO\" / \"CARACTERÍSTICA DE CONJURAÇÃO: CONHECIMENTO\".",
+       "doLivro": [
+        {
+         "nome": "Mago de Batalha",
+         "texto": "Você concentrou seus estudos em se tornar uma força inconquistável no campo de batalha. Ganhe um espaço adicional de pontos de vida."
+        },
+        {
+         "nome": "Enfrente seu medo",
+         "texto": "quando for bem-sucedido com Medo em uma rolagem de ataque, você causa 1d10 de dano mágico extra."
+        }
+       ]
+      },
+      "especializacao": {
+       "arquivo": "Escola da Guerra(1).png",
+       "imagem": "assets/cartas/subclasses/MAGO/Escola da Guerra(1).png",
+       "caracteristicas": [
+        {
+         "nome": "Escudo Conjurado",
+         "texto": "Você pode manter uma barreira protetora de magia. Enquanto tiver pelo menos 2 Esperanças, você adiciona sua Proficiência à sua Evasão."
+        },
+        {
+         "nome": "Movido pelo Medo",
+         "texto": "O dano mágico extra da sua habilidade Enfrente Seu Medo aumenta para 2d10."
+        }
+       ],
+       "texto": "WIZARD\nESCOLA DA GUERRA\nSpecialization\nSPELLCAST TRAIT: KNOWLEDGE\nEscudo Conjurado: Você pode manter uma barreira protetora de magia. Enquanto tiver pelo menos 2 Esperanças, você adiciona sua Proficiência à sua Evasão.\nMovido pelo Medo: O dano mágico extra da sua habilidade Enfrente Seu Medo aumenta para 2d10.",
+       "observacao": "O rótulo do tipo de carta está em inglês (\"Specialization\"). O rótulo da classe (\"WIZARD\") e o rótulo \"SPELLCAST TRAIT\" com o valor \"KNOWLEDGE\" também estão impressos em inglês na carta.",
+       "doLivro": [
+        {
+         "nome": "Conjurar Escudo",
+         "texto": "Você pode manter uma barreira protetora de magia. Enquanto tiver pelo menos 2 Esperanças, você adiciona sua Proficiência à sua Evasão."
+        },
+        {
+         "nome": "Alimentado pelo medo",
+         "texto": "o dano mágico extra da sua característica \"Enfrente seu medo\" aumenta para 2d10."
+        }
+       ]
+      },
+      "maestria": {
+       "arquivo": "Escola da Guerra(2).png",
+       "imagem": "assets/cartas/subclasses/MAGO/Escola da Guerra(2).png",
+       "caracteristicas": [
+        {
+         "nome": "Prosperar no Caos",
+         "texto": "Quando você acertar um ataque, pode marcar 1 Estresse após rolar o dano para forçar o alvo a marcar um Ponto de Vida adicional."
+        },
+        {
+         "nome": "Sem Medo",
+         "texto": "O dano mágico extra da sua habilidade Enfrente Seu Medo aumenta para 3d10."
+        }
+       ],
+       "texto": "WIZARD\nESCOLA DA GUERRA\nMastery\nSPELLCAST TRAIT: KNOWLEDGE\nProsperar no Caos: Quando você acertar um ataque, pode marcar 1 Estresse após rolar o dano para forçar o alvo a marcar um Ponto de Vida adicional.\nSem Medo: O dano mágico extra da sua habilidade Enfrente Seu Medo aumenta para 3d10.",
+       "observacao": "O rótulo do tipo de carta está em inglês (\"Mastery\"). O rótulo da classe (\"WIZARD\") e o rótulo \"SPELLCAST TRAIT\" com o valor \"KNOWLEDGE\" também estão impressos em inglês na carta.",
+       "doLivro": [
+        {
+         "nome": "Prosperar no caos",
+         "texto": "Ao ser bem-sucedido em um ataque, você pode marcar um Estresse após rolar o dano para forçar o alvo a marcar um Hit Point adicional."
+        },
+        {
+         "nome": "Não tenha medo",
+         "texto": "o dano mágico extra da sua característica \"Enfrente seu medo\" aumenta para 3d10."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "problemasDeTraducao": [
+    "Título da classe impresso em inglês: 'WIZARD' (não foi traduzido para 'Mago' na página).",
+    "Seção 'DOMÉSTICAS' é uma tradução ruim/errada de 'Domains' (deveria ser 'Domínios').",
+    "A frase de chamada da Escola de Conhecimento mantém o termo em inglês 'School of Knowledge' em vez de 'Escola de Conhecimento'.",
+    "A frase de chamada da Escola de Guerra mantém o termo em inglês 'School of War' em vez de 'Escola de Guerra'.",
+    "No recurso 'Recordação perfeita' o texto usa a palavra em inglês 'card' em vez de 'carta' ('chamar de volta um card de domínio').",
+    "No recurso de maestria 'Prosperar no caos' o texto usa o termo em inglês 'Hit Point' em vez de 'Ponto de Vida'.",
+    "O nome do recurso de Esperança aparece com espaçamento estranho no PDF, exibido como 'Desta veznão:' (sem espaço correto entre 'vez' e 'não').",
+    "Na descrição de 'Prestidigitação', a palavra 'acender' aparece com letras espaçadas de forma estranha no PDF ('a c e n d e r'), possível artefato de diagramação.",
+    "O título da seção 'CONEXÕES' aparece impresso como 'CONEXõES' (erro tipográfico, com 'õ' minúsculo no meio da palavra em maiúsculas).",
+    "As duas páginas lidas (pag-051.png e pag-052.png) já contêm o título, a descrição completa e todo o conteúdo restante da classe Mago; não há trecho faltando ou cortado entre elas."
+   ],
+   "pastaCartas": "assets/cartas/subclasses/MAGO"
+  },
+  {
+   "id": "patrulheiro",
+   "nome": "Patrulheiro",
+   "nomeLivro": "RANGER",
+   "descricao": "Os rangers são caçadores altamente qualificados que, apesar de suas habilidades marciais, raramente emprestam suas habilidades a um exército. Por meio do domínio do corpo e de uma profunda compreensão da natureza selvagem, os rangers se tornam estrategistas astutos, perseguindo suas presas com astúcia e paciência. Muitos rangers rastreiam e lutam ao lado de um companheiro animal com o qual criaram um poderoso vínculo espiritual. Ao aperfeiçoar suas habilidades na natureza, os guardas-florestais se tornam rastreadores experientes, tão propensos a enredar seus inimigos em uma armadilha quanto a atacá-los de frente.",
+   "dominios": [
+    "BONE",
+    "SAGE"
+   ],
+   "dominiosNomes": [
+    "Osso",
+    "Sábio"
+   ],
+   "evasaoInicial": 12,
+   "pontosDeVidaIniciais": 6,
+   "itensDeClasse": [
+    "Um troféu de sua primeira morte ou uma bússola aparentemente quebrada"
+   ],
+   "caracteristicaEsperanca": {
+    "nome": "Hold Them Off",
+    "texto": "Gaste 3 de Esperança quando for bem-sucedido em um ataque com uma arma para usar a mesma rolagem contra dois adversários adicionais dentro do alcance do ataque."
+   },
+   "caracteristicasDeClasse": [
+    {
+     "nome": "Foco do Ranger",
+     "texto": "Gaste uma Esperança e faça um ataque contra um alvo. Se for bem-sucedido, cause o dano normal do seu ataque e transforme temporariamente o alvo do ataque em seu Foco. Até que essa característica termine ou você faça de uma criatura diferente o seu Foco, você ganha os seguintes benefícios contra o seu Foco: Você sabe exatamente em que direção eles estão. Quando você causa dano a eles, eles devem marcar um Estresse. Ao falhar em um ataque contra eles, você pode usar o recurso Foco do Ranger para rolar novamente seus Dados de Dualidade."
+    }
+   ],
+   "perguntasDeFundo": [
+    "Uma criatura terrível feriu sua comunidade e você prometeu caçá-la. O que são elas e que rastro ou sinal único deixam para trás?",
+    "Sua primeira morte quase o matou também. O que foi isso e que parte de você nunca mais foi a mesma depois desse evento?",
+    "Você já viajou por muitas terras perigosas, mas qual é o único lugar que você se recusa a ir?"
+   ],
+   "conexoes": [
+    "Que competição amigável nós temos?",
+    "Por que você age de forma diferente quando estamos sozinhos e quando há outras pessoas por perto?",
+    "Que ameaça você me pediu para observar e por que está preocupado com ela?"
+   ],
+   "subclasses": [
+    {
+     "id": "patrulheiro-laco-bestial",
+     "nome": "Laço Bestial",
+     "nomeCarta": "LAÇO BESTIAL",
+     "nomeLivro": "Beastbound",
+     "chamada": "Jogue com o Beastbound se quiser formar um vínculo profundo com um aliado animal.",
+     "caracteristicaConjuracaoImpressa": "AGILITY",
+     "caracteristicaConjuracao": "Agilidade",
+     "cartas": {
+      "fundacao": {
+       "arquivo": "Laço Bestial.png",
+       "imagem": "assets/cartas/subclasses/RANGER/Laço Bestial.png",
+       "caracteristicas": [
+        {
+         "nome": "Companheiro",
+         "texto": "Você tem um companheiro animal à sua escolha (a critério do GM). Ele permanece ao seu lado, a menos que você diga o contrário. Use a ficha de Companheiro Patrulheiro. Ao subir de nível, escolha também uma opção de evolução para seu companheiro nessa ficha."
+        }
+       ],
+       "texto": "LAÇO BESTIAL\nFoundation\nSPELLCAST TRAIT: AGILITY\nCompanheiro: Você tem um companheiro animal à sua escolha (a critério do GM). Ele permanece ao seu lado, a menos que você diga o contrário. Use a ficha de Companheiro Patrulheiro. Ao subir de nível, escolha também uma opção de evolução para seu companheiro nessa ficha.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Foundation\"); mapeado para \"Fundação\".",
+       "doLivro": [
+        {
+         "nome": "Companheiro",
+         "texto": "Você tem um companheiro animal de sua escolha (a critério do GM). Ele fica ao seu lado, a menos que você diga o contrário. Pegue a folha Ranger Companion. Ao subir o nível de seu personagem, escolha também uma opção de aumento de nível para seu companheiro nessa ficha."
+        }
+       ]
+      },
+      "especializacao": {
+       "arquivo": "Laço Bestial(1).png",
+       "imagem": "assets/cartas/subclasses/RANGER/Laço Bestial(1).png",
+       "caracteristicas": [
+        {
+         "nome": "Treinamento Especializado",
+         "texto": "Escolha uma opção de evolução adicional para seu companheiro."
+        },
+        {
+         "nome": "Vínculo de Batalha",
+         "texto": "Quando um adversário atacar você enquanto estiver dentro do alcance Corpo a Corpo do seu companheiro, você ganha +2 de bônus em sua Evasão contra esse ataque."
+        }
+       ],
+       "texto": "LAÇO BESTIAL\nSpecialization\nSPELLCAST TRAIT: AGILITY\nTreinamento Especializado: Escolha uma opção de evolução adicional para seu companheiro.\nVínculo de Batalha: Quando um adversário atacar você enquanto estiver dentro do alcance Corpo a Corpo do seu companheiro, você ganha +2 de bônus em sua Evasão contra esse ataque.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Specialization\"); mapeado para \"Especialização\".",
+       "doLivro": [
+        {
+         "nome": "Treinamento especializado",
+         "texto": "Escolha uma opção adicional de aumento de nível para seu companheiro."
+        },
+        {
+         "nome": "Battle-Bonded (vínculo de batalha)",
+         "texto": "Quando um adversário o ataca enquanto está dentro do alcance corpo a corpo do seu companheiro, você ganha um bônus de +2 na sua Evasão contra o ataque."
+        }
+       ]
+      },
+      "maestria": {
+       "arquivo": "Laço Bestial(2).png",
+       "imagem": "assets/cartas/subclasses/RANGER/Laço Bestial(2).png",
+       "caracteristicas": [
+        {
+         "nome": "Treinamento Avançado",
+         "texto": "Escolha duas opções de evolução adicionais para seu companheiro."
+        },
+        {
+         "nome": "Amigo Leal",
+         "texto": "Uma vez por descanso longo, quando o dano de um ataque fosse marcar o último Estresse do seu companheiro ou seu último Ponto de Vida e vocês estiverem em alcance Próximo, você ou seu companheiro podem correr para o lado do outro e sofrer esse dano no lugar."
+        }
+       ],
+       "texto": "LAÇO BESTIAL\nMastery\nSPELLCAST TRAIT: AGILITY\nTreinamento Avançado: Escolha duas opções de evolução adicionais para seu companheiro.\nAmigo Leal: Uma vez por descanso longo, quando o dano de um ataque fosse marcar o último Estresse do seu companheiro ou seu último Ponto de Vida e vocês estiverem em alcance Próximo, você ou seu companheiro podem correr para o lado do outro e sofrer esse dano no lugar.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Mastery\"); mapeado para \"Maestria\".",
+       "doLivro": [
+        {
+         "nome": "Treinamento avançado",
+         "texto": "Escolha duas opções adicionais de aumento de nível para seu companheiro."
+        },
+        {
+         "nome": "Amigo leal",
+         "texto": "Uma vez por descanso longo, quando o dano de um ataque marcar o último Estresse do seu companheiro ou o seu último Ponto de Vida e vocês estiverem à curta distância um do outro, você ou seu companheiro podem correr para o lado do outro e receber esse dano."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "patrulheiro-explorador",
+     "nome": "Explorador",
+     "nomeCarta": "EXPLORADOR",
+     "nomeLivro": "O Wayfinder",
+     "chamada": "Jogue com o Wayfinder se quiser caçar sua presa e atacar com força mortal.",
+     "caracteristicaConjuracaoImpressa": "AGILITY",
+     "caracteristicaConjuracao": "Agilidade",
+     "cartas": {
+      "fundacao": {
+       "arquivo": "Explorador.png",
+       "imagem": "assets/cartas/subclasses/RANGER/Explorador.png",
+       "caracteristicas": [
+        {
+         "nome": "Predador Implacável",
+         "texto": "Quando fizer uma jogada de dano, você pode marcar 1 Estresse para ganhar +1 de bônus na sua Proficiência. Além disso, quando causar dano Severo a um adversário, ele deve marcar 1 Estresse."
+        },
+        {
+         "nome": "Caminho à Frente",
+         "texto": "Quando estiver viajando para um lugar que já visitou anteriormente ou carregar um objeto que esteve nesse local antes, você pode identificar o caminho mais curto e direto para seu destino."
+        }
+       ],
+       "texto": "EXPLORADOR\nFoundation\nSPELLCAST TRAIT: AGILITY\nPredador Implacável: Quando fizer uma jogada de dano, você pode marcar 1 Estresse para ganhar +1 de bônus na sua Proficiência. Além disso, quando causar dano Severo a um adversário, ele deve marcar 1 Estresse.\nCaminho à Frente: Quando estiver viajando para um lugar que já visitou anteriormente ou carregar um objeto que esteve nesse local antes, você pode identificar o caminho mais curto e direto para seu destino.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Foundation\"); mapeado para \"Fundação\".",
+       "doLivro": [
+        {
+         "nome": "Predador Implacável",
+         "texto": "Ao fazer uma rolagem de dano, você pode marcar um Estresse para ganhar um bônus de +1 na sua Proficiência. Além disso, quando você causa dano Grave a um adversário, ele deve marcar um Estresse."
+        },
+        {
+         "nome": "Caminho à frente",
+         "texto": "Quando você está viajando para um local que já visitou anteriormente ou carrega um objeto que já esteve no local antes, você pode identificar o caminho mais curto e direto para o seu destino."
+        }
+       ]
+      },
+      "especializacao": {
+       "arquivo": "Explorador(1).png",
+       "imagem": "assets/cartas/subclasses/RANGER/Explorador(1).png",
+       "caracteristicas": [
+        {
+         "nome": "Predador Elusivo",
+         "texto": "Quando seu Foco fizer um ataque contra você, você ganha +2 de bônus na sua Evasão contra esse ataque."
+        }
+       ],
+       "texto": "EXPLORADOR\nSpecialization\nSPELLCAST TRAIT: AGILITY\nPredador Elusivo: Quando seu Foco fizer um ataque contra você, você ganha +2 de bônus na sua Evasão contra esse ataque.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Specialization\"); mapeado para \"Especialização\".",
+       "doLivro": [
+        {
+         "nome": "Elusive Predator (Predador Elusivo)",
+         "texto": "Quando seu Foco faz um ataque contra você, você ganha um bônus de +2 em sua Evasão contra o ataque."
+        }
+       ]
+      },
+      "maestria": {
+       "arquivo": "Explorador(2).png",
+       "imagem": "assets/cartas/subclasses/RANGER/Explorador(2).png",
+       "caracteristicas": [
+        {
+         "nome": "Predador de Topo",
+         "texto": "Antes de fazer uma jogada de ataque contra seu Foco, você pode gastar 1 Esperança. Em um ataque bem-sucedido, você remove 1 Medo da reserva de Medo do Mestre."
+        }
+       ],
+       "texto": "EXPLORADOR\nMastery\nSPELLCAST TRAIT: AGILITY\nPredador de Topo: Antes de fazer uma jogada de ataque contra seu Foco, você pode gastar 1 Esperança. Em um ataque bem-sucedido, você remove 1 Medo da reserva de Medo do Mestre.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Mastery\"); mapeado para \"Maestria\".",
+       "doLivro": [
+        {
+         "nome": "Predador Apex",
+         "texto": "Antes de fazer uma rolagem de ataque contra seu Foco, você pode gastar uma Esperança. Em um ataque bem-sucedido, você remove um Fear da reserva de Fear do GM."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "problemasDeTraducao": [
+    "Título da classe permanece em inglês: 'RANGER' (não traduzido para 'Patrulheiro' no cabeçalho impresso).",
+    "'Hold Them Off' (nome da característica de Esperança) ficou em inglês, sem tradução ao lado.",
+    "'RECURSO ESPERANÇA DO GUARDA FLORESTAL' usa 'guarda florestal' em vez de 'ranger/patrulheiro', inconsistente com o restante do texto.",
+    "'Battle-Bonded (vínculo de batalha)' ficou parcialmente em inglês, com a tradução entre parênteses.",
+    "'Elusive Predator (Predador Elusivo)' ficou parcialmente em inglês, com a tradução entre parênteses.",
+    "A subclasse Wayfinder é chamada de 'O Wayfinder' no título da seção, mas de apenas 'Wayfinder' no texto 'Escolha a subclasse Beastbound ou Wayfinder' — nome não totalmente traduzido/localizado (permanece em inglês, sem versão em português).",
+    "'Beastbound' também permanece integralmente em inglês, sem tradução do nome da subclasse.",
+    "'Pegue a folha Ranger Companion' — nome da ficha 'Ranger Companion' ficou em inglês, não traduzido para 'Ficha do Companheiro Animal' ou similar.",
+    "'Amigo leal' (recurso de maestria do Beastbound) parece truncado/mal formatado ao final da página 39, mas o texto continua coerente — apenas atenção ao corte de página.",
+    "A ficha do Companheiro Animal (Ranger Companion) está nas páginas 41-42, fora das duas páginas fornecidas (39-40), e não foi transcrita conforme instrução."
+   ],
+   "pastaCartas": "assets/cartas/subclasses/RANGER"
+  },
+  {
+   "id": "seraph",
+   "nome": "Seraph",
+   "nomeLivro": "SERAPH",
+   "descricao": "Os serafins são lutadores e curandeiros divinos imbuídos de um propósito sagrado. Existe uma grande variedade de divindades nos reinos e, portanto, vários tipos de serafins são designados por esses deuses. Seu ethos tradicionalmente se alinha com o domínio ou os objetivos de seu deus, como defender os fracos, exigir vingança, proteger uma terra ou artefato ou defender uma fé específica. Alguns serafins se aliam a um exército ou localidade, para satisfação de seus governantes, mas outros cruzados lutam em oposição às loucuras do Reino Mortal. É melhor ser aliado de um serafim do que inimigo dele, pois eles são inimigos terríveis para aqueles que desafiam seu propósito.",
+   "dominios": [
+    "SPLENDOR",
+    "VALOR"
+   ],
+   "dominiosNomes": [
+    "Esplendor",
+    "Valor"
+   ],
+   "evasaoInicial": 9,
+   "pontosDeVidaIniciais": 7,
+   "itensDeClasse": [
+    "Um pacote de oferendas ou um símbolo de seu deus"
+   ],
+   "caracteristicaEsperanca": {
+    "nome": "Suporte à vida",
+    "texto": "Gaste 3 de Esperança para eliminar um ponto de vida de um aliado que esteja a curta distância."
+   },
+   "caracteristicasDeClasse": [
+    {
+     "nome": "Dados de oração",
+     "texto": "No início de cada sessão, role um número de d4s igual ao traço Spellcast de sua subclasse e coloque-os em sua ficha de personagem no espaço fornecido. Esses são seus dados de oração. Você pode gastar qualquer número de Dados de Oração para ajudar a si mesmo ou a um aliado dentro do alcance de Longe. Você pode usar o valor de um dado gasto para reduzir o dano recebido, adicionar ao resultado de uma rolagem após a rolagem ou ganhe Esperança igual ao resultado. No final de cada sessão, limpe todos os dados de oração não gastos."
+    }
+   ],
+   "perguntasDeFundo": [
+    "A qual deus você se dedicou? Que façanha incrível eles realizaram por você em um momento de desespero?",
+    "Como sua aparência mudou depois de fazer seu juramento?",
+    "De que maneira estranha ou única você se comunica com seu deus?"
+   ],
+   "conexoes": [
+    "Que promessa você me fez fazer, caso morresse no campo de batalha?",
+    "Por que você me faz tantas perguntas sobre meu Deus?",
+    "Você me disse para proteger um membro do nosso grupo acima de todos os outros, até de você mesmo. Quem são eles e por quê?"
+   ],
+   "subclasses": [
+    {
+     "id": "seraph-portador-divino",
+     "nome": "Portador Divino",
+     "nomeCarta": "PORTADOR DIVINO",
+     "nomeLivro": "Soldador Divino",
+     "chamada": "Jogue com o Divine Wielder se quiser dominar o campo de batalha com uma arma lendária.",
+     "caracteristicaConjuracaoImpressa": "STRENGTH",
+     "caracteristicaConjuracao": null,
+     "cartas": {
+      "fundacao": {
+       "arquivo": "portador divino.png",
+       "imagem": "assets/cartas/subclasses/SERAPH/portador divino.png",
+       "caracteristicas": [
+        {
+         "nome": "Arma Espiritual",
+         "texto": "Quando você estiver com uma arma equipada com alcance Corpo a Corpo ou Muito Próximo, ela pode voar de sua mão para atacar um adversário em alcance Próximo e depois retornar para você. Você pode marcar 1 Estresse para mirar um adversário adicional dentro do alcance com a mesma jogada de ataque."
+        },
+        {
+         "nome": "Toque Moderado",
+         "texto": "Uma vez por descanso longo, toque uma criatura e remova 2 Pontos de Vida ou 2 Estresses dela."
+        }
+       ],
+       "texto": "SERAPH\nPORTADOR DIVINO\nFoundation\nSPELLCAST TRAIT: STRENGTH\nArma Espiritual: Quando você estiver com uma arma equipada com alcance Corpo a Corpo ou Muito Próximo, ela pode voar de sua mão para atacar um adversário em alcance Próximo e depois retornar para você. Você pode marcar 1 Estresse para mirar um adversário adicional dentro do alcance com a mesma jogada de ataque.\nToque Moderado: Uma vez por descanso longo, toque uma criatura e remova 2 Pontos de Vida ou 2 Estresses dela.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Foundation\"); mapeado para \"Fundação\". O rótulo \"SPELLCAST TRAIT\" também está em inglês.",
+       "doLivro": [
+        {
+         "nome": "Arma espiritual",
+         "texto": "Quando você tem uma arma equipada com alcance corpo a corpo ou muito próximo, ela pode voar da sua mão para atacar um adversário dentro do alcance próximo e depois retornar para você. Você pode marcar um Estresse para atingir um adversário adicional dentro do alcance com a mesma rolagem de ataque."
+        },
+        {
+         "nome": "Toque poupador",
+         "texto": "Uma vez por descanso longo, toque em uma criatura e elimine 2 pontos de vida ou 2 de estresse dela."
+        }
+       ]
+      },
+      "especializacao": {
+       "arquivo": "portador divino(1).png",
+       "imagem": "assets/cartas/subclasses/SERAPH/portador divino(1).png",
+       "caracteristicas": [
+        {
+         "nome": "Devoto",
+         "texto": "Quando você rolar seus Dados de Oração, pode rolar um dado adicional e descartar o resultado mais baixo. Além disso, pode usar a habilidade Toque Moderado duas vezes em vez de uma por descanso longo."
+        }
+       ],
+       "texto": "SERAPH\nPORTADOR DIVINO\nSpecialization\nSPELLCAST TRAIT: STRENGTH\nDevoto: Quando você rolar seus Dados de Oração, pode rolar um dado adicional e descartar o resultado mais baixo. Além disso, pode usar a habilidade Toque Moderado duas vezes em vez de uma por descanso longo.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Specialization\"); mapeado para \"Especialização\". O rótulo \"SPELLCAST TRAIT\" também está em inglês.",
+       "doLivro": [
+        {
+         "nome": "Devoto",
+         "texto": "Ao rolar seus dados de oração, você pode rolar um dado adicional e descartar o resultado mais baixo. Além disso, você pode usar o recurso \"Sparing Touch\" duas vezes em vez de uma vez por descanso longo."
+        }
+       ]
+      },
+      "maestria": {
+       "arquivo": "portador divino(2).png",
+       "imagem": "assets/cartas/subclasses/SERAPH/portador divino(2).png",
+       "caracteristicas": [
+        {
+         "nome": "Ressonância Sagrada",
+         "texto": "Quando você rolar dano para a habilidade Arma Espiritual, se algum dos resultados dos dados for igual, dobre o valor de cada dado correspondente. Por exemplo, se você rolar dois 5, eles contarão como dois 10."
+        }
+       ],
+       "texto": "SERAPH\nPORTADOR DIVINO\nMastery\nSPELLCAST TRAIT: STRENGTH\nRessonância Sagrada: Quando você rolar dano para a habilidade Arma Espiritual, se algum dos resultados dos dados for igual, dobre o valor de cada dado correspondente. Por exemplo, se você rolar dois 5, eles contarão como dois 10.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Mastery\"); mapeado para \"Maestria\". O rótulo \"SPELLCAST TRAIT\" também está em inglês.",
+       "doLivro": [
+        {
+         "nome": "Ressonância sagrada",
+         "texto": "Quando você rolar o dano para a característica \"Spirit Weapon\" (Arma espiritual), se algum dos resultados do dado for igual, dobre o valor de cada dado igual. Por exemplo, se você rolar dois 5s, eles contarão como dois 10s."
+        }
+       ]
+      }
+     }
+    },
+    {
+     "id": "seraph-sentinela-alado",
+     "nome": "Sentinela Alado",
+     "nomeCarta": "SENTINELA ALADO",
+     "nomeLivro": "Sentinela Alada",
+     "chamada": "Jogue com o Winged Sentinel se quiser lutar e desferir golpes esmagadores do céu.",
+     "caracteristicaConjuracaoImpressa": "STRENGTH",
+     "caracteristicaConjuracao": null,
+     "cartas": {
+      "fundacao": {
+       "arquivo": "Sentinela Alado.png",
+       "imagem": "assets/cartas/subclasses/SERAPH/Sentinela Alado.png",
+       "caracteristicas": [
+        {
+         "nome": "Asas de Luz",
+         "texto": "Você pode voar. Enquanto estiver voando, pode fazer o seguinte:\n• Marque 1 Estresse para pegar e carregar outra criatura disposta de tamanho aproximado ao seu ou menor.\n• Gaste 1 Esperança para causar 1d8 de dano extra em um ataque bem-sucedido."
+        }
+       ],
+       "texto": "SERAPH\nSENTINELA ALADO\nFoundation\nSPELLCAST TRAIT: STRENGTH\nAsas de Luz: Você pode voar. Enquanto estiver voando, pode fazer o seguinte:\n• Marque 1 Estresse para pegar e carregar outra criatura disposta de tamanho aproximado ao seu ou menor.\n• Gaste 1 Esperança para causar 1d8 de dano extra em um ataque bem-sucedido.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Foundation\"); mapeado para \"Fundação\". O rótulo \"SPELLCAST TRAIT\" também está em inglês.",
+       "doLivro": [
+        {
+         "nome": "Asas de luz",
+         "texto": "Você pode voar. Enquanto estiver voando, você pode fazer o seguinte: Marque um Estresse para pegar e carregar outra criatura disposta, aproximadamente do seu tamanho ou menor. Gaste uma Esperança para causar 1d8 extra de dano em um ataque bem-sucedido."
+        }
+       ]
+      },
+      "especializacao": {
+       "arquivo": "Sentinela Alado(1).png",
+       "imagem": "assets/cartas/subclasses/SERAPH/Sentinela Alado(1).png",
+       "caracteristicas": [
+        {
+         "nome": "Vulto Etéreo",
+         "texto": "Seu vulto sobrenatural inspira admiração e medo. Enquanto estiver voando, você tem vantagem em Jogadas de Presença. Quando tiver sucesso com Esperança em uma Jogada de Presença, pode remover 1 Medo da reserva de Medo do Mestre em vez de ganhar Esperança."
+        }
+       ],
+       "texto": "SERAPH\nSENTINELA ALADO\nSpecialization\nSPELLCAST TRAIT: STRENGTH\nVulto Etéreo: Seu vulto sobrenatural inspira admiração e medo. Enquanto estiver voando, você tem vantagem em Jogadas de Presença. Quando tiver sucesso com Esperança em uma Jogada de Presença, pode remover 1 Medo da reserva de Medo do Mestre em vez de ganhar Esperança.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Specialization\"); mapeado para \"Especialização\". O rótulo \"SPELLCAST TRAIT\" também está em inglês.",
+       "doLivro": [
+        {
+         "nome": "Visage Ethereal",
+         "texto": "Seu rosto sobrenatural causa admiração e medo. Enquanto estiver voando, você tem vantagem em Rolagens de Presença. Quando for bem-sucedido com Esperança em uma rolagem de Presença, você pode remover um Medo da reserva de Medo do GM em vez de ganhar Esperança."
+        }
+       ]
+      },
+      "maestria": {
+       "arquivo": "Sentinela Alado(2).png",
+       "imagem": "assets/cartas/subclasses/SERAPH/Sentinela Alado(2).png",
+       "caracteristicas": [
+        {
+         "nome": "Ascendente",
+         "texto": "Ganhe um bônus permanente de +4 no seu limiar de dano Severo."
+        },
+        {
+         "nome": "Poder dos Deuses",
+         "texto": "Enquanto estiver voando, você causa 1d12 de dano extra em vez de 1d8 com sua habilidade Asas de Luz."
+        }
+       ],
+       "texto": "SERAPH\nSENTINELA ALADO\nMastery\nSPELLCAST TRAIT: STRENGTH\nAscendente: Ganhe um bônus permanente de +4 no seu limiar de dano Severo.\nPoder dos Deuses: Enquanto estiver voando, você causa 1d12 de dano extra em vez de 1d8 com sua habilidade Asas de Luz.",
+       "observacao": "O rótulo do tipo de carta está impresso em inglês (\"Mastery\"); mapeado para \"Maestria\". O rótulo \"SPELLCAST TRAIT\" também está em inglês.",
+       "doLivro": [
+        {
+         "nome": "Ascendente",
+         "texto": "Ganhe um bônus permanente de +4 no seu limite de dano grave."
+        },
+        {
+         "nome": "Poder dos Deuses",
+         "texto": "enquanto estiver voando, você causa 1d12 em vez de 1d8 de sua característica \"Asas de Luz\"."
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "problemasDeTraducao": [
+    "Cabeçalho 'DOMÉSTICAS' usado para a lista de Domínios da classe (Esplendor e Valor) — tradução incorreta de 'Domains', deveria ser algo como 'DOMÍNIOS'.",
+    "Nome impresso da primeira subclasse é 'SOLDADOR DIVINO', tradução incorreta de 'Divine Wielder' — deveria ser 'Portador Divino', como o próprio texto de introdução das subclasses ('Escolha a subclasse Divine Wielder (Portador Divino) ou Winged Sentinel (Sentinela Alada)') indica.",
+    "Nas frases 'Jogue com X se quiser...' de cada subclasse, os nomes ficaram em inglês ('Divine Wielder' e 'Winged Sentinel') em vez de usar os nomes traduzidos já apresentados no parágrafo anterior.",
+    "Na característica de classe 'Dados de oração', o termo 'traço Spellcast' ficou em inglês (não traduzido para algo como 'traço de Conjuração').",
+    "No recurso de especialização 'Devoto' (Soldador Divino), a habilidade é citada como 'Sparing Touch' em inglês, mas essa mesma habilidade foi traduzida como 'Toque poupador' na seção de Fundação — inconsistência de tradução do mesmo termo.",
+    "No recurso de maestria 'Ressonância sagrada' (Soldador Divino), o termo 'Spirit Weapon' ficou entre aspas em inglês, com 'Arma espiritual' apenas entre parênteses ao lado.",
+    "Nome do recurso de especialização da Sentinela Alada, 'Visage Ethereal', ficou inteiramente em inglês, sem nenhuma tradução para o português.",
+    "Os cabeçalhos do terceiro nível de recursos das subclasses aparecem como 'RECURSO DE DOMÍNIO' / 'RECURSOS DE DOMÍNIO', o que parece ser tradução incorreta de 'Mastery' (deveria ser 'Recurso de Maestria'), já que 'Domínio' é termo distinto usado no jogo para as cartas de domínio da classe.",
+    "Ordem impressa das subclasses na página: primeiro 'Soldador Divino' (Divine Wielder), depois 'Sentinela Alada' (Winged Sentinel). Segundo a errata do livro, a arte e o texto de Divine Wielder e Winged Sentinel foram trocados de lugar nesta página para tentar ficar em ordem alfabética — essa é a ordem tal como impressa, registrada aqui sem correção.",
+    "No título 'CONEXÕES' (página 46), o caractere acentuado 'Õ' aparece renderizado em fonte/peso diferente do restante da palavra, possível artefato de diagramação/OCR, embora a grafia em si esteja correta."
+   ],
+   "pastaCartas": "assets/cartas/subclasses/SERAPH"
+  }
+ ]
+}

@@ -4,11 +4,13 @@ Sistema web **mobile-first** para as fichas da mesa de Daggerheart.
 Frontend estático (GitHub Pages) + backend em Google Apps Script gravando numa
 planilha do Google Sheets.
 
-> **Parte 1 — login e persistência.** Esta entrega monta a fundação: acesso por
-> código, sessão, salvamento na planilha e a identidade visual. As regras do
-> livro (classes, domínios, ancestralidades, comunidades, equipamento,
-> condições, criação de ficha) entram nas partes seguintes, extraídas
-> exclusivamente dos arquivos da pasta do projeto.
+> **Progresso.** Parte 1: login, sessão e persistência. Parte 2: os 9 domínios e
+> as 189 cartas de domínio. Parte 3: as 9 classes, 18 subclasses e 54 cartas de
+> subclasse. Tudo extraído exclusivamente dos arquivos da pasta do projeto.
+>
+> **Regra de fonte:** as CARTAS em PNG são a fonte confiável em português. O PDF
+> do livro em pt-BR é uma tradução automática ruim e só serve como conferência
+> estrutural. As erratas oficiais (em inglês) valem sobre o livro.
 
 ---
 
@@ -32,21 +34,30 @@ sistema/
 │       ├── abertura.js     login e criação de acesso
 │       ├── roster.js       lista de personagens
 │       └── ajustes.js      conexão e troca de código
-├── data/                   JSONs de regras (a partir da Parte 2)
-├── assets/cartas/          imagens das cartas (a partir da Parte 3)
+├── data/
+│   ├── dominios.json       9 domínios (Parte 2)
+│   ├── cartas-dominio.json 189 cartas de domínio (Parte 2)
+│   └── classes.json        9 classes + 18 subclasses (Parte 3)
+├── assets/cartas/
+│   ├── dominios/<DOM>/     189 PNGs oficiais
+│   └── subclasses/<CLASSE>/ 54 PNGs oficiais
+├── docs/                   pontos de interesse de cada parte
 ├── backend/                arquivos .gs que vão para o Apps Script
 │   ├── 00_Config.gs        constantes e estrutura das abas
 │   ├── 10_Planilha.gs      leitura/escrita na planilha
 │   ├── 20_Auth.gs          jogadores, códigos e sessões
 │   ├── 30_Personagens.gs   CRUD das fichas
 │   ├── 40_Regras.gs        validação da ficha (cresce a cada parte)
+│   ├── 41_Dominios.gs      domínios e cartas — GERADO do JSON
+│   ├── 42_Classes.gs       classes e subclasses — GERADO do JSON
 │   ├── 50_Setup.gs         setup(), reset, código do Mestre
 │   └── 99_Api.gs           doGet/doPost e roteamento
 └── tools/                  só para desenvolvimento (não vai para o Pages)
     ├── apps-script-mock.mjs  imitação do Apps Script para rodar em Node
     ├── servidor-teste.mjs    servidor local com o backend real
     ├── testes-backend.mjs    testes de lógica do backend
-    └── testes-e2e.mjs        teste no navegador (Playwright)
+    ├── testes-e2e.mjs        teste no navegador (Playwright)
+    └── gerar-42-classes.mjs  regenera backend/42_Classes.gs a partir do JSON
 ```
 
 ---
@@ -125,16 +136,30 @@ sendo JSON.
 
 ---
 
-## O que vem nas próximas partes
+## Roteiro
 
-1. Classes e subclasses
-2. Domínios e cartas de domínio (com as imagens da pasta de cartas)
-3. Ancestralidades e comunidades
-4. Traços, criação de ficha guiada
-5. Equipamento, inventário e itens
-6. Condições e estados
-7. Subida de nível
-8. Painel do Mestre
+1. ✅ Login, sessão e persistência
+2. ✅ Domínios e cartas de domínio (189 cartas + imagens)
+3. ✅ Classes e subclasses (54 cartas + imagens)
+4. ⬜ Ancestralidades e comunidades
+5. ⬜ Traços e criação de ficha guiada
+6. ⬜ Equipamento, inventário e itens
+7. ⬜ Condições e estados
+8. ⬜ Subida de nível
+9. ⬜ Painel do Mestre
 
-Cada parte traz os dados em `data/*.json`, a validação correspondente em
-`backend/40_Regras.gs` e a tela em `js/telas/`.
+Cada parte traz os dados em `data/*.json`, a validação no `backend/4X_*.gs`
+correspondente, um documento em `docs/pontos-de-interesse-*.md` com o que ficou
+pendente, e (depois) a tela em `js/telas/`.
+
+### Pendências conhecidas, herdadas das partes já feitas
+
+- **Contadores com estado** — 16 cartas de domínio e 3 características de classe
+  guardam fichas/marcadores/um dado com valor corrente. Precisa de um mecanismo
+  genérico que zere em descanso. Não estava no plano original.
+- **Terminologia de condições** — "Cloaked" aparece como *Camuflado* (livro e
+  carta de Arcana) e como *Encoberto* (cartas do Caminhante Noturno);
+  "Hidden" aparece como *Oculto*. Escolher o canônico e registrar sinônimos.
+- **Atributos** — Strength e Finesse ainda não têm tradução confirmada em pt-BR.
+- **Fichas paralelas** — Beastform (Druida) e Companheiro Animal (Patrulheiro)
+  não cabem na ficha principal.
