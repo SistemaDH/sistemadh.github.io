@@ -7,8 +7,9 @@ planilha do Google Sheets.
 > **Progresso.** Parte 1: login, sessão e persistência. Parte 2: os 9 domínios e
 > as 189 cartas de domínio. Parte 3: as 9 classes, 18 subclasses e 54 cartas de
 > subclasse. Parte 4: 18 ancestralidades e 9 comunidades, com a regra de
-> ancestralidade mista validada no servidor. Tudo extraído exclusivamente dos
-> arquivos da pasta do projeto.
+> ancestralidade mista validada no servidor. Parte 5: 192 armas, 34 armaduras e
+> 120 itens, com os números vindos do SRD oficial porque o livro em pt-BR está
+> numa versão anterior à errata.
 >
 > **Regra de fonte:** as CARTAS em PNG são a fonte confiável em português. O PDF
 > do livro em pt-BR é uma tradução automática ruim e só serve como conferência
@@ -41,7 +42,9 @@ sistema/
 │   ├── cartas-dominio.json 189 cartas de domínio (Parte 2)
 │   ├── classes.json        9 classes + 18 subclasses (Parte 3)
 │   ├── ancestralidades.json 18 ancestralidades + regra de mista (Parte 4)
-│   └── comunidades.json    9 comunidades (Parte 4)
+│   ├── comunidades.json    9 comunidades (Parte 4)
+│   ├── equipamentos.json   armas, armaduras, saque e consumíveis (Parte 5)
+│   └── equipamentos-correcoes.json  toda correção feita nas tabelas
 ├── assets/cartas/
 │   ├── dominios/<DOM>/     189 PNGs oficiais
 │   ├── subclasses/<CLASSE>/ 54 PNGs oficiais
@@ -57,6 +60,7 @@ sistema/
 │   ├── 41_Dominios.gs      domínios e cartas — GERADO do JSON
 │   ├── 42_Classes.gs       classes e subclasses — GERADO do JSON
 │   ├── 43_Origens.gs       ancestralidades e comunidades — GERADO do JSON
+│   ├── 44_Equipamento.gs   armas, armaduras e itens — GERADO do JSON
 │   ├── 50_Setup.gs         setup(), reset, código do Mestre
 │   └── 99_Api.gs           doGet/doPost e roteamento
 └── tools/                  só para desenvolvimento (não vai para o Pages)
@@ -65,7 +69,8 @@ sistema/
     ├── testes-backend.mjs    testes de lógica do backend
     ├── testes-e2e.mjs        teste no navegador (Playwright)
     ├── gerar-42-classes.mjs  regenera backend/42_Classes.gs a partir do JSON
-    └── gerar-43-origens.mjs  regenera backend/43_Origens.gs a partir do JSON
+    ├── gerar-43-origens.mjs  regenera backend/43_Origens.gs a partir do JSON
+    └── gerar-44-equipamento.mjs  regenera backend/44_Equipamento.gs
 ```
 
 ---
@@ -150,8 +155,9 @@ sendo JSON.
 2. ✅ Domínios e cartas de domínio (189 cartas + imagens)
 3. ✅ Classes e subclasses (54 cartas + imagens)
 4. ✅ Ancestralidades e comunidades (27 cartas + imagens)
-5. ⬜ Traços e criação de ficha guiada
-6. ⬜ Equipamento, inventário e itens
+5. ✅ Equipamento, inventário e itens (192 armas, 34 armaduras, 120 itens,
+   46 itens de moldura de campanha e as regras de ouro)
+6. ⬜ Traços e criação de ficha guiada
 7. ⬜ Condições e estados
 8. ⬜ Subida de nível
 9. ⬜ Painel do Mestre
@@ -168,6 +174,14 @@ pendente, e (depois) a tela em `js/telas/`.
 - **Terminologia de condições** — "Cloaked" aparece como *Camuflado* (livro e
   carta de Arcana) e como *Encoberto* (cartas do Caminhante Noturno);
   "Hidden" aparece como *Oculto*. Escolher o canônico e registrar sinônimos.
-- **Atributos** — Strength e Finesse ainda não têm tradução confirmada em pt-BR.
+- **Atributos** — confirmados no livro (p.18): Agilidade, Força, **Finesse**
+  (não é traduzido), Instinto, Presença, Conhecimento. Distribuição inicial
+  +2, +1, +1, 0, 0, -1.
+- **Livro pt-BR é pré-errata** — provado nas tabelas de equipamento: Espada
+  Longa, Lança e Anéis Brilhantes têm os números velhos lá. Os números do app
+  vêm do SRD oficial.
+- **Numeração da errata** — as páginas citadas na errata são as IMPRESSAS no
+  rodapé, sempre o número do PDF menos 1. A "p.317" da errata é a página 318 do
+  arquivo. Conferir sempre pelo rodapé impresso.
 - **Fichas paralelas** — Beastform (Druida) e Companheiro Animal (Patrulheiro)
   não cabem na ficha principal.

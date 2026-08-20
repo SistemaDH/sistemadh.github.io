@@ -572,6 +572,194 @@ teste('ancestralidade mista: recusa duas iguais e quantidade errada', () => {
   }).ok, false);
 });
 
+console.log('\nEquipamento');
+const ARMAS = avaliar('ARMAS');
+const ARMADURAS = avaliar('ARMADURAS');
+const ITENS = avaliar('ITENS');
+
+teste('contagem bate com o SRD oficial', () => {
+  igual(ARMAS.filter((a) => a.cat === 'primaria').length, 155, 'armas primárias');
+  igual(ARMAS.filter((a) => a.cat === 'secundaria').length, 37, 'armas secundárias');
+  igual(ARMADURAS.length, 34, 'armaduras');
+  igual(ITENS.filter((i) => i.tipo === 'saque').length, 60, 'itens de saque');
+  igual(ITENS.filter((i) => i.tipo === 'consumivel').length, 60, 'consumíveis');
+});
+
+teste('todo equipamento tem id único', () => {
+  const ids = ARMAS.concat(ARMADURAS).map((x) => x.id);
+  igual(new Set(ids).size, ids.length, 'há ids repetidos');
+});
+
+teste('nenhum nome de arma se repete dentro do mesmo nível', () => {
+  const vistos = {};
+  ARMAS.forEach((a) => {
+    const k = `${a.cat}|${a.tier}|${a.tabela}|${a.nome.toLowerCase()}`;
+    verdade(!vistos[k], `nome repetido: ${a.nome} (nível ${a.tier})`);
+    vistos[k] = true;
+  });
+});
+
+teste('todo atributo e alcance está em português', () => {
+  const tracos = ['Agilidade', 'Força', 'Finesse', 'Instinto', 'Presença', 'Conhecimento'];
+  const alcances = ['Corpo a Corpo', 'Muito Próximo', 'Próximo', 'Distante', 'Muito Distante'];
+  ARMAS.forEach((a) => {
+    verdade(tracos.indexOf(a.atributo) >= 0, `atributo estranho em ${a.nome}: ${a.atributo}`);
+    verdade(alcances.indexOf(a.alcance) >= 0, `alcance estranho em ${a.nome}: ${a.alcance}`);
+    verdade(['Uma mão', 'Duas mãos'].indexOf(a.maos) >= 0, `carga estranha em ${a.nome}: ${a.maos}`);
+  });
+});
+
+teste('os números corrigidos pela errata estão certos', () => {
+  // A errata mudou estes três; o livro em pt-BR ainda tem os valores velhos.
+  igual(contexto.acharArma_('Espada Longa').dano, 'd10+3 phy');
+  igual(contexto.acharArma_('Lança').dano, 'd8+3 phy');
+  igual(contexto.acharArma_('Lança').carac, null, 'a Lança não tem mais Incômoda');
+  igual(contexto.acharArma_('Anéis Brilhantes').dano, 'd10+2 mag');
+  igual(contexto.acharArma_('Knuckle Claws') || contexto.acharArma_('Garras de Punho') ?
+        (contexto.acharArma_('Garras de Punho') || {}).maos : null, 'Uma mão');
+});
+
+teste('acha arma pelo nome em português, pelo do livro e pelo inglês', () => {
+  const a = contexto.acharArma_('Maça');
+  verdade(a, 'não achou pelo nome corrigido');
+  igual(contexto.acharArma_('Mace').id, a.id, 'não achou pelo inglês');
+  igual(contexto.acharArma_('Cutelo').id, contexto.acharArma_('Classe C').id,
+        'não achou pelo nome errado do livro');
+});
+
+teste('nível da tabela x nível do personagem', () => {
+  igual(contexto.tierDoNivel_(1), 1);
+  igual(contexto.tierDoNivel_(4), 2);
+  igual(contexto.tierDoNivel_(5), 3);
+  igual(contexto.tierDoNivel_(10), 4);
+});
+
+teste('recusa equipamento acima do nível do personagem', () => {
+  const r = contexto.validarEquipamento_({ primaria: 'Espada Longa Lendária' }, 1);
+  igual(r.ok, false);
+  verdade(r.erros[0].indexOf('nível 4') >= 0, JSON.stringify(r.erros));
+});
+
+teste('duas mãos não deixa levar arma secundária', () => {
+  // Espada Longa é de duas mãos; Espada Curta é secundária de uma mão.
+  const r = contexto.validarEquipamento_(
+    { primaria: 'Espada Longa', secundaria: 'Espada curta' }, 1);
+  igual(r.ok, false);
+  verdade(r.erros.some((e) => e.indexOf('duas mãos') >= 0), JSON.stringify(r.erros));
+});
+
+teste('primária de uma mão + secundária passa', () => {
+  const r = contexto.validarEquipamento_(
+    { primaria: 'Espada Larga', secundaria: 'Espada curta', armadura: 'Armadura de couro' }, 1);
+  verdade(r.ok, JSON.stringify(r.erros));
+  igual(r.resolvido.primaria.maos, 'Uma mão');
+});
+
+teste('recusa arma secundária no lugar da primária', () => {
+  const r = contexto.validarEquipamento_({ primaria: 'Espada curta' }, 1);
+  igual(r.ok, false);
+  verdade(r.erros[0].indexOf('secundária') >= 0, JSON.stringify(r.erros));
+});
+
+teste('limiares da armadura viram números', () => {
+  const l = contexto.limiaresDaArmadura_('Armadura de couro');
+  igual(l, { maior: 6, severo: 13 });
+});
+
+teste('equipamento das molduras de campanha', () => {
+  const camp = avaliar('EQUIPAMENTO_CAMPANHA');
+  igual(camp.length, 46);
+  igual(new Set(camp.map((c) => c.moldura)).size, 3, 'deveriam ser 3 molduras');
+  verdade(contexto.acharEquipamentoDeCampanha_('Dinamite'), 'não achou a Dinamite');
+  verdade(contexto.acharEquipamentoDeCampanha_('Quantum'), 'não achou o Quantum');
+});
+
+teste('as duas erratas das molduras estão aplicadas', () => {
+  // p.275: a característica Enorme do Martelo de forja dá -1 em Evasão, não Agilidade
+  const mf = contexto.acharEquipamentoDeCampanha_('Martelo de forja');
+  verdade(mf, 'não achou o Martelo de forja');
+  // p.317: o d6 do Revólver virou d8
+  const rv = contexto.acharEquipamentoDeCampanha_('Revólver');
+  verdade(rv.dano.indexOf('d8') >= 0, `dano do Revólver: ${rv.dano}`);
+  verdade(rv.dano.indexOf('d6') < 0, 'ainda sobrou um d6 no Revólver');
+  // o Revólver pequeno é outra arma e continua com d6
+  const rp = contexto.acharEquipamentoDeCampanha_('Revólver pequeno');
+  verdade(rp.dano.indexOf('d6') >= 0, 'o Revólver pequeno não deveria ter mudado');
+});
+
+console.log('\nOuro');
+
+teste('conversão de ouro: 10 punhados viram 1 bolsa', () => {
+  igual(contexto.ouroNormalizado_(10), { punhados: 0, bolsas: 1, cofres: 0, estourou: false });
+  igual(contexto.ouroNormalizado_(23), { punhados: 3, bolsas: 2, cofres: 0, estourou: false });
+  igual(contexto.ouroNormalizado_(100), { punhados: 0, bolsas: 0, cofres: 1, estourou: false });
+});
+
+teste('não dá para passar de 1 cofre', () => {
+  const r = contexto.ouroNormalizado_(150);
+  igual(r.cofres, 1);
+  igual(r.estourou, true);
+});
+
+teste('somar e gastar ouro', () => {
+  igual(contexto.ajustarOuro_({ punhados: 9 }, 1), { punhados: 0, bolsas: 1, cofres: 0, estourou: false });
+  igual(contexto.ajustarOuro_({ bolsas: 1 }, -1), { punhados: 9, bolsas: 0, cofres: 0, estourou: false });
+  igual(contexto.ajustarOuro_({ bolsas: 9, punhados: 9 }, 1), { punhados: 0, bolsas: 0, cofres: 1, estourou: false });
+});
+
+teste('recusa ouro anotado fora das regras', () => {
+  igual(contexto.validarOuro_({ punhados: 3, bolsas: 2, cofres: 0 }).ok, true);
+  igual(contexto.validarOuro_({ punhados: 12 }).ok, false);
+  igual(contexto.validarOuro_({ bolsas: 10 }).ok, false);
+  igual(contexto.validarOuro_({ cofres: 2 }).ok, false);
+  igual(contexto.validarOuro_({ punhados: -1 }).ok, false);
+});
+
+teste('acha item de saque e consumível', () => {
+  verdade(contexto.acharItem_('loot-01'), 'saque por id');
+  verdade(contexto.acharItem_('consumivel-01'), 'consumível por id');
+  igual(contexto.acharItem_('nao-existe-mesmo'), null);
+});
+
+// Estes nasceram da 2ª conferência, depois que a Vanessa perguntou se as linhas
+// sobrepostas do PDF tinham atrapalhado. Todos são erros que a 1ª passada deixou.
+teste('nomes corrigidos na auditoria, com o nome errado ainda achando', () => {
+  const pares = [
+    ['Trabuco', 'Cassetete'],                       // Blunderbuss não é cassetete
+    ['Broquel', 'Fivela'],                          // Buckler não é fivela de cinto
+    ['Espada de Conjuração', 'Espada de fundição'], // casting = conjurar, não fundir
+    ['Varinha do Fascínio', 'Varinha de Entusiasmo'],
+    ['Arma de Haste Estendida', 'Arma de mão estendida'],
+    ['Manopla Energizada', 'Gauntlet energizado']
+  ];
+  pares.forEach(([certo, errado]) => {
+    const a = contexto.acharArma_(certo);
+    verdade(a, `não achou "${certo}"`);
+    igual((contexto.acharArma_(errado) || {}).id, a.id, `"${errado}" deveria continuar achando "${certo}"`);
+  });
+});
+
+teste('itens corrigidos na auditoria', () => {
+  const pares = [
+    ['Veneno de Grindletooth', 'Veneno de dente-de-leão'], // Grindletooth é criatura, não a flor
+    ['Chave-Mestra', 'Skeleton Key'],
+    ['Flechas Perfurantes', 'Piercing Arrows'],
+    ['Unguento de Guelras', 'Gill Salve'],
+    ['Gota de Estrela', 'Estrógeno']                       // Stardrop virou "Estrógeno" no livro
+  ];
+  pares.forEach(([certo, outro]) => {
+    const i = contexto.acharItem_(certo);
+    verdade(i, `não achou "${certo}"`);
+    igual((contexto.acharItem_(outro) || {}).id, i.id, `"${outro}" deveria continuar achando "${certo}"`);
+  });
+});
+
+teste('nenhum nome de item se repete', () => {
+  const itens = avaliar('ITENS');
+  const nomes = itens.map((i) => i.nome.toLowerCase());
+  igual(new Set(nomes).size, nomes.length, 'há itens com nomes iguais');
+});
+
 console.log('\nZerar planilha');
 teste('arquivarEResetar preserva o antigo e recria vazio', () => {
   contexto.arquivarEResetar();

@@ -1,0 +1,979 @@
+{
+ "versao": 1,
+ "total": 139,
+ "correcoes": [
+  {
+   "item": "Ricochet Axes / Aantari Bow",
+   "tipo": "ordem",
+   "de": "trocados entre si",
+   "para": "cada um no seu lugar",
+   "motivo": "as duas linhas estavam invertidas na tabela do livro em relação ao original"
+  },
+  {
+   "item": "Longsword",
+   "tipo": "dano",
+   "de": "d8+3 phy",
+   "para": "d10+3 phy",
+   "motivo": "o número do livro não bate com o oficial"
+  },
+  {
+   "item": "Greatsword",
+   "tipo": "nome",
+   "de": "Espada Larga",
+   "para": "Espada Grande",
+   "motivo": "o livro chama Broadsword E Greatsword de \"Espada Larga\" — dois itens diferentes com o mesmo nome"
+  },
+  {
+   "item": "Mace",
+   "tipo": "nome",
+   "de": "Mace",
+   "para": "Maça",
+   "motivo": "o livro deixou \"Mace\" em inglês"
+  },
+  {
+   "item": "Quarterstaff",
+   "tipo": "nome",
+   "de": "Bastão de quartel",
+   "para": "Bordão",
+   "motivo": "o livro traduziu \"quarterstaff\" como \"Bastão de quartel\" (quarter virou quartel)"
+  },
+  {
+   "item": "Cutlass",
+   "tipo": "nome",
+   "de": "Classe C",
+   "para": "Cutelo",
+   "motivo": "o livro traduziu \"Cutlass\" como \"Classe C\""
+  },
+  {
+   "item": "Rapier",
+   "tipo": "nome",
+   "de": "Rapier",
+   "para": "Florete",
+   "motivo": "o livro deixou \"Rapier\" em inglês"
+  },
+  {
+   "item": "Spear",
+   "tipo": "dano",
+   "de": "d10+2 phy",
+   "para": "d8+3 phy",
+   "motivo": "o número do livro não bate com o oficial"
+  },
+  {
+   "item": "Improved Longsword",
+   "tipo": "dano",
+   "de": "d8+6 phy",
+   "para": "d10+6 phy",
+   "motivo": "o número do livro não bate com o oficial"
+  },
+  {
+   "item": "Improved Greatsword",
+   "tipo": "nome",
+   "de": "Espada Larga Aprimorada",
+   "para": "Espada Grande Aprimorada",
+   "motivo": "o livro chama Broadsword E Greatsword de \"Espada Larga\" — dois itens diferentes com o mesmo nome"
+  },
+  {
+   "item": "Improved Mace",
+   "tipo": "nome",
+   "de": "Mace aprimorado",
+   "para": "Maça Aprimorada",
+   "motivo": "o livro deixou \"Mace\" em inglês"
+  },
+  {
+   "item": "Improved Quarterstaff",
+   "tipo": "nome",
+   "de": "Bastão de quartel aprimorado",
+   "para": "Bordão Aprimorado",
+   "motivo": "o livro traduziu \"quarterstaff\" como \"Bastão de quartel\" (quarter virou quartel)"
+  },
+  {
+   "item": "Improved Cutlass",
+   "tipo": "nome",
+   "de": "Cutlass aprimorado",
+   "para": "Cutelo Aprimorado",
+   "motivo": "o livro traduziu \"Cutlass\" como \"Classe C\""
+  },
+  {
+   "item": "Improved Rapier",
+   "tipo": "nome",
+   "de": "Rapier aprimorado",
+   "para": "Florete Aprimorado",
+   "motivo": "o livro deixou \"Rapier\" em inglês"
+  },
+  {
+   "item": "Improved Spear",
+   "tipo": "dano",
+   "de": "d10+5 phy",
+   "para": "d8+6 phy",
+   "motivo": "o número do livro não bate com o oficial"
+  },
+  {
+   "item": "Gilded Falchion",
+   "tipo": "nome",
+   "de": "Falchion dourado",
+   "para": "Bracamarte Dourado",
+   "motivo": "o livro deixou \"Falchion\" em inglês"
+  },
+  {
+   "item": "Knuckle Blades",
+   "tipo": "nome",
+   "de": "Lâminas de articulação",
+   "para": "Lâminas de Punho",
+   "motivo": "o livro traduziu como \"Lâminas de articulação\""
+  },
+  {
+   "item": "Advanced Longsword",
+   "tipo": "dano",
+   "de": "d8+9 phy",
+   "para": "d10+9 phy",
+   "motivo": "o número do livro não bate com o oficial"
+  },
+  {
+   "item": "Advanced Greatsword",
+   "tipo": "nome",
+   "de": "Espada Larga Avançada",
+   "para": "Espada Grande Avançada",
+   "motivo": "o livro chama Broadsword E Greatsword de \"Espada Larga\" — dois itens diferentes com o mesmo nome"
+  },
+  {
+   "item": "Advanced Mace",
+   "tipo": "nome",
+   "de": "Mace avançado",
+   "para": "Maça Avançada",
+   "motivo": "o livro deixou \"Mace\" em inglês"
+  },
+  {
+   "item": "Advanced Quarterstaff",
+   "tipo": "nome",
+   "de": "Bastão avançado",
+   "para": "Bordão Avançado",
+   "motivo": "o livro traduziu \"quarterstaff\" como \"Bastão de quartel\" (quarter virou quartel)"
+  },
+  {
+   "item": "Advanced Cutlass",
+   "tipo": "nome",
+   "de": "Cutlass avançado",
+   "para": "Cutelo Avançado",
+   "motivo": "o livro traduziu \"Cutlass\" como \"Classe C\""
+  },
+  {
+   "item": "Advanced Rapier",
+   "tipo": "nome",
+   "de": "Rapier avançado",
+   "para": "Florete Avançado",
+   "motivo": "o livro deixou \"Rapier\" em inglês"
+  },
+  {
+   "item": "Advanced Spear",
+   "tipo": "dano",
+   "de": "d10+8 phy",
+   "para": "d8+9 phy",
+   "motivo": "o número do livro não bate com o oficial"
+  },
+  {
+   "item": "Flickerfly Blade",
+   "tipo": "nome",
+   "de": "(nome fundido/ilegível - texto da célula mistura 'Lâmina'/'Blakesword'; característica associada é 'Bravura: +1 Evasão, +3 dano Severo')",
+   "para": "Lâmina Vagalume",
+   "motivo": "o nome saiu fundido com a linha vizinha"
+  },
+  {
+   "item": "Bravesword",
+   "tipo": "nome",
+   "de": "(nome fundido/ilegível - texto da célula mistura 'Lâmina'/'Blakesword'; característica associada é 'Sharpwing (Asa afiada): ganhe bônus... igual à sua Agilidade')",
+   "para": "Espada Valente",
+   "motivo": "o nome saiu fundido com a linha vizinha"
+  },
+  {
+   "item": "Meridian Cutlass",
+   "tipo": "dano",
+   "de": "(d10+5) (phy)",
+   "para": "d10+5 phy",
+   "motivo": "o número do livro não bate com o oficial"
+  },
+  {
+   "item": "Retractable Saber",
+   "tipo": "nome",
+   "de": "(nome oculto/ilegível - linha sobreposta abaixo de 'Meridiano Cutelo', texto residual 'evitar à detecção')",
+   "para": "Sabre Retrátil",
+   "motivo": "a linha ficou oculta sob a linha vizinha"
+  },
+  {
+   "item": "Retractable Saber",
+   "tipo": "dano",
+   "de": "(d10+7) (phy)",
+   "para": "d10+7 phy",
+   "motivo": "o número do livro não bate com o oficial"
+  },
+  {
+   "item": "Talon Blades",
+   "tipo": "nome",
+   "de": "Lâminas Talon",
+   "para": "Lâminas de Garra",
+   "motivo": "o livro deixou \"Talon\" em inglês"
+  },
+  {
+   "item": "Black Powder Revolver",
+   "tipo": "nome",
+   "de": "(Grovoba)(Blade) Powder (nome fundido, colunas sobrepostas)",
+   "para": "Revólver de Pólvora Negra",
+   "motivo": "o nome saiu fundido com a linha vizinha na página"
+  },
+  {
+   "item": "Black Powder Revolver",
+   "tipo": "dano",
+   "de": "(d6+7) (phy)",
+   "para": "d6+8 phy",
+   "motivo": "o número do livro não bate com o oficial"
+  },
+  {
+   "item": "Spiked Bow",
+   "tipo": "nome",
+   "de": "(nome oculto/fundido com a linha anterior, ilegível; imagem legenda 'ARCO COM ESPIGÕES')",
+   "para": "Arco com Espigões",
+   "motivo": "a linha ficou fundida com a anterior"
+  },
+  {
+   "item": "Spiked Bow",
+   "tipo": "dano",
+   "de": "d6+8 phy",
+   "para": "d6+7 phy",
+   "motivo": "o número do livro não bate com o oficial"
+  },
+  {
+   "item": "Legendary Longsword",
+   "tipo": "dano",
+   "de": "d8+12 phy",
+   "para": "d10+12 phy",
+   "motivo": "o número do livro não bate com o oficial"
+  },
+  {
+   "item": "Legendary Greatsword",
+   "tipo": "nome",
+   "de": "Greatsword lendário",
+   "para": "Espada Grande Lendária",
+   "motivo": "o livro chama Broadsword E Greatsword de \"Espada Larga\" — dois itens diferentes com o mesmo nome"
+  },
+  {
+   "item": "Legendary Quarterstaff",
+   "tipo": "nome",
+   "de": "Lendária Quarterstaff",
+   "para": "Bordão Lendário",
+   "motivo": "o livro traduziu \"quarterstaff\" como \"Bastão de quartel\" (quarter virou quartel)"
+  },
+  {
+   "item": "Legendary Rapier",
+   "tipo": "nome",
+   "de": "Rapier lendário",
+   "para": "Florete Lendário",
+   "motivo": "o livro deixou \"Rapier\" em inglês"
+  },
+  {
+   "item": "Legendary Spear",
+   "tipo": "dano",
+   "de": "d10+11 phy",
+   "para": "d8+12 phy",
+   "motivo": "o número do livro não bate com o oficial"
+  },
+  {
+   "item": "Glowing Rings",
+   "tipo": "dano",
+   "de": "d10+1 mag",
+   "para": "d10+2 mag",
+   "motivo": "o número do livro não bate com o oficial"
+  },
+  {
+   "item": "Shortstaff",
+   "tipo": "nome",
+   "de": "Pessoal de baixa estatura",
+   "para": "Bastão Curto",
+   "motivo": "o livro traduziu \"Shortstaff\" como \"Pessoal de baixa estatura\" (staff virou pessoal)"
+  },
+  {
+   "item": "Shortstaff",
+   "tipo": "dano",
+   "de": "d8+1 carregador",
+   "para": "d8+1 mag",
+   "motivo": "o número do livro não bate com o oficial"
+  },
+  {
+   "item": "Dualstaff",
+   "tipo": "nome",
+   "de": "Dualstaff",
+   "para": "Bastão Duplo",
+   "motivo": "o livro deixou \"Dualstaff\" em inglês"
+  },
+  {
+   "item": "Greatstaff",
+   "tipo": "nome",
+   "de": "Greatstaff",
+   "para": "Bastão Longo",
+   "motivo": "o livro deixou \"Greatstaff\" em inglês"
+  },
+  {
+   "item": "Improved Shortstaff",
+   "tipo": "nome",
+   "de": "Equipe reduzida aprimorada",
+   "para": "Bastão Curto Aprimorado",
+   "motivo": "o livro traduziu \"Shortstaff\" como \"Pessoal de baixa estatura\" (staff virou pessoal)"
+  },
+  {
+   "item": "Improved Dualstaff",
+   "tipo": "nome",
+   "de": "Dualstaff aprimorado",
+   "para": "Bastão Duplo Aprimorado",
+   "motivo": "o livro deixou \"Dualstaff\" em inglês"
+  },
+  {
+   "item": "Improved Greatstaff",
+   "tipo": "nome",
+   "de": "Greatstaff aprimorado",
+   "para": "Bastão Longo Aprimorado",
+   "motivo": "o livro deixou \"Greatstaff\" em inglês"
+  },
+  {
+   "item": "Keeper's Staff",
+   "tipo": "nome",
+   "de": "Equipe do Guardião",
+   "para": "Bastão do Guardião",
+   "motivo": "o livro traduziu como \"Equipe do Guardião\" (staff virou equipe)"
+  },
+  {
+   "item": "Advanced Shortstaff",
+   "tipo": "nome",
+   "de": "Equipe avançada de curta",
+   "para": "Bastão Curto Avançado",
+   "motivo": "o livro traduziu \"Shortstaff\" como \"Pessoal de baixa estatura\" (staff virou pessoal)"
+  },
+  {
+   "item": "Advanced Dualstaff",
+   "tipo": "nome",
+   "de": "Duelisfaff avançado",
+   "para": "Bastão Duplo Avançado",
+   "motivo": "o livro deixou \"Dualstaff\" em inglês"
+  },
+  {
+   "item": "Advanced Greatstaff",
+   "tipo": "nome",
+   "de": "Avançado (nome cortado/incompleto)",
+   "para": "Bastão Longo Avançado",
+   "motivo": "o livro deixou \"Greatstaff\" em inglês"
+  },
+  {
+   "item": "Axe of Fortunis",
+   "tipo": "nome",
+   "de": "de Fortunis (nome incompleto, legenda da imagem diz 'MACHADO DE FORTUNIS')",
+   "para": "Machado de Fortunis",
+   "motivo": "o nome saiu incompleto na página"
+  },
+  {
+   "item": "Blessed Anlace",
+   "tipo": "nome",
+   "de": "Blessed Anlace",
+   "para": "Punhal Abençoado",
+   "motivo": "o livro deixou o nome em inglês"
+  },
+  {
+   "item": "Ghostblade",
+   "tipo": "dano",
+   "de": "d10+7 phy ou mag",
+   "para": "d10+7 phy or mag",
+   "motivo": "o número do livro não bate com o oficial"
+  },
+  {
+   "item": "Firestaff",
+   "tipo": "nome",
+   "de": "Pessoal de combate",
+   "para": "Bastão de Fogo",
+   "motivo": "o livro traduziu como \"Pessoal de combate\""
+  },
+  {
+   "item": "Mage Orb",
+   "tipo": "nome",
+   "de": "Mage Orb",
+   "para": "Orbe do Mago",
+   "motivo": "o livro deixou o nome em inglês"
+  },
+  {
+   "item": "Legendary Shortstaff",
+   "tipo": "nome",
+   "de": "Shortstaff lendário",
+   "para": "Bastão Curto Lendário",
+   "motivo": "o livro traduziu \"Shortstaff\" como \"Pessoal de baixa estatura\" (staff virou pessoal)"
+  },
+  {
+   "item": "Legendary Dualstaff",
+   "tipo": "nome",
+   "de": "Lendário Dualstaff",
+   "para": "Bastão Duplo Lendário",
+   "motivo": "o livro deixou \"Dualstaff\" em inglês"
+  },
+  {
+   "item": "Legendary Greatstaff",
+   "tipo": "nome",
+   "de": "Greatstaff lendário",
+   "para": "Bastão Longo Lendário",
+   "motivo": "o livro deixou \"Greatstaff\" em inglês"
+  },
+  {
+   "item": "Floating Bladeshards",
+   "tipo": "nome",
+   "de": "Bladeshards flutuantes",
+   "para": "Estilhaços Flutuantes",
+   "motivo": "o livro deixou \"Bladeshards\" em inglês"
+  },
+  {
+   "item": "Fusion Gloves",
+   "tipo": "nome",
+   "de": "Luvas Fusion",
+   "para": "Luvas de Fusão",
+   "motivo": "o livro deixou \"Fusion\" em inglês"
+  },
+  {
+   "item": "Shortsword",
+   "tipo": "dano",
+   "de": "(d8) (phy)",
+   "para": "d8 phy",
+   "motivo": "o número do livro não bate com o oficial"
+  },
+  {
+   "item": "Grappler",
+   "tipo": "nome",
+   "de": "Garrafa",
+   "para": "Arpéu",
+   "motivo": "o livro deixou \"Grappler\" em inglês"
+  },
+  {
+   "item": "Improved Grappler",
+   "tipo": "nome",
+   "de": "Grappler aprimorado",
+   "para": "Arpéu Aprimorado",
+   "motivo": "o livro deixou \"Grappler\" em inglês"
+  },
+  {
+   "item": "Advanced Grappler",
+   "tipo": "nome",
+   "de": "Grappler avançado",
+   "para": "Arpéu Avançado",
+   "motivo": "o livro deixou \"Grappler\" em inglês"
+  },
+  {
+   "item": "Legendary Grappler",
+   "tipo": "nome",
+   "de": "Lutador lendário",
+   "para": "Arpéu Lendário",
+   "motivo": "o livro deixou \"Grappler\" em inglês"
+  },
+  {
+   "item": "Braveshield",
+   "tipo": "nome",
+   "de": "Escudo Braveshield",
+   "para": "Escudo Valente",
+   "motivo": "o livro deixou \"Braveshield\" em inglês"
+  },
+  {
+   "item": "Knuckle Claws",
+   "tipo": "nome",
+   "de": "Garras de articulação",
+   "para": "Garras de Punho",
+   "motivo": "o livro traduziu como \"Garras de articulação\""
+  },
+  {
+   "item": "Primer Shard",
+   "tipo": "nome",
+   "de": "Fragmento de primer",
+   "para": "Fragmento Iniciador",
+   "motivo": "o livro deixou \"primer\" em inglês"
+  },
+  {
+   "item": "Bellamoi Fine Armor",
+   "tipo": "nome",
+   "de": "Bellamoi Fine Armor",
+   "para": "Armadura Fina Bellamoi",
+   "motivo": "o livro deixou o nome em inglês"
+  },
+  {
+   "item": "Dragonscale Armor",
+   "tipo": "nome",
+   "de": "(Escama de dragão) (Armadura)",
+   "para": "Armadura de Escamas de Dragão",
+   "motivo": "o nome saiu fragmentado entre parênteses"
+  },
+  {
+   "item": "Spiked Plate Armor",
+   "tipo": "nome",
+   "de": "(Spiked) (Plate) (Armadura)",
+   "para": "Armadura de Placas com Espinhos",
+   "motivo": "o nome saiu meio em inglês e fragmentado"
+  },
+  {
+   "item": "Bladefare Armor",
+   "tipo": "nome",
+   "de": "Bladefare Armor",
+   "para": "Armadura Bladefare",
+   "motivo": "o livro deixou o nome em inglês; \"Bladefare\" é nome próprio"
+  },
+  {
+   "item": "Emberwoven Armor",
+   "tipo": "nome",
+   "de": "Armadura Emberwoven",
+   "para": "Armadura de Brasa",
+   "motivo": "o livro deixou \"Emberwoven\" em inglês"
+  },
+  {
+   "item": "Veritas Opal Armor",
+   "tipo": "nome",
+   "de": "(Veritas) (Opal) (Armor)",
+   "para": "Armadura de Opala Veritas",
+   "motivo": "o nome saiu fragmentado entre parênteses"
+  },
+  {
+   "item": "loot 15 — Valorstone",
+   "tipo": "item",
+   "de": "Valorstone",
+   "para": "Valorstone",
+   "motivo": "entrada ilegível ou ausente no livro; ficou o texto oficial em inglês"
+  },
+  {
+   "item": "loot 35 — Airblade Charm",
+   "tipo": "item",
+   "de": "Charme da lâmina de ar",
+   "para": "Airblade Charm",
+   "motivo": "entrada ilegível ou ausente no livro; ficou o texto oficial em inglês"
+  },
+  {
+   "item": "loot 36 — Portal Seed",
+   "tipo": "item",
+   "de": "Portal Seed",
+   "para": "Portal Seed",
+   "motivo": "entrada ilegível ou ausente no livro; ficou o texto oficial em inglês"
+  },
+  {
+   "item": "consumivel 13 — Potion of Stability",
+   "tipo": "item",
+   "de": "",
+   "para": "Potion of Stability",
+   "motivo": "entrada ilegível ou ausente no livro; ficou o texto oficial em inglês"
+  },
+  {
+   "item": "consumivel 18 — Snap Powder",
+   "tipo": "item",
+   "de": "",
+   "para": "Snap Powder",
+   "motivo": "entrada ilegível ou ausente no livro; ficou o texto oficial em inglês"
+  },
+  {
+   "item": "consumivel 45 — Ogre Musk",
+   "tipo": "item",
+   "de": "Almiscar de ogro",
+   "para": "Ogre Musk",
+   "motivo": "entrada ilegível ou ausente no livro; ficou o texto oficial em inglês"
+  },
+  {
+   "item": "consumivel 51 — Feast of Xuria",
+   "tipo": "item",
+   "de": "Festa de Xuria",
+   "para": "Feast of Xuria",
+   "motivo": "entrada ilegível ou ausente no livro; ficou o texto oficial em inglês"
+  },
+  {
+   "item": "consumivel 55 — Knowledge Stone",
+   "tipo": "item",
+   "de": "Pedra do Conhecimento",
+   "para": "Knowledge Stone",
+   "motivo": "entrada ilegível ou ausente no livro; ficou o texto oficial em inglês"
+  },
+  {
+   "item": "consumivel 60 — Stardrop",
+   "tipo": "item",
+   "de": "Estrógeno",
+   "para": "Stardrop",
+   "motivo": "entrada ilegível ou ausente no livro; ficou o texto oficial em inglês"
+  },
+  {
+   "item": "Pitchfork (Festa da Besta (Beast Feast))",
+   "tipo": "nome",
+   "de": "Pitchfork",
+   "para": "Forcado",
+   "motivo": "o livro deixou \"Pitchfork\" em inglês"
+  },
+  {
+   "item": "Equipe de caminhada (Festa da Besta (Beast Feast))",
+   "tipo": "nome",
+   "de": "Equipe de caminhada",
+   "para": "Bordão de Caminhada",
+   "motivo": "\"walking staff\" virou \"equipe de caminhada\" (staff = equipe)"
+  },
+  {
+   "item": "Pôquer Forge (Festa da Besta (Beast Feast))",
+   "tipo": "nome",
+   "de": "Pôquer Forge",
+   "para": "Atiçador de Forja",
+   "motivo": "\"forge poker\" virou \"Pôquer Forge\" (poker = pôquer)"
+  },
+  {
+   "item": "Proteção da tampa do barril (Festa da Besta (Beast Feast))",
+   "tipo": "nome",
+   "de": "Proteção da tampa do barril",
+   "para": "Escudo de Tampa de Barril",
+   "motivo": "o nome ficou como \"Proteção da tampa do barril\""
+  },
+  {
+   "item": "Escudo de mesa (moldura)",
+   "tipo": "nome-caracteristica",
+   "de": "Barrier",
+   "para": "Barreira",
+   "motivo": "o livro deixou \"Barrier\" em inglês"
+  },
+  {
+   "item": "Festival Whip (Festa da Besta (Beast Feast))",
+   "tipo": "nome",
+   "de": "Festival Whip",
+   "para": "Chicote de Festival",
+   "motivo": "o livro deixou o nome em inglês"
+  },
+  {
+   "item": "Gancho de reboque (moldura)",
+   "tipo": "nome-caracteristica",
+   "de": "Hooked",
+   "para": "Gancho",
+   "motivo": "o livro deixou \"Hooked\" em inglês"
+  },
+  {
+   "item": "Lançador de sinalizadores (moldura)",
+   "tipo": "nome-caracteristica",
+   "de": "Bright",
+   "para": "Brilhante",
+   "motivo": "o livro deixou \"Bright\" em inglês e o texto saiu corrompido"
+  },
+  {
+   "item": "Laço (moldura)",
+   "tipo": "nome-caracteristica",
+   "de": "Roped",
+   "para": "Enlaçado",
+   "motivo": "o livro deixou \"Roped\" em inglês"
+  },
+  {
+   "item": "Martelo de forja (Festa da Besta)",
+   "tipo": "errata",
+   "de": "Enorme: -1 para Agilidade",
+   "para": "Enorme: -1 para Evasão",
+   "motivo": "errata oficial p.275 (Sledgehammer)"
+  },
+  {
+   "item": "Revólver (Colosso das Terras Áridas)",
+   "tipo": "errata",
+   "de": "Nível 1: d6+1 phy; Nível 2: d6+4 phy; Nível 3: d6+7 phy; Nível 4: d6+10 phy",
+   "para": "Nível 1: d8+1 phy; Nível 2: d8+4 phy; Nível 3: d8+7 phy; Nível 4: d8+10 phy",
+   "motivo": "errata oficial p.317"
+  },
+  {
+   "item": "Unidades de ouro",
+   "tipo": "nome",
+   "de": "punhado / \"Mão cheia\" / baú",
+   "para": "Punhado / Bolsa / Cofre",
+   "motivo": "o livro usa dois nomes para a mesma unidade na tabela de custos"
+  },
+  {
+   "item": "loot-15 — Valorstone",
+   "tipo": "item-revisado",
+   "de": "Valorstone",
+   "para": "Valorstone",
+   "motivo": "nome confirmado pela Vanessa (o livro mantém em inglês)"
+  },
+  {
+   "item": "loot-35 — Airblade Charm",
+   "tipo": "item-revisado",
+   "de": "Airblade Charm",
+   "para": "Charme da lâmina de ar",
+   "motivo": "nome confirmado pela Vanessa no livro"
+  },
+  {
+   "item": "loot-36 — Portal Seed",
+   "tipo": "item-revisado",
+   "de": "Portal Seed",
+   "para": "Portal Seed",
+   "motivo": "nome confirmado pela Vanessa (o livro mantém em inglês)"
+  },
+  {
+   "item": "consumivel-13 — Potion of Stability",
+   "tipo": "item-revisado",
+   "de": "Potion of Stability",
+   "para": "Poção da estabilidade",
+   "motivo": "nome confirmado pela Vanessa no livro"
+  },
+  {
+   "item": "consumivel-18 — Snap Powder",
+   "tipo": "item-revisado",
+   "de": "Snap Powder",
+   "para": "Pó de estalo",
+   "motivo": "nome confirmado pela Vanessa no livro (a linha estava em branco na página)"
+  },
+  {
+   "item": "consumivel-45 — Ogre Musk",
+   "tipo": "item-revisado",
+   "de": "Ogre Musk",
+   "para": "Almíscar de ogro",
+   "motivo": "nome confirmado pela Vanessa no livro"
+  },
+  {
+   "item": "consumivel-51 — Feast of Xuria",
+   "tipo": "item-revisado",
+   "de": "Feast of Xuria",
+   "para": "Festa de Xuria",
+   "motivo": "nome confirmado pela Vanessa no livro"
+  },
+  {
+   "item": "consumivel-55 — Knowledge Stone",
+   "tipo": "item-revisado",
+   "de": "Knowledge Stone",
+   "para": "Pedra do Conhecimento",
+   "motivo": "nome confirmado pela Vanessa no livro"
+  },
+  {
+   "item": "consumivel-60 — Stardrop",
+   "tipo": "item-revisado",
+   "de": "Stardrop",
+   "para": "Gota de Estrela",
+   "motivo": "o livro traz \"Estrógeno\" — tradução automática de \"Stardrop\". Corrigido para Gota de Estrela; \"Estrógeno\" continua valendo na busca."
+  },
+  {
+   "item": "Improved Warhammer (arma)",
+   "tipo": "nome-auditoria",
+   "de": "Warhammer aprimorado",
+   "para": "Martelo de guerra aprimorado",
+   "motivo": "o livro deixou \"Warhammer aprimorado\" enquanto o nível 1 já era \"Martelo de guerra\""
+  },
+  {
+   "item": "Blunderbuss (arma)",
+   "tipo": "nome-auditoria",
+   "de": "Cassetete",
+   "para": "Trabuco",
+   "motivo": "o livro traduziu como \"Cassetete\" (cassetete é um bastão policial; blunderbuss é arma de fogo). Usei Trabuco em vez de Bacamarte para não confundir com o Bracamarte Dourado (Gilded Falchion)"
+  },
+  {
+   "item": "Meridian Cutlass (arma)",
+   "tipo": "nome-auditoria",
+   "de": "Meridiano Cutelo",
+   "para": "Cutelo Meridiano",
+   "motivo": "o livro inverteu a ordem: \"Meridiano Cutelo\""
+  },
+  {
+   "item": "Extended Polearm (arma)",
+   "tipo": "nome-auditoria",
+   "de": "Arma de mão estendida",
+   "para": "Arma de Haste Estendida",
+   "motivo": "o livro traduziu como \"Arma de mão estendida\" — polearm é arma de haste, o oposto de arma de mão"
+  },
+  {
+   "item": "Casting Sword (arma)",
+   "tipo": "nome-auditoria",
+   "de": "Espada de fundição",
+   "para": "Espada de Conjuração",
+   "motivo": "o livro traduziu como \"Espada de fundição\" — \"casting\" aqui é conjurar magia, não fundir metal"
+  },
+  {
+   "item": "Wand of Enthrallment (arma)",
+   "tipo": "nome-auditoria",
+   "de": "Varinha de Entusiasmo",
+   "para": "Varinha do Fascínio",
+   "motivo": "o livro traduziu como \"Varinha de Entusiasmo\" — enthrallment é fascínio/domínio, não entusiasmo"
+  },
+  {
+   "item": "Improved Small Dagger (arma)",
+   "tipo": "nome-auditoria",
+   "de": "Adaga pequena aprimorada",
+   "para": "Punhal pequeno aprimorado",
+   "motivo": "o livro alternava entre \"Punhal pequeno\" e \"Adaga pequena\" para a mesma arma"
+  },
+  {
+   "item": "Buckler (arma)",
+   "tipo": "nome-auditoria",
+   "de": "Fivela",
+   "para": "Broquel",
+   "motivo": "o livro traduziu como \"Fivela\" — fivela é de cinto; buckler é um escudo pequeno"
+  },
+  {
+   "item": "Powered Gauntlet (arma)",
+   "tipo": "nome-auditoria",
+   "de": "Gauntlet energizado",
+   "para": "Manopla Energizada",
+   "motivo": "o livro deixou \"Gauntlet energizado\" com a palavra em inglês, sendo que as outras são \"Manopla\""
+  },
+  {
+   "item": "Premium Bedroll (saque)",
+   "tipo": "nome-auditoria",
+   "de": "Pano de cama premium",
+   "para": "Saco de Dormir Premium",
+   "motivo": "o livro traduziu como \"Pano de cama premium\", mas usa \"saco de dormir\" no título da própria página"
+  },
+  {
+   "item": "Manacles (saque)",
+   "tipo": "nome-auditoria",
+   "de": "Manáculas",
+   "para": "Algemas",
+   "motivo": "o livro usou \"Manáculas\", forma rara; algemas é o termo corrente"
+  },
+  {
+   "item": "Companion Case (saque)",
+   "tipo": "nome-auditoria",
+   "de": "Estojo complementar",
+   "para": "Estojo do Companheiro",
+   "motivo": "o livro traduziu como \"Estojo complementar\" — companion aqui é o companheiro animal"
+  },
+  {
+   "item": "Piercing Arrows (saque)",
+   "tipo": "nome-auditoria",
+   "de": "(Perfurante) (Flechas)",
+   "para": "Flechas Perfurantes",
+   "motivo": "o nome saiu como \"(Perfurante) (Flechas)\", com os parênteses do PDF e a ordem invertida"
+  },
+  {
+   "item": "Skeleton Key (saque)",
+   "tipo": "nome-auditoria",
+   "de": "Skeleton Key (chave de esqueleto)",
+   "para": "Chave-Mestra",
+   "motivo": "o livro deixou \"Skeleton Key (chave de esqueleto)\" — skeleton key é chave-mestra/gazua"
+  },
+  {
+   "item": "Corrector Sprite (saque)",
+   "tipo": "nome-auditoria",
+   "de": "Corrector Sprite",
+   "para": "Espírito Corretor",
+   "motivo": "o livro deixou o nome em inglês"
+  },
+  {
+   "item": "Lorekeeper (saque)",
+   "tipo": "nome-auditoria",
+   "de": "Lorekeeper",
+   "para": "Guardião do Saber",
+   "motivo": "o livro deixou o nome em inglês"
+  },
+  {
+   "item": "Greatstone (saque)",
+   "tipo": "nome-auditoria",
+   "de": "Greatstone",
+   "para": "Pedra Maior",
+   "motivo": "o livro deixou o nome em inglês"
+  },
+  {
+   "item": "Calming Pendant (saque)",
+   "tipo": "nome-auditoria",
+   "de": "Calmante Pingente",
+   "para": "Pingente Calmante",
+   "motivo": "o livro inverteu a ordem: \"Calmante Pingente\""
+  },
+  {
+   "item": "Stride Relic (saque)",
+   "tipo": "nome-auditoria",
+   "de": "Stride Relic (Relíquia da passada)",
+   "para": "Relíquia da Passada",
+   "motivo": "o nome saiu como \"Stride Relic (Relíquia da passada)\", meio em inglês"
+  },
+  {
+   "item": "Enlighten Relic (saque)",
+   "tipo": "nome-auditoria",
+   "de": "Iluminar Relíquia",
+   "para": "Relíquia da Iluminação",
+   "motivo": "o livro inverteu a ordem (\"Iluminar Relíquia\"); as outras relíquias seguem \"Relíquia de ...\""
+  },
+  {
+   "item": "Grindletooth Venom (consumível)",
+   "tipo": "nome-auditoria",
+   "de": "Veneno de dente-de-leão",
+   "para": "Veneno de Grindletooth",
+   "motivo": "o livro traduziu como \"Veneno de dente-de-leão\" — Grindletooth é nome de criatura, não a flor"
+  },
+  {
+   "item": "Improved Grindletooth Venom (consumível)",
+   "tipo": "nome-auditoria",
+   "de": "Aprimorado Veneno de dente-de-leão",
+   "para": "Veneno de Grindletooth Aprimorado",
+   "motivo": "mesmo erro do anterior, mais a ordem invertida"
+  },
+  {
+   "item": "Armor Stitcher (consumível)",
+   "tipo": "nome-auditoria",
+   "de": "Costureira de armaduras",
+   "para": "Costurador de Armadura",
+   "motivo": "o livro usou \"Costureira de armaduras\", que soa como a pessoa e não o item"
+  },
+  {
+   "item": "Gill Salve (consumível)",
+   "tipo": "nome-auditoria",
+   "de": "Salva de gânglios",
+   "para": "Unguento de Guelras",
+   "motivo": "o livro traduziu como \"Salva de gânglios\" — gill é guelra e salve é unguento"
+  },
+  {
+   "item": "Major Stride Potion (consumível)",
+   "tipo": "nome-auditoria",
+   "de": "Poção de impulso maior",
+   "para": "Poção da Passada Maior",
+   "motivo": "o livro usou \"Poção de impulso maior\", inconsistente com a \"Poção da passada\" menor"
+  },
+  {
+   "item": "Major Enlighten Potion (consumível)",
+   "tipo": "nome-auditoria",
+   "de": "Maior Poção de iluminação",
+   "para": "Poção de Iluminação Maior",
+   "motivo": "o livro inverteu a ordem"
+  },
+  {
+   "item": "Channelstone (consumível)",
+   "tipo": "nome-auditoria",
+   "de": "Pedra de canal",
+   "para": "Pedra de Canalização",
+   "motivo": "o livro usou \"Pedra de canal\""
+  },
+  {
+   "item": "Hopehold Flare (consumível)",
+   "tipo": "nome-auditoria",
+   "de": "Hopehold Flare",
+   "para": "Sinalizador de Hopehold",
+   "motivo": "o livro deixou o nome todo em inglês"
+  },
+  {
+   "item": "Featherbone (consumível)",
+   "tipo": "nome-auditoria",
+   "de": "Espinha de peixe",
+   "para": "Osso-Pena",
+   "motivo": "o livro traduziu como \"Espinha de peixe\", que é outra coisa"
+  },
+  {
+   "item": "Major Stamina Potion (consumível)",
+   "tipo": "nome-auditoria",
+   "de": "Maior Poção de resistência",
+   "para": "Poção de Resistência Maior",
+   "motivo": "o livro inverteu a ordem"
+  },
+  {
+   "item": "Dragonbloom Tea (consumível)",
+   "tipo": "nome-auditoria",
+   "de": "Flor do Dragão Chá",
+   "para": "Chá de Flor-de-Dragão",
+   "motivo": "o livro embaralhou a ordem: \"Flor do Dragão Chá\""
+  },
+  {
+   "item": "Bonding Honey (consumível)",
+   "tipo": "nome-auditoria",
+   "de": "Colagem de mel",
+   "para": "Mel Aglutinante",
+   "motivo": "o livro usou \"Colagem de mel\""
+  },
+  {
+   "item": "Sweet Moss (consumível)",
+   "tipo": "errata-auditoria",
+   "de": "Você pode consumir esse musgo durante um descanso para eliminar 1d4 PV ou 1d4 de estresse.",
+   "para": "Você pode consumir esse musgo durante um descanso para limpar 1d10 PV ou 1d10 de Estresse.",
+   "motivo": "ERRATA p.133: o livro traz 1d4, o valor corrigido é 1d10. Achado nesta auditoria, cruzando os números da descrição em português com a oficial."
+  },
+  {
+   "item": "Blinding Orb (consumível)",
+   "tipo": "nome-auditoria",
+   "de": "Ofuscante Orbe",
+   "para": "Orbe Ofuscante",
+   "motivo": "o livro inverteu a ordem: \"Ofuscante Orbe\""
+  }
+ ]
+}
