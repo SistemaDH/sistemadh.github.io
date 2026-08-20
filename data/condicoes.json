@@ -1,0 +1,144 @@
+{
+  "versao": 1,
+  "fonte": "Livro pt-BR p.102 (Condições) para as três primárias; características de classe/subclasse e cartas de domínio em PNG para as especiais. Erratas oficiais aplicadas (p.42 Cloaked, p.102 Hidden, p.243 Restrained).",
+  "nota": "O livro é inconsistente consigo mesmo: o parágrafo de abertura da p.102 chama as três primárias de 'Escondido, Confinado e Vulnerável', o subtítulo logo abaixo escreve 'HIDDEN' e 'RESTREINADO', e o índice remissivo registra 'Oculto 102' e 'Restrito 102'. Adotamos os nomes do índice + do corpo do texto, que são também os usados nas cartas.",
+  "condicoes": [
+    {
+      "id": "oculto",
+      "nome": "Oculto",
+      "nomeIngles": "Hidden",
+      "tipo": "primaria",
+      "texto": "Enquanto estiver fora da vista de todos os inimigos e eles não souberem onde você está, você ganha a condição Oculto. Enquanto estiver Oculto, todas as jogadas contra você são feitas com desvantagem. Depois que um adversário se mover para um lugar de onde poderia ver você, que você entrar na linha de visão dele, ou que você fizer um ataque, você deixa de estar Oculto.",
+      "sinonimos": ["Escondido", "Hidden"],
+      "acumulavel": false,
+      "errata": "p.102 — a última frase foi reescrita para listar as três formas de perder a condição."
+    },
+    {
+      "id": "restrito",
+      "nome": "Restrito",
+      "nomeIngles": "Restrained",
+      "tipo": "primaria",
+      "texto": "Quando você adquire a condição Restrito, não pode se mover até que a condição seja removida, mas ainda pode realizar ações a partir da posição atual.",
+      "sinonimos": ["Restreinado", "Confinado", "Contido", "Imobilizado", "Restrained"],
+      "acumulavel": false,
+      "observacao": "Cinco traduções diferentes para a MESMA condição foram encontradas: 'Restrito' (índice e cartas Livro de Norai / Mantenha a Posição), 'Restreinado' (subtítulo da p.102), 'Confinado' (abertura da p.102), 'Contido' (Guardião Imparável e moldura Colosso das Terras Secas) e 'Imobilizado' (cartas Vincular Sombras e Força da Natureza, e o Ato de Desaparecimento do Caminhante Noturno). Todas viram sinônimo de busca."
+    },
+    {
+      "id": "vulneravel",
+      "nome": "Vulnerável",
+      "nomeIngles": "Vulnerable",
+      "tipo": "primaria",
+      "texto": "Quando você ganha a condição Vulnerável, está em posição difícil na ficção: derrubado, lutando para manter o equilíbrio, pego de surpresa, magicamente enfraquecido ou o que fizer sentido na cena. Enquanto estiver Vulnerável, todas as jogadas que tiverem você como alvo são feitas com vantagem.",
+      "sinonimos": ["Vulnerable"],
+      "acumulavel": false
+    },
+    {
+      "id": "camuflado",
+      "nome": "Camuflado",
+      "nomeIngles": "Cloaked",
+      "tipo": "especial",
+      "origem": "Característica de classe do Ladino; cartas do Caminhante Noturno; carta de domínio Arcana.",
+      "texto": "Sempre que estiver Oculto, você também está Camuflado. Além dos benefícios de Oculto, enquanto estiver Camuflado você permanece invisível se ficar parado quando um adversário se mover para onde normalmente o veria. Depois de fazer um ataque ou terminar um movimento dentro da linha de visão de um adversário, você deixa de estar Camuflado.",
+      "sinonimos": ["Encoberto", "Cloaked"],
+      "acumulavel": false,
+      "errata": "p.42 — a última frase da característica de classe foi reescrita.",
+      "observacao": "As cartas do Caminhante Noturno (Passo Sombrio, Nuvem Sombria, Ato de Desaparecimento) usam 'Encoberto' para a mesma condição que o livro e a carta de Arcana chamam de 'Camuflado'. Canônico escolhido pela Vanessa: Camuflado."
+    },
+    {
+      "id": "invisivel",
+      "nome": "Invisível",
+      "nomeIngles": "Invisible",
+      "tipo": "especial",
+      "origem": "Carta de domínio Graça — Invisibilidade.",
+      "texto": "Uma criatura Invisível não pode ser vista, exceto por meios mágicos, e as jogadas de ataque contra ela são feitas com desvantagem.",
+      "sinonimos": ["Invisible"],
+      "acumulavel": false
+    },
+    {
+      "id": "encantado",
+      "nome": "Encantado",
+      "nomeIngles": "Charmed",
+      "tipo": "especial",
+      "origem": "Cartas de domínio Graça — Encantar e Enfeitiçar em Massa.",
+      "texto": "A atenção do alvo fica fixa em você, reduzindo o campo de visão dele e abafando todos os sons exceto a sua voz.",
+      "sinonimos": ["Charmed", "Enfeitiçado"],
+      "acumulavel": false
+    },
+    {
+      "id": "atordoado",
+      "nome": "Atordoado",
+      "nomeIngles": "Stunned",
+      "tipo": "especial",
+      "origem": "Cartas de domínio Graça — Brilho Hipnótico; Esplendor — Luz Ofuscante.",
+      "texto": "Enquanto estiver Atordoado, o alvo não pode usar reações nem realizar outras ações até que a condição seja removida.",
+      "sinonimos": ["Stunned"],
+      "acumulavel": false
+    },
+    {
+      "id": "adormecido",
+      "nome": "Adormecido",
+      "nomeIngles": "Asleep",
+      "tipo": "especial",
+      "origem": "Carta de domínio Códice — Livro de Illiat.",
+      "texto": "O alvo fica Adormecido até sofrer dano ou até o Mestre gastar um Medo no turno dele para limpar a condição.",
+      "sinonimos": ["Asleep", "Dormindo"],
+      "acumulavel": false
+    },
+    {
+      "id": "silenciado",
+      "nome": "Silenciado",
+      "nomeIngles": "Silenced",
+      "tipo": "especial",
+      "origem": "Carta de domínio Meia-Noite — Silêncio.",
+      "texto": "Enquanto Silenciado, o alvo não pode produzir som nem conjurar magias que exijam palavras faladas.",
+      "sinonimos": ["Silenced"],
+      "acumulavel": false
+    },
+    {
+      "id": "aterrorizado",
+      "nome": "Aterrorizado",
+      "nomeIngles": "Horrified",
+      "tipo": "especial",
+      "origem": "Carta de domínio Meia-Noite — Terror Noturno.",
+      "texto": "Enquanto estiverem Aterrorizados, os alvos ficam Vulneráveis.",
+      "sinonimos": ["Horrified", "Terrified", "Apavorado"],
+      "acumulavel": false
+    },
+    {
+      "id": "espectral",
+      "nome": "Espectral",
+      "nomeIngles": "Spectral",
+      "tipo": "especial",
+      "origem": "Carta de domínio Meia-Noite — Espectro da Escuridão.",
+      "texto": "Enquanto estiver Espectral, você é imune a dano físico e pode flutuar e atravessar objetos sólidos.",
+      "sinonimos": ["Spectral"],
+      "acumulavel": false
+    },
+    {
+      "id": "corroido",
+      "nome": "Corroído",
+      "nomeIngles": "Corroded",
+      "tipo": "especial",
+      "origem": "Carta de domínio Sábio — Projétil Corrosivo.",
+      "texto": "Enquanto estiver Corroído, o alvo sofre penalidade na Dificuldade conforme descrito na carta que aplicou a condição.",
+      "sinonimos": ["Corroded"],
+      "acumulavel": true,
+      "observacao": "É a única condição do sistema que se acumula por design: a penalidade cresce com o Estresse gasto."
+    },
+    {
+      "id": "em-chamas",
+      "nome": "Em Chamas",
+      "nomeIngles": "On Fire",
+      "tipo": "especial",
+      "origem": "Carta de domínio Arcana — Aperto de Cinzas.",
+      "texto": "Quando uma criatura agir enquanto estiver Em Chamas, ela deve sofrer dano conforme descrito na carta que aplicou a condição.",
+      "sinonimos": ["On Fire", "Queimando"],
+      "acumulavel": false
+    }
+  ],
+  "regras": {
+    "temporaria": "Quando um efeito diz que a condição é 'temporária' ou vale 'temporariamente', ela pode ser removida com uma jogada de ação contra uma dificuldade definida pelo Mestre — descrita e negociada na ficção. Livro p.102.",
+    "especial": "Condições especiais só são removidas quando o requisito descrito no próprio texto é cumprido. Livro p.102.",
+    "acumulo": "Salvo indicação em contrário, a mesma condição não se acumula: aplicá-la de novo em um alvo que já a tem não faz nada. Livro p.102."
+  }
+}

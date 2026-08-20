@@ -28,15 +28,21 @@ function fichaInicial(nome) {
       subclasse: '',
       descricao: ''
     },
-    tracos: {},
+    tracos: {
+      agilidade: null, forca: null, finesse: null,
+      instinto: null, presenca: null, conhecimento: null
+    },
     recursos: {},
     defesas: {},
     dominios: [],
     cartas: { ativas: [], cofre: [] },
+    caracteristicas: [],
     experiencias: [],
     equipamento: {},
     inventario: [],
     condicoes: [],
+    contadores: {},
+    fichasFilhas: [],
     avancos: {},
     anotacoes: ''
   };

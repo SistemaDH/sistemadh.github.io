@@ -335,3 +335,29 @@ Se a Festa da Besta virar campanha da sua mesa, vale abrir essas páginas junto 
 
 Fora isso: 226 nomes de arma/armadura e 120 de item conferidos um a um contra o original,
 e 0 divergências de número restantes nas descrições.
+
+---
+
+## 13. Errata do Revólver (p.317) — dúvida resolvida
+
+Ficou em aberto na Parte 5 se o `d6 → d8` da errata valia também para o
+**Revólver pequeno**. Conferido na página impressa 317 (PDF 318), moldura
+**Colosso das Terras Secas**:
+
+| Arma | Tabela | Dano no livro |
+|---|---|---|
+| Revólver | primárias | d6+1 / d6+4 / d6+7 / d6+10 |
+| Revólver pequeno | secundárias | d6 / d6+3 / d6+6 / d6+9 |
+
+A errata diz literalmente *"Revolver's d6 has been replaced with a d8"* — nomeia
+**Revolver**, e "Small Revolver" é uma entrada com nome próprio, em outra tabela,
+não citada. Além disso o Revólver primário estava com dado menor que o Rifle da
+mesma tabela (d8), e o recurso do Revólver pequeno é dar **+4 ao dano da arma
+primária** — arma secundária no Daggerheart usa dado baixo de propósito (o Laço
+é d4).
+
+**Aplicado só na primária.** O Revólver pequeno segue d6.
+
+Encontrado de quebra na mesma página, sem efeito nas regras: os cabeçalhos da
+tabela saíram como "TRÁFICO" (é *Traço*), "RAnGE" e "BURDEn", e o recurso do
+Laço ficou "Roped:" / "Com corda" em vez de *Enlaçado*.

@@ -4,12 +4,14 @@
  *  Validação da ficha e (a partir das próximas etapas) as regras de Daggerheart
  *  aplicadas no servidor.
  *
- *  ESTADO NESTA ETAPA (Parte 1 — login e persistência):
- *  aqui existe apenas a validação ESTRUTURAL da ficha: formato, tamanho,
- *  profundidade e sanitização. Nenhuma regra do livro foi escrita ainda —
- *  classes, traços, limiares, cartas de domínio, condições e equipamento
- *  entram nas próximas partes, extraídos exclusivamente do PDF do livro e das
- *  cartas da pasta de contexto.
+ *  ESTADO NESTA ETAPA:
+ *  além da validação ESTRUTURAL (formato, tamanho, profundidade,
+ *  sanitização), este arquivo agora COSTURA os índices das partes já feitas:
+ *   • 45_Tracos.gs      — os seis traços e a distribuição inicial
+ *   • 46_Condicoes.gs   — o vocabulário canônico de condições
+ *   • 47_Contadores.gs  — as fichas/marcadores/dados que ficam nas cartas
+ *  Cada índice valida o seu pedaço; aqui a gente só chama na ordem certa,
+ *  porque os contadores dependem dos traços já normalizados.
  *
  *  O servidor é a fonte da verdade: quando as regras chegarem, elas serão
  *  conferidas AQUI, não só no navegador.
@@ -42,15 +44,21 @@ function fichaVazia_() {
       subclasse: '',
       descricao: ''
     },
-    tracos: {},          // etapa "Criação de ficha"
-    recursos: {},        // PV, Estresse, Esperança, Armadura
+    tracos: {            // os seis traços — ver 45_Tracos.gs
+      agilidade: null, forca: null, finesse: null,
+      instinto: null, presenca: null, conhecimento: null
+    },
+    recursos: {},        // PV, Estresse, Esperança, Armadura, proficiência
     defesas: {},         // Evasão e limiares de dano
     dominios: [],        // domínios da classe
     cartas: { ativas: [], cofre: [] },
+    caracteristicas: [], // ancestralidade, comunidade, classe, subclasse
     experiencias: [],
     equipamento: {},
     inventario: [],
-    condicoes: [],
+    condicoes: [],       // ver 46_Condicoes.gs
+    contadores: {},      // fichas/marcadores/dados nas cartas — ver 47_Contadores.gs
+    fichasFilhas: [],    // Beastform e Companheiro Animal — ver validarFichasFilhas_
     avancos: {},         // histórico de subida de nível
     anotacoes: '',
     meta: { schema: SCHEMA_FICHA }
@@ -98,10 +106,103 @@ function mesclarComEsqueleto_(ficha) {
   const base = fichaVazia_();
   const saida = Object.assign({}, base, ficha);
   // Objetos de primeiro nível também recebem os campos que faltam.
-  ['identidade', 'cartas', 'meta'].forEach(function (chave) {
+  ['identidade', 'tracos', 'cartas', 'recursos', 'contadores', 'meta'].forEach(function (chave) {
     saida[chave] = Object.assign({}, base[chave], ficha[chave] || {});
   });
   return saida;
+}
+
+
+/* ------------------------------------------------------------------------ *
+ *  Fichas paralelas (Beastform e Companheiro Animal)
+ * ------------------------------------------------------------------------ */
+
+/**
+ * PONTO DE INTERESSE — encaixe reservado, conteúdo ainda não modelado.
+ *
+ * O Druida (Beastform, livro p.33-36) e o Patrulheiro Laço Bestial
+ * (Companheiro Animal, p.41-42) usam FICHAS PRÓPRIAS, com atributos e
+ * evolução separados da ficha principal. Não cabem em ficha.tracos nem em
+ * ficha.recursos: a forma de besta troca Evasão e traços por completo, e o
+ * companheiro sobe de nível na ficha dele.
+ *
+ * O que existe AQUI é só o encaixe: a ficha principal já aceita a lista, com
+ * tipo, nome e um balde de dados livre. Isso evita ter que migrar todas as
+ * fichas já salvas quando a parte de fichas paralelas for feita de verdade.
+ *
+ * O que FALTA (parte própria, depois da criação de ficha):
+ *  • as opções de Beastform por tier e as características de cada forma;
+ *  • a tabela de evolução do Companheiro e a Experiência dele;
+ *  • as erratas p.33, p.34, p.35 (Beastform) e p.41/352 (Companheiro).
+ */
+const TIPOS_FICHA_FILHA = {
+  beastform: {
+    nome: 'Forma de Besta',
+    nomeIngles: 'Beastform',
+    exigeClasse: 'druida',
+    exigeSubclasse: null,
+    maximo: 1
+  },
+  companheiro: {
+    nome: 'Companheiro Animal',
+    nomeIngles: 'Ranger Companion',
+    exigeClasse: 'patrulheiro',
+    exigeSubclasse: 'patrulheiro-laco-bestial',
+    maximo: 1
+  }
+};
+
+/**
+ * Valida ficha.fichasFilhas: só a estrutura e quem pode ter cada tipo.
+ * O conteúdo (campo dados) passa direto, já sanitizado.
+ * Normaliza no lugar e devolve a lista de problemas.
+ */
+function validarFichasFilhas_(ficha) {
+  const problemas = [];
+  const bruto = (ficha && ficha.fichasFilhas) || [];
+  if (!Array.isArray(bruto)) {
+    ficha.fichasFilhas = [];
+    problemas.push('O campo de fichas paralelas precisa ser uma lista.');
+    return problemas;
+  }
+
+  const id = (ficha.identidade || {});
+  const classeId = (typeof normalizarClasse_ === 'function') ? normalizarClasse_(id.classe) : '';
+  const subclasseId = (typeof normalizarSubclasse_ === 'function') ? normalizarSubclasse_(id.subclasse) : '';
+
+  const saida = [];
+  const contagem = {};
+  for (let i = 0; i < bruto.length; i++) {
+    const item = bruto[i] || {};
+    const tipo = String(item.tipo || '').trim();
+    const def = TIPOS_FICHA_FILHA[tipo];
+    if (!def) {
+      problemas.push('Tipo de ficha paralela desconhecido: "' + tipo + '".');
+      continue;
+    }
+    if (classeId && def.exigeClasse && classeId !== def.exigeClasse) {
+      problemas.push(def.nome + ' é da classe ' + def.exigeClasse + '.');
+      continue;
+    }
+    if (subclasseId && def.exigeSubclasse && subclasseId !== def.exigeSubclasse) {
+      problemas.push(def.nome + ' é da subclasse ' + def.exigeSubclasse + '.');
+      continue;
+    }
+    contagem[tipo] = (contagem[tipo] || 0) + 1;
+    if (contagem[tipo] > def.maximo) {
+      problemas.push('Só cabe ' + def.maximo + ' ficha de ' + def.nome + ' por personagem.');
+      continue;
+    }
+    saida.push({
+      tipo: tipo,
+      nome: String(item.nome || def.nome).trim().slice(0, LIMITES.TAMANHO_NOME),
+      nivel: Math.max(1, Math.min(10, Math.trunc(Number(item.nivel)) || 1)),
+      dados: (item.dados && typeof item.dados === 'object' && !Array.isArray(item.dados)) ? item.dados : {}
+    });
+  }
+
+  ficha.fichasFilhas = saida;
+  return problemas;
 }
 
 /**
@@ -137,6 +238,26 @@ function validarFicha_(fichaBruta) {
 
   ficha.meta = ficha.meta || {};
   ficha.meta.schema = SCHEMA_FICHA;
+
+  // Ordem importa: os traços precisam estar normalizados antes dos
+  // contadores, porque quase todo máximo de contador é "igual ao seu traço".
+  let problemas = [];
+  if (typeof validarTracos_ === 'function') problemas = problemas.concat(validarTracos_(ficha));
+  if (typeof validarCondicoes_ === 'function') problemas = problemas.concat(validarCondicoes_(ficha));
+  if (typeof validarContadores_ === 'function') problemas = problemas.concat(validarContadores_(ficha));
+  problemas = problemas.concat(validarFichasFilhas_(ficha));
+
+  if (problemas.length) {
+    // Durante a criação de ficha o front grava rascunho a cada passo; aí os
+    // problemas viram aviso em vez de recusa, senão nada é salvo pela metade.
+    if (ficha.meta.rascunho) {
+      ficha.meta.avisos = problemas.slice(0, 20);
+    } else {
+      throw erroApi_(ERRO.DADOS_INVALIDOS, problemas[0], { problemas: problemas.slice(0, 20) });
+    }
+  } else {
+    delete ficha.meta.avisos;
+  }
 
   return ficha;
 }

@@ -665,7 +665,7 @@
    "tipo": "errata",
    "de": "Nível 1: d6+1 phy; Nível 2: d6+4 phy; Nível 3: d6+7 phy; Nível 4: d6+10 phy",
    "para": "Nível 1: d8+1 phy; Nível 2: d8+4 phy; Nível 3: d8+7 phy; Nível 4: d8+10 phy",
-   "motivo": "errata oficial p.317"
+   "motivo": "errata oficial p.317. CONFERIDO na página impressa 317 (PDF 318): a moldura Colosso das Terras Secas tem DUAS armas de revólver em tabelas diferentes — 'Revólver' (primária, era d6+1/+4/+7/+10) e 'Revólver pequeno' (secundária, d6/+3/+6/+9). A errata nomeia 'Revolver'; 'Small Revolver' é entrada com nome próprio e não foi citada. Aplicado só na primária — que também estava com dado menor que o Rifle da mesma tabela (d8), enquanto o recurso do Revólver pequeno é justamente dar +4 ao dano da arma primária."
   },
   {
    "item": "Unidades de ouro",

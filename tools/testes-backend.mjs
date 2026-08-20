@@ -760,6 +760,279 @@ teste('nenhum nome de item se repete', () => {
   igual(new Set(nomes).size, nomes.length, 'há itens com nomes iguais');
 });
 
+console.log('\nTraços');
+
+const fichaBase = (extra = {}) => Object.assign({
+  identidade: { nome: 'Teste', nivel: 1, classe: 'Mago', subclasse: 'Escola do Conhecimento' },
+  tracos: { agilidade: 0, forca: -1, finesse: 1, instinto: 1, presenca: 0, conhecimento: 2 }
+}, extra);
+
+teste('normaliza traço pelo nome pt, en e apelido', () => {
+  igual(contexto.normalizarTraco_('Conhecimento'), 'conhecimento');
+  igual(contexto.normalizarTraco_('KNOWLEDGE'), 'conhecimento');
+  igual(contexto.normalizarTraco_('força'), 'forca');
+  igual(contexto.normalizarTraco_('Finesse'), 'finesse');
+  igual(contexto.normalizarTraco_('Destreza'), 'finesse'); // sinônimo registrado
+  igual(contexto.normalizarTraco_('Carisma'), '');         // não existe em Daggerheart
+});
+
+teste('Conjuração não é um traço: vem da subclasse', () => {
+  verdade(contexto.ehConjuracao_('Spellcast'), 'Spellcast deveria ser reconhecido');
+  igual(contexto.normalizarTraco_('Conjuração'), '', 'Conjuração não pode virar um traço próprio');
+  const f = fichaBase();
+  igual(contexto.conjuracaoDoPersonagem_(f), 'conhecimento'); // Mago = Knowledge
+  igual(contexto.valorDoTraco_(f, 'Conjuração'), 2);
+  const guerreiro = fichaBase({ identidade: { nome: 'G', nivel: 1, classe: 'Guerreiro', subclasse: 'Chamada do Matador' } });
+  igual(contexto.conjuracaoDoPersonagem_(guerreiro), '', 'Guerreiro não conjura');
+});
+
+teste('regra do livro p.17: traço negativo conta como 0 fichas', () => {
+  const f = fichaBase();
+  igual(contexto.valorDoTraco_(f, 'Força'), -1);
+  igual(contexto.fichasPorTraco_(f, 'Força'), 0);
+  igual(contexto.fichasPorTraco_(f, 'Conhecimento'), 2);
+});
+
+teste('nível 1 exige exatamente +2,+1,+1,0,0,-1', () => {
+  const ok = fichaBase();
+  igual(contexto.validarTracos_(ok), []);
+  const ruim = fichaBase({ tracos: { agilidade: 2, forca: 2, finesse: 1, instinto: 1, presenca: 0, conhecimento: 0 } });
+  verdade(contexto.validarTracos_(ruim).length > 0, 'deveria recusar a distribuição errada');
+});
+
+teste('ficha nova sem traços preenchidos passa', () => {
+  const vazia = { identidade: { nome: 'X', nivel: 1 }, tracos: { agilidade: null, forca: null, finesse: null, instinto: null, presenca: null, conhecimento: null } };
+  igual(contexto.validarTracos_(vazia), []);
+});
+
+teste('traço pela metade e traço inventado são recusados', () => {
+  const meio = { identidade: { nome: 'X', nivel: 1 }, tracos: { agilidade: 2, forca: 1 } };
+  verdade(contexto.validarTracos_(meio).length > 0, 'deveria exigir os seis');
+  const inventado = { identidade: { nome: 'X', nivel: 1 }, tracos: { agilidade: 0, forca: -1, finesse: 1, instinto: 1, presenca: 0, conhecimento: 2, carisma: 3 } };
+  verdade(contexto.validarTracos_(inventado).some((p) => /desconhecido/i.test(p)), 'deveria avisar do traço inventado');
+});
+
+console.log('\nCondições');
+
+teste('as cinco traduções de Restrained caem na mesma condição', () => {
+  ['Restrito', 'Restreinado', 'Confinado', 'Contido', 'Imobilizado', 'Restrained']
+    .forEach((n) => igual(contexto.normalizarCondicao_(n), 'restrito', `"${n}" deveria virar restrito`));
+});
+
+teste('Camuflado é o canônico e Encoberto continua achando', () => {
+  igual(contexto.normalizarCondicao_('Camuflado'), 'camuflado');
+  igual(contexto.normalizarCondicao_('Encoberto'), 'camuflado');
+  igual(contexto.normalizarCondicao_('Cloaked'), 'camuflado');
+  igual(contexto.nomeDaCondicao_('Encoberto'), 'Camuflado');
+});
+
+teste('Oculto aceita Escondido e Hidden', () => {
+  ['Oculto', 'Escondido', 'Hidden'].forEach((n) => igual(contexto.normalizarCondicao_(n), 'oculto'));
+});
+
+teste('plural e feminino das cartas são reconhecidos', () => {
+  igual(contexto.normalizarCondicao_('Atordoados'), 'atordoado');
+  igual(contexto.normalizarCondicao_('Vulneráveis'), 'vulneravel');
+  igual(contexto.normalizarCondicao_('Encantada'), 'encantado');
+  igual(contexto.normalizarCondicao_('Corroídos'), 'corroido');
+});
+
+teste('nenhum radical de condição colide com outro', () => {
+  const CONDICAO_ALIASES = avaliar('CONDICAO_ALIASES');
+  const dono = {};
+  Object.keys(CONDICAO_ALIASES).forEach((id) => {
+    CONDICAO_ALIASES[id].forEach((nome) => {
+      const r = contexto.radicalCondicao_(contexto.chaveTexto_(nome));
+      if (dono[r] && dono[r] !== id) throw new Error(`radical "${r}" serve a ${dono[r]} e a ${id}`);
+      dono[r] = id;
+    });
+  });
+});
+
+teste('condição não acumula, mas Corroído sim', () => {
+  const f = { condicoes: ['Vulnerável', 'Vulneráveis', 'Corroído', 'Corroídos'] };
+  contexto.validarCondicoes_(f);
+  igual(f.condicoes.filter((c) => c.id === 'vulneravel').length, 1);
+  igual(f.condicoes.filter((c) => c.id === 'corroido').length, 2);
+  verdade(contexto.temCondicao_(f, 'Vulnerable'), 'temCondicao_ deveria aceitar o inglês');
+});
+
+teste('condição inventada é recusada', () => {
+  const f = { condicoes: ['Petrificado'] };
+  const p = contexto.validarCondicoes_(f);
+  igual(f.condicoes, []);
+  verdade(p.length > 0, 'deveria reclamar');
+});
+
+console.log('\nContadores com estado');
+
+teste('as 20 cartas/características com estado estão no catálogo', () => {
+  const CONTADORES = avaliar('CONTADORES');
+  igual(Object.keys(CONTADORES).length, 20);
+  const porOrigem = {};
+  Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
+  igual(porOrigem['carta-dominio'], 17);
+});
+
+teste('toda carta marcada como "guarda estado" tem contador', async () => {
+  const fs = await import('node:fs');
+  const cartas = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/cartas-dominio.json'), 'utf8')).cartas;
+  const comEstado = cartas.filter((c) => (c.dependencias || []).some((d) => d === 'marcadores_na_carta' || d === 'contadores'));
+  comEstado.forEach((c) => {
+    verdade(contexto.contadoresDoRef_(c.id).length === 1, `carta ${c.id} sem contador no catálogo`);
+  });
+});
+
+teste('máximo "igual ao seu traço" usa o traço certo', () => {
+  const f = fichaBase();
+  // Restauração (Esplendor) = traço de Conjuração; Mago conjura com Conhecimento (+2)
+  igual(contexto.maximoDoContador_('carta:splendor-restauracao', f), 2);
+  // Palavras Inspiradoras = Presença (0)
+  igual(contexto.maximoDoContador_('carta:grace-palavras-inspiradoras', f), 0);
+  // Abordagem Estratégica = Conhecimento, mínimo 1
+  igual(contexto.maximoDoContador_('carta:bone-abordagem-estrategica', f), 2);
+  const fraco = fichaBase({ tracos: { agilidade: 1, forca: 2, finesse: 1, instinto: 0, presenca: 0, conhecimento: -1 } });
+  igual(contexto.maximoDoContador_('carta:bone-abordagem-estrategica', fraco), 1, 'o mínimo 1 tem que valer');
+});
+
+teste('máximo por nível, por proficiência e pelo dado', () => {
+  const f = fichaBase({ identidade: { nome: 'T', nivel: 6, classe: 'Guerreiro', subclasse: 'Chamada do Matador' } });
+  igual(contexto.maximoDoContador_('carta:codex-simbolo-da-retaliacao', f), 6);       // nível
+  igual(contexto.maximoDoContador_('classe:guerreiro:matador', f), 3);                // tier 3 do nível 6
+  igual(contexto.maximoDoContador_('carta:sage-surto-selvagem', f), 6);               // lados do d6
+});
+
+teste('dado do contador cresce com o nível e com a maestria', () => {
+  const n1 = fichaBase({ identidade: { nome: 'B', nivel: 1, classe: 'Bardo', subclasse: 'Músico Errante' } });
+  const n5 = fichaBase({ identidade: { nome: 'B', nivel: 5, classe: 'Bardo', subclasse: 'Músico Errante' } });
+  igual(contexto.dadoDoContador_('classe:bardo:rally', n1), 'd6');
+  igual(contexto.dadoDoContador_('classe:bardo:rally', n5), 'd8');
+  const poeta = fichaBase({
+    identidade: { nome: 'B', nivel: 10, classe: 'Bardo', subclasse: 'Artífice das Palavras' },
+    caracteristicas: [{ nome: 'Poesia Épica' }]
+  });
+  igual(contexto.dadoDoContador_('classe:bardo:rally', poeta), 'd10');
+  const g1 = fichaBase({ identidade: { nome: 'G', nivel: 1, classe: 'Guardião', subclasse: 'Robusto' } });
+  igual(contexto.dadoDoContador_('classe:guardiao:imparavel', g1), 'd4');
+  igual(contexto.maximoDoContador_('classe:guardiao:imparavel', g1), 4);
+});
+
+teste('Templo das Selvas conta as cartas Sábias do conjunto e do cofre', () => {
+  const f = fichaBase({
+    identidade: { nome: 'D', nivel: 5, classe: 'Druida', subclasse: 'Guardião dos Elementos' },
+    cartas: { ativas: ['Templo das Selvas', 'Pele Espinhosa'], cofre: ['Surto Selvagem', 'Palavras Inspiradoras'] }
+  });
+  igual(contexto.maximoDoContador_('carta:sage-templo-das-selvas', f), 3); // 3 Sábias, 1 de Graça
+});
+
+teste('contador acima do máximo é cortado e avisado', () => {
+  const f = fichaBase({ contadores: { 'carta:splendor-restauracao': { valor: 9 } } });
+  const p = contexto.validarContadores_(f);
+  igual(f.contadores['carta:splendor-restauracao'].valor, 2);
+  verdade(p.length > 0, 'deveria avisar do corte');
+});
+
+teste('contador desconhecido é jogado fora', () => {
+  const f = fichaBase({ contadores: { 'carta:nao-existe': { valor: 3 } } });
+  const p = contexto.validarContadores_(f);
+  igual(Object.keys(f.contadores), []);
+  verdade(p.length > 0);
+});
+
+teste('descanso longo recarrega umas e zera outras', () => {
+  const f = fichaBase({
+    contadores: {
+      'carta:splendor-restauracao': { valor: 0 },     // recarrega no descanso longo
+      'carta:sage-pele-espinhosa': { valor: 2 },      // zera em qualquer descanso
+      'classe:guerreiro:matador': { valor: 1 }        // só zera no fim da sessão
+    }
+  });
+  contexto.aplicarGatilhoContadores_(f, 'descanso-longo');
+  igual(f.contadores['carta:splendor-restauracao'].valor, 2, 'deveria encher');
+  verdade(!f.contadores['carta:sage-pele-espinhosa'], 'deveria ter zerado');
+  igual(f.contadores['classe:guerreiro:matador'].valor, 1, 'não é gatilho dele');
+});
+
+teste('fim de sessão zera os Dados de Matador e enche Liberar o Caos no início', () => {
+  const f = fichaBase({ contadores: { 'classe:guerreiro:matador': { valor: 2 } } });
+  contexto.aplicarGatilhoContadores_(f, 'fim-de-sessao');
+  verdade(!f.contadores['classe:guerreiro:matador'], 'deveria ter zerado');
+  const mago = fichaBase();
+  contexto.aplicarGatilhoContadores_(mago, 'inicio-de-sessao');
+  igual(mago.contadores['carta:arcana-liberar-o-caos'].valor, 2); // Conhecimento +2
+});
+
+teste('Dado de Reunião tem nome canônico e os dois sinônimos das cartas', () => {
+  igual(contexto.normalizarContador_('Dado de Reunião'), 'classe:bardo:rally');
+  igual(contexto.normalizarContador_('Dado de Motivação'), 'classe:bardo:rally');
+  igual(contexto.normalizarContador_('Rally Die'), 'classe:bardo:rally');
+  igual(contexto.normalizarContador_('Slayer Dice'), 'classe:guerreiro:matador');
+  igual(contexto.normalizarContador_('Unstoppable Die'), 'classe:guardiao:imparavel');
+});
+
+console.log('\nFicha completa e fichas paralelas');
+
+teste('ficha nova vazia continua salvando', () => {
+  const f = contexto.validarFicha_({ identidade: { nome: 'Novato', nivel: 1 } });
+  igual(f.tracos, { agilidade: null, forca: null, finesse: null, instinto: null, presenca: null, conhecimento: null });
+  igual(f.condicoes, []);
+  igual(f.contadores, {});
+  igual(f.fichasFilhas, []);
+});
+
+teste('ficha com traços errados é recusada ao salvar', () => {
+  let deu = false;
+  try {
+    contexto.validarFicha_({ identidade: { nome: 'X', nivel: 1 }, tracos: { agilidade: 3, forca: 3, finesse: 3, instinto: 3, presenca: 3, conhecimento: 3 } });
+  } catch (e) { deu = true; }
+  verdade(deu, 'deveria ter recusado');
+});
+
+teste('rascunho transforma recusa em aviso', () => {
+  const f = contexto.validarFicha_({
+    identidade: { nome: 'X', nivel: 1 },
+    tracos: { agilidade: 3, forca: 3, finesse: 3, instinto: 3, presenca: 3, conhecimento: 3 },
+    meta: { rascunho: true }
+  });
+  verdade((f.meta.avisos || []).length > 0, 'deveria ter avisos');
+});
+
+teste('Beastform só para Druida, Companheiro só para Laço Bestial', () => {
+  const druida = { identidade: { nome: 'D', nivel: 1, classe: 'Druida', subclasse: 'Guardião dos Elementos' },
+                   fichasFilhas: [{ tipo: 'beastform', nome: 'Lobo' }] };
+  igual(contexto.validarFichasFilhas_(druida), []);
+  igual(druida.fichasFilhas[0].nome, 'Lobo');
+
+  const mago = { identidade: { nome: 'M', nivel: 1, classe: 'Mago', subclasse: 'Escola da Guerra' },
+                 fichasFilhas: [{ tipo: 'beastform' }] };
+  verdade(contexto.validarFichasFilhas_(mago).length > 0, 'Mago não vira besta');
+  igual(mago.fichasFilhas, []);
+
+  const explorador = { identidade: { nome: 'P', nivel: 1, classe: 'Patrulheiro', subclasse: 'Explorador' },
+                       fichasFilhas: [{ tipo: 'companheiro' }] };
+  verdade(contexto.validarFichasFilhas_(explorador).length > 0, 'Explorador não tem companheiro');
+
+  const laco = { identidade: { nome: 'P', nivel: 1, classe: 'Patrulheiro', subclasse: 'Laço Bestial' },
+                 fichasFilhas: [{ tipo: 'companheiro', nome: 'Corvo' }, { tipo: 'companheiro', nome: 'Outro' }] };
+  verdade(contexto.validarFichasFilhas_(laco).length > 0, 'só cabe um companheiro');
+  igual(laco.fichasFilhas.length, 1);
+});
+
+teste('salvar e reler a ficha preserva contadores e condições', () => {
+  const reg = api('registrar', { nome: 'Contadora', codigo: 'segredo123' });
+  const token = (reg.ok ? reg : api('entrar', { nome: 'Contadora', codigo: 'segredo123' })).dados.token;
+  const criada = api('criarPersonagem', { token, ficha: {
+    identidade: { nome: 'Elowen', nivel: 1, classe: 'Mago', subclasse: 'Escola do Conhecimento' },
+    tracos: { agilidade: 0, forca: -1, finesse: 1, instinto: 1, presenca: 0, conhecimento: 2 },
+    condicoes: ['Encoberto'],
+    contadores: { 'carta:splendor-restauracao': { valor: 2 } }
+  } });
+  verdade(criada.ok, 'deveria criar: ' + JSON.stringify(criada.erro || {}));
+  const lida = api('obterPersonagem', { token, id: criada.dados.personagem.id });
+  igual(lida.dados.personagem.ficha.condicoes[0].nome, 'Camuflado');
+  igual(lida.dados.personagem.ficha.contadores['carta:splendor-restauracao'].valor, 2);
+});
+
 console.log('\nZerar planilha');
 teste('arquivarEResetar preserva o antigo e recria vazio', () => {
   contexto.arquivarEResetar();

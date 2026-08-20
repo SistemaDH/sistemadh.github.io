@@ -1,0 +1,76 @@
+{
+  "versao": 1,
+  "fonte": "Livro pt-BR p.16-17 (ETAPA 3 — Atribuir traços de caráter). Os verbos de cada traço vieram do livro, com as palavras que ficaram em inglês traduzidas por mim.",
+  "termo": {
+    "escolhido": "traço",
+    "plural": "traços",
+    "motivo": "O livro usa 'traços de caráter' no título da ETAPA 3 e 'características' no corpo da mesma página. 'Característica' já é usada no sistema para as características de ancestralidade, comunidade, classe, subclasse e equipamento, então 'traço' ficou reservado para os seis atributos — que é também o termo do SRD em inglês ('trait').",
+    "sinonimos": ["característica", "traço de caráter", "atributo", "trait"]
+  },
+  "distribuicaoInicial": [2, 1, 1, 0, 0, -1],
+  "limites": { "minimo": -3, "maximo": 8 },
+  "regraDeContagem": "Quando uma carta ou efeito manda usar o VALOR de um traço (ex.: colocar fichas iguais ao seu Conhecimento), um +3 conta como 3 e um valor negativo conta como 0 fichas, salvo indicação em contrário. Livro p.17.",
+  "tracos": [
+    {
+      "id": "agilidade",
+      "nome": "Agilidade",
+      "nomeIngles": "Agility",
+      "verbos": ["Correr", "Saltar", "Manobrar"],
+      "verbosIngles": ["Sprint", "Leap", "Maneuver"],
+      "descricao": "Agilidade alta significa que você é rápido, ágil em terreno difícil e reage depressa ao perigo. Você faz uma jogada de Agilidade para subir uma corda, correr para se proteger ou saltar de um telhado para outro.",
+      "sinonimos": ["Agility"]
+    },
+    {
+      "id": "forca",
+      "nome": "Força",
+      "nomeIngles": "Strength",
+      "verbos": ["Levantar", "Esmagar", "Agarrar"],
+      "verbosIngles": ["Lift", "Smash", "Grapple"],
+      "descricao": "Força alta significa que você é melhor em feitos que testam sua potência física e sua resistência. Você faz uma jogada de Força para arrombar uma porta, levantar objetos pesados ou se manter firme contra um inimigo.",
+      "sinonimos": ["Strength"]
+    },
+    {
+      "id": "finesse",
+      "nome": "Finesse",
+      "nomeIngles": "Finesse",
+      "verbos": ["Controlar", "Ocultar", "Ajustar"],
+      "verbosIngles": ["Control", "Hide", "Tinker"],
+      "descricao": "Finesse alta significa que você é habilidoso em tarefas que exigem precisão, furtividade ou controle fino. Você faz uma jogada de Finesse para usar ferramentas delicadas, escapar da atenção ou atacar com precisão.",
+      "sinonimos": ["Finesse", "Destreza", "Precisão"],
+      "observacao": "O livro NÃO traduz Finesse. Mantido em inglês para bater com as cartas e com a ficha oficial."
+    },
+    {
+      "id": "instinto",
+      "nome": "Instinto",
+      "nomeIngles": "Instinct",
+      "verbos": ["Perceber", "Sentir", "Navegar"],
+      "verbosIngles": ["Perceive", "Sense", "Navigate"],
+      "descricao": "Instinto alto significa que você tem percepção aguçada do ambiente e intuição natural. Você faz uma jogada de Instinto para perceber o perigo, notar detalhes ou rastrear um inimigo esquivo.",
+      "sinonimos": ["Instinct"]
+    },
+    {
+      "id": "presenca",
+      "nome": "Presença",
+      "nomeIngles": "Presence",
+      "verbos": ["Encantar", "Representar", "Enganar"],
+      "verbosIngles": ["Charm", "Perform", "Deceive"],
+      "descricao": "Presença alta significa que você tem forte força de personalidade e facilidade em situações sociais. Você faz uma jogada de Presença para defender seu caso, intimidar um inimigo ou chamar a atenção de uma multidão.",
+      "sinonimos": ["Presence"]
+    },
+    {
+      "id": "conhecimento",
+      "nome": "Conhecimento",
+      "nomeIngles": "Knowledge",
+      "verbos": ["Recordar", "Analisar", "Compreender"],
+      "verbosIngles": ["Recall", "Analyze", "Comprehend"],
+      "descricao": "Conhecimento elevado significa que você sabe o que os outros não sabem e entende como aplicar a mente por dedução e inferência. Você faz uma jogada de Conhecimento para interpretar fatos, ver padrões ou lembrar informações importantes.",
+      "sinonimos": ["Knowledge", "Saber"]
+    }
+  ],
+  "conjuracao": {
+    "nome": "Conjuração",
+    "nomeIngles": "Spellcast",
+    "explicacao": "Conjuração NÃO é um sétimo traço: é o apelido de um dos seis traços, definido pela subclasse. Cartas que dizem 'seu traço de Conjuração' usam o valor do traço apontado pela subclasse.",
+    "sinonimos": ["Spellcast", "Magia", "Feitiço"]
+  }
+}

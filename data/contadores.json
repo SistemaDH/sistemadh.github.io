@@ -1,0 +1,152 @@
+{
+  "versao": 1,
+  "fonte": "Textos das 17 cartas de domínio que guardam estado (data/cartas-dominio.json) e das 3 características de classe com dados próprios (data/classes.json).",
+  "explicacao": "Várias cartas e características mandam 'colocar fichas/marcadores/um dado nesta carta'. Esse valor é ESTADO DO PERSONAGEM, não da carta: precisa ser gravado na ficha e zerado na hora certa. Este catálogo diz, para cada um: qual é o máximo, que dado usa e quando zera.",
+  "gatilhos": {
+    "inicio-de-sessao": "Na abertura da sessão.",
+    "fim-de-sessao": "No encerramento da sessão.",
+    "descanso-longo": "Em qualquer descanso longo.",
+    "descanso": "Em qualquer descanso, curto ou longo.",
+    "fim-da-cena": "Quando a cena termina (ou quando o efeito descrito na carta acaba).",
+    "troca-de-alvo": "Quando o efeito é apontado para outro alvo.",
+    "manual": "Só quando o texto da carta mandar — o app não zera sozinho."
+  },
+  "limiteAberto": 99,
+  "contadores": [
+    { "chave": "carta:arcana-liberar-o-caos", "origem": "carta-dominio", "refId": "arcana-liberar-o-caos",
+      "nome": "Liberar o Caos", "rotulo": "fichas", "tipo": "marcadores",
+      "maximo": { "tipo": "traco", "traco": "Conjuração" },
+      "recarregaEm": ["inicio-de-sessao"], "zeraEm": ["fim-de-sessao"],
+      "observacao": "Marcar 1 Estresse reabastece até o máximo, a qualquer momento." },
+
+    { "chave": "carta:arcana-voar", "origem": "carta-dominio", "refId": "arcana-voar",
+      "nome": "Voar", "rotulo": "fichas", "tipo": "marcadores",
+      "maximo": { "tipo": "traco", "traco": "Agilidade", "minimo": 1 },
+      "recarregaEm": [], "zeraEm": ["fim-da-cena"],
+      "observacao": "Enche só quando a Jogada de Conjuração (15) dá certo. Chegou a zero, o personagem desce." },
+
+    { "chave": "carta:bone-abordagem-estrategica", "origem": "carta-dominio", "refId": "bone-abordagem-estrategica",
+      "nome": "Abordagem Estratégica", "rotulo": "fichas", "tipo": "marcadores",
+      "maximo": { "tipo": "traco", "traco": "Conhecimento", "minimo": 1 },
+      "recarregaEm": ["descanso-longo"], "zeraEm": ["descanso-longo"] },
+
+    { "chave": "carta:codex-simbolo-da-retaliacao", "origem": "carta-dominio", "refId": "codex-simbolo-da-retaliacao",
+      "nome": "Símbolo da Retaliação", "rotulo": "dados", "tipo": "dados",
+      "dado": { "padrao": "d8" },
+      "maximo": { "tipo": "nivel" },
+      "recarregaEm": [], "zeraEm": ["manual", "troca-de-alvo"],
+      "observacao": "Ganha um d8 sempre que o adversário marcado causa dano. Zera quando você acerta o alvo marcado, quando ele é derrotado ou quando a carta é lançada de novo." },
+
+    { "chave": "carta:grace-palavras-inspiradoras", "origem": "carta-dominio", "refId": "grace-palavras-inspiradoras",
+      "nome": "Palavras Inspiradoras", "rotulo": "marcadores", "tipo": "marcadores",
+      "maximo": { "tipo": "traco", "traco": "Presença" },
+      "recarregaEm": ["descanso-longo"], "zeraEm": ["descanso-longo"] },
+
+    { "chave": "carta:grace-invisibilidade", "origem": "carta-dominio", "refId": "grace-invisibilidade",
+      "nome": "Invisibilidade", "rotulo": "marcadores", "tipo": "marcadores",
+      "maximo": { "tipo": "traco", "traco": "Conjuração" },
+      "recarregaEm": [], "zeraEm": ["fim-da-cena"],
+      "observacao": "Gasta 1 a cada ação da criatura Invisível. Ao gastar o último, o efeito acaba. Só uma criatura Invisível por vez.",
+      "condicaoLigada": "invisivel" },
+
+    { "chave": "carta:grace-nunca-ofuscado", "origem": "carta-dominio", "refId": "grace-nunca-ofuscado",
+      "nome": "Nunca Ofuscado", "rotulo": "marcadores", "tipo": "marcadores",
+      "maximo": { "tipo": "aberto" },
+      "recarregaEm": [], "zeraEm": ["manual"],
+      "observacao": "Ganha marcadores igual aos Pontos de Vida perdidos; some todos no próximo ataque bem-sucedido. A carta não declara teto." },
+
+    { "chave": "carta:midnight-disfarce-incrivel", "origem": "carta-dominio", "refId": "midnight-disfarce-incrivel",
+      "nome": "Disfarce Incrível", "rotulo": "marcadores", "tipo": "marcadores",
+      "maximo": { "tipo": "traco", "traco": "Conjuração" },
+      "recarregaEm": [], "zeraEm": ["fim-da-cena"] },
+
+    { "chave": "carta:midnight-disfarce-em-massa", "origem": "carta-dominio", "refId": "midnight-disfarce-em-massa",
+      "nome": "Disfarce em Massa", "rotulo": "contagem", "tipo": "contagem-regressiva",
+      "inicial": 8,
+      "maximo": { "tipo": "fixo", "valor": 8 },
+      "recarregaEm": [], "zeraEm": ["fim-da-cena"],
+      "observacao": "É uma Contagem Regressiva (8), não marcadores: começa em 8 e desce. Quando chega a 0, o disfarce acaba." },
+
+    { "chave": "carta:midnight-carga-magica", "origem": "carta-dominio", "refId": "midnight-carga-magica",
+      "nome": "Carga Mágica", "rotulo": "marcadores", "tipo": "marcadores",
+      "maximo": { "tipo": "traco", "traco": "Conjuração" },
+      "recarregaEm": [], "zeraEm": ["manual"] },
+
+    { "chave": "carta:midnight-tributo-do-crepusculo", "origem": "carta-dominio", "refId": "midnight-tributo-do-crepusculo",
+      "nome": "Tributo do Crepúsculo", "rotulo": "fichas", "tipo": "marcadores",
+      "maximo": { "tipo": "aberto" },
+      "recarregaEm": [], "zeraEm": ["descanso", "troca-de-alvo"],
+      "observacao": "Só um Tributo do Crepúsculo ativo por vez. A carta não declara teto de fichas." },
+
+    { "chave": "carta:sage-fortaleza-selvagem", "origem": "carta-dominio", "refId": "sage-fortaleza-selvagem",
+      "nome": "Fortaleza Selvagem", "rotulo": "PV da cúpula", "tipo": "marcadores",
+      "maximo": { "tipo": "fixo", "valor": 3 },
+      "recarregaEm": [], "zeraEm": ["fim-da-cena"],
+      "observacao": "Os marcadores são os Pontos de Vida da cúpula, não do personagem. No 3º, a cúpula cai." },
+
+    { "chave": "carta:sage-pele-espinhosa", "origem": "carta-dominio", "refId": "sage-pele-espinhosa",
+      "nome": "Pele Espinhosa", "rotulo": "marcadores", "tipo": "marcadores",
+      "maximo": { "tipo": "traco", "traco": "Conjuração" },
+      "recarregaEm": [], "zeraEm": ["descanso"],
+      "observacao": "Uma vez por descanso, gastando 1 Esperança." },
+
+    { "chave": "carta:sage-surto-selvagem", "origem": "carta-dominio", "refId": "sage-surto-selvagem",
+      "nome": "Surto Selvagem", "rotulo": "valor do dado", "tipo": "dado-valor",
+      "dado": { "padrao": "d6" },
+      "inicial": 1,
+      "maximo": { "tipo": "dado" },
+      "recarregaEm": [], "zeraEm": ["descanso"],
+      "observacao": "Uma vez por descanso longo. Sobe de 1 em 1; quando passa de 6 ou você descansa, a forma acaba e você marca 1 Estresse." },
+
+    { "chave": "carta:sage-templo-das-selvas", "origem": "carta-dominio", "refId": "sage-templo-das-selvas",
+      "nome": "Templo das Selvas", "rotulo": "marcadores", "tipo": "marcadores",
+      "maximo": { "tipo": "cartas-do-dominio", "dominio": "SAGE", "onde": ["ativas", "cofre"] },
+      "recarregaEm": ["descanso-longo"], "zeraEm": ["descanso-longo"],
+      "observacao": "Sucesso crítico numa Jogada de Conjuração de magia Sábia também dá +1 marcador." },
+
+    { "chave": "carta:splendor-restauracao", "origem": "carta-dominio", "refId": "splendor-restauracao",
+      "nome": "Restauração", "rotulo": "marcadores", "tipo": "marcadores",
+      "maximo": { "tipo": "traco", "traco": "Conjuração" },
+      "recarregaEm": ["descanso-longo"], "zeraEm": ["descanso-longo"] },
+
+    { "chave": "carta:splendor-zona-de-protecao", "origem": "carta-dominio", "refId": "splendor-zona-de-protecao",
+      "nome": "Zona de Proteção", "rotulo": "valor do dado", "tipo": "dado-valor",
+      "dado": { "padrao": "d6" },
+      "inicial": 1,
+      "maximo": { "tipo": "dado" },
+      "recarregaEm": [], "zeraEm": ["fim-da-cena", "descanso-longo"],
+      "observacao": "Uma vez por descanso longo. Quando o valor passa de 6, a zona some." },
+
+    { "chave": "classe:bardo:rally", "origem": "caracteristica-classe", "refId": "bardo",
+      "nome": "Dado de Reunião", "rotulo": "dado guardado", "tipo": "marcadores",
+      "dado": { "padrao": "d6", "progressao": [
+        { "nivelMinimo": 5, "dado": "d8", "motivo": "Nível 5 (característica de classe Rally)" },
+        { "caracteristica": "Poesia Épica", "dado": "d10", "motivo": "Maestria do Artífice das Palavras" }
+      ] },
+      "maximo": { "tipo": "fixo", "valor": 1 },
+      "recarregaEm": ["inicio-de-sessao"], "zeraEm": ["fim-de-sessao"],
+      "observacao": "Uma vez por sessão o Bardo dá um Dado de Reunião a si mesmo e a cada aliado; na ficha de cada personagem cabe 1. O aliado gasta rolando e somando a uma jogada de ação, reação ou dano — ou limpando Estresse igual ao resultado.",
+      "termo": { "canonico": "Dado de Reunião", "sinonimos": ["Rally Die", "Rally Dice", "Dado de Motivação"],
+        "motivo": "A carta do Maestro (Músico Errante) usa 'Dado de Reunião' e a de Poesia Épica (Artífice das Palavras) usa 'Dado de Motivação' para a MESMA coisa; a característica de classe deixa 'Rally Die' em inglês. Escolhido 'Dado de Reunião' porque o próprio texto da característica diz 'descreva como você reúne o grupo'." } },
+
+    { "chave": "classe:guardiao:imparavel", "origem": "caracteristica-classe", "refId": "guardiao",
+      "nome": "Dado Imparável", "rotulo": "valor do dado", "tipo": "dado-valor",
+      "dado": { "padrao": "d4", "progressao": [
+        { "nivelMinimo": 5, "dado": "d6", "motivo": "Nível 5 (característica de classe Imparável)" }
+      ] },
+      "inicial": 1,
+      "maximo": { "tipo": "dado" },
+      "recarregaEm": [], "zeraEm": ["fim-da-cena", "descanso-longo"],
+      "observacao": "Uma vez por descanso longo. Começa com 1 virado para cima e sobe 1 a cada jogada de dano que tire ao menos 1 PV do alvo. Quando o valor passa do máximo do dado ou a cena acaba, o dado sai e você deixa de estar Imparável.",
+      "termo": { "canonico": "Dado Imparável", "sinonimos": ["Unstoppable Die", "dado imparável"],
+        "motivo": "O texto do livro alterna entre 'Dado Imparável' e 'Unstoppable Die' dentro do mesmo parágrafo." } },
+
+    { "chave": "classe:guerreiro:matador", "origem": "caracteristica-subclasse", "refId": "guerreiro-chamada-do-matador",
+      "nome": "Dados de Matador", "rotulo": "dados", "tipo": "dados",
+      "dado": { "padrao": "d6" },
+      "maximo": { "tipo": "proficiencia" },
+      "recarregaEm": [], "zeraEm": ["fim-de-sessao"],
+      "observacao": "Numa jogada com Esperança, o Guerreiro pode colocar um d6 na carta em vez de ganhar 1 Esperança. No fim da sessão, descarta todos os não usados e ganha 1 Esperança por dado descartado. A maestria Preparação Marcial deixa aliados guardarem um d6 de Matador também.",
+      "termo": { "canonico": "Dados de Matador", "sinonimos": ["Slayer Dice", "Slayer Die", "Dado de Matador"] } }
+  ]
+}

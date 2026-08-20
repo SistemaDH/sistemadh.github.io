@@ -9,7 +9,9 @@ planilha do Google Sheets.
 > subclasse. Parte 4: 18 ancestralidades e 9 comunidades, com a regra de
 > ancestralidade mista validada no servidor. Parte 5: 192 armas, 34 armaduras e
 > 120 itens, com os números vindos do SRD oficial porque o livro em pt-BR está
-> numa versão anterior à errata.
+> numa versão anterior à errata. **Pontas soltas** amarradas antes da criação
+> de ficha: traços, condições, contadores com estado e o encaixe das fichas
+> paralelas (ver `docs/pontas-soltas.md`).
 >
 > **Regra de fonte:** as CARTAS em PNG são a fonte confiável em português. O PDF
 > do livro em pt-BR é uma tradução automática ruim e só serve como conferência
@@ -44,7 +46,10 @@ sistema/
 │   ├── ancestralidades.json 18 ancestralidades + regra de mista (Parte 4)
 │   ├── comunidades.json    9 comunidades (Parte 4)
 │   ├── equipamentos.json   armas, armaduras, saque e consumíveis (Parte 5)
-│   └── equipamentos-correcoes.json  toda correção feita nas tabelas
+│   ├── equipamentos-correcoes.json  toda correção feita nas tabelas
+│   ├── tracos.json         os seis traços e a distribuição inicial
+│   ├── condicoes.json      condições oficiais + os sinônimos do livro
+│   └── contadores.json     as 20 cartas/características que guardam estado
 ├── assets/cartas/
 │   ├── dominios/<DOM>/     189 PNGs oficiais
 │   ├── subclasses/<CLASSE>/ 54 PNGs oficiais
@@ -70,7 +75,10 @@ sistema/
     ├── testes-e2e.mjs        teste no navegador (Playwright)
     ├── gerar-42-classes.mjs  regenera backend/42_Classes.gs a partir do JSON
     ├── gerar-43-origens.mjs  regenera backend/43_Origens.gs a partir do JSON
-    └── gerar-44-equipamento.mjs  regenera backend/44_Equipamento.gs
+    ├── gerar-44-equipamento.mjs  regenera backend/44_Equipamento.gs
+    ├── gerar-45-tracos.mjs   regenera backend/45_Tracos.gs
+    ├── gerar-46-condicoes.mjs  regenera backend/46_Condicoes.gs
+    └── gerar-47-contadores.mjs regenera backend/47_Contadores.gs
 ```
 
 ---
@@ -157,8 +165,8 @@ sendo JSON.
 4. ✅ Ancestralidades e comunidades (27 cartas + imagens)
 5. ✅ Equipamento, inventário e itens (192 armas, 34 armaduras, 120 itens,
    46 itens de moldura de campanha e as regras de ouro)
-6. ⬜ Traços e criação de ficha guiada
-7. ⬜ Condições e estados
+6. ⬜ Criação de ficha guiada (os traços já estão prontos)
+7. ⬜ Condições em jogo e estados (o vocabulário já está pronto)
 8. ⬜ Subida de nível
 9. ⬜ Painel do Mestre
 
@@ -168,20 +176,37 @@ pendente, e (depois) a tela em `js/telas/`.
 
 ### Pendências conhecidas, herdadas das partes já feitas
 
-- **Contadores com estado** — 16 cartas de domínio e 3 características de classe
-  guardam fichas/marcadores/um dado com valor corrente. Precisa de um mecanismo
-  genérico que zere em descanso. Não estava no plano original.
-- **Terminologia de condições** — "Cloaked" aparece como *Camuflado* (livro e
-  carta de Arcana) e como *Encoberto* (cartas do Caminhante Noturno);
-  "Hidden" aparece como *Oculto*. Escolher o canônico e registrar sinônimos.
-- **Atributos** — confirmados no livro (p.18): Agilidade, Força, **Finesse**
-  (não é traduzido), Instinto, Presença, Conhecimento. Distribuição inicial
-  +2, +1, +1, 0, 0, -1.
+Amarradas em `docs/pontas-soltas.md` (feito antes da Parte 6):
+
+- ✅ **Traços** — o termo virou "traço" (e não "característica", que já é usada
+  para as características de ancestralidade/classe/equipamento). Os seis são
+  Agilidade, Força, **Finesse**, Instinto, Presença e Conhecimento, com
+  distribuição inicial +2, +1, +1, 0, 0, -1. Conjuração não é um sétimo traço:
+  é o apelido de um dos seis, apontado pela subclasse.
+- ✅ **Contadores com estado** — 20 cartas e características guardam
+  fichas/marcadores/dados. Mecanismo genérico em `47_Contadores.gs`, com
+  zeragem por gatilho (descanso, sessão, cena).
+- ✅ **Terminologia de condições** — canônicos: Oculto, Restrito, Vulnerável e
+  Camuflado. O livro tem CINCO nomes diferentes para "Restrained"; todos viraram
+  sinônimo de busca.
+- ✅ **Fichas paralelas** — o encaixe (`ficha.fichasFilhas`) já existe e o
+  servidor barra quem não pode ter. O conteúdo de Beastform e do Companheiro
+  Animal vira uma parte própria.
+- ✅ **Revólver da errata p.317** — vale só para a arma primária da moldura
+  Colosso das Terras Secas (d8+1/+4/+7/+10). O Revólver pequeno segue d6.
+
+Ainda abertas:
+
 - **Livro pt-BR é pré-errata** — provado nas tabelas de equipamento: Espada
   Longa, Lança e Anéis Brilhantes têm os números velhos lá. Os números do app
   vêm do SRD oficial.
 - **Numeração da errata** — as páginas citadas na errata são as IMPRESSAS no
   rodapé, sempre o número do PDF menos 1. A "p.317" da errata é a página 318 do
   arquivo. Conferir sempre pelo rodapé impresso.
-- **Fichas paralelas** — Beastform (Druida) e Companheiro Animal (Patrulheiro)
-  não cabem na ficha principal.
+- **4 itens da moldura Festa da Besta** seguem ilegíveis no PDF.
+- **22 das 68 traduções de característica de equipamento** são minhas e esperam
+  revisão (listadas em `docs/relatorio-equipamento.md`).
+- **Trechos corrompidos do livro** (Ataque Furtivo, Caçador, Passo Sombrio,
+  dica do Imparável) — todos de subida de nível, entram na Parte 8.
+- **Proficiência** ainda não tem regra própria; cai no tier do nível até a
+  Parte 8.
