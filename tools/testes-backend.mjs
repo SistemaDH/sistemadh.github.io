@@ -1033,6 +1033,187 @@ teste('salvar e reler a ficha preserva contadores e condições', () => {
   igual(lida.dados.personagem.ficha.contadores['carta:splendor-restauracao'].valor, 2);
 });
 
+console.log('\nCriação de ficha');
+
+const fichaCompleta = (mudancas = {}) => Object.assign({
+  identidade: { nome: 'Marlowe Fairwind', pronomes: 'ela/dela', nivel: 1,
+                classe: 'Feiticeiro', subclasse: 'Origem Primal',
+                ancestralidade: 'Elfo', comunidade: 'Loreborne' },
+  tracos: { agilidade: 0, forca: -1, finesse: 1, instinto: 2, presenca: 1, conhecimento: 0 },
+  equipamento: { primaria: 'Bastão Duplo', secundaria: null, armadura: 'Armadura de couro' },
+  experiencias: [{ nome: 'Mago Real', bonus: 2 }, { nome: 'Não no meu relógio', bonus: 2 }],
+  cartas: { ativas: [], cofre: [] },
+  ouro: { punhados: 1, bolsas: 0, cofres: 0 }
+}, mudancas);
+
+teste('o exemplo do livro bate com os nossos cálculos', () => {
+  // Livro p.22-23: Marlowe Fairwind, Feiticeiro nível 1, Armadura de couro 6/13.
+  // A ficha impressa traz Evasão 10, armadura 3, PV 6, Estresse 6, proficiência 1
+  // e limiares 7/14. Se algum desses números mudar, este teste quebra.
+  const f = fichaCompleta();
+  const d = contexto.derivadosDoPersonagem_(f);
+  igual(d.evasao, 10, 'Evasão');
+  igual(d.pontosDeVidaMaximos, 6, 'Pontos de Vida');
+  igual(d.estresseMaximo, 6, 'Estresse');
+  igual(d.proficiencia, 1, 'Proficiência');
+  igual(d.pontuacaoArmadura, 3, 'pontuação de armadura');
+  igual(d.limiarMaior, 7, 'limiar maior = 6 + nível 1');
+  igual(d.limiarGrave, 14, 'limiar grave = 13 + nível 1');
+  igual(d.tracoDeConjuracao, 'instinto', 'o Feiticeiro conjura com Instinto');
+});
+
+teste('a Armadura Gambeson soma +1 na Evasão pela característica Flexível', () => {
+  const semGambeson = contexto.derivadosDoPersonagem_(fichaCompleta());
+  const comGambeson = contexto.derivadosDoPersonagem_(fichaCompleta({
+    equipamento: { primaria: 'Bastão Duplo', secundaria: null, armadura: 'Armadura Gambeson' }
+  }));
+  igual(semGambeson.evasao, 10);
+  igual(comGambeson.evasao, 11, 'Flexível: +1 para Evasão');
+  igual(comGambeson.limiarMaior, 6, '5 + nível 1');
+});
+
+teste('aplicarDerivados_ grava os máximos e começa com 2 de Esperança', () => {
+  const f = fichaCompleta();
+  contexto.aplicarDerivados_(f);
+  igual(f.recursos.esperanca, 2);
+  igual(f.recursos.esperancaMaxima, 6);
+  igual(f.recursos.pontosDeVidaMarcados, 0);
+  igual(f.defesas.limiarGrave, 14);
+  igual(f.dominios, ['ARCANA', 'MIDNIGHT']);
+});
+
+teste('aplicarDerivados_ não apaga o que o jogador já gastou', () => {
+  const f = fichaCompleta({ recursos: { esperanca: 5, pontosDeVidaMarcados: 3, estresseMarcado: 2 } });
+  contexto.aplicarDerivados_(f);
+  igual(f.recursos.esperanca, 5);
+  igual(f.recursos.pontosDeVidaMarcados, 3);
+  const demais = fichaCompleta({ recursos: { esperanca: 99, pontosDeVidaMarcados: 99 } });
+  contexto.aplicarDerivados_(demais);
+  igual(demais.recursos.esperanca, 6, 'corta no máximo');
+  igual(demais.recursos.pontosDeVidaMarcados, 6);
+});
+
+teste('os 9 guias de classe têm a distribuição oficial de traços', () => {
+  const GUIAS = avaliar('GUIAS_DE_CLASSE');
+  igual(Object.keys(GUIAS).length, 9);
+  Object.entries(GUIAS).forEach(([id, g]) => {
+    const v = Object.values(g.tracos).sort((a, b) => a - b).join(',');
+    igual(v, '-1,0,0,1,1,2', `traços sugeridos de ${id}`);
+  });
+});
+
+teste('todo guia aponta para arma e armadura que existem nas tabelas', () => {
+  const GUIAS = avaliar('GUIAS_DE_CLASSE');
+  Object.entries(GUIAS).forEach(([id, g]) => {
+    verdade(contexto.acharArma_(g.armaPrimaria), `${id}: arma primária não encontrada`);
+    if (g.armaSecundaria) verdade(contexto.acharArma_(g.armaSecundaria), `${id}: arma secundária não encontrada`);
+    verdade(contexto.acharArmadura_(g.armadura), `${id}: armadura não encontrada`);
+  });
+});
+
+teste('criação rápida monta uma ficha de nível 1 inteira', () => {
+  const f = contexto.fichaRapida_({
+    nome: 'Rápida', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'Contador de Histórias', bonus: 2 }, { nome: 'Língua de Prata', bonus: 2 }]
+  });
+  igual(f.identidade.nivel, 1);
+  igual(f.tracos.presenca, 2, 'o Bardo sugere +2 em Presença');
+  igual(f.equipamento.primaria, 'primaria-t1-florete');
+  igual(f.equipamento.secundaria, 'secundaria-t1-punhal-pequeno');
+  igual(f.recursos.esperanca, 2);
+  igual(f.defesas.evasao, 11, 'Bardo 10 + 1 da Gambeson Flexível');
+  igual(f.ouro.punhados, 1);
+  verdade(f.inventario.length >= 5, 'inventário padrão + poção + item de classe');
+  igual(f.caracteristicas.length, 3, '2 da ancestralidade + 1 da comunidade');
+  igual(f.meta.criadaPor, 'rapida');
+});
+
+teste('validarCriacao_ aprova uma ficha completa', () => {
+  const f = contexto.fichaRapida_({
+    nome: 'Completa', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'Contador de Histórias', bonus: 2 }, { nome: 'Língua de Prata', bonus: 2 }]
+  });
+  igual(contexto.validarCriacao_(f), []);
+});
+
+teste('validarCriacao_ recusa carta de outro domínio e de nível alto', () => {
+  const base = {
+    nome: 'X', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  };
+  // "Andar na Parede" é de Arcana; o Bardo tem Graça e Códice.
+  const foraDoDominio = contexto.fichaRapida_({ ...base, cartas: ['arcana-andar-na-parede', 'grace-palavras-inspiradoras'] });
+  verdade(contexto.validarCriacao_(foraDoDominio).some((p) => /domínio/i.test(p)), 'deveria recusar a carta de fora');
+
+  const cartas = avaliar('CARTAS_DOMINIO');
+  const altaDeGraca = cartas.GRACE.find((c) => c[2] > 1);
+  const nivelAlto = contexto.fichaRapida_({ ...base, cartas: [altaDeGraca[0], 'grace-palavras-inspiradoras'] });
+  verdade(contexto.validarCriacao_(nivelAlto).length > 0, 'deveria recusar a carta acima do nível 1');
+});
+
+teste('validarCriacao_ cobra as duas Experiências e as duas cartas', () => {
+  const f = contexto.fichaRapida_({
+    nome: 'X', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras'],
+    experiencias: [{ nome: 'Só uma', bonus: 2 }]
+  });
+  const p = contexto.validarCriacao_(f);
+  verdade(p.some((x) => /Experiências/.test(x)), 'faltou cobrar Experiência');
+  verdade(p.some((x) => /cartas de domínio/.test(x)), 'faltou cobrar carta');
+});
+
+teste('ancestralidade mista entra pela criação', () => {
+  const f = contexto.fichaRapida_({
+    nome: 'Mestiço', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade: 'goblin-orc', comunidade: 'Wildborne',
+    ancestralidadeMista: ['Goblin', 'Orc'],
+    caracteristicasEscolhidas: ['Pé Firme', 'Presas'],
+    cartas: [], experiencias: []
+  });
+  igual(f.caracteristicas.length, 3);
+  igual(contexto.validarOrigem_(contexto.origemDaFicha_(f)).ok, true);
+
+  const proibida = contexto.fichaRapida_({
+    nome: 'Errado', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade: 'goblin-orc', comunidade: 'Wildborne',
+    ancestralidadeMista: ['Goblin', 'Orc'],
+    caracteristicasEscolhidas: ['Pé Firme', 'Robusto'],
+    cartas: [], experiencias: []
+  });
+  igual(contexto.validarOrigem_(contexto.origemDaFicha_(proibida)).ok, false,
+    'duas PRIMEIRAS características não podem');
+});
+
+teste('arma de duas mãos não deixa levar secundária na criação', () => {
+  const f = fichaCompleta({
+    equipamento: { primaria: 'Bastão Duplo', secundaria: 'Escudo redondo', armadura: 'Armadura de couro' },
+    cartas: { ativas: ['arcana-andar-na-parede', 'midnight-disfarce-incrivel'], cofre: [] }
+  });
+  verdade(contexto.validarCriacao_(f).some((p) => /duas mãos/i.test(p)), 'deveria reclamar das mãos');
+});
+
+teste('sem armadura o app avisa que não dá para calcular limiar', () => {
+  const f = fichaCompleta({ equipamento: { primaria: 'Bastão Duplo', secundaria: null, armadura: null } });
+  const p = contexto.validarCriacao_(f);
+  verdade(p.some((x) => /limiares/i.test(x)), 'deveria avisar do limiar');
+});
+
+teste('salvar recalcula os derivados mesmo se o cliente mandar errado', () => {
+  const f = contexto.validarFicha_(fichaCompleta({
+    cartas: { ativas: [], cofre: [] },
+    defesas: { evasao: 99, limiarMaior: 99, limiarGrave: 99 },
+    recursos: { proficiencia: 7 }
+  }));
+  igual(f.defesas.evasao, 10, 'o servidor manda no número');
+  igual(f.defesas.limiarGrave, 14);
+});
+
 console.log('\nZerar planilha');
 teste('arquivarEResetar preserva o antigo e recria vazio', () => {
   contexto.arquivarEResetar();

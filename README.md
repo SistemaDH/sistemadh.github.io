@@ -13,6 +13,9 @@ planilha do Google Sheets.
 > de ficha: traços, condições, contadores com estado e o encaixe das fichas
 > paralelas (ver `docs/pontas-soltas.md`).
 >
+> **Parte 6:** criação de ficha guiada — as 9 etapas do capítulo 1, com os
+> guias de classe do apêndice e o visualizador de cartas em PNG.
+>
 > **Regra de fonte:** as CARTAS em PNG são a fonte confiável em português. O PDF
 > do livro em pt-BR é uma tradução automática ruim e só serve como conferência
 > estrutural. As erratas oficiais (em inglês) valem sobre o livro.
@@ -27,17 +30,22 @@ sistema/
 ├── css/
 │   ├── tema.css            cores, tipografia, espaçamento (todas as variáveis)
 │   ├── componentes.css     botões, campos, cartões, modal, avisos
-│   └── telas.css           moldura do app, abertura e roster
+│   ├── telas.css           moldura do app, abertura e roster
+│   └── criacao.css         assistente de criação e visor de cartas
 ├── js/
 │   ├── config.js           URL da API, versões, mensagens de erro
 │   ├── util.js             helpers de DOM, datas, localStorage
 │   ├── api.js              conversa com o Apps Script (POST + plano B JSONP)
+│   ├── dados.js            carrega os catálogos de data/*.json sob demanda
 │   ├── estado.js           estado único do app + ações
 │   ├── ui.js               avisos, modais, confirmações
 │   ├── app.js              ponto de entrada e troca de telas
+│   ├── componentes/
+│   │   └── carta.js        visualizador de carta em PNG (tela cheia)
 │   └── telas/
 │       ├── abertura.js     login e criação de acesso
 │       ├── roster.js       lista de personagens
+│       ├── criacao.js      assistente de criação (9 etapas)
 │       └── ajustes.js      conexão e troca de código
 ├── data/
 │   ├── dominios.json       9 domínios (Parte 2)
@@ -49,7 +57,9 @@ sistema/
 │   ├── equipamentos-correcoes.json  toda correção feita nas tabelas
 │   ├── tracos.json         os seis traços e a distribuição inicial
 │   ├── condicoes.json      condições oficiais + os sinônimos do livro
-│   └── contadores.json     as 20 cartas/características que guardam estado
+│   ├── contadores.json     as 20 cartas/características que guardam estado
+│   ├── criacao.json        as 9 etapas e os números fixos do nível 1
+│   └── guias-de-classe.json as 9 folhas "Guia de Caráter" do apêndice
 ├── assets/cartas/
 │   ├── dominios/<DOM>/     189 PNGs oficiais
 │   ├── subclasses/<CLASSE>/ 54 PNGs oficiais
@@ -78,7 +88,10 @@ sistema/
     ├── gerar-44-equipamento.mjs  regenera backend/44_Equipamento.gs
     ├── gerar-45-tracos.mjs   regenera backend/45_Tracos.gs
     ├── gerar-46-condicoes.mjs  regenera backend/46_Condicoes.gs
-    └── gerar-47-contadores.mjs regenera backend/47_Contadores.gs
+    ├── gerar-47-contadores.mjs regenera backend/47_Contadores.gs
+    ├── gerar-48-criacao.mjs    regenera backend/48_Criacao.gs
+    ├── montar-guias-de-classe.py  monta data/guias-de-classe.json
+    └── capturar-telas.mjs      prints do assistente num "celular"
 ```
 
 ---
@@ -151,6 +164,15 @@ mais um segredo global guardado fora da planilha. O código do Mestre nem aparec
 na planilha. Não é segurança bancária — é o suficiente para ninguém abrir a
 ficha do outro por acidente.
 
+**O servidor recalcula os derivados.** Evasão, Pontos de Vida, limiares,
+proficiência e pontuação de armadura nunca vêm do cliente: `validarFicha_()`
+chama `aplicarDerivados_()` em toda gravação. Os valores CORRENTES (PV
+marcados, Esperança gasta) são preservados; só os máximos são recalculados.
+
+**A carta em PNG é um componente só.** `js/componentes/carta.js` serve classe,
+subclasse, ancestralidade, comunidade e carta de domínio. Em qualquer lugar,
+tocar no nome abre a carta em tela cheia, com setas e arrastar para o lado.
+
 **`text/plain` no POST é de propósito.** Com esse Content-Type o navegador não
 faz preflight de CORS, que o Apps Script não sabe responder. O corpo continua
 sendo JSON.
@@ -165,7 +187,7 @@ sendo JSON.
 4. ✅ Ancestralidades e comunidades (27 cartas + imagens)
 5. ✅ Equipamento, inventário e itens (192 armas, 34 armaduras, 120 itens,
    46 itens de moldura de campanha e as regras de ouro)
-6. ⬜ Criação de ficha guiada (os traços já estão prontos)
+6. ✅ Criação de ficha guiada (9 etapas, guiada e rápida, cartas em PNG)
 7. ⬜ Condições em jogo e estados (o vocabulário já está pronto)
 8. ⬜ Subida de nível
 9. ⬜ Painel do Mestre

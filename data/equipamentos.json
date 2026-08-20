@@ -1837,7 +1837,10 @@
    "alcance": "Corpo a Corpo",
    "dano": "d8+1 mag",
    "maos": "Uma mão",
-   "caracteristica": null
+   "caracteristica": null,
+   "aliases": [
+    "Machado consagrado"
+   ]
   },
   {
    "id": "primaria-t1-aneis-brilhantes",
@@ -1908,7 +1911,10 @@
    "alcance": "Próximo",
    "dano": "d8+1 mag",
    "maos": "Uma mão",
-   "caracteristica": null
+   "caracteristica": null,
+   "aliases": [
+    "Cajado curto"
+   ]
   },
   {
    "id": "primaria-t1-bastao-duplo",
@@ -1986,7 +1992,11 @@
     "texto": "Poderoso: Em um ataque bem-sucedido, role um dado de dano adicional e descarte o resultado mais baixo.",
     "fonteTraducao": "livro",
     "confianca": "alta"
-   }
+   },
+   "aliases": [
+    "Cajado grande",
+    "Grande Cajado"
+   ]
   },
   {
    "id": "primaria-t2-manoplas-arcanas-aprimoradas",
@@ -3248,7 +3258,11 @@
     "texto": "Emparelhado: +2 de dano de arma primária a alvos dentro do alcance Corpo a Corpo",
     "fonteTraducao": "livro",
     "confianca": "alta"
-   }
+   },
+   "aliases": [
+    "Adaga Pequena",
+    "Adaga pequena"
+   ]
   },
   {
    "id": "secundaria-t1-chicote",

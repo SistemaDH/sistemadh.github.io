@@ -79,13 +79,101 @@ try {
     await pagina.waitForSelector('.vazio__titulo');
   });
 
-  await passo('criar personagem', async () => {
-    await pagina.getByRole('button', { name: 'Criar personagem' }).click();
-    await pagina.fill('.modal__caixa input[type="text"]', 'Lyra Sombravento');
-    await pagina.getByRole('button', { name: 'Criar', exact: true }).click();
-    await pagina.waitForSelector('.ficha-cartao__nome', { timeout: 15000 });
+  /** Avança o assistente e confere que o botão não estava travado. */
+  const continuar = async () => {
+    const botao = pagina.locator('.criacao__rodape .btn--principal');
+    if (await botao.isDisabled()) {
+      const aviso = await pagina.textContent('.criacao__rodapeAviso');
+      throw new Error(`"Continuar" travado: ${aviso}`);
+    }
+    await botao.click();
+  };
+
+  await passo('criar personagem pelo assistente guiado', async () => {
+    await pagina.locator('#app').getByRole('button', { name: 'Criar personagem' }).click();
+    await pagina.waitForSelector('.criacao__corpo .campo__entrada');
+
+    // Etapa 0 — nome e caminho
+    await pagina.fill('.criacao__corpo .campo__entrada >> nth=0', 'Lyra Sombravento');
+    await pagina.getByRole('button', { name: /Criação guiada/ }).click();
+    await continuar();
+
+    // Etapa 1 — classe (o botão "Escolher" já avança sozinho)
+    await pagina.waitForSelector('.lista-escolha__botao');
+    await pagina.locator('.lista-escolha__botao').first().click();
+
+    // Etapa 1b — subclasse
+    await pagina.waitForSelector('.lista-escolha__botao');
+    await pagina.locator('.lista-escolha__botao').first().click();
+
+    // Etapa 2 — herança
+    await pagina.waitForSelector('.grade-opcoes__item');
+    await pagina.locator('.grade-opcoes__item .btn').first().click();          // ancestralidade
+    await pagina.locator('.criacao__secao', { hasText: 'Comunidade' }).waitFor();
+    await pagina.locator('.grade-opcoes').last().locator('.btn').first().click(); // comunidade
+    await continuar();
+
+    // Etapa 3 — traços, pela sugestão do livro
+    await pagina.getByRole('button', { name: /Usar a sugestão do livro/ }).click();
+    await continuar();
+
+    // Etapa 5 — equipamento: arma e armadura já vêm do guia, falta a poção
+    await pagina.waitForSelector('.painel-derivados');
+    await pagina.locator('.chips .chip').first().click();
+    const chipsItem = pagina.locator('.chips').nth(1).locator('.chip');
+    if (await chipsItem.count()) await chipsItem.first().click();
+    await continuar();
+
+    // Etapa 8 — duas cartas de domínio
+    await pagina.waitForSelector('.lista-escolha--compacta .btn--pequeno');
+    await pagina.locator('.lista-escolha--compacta .btn--pequeno').nth(0).click();
+    await pagina.locator('.lista-escolha--compacta .btn--pequeno:not([disabled])').nth(1).click();
+    await continuar();
+
+    // Etapa 7 — Experiências
+    await pagina.fill('.criacao__corpo .campo__entrada >> nth=0', 'Contadora de histórias');
+    await pagina.fill('.criacao__corpo .campo__entrada >> nth=1', 'Ouvido para segredos');
+    await continuar();
+
+    // Etapas 6 e 9 — história (pulável)
+    await continuar();
+
+    // Revisão
+    await pagina.waitForSelector('.painel-derivados');
+    await pagina.locator('.criacao__rodape .btn--principal').click();
+
+    await pagina.waitForSelector('.ficha-cartao__nome', { timeout: 20000 });
     const nome = await pagina.textContent('.ficha-cartao__nome');
     if (nome.trim() !== 'Lyra Sombravento') throw new Error(`nome no card: "${nome}"`);
+  });
+
+  await passo('a ficha criada tem classe, herança e nível', async () => {
+    const linhas = await pagina.locator('.ficha-cartao__linha').allTextContents();
+    const juntas = linhas.join(' | ');
+    if (!/Bardo/.test(juntas)) throw new Error(`esperava a classe no card: ${juntas}`);
+    const nivel = await pagina.textContent('.selo--nivel');
+    if (!/1/.test(nivel)) throw new Error(`nível no card: ${nivel}`);
+  });
+
+  await passo('a carta em PNG abre ao tocar no nome', async () => {
+    await pagina.locator('.acao-flutuante').click();
+    await pagina.waitForSelector('.criacao__corpo .campo__entrada');
+    await pagina.fill('.criacao__corpo .campo__entrada >> nth=0', 'Teste da Carta');
+    await pagina.getByRole('button', { name: /Criação rápida/ }).click();
+    await pagina.locator('.criacao__rodape .btn--principal').click();
+
+    await pagina.waitForSelector('.nome-carta');
+    await pagina.locator('.nome-carta').first().click();
+    await pagina.waitForSelector('.modal__caixa--carta');
+    const legenda = await pagina.textContent('.carta-visor__legenda');
+    if (!legenda.trim()) throw new Error('a carta abriu sem legenda');
+    await pagina.locator('.modal__caixa--carta').getByRole('button', { name: 'Fechar' }).click();
+    await pagina.waitForSelector('.modal__caixa--carta', { state: 'detached' });
+
+    // sai do assistente sem criar
+    await pagina.locator('.criacao__topo .btn--icone').click();
+    await pagina.getByRole('button', { name: 'Sair' }).click();
+    await pagina.waitForSelector('.criacao', { state: 'detached' });
   });
 
   await passo('a sessão sobrevive ao recarregar a página', async () => {

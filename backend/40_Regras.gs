@@ -48,14 +48,24 @@ function fichaVazia_() {
       agilidade: null, forca: null, finesse: null,
       instinto: null, presenca: null, conhecimento: null
     },
+    origem: {            // detalhe da herança — ver 43_Origens.gs
+      ancestralidadeMista: [],
+      caracteristicasEscolhidas: []
+    },
     recursos: {},        // PV, Estresse, Esperança, Armadura, proficiência
     defesas: {},         // Evasão e limiares de dano
     dominios: [],        // domínios da classe
     cartas: { ativas: [], cofre: [] },
     caracteristicas: [], // ancestralidade, comunidade, classe, subclasse
-    experiencias: [],
-    equipamento: {},
+    experiencias: [],    // duas no nível 1, +2 cada — ver 48_Criacao.gs
+    equipamento: {       // ids das tabelas do capítulo 2
+      primaria: null, secundaria: null, armadura: null
+    },
     inventario: [],
+    ouro: { punhados: 0, bolsas: 0, cofres: 0 },
+    historia: {          // etapas 6 e 9 — narrativo, tudo opcional
+      fundo: [], conexoes: [], descricaoFisica: {}
+    },
     condicoes: [],       // ver 46_Condicoes.gs
     contadores: {},      // fichas/marcadores/dados nas cartas — ver 47_Contadores.gs
     fichasFilhas: [],    // Beastform e Companheiro Animal — ver validarFichasFilhas_
@@ -106,7 +116,8 @@ function mesclarComEsqueleto_(ficha) {
   const base = fichaVazia_();
   const saida = Object.assign({}, base, ficha);
   // Objetos de primeiro nível também recebem os campos que faltam.
-  ['identidade', 'tracos', 'cartas', 'recursos', 'contadores', 'meta'].forEach(function (chave) {
+  ['identidade', 'tracos', 'origem', 'cartas', 'recursos', 'defesas', 'equipamento',
+   'ouro', 'historia', 'contadores', 'meta'].forEach(function (chave) {
     saida[chave] = Object.assign({}, base[chave], ficha[chave] || {});
   });
   return saida;
@@ -243,9 +254,18 @@ function validarFicha_(fichaBruta) {
   // contadores, porque quase todo máximo de contador é "igual ao seu traço".
   let problemas = [];
   if (typeof validarTracos_ === 'function') problemas = problemas.concat(validarTracos_(ficha));
+  if (typeof validarExperiencias_ === 'function') problemas = problemas.concat(validarExperiencias_(ficha));
   if (typeof validarCondicoes_ === 'function') problemas = problemas.concat(validarCondicoes_(ficha));
   if (typeof validarContadores_ === 'function') problemas = problemas.concat(validarContadores_(ficha));
   problemas = problemas.concat(validarFichasFilhas_(ficha));
+  if (typeof validarOuro_ === 'function') {
+    const vOuro = validarOuro_(ficha.ouro);
+    if (!vOuro.ok) problemas = problemas.concat(vOuro.erros);
+  }
+
+  // Os valores derivados (Evasão, PV, limiares, proficiência) são sempre
+  // recalculados no servidor: o cliente não manda esses números.
+  if (typeof aplicarDerivados_ === 'function') aplicarDerivados_(ficha);
 
   if (problemas.length) {
     // Durante a criação de ficha o front grava rascunho a cada passo; aí os

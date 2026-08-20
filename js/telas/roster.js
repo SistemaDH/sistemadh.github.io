@@ -1,10 +1,9 @@
 /**
  * telas/roster.js — lista de personagens depois do login.
  *
- * NESTA ETAPA (Parte 1) o roster prova que o ciclo completo funciona:
- * criar, listar, abrir, renomear, excluir — tudo indo e voltando da planilha.
- * O assistente de criação de personagem e a ficha de verdade entram nas
- * próximas partes, quando as regras do livro forem extraídas.
+ * Lista, abre, renomeia e exclui. Criar personagem NÃO acontece mais aqui:
+ * o botão "+ Nova ficha" chama o assistente de criação (telas/criacao.js),
+ * que segue as nove etapas do livro.
  */
 
 import { el, dataRelativa, travarBotao } from '../util.js';
@@ -14,39 +13,7 @@ import {
   abrirModal, fecharModal, confirmar, avisarErro, avisarSucesso,
   blocoCarregando, blocoVazio
 } from '../ui.js';
-
-/** Ficha mínima usada para criar um personagem novo nesta etapa. */
-function fichaInicial(nome) {
-  return {
-    identidade: {
-      nome,
-      pronomes: '',
-      nivel: 1,
-      ancestralidade: '',
-      comunidade: '',
-      classe: '',
-      subclasse: '',
-      descricao: ''
-    },
-    tracos: {
-      agilidade: null, forca: null, finesse: null,
-      instinto: null, presenca: null, conhecimento: null
-    },
-    recursos: {},
-    defesas: {},
-    dominios: [],
-    cartas: { ativas: [], cofre: [] },
-    caracteristicas: [],
-    experiencias: [],
-    equipamento: {},
-    inventario: [],
-    condicoes: [],
-    contadores: {},
-    fichasFilhas: [],
-    avancos: {},
-    anotacoes: ''
-  };
-}
+import { abrirCriacao } from './criacao.js';
 
 export function telaRoster() {
   const raiz = el('div', { class: 'roster' });
@@ -59,7 +26,7 @@ export function telaRoster() {
   const botaoNovo = el('button', {
     type: 'button',
     class: 'btn btn--principal acao-flutuante',
-    onClick: () => abrirNovoPersonagem()
+    onClick: () => abrirCriacao({ aoCriar: () => desenharLista() })
   }, '+ Nova ficha');
 
   raiz.append(cabecalho, lista, botaoNovo);
@@ -96,7 +63,7 @@ export function telaRoster() {
             type: 'button',
             class: 'btn btn--principal',
             style: 'margin-top:16px',
-            onClick: () => abrirNovoPersonagem()
+            onClick: () => abrirCriacao({ aoCriar: () => desenharLista() })
           }, 'Criar personagem')
         )
       );
@@ -130,53 +97,6 @@ export function telaRoster() {
 
   /* ---------------------------------------------------------------- */
 
-  function abrirNovoPersonagem() {
-    const entrada = el('input', {
-      class: 'campo__entrada',
-      type: 'text',
-      maxlength: 40,
-      placeholder: 'Nome do personagem',
-      autocapitalize: 'words'
-    });
-
-    const botao = el('button', { type: 'button', class: 'btn btn--principal' }, 'Criar');
-    botao.addEventListener('click', () => {
-      const nome = entrada.value.trim();
-      if (!nome) return avisarErro('Dê um nome ao personagem.');
-      travarBotao(botao, (async () => {
-        try {
-          await acoes.criarPersonagem(fichaInicial(nome));
-          fecharModal();
-          desenharLista();
-          avisarSucesso('Ficha criada.');
-        } catch (e) {
-          avisarErro(mensagemDoErro(e));
-        }
-      })());
-    });
-
-    entrada.addEventListener('keydown', (ev) => {
-      if (ev.key === 'Enter') botao.click();
-    });
-
-    abrirModal({
-      titulo: 'Nova ficha',
-      conteudo: el('div', { class: 'pilha' }, [
-        el('div', { class: 'campo' }, [
-          el('span', { class: 'campo__rotulo', texto: 'Nome do personagem' }),
-          entrada
-        ]),
-        el('p', {
-          class: 'campo__ajuda',
-          texto: 'O assistente completo de criação (classe, ancestralidade, traços, cartas) chega na próxima parte do sistema.'
-        })
-      ]),
-      acoes: [
-        el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => fecharModal() }, 'Cancelar'),
-        botao
-      ]
-    });
-  }
 
   async function abrirFicha(id) {
     const { fechar, caixa } = abrirModal({ titulo: 'Abrindo…', conteudo: blocoCarregando() });

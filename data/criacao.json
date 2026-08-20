@@ -1,0 +1,103 @@
+{
+  "versao": 1,
+  "fonte": "Livro pt-BR, Capítulo 1 (páginas impressas 13-21), lido como imagem. Conferido contra o exemplo de personagem preenchido das páginas 22-23 (Marlowe Fairwind).",
+  "nivelInicial": 1,
+  "numeros": {
+    "esperancaInicial": 2,
+    "esperancaMaxima": 6,
+    "estresse": 6,
+    "proficienciaInicial": 1,
+    "distribuicaoDeTracos": [2, 1, 1, 0, 0, -1],
+    "cartasDeDominio": { "quantidade": 2, "nivelMaximo": 1 },
+    "experiencias": { "quantidade": 2, "bonus": 2 },
+    "ouroInicial": { "punhados": 1, "bolsas": 0, "cofres": 0 }
+  },
+  "limiares": {
+    "formula": "limiar maior = limiar base menor da armadura + nível; limiar grave = limiar base maior da armadura + nível",
+    "conferencia": "No exemplo do livro (nível 1, Armadura de couro 6/13) a ficha traz 7/14. Confere.",
+    "semArmadura": "O livro manda escolher uma armadura na ETAPA 5 e não diz o que fazer sem armadura. Enquanto isso não aparecer, o app mostra os limiares como indefinidos e avisa."
+  },
+  "inventarioPadrao": [
+    { "nome": "Uma tocha", "nota": "algumas folhas de classe escrevem \"uma lanterna\" — é o mesmo item" },
+    { "nome": "15 metros de corda" },
+    { "nome": "Suprimentos básicos", "nota": "barraca, saco de dormir, caixa de isca, rações, etc." },
+    { "nome": "Um punhado de ouro" }
+  ],
+  "escolhaDePocao": {
+    "pergunta": "Escolha uma poção inicial",
+    "opcoes": [
+      { "nome": "Poção de Saúde Menor", "efeito": "limpa 1d4 Pontos de Vida" },
+      { "nome": "Poção de Vigor Menor", "efeito": "limpa 1d4 de Estresse", "sinonimos": ["Poção de resistência menor"] }
+    ],
+    "nota": "O livro chama a segunda de \"Poção de Vigor Menor\" no capítulo 1 e de \"Poção de resistência menor\" nas folhas de classe. É o mesmo item."
+  },
+  "armas": {
+    "regra": "Uma arma primária de duas mãos, OU uma arma primária de uma mão mais uma arma secundária de uma mão. Só armas de nível 1 na criação.",
+    "proficiencia": "No nível 1 a proficiência é 1: você rola UM dado de dano por ataque com arma."
+  },
+  "experiencias": {
+    "oQueE": "Uma Experiência é uma palavra ou frase que resume um conjunto de habilidades que seu personagem juntou pela vida.",
+    "quantidade": 2,
+    "bonus": 2,
+    "comoUsa": "Antes de uma jogada de ação ou reação, gaste 1 Esperança para somar o modificador da Experiência ao resultado. Se mais de uma Experiência couber na cena, dá para somar várias, gastando 1 Esperança por cada.",
+    "comoCriar": [
+      "Seja específico: \"Talentoso\" e \"Focado\" servem para tudo e não valem. \"Espadachim\" ou \"Estudos Mágicos\" valem.",
+      "Não pode dar magia nem habilidade de jogo: \"Alçar Voo\" e \"Matar com um Golpe\" são mecânicos demais. Prefira \"Piloto\" ou \"Assassino\".",
+      "Tempere com sabor: em vez de \"Assassino\", \"Assassino do Sindicato Safira\"."
+    ],
+    "exemplos": {
+      "Antecedentes": ["Assassino", "Ferreiro", "Guarda-costas", "Caçador de recompensas", "Cozinheiro da família real", "Artista de circo", "Vigarista", "Monarca Caído", "Médico de Campo", "Alta Sacerdotisa", "Mercador", "Nobre", "Pirata", "Político", "Fugitivo", "Estudioso", "Espada de Aluguel", "Soldado", "Contador de Histórias", "Ladrão", "Viajante do Mundo"],
+      "Características": ["Afável", "Resistente a Batalha", "Leitor de Livros", "Charmoso", "Covarde", "Amigo de Todos", "Útil", "Presença Intimidadora", "Líder", "Lobo Solitário", "Leal", "Observador", "Brincalhão", "Língua de Prata", "Dedos Pegajosos", "Teimoso até a Falha", "Sobrevivente", "Jovem e Ingênuo"],
+      "Especialidades": ["Acrobata", "Jogador", "Curandeiro", "Inventor", "Historiador Mágico", "Cartógrafo", "Mestre do Disfarce", "Navegador", "Atirador de Elite", "Sobrevivencialista", "Espadachim", "Tático"],
+      "Habilidades": ["Encantador de Animais", "Troca", "Mira Mortal", "Aprendizado Rápido", "Força Incrível", "Mentiroso", "Pés Ligeiros", "Negociador", "Memória Fotográfica", "Mãos Rápidas", "Conserto", "Catador", "Rastreador"],
+      "Frases": ["Me Pegue Se For Capaz", "Finja Até Conseguir", "De Primeira", "Segure a Linha", "Não Vou Te Decepcionar", "Eu Te Pego", "Estou Com Você", "Conhecimento É Poder", "Amigo da Natureza", "Nunca Mais", "Ninguém Fica Para Trás", "Escolha Alguém do Seu Tamanho", "O Show Tem Que Continuar", "Isto Não É Uma Negociação", "Lobo em Pele de Cordeiro"]
+    },
+    "notaDeTraducao": "A lista \"Frases\" está em inglês no livro (Catch Me If You Can, Fake It Till You Make It...). Traduzi as quinze; são exemplos, não regra."
+  },
+  "etapas": [
+    { "id": "classe", "numero": 1, "titulo": "Escolha sua classe", "paginaImpressa": 13,
+      "resumo": "Escolha uma das 9 classes e, dentro dela, uma das 2 subclasses.",
+      "preenche": ["identidade.classe", "identidade.subclasse", "dominios"],
+      "obrigatoria": true },
+    { "id": "heranca", "numero": 2, "titulo": "Escolha sua herança", "paginaImpressa": 16,
+      "resumo": "Ancestralidade (18 opções, ou uma mista) mais comunidade (9 opções).",
+      "preenche": ["identidade.ancestralidade", "identidade.comunidade", "caracteristicas"],
+      "obrigatoria": true },
+    { "id": "tracos", "numero": 3, "titulo": "Atribua seus traços", "paginaImpressa": 17,
+      "resumo": "Distribua +2, +1, +1, 0, 0 e -1 pelos seis traços, na ordem que quiser.",
+      "preenche": ["tracos"],
+      "obrigatoria": true },
+    { "id": "registro", "numero": 4, "titulo": "Anote o resto da ficha", "paginaImpressa": 18,
+      "resumo": "Evasão e Pontos de Vida vêm da classe; Estresse é 6; Esperança começa em 2.",
+      "preenche": ["defesas.evasao", "recursos"],
+      "obrigatoria": true,
+      "automatica": true },
+    { "id": "equipamento", "numero": 5, "titulo": "Escolha seu equipamento inicial", "paginaImpressa": 18,
+      "resumo": "Armas e armadura de nível 1, mais o inventário padrão e a poção inicial.",
+      "preenche": ["equipamento", "inventario", "defesas.limiares"],
+      "obrigatoria": true },
+    { "id": "fundo", "numero": 6, "titulo": "Crie seu histórico", "paginaImpressa": 19,
+      "resumo": "Responda as três perguntas de fundo da sua classe — ou invente as suas.",
+      "preenche": ["historia.fundo", "identidade.descricao"],
+      "obrigatoria": false },
+    { "id": "experiencias", "numero": 7, "titulo": "Crie suas Experiências", "paginaImpressa": 20,
+      "resumo": "Duas Experiências, +2 cada.",
+      "preenche": ["experiencias"],
+      "obrigatoria": true },
+    { "id": "cartas", "numero": 8, "titulo": "Escolha suas cartas de domínio", "paginaImpressa": 21,
+      "resumo": "Duas cartas de nível 1, dos dois domínios da sua classe (pode ser uma de cada ou duas do mesmo).",
+      "preenche": ["cartas.ativas"],
+      "obrigatoria": true },
+    { "id": "conexoes", "numero": 9, "titulo": "Crie suas conexões", "paginaImpressa": 21,
+      "resumo": "Faça a cada colega uma das perguntas de conexão da sua classe. Dá para deixar para a mesa.",
+      "preenche": ["historia.conexoes"],
+      "obrigatoria": false }
+  ],
+  "observacoesDoLivro": [
+    "O livro alterna \"ETAPA\" e \"PASSO\" para a mesma coisa (ETAPA 5, PASSO 6, ETAPA 7, PASSO 9).",
+    "A ficha de personagem impressa tem vários rótulos que a tradução não pegou: \"GOID\" (Gold), \"RA\", \"PESO InvEntáRIo\" (Inventory Weapon), \"Aula\" (Class), \"caractere\" (character), \"DOMICÍLIOS COMPARTILHADOS\" (Shared Domains).",
+    "No exemplo de personagem das p.22-23 nenhum losango de Esperança está marcado, mesmo com a regra mandando começar com 2.",
+    "O exemplo usa Armadura de couro (6/13) enquanto o Guia de Caráter do Feiticeiro sugere Gambeson (5/11). Não é erro: o guia é sugestão, não obrigação.",
+    "A regra de ancestralidade mista NÃO está no capítulo 1; ela fica na seção Ancestrais (p.72) e já está implementada em 43_Origens.gs."
+  ]
+}

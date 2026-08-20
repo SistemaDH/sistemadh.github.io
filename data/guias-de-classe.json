@@ -1,0 +1,1926 @@
+{
+ "versao": 1,
+ "fonte": "Folhas \"Guia de Caráter\" do apêndice (páginas 369-385 do PDF), lidas como imagem. Nomes e números de arma/armadura resolvidos contra as tabelas do capítulo 2, que são a fonte dos números.",
+ "total": 9,
+ "guias": [
+  {
+   "classe": "bardo",
+   "nomeLivro": "BARD",
+   "paginaPdf": 369,
+   "chamada": "Como bardo, você sabe como fazer as pessoas falarem, chamar a atenção para si mesmo e usar palavras ou música para influenciar o mundo ao seu redor.",
+   "chamadaLivro": null,
+   "tracosSugeridos": {
+    "agilidade": 0,
+    "forca": -1,
+    "finesse": 1,
+    "instinto": 0,
+    "presenca": 2,
+    "conhecimento": 1
+   },
+   "armaPrimaria": {
+    "nomeLivro": "Rapier",
+    "danoLivro": "d8 de phy",
+    "id": "primaria-t1-florete",
+    "nome": "Florete",
+    "atributo": "Presença",
+    "alcance": "Corpo a Corpo",
+    "dano": "d8 phy",
+    "maos": "Uma mão",
+    "caracteristica": "Rápido"
+   },
+   "armaSecundaria": {
+    "nomeLivro": "Adaga pequena",
+    "danoLivro": "d8 phy",
+    "id": "secundaria-t1-punhal-pequeno",
+    "nome": "Punhal pequeno",
+    "atributo": "Finesse",
+    "alcance": "Corpo a Corpo",
+    "dano": "d8 phy",
+    "maos": "Uma mão",
+    "caracteristica": "Emparelhado"
+   },
+   "armadura": {
+    "nomeLivro": "Armadura Gambeson",
+    "limiaresLivro": "5/11",
+    "id": "armadura-t1-armadura-gambeson",
+    "nome": "Armadura Gambeson",
+    "limiares": "5/11",
+    "pontuacao": 3,
+    "caracteristica": "Flexível"
+   },
+   "inventario": {
+    "levar": [
+     "uma tocha",
+     "15 metros de corda",
+     "suprimentos básicos",
+     "um punhado de ouro"
+    ],
+    "escolherEntre": [
+     [
+      "uma Poção de Saúde Menor",
+      "uma Poção de resistência menor"
+     ],
+     [
+      "um romance",
+      "uma carta nunca aberta"
+     ]
+    ],
+    "extra": "E, EM SEGUIDA, DECIDA EM QUE VOCÊ CARREGARÁ SEUS FEITIÇOS: livro de canções, diário, etc."
+   },
+   "descricao": {
+    "Roupas que são": [
+     "extravagantes",
+     "barulhentas",
+     "grandes demais",
+     "esfarrapadas",
+     "elegantes",
+     "selvagens"
+    ],
+    "Olhos como": [
+     "cravos",
+     "terra",
+     "oceano infinito",
+     "fogo",
+     "hera",
+     "lilases",
+     "noite",
+     "espuma do mar",
+     "inverno"
+    ],
+    "Corpo": [
+     "largo",
+     "esculpido",
+     "curvilíneo",
+     "esguio",
+     "robusto",
+     "curto",
+     "atarracado",
+     "alto",
+     "magro",
+     "pequeno",
+     "tonificado"
+    ],
+    "Pele da cor de": [
+     "cinzas",
+     "trevo",
+     "neve caindo",
+     "areia fina",
+     "obsidiana",
+     "rosa",
+     "safira",
+     "glicínia"
+    ],
+    "Atitude como": [
+     "um barman",
+     "um mágico",
+     "um mestre de cerimônias",
+     "um astro do rock",
+     "um fanfarrão"
+    ]
+   },
+   "perguntasDeFundo": [
+    {
+     "texto": "Quem da sua comunidade te ensinou a ter tanta confiança em si mesmo?",
+     "textoLivro": "Quem de sua comunidade lhe ensinou a ter esse tipo de comportamento? confiança em si mesmo?",
+     "traducao": "reparada por mim"
+    },
+    {
+     "texto": "Você já foi apaixonado. Quem você adorava e como ele o magoou?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Você sempre admirou outro bardo. Quem é ele e por que você o idolatra?",
+     "traducao": "livro"
+    }
+   ],
+   "perguntasDeConexao": [
+    {
+     "texto": "O que o fez perceber que seríamos tão bons amigos?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "O que eu faço que o irrita?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Por que você agarra minha mão à noite?",
+     "traducao": "livro"
+    }
+   ],
+   "observacoesDoLivro": [
+    "Nome da classe no cabeçalho está em inglês: 'BARD' (não traduzido).",
+    "Nome da arma primária em inglês: 'Rapier' (não traduzido para 'Florete').",
+    "Dano da arma primária impresso como 'd8 de phy' (com um 'de' sobrando); a secundária usa 'd8 phy'.",
+    "1ª pergunta de fundo está truncada/quebrada: 'Quem de sua comunidade lhe ensinou a ter esse tipo de comportamento? confiança em si mesmo?' — o original é 'Who from your community taught you to have such confidence in yourself?'; a tradução ficou partida em duas frases sem sentido.",
+    "'Roupas que são' lista 'extravagantes' duas vezes (duplicata; no original provavelmente 'flashy' e 'flamboyant').",
+    "'Olhos como' mantém 4 palavras em inglês não traduzidas: ivy, lilacs, night, seafoam, winter (5 palavras).",
+    "Título do cabeçalho do bloco é 'DESCRIÇÃO DOS CARACTERES' (tradução literal de 'CHARACTER DESCRIPTION'); nas outras folhas é 'DESCRIÇÃO DO PERSONAGEM'.",
+    "Título da seção impresso com caixa irregular: 'quEstõEs dE fundo' e 'GUIA DE CARÁTER' (com 'Á' destacado).",
+    "A 1ª pergunta de conexão fica graficamente sobreposta à faixa de instrução acima dela, mas é legível."
+   ]
+  },
+  {
+   "classe": "druida",
+   "nomeLivro": "DRUID",
+   "paginaPdf": 371,
+   "chamada": "Como druida, você é uma força da natureza, preservando o equilíbrio da vida e da morte ao canalizar a própria natureza por meio de você.",
+   "chamadaLivro": null,
+   "tracosSugeridos": {
+    "agilidade": 1,
+    "forca": 0,
+    "finesse": 1,
+    "instinto": 2,
+    "presenca": -1,
+    "conhecimento": 0
+   },
+   "armaPrimaria": {
+    "nomeLivro": "Cajado curto",
+    "danoLivro": "d8+1 mag",
+    "id": "primaria-t1-bastao-curto",
+    "nome": "Bastão Curto",
+    "atributo": "Instinto",
+    "alcance": "Próximo",
+    "dano": "d8+1 mag",
+    "maos": "Uma mão",
+    "caracteristica": null
+   },
+   "armaSecundaria": {
+    "nomeLivro": "Escudo redondo",
+    "danoLivro": "d4 phy",
+    "id": "secundaria-t1-escudo-redondo",
+    "nome": "Escudo redondo",
+    "atributo": "Força",
+    "alcance": "Corpo a Corpo",
+    "dano": "d4 phy",
+    "maos": "Uma mão",
+    "caracteristica": "Proteção"
+   },
+   "armadura": {
+    "nomeLivro": "Armadura de couro",
+    "limiaresLivro": "6/13",
+    "id": "armadura-t1-armadura-de-couro",
+    "nome": "Armadura de couro",
+    "limiares": "6/13",
+    "pontuacao": 3,
+    "caracteristica": null
+   },
+   "inventario": {
+    "levar": [
+     "uma tocha",
+     "15 metros de corda",
+     "suprimentos básicos",
+     "um punhado de ouro"
+    ],
+    "escolherEntre": [
+     [
+      "uma Poção de Saúde Menor",
+      "uma Poção de resistência menor"
+     ],
+     [
+      "um pequeno saco de pedras e ossos",
+      "um estranho pingente encontrado na sujeira"
+     ]
+    ],
+    "extra": null
+   },
+   "descricao": {
+    "Roupas que são": [
+     "camufladas",
+     "crescidas",
+     "soltas",
+     "natural",
+     "retalhos",
+     "regal"
+    ],
+    "Olhos como": [
+     "cravos",
+     "terra",
+     "oceano infinito",
+     "fogo",
+     "hera",
+     "lilases",
+     "noite",
+     "espuma do mar",
+     "inverno"
+    ],
+    "Corpo": [
+     "largo",
+     "esculpido",
+     "curvilíneo",
+     "esguio",
+     "robusto",
+     "curto",
+     "atarracado",
+     "alto",
+     "magro",
+     "pequeno",
+     "tonificado"
+    ],
+    "Pele da cor de": [
+     "cinzas",
+     "trevo",
+     "neve caindo",
+     "areia fina",
+     "obsidiana",
+     "rosa",
+     "safira",
+     "glicínia"
+    ],
+    "Atitude como": [
+     "uma bombinha",
+     "uma raposa",
+     "um guia",
+     "um hippie",
+     "uma bruxa"
+    ]
+   },
+   "perguntasDeFundo": [
+    {
+     "texto": "Por que a comunidade em que você cresceu era tão dependente da natureza e de suas criaturas?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Qual foi o primeiro animal selvagem com o qual você se relacionou? Por que seu vínculo terminou?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Quem está tentando persegui-lo? O que eles querem de você?",
+     "traducao": "livro"
+    }
+   ],
+   "perguntasDeConexao": [
+    {
+     "texto": "O que você me confidenciou que me faz mergulhar no perigo por você todas as vezes?",
+     "textoLivro": "O que você me confidenciou que me fez dar um pulo de alegria? perigo para você todas as vezes?",
+     "traducao": "reparada por mim"
+    },
+    {
+     "texto": "Que animal eu diria que você me lembra?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Que apelido carinhoso você me deu?",
+     "traducao": "livro"
+    }
+   ],
+   "observacoesDoLivro": [
+    "Nome da classe no cabeçalho está em inglês: 'DRUID' (não traduzido).",
+    "A arma primária (Cajado curto) NÃO tem linha de característica impressa na folha — campo 'caracteristica' = null.",
+    "A armadura (Armadura de couro) NÃO tem linha de característica impressa — campo 'caracteristica' = null.",
+    "Alcance da arma primária impresso em minúscula e colado ao atributo: 'Instinto próximo'.",
+    "1ª pergunta de conexão truncada/quebrada: 'O que você me confidenciou que me fez dar um pulo de alegria? perigo para você todas as vezes?' — o original é 'What did you confide in me that makes me leap into danger for you every time?'; a tradução perdeu a ligação entre as duas metades.",
+    "'Roupas que são' traz 'patchwork' (inglês) e também 'retalhos' (a tradução de patchwork) na mesma lista — item duplicado.",
+    "'Olhos como' mantém palavras em inglês: ivy, lilacs, night, seafoam, winter.",
+    "'Atitude como: uma bombinha' parece tradução errada de 'a firecracker'.",
+    "'Roupas que são: crescidas' parece tradução errada de 'overgrown'.",
+    "Na 3ª pergunta de fundo o hífen de 'persegui-lo' fica sobreposto ao texto na renderização (parece rasurado), mas o texto é 'persegui-lo'."
+   ]
+  },
+  {
+   "classe": "guardiao",
+   "nomeLivro": "GUARDIÃO",
+   "paginaPdf": 373,
+   "chamada": "Como guardião, você se coloca em perigo para proteger seu grupo e zelar por aqueles que talvez não sobrevivessem sem você aqui.",
+   "chamadaLivro": "Como guardião, você corre perigo para proteger seu grupo. aqui. zelar por aqueles que talvez não sobrevivam sem você t",
+   "tracosSugeridos": {
+    "agilidade": 1,
+    "forca": 2,
+    "finesse": -1,
+    "instinto": 0,
+    "presenca": 1,
+    "conhecimento": 0
+   },
+   "armaPrimaria": {
+    "nomeLivro": "Machado de batalha",
+    "danoLivro": "d10+3 phy",
+    "id": "primaria-t1-machado-de-batalha",
+    "nome": "Machado de batalha",
+    "atributo": "Força",
+    "alcance": "Corpo a Corpo",
+    "dano": "d10+3 phy",
+    "maos": "Duas mãos",
+    "caracteristica": null
+   },
+   "armaSecundaria": null,
+   "armadura": {
+    "nomeLivro": "Armadura de cota de malha",
+    "limiaresLivro": "7/15",
+    "id": "armadura-t1-armadura-de-cota-de-malha",
+    "nome": "Armadura de cota de malha",
+    "limiares": "7/15",
+    "pontuacao": 4,
+    "caracteristica": "Pesado"
+   },
+   "inventario": {
+    "levar": [
+     "uma lanterna",
+     "15 metros de corda",
+     "suprimentos básicos",
+     "um punhado de ouro"
+    ],
+    "escolherEntre": [
+     [
+      "uma Poção de Saúde Menor",
+      "uma Poção de resistência menor"
+     ],
+     [
+      "um totem de seu mentor",
+      "uma chave secreta"
+     ]
+    ],
+    "extra": null
+   },
+   "descricao": {
+    "Roupas que são": [
+     "casuais",
+     "complexas",
+     "soltas",
+     "acolchoadas",
+     "reais",
+     "táticas",
+     "desgastadas pelo tempo"
+    ],
+    "Olhos como": [
+     "cravos",
+     "terra",
+     "oceano infinito",
+     "fogo",
+     "hera",
+     "lilases",
+     "noite",
+     "espuma do mar",
+     "inverno"
+    ],
+    "Corpo": [
+     "largo",
+     "esculpido",
+     "curvilíneo",
+     "esguio",
+     "robusto",
+     "curto",
+     "atarracado",
+     "alto",
+     "magro",
+     "pequeno",
+     "tonificado"
+    ],
+    "Pele da cor de": [
+     "cinzas",
+     "trevo",
+     "neve caindo",
+     "areia fina",
+     "obsidiana",
+     "rosa",
+     "safira",
+     "glicínia"
+    ],
+    "Atitude como": [
+     "um capitão",
+     "um zelador",
+     "um elefante",
+     "um general",
+     "um lutador"
+    ]
+   },
+   "perguntasDeFundo": [
+    {
+     "texto": "Quem da sua comunidade você deixou de proteger e por que ainda pensa neles?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Você foi encarregado de proteger algo importante e entregá-lo em um lugar perigoso. O que é e para onde ele precisa ir?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Você considera um aspecto de si mesmo como uma fraqueza. Qual é esse aspecto e como ele o afetou?",
+     "traducao": "livro"
+    }
+   ],
+   "perguntasDeConexao": [
+    {
+     "texto": "Como eu salvei sua vida na primeira vez que nos encontramos?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Que pequeno presente você me deu e percebeu que eu sempre carrego comigo?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Que mentira você me contou sobre si mesmo em que eu absolutamente acredito?",
+     "traducao": "livro"
+    }
+   ],
+   "observacoesDoLivro": [
+    "A frase de chamada está GRAVEMENTE corrompida na diagramação: a 1ª linha termina com um 'aqui.' solto e a 2ª linha termina em 't' cortado — impresso como 'Como guardião, você corre perigo para proteger seu grupo.    aqui. / zelar por aqueles que talvez não sobrevivam sem você t'. O original é 'As a guardian, you put yourself in danger to protect your group... to look after those who may not survive without you here.' Texto registrado exatamente como impresso.",
+    "A folha NÃO tem 'ARMA SECUNDÁRIA SUGERIDA' — campo = null.",
+    "A arma primária (Machado de batalha) NÃO tem linha de característica impressa — campo 'caracteristica' = null.",
+    "No bloco LEVAR a lista é quebrada de forma estranha ('suprimentos básicos,' e depois 'e um punhado de ouro'), mas os itens são os mesmos das outras folhas — com lanterna no lugar da tocha.",
+    "Lista de características quebra a linha no meio: '+1 Agilidade, +2 Força, -1 Finesse, 0 / Instinto, +1 Presença, 0 Conhecimento'.",
+    "'Olhos como' mantém palavras em inglês: ivy, lilacs, night, seafoam, winter.",
+    "'Roupas que são: reais' parece tradução errada de 'regal' (real/majestoso).",
+    "'Atitude como: um zelador' parece tradução literal de 'a caretaker'."
+   ]
+  },
+  {
+   "classe": "patrulheiro",
+   "nomeLivro": "RANGER",
+   "paginaPdf": 375,
+   "chamada": "Como patrulheiro, seu olhar aguçado e sua pressa graciosa te tornam indispensável para rastrear inimigos e navegar pelas terras selvagens.",
+   "chamadaLivro": "Como guarda-florestal, seu olhar aguçado e sua graciosa pressa o tornam indespensável ao rastrear inimigos e navegar pela selvagens.",
+   "tracosSugeridos": {
+    "agilidade": 2,
+    "forca": 0,
+    "finesse": 1,
+    "instinto": 1,
+    "presenca": -1,
+    "conhecimento": 0
+   },
+   "armaPrimaria": {
+    "nomeLivro": "Arco curto",
+    "danoLivro": "d6+3 phy",
+    "id": "primaria-t1-arco-curto",
+    "nome": "Arco curto",
+    "atributo": "Agilidade",
+    "alcance": "Distante",
+    "dano": "d6+3 phy",
+    "maos": "Duas mãos",
+    "caracteristica": null
+   },
+   "armaSecundaria": null,
+   "armadura": {
+    "nomeLivro": "Armadura de couro",
+    "limiaresLivro": "6/13",
+    "id": "armadura-t1-armadura-de-couro",
+    "nome": "Armadura de couro",
+    "limiares": "6/13",
+    "pontuacao": 3,
+    "caracteristica": null
+   },
+   "inventario": {
+    "levar": [
+     "uma tocha",
+     "15 metros de corda",
+     "suprimentos básicos",
+     "um punhado de ouro"
+    ],
+    "escolherEntre": [
+     [
+      "uma Poção de Saúde Menor",
+      "uma Poção de resistência menor"
+     ],
+     [
+      "um troféu de sua primeira morte",
+      "uma bússola aparentemente quebrada"
+     ]
+    ],
+    "extra": null
+   },
+   "descricao": {
+    "Roupas que são": [
+     "fluidas",
+     "suaves e naturais",
+     "manchado",
+     "tático",
+     "apertado",
+     "tecido"
+    ],
+    "Olhos como": [
+     "cravos",
+     "terra",
+     "oceano infinito",
+     "fogo",
+     "hera",
+     "lilases",
+     "noite",
+     "espuma do mar",
+     "inverno"
+    ],
+    "Corpo": [
+     "largo",
+     "esculpido",
+     "curvilíneo",
+     "esguio",
+     "robusto",
+     "curto",
+     "atarracado",
+     "alto",
+     "magro",
+     "pequeno",
+     "tonificado"
+    ],
+    "Pele da cor de": [
+     "cinzas",
+     "trevo",
+     "neve caindo",
+     "areia fina",
+     "obsidiana",
+     "rosa",
+     "safira",
+     "glicínia"
+    ],
+    "Atitude como": [
+     "uma criança",
+     "um fantasma",
+     "um sobrevivente",
+     "um professor",
+     "um cão de guarda"
+    ]
+   },
+   "perguntasDeFundo": [
+    {
+     "texto": "Uma criatura terrível feriu sua comunidade e você prometeu caçá-la. O que são elas e que rastro ou sinal único deixam para trás?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Sua primeira morte quase o matou também. O que foi, e o que parte de você nunca mais foi a mesma depois desse evento?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Você já viajou por muitas terras perigosas, mas qual é o único lugar que você se recusa a ir?",
+     "traducao": "livro"
+    }
+   ],
+   "perguntasDeConexao": [
+    {
+     "texto": "Que competição amigável nós temos?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Por que você age de forma diferente quando estamos sozinhos e quando há outras pessoas por perto?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Que ameaça você me pediu para observar e por que está preocupado com ela?",
+     "traducao": "livro"
+    }
+   ],
+   "observacoesDoLivro": [
+    "A frase de chamada está impressa com linhas SOBREPOSTAS no PDF: 'tornam indes' e 'pensável' se sobrepõem na mesma linha, e 'selvag' / 'ens.' ficam quebrados em linhas separadas e deslocados. Reconstrução usada: 'tornam indespensável ... navegar pela selvagens.' O texto impresso literal é ilegível como sequência linear.",
+    "'indespensável' está grafado assim (o correto em português seria 'indispensável').",
+    "'navegar pela selvagens' - concordância errada (deveria ser 'pelas selvagens' ou 'pela selvageria'); tradução de 'the wilds'.",
+    "Nome da classe em inglês no cabeçalho: RANGER. Cabeçalho 'GUIA DE CARÁTER' (tradução ruim de 'Character Guide').",
+    "'CARACTERÍSTICAS SUGERIDAS' com valores +2/+1/+1/0/0/-1 - conjunto CONFERE.",
+    "Arma primária: alcance impresso como 'Agilidade distante' (traço de atributo + alcance juntos); 'distante' é tradução de 'Far'. Dano 'd6+3 phy' com 'phy' não traduzido.",
+    "Arma primária e armadura NÃO têm linha de característica impressa nesta página (campo null).",
+    "Esta classe não tem ARMA SECUNDÁRIA SUGERIDA na folha (null).",
+    "Descrição 'Roupas que sejam:' mistura gênero: 'fluidas, suaves e naturais' (feminino) com 'manchado, tático, apertado, tecido' (masculino).",
+    "Vários itens de 'Olhos como' ficaram em inglês, não traduzidos: ivy, lilacs, night, seafoam, winter.",
+    "'Olhos como' desta página traz 'oceano sem fim' enquanto Rogue e Seraph trazem 'oceano infinito' para o mesmo item.",
+    "Fora do quadro de inventário, no rodapé do bloco de perguntas, há a instrução: 'Em seguida, trabalhe com o GM para gerar duas Experiências iniciais para seu personagem.'",
+    "Conexão 1 impressa com sobreposição leve ('prometeu caçá-la' na pergunta de fundo 1 aparece com glifos sobrepostos), mas legível."
+   ]
+  },
+  {
+   "classe": "ladino",
+   "nomeLivro": "ROGUE",
+   "paginaPdf": 377,
+   "chamada": "Como malandro, você tem experiência em lutar com sua lâmina e também com sua inteligência, preferindo se mover rapidamente e lutar em silêncio.",
+   "chamadaLivro": null,
+   "tracosSugeridos": {
+    "agilidade": 1,
+    "forca": -1,
+    "finesse": 2,
+    "instinto": 0,
+    "presenca": 1,
+    "conhecimento": 0
+   },
+   "armaPrimaria": {
+    "nomeLivro": "Adaga",
+    "danoLivro": "d8+1 phy",
+    "id": "primaria-t1-adaga",
+    "nome": "Adaga",
+    "atributo": "Finesse",
+    "alcance": "Corpo a Corpo",
+    "dano": "d8+1 phy",
+    "maos": "Uma mão",
+    "caracteristica": null
+   },
+   "armaSecundaria": {
+    "nomeLivro": "Adaga Pequena",
+    "danoLivro": "d8 phy",
+    "id": "secundaria-t1-punhal-pequeno",
+    "nome": "Punhal pequeno",
+    "atributo": "Finesse",
+    "alcance": "Corpo a Corpo",
+    "dano": "d8 phy",
+    "maos": "Uma mão",
+    "caracteristica": "Emparelhado"
+   },
+   "armadura": {
+    "nomeLivro": "Armadura Gambeson",
+    "limiaresLivro": "5/11",
+    "id": "armadura-t1-armadura-gambeson",
+    "nome": "Armadura Gambeson",
+    "limiares": "5/11",
+    "pontuacao": 3,
+    "caracteristica": "Flexível"
+   },
+   "inventario": {
+    "levar": [
+     "uma tocha",
+     "15 metros de corda",
+     "suprimentos básicos",
+     "um punhado de ouro"
+    ],
+    "escolherEntre": [
+     [
+      "uma Poção de Saúde Menor",
+      "uma Poção de resistência menor"
+     ],
+     [
+      "um conjunto de ferramentas de falsificação",
+      "um gancho"
+     ]
+    ],
+    "extra": null
+   },
+   "descricao": {
+    "Roupas que são": [
+     "limpas",
+     "escuras",
+     "discretas",
+     "de couro",
+     "assustadoras",
+     "táticas",
+     "justas"
+    ],
+    "Olhos como": [
+     "cravos",
+     "terra",
+     "oceano infinito",
+     "fogo",
+     "hera",
+     "lilases",
+     "noite",
+     "espuma do mar",
+     "inverno"
+    ],
+    "Corpo": [
+     "largo",
+     "esculpido",
+     "curvilíneo",
+     "esguio",
+     "robusto",
+     "curto",
+     "atarracado",
+     "alto",
+     "magro",
+     "pequeno",
+     "tonificado"
+    ],
+    "Pele da cor de": [
+     "cinzas",
+     "trevo",
+     "neve caindo",
+     "areia fina",
+     "obsidiana",
+     "rosa",
+     "safira",
+     "glicínia"
+    ],
+    "Atitude como": [
+     "um bandido",
+     "um vigarista",
+     "um jogador",
+     "um chefe da máfia",
+     "um pirata"
+    ]
+   },
+   "perguntasDeFundo": [
+    {
+     "texto": "O que você foi pego fazendo que o levou a ser exilado de sua comunidade de origem?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Você costumava ter uma vida diferente, mas tentou deixá-la para trás. Quem do seu passado ainda está te perseguindo?",
+     "textoLivro": "Vocêcostumava ter uma vida diferente, mas tentou deixá-la para trás. Quem do seu passado ainda está lhe perseguindo?",
+     "traducao": "reparada por mim"
+    },
+    {
+     "texto": "De quem do seu passado você ficou mais triste ao se despedir?",
+     "traducao": "livro"
+    }
+   ],
+   "perguntasDeConexao": [
+    {
+     "texto": "O que eu o convenci a fazer recentemente que nos colocou em apuros?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "O que descobri sobre seu passado que mantive em segredo dos outros?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Quem você conhece do meu passado, e como isso influenciou o que você sente por mim?",
+     "textoLivro": "Quem você conhece do meu passado, e como eles influenciou seus sentimentos em relação a mim?",
+     "traducao": "reparada por mim"
+    }
+   ],
+   "observacoesDoLivro": [
+    "Nome da classe em inglês no cabeçalho: ROGUE. Cabeçalho 'GUIA DE CARÁTER'.",
+    "Conjunto de características +2/+1/+1/0/0/-1 - CONFERE (+2 Finesse, +1 Agilidade, +1 Presença, 0 Instinto, 0 Conhecimento, -1 Força).",
+    "'Como malandro' - tradução de 'rogue' como 'malandro' no corpo, mas o id de classe usual seria 'ladino'.",
+    "Título impresso como 'ARMADURA SUGERIDA:' (com dois-pontos), diferente do Ranger que não tem dois-pontos.",
+    "Arma primária não tem linha de característica impressa (null).",
+    "Arma secundária 'Adaga Pequena' com alcance capitalizado de forma inconsistente ('Corpo a Corpo' / 'Uma Mão').",
+    "'phy' não traduzido no dano.",
+    "Pergunta de fundo 2 impressa SEM ESPAÇO: 'Vocêcostumava' (deveria ser 'Você costumava'). Copiado literalmente.",
+    "Pergunta de conexão 3 com erro de concordância: 'como eles influenciou seus sentimentos' (deveria ser 'influenciaram').",
+    "Itens de 'Olhos como' em inglês: ivy, lilacs, night, seafoam, winter.",
+    "Fora do quadro de inventário, no rodapé do bloco de perguntas: 'Em seguida, trabalhe com o GM para gerar duas Experiências iniciais para seu personagem.'"
+   ]
+  },
+  {
+   "classe": "seraph",
+   "nomeLivro": "SERAPH",
+   "paginaPdf": 379,
+   "chamada": "Como serafim, você fez um voto a um deus que o ajuda a canalizar o poder arcano sagrado para manter seu grupo em pé.",
+   "chamadaLivro": null,
+   "tracosSugeridos": {
+    "agilidade": 0,
+    "forca": 2,
+    "finesse": 0,
+    "instinto": 1,
+    "presenca": 1,
+    "conhecimento": -1
+   },
+   "armaPrimaria": {
+    "nomeLivro": "Machado consagrado",
+    "danoLivro": "d8+1 mag",
+    "id": "primaria-t1-machado-sagrado",
+    "nome": "Machado sagrado",
+    "atributo": "Força",
+    "alcance": "Corpo a Corpo",
+    "dano": "d8+1 mag",
+    "maos": "Uma mão",
+    "caracteristica": null
+   },
+   "armaSecundaria": {
+    "nomeLivro": "Escudo redondo",
+    "danoLivro": "d4 phy",
+    "id": "secundaria-t1-escudo-redondo",
+    "nome": "Escudo redondo",
+    "atributo": "Força",
+    "alcance": "Corpo a Corpo",
+    "dano": "d4 phy",
+    "maos": "Uma mão",
+    "caracteristica": "Proteção"
+   },
+   "armadura": {
+    "nomeLivro": "Armadura de cota de malha",
+    "limiaresLivro": "7/15",
+    "id": "armadura-t1-armadura-de-cota-de-malha",
+    "nome": "Armadura de cota de malha",
+    "limiares": "7/15",
+    "pontuacao": 4,
+    "caracteristica": "Pesado"
+   },
+   "inventario": {
+    "levar": [
+     "uma tocha",
+     "15 metros de corda",
+     "suprimentos básicos",
+     "um punhado de ouro"
+    ],
+    "escolherEntre": [
+     [
+      "uma Poção de Saúde Menor",
+      "uma Poção de resistência menor"
+     ],
+     [
+      "um pacote de ofertas",
+      "um símbolo de seu deus"
+     ]
+    ],
+    "extra": null
+   },
+   "descricao": {
+    "Roupas que são": [
+     "brilhantes",
+     "ondulantes",
+     "ornamentadas",
+     "justas",
+     "modestas",
+     "estranhas",
+     "naturais"
+    ],
+    "Olhos como": [
+     "cravos",
+     "terra",
+     "oceano infinito",
+     "fogo",
+     "hera",
+     "lilases",
+     "noite",
+     "espuma do mar",
+     "inverno"
+    ],
+    "Corpo": [
+     "largo",
+     "esculpido",
+     "curvilíneo",
+     "esguio",
+     "robusto",
+     "curto",
+     "atarracado",
+     "alto",
+     "magro",
+     "pequeno",
+     "tonificado"
+    ],
+    "Pele da cor de": [
+     "cinzas",
+     "trevo",
+     "neve caindo",
+     "areia fina",
+     "obsidiana",
+     "rosa",
+     "safira",
+     "glicínia"
+    ],
+    "Atitude como": [
+     "um anjo",
+     "um médico",
+     "um evangelista",
+     "um monge",
+     "um padre"
+    ]
+   },
+   "perguntasDeFundo": [
+    {
+     "texto": "A qual deus você se dedicou? Que façanha incrível eles realizaram por você em um momento de desespero?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Como sua aparência mudou depois de fazer seu juramento?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "De que maneira estranha ou única você se comunica com seu deus?",
+     "traducao": "livro"
+    }
+   ],
+   "perguntasDeConexao": [
+    {
+     "texto": "Com que promessa você me fez concordar, caso eu morresse no campo de batalha?",
+     "textoLivro": "Com que promessa você me fez concordar, caso morresse em no campo de batalha?",
+     "traducao": "reparada por mim"
+    },
+    {
+     "texto": "Por que você me faz tantas perguntas sobre o meu deus?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Você me disse para proteger um membro do nosso grupo acima de todos os outros, até de você mesmo. Quem são eles e por quê?",
+     "traducao": "livro"
+    }
+   ],
+   "observacoesDoLivro": [
+    "Nome da classe em inglês no cabeçalho: SERAPH (no corpo do texto aparece 'serafim'). Cabeçalho 'GUIA DE CARÁTER'.",
+    "Conjunto de características +2/+1/+1/0/0/-1 - CONFERE (+2 Força, +1 Instinto, +1 Presença, 0 Agilidade, 0 Finesse, -1 Conhecimento).",
+    "Esta é a única das três folhas cuja linha de descrição é 'Roupas que são:' (Ranger e Rogue usam 'Roupas que sejam:').",
+    "Arma primária: mãos impresso como 'Com uma mão' (Rogue e a secundária desta página usam 'Uma mão') - inconsistência de tradução.",
+    "Arma primária não tem linha de característica impressa (null). Dano 'd8+1 mag' com 'mag' não traduzido.",
+    "Título impresso como 'ARMADURA SUGERIDA:' (com dois-pontos).",
+    "Pergunta de conexão 1 com preposição duplicada: 'caso morresse em no campo de batalha?' - copiado literalmente.",
+    "Pergunta de fundo 1: 'Que façanha incrível eles realizaram por você' - concordância/pronome estranho vindo do inglês ('they').",
+    "Itens de 'Olhos como' em inglês: ivy, lilacs, night, seafoam, winter.",
+    "Fora do quadro de inventário, no rodapé do bloco de perguntas: 'Em seguida, trabalhe com o GM para gerar duas Experiências iniciais para seu personagem.'"
+   ]
+  },
+  {
+   "classe": "feiticeiro",
+   "nomeLivro": "SORCERER",
+   "paginaPdf": 381,
+   "chamada": "Como feiticeiro, você nasceu com um poder mágico inato e aprendeu a usar esse poder para conseguir o que deseja.",
+   "chamadaLivro": "Como feiticeiro, você nasceu com um poder mágico inato, você aprendeu a usar esse poder e para obter o que deseja form iga.",
+   "tracosSugeridos": {
+    "agilidade": 0,
+    "forca": -1,
+    "finesse": 1,
+    "instinto": 2,
+    "presenca": 1,
+    "conhecimento": 0
+   },
+   "armaPrimaria": {
+    "nomeLivro": "Dualstaff",
+    "danoLivro": "d6+3 mag",
+    "id": "primaria-t1-bastao-duplo",
+    "nome": "Bastão Duplo",
+    "atributo": "Instinto",
+    "alcance": "Distante",
+    "dano": "d6+3 mag",
+    "maos": "Duas mãos",
+    "caracteristica": null
+   },
+   "armaSecundaria": null,
+   "armadura": {
+    "nomeLivro": "Armadura Gambeson",
+    "limiaresLivro": "5/11",
+    "id": "armadura-t1-armadura-gambeson",
+    "nome": "Armadura Gambeson",
+    "limiares": "5/11",
+    "pontuacao": 3,
+    "caracteristica": "Flexível"
+   },
+   "inventario": {
+    "levar": [
+     "uma lanterna",
+     "15 metros de corda",
+     "suprimentos básicos",
+     "um punhado de ouro"
+    ],
+    "escolherEntre": [
+     [
+      "uma Poção de Saúde Menor",
+      "uma Poção de resistência menor"
+     ],
+     [
+      "um orbe sussurrante",
+      "uma herança de família"
+     ]
+    ],
+    "extra": null
+   },
+   "descricao": {
+    "Roupas que são": [
+     "sempre em movimento",
+     "extravagantes",
+     "discreto",
+     "em camadas",
+     "ornamentado",
+     "apertado"
+    ],
+    "Olhos como": [
+     "cravos",
+     "terra",
+     "oceano infinito",
+     "fogo",
+     "hera",
+     "lilases",
+     "noite",
+     "espuma do mar",
+     "inverno"
+    ],
+    "Corpo": [
+     "largo",
+     "esculpido",
+     "curvilíneo",
+     "esguio",
+     "robusto",
+     "curto",
+     "atarracado",
+     "alto",
+     "magro",
+     "pequeno",
+     "tonificado"
+    ],
+    "Pele da cor de": [
+     "cinzas",
+     "trevo",
+     "neve caindo",
+     "areia fina",
+     "obsidiana",
+     "rosa",
+     "safira",
+     "glicínia"
+    ],
+    "Atitude como": [
+     "uma celebridade",
+     "um comandante",
+     "um político",
+     "um brincalhão",
+     "um lobo em pele de cordeiro"
+    ]
+   },
+   "perguntasDeFundo": [
+    {
+     "texto": "O que você fez para que as pessoas de sua comunidade desconfiassem de você?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Que mentor lhe ensinou a controlar sua magia indomável e por que ele não pode mais guiá-lo?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Você tem um medo profundo que esconde de todos. O que é esse medo e por que ele o assusta?",
+     "traducao": "livro"
+    }
+   ],
+   "perguntasDeConexao": [
+    {
+     "texto": "Por que você confia tanto em mim?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "O que eu fiz para que você seja cauteloso comigo?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Por que mantemos nosso passado compartilhado em segredo?",
+     "traducao": "livro"
+    }
+   ],
+   "observacoesDoLivro": [
+    "Cabeçalho impresso em inglês: 'SORCERER' (não traduzido). É a folha do Feiticeiro.",
+    "A frase de chamada está com texto sobreposto/quebrado na diagramação: um glifo 'e' impresso por cima de 'poder' e os fragmentos soltos 'form' e 'iga.' no canto direito/abaixo. Transcrita exatamente como aparece, mas a frase está incompleta/ilegível no final.",
+    "Conjunto de características confere: +2, +1, +1, 0, 0, -1.",
+    "Nome da arma primária não traduzido: 'Dualstaff'.",
+    "A arma primária não traz texto de característica impresso na folha (campo null).",
+    "A folha não tem seção de ARMA SECUNDÁRIA SUGERIDA (campo null).",
+    "No inventário aparece 'uma lanterna' (as outras folhas trazem 'uma tocha').",
+    "Na conexão 1 as palavras 'tanto' e 'em' saem coladas/sobrepostas no PDF ('tantoem'); transcrito como 'tanto em'.",
+    "Opções de 'Olhos como' parcialmente em inglês: ivy, night, seafoam, winter."
+   ]
+  },
+  {
+   "classe": "guerreiro",
+   "nomeLivro": "GUERREIRO",
+   "paginaPdf": 383,
+   "chamada": "Como guerreiro, você corre para a batalha sem hesitação nem cautela, sabendo que sua força e seu treino falam por você.",
+   "chamadaLivro": "Como guerreiro, você corre para a batalha sem hesitação ou cautela, sabendo pois você pode derrubar qualquer inimigo que esteja em seu caminho. o.",
+   "tracosSugeridos": {
+    "agilidade": 2,
+    "forca": 1,
+    "finesse": 0,
+    "instinto": 1,
+    "presenca": -1,
+    "conhecimento": 0
+   },
+   "armaPrimaria": {
+    "nomeLivro": "Espada longa",
+    "danoLivro": "d8+3 phy",
+    "id": "primaria-t1-espada-longa",
+    "nome": "Espada longa",
+    "atributo": "Agilidade",
+    "alcance": "Corpo a Corpo",
+    "dano": "d10+3 phy",
+    "maos": "Duas mãos",
+    "caracteristica": null
+   },
+   "armaSecundaria": null,
+   "armadura": {
+    "nomeLivro": "Armadura de cota de malha",
+    "limiaresLivro": "7/ 15",
+    "id": "armadura-t1-armadura-de-cota-de-malha",
+    "nome": "Armadura de cota de malha",
+    "limiares": "7/15",
+    "pontuacao": 4,
+    "caracteristica": "Pesado"
+   },
+   "inventario": {
+    "levar": [
+     "uma tocha",
+     "15 metros de corda",
+     "suprimentos básicos",
+     "um punhado de ouro"
+    ],
+    "escolherEntre": [
+     [
+      "uma Poção de Saúde Menor",
+      "uma Poção de resistência menor"
+     ],
+     [
+      "o desenho de um amante",
+      "uma pedra de afiar"
+     ]
+    ],
+    "extra": null
+   },
+   "descricao": {
+    "Roupas que são": [
+     "ousadas",
+     "com remendos",
+     "reforçadas",
+     "reais",
+     "elegantes",
+     "econômicas",
+     "desgastadas pelo tempo"
+    ],
+    "Olhos como": [
+     "cravos",
+     "terra",
+     "oceano infinito",
+     "fogo",
+     "hera",
+     "lilases",
+     "noite",
+     "espuma do mar",
+     "inverno"
+    ],
+    "Corpo": [
+     "largo",
+     "esculpido",
+     "curvilíneo",
+     "esguio",
+     "robusto",
+     "curto",
+     "atarracado",
+     "alto",
+     "magro",
+     "pequeno",
+     "tonificado"
+    ],
+    "Pele da cor de": [
+     "cinzas",
+     "trevo",
+     "neve caindo",
+     "areia fina",
+     "obsidiana",
+     "rosa",
+     "safira",
+     "glicínia"
+    ],
+    "Atitude como": [
+     "um touro",
+     "um soldado dedicado",
+     "um gladiador",
+     "um herói",
+     "um trabalhador contratado"
+    ]
+   },
+   "perguntasDeFundo": [
+    {
+     "texto": "Quem te ensinou a lutar, e por que ficaram para trás quando você saiu de casa?",
+     "textoLivro": "Quem o ensinou a lutar e por que eles ficaram para trás quando você estava no campo de batalha? saiu de casa?",
+     "traducao": "reparada por mim"
+    },
+    {
+     "texto": "Alguém o derrotou em uma batalha anos atrás e o deixou para morrer. Quem foi e como ele o traiu?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Que lugar lendário você sempre quis visitar e por que ele é tão especial?",
+     "traducao": "livro"
+    }
+   ],
+   "perguntasDeConexao": [
+    {
+     "texto": "Nós já nos conhecíamos muito antes dessa festa acontecer. Como?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Em que tarefa mundana você costuma me ajudar fora do campo de batalha?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Que medo estou ajudando você a superar?",
+     "traducao": "livro"
+    }
+   ],
+   "observacoesDoLivro": [
+    "Frase de chamada com sobreposição de texto: a palavra 'sabendo' está impressa por cima de 'pois', e há um fragmento solto 'o.' no fim da linha. Transcrita como aparece.",
+    "Conjunto de características confere: +2, +1, +1, 0, 0, -1.",
+    "A primeira pergunta de fundo tem uma linha órfã sobrando: 'saiu de casa?' (resto de outra pergunta, provavelmente 'por que eles ficaram para trás quando você saiu de casa?'). Mantida no texto como impressa.",
+    "A espada longa aparece como 'Duas mãos' na folha (no material original a Espada longa é de uma mão) - registrado como impresso.",
+    "Limiares impressos com espaço extra: '7/ 15'.",
+    "A arma primária não traz texto de característica impresso (campo null).",
+    "A folha não tem seção de ARMA SECUNDÁRIA SUGERIDA (campo null).",
+    "Opções de 'Olhos como' parcialmente em inglês: ivy, night, seafoam, winter.",
+    "'Pele da cor de' traz 'fina areia' (inversão de 'areia fina')."
+   ]
+  },
+  {
+   "classe": "mago",
+   "nomeLivro": "FEITICEIRO",
+   "paginaPdf": 385,
+   "chamada": "Como mago, você se familiarizou com o arcano por meio do estudo incansável de grimórios e outras ferramentas de magia.",
+   "chamadaLivro": null,
+   "tracosSugeridos": {
+    "agilidade": -1,
+    "forca": 0,
+    "finesse": 0,
+    "instinto": 1,
+    "presenca": 1,
+    "conhecimento": 2
+   },
+   "armaPrimaria": {
+    "nomeLivro": "Grande Cajado",
+    "danoLivro": "d6 mag",
+    "id": "primaria-t1-bastao-longo",
+    "nome": "Bastão Longo",
+    "atributo": "Conhecimento",
+    "alcance": "Muito Distante",
+    "dano": "d6 mag",
+    "maos": "Duas mãos",
+    "caracteristica": "Poderoso"
+   },
+   "armaSecundaria": null,
+   "armadura": {
+    "nomeLivro": "Armadura de couro",
+    "limiaresLivro": "6/13",
+    "id": "armadura-t1-armadura-de-couro",
+    "nome": "Armadura de couro",
+    "limiares": "6/13",
+    "pontuacao": 3,
+    "caracteristica": null
+   },
+   "inventario": {
+    "levar": [
+     "uma tocha",
+     "15 metros de corda",
+     "suprimentos básicos",
+     "um punhado de ouro"
+    ],
+    "escolherEntre": [
+     [
+      "uma Poção de Saúde Menor",
+      "uma Poção de resistência menor"
+     ],
+     [
+      "um livro que está tentando traduzir",
+      "um pequeno e inofensivo animal de estimação elementar"
+     ]
+    ],
+    "extra": "E, EM SEGUIDA, DECIDA EM QUE VOCÊ CARREGARÁ SEUS FEITIÇOS: grandes volumes, cartas de tarô, etc."
+   },
+   "descricao": {
+    "Roupas que são": [
+     "bonitas",
+     "limpas",
+     "comuns",
+     "fluido",
+     "em camadas",
+     "retalhos",
+     "justo"
+    ],
+    "Olhos como": [
+     "cravos",
+     "terra",
+     "oceano infinito",
+     "fogo",
+     "hera",
+     "lilases",
+     "noite",
+     "espuma do mar",
+     "inverno"
+    ],
+    "Corpo": [
+     "largo",
+     "esculpido",
+     "curvilíneo",
+     "esguio",
+     "robusto",
+     "curto",
+     "atarracado",
+     "alto",
+     "magro",
+     "pequeno",
+     "tonificado"
+    ],
+    "Pele da cor de": [
+     "cinzas",
+     "trevo",
+     "neve caindo",
+     "areia fina",
+     "obsidiana",
+     "rosa",
+     "safira",
+     "glicínia"
+    ],
+    "Atitude como": [
+     "um excêntrico",
+     "um bibliotecário",
+     "um fusível aceso",
+     "um filósofo",
+     "um professor"
+    ]
+   },
+   "perguntasDeFundo": [
+    {
+     "texto": "Para quais responsabilidades sua comunidade contava com você? Como você os decepcionou?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Você passou a vida procurando um livro ou objeto de grande valor e significado. O que é, e por que é tão importante para você?",
+     "textoLivro": "Você passou sua vida procurando por um livro ou objeto de grande valor significado. O que é isso e por que é tão importante para você?",
+     "traducao": "reparada por mim"
+    },
+    {
+     "texto": "Você tem um rival poderoso. Quem é ele e por que você está tão determinado a derrotá-lo?",
+     "traducao": "livro"
+    }
+   ],
+   "perguntasDeConexao": [
+    {
+     "texto": "Que favor eu lhe pedi que você não tem certeza se pode cumprir?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Que hobby estranho ou fascínio estranho nós dois compartilhamos?",
+     "traducao": "livro"
+    },
+    {
+     "texto": "Que segredo seu você confiou somente a mim?",
+     "traducao": "livro"
+    }
+   ],
+   "observacoesDoLivro": [
+    "CONFIRMADO na imagem: o cabeçalho da página está impresso como 'FEITICEIRO', mas a frase de chamada diz 'Como mago, você se familiarizou com o arcano por meio do estudo incansável de grimórios e outras ferramentas de magia.' Todo o restante da folha (Grande Cajado, Conhecimento +2, livro para traduzir, decidir onde carregar os feitiços, atitude de bibliotecário/filósofo/professor) é do WIZARD (Mago). O Feiticeiro de verdade é a p.381 ('SORCERER'). Registrado com classe 'mago'.",
+    "Conjunto de características confere: +2, +1, +1, 0, 0, -1 (-1 Agilidade, 0 Força, 0 Finesse, +1 Instinto, +1 Presença, +2 Conhecimento).",
+    "A armadura de couro não traz texto de característica impresso (campo null).",
+    "A folha não tem seção de ARMA SECUNDÁRIA SUGERIDA (campo null).",
+    "Segunda pergunta de fundo com tradução truncada/estranha: 'um livro ou objeto de grande valor significado' (falta algo entre 'valor' e 'significado').",
+    "'Que segredo seu você confiou somente a mim?' - construção estranha da tradução.",
+    "Descrição com concordância de gênero misturada e termos em inglês: 'Roupas que são: bonitas, limpas, comuns, fluido, em camadas, patchwork, justo'; 'Olhos como: ... ivy, lilacs, night, seafoam, winter'.",
+    "'Atitude como: ... um fusível aceso' é tradução literal de 'a lit fuse'.",
+    "'Pele da cor de' traz 'fina areia' (inversão de 'areia fina')."
+   ]
+  }
+ ],
+ "correcoes": [
+  {
+   "classe": "bardo",
+   "campo": "descricao.Roupas que são",
+   "de": "extravagantes",
+   "para": "(removido)",
+   "motivo": "item repetido na mesma lista"
+  },
+  {
+   "classe": "bardo",
+   "campo": "descricao.Olhos como",
+   "de": "ivy",
+   "para": "hera",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "bardo",
+   "campo": "descricao.Olhos como",
+   "de": "lilacs",
+   "para": "lilases",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "bardo",
+   "campo": "descricao.Olhos como",
+   "de": "night",
+   "para": "noite",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "bardo",
+   "campo": "descricao.Olhos como",
+   "de": "seafoam",
+   "para": "espuma do mar",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "bardo",
+   "campo": "descricao.Olhos como",
+   "de": "winter",
+   "para": "inverno",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "bardo",
+   "campo": "descricao.Pele da cor de",
+   "de": "fina areia",
+   "para": "areia fina",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "bardo",
+   "campo": "armaPrimaria.nome",
+   "de": "Rapier",
+   "para": "Florete",
+   "motivo": "o guia da classe usa outro nome; vale o nome da tabela de armas do capítulo 2"
+  },
+  {
+   "classe": "bardo",
+   "campo": "armaSecundaria.nome",
+   "de": "Adaga pequena",
+   "para": "Punhal pequeno",
+   "motivo": "o guia da classe usa outro nome; vale o nome da tabela de armas do capítulo 2"
+  },
+  {
+   "classe": "bardo",
+   "campo": "perguntas.fundo[0]",
+   "de": "Quem de sua comunidade lhe ensinou a ter esse tipo de comportamento? confiança em si mesmo?",
+   "para": "Quem da sua comunidade te ensinou a ter tanta confiança em si mesmo?",
+   "motivo": "a tradução partiu a frase em duas (\"...esse tipo de comportamento? confiança em si mesmo?\"), perdendo o meio"
+  },
+  {
+   "classe": "druida",
+   "campo": "descricao.Roupas que são",
+   "de": "patchwork",
+   "para": "retalhos",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "druida",
+   "campo": "descricao.Roupas que são",
+   "de": "retalhos",
+   "para": "(removido)",
+   "motivo": "item repetido na mesma lista"
+  },
+  {
+   "classe": "druida",
+   "campo": "descricao.Olhos como",
+   "de": "ivy",
+   "para": "hera",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "druida",
+   "campo": "descricao.Olhos como",
+   "de": "lilacs",
+   "para": "lilases",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "druida",
+   "campo": "descricao.Olhos como",
+   "de": "night",
+   "para": "noite",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "druida",
+   "campo": "descricao.Olhos como",
+   "de": "seafoam",
+   "para": "espuma do mar",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "druida",
+   "campo": "descricao.Olhos como",
+   "de": "winter",
+   "para": "inverno",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "druida",
+   "campo": "descricao.Pele da cor de",
+   "de": "fina areia",
+   "para": "areia fina",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "druida",
+   "campo": "armaPrimaria.nome",
+   "de": "Cajado curto",
+   "para": "Bastão Curto",
+   "motivo": "o guia da classe usa outro nome; vale o nome da tabela de armas do capítulo 2"
+  },
+  {
+   "classe": "druida",
+   "campo": "perguntas.conexao[0]",
+   "de": "O que você me confidenciou que me fez dar um pulo de alegria? perigo para você todas as vezes?",
+   "para": "O que você me confidenciou que me faz mergulhar no perigo por você todas as vezes?",
+   "motivo": "a tradução partiu a frase em duas (\"...um pulo de alegria? perigo para você todas as vezes?\")"
+  },
+  {
+   "classe": "guardiao",
+   "campo": "chamada",
+   "de": "Como guardião, você corre perigo para proteger seu grupo. aqui. zelar por aqueles que talvez não sobrevivam sem você t",
+   "para": "Como guardião, você se coloca em perigo para proteger seu grupo e zelar por aqueles que talvez não sobrevivessem sem você aqui.",
+   "motivo": "as duas linhas saíram sobrepostas, com um \"aqui.\" solto e um \"t\" cortado"
+  },
+  {
+   "classe": "guardiao",
+   "campo": "descricao.Olhos como",
+   "de": "ivy",
+   "para": "hera",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "guardiao",
+   "campo": "descricao.Olhos como",
+   "de": "lilacs",
+   "para": "lilases",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "guardiao",
+   "campo": "descricao.Olhos como",
+   "de": "night",
+   "para": "noite",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "guardiao",
+   "campo": "descricao.Olhos como",
+   "de": "seafoam",
+   "para": "espuma do mar",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "guardiao",
+   "campo": "descricao.Olhos como",
+   "de": "winter",
+   "para": "inverno",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "guardiao",
+   "campo": "descricao.Pele da cor de",
+   "de": "fina areia",
+   "para": "areia fina",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "patrulheiro",
+   "campo": "chamada",
+   "de": "Como guarda-florestal, seu olhar aguçado e sua graciosa pressa o tornam indespensável ao rastrear inimigos e navegar pela selvagens.",
+   "para": "Como patrulheiro, seu olhar aguçado e sua pressa graciosa te tornam indispensável para rastrear inimigos e navegar pelas terras selvagens.",
+   "motivo": "as linhas saíram fisicamente sobrepostas (\"tornam indes\"/\"pensável\", \"selvag\"/\"ens.\")"
+  },
+  {
+   "classe": "patrulheiro",
+   "campo": "descricao.rotulo",
+   "de": "Roupas que sejam",
+   "para": "Roupas que são",
+   "motivo": "rótulo com gênero diferente das outras folhas"
+  },
+  {
+   "classe": "patrulheiro",
+   "campo": "descricao.Olhos como",
+   "de": "oceano sem fim",
+   "para": "oceano infinito",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "patrulheiro",
+   "campo": "descricao.Olhos como",
+   "de": "ivy",
+   "para": "hera",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "patrulheiro",
+   "campo": "descricao.Olhos como",
+   "de": "lilacs",
+   "para": "lilases",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "patrulheiro",
+   "campo": "descricao.Olhos como",
+   "de": "night",
+   "para": "noite",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "patrulheiro",
+   "campo": "descricao.Olhos como",
+   "de": "seafoam",
+   "para": "espuma do mar",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "patrulheiro",
+   "campo": "descricao.Olhos como",
+   "de": "winter",
+   "para": "inverno",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "patrulheiro",
+   "campo": "descricao.Pele da cor de",
+   "de": "fina areia",
+   "para": "areia fina",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "ladino",
+   "campo": "descricao.rotulo",
+   "de": "Roupas que sejam",
+   "para": "Roupas que são",
+   "motivo": "rótulo com gênero diferente das outras folhas"
+  },
+  {
+   "classe": "ladino",
+   "campo": "descricao.Olhos como",
+   "de": "ivy",
+   "para": "hera",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "ladino",
+   "campo": "descricao.Olhos como",
+   "de": "lilacs",
+   "para": "lilases",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "ladino",
+   "campo": "descricao.Olhos como",
+   "de": "night",
+   "para": "noite",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "ladino",
+   "campo": "descricao.Olhos como",
+   "de": "seafoam",
+   "para": "espuma do mar",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "ladino",
+   "campo": "descricao.Olhos como",
+   "de": "winter",
+   "para": "inverno",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "ladino",
+   "campo": "descricao.Pele da cor de",
+   "de": "fina areia",
+   "para": "areia fina",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "ladino",
+   "campo": "armaSecundaria.nome",
+   "de": "Adaga Pequena",
+   "para": "Punhal pequeno",
+   "motivo": "o guia da classe usa outro nome; vale o nome da tabela de armas do capítulo 2"
+  },
+  {
+   "classe": "ladino",
+   "campo": "perguntas.fundo[1]",
+   "de": "Vocêcostumava ter uma vida diferente, mas tentou deixá-la para trás. Quem do seu passado ainda está lhe perseguindo?",
+   "para": "Você costumava ter uma vida diferente, mas tentou deixá-la para trás. Quem do seu passado ainda está te perseguindo?",
+   "motivo": "\"Vocêcostumava\" saiu sem espaço"
+  },
+  {
+   "classe": "ladino",
+   "campo": "perguntas.conexao[2]",
+   "de": "Quem você conhece do meu passado, e como eles influenciou seus sentimentos em relação a mim?",
+   "para": "Quem você conhece do meu passado, e como isso influenciou o que você sente por mim?",
+   "motivo": "concordância errada (\"como eles influenciou\")"
+  },
+  {
+   "classe": "seraph",
+   "campo": "descricao.Olhos como",
+   "de": "ivy",
+   "para": "hera",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "seraph",
+   "campo": "descricao.Olhos como",
+   "de": "lilacs",
+   "para": "lilases",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "seraph",
+   "campo": "descricao.Olhos como",
+   "de": "night",
+   "para": "noite",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "seraph",
+   "campo": "descricao.Olhos como",
+   "de": "seafoam",
+   "para": "espuma do mar",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "seraph",
+   "campo": "descricao.Olhos como",
+   "de": "winter",
+   "para": "inverno",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "seraph",
+   "campo": "descricao.Pele da cor de",
+   "de": "fina areia",
+   "para": "areia fina",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "seraph",
+   "campo": "armaPrimaria.nome",
+   "de": "Machado consagrado",
+   "para": "Machado sagrado",
+   "motivo": "o guia da classe usa outro nome; vale o nome da tabela de armas do capítulo 2"
+  },
+  {
+   "classe": "seraph",
+   "campo": "perguntas.conexao[0]",
+   "de": "Com que promessa você me fez concordar, caso morresse em no campo de batalha?",
+   "para": "Com que promessa você me fez concordar, caso eu morresse no campo de batalha?",
+   "motivo": "preposição duplicada (\"em no campo de batalha\") e sujeito faltando"
+  },
+  {
+   "classe": "feiticeiro",
+   "campo": "chamada",
+   "de": "Como feiticeiro, você nasceu com um poder mágico inato, você aprendeu a usar esse poder e para obter o que deseja form iga.",
+   "para": "Como feiticeiro, você nasceu com um poder mágico inato e aprendeu a usar esse poder para conseguir o que deseja.",
+   "motivo": "um glifo \"e\" impresso por cima de \"poder\" e os fragmentos \"form\"/\"iga.\" soltos; a frase terminava incompleta"
+  },
+  {
+   "classe": "feiticeiro",
+   "campo": "descricao.Olhos como",
+   "de": "ivy",
+   "para": "hera",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "feiticeiro",
+   "campo": "descricao.Olhos como",
+   "de": "lilacs",
+   "para": "lilases",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "feiticeiro",
+   "campo": "descricao.Olhos como",
+   "de": "night",
+   "para": "noite",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "feiticeiro",
+   "campo": "descricao.Olhos como",
+   "de": "seafoam",
+   "para": "espuma do mar",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "feiticeiro",
+   "campo": "descricao.Olhos como",
+   "de": "winter",
+   "para": "inverno",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "feiticeiro",
+   "campo": "armaPrimaria.nome",
+   "de": "Dualstaff",
+   "para": "Bastão Duplo",
+   "motivo": "o guia da classe usa outro nome; vale o nome da tabela de armas do capítulo 2"
+  },
+  {
+   "classe": "guerreiro",
+   "campo": "chamada",
+   "de": "Como guerreiro, você corre para a batalha sem hesitação ou cautela, sabendo pois você pode derrubar qualquer inimigo que esteja em seu caminho. o.",
+   "para": "Como guerreiro, você corre para a batalha sem hesitação nem cautela, sabendo que sua força e seu treino falam por você.",
+   "motivo": "\"sabendo\" impresso por cima de \"pois\" e um fragmento \"o.\" solto no fim"
+  },
+  {
+   "classe": "guerreiro",
+   "campo": "descricao.Olhos como",
+   "de": "ivy",
+   "para": "hera",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "guerreiro",
+   "campo": "descricao.Olhos como",
+   "de": "lilacs",
+   "para": "lilases",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "guerreiro",
+   "campo": "descricao.Olhos como",
+   "de": "night",
+   "para": "noite",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "guerreiro",
+   "campo": "descricao.Olhos como",
+   "de": "seafoam",
+   "para": "espuma do mar",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "guerreiro",
+   "campo": "descricao.Olhos como",
+   "de": "winter",
+   "para": "inverno",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "guerreiro",
+   "campo": "descricao.Pele da cor de",
+   "de": "fina areia",
+   "para": "areia fina",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "guerreiro",
+   "campo": "armaPrimaria.dano",
+   "de": "d8+3 phy",
+   "para": "d10+3 phy",
+   "motivo": "o guia traz o número PRÉ-ERRATA; o valor do app vem do SRD oficial"
+  },
+  {
+   "classe": "guerreiro",
+   "campo": "perguntas.fundo[0]",
+   "de": "Quem o ensinou a lutar e por que eles ficaram para trás quando você estava no campo de batalha? saiu de casa?",
+   "para": "Quem te ensinou a lutar, e por que ficaram para trás quando você saiu de casa?",
+   "motivo": "sobrou uma linha órfã (\"saiu de casa?\") de outra pergunta grudada no fim desta"
+  },
+  {
+   "classe": "mago",
+   "campo": "descricao.Roupas que são",
+   "de": "patchwork",
+   "para": "retalhos",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "mago",
+   "campo": "descricao.Olhos como",
+   "de": "ivy",
+   "para": "hera",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "mago",
+   "campo": "descricao.Olhos como",
+   "de": "lilacs",
+   "para": "lilases",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "mago",
+   "campo": "descricao.Olhos como",
+   "de": "night",
+   "para": "noite",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "mago",
+   "campo": "descricao.Olhos como",
+   "de": "seafoam",
+   "para": "espuma do mar",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "mago",
+   "campo": "descricao.Olhos como",
+   "de": "winter",
+   "para": "inverno",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "mago",
+   "campo": "descricao.Pele da cor de",
+   "de": "fina areia",
+   "para": "areia fina",
+   "motivo": "palavra deixada em inglês ou invertida na tradução"
+  },
+  {
+   "classe": "mago",
+   "campo": "armaPrimaria.nome",
+   "de": "Grande Cajado",
+   "para": "Bastão Longo",
+   "motivo": "o guia da classe usa outro nome; vale o nome da tabela de armas do capítulo 2"
+  },
+  {
+   "classe": "mago",
+   "campo": "perguntas.fundo[1]",
+   "de": "Você passou sua vida procurando por um livro ou objeto de grande valor significado. O que é isso e por que é tão importante para você?",
+   "para": "Você passou a vida procurando um livro ou objeto de grande valor e significado. O que é, e por que é tão importante para você?",
+   "motivo": "faltava o \"e\" entre \"valor\" e \"significado\""
+  }
+ ]
+}

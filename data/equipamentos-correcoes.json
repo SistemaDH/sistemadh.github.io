@@ -1,6 +1,6 @@
 {
  "versao": 1,
- "total": 139,
+ "total": 143,
  "correcoes": [
   {
    "item": "Ricochet Axes / Aantari Bow",
@@ -974,6 +974,34 @@
    "de": "Ofuscante Orbe",
    "para": "Orbe Ofuscante",
    "motivo": "o livro inverteu a ordem: \"Ofuscante Orbe\""
+  },
+  {
+   "item": "Hallowed Axe (arma)",
+   "tipo": "alias-guia-de-classe",
+   "de": "Machado consagrado",
+   "para": "Machado sagrado",
+   "motivo": "a folha \"Guia de Caráter\" da classe (apêndice) usa outro nome para a mesma arma da tabela do capítulo 2"
+  },
+  {
+   "item": "Shortstaff (arma)",
+   "tipo": "alias-guia-de-classe",
+   "de": "Cajado curto",
+   "para": "Bastão Curto",
+   "motivo": "a folha \"Guia de Caráter\" da classe (apêndice) usa outro nome para a mesma arma da tabela do capítulo 2"
+  },
+  {
+   "item": "Greatstaff (arma)",
+   "tipo": "alias-guia-de-classe",
+   "de": "Cajado grande, Grande Cajado",
+   "para": "Bastão Longo",
+   "motivo": "a folha \"Guia de Caráter\" da classe (apêndice) usa outro nome para a mesma arma da tabela do capítulo 2"
+  },
+  {
+   "item": "Small Dagger (arma)",
+   "tipo": "alias-guia-de-classe",
+   "de": "Adaga Pequena, Adaga pequena",
+   "para": "Punhal pequeno",
+   "motivo": "a folha \"Guia de Caráter\" da classe (apêndice) usa outro nome para a mesma arma da tabela do capítulo 2"
   }
  ]
 }

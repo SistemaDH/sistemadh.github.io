@@ -1,0 +1,502 @@
+/* ==========================================================================
+   criacao.css — assistente de criação de ficha e visualizador de cartas.
+
+   Mobile-first: a moldura é uma coluna de altura total com topo fixo, miolo
+   rolável e rodapé fixo. Alvos de toque nunca abaixo de 44px.
+   ========================================================================== */
+
+.criacao {
+  position: fixed;
+  inset: 0;
+  /* Acima do topo e do botão flutuante do roster (--z-topo), abaixo do modal
+     de carta (--z-modal) — o visor de carta precisa cobrir o assistente. */
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  background: var(--cor-fundo);
+  background-image:
+    radial-gradient(120% 60% at 50% 0%, rgba(217, 171, 91, 0.10), transparent 60%);
+}
+
+/* ---------------------------------------------------------------- topo --- */
+
+.criacao__topo {
+  flex: 0 0 auto;
+  padding: calc(10px + env(safe-area-inset-top)) 12px 0;
+  border-bottom: 1px solid var(--cor-borda);
+  background: var(--cor-fundo-2);
+}
+
+.criacao__topoLinha {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+}
+
+.criacao__tituloBloco {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.criacao__etiqueta {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cor-ouro);
+}
+
+.criacao__titulo {
+  font-family: var(--fonte-titulo);
+  font-size: 19px;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.criacao__progresso {
+  height: 3px;
+  margin: 8px -12px 0;
+  background: var(--cor-borda);
+  overflow: hidden;
+}
+
+.criacao__progressoBarra {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cor-ouro-escuro), var(--cor-ouro));
+  transition: width 240ms ease;
+}
+
+/* --------------------------------------------------------------- corpo --- */
+
+.criacao__corpo {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 16px 12px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* O miolo é uma coluna flex de altura limitada, então os filhos encolheriam
+   abaixo do próprio conteúdo e o texto vazaria para fora da caixa. Aqui a
+   gente proíbe isso: cada bloco ocupa exatamente a altura do que tem dentro. */
+.criacao__corpo > * { flex: 0 0 auto; }
+
+.criacao__ajuda {
+  margin: 0;
+  color: var(--cor-texto-suave);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.criacao__secao {
+  font-family: var(--fonte-titulo);
+  font-size: 16px;
+  margin: 12px 0 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--cor-borda);
+  color: var(--cor-ouro);
+}
+
+.criacao__subsecao {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--cor-texto-suave);
+  margin: 8px 0 6px;
+}
+
+.criacao__pergunta {
+  margin: 0 0 8px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.criacao__alternador {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  min-height: 44px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: var(--cor-fundo-2);
+  cursor: pointer;
+}
+
+.criacao__caixa {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  accent-color: var(--cor-ouro);
+}
+
+.criacao__coluna { margin-top: 8px; }
+.criacao__linhaDescricao { margin-bottom: 4px; }
+
+/* -------------------------------------------------------------- rodapé --- */
+
+.criacao__rodape {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--cor-borda);
+  background: var(--cor-fundo-2);
+}
+
+.criacao__rodapeAviso {
+  text-align: center;
+  color: var(--cor-texto-suave);
+  line-height: 1.3;
+}
+
+.criacao__rodape .btn { min-height: 44px; }
+
+/* ------------------------------------------------------------ caminhos --- */
+
+.criacao__caminhos {
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.criacao__caminho { text-align: left; }
+
+/* ------------------------------------------------------- listas e itens --- */
+
+.lista-escolha {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lista-escolha__item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+  width: 100%;
+}
+
+.lista-escolha__cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.lista-escolha__resumo {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.lista-escolha--compacta .lista-escolha__resumo {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.lista-escolha__botao { align-self: flex-start; min-height: 44px; }
+
+.grade-opcoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.grade-opcoes__item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.esta-escolhido {
+  border-color: var(--cor-ouro);
+  box-shadow: 0 0 0 1px var(--cor-ouro) inset;
+}
+
+.lista-simples {
+  margin: 0;
+  padding-left: 20px;
+  line-height: 1.6;
+}
+
+.sanfona {
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  padding: 8px 12px;
+  background: var(--cor-fundo-2);
+}
+
+.sanfona > summary {
+  cursor: pointer;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------- chips --- */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--cor-borda);
+  background: var(--cor-fundo-2);
+  color: var(--cor-texto);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 120ms, background 120ms;
+}
+
+.chip:hover:not(:disabled) { border-color: var(--cor-ouro-escuro); }
+.chip:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.chip--ativo {
+  border-color: var(--cor-ouro);
+  background: rgba(217, 171, 91, 0.14);
+  color: var(--cor-ouro);
+  font-weight: 600;
+}
+
+.chips--valores .chip--valor {
+  min-width: 52px;
+  min-height: 44px;
+  justify-content: center;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  font-size: 15px;
+}
+
+/* --------------------------------------------------------------- traços --- */
+
+.traco { display: flex; flex-direction: column; gap: 6px; }
+.traco__topo { display: flex; align-items: center; gap: 8px; }
+
+.traco__valor {
+  font-family: var(--fonte-titulo);
+  font-size: 20px;
+  color: var(--cor-ouro);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ----------------------------------------------------------- derivados --- */
+
+.derivados {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 8px;
+}
+
+.derivado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+  text-align: center;
+}
+
+.derivado__rotulo {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--cor-texto-suave);
+}
+
+.derivado__valor {
+  font-family: var(--fonte-titulo);
+  font-size: 20px;
+  color: var(--cor-ouro);
+  font-variant-numeric: tabular-nums;
+}
+
+.derivado__nota { font-size: 10px; color: var(--cor-texto-suave); }
+
+.painel-derivados { margin-top: 8px; }
+
+.revisao__linha {
+  display: flex;
+  gap: 8px;
+  margin: 4px 0;
+  line-height: 1.4;
+}
+
+.revisao__rotulo {
+  flex: 0 0 96px;
+  color: var(--cor-texto-suave);
+  font-size: 13px;
+}
+
+.cartao--alerta { border-color: var(--cor-alerta); }
+
+/* ============================================================== cartas === */
+
+/* O nome que abre a carta — o gesto que se repete no app inteiro. */
+.nome-carta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 4px 2px;
+  border: 0;
+  background: none;
+  color: var(--cor-ouro);
+  font: inherit;
+  font-family: var(--fonte-titulo);
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  border-bottom: 1px dashed rgba(217, 171, 91, 0.45);
+}
+
+.nome-carta:hover { border-bottom-style: solid; }
+.nome-carta__icone { font-size: 13px; opacity: 0.7; }
+
+.modal__caixa--carta {
+  max-width: min(96vw, 560px);
+  padding: 12px;
+}
+
+.carta-visor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.carta-visor__quadro {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carta-visor__palco {
+  width: 100%;
+  min-height: 40vh;
+  max-height: 68vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: pan-y;
+}
+
+.carta-visor__img {
+  max-width: 100%;
+  max-height: 68vh;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.carta-visor__seta {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--cor-borda);
+  background: rgba(12, 10, 18, 0.75);
+  color: var(--cor-ouro);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.carta-visor__seta--esq { left: -4px; }
+.carta-visor__seta--dir { right: -4px; }
+.carta-visor__seta[hidden] { display: none; }
+
+.carta-visor__legenda {
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-size: 17px;
+  color: var(--cor-ouro);
+  text-align: center;
+}
+
+.carta-visor__contador {
+  font-size: 12px;
+  color: var(--cor-texto-suave);
+  text-align: center;
+}
+
+.carta-visor__reserva {
+  padding: 16px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 10px;
+  background: var(--cor-fundo-2);
+  width: 100%;
+}
+
+.carta-visor__reservaTitulo {
+  margin: 0 0 4px;
+  font-family: var(--fonte-titulo);
+  color: var(--cor-ouro);
+}
+
+.carta-visor__reservaTexto {
+  margin: 8px 0 0;
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+/* ------------------------------------------------------------- telas ---- */
+
+.campo__entrada--area {
+  min-height: 76px;
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.btn--pequeno {
+  min-height: 40px;
+  padding: 8px 14px;
+  font-size: 14px;
+}
+
+@media (min-width: 720px) {
+  .criacao__corpo { padding: 20px max(16px, calc((100vw - 720px) / 2)) 32px; }
+  .criacao__topo,
+  .criacao__rodape { padding-left: max(16px, calc((100vw - 720px) / 2)); padding-right: max(16px, calc((100vw - 720px) / 2)); }
+  .criacao__caminhos { grid-template-columns: 1fr 1fr; }
+}
+
+/* Quando falta alguma escolha, "Continuar" precisa PARECER travado. Só baixar
+   a opacidade não basta: o dourado continua chamativo em cima do fundo escuro
+   e a pessoa fica tocando num botão que não responde. */
+.criacao__rodape .btn--principal:disabled {
+  background: var(--cor-superficie-alta);
+  border-color: var(--cor-borda);
+  color: var(--cor-texto-fraco);
+  box-shadow: none;
+  opacity: 1;
+}
+
+/* O aviso do rodapé é a explicação do botão travado — merece destaque. */
+.criacao__rodape .btn--principal:disabled + .criacao__rodapeAviso,
+.criacao__rodapeAviso { font-size: var(--txt-sm); }
