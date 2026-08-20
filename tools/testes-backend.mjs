@@ -465,6 +465,113 @@ teste('as duas subclasses de uma classe usam o mesmo atributo de Conjuração', 
   });
 });
 
+console.log('\nAncestralidades e comunidades');
+const ANCESTRALIDADES = avaliar('ANCESTRALIDADES');
+const COMUNIDADES = avaliar('COMUNIDADES');
+
+teste('18 ancestralidades com 2 características cada, na ordem', () => {
+  const ids = Object.keys(ANCESTRALIDADES);
+  igual(ids.length, 18);
+  ids.forEach((id) => {
+    const cs = ANCESTRALIDADES[id].caracteristicas;
+    igual(cs.length, 2, `${id} deveria ter 2 características`);
+    igual(cs.map((c) => c.ordem), [1, 2], `${id} fora de ordem`);
+  });
+});
+
+teste('9 comunidades com 1 característica cada', () => {
+  const ids = Object.keys(COMUNIDADES);
+  igual(ids.length, 9);
+  ids.forEach((id) => verdade(COMUNIDADES[id].caracteristica, `${id} sem característica`));
+});
+
+teste('nenhum nome de característica de ancestralidade se repete', () => {
+  const nomes = [];
+  Object.keys(ANCESTRALIDADES).forEach((id) =>
+    ANCESTRALIDADES[id].caracteristicas.forEach((c) => nomes.push(c.nome.toLowerCase())));
+  igual(nomes.length, 36);
+  igual(new Set(nomes).size, 36, 'há nomes de característica repetidos entre ancestralidades');
+});
+
+teste('normaliza ancestralidade pelo nome da carta e pelo do livro', () => {
+  igual(contexto.normalizarAncestralidade_('Anão'), 'anao');
+  igual(contexto.normalizarAncestralidade_('Dwarf'), 'anao');
+  igual(contexto.normalizarAncestralidade_('FADA'), 'fada');
+  igual(contexto.normalizarAncestralidade_('Faerie'), 'fada');
+  igual(contexto.normalizarAncestralidade_('Clanquear'), 'clank');
+  igual(contexto.normalizarAncestralidade_('Tiefling'), null);
+});
+
+teste('normaliza comunidade', () => {
+  igual(contexto.normalizarComunidade_('Wildborne'), 'wildborne');
+  igual(contexto.normalizarComunidade_('wanderborne'), 'wanderborne');
+  igual(contexto.normalizarComunidade_('Cityborne'), null);
+});
+
+teste('ancestralidade simples válida passa', () => {
+  const r = contexto.validarOrigem_({ ancestralidade: 'Goblin', comunidade: 'Wildborne' });
+  verdade(r.ok, JSON.stringify(r.erros));
+  igual(r.resolvido.ancestralidades, ['goblin']);
+  igual(r.resolvido.caracteristicas.length, 2);
+});
+
+teste('recusa ancestralidade ou comunidade inexistente', () => {
+  const r = contexto.validarOrigem_({ ancestralidade: 'Dracônico', comunidade: 'Skyborne' });
+  igual(r.ok, false);
+  igual(r.erros.length, 2);
+});
+
+// O exemplo goblin-orc é do próprio livro (p.72) e serve de teste de mesa.
+teste('ancestralidade mista: o exemplo válido do livro passa', () => {
+  const a = contexto.validarOrigem_({
+    ancestralidadeMista: ['Goblin', 'Orc'],
+    caracteristicasEscolhidas: ['Pé Firme', 'Presas'],
+    comunidade: 'Slyborne'
+  });
+  verdade(a.ok, JSON.stringify(a.erros));
+  const b = contexto.validarOrigem_({
+    ancestralidadeMista: ['Goblin', 'Orc'],
+    caracteristicasEscolhidas: ['Robusto', 'Sentido de Perigo'],
+    comunidade: 'Slyborne'
+  });
+  verdade(b.ok, JSON.stringify(b.erros));
+});
+
+teste('ancestralidade mista: o exemplo PROIBIDO do livro é recusado', () => {
+  // "Você não pode usar as características Pé Firme e Robusto" — as duas são
+  // a PRIMEIRA característica da sua ancestralidade.
+  const r = contexto.validarOrigem_({
+    ancestralidadeMista: ['Goblin', 'Orc'],
+    caracteristicasEscolhidas: ['Pé Firme', 'Robusto'],
+    comunidade: 'Slyborne'
+  });
+  igual(r.ok, false);
+  verdade(r.erros.some((e) => e.indexOf('mesmo lugar da ordem') >= 0), JSON.stringify(r.erros));
+});
+
+teste('ancestralidade mista: recusa característica de fora das duas escolhidas', () => {
+  const r = contexto.validarOrigem_({
+    ancestralidadeMista: ['Goblin', 'Orc'],
+    caracteristicasEscolhidas: ['Pé Firme', 'Asas'],
+    comunidade: 'Slyborne'
+  });
+  igual(r.ok, false);
+  verdade(r.erros.some((e) => e.indexOf('Asas') >= 0), JSON.stringify(r.erros));
+});
+
+teste('ancestralidade mista: recusa duas iguais e quantidade errada', () => {
+  igual(contexto.validarOrigem_({
+    ancestralidadeMista: ['Goblin', 'Goblin'],
+    caracteristicasEscolhidas: ['Pé Firme', 'Sentido de Perigo'],
+    comunidade: 'Slyborne'
+  }).ok, false);
+  igual(contexto.validarOrigem_({
+    ancestralidadeMista: ['Goblin', 'Orc', 'Elfo'],
+    caracteristicasEscolhidas: ['Pé Firme', 'Presas'],
+    comunidade: 'Slyborne'
+  }).ok, false);
+});
+
 console.log('\nZerar planilha');
 teste('arquivarEResetar preserva o antigo e recria vazio', () => {
   contexto.arquivarEResetar();

@@ -1,0 +1,696 @@
+{
+ "versao": 1,
+ "fonte": "Cartas oficiais em PNG (pt-BR) para nomes e características + livro para as descrições",
+ "regraAncestralidadeMista": {
+  "titulo": "ANCESTRIA MISTA",
+  "texto": "As famílias no mundo de Daggerheart são tão únicas quanto os povos e as culturas que as habitam. A aparência e o conjunto de habilidades de qualquer pessoa podem ser moldados por sangue, magia, proximidade ou uma variedade de outros fatores.\n\nSe você decidir que seu personagem é descendente de vários ancestrais e quiser representar isso mecanicamente no jogo, siga as etapas abaixo:\n\nETAPA 1: DETERMINAR A COMBINAÇÃO DE ANCESTRAIS\nAo escolher um ancestral na criação do personagem, escreva como ele se identifica na seção Heritage (Herança) da sua ficha de personagem. Por exemplo, sua ascendência pode ser \"goblin-orc\", ou apenas \"goblin\" (com orc na linhagem), ou um nome que você escolher, como \"toothling\".\n\nETAPA 2: ESCOLHA OS RECURSOS DE ANCESTRALIDADE\nTrabalhe com o seu GM para escolher duas características dos ancestrais da linhagem do seu personagem.\n\nVocê deve escolher a primeira característica de um ancestral e a segunda de outro. Anote ambas em uma ficha de anotações que pode ser guardada com as outras fichas ou ao lado da ficha do personagem. Por exemplo, se estiver criando um goblin-orc, você pode escolher as características \"Surefooted\" (Pé firme) e \"Tusks\" (Presas) ou as características \"Sturdy\" (Robusto) e \"Danger Sense\" (Sentido de perigo). Você não pode usar as características \"Surefooted\" (Pé firme) e \"Sturdy\" (Robusto).\n\nSe a herança do seu personagem incluir mais de dois ancestrais, você só escolherá as características de dois deles. Você pode representar outros ancestrais por meio de sua aparência ou história de fundo.",
+  "resumoMecanico": "Escolha duas características: a PRIMEIRA característica de uma ancestralidade e a SEGUNDA de outra. Se a herança tiver mais de duas ancestralidades, ainda assim só duas entram mecanicamente.",
+  "problemasDeTraducao": [
+   "\"Heritage (Herança)\" - termo em inglês com tradução entre parênteses, não totalmente traduzido.",
+   "\"GM\" não traduzido (deveria ser \"Mestre\" ou \"Mestre de Jogo\").",
+   "Nomes de características mantidos em inglês com tradução entre parênteses: \"Surefooted (Pé firme)\", \"Tusks (Presas)\", \"Sturdy (Robusto)\", \"Danger Sense (Sentido de perigo)\".",
+   "Exemplo de nome de ancestralidade \"toothling\" mantido em inglês, sem tradução.",
+   "Legendas das ilustrações de exemplo mantidas parcialmente em inglês: \"INFERNIS-RIBBET \\\"SAPO COM CHIFRES\\\"\", \"FUNGRIL-GALAPA \\\"SHROOMSHELL\\\" (CASCA DE COGUMELO)\", \"FAERIE-SIMIAH \\\"FLITTERIN\\\"\" - os apelidos \"SHROOMSHELL\" e \"FLITTERIN\" não foram traduzidos."
+  ]
+ },
+ "introducaoLivro": "Ancestrais\n\nOs ancestrais representam a linhagem do seu personagem, o que afeta sua aparência física.\nA seção a seguir descreve cada ascendência em Coração de Adaga e as características físicas compartilhadas pelos membros dessa ascendência. Dito isso, você pode decidir que o seu personagem possui características que não são \"padrão\" ou \"médias\" para aquele ancestral. Incentivamos você a buscar inspiração na arte e a explorar a diversidade de cada ancestralidade ao criar a aparência do seu personagem.\n\nEsperamos que esta seção ofereça uma janela para as várias características físicas das criaturas que povoam Coração de Adaga. Ao jogar e conhecer membros de cada ancestralidade, você terá a oportunidade de aprender sobre as nuances e as características únicas de cada um deles.\nqualidades entre eles. Você também notará que, no mundo de Coração de Adaga, o termo \"povo\" é usado para se referir a todos os ancestrais, pois os indivíduos de todas as linhagens possuem características e culturas únicas, bem como personalidade.\n\nAlguns ancestrais são descritos usando o termo \"humanoide\". Isso não se refere ao fato de esse ancestral específico ter qualquer relação com os \"humanos\", o ancestral distinto dentro do\nCoração de Adaga. Especificamente, ele se refere ao conjunto de características físicas que os leitores reconhecerão a partir de sua própria anatomia, como o movimento bípede e a postura ereta,\nlayout facial, entre outros. Essas características variam de acordo com a ascendência e o indivíduo, embora o termo \"humanoide\" ainda deva fornecer um quadro de referência útil.\n\nCada ancestral tem duas características de ancestralidade. Embora algumas características (como a capacidade de voar) estejam diretamente ligadas à anatomia de um ancestral, é você quem determina a forma física do seu personagem. Se decidir que seu personagem fada nunca teve asas ou perdeu as asas, você pode trabalhar com o MJ para substituir a característica \"Wings\" (Asas) que concede o voo às fadas. Da mesma forma, cabe a você decidir a importância da aparência do seu personagem para a história dele.\n\nSe quiser criar um personagem que combine mais de uma ascendência, consulte a seção \"Ascendência mista\" na página 71.",
+ "ancestralidades": [
+  {
+   "id": "anao",
+   "nome": "Anão",
+   "nomeCarta": "ANÃO",
+   "nomeLivro": "DWARF",
+   "descricao": "Os anões são mais facilmente reconhecidos como humanóides baixos com estrutura quadrada, musculatura densa e cabelos grossos. Sua altura média varia de 1,5 a 2,5 metros e eles geralmente são largos em proporção à sua estatura. Sua pele e As unhas dos anões contêm uma grande quantidade de queratina, o que as torna naturalmente resistentes. Isso permite que os anões incorporem pedras preciosas em seus corpos e se enfeitem com tatuagens ou piercings. Seus cabelos crescem espessamente, geralmente na cabeça, mas alguns anões também têm cabelos grossos no corpo. Os anões de todos os gêneros podem desenvolver pelos faciais, que eles costumam pentear em arranjos elaborados. Normalmente, os anões vivem até 250 anos de idade, mantendo sua massa muscular até mais tarde na vida.",
+   "caracteristicas": [
+    {
+     "ordem": 1,
+     "nome": "Pele Grossa",
+     "texto": "Quando você sofrer dano Menor, pode marcar 2 Estresse em vez de marcar um Ponto de Vida."
+    },
+    {
+     "ordem": 2,
+     "nome": "Fortitude Aumentada",
+     "texto": "Gaste 3 Esperança para reduzir pela metade o dano físico recebido."
+    }
+   ],
+   "caracteristicasNoLivro": [
+    {
+     "nome": "Pele grossa",
+     "texto": "Ao sofrer dano menor, você pode marcar 2 pontos de estresse em vez de marcar um ponto de vida."
+    },
+    {
+     "nome": "Fortitude aumentada",
+     "texto": "Gaste 3 de Esperança para reduzir à metade o dano físico recebido."
+    }
+   ],
+   "imagem": "assets/cartas/ancestralidades/anão.png",
+   "arquivo": "anão.png",
+   "paginaLivro": 56,
+   "observacao": null,
+   "problemasDeTraducao": [
+    "O título da ancestralidade permanece em inglês, 'DWARF', não foi traduzido para 'Anão' (termo usado em todo o corpo do texto).",
+    "Frase quebrada: 'Sua pele e As unhas dos anões contêm...' — parece faltar texto entre 'Sua pele e' e a oração seguinte, resultando em frase incompleta/sem nexo."
+   ]
+  },
+  {
+   "id": "clank",
+   "nome": "Clank",
+   "nomeCarta": "CLANK",
+   "nomeLivro": "CLANQUEAR",
+   "descricao": "Os Clanks são seres mecânicos sencientes construídos com uma variedade de materiais, incluindo metal, madeira e pedra. Eles podem\nse assemelham a humanoides, animais ou até mesmo objetos inanimados. Como os seres orgânicos, seus corpos têm uma grande variedade de tamanhos.\nDevido à sua construção sob medida, muitos clanks têm configurações físicas altamente especializadas. Os exemplos incluem mãos com garras para agarrar, rodas para movimentação ou armamento embutido.\n\nMuitos clãs adotam modificações corporais tanto para estilo quanto para função, e os membros de outras ancestralidades frequentemente recorrem a artesãos clãs para construir auxílios de mobilidade e adornos físicos personalizados. Outros ancestrais podem criar clãs, até mesmo usando suas próprias características físicas como inspiração, mas também é comum que os clãs construam uns aos outros. A vida útil de um clank se estende enquanto ele for capaz de adquirir ou criar novas peças, tornando sua forma física efetivamente imortal. Dito isso, suas mentes estão sujeitas aos efeitos do tempo e se deterioram à medida que a magia que as fortalece perde a potência.",
+   "caracteristicas": [
+    {
+     "ordem": 1,
+     "nome": "Projeto Intencional",
+     "texto": "Decida quem te criou e para qual propósito. Na criação do personagem, escolha uma das suas Experiências que melhor se alinhe a esse propósito e ganhe um bônus permanente de +1 nela."
+    },
+    {
+     "ordem": 2,
+     "nome": "Eficiente",
+     "texto": "Quando você fizer um descanso curto, pode escolher usar um movimento de descanso longo em vez de um movimento de descanso curto."
+    }
+   ],
+   "caracteristicasNoLivro": [
+    {
+     "nome": "Design com propósito",
+     "texto": "Decida quem o criou e com que propósito. Na criação do personagem, escolha uma de suas Experiências que melhor se alinhe com esse propósito e ganhe um bônus permanente de +1 para ela."
+    },
+    {
+     "nome": "Eficiente",
+     "texto": "Quando você tira um descanso curto, pode escolher um movimento de descanso longo em vez de um movimento de descanso curto."
+    }
+   ],
+   "imagem": "assets/cartas/ancestralidades/Clank.png",
+   "arquivo": "Clank.png",
+   "paginaLivro": 54,
+   "observacao": null,
+   "problemasDeTraducao": [
+    "O título impresso é 'CLANQUEAR', mas todo o corpo do texto usa 'Clanks'/'clãs'/'clank' (o termo original em inglês é 'Clank') — nome do título inconsistente com o termo usado na descrição.",
+    "Frase quebrada: 'Eles podem\\nse assemelham a humanoides...' — falta concordância/conectivo, resultando em frase mal formada (provavelmente deveria ser 'Eles podem se assemelhar a...')."
+   ]
+  },
+  {
+   "id": "drakona",
+   "nome": "Drakona",
+   "nomeCarta": "DRAKONA",
+   "nomeLivro": "DRAKONA",
+   "descricao": "Os drakona se assemelham a dragões sem asas em forma humanoide e possuem um poderoso sopro elementar. Todos os drakona têm escamas grossas que proporcionam uma excelente armadura natural contra ataques e contra as forças da natureza. São de grande porte, variando de 1,5 a 2,5 metros em média, com dentes longos e afiados. Novos dentes crescem durante a vida útil de aproximadamente 350 anos de um Drakona, de modo que eles nunca correm o risco de perder permanentemente os dentes\num incisivo. Ao contrário de seus ancestrais dragões, os drakona não têm asas e não podem voar sem ajuda mágica. Os membros dessa linhagem transmitem o elemento de sua respiração por meio de\nEm algumas gerações, embora em casos raros, o poder elemental de um drakona será diferente do resto de sua família.",
+   "caracteristicas": [
+    {
+     "ordem": 1,
+     "nome": "Escamas",
+     "texto": "Suas escamas funcionam como proteção natural. Quando você for sofrer dano Severo, pode marcar um Stress para reduzir em 1 o número de Pontos de Vida perdidos."
+    },
+    {
+     "ordem": 2,
+     "nome": "Sopro Elemental",
+     "texto": "Escolha um elemento para seu sopro (como eletricidade, fogo ou gelo). Você pode usar esse sopro contra um alvo ou grupo de alvos em alcance Muito Próximo, tratando-o como uma arma Instinto que causa d8 de dano mágico usando sua Proficiência."
+    }
+   ],
+   "caracteristicasNoLivro": [
+    {
+     "nome": "Escamas",
+     "texto": "Suas escamas funcionam como proteção natural. Quando você receberia dano grave, poderá marcar um estresse para marcar 1 ponto de vida a menos."
+    },
+    {
+     "nome": "Sopro elementar",
+     "texto": "Escolha um elemento para seu sopro (como eletricidade, fogo ou gelo). Você pode usar esse sopro contra um alvo ou grupo de alvos a uma distância muito próxima, tratando-o como uma arma de Instinto que causa d8 de dano mágico usando sua Proficiência."
+    }
+   ],
+   "imagem": "assets/cartas/ancestralidades/Drakona.png",
+   "arquivo": "Drakona.png",
+   "paginaLivro": 55,
+   "observacao": "A carta mistura os termos 'Stress' (em Escamas) e 'Estresse' (nas demais cartas do lote) — transcrito exatamente como impresso.",
+   "problemasDeTraducao": [
+    "Trecho final da descrição está incompleto/cortado: '...transmitem o elemento de sua respiração por meio de\\nEm algumas gerações...' — falta texto entre 'por meio de' e 'Em algumas gerações', a frase sobre como o elemento é herdado ficou incompleta.",
+    "Frase gramaticalmente quebrada: 'nunca correm o risco de perder permanentemente os dentes\\num incisivo' — sem sentido como está impressa."
+   ]
+  },
+  {
+   "id": "elfo",
+   "nome": "Elfo",
+   "nomeCarta": "ELFO",
+   "nomeLivro": "ELF",
+   "descricao": "Os elfos são normalmente humanóides altos com orelhas pontudas e sentidos aguçados. Suas orelhas variam em tamanho e formato pontiagudo e, à medida que envelhecem, as pontas começam a se inclinar. Embora os elfos tenham uma grande variedade de tipos de corpos, todos são bastante altos, com alturas que variam de 6 a 6 ½ pés. Todos os elfos têm a capacidade de entrar em um transe celestial, em vez de dormir. Isso permite que eles descansem efetivamente em um curto período de tempo.\n\nAlguns elfos possuem o que é conhecido como \"forma mística\", que ocorre quando um elfo se dedica ao estudo ou à proteção do mundo natural tão profundamente que sua forma física muda. Essas características podem incluir sardas celestiais, a presença de folhas, vinhas ou flores em seus cabelos, olhos que tremeluzem como fogo e muito mais. Às vezes, essas características são herdadas dos pais, mas se um elfo mudar de ambiente ou de foco mágico, sua aparência mudará com o tempo. Como os elfos vivem cerca de 350 anos, essas características podem mudar mais de uma vez ao longo de sua vida.",
+   "caracteristicas": [
+    {
+     "ordem": 1,
+     "nome": "Reações Rápidas",
+     "texto": "Marque 1 Estresse para ganhar vantagem em uma jogada de reação."
+    },
+    {
+     "ordem": 2,
+     "nome": "Transe Celestial",
+     "texto": "Durante um descanso, você pode entrar em transe para escolher um movimento de tempo livre adicional."
+    }
+   ],
+   "caracteristicasNoLivro": [
+    {
+     "nome": "Reações rápidas",
+     "texto": "Marque um Estresse para ganhar vantagem em uma rolagem de reação."
+    },
+    {
+     "nome": "Celestial Trance (Transe Celestial)",
+     "texto": "Durante um descanso, você pode entrar em transe para escolher um movimento adicional de tempo de inatividade."
+    }
+   ],
+   "imagem": "assets/cartas/ancestralidades/Elfo.png",
+   "arquivo": "Elfo.png",
+   "paginaLivro": 57,
+   "observacao": null,
+   "problemasDeTraducao": [
+    "O título 'ELF' não foi traduzido para 'Elfo'.",
+    "Nome da característica ficou em inglês com tradução entre parênteses: 'Celestial Trance (Transe Celestial)'.",
+    "Medida de altura mantida em pés ('6 a 6 ½ pés'), sem conversão ou adaptação para o sistema métrico usado nas demais páginas."
+   ]
+  },
+  {
+   "id": "fada",
+   "nome": "Fada",
+   "nomeCarta": "FADA",
+   "nomeLivro": "FAERIE",
+   "descricao": "As fadas são criaturas humanoides aladas com características de insetos. Essas características abrangem um amplo espectro de humanoides a insetóides - algumas possuem braços adicionais, olhos compostos, órgãos de lanterna, exoesqueletos quitinosos ou ferrões. Por causa de seus laços estreitos com o mundo natural, elas também possuem frequentemente atributos que lhes permitem se misturar com várias plantas. A altura média de uma fada varia de 2 a 5 pés, mas algumas fadas atingem até 2,5 metros de altura. Todas as fadas possuem asas membranosas e cada uma delas passa por um processo de metamorfose. O processo e as mudanças diferem de fada para fada, mas, durante essa transformação, cada indivíduo manifesta a aparência única que terá durante o resto de sua vida de aproximadamente 50 anos.",
+   "caracteristicas": [
+    {
+     "ordem": 1,
+     "nome": "Dobradora da Sorte",
+     "texto": "Uma vez por sessão, após você ou um aliado voluntário em alcance Próximo fazer uma jogada de ação, você pode gastar 3 Esperança para rerrolar os Dados da Dualidade."
+    },
+    {
+     "ordem": 2,
+     "nome": "Asas",
+     "texto": "Você pode voar. Enquanto estiver voando, pode marcar 1 Estresse depois que um adversário fizer um ataque contra você para ganhar +2 de bônus em sua Evasão contra esse ataque."
+    }
+   ],
+   "caracteristicasNoLivro": [
+    {
+     "nome": "Dobrador de sorte",
+     "texto": "Uma vez por sessão, depois que você ou um aliado disposto dentro do alcance próximo fizer uma rolagem de ação, você pode gastar 3 de Esperança para rolar novamente os Dados de Dualidade."
+    },
+    {
+     "nome": "Asas",
+     "texto": "Você pode voar. Enquanto estiver voando, você pode marcar um Stress depois que um adversário fizer um ataque contra você para ganhar um bônus de +2 na sua Evasão contra esse ataque."
+    }
+   ],
+   "imagem": "assets/cartas/ancestralidades/fada.png",
+   "arquivo": "fada.png",
+   "paginaLivro": 58,
+   "observacao": null,
+   "problemasDeTraducao": [
+    "O título 'FAERIE' não foi traduzido para 'Fada'.",
+    "Mistura de unidades na descrição: 'a altura média de uma fada varia de 2 a 5 pés, mas algumas fadas atingem até 2,5 metros' — usa pés numa parte da frase e metros na outra, sem padronização.",
+    "O cabeçalho da seção aparece como 'RECURSO DE ANCESTRALIDADE' (singular), mas lista duas características (Dobrador de sorte e Asas).",
+    "'Stress' aparece em inglês, não traduzido para 'Estresse' como nas demais páginas."
+   ]
+  },
+  {
+   "id": "fauno",
+   "nome": "Fauno",
+   "nomeCarta": "FAUNO",
+   "nomeLivro": "FAUN",
+   "descricao": "Os faunos se assemelham a cabras humanoides com chifres curvos, pupilas quadradas e cascos fendidos. Embora suas aparências possam variar, a maioria dos faunos tem um torso humanoide e uma parte inferior do corpo semelhante a uma cabra, coberta de pelos densos. Os rostos dos faunos podem ser mais caprinos ou mais humanos, e eles têm uma grande variedade de formatos de orelhas e chifres. Os chifres dos faunos variam de curtos com curvatura mínima a muito maiores com uma curvatura distinta. A altura média dos faunos varia de 1,5 a 2,5 metros, mas sua altura pode mudar drasticamente de um momento para o outro com base em sua postura. A maioria dos faunos tem membros proporcionalmente longos, independentemente de seu tamanho ou forma, e são conhecidos por sua capacidade de desferir golpes poderosos com seus cascos divididos. Os faunos vivem cerca de 225 anos e, à medida que envelhecem, sua aparência pode se tornar cada vez mais parecida com a de uma cabra.",
+   "caracteristicas": [
+    {
+     "ordem": 1,
+     "nome": "Salto Caprino",
+     "texto": "Você pode saltar para qualquer lugar dentro do alcance Próximo como se estivesse usando movimento normal, permitindo ultrapassar obstáculos, pular vãos ou escalar barreiras com facilidade."
+    },
+    {
+     "ordem": 2,
+     "nome": "Chute",
+     "texto": "Quando você tiver sucesso em um ataque contra um alvo em alcance Corpo a Corpo, pode marcar 1 Estresse para se impulsionar nele com um chute, causando 2d6 de dano extra e empurrando você ou o alvo para alcance Muito Próximo."
+    }
+   ],
+   "caracteristicasNoLivro": [
+    {
+     "nome": "Caprine Leap (Salto Caprino)",
+     "texto": "você pode saltar para qualquer lugar dentro do alcance de proximidade como se estivesse usando o movimento normal, o que lhe permite transpor obstáculos, saltar sobre fendas ou escalar barreiras com facilidade."
+    },
+    {
+     "nome": "Chute",
+     "texto": "Ao ser bem-sucedido em um ataque contra um alvo dentro do alcance Corpo a Corpo, você pode marcar um Estresse para chutar a si mesmo para fora dele, causando um dano extra de 2d6 e fazendo com que você ou o alvo recuem para o alcance Muito Próximo."
+    }
+   ],
+   "imagem": "assets/cartas/ancestralidades/Fauno.png",
+   "arquivo": "Fauno.png",
+   "paginaLivro": 59,
+   "observacao": null,
+   "problemasDeTraducao": [
+    "O título 'FAUN' não foi traduzido para 'Fauno'.",
+    "Nome da característica ficou em inglês com tradução entre parênteses: 'Caprine Leap (Salto Caprino)'."
+   ]
+  },
+  {
+   "id": "firbolg",
+   "nome": "Firbolg",
+   "nomeCarta": "FIRBOLG",
+   "nomeLivro": "FIRBOLG",
+   "descricao": "Os Firbolgs são humanoides bovinos normalmente reconhecidos por seus narizes largos e orelhas longas e caídas. Alguns têm rostos que são uma mistura de humanoide e bisão, boi, vaca ou outras criaturas bovinas. Outros, geralmente chamados de minotauros, têm cabeças que se assemelham totalmente a bovinos. Eles são criaturas altas e musculosas, com alturas que variam de cerca de 1,5 metro a 1,5 metro. 7 pés e possuem uma força extraordinária, independentemente de sua idade. Alguns firbolgs são conhecidos por usar essa força para atacar seus adversários, uma ação que é particularmente eficaz para aqueles que têm uma das muitas variedades de estilos de chifres comumente encontrados nessa ancestralidade. Embora suas características exclusivas possam variar, todos os firbolgs são cobertos de pelos, que podem ser suaves e em tons de terra ou em uma variedade de tons pastéis, como rosas suaves e azuis. Em média, os firbolgs vivem por cerca de 150 anos.",
+   "caracteristicas": [
+    {
+     "ordem": 1,
+     "nome": "Investida",
+     "texto": "Quando você obtiver sucesso em uma jogada de Agilidade para se mover de Alcance Longo ou Muito Longo para Alcance Corpo a Corpo com um ou mais alvos, pode marcar 1 Estresse para causar 1d12 de dano físico a todos os alvos em Alcance Corpo a Corpo."
+    },
+    {
+     "ordem": 2,
+     "nome": "Inabalável",
+     "texto": "Quando você for marcar 1 Estresse, role um d6. Com resultado 6, não marque o Estresse."
+    }
+   ],
+   "caracteristicasNoLivro": [
+    {
+     "nome": "Carga",
+     "texto": "Quando for bem-sucedido em uma rolagem de agilidade para se mover de um alcance distante ou muito distante para um alcance corpo a corpo com um ou mais alvos, você pode marcar um estresse para causar 1d12 de dano físico a todos os alvos dentro do alcance corpo a corpo."
+    },
+    {
+     "nome": "Inabalável",
+     "texto": "Quando você quiser marcar um Estresse, role um d6. Se o resultado for 6, não o marque."
+    }
+   ],
+   "imagem": "assets/cartas/ancestralidades/Firbolg.png",
+   "arquivo": "Firbolg.png",
+   "paginaLivro": 60,
+   "observacao": null,
+   "problemasDeTraducao": [
+    "Frase de altura totalmente quebrada pela tradução: 'com alturas que variam de cerca de 1,5 metro a 1,5 metro. 7 pés' — a medida em pés (provavelmente algo como '5 a 5,7 pés' no original) ficou fragmentada e colada de forma incoerente junto com a conversão em metros, resultando em texto sem sentido."
+   ]
+  },
+  {
+   "id": "fungril",
+   "nome": "Fungril",
+   "nomeCarta": "FUNGRIL",
+   "nomeLivro": "FUNGRIL",
+   "descricao": "Os fungos se assemelham a cogumelos humanoides. Eles podem ter uma aparência mais humanoide ou mais fúngica e vêm em uma variedade de cores, desde tons de terra até vermelhos brilhantes, amarelos, roxos e azuis. Os fungril apresentam uma variedade incrível de corpos, rostos e membros, pois não há\nA forma de cada um deles é única e comum. Até mesmo suas alturas variam de um minúsculo 2 pés de altura a impressionantes 7 pés de altura. Embora a expectativa de vida comum de um fungril seja de cerca de 300 anos, foi relatado que alguns vivem muito mais. Eles podem se comunicar de forma não verbal e muitos membros desse ancestral usam uma matriz micelial para trocar informações quimicamente com outros fungril em longas distâncias.",
+   "caracteristicas": [
+    {
+     "ordem": 1,
+     "nome": "Rede Fungril",
+     "texto": "Faça uma jogada de Instinto (12) para usar sua rede micelial e se comunicar com outros da sua ancestralidade. Em caso de sucesso, você pode se comunicar a qualquer distância."
+    },
+    {
+     "ordem": 2,
+     "nome": "Conexão com a Morte",
+     "texto": "Enquanto estiver tocando um cadáver que tenha morrido recentemente, você pode marcar 1 Estresse para extrair uma memória do cadáver relacionada a uma emoção ou sensação específica à sua escolha."
+    }
+   ],
+   "caracteristicasNoLivro": [
+    {
+     "nome": "Rede Fungril",
+     "texto": "Faça uma rolagem de instinto (12) para usar sua matriz micelial para falar com outros de sua ancestralidade. Se for bem-sucedido, você poderá se comunicar a qualquer distância."
+    },
+    {
+     "nome": "Conexão com a morte",
+     "texto": "Ao tocar em um cadáver que morreu recentemente, você pode marcar um Estresse para extrair uma memória do cadáver relacionada a uma emoção ou sensação específica de sua escolha."
+    }
+   ],
+   "imagem": "assets/cartas/ancestralidades/Fungril.png",
+   "arquivo": "Fungril.png",
+   "paginaLivro": 61,
+   "observacao": null,
+   "problemasDeTraducao": [
+    "Trecho quebrado/sem nexo: 'pois não há\\nA forma de cada um deles é única e comum.' — falta texto entre 'não há' e a frase seguinte; parece ter se perdido o conteúdo original (provavelmente algo como 'não haver dois fungril iguais').",
+    "Medida de altura mantida em pés ('2 pés' a '7 pés'), sem conversão para metros, inconsistente com outras páginas.",
+    "Uso inconsistente do nome da ancestralidade dentro do próprio texto: ora 'fungos', ora 'fungril', ora 'esse ancestral' (quando o esperado seria 'essa ancestralidade')."
+   ]
+  },
+  {
+   "id": "galapa",
+   "nome": "Galapa",
+   "nomeCarta": "GALAPA",
+   "nomeLivro": "GALAPA",
+   "descricao": "Os galapas se assemelham a tartarugas antropomórficas com carapaças grandes e abobadadas, nas quais podem se retrair. Em média, elas variam de 1 a 2 metros de altura e o formato de sua cabeça e corpo pode se assemelhar a qualquer tipo de tartaruga. Os galapas apresentam uma variedade de tons de terra - na maioria das vezes, tons de verde e marrom - e possuem padrões exclusivos em suas carapaças. Os membros dessa linhagem podem colocar a cabeça, os braços e as pernas dentro da carapaça para se protegerem e usá-la como um escudo natural quando são necessárias medidas defensivas. Alguns complementam a força ou a aparência de suas conchas colocando armaduras ou esculpindo desenhos exclusivos, mas o processo é extremamente doloroso. A maioria das galapas se move lentamente, independentemente de sua idade, e pode viver aproximadamente 150 anos.",
+   "caracteristicas": [
+    {
+     "ordem": 1,
+     "nome": "Carapaça",
+     "texto": "Ganhe um bônus em seus limiares de dano igual à sua Proficiência."
+    },
+    {
+     "ordem": 2,
+     "nome": "Retrair",
+     "texto": "Marque 1 Estresse para se retrair na sua carapaça. Enquanto estiver dentro dela, você tem resistência a dano físico, desvantagem em jogadas de ação e não pode se mover."
+    }
+   ],
+   "caracteristicasNoLivro": [
+    {
+     "nome": "Concha",
+     "texto": "Ganhe um bônus para seus limites de dano igual à sua proficiência."
+    },
+    {
+     "nome": "Retract (Retrair)",
+     "texto": "marque um estresse para se retrair em sua carapaça. Enquanto estiver em sua concha, você tem resistência a dano físico, tem desvantagem em rolagens de ação e não pode se mover."
+    }
+   ],
+   "imagem": "assets/cartas/ancestralidades/Galapa.png",
+   "arquivo": "Galapa.png",
+   "paginaLivro": 62,
+   "observacao": null,
+   "problemasDeTraducao": [
+    "Nome da característica ficou em inglês com tradução entre parênteses: 'Retract (Retrair)'.",
+    "Uso inconsistente dos termos 'carapaça' e 'concha' para se referir à mesma coisa dentro do mesmo texto."
+   ]
+  },
+  {
+   "id": "gigante",
+   "nome": "Gigante",
+   "nomeCarta": "GIGANTE",
+   "nomeLivro": "GIGANTE",
+   "descricao": "Os gigantes são humanóides imponentes com ombros largos, braços longos e de um a três olhos. Os gigantes adultos têm de 1,5 a 2,5 metros de altura e são naturalmente musculosos, independentemente do tipo de corpo. Eles são facilmente reconhecidos por suas estruturas largas e braços e pescoços alongados. Embora possam ter até três olhos, todos os gigantes nascem sem nenhum e permanecem sem visão durante o primeiro ano de vida. Até que o gigante atinja a idade de 10 anos e suas características se desenvolvam completamente, a formação de seus olhos pode variar. Aqueles com um único olho são comumente conhecidos como ciclopes. A expectativa de vida média dos gigantes é de cerca de 75 anos.",
+   "caracteristicas": [
+    {
+     "ordem": 1,
+     "nome": "Resistência",
+     "texto": "Ganhe um espaço adicional de Pontos de Vida na criação do personagem."
+    },
+    {
+     "ordem": 2,
+     "nome": "Alcance",
+     "texto": "Trate qualquer arma, habilidade, magia ou outra característica com alcance Corpo a Corpo como se tivesse alcance Muito Próximo."
+    }
+   ],
+   "caracteristicasNoLivro": [
+    {
+     "nome": "Resistência",
+     "texto": "Ganhe um espaço adicional de Hit Point na criação do personagem."
+    },
+    {
+     "nome": "Alcance",
+     "texto": "Trate qualquer arma, habilidade, feitiço ou outro recurso que tenha um alcance corpo a corpo como se tivesse um alcance muito próximo."
+    }
+   ],
+   "imagem": "assets/cartas/ancestralidades/gigante.png",
+   "arquivo": "gigante.png",
+   "paginaLivro": 63,
+   "observacao": null,
+   "problemasDeTraducao": [
+    "\"Hit Point\" não foi traduzido (deveria ser algo como \"Ponto de Vida\") no recurso Resistência.",
+    "Legendas dos esboços de arte mantidas em inglês: \"ADULT GIANTS\", \"ADULT HUMAN\"."
+   ]
+  },
+  {
+   "id": "goblin",
+   "nome": "Goblin",
+   "nomeCarta": "GOBLIN",
+   "nomeLivro": "GOBLIN",
+   "descricao": "Os goblins são pequenos humanoides facilmente reconhecíveis por seus olhos grandes e suas enormes orelhas membranosas. Com audição e visão aguçadas, eles percebem detalhes tanto a grandes distâncias quanto na escuridão, o que lhes permite transitar com facilidade por ambientes menos favoráveis. As cores de sua pele e de seus olhos são incrivelmente variadas, não havendo uma tonalidade, vibrante ou suave, mais dominante do que outra. Um goblin típico tem entre 1 ,5 e 2 metros de altura e cada uma de suas orelhas tem aproximadamente o tamanho de sua cabeça. Os goblins são conhecidos por usar as posições das orelhas para um efeito muito específico ao se comunicarem de forma não verbal. A vida útil de um goblin é de aproximadamente 100 anos, e muitos mantêm sua audição e visão aguçadas até uma idade avançada.",
+   "caracteristicas": [
+    {
+     "ordem": 1,
+     "nome": "Pé Firme",
+     "texto": "Você ignora desvantagem em jogadas de Agilidade."
+    },
+    {
+     "ordem": 2,
+     "nome": "Sentido de Perigo",
+     "texto": "Uma vez por descanso, marque 1 Estresse para forçar um adversário a rerrolar um ataque contra você ou um aliado em alcance Muito Próximo."
+    }
+   ],
+   "caracteristicasNoLivro": [
+    {
+     "nome": "Pé seguro",
+     "texto": "Você ignora a desvantagem nas jogadas de agilidade."
+    },
+    {
+     "nome": "Senso de Perigo",
+     "texto": "Uma vez por descanso, marque um Estresse para forçar um adversário a repetir um ataque contra você ou um aliado a uma distância muito próxima."
+    }
+   ],
+   "imagem": "assets/cartas/ancestralidades/Goblin.png",
+   "arquivo": "Goblin.png",
+   "paginaLivro": 64,
+   "observacao": null,
+   "problemasDeTraducao": [
+    "Erro de digitação/espaçamento no texto impresso: \"1 ,5 e 2 metros\".",
+    "Legendas dos esboços de arte mantidas em inglês: \"IT'S COMMON FOR GOBLINS TO ADORN THEIR EARS WITH ACCESSORIES, PIERCINGS, AND MODIFICATIONS.\", \"LARGE EARS\", \"LARGE EYES\", \"SHORT NOSE\", \"MANY GOBLINS ESTABLISH ENTIRE LANGUAGES BASED ON THE MOVEMENTS AND POSITION OF THEIR EARS.\", \"ELDER GOBLIN\", \"ADULT GOBLIN\", \"YOUNG GOBLIN\", \"GOBLINS CAN HAVE A VARIETY OF SKIN TONES.\", \"GOBLIN EYES ARE QUITE LARGE, MANY GOBLINS DON'T HAVE VISIBLE SCLERA.\""
+   ]
+  },
+  {
+   "id": "halfling",
+   "nome": "Halfling",
+   "nomeCarta": "HALFLING",
+   "nomeLivro": "HALFLING",
+   "descricao": "Os halflings são pequenos humanoides com pés grandes e peludos e orelhas arredondadas proeminentes. Em média, os halflings têm de 3 a 4 pés de altura, e suas orelhas, nariz e pés são maiores em proporção ao resto do corpo. Os membros dessa linhagem vivem cerca de 150 anos, e a aparência de um halfling provavelmente permanecerá jovem, mesmo quando ele passar da idade adulta para a velhice. Os halflings são naturalmente sintonizados com os campos magnéticos do Reino Mortal, o que lhes confere uma forte bússola interna. Eles também possuem sentidos agudos de audição e olfato e, muitas vezes, conseguem detectar aqueles que lhes são familiares pelo som de seus movimentos.",
+   "caracteristicas": [
+    {
+     "ordem": 1,
+     "nome": "Portador da Sorte",
+     "texto": "No início de cada sessão, todos no seu grupo ganham 1 Esperança."
+    },
+    {
+     "ordem": 2,
+     "nome": "Bússola Interna",
+     "texto": "Quando você rolar 1 no seu Dado de Esperança, pode rerrolar esse dado."
+    }
+   ],
+   "caracteristicasNoLivro": [
+    {
+     "nome": "Luckbringer",
+     "texto": "No início de cada sessão, todos em seu grupo ganham uma Esperança."
+    },
+    {
+     "nome": "Bússola interna",
+     "texto": "Ao rolar um 1 no Hope Die, você pode rolar novamente."
+    }
+   ],
+   "imagem": "assets/cartas/ancestralidades/Halfling.png",
+   "arquivo": "Halfling.png",
+   "paginaLivro": 65,
+   "observacao": null,
+   "problemasDeTraducao": [
+    "Nome da característica \"Luckbringer\" não foi traduzido para o português.",
+    "\"Hope Die\" não foi traduzido (deveria ser \"Dado de Esperança\").",
+    "Medida de altura dada em \"pés\" (3 a 4 pés) em vez de metros, inconsistente com as demais ancestralidades do livro.",
+    "Legendas dos esboços de arte mantidas em inglês: \"HUMAN\", \"HALFLING\", \"THE AVERAGE HALFLING IS ROUGHLY HALF THE HEIGHT OF THE AVERAGE HUMAN.\", \"SOME HALFLING EARS MAY REACH UPWARD MORE PROMINENTLY.\", \"HALFLING EARS TEND TO HAVE A ROUNDED SHAPE.\", \"ELDER HALFLING\", \"ADULT HALFLING\", \"YOUNG HALFLING\", \"HALFLINGS ARE OFTEN PERCEIVED TO BE YOUTHFUL IN APPEARANCE, EVEN AFTER REACHING ADULTHOOD. ONLY WHEN A HALFLING REACHES THE LAST DECADE OF THEIR LIFE DO THEY SHOW THE OBVIOUS SIGNS OF AGING.\""
+   ]
+  },
+  {
+   "id": "humanos",
+   "nome": "Humanos",
+   "nomeCarta": "HUMANOS",
+   "nomeLivro": "HUMANO",
+   "descricao": "Os humanos são mais facilmente reconhecidos por suas mãos hábeis, orelhas arredondadas e corpos construídos para a resistência. Sua altura média varia de um pouco menos de 1,5 metro a cerca de 1,5 metro. Eles têm uma grande variedade de constituição física, sendo que alguns são bastante largos, outros são ágeis e muitos habitam o espectro intermediário. Os humanos são fisicamente adaptáveis e se ajustam a climas rigorosos com relativa facilidade. Em geral, os seres humanos vivem até os 100 anos de idade, com seus corpos mudando drasticamente entre os anos mais jovens e os mais velhos.",
+   "caracteristicas": [
+    {
+     "ordem": 1,
+     "nome": "Alta Resistência",
+     "texto": "Ganhe um espaço adicional de Estresse na criação do personagem."
+    },
+    {
+     "ordem": 2,
+     "nome": "Adaptabilidade",
+     "texto": "Quando falhar em uma jogada que utilize uma de suas Experiências, você pode marcar 1 Estresse para rerrolar."
+    }
+   ],
+   "caracteristicasNoLivro": [
+    {
+     "nome": "High Stamina (Alta resistência)",
+     "texto": "ganha um espaço adicional de estresse na criação do personagem."
+    },
+    {
+     "nome": "Adaptabilidade",
+     "texto": "Quando você falha em uma rolagem que utilizou uma de suas Experiências, pode marcar um Estresse para fazer uma nova rolagem."
+    }
+   ],
+   "imagem": "assets/cartas/ancestralidades/Humanos.png",
+   "arquivo": "Humanos.png",
+   "paginaLivro": 66,
+   "observacao": null,
+   "problemasDeTraducao": [
+    "Frase da altura sem sentido/mal traduzida: \"Sua altura média varia de um pouco menos de 1,5 metro a cerca de 1,5 metro\" (intervalo com o mesmo valor de mínimo e máximo).",
+    "Nome da característica em mistura de inglês e português: \"High Stamina (Alta resistência)\".",
+    "Legendas dos esboços de arte mantidas em inglês: \"ADULT HUMAN\", \"YOUNG HUMAN\", \"ELDER HUMAN\", \"IT'S COMMONPLACE FOR HUMANS TO INCORPORATE BOTH MAGICAL AND MECHANICAL TOOLS, ACCESSORIES, AND ITEMS THAT ASSIST THEIR DAILY LIFE AND TASKS.\", \"HUMANS OFTEN DRESS TO CLEARLY DISPLAY SOCIAL STATUS, WEALTH, PERSONAL FAITH, OR AESTHETICS.\""
+   ]
+  },
+  {
+   "id": "infernis",
+   "nome": "Infernis",
+   "nomeCarta": "INFERNIS",
+   "nomeLivro": "INFERNIS",
+   "descricao": "Os Infernis são humanoides que possuem dentes caninos afiados, orelhas pontudas e chifres. Eles são descendentes de demônios dos Círculos Inferiores. Em média, a altura dos infernais varia de 1,5 a 2,5 metros e são conhecidos por terem dedos longos e unhas pontiagudas. Alguns têm caudas longas, finas e lisas que terminam em pontas, garfos ou pontas de flechas. É comum que os infernais tenham dois ou quatro chifres, embora alguns tenham coroas de muitos chifres ou apenas um. Esses chifres também podem crescer assimetricamente, formando formas únicas, geralmente curvas, que os infernais aprimoram com entalhes e ornamentação. A pele, o cabelo e os chifres têm uma variedade de cores que podem incluir tons pastéis suaves, tons fortes ou tons vibrantes, como escarlate rosado, púrpura profundo e preto intenso. Os Infernis possuem um \"rosto de pavor\" que se manifesta tanto involuntariamente, como quando sentem medo ou outras emoções fortes, quanto propositalmente, como quando desejam intimidar um adversário. Esse rosto pode modificar brevemente sua aparência de várias maneiras, inclusive alongando os dentes e as unhas, mudando a cor dos olhos, torcendo os chifres ou aumentando a altura. Em média, os infernais vivem até 350 anos, sendo que alguns atribuem essa expectativa de vida à sua linhagem demoníaca.",
+   "caracteristicas": [
+    {
+     "ordem": 1,
+     "nome": "Destemido",
+     "texto": "Quando você rolar com Medo, pode marcar 2 Estresses para transformar a jogada em uma com Esperança."
+    },
+    {
+     "ordem": 2,
+     "nome": "Visagem Aterradora",
+     "texto": "Você tem vantagem em jogadas para intimidar criaturas hostis."
+    }
+   ],
+   "caracteristicasNoLivro": [
+    {
+     "nome": "Sem medo",
+     "texto": "Quando rolar com Medo, você pode marcar 2 de Estresse para transformá-lo em uma rolagem com Esperança."
+    },
+    {
+     "nome": "Visagem de pavor",
+     "texto": "Você tem vantagem em rolagens para intimidar criaturas hostis."
+    }
+   ],
+   "imagem": "assets/cartas/ancestralidades/Infernis.png",
+   "arquivo": "Infernis.png",
+   "paginaLivro": 67,
+   "observacao": null,
+   "problemasDeTraducao": [
+    "Nome da ancestralidade usado de forma inconsistente no mesmo texto: ora \"Infernis\", ora \"infernais\".",
+    "Legendas dos esboços de arte mantidas em inglês: \"INFERNIS HORNS CAN BE OF ANY SHAPE AND SIZE.\", \"HORNS - INFERNIS CAN HAVE ANY NUMBER OF HORNS. THEIR HORNS ARE NOT DETERMINED BY THEIR PARENTAGE, BUT RATHER, ARE UNIQUE TO EACH INDIVIDUAL.\", \"DECORATION - INFERNIS OFTEN DECORATE OR MODIFY THEIR HORNS.\", \"TAILS - SOME INFERNIS HAVE TAILS THAT ARE LONG, THIN, AND SMOOTH.\", \"ELDER INFERNIS\", \"ADULT INFERNIS\", \"FORKED TAIL\", \"ARROW-SHAPED TAIL\"."
+   ]
+  },
+  {
+   "id": "katari",
+   "nome": "Katari",
+   "nomeCarta": "KATARI",
+   "nomeLivro": "KATARI",
+   "descricao": "Os Katari são humanoides felinos com garras retráteis, pupilas com fendas verticais e orelhas altas e triangulares. Eles também podem ter dentes caninos pequenos e pontiagudos, pelo macio e bigodes longos que ajudam na percepção e na navegação. Suas orelhas podem girar quase 180 graus para detectar sons, o que aumenta seus sentidos aguçados. Os katari podem ter uma aparência mais ou menos felina ou humanoide, com atributos felinos na forma de pelos, bigodes e focinho. Cerca de metade da população de katari tem cauda. A pele e o pelo apresentam uma grande variedade de tonalidades e padrões, incluindo cores sólidas, tons de chita, listras tabby e uma série de manchas, remendos, marmorização ou faixas. Sua altura varia de 1,5 a 2,5 metros e eles vivem até cerca de 150 anos.",
+   "caracteristicas": [
+    {
+     "ordem": 1,
+     "nome": "Instintos Felinos",
+     "texto": "Quando fizer uma jogada de Agilidade, pode gastar 2 Esperança para rerrolar seu Dado de Esperança."
+    },
+    {
+     "ordem": 2,
+     "nome": "Garras Retráteis",
+     "texto": "Faça uma jogada de Agilidade para arranhar um alvo em alcance Corpo a Corpo. Em caso de sucesso, ele fica temporariamente Vulnerável."
+    }
+   ],
+   "caracteristicasNoLivro": [
+    {
+     "nome": "Instintos felinos",
+     "texto": "Ao fazer uma rolagem de agilidade, você pode gastar 2 de esperança para rolar novamente o dado de esperança."
+    },
+    {
+     "nome": "Garras retráteis",
+     "texto": "Faça uma rolagem de agilidade para arranhar um alvo dentro do alcance corpo a corpo. Se for bem-sucedido, ele se tornará temporariamente vulnerável."
+    }
+   ],
+   "imagem": "assets/cartas/ancestralidades/Katari.png",
+   "arquivo": "Katari.png",
+   "paginaLivro": 68,
+   "observacao": null,
+   "problemasDeTraducao": [
+    "Termo \"listras tabby\" mantido em inglês, sem tradução.",
+    "Legendas dos esboços de arte mantidas em inglês: \"FELINE FEATURES - KATARI APPEARANCES CAN RANGE FROM MORE FELINE TO MORE HUMANOID WITH SUBTLER FELINE FEATURES.\", \"SOME KATARI ARE DIGITIGRADES, NATURALLY STANDING ON THEIR TOES... WHILE OTHERS ARE PLANTIGRADES, NATURALLY STANDING FLAT-FOOTED ON THEIR HEELS.\", \"KATARI ALWAYS HAVE FELINE EARS, EVEN WHEN THEY ARE VERY HUMANOID IN APPEARANCE\", \"ALL KATARI HAVE VERTICAL SLIT PUPILS.\", \"ADULT KATARI\", \"KATARI HAVE SHARP, RETRACTABLE CLAWS.\""
+   ]
+  },
+  {
+   "id": "orc",
+   "nome": "Orc",
+   "nomeCarta": "ORC",
+   "nomeLivro": "ORC",
+   "descricao": "Os orcs são humanóides mais facilmente reconhecidos por suas feições quadradas e presas semelhantes às de javali que se projetam da mandíbula inferior. As presas são de vários tamanhos e, embora se estendam da boca, não são usadas para consumir alimentos. Em vez disso, muitos orcs optam por decorar suas presas com ornamentação significativa. Os orcs normalmente vivem 125 anos e, a menos que sejam alterados, suas presas continuam a crescer ao longo de suas vidas. Suas orelhas são pontudas e seus cabelos e pele geralmente têm tons de verde, azul, rosa ou cinza. Os orcs tendem a ter um corpo musculoso e sua altura média varia de 1,5 a 2,5 metros.",
+   "caracteristicas": [
+    {
+     "ordem": 1,
+     "nome": "Robusto",
+     "texto": "Quando você tiver 1 Ponto de Vida restante, ataques contra você têm desvantagem."
+    },
+    {
+     "ordem": 2,
+     "nome": "Presas",
+     "texto": "Quando você acertar um ataque contra um alvo em alcance Corpo a Corpo, pode gastar 1 Esperança para investir o alvo com suas presas, causando 1d6 de dano extra."
+    }
+   ],
+   "caracteristicasNoLivro": [
+    {
+     "nome": "Robustez",
+     "texto": "Quando você tem 1 ponto de vida restante, os ataques contra você ficam em desvantagem."
+    },
+    {
+     "nome": "Presas",
+     "texto": "Ao ser bem-sucedido em um ataque contra um alvo dentro do alcance corpo a corpo, você pode gastar uma Esperança para dilacerar o alvo com suas presas, causando 1d6 de dano extra."
+    }
+   ],
+   "imagem": "assets/cartas/ancestralidades/Orc.png",
+   "arquivo": "Orc.png",
+   "paginaLivro": 69,
+   "observacao": null,
+   "problemasDeTraducao": [
+    "Rodapé da página traz \"Capítulo 1: Ancestralidade\" em vez de \"Capítulo 1: Ancestrais\", inconsistente com as demais páginas.",
+    "Legendas dos esboços de arte mantidas em inglês: \"ORCS CAN HAVE A WIDE RANGE OF NATURAL HAIR GROWTH, FROM NO HAIR TO THICK HAIR COVERING MOST OF THEIR BODY.\", \"SKIN TONES - ORC SKIN TONES CAN RANGE FROM COOLER SHADES OF GREENS AND BLUES TO WARMER SHADES OF PINKS AND GRAYS.\", \"TUSKS AND SIGNIFICANCE - AN ORCS' TUSKS TEND TO BE FAIRLY PROMINENT AND CAN GROW IN A VARIETY OF WAYS DEPENDING ON THE INDIVIDUAL AND PARENTAGE. THEY CAN BE CARVED OR ORNAMENTED.\", \"DOUBLE BOTTOM SET\", \"ADORNED TUSKS\", \"DOUBLE SET TOP & BOTTOM (VERY RARE)\", \"LONG TUSKS\", \"TOP SET (RARE)\", \"YOUNG ORC\", \"ADULT ORC\"."
+   ]
+  },
+  {
+   "id": "ribbet",
+   "nome": "Ribbet",
+   "nomeCarta": "RIBBET",
+   "nomeLivro": "RIBBET",
+   "descricao": "Os Ribbets se assemelham a sapos antropomórficos com olhos salientes e mãos e pés com membranas. Eles têm pele úmida lisa (embora às vezes verrucosa) e olhos posicionados em ambos os lados da cabeça. Alguns ribbets têm pernas traseiras com mais de duas vezes o comprimento do tronco, enquanto outros têm membros curtos. Independentemente de seu tamanho (que varia cerca de 3 pés a 4 ½ pés), as fitas se movimentam principalmente por meio de saltos. Todos os ribbets têm apêndices com membranas, o que lhes permite nadar com facilidade. Alguns ribbets possuem camuflagem natural verde e marrom, enquanto outros têm cores vibrantes com padrões ousados. Independentemente de sua aparência, todos os lagartos nascem de ovos postos na água, eclodem em girinos e, após cerca de 6 a 7 anos, tornam-se anfíbios que podem se locomover em terra. Os ribeirinhos vivem aproximadamente 100 anos.",
+   "caracteristicas": [
+    {
+     "ordem": 1,
+     "nome": "Anfíbio",
+     "texto": "Você pode respirar e se mover naturalmente debaixo d'água."
+    },
+    {
+     "ordem": 2,
+     "nome": "Língua Comprida",
+     "texto": "Você pode usar sua língua longa para agarrar objetos em alcance Próximo. Marque 1 Estresse para usar sua língua como uma arma Finesse de alcance Próximo que causa d12 de dano físico usando sua Proficiência."
+    }
+   ],
+   "caracteristicasNoLivro": [
+    {
+     "nome": "Anfíbio",
+     "texto": "você pode respirar e se mover naturalmente embaixo d'água."
+    },
+    {
+     "nome": "Long Tongue (Língua longa)",
+     "texto": "Você pode usar sua língua longa para agarrar coisas a curta distância. Marque um Estresse para usar sua língua como uma arma de perto de Finesse que causa d12 de dano físico usando sua Proficiência."
+    }
+   ],
+   "imagem": "assets/cartas/ancestralidades/Ribbet.png",
+   "arquivo": "Ribbet.png",
+   "paginaLivro": 70,
+   "observacao": null,
+   "problemasDeTraducao": [
+    "Erros graves de tradução do nome \"Ribbet\": no mesmo parágrafo aparece traduzido incorretamente como \"as fitas\" (deveria continuar \"os ribbets\"), \"todos os lagartos\" (deveria ser \"todos os ribbets\") e \"Os ribeirinhos vivem\" (deveria ser \"Os ribbets vivem\").",
+    "Nome da característica em mistura de inglês e português: \"Long Tongue (Língua longa)\".",
+    "Termo \"Finesse\" não traduzido.",
+    "Medida de tamanho dada em \"pés\" (3 pés a 4 ½ pés) em vez de metros, inconsistente com as demais ancestralidades.",
+    "Legendas dos esboços de arte mantidas em inglês: \"A RIBBET'S SKIN CAN VARY WIDELY—RANGING FROM NEUTRAL TONES, SUCH AS BROWNS, GRAYS, OR GREENS, TO VIVID HUES LIKE YELLOW, RED, AND BLUE.\", \"THEIR SKIN MIGHT BE BUMPY AND DRY OR SMOOTH AND SHINY, AND SOMETIMES APPEARS DECORATED WITH STRIPES, SPOTS, OR GRADIENTS.\", \"EACH RIBBET HAS A UNIQUE COLORATION AND PATTERN COMBINATION, WITH SOME RESEMBLANCE TO THEIR PARENTS.\", \"SOME RIBBETS HAVE WEBBED DIGITS AND STICKY PADS ON THEIR FINGERS AND TOES.\", \"ADULT\", \"CHILD\", \"YOUNG RIBBETS HAVE SHORT TAILS THAT SHRINK AS THEY MATURE, AS WELL AS PROPORTIONATELY LARGE EYES, HANDS, AND FEET.\", \"RIBBETS OFTEN MOVE AROUND BY HOPPING INSTEAD OF WALKING.\", \"ADULT RIBBET\", \"YOUNG RIBBET\", \"ELDER RIBBET\"."
+   ]
+  },
+  {
+   "id": "simiah",
+   "nome": "Simiah",
+   "nomeCarta": "SIMIAH",
+   "nomeLivro": "SIMIAH",
+   "descricao": "Os símios se assemelham a macacos e símios antropomórficos com membros longos e pés preênseis. Embora sua aparência reflita todas as criaturas símias, desde o maior gorila até o menor saguim, seu tamanho não se alinha com suas contrapartes animais e eles podem ter de 2 a 6 pés alto. Todos os simiah podem usar seus pés hábeis para comunicação não verbal, trabalho e combate. Além disso, alguns também têm caudas preênseis que podem agarrar objetos ou ajudar no equilíbrio durante manobras difíceis. Essas características conferem aos membros dessa linhagem uma agilidade única que os ajuda em uma variedade de tarefas físicas. Em particular, os simiah são habilidosos Os simiah são muito mais resistentes e podem facilmente passar do movimento bípede para o andar com os nós dos dedos e escalar, e vice-versa. Em média, os simiah vivem cerca de 100 anos.",
+   "caracteristicas": [
+    {
+     "ordem": 1,
+     "nome": "Escalador Nato",
+     "texto": "Você tem vantagem em jogadas de Agilidade que envolvam equilíbrio e escalada."
+    },
+    {
+     "ordem": 2,
+     "nome": "Ágil",
+     "texto": "Ganhe um bônus permanente de +1 em sua Evasão na criação do personagem."
+    }
+   ],
+   "caracteristicasNoLivro": [
+    {
+     "nome": "Alpinista natural",
+     "texto": "você tem vantagem em jogadas de agilidade que envolvam equilíbrio e escalada."
+    },
+    {
+     "nome": "Agil",
+     "texto": "Ganhe um bônus permanente de +1 para a sua Evasão na criação do personagem."
+    }
+   ],
+   "imagem": "assets/cartas/ancestralidades/Simiah.png",
+   "arquivo": "Simiah.png",
+   "paginaLivro": 71,
+   "observacao": "O número de errata '055/270' NÃO aparece visível no rodapé desta imagem; o rodapé mostra apenas 'Daggerheart™ Compatible. Terms at Daggerheart.com' e o logo, sem numeração de coleção legível.",
+   "problemasDeTraducao": [
+    "Trecho da descrição corrompido/repetido e sem sentido gramatical: \"...os simiah são habilidosos Os simiah são muito mais resistentes e podem facilmente passar do movimento bípede...\" (parece frase cortada/duplicada por erro de tradução ou diagramação).",
+    "\"eles podem ter de 2 a 6 pés alto\" - erro gramatical (\"pés de altura\") e medida em pés em vez de metros, inconsistente com as demais ancestralidades.",
+    "Nome da característica \"Agil\" grafado sem acento (deveria ser \"Ágil\").",
+    "Legendas dos esboços de arte mantidas em inglês: \"YOUNG SIMIAH\", \"THEY ARE WELL KNOWN FOR THEIR CLIMBING ABILITY AND DEXTEROUS MOVEMENT.\", \"ELDER SIMIAH\", \"ADULT SIMIAH\"."
+   ]
+  }
+ ]
+}
