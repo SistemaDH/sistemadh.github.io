@@ -43,18 +43,18 @@ const CONDICOES = {
 
 /** Todo nome já visto no livro, nas cartas e no inglês. */
 const CONDICAO_ALIASES = {
-  "oculto": ["Oculto","Hidden","Escondido"],
-  "restrito": ["Restrito","Restrained","Restreinado","Confinado","Contido","Imobilizado"],
-  "vulneravel": ["Vulnerável","Vulnerable"],
+  "oculto": ["Escondido","Hidden","Oculto"],
+  "restrito": ["Confinado","Contido","Imobilizado","Restrained","Restreinado","Restrito"],
+  "vulneravel": ["Vulnerable","Vulnerável"],
   "camuflado": ["Camuflado","Cloaked","Encoberto"],
-  "invisivel": ["Invisível","Invisible"],
-  "encantado": ["Encantado","Charmed","Enfeitiçado"],
+  "invisivel": ["Invisible","Invisível"],
+  "encantado": ["Charmed","Encantado","Enfeitiçado"],
   "atordoado": ["Atordoado","Stunned"],
   "adormecido": ["Adormecido","Asleep","Dormindo"],
-  "silenciado": ["Silenciado","Silenced"],
-  "aterrorizado": ["Aterrorizado","Horrified","Terrified","Apavorado"],
-  "espectral": ["Espectral","Spectral"],
-  "corroido": ["Corroído","Corroded"],
+  "silenciado": ["Silenced","Silenciado"],
+  "aterrorizado": ["Apavorado","Aterrorizado","Horrified","Terrified"],
+  "espectral": ["Espectral","Incorpóreo","Spectral"],
+  "corroido": ["Corroded","Corroído"],
   "em-chamas": ["Em Chamas","On Fire","Queimando"],
 };
 

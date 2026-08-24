@@ -1214,6 +1214,765 @@ teste('salvar recalcula os derivados mesmo se o cliente mandar errado', () => {
   igual(f.defesas.limiarGrave, 14);
 });
 
+console.log('\nFormas de Fera e Companheiro Animal');
+
+teste('24 formas, 6 por patamar', () => {
+  const FORMAS = avaliar('FORMAS_DE_FERA');
+  igual(Object.keys(FORMAS).length, 24);
+  const porPatamar = {};
+  Object.values(FORMAS).forEach((f) => { porPatamar[f.patamar] = (porPatamar[f.patamar] || 0) + 1; });
+  igual(porPatamar, { 1: 6, 2: 6, 3: 6, 4: 6 });
+});
+
+teste('toda forma base tem ataque; as de aprimoramento não têm mesmo', () => {
+  const FORMAS = avaliar('FORMAS_DE_FERA');
+  const aprimoramentos = [];
+  Object.entries(FORMAS).forEach(([id, f]) => {
+    verdade((f.caracteristicas || []).length > 0, `${id} sem característica`);
+    if (f.tipo === 'aprimoramento') { aprimoramentos.push(id); return; }
+    verdade(f.ataque && f.ataque.dano, `${id} sem dano`);
+    verdade(f.modificadores && f.modificadores.atributo, `${id} sem modificador de atributo`);
+  });
+  // Fera Lendária e Fera Mítica não têm estatística própria: elas pegam uma
+  // forma de patamar menor e a turbinam.
+  igual(aprimoramentos.sort(), ['fera-lendaria', 'fera-mitica']);
+});
+
+teste('o modificador de atributo usa o vocabulário do app', () => {
+  const FORMAS = avaliar('FORMAS_DE_FERA');
+  Object.entries(FORMAS).forEach(([id, f]) => {
+    const atr = (f.modificadores || {}).atributo;
+    if (!atr) return;
+    verdade(!/Acuidade/.test(atr), `${id} ficou com "Acuidade" em vez de "Finesse"`);
+    const nome = atr.replace(/\s*[+-]\d+$/, '');
+    verdade(contexto.normalizarTraco_(nome), `${id}: "${nome}" não é um traço conhecido`);
+  });
+});
+
+teste('a errata da Fera Poderosa está aplicada', () => {
+  // Livro pt-BR imprime Força +1 / Evasão +3; a errata p.33 inverteu.
+  const f = avaliar('FORMAS_DE_FERA')['fera-poderosa'];
+  verdade(f, 'Fera Poderosa não encontrada');
+  igual(f.modificadores.atributo, 'Força +3');
+  igual(f.modificadores.evasao, '+1');
+});
+
+teste('o patamar limita quais formas o Druida alcança', () => {
+  igual(contexto.formasDisponiveis_(1).length, 6, 'nível 1 = só o 1º patamar');
+  igual(contexto.formasDisponiveis_(4).length, 12, 'nível 4 = patamares 1 e 2');
+  igual(contexto.formasDisponiveis_(7).length, 18);
+  igual(contexto.formasDisponiveis_(10).length, 24);
+});
+
+teste('forma acima do patamar é recusada', () => {
+  const dados = { formaAtiva: 'Fera Mítica', formasConhecidas: [] };
+  const p = contexto.validarFichaDeFera_(dados, 1);
+  verdade(p.some((x) => /patamar/.test(x)), 'deveria reclamar do patamar');
+  igual(dados.formaAtiva, null);
+
+  const ok = { formaAtiva: 'Explorador Ágil', formasConhecidas: ['Animal Doméstico', 'Animal Doméstico'] };
+  igual(contexto.validarFichaDeFera_(ok, 1), []);
+  igual(ok.formaAtiva, 'explorador-agil');
+  igual(ok.formasConhecidas, ['animal-domestico'], 'repetida deveria sumir');
+});
+
+teste('as 8 evoluções do companheiro estão no catálogo', () => {
+  const EV = avaliar('EVOLUCOES_COMPANHEIRO');
+  igual(Object.keys(EV).length, 8);
+  ['Afago', 'Apegado', 'Atento', 'Blindado', 'Feroz', 'Inteligente', 'Luz no Fim do Túnel', 'Resiliente']
+    .forEach((n) => verdade(contexto.normalizarEvolucao_(n), `não achou "${n}"`));
+});
+
+teste('o dado do companheiro só sobe com Feroz', () => {
+  const semFeroz = { evasao: 10, dado: 'd10', evolucoes: ['Atento'] };
+  const p = contexto.validarFichaDeCompanheiro_(semFeroz);
+  verdade(p.some((x) => /Feroz/.test(x)), 'deveria reclamar');
+  igual(semFeroz.dado, 'd6', 'volta para a base');
+
+  const comDois = { evasao: 10, dado: 'd10', evolucoes: ['Feroz', 'Feroz'] };
+  igual(contexto.validarFichaDeCompanheiro_(comDois), []);
+  igual(comDois.dado, 'd10');
+});
+
+teste('Feroz pode repetir, as outras evoluções também são livres', () => {
+  const c = { evasao: 12, dado: 'd8', evolucoes: ['Feroz', 'Atento', 'Feroz'] };
+  contexto.validarFichaDeCompanheiro_(c);
+  igual(c.evolucoes.filter((e) => e === 'feroz').length, 2);
+});
+
+teste('a errata do dano físico ou mágico do companheiro está aplicada', () => {
+  const TIPOS = avaliar('COMPANHEIRO_TIPOS_DE_DANO');
+  igual(TIPOS, ['físico', 'mágico']);
+  const c = { evasao: 10, tipoDeDano: 'mágico', evolucoes: [] };
+  igual(contexto.validarFichaDeCompanheiro_(c), []);
+  igual(c.tipoDeDano, 'mágico');
+  const errado = { evasao: 10, tipoDeDano: 'psíquico', evolucoes: [] };
+  contexto.validarFichaDeCompanheiro_(errado);
+  igual(errado.tipoDeDano, 'físico', 'tipo inválido cai no padrão');
+});
+
+teste('a ficha filha do Druida entra pela ficha principal', () => {
+  const f = contexto.validarFicha_({
+    identidade: { nome: 'Sylva', nivel: 5, classe: 'Druida', subclasse: 'Guardião dos Elementos' },
+    fichasFilhas: [{ tipo: 'beastform', dados: { formaAtiva: 'Fera Alada' } }]
+  });
+  igual(f.fichasFilhas.length, 1);
+  igual(f.fichasFilhas[0].dados.formaAtiva, 'fera-alada');
+});
+
+teste('ficha filha com conteúdo inválido é recusada ao salvar', () => {
+  let deu = false;
+  try {
+    contexto.validarFicha_({
+      identidade: { nome: 'Sylva', nivel: 1, classe: 'Druida', subclasse: 'Guardião dos Elementos' },
+      fichasFilhas: [{ tipo: 'beastform', dados: { formaAtiva: 'Fera Mítica' } }]
+    });
+  } catch (e) { deu = true; }
+  verdade(deu, 'nível 1 não alcança o 4º patamar');
+});
+
+teste('vocabulário: o texto das formas usa o do app, não o do livro da Jambô', async () => {
+  const fs = await import('node:fs');
+  const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/fichas-filhas.json'), 'utf8'));
+  const tudo = JSON.stringify(d.formaDeFera.formas) + JSON.stringify(d.companheiroAnimal.evolucoes);
+  // O campo "texto" já foi convertido; o original fica em "textoLivro".
+  d.formaDeFera.formas.forEach((f) => {
+    f.caracteristicas.forEach((c) => {
+      verdade(!/Ponto de Fadiga|Acuidade/.test(c.texto),
+        `"${f.nome} · ${c.nome}" ficou com vocabulário da Jambô`);
+    });
+  });
+  verdade(/textoLivro/.test(tudo), 'o texto original da Jambô precisa estar guardado');
+});
+
+console.log('\nGlossário das duas traduções');
+
+teste('o glossário cobre os nomes que mudam', () => {
+  const G = avaliar('GLOSSARIO');
+  igual(G.length, 49);
+  const porCategoria = {};
+  G.forEach((t) => { porCategoria[t.categoria] = (porCategoria[t.categoria] || 0) + 1; });
+  igual(porCategoria.comunidade, 9, 'as 9 comunidades mudam de nome');
+  igual(porCategoria.subclasse, 17);
+  igual(porCategoria.dominio, 3);
+  // Os dois movimentos de descanso que mudam de nome: Reduzir/Zerar Fadiga.
+  igual(porCategoria['movimento-de-descanso'], 2);
+});
+
+teste('vai e volta entre as duas traduções', () => {
+  igual(contexto.jamboDe_('Osso'), 'Falange');
+  igual(contexto.jamboDe_('Finesse'), 'Acuidade');
+  igual(contexto.jamboDe_('Lâmina'), '', 'domínio que não muda não tem glosa');
+  igual(contexto.canonicoDe_('Erudita'), 'Loreborne');
+  igual(contexto.canonicoDe_('gatuno'), 'Caminhante Noturno');
+  igual(contexto.canonicoDe_('Sabedoria'), 'Sábio');
+});
+
+teste('nomeComGlossa_ só põe parêntese quando há diferença', () => {
+  igual(contexto.nomeComGlossa_('Osso'), 'Osso (Falange)');
+  igual(contexto.nomeComGlossa_('Lâmina'), 'Lâmina');
+  igual(contexto.nomeComGlossa_('Patrulheiro'), 'Patrulheiro (Caçador)');
+});
+
+teste('glosarNome e glosarEmTexto são decisões separadas', () => {
+  // "Esperança (Ponto de Esperança)" é ruído: a diferença é só o prefixo.
+  igual(contexto.nomeComGlossa_('Esperança'), 'Esperança');
+  igual(contexto.nomeComGlossa_('Medo'), 'Medo');
+  // Já "Estresse" × "Ponto de Fadiga" são palavras diferentes: vale o parêntese.
+  igual(contexto.nomeComGlossa_('Estresse'), 'Estresse (Ponto de Fadiga)');
+  // E o caminho de volta continua achando, senão a busca perderia o termo.
+  igual(contexto.canonicoDe_('Ponto de Esperança'), 'Esperança');
+  igual(contexto.canonicoDe_('Ponto de Medo'), 'Medo');
+});
+
+teste('a glosa entra só na primeira ocorrência', () => {
+  const t = contexto.glosarTexto_('Marque um Estresse. Depois marque outro Estresse.');
+  igual(t, 'Marque um Estresse (Ponto de Fadiga). Depois marque outro Estresse.');
+  igual((t.match(/Ponto de Fadiga/g) || []).length, 1);
+});
+
+teste('a glosa respeita plural e feminino', () => {
+  verdade(/Encantado \(Enfeitiçado\)/.test(contexto.glosarTexto_('O alvo fica Encantado.')));
+  verdade(/Encantados \(Enfeitiçado\)/.test(contexto.glosarTexto_('Eles ficam Encantados.')));
+});
+
+teste('a glosa não confunde a Dificuldade com um parêntese já escrito', () => {
+  // "traço de Conjuração (15)" — o (15) é a Dificuldade, não uma glosa.
+  const t = contexto.glosarTexto_('Faça uma Jogada usando seu traço de Conjuração (15).');
+  verdade(/atributo de conjuração/.test(t), 'deveria ter glosado mesmo com o (15) logo depois');
+  igual(contexto.glosarTexto_(t), t, 'rodar de novo não pode duplicar a glosa');
+});
+
+teste('a glosa não desloca o texto quando há espaço duplo ou quebra de linha', () => {
+  igual(contexto.glosarTexto_('  Marque um Estresse.'), '  Marque um Estresse (Ponto de Fadiga).');
+  igual(contexto.glosarTexto_('Linha um.\n\nFique Oculto.'), 'Linha um.\n\nFique Oculto (Escondido).');
+});
+
+teste('a colisão do Oculto sai certa nos dois sentidos', () => {
+  // Nas cartas: Oculto = Hidden e Camuflado = Cloaked.
+  // Na Jambô:   Escondido = Hidden e Oculto = Cloaked.
+  const t = contexto.glosarTexto_('Sempre que estiver Oculto, você estará Camuflado.');
+  igual(t, 'Sempre que estiver Oculto (Escondido), você estará Camuflado (Oculto).');
+  igual(contexto.canonicoDe_('Oculto'), 'Camuflado', 'o "Oculto" da Jambô é o nosso Camuflado');
+  igual(contexto.jamboDe_('Oculto'), 'Escondido', 'o nosso "Oculto" é o Escondido da Jambô');
+});
+
+teste('procurar pelo nome da Jambô acha a mesma coisa', () => {
+  // Esta é a promessa da decisão de vocabulário: o nome descartado continua
+  // funcionando na busca. Se este teste quebra, a promessa quebrou.
+  const G = avaliar('GLOSSARIO');
+  const normalizador = {
+    dominio: contexto.normalizarDominio_,
+    classe: contexto.normalizarClasse_,
+    subclasse: contexto.normalizarSubclasse_,
+    ancestralidade: contexto.normalizarAncestralidade_,
+    comunidade: contexto.normalizarComunidade_,
+    condicao: contexto.normalizarCondicao_
+  };
+  G.forEach((t) => {
+    const fn = normalizador[t.categoria];
+    if (!fn) return;
+    const porCanonico = fn(t.canonico);
+    verdade(porCanonico, `${t.categoria} "${t.canonico}" não resolve`);
+    // A ÚNICA exceção é a colisão do Oculto, testada logo abaixo.
+    if (t.canonico === 'Camuflado') return;
+    igual(fn(t.jambo), porCanonico,
+      `procurar "${t.jambo}" (Jambô) deveria achar "${t.canonico}"`);
+  });
+});
+
+teste('a colisão do Oculto NÃO virou sinônimo, de propósito', () => {
+  // "Oculto" é Cloaked na Jambô, mas nas cartas é Hidden. Se ele entrasse como
+  // sinônimo de Camuflado, procurar "Oculto" viraria loteria. O gerador barra.
+  const ALIASES = avaliar('CONDICAO_ALIASES');
+  verdade(!ALIASES.camuflado.some((a) => contexto.chaveTexto_(a) === 'oculto'),
+    '"Oculto" não pode ser sinônimo de Camuflado');
+  igual(contexto.normalizarCondicao_('Oculto'), 'oculto', 'continua sendo Hidden');
+  igual(contexto.normalizarCondicao_('Encoberto'), 'camuflado', 'o sinônimo das cartas segue valendo');
+});
+
+console.log('\nConferência das cartas com o livro da Jambô');
+
+teste('as 2 divergências em que o livro estava certo foram corrigidas', async () => {
+  const fs = await import('node:fs');
+  const doc = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/cartas-dominio.json'), 'utf8'));
+  const carta = (id) => doc.cartas.find((c) => c.id === id);
+
+  // Redemoinho: a carta em PNG tinha perdido a última regra inteira.
+  verdade(/metade do dano/.test(carta('blade-redemoinho').texto),
+    'Redemoinho precisa da frase "sofrem metade do dano"');
+  // Silêncio: a carta dizia "dano grave"; o oficial é "Major" = maior.
+  verdade(/dano maior/.test(carta('midnight-silencio').texto), 'Silêncio deveria dizer "dano maior"');
+  verdade(!/dano grave/.test(carta('midnight-silencio').texto), 'Silêncio não pode mais dizer "dano grave"');
+});
+
+teste('as 2 divergências em que a carta estava certa não foram mexidas', async () => {
+  const fs = await import('node:fs');
+  const doc = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/cartas-dominio.json'), 'utf8'));
+  const carta = (id) => doc.cartas.find((c) => c.id === id);
+  verdade(/Muito Próximo/.test(carta('valor-golpe-no-chao').texto), 'Golpe no Chão é Muito Próximo');
+  verdade(/[Rr]eação/.test(carta('codex-livro-de-exota').texto), 'Livro de Exota usa jogada de reação');
+  igual(doc.conferenciaComOLivro.divergenciasMecanicas, 4);
+});
+
+teste('nenhuma carta ficou com o texto em inglês', async () => {
+  const fs = await import('node:fs');
+  const doc = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/cartas-dominio.json'), 'utf8'));
+  const emIngles = doc.cartas.filter((c) =>
+    /\b(Make a|Spellcast Roll|On a success|you must mark|the target)\b/.test(c.texto));
+  igual(emIngles.map((c) => c.id), [], 'estas cartas ainda estão em inglês');
+});
+
+teste('nenhum NOME de carta ficou em inglês', () => {
+  const CARTAS = avaliar('CARTAS_DOMINIO');
+  const suspeitos = [];
+  Object.values(CARTAS).forEach((lista) => lista.forEach(([id, nome]) => {
+    if (/\b(of|the|Words|Share|Forest|Sprites|Burden|Discord)\b/.test(nome)) suspeitos.push(nome);
+  }));
+  igual(suspeitos, []);
+});
+
+
+/* -------------------------------------------------------------------------- */
+
+console.log('\nDescanso — a tabela');
+
+const DESCANSO = avaliar('DESCANSO');
+const MOVIMENTOS_DESCANSO = avaliar('MOVIMENTOS_DESCANSO');
+const TIPOS_DE_DESCANSO = avaliar('TIPOS_DE_DESCANSO');
+
+/** Ficha de teste do descanso: nível 1, já machucada. */
+function fichaCansada(extras = {}) {
+  const f = contexto.fichaRapida_({
+    nome: 'Cansada', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'Contador de Histórias', bonus: 2 }, { nome: 'Língua de Prata', bonus: 2 }]
+  });
+  f.recursos.pontosDeVidaMarcados = 4;
+  f.recursos.estresseMarcado = 5;
+  f.recursos.esperanca = 2;
+  f.defesas.pontuacaoArmadura = f.defesas.pontuacaoArmadura || 3;
+  f.recursos.armaduraMarcada = 2;
+  Object.assign(f.recursos, extras.recursos || {});
+  return f;
+}
+
+teste('o livro dá 2 movimentos, 4 opções no curto e 5 no longo', () => {
+  igual(DESCANSO.movimentosPorDescanso, 2);
+  igual(DESCANSO.podeRepetirMovimento, true);
+  igual(DESCANSO.maxDescansosCurtosSeguidos, 3);
+  const curto = Object.values(MOVIMENTOS_DESCANSO).filter((m) => m.tipos.includes('curto'));
+  const longo = Object.values(MOVIMENTOS_DESCANSO).filter((m) => m.tipos.includes('longo'));
+  igual(curto.length, 4);
+  igual(longo.length, 5);
+});
+
+teste('só o descanso curto usa patamar', () => {
+  Object.values(MOVIMENTOS_DESCANSO).forEach((m) => {
+    if (m.efeito.somaPatamar) verdade(!m.tipos.includes('longo'), `${m.id} soma patamar no descanso longo`);
+  });
+  igual(TIPOS_DE_DESCANSO.find((t) => t.id === 'curto').usaPatamar, true);
+  igual(TIPOS_DE_DESCANSO.find((t) => t.id === 'longo').usaPatamar, false);
+});
+
+teste('patamar é o do nível, não o nível (livro p.109)', () => {
+  const f = fichaCansada();
+  igual(contexto.patamarDaFicha_(f), 1, 'nível 1 → patamar 1');
+  f.identidade.nivel = 4; igual(contexto.patamarDaFicha_(f), 2);
+  f.identidade.nivel = 7; igual(contexto.patamarDaFicha_(f), 3);
+  f.identidade.nivel = 10; igual(contexto.patamarDaFicha_(f), 4);
+});
+
+teste('o nome da Jambô continua achando o movimento', () => {
+  igual(contexto.normalizarMovimento_('Reduzir Fadiga'), 'reduzir-estresse');
+  igual(contexto.normalizarMovimento_('Zerar Fadiga'), 'zerar-estresse');
+  igual(contexto.normalizarMovimento_('Tratar Feridas'), 'tratar-feridas');
+  igual(contexto.normalizarMovimento_('Clear Stress'), 'reduzir-estresse');
+  igual(contexto.normalizarMovimento_('inventado'), null);
+});
+
+console.log('\nDescanso — a prévia');
+
+teste('a prévia não encosta na ficha original', () => {
+  const f = fichaCansada();
+  const antes = JSON.stringify(f);
+  contexto.previaDoDescanso_(f, 'curto', [
+    { movimento: 'tratar-feridas', rolagem: 3 },
+    { movimento: 'reduzir-estresse', rolagem: 2 }
+  ]);
+  igual(JSON.stringify(f), antes, 'a prévia alterou a ficha');
+});
+
+teste('descanso curto: 1d4 + patamar, com a conta à mostra', () => {
+  const f = fichaCansada();
+  const p = contexto.previaDoDescanso_(f, 'curto', [
+    { movimento: 'tratar-feridas', rolagem: 3 },
+    { movimento: 'reduzir-estresse', rolagem: 2 }
+  ]);
+  verdade(p.ok, JSON.stringify(p.erros));
+  igual(p.patamar, 1);
+  igual(p.movimentos[0].contaDaFormula, 'd4 (3) + patamar 1 = 4');
+  igual(p.movimentos[0].quantidade, 4, '4 marcados − 4 = 0');
+  igual(p.movimentos[1].contaDaFormula, 'd4 (2) + patamar 1 = 3');
+  const pv = p.recursos.find((r) => r.chave === 'pontosDeVidaMarcados');
+  const es = p.recursos.find((r) => r.chave === 'estresseMarcado');
+  igual([pv.antes, pv.depois], [4, 0]);
+  igual([es.antes, es.depois], [5, 2]);
+});
+
+teste('o app NÃO rola o dado: sem rolagem a prévia pede o resultado', () => {
+  const f = fichaCansada();
+  const p = contexto.previaDoDescanso_(f, 'curto', [{ movimento: 'tratar-feridas' }]);
+  igual(p.ok, false);
+  igual(p.precisaDeRolagem, ['Tratar Feridas']);
+  igual(p.movimentos[0].contaDaFormula, 'd4 + patamar 1');
+  igual(p.recursos, [], 'sem rolagem nada muda');
+});
+
+teste('rolagem fora do dado é recusada', () => {
+  const f = fichaCansada();
+  [0, 5, -1, 'abc'].forEach((r) => {
+    const p = contexto.previaDoDescanso_(f, 'curto', [{ movimento: 'tratar-feridas', rolagem: r }]);
+    verdade(p.precisaDeRolagem.length === 1, `d4 aceitou ${r}`);
+  });
+});
+
+teste('a cura não passa do que estava marcado', () => {
+  const f = fichaCansada();
+  f.recursos.pontosDeVidaMarcados = 1;
+  const p = contexto.previaDoDescanso_(f, 'curto', [{ movimento: 'tratar-feridas', rolagem: 4 }]);
+  igual(p.movimentos[0].quantidade, 1);
+  verdade(/só havia 1 marcado/.test(p.movimentos[0].observacao), p.movimentos[0].observacao);
+});
+
+teste('o mesmo movimento duas vezes é permitido (livro p.105)', () => {
+  const f = fichaCansada();
+  const p = contexto.previaDoDescanso_(f, 'curto', [
+    { movimento: 'tratar-feridas', rolagem: 1 },
+    { movimento: 'tratar-feridas', rolagem: 1 }
+  ]);
+  verdade(p.ok, JSON.stringify(p.erros));
+  const pv = p.recursos.find((r) => r.chave === 'pontosDeVidaMarcados');
+  igual([pv.antes, pv.depois], [4, 0], 'duas curas de 1+1 = 4');
+});
+
+teste('Preparar-se dá 1 de Esperança — 2 se for em grupo, com teto de 6', () => {
+  const f = fichaCansada();
+  const sozinho = contexto.previaDoDescanso_(f, 'curto', [{ movimento: 'preparar-se' }]);
+  igual(sozinho.recursos.find((r) => r.chave === 'esperanca').depois, 3);
+
+  const emGrupo = contexto.previaDoDescanso_(f, 'curto', [{ movimento: 'preparar-se', comGrupo: true }]);
+  igual(emGrupo.recursos.find((r) => r.chave === 'esperanca').depois, 4);
+
+  f.recursos.esperanca = 6;
+  const cheio = contexto.previaDoDescanso_(f, 'curto', [{ movimento: 'preparar-se', comGrupo: true }]);
+  igual(cheio.recursos, [], 'no teto de 6 nada muda');
+  verdade(/máximo/.test(cheio.movimentos[0].observacao), cheio.movimentos[0].observacao);
+});
+
+teste('descanso longo cura por completo, sem rolagem', () => {
+  const f = fichaCansada();
+  const p = contexto.previaDoDescanso_(f, 'longo', [
+    { movimento: 'tratar-todas-as-feridas' },
+    { movimento: 'zerar-estresse' }
+  ]);
+  verdade(p.ok, JSON.stringify(p.erros));
+  igual(p.precisaDeRolagem, []);
+  igual(p.recursos.find((r) => r.chave === 'pontosDeVidaMarcados').depois, 0);
+  igual(p.recursos.find((r) => r.chave === 'estresseMarcado').depois, 0);
+  igual(p.movimentos[0].contaDaFormula, 'tudo');
+});
+
+teste('movimento do descanso errado é recusado', () => {
+  const f = fichaCansada();
+  const p = contexto.previaDoDescanso_(f, 'curto', [{ movimento: 'zerar-estresse' }]);
+  verdade(p.erros.some((e) => /não é um movimento de descanso curto/.test(e)), JSON.stringify(p.erros));
+});
+
+teste('mais de dois movimentos é recusado', () => {
+  const f = fichaCansada();
+  const p = contexto.previaDoDescanso_(f, 'longo', [
+    { movimento: 'zerar-estresse' }, { movimento: 'zerar-estresse' }, { movimento: 'zerar-estresse' }
+  ]);
+  verdade(p.erros.some((e) => /2 movimentos por descanso/.test(e)), JSON.stringify(p.erros));
+});
+
+teste('movimento feito num aliado gasta o movimento e não muda esta ficha', () => {
+  const f = fichaCansada();
+  const p = contexto.previaDoDescanso_(f, 'curto', [
+    { movimento: 'tratar-feridas', alvo: 'aliado' },
+    { movimento: 'reduzir-estresse', rolagem: 1 }
+  ]);
+  verdade(p.ok, JSON.stringify(p.erros));
+  igual(p.movimentos[0].alvo, 'aliado');
+  igual(p.movimentos[0].quantidade, 0);
+  igual(p.recursos.find((r) => r.chave === 'pontosDeVidaMarcados'), undefined);
+});
+
+teste('Reduzir Estresse não tem opção de aliado (o livro não dá)', () => {
+  igual(MOVIMENTOS_DESCANSO['reduzir-estresse'].podeMirarAliado, false);
+  igual(MOVIMENTOS_DESCANSO['tratar-feridas'].podeMirarAliado, true);
+  igual(MOVIMENTOS_DESCANSO['reparar-armadura'].podeMirarAliado, true);
+});
+
+teste('a contagem de descansos curtos sobe e o longo zera', () => {
+  let f = fichaCansada();
+  igual(contexto.previaDoDescanso_(f, 'curto', [{ movimento: 'preparar-se' }]).descansosCurtosSeguidos.depois, 1);
+  f.descanso = { curtosSeguidos: 3, ultimo: null };
+  const quarto = contexto.previaDoDescanso_(f, 'curto', [{ movimento: 'preparar-se' }]);
+  verdade(quarto.avisos.some((a) => /precisa ser longo/.test(a)), JSON.stringify(quarto.avisos));
+  igual(contexto.previaDoDescanso_(f, 'longo', [{ movimento: 'zerar-estresse' }]).descansosCurtosSeguidos.depois, 0);
+});
+
+teste('a prévia mostra o Medo do Mestre mas não o aplica', () => {
+  const f = fichaCansada();
+  igual(contexto.previaDoDescanso_(f, 'curto', []).medoDoMestre, '1d4');
+  igual(contexto.previaDoDescanso_(f, 'longo', []).medoDoMestre, '1d4 + o número de personagens');
+});
+
+teste('errata p.164: contagem de longo prazo só no descanso longo', () => {
+  igual(TIPOS_DE_DESCANSO.find((t) => t.id === 'curto').contagemDeLongoPrazo, 0);
+  igual(TIPOS_DE_DESCANSO.find((t) => t.id === 'longo').contagemDeLongoPrazo, 1);
+});
+
+teste('aplicarDescanso_ recusa quando falta a rolagem', () => {
+  const f = fichaCansada();
+  let erro = null;
+  try { contexto.aplicarDescanso_(f, 'curto', [{ movimento: 'tratar-feridas' }]); }
+  catch (e) { erro = e; }
+  verdade(erro && /Falta o resultado do dado/.test(erro.message), String(erro && erro.message));
+});
+
+teste('aplicar e prever dão exatamente o mesmo relatório', () => {
+  const f = fichaCansada();
+  const escolhas = [{ movimento: 'tratar-feridas', rolagem: 2 }, { movimento: 'preparar-se', comGrupo: true }];
+  const previa = contexto.previaDoDescanso_(f, 'curto', escolhas);
+  const feito = contexto.aplicarDescanso_(f, 'curto', escolhas);
+  igual(JSON.stringify(feito.previa), JSON.stringify(previa), 'prévia e aplicação divergiram');
+  igual(feito.ficha.recursos.pontosDeVidaMarcados, 1);
+  igual(feito.ficha.recursos.esperanca, 4);
+  igual(feito.ficha.descanso.ultimo.tipo, 'curto');
+});
+
+teste('o descanso dispara o gatilho dos contadores das cartas', () => {
+  const CONTADORES = avaliar('CONTADORES');
+  const noDescanso = Object.entries(CONTADORES)
+    .filter(([, d]) => (d.zeraEm || []).includes('descanso') || (d.recarregaEm || []).includes('descanso-longo'));
+  verdade(noDescanso.length > 0, 'nenhum contador reage a descanso — a tabela mudou?');
+
+  const [chave] = noDescanso[0];
+  const f = fichaCansada();
+  f.contadores = { [chave]: { valor: 1 } };
+  const p = contexto.previaDoDescanso_(f, 'longo', [{ movimento: 'zerar-estresse' }]);
+  verdade(p.contadores.some((c) => c.chave === chave), JSON.stringify(p.contadores));
+});
+
+console.log('\nAjustes — o toque na ficha');
+
+teste('marcar um recurso respeita o teto e o chão', () => {
+  const f = fichaCansada();
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'recurso', chave: 'pv', valor: 99 }]);
+  igual(r.erros, []);
+  igual(f.recursos.pontosDeVidaMarcados, f.recursos.pontosDeVidaMaximos);
+  verdade(/máximo/.test(r.mudancas[0].aviso), r.mudancas[0].aviso);
+
+  contexto.aplicarAjustes_(f, [{ tipo: 'recurso', chave: 'pv', valor: -5 }]);
+  igual(f.recursos.pontosDeVidaMarcados, 0);
+});
+
+teste('delta e valor: o + e o − contra o toque no marcador', () => {
+  const f = fichaCansada();
+  f.recursos.estresseMarcado = 2;
+  contexto.aplicarAjustes_(f, [{ tipo: 'recurso', chave: 'estresse', delta: 1 }]);
+  igual(f.recursos.estresseMarcado, 3);
+  contexto.aplicarAjustes_(f, [{ tipo: 'recurso', chave: 'estresse', valor: 1 }]);
+  igual(f.recursos.estresseMarcado, 1);
+});
+
+teste('o nome do recurso aceita as duas traduções', () => {
+  const f = fichaCansada();
+  igual(contexto.normalizarRecursoAjustavel_('Fadiga'), 'estresseMarcado');
+  igual(contexto.normalizarRecursoAjustavel_('Estresse'), 'estresseMarcado');
+  igual(contexto.normalizarRecursoAjustavel_('PV'), 'pontosDeVidaMarcados');
+  igual(contexto.normalizarRecursoAjustavel_('inventado'), null);
+});
+
+teste('encher PV e Estresse avisa o que o livro manda fazer', () => {
+  const f = fichaCansada();
+  f.recursos.pontosDeVidaMarcados = 0;
+  const pv = contexto.aplicarAjustes_(f, [
+    { tipo: 'recurso', chave: 'pv', valor: f.recursos.pontosDeVidaMaximos }
+  ]);
+  verdade(/Evitar a Morte/.test(pv.mudancas[0].alerta || ''), JSON.stringify(pv.mudancas[0]));
+
+  f.recursos.estresseMarcado = 0;
+  const es = contexto.aplicarAjustes_(f, [
+    { tipo: 'recurso', chave: 'estresse', valor: f.recursos.estresseMaximo }
+  ]);
+  verdade(/Vulnerável/.test(es.mudancas[0].alerta || ''), JSON.stringify(es.mudancas[0]));
+  // O alerta usa "se precisar marcar": a regra do livro dispara quando você
+  // PRECISA marcar Estresse e não pode, não quando a trilha enche.
+  verdade(/se precisar marcar/.test(es.mudancas[0].alerta || ''), es.mudancas[0].alerta);
+});
+
+teste('ligar e desligar condição, com as duas traduções', () => {
+  const f = fichaCansada();
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'condicao', chave: 'Imobilizado', ligar: true }]);
+  igual(r.erros, []);
+  igual(f.condicoes.map((c) => c.id), ['restrito'], 'o nome da Jambô deveria virar "restrito"');
+
+  const repetida = contexto.aplicarAjustes_(f, [{ tipo: 'condicao', chave: 'Restrito', ligar: true }]);
+  igual(f.condicoes.length, 1, 'a mesma condição não se acumula');
+  verdade(repetida.mudancas[0].semEfeito);
+
+  contexto.aplicarAjustes_(f, [{ tipo: 'condicao', chave: 'Restrito', ligar: false }]);
+  igual(f.condicoes, []);
+});
+
+teste('condição desconhecida vira erro, não lixo na ficha', () => {
+  const f = fichaCansada();
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'condicao', chave: 'Enfeitiçadíssimo', ligar: true }]);
+  verdade(r.erros.length === 1, JSON.stringify(r));
+  igual(f.condicoes, []);
+});
+
+teste('contador zerado sai da ficha', () => {
+  const CONTADORES = avaliar('CONTADORES');
+  const chave = Object.keys(CONTADORES)[0];
+  const f = fichaCansada();
+  contexto.aplicarAjustes_(f, [{ tipo: 'contador', chave: chave, valor: 1 }]);
+  verdade(f.contadores[chave], 'deveria ter criado o contador');
+  contexto.aplicarAjustes_(f, [{ tipo: 'contador', chave: chave, valor: 0 }]);
+  igual(f.contadores[chave], undefined, 'contador em zero deveria sumir');
+});
+
+teste('carta vai para o cofre e volta, com o custo de recordar informado', () => {
+  const f = fichaCansada();
+  igual(f.cartas.ativas.length, 2);
+  const r = contexto.aplicarAjustes_(f, [
+    { tipo: 'carta', carta: 'grace-palavras-inspiradoras', para: 'cofre' }
+  ]);
+  igual(r.erros, []);
+  igual(f.cartas.ativas, ['codex-livro-de-ava']);
+  igual(f.cartas.cofre, ['grace-palavras-inspiradoras']);
+
+  const volta = contexto.aplicarAjustes_(f, [
+    { tipo: 'carta', carta: 'Palavras Inspiradoras', para: 'ativas' }
+  ]);
+  igual(f.cartas.cofre, []);
+  igual(volta.mudancas[0].de, 'cofre');
+  verdade(typeof volta.mudancas[0].custoRecordar === 'number', 'faltou o custo de recordar');
+});
+
+teste('a mão não passa de 5 cartas', () => {
+  const cartas = avaliar('CARTAS_DOMINIO');
+  const MAX = avaliar('MAX_CARTAS_ATIVAS');
+  const f = fichaCansada();
+  f.identidade.nivel = 10;
+  const deGraca = cartas.GRACE.map((c) => c[0]);
+  f.cartas = { ativas: deGraca.slice(0, MAX), cofre: [deGraca[MAX]] };
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'carta', carta: deGraca[MAX], para: 'ativas' }]);
+  verdade(r.erros.some((e) => new RegExp(`${MAX} cartas`).test(e)), JSON.stringify(r));
+});
+
+teste('o gatilho de início de sessão recarrega os contadores certos', () => {
+  const CONTADORES = avaliar('CONTADORES');
+  const recarregam = Object.keys(CONTADORES)
+    .filter((k) => (CONTADORES[k].recarregaEm || []).includes('inicio-de-sessao'));
+  verdade(recarregam.length > 0, 'nenhum contador recarrega no início de sessão?');
+  const f = fichaCansada();
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'gatilho', gatilho: 'inicio-de-sessao' }]);
+  igual(r.erros, []);
+  verdade(r.mudancas[0].contadores.length > 0, JSON.stringify(r.mudancas[0]));
+});
+
+teste('gatilho inventado é recusado', () => {
+  const f = fichaCansada();
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'gatilho', gatilho: 'lua-cheia' }]);
+  verdade(r.erros.length === 1, JSON.stringify(r));
+});
+
+teste('rajada de toques tem teto', () => {
+  const f = fichaCansada();
+  const muitos = Array.from({ length: 25 }, () => ({ tipo: 'recurso', chave: 'pv', delta: 1 }));
+  const r = contexto.aplicarAjustes_(f, muitos);
+  verdade(r.erros.some((e) => /no máximo/.test(e)), JSON.stringify(r.erros));
+});
+
+console.log('\nFicha em jogo — pela API');
+
+let idEmJogo = null;
+let tokenJogo = null;
+
+teste('cria a ficha de jogo pela API', () => {
+  tokenJogo = api('registrar', { nome: 'Jogadora', codigo: 'senha-de-jogo' }).dados.token;
+  const ficha = contexto.fichaRapida_({
+    nome: 'Em Jogo', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  const r = api('criarPersonagem', { token: tokenJogo, ficha });
+  verdade(r.ok, JSON.stringify(r));
+  idEmJogo = r.dados.personagem.id;
+});
+
+teste('ajustarFicha grava e devolve a versão nova', () => {
+  const antes = api('obterPersonagem', { token: tokenJogo, id: idEmJogo }).dados.personagem;
+  const r = api('ajustarFicha', {
+    token: tokenJogo, id: idEmJogo, versao: antes.versao,
+    ajustes: [{ tipo: 'recurso', chave: 'estresse', delta: 2 }]
+  });
+  verdade(r.ok, JSON.stringify(r));
+  igual(r.dados.personagem.ficha.recursos.estresseMarcado, 2);
+  igual(r.dados.personagem.versao, antes.versao + 1);
+  igual(r.dados.mudancas[0].rotulo, 'Estresse');
+});
+
+teste('sem versão, o toque aplica sobre o que estiver gravado', () => {
+  // É o caso da rajada: dois toques seguidos não podem virar CONFLITO à toa.
+  const a = api('ajustarFicha', { token: tokenJogo, id: idEmJogo, ajustes: [{ tipo: 'recurso', chave: 'estresse', delta: 1 }] });
+  const b = api('ajustarFicha', { token: tokenJogo, id: idEmJogo, ajustes: [{ tipo: 'recurso', chave: 'estresse', delta: 1 }] });
+  verdade(a.ok && b.ok, JSON.stringify([a.erro, b.erro]));
+  igual(b.dados.personagem.ficha.recursos.estresseMarcado, 4);
+});
+
+teste('com versão velha, a trava otimista pega', () => {
+  const r = api('ajustarFicha', {
+    token: tokenJogo, id: idEmJogo, versao: 1,
+    ajustes: [{ tipo: 'recurso', chave: 'estresse', delta: 1 }]
+  });
+  igual(r.erro.codigo, 'CONFLITO');
+});
+
+teste('ficha dos outros continua fora de alcance', () => {
+  const outro = api('registrar', { nome: 'Intrusa', codigo: 'senha-intrusa' }).dados.token;
+  const r = api('ajustarFicha', {
+    token: outro, id: idEmJogo, ajustes: [{ tipo: 'recurso', chave: 'pv', delta: 1 }]
+  });
+  igual(r.erro.codigo, 'SEM_PERMISSAO');
+});
+
+teste('previaDescanso não grava nada', () => {
+  const antes = api('obterPersonagem', { token: tokenJogo, id: idEmJogo }).dados.personagem;
+  const r = api('previaDescanso', {
+    token: tokenJogo, id: idEmJogo, tipo: 'curto',
+    escolhas: [{ movimento: 'reduzir-estresse', rolagem: 3 }]
+  });
+  verdade(r.ok, JSON.stringify(r));
+  const depois = api('obterPersonagem', { token: tokenJogo, id: idEmJogo }).dados.personagem;
+  igual(depois.versao, antes.versao, 'a prévia gravou');
+  igual(depois.ficha.recursos.estresseMarcado, antes.ficha.recursos.estresseMarcado);
+});
+
+teste('movimentosDeDescanso monta a lista da tela', () => {
+  const r = api('movimentosDeDescanso', { token: tokenJogo, id: idEmJogo, tipo: 'curto' });
+  verdade(r.ok, JSON.stringify(r));
+  igual(r.dados.movimentos.length, 4);
+  igual(r.dados.patamar, 1);
+  igual(r.dados.movimentosPorDescanso, 2);
+});
+
+teste('aplicarDescanso grava e devolve o relatório', () => {
+  const antes = api('obterPersonagem', { token: tokenJogo, id: idEmJogo }).dados.personagem;
+  const r = api('aplicarDescanso', {
+    token: tokenJogo, id: idEmJogo, versao: antes.versao, tipo: 'curto',
+    escolhas: [{ movimento: 'reduzir-estresse', rolagem: 3 }, { movimento: 'preparar-se' }]
+  });
+  verdade(r.ok, JSON.stringify(r));
+  igual(r.dados.personagem.ficha.recursos.estresseMarcado, 0, '4 marcados − (3+1) = 0');
+  igual(r.dados.personagem.ficha.recursos.esperanca, 3);
+  igual(r.dados.personagem.ficha.descanso.curtosSeguidos, 1);
+  igual(r.dados.resultado.nomeDoTipo, 'Descanso Curto');
+});
+
+teste('aplicarDescanso sem a rolagem é recusado pela API', () => {
+  const r = api('aplicarDescanso', {
+    token: tokenJogo, id: idEmJogo, tipo: 'curto',
+    escolhas: [{ movimento: 'tratar-feridas' }]
+  });
+  igual(r.erro.codigo, 'DADOS_INVALIDOS');
+  verdade(/Falta o resultado do dado/.test(r.erro.mensagem), r.erro.mensagem);
+});
+
+teste('as cartas da ficha passam a ser validadas ao salvar', () => {
+  const ficha = api('obterPersonagem', { token: tokenJogo, id: idEmJogo }).dados.personagem.ficha;
+  ficha.cartas.ativas = ['arcana-andar-na-parede'];   // Arcana não é do Bardo
+  const r = api('salvarPersonagem', { token: tokenJogo, id: idEmJogo, ficha });
+  igual(r.erro.codigo, 'DADOS_INVALIDOS');
+  verdade(/domínio/i.test(r.erro.mensagem), r.erro.mensagem);
+});
+
+teste('carta gravada pelo nome vira id', () => {
+  const p = api('obterPersonagem', { token: tokenJogo, id: idEmJogo }).dados.personagem;
+  const ficha = p.ficha;
+  ficha.cartas = { ativas: ['Palavras Inspiradoras'], cofre: [] };
+  const r = api('salvarPersonagem', { token: tokenJogo, id: idEmJogo, ficha, versao: p.versao });
+  verdade(r.ok, JSON.stringify(r.erro));
+  igual(r.dados.personagem.ficha.cartas.ativas, ['grace-palavras-inspiradoras']);
+});
+
 console.log('\nZerar planilha');
 teste('arquivarEResetar preserva o antigo e recria vazio', () => {
   contexto.arquivarEResetar();

@@ -1,0 +1,1037 @@
+{
+ "versao": 1,
+ "fonte": {
+  "regrasFormaDeFera": "DH-DigitalRegras.pdf (Jambô, Prévia 5), p. 34 — DRUIDA, 'HABILIDADES DE CLASSE: Forma de Fera'; confirmado pela ficha de multiclasse do Druida em DH-Fichas-Adicionais.pdf p.11 (PDF) que traz o mesmo texto abreviado.",
+  "listaDeFormas": "DH-DigitalRegras.pdf p. 36 (introdução + 1º patamar), p. 37 (2º patamar), p. 38 (3º patamar), p. 39 (4º patamar). Conferido contra a ficha 'DRUIDa — forma de fera' do apêndice, p. 350–351 do mesmo PDF. Todas as páginas foram renderizadas em PNG a 160 dpi e lidas como imagem para conferir números.",
+  "patamarPorNivel": "DH-DigitalRegras.pdf, tabela de patamares: 1º nível → 1º patamar; 2º ao 4º nível → 2º patamar; 5º ao 7º nível → 3º patamar; 8º ao 10º nível → 4º patamar.",
+  "companheiroAnimal": "DH-DigitalRegras.pdf p. 31 (subclasse TREINADOR), p. 32 ('COMPANHEIRO ANIMAL' + 'MECÂNICAS DO COMPANHEIRO ANIMAL'), p. 33 e p. 352 (ficha 'caçador — companheiro animal').",
+  "conferenciaEmIngles": "Character-Sheets-and-Guides-Daggerheart-May212025.pdf p. 4–5 (Druid Beastform sheet) e p. 10 (Ranger Companion sheet).",
+  "erratas": "/tmp/erratas.txt (Daggerheart Errata Document, 09/09/2025).",
+  "naoUsado": "DH-Fichas-Adicionais.pdf e Additional-Sheets-Daggerheart-May212025.pdf NÃO contêm a ficha de Forma de Fera nem a de Companheiro Animal — só guias do mestre/jogo, ficha de apoio, equipamento e fichas de multiclasse. As fichas 'filhas' estão no apêndice do livro principal (p. 350–352)."
+ },
+ "vocabulario": {
+  "aplicado": "cartas",
+  "explicacao": "Não existem cartas em PNG de Forma de Fera nem de Companheiro Animal, então a única fonte em português é o livro da Jambô (Prévia 5). O texto foi convertido para o vocabulário que o app usa hoje (o das cartas) e o original ficou guardado em textoLivro. Para adotar a tradução da Jambô, basta trocar qual campo o gerador lê.",
+  "substituicoes": [
+   [
+    "Acuidade",
+    "Finesse"
+   ],
+   [
+    "Fadiga",
+    "Estresse"
+   ],
+   [
+    "PF",
+    "Estresse"
+   ],
+   [
+    "PV",
+    "Pontos de Vida"
+   ],
+   [
+    "Ponto de Esperança",
+    "Esperança"
+   ],
+   [
+    "Ponto de Fadiga",
+    "Estresse"
+   ],
+   [
+    "Pontos de Esperança",
+    "Esperança"
+   ],
+   [
+    "Pontos de Fadiga",
+    "Estresse"
+   ],
+   [
+    "dano fís\\.",
+    "dano físico"
+   ],
+   [
+    "teste de conjuração",
+    "Jogada de Conjuração"
+   ]
+  ],
+  "ocorrencias": 67
+ },
+ "formaDeFera": {
+  "regras": {
+   "comoEntra": "Marque 1 Estresse para se transformar magicamente em uma criatura de patamar igual ou menor que o seu na lista de Formas de Fera. (Ao usar sua Forma de fera, escolha um grupo de criaturas de patamar igual ou inferior ao seu. A critério do mestre, você pode descrever sua transformação em qualquer animal adequado a esse grupo.) Formas híbridas custam Estresse adicional: Híbrido Lendário pede 1 Estresse adicional e Híbrido Mítico pede 2 Estresse adicionais. A Habilidade de Esperança do druida, 'Evolução', permite gastar 3 Esperança para usar Forma de Fera sem marcar Estresse; ao fazer isso, aumente um atributo em +1 até sair da Forma de Fera.",
+   "comoEntraLivro": "Marque 1 Ponto de Fadiga para se transformar magicamente em uma criatura de patamar igual ou menor que o seu na lista de Formas de Fera. (Ao usar sua Forma de fera, escolha um grupo de criaturas de patamar igual ou inferior ao seu. A critério do mestre, você pode descrever sua transformação em qualquer animal adequado a esse grupo.) Formas híbridas custam Fadiga adicional: Híbrido Lendário pede 1 Ponto de Fadiga adicional e Híbrido Mítico pede 2 Pontos de Fadiga adicionais. A Habilidade de Esperança do druida, 'Evolução', permite gastar 3 Pontos de Esperança para usar Forma de Fera sem marcar Fadiga; ao fazer isso, aumente um atributo em +1 até sair da Forma de Fera.",
+   "comoSai": "Você pode sair dessa forma a qualquer momento. Marcar seu último Ponto de Vida faz com que você saia da Forma de Fera automaticamente. Além disso, formas com a habilidade Frágil (Animal Doméstico, Explorador Ágil, Explorador Aquático, Ruminante Arisco) saem da Forma de Fera ao sofrer dano maior ou grave.",
+   "evasao": "Você soma o bônus de Evasão dela à sua Evasão. Detalhe da lista: 'enquanto estiver transformado, você soma o bônus de Evasão da criatura à sua Evasão normal. Por exemplo, se sua Evasão é 8 e sua Forma de Fera diz “Evasão +2”, sua Evasão nessa forma se torna 10.'",
+   "atributos": "Você usa o atributo especificado nas estatísticas dela para atacar. 'Atributo de personagem: enquanto estiver transformado, você recebe um bônus no atributo listado. Por exemplo, enquanto estiver transformado em Explorador Ágil, você recebe um bônus de +1 em Agilidade. Você perde esse bônus quando sai da Forma de Fera.' Ao atacar, 'você usa o alcance, atributo e dados de dano da criatura, mas pode usar sua Proficiência'.",
+   "pvEFadiga": "O livro não descreve nenhuma alteração de Pontos de Vida nem de Estresse durante a transformação: você continua usando os do personagem. A única regra explícita é que 'marcar seu último Ponto de Vida faz com que você saia da Forma de Fera automaticamente'. O custo de entrada é marcar 1 Estresse (mais Estresse adicional nas formas híbridas).",
+   "pvEFadigaLivro": "O livro não descreve nenhuma alteração de Pontos de Vida nem de Pontos de Fadiga durante a transformação: você continua usando os do personagem. A única regra explícita é que 'marcar seu último Ponto de Vida faz com que você saia da Forma de Fera automaticamente'. O custo de entrada é marcar 1 Ponto de Fadiga (mais Fadiga adicional nas formas híbridas).",
+   "armadura": "Enquanto estiver na Forma de Fera, sua armadura se torna parte de seu corpo e você marca Pontos de Armadura normalmente; quando sai da Forma de Fera, esses Pontos de Armadura permanecem marcados.",
+   "equipamento": "Enquanto estiver transformado, você não pode usar armas. O livro não traz regra explícita sobre outros itens de inventário ou consumíveis enquanto transformado.",
+   "cartasDeDominio": "Enquanto estiver transformado, você não pode usar feitiços das cartas de domínio, mas ainda pode usar outras habilidades ou talentos aos quais tenha acesso. Os feitiços conjurados antes da transformação permanecem ativos, com sua duração normal.",
+   "falarEConjurar": "Você pode falar e se comunicar normalmente. Conjurar feitiços de cartas de domínio é proibido enquanto transformado; feitiços já conjurados antes da transformação continuam ativos pela duração normal.",
+   "limitePorDescanso": null
+  },
+  "total": 24,
+  "formas": [
+   {
+    "id": "animal-domestico",
+    "nome": "Animal Doméstico",
+    "tipo": "base",
+    "patamar": 1,
+    "nivelMinimo": 1,
+    "grupo": "Animal Doméstico",
+    "verbos": [
+     "escalar",
+     "localizar",
+     "proteger"
+    ],
+    "modificadores": {
+     "atributo": "Instinto +1",
+     "evasao": "+2"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo",
+     "atributo": "Instinto",
+     "dano": "d6 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Companhia",
+      "texto": "ao ajudar um aliado, você pode rolar 1d8 como seu dado de vantagem."
+     },
+     {
+      "nome": "Frágil",
+      "texto": "ao sofrer dano maior ou grave, você sai da Forma de Fera."
+     }
+    ],
+    "exemplos": [
+     "Cão",
+     "coelho",
+     "gato"
+    ],
+    "errataAplicada": null
+   },
+   {
+    "id": "aracnideo-espreitador",
+    "nome": "Aracnídeo Espreitador",
+    "tipo": "base",
+    "patamar": 1,
+    "nivelMinimo": 1,
+    "grupo": "Aracnídeo Espreitador",
+    "verbos": [
+     "atacar",
+     "escalar",
+     "mover-se furtivamente"
+    ],
+    "modificadores": {
+     "atributo": "Finesse +1",
+     "evasao": "+2"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo",
+     "atributo": "Finesse",
+     "dano": "d6 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Lança-teia",
+      "texto": "você pode criar uma poderosa teia, útil nas aventuras e nas batalhas. Ela é resistente o bastante para suportar uma criatura. Você pode Imobilizar temporariamente um alvo Próximo se passar em um teste de Finesse contra ele.",
+      "textoLivro": "você pode criar uma poderosa teia, útil nas aventuras e nas batalhas. Ela é resistente o bastante para suportar uma criatura. Você pode Imobilizar temporariamente um alvo Próximo se passar em um teste de Acuidade contra ele."
+     },
+     {
+      "nome": "Picada Peçonhenta",
+      "texto": "quando acerta um ataque contra um alvo Corpo a Corpo, você o deixa temporariamente Envenenado. Uma criatura Envenenada sofre 1d10 de dano físico direto cada vez que age."
+     }
+    ],
+    "exemplos": [
+     "Aranha-lobo",
+     "tarântula"
+    ],
+    "errataAplicada": null
+   },
+   {
+    "id": "explorador-agil",
+    "nome": "Explorador Ágil",
+    "tipo": "base",
+    "patamar": 1,
+    "nivelMinimo": 1,
+    "grupo": "Explorador Ágil",
+    "verbos": [
+     "enganar",
+     "localizar",
+     "mover-se furtivamente"
+    ],
+    "modificadores": {
+     "atributo": "Agilidade +1",
+     "evasao": "+2"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo",
+     "atributo": "Agilidade",
+     "dano": "d4 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Ágil",
+      "texto": "seu movimento é silencioso e você pode gastar 1 Esperança para se mover até um ponto Distante sem precisar fazer um teste.",
+      "textoLivro": "seu movimento é silencioso e você pode gastar 1 Ponto de Esperança para se mover até um ponto Distante sem precisar fazer um teste."
+     },
+     {
+      "nome": "Frágil",
+      "texto": "ao sofrer dano maior ou grave, você sai da Forma de Fera."
+     }
+    ],
+    "exemplos": [
+     "Camundongo",
+     "doninha",
+     "raposa"
+    ],
+    "errataAplicada": null
+   },
+   {
+    "id": "explorador-aquatico",
+    "nome": "Explorador Aquático",
+    "tipo": "base",
+    "patamar": 1,
+    "nivelMinimo": 1,
+    "grupo": "Explorador Aquático",
+    "verbos": [
+     "mover-se furtivamente",
+     "nadar",
+     "orientar-se"
+    ],
+    "modificadores": {
+     "atributo": "Agilidade +1",
+     "evasao": "+2"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo",
+     "atributo": "Agilidade",
+     "dano": "d4 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Aquático",
+      "texto": "você pode respirar e se movimentar naturalmente embaixo d’água."
+     },
+     {
+      "nome": "Frágil",
+      "texto": "ao sofrer dano maior ou grave, você sai da Forma de Fera."
+     }
+    ],
+    "exemplos": [
+     "Enguia",
+     "peixe",
+     "polvo"
+    ],
+    "errataAplicada": null
+   },
+   {
+    "id": "predador-de-bando",
+    "nome": "Predador de Bando",
+    "tipo": "base",
+    "patamar": 1,
+    "nivelMinimo": 1,
+    "grupo": "Predador de Bando",
+    "verbos": [
+     "atacar",
+     "correr",
+     "rastrear"
+    ],
+    "modificadores": {
+     "atributo": "Força +2",
+     "evasao": "+1"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo",
+     "atributo": "Força",
+     "dano": "d8+2 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Caça em Bando",
+      "texto": "quando você acerta um ataque contra um alvo atingido por um aliado imediatamente antes de você, seu dano aumenta em +1d8."
+     },
+     {
+      "nome": "Golpe Debilitante",
+      "texto": "quando você acerta um ataque contra um alvo Corpo a Corpo, você pode marcar 1 Estresse para torná-lo temporariamente Vulnerável.",
+      "textoLivro": "quando você acerta um ataque contra um alvo Corpo a Corpo, você pode marcar 1 Ponto de Fadiga para torná-lo temporariamente Vulnerável."
+     }
+    ],
+    "exemplos": [
+     "Coiote",
+     "hiena",
+     "lobo"
+    ],
+    "errataAplicada": null
+   },
+   {
+    "id": "ruminante-arisco",
+    "nome": "Ruminante Arisco",
+    "tipo": "base",
+    "patamar": 1,
+    "nivelMinimo": 1,
+    "grupo": "Ruminante Arisco",
+    "verbos": [
+     "correr",
+     "mover-se furtivamente",
+     "saltar"
+    ],
+    "modificadores": {
+     "atributo": "Agilidade +1",
+     "evasao": "+3"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo",
+     "atributo": "Agilidade",
+     "dano": "d6 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Frágil",
+      "texto": "ao sofrer dano maior ou grave, você sai da Forma de Fera."
+     },
+     {
+      "nome": "Presa Arisca",
+      "texto": "quando sofre um ataque, você pode marcar 1 Estresse para rolar 1d4 e somar o resultado à sua Evasão contra esse ataque.",
+      "textoLivro": "quando sofre um ataque, você pode marcar 1 Ponto de Fadiga para rolar 1d4 e somar o resultado à sua Evasão contra esse ataque."
+     }
+    ],
+    "exemplos": [
+     "Cabra",
+     "cervo",
+     "gazela"
+    ],
+    "errataAplicada": null
+   },
+   {
+    "id": "carapaca-vigilante",
+    "nome": "Carapaça Vigilante",
+    "tipo": "base",
+    "patamar": 2,
+    "nivelMinimo": 2,
+    "grupo": "Carapaça Vigilante",
+    "verbos": [
+     "cavar",
+     "localizar",
+     "proteger"
+    ],
+    "modificadores": {
+     "atributo": "Força +1",
+     "evasao": "+1"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo",
+     "atributo": "Força",
+     "dano": "d8+2 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Canhão Ricochete",
+      "texto": "marque 1 Estresse para que um aliado arremesse você contra um adversário. Para fazer isso, o aliado faz um teste de ataque usando Agilidade ou Força (à escolha dele) contra um alvo Próximo. Em um sucesso, o adversário sofre d12+2 de dano físico usando a Proficiência de seu aliado. Você pode gastar 1 Esperança para escolher outro adversário Muito Próximo do primeiro como alvo. O segundo alvo sofre metade do dano causado ao primeiro alvo.",
+      "textoLivro": "marque 1 Ponto de Fadiga para que um aliado arremesse você contra um adversário. Para fazer isso, o aliado faz um teste de ataque usando Agilidade ou Força (à escolha dele) contra um alvo Próximo. Em um sucesso, o adversário sofre d12+2 de dano físico usando a Proficiência de seu aliado. Você pode gastar 1 Ponto de Esperança para escolher outro adversário Muito Próximo do primeiro como alvo. O segundo alvo sofre metade do dano causado ao primeiro alvo."
+     },
+     {
+      "nome": "Carapaça Reforçada",
+      "texto": "seu exterior sólido concede resistência a dano físico. Além disso, você pode marcar 1 Ponto de Armadura para se recolher em sua carapaça. Enquanto estiver dentro dela, o dano físico que você sofre é reduzido em um número igual à sua Armadura (após aplicar a resistência), mas você não pode realizar outros movimentos ."
+     }
+    ],
+    "exemplos": [
+     "Pangolim",
+     "tartaruga",
+     "tatu"
+    ],
+    "errataAplicada": null
+   },
+   {
+    "id": "fera-alada",
+    "nome": "Fera Alada",
+    "tipo": "base",
+    "patamar": 2,
+    "nivelMinimo": 2,
+    "grupo": "Fera Alada",
+    "verbos": [
+     "enganar",
+     "intimidar",
+     "localizar"
+    ],
+    "modificadores": {
+     "atributo": "Finesse +1",
+     "evasao": "+3"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo (CaC)",
+     "atributo": "Finesse",
+     "dano": "d4+2 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Ossos Ocos",
+      "texto": "você sofre uma penalidade de –2 nos seus limiares de dano."
+     },
+     {
+      "nome": "Visão Aérea",
+      "texto": "você pode voar à vontade. Uma vez por descanso, e enquanto estiver no ar, você pode perguntar ao mestre algo sobre a paisagem abaixo sem precisar de teste. Na primeira vez em que um personagem fizer um teste para agir em relação a essa informação, ele o faz com vantagem."
+     }
+    ],
+    "exemplos": [
+     "Coruja",
+     "corvo",
+     "gavião"
+    ],
+    "errataAplicada": null
+   },
+   {
+    "id": "fera-poderosa",
+    "nome": "Fera Poderosa",
+    "tipo": "base",
+    "patamar": 2,
+    "nivelMinimo": 2,
+    "grupo": "Fera Poderosa",
+    "verbos": [
+     "intimidar",
+     "orientar-se",
+     "proteger"
+    ],
+    "modificadores": {
+     "atributo": "Força +3",
+     "evasao": "+1"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo",
+     "atributo": "Força",
+     "dano": "d10+4 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Ataque Violento",
+      "texto": "quando tira 1 em um dado de dano, você pode rolar 1d10 e somar o resultado à rolagem de dano. Além disso, antes de fazer um teste de ataque, você pode marcar 1 Estresse para receber um bônus de +1 em sua Proficiência para esse ataque.",
+      "textoLivro": "quando tira 1 em um dado de dano, você pode rolar 1d10 e somar o resultado à rolagem de dano. Além disso, antes de fazer um teste de ataque, você pode marcar 1 Ponto de Fadiga para receber um bônus de +1 em sua Proficiência para esse ataque."
+     },
+     {
+      "nome": "Couro Espesso",
+      "texto": "você recebe +2 de bônus nos seus limiares de dano."
+     }
+    ],
+    "exemplos": [
+     "Alce",
+     "touro",
+     "urso"
+    ],
+    "errataAplicada": "Errata p.33 (Powerful Beast): os valores foram trocados. O livro pt-BR imprime 'Força +1 | Evasão +3' (p.37 e ficha p.350); o valor corrigido é 'Força +3 | Evasão +1'."
+   },
+   {
+    "id": "predador-furtivo",
+    "nome": "Predador Furtivo",
+    "tipo": "base",
+    "patamar": 2,
+    "nivelMinimo": 2,
+    "grupo": "Predador Furtivo",
+    "verbos": [
+     "atacar",
+     "escalar",
+     "mover-se furtivamente"
+    ],
+    "modificadores": {
+     "atributo": "Instinto +1",
+     "evasao": "+3"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo (CaC)",
+     "atributo": "Instinto",
+     "dano": "d8+6 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Abate",
+      "texto": "marque 1 Estresse para se mover até ficar Corpo a Corpo a um alvo e fazer um teste de ataque contra ele. Em um sucesso, você recebe um bônus de +2 em sua Proficiência para esse ataque e o alvo deve marcar 1 Estresse.",
+      "textoLivro": "marque 1 Ponto de Fadiga para se mover até ficar Corpo a Corpo a um alvo e fazer um teste de ataque contra ele. Em um sucesso, você recebe um bônus de +2 em sua Proficiência para esse ataque e o alvo deve marcar 1 Ponto de Fadiga."
+     },
+     {
+      "nome": "Disparada",
+      "texto": "gaste 1 Esperança para se mover até um ponto em alcance Distante sem precisar fazer um teste.",
+      "textoLivro": "gaste 1 Ponto de Esperança para se mover até um ponto em alcance Distante sem precisar fazer um teste."
+     }
+    ],
+    "exemplos": [
+     "Guepardo",
+     "leão",
+     "pantera"
+    ],
+    "errataAplicada": null
+   },
+   {
+    "id": "serpente-traicoeira",
+    "nome": "Serpente Traiçoeira",
+    "tipo": "base",
+    "patamar": 2,
+    "nivelMinimo": 2,
+    "grupo": "Serpente Traiçoeira",
+    "verbos": [
+     "deslizar",
+     "enganar",
+     "escalar"
+    ],
+    "modificadores": {
+     "atributo": "Finesse +1",
+     "evasao": "+2"
+    },
+    "ataque": {
+     "alcance": "Muito Próximo",
+     "atributo": "Finesse",
+     "dano": "d8+4 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Bote Peçonhento",
+      "texto": "faça um ataque contra qualquer número de alvos Próximos. Em um sucesso, o alvo fica temporariamente Envenenado. Uma criatura Envenenada sofre 1d10 de dano físico direto a cada vez que age."
+     },
+     {
+      "nome": "Silvo de alerta",
+      "texto": "marque 1 Estresse para forçar qualquer número de alvos Corpo a Corpo a se afastarem até ficarem Muito Próximos.",
+      "textoLivro": "marque 1 Ponto de Fadiga para forçar qualquer número de alvos Corpo a Corpo a se afastarem até ficarem Muito Próximos."
+     }
+    ],
+    "exemplos": [
+     "Cascavel",
+     "naja",
+     "víbora"
+    ],
+    "errataAplicada": "Errata p.33 (Striking Serpent / Venomous Strike, 'direct physical damage'): nenhuma mudança necessária — a edição pt-BR já imprime 'dano físico direto' em Bote Peçonhento."
+   },
+   {
+    "id": "trotador-robusto",
+    "nome": "Trotador Robusto",
+    "tipo": "base",
+    "patamar": 2,
+    "nivelMinimo": 2,
+    "grupo": "Trotador Robusto",
+    "verbos": [
+     "correr",
+     "orientar-se",
+     "saltar"
+    ],
+    "modificadores": {
+     "atributo": "Agilidade +1",
+     "evasao": "+2"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo (CaC)",
+     "atributo": "Agilidade",
+     "dano": "d8+1 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Atropelar",
+      "texto": "marque 1 Estresse para se mover até um ponto em alcance Próximo em linha reta e atacar todos os alvos Corpo a Corpo à linha. Alvos atingidos sofrem d8+1 de dano físico usando sua Proficiência e ficam temporariamente Vulneráveis.",
+      "textoLivro": "marque 1 Ponto de Fadiga para se mover até um ponto em alcance Próximo em linha reta e atacar todos os alvos Corpo a Corpo à linha. Alvos atingidos sofrem d8+1 de dano físico usando sua Proficiência e ficam temporariamente Vulneráveis."
+     },
+     {
+      "nome": "Besta de Carga",
+      "texto": "você pode carregar até dois aliados voluntários com você enquanto se movimenta."
+     }
+    ],
+    "exemplos": [
+     "Camelo",
+     "cavalo",
+     "zebra"
+    ],
+    "errataAplicada": null
+   },
+   {
+    "id": "fera-lendaria",
+    "nome": "Fera Lendária",
+    "tipo": "aprimoramento",
+    "patamar": 3,
+    "nivelMinimo": 5,
+    "grupo": "Fera Lendária (Aprimoradamento de 1º patamar)",
+    "verbos": [],
+    "modificadores": {
+     "atributo": null,
+     "evasao": null
+    },
+    "ataque": {},
+    "caracteristicas": [
+     {
+      "nome": "Evoluído",
+      "texto": "escolha uma Forma de Fera de 1º patamar e torne-se uma versão maior e mais poderosa dessa criatura. Enquanto estiver nessa forma, você mantém todos os atributos e habilidades da forma original e recebe os seguintes bônus:\n • Bônus de +6 em rolagens de dano\n • Bônus de +1 no atributo da forma\n • Bônus de +2 na Evasão"
+     }
+    ],
+    "exemplos": [],
+    "errataAplicada": null
+   },
+   {
+    "id": "grande-fera-alada",
+    "nome": "Grande Fera Alada",
+    "tipo": "base",
+    "patamar": 3,
+    "nivelMinimo": 5,
+    "grupo": "Grande Fera Alada",
+    "verbos": [
+     "distrair",
+     "enganar",
+     "localizar"
+    ],
+    "modificadores": {
+     "atributo": "Finesse +2",
+     "evasao": "+3"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo (CaC)",
+     "atributo": "Finesse",
+     "dano": "d8+6 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Besta de Carga",
+      "texto": "você pode carregar até dois aliados voluntários com você enquanto se movimenta."
+     },
+     {
+      "nome": "Visão Aérea",
+      "texto": "você pode voar à vontade. Uma vez por descanso, e enquanto estiver no ar, você pode perguntar ao mestre algo sobre a paisagem abaixo sem precisar de teste. Na primeira vez em que um personagem fizer um teste para agir em relação a essa informação, ele o faz com vantagem."
+     }
+    ],
+    "exemplos": [
+     "Águia gigante",
+     "falcão"
+    ],
+    "errataAplicada": null
+   },
+   {
+    "id": "grande-predador",
+    "nome": "Grande Predador",
+    "tipo": "base",
+    "patamar": 3,
+    "nivelMinimo": 5,
+    "grupo": "Grande Predador",
+    "verbos": [
+     "atacar",
+     "correr",
+     "mover-se furtivamente"
+    ],
+    "modificadores": {
+     "atributo": "Força +2",
+     "evasao": "+2"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo",
+     "atributo": "Força",
+     "dano": "d12+8 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Ataque Voraz",
+      "texto": "quando acerta um ataque em um alvo, você pode gastar 1 Esperança para deixá-lo temporariamente Vulnerável e receber um bônus de +1 em Proficiência nesse ataque.",
+      "textoLivro": "quando acerta um ataque em um alvo, você pode gastar 1 Ponto de Esperança para deixá-lo temporariamente Vulnerável e receber um bônus de +1 em Proficiência nesse ataque."
+     },
+     {
+      "nome": "Besta de Carga",
+      "texto": "você pode carregar até dois aliados voluntários com você enquanto se movimenta."
+     }
+    ],
+    "exemplos": [
+     "Lobo atroz",
+     "tigre dente-de-sabre",
+     "velocirraptor"
+    ],
+    "errataAplicada": null
+   },
+   {
+    "id": "hibrido-lendario",
+    "nome": "Híbrido Lendário",
+    "tipo": "base",
+    "patamar": 3,
+    "nivelMinimo": 5,
+    "grupo": "Híbrido Lendário",
+    "verbos": [],
+    "modificadores": {
+     "atributo": "Força +2",
+     "evasao": "+3"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo",
+     "atributo": "Força",
+     "dano": "d10+8 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Habilidades Híbridas",
+      "texto": "marque 1 Estresse adicional para se transformar nesta criatura. Escolha duas opções quaisquer de Forma de Fera de 1º a 2º patamar. Escolha um total de quatro vantagens e duas habilidades dessas opções.",
+      "textoLivro": "marque 1 Ponto de Fadiga adicional para se transformar nesta criatura. Escolha duas opções quaisquer de Forma de Fera de 1º a 2º patamar. Escolha um total de quatro vantagens e duas habilidades dessas opções."
+     }
+    ],
+    "exemplos": [
+     "Esfinge",
+     "grifo"
+    ],
+    "errataAplicada": "Errata p.34 (Legendary Hybrid, adicionar o tipo de dano 'phy'): nenhuma mudança necessária — a edição pt-BR já imprime 'd10+8 de dano fís.'."
+   },
+   {
+    "id": "lagarto-poderoso",
+    "nome": "Lagarto Poderoso",
+    "tipo": "base",
+    "patamar": 3,
+    "nivelMinimo": 5,
+    "grupo": "Lagarto Poderoso",
+    "verbos": [
+     "atacar",
+     "mover-se furtivamente",
+     "rastrear"
+    ],
+    "modificadores": {
+     "atributo": "Instinto +2",
+     "evasao": "+1"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo",
+     "atributo": "Instinto",
+     "dano": "d10+7 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Armadura Física",
+      "texto": "você recebe um bônus de +3 em seus limiares de dano."
+     },
+     {
+      "nome": "Golpe Súbito",
+      "texto": "quando acerta um ataque contra um alvo Corpo a Corpo, você pode gastar 1 Esperança para segurá-lo com a mandíbula, deixando-o temporariamente Imobilizado e Vulnerável.",
+      "textoLivro": "quando acerta um ataque contra um alvo Corpo a Corpo, você pode gastar 1 Ponto de Esperança para segurá-lo com a mandíbula, deixando-o temporariamente Imobilizado e Vulnerável."
+     }
+    ],
+    "exemplos": [
+     "Crocodilo",
+     "jacaré",
+     "monstro-de-gila"
+    ],
+    "errataAplicada": null
+   },
+   {
+    "id": "predador-aquatico",
+    "nome": "Predador Aquático",
+    "tipo": "base",
+    "patamar": 3,
+    "nivelMinimo": 5,
+    "grupo": "Predador Aquático",
+    "verbos": [
+     "atacar",
+     "nadar",
+     "rastrear"
+    ],
+    "modificadores": {
+     "atributo": "Agilidade +2",
+     "evasao": "+4"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo (CaC)",
+     "atributo": "Agilidade",
+     "dano": "d10+6 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Aquático",
+      "texto": "você pode respirar e se movimentar naturalmente embaixo d’água."
+     },
+     {
+      "nome": "Ataque Voraz",
+      "texto": "quando acerta um ataque em um alvo, você pode gastar 1 Esperança para deixá-lo temporariamente Vulnerável e receber um bônus de +1 em Proficiência nesse ataque.",
+      "textoLivro": "quando acerta um ataque em um alvo, você pode gastar 1 Ponto de Esperança para deixá-lo temporariamente Vulnerável e receber um bônus de +1 em Proficiência nesse ataque."
+     }
+    ],
+    "exemplos": [
+     "Golfinho",
+     "orca",
+     "tubarão"
+    ],
+    "errataAplicada": null
+   },
+   {
+    "id": "cacador-aereo-mitico",
+    "nome": "Caçador Aéreo Mítico",
+    "tipo": "base",
+    "patamar": 4,
+    "nivelMinimo": 8,
+    "grupo": "Caçador Aéreo Mítico",
+    "verbos": [
+     "atacar",
+     "enganar",
+     "localizar",
+     "orientar-se"
+    ],
+    "modificadores": {
+     "atributo": "Finesse +3",
+     "evasao": "+4"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo (CaC)",
+     "atributo": "Finesse",
+     "dano": "d10+11 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Ave de Rapina Mortal",
+      "texto": "você pode voar à vontade e se mover até um ponto em alcance Distante como parte de seu movimento. Quando ataca um alvo após se mover em linha reta até ficar Corpo a Corpo a ele a partir de no mínimo alcance Próximo, você pode rolar novamente todos os dados de dano com um resultado menor que sua Proficiência."
+     },
+     {
+      "nome": "Besta de Carga",
+      "texto": "você pode carregar até dois aliados voluntários com você enquanto se movimenta."
+     }
+    ],
+    "exemplos": [
+     "Dragão",
+     "pterodátilo",
+     "roca",
+     "serpe"
+    ],
+    "errataAplicada": null
+   },
+   {
+    "id": "fera-aquatica-epica",
+    "nome": "Fera Aquática Épica",
+    "tipo": "base",
+    "patamar": 4,
+    "nivelMinimo": 8,
+    "grupo": "Fera Aquática Épica",
+    "verbos": [
+     "intimidar",
+     "localizar",
+     "proteger",
+     "rastrear"
+    ],
+    "modificadores": {
+     "atributo": "Agilidade +3",
+     "evasao": "+3"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo (CaC)",
+     "atributo": "Agilidade",
+     "dano": "d10+10 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Mestre do Oceano",
+      "texto": "você pode respirar e se movimentar naturalmente debaixo d’água. Quando acerta um ataque contra um alvo Corpo a Corpo, você pode deixá-lo temporariamente Imobilizado."
+     },
+     {
+      "nome": "Robusto",
+      "texto": "quando for marcar Ponto de Armadura, role 1d6. Em um resultado 5 ou mais, reduza a gravidade em um limiar sem marcar PA."
+     }
+    ],
+    "exemplos": [
+     "Baleia",
+     "lula gigante"
+    ],
+    "errataAplicada": null
+   },
+   {
+    "id": "fera-massiva",
+    "nome": "Fera Massiva",
+    "tipo": "base",
+    "patamar": 4,
+    "nivelMinimo": 8,
+    "grupo": "Fera Massiva",
+    "verbos": [
+     "correr",
+     "intimidar",
+     "localizar",
+     "proteger"
+    ],
+    "modificadores": {
+     "atributo": "Força +3",
+     "evasao": "+1"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo",
+     "atributo": "Força",
+     "dano": "d12+12 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Besta de Carga",
+      "texto": "você pode carregar até dois aliados voluntários com você enquanto se movimenta."
+     },
+     {
+      "nome": "Demolir",
+      "texto": "gaste 1 Esperança para se mover até um ponto Distante em linha reta e atacar todos os alvos Corpo a Corpo à linha. Alvos atingidos sofrem d8+10 de dano físico usando sua Proficiência e ficam temporariamente Vulneráveis.",
+      "textoLivro": "gaste 1 Ponto de Esperança para se mover até um ponto Distante em linha reta e atacar todos os alvos Corpo a Corpo à linha. Alvos atingidos sofrem d8+10 de dano físico usando sua Proficiência e ficam temporariamente Vulneráveis."
+     },
+     {
+      "nome": "Impávido",
+      "texto": "você recebe um bônus de +2 em seus limiares de dano."
+     }
+    ],
+    "exemplos": [
+     "Elefante",
+     "mamute",
+     "rinoceronte"
+    ],
+    "errataAplicada": null
+   },
+   {
+    "id": "fera-mitica",
+    "nome": "Fera Mítica",
+    "tipo": "aprimoramento",
+    "patamar": 4,
+    "nivelMinimo": 8,
+    "grupo": "Fera Mítica (Aprimoramento de 1º ou 2º patamar)",
+    "verbos": [],
+    "modificadores": {
+     "atributo": null,
+     "evasao": null
+    },
+    "ataque": {},
+    "caracteristicas": [
+     {
+      "nome": "Evoluído",
+      "texto": "escolha uma Forma de Fera de 1º patamar e torne-se uma versão maior e mais poderosa dessa criatura. Enquanto estiver nessa forma, você mantém todos os atributos e habilidades da forma original e recebe os seguintes bônus:\n • Bônus de +9 rolagens de dano\n • Bônus de +2 no atributo da forma\n • Bônus de +3 na Evasão\n • Seu dado de dano aumenta em um passo (d6 para d8, d8 para d10 etc.)."
+     }
+    ],
+    "exemplos": [],
+    "errataAplicada": "Errata p.35 (Mythic Beast / 'Evolved', remoção de um 'the' duplicado): nenhuma mudança necessária — o erro é exclusivo do texto em inglês e não existe na edição pt-BR."
+   },
+   {
+    "id": "hibrido-mitico",
+    "nome": "Híbrido Mítico",
+    "tipo": "base",
+    "patamar": 4,
+    "nivelMinimo": 8,
+    "grupo": "Híbrido Mítico",
+    "verbos": [],
+    "modificadores": {
+     "atributo": "Força +3",
+     "evasao": "+2"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo",
+     "atributo": "Força",
+     "dano": "d12+10 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Habilidades Híbridas",
+      "texto": "marque 2 Estresse adicionais para se transformar nesta criatura. Escolha duas opções quaisquer de Forma de Fera de 1º a 3º patamar. Escolha um total de cinco vantagens e três habilidades dessas opções.",
+      "textoLivro": "marque 2 Ponto de Fadiga adicionais para se transformar nesta criatura. Escolha duas opções quaisquer de Forma de Fera de 1º a 3º patamar. Escolha um total de cinco vantagens e três habilidades dessas opções."
+     }
+    ],
+    "exemplos": [
+     "Cocatriz",
+     "mantícora",
+     "quimera"
+    ],
+    "errataAplicada": null
+   },
+   {
+    "id": "lagarto-terrivel",
+    "nome": "Lagarto Terrível",
+    "tipo": "base",
+    "patamar": 4,
+    "nivelMinimo": 8,
+    "grupo": "Lagarto Terrível",
+    "verbos": [
+     "atacar",
+     "enganar",
+     "intimidar",
+     "rastrear"
+    ],
+    "modificadores": {
+     "atributo": "Força +3",
+     "evasao": "+2"
+    },
+    "ataque": {
+     "alcance": "Corpo a Corpo",
+     "atributo": "Força",
+     "dano": "d12+10 de dano físico"
+    },
+    "caracteristicas": [
+     {
+      "nome": "Disparada Massiva",
+      "texto": "você pode se mover até um ponto em alcance Distante sem precisar fazer uma teste. Você ignora terreno difícil (a critério do mestre) devido ao seu tamanho."
+     },
+     {
+      "nome": "Golpes Devastadores",
+      "texto": "quando causa dano grave em um alvo Corpo a Corpo, você pode marcar 1 Estresse para forçá-lo a marcar 1 Pontos de Vida adicional.",
+      "textoLivro": "quando causa dano grave em um alvo Corpo a Corpo, você pode marcar 1 Ponto de Fadiga para forçá-lo a marcar 1 PV adicional."
+     }
+    ],
+    "exemplos": [
+     "Braquiossauro",
+     "tiranossauro"
+    ],
+    "errataAplicada": null
+   }
+  ]
+ },
+ "companheiroAnimal": {
+  "base": {
+   "evasao": 10,
+   "dano": "No 1º nível, o dado de dano de seu companheiro animal é d6 e ele tem alcance Corpo a Corpo. 'Ao mandar o companheiro animal atacar, ele recebe todos os benefícios que você receberia (como os efeitos de Marca da Presa). Em um sucesso, a rolagem de dano dele usa sua Proficiência e o dado de dano dele.' A ficha traz a trilha de dados 'd6 / d8 / d10 / d12' para marcar as evoluções de Feroz. ERRATA APLICADA (p.40 e p.41/352 em inglês; p.32 e p.33/352 em pt-BR): escolha também se o companheiro causa dano físico ou mágico.",
+   "experiencias": {
+    "quantidade": 2,
+    "bonus": 2
+   },
+   "observacoes": "Criação (p.32): 1ª etapa — nome e tipo de animal, definidos junto com o mestre, com imagem na ficha. 2ª etapa — Evasão, que começa em 10. 3ª etapa — duas Experiências baseadas no treinamento e na história de vocês, ambas começando com +2; sempre que você receber uma nova Experiência, seu companheiro recebe uma também, e todas as Experiências novas começam em +2. 4ª etapa — descreva o método que ele usa para causar dano (seu ataque padrão) e anote na seção 'ataque e dano'; dado d6 e alcance Corpo a Corpo no 1º nível [+ errata: escolha se o dano é físico ou mágico]. Teste: 'Faça um Jogada de Conjuração para criar um elo com seu companheiro animal e mandá-lo agir. Gaste 1 Esperança para somar uma Experiência do companheiro aplicável ao teste dele. Em um sucesso com Esperança, se seu próximo movimento se relacionar ao sucesso dele, você faz o teste com vantagem.' Exemplos de Experiências de companheiro animal impressos no livro: Ágil, Alerta Máximo, Amigável, Animal de Serviço, Companheiro Real, Distração Corajosa, Escudeiro, Especialista em Escalada, Guardião da Floresta, Horripilante, Intimidador, Leal Até o Fim, Montaria Confiável, Ninguém Fica Para Trás, Nós Sempre Nos Encontramos, Orientação, Protetor, Vigilante, Você Não Pode Acertar o Que Não Pode Ver. O companheiro não tem Pontos de Vida: ele usa Estresse (ver 'quandoCai').",
+   "errataAplicada": "Errata p.40 ('Choose whether they deal physical or magic damage.', acrescentada ao fim da 4ª etapa) e errata p.41/352 + Ranger Companion Sheet ('physical or magic option has been added to the Beastbound Companion sheet'). A edição pt-BR (Prévia 5) NÃO traz essa opção nem na p.32 nem na ficha (p.33/352); foi acrescentada aqui."
+  },
+  "evolucoes": [
+   {
+    "nome": "Afago",
+    "texto": "uma vez por descanso, quando você passa um momento de tranquilidade dando carinho e atenção a seu companheiro animal, você pode receber 1 Esperança ou cada um de vocês pode recuperar 1 Estresse.",
+    "textoLivro": "uma vez por descanso, quando você passa um momento de tranquilidade dando carinho e atenção a seu companheiro animal, você pode receber 1 Ponto de Esperança ou cada um de vocês pode recuperar 1 Ponto de Fadiga."
+   },
+   {
+    "nome": "Apegado",
+    "texto": "quando você marca seu último Ponto de Vida, seu companheiro animal vem rapidamente para socorrê-lo. Role um número de d6 igual ao número de Estresse que ele ainda tem disponível e marque-os. Se tirar 6 em qualquer uma dessas rolagens, seu companheiro animal ajuda você. Recupere seu último Ponto de Vida e volte à cena.",
+    "textoLivro": "quando você marca seu último Ponto de Vida, seu companheiro animal vem rapidamente para socorrê-lo. Role um número de d6 igual ao número de PF que ele ainda tem disponível e marque-os. Se tirar 6 em qualquer uma dessas rolagens, seu companheiro animal ajuda você. Recupere seu último Ponto de Vida e volte à cena."
+   },
+   {
+    "nome": "Atento",
+    "texto": "seu companheiro animal recebe um bônus permanente de +2 na Evasão."
+   },
+   {
+    "nome": "Blindado",
+    "texto": "quando seu companheiro animal sofre dano, você pode marcar um de seus Pontos de Armadura em vez de marcar 1 Estresse dele.",
+    "textoLivro": "quando seu companheiro animal sofre dano, você pode marcar um de seus Pontos de Armadura em vez de marcar 1 Ponto de Fadiga dele."
+   },
+   {
+    "nome": "Feroz",
+    "texto": "aumente o dado de dano ou alcance de seu companheiro animal em um passo (d6 para d8, Próximo para Distante etc.)."
+   },
+   {
+    "nome": "Inteligente",
+    "texto": "seu companheiro recebe um bônus permanente de +1 em uma Experiência de companheiro à sua escolha."
+   },
+   {
+    "nome": "Luz no Fim do Túnel",
+    "texto": "seu personagem pode marcar 1 Esperança adicional. (Na ficha, p.33/352: 'Use esse espaço para marcar 1 Esperança adicional do seu personagem.')",
+    "textoLivro": "seu personagem pode marcar 1 Ponto de Esperança adicional. (Na ficha, p.33/352: 'Use esse espaço para marcar 1 Ponto de Esperança adicional do seu personagem.')"
+   },
+   {
+    "nome": "Resiliente",
+    "texto": "seu companheiro recebe 1 Estresse adicional.",
+    "textoLivro": "seu companheiro recebe 1 Ponto de Fadiga adicional."
+   }
+  ],
+  "subidaDeNivel": "'AUMENTO DE NÍVEL DO COMPANHEIRO: Quando seu personagem sobe de nível, escolha uma opção disponível abaixo para seu companheiro e anote-a na ficha.' Ou seja, 1 opção por nível do personagem. A subclasse treinador dá opções extras: a Habilidade Fundamental 'Companheiro Animal' repete 'Quando seu personagem subir de nível, escolha também uma das opções de aumento de nível na ficha do seu companheiro'; a Habilidade de Especialização 'Treinamento Especializado' concede 'uma opção de aumento de nível adicional'; e a Habilidade de Maestria 'Treinamento Avançado' concede 'duas opções de aumento de nível adicionais'. Além disso, sempre que o personagem recebe uma nova Experiência, o companheiro também recebe uma, começando em +2.",
+  "quandoCai": "'DANO COMO PONTOS DE FADIGA: Quando seu companheiro sofre qualquer quantidade de dano, ele marca 1 Estresse. Ao marcar o último Estresse, ele sai de cena (escondendo-se, fugindo ou algo parecido). Ele fica indisponível até o início do seu próximo descanso longo, quando retorna recuperado com Estresse 1. Quando você escolhe um movimento de repouso para recuperar sua Estresse, seu companheiro recupera a mesma quantidade.' O companheiro não morre: sai de cena. A habilidade de maestria do treinador 'Amigo Leal' permite, uma vez por descanso longo, trocar quem sofre o dano quando um ataque faria você marcar seu último Pontos de Vida ou seu companheiro marcar a última Estresse, desde que vocês estejam Próximos e fiquem Corpo a Corpo."
+ },
+ "observacoes": [
+  "As fichas 'filhas' NÃO estão em DH-Fichas-Adicionais.pdf (esse arquivo só tem guia do mestre, criação de personagem, guia de jogo, ficha de apoio, equipamento e as 10 fichas de multiclasse). Elas estão no apêndice do livro principal: 'DRUIDa — forma de fera' nas p.350-351 e 'caçador — companheiro animal' na p.352 do DH-DigitalRegras.pdf (mesma arte da p.33).",
+  "No livro pt-BR a numeração impressa coincide com a numeração do PDF (p. impressa 36 = p. 36 do PDF). O Caçador está nas p.30-33, não nas p.41-42 — a ordem das classes é alfabética em português, diferente do inglês.",
+  "ERRATA APLICADA — Fera Poderosa (Powerful Beast), p.33 EN / p.37 e ficha p.350 pt-BR: o livro imprime 'Força +1 | Evasão +3'; gravei o valor corrigido 'Força +3 | Evasão +1'.",
+  "ERRATA JÁ CONTEMPLADA — Serpente Traiçoeira / Bote Peçonhento: a edição pt-BR já imprime 'dano físico direto'. Nada a corrigir.",
+  "ERRATA JÁ CONTEMPLADA — Híbrido Lendário: a edição pt-BR já imprime 'd10+8 de dano fís.' (o tipo de dano que faltava no inglês). Nada a corrigir.",
+  "ERRATA SEM EFEITO EM PT — Fera Mítica / Evoluído: a errata removia um 'the' duplicado do texto em inglês; o erro não existe em português.",
+  "ERRATA APLICADA — Companheiro Animal: a opção 'dano físico ou mágico' (errata p.40 e p.41/352 + ficha do Ranger) NÃO está na edição pt-BR Prévia 5, nem na p.32 nem na ficha p.33/352. Foi acrescentada em companheiroAnimal.base.dano e registrada em base.errataAplicada.",
+  "DIVERGÊNCIA COM O INGLÊS (mantive o texto impresso em pt-BR) — Aracnídeo Espreitador: o pt-BR imprime 'Corpo a Corpo (Acuidade) d6 de dano fís.' na p.36 E na ficha p.350; o inglês (Stalking Arachnid) traz 'Melee Finesse d6+1 phy'. O pt-BR perdeu o +1. Não é coberto pelas erratas.",
+  "DIVERGÊNCIA COM O INGLÊS — Serpente Traiçoeira / Bote Peçonhento: pt-BR diz 'contra qualquer número de alvos Próximos'; o inglês diz 'within Very Close range'. O ataque da forma é Muito Próximo, o que sugere que 'Próximos' é erro de tradução.",
+  "DIVERGÊNCIA COM O INGLÊS — Besta de Carga (Carrier) nas formas de 4º patamar: o pt-BR imprime 'até dois aliados' em Caçador Aéreo Mítico e em Fera Massiva; o inglês traz 'up to three willing allies' (Mythic Aerial Hunter) e 'up to four willing allies' (Massive Behemoth). Mantive 'dois' como impresso.",
+  "DIVERGÊNCIA COM O INGLÊS — Híbrido Mítico / Habilidades Híbridas: o pt-BR diz 'Escolha duas opções quaisquer de Forma de Fera de 1º a 3º patamar'; o inglês diz 'Choose any three Beastform options from Tiers 1–3'. Como o pt-BR manda escolher cinco vantagens e três habilidades, 'duas opções' parece erro de tradução. Mantive o impresso.",
+  "CONTRADIÇÃO INTERNA — Fera Mítica: o subtítulo diz '(Aprimoramento de 1º ou 2º patamar)', mas o texto de Evoluído diz 'escolha uma Forma de Fera de 1º patamar', omitindo o 2º patamar. O inglês confirma 'Pick a Tier 1 or Tier 2 Beastform option'. Mantive o texto impresso e registro aqui.",
+  "ERROS TIPOGRÁFICOS MANTIDOS COMO IMPRESSOS: 'Fera Lendária (Aprimoradamento de 1º patamar)' (deveria ser 'Aprimoramento'); 'Bônus de +9 rolagens de dano' (falta 'em'); 'marque 2 Ponto de Fadiga adicionais' (Híbrido Mítico); 'sem precisar fazer uma teste' (Lagarto Terrível); 'mas você não pode realizar outros movimentos .' (Carapaça Vigilante — espaço antes do ponto; o inglês diz 'you can't perform other actions without leaving this form', ou seja 'ações', não 'movimentos', e o pt-BR omitiu 'sem sair desta forma').",
+  "VARIAÇÃO ENTRE LIVRO E FICHA — Aracnídeo Espreitador: os verbos de vantagem são 'atacar, escalar, mover-se furtivamente' na p.36 e 'atacar, escalar, esgueirar' na ficha p.350. Adotei a redação da p.36 (texto de regras).",
+  "VARIAÇÃO DE ABREVIAÇÃO — o livro alterna 'Corpo a Corpo' e 'CaC' na linha de ataque de algumas formas (Fera Alada, Predador Furtivo, Trotador Robusto, Grande Fera Alada, Predador Aquático, Caçador Aéreo Mítico, Fera Aquática Épica). Registrei como 'Corpo a Corpo (CaC)' nesses casos; a ficha do apêndice usa 'Corpo a Corpo' por extenso em vários deles.",
+  "limitePorDescanso ficou null: o livro NÃO impõe limite de usos de Forma de Fera por descanso. O custo é 1 Ponto de Fadiga por transformação (mais Fadiga nas híbridas). Os limites 'uma vez por descanso' que aparecem são de habilidades internas das formas (Visão Aérea) ou da subclasse.",
+  "Fera Lendária e Fera Mítica não têm linha de atributo/Evasão/ataque próprios (herdam da forma escolhida); por isso 'modificadores' e 'ataque' vêm com null nessas duas entradas.",
+  "Fera Lendária, Híbrido Lendário, Fera Mítica e Híbrido Mítico não listam verbos de vantagem próprios (as híbridas escolhem vantagens de outras formas); 'verbos' vem como lista vazia nessas quatro.",
+  "Não há no livro nenhuma regra explícita sobre usar itens de inventário/consumíveis enquanto em Forma de Fera; o texto só proíbe armas e feitiços de cartas de domínio. Registrado como tal em regras.equipamento."
+ ]
+}

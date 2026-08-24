@@ -1,0 +1,724 @@
+/* ==========================================================================
+   ficha.css — a FICHA EM JOGO (Parte 7).
+
+   Três regras de forma que vêm do uso na mesa:
+
+   1. O polegar manda. As abas ficam embaixo, e tudo que se marca tem no
+      mínimo o alvo de toque do tema (--alvo-toque).
+   2. Nada de rolagem horizontal. As trilhas quebram em várias linhas em vez
+      de escorrer para fora da tela — uma classe com 12 Pontos de Vida no
+      nível 10 tem de caber num celular estreito.
+   3. O que muda com o toque muda VISUALMENTE na hora. O marcador acende
+      antes de a rede responder; se o servidor discordar, a tela se redesenha.
+   ========================================================================== */
+
+.ficha {
+  position: fixed;
+  inset: 0;
+  /* Acima da barra do app (--z-topo), abaixo dos modais (--z-modal) — assim o
+     visualizador de carta e o descanso continuam cobrindo a ficha. */
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  background: var(--cor-fundo);
+  /* Sem isso o iPhone esconde as abas atrás da barra de gestos. */
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* --- topo ---------------------------------------------------------------- */
+
+.ficha__topo {
+  flex: 0 0 auto;
+  background: var(--cor-fundo-2);
+  border-bottom: 1px solid var(--cor-borda);
+  padding: var(--e3) var(--e4);
+  padding-top: calc(var(--e3) + env(safe-area-inset-top));
+}
+
+.ficha__topoLinha {
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+}
+
+.ficha__identidade { flex: 1 1 auto; min-width: 0; }
+
+.ficha__nome {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-xl);
+  color: var(--cor-ouro-claro);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ficha__subtitulo {
+  margin: 2px 0 0;
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-suave);
+}
+
+/* --- corpo --------------------------------------------------------------- */
+
+.ficha__corpo {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: var(--e4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e4);
+}
+
+/* Numa coluna flex com altura limitada os filhos encolhem abaixo do próprio
+   conteúdo e o texto vaza da caixa. Trava aprendida na tela de criação. */
+.ficha__corpo > * { flex: 0 0 auto; }
+
+.ficha__bloco {
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  padding: var(--e4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e3);
+}
+
+.ficha__blocoTopo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e3);
+}
+
+.ficha__secao {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-md);
+  color: var(--cor-ouro);
+  margin: 0;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.ficha__nota {
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-fraco);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.ficha__rodape {
+  text-align: center;
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-fraco);
+  margin: 0;
+  padding-bottom: var(--e4);
+}
+
+/* --- abas ---------------------------------------------------------------- */
+
+.ficha__abas {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--cor-fundo-2);
+  border-top: 1px solid var(--cor-borda);
+}
+
+.ficha__aba {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: var(--alvo-toque);
+  padding: var(--e2) var(--e1);
+  background: none;
+  border: none;
+  border-top: 2px solid transparent;
+  color: var(--cor-texto-fraco);
+  cursor: pointer;
+  transition: color var(--transicao), border-color var(--transicao);
+}
+
+.ficha__aba.esta-ativa {
+  color: var(--cor-ouro-claro);
+  border-top-color: var(--cor-ouro);
+  background: linear-gradient(180deg, rgba(217, 171, 91, .10), transparent 70%);
+}
+
+.ficha__abaIcone { font-size: 1.15rem; line-height: 1; }
+.ficha__abaRotulo { font-size: var(--txt-xs); letter-spacing: .02em; }
+
+/* ==========================================================================
+   Trilhas de marcador — PV, Estresse, Armadura, Esperança
+   ========================================================================== */
+
+.trilha {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+  padding: var(--e3) 0;
+}
+
+.trilha + .trilha { border-top: 1px solid var(--cor-borda); }
+
+.trilha__topo {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+}
+
+.trilha__rotulo {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 600;
+  font-size: var(--txt-sm);
+  color: var(--cor-texto);
+}
+
+.trilha__conta {
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-sm);
+  color: var(--cor-texto-suave);
+  min-width: 3.2em;
+  text-align: right;
+}
+
+/* O wrap é obrigatório: no nível 10 uma trilha pode ter mais de dez
+   marcadores, e escorrer para fora da tela não é opção. */
+.trilha__pontos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+}
+
+.trilha__ponto {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: var(--raio-sm);
+  border: 2px solid var(--cor-borda-forte);
+  background: var(--cor-fundo-2);
+  cursor: pointer;
+  transition: background var(--transicao), border-color var(--transicao), transform 90ms;
+}
+
+.trilha__ponto:active { transform: scale(.9); }
+
+.trilha__ponto--losango {
+  border-radius: 50%;
+}
+
+.trilha__ajuda {
+  margin: 0;
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-fraco);
+  line-height: 1.45;
+}
+
+/* Cada trilha tem a sua cor: reconhecer a trilha de canto de olho, no meio de
+   uma cena, vale mais do que uniformidade. */
+.trilha--pv .trilha__ponto.esta-cheio {
+  background: var(--cor-perigo);
+  border-color: var(--cor-perigo);
+}
+.trilha--estresse .trilha__ponto.esta-cheio {
+  background: var(--cor-medo);
+  border-color: var(--cor-medo);
+}
+.trilha--armadura .trilha__ponto.esta-cheio {
+  background: var(--cor-info);
+  border-color: var(--cor-info);
+}
+.trilha--esperanca .trilha__ponto.esta-cheio {
+  background: var(--cor-esperanca);
+  border-color: var(--cor-esperanca);
+  box-shadow: 0 0 10px rgba(255, 201, 74, .35);
+}
+
+.trilha--pv .trilha__rotulo { color: #f0b3b3; }
+.trilha--estresse .trilha__rotulo { color: #d8c2ff; }
+.trilha--armadura .trilha__rotulo { color: #b5d8f2; }
+.trilha--esperanca .trilha__rotulo { color: var(--cor-esperanca); }
+
+/* ==========================================================================
+   Caixinhas de número (defesas, ouro, arma)
+   ========================================================================== */
+
+.ficha__grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(76px, 1fr));
+  gap: var(--e2);
+}
+
+.ficha__caixinha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--e2);
+  background: var(--cor-fundo-2);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+  text-align: center;
+}
+
+.ficha__caixinhaRotulo {
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-fraco);
+  line-height: 1.2;
+}
+
+.ficha__caixinhaValor {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-xl);
+  color: var(--cor-ouro-claro);
+  line-height: 1.1;
+}
+
+/* ==========================================================================
+   Traços
+   ========================================================================== */
+
+.ficha__tracos {
+  display: grid;
+  /* 84px porque "Conhecimento" e "Finesse (Acuidade)" precisam caber em três
+     colunas num celular de 390px — abaixo disso o nome vazava para fora da
+     caixa. O que garante o resto é a quebra de linha logo abaixo. */
+  grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+  gap: var(--e2);
+}
+
+.ficha__traco {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--e3) var(--e2);
+  background: var(--cor-fundo-2);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+  text-align: center;
+}
+
+.ficha__traco.e-conjuracao {
+  border-color: var(--cor-ouro-escuro);
+  box-shadow: var(--brilho-ouro);
+}
+
+.ficha__tracoValor {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-2xl);
+  color: var(--cor-texto);
+  line-height: 1;
+}
+
+.ficha__tracoNome {
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-suave);
+  line-height: 1.25;
+  /* O nome com glosa ("Finesse (Acuidade)") é mais largo que a coluna: deixa
+     quebrar em vez de escorrer para fora. */
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+/* Dentro do quadradinho do traço a glosa desce para a linha de baixo e fica
+   miúda — ela é uma nota de rodapé, não o nome. */
+.ficha__traco .glosa {
+  display: block;
+  font-size: 10px;
+}
+
+.ficha__tracoSelo {
+  font-size: 10px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--cor-ouro);
+}
+
+/* ==========================================================================
+   Condições
+   ========================================================================== */
+
+.ficha__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e1);
+  min-height: 36px;
+  padding: var(--e1) var(--e3);
+  border-radius: var(--raio-cheio);
+  border: 1px solid var(--cor-borda-forte);
+  background: var(--cor-superficie-alta);
+  color: var(--cor-texto);
+  font-size: var(--txt-sm);
+  cursor: pointer;
+  text-align: left;
+}
+
+.chip--condicao {
+  border-color: var(--cor-alerta);
+  color: #f0d9a8;
+  background: rgba(224, 162, 58, .12);
+}
+
+.chip__marca {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  opacity: .8;
+}
+
+/* ==========================================================================
+   Contadores das cartas
+   ========================================================================== */
+
+.ficha__contador {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  padding: var(--e2) var(--e3);
+  background: var(--cor-fundo-2);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+}
+
+.ficha__contadorNome {
+  margin: 0;
+  font-size: var(--txt-sm);
+  font-weight: 600;
+  color: var(--cor-texto);
+}
+
+.ficha__contadorValor {
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-lg);
+  color: var(--cor-ouro-claro);
+  min-width: 2ch;
+  text-align: center;
+}
+
+/* ==========================================================================
+   Equipamento e características
+   ========================================================================== */
+
+.ficha__equip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  padding: var(--e3);
+  background: var(--cor-fundo-2);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+  text-align: left;
+  color: var(--cor-texto);
+}
+
+.ficha__equip--clicavel { cursor: pointer; }
+.ficha__equip--clicavel:hover { border-color: var(--cor-ouro-escuro); }
+.ficha__equip--clicavel:active { transform: scale(.995); }
+
+.ficha__equipRotulo {
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-fraco);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.ficha__equipNome {
+  font-size: var(--txt-md);
+  color: var(--cor-ouro-claro);
+}
+
+.ficha__carac {
+  padding: var(--e3);
+  background: var(--cor-fundo-2);
+  border-left: 3px solid var(--cor-ouro-escuro);
+  border-radius: 0 var(--raio-sm) var(--raio-sm) 0;
+}
+
+.ficha__caracNome {
+  margin: 0 0 var(--e1);
+  font-size: var(--txt-sm);
+  color: var(--cor-ouro-claro);
+}
+
+.ficha__exp {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e3);
+  padding: var(--e2) var(--e3);
+  background: var(--cor-fundo-2);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+}
+
+/* ==========================================================================
+   Cartas de domínio na ficha
+   ========================================================================== */
+
+.ficha__cartas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--e3);
+}
+
+.ficha__carta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+  padding: var(--e3);
+  background: var(--cor-fundo-2);
+  border: 1px solid var(--cor-borda);
+  /* A cor do domínio entra pela variável que o JS injeta no style do cartão. */
+  border-left: 4px solid var(--cor-dominio, var(--cor-ouro));
+  border-radius: var(--raio-sm);
+}
+
+.ficha__cartaTopo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--e2);
+  flex-wrap: wrap;
+}
+
+.ficha__cartaTexto {
+  color: var(--cor-texto-suave);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   Inventário
+   ========================================================================== */
+
+.ficha__inventario {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+}
+
+.ficha__item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--e3);
+  padding: var(--e2) var(--e3);
+  background: var(--cor-fundo-2);
+  border-radius: var(--raio-sm);
+  font-size: var(--txt-sm);
+}
+
+/* ==========================================================================
+   Botão de descanso
+   ========================================================================== */
+
+.ficha__acoesGrandes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+}
+
+.ficha__botaoDescanso {
+  width: 100%;
+  min-height: 52px;
+  font-size: var(--txt-lg);
+  letter-spacing: .02em;
+}
+
+/* ==========================================================================
+   Cartão do roster — agora com um botão de excluir por cima
+   ========================================================================== */
+
+.ficha-cartao { position: relative; padding: 0; }
+
+.ficha-cartao__abrir {
+  display: block;
+  width: 100%;
+  padding: var(--e4);
+  background: none;
+  border: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ficha-cartao__excluir {
+  position: absolute;
+  right: var(--e2);
+  bottom: var(--e2);
+  opacity: .5;
+}
+
+.ficha-cartao__excluir:hover,
+.ficha-cartao__excluir:focus-visible { opacity: 1; }
+
+/* ==========================================================================
+   Descanso (modal)
+   ========================================================================== */
+
+.modal__caixa--descanso { max-width: 620px; }
+
+.descanso {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e3);
+}
+
+.descanso__tipos {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--e3);
+}
+
+@media (min-width: 520px) {
+  .descanso__tipos { grid-template-columns: 1fr 1fr; }
+}
+
+.descanso__tipo { text-align: left; }
+
+.descanso__migalha {
+  margin: 0;
+  font-size: var(--txt-xs);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--cor-ouro);
+}
+
+.descanso__titulo {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-lg);
+  color: var(--cor-texto);
+  margin: 0;
+}
+
+.descanso__subtitulo {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-sm);
+  color: var(--cor-ouro);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin: var(--e2) 0 0;
+}
+
+.descanso__movimento {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+}
+
+.descanso__movimento.esta-escolhido {
+  border-color: var(--cor-ouro-escuro);
+  box-shadow: var(--brilho-ouro);
+}
+
+.descanso__movTopo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e2);
+}
+
+.descanso__formula {
+  margin: 0;
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-xs);
+  color: var(--cor-ouro-claro);
+}
+
+.descanso__dado { max-width: 12ch; }
+
+.descanso__contagem {
+  text-align: center;
+  font-size: var(--txt-sm);
+  color: var(--cor-texto-suave);
+}
+
+/* --- a prévia ------------------------------------------------------------ */
+
+.descanso__mudancas {
+  padding: var(--e3);
+  background: var(--cor-fundo-2);
+  border: 1px solid var(--cor-ouro-escuro);
+  border-radius: var(--raio-sm);
+}
+
+.descanso__mudanca {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e2);
+  font-size: var(--txt-sm);
+}
+
+.descanso__de {
+  font-family: var(--fonte-mono);
+  color: var(--cor-texto-fraco);
+  text-decoration: line-through;
+}
+
+.descanso__seta { color: var(--cor-ouro); }
+
+.descanso__para {
+  font-family: var(--fonte-mono);
+  color: var(--cor-ouro-claro);
+}
+
+.descanso__resumo {
+  padding: var(--e2) var(--e3);
+  background: var(--cor-fundo-2);
+  border-radius: var(--raio-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+}
+
+.descanso__conta {
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-xs);
+  color: var(--cor-ouro-claro);
+}
+
+.descanso__mestre {
+  padding: var(--e3);
+  border: 1px dashed var(--cor-medo);
+  border-radius: var(--raio-sm);
+  background: var(--cor-medo-fundo);
+}
+
+.descanso__mestre p { margin: var(--e1) 0 0; }
+
+.descanso__erro {
+  margin: 0;
+  padding: var(--e2) var(--e3);
+  border-radius: var(--raio-sm);
+  background: rgba(224, 82, 82, .14);
+  border: 1px solid var(--cor-perigo);
+  color: #f2b8b8;
+  font-size: var(--txt-sm);
+}
+
+.descanso__aviso {
+  margin: 0;
+  padding: var(--e2) var(--e3);
+  border-radius: var(--raio-sm);
+  background: rgba(224, 162, 58, .12);
+  border: 1px solid var(--cor-alerta);
+  color: #f0d9a8;
+  font-size: var(--txt-sm);
+}

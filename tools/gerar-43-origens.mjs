@@ -7,6 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { comJambo } from './lib-glossario.mjs';
 
 const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const anc = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/ancestralidades.json'), 'utf8'));
@@ -50,7 +51,7 @@ L.push('};\n');
 L.push('/** Nomes alternativos de ancestralidade (carta x livro). */');
 L.push('const ANCESTRALIDADE_ALIASES = {');
 for (const a of anc.ancestralidades) {
-  const als = [...new Set([a.nome, a.nomeCarta, a.nomeLivro].filter(Boolean))];
+  const als = comJambo(a.nome, [a.nome, a.nomeCarta, a.nomeLivro]);
   L.push(`  ${j(a.id)}: ${j(als)},`);
 }
 L.push('};\n');
@@ -59,6 +60,13 @@ L.push('/** Comunidades: id -> nome e a característica. */');
 L.push('const COMUNIDADES = {');
 for (const c of com.comunidades) {
   L.push(`  ${j(c.id)}: { nome: ${j(c.nome)}, caracteristica: ${j(c.caracteristica.nome)} },`);
+}
+L.push('};\n');
+
+L.push('/** Nomes alternativos de comunidade — as 9 mudam na tradução da Jambô. */');
+L.push('const COMUNIDADE_ALIASES = {');
+for (const c of com.comunidades) {
+  L.push(`  ${j(c.id)}: ${j(comJambo(c.nome, [c.nome, c.nomeCarta]))},`);
 }
 L.push('};\n');
 
@@ -87,6 +95,10 @@ function normalizarComunidade_(nome) {
   const ids = Object.keys(COMUNIDADES);
   for (let i = 0; i < ids.length; i++) {
     if (ids[i] === alvo || chaveTexto_(COMUNIDADES[ids[i]].nome) === alvo) return ids[i];
+    const lista = COMUNIDADE_ALIASES[ids[i]] || [];
+    for (let k = 0; k < lista.length; k++) {
+      if (chaveTexto_(lista[k]) === alvo) return ids[i];
+    }
   }
   return null;
 }

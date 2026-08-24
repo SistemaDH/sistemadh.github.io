@@ -6,6 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { comJambo } from './lib-glossario.mjs';
 
 const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dados = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/classes.json'), 'utf8'));
@@ -52,7 +53,7 @@ L.push('};\n');
 L.push('/** Nomes alternativos de classe que aparecem no livro e nas cartas. */');
 L.push('const CLASSE_ALIASES = {');
 for (const c of dados.classes) {
-  const als = [...new Set([c.nome, c.id, (c.nomeLivro || '').trim()].filter(Boolean))].sort();
+  const als = comJambo(c.nome, [c.nome, c.id, (c.nomeLivro || '').trim()]);
   L.push(`  ${j(c.id)}: ${j(als)},`);
 }
 L.push('};\n');
@@ -61,7 +62,7 @@ L.push('/** Nomes alternativos de subclasse (carta x livro). */');
 L.push('const SUBCLASSE_ALIASES = {');
 for (const c of dados.classes) {
   for (const s of c.subclasses) {
-    const als = [...new Set([s.nome, s.nomeCarta, s.nomeLivro].filter(Boolean))].sort();
+    const als = comJambo(s.nome, [s.nome, s.nomeCarta, s.nomeLivro]);
     L.push(`  ${j(s.id)}: ${j(als)},`);
   }
 }

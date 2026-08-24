@@ -16,9 +16,13 @@ planilha do Google Sheets.
 > **Parte 6:** criação de ficha guiada — as 9 etapas do capítulo 1, com os
 > guias de classe do apêndice e o visualizador de cartas em PNG.
 >
-> **Regra de fonte:** as CARTAS em PNG são a fonte confiável em português. O PDF
-> do livro em pt-BR é uma tradução automática ruim e só serve como conferência
-> estrutural. As erratas oficiais (em inglês) valem sobre o livro.
+> **Regra de fonte:** as CARTAS em PNG são a fonte confiável em português.
+> Existem DOIS PDFs do livro em pt-BR: `Daggerheart regras.pdf` (tradução
+> automática ruim) e `DH-DigitalRegras.pdf` (**tradução oficial da Jambô,
+> Prévia 5** — bem melhor). Os dois são PRÉ-ERRATA, então as erratas oficiais
+> em inglês continuam valendo sobre os dois. A conferência completa contra o
+> livro da Jambô está em `docs/conferencia-livro-jambo.md`: nenhum número do
+> sistema precisou de correção.
 
 ---
 
@@ -37,6 +41,7 @@ sistema/
 │   ├── util.js             helpers de DOM, datas, localStorage
 │   ├── api.js              conversa com o Apps Script (POST + plano B JSONP)
 │   ├── dados.js            carrega os catálogos de data/*.json sob demanda
+│   ├── glossario.js        o parêntese com o termo da Jambô
 │   ├── estado.js           estado único do app + ações
 │   ├── ui.js               avisos, modais, confirmações
 │   ├── app.js              ponto de entrada e troca de telas
@@ -59,7 +64,9 @@ sistema/
 │   ├── condicoes.json      condições oficiais + os sinônimos do livro
 │   ├── contadores.json     as 20 cartas/características que guardam estado
 │   ├── criacao.json        as 9 etapas e os números fixos do nível 1
-│   └── guias-de-classe.json as 9 folhas "Guia de Caráter" do apêndice
+│   ├── guias-de-classe.json as 9 folhas "Guia de Caráter" do apêndice
+│   ├── fichas-filhas.json  24 Formas de Fera + 8 evoluções do Companheiro
+│   └── glossario.json      as duas traduções pt-BR lado a lado
 ├── assets/cartas/
 │   ├── dominios/<DOM>/     189 PNGs oficiais
 │   ├── subclasses/<CLASSE>/ 54 PNGs oficiais
@@ -90,7 +97,12 @@ sistema/
     ├── gerar-46-condicoes.mjs  regenera backend/46_Condicoes.gs
     ├── gerar-47-contadores.mjs regenera backend/47_Contadores.gs
     ├── gerar-48-criacao.mjs    regenera backend/48_Criacao.gs
+    ├── gerar-41-dominios.mjs   regenera backend/41_Dominios.gs
+    ├── gerar-49-fichas-filhas.mjs regenera backend/49_FichasFilhas.gs
+    ├── gerar-4A-glossario.mjs  regenera backend/4A_Glossario.gs
+    ├── lib-glossario.mjs       põe os nomes da Jambô nas tabelas de alias
     ├── montar-guias-de-classe.py  monta data/guias-de-classe.json
+    ├── montar-fichas-filhas.py    monta data/fichas-filhas.json
     └── capturar-telas.mjs      prints do assistente num "celular"
 ```
 
@@ -169,6 +181,17 @@ proficiência e pontuação de armadura nunca vêm do cliente: `validarFicha_()`
 chama `aplicarDerivados_()` em toda gravação. Os valores CORRENTES (PV
 marcados, Esperança gasta) são preservados; só os máximos são recalculados.
 
+**O app fala a língua das cartas, e mostra a do livro do lado.** As cartas em
+PNG e o livro da Jambô traduzem quase tudo com nomes diferentes. O app usa o
+nome da carta — é o que o jogador vê quando toca e a imagem abre — e mostra o
+termo da Jambô entre parênteses, para quem estiver com o livro na mão achar. É
+uma camada de EXIBIÇÃO (`js/glossario.js`): o que fica gravado na ficha é só o
+nome canônico.
+
+**"Oculto" é uma armadilha, e o gerador sabe disso.** Nas cartas é *Hidden*; na
+Jambô é *Cloaked*. Por isso o termo da Jambô não entra como sinônimo quando ele
+já é o nome canônico de outra coisa — `tools/lib-glossario.mjs` barra e avisa.
+
 **A carta em PNG é um componente só.** `js/componentes/carta.js` serve classe,
 subclasse, ancestralidade, comunidade e carta de domínio. Em qualquer lugar,
 tocar no nome abre a carta em tela cheia, com setas e arrastar para o lado.
@@ -211,9 +234,10 @@ Amarradas em `docs/pontas-soltas.md` (feito antes da Parte 6):
 - ✅ **Terminologia de condições** — canônicos: Oculto, Restrito, Vulnerável e
   Camuflado. O livro tem CINCO nomes diferentes para "Restrained"; todos viraram
   sinônimo de busca.
-- ✅ **Fichas paralelas** — o encaixe (`ficha.fichasFilhas`) já existe e o
-  servidor barra quem não pode ter. O conteúdo de Beastform e do Companheiro
-  Animal vira uma parte própria.
+- ✅ **Fichas paralelas** — feitas. 24 Formas de Fera (6 por patamar) e 8
+  evoluções do Companheiro Animal, tiradas do livro da Jambô com as erratas
+  aplicadas. O texto está gravado nas duas traduções (`texto` e `textoLivro`),
+  para a decisão de vocabulário poder virar sem reextrair nada.
 - ✅ **Revólver da errata p.317** — vale só para a arma primária da moldura
   Colosso das Terras Secas (d8+1/+4/+7/+10). O Revólver pequeno segue d6.
 
@@ -228,6 +252,11 @@ Ainda abertas:
 - **4 itens da moldura Festa da Besta** seguem ilegíveis no PDF.
 - **22 das 68 traduções de característica de equipamento** são minhas e esperam
   revisão (listadas em `docs/relatorio-equipamento.md`).
+- ✅ **Qual tradução é a oficial do app** — DECIDIDO. Onde existe carta, vale o
+  texto da carta; onde a mecânica diverge, vale quem bate com o oficial em
+  inglês; onde não existe carta, vale o livro da Jambô. E onde o nome de uma
+  mecânica muda, os dois aparecem, com o outro entre parênteses. Ver
+  `docs/conferencia-livro-jambo.md`.
 - **Trechos corrompidos do livro** (Ataque Furtivo, Caçador, Passo Sombrio,
   dica do Imparável) — todos de subida de nível, entram na Parte 8.
 - **Proficiência** ainda não tem regra própria; cai no tier do nível até a

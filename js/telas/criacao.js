@@ -24,6 +24,7 @@ import {
   abrirCarta, nomeQueAbreCarta,
   daCartaDeDominio, daSubclasse, daAncestralidade, daComunidade
 } from '../componentes/carta.js';
+import { prepararGlossario, nomeComGlossa, textoComGlossa } from '../glossario.js';
 
 const TRACOS_ORDEM = ['agilidade', 'forca', 'finesse', 'instinto', 'presenca', 'conhecimento'];
 
@@ -256,7 +257,12 @@ export async function abrirCriacao({ aoCriar } = {}) {
               el('span', { class: 'selo', texto: `${c.pontosDeVidaIniciais} PV` })
             ]),
             el('p', { class: 'texto-sm lista-escolha__resumo', texto: guia ? guia.chamada : c.descricao.slice(0, 180) }),
-            el('p', { class: 'texto-sm texto-suave', texto: `Domínios: ${c.dominiosNomes.join(' e ')}` }),
+            el('p', { class: 'texto-sm texto-suave' }, [
+              document.createTextNode('Domínios: '),
+              nomeComGlossa(c.dominiosNomes[0]),
+              document.createTextNode(' e '),
+              nomeComGlossa(c.dominiosNomes[1])
+            ]),
             el('button', {
               type: 'button',
               class: `btn ${escolhida ? 'btn--principal' : 'btn--fantasma'} lista-escolha__botao`,
@@ -328,7 +334,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
             ...(fundacao.caracteristicas || []).map((f) =>
               el('p', { class: 'texto-sm' }, [
                 el('strong', { texto: `${f.nome}: ` }),
-                document.createTextNode(f.texto)
+                textoComGlossa(f.texto)
               ])),
             el('button', {
               type: 'button',
@@ -456,7 +462,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
     itens.forEach((item) => {
       grade.append(el('div', { class: `cartao grade-opcoes__item ${escolhido(item) ? 'esta-escolhido' : ''}` }, [
         nomeQueAbreCarta(item.nome, () => carta(item)),
-        el('p', { class: 'texto-sm texto-suave', texto: detalhe(item) }),
+        el('p', { class: 'texto-sm texto-suave' }, textoComGlossa(detalhe(item))),
         el('button', {
           type: 'button',
           class: `btn ${escolhido(item) ? 'btn--principal' : 'btn--fantasma'} btn--pequeno`,
@@ -729,7 +735,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
         classe.dominios.forEach((codigo) => {
           const doDominio = doClasse.filter((c) => c.dominio === codigo);
           if (!doDominio.length) return;
-          pai.append(el('h2', { class: 'criacao__secao', texto: doDominio[0].dominioNome }));
+          pai.append(el('h2', { class: 'criacao__secao' }, nomeComGlossa(doDominio[0].dominioNome)));
 
           const lista = el('div', { class: 'lista-escolha lista-escolha--compacta' });
           doDominio.forEach((c, i) => {
@@ -746,7 +752,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
                 el('span', { class: 'crescer' }),
                 el('span', { class: 'selo', texto: c.tipo })
               ]),
-              el('p', { class: 'texto-sm lista-escolha__resumo', texto: c.texto }),
+              el('p', { class: 'texto-sm lista-escolha__resumo' }, textoComGlossa(c.texto)),
               el('button', {
                 type: 'button',
                 class: `btn ${escolhida ? 'btn--principal' : 'btn--fantasma'} btn--pequeno`,
@@ -976,10 +982,16 @@ export async function abrirCriacao({ aoCriar } = {}) {
       }
     };
 
+    /** Uma linha da revisão. Cada pedaço do valor passa pela glosa. */
     function linha(rotulo, valor) {
+      const caixa = el('span');
+      String(valor).split(' · ').forEach((parte, i) => {
+        if (i) caixa.append(document.createTextNode(' · '));
+        caixa.append(nomeComGlossa(parte));
+      });
       return el('p', { class: 'revisao__linha' }, [
         el('span', { class: 'revisao__rotulo', texto: rotulo }),
-        el('span', { texto: String(valor) })
+        caixa
       ]);
     }
   }
@@ -1098,6 +1110,9 @@ function rascunhoVazio() {
 }
 
 async function carregarCatalogo() {
+  // O glossário entra no mesmo lote: ele precisa estar pronto ANTES da primeira
+  // tela desenhar, senão os parênteses da tradução da Jambô só apareceriam a
+  // partir do segundo passo.
   const [classes, ancestralidades, comunidades, cartasArquivo, equipamentos, criacao, tracos, guias] =
     await Promise.all([
       dados.carregar('classes'),
@@ -1107,7 +1122,8 @@ async function carregarCatalogo() {
       dados.carregar('equipamentos'),
       dados.carregar('criacao'),
       dados.carregar('tracos'),
-      dados.carregar('guias-de-classe')
+      dados.carregar('guias-de-classe'),
+      prepararGlossario()
     ]);
   return {
     classes: classes.classes,

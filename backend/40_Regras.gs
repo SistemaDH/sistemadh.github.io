@@ -69,6 +69,9 @@ function fichaVazia_() {
     condicoes: [],       // ver 46_Condicoes.gs
     contadores: {},      // fichas/marcadores/dados nas cartas — ver 47_Contadores.gs
     fichasFilhas: [],    // Beastform e Companheiro Animal — ver validarFichasFilhas_
+    descanso: {          // repouso — ver 4B_Descanso.gs
+      curtosSeguidos: 0, ultimo: null
+    },
     avancos: {},         // histórico de subida de nível
     anotacoes: '',
     meta: { schema: SCHEMA_FICHA }
@@ -117,7 +120,7 @@ function mesclarComEsqueleto_(ficha) {
   const saida = Object.assign({}, base, ficha);
   // Objetos de primeiro nível também recebem os campos que faltam.
   ['identidade', 'tracos', 'origem', 'cartas', 'recursos', 'defesas', 'equipamento',
-   'ouro', 'historia', 'contadores', 'meta'].forEach(function (chave) {
+   'ouro', 'historia', 'contadores', 'descanso', 'meta'].forEach(function (chave) {
     saida[chave] = Object.assign({}, base[chave], ficha[chave] || {});
   });
   return saida;
@@ -137,14 +140,9 @@ function mesclarComEsqueleto_(ficha) {
  * ficha.recursos: a forma de besta troca Evasão e traços por completo, e o
  * companheiro sobe de nível na ficha dele.
  *
- * O que existe AQUI é só o encaixe: a ficha principal já aceita a lista, com
- * tipo, nome e um balde de dados livre. Isso evita ter que migrar todas as
- * fichas já salvas quando a parte de fichas paralelas for feita de verdade.
- *
- * O que FALTA (parte própria, depois da criação de ficha):
- *  • as opções de Beastform por tier e as características de cada forma;
- *  • a tabela de evolução do Companheiro e a Experiência dele;
- *  • as erratas p.33, p.34, p.35 (Beastform) e p.41/352 (Companheiro).
+ * O ENCAIXE mora aqui (quem pode ter, quantas, o formato da lista) e o
+ * CONTEÚDO mora em 49_FichasFilhas.gs — as 24 Formas de Fera e as 8 evoluções
+ * do Companheiro, extraídas do livro da Jambô com as erratas aplicadas.
  */
 const TIPOS_FICHA_FILHA = {
   beastform: {
@@ -204,15 +202,64 @@ function validarFichasFilhas_(ficha) {
       problemas.push('Só cabe ' + def.maximo + ' ficha de ' + def.nome + ' por personagem.');
       continue;
     }
-    saida.push({
+    const filha = {
       tipo: tipo,
       nome: String(item.nome || def.nome).trim().slice(0, LIMITES.TAMANHO_NOME),
       nivel: Math.max(1, Math.min(10, Math.trunc(Number(item.nivel)) || 1)),
       dados: (item.dados && typeof item.dados === 'object' && !Array.isArray(item.dados)) ? item.dados : {}
-    });
+    };
+
+    // O CONTEÚDO de cada tipo é validado em 49_FichasFilhas.gs.
+    const nivelDono = Number(id.nivel) || 1;
+    if (tipo === 'beastform' && typeof validarFichaDeFera_ === 'function') {
+      problemas.push.apply(problemas, validarFichaDeFera_(filha.dados, nivelDono));
+    }
+    if (tipo === 'companheiro' && typeof validarFichaDeCompanheiro_ === 'function') {
+      problemas.push.apply(problemas, validarFichaDeCompanheiro_(filha.dados));
+    }
+
+    saida.push(filha);
   }
 
   ficha.fichasFilhas = saida;
+  return problemas;
+}
+
+/**
+ * Valida as cartas de domínio da ficha (mão + cofre).
+ *
+ * O conteúdo da checagem mora em 41_Dominios.gs; aqui a gente só descobre
+ * quais domínios a classe libera e normaliza a lista para IDs — porque na
+ * ficha em jogo as cartas andam da mão para o cofre o tempo todo, e uma carta
+ * que entrou pelo nome ("Redemoinho") tem de virar id antes de ser comparada.
+ */
+function validarCartasDaFicha_(ficha) {
+  const problemas = [];
+  if (typeof validarCartasDoPersonagem_ !== 'function') return problemas;
+
+  ficha.cartas = ficha.cartas || {};
+  const ativas = Array.isArray(ficha.cartas.ativas) ? ficha.cartas.ativas : [];
+  const cofre = Array.isArray(ficha.cartas.cofre) ? ficha.cartas.cofre : [];
+  if (!ativas.length && !cofre.length) {
+    ficha.cartas = { ativas: [], cofre: [] };
+    return problemas;
+  }
+
+  const id = ficha.identidade || {};
+  const dominios = (typeof dominiosDaClasse_ === 'function') ? dominiosDaClasse_(id.classe) : [];
+  const r = validarCartasDoPersonagem_(ativas, cofre, dominios, id.nivel);
+  if (!r.ok) problemas.push.apply(problemas, r.erros);
+
+  // Guarda sempre o ID canônico, nunca o nome digitado.
+  const paraId = function (item) {
+    const bruto = (item && typeof item === 'object') ? (item.id || item.nome) : item;
+    const carta = (typeof acharCarta_ === 'function') ? acharCarta_(bruto) : null;
+    return carta ? carta.id : null;
+  };
+  ficha.cartas = {
+    ativas: ativas.map(paraId).filter(function (x) { return x; }),
+    cofre: cofre.map(paraId).filter(function (x) { return x; })
+  };
   return problemas;
 }
 
@@ -257,6 +304,7 @@ function validarFicha_(fichaBruta) {
   if (typeof validarExperiencias_ === 'function') problemas = problemas.concat(validarExperiencias_(ficha));
   if (typeof validarCondicoes_ === 'function') problemas = problemas.concat(validarCondicoes_(ficha));
   if (typeof validarContadores_ === 'function') problemas = problemas.concat(validarContadores_(ficha));
+  problemas = problemas.concat(validarCartasDaFicha_(ficha));
   problemas = problemas.concat(validarFichasFilhas_(ficha));
   if (typeof validarOuro_ === 'function') {
     const vOuro = validarOuro_(ficha.ouro);

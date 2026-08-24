@@ -175,6 +175,63 @@ function executar_(p) {
         return ok_({ personagem: restaurarPersonagem_(jogador, p.id) });
       }
 
+      /* --- ficha em jogo ------------------------------------------------ */
+
+      /**
+       * Um ou mais toques na ficha: marcar PV, ligar condição, mexer num
+       * contador, mandar carta para o cofre. O cliente manda só a intenção;
+       * a ficha de partida é a que está gravada agora.
+       */
+      case 'ajustarFicha': {
+        const jogador = exigirSessao_(p.token);
+        let relatorio = null;
+        const r = mutarPersonagem_(jogador, p.id, p.versao, function (ficha) {
+          relatorio = aplicarAjustes_(ficha, p.ajustes);
+          if (relatorio.erros.length && !relatorio.mudancas.length) {
+            throw erroApi_(ERRO.DADOS_INVALIDOS, relatorio.erros[0], { problemas: relatorio.erros });
+          }
+          return { ficha: ficha, extra: relatorio, evento: 'ficha-ajustada' };
+        });
+        return ok_({
+          personagem: r.personagem,
+          mudancas: r.extra.mudancas,
+          avisos: r.extra.erros
+        });
+      }
+
+      /** O que o descanso VAI fazer. Não grava nada. */
+      case 'previaDescanso': {
+        const jogador = exigirSessao_(p.token);
+        const atual = obterPersonagem_(jogador, p.id);
+        return ok_({
+          previa: previaDoDescanso_(atual.ficha, p.tipo, p.escolhas),
+          versao: atual.versao
+        });
+      }
+
+      /** Os movimentos possíveis neste tipo de descanso, para montar a tela. */
+      case 'movimentosDeDescanso': {
+        const jogador = exigirSessao_(p.token);
+        const atual = obterPersonagem_(jogador, p.id);
+        return ok_({
+          tipo: p.tipo,
+          patamar: patamarDaFicha_(atual.ficha),
+          movimentosPorDescanso: DESCANSO.movimentosPorDescanso,
+          podeRepetirMovimento: DESCANSO.podeRepetirMovimento,
+          movimentos: movimentosDoDescanso_(p.tipo, atual.ficha)
+        });
+      }
+
+      /** Aplica o descanso de verdade e devolve o mesmo relatório da prévia. */
+      case 'aplicarDescanso': {
+        const jogador = exigirSessao_(p.token);
+        const r = mutarPersonagem_(jogador, p.id, p.versao, function (ficha) {
+          const feito = aplicarDescanso_(ficha, p.tipo, p.escolhas);
+          return { ficha: feito.ficha, extra: feito.previa, evento: 'descanso-' + feito.previa.tipo };
+        });
+        return ok_({ personagem: r.personagem, resultado: r.extra });
+      }
+
       /* --- mesa / configuração ----------------------------------------- */
       case 'lerConfig': {
         exigirSessao_(p.token);

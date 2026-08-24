@@ -206,7 +206,7 @@
 
 .grade-opcoes {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
   gap: 10px;
 }
 
@@ -215,6 +215,8 @@
   flex-direction: column;
   gap: 6px;
   align-items: flex-start;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .esta-escolhido {
@@ -352,10 +354,11 @@
 
 /* O nome que abre a carta — o gesto que se repete no app inteiro. */
 .nome-carta {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 36px;
+  /* Texto corrido, não flex: assim o nome, a glosa e o ícone quebram de linha
+     como uma frase quebra. Com flex, cada pedaço ia parar numa linha só dele
+     em coluna estreita ("Highborne" / "(Aristocrática)" / "🂠"). */
+  display: inline;
+  max-width: 100%;
   padding: 4px 2px;
   border: 0;
   background: none;
@@ -370,7 +373,10 @@
 }
 
 .nome-carta:hover { border-bottom-style: solid; }
-.nome-carta__icone { font-size: 13px; opacity: 0.7; }
+
+/* O ícone gruda na glosa (ou no nome, quando não há glosa) para nunca cair
+   sozinho numa linha. */
+.nome-carta__icone { font-size: 13px; opacity: .7; margin-right: 6px; white-space: nowrap; }
 
 .modal__caixa--carta {
   max-width: min(96vw, 560px);
@@ -500,3 +506,22 @@
 /* O aviso do rodapé é a explicação do botão travado — merece destaque. */
 .criacao__rodape .btn--principal:disabled + .criacao__rodapeAviso,
 .criacao__rodapeAviso { font-size: var(--txt-sm); }
+
+/* A GLOSA: o termo da tradução da Jambô, mostrado ao lado do nome canônico.
+   Precisa ser legível para quem procura no livro, e apagada o suficiente para
+   não parecer parte da regra. */
+.glosa {
+  margin-left: 5px;
+  font-family: var(--fonte-mono);
+  font-size: 0.82em;
+  font-weight: 400;
+  font-style: normal;
+  color: var(--cor-texto-fraco);
+  white-space: nowrap;
+}
+
+.nome-carta .glosa,
+.carta-visor__legenda .glosa,
+.criacao__secao .glosa {
+  color: var(--cor-ouro-escuro);
+}

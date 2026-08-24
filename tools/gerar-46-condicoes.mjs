@@ -7,6 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { comJambo, colisoes } from './lib-glossario.mjs';
 
 const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/condicoes.json'), 'utf8'));
@@ -50,7 +51,7 @@ L.push('};\n');
 L.push('/** Todo nome já visto no livro, nas cartas e no inglês. */');
 L.push('const CONDICAO_ALIASES = {');
 for (const c of d.condicoes) {
-  const als = [...new Set([c.nome, c.nomeIngles, ...(c.sinonimos || [])])];
+  const als = comJambo(c.nome, [c.nome, c.nomeIngles, ...(c.sinonimos || [])]);
   L.push(`  ${j(c.id)}: ${j(als)},`);
 }
 L.push('};\n');
@@ -150,3 +151,5 @@ function temCondicao_(ficha, nome) {
 
 fs.writeFileSync(path.join(RAIZ, 'backend/46_Condicoes.gs'), L.join('\n'), 'utf8');
 console.log('backend/46_Condicoes.gs gerado —', d.condicoes.length, 'condições');
+colisoes.forEach((c) => console.log(
+  `  ⚠ "${c.jambo}" NÃO entrou como sinônimo de "${c.canonico}": já é o nome canônico de outra ${c.categoria}.`));

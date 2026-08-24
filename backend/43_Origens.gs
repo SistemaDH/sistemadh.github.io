@@ -45,24 +45,24 @@ const ANCESTRALIDADES = {
 
 /** Nomes alternativos de ancestralidade (carta x livro). */
 const ANCESTRALIDADE_ALIASES = {
-  "anao": ["Anão","ANÃO","DWARF"],
-  "clank": ["Clank","CLANK","CLANQUEAR"],
-  "drakona": ["Drakona","DRAKONA"],
-  "elfo": ["Elfo","ELFO","ELF"],
-  "fada": ["Fada","FADA","FAERIE"],
-  "fauno": ["Fauno","FAUNO","FAUN"],
-  "firbolg": ["Firbolg","FIRBOLG"],
-  "fungril": ["Fungril","FUNGRIL"],
-  "galapa": ["Galapa","GALAPA"],
-  "gigante": ["Gigante","GIGANTE"],
-  "goblin": ["Goblin","GOBLIN"],
-  "halfling": ["Halfling","HALFLING"],
-  "humanos": ["Humanos","HUMANOS","HUMANO"],
-  "infernis": ["Infernis","INFERNIS"],
-  "katari": ["Katari","KATARI"],
-  "orc": ["Orc","ORC"],
-  "ribbet": ["Ribbet","RIBBET"],
-  "simiah": ["Simiah","SIMIAH"],
+  "anao": ["Anão","DWARF"],
+  "clank": ["Clank","CLANQUEAR"],
+  "drakona": ["Drakona"],
+  "elfo": ["ELF","Elfo"],
+  "fada": ["Fada","FAERIE"],
+  "fauno": ["FAUN","Fauno"],
+  "firbolg": ["Firbolg"],
+  "fungril": ["Fungril"],
+  "galapa": ["Galapa"],
+  "gigante": ["Gigante"],
+  "goblin": ["Goblin"],
+  "halfling": ["Halfling","Pequenino"],
+  "humanos": ["HUMANO","Humanos"],
+  "infernis": ["Infernis"],
+  "katari": ["Katari"],
+  "orc": ["Orc"],
+  "ribbet": ["Quacho","Ribbet"],
+  "simiah": ["Simiah","Símio"],
 };
 
 /** Comunidades: id -> nome e a característica. */
@@ -76,6 +76,19 @@ const COMUNIDADES = {
   "underborne": { nome: "Underborne", caracteristica: "Vida na Penumbra" },
   "wanderborne": { nome: "Wanderborne", caracteristica: "Mochila Nômade" },
   "wildborne": { nome: "Wildborne", caracteristica: "Pé-Leve" },
+};
+
+/** Nomes alternativos de comunidade — as 9 mudam na tradução da Jambô. */
+const COMUNIDADE_ALIASES = {
+  "highborne": ["Aristocrática","Highborne"],
+  "loreborne": ["Erudita","Loreborne"],
+  "orderborne": ["Disciplinada","Orderborne"],
+  "ridgeborne": ["Montanhesa","Ridgeborne"],
+  "seaborne": ["Marítima","Seaborne"],
+  "slyborne": ["Fora da lei","Slyborne"],
+  "underborne": ["Subterrânea","Underborne"],
+  "wanderborne": ["Nômade","Wanderborne"],
+  "wildborne": ["Silvestre","Wildborne"],
 };
 
 /* ------------------------------------------------------------------------ *
@@ -103,6 +116,10 @@ function normalizarComunidade_(nome) {
   const ids = Object.keys(COMUNIDADES);
   for (let i = 0; i < ids.length; i++) {
     if (ids[i] === alvo || chaveTexto_(COMUNIDADES[ids[i]].nome) === alvo) return ids[i];
+    const lista = COMUNIDADE_ALIASES[ids[i]] || [];
+    for (let k = 0; k < lista.length; k++) {
+      if (chaveTexto_(lista[k]) === alvo) return ids[i];
+    }
   }
   return null;
 }

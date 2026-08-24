@@ -163,6 +163,20 @@ export const api = {
   excluirPersonagem: (token, id) => chamar('excluirPersonagem', { token, id }),
   restaurarPersonagem: (token, id) => chamar('restaurarPersonagem', { token, id }),
 
+  /* --- ficha em jogo ---------------------------------------------------
+     Nos toques da ficha o cliente manda só a INTENÇÃO, não a ficha inteira.
+     `versao` é opcional de propósito: numa rajada de toques na mesma trilha,
+     mandar a versão só criaria CONFLITO à toa. Quem decide se o valor cabe é
+     o servidor. ------------------------------------------------------------ */
+  ajustarFicha: (token, id, ajustes, versao) =>
+    chamar('ajustarFicha', { token, id, ajustes, versao }),
+  previaDescanso: (token, id, tipo, escolhas) =>
+    chamar('previaDescanso', { token, id, tipo, escolhas }),
+  movimentosDeDescanso: (token, id, tipo) =>
+    chamar('movimentosDeDescanso', { token, id, tipo }),
+  aplicarDescanso: (token, id, tipo, escolhas, versao) =>
+    chamar('aplicarDescanso', { token, id, tipo, escolhas, versao }),
+
   lerConfig: (token, chave) => chamar('lerConfig', { token, chave }),
   gravarConfig: (token, chave, valor) => chamar('gravarConfig', { token, chave, valor }),
   listarJogadores: (token) => chamar('listarJogadores', { token })

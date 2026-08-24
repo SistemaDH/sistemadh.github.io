@@ -13,6 +13,7 @@
 
 import { el } from '../util.js';
 import { abrirModal } from '../ui.js';
+import { nomeComGlossa, textoComGlossa } from '../glossario.js';
 
 /**
  * @param {Object} opcoes
@@ -89,7 +90,7 @@ export function abrirCarta({ itens, indice = 0, aoEscolher, textoEscolher = 'Esc
       palco.append(reserva(item));
     }
 
-    legenda.textContent = item.nome || '';
+    legenda.replaceChildren(nomeComGlossa(item.nome || ''));
     contador.textContent = lista.length > 1 ? `${atual + 1} de ${lista.length}` : (item.rodape || '');
     anterior.hidden = lista.length < 2;
     proxima.hidden = lista.length < 2;
@@ -97,9 +98,10 @@ export function abrirCarta({ itens, indice = 0, aoEscolher, textoEscolher = 'Esc
 
   function reserva(item) {
     return el('div', { class: 'carta-visor__reserva' }, [
-      el('h3', { class: 'carta-visor__reservaTitulo', texto: item.nome || 'Carta' }),
+      el('h3', { class: 'carta-visor__reservaTitulo' }, nomeComGlossa(item.nome || 'Carta')),
       item.rodape ? el('p', { class: 'texto-sm', texto: item.rodape }) : null,
-      el('p', { class: 'carta-visor__reservaTexto', texto: item.texto || 'A imagem desta carta não está disponível.' })
+      el('p', { class: 'carta-visor__reservaTexto' },
+        item.texto ? textoComGlossa(item.texto) : 'A imagem desta carta não está disponível.')
     ]);
   }
 
@@ -185,7 +187,11 @@ export function nomeQueAbreCarta(texto, obterCarta, extras = {}) {
       if (dados) abrirCarta({ ...dados, ...extras });
     }
   }, [
-    el('span', { texto }),
-    el('span', { class: 'nome-carta__icone', 'aria-hidden': 'true' }, '🂠')
+    // O ícone vem ANTES do nome de propósito: no fim da linha ele caía sozinho
+    // numa terceira linha sempre que o nome levava glosa ("Highborne
+    // (Aristocrática) 🂠"). Na frente, ele marca o nome como tocável e nunca
+    // fica órfão.
+    el('span', { class: 'nome-carta__icone', 'aria-hidden': 'true' }, '🂠'),
+    nomeComGlossa(texto)
   ]);
 }

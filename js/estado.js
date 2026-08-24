@@ -9,6 +9,7 @@
 import { api } from './api.js';
 import { CHAVES } from './config.js';
 import { guardado } from './util.js';
+import { enfileirar, marcarPendente } from './fila.js';
 
 const estado = {
   /** null enquanto não sabemos se há sessão válida. */
@@ -170,6 +171,68 @@ export const acoes = {
       definir({ personagemAberto: null });
     }
     await acoes.carregarPersonagens();
+  },
+
+  /* ------------------------------------------------------------------------
+     Ficha em jogo — os toques
+     ---------------------------------------------------------------------- */
+
+  /**
+   * Manda um ou mais ajustes (marcar PV, ligar condição, mover carta).
+   *
+   * Três coisas de propósito:
+   *  • vai pela FILA: os toques saem um de cada vez, na ordem do dedo;
+   *  • NÃO manda `versao`: numa rajada na mesma trilha a versão já estaria
+   *    velha no segundo toque e viraria CONFLITO à toa. O servidor aplica
+   *    sobre o que estiver gravado — é ele quem sabe se o valor cabe;
+   *  • devolve as `mudancas` para a tela poder mostrar o alerta do livro
+   *    ("Estresse no limite: você fica Vulnerável…").
+   */
+  ajustarFicha(id, ajustes) {
+    const lista = Array.isArray(ajustes) ? ajustes : [ajustes];
+    marcarPendente(id, 1);
+    return enfileirar(id, async () => {
+      try {
+        const dados = await api.ajustarFicha(estado.token, id, lista);
+        if (estado.personagemAberto && estado.personagemAberto.id === id) {
+          definir({ personagemAberto: dados.personagem });
+        }
+        return dados;
+      } finally {
+        marcarPendente(id, -1);
+      }
+    });
+  },
+
+  /** Relê a ficha do servidor — usado quando um envio falha. */
+  async recarregarPersonagem(id) {
+    const dados = await api.obterPersonagem(estado.token, id);
+    if (estado.personagemAberto && estado.personagemAberto.id === id) {
+      definir({ personagemAberto: dados.personagem });
+    }
+    return dados.personagem;
+  },
+
+  /* ------------------------------------------------------------------------
+     Descanso
+     ---------------------------------------------------------------------- */
+
+  movimentosDeDescanso(id, tipo) {
+    return api.movimentosDeDescanso(estado.token, id, tipo);
+  },
+
+  /** O que o descanso VAI fazer. Não grava nada. */
+  previaDescanso(id, tipo, escolhas) {
+    return api.previaDescanso(estado.token, id, tipo, escolhas);
+  },
+
+  /** Aplica o descanso. Aqui a versão VAI: é uma ação única e deliberada. */
+  async aplicarDescanso(id, tipo, escolhas, versao) {
+    const dados = await enfileirar(id, () =>
+      api.aplicarDescanso(estado.token, id, tipo, escolhas, versao));
+    definir({ personagemAberto: dados.personagem });
+    await acoes.carregarPersonagens();
+    return dados;
   },
 
   /* ------------------------------------------------------------------------

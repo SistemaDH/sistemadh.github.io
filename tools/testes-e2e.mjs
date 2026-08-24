@@ -181,24 +181,198 @@ try {
     await pagina.waitForSelector('.ficha-cartao__nome', { timeout: 15000 });
   });
 
-  await passo('editar e salvar a ficha', async () => {
-    await pagina.click('.ficha-cartao');
-    await pagina.waitForSelector('.modal__caixa textarea');
-    await pagina.fill('.modal__caixa textarea', 'Devendo favor a um dragão.');
-    await pagina.getByRole('button', { name: 'Salvar' }).click();
+  /* --- Parte 7: a ficha em jogo ----------------------------------------- */
+
+  const abrirFichaEmJogo = async () => {
+    await pagina.click('.ficha-cartao__abrir');
+    // Espera o RODAPÉ, não o .ficha__abas: a barra de abas já existe vazia no
+    // instante em que a tela abre, então esperar por ela passa antes de a
+    // ficha ter chegado do servidor — e o teste lia zero.
+    await pagina.waitForSelector('.ficha__rodape', { timeout: 15000 });
+  };
+
+  /** Quantos marcadores de uma trilha estão acesos AGORA, na tela. */
+  const marcados = (classe) => pagina.locator(`.trilha--${classe} .trilha__ponto.esta-cheio`).count();
+
+  /**
+   * A versão que o servidor devolveu, lida do rodapé da ficha.
+   *
+   * É o único sinal confiável de "já gravou": o marcador acende OTIMISTA, sem
+   * esperar a rede, então contar marcadores acesos não prova nada. A versão só
+   * sobe quando o Apps Script gravou de verdade.
+   */
+  const versaoNaTela = async () => {
+    const txt = await pagina.locator('.ficha__rodape').first().textContent();
+    const m = /versão (\d+)/.exec(txt || '');
+    return m ? Number(m[1]) : -1;
+  };
+  const esperarGravar = async (versaoAnterior) => {
+    await pagina.waitForFunction((v) => {
+      const el = document.querySelector('.ficha__rodape');
+      const m = el && /versão (\d+)/.exec(el.textContent || '');
+      return Boolean(m) && Number(m[1]) > v;
+    }, versaoAnterior, { timeout: 20000 });
+  };
+
+  await passo('a ficha em jogo abre com as quatro abas', async () => {
+    await abrirFichaEmJogo();
+    for (const nome of ['Jogo', 'Cartas', 'Mochila', 'História']) {
+      await pagina.getByRole('tab', { name: nome }).waitFor({ timeout: 5000 });
+    }
+    await pagina.waitForSelector('.trilha--pv');
+    await pagina.waitForSelector('.trilha--estresse');
+    await pagina.waitForSelector('.trilha--esperanca');
+  });
+
+  await passo('marcar um Ponto de Vida grava no servidor', async () => {
+    if (await marcados('pv') !== 0) throw new Error('a ficha começou com PV marcado');
+    const antes = await versaoNaTela();
+    // Toca no 3º marcador: a trilha marca de 1 até 3 de uma vez.
+    await pagina.locator('.trilha--pv .trilha__ponto').nth(2).click();
+    await esperarGravar(antes);
+    if (await marcados('pv') !== 3) throw new Error(`ficou com ${await marcados('pv')} marcados`);
+  });
+
+  await passo('o toque sobrevive ao recarregar (foi mesmo para o servidor)', async () => {
+    await pagina.reload({ waitUntil: 'networkidle' });
+    await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+    await abrirFichaEmJogo();
+    if (await marcados('pv') !== 3) throw new Error(`voltou com ${await marcados('pv')} PV marcados`);
+  });
+
+  await passo('tocar no último marcado desmarca ele', async () => {
+    const antes = await versaoNaTela();
+    await pagina.locator('.trilha--pv .trilha__ponto').nth(2).click();
+    await esperarGravar(antes);
+    if (await marcados('pv') !== 2) throw new Error(`ficou com ${await marcados('pv')} marcados`);
+  });
+
+  await passo('uma rajada de toques não vira conflito', async () => {
+    // O ponto do enfileiramento: quatro toques em sequência, sem esperar.
+    const antes = await versaoNaTela();
+    const pontos = pagina.locator('.trilha--estresse .trilha__ponto');
+    for (const i of [0, 1, 2, 3]) await pontos.nth(i).click({ noWaitAfter: true });
+    // Quatro toques = quatro gravações; a versão tem de subir quatro vezes.
+    await pagina.waitForFunction((v) => {
+      const el = document.querySelector('.ficha__rodape');
+      const m = el && /versão (\d+)/.exec(el.textContent || '');
+      return Boolean(m) && Number(m[1]) >= v + 4;
+    }, antes, { timeout: 30000 });
+    if (await marcados('estresse') !== 4) throw new Error(`Estresse: ${await marcados('estresse')}`);
+    const conflito = await pagina.locator('.aviso--erro').count();
+    if (conflito) throw new Error('apareceu erro na rajada de toques');
+  });
+
+  await passo('ligar e desligar uma condição', async () => {
+    await pagina.getByRole('button', { name: '+ Condição' }).click();
+    await pagina.waitForSelector('.modal__caixa');
+    await pagina.locator('.modal__caixa .cartao--clicavel').first().click();
+    await pagina.waitForSelector('.chip--condicao', { timeout: 15000 });
+    await pagina.locator('.chip--condicao').first().click();
+    await pagina.getByRole('button', { name: 'Remover' }).click();
+    await pagina.waitForSelector('.chip--condicao', { state: 'detached', timeout: 15000 });
+  });
+
+  await passo('a aba Cartas manda uma carta para o cofre e traz de volta', async () => {
+    await pagina.getByRole('tab', { name: 'Cartas' }).click();
+    await pagina.waitForSelector('.ficha__carta');
+    const naMao = pagina.locator('button', { hasText: 'Guardar no cofre' });
+    const noCofre = pagina.locator('button', { hasText: 'Trazer para a mão' });
+    const antes = await naMao.count();
+
+    await naMao.first().click();
+    await pagina.waitForFunction(() => document.querySelectorAll(
+      '.ficha__cartas button').length > 0 &&
+      Array.from(document.querySelectorAll('.ficha__cartas button'))
+        .some((b) => b.textContent.trim() === 'Trazer para a mão'),
+    null, { timeout: 15000 });
+
+    await noCofre.first().click();
+    await pagina.waitForFunction((n) =>
+      document.querySelectorAll('.ficha__cartas button').length &&
+      Array.from(document.querySelectorAll('.ficha__cartas button'))
+        .filter((b) => b.textContent.trim() === 'Guardar no cofre').length === n,
+    antes, { timeout: 15000 });
+  });
+
+  await passo('tocar no nome da carta abre o PNG', async () => {
+    await pagina.locator('.ficha__carta .nome-carta').first().click();
+    await pagina.waitForSelector('.modal__caixa--carta', { timeout: 10000 });
+    await pagina.locator('.modal__caixa--carta').getByRole('button', { name: 'Fechar' }).click();
+    await pagina.waitForSelector('.modal__caixa--carta', { state: 'detached' });
+  });
+
+  await passo('o descanso curto mostra a prévia antes de aplicar', async () => {
+    await pagina.getByRole('tab', { name: 'Jogo' }).click();
+    await pagina.getByRole('button', { name: /Descansar/ }).click();
+    await pagina.waitForSelector('.descanso__tipos');
+    await pagina.getByRole('button', { name: /Descanso Curto/ }).click();
+    await pagina.waitForSelector('.descanso__movimento', { timeout: 15000 });
+
+    // "Só ficha, sem dados": o app pede o RESULTADO do dado, não rola.
+    const tratar = pagina.locator('.descanso__movimento', { hasText: 'Tratar Feridas' });
+    await tratar.locator('input.descanso__dado').fill('2');
+    await tratar.getByRole('button', { name: 'Escolher este' }).click();
+
+    const preparar = pagina.locator('.descanso__movimento', { hasText: 'Preparar-se' });
+    await preparar.getByRole('button', { name: 'Escolher este' }).click();
+
+    await pagina.getByRole('button', { name: 'Ver o que muda' }).click();
+    await pagina.waitForSelector('.descanso__mudancas', { timeout: 15000 });
+
+    // A conta tem de aparecer inteira: dado + patamar.
+    const conta = await pagina.locator('.descanso__conta').first().textContent();
+    if (!/d4 \(2\) \+ patamar 1 = 3/.test(conta)) throw new Error(`conta da prévia: "${conta}"`);
+    // E o Medo do Mestre é mostrado, nunca aplicado.
+    await pagina.waitForSelector('.descanso__mestre');
+  });
+
+  // A ficha entra aqui com 2 Pontos de Vida marcados e 2 de Esperança.
+  await passo('confirmar o descanso aplica o que a prévia mostrou', async () => {
+    await pagina.getByRole('button', { name: 'Confirmar descanso' }).click();
+    await pagina.waitForSelector('.aviso--sucesso', { timeout: 20000 });
+    await pagina.waitForSelector('.modal__caixa--descanso', { state: 'detached' });
+    // 2 marcados − (2 do dado + 1 do patamar) = 0.
+    await pagina.waitForFunction(() =>
+      document.querySelectorAll('.trilha--pv .trilha__ponto.esta-cheio').length === 0,
+      null, { timeout: 15000 });
+    // E a Esperança subiu 1 com o Preparar-se.
+    const esperanca = await pagina.locator('.trilha--esperanca .trilha__ponto.esta-cheio').count();
+    if (esperanca !== 3) throw new Error(`Esperança: ${esperanca}, esperava 3 (2 iniciais + 1)`);
+  });
+
+  await passo('a aba História salva as anotações', async () => {
+    await pagina.getByRole('tab', { name: 'História' }).click();
+    await pagina.waitForSelector('.ficha__corpo textarea');
+    await pagina.fill('.ficha__corpo textarea', 'Devendo favor a um dragão.');
+    await pagina.getByRole('button', { name: 'Salvar anotações' }).click();
     await pagina.waitForSelector('.aviso--sucesso', { timeout: 15000 });
-    await pagina.waitForSelector('.modal', { state: 'detached' });
   });
 
   await passo('o texto salvo volta do servidor', async () => {
     await pagina.reload({ waitUntil: 'networkidle' });
-    await pagina.waitForSelector('.ficha-cartao');
-    await pagina.click('.ficha-cartao');
-    await pagina.waitForSelector('.modal__caixa textarea');
-    const valor = await pagina.inputValue('.modal__caixa textarea');
+    await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+    await abrirFichaEmJogo();
+    await pagina.getByRole('tab', { name: 'História' }).click();
+    await pagina.waitForSelector('.ficha__corpo textarea');
+    const valor = await pagina.inputValue('.ficha__corpo textarea');
     if (valor !== 'Devendo favor a um dragão.') throw new Error(`veio: "${valor}"`);
-    await pagina.getByRole('button', { name: 'Fechar' }).click();
-    await pagina.waitForSelector('.modal', { state: 'detached' });
+  });
+
+  await passo('a ficha em jogo cabe no celular, sem rolagem horizontal', async () => {
+    await pagina.getByRole('tab', { name: 'Jogo' }).click();
+    const estoura = await pagina.evaluate(() => {
+      const corpo = document.querySelector('.ficha__corpo');
+      return corpo.scrollWidth > corpo.clientWidth + 1 ||
+        document.documentElement.scrollWidth > window.innerWidth + 1;
+    });
+    if (estoura) throw new Error('a ficha rola para o lado no celular');
+  });
+
+  await passo('fechar a ficha volta para a lista', async () => {
+    await pagina.locator('.ficha__topo .btn--icone').click();
+    await pagina.waitForSelector('.ficha', { state: 'detached', timeout: 15000 });
+    await pagina.waitForSelector('.ficha-cartao__abrir');
   });
 
   await passo('sair da conta volta para a abertura', async () => {

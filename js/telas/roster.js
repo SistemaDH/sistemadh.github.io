@@ -6,14 +6,12 @@
  * que segue as nove etapas do livro.
  */
 
-import { el, dataRelativa, travarBotao } from '../util.js';
+import { el, dataRelativa } from '../util.js';
 import { obterEstado, acoes, ehMestre, assinar } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
-import {
-  abrirModal, fecharModal, confirmar, avisarErro, avisarSucesso,
-  blocoCarregando, blocoVazio
-} from '../ui.js';
+import { confirmar, avisarErro, avisarSucesso, blocoVazio } from '../ui.js';
 import { abrirCriacao } from './criacao.js';
+import { abrirFichaEmJogo } from './ficha.js';
 
 export function telaRoster() {
   const raiz = el('div', { class: 'roster' });
@@ -77,9 +75,13 @@ export function telaRoster() {
     const detalhes = [p.ancestralidade, p.comunidade].filter(Boolean).join(' · ');
     const classe = [p.classe, p.subclasse].filter(Boolean).join(' · ');
 
-    return el('button', {
+    // O cartão é um <div> com um <button> dentro, não um <button> gigante:
+    // o botão de excluir precisa ficar por cima, e botão dentro de botão é
+    // HTML inválido (e o toque no celular vira loteria).
+    const abrir = el('button', {
       type: 'button',
-      class: 'cartao cartao--clicavel cartao--ornamentado ficha-cartao',
+      class: 'ficha-cartao__abrir',
+      'aria-label': `Abrir a ficha de ${p.nome}`,
       onClick: () => abrirFicha(p.id)
     }, [
       el('div', { class: 'ficha-cartao__topo' }, [
@@ -93,94 +95,50 @@ export function telaRoster() {
         el('span', { class: 'selo', texto: `Salvo ${dataRelativa(p.atualizadoEm)}` })
       ])
     ]);
+
+    const excluir = el('button', {
+      type: 'button',
+      class: 'btn btn--fantasma btn--icone ficha-cartao__excluir',
+      'aria-label': `Excluir a ficha de ${p.nome}`,
+      onClick: (ev) => { ev.stopPropagation(); pedirExclusao(p); }
+    }, '🗑');
+
+    return el('div', {
+      class: 'cartao cartao--clicavel cartao--ornamentado ficha-cartao'
+    }, [abrir, excluir]);
+  }
+
+  async function pedirExclusao(p) {
+    const certeza = await confirmar({
+      titulo: 'Excluir ficha',
+      mensagem: `“${p.nome}” sai da lista. A linha continua guardada na planilha, ` +
+        'então o Mestre consegue restaurar.',
+      confirmarTexto: 'Excluir',
+      perigo: true
+    });
+    if (!certeza) return;
+    try {
+      await acoes.excluirPersonagem(p.id);
+      desenharLista();
+      avisarSucesso('Ficha excluída.');
+    } catch (e) {
+      avisarErro(mensagemDoErro(e));
+    }
   }
 
   /* ---------------------------------------------------------------- */
 
 
-  async function abrirFicha(id) {
-    const { fechar, caixa } = abrirModal({ titulo: 'Abrindo…', conteudo: blocoCarregando() });
-    try {
-      const p = await acoes.abrirPersonagem(id);
-      caixa.replaceChildren(...conteudoFicha(p, fechar));
-    } catch (e) {
-      avisarErro(mensagemDoErro(e));
-      fechar();
-    }
-  }
-
   /**
-   * Ficha provisória da Parte 1: identidade + anotações.
-   * A ficha de jogo (PV, Estresse, Esperança, traços, cartas) entra depois.
+   * Abre a FICHA EM JOGO (telas/ficha.js) em tela cheia.
+   *
+   * Até a Parte 6 isto era um modalzinho com nome e anotações — um lugar de
+   * espera enquanto a ficha de verdade não existia. Agora existe: quatro abas,
+   * as trilhas que se marca com o dedo e o descanso. Ao fechar, a lista se
+   * redesenha para o cartão mostrar o "salvo há pouco" certo.
    */
-  function conteudoFicha(p, fechar) {
-    const nome = el('input', { class: 'campo__entrada', type: 'text', maxlength: 40, value: p.nome });
-    const anotacoes = el('textarea', {
-      class: 'campo__area',
-      maxlength: 5000,
-      placeholder: 'Anotações livres sobre o personagem…'
-    });
-    anotacoes.value = (p.ficha && p.ficha.anotacoes) || '';
-
-    const botaoSalvar = el('button', { type: 'button', class: 'btn btn--principal' }, 'Salvar');
-    botaoSalvar.addEventListener('click', () => {
-      const ficha = { ...p.ficha };
-      ficha.identidade = { ...ficha.identidade, nome: nome.value.trim() };
-      ficha.anotacoes = anotacoes.value;
-      travarBotao(botaoSalvar, (async () => {
-        try {
-          await acoes.salvarPersonagem(p.id, ficha, p.versao);
-          desenharLista();
-          avisarSucesso('Ficha salva.');
-          fechar();
-        } catch (e) {
-          avisarErro(mensagemDoErro(e));
-        }
-      })());
-    });
-
-    const botaoExcluir = el('button', { type: 'button', class: 'btn btn--perigo btn--pequeno' }, 'Excluir ficha');
-    botaoExcluir.addEventListener('click', async () => {
-      const certeza = await confirmar({
-        titulo: 'Excluir ficha',
-        mensagem: `“${p.nome}” sai da lista. A linha continua guardada na planilha, então o Mestre consegue restaurar.`,
-        confirmarTexto: 'Excluir',
-        perigo: true
-      });
-      if (!certeza) return;
-      try {
-        await acoes.excluirPersonagem(p.id);
-        desenharLista();
-        avisarSucesso('Ficha excluída.');
-        fechar();
-      } catch (e) {
-        avisarErro(mensagemDoErro(e));
-      }
-    });
-
-    return [
-      el('h2', { class: 'cartao__titulo', texto: p.nome }),
-      el('p', { class: 'texto-sm texto-fraco', texto: `Nível ${p.nivel} · salvo ${dataRelativa(p.atualizadoEm)} · versão ${p.versao}` }),
-      el('div', { class: 'pilha', style: 'margin-top:16px' }, [
-        el('div', { class: 'campo' }, [
-          el('span', { class: 'campo__rotulo', texto: 'Nome' }),
-          nome
-        ]),
-        el('div', { class: 'campo' }, [
-          el('span', { class: 'campo__rotulo', texto: 'Anotações' }),
-          anotacoes
-        ]),
-        el('p', {
-          class: 'campo__ajuda',
-          texto: 'Classe, ancestralidade, comunidade, traços, equipamento e cartas entram nas próximas partes — direto do livro.'
-        })
-      ]),
-      el('div', { class: 'modal__acoes' }, [
-        el('button', { type: 'button', class: 'btn btn--fantasma', onClick: fechar }, 'Fechar'),
-        botaoSalvar
-      ]),
-      el('div', { style: 'margin-top:12px;text-align:center' }, [botaoExcluir])
-    ];
+  function abrirFicha(id) {
+    abrirFichaEmJogo(id, { aoFechar: () => desenharLista() });
   }
 
   /* ---------------------------------------------------------------- */

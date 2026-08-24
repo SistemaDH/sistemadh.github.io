@@ -3,9 +3,8 @@
  *  Arquivo: 41_Dominios.gs
  *  Domínios e cartas de domínio — ÍNDICE do servidor.
  *
- *  Este arquivo é GERADO a partir de data/cartas-dominio.json (que por sua vez
- *  saiu da transcrição das 189 cartas oficiais em PNG, em português).
- *  NÃO edite à mão: mexa no JSON e gere de novo.
+ *  GERADO por tools/gerar-41-dominios.mjs a partir de data/dominios.json e
+ *  data/cartas-dominio.json. NÃO edite à mão.
  *
  *  Por que só um índice e não o texto inteiro: o servidor precisa VALIDAR
  *  escolhas (a carta existe? é desse domínio? o nível permite?), não exibir.
@@ -13,47 +12,42 @@
  *
  *  Regras do livro usadas aqui:
  *   • Cada domínio tem 21 cartas: 3 de nível 1 e 2 de cada nível de 2 a 10.
- *   • Só é possível escolher cartas de nível igual ou menor ao do personagem
- *     (livro, "Leitura de cartões de domínio", p.26).
- *   • O conjunto ativo ("loadout") tem 5 cartas; o excedente vai para o cofre
- *     (livro, p.26 e p.101).
- *   • Grimórios são exclusivos do domínio Códice (livro, p.26).
+ *   • Só é possível escolher cartas de nível igual ou menor ao do personagem.
+ *   • O conjunto ativo ("loadout") tem 5 cartas; o excedente vai para o cofre.
+ *   • Grimórios são exclusivos do domínio Códice.
  * ============================================================================
  */
 
 /** Quantidade de cartas que podem ficar ativas ao mesmo tempo. */
 const MAX_CARTAS_ATIVAS = 5;
 
-/** Nomes de domínio aceitos (o livro é inconsistente entre capítulos). */
+/** Nomes de domínio aceitos (as duas traduções do livro e as cartas). */
 const DOMINIO_ALIASES = {
-  ARCANA: ["ARCANA", "Arcana", "Arcano", "Arcanos"],
-  BLADE: ["BLADE", "Blade", "Lamina", "Lâmina"],
-  BONE: ["BONE", "Bone", "Osso", "Ossos"],
-  CODEX: ["CODEX", "Codex", "Codice", "Códice"],
-  GRACE: ["GRACE", "Graca", "Grace", "Graça"],
-  MIDNIGHT: ["MIDNIGHT", "Meia noite", "Meia-Noite", "Meia-noite", "Midnight"],
-  SAGE: ["SAGE", "Saber", "Sabio", "Sage", "Salvia", "Sábio", "Sálvia"],
-  SPLENDOR: ["Esplendor", "SPLENDOR", "Splendor"],
-  VALOR: ["VALOR", "Valor"],
+  ARCANA: ["ARCANA","Arcano","Arcanos"],
+  BLADE: ["BLADE","Lâmina"],
+  BONE: ["BONE","Falange","Osso","Ossos"],
+  CODEX: ["CODEX","Códice"],
+  GRACE: ["Graça","GRACE"],
+  MIDNIGHT: ["Meia noite","Meia-Noite","MIDNIGHT"],
+  SAGE: ["Sabedoria","Saber","Sábio","SAGE","Sálvia"],
+  SPLENDOR: ["Esplendor","SPLENDOR"],
+  VALOR: ["VALOR"],
 };
 
 /** Dados básicos de cada domínio. */
 const DOMINIOS = {
-  ARCANA: { nome: "Arcana", cor: '#8a5cf0', classes: ["Druida", "Feiticeiro"] },
-  BLADE: { nome: "Lâmina", cor: '#c0392b', classes: ["Guardião", "Guerreiro"] },
-  BONE: { nome: "Osso", cor: '#b9a887', classes: ["Patrulheiro", "Guerreiro"] },
-  CODEX: { nome: "Códice", cor: '#3f7fd0', classes: ["Bardo", "Mago"] },
-  GRACE: { nome: "Graça", cor: '#d4519a', classes: ["Bardo", "Ladino"] },
-  MIDNIGHT: { nome: "Meia-Noite", cor: '#2f3b6e', classes: ["Ladino", "Feiticeiro"] },
-  SAGE: { nome: "Sábio", cor: '#4c9a5b', classes: ["Druida", "Patrulheiro"] },
-  SPLENDOR: { nome: "Esplendor", cor: '#e0b13a', classes: ["Seraph", "Mago"] },
-  VALOR: { nome: "Valor", cor: '#d97e2b', classes: ["Guardião", "Seraph"] },
+  ARCANA: { nome: "Arcana", cor: "#8a5cf0", classes: ["Druida","Feiticeiro"] },
+  BLADE: { nome: "Lâmina", cor: "#c0392b", classes: ["Guardião","Guerreiro"] },
+  BONE: { nome: "Osso", cor: "#b9a887", classes: ["Patrulheiro","Guerreiro"] },
+  CODEX: { nome: "Códice", cor: "#3f7fd0", classes: ["Bardo","Mago"] },
+  GRACE: { nome: "Graça", cor: "#d4519a", classes: ["Bardo","Ladino"] },
+  MIDNIGHT: { nome: "Meia-Noite", cor: "#2f3b6e", classes: ["Ladino","Feiticeiro"] },
+  SAGE: { nome: "Sábio", cor: "#4c9a5b", classes: ["Druida","Patrulheiro"] },
+  SPLENDOR: { nome: "Esplendor", cor: "#e0b13a", classes: ["Seraph","Mago"] },
+  VALOR: { nome: "Valor", cor: "#d97e2b", classes: ["Guardião","Seraph"] },
 };
 
-/**
- * Índice das cartas: DOMINIO -> lista de [id, nome, nível, tipo, custo de recordar].
- * Formato de array (e não objeto) para o arquivo não ficar gigante.
- */
+/** As 189 cartas: [id, nome, nível, tipo, custo de recordar]. */
 const CARTAS_DOMINIO = {
   ARCANA: [
     ["arcana-andar-na-parede", "Andar na Parede", 1, "Feitiço", 1],
@@ -158,9 +152,9 @@ const CARTAS_DOMINIO = {
     ["grace-discurso-acalmante", "Discurso Acalmante", 4, "Habilidade", 1],
     ["grace-pelos-seus-olhos", "Pelos Seus Olhos", 4, "Feitiço", 1],
     ["grace-mergulhador-de-pensamentos", "Mergulhador de Pensamentos", 5, "Feitiço", 2],
-    ["grace-words-of-discord", "Words of Discord", 5, "Feitiço", 1],
+    ["grace-words-of-discord", "Palavras de Discórdia", 5, "Feitiço", 1],
     ["grace-nunca-ofuscado", "Nunca Ofuscado", 6, "Habilidade", 2],
-    ["grace-share-the-burden", "Share the Burden", 6, "Feitiço", 0],
+    ["grace-share-the-burden", "Partilhar o Fardo", 6, "Feitiço", 0],
     ["grace-carisma-infinito", "Carisma Infinito", 7, "Habilidade", 1],
     ["grace-tocado-pela-graca", "Tocado pela Graça", 7, "Habilidade", 2],
     ["grace-enfeiticar-em-massa", "Enfeitiçar em Massa", 8, "Feitiço", 3],
@@ -186,8 +180,8 @@ const CARTAS_DOMINIO = {
     ["midnight-sussurros-sombrios", "Sussurros Sombrios", 6, "Feitiço", 0],
     ["midnight-esquiva-desaparecente", "Esquiva Desaparecente", 7, "Feitiço", 1],
     ["midnight-tocado-pela-meia-noite", "Tocado pela Meia-Noite", 7, "Habilidade", 2],
-    ["midnight-carga-magica", "Carga Mágica", 8, "Feitiço", 1],
     ["midnight-cacador-das-sombras", "Caçador das Sombras", 8, "Habilidade", 2],
+    ["midnight-carga-magica", "Carga Mágica", 8, "Feitiço", 1],
     ["midnight-terror-noturno", "Terror Noturno", 9, "Feitiço", 2],
     ["midnight-tributo-do-crepusculo", "Tributo do Crepúsculo", 9, "Habilidade", 1],
     ["midnight-eclipse", "Eclipse", 10, "Feitiço", 2],
@@ -210,7 +204,7 @@ const CARTAS_DOMINIO = {
     ["sage-surto-selvagem", "Surto Selvagem", 7, "Feitiço", 2],
     ["sage-tocado-pelo-saber", "Tocado pelo Saber", 7, "Habilidade", 2],
     ["sage-barreira-rejuvenescedora", "Barreira Rejuvenescedora", 8, "Feitiço", 1],
-    ["sage-forest-sprites", "Forest Sprites", 8, "Feitiço", 2],
+    ["sage-forest-sprites", "Espíritos da Floresta", 8, "Feitiço", 2],
     ["sage-dominio-das-plantas", "Domínio das Plantas", 9, "Feitiço", 1],
     ["sage-templo-das-selvas", "Templo das Selvas", 9, "Habilidade", 2],
     ["sage-forca-da-natureza", "Força da Natureza", 10, "Feitiço", 2],

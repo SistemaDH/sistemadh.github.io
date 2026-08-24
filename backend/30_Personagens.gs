@@ -196,6 +196,74 @@ function salvarPersonagem_(jogador, id, ficha, versaoEsperada) {
 }
 
 /**
+ * Lê, altera e grava uma ficha dentro de UMA trava só.
+ *
+ * É o caminho dos toques da ficha em jogo (4C_Ajustes.gs) e do descanso
+ * (4B_Descanso.gs). A diferença para salvarPersonagem_ é de onde vem a ficha:
+ * ali o cliente manda a ficha inteira; aqui ele manda só a INTENÇÃO, e a ficha
+ * de partida é a que está gravada AGORA. Isso importa por dois motivos:
+ *
+ *  • o servidor continua sendo a fonte da verdade — quem decide se o Estresse
+ *    cabe é ele, não o navegador;
+ *  • um toque nunca sobrescreve uma alteração que o cliente ainda não viu.
+ *
+ * A trava otimista continua valendo: `versaoEsperada`, quando vem, precisa
+ * bater. O cliente pode omitir para dizer "aplique sobre o que estiver lá" —
+ * que é o certo para uma rajada de toques na mesma trilha.
+ *
+ * @param {Function} fn recebe (ficha, personagem) e devolve
+ *        { ficha, extra, evento } — `extra` volta junto na resposta.
+ */
+function mutarPersonagem_(jogador, id, versaoEsperada, fn) {
+  return comTrava_(function () {
+    const linha = acharPersonagem_(id);
+    if (!linha || String(linha.excluido).toUpperCase() === 'TRUE') {
+      throw erroApi_(ERRO.NAO_ENCONTRADO, 'Personagem não encontrado.');
+    }
+    if (!podeAcessar_(jogador, linha)) {
+      throw erroApi_(ERRO.SEM_PERMISSAO, 'Essa ficha não é sua.');
+    }
+    const versaoAtual = Number(linha.versao) || 1;
+    if (versaoEsperada !== undefined && versaoEsperada !== null &&
+        Number(versaoEsperada) !== versaoAtual) {
+      throw erroApi_(
+        ERRO.CONFLITO,
+        'Essa ficha foi alterada em outro lugar. Recarregue antes de salvar.',
+        { versaoAtual: versaoAtual }
+      );
+    }
+
+    const atual = personagemDaLinha_(linha, true);
+    const r = fn(atual.ficha, atual) || {};
+    const validada = validarFicha_(r.ficha || atual.ficha);
+    const json = JSON.stringify(validada);
+    if (json.length > LIMITE_DADOS_CHARS) {
+      throw erroApi_(ERRO.DADOS_INVALIDOS, 'A ficha ficou grande demais para uma célula da planilha.');
+    }
+
+    const espelho = espelhoDaFicha_(validada);
+    const atualizacao = {
+      nome: espelho.nome,
+      classe: espelho.classe,
+      subclasse: espelho.subclasse,
+      ancestralidade: espelho.ancestralidade,
+      comunidade: espelho.comunidade,
+      nivel: espelho.nivel,
+      versao: versaoAtual + 1,
+      schema: SCHEMA_FICHA,
+      atualizadoEm: agoraIso_(),
+      dados: json
+    };
+    atualizarLinha_(ABAS.PERSONAGENS, linha._linha, atualizacao);
+    registrarLog_(jogador, r.evento || 'personagem-ajustado', espelho.nome);
+    return {
+      personagem: personagemDaLinha_(Object.assign({}, linha, atualizacao), true),
+      extra: r.extra === undefined ? null : r.extra
+    };
+  });
+}
+
+/**
  * Exclusão lógica: a linha continua na planilha com excluido = TRUE.
  * Nada de perder ficha por toque errado no celular.
  */

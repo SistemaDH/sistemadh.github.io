@@ -502,7 +502,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 0,
-   "texto": "Quando você fizer um ataque bem-sucedido contra um alvo dentro do alcance Muito Próximo, pode gastar uma Esperança para usar o ataque contra todos os outros alvos dentro do alcance Muito Próximo.",
+   "texto": "Quando você fizer um ataque bem-sucedido contra um alvo dentro do alcance Muito Próximo, pode gastar uma Esperança para usar o ataque contra todos os outros alvos dentro do alcance Muito Próximo. Todos os adversários adicionais que você acertar sofrem metade do dano.",
    "imagem": "assets/cartas/dominios/BLADE/Redemoinho.png",
    "arquivo": "Redemoinho.png",
    "condicoes": [],
@@ -511,7 +511,10 @@
    ],
    "pendenteTraducao": false,
    "errata": "Errata p.329 (Whirlwind, Lâmina 1): texto revisado. A carta já está na versão corrigida.",
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "origem": {
+    "texto": "livro-jambo"
+   }
   },
   {
    "id": "blade-imprudente",
@@ -1642,14 +1645,17 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 0,
-   "texto": "Make a Spellcast Roll against a target within Close range. On a success, roll a number of d20s equal to your Spellcast trait. The target must make a reaction roll with a Difficulty equal to your highest result. On a success, the target must mark a Stress but isn't banished. Once per rest on a failure, they are banished from this realm.\nWhen the PCs roll with Fear, the Difficulty gains a −1 penalty and the target makes another reaction roll. On a success, they return from banishment.",
+   "texto": "Faça uma Jogada de Conjuração contra um alvo dentro do alcance Próximo. Em um sucesso, role um número de d20 igual ao seu traço de Conjuração. O alvo deve fazer uma jogada de reação com Dificuldade igual ao seu resultado mais alto. Em um sucesso, o alvo marca 1 Estresse, mas não é banido. Uma vez por descanso, se falhar, ele é banido deste reino.\nQuando os personagens rolarem com Medo, a Dificuldade sofre uma penalidade de -1 e o alvo faz outra jogada de reação. Em um sucesso, ele volta do banimento.",
    "imagem": "assets/cartas/dominios/CODEX/Banir.png",
    "arquivo": "Banir.png",
    "condicoes": [],
    "dependencias": [],
    "pendenteTraducao": true,
    "errata": null,
-   "observacao": "Diferente de todas as outras cartas do maço (que estão em português), o corpo do texto desta carta está impresso inteiramente em inglês, apesar do título 'BANIR' estar em português. Transcrito exatamente como impresso, sem tradução."
+   "observacao": "Diferente de todas as outras cartas do maço (que estão em português), o corpo do texto desta carta está impresso inteiramente em inglês, apesar do título 'BANIR' estar em português. Transcrito exatamente como impresso, sem tradução.",
+   "origem": {
+    "texto": "livro-jambo"
+   }
   },
   {
    "id": "codex-simbolo-da-retaliacao",
@@ -2094,7 +2100,7 @@
    "id": "grace-words-of-discord",
    "dominio": "GRACE",
    "dominioNome": "Graça",
-   "nome": "Words of Discord",
+   "nome": "Palavras de Discórdia",
    "nomeImpresso": "WORDS OF DISCORD",
    "nivel": 5,
    "tipo": "Feitiço",
@@ -2109,7 +2115,10 @@
    ],
    "pendenteTraducao": true,
    "errata": null,
-   "observacao": "O nome impresso na carta está em inglês (\"Words of Discord\"), assim como o nome do arquivo; o texto da carta refere-se à magia como \"Palavras de Discórdia\" em português."
+   "observacao": "O nome impresso na carta está em inglês (\"Words of Discord\"), assim como o nome do arquivo; o texto da carta refere-se à magia como \"Palavras de Discórdia\" em português.",
+   "origem": {
+    "nome": "livro-jambo"
+   }
   },
   {
    "id": "grace-nunca-ofuscado",
@@ -2138,7 +2147,7 @@
    "id": "grace-share-the-burden",
    "dominio": "GRACE",
    "dominioNome": "Graça",
-   "nome": "Share the Burden",
+   "nome": "Partilhar o Fardo",
    "nomeImpresso": "SHARE THE BURDEN",
    "nivel": 6,
    "tipo": "Feitiço",
@@ -2155,7 +2164,10 @@
    ],
    "pendenteTraducao": true,
    "errata": null,
-   "observacao": "O nome impresso na carta está em inglês (\"Share the Burden\"), assim como o nome do arquivo; não foi traduzido nesta versão do baralho."
+   "observacao": "O nome impresso na carta está em inglês (\"Share the Burden\"), assim como o nome do arquivo; não foi traduzido nesta versão do baralho.",
+   "origem": {
+    "nome": "livro-jambo"
+   }
   },
   {
    "id": "grace-carisma-infinito",
@@ -2574,7 +2586,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Faça uma Jogada de Conjuração contra um alvo dentro do alcance Próximo. Em um sucesso, gaste 1 Esperança para conjurar uma magia supressora ao redor do alvo que abrange tudo dentro do alcance Muito Próximo dele e o acompanha enquanto se move.\nO alvo e tudo na área ficam Silenciados até que o Mestre gaste um Medo no turno dele para remover essa condição, você lance Silêncio novamente, ou você sofra dano grave. Enquanto Silenciados, eles não podem fazer barulho nem lançar magias.",
+   "texto": "Faça uma Jogada de Conjuração contra um alvo dentro do alcance Próximo. Em um sucesso, gaste 1 Esperança para conjurar uma magia supressora ao redor do alvo que abrange tudo dentro do alcance Muito Próximo dele e o acompanha enquanto se move.\nO alvo e tudo na área ficam Silenciados até que o Mestre gaste um Medo no turno dele para remover essa condição, você lance Silêncio novamente, ou você sofra dano maior. Enquanto Silenciados, eles não podem fazer barulho nem lançar magias.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Silêncio.png",
    "arquivo": "Silêncio.png",
    "condicoes": [
@@ -2588,7 +2600,10 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "origem": {
+    "texto": "livro-jambo"
+   }
   },
   {
    "id": "midnight-disfarce-em-massa",
@@ -3188,7 +3203,7 @@
    "id": "sage-forest-sprites",
    "dominio": "SAGE",
    "dominioNome": "Sábio",
-   "nome": "Forest Sprites",
+   "nome": "Espíritos da Floresta",
    "nomeImpresso": "FOREST SPRITES",
    "nivel": 8,
    "tipo": "Feitiço",
@@ -3204,7 +3219,10 @@
    ],
    "pendenteTraducao": true,
    "errata": null,
-   "observacao": "O arquivo \"Forest Sprites.png\" tem nome em inglês; o nome impresso na própria carta também está em inglês (\"FOREST SPRITES\"), não foi traduzido para português como as demais cartas do domínio. O rótulo de tipo também está impresso em inglês (\"SPELL\")."
+   "observacao": "O arquivo \"Forest Sprites.png\" tem nome em inglês; o nome impresso na própria carta também está em inglês (\"FOREST SPRITES\"), não foi traduzido para português como as demais cartas do domínio. O rótulo de tipo também está impresso em inglês (\"SPELL\").",
+   "origem": {
+    "nome": "livro-jambo"
+   }
   },
   {
    "id": "sage-dominio-das-plantas",
@@ -4254,5 +4272,72 @@
    "errata": null,
    "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
   }
- ]
+ ],
+ "conferenciaComOLivro": {
+  "quando": "2026-08-22",
+  "fonte": "DH-DigitalRegras.pdf (Jambô, Prévia 5), apêndice \"Cartas de domínio\", p.328-342",
+  "cartasComparadas": 189,
+  "divergenciasMecanicas": 4,
+  "corrigidas": [
+   {
+    "carta": "blade-redemoinho",
+    "campo": "texto",
+    "de": "Quando você fizer um ataque bem-sucedido contra um alvo dentro do alcance Muito Próximo, pode gastar uma Esperança para usar o ataque contra todos os outros alvos dentro do alcance Muito Próximo.",
+    "para": "Quando você fizer um ataque bem-sucedido contra um alvo dentro do alcance Muito Próximo, pode gastar uma Esperança para usar o ataque contra todos os outros alvos dentro do alcance Muito Próximo. Todos os adversários adicionais que você acertar sofrem metade do dano.",
+    "motivo": "A carta em PNG perdeu a última frase inteira. O livro da Jambô e o texto oficial em inglês trazem \"Todos os adversários adicionais que você acertar sofrem metade do dano.\" Sem ela a carta fica forte demais.",
+    "fonte": "livro-jambo"
+   },
+   {
+    "carta": "midnight-silencio",
+    "campo": "texto",
+    "de": "Faça uma Jogada de Conjuração contra um alvo dentro do alcance Próximo. Em um sucesso, gaste 1 Esperança para conjurar uma magia supressora ao redor do alvo que abrange tudo dentro do alcance Muito Próximo dele e o acompanha enquanto se move.\nO alvo e tudo na área ficam Silenciados até que o Mestre gaste um Medo no turno dele para remover essa condição, você lance Silêncio novamente, ou você sofra dano grave. Enquanto Silenciados, eles não podem fazer barulho nem lançar magias.",
+    "para": "Faça uma Jogada de Conjuração contra um alvo dentro do alcance Próximo. Em um sucesso, gaste 1 Esperança para conjurar uma magia supressora ao redor do alvo que abrange tudo dentro do alcance Muito Próximo dele e o acompanha enquanto se move.\nO alvo e tudo na área ficam Silenciados até que o Mestre gaste um Medo no turno dele para remover essa condição, você lance Silêncio novamente, ou você sofra dano maior. Enquanto Silenciados, eles não podem fazer barulho nem lançar magias.",
+    "motivo": "A carta diz \"dano grave\" e o oficial (Hush) diz \"Major damage\" = dano MAIOR. Com \"grave\" o feitiço durava mais do que deveria.",
+    "fonte": "livro-jambo"
+   },
+   {
+    "carta": "codex-banir",
+    "campo": "texto",
+    "de": "Make a Spellcast Roll against a target within Close range. On a success, roll a number of d20s equal to your Spellcast trait. The target must make a reaction roll with a Difficulty equal to your highest result. On a success, the target must mark a Stress but isn't banished. Once per rest on a failure, they are banished from this realm.\nWhen the PCs roll with Fear, the Difficulty gains a −1 penalty and the target makes another reaction roll. On a success, they return from banishment.",
+    "para": "Faça uma Jogada de Conjuração contra um alvo dentro do alcance Próximo. Em um sucesso, role um número de d20 igual ao seu traço de Conjuração. O alvo deve fazer uma jogada de reação com Dificuldade igual ao seu resultado mais alto. Em um sucesso, o alvo marca 1 Estresse, mas não é banido. Uma vez por descanso, se falhar, ele é banido deste reino.\nQuando os personagens rolarem com Medo, a Dificuldade sofre uma penalidade de -1 e o alvo faz outra jogada de reação. Em um sucesso, ele volta do banimento.",
+    "motivo": "O texto desta carta está INTEIRO em inglês no PNG. Traduzido a partir do livro da Jambô, no vocabulário das cartas.",
+    "fonte": "livro-jambo"
+   },
+   {
+    "carta": "grace-words-of-discord",
+    "campo": "nome",
+    "de": "Words of Discord",
+    "para": "Palavras de Discórdia",
+    "motivo": "O NOME desta carta ficou em inglês no PNG (o texto já estava em português). Nome vindo do livro da Jambô.",
+    "fonte": "livro-jambo"
+   },
+   {
+    "carta": "grace-share-the-burden",
+    "campo": "nome",
+    "de": "Share the Burden",
+    "para": "Partilhar o Fardo",
+    "motivo": "O NOME desta carta ficou em inglês no PNG (o texto já estava em português). Nome vindo do livro da Jambô.",
+    "fonte": "livro-jambo"
+   },
+   {
+    "carta": "sage-forest-sprites",
+    "campo": "nome",
+    "de": "Forest Sprites",
+    "para": "Espíritos da Floresta",
+    "motivo": "O NOME desta carta ficou em inglês no PNG (o texto já estava em português). Nome vindo do livro da Jambô.",
+    "fonte": "livro-jambo"
+   }
+  ],
+  "mantidasComoEstavam": [
+   {
+    "carta": "valor-golpe-no-chao",
+    "motivo": "O livro da Jambô diz alvos \"Próximos\"; a carta diz \"Muito Próximo\", que é o alcance do oficial (Ground Pound: \"within Very Close range\"). A carta fica."
+   },
+   {
+    "carta": "codex-livro-de-exota",
+    "motivo": "O livro da Jambô troca a jogada de REAÇÃO por um teste de conjuração. O oficial pede reaction roll, e jogada de reação não gera Esperança nem Medo — não é sinônimo. A carta fica."
+   }
+  ],
+  "nota": "Regra da Vanessa: onde existe carta, o texto da carta manda — menos quando a mecânica diverge. Aí vale quem bate com o texto oficial em inglês."
+ }
 }
