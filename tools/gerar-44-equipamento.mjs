@@ -12,6 +12,33 @@ const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/equipamentos.json'), 'utf8'));
 
 const j = (v) => JSON.stringify(v);
+
+/*
+ * O dano vem do SRD em inglês com o sufixo "phy"/"mag" — e ia parar na FICHA,
+ * em inglês, embaixo do nome da arma ("d8 phy"). O número é do SRD (já com as
+ * erratas); só o rótulo do tipo de dano vira português.
+ */
+const emPortugues = (dano) => String(dano || '')
+  .replace(/\bphy\b/g, 'fís')
+  .replace(/\bmag\b/g, 'mág');
+
+
+/*
+ * Conferência: nenhuma característica de arma/armadura pode ficar com tradução
+ * minha. Eram 22 (o livro velho não trazia essas linhas legíveis); todas foram
+ * conferidas no DH-DigitalRegras — e várias estavam diferentes do que eu tinha
+ * chutado: Devastating é "Atroz", não "Devastador"; Greedy é "Egoísta", não
+ * "Ganancioso"; Healing é "Vitalizante", não "Curativo".
+ */
+{
+  const minhas = [...(d.armas || []), ...(d.armaduras || [])]
+    .map((x) => x.caracteristica).filter(Boolean)
+    .filter((c) => c.fonteTraducao !== 'livro')
+    .map((c) => c.nomeIngles);
+  if (minhas.length) {
+    throw new Error(`característica sem tradução do livro: ${[...new Set(minhas)].join(', ')}`);
+  }
+}
 const L = [];
 
 L.push(`/**
@@ -47,10 +74,17 @@ const MAOS_DISPONIVEIS = 2;
 
 const arma = (a) => j({
   id: a.id, nome: a.nome, cat: a.categoria, tier: a.tier, tabela: a.tabela,
-  atributo: a.atributo, alcance: a.alcance, dano: a.dano, maos: a.maos,
+  atributo: a.atributo, alcance: a.alcance, dano: emPortugues(a.dano), maos: a.maos,
   carac: a.caracteristica ? a.caracteristica.nome : null
 });
 
+/*
+ * O equipamento de moldura NÃO entra em ARMAS/ARMADURAS de propósito: o Festim
+ * das Feras tem um "Cutelo" com estatísticas próprias, e o Capítulo 2 também
+ * tem um. Misturar faria a busca por NOME virar loteria. Eles ficam na lista
+ * separada e as funções de consulta caem nela quando não acham pelo caminho
+ * normal — assim a ficha do Festim valida sem que a validação saiba de moldura.
+ */
 L.push('/** Armas primárias e secundárias. */');
 L.push('const ARMAS = [');
 for (const a of d.armas) L.push(`  ${arma(a)},`);
@@ -59,7 +93,7 @@ L.push('];\n');
 L.push('/** Armaduras. */');
 L.push('const ARMADURAS = [');
 for (const a of d.armaduras) {
-  L.push(`  ${j({ id: a.id, nome: a.nome, tier: a.tier, limiares: a.limiares,
+  L.push(`  ${j({ id: a.id, nome: a.nome, tier: a.tier || 1, limiares: a.limiares,
                   pontuacao: a.pontuacaoArmadura,
                   carac: a.caracteristica ? a.caracteristica.nome : null })},`);
 }
@@ -68,7 +102,7 @@ L.push('];\n');
 L.push('/** Nomes alternativos: o do livro (às vezes errado) e o original em inglês. */');
 L.push('const EQUIPAMENTO_ALIASES = {');
 for (const a of [...d.armas, ...d.armaduras]) {
-  const als = [...new Set([a.nome, a.nomeIngles, a.nomeLivro, ...(a.aliases || [])].filter(Boolean))];
+  const als = [...new Set([a.nome, a.nomeIngles, a.nomeLivro, a.nomeAntigo, ...(a.aliases || [])].filter(Boolean))];
   if (als.length > 1) L.push(`  ${j(a.id)}: ${j(als)},`);
 }
 L.push('};\n');
@@ -76,8 +110,30 @@ L.push('};\n');
 L.push('/** Itens de saque e consumíveis. `nomes` guarda os sinônimos para a busca. */');
 L.push('const ITENS = [');
 for (const i of [...d.loot, ...d.consumiveis]) {
-  const nomes = [...new Set([i.nome, i.nomeIngles, ...(i.aliases || [])].filter(Boolean))];
+  // `nomeAntigo` guarda a tradução que o sistema usava antes de conferir o
+  // nome no livro. Continua achando na busca — foi o que a mesa leu por meses.
+  const nomes = [...new Set([i.nome, i.nomeIngles, i.nomeAntigo, ...(i.aliases || [])].filter(Boolean))];
   L.push(`  ${j({ id: i.id, nome: i.nome, tipo: i.id.startsWith('loot') ? 'saque' : 'consumivel', nomes })},`);
+}
+L.push('];\n');
+
+/*
+ * As MOLDURAS DE CAMPANHA. Depois da reimportação do livro bom, o equipamento
+ * delas tem a mesma forma do equipamento normal — categoria primária /
+ * secundária / armadura, patamar, característica — e é por isso que ele agora
+ * ENTRA nas mesmas tabelas de consulta: um personagem do Festim das Feras
+ * equipa uma "Frigideira de ferro" pelo mesmo caminho que qualquer outro
+ * equipa uma espada, e a validação nem precisa saber que existe moldura.
+ *
+ * O que continua separado é a LISTA por moldura, para a criação de ficha poder
+ * oferecer só as tabelas da moldura da mesa.
+ */
+L.push('/** As molduras de campanha e o equipamento de cada uma. */');
+L.push('const MOLDURAS = [');
+for (const m of (d.campanhas || [])) {
+  L.push(`  ${j({ id: m.id, nome: m.nome, regra: m.regra || '',
+                  substituiEquipamentoInicial: Boolean(m.substituiEquipamentoInicial),
+                  itens: m.itens.map((i) => i.id) })},`);
 }
 L.push('];\n');
 
@@ -86,9 +142,12 @@ L.push('const EQUIPAMENTO_CAMPANHA = [');
 for (const m of (d.campanhas || [])) {
   for (const i of m.itens) {
     L.push(`  ${j({ id: i.id, nome: i.nome, cat: i.categoria, moldura: m.nome,
+                    tabela: i.tabela || null, tier: i.tier || 1,
                     atributo: i.atributo || null, alcance: i.alcance || null,
-                    dano: i.dano || null, maos: i.maos || null,
-                    limiares: i.limiares || null, pontuacao: i.pontuacaoArmadura || null })},`);
+                    dano: i.dano ? emPortugues(i.dano) : null, maos: i.maos || null,
+                    limiares: i.limiares || null, pontuacao: i.pontuacaoArmadura || null,
+                    carac: (i.caracteristica && i.caracteristica.nome) || null,
+                    nomes: [...new Set([i.nome, i.nomeAntigo].filter(Boolean))] })},`);
   }
 }
 L.push('];\n');
@@ -98,7 +157,7 @@ L.push('/** Unidades de ouro e a conversão entre elas. */');
 L.push(`const OURO_UNIDADES = ${j(ouro.unidades)};`);
 L.push('/** Quantos punhados vale cada unidade. */');
 L.push('const OURO_EM_PUNHADOS = { punhado: 1, bolsa: 10, cofre: 100 };');
-L.push('/** Teto: não dá para ter mais de 1 cofre (livro/SRD). */');
+L.push('/** Teto: não dá para ter mais de 1 baú (livro p.104 / SRD). */');
 L.push('const OURO_MAXIMO_PUNHADOS = 100;\n');
 
 L.push(`/* ------------------------------------------------------------------------ *
@@ -128,6 +187,12 @@ function acharArma_(idOuNome) {
   for (let i = 0; i < ARMAS.length; i++) {
     if (baterNome_(ARMAS[i], alvo)) return ARMAS[i];
   }
+  // Não achou nas tabelas do Capítulo 2? Pode ser equipamento de MOLDURA de
+  // campanha (o Festim das Feras troca as tabelas iniciais por outras). A
+  // busca cai aqui por último para o "Cutelo" do capítulo 2 continuar ganhando
+  // do "Cutelo" do Festim quando alguém procura pelo nome.
+  const daMoldura = acharEquipamentoDeCampanha_(idOuNome);
+  if (daMoldura && (daMoldura.cat === 'primaria' || daMoldura.cat === 'secundaria')) return daMoldura;
   return null;
 }
 
@@ -135,6 +200,13 @@ function acharArma_(idOuNome) {
 function acharArmadura_(idOuNome) {
   const alvo = chaveTexto_(idOuNome);
   if (!alvo) return null;
+  const daMoldura = acharEquipamentoDeCampanha_(idOuNome);
+  if (daMoldura && daMoldura.cat === 'armadura') {
+    // A forma que validarEquipamento_ espera.
+    return { id: daMoldura.id, nome: daMoldura.nome, tier: daMoldura.tier || 1,
+             limiares: daMoldura.limiares, pontuacao: daMoldura.pontuacao, carac: daMoldura.carac,
+             moldura: daMoldura.moldura };
+  }
   for (let i = 0; i < ARMADURAS.length; i++) {
     if (baterNome_(ARMADURAS[i], alvo)) return ARMADURAS[i];
   }
@@ -221,14 +293,20 @@ function acharEquipamentoDeCampanha_(idOuNome) {
   if (!alvo) return null;
   for (let i = 0; i < EQUIPAMENTO_CAMPANHA.length; i++) {
     const e = EQUIPAMENTO_CAMPANHA[i];
-    if (chaveTexto_(e.id) === alvo || chaveTexto_(e.nome) === alvo) return e;
+    if (chaveTexto_(e.id) === alvo) return e;
+    // A lista de nomes traz o do livro bom e o que o sistema usava antes dele
+    // ("Marreta" era "Martelo de forja") — o antigo continua achando.
+    const nomes = e.nomes || [e.nome];
+    for (let k = 0; k < nomes.length; k++) if (chaveTexto_(nomes[k]) === alvo) return e;
   }
   return null;
 }
 
 /* ------------------------------------------------------------------------ *
  *  Ouro
- *  10 punhados = 1 bolsa · 10 bolsas = 1 cofre · no máximo 1 cofre.
+ *  10 punhados = 1 bolsa · 10 bolsas = 1 baú · no máximo 1 baú.
+ *
+ *  A chave gravada é 'cofres' por história; o livro (p.104) e a tela dizem BAÚ.
  * ------------------------------------------------------------------------ */
 
 /** Converte {punhados, bolsas, cofres} no total em punhados. */
@@ -270,8 +348,8 @@ function validarOuro_(ouro) {
     }
   });
   if ((Number(ouro.punhados) || 0) > 9) erros.push('A cada 10 punhados, marque 1 bolsa e limpe os punhados.');
-  if ((Number(ouro.bolsas) || 0) > 9) erros.push('A cada 10 bolsas, marque 1 cofre e limpe as bolsas.');
-  if ((Number(ouro.cofres) || 0) > 1) erros.push('Não dá para ter mais de 1 cofre.');
+  if ((Number(ouro.bolsas) || 0) > 9) erros.push('A cada 10 bolsas, marque 1 baú e limpe as bolsas.');
+  if ((Number(ouro.cofres) || 0) > 1) erros.push('Não dá para ter mais de 1 baú.');
   return { ok: erros.length === 0, erros: erros };
 }
 

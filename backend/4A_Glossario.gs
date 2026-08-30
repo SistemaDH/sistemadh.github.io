@@ -41,8 +41,8 @@ const GLOSSARIO = [
   { canonico: "Arcana", jambo: "Arcano", ingles: "Arcana", categoria: "dominio", glosarEmTexto: false, glosarNome: true },
   { canonico: "Osso", jambo: "Falange", ingles: "Bone", categoria: "dominio", glosarEmTexto: false, glosarNome: true },
   { canonico: "Sábio", jambo: "Sabedoria", ingles: "Sage", categoria: "dominio", glosarEmTexto: false, glosarNome: true },
-  { canonico: "Patrulheiro", jambo: "Caçador", ingles: "Ranger", categoria: "classe", glosarEmTexto: false, glosarNome: true },
-  { canonico: "Seraph", jambo: "Serafim", ingles: "Seraph", categoria: "classe", glosarEmTexto: false, glosarNome: true },
+  { canonico: "Caçador", jambo: "Caçador", ingles: "Ranger", categoria: "classe", glosarEmTexto: false, glosarNome: true },
+  { canonico: "Serafim", jambo: "Serafim", ingles: "Seraph", categoria: "classe", glosarEmTexto: false, glosarNome: true },
   { canonico: "Músico Errante", jambo: "trovador", ingles: "Troubadour", categoria: "subclasse", glosarEmTexto: false, glosarNome: true },
   { canonico: "Artífice das Palavras", jambo: "beletrista", ingles: "Wordsmith", categoria: "subclasse", glosarEmTexto: false, glosarNome: true },
   { canonico: "Explorador", jambo: "rastreador", ingles: "Wayfinder", categoria: "subclasse", glosarEmTexto: false, glosarNome: true },
@@ -73,6 +73,13 @@ const GLOSSARIO = [
   { canonico: "Underborne", jambo: "Subterrânea", ingles: "Underborne", categoria: "comunidade", glosarEmTexto: false, glosarNome: true },
   { canonico: "Wanderborne", jambo: "Nômade", ingles: "Wanderborne", categoria: "comunidade", glosarEmTexto: false, glosarNome: true },
   { canonico: "Wildborne", jambo: "Silvestre", ingles: "Wildborne", categoria: "comunidade", glosarEmTexto: false, glosarNome: true },
+  { canonico: "dano Severo", jambo: "dano grave", ingles: "Severe damage", categoria: "dano", glosarEmTexto: true, glosarNome: true },
+  { canonico: "dano Maior", jambo: "dano moderado", ingles: "Major damage", categoria: "dano", glosarEmTexto: true, glosarNome: true },
+  { canonico: "dano Menor", jambo: "dano leve", ingles: "Minor damage", categoria: "dano", glosarEmTexto: true, glosarNome: true },
+  { canonico: "cofre", jambo: "reserva", ingles: "vault", categoria: "carta", glosarEmTexto: false, glosarNome: true },
+  { canonico: "jogada", jambo: "teste", ingles: "roll", categoria: "termo", glosarEmTexto: false, glosarNome: true },
+  { canonico: "traço", jambo: "atributo", ingles: "trait", categoria: "termo", glosarEmTexto: false, glosarNome: true },
+  { canonico: "Dados de Dualidade", jambo: "Dado do Destino", ingles: "Duality Dice", categoria: "termo", glosarEmTexto: false, glosarNome: true },
 ];
 
 /**
@@ -86,9 +93,16 @@ const GLOSSARIO = [
 function jamboDe_(canonico) {
   const alvo = chaveTexto_(canonico);
   for (let i = 0; i < GLOSSARIO.length; i++) {
-    if (chaveTexto_(GLOSSARIO[i].canonico) === alvo) {
-      return GLOSSARIO[i].glosarNome === false ? '' : GLOSSARIO[i].jambo;
-    }
+    const t = GLOSSARIO[i];
+    if (chaveTexto_(t.canonico) !== alvo) continue;
+    if (t.glosarNome === false) return '';
+    // Termo que existe no glossário mas NÃO muda de nome entre as duas
+    // traduções: o parêntese seria "Caçador (Caçador)". Acontece quando o
+    // canônico passou a ser o próprio nome do livro — foi o caso do Caçador e
+    // do Serafim, onde quem diverge é a CARTA (RANGER, SERAPH), e essa
+    // diferença já vive nos aliases de busca.
+    if (chaveTexto_(t.jambo) === alvo) return '';
+    return t.jambo;
   }
   return '';
 }

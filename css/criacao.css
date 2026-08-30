@@ -525,3 +525,26 @@
 .criacao__secao .glosa {
   color: var(--cor-ouro-escuro);
 }
+
+/* --------------------------------------------------------------------------
+   Moldura de campanha na etapa de equipamento
+   -------------------------------------------------------------------------- */
+
+/*
+ * Quando a mesa joga um cenário que TROCA as tabelas iniciais (o Festim das
+ * Feras), o jogador precisa entender por que não há espada nenhuma na lista.
+ * Daí o bloco antes dos seletores, com a regra do livro.
+ */
+.criacao__moldura {
+  padding: var(--e3);
+  margin-bottom: var(--e4);
+  background: var(--cor-fundo-2);
+  border-left: 3px solid var(--cor-ouro);
+  border-radius: 0 var(--raio-sm) var(--raio-sm) 0;
+}
+
+.criacao__molduraNome {
+  margin: 0 0 var(--e2);
+  font-size: var(--txt-md);
+  color: var(--cor-ouro-claro);
+}

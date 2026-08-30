@@ -58,9 +58,16 @@ L.push(`/**
 function jamboDe_(canonico) {
   const alvo = chaveTexto_(canonico);
   for (let i = 0; i < GLOSSARIO.length; i++) {
-    if (chaveTexto_(GLOSSARIO[i].canonico) === alvo) {
-      return GLOSSARIO[i].glosarNome === false ? '' : GLOSSARIO[i].jambo;
-    }
+    const t = GLOSSARIO[i];
+    if (chaveTexto_(t.canonico) !== alvo) continue;
+    if (t.glosarNome === false) return '';
+    // Termo que existe no glossário mas NÃO muda de nome entre as duas
+    // traduções: o parêntese seria "Caçador (Caçador)". Acontece quando o
+    // canônico passou a ser o próprio nome do livro — foi o caso do Caçador e
+    // do Serafim, onde quem diverge é a CARTA (RANGER, SERAPH), e essa
+    // diferença já vive nos aliases de busca.
+    if (chaveTexto_(t.jambo) === alvo) return '';
+    return t.jambo;
   }
   return '';
 }

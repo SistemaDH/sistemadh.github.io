@@ -84,21 +84,91 @@ function ehConjuracao_(nome) {
   return false;
 }
 
-/**
- * Qual traço é o de Conjuração deste personagem.
- * Vem da subclasse (42_Classes.gs). Devolve '' se a subclasse não conjura.
- */
-function conjuracaoDoPersonagem_(ficha) {
-  const id = (ficha && ficha.identidade) || {};
-  if (typeof CLASSES === 'undefined' || typeof normalizarClasse_ !== 'function') return '';
-  const cid = normalizarClasse_(id.classe);
-  const sid = normalizarSubclasse_(id.subclasse);
-  if (!cid || !sid || !CLASSES[cid]) return '';
-  const subs = CLASSES[cid].subclasses || [];
+/** O traço de Conjuração de uma subclasse específica, ou '' se ela não conjura. */
+function conjuracaoDaSubclasse_(classeId, subclasseId) {
+  if (typeof CLASSES === 'undefined' || !classeId || !subclasseId) return '';
+  const c = CLASSES[classeId];
+  if (!c) return '';
+  const subs = c.subclasses || [];
   for (let i = 0; i < subs.length; i++) {
-    if (subs[i].id === sid) return normalizarTraco_(subs[i].conjuracao);
+    if (subs[i].id === subclasseId) return normalizarTraco_(subs[i].conjuracao);
   }
   return '';
+}
+
+/**
+ * TODOS os traços de Conjuração a que este personagem tem direito.
+ *
+ * Quase sempre é um só, o da subclasse. Vira dois quando a multiclasse traz
+ * uma carta de fundação com outro traço — e aí o livro (p.109) manda deixar o
+ * jogador escolher:
+ *
+ *   "Se a subclasse conceder um traço de Conjuração, você pode escolher usar
+ *    este traço ou o traço de Conjuração da sua subclasse original ao fazer um
+ *    teste de conjuração."
+ *
+ * O SRD diz o mesmo: "If your foundation cards specify different Spellcast
+ * traits, you can choose which one to apply when making a Spellcast roll."
+ *
+ * ⚠ Repare no "ao fazer um teste": a escolha é POR JOGADA, não permanente. O
+ * app não rola dado, então o que ele guarda é qual dos dois está valendo agora
+ * — que é o que os contadores de carta precisam para saber o teto ("fichas
+ * iguais ao seu traço de Conjuração"). Trocar é um toque.
+ */
+function conjuracoesDaFicha_(ficha) {
+  const id = (ficha && ficha.identidade) || {};
+  if (typeof CLASSES === 'undefined' || typeof normalizarClasse_ !== 'function') return [];
+  const saida = [];
+  const põe = function (traco, origem, subclasse) {
+    if (!traco) return;
+    for (let i = 0; i < saida.length; i++) if (saida[i].traco === traco) return;
+    saida.push({ traco: traco, origem: origem, subclasse: subclasse });
+  };
+
+  const cid = normalizarClasse_(id.classe);
+  const sid = (typeof normalizarSubclasse_ === 'function') ? normalizarSubclasse_(id.subclasse) : null;
+  põe(conjuracaoDaSubclasse_(cid, sid), 'subclasse', id.subclasse || '');
+
+  const mc = ficha && ficha.multiclasse;
+  if (mc && mc.classe && mc.subclasse) {
+    const cid2 = normalizarClasse_(mc.classe);
+    const sid2 = (typeof normalizarSubclasse_ === 'function') ? normalizarSubclasse_(mc.subclasse) : null;
+    põe(conjuracaoDaSubclasse_(cid2, sid2), 'multiclasse', mc.subclasse || '');
+  }
+  return saida;
+}
+
+/**
+ * Qual traço de Conjuração está valendo agora.
+ *
+ * Com uma opção só, é ela. Com duas, é a que o jogador marcou em
+ * 'ficha.conjuracaoEscolhida' — e, se ele não marcou nada, a da subclasse
+ * ORIGINAL, que é o padrão do livro ("use o traço definido pela sua nova
+ * subclasse" só vale para quem não tinha nenhum).
+ */
+function conjuracaoDoPersonagem_(ficha) {
+  const lista = conjuracoesDaFicha_(ficha);
+  if (!lista.length) return '';
+  const escolhido = normalizarTraco_((ficha && ficha.conjuracaoEscolhida) || '');
+  if (escolhido) {
+    for (let i = 0; i < lista.length; i++) if (lista[i].traco === escolhido) return escolhido;
+  }
+  return lista[0].traco;
+}
+
+/**
+ * Limpa uma escolha de Conjuração que não vale mais — por exemplo, a ficha
+ * desfez a multiclasse e ficou com a escolha da subclasse que sumiu.
+ */
+function validarConjuracao_(ficha) {
+  const problemas = [];
+  if (!ficha || !ficha.conjuracaoEscolhida) return problemas;
+  const escolhido = normalizarTraco_(ficha.conjuracaoEscolhida);
+  const lista = conjuracoesDaFicha_(ficha);
+  let vale = false;
+  for (let i = 0; i < lista.length; i++) if (lista[i].traco === escolhido) vale = true;
+  ficha.conjuracaoEscolhida = vale ? escolhido : '';
+  return problemas;
 }
 
 /**

@@ -139,14 +139,22 @@ Nenhuma delas mudou o sistema — estão registradas em
 
 ---
 
-## Ainda em aberto
+## Ainda em aberto — nada mais (varrido depois do A7)
 
-- **A decisão de vocabulário** (artefato "Cartas ou Jambô").
-- **A tela de ficha de jogo** — a criação grava tudo, mas abrir o personagem no
-  roster ainda mostra a tela simples da Parte 1. As fichas paralelas também
-  precisam dela para aparecer.
-- **Proficiência** cai no tier do nível até a Parte 8.
-- **22 traduções de característica de equipamento** ainda esperando sua revisão.
+Os quatro itens que estavam aqui **fecharam**, cada um na sua parte. Ficam
+listados para o histórico não se perder:
+
+- ~~A decisão de vocabulário~~ — fechada: o app fala a língua das cartas, com o
+  termo da Jambô entre parênteses. Ver a seção "A decisão de vocabulário", abaixo.
+- ~~A tela de ficha de jogo~~ — fechada na Parte 7 (ficha em jogo) e na C2
+  (fichas paralelas).
+- ~~Proficiência cai no tier do nível~~ — fechada na Parte 8: virou regra própria,
+  e o invariante E1 protege a separação entre patamar e Proficiência.
+- ~~22 traduções de característica de equipamento~~ — fechadas no B2, sem precisar
+  de revisão: as 22 estão no `DH-DigitalRegras.pdf`, e 8 delas estavam diferentes
+  do oficial.
+
+O índice vivo é o `BACKLOG.md`.
 
 ---
 

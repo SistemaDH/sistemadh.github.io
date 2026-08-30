@@ -1,0 +1,259 @@
+{
+ "versao": 1,
+ "fonte": "DH-DigitalRegras.pdf (Jambô, Prévia 5), páginas impressas 154 (MEDO), 162-163 (CONTAGENS REGRESSIVAS) e 164 (CONTAGENS DE LONGO PRAZO). Lidas como IMAGEM a 150 dpi. Regras de repouso do Mestre já levantadas na Parte 7 (pp. 105 e 181). Erratas conferidas.",
+ "medo": {
+  "textoDeAbertura": "Enquanto personagens recebem Pontos de Esperança, você recebe Pontos de Medo.",
+  "inicial": "No início da campanha, você começa com um número de Pontos de Medo igual ao número de personagens.",
+  "maximo": 12,
+  "textoMaximo": "Você pode ter até 12 Pontos de Medo.",
+  "entreSessoes": "Pontos de Medo são transferidos entre as sessões, então anote quantos tem no fim de cada sessão e comece a próxima com a mesma quantidade.",
+  "comoGanha": [
+   {
+    "id": "rolagem-com-medo",
+    "texto": "Sempre que um personagem rola com Medo, você ganha 1 Ponto de Medo.",
+    "quantidade": 1
+   },
+   {
+    "id": "descanso-curto",
+    "texto": "Descanso curto do grupo.",
+    "formula": "1d4"
+   },
+   {
+    "id": "descanso-longo",
+    "texto": "Descanso longo do grupo.",
+    "formula": "1d4 + número de personagens"
+   },
+   {
+    "id": "repouso-prolongado",
+    "texto": "Repouso prolongado de vários dias.",
+    "formula": "1d6 por personagem"
+   },
+   {
+    "id": "outros",
+    "texto": "Certos talentos e feitiços, e habilidades dos adversários."
+   }
+  ],
+  "comoGasta": [
+   {
+    "id": "interromper",
+    "custo": 1,
+    "texto": "Interromper os jogadores para fazer um movimento."
+   },
+   {
+    "id": "movimento-extra",
+    "custo": 1,
+    "texto": "Fazer um movimento do mestre adicional."
+   },
+   {
+    "id": "habilidade-adversario",
+    "custo": null,
+    "texto": "Usar a habilidade de Medo de um adversário.",
+    "nota": "Custa o número indicado na ficha do adversário."
+   },
+   {
+    "id": "habilidade-ambiente",
+    "custo": null,
+    "texto": "Usar a habilidade de Medo de um ambiente.",
+    "nota": "Custa o número indicado na ficha do ambiente."
+   },
+   {
+    "id": "experiencia-adversario",
+    "custo": 1,
+    "texto": "Adicionar a Experiência de um adversário à jogada."
+   }
+  ],
+  "dica": "Como em qualquer movimento do mestre, gastar Medo não deve prejudicar a diversão dos jogadores. Pontos de Medo são uma ferramenta para aprimorar a cena, criar tensão dramática e aumentar os riscos, não para interromper as ações heroicas de um personagem."
+ },
+ "contagens": {
+  "oQueE": "Você pode usar uma contagem regressiva para acompanhar o avanço de um evento, consequência ou movimento de adversário.",
+  "comoFunciona": "Cada vez que a contagem regressiva diminuir, gire o dado para reduzir seu valor em 1. Quando a contagem diminuir de 1 para 0, ela termina e aciona o evento esperado.",
+  "entreSessoes": "Se precisar continuar uma contagem regressiva de uma sessão para outra, anote o valor atual dela para continuar contando na próxima sessão.",
+  "tresElementos": [
+   {
+    "chave": "ativacao",
+    "nome": "Ativação",
+    "texto": "Qual momento da narrativa ativa a contagem regressiva?"
+   },
+   {
+    "chave": "avanco",
+    "nome": "Avanço",
+    "texto": "Quando a contagem regressiva avança, fazendo você diminuir o dado em 1?"
+   },
+   {
+    "chave": "efeito",
+    "nome": "Efeito",
+    "texto": "O que acontece quando a contagem regressiva termina?"
+   }
+  ],
+  "tipos": [
+   {
+    "id": "padrao",
+    "nome": "Contagem padrão",
+    "texto": "O dado começa em um número específico e avança cada vez que um jogador faz uma jogada, independentemente do resultado. Quando o dado de contagem chega a 0, o efeito dela é acionado imediatamente após a resolução da última jogada.",
+    "avancaPorTeste": 1,
+    "usaTabelaDinamica": false,
+    "orientacaoDeTamanho": [
+     "Contagens curtas (2 a 4) funcionam bem quando você deseja que um movimento ou evento seja acionado logo, independentemente dos resultados dos jogadores.",
+     "Contagens mais longas (5 ou mais) são mais adequadas para movimentos ou eventos poderosos que você deseja construir ao longo de uma cena inteira."
+    ],
+    "nota": "Em combate, contagens padrão para movimentos dos adversários geralmente são reservadas para o antagonista principal. A maioria dos encontros inclui no máximo um adversário com esse tipo de mecânica."
+   },
+   {
+    "id": "progresso",
+    "nome": "Contagem de progresso",
+    "nomeAlternativo": "Contagem de avanço",
+    "texto": "Contagem dinâmica usada quando os jogadores estão trabalhando para obter um resultado desejado. Não diminui a cada jogada — é influenciada pelo resultado das rolagens ou escolhas.",
+    "usaTabelaDinamica": true,
+    "valorInicialSugerido": [
+     5,
+     10
+    ]
+   },
+   {
+    "id": "consequencia",
+    "nome": "Contagem de consequência",
+    "texto": "Contagem dinâmica usada quando os jogadores estão tentando evitar um resultado temido. Não diminui a cada jogada — é influenciada pelo resultado das rolagens ou escolhas.",
+    "usaTabelaDinamica": true,
+    "valorInicialSugerido": [
+     5,
+     10
+    ]
+   },
+   {
+    "id": "longo-prazo",
+    "nome": "Contagem de longo prazo",
+    "texto": "Acompanha eventos de longo prazo na campanha: a queda de uma nação, a morte de um mago poderoso ou outro evento importante que pode levar mais do que algumas sessões para se concretizar.",
+    "usaTabelaDinamica": false,
+    "avancaPorTeste": 0,
+    "valorInicialSugerido": [
+     4,
+     12
+    ],
+    "trilha": "Geralmente é mais fácil criar uma trilha de contagem para registrar o avanço em várias sessões: desenhe um número de quadrados igual ao valor escolhido e, ao lado de cada um, escreva o evento que representa aquela etapa."
+   }
+  ],
+  "tabelaDinamica": {
+   "titulo": "Avanço de Contagens Dinâmicas",
+   "nota": "A tabela vale para as contagens de progresso e de consequência. A contagem padrão não usa esta tabela — ela diminui 1 a cada jogada, qualquer que seja o resultado.",
+   "linhas": [
+    {
+     "resultado": "Falha com Medo",
+     "progresso": 0,
+     "consequencia": 3
+    },
+    {
+     "resultado": "Falha com Esperança",
+     "progresso": 0,
+     "consequencia": 2
+    },
+    {
+     "resultado": "Sucesso com Medo",
+     "progresso": 1,
+     "consequencia": 1
+    },
+    {
+     "resultado": "Sucesso com Esperança",
+     "progresso": 2,
+     "consequencia": 0
+    },
+    {
+     "resultado": "Sucesso Crítico",
+     "progresso": 3,
+     "consequencia": 0
+    }
+   ]
+  },
+  "recursosAvancados": [
+   {
+    "id": "aleatorio",
+    "nome": "Valor inicial aleatório",
+    "texto": "Em vez de atribuir um valor inicial, a contagem pode usar um valor aleatório. \"Contagem (1d6)\" significa que você rola 1d6 e usa o resultado como o valor inicial."
+   },
+   {
+    "id": "ciclo",
+    "nome": "Ciclos",
+    "texto": "Algumas contagens entram em ciclo após serem ativadas. Depois que esse tipo de contagem é ativada e você aplica seus efeitos, ela retorna ao seu valor inicial e recomeça. \"Contagem (ciclo 5)\" reinicia após ser diminuída 5 vezes."
+   },
+   {
+    "id": "crescente",
+    "nome": "Crescente",
+    "texto": "Cada vez que uma contagem crescente é acionada e reiniciada, seu valor inicial aumenta em 1. \"Contagem (crescente 8)\" começa em 8 e, após o efeito, o valor inicial reinicia em 9, depois 10 e assim por diante."
+   },
+   {
+    "id": "decrescente",
+    "nome": "Decrescente",
+    "texto": "Cada vez que uma contagem decrescente é acionada, seu valor inicial diminui em 1. \"Contagem (decrescente 8)\" começa em 8, depois é reiniciada em 7, depois 6. Quando uma contagem decrescente chega a 0, um evento importante é acionado."
+   }
+  ],
+  "perseguicao": {
+   "texto": "Contagens dinâmicas também servem para cenas de perseguição. Defina duas contagens: uma para os perseguidores, outra para os fugitivos. Escolha um dado para a contagem dos perseguidores — quanto mais tempo a cena durar, maior deve ser o valor inicial — e defina-o com o valor mais alto. Em seguida, selecione outro dado de mesmo valor inicial para a contagem dos fugitivos, mas defina-o com um valor menor para refletir sua vantagem.",
+   "vantagens": [
+    {
+     "nome": "pequena vantagem",
+     "ajuste": -1
+    },
+    {
+     "nome": "vantagem razoável",
+     "ajuste": -3
+    },
+    {
+     "nome": "vantagem substancial",
+     "ajuste": -5
+    }
+   ],
+   "comoAvancam": "Independentemente dos personagens estarem perseguindo ou fugindo, suas jogadas avançam AMBAS as contagens, como mostrado na tabela Avanço de Contagens Dinâmicas.",
+   "comoParear": "As duas contagens ficam ligadas por um par: avançar uma pelo resultado de uma jogada avança a outra pela coluna DELA. Um sucesso aproxima os perseguidores e afasta a fuga; uma falha faz o contrário."
+  },
+  "tabelaDeProjeto": {
+   "titulo": "Avanço de projeto no repouso",
+   "fonte": "Livro p.181, critério OPCIONAL — o Mestre pode em vez disso deixar a contagem andar sozinha.",
+   "nota": "É uma tabela DIFERENTE da de contagens dinâmicas: aqui até a falha avança, porque trabalhar num projeto rende alguma coisa mesmo quando dá errado.",
+   "linhas": [
+    {
+     "resultado": "Sucesso Crítico",
+     "avanca": 4
+    },
+    {
+     "resultado": "Sucesso com Esperança",
+     "avanca": 3
+    },
+    {
+     "resultado": "Sucesso com Medo",
+     "avanca": 2
+    },
+    {
+     "resultado": "Falha com Esperança",
+     "avanca": 1
+    },
+    {
+     "resultado": "Falha com Medo",
+     "avanca": 1
+    }
+   ]
+  }
+ },
+ "longoPrazoNoRepouso": {
+  "textoImpresso": "Em descansos curtos, marque a contagem de longo prazo uma vez. Em descansos longos, marque pelo menos duas.",
+  "situacao": "PRÉ-ERRATA — não use.",
+  "regraCorrigida": "Em um descanso longo, você geralmente deve diminuir uma contagem regressiva de longo prazo relevante uma vez. Em descanso curto, nenhuma.",
+  "porQue": "A errata oficial (p.164) reescreveu a primeira frase e REMOVEU a segunda. O texto corrigido também é o que já está nas pp. 105 e 181 do próprio livro — que falam da contagem de longo prazo só no descanso longo. A p.164 impressa é a única que discorda, e é a que a errata conserta.",
+  "avancoPorDescanso": {
+   "curto": 0,
+   "longo": 1
+  }
+ },
+ "erratasAplicadas": [
+  "p.164 — a primeira frase de \"Avançando contagens regressivas de longo prazo\" passou a ser \"Em um descanso longo, você geralmente deve diminuir uma contagem regressiva de longo prazo relevante uma vez\"; a segunda frase foi removida. Confirmado lendo a página: o texto impresso é o antigo."
+ ],
+ "errosDeDigitacaoDoOriginal": [
+  "p.164, rodapé: \"Chapter 3: Mecânica Básica do Mestre\" — a palavra \"Chapter\" ficou em INGLÊS. As páginas 162 e 163 trazem \"Capítulo 3\" corretamente.",
+  "pp. 162 e 163: a mesma contagem é chamada de \"contagem de avanço\" no texto corrido da p.162 e de \"CONTAGEM DE PROGRESSO\" no cabeçalho da tabela da p.163. São a mesma coisa.",
+  "p.162: \"use mostre a face 5 do d6 como seu dado de contagem\" — sobra o \"use\"."
+ ],
+ "pontosDeInteresse": [
+  "ADVERSÁRIOS E AMBIENTES — o gasto de Medo em \"habilidade de Medo de um adversário\" custa o número indicado na ficha DELE. O app não tem fichas de adversário ainda; o painel deixa gastar um número livre de Medo com uma anotação do que foi.",
+  "ROLAGEM COM MEDO — o livro dá 1 Ponto de Medo ao Mestre sempre que um personagem rola com Medo. Como a decisão da mesa foi \"só ficha, sem dados\", o app não sabe quando isso acontece: o botão de +1 fica na mão do Mestre.",
+  "CONTAGEM PADRÃO EM COMBATE — avança a cada jogada de qualquer jogador. Sem rolagem no app, quem avança é o Mestre. O botão existe; a automação depende de um dia haver rolagem.",
+  "ROLAGEM COM MEDO — o livro dá 1 Ponto de Medo ao Mestre sempre que um personagem rola com Medo. Como a decisão da mesa foi \"só ficha, sem dados\", o app não sabe quando isso acontece: o botão de +1 fica na mão do Mestre."
+ ]
+}

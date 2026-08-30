@@ -194,12 +194,23 @@ function maximoDoContador_(chave, ficha) {
  * (1/2/3/4), que é a progressão automática do livro.
  */
 function proficienciaDaFicha_(ficha) {
-  const rec = (ficha || {}).recursos || {};
-  const n = Math.trunc(Number(rec.proficiencia));
-  if (isFinite(n) && n >= 1) return Math.min(n, 6);
   const nivel = Number(((ficha || {}).identidade || {}).nivel) || 1;
-  if (typeof tierDoNivel_ === 'function') return tierDoNivel_(nivel) || 1;
-  return 1;
+
+  // A regra de verdade (livro p.110): começa em 1 e ganha +1 nas conquistas
+  // dos níveis 2, 5 e 8; pode subir mais pela opção de avanço dos patamares
+  // 3 e 4. A tabela mora em 4D_Avanco.gs.
+  //
+  // ⚠ Este cálculo NÃO pode ler recursos.proficiencia: aplicarDerivados_
+  // grava esse campo a partir daqui, então ler de volta congelaria o valor e
+  // subir de nível nunca aumentaria a Proficiência.
+  let p = (typeof proficienciaBase_ === 'function')
+    ? proficienciaBase_(nivel)
+    : (typeof tierDoNivel_ === 'function' ? (tierDoNivel_(nivel) || 1) : 1);
+
+  if (typeof bonusDeAvanco_ === 'function') {
+    p += (bonusDeAvanco_(ficha).proficiencia || 0);
+  }
+  return Math.max(1, Math.min(6, p));
 }
 
 /** Valor inicial (quando a carta manda começar cheio ou com o dado em 1). */

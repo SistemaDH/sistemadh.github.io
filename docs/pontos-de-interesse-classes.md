@@ -67,18 +67,72 @@ decisão de modelagem antes da Parte 4. A errata mexe nos dois:
 Powerful Beast passou a ter Força +3 / Evasão +1, e o companheiro ganhou a
 escolha entre dano físico e mágico.
 
-## 5. Trecho do livro corrompido na tradução — confirmar antes de usar
+## 5. Trecho corrompido — FECHADO reimportando o capítulo inteiro (B3)
 
-- **Ladino — tabela de Ataque Furtivo**: saiu como "Nível X → Nível X", sem os
-  dados. O correto quase certamente é 1d6 / 2d6 / 3d6 / 4d6 por camada, mas
-  **não vou gravar isso sem confirmar**.
-- **Guerreiro — característica "Caçador"**: frase truncada
-  ("Quando você faz um Para obter o resultado...").
-- **Ladino — Shadow Stepper**: texto incoerente ("marcar uma corda").
-- **Guardião — dica do Imparável**: termina com frase repetida/corrompida.
+Os quatro pontos marcados na Parte 3 (tabela do Ataque Furtivo, "Caçador"
+truncado, Passo Sombrio incoerente, dica do Imparável repetida) não eram
+quatro defeitos isolados: eram sintoma de que **o capítulo de classes tinha
+sido lido do livro errado**. O `Daggerheart regras.pdf` é uma tradução
+automática; o `DH-DigitalRegras.pdf` que você trouxe é a da Jambô.
 
-Esses quatro pontos estão marcados no JSON dentro de `problemasDeTraducao` da
-classe correspondente.
+O tamanho do estrago só apareceu quando a ficha passou a MOSTRAR essas
+características (ver `pontos-de-interesse-avanco.md` §5): o jogador lia
+
+> "aumente o valor do **Unstoppable Die** em um"
+> "**Canal Raw Power**"
+> "**Hold Them Off**"
+> "**No Mercy** (Sem piedade)"
+
+Então as 9 classes foram reimportadas: característica de classe,
+característica de Esperança, itens de classe e descrição. O texto entra no
+**vocabulário das cartas** (Estresse, Esperança, jogada, traço, dano Severo,
+Oculto/Camuflado) e o glossário mostra o termo do livro entre parênteses,
+como já fazia com "Estresse (Ponto de Fadiga)".
+
+### O erro de REGRA que estava escondido ali
+
+O Ataque Furtivo do Ladino dizia "**d6 igual ao seu nível**". O certo é
+**patamar**:
+
+> SRD: "add a number of d6s equal to your **tier** to your damage roll."
+> Livro p.46: "some um número de d6 igual ao seu **patamar**."
+
+No 10º nível isso é 4d6 contra 10d6. **A errata foi conferida e não toca no
+assunto** — o erro é da tradução velha, não da regra. Virou o invariante E12,
+com conferência no gerador e teste nomeado.
+
+### Nomes que mudaram, e por quê
+
+| Antes | Agora | Motivo |
+|---|---|---|
+| Patrulheiro | **Caçador** | Decisão sua: a carta diz RANGER em inglês; o livro traduz. |
+| Seraph | **Serafim** | Idem, a carta diz SERAPH. |
+| Rally / Dado de Reunião | **Inspiração / Dado de Inspiração** | As duas cartas do Bardo se contradizem ("Reunião" × "Motivação"); o livro desempata. |
+| Imparável / Unstoppable Die | **Determinação / Dado de Determinação** | Era metade inglês. |
+| Foco do Ranger | **Marca da Presa** | — |
+| Hold Them Off | **Segurem Eles** | O livro imprime "Sergurem" (grupo F). |
+| No Mercy (Sem piedade) | **Sem Piedade** | — |
+| Tanque de linha de frente | **Linha de Frente** | — |
+| Suporte à vida | **Alicerce da Vida** | — |
+| Desta vez não | **Não Dessa Vez** | — |
+| Canal Raw Power | **Canalizar Poder Bruto** | — |
+| Wildtouch | **Dádiva da Natureza** | — |
+
+As **chaves internas** dos contadores não mudaram (`classe:bardo:rally`,
+`classe:guardiao:imparavel`): elas já estão gravadas nas fichas de quem joga,
+e renomear apagaria o dado guardado. O nome que aparece na tela é o novo.
+
+### As perguntas de origem e os vínculos — também reimportados (B6)
+
+Ficaram para uma segunda passada e vieram junto: as 3 perguntas de origem e os
+3 vínculos de cada classe, do livro bom. Saiu o "Você já foi apaixonado. Quem
+você adorou e como ele o magoou?" e entrou o "Você já se apaixonou. Quem você
+amava e como essa pessoa partiu seu coração?".
+
+O **guia de classe do apêndice** (`data/guias-de-classe.json`) tinha uma
+segunda cópia dessas mesmas perguntas, também da tradução velha — e é ELA que a
+criação de ficha mostra. As duas foram sincronizadas, com teste que quebra se
+divergirem: o jogador não pode ler uma pergunta na tela e outra no livro.
 
 ## 6. Erratas que tocam classes — situação
 

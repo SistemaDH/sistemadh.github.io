@@ -170,12 +170,59 @@ export const api = {
      o servidor. ------------------------------------------------------------ */
   ajustarFicha: (token, id, ajustes, versao) =>
     chamar('ajustarFicha', { token, id, ajustes, versao }),
+  aliadosDaMesa: (token, id) => chamar('aliadosDaMesa', { token, id }),
+  meusProjetos: (token, id) => chamar('meusProjetos', { token, id }),
   previaDescanso: (token, id, tipo, escolhas) =>
     chamar('previaDescanso', { token, id, tipo, escolhas }),
   movimentosDeDescanso: (token, id, tipo) =>
     chamar('movimentosDeDescanso', { token, id, tipo }),
   aplicarDescanso: (token, id, tipo, escolhas, versao) =>
     chamar('aplicarDescanso', { token, id, tipo, escolhas, versao }),
+
+  /* --- subir de nível --------------------------------------------------- */
+  opcoesDeAvanco: (token, id) => chamar('opcoesDeAvanco', { token, id }),
+  previaDeAvanco: (token, id, escolhas) => chamar('previaDeAvanco', { token, id, escolhas }),
+  aplicarAvanco: (token, id, escolhas, versao) =>
+    chamar('aplicarAvanco', { token, id, escolhas, versao }),
+  desfazerAvanco: (token, id, versao) => chamar('desfazerAvanco', { token, id, versao }),
+  aplicarCartaPermanente: (token, id, carta, escolhas, versao) =>
+    chamar('aplicarCartaPermanente', { token, id, carta, escolhas, versao }),
+
+  /* --- painel do Mestre -------------------------------------------------- */
+  painelDoMestre: (token) => chamar('painelDoMestre', { token }),
+  ajustarMedo: (token, dados) => chamar('ajustarMedo', { token, ...dados }),
+  criarContagem: (token, contagem) => chamar('criarContagem', { token, contagem }),
+  avancarContagem: (token, id, dados) => chamar('avancarContagem', { token, id, ...dados }),
+  editarContagem: (token, id, contagem) => chamar('editarContagem', { token, id, contagem }),
+  excluirContagem: (token, id) => chamar('excluirContagem', { token, id }),
+  previaDescansoDaMesa: (token, tipo, escolhas) =>
+    chamar('previaDescansoDaMesa', { token, tipo, escolhas }),
+  aplicarDescansoDaMesa: (token, tipo, escolhas) =>
+    chamar('aplicarDescansoDaMesa', { token, tipo, escolhas }),
+  parearContagens: (token, idA, idB) => chamar('parearContagens', { token, idA, idB }),
+  desparearContagem: (token, id) => chamar('desparearContagem', { token, id }),
+  avancarPerseguicao: (token, id, resultado) => chamar('avancarPerseguicao', { token, id, resultado }),
+  abrirSessao: (token) => chamar('abrirSessao', { token }),
+  anunciarNivelDaMesa: (token, nivel) => chamar('anunciarNivelDaMesa', { token, nivel }),
+  definirMoldura: (token, moldura) => chamar('definirMoldura', { token, moldura }),
+  molduraDaMesa: (token) => chamar('molduraDaMesa', { token }),
+
+  /* --- encontro em jogo -------------------------------------------------- */
+  encontro: (token) => chamar('encontro', { token }),
+  definirEncontro: (token, dados) => chamar('definirEncontro', { token, ...dados }),
+  acrescentarAoEncontro: (token, dados) => chamar('acrescentarAoEncontro', { token, ...dados }),
+  ajustarAdversario: (token, dados) => chamar('ajustarAdversario', { token, ...dados }),
+  porEmFoco: (token, id, primeiroDoTurno) =>
+    chamar('porEmFoco', { token, id, primeiroDoTurno }),
+  limparFoco: (token) => chamar('limparFoco', { token }),
+  usarHabilidade: (token, id, habilidade, contagem) =>
+    chamar('usarHabilidade', { token, id, habilidade, contagem }),
+  removerDoEncontro: (token, id) => chamar('removerDoEncontro', { token, id }),
+  limparEncontro: (token) => chamar('limparEncontro', { token }),
+  definirDanoMassivo: (token, ligado) => chamar('definirDanoMassivo', { token, ligado }),
+  adversariosDaMesa: (token) => chamar('adversariosDaMesa', { token }),
+  salvarAdversarioDaMesa: (token, ficha) => chamar('salvarAdversarioDaMesa', { token, ficha }),
+  excluirAdversarioDaMesa: (token, id) => chamar('excluirAdversarioDaMesa', { token, id }),
 
   lerConfig: (token, chave) => chamar('lerConfig', { token, chave }),
   gravarConfig: (token, chave, valor) => chamar('gravarConfig', { token, chave, valor }),

@@ -66,15 +66,15 @@ const ETAPAS_CRIACAO = [
 
 /** Guia de Caráter de cada classe (folhas do apêndice, p.369-385). */
 const GUIAS_DE_CLASSE = {
-  "bardo": { chamada: "Como bardo, você sabe como fazer as pessoas falarem, chamar a atenção para si mesmo e usar palavras ou música para influenciar o mundo ao seu redor.", tracos: {"agilidade":0,"forca":-1,"finesse":1,"instinto":0,"presenca":2,"conhecimento":1}, armaPrimaria: "primaria-t1-florete", armaSecundaria: "secundaria-t1-punhal-pequeno", armadura: "armadura-t1-armadura-gambeson", inventario: {"levar":["uma tocha","15 metros de corda","suprimentos básicos","um punhado de ouro"],"escolherEntre":[["uma Poção de Saúde Menor","uma Poção de resistência menor"],["um romance","uma carta nunca aberta"]],"extra":"E, EM SEGUIDA, DECIDA EM QUE VOCÊ CARREGARÁ SEUS FEITIÇOS: livro de canções, diário, etc."}, descricao: {"Roupas que são":["extravagantes","barulhentas","grandes demais","esfarrapadas","elegantes","selvagens"],"Olhos como":["cravos","terra","oceano infinito","fogo","hera","lilases","noite","espuma do mar","inverno"],"Corpo":["largo","esculpido","curvilíneo","esguio","robusto","curto","atarracado","alto","magro","pequeno","tonificado"],"Pele da cor de":["cinzas","trevo","neve caindo","areia fina","obsidiana","rosa","safira","glicínia"],"Atitude como":["um barman","um mágico","um mestre de cerimônias","um astro do rock","um fanfarrão"]}, perguntasDeFundo: ["Quem da sua comunidade te ensinou a ter tanta confiança em si mesmo?","Você já foi apaixonado. Quem você adorava e como ele o magoou?","Você sempre admirou outro bardo. Quem é ele e por que você o idolatra?"], perguntasDeConexao: ["O que o fez perceber que seríamos tão bons amigos?","O que eu faço que o irrita?","Por que você agarra minha mão à noite?"] },
-  "druida": { chamada: "Como druida, você é uma força da natureza, preservando o equilíbrio da vida e da morte ao canalizar a própria natureza por meio de você.", tracos: {"agilidade":1,"forca":0,"finesse":1,"instinto":2,"presenca":-1,"conhecimento":0}, armaPrimaria: "primaria-t1-bastao-curto", armaSecundaria: "secundaria-t1-escudo-redondo", armadura: "armadura-t1-armadura-de-couro", inventario: {"levar":["uma tocha","15 metros de corda","suprimentos básicos","um punhado de ouro"],"escolherEntre":[["uma Poção de Saúde Menor","uma Poção de resistência menor"],["um pequeno saco de pedras e ossos","um estranho pingente encontrado na sujeira"]],"extra":null}, descricao: {"Roupas que são":["camufladas","crescidas","soltas","natural","retalhos","regal"],"Olhos como":["cravos","terra","oceano infinito","fogo","hera","lilases","noite","espuma do mar","inverno"],"Corpo":["largo","esculpido","curvilíneo","esguio","robusto","curto","atarracado","alto","magro","pequeno","tonificado"],"Pele da cor de":["cinzas","trevo","neve caindo","areia fina","obsidiana","rosa","safira","glicínia"],"Atitude como":["uma bombinha","uma raposa","um guia","um hippie","uma bruxa"]}, perguntasDeFundo: ["Por que a comunidade em que você cresceu era tão dependente da natureza e de suas criaturas?","Qual foi o primeiro animal selvagem com o qual você se relacionou? Por que seu vínculo terminou?","Quem está tentando persegui-lo? O que eles querem de você?"], perguntasDeConexao: ["O que você me confidenciou que me faz mergulhar no perigo por você todas as vezes?","Que animal eu diria que você me lembra?","Que apelido carinhoso você me deu?"] },
-  "guardiao": { chamada: "Como guardião, você se coloca em perigo para proteger seu grupo e zelar por aqueles que talvez não sobrevivessem sem você aqui.", tracos: {"agilidade":1,"forca":2,"finesse":-1,"instinto":0,"presenca":1,"conhecimento":0}, armaPrimaria: "primaria-t1-machado-de-batalha", armaSecundaria: null, armadura: "armadura-t1-armadura-de-cota-de-malha", inventario: {"levar":["uma lanterna","15 metros de corda","suprimentos básicos","um punhado de ouro"],"escolherEntre":[["uma Poção de Saúde Menor","uma Poção de resistência menor"],["um totem de seu mentor","uma chave secreta"]],"extra":null}, descricao: {"Roupas que são":["casuais","complexas","soltas","acolchoadas","reais","táticas","desgastadas pelo tempo"],"Olhos como":["cravos","terra","oceano infinito","fogo","hera","lilases","noite","espuma do mar","inverno"],"Corpo":["largo","esculpido","curvilíneo","esguio","robusto","curto","atarracado","alto","magro","pequeno","tonificado"],"Pele da cor de":["cinzas","trevo","neve caindo","areia fina","obsidiana","rosa","safira","glicínia"],"Atitude como":["um capitão","um zelador","um elefante","um general","um lutador"]}, perguntasDeFundo: ["Quem da sua comunidade você deixou de proteger e por que ainda pensa neles?","Você foi encarregado de proteger algo importante e entregá-lo em um lugar perigoso. O que é e para onde ele precisa ir?","Você considera um aspecto de si mesmo como uma fraqueza. Qual é esse aspecto e como ele o afetou?"], perguntasDeConexao: ["Como eu salvei sua vida na primeira vez que nos encontramos?","Que pequeno presente você me deu e percebeu que eu sempre carrego comigo?","Que mentira você me contou sobre si mesmo em que eu absolutamente acredito?"] },
-  "patrulheiro": { chamada: "Como patrulheiro, seu olhar aguçado e sua pressa graciosa te tornam indispensável para rastrear inimigos e navegar pelas terras selvagens.", tracos: {"agilidade":2,"forca":0,"finesse":1,"instinto":1,"presenca":-1,"conhecimento":0}, armaPrimaria: "primaria-t1-arco-curto", armaSecundaria: null, armadura: "armadura-t1-armadura-de-couro", inventario: {"levar":["uma tocha","15 metros de corda","suprimentos básicos","um punhado de ouro"],"escolherEntre":[["uma Poção de Saúde Menor","uma Poção de resistência menor"],["um troféu de sua primeira morte","uma bússola aparentemente quebrada"]],"extra":null}, descricao: {"Roupas que são":["fluidas","suaves e naturais","manchado","tático","apertado","tecido"],"Olhos como":["cravos","terra","oceano infinito","fogo","hera","lilases","noite","espuma do mar","inverno"],"Corpo":["largo","esculpido","curvilíneo","esguio","robusto","curto","atarracado","alto","magro","pequeno","tonificado"],"Pele da cor de":["cinzas","trevo","neve caindo","areia fina","obsidiana","rosa","safira","glicínia"],"Atitude como":["uma criança","um fantasma","um sobrevivente","um professor","um cão de guarda"]}, perguntasDeFundo: ["Uma criatura terrível feriu sua comunidade e você prometeu caçá-la. O que são elas e que rastro ou sinal único deixam para trás?","Sua primeira morte quase o matou também. O que foi, e o que parte de você nunca mais foi a mesma depois desse evento?","Você já viajou por muitas terras perigosas, mas qual é o único lugar que você se recusa a ir?"], perguntasDeConexao: ["Que competição amigável nós temos?","Por que você age de forma diferente quando estamos sozinhos e quando há outras pessoas por perto?","Que ameaça você me pediu para observar e por que está preocupado com ela?"] },
-  "ladino": { chamada: "Como malandro, você tem experiência em lutar com sua lâmina e também com sua inteligência, preferindo se mover rapidamente e lutar em silêncio.", tracos: {"agilidade":1,"forca":-1,"finesse":2,"instinto":0,"presenca":1,"conhecimento":0}, armaPrimaria: "primaria-t1-adaga", armaSecundaria: "secundaria-t1-punhal-pequeno", armadura: "armadura-t1-armadura-gambeson", inventario: {"levar":["uma tocha","15 metros de corda","suprimentos básicos","um punhado de ouro"],"escolherEntre":[["uma Poção de Saúde Menor","uma Poção de resistência menor"],["um conjunto de ferramentas de falsificação","um gancho"]],"extra":null}, descricao: {"Roupas que são":["limpas","escuras","discretas","de couro","assustadoras","táticas","justas"],"Olhos como":["cravos","terra","oceano infinito","fogo","hera","lilases","noite","espuma do mar","inverno"],"Corpo":["largo","esculpido","curvilíneo","esguio","robusto","curto","atarracado","alto","magro","pequeno","tonificado"],"Pele da cor de":["cinzas","trevo","neve caindo","areia fina","obsidiana","rosa","safira","glicínia"],"Atitude como":["um bandido","um vigarista","um jogador","um chefe da máfia","um pirata"]}, perguntasDeFundo: ["O que você foi pego fazendo que o levou a ser exilado de sua comunidade de origem?","Você costumava ter uma vida diferente, mas tentou deixá-la para trás. Quem do seu passado ainda está te perseguindo?","De quem do seu passado você ficou mais triste ao se despedir?"], perguntasDeConexao: ["O que eu o convenci a fazer recentemente que nos colocou em apuros?","O que descobri sobre seu passado que mantive em segredo dos outros?","Quem você conhece do meu passado, e como isso influenciou o que você sente por mim?"] },
-  "seraph": { chamada: "Como serafim, você fez um voto a um deus que o ajuda a canalizar o poder arcano sagrado para manter seu grupo em pé.", tracos: {"agilidade":0,"forca":2,"finesse":0,"instinto":1,"presenca":1,"conhecimento":-1}, armaPrimaria: "primaria-t1-machado-sagrado", armaSecundaria: "secundaria-t1-escudo-redondo", armadura: "armadura-t1-armadura-de-cota-de-malha", inventario: {"levar":["uma tocha","15 metros de corda","suprimentos básicos","um punhado de ouro"],"escolherEntre":[["uma Poção de Saúde Menor","uma Poção de resistência menor"],["um pacote de ofertas","um símbolo de seu deus"]],"extra":null}, descricao: {"Roupas que são":["brilhantes","ondulantes","ornamentadas","justas","modestas","estranhas","naturais"],"Olhos como":["cravos","terra","oceano infinito","fogo","hera","lilases","noite","espuma do mar","inverno"],"Corpo":["largo","esculpido","curvilíneo","esguio","robusto","curto","atarracado","alto","magro","pequeno","tonificado"],"Pele da cor de":["cinzas","trevo","neve caindo","areia fina","obsidiana","rosa","safira","glicínia"],"Atitude como":["um anjo","um médico","um evangelista","um monge","um padre"]}, perguntasDeFundo: ["A qual deus você se dedicou? Que façanha incrível eles realizaram por você em um momento de desespero?","Como sua aparência mudou depois de fazer seu juramento?","De que maneira estranha ou única você se comunica com seu deus?"], perguntasDeConexao: ["Com que promessa você me fez concordar, caso eu morresse no campo de batalha?","Por que você me faz tantas perguntas sobre o meu deus?","Você me disse para proteger um membro do nosso grupo acima de todos os outros, até de você mesmo. Quem são eles e por quê?"] },
-  "feiticeiro": { chamada: "Como feiticeiro, você nasceu com um poder mágico inato e aprendeu a usar esse poder para conseguir o que deseja.", tracos: {"agilidade":0,"forca":-1,"finesse":1,"instinto":2,"presenca":1,"conhecimento":0}, armaPrimaria: "primaria-t1-bastao-duplo", armaSecundaria: null, armadura: "armadura-t1-armadura-gambeson", inventario: {"levar":["uma lanterna","15 metros de corda","suprimentos básicos","um punhado de ouro"],"escolherEntre":[["uma Poção de Saúde Menor","uma Poção de resistência menor"],["um orbe sussurrante","uma herança de família"]],"extra":null}, descricao: {"Roupas que são":["sempre em movimento","extravagantes","discreto","em camadas","ornamentado","apertado"],"Olhos como":["cravos","terra","oceano infinito","fogo","hera","lilases","noite","espuma do mar","inverno"],"Corpo":["largo","esculpido","curvilíneo","esguio","robusto","curto","atarracado","alto","magro","pequeno","tonificado"],"Pele da cor de":["cinzas","trevo","neve caindo","areia fina","obsidiana","rosa","safira","glicínia"],"Atitude como":["uma celebridade","um comandante","um político","um brincalhão","um lobo em pele de cordeiro"]}, perguntasDeFundo: ["O que você fez para que as pessoas de sua comunidade desconfiassem de você?","Que mentor lhe ensinou a controlar sua magia indomável e por que ele não pode mais guiá-lo?","Você tem um medo profundo que esconde de todos. O que é esse medo e por que ele o assusta?"], perguntasDeConexao: ["Por que você confia tanto em mim?","O que eu fiz para que você seja cauteloso comigo?","Por que mantemos nosso passado compartilhado em segredo?"] },
-  "guerreiro": { chamada: "Como guerreiro, você corre para a batalha sem hesitação nem cautela, sabendo que sua força e seu treino falam por você.", tracos: {"agilidade":2,"forca":1,"finesse":0,"instinto":1,"presenca":-1,"conhecimento":0}, armaPrimaria: "primaria-t1-espada-longa", armaSecundaria: null, armadura: "armadura-t1-armadura-de-cota-de-malha", inventario: {"levar":["uma tocha","15 metros de corda","suprimentos básicos","um punhado de ouro"],"escolherEntre":[["uma Poção de Saúde Menor","uma Poção de resistência menor"],["o desenho de um amante","uma pedra de afiar"]],"extra":null}, descricao: {"Roupas que são":["ousadas","com remendos","reforçadas","reais","elegantes","econômicas","desgastadas pelo tempo"],"Olhos como":["cravos","terra","oceano infinito","fogo","hera","lilases","noite","espuma do mar","inverno"],"Corpo":["largo","esculpido","curvilíneo","esguio","robusto","curto","atarracado","alto","magro","pequeno","tonificado"],"Pele da cor de":["cinzas","trevo","neve caindo","areia fina","obsidiana","rosa","safira","glicínia"],"Atitude como":["um touro","um soldado dedicado","um gladiador","um herói","um trabalhador contratado"]}, perguntasDeFundo: ["Quem te ensinou a lutar, e por que ficaram para trás quando você saiu de casa?","Alguém o derrotou em uma batalha anos atrás e o deixou para morrer. Quem foi e como ele o traiu?","Que lugar lendário você sempre quis visitar e por que ele é tão especial?"], perguntasDeConexao: ["Nós já nos conhecíamos muito antes dessa festa acontecer. Como?","Em que tarefa mundana você costuma me ajudar fora do campo de batalha?","Que medo estou ajudando você a superar?"] },
-  "mago": { chamada: "Como mago, você se familiarizou com o arcano por meio do estudo incansável de grimórios e outras ferramentas de magia.", tracos: {"agilidade":-1,"forca":0,"finesse":0,"instinto":1,"presenca":1,"conhecimento":2}, armaPrimaria: "primaria-t1-bastao-longo", armaSecundaria: null, armadura: "armadura-t1-armadura-de-couro", inventario: {"levar":["uma tocha","15 metros de corda","suprimentos básicos","um punhado de ouro"],"escolherEntre":[["uma Poção de Saúde Menor","uma Poção de resistência menor"],["um livro que está tentando traduzir","um pequeno e inofensivo animal de estimação elementar"]],"extra":"E, EM SEGUIDA, DECIDA EM QUE VOCÊ CARREGARÁ SEUS FEITIÇOS: grandes volumes, cartas de tarô, etc."}, descricao: {"Roupas que são":["bonitas","limpas","comuns","fluido","em camadas","retalhos","justo"],"Olhos como":["cravos","terra","oceano infinito","fogo","hera","lilases","noite","espuma do mar","inverno"],"Corpo":["largo","esculpido","curvilíneo","esguio","robusto","curto","atarracado","alto","magro","pequeno","tonificado"],"Pele da cor de":["cinzas","trevo","neve caindo","areia fina","obsidiana","rosa","safira","glicínia"],"Atitude como":["um excêntrico","um bibliotecário","um fusível aceso","um filósofo","um professor"]}, perguntasDeFundo: ["Para quais responsabilidades sua comunidade contava com você? Como você os decepcionou?","Você passou a vida procurando um livro ou objeto de grande valor e significado. O que é, e por que é tão importante para você?","Você tem um rival poderoso. Quem é ele e por que você está tão determinado a derrotá-lo?"], perguntasDeConexao: ["Que favor eu lhe pedi que você não tem certeza se pode cumprir?","Que hobby estranho ou fascínio estranho nós dois compartilhamos?","Que segredo seu você confiou somente a mim?"] },
+  "bardo": { chamada: "Como bardo, você sabe como fazer as pessoas falarem, chamar a atenção para si mesmo e usar palavras ou música para influenciar o mundo ao seu redor.", tracos: {"agilidade":0,"forca":-1,"finesse":1,"instinto":0,"presenca":2,"conhecimento":1}, armaPrimaria: "primaria-t1-florete", armaSecundaria: "secundaria-t1-punhal-pequeno", armadura: "armadura-t1-armadura-gambeson", inventario: {"levar":["uma tocha","15 metros de corda","suprimentos básicos","um punhado de ouro"],"escolherEntre":[["uma Poção de Saúde Menor","uma Poção de resistência menor"],["um livro de romance","uma carta que nunca foi aberta"]],"extra":"E, EM SEGUIDA, DECIDA EM QUE VOCÊ CARREGARÁ SEUS FEITIÇOS: livro de canções, diário, etc.","escolherEntreAntigo":["um romance","uma carta nunca aberta"]}, descricao: {"Roupas que são":["extravagantes","barulhentas","grandes demais","esfarrapadas","elegantes","selvagens"],"Olhos como":["cravos","terra","oceano infinito","fogo","hera","lilases","noite","espuma do mar","inverno"],"Corpo":["largo","esculpido","curvilíneo","esguio","robusto","curto","atarracado","alto","magro","pequeno","tonificado"],"Pele da cor de":["cinzas","trevo","neve caindo","areia fina","obsidiana","rosa","safira","glicínia"],"Atitude como":["um barman","um mágico","um mestre de cerimônias","um astro do rock","um fanfarrão"]}, perguntasDeFundo: ["Quem em sua comunidade lhe ensinou a ter tanta confiança em si mesmo?","Você já se apaixonou. Quem você amava e como essa pessoa partiu seu coração?","Você sempre teve admiração por outro bardo. Quem é essa pessoa e por que você a idolatra?"], perguntasDeConexao: ["Como percebeu que seríamos grandes amigos?","O que eu faço que irrita você?","Por que você segura minha mão à noite?"] },
+  "druida": { chamada: "Como druida, você é uma força da natureza, preservando o equilíbrio da vida e da morte ao canalizar a própria natureza por meio de você.", tracos: {"agilidade":1,"forca":0,"finesse":1,"instinto":2,"presenca":-1,"conhecimento":0}, armaPrimaria: "primaria-t1-bastao-curto", armaSecundaria: "secundaria-t1-escudo-redondo", armadura: "armadura-t1-armadura-de-couro", inventario: {"levar":["uma tocha","15 metros de corda","suprimentos básicos","um punhado de ouro"],"escolherEntre":[["uma Poção de Saúde Menor","uma Poção de resistência menor"],["uma pequena bolsa com ossos e pedras","um estranho pingente encontrado na terra"]],"extra":null,"escolherEntreAntigo":["um pequeno saco de pedras e ossos","um estranho pingente encontrado na sujeira"]}, descricao: {"Roupas que são":["camufladas","crescidas","soltas","natural","retalhos","regal"],"Olhos como":["cravos","terra","oceano infinito","fogo","hera","lilases","noite","espuma do mar","inverno"],"Corpo":["largo","esculpido","curvilíneo","esguio","robusto","curto","atarracado","alto","magro","pequeno","tonificado"],"Pele da cor de":["cinzas","trevo","neve caindo","areia fina","obsidiana","rosa","safira","glicínia"],"Atitude como":["uma bombinha","uma raposa","um guia","um hippie","uma bruxa"]}, perguntasDeFundo: ["Por que a comunidade na qual você cresceu confiava tanto na natureza e suas criaturas?","Qual foi o primeiro animal com o qual você teve uma conexão emocional? Por que essa conexão acabou?","Quem está caçando você? O que essa pessoa quer de você?"], perguntasDeConexao: ["O que você confiou a mim que sempre faz com que eu me arrisque por você?","De que animal você me faz lembrar?","Qual o apelido carinhoso que você me deu?"] },
+  "guardiao": { chamada: "Como guardião, você se coloca em perigo para proteger seu grupo e zelar por aqueles que talvez não sobrevivessem sem você aqui.", tracos: {"agilidade":1,"forca":2,"finesse":-1,"instinto":0,"presenca":1,"conhecimento":0}, armaPrimaria: "primaria-t1-machado-de-batalha", armaSecundaria: null, armadura: "armadura-t1-armadura-de-cota-de-malha", inventario: {"levar":["uma lanterna","15 metros de corda","suprimentos básicos","um punhado de ouro"],"escolherEntre":[["uma Poção de Saúde Menor","uma Poção de resistência menor"],["um totem de seu mentor","uma chave secreta"]],"extra":null}, descricao: {"Roupas que são":["casuais","complexas","soltas","acolchoadas","reais","táticas","desgastadas pelo tempo"],"Olhos como":["cravos","terra","oceano infinito","fogo","hera","lilases","noite","espuma do mar","inverno"],"Corpo":["largo","esculpido","curvilíneo","esguio","robusto","curto","atarracado","alto","magro","pequeno","tonificado"],"Pele da cor de":["cinzas","trevo","neve caindo","areia fina","obsidiana","rosa","safira","glicínia"],"Atitude como":["um capitão","um zelador","um elefante","um general","um lutador"]}, perguntasDeFundo: ["Quem da sua comunidade você não conseguiu proteger e por que você ainda pensa nessa pessoa?","Você recebeu a missão de proteger e levar algo importante a um lugar perigoso. O que é e aonde você precisa ir?","Você acredita ter uma fraqueza. O que é, e como isso afeta você?"], perguntasDeConexao: ["Como salvei sua vida quando nos conhecemos?","Que lembrança você me deu e percebeu que eu sempre carrego comigo?","Que mentira você me contou sobre você na qual eu caí completamente?"] },
+  "patrulheiro": { chamada: "Como patrulheiro, seu olhar aguçado e sua pressa graciosa te tornam indispensável para rastrear inimigos e navegar pelas terras selvagens.", tracos: {"agilidade":2,"forca":0,"finesse":1,"instinto":1,"presenca":-1,"conhecimento":0}, armaPrimaria: "primaria-t1-arco-curto", armaSecundaria: null, armadura: "armadura-t1-armadura-de-couro", inventario: {"levar":["uma tocha","15 metros de corda","suprimentos básicos","um punhado de ouro"],"escolherEntre":[["uma Poção de Saúde Menor","uma Poção de resistência menor"],["um troféu do seu primeiro abate","uma bússola quebrada"]],"extra":null,"escolherEntreAntigo":["um troféu de sua primeira morte","uma bússola aparentemente quebrada"]}, descricao: {"Roupas que são":["fluidas","suaves e naturais","manchado","tático","apertado","tecido"],"Olhos como":["cravos","terra","oceano infinito","fogo","hera","lilases","noite","espuma do mar","inverno"],"Corpo":["largo","esculpido","curvilíneo","esguio","robusto","curto","atarracado","alto","magro","pequeno","tonificado"],"Pele da cor de":["cinzas","trevo","neve caindo","areia fina","obsidiana","rosa","safira","glicínia"],"Atitude como":["uma criança","um fantasma","um sobrevivente","um professor","um cão de guarda"]}, perguntasDeFundo: ["Uma criatura terrível prejudicou sua comunidade e você jurou abatê-la. Que criatura é essa e qual é a trilha ou sinal específico que ela deixa para trás?","A primeira presa que abateu quase matou você. Que criatura foi essa, e, desde então, que parte de você nunca mais foi a mesma?","Você já visitou muitos lugares perigosos, mas qual é o lugar aonde você jamais iria?"], perguntasDeConexao: ["Qual é a rivalidade amigável que temos?","Por que você age de forma tão diferente quando estamos sozinhos e quando há outras pessoas junto?","Você me pediu para tomar cuidado com qual ameaça, e por que se preocupa com isso?"] },
+  "ladino": { chamada: "Como malandro, você tem experiência em lutar com sua lâmina e também com sua inteligência, preferindo se mover rapidamente e lutar em silêncio.", tracos: {"agilidade":1,"forca":-1,"finesse":2,"instinto":0,"presenca":1,"conhecimento":0}, armaPrimaria: "primaria-t1-adaga", armaSecundaria: "secundaria-t1-punhal-pequeno", armadura: "armadura-t1-armadura-gambeson", inventario: {"levar":["uma tocha","15 metros de corda","suprimentos básicos","um punhado de ouro"],"escolherEntre":[["uma Poção de Saúde Menor","uma Poção de resistência menor"],["um conjunto de ferramentas de falsificação","um arpéu"]],"extra":null,"escolherEntreAntigo":["um conjunto de ferramentas de falsificação","um gancho"]}, descricao: {"Roupas que são":["limpas","escuras","discretas","de couro","assustadoras","táticas","justas"],"Olhos como":["cravos","terra","oceano infinito","fogo","hera","lilases","noite","espuma do mar","inverno"],"Corpo":["largo","esculpido","curvilíneo","esguio","robusto","curto","atarracado","alto","magro","pequeno","tonificado"],"Pele da cor de":["cinzas","trevo","neve caindo","areia fina","obsidiana","rosa","safira","glicínia"],"Atitude como":["um bandido","um vigarista","um jogador","um chefe da máfia","um pirata"]}, perguntasDeFundo: ["O que sua comunidade descobriu você fazendo que fez com que fosse expulso?","Você tinha uma vida diferente, mas tentou abandoná-la. Que figura do passado ainda o persegue?","Você ficou mais triste ao se despedir de quem?"], perguntasDeConexao: ["O que eu convenci você a fazer recentemente que nos deixou em apuros?","O que eu descobri sobre o seu passado e escondo dos outros?","Quem você conhece do meu passado e como essa pessoa influenciou o que você sente sobre mim?"] },
+  "seraph": { chamada: "Como serafim, você fez um voto a um deus que o ajuda a canalizar o poder arcano sagrado para manter seu grupo em pé.", tracos: {"agilidade":0,"forca":2,"finesse":0,"instinto":1,"presenca":1,"conhecimento":-1}, armaPrimaria: "primaria-t1-machado-sagrado", armaSecundaria: "secundaria-t1-escudo-redondo", armadura: "armadura-t1-armadura-de-cota-de-malha", inventario: {"levar":["uma tocha","15 metros de corda","suprimentos básicos","um punhado de ouro"],"escolherEntre":[["uma Poção de Saúde Menor","uma Poção de resistência menor"],["algumas oferendas","um símbolo de seu deus"]],"extra":null,"escolherEntreAntigo":["um pacote de ofertas","um símbolo de seu deus"]}, descricao: {"Roupas que são":["brilhantes","ondulantes","ornamentadas","justas","modestas","estranhas","naturais"],"Olhos como":["cravos","terra","oceano infinito","fogo","hera","lilases","noite","espuma do mar","inverno"],"Corpo":["largo","esculpido","curvilíneo","esguio","robusto","curto","atarracado","alto","magro","pequeno","tonificado"],"Pele da cor de":["cinzas","trevo","neve caindo","areia fina","obsidiana","rosa","safira","glicínia"],"Atitude como":["um anjo","um médico","um evangelista","um monge","um padre"]}, perguntasDeFundo: ["Que deus(a) você segue? Que façanha incrível essa divindade realizou em seu momento de desespero?","O que mudou em sua aparência após seu juramento?","De que forma estranha ou exclusiva você se comunica com a divindade que segue?"], perguntasDeConexao: ["O que você me fez prometer caso morra em batalha?","Por que pergunta tantas coisas sobre minha divindade?","Você me pediu para proteger um membro do grupo acima de todos, inclusive de você. Quem e por quê?"] },
+  "feiticeiro": { chamada: "Como feiticeiro, você nasceu com um poder mágico inato e aprendeu a usar esse poder para conseguir o que deseja.", tracos: {"agilidade":0,"forca":-1,"finesse":1,"instinto":2,"presenca":1,"conhecimento":0}, armaPrimaria: "primaria-t1-bastao-duplo", armaSecundaria: null, armadura: "armadura-t1-armadura-gambeson", inventario: {"levar":["uma lanterna","15 metros de corda","suprimentos básicos","um punhado de ouro"],"escolherEntre":[["uma Poção de Saúde Menor","uma Poção de resistência menor"],["um orbe sussurrante","uma herança de família"]],"extra":null}, descricao: {"Roupas que são":["sempre em movimento","extravagantes","discreto","em camadas","ornamentado","apertado"],"Olhos como":["cravos","terra","oceano infinito","fogo","hera","lilases","noite","espuma do mar","inverno"],"Corpo":["largo","esculpido","curvilíneo","esguio","robusto","curto","atarracado","alto","magro","pequeno","tonificado"],"Pele da cor de":["cinzas","trevo","neve caindo","areia fina","obsidiana","rosa","safira","glicínia"],"Atitude como":["uma celebridade","um comandante","um político","um brincalhão","um lobo em pele de cordeiro"]}, perguntasDeFundo: ["O que você fez que tornou as pessoas de sua comunidade desconfiadas de você?","Quem lhe ensinou a domar sua magia descontrolada e por que essa pessoa não pode mais orientar você?","Você teme algo profundamente e esconde isso de todos. O que é, e por que isso o aterroriza?"], perguntasDeConexao: ["Por que você confia tanto em mim?","O que eu fiz para você suspeitar tanto de mim?","Por que mantemos em segredo o passado que compartilhamos?"] },
+  "guerreiro": { chamada: "Como guerreiro, você corre para a batalha sem hesitação nem cautela, sabendo que sua força e seu treino falam por você.", tracos: {"agilidade":2,"forca":1,"finesse":0,"instinto":1,"presenca":-1,"conhecimento":0}, armaPrimaria: "primaria-t1-espada-longa", armaSecundaria: null, armadura: "armadura-t1-armadura-de-cota-de-malha", inventario: {"levar":["uma tocha","15 metros de corda","suprimentos básicos","um punhado de ouro"],"escolherEntre":[["uma Poção de Saúde Menor","uma Poção de resistência menor"],["o desenho de alguém que ama","uma pedra de amolar"]],"extra":null,"escolherEntreAntigo":["o desenho de um amante","uma pedra de afiar"]}, descricao: {"Roupas que são":["ousadas","com remendos","reforçadas","reais","elegantes","econômicas","desgastadas pelo tempo"],"Olhos como":["cravos","terra","oceano infinito","fogo","hera","lilases","noite","espuma do mar","inverno"],"Corpo":["largo","esculpido","curvilíneo","esguio","robusto","curto","atarracado","alto","magro","pequeno","tonificado"],"Pele da cor de":["cinzas","trevo","neve caindo","areia fina","obsidiana","rosa","safira","glicínia"],"Atitude como":["um touro","um soldado dedicado","um gladiador","um herói","um trabalhador contratado"]}, perguntasDeFundo: ["Quem ensinou você a lutar e por que essa pessoa ficou para trás quando você saiu de sua comunidade?","Anos atrás, você perdeu uma batalha para alguém que o deixou à beira da morte. Quem é essa pessoa e como ela traiu você?","Que lugar lendário você sempre quis visitar e por que ele é tão especial?"], perguntasDeConexao: ["Nos conhecíamos bem antes do surgimento do grupo. Como?","Com qual tarefa mundana você costuma me ajudar, fora dos momentos de batalha?","Que medos estou ajudando você a superar?"] },
+  "mago": { chamada: "Como mago, você se familiarizou com o arcano por meio do estudo incansável de grimórios e outras ferramentas de magia.", tracos: {"agilidade":-1,"forca":0,"finesse":0,"instinto":1,"presenca":1,"conhecimento":2}, armaPrimaria: "primaria-t1-bastao-longo", armaSecundaria: null, armadura: "armadura-t1-armadura-de-couro", inventario: {"levar":["uma tocha","15 metros de corda","suprimentos básicos","um punhado de ouro"],"escolherEntre":[["uma Poção de Saúde Menor","uma Poção de resistência menor"],["um livro que você está tentando traduzir","um pequeno e inofensivo elemental de estimação"]],"extra":"E, EM SEGUIDA, DECIDA EM QUE VOCÊ CARREGARÁ SEUS FEITIÇOS: grandes volumes, cartas de tarô, etc.","escolherEntreAntigo":["um livro que está tentando traduzir","um pequeno e inofensivo animal de estimação elementar"]}, descricao: {"Roupas que são":["bonitas","limpas","comuns","fluido","em camadas","retalhos","justo"],"Olhos como":["cravos","terra","oceano infinito","fogo","hera","lilases","noite","espuma do mar","inverno"],"Corpo":["largo","esculpido","curvilíneo","esguio","robusto","curto","atarracado","alto","magro","pequeno","tonificado"],"Pele da cor de":["cinzas","trevo","neve caindo","areia fina","obsidiana","rosa","safira","glicínia"],"Atitude como":["um excêntrico","um bibliotecário","um fusível aceso","um filósofo","um professor"]}, perguntasDeFundo: ["Para quais responsabilidades sua comunidade já contou com você? Como você a decepcionou?","Você passou a vida em busca de um livro ou objeto importante. O que é, e por que é tão importante?","Você tem um rival poderoso. Quem é essa pessoa e por que você quer tanto derrotá-la?"], perguntasDeConexao: ["Que favor eu pedi e você não sabe se conseguirá cumprir?","Que passatempo ou fascinação estranha nós compartilhamos?","Que segredo a seu respeito você confiou a mim?"] },
 };
 
 /** Guia da classe, aceitando qualquer grafia do nome. */
@@ -130,6 +130,111 @@ function caracteristicasDaOrigem_(ficha) {
 }
 
 /**
+ * As características que a CLASSE concede — a original e a de multiclasse.
+ *
+ * A REGRA, e por que ela precisou do SRD em inglês
+ * ------------------------------------------------
+ * O livro pt-BR diz que quem faz multiclasse "receba suas habilidades
+ * iniciais" da classe nova. "Habilidades iniciais" não é termo de regra em
+ * lugar nenhum do livro, e por isso a Parte 8 deixou isto sem implementar em
+ * vez de chutar. O SRD oficial em inglês (Darrington Press, CC BY 4.0) é
+ * exato:
+ *
+ *   "When you multiclass, you choose an additional class, gain access to one
+ *    of its domains, and acquire its class feature."
+ *
+ * E o SRD separa, em cada classe, a CLASS FEATURE (o Rally do Bardo) da HOPE
+ * FEATURE (o "Faça uma cena"). Multiclasse dá a primeira. **Não dá a
+ * segunda** — se desse, o personagem teria duas maneiras de gastar Esperança
+ * que o livro nunca pôs na mesma ficha.
+ *
+ * Daí a assimetria proposital deste código: a classe original entrega
+ * característica de classe + característica de Esperança; a multiclasse
+ * entrega só a de classe.
+ *
+ * AS CARTAS DE SUBCLASSE também entram aqui, porque é ali que mora metade do
+ * que o personagem sabe fazer — e só as cartas que ele REALMENTE tem
+ * ('ficha.subclasseCartas' na original, sempre só a fundação na multiclasse).
+ * É isso que faz 'temCaracteristicaNaFicha_('Poesia Épica')' funcionar e o
+ * Dado de Reunião virar d10 na hora certa.
+ *
+ * ⚠ Só os NOMES, como nas ancestralidades. O texto da regra mora nos
+ * data/*.json e quem junta os dois é a tela.
+ */
+function caracteristicasDaClasse_(ficha) {
+  const saida = [];
+  const id = (ficha && ficha.identidade) || {};
+
+  const normClasse = (x) => (typeof normalizarClasse_ === 'function') ? normalizarClasse_(x) : null;
+  const normSub = (x) => (typeof normalizarSubclasse_ === 'function') ? normalizarSubclasse_(x) : null;
+
+  const subclasseDe = (classeId, subId) => {
+    const c = CLASSES[classeId];
+    if (!c || !subId) return null;
+    const subs = c.subclasses || [];
+    for (let i = 0; i < subs.length; i++) if (subs[i].id === subId) return subs[i];
+    return null;
+  };
+
+  const juntarCartas = (sub, quais, origem) => {
+    if (!sub) return;
+    const mapa = sub.caracteristicas || {};
+    for (let i = 0; i < quais.length; i++) {
+      const lista = mapa[quais[i]] || [];
+      for (let k = 0; k < lista.length; k++) saida.push({ nome: lista[k], origem: origem });
+    }
+  };
+
+  // --- a classe original ---------------------------------------------------
+  const classeId = normClasse(id.classe);
+  const c = classeId ? CLASSES[classeId] : null;
+  if (c) {
+    (c.caracteristicas || []).forEach(function (n) { saida.push({ nome: n, origem: 'classe' }); });
+    if (c.caracteristicaEsperanca) {
+      saida.push({ nome: c.caracteristicaEsperanca, origem: 'esperança' });
+    }
+    const quais = Array.isArray(ficha.subclasseCartas) && ficha.subclasseCartas.length
+      ? ficha.subclasseCartas : ['fundacao'];
+    juntarCartas(subclasseDe(classeId, normSub(id.subclasse)), quais, 'subclasse');
+  }
+
+  // --- a multiclasse -------------------------------------------------------
+  const mc = ficha && ficha.multiclasse;
+  if (mc && mc.classe) {
+    const idMc = normClasse(mc.classe);
+    const c2 = idMc ? CLASSES[idMc] : null;
+    if (c2) {
+      (c2.caracteristicas || []).forEach(function (n) {
+        saida.push({ nome: n, origem: 'multiclasse' });
+      });
+      // ⚠ NÃO entra c2.caracteristicaEsperanca. Ver o comentário acima: o SRD
+      //   dá "its class feature", e a de Esperança é outra coisa.
+      const quaisMc = Array.isArray(mc.cartas) && mc.cartas.length ? mc.cartas : ['fundacao'];
+      juntarCartas(subclasseDe(idMc, normSub(mc.subclasse)), quaisMc, 'multiclasse');
+    }
+  }
+
+  return saida;
+}
+
+/**
+ * Os domínios a que o personagem tem acesso — inclusive o da multiclasse.
+ *
+ * A validação das cartas nunca dependeu disto (quem manda lá é
+ * 'limitesDeDominio_', que sabe do teto de metade do nível). Isto aqui é o
+ * que a FICHA mostra: sem o domínio novo na lista, quem multiclassou via a
+ * carta na mão e um cabeçalho que não citava o domínio dela.
+ */
+function dominiosDoPersonagem_(ficha) {
+  const id = (ficha && ficha.identidade) || {};
+  const base = (typeof dominiosDaClasse_ === 'function') ? (dominiosDaClasse_(id.classe) || []) : [];
+  const saida = base.slice();
+  const mc = ficha && ficha.multiclasse;
+  if (mc && mc.dominio && saida.indexOf(mc.dominio) === -1) saida.push(mc.dominio);
+  return saida;
+}
+
+/**
  * Tudo que é DERIVADO da ficha — nada aqui é escolha do jogador.
  * Devolve os números; quem grava é aplicarDerivados_().
  */
@@ -141,6 +246,16 @@ function derivadosDoPersonagem_(ficha) {
   const eq = (ficha && ficha.equipamento) || {};
   const armadura = (typeof acharArmadura_ === 'function' && eq.armadura)
     ? acharArmadura_(eq.armadura) : null;
+
+  /*
+   * A FORMA DE FERA muda a Evasão enquanto dura: o livro manda "somar o bônus
+   * de Evasão dela à sua Evasão". É a única coisa da ficha paralela que mexe
+   * num número da ficha principal — o atributo de ataque e as habilidades são
+   * leitura, não conta.
+   */
+  const formaAtiva = (typeof formaDeFeraAtiva_ === 'function') ? formaDeFeraAtiva_(ficha) : null;
+  const bonusDaForma = (formaAtiva && formaAtiva.modificadores)
+    ? (Math.trunc(Number(String(formaAtiva.modificadores.evasao || '0').replace('+', ''))) || 0) : 0;
 
   let evasao = bases ? bases.evasaoInicial : null;
   const pontuacaoArmadura = armadura ? (armadura.pontuacao || 0) : 0;
@@ -156,17 +271,47 @@ function derivadosDoPersonagem_(ficha) {
   const proficiencia = (typeof proficienciaDaFicha_ === 'function')
     ? proficienciaDaFicha_(ficha) : CRIACAO.proficienciaInicial;
 
+  // Os bônus PERMANENTES que a subida de nível deixou na ficha. Ficam num
+  // balde separado (ficha.avancos.bonus) de propósito: assim a base continua
+  // sendo sempre a da classe + armadura, e o que veio do avanço dá para ler,
+  // conferir e desfazer sem recalcular a ficha inteira. Quem preenche é o
+  // 4D_Avanco.gs — aqui a gente só soma.
+  const b = (typeof bonusDeAvanco_ === 'function') ? bonusDeAvanco_(ficha)
+    : { evasao: 0, pontosDeVidaMaximos: 0, estresseMaximo: 0 };
+
+  let pontosDeVidaMaximos = bases ? bases.pontosDeVidaIniciais : null;
+  /*
+   * Os bônus PERMANENTES que vieram de CARTA (Vitalidade). Ficam num balde
+   * separado do da subida de nível porque as duas fontes são independentes —
+   * e, como todo o resto, são DERIVADOS: somados na hora da conta, nunca
+   * gravados em cima do valor, senão somariam de novo na próxima.
+   */
+  const bc = (typeof bonusDeCartas_ === 'function') ? bonusDeCartas_(ficha)
+    : { pontosDeVidaMaximos: 0, estresseMaximo: 0, limiares: 0 };
+
+  if (pontosDeVidaMaximos !== null) {
+    pontosDeVidaMaximos += (b.pontosDeVidaMaximos || 0) + bc.pontosDeVidaMaximos;
+  }
+  if (bc.limiares && limiarMaior !== null) {
+    limiarMaior += bc.limiares;
+    limiarGrave += bc.limiares;
+  }
+  if (evasao !== null) evasao += (b.evasao || 0) + bonusDaForma;
+
   return {
     evasao: evasao,
-    pontosDeVidaMaximos: bases ? bases.pontosDeVidaIniciais : null,
-    estresseMaximo: CRIACAO.estresse,
+    pontosDeVidaMaximos: pontosDeVidaMaximos,
+    estresseMaximo: CRIACAO.estresse + (b.estresseMaximo || 0) + bc.estresseMaximo,
     esperancaMaxima: CRIACAO.esperancaMaxima,
     proficiencia: proficiencia,
     pontuacaoArmadura: pontuacaoArmadura,
     limiarMaior: limiarMaior,
     limiarGrave: limiarGrave,
-    dominios: (typeof dominiosDaClasse_ === 'function') ? dominiosDaClasse_(id.classe) : [],
-    tracoDeConjuracao: (typeof conjuracaoDoPersonagem_ === 'function') ? conjuracaoDoPersonagem_(ficha) : ''
+    dominios: dominiosDoPersonagem_(ficha),
+    caracteristicas: caracteristicasDaOrigem_(ficha).concat(caracteristicasDaClasse_(ficha)),
+    formaDeFera: formaAtiva ? { id: formaAtiva.id, nome: formaAtiva.nome, evasao: bonusDaForma } : null,
+    tracoDeConjuracao: (typeof conjuracaoDoPersonagem_ === 'function') ? conjuracaoDoPersonagem_(ficha) : '',
+    conjuracoesDisponiveis: (typeof conjuracoesDaFicha_ === 'function') ? conjuracoesDaFicha_(ficha) : []
   };
 }
 
@@ -203,6 +348,34 @@ function aplicarDerivados_(ficha) {
   r.armaduraMarcada = limitar_(r.armaduraMarcada, 0, d.pontuacaoArmadura);
 
   ficha.dominios = d.dominios;
+
+  /*
+   * As CARACTERÍSTICAS também são derivadas — origem + classe + multiclasse.
+   * Até a Parte 9 só as de origem entravam, e o Rally do Bardo não aparecia em
+   * lugar nenhum da ficha. Recalcular aqui conserta as fichas antigas sozinho,
+   * no primeiro salvamento.
+   *
+   * ⚠ O cálculo lê ficha.origem, identidade e multiclasse — nunca
+   * ficha.caracteristicas. Ler o próprio campo derivado de volta foi o que
+   * congelou a Proficiência por três partes (E4 no BACKLOG).
+   */
+  ficha.caracteristicas = d.caracteristicas;
+
+  /*
+   * O traço de Conjuração também é derivado. A tela desenhava o dele sozinha,
+   * repetindo a regra do servidor em JavaScript — e essa cópia ia ficar errada
+   * no dia em que a multiclasse desse duas opções. Agora o servidor manda as
+   * duas coisas: qual vale agora e quais existem.
+   */
+  ficha.tracoDeConjuracao = d.tracoDeConjuracao;
+  ficha.formaDeFera = d.formaDeFera;
+  ficha.conjuracoesDisponiveis = d.conjuracoesDisponiveis;
+
+  // Encher o Estresse deixa Vulnerável (livro p.99 e SRD). Aqui, depois dos
+  // tetos: é o único ponto em que o máximo de Estresse já está calculado.
+  if (typeof sincronizarVulneravelPorEstresse_ === 'function') {
+    d.vulneravel = sincronizarVulneravelPorEstresse_(ficha);
+  }
   return d;
 }
 

@@ -48,14 +48,25 @@ no app. Quando a parte correspondente for construída, voltar aqui e ligar as po
 - **Restauração** (Esplendor 6)
 - **Zona de Proteção** (Esplendor 6)
 
-### 2.2 Cartas que mudam a ficha de forma permanente
+### 2.2 Cartas que mudam a ficha de forma permanente — RESOLVIDO (I2)
 5 cartas dão bônus permanente ou se removem do jogo. Precisam de tratamento especial na ficha (não dá para simplesmente "desequipar").
 
-- **Vitalidade** (Lâmina 5)
-- **Livro do Ronin** (Códice 9)
-- **Mestre do Ofício** (Graça 9)
-- **Projétil Corrosivo** (Sábio 3)
-- **Ressurreição** (Esplendor 10)
+Três mexem na **própria ficha**, aplicam pelo botão dentro da carta e vão
+trancadas para o cofre — o bônus é **derivado** (nunca gravado em cima do
+máximo) e a carta não volta para a mão:
+
+- **Vitalidade** (Lâmina 5) — exatamente dois de três benefícios distintos
+- **Mestre do Ofício** (Graça 9) — +2 em duas Experiências ou +3 em uma
+- **Ressurreição** (Esplendor 10) — só tranca; o que ela faz depende de um d6,
+  e quem rola é o jogador
+
+Duas mexem no **alvo**, não na ficha, e por isso não passam por aqui: viram
+condição ou observação no adversário em cena.
+
+- **Livro do Ronin** (Códice 9) — deixa permanentemente Vulnerável
+- **Projétil Corrosivo** (Sábio 3) — deixa Corroído
+
+Arquivo: `backend/4I_CartasPermanentes.gs`. Detalhe em `pontas-h-e-i.md` §I2.
 
 ### 2.3 Cartas que a edição pt-BR deixou em inglês
 - **Banir** (Códice 6) — arquivo `Banir.png` — o TEXTO INTEIRO da carta está em inglês

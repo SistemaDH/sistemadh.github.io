@@ -13,7 +13,8 @@
 
 import { el } from '../util.js';
 import { abrirModal } from '../ui.js';
-import { nomeComGlossa, textoComGlossa } from '../glossario.js';
+import { nomeComGlossa } from '../glossario.js';
+import { textoAnotado } from '../verbete.js';
 
 /**
  * @param {Object} opcoes
@@ -101,7 +102,7 @@ export function abrirCarta({ itens, indice = 0, aoEscolher, textoEscolher = 'Esc
       el('h3', { class: 'carta-visor__reservaTitulo' }, nomeComGlossa(item.nome || 'Carta')),
       item.rodape ? el('p', { class: 'texto-sm', texto: item.rodape }) : null,
       el('p', { class: 'carta-visor__reservaTexto' },
-        item.texto ? textoComGlossa(item.texto) : 'A imagem desta carta não está disponível.')
+        item.texto ? textoAnotado(item.texto) : 'A imagem desta carta não está disponível.')
     ]);
   }
 

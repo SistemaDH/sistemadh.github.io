@@ -1,0 +1,2110 @@
+{
+  "versao": 1,
+  "fonte": "Daggerheart — Livro de Regras, edição Jambô (1ª ed., 2025, 368p), conferido contra a errata oficial de 9/9/2025 e o SRD 1.0 em inglês.",
+  "regra": "O app fala a língua das CARTAS. O verbete traz o termo da carta, o do livro entre parênteses quando divergem, e a página para quem quiser ler o texto inteiro.",
+  "aviso": "Os verbetes são resumo escrito para a mesa, não transcrição do livro. Quando a errata muda a regra, o verbete conta a versão CORRIGIDA e diz que corrigiu — a ordem de precedência é errata > SRD > livro.",
+  "paginasDoLivro": 368,
+  "verbetes": [
+    {
+      "id": "acao-de-adversario",
+      "termo": "Ação",
+      "variantes": [
+        "ação única",
+        "ataque padrão"
+      ],
+      "categoria": "adversario",
+      "pagina": 195,
+      "ancora": "Ações de adversários podem ser divididas em três categorias",
+      "resumo": "Só sai com o adversário EM FOCO, e no lugar do ataque padrão.",
+      "explicacao": [
+        "Todo adversário tem um ataque padrão: nome, alcance e dano.",
+        "Ele também pode fazer o que não está na ficha — a ficha é o mínimo, não o máximo."
+      ],
+      "veja": [
+        "foco",
+        "habilidade-de-adversario"
+      ]
+    },
+    {
+      "id": "adversario",
+      "termo": "Adversário",
+      "variantes": [
+        "adversários"
+      ],
+      "categoria": "adversario",
+      "pagina": 193,
+      "ancora": "Cada ficha de adversário apresenta suas informações",
+      "resumo": "A ficha de quem se opõe ao grupo: patamar, tipo, Dificuldade, limiares, PV, Estresse, ataque padrão e habilidades.",
+      "explicacao": [
+        "Adversário de 1º patamar serve a grupos de nível 1; 2º patamar aos níveis 2 a 4; 3º aos 5 a 7; 4º aos 8 a 10.",
+        "Quando a ficha diz \"aliado\", ela fala de outro adversário — não de um personagem."
+      ],
+      "veja": [
+        "dificuldade-do-adversario",
+        "tipo-de-adversario",
+        "habilidade-de-adversario",
+        "patamar-de-adversario"
+      ]
+    },
+    {
+      "id": "adversario-derrotado",
+      "termo": "Adversário derrotado",
+      "variantes": [
+        "derrotado"
+      ],
+      "categoria": "adversario",
+      "pagina": 208,
+      "ancora": "Quando um adversário marca seu último Ponto de Vida",
+      "resumo": "Marcou o último PV, está derrotado — mas o que isso SIGNIFICA é decisão da mesa.",
+      "explicacao": [
+        "Inconsciente, amarrado, morto: o livro deixa para a mesa.",
+        "Adversários importantes costumam ter como escapar ou forjar a própria morte."
+      ],
+      "veja": [
+        "pontos-de-vida",
+        "adversario"
+      ]
+    },
+    {
+      "id": "dificuldade-do-adversario",
+      "termo": "Dificuldade do adversário",
+      "variantes": [],
+      "categoria": "adversario",
+      "pagina": 193,
+      "ancora": "Adversários não usam Evasão como personagens fazem",
+      "resumo": "Adversário não tem Evasão: tem Dificuldade. Alcançar o número já é sucesso.",
+      "explicacao": [
+        "Quando uma habilidade do adversário pede uma jogada e não diz a Dificuldade, use a da ficha."
+      ],
+      "veja": [
+        "evasao",
+        "dificuldade",
+        "adversario"
+      ]
+    },
+    {
+      "id": "experiencia-de-adversario",
+      "termo": "Experiência de adversário",
+      "variantes": [],
+      "categoria": "adversario",
+      "pagina": 194,
+      "ancora": "você pode gastar 1 Ponto de Medo para somar o bônus da",
+      "resumo": "Custa 1 Medo, e pode somar na Dificuldade, na jogada de ataque ou na de reação.",
+      "explicacao": [
+        "Rendem mais guardadas para os momentos dramáticos do que usadas em toda jogada."
+      ],
+      "veja": [
+        "experiencia",
+        "medo",
+        "adversario"
+      ]
+    },
+    {
+      "id": "guia-de-batalha",
+      "termo": "Guia de Batalha",
+      "variantes": [],
+      "categoria": "adversario",
+      "pagina": 197,
+      "ancora": "quantos e quais tipos de adversários utilizar num encontro",
+      "resumo": "A conta que diz de que tamanho o encontro pode ser.",
+      "explicacao": [],
+      "quadro": {
+        "tipo": "formula",
+        "texto": "(3 × personagens no combate) + 2",
+        "nota": "Três personagens dão 11 PB; cinco dão 17."
+      },
+      "veja": [
+        "pontos-de-batalha"
+      ]
+    },
+    {
+      "id": "habilidade-de-adversario",
+      "termo": "Habilidade de adversário",
+      "variantes": [],
+      "categoria": "adversario",
+      "pagina": 194,
+      "ancora": "Cada adversário marca PF individualmente",
+      "resumo": "Três tipos: ação, reação e passiva. Algumas cobram Medo, Estresse, ou os dois.",
+      "explicacao": [
+        "O Estresse sai do PRÓPRIO adversário: um não paga pelo outro.",
+        "O Medo da habilidade é cobrado MESMO que você já tenha gasto Medo para pôr o bicho em foco."
+      ],
+      "veja": [
+        "acao-de-adversario",
+        "reacao-de-adversario",
+        "passiva-de-adversario",
+        "habilidade-de-medo",
+        "foco"
+      ]
+    },
+    {
+      "id": "habilidade-de-foco",
+      "termo": "Habilidade de foco",
+      "variantes": [],
+      "categoria": "adversario",
+      "pagina": 196,
+      "ancora": "isso não requer Pontos de Medo",
+      "resumo": "A habilidade que põe adversários em foco na hora — e, salvo texto em contrário, NÃO custa Medo.",
+      "explicacao": [
+        "Quem foi posto em foco assim não pode usar outra habilidade de foco.",
+        "O Mestre escolhe a ordem em que eles agem."
+      ],
+      "veja": [
+        "foco",
+        "habilidade-de-adversario"
+      ]
+    },
+    {
+      "id": "habilidade-de-invocacao",
+      "termo": "Habilidade de invocação",
+      "variantes": [
+        "invocar"
+      ],
+      "categoria": "adversario",
+      "pagina": 196,
+      "ancora": "Certas habilidades invocam adversários adicionais",
+      "resumo": "Traz adversários novos para a cena, no alcance que a habilidade disser.",
+      "explicacao": [
+        "Serve para esticar ou endurecer a luta.",
+        "Invocados NÃO entram na conta de Pontos de Batalha."
+      ],
+      "veja": [
+        "pontos-de-batalha",
+        "habilidade-de-adversario"
+      ]
+    },
+    {
+      "id": "habilidade-de-medo",
+      "termo": "Habilidade de Medo",
+      "variantes": [],
+      "categoria": "adversario",
+      "pagina": 196,
+      "ancora": "Habilidades de Medo são as mais raras e poderosas",
+      "resumo": "As mais raras e mais fortes: exigem Pontos de Medo para serem ativadas.",
+      "explicacao": [
+        "Podem ser passivas, ações ou reações.",
+        "Ambientes também têm habilidades de Medo, e funcionam igual (p.241).",
+        "O Mestre sempre pode improvisar uma habilidade de Medo por 1 Medo."
+      ],
+      "veja": [
+        "medo",
+        "habilidade-de-adversario",
+        "ambiente"
+      ]
+    },
+    {
+      "id": "horda",
+      "termo": "Horda",
+      "variantes": [],
+      "categoria": "adversario",
+      "pagina": 195,
+      "ancora": "quando tiver marcado metade de seus",
+      "resumo": "Ao marcar metade dos PV ou mais, o ataque padrão da horda passa a causar o dano reduzido escrito na habilidade.",
+      "explicacao": [
+        "O app avisa quando o limite é cruzado — quem rola o ataque é o Mestre."
+      ],
+      "veja": [
+        "tipo-de-adversario",
+        "passiva-de-adversario"
+      ]
+    },
+    {
+      "id": "improvisando-adversarios",
+      "termo": "Improvisando adversários",
+      "variantes": [
+        "adversários personalizados"
+      ],
+      "categoria": "adversario",
+      "pagina": 208,
+      "ancora": "patamar",
+      "resumo": "Subir de patamar: acrescente uma habilidade forte. Descer: tire a mais poderosa ou complicada.",
+      "explicacao": [
+        "A p.208 traz também a tabela de estatísticas por patamar, para montar do zero."
+      ],
+      "veja": [
+        "patamar-de-adversario",
+        "tipo-de-adversario"
+      ]
+    },
+    {
+      "id": "inclemente",
+      "termo": "Inclemente",
+      "variantes": [],
+      "categoria": "adversario",
+      "pagina": 195,
+      "ancora": "este adversário pode ser posto",
+      "resumo": "Pode ser posto em foco X vezes por turno do Mestre — pagando o Medo normalmente.",
+      "explicacao": [
+        "Serve para o bicho excepcionalmente rápido, ou para quem enfrenta o grupo sozinho."
+      ],
+      "veja": [
+        "foco",
+        "passiva-de-adversario"
+      ]
+    },
+    {
+      "id": "lacaio",
+      "termo": "Lacaio",
+      "variantes": [],
+      "categoria": "adversario",
+      "pagina": 195,
+      "ancora": "este adversário é derrotado quando",
+      "resumo": "Cai com QUALQUER dano. E cada X pontos de dano derrubam mais um lacaio no alcance.",
+      "explicacao": [
+        "A leitura literal do texto: o alvo cai por sofrer dano, e mais (dano ÷ X) caem junto. Com Lacaio (3) e 7 de dano: o alvo + 2 = 3 no total.",
+        "Não há esclarecimento oficial sobre isso; o exemplo do SRD é o da leitura literal, e é a que esta mesa usa.",
+        "Em Pontos de Batalha, um CONJUNTO de lacaios do tamanho do grupo custa 1 PB."
+      ],
+      "veja": [
+        "tipo-de-adversario",
+        "pontos-de-batalha"
+      ]
+    },
+    {
+      "id": "lentidao",
+      "termo": "Lentidão",
+      "variantes": [],
+      "categoria": "adversario",
+      "pagina": 195,
+      "ancora": "mas não tiver nenhum marcador em sua ficha",
+      "resumo": "O primeiro foco é só preparação: põe um marcador. Só no foco seguinte ele age.",
+      "explicacao": [
+        "Combina com quem tem ações poderosas que compensam a demora."
+      ],
+      "veja": [
+        "foco",
+        "passiva-de-adversario"
+      ]
+    },
+    {
+      "id": "limiares-do-adversario",
+      "termo": "Limiares do adversário",
+      "variantes": [],
+      "categoria": "adversario",
+      "pagina": 193,
+      "ancora": "representa os limiares de dano do adversário",
+      "resumo": "\"Limiares: 8/14\" é o mesmo que na ficha do jogador: 8 é o Maior, 14 é o Severo.",
+      "explicacao": [
+        "Adversário NÃO soma nível a esses números — o que está escrito é o valor final."
+      ],
+      "veja": [
+        "limiares-de-dano",
+        "adversario"
+      ]
+    },
+    {
+      "id": "passiva-de-adversario",
+      "termo": "Passiva",
+      "variantes": [
+        "passivas"
+      ],
+      "categoria": "adversario",
+      "pagina": 195,
+      "ancora": "Passivas de adversários estão sempre ativas",
+      "resumo": "Sempre ativa. Não há o que \"usar\": ou vale o tempo todo, ou dispara sozinha.",
+      "explicacao": [
+        "Umas são permanentes (Forma Arcana dá resistência a dano mágico); outras disparam na condição descrita (Horda)."
+      ],
+      "veja": [
+        "habilidade-de-adversario",
+        "horda",
+        "inclemente",
+        "lentidao"
+      ]
+    },
+    {
+      "id": "patamar-de-adversario",
+      "termo": "Patamar de adversário",
+      "variantes": [],
+      "categoria": "adversario",
+      "pagina": 209,
+      "ancora": "patamar",
+      "resumo": "Quatro faixas de ameaça, casadas com os patamares de jogo.",
+      "explicacao": [
+        "Dá para usar ficha de outro patamar — mas aí é preciso ajustar, como manda a p.208."
+      ],
+      "veja": [
+        "patamar-de-jogo",
+        "improvisando-adversarios"
+      ]
+    },
+    {
+      "id": "pontos-de-batalha",
+      "termo": "Pontos de Batalha",
+      "variantes": [
+        "PB"
+      ],
+      "categoria": "adversario",
+      "pagina": 197,
+      "ancora": "Gaste 5 PB a cada adversário solo",
+      "resumo": "A moeda do orçamento do encontro. Gaste até acabar.",
+      "explicacao": [],
+      "quadro": {
+        "tipo": "lista",
+        "titulo": "Ajustes ao total",
+        "itens": [
+          "−1 PB se a luta deve ser mais fácil ou curta",
+          "−2 PB se houver 2 ou mais adversários solo",
+          "−2 PB para dar +1d4 (ou +2) no dano de todos os adversários",
+          "+1 PB se você escolher um adversário de patamar inferior",
+          "+1 PB se não houver brutamontes, horda, líder nem solo",
+          "+2 PB se a luta precisar ser mais perigosa"
+        ]
+      },
+      "veja": [
+        "guia-de-batalha",
+        "tipo-de-adversario",
+        "habilidade-de-invocacao"
+      ]
+    },
+    {
+      "id": "reacao-de-adversario",
+      "termo": "Reação",
+      "variantes": [],
+      "categoria": "adversario",
+      "pagina": 195,
+      "ancora": "Reações de adversários são habilidades que não surtem",
+      "resumo": "Dispara sozinha quando a condição descrita acontece — SEM gastar Medo para interromper.",
+      "explicacao": [
+        "A menos que o próprio texto da reação diga o contrário."
+      ],
+      "veja": [
+        "habilidade-de-adversario",
+        "foco"
+      ]
+    },
+    {
+      "id": "tipo-de-adversario",
+      "termo": "Tipo de adversário",
+      "variantes": [],
+      "categoria": "adversario",
+      "pagina": 194,
+      "ancora": "Assistentes ajudam os aliados",
+      "resumo": "O papel do bicho no conflito. É o tipo que decide quanto ele custa em Pontos de Batalha.",
+      "explicacao": [
+        "Misturar tipos diferentes é o que deixa o encontro interessante."
+      ],
+      "quadro": {
+        "tipo": "tabela",
+        "titulo": "",
+        "colunas": [
+          "Tipo",
+          "O que faz",
+          "Custa"
+        ],
+        "linhas": [
+          [
+            "Assistente",
+            "Ajuda os aliados e atrapalha os oponentes.",
+            "1 PB"
+          ],
+          [
+            "Atirador",
+            "Frágil de perto, perigoso de longe.",
+            "2 PB"
+          ],
+          [
+            "Brutamontes",
+            "Duro de matar e de golpe pesado.",
+            "4 PB"
+          ],
+          [
+            "Comum",
+            "A base dos grupos de adversários.",
+            "2 PB"
+          ],
+          [
+            "Horda",
+            "Criaturas idênticas agindo como uma unidade só.",
+            "2 PB"
+          ],
+          [
+            "Lacaio",
+            "Cai fácil, mas perigoso em quantidade.",
+            "1 PB por conjunto"
+          ],
+          [
+            "Líder",
+            "Comanda e invoca outros adversários.",
+            "3 PB"
+          ],
+          [
+            "Manipulador",
+            "O desafio dele se resolve na conversa.",
+            "1 PB"
+          ],
+          [
+            "Oportunista",
+            "Explora fraquezas e emboscada.",
+            "2 PB"
+          ],
+          [
+            "Solo",
+            "Desafio formidável sozinho, com ou sem assistentes.",
+            "5 PB"
+          ]
+        ]
+      },
+      "veja": [
+        "pontos-de-batalha",
+        "lacaio",
+        "horda",
+        "adversario"
+      ]
+    },
+    {
+      "id": "adaptando-ambientes",
+      "termo": "Adaptando ambientes",
+      "variantes": [
+        "patamar de ambiente"
+      ],
+      "categoria": "ambiente",
+      "pagina": 242,
+      "ancora": "Estatísticas de Ambientes por Patamar",
+      "resumo": "Levar um ambiente para outro patamar é trocar a Dificuldade e os dados de dano.",
+      "explicacao": [
+        "Ambiente é mais fácil de mexer que adversário: não há PV, limiares nem Estresse.",
+        "Subindo o patamar, considere acrescentar uma habilidade de Medo; descendo, tirar a mais impactante.",
+        "Se ele invoca adversários, troque por bichos do patamar novo."
+      ],
+      "quadro": {
+        "tipo": "tabela",
+        "titulo": "Estatísticas de ambientes por patamar (p.242)",
+        "colunas": [
+          "Estatística",
+          "1º",
+          "2º",
+          "3º",
+          "4º"
+        ],
+        "linhas": [
+          [
+            "Dados de dano",
+            "1d6+1 a 1d8+3",
+            "2d6+3 a 2d10+2",
+            "3d8+3 a 3d10+1",
+            "4d8+3 a 4d10+10"
+          ],
+          [
+            "Dificuldade",
+            "11",
+            "14",
+            "17",
+            "20"
+          ]
+        ]
+      },
+      "veja": [
+        "ambiente",
+        "habilidade-de-medo"
+      ]
+    },
+    {
+      "id": "ambiente",
+      "termo": "Ambiente",
+      "variantes": [
+        "ambientes"
+      ],
+      "categoria": "ambiente",
+      "pagina": 240,
+      "ancora": "Ambientes representam tudo o que há na cena",
+      "resumo": "A ficha do LUGAR: tudo na cena que não é personagem nem adversário.",
+      "explicacao": [
+        "Traz patamar, tipo, impulsos, Dificuldade, adversários sugeridos e habilidades.",
+        "Ambiente não tem PV nem Estresse — não há trilha para marcar.",
+        "As perguntas em itálico embaixo de cada habilidade são ganchos para o Mestre, não regra."
+      ],
+      "veja": [
+        "tipo-de-ambiente",
+        "adaptando-ambientes",
+        "impulsos"
+      ]
+    },
+    {
+      "id": "impulsos",
+      "termo": "Impulsos",
+      "variantes": [],
+      "categoria": "ambiente",
+      "pagina": 240,
+      "ancora": "como a narrativa provoca e",
+      "resumo": "O que o lugar QUER: como ele provoca e desafia quem entra.",
+      "explicacao": [
+        "Lugares não têm vontade — os impulsos resumem as forças que agem ali."
+      ],
+      "veja": [
+        "ambiente"
+      ]
+    },
+    {
+      "id": "tipo-de-ambiente",
+      "termo": "Tipo de ambiente",
+      "variantes": [
+        "Travessia",
+        "Exploração",
+        "Social",
+        "Evento"
+      ],
+      "categoria": "ambiente",
+      "pagina": 241,
+      "ancora": "Ambientes de Evento são definidos pelas atividades",
+      "resumo": "Quatro tipos de cena — e nenhum impede os outros de acontecerem ali.",
+      "explicacao": [],
+      "quadro": {
+        "tipo": "lista",
+        "titulo": "",
+        "itens": [
+          "Evento: definido pelo que acontece, mais do que pelo lugar",
+          "Exploração: lugares cheios de mistério a descobrir",
+          "Social: o desafio é interpessoal",
+          "Travessia: atravessar o espaço já é o desafio"
+        ]
+      },
+      "veja": [
+        "ambiente"
+      ]
+    },
+    {
+      "id": "custo-de-recordar",
+      "termo": "custo de recordar",
+      "variantes": [
+        "custo de troca"
+      ],
+      "categoria": "carta",
+      "pagina": 101,
+      "ancora": "cartas de domínio",
+      "resumo": "O Estresse que se marca para trocar uma carta do cofre pela da mão fora de um descanso.",
+      "explicacao": [
+        "Num descanso a troca é de graça, e é isso que o descanso faz de melhor com as cartas.",
+        "Sem Estresse sobrando, a troca não acontece — não existe carta na mão sem o custo pago."
+      ],
+      "veja": [
+        "mao-e-cofre",
+        "estresse",
+        "descanso-curto"
+      ],
+      "noLivro": "custo de troca"
+    },
+    {
+      "id": "limites-de-uso",
+      "termo": "Limites de uso",
+      "variantes": [
+        "uma vez por descanso",
+        "uma vez por descanso longo",
+        "uma vez por sessão"
+      ],
+      "categoria": "carta",
+      "pagina": 101,
+      "ancora": "Algumas cartas de domínio tem um limite de uso",
+      "resumo": "Quando a carta diz \"uma vez por descanso\", o uso volta no fim de qualquer descanso.",
+      "explicacao": [
+        "\"Uma vez por descanso longo\" só volta no descanso longo.",
+        "\"Uma vez por sessão\" NÃO volta com descanso: volta na sessão seguinte."
+      ],
+      "veja": [
+        "descanso-curto",
+        "descanso-longo"
+      ]
+    },
+    {
+      "id": "mao-e-cofre",
+      "termo": "mão",
+      "noLivro": "a mão é a mesma; o cofre o livro chama de \"reserva\"",
+      "variantes": [
+        "cofre",
+        "reserva"
+      ],
+      "categoria": "carta",
+      "pagina": 101,
+      "ancora": "Sua mão pode ter no máximo 5 cartas de domínio ativas",
+      "resumo": "A mão tem no máximo 5 cartas de domínio ativas. O resto fica no cofre.",
+      "explicacao": [
+        "Cartas de subclasse, ancestralidade e comunidade NÃO contam para o limite e estão sempre ativas.",
+        "No app, \"cofre\" é SÓ isto. A terceira categoria de ouro chama-se baú, como no livro — as duas já se chamaram cofre, e isso confundia."
+      ],
+      "veja": [
+        "custo-de-recordar",
+        "descanso-curto",
+        "ouro"
+      ]
+    },
+    {
+      "id": "alcance",
+      "termo": "Alcance",
+      "variantes": [
+        "Corpo a Corpo",
+        "Muito Próximo",
+        "Próximo",
+        "Distante",
+        "Muito Distante",
+        "Fora de Alcance"
+      ],
+      "categoria": "cena",
+      "pagina": 103,
+      "ancora": "Daggerheart usa alcance como uma medida de distância geral",
+      "resumo": "Seis faixas em vez de metros. O mapa serve à ficção, nunca o contrário.",
+      "explicacao": [
+        "Quando um efeito cita um alcance, é o MÁXIMO dele: também vale mais perto.",
+        "Mede-se a partir de quem usa o efeito, em qualquer direção."
+      ],
+      "quadro": {
+        "tipo": "tabela",
+        "titulo": "",
+        "colunas": [
+          "Alcance",
+          "Mais ou menos",
+          "No grid (regra opcional)"
+        ],
+        "linhas": [
+          [
+            "Corpo a Corpo",
+            "até ~1 m — dá para tocar",
+            "1 quadrado"
+          ],
+          [
+            "Muito Próximo",
+            "1,5 m a 3 m",
+            "3 quadrados"
+          ],
+          [
+            "Próximo",
+            "3 m a 9 m",
+            "6 quadrados"
+          ],
+          [
+            "Distante",
+            "9 m a 30 m",
+            "12 quadrados"
+          ],
+          [
+            "Muito Distante",
+            "30 m a 90 m",
+            "13+ quadrados"
+          ],
+          [
+            "Fora de Alcance",
+            "além disso — não pode ser alvo",
+            "fora do mapa"
+          ]
+        ]
+      },
+      "veja": [
+        "movimento",
+        "alvos-e-grupos"
+      ]
+    },
+    {
+      "id": "alvos-e-grupos",
+      "termo": "Alvos e grupos",
+      "variantes": [
+        "grupo de alvos",
+        "múltiplos alvos"
+      ],
+      "categoria": "cena",
+      "pagina": 104,
+      "ancora": "todos devem estar acumulados numa área em alcance Muito Próximo",
+      "resumo": "Para acertar um grupo, todos precisam estar amontoados dentro de Muito Próximo de um ponto.",
+      "explicacao": [
+        "Uma jogada de ataque só, comparada com a Dificuldade de cada alvo.",
+        "O dano é rolado UMA vez e aplicado inteiro a cada alvo atingido."
+      ],
+      "veja": [
+        "jogada-de-ataque",
+        "alcance"
+      ]
+    },
+    {
+      "id": "cobertura",
+      "termo": "Cobertura",
+      "variantes": [
+        "linha de visão",
+        "escuridão"
+      ],
+      "categoria": "cena",
+      "pagina": 104,
+      "ancora": "testes de ataque contra você são feitos com desvantagem",
+      "resumo": "Atrás de algo que atrapalha o ataque: quem atira em você tem desvantagem.",
+      "explicacao": [
+        "Atrás de algo que IMPEDE — uma parede — você em geral nem pode ser alvo, mas explosões em área ainda pegam.",
+        "Escuridão o Mestre resolve subindo a Dificuldade ou dando desvantagem."
+      ],
+      "veja": [
+        "vantagem",
+        "alcance"
+      ]
+    },
+    {
+      "id": "fim-da-cena",
+      "termo": "Fim da cena",
+      "variantes": [
+        "até o fim da cena"
+      ],
+      "categoria": "cena",
+      "pagina": 107,
+      "ancora": "define sua duração até o fim da cena",
+      "resumo": "Uma cena acaba quando a situação dela se resolve — quem decide é o Mestre.",
+      "explicacao": [
+        "Batalha acaba quando um lado foge, se rende ou cai. Perseguição, quando pegam ou escapam."
+      ],
+      "veja": [
+        "condicao-temporaria"
+      ]
+    },
+    {
+      "id": "movimento",
+      "termo": "Movimento",
+      "variantes": [],
+      "categoria": "cena",
+      "pagina": 104,
+      "ancora": "você também pode se mover para um ponto em alcance Próximo",
+      "resumo": "Numa jogada, você anda até alcance Próximo de graça. Mais que isso pede uma jogada de Agilidade.",
+      "explicacao": [
+        "Fora de perigo, ninguém conta distância.",
+        "Adversário em foco também anda até Próximo de graça — e, para ir mais longe, gasta o movimento inteiro, mas não faz jogada nenhuma."
+      ],
+      "veja": [
+        "alcance",
+        "foco"
+      ]
+    },
+    {
+      "id": "condicao-temporaria",
+      "termo": "condição temporária",
+      "variantes": [
+        "temporariamente",
+        "efeito temporário"
+      ],
+      "categoria": "condicao",
+      "pagina": 102,
+      "ancora": "esta é uma condição",
+      "resumo": "Quando o texto diz \"temporariamente\", dá para tentar sair com uma jogada.",
+      "explicacao": [
+        "A Dificuldade é do Mestre, e a saída tem de ser descrita na ficção.",
+        "Num adversário, o Mestre põe ele em foco e narra a saída — sem jogada, mas gastando o foco."
+      ],
+      "veja": [
+        "condicoes",
+        "foco"
+      ]
+    },
+    {
+      "id": "condicoes",
+      "termo": "Condições",
+      "variantes": [
+        "condição"
+      ],
+      "categoria": "condicao",
+      "pagina": 102,
+      "ancora": "Daggerheart tem três condições principais",
+      "resumo": "Três principais — Oculto, Restrito e Vulnerável — mais as que as cartas inventam.",
+      "explicacao": [
+        "A mesma condição NÃO se acumula no mesmo alvo.",
+        "Condição \"temporária\" sai com uma jogada; a comum sai quando o texto que a pôs disser.",
+        "Num adversário, o Mestre gasta o FOCO dele para tirar a condição — sem jogada."
+      ],
+      "veja": [
+        "oculto",
+        "restrito",
+        "vulneravel",
+        "condicao-temporaria"
+      ]
+    },
+    {
+      "id": "oculto",
+      "termo": "Oculto",
+      "variantes": [
+        "Escondido"
+      ],
+      "categoria": "condicao",
+      "pagina": 102,
+      "ancora": "você está Escondido",
+      "resumo": "Fora do campo de visão e sem que saibam onde você está: jogadas contra você têm desvantagem.",
+      "explicacao": [
+        "Sai quando o adversário passa a ver você, quando você entra na linha de visão dele, ou quando você ataca.",
+        "Cuidado com o nome: nas cartas, Oculto é este (Hidden); o que a Jambô chama de \"Oculto\" é outra condição, o Camuflado (Cloaked)."
+      ],
+      "errata": "A errata (p.102) reescreveu a condição — a edição da Jambô já saiu com o texto corrigido.",
+      "veja": [
+        "condicoes",
+        "vantagem"
+      ],
+      "noLivro": "Escondido"
+    },
+    {
+      "id": "restrito",
+      "termo": "Restrito",
+      "variantes": [
+        "Imobilizado"
+      ],
+      "categoria": "condicao",
+      "pagina": 102,
+      "ancora": "você não pode",
+      "resumo": "Você não sai do lugar, mas continua podendo agir de onde está.",
+      "explicacao": [],
+      "veja": [
+        "condicoes"
+      ],
+      "noLivro": "Imobilizado"
+    },
+    {
+      "id": "vulneravel",
+      "termo": "Vulnerável",
+      "variantes": [],
+      "categoria": "condicao",
+      "pagina": 102,
+      "ancora": "todos os testes que o têm como alvo tem vantagem",
+      "resumo": "Todas as jogadas contra você têm vantagem.",
+      "explicacao": [
+        "Derrubado, desequilibrado, pego de guarda baixa — a mesa descreve como aconteceu.",
+        "Marcar todo o Estresse deixa você Vulnerável até recuperar ao menos 1."
+      ],
+      "veja": [
+        "condicoes",
+        "estresse",
+        "vantagem"
+      ]
+    },
+    {
+      "id": "contagem-com-ciclo",
+      "termo": "Contagem com ciclo",
+      "variantes": [
+        "ciclo",
+        "contagem crescente",
+        "contagem decrescente",
+        "valor inicial aleatório"
+      ],
+      "categoria": "contagem",
+      "pagina": 163,
+      "ancora": "Algumas contagens regressivas entram em ciclo",
+      "resumo": "Contagem que se reinicia depois de disparar. Comum em adversário que recarrega habilidade.",
+      "explicacao": [
+        "\"Contagem (ciclo 5)\" reinicia no 5 toda vez.",
+        "\"Contagem (crescente 8)\" reinicia em 9, depois 10 — o intervalo aumenta. A decrescente faz o contrário.",
+        "\"Contagem (1d6)\" tem valor inicial ROLADO: serve para quando o tempo é imprevisível."
+      ],
+      "veja": [
+        "contagem-regressiva"
+      ]
+    },
+    {
+      "id": "contagem-de-longo-prazo",
+      "termo": "Contagem de longo prazo",
+      "variantes": [],
+      "categoria": "contagem",
+      "pagina": 164,
+      "ancora": "Contagens regressivas também podem ser usadas para",
+      "resumo": "A contagem da campanha — a queda de um reino, uma invasão. Normalmente entre 4 e 12.",
+      "explicacao": [
+        "Em vez de dado, uma trilha de quadrados, com um evento escrito ao lado de cada um.",
+        "Ela anda no DESCANSO LONGO — em geral uma vez."
+      ],
+      "errata": "A errata (p.164) trocou a regra: no descanso longo, avance uma contagem de longo prazo relevante UMA vez. O descanso curto não a move; o texto impresso ainda diz o contrário.",
+      "veja": [
+        "contagem-regressiva",
+        "descanso-longo"
+      ]
+    },
+    {
+      "id": "contagem-dinamica",
+      "termo": "Contagem dinâmica",
+      "variantes": [
+        "contagem de progresso",
+        "contagem de consequência"
+      ],
+      "categoria": "contagem",
+      "pagina": 162,
+      "ancora": "esta contagem não diminui a cada teste",
+      "resumo": "Desce conforme o RESULTADO da jogada, não a cada jogada. Valor inicial costuma ser 5 a 10.",
+      "explicacao": [
+        "Progresso: o grupo está tentando chegar lá. Consequência: o grupo está tentando evitar."
+      ],
+      "quadro": {
+        "tipo": "tabela",
+        "titulo": "Avanço de contagens dinâmicas (p.163)",
+        "colunas": [
+          "Resultado",
+          "Progresso",
+          "Consequência"
+        ],
+        "linhas": [
+          [
+            "Falha com Medo",
+            "não desce",
+            "desce 3"
+          ],
+          [
+            "Falha com Esperança",
+            "não desce",
+            "desce 2"
+          ],
+          [
+            "Sucesso com Medo",
+            "desce 1",
+            "desce 1"
+          ],
+          [
+            "Sucesso com Esperança",
+            "desce 2",
+            "não desce"
+          ],
+          [
+            "Sucesso crítico",
+            "desce 3",
+            "não desce"
+          ]
+        ]
+      },
+      "veja": [
+        "contagem-regressiva",
+        "resultado-da-jogada"
+      ]
+    },
+    {
+      "id": "contagem-padrao",
+      "termo": "Contagem padrão",
+      "variantes": [],
+      "categoria": "contagem",
+      "pagina": 162,
+      "ancora": "na qual o dado começa em um número específico",
+      "resumo": "Desce 1 a CADA jogada de personagem, dê no que der.",
+      "explicacao": [
+        "Curta (2 a 4) para o que deve acontecer logo; longa (5 ou mais) para o que se constrói na cena inteira.",
+        "Em combate, normalmente só o antagonista principal tem uma."
+      ],
+      "veja": [
+        "contagem-regressiva",
+        "contagem-dinamica"
+      ]
+    },
+    {
+      "id": "contagem-regressiva",
+      "termo": "Contagem regressiva",
+      "variantes": [
+        "Contagem",
+        "contagens regressivas",
+        "dado de contagem"
+      ],
+      "categoria": "contagem",
+      "pagina": 162,
+      "ancora": "Cada vez que a contagem regressiva diminuir, gire o dado",
+      "resumo": "Um número que desce até 0 e aí dispara alguma coisa.",
+      "explicacao": [
+        "Ao montar uma, decida três coisas: a ATIVAÇÃO (o que a liga), o AVANÇO (o que a faz descer) e o EFEITO (o que acontece no 0).",
+        "Dá para mostrar o dado à mesa (a tensão sobe a cada giro) ou guardar em segredo.",
+        "Contagem que atravessa sessão: anote o valor."
+      ],
+      "veja": [
+        "contagem-padrao",
+        "contagem-dinamica",
+        "contagem-de-longo-prazo"
+      ]
+    },
+    {
+      "id": "dano-direto",
+      "termo": "Dano direto",
+      "variantes": [],
+      "categoria": "dano",
+      "pagina": 99,
+      "ancora": "Dano direto é dano físico ou mágico que não pode ser",
+      "resumo": "Dano que Pontos de Armadura NÃO reduzem.",
+      "explicacao": [
+        "Resistência e imunidade continuam valendo — o que o \"direto\" tira é a armadura."
+      ],
+      "veja": [
+        "pontos-de-armadura"
+      ]
+    },
+    {
+      "id": "dano-massivo",
+      "termo": "Dano massivo",
+      "variantes": [
+        "limiar massivo"
+      ],
+      "categoria": "dano",
+      "pagina": 91,
+      "ancora": "REGRA OPCIONAL: DANO MASSIVO",
+      "resumo": "REGRA OPCIONAL: dano igual ao dobro do limiar Severo marca 4 PV em vez de 3.",
+      "explicacao": [
+        "O livro apresenta como opcional — \"para deixar o jogo ainda mais perigoso\".",
+        "Esta mesa decidiu usar, e dá para desligar sem mexer em código."
+      ],
+      "veja": [
+        "limiares-de-dano"
+      ]
+    },
+    {
+      "id": "dano-sofrido",
+      "termo": "Dano sofrido",
+      "variantes": [],
+      "categoria": "dano",
+      "pagina": 107,
+      "ancora": "ela se refere",
+      "resumo": "A quantidade de dano que o alvo está recebendo NAQUELE momento — antes de virar PV.",
+      "explicacao": [
+        "É o número em que habilidades como Vigoroso (anão) mordem: o Mestre declara quanto vem, e aí o jogador reduz."
+      ],
+      "veja": [
+        "limiares-de-dano"
+      ]
+    },
+    {
+      "id": "imunidade",
+      "termo": "Imunidade",
+      "variantes": [
+        "imune"
+      ],
+      "categoria": "dano",
+      "pagina": 99,
+      "ancora": "não recebe qualquer dano do tipo em questão",
+      "resumo": "Nenhum dano daquele tipo — não é metade, é zero.",
+      "explicacao": [],
+      "veja": [
+        "resistencia",
+        "tipo-de-dano"
+      ]
+    },
+    {
+      "id": "limiares-de-dano",
+      "termo": "Limiares de Dano",
+      "variantes": [
+        "Limiares",
+        "Limiar",
+        "limiar Maior",
+        "limiar Severo",
+        "limiar grave",
+        "dano Menor",
+        "dano Maior",
+        "dano Severo",
+        "dano leve",
+        "dano moderado",
+        "dano grave"
+      ],
+      "categoria": "dano",
+      "pagina": 91,
+      "ancora": "compare o total de dano sofrido a seus limiares",
+      "resumo": "Dois números (\"9/17\") que dizem quantos PV cada golpe custa: 1, 2 ou 3.",
+      "explicacao": [
+        "Compare o dano com os seus limiares e marque o que a faixa mandar.",
+        "Você sempre soma o SEU NÍVEL aos limiares base da armadura.",
+        "As cartas dizem Menor / Maior / Severo; o livro escreve leve / moderado / grave na ficha e, numa frase da p.91, \"maior\" no lugar de \"moderado\". É a mesma faixa."
+      ],
+      "quadro": {
+        "tipo": "tabela",
+        "titulo": "A conta do dano",
+        "colunas": [
+          "Faixa",
+          "Quando",
+          "PV"
+        ],
+        "linhas": [
+          [
+            "Menor (leve)",
+            "abaixo do limiar Maior",
+            "1"
+          ],
+          [
+            "Maior (moderado)",
+            "do limiar Maior até antes do Severo",
+            "2"
+          ],
+          [
+            "Severo (grave)",
+            "do limiar Severo para cima",
+            "3"
+          ],
+          [
+            "Massivo",
+            "o dobro do limiar Severo",
+            "4 (regra opcional)"
+          ]
+        ]
+      },
+      "veja": [
+        "dano-massivo",
+        "pontos-de-armadura",
+        "pontos-de-vida",
+        "resistencia"
+      ]
+    },
+    {
+      "id": "multiplas-fontes-de-dano",
+      "termo": "Múltiplas fontes de dano",
+      "variantes": [],
+      "categoria": "dano",
+      "pagina": 98,
+      "ancora": "esse dano é sempre somado",
+      "resumo": "Quando um mesmo movimento fere a mesma criatura mais de uma vez, some tudo ANTES de comparar com os limiares.",
+      "explicacao": [
+        "Somar antes muda a faixa: 5 + 5 pode virar dano Maior, enquanto 5 e 5 separados seriam dois danos Menores."
+      ],
+      "veja": [
+        "limiares-de-dano"
+      ]
+    },
+    {
+      "id": "proficiencia",
+      "termo": "Proficiência",
+      "variantes": [],
+      "categoria": "dano",
+      "pagina": 98,
+      "ancora": "Você começa com Proficiência 1 e pode aumentar esse valor",
+      "resumo": "Quantos dados de dano você rola. Começa em 1 e vai até 6.",
+      "explicacao": [
+        "Não é da arma: trocar de arma não mexe nela.",
+        "Sobe de graça nos níveis 2, 5 e 8, e pode subir de novo pelos avanços.",
+        "É parecida com o patamar, mas não é a mesma coisa — a Proficiência pode passar do patamar."
+      ],
+      "veja": [
+        "patamar-de-jogo",
+        "rolagem-de-dano"
+      ]
+    },
+    {
+      "id": "resistencia",
+      "termo": "Resistência",
+      "variantes": [
+        "resistente"
+      ],
+      "categoria": "dano",
+      "pagina": 99,
+      "ancora": "reduzido à metade antes de ser comparado aos seus",
+      "resumo": "Metade do dano, ANTES de comparar com os limiares.",
+      "explicacao": [
+        "A metade arredonda para CIMA, pela regra geral da p.107.",
+        "Duas fontes da mesma resistência não empilham: continua sendo metade.",
+        "Resistência e imunidade vêm primeiro; Pontos de Armadura depois."
+      ],
+      "veja": [
+        "imunidade",
+        "arredondar-para-cima",
+        "pontos-de-armadura"
+      ]
+    },
+    {
+      "id": "rolagem-de-dano",
+      "termo": "Rolagem de dano",
+      "variantes": [
+        "dados de dano"
+      ],
+      "categoria": "dano",
+      "pagina": 98,
+      "ancora": "Rolagens de dano são compostas por duas",
+      "resumo": "Duas partes: a sua Proficiência diz QUANTOS dados, a arma (ou o feitiço) diz QUAIS.",
+      "explicacao": [
+        "Proficiência 2 com uma espada d8 = 2d8. O modificador (\"+3\") entra uma vez só, no fim — a Proficiência não multiplica ele.",
+        "Bônus na rolagem entram ANTES de rolar, nunca depois de ver o resultado."
+      ],
+      "veja": [
+        "proficiencia",
+        "sucesso-critico",
+        "multiplas-fontes-de-dano"
+      ]
+    },
+    {
+      "id": "tipo-de-dano",
+      "termo": "Tipo de dano",
+      "variantes": [
+        "dano físico",
+        "dano mágico"
+      ],
+      "categoria": "dano",
+      "pagina": 99,
+      "ancora": "considere que funciona tanto para dano físico quanto para mágico",
+      "resumo": "Todo dano é físico ou mágico. Importa para resistência, imunidade e para as habilidades que citam um tipo.",
+      "explicacao": [
+        "Quando um texto de resistência ou imunidade não diz o tipo, vale para os dois.",
+        "Se um ataque causa os dois tipos, só se beneficia de resistência quem é resistente a AMBOS."
+      ],
+      "veja": [
+        "resistencia",
+        "imunidade"
+      ]
+    },
+    {
+      "id": "cicatrizes",
+      "termo": "Cicatrizes",
+      "variantes": [
+        "cicatriz"
+      ],
+      "categoria": "descanso",
+      "pagina": 106,
+      "ancora": "faça um X em um de seus espaços disponíveis para Pontos",
+      "resumo": "Um X permanente num espaço de Esperança. Aquele espaço não enche mais.",
+      "explicacao": [
+        "O que a cicatriz significa é do jogador — física, uma lembrança, um medo.",
+        "Podem ser curadas a critério do Mestre, como projeto ou recompensa.",
+        "Perder o ÚLTIMO espaço de Esperança encerra a jornada do personagem."
+      ],
+      "veja": [
+        "morte",
+        "esperanca"
+      ]
+    },
+    {
+      "id": "descanso-curto",
+      "termo": "Descanso curto",
+      "variantes": [],
+      "categoria": "descanso",
+      "pagina": 105,
+      "ancora": "Um descanso curto é quando o grupo recupera o fôlego",
+      "resumo": "Cerca de uma hora. Troca de cartas de graça e dois movimentos, cada um valendo 1d4 + o patamar.",
+      "explicacao": [],
+      "quadro": {
+        "tipo": "lista",
+        "titulo": "Os quatro movimentos — escolha dois, ou o mesmo duas vezes",
+        "itens": [
+          "Preparar-se: +1 Esperança (ou +2 se preparar junto com alguém)",
+          "Reparar Armadura: recupera 1d4 + patamar de Pontos de Armadura",
+          "Reduzir Estresse (Reduzir Fadiga): recupera 1d4 + patamar de Estresse",
+          "Tratar Feridas: recupera 1d4 + patamar de Pontos de Vida"
+        ]
+      },
+      "veja": [
+        "repouso",
+        "descanso-longo",
+        "patamar-de-jogo"
+      ]
+    },
+    {
+      "id": "descanso-longo",
+      "termo": "Descanso longo",
+      "variantes": [],
+      "categoria": "descanso",
+      "pagina": 105,
+      "ancora": "Um descanso longo é quando o grupo acampa",
+      "resumo": "Algumas horas de acampamento. Os movimentos aqui zeram a trilha inteira, em vez de rolar dado.",
+      "explicacao": [],
+      "quadro": {
+        "tipo": "lista",
+        "titulo": "Os cinco movimentos — escolha dois, ou o mesmo duas vezes",
+        "itens": [
+          "Preparar-se: +1 Esperança (ou +2 em grupo)",
+          "Reparar Armadura por Completo: TODOS os Pontos de Armadura",
+          "Tratar Todas as Feridas: TODOS os Pontos de Vida",
+          "Zerar Estresse (Zerar Fadiga): TODO o Estresse",
+          "Trabalhar em um Projeto: começa ou avança um projeto"
+        ]
+      },
+      "veja": [
+        "repouso",
+        "projeto",
+        "contagem-de-longo-prazo"
+      ]
+    },
+    {
+      "id": "morte",
+      "termo": "Morte",
+      "variantes": [
+        "movimento de morte"
+      ],
+      "categoria": "descanso",
+      "pagina": 106,
+      "ancora": "você deve fazer um movimento de morte",
+      "resumo": "Marcar o último PV não mata: obriga a ESCOLHER um dos três movimentos de morte.",
+      "explicacao": [],
+      "quadro": {
+        "tipo": "lista",
+        "titulo": "Os três movimentos de morte",
+        "itens": [
+          "Sacrifício Glorioso: um último movimento com sucesso crítico automático, e o personagem atravessa o véu",
+          "Evitar a Morte: fica inconsciente; volta com 1 PV recuperado ou no descanso longo. Role o Dado de Esperança: se der até o seu nível, ganha uma cicatriz",
+          "Arriscar Tudo: role os Dados de Dualidade. Esperança mais alto, você fica de pé e recupera aquele valor entre PV e Estresse; Medo mais alto, atravessa o véu; crítico, fica de pé com tudo cheio"
+        ]
+      },
+      "veja": [
+        "cicatrizes",
+        "pontos-de-vida"
+      ]
+    },
+    {
+      "id": "projeto",
+      "termo": "Projeto",
+      "variantes": [
+        "projetos"
+      ],
+      "categoria": "descanso",
+      "pagina": 105,
+      "ancora": "Se o personagem tentar iniciar um projeto que levará muito",
+      "resumo": "Uma tarefa longa — decifrar um texto, forjar uma arma — que anda com o movimento Trabalhar em um Projeto.",
+      "explicacao": [
+        "Combine com o Mestre antes. Normalmente vem com uma contagem regressiva de progresso.",
+        "Ou a contagem anda sozinha, ou o Mestre pede uma jogada para medir o avanço."
+      ],
+      "veja": [
+        "descanso-longo",
+        "contagem-regressiva"
+      ]
+    },
+    {
+      "id": "repouso",
+      "termo": "Repouso",
+      "variantes": [],
+      "categoria": "descanso",
+      "pagina": 105,
+      "ancora": "cada personagem pode fazer duas",
+      "resumo": "A pausa do grupo. Cada personagem faz DOIS movimentos de repouso — e pode repetir o mesmo.",
+      "explicacao": [
+        "O grupo faz até TRÊS descansos curtos antes que o próximo precise ser longo.",
+        "Descanso curto interrompido não dá benefício nenhum. Descanso longo interrompido ainda vale como um curto.",
+        "O mundo não para: em descanso curto o Mestre ganha 1d4 de Medo; no longo, 1d4 + o número de personagens."
+      ],
+      "veja": [
+        "descanso-curto",
+        "descanso-longo",
+        "projeto"
+      ]
+    },
+    {
+      "id": "arma-principal",
+      "termo": "Arma principal",
+      "variantes": [
+        "arma secundária",
+        "empunhadura"
+      ],
+      "categoria": "equipamento",
+      "pagina": 112,
+      "ancora": "arma",
+      "resumo": "Uma principal e, se a empunhadura deixar, uma secundária.",
+      "explicacao": [
+        "Arma de duas mãos ocupa as duas: não sobra espaço para a secundária.",
+        "Trocar de arma no meio do perigo custa Estresse."
+      ],
+      "errata": "A errata (p.112) deixou claro: em calmaria ou durante um descanso, a troca de arma NÃO custa Estresse.",
+      "veja": [
+        "inventario",
+        "rolagem-de-dano"
+      ]
+    },
+    {
+      "id": "armadura-base",
+      "termo": "Armadura base",
+      "variantes": [
+        "limiares base",
+        "sem armadura"
+      ],
+      "categoria": "equipamento",
+      "pagina": 114,
+      "ancora": "Todas as armaduras deste livro são apresentadas com nome",
+      "resumo": "A armadura dá dois números: os limiares base e quantos Pontos de Armadura você tem.",
+      "explicacao": [
+        "Aos limiares base soma-se SEMPRE o seu nível: base 7/15 no nível 1 vira 8/16.",
+        "A habilidade da armadura vale só para aquela armadura, e só equipada."
+      ],
+      "veja": [
+        "pontos-de-armadura",
+        "limiares-de-dano"
+      ]
+    },
+    {
+      "id": "inventario",
+      "termo": "Inventário",
+      "variantes": [
+        "mochila"
+      ],
+      "categoria": "equipamento",
+      "pagina": 112,
+      "ancora": "inventário",
+      "resumo": "O que o personagem carrega mas NÃO está usando — e por isso não dá benefício nenhum.",
+      "explicacao": [
+        "Equipar é o que liga a arma ou a armadura; guardada, ela não conta."
+      ],
+      "errata": "A errata (p.112) deixou explícito que item no inventário não é empunhado e não dá seus benefícios.",
+      "veja": [
+        "arma-principal",
+        "ouro"
+      ]
+    },
+    {
+      "id": "dados-de-dualidade",
+      "termo": "Dados de Dualidade",
+      "variantes": [
+        "Dado do Destino",
+        "Dado de Esperança",
+        "Dado de Medo"
+      ],
+      "categoria": "jogada",
+      "pagina": 90,
+      "ancora": "Os dados principais de Daggerheart são um par de d12",
+      "resumo": "O par de d12 de toda jogada: um é Esperança, o outro é Medo.",
+      "explicacao": [
+        "O maior dos dois diz de quem é a consequência — \"rolei 15 com Medo\".",
+        "Os dois iguais é sucesso crítico, mesmo que o total não alcance a Dificuldade."
+      ],
+      "veja": [
+        "sucesso-critico",
+        "jogada"
+      ],
+      "noLivro": "Dado do Destino"
+    },
+    {
+      "id": "dificuldade",
+      "termo": "Dificuldade",
+      "variantes": [],
+      "categoria": "jogada",
+      "pagina": 93,
+      "ancora": "seu resultado total precisa ser igual",
+      "resumo": "O número que a jogada precisa alcançar. Igual JÁ é sucesso.",
+      "explicacao": [
+        "Quando vem entre parênteses — \"jogada de Agilidade (13)\" — é a carta que define; senão, quem define é o Mestre.",
+        "Contra um adversário, a Dificuldade é a da ficha DELE."
+      ],
+      "veja": [
+        "jogada",
+        "dificuldade-do-adversario",
+        "evasao"
+      ]
+    },
+    {
+      "id": "experiencia",
+      "termo": "Experiência",
+      "variantes": [
+        "Experiências"
+      ],
+      "categoria": "jogada",
+      "pagina": 93,
+      "ancora": "gaste 1 Ponto de Esperança para cada Experiência",
+      "resumo": "Uma frase sobre o passado do personagem, com um bônus. Custa 1 Esperança por Experiência usada.",
+      "explicacao": [
+        "Você descreve como ela ajuda; o Mestre pode pedir a justificativa, mas quem decide se cabe é você.",
+        "Uma Experiência que serve em toda jogada é ampla demais — o Mestre vai pedir para estreitar.",
+        "Adversários têm Experiências também, e elas custam 1 Medo (p.194)."
+      ],
+      "errata": "A errata (p.110) esclareceu o avanço: aumentar Experiências dá +1 PERMANENTE em DUAS delas.",
+      "veja": [
+        "esperanca",
+        "experiencia-de-adversario"
+      ]
+    },
+    {
+      "id": "jogada",
+      "termo": "jogada",
+      "noLivro": "teste",
+      "variantes": [
+        "teste",
+        "teste de movimento"
+      ],
+      "categoria": "jogada",
+      "pagina": 93,
+      "ancora": "seu resultado total precisa ser igual",
+      "resumo": "Dados de Dualidade + traço + modificadores, contra a Dificuldade.",
+      "explicacao": [
+        "Só se joga quando o resultado é incerto E interessante: o que é fácil ou impossível não vai aos dados."
+      ],
+      "veja": [
+        "dificuldade",
+        "dados-de-dualidade",
+        "vantagem",
+        "experiencia"
+      ]
+    },
+    {
+      "id": "jogada-de-ataque",
+      "termo": "jogada de ataque",
+      "variantes": [
+        "teste de ataque"
+      ],
+      "categoria": "jogada",
+      "pagina": 96,
+      "ancora": "você está fazendo um teste de ataque",
+      "resumo": "A jogada feita com intenção de ferir. O traço vem da arma ou do feitiço.",
+      "explicacao": [
+        "Por padrão um ataque tem UM alvo. Quando permite vários, role uma vez e compare com a Dificuldade de cada um.",
+        "Sem arma, é uma jogada de Força ou Finesse (Acuidade)."
+      ],
+      "veja": [
+        "jogada-de-conjuracao",
+        "rolagem-de-dano",
+        "alvos-e-grupos"
+      ]
+    },
+    {
+      "id": "jogada-de-conjuracao",
+      "termo": "jogada de Conjuração",
+      "variantes": [
+        "teste de conjuração",
+        "traço de Conjuração"
+      ],
+      "categoria": "jogada",
+      "pagina": 96,
+      "ancora": "Testes de conjuração são usados quando você está criando",
+      "resumo": "A jogada da magia, feita com o traço de Conjuração que a subclasse dá.",
+      "explicacao": [
+        "Se a magia pode causar dano, a jogada de Conjuração TAMBÉM conta como jogada de ataque.",
+        "Só dá para conjurar o que está escrito na carta. Descrever bonito não cria efeito novo."
+      ],
+      "veja": [
+        "jogada-de-ataque",
+        "jogada"
+      ]
+    },
+    {
+      "id": "jogada-de-reacao",
+      "termo": "jogada de reação",
+      "variantes": [
+        "teste de reação"
+      ],
+      "categoria": "jogada",
+      "pagina": 99,
+      "ancora": "teste de reação",
+      "resumo": "Uma jogada para escapar de algo, sem as consequências normais de Esperança e Medo.",
+      "explicacao": [
+        "Um crítico numa jogada de reação não dá Esperança nem tira Estresse — ele só ignora tudo que ainda o afetaria."
+      ],
+      "veja": [
+        "jogada",
+        "reacao-de-adversario"
+      ]
+    },
+    {
+      "id": "prestar-ajuda",
+      "termo": "Prestar Ajuda",
+      "variantes": [],
+      "categoria": "jogada",
+      "pagina": 90,
+      "ancora": "você pode gastar Pontos de Esperança para Prestar Ajuda",
+      "resumo": "Gaste 1 Esperança, descreva como ajuda, e o aliado rola 1d6 de vantagem.",
+      "explicacao": [
+        "Várias pessoas podem ajudar a mesma jogada, cada uma gastando 1 Esperança."
+      ],
+      "veja": [
+        "vantagem",
+        "esperanca"
+      ]
+    },
+    {
+      "id": "resultado-da-jogada",
+      "termo": "sucesso com Esperança",
+      "variantes": [
+        "sucesso com Medo",
+        "falha com Esperança",
+        "falha com Medo"
+      ],
+      "categoria": "jogada",
+      "pagina": 94,
+      "ancora": "EM UM SUCESSO COM ESPERANÇA",
+      "resumo": "Cinco resultados possíveis, e cada um move um recurso de lado.",
+      "explicacao": [],
+      "quadro": {
+        "tipo": "tabela",
+        "titulo": "",
+        "colunas": [
+          "Resultado",
+          "O que acontece"
+        ],
+        "linhas": [
+          [
+            "Sucesso crítico",
+            "consegue e mais um pouco; +1 Esperança e −1 Estresse"
+          ],
+          [
+            "Sucesso com Esperança",
+            "consegue o que queria; +1 Esperança"
+          ],
+          [
+            "Sucesso com Medo",
+            "consegue, mas a um preço; o Mestre ganha 1 Medo"
+          ],
+          [
+            "Falha com Esperança",
+            "não sai como o planejado; +1 Esperança"
+          ],
+          [
+            "Falha com Medo",
+            "dá muito errado; o Mestre ganha 1 Medo"
+          ]
+        ]
+      },
+      "veja": [
+        "dados-de-dualidade",
+        "medo",
+        "esperanca"
+      ]
+    },
+    {
+      "id": "sucesso-critico",
+      "termo": "Sucesso crítico",
+      "variantes": [],
+      "categoria": "jogada",
+      "pagina": 94,
+      "ancora": "Você consegue o que desejava e um pouco mais",
+      "resumo": "Os dois Dados de Dualidade com o mesmo valor. Vale mesmo abaixo da Dificuldade.",
+      "explicacao": [
+        "Você recebe 1 Esperança E recupera 1 Estresse.",
+        "Num ataque, o dano crítico é: o máximo possível dos dados + uma rolagem normal + o modificador."
+      ],
+      "veja": [
+        "dados-de-dualidade",
+        "rolagem-de-dano"
+      ]
+    },
+    {
+      "id": "vantagem",
+      "termo": "Vantagem",
+      "variantes": [
+        "Desvantagem"
+      ],
+      "categoria": "jogada",
+      "pagina": 100,
+      "ancora": "você acrescenta um dado de",
+      "resumo": "Vantagem soma 1d6 à jogada; desvantagem subtrai 1d6.",
+      "explicacao": [
+        "As duas SEMPRE se cancelam: você nunca rola os dois ao mesmo tempo.",
+        "Duas vantagens e uma desvantagem deixam 1d6 de vantagem — não empilha.",
+        "NPCs fazem diferente: o Mestre rola 1d20 a mais e fica com o maior (ou menor)."
+      ],
+      "veja": [
+        "prestar-ajuda",
+        "efeitos-simultaneos"
+      ]
+    },
+    {
+      "id": "distribuindo-ouro",
+      "termo": "Distribuindo ouro",
+      "variantes": [
+        "distribuindo tesouro"
+      ],
+      "categoria": "mestre",
+      "pagina": 165,
+      "ancora": "ouro",
+      "resumo": "Quanto ouro entra é decisão da mesa — e é o que define, na prática, o preço das coisas.",
+      "explicacao": [
+        "Como o livro não tem tabela de preços, o preço nasce da quantidade de ouro que o grupo recebe entre sessões."
+      ],
+      "veja": [
+        "ouro"
+      ]
+    },
+    {
+      "id": "foco",
+      "termo": "Foco",
+      "variantes": [
+        "em foco",
+        "pôr em foco",
+        "marcadores de foco"
+      ],
+      "categoria": "mestre",
+      "pagina": 100,
+      "ancora": "quantidade equivalente de adversários em foco",
+      "resumo": "O adversário em foco é quem age. O primeiro do movimento é de graça; cada um a mais custa 1 Medo.",
+      "explicacao": [
+        "Adversário em foco pode: mover-se até Próximo e atacar, mover-se e agir, tirar uma condição, ou correr até Distante/Muito Distante.",
+        "Uma ação da ficha só sai com o adversário em foco. Passivas e reações, não.",
+        "Cuidado: as HABILIDADES de foco (p.196) põem outros em foco sem custar Medo — é outra coisa."
+      ],
+      "veja": [
+        "medo",
+        "habilidade-de-foco",
+        "acao-de-adversario"
+      ]
+    },
+    {
+      "id": "jogada-de-adversario",
+      "termo": "jogada de adversário",
+      "variantes": [
+        "testes dos adversários"
+      ],
+      "categoria": "mestre",
+      "pagina": 160,
+      "ancora": "adversário",
+      "resumo": "O Mestre rola 1d20 pelo adversário, mais o modificador da ficha.",
+      "explicacao": [
+        "Adversários também fazem jogadas de reação, com regras um pouco diferentes (p.161)."
+      ],
+      "veja": [
+        "vantagem-de-npc",
+        "reacao-de-adversario",
+        "dificuldade-do-adversario"
+      ]
+    },
+    {
+      "id": "movimento-do-mestre",
+      "termo": "Movimento do Mestre",
+      "variantes": [
+        "movimentos do mestre",
+        "movimento suave",
+        "movimento rígido"
+      ],
+      "categoria": "mestre",
+      "pagina": 149,
+      "ancora": "movimento",
+      "resumo": "O que o Mestre faz quando o jogo volta para ele: uma falha, uma rolagem com Medo, ou 1 Medo gasto para interromper.",
+      "explicacao": [
+        "Depois de um movimento, 1 Medo compra um movimento a mais no mesmo turno."
+      ],
+      "veja": [
+        "medo",
+        "foco"
+      ]
+    },
+    {
+      "id": "vantagem-de-npc",
+      "termo": "Vantagem de NPC",
+      "variantes": [
+        "concedendo vantagem"
+      ],
+      "categoria": "mestre",
+      "pagina": 160,
+      "ancora": "vantagem",
+      "resumo": "NPC com vantagem rola 1d20 A MAIS e fica com o maior — não é o d6 dos personagens.",
+      "explicacao": [
+        "Com desvantagem, fica com o menor."
+      ],
+      "veja": [
+        "vantagem",
+        "jogada-de-adversario"
+      ]
+    },
+    {
+      "id": "avanco",
+      "termo": "Avanço",
+      "variantes": [
+        "avanços"
+      ],
+      "categoria": "nivel",
+      "pagina": 110,
+      "ancora": "Avanço",
+      "resumo": "As DUAS escolhas por nível, tiradas da lista do seu patamar.",
+      "explicacao": [
+        "Depois dos avanços, os limiares sobem +1 (você sempre soma o nível atual aos limiares).",
+        "Por fim, escolha uma carta de domínio nova de nível igual ou menor que o seu."
+      ],
+      "errata": "A errata (p.110) esclareceu: aumentar Experiências dá +1 permanente em DUAS Experiências.",
+      "veja": [
+        "conquistas",
+        "multiclasse",
+        "limiares-de-dano"
+      ]
+    },
+    {
+      "id": "conquistas",
+      "termo": "Conquistas",
+      "variantes": [
+        "conquista de nível"
+      ],
+      "categoria": "nivel",
+      "pagina": 109,
+      "ancora": "aplique primeiro as",
+      "resumo": "O que vem de graça ao entrar num patamar novo, antes de escolher qualquer avanço.",
+      "explicacao": [
+        "Nos níveis 2, 5 e 8: uma Experiência nova com +2 e +1 permanente de Proficiência.",
+        "Nos níveis 5 e 8 também se apagam as marcas de traço do patamar anterior — os traços voltam a poder subir."
+      ],
+      "veja": [
+        "patamar-de-jogo",
+        "avanco",
+        "experiencia"
+      ]
+    },
+    {
+      "id": "multiclasse",
+      "termo": "Multiclasse",
+      "variantes": [],
+      "categoria": "nivel",
+      "pagina": 111,
+      "ancora": "A partir do 5° nível, você pode escolher multiclasse",
+      "resumo": "A partir do 5º nível: uma classe a mais, um domínio dela, as habilidades iniciais e a carta fundamental de uma subclasse.",
+      "explicacao": [
+        "Consome o nível inteiro — as duas escolhas.",
+        "Se a subclasse nova der um traço de Conjuração, dá para escolher qual dos dois usar."
+      ],
+      "veja": [
+        "avanco",
+        "jogada-de-conjuracao"
+      ]
+    },
+    {
+      "id": "patamar-de-jogo",
+      "termo": "Patamar",
+      "variantes": [
+        "patamares"
+      ],
+      "categoria": "nivel",
+      "pagina": 109,
+      "ancora": "Níveis em Daggerheart são divididos em patamares",
+      "resumo": "Quatro faixas de nível. O patamar entra nos movimentos de descanso e nas conquistas.",
+      "explicacao": [
+        "Patamar não é Proficiência: dão o mesmo número no começo, mas a Proficiência pode passar disso pelos avanços."
+      ],
+      "quadro": {
+        "tipo": "tabela",
+        "titulo": "",
+        "colunas": [
+          "Patamar",
+          "Níveis"
+        ],
+        "linhas": [
+          [
+            "1º",
+            "nível 1"
+          ],
+          [
+            "2º",
+            "níveis 2 a 4"
+          ],
+          [
+            "3º",
+            "níveis 5 a 7"
+          ],
+          [
+            "4º",
+            "níveis 8 a 10"
+          ]
+        ]
+      },
+      "veja": [
+        "proficiencia",
+        "conquistas",
+        "descanso-curto"
+      ]
+    },
+    {
+      "id": "esperanca",
+      "termo": "Esperança",
+      "variantes": [
+        "Ponto de Esperança",
+        "Pontos de Esperança"
+      ],
+      "categoria": "recurso",
+      "pagina": 90,
+      "ancora": "você só pode acumular um máximo de",
+      "resumo": "A moeda do jogador. Você recebe quase toda vez que rola com Esperança, e o teto são 6 pontos.",
+      "explicacao": [
+        "A Esperança ATRAVESSA sessões, como o Medo do Mestre.",
+        "Gasta-se 1 Esperança por Experiência que você quiser somar a uma jogada.",
+        "Também paga Prestar Ajuda, a jogada em dupla e as habilidades de Esperança da classe.",
+        "Cada cicatriz apaga PARA SEMPRE um espaço de Esperança (p.106)."
+      ],
+      "veja": [
+        "experiencia",
+        "cicatrizes",
+        "gastando-recursos"
+      ],
+      "noLivro": "Ponto de Esperança"
+    },
+    {
+      "id": "estresse",
+      "termo": "Estresse",
+      "variantes": [
+        "Ponto de Fadiga",
+        "Pontos de Fadiga",
+        "PF",
+        "Fadiga"
+      ],
+      "categoria": "recurso",
+      "pagina": 92,
+      "ancora": "Pontos de Fadiga (PF) representam o esforço físico e mental",
+      "resumo": "O esforço físico e mental. É o que a maioria das cartas cobra para funcionar.",
+      "explicacao": [
+        "Ao marcar o último Estresse, você fica Vulnerável até recuperar ao menos 1.",
+        "Se for forçado a marcar Estresse e não tiver nenhum livre, marque 1 PV no lugar.",
+        "Não dá para usar um movimento que exige marcar Estresse se tudo já está marcado."
+      ],
+      "errata": "A errata (p.92) fixou os números: toda classe começa com 6 espaços, e o máximo é 12.",
+      "veja": [
+        "vulneravel",
+        "gastando-recursos",
+        "descanso-curto"
+      ],
+      "noLivro": "Ponto de Fadiga"
+    },
+    {
+      "id": "evasao",
+      "termo": "Evasão",
+      "variantes": [],
+      "categoria": "recurso",
+      "pagina": 91,
+      "ancora": "Evasão representa o talento de personagem em evitar ataques",
+      "resumo": "A Dificuldade que um adversário precisa alcançar para acertar você.",
+      "explicacao": [
+        "A base vem da classe, e cartas, equipamento e condições mexem nela.",
+        "Descrever COMO você desvia é bem-vindo, mas não muda o número nem dá bônus.",
+        "Adversários não têm Evasão: eles têm Dificuldade (p.193)."
+      ],
+      "veja": [
+        "dificuldade",
+        "dificuldade-do-adversario"
+      ]
+    },
+    {
+      "id": "gastando-recursos",
+      "termo": "Gastando recursos",
+      "variantes": [],
+      "categoria": "recurso",
+      "pagina": 107,
+      "ancora": "você não pode gastar Pontos de Esperança ou marcar Fadiga várias vezes",
+      "resumo": "Você não pode pagar duas vezes a mesma habilidade para dobrar o efeito numa mesma jogada.",
+      "explicacao": [
+        "\"Gaste 1 Esperança para somar 1d6\" não vira 2 Esperança por 2d6.",
+        "Mas quando o efeito NÃO é bônus numa jogada, usar a habilidade duas vezes vale: 6 Esperança por 4 Pontos de Armadura, sim.",
+        "O recurso sai no momento em que você usa — não depois de ver o resultado."
+      ],
+      "veja": [
+        "esperanca",
+        "estresse"
+      ]
+    },
+    {
+      "id": "medo",
+      "termo": "Medo",
+      "variantes": [
+        "Ponto de Medo",
+        "Pontos de Medo"
+      ],
+      "categoria": "recurso",
+      "pagina": 154,
+      "ancora": "Você pode ter até 12 Pontos de Medo",
+      "resumo": "A moeda do Mestre. Ele começa a campanha com 1 por personagem, ganha 1 sempre que alguém rola com Medo, e o teto é 12.",
+      "explicacao": [
+        "O Medo ATRAVESSA sessões: anota-se no fim de uma e começa a próxima com o mesmo número.",
+        "Em descanso curto o Mestre recebe 1d4; em descanso longo, 1d4 + o número de personagens."
+      ],
+      "quadro": {
+        "tipo": "lista",
+        "titulo": "Cada 1 Medo compra uma destas coisas",
+        "itens": [
+          "Interromper os jogadores para fazer um movimento",
+          "Fazer um movimento do Mestre adicional",
+          "Usar a habilidade de Medo de um adversário",
+          "Usar a habilidade de Medo de um ambiente",
+          "Somar a Experiência de um adversário a uma jogada"
+        ]
+      },
+      "veja": [
+        "foco",
+        "habilidade-de-medo",
+        "descanso-longo"
+      ],
+      "noLivro": "Ponto de Medo"
+    },
+    {
+      "id": "ouro",
+      "termo": "Ouro",
+      "variantes": [
+        "punhado",
+        "punhados",
+        "bolsa",
+        "bolsas",
+        "baú",
+        "baús"
+      ],
+      "categoria": "recurso",
+      "pagina": 104,
+      "ancora": "Ouro é medido em punhados, bolsas e baús",
+      "resumo": "Três categorias: 10 punhados viram 1 bolsa, 10 bolsas viram 1 baú — e o livro não define preço de nada.",
+      "explicacao": [
+        "Ao encher uma categoria e ganhar mais, marque uma da categoria seguinte e apague a atual.",
+        "Passando de 1 baú é preciso guardar ouro em algum lugar antes de receber mais.",
+        "O app dizia \"cofre\" na terceira categoria e passou a dizer BAÚ, como o livro — no app, \"cofre\" é a reserva de cartas.",
+        "Preço é decisão da mesa: \"o mestre determinará o preço dos equipamentos com base na quantidade de ouro recebida pelo grupo entre as sessões\"."
+      ],
+      "quadro": {
+        "tipo": "lista",
+        "titulo": "",
+        "itens": [
+          "Regra opcional: acrescentar MOEDAS como categoria mais baixa — 10 moedas = 1 punhado."
+        ]
+      },
+      "veja": [
+        "inventario"
+      ]
+    },
+    {
+      "id": "pontos-de-armadura",
+      "termo": "Pontos de Armadura",
+      "variantes": [
+        "PA",
+        "Ponto de Armadura",
+        "Armadura"
+      ],
+      "categoria": "recurso",
+      "pagina": 114,
+      "ancora": "reduza a gravidade do dano em um limiar",
+      "resumo": "Marcar 1 Ponto de Armadura desce o dano UMA faixa: de Severo para Maior, de Maior para Menor, de Menor para nada.",
+      "explicacao": [
+        "É 1 PA por golpe — não dá para marcar dois e descer duas faixas.",
+        "Com Armadura 0 não há o que marcar. O total, com todos os bônus, nunca passa de 12.",
+        "A habilidade da armadura vale só para AQUELA armadura, e só enquanto estiver equipada."
+      ],
+      "veja": [
+        "limiares-de-dano",
+        "armadura-base",
+        "descanso-curto"
+      ]
+    },
+    {
+      "id": "pontos-de-vida",
+      "termo": "Pontos de Vida",
+      "variantes": [
+        "PV",
+        "Ponto de Vida"
+      ],
+      "categoria": "recurso",
+      "pagina": 91,
+      "ancora": "Quando o mestre disser que você sofreu dano, compare o",
+      "resumo": "A trilha que mede os ferimentos. Você marca de 1 a 3 PV por golpe, conforme o dano bate nos seus limiares.",
+      "explicacao": [
+        "Quantos PV você tem vem da classe; subir de nível pode aumentar.",
+        "Ao marcar o ÚLTIMO PV, você faz um movimento de morte — não morre automaticamente.",
+        "Se conseguir reduzir o dano a 0 ou menos, não marca nada."
+      ],
+      "errata": "A errata (p.91) acrescentou o teto: o máximo é 12 espaços de PV.",
+      "veja": [
+        "limiares-de-dano",
+        "morte",
+        "pontos-de-armadura"
+      ]
+    },
+    {
+      "id": "arredondar-para-cima",
+      "termo": "Arredondar para cima",
+      "variantes": [
+        "arredonde para cima"
+      ],
+      "categoria": "regra-geral",
+      "pagina": 107,
+      "ancora": "arredonde para cima",
+      "resumo": "O jogo não usa frações. Sem instrução em contrário, arredonde para cima.",
+      "explicacao": [
+        "É esta regra que resolve a metade da resistência: 7 resistido dá 4, não 3."
+      ],
+      "veja": [
+        "resistencia"
+      ]
+    },
+    {
+      "id": "efeitos-simultaneos",
+      "termo": "Efeitos simultâneos",
+      "variantes": [
+        "efeitos cumulativos"
+      ],
+      "categoria": "regra-geral",
+      "pagina": 107,
+      "ancora": "Se dois ou mais efeitos forem aplicáveis numa situação",
+      "resumo": "Quando dois efeitos valem ao mesmo tempo e as regras não dizem a ordem, quem usa escolhe a ordem.",
+      "explicacao": [
+        "Se os dois não puderem ser resolvidos juntos, é preciso escolher um.",
+        "Condições, vantagem e desvantagem NÃO se acumulam."
+      ],
+      "veja": [
+        "vantagem",
+        "condicoes"
+      ]
+    },
+    {
+      "id": "rolando-dados-novamente",
+      "termo": "Rolando dados novamente",
+      "variantes": [
+        "rolar novamente"
+      ],
+      "categoria": "regra-geral",
+      "pagina": 107,
+      "ancora": "Quando uma habilidade permitir que você role um dado",
+      "resumo": "O novo resultado vale, sempre. Você não escolhe entre os dois.",
+      "explicacao": [
+        "A menos que a habilidade diga, com todas as letras, que dá para escolher."
+      ],
+      "veja": [
+        "jogada"
+      ]
+    }
+  ]
+}

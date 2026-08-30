@@ -258,6 +258,21 @@ const CARTAS_DOMINIO = {
   ],
 };
 
+/**
+ * As 5 cartas que mudam alguma coisa PARA SEMPRE.
+ *
+ * Três mexem na própria ficha (Vitalidade, Mestre do Ofício, Ressurreição) e
+ * duas mexem no ALVO (Livro do Ronin, Projétil Corrosivo) — essas viram
+ * condição ou observação no adversário, dentro do encontro.
+ */
+const CARTAS_PERMANENTES = {
+  "blade-vitalidade": {"trancaNoCofre":true,"escolher":2,"de":[{"id":"estresse","rotulo":"Um espaço de Estresse","campo":"estresseMaximo","delta":1},{"id":"pv","rotulo":"Um espaço de Ponto de Vida","campo":"pontosDeVidaMaximos","delta":1},{"id":"limiares","rotulo":"+2 de bônus em seus limiares de dano","campo":"limiares","delta":2}],"nota":"O livro manda escolher DOIS dos três, e depois pôr a carta no cofre para sempre."},
+  "codex-livro-do-ronin": {"noAlvo":"Enervação Eterna deixa o alvo permanentemente Vulnerável. Isso é uma condição no ADVERSÁRIO: aplique pelo encontro, no cartão dele."},
+  "grace-mestre-do-oficio": {"trancaNoCofre":true,"experiencias":[{"id":"duas","rotulo":"+2 em duas Experiências","bonus":2,"quantas":2},{"id":"uma","rotulo":"+3 em uma Experiência","bonus":3,"quantas":1}],"nota":"Escolha um dos dois arranjos; a carta vai para o cofre para sempre."},
+  "sage-projetil-corrosivo": {"noAlvo":"Corroído fica no ADVERSÁRIO, não na sua ficha: −1 na Dificuldade dele para cada 2 Estresses gastos. Anote na observação do cartão dele, no encontro."},
+  "splendor-ressurreicao": {"trancaNoCofre":true,"manual":true,"nota":"A carta só vai para o cofre se o d6 sair 5 ou menos — quem rola é o jogador, então o app espera ele dizer que aconteceu."},
+};
+
 /* ------------------------------------------------------------------------ *
  *  Consultas
  * ------------------------------------------------------------------------ */

@@ -40,21 +40,30 @@ export function avisar(texto, tipo = 'info', duracao) {
 }
 
 export const avisarErro = (texto) => avisar(texto, 'erro');
-export const avisarSucesso = (texto) => avisar(texto, 'sucesso');
+export const avisarSucesso = (texto, duracao) => avisar(texto, 'sucesso', duracao);
 
 /* --------------------------------------------------------------------------
    Modal
    -------------------------------------------------------------------------- */
 
-let modalAberto = null;
+/**
+ * A PILHA de modais.
+ *
+ * Antes era um só, e abrir o segundo fechava o primeiro. Isso quebrou na
+ * subida de nível: escolher a carta de domínio abre um modal DE DENTRO do
+ * modal de avanço, e o de avanço sumia junto com tudo que já tinha sido
+ * escolhido. Uma pilha resolve e não muda nada para quem usa um modal só.
+ *
+ * Escape e o clique no fundo fecham SEMPRE o de cima — que é o que a pessoa
+ * está olhando.
+ */
+const pilhaDeModais = [];
 
 /**
- * Abre um modal. Devolve { fechar }.
+ * Abre um modal por cima dos que já estiverem abertos. Devolve { fechar, caixa }.
  * @param {{titulo?:string, conteudo:Node|string, acoes?:Node[], aoFechar?:Function}} opcoes
  */
 export function abrirModal({ titulo, conteudo, acoes = [], aoFechar } = {}) {
-  fecharModal();
-
   const caixa = el('div', {
     class: 'modal__caixa',
     role: 'dialog',
@@ -66,27 +75,43 @@ export function abrirModal({ titulo, conteudo, acoes = [], aoFechar } = {}) {
   caixa.append(conteudo instanceof Node ? conteudo : el('p', { texto: String(conteudo) }));
   if (acoes.length) caixa.append(el('div', { class: 'modal__acoes' }, acoes));
 
-  const fundo = el('div', { class: 'modal' }, [caixa]);
+  // Cada nível da pilha sobe um degrau de z-index, senão o de cima ficaria
+  // atrás do de baixo (mesmo z-index, e o DOM decide pela ordem — que até
+  // funciona, mas quebra assim que alguém puser um z-index no conteúdo).
+  const fundo = el('div', {
+    class: 'modal',
+    style: `z-index: calc(var(--z-modal) + ${pilhaDeModais.length})`
+  }, [caixa]);
+
   fundo.addEventListener('click', (ev) => {
     if (ev.target === fundo) fechar();
   });
 
   const aoTeclar = (ev) => {
-    if (ev.key === 'Escape') fechar();
+    // Só o modal do TOPO responde ao Escape.
+    if (ev.key !== 'Escape') return;
+    if (pilhaDeModais[pilhaDeModais.length - 1] !== registro) return;
+    fechar();
   };
   document.addEventListener('keydown', aoTeclar);
 
+  let fechado = false;
   function fechar() {
+    if (fechado) return;
+    fechado = true;
     document.removeEventListener('keydown', aoTeclar);
     fundo.remove();
-    if (modalAberto && modalAberto.node === fundo) modalAberto = null;
-    document.body.style.overflow = '';
+    const i = pilhaDeModais.indexOf(registro);
+    if (i >= 0) pilhaDeModais.splice(i, 1);
+    // A rolagem do fundo só volta quando o último modal fecha.
+    if (!pilhaDeModais.length) document.body.style.overflow = '';
     if (typeof aoFechar === 'function') aoFechar();
   }
 
+  const registro = { node: fundo, fechar };
   document.body.append(fundo);
   document.body.style.overflow = 'hidden';
-  modalAberto = { node: fundo, fechar };
+  pilhaDeModais.push(registro);
 
   // Foco no primeiro campo/botão, para o teclado do celular já aparecer.
   const focavel = caixa.querySelector('input, textarea, select, button');
@@ -95,8 +120,26 @@ export function abrirModal({ titulo, conteudo, acoes = [], aoFechar } = {}) {
   return { fechar, caixa };
 }
 
+/** Fecha o modal do topo da pilha. */
 export function fecharModal() {
-  if (modalAberto) modalAberto.fechar();
+  const topo = pilhaDeModais[pilhaDeModais.length - 1];
+  if (topo) topo.fechar();
+}
+
+/** Fecha todos — usado quando a tela inteira troca. */
+export function fecharTodosOsModais() {
+  while (pilhaDeModais.length) pilhaDeModais[pilhaDeModais.length - 1].fechar();
+}
+
+/**
+ * Tem algum modal aberto?
+ *
+ * Serve para as telas de tela-cheia (ficha, criação) não fecharem no Escape
+ * quando o que a pessoa quer fechar é o modal que está por cima. Sem isso,
+ * apertar Escape para sair do visualizador de carta fechava a ficha junto.
+ */
+export function temModalAberto() {
+  return pilhaDeModais.length > 0;
 }
 
 /**

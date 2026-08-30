@@ -691,7 +691,32 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "efeitoPermanente": {
+    "trancaNoCofre": true,
+    "escolher": 2,
+    "de": [
+     {
+      "id": "estresse",
+      "rotulo": "Um espaço de Estresse",
+      "campo": "estresseMaximo",
+      "delta": 1
+     },
+     {
+      "id": "pv",
+      "rotulo": "Um espaço de Ponto de Vida",
+      "campo": "pontosDeVidaMaximos",
+      "delta": 1
+     },
+     {
+      "id": "limiares",
+      "rotulo": "+2 de bônus em seus limiares de dano",
+      "campo": "limiares",
+      "delta": 2
+     }
+    ],
+    "nota": "O livro manda escolher DOIS dos três, e depois pôr a carta no cofre para sempre."
+   }
   },
   {
    "id": "blade-endurecido-pela-batalha",
@@ -971,7 +996,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 0,
-   "texto": "Uma vez por descanso, marque 1 Estresse para disparar até qualquer ponto dentro do alcance Longo sem precisar fazer um teste de Agilidade para chegar lá. Se terminar esse movimento dentro do alcance Corpo a Corpo de um adversário e imediatamente realizar um ataque contra ele, você recebe +1 na jogada de ataque.",
+   "texto": "Uma vez por descanso, marque 1 Estresse para disparar até qualquer ponto dentro do alcance Longo sem precisar fazer uma jogada de Agilidade para chegar lá. Se terminar esse movimento dentro do alcance Corpo a Corpo de um adversário e imediatamente realizar um ataque contra ele, você recebe +1 na jogada de ataque.",
    "imagem": "assets/cartas/dominios/BONE/Manobras Ágeis.png",
    "arquivo": "Manobras Ágeis.png",
    "condicoes": [],
@@ -1129,7 +1154,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 1,
-   "texto": "Ao observar uma criatura, você pode fazer um Teste de Instinto contra ela. Em caso de sucesso, gaste uma Esperança e pergunte ao GM um dos seguintes conjuntos de informações sobre o alvo:\n• Seus Pontos de Vida e Estresse não marcados.\n• Sua Dificuldade e limiares de dano.\n• Suas táticas e dados de dano de ataque padrão.\n• Suas características e Experiências.\nAlém disso, em caso de sucesso, você pode marcar um Estresse para remover um Medo da Reserva de Medo do GM.",
+   "texto": "Ao observar uma criatura, você pode fazer uma Jogada de Instinto contra ela. Em caso de sucesso, gaste uma Esperança e pergunte ao GM um dos seguintes conjuntos de informações sobre o alvo:\n• Seus Pontos de Vida e Estresse não marcados.\n• Sua Dificuldade e limiares de dano.\n• Suas táticas e dados de dano de ataque padrão.\n• Suas características e Experiências.\nAlém disso, em caso de sucesso, você pode marcar um Estresse para remover um Medo da Reserva de Medo do GM.",
    "imagem": "assets/cartas/dominios/BONE/Conheça Teu Inimigo.png",
    "arquivo": "Conheça Teu Inimigo.png",
    "condicoes": [],
@@ -1264,7 +1289,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 1,
-   "texto": "Realize um Teste de Agilidade contra todos os alvos dentro do alcance Próximo.\nVocê pode gastar 1 Esperança para mover os alvos nos quais teve sucesso, assim como quaisquer aliados dispostos dentro do alcance Próximo, para outro ponto dentro desse mesmo alcance.",
+   "texto": "Realize uma Jogada de Agilidade contra todos os alvos dentro do alcance Próximo.\nVocê pode gastar 1 Esperança para mover os alvos nos quais teve sucesso, assim como quaisquer aliados dispostos dentro do alcance Próximo, para outro ponto dentro desse mesmo alcance.",
    "imagem": "assets/cartas/dominios/BONE/DOMINAR.png",
    "arquivo": "DOMINAR.png",
    "condicoes": [],
@@ -1624,7 +1649,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 2,
-   "texto": "Uma vez por descanso longo, você pode se teletransportar instantaneamente, junto de qualquer número de alvos voluntários dentro de Alcance Curto, para um lugar que você já tenha visitado antes. Escolha uma das opções abaixo e faça um Teste de Conjuração (16):\nSe você conhece muito bem o local, receba +3 no teste.\nSe você já visitou o local com frequência, receba +1.\nSe você já visitou o local poucas vezes, não há modificador.\nSe você esteve lá apenas uma vez, receba −2 no teste.\nEm caso de sucesso, vocês aparecem exatamente no destino pretendido. Em caso de falha, vocês aparecem fora do curso — a margem de falha determina o quão longe do local correto vocês surgem.",
+   "texto": "Uma vez por descanso longo, você pode se teletransportar instantaneamente, junto de qualquer número de alvos voluntários dentro de Alcance Curto, para um lugar que você já tenha visitado antes. Escolha uma das opções abaixo e faça uma Jogada de Conjuração (16):\nSe você conhece muito bem o local, receba +3 na jogada.\nSe você já visitou o local com frequência, receba +1.\nSe você já visitou o local poucas vezes, não há modificador.\nSe você esteve lá apenas uma vez, receba −2 na jogada.\nEm caso de sucesso, vocês aparecem exatamente no destino pretendido. Em caso de falha, vocês aparecem fora do curso — a margem de falha determina o quão longe do local correto vocês surgem.",
    "imagem": "assets/cartas/dominios/CODEX/Teleporte.png",
    "arquivo": "Teleporte.png",
    "condicoes": [],
@@ -1689,7 +1714,7 @@
    "tipo": "Grimório",
    "tipoImpresso": "GRIMOIRE",
    "custoRecordar": 0,
-   "texto": "**Passar Através:** Faça um Teste de Conjuração (13). Uma vez por descanso, em caso de sucesso, você e todas as criaturas tocando em você podem passar por uma parede ou porta dentro de Alcance Próximo. O efeito termina quando todos estiverem do outro lado.\n**Portão Dimensional:** Faça um Teste de Conjuração (14). Uma vez por descanso longo, em caso de sucesso, abra um portal para um local em outra dimensão ou plano de existência que você já tenha visitado antes. Esse portal dura até seu próximo descanso.",
+   "texto": "**Passar Através:** Faça uma Jogada de Conjuração (13). Uma vez por descanso, em caso de sucesso, você e todas as criaturas tocando em você podem passar por uma parede ou porta dentro de Alcance Próximo. O efeito termina quando todos estiverem do outro lado.\n**Portão Dimensional:** Faça uma Jogada de Conjuração (14). Uma vez por descanso longo, em caso de sucesso, abra um portal para um local em outra dimensão ou plano de existência que você já tenha visitado antes. Esse portal dura até seu próximo descanso.",
    "imagem": "assets/cartas/dominios/CODEX/Livro de Homet.png",
    "arquivo": "Livro de Homet.png",
    "condicoes": [],
@@ -1698,7 +1723,7 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'. Esta carta usa 'Teste de Conjuração' em vez de 'jogada de Spellcast', diferente das demais cartas de Grimório do maço."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'. Esta carta usa 'Jogada de Conjuração' em vez de 'jogada de Spellcast', diferente das demais cartas de Grimório do maço."
   },
   {
    "id": "codex-tocado-pelo-codice",
@@ -1794,7 +1819,10 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'.",
+   "efeitoPermanente": {
+    "noAlvo": "Enervação Eterna deixa o alvo permanentemente Vulnerável. Isso é uma condição no ADVERSÁRIO: aplique pelo encontro, no cartão dele."
+   }
   },
   {
    "id": "codex-onda-de-desintegracao",
@@ -2304,7 +2332,25 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "efeitoPermanente": {
+    "trancaNoCofre": true,
+    "experiencias": [
+     {
+      "id": "duas",
+      "rotulo": "+2 em duas Experiências",
+      "bonus": 2,
+      "quantas": 2
+     },
+     {
+      "id": "uma",
+      "rotulo": "+3 em uma Experiência",
+      "bonus": 3,
+      "quantas": 1
+     }
+    ],
+    "nota": "Escolha um dos dois arranjos; a carta vai para o cofre para sempre."
+   }
   },
   {
    "id": "grace-notorio",
@@ -2993,7 +3039,10 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português."
+   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português.",
+   "efeitoPermanente": {
+    "noAlvo": "Corroído fica no ADVERSÁRIO, não na sua ficha: −1 na Dificuldade dele para cada 2 Estresses gastos. Anote na observação do cartão dele, no encontro."
+   }
   },
   {
    "id": "sage-aperto-da-morte",
@@ -3777,7 +3826,12 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"SPELL\")."
+   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"SPELL\").",
+   "efeitoPermanente": {
+    "trancaNoCofre": true,
+    "manual": true,
+    "nota": "A carta só vai para o cofre se o d6 sair 5 ou menos — quem rola é o jogador, então o app espera ele dizer que aconteceu."
+   }
   },
   {
    "id": "splendor-revigoramento",

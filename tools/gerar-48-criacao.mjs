@@ -117,6 +117,111 @@ function caracteristicasDaOrigem_(ficha) {
 }
 
 /**
+ * As características que a CLASSE concede — a original e a de multiclasse.
+ *
+ * A REGRA, e por que ela precisou do SRD em inglês
+ * ------------------------------------------------
+ * O livro pt-BR diz que quem faz multiclasse "receba suas habilidades
+ * iniciais" da classe nova. "Habilidades iniciais" não é termo de regra em
+ * lugar nenhum do livro, e por isso a Parte 8 deixou isto sem implementar em
+ * vez de chutar. O SRD oficial em inglês (Darrington Press, CC BY 4.0) é
+ * exato:
+ *
+ *   "When you multiclass, you choose an additional class, gain access to one
+ *    of its domains, and acquire its class feature."
+ *
+ * E o SRD separa, em cada classe, a CLASS FEATURE (o Rally do Bardo) da HOPE
+ * FEATURE (o "Faça uma cena"). Multiclasse dá a primeira. **Não dá a
+ * segunda** — se desse, o personagem teria duas maneiras de gastar Esperança
+ * que o livro nunca pôs na mesma ficha.
+ *
+ * Daí a assimetria proposital deste código: a classe original entrega
+ * característica de classe + característica de Esperança; a multiclasse
+ * entrega só a de classe.
+ *
+ * AS CARTAS DE SUBCLASSE também entram aqui, porque é ali que mora metade do
+ * que o personagem sabe fazer — e só as cartas que ele REALMENTE tem
+ * ('ficha.subclasseCartas' na original, sempre só a fundação na multiclasse).
+ * É isso que faz 'temCaracteristicaNaFicha_('Poesia Épica')' funcionar e o
+ * Dado de Reunião virar d10 na hora certa.
+ *
+ * ⚠ Só os NOMES, como nas ancestralidades. O texto da regra mora nos
+ * data/*.json e quem junta os dois é a tela.
+ */
+function caracteristicasDaClasse_(ficha) {
+  const saida = [];
+  const id = (ficha && ficha.identidade) || {};
+
+  const normClasse = (x) => (typeof normalizarClasse_ === 'function') ? normalizarClasse_(x) : null;
+  const normSub = (x) => (typeof normalizarSubclasse_ === 'function') ? normalizarSubclasse_(x) : null;
+
+  const subclasseDe = (classeId, subId) => {
+    const c = CLASSES[classeId];
+    if (!c || !subId) return null;
+    const subs = c.subclasses || [];
+    for (let i = 0; i < subs.length; i++) if (subs[i].id === subId) return subs[i];
+    return null;
+  };
+
+  const juntarCartas = (sub, quais, origem) => {
+    if (!sub) return;
+    const mapa = sub.caracteristicas || {};
+    for (let i = 0; i < quais.length; i++) {
+      const lista = mapa[quais[i]] || [];
+      for (let k = 0; k < lista.length; k++) saida.push({ nome: lista[k], origem: origem });
+    }
+  };
+
+  // --- a classe original ---------------------------------------------------
+  const classeId = normClasse(id.classe);
+  const c = classeId ? CLASSES[classeId] : null;
+  if (c) {
+    (c.caracteristicas || []).forEach(function (n) { saida.push({ nome: n, origem: 'classe' }); });
+    if (c.caracteristicaEsperanca) {
+      saida.push({ nome: c.caracteristicaEsperanca, origem: 'esperança' });
+    }
+    const quais = Array.isArray(ficha.subclasseCartas) && ficha.subclasseCartas.length
+      ? ficha.subclasseCartas : ['fundacao'];
+    juntarCartas(subclasseDe(classeId, normSub(id.subclasse)), quais, 'subclasse');
+  }
+
+  // --- a multiclasse -------------------------------------------------------
+  const mc = ficha && ficha.multiclasse;
+  if (mc && mc.classe) {
+    const idMc = normClasse(mc.classe);
+    const c2 = idMc ? CLASSES[idMc] : null;
+    if (c2) {
+      (c2.caracteristicas || []).forEach(function (n) {
+        saida.push({ nome: n, origem: 'multiclasse' });
+      });
+      // ⚠ NÃO entra c2.caracteristicaEsperanca. Ver o comentário acima: o SRD
+      //   dá "its class feature", e a de Esperança é outra coisa.
+      const quaisMc = Array.isArray(mc.cartas) && mc.cartas.length ? mc.cartas : ['fundacao'];
+      juntarCartas(subclasseDe(idMc, normSub(mc.subclasse)), quaisMc, 'multiclasse');
+    }
+  }
+
+  return saida;
+}
+
+/**
+ * Os domínios a que o personagem tem acesso — inclusive o da multiclasse.
+ *
+ * A validação das cartas nunca dependeu disto (quem manda lá é
+ * 'limitesDeDominio_', que sabe do teto de metade do nível). Isto aqui é o
+ * que a FICHA mostra: sem o domínio novo na lista, quem multiclassou via a
+ * carta na mão e um cabeçalho que não citava o domínio dela.
+ */
+function dominiosDoPersonagem_(ficha) {
+  const id = (ficha && ficha.identidade) || {};
+  const base = (typeof dominiosDaClasse_ === 'function') ? (dominiosDaClasse_(id.classe) || []) : [];
+  const saida = base.slice();
+  const mc = ficha && ficha.multiclasse;
+  if (mc && mc.dominio && saida.indexOf(mc.dominio) === -1) saida.push(mc.dominio);
+  return saida;
+}
+
+/**
  * Tudo que é DERIVADO da ficha — nada aqui é escolha do jogador.
  * Devolve os números; quem grava é aplicarDerivados_().
  */
@@ -128,6 +233,16 @@ function derivadosDoPersonagem_(ficha) {
   const eq = (ficha && ficha.equipamento) || {};
   const armadura = (typeof acharArmadura_ === 'function' && eq.armadura)
     ? acharArmadura_(eq.armadura) : null;
+
+  /*
+   * A FORMA DE FERA muda a Evasão enquanto dura: o livro manda "somar o bônus
+   * de Evasão dela à sua Evasão". É a única coisa da ficha paralela que mexe
+   * num número da ficha principal — o atributo de ataque e as habilidades são
+   * leitura, não conta.
+   */
+  const formaAtiva = (typeof formaDeFeraAtiva_ === 'function') ? formaDeFeraAtiva_(ficha) : null;
+  const bonusDaForma = (formaAtiva && formaAtiva.modificadores)
+    ? (Math.trunc(Number(String(formaAtiva.modificadores.evasao || '0').replace('+', ''))) || 0) : 0;
 
   let evasao = bases ? bases.evasaoInicial : null;
   const pontuacaoArmadura = armadura ? (armadura.pontuacao || 0) : 0;
@@ -143,17 +258,47 @@ function derivadosDoPersonagem_(ficha) {
   const proficiencia = (typeof proficienciaDaFicha_ === 'function')
     ? proficienciaDaFicha_(ficha) : CRIACAO.proficienciaInicial;
 
+  // Os bônus PERMANENTES que a subida de nível deixou na ficha. Ficam num
+  // balde separado (ficha.avancos.bonus) de propósito: assim a base continua
+  // sendo sempre a da classe + armadura, e o que veio do avanço dá para ler,
+  // conferir e desfazer sem recalcular a ficha inteira. Quem preenche é o
+  // 4D_Avanco.gs — aqui a gente só soma.
+  const b = (typeof bonusDeAvanco_ === 'function') ? bonusDeAvanco_(ficha)
+    : { evasao: 0, pontosDeVidaMaximos: 0, estresseMaximo: 0 };
+
+  let pontosDeVidaMaximos = bases ? bases.pontosDeVidaIniciais : null;
+  /*
+   * Os bônus PERMANENTES que vieram de CARTA (Vitalidade). Ficam num balde
+   * separado do da subida de nível porque as duas fontes são independentes —
+   * e, como todo o resto, são DERIVADOS: somados na hora da conta, nunca
+   * gravados em cima do valor, senão somariam de novo na próxima.
+   */
+  const bc = (typeof bonusDeCartas_ === 'function') ? bonusDeCartas_(ficha)
+    : { pontosDeVidaMaximos: 0, estresseMaximo: 0, limiares: 0 };
+
+  if (pontosDeVidaMaximos !== null) {
+    pontosDeVidaMaximos += (b.pontosDeVidaMaximos || 0) + bc.pontosDeVidaMaximos;
+  }
+  if (bc.limiares && limiarMaior !== null) {
+    limiarMaior += bc.limiares;
+    limiarGrave += bc.limiares;
+  }
+  if (evasao !== null) evasao += (b.evasao || 0) + bonusDaForma;
+
   return {
     evasao: evasao,
-    pontosDeVidaMaximos: bases ? bases.pontosDeVidaIniciais : null,
-    estresseMaximo: CRIACAO.estresse,
+    pontosDeVidaMaximos: pontosDeVidaMaximos,
+    estresseMaximo: CRIACAO.estresse + (b.estresseMaximo || 0) + bc.estresseMaximo,
     esperancaMaxima: CRIACAO.esperancaMaxima,
     proficiencia: proficiencia,
     pontuacaoArmadura: pontuacaoArmadura,
     limiarMaior: limiarMaior,
     limiarGrave: limiarGrave,
-    dominios: (typeof dominiosDaClasse_ === 'function') ? dominiosDaClasse_(id.classe) : [],
-    tracoDeConjuracao: (typeof conjuracaoDoPersonagem_ === 'function') ? conjuracaoDoPersonagem_(ficha) : ''
+    dominios: dominiosDoPersonagem_(ficha),
+    caracteristicas: caracteristicasDaOrigem_(ficha).concat(caracteristicasDaClasse_(ficha)),
+    formaDeFera: formaAtiva ? { id: formaAtiva.id, nome: formaAtiva.nome, evasao: bonusDaForma } : null,
+    tracoDeConjuracao: (typeof conjuracaoDoPersonagem_ === 'function') ? conjuracaoDoPersonagem_(ficha) : '',
+    conjuracoesDisponiveis: (typeof conjuracoesDaFicha_ === 'function') ? conjuracoesDaFicha_(ficha) : []
   };
 }
 
@@ -190,6 +335,34 @@ function aplicarDerivados_(ficha) {
   r.armaduraMarcada = limitar_(r.armaduraMarcada, 0, d.pontuacaoArmadura);
 
   ficha.dominios = d.dominios;
+
+  /*
+   * As CARACTERÍSTICAS também são derivadas — origem + classe + multiclasse.
+   * Até a Parte 9 só as de origem entravam, e o Rally do Bardo não aparecia em
+   * lugar nenhum da ficha. Recalcular aqui conserta as fichas antigas sozinho,
+   * no primeiro salvamento.
+   *
+   * ⚠ O cálculo lê ficha.origem, identidade e multiclasse — nunca
+   * ficha.caracteristicas. Ler o próprio campo derivado de volta foi o que
+   * congelou a Proficiência por três partes (E4 no BACKLOG).
+   */
+  ficha.caracteristicas = d.caracteristicas;
+
+  /*
+   * O traço de Conjuração também é derivado. A tela desenhava o dele sozinha,
+   * repetindo a regra do servidor em JavaScript — e essa cópia ia ficar errada
+   * no dia em que a multiclasse desse duas opções. Agora o servidor manda as
+   * duas coisas: qual vale agora e quais existem.
+   */
+  ficha.tracoDeConjuracao = d.tracoDeConjuracao;
+  ficha.formaDeFera = d.formaDeFera;
+  ficha.conjuracoesDisponiveis = d.conjuracoesDisponiveis;
+
+  // Encher o Estresse deixa Vulnerável (livro p.99 e SRD). Aqui, depois dos
+  // tetos: é o único ponto em que o máximo de Estresse já está calculado.
+  if (typeof sincronizarVulneravelPorEstresse_ === 'function') {
+    d.vulneravel = sincronizarVulneravelPorEstresse_(ficha);
+  }
   return d;
 }
 

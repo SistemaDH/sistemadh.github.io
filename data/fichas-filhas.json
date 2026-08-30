@@ -135,7 +135,7 @@
     "caracteristicas": [
      {
       "nome": "Lança-teia",
-      "texto": "você pode criar uma poderosa teia, útil nas aventuras e nas batalhas. Ela é resistente o bastante para suportar uma criatura. Você pode Imobilizar temporariamente um alvo Próximo se passar em um teste de Finesse contra ele.",
+      "texto": "você pode criar uma poderosa teia, útil nas aventuras e nas batalhas. Ela é resistente o bastante para suportar uma criatura. Você pode Imobilizar temporariamente um alvo Próximo se passar em uma jogada de Finesse contra ele.",
       "textoLivro": "você pode criar uma poderosa teia, útil nas aventuras e nas batalhas. Ela é resistente o bastante para suportar uma criatura. Você pode Imobilizar temporariamente um alvo Próximo se passar em um teste de Acuidade contra ele."
      },
      {
@@ -173,7 +173,7 @@
     "caracteristicas": [
      {
       "nome": "Ágil",
-      "texto": "seu movimento é silencioso e você pode gastar 1 Esperança para se mover até um ponto Distante sem precisar fazer um teste.",
+      "texto": "seu movimento é silencioso e você pode gastar 1 Esperança para se mover até um ponto Distante sem precisar fazer uma jogada.",
       "textoLivro": "seu movimento é silencioso e você pode gastar 1 Ponto de Esperança para se mover até um ponto Distante sem precisar fazer um teste."
      },
      {
@@ -328,7 +328,7 @@
     "caracteristicas": [
      {
       "nome": "Canhão Ricochete",
-      "texto": "marque 1 Estresse para que um aliado arremesse você contra um adversário. Para fazer isso, o aliado faz um teste de ataque usando Agilidade ou Força (à escolha dele) contra um alvo Próximo. Em um sucesso, o adversário sofre d12+2 de dano físico usando a Proficiência de seu aliado. Você pode gastar 1 Esperança para escolher outro adversário Muito Próximo do primeiro como alvo. O segundo alvo sofre metade do dano causado ao primeiro alvo.",
+      "texto": "marque 1 Estresse para que um aliado arremesse você contra um adversário. Para fazer isso, o aliado faz uma jogada de ataque usando Agilidade ou Força (à escolha dele) contra um alvo Próximo. Em um sucesso, o adversário sofre d12+2 de dano físico usando a Proficiência de seu aliado. Você pode gastar 1 Esperança para escolher outro adversário Muito Próximo do primeiro como alvo. O segundo alvo sofre metade do dano causado ao primeiro alvo.",
       "textoLivro": "marque 1 Ponto de Fadiga para que um aliado arremesse você contra um adversário. Para fazer isso, o aliado faz um teste de ataque usando Agilidade ou Força (à escolha dele) contra um alvo Próximo. Em um sucesso, o adversário sofre d12+2 de dano físico usando a Proficiência de seu aliado. Você pode gastar 1 Ponto de Esperança para escolher outro adversário Muito Próximo do primeiro como alvo. O segundo alvo sofre metade do dano causado ao primeiro alvo."
      },
      {
@@ -371,7 +371,7 @@
      },
      {
       "nome": "Visão Aérea",
-      "texto": "você pode voar à vontade. Uma vez por descanso, e enquanto estiver no ar, você pode perguntar ao mestre algo sobre a paisagem abaixo sem precisar de teste. Na primeira vez em que um personagem fizer um teste para agir em relação a essa informação, ele o faz com vantagem."
+      "texto": "você pode voar à vontade. Uma vez por descanso, e enquanto estiver no ar, você pode perguntar ao mestre algo sobre a paisagem abaixo sem precisar de jogada. Na primeira vez em que um personagem fizer uma jogada para agir em relação a essa informação, ele o faz com vantagem."
      }
     ],
     "exemplos": [
@@ -405,7 +405,7 @@
     "caracteristicas": [
      {
       "nome": "Ataque Violento",
-      "texto": "quando tira 1 em um dado de dano, você pode rolar 1d10 e somar o resultado à rolagem de dano. Além disso, antes de fazer um teste de ataque, você pode marcar 1 Estresse para receber um bônus de +1 em sua Proficiência para esse ataque.",
+      "texto": "quando tira 1 em um dado de dano, você pode rolar 1d10 e somar o resultado à rolagem de dano. Além disso, antes de fazer uma jogada de ataque, você pode marcar 1 Estresse para receber um bônus de +1 em sua Proficiência para esse ataque.",
       "textoLivro": "quando tira 1 em um dado de dano, você pode rolar 1d10 e somar o resultado à rolagem de dano. Além disso, antes de fazer um teste de ataque, você pode marcar 1 Ponto de Fadiga para receber um bônus de +1 em sua Proficiência para esse ataque."
      },
      {
@@ -444,12 +444,12 @@
     "caracteristicas": [
      {
       "nome": "Abate",
-      "texto": "marque 1 Estresse para se mover até ficar Corpo a Corpo a um alvo e fazer um teste de ataque contra ele. Em um sucesso, você recebe um bônus de +2 em sua Proficiência para esse ataque e o alvo deve marcar 1 Estresse.",
+      "texto": "marque 1 Estresse para se mover até ficar Corpo a Corpo a um alvo e fazer uma jogada de ataque contra ele. Em um sucesso, você recebe um bônus de +2 em sua Proficiência para esse ataque e o alvo deve marcar 1 Estresse.",
       "textoLivro": "marque 1 Ponto de Fadiga para se mover até ficar Corpo a Corpo a um alvo e fazer um teste de ataque contra ele. Em um sucesso, você recebe um bônus de +2 em sua Proficiência para esse ataque e o alvo deve marcar 1 Ponto de Fadiga."
      },
      {
       "nome": "Disparada",
-      "texto": "gaste 1 Esperança para se mover até um ponto em alcance Distante sem precisar fazer um teste.",
+      "texto": "gaste 1 Esperança para se mover até um ponto em alcance Distante sem precisar fazer uma jogada.",
       "textoLivro": "gaste 1 Ponto de Esperança para se mover até um ponto em alcance Distante sem precisar fazer um teste."
      }
     ],
@@ -588,7 +588,7 @@
      },
      {
       "nome": "Visão Aérea",
-      "texto": "você pode voar à vontade. Uma vez por descanso, e enquanto estiver no ar, você pode perguntar ao mestre algo sobre a paisagem abaixo sem precisar de teste. Na primeira vez em que um personagem fizer um teste para agir em relação a essa informação, ele o faz com vantagem."
+      "texto": "você pode voar à vontade. Uma vez por descanso, e enquanto estiver no ar, você pode perguntar ao mestre algo sobre a paisagem abaixo sem precisar de jogada. Na primeira vez em que um personagem fizer uma jogada para agir em relação a essa informação, ele o faz com vantagem."
      }
     ],
     "exemplos": [
@@ -944,7 +944,7 @@
     "caracteristicas": [
      {
       "nome": "Disparada Massiva",
-      "texto": "você pode se mover até um ponto em alcance Distante sem precisar fazer uma teste. Você ignora terreno difícil (a critério do mestre) devido ao seu tamanho."
+      "texto": "você pode se mover até um ponto em alcance Distante sem precisar fazer uma jogada. Você ignora terreno difícil (a critério do mestre) devido ao seu tamanho."
      },
      {
       "nome": "Golpes Devastadores",
@@ -968,7 +968,7 @@
     "quantidade": 2,
     "bonus": 2
    },
-   "observacoes": "Criação (p.32): 1ª etapa — nome e tipo de animal, definidos junto com o mestre, com imagem na ficha. 2ª etapa — Evasão, que começa em 10. 3ª etapa — duas Experiências baseadas no treinamento e na história de vocês, ambas começando com +2; sempre que você receber uma nova Experiência, seu companheiro recebe uma também, e todas as Experiências novas começam em +2. 4ª etapa — descreva o método que ele usa para causar dano (seu ataque padrão) e anote na seção 'ataque e dano'; dado d6 e alcance Corpo a Corpo no 1º nível [+ errata: escolha se o dano é físico ou mágico]. Teste: 'Faça um Jogada de Conjuração para criar um elo com seu companheiro animal e mandá-lo agir. Gaste 1 Esperança para somar uma Experiência do companheiro aplicável ao teste dele. Em um sucesso com Esperança, se seu próximo movimento se relacionar ao sucesso dele, você faz o teste com vantagem.' Exemplos de Experiências de companheiro animal impressos no livro: Ágil, Alerta Máximo, Amigável, Animal de Serviço, Companheiro Real, Distração Corajosa, Escudeiro, Especialista em Escalada, Guardião da Floresta, Horripilante, Intimidador, Leal Até o Fim, Montaria Confiável, Ninguém Fica Para Trás, Nós Sempre Nos Encontramos, Orientação, Protetor, Vigilante, Você Não Pode Acertar o Que Não Pode Ver. O companheiro não tem Pontos de Vida: ele usa Estresse (ver 'quandoCai').",
+   "observacoes": "Criação (p.32): 1ª etapa — nome e tipo de animal, definidos junto com o mestre, com imagem na ficha. 2ª etapa — Evasão, que começa em 10. 3ª etapa — duas Experiências baseadas no treinamento e na história de vocês, ambas começando com +2; sempre que você receber uma nova Experiência, seu companheiro recebe uma também, e todas as Experiências novas começam em +2. 4ª etapa — descreva o método que ele usa para causar dano (seu ataque padrão) e anote na seção 'ataque e dano'; dado d6 e alcance Corpo a Corpo no 1º nível [+ errata: escolha se o dano é físico ou mágico]. Jogada: 'Faça um Jogada de Conjuração para criar um elo com seu companheiro animal e mandá-lo agir. Gaste 1 Esperança para somar uma Experiência do companheiro aplicável à jogada dele. Em um sucesso com Esperança, se seu próximo movimento se relacionar ao sucesso dele, você faz a jogada com vantagem.' Exemplos de Experiências de companheiro animal impressos no livro: Ágil, Alerta Máximo, Amigável, Animal de Serviço, Companheiro Real, Distração Corajosa, Escudeiro, Especialista em Escalada, Guardião da Floresta, Horripilante, Intimidador, Leal Até o Fim, Montaria Confiável, Ninguém Fica Para Trás, Nós Sempre Nos Encontramos, Orientação, Protetor, Vigilante, Você Não Pode Acertar o Que Não Pode Ver. O companheiro não tem Pontos de Vida: ele usa Estresse (ver 'quandoCai').",
    "errataAplicada": "Errata p.40 ('Choose whether they deal physical or magic damage.', acrescentada ao fim da 4ª etapa) e errata p.41/352 + Ranger Companion Sheet ('physical or magic option has been added to the Beastbound Companion sheet'). A edição pt-BR (Prévia 5) NÃO traz essa opção nem na p.32 nem na ficha (p.33/352); foi acrescentada aqui."
   },
   "evolucoes": [
@@ -1026,7 +1026,7 @@
   "DIVERGÊNCIA COM O INGLÊS — Besta de Carga (Carrier) nas formas de 4º patamar: o pt-BR imprime 'até dois aliados' em Caçador Aéreo Mítico e em Fera Massiva; o inglês traz 'up to three willing allies' (Mythic Aerial Hunter) e 'up to four willing allies' (Massive Behemoth). Mantive 'dois' como impresso.",
   "DIVERGÊNCIA COM O INGLÊS — Híbrido Mítico / Habilidades Híbridas: o pt-BR diz 'Escolha duas opções quaisquer de Forma de Fera de 1º a 3º patamar'; o inglês diz 'Choose any three Beastform options from Tiers 1–3'. Como o pt-BR manda escolher cinco vantagens e três habilidades, 'duas opções' parece erro de tradução. Mantive o impresso.",
   "CONTRADIÇÃO INTERNA — Fera Mítica: o subtítulo diz '(Aprimoramento de 1º ou 2º patamar)', mas o texto de Evoluído diz 'escolha uma Forma de Fera de 1º patamar', omitindo o 2º patamar. O inglês confirma 'Pick a Tier 1 or Tier 2 Beastform option'. Mantive o texto impresso e registro aqui.",
-  "ERROS TIPOGRÁFICOS MANTIDOS COMO IMPRESSOS: 'Fera Lendária (Aprimoradamento de 1º patamar)' (deveria ser 'Aprimoramento'); 'Bônus de +9 rolagens de dano' (falta 'em'); 'marque 2 Ponto de Fadiga adicionais' (Híbrido Mítico); 'sem precisar fazer uma teste' (Lagarto Terrível); 'mas você não pode realizar outros movimentos .' (Carapaça Vigilante — espaço antes do ponto; o inglês diz 'you can't perform other actions without leaving this form', ou seja 'ações', não 'movimentos', e o pt-BR omitiu 'sem sair desta forma').",
+  "ERROS TIPOGRÁFICOS MANTIDOS COMO IMPRESSOS: 'Fera Lendária (Aprimoradamento de 1º patamar)' (deveria ser 'Aprimoramento'); 'Bônus de +9 rolagens de dano' (falta 'em'); 'marque 2 Ponto de Fadiga adicionais' (Híbrido Mítico); 'sem precisar fazer uma jogada' (Lagarto Terrível); 'mas você não pode realizar outros movimentos .' (Carapaça Vigilante — espaço antes do ponto; o inglês diz 'you can't perform other actions without leaving this form', ou seja 'ações', não 'movimentos', e o pt-BR omitiu 'sem sair desta forma').",
   "VARIAÇÃO ENTRE LIVRO E FICHA — Aracnídeo Espreitador: os verbos de vantagem são 'atacar, escalar, mover-se furtivamente' na p.36 e 'atacar, escalar, esgueirar' na ficha p.350. Adotei a redação da p.36 (texto de regras).",
   "VARIAÇÃO DE ABREVIAÇÃO — o livro alterna 'Corpo a Corpo' e 'CaC' na linha de ataque de algumas formas (Fera Alada, Predador Furtivo, Trotador Robusto, Grande Fera Alada, Predador Aquático, Caçador Aéreo Mítico, Fera Aquática Épica). Registrei como 'Corpo a Corpo (CaC)' nesses casos; a ficha do apêndice usa 'Corpo a Corpo' por extenso em vários deles.",
   "limitePorDescanso ficou null: o livro NÃO impõe limite de usos de Forma de Fera por descanso. O custo é 1 Ponto de Fadiga por transformação (mais Fadiga nas híbridas). Os limites 'uma vez por descanso' que aparecem são de habilidades internas das formas (Visão Aérea) ou da subclasse.",

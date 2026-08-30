@@ -1,0 +1,851 @@
+/* ==========================================================================
+   mestre.css — o PAINEL DO MESTRE (Parte 9).
+
+   A cor que manda aqui é a do Medo (roxo), não a do ouro: é o que separa, de
+   relance, "estou na minha ficha" de "estou conduzindo a mesa".
+   ========================================================================== */
+
+.mestre {
+  position: fixed;
+  inset: 0;
+  /* Mesma faixa da ficha: acima da barra do app, abaixo dos modais. */
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  background: var(--cor-fundo);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.mestre__topo {
+  flex: 0 0 auto;
+  background: var(--cor-medo-fundo);
+  border-bottom: 1px solid var(--cor-medo);
+  padding: var(--e3) var(--e4);
+  padding-top: calc(var(--e3) + env(safe-area-inset-top));
+}
+
+.mestre__topoLinha {
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+}
+
+.mestre__identidade { flex: 1 1 auto; min-width: 0; }
+
+.mestre__titulo {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-lg);
+  color: #d8c2ff;
+  margin: 0;
+}
+
+.mestre__subtitulo {
+  margin: 2px 0 0;
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-suave);
+}
+
+.selo--medo {
+  border-color: var(--cor-medo);
+  color: #d8c2ff;
+  background: rgba(139, 92, 246, .2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Também usado no roster, para a ficha que ficou atrás do nível da mesa. */
+.selo--alerta { border-color: var(--cor-alerta); color: #f0d9a8; }
+
+/* --- corpo e abas --------------------------------------------------------- */
+
+.mestre__corpo {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: var(--e4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e4);
+}
+
+.mestre__corpo > * { flex: 0 0 auto; }
+
+.mestre__bloco {
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  padding: var(--e4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e3);
+}
+
+.mestre__blocoTopo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e3);
+}
+
+.mestre__secao {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-md);
+  color: #c4a8f5;
+  margin: 0;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.mestre__subsecao {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-sm);
+  color: var(--cor-ouro);
+  margin: var(--e2) 0 0;
+}
+
+.mestre__abas {
+  flex: 0 0 auto;
+  display: grid;
+  /* quatro abas desde o bestiário: em 390px cada uma fica com ~97px, que ainda
+     cabe o rótulo inteiro sem quebrar. */
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--cor-fundo-2);
+  border-top: 1px solid var(--cor-borda);
+}
+
+.mestre__aba {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: var(--alvo-toque);
+  padding: var(--e2) var(--e1);
+  background: none;
+  border: none;
+  border-top: 2px solid transparent;
+  color: var(--cor-texto-fraco);
+  cursor: pointer;
+  transition: color var(--transicao), border-color var(--transicao);
+}
+
+.mestre__aba.esta-ativa {
+  color: #d8c2ff;
+  border-top-color: var(--cor-medo);
+  background: linear-gradient(180deg, rgba(139, 92, 246, .14), transparent 70%);
+}
+
+.mestre__abaIcone { font-size: 1.15rem; line-height: 1; }
+.mestre__abaRotulo { font-size: var(--txt-xs); }
+
+/* --- Medo ----------------------------------------------------------------- */
+
+.trilha--medoMesa .trilha__rotulo { color: #d8c2ff; }
+
+.trilha__ponto--medo.esta-cheio {
+  background: var(--cor-medo);
+  border-color: var(--cor-medo);
+  box-shadow: 0 0 10px rgba(139, 92, 246, .4);
+}
+
+.mestre__botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+}
+
+.mestre__lista {
+  margin: 0;
+  padding-left: var(--e5);
+  font-size: var(--txt-sm);
+  line-height: 1.6;
+  color: var(--cor-texto-suave);
+}
+
+.mestre__formula {
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-xs);
+  color: var(--cor-ouro-claro);
+}
+
+.mestre__dica {
+  margin: 0;
+  padding: var(--e3);
+  border-left: 3px solid var(--cor-medo);
+  background: var(--cor-fundo-2);
+  border-radius: 0 var(--raio-sm) var(--raio-sm) 0;
+  font-size: var(--txt-sm);
+  font-style: italic;
+  color: var(--cor-texto-suave);
+}
+
+/* --- contagens ------------------------------------------------------------ */
+
+.mestre__contagem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+  border-left: 4px solid var(--cor-borda-forte);
+}
+
+/* Cada tipo tem a sua cor: progresso puxa para o que os jogadores querem,
+   consequência para o que temem. */
+.mestre__contagem--padrao { border-left-color: var(--cor-info); }
+.mestre__contagem--progresso { border-left-color: var(--cor-sucesso); }
+.mestre__contagem--consequencia { border-left-color: var(--cor-perigo); }
+.mestre__contagem--longo-prazo { border-left-color: var(--cor-medo); }
+
+.mestre__contagem.esta-encerrada { opacity: .6; }
+
+.mestre__contagemTopo {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+}
+
+.mestre__contagemValor {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-2xl);
+  color: var(--cor-ouro-claro);
+  line-height: 1;
+  min-width: 1.5em;
+  text-align: right;
+}
+
+.mestre__trilha {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.mestre__quadradinho {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--cor-borda-forte);
+  border-radius: 3px;
+  background: var(--cor-fundo-2);
+}
+
+.mestre__quadradinho.esta-marcado {
+  background: var(--cor-medo);
+  border-color: var(--cor-medo);
+}
+
+.mestre__etapa {
+  margin: 0;
+  padding: var(--e2) var(--e3);
+  background: var(--cor-medo-fundo);
+  border-radius: var(--raio-sm);
+  font-size: var(--txt-sm);
+  color: #d8c2ff;
+}
+
+.mestre__tabela {
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+  padding: var(--e3);
+  background: var(--cor-fundo-2);
+}
+
+.mestre__tabelaTitulo {
+  cursor: pointer;
+  font-size: var(--txt-sm);
+  color: var(--cor-ouro-claro);
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+.mestre__tabelaLinhas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+  margin-top: var(--e2);
+}
+
+.mestre__tabelaLinha {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e2);
+  font-size: var(--txt-sm);
+  padding: var(--e1) 0;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.mestre__tabelaValor {
+  font-family: var(--fonte-mono);
+  min-width: 2.5em;
+  text-align: right;
+  color: var(--cor-ouro-claro);
+}
+
+/* --- grupo ---------------------------------------------------------------- */
+
+.mestre__ficha {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+}
+
+.mestre__fichaTopo {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+}
+
+.mestre__atrasado {
+  margin: 0;
+  padding: var(--e2) var(--e3);
+  border-radius: var(--raio-sm);
+  background: rgba(224, 162, 58, .12);
+  border: 1px solid var(--cor-alerta);
+  color: #f0d9a8;
+  font-size: var(--txt-xs);
+}
+
+.mestre__trilhas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+}
+
+.mestre__mini {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  font-size: var(--txt-xs);
+}
+
+.mestre__miniRotulo {
+  min-width: 5.5em;
+  color: var(--cor-texto-suave);
+}
+
+.mestre__miniPontos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  flex: 1 1 auto;
+}
+
+.mestre__miniPonto {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  border: 1px solid var(--cor-borda-forte);
+  background: var(--cor-fundo-2);
+}
+
+.mestre__miniPonto--pv.esta-cheio { background: var(--cor-perigo); border-color: var(--cor-perigo); }
+.mestre__miniPonto--estresse.esta-cheio { background: var(--cor-medo); border-color: var(--cor-medo); }
+.mestre__miniPonto--armadura.esta-cheio { background: var(--cor-info); border-color: var(--cor-info); }
+.mestre__miniPonto--esperanca.esta-cheio {
+  background: var(--cor-esperanca);
+  border-color: var(--cor-esperanca);
+  border-radius: 50%;
+}
+
+.mestre__miniConta {
+  font-family: var(--fonte-mono);
+  color: var(--cor-texto-fraco);
+  min-width: 3em;
+  text-align: right;
+}
+
+/* --- o botão de entrada no roster ----------------------------------------- */
+
+.roster__painel {
+  width: 100%;
+  min-height: 48px;
+  border-color: var(--cor-medo);
+  color: #d8c2ff;
+  background: var(--cor-medo-fundo);
+}
+
+/* A linha de Editar/Excluir fica separada dos botões de avanço, e mais
+   discreta: no meio de uma cena, o que se aperta é o avanço. */
+.mestre__botoes--secundarios {
+  border-top: 1px solid var(--cor-borda);
+  padding-top: var(--e2);
+  margin-top: var(--e1);
+}
+
+.mestre__botoes--secundarios .btn { opacity: .7; }
+.mestre__botoes--secundarios .btn:hover { opacity: 1; }
+
+/* --- trilha de etapas e par de perseguição -------------------------------- */
+
+.mestre__etapas { gap: var(--e1); }
+
+.mestre__etapaLinha {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+}
+
+.mestre__etapaValor {
+  font-family: var(--fonte-mono);
+  color: var(--cor-ouro-claro);
+  min-width: 2ch;
+  text-align: right;
+  flex: 0 0 auto;
+}
+
+.mestre__par {
+  margin: 0;
+  padding: var(--e1) var(--e3);
+  border-left: 3px solid var(--cor-alerta);
+  background: rgba(224, 162, 58, .10);
+  border-radius: 0 var(--raio-sm) var(--raio-sm) 0;
+  font-size: var(--txt-xs);
+  color: #f0d9a8;
+}
+
+/* --------------------------------------------------------------------------
+   Bestiário — a aba das 129 fichas de adversário e dos 19 ambientes
+   -------------------------------------------------------------------------- */
+
+.bestiario { display: flex; flex-direction: column; gap: var(--e3); }
+
+.bestiario__listas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--e2);
+}
+
+.bestiario__lista {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--e2);
+  min-height: var(--alvo-toque);
+  padding: var(--e2) var(--e3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: rgba(0, 0, 0, .25);
+  color: var(--cor-texto-suave);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bestiario__lista.esta-ativa {
+  border-color: var(--cor-medo);
+  color: #d8c2ff;
+  background: var(--cor-medo-fundo);
+}
+
+.bestiario__conta {
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-fraco);
+}
+
+.bestiario__filtros { display: flex; flex-direction: column; gap: var(--e2); }
+
+.bestiario__pilulas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e1);
+}
+
+/* A pílula é um filtro de um toque. Alvo de 32px de altura com folga lateral:
+   menor que o alvo-toque padrão porque são muitas e ficam lado a lado, mas
+   ainda confortável para o polegar. */
+.pilula {
+  min-height: 32px;
+  padding: var(--e1) var(--e3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-cheio);
+  background: rgba(0, 0, 0, .25);
+  color: var(--cor-texto-suave);
+  font-size: var(--txt-xs);
+  cursor: pointer;
+  transition: border-color var(--transicao), color var(--transicao);
+}
+
+.pilula.esta-ativa {
+  border-color: var(--cor-ouro);
+  color: var(--cor-ouro-claro);
+  background: rgba(217, 171, 91, .12);
+}
+
+.bestiario__guia { align-self: flex-start; }
+
+.bestiario__resultado { display: flex; flex-direction: column; gap: var(--e2); }
+
+.bestiario__linha {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+  width: 100%;
+  padding: var(--e3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.bestiario__linha:hover { border-color: var(--cor-ouro-escuro); }
+
+.bestiario__linhaTopo,
+.bestiario__linhaMeio {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  flex-wrap: wrap;
+}
+
+.bestiario__nome { flex: 1 1 auto; }
+.bestiario__tipo { font-size: var(--txt-xs); color: var(--cor-texto-suave); }
+.bestiario__pb {
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-xs);
+  color: var(--cor-ouro-claro);
+}
+.bestiario__desc { margin: 0; }
+
+.selo--patamar { border-color: var(--cor-ouro-escuro); color: var(--cor-ouro-claro); }
+.selo--passiva { border-color: var(--cor-borda); color: var(--cor-texto-suave); }
+.selo--acao { border-color: var(--cor-ouro-escuro); color: var(--cor-ouro-claro); }
+.selo--reacao { border-color: var(--cor-medo); color: #d8c2ff; }
+
+.bestiario__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e3);
+}
+
+.bestiario__mini { display: flex; align-items: baseline; gap: 4px; }
+.bestiario__miniRotulo { font-size: var(--txt-xs); color: var(--cor-texto-fraco); }
+.bestiario__miniValor { font-family: var(--fonte-mono); font-size: var(--txt-sm); }
+
+.bestiario__nota { margin-top: var(--e3); }
+.bestiario__nota summary { cursor: pointer; color: var(--cor-texto-fraco); }
+
+/* --- a ficha aberta ------------------------------------------------------- */
+
+.ficha-adversario { display: flex; flex-direction: column; gap: var(--e3); }
+
+.ficha-adversario__tipo {
+  margin: 0;
+  font-style: italic;
+  color: var(--cor-ouro-claro);
+}
+
+.ficha-adversario__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e3);
+  padding: var(--e2) var(--e3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: rgba(0, 0, 0, .25);
+}
+
+.ficha-adversario__ataque {
+  margin: 0;
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-sm);
+}
+
+.ficha-adversario__secao {
+  margin: var(--e2) 0 0;
+  font-size: var(--txt-sm);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+
+.habilidade {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+  padding: var(--e3);
+  border-left: 3px solid var(--cor-ouro-escuro);
+  background: rgba(255, 255, 255, .03);
+  border-radius: 0 var(--raio-sm) var(--raio-sm) 0;
+}
+
+.habilidade__nome {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  margin: 0;
+  font-size: var(--txt-md);
+}
+
+.habilidade__texto { margin: 0; font-size: var(--txt-sm); }
+
+.habilidade__custo {
+  margin: 0;
+  font-size: var(--txt-xs);
+  color: #d8c2ff;
+}
+
+/* As perguntas dos ambientes são ganchos para o Mestre, não regra — ficam em
+   itálico, como no livro, para não se confundirem com o texto da habilidade. */
+.habilidade__pergunta {
+  margin: 0;
+  font-style: italic;
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-fraco);
+}
+
+.habilidade__correcao {
+  margin: 0;
+  padding: var(--e1) var(--e3);
+  border-left: 3px solid var(--cor-alerta);
+  background: rgba(224, 162, 58, .10);
+  border-radius: 0 var(--raio-sm) var(--raio-sm) 0;
+  font-size: var(--txt-xs);
+  color: #f0d9a8;
+}
+
+/* Um nome de adversário citado dentro da ficha de um ambiente: toca e abre. */
+.elo {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--cor-ouro-claro);
+  font: inherit;
+  text-decoration: underline dotted;
+  cursor: pointer;
+}
+
+.guia-batalha { display: flex; flex-direction: column; gap: var(--e3); }
+
+.bestiario__pbTotal {
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-lg);
+  color: var(--cor-ouro-claro);
+}
+
+.guia-batalha__ajuste {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e2);
+  font-size: var(--txt-sm);
+  cursor: pointer;
+}
+
+.guia-batalha__custos {
+  margin: 0;
+  padding-left: var(--e4);
+  font-size: var(--txt-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+}
+
+/* --------------------------------------------------------------------------
+   Encontro em jogo — os adversários que estão em cena AGORA
+   -------------------------------------------------------------------------- */
+
+/* Com a cena, o alternador virou de três. Em 390px cada um fica com ~120px,
+   que ainda cabe "Adversários" sem quebrar. */
+.bestiario__listas--tres { grid-template-columns: 1fr 1fr 1fr; }
+.bestiario__listas--tres .bestiario__lista { flex-direction: column; gap: 0; }
+
+.bestiario__linha--comAcao { position: relative; }
+
+.bestiario__porEmCena {
+  align-self: flex-start;
+  min-height: 36px;
+}
+
+.encontro { display: flex; flex-direction: column; gap: var(--e3); }
+
+.encontro__conta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+  padding: var(--e3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: rgba(0, 0, 0, .25);
+}
+
+.encontro__contaLinha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e3);
+}
+
+.encontro__pb {
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-lg);
+  color: var(--cor-ouro-claro);
+}
+
+.encontro__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+}
+
+.encontro__cartao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+  padding: var(--e3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+}
+
+/* Em foco é o estado que a Mestra precisa achar de relance no meio da cena. */
+.encontro__cartao.esta-em-foco {
+  border-color: var(--cor-medo);
+  box-shadow: 0 0 0 1px var(--cor-medo) inset;
+}
+
+/* Derrotado não some da lista — continua contando Pontos de Batalha, e pode
+   voltar. Só perde o destaque. */
+.encontro__cartao.esta-derrotado {
+  opacity: .55;
+  border-style: dashed;
+}
+
+.encontro__topo {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  flex-wrap: wrap;
+}
+
+.encontro__nome {
+  flex: 1 1 auto;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.encontro__nome:hover strong { color: var(--cor-ouro-claro); }
+
+.encontro__linhaDano {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  flex-wrap: wrap;
+}
+
+.encontro__dano {
+  width: 8ch;
+  min-width: 8ch;
+  padding-left: var(--e2);
+  padding-right: var(--e2);
+  text-align: center;
+  font-family: var(--fonte-mono);
+}
+
+.encontro__condicoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e1);
+}
+
+/* As habilidades que custam recurso, dentro do cartão do adversário. */
+.encontro__habilidades {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+}
+
+.encontro__habilidade {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-height: var(--alvo-toque);
+  padding: var(--e2) var(--e3);
+  border: 1px solid var(--cor-medo);
+  border-radius: var(--raio);
+  background: var(--cor-medo-fundo);
+  color: #d8c2ff;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Sem Medo na mesa ou sem Estresse no bicho: o botão continua lá, mas apagado
+   — o servidor recusa de qualquer forma, e sumir com ele esconderia a regra. */
+.encontro__habilidade.esta-sem-recurso {
+  opacity: .5;
+  border-color: var(--cor-borda);
+  background: none;
+  color: var(--cor-texto-fraco);
+}
+
+.encontro__habilidadeNome { font-weight: 600; font-size: var(--txt-sm); }
+.encontro__habilidadeCusto { font-size: var(--txt-xs); opacity: .85; }
+
+/* Levar uma ficha para outro patamar — recolhido, porque é consulta e não
+   acontece no meio da cena. */
+.adaptar { margin-top: var(--e2); }
+.adaptar > summary { cursor: pointer; }
+.adaptar__corpo { display: flex; flex-direction: column; gap: var(--e2); padding-top: var(--e2); }
+
+.adaptar__lista {
+  margin: 0;
+  padding-left: var(--e4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+  font-size: var(--txt-sm);
+}
+
+/* O patamar da própria ficha fica marcado, para o Mestre não se perder. */
+.pilula.e-o-atual { border-style: dashed; }
+
+/* O editor de adversário da mesa — muitos campos, então a coluna manda e as
+   duplas só ficam lado a lado quando cabem. */
+.editor-adversario { display: flex; flex-direction: column; gap: var(--e3); }
+
+.editor-adversario__linha {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+  align-items: flex-end;
+}
+
+.editor-adversario__linha > .campo { flex: 1 1 8rem; min-width: 8rem; }
+
+.editor-adversario__habilidade {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+  padding: var(--e3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: rgba(0, 0, 0, .2);
+}
+
+/* O custo lido do texto, embaixo da caixa: é o retorno imediato de que a
+   frase escrita virou regra. */
+.editor-adversario__custo { margin: 0; color: var(--cor-texto-fraco); }
+.editor-adversario__custo.esta-cobrando { color: #d8c2ff; }
+
+.editor-adversario__dica {
+  margin: 0;
+  padding: var(--e2) var(--e3);
+  border-left: 3px solid var(--cor-ouro-escuro);
+  background: rgba(217, 171, 91, .08);
+  border-radius: 0 var(--raio-sm) var(--raio-sm) 0;
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-suave);
+}
+
+.editor-adversario__tirar { flex: 0 0 auto; min-width: var(--alvo-toque); }
+
+/* Editar e apagar só existem na ficha da mesa, e não podem ser confundidos
+   com o "+ cena" — nem pelo dedo nem pelo teste. */
+.bestiario__daMesaAcao { align-self: flex-start; min-height: 36px; }
+
+/* O tipo de dano só aparece quando o adversário resiste a alguma coisa. */
+.encontro__dano-bloco { display: flex; flex-direction: column; gap: var(--e1); }

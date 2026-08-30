@@ -3,6 +3,7 @@
  * Uso: node tools/testes-backend.mjs
  */
 
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { criarAmbiente } from './apps-script-mock.mjs';
@@ -611,10 +612,13 @@ teste('todo atributo e alcance está em português', () => {
 
 teste('os números corrigidos pela errata estão certos', () => {
   // A errata mudou estes três; o livro em pt-BR ainda tem os valores velhos.
-  igual(contexto.acharArma_('Espada Longa').dano, 'd10+3 phy');
-  igual(contexto.acharArma_('Lança').dano, 'd8+3 phy');
+  // O número é do SRD (com errata); o rótulo do tipo de dano é traduzido —
+  // ele aparece na ficha, embaixo do nome da arma.
+  igual(contexto.acharArma_('Espada Longa').dano, 'd10+3 fís');
+  igual(contexto.acharArma_('Lança').dano, 'd8+3 fís');
+  verdade(!/\bphy\b|\bmag\b/.test(JSON.stringify(avaliar('ARMAS'))), 'sobrou "phy"/"mag" em alguma arma');
   igual(contexto.acharArma_('Lança').carac, null, 'a Lança não tem mais Incômoda');
-  igual(contexto.acharArma_('Anéis Brilhantes').dano, 'd10+2 mag');
+  igual(contexto.acharArma_('Anéis Brilhantes').dano, 'd10+2 mág');
   igual(contexto.acharArma_('Knuckle Claws') || contexto.acharArma_('Garras de Punho') ?
         (contexto.acharArma_('Garras de Punho') || {}).maos : null, 'Uma mão');
 });
@@ -668,10 +672,76 @@ teste('limiares da armadura viram números', () => {
 
 teste('equipamento das molduras de campanha', () => {
   const camp = avaliar('EQUIPAMENTO_CAMPANHA');
-  igual(camp.length, 46);
+  // 36 do Festim das Feras (15 físicas + 10 mágicas + 7 secundárias + 4
+  // armaduras), 21 do Colosso (5 armas × 4 patamares + a Dinamite) e 7 da
+  // Placa-mãe.
+  igual(camp.length, 64);
   igual(new Set(camp.map((c) => c.moldura)).size, 3, 'deveriam ser 3 molduras');
   verdade(contexto.acharEquipamentoDeCampanha_('Dinamite'), 'não achou a Dinamite');
   verdade(contexto.acharEquipamentoDeCampanha_('Quantum'), 'não achou o Quantum');
+
+  // Reimportado do livro bom: cada arma sabe se é primária ou secundária, e a
+  // moldura que substitui as tabelas do Capítulo 2 diz isso.
+  const festim = avaliar('MOLDURAS').find((m) => m.id === 'festim-das-feras');
+  verdade(festim.substituiEquipamentoInicial, 'o Festim troca as tabelas iniciais');
+  const doFestim = camp.filter((c) => c.moldura === 'Festim das Feras');
+  igual(doFestim.filter((c) => c.cat === 'primaria').length, 25);
+  igual(doFestim.filter((c) => c.cat === 'secundaria').length, 7);
+  igual(doFestim.filter((c) => c.cat === 'armadura').length, 4);
+
+  // E o nome antigo continua achando (a mesa leu "Martelo de forja" por meses).
+  igual(contexto.acharEquipamentoDeCampanha_('Martelo de forja').nome, 'Marreta');
+  igual(contexto.acharEquipamentoDeCampanha_('Roupas acolchoadas').nome, 'Vestimenta acolchoada');
+
+  // A ficha equipa isso pelo caminho normal: acharArma_ cai na moldura quando
+  // não acha nas tabelas do Capítulo 2 — mas o "Cutelo" do Capítulo 2 ganha.
+  igual(contexto.acharArma_('campanha-festim-das-feras-frigideira-de-ferro').nome, 'Frigideira de ferro');
+  igual(contexto.acharArma_('Cutelo').id, 'primaria-t1-cutelo', 'o Cutelo do Capítulo 2 vem primeiro');
+  igual(contexto.acharArmadura_('campanha-festim-das-feras-peitoral-de-assadeira').limiares, '8 / 17');
+});
+
+teste('a moldura é da MESA e o Mestre é quem escolhe (fecha C5)', () => {
+  const doMestre = api('entrarMestre', { codigo: 'codigo-do-mestre' }).dados.token;
+  const tokenJogador = api('registrar', { nome: 'Cozinheira', codigo: 'senha-cozinha' }).dados.token;
+
+  // Jogador não define moldura.
+  igual(api('definirMoldura', { token: tokenJogador, moldura: 'festim-das-feras' }).erro.codigo, 'SEM_PERMISSAO');
+
+  // Nome inventado é recusado.
+  igual(api('definirMoldura', { token: doMestre, moldura: 'campanha-do-vizinho' }).erro.codigo, 'DADOS_INVALIDOS');
+
+  const r = api('definirMoldura', { token: doMestre, moldura: 'Festim das Feras' });
+  verdade(r.ok, JSON.stringify(r.erro));
+  igual(r.dados.depois, 'festim-das-feras', 'aceita pelo nome e guarda o id');
+
+  // E o jogador consulta para saber de que tabelas tirar o equipamento.
+  const vista = api('molduraDaMesa', { token: tokenJogador }).dados;
+  igual(vista.moldura.id, 'festim-das-feras');
+  verdade(vista.moldura.substituiEquipamentoInicial, 'o Festim troca as tabelas do Capítulo 2');
+  igual(vista.equipamento.length, 36);
+  verdade(vista.equipamento.some((e) => e.nome === 'Frigideira de ferro'), 'faltou a frigideira');
+
+  // Tirar a moldura volta tudo ao Capítulo 2.
+  igual(api('definirMoldura', { token: doMestre, moldura: '' }).dados.depois, '');
+  igual(api('molduraDaMesa', { token: tokenJogador }).dados.moldura, null);
+});
+
+teste('a ficha do Festim das Feras equipa a frigideira sem reclamar', () => {
+  const v = contexto.validarEquipamento_({
+    primaria: 'campanha-festim-das-feras-frigideira-de-ferro',
+    secundaria: 'campanha-festim-das-feras-escudo-de-tampa-de-barril',
+    armadura: 'campanha-festim-das-feras-avental-de-couro'
+  }, 1);
+  igual(v.erros, []);
+  igual(v.resolvido.primaria.nome, 'Frigideira de ferro');
+
+  // As regras normais continuam valendo: duas mãos não deixam levar secundária.
+  const duas = contexto.validarEquipamento_({
+    primaria: 'campanha-festim-das-feras-machado-de-acougueiro',
+    secundaria: 'campanha-festim-das-feras-escudo-de-tampa-de-barril'
+  }, 1);
+  igual(duas.erros.length, 1);
+  verdade(/duas mãos/.test(duas.erros[0]), duas.erros[0]);
 });
 
 teste('as duas erratas das molduras estão aplicadas', () => {
@@ -745,13 +815,295 @@ teste('itens corrigidos na auditoria', () => {
     ['Chave-Mestra', 'Skeleton Key'],
     ['Flechas Perfurantes', 'Piercing Arrows'],
     ['Unguento de Guelras', 'Gill Salve'],
-    ['Gota de Estrela', 'Estrógeno']                       // Stardrop virou "Estrógeno" no livro
+    // "Gota de Estrela" era tradução minha; o livro da Jambô diz "Gota
+    // Estelar" (conferido ao fechar o B4). O nome antigo e o "Estrógeno" da
+    // tradução automática continuam achando.
+    ['Gota Estelar', 'Estrógeno'],
+    ['Gota Estelar', 'Gota de Estrela']
   ];
   pares.forEach(([certo, outro]) => {
     const i = contexto.acharItem_(certo);
     verdade(i, `não achou "${certo}"`);
     igual((contexto.acharItem_(outro) || {}).id, i.id, `"${outro}" deveria continuar achando "${certo}"`);
   });
+});
+
+console.log('\nCusto de recordar, cobrado de verdade (fecha D3)');
+
+teste('trazer do cofre cobra Estresse — ou não, se for num descanso', () => {
+  const f = contexto.fichaRapida_({
+    nome: 'Memória', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  const custo = contexto.acharCarta_('codex-livro-de-ava').custoRecordar;
+  verdade(custo > 0, 'a carta escolhida precisa ter custo');
+
+  // Vai para o cofre (de graça) e volta cobrando.
+  contexto.aplicarAjustes_(f, [{ tipo: 'carta', carta: 'codex-livro-de-ava', para: 'cofre' }]);
+  igual(f.recursos.estresseMarcado, 0, 'guardar no cofre não custa nada');
+
+  const r = contexto.aplicarAjustes_(f, [
+    { tipo: 'carta', carta: 'codex-livro-de-ava', para: 'ativas', cobrarCusto: true }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].custoCobrado, custo);
+  igual(f.recursos.estresseMarcado, custo, 'o Estresse é marcado junto com a troca');
+
+  // De novo, agora "estou num descanso": a troca é livre.
+  contexto.aplicarAjustes_(f, [{ tipo: 'carta', carta: 'codex-livro-de-ava', para: 'cofre' }]);
+  const livre = contexto.aplicarAjustes_(f, [{ tipo: 'carta', carta: 'codex-livro-de-ava', para: 'ativas' }]);
+  igual(livre.mudancas[0].custoCobrado, undefined);
+  igual(f.recursos.estresseMarcado, custo, 'não cobrou de novo');
+});
+
+teste('sem Estresse sobrando, a troca é recusada inteira', () => {
+  const f = contexto.fichaRapida_({
+    nome: 'Esgotada', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  contexto.aplicarAjustes_(f, [{ tipo: 'carta', carta: 'codex-livro-de-ava', para: 'cofre' }]);
+  f.recursos.estresseMarcado = f.recursos.estresseMaximo;
+
+  const r = contexto.aplicarAjustes_(f, [
+    { tipo: 'carta', carta: 'codex-livro-de-ava', para: 'ativas', cobrarCusto: true }]);
+  igual(r.erros.length, 1);
+  verdade(/Não sobra Estresse/.test(r.erros[0]), r.erros[0]);
+  // E a carta NÃO foi para a mão: não existe meio-termo.
+  verdade(f.cartas.cofre.indexOf('codex-livro-de-ava') !== -1, 'a carta continua no cofre');
+});
+
+console.log('\nVulnerável ao encher o Estresse (fecha D1)');
+
+teste('encher o Estresse liga a Vulnerável, e limpar desliga', () => {
+  const f = contexto.fichaRapida_({
+    nome: 'Estressada', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  const teto = f.recursos.estresseMaximo;
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'recurso', chave: 'estresseMarcado', valor: teto }]);
+  igual(r.erros, []);
+  verdade(/Vulnerável/.test(r.mudancas[0].alerta), r.mudancas[0].alerta);
+
+  const cheia = contexto.validarFicha_(f);
+  verdade(contexto.temCondicao_(cheia, 'Vulnerável'), 'o livro p.99 não dá margem');
+  igual(cheia.condicoes.filter((c) => c.id === 'vulneravel')[0].origem, 'estresse cheio');
+
+  contexto.aplicarAjustes_(cheia, [{ tipo: 'recurso', chave: 'estresseMarcado', valor: teto - 1 }]);
+  const aliviada = contexto.validarFicha_(cheia);
+  verdade(!contexto.temCondicao_(aliviada, 'Vulnerável'), 'limpar 1 Estresse tira a condição');
+});
+
+teste('a Vulnerável que veio de outro lugar NÃO é apagada', () => {
+  const f = contexto.fichaRapida_({
+    nome: 'Derrubada', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  // Vulnerável marcada à mão (veio de uma carta, do Mestre, da ficção).
+  contexto.aplicarAjustes_(f, [{ tipo: 'condicao', chave: 'Vulnerável', ligar: true }]);
+  const teto = f.recursos.estresseMaximo;
+  contexto.aplicarAjustes_(f, [{ tipo: 'recurso', chave: 'estresseMarcado', valor: teto }]);
+  let v = contexto.validarFicha_(f);
+  igual(v.condicoes.filter((c) => c.id === 'vulneravel').length, 1, 'não duplica');
+
+  contexto.aplicarAjustes_(v, [{ tipo: 'recurso', chave: 'estresseMarcado', valor: 0 }]);
+  v = contexto.validarFicha_(v);
+  verdade(contexto.temCondicao_(v, 'Vulnerável'),
+    'limpar Estresse não pode tirar uma Vulnerável que não veio do Estresse');
+});
+
+console.log('\nFichas paralelas na tela (fecha C2)');
+
+function druidaNivel5() {
+  const f = contexto.fichaRapida_({
+    nome: 'Sálvia', classe: 'Druida', subclasse: 'Guardião dos Elementos',
+    ancestralidade: 'Elfo', comunidade: 'Wildborne',
+    cartas: ['sage-emaranhado-cruel', 'arcana-talisma-runico'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  f.identidade.nivel = 5;
+  return contexto.validarFicha_(f);
+}
+
+teste('entrar e sair da Forma de Fera pela tela', () => {
+  const f = druidaNivel5();
+  const evasaoNormal = f.defesas.evasao;
+
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'entrar', forma: 'fera-alada' }]).erros.length,
+    1, 'sem a ficha paralela criada não dá para entrar em forma nenhuma');
+
+  const criou = contexto.aplicarAjustes_(f, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'criar' }]);
+  igual(criou.erros, []);
+
+  const entrou = contexto.aplicarAjustes_(f, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'entrar', forma: 'fera-alada' }]);
+  igual(entrou.erros, []);
+  verdade(/1 Estresse/.test(entrou.mudancas[0].aviso), 'o custo é lembrado, não cobrado');
+
+  // A Evasão da forma entra na conta da ficha principal (livro p.34).
+  const depois = contexto.validarFicha_(f);
+  igual(depois.formaDeFera.id, 'fera-alada');
+  igual(depois.defesas.evasao, evasaoNormal + depois.formaDeFera.evasao);
+
+  const saiu = contexto.aplicarAjustes_(depois, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'sair' }]);
+  igual(saiu.erros, []);
+  const fora = contexto.validarFicha_(depois);
+  igual(fora.formaDeFera, null);
+  igual(fora.defesas.evasao, evasaoNormal, 'saiu da forma, a Evasão volta ao que era');
+});
+
+teste('forma acima do patamar do personagem é recusada', () => {
+  const f = druidaNivel5();
+  contexto.aplicarAjustes_(f, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'criar' }]);
+  // Nível 5 é patamar 3; "Fera Massiva" é de patamar 4. O ajuste em si passa —
+  // quem barra é a validação, que é onde a regra mora.
+  contexto.aplicarAjustes_(f, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'entrar', forma: 'fera-massiva' }]);
+  let recusou = '';
+  try { contexto.validarFicha_(f); } catch (e) { recusou = String(e.message || e); }
+  verdade(/patamar 4/.test(recusou), `a validação devia recusar; disse "${recusou}"`);
+});
+
+teste('a Forma de Fera é só do Druida', () => {
+  const f = contexto.fichaRapida_({
+    nome: 'Guerreira', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade: 'Anão', comunidade: 'Ridgeborne',
+    cartas: ['blade-redemoinho', 'bone-intocavel'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  contexto.aplicarAjustes_(f, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'criar' }]);
+  let recusou = '';
+  try { contexto.validarFicha_(f); } catch (e) { recusou = String(e.message || e); }
+  verdade(/da classe druida/i.test(recusou), `a validação devia recusar; disse "${recusou}"`);
+});
+
+teste('o Companheiro Animal guarda animal, dado e evoluções', () => {
+  const f = contexto.fichaRapida_({
+    nome: 'Caçadora', classe: 'Caçador', subclasse: 'Laço Bestial',
+    ancestralidade: 'Elfo', comunidade: 'Wildborne',
+    cartas: ['bone-intocavel', 'sage-lingua-da-natureza'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'fichaFilha', filha: 'companheiro', acao: 'criar' }]).erros, []);
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'fichaFilha', filha: 'companheiro', acao: 'editar', nome: 'Farrusco',
+    campos: { animal: 'Corvo', tipoDeDano: 'mágico', evolucoes: ['feroz'], dado: 'd8' }
+  }]);
+  igual(r.erros, []);
+  const validada = contexto.validarFicha_(f);
+  const comp = validada.fichasFilhas.find((x) => x.tipo === 'companheiro');
+  igual(comp.nome, 'Farrusco');
+  igual(comp.dados.animal, 'Corvo');
+  igual(comp.dados.dado, 'd8', 'uma evolução Feroz permite subir um degrau do dado');
+  igual(comp.dados.tipoDeDano, 'mágico', 'errata p.40/41/352');
+
+  // Sem a segunda Feroz, o d10 é recusado — e a mensagem diz por quê, em vez
+  // de o dado voltar sozinho e o jogador não entender o que aconteceu.
+  contexto.aplicarAjustes_(f, [{ tipo: 'fichaFilha', filha: 'companheiro', acao: 'editar', campos: { dado: 'd10' } }]);
+  let recusou = '';
+  try { contexto.validarFicha_(f); } catch (e) { recusou = String(e.message || e); }
+  verdade(/só tem 1 evolução/.test(recusou), `disse "${recusou}"`);
+});
+
+console.log('\nMochila e ouro editáveis (fecha C1)');
+
+teste('o ouro sobe de categoria sozinho, como na ficha de papel', () => {
+  const f = contexto.fichaRapida_({
+    nome: 'Rica', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  f.ouro = { punhados: 9, bolsas: 0, cofres: 0 };
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'ouro', chave: 'punhados', delta: 1 }]);
+  igual(r.erros, []);
+  igual(f.ouro, { punhados: 0, bolsas: 1, cofres: 0 }, '10 punhados viram 1 bolsa');
+
+  // E o troco desce igual: 1 bolsa − 1 punhado = 9 punhados.
+  contexto.aplicarAjustes_(f, [{ tipo: 'ouro', chave: 'punhados', delta: -1 }]);
+  igual(f.ouro, { punhados: 9, bolsas: 0, cofres: 0 });
+
+  // Não dá para gastar o que não se tem.
+  f.ouro = { punhados: 0, bolsas: 0, cofres: 0 };
+  const vazio = contexto.aplicarAjustes_(f, [{ tipo: 'ouro', chave: 'punhados', delta: -1 }]);
+  igual(vazio.erros.length, 1);
+
+  // O teto de 1 baú (livro p.104) avisa em vez de apagar em silêncio.
+  f.ouro = { punhados: 9, bolsas: 9, cofres: 1 };
+  const cheio = contexto.aplicarAjustes_(f, [{ tipo: 'ouro', chave: 'punhados', delta: 1 }]);
+  igual(cheio.erros, []);
+  verdade(/baú encheu/.test(cheio.mudancas[0].aviso), cheio.mudancas[0].aviso);
+  igual(f.ouro.cofres, 1);
+});
+
+teste('a mochila aceita item novo e devolve item tirado', () => {
+  const f = contexto.fichaRapida_({
+    nome: 'Mochileira', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  const antes = f.inventario.length;
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'inventario', acao: 'adicionar', item: '  Um mapa   rasgado  ' }]);
+  igual(r.erros, []);
+  igual(f.inventario[f.inventario.length - 1], 'Um mapa rasgado', 'espaço sobrando é aparado');
+  igual(f.inventario.length, antes + 1);
+
+  const tirou = contexto.aplicarAjustes_(f, [{ tipo: 'inventario', acao: 'remover', indice: antes }]);
+  igual(tirou.mudancas[0].item, 'Um mapa rasgado');
+  igual(f.inventario.length, antes);
+
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'inventario', acao: 'adicionar', item: '   ' }]).erros.length, 1);
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'inventario', acao: 'remover', indice: 999 }]).erros.length, 1);
+});
+
+teste('nenhuma característica de equipamento é tradução minha (fecha B2)', () => {
+  const dados = JSON.parse(fs.readFileSync(new URL('../data/equipamentos.json', import.meta.url), 'utf8'));
+  const cs = [...dados.armas, ...dados.armaduras].map((x) => x.caracteristica).filter(Boolean);
+  const minhas = cs.filter((c) => c.fonteTraducao !== 'livro').map((c) => c.nomeIngles);
+  igual([...new Set(minhas)], [], 'todas as 68 vêm do livro agora');
+  // Três que eu tinha traduzido diferente do oficial — se voltarem, foi
+  // alguém regenerando por cima do arquivo velho.
+  const por = (ing) => cs.find((c) => c.nomeIngles === ing);
+  igual(por('Devastating').nome, 'Atroz');
+  igual(por('Greedy').nome, 'Egoísta');
+  igual(por('Healing').nome, 'Vitalizante');
+  // E o nome que a mesa leu até aqui continua achando.
+  igual(por('Devastating').nomeAntigo, 'Devastador');
+});
+
+teste('a regra do descanso interrompido viaja com os movimentos (fecha B5)', () => {
+  const token = api('registrar', { nome: 'Interrompida', codigo: 'senha-interrompida' }).dados.token;
+  const f = contexto.fichaRapida_({
+    nome: 'Interrompida', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  const p = api('criarPersonagem', { token, ficha: f }).dados.personagem;
+
+  const curto = api('movimentosDeDescanso', { token, id: p.id, tipo: 'curto' }).dados;
+  const longo = api('movimentosDeDescanso', { token, id: p.id, tipo: 'longo' }).dados;
+  verdade(/benefício nenhum/.test(curto.seInterrompido), curto.seInterrompido);
+  verdade(/descanso curto/.test(longo.seInterrompido), longo.seInterrompido);
+});
+
+teste('os 9 itens ilegíveis foram conferidos no livro (fecha B4)', () => {
+  const dados = JSON.parse(fs.readFileSync(new URL('../data/equipamentos.json', import.meta.url), 'utf8'));
+  const conferidos = [...dados.loot, ...dados.consumiveis].filter((i) => i.fonteDoTexto);
+  igual(conferidos.length, 9, 'eram 9 itens que o livro velho não deu para ler');
+  conferidos.forEach((i) => {
+    verdade(i.nomeAntigo, `${i.nome} precisa guardar o nome antigo para a busca`);
+    verdade(contexto.acharItem_(i.nomeAntigo), `busca por "${i.nomeAntigo}" parou de achar`);
+    verdade(contexto.acharItem_(i.nome), `busca por "${i.nome}" não acha`);
+  });
+  // O que o livro deu de graça: dois nomes que eram tradução minha.
+  igual(contexto.acharItem_('Valorstone').nome, 'Pedra da Resiliência');
+  igual(contexto.acharItem_('Portal Seed').nome, 'Semente de Portal');
 });
 
 teste('nenhum nome de item se repete', () => {
@@ -1126,7 +1478,14 @@ teste('criação rápida monta uma ficha de nível 1 inteira', () => {
   igual(f.defesas.evasao, 11, 'Bardo 10 + 1 da Gambeson Flexível');
   igual(f.ouro.punhados, 1);
   verdade(f.inventario.length >= 5, 'inventário padrão + poção + item de classe');
-  igual(f.caracteristicas.length, 3, '2 da ancestralidade + 1 da comunidade');
+  // 2 da ancestralidade + 1 da comunidade + Rally + "Faça uma cena" +
+  // a característica da carta de fundação do Músico Errante.
+  const porOrigem = (l, o) => l.filter((c) => c.origem === o).map((c) => c.nome);
+  igual(porOrigem(f.caracteristicas, 'ancestralidade').length, 2);
+  igual(porOrigem(f.caracteristicas, 'comunidade').length, 1);
+  igual(porOrigem(f.caracteristicas, 'classe'), ['Inspiração']);
+  igual(porOrigem(f.caracteristicas, 'esperança'), ['Fazer uma Cena']);
+  igual(porOrigem(f.caracteristicas, 'subclasse'), ['Intérprete Talentoso']);
   igual(f.meta.criadaPor, 'rapida');
 });
 
@@ -1176,7 +1535,10 @@ teste('ancestralidade mista entra pela criação', () => {
     caracteristicasEscolhidas: ['Pé Firme', 'Presas'],
     cartas: [], experiencias: []
   });
-  igual(f.caracteristicas.length, 3);
+  // As DUAS escolhidas na mistura, mais a da comunidade.
+  igual(f.caracteristicas.filter((c) => c.origem === 'ancestralidade').map((c) => c.nome),
+    ['Pé Firme', 'Presas']);
+  igual(f.caracteristicas.filter((c) => c.origem === 'comunidade').length, 1);
   igual(contexto.validarOrigem_(contexto.origemDaFicha_(f)).ok, true);
 
   const proibida = contexto.fichaRapida_({
@@ -1345,11 +1707,67 @@ teste('vocabulário: o texto das formas usa o do app, não o do livro da Jambô'
   verdade(/textoLivro/.test(tudo), 'o texto original da Jambô precisa estar guardado');
 });
 
+console.log('\nClasses reimportadas do livro bom (fecha B3)');
+
+teste('nenhuma característica de classe tem inglês no meio da frase', () => {
+  const C = avaliar('CLASSES');
+  const dados = JSON.parse(fs.readFileSync(new URL('../data/classes.json', import.meta.url), 'utf8'));
+  const proibidas = ['Unstoppable', 'Rally', 'Raw Power', 'Wildtouch', 'No Mercy',
+    'Hold Them Off', 'Shadow Stepper', 'Hope Die', 'Very Far'];
+  dados.classes.forEach((c) => {
+    const txt = [c.caracteristicaEsperanca, ...c.caracteristicasDeClasse]
+      .map((f) => f.nome + ' ' + f.texto).join(' ');
+    proibidas.forEach((p) => verdade(!txt.includes(p), `${c.nome} ainda tem "${p}"`));
+    // E o servidor precisa conhecer as duas listas, senão a ficha fica muda.
+    verdade((C[c.id].caracteristicas || []).length >= 1, `${c.nome} sem característica de classe`);
+    verdade(Boolean(C[c.id].caracteristicaEsperanca), `${c.nome} sem característica de Esperança`);
+  });
+});
+
+teste('as perguntas de origem e vínculos vieram do livro bom (fecha B6)', () => {
+  const dados = JSON.parse(fs.readFileSync(new URL('../data/classes.json', import.meta.url), 'utf8'));
+  const guias = JSON.parse(fs.readFileSync(new URL('../data/guias-de-classe.json', import.meta.url), 'utf8'));
+  dados.classes.forEach((c) => {
+    igual(c.perguntasDeFundo.length, 3, `${c.nome}: perguntas de origem`);
+    igual(c.conexoes.length, 3, `${c.nome}: vínculos`);
+    // A tradução velha dizia "Você já foi apaixonado. Quem você adorou..."
+    verdade(!/adorou|magoou|o incomoda/.test(c.conexoes.concat(c.perguntasDeFundo).join(' ')),
+      `${c.nome} ainda tem texto da tradução velha`);
+    // O guia do apêndice mostra as MESMAS perguntas — se divergirem, o jogador
+    // lê uma coisa na criação e outra no livro.
+    const g = guias.guias.find((x) => x.classe === c.id);
+    igual(g.perguntasDeFundo.map((x) => x.texto), c.perguntasDeFundo, `${c.nome}: guia x classe`);
+    igual(g.perguntasDeConexao.map((x) => x.texto), c.conexoes, `${c.nome}: guia x classe`);
+  });
+});
+
+teste('Ataque Furtivo soma d6 igual ao PATAMAR, não ao nível', () => {
+  const dados = JSON.parse(fs.readFileSync(new URL('../data/classes.json', import.meta.url), 'utf8'));
+  const ladino = dados.classes.find((c) => c.id === 'ladino');
+  const f = ladino.caracteristicasDeClasse.find((x) => /Ataque Furtivo/i.test(x.nome));
+  verdade(/d6 igual ao seu patamar/.test(f.texto), f.texto);
+  verdade(!/d6 igual ao seu n[ií]vel/i.test(f.texto), 'o "nível" da tradução velha voltou');
+});
+
+teste('a ficha antiga que diz "Patrulheiro" continua abrindo', () => {
+  // A classe passou a se chamar Caçador. Fichas gravadas antes disso têm
+  // "Patrulheiro" no campo de identidade e não podem virar ficha inválida.
+  const f = contexto.fichaRapida_({
+    nome: 'Antiga', classe: 'Patrulheiro', subclasse: 'Explorador',
+    ancestralidade: 'Elfo', comunidade: 'Highborne', cartas: [], experiencias: []
+  });
+  igual(contexto.normalizarClasse_(f.identidade.classe), 'patrulheiro');
+  // validarFicha_ estoura quando a ficha é inválida; aqui ela precisa passar.
+  const validada = contexto.validarFicha_(f);
+  igual(validada.identidade.classe, 'Patrulheiro', 'o nome gravado não é reescrito');
+  igual(validada.dominios, ['BONE', 'SAGE'], 'e os domínios da classe continuam saindo');
+});
+
 console.log('\nGlossário das duas traduções');
 
 teste('o glossário cobre os nomes que mudam', () => {
   const G = avaliar('GLOSSARIO');
-  igual(G.length, 49);
+  igual(G.length, 56);
   const porCategoria = {};
   G.forEach((t) => { porCategoria[t.categoria] = (porCategoria[t.categoria] || 0) + 1; });
   igual(porCategoria.comunidade, 9, 'as 9 comunidades mudam de nome');
@@ -1357,6 +1775,8 @@ teste('o glossário cobre os nomes que mudam', () => {
   igual(porCategoria.dominio, 3);
   // Os dois movimentos de descanso que mudam de nome: Reduzir/Zerar Fadiga.
   igual(porCategoria['movimento-de-descanso'], 2);
+  // Os três limiares: as cartas dizem "dano Severo", o livro diz "dano grave".
+  igual(porCategoria.dano, 3);
 });
 
 teste('vai e volta entre as duas traduções', () => {
@@ -1371,7 +1791,14 @@ teste('vai e volta entre as duas traduções', () => {
 teste('nomeComGlossa_ só põe parêntese quando há diferença', () => {
   igual(contexto.nomeComGlossa_('Osso'), 'Osso (Falange)');
   igual(contexto.nomeComGlossa_('Lâmina'), 'Lâmina');
-  igual(contexto.nomeComGlossa_('Patrulheiro'), 'Patrulheiro (Caçador)');
+  // Caçador virou o nome canônico (decisão de 26/08/2026): o livro traduz, a
+  // carta deixou RANGER em inglês. Sem diferença a glosar, mas o nome antigo
+  // do sistema e o da carta continuam achando na busca.
+  igual(contexto.nomeComGlossa_('Caçador'), 'Caçador');
+  igual(contexto.normalizarClasse_('Patrulheiro'), 'patrulheiro');
+  igual(contexto.normalizarClasse_('Ranger'), 'patrulheiro');
+  igual(contexto.normalizarClasse_('Seraph'), 'seraph');
+  igual(contexto.normalizarClasse_('Serafim'), 'seraph');
 });
 
 teste('glosarNome e glosarEmTexto são decisões separadas', () => {
@@ -1658,16 +2085,51 @@ teste('mais de dois movimentos é recusado', () => {
   verdade(p.erros.some((e) => /2 movimentos por descanso/.test(e)), JSON.stringify(p.erros));
 });
 
-teste('movimento feito num aliado gasta o movimento e não muda esta ficha', () => {
+teste('movimento em aliado não muda ESTA ficha — a cura vai para a do aliado', () => {
   const f = fichaCansada();
   const p = contexto.previaDoDescanso_(f, 'curto', [
-    { movimento: 'tratar-feridas', alvo: 'aliado' },
+    { movimento: 'tratar-feridas', alvo: 'aliado', aliadoId: 'id-do-aliado',
+      aliadoNome: 'Bruno', rolagem: 3 },
     { movimento: 'reduzir-estresse', rolagem: 1 }
   ]);
   verdade(p.ok, JSON.stringify(p.erros));
   igual(p.movimentos[0].alvo, 'aliado');
-  igual(p.movimentos[0].quantidade, 0);
-  igual(p.recursos.find((r) => r.chave === 'pontosDeVidaMarcados'), undefined);
+  igual(p.recursos.find((r) => r.chave === 'pontosDeVidaMarcados'), undefined,
+    'os PV de quem descansou não mudam');
+
+  // A cura vira um "presente" endereçado.
+  igual(p.paraAliados.length, 1);
+  igual(p.paraAliados[0].aliadoId, 'id-do-aliado');
+  igual(p.paraAliados[0].quantidade, 4, 'd4 (3) + patamar 1');
+  igual(p.paraAliados[0].recurso, 'pontosDeVidaMarcados');
+});
+
+teste('movimento em aliado sem dizer QUAL aliado é recusado', () => {
+  const f = fichaCansada();
+  const p = contexto.previaDoDescanso_(f, 'curto', [
+    { movimento: 'tratar-feridas', alvo: 'aliado', rolagem: 3 }
+  ]);
+  verdade(p.erros.some((e) => /escolha qual aliado/.test(e)), JSON.stringify(p.erros));
+});
+
+teste('a cura em aliado só LIMPA — nunca marca', () => {
+  const aliado = fichaCansada();
+  aliado.recursos.pontosDeVidaMarcados = 2;
+  const r = contexto.aplicarCuraDeAliado_(aliado, {
+    recurso: 'pontosDeVidaMarcados', quantidade: 5, rotulo: 'Pontos de Vida'
+  });
+  igual(r.antes, 2);
+  igual(r.depois, 0, 'não passa de zero');
+  igual(r.quantidade, 2, 'curou só o que estava marcado');
+
+  // E com a ficha já limpa, não acontece nada — muito menos marcar.
+  const limpa = fichaCansada();
+  limpa.recursos.estresseMarcado = 0;
+  const nada = contexto.aplicarCuraDeAliado_(limpa, {
+    recurso: 'estresseMarcado', quantidade: 4, rotulo: 'Estresse'
+  });
+  igual(nada.depois, 0);
+  igual(nada.semEfeito, true);
 });
 
 teste('Reduzir Estresse não tem opção de aliado (o livro não dá)', () => {
@@ -1771,9 +2233,9 @@ teste('encher PV e Estresse avisa o que o livro manda fazer', () => {
     { tipo: 'recurso', chave: 'estresse', valor: f.recursos.estresseMaximo }
   ]);
   verdade(/Vulnerável/.test(es.mudancas[0].alerta || ''), JSON.stringify(es.mudancas[0]));
-  // O alerta usa "se precisar marcar": a regra do livro dispara quando você
-  // PRECISA marcar Estresse e não pode, não quando a trilha enche.
-  verdade(/se precisar marcar/.test(es.mudancas[0].alerta || ''), es.mudancas[0].alerta);
+  // A leitura mudou: o livro bom (p.99) e o SRD dizem que encher o Estresse
+  // JÁ deixa Vulnerável. O "não pode marcar" é a outra regra (marca 1 PV).
+  verdade(/fica Vulnerável até limpar/.test(es.mudancas[0].alerta || ''), es.mudancas[0].alerta);
 });
 
 teste('ligar e desligar condição, com as duas traduções', () => {
@@ -1971,6 +2433,2068 @@ teste('carta gravada pelo nome vira id', () => {
   const r = api('salvarPersonagem', { token: tokenJogo, id: idEmJogo, ficha, versao: p.versao });
   verdade(r.ok, JSON.stringify(r.erro));
   igual(r.dados.personagem.ficha.cartas.ativas, ['grace-palavras-inspiradoras']);
+});
+
+
+/* -------------------------------------------------------------------------- */
+
+
+console.log('\nDescanso — a cura que atravessa para o aliado');
+
+teste('a cura pousa na ficha do aliado, pela API', () => {
+  const tokenA = api('registrar', { nome: 'Curandeira', codigo: 'senha-cura' }).dados.token;
+  const tokenB = api('registrar', { nome: 'Ferido', codigo: 'senha-ferido' }).dados.token;
+
+  const doente = contexto.fichaRapida_({
+    nome: 'Ferido', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade: 'Anão', comunidade: 'Ridgeborne',
+    cartas: ['blade-redemoinho', 'bone-intocavel'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  doente.recursos.pontosDeVidaMarcados = 5;
+  const fichaB = api('criarPersonagem', { token: tokenB, ficha: doente }).dados.personagem;
+
+  const curandeira = contexto.fichaRapida_({
+    nome: 'Curandeira', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  curandeira.recursos.pontosDeVidaMarcados = 3;
+  const fichaA = api('criarPersonagem', { token: tokenA, ficha: curandeira }).dados.personagem;
+
+  // A lista de aliados não inclui a própria ficha.
+  const aliados = api('aliadosDaMesa', { token: tokenA, id: fichaA.id }).dados.aliados;
+  verdade(aliados.some((x) => x.id === fichaB.id), 'o ferido deveria estar na lista');
+  verdade(!aliados.some((x) => x.id === fichaA.id), 'a própria ficha não é aliada de si');
+
+  const r = api('aplicarDescanso', {
+    token: tokenA, id: fichaA.id, versao: fichaA.versao, tipo: 'curto',
+    escolhas: [
+      { movimento: 'tratar-feridas', alvo: 'aliado', aliadoId: fichaB.id, rolagem: 3 },
+      { movimento: 'preparar-se' }
+    ]
+  });
+  verdade(r.ok, JSON.stringify(r));
+
+  // A curandeira não se curou.
+  igual(r.dados.personagem.ficha.recursos.pontosDeVidaMarcados, 3);
+
+  // O ferido, sim: 5 − (3 + patamar 1) = 1.
+  igual(r.dados.curados.length, 1);
+  igual(r.dados.curados[0].antes, 5);
+  igual(r.dados.curados[0].depois, 1);
+
+  const depois = api('obterPersonagem', { token: tokenB, id: fichaB.id }).dados.personagem;
+  igual(depois.ficha.recursos.pontosDeVidaMarcados, 1, 'gravou de verdade na ficha do outro');
+  verdade(depois.versao > fichaB.versao, 'a versão do aliado subiu');
+});
+
+teste('curar um aliado que não existe não derruba o descanso', () => {
+  const token = api('registrar', { nome: 'Sozinha', codigo: 'senha-sozinha' }).dados.token;
+  const f = contexto.fichaRapida_({
+    nome: 'Sozinha', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  const criada = api('criarPersonagem', { token, ficha: f }).dados.personagem;
+  const r = api('aplicarDescanso', {
+    token, id: criada.id, versao: criada.versao, tipo: 'curto',
+    escolhas: [
+      { movimento: 'tratar-feridas', alvo: 'aliado', aliadoId: 'nao-existe', rolagem: 2 },
+      { movimento: 'preparar-se' }
+    ]
+  });
+  verdade(r.ok, JSON.stringify(r));
+  verdade(/não encontrada/.test(r.dados.curados[0].erro || ''), JSON.stringify(r.dados.curados));
+});
+
+console.log('\nAvanço — a tabela');
+
+const OPCOES_AVANCO = avaliar('OPCOES_AVANCO');
+const PATAMARES = avaliar('PATAMARES');
+const ESCOLHAS_POR_NIVEL = avaliar('ESCOLHAS_POR_NIVEL');
+
+/** Uma bardo de nível 1 pronta para subir. */
+function bardoNivel1(extras = {}) {
+  return contexto.fichaRapida_({
+    nome: 'Subindo', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }],
+    ...extras
+  });
+}
+
+/**
+ * Sobe a ficha um nível escolhendo sozinho duas opções que ainda cabem.
+ *
+ * Não dá para fixar "sempre PV e Estresse": eles têm 2 quadradinhos por
+ * patamar, então no terceiro nível do patamar acabam — e o teste quebraria por
+ * culpa do helper, não do código. Então ele pergunta ao próprio backend o que
+ * ainda está livre.
+ */
+function subirUm(ficha, escolhas = {}) {
+  const nivelNovo = ficha.identidade.nivel + 1;
+  const conquista = contexto.conquistasDoNivel_(nivelNovo);
+  const base = {};
+  if (conquista) base.experienciaNova = `Experiência do nível ${nivelNovo}`;
+
+  if (!escolhas.avancos) {
+    const livres = contexto.opcoesDisponiveis_(ficha, nivelNovo)
+      .filter((o) => o.disponivel && !o.negrito && o.id !== 'subclasse');
+    const pedidos = [];
+    // Traços tem 3 espaços por patamar e é o que mais rende; PV, Estresse e
+    // Evasão entram depois. As que precisam de dado extra recebem o dado aqui.
+    const ordem = ['tracos', 'pontos-de-vida', 'estresse', 'evasao', 'experiencias'];
+    const marcados = (ficha.avancos && ficha.avancos.tracosMarcados) || [];
+    const usadosAgora = marcados.slice();
+
+    for (const id of ordem) {
+      for (const o of livres.filter((x) => x.id === id)) {
+        let restam = o.restam;
+        while (restam > 0 && pedidos.length < 2) {
+          if (id === 'tracos') {
+            const livresT = o.tracosLivres.filter((t) => !usadosAgora.includes(t));
+            if (livresT.length < 2) break;
+            pedidos.push({ opcao: id, patamar: o.patamar, tracos: livresT.slice(0, 2) });
+            usadosAgora.push(livresT[0], livresT[1]);
+          } else if (id === 'experiencias') {
+            pedidos.push({ opcao: id, patamar: o.patamar, experiencias: [0, 1] });
+          } else {
+            pedidos.push({ opcao: id, patamar: o.patamar });
+          }
+          restam--;
+        }
+        if (pedidos.length >= 2) break;
+      }
+      if (pedidos.length >= 2) break;
+    }
+    if (pedidos.length < 2) {
+      throw new Error(`subirUm: só achei ${pedidos.length} opção livre para o nível ${nivelNovo}`);
+    }
+    base.avancos = pedidos;
+  }
+  return contexto.aplicarAvanco_(ficha, { ...base, ...escolhas }).ficha;
+}
+
+teste('os quatro patamares cobrem os dez níveis', () => {
+  const cobertos = PATAMARES.flatMap((p) => p.niveis).sort((a, b) => a - b);
+  igual(cobertos, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  igual(PATAMARES.map((p) => p.niveis[0]), [1, 2, 5, 8]);
+});
+
+teste('o patamar de cada nível bate com o livro (p.109)', () => {
+  const esperado = { 1: 1, 2: 2, 3: 2, 4: 2, 5: 3, 6: 3, 7: 3, 8: 4, 9: 4, 10: 4 };
+  Object.entries(esperado).forEach(([nivel, patamar]) => {
+    igual(contexto.patamarDoNivel_(Number(nivel)), patamar, `nível ${nivel}`);
+  });
+});
+
+teste('conquistas só nos níveis 2, 5 e 8', () => {
+  const com = [];
+  for (let n = 1; n <= 10; n++) if (contexto.conquistasDoNivel_(n)) com.push(n);
+  igual(com, [2, 5, 8]);
+});
+
+teste('a contagem de quadradinhos bate com a ficha de papel', () => {
+  const esperado = {
+    2: { tracos: 3, 'pontos-de-vida': 2, estresse: 2, experiencias: 1, 'carta-de-dominio': 1, evasao: 1 },
+    3: { tracos: 3, 'pontos-de-vida': 2, estresse: 2, experiencias: 1, 'carta-de-dominio': 1, evasao: 1, subclasse: 1, proficiencia: 2, multiclasse: 2 },
+    4: { tracos: 3, 'pontos-de-vida': 2, estresse: 2, experiencias: 1, 'carta-de-dominio': 1, evasao: 1, subclasse: 1, proficiencia: 2, multiclasse: 2 }
+  };
+  Object.entries(esperado).forEach(([pt, mapa]) => {
+    Object.entries(mapa).forEach(([id, n]) => {
+      igual(contexto.espacosDaOpcao_(id, Number(pt)), n, `${id} no ${pt}º patamar`);
+    });
+  });
+  igual(contexto.espacosDaOpcao_('proficiencia', 2), 0, 'Proficiência não existe no 2º patamar');
+  igual(contexto.espacosDaOpcao_('multiclasse', 2), 0, 'multiclasse não existe no 2º patamar');
+});
+
+teste('negrito consome as DUAS escolhas do nível', () => {
+  const negrito = OPCOES_AVANCO.filter((o) => o.negrito).map((o) => o.id);
+  igual(negrito, ['proficiencia', 'multiclasse']);
+  negrito.forEach((id) => {
+    igual(OPCOES_AVANCO.find((o) => o.id === id).consomeEscolhas, 2, id);
+  });
+  OPCOES_AVANCO.filter((o) => !o.negrito).forEach((o) => {
+    igual(o.consomeEscolhas, 1, o.id);
+  });
+});
+
+console.log('\nProficiência — a ponta solta da Parte 5, resolvida');
+
+teste('Proficiência base: 1, e +1 nos níveis 2, 5 e 8', () => {
+  const esperado = { 1: 1, 2: 2, 3: 2, 4: 2, 5: 3, 6: 3, 7: 3, 8: 4, 9: 4, 10: 4 };
+  Object.entries(esperado).forEach(([nivel, p]) => {
+    igual(contexto.proficienciaBase_(Number(nivel)), p, `nível ${nivel}`);
+  });
+});
+
+teste('Proficiência não é mais congelada pelo valor já gravado', () => {
+  // O bug antigo: proficienciaDaFicha_ lia recursos.proficiencia, que
+  // aplicarDerivados_ tinha acabado de escrever — então subir de nível nunca
+  // aumentava a Proficiência.
+  const f = bardoNivel1();
+  igual(f.recursos.proficiencia, 1);
+  f.identidade.nivel = 5;
+  contexto.aplicarDerivados_(f);
+  igual(f.recursos.proficiencia, 3, 'no nível 5 a Proficiência tem de ser 3');
+});
+
+teste('a opção de avanço soma por cima da base', () => {
+  const f = bardoNivel1();
+  f.identidade.nivel = 5;
+  f.avancos = { historico: [], espacos: {}, tracosMarcados: [], bonus: { proficiencia: 1 } };
+  contexto.aplicarDerivados_(f);
+  igual(f.recursos.proficiencia, 4, 'base 3 + 1 de avanço');
+});
+
+teste('patamar e Proficiência são coisas DIFERENTES', () => {
+  // Dão o mesmo número por padrão, mas a Proficiência pode passar disso e o
+  // patamar não — é ele que o descanso curto soma no 1d4.
+  const f = bardoNivel1();
+  f.identidade.nivel = 6;
+  f.avancos = { historico: [], espacos: {}, tracosMarcados: [], bonus: { proficiencia: 2 } };
+  contexto.aplicarDerivados_(f);
+  igual(f.recursos.proficiencia, 5);
+  igual(contexto.patamarDaFicha_(f), 3, 'o patamar continua sendo o do nível');
+});
+
+console.log('\nAvanço — a prévia e a aplicação');
+
+teste('a prévia não encosta na ficha original', () => {
+  const f = bardoNivel1();
+  const antes = JSON.stringify(f);
+  contexto.previaDoAvanco_(f, {
+    experienciaNova: 'Nova', avancos: [{ opcao: 'evasao' }, { opcao: 'pontos-de-vida' }]
+  });
+  igual(JSON.stringify(f), antes, 'a prévia alterou a ficha');
+});
+
+teste('prever e aplicar dão exatamente o mesmo relatório', () => {
+  const f = bardoNivel1();
+  const escolhas = {
+    experienciaNova: 'Palco', avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }]
+  };
+  const previa = contexto.previaDoAvanco_(f, escolhas);
+  const feito = contexto.aplicarAvanco_(f, escolhas);
+  igual(JSON.stringify(feito.previa), JSON.stringify(previa), 'prévia e aplicação divergiram');
+});
+
+teste('subir para o nível 2 faz tudo que o livro manda', () => {
+  const f = bardoNivel1();
+  const evasaoAntes = f.defesas.evasao;
+  const cartas = avaliar('CARTAS_DOMINIO');
+  const nivel2 = cartas.GRACE.find((c) => c[2] === 2);
+
+  const r = contexto.aplicarAvanco_(f, {
+    experienciaNova: 'Palco de mil vilarejos',
+    avancos: [{ opcao: 'tracos', tracos: ['agilidade', 'forca'] }, { opcao: 'evasao' }],
+    carta: nivel2[0]
+  });
+  const nova = r.ficha;
+
+  igual(nova.identidade.nivel, 2);
+  igual(nova.recursos.proficiencia, 2, 'conquista do nível 2');
+  igual(nova.experiencias.length, 3, 'a Experiência nova entrou');
+  igual(nova.experiencias[2].bonus, 2);
+  igual(nova.defesas.evasao, evasaoAntes + 1, 'a Evasão do avanço');
+  igual(nova.defesas.limiarMaior, f.defesas.limiarMaior + 1, 'limiares +1');
+  igual(nova.defesas.limiarGrave, f.defesas.limiarGrave + 1);
+  igual(nova.tracos.agilidade, f.tracos.agilidade + 1);
+  igual(nova.tracos.forca, f.tracos.forca + 1);
+  igual(nova.avancos.tracosMarcados, ['agilidade', 'forca']);
+  verdade(nova.cartas.ativas.includes(nivel2[0]), 'a carta do nível entrou');
+});
+
+teste('a conquista do nível 2 cobra o nome da Experiência nova', () => {
+  const f = bardoNivel1();
+  const p = contexto.previaDoAvanco_(f, { avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }] });
+  igual(p.ok, false);
+  verdade(p.erros.some((e) => /dê um nome/.test(e)), JSON.stringify(p.erros));
+});
+
+teste('mais de duas escolhas é recusado', () => {
+  const f = bardoNivel1();
+  const p = contexto.previaDoAvanco_(f, {
+    experienciaNova: 'X',
+    avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }, { opcao: 'pontos-de-vida' }]
+  });
+  verdade(p.erros.some((e) => new RegExp(`${ESCOLHAS_POR_NIVEL} escolhas por nível`).test(e)),
+    JSON.stringify(p.erros));
+});
+
+teste('os quadradinhos acabam e a opção sai de cena', () => {
+  // Evasão tem 1 espaço no 2º patamar: dá para pegar uma vez só até o nível 5.
+  let f = bardoNivel1();
+  f = subirUm(f, { avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }] });
+  const p = contexto.previaDoAvanco_(f, { avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }] });
+  verdade(p.erros.some((e) => /espaços já estão marcados/.test(e)), JSON.stringify(p.erros));
+});
+
+teste('o mesmo traço não pode ser marcado duas vezes no patamar', () => {
+  let f = bardoNivel1();
+  f = subirUm(f, { avancos: [{ opcao: 'tracos', tracos: ['agilidade', 'forca'] }] });
+  const p = contexto.previaDoAvanco_(f, {
+    avancos: [{ opcao: 'tracos', tracos: ['agilidade', 'finesse'] }]
+  });
+  verdade(p.erros.some((e) => /já foi marcado neste patamar/.test(e)), JSON.stringify(p.erros));
+});
+
+teste('a conquista do nível 5 limpa as marcações dos traços', () => {
+  let f = bardoNivel1();
+  f = subirUm(f, { avancos: [{ opcao: 'tracos', tracos: ['agilidade', 'forca'] }] });   // 2
+  f = subirUm(f, { avancos: [{ opcao: 'tracos', tracos: ['finesse', 'instinto'] }] });  // 3
+  f = subirUm(f, { avancos: [{ opcao: 'tracos', tracos: ['presenca', 'conhecimento'] }] }); // 4
+  igual(f.avancos.tracosMarcados.length, 6, 'os seis traços marcados no 2º patamar');
+
+  f = subirUm(f);   // 5 — conquista de patamar
+  igual(f.avancos.tracosMarcados, [], 'a conquista do nível 5 limpou');
+  igual(f.recursos.proficiencia, 3);
+});
+
+teste('a errata é respeitada: duas Experiências ganham +1 cada', () => {
+  const f = bardoNivel1();
+  const r = contexto.aplicarAvanco_(f, {
+    experienciaNova: 'Terceira',
+    avancos: [{ opcao: 'experiencias', experiencias: [0, 1] }, { opcao: 'evasao' }]
+  });
+  igual(r.ficha.experiencias[0].bonus, 3);
+  igual(r.ficha.experiencias[1].bonus, 3);
+  igual(r.ficha.experiencias[2].bonus, 2, 'a nova entra com +2, sem o avanço');
+});
+
+teste('a mesma Experiência duas vezes é recusada', () => {
+  const f = bardoNivel1();
+  const p = contexto.previaDoAvanco_(f, {
+    experienciaNova: 'X', avancos: [{ opcao: 'experiencias', experiencias: [0, 0] }]
+  });
+  verdade(p.erros.some((e) => /DIFERENTES/.test(e)), JSON.stringify(p.erros));
+});
+
+teste('a errata do teto de 12 vale para PV e Estresse', () => {
+  const f = bardoNivel1();
+  f.avancos = { historico: [], espacos: {}, tracosMarcados: [], bonus: { estresseMaximo: 6 } };
+  contexto.aplicarDerivados_(f);
+  igual(f.recursos.estresseMaximo, 12, '6 de base + 6 de avanço');
+  const opcoes = contexto.opcoesDisponiveis_(f, 2);
+  const estresse = opcoes.find((o) => o.id === 'estresse');
+  igual(estresse.disponivel, false);
+  verdade(/teto de 12/.test(estresse.motivo), estresse.motivo);
+});
+
+teste('a carta extra respeita o teto do patamar', () => {
+  const cartas = avaliar('CARTAS_DOMINIO');
+  const alta = cartas.GRACE.find((c) => c[2] === 5);
+  let f = bardoNivel1();
+  f = subirUm(f);   // 2
+  f = subirUm(f);   // 3
+  f = subirUm(f);   // 4
+  igual(f.identidade.nivel, 4);
+  // No 2º patamar o livro escreve o teto: nível 4. Uma carta de nível 5 não entra.
+  const p = contexto.previaDoAvanco_(f, {
+    experienciaNova: 'Conquista do nível 5',
+    avancos: [{ opcao: 'carta-de-dominio', carta: alta[0], patamar: 2 }]
+  });
+  verdade(p.erros.some((e) => /teto aqui é/.test(e)), JSON.stringify(p.erros));
+});
+
+teste('a troca de carta é por nível igual ou menor', () => {
+  const cartas = avaliar('CARTAS_DOMINIO');
+  const nivel2 = cartas.GRACE.find((c) => c[2] === 2);
+  const f = bardoNivel1();
+  const p = contexto.previaDoAvanco_(f, {
+    experienciaNova: 'X',
+    avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }],
+    troca: { sai: 'grace-palavras-inspiradoras', entra: nivel2[0] }
+  });
+  verdade(p.erros.some((e) => /nível igual ou menor/.test(e)), JSON.stringify(p.erros));
+});
+
+teste('desfazer devolve a ficha exatamente como estava', () => {
+  const f = bardoNivel1();
+  const antes = JSON.stringify(f);
+  const r = contexto.aplicarAvanco_(f, {
+    experienciaNova: 'Some depois',
+    avancos: [{ opcao: 'tracos', tracos: ['agilidade', 'forca'] }, { opcao: 'evasao' }]
+  });
+  const desfeita = contexto.desfazerUltimoAvanco_(r.ficha);
+  igual(desfeita.identidade.nivel, 1);
+  igual(desfeita.experiencias.length, 2);
+  igual(desfeita.defesas.evasao, f.defesas.evasao);
+  igual(desfeita.tracos, f.tracos);
+  igual(desfeita.avancos.tracosMarcados, []);
+});
+
+teste('desfazer duas vezes seguidas é recusado', () => {
+  const f = bardoNivel1();
+  const r = contexto.aplicarAvanco_(f, {
+    experienciaNova: 'X', avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }]
+  });
+  const desfeita = contexto.desfazerUltimoAvanco_(r.ficha);
+  let erro = null;
+  try { contexto.desfazerUltimoAvanco_(desfeita); } catch (e) { erro = e; }
+  verdade(erro && /não há um avanço recente/i.test(erro.message), String(erro && erro.message));
+});
+
+console.log('\nMulticlasse');
+
+/** Leva a bardo até o nível 5, onde a multiclasse abre. */
+function bardoNivel5() {
+  let f = bardoNivel1();
+  for (let n = 2; n <= 5; n++) f = subirUm(f);
+  return f;
+}
+
+teste('multiclasse não aparece antes do nível 5', () => {
+  const f = bardoNivel1();
+  const opcoes = contexto.opcoesDisponiveis_(f, 2);
+  igual(opcoes.filter((o) => o.id === 'multiclasse').length, 0, 'não existe no 2º patamar');
+});
+
+teste('multiclasse consome o nível inteiro', () => {
+  const f = bardoNivel5();
+  const p = contexto.previaDoAvanco_(f, {
+    avancos: [
+      { opcao: 'multiclasse', classe: 'druida', dominio: 'SAGE', subclasse: 'druida-guardiao-dos-elementos' },
+      { opcao: 'evasao' }
+    ]
+  });
+  verdade(p.erros.some((e) => /escolhas por nível/.test(e)), JSON.stringify(p.erros));
+});
+
+teste('multiclasse entra e dá acesso ao domínio novo', () => {
+  const f = bardoNivel5();
+  const r = contexto.aplicarAvanco_(f, {
+    avancos: [{ opcao: 'multiclasse', classe: 'druida', dominio: 'SAGE', subclasse: 'druida-guardiao-dos-elementos' }]
+  });
+  igual(r.ficha.multiclasse.classe, 'druida');
+  igual(r.ficha.multiclasse.dominio, 'SAGE');
+  igual(r.ficha.multiclasse.cartas, ['fundacao'], 'só a carta fundamental');
+  const limites = contexto.limitesDeDominio_(r.ficha);
+  const sage = limites.find((l) => l.dominio === 'SAGE');
+  igual(sage.nivelMaximo, 3, 'nível 6, metade arredondando para cima = 3');
+  igual(sage.origem, 'multiclasse');
+});
+
+teste('multiclasse com duas fundações dá DOIS traços de Conjuração (fecha C6)', () => {
+  // Bardo (Presença) que multiclassa em Druida (Instinto).
+  const f = bardoNivel5();
+  const r = contexto.aplicarAvanco_(f, {
+    avancos: [{ opcao: 'multiclasse', classe: 'druida', dominio: 'SAGE', subclasse: 'druida-guardiao-dos-elementos' }]
+  });
+  const ficha = r.ficha;
+  const lista = contexto.conjuracoesDaFicha_(ficha);
+  igual(lista.map((x) => x.traco), ['presenca', 'instinto']);
+  igual(lista.map((x) => x.origem), ['subclasse', 'multiclasse']);
+
+  // Sem escolher nada, vale o da subclasse ORIGINAL.
+  igual(contexto.conjuracaoDoPersonagem_(ficha), 'presenca');
+
+  // Trocar é um ajuste, e só aceita traço a que a ficha tem direito.
+  const ok = contexto.aplicarAjustes_(ficha, [{ tipo: 'conjuracao', traco: 'Instinto' }]);
+  igual(ok.erros, []);
+  igual(contexto.conjuracaoDoPersonagem_(ficha), 'instinto');
+  const nao = contexto.aplicarAjustes_(ficha, [{ tipo: 'conjuracao', traco: 'Força' }]);
+  igual(nao.erros.length, 1, 'Força não é conjuração de ninguém aqui');
+
+  // E o teto dos contadores acompanha: "fichas iguais ao traço de Conjuração".
+  igual(contexto.valorDoTraco_(ficha, 'Conjuração'), ficha.tracos.instinto);
+});
+
+teste('sem multiclasse não há o que escolher, e escolha órfã é limpa', () => {
+  const f = contexto.fichaRapida_({
+    nome: 'Simples', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  igual(contexto.conjuracoesDaFicha_(f).length, 1);
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'conjuracao', traco: 'Instinto' }]);
+  igual(r.erros.length, 1, 'não dá para escolher o que não se tem');
+
+  // Escolha que sobrou de uma multiclasse desfeita some na validação.
+  f.conjuracaoEscolhida = 'instinto';
+  const validada = contexto.validarFicha_(f);
+  igual(validada.conjuracaoEscolhida, '');
+  igual(validada.tracoDeConjuracao, 'presenca');
+});
+
+teste('multiclasse dá a característica de CLASSE e NÃO a de Esperança (fecha B1)', () => {
+  const f = bardoNivel5();
+  const r = contexto.aplicarAvanco_(f, {
+    avancos: [{ opcao: 'multiclasse', classe: 'druida', dominio: 'SAGE', subclasse: 'druida-guardiao-dos-elementos' }]
+  });
+  const nomes = (origem) => r.ficha.caracteristicas
+    .filter((c) => c.origem === origem).map((c) => c.nome);
+
+  // O SRD: "you choose an additional class, gain access to one of its domains,
+  // and acquire its class feature". Feature, não Hope Feature.
+  const doDruida = avaliar('CLASSES')['druida'];
+  doDruida.caracteristicas.forEach((n) => {
+    verdade(nomes('multiclasse').indexOf(n) !== -1, `faltou a característica de classe "${n}"`);
+  });
+  verdade(nomes('multiclasse').indexOf(doDruida.caracteristicaEsperanca) === -1,
+    'a característica de Esperança do Druida NÃO pode entrar pela multiclasse');
+
+  // A do Bardo, essa sim, continua na ficha — é a classe original dele.
+  igual(nomes('esperança'), ['Fazer uma Cena']);
+
+  // E a carta de FUNDAÇÃO da subclasse nova entra; especialização e maestria não.
+  const sub = doDruida.subclasses.filter((x) => x.id === 'druida-guardiao-dos-elementos')[0];
+  sub.caracteristicas.fundacao.forEach((n) => {
+    verdade(nomes('multiclasse').indexOf(n) !== -1, `faltou a fundação "${n}"`);
+  });
+  sub.caracteristicas.maestria.forEach((n) => {
+    verdade(nomes('multiclasse').indexOf(n) === -1, `a maestria "${n}" não podia estar aqui`);
+  });
+});
+
+teste('a ficha mostra o domínio da multiclasse junto com os dois da classe', () => {
+  const f = bardoNivel5();
+  const r = contexto.aplicarAvanco_(f, {
+    avancos: [{ opcao: 'multiclasse', classe: 'druida', dominio: 'SAGE', subclasse: 'druida-guardiao-dos-elementos' }]
+  });
+  igual(r.ficha.dominios, ['GRACE', 'CODEX', 'SAGE']);
+});
+
+teste('metade do nível arredonda PARA CIMA (exemplo do livro)', () => {
+  // O livro: "um mago de 5º nível que fez multiclasse pode escolher cartas
+  // de Sabedoria de até 3º nível".
+  igual(contexto.metadeDoNivel_(5), 3);
+  igual(contexto.metadeDoNivel_(6), 3);
+  igual(contexto.metadeDoNivel_(7), 4);
+  igual(contexto.metadeDoNivel_(10), 5);
+});
+
+teste('a carta do domínio novo é barrada acima da metade do nível', () => {
+  const f = bardoNivel5();
+  const r = contexto.aplicarAvanco_(f, {
+    avancos: [{ opcao: 'multiclasse', classe: 'druida', dominio: 'SAGE', subclasse: 'druida-guardiao-dos-elementos' }]
+  });
+  igual(r.ficha.identidade.nivel, 6, 'a multiclasse foi feita subindo para o 6');
+
+  // A prévia seguinte é do nível 7, onde a metade arredondada para cima é 4.
+  const cartas = avaliar('CARTAS_DOMINIO');
+  const sage4 = cartas.SAGE.find((c) => c[2] === 4);
+  const sage5 = cartas.SAGE.find((c) => c[2] === 5);
+
+  const cabe = contexto.previaDoAvanco_(r.ficha, {
+    carta: sage4[0], avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }]
+  });
+  igual(cabe.erros, [], 'nível 4 cabe no teto 4');
+
+  const naoCabe = contexto.previaDoAvanco_(r.ficha, {
+    carta: sage5[0], avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }]
+  });
+  verdade(naoCabe.erros.some((e) => /metade do nível/.test(e)), JSON.stringify(naoCabe.erros));
+
+  // E o domínio ORIGINAL continua indo até o nível cheio.
+  const graca7 = cartas.GRACE.find((c) => c[2] === 7);
+  const original = contexto.previaDoAvanco_(r.ficha, {
+    carta: graca7[0], avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }]
+  });
+  igual(original.erros, [], 'o domínio da classe original vai até o nível cheio');
+});
+
+teste('só uma multiclasse por personagem', () => {
+  const f = bardoNivel5();
+  const r = contexto.aplicarAvanco_(f, {
+    avancos: [{ opcao: 'multiclasse', classe: 'druida', dominio: 'SAGE', subclasse: 'druida-guardiao-dos-elementos' }]
+  });
+  const opcoes = contexto.opcoesDisponiveis_(r.ficha, 7);
+  const mc = opcoes.find((o) => o.id === 'multiclasse');
+  igual(mc.disponivel, false);
+  verdade(/uma só por personagem/.test(mc.motivo), mc.motivo);
+});
+
+teste('quem faz multiclasse não pega mais subclasse aprimorada', () => {
+  const f = bardoNivel5();
+  const r = contexto.aplicarAvanco_(f, {
+    avancos: [{ opcao: 'multiclasse', classe: 'druida', dominio: 'SAGE', subclasse: 'druida-guardiao-dos-elementos' }]
+  });
+  const sub = contexto.opcoesDisponiveis_(r.ficha, 7).find((o) => o.id === 'subclasse');
+  igual(sub.disponivel, false);
+  verdade(/não recebe mais cartas de subclasse/.test(sub.motivo), sub.motivo);
+});
+
+teste('pegar a subclasse aprimorada corta a multiclasse do patamar', () => {
+  const f = bardoNivel5();
+  const r = contexto.aplicarAvanco_(f, { avancos: [{ opcao: 'subclasse' }, { opcao: 'evasao' }] });
+  igual(r.ficha.subclasseCartas, ['fundacao', 'especializacao']);
+  const mc = contexto.opcoesDisponiveis_(r.ficha, 6).find((o) => o.id === 'multiclasse');
+  igual(mc.disponivel, false);
+  verdade(/subclasse aprimorada neste patamar/.test(mc.motivo), mc.motivo);
+});
+
+teste('a multiclasse precisa ser outra classe e um domínio novo', () => {
+  const f = bardoNivel5();
+  const mesma = contexto.previaDoAvanco_(f, {
+    avancos: [{ opcao: 'multiclasse', classe: 'bardo', dominio: 'CODEX', subclasse: 'bardo-musico-errante' }]
+  });
+  verdade(mesma.erros.some((e) => /classe diferente/.test(e)), JSON.stringify(mesma.erros));
+
+  const dominioRepetido = contexto.previaDoAvanco_(f, {
+    // Códice é domínio do Bardo E do Mago: escolher Códice não daria nada novo.
+    avancos: [{ opcao: 'multiclasse', classe: 'mago', dominio: 'CODEX', subclasse: 'mago-escola-do-conhecimento' }]
+  });
+  verdade(dominioRepetido.erros.some((e) => /já tem acesso a esse domínio/.test(e)),
+    JSON.stringify(dominioRepetido.erros));
+});
+
+teste('a ficha não consegue inventar bônus de avanço', () => {
+  const f = bardoNivel1();
+  f.avancos.espacos = { 2: { evasao: 99 } };
+  const problemas = contexto.validarAvancos_(f);
+  verdade(problemas.some((p) => /só cabem 1/.test(p)), JSON.stringify(problemas));
+  igual(f.avancos.espacos['2'].evasao, 1, 'foi recortado para o que cabe');
+});
+
+console.log('\nSubir de nível — pela API');
+
+teste('a API sobe o nível e devolve o relatório', () => {
+  const token = api('registrar', { nome: 'Escalada', codigo: 'senha-escalada' }).dados.token;
+  const criada = api('criarPersonagem', { token, ficha: bardoNivel1() }).dados.personagem;
+
+  const opcoes = api('opcoesDeAvanco', { token, id: criada.id });
+  verdade(opcoes.ok, JSON.stringify(opcoes));
+  igual(opcoes.dados.nivelNovo, 2);
+  igual(opcoes.dados.patamar, 2);
+  verdade(opcoes.dados.conquista, 'o nível 2 tem conquista');
+
+  const previa = api('previaDeAvanco', {
+    token, id: criada.id,
+    escolhas: { experienciaNova: 'Estrada', avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }] }
+  });
+  verdade(previa.ok && previa.dados.previa.ok, JSON.stringify(previa));
+
+  const depois = api('obterPersonagem', { token, id: criada.id }).dados.personagem;
+  igual(depois.versao, criada.versao, 'a prévia gravou alguma coisa');
+
+  const feito = api('aplicarAvanco', {
+    token, id: criada.id, versao: criada.versao,
+    escolhas: { experienciaNova: 'Estrada', avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }] }
+  });
+  verdade(feito.ok, JSON.stringify(feito));
+  igual(feito.dados.personagem.ficha.identidade.nivel, 2);
+  igual(feito.dados.personagem.nivel, 2, 'a coluna-espelho também subiu');
+  igual(feito.dados.resultado.nivelDepois, 2);
+
+  const desfeito = api('desfazerAvanco', { token, id: criada.id });
+  verdade(desfeito.ok, JSON.stringify(desfeito));
+  igual(desfeito.dados.personagem.ficha.identidade.nivel, 1);
+});
+
+
+/* -------------------------------------------------------------------------- */
+
+console.log('\nPainel do Mestre — Medo');
+
+const MEDO_MAXIMO = avaliar('MEDO_MAXIMO');
+const TABELA_DINAMICA = avaliar('TABELA_DINAMICA');
+const MAX_DESCANSOS_CURTOS = avaliar('MAX_DESCANSOS_CURTOS');
+
+let tokenPainel = null;
+teste('o Mestre entra e abre o painel', () => {
+  tokenPainel = api('entrarMestre', { codigo: 'codigo-do-mestre' }).dados.token;
+  const r = api('painelDoMestre', { token: tokenPainel });
+  verdade(r.ok, JSON.stringify(r));
+  igual(r.dados.mesa.medo, 0);
+  igual(r.dados.medoRegras.maximo, 12);
+  verdade(Array.isArray(r.dados.personagens), 'a lista de fichas deveria vir junto');
+});
+
+teste('jogador comum não abre o painel', () => {
+  const token = api('registrar', { nome: 'Curiosa', codigo: 'senha-curiosa' }).dados.token;
+  igual(api('painelDoMestre', { token }).erro.codigo, 'SEM_PERMISSAO');
+  igual(api('ajustarMedo', { token, delta: 5 }).erro.codigo, 'SEM_PERMISSAO');
+  igual(api('criarContagem', { token, contagem: { nome: 'X', tipo: 'padrao', valorInicial: 4 } }).erro.codigo,
+    'SEM_PERMISSAO');
+  igual(api('abrirSessao', { token }).erro.codigo, 'SEM_PERMISSAO');
+});
+
+teste('o Medo respeita o teto de 12 do livro', () => {
+  api('ajustarMedo', { token: tokenPainel, valor: 0 });
+  const r = api('ajustarMedo', { token: tokenPainel, valor: 99 });
+  igual(r.dados.medo.depois, MEDO_MAXIMO);
+  verdade(/máximo é 12/.test(r.dados.medo.aviso), r.dados.medo.aviso);
+
+  const chao = api('ajustarMedo', { token: tokenPainel, valor: -5 });
+  igual(chao.dados.medo.depois, 0);
+});
+
+teste('delta e valor funcionam nos dois sentidos', () => {
+  api('ajustarMedo', { token: tokenPainel, valor: 3 });
+  igual(api('ajustarMedo', { token: tokenPainel, delta: 2 }).dados.medo.depois, 5);
+  igual(api('ajustarMedo', { token: tokenPainel, delta: -1 }).dados.medo.depois, 4);
+});
+
+teste('o Medo inicial é um por personagem (livro p.154)', () => {
+  igual(contexto.medoInicial_(4), 4);
+  igual(contexto.medoInicial_(0), 0);
+  igual(contexto.medoInicial_(50), MEDO_MAXIMO, 'nem o inicial passa do teto');
+});
+
+teste('abrir sessão NÃO zera o Medo — ele transfere entre sessões', () => {
+  api('ajustarMedo', { token: tokenPainel, valor: 7 });
+  const r = api('abrirSessao', { token: tokenPainel });
+  verdade(r.ok, JSON.stringify(r));
+  igual(r.dados.sessao.medo, 7, 'o livro p.154 manda transferir o Medo');
+  igual(r.dados.mesa.medo, 7);
+  verdade(r.dados.sessao.numero >= 1);
+});
+
+console.log('\nPainel do Mestre — contagens regressivas');
+
+teste('a tabela de avanço dinâmico bate com o livro (p.163)', () => {
+  const esperado = [
+    ['Falha com Medo', 0, 3],
+    ['Falha com Esperança', 0, 2],
+    ['Sucesso com Medo', 1, 1],
+    ['Sucesso com Esperança', 2, 0],
+    ['Sucesso Crítico', 3, 0]
+  ];
+  igual(TABELA_DINAMICA.map((l) => [l.resultado, l.progresso, l.consequencia]), esperado);
+});
+
+teste('progresso e consequência são espelhados', () => {
+  // O que aproxima os jogadores do que querem é o que trava o que temem.
+  TABELA_DINAMICA.forEach((l) => {
+    verdade(!(l.progresso > 0 && l.consequencia > 0) || l.resultado === 'Sucesso com Medo',
+      `${l.resultado} avança os dois ao mesmo tempo`);
+  });
+  const somaProgresso = TABELA_DINAMICA.reduce((n, l) => n + l.progresso, 0);
+  const somaConsequencia = TABELA_DINAMICA.reduce((n, l) => n + l.consequencia, 0);
+  igual([somaProgresso, somaConsequencia], [6, 6], 'as duas colunas somam igual');
+});
+
+teste('a contagem PADRÃO anda 1 a cada teste, qualquer que seja o resultado', () => {
+  ['Sucesso Crítico', 'Falha com Medo', 'Sucesso com Esperança'].forEach((r) => {
+    igual(contexto.avancoPorResultado_('padrao', r), 1, r);
+  });
+});
+
+teste('a contagem de LONGO PRAZO não anda por teste', () => {
+  igual(contexto.avancoPorResultado_('longo-prazo', 'Sucesso Crítico'), 0);
+  igual(contexto.avancoPorResultado_('longo-prazo', 'Falha com Medo'), 0);
+});
+
+let idContagem = null;
+teste('criar uma contagem padrão e fazê-la andar', () => {
+  const r = api('criarContagem', {
+    token: tokenPainel,
+    contagem: { nome: 'A ponte racha', tipo: 'padrao', valorInicial: 3, descricao: 'A ponte desaba.' }
+  });
+  verdade(r.ok, JSON.stringify(r));
+  idContagem = r.dados.contagem.id;
+  igual(r.dados.contagem.valor, 3, 'começa cheia');
+
+  const a1 = api('avancarContagem', { token: tokenPainel, id: idContagem, resultado: 'Falha com Medo' });
+  igual(a1.dados.avanco.depois, 2, 'padrão anda 1 mesmo na falha');
+  igual(a1.dados.avanco.acionou, false);
+
+  api('avancarContagem', { token: tokenPainel, id: idContagem, resultado: 'Sucesso Crítico' });
+  const a3 = api('avancarContagem', { token: tokenPainel, id: idContagem, passo: 1 });
+  igual(a3.dados.avanco.depois, 0);
+  igual(a3.dados.avanco.acionou, true, 'chegou a 0 e acionou');
+  igual(a3.dados.contagem.encerrada, true);
+});
+
+teste('a contagem de consequência anda com a falha, não com o sucesso', () => {
+  const r = api('criarContagem', {
+    token: tokenPainel, contagem: { nome: 'O ladrão escapa', tipo: 'consequencia', valorInicial: 6 }
+  });
+  const id = r.dados.contagem.id;
+
+  const sucesso = api('avancarContagem', { token: tokenPainel, id, resultado: 'Sucesso com Esperança' });
+  igual(sucesso.dados.avanco.depois, 6, 'sucesso com Esperança não mexe na consequência');
+
+  const falha = api('avancarContagem', { token: tokenPainel, id, resultado: 'Falha com Medo' });
+  igual(falha.dados.avanco.depois, 3, 'falha com Medo diminui 3');
+});
+
+teste('a contagem de progresso anda com o sucesso, não com a falha', () => {
+  const r = api('criarContagem', {
+    token: tokenPainel, contagem: { nome: 'Derrubar a parede', tipo: 'progresso', valorInicial: 6 }
+  });
+  const id = r.dados.contagem.id;
+
+  const falha = api('avancarContagem', { token: tokenPainel, id, resultado: 'Falha com Esperança' });
+  igual(falha.dados.avanco.depois, 6, 'falha não avança o progresso');
+
+  const critico = api('avancarContagem', { token: tokenPainel, id, resultado: 'Sucesso Crítico' });
+  igual(critico.dados.avanco.depois, 3, 'crítico diminui 3');
+});
+
+teste('contagem de ciclo reinicia ao acionar', () => {
+  const r = api('criarContagem', {
+    token: tokenPainel, contagem: { nome: 'Recarga do dragão', tipo: 'padrao', valorInicial: 2, ciclo: true }
+  });
+  const id = r.dados.contagem.id;
+  api('avancarContagem', { token: tokenPainel, id, passo: 1 });
+  const fim = api('avancarContagem', { token: tokenPainel, id, passo: 1 });
+  igual(fim.dados.avanco.acionou, true);
+  igual(fim.dados.avanco.reiniciou, true);
+  igual(fim.dados.contagem.valor, 2, 'voltou ao valor inicial');
+  igual(fim.dados.contagem.encerrada, false, 'ciclo não encerra');
+});
+
+teste('contagem crescente sobe o valor inicial a cada volta', () => {
+  const r = api('criarContagem', {
+    token: tokenPainel,
+    contagem: { nome: 'Maré', tipo: 'padrao', valorInicial: 2, ciclo: true, direcao: 'crescente' }
+  });
+  const id = r.dados.contagem.id;
+  api('avancarContagem', { token: tokenPainel, id, passo: 2 });
+  const depois = api('painelDoMestre', { token: tokenPainel }).dados.mesa.contagens
+    .find((c) => c.id === id);
+  igual(depois.valorInicial, 3, 'o valor inicial subiu de 2 para 3');
+  igual(depois.valor, 3);
+});
+
+teste('contagem decrescente encerra quando o valor inicial chega a 0', () => {
+  const r = api('criarContagem', {
+    token: tokenPainel,
+    contagem: { nome: 'A caverna cede', tipo: 'padrao', valorInicial: 1, ciclo: true, direcao: 'decrescente' }
+  });
+  const id = r.dados.contagem.id;
+  const fim = api('avancarContagem', { token: tokenPainel, id, passo: 1 });
+  igual(fim.dados.contagem.encerrada, true, 'decrescente que zera é o fim');
+  igual(fim.dados.avanco.reiniciou, false);
+});
+
+teste('a trilha de etapas devolve o texto do valor atual', () => {
+  const r = api('criarContagem', {
+    token: tokenPainel,
+    contagem: {
+      nome: 'A invasão', tipo: 'longo-prazo', valorInicial: 3,
+      etapas: [
+        { valor: 3, texto: 'Refugiados chegam.' },
+        { valor: 2, texto: 'O exército marcha.' },
+        { valor: 0, texto: 'Guerra aberta.' }
+      ]
+    }
+  });
+  const id = r.dados.contagem.id;
+  igual(r.dados.contagem.etapas.length, 3);
+  const a = api('avancarContagem', { token: tokenPainel, id, passo: 1 });
+  igual(a.dados.avanco.etapa.texto, 'O exército marcha.');
+});
+
+teste('contagem inválida é recusada, e a lista tem teto', () => {
+  igual(api('criarContagem', {
+    token: tokenPainel, contagem: { nome: 'Sem tipo', tipo: 'inventado', valorInicial: 4 }
+  }).erro.codigo, 'DADOS_INVALIDOS');
+  igual(api('avancarContagem', { token: tokenPainel, id: 'nao-existe', passo: 1 }).erro.codigo,
+    'NAO_ENCONTRADO');
+});
+
+teste('editar e excluir uma contagem', () => {
+  const r = api('criarContagem', {
+    token: tokenPainel, contagem: { nome: 'Temporária', tipo: 'padrao', valorInicial: 4 }
+  });
+  const id = r.dados.contagem.id;
+  const e = api('editarContagem', {
+    token: tokenPainel, id, contagem: { nome: 'Renomeada', valor: 2 }
+  });
+  igual(e.dados.contagem.nome, 'Renomeada');
+  igual(e.dados.contagem.valor, 2);
+  igual(e.dados.contagem.id, id, 'o id não muda ao editar');
+
+  verdade(api('excluirContagem', { token: tokenPainel, id }).ok);
+  igual(api('avancarContagem', { token: tokenPainel, id, passo: 1 }).erro.codigo, 'NAO_ENCONTRADO');
+});
+
+
+console.log('\nProjetos e perseguição (fecha A3 e A8)');
+
+const TABELA_DE_PROJETO = avaliar('TABELA_DE_PROJETO');
+
+teste('no projeto, ATÉ A FALHA avança — não é a tabela dinâmica', () => {
+  igual(TABELA_DE_PROJETO.map((l) => [l.resultado, l.avanca]), [
+    ['Sucesso Crítico', 4],
+    ['Sucesso com Esperança', 3],
+    ['Sucesso com Medo', 2],
+    ['Falha com Esperança', 1],
+    ['Falha com Medo', 1]
+  ]);
+  // A diferença que importa: na dinâmica a falha NÃO avança o progresso.
+  igual(contexto.avancoPorResultado_('progresso', 'Falha com Medo'), 0);
+  igual(contexto.avancoDeProjeto_('Falha com Medo'), 1);
+  igual(contexto.avancoDeProjeto_(null), 1, 'sem resultado, anda 1');
+});
+
+teste('o projeto anda pelo descanso longo do dono', () => {
+  const token = api('registrar', { nome: 'Artesã', codigo: 'senha-artesa' }).dados.token;
+  const criada = api('criarPersonagem', { token, ficha: bardoNivel1() }).dados.personagem;
+
+  const c = api('criarContagem', {
+    token: tokenPainel,
+    contagem: {
+      nome: 'Forjar a espada', tipo: 'progresso', valorInicial: 8,
+      projeto: { personagemId: criada.id, personagemNome: criada.nome }
+    }
+  }).dados.contagem;
+  igual(c.projeto.personagemId, criada.id);
+
+  // O jogador vê o projeto dele.
+  const meus = api('meusProjetos', { token, id: criada.id }).dados.projetos;
+  igual(meus.length, 1);
+  igual(meus[0].nome, 'Forjar a espada');
+
+  const r = api('aplicarDescanso', {
+    token, id: criada.id, versao: criada.versao, tipo: 'longo',
+    escolhas: [
+      { movimento: 'trabalhar-em-um-projeto', projeto: 'Forjando', projetoId: c.id,
+        resultado: 'Sucesso com Esperança' },
+      { movimento: 'zerar-estresse' }
+    ]
+  });
+  verdade(r.ok, JSON.stringify(r));
+  igual(r.dados.resultado.projeto.depois, 5, '8 − 3 do sucesso com Esperança');
+});
+
+teste('não dá para empurrar o projeto de outro personagem', () => {
+  const tokenA = api('registrar', { nome: 'DonoA', codigo: 'senha-dono-a' }).dados.token;
+  const tokenB = api('registrar', { nome: 'DonoB', codigo: 'senha-dono-b' }).dados.token;
+  const fichaA = api('criarPersonagem', { token: tokenA, ficha: bardoNivel1() }).dados.personagem;
+  const fichaB = api('criarPersonagem', { token: tokenB, ficha: bardoNivel1() }).dados.personagem;
+
+  const c = api('criarContagem', {
+    token: tokenPainel,
+    contagem: { nome: 'Projeto de A', tipo: 'progresso', valorInicial: 6,
+      projeto: { personagemId: fichaA.id } }
+  }).dados.contagem;
+
+  const r = api('aplicarDescanso', {
+    token: tokenB, id: fichaB.id, versao: fichaB.versao, tipo: 'longo',
+    escolhas: [
+      { movimento: 'trabalhar-em-um-projeto', projetoId: c.id, resultado: 'Sucesso Crítico' },
+      { movimento: 'zerar-estresse' }
+    ]
+  });
+  verdade(r.ok, 'o descanso em si não falha');
+  verdade(r.dados.resultado.avisos.some((a) => /projeto de outro personagem/.test(a)),
+    JSON.stringify(r.dados.resultado.avisos));
+
+  const depois = api('painelDoMestre', { token: tokenPainel }).dados.mesa.contagens
+    .find((x) => x.id === c.id);
+  igual(depois.valor, 6, 'o projeto de A não andou');
+});
+
+teste('uma contagem que não é projeto não anda pelo descanso', () => {
+  const token = api('registrar', { nome: 'Tentando', codigo: 'senha-tentando' }).dados.token;
+  const ficha = api('criarPersonagem', { token, ficha: bardoNivel1() }).dados.personagem;
+  const c = api('criarContagem', {
+    token: tokenPainel, contagem: { nome: 'Contagem qualquer', tipo: 'progresso', valorInicial: 5 }
+  }).dados.contagem;
+
+  const r = api('aplicarDescanso', {
+    token, id: ficha.id, versao: ficha.versao, tipo: 'longo',
+    escolhas: [
+      { movimento: 'trabalhar-em-um-projeto', projetoId: c.id },
+      { movimento: 'zerar-estresse' }
+    ]
+  });
+  verdade(r.dados.resultado.avisos.some((a) => /não é um projeto/.test(a)),
+    JSON.stringify(r.dados.resultado.avisos));
+});
+
+teste('perseguição: um teste avança as DUAS contagens', () => {
+  const perseguidores = api('criarContagem', {
+    token: tokenPainel, contagem: { nome: 'Alcançar o ladrão', tipo: 'progresso', valorInicial: 6 }
+  }).dados.contagem;
+  // O livro dá vantagem ao fugitivo: valor inicial menor.
+  const fugitivo = api('criarContagem', {
+    token: tokenPainel, contagem: { nome: 'O ladrão some', tipo: 'consequencia', valorInicial: 3 }
+  }).dados.contagem;
+
+  const par = api('parearContagens', {
+    token: tokenPainel, idA: perseguidores.id, idB: fugitivo.id
+  });
+  verdade(par.ok, JSON.stringify(par));
+
+  // Sucesso com Esperança: aproxima quem persegue (−2), não move a fuga.
+  const bom = api('avancarPerseguicao', {
+    token: tokenPainel, id: perseguidores.id, resultado: 'Sucesso com Esperança'
+  });
+  igual(bom.dados.avancos[0].depois, 4, 'progresso −2');
+  igual(bom.dados.avancos[1].depois, 3, 'a consequência não mexe no sucesso com Esperança');
+
+  // Falha com Medo: a fuga anda 3, o alcance não.
+  const ruim = api('avancarPerseguicao', {
+    token: tokenPainel, id: perseguidores.id, resultado: 'Falha com Medo'
+  });
+  igual(ruim.dados.avancos[0].depois, 4, 'progresso não anda na falha');
+  igual(ruim.dados.avancos[1].acionou, true, '3 − 3 = 0: o ladrão escapou');
+});
+
+teste('só duas contagens dinâmicas podem virar perseguição', () => {
+  const padrao = api('criarContagem', {
+    token: tokenPainel, contagem: { nome: 'Padrão', tipo: 'padrao', valorInicial: 4 }
+  }).dados.contagem;
+  const prog = api('criarContagem', {
+    token: tokenPainel, contagem: { nome: 'Progresso', tipo: 'progresso', valorInicial: 4 }
+  }).dados.contagem;
+
+  igual(api('parearContagens', { token: tokenPainel, idA: padrao.id, idB: prog.id }).erro.codigo,
+    'DADOS_INVALIDOS');
+  igual(api('parearContagens', { token: tokenPainel, idA: prog.id, idB: prog.id }).erro.codigo,
+    'DADOS_INVALIDOS');
+  igual(api('avancarPerseguicao', { token: tokenPainel, id: prog.id, resultado: 'Sucesso Crítico' })
+    .erro.codigo, 'DADOS_INVALIDOS');
+});
+
+teste('desparear solta as duas pontas', () => {
+  const a = api('criarContagem', {
+    token: tokenPainel, contagem: { nome: 'Par A', tipo: 'progresso', valorInicial: 5 }
+  }).dados.contagem;
+  const b = api('criarContagem', {
+    token: tokenPainel, contagem: { nome: 'Par B', tipo: 'consequencia', valorInicial: 5 }
+  }).dados.contagem;
+  api('parearContagens', { token: tokenPainel, idA: a.id, idB: b.id });
+  api('desparearContagem', { token: tokenPainel, id: a.id });
+
+  const mesa = api('painelDoMestre', { token: tokenPainel }).dados.mesa;
+  igual(mesa.contagens.find((x) => x.id === a.id).parDe, '');
+  igual(mesa.contagens.find((x) => x.id === b.id).parDe, '', 'a outra ponta também soltou');
+});
+
+console.log('\nPainel do Mestre — descanso da mesa (fecha as pontas da Parte 7)');
+
+teste('o descanso curto dá 1d4 de Medo e NÃO mexe na contagem de longo prazo', () => {
+  api('ajustarMedo', { token: tokenPainel, valor: 0 });
+  const p = api('previaDescansoDaMesa', {
+    token: tokenPainel, tipo: 'curto', escolhas: { rolagem: 3, quantosPersonagens: 4 }
+  }).dados.previa;
+  verdade(p.ok, JSON.stringify(p.erros));
+  igual(p.medo.ganho, 3, '1d4 puro, sem somar personagens');
+  igual(p.contagemDeLongoPrazo, 0, 'ERRATA p.164: descanso curto não marca contagem de longo prazo');
+  igual(p.medo.conta, '1d4 (3) = 3');
+});
+
+teste('o descanso longo soma o número de personagens', () => {
+  api('ajustarMedo', { token: tokenPainel, valor: 0 });
+  const p = api('previaDescansoDaMesa', {
+    token: tokenPainel, tipo: 'longo', escolhas: { rolagem: 2, quantosPersonagens: 4 }
+  }).dados.previa;
+  igual(p.medo.ganho, 6, '2 do dado + 4 personagens');
+  igual(p.contagemDeLongoPrazo, 1, 'o longo marca uma vez');
+  verdade(/1d4 \(2\) \+ 4 personagens = 6/.test(p.medo.conta), p.medo.conta);
+});
+
+teste('o repouso prolongado é 1d6 POR personagem', () => {
+  const p = api('previaDescansoDaMesa', {
+    token: tokenPainel, tipo: 'prolongado', escolhas: { rolagem: 3, quantosPersonagens: 4 }
+  }).dados.previa;
+  igual(p.medo.ganho, 12, '3 × 4 personagens');
+});
+
+teste('o app não rola o dado do Medo', () => {
+  const p = api('previaDescansoDaMesa', {
+    token: tokenPainel, tipo: 'curto', escolhas: { quantosPersonagens: 4 }
+  }).dados.previa;
+  igual(p.ok, false);
+  igual(p.precisaDeRolagem, true);
+  igual(api('aplicarDescansoDaMesa', {
+    token: tokenPainel, tipo: 'curto', escolhas: { quantosPersonagens: 4 }
+  }).erro.codigo, 'DADOS_INVALIDOS');
+});
+
+teste('o descanso longo diminui a contagem de longo prazo escolhida', () => {
+  const c = api('criarContagem', {
+    token: tokenPainel, contagem: { nome: 'A queda do reino', tipo: 'longo-prazo', valorInicial: 8 }
+  }).dados.contagem;
+
+  const r = api('aplicarDescansoDaMesa', {
+    token: tokenPainel, tipo: 'longo',
+    escolhas: { rolagem: 1, quantosPersonagens: 3, contagemDeLongoPrazo: c.id }
+  });
+  verdade(r.ok, JSON.stringify(r));
+  igual(r.dados.resultado.contagens[0].depois, 7, '8 − 1');
+  const depois = api('painelDoMestre', { token: tokenPainel }).dados.mesa.contagens
+    .find((x) => x.id === c.id);
+  igual(depois.valor, 7, 'gravou de verdade');
+});
+
+teste('uma contagem que não é de longo prazo é recusada no descanso', () => {
+  const c = api('criarContagem', {
+    token: tokenPainel, contagem: { nome: 'Padrão qualquer', tipo: 'padrao', valorInicial: 4 }
+  }).dados.contagem;
+  const p = api('previaDescansoDaMesa', {
+    token: tokenPainel, tipo: 'longo',
+    escolhas: { rolagem: 1, quantosPersonagens: 3, contagemDeLongoPrazo: c.id }
+  }).dados.previa;
+  verdade(p.erros.some((e) => /não é uma contagem de longo prazo/.test(e)), JSON.stringify(p.erros));
+});
+
+teste('o limite de três descansos curtos é do GRUPO e mora na mesa', () => {
+  // Zera a contagem com um descanso longo.
+  api('aplicarDescansoDaMesa', {
+    token: tokenPainel, tipo: 'longo', escolhas: { rolagem: 1, quantosPersonagens: 3 }
+  });
+  for (let i = 0; i < MAX_DESCANSOS_CURTOS; i++) {
+    api('aplicarDescansoDaMesa', {
+      token: tokenPainel, tipo: 'curto', escolhas: { rolagem: 1, quantosPersonagens: 3 }
+    });
+  }
+  const p = api('previaDescansoDaMesa', {
+    token: tokenPainel, tipo: 'curto', escolhas: { rolagem: 1, quantosPersonagens: 3 }
+  }).dados.previa;
+  verdade(p.avisos.some((a) => /precisa ser longo/.test(a)), JSON.stringify(p.avisos));
+  igual(p.descansosCurtosSeguidos.antes, MAX_DESCANSOS_CURTOS);
+});
+
+teste('o Medo do descanso respeita o teto', () => {
+  api('ajustarMedo', { token: tokenPainel, valor: 11 });
+  const p = api('previaDescansoDaMesa', {
+    token: tokenPainel, tipo: 'longo', escolhas: { rolagem: 4, quantosPersonagens: 4 }
+  }).dados.previa;
+  igual(p.medo.depois, MEDO_MAXIMO);
+  verdade(p.avisos.some((a) => /teto de 12/.test(a)), JSON.stringify(p.avisos));
+});
+
+console.log('\nPainel do Mestre — nível da mesa');
+
+teste('o Mestre anuncia o nível sem mexer em ficha nenhuma', () => {
+  const token = api('registrar', { nome: 'Atrasado', codigo: 'senha-atrasado' }).dados.token;
+  const ficha = api('criarPersonagem', { token, ficha: bardoNivel1() }).dados.personagem;
+  igual(ficha.nivel, 1);
+
+  const r = api('anunciarNivelDaMesa', { token: tokenPainel, nivel: 3 });
+  verdade(r.ok, JSON.stringify(r));
+  igual(r.dados.depois, 3);
+
+  const depois = api('obterPersonagem', { token, id: ficha.id }).dados.personagem;
+  igual(depois.nivel, 1, 'a ficha do jogador NÃO foi mexida — ele escolhe os avanços');
+
+  // Mas o jogador vê o aviso ao abrir a sessão.
+  igual(api('sessao', { token }).dados.nivelDaMesa, 3);
+});
+
+teste('o nível da mesa fica entre 1 e 10', () => {
+  igual(api('anunciarNivelDaMesa', { token: tokenPainel, nivel: 99 }).dados.depois, 10);
+  igual(api('anunciarNivelDaMesa', { token: tokenPainel, nivel: 0 }).dados.depois, 1);
+});
+
+teste('o painel resume as fichas sem carregar tudo', () => {
+  const r = api('painelDoMestre', { token: tokenPainel });
+  const p = r.dados.personagens[0];
+  verdade(p.nome, 'o resumo precisa do nome');
+  verdade(p.pontosDeVida && typeof p.pontosDeVida.maximo === 'number', JSON.stringify(p));
+  verdade(p.estresse && p.esperanca && p.armadura, 'as quatro trilhas no resumo');
+  igual(p.ficha, undefined, 'a ficha inteira NÃO vai no resumo');
+});
+
+/* -------------------------------------------------------------------------- */
+
+console.log('\nBestiário');
+teste('as 129 fichas e os 19 ambientes estão no servidor', () => {
+  igual(avaliar('ADVERSARIOS.length'), 129);
+  igual(avaliar('AMBIENTES.length'), 19);
+  igual(avaliar('TIPOS_DE_ADVERSARIO.length'), 10);
+});
+
+teste('acha adversário por id, por nome e pelo nome do índice', () => {
+  igual(contexto.acharAdversario_('urso').nome, 'Urso');
+  igual(contexto.acharAdversario_('Cobra-De-Vidro').id, 'cobra-de-vidro');
+  // o índice do livro chama a HORDA DE ZUMBIS de "Zumbis, horda"
+  igual(contexto.acharAdversario_('Zumbis, horda').id, 'horda-de-zumbis');
+  igual(contexto.acharAdversario_('não existe'), null);
+});
+
+teste('acha ambiente pelo nome do índice, que difere do cabeçalho', () => {
+  igual(contexto.acharAmbiente_('Templo sagrado').id, 'templo-exaltado');
+  igual(contexto.acharAmbiente_('taverna local').patamar, 1);
+});
+
+teste('o catálogo filtra por patamar, tipo e busca', () => {
+  const t1 = contexto.catalogoDeAdversarios_({ patamar: 1 });
+  igual(t1.total, 129, 'o total é sempre o do catálogo inteiro');
+  verdade(t1.itens.length === 52, 'são 52 fichas de 1º patamar, achei ' + t1.itens.length);
+  verdade(t1.itens.every((x) => x.patamar === 1), 'todas de 1º patamar');
+  const solos = contexto.catalogoDeAdversarios_({ tipo: 'Solo' });
+  igual(solos.itens.length, 20);
+  verdade(solos.itens.every((x) => x.pontosDeBatalha === 5), 'todo solo custa 5 PB');
+  const busca = contexto.catalogoDeAdversarios_({ busca: 'zumbi' });
+  verdade(busca.itens.length >= 4, 'a busca por "zumbi" acha os zumbis');
+});
+
+teste('o tipo do adversário responde em português e em inglês', () => {
+  igual(contexto.tipoDeAdversario_('Brutamonte').ingles, 'Bruiser');
+  igual(contexto.tipoDeAdversario_('bruiser').nome, 'Brutamonte');
+  igual(contexto.custoEmPontosDeBatalha_('Líder'), 3);
+});
+
+teste('Pontos de Batalha: (3 x personagens) + 2', () => {
+  // os dois exemplos do livro, p.196
+  igual(contexto.pontosDeBatalha_(3, []).total, 11);
+  igual(contexto.pontosDeBatalha_(5, []).total, 17);
+});
+
+teste('os ajustes do Guia de Batalha somam e subtraem', () => {
+  const r = contexto.pontosDeBatalha_(4, ['mais-facil']);
+  igual(r.base, 14);
+  igual(r.total, 13, 'o exemplo do livro: 14 vira 13 para um encontro mais fácil');
+  igual(r.ajustes.length, 1);
+  // ajuste repetido não conta duas vezes
+  igual(contexto.pontosDeBatalha_(4, ['mais-facil', 'mais-facil']).total, 13);
+  // id desconhecido é ignorado, não quebra
+  igual(contexto.pontosDeBatalha_(4, ['inventado']).total, 14);
+});
+
+teste('o encontro do exemplo do livro custa 13 PB', () => {
+  // "dois brutamontes (8), dois comuns (4) e quatro lacaios (1)", com 4 personagens
+  const c = contexto.custoDoEncontro_([
+    { adversario: 'urso', quantidade: 2 },            // 2 brutamontes = 8 PB
+    { adversario: 'guarda-armado', quantidade: 2 },   // 2 comuns      = 4 PB
+    { adversario: 'esqueleto-arruinado', quantidade: 4 } // 1 conjunto = 1 PB
+  ], 4);
+  igual(c.gasto, 13);
+  igual(c.lacaios.conjuntos, 1, 'quatro lacaios com quatro personagens é UM conjunto');
+});
+
+teste('lacaio custa por conjunto do tamanho do grupo, arredondando para cima', () => {
+  const c = contexto.custoDoEncontro_([{ adversario: 'esqueleto-arruinado', quantidade: 8 }], 3);
+  igual(c.lacaios.conjuntos, 3, 'oito lacaios em grupos de três dão três conjuntos');
+  igual(c.gasto, 3);
+});
+
+teste('encontro com adversário inexistente é recusado', () => {
+  let deu = false;
+  try { contexto.custoDoEncontro_([{ adversario: 'dragão de papel' }], 4); }
+  catch (e) { deu = true; }
+  verdade(deu, 'deveria recusar');
+});
+
+teste('todo adversário do catálogo tem um tipo com custo conhecido', () => {
+  const tipos = avaliar('ADVERSARIOS.map(function (l) { return l[2]; })');
+  const sem = [...new Set(tipos)].filter((t) => !contexto.tipoDeAdversario_(t));
+  igual(sem, []);
+});
+
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+
+console.log('\nComprar');
+
+teste('comprar tira o ouro e põe o item, de uma vez só', () => {
+  const f = contexto.fichaVazia_();
+  f.ouro = { punhados: 5, bolsas: 1, cofres: 0 };
+  const r = contexto.comprarItem_(f, { item: 'Corda de 15 metros', preco: { punhados: 7 } });
+  igual(r.custo, 7);
+  igual(f.inventario, ['Corda de 15 metros']);
+  igual(f.ouro, { punhados: 8, bolsas: 0, cofres: 0 }, '15 punhados menos 7 dá 8');
+});
+
+teste('sem ouro suficiente, NADA acontece', () => {
+  const f = contexto.fichaVazia_();
+  f.ouro = { punhados: 3, bolsas: 0, cofres: 0 };
+  const r = contexto.comprarItem_(f, { item: 'Espada', preco: { bolsas: 1 } });
+  verdade(r.erro, 'deveria recusar');
+  igual(f.inventario, [], 'e a mochila continua vazia');
+  igual(f.ouro, { punhados: 3, bolsas: 0, cofres: 0 }, 'e o ouro intacto');
+});
+
+teste('mochila cheia recusa a compra ANTES de cobrar', () => {
+  const f = contexto.fichaVazia_();
+  f.ouro = { punhados: 0, bolsas: 5, cofres: 0 };
+  f.inventario = [];
+  for (let i = 0; i < 60; i++) f.inventario.push('item ' + i);
+  const antes = JSON.stringify(f.ouro);
+  const r = contexto.comprarItem_(f, { item: 'Mais um', preco: { punhados: 1 } });
+  verdade(r.erro, 'deveria recusar');
+  igual(JSON.stringify(f.ouro), antes, 'o ouro não foi tocado');
+});
+
+teste('compra sem preço é recusada — para isso existe "acrescentar"', () => {
+  const f = contexto.fichaVazia_();
+  f.ouro = { punhados: 9, bolsas: 0, cofres: 0 };
+  const r = contexto.comprarItem_(f, { item: 'Achado no chão', preco: {} });
+  verdade(r.erro);
+  igual(f.inventario, []);
+});
+
+teste('o troco atravessa as categorias', () => {
+  const f = contexto.fichaVazia_();
+  f.ouro = { punhados: 0, bolsas: 0, cofres: 1 };
+  contexto.comprarItem_(f, { item: 'Cavalo', preco: { bolsas: 3 } });
+  igual(f.ouro, { punhados: 0, bolsas: 7, cofres: 0 }, '1 cofre são 10 bolsas; menos 3 dá 7');
+});
+
+console.log('\nCartas que mudam a ficha para sempre');
+
+/** Uma ficha com a carta na mão, pronta para aplicar o efeito. */
+function fichaComCarta(cartaId, experiencias) {
+  const f = contexto.fichaVazia_();
+  f.identidade = { nome: 'Teste', classe: 'guerreiro', subclasse: 'call of the brave' };
+  f.cartas = { ativas: [cartaId], cofre: [] };
+  f.experiencias = experiencias || [{ nome: 'Rastrear', bonus: 2 }, { nome: 'Barganha', bonus: 2 }];
+  return f;
+}
+
+teste('Vitalidade soma dois benefícios e tranca a carta no cofre', () => {
+  const f = fichaComCarta('blade-vitalidade');
+  const r = contexto.aplicarCartaPermanente_(f, 'Vitalidade', { beneficios: ['pv', 'estresse'] });
+  igual(contexto.bonusDeCartas_(f).pontosDeVidaMaximos, 1);
+  igual(contexto.bonusDeCartas_(f).estresseMaximo, 1);
+  igual(contexto.bonusDeCartas_(f).limiares, 0, 'só o que foi escolhido');
+  igual(f.cartas.ativas, [], 'saiu da mão');
+  verdade(f.cartas.cofre.indexOf('blade-vitalidade') >= 0, 'e foi para o cofre');
+  verdade(/permanentemente/.test(r.aviso));
+});
+
+teste('Vitalidade exige EXATAMENTE dois benefícios diferentes', () => {
+  let deu = 0;
+  try { contexto.aplicarCartaPermanente_(fichaComCarta('blade-vitalidade'), 'Vitalidade', { beneficios: ['pv'] }); }
+  catch (e) { deu++; }
+  try { contexto.aplicarCartaPermanente_(fichaComCarta('blade-vitalidade'), 'Vitalidade', { beneficios: ['pv', 'pv'] }); }
+  catch (e) { deu++; }
+  try { contexto.aplicarCartaPermanente_(fichaComCarta('blade-vitalidade'), 'Vitalidade', { beneficios: ['pv', 'estresse', 'limiares'] }); }
+  catch (e) { deu++; }
+  igual(deu, 3);
+});
+
+teste('o bônus da Vitalidade é DERIVADO, não gravado em cima', () => {
+  const f = fichaComCarta('blade-vitalidade');
+  f.identidade = { nome: 'T', classe: 'guerreiro', subclasse: 'call of the brave' };
+  f.equipamento = { primaria: null, secundaria: null, armadura: 'armadura-t1-armadura-de-couro' };
+  const antes = contexto.derivadosDoPersonagem_(f).pontosDeVidaMaximos;
+  contexto.aplicarCartaPermanente_(f, 'Vitalidade', { beneficios: ['pv', 'limiares'] });
+  const depois = contexto.derivadosDoPersonagem_(f).pontosDeVidaMaximos;
+  igual(depois, antes + 1);
+  // derivar duas vezes não soma duas vezes — foi o bug E4 de outra parte
+  igual(contexto.derivadosDoPersonagem_(f).pontosDeVidaMaximos, depois);
+});
+
+teste('a Vitalidade também sobe os dois limiares', () => {
+  const f = fichaComCarta('blade-vitalidade');
+  f.identidade = { nome: 'T', classe: 'guerreiro', subclasse: 'call of the brave' };
+  f.equipamento = { primaria: null, secundaria: null, armadura: 'armadura-t1-armadura-de-couro' };
+  const antes = contexto.derivadosDoPersonagem_(f);
+  contexto.aplicarCartaPermanente_(f, 'Vitalidade', { beneficios: ['limiares', 'pv'] });
+  const depois = contexto.derivadosDoPersonagem_(f);
+  igual(depois.limiarMaior, antes.limiarMaior + 2);
+  igual(depois.limiarGrave, antes.limiarGrave + 2);
+});
+
+teste('Mestre do Ofício soma nas Experiências escolhidas', () => {
+  const f = fichaComCarta('grace-mestre-do-oficio');
+  contexto.aplicarCartaPermanente_(f, 'Mestre do Ofício', { arranjo: 'duas', experiencias: [0, 1] });
+  igual(f.experiencias.map((e) => e.bonus), [4, 4]);
+});
+
+teste('Mestre do Ofício com +3 só aceita UMA Experiência', () => {
+  const f = fichaComCarta('grace-mestre-do-oficio');
+  let deu = false;
+  try { contexto.aplicarCartaPermanente_(f, 'Mestre do Ofício', { arranjo: 'uma', experiencias: [0, 1] }); }
+  catch (e) { deu = true; }
+  verdade(deu, 'deveria recusar duas');
+  contexto.aplicarCartaPermanente_(f, 'Mestre do Ofício', { arranjo: 'uma', experiencias: [1] });
+  igual(f.experiencias.map((e) => e.bonus), [2, 5]);
+});
+
+teste('não dá para aplicar a mesma carta duas vezes', () => {
+  const f = fichaComCarta('blade-vitalidade');
+  contexto.aplicarCartaPermanente_(f, 'Vitalidade', { beneficios: ['pv', 'estresse'] });
+  let deu = false;
+  try { contexto.aplicarCartaPermanente_(f, 'Vitalidade', { beneficios: ['pv', 'limiares'] }); }
+  catch (e) { deu = true; }
+  verdade(deu, 'deveria recusar');
+  igual(contexto.bonusDeCartas_(f).pontosDeVidaMaximos, 1, 'e não somar de novo');
+});
+
+teste('não dá para aplicar carta que o personagem não tem', () => {
+  const f = contexto.fichaVazia_();
+  let deu = false;
+  try { contexto.aplicarCartaPermanente_(f, 'Vitalidade', { beneficios: ['pv', 'estresse'] }); }
+  catch (e) { deu = true; }
+  verdade(deu, 'deveria recusar');
+});
+
+teste('a carta trancada NÃO volta para a mão', () => {
+  const f = fichaComCarta('blade-vitalidade');
+  contexto.aplicarCartaPermanente_(f, 'Vitalidade', { beneficios: ['pv', 'estresse'] });
+  const r = contexto.ajustarCarta_(f, { carta: 'blade-vitalidade', para: 'ativas' });
+  verdade(r.erro, 'deveria recusar: ' + JSON.stringify(r));
+  igual(f.cartas.ativas, []);
+});
+
+teste('a carta que muda o ALVO não passa por aqui', () => {
+  const f = fichaComCarta('codex-livro-do-ronin');
+  let mensagem = '';
+  try { contexto.aplicarCartaPermanente_(f, 'Livro do Ronin', {}); }
+  catch (e) { mensagem = e.message; }
+  verdade(/ALVO/.test(mensagem), 'o erro explica onde a regra mora: ' + mensagem);
+});
+
+console.log('\nVocabulário');
+teste('nenhum texto CANÔNICO diz "teste" — o das cartas é "jogada"', () => {
+  // 'ancora' é texto LITERAL do livro — é o que prova que a página está certa.
+  // 'variantes' são de propósito as outras grafias, inclusive a da Jambô: é assim
+  // que quem leu "teste" no livro acha o verbete de "jogada".
+  const intocaveis = new Set(['textoLivro', 'textoLivroLiteral', 'nomeLivro',
+    'nomeImpresso', 'tipoImpresso', 'jambo', 'ingles', 'fonte', 'motivo',
+    'porque', 'errosDeDigitacaoDoOriginal', 'noLivro', 'nomeNoIndice', 'regra',
+    'aviso', 'doisNiveisDeGlosa', 'substituicoes', 'ancora', 'variantes']);
+  const achados = [];
+  const andar = (no, chave, arquivo) => {
+    if (Array.isArray(no)) return no.forEach((x) => andar(x, chave, arquivo));
+    if (no && typeof no === 'object') {
+      return Object.keys(no).forEach((k) => {
+        if (!intocaveis.has(k)) andar(no[k], k, arquivo);
+      });
+    }
+    if (typeof no === 'string' && /\btestes?\b/i.test(no)) {
+      achados.push(`${arquivo} [${chave}]`);
+    }
+  };
+  for (const arq of fs.readdirSync(path.join(RAIZ, 'data'))) {
+    if (!arq.endsWith('.json') || arq === 'glossario.json') continue;
+    andar(JSON.parse(fs.readFileSync(path.join(RAIZ, 'data', arq), 'utf8')), null, arq);
+  }
+  igual([...new Set(achados)], []);
+});
+
+console.log('\nEncontro em jogo');
+
+/** Um encontro limpo, com o Medo cheio, para cada teste começar igual. */
+function mesaComEncontro(medo) {
+  const m = contexto.mesaLer_();
+  contexto.limparEncontro_(m);
+  m.medo = medo === undefined ? 6 : medo;
+  m.danoMassivo = true;
+  contexto.mesaGravar_(m);
+  return contexto.mesaLer_();
+}
+
+teste('dano vira PV pelos limiares da ficha (livro p.91)', () => {
+  const l = { maior: 8, severo: 16 };
+  // o exemplo do próprio livro, com o guardião de limiares 8/16
+  igual(contexto.pvDoDano_(7, l, false).pv, 1, 'dano abaixo do maior');
+  igual(contexto.pvDoDano_(8, l, false).pv, 2, 'exatamente o limiar maior');
+  igual(contexto.pvDoDano_(15, l, false).pv, 2, 'abaixo do severo');
+  igual(contexto.pvDoDano_(16, l, false).pv, 3, 'exatamente o limiar severo');
+  igual(contexto.pvDoDano_(31, l, false).pv, 3, 'quase o dobro, mas não');
+  igual(contexto.pvDoDano_(0, l, false).pv, 0, 'dano reduzido a 0 não marca');
+});
+
+teste('dano massivo marca 4 PV — e só quando a mesa liga', () => {
+  const l = { maior: 8, severo: 16 };
+  igual(contexto.pvDoDano_(32, l, true).pv, 4, 'com a regra ligada');
+  igual(contexto.pvDoDano_(32, l, false).pv, 3, 'com a regra desligada volta a ser Severo');
+  igual(contexto.pvDoDano_(32, l, true).faixa, 'massivo');
+});
+
+teste('os limiares saem do texto "7/15" da ficha', () => {
+  igual(contexto.limiaresDoTexto_('7/15'), { maior: 7, severo: 15 });
+  igual(contexto.limiaresDoTexto_('nenhum'), null);
+  igual(contexto.limiaresDoTexto_(null), null);
+});
+
+teste('lacaio: o alvo cai com qualquer dano, e mais um a cada N', () => {
+  // conferido na web: 7 de dano contra Lacaio (3) derruba 3 no total
+  const r = contexto.lacaiosDerrotados_(7, 3);
+  igual(r.alvo, 1);
+  igual(r.adicionais, 2);
+  igual(r.total, 3);
+  igual(contexto.lacaiosDerrotados_(1, 3).total, 1, 'dano mínimo derruba só o alvo');
+  igual(contexto.lacaiosDerrotados_(3, 3).total, 2, 'exatamente N derruba o alvo + 1');
+  igual(contexto.lacaiosDerrotados_(0, 3).total, 0, 'sem dano, ninguém cai');
+});
+
+teste('acrescentar dois ursos dá duas trilhas independentes', () => {
+  const m = mesaComEncontro();
+  contexto.acrescentarAoEncontro_(m, { adversario: 'urso', quantidade: 2 });
+  contexto.mesaGravar_(m);
+  const atual = contexto.mesaLer_();
+  igual(atual.encontro.adversarios.length, 2);
+  verdade(atual.encontro.adversarios[0].id !== atual.encontro.adversarios[1].id, 'ids diferentes');
+  igual(atual.encontro.adversarios.map((a) => a.apelido), ['Urso 1', 'Urso 2'],
+    'com mais de um do mesmo bicho, o apelido ganha número');
+});
+
+teste('o dano digitado vira PV na trilha do adversário certo', () => {
+  const m = mesaComEncontro();
+  contexto.acrescentarAoEncontro_(m, { adversario: 'urso', quantidade: 2 });
+  const alvo = m.encontro.adversarios[0];
+  const outro = m.encontro.adversarios[1];
+  const ficha = contexto.acharAdversario_('urso');
+  const lim = contexto.limiaresDoTexto_(ficha.limiares);
+  const r = contexto.ajustarAdversarioEmCena_(m, { id: alvo.id, dano: lim.severo });
+  igual(r.mudancas.dano.pv, 3, 'dano no limiar Severo marca 3');
+  igual(alvo.pontosDeVidaMarcados, 3);
+  igual(outro.pontosDeVidaMarcados, 0, 'o outro urso não foi tocado');
+});
+
+teste('marcar o último PV derrota, e o aviso do livro aparece', () => {
+  const m = mesaComEncontro();
+  contexto.acrescentarAoEncontro_(m, { adversario: 'urso' });
+  const alvo = m.encontro.adversarios[0];
+  const ficha = contexto.acharAdversario_('urso');
+  const r = contexto.ajustarAdversarioEmCena_(m, { id: alvo.id, pontosDeVida: ficha.pontosDeVida });
+  verdade(alvo.derrotado, 'deveria estar derrotado');
+  verdade(/derrotado/.test(r.mudancas.aviso || ''), 'o aviso do livro p.203');
+});
+
+teste('lacaio cai inteiro com qualquer dano, e o app diz quantos vão junto', () => {
+  const m = mesaComEncontro();
+  // Esqueleto Arruinado é Lacaio (4)
+  contexto.acrescentarAoEncontro_(m, { adversario: 'esqueleto-arruinado' });
+  const alvo = m.encontro.adversarios[0];
+  const r = contexto.ajustarAdversarioEmCena_(m, { id: alvo.id, dano: 9 });
+  verdade(alvo.derrotado, 'qualquer dano derruba o lacaio');
+  igual(r.mudancas.lacaios.total, 3, '9 ÷ 4 = 2 adicionais, mais o alvo');
+});
+
+teste('a horda avisa quando passa da metade dos PV', () => {
+  const m = mesaComEncontro();
+  contexto.acrescentarAoEncontro_(m, { adversario: 'horda-de-zumbis' });
+  const alvo = m.encontro.adversarios[0];
+  const ficha = contexto.acharAdversario_('horda-de-zumbis');
+  const r = contexto.ajustarAdversarioEmCena_(m, {
+    id: alvo.id, pontosDeVida: Math.ceil(ficha.pontosDeVida / 2)
+  });
+  verdade(/metade dos Pontos de Vida/.test(r.mudancas.horda || ''), 'o aviso da habilidade Horda');
+});
+
+teste('condição de adversário passa pelo mesmo validador da ficha', () => {
+  const m = mesaComEncontro();
+  contexto.acrescentarAoEncontro_(m, { adversario: 'urso' });
+  const alvo = m.encontro.adversarios[0];
+  // "Imobilizado" é o nome da Jambô; o canônico das cartas é Restrito
+  contexto.ajustarAdversarioEmCena_(m, { id: alvo.id, condicoes: ['Imobilizado'] });
+  igual(alvo.condicoes.map((c) => c.nome), ['Restrito']);
+});
+
+teste('pôr em foco: o primeiro é de graça, o segundo custa 1 Medo', () => {
+  const m = mesaComEncontro(4);
+  contexto.acrescentarAoEncontro_(m, { adversario: 'urso', quantidade: 2 });
+  const [a, b] = m.encontro.adversarios;
+  const r1 = contexto.porEmFoco_(m, a.id, { primeiroDoTurno: true });
+  igual(r1.custo, 0);
+  igual(m.medo, 4, 'o primeiro do movimento não cobra');
+  const r2 = contexto.porEmFoco_(m, b.id, {});
+  igual(r2.custo, 1);
+  igual(m.medo, 3, 'o segundo cobra 1 Medo');
+});
+
+teste('sem Medo sobrando, pôr em foco é recusado inteiro', () => {
+  const m = mesaComEncontro(0);
+  contexto.acrescentarAoEncontro_(m, { adversario: 'urso' });
+  const alvo = m.encontro.adversarios[0];
+  let deu = false;
+  try { contexto.porEmFoco_(m, alvo.id, {}); } catch (e) { deu = true; }
+  verdade(deu, 'deveria recusar');
+  verdade(!alvo.emFoco, 'e não pode ter ficado em foco');
+  igual(m.medo, 0, 'nem mexido no Medo');
+});
+
+teste('adversário derrotado não entra em foco', () => {
+  const m = mesaComEncontro(6);
+  contexto.acrescentarAoEncontro_(m, { adversario: 'urso' });
+  const alvo = m.encontro.adversarios[0];
+  contexto.ajustarAdversarioEmCena_(m, { id: alvo.id, pontosDeVida: 99 });
+  let deu = false;
+  try { contexto.porEmFoco_(m, alvo.id, { primeiroDoTurno: true }); } catch (e) { deu = true; }
+  verdade(deu, 'deveria recusar');
+});
+
+teste('derrotar tira do foco sozinho', () => {
+  const m = mesaComEncontro(6);
+  contexto.acrescentarAoEncontro_(m, { adversario: 'urso' });
+  const alvo = m.encontro.adversarios[0];
+  contexto.porEmFoco_(m, alvo.id, { primeiroDoTurno: true });
+  verdade(alvo.emFoco, 'entrou em foco');
+  contexto.ajustarAdversarioEmCena_(m, { id: alvo.id, pontosDeVida: 99 });
+  verdade(!alvo.emFoco, 'ao cair, sai do foco');
+});
+
+teste('o encontro sobrevive à gravação, com trilha e tudo', () => {
+  const m = mesaComEncontro();
+  contexto.acrescentarAoEncontro_(m, { adversario: 'urso' });
+  contexto.ajustarAdversarioEmCena_(m, { id: m.encontro.adversarios[0].id, dano: 5 });
+  contexto.mesaGravar_(m);
+  const relido = contexto.mesaLer_();
+  igual(relido.encontro.adversarios.length, 1);
+  verdade(relido.encontro.adversarios[0].pontosDeVidaMarcados > 0, 'a trilha voltou marcada');
+});
+
+teste('adversário inventado é recusado ao entrar na cena', () => {
+  const m = mesaComEncontro();
+  let deu = false;
+  try { contexto.acrescentarAoEncontro_(m, { adversario: 'dragão de papel' }); }
+  catch (e) { deu = true; }
+  verdade(deu, 'deveria recusar');
+  igual(m.encontro.adversarios.length, 0);
+});
+
+teste('a conta de Pontos de Batalha lê a cena montada', () => {
+  const m = mesaComEncontro();
+  contexto.acrescentarAoEncontro_(m, { adversario: 'urso', quantidade: 2 });        // 2 brutamontes = 8
+  contexto.acrescentarAoEncontro_(m, { adversario: 'guarda-armado', quantidade: 2 }); // 2 comuns = 4
+  contexto.acrescentarAoEncontro_(m, { adversario: 'esqueleto-arruinado', quantidade: 4 }); // 1 conjunto = 1
+  const conta = contexto.contaDoEncontro_(m, 4);
+  igual(conta.pontosDeBatalha.total, 14, '(3 x 4) + 2');
+  igual(conta.gasto.gasto, 13, 'o encontro do exemplo do livro');
+  igual(conta.sobra, 1);
+});
+
+teste('adversário derrotado continua contando Pontos de Batalha', () => {
+  const m = mesaComEncontro();
+  contexto.acrescentarAoEncontro_(m, { adversario: 'urso' });
+  const antes = contexto.contaDoEncontro_(m, 4).gasto.gasto;
+  contexto.ajustarAdversarioEmCena_(m, { id: m.encontro.adversarios[0].id, pontosDeVida: 99 });
+  igual(contexto.contaDoEncontro_(m, 4).gasto.gasto, antes,
+    'o custo é do que foi POSTO na cena, não do que está de pé');
+});
+
+teste('a habilidade cobra o Medo da MESA e o Estresse do PRÓPRIO adversário', () => {
+  const m = mesaComEncontro(6);
+  // Cobra-de-Vidro: Cuspideira custa 1 Medo, Serpente Giratória custa 1 Estresse
+  contexto.acrescentarAoEncontro_(m, { adversario: 'cobra-de-vidro' });
+  const alvo = m.encontro.adversarios[0];
+  const habs = contexto.habilidadesComCusto_('cobra-de-vidro');
+  const cuspida = habs.filter((h) => h.custoDeMedo > 0)[0];
+  const giro = habs.filter((h) => h.custoDeEstresse > 0)[0];
+
+  const r1 = contexto.usarHabilidade_(m, { id: alvo.id, habilidade: cuspida.indice });
+  igual(r1.cobrado.medo, 1);
+  igual(m.medo, 5, 'o Medo saiu da mesa');
+  igual(alvo.estresseMarcado, 0, 'e não do adversário');
+
+  const r2 = contexto.usarHabilidade_(m, { id: alvo.id, habilidade: giro.indice });
+  igual(r2.cobrado.estresse, 1);
+  igual(alvo.estresseMarcado, 1, 'o Estresse saiu do próprio adversário');
+  igual(m.medo, 5, 'e o Medo da mesa ficou onde estava');
+});
+
+teste('sem Medo na mesa, a habilidade é recusada inteira', () => {
+  const m = mesaComEncontro(0);
+  contexto.acrescentarAoEncontro_(m, { adversario: 'cobra-de-vidro' });
+  const alvo = m.encontro.adversarios[0];
+  const hab = contexto.habilidadesComCusto_('cobra-de-vidro').filter((h) => h.custoDeMedo > 0)[0];
+  let deu = false;
+  try { contexto.usarHabilidade_(m, { id: alvo.id, habilidade: hab.indice }); } catch (e) { deu = true; }
+  verdade(deu, 'deveria recusar');
+  igual(m.medo, 0);
+  igual(alvo.estresseMarcado, 0, 'nada foi cobrado pela metade');
+});
+
+teste('sem Estresse sobrando no adversário, a habilidade é recusada', () => {
+  const m = mesaComEncontro(6);
+  contexto.acrescentarAoEncontro_(m, { adversario: 'cobra-de-vidro' });
+  const alvo = m.encontro.adversarios[0];
+  const ficha = contexto.acharAdversario_('cobra-de-vidro');
+  contexto.ajustarAdversarioEmCena_(m, { id: alvo.id, estresse: ficha.estresse });  // enche
+  const hab = contexto.habilidadesComCusto_('cobra-de-vidro').filter((h) => h.custoDeEstresse > 0)[0];
+  let deu = false;
+  try { contexto.usarHabilidade_(m, { id: alvo.id, habilidade: hab.indice }); } catch (e) { deu = true; }
+  verdade(deu, 'deveria recusar');
+  igual(m.medo, 6, 'e o Medo da mesa não foi tocado');
+});
+
+teste('um adversário não gasta o Estresse do outro', () => {
+  const m = mesaComEncontro(6);
+  contexto.acrescentarAoEncontro_(m, { adversario: 'cobra-de-vidro', quantidade: 2 });
+  const [a, b] = m.encontro.adversarios;
+  const hab = contexto.habilidadesComCusto_('cobra-de-vidro').filter((h) => h.custoDeEstresse > 0)[0];
+  contexto.usarHabilidade_(m, { id: a.id, habilidade: hab.indice });
+  igual(a.estresseMarcado, 1);
+  igual(b.estresseMarcado, 0, 'a segunda cobra continua inteira');
+});
+
+teste('habilidade sem custo não é "usada" — não há o que cobrar', () => {
+  const m = mesaComEncontro(6);
+  contexto.acrescentarAoEncontro_(m, { adversario: 'urso' });
+  const alvo = m.encontro.adversarios[0];
+  let deu = false;
+  try { contexto.usarHabilidade_(m, { id: alvo.id, habilidade: 99 }); } catch (e) { deu = true; }
+  verdade(deu, 'deveria recusar índice inexistente');
+});
+
+teste('adversário derrotado não usa habilidade', () => {
+  const m = mesaComEncontro(6);
+  contexto.acrescentarAoEncontro_(m, { adversario: 'cobra-de-vidro' });
+  const alvo = m.encontro.adversarios[0];
+  contexto.ajustarAdversarioEmCena_(m, { id: alvo.id, pontosDeVida: 99 });
+  const hab = contexto.habilidadesComCusto_('cobra-de-vidro')[0];
+  let deu = false;
+  try { contexto.usarHabilidade_(m, { id: alvo.id, habilidade: hab.indice }); } catch (e) { deu = true; }
+  verdade(deu, 'deveria recusar');
+});
+
+teste('habilidade com contagem de valor fixo cria a contagem junto', () => {
+  const m = mesaComEncontro(6);
+  // Guarda Chefe: "Ao Meu Sinal" traz Contagem (5)
+  contexto.acrescentarAoEncontro_(m, { adversario: 'guarda-chefe' });
+  const alvo = m.encontro.adversarios[0];
+  const hab = contexto.habilidadesComCusto_('guarda-chefe').filter((h) => h.contagem)[0];
+  igual(hab.contagem.valor, 5);
+  const antes = m.contagens.length;
+  const r = contexto.usarHabilidade_(m, { id: alvo.id, habilidade: hab.indice });
+  igual(m.contagens.length, antes + 1, 'a contagem nasceu na mesma gravação');
+  igual(r.contagem.valor, 5);
+  verdade(/Ao Meu Sinal/.test(r.contagem.nome), 'o nome sai da habilidade');
+});
+
+teste('contagem em DADO espera o número que a Mestra rolou', () => {
+  const m = mesaComEncontro(6);
+  // Oscilume Jovem: "Sopro Alucinógeno" traz Contagem (ciclo 1d6)
+  contexto.acrescentarAoEncontro_(m, { adversario: 'oscilume-jovem' });
+  const alvo = m.encontro.adversarios[0];
+  const hab = contexto.habilidadesComCusto_('oscilume-jovem').filter((h) => h.contagem)[0];
+  igual(hab.contagem.valor, null, 'o livro põe um dado, não um número');
+  igual(hab.contagem.dado, '1d6');
+  // sem o número, o app não inventa
+  const semNumero = contexto.usarHabilidade_(m, { id: alvo.id, habilidade: hab.indice });
+  igual(semNumero.contagem.faltouValor, '1d6');
+  // com o número, cria
+  const antes = m.contagens.length;
+  const comNumero = contexto.usarHabilidade_(m, {
+    id: alvo.id, habilidade: hab.indice, contagem: { valor: 4 }
+  });
+  igual(m.contagens.length, antes + 1);
+  igual(comNumero.contagem.valor, 4);
+  verdade(comNumero.contagem.ciclo, 'e é uma contagem em ciclo');
+});
+
+teste('toda habilidade que custa Estresse cabe no Estresse da ficha', () => {
+  const linhas = avaliar('HABILIDADES_COM_CUSTO');
+  const ruins = linhas.filter((l) => {
+    const f = contexto.acharAdversario_(l[0]);
+    return l[5] > f.estresse;
+  });
+  igual(ruins.map((l) => l[0] + ' > ' + l[2]), []);
+});
+
+teste('resistência corta o dano pela metade antes dos limiares (livro p.98)', () => {
+  const l = { maior: 8, severo: 16 };
+  // 16 seria Severo; resistido vira 8, que é Maior
+  igual(contexto.pvDoDano_(16, l, false, true).pv, 2);
+  igual(contexto.pvDoDano_(16, l, false, false).pv, 3, 'sem resistir, continua Severo');
+  // a metade arredonda para CIMA — regra geral do livro, "não usa frações"
+  igual(contexto.pvDoDano_(15, l, false, true).reduzidoPara, 8);
+});
+
+teste('o adversário resistente só resiste ao tipo de dano dele', () => {
+  const m = mesaComEncontro();
+  // Esqueleto Guerreiro é resistente a dano físico
+  contexto.acrescentarAoEncontro_(m, { adversario: 'esqueleto-guerreiro' });
+  const alvo = m.encontro.adversarios[0];
+  const ficha = contexto.acharAdversario_('esqueleto-guerreiro');
+  const lim = contexto.limiaresDoTexto_(ficha.limiares);
+
+  const fisico = contexto.ajustarAdversarioEmCena_(m, {
+    id: alvo.id, dano: lim.severo, tipoDeDano: 'fisico'
+  });
+  verdade(fisico.mudancas.dano.reduzidoPara, 'o dano físico foi resistido');
+  contexto.ajustarAdversarioEmCena_(m, { id: alvo.id, pontosDeVida: 0 });
+
+  const magico = contexto.ajustarAdversarioEmCena_(m, {
+    id: alvo.id, dano: lim.severo, tipoDeDano: 'magico'
+  });
+  igual(magico.mudancas.dano.reduzidoPara, null, 'dano mágico passa inteiro');
+  igual(magico.mudancas.dano.pv, 3);
+});
+
+teste('sem dizer o tipo, o dano passa inteiro — o app não adivinha', () => {
+  const m = mesaComEncontro();
+  contexto.acrescentarAoEncontro_(m, { adversario: 'esqueleto-guerreiro' });
+  const alvo = m.encontro.adversarios[0];
+  const ficha = contexto.acharAdversario_('esqueleto-guerreiro');
+  const r = contexto.ajustarAdversarioEmCena_(m, {
+    id: alvo.id, dano: contexto.limiaresDoTexto_(ficha.limiares).severo
+  });
+  igual(r.mudancas.dano.reduzidoPara, null);
+  igual(r.mudancas.dano.pv, 3);
+});
+
+teste('a Forma Fantasmagórica dá resistência a quem está em cena', () => {
+  const m = mesaComEncontro();
+  m.encontro.ambiente = 'cidade-assombrada';
+  contexto.acrescentarAoEncontro_(m, { adversario: 'urso' });
+  const alvo = m.encontro.adversarios[0];
+  igual(contexto.efeitosDoAmbiente_('cidade-assombrada').length, 1, 'o ambiente oferece o efeito');
+
+  contexto.ajustarAdversarioEmCena_(m, { id: alvo.id, efeitos: ['fantasmagorico'] });
+  igual(alvo.efeitos, ['fantasmagorico']);
+  const ficha = contexto.acharAdversario_('urso');
+  const lim = contexto.limiaresDoTexto_(ficha.limiares);
+  const r = contexto.ajustarAdversarioEmCena_(m, {
+    id: alvo.id, dano: lim.severo, tipoDeDano: 'fisico'
+  });
+  verdade(r.mudancas.dano.reduzidoPara, 'o urso fantasma resiste a dano físico');
+});
+
+teste('o efeito é da INSTÂNCIA, não da ficha', () => {
+  const m = mesaComEncontro();
+  m.encontro.ambiente = 'cidade-assombrada';
+  contexto.acrescentarAoEncontro_(m, { adversario: 'urso', quantidade: 2 });
+  const [a, b] = m.encontro.adversarios;
+  contexto.ajustarAdversarioEmCena_(m, { id: a.id, efeitos: ['fantasmagorico'] });
+  igual(b.efeitos, [], 'o segundo urso continua de carne e osso');
+  const ficha = contexto.acharAdversario_('urso');
+  igual(ficha.resistencias, undefined, 'e a ficha do catálogo não foi tocada');
+});
+
+teste('efeito inventado é ignorado', () => {
+  const m = mesaComEncontro();
+  contexto.acrescentarAoEncontro_(m, { adversario: 'urso' });
+  const alvo = m.encontro.adversarios[0];
+  contexto.ajustarAdversarioEmCena_(m, { id: alvo.id, efeitos: ['virar-sapo'] });
+  igual(alvo.efeitos, []);
+});
+
+teste('limpar o encontro zera a cena sem tocar no Medo', () => {
+  const m = mesaComEncontro(5);
+  contexto.acrescentarAoEncontro_(m, { adversario: 'urso' });
+  contexto.limparEncontro_(m);
+  igual(m.encontro.adversarios.length, 0);
+  igual(m.medo, 5);
+});
+
+/* -------------------------------------------------------------------------- */
+
+console.log('\nAdversários da mesa');
+
+function mesaLimpa(medo) {
+  const m = contexto.mesaLer_();
+  contexto.limparEncontro_(m);
+  m.adversariosDaMesa = [];
+  m.medo = medo === undefined ? 6 : medo;
+  contexto.mesaGravar_(m);
+  return contexto.mesaLer_();
+}
+
+teste('a ficha nasce com a sugestão do livro para o patamar (p.208)', () => {
+  const s = contexto.sugestaoDoPatamar_(3);
+  igual(s.dificuldade, 17);
+  igual(s.modificadorDeAtaque, '+3');
+  igual(s.limiares, '20/32');
+});
+
+teste('salvar uma ficha da mesa e achá-la pelo nome', () => {
+  const m = mesaLimpa();
+  const ficha = contexto.salvarAdversarioDaMesa_(m, {
+    nome: 'Açoite de Sarça', tipo: 'Líder', patamar: 1,
+    dificuldade: 14, limiares: '9/14', pontosDeVida: 6, estresse: 4,
+    ataque: { modificador: '+3', nome: 'Açoite Envenenado', alcance: 'Próximo', dano: '1d10+2 fís' }
+  });
+  contexto.mesaGravar_(m);
+  verdade(/^mesa:/.test(ficha.id), 'o id começa com "mesa:", para nunca colidir com o livro');
+  const achada = contexto.acharAdversarioCompleto_('Açoite de Sarça');
+  igual(achada.dificuldade, 14);
+  igual(achada.pontosDeBatalha, 3, 'líder custa 3 PB, como qualquer líder');
+});
+
+teste('a ficha da mesa entra na cena com trilha própria', () => {
+  const m = mesaLimpa();
+  const ficha = contexto.salvarAdversarioDaMesa_(m, {
+    nome: 'Açoite de Sarça', tipo: 'Líder', patamar: 1,
+    limiares: '9/14', pontosDeVida: 6, estresse: 4
+  });
+  contexto.acrescentarAoEncontro_(m, { adversario: ficha.id });
+  const alvo = m.encontro.adversarios[0];
+  const r = contexto.ajustarAdversarioEmCena_(m, { id: alvo.id, dano: 14 });
+  igual(r.mudancas.dano.pv, 3, '14 é o limiar Severo desta ficha');
+  igual(alvo.pontosDeVidaMarcados, 3);
+  contexto.mesaGravar_(m);
+  igual(contexto.mesaLer_().encontro.adversarios[0].pontosDeVidaMarcados, 3, 'sobreviveu à gravação');
+});
+
+teste('o custo sai do TEXTO que a Mestra escreveu', () => {
+  const m = mesaLimpa();
+  const ficha = contexto.salvarAdversarioDaMesa_(m, {
+    nome: 'Anciã do Vilarejo', tipo: 'Manipulador', patamar: 1, estresse: 4,
+    habilidades: [
+      { nome: 'Falta de Hospitalidade', tipo: 'ação',
+        texto: 'gaste 2 Medo para virar o vilarejo contra os personagens.' },
+      { nome: 'Paz das Pradarias', tipo: 'ação',
+        texto: 'marque 1 Estresse para acalmar todos os alvos Próximos.' },
+      { nome: 'Sábia', tipo: 'passiva',
+        texto: 'os alvos devem marcar 2 Estresse ao discutir com a anciã.' }
+    ]
+  });
+  igual(ficha.habilidades[0].custoDeMedo, 2);
+  igual(ficha.habilidades[1].custoDeEstresse, 1);
+  igual(ficha.habilidades[2].custoDeMedo, undefined, 'o que o ALVO marca não é custo dela');
+  igual(ficha.habilidades[2].custoDeEstresse, undefined);
+  igual(ficha.custoDeMedoMaximo, 2);
+});
+
+teste('a habilidade da ficha da mesa cobra igual às do livro', () => {
+  const m = mesaLimpa(3);
+  const ficha = contexto.salvarAdversarioDaMesa_(m, {
+    nome: 'Anciã do Vilarejo', tipo: 'Manipulador', patamar: 1, estresse: 4,
+    habilidades: [{ nome: 'Falta de Hospitalidade', tipo: 'ação',
+      texto: 'gaste 2 Medo para virar o vilarejo contra os personagens.' }]
+  });
+  contexto.acrescentarAoEncontro_(m, { adversario: ficha.id });
+  const alvo = m.encontro.adversarios[0];
+  const hab = contexto.habilidadesComCusto_(ficha.id)[0];
+  igual(hab.custoDeMedo, 2);
+  contexto.usarHabilidade_(m, { id: alvo.id, habilidade: hab.indice });
+  igual(m.medo, 1, 'o Medo saiu da mesa');
+});
+
+teste('lacaio da mesa não ganha limiares, e cai com qualquer dano', () => {
+  const m = mesaLimpa();
+  const ficha = contexto.salvarAdversarioDaMesa_(m, {
+    nome: 'Rato de Esgoto', tipo: 'Lacaio', patamar: 1,
+    limiares: '9/14', pontosDeVida: 1, estresse: 1,
+    habilidades: [{ nome: 'Lacaio (4)', tipo: 'passiva',
+      texto: 'o rato é derrotado quando sofre qualquer dano.' }]
+  });
+  igual(ficha.limiares, null, 'lacaio não tem limiar, mesmo se digitado');
+  contexto.acrescentarAoEncontro_(m, { adversario: ficha.id });
+  const alvo = m.encontro.adversarios[0];
+  const r = contexto.ajustarAdversarioEmCena_(m, { id: alvo.id, dano: 9 });
+  verdade(alvo.derrotado, 'caiu com qualquer dano');
+  igual(r.mudancas.lacaios.total, 3, '9 ÷ 4 = 2 adicionais, mais o alvo');
+});
+
+teste('não dá para apagar ficha que está em cena', () => {
+  const m = mesaLimpa();
+  const ficha = contexto.salvarAdversarioDaMesa_(m, { nome: 'Bicho', tipo: 'Comum', patamar: 1 });
+  contexto.acrescentarAoEncontro_(m, { adversario: ficha.id });
+  let deu = false;
+  try { contexto.excluirAdversarioDaMesa_(m, ficha.id); } catch (e) { deu = true; }
+  verdade(deu, 'deveria recusar');
+  igual(m.adversariosDaMesa.length, 1);
+  // tirando da cena, apaga
+  contexto.removerDoEncontro_(m, m.encontro.adversarios[0].id);
+  contexto.excluirAdversarioDaMesa_(m, ficha.id);
+  igual(m.adversariosDaMesa.length, 0);
+});
+
+teste('ficha sem nome ou com tipo inventado é recusada', () => {
+  const m = mesaLimpa();
+  let deu = 0;
+  try { contexto.salvarAdversarioDaMesa_(m, { tipo: 'Comum', patamar: 1 }); } catch (e) { deu++; }
+  try { contexto.salvarAdversarioDaMesa_(m, { nome: 'X', tipo: 'Chefão', patamar: 1 }); } catch (e) { deu++; }
+  igual(deu, 2);
+  igual(m.adversariosDaMesa.length, 0);
+});
+
+teste('a ficha da mesa entra na conta de Pontos de Batalha', () => {
+  // era o buraco: custoDoEncontro_ só olhava o catálogo do livro, e montar um
+  // encontro com ficha própria era recusado inteiro
+  const m = mesaLimpa();
+  const ficha = contexto.salvarAdversarioDaMesa_(m, { nome: 'Bicho', tipo: 'Brutamonte', patamar: 1 });
+  contexto.acrescentarAoEncontro_(m, { adversario: ficha.id });
+  igual(contexto.contaDoEncontro_(m, 4).gasto.gasto, 4, 'brutamonte custa 4 PB, seja do livro ou da mesa');
+});
+
+teste('salvar de novo com o mesmo id reescreve, não duplica', () => {
+  const m = mesaLimpa();
+  const a = contexto.salvarAdversarioDaMesa_(m, { nome: 'Bicho', tipo: 'Comum', patamar: 1, pontosDeVida: 3 });
+  const b = contexto.salvarAdversarioDaMesa_(m, { id: a.id, nome: 'Bicho', tipo: 'Comum', patamar: 1, pontosDeVida: 9 });
+  igual(m.adversariosDaMesa.length, 1);
+  igual(b.pontosDeVida, 9);
+});
+
+teste('a terceira categoria de ouro se chama BAÚ, e "cofre" continua achando', () => {
+  // O livro (p.104) escreve "punhados, bolsas e baús", e não há carta nenhuma
+  // que fale de ouro — então vale o livro. Some também a colisão com o "cofre"
+  // de cartas, que o livro chama de reserva.
+  const u = avaliar('OURO_UNIDADES').find((x) => x.id === 'cofre');
+  igual(u.nome, 'Baú');
+  igual(u.plural, 'Baús');
+  // E14: o nome antigo NUNCA some da busca — a mesa leu "cofre" por meses.
+  verdade(u.aliases.indexOf('cofre') >= 0, 'o alias "cofre" tem de continuar existindo');
+  // a chave GRAVADA não mudou: isto é rótulo, não migração
+  igual(Object.keys(avaliar('OURO_CATEGORIAS')).join(','), 'punhados,bolsas,cofres');
+});
+
+teste('a mensagem de estouro do ouro fala em baú, não em cofre', () => {
+  const f = contexto.fichaRapida_({ nome: 'Rica', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Humano', comunidade: 'Wanderborne' });
+  // 1 baú já é o teto (100 punhados); o punhado seguinte é que estoura
+  f.ouro = { punhados: 0, bolsas: 0, cofres: 1 };
+  const r = contexto.ajustarOuroDaFicha_(f, { chave: 'punhados', delta: 1 });
+  igual(f.ouro.cofres, 1);
+  verdade(/baú/i.test(r.aviso || ''), 'o aviso foi: ' + r.aviso);
+  verdade(!/cofre/i.test(r.aviso || ''), 'o aviso ainda diz "cofre": ' + r.aviso);
+});
+
+console.log('\nVerbetes');
+
+teste('todo verbete tem página dentro do livro e resumo que cabe no celular', () => {
+  const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data', 'verbetes.json'), 'utf8'));
+  const problemas = [];
+  d.verbetes.forEach((v) => {
+    if (!(v.pagina >= 1 && v.pagina <= d.paginasDoLivro)) problemas.push(v.id + ': página');
+    if (!v.ancora) problemas.push(v.id + ': sem âncora');
+    if (!v.resumo || v.resumo.length > 220) problemas.push(v.id + ': resumo');
+  });
+  igual(problemas.join(' | '), '');
+  verdade(d.verbetes.length >= 90, 'esperava os ~93 verbetes, achei ' + d.verbetes.length);
+});
+
+teste('nenhuma palavra aciona DOIS verbetes', () => {
+  // Se duas entradas disputassem a mesma palavra, qual abriria dependeria da
+  // ordem do arquivo — e o jogador leria a regra errada sem desconfiar.
+  const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data', 'verbetes.json'), 'utf8'));
+  const dono = new Map();
+  const colisoes = [];
+  d.verbetes.forEach((v) => {
+    [v.termo, ...(v.variantes || [])].forEach((p) => {
+      const k = String(p).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      if (dono.has(k)) colisoes.push(`${p}: ${dono.get(k)} × ${v.id}`);
+      dono.set(k, v.id);
+    });
+  });
+  igual(colisoes.join(' | '), '');
+});
+
+teste('todo "veja também" aponta para um verbete que existe', () => {
+  const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data', 'verbetes.json'), 'utf8'));
+  const ids = new Set(d.verbetes.map((v) => v.id));
+  const quebrados = [];
+  d.verbetes.forEach((v) => (v.veja || []).forEach((o) => {
+    if (!ids.has(o)) quebrados.push(`${v.id} → ${o}`);
+  }));
+  igual(quebrados.join(' | '), '');
+});
+
+teste('o termo da Jambô vem do GLOSSÁRIO, não de uma segunda lista', () => {
+  // Duas listas com o mesmo par de palavras discordariam na primeira correção
+  // feita num lado só. Onde o glossário conhece o termo, o verbete tem de dizer
+  // exatamente o que ele diz.
+  const v = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data', 'verbetes.json'), 'utf8'));
+  const g = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data', 'glossario.json'), 'utf8'));
+  const chave = (t) => String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const jambo = new Map(g.termos.map((t) => [chave(t.canonico), t.jambo]));
+  const divergem = [];
+  v.verbetes.forEach((x) => {
+    const esperado = jambo.get(chave(x.termo));
+    if (esperado && x.noLivro && x.noLivro !== esperado
+        && chave(esperado) !== chave(x.termo)) {
+      divergem.push(`${x.id}: "${x.noLivro}" × glossário "${esperado}"`);
+    }
+  });
+  igual(divergem.join(' | '), '');
+});
+
+teste('as faixas de dano caem TODAS no mesmo verbete', () => {
+  // Menor/Maior/Severo são a mesma tabela. Três verbetes quase iguais fariam o
+  // jogador ler três vezes para descobrir que era uma coisa só.
+  const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data', 'verbetes.json'), 'utf8'));
+  const donos = ['dano Menor', 'dano Maior', 'dano Severo', 'Limiares'].map((p) => {
+    const achado = d.verbetes.find((v) =>
+      [v.termo, ...(v.variantes || [])].some((x) => x === p));
+    return achado ? achado.id : '(nenhum)';
+  });
+  igual([...new Set(donos)].join(' | '), 'limiares-de-dano');
 });
 
 console.log('\nZerar planilha');

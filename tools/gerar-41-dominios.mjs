@@ -73,6 +73,22 @@ for (const d of doms.dominios) {
 }
 L.push('};\n');
 
+// As cinco cartas que mudam a ficha PARA SEMPRE. Só elas precisam do
+// servidor: é ele quem soma o benefício e tranca a carta no cofre.
+const permanentes = cartas.filter((c) => c.efeitoPermanente);
+L.push(`/**
+ * As ${permanentes.length} cartas que mudam alguma coisa PARA SEMPRE.
+ *
+ * Três mexem na própria ficha (Vitalidade, Mestre do Ofício, Ressurreição) e
+ * duas mexem no ALVO (Livro do Ronin, Projétil Corrosivo) — essas viram
+ * condição ou observação no adversário, dentro do encontro.
+ */`);
+L.push('const CARTAS_PERMANENTES = {');
+for (const c of permanentes) {
+  L.push(`  ${j(c.id)}: ${JSON.stringify(c.efeitoPermanente)},`);
+}
+L.push('};\n');
+
 L.push(rodape);
 
 // Conferência estrutural antes de gravar: 21 por domínio, 3 no nível 1.

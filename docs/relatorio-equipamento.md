@@ -124,49 +124,68 @@ diferentes: *Protective*, *Sheltering* e *Warded*. Mantive Proteção só para
 - **Ricochet Axes / Aantari Bow**: as duas linhas estavam invertidas na tabela do livro em relação ao original.
 
 
-## 6. Itens que o livro não deu para ler (9)
+## 6. Itens que o livro não deu para ler — FECHADO (B4)
 
-Ficaram com o texto oficial em inglês. São poucos e valeria conferir no seu livro físico:
+Os nove estavam legíveis no `DH-DigitalRegras.pdf` (Capítulo 2: Tesouro).
+Todos foram conferidos e agora trazem o texto oficial da Jambô:
 
-- loot 15 — Valorstone
-- loot 35 — Airblade Charm
-- loot 36 — Portal Seed
-- consumivel 13 — Potion of Stability
-- consumivel 18 — Snap Powder
-- consumivel 45 — Ogre Musk
-- consumivel 51 — Feast of Xuria
-- consumivel 55 — Knowledge Stone
-- consumivel 60 — Stardrop
+| # | Antes | Agora (livro) |
+|---|-------|---------------|
+| loot 15 | *Valorstone* (em inglês) | **Pedra da Resiliência** |
+| loot 35 | Charme da lâmina de ar | **Amuleto do Alcance** |
+| loot 36 | *Portal Seed* (em inglês) | **Semente de Portal** |
+| consumível 13 | Poção da estabilidade | **Poção da Estabilidade** |
+| consumível 18 | Pó de estalo | **Pó do Estalo** |
+| consumível 45 | Almíscar de ogro | **Almíscar do Ogro** |
+| consumível 51 | Festa de Xuria | **Ceia de Xúria** |
+| consumível 55 | Pedra do Conhecimento | **Pedra do Conhecimento** (texto conferido) |
+| consumível 60 | Gota de Estrela | **Gota Estelar** |
 
-## 7. Características das armas e armaduras
+Cada um guarda o `nomeAntigo`, que continua achando na busca — é o nome que a
+mesa leu até aqui.
 
-São 68 características diferentes. **46** eu achei traduzidas no próprio livro;
-**22** tive que traduzir. Estas são as minhas — vale uma olhada:
+Duas coisas que apareceram no caminho:
 
-| Inglês | Minha tradução |
-|---|---|
-| Bonded | **Vinculado** |
-| Bouncing | **Saltitante** |
-| Brave | **Corajoso** |
-| Concussive | **Concussivo** |
-| Destructive | **Destrutiva** |
-| Devastating | **Devastador** |
-| Dueling | **Duelista** |
-| Grappling | **Agarrão** |
-| Greedy | **Ganancioso** |
-| Healing | **Curativo** |
-| Hot | **Incandescente** |
-| Lifestealing | **Roubo de Vida** |
-| Long | **Longo** |
-| Lucky | **Sortudo** |
-| Otherworldly | **Extraterreno** |
-| Retractable | **Retrátil** |
-| Self-Correcting | **Autocorretiva** |
-| Serrated | **Serrilhada** |
-| Sharpwing | **Asa Afiada** |
-| Sheltering | **Amparo** |
-| Timebending | **Dobra do Tempo** |
-| Warded | **Resguardo** |
+- **A numeração dos consumíveis não bate** entre o SRD em inglês e a tabela da
+  Jambô a partir do 53. A Pedra do Conhecimento é 55 no SRD e **56** no livro;
+  o Musgo Doce é 56 no SRD e **53** no livro. O sistema segue a do SRD, que é
+  de onde vieram os 120 itens.
+- **O Musgo Doce confirma que o livro é pré-errata**: ele diz 1d4 PV/Fadiga
+  onde a errata (p.133) mandou 1d10. O sistema já estava com o 1d10.
+
+## 7. Características das armas e armaduras — FECHADO (B2)
+
+São 68 características diferentes. Na Parte 5, 46 estavam legíveis no livro e
+**22 eu tive que traduzir**, deixando marcado para você revisar. Não precisou:
+as 22 estão no `DH-DigitalRegras.pdf`, e **8 delas o livro traduz diferente do
+que eu tinha chutado**:
+
+| Inglês | Minha tradução | **Livro (agora)** |
+|---|---|---|
+| Devastating | Devastador | **Atroz** |
+| Greedy | Ganancioso | **Egoísta** |
+| Healing | Curativo | **Vitalizante** |
+| Self-Correcting | Autocorretiva | **Perfeccionista** |
+| Serrated | Serrilhada | **Serra** |
+| Sharpwing | Asa Afiada | **Fugaz** |
+| Lifestealing | Roubo de Vida | **Sorvedouras** |
+| Warded | Resguardo | **Égide** |
+
+E as outras 14, onde eu tinha chegado perto mas não igual: Bonded →
+**Ligação**, Bouncing → **Ricochete**, Brave → **Valente**, Concussive →
+**Repelente**, Destructive → **Destruição**, Dueling → **Direcionado**,
+Grappling → **Agarrar**, Hot → **Quente**, Long → **Comprimento**, Lucky →
+**Sorte**, Otherworldly → **De outro mundo**, Sheltering → **Proteção**,
+Timebending → **Distorção Temporal**. Só **Retractable → Retrátil** eu tinha
+acertado na mosca.
+
+Cada uma guarda o `nomeAntigo` — o nome que a mesa leu até aqui continua
+achando na busca. E o gerador agora **se recusa a gerar** se alguma
+característica voltar a ficar sem tradução do livro (invariante E15).
+
+Dois erros de digitação do livro preservados: *Egoísta* diz "na sua
+Proficiência **em em** uma rolagem de dano", e *Valente* imprime "**+ 3**" com
+espaço depois do sinal.
 
 ## 8. Traduções do livro que eu mantive mesmo achando estranhas
 
@@ -215,6 +234,53 @@ Sobre o Revólver: existem dois na mesma página — **Revólver** (primária) e
 **Revólver pequeno** (secundária, d6). A errata fala em "Revolver", então apliquei
 só na primária e deixei a secundária como está. Se você entender diferente, é uma
 linha para mudar.
+
+### 11.1b As molduras reimportadas do livro bom — FECHADO (C5)
+
+Ao tentar fechar o C5 (deixar a moldura selecionável na criação) apareceu que o
+problema não é a tela: é o **dado**. As tabelas do Festim das Feras que estão no
+sistema vieram do livro velho e chegaram assim:
+
+- **sem a divisão** que o livro faz — "Armas Físicas Principais", "Armas Mágicas
+  Principais", "Armas Secundárias" e "Armaduras" viraram um monte só de
+  `categoria: "arma"`, e sem isso a validação de equipamento não sabe o que é
+  primária e o que é secundária;
+- com **4 linhas ilegíveis** (nomes de duas armas grudados, "Enchanted Kite" em
+  inglês, uma armadura sem nome);
+- com `maos` em três grafias diferentes, incluindo `One-Handed`.
+
+O `DH-DigitalRegras.pdf` traz as mesmas tabelas **limpas, divididas e em
+português** (pp. 275-277) — inclusive o "Peitoral de assadeira" e a "Vestimenta
+acolchoada" que estavam ilegíveis. Foi de lá que veio a reimportação:
+
+| Moldura | O que entrou |
+|---|---|
+| **Festim das Feras** (era "Festa da Besta") | 15 armas físicas principais, 10 mágicas principais, 7 secundárias e 4 armaduras — **36**, todas de 1º patamar |
+| **Colosso das Terras Áridas** | 3 primárias e 2 secundárias, cada uma nos **4 patamares** (20 linhas), mais a Dinamite |
+| **Placa-mãe** | continua sem tabela: a arma é o Ikonis, customizável, e a moeda é quantum |
+
+Nomes que mudaram com o livro bom (o antigo continua achando na busca):
+*Martelo de forja* → **Marreta**, *Atiçador de Forja* → **Atiçador de fogo**,
+*Roupas acolchoadas* → **Vestimenta acolchoada**, *Garfo grande* → **Forcado
+grande**, *Faca de corte* → **Faca de descascar frutas**, *Gancho de reboque* →
+**Cabo de reboque**, *Enchanted Kite* → **Pipa encantada**, *Batedor de
+varinha* → **Varinha batedeira**, *Equipe Sparkling longe* → **Cajado
+cintilante**, *Isqueiro encantado* → **Acendedor de forja encantado**, e a
+armadura sem nome → **Peitoral de assadeira**.
+
+⚠ **A errata do Revólver foi reaplicada.** O livro é pré-errata e traz d6; a
+errata p.317 diz "Revolver's d6 has been replaced with a d8". O sistema fica com
+o d8 na primária e mantém o **Revólver pequeno** (secundária) em d6, como antes.
+
+**Como a moldura funciona agora:** ela é da MESA. O Mestre escolhe no painel
+(aba Mesa), e a criação de ficha passa a oferecer as tabelas dela quando a
+moldura *substitui* o equipamento inicial — que é o caso do Festim das Feras e
+não é o do Colosso, onde as armas **somam** às do Capítulo 2.
+
+⚠ O equipamento de moldura **não entra** nas listas normais de armas e
+armaduras: o Festim tem um "Cutelo" e o Capítulo 2 também. As funções de busca
+caem na lista da moldura só quando não acham pelo caminho normal, então
+procurar "Cutelo" continua achando o do Capítulo 2 (invariante E18).
 
 ### 11.2 O que entrou
 

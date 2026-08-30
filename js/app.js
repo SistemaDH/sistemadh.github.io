@@ -83,6 +83,27 @@ function desenhar() {
 assinar(() => desenhar());
 
 // Aviso de conexão perdida/voltando — útil quando a mesa está num Wi-Fi ruim.
+/*
+ * O NÍVEL DA MESA chega no login. Se o Mestre anunciar um nível com o jogador
+ * já dentro do app, o aviso dele ficaria esperando a próxima entrada — que
+ * pode ser semana que vem.
+ *
+ * Não há canal em tempo real neste app, e inventar um por causa disso seria
+ * desproporcional. O que existe é o momento em que a pessoa VOLTA para a tela:
+ * é aí que o app pergunta, uma vez, e avisa se mudou.
+ */
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  acoes.atualizarSessao().then((r) => {
+    if (r && r.nivelMudou) {
+      avisar(r.para > r.de
+        ? `A mesa subiu para o nível ${r.para}. Abra a ficha para pegar seus avanços.`
+        : `O Mestre pôs a mesa no nível ${r.para}.`, 'alerta', 8000);
+      desenhar();
+    }
+  });
+});
+
 window.addEventListener('offline', () => avisar('Você está sem internet. As alterações não vão salvar.', 'alerta', 8000));
 window.addEventListener('online', () => avisar('Conexão de volta.', 'sucesso'));
 

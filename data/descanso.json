@@ -1,196 +1,273 @@
 {
-  "versao": 1,
-  "fonte": "DH-DigitalRegras.pdf (Jambô Editora, Prévia 5). Páginas impressas: p. 105 (REPOUSO, DESCANSO CURTO, DESCANSO LONGO, CONSEQUÊNCIAS DE REPOUSOS, RECUPERAR HABILIDADES NO REPOUSO), p. 181 (USANDO REPOUSO, REPOUSO DO MESTRE, REPOUSO PROLONGADO), p. 164 (contagens de longo prazo), p. 109 (PATAMARES DE JOGO), p. 106 (Evitar a Morte, cicatrizes), p. 54 (Clank Eficiente), p. 133 (Musgo Doce). Erratas oficiais aplicadas: p. 164, p. 133, p. 112, p. 42.",
-
-  "regraDeVocabulario": "Não existe carta de descanso. Pela regra da Vanessa, o conteúdo vem do livro da Jambô, mas os NOMES de mecânica são convertidos para o vocabulário das cartas — por isso \"Reduzir Fadiga\" virou \"Reduzir Estresse\" e \"Zerar Fadiga\" virou \"Zerar Estresse\". O termo da Jambô fica guardado em nomeJambo e aparece entre parênteses na tela.",
-
-  "textoIntroducao": "Um grupo pode descansar antes de continuar sua jornada. Quando o fizer, cada personagem pode fazer dois movimentos de repouso. Embora o repouso permita recuperar-se dos perigos encarados, também é uma oportunidade para os personagens terem cenas importantes e emotivas entre si.",
-
-  "movimentosPorDescanso": 2,
-  "podeRepetirMovimento": true,
-  "maxDescansosCurtosSeguidos": 3,
-  "trocaDeCartas": "Em qualquer descanso, curto ou longo, cada jogador pode trocar as cartas de domínio da mão pelas cartas da reserva.",
-
-  "tipos": [
-    {
-      "id": "curto",
-      "nome": "Descanso Curto",
-      "duracao": "aproximadamente uma hora",
-      "descricao": "O grupo recupera o fôlego numa pausa de cerca de uma hora. Cada jogador pode trocar as cartas de domínio da mão pelas da reserva e então faz dois movimentos da lista (ou o mesmo duas vezes).",
-      "gatilhoContadores": "descanso",
-      "usaPatamar": true,
-      "medoDoMestre": "1d4",
-      "contagemDeLongoPrazo": 0,
-      "seInterrompido": "Os personagens não recebem benefício nenhum."
-    },
-    {
-      "id": "longo",
-      "nome": "Descanso Longo",
-      "duracao": "algumas horas — o grupo acampa e descansa",
-      "descricao": "O grupo acampa, relaxa por algumas horas e descansa. Cada jogador pode trocar as cartas de domínio da mão pelas da reserva e então faz dois movimentos da lista (ou o mesmo duas vezes).",
-      "gatilhoContadores": "descanso-longo",
-      "usaPatamar": false,
-      "medoDoMestre": "1d4 + o número de personagens",
-      "contagemDeLongoPrazo": 1,
-      "seInterrompido": "Os personagens ainda recebem os benefícios de um descanso curto, mesmo que já tenham feito os três permitidos."
-    }
-  ],
-
-  "movimentos": [
-    {
-      "id": "preparar-se",
-      "nome": "Preparar-se",
-      "nomeJambo": "",
-      "ingles": "Prepare",
-      "tipos": ["curto", "longo"],
-      "texto": "Descreva como você se prepara para seguir se aventurando e ganhe 1 Ponto de Esperança. Caso se prepare com um ou mais membros do grupo, cada um de vocês recebe 2 Pontos de Esperança.",
-      "formula": "1 Esperança — ou 2, se preparar junto com alguém do grupo",
-      "efeito": { "recurso": "esperanca", "modo": "ganhar", "base": 1, "baseEmGrupo": 2 },
-      "perguntas": [
-        { "chave": "comGrupo", "tipo": "sim-nao", "texto": "Você se preparou junto com alguém do grupo?", "padrao": false }
-      ],
-      "podeMirarAliado": false
-    },
-    {
-      "id": "reparar-armadura",
-      "nome": "Reparar Armadura",
-      "nomeJambo": "",
-      "ingles": "Repair Armor",
-      "tipos": ["curto"],
-      "texto": "Descreva como você conserta sua armadura rapidamente, então recupere um número de Pontos de Armadura igual a 1d4 + seu patamar. Você também pode fazer este movimento para recuperar a Armadura de um aliado.",
-      "textoLivroLiteral": "descreva como você conserta sua armadura rapidamente, então recupere um número de PD igual a 1d4 + seu patamar. Você também pode fazer este movimento para recuperar a Armadura de um aliado.",
-      "formula": "1d4 + patamar",
-      "efeito": { "recurso": "armaduraMarcada", "modo": "limpar", "dado": "d4", "somaPatamar": true },
-      "perguntas": [],
-      "podeMirarAliado": true
-    },
-    {
-      "id": "reduzir-estresse",
-      "nome": "Reduzir Estresse",
-      "nomeJambo": "Reduzir Fadiga",
-      "ingles": "Clear Stress",
-      "tipos": ["curto"],
-      "texto": "Descreva como você descarrega suas frustrações ou se concentra, então recupere uma quantidade de Estresse igual a 1d4 + seu patamar.",
-      "textoLivroLiteral": "descreva como você descarrega suas frustrações ou se conentra, então recupere uma quantidade de PF igual a 1d4 + seu patamar.",
-      "formula": "1d4 + patamar",
-      "efeito": { "recurso": "estresseMarcado", "modo": "limpar", "dado": "d4", "somaPatamar": true },
-      "perguntas": [],
-      "podeMirarAliado": false
-    },
-    {
-      "id": "tratar-feridas",
-      "nome": "Tratar Feridas",
-      "nomeJambo": "",
-      "ingles": "Tend to Wounds",
-      "tipos": ["curto"],
-      "texto": "Descreva como cuida de seus ferimentos às pressas. Em seguida, recupere uma quantidade de Pontos de Vida igual a 1d4 + seu patamar. Você também pode fazer este movimento para tratar as feridas de um aliado.",
-      "formula": "1d4 + patamar",
-      "efeito": { "recurso": "pontosDeVidaMarcados", "modo": "limpar", "dado": "d4", "somaPatamar": true },
-      "perguntas": [],
-      "podeMirarAliado": true
-    },
-    {
-      "id": "reparar-armadura-por-completo",
-      "nome": "Reparar Armadura por Completo",
-      "nomeJambo": "",
-      "ingles": "Repair All Armor",
-      "tipos": ["longo"],
-      "texto": "Descreva como você passa um bom tempo consertando sua armadura, então recupere todos os seus Pontos de Armadura. Você pode fazer este movimento para recuperar a Armadura de um aliado.",
-      "formula": "todos os Pontos de Armadura, sem rolagem",
-      "efeito": { "recurso": "armaduraMarcada", "modo": "limpar-tudo" },
-      "perguntas": [],
-      "podeMirarAliado": true
-    },
-    {
-      "id": "tratar-todas-as-feridas",
-      "nome": "Tratar Todas as Feridas",
-      "nomeJambo": "",
-      "ingles": "Tend to All Wounds",
-      "tipos": ["longo"],
-      "texto": "Descreva como você cuida de suas feridas, então recupere todos os seus Pontos de Vida. Você também pode fazer este movimento para tratar as feridas de um aliado.",
-      "formula": "todos os Pontos de Vida, sem rolagem",
-      "efeito": { "recurso": "pontosDeVidaMarcados", "modo": "limpar-tudo" },
-      "perguntas": [],
-      "podeMirarAliado": true
-    },
-    {
-      "id": "zerar-estresse",
-      "nome": "Zerar Estresse",
-      "nomeJambo": "Zerar Fadiga",
-      "ingles": "Clear All Stress",
-      "tipos": ["longo"],
-      "texto": "Descreva como você descarrega suas frustrações ou se concentra, então recupere o seu Estresse por completo.",
-      "textoLivroLiteral": "descreva como você descarrega suas frustrações ou se concentra, então recupere seus Pontos de Fadiga por completo.",
-      "formula": "todo o Estresse, sem rolagem",
-      "efeito": { "recurso": "estresseMarcado", "modo": "limpar-tudo" },
-      "perguntas": [],
-      "podeMirarAliado": false
-    },
-    {
-      "id": "trabalhar-em-um-projeto",
-      "nome": "Trabalhar em um Projeto",
-      "nomeJambo": "",
-      "ingles": "Work on a Project",
-      "tipos": ["longo"],
-      "texto": "Inicie ou continue o trabalho em um projeto. O Mestre define uma contagem regressiva; o movimento faz a contagem andar, ou o Mestre pede um teste.",
-      "formula": null,
-      "efeito": { "recurso": null, "modo": "narrativo" },
-      "perguntas": [
-        { "chave": "projeto", "tipo": "texto", "texto": "Em que projeto você trabalhou?", "padrao": "" }
-      ],
-      "podeMirarAliado": false,
-      "criterioOpcionalDeAvanco": "p. 181: Sucesso Crítico diminui 4; Sucesso com Esperança diminui 3; Sucesso com Medo diminui 2; qualquer falha diminui 1."
-    }
-  ],
-
-  "aliases": {
-    "reduzir-estresse": ["Reduzir Fadiga", "Clear Stress", "Limpar Estresse"],
-    "zerar-estresse": ["Zerar Fadiga", "Clear All Stress", "Limpar todo o Estresse"],
-    "preparar-se": ["Preparar", "Prepare", "Preparar-me"],
-    "reparar-armadura": ["Consertar Armadura", "Repair Armor"],
-    "tratar-feridas": ["Curar Feridas", "Tend to Wounds"],
-    "reparar-armadura-por-completo": ["Reparar Toda a Armadura", "Repair All Armor"],
-    "tratar-todas-as-feridas": ["Curar Todas as Feridas", "Tend to All Wounds"],
-    "trabalhar-em-um-projeto": ["Projeto", "Trabalhar em Projeto", "Work on a Project"]
+ "versao": 1,
+ "fonte": "DH-DigitalRegras.pdf (Jambô Editora, Prévia 5). Páginas impressas: p. 105 (REPOUSO, DESCANSO CURTO, DESCANSO LONGO, CONSEQUÊNCIAS DE REPOUSOS, RECUPERAR HABILIDADES NO REPOUSO), p. 181 (USANDO REPOUSO, REPOUSO DO MESTRE, REPOUSO PROLONGADO), p. 164 (contagens de longo prazo), p. 109 (PATAMARES DE JOGO), p. 106 (Evitar a Morte, cicatrizes), p. 54 (Clank Eficiente), p. 133 (Musgo Doce). Erratas oficiais aplicadas: p. 164, p. 133, p. 112, p. 42.",
+ "regraDeVocabulario": "Não existe carta de descanso. Pela regra da Vanessa, o conteúdo vem do livro da Jambô, mas os NOMES de mecânica são convertidos para o vocabulário das cartas — por isso \"Reduzir Fadiga\" virou \"Reduzir Estresse\" e \"Zerar Fadiga\" virou \"Zerar Estresse\". O termo da Jambô fica guardado em nomeJambo e aparece entre parênteses na tela.",
+ "textoIntroducao": "Um grupo pode descansar antes de continuar sua jornada. Quando o fizer, cada personagem pode fazer dois movimentos de repouso. Embora o repouso permita recuperar-se dos perigos encarados, também é uma oportunidade para os personagens terem cenas importantes e emotivas entre si.",
+ "movimentosPorDescanso": 2,
+ "podeRepetirMovimento": true,
+ "maxDescansosCurtosSeguidos": 3,
+ "trocaDeCartas": "Em qualquer descanso, curto ou longo, cada jogador pode trocar as cartas de domínio da mão pelas cartas da reserva.",
+ "tipos": [
+  {
+   "id": "curto",
+   "nome": "Descanso Curto",
+   "duracao": "aproximadamente uma hora",
+   "descricao": "O grupo recupera o fôlego numa pausa de cerca de uma hora. Cada jogador pode trocar as cartas de domínio da mão pelas da reserva e então faz dois movimentos da lista (ou o mesmo duas vezes).",
+   "gatilhoContadores": "descanso",
+   "usaPatamar": true,
+   "medoDoMestre": "1d4",
+   "contagemDeLongoPrazo": 0,
+   "seInterrompido": "Os personagens não recebem benefício nenhum."
   },
-
-  "tambemAcontece": [
-    "Efeitos que duram \"até o próximo descanso\" terminam no fim de QUALQUER descanso, e habilidades com usos por descanso voltam cheias. (p. 105)",
-    "Efeitos que duram \"até o próximo descanso longo\" e habilidades com usos por descanso longo só voltam no descanso LONGO. (p. 105)",
-    "Habilidades \"uma vez por sessão\" NÃO voltam em descanso — só no começo da próxima sessão. (p. 105)",
-    "Pontos de Vida, Estresse e Pontos de Armadura NÃO se recuperam sozinhos: só pelos movimentos. Descansar, por si só, não cura nada.",
-    "Esperança não tem reset nem ganho automático: a única fonte no repouso é Preparar-se, respeitando o teto de 6. (p. 18, p. 105)",
-    "Personagem inconsciente por Evitar a Morte volta a si ao recuperar 1 Ponto de Vida ou mais, ou quando o grupo fizer um descanso longo. (p. 106)",
-    "Cicatrizes não são removidas por descanso; a critério do Mestre podem virar um projeto. Esperança marcada com X por cicatriz é perda permanente. (p. 106)",
-    "Troca de armas sem custo de Estresse durante o repouso. (errata p. 112)",
-    "Musgo Doce consumido durante um descanso limpa 1d10 Pontos de Vida ou 1d10 Estresse. (p. 133 com a errata)",
-    "Clank com a característica Eficiente pode, em um descanso curto, escolher um movimento de descanso longo no lugar de um de curto. (p. 54)",
-    "Repouso prolongado de vários dias: o Mestre recebe 1d6 Pontos de Medo por personagem e avança as contagens de longo prazo que fizerem sentido. (p. 181)"
+  {
+   "id": "longo",
+   "nome": "Descanso Longo",
+   "duracao": "algumas horas — o grupo acampa e descansa",
+   "descricao": "O grupo acampa, relaxa por algumas horas e descansa. Cada jogador pode trocar as cartas de domínio da mão pelas da reserva e então faz dois movimentos da lista (ou o mesmo duas vezes).",
+   "gatilhoContadores": "descanso-longo",
+   "usaPatamar": false,
+   "medoDoMestre": "1d4 + o número de personagens",
+   "contagemDeLongoPrazo": 1,
+   "seInterrompido": "Os personagens ainda recebem os benefícios de um descanso curto, mesmo que já tenham feito os três permitidos."
+  }
+ ],
+ "movimentos": [
+  {
+   "id": "preparar-se",
+   "nome": "Preparar-se",
+   "nomeJambo": "",
+   "ingles": "Prepare",
+   "tipos": [
+    "curto",
+    "longo"
+   ],
+   "texto": "Descreva como você se prepara para seguir se aventurando e ganhe 1 Ponto de Esperança. Caso se prepare com um ou mais membros do grupo, cada um de vocês recebe 2 Pontos de Esperança.",
+   "formula": "1 Esperança — ou 2, se preparar junto com alguém do grupo",
+   "efeito": {
+    "recurso": "esperanca",
+    "modo": "ganhar",
+    "base": 1,
+    "baseEmGrupo": 2
+   },
+   "perguntas": [
+    {
+     "chave": "comGrupo",
+     "tipo": "sim-nao",
+     "texto": "Você se preparou junto com alguém do grupo?",
+     "padrao": false
+    }
+   ],
+   "podeMirarAliado": false
+  },
+  {
+   "id": "reparar-armadura",
+   "nome": "Reparar Armadura",
+   "nomeJambo": "",
+   "ingles": "Repair Armor",
+   "tipos": [
+    "curto"
+   ],
+   "texto": "Descreva como você conserta sua armadura rapidamente, então recupere um número de Pontos de Armadura igual a 1d4 + seu patamar. Você também pode fazer este movimento para recuperar a Armadura de um aliado.",
+   "textoLivroLiteral": "descreva como você conserta sua armadura rapidamente, então recupere um número de PD igual a 1d4 + seu patamar. Você também pode fazer este movimento para recuperar a Armadura de um aliado.",
+   "formula": "1d4 + patamar",
+   "efeito": {
+    "recurso": "armaduraMarcada",
+    "modo": "limpar",
+    "dado": "d4",
+    "somaPatamar": true
+   },
+   "perguntas": [],
+   "podeMirarAliado": true
+  },
+  {
+   "id": "reduzir-estresse",
+   "nome": "Reduzir Estresse",
+   "nomeJambo": "Reduzir Fadiga",
+   "ingles": "Clear Stress",
+   "tipos": [
+    "curto"
+   ],
+   "texto": "Descreva como você descarrega suas frustrações ou se concentra, então recupere uma quantidade de Estresse igual a 1d4 + seu patamar.",
+   "textoLivroLiteral": "descreva como você descarrega suas frustrações ou se conentra, então recupere uma quantidade de PF igual a 1d4 + seu patamar.",
+   "formula": "1d4 + patamar",
+   "efeito": {
+    "recurso": "estresseMarcado",
+    "modo": "limpar",
+    "dado": "d4",
+    "somaPatamar": true
+   },
+   "perguntas": [],
+   "podeMirarAliado": false
+  },
+  {
+   "id": "tratar-feridas",
+   "nome": "Tratar Feridas",
+   "nomeJambo": "",
+   "ingles": "Tend to Wounds",
+   "tipos": [
+    "curto"
+   ],
+   "texto": "Descreva como cuida de seus ferimentos às pressas. Em seguida, recupere uma quantidade de Pontos de Vida igual a 1d4 + seu patamar. Você também pode fazer este movimento para tratar as feridas de um aliado.",
+   "formula": "1d4 + patamar",
+   "efeito": {
+    "recurso": "pontosDeVidaMarcados",
+    "modo": "limpar",
+    "dado": "d4",
+    "somaPatamar": true
+   },
+   "perguntas": [],
+   "podeMirarAliado": true
+  },
+  {
+   "id": "reparar-armadura-por-completo",
+   "nome": "Reparar Armadura por Completo",
+   "nomeJambo": "",
+   "ingles": "Repair All Armor",
+   "tipos": [
+    "longo"
+   ],
+   "texto": "Descreva como você passa um bom tempo consertando sua armadura, então recupere todos os seus Pontos de Armadura. Você pode fazer este movimento para recuperar a Armadura de um aliado.",
+   "formula": "todos os Pontos de Armadura, sem rolagem",
+   "efeito": {
+    "recurso": "armaduraMarcada",
+    "modo": "limpar-tudo"
+   },
+   "perguntas": [],
+   "podeMirarAliado": true
+  },
+  {
+   "id": "tratar-todas-as-feridas",
+   "nome": "Tratar Todas as Feridas",
+   "nomeJambo": "",
+   "ingles": "Tend to All Wounds",
+   "tipos": [
+    "longo"
+   ],
+   "texto": "Descreva como você cuida de suas feridas, então recupere todos os seus Pontos de Vida. Você também pode fazer este movimento para tratar as feridas de um aliado.",
+   "formula": "todos os Pontos de Vida, sem rolagem",
+   "efeito": {
+    "recurso": "pontosDeVidaMarcados",
+    "modo": "limpar-tudo"
+   },
+   "perguntas": [],
+   "podeMirarAliado": true
+  },
+  {
+   "id": "zerar-estresse",
+   "nome": "Zerar Estresse",
+   "nomeJambo": "Zerar Fadiga",
+   "ingles": "Clear All Stress",
+   "tipos": [
+    "longo"
+   ],
+   "texto": "Descreva como você descarrega suas frustrações ou se concentra, então recupere o seu Estresse por completo.",
+   "textoLivroLiteral": "descreva como você descarrega suas frustrações ou se concentra, então recupere seus Pontos de Fadiga por completo.",
+   "formula": "todo o Estresse, sem rolagem",
+   "efeito": {
+    "recurso": "estresseMarcado",
+    "modo": "limpar-tudo"
+   },
+   "perguntas": [],
+   "podeMirarAliado": false
+  },
+  {
+   "id": "trabalhar-em-um-projeto",
+   "nome": "Trabalhar em um Projeto",
+   "nomeJambo": "",
+   "ingles": "Work on a Project",
+   "tipos": [
+    "longo"
+   ],
+   "texto": "Inicie ou continue o trabalho em um projeto. O Mestre define uma contagem regressiva; o movimento faz a contagem andar, ou o Mestre pede uma jogada.",
+   "formula": null,
+   "efeito": {
+    "recurso": null,
+    "modo": "narrativo"
+   },
+   "perguntas": [
+    {
+     "chave": "projeto",
+     "tipo": "texto",
+     "texto": "Em que projeto você trabalhou?",
+     "padrao": ""
+    }
+   ],
+   "podeMirarAliado": false,
+   "criterioOpcionalDeAvanco": "p. 181: Sucesso Crítico diminui 4; Sucesso com Esperança diminui 3; Sucesso com Medo diminui 2; qualquer falha diminui 1."
+  }
+ ],
+ "aliases": {
+  "reduzir-estresse": [
+   "Reduzir Fadiga",
+   "Clear Stress",
+   "Limpar Estresse"
   ],
-
-  "erratasAplicadas": [
-    "p. 164 — a primeira frase de \"Avançando contagens regressivas de longo prazo\" passou a ser \"Em um descanso longo, você geralmente deve diminuir uma contagem regressiva de longo prazo relevante uma vez\"; a segunda frase foi removida. O texto impresso em português (\"Em descansos curtos, marque a contagem de longo prazo uma vez. Em descansos longos, marque pelo menos duas.\") é PRÉ-ERRATA e contradiz as pp. 105 e 181. Vale a errata: descanso longo = uma marcação; descanso curto = nenhuma.",
-    "p. 133 — Musgo Doce: 1d10 (impresso 1d4).",
-    "p. 112 — troca de armas sem custo de Estresse durante o repouso.",
-    "p. 42 — o bônus da habilidade de Esperança do ladino dura até o PRÓXIMO DESCANSO (qualquer um), não só o longo."
+  "zerar-estresse": [
+   "Zerar Fadiga",
+   "Clear All Stress",
+   "Limpar todo o Estresse"
   ],
-
-  "observacoes": [
-    "\"Patamar\" (p. 109) é 1 no nível 1; 2 nos níveis 2-4; 3 nos 5-7; 4 nos 8-10. NÃO é o nível do personagem. Só os movimentos do descanso CURTO usam patamar.",
-    "Repetir o mesmo movimento duas vezes é explícito nos dois tipos: \"faz dois dos movimentos a seguir (ou o mesmo duas vezes)\". O livro não restringe qual.",
-    "ERRO DE IMPRESSÃO mantido em textoLivroLiteral: em Reparar Armadura o livro escreve \"recupere um número de PD\". \"PD\" não aparece em nenhum outro lugar do livro; pelo contexto é Pontos de Armadura (a versão do descanso longo escreve por extenso). Confirmado a 320 dpi.",
-    "Erros de digitação do original preservados em textoLivroLiteral: \"se conentra\", \"duas movimentos\", \"Algumas movimentos\".",
-    "O livro não diz explicitamente que o contador de três descansos curtos zera após um descanso longo — está implícito em \"antes do próximo precisar ser um descanso longo\". O app zera.",
-    "Não existe penalidade por descansar repetidamente no mesmo lugar nas regras básicas. A pressão é indireta: o Medo que o Mestre acumula e o avanço das contagens de longo prazo.",
-    "O livro não fixa duração em horas para o descanso longo, só \"algumas horas\"."
+  "preparar-se": [
+   "Preparar",
+   "Prepare",
+   "Preparar-me"
   ],
-
-  "pontosDeInteresse": [
-    "MEDO DO MESTRE — o descanso gera Medo (1d4 no curto; 1d4 + número de personagens no longo) e, no longo, avança uma contagem de longo prazo. Isso é do Mestre, não da ficha. O app mostra a fórmula no resumo do descanso, mas NÃO mexe no Medo da mesa. Fica para a Parte 9 (painel do Mestre).",
-    "CONTAGENS REGRESSIVAS DE LONGO PRAZO e PROJETOS — o movimento Trabalhar em um Projeto só registra o texto do projeto por enquanto. As contagens da mesa entram na Parte 9.",
-    "MOVIMENTO EM ALIADO — Reparar Armadura, Tratar Feridas e as versões completas podem ser usadas na ficha de um aliado. Como o app trata uma ficha por vez, escolher \"em um aliado\" gasta o movimento e não altera esta ficha; a cura é lançada na ficha do aliado por quem a estiver segurando. Descanso em grupo entra junto com o painel do Mestre.",
-    "CLANK EFICIENTE — a característica permite trocar um movimento de curto por um de longo. O app já libera a lista longa quando a ficha tem a característica; conferir quando a Parte 8 tocar em características de ancestralidade.",
-    "DESCANSO INTERROMPIDO — o livro não diz se, num descanso longo interrompido, o jogador re-escolhe dois movimentos curtos ou converte os que já escolheu. É decisão de mesa; o app oferece \"interromper\" como um descanso curto novo.",
-    "PATAMAR usa tierDoNivel_, que hoje também é o que responde por proficiência. Quando a Parte 8 trouxer a regra real de proficiência, o patamar continua sendo o do nível — conferir que a separação não se perdeu."
+  "reparar-armadura": [
+   "Consertar Armadura",
+   "Repair Armor"
+  ],
+  "tratar-feridas": [
+   "Curar Feridas",
+   "Tend to Wounds"
+  ],
+  "reparar-armadura-por-completo": [
+   "Reparar Toda a Armadura",
+   "Repair All Armor"
+  ],
+  "tratar-todas-as-feridas": [
+   "Curar Todas as Feridas",
+   "Tend to All Wounds"
+  ],
+  "trabalhar-em-um-projeto": [
+   "Projeto",
+   "Trabalhar em Projeto",
+   "Work on a Project"
   ]
+ },
+ "tambemAcontece": [
+  "Efeitos que duram \"até o próximo descanso\" terminam no fim de QUALQUER descanso, e habilidades com usos por descanso voltam cheias. (p. 105)",
+  "Efeitos que duram \"até o próximo descanso longo\" e habilidades com usos por descanso longo só voltam no descanso LONGO. (p. 105)",
+  "Habilidades \"uma vez por sessão\" NÃO voltam em descanso — só no começo da próxima sessão. (p. 105)",
+  "Pontos de Vida, Estresse e Pontos de Armadura NÃO se recuperam sozinhos: só pelos movimentos. Descansar, por si só, não cura nada.",
+  "Esperança não tem reset nem ganho automático: a única fonte no repouso é Preparar-se, respeitando o teto de 6. (p. 18, p. 105)",
+  "Personagem inconsciente por Evitar a Morte volta a si ao recuperar 1 Ponto de Vida ou mais, ou quando o grupo fizer um descanso longo. (p. 106)",
+  "Cicatrizes não são removidas por descanso; a critério do Mestre podem virar um projeto. Esperança marcada com X por cicatriz é perda permanente. (p. 106)",
+  "Troca de armas sem custo de Estresse durante o repouso. (errata p. 112)",
+  "Musgo Doce consumido durante um descanso limpa 1d10 Pontos de Vida ou 1d10 Estresse. (p. 133 com a errata)",
+  "Clank com a característica Eficiente pode, em um descanso curto, escolher um movimento de descanso longo no lugar de um de curto. (p. 54)",
+  "Repouso prolongado de vários dias: o Mestre recebe 1d6 Pontos de Medo por personagem e avança as contagens de longo prazo que fizerem sentido. (p. 181)"
+ ],
+ "erratasAplicadas": [
+  "p. 164 — a primeira frase de \"Avançando contagens regressivas de longo prazo\" passou a ser \"Em um descanso longo, você geralmente deve diminuir uma contagem regressiva de longo prazo relevante uma vez\"; a segunda frase foi removida. O texto impresso em português (\"Em descansos curtos, marque a contagem de longo prazo uma vez. Em descansos longos, marque pelo menos duas.\") é PRÉ-ERRATA e contradiz as pp. 105 e 181. Vale a errata: descanso longo = uma marcação; descanso curto = nenhuma.",
+  "p. 133 — Musgo Doce: 1d10 (impresso 1d4).",
+  "p. 112 — troca de armas sem custo de Estresse durante o repouso.",
+  "p. 42 — o bônus da habilidade de Esperança do ladino dura até o PRÓXIMO DESCANSO (qualquer um), não só o longo."
+ ],
+ "observacoes": [
+  "\"Patamar\" (p. 109) é 1 no nível 1; 2 nos níveis 2-4; 3 nos 5-7; 4 nos 8-10. NÃO é o nível do personagem. Só os movimentos do descanso CURTO usam patamar.",
+  "Repetir o mesmo movimento duas vezes é explícito nos dois tipos: \"faz dois dos movimentos a seguir (ou o mesmo duas vezes)\". O livro não restringe qual.",
+  "ERRO DE IMPRESSÃO mantido em textoLivroLiteral: em Reparar Armadura o livro escreve \"recupere um número de PD\". \"PD\" não aparece em nenhum outro lugar do livro; pelo contexto é Pontos de Armadura (a versão do descanso longo escreve por extenso). Confirmado a 320 dpi.",
+  "Erros de digitação do original preservados em textoLivroLiteral: \"se conentra\", \"duas movimentos\", \"Algumas movimentos\".",
+  "O livro não diz explicitamente que o contador de três descansos curtos zera após um descanso longo — está implícito em \"antes do próximo precisar ser um descanso longo\". O app zera.",
+  "Não existe penalidade por descansar repetidamente no mesmo lugar nas regras básicas. A pressão é indireta: o Medo que o Mestre acumula e o avanço das contagens de longo prazo.",
+  "O livro não fixa duração em horas para o descanso longo, só \"algumas horas\"."
+ ],
+ "pontosDeInteresse": [
+  "MEDO DO MESTRE — o descanso gera Medo (1d4 no curto; 1d4 + número de personagens no longo) e, no longo, avança uma contagem de longo prazo. Isso é do Mestre, não da ficha. O app mostra a fórmula no resumo do descanso, mas NÃO mexe no Medo da mesa. Fica para a Parte 9 (painel do Mestre).",
+  "CONTAGENS REGRESSIVAS DE LONGO PRAZO e PROJETOS — o movimento Trabalhar em um Projeto só registra o texto do projeto por enquanto. As contagens da mesa entram na Parte 9.",
+  "MOVIMENTO EM ALIADO — Reparar Armadura, Tratar Feridas e as versões completas podem ser usadas na ficha de um aliado. Como o app trata uma ficha por vez, escolher \"em um aliado\" gasta o movimento e não altera esta ficha; a cura é lançada na ficha do aliado por quem a estiver segurando. Descanso em grupo entra junto com o painel do Mestre.",
+  "CLANK EFICIENTE — a característica permite trocar um movimento de curto por um de longo. O app já libera a lista longa quando a ficha tem a característica; conferir quando a Parte 8 tocar em características de ancestralidade.",
+  "DESCANSO INTERROMPIDO — o livro não diz se, num descanso longo interrompido, o jogador re-escolhe dois movimentos curtos ou converte os que já escolheu. É decisão de mesa; o app oferece \"interromper\" como um descanso curto novo.",
+  "PATAMAR usa tierDoNivel_, que hoje também é o que responde por proficiência. Quando a Parte 8 trouxer a regra real de proficiência, o patamar continua sendo o do nível — conferir que a separação não se perdeu."
+ ]
 }

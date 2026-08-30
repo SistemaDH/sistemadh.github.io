@@ -455,6 +455,167 @@
   color: var(--cor-ouro-claro);
 }
 
+/*
+ * As características de subclasse vêm da carta com quebra de linha e marcador
+ * ("• Canção Relaxante: ..."). Sem isto as três canções do Músico Errante
+ * viravam um parágrafo corrido e ninguém achava onde uma acabava.
+ */
+.ficha__carac p { white-space: pre-line; }
+
+/*
+ * Traço que dá para virar o traço de Conjuração (multiclasse com duas
+ * fundações). Precisa parecer clicável sem competir com o que está valendo:
+ * borda pontilhada em vez da dourada cheia da e-conjuracao.
+ */
+.ficha__traco.e-trocavel {
+  border-style: dashed;
+  cursor: pointer;
+  font: inherit;
+  text-align: inherit;
+  color: inherit;
+}
+
+.ficha__tracoTrocar { color: var(--cor-ouro-claro); }
+
+.ficha__conjNota { margin: 0 0 var(--e3); }
+
+/*
+ * Carta de subclasse: a barra lateral colorida das cartas de domínio marca o
+ * domínio, e subclasse não tem domínio. Fica o ouro, que é a cor de "isto é
+ * seu para sempre".
+ */
+.ficha__carta--subclasse { --cor-dominio: var(--cor-ouro-escuro); }
+.ficha__carta--subclasse .ficha__cartaTexto { white-space: pre-line; }
+
+/* --- mochila -------------------------------------------------------------- */
+
+/*
+ * Cada moeda é um cartão com "− valor +" dentro. Com 100px os dois botões de
+ * 44px (o alvo de toque mínimo) mais o número não cabiam e vazavam por cima
+ * do cartão vizinho. 150px cabe; no celular ficam dois por linha.
+ */
+.ficha__moedas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--e3);
+  margin-bottom: var(--e3);
+}
+
+.ficha__moeda {
+  padding: var(--e3);
+  background: var(--cor-fundo-2);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+  text-align: center;
+}
+
+.ficha__moeda .linha { justify-content: center; flex-wrap: nowrap; }
+.ficha__moeda .btn--contador { flex: 0 0 auto; }
+.ficha__moedaRotulo { display: block; font-size: var(--txt-xs); color: var(--cor-texto-suave); margin-bottom: var(--e2); }
+.ficha__moedaValor { font-size: var(--txt-lg); min-width: 2ch; display: inline-block; }
+
+.ficha__novoItem {
+  display: flex;
+  gap: var(--e2);
+  margin-top: var(--e3);
+}
+
+.ficha__novoItem .campo__entrada { flex: 1; min-width: 0; }
+
+/*
+ * Preço da compra. Três campos lado a lado, na mesma ordem das moedas da aba —
+ * punhado, bolsa, cofre — para o olho não precisar reaprender nada.
+ */
+.ficha__precos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--e2);
+}
+
+.ficha__preco {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+}
+
+.ficha__precoCampo {
+  width: 100%;
+  text-align: center;
+}
+
+/* Escolha que ocupa a linha inteira dentro de um modal (uma por linha). */
+.ficha__escolhaLarga { width: 100%; }
+
+/* --- fichas paralelas ----------------------------------------------------- */
+
+.ficha__paralela {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+
+.paralela__migalha {
+  margin: 0 0 var(--e3);
+  font-size: var(--txt-xs);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--cor-ouro-claro);
+}
+
+.paralela__titulo { margin: var(--e5) 0 var(--e2); font-size: var(--txt-md); }
+.paralela__patamar {
+  margin: var(--e4) 0 var(--e2);
+  font-size: var(--txt-xs);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--cor-texto-suave);
+}
+
+.paralela__ativa { border-color: var(--cor-ouro); }
+
+.paralela__numeros {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: var(--e2);
+  margin: var(--e3) 0;
+}
+
+.paralela__numero {
+  padding: var(--e2);
+  background: var(--cor-fundo-2);
+  border-radius: var(--raio-sm);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.paralela__numeroRotulo {
+  display: block;
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-suave);
+}
+
+/* Valor e nota são linhas separadas: juntos viravam "+3já somada na ficha". */
+.paralela__numero strong { display: block; font-size: var(--txt-md); margin: var(--e1) 0; }
+.paralela__numero .texto-xs { display: block; }
+
+.paralela__carac { margin-bottom: var(--e2); }
+.paralela__caracNome { margin: 0 0 var(--e1); color: var(--cor-ouro-claro); font-size: var(--txt-sm); }
+.paralela__forma.esta-ativa, .paralela__evolucao.esta-ativa { border-color: var(--cor-ouro); }
+/* As características da forma vêm uma por linha, como na ficha do livro. */
+.paralela__forma p, .paralela__carac p { white-space: pre-line; }
+.paralela__formaTopo { display: flex; align-items: center; gap: var(--e2); }
+.paralela__aprimoramento { color: var(--cor-ouro-claro); }
+.paralela__remover { margin-top: var(--e5); }
+
+/* A ficha que ficou para trás do grupo. Aviso, não bloqueio. */
+.ficha__atrasada {
+  border: 1px dashed var(--cor-ouro-escuro);
+  border-radius: var(--raio-sm);
+  padding: var(--e3);
+  color: var(--cor-ouro-claro);
+}
+
 .ficha__exp {
   display: flex;
   align-items: center;
@@ -644,6 +805,34 @@
 
 .descanso__dado { max-width: 12ch; }
 
+/* O "e se for interrompido" fica recolhido: é regra que se lê uma vez. */
+.descanso__interrompido {
+  margin: var(--e3) 0;
+  padding: var(--e3);
+  background: var(--cor-fundo-2);
+  border: 1px dashed var(--cor-borda-forte);
+  border-radius: var(--raio-sm);
+}
+
+.descanso__interrompido summary {
+  cursor: pointer;
+  font-size: var(--txt-sm);
+  color: var(--cor-ouro-claro);
+  min-height: var(--alvo-toque);
+  display: flex;
+  align-items: center;
+}
+
+.descanso__interrompido p { margin: var(--e2) 0 0; }
+
+/*
+ * O rodapé do descanso tem três coisas em 390px: Voltar, "0 de 2" e o botão
+ * de prévia. Sem isto o botão quebrava em três linhas ("Ver o / que /
+ * muda") e virava um bloco alto no canto. Quem cede espaço é a contagem.
+ */
+.modal__caixa--descanso .modal__acoes .btn { white-space: nowrap; }
+.descanso__contagem { min-width: 0; }
+
 .descanso__contagem {
   text-align: center;
   font-size: var(--txt-sm);
@@ -721,4 +910,280 @@
   border: 1px solid var(--cor-alerta);
   color: #f0d9a8;
   font-size: var(--txt-sm);
+}
+
+/* ==========================================================================
+   Subir de nível (modal)
+
+   A forma vem da ficha de papel: cada opção tem uma fileira de QUADRADINHOS,
+   e é olhando para eles que se entende por que uma opção sumiu.
+   ========================================================================== */
+
+.modal__caixa--avanco { max-width: 640px; }
+
+.avanco {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e3);
+}
+
+.avanco__migalha {
+  margin: 0;
+  font-size: var(--txt-xs);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--cor-ouro);
+}
+
+.avanco__titulo {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-lg);
+  color: var(--cor-texto);
+  margin: 0;
+}
+
+.avanco__subtitulo {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-sm);
+  color: var(--cor-ouro);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin: var(--e2) 0 0;
+}
+
+.avanco__contagem {
+  text-align: center;
+  font-size: var(--txt-sm);
+  color: var(--cor-texto-suave);
+}
+
+/* --- a conquista do patamar ---------------------------------------------- */
+
+.avanco__conquista {
+  padding: var(--e3);
+  border: 1px solid var(--cor-ouro-escuro);
+  border-radius: var(--raio-sm);
+  background: linear-gradient(180deg, rgba(217, 171, 91, .10), transparent);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+}
+
+.avanco__conquistaTitulo {
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-md);
+  color: var(--cor-ouro-claro);
+}
+
+/* --- as opções ------------------------------------------------------------ */
+
+.avanco__opcao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+}
+
+.avanco__opcao.esta-escolhido {
+  border-color: var(--cor-ouro-escuro);
+  box-shadow: var(--brilho-ouro);
+}
+
+/* As duas opções que consomem o nível inteiro merecem destaque próprio: é o
+   negrito do livro virando borda. */
+.avanco__opcao.e-negrito { border-left: 3px solid var(--cor-ouro); }
+
+.avanco__opcaoTopo {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  flex-wrap: wrap;
+}
+
+.avanco__quadradinhos {
+  display: flex;
+  gap: var(--e1);
+  flex: 0 0 auto;
+}
+
+.avanco__quadradinho {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--cor-borda-forte);
+  border-radius: 3px;
+  background: var(--cor-fundo-2);
+}
+
+/* Já gravado na ficha × marcado agora, nesta subida — cores diferentes para a
+   pessoa ver o que ela mesma acabou de escolher. */
+.avanco__quadradinho.esta-cheio {
+  background: var(--cor-texto-fraco);
+  border-color: var(--cor-texto-fraco);
+}
+
+.avanco__quadradinho.esta-agora {
+  background: var(--cor-ouro);
+  border-color: var(--cor-ouro-claro);
+}
+
+.avanco__negrito {
+  margin: 0;
+  font-size: var(--txt-xs);
+  color: var(--cor-ouro-claro);
+  font-weight: 600;
+}
+
+.avanco__bloqueado {
+  margin: 0;
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-fraco);
+  font-style: italic;
+}
+
+.avanco__aviso {
+  margin: 0;
+  padding: var(--e2) var(--e3);
+  border-radius: var(--raio-sm);
+  background: rgba(224, 162, 58, .12);
+  border: 1px solid var(--cor-alerta);
+  color: #f0d9a8;
+  font-size: var(--txt-xs);
+  line-height: 1.5;
+}
+
+.avanco__grade {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+}
+
+.avanco__pilula.esta-escolhido {
+  border-color: var(--cor-ouro);
+  color: var(--cor-ouro-claro);
+  background: rgba(217, 171, 91, .12);
+}
+
+/* --- carta do nível e troca ---------------------------------------------- */
+
+.avanco__cartaEscolhida {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e1);
+  flex-wrap: wrap;
+}
+
+.avanco__limites {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+}
+
+.avanco__troca {
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+  padding: var(--e3);
+  background: var(--cor-fundo-2);
+}
+
+.avanco__trocaTitulo {
+  cursor: pointer;
+  font-size: var(--txt-sm);
+  color: var(--cor-ouro-claro);
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+/* --- a prévia ------------------------------------------------------------- */
+
+.avanco__mudancas {
+  padding: var(--e3);
+  background: var(--cor-fundo-2);
+  border: 1px solid var(--cor-ouro-escuro);
+  border-radius: var(--raio-sm);
+}
+
+.avanco__mudanca {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e2);
+  font-size: var(--txt-sm);
+}
+
+.avanco__de {
+  font-family: var(--fonte-mono);
+  color: var(--cor-texto-fraco);
+  text-decoration: line-through;
+}
+
+.avanco__seta { color: var(--cor-ouro); }
+
+.avanco__para {
+  font-family: var(--fonte-mono);
+  color: var(--cor-ouro-claro);
+}
+
+.avanco__resumo {
+  padding: var(--e2) var(--e3);
+  background: var(--cor-fundo-2);
+  border-radius: var(--raio-sm);
+}
+
+.avanco__lista {
+  margin: 0;
+  padding-left: var(--e5);
+  font-size: var(--txt-sm);
+  line-height: 1.6;
+}
+
+.avanco__erro {
+  margin: 0;
+  padding: var(--e2) var(--e3);
+  border-radius: var(--raio-sm);
+  background: rgba(224, 82, 82, .14);
+  border: 1px solid var(--cor-perigo);
+  color: #f2b8b8;
+  font-size: var(--txt-sm);
+}
+
+.avanco__avisoCaixa {
+  margin: 0;
+  padding: var(--e2) var(--e3);
+  border-radius: var(--raio-sm);
+  background: rgba(224, 162, 58, .12);
+  border: 1px solid var(--cor-alerta);
+  color: #f0d9a8;
+  font-size: var(--txt-sm);
+}
+
+/* --- o botão na ficha ----------------------------------------------------- */
+
+.ficha__botaoNivel {
+  width: 100%;
+  min-height: 52px;
+  font-size: var(--txt-lg);
+  letter-spacing: .02em;
+}
+
+/* O que o descanso manda para a ficha de OUTRA pessoa. É a única parte que sai
+   desta ficha, então ganha borda própria. */
+.descanso__paraAliado {
+  padding: var(--e2) var(--e3);
+  background: var(--cor-fundo-2);
+  border-left: 3px solid var(--cor-sucesso);
+  border-radius: 0 var(--raio-sm) var(--raio-sm) 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.descanso__paraAliado p { margin: 0; }
+
+/* O rodapé da carta pode ter dois botões: o efeito permanente (cinco cartas no
+   jogo inteiro) e o de guardar/trazer. */
+.ficha__cartaAcoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+  align-items: center;
 }

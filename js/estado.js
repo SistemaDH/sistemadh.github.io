@@ -18,6 +18,7 @@ const estado = {
   personagens: [],
   personagemAberto: null,
   medo: 0,
+  nivelDaMesa: 1,
   versaoServidor: null,
   iniciando: true
 };
@@ -66,6 +67,8 @@ function esquecerSessao() {
   definir({ token: null, jogador: null, personagens: [], personagemAberto: null });
 }
 
+let ultimaConferida = 0;
+
 export const acoes = {
   /** Chamado uma vez na abertura do app: valida o token guardado. */
   async iniciar() {
@@ -78,6 +81,7 @@ export const acoes = {
       definir({
         jogador: dados.jogador,
         medo: dados.medo ?? 0,
+        nivelDaMesa: dados.nivelDaMesa ?? 1,
         versaoServidor: dados.versao,
         iniciando: false
       });
@@ -87,6 +91,32 @@ export const acoes = {
       if (e.codigo === 'NAO_AUTENTICADO') esquecerSessao();
       definir({ iniciando: false });
       if (e.codigo !== 'NAO_AUTENTICADO') throw e;
+    }
+  },
+
+  /**
+   * Relê o que MUDOU NA MESA sem recarregar o app inteiro.
+   *
+   * O nível da mesa e o Medo chegavam só no login: se o Mestre anunciasse um
+   * nível com o jogador já dentro do app, o aviso dele só aparecia na próxima
+   * entrada. Isto conserta pelo caminho barato — o app pergunta quando volta a
+   * ficar visível e quando a lista de personagens é aberta —, sem inventar um
+   * canal em tempo real que o resto do app não tem.
+   *
+   * @return {{nivelMudou:boolean, de:number, para:number}|null}
+   */
+  async atualizarSessao() {
+    if (!estado.token) return null;
+    if (Date.now() - ultimaConferida < 20000) return null;   // não martelar o servidor
+    ultimaConferida = Date.now();
+    try {
+      const dados = await api.sessao(estado.token);
+      const de = estado.nivelDaMesa;
+      const para = dados.nivelDaMesa ?? de;
+      definir({ medo: dados.medo ?? estado.medo, nivelDaMesa: para });
+      return { nivelMudou: para !== de, de: de, para: para };
+    } catch (e) {
+      return null;   // sem rede: fica com o que já estava
     }
   },
 
@@ -221,6 +251,16 @@ export const acoes = {
     return api.movimentosDeDescanso(estado.token, id, tipo);
   },
 
+  /** As outras fichas da mesa — quem pode receber a cura de um movimento. */
+  aliadosDaMesa(id) {
+    return api.aliadosDaMesa(estado.token, id);
+  },
+
+  /** Os projetos deste personagem, para o movimento do descanso longo. */
+  meusProjetos(id) {
+    return api.meusProjetos(estado.token, id);
+  },
+
   /** O que o descanso VAI fazer. Não grava nada. */
   previaDescanso(id, tipo, escolhas) {
     return api.previaDescanso(estado.token, id, tipo, escolhas);
@@ -236,13 +276,130 @@ export const acoes = {
   },
 
   /* ------------------------------------------------------------------------
+     Subir de nível
+     ---------------------------------------------------------------------- */
+
+  opcoesDeAvanco(id) {
+    return api.opcoesDeAvanco(estado.token, id);
+  },
+
+  /** O que subir de nível VAI fazer. Não grava nada. */
+  previaDeAvanco(id, escolhas) {
+    return api.previaDeAvanco(estado.token, id, escolhas);
+  },
+
+  /** Sobe o nível. A versão VAI: é uma ação única e deliberada, não um toque. */
+  async aplicarAvanco(id, escolhas, versao) {
+    const dados = await enfileirar(id, () => api.aplicarAvanco(estado.token, id, escolhas, versao));
+    definir({ personagemAberto: dados.personagem });
+    await acoes.carregarPersonagens();
+    return dados;
+  },
+
+  async desfazerAvanco(id, versao) {
+    const dados = await enfileirar(id, () => api.desfazerAvanco(estado.token, id, versao));
+    definir({ personagemAberto: dados.personagem });
+    await acoes.carregarPersonagens();
+    return dados;
+  },
+
+  /* ------------------------------------------------------------------------
      Mesa
      ---------------------------------------------------------------------- */
 
+  /**
+   * Mexe no Medo da mesa.
+   *
+   * Passou a usar a ação própria do painel (ajustarMedo) em vez de gravar uma
+   * chave solta de configuração: o teto de 12 é regra do livro e quem aplica
+   * é o servidor, não o botão.
+   */
   async definirMedo(valor) {
-    const dados = await api.gravarConfig(estado.token, 'medo', valor);
-    definir({ medo: dados.valor });
-    return dados.valor;
+    const dados = await api.ajustarMedo(estado.token, { valor });
+    definir({ medo: dados.medo.depois });
+    return dados.medo.depois;
+  },
+
+  /* ------------------------------------------------------------------------
+     Painel do Mestre
+     ---------------------------------------------------------------------- */
+
+  painelDoMestre() {
+    return api.painelDoMestre(estado.token);
+  },
+
+  async ajustarMedo(dados) {
+    const r = await api.ajustarMedo(estado.token, dados);
+    definir({ medo: r.medo.depois });
+    return r;
+  },
+
+  aplicarCartaPermanente: (id, carta, escolhas, versao) =>
+    api.aplicarCartaPermanente(estado.token, id, carta, escolhas, versao),
+
+  criarContagem: (contagem) => api.criarContagem(estado.token, contagem),
+  avancarContagem: (id, dados) => api.avancarContagem(estado.token, id, dados),
+  editarContagem: (id, contagem) => api.editarContagem(estado.token, id, contagem),
+  excluirContagem: (id) => api.excluirContagem(estado.token, id),
+  previaDescansoDaMesa: (tipo, escolhas) => api.previaDescansoDaMesa(estado.token, tipo, escolhas),
+  parearContagens: (idA, idB) => api.parearContagens(estado.token, idA, idB),
+  desparearContagem: (id) => api.desparearContagem(estado.token, id),
+  avancarPerseguicao: (id, resultado) => api.avancarPerseguicao(estado.token, id, resultado),
+  abrirSessao: () => api.abrirSessao(estado.token),
+
+  async aplicarDescansoDaMesa(tipo, escolhas) {
+    const r = await api.aplicarDescansoDaMesa(estado.token, tipo, escolhas);
+    definir({ medo: r.mesa.medo });
+    return r;
+  },
+
+  async anunciarNivelDaMesa(nivel) {
+    const r = await api.anunciarNivelDaMesa(estado.token, nivel);
+    definir({ nivelDaMesa: r.depois });
+    return r;
+  },
+
+  /** A moldura de campanha é do Mestre; quem cria ficha só a consulta. */
+  async definirMoldura(moldura) {
+    return api.definirMoldura(estado.token, moldura);
+  },
+
+  async molduraDaMesa() {
+    return api.molduraDaMesa(estado.token);
+  },
+
+  /* ----------------------------------------------------------------------
+     Encontro em jogo
+
+     Toda ação devolve o encontro INTEIRO recalculado — o mesmo padrão das
+     contagens. É uma resposta maior, mas evita a tela e o servidor
+     discordarem sobre quem está derrotado no meio de uma cena.
+     ---------------------------------------------------------------------- */
+
+  encontro: () => api.encontro(estado.token),
+  definirEncontro: (dados) => api.definirEncontro(estado.token, dados),
+  acrescentarAoEncontro: (dados) => api.acrescentarAoEncontro(estado.token, dados),
+  ajustarAdversario: (dados) => api.ajustarAdversario(estado.token, dados),
+  limparFoco: () => api.limparFoco(estado.token),
+  removerDoEncontro: (id) => api.removerDoEncontro(estado.token, id),
+  limparEncontro: () => api.limparEncontro(estado.token),
+  definirDanoMassivo: (ligado) => api.definirDanoMassivo(estado.token, ligado),
+  adversariosDaMesa: () => api.adversariosDaMesa(estado.token),
+  salvarAdversarioDaMesa: (ficha) => api.salvarAdversarioDaMesa(estado.token, ficha),
+  excluirAdversarioDaMesa: (id) => api.excluirAdversarioDaMesa(estado.token, id),
+
+  /** Pôr em foco mexe no Medo da mesa, então o estado local acompanha. */
+  async porEmFoco(id, primeiroDoTurno) {
+    const r = await api.porEmFoco(estado.token, id, primeiroDoTurno);
+    definir({ medo: r.medo });
+    return r;
+  },
+
+  /** Usar habilidade também pode gastar Medo — mesmo cuidado. */
+  async usarHabilidade(id, habilidade, contagem) {
+    const r = await api.usarHabilidade(estado.token, id, habilidade, contagem);
+    definir({ medo: r.medo });
+    return r;
   }
 };
 

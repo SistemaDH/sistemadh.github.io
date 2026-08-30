@@ -143,6 +143,8 @@ function simularDescanso_(ficha, tipo, escolhas) {
   const disponiveis = movimentosDoDescanso_(t.id, copia);
   const patamar = patamarDaFicha_(copia);
   const feitos = [];
+  // A cura que este descanso manda para OUTRAS fichas.
+  const paraAliados = [];
 
   for (let i = 0; i < lista.length && i < DESCANSO.movimentosPorDescanso; i++) {
     const escolha = lista[i] || {};
@@ -178,10 +180,29 @@ function simularDescanso_(ficha, tipo, escolhas) {
       observacao: ''
     };
 
-    // Movimento usado na ficha de um aliado: gasta o movimento, não muda nada aqui.
+    // Movimento usado na ficha de um ALIADO.
+    //
+    // A cura não pousa nesta ficha: ela vira um "presente" que o servidor
+    // aplica na ficha do aliado, dentro da mesma trava. Aqui a gente só faz a
+    // conta e registra para quem vai — porque a ficha do aliado não está
+    // carregada neste ponto, e adivinhar o máximo dele seria mentira.
     if (emAliado) {
-      feito.observacao = 'Feito na ficha de um aliado — esta ficha não muda. ' +
-        'Quem estiver com a ficha do aliado aplica a cura lá.';
+      const presente = curaParaAliado_(def, escolha, patamar, erros);
+      if (!presente) continue;
+      presente.aliadoId = String(escolha.aliadoId || '').slice(0, 60);
+      presente.aliadoNome = String(escolha.aliadoNome || '').slice(0, 40);
+      if (!presente.aliadoId) {
+        erros.push('"' + def.nome + '" em um aliado: escolha qual aliado.');
+        continue;
+      }
+      feito.paraAliado = presente;
+      feito.quantidade = presente.quantidade;
+      feito.contaDaFormula = presente.conta;
+      feito.precisaDeRolagem = presente.precisaDeRolagem;
+      feito.observacao = presente.precisaDeRolagem
+        ? presente.observacao
+        : 'Vai para a ficha de ' + (presente.aliadoNome || 'um aliado') + '.';
+      paraAliados.push(presente);
       feitos.push(feito);
       continue;
     }
@@ -342,11 +363,85 @@ function simularDescanso_(ficha, tipo, escolhas) {
     descansosCurtosSeguidos: { antes: seguidosAntes, depois: seguidosDepois,
       maximo: DESCANSO.maxDescansosCurtosSeguidos },
     precisaDeRolagem: precisaRolar,
+    paraAliados: paraAliados,
     erros: erros,
     avisos: avisos
   };
 
   return { ficha: copia, previa: previa };
+}
+
+/**
+ * A conta da cura destinada a um ALIADO.
+ *
+ * É a mesma fórmula do movimento em si mesmo — a diferença é só onde ela
+ * pousa. Devolve o "presente"; null quando não dá para calcular.
+ */
+function curaParaAliado_(def, escolha, patamar, erros) {
+  const ef = def.efeito || {};
+  const presente = {
+    movimento: def.id,
+    nomeDoMovimento: def.nome,
+    recurso: ef.recurso,
+    rotulo: ROTULO_RECURSO_DESCANSO[ef.recurso] || '',
+    quantidade: 0,
+    tudo: false,
+    conta: '',
+    precisaDeRolagem: false,
+    observacao: ''
+  };
+
+  if (ef.modo === 'limpar-tudo') {
+    presente.tudo = true;
+    presente.conta = 'tudo';
+    return presente;
+  }
+
+  if (ef.modo === 'limpar') {
+    const lados = Number(String(ef.dado || 'd4').replace(/[^0-9]/g, '')) || 4;
+    const bruto = Math.trunc(Number(escolha.rolagem));
+    if (!isFinite(bruto) || bruto < 1 || bruto > lados) {
+      presente.precisaDeRolagem = true;
+      presente.conta = ef.dado + ' + patamar ' + patamar;
+      presente.observacao = 'Role o ' + ef.dado + ' na mesa e informe o resultado (1 a ' + lados + ').';
+      return presente;
+    }
+    presente.quantidade = bruto + (ef.somaPatamar ? patamar : 0);
+    presente.conta = ef.dado + ' (' + bruto + ')' +
+      (ef.somaPatamar ? ' + patamar ' + patamar : '') + ' = ' + presente.quantidade;
+    return presente;
+  }
+
+  erros.push('"' + def.nome + '" não pode ser usado em um aliado.');
+  return null;
+}
+
+/**
+ * Aplica na ficha do ALIADO a cura que veio do descanso de outra pessoa.
+ *
+ * ⚠ Só LIMPA recursos marcados — nunca marca. É isso que torna seguro deixar
+ * um jogador mexer na ficha de outro: o pior que pode acontecer é alguém ser
+ * curado sem ter pedido. Se um dia entrar aqui um efeito que MARCA, esta
+ * garantia cai e a permissão precisa ser repensada.
+ */
+function aplicarCuraDeAliado_(fichaAliado, presente) {
+  fichaAliado.recursos = fichaAliado.recursos || {};
+  const chave = presente.recurso;
+  const antes = Math.max(0, Math.trunc(Number(fichaAliado.recursos[chave])) || 0);
+  const quanto = presente.tudo ? antes : Math.max(0, Math.trunc(Number(presente.quantidade)) || 0);
+  const depois = Math.max(0, antes - quanto);
+  fichaAliado.recursos[chave] = depois;
+  return {
+    recurso: chave,
+    rotulo: presente.rotulo,
+    movimento: presente.nomeDoMovimento,
+    aliadoId: presente.aliadoId,
+    aliadoNome: presente.aliadoNome,
+    antes: antes,
+    depois: depois,
+    quantidade: antes - depois,
+    semEfeito: antes === depois
+  };
 }
 
 /** Só o relatório: não altera nada. */

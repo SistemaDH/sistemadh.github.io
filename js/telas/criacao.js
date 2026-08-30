@@ -16,15 +16,16 @@
  */
 
 import { el, limpar, travarBotao } from '../util.js';
-import { avisarErro, avisarSucesso, confirmar } from '../ui.js';
-import { acoes } from '../estado.js';
+import { avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js';
+import { acoes, obterEstado } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
 import * as dados from '../dados.js';
 import {
   abrirCarta, nomeQueAbreCarta,
   daCartaDeDominio, daSubclasse, daAncestralidade, daComunidade
 } from '../componentes/carta.js';
-import { prepararGlossario, nomeComGlossa, textoComGlossa } from '../glossario.js';
+import { prepararGlossario, nomeComGlossa } from '../glossario.js';
+import { textoAnotado, prepararVerbetes } from '../verbete.js';
 
 const TRACOS_ORDEM = ['agilidade', 'forca', 'finesse', 'instinto', 'presenca', 'conhecimento'];
 
@@ -334,7 +335,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
             ...(fundacao.caracteristicas || []).map((f) =>
               el('p', { class: 'texto-sm' }, [
                 el('strong', { texto: `${f.nome}: ` }),
-                textoComGlossa(f.texto)
+                textoAnotado(f.texto)
               ])),
             el('button', {
               type: 'button',
@@ -462,7 +463,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
     itens.forEach((item) => {
       grade.append(el('div', { class: `cartao grade-opcoes__item ${escolhido(item) ? 'esta-escolhido' : ''}` }, [
         nomeQueAbreCarta(item.nome, () => carta(item)),
-        el('p', { class: 'texto-sm texto-suave' }, textoComGlossa(detalhe(item))),
+        el('p', { class: 'texto-sm texto-suave' }, textoAnotado(detalhe(item))),
         el('button', {
           type: 'button',
           class: `btn ${escolhido(item) ? 'btn--principal' : 'btn--fantasma'} btn--pequeno`,
@@ -582,9 +583,33 @@ export async function abrirCriacao({ aoCriar } = {}) {
       titulo: 'Equipamento inicial',
       ajuda: 'Uma arma primária de duas mãos, ou uma primária de uma mão mais uma secundária. Mais uma armadura. Tudo de nível 1.',
       desenhar(pai) {
-        const primarias = catalogo.equipamentos.armas.filter((a) => a.categoria === 'primaria' && a.tier === 1);
-        const secundarias = catalogo.equipamentos.armas.filter((a) => a.categoria === 'secundaria' && a.tier === 1);
-        const armaduras = catalogo.equipamentos.armaduras.filter((a) => a.tier === 1);
+        // Com uma moldura que TROCA as tabelas iniciais, o equipamento sai dela.
+        const troca = catalogo.moldura && catalogo.moldura.substituiEquipamentoInicial;
+        const daMoldura = (cat) => catalogo.equipamentoDaMoldura
+          .filter((e) => e.cat === cat && (e.tier || 1) === 1)
+          .map((e) => ({
+            id: e.id, nome: e.nome, categoria: e.cat, tier: e.tier || 1,
+            atributo: e.atributo, alcance: e.alcance, dano: e.dano, maos: e.maos,
+            limiares: e.limiares, pontuacaoArmadura: e.pontuacao,
+            caracteristica: e.carac ? { nome: e.carac } : null
+          }));
+
+        const primarias = troca
+          ? daMoldura('primaria')
+          : catalogo.equipamentos.armas.filter((a) => a.categoria === 'primaria' && a.tier === 1);
+        const secundarias = troca
+          ? daMoldura('secundaria')
+          : catalogo.equipamentos.armas.filter((a) => a.categoria === 'secundaria' && a.tier === 1);
+        const armaduras = troca
+          ? daMoldura('armadura')
+          : catalogo.equipamentos.armaduras.filter((a) => a.tier === 1);
+
+        if (troca) {
+          pai.append(el('div', { class: 'criacao__moldura' }, [
+            el('h3', { class: 'criacao__molduraNome', texto: catalogo.moldura.nome }),
+            el('p', { class: 'texto-sm' }, textoAnotado(catalogo.moldura.regra || ''))
+          ]));
+        }
 
         const primaria = primarias.find((a) => a.id === rascunho.equipamento.primaria) || null;
         const duasMaos = primaria && /duas/i.test(primaria.maos || '');
@@ -752,7 +777,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
                 el('span', { class: 'crescer' }),
                 el('span', { class: 'selo', texto: c.tipo })
               ]),
-              el('p', { class: 'texto-sm lista-escolha__resumo' }, textoComGlossa(c.texto)),
+              el('p', { class: 'texto-sm lista-escolha__resumo' }, textoAnotado(c.texto)),
               el('button', {
                 type: 'button',
                 class: `btn ${escolhida ? 'btn--principal' : 'btn--fantasma'} btn--pequeno`,
@@ -973,6 +998,19 @@ export async function abrirCriacao({ aoCriar } = {}) {
               avisarSucesso('Ficha criada.');
               fechar();
               if (typeof aoCriar === 'function') aoCriar(personagem);
+              /*
+               * Entrou no meio da campanha? O livro (p.105) manda criar "no
+               * nível atual do grupo". Toda ficha nasce no 1 — porque cada
+               * nível é uma escolha do jogador, não do app — então o que dá
+               * para fazer é avisar quantos degraus faltam, aqui, na hora em
+               * que ele ainda está com a ficha na mão.
+               */
+              const daMesa = Number(obterEstado().nivelDaMesa) || 1;
+              if (daMesa > 1) {
+                avisar(`A mesa está no nível ${daMesa}. Abra a ficha e use "Subir para o nível 2" ` +
+                  `${daMesa - 1} ${daMesa - 1 === 1 ? 'vez' : 'vezes'} para alcançar o grupo.`,
+                'info', 9000);
+              }
             } catch (e) {
               avisarErro(mensagemDoErro(e));
             }
@@ -1110,9 +1148,9 @@ function rascunhoVazio() {
 }
 
 async function carregarCatalogo() {
-  // O glossário entra no mesmo lote: ele precisa estar pronto ANTES da primeira
-  // tela desenhar, senão os parênteses da tradução da Jambô só apareceriam a
-  // partir do segundo passo.
+  // O glossário e os verbetes entram no mesmo lote: precisam estar prontos
+  // ANTES da primeira tela desenhar, senão os parênteses da tradução da Jambô e
+  // as palavras clicáveis só apareceriam a partir do segundo passo.
   const [classes, ancestralidades, comunidades, cartasArquivo, equipamentos, criacao, tracos, guias] =
     await Promise.all([
       dados.carregar('classes'),
@@ -1123,8 +1161,25 @@ async function carregarCatalogo() {
       dados.carregar('criacao'),
       dados.carregar('tracos'),
       dados.carregar('guias-de-classe'),
-      prepararGlossario()
+      prepararGlossario(),
+      prepararVerbetes()
     ]);
+  /*
+   * A MOLDURA DE CAMPANHA da mesa. É o Mestre quem escolhe (painel da mesa), e
+   * ela pode TROCAR as tabelas de equipamento inicial: no Festim das Feras os
+   * personagens são "heróis do dia a dia sem acesso a armas comuns" e escolhem
+   * frigideira, forcado e rolo de massa em vez de espada.
+   *
+   * Falhar aqui não pode impedir a criação de ficha — sem moldura, seguem as
+   * tabelas do Capítulo 2.
+   */
+  let moldura = null;
+  try {
+    moldura = await acoes.molduraDaMesa();
+  } catch (e) {
+    moldura = null;
+  }
+
   return {
     classes: classes.classes,
     ancestralidades: ancestralidades.ancestralidades,
@@ -1133,7 +1188,9 @@ async function carregarCatalogo() {
     equipamentos,
     criacao,
     tracos,
-    guias: guias.guias
+    guias: guias.guias,
+    moldura: (moldura && moldura.moldura) || null,
+    equipamentoDaMoldura: (moldura && moldura.equipamento) || []
   };
 }
 

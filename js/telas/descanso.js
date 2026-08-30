@@ -20,7 +20,8 @@ import { el, limpar, travarBotao } from '../util.js';
 import { abrirModal, avisarErro, avisarSucesso } from '../ui.js';
 import { acoes } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
-import { nomeComGlossa, textoComGlossa } from '../glossario.js';
+import { nomeComGlossa } from '../glossario.js';
+import { textoAnotado } from '../verbete.js';
 
 /**
  * @param {{personagem:Object, aoAplicar?:Function}} opcoes
@@ -42,6 +43,13 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
   let patamar = 1;
   let porDescanso = 2;
   let escolhas = [];
+  // As outras fichas da mesa: Tratar Feridas e Reparar Armadura podem ser
+  // usados nelas, e agora a cura pousa lá de verdade.
+  let aliados = [];
+  let seInterrompido = '';
+  // Os projetos deste personagem — o movimento do descanso longo faz um andar.
+  let projetos = [];
+  let tabelaDeProjeto = [];
 
   passoTipo();
 
@@ -81,10 +89,18 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
       el('span', { class: 'texto-sm', texto: 'Buscando os movimentos…' })
     ]));
     try {
-      const r = await acoes.movimentosDeDescanso(personagem.id, id);
+      const [r, listaDeAliados, meus] = await Promise.all([
+        acoes.movimentosDeDescanso(personagem.id, id),
+        acoes.aliadosDaMesa(personagem.id).catch(() => ({ aliados: [] })),
+        acoes.meusProjetos(personagem.id).catch(() => ({ projetos: [], tabela: [] }))
+      ]);
       disponiveis = r.movimentos || [];
       patamar = r.patamar || 1;
       porDescanso = r.movimentosPorDescanso || 2;
+      seInterrompido = r.seInterrompido || '';
+      aliados = listaDeAliados.aliados || [];
+      projetos = meus.projetos || [];
+      tabelaDeProjeto = meus.tabela || [];
       escolhas = [];
       passoMovimentos();
     } catch (e) {
@@ -103,6 +119,24 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
       el('h3', { class: 'descanso__titulo', texto: `Escolha ${porDescanso} movimentos` }),
       el('p', { class: 'campo__ajuda', texto: 'Pode repetir o mesmo movimento duas vezes.' })
     );
+
+    /*
+     * O "e se alguém aparecer no meio?" fica à vista ANTES de escolher.
+     * O livro (p.105) diz o resultado — curto interrompido não dá nada, longo
+     * interrompido vira um curto — mas nem ele nem o SRD em inglês dizem se o
+     * jogador re-escolhe os movimentos ou converte os que já pegou. Isso é
+     * decisão de mesa, e a tela diz isso com todas as letras em vez de
+     * inventar uma regra.
+     */
+    if (seInterrompido) {
+      corpo.append(el('details', { class: 'descanso__interrompido' }, [
+        el('summary', { texto: 'E se o descanso for interrompido?' }),
+        el('p', { class: 'texto-sm', texto: seInterrompido }),
+        el('p', { class: 'texto-xs texto-fraco', texto:
+          'O livro não diz se você re-escolhe os movimentos ou aproveita os já escolhidos — ' +
+          'quem decide é a mesa. O app oferece um descanso curto novo.' })
+      ]));
+    }
 
     const lista = el('div', { class: 'pilha' });
     disponiveis.forEach((m) => lista.append(cartaoDeMovimento(m)));
@@ -134,7 +168,7 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
     if (m.deOutroDescanso) {
       cartao.append(el('p', { class: 'selo selo--mestre', texto: m.deOutroDescanso }));
     }
-    cartao.append(el('p', { class: 'texto-sm' }, textoComGlossa(m.texto || '')));
+    cartao.append(el('p', { class: 'texto-sm' }, textoAnotado(m.texto || '')));
     if (m.formula) {
       cartao.append(el('p', { class: 'descanso__formula', texto: m.formula }));
     }
@@ -146,18 +180,41 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
     const rolagem = precisaDeDado ? el('input', {
       type: 'number', class: 'campo__entrada descanso__dado',
       min: 1, max: lados, inputmode: 'numeric',
-      placeholder: `resultado do ${m.efeito.dado}`
+      placeholder: 'ex.: 3'
     }) : null;
 
     const comGrupo = (m.perguntas || []).some((q) => q.chave === 'comGrupo')
       ? el('input', { type: 'checkbox', class: 'criacao__caixa' }) : null;
 
-    const projeto = (m.perguntas || []).some((q) => q.chave === 'projeto')
-      ? el('input', { type: 'text', class: 'campo__entrada', maxlength: 200, placeholder: 'Em que projeto você trabalhou?' })
+    const pedeProjeto = (m.perguntas || []).some((q) => q.chave === 'projeto');
+    const projeto = pedeProjeto
+      ? el('input', { type: 'text', class: 'campo__entrada', maxlength: 200,
+          placeholder: 'Em que projeto você trabalhou?' })
       : null;
 
-    const emAliado = m.podeMirarAliado
-      ? el('input', { type: 'checkbox', class: 'criacao__caixa' }) : null;
+    // Se o Mestre já criou uma contagem de projeto para este personagem, o
+    // movimento pode fazê-la andar de verdade — com a tabela da p.181, em que
+    // ATÉ A FALHA avança.
+    const selProjeto = (pedeProjeto && projetos.length) ? el('select', { class: 'campo__entrada' }) : null;
+    const selResultado = selProjeto ? el('select', { class: 'campo__entrada' }) : null;
+    if (selProjeto) {
+      selProjeto.append(el('option', { value: '' }, '— só anotar, sem mexer na contagem —'));
+      projetos.forEach((x) => selProjeto.append(
+        el('option', { value: x.id }, `${x.nome} (${x.valor})`)));
+      selResultado.append(el('option', { value: '' }, 'sem teste — anda 1'));
+      tabelaDeProjeto.forEach((l) => selResultado.append(
+        el('option', { value: l.resultado }, `${l.resultado} — anda ${l.avanca}`)));
+    }
+
+    // Antes era um "sim/não". Agora precisa dizer QUEM, porque a cura vai
+    // mesmo para a ficha da pessoa.
+    const selAliado = (m.podeMirarAliado && aliados.length)
+      ? el('select', { class: 'campo__entrada' }) : null;
+    if (selAliado) {
+      selAliado.append(el('option', { value: '' }, '— em mim mesmo —'));
+      aliados.forEach((a) => selAliado.append(
+        el('option', { value: a.id }, `${a.nome}${a.donoNome ? ' · ' + a.donoNome : ''}`)));
+    }
 
     if (rolagem) {
       cartao.append(el('label', { class: 'campo' }, [
@@ -177,10 +234,30 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
         el('span', { class: 'campo__rotulo', texto: 'Projeto' }), projeto
       ]));
     }
-    if (emAliado) {
-      cartao.append(el('label', { class: 'criacao__alternador' }, [
-        emAliado, el('span', { texto: 'Fiz isso na ficha de um aliado (gasta o movimento, não muda a minha)' })
+    if (selProjeto) {
+      cartao.append(
+        el('label', { class: 'campo' }, [
+          el('span', { class: 'campo__rotulo', texto: 'Contagem de projeto a avançar' }), selProjeto
+        ]),
+        el('label', { class: 'campo' }, [
+          el('span', { class: 'campo__rotulo', texto: 'Resultado do teste' }),
+          selResultado,
+          el('span', { class: 'campo__ajuda', texto:
+            'No projeto, até a falha avança 1 — passar o repouso trabalhando rende alguma coisa ' +
+            'mesmo quando o teste dá errado (livro p.181).' })
+        ])
+      );
+    }
+    if (selAliado) {
+      cartao.append(el('label', { class: 'campo' }, [
+        el('span', { class: 'campo__rotulo', texto: 'Em quem?' }),
+        selAliado,
+        el('span', { class: 'campo__ajuda', texto:
+          'Escolhendo um aliado, a cura vai para a ficha dele — a sua não muda.' })
       ]));
+    } else if (m.podeMirarAliado) {
+      cartao.append(el('p', { class: 'campo__ajuda', texto:
+        'Este movimento também pode ser usado num aliado, mas não há outra ficha na mesa ainda.' }));
     }
 
     const adicionar = el('button', {
@@ -189,8 +266,16 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
 
     adicionar.addEventListener('click', () => {
       const escolha = { movimento: m.id };
-      if (emAliado && emAliado.checked) escolha.alvo = 'aliado';
-      else if (rolagem) {
+      const alvoAliado = selAliado && selAliado.value;
+      if (alvoAliado) {
+        const quem = aliados.find((a) => a.id === alvoAliado);
+        escolha.alvo = 'aliado';
+        escolha.aliadoId = alvoAliado;
+        escolha.aliadoNome = quem ? quem.nome : '';
+      }
+      // A rolagem vale nos dois casos: em aliado, o dado é o mesmo — muda só
+      // onde a cura pousa.
+      if (rolagem) {
         const n = Number(rolagem.value);
         if (!Number.isInteger(n) || n < 1 || n > lados) {
           avisarErro(`Digite o resultado do ${m.efeito.dado}: um número de 1 a ${lados}.`);
@@ -201,6 +286,10 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
       }
       if (comGrupo && comGrupo.checked) escolha.comGrupo = true;
       if (projeto && projeto.value.trim()) escolha.projeto = projeto.value.trim();
+      if (selProjeto && selProjeto.value) {
+        escolha.projetoId = selProjeto.value;
+        if (selResultado.value) escolha.resultado = selResultado.value;
+      }
       escolhas.push(escolha);
       passoMovimentos();
     });
@@ -280,6 +369,19 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
         m.observacao ? el('p', { class: 'texto-xs texto-fraco', texto: m.observacao }) : null
       ]))));
 
+    // O que vai para a ficha DE OUTRA PESSOA — merece destaque próprio, porque
+    // é a única parte do descanso que sai desta ficha.
+    if ((previa.paraAliados || []).length) {
+      corpo.append(el('h4', { class: 'descanso__subtitulo', texto: 'Vai para outras fichas' }));
+      corpo.append(el('div', { class: 'pilha' }, previa.paraAliados.map((x) =>
+        el('div', { class: 'descanso__paraAliado' }, [
+          el('strong', {}, nomeComGlossa(x.aliadoNome || 'Aliado')),
+          el('p', { class: 'texto-sm', texto:
+            `${x.nomeDoMovimento}: recupera ${x.tudo ? 'tudo' : x.quantidade} de ${x.rotulo}.` }),
+          x.conta ? el('span', { class: 'descanso__conta', texto: x.conta }) : null
+        ]))));
+    }
+
     // Contadores das cartas que o descanso zera ou enche.
     if ((previa.contadores || []).length) {
       corpo.append(el('h4', { class: 'descanso__subtitulo', texto: 'Marcadores das cartas' }));
@@ -319,6 +421,17 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
       travarBotao(confirmar, (async () => {
         try {
           const r = await acoes.aplicarDescanso(personagem.id, tipo, escolhas, personagem.versao);
+          const proj = (r.resultado || {}).projeto;
+          if (proj) {
+            avisarSucesso(proj.acionou
+              ? `"${proj.nome}" chegou a zero — o projeto terminou!`
+              : `"${proj.nome}": ${proj.antes} → ${proj.depois}.`);
+          }
+          (r.curados || []).forEach((c) => {
+            if (c.erro) avisarErro(`${c.aliadoNome || 'Aliado'}: ${c.erro}`);
+            else if (c.semEfeito) avisarSucesso(`${c.aliadoNome} já estava sem ${c.rotulo} marcado.`);
+            else avisarSucesso(`${c.aliadoNome}: ${c.rotulo} ${c.antes} → ${c.depois}.`);
+          });
           avisarSucesso(`${previa.nomeDoTipo} aplicado.`);
           modal.fechar();
           if (aoAplicar) aoAplicar(r.personagem);

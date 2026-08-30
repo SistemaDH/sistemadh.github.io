@@ -1,0 +1,219 @@
+{
+  "versao": 1,
+  "fonte": "DH-DigitalRegras.pdf (Jambô, Prévia 5), páginas impressas 109, 110 e 111 — o capítulo \"Subindo de Nível\". Lidas como IMAGEM a 200 dpi, com recortes a 400 dpi para contar os quadradinhos de cada opção. A numeração impressa no rodapé bate com a do PDF. Erratas oficiais conferidas: só três tocam em avanço (tetos de PV e Estresse, e a clarificação das Experiências) — não existe errata nenhuma sobre Proficiência.",
+
+  "regraDeVocabulario": "Não existe carta de avanço. Pelo padrão da mesa, o conteúdo vem do livro mas os NOMES de mecânica são os das cartas: \"atributo\" vira TRAÇO, \"PF\"/\"Fadiga\" vira ESTRESSE. O texto literal do livro fica guardado em textoLivroLiteral.",
+
+  "escolhasPorNivel": 2,
+  "nivelMaximo": 10,
+  "regraDeEscolha": "Você pode escolher duas opções quaisquer que ainda não estejam marcadas. Algumas opções têm mais de um espaço para marcação, ou seja: elas podem ser escolhidas mais de uma vez. Ao escolher uma opção, marque o espaço apropriado. Quando todos os espaços de uma opção estiverem marcados, você não pode mais escolher essa opção.",
+  "opcoesDoPatamarAnterior": "A partir do 3º patamar, o personagem também pode gastar um avanço num espaço ainda livre do patamar ANTERIOR (só o anterior, não todos).",
+
+  "procedimento": [
+    "Atualize o nível do personagem.",
+    "Aplique primeiro as conquistas do patamar, se este nível tiver alguma (só os níveis 2, 5 e 8 têm).",
+    "Escolha dois avanços e marque os espaços. As opções em negrito (Proficiência e Multiclasse) exigem marcar os DOIS espaços — nesse nível você não escolhe mais nada.",
+    "Aumente os limiares de dano em +1.",
+    "Pegue uma nova carta de domínio de nível igual ou menor que o seu, de um domínio a que tem acesso."
+  ],
+
+  "patamares": [
+    { "numero": 1, "niveis": [1], "conquistas": [] },
+    { "numero": 2, "niveis": [2, 3, 4], "conquistas": [
+      { "nivel": 2,
+        "texto": "No nível 2, você cria uma nova Experiência com o modificador de +2 e a anota em sua ficha. Você também aumenta permanentemente sua Proficiência em +1.",
+        "efeitos": [
+          { "tipo": "experiencia-nova", "bonus": 2 },
+          { "tipo": "proficiencia", "delta": 1 }
+        ] }
+    ] },
+    { "numero": 3, "niveis": [5, 6, 7], "conquistas": [
+      { "nivel": 5,
+        "texto": "No nível 5, você cria uma nova Experiência com o modificador de +2 e a anota em sua ficha. Você também aumenta permanentemente sua Proficiência em +1. Além disso, remova quaisquer marcações nos traços marcados no patamar anterior, permitindo que você aumente estes traços novamente neste patamar.",
+        "textoLivroLiteral": "No nível 5, você cria uma nova Experiência com o modificador de +2 e a anota em sua ficha. Você também aumenta permanentemente sua Proficiência em +1. Além disso, remova quaisquer marcações nos atributos marcados no patamar anterior, permitindo que você aumente estes atributos novamente neste patamar.",
+        "efeitos": [
+          { "tipo": "experiencia-nova", "bonus": 2 },
+          { "tipo": "proficiencia", "delta": 1 },
+          { "tipo": "limpar-tracos-marcados" }
+        ] }
+    ] },
+    { "numero": 4, "niveis": [8, 9, 10], "conquistas": [
+      { "nivel": 8,
+        "texto": "No nível 8, você cria uma nova Experiência com o modificador de +2 e a anota em sua ficha. Você também aumenta permanentemente sua Proficiência em +1. Além disso, remova quaisquer marcações nos traços marcados no patamar anterior.",
+        "textoLivroLiteral": "No nível 8, você cria uma nova Experiência com o modificador de +2 e a anota em sua ficha. Você também aumenta permanentemente sua Proficiência em +1. Além disso, remova quaisquer marcações nos atributos que marcados no patamar anterior.",
+        "efeitos": [
+          { "tipo": "experiencia-nova", "bonus": 2 },
+          { "tipo": "proficiencia", "delta": 1 },
+          { "tipo": "limpar-tracos-marcados" }
+        ] }
+    ] }
+  ],
+
+  "opcoes": [
+    {
+      "id": "tracos",
+      "nome": "Dois traços +1",
+      "texto": "Escolha dois traços desmarcados, os marque e receba um bônus de +1 em cada.",
+      "textoLivroLiteral": "Escolha dois atributos desmarcados, os marque e receba um bônus de +1 em cada.",
+      "espacos": { "2": 3, "3": 3, "4": 3 },
+      "consomeEscolhas": 1,
+      "efeito": { "tipo": "tracos", "quantidade": 2, "bonus": 1 },
+      "detalhe": "Os traços marcados ficam bloqueados até o próximo patamar, quando a conquista apaga as marcações."
+    },
+    {
+      "id": "pontos-de-vida",
+      "nome": "Pontos de Vida +1",
+      "texto": "Aumente seus Pontos de Vida em 1 permanentemente.",
+      "textoLivroLiteral": "Aumente seus PV em 1 permanentemente.",
+      "espacos": { "2": 2, "3": 2, "4": 2 },
+      "consomeEscolhas": 1,
+      "efeito": { "tipo": "recurso", "chave": "pontosDeVidaMaximos", "delta": 1, "teto": 12 },
+      "detalhe": "A errata da p.91 fixa o teto: no máximo 12 Pontos de Vida."
+    },
+    {
+      "id": "estresse",
+      "nome": "Estresse +1",
+      "texto": "Aumente seu Estresse em 1 permanentemente.",
+      "textoLivroLiteral": "Aumente seus PF em 1 permanentemente.",
+      "espacos": { "2": 2, "3": 2, "4": 2 },
+      "consomeEscolhas": 1,
+      "efeito": { "tipo": "recurso", "chave": "estresseMaximo", "delta": 1, "teto": 12 },
+      "detalhe": "A errata da p.92 fixa o teto: no máximo 12 de Estresse."
+    },
+    {
+      "id": "experiencias",
+      "nome": "Duas Experiências +1",
+      "texto": "Receba +1 em duas Experiências permanentemente.",
+      "espacos": { "2": 1, "3": 1, "4": 1 },
+      "consomeEscolhas": 1,
+      "efeito": { "tipo": "experiencias", "quantidade": 2, "bonus": 1 },
+      "detalhe": "A errata da p.110 confirma: escolha DUAS Experiências e cada uma ganha +1. Não é uma Experiência ganhando +2."
+    },
+    {
+      "id": "carta-de-dominio",
+      "nome": "Carta de domínio extra",
+      "texto": "Escolha uma nova carta de domínio de um domínio que você tem acesso e de um nível igual ou menor que o seu.",
+      "espacos": { "2": 1, "3": 1, "4": 1 },
+      "consomeEscolhas": 1,
+      "efeito": { "tipo": "carta-de-dominio", "nivelMaximoPorPatamar": { "2": 4, "3": 7, "4": null } },
+      "detalhe": "É uma carta A MAIS, além da que todo personagem pega ao subir de nível. Nos patamares 2 e 3 o livro escreve o teto entre parênteses (nível máx. 4 e 7); no 4º patamar não escreve nenhum — o teto vira o próprio nível."
+    },
+    {
+      "id": "evasao",
+      "nome": "Evasão +1",
+      "texto": "Aumente sua Evasão em +1 permanentemente.",
+      "espacos": { "2": 1, "3": 1, "4": 1 },
+      "consomeEscolhas": 1,
+      "efeito": { "tipo": "evasao", "delta": 1 }
+    },
+    {
+      "id": "subclasse",
+      "nome": "Carta de subclasse aprimorada",
+      "texto": "Pegue sua carta de subclasse aprimorada. Em seguida, corte a opção de multiclasse desse patamar.",
+      "espacos": { "3": 1, "4": 1 },
+      "consomeEscolhas": 1,
+      "efeito": { "tipo": "subclasse" },
+      "detalhe": "Se você só tem a carta fundamental, pega a de especialização; se já tem a de especialização, pega a de maestria. Ao pegar, a multiclasse deste patamar sai de cena."
+    },
+    {
+      "id": "proficiencia",
+      "nome": "Proficiência +1",
+      "texto": "Aumente sua Proficiência em +1.",
+      "espacos": { "3": 2, "4": 2 },
+      "consomeEscolhas": 2,
+      "negrito": true,
+      "efeito": { "tipo": "proficiencia", "delta": 1 },
+      "detalhe": "Os dois espaços estão em negrito: escolher esta opção consome as DUAS escolhas do nível. Cada +1 de Proficiência é mais um dado de dano na arma (2d6 vira 3d6)."
+    },
+    {
+      "id": "multiclasse",
+      "nome": "Multiclasse",
+      "texto": "Multiclasse: escolha uma classe adicional para o seu personagem. Em seguida, corte \"Pegue sua carta de subclasse aprimorada\" e a outra opção de multiclasse nesta ficha.",
+      "textoLivroLiteral": "Multiclasse: escolha uma classe adicional para o seu personagem. Em seguida, corte \"Peque uma carta de subclasse aprimorada\" e a outra opção de multiclasse nesta ficha.",
+      "espacos": { "3": 2, "4": 2 },
+      "consomeEscolhas": 2,
+      "negrito": true,
+      "nivelMinimo": 5,
+      "efeito": { "tipo": "multiclasse" },
+      "detalhe": "Consome as duas escolhas do nível. Uma única vez na vida do personagem — e quem faz multiclasse nunca chega à carta de maestria de subclasse nenhuma."
+    }
+  ],
+
+  "limiaresDeDano": {
+    "regra": "Após escolher os avanços, aumente os limiares de dano do seu personagem em +1 (você sempre soma seu nível atual aos limiares de dano).",
+    "formula": "limiar maior = limiar base menor da armadura + nível; limiar grave = limiar base maior da armadura + nível",
+    "conferencia": "No exemplo da p.111 a personagem sobe para o nível 2 e os limiares vão de 7/14 para 8/15."
+  },
+
+  "proficiencia": {
+    "inicial": 1,
+    "textoLivro": "Ao aprimorar sua Proficiência: preencha um dos círculos vazios na seção \"Proficiência\" da sua ficha de personagem, então aumente o número de dados de dano de sua arma em 1 (por exemplo, de 2d6 para 3d6).",
+    "regra": "Começa em 1 no nível 1. Sobe +1 automaticamente pelas conquistas dos níveis 2, 5 e 8. Pode subir mais pela opção de avanço dos patamares 3 e 4.",
+    "efeitoMecanico": "É o número de dados de dano que a arma rola.",
+    "semErrata": "Conferido: a palavra \"Proficiency\" não aparece uma única vez no PDF de erratas. A regra do livro vale como está."
+  },
+
+  "cartaDeDominioPorNivel": {
+    "regra": "Todo nível o personagem pega uma carta de domínio nova, de um domínio a que tem acesso e de nível igual ou menor que o seu.",
+    "troca": "Além disso, você também pode trocar uma carta de domínio que você já possui por outra carta de domínio de um nível igual ou menor que o da carta trocada.",
+    "limiteDeMao": "No máximo cinco cartas ativas na mão; o resto vai para o cofre."
+  },
+
+  "multiclasse": {
+    "nivelMinimo": 5,
+    "umaVezNaVida": true,
+    "textoLivro": "A partir do 5º nível, você pode escolher multiclasse como opção ao subir de nível. Ao fazer isso, escolha uma classe adicional, selecione um dos domínios dela e receba suas habilidades iniciais; depois pegue o módulo de multiclasse apropriado e o anexe ao lado direito de sua ficha. Em seguida, escolha a carta fundamental de uma subclasse. Se a subclasse conceder um traço de Conjuração, você pode escolher usar este traço ou o traço de Conjuração da sua subclasse original ao fazer um teste de conjuração. Se não tiver um traço de Conjuração e agora precisa de um para sua multiclasse, use o traço definido pela sua nova subclasse.",
+    "textoLivroLiteral": "A partir do 5º nível, você pode escolher multiclasse como opção ao subir de nível. Ao fazer isso, escolha uma classe adicional, selecione um dos domínios dela e receba suas habilidades iniciais; depois pegue o módulo de multiclasse apropriado e o anexe ao lado direito de sua ficha. Em seguida, escolha a carta fundamental de uma subclasse. Se a subclasse conceder um atributo de conjuração, você pode escolher usar este atributo ou o atributo de conjuração da sua subclasse original ao fazer um teste de conjuração. Se não tiver um atributo de conjuração e agora precisa de um para sua multiclasse, use o atributo definido pela sua nova subclasse.",
+    "escolhas": [
+      { "chave": "classe", "texto": "Escolha a classe adicional." },
+      { "chave": "dominio", "texto": "Escolha UM domínio dela a que você ainda não tem acesso." },
+      { "chave": "subclasse", "texto": "Escolha a subclasse e pegue a carta FUNDAMENTAL dela." }
+    ],
+    "metadeDoNivel": {
+      "regra": "As cartas do domínio novo são limitadas à metade do seu nível, arredondando para cima.",
+      "textoLivro": "Escolha um domínio da sua nova classe ao qual você ainda não tem acesso. Daquele momento em diante, sempre que escolher cartas de domínio, você também pode escolher cartas do domínio escolhido, mas elas devem ser no máximo da metade de seu nível. Isso significa que, se um mago de 5º nível fez multiclasse com druida e escolheu o domínio da Sabedoria, ele pode escolher qualquer carta do domínio da Sabedoria que seja, no máximo, de 3º nível.",
+      "arredondamento": "Para cima — o exemplo do livro confirma (nível 5 → cartas até nível 3), e a regra geral da p.107 (\"ARREDONDAR PARA CIMA\") diz o mesmo."
+    },
+    "nivelDasHabilidades": "Quaisquer ataques, magias ou outros movimentos que você faz por conta da multiclasse são sempre feitos no seu nível atual. A restrição da metade do nível se aplica apenas para ESCOLHER cartas de domínio, não às mecânicas delas.",
+    "conjuracao": "Se a nova subclasse dá um traço de Conjuração, o personagem pode usar esse ou o original. Se não tinha nenhum e agora precisa, usa o da nova subclasse.",
+    "custo": "Consome as duas escolhas de avanço do nível.",
+    "cortes": [
+      "A opção \"Pegue sua carta de subclasse aprimorada\" deste patamar sai de cena.",
+      "Todas as outras opções de multiclasse da ficha saem de cena — só uma multiclasse por personagem.",
+      "Consequência: quem faz multiclasse nunca recebe a carta de maestria de nenhuma subclasse."
+    ]
+  },
+
+  "erratasAplicadas": [
+    "p.91 — Clarity — \"You'll be able to increase the number of Hit Point slots you have available as you level up, to a maximum of 12.\" => teto de 12 Pontos de Vida.",
+    "p.92 — Clarity — \"All classes start with 6 Stress slots… to a maximum of 12.\" => todas as classes começam com 6 de Estresse e o teto pelo avanço é 12.",
+    "p.110 — Clarity — sob \"When you choose to increase your Experiences\": escolha DUAS Experiências e cada uma ganha +1 permanente. Confirma a leitura do texto em português.",
+    "CONFERIDO E VAZIO: não existe errata sobre Proficiência, multiclasse, limiares de dano ligados a avanço, nem sobre o quadro de avanço das fichas. A palavra \"Proficiency\" não aparece no PDF de erratas."
+  ],
+
+  "errosDeDigitacaoDoOriginal": [
+    "p.109, conquista do nível 8: \"remova quaisquer marcações nos atributos que marcados no patamar anterior\" — o \"que\" está sobrando. O item do nível 5 traz a construção certa.",
+    "p.109: \"confira a sessão 'Passo 7: Crie Suas Experiências'\" — \"sessão\" por \"seção\".",
+    "p.110, rodapé dos TRÊS quadros de patamar: \"ajuste seus limiarres de dano de acordo\" — \"limiarres\" por \"limiares\". Três vezes.",
+    "p.110, opção de Multiclasse (patamares 3 e 4): \"corte 'Peque uma carta de subclasse aprimorada'\" — \"Peque\" por \"Pegue\", e \"uma\" onde o nome real da opção é \"Pegue SUA carta de subclasse aprimorada\".",
+    "p.110: \"desde que seja de um domínios ao qual você tem acesso\" — concordância.",
+    "p.110, Proficiência e Multiclasse: \"os espaços para marcar este de aumento de nível estão em negrito\" — falta uma palavra. Repetido nas duas opções.",
+    "p.111: \"escolha uma nova carta dos baralho de domínio\" — concordância.",
+    "p.111: \"Corte também todas as outras sessões de multiclasse\" — \"sessões\" por \"seções\".",
+    "p.111, exemplo: \"preenche o controno pontilhado\" — \"controno\" por \"contorno\".",
+    "p.111, exemplo: \"atualiza o nível de Tabby para 2 no topo de ficha de personagem\" — \"de ficha\" por \"da ficha\"."
+  ],
+
+  "ambiguidades": [
+    "Conquista dos níveis 5 e 8: a p.109 diz \"remova as marcações nos traços marcados NO PATAMAR ANTERIOR\" e o quadro da p.110 diz \"remova TODAS as marcações\". Na prática dá no mesmo, porque só o patamar anterior teria marcações válidas. O app limpa todas.",
+    "Carta de domínio extra no 4º patamar: os patamares 2 e 3 trazem teto explícito entre parênteses (4 e 7); o 4º não traz nenhum. Reconferido a 400 dpi — é o texto do livro. O app usa o próprio nível como teto lá.",
+    "\"PF\"/\"Fadiga\": o quadro escreve \"PF\", a explicação escreve \"Pontos de Fadiga\" e o exemplo escreve \"Fadiga\". Os três são a mesma coisa — o Estresse das cartas."
+  ],
+
+  "pontosDeInteresse": [
+    "SUBIR DE NÍVEL É DO GRUPO — o livro diz que todos sobem juntos. O app deixa cada jogador subir a própria ficha; o Mestre subir a mesa inteira de uma vez entra na Parte 9.",
+    "PERSONAGEM NOVO NO MEIO DA CAMPANHA — o livro (p.105) manda criar no nível atual do grupo. A criação de ficha só faz nível 1; subir logo depois resolve, mas um atalho \"criar já no nível N\" seria melhor. Fica anotado.",
+    "MÓDULO DE MULTICLASSE — o livro fala em \"pegue o módulo de multiclasse apropriado e o anexe ao lado direito de sua ficha\". Esse módulo é um pedaço de papel do jogo físico; no app ele vira a seção de multiclasse da ficha. Não existe PNG dele no acervo de cartas.",
+    "TROCA DE CARTA AO SUBIR — o livro permite trocar uma carta que você já tem por outra de nível igual ou menor. Isso é diferente de mover carta entre mão e cofre (que a Parte 7 já faz): é DESCARTAR uma carta e pegar outra. Entra como passo opcional do avanço."
+  ]
+}

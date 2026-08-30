@@ -57,8 +57,8 @@ const CONTADORES = {
   "carta:sage-templo-das-selvas": { origem: "carta-dominio", refId: "sage-templo-das-selvas", nome: "Templo das Selvas", rotulo: "marcadores", tipo: "marcadores", maximo: {"tipo":"cartas-do-dominio","dominio":"SAGE","onde":["ativas","cofre"]}, zeraEm: ["descanso-longo"], recarregaEm: ["descanso-longo"] },
   "carta:splendor-restauracao": { origem: "carta-dominio", refId: "splendor-restauracao", nome: "Restauração", rotulo: "marcadores", tipo: "marcadores", maximo: {"tipo":"traco","traco":"Conjuração"}, zeraEm: ["descanso-longo"], recarregaEm: ["descanso-longo"] },
   "carta:splendor-zona-de-protecao": { origem: "carta-dominio", refId: "splendor-zona-de-protecao", nome: "Zona de Proteção", rotulo: "valor do dado", tipo: "dado-valor", maximo: {"tipo":"dado"}, zeraEm: ["fim-da-cena","descanso-longo"], recarregaEm: [], dado: {"padrao":"d6"}, inicial: 1 },
-  "classe:bardo:rally": { origem: "caracteristica-classe", refId: "bardo", nome: "Dado de Reunião", rotulo: "dado guardado", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-de-sessao"], recarregaEm: ["inicio-de-sessao"], dado: {"padrao":"d6","progressao":[{"nivelMinimo":5,"dado":"d8","motivo":"Nível 5 (característica de classe Rally)"},{"caracteristica":"Poesia Épica","dado":"d10","motivo":"Maestria do Artífice das Palavras"}]} },
-  "classe:guardiao:imparavel": { origem: "caracteristica-classe", refId: "guardiao", nome: "Dado Imparável", rotulo: "valor do dado", tipo: "dado-valor", maximo: {"tipo":"dado"}, zeraEm: ["fim-da-cena","descanso-longo"], recarregaEm: [], dado: {"padrao":"d4","progressao":[{"nivelMinimo":5,"dado":"d6","motivo":"Nível 5 (característica de classe Imparável)"}]}, inicial: 1 },
+  "classe:bardo:rally": { origem: "caracteristica-classe", refId: "bardo", nome: "Dado de Inspiração", rotulo: "dado guardado", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-de-sessao"], recarregaEm: ["inicio-de-sessao"], dado: {"padrao":"d6","progressao":[{"nivelMinimo":5,"dado":"d8","motivo":"Nível 5 (característica de classe Inspiração)"},{"caracteristica":"Poesia Épica","dado":"d10","motivo":"Maestria do Artífice das Palavras"}]} },
+  "classe:guardiao:imparavel": { origem: "caracteristica-classe", refId: "guardiao", nome: "Dado de Determinação", rotulo: "valor do dado", tipo: "dado-valor", maximo: {"tipo":"dado"}, zeraEm: ["fim-da-cena","descanso-longo"], recarregaEm: [], dado: {"padrao":"d4","progressao":[{"nivelMinimo":5,"dado":"d6","motivo":"Nível 5 (característica de classe Determinação)"}]}, inicial: 1 },
   "classe:guerreiro:matador": { origem: "caracteristica-subclasse", refId: "guerreiro-chamada-do-matador", nome: "Dados de Matador", rotulo: "dados", tipo: "dados", maximo: {"tipo":"proficiencia"}, zeraEm: ["fim-de-sessao"], recarregaEm: [], dado: {"padrao":"d6"} },
 };
 
@@ -81,9 +81,9 @@ const CONTADOR_ALIASES = {
   "carta:sage-templo-das-selvas": ["Templo das Selvas"],
   "carta:splendor-restauracao": ["Restauração"],
   "carta:splendor-zona-de-protecao": ["Zona de Proteção"],
-  "classe:bardo:rally": ["Dado de Reunião","Rally Die","Rally Dice","Dado de Motivação"],
-  "classe:guardiao:imparavel": ["Dado Imparável","Unstoppable Die","dado imparável"],
-  "classe:guerreiro:matador": ["Dados de Matador","Slayer Dice","Slayer Die","Dado de Matador"],
+  "classe:bardo:rally": ["Dado de Inspiração","Dado de Reunião","Dado de Motivação","Rally Die","Rally Dice"],
+  "classe:guardiao:imparavel": ["Dado de Determinação","Dado Imparável","Unstoppable Die"],
+  "classe:guerreiro:matador": ["Dados de Matador","Dado de Matador","Dado de Matança","Dados de Matança","Slayer Dice","Slayer Die"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */
@@ -206,12 +206,23 @@ function maximoDoContador_(chave, ficha) {
  * (1/2/3/4), que é a progressão automática do livro.
  */
 function proficienciaDaFicha_(ficha) {
-  const rec = (ficha || {}).recursos || {};
-  const n = Math.trunc(Number(rec.proficiencia));
-  if (isFinite(n) && n >= 1) return Math.min(n, 6);
   const nivel = Number(((ficha || {}).identidade || {}).nivel) || 1;
-  if (typeof tierDoNivel_ === 'function') return tierDoNivel_(nivel) || 1;
-  return 1;
+
+  // A regra de verdade (livro p.110): começa em 1 e ganha +1 nas conquistas
+  // dos níveis 2, 5 e 8; pode subir mais pela opção de avanço dos patamares
+  // 3 e 4. A tabela mora em 4D_Avanco.gs.
+  //
+  // ⚠ Este cálculo NÃO pode ler recursos.proficiencia: aplicarDerivados_
+  // grava esse campo a partir daqui, então ler de volta congelaria o valor e
+  // subir de nível nunca aumentaria a Proficiência.
+  let p = (typeof proficienciaBase_ === 'function')
+    ? proficienciaBase_(nivel)
+    : (typeof tierDoNivel_ === 'function' ? (tierDoNivel_(nivel) || 1) : 1);
+
+  if (typeof bonusDeAvanco_ === 'function') {
+    p += (bonusDeAvanco_(ficha).proficiencia || 0);
+  }
+  return Math.max(1, Math.min(6, p));
 }
 
 /** Valor inicial (quando a carta manda começar cheio ou com o dado em 1). */

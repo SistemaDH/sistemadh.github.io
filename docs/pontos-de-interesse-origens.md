@@ -75,8 +75,14 @@ separado das duas ancestralidades mecânicas. A ficha precisa dos dois campos.
 36 nomes de característica, todos únicos (nenhum se repete entre ancestralidades — por isso
 dá para achar uma característica só pelo nome).
 
-## 4. Ainda NÃO feito
+## 4. Ainda NÃO feito — nada mais (varrido depois do A7)
 
-- Telas de ancestralidade e comunidade (frontend)
-- Aplicar os efeitos das características na ficha (depende da criação de ficha)
-- Confirmar a tradução de "Strength" e "Finesse" — segue pendente desde a Parte 3
+- ~~Telas de ancestralidade e comunidade~~ — fechadas na criação guiada (Parte 6).
+- ~~Aplicar os efeitos das características na ficha~~ — fechado: os derivados saem
+  da criação e a ficha em jogo mostra as características.
+- ~~Confirmar "Strength" e "Finesse"~~ — fechado no glossário: **Força** e
+  **Finesse** (a Jambô diz *Acuidade*, que aparece entre parênteses).
+
+O que sobrou desta parte é o **I6** do `BACKLOG.md`: o acervo de cartas é
+anterior à errata que numerou o Simiah. Só cosmético, e não é coisa que o app
+resolva — é o baralho físico.

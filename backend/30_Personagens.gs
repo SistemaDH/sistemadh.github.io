@@ -264,6 +264,46 @@ function mutarPersonagem_(jogador, id, versaoEsperada, fn) {
 }
 
 /**
+ * Altera a ficha de OUTRO personagem, SEM tomar a trava.
+ *
+ * ⚠ Só pode ser chamada de DENTRO de um comTrava_ que já está aberto. É o caso
+ * do descanso: um movimento usado em aliado precisa gravar duas fichas de uma
+ * vez, e abrir uma segunda trava no meio da primeira é receita de impasse.
+ *
+ * A PERMISSÃO aqui é deliberadamente frouxa — qualquer jogador da mesa pode
+ * mexer na ficha de qualquer outro. Isso só é seguro porque o único caminho
+ * que chega aqui é a cura de descanso, que apenas LIMPA recursos marcados.
+ * Ninguém consegue ferir a ficha alheia; o pior é curar sem ter pedido. Se
+ * algum dia outra coisa passar por aqui, esta garantia cai.
+ *
+ * @param {Function} mutar recebe a ficha do outro e devolve o relatório
+ * @return {{personagem, extra}|null} null quando o personagem não existe
+ */
+function alterarFichaDeOutroSemTrava_(id, mutar) {
+  const linha = acharPersonagem_(id);
+  if (!linha || String(linha.excluido).toUpperCase() === 'TRUE') return null;
+
+  const atual = personagemDaLinha_(linha, true);
+  const extra = mutar(atual.ficha);
+  const validada = validarFicha_(atual.ficha);
+  const json = JSON.stringify(validada);
+  if (json.length > LIMITE_DADOS_CHARS) {
+    throw erroApi_(ERRO.DADOS_INVALIDOS, 'A ficha de ' + linha.nome + ' ficou grande demais.');
+  }
+  const atualizacao = {
+    versao: (Number(linha.versao) || 1) + 1,
+    schema: SCHEMA_FICHA,
+    atualizadoEm: agoraIso_(),
+    dados: json
+  };
+  atualizarLinha_(ABAS.PERSONAGENS, linha._linha, atualizacao);
+  return {
+    personagem: personagemDaLinha_(Object.assign({}, linha, atualizacao), true),
+    extra: extra
+  };
+}
+
+/**
  * Exclusão lógica: a linha continua na planilha com excluido = TRUE.
  * Nada de perder ficha por toque errado no celular.
  */

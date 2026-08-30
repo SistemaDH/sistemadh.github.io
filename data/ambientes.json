@@ -1,0 +1,1681 @@
+{
+ "versao": 1,
+ "fonte": "DH-DigitalRegras.pdf (Jambô, Prévia 5), p.243-251, conferido ficha a ficha contra o SRD em inglês. Vocabulário das cartas (ver glossario.json).",
+ "ambientes": [
+  {
+   "id": "ascencao-ingreme",
+   "nome": "Ascenção Íngreme",
+   "nomeLivro": "ASCENÇÃO ÍNGREME",
+   "tipo": "Travessia",
+   "patamar": 1,
+   "dificuldade": 12,
+   "adversariosPotenciais": [
+    {
+     "adversarios": [
+      {
+       "nome": "cobra-de-vidro",
+       "adversarioId": "cobra-de-vidro"
+      }
+     ]
+    },
+    {
+     "adversarios": [
+      {
+       "nome": "construto",
+       "adversarioId": "construto"
+      }
+     ]
+    },
+    {
+     "adversarios": [
+      {
+       "nome": "defensor enraizado",
+       "adversarioId": "defensor-enraizado"
+      }
+     ]
+    },
+    {
+     "adversarios": [
+      {
+       "nome": "escorpião gigante",
+       "adversarioId": "escorpiao-gigante"
+      }
+     ]
+    }
+   ],
+   "descricao": "Um penhasco rochoso e íngreme, alto o suficiente para oferecer perigo.",
+   "impulsos": [
+    "atirar despreparados às rochas",
+    "atrair pessoas com promessas do que pode haver no topo"
+   ],
+   "habilidades": [
+    {
+     "nome": "Bastões Abandonados",
+     "tipo": "passiva",
+     "perguntas": [
+      "O que o formato e material desses bastões dizem sobre os alpinistas anteriores?",
+      "Quão distantes eles estão uns dos outros?"
+     ],
+     "texto": "aventureiros que estiveram aqui antes deixaram para trás grandes bastões de metal usados por alpinistas para escalar. Se um personagem usando esses bastões falhar em uma jogada para escalar, ele pode marcar 1 Estresse para evitar aumentar a Contagem."
+    },
+    {
+     "nome": "Escalada",
+     "tipo": "passiva",
+     "perguntas": [
+      "Que tipo de formações rochosas estranhas existem aqui?",
+      "Quais avisos de perigo foram deixados por aventureiros pregressos?"
+     ],
+     "texto": "escalar o penhasco é uma Contagem de Progresso (12), que diminui de acordo com critérios abaixo sempre que os personagens fizerem jogadas para escalar:\n• Sucesso crítico: diminua em 3\n• Sucesso com Esperança: diminua em 2\n• Sucesso com Medo: diminua em 1\n• Falha com Esperança: não diminua\n• Falha com Medo: acrescente 1 No fim da a Contagem, o grupo estará no topo do penhasco."
+    },
+    {
+     "nome": "Queda",
+     "tipo": "ação",
+     "perguntas": [
+      "De que maneira é possível ver que muitos outros já caíram daqui antes?",
+      "Quais formas de vida nessas paredes tentariam assustar os aventureiros para que caiam e se tornem presas fáceis?"
+     ],
+     "texto": "gaste 1 Medo para fazer com que um personagem perca a firmeza das mãos e despenque do penhasco. Se ele não for salvo na próxima movimento, cairá ao chão e acrescentará 2 à Contagem. O personagem que caiu sofre 1d12 pontos de dano físico se o contador estiver entre 8 e 12, 2d12 pontos se o contador estiver entre 4 e 7, ou 3d12 pontos se o contador estiver em 3 ou menos.",
+     "custoDeMedo": 1
+    }
+   ],
+   "custoDeMedoMaximo": 1,
+   "errosDeDigitacaoDoOriginal": [
+    "O livro imprime \"1° patamar\" com sinal de grau em vez do ordinal \"º\"."
+   ]
+  },
+  {
+   "id": "emboscada",
+   "nome": "Emboscada",
+   "nomeLivro": "EMBOSCADA",
+   "tipo": "Evento",
+   "patamar": 1,
+   "dificuldade": "especial (veja Força Relativa)",
+   "adversariosPotenciais": [
+    {
+     "adversarios": [
+      {
+       "nome": "quaisquer",
+       "semFicha": "qualquer adversário serve"
+      }
+     ]
+    }
+   ],
+   "descricao": "Uma emboscada feita pelo grupo a fim de surpreender um adversário.",
+   "impulsos": [
+    "escapar",
+    "agrupar-se",
+    "proteger os mais vulneráveis"
+   ],
+   "habilidades": [
+    {
+     "nome": "Força Relativa",
+     "tipo": "passiva",
+     "perguntas": [
+      "Qual adversário estaria menos preparado?",
+      "E qual estaria mais preparado?"
+     ],
+     "texto": "a Dificuldade deste ambiente é igual à do adversário com a Dificuldade mais alta."
+    },
+    {
+     "nome": "De Onde Eles Vieram?",
+     "tipo": "reação",
+     "perguntas": [
+      "O que os adversários estavam fazendo quando a emboscada começou?",
+      "Que impacto isso tem na forma como eles lutam?"
+     ],
+     "texto": "quando um personagem iniciar a emboscada aos adversários desprevenidos, você perde 2 Medo e a primeira jogada de ataque feito por um personagem recebe vantagem."
+    }
+   ]
+  },
+  {
+   "id": "bosque-esquecido",
+   "nome": "Bosque Esquecido",
+   "nomeLivro": "BOSQUE ESQUECIDO",
+   "tipo": "Exploração",
+   "patamar": 1,
+   "dificuldade": 11,
+   "adversariosPotenciais": [
+    {
+     "grupo": "feras",
+     "adversarios": [
+      {
+       "nome": "urso",
+       "adversarioId": "urso"
+      },
+      {
+       "nome": "lobo atroz",
+       "adversarioId": "lobo-atroz"
+      },
+      {
+       "nome": "cobra-de-vidro",
+       "adversarioId": "cobra-de-vidro"
+      }
+     ]
+    },
+    {
+     "grupo": "guardiões do bosque",
+     "adversarios": [
+      {
+       "nome": "ente menor",
+       "adversarioId": "ente-menor"
+      },
+      {
+       "nome": "soldado silvestre",
+       "adversarioId": "soldado-silvestre"
+      },
+      {
+       "nome": "dríade Jovem",
+       "adversarioId": "driade-jovem"
+      }
+     ]
+    }
+   ],
+   "descricao": "Um antigo bosque druídico abandonado e retomado pela natureza.",
+   "impulsos": [
+    "atrair os curiosos",
+    "ecoar o passado"
+   ],
+   "habilidades": [
+    {
+     "nome": "Campo de Batalha Ermo",
+     "tipo": "passiva",
+     "perguntas": [
+      "De onde vieram esses grupos rivais?",
+      "Por que o bosque foi abandonado?"
+     ],
+     "texto": "houve uma batalha aqui. Um personagem pode fazer uma jogada de Instinto para identificar evidências da luta. Sucesso com Esperança revela todas as três informações abaixo. Sucesso com Medo revela duas. Se falhar, o personagem pode marcar 1 Estresse para aprender uma das informações ou receber vantagem na sua próxima jogada para investigar o ambiente. Um personagem com Experiências ou origem adequados pode aprender um detalhe extra e uma resposta correta (nem sempre completa) de uma pergunta sobre a cena.\n• Há evidências de uma batalha (armas quebradas e sulcos no chão) por toda parte.\n• Na verdade, o tronco coberto de musgo de uma árvore é o cadáver de um ente.\n• Árvores ainda de pé parecem retorcidas de maneiras estranhas, como se por mágica."
+    },
+    {
+     "nome": "Profanador",
+     "tipo": "ação",
+     "perguntas": [
+      "De que cor a grama fica quando o elemental surge?",
+      "Como o caos distorce os insetos e outros pequenos animais do bosque?"
+     ],
+     "texto": "gaste 1 Medo para invocar um elemental menor do caos, atraído pelos ecos de discórdia e violência. Ele surge Distante de um personagem a sua escolha e é posto em foco imediatamente.",
+     "custoDeMedo": 1
+    },
+    {
+     "nome": "Sem Boas-vindas",
+     "tipo": "ação",
+     "perguntas": [
+      "O que estes guardiões estão escondendo?",
+      "Será que o grupo poderia enfrentar alguma outra ameaça à floresta para acalmar a dríade?"
+     ],
+     "texto": "uma dríade jovem, dois soldados silvestres e um número de entes menores igual ao número de personagens surgem para enfrentar o grupo de intrusos."
+    },
+    {
+     "nome": "Vinhas com Espinhos",
+     "tipo": "ação",
+     "perguntas": [
+      "Quantas dessas vinhas existem aqui?",
+      "Por que elas agarrariam alguém?",
+      "Elas puxam a vítima para o chão ou a suspendem no ar?"
+     ],
+     "texto": "escolha um ponto no bosque. Todos os alvos Muito Próximos deste ponto devem passar em uma jogada de reação de Agilidade, ou sofrem 1d8+3 pontos de dano físico e ficam Restritos pelas vinhas com espinhos. Criaturas Restritas podem ser libertadas com sucesso em uma jogada de Finesse ou Força ou causando 6 pontos de dano às vinhas."
+    }
+   ],
+   "custoDeMedoMaximo": 1
+  },
+  {
+   "id": "emboscados",
+   "nome": "Emboscados",
+   "nomeLivro": "EMBOSCADOS",
+   "tipo": "Evento",
+   "patamar": 1,
+   "dificuldade": "especial (veja Força Relativa)",
+   "adversariosPotenciais": [
+    {
+     "adversarios": [
+      {
+       "nome": "quaisquer",
+       "semFicha": "qualquer adversário serve"
+      }
+     ]
+    }
+   ],
+   "descricao": "Uma emboscada feita para pegar o grupo desprevenido.",
+   "impulsos": [
+    "subjugar",
+    "dividir",
+    "cercar"
+   ],
+   "habilidades": [
+    {
+     "nome": "Força Relativa",
+     "tipo": "passiva",
+     "perguntas": [
+      "Quem dá o sinal para a emboscada?",
+      "O que torna essa liderança evidente?"
+     ],
+     "texto": "a Dificuldade deste ambiente é igual à do adversário com a Dificuldade mais alta."
+    },
+    {
+     "nome": "Surpresa!",
+     "tipo": "ação",
+     "perguntas": [
+      "O que esses adversários desejam do grupo?",
+      "Como suas táticas de emboscada refletem esse desejo?"
+     ],
+     "texto": "os responsáveis pela emboscada se revelam ao grupo. Receba 2 Medo e ponha um dos adversários da emboscada em foco imediatamente."
+    }
+   ]
+  },
+  {
+   "id": "localidade-estrategica",
+   "nome": "Localidade Estratégica",
+   "nomeLivro": "LOCALIDADE ESTRATÉGICA",
+   "tipo": "Social",
+   "patamar": 1,
+   "dificuldade": 12,
+   "adversariosPotenciais": [
+    {
+     "grupo": "bando do Punhal Escarpado",
+     "adversarios": [
+      {
+       "nome": "arqueiro",
+       "adversarioId": "punhal-escarpado-seteiro"
+      },
+      {
+       "nome": "brigão",
+       "adversarioId": "punhal-escarpado-brigao"
+      },
+      {
+       "nome": "bruxo",
+       "adversarioId": "punhal-escarpado-bruxo"
+      },
+      {
+       "nome": "chefe",
+       "adversarioId": "punhal-escarpado-chefe"
+      },
+      {
+       "nome": "covarde",
+       "adversarioId": "punhal-escarpado-ladrao"
+      },
+      {
+       "nome": "ladrão",
+       "adversarioId": "punhal-escarpado-bandido"
+      }
+     ]
+    },
+    {
+     "adversarios": [
+      {
+       "nome": "comerciante",
+       "adversarioId": "comerciante"
+      }
+     ]
+    },
+    {
+     "adversarios": [
+      {
+       "nome": "ladrão mascarado",
+       "adversarioId": "patife-mascarado"
+      }
+     ]
+    }
+   ],
+   "descricao": "Uma pequena cidade na fronteira de uma nação ou região, próxima a uma masmorra, tumba ou outro destino típico de aventureiros.",
+   "impulsos": [
+    "levar os desesperados à ruína",
+    "lucrar com esperanças vãs"
+   ],
+   "habilidades": [
+    {
+     "nome": "Aventureiros Rivais",
+     "tipo": "passiva",
+     "perguntas": [
+      "Quem tem uma conexão com algum dos aventureiros rivais?",
+      "Ele se aproxima dos rivais primeiro ou espera que se aproximem antes?"
+     ],
+     "texto": "outro grupo está por aqui, buscando os mesmos tesouros ou pistas dos personagens."
+    },
+    {
+     "nome": "Boatos e Rumores",
+     "tipo": "passiva",
+     "perguntas": [
+      "Quais notícias o grupo tem que poderiam ser compartilhados com os curiosos?",
+      "O que os habitantes locais pensam sobre esses eventos?"
+     ],
+     "texto": "boatos são a moeda mais ligeira no reino. Um personagem pode fazer perguntas sobre grandes eventos com uma jogada de Presença. O que ele aprende depende do resultado, seguindo os critérios abaixo.\n• Sucesso crítico: aprende sobre dois grandes eventos. O personagem pode fazer uma pergunta sobre um rumor e obter uma resposta verdadeira (mas não necessariamente completa).\n• Sucesso com Esperança: aprende sobre dois eventos, e ao menos um deles é relevante à origem do personagem.\n• Sucesso com Medo: aprende um rumor alarmante relacionado à origem do personagem.\n• Qualquer falha: os habitantes locais não respondem bem às perguntas. É preciso 1 Estresse para aprender um boato relevante."
+    },
+    {
+     "nome": "Sociedade da Bússola Quebrada",
+     "tipo": "passiva",
+     "perguntas": [
+      "Do que o grupo se gaba nesse lugar?",
+      "Quais dessas histórias são verdade?"
+     ],
+     "texto": "uma sociedade de aventureiros possui uma sede nesta cidade, onde heróis podem trocar histórias de glória e rumores, além de beber pensando em sucessos imaginados e tramas contra rivais."
+    },
+    {
+     "nome": "Seria Uma Pena se Algo Acontecesse à Sua Loja",
+     "tipo": "ação",
+     "perguntas": [
+      "Que tipo de problemas seriam causados por uma intervenção dos personagens?"
+     ],
+     "texto": "o grupo presencia agentes de um grupo criminoso local tentando intimidar o dono de uma loja."
+    },
+    {
+     "nome": "Lugar Errado, Hora Errada",
+     "tipo": "reação",
+     "perguntas": [
+      "O que revela ao grupo que estes criminosos já foram aventureiros?"
+     ],
+     "texto": "durante a noite, quando o grupo estiver sozinho em um beco, você pode gastar 1 Medo para introduzir um grupo de ladrões tentando roubá-lo. Os ladrões surgem Próximos de um personagem a sua escolha e são: um brigão do Punhal Escarpado, um número de ladrões do Punhal Escarpado igual ao número de personagens e um chefe do Punhal Escarpado. Para grupos maiores, acrescente um bruxo e um arqueiro do Punhal Escarpado.",
+     "custoDeMedo": 1
+    }
+   ],
+   "custoDeMedoMaximo": 1
+  },
+  {
+   "id": "manancial-raivoso",
+   "nome": "Manancial Raivoso",
+   "nomeLivro": "MANANCIAL RAIVOSO",
+   "tipo": "Travessia",
+   "patamar": 1,
+   "dificuldade": 10,
+   "adversariosPotenciais": [
+    {
+     "grupo": "feras",
+     "adversarios": [
+      {
+       "nome": "urso",
+       "adversarioId": "urso"
+      },
+      {
+       "nome": "cobra-de-vidro",
+       "adversarioId": "cobra-de-vidro"
+      }
+     ]
+    },
+    {
+     "grupo": "bando do Punhal Escarpado",
+     "adversarios": [
+      {
+       "nome": "arqueiro",
+       "adversarioId": "punhal-escarpado-seteiro"
+      },
+      {
+       "nome": "brigão",
+       "adversarioId": "punhal-escarpado-brigao"
+      },
+      {
+       "nome": "bruxo",
+       "adversarioId": "punhal-escarpado-bruxo"
+      },
+      {
+       "nome": "chefe",
+       "adversarioId": "punhal-escarpado-chefe"
+      },
+      {
+       "nome": "covarde",
+       "adversarioId": "punhal-escarpado-ladrao"
+      },
+      {
+       "nome": "ladrão",
+       "adversarioId": "punhal-escarpado-bandido"
+      }
+     ]
+    }
+   ],
+   "descricao": "Um rio de águas velozes, sem ponte para travessia, e profundo o suficiente para arrastar a maioria das pessoas.",
+   "impulsos": [
+    "cruzar bancos de areia",
+    "arrastar despreparados",
+    "dividir a terra"
+   ],
+   "habilidades": [
+    {
+     "nome": "Travessia Arriscada",
+     "tipo": "passiva",
+     "perguntas": [
+      "Algum dos personagens já passou por um rio assim antes?",
+      "Algum deles tem medo de se afogar?"
+     ],
+     "texto": "atravessar o rio requer que o grupo conclua uma Contagem de Progresso (4). Um personagem que falhe com Medo em uma jogada fica imediatamente sujeito à Corrente do rio sem que o mestre precise gastar Medo."
+    },
+    {
+     "nome": "Corrente",
+     "tipo": "ação",
+     "perguntas": [
+      "Quais tipos de bugigangas existem no fundo do rio?",
+      "Será que predadores habitam essas águas?"
+     ],
+     "texto": "gaste 1 Medo para fazer um personagem ser pego pela correnteza. O alvo deve fazer uma jogada de reação de Agilidade. Se falhar, sofre 1d6+1 pontos de dano físico e é tragado rio abaixo até um ponto em alcance Próximo, ficando Vulnerável até que saia do rio. Se passar, deve marcar 1 Estresse.",
+     "custoDeMedo": 1
+    },
+    {
+     "nome": "Predador Paciente",
+     "tipo": "ação",
+     "perguntas": [
+      "Quais tesouros a fera esconde em sua toca?",
+      "Quais viajantes já foram vítimas deste predador?"
+     ],
+     "texto": "gaste 1 Medo para invocar uma cobra-de-vidro Próxima de um personagem a sua escolha. A cobra surge dentro ou próxima ao rio e é posta em foco imediatamente para fazer a ação Serpente Giratória.",
+     "custoDeMedo": 1
+    }
+   ],
+   "custoDeMedoMaximo": 1,
+   "nomeNoIndice": "Manacial raivoso"
+  },
+  {
+   "id": "mercado-movimentado",
+   "nome": "Mercado Movimentado",
+   "nomeLivro": "MERCADO MOVIMENTADO",
+   "tipo": "Social",
+   "patamar": 1,
+   "dificuldade": 10,
+   "adversariosPotenciais": [
+    {
+     "adversarios": [
+      {
+       "nome": "comerciante",
+       "adversarioId": "comerciante"
+      }
+     ]
+    },
+    {
+     "grupo": "guardas",
+     "adversarios": [
+      {
+       "nome": "guarda armado",
+       "adversarioId": "guarda-armado"
+      },
+      {
+       "nome": "guarda chefe",
+       "adversarioId": "guarda-chefe"
+      }
+     ]
+    },
+    {
+     "adversarios": [
+      {
+       "nome": "ladrão mascarado",
+       "adversarioId": "patife-mascarado"
+      }
+     ]
+    }
+   ],
+   "descricao": "O coração econômico de um assentamento, com artesãos locais, mercadores viajantes e gente de toda classe social.",
+   "impulsos": [
+    "comprar barato e vender caro",
+    "instigar e atrair com itens de todos os cantos"
+   ],
+   "habilidades": [
+    {
+     "nome": "Inclinar a Balança",
+     "tipo": "passiva",
+     "perguntas": [
+      "Qualquer moeda é aceita ou apenas a moeda local?",
+      "Quão indiscretos são os personagens quando oferecem esse suborno?"
+     ],
+     "texto": "personagens podem receber vantagem em uma jogada de Presença se oferecerem um punhado de ouro como parte da interação."
+    },
+    {
+     "nome": "Dedos Leves",
+     "tipo": "ação",
+     "perguntas": [
+      "O que levou essa pessoa a bater carteiras?",
+      "Onde é o esconderijo do ladrão e como ele se esconde?"
+     ],
+     "texto": "um ladrão tenta roubar algo de um dos personagens, este deve passar em uma jogada de Instinto para perceber o ladrão ou perde um item à escolha do mestre, enquanto o ladrão foge para um ponto em alcance Próximo. Para recuperar o item perdido, os jogadores precisam completar uma Contagem de Progresso (6) para perseguir o ladrão antes que este complete uma Contagem de Consequência (4) e escape para seu esconderijo."
+    },
+    {
+     "nome": "Descoberta Inesperada",
+     "tipo": "ação",
+     "perguntas": [
+      "Que coisa mais valiosa que ouro o mercador pedirá em troca disso?"
+     ],
+     "texto": "revele aos personagens que um dos comerciantes tem algo que eles desejam ou necessitam, como comida de sua terra natal, um livro raro, componentes mágicos, um mapa do tesouro duvidoso ou uma chave mágica."
+    },
+    {
+     "nome": "Levado pela multidão",
+     "tipo": "reação",
+     "perguntas": [
+      "Para onde os movimentos da multidão irão levar o personagem?",
+      "Como ele se sente estando sozinho, mas rodeado de gente?"
+     ],
+     "texto": "quando um personagem se separar do grupo, a multidão se move, o isolando dos companheiros."
+    }
+   ]
+  },
+  {
+   "id": "taverna-local",
+   "nome": "Taverna Local",
+   "nomeLivro": "TAVERNA LOCAL",
+   "tipo": "Social",
+   "patamar": 1,
+   "dificuldade": 10,
+   "adversariosPotenciais": [
+    {
+     "adversarios": [
+      {
+       "nome": "comerciante",
+       "adversarioId": "comerciante"
+      }
+     ]
+    },
+    {
+     "grupo": "guardas",
+     "adversarios": [
+      {
+       "nome": "guarda armado",
+       "adversarioId": "guarda-armado"
+      },
+      {
+       "nome": "guarda chefe",
+       "adversarioId": "guarda-chefe"
+      }
+     ]
+    },
+    {
+     "grupo": "mercenários",
+     "adversarios": [
+      {
+       "nome": "saqueador",
+       "adversarioId": "saqueador"
+      },
+      {
+       "nome": "mercenário",
+       "adversarioId": "mercenario"
+      },
+      {
+       "nome": "guerreiro arcano",
+       "adversarioId": "guerreiro-arcano"
+      },
+      {
+       "nome": "mestre de armas",
+       "adversarioId": "mestre-de-armas"
+      }
+     ]
+    }
+   ],
+   "descricao": "Uma taverna muito animada que serve de local de encontro na cidade.",
+   "impulsos": [
+    "dar oportunidades aos aventureiros",
+    "juntar a comunidade"
+   ],
+   "habilidades": [
+    {
+     "nome": "Cantar pela Refeição",
+     "tipo": "passiva",
+     "perguntas": [
+      "Qual performance você vai apresentar?",
+      "O que ela significa para você?",
+      "Quando foi a última vez que você fez essa performance em público?"
+     ],
+     "texto": "um personagem pode fazer uma performance para os convivas com uma jogada de Presença. Se passar, o personagem recebe 1d4 punhados de ouro (2d4 em caso de sucesso crítico). Se falhar, marca 1 Estresse."
+    },
+    {
+     "nome": "Quais os Boatos da Cidade?",
+     "tipo": "passiva",
+     "perguntas": [
+      "Quem possui esse tipo de informação?",
+      "Quais boatos os habitantes locais começaram a espalhar sobre os personagens?"
+     ],
+     "texto": "um personagem pode perguntar ao taverneiro, aos funcionários ou aos clientes sobre eventos locais, rumores e possíveis trabalhos fazendo uma jogada de Presença. Se passar, ele pode aprender dois detalhes abaixo (à escolha do jogador), ou três se teve um sucesso crítico. Se falhar, pode aprender um detalhe e marcar 1 Estresse enquanto seu interlocutor se perde em algum assunto irrelevante.\n• Um rumor fascinante conectado à origem de um personagem\n• Um trabalho promissor para o grupo, envolvendo alguma ameaça ou situação próximas\n• Lendas locais que envolvem algo que o grupo tenha visto\n• Boatos que apontam para algum problema na comunidade"
+    },
+    {
+     "nome": "Briga de Bar!",
+     "tipo": "ação",
+     "perguntas": [
+      "Quem começou a briga?",
+      "O que vai fazer com que ela pare?"
+     ],
+     "texto": "gaste 1 Medo para começar uma briga na taverna. Se um personagem tentar se mover durante a briga, deve passar em uma jogada de Agilidade ou Presença para não sofrer 1d6+2 pontos de dano físico, causados por um soco ou objeto aleatório. Um personagem pode tentar ativar esta habilidade com uma jogada que provoque os outros clientes.",
+     "custoDeMedo": 1
+    },
+    {
+     "nome": "Figura Misteriosa",
+     "tipo": "ação",
+     "perguntas": [
+      "O que a figura deseja?",
+      "Qual a impressão que ela tem dos personagens?",
+      "Que maneirismos ou acessórios ela possui?"
+     ],
+     "texto": "revele um estranho que esconde sua identidade, oculto em alguma mesa nas sombras."
+    },
+    {
+     "nome": "Gente Nova no Pedaço",
+     "tipo": "ação",
+     "perguntas": [
+      "Ele sabia que o grupo estava aqui?",
+      "O que ele está fazendo na cidade?"
+     ],
+     "texto": "apresente um NPC importante que deseja contratar os aventureiros para algo relacionado à origem de um dos personagens."
+    }
+   ],
+   "custoDeMedoMaximo": 1
+  },
+  {
+   "id": "cidade-assombrada",
+   "nome": "Cidade Assombrada",
+   "nomeLivro": "CIDADE ASSOMBRADA",
+   "tipo": "Exploração",
+   "patamar": 2,
+   "dificuldade": 14,
+   "adversariosPotenciais": [
+    {
+     "grupo": "fantasmas",
+     "adversarios": [
+      {
+       "nome": "espectro arqueiro",
+       "adversarioId": "espectro-arqueiro"
+      },
+      {
+       "nome": "espectro capitão",
+       "adversarioId": "espectro-capitao"
+      },
+      {
+       "nome": "espectro guardião",
+       "adversarioId": "espectro-guardiao"
+      }
+     ]
+    },
+    {
+     "grupo": "versões fantasmagóricas de outros adversários",
+     "adversarios": [
+      {
+       "nome": "veja Forma Fantasmagórica",
+       "semFicha": "o livro manda ver outra habilidade"
+      }
+     ]
+    }
+   ],
+   "descricao": "Uma cidade abandonada e assombrada por espíritos de eras passadas.",
+   "impulsos": [
+    "desorientar e confundir",
+    "replicar calamidades públicas e pessoais"
+   ],
+   "habilidades": [
+    {
+     "nome": "Conhecimento Oculto",
+     "tipo": "passiva",
+     "perguntas": [
+      "Quais segredos estão ocultos na cidade?",
+      "Por que há tantos fantasmas aqui?",
+      "Quais aventureiros já encontraram seu fim neste local?"
+     ],
+     "texto": "a cidade esconde incontáveis mistérios a serem desvendados. Um personagem que busque informação sobre a cidade pode fazer uma jogada de Instinto ou Conhecimento para aprender sobre o local e descobrir tesouros (possivelmente assombrados).\n• Sucesso crítico: recebe informações valiosas e um item útil.\n• Sucesso com Esperança: recebe informações valiosas.\n• Sucesso com Medo: recebe informações vagas ou incompletas.\n• Qualquer falha: marque 1 Estresse para encontrar uma pista após uma busca exaustiva."
+    },
+    {
+     "nome": "Forma Fantasmagórica",
+     "tipo": "passiva",
+     "perguntas": [
+      "Quais feridas em suas formas físicas foram as causas de suas mortes?",
+      "Quais propósitos inacabados os mantêm presos ao Plano Mortal?"
+     ],
+     "texto": "adversários que surgem aqui possuem forma fantasmagórica. Eles têm resistência a dano físico e podem marcar 1 Estresse para se moverem até um ponto em alcance Próximo atravessando objetos sólidos."
+    },
+    {
+     "nome": "Antiga Calamidade",
+     "tipo": "ação",
+     "perguntas": [
+      "Foi este desastre que fez com que a cidade fosse abandonada?",
+      "O que se sabe desse evento, e como esse conhecimento pode ajudar na fuga dos personagens?"
+     ],
+     "texto": "gaste 1 Medo para manifestar o eco de um desastre passado que assolou a cidade. Ative uma Contagem de Progresso (5) enquanto o desastre é repetido ao redor dos personagens. Para completar a contagem e escapar da catástrofe, os personagens devem superar desafios como incêndios, multidões de civis, queda de estruturas e ruas enquanto descobrem a história do que aconteceu e encontram pistas para escapar do inevitável.",
+     "custoDeMedo": 1
+    },
+    {
+     "nome": "Sem Saída",
+     "tipo": "ação",
+     "perguntas": [
+      "O que os fantasmas querem?",
+      "O que vocês precisam que eles têm?"
+     ],
+     "texto": "fantasmas de eras anteriores manifestam cenas de seu tempo, como um festival de rua, uma revolução ou um assalto. Essas assombrações alteram a aparência da cidade ao redor dos personagens, bloqueando o caminho atrás deles, forçando um desvio ou impondo desafios, como confundi-los com ladrões rivais durante o assalto."
+    }
+   ],
+   "custoDeMedoMaximo": 1,
+   "errosDeDigitacaoDoOriginal": [
+    "O livro imprime \"egredos\" no lugar de \"segredos\"."
+   ]
+  },
+  {
+   "id": "passagem-montanhosa",
+   "nome": "Passagem Montanhosa",
+   "nomeLivro": "PASSAGEM MONTANHOSA",
+   "tipo": "Travessia",
+   "patamar": 2,
+   "dificuldade": 15,
+   "adversariosPotenciais": [
+    {
+     "adversarios": [
+      {
+       "nome": "crânio do caos",
+       "adversarioId": "cranio-do-caos"
+      }
+     ]
+    },
+    {
+     "grupo": "feras",
+     "adversarios": [
+      {
+       "nome": "urso",
+       "adversarioId": "urso"
+      },
+      {
+       "nome": "águia gigante",
+       "adversarioId": "aguia-gigante"
+      },
+      {
+       "nome": "cobra-de-vidro",
+       "adversarioId": "cobra-de-vidro"
+      }
+     ]
+    },
+    {
+     "adversarios": [
+      {
+       "nome": "minotauro arrasador",
+       "adversarioId": "minotauro-arrasador"
+      }
+     ]
+    },
+    {
+     "adversarios": [
+      {
+       "nome": "predador mortal",
+       "adversarioId": "predador-mortal"
+      }
+     ]
+    }
+   ],
+   "descricao": "Picos rochosos que atravessam as nuvens com caminhos e passagens tortuosas.",
+   "impulsos": [
+    "cobrar um preço alto em energia e suprimentos",
+    "revelar alterações mágicas",
+    "tornar a viagem vagarosa"
+   ],
+   "habilidades": [
+    {
+     "nome": "Símbolos Místicos",
+     "tipo": "passiva",
+     "perguntas": [
+      "Quem colocou esses encantos aqui?",
+      "Eles estão por perto?",
+      "Por que desejam que o clima aqui seja tão rigoroso?"
+     ],
+     "texto": "marcações grandes foram feitas na face da montanha. Um personagem com origem ou Experiências relevantes pode identificá-las como magia climática, que aumenta o poder dos ventos gélidos. Este personagem deve passar em uma jogada de Conhecimento para relembrar informações sobre os símbolos, possíveis informações sobre seus criadores e o conhecimento em como dispersá-los. Em caso de sucesso crítico, também reconhece que os símbolos tem o estilo de encantos montanheses e recebe vantagem para dispersá-los."
+    },
+    {
+     "nome": "Avalanche",
+     "tipo": "ação",
+     "perguntas": [
+      "Como os personagens tentam sobreviver à avalanche?",
+      "Como tentam encontrar uns aos outros se forem arrastados montanha abaixo?"
+     ],
+     "texto": "gaste 1 Medo para castigar a montanha com uma torrente gelada, provocando uma avalanche. Todos os personagens no caminho devem passar em uma jogada de reação de Agilidade ou Força, ou serão soterrados e arrastados montanha abaixo. Quem falhar é empurrado montanha abaixo até pontos em alcance Distante, sofre 2d20 pontos de dano físico e deve marcar 1 Estresse. Quem passar deve marcar 1 Estresse.",
+     "custoDeMedo": 1
+    },
+    {
+     "nome": "Ninho de Aves de Rapina",
+     "tipo": "reação",
+     "perguntas": [
+      "Quando foi a última vez que as águias encontraram presas?",
+      "Elas têm filhotes ou ovos em seu ninho?"
+     ],
+     "texto": "se os personagens adentrarem o território de caça das aves de rapina, duas águas gigantes surgem Muito Distantes de um personagem a escolha do mestre, que é identificado como uma provável presa."
+    },
+    {
+     "nome": "Ventos Gélidos",
+     "tipo": "reação",
+     "perguntas": [
+      "Quais partes dos corpos dos personagens ficam dormentes primeiro?",
+      "Como eles tentam se aquecer à medida que avançam?"
+     ],
+     "texto": "Contagem (ciclo 4). Quando os personagens entram na passagem montanhosa, ative a contagem. Quando ela terminar, todos os personagens na passagem precisam passar em uma jogada de reação de Força ou devem marcar 1 Estresse. Um personagem vestindo roupas apropriadas ao frio extremo recebe vantagem nestes jogadas."
+    }
+   ],
+   "custoDeMedoMaximo": 1,
+   "errosDeDigitacaoDoOriginal": [
+    "O livro imprime \"entram a passagem\" no lugar de \"entram na\"."
+   ]
+  },
+  {
+   "id": "ritual-de-cultistas",
+   "nome": "Ritual de Cultistas",
+   "nomeLivro": "RITUAL DE CULTISTAS",
+   "tipo": "Evento",
+   "patamar": 2,
+   "dificuldade": 14,
+   "adversariosPotenciais": [
+    {
+     "grupo": "culto dos Deuses Caídos",
+     "adversarios": [
+      {
+       "nome": "cultista adepto",
+       "adversarioId": "cultista-adepto"
+      },
+      {
+       "nome": "cultista sicário",
+       "adversarioId": "cultista-sicario"
+      },
+      {
+       "nome": "cultista iniciado",
+       "adversarioId": "cultista-iniciado"
+      },
+      {
+       "nome": "portador dos segredos",
+       "adversarioId": "portador-dos-segredos"
+      }
+     ]
+    }
+   ],
+   "descricao": "Um culto dos Deuses Caídos que se reúne ao redor do símbolo de deuses derrotados e de uma fogueira de chamas verdes.",
+   "impulsos": [
+    "profanar a terra",
+    "unir o Plano Mortal aos Círculos Inferiores"
+   ],
+   "habilidades": [
+    {
+     "nome": "Solo Profano",
+     "tipo": "passiva",
+     "perguntas": [
+      "Como os personagens notam que há algo de errado neste lugar?",
+      "Quais medos ressurgem enquanto sua Esperança é testada?"
+     ],
+     "texto": "cultistas dedicaram este lugar aos Deuses Caídos e sua influência profana se manifesta aqui. Reduza o dado de Esperança dos personagens para 1d10 enquanto estiverem neste ambiente. A profanação pode ser removida com uma Contagem de Progresso (6)."
+    },
+    {
+     "nome": "Poder Blasfemo",
+     "tipo": "ação",
+     "perguntas": [
+      "Como a aparência do inimigo muda?",
+      "Quais medos são relembrados com seus golpes?"
+     ],
+     "texto": "parte do poder do ritual é direcionada para que um membro do culto lute contra os invasores. Escolha um adversário para que seja Imbuído com magia terrível até o fim da cena ou até que seja derrotado. Um adversário Imbuído é posto em foco imediatamente e recebe um dos seguintes benefícios, ou os três se você gastar 1 Medo:\n• Faz todas as jogadas de ataque com vantagem.\n• Causa 1d10 pontos de dano extra ao acertar ataques\n• Recebe a seguinte habilidade: Inclemente (2) (passiva): este adversário pode ser posto em foco até 2 vezes por turno do mestre. Gaste Medo normalmente para colocá-lo em foco.",
+     "custoDeMedo": 1
+    },
+    {
+     "nome": "Completar o Ritual",
+     "tipo": "reação",
+     "perguntas": [
+      "Qual será a sensação de ver tamanha devoção em sua busca por medo e dominação?"
+     ],
+     "texto": "se o líder do ritual for vítima de um ataque ou feitiço, um aliado Muito Próximo pode marcar 1 Estresse para tornar-se a vítima no seu lugar."
+    },
+    {
+     "nome": "Invocação",
+     "tipo": "reação",
+     "perguntas": [
+      "O que os cultistas pretendem fazer com esse demônio caso sejam bem-sucedidos?",
+      "O que eles tentarão invocar depois?"
+     ],
+     "texto": "Contagem (6). Quando os personagens entram na cena ou quando o culto inicia seu ritual de invocação demoníaca, ative a contagem. Escolha um adversário para liderar o ritual. A contagem diminui sempre que um personagem fizer uma rolagem com Medo. Quando ela terminar, invoque um demônio menor Muito Próximo do líder do ritual. Se o líder for derrotado, a contagem é encerrada sem efeito e o ritual falha."
+    }
+   ],
+   "custoDeMedoMaximo": 1
+  },
+  {
+   "id": "templo-exaltado",
+   "nome": "Templo Exaltado",
+   "nomeLivro": "TEMPLO EXALTADO",
+   "tipo": "Social",
+   "patamar": 2,
+   "dificuldade": 13,
+   "adversariosPotenciais": [
+    {
+     "grupo": "guardas",
+     "adversarios": [
+      {
+       "nome": "guarda arqueiro",
+       "adversarioId": "guarda-arqueiro"
+      },
+      {
+       "nome": "guarda armado",
+       "adversarioId": "guarda-armado"
+      },
+      {
+       "nome": "guarda chefe",
+       "adversarioId": "guarda-chefe"
+      }
+     ]
+    }
+   ],
+   "descricao": "Um templo movimentado e bem-cuidado, que oferece curas e solenidades. É supervisionado por um sacerdote ou serafim.",
+   "impulsos": [
+    "conectar o Plano Mortal à Graça Superior",
+    "demonstrar o poder do divino",
+    "ajudar e socorrer os fiéis"
+   ],
+   "habilidades": [
+    {
+     "nome": "Local de Cura",
+     "tipo": "passiva",
+     "perguntas": [
+      "Qual o cheiro do incenso daqui?",
+      "Acólitos cantam que tipo de música?"
+     ],
+     "texto": "um personagem que descanse no templo recupera automaticamente todos os Pontos de Vida."
+    },
+    {
+     "nome": "Orientação Divina",
+     "tipo": "passiva",
+     "perguntas": [
+      "Como é o sentimento de ser tocado pelas visões?",
+      "Quais sentimentos se mantêm depois que as imagens se vão?"
+     ],
+     "texto": "um personagem que reze para uma divindade enquanto estiver no templo pode fazer uma jogada de Instinto para receber respostas. Se o deus de suas súplicas não for bem-vindo no templo, a jogada sofre desvantagem.\n• Sucesso crítico: o personagem recebe informações claras. Além disso, recebe 1d4 Esperança, que podem ser distribuídos entre o grupo se compartilhar a visão recebida.\n• Sucesso com Esperança: o personagem recebe informações claras.\n• Sucesso com Medo: o personagem recebe vislumbres rápidos de sabedoria ou emoções que direcionam a uma resposta.\n• Qualquer falha: o personagem recebe apenas visões vagas. Ele pode marcar 1 Estresse para receber uma imagem clara sem contexto."
+    },
+    {
+     "nome": "Esperança Inquebrantável",
+     "tipo": "reação",
+     "perguntas": [
+      "Quais emoções ou memórias vêm à tona quando o medo surge?"
+     ],
+     "texto": "uma vez por cena, cada personagem pode marcar 1 Estresse para transformar uma rolagem com Medo numa rolagem com Esperança."
+    },
+    {
+     "nome": "Reprovação Divina",
+     "tipo": "reação",
+     "perguntas": [
+      "Quais símbolos ou ícones indicam que são agentes de uma divindade?",
+      "Quem é o líder do grupo e o que os chamou para essa vocação?"
+     ],
+     "texto": "se os personagens forem intrusos no templo, tenham blasfemado ou ofendido o clero, você pode gastar 1 Medo para invocar um serafim supremo e 1d4 guardas armados Próximos do sacerdote superior para que sua vontade seja cumprida.",
+     "custoDeMedo": 1
+    }
+   ],
+   "custoDeMedoMaximo": 1,
+   "nomeNoIndice": "Templo sagrado"
+  },
+  {
+   "id": "batalha-campal",
+   "nome": "Batalha Campal",
+   "nomeLivro": "BATALHA CAMPAL",
+   "tipo": "Evento",
+   "patamar": 3,
+   "dificuldade": 17,
+   "adversariosPotenciais": [
+    {
+     "grupo": "mercenários",
+     "adversarios": [
+      {
+       "nome": "saqueador",
+       "adversarioId": "saqueador"
+      },
+      {
+       "nome": "mercenário",
+       "adversarioId": "mercenario"
+      },
+      {
+       "nome": "guerreiro arcano",
+       "adversarioId": "guerreiro-arcano"
+      },
+      {
+       "nome": "mestre de armas",
+       "adversarioId": "mestre-de-armas"
+      }
+     ]
+    },
+    {
+     "grupo": "forças nobres",
+     "adversarios": [
+      {
+       "nome": "esquadrão de arqueiros",
+       "adversarioId": "esquadrao-de-arqueiros"
+      },
+      {
+       "nome": "conscrito",
+       "adversarioId": "conscrito"
+      },
+      {
+       "nome": "soldado de elite",
+       "adversarioId": "soldado-de-elite"
+      },
+      {
+       "nome": "cavaleiro do reino",
+       "adversarioId": "cavaleiro-do-reino"
+      }
+     ]
+    }
+   ],
+   "descricao": "Um combate massivo entre dois grupos de combatentes armados.",
+   "impulsos": [
+    "tomar pessoas",
+    "terras e riquezas",
+    "derramar sangue por ganância e glória"
+   ],
+   "habilidades": [
+    {
+     "nome": "Perdido no Mar de Aço",
+     "tipo": "passiva",
+     "perguntas": [
+      "Será que os combatentes acham que vocês são inimigos ou intrusos?",
+      "Você consegue diferenciar amigos de inimigos em meio ao combate?"
+     ],
+     "texto": "atravessar o campo de batalha durante um combate ativo é extremamente perigoso. Um personagem deve passar em uma jogada de Agilidade para se mover, e pode ir apenas até alcance Próximo se passar. Se um adversário estiver Corpo a Corpo, o personagem deve marcar 1 Estresse para fazer a jogada de Agilidade para se mover."
+    },
+    {
+     "nome": "Magia de Guerra",
+     "tipo": "ação",
+     "perguntas": [
+      "De que forma o ataque é feito?",
+      "Bola de fogo, chuva ácida, tempestade de lâminas?",
+      "Quais objetivos táticos o ataque pretende alcançar e o que virá depois?"
+     ],
+     "texto": "gaste 1 Medo para fazer com o mago de um dos lados usar uma magia de destruição em larga escala. Escolha um ponto Muito Distante do mago no campo de batalha. Todos os alvos Próximos deste ponto devem fazer uma jogada de reação de Agilidade. Quem falhar sofre 3d12+8 pontos de dano mágico e deve marcar 1 Estresse.",
+     "custoDeMedo": 1
+    },
+    {
+     "nome": "Reforços!",
+     "tipo": "ação",
+     "perguntas": [
+      "Quem eles irão atacar primeiro?",
+      "Que tipo de formação irão assumir?"
+     ],
+     "texto": "invoque os reforços: um cavaleiro do reino, uma quantidade de lacaios de 3º patamar equivalente ao número de personagens e dois adversários à sua escolha Distantes de um personagem à sua escolha. O cavaleiro do reino é imediatamente posto em foco."
+    },
+    {
+     "nome": "Saquear e Pilhar",
+     "tipo": "ação",
+     "perguntas": [],
+     "texto": "as forças atacantes intensificam o ataque ao começar incêndios, roubar objetos valiosos, sequestrar pessoas importantes e matar a população. O que é valioso por aqui? Quem é mais Vulnerável?"
+    }
+   ],
+   "custoDeMedoMaximo": 1
+  },
+  {
+   "id": "cerco-ao-castelo",
+   "nome": "Cerco ao Castelo",
+   "nomeLivro": "CERCO AO CASTELO",
+   "tipo": "Evento",
+   "patamar": 3,
+   "dificuldade": 17,
+   "adversariosPotenciais": [
+    {
+     "grupo": "mercenários",
+     "adversarios": [
+      {
+       "nome": "saqueador",
+       "adversarioId": "saqueador"
+      },
+      {
+       "nome": "mercenário",
+       "adversarioId": "mercenario"
+      },
+      {
+       "nome": "guerreiro arcano",
+       "adversarioId": "guerreiro-arcano"
+      },
+      {
+       "nome": "mestre de armas",
+       "adversarioId": "mestre-de-armas"
+      }
+     ]
+    },
+    {
+     "grupo": "forças nobres",
+     "adversarios": [
+      {
+       "nome": "esquadrão de arqueiros",
+       "adversarioId": "esquadrao-de-arqueiros"
+      },
+      {
+       "nome": "conscrito",
+       "adversarioId": "conscrito"
+      },
+      {
+       "nome": "soldado de elite",
+       "adversarioId": "soldado-de-elite"
+      },
+      {
+       "nome": "cavaleiro do reino",
+       "adversarioId": "cavaleiro-do-reino"
+      }
+     ]
+    }
+   ],
+   "descricao": "Um cerco ativo com atacantes tentando entrar num castelo fortificado.",
+   "impulsos": [
+    "eliminar a vontade de lutar",
+    "quebrar a muralha",
+    "criar tensão"
+   ],
+   "habilidades": [
+    {
+     "nome": "Entrada Secreta",
+     "tipo": "passiva",
+     "perguntas": [
+      "Como eles conseguem entrar sem revelar o caminho às forças de ataque?",
+      "Há algum dos defensores protegendo essa entrada?"
+     ],
+     "texto": "um personagem pode encontrar ou recordar de uma passagem secreta para o castelo com sucesso em uma jogada de Instinto ou Conhecimento."
+    },
+    {
+     "nome": "Armas de Cerco (mudança de ambiente)",
+     "tipo": "ação",
+     "perguntas": [
+      "Quais armas de cerco foram usadas?",
+      "São mágicas, mundanas ou uma mistura de ambas?",
+      "Quais defesas devem ser superadas pelos personagens para que consigam invadir o castelo?"
+     ],
+     "texto": "Contagem de Consequência (6). As forças de ataque usam uma arma de cerco para eliminar as fortificações do castelo. Ative a contagem quando iniciar o cerco (para um cerco prolongado, use uma contagem de longo prazo). Quando a contagem terminar, as fortificações são quebradas e os atacantes avançam para dentro do castelo. Receba 2 Medo, mude o ambiente para a batalha campal e o ponha em foco."
+    },
+    {
+     "nome": "Reforços!",
+     "tipo": "ação",
+     "perguntas": [
+      "Quem eles irão atacar primeiro?",
+      "Que tipo de formação irão assumir?"
+     ],
+     "texto": "invoque os reforços: um cavaleiro do reino, uma quantidade de lacaios de 3º patamar equivalente ao número de personagens e dois adversários à sua escolha Distantes de um personagem à sua escolha. O cavaleiro do reino é imediatamente posto em foco."
+    },
+    {
+     "nome": "Dano Indireto",
+     "tipo": "reação",
+     "perguntas": [
+      "Quais escombros são espalhados pelo ataque?",
+      "O que foi quebrado que não pode ser facilmente consertado?"
+     ],
+     "texto": "quando um adversário for derrotado, você pode gastar 1 Medo para fazer o ataque de uma arma de cerco atingir um ponto do campo de batalha. Alvos Muito Próximos do ponto devem fazer uma jogada de reação de Agilidade.\n• Quem falhar sofre 3d8+3 pontos de dano físico ou mágico e deve marcar 1 Estresse.\n• Quem passar deve marcar 1 Estresse.",
+     "custoDeMedo": 1
+    }
+   ],
+   "custoDeMedoMaximo": 1
+  },
+  {
+   "id": "coracao-ardente-da-floresta",
+   "nome": "Coração Ardente da Floresta",
+   "nomeLivro": "CORAÇÃO ARDENTE DA FLORESTA",
+   "tipo": "Exploração",
+   "patamar": 3,
+   "dificuldade": 16,
+   "adversariosPotenciais": [
+    {
+     "grupo": "feras",
+     "adversarios": [
+      {
+       "nome": "urso",
+       "adversarioId": "urso"
+      },
+      {
+       "nome": "cobra-de-vidro",
+       "adversarioId": "cobra-de-vidro"
+      }
+     ]
+    },
+    {
+     "grupo": "Elementais",
+     "adversarios": [
+      {
+       "nome": "centelha elemental",
+       "adversarioId": "centelha-elemental"
+      }
+     ]
+    },
+    {
+     "grupo": "defensores verdejantes",
+     "adversarios": [
+      {
+       "nome": "dríade",
+       "adversarioId": "driade"
+      },
+      {
+       "nome": "ente",
+       "adversarioId": "ente-carvalho"
+      },
+      {
+       "nome": "cavaleiro cervo",
+       "adversarioId": "cavaleiro-do-cervo"
+      }
+     ]
+    }
+   ],
+   "descricao": "Cinzas azuladas preenchem o ar ao redor de uma imensa árvore coberta de musgo, queimando eternamente num tom doentio de azul.",
+   "impulsos": [
+    "criar um ritmo estranho a ser seguido por todos",
+    "corromper as matas"
+   ],
+   "habilidades": [
+    {
+     "nome": "Chama Índigo",
+     "tipo": "passiva",
+     "perguntas": [
+      "Qual culto dos Deuses Caídos corrompeu essas matas?",
+      "O que já foi feito com a madeira e seiva amaldiçoadas dessa árvore?"
+     ],
+     "texto": "personagens que se aproximem da árvore central podem fazer uma jogada de Conhecimento para tentar identificar a magia que consome este ambiente.\n• Em caso de sucesso: aprendem três dos detalhes abaixo. Em um sucesso com Medo, aprendem dois.\n• Em caso de falha: devem marcar 1 Estresse para aprender um dos detalhes e receber vantagem na próxima jogada para investigar o ambiente.\n• Detalhes: isso é o resultado de magia dos Deuses Caídos. A corrupção se espalha através do musgo cinzento. O local pode ser purificado apenas através de um ritual de magia da natureza com uma Contagem de Progresso (8)."
+    },
+    {
+     "nome": "Local de Magia Caótica",
+     "tipo": "passiva",
+     "perguntas": [
+      "Como é a sensação de fazer magia neste local tocado pelo caos?",
+      "O que você acha que aconteceria se você perdesse o controle do feitiço?"
+     ],
+     "texto": "quando um personagem fizer uma jogada de conjuração, ele deve rolar dois dados de Medo e ficar com o resultado mais alto."
+    },
+    {
+     "nome": "Construtos de Carvão",
+     "tipo": "ação",
+     "perguntas": [
+      "Estes são animais reais consumidos pelas chamas ou meros construtos de magia corrompida?"
+     ],
+     "texto": "animais distorcidos, envoltos em chamas azuladas, surgem em um ponto à sua escolha. Todos os alvos Próximos deste ponto devem fazer uma jogada de reação de Agilidade. Quem falhar sofre 3d12+3 pontos de dano físico. Quem passar sofre metade do dano."
+    },
+    {
+     "nome": "Vinhas Constritoras",
+     "tipo": "ação",
+     "perguntas": [
+      "Que memórias dolorosas acompanham as vinhas quando elas machucam a carne dos aventureiros?"
+     ],
+     "texto": "vinhas repletas de espinhos surgem do meio da vegetação rasteira para agarrar os personagens. Um alvo deve passar em uma jogada de reação de Agilidade ou fica Restrito e Vulnerável até que se liberte com sucesso em uma jogada de Finesse ou Força, eliminando as duas condições (ou causando 10 pontos de dano às vinhas). Quando faz uma jogada para escapar, o alvo sofre 1d8+4 pontos de dano físico e perde 1 Esperança."
+    },
+    {
+     "nome": "Cinzas Sufocantes",
+     "tipo": "reação",
+     "perguntas": [
+      "Quais alucinações são induzidas pelas cinzas?",
+      "Que gosto incongruente elas possuem?"
+     ],
+     "texto": "Contagem (ciclo 6). Quando o grupo adentrar o coração ardente da floresta, ative a contagem. Quando ela terminar, todos os personagens devem fazer uma jogada de reação de Força ou Instinto. Quem falhar sofre 4d6+5 pontos de dano físico direto. Quem passar sofre metade do dano. Máscaras ou roupas de proteção concedem vantagem na jogada de reação."
+    }
+   ]
+  },
+  {
+   "id": "corte-imperial",
+   "nome": "Corte Imperial",
+   "nomeLivro": "CORTE IMPERIAL",
+   "tipo": "Social",
+   "patamar": 4,
+   "dificuldade": 20,
+   "adversariosPotenciais": [
+    {
+     "adversarios": [
+      {
+       "nome": "cavaleiro do reino",
+       "adversarioId": "cavaleiro-do-reino"
+      }
+     ]
+    },
+    {
+     "adversarios": [
+      {
+       "nome": "cortesão",
+       "adversarioId": "cortesao"
+      }
+     ]
+    },
+    {
+     "adversarios": [
+      {
+       "nome": "espião",
+       "adversarioId": "espiao"
+      }
+     ]
+    },
+    {
+     "adversarios": [
+      {
+       "nome": "guarda armado",
+       "adversarioId": "guarda-armado"
+      }
+     ]
+    },
+    {
+     "adversarios": [
+      {
+       "nome": "monarca",
+       "adversarioId": "monarca"
+      }
+     ]
+    }
+   ],
+   "descricao": "O majestoso domínio de um império poderoso, ricamente decorado com tesouros roubados.",
+   "impulsos": [
+    "justificar e perpetuar o poder do império",
+    "seduzir rivais com promessas de poder e conforto"
+   ],
+   "habilidades": [
+    {
+     "nome": "Todas as Estradas Levam ao Império",
+     "tipo": "passiva",
+     "perguntas": [
+      "Como a linguagem é usada para dificultar a discussão de formas alternativas de vida?",
+      "Quais benefícios óbvios à lealdade fomentam atrito a essas discussões?"
+     ],
+     "texto": "personagens que estiverem na corte imperial sofrem desvantagem em jogadas de Presença para movimentos que não se encaixem no modo de vida do Império ou que não sejam em apoio à dominância imperial."
+    },
+    {
+     "nome": "Vassalos Rivais",
+     "tipo": "passiva",
+     "perguntas": [
+      "Como eles se beneficiam de sua vassalagem, e qual o custo dela?",
+      "Quais fraquezas fazem com que considerem se opor ao inevitável?"
+     ],
+     "texto": "os personagens podem encontrar súditos do império, vassalos e suplicantes na corte. Todos desejam privilégios, proximidade ao poder, trocar favores por lealdade e posições acima dos outros. Alguns podem estar desesperados a prejudicar seus rivais, enquanto outros podem estar abertos a discutir ideias que beiram a traição."
+    },
+    {
+     "nome": "Decreto Imperial",
+     "tipo": "ação",
+     "perguntas": [
+      "Que tipo de demonstração de poder ou transferência de riquezas é necessária para adiantar o plano?",
+      "Quantas vidas foram interrompidas ou alteradas para fazer isso acontecer?"
+     ],
+     "texto": "gaste 1 Medo para reduzir uma Contagem de longo prazo relacionada à agenda imperial em 1d4. Se isso encerrar a contagem, uma proclamação relevante à agenda é feita na corte e o plano é executado.",
+     "custoDeMedo": 1
+    },
+    {
+     "nome": "Magnitude Imperial",
+     "tipo": "ação",
+     "perguntas": [
+      "O que o grupo desejaria tanto para de cogitar se aliar a tiranos?",
+      "Como os agentes do Império descobriram esses desejos dos personagens?"
+     ],
+     "texto": "gaste 1 Medo para dar a um personagem uma oportunidade de ouro, ou ofereça a resolução de um de seus objetivos principais em troca de obediência e suporte ao Império. O alvo deve fazer uma jogada de reação de Presença. Se falhar, deve marcar todos os seus Estresse ou aceitar a oferta. Se já tiver marcado todos os Estresse, ele deve aceitar a oferta ou se exilar do Império. Se passar, o personagem deve marcar 1d4 Estresse para resistir à tentação.",
+     "custoDeMedo": 1
+    },
+    {
+     "nome": "Olhos em Todos os Cantos",
+     "tipo": "reação",
+     "perguntas": [
+      "Como o Império mantém a lealdade dessa testemunha?",
+      "Por que seu primeiro impulso é o de proteger a nação, mesmo contra sua vontade?"
+     ],
+     "texto": "se rolar com Medo, você pode gastar 1 Medo para fazer com que alguém leal ao Império escute conversas de traição na corte. Um personagem deve passar em uma jogada de reação de Instinto para perceber que o grupo foi ouvido e tentar interceptar a testemunha antes dela o expor.",
+     "custoDeMedo": 1
+    }
+   ],
+   "custoDeMedoMaximo": 1,
+   "errosDeDigitacaoDoOriginal": [
+    "O livro imprime \"faste\" no lugar de \"gaste\".",
+    "O livro imprime \"longo lrazo\" no lugar de \"longo prazo\"."
+   ]
+  },
+  {
+   "id": "ossuario-do-necromante",
+   "nome": "Ossuário do Necromante",
+   "nomeLivro": "OSSUÁRIO DO NECROMANTE",
+   "tipo": "Exploração",
+   "patamar": 4,
+   "dificuldade": 19,
+   "adversariosPotenciais": [
+    {
+     "grupo": "tropas do arquinecromante",
+     "adversarios": [
+      {
+       "nome": "zumbi aperfeiçoado",
+       "adversarioId": "zumbi-aperfeicoado"
+      },
+      {
+       "nome": "legião de zumbis",
+       "adversarioId": "legiao-de-zumbis"
+      }
+     ]
+    }
+   ],
+   "descricao": "Uma cripta empoeirada com uma biblioteca, corredores confusos e muitos sarcófagos, além do sangue de invasores por toda parte.",
+   "impulsos": [
+    "confundir intrusos",
+    "mergulhar em segredos imaculados",
+    "manifestar a não-vida",
+    "liberar uma onda de mortos-vivos"
+   ],
+   "habilidades": [
+    {
+     "nome": "Não Há Lugar Para os Vivos",
+     "tipo": "passiva",
+     "perguntas": [
+      "Qual a sensação de tentar se curar no que parece ser a antítese da vida?"
+     ],
+     "texto": "uma habilidade ou ação que recupere PV requer o gasto de 1 Esperança para funcionar. Se já for algo exigido pela habilidade, o personagem deve gastar 1 Esperança adicional."
+    },
+    {
+     "nome": "Séculos de Conhecimento",
+     "tipo": "passiva",
+     "perguntas": [
+      "Quais os títulos dos tomos?",
+      "Quais os projetos do necromante e o que eles dizem sobre seus planos?"
+     ],
+     "texto": "um personagem pode investigar a biblioteca e o laboratório e fazer uma jogada de Conhecimento para descobrir informações sobre magia arcana, história local e os planos do necromante."
+    },
+    {
+     "nome": "Aura de Morte",
+     "tipo": "ação",
+     "perguntas": [
+      "Como esse vigor renovado se manifesta?",
+      "Eles parecem mais vivos ou, paradoxalmente, mais decaídos, porém vigorosos?"
+     ],
+     "texto": "uma vez por cena, role 1d4. Todos os mortos-vivos Distantes do necromante podem recuperar uma quantidade de PV e Estresse iguais ao resultado do dado. Cada criatura decide como esse número é divido entre seus pontos."
+    },
+    {
+     "nome": "Explosão de Ossos",
+     "tipo": "ação",
+     "perguntas": [
+      "Como é a arquitetura destruída?",
+      "Que ossos se prendem à armadura?"
+     ],
+     "texto": "todos os alvos Próximos de um ponto escolhido no ambiente devem passar em uma jogada de reação de Agilidade ou sofrem 4d8+8 pontos de dano físico causado por estilhaços de esqueletos lançados por explosões do ossuário."
+    },
+    {
+     "nome": "Não Param de Aparecer!",
+     "tipo": "ação",
+     "perguntas": [
+      "Quem eram essas pessoas antes de virarem peões do necromante?",
+      "Quais vestígios de suas vidas passadas podem ser vistos pelos heróis?"
+     ],
+     "texto": "gaste 1 Medo para invocar ou 1d6 zumbis decompostos, ou dois zumbis aperfeiçoados, ou uma legião de zumbis, que surgem Próximos de um personagem à sua escolha.",
+     "custoDeMedo": 1
+    }
+   ],
+   "custoDeMedoMaximo": 1,
+   "errosDeDigitacaoDoOriginal": [
+    "O livro imprime \"aecromante\" no lugar de \"necromante\"."
+   ]
+  },
+  {
+   "id": "reino-do-caos",
+   "nome": "Reino do Caos",
+   "nomeLivro": "REINO DO CAOS",
+   "tipo": "Travessia",
+   "patamar": 4,
+   "dificuldade": 20,
+   "adversariosPotenciais": [
+    {
+     "grupo": "monstruosidades dos Reinos Exteriores",
+     "adversarios": [
+      {
+       "nome": "abominação",
+       "adversarioId": "abominacao"
+      },
+      {
+       "nome": "corruptor",
+       "adversarioId": "reinos-exteriores-corruptor"
+      },
+      {
+       "nome": "servo",
+       "adversarioId": "reinos-exteriores-servo"
+      }
+     ]
+    }
+   ],
+   "descricao": "Espaço sobrenatural, onde leis da realidade são instáveis e perigosas.",
+   "impulsos": [
+    "aniquilar certezas",
+    "consumir poder",
+    "desafiar a lógica"
+   ],
+   "habilidades": [
+    {
+     "nome": "Arquitetura Impossível",
+     "tipo": "passiva",
+     "perguntas": [
+      "Qual a sensação de se mover em um espaço tão diferente do Plano Mortal?",
+      "Quais pontos ou objetos você mantém como referência para seu equilíbrio?",
+      "Quais paisagens bizarras você atravessa durante a jornada?"
+     ],
+     "texto": "acima é abaixo, abaixo é à direita, à direita é rumo às estrelas. A própria gravidade e suas direções estão em constante mudança, e quaisquer tentativas de se mover através deste reino é uma odisseia que exige uma Contagem de Progresso (8). Se falhar, o personagem deve marcar 1 Estresse além das outras consequências da jogada."
+    },
+    {
+     "nome": "Desfazer",
+     "tipo": "ação",
+     "perguntas": [
+      "Quais outros mundos você vislumbra enquanto este lugar te desfaz?",
+      "Quais traços de sua personalidade este lugar está tentando apagar?"
+     ],
+     "texto": "gaste 1 Medo para forçar um personagem a fazer uma jogada de reação de Força. Se falhar, sofre 4d10 pontos de dano mágico direto. Se passar, deve marcar 1 Estresse.",
+     "custoDeMedo": 1
+    },
+    {
+     "nome": "Este Lugar Tomará Tudo que Você É",
+     "tipo": "ação",
+     "perguntas": [
+      "Como este lugar consegue roubar aquilo que te torna lendário?",
+      "Como é a sensação de ter esse poder tirado de si?"
+     ],
+     "texto": "Contagem (ciclo 1d4). Ative a contagem regressiva. Quando ela terminar, todos os personagens devem passar em uma jogada de reação de Presença, ou seu traço mais alto é reduzido em 1d4, a menos que marquem uma quantidade de Estresse igual ao valor do traço. Quaisquer pontos de traço perdidos são recuperados se o personagem rolar um sucesso crítico ou escapar do Reino do Caos."
+    },
+    {
+     "nome": "Predadores dos Reinos Exteriores",
+     "tipo": "ação",
+     "perguntas": [
+      "Que restos deste mundo em frangalhos são deixados para trás por feras em busca de carne fresca?",
+      "Quais reflexos distorcidos de personalidade são revelados entre situações de malícia inquestionável?"
+     ],
+     "texto": "gaste 1 Medo para invocar uma abominação dos Reinos Exteriores, um corruptor dos Reinos Exteriores e 2d6 servos dos Reinos Exteriores, que surgem Próximos de um personagem à sua escolha, desafiando a lógica e causalidade. Ponha um desses adversários em foco imediatamente. Além disso, você pode gastar 1 Medo adicional para que o ataque padrão do adversário escolhido seja um sucesso automático.",
+     "custoDeMedo": 1
+    },
+    {
+     "nome": "Realidade Desconcertante",
+     "tipo": "reação",
+     "perguntas": [
+      "Que momento você observa?",
+      "Caso seja uma memória, como ela é distorcida por este lugar?",
+      "Quão difícil é preservar a memória real?"
+     ],
+     "texto": "se rolar com Medo, você pode perguntar ao personagem qual de seus medos é evocado pelo Reino do Caos, enquanto uma visão da realidade se desfaz e é reconstruída para ele. O personagem perde 1 Esperança. Se for o último Esperança do personagem, você recebe 1 Medo."
+    }
+   ],
+   "custoDeMedoMaximo": 1,
+   "errosDeDigitacaoDoOriginal": [
+    "O livro imprime \"aorruptor\" no lugar de \"corruptor\".",
+    "O livro imprime \"rumo as estrelas\" sem crase.",
+    "O livro imprime \"é reduzidos\" sem concordância."
+   ]
+  },
+  {
+   "id": "usurpacao-divina",
+   "nome": "Usurpação Divina",
+   "nomeLivro": "USURPAÇÃO DIVINA",
+   "tipo": "Evento",
+   "patamar": 4,
+   "dificuldade": 20,
+   "adversariosPotenciais": [
+    {
+     "adversarios": [
+      {
+       "nome": "arquinecromante",
+       "adversarioId": "arquinecromante"
+      }
+     ]
+    },
+    {
+     "adversarios": [
+      {
+       "nome": "pelotão caído",
+       "adversarioId": "caido-defensor"
+      }
+     ]
+    },
+    {
+     "adversarios": [
+      {
+       "nome": "predador mortal",
+       "adversarioId": "predador-mortal"
+      }
+     ]
+    },
+    {
+     "adversarios": [
+      {
+       "nome": "oráculo da perdição",
+       "adversarioId": "oraculo-da-perdicao"
+      }
+     ]
+    },
+    {
+     "adversarios": [
+      {
+       "nome": "zumbi aperfeiçoado",
+       "adversarioId": "zumbi-aperfeicoado"
+      }
+     ]
+    }
+   ],
+   "descricao": "Um ritual massivo projetado para derrubar os portões da Graça Superior e destronar um dos Novos Deuses.",
+   "impulsos": [
+    "coletar poder",
+    "inspirar temor",
+    "silenciar dissidentes"
+   ],
+   "habilidades": [
+    {
+     "nome": "Bênção Divina",
+     "tipo": "passiva",
+     "perguntas": [
+      "Qual divindade te favorece enquanto você luta contra a usurpação?",
+      "Como essa energia renovada reflete essa influência?"
+     ],
+     "texto": "quando um personagem rolar um sucesso crítico, ele pode gastar 2 Esperança para restaurar uma habilidade de uso limitado (como “uma vez por descanso” ou “uma vez por sessão”)."
+    },
+    {
+     "nome": "Preparação Final",
+     "tipo": "passiva",
+     "perguntas": [
+      "O que falta ao usurpador?",
+      "O coração de um serafim supremo?",
+      "A pedra magnética de um portal antigo?",
+      "A lealdade de dois arqui-inimigos?",
+      "As lágrimas de uma alma inocente que teve o coração partido?"
+     ],
+     "texto": "quando o ambiente for posto em foco pela primeira vez, escolha um adversário como o usurpador que está tentando tomar o lugar dos deuses. Ative uma Contagem de longo prazo (8) enquanto o usurpador prepara todas as partes do ritual. Quando a contagem terminar, ponha o ambiente em foco e use a habilidade Início do Fim. Enquanto este ambiente estiver em jogo, você pode acumular até 15 Medo."
+    },
+    {
+     "nome": "Corja Profana",
+     "tipo": "ação",
+     "perguntas": [
+      "A qual Deus Caído esses pelotões servem?",
+      "Qual é o deus cuja carne eles desejam devorar?"
+     ],
+     "texto": "gaste 2 Medo para invocar 1d4+2 pelotões caídos, que surgem Próximos do usurpador para auxiliálo no cerco divino. Ponha os pelotões em foco imediatamente para usar a ação Ataque em Grupo.",
+     "custoDeMedo": 2
+    },
+    {
+     "nome": "Deicídio",
+     "tipo": "ação",
+     "perguntas": [
+      "Qual divindade encontrou seu fim?",
+      "Quais foram suas últimas palavras?",
+      "Como o novo poder o usurpador se manifesta?"
+     ],
+     "texto": "se a Contagem de Cerco Divino (veja Início do Fim) tiver terminado, você pode gastar 3 Medo para descrever o usurpador assassinando uma divindade da Graça Superior, absorvendo seu poder e ficando mais forte. O usurpador recupera 2 Pontos de Vida. Escolha entre aumentar a Dificuldade, dano e modificador de ataque do usurpador ou dar-lhe uma nova habilidade do deus assassinado.",
+     "custoDeMedo": 3
+    },
+    {
+     "nome": "Conexão Com o Ritual",
+     "tipo": "reação",
+     "perguntas": [
+      "Quais visões de falhas antigas o atormentam quando seus esforços são em vão?",
+      "Essas memórias são distorcidas pelo usurpador?"
+     ],
+     "texto": "se falhar com Medo contra o usurpador, o personagem deve marcar 1d4 Estresse graças à retaliação mágica."
+    },
+    {
+     "nome": "Início do Fim",
+     "tipo": "reação",
+     "perguntas": [
+      "Como o Plano Mortal se contorce quando a ordem natural é violada?",
+      "Quais mortais são testemunhas distantes desta blasfêmia?"
+     ],
+     "texto": "quando a contagem de longo prazo da Preparação Final termina, o usurpador começa a atacar os portões da Graça Superior. Ative a Contagem de Cerco Divino (10). Ponha o usurpador em foco e descreva seu ataque, subtraindo 1 da contagem. Se o usurpador sofrer dano maior ou grave, acrescente 1 à contagem. Quando a contagem terminar, o usurpador estilhaça a barreira entre o Plano Mortal e As Graças Superiores para assassinar os deuses e tomar seu lugar. Receba 1 Medo para cada Ponto de Vida que o usurpador não tiver marcado. Você pode usar Deicida imediatamente, sem gastar Medo, como uma movimento adicional do mestre."
+    }
+   ],
+   "custoDeMedoMaximo": 3
+  }
+ ],
+ "ligacao": "Cada nome da lista \"Adversários\" de um ambiente aponta para o id da ficha correspondente. Quem fica sem `adversarioId` traz `semFicha` dizendo por quê — o livro cita nomes que não têm ficha própria."
+}

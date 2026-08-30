@@ -14,8 +14,32 @@ import { chromium } from 'playwright';
 import { criarServidor } from '/home/claude/dh/tools/servidor-teste.mjs';
 
 const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
-const { servidor, porta } = await criarServidor({ porta: 0, semarcar: true });
+const { servidor, porta, ambiente } = await criarServidor({ porta: 0, semarcar: true });
 const base = `http://localhost:${porta}`;
+
+/**
+ * Um SEGUNDO personagem, de outro jogador, semeado direto no backend.
+ *
+ * Não é enfeite: sem outra ficha na mesa, o seletor "em quem" dos movimentos
+ * de cura não aparece — a tela cai no aviso "não há outra ficha na mesa
+ * ainda". Para fotografar o que a Parte 9 fechou (A4), a mesa precisa ter
+ * gente. Passa pelo backend porque repetir o assistente de criação inteiro
+ * só para isso dobraria o tempo do capturador.
+ */
+{
+  const c = ambiente.contexto;
+  const t = JSON.parse(c.doPost({ postData: { contents: JSON.stringify({
+    acao: 'registrar', nome: 'Bruno', codigo: 'senha-bruno' }) } }).getContent()).dados.token;
+  const ferido = c.fichaRapida_({
+    nome: 'Torm Pedrafunda', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade: 'Anão', comunidade: 'Ridgeborne',
+    cartas: ['blade-redemoinho', 'bone-intocavel'],
+    experiencias: [{ nome: 'Ferreiro', bonus: 2 }, { nome: 'Teimoso', bonus: 2 }]
+  });
+  ferido.recursos.pontosDeVidaMarcados = 4;
+  c.doPost({ postData: { contents: JSON.stringify({
+    acao: 'criarPersonagem', token: t, ficha: ferido }) } });
+}
 
 const nav = await chromium.launch({ executablePath: CHROME, args: ['--no-sandbox'] });
 const ctx = await nav.newContext({
@@ -136,8 +160,47 @@ await foto('f3-jogo-fim');
 await p.getByRole('tab', { name: 'Cartas' }).click();
 await foto('f4-cartas');
 
+
+
+// O VERBETE: tocar na palavra de mecânica e ler a regra com a página.
+// As trilhas moram na aba Jogo, então volta para lá antes.
+await p.getByRole('tab', { name: 'Jogo' }).click();
+await p.waitForSelector('.trilha');
+await p.locator('.trilha__rotulo .verbete__gatilho').first().click();
+await p.waitForSelector('.verbete');
+await foto('f4b-verbete-pv');
+{
+  const caixa = p.locator('.modal__caixa').last();
+  await caixa.locator('.verbete__vejaBotoes button').first().click();
+  await p.waitForTimeout(300);
+}
+await foto('f4c-verbete-limiares');
+await p.keyboard.press('Escape');
+await p.keyboard.press('Escape');
+await p.waitForTimeout(300);
+
 await p.getByRole('tab', { name: 'Mochila' }).click();
 await foto('f5-mochila');
+
+// Mochila editável: um item novo e um punhado a mais (C1).
+await p.locator('.ficha__novoItem .campo__entrada').fill('Um mapa rasgado do porto');
+await p.getByRole('button', { name: 'Guardar' }).click();
+await p.waitForTimeout(1200);
+await p.locator('.ficha__moedas').scrollIntoViewIfNeeded();
+await foto('f5b-mochila-editavel');
+
+// Comprar (I1): o livro não tem tabela de preços, então quem digita o preço
+// combinado é o jogador — e as duas metades andam juntas.
+await p.locator('.ficha__comprar').click();
+await p.waitForSelector('.modal__caixa');
+{
+  const caixa = p.locator('.modal__caixa').last();
+  await caixa.locator('.campo__entrada').first().fill('Uma tocha da boa');
+  await caixa.locator('.ficha__preco', { hasText: 'Punhados' }).locator('input').fill('3');
+}
+await foto('f5c-comprar');
+await p.keyboard.press('Escape');
+await p.waitForTimeout(300);
 
 await p.getByRole('tab', { name: 'História' }).click();
 await foto('f6-historia');
@@ -153,8 +216,18 @@ await p.getByRole('button', { name: /Descanso Curto/ }).click();
 await p.waitForSelector('.descanso__movimento', { timeout: 20000 });
 await foto('f8-descanso-movimentos');
 
+// A regra do descanso interrompido, aberta.
+await p.locator('.descanso__interrompido summary').click();
+await p.locator('.descanso__interrompido').scrollIntoViewIfNeeded();
+await foto('f8c-descanso-interrompido');
+
 const tratar = p.locator('.descanso__movimento', { hasText: 'Tratar Feridas' });
+await tratar.scrollIntoViewIfNeeded();
+await foto('f8b-descanso-em-quem');
 await tratar.locator('input.descanso__dado').fill('2');
+// Mira no ALIADO: é o caminho que a Parte 9 abriu (A4) — a cura sai desta
+// ficha e pousa na do outro, e a prévia precisa dizer isso.
+await tratar.locator('select').selectOption({ index: 1 });
 await tratar.getByRole('button', { name: 'Escolher este' }).click();
 const preparar = p.locator('.descanso__movimento', { hasText: 'Preparar-se' });
 await preparar.getByRole('button', { name: 'Escolher este' }).click();
@@ -163,6 +236,124 @@ await p.waitForSelector('.descanso__mudancas', { timeout: 20000 });
 await foto('f9-descanso-previa');
 await p.locator('.modal__caixa--descanso').evaluate((e) => { e.scrollTop = e.scrollHeight; });
 await foto('f10-descanso-previa-fim');
+
+/* --- subir de nível, nos três momentos ------------------------------------ */
+
+// Fecha o modal do descanso pelo fundo — "Voltar" e "Fechar" existem em mais
+// de um lugar na tela, e o seletor por nome dá ambiguidade.
+await p.keyboard.press('Escape');
+await p.waitForSelector('.modal__caixa--descanso', { state: 'detached', timeout: 10000 });
+
+await p.getByRole('tab', { name: 'Jogo' }).click();
+await p.locator('.ficha__botaoNivel').scrollIntoViewIfNeeded();
+await foto('f11-botoes-da-ficha');
+
+await p.getByRole('button', { name: /Subir para o nível/ }).click();
+await p.waitForSelector('.avanco__opcao', { timeout: 25000 });
+await foto('f12-avanco-conquista');
+
+await p.locator('.avanco__opcao').first().scrollIntoViewIfNeeded();
+await foto('f13-avanco-opcoes');
+
+await p.fill('.avanco__conquista input', 'Palco de mil vilarejos');
+const evasao = p.locator('.avanco__opcao', { hasText: 'Evasão +1' });
+await evasao.getByRole('button', { name: 'Escolher' }).click();
+const estresse = p.locator('.avanco__opcao', { hasText: 'Estresse +1' });
+await estresse.getByRole('button', { name: 'Escolher' }).click();
+await foto('f14-avanco-escolhido');
+
+await p.getByRole('button', { name: 'Continuar' }).click();
+await p.waitForSelector('.avanco__limites');
+await p.getByRole('button', { name: 'Escolher a carta' }).first().click();
+await p.waitForSelector('.modal__caixa .cartao--clicavel');
+await foto('f15-escolher-carta');
+await p.locator('.modal__caixa .cartao--clicavel').first().click();
+await foto('f16-avanco-carta');
+
+await p.getByRole('button', { name: 'Ver o que muda' }).click();
+await p.waitForSelector('.avanco__mudancas', { timeout: 25000 });
+await foto('f17-avanco-previa');
+await p.locator('.modal__caixa--avanco').evaluate((e) => { e.scrollTop = e.scrollHeight; });
+await foto('f18-avanco-previa-fim');
+
+/* --- uma ficha MULTICLASSE, só para o print das características ----------- *
+ *
+ * Semeada pelo backend com o token da própria jogadora (lido do
+ * localStorage), porque subir do 1 ao 6 pelo assistente levaria uns 40
+ * cliques. O que interessa no print é o resultado: a característica de classe
+ * do Druida na ficha da Barda — e a de Esperança dele AUSENTE.
+ */
+{
+  const token = await p.evaluate(() => JSON.parse(localStorage.getItem('dh:token')));
+  const c = ambiente.contexto;
+  const f = c.fichaRapida_({
+    nome: 'Lyra (multiclasse)', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'Contadora de histórias', bonus: 2 }, { nome: 'Língua de prata', bonus: 2 }]
+  });
+  f.identidade.nivel = 6;
+  f.multiclasse = { classe: 'druida', dominio: 'SAGE', subclasse: 'druida-guardiao-dos-elementos' };
+  c.doPost({ postData: { contents: JSON.stringify({ acao: 'criarPersonagem', token, ficha: f }) } });
+  await p.reload({ waitUntil: 'networkidle' });
+  await p.waitForSelector('.ficha-cartao__abrir');
+  await p.locator('.ficha-cartao__abrir').filter({ hasText: 'multiclasse' }).click();
+  await p.waitForSelector('.ficha__rodape', { timeout: 20000 });
+  // Os DOIS traços de Conjuração, com o outro clicável (C6).
+  await p.locator('.ficha__tracos').scrollIntoViewIfNeeded();
+  await foto('f20-multiclasse-conjuracao');
+  await p.locator('.ficha__traco.e-trocavel').first().click();
+  await p.waitForTimeout(1200);
+  await p.locator('.ficha__tracos').scrollIntoViewIfNeeded();
+  await foto('f21-conjuracao-trocada');
+
+  await p.locator('.ficha__corpo').evaluate((e) => { e.scrollTop = e.scrollHeight; });
+  await p.locator('.ficha__carac').last().scrollIntoViewIfNeeded();
+  await foto('f19-multiclasse-caracteristicas');
+
+  // As cartas de subclasse, com a da multiclasse junto (C3).
+  await p.getByRole('tab', { name: 'Cartas' }).click();
+  await p.waitForSelector('.ficha__carta--subclasse');
+  await foto('f22-cartas-de-subclasse');
+  await p.locator('.ficha__carta--subclasse .nome-carta').first().click();
+  await p.waitForSelector('.carta-visor__palco img', { timeout: 15000 });
+  await p.waitForTimeout(600);
+  await foto('f23-carta-de-subclasse-png');
+  await p.locator('.modal__caixa--carta').getByRole('button', { name: 'Fechar' }).click();
+  await p.waitForSelector('.modal__caixa--carta', { state: 'detached' });
+
+  /*
+   * O custo de recordar (D3). Esta ficha tem cartas com custo 1 e 2 — a da
+   * criação rápida vem com duas de custo 0, e aí não haveria o que mostrar.
+   */
+  await p.locator('.ficha__carta:not(.ficha__carta--subclasse)')
+    .filter({ hasText: 'Guardar no cofre' }).first()
+    .getByRole('button', { name: 'Guardar no cofre' }).click();
+  await p.waitForTimeout(1200);
+  await p.locator('.ficha__carta', { hasText: 'Trazer para a mão' }).first()
+    .getByRole('button', { name: 'Trazer para a mão' }).click();
+  await p.waitForSelector('.modal__caixa');
+  await foto('f26-custo-de-recordar');
+  await p.locator('.modal__caixa').last().getByRole('button', { name: /Marcar/ }).click();
+  await p.waitForTimeout(1200);
+}
+
+/* --- a ficha que ficou atrás do nível da mesa (C4) ------------------------ */
+{
+  // O Mestre anuncia o nível 4; a Lyra está no 2.
+  const c = ambiente.contexto;
+  const m = c.mesaLer_();
+  m.nivelDaMesa = 4;
+  c.mesaGravar_(m);
+  await p.reload({ waitUntil: 'networkidle' });
+  await p.waitForSelector('.ficha-cartao__abrir', { timeout: 20000 });
+  await foto('f24-roster-atras-da-mesa');
+  await p.locator('.ficha-cartao__abrir').filter({ hasText: 'Lyra Sombravento' }).click();
+  await p.waitForSelector('.ficha__rodape', { timeout: 20000 });
+  await p.locator('.ficha__corpo').evaluate((e) => { e.scrollTop = e.scrollHeight; });
+  await p.locator('.ficha__atrasada').scrollIntoViewIfNeeded();
+  await foto('f25-ficha-atras-da-mesa');
+}
 
 await nav.close();
 servidor.close();

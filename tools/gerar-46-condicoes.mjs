@@ -137,6 +137,54 @@ function validarCondicoes_(ficha) {
   return problemas;
 }
 
+/**
+ * A condição VULNERÁVEL que vem de encher o Estresse.
+ *
+ * O livro (p.99) não dá margem: "Quando marcar seu último Ponto de Fadiga,
+ * você fica Vulnerável até que recupere ao menos 1 Ponto de Fadiga." É uma
+ * regra sem escolha e sem dado — dá para o app aplicar sozinho, e é melhor que
+ * aplique: era a coisa que mais escapava na mesa, porque acontece justo no
+ * momento em que todo mundo está preocupado com outra coisa.
+ *
+ * ⚠ Só mexe na condição que ELE mesmo pôs (origem 'estresse cheio'). Uma
+ * Vulnerável que veio de uma carta ou do Mestre continua lá depois de limpar
+ * Estresse — quem tirou não foi este código.
+ */
+const ORIGEM_VULNERAVEL_POR_ESTRESSE = 'estresse cheio';
+
+function sincronizarVulneravelPorEstresse_(ficha) {
+  if (!ficha) return null;
+  const r = ficha.recursos || {};
+  const maximo = Number(r.estresseMaximo) || 0;
+  const marcado = Number(r.estresseMarcado) || 0;
+  const cheio = maximo > 0 && marcado >= maximo;
+
+  const lista = Array.isArray(ficha.condicoes) ? ficha.condicoes : [];
+  let indiceAutomatica = -1;
+  let temDeOutraOrigem = false;
+  for (let i = 0; i < lista.length; i++) {
+    const c = lista[i] || {};
+    if (c.id !== 'vulneravel') continue;
+    if (c.origem === ORIGEM_VULNERAVEL_POR_ESTRESSE) indiceAutomatica = i;
+    else temDeOutraOrigem = true;
+  }
+
+  if (cheio && indiceAutomatica === -1 && !temDeOutraOrigem) {
+    lista.push({
+      id: 'vulneravel', nome: CONDICOES['vulneravel'].nome,
+      temporaria: false, origem: ORIGEM_VULNERAVEL_POR_ESTRESSE
+    });
+    ficha.condicoes = lista;
+    return 'ligou';
+  }
+  if (!cheio && indiceAutomatica !== -1) {
+    lista.splice(indiceAutomatica, 1);
+    ficha.condicoes = lista;
+    return 'desligou';
+  }
+  return null;
+}
+
 /** true se o personagem está com a condição (aceita qualquer sinônimo). */
 function temCondicao_(ficha, nome) {
   const id = normalizarCondicao_(nome);

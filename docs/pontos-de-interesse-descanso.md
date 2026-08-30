@@ -42,13 +42,26 @@ bloqueia**. A contagem de verdade, do grupo, é do painel do Mestre.
 O livro não diz explicitamente que a contagem zera depois de um descanso longo —
 está implícito em "antes do próximo precisar ser um descanso longo". O app zera.
 
-## 5. Descanso interrompido
+## 5. Descanso interrompido — CONFERIDO, e continua sendo decisão de mesa (B5)
 
-O livro (p. 105) diz o resultado — curto interrompido não dá benefício nenhum;
-longo interrompido ainda dá os benefícios de um curto — mas **não diz** se, nesse
-caso, o jogador re-escolhe dois movimentos curtos ou converte os longos que já
-tinha escolhido. É decisão de mesa. O app guarda o texto em `seInterrompido` e
-oferece "fazer um descanso curto" como um descanso novo.
+O livro (p.105) diz o resultado — curto interrompido não dá benefício nenhum;
+longo interrompido ainda dá os benefícios de um curto — mas **não diz** se,
+nesse caso, o jogador re-escolhe dois movimentos curtos ou converte os longos
+que já tinha escolhido.
+
+Fui atrás do **SRD em inglês** para ver se a tradução tinha comido alguma
+frase. Não tinha:
+
+> "If a short rest is interrupted, such as by an adversary's attack, the
+> characters don't gain its benefits."
+> "If a long rest is interrupted, the characters only gain the benefits of a
+> short rest."
+
+O SRD é tão calado quanto o livro. Então isto **não é ponta solta, é decisão
+de mesa** — e o app parou de fingir que não existia: a tela de descanso agora
+mostra a regra num bloco recolhido **antes** de escolher os movimentos, com o
+aviso de que o resto é combinado da mesa e de que o app oferece um descanso
+curto novo.
 
 ## 6. Clank "Eficiente"
 
@@ -58,13 +71,20 @@ um descanso curto. `movimentosDoDescanso_` já libera a lista longa quando
 de novo quando a Parte 8 mexer em características de ancestralidade** — se o
 formato de `ficha.caracteristicas` mudar, esta exceção é a primeira a quebrar.
 
-## 7. Custo de recordar: informação, não cobrança
+## 7. Custo de recordar — COBRADO agora, perguntando antes (D3)
 
 Trazer uma carta do cofre para a mão custa o **custo de recordar** em Estresse
 fora de um descanso, e é **livre** durante um descanso. Quem sabe em qual dos
-dois casos a mesa está é a mesa. Por isso `ajustarCarta_` **devolve** o número e
-o aviso, mas **não marca Estresse sozinho** — o cliente mostra e, se for o caso,
-manda um ajuste de recurso junto.
+dois casos a mesa está continua sendo a mesa — então o app **pergunta** em vez
+de decidir: tocar em "Trazer para a mão" numa carta com custo abre as duas
+saídas, "Marcar N de Estresse" e "Estou num descanso".
+
+O que mudou é que agora ele **marca de verdade**, e marca no mesmo pedido da
+troca (`cobrarCusto: true` em `ajustarCarta_`). Isso não é detalhe: se o
+Estresse fosse um segundo ajuste vindo do cliente, existiria o estado
+meio-termo de carta na mão sem ninguém ter pago. E, sem Estresse sobrando, a
+troca é **recusada inteira**, com a mensagem dizendo o que fazer (descansar,
+limpar Estresse, ou trocar durante um descanso).
 
 ## 8. Patamar × proficiência
 
@@ -86,20 +106,60 @@ descanso longo, que escreve por extenso) é **Pontos de Armadura**. Confirmado a
 
 # Pontos de interesse — a ficha em jogo
 
-## 10. Mochila e ouro são só de leitura
+## 10. Mochila e ouro — EDITÁVEIS agora (C1)
 
-A aba MOCHILA mostra o inventário e o ouro que vieram da criação, mas ainda
-não deixa editar item a item. Editar entra junto com a COMPRA de equipamento
-(mercado, preços, carregar peso) — que é um sistema próprio, não um campo de
-texto. Enquanto isso, `salvarPersonagem` continua aceitando a ficha inteira,
-então nada fica preso.
+Eram só leitura, esperando a compra de equipamento. Mas o que a mesa faz toda
+sessão não é comprar com tabela de preço: é anotar o que achou no baú e riscar
+a poção que bebeu. Isso agora funciona:
 
-## 11. Fichas paralelas ainda não aparecem na tela
+- **Item novo** por escrito, como a linha em branco da ficha de papel, e o 🗑
+  tira de volta.
+- **Ouro por categoria**, com o troco no servidor: tocar em "+" no punhado
+  quando já há nove vira **1 bolsa** — e o teto de 1 baú (livro p.104) avisa
+  em vez de apagar em silêncio. *(A terceira categoria se chamava "cofre" até o
+  J5; hoje é "baú", como no livro — "cofre", no app, é a reserva de cartas.)*
 
-`49_FichasFilhas.gs` já valida Forma de Fera e Companheiro Animal, e a ficha já
-guarda `fichasFilhas`. A ABA que mostra e edita essas fichas não existe ainda —
-elas só entram quando houver um Druida ou um Patrulheiro Laço Bestial de
-verdade na mesa. O encaixe está pronto dos dois lados.
+~~O que continua faltando é o **mercado**: preço de tabela, patamar do item,
+gastar ouro comprando.~~
+
+**Resolvido (I1) — e a premissa estava errada.** Não existe tabela de preços: o
+livro é explícito (p.104) que *"este livro não define preços para armas,
+armaduras ou espólios… O mestre determinará o preço"*. Os arquivos de
+equipamento do SRD também não têm campo de custo. Então não havia mercado a
+construir.
+
+O que existe agora é o botão **Comprar**, ao lado de "Guardar": o jogador
+escreve o item, digita o preço que a mesa combinou, e o servidor tira o ouro e
+guarda o item **na mesma gravação** — ou não faz nenhuma das duas. É o que o
+papel não faz sozinho. Passa por `comprarItem_` (4C_Ajustes.gs), no mesmo
+caminho de `ajustarInventario_`/`ajustarOuroDaFicha_`, como estava previsto.
+Detalhe em `pontas-h-e-i.md` §I1.
+
+## 11. Fichas paralelas — TÊM TELA agora (C2)
+
+`49_FichasFilhas.gs` validava as 24 Formas de Fera e as 8 evoluções do
+Companheiro desde a rodada de pontas soltas, mas não havia onde mexer nelas.
+Agora há — em `js/telas/paralelas.js`.
+
+**Não virou uma quinta aba.** A decisão da mesa foram quatro abas fixas, e uma
+aba que só Druida e Laço Bestial usam seria peso morto no rodapé de todo mundo.
+Ficou uma **seção na aba Jogo**, que só aparece para quem pode ter, abrindo um
+modal de tela cheia — o mesmo formato do descanso e da subida de nível.
+
+**Forma de Fera:** lista as formas do patamar do personagem, entra, troca e sai.
+A **Evasão da forma é somada na ficha principal** enquanto ela dura (livro
+p.34) — e some sozinha ao sair, porque é derivada, não gravada (invariante
+E17). O **Estresse de entrar não é cobrado**: o app mostra o custo e o jogador
+marca, a mesma regra do "só ficha, sem dados".
+
+**Companheiro Animal:** nome, animal, as Experiências (duas na criação, +2 cada),
+as evoluções — inclusive "Feroz" repetida — e a escada do dado d6 → d12. O app
+**não deriva o dado** das evoluções: "Feroz" deixa subir o dado **ou** o
+alcance, e quem escolhe é o jogador. Os botões acima do permitido ficam
+desligados, e o servidor recusa de novo se alguém insistir.
+
+O tipo de dano (físico ou mágico) está lá porque a **errata** o acrescentou —
+a edição pt-BR não traz essa escolha nem no texto nem na ficha.
 
 ## 12. Nível e avanço
 
@@ -124,11 +184,30 @@ Estresse, mas NÃO marca. O motivo está no ponto 7: durante um descanso a troca
 é livre, e quem sabe se a mesa está num descanso é a mesa. Quando o painel do
 Mestre souber em que momento o grupo está, isso pode virar automático.
 
-## 15. Um alerta que o app dá, mas cuja regra ele não aplica
+## 15. Vulnerável e Evitar a Morte — um fechou, o outro não (D1, D2)
 
-Encher a trilha de Estresse mostra "você fica Vulnerável até limpar ao menos 1"
-(livro p. 98) e encher a de Pontos de Vida mostra "faça uma jogada para Evitar a
-Morte" (p. 106). Os dois são AVISOS: o app não liga a condição Vulnerável
-sozinho nem abre a jogada de morte. Automatizar o Vulnerável é fácil e provável;
-Evitar a Morte não, porque envolve escolha do jogador e rolagem — e a decisão
-desta parte foi "só ficha, sem dados".
+### Vulnerável ao encher o Estresse — FECHADO (D1)
+
+Eu tinha lido esta regra errado. O texto que estava no app dizia "se precisar
+marcar mais 1 e não puder, você fica Vulnerável" — como se a condição
+dependesse de uma segunda coisa acontecer. O livro bom (p.99) e o SRD dizem o
+simples:
+
+> "When a character marks their last Stress, they become Vulnerable until they
+> clear at least 1 Stress."
+
+A frase do "não pode marcar" é **outra** regra, logo abaixo: aí se marca 1 PV
+no lugar do Estresse. Como esta não tem escolha nem dado, o app aplica: encheu
+a trilha, a condição aparece; limpou 1, ela sai.
+
+⚠ Ela só mexe na condição que **ela mesma** pôs (`origem: 'estresse cheio'`).
+Uma Vulnerável que veio de uma carta ou do Mestre continua lá depois de limpar
+Estresse — e o modal da condição, nesse caso, troca o botão "Remover" por um
+recado: essa sai sozinha.
+
+### Evitar a Morte — continua sendo aviso (D2)
+
+Encher os Pontos de Vida abre uma jogada com escolha entre três movimentos e
+rolagem de dado. É exatamente o que a decisão "só ficha, sem dados" deixa de
+fora. O app avisa na hora e para por aí.
+

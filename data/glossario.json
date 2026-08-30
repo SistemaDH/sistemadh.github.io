@@ -1,64 +1,415 @@
 {
-  "versao": 1,
-  "fonte": "Cartas oficiais em PNG (coluna canônica) × DH-DigitalRegras.pdf, tradução da Jambô Editora, Prévia 5 (coluna alternativa).",
-  "regra": "O app fala a língua das CARTAS, porque é o que o jogador vê quando toca num nome e a imagem abre. Onde não existe carta (Forma de Fera, Companheiro Animal), o texto vem do livro da Jambô, mas convertido para o mesmo vocabulário. Nos pontos em que o nome de uma mecânica muda entre as duas traduções, o app mostra o termo da Jambô entre parênteses, para quem estiver com o livro na mão achar.",
-  "doisNiveisDeGlosa": "glosarEmTexto manda dentro do TEXTO de uma carta; glosarNome manda ao lado do NOME. Os dois são independentes e ambos valem true quando o campo não está escrito. Um termo pode valer a glosa no nome e não no texto (Estresse × Ponto de Fadiga: as palavras são diferentes, mas repetir a cada linha polui) — e o contrário existe também.",
-  "aviso": "\"Oculto\" é o caso perigoso: nas cartas significa Hidden e na Jambô significa Cloaked. Por isso a glosa nunca é aplicada em cima do texto da Jambô — só do texto das cartas, onde o sentido é conhecido.",
-  "termos": [
-    { "canonico": "Finesse", "jambo": "Acuidade", "ingles": "Finesse", "categoria": "traco", "glosarEmTexto": true },
-    { "canonico": "Estresse", "jambo": "Ponto de Fadiga", "ingles": "Stress", "categoria": "recurso", "glosarEmTexto": true },
-    { "canonico": "Esperança", "jambo": "Ponto de Esperança", "ingles": "Hope", "categoria": "recurso", "glosarEmTexto": false, "glosarNome": false, "motivo": "as duas formas já são quase iguais; glosar só polui — nem no texto nem ao lado do nome" },
-    { "canonico": "Medo", "jambo": "Ponto de Medo", "ingles": "Fear", "categoria": "recurso", "glosarEmTexto": false, "glosarNome": false, "motivo": "idem" },
-    { "canonico": "traço de Conjuração", "jambo": "atributo de conjuração", "ingles": "Spellcast trait", "categoria": "traco", "glosarEmTexto": true },
-    { "canonico": "custo de recordar", "jambo": "custo de troca", "ingles": "Recall Cost", "categoria": "carta", "glosarEmTexto": true },
-    { "canonico": "Reduzir Estresse", "jambo": "Reduzir Fadiga", "ingles": "Clear Stress", "categoria": "movimento-de-descanso", "glosarEmTexto": false, "motivo": "nome de movimento de descanso; a glosa aparece ao lado do nome, no cartão do movimento" },
-    { "canonico": "Zerar Estresse", "jambo": "Zerar Fadiga", "ingles": "Clear All Stress", "categoria": "movimento-de-descanso", "glosarEmTexto": false, "motivo": "idem" },
-    { "canonico": "Habilidade", "jambo": "Talento", "ingles": "Ability", "categoria": "tipo-de-carta", "glosarEmTexto": false, "motivo": "só aparece como rótulo do tipo da carta, e ali a glosa é mostrada à parte" },
-
-    { "canonico": "Oculto", "jambo": "Escondido", "ingles": "Hidden", "categoria": "condicao", "glosarEmTexto": true },
-    { "canonico": "Restrito", "jambo": "Imobilizado", "ingles": "Restrained", "categoria": "condicao", "glosarEmTexto": true },
-    { "canonico": "Camuflado", "jambo": "Oculto", "ingles": "Cloaked", "categoria": "condicao", "glosarEmTexto": true },
-    { "canonico": "Encantado", "jambo": "Enfeitiçado", "ingles": "Charmed", "categoria": "condicao", "glosarEmTexto": true },
-    { "canonico": "Espectral", "jambo": "Incorpóreo", "ingles": "Spectral", "categoria": "condicao", "glosarEmTexto": true },
-
-    { "canonico": "Arcana", "jambo": "Arcano", "ingles": "Arcana", "categoria": "dominio", "glosarEmTexto": false },
-    { "canonico": "Osso", "jambo": "Falange", "ingles": "Bone", "categoria": "dominio", "glosarEmTexto": false },
-    { "canonico": "Sábio", "jambo": "Sabedoria", "ingles": "Sage", "categoria": "dominio", "glosarEmTexto": false },
-
-    { "canonico": "Patrulheiro", "jambo": "Caçador", "ingles": "Ranger", "categoria": "classe", "glosarEmTexto": false },
-    { "canonico": "Seraph", "jambo": "Serafim", "ingles": "Seraph", "categoria": "classe", "glosarEmTexto": false },
-
-    { "canonico": "Músico Errante", "jambo": "trovador", "ingles": "Troubadour", "categoria": "subclasse", "glosarEmTexto": false },
-    { "canonico": "Artífice das Palavras", "jambo": "beletrista", "ingles": "Wordsmith", "categoria": "subclasse", "glosarEmTexto": false },
-    { "canonico": "Explorador", "jambo": "rastreador", "ingles": "Wayfinder", "categoria": "subclasse", "glosarEmTexto": false },
-    { "canonico": "Laço Bestial", "jambo": "treinador", "ingles": "Beastbound", "categoria": "subclasse", "glosarEmTexto": false },
-    { "canonico": "Guardião dos Elementos", "jambo": "protetor dos elementos", "ingles": "Warden of the Elements", "categoria": "subclasse", "glosarEmTexto": false },
-    { "canonico": "Guardião da Renovação", "jambo": "protetor da renovação", "ingles": "Warden of Renewal", "categoria": "subclasse", "glosarEmTexto": false },
-    { "canonico": "Origem Elemental", "jambo": "elementalista", "ingles": "Elemental Origin", "categoria": "subclasse", "glosarEmTexto": false },
-    { "canonico": "Origem Primal", "jambo": "primordialista", "ingles": "Primal Origin", "categoria": "subclasse", "glosarEmTexto": false },
-    { "canonico": "Robusto", "jambo": "baluarte", "ingles": "Stalwart", "categoria": "subclasse", "glosarEmTexto": false },
-    { "canonico": "Vingança", "jambo": "vingador", "ingles": "Vengeance", "categoria": "subclasse", "glosarEmTexto": false },
-    { "canonico": "Chamada dos Bravos", "jambo": "escolhido da bravura", "ingles": "Call of the Brave", "categoria": "subclasse", "glosarEmTexto": false },
-    { "canonico": "Chamada do Matador", "jambo": "escolhido da matança", "ingles": "Call of the Slayer", "categoria": "subclasse", "glosarEmTexto": false },
-    { "canonico": "Caminhante Noturno", "jambo": "gatuno", "ingles": "Nightwalker", "categoria": "subclasse", "glosarEmTexto": false },
-    { "canonico": "Sindicato", "jambo": "mafioso", "ingles": "Syndicate", "categoria": "subclasse", "glosarEmTexto": false },
-    { "canonico": "Escola do Conhecimento", "jambo": "discípulo do conhecimento", "ingles": "School of Knowledge", "categoria": "subclasse", "glosarEmTexto": false },
-    { "canonico": "Escola da Guerra", "jambo": "discípulo da guerra", "ingles": "School of War", "categoria": "subclasse", "glosarEmTexto": false },
-    { "canonico": "Sentinela Alado", "jambo": "sentinela alada", "ingles": "Winged Sentinel", "categoria": "subclasse", "glosarEmTexto": false },
-
-    { "canonico": "Halfling", "jambo": "Pequenino", "ingles": "Halfling", "categoria": "ancestralidade", "glosarEmTexto": false },
-    { "canonico": "Ribbet", "jambo": "Quacho", "ingles": "Ribbet", "categoria": "ancestralidade", "glosarEmTexto": false },
-    { "canonico": "Simiah", "jambo": "Símio", "ingles": "Simiah", "categoria": "ancestralidade", "glosarEmTexto": false },
-    { "canonico": "Humanos", "jambo": "Humano", "ingles": "Human", "categoria": "ancestralidade", "glosarEmTexto": false },
-
-    { "canonico": "Highborne", "jambo": "Aristocrática", "ingles": "Highborne", "categoria": "comunidade", "glosarEmTexto": false },
-    { "canonico": "Loreborne", "jambo": "Erudita", "ingles": "Loreborne", "categoria": "comunidade", "glosarEmTexto": false },
-    { "canonico": "Orderborne", "jambo": "Disciplinada", "ingles": "Orderborne", "categoria": "comunidade", "glosarEmTexto": false },
-    { "canonico": "Ridgeborne", "jambo": "Montanhesa", "ingles": "Ridgeborne", "categoria": "comunidade", "glosarEmTexto": false },
-    { "canonico": "Seaborne", "jambo": "Marítima", "ingles": "Seaborne", "categoria": "comunidade", "glosarEmTexto": false },
-    { "canonico": "Slyborne", "jambo": "Fora da lei", "ingles": "Slyborne", "categoria": "comunidade", "glosarEmTexto": false },
-    { "canonico": "Underborne", "jambo": "Subterrânea", "ingles": "Underborne", "categoria": "comunidade", "glosarEmTexto": false },
-    { "canonico": "Wanderborne", "jambo": "Nômade", "ingles": "Wanderborne", "categoria": "comunidade", "glosarEmTexto": false },
-    { "canonico": "Wildborne", "jambo": "Silvestre", "ingles": "Wildborne", "categoria": "comunidade", "glosarEmTexto": false }
-  ]
+ "versao": 1,
+ "fonte": "Cartas oficiais em PNG (coluna canônica) × DH-DigitalRegras.pdf, tradução da Jambô Editora, Prévia 5 (coluna alternativa).",
+ "regra": "O app fala a língua das CARTAS, porque é o que o jogador vê quando toca num nome e a imagem abre. Onde não existe carta (Forma de Fera, Companheiro Animal), o texto vem do livro da Jambô, mas convertido para o mesmo vocabulário. Nos pontos em que o nome de uma mecânica muda entre as duas traduções, o app mostra o termo da Jambô entre parênteses, para quem estiver com o livro na mão achar.",
+ "doisNiveisDeGlosa": "glosarEmTexto manda dentro do TEXTO de uma carta; glosarNome manda ao lado do NOME. Os dois são independentes e ambos valem true quando o campo não está escrito. Um termo pode valer a glosa no nome e não no texto (Estresse × Ponto de Fadiga: as palavras são diferentes, mas repetir a cada linha polui) — e o contrário existe também.",
+ "aviso": "\"Oculto\" é o caso perigoso: nas cartas significa Hidden e na Jambô significa Cloaked. Por isso a glosa nunca é aplicada em cima do texto da Jambô — só do texto das cartas, onde o sentido é conhecido.",
+ "termos": [
+  {
+   "canonico": "Finesse",
+   "jambo": "Acuidade",
+   "ingles": "Finesse",
+   "categoria": "traco",
+   "glosarEmTexto": true
+  },
+  {
+   "canonico": "Estresse",
+   "jambo": "Ponto de Fadiga",
+   "ingles": "Stress",
+   "categoria": "recurso",
+   "glosarEmTexto": true
+  },
+  {
+   "canonico": "Esperança",
+   "jambo": "Ponto de Esperança",
+   "ingles": "Hope",
+   "categoria": "recurso",
+   "glosarEmTexto": false,
+   "glosarNome": false,
+   "motivo": "as duas formas já são quase iguais; glosar só polui — nem no texto nem ao lado do nome"
+  },
+  {
+   "canonico": "Medo",
+   "jambo": "Ponto de Medo",
+   "ingles": "Fear",
+   "categoria": "recurso",
+   "glosarEmTexto": false,
+   "glosarNome": false,
+   "motivo": "idem"
+  },
+  {
+   "canonico": "traço de Conjuração",
+   "jambo": "atributo de conjuração",
+   "ingles": "Spellcast trait",
+   "categoria": "traco",
+   "glosarEmTexto": true
+  },
+  {
+   "canonico": "custo de recordar",
+   "jambo": "custo de troca",
+   "ingles": "Recall Cost",
+   "categoria": "carta",
+   "glosarEmTexto": true
+  },
+  {
+   "canonico": "Reduzir Estresse",
+   "jambo": "Reduzir Fadiga",
+   "ingles": "Clear Stress",
+   "categoria": "movimento-de-descanso",
+   "glosarEmTexto": false,
+   "motivo": "nome de movimento de descanso; a glosa aparece ao lado do nome, no cartão do movimento"
+  },
+  {
+   "canonico": "Zerar Estresse",
+   "jambo": "Zerar Fadiga",
+   "ingles": "Clear All Stress",
+   "categoria": "movimento-de-descanso",
+   "glosarEmTexto": false,
+   "motivo": "idem"
+  },
+  {
+   "canonico": "Habilidade",
+   "jambo": "Talento",
+   "ingles": "Ability",
+   "categoria": "tipo-de-carta",
+   "glosarEmTexto": false,
+   "motivo": "só aparece como rótulo do tipo da carta, e ali a glosa é mostrada à parte"
+  },
+  {
+   "canonico": "Oculto",
+   "jambo": "Escondido",
+   "ingles": "Hidden",
+   "categoria": "condicao",
+   "glosarEmTexto": true
+  },
+  {
+   "canonico": "Restrito",
+   "jambo": "Imobilizado",
+   "ingles": "Restrained",
+   "categoria": "condicao",
+   "glosarEmTexto": true
+  },
+  {
+   "canonico": "Camuflado",
+   "jambo": "Oculto",
+   "ingles": "Cloaked",
+   "categoria": "condicao",
+   "glosarEmTexto": true
+  },
+  {
+   "canonico": "Encantado",
+   "jambo": "Enfeitiçado",
+   "ingles": "Charmed",
+   "categoria": "condicao",
+   "glosarEmTexto": true
+  },
+  {
+   "canonico": "Espectral",
+   "jambo": "Incorpóreo",
+   "ingles": "Spectral",
+   "categoria": "condicao",
+   "glosarEmTexto": true
+  },
+  {
+   "canonico": "Arcana",
+   "jambo": "Arcano",
+   "ingles": "Arcana",
+   "categoria": "dominio",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Osso",
+   "jambo": "Falange",
+   "ingles": "Bone",
+   "categoria": "dominio",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Sábio",
+   "jambo": "Sabedoria",
+   "ingles": "Sage",
+   "categoria": "dominio",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Caçador",
+   "jambo": "Caçador",
+   "ingles": "Ranger",
+   "categoria": "classe",
+   "glosarEmTexto": false,
+   "motivo": "A carta é um produto \"Daggerheart Compatible\" e deixou RANGER em inglês, como fez com \"Foundation\" e \"SPELLCAST TRAIT\". O livro da Jambô traduz Caçador. Decisão da Vanessa (26/08/2026): fica o nome do livro; \"Patrulheiro\" (nome antigo do sistema) e \"Ranger\" continuam achando na busca."
+  },
+  {
+   "canonico": "Serafim",
+   "jambo": "Serafim",
+   "ingles": "Seraph",
+   "categoria": "classe",
+   "glosarEmTexto": false,
+   "motivo": "Mesmo caso do Caçador: a carta diz SERAPH em inglês, o livro diz Serafim."
+  },
+  {
+   "canonico": "Músico Errante",
+   "jambo": "trovador",
+   "ingles": "Troubadour",
+   "categoria": "subclasse",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Artífice das Palavras",
+   "jambo": "beletrista",
+   "ingles": "Wordsmith",
+   "categoria": "subclasse",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Explorador",
+   "jambo": "rastreador",
+   "ingles": "Wayfinder",
+   "categoria": "subclasse",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Laço Bestial",
+   "jambo": "treinador",
+   "ingles": "Beastbound",
+   "categoria": "subclasse",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Guardião dos Elementos",
+   "jambo": "protetor dos elementos",
+   "ingles": "Warden of the Elements",
+   "categoria": "subclasse",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Guardião da Renovação",
+   "jambo": "protetor da renovação",
+   "ingles": "Warden of Renewal",
+   "categoria": "subclasse",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Origem Elemental",
+   "jambo": "elementalista",
+   "ingles": "Elemental Origin",
+   "categoria": "subclasse",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Origem Primal",
+   "jambo": "primordialista",
+   "ingles": "Primal Origin",
+   "categoria": "subclasse",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Robusto",
+   "jambo": "baluarte",
+   "ingles": "Stalwart",
+   "categoria": "subclasse",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Vingança",
+   "jambo": "vingador",
+   "ingles": "Vengeance",
+   "categoria": "subclasse",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Chamada dos Bravos",
+   "jambo": "escolhido da bravura",
+   "ingles": "Call of the Brave",
+   "categoria": "subclasse",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Chamada do Matador",
+   "jambo": "escolhido da matança",
+   "ingles": "Call of the Slayer",
+   "categoria": "subclasse",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Caminhante Noturno",
+   "jambo": "gatuno",
+   "ingles": "Nightwalker",
+   "categoria": "subclasse",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Sindicato",
+   "jambo": "mafioso",
+   "ingles": "Syndicate",
+   "categoria": "subclasse",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Escola do Conhecimento",
+   "jambo": "discípulo do conhecimento",
+   "ingles": "School of Knowledge",
+   "categoria": "subclasse",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Escola da Guerra",
+   "jambo": "discípulo da guerra",
+   "ingles": "School of War",
+   "categoria": "subclasse",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Sentinela Alado",
+   "jambo": "sentinela alada",
+   "ingles": "Winged Sentinel",
+   "categoria": "subclasse",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Halfling",
+   "jambo": "Pequenino",
+   "ingles": "Halfling",
+   "categoria": "ancestralidade",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Ribbet",
+   "jambo": "Quacho",
+   "ingles": "Ribbet",
+   "categoria": "ancestralidade",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Simiah",
+   "jambo": "Símio",
+   "ingles": "Simiah",
+   "categoria": "ancestralidade",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Humanos",
+   "jambo": "Humano",
+   "ingles": "Human",
+   "categoria": "ancestralidade",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Highborne",
+   "jambo": "Aristocrática",
+   "ingles": "Highborne",
+   "categoria": "comunidade",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Loreborne",
+   "jambo": "Erudita",
+   "ingles": "Loreborne",
+   "categoria": "comunidade",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Orderborne",
+   "jambo": "Disciplinada",
+   "ingles": "Orderborne",
+   "categoria": "comunidade",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Ridgeborne",
+   "jambo": "Montanhesa",
+   "ingles": "Ridgeborne",
+   "categoria": "comunidade",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Seaborne",
+   "jambo": "Marítima",
+   "ingles": "Seaborne",
+   "categoria": "comunidade",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Slyborne",
+   "jambo": "Fora da lei",
+   "ingles": "Slyborne",
+   "categoria": "comunidade",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Underborne",
+   "jambo": "Subterrânea",
+   "ingles": "Underborne",
+   "categoria": "comunidade",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Wanderborne",
+   "jambo": "Nômade",
+   "ingles": "Wanderborne",
+   "categoria": "comunidade",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "Wildborne",
+   "jambo": "Silvestre",
+   "ingles": "Wildborne",
+   "categoria": "comunidade",
+   "glosarEmTexto": false
+  },
+  {
+   "canonico": "dano Severo",
+   "jambo": "dano grave",
+   "ingles": "Severe damage",
+   "categoria": "dano",
+   "glosarEmTexto": true,
+   "motivo": "As cartas dizem \"dano Severo\"; o livro da Jambô diz \"dano grave\". É o mesmo limiar."
+  },
+  {
+   "canonico": "dano Maior",
+   "jambo": "dano moderado",
+   "ingles": "Major damage",
+   "categoria": "dano",
+   "glosarEmTexto": true
+  },
+  {
+   "canonico": "dano Menor",
+   "jambo": "dano leve",
+   "ingles": "Minor damage",
+   "categoria": "dano",
+   "glosarEmTexto": true
+  },
+  {
+   "canonico": "cofre",
+   "jambo": "reserva",
+   "ingles": "vault",
+   "categoria": "carta",
+   "glosarEmTexto": false,
+   "motivo": "Onde ficam as cartas de domínio fora da mão. A tela usa \"cofre\", como as cartas; o livro diz \"reserva\"."
+  },
+  {
+   "canonico": "jogada",
+   "jambo": "teste",
+   "ingles": "roll",
+   "categoria": "termo",
+   "glosarEmTexto": false,
+   "motivo": "As cartas usam \"jogada\" 74 vezes contra 3 de \"teste\"; o livro usa \"teste\". Não vale glosar no texto — apareceria em quase toda frase."
+  },
+  {
+   "canonico": "traço",
+   "jambo": "atributo",
+   "ingles": "trait",
+   "categoria": "termo",
+   "glosarEmTexto": false,
+   "motivo": "Decisão da Parte 4: \"Traços\" é o nome dos seis atributos. Não glosa no texto pelo mesmo motivo da jogada."
+  },
+  {
+   "canonico": "Dados de Dualidade",
+   "jambo": "Dado do Destino",
+   "ingles": "Duality Dice",
+   "categoria": "termo",
+   "glosarEmTexto": false,
+   "motivo": "O próprio livro alterna: \"Dados de Dualidade\" na p.30 (Caçador) e \"Dado do Destino\" na p.48 (Mago)."
+  }
+ ]
 }

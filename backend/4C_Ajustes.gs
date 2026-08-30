@@ -25,6 +25,10 @@
 /** Teto de segurança: uma rajada de toques não vira um pedido gigante. */
 const LIMITE_AJUSTES_POR_PEDIDO = 20;
 
+/** Tamanho de um item escrito à mão na mochila, e quantos cabem. */
+const LIMITE_ITEM_INVENTARIO = 120;
+const LIMITE_ITENS_INVENTARIO = 60;
+
 /** As quatro trilhas que se marca com o dedo, e onde mora o teto de cada uma. */
 const RECURSOS_AJUSTAVEIS = {
   pontosDeVidaMarcados: { rotulo: 'Pontos de Vida', maximo: 'pontosDeVidaMaximos', onde: 'recursos', marcador: true },
@@ -100,6 +104,11 @@ function aplicarAjustes_(ficha, ajustes) {
     else if (tipo === 'contador') r = ajustarContador_(ficha, a);
     else if (tipo === 'carta') r = ajustarCarta_(ficha, a);
     else if (tipo === 'gatilho') r = ajustarGatilho_(ficha, a);
+    else if (tipo === 'conjuracao') r = ajustarConjuracao_(ficha, a);
+    else if (tipo === 'ouro') r = ajustarOuroDaFicha_(ficha, a);
+    else if (tipo === 'inventario') r = ajustarInventario_(ficha, a);
+    else if (tipo === 'compra') r = comprarItem_(ficha, a);
+    else if (tipo === 'fichafilha') r = ajustarFichaFilha_(ficha, a);
     else r = { erro: 'Tipo de ajuste desconhecido: "' + String(a.tipo) + '".' };
 
     if (r && r.erro) erros.push(r.erro);
@@ -112,6 +121,263 @@ function aplicarAjustes_(ficha, ajustes) {
 /* ------------------------------------------------------------------------ *
  *  Um handler por tipo de ajuste
  * ------------------------------------------------------------------------ */
+
+/**
+ * Troca qual traço de Conjuração está valendo, quando a multiclasse deu dois.
+ *
+ * O livro deixa escolher A CADA teste de conjuração; como o app não rola dado,
+ * o que existe é um interruptor. Só aceita traço que a ficha realmente tem
+ * direito de usar — quem diz isso é conjuracoesDaFicha_ (45_Tracos.gs).
+ */
+function ajustarConjuracao_(ficha, a) {
+  if (typeof conjuracoesDaFicha_ !== 'function') {
+    return { erro: 'Este servidor não sabe resolver traço de Conjuração.' };
+  }
+  const lista = conjuracoesDaFicha_(ficha);
+  if (lista.length < 2) {
+    return { erro: 'Este personagem tem um traço de Conjuração só — não há o que escolher.' };
+  }
+  const alvo = (typeof normalizarTraco_ === 'function') ? normalizarTraco_(a.traco) : '';
+  let achou = null;
+  for (let i = 0; i < lista.length; i++) if (lista[i].traco === alvo) achou = lista[i];
+  if (!achou) return { erro: 'Traço de Conjuração indisponível: "' + String(a.traco) + '".' };
+
+  const antes = conjuracaoDoPersonagem_(ficha);
+  ficha.conjuracaoEscolhida = alvo;
+  return {
+    tipo: 'conjuracao', traco: alvo, origem: achou.origem,
+    subclasse: achou.subclasse, antes: antes, depois: alvo
+  };
+}
+
+/**
+ * Mexe numa FICHA PARALELA (Forma de Fera, Companheiro Animal).
+ *
+ * Elas não cabem na ficha principal — a Forma troca Evasão e atributo de
+ * ataque enquanto dura, e o Companheiro sobe de nível numa ficha própria — mas
+ * também não são personagens separados: vivem em `ficha.fichasFilhas` e são
+ * validadas por 49_FichasFilhas.gs. Aqui só entram os toques da tela.
+ *
+ * As ações: 'criar' e 'remover' (a ficha inteira), 'entrar'/'sair' (Forma de
+ * Fera) e 'editar' (os campos do Companheiro). Quem confere se a classe pode
+ * ter aquilo, se a forma é do patamar certo e se o dado do companheiro condiz
+ * com as evoluções continua sendo a validação — este arquivo não repete
+ * regra nenhuma.
+ */
+function ajustarFichaFilha_(ficha, a) {
+  const tipo = chaveTexto_(a.filha);
+  if (tipo !== 'beastform' && tipo !== 'companheiro') {
+    return { erro: 'Ficha paralela desconhecida: "' + String(a.filha) + '".' };
+  }
+  ficha.fichasFilhas = Array.isArray(ficha.fichasFilhas) ? ficha.fichasFilhas : [];
+  const acao = chaveTexto_(a.acao);
+
+  let indice = -1;
+  for (let i = 0; i < ficha.fichasFilhas.length; i++) {
+    if (String((ficha.fichasFilhas[i] || {}).tipo) === tipo) indice = i;
+  }
+
+  if (acao === 'criar') {
+    if (indice !== -1) return { erro: 'Esta ficha paralela já existe.' };
+    if (typeof fichaFilhaVazia_ !== 'function') return { erro: 'Este servidor não sabe criar ficha paralela.' };
+    const nova = fichaFilhaVazia_(tipo);
+    if (!nova) return { erro: 'Ficha paralela desconhecida: "' + String(a.filha) + '".' };
+    ficha.fichasFilhas.push(nova);
+    return { tipo: 'fichaFilha', filha: tipo, acao: 'criar', nome: nova.nome };
+  }
+
+  if (indice === -1) return { erro: 'Esta ficha paralela ainda não existe.' };
+  const filha = ficha.fichasFilhas[indice];
+  filha.dados = filha.dados || {};
+
+  if (acao === 'remover') {
+    ficha.fichasFilhas.splice(indice, 1);
+    return { tipo: 'fichaFilha', filha: tipo, acao: 'remover' };
+  }
+
+  if (acao === 'entrar') {
+    if (tipo !== 'beastform') return { erro: 'Só a Forma de Fera tem entrar e sair.' };
+    const forma = (typeof normalizarFormaDeFera_ === 'function') ? normalizarFormaDeFera_(a.forma) : '';
+    if (!forma) return { erro: 'Forma de Fera desconhecida: "' + String(a.forma) + '".' };
+    const antes = filha.dados.formaAtiva || null;
+    filha.dados.formaAtiva = forma;
+    return {
+      tipo: 'fichaFilha', filha: tipo, acao: 'entrar', forma: forma,
+      nome: FORMAS_DE_FERA[forma] ? FORMAS_DE_FERA[forma].nome : forma, antes: antes,
+      // O custo é do jogador: o app não marca Estresse sozinho, do mesmo jeito
+      // que não rola dado. Ele lembra.
+      aviso: antes ? '' : 'Entrar na Forma de Fera custa 1 Estresse (mais 1 ou 2 nas híbridas) — marque na trilha.'
+    };
+  }
+
+  if (acao === 'sair') {
+    if (tipo !== 'beastform') return { erro: 'Só a Forma de Fera tem entrar e sair.' };
+    const antes = filha.dados.formaAtiva || null;
+    if (!antes) return { erro: 'Este personagem não está em Forma de Fera.' };
+    filha.dados.formaAtiva = null;
+    return { tipo: 'fichaFilha', filha: tipo, acao: 'sair', antes: antes };
+  }
+
+  if (acao === 'editar') {
+    const campos = (a.campos && typeof a.campos === 'object' && !Array.isArray(a.campos)) ? a.campos : {};
+    const permitidos = tipo === 'companheiro'
+      ? ['animal', 'evasao', 'dado', 'alcance', 'tipoDeDano', 'evolucoes', 'experiencias']
+      : ['formasConhecidas'];
+    const mexeu = [];
+    for (let i = 0; i < permitidos.length; i++) {
+      const k = permitidos[i];
+      if (campos[k] === undefined) continue;
+      filha.dados[k] = campos[k];
+      mexeu.push(k);
+    }
+    if (a.nome !== undefined) { filha.nome = String(a.nome); mexeu.push('nome'); }
+    if (!mexeu.length) return { erro: 'Nada para editar nesta ficha paralela.' };
+    return { tipo: 'fichaFilha', filha: tipo, acao: 'editar', campos: mexeu };
+  }
+
+  return { erro: 'Ação de ficha paralela desconhecida: "' + String(a.acao) + '".' };
+}
+
+/**
+ * Quanto vale, em punhados, cada categoria de ouro.
+ *
+ * A chave `cofres` é histórica: a tela mostra "Baús", que é como o livro chama
+ * (p.104). Trocar a CHAVE obrigaria a migrar toda ficha já gravada por um ganho
+ * de zero — o nome que a mesa lê é o da tela.
+ */
+const OURO_CATEGORIAS = { punhados: 1, bolsas: 10, cofres: 100 };
+
+/**
+ * Mexe no ouro por CATEGORIA, com o troco automático.
+ *
+ * A ficha de papel tem quadradinhos: 9 punhados, 9 bolsas, 1 baú. Quem chega
+ * ao décimo punhado apaga os nove e marca uma bolsa. Fazer o jogador digitar
+ * isso à mão seria pedir para errar, então aqui ele só toca em "+1 punhado" e
+ * a conta sobe de categoria sozinha (ouroNormalizado_ em 44_Equipamento.gs).
+ *
+ * O teto de 1 baú é do livro (p.104): com tudo marcado, é preciso gastar ou
+ * guardar antes de receber mais. O app avisa em vez de apagar em silêncio.
+ */
+function ajustarOuroDaFicha_(ficha, a) {
+  const cat = chaveTexto_(a.chave);
+  if (!OURO_CATEGORIAS[cat]) {
+    return { erro: 'Categoria de ouro desconhecida: "' + String(a.chave) + '".' };
+  }
+  if (typeof ouroNormalizado_ !== 'function') {
+    return { erro: 'Este servidor não sabe converter ouro.' };
+  }
+  const passo = Math.trunc(Number(a.delta));
+  if (!isFinite(passo) || passo === 0) return { erro: 'O ajuste de ouro precisa de um delta.' };
+
+  ficha.ouro = ficha.ouro || { punhados: 0, bolsas: 0, cofres: 0 };
+  const antes = { punhados: ficha.ouro.punhados || 0, bolsas: ficha.ouro.bolsas || 0, cofres: ficha.ouro.cofres || 0 };
+  const total = ouroEmPunhados_(antes) + passo * OURO_CATEGORIAS[cat];
+  if (total < 0) return { erro: 'Não dá para gastar mais ouro do que se tem.' };
+
+  const novo = ouroNormalizado_(total);
+  ficha.ouro = { punhados: novo.punhados, bolsas: novo.bolsas, cofres: novo.cofres };
+  return {
+    tipo: 'ouro', chave: cat, antes: antes, depois: ficha.ouro,
+    aviso: novo.estourou ? 'O baú encheu — o livro não deixa passar de 1 baú.' : ''
+  };
+}
+
+/**
+ * COMPRAR um item: tira o ouro e põe o item na mochila, de uma vez só.
+ *
+ * O livro NÃO tem tabela de preços — e é explícito sobre isso (p.104): "Este
+ * livro não define preços para armas, armaduras ou espólios… O mestre
+ * determinará o preço dos equipamentos com base na quantidade de ouro recebida
+ * pelo grupo entre as sessões." Então o app não inventa preço: quem diz quanto
+ * custa é a mesa, e o jogador digita o número combinado.
+ *
+ * O que o app faz é o que o papel não faz sozinho: garantir que as duas metades
+ * aconteçam JUNTAS. Sem isso, dava para pagar e a mochila estar cheia — ouro
+ * gasto por nada.
+ */
+function comprarItem_(ficha, a) {
+  const texto = String(a.item === undefined ? '' : a.item).trim().replace(/\s+/g, ' ');
+  if (!texto) return { erro: 'Escreva o que está sendo comprado.' };
+  if (texto.length > LIMITE_ITEM_INVENTARIO) {
+    return { erro: 'O nome do item passa de ' + LIMITE_ITEM_INVENTARIO + ' caracteres.' };
+  }
+  ficha.inventario = Array.isArray(ficha.inventario) ? ficha.inventario : [];
+  if (ficha.inventario.length >= LIMITE_ITENS_INVENTARIO) {
+    return { erro: 'A mochila já tem ' + LIMITE_ITENS_INVENTARIO + ' itens — tire algo antes de comprar.' };
+  }
+
+  const preco = (a.preco && typeof a.preco === 'object') ? a.preco : {};
+  let custo = 0;
+  const chaves = Object.keys(OURO_CATEGORIAS);
+  for (let i = 0; i < chaves.length; i++) {
+    const quanto = Math.max(0, Math.trunc(Number(preco[chaves[i]])) || 0);
+    custo += quanto * OURO_CATEGORIAS[chaves[i]];
+  }
+  if (custo <= 0) {
+    return { erro: 'Diga quanto custou. Se foi de graça, use "acrescentar à mochila".' };
+  }
+
+  ficha.ouro = ficha.ouro || { punhados: 0, bolsas: 0, cofres: 0 };
+  const antes = {
+    punhados: ficha.ouro.punhados || 0,
+    bolsas: ficha.ouro.bolsas || 0,
+    cofres: ficha.ouro.cofres || 0
+  };
+  const total = ouroEmPunhados_(antes) - custo;
+  if (total < 0) {
+    return { erro: 'Não dá para gastar mais ouro do que se tem: custou ' + custo +
+                   ' punhado(s) e há ' + ouroEmPunhados_(antes) + '.' };
+  }
+
+  // As duas metades, agora que as duas passaram na conferência.
+  const novo = ouroNormalizado_(total);
+  ficha.ouro = { punhados: novo.punhados, bolsas: novo.bolsas, cofres: novo.cofres };
+  ficha.inventario.push(texto);
+
+  return {
+    tipo: 'compra', item: texto, custo: custo,
+    antes: antes, depois: ficha.ouro, total: ficha.inventario.length,
+    aviso: 'Preço é decisão da mesa: o livro (p.104) não define preços.'
+  };
+}
+
+/**
+ * Acrescenta ou tira um item da mochila.
+ *
+ * Sem mercado, sem preço, sem catálogo: é uma lista de texto, como a linha em
+ * branco da ficha de papel. Quando existir compra de equipamento, ela vai
+ * passar por aqui em vez de inventar outro caminho.
+ */
+function ajustarInventario_(ficha, a) {
+  const acao = chaveTexto_(a.acao);
+  ficha.inventario = Array.isArray(ficha.inventario) ? ficha.inventario : [];
+
+  if (acao === 'adicionar') {
+    const texto = String(a.item === undefined ? '' : a.item).trim().replace(/\s+/g, ' ');
+    if (!texto) return { erro: 'Escreva o que entra na mochila.' };
+    if (texto.length > LIMITE_ITEM_INVENTARIO) {
+      return { erro: 'O nome do item passa de ' + LIMITE_ITEM_INVENTARIO + ' caracteres.' };
+    }
+    if (ficha.inventario.length >= LIMITE_ITENS_INVENTARIO) {
+      return { erro: 'A mochila já tem ' + LIMITE_ITENS_INVENTARIO + ' itens.' };
+    }
+    ficha.inventario.push(texto);
+    return { tipo: 'inventario', acao: 'adicionar', item: texto, total: ficha.inventario.length };
+  }
+
+  if (acao === 'remover') {
+    const i = Math.trunc(Number(a.indice));
+    if (!isFinite(i) || i < 0 || i >= ficha.inventario.length) {
+      return { erro: 'Item da mochila não encontrado.' };
+    }
+    const bruto = ficha.inventario[i];
+    const nome = (bruto && typeof bruto === 'object') ? (bruto.nome || '') : String(bruto);
+    ficha.inventario.splice(i, 1);
+    return { tipo: 'inventario', acao: 'remover', item: nome, total: ficha.inventario.length };
+  }
+
+  return { erro: 'Ação de mochila desconhecida: "' + String(a.acao) + '".' };
+}
 
 function ajustarRecurso_(ficha, a) {
   const chave = normalizarRecursoAjustavel_(a.chave);
@@ -147,11 +413,23 @@ function ajustarRecurso_(ficha, a) {
     m.alerta = 'Pontos de Vida no limite: é hora de fazer uma jogada para Evitar a Morte (livro p. 106).';
   }
   if (chave === 'estresseMarcado' && teto && depois >= teto && antes < teto) {
-    // A regra do livro (p. 98) dispara quando você PRECISA marcar Estresse e
-    // não pode — não no instante em que a trilha enche. Por isso é aviso, e
-    // com o "se": o app não liga a condição sozinho.
-    m.alerta = 'Estresse no limite: se precisar marcar mais 1 e não puder, ' +
-      'você fica Vulnerável até limpar ao menos 1 (livro p. 98).';
+    /*
+     * Eu tinha lido esta regra errado até aqui: achava que a Vulnerável só
+     * chegava quando o personagem PRECISASSE marcar Estresse e não pudesse.
+     * O livro bom (p.99) e o SRD dizem a mesma coisa, e é mais simples:
+     *
+     *   "When a character marks their last Stress, they become Vulnerable
+     *    until they clear at least 1 Stress."
+     *
+     * A frase do "não pode marcar" é OUTRA regra, logo abaixo: aí se marca 1
+     * PV em vez do Estresse. Como esta não tem escolha nem dado, o app liga a
+     * condição sozinho (sincronizarVulneravelPorEstresse_) — e o aviso aqui só
+     * conta o que aconteceu.
+     */
+    m.alerta = 'Estresse cheio: você fica Vulnerável até limpar ao menos 1 (livro p.99).';
+  }
+  if (chave === 'estresseMarcado' && teto && depois < teto && antes >= teto) {
+    m.aviso = 'Estresse abaixo do limite — a Vulnerável que veio dele saiu.';
   }
   return m;
 }
@@ -238,6 +516,14 @@ function ajustarCarta_(ficha, a) {
   const carta = acharCarta_(a.carta);
   if (!carta) return { erro: 'Carta de domínio desconhecida: "' + String(a.carta) + '".' };
 
+  // Carta permanente já aplicada não volta para a mão: o livro diz que ela
+  // fica no cofre "permanentemente", e trazer de volta daria o bônus de novo.
+  if (typeof cartaTrancada_ === 'function' && cartaTrancada_(ficha, carta.id)
+      && chaveTexto_(a.para) !== 'cofre') {
+    return { erro: carta.nome + ' já foi usada e fica trancada no cofre — o livro diz ' +
+             '"permanentemente".' };
+  }
+
   const para = chaveTexto_(a.para) === 'cofre' ? 'cofre' : 'ativas';
   const de = para === 'cofre' ? 'ativas' : 'cofre';
 
@@ -267,6 +553,31 @@ function ajustarCarta_(ficha, a) {
     return { erro: 'A mão já tem ' + MAX_CARTAS_ATIVAS + ' cartas. Mande uma para o cofre antes.' };
   }
 
+  /*
+   * O CUSTO DE RECORDAR.
+   *
+   * Trazer uma carta do cofre para a mão custa o custo de recordar em Estresse
+   * — mas é de graça durante um descanso. Quem sabe em qual dos dois casos a
+   * mesa está é o jogador, então o app pergunta em vez de decidir: o cliente
+   * manda `cobrarCusto: true` quando é fora de descanso.
+   *
+   * Quando manda, quem marca o Estresse é AQUI, não um segundo ajuste do
+   * cliente: assim o custo e a troca acontecem juntos ou não acontecem, e não
+   * existe o estado meio-termo de carta na mão sem Estresse marcado.
+   */
+  const custo = (para === 'ativas' && estavaLaAtras) ? (Number(carta.custoRecordar) || 0) : 0;
+  const cobrar = custo > 0 && a.cobrarCusto === true;
+
+  if (cobrar) {
+    const r = ficha.recursos || {};
+    const teto = Number(r.estresseMaximo) || 0;
+    const marcado = Math.max(0, Number(r.estresseMarcado) || 0);
+    if (marcado + custo > teto) {
+      return { erro: 'Não sobra Estresse para pagar o custo de recordar de "' + carta.nome +
+        '" (' + custo + '). Descanse, limpe Estresse — ou faça a troca durante um descanso, que é livre.' };
+    }
+  }
+
   tirar(ficha.cartas.ativas);
   tirar(ficha.cartas.cofre);
   ficha.cartas[para].push(carta.id);
@@ -276,14 +587,14 @@ function ajustarCarta_(ficha, a) {
     nivel: carta.nivel, para: para, de: estavaLaAtras ? de : null,
     custoRecordar: carta.custoRecordar
   };
-  // O custo de recordar é INFORMAÇÃO, não cobrança: o app não marca Estresse
-  // sozinho. Trazer uma carta do cofre custa o custo de recordar em Estresse,
-  // mas é de graça durante um descanso — e é a mesa que sabe em qual dos dois
-  // casos está. O cliente mostra o número e, se for o caso, manda um ajuste de
-  // recurso junto.
-  if (para === 'ativas' && estavaLaAtras && carta.custoRecordar) {
-    m.aviso = 'Trazer "' + carta.nome + '" do cofre custa ' + carta.custoRecordar +
-      ' de Estresse fora de um descanso. Durante o descanso, a troca é livre.';
+
+  if (cobrar) {
+    ficha.recursos.estresseMarcado = (Number(ficha.recursos.estresseMarcado) || 0) + custo;
+    m.custoCobrado = custo;
+    m.estresseMarcado = ficha.recursos.estresseMarcado;
+    m.aviso = 'Recordar "' + carta.nome + '" custou ' + custo + ' de Estresse.';
+  } else if (custo) {
+    m.aviso = 'Troca livre: "' + carta.nome + '" voltou para a mão sem pagar o custo de recordar.';
   }
   return m;
 }

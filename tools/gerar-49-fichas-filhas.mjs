@@ -205,6 +205,23 @@ function validarFichaDeCompanheiro_(dadosFilha) {
 }
 
 /** Ficha filha vazia do tipo pedido, já com os valores iniciais do livro. */
+/**
+ * A Forma de Fera em que o personagem está AGORA, ou null.
+ *
+ * Existe para a ficha principal poder somar o bônus de Evasão da forma sem
+ * saber como as fichas paralelas são guardadas.
+ */
+function formaDeFeraAtiva_(ficha) {
+  const lista = (ficha && ficha.fichasFilhas) || [];
+  for (let i = 0; i < lista.length; i++) {
+    const f = lista[i] || {};
+    if (String(f.tipo) !== 'beastform') continue;
+    const id = ((f.dados || {}).formaAtiva) || null;
+    if (id && FORMAS_DE_FERA[id]) return Object.assign({ id: id }, FORMAS_DE_FERA[id]);
+  }
+  return null;
+}
+
 function fichaFilhaVazia_(tipo) {
   if (tipo === 'beastform') {
     return { tipo: 'beastform', nome: 'Forma de Fera', nivel: 1,

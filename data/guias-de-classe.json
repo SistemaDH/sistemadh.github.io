@@ -24,7 +24,7 @@
     "nome": "Florete",
     "atributo": "Presença",
     "alcance": "Corpo a Corpo",
-    "dano": "d8 phy",
+    "dano": "d8 fís",
     "maos": "Uma mão",
     "caracteristica": "Rápido"
    },
@@ -35,7 +35,7 @@
     "nome": "Punhal pequeno",
     "atributo": "Finesse",
     "alcance": "Corpo a Corpo",
-    "dano": "d8 phy",
+    "dano": "d8 fís",
     "maos": "Uma mão",
     "caracteristica": "Emparelhado"
    },
@@ -61,11 +61,15 @@
       "uma Poção de resistência menor"
      ],
      [
-      "um romance",
-      "uma carta nunca aberta"
+      "um livro de romance",
+      "uma carta que nunca foi aberta"
      ]
     ],
-    "extra": "E, EM SEGUIDA, DECIDA EM QUE VOCÊ CARREGARÁ SEUS FEITIÇOS: livro de canções, diário, etc."
+    "extra": "E, EM SEGUIDA, DECIDA EM QUE VOCÊ CARREGARÁ SEUS FEITIÇOS: livro de canções, diário, etc.",
+    "escolherEntreAntigo": [
+     "um romance",
+     "uma carta nunca aberta"
+    ]
    },
    "descricao": {
     "Roupas que são": [
@@ -120,31 +124,36 @@
    },
    "perguntasDeFundo": [
     {
-     "texto": "Quem da sua comunidade te ensinou a ter tanta confiança em si mesmo?",
-     "textoLivro": "Quem de sua comunidade lhe ensinou a ter esse tipo de comportamento? confiança em si mesmo?",
-     "traducao": "reparada por mim"
+     "texto": "Quem em sua comunidade lhe ensinou a ter tanta confiança em si mesmo?",
+     "textoAntigo": "Quem da sua comunidade te ensinou a ter tanta confiança em si mesmo?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Você já foi apaixonado. Quem você adorava e como ele o magoou?",
-     "traducao": "livro"
+     "texto": "Você já se apaixonou. Quem você amava e como essa pessoa partiu seu coração?",
+     "textoAntigo": "Você já foi apaixonado. Quem você adorava e como ele o magoou?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Você sempre admirou outro bardo. Quem é ele e por que você o idolatra?",
-     "traducao": "livro"
+     "texto": "Você sempre teve admiração por outro bardo. Quem é essa pessoa e por que você a idolatra?",
+     "textoAntigo": "Você sempre admirou outro bardo. Quem é ele e por que você o idolatra?",
+     "traducao": "livro (DH-DigitalRegras)"
     }
    ],
    "perguntasDeConexao": [
     {
-     "texto": "O que o fez perceber que seríamos tão bons amigos?",
-     "traducao": "livro"
+     "texto": "Como percebeu que seríamos grandes amigos?",
+     "textoAntigo": "O que o fez perceber que seríamos tão bons amigos?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "O que eu faço que o irrita?",
-     "traducao": "livro"
+     "texto": "O que eu faço que irrita você?",
+     "textoAntigo": "O que eu faço que o irrita?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Por que você agarra minha mão à noite?",
-     "traducao": "livro"
+     "texto": "Por que você segura minha mão à noite?",
+     "textoAntigo": "Por que você agarra minha mão à noite?",
+     "traducao": "livro (DH-DigitalRegras)"
     }
    ],
    "observacoesDoLivro": [
@@ -180,7 +189,7 @@
     "nome": "Bastão Curto",
     "atributo": "Instinto",
     "alcance": "Próximo",
-    "dano": "d8+1 mag",
+    "dano": "d8+1 mág",
     "maos": "Uma mão",
     "caracteristica": null
    },
@@ -191,7 +200,7 @@
     "nome": "Escudo redondo",
     "atributo": "Força",
     "alcance": "Corpo a Corpo",
-    "dano": "d4 phy",
+    "dano": "d4 fís",
     "maos": "Uma mão",
     "caracteristica": "Proteção"
    },
@@ -217,11 +226,15 @@
       "uma Poção de resistência menor"
      ],
      [
-      "um pequeno saco de pedras e ossos",
-      "um estranho pingente encontrado na sujeira"
+      "uma pequena bolsa com ossos e pedras",
+      "um estranho pingente encontrado na terra"
      ]
     ],
-    "extra": null
+    "extra": null,
+    "escolherEntreAntigo": [
+     "um pequeno saco de pedras e ossos",
+     "um estranho pingente encontrado na sujeira"
+    ]
    },
    "descricao": {
     "Roupas que são": [
@@ -276,31 +289,36 @@
    },
    "perguntasDeFundo": [
     {
-     "texto": "Por que a comunidade em que você cresceu era tão dependente da natureza e de suas criaturas?",
-     "traducao": "livro"
+     "texto": "Por que a comunidade na qual você cresceu confiava tanto na natureza e suas criaturas?",
+     "textoAntigo": "Por que a comunidade em que você cresceu era tão dependente da natureza e de suas criaturas?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Qual foi o primeiro animal selvagem com o qual você se relacionou? Por que seu vínculo terminou?",
-     "traducao": "livro"
+     "texto": "Qual foi o primeiro animal com o qual você teve uma conexão emocional? Por que essa conexão acabou?",
+     "textoAntigo": "Qual foi o primeiro animal selvagem com o qual você se relacionou? Por que seu vínculo terminou?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Quem está tentando persegui-lo? O que eles querem de você?",
-     "traducao": "livro"
+     "texto": "Quem está caçando você? O que essa pessoa quer de você?",
+     "textoAntigo": "Quem está tentando persegui-lo? O que eles querem de você?",
+     "traducao": "livro (DH-DigitalRegras)"
     }
    ],
    "perguntasDeConexao": [
     {
-     "texto": "O que você me confidenciou que me faz mergulhar no perigo por você todas as vezes?",
-     "textoLivro": "O que você me confidenciou que me fez dar um pulo de alegria? perigo para você todas as vezes?",
-     "traducao": "reparada por mim"
+     "texto": "O que você confiou a mim que sempre faz com que eu me arrisque por você?",
+     "textoAntigo": "O que você me confidenciou que me faz mergulhar no perigo por você todas as vezes?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Que animal eu diria que você me lembra?",
-     "traducao": "livro"
+     "texto": "De que animal você me faz lembrar?",
+     "textoAntigo": "Que animal eu diria que você me lembra?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Que apelido carinhoso você me deu?",
-     "traducao": "livro"
+     "texto": "Qual o apelido carinhoso que você me deu?",
+     "textoAntigo": "Que apelido carinhoso você me deu?",
+     "traducao": "livro (DH-DigitalRegras)"
     }
    ],
    "observacoesDoLivro": [
@@ -337,7 +355,7 @@
     "nome": "Machado de batalha",
     "atributo": "Força",
     "alcance": "Corpo a Corpo",
-    "dano": "d10+3 phy",
+    "dano": "d10+3 fís",
     "maos": "Duas mãos",
     "caracteristica": null
    },
@@ -424,30 +442,36 @@
    },
    "perguntasDeFundo": [
     {
-     "texto": "Quem da sua comunidade você deixou de proteger e por que ainda pensa neles?",
-     "traducao": "livro"
+     "texto": "Quem da sua comunidade você não conseguiu proteger e por que você ainda pensa nessa pessoa?",
+     "textoAntigo": "Quem da sua comunidade você deixou de proteger e por que ainda pensa neles?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Você foi encarregado de proteger algo importante e entregá-lo em um lugar perigoso. O que é e para onde ele precisa ir?",
-     "traducao": "livro"
+     "texto": "Você recebeu a missão de proteger e levar algo importante a um lugar perigoso. O que é e aonde você precisa ir?",
+     "textoAntigo": "Você foi encarregado de proteger algo importante e entregá-lo em um lugar perigoso. O que é e para onde ele precisa ir?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Você considera um aspecto de si mesmo como uma fraqueza. Qual é esse aspecto e como ele o afetou?",
-     "traducao": "livro"
+     "texto": "Você acredita ter uma fraqueza. O que é, e como isso afeta você?",
+     "textoAntigo": "Você considera um aspecto de si mesmo como uma fraqueza. Qual é esse aspecto e como ele o afetou?",
+     "traducao": "livro (DH-DigitalRegras)"
     }
    ],
    "perguntasDeConexao": [
     {
-     "texto": "Como eu salvei sua vida na primeira vez que nos encontramos?",
-     "traducao": "livro"
+     "texto": "Como salvei sua vida quando nos conhecemos?",
+     "textoAntigo": "Como eu salvei sua vida na primeira vez que nos encontramos?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Que pequeno presente você me deu e percebeu que eu sempre carrego comigo?",
-     "traducao": "livro"
+     "texto": "Que lembrança você me deu e percebeu que eu sempre carrego comigo?",
+     "textoAntigo": "Que pequeno presente você me deu e percebeu que eu sempre carrego comigo?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Que mentira você me contou sobre si mesmo em que eu absolutamente acredito?",
-     "traducao": "livro"
+     "texto": "Que mentira você me contou sobre você na qual eu caí completamente?",
+     "textoAntigo": "Que mentira você me contou sobre si mesmo em que eu absolutamente acredito?",
+     "traducao": "livro (DH-DigitalRegras)"
     }
    ],
    "observacoesDoLivro": [
@@ -482,7 +506,7 @@
     "nome": "Arco curto",
     "atributo": "Agilidade",
     "alcance": "Distante",
-    "dano": "d6+3 phy",
+    "dano": "d6+3 fís",
     "maos": "Duas mãos",
     "caracteristica": null
    },
@@ -509,11 +533,15 @@
       "uma Poção de resistência menor"
      ],
      [
-      "um troféu de sua primeira morte",
-      "uma bússola aparentemente quebrada"
+      "um troféu do seu primeiro abate",
+      "uma bússola quebrada"
      ]
     ],
-    "extra": null
+    "extra": null,
+    "escolherEntreAntigo": [
+     "um troféu de sua primeira morte",
+     "uma bússola aparentemente quebrada"
+    ]
    },
    "descricao": {
     "Roupas que são": [
@@ -568,30 +596,36 @@
    },
    "perguntasDeFundo": [
     {
-     "texto": "Uma criatura terrível feriu sua comunidade e você prometeu caçá-la. O que são elas e que rastro ou sinal único deixam para trás?",
-     "traducao": "livro"
+     "texto": "Uma criatura terrível prejudicou sua comunidade e você jurou abatê-la. Que criatura é essa e qual é a trilha ou sinal específico que ela deixa para trás?",
+     "textoAntigo": "Uma criatura terrível feriu sua comunidade e você prometeu caçá-la. O que são elas e que rastro ou sinal único deixam para trás?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Sua primeira morte quase o matou também. O que foi, e o que parte de você nunca mais foi a mesma depois desse evento?",
-     "traducao": "livro"
+     "texto": "A primeira presa que abateu quase matou você. Que criatura foi essa, e, desde então, que parte de você nunca mais foi a mesma?",
+     "textoAntigo": "Sua primeira morte quase o matou também. O que foi, e o que parte de você nunca mais foi a mesma depois desse evento?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Você já viajou por muitas terras perigosas, mas qual é o único lugar que você se recusa a ir?",
-     "traducao": "livro"
+     "texto": "Você já visitou muitos lugares perigosos, mas qual é o lugar aonde você jamais iria?",
+     "textoAntigo": "Você já viajou por muitas terras perigosas, mas qual é o único lugar que você se recusa a ir?",
+     "traducao": "livro (DH-DigitalRegras)"
     }
    ],
    "perguntasDeConexao": [
     {
-     "texto": "Que competição amigável nós temos?",
-     "traducao": "livro"
+     "texto": "Qual é a rivalidade amigável que temos?",
+     "textoAntigo": "Que competição amigável nós temos?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Por que você age de forma diferente quando estamos sozinhos e quando há outras pessoas por perto?",
-     "traducao": "livro"
+     "texto": "Por que você age de forma tão diferente quando estamos sozinhos e quando há outras pessoas junto?",
+     "textoAntigo": "Por que você age de forma diferente quando estamos sozinhos e quando há outras pessoas por perto?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Que ameaça você me pediu para observar e por que está preocupado com ela?",
-     "traducao": "livro"
+     "texto": "Você me pediu para tomar cuidado com qual ameaça, e por que se preocupa com isso?",
+     "textoAntigo": "Que ameaça você me pediu para observar e por que está preocupado com ela?",
+     "traducao": "livro (DH-DigitalRegras)"
     }
    ],
    "observacoesDoLivro": [
@@ -631,7 +665,7 @@
     "nome": "Adaga",
     "atributo": "Finesse",
     "alcance": "Corpo a Corpo",
-    "dano": "d8+1 phy",
+    "dano": "d8+1 fís",
     "maos": "Uma mão",
     "caracteristica": null
    },
@@ -642,7 +676,7 @@
     "nome": "Punhal pequeno",
     "atributo": "Finesse",
     "alcance": "Corpo a Corpo",
-    "dano": "d8 phy",
+    "dano": "d8 fís",
     "maos": "Uma mão",
     "caracteristica": "Emparelhado"
    },
@@ -669,10 +703,14 @@
      ],
      [
       "um conjunto de ferramentas de falsificação",
-      "um gancho"
+      "um arpéu"
      ]
     ],
-    "extra": null
+    "extra": null,
+    "escolherEntreAntigo": [
+     "um conjunto de ferramentas de falsificação",
+     "um gancho"
+    ]
    },
    "descricao": {
     "Roupas que são": [
@@ -728,32 +766,36 @@
    },
    "perguntasDeFundo": [
     {
-     "texto": "O que você foi pego fazendo que o levou a ser exilado de sua comunidade de origem?",
-     "traducao": "livro"
+     "texto": "O que sua comunidade descobriu você fazendo que fez com que fosse expulso?",
+     "textoAntigo": "O que você foi pego fazendo que o levou a ser exilado de sua comunidade de origem?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Você costumava ter uma vida diferente, mas tentou deixá-la para trás. Quem do seu passado ainda está te perseguindo?",
-     "textoLivro": "Vocêcostumava ter uma vida diferente, mas tentou deixá-la para trás. Quem do seu passado ainda está lhe perseguindo?",
-     "traducao": "reparada por mim"
+     "texto": "Você tinha uma vida diferente, mas tentou abandoná-la. Que figura do passado ainda o persegue?",
+     "textoAntigo": "Você costumava ter uma vida diferente, mas tentou deixá-la para trás. Quem do seu passado ainda está te perseguindo?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "De quem do seu passado você ficou mais triste ao se despedir?",
-     "traducao": "livro"
+     "texto": "Você ficou mais triste ao se despedir de quem?",
+     "textoAntigo": "De quem do seu passado você ficou mais triste ao se despedir?",
+     "traducao": "livro (DH-DigitalRegras)"
     }
    ],
    "perguntasDeConexao": [
     {
-     "texto": "O que eu o convenci a fazer recentemente que nos colocou em apuros?",
-     "traducao": "livro"
+     "texto": "O que eu convenci você a fazer recentemente que nos deixou em apuros?",
+     "textoAntigo": "O que eu o convenci a fazer recentemente que nos colocou em apuros?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "O que descobri sobre seu passado que mantive em segredo dos outros?",
-     "traducao": "livro"
+     "texto": "O que eu descobri sobre o seu passado e escondo dos outros?",
+     "textoAntigo": "O que descobri sobre seu passado que mantive em segredo dos outros?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Quem você conhece do meu passado, e como isso influenciou o que você sente por mim?",
-     "textoLivro": "Quem você conhece do meu passado, e como eles influenciou seus sentimentos em relação a mim?",
-     "traducao": "reparada por mim"
+     "texto": "Quem você conhece do meu passado e como essa pessoa influenciou o que você sente sobre mim?",
+     "textoAntigo": "Quem você conhece do meu passado, e como isso influenciou o que você sente por mim?",
+     "traducao": "livro (DH-DigitalRegras)"
     }
    ],
    "observacoesDoLivro": [
@@ -791,7 +833,7 @@
     "nome": "Machado sagrado",
     "atributo": "Força",
     "alcance": "Corpo a Corpo",
-    "dano": "d8+1 mag",
+    "dano": "d8+1 mág",
     "maos": "Uma mão",
     "caracteristica": null
    },
@@ -802,7 +844,7 @@
     "nome": "Escudo redondo",
     "atributo": "Força",
     "alcance": "Corpo a Corpo",
-    "dano": "d4 phy",
+    "dano": "d4 fís",
     "maos": "Uma mão",
     "caracteristica": "Proteção"
    },
@@ -828,11 +870,15 @@
       "uma Poção de resistência menor"
      ],
      [
-      "um pacote de ofertas",
+      "algumas oferendas",
       "um símbolo de seu deus"
      ]
     ],
-    "extra": null
+    "extra": null,
+    "escolherEntreAntigo": [
+     "um pacote de ofertas",
+     "um símbolo de seu deus"
+    ]
    },
    "descricao": {
     "Roupas que são": [
@@ -888,31 +934,36 @@
    },
    "perguntasDeFundo": [
     {
-     "texto": "A qual deus você se dedicou? Que façanha incrível eles realizaram por você em um momento de desespero?",
-     "traducao": "livro"
+     "texto": "Que deus(a) você segue? Que façanha incrível essa divindade realizou em seu momento de desespero?",
+     "textoAntigo": "A qual deus você se dedicou? Que façanha incrível eles realizaram por você em um momento de desespero?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Como sua aparência mudou depois de fazer seu juramento?",
-     "traducao": "livro"
+     "texto": "O que mudou em sua aparência após seu juramento?",
+     "textoAntigo": "Como sua aparência mudou depois de fazer seu juramento?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "De que maneira estranha ou única você se comunica com seu deus?",
-     "traducao": "livro"
+     "texto": "De que forma estranha ou exclusiva você se comunica com a divindade que segue?",
+     "textoAntigo": "De que maneira estranha ou única você se comunica com seu deus?",
+     "traducao": "livro (DH-DigitalRegras)"
     }
    ],
    "perguntasDeConexao": [
     {
-     "texto": "Com que promessa você me fez concordar, caso eu morresse no campo de batalha?",
-     "textoLivro": "Com que promessa você me fez concordar, caso morresse em no campo de batalha?",
-     "traducao": "reparada por mim"
+     "texto": "O que você me fez prometer caso morra em batalha?",
+     "textoAntigo": "Com que promessa você me fez concordar, caso eu morresse no campo de batalha?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Por que você me faz tantas perguntas sobre o meu deus?",
-     "traducao": "livro"
+     "texto": "Por que pergunta tantas coisas sobre minha divindade?",
+     "textoAntigo": "Por que você me faz tantas perguntas sobre o meu deus?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Você me disse para proteger um membro do nosso grupo acima de todos os outros, até de você mesmo. Quem são eles e por quê?",
-     "traducao": "livro"
+     "texto": "Você me pediu para proteger um membro do grupo acima de todos, inclusive de você. Quem e por quê?",
+     "textoAntigo": "Você me disse para proteger um membro do nosso grupo acima de todos os outros, até de você mesmo. Quem são eles e por quê?",
+     "traducao": "livro (DH-DigitalRegras)"
     }
    ],
    "observacoesDoLivro": [
@@ -949,7 +1000,7 @@
     "nome": "Bastão Duplo",
     "atributo": "Instinto",
     "alcance": "Distante",
-    "dano": "d6+3 mag",
+    "dano": "d6+3 mág",
     "maos": "Duas mãos",
     "caracteristica": null
    },
@@ -1035,30 +1086,36 @@
    },
    "perguntasDeFundo": [
     {
-     "texto": "O que você fez para que as pessoas de sua comunidade desconfiassem de você?",
-     "traducao": "livro"
+     "texto": "O que você fez que tornou as pessoas de sua comunidade desconfiadas de você?",
+     "textoAntigo": "O que você fez para que as pessoas de sua comunidade desconfiassem de você?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Que mentor lhe ensinou a controlar sua magia indomável e por que ele não pode mais guiá-lo?",
-     "traducao": "livro"
+     "texto": "Quem lhe ensinou a domar sua magia descontrolada e por que essa pessoa não pode mais orientar você?",
+     "textoAntigo": "Que mentor lhe ensinou a controlar sua magia indomável e por que ele não pode mais guiá-lo?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Você tem um medo profundo que esconde de todos. O que é esse medo e por que ele o assusta?",
-     "traducao": "livro"
+     "texto": "Você teme algo profundamente e esconde isso de todos. O que é, e por que isso o aterroriza?",
+     "textoAntigo": "Você tem um medo profundo que esconde de todos. O que é esse medo e por que ele o assusta?",
+     "traducao": "livro (DH-DigitalRegras)"
     }
    ],
    "perguntasDeConexao": [
     {
      "texto": "Por que você confia tanto em mim?",
-     "traducao": "livro"
+     "textoAntigo": "Por que você confia tanto em mim?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "O que eu fiz para que você seja cauteloso comigo?",
-     "traducao": "livro"
+     "texto": "O que eu fiz para você suspeitar tanto de mim?",
+     "textoAntigo": "O que eu fiz para que você seja cauteloso comigo?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Por que mantemos nosso passado compartilhado em segredo?",
-     "traducao": "livro"
+     "texto": "Por que mantemos em segredo o passado que compartilhamos?",
+     "textoAntigo": "Por que mantemos nosso passado compartilhado em segredo?",
+     "traducao": "livro (DH-DigitalRegras)"
     }
    ],
    "observacoesDoLivro": [
@@ -1094,7 +1151,7 @@
     "nome": "Espada longa",
     "atributo": "Agilidade",
     "alcance": "Corpo a Corpo",
-    "dano": "d10+3 phy",
+    "dano": "d10+3 fís",
     "maos": "Duas mãos",
     "caracteristica": null
    },
@@ -1121,11 +1178,15 @@
       "uma Poção de resistência menor"
      ],
      [
-      "o desenho de um amante",
-      "uma pedra de afiar"
+      "o desenho de alguém que ama",
+      "uma pedra de amolar"
      ]
     ],
-    "extra": null
+    "extra": null,
+    "escolherEntreAntigo": [
+     "o desenho de um amante",
+     "uma pedra de afiar"
+    ]
    },
    "descricao": {
     "Roupas que são": [
@@ -1181,31 +1242,36 @@
    },
    "perguntasDeFundo": [
     {
-     "texto": "Quem te ensinou a lutar, e por que ficaram para trás quando você saiu de casa?",
-     "textoLivro": "Quem o ensinou a lutar e por que eles ficaram para trás quando você estava no campo de batalha? saiu de casa?",
-     "traducao": "reparada por mim"
+     "texto": "Quem ensinou você a lutar e por que essa pessoa ficou para trás quando você saiu de sua comunidade?",
+     "textoAntigo": "Quem te ensinou a lutar, e por que ficaram para trás quando você saiu de casa?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Alguém o derrotou em uma batalha anos atrás e o deixou para morrer. Quem foi e como ele o traiu?",
-     "traducao": "livro"
+     "texto": "Anos atrás, você perdeu uma batalha para alguém que o deixou à beira da morte. Quem é essa pessoa e como ela traiu você?",
+     "textoAntigo": "Alguém o derrotou em uma batalha anos atrás e o deixou para morrer. Quem foi e como ele o traiu?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
      "texto": "Que lugar lendário você sempre quis visitar e por que ele é tão especial?",
-     "traducao": "livro"
+     "textoAntigo": "Que lugar lendário você sempre quis visitar e por que ele é tão especial?",
+     "traducao": "livro (DH-DigitalRegras)"
     }
    ],
    "perguntasDeConexao": [
     {
-     "texto": "Nós já nos conhecíamos muito antes dessa festa acontecer. Como?",
-     "traducao": "livro"
+     "texto": "Nos conhecíamos bem antes do surgimento do grupo. Como?",
+     "textoAntigo": "Nós já nos conhecíamos muito antes dessa festa acontecer. Como?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Em que tarefa mundana você costuma me ajudar fora do campo de batalha?",
-     "traducao": "livro"
+     "texto": "Com qual tarefa mundana você costuma me ajudar, fora dos momentos de batalha?",
+     "textoAntigo": "Em que tarefa mundana você costuma me ajudar fora do campo de batalha?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Que medo estou ajudando você a superar?",
-     "traducao": "livro"
+     "texto": "Que medos estou ajudando você a superar?",
+     "textoAntigo": "Que medo estou ajudando você a superar?",
+     "traducao": "livro (DH-DigitalRegras)"
     }
    ],
    "observacoesDoLivro": [
@@ -1241,7 +1307,7 @@
     "nome": "Bastão Longo",
     "atributo": "Conhecimento",
     "alcance": "Muito Distante",
-    "dano": "d6 mag",
+    "dano": "d6 mág",
     "maos": "Duas mãos",
     "caracteristica": "Poderoso"
    },
@@ -1268,11 +1334,15 @@
       "uma Poção de resistência menor"
      ],
      [
-      "um livro que está tentando traduzir",
-      "um pequeno e inofensivo animal de estimação elementar"
+      "um livro que você está tentando traduzir",
+      "um pequeno e inofensivo elemental de estimação"
      ]
     ],
-    "extra": "E, EM SEGUIDA, DECIDA EM QUE VOCÊ CARREGARÁ SEUS FEITIÇOS: grandes volumes, cartas de tarô, etc."
+    "extra": "E, EM SEGUIDA, DECIDA EM QUE VOCÊ CARREGARÁ SEUS FEITIÇOS: grandes volumes, cartas de tarô, etc.",
+    "escolherEntreAntigo": [
+     "um livro que está tentando traduzir",
+     "um pequeno e inofensivo animal de estimação elementar"
+    ]
    },
    "descricao": {
     "Roupas que são": [
@@ -1328,31 +1398,36 @@
    },
    "perguntasDeFundo": [
     {
-     "texto": "Para quais responsabilidades sua comunidade contava com você? Como você os decepcionou?",
-     "traducao": "livro"
+     "texto": "Para quais responsabilidades sua comunidade já contou com você? Como você a decepcionou?",
+     "textoAntigo": "Para quais responsabilidades sua comunidade contava com você? Como você os decepcionou?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Você passou a vida procurando um livro ou objeto de grande valor e significado. O que é, e por que é tão importante para você?",
-     "textoLivro": "Você passou sua vida procurando por um livro ou objeto de grande valor significado. O que é isso e por que é tão importante para você?",
-     "traducao": "reparada por mim"
+     "texto": "Você passou a vida em busca de um livro ou objeto importante. O que é, e por que é tão importante?",
+     "textoAntigo": "Você passou a vida procurando um livro ou objeto de grande valor e significado. O que é, e por que é tão importante para você?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Você tem um rival poderoso. Quem é ele e por que você está tão determinado a derrotá-lo?",
-     "traducao": "livro"
+     "texto": "Você tem um rival poderoso. Quem é essa pessoa e por que você quer tanto derrotá-la?",
+     "textoAntigo": "Você tem um rival poderoso. Quem é ele e por que você está tão determinado a derrotá-lo?",
+     "traducao": "livro (DH-DigitalRegras)"
     }
    ],
    "perguntasDeConexao": [
     {
-     "texto": "Que favor eu lhe pedi que você não tem certeza se pode cumprir?",
-     "traducao": "livro"
+     "texto": "Que favor eu pedi e você não sabe se conseguirá cumprir?",
+     "textoAntigo": "Que favor eu lhe pedi que você não tem certeza se pode cumprir?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Que hobby estranho ou fascínio estranho nós dois compartilhamos?",
-     "traducao": "livro"
+     "texto": "Que passatempo ou fascinação estranha nós compartilhamos?",
+     "textoAntigo": "Que hobby estranho ou fascínio estranho nós dois compartilhamos?",
+     "traducao": "livro (DH-DigitalRegras)"
     },
     {
-     "texto": "Que segredo seu você confiou somente a mim?",
-     "traducao": "livro"
+     "texto": "Que segredo a seu respeito você confiou a mim?",
+     "textoAntigo": "Que segredo seu você confiou somente a mim?",
+     "traducao": "livro (DH-DigitalRegras)"
     }
    ],
    "observacoesDoLivro": [

@@ -68,11 +68,26 @@ function fichaVazia_() {
     },
     condicoes: [],       // ver 46_Condicoes.gs
     contadores: {},      // fichas/marcadores/dados nas cartas — ver 47_Contadores.gs
+    // As cartas que mudam a ficha PARA SEMPRE (Vitalidade, Mestre do Ofício,
+    // Ressurreição). O bônus fica em `bonusDeCartas`, derivado como os outros;
+    // aqui só o registro de que a carta já foi usada e está trancada no cofre.
+    cartasPermanentes: {},
+    bonusDeCartas: {},   // ver 4I_CartasPermanentes.gs
     fichasFilhas: [],    // Beastform e Companheiro Animal — ver validarFichasFilhas_
     descanso: {          // repouso — ver 4B_Descanso.gs
       curtosSeguidos: 0, ultimo: null
     },
-    avancos: {},         // histórico de subida de nível
+    subclasseCartas: ['fundacao'],  // fundação -> especialização -> maestria
+    // Qual traço de Conjuração está valendo, quando a multiclasse deu dois.
+    // Vazio = o da subclasse original. Ver conjuracoesDaFicha_ (45_Tracos.gs).
+    conjuracaoEscolhida: '',
+    multiclasse: null,   // segunda classe, do nível 5 em diante — ver 4D_Avanco.gs
+    avancos: {           // subida de nível — ver 4D_Avanco.gs
+      historico: [],     //   o que foi escolhido em cada nível
+      espacos: {},       //   quadradinhos marcados, por patamar
+      tracosMarcados: [],//   traços bloqueados até o próximo patamar
+      bonus: {}          //   soma dos efeitos permanentes (Evasão, PV, Estresse, Proficiência)
+    },
     anotacoes: '',
     meta: { schema: SCHEMA_FICHA }
   };
@@ -120,7 +135,8 @@ function mesclarComEsqueleto_(ficha) {
   const saida = Object.assign({}, base, ficha);
   // Objetos de primeiro nível também recebem os campos que faltam.
   ['identidade', 'tracos', 'origem', 'cartas', 'recursos', 'defesas', 'equipamento',
-   'ouro', 'historia', 'contadores', 'descanso', 'meta'].forEach(function (chave) {
+   'ouro', 'historia', 'contadores', 'descanso', 'avancos', 'meta',
+   'cartasPermanentes', 'bonusDeCartas'].forEach(function (chave) {
     saida[chave] = Object.assign({}, base[chave], ficha[chave] || {});
   });
   return saida;
@@ -246,8 +262,14 @@ function validarCartasDaFicha_(ficha) {
   }
 
   const id = ficha.identidade || {};
-  const dominios = (typeof dominiosDaClasse_ === 'function') ? dominiosDaClasse_(id.classe) : [];
-  const r = validarCartasDoPersonagem_(ativas, cofre, dominios, id.nivel);
+  // Com multiclasse cada domínio tem um teto de nível diferente (o domínio
+  // novo vai só até a metade do nível), então quem confere é o 4D_Avanco.gs.
+  const r = (typeof validarCartasComLimites_ === 'function')
+    ? validarCartasComLimites_(ativas, cofre, ficha)
+    : validarCartasDoPersonagem_(
+        ativas, cofre,
+        (typeof dominiosDaClasse_ === 'function') ? dominiosDaClasse_(id.classe) : [],
+        id.nivel);
   if (!r.ok) problemas.push.apply(problemas, r.erros);
 
   // Guarda sempre o ID canônico, nunca o nome digitado.
@@ -304,6 +326,12 @@ function validarFicha_(fichaBruta) {
   if (typeof validarExperiencias_ === 'function') problemas = problemas.concat(validarExperiencias_(ficha));
   if (typeof validarCondicoes_ === 'function') problemas = problemas.concat(validarCondicoes_(ficha));
   if (typeof validarContadores_ === 'function') problemas = problemas.concat(validarContadores_(ficha));
+  // A multiclasse precisa estar resolvida ANTES das cartas: é ela que define
+  // o teto de nível das cartas do domínio novo.
+  if (typeof validarAvancos_ === 'function') problemas = problemas.concat(validarAvancos_(ficha));
+  // Depois da multiclasse, de novo: é ela que pode ter trazido o segundo
+  // traço de Conjuração — ou levado embora o que estava escolhido.
+  if (typeof validarConjuracao_ === 'function') problemas = problemas.concat(validarConjuracao_(ficha));
   problemas = problemas.concat(validarCartasDaFicha_(ficha));
   problemas = problemas.concat(validarFichasFilhas_(ficha));
   if (typeof validarOuro_ === 'function') {

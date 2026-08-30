@@ -24,77 +24,95 @@ const CLASSES = {
     dominios: ["GRACE","CODEX"],
     evasaoInicial: 10,
     pontosDeVidaIniciais: 5,
-    subclasses: [{"id":"bardo-musico-errante","nome":"Músico Errante","conjuracao":"PRESENÇA"}, {"id":"bardo-artifice-das-palavras","nome":"Artífice das Palavras","conjuracao":"PRESENÇA"}]
+    caracteristicas: ["Inspiração"],
+    caracteristicaEsperanca: "Fazer uma Cena",
+    subclasses: [{"id":"bardo-musico-errante","nome":"Músico Errante","conjuracao":"PRESENÇA","caracteristicas":{"fundacao":["Intérprete Talentoso"],"especializacao":["Maestro"],"maestria":["Virtuoso"]}}, {"id":"bardo-artifice-das-palavras","nome":"Artífice das Palavras","conjuracao":"PRESENÇA","caracteristicas":{"fundacao":["Discurso Empolgante","Coração de Poeta"],"especializacao":["Eloquente"],"maestria":["Poesia Épica"]}}]
   },
   "druida": {
     nome: "Druida",
     dominios: ["SAGE","ARCANA"],
     evasaoInicial: 10,
     pontosDeVidaIniciais: 6,
-    subclasses: [{"id":"druida-guardiao-dos-elementos","nome":"Guardião dos Elementos","conjuracao":"INSTINCT"}, {"id":"druida-guardiao-da-renovacao","nome":"Guardião da Renovação","conjuracao":"INSTINCT"}]
+    caracteristicas: ["Forma de Fera","Dádiva da Natureza"],
+    caracteristicaEsperanca: "Evolução",
+    subclasses: [{"id":"druida-guardiao-dos-elementos","nome":"Guardião dos Elementos","conjuracao":"INSTINCT","caracteristicas":{"fundacao":["Encarnar Elemental"],"especializacao":["Aura Elemental"],"maestria":["Domínio Elemental"]}}, {"id":"druida-guardiao-da-renovacao","nome":"Guardião da Renovação","conjuracao":"INSTINCT","caracteristicas":{"fundacao":["Clareza da Natureza","Regeneração"],"especializacao":["Alcance Regenerativo","Proteção do Guardião"],"maestria":["Defensor"]}}]
   },
   "feiticeiro": {
     nome: "Feiticeiro",
     dominios: ["ARCANA","MIDNIGHT"],
     evasaoInicial: 10,
     pontosDeVidaIniciais: 6,
-    subclasses: [{"id":"feiticeiro-origem-elemental","nome":"Origem Elemental","conjuracao":"INSTINCT"}, {"id":"feiticeiro-origem-primal","nome":"Origem Primal","conjuracao":"INSTINCT"}]
+    caracteristicas: ["Sentido Arcano","Ilusão Menor","Canalizar Poder Bruto"],
+    caracteristicaEsperanca: "Magia Volátil",
+    subclasses: [{"id":"feiticeiro-origem-elemental","nome":"Origem Elemental","conjuracao":"INSTINCT","caracteristicas":{"fundacao":["Elementalista"],"especializacao":["Evasão Natural"],"maestria":["Transcendência"]}}, {"id":"feiticeiro-origem-primal","nome":"Origem Primal","conjuracao":"INSTINCT","caracteristicas":{"fundacao":["Manipular Magia"],"especializacao":["Ajuda Encantada"],"maestria":["Carga Arcana"]}}]
   },
   "guardiao": {
     nome: "Guardião",
     dominios: ["VALOR","BLADE"],
     evasaoInicial: 9,
     pontosDeVidaIniciais: 7,
-    subclasses: [{"id":"guardiao-robusto","nome":"Robusto","conjuracao":null}, {"id":"guardiao-vinganca","nome":"Vingança","conjuracao":null}]
+    caracteristicas: ["Determinação"],
+    caracteristicaEsperanca: "Linha de Frente",
+    subclasses: [{"id":"guardiao-robusto","nome":"Robusto","conjuracao":null,"caracteristicas":{"fundacao":["Inabalável","Vontade de Ferro"],"especializacao":["Implacável","Parceiros de Armas"],"maestria":["Destemido","Protetor Leal"]}}, {"id":"guardiao-vinganca","nome":"Vingança","conjuracao":null,"caracteristicas":{"fundacao":["À Vontade","Vingança"],"especializacao":["Ato de Retaliação"],"maestria":["Nêmesis"]}}]
   },
   "guerreiro": {
     nome: "Guerreiro",
     dominios: ["BLADE","BONE"],
     evasaoInicial: 11,
     pontosDeVidaIniciais: 6,
-    subclasses: [{"id":"guerreiro-chamada-dos-bravos","nome":"Chamada dos Bravos","conjuracao":null}, {"id":"guerreiro-chamada-do-matador","nome":"Chamada do Matador","conjuracao":null}]
+    caracteristicas: ["Ataque de Oportunidade","Treinamento de Combate"],
+    caracteristicaEsperanca: "Sem Piedade",
+    subclasses: [{"id":"guerreiro-chamada-dos-bravos","nome":"Chamada dos Bravos","conjuracao":null,"caracteristicas":{"fundacao":["Coragem","Ritual de Batalha"],"especializacao":["Superação do Desafio"],"maestria":["Camaradagem"]}}, {"id":"guerreiro-chamada-do-matador","nome":"Chamada do Matador","conjuracao":null,"caracteristicas":{"fundacao":["Matador"],"especializacao":["Especialista em Armas"],"maestria":["Preparação Marcial"]}}]
   },
   "ladino": {
     nome: "Ladino",
     dominios: ["MIDNIGHT","GRACE"],
     evasaoInicial: 12,
     pontosDeVidaIniciais: 6,
-    subclasses: [{"id":"ladino-caminhante-noturno","nome":"Caminhante Noturno","conjuracao":"FINESSE"}, {"id":"ladino-sindicato","nome":"Sindicato","conjuracao":"FINESSE"}]
+    caracteristicas: ["Camuflado","Ataque Furtivo"],
+    caracteristicaEsperanca: "Esquiva de Ladino",
+    subclasses: [{"id":"ladino-caminhante-noturno","nome":"Caminhante Noturno","conjuracao":"FINESSE","caracteristicas":{"fundacao":["Passo Sombrio"],"especializacao":["Nuvem Sombria","Adrenalina"],"maestria":["Sombra Fugaz","Ato de Desaparecimento"]}}, {"id":"ladino-sindicato","nome":"Sindicato","conjuracao":"FINESSE","caracteristicas":{"fundacao":["Bem Conectado"],"especializacao":["Contatos em Todo Lugar"],"maestria":["Apoio Confiável"]}}]
   },
   "mago": {
     nome: "Mago",
     dominios: ["CODEX","SPLENDOR"],
     evasaoInicial: 11,
     pontosDeVidaIniciais: 5,
-    subclasses: [{"id":"mago-escola-do-conhecimento","nome":"Escola do Conhecimento","conjuracao":"KNOWLEDGE"}, {"id":"mago-escola-da-guerra","nome":"Escola da Guerra","conjuracao":"KNOWLEDGE"}]
+    caracteristicas: ["Padrões Estranhos","Prestidigitação"],
+    caracteristicaEsperanca: "Não Dessa Vez",
+    subclasses: [{"id":"mago-escola-do-conhecimento","nome":"Escola do Conhecimento","conjuracao":"KNOWLEDGE","caracteristicas":{"fundacao":["Preparado","Adepto"],"especializacao":["Realizado","Memória Perfeita"],"maestria":["Brilhante","Especialização Apurada"]}}, {"id":"mago-escola-da-guerra","nome":"Escola da Guerra","conjuracao":"KNOWLEDGE","caracteristicas":{"fundacao":["Mago de Batalha","Enfrente Seu Medo"],"especializacao":["Escudo Conjurado","Movido pelo Medo"],"maestria":["Prosperar no Caos","Sem Medo"]}}]
   },
   "patrulheiro": {
-    nome: "Patrulheiro",
+    nome: "Caçador",
     dominios: ["BONE","SAGE"],
     evasaoInicial: 12,
     pontosDeVidaIniciais: 6,
-    subclasses: [{"id":"patrulheiro-laco-bestial","nome":"Laço Bestial","conjuracao":"AGILITY"}, {"id":"patrulheiro-explorador","nome":"Explorador","conjuracao":"AGILITY"}]
+    caracteristicas: ["Marca da Presa"],
+    caracteristicaEsperanca: "Segurem Eles",
+    subclasses: [{"id":"patrulheiro-laco-bestial","nome":"Laço Bestial","conjuracao":"AGILITY","caracteristicas":{"fundacao":["Companheiro"],"especializacao":["Treinamento Especializado","Vínculo de Batalha"],"maestria":["Treinamento Avançado","Amigo Leal"]}}, {"id":"patrulheiro-explorador","nome":"Explorador","conjuracao":"AGILITY","caracteristicas":{"fundacao":["Predador Implacável","Caminho à Frente"],"especializacao":["Predador Elusivo"],"maestria":["Predador de Topo"]}}]
   },
   "seraph": {
-    nome: "Seraph",
+    nome: "Serafim",
     dominios: ["SPLENDOR","VALOR"],
     evasaoInicial: 9,
     pontosDeVidaIniciais: 7,
-    subclasses: [{"id":"seraph-portador-divino","nome":"Portador Divino","conjuracao":"STRENGTH"}, {"id":"seraph-sentinela-alado","nome":"Sentinela Alado","conjuracao":"STRENGTH"}]
+    caracteristicas: ["Dados de Oração"],
+    caracteristicaEsperanca: "Alicerce da Vida",
+    subclasses: [{"id":"seraph-portador-divino","nome":"Portador Divino","conjuracao":"STRENGTH","caracteristicas":{"fundacao":["Arma Espiritual","Toque Moderado"],"especializacao":["Devoto"],"maestria":["Ressonância Sagrada"]}}, {"id":"seraph-sentinela-alado","nome":"Sentinela Alado","conjuracao":"STRENGTH","caracteristicas":{"fundacao":["Asas de Luz"],"especializacao":["Vulto Etéreo"],"maestria":["Ascendente","Poder dos Deuses"]}}]
   },
 };
 
 /** Nomes alternativos de classe que aparecem no livro e nas cartas. */
 const CLASSE_ALIASES = {
-  "bardo": ["BARD","Bardo"],
-  "druida": ["DRUID","Druida"],
-  "feiticeiro": ["Feiticeiro","SORCERER"],
+  "bardo": ["Bardo"],
+  "druida": ["Druida"],
+  "feiticeiro": ["Feiticeiro"],
   "guardiao": ["Guardião"],
   "guerreiro": ["Guerreiro"],
-  "ladino": ["Ladino","ROGUE"],
-  "mago": ["Mago","WIZARD"],
-  "patrulheiro": ["Caçador","Patrulheiro","RANGER"],
-  "seraph": ["Serafim","Seraph"],
+  "ladino": ["Ladino"],
+  "mago": ["Mago"],
+  "patrulheiro": ["Caçador","patrulheiro","Ranger"],
+  "seraph": ["Serafim","seraph"],
 };
 
 /** Nomes alternativos de subclasse (carta x livro). */
@@ -128,6 +146,11 @@ function normalizarClasse_(nome) {
   const alvo = chaveTexto_(nome);
   if (!alvo) return null;
   const ids = Object.keys(CLASSE_ALIASES);
+  // O próprio id canônico sempre resolve para si mesmo: a ficha guarda o nome
+  // de exibição, mas o cliente e o histórico de avanço trafegam o id.
+  for (let i = 0; i < ids.length; i++) {
+    if (chaveTexto_(ids[i]) === alvo) return ids[i];
+  }
   for (let i = 0; i < ids.length; i++) {
     const lista = CLASSE_ALIASES[ids[i]];
     for (let k = 0; k < lista.length; k++) {
@@ -142,6 +165,10 @@ function normalizarSubclasse_(nome) {
   const alvo = chaveTexto_(nome);
   if (!alvo) return null;
   const ids = Object.keys(SUBCLASSE_ALIASES);
+  // Idem: "druida-guardiao-dos-elementos" tem de resolver para si mesmo.
+  for (let i = 0; i < ids.length; i++) {
+    if (chaveTexto_(ids[i]) === alvo) return ids[i];
+  }
   for (let i = 0; i < ids.length; i++) {
     const lista = SUBCLASSE_ALIASES[ids[i]];
     for (let k = 0; k < lista.length; k++) {

@@ -103,14 +103,7 @@ export function textoComGlossa(texto) {
     return frag;
   }
 
-  // Acha as posições onde a glosa entra, sem mexer no texto ainda.
-  const marcas = [];
-  termos.filter((t) => t.glosarEmTexto).forEach((t) => {
-    const achado = acharTermo(bruto, t.canonico);
-    if (achado.inicio < 0) return;
-    marcas.push({ pos: achado.fim, jambo: t.jambo });
-  });
-  marcas.sort((a, b) => a.pos - b.pos);
+  const marcas = marcasDeGlossa(bruto);
 
   let cursor = 0;
   marcas.forEach((m) => {
@@ -124,6 +117,27 @@ export function textoComGlossa(texto) {
   });
   frag.append(document.createTextNode(bruto.slice(cursor)));
   return frag;
+}
+
+/**
+ * Onde a glosa entraria, sem montar nada.
+ *
+ * Existe para a camada de VERBETES poder compor com esta: quem monta o texto
+ * final precisa das duas listas de marcas ao mesmo tempo, senão uma passaria
+ * por cima da outra. Devolve [{ inicio, fim, jambo }] — `fim` é onde o
+ * parêntese entra.
+ */
+export function marcasDeGlossa(texto) {
+  const bruto = String(texto || '');
+  if (!bruto || !termos) return [];
+  const marcas = [];
+  termos.filter((t) => t.glosarEmTexto).forEach((t) => {
+    const achado = acharTermo(bruto, t.canonico);
+    if (achado.inicio < 0) return;
+    marcas.push({ inicio: achado.inicio, fim: achado.fim, pos: achado.fim, jambo: t.jambo });
+  });
+  marcas.sort((a, b) => a.pos - b.pos);
+  return marcas;
 }
 
 /** Versão em texto puro — útil para atributos title e para busca. */

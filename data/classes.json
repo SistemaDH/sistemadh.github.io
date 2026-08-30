@@ -5,8 +5,8 @@
   {
    "id": "bardo",
    "nome": "Bardo",
-   "nomeLivro": "BARD",
-   "descricao": "Os bardos são as pessoas mais carismáticas de todos os reinos. Os membros dessa classe são mestres em cativar e se especializam em uma variedade de tipos de apresentações, incluindo cantar, tocar instrumentos musicais, tecer contos ou contar piadas. Seja se apresentando para uma plateia ou falando com um indivíduo, os bardos prosperam em situações sociais. Os membros dessa profissão se unem e treinam em escolas ou guildas, mas uma corrente de egoísmo percorre os bardos. Embora possam ser a classe mais propensa a unir as pessoas, um bardo de mau humor pode facilmente destruir um partido.",
+   "nomeLivro": "BARDO",
+   "descricao": "Bardos são as pessoas mais carismáticas dos reinos. Membros desta classe são mestres do fascínio e se especializam em diversos tipos de performance, como a música, o humor e a contação de histórias. Bardos são ótimos em situações sociais, seja interagindo com um público ou com um indivíduo. Ainda que hajam membros dessa classe com egos inflados, há escolas e guildas onde bardos compartilham laços e conhecimento. Embora sejam os mais capazes de unir pessoas, um bardo de temperamento forte pode dividir um grupo com a mesma facilidade.",
    "dominios": [
     "GRACE",
     "CODEX"
@@ -18,27 +18,27 @@
    "evasaoInicial": 10,
    "pontosDeVidaIniciais": 5,
    "itensDeClasse": [
-    "Um romance ou uma carta nunca aberta"
+    "Um livro de romance ou uma carta que nunca foi aberta"
    ],
    "caracteristicaEsperanca": {
-    "nome": "Faça uma cena",
-    "texto": "Gaste 3 de Esperança para distrair temporariamente um alvo a curta distância, dando a ele uma penalidade de -2 em sua Dificuldade."
+    "nome": "Fazer uma Cena",
+    "texto": "Gaste 3 de Esperança para distrair temporariamente um alvo Próximo, aplicando uma penalidade de −2 à Dificuldade dele."
    },
    "caracteristicasDeClasse": [
     {
-     "nome": "Rally",
-     "texto": "Uma vez por sessão, descreva como você reúne o grupo e atribua a si mesmo e a cada um de seus aliados um Rally Die. No nível 1, seu Rally Die é um d6. Um PC pode gastar seu Rally Die para rolá-lo, adicionando o resultado à sua rolagem de ação, rolagem de reação, rolagem de dano ou para eliminar um número de Stress igual ao resultado. No final de cada sessão, limpe todos os Rally Dice não gastos. No nível 5, seu Rally Die aumenta para d8."
+     "nome": "Inspiração",
+     "texto": "Uma vez por sessão, descreva como você inspira o grupo. Você e seus aliados recebem um Dado de Inspiração. No 1º nível, seu Dado de Inspiração é d6. Um personagem pode rolar o Dado de Inspiração e somar o resultado a uma jogada, jogada de reação ou jogada de dano, ou limpar Estresse igual ao resultado. No fim de cada sessão, Dados de Inspiração não utilizados são perdidos.\nNo 5º nível, seu Dado de Inspiração aumenta para d8."
     }
    ],
    "perguntasDeFundo": [
-    "Quem de sua comunidade lhe ensinou a ter tanta confiança em si mesmo?",
-    "Você já foi apaixonado. Quem você adorou e como ele o magoou?",
-    "Você sempre admirou outro bardo. Quem é ele e por que você o idolatra?"
+    "Quem em sua comunidade lhe ensinou a ter tanta confiança em si mesmo?",
+    "Você já se apaixonou. Quem você amava e como essa pessoa partiu seu coração?",
+    "Você sempre teve admiração por outro bardo. Quem é essa pessoa e por que você a idolatra?"
    ],
    "conexoes": [
-    "O que o fez perceber que seríamos tão bons amigos?",
-    "O que eu faço que o incomoda?",
-    "Por que você agarra minha mão à noite?"
+    "Como percebeu que seríamos grandes amigos?",
+    "O que eu faço que irrita você?",
+    "Por que você segura minha mão à noite?"
    ],
    "subclasses": [
     {
@@ -180,25 +180,15 @@
      }
     }
    ],
-   "problemasDeTraducao": [
-    "O título da classe ficou impresso como 'BARD', não foi traduzido para 'BARDO'.",
-    "O rótulo do campo de domínios ficou 'DOMÉSTICAS' — tradução claramente errada de 'Domains' (deveria ser algo como 'Domínios').",
-    "O nome da subclasse 'Troubadour' não foi traduzido (deveria ser algo como 'Trovador'), embora o parágrafo de introdução das subclasses já diga 'Escolha a subclasse Trovador ou Ferreiro'.",
-    "O nome da subclasse 'Wordsmith' não foi traduzido no título, e na frase de chamada da outra subclasse (Troubadour) essa mesma subclasse é chamada de 'Ferreiro', uma tradução literal e errada de 'Wordsmith' (que se refere a um mestre das palavras, não a um ferreiro/smith de metal).",
-    "Na característica de Domínio 'Virtuoso' (Troubadour), o texto cita a característica de Fundação pelo nome em inglês 'Gifted Performer', mas essa característica foi traduzida no livro como 'Artista talentoso' — nomes inconsistentes entre si.",
-    "O nome de uma das músicas da característica 'Artista talentoso' ficou parcialmente em inglês: 'Heartbreaking Song (Canção de partir o coração)'.",
-    "Os termos de mecânica 'Rally', 'Rally Die' e 'Rally Dice' não foram traduzidos (ficaram em inglês) no recurso de classe 'Rally' do Bardo.",
-    "Os termos 'Hope' e 'Stress' aparecem em inglês (com tradução entre parênteses) na característica de Especialização 'Maestro': 'ganhar uma Hope (esperança) ou eliminar um Stress (estresse)'.",
-    "No recurso de Especialização 'Eloquente' (Wordsmith), aparece o termo em inglês 'Hope' sem tradução: 'Ajude um aliado sem gastar com a Hope'.",
-    "Os nomes dos domínios 'Grace' e 'Codex' (na seção 'Domésticas') não foram traduzidos para o português."
-   ],
-   "pastaCartas": "assets/cartas/subclasses/BARDO"
+   "problemasDeTraducao": [],
+   "pastaCartas": "assets/cartas/subclasses/BARDO",
+   "fonteDasCaracteristicas": "DH-DigitalRegras.pdf (Jambô), pp. 28-51 — reimportado no vocabulário das cartas."
   },
   {
    "id": "druida",
    "nome": "Druida",
-   "nomeLivro": "DRUID",
-   "descricao": "Tornar-se um druida é mais do que uma ocupação; é um chamado para aqueles que desejam aprender e proteger a magia da natureza selvagem. Embora alguém possa subestimar um druida gentil que pratica o trabalho frequentemente silencioso de cultivar a flora, os druidas que canalizam as forças indomáveis da natureza são aterrorizantes de se ver. Os druidas cultivam suas habilidades em pequenos grupos, geralmente ligados por um ethos ou local específico, mas alguns optam por trabalhar sozinhos. Com anos de estudo e dedicação, os druidas podem aprender a se transformar em feras e moldar a própria natureza.",
+   "nomeLivro": "DRUIDA",
+   "descricao": "Ser um druida é mais que uma ocupação; é uma vocação para aqueles que almejam proteger a natureza e aprender com sua magia. Embora alguém possa subestimar um druida gentil que pratica o trabalho silencioso de cultivar vegetais, druidas que canalizam as forças indomáveis da natureza são uma visão aterrorizante. Muitos cultivam suas habilidades em grupos pequenos, frequentemente conectados por um local ou tradição em específico, mas alguns optam por trabalhar sozinhos. Com anos de estudo e dedicação, druidas podem aprender a se transformar em feras e alterar a natureza.",
    "dominios": [
     "SAGE",
     "ARCANA"
@@ -210,31 +200,31 @@
    "evasaoInicial": 10,
    "pontosDeVidaIniciais": 6,
    "itensDeClasse": [
-    "Um pequeno saco de pedras e ossos ou um estranho pingente encontrado na sujeira"
+    "Uma pequena bolsa com ossos e pedras ou um estranho pingente encontrado na terra"
    ],
    "caracteristicaEsperanca": {
     "nome": "Evolução",
-    "texto": "Gaste 3 Hope para se transformar em uma Beastform sem marcar um Stress. Ao fazer isso, escolha uma característica para aumentar em +1 até que você saia dessa Beastform."
+    "texto": "Gaste 3 de Esperança para usar Forma de Fera sem marcar Estresse. Ao fazer isso, aumente um traço em +1 até sair da Forma de Fera."
    },
    "caracteristicasDeClasse": [
     {
-     "nome": "Forma de fera",
-     "texto": "Marque uma Stress para se transformar magicamente em uma criatura de seu nível ou inferior da lista de Beastform. Você pode sair dessa forma a qualquer momento. Enquanto estiver transformado, você não pode usar armas nem lançar feitiços de cartas de domínio, mas ainda pode usar outros recursos ou habilidades aos quais tem acesso. Os feitiços lançados antes da transformação permanecem ativos e duram a duração normal, e você pode falar e se comunicar normalmente. Além disso, você ganha as características da Beastform, adiciona o bônus de evasão dela para sua Evasão e use a característica especificada em suas estatísticas para seu ataque. Enquanto estiver em uma Beastform, sua armadura se torna parte do seu corpo e você marca os espaços de armadura normalmente; quando você sai de uma Beastform, esses espaços de armadura marcados permanecem marcados. Se você marcar seu último ponto de vida, sairá automaticamente dessa forma."
+     "nome": "Forma de Fera",
+     "texto": "Marque 1 Estresse para se transformar magicamente em uma criatura de patamar igual ou menor que o seu na lista de Formas de Fera. Você pode sair dessa forma a qualquer momento. Enquanto estiver transformado, você não pode usar armas ou feitiços das cartas de domínio, mas ainda pode usar outras habilidades ou talentos aos quais tenha acesso. Os feitiços conjurados antes da transformação permanecem ativos, com sua duração normal, e você pode falar e se comunicar normalmente. Além disso, você recebe as habilidades da Forma de Fera escolhida, soma o bônus de Evasão dela à sua Evasão e usa o traço especificado nas estatísticas dela para atacar. Enquanto estiver na Forma de Fera, sua armadura se torna parte de seu corpo e você marca Pontos de Armadura normalmente; quando sai da Forma de Fera, esses Pontos de Armadura permanecem marcados. Marcar seu último Ponto de Vida faz com que você saia da Forma de Fera automaticamente."
     },
     {
-     "nome": "Wildtouch",
-     "texto": "Você pode realizar efeitos inofensivos e sutis que envolvam a natureza - como fazer uma flor crescer rapidamente, convocar uma leve rajada de vento ou acender uma fogueira - à vontade."
+     "nome": "Dádiva da Natureza",
+     "texto": "Você pode criar à vontade efeitos inofensivos e sutis envolvendo a natureza, como fazer com que uma flor cresça rapidamente, invocar uma brisa ou acender uma fogueira."
     }
    ],
    "perguntasDeFundo": [
-    "Por que a comunidade em que você cresceu era tão dependente da natureza e de suas criaturas?",
-    "Qual foi o primeiro animal selvagem com o qual você se relacionou? Por que seu vínculo acabou?",
-    "Quem está tentando persegui-lo? O que eles querem de você?"
+    "Por que a comunidade na qual você cresceu confiava tanto na natureza e suas criaturas?",
+    "Qual foi o primeiro animal com o qual você teve uma conexão emocional? Por que essa conexão acabou?",
+    "Quem está caçando você? O que essa pessoa quer de você?"
    ],
    "conexoes": [
-    "O que você me confidenciou que me faz correr perigo por você todas as vezes?",
-    "De que animal eu diria que você me lembra?",
-    "Que apelido carinhoso você me deu?"
+    "O que você confiou a mim que sempre faz com que eu me arrisque por você?",
+    "De que animal você me faz lembrar?",
+    "Qual o apelido carinhoso que você me deu?"
    ],
    "subclasses": [
     {
@@ -384,26 +374,15 @@
      }
     }
    ],
-   "problemasDeTraducao": [
-    "O título da classe está impresso como 'DRUID' (inglês), não 'DRUIDA'.",
-    "O cabeçalho que lista os domínios da classe está impresso como 'DOMÉSTICAS' em vez de 'Domínios' — mistradução clara do termo em inglês 'Domains'.",
-    "O termo 'Beastform' (forma de fera/besta) nunca foi traduzido e aparece em inglês em todo o texto (Recurso Esperança, Forma de fera, e nas duas subclasses).",
-    "O termo 'Hope' aparece em inglês na Característica de Esperança ('Gaste 3 Hope'), enquanto em outros trechos do livro o termo é traduzido como 'Esperança'.",
-    "O termo 'Stress' aparece em inglês, sem tradução, em vários pontos ('Marque uma Stress', 'sem marcar um Stress'), enquanto em outros pontos do mesmo texto foi traduzido como 'Estresse' — tradução inconsistente.",
-    "Os nomes das subclasses foram traduzidos de forma inconsistente: a chamada introdutória usa 'Guardião dos Elementos' e 'Guardião da Renovação', mas os títulos das seções usam 'DIRETOR DOS ELEMENTOS' e 'DIRETOR DE RENOVAÇÃO' — tradução errada de 'Warden' (deveria ser 'Guardião', não 'Diretor').",
-    "Nas frases de chamada de cada subclasse, o nome da subclasse permanece em inglês ('Warden of the Elements', 'Warden of Renewal') mesmo com a tradução entre parênteses logo acima.",
-    "Na Fundação do Diretor de Renovação, o texto de 'Regeneração' diz 'Essa criatura elimina 1d4 pontos de vida', frase estranha e provavelmente mal traduzida (o sentido esperado seria curar/remover pontos de vida marcados, não 'eliminar pontos de vida').",
-    "Na Especialização do Diretor de Renovação, 'Proteção do Guardião' repete a mesma construção estranha 'eliminar 2 pontos de vida de 1d4 aliados', com o mesmo problema de tradução do item anterior.",
-    "No texto de 'Forma de fera', a frase 'Você pode sair dessa forma a qualquer momento' apresentava uma renderização estranha no PDF ('dessaforma' colado), possível artefato de OCR/formatação — verificar contra o PDF original se precisão exata for necessária.",
-    "As opções completas de Beastform (lista de criaturas, tiers, estatísticas) ficam em tabelas nas páginas 33 a 36, fora das duas páginas analisadas aqui, e portanto não foram transcritas."
-   ],
-   "pastaCartas": "assets/cartas/subclasses/DRUIDA"
+   "problemasDeTraducao": [],
+   "pastaCartas": "assets/cartas/subclasses/DRUIDA",
+   "fonteDasCaracteristicas": "DH-DigitalRegras.pdf (Jambô), pp. 28-51 — reimportado no vocabulário das cartas."
   },
   {
    "id": "feiticeiro",
    "nome": "Feiticeiro",
-   "nomeLivro": "SORCERER",
-   "descricao": "Nem todos os usuários de magia inata optam por aprimorar sua arte, mas aqueles que o fazem podem se tornar feiticeiros poderosos. Os dons desses portadores são transmitidos pelas famílias, mesmo que elas não saibam ou relutem em praticá-los. As habilidades de um feiticeiro podem variar do elemental ao ilusório e além, e muitos praticantes se unem em coletivos com base em seus talentos. O ato de se tornar um feiticeiro formidável não é a prática de adquirir poder, mas aprender a cultivar e controlar o poder que já se possui. A magia de um feiticeiro mal orientado ou indisciplinado é, de fato, uma força perigosa.",
+   "nomeLivro": "FEITICEIRO",
+   "descricao": "Nem todos os usuários inatos de magia decidem aprimorar suas artes, mas aqueles que o fazem podem se tornar poderosos feiticeiros. Esse dom é passado de geração em geração, mesmo que a família o desconheça ou hesite em colocá-lo em prática. As habilidades de um feiticeiro variam de manipulação elemental às artes da ilusão, e podem ir ainda além. Muitos praticantes juntam-se em grupos organizados de acordo com seus talentos. Tornar-se um feiticeiro extraordinário não envolve se tornar mais poderoso, mas aprender a cultivar e controlar o poder que já está em seu âmago. Feitiçaria sem orientação ou disciplina adequada é uma força extremamente perigosa.",
    "dominios": [
     "ARCANA",
     "MIDNIGHT"
@@ -415,36 +394,35 @@
    "evasaoInicial": 10,
    "pontosDeVidaIniciais": 6,
    "itensDeClasse": [
-    "Um globo sussurrante",
-    "Uma herança de família"
+    "Um orbe sussurrante ou uma herança de família"
    ],
    "caracteristicaEsperanca": {
-    "nome": "Magia volátil",
-    "texto": "gaste 3 de Esperança para rolar novamente qualquer número de dados de dano em um ataque que cause dano mágico."
+    "nome": "Magia Volátil",
+    "texto": "Gaste 3 de Esperança para rolar novamente uma quantidade qualquer de dados de dano em um ataque que causa dano mágico."
    },
    "caracteristicasDeClasse": [
     {
      "nome": "Sentido Arcano",
-     "texto": "Você pode sentir a presença de pessoas e objetos mágicos a curta distância."
+     "texto": "Você pode sentir a presença de objetos e pessoas com magia quando estão Próximos."
     },
     {
-     "nome": "Ilusão menor",
-     "texto": "Faça um lançamento de feitiço (10). Se for bem-sucedido, você criará uma pequena ilusão visual não maior do que você mesmo a curta distância. Essa ilusão é convincente para qualquer pessoa a curta distância ou mais."
+     "nome": "Ilusão Menor",
+     "texto": "Faça uma Jogada de Conjuração (10). Em um sucesso, você cria uma ilusão visual em alcance Próximo. Ela não pode ultrapassar seu tamanho. Essa ilusão parece convincente a qualquer um que esteja Próximo ou mais distante."
     },
     {
-     "nome": "Canal Raw Power",
-     "texto": "Uma vez por descanso longo, você pode colocar uma carta de domínio do seu equipamento no seu cofre e escolher entre: Ganhe Esperança igual ao nível da carta. Aprimore um feitiço que causa dano, ganhando um bônus na rolagem de dano igual ao dobro do nível da carta."
+     "nome": "Canalizar Poder Bruto",
+     "texto": "Uma vez por descanso longo, você pode colocar uma carta de domínio de sua mão no cofre e escolher entre:\n• Receber Esperança igual ao nível da carta.\n• Aprimorar um feitiço que cause dano, recebendo um bônus na jogada de dano igual ao dobro do nível da carta."
     }
    ],
    "perguntasDeFundo": [
-    "O que você fez que deixou as pessoas de sua comunidade desconfiadas de você?",
-    "Que mentor lhe ensinou a controlar sua magia indomável e por que ele não pode mais guiá-lo?",
-    "Você tem um medo profundo que esconde de todos. O que é esse medo e por que ele o assusta?"
+    "O que você fez que tornou as pessoas de sua comunidade desconfiadas de você?",
+    "Quem lhe ensinou a domar sua magia descontrolada e por que essa pessoa não pode mais orientar você?",
+    "Você teme algo profundamente e esconde isso de todos. O que é, e por que isso o aterroriza?"
    ],
    "conexoes": [
     "Por que você confia tanto em mim?",
-    "O que eu fiz para que você seja cauteloso comigo?",
-    "Por que mantemos nosso passado compartilhado em segredo?"
+    "O que eu fiz para você suspeitar tanto de mim?",
+    "Por que mantemos em segredo o passado que compartilhamos?"
    ],
    "subclasses": [
     {
@@ -578,22 +556,15 @@
      }
     }
    ],
-   "problemasDeTraducao": [
-    "Título da classe aparece em inglês: 'SORCERER' (não foi traduzido para 'FEITICEIRO' no título grande da página 47).",
-    "O rótulo 'DOMÉSTICAS' (página 47) é claramente uma má tradução de 'Domains' — deveria ser 'Domínios'. O conteúdo listado ('Arcanos e meia-noite') são os domínios da classe.",
-    "'RECURSO SORCERER'S HOPE' (página 47) mistura inglês e português — 'Sorcerer's Hope' não foi traduzido (deveria ser algo como 'Recurso de Esperança do Feiticeiro').",
-    "Nome da característica de classe 'Canal Raw Power' (página 47) está em inglês/mal traduzido — 'Raw Power' não foi traduzido.",
-    "Inconsistência de nome de subclasse: na introdução ('Escolha a subclasse Origem Elemental ou Origem Primordial') e na chamada de jogo ('Jogue a Origem Elemental...') usa-se 'Origem Elemental', mas o título do box na página 47 está impresso como 'ORIGEM ELEMENTAR' — duas grafias diferentes para a mesma subclasse.",
-    "Inconsistência de nome de subclasse: a segunda subclasse é chamada de 'Origem Primordial' na introdução e no texto da chamada ('Use a Origem Primordial...'), mas o título do box na página 48 está impresso como 'ORIGEM PRIMÁRIA' — nome diferente do usado no restante do texto.",
-    "Na descrição de 'Carga Arcana' (página 48), a frase final sobre a rolagem de reação está com sintaxe estranha/mal traduzida: '...ou um bônus de +3 na dificuldade de uma rolagem de reação que o feitiço faz com que o alvo faça.' — texto confuso, mas transcrito exatamente como impresso."
-   ],
-   "pastaCartas": "assets/cartas/subclasses/FEITICEIRO"
+   "problemasDeTraducao": [],
+   "pastaCartas": "assets/cartas/subclasses/FEITICEIRO",
+   "fonteDasCaracteristicas": "DH-DigitalRegras.pdf (Jambô), pp. 28-51 — reimportado no vocabulário das cartas."
   },
   {
    "id": "guardiao",
    "nome": "Guardião",
    "nomeLivro": "GUARDIÃO",
-   "descricao": "O título de guardião representa uma série de profissões marciais, falando mais sobre sua bússola moral e fortaleza inabalável do que sobre os meios pelos quais lutam. Embora muitos guardiões se juntem a grupos de militantes de um país ou de uma causa, é mais provável que eles sigam aqueles com quem realmente se importam, independentemente da maioria. Os guardiões são conhecidos por lutarem com ferocidade notável, mesmo contra probabilidades esmagadoras, defendendo sua coorte acima de tudo. Ai de quem ferir o aliado de um guardião, pois o guardião responderá a esse ferimento na mesma moeda.",
+   "descricao": "O guardião representa uma gama de profissões marciais e é mais ligado à sua bússola moral e resiliência inabalável do que aos seus métodos de combate. Ainda que muitos guardiões se juntem a grupos em prol de um país ou de uma causa, é mais provável que eles sigam aqueles poucos com quem realmente se importam, ignorando os demais. Guardiões são conhecidos por lutar e, acima de tudo, defender os seus com notável ferocidade, mesmo quando as chances estão contra eles. Pobres daqueles que causarem mal aos aliados de um guardião, pois membros desta classe respondem à altura.",
    "dominios": [
     "VALOR",
     "BLADE"
@@ -608,24 +579,24 @@
     "Um totem de seu mentor ou uma chave secreta"
    ],
    "caracteristicaEsperanca": {
-    "nome": "Tanque de linha de frente",
-    "texto": "Gaste 3 de Esperança para liberar 2 espaços de armadura."
+    "nome": "Linha de Frente",
+    "texto": "Gaste 3 de Esperança para recuperar 2 Pontos de Armadura."
    },
    "caracteristicasDeClasse": [
     {
-     "nome": "Imparável",
-     "texto": "Uma vez por descanso longo, você pode se tornar Imparável. Você ganha um dado imparável. No nível 1, seu Dado Imparável é um d4. Coloque-o em sua ficha de personagem no espaço fornecido, começando com o valor 1 voltado para cima. Depois de fazer uma rolagem de dano que cause 1 ou mais pontos de vida a um alvo, aumente o valor do Unstoppable Die em um. Quando o valor do dado exceder seu valor máximo ou quando a cena terminar, remova o dado e saia do Unstoppable. No nível 5, seu Unstoppable Die aumenta para um d6.\n\nEnquanto estiver imparável, você obtém os seguintes benefícios:\n• Você reduz a gravidade do dano físico em um limite (Grave para Maior, Maior para Menor, Menor para Nenhum).\n• Você adiciona o valor atual do Dado Imparável à sua rolagem de dano.\n• Você não pode ser contido ou vulnerável.\n\nDica: se o seu Dado Imparável for um d4 e o 4 estiver voltado para cima, você removerá o dado na próxima vez que for aumentá-lo. No entanto, se o seu Unstoppable Die tiver aumentado para um d6 e o 4 estiver voltado para cima, você o transformará em 5 na próxima vez que for aumentá-lo. Nesse caso, você removerá o dado depois que precisar aumentá-lo. Nesse caso, você removerá o dado depois que precisar aumentá-lo para mais de 6."
+     "nome": "Determinação",
+     "texto": "Uma vez por descanso longo, você pode ficar Determinado, recebendo um Dado de Determinação. No 1º nível, seu Dado de Determinação é d4. Coloque-o sobre o espaço apropriado na ficha de personagem, começando com o número 1 voltado para cima. Após fazer uma jogada de dano que tira 1 ou mais Pontos de Vida de um alvo, aumente o valor do Dado de Determinação em +1. No momento em que o dado for ultrapassar seu valor máximo, ou quando a cena acabar, remova-o e encerre sua Determinação. No 5º nível, seu Dado de Determinação aumenta para d6.\nEnquanto estiver Determinado, você recebe os seguintes benefícios:\n• Você reduz a gravidade do dano físico em uma categoria (de Severo para Maior, de Maior para Menor ou de Menor para nenhum).\n• Você soma o valor atual do Dado de Determinação às suas jogadas de dano.\n• Você não pode ser Restrito ou ficar Vulnerável.\nDica: se o seu Dado de Determinação é 1d4 e o 4 estiver voltado para cima, remova o dado na próxima vez que for aumentá-lo. No entanto, se o seu Dado de Determinação aumentou para d6 e atualmente o 4 está voltado para cima, mude o número para 5 na próxima vez que for aumentá-lo. Nesse caso, você deverá removê-lo apenas quando for aumentá-lo para um número maior que 6."
     }
    ],
    "perguntasDeFundo": [
-    "Quem da sua comunidade você deixou de proteger e por que ainda pensa neles?",
-    "Você foi encarregado de proteger algo importante e entregá-lo em um lugar perigoso. O que é e para onde ele precisa ir?",
-    "Você considera um aspecto de si mesmo como uma fraqueza. Qual é esse aspecto e como ele o afetou?"
+    "Quem da sua comunidade você não conseguiu proteger e por que você ainda pensa nessa pessoa?",
+    "Você recebeu a missão de proteger e levar algo importante a um lugar perigoso. O que é e aonde você precisa ir?",
+    "Você acredita ter uma fraqueza. O que é, e como isso afeta você?"
    ],
    "conexoes": [
-    "Como eu salvei sua vida na primeira vez que nos encontramos?",
-    "Que pequeno presente você me deu e percebeu que eu sempre carrego comigo?",
-    "Que mentira você me contou sobre si mesmo em que eu absolutamente acredito?"
+    "Como salvei sua vida quando nos conhecemos?",
+    "Que lembrança você me deu e percebeu que eu sempre carrego comigo?",
+    "Que mentira você me contou sobre você na qual eu caí completamente?"
    ],
    "subclasses": [
     {
@@ -791,23 +762,15 @@
      }
     }
    ],
-   "problemasDeTraducao": [
-    "O cabeçalho da seção de domínios aparece como 'DOMÉSTICAS' em vez de 'Domínios' (erro de tradução de 'Domains').",
-    "A chamada geral das subclasses usa os nomes em inglês: 'Escolha a subclasse Stalwart ou Vengeance', enquanto os títulos das seções abaixo aparecem como 'STALWART' (não traduzido) e 'VINGANÇA' (traduzido) - inconsistência de tradução.",
-    "Na chamada da subclasse Vingança: 'Use o Vengeance se quiser derrubar inimigos...' mistura o nome em inglês 'Vengeance' dentro da frase em português, mesmo o título da seção estando traduzido como 'VINGANÇA'.",
-    "No recurso de classe 'Imparável', o texto mistura 'Dado Imparável' (traduzido) com 'Unstoppable Die' (mantido em inglês) dentro do mesmo parágrafo.",
-    "No recurso 'Vontade de ferro' (Stalwart), aparece 'Slot de Armadura' usando a palavra inglesa 'Slot', enquanto em outras partes do texto (ex. 'Parceiros de armas') usa-se 'espaço de armadura'.",
-    "No recurso 'Vingança' (subclasse Vingança), o termo 'Hit Point' aparece em inglês, não traduzido para 'Ponto de Vida'.",
-    "O recurso de especialização da subclasse Vingança mantém o nome em inglês 'Act of Reprisal' com a tradução '(Ato de represália)' entre parênteses, em vez de traduzir totalmente o nome do recurso.",
-    "O parágrafo 'Dica' do recurso 'Imparável' termina com uma frase visivelmente repetida/confusa: 'Nesse caso, você removerá o dado depois que precisar aumentá-lo. Nesse caso, você removerá o dado depois que precisar aumentá-lo para mais de 6.' - parece um erro de duplicação/tradução malfeita do texto original."
-   ],
-   "pastaCartas": "assets/cartas/subclasses/GUARDIÃO"
+   "problemasDeTraducao": [],
+   "pastaCartas": "assets/cartas/subclasses/GUARDIÃO",
+   "fonteDasCaracteristicas": "DH-DigitalRegras.pdf (Jambô), pp. 28-51 — reimportado no vocabulário das cartas."
   },
   {
    "id": "guerreiro",
    "nome": "Guerreiro",
    "nomeLivro": "GUERREIRO",
-   "descricao": "Para se tornar um guerreiro, são necessários anos, muitas vezes uma vida inteira, de treinamento e dedicação ao domínio das armas e da violência. Enquanto muitos que buscam lutar aprimoram apenas sua força, os guerreiros entendem a importância de um corpo e uma mente ágeis, o que os torna alguns dos lutadores mais procurados em todos os reinos. Frequentemente, os guerreiros encontram emprego em um exército, em um bando de mercenários ou até mesmo em uma guarda real, mas seu potencial é desperdiçado em qualquer posição em que não possam continuar a melhorar e expandir suas habilidades. Os guerreiros são conhecidos por terem uma arma favorita; colocar-se entre eles e sua lâmina seria um erro grave.",
+   "descricao": "Tornar-se um guerreiro requer anos, às vezes uma vida inteira, de treinamento e dedicação ao domínio das armas e da violência. Enquanto muitos que procuram lutar cultivam apenas a força, guerreiros entendem a importância de um corpo e uma mente ágeis, o que os coloca entre os combatentes mais cobiçados dos reinos. Frequentemente, guerreiros encontram emprego em um exército, bando de mercenários ou mesmo uma guarda real, mas seu potencial é desperdiçado em qualquer posição na qual não possam aprimorar e expandir suas habilidades. Guerreiros são conhecidos por terem uma arma favorita, portanto ficar entre um guerreiro e sua lâmina pode ser um erro gravíssimo.",
    "dominios": [
     "BLADE",
     "BONE"
@@ -819,31 +782,31 @@
    "evasaoInicial": 11,
    "pontosDeVidaIniciais": 6,
    "itensDeClasse": [
-    "O desenho de um amante ou uma pedra de afiar"
+    "O desenho de alguém que ama ou uma pedra de amolar"
    ],
    "caracteristicaEsperanca": {
-    "nome": "No Mercy (Sem piedade)",
-    "texto": "Gaste 3 de Esperança para ganhar um bônus de +1 nas rolagens de ataque até o próximo descanso."
+    "nome": "Sem Piedade",
+    "texto": "Gaste 3 de Esperança para receber um bônus de +1 em jogadas de ataque até seu próximo descanso."
    },
    "caracteristicasDeClasse": [
     {
-     "nome": "Ataque de oportunidade",
-     "texto": "Se um adversário dentro do alcance corpo a corpo tentar sair desse alcance, faça uma rolagem de reação usando uma característica de sua escolha contra a dificuldade dele. Escolha um efeito se for bem-sucedido, ou dois se for criticamente bem-sucedido: Eles não podem sair de onde estão. Você causa dano a eles igual ao dano de sua arma principal. Você se move com eles."
+     "nome": "Ataque de Oportunidade",
+     "texto": "Se um adversário Corpo a Corpo tentar sair desse alcance, faça uma jogada de reação usando um traço à sua escolha contra a Dificuldade dele. Em um sucesso, escolha um efeito; em um sucesso crítico, escolha dois:\n• Ele não pode sair de onde está.\n• Você causa dano a ele igual ao dano de sua arma principal.\n• Você se movimenta com ele."
     },
     {
-     "nome": "Treinamento de combate",
-     "texto": "Você ignora o fardo ao equipar armas. Ao causar dano físico, você recebe um bônus para a rolagem de dano igual ao seu nível."
+     "nome": "Treinamento de Combate",
+     "texto": "Você ignora o tipo de empunhadura de armas equipadas. Ao causar dano físico, você recebe um bônus igual ao seu nível na jogada de dano."
     }
    ],
    "perguntasDeFundo": [
-    "Quem o ensinou a lutar e por que eles ficaram para trás quando você saiu de casa?",
-    "Alguém o derrotou em uma batalha anos atrás e o deixou para morrer. Quem foi e como ele o traiu?",
+    "Quem ensinou você a lutar e por que essa pessoa ficou para trás quando você saiu de sua comunidade?",
+    "Anos atrás, você perdeu uma batalha para alguém que o deixou à beira da morte. Quem é essa pessoa e como ela traiu você?",
     "Que lugar lendário você sempre quis visitar e por que ele é tão especial?"
    ],
    "conexoes": [
-    "Nós já nos conhecíamos muito antes dessa festa acontecer. Como?",
-    "Em que tarefa mundana você costuma me ajudar fora do campo de batalha?",
-    "Que medo estou ajudando você a superar?"
+    "Nos conhecíamos bem antes do surgimento do grupo. Como?",
+    "Com qual tarefa mundana você costuma me ajudar, fora dos momentos de batalha?",
+    "Que medos estou ajudando você a superar?"
    ],
    "subclasses": [
     {
@@ -985,26 +948,15 @@
      }
     }
    ],
-   "problemasDeTraducao": [
-    "O campo que deveria ser 'DOMÍNIOS' (Domains) foi impresso como 'DOMÉSTICAS', um erro de tradução automática; os valores listados abaixo dele ('Lâmina e osso') são na verdade os nomes dos dois domínios da classe.",
-    "A característica de Esperança manteve o nome em inglês 'No Mercy' junto com a tradução '(Sem piedade)' em vez de aparecer só em português.",
-    "O texto de introdução das subclasses diz 'Chamado do Bravo' (singular), mas o título da seção logo abaixo está impresso como 'CHAMADO DOS BRAVOS' (plural) — inconsistência entre as duas formas.",
-    "Frase de chamada da subclasse Chamado dos Bravos ficou parcialmente em inglês: 'Jogue o Call of the Brave se quiser...' (nome da subclasse não traduzido).",
-    "No recurso de Especialização 'Enfrentar o desafio', o termo 'Hope Die' aparece em inglês, com tradução entre parênteses '(dado de esperança)'.",
-    "No recurso de Maestria/Domínio 'Camaradagem', os termos 'Tag Team Roll' (duas vezes) e 'Hope' aparecem em inglês, sem tradução.",
-    "A seção que deveria ser 'Recurso de Maestria' (Mastery) foi rotulada no livro como 'RECURSO DE DOMÍNIO', o que gera confusão com o termo 'Domínios' (Domains) usado para as escolas de magia/habilidades da classe.",
-    "Frase de chamada da subclasse Chamado do Matador ficou parcialmente em inglês: 'Jogue o Call of the Slayer se você quiser...' (nome da subclasse não traduzido).",
-    "O termo 'Slayer Dice' (e variações 'dados de Slayer', 'Slayer Dado', 'Slayer Die') aparece em inglês ou parcialmente traduzido de forma inconsistente em várias partes do texto da subclasse Chamado do Matador.",
-    "No recurso de Fundação 'Caçador' há uma frase visivelmente corrompida/incompleta pela tradução automática: '...Quando você faz um Para obter o resultado de uma rolagem de ataque ou de dano, você pode gastar...' — parece faltar texto ou houve fusão indevida de duas frases; transcrito exatamente como impresso.",
-    "Em 'Preparação marcial', a expressão 'ganham um d6 de Slayer Dado' está gramaticalmente estranha/mal traduzida (mistura literal de 'Slayer Die' com 'Dado'), e logo em seguida o mesmo item volta a usar o termo em inglês 'Slayer Die'."
-   ],
-   "pastaCartas": "assets/cartas/subclasses/GUERREIRO"
+   "problemasDeTraducao": [],
+   "pastaCartas": "assets/cartas/subclasses/GUERREIRO",
+   "fonteDasCaracteristicas": "DH-DigitalRegras.pdf (Jambô), pp. 28-51 — reimportado no vocabulário das cartas."
   },
   {
    "id": "ladino",
    "nome": "Ladino",
-   "nomeLivro": "ROGUE",
-   "descricao": "Rogues são canalhas, muitas vezes tanto na atitude quanto na prática. Amplamente conhecidos como mentirosos e ladrões, os melhores dessa classe se movem pelo mundo de forma anônima. Utilizando sua perspicácia e lâminas afiadas, os ladinos enganam seus inimigos por meio da manipulação social com a mesma facilidade com que arrombam fechaduras, escalam janelas ou desferem golpes dissimulados. Esses mestres da arte mágica manipulam a sombra e o movimento, acrescentando uma série de ferramentas úteis e mortais ao seu repertório. Os ladinos frequentemente estabelecem guildas para encontrar futuros cúmplices, contratar trabalhos e aprimorar habilidades secretas, provando que há honra entre os ladrões para aqueles que sabem onde procurar.",
+   "nomeLivro": "LADINO",
+   "descricao": "Ladinos são malandros, tanto na atitude quanto na prática. Em geral conhecidos como ladrões e mentirosos, os melhores membros desta classe são anônimos para o resto do mundo. Com uma astúcia tão afiada quanto suas lâminas, ladinos manipulam socialmente os oponentes com a mesma facilidade com que arrombam fechaduras, escalam janelas ou atacam furtivamente. Mestres no ofício mágico, eles manipulam as sombras e o movimento, tendo uma ampla gama de ferramentas úteis e mortais em seu repertório. Ladinos costumam estabelecer guildas para encontrar futuros cúmplices, contratar serviços e cultivar suas técnicas secretas, comprovando que existe honra entre ladrões… para aqueles que sabem onde procurar.",
    "dominios": [
     "MIDNIGHT",
     "GRACE"
@@ -1016,32 +968,31 @@
    "evasaoInicial": 12,
    "pontosDeVidaIniciais": 6,
    "itensDeClasse": [
-    "Um conjunto de ferramentas de falsificação",
-    "um gancho"
+    "Um conjunto de ferramentas de falsificação ou um arpéu"
    ],
    "caracteristicaEsperanca": {
-    "nome": "Esquiva do Ladino",
-    "texto": "Gaste 3 Hope (Esperança) para ganhar um bônus de +2 em sua Evasão até a próxima vez que um ataque for bem-sucedido contra você. Caso contrário, esse bônus dura até o seu próximo descanso."
+    "nome": "Esquiva de Ladino",
+    "texto": "Gaste 3 de Esperança para receber um bônus de +2 na Evasão até o próximo ataque que acertar você. Caso contrário, esse bônus dura até seu próximo descanso."
    },
    "caracteristicasDeClasse": [
     {
      "nome": "Camuflado",
-     "texto": "Sempre que você estiver oculto, estará camuflado. Além dos benefícios da condição Hidden (oculto), enquanto estiver camuflado, você permanecerá invisível se estiver parado quando um adversário se mover para onde normalmente o veria. Depois de fazer um ataque ou terminar um movimento dentro da linha de visão de um adversário, você não estará mais camuflado."
+     "texto": "Sempre que estiver Oculto, em vez disso você fica Camuflado. Além dos benefícios da condição Oculto, enquanto estiver Camuflado, quando um adversário se movimentar para onde normalmente veria você, ele não pode vê-lo se você estiver parado. Ao entrar ou se movimentar dentro da linha de visão de um adversário, ou ao atacar, você deixa de estar Camuflado."
     },
     {
-     "nome": "Ataque furtivo",
-     "texto": "Quando você for bem-sucedido em um ataque enquanto estiver camuflado ou enquanto um aliado estiver dentro do alcance corpo a corpo do seu alvo, adicione um número de d6s igual ao seu nível à sua rolagem de dano. Nível 1→ Nível 1. Níveis 2-4→ Nível 2. Níveis 5-7→ Nível 3. Níveis 8-10→ Nível 4."
+     "nome": "Ataque Furtivo",
+     "texto": "Quando acertar um ataque enquanto estiver Camuflado, ou enquanto um aliado estiver Corpo a Corpo ao seu alvo, some um número de d6 igual ao seu patamar à jogada de dano.\n1º nível → 1º patamar\n2º ao 4º nível → 2º patamar\n5º ao 7º nível → 3º patamar\n8º ao 10º nível → 4º patamar"
     }
    ],
    "perguntasDeFundo": [
-    "O que você foi pego fazendo que o levou a ser exilado de sua comunidade de origem?",
-    "Você costumava ter uma vida diferente, mas tentou deixá-la para trás. Quem do seu passado ainda está lhe perseguindo?",
-    "De quem do seu passado você ficou mais triste ao se despedir?"
+    "O que sua comunidade descobriu você fazendo que fez com que fosse expulso?",
+    "Você tinha uma vida diferente, mas tentou abandoná-la. Que figura do passado ainda o persegue?",
+    "Você ficou mais triste ao se despedir de quem?"
    ],
    "conexoes": [
-    "O que eu o convenci a fazer recentemente que nos colocou em apuros?",
-    "O que descobri sobre seu passado que mantive em segredo dos outros?",
-    "Quem você conhece do meu passado e como eles influenciaram seus sentimentos em relação a mim?"
+    "O que eu convenci você a fazer recentemente que nos deixou em apuros?",
+    "O que eu descobri sobre o seu passado e escondo dos outros?",
+    "Quem você conhece do meu passado e como essa pessoa influenciou o que você sente sobre mim?"
    ],
    "subclasses": [
     {
@@ -1191,28 +1142,15 @@
      }
     }
    ],
-   "problemasDeTraducao": [
-    "Título da classe impresso em inglês: 'ROGUE' (não 'Ladino').",
-    "No parágrafo de descrição, a palavra 'Rogues' aparece em inglês ('Rogues são canalhas...'), misturada com 'ladinos' no resto do texto.",
-    "'DOMÉSTICAS' é uma tradução claramente errada de 'Domains' (deveria ser 'Domínios'); os domínios em si ('Meia-noite e Graça') parecem corretos.",
-    "'CARACTERÍSTICA DE FEITIÇO' traz o valor 'Finesse' em inglês, não traduzido (deveria ser algo como 'Presteza' ou similar).",
-    "No recurso de Fundação do Nightwalker ('Shadow Stepper'), o texto está incoerente/quebrado: 'você pode marcar uma corda para desaparecer de onde está e reaparecer em outra área. sombra em um raio de alcance distante.' — 'marcar uma corda' não faz sentido (provavelmente deveria ser 'marcar um Estresse', como no recurso equivalente do Syndicate) e a frase sobre 'sombra em um raio de alcance distante' parece um fragmento cortado/deslocado do texto original.",
-    "O próprio nome do recurso 'Shadow Stepper' não foi traduzido para português.",
-    "No recurso de Maestria 'Fleeting Shadow (Sombra fugaz)', a expressão de alcance 'Very Far' foi deixada em inglês (deveria ser 'Muito Longe').",
-    "Cabeçalho da segunda subclasse impresso como 'SINDICATO', mas o texto de chamada logo abaixo diz 'Jogue no Syndicate...', mantendo o nome em inglês — inconsistência entre título e corpo do texto.",
-    "A frase de chamada do Syndicate está com português estranho/mal formado: 'se quiser ter uma rede de contatos em todos os lugares que for.'",
-    "O nome do recurso de Especialização do Syndicate é 'Contatos em todos os lugares', mas no recurso de Maestria ele é referenciado como 'Contatos em qualquer lugar' — inconsistência de nome entre as duas seções.",
-    "No recurso de Maestria do Syndicate, a expressão 'Hope Die' foi deixada em inglês, não traduzida (deveria ser algo como 'dado de Esperança').",
-    "A tabela de progressão do Ataque furtivo está claramente mal traduzida/incoerente: 'Nível 1→ Nível 1', 'Níveis 2-4→ Nível 2', 'Níveis 5-7→ Nível 3', 'Níveis 8-10→ Nível 4' — o lado direito deveria mostrar a quantidade de d6 (ex.: 1d6, 2d6, 3d6, 4d6), não repetir 'Nível X'.",
-    "A característica de classe 'Cloaked' do original em inglês foi traduzida aqui como 'Camuflado', e não como 'Encapuzado' — nome divergente do esperado para conferência com a errata oficial."
-   ],
-   "pastaCartas": "assets/cartas/subclasses/LADINO"
+   "problemasDeTraducao": [],
+   "pastaCartas": "assets/cartas/subclasses/LADINO",
+   "fonteDasCaracteristicas": "DH-DigitalRegras.pdf (Jambô), pp. 28-51 — reimportado no vocabulário das cartas."
   },
   {
    "id": "mago",
    "nome": "Mago",
-   "nomeLivro": "WIZARD",
-   "descricao": "Seja por meio de uma instituição ou de estudo individual, aqueles conhecidos como magos adquirem e aprimoram um imenso poder mágico ao longo de anos de aprendizado usando uma variedade de ferramentas, incluindo livros, pedras, poções e ervas. Alguns magos dedicam suas vidas a dominar uma determinada escola de magia, enquanto outros aprendem em uma ampla variedade de disciplinas. Muitos magos se tornam figuras sábias e poderosas em suas comunidades, aconselhando governantes, fornecendo remédios e curas e até mesmo liderando conselhos de guerra. Embora todos esses magos trabalhem com o objetivo comum de coletar conhecimento mágico, os magos costumam ter mais conflitos dentro de suas próprias fileiras, pois a aquisição, a manutenção e o compartilhamento de segredos poderosos é um tópico de intenso debate que resultou em inúmeras mortes.",
+   "nomeLivro": "MAGO",
+   "descricao": "Sejam alunos de uma instituição, sejam autodidatas, magos adquirem e cultivam imenso poder mágico ao longo de anos de aprendizado com uma variedade de ferramentas como ervas, livros, pedras e poções. Alguns magos dedicam a vida a dominar uma escola de magia específica; outros estudam uma grande variedade de disciplinas. Muitos magos são figuras sábias e poderosas nas comunidades onde vivem, aconselhando governantes, fornecendo cura ou remédios e até mesmo liderando conselhos de guerra. Embora todos os magos trabalhem em prol do objetivo de angariar conhecimento mágico, eles frequentemente encontram os maiores conflitos entre seus iguais, visto que a aquisição, proteção e disseminação de segredos poderosos geram debates intensos que já resultaram em inumeráveis mortes.",
    "dominios": [
     "CODEX",
     "SPLENDOR"
@@ -1224,32 +1162,31 @@
    "evasaoInicial": 11,
    "pontosDeVidaIniciais": 5,
    "itensDeClasse": [
-    "Um livro que você está tentando traduzir",
-    "um pequeno e inofensivo animal de estimação elemental"
+    "Um livro que você está tentando traduzir ou um pequeno e inofensivo elemental de estimação"
    ],
    "caracteristicaEsperanca": {
-    "nome": "Desta vez não",
-    "texto": "gaste 3 de Esperança para forçar um adversário dentro do alcance de Longe a rolar novamente uma rolagem de ataque ou dano."
+    "nome": "Não Dessa Vez",
+    "texto": "Gaste 3 de Esperança para forçar um adversário Distante ou mais próximo a refazer uma jogada de ataque ou uma jogada de dano."
    },
    "caracteristicasDeClasse": [
     {
-     "nome": "Prestidigitação",
-     "texto": "Você pode realizar efeitos mágicos inofensivos e sutis à vontade. Por exemplo, você pode mudar a cor de um objeto, criar um cheiro, acender uma vela, fazer um pequeno objeto flutuar, iluminar uma sala ou consertar um pequeno objeto."
+     "nome": "Padrões Estranhos",
+     "texto": "Escolha um número de 1 a 12. Ao rolar esse número em um Dado de Dualidade, receba 1 de Esperança ou limpe 1 Estresse. Você pode mudar o número escolhido durante um descanso longo."
     },
     {
-     "nome": "Padrões estranhos",
-     "texto": "Escolha um número entre 1 e 12. Quando rolar esse número em um dado de Dualidade, ganhe uma Esperança ou elimine uma Estresse. Você pode alterar esse número quando fizer um descanso longo."
+     "nome": "Prestidigitação",
+     "texto": "Você pode executar efeitos mágicos sutis e inofensivos à vontade. Por exemplo, você pode mudar a cor de um objeto, criar um cheiro, acender uma vela, fazer um pequeno objeto flutuar, iluminar uma sala ou consertar um objeto pequeno."
     }
    ],
    "perguntasDeFundo": [
-    "Para quais responsabilidades sua comunidade contava com você? Como você os decepcionou?",
-    "Você passou a vida procurando por um livro ou objeto de grande significado. O que é e por que é tão importante para você?",
-    "Você tem um rival poderoso. Quem é ele e por que você está tão determinado a derrotá-lo?"
+    "Para quais responsabilidades sua comunidade já contou com você? Como você a decepcionou?",
+    "Você passou a vida em busca de um livro ou objeto importante. O que é, e por que é tão importante?",
+    "Você tem um rival poderoso. Quem é essa pessoa e por que você quer tanto derrotá-la?"
    ],
    "conexoes": [
-    "Que favor eu lhe pedi que você não tem certeza se pode cumprir?",
-    "Que hobby estranho ou fascínio estranho nós dois compartilhamos?",
-    "Que segredo seu você confiou somente a mim?"
+    "Que favor eu pedi e você não sabe se conseguirá cumprir?",
+    "Que passatempo ou fascinação estranha nós compartilhamos?",
+    "Que segredo a seu respeito você confiou a mim?"
    ],
    "subclasses": [
     {
@@ -1431,25 +1368,15 @@
      }
     }
    ],
-   "problemasDeTraducao": [
-    "Título da classe impresso em inglês: 'WIZARD' (não foi traduzido para 'Mago' na página).",
-    "Seção 'DOMÉSTICAS' é uma tradução ruim/errada de 'Domains' (deveria ser 'Domínios').",
-    "A frase de chamada da Escola de Conhecimento mantém o termo em inglês 'School of Knowledge' em vez de 'Escola de Conhecimento'.",
-    "A frase de chamada da Escola de Guerra mantém o termo em inglês 'School of War' em vez de 'Escola de Guerra'.",
-    "No recurso 'Recordação perfeita' o texto usa a palavra em inglês 'card' em vez de 'carta' ('chamar de volta um card de domínio').",
-    "No recurso de maestria 'Prosperar no caos' o texto usa o termo em inglês 'Hit Point' em vez de 'Ponto de Vida'.",
-    "O nome do recurso de Esperança aparece com espaçamento estranho no PDF, exibido como 'Desta veznão:' (sem espaço correto entre 'vez' e 'não').",
-    "Na descrição de 'Prestidigitação', a palavra 'acender' aparece com letras espaçadas de forma estranha no PDF ('a c e n d e r'), possível artefato de diagramação.",
-    "O título da seção 'CONEXÕES' aparece impresso como 'CONEXõES' (erro tipográfico, com 'õ' minúsculo no meio da palavra em maiúsculas).",
-    "As duas páginas lidas (pag-051.png e pag-052.png) já contêm o título, a descrição completa e todo o conteúdo restante da classe Mago; não há trecho faltando ou cortado entre elas."
-   ],
-   "pastaCartas": "assets/cartas/subclasses/MAGO"
+   "problemasDeTraducao": [],
+   "pastaCartas": "assets/cartas/subclasses/MAGO",
+   "fonteDasCaracteristicas": "DH-DigitalRegras.pdf (Jambô), pp. 28-51 — reimportado no vocabulário das cartas."
   },
   {
    "id": "patrulheiro",
-   "nome": "Patrulheiro",
-   "nomeLivro": "RANGER",
-   "descricao": "Os rangers são caçadores altamente qualificados que, apesar de suas habilidades marciais, raramente emprestam suas habilidades a um exército. Por meio do domínio do corpo e de uma profunda compreensão da natureza selvagem, os rangers se tornam estrategistas astutos, perseguindo suas presas com astúcia e paciência. Muitos rangers rastreiam e lutam ao lado de um companheiro animal com o qual criaram um poderoso vínculo espiritual. Ao aperfeiçoar suas habilidades na natureza, os guardas-florestais se tornam rastreadores experientes, tão propensos a enredar seus inimigos em uma armadilha quanto a atacá-los de frente.",
+   "nome": "Caçador",
+   "nomeLivro": "CAÇADOR",
+   "descricao": "Caçadores são indivíduos altamente competentes que, a despeito de suas habilidades marciais, raramente emprestam seus talentos a exércitos. Dominando o corpo e com uma profunda compreensão do ambiente selvagem, caçadores são estrategistas perspicazes, perseguindo suas presas com astúcia e paciência. Muitos membros desta classe caçam e lutam ao lado de um companheiro animal com o qual forjaram um poderoso vínculo espiritual. Ao cultivar suas habilidades na natureza, caçadores se tornam peritos na perseguição, tão aptos a capturar oponentes com armadilhas quanto a enfrentá-los diretamente.",
    "dominios": [
     "BONE",
     "SAGE"
@@ -1461,27 +1388,30 @@
    "evasaoInicial": 12,
    "pontosDeVidaIniciais": 6,
    "itensDeClasse": [
-    "Um troféu de sua primeira morte ou uma bússola aparentemente quebrada"
+    "Um troféu do seu primeiro abate ou uma bússola quebrada"
    ],
    "caracteristicaEsperanca": {
-    "nome": "Hold Them Off",
-    "texto": "Gaste 3 de Esperança quando for bem-sucedido em um ataque com uma arma para usar a mesma rolagem contra dois adversários adicionais dentro do alcance do ataque."
+    "nome": "Segurem Eles",
+    "texto": "Quando acertar um ataque com uma arma, você pode gastar 3 de Esperança para usar a mesma jogada contra dois adversários adicionais no alcance do ataque.",
+    "errosDeDigitacaoDoOriginal": [
+     "O livro imprime \"Sergurem Eles\", com um R a mais."
+    ]
    },
    "caracteristicasDeClasse": [
     {
-     "nome": "Foco do Ranger",
-     "texto": "Gaste uma Esperança e faça um ataque contra um alvo. Se for bem-sucedido, cause o dano normal do seu ataque e transforme temporariamente o alvo do ataque em seu Foco. Até que essa característica termine ou você faça de uma criatura diferente o seu Foco, você ganha os seguintes benefícios contra o seu Foco: Você sabe exatamente em que direção eles estão. Quando você causa dano a eles, eles devem marcar um Estresse. Ao falhar em um ataque contra eles, você pode usar o recurso Foco do Ranger para rolar novamente seus Dados de Dualidade."
+     "nome": "Marca da Presa",
+     "texto": "Gaste 1 de Esperança e ataque um alvo. Se acertar, cause o dano normal e Marque o alvo do ataque temporariamente. Até o efeito desta habilidade acabar ou até você Marcar outra criatura, receba os seguintes benefícios contra o alvo Marcado:\n• Você sabe precisamente em que direção ele está.\n• Quando causar dano a esse alvo, ele deve marcar 1 Estresse.\n• Quando errar um ataque contra ele, você pode encerrar sua Marca da Presa para rolar seus Dados de Dualidade novamente."
     }
    ],
    "perguntasDeFundo": [
-    "Uma criatura terrível feriu sua comunidade e você prometeu caçá-la. O que são elas e que rastro ou sinal único deixam para trás?",
-    "Sua primeira morte quase o matou também. O que foi isso e que parte de você nunca mais foi a mesma depois desse evento?",
-    "Você já viajou por muitas terras perigosas, mas qual é o único lugar que você se recusa a ir?"
+    "Uma criatura terrível prejudicou sua comunidade e você jurou abatê-la. Que criatura é essa e qual é a trilha ou sinal específico que ela deixa para trás?",
+    "A primeira presa que abateu quase matou você. Que criatura foi essa, e, desde então, que parte de você nunca mais foi a mesma?",
+    "Você já visitou muitos lugares perigosos, mas qual é o lugar aonde você jamais iria?"
    ],
    "conexoes": [
-    "Que competição amigável nós temos?",
-    "Por que você age de forma diferente quando estamos sozinhos e quando há outras pessoas por perto?",
-    "Que ameaça você me pediu para observar e por que está preocupado com ela?"
+    "Qual é a rivalidade amigável que temos?",
+    "Por que você age de forma tão diferente quando estamos sozinhos e quando há outras pessoas junto?",
+    "Você me pediu para tomar cuidado com qual ameaça, e por que se preocupa com isso?"
    ],
    "subclasses": [
     {
@@ -1639,25 +1569,19 @@
      }
     }
    ],
-   "problemasDeTraducao": [
-    "Título da classe permanece em inglês: 'RANGER' (não traduzido para 'Patrulheiro' no cabeçalho impresso).",
-    "'Hold Them Off' (nome da característica de Esperança) ficou em inglês, sem tradução ao lado.",
-    "'RECURSO ESPERANÇA DO GUARDA FLORESTAL' usa 'guarda florestal' em vez de 'ranger/patrulheiro', inconsistente com o restante do texto.",
-    "'Battle-Bonded (vínculo de batalha)' ficou parcialmente em inglês, com a tradução entre parênteses.",
-    "'Elusive Predator (Predador Elusivo)' ficou parcialmente em inglês, com a tradução entre parênteses.",
-    "A subclasse Wayfinder é chamada de 'O Wayfinder' no título da seção, mas de apenas 'Wayfinder' no texto 'Escolha a subclasse Beastbound ou Wayfinder' — nome não totalmente traduzido/localizado (permanece em inglês, sem versão em português).",
-    "'Beastbound' também permanece integralmente em inglês, sem tradução do nome da subclasse.",
-    "'Pegue a folha Ranger Companion' — nome da ficha 'Ranger Companion' ficou em inglês, não traduzido para 'Ficha do Companheiro Animal' ou similar.",
-    "'Amigo leal' (recurso de maestria do Beastbound) parece truncado/mal formatado ao final da página 39, mas o texto continua coerente — apenas atenção ao corte de página.",
-    "A ficha do Companheiro Animal (Ranger Companion) está nas páginas 41-42, fora das duas páginas fornecidas (39-40), e não foi transcrita conforme instrução."
+   "problemasDeTraducao": [],
+   "pastaCartas": "assets/cartas/subclasses/RANGER",
+   "nomesAlternativos": [
+    "Patrulheiro",
+    "Ranger"
    ],
-   "pastaCartas": "assets/cartas/subclasses/RANGER"
+   "fonteDasCaracteristicas": "DH-DigitalRegras.pdf (Jambô), pp. 28-51 — reimportado no vocabulário das cartas."
   },
   {
    "id": "seraph",
-   "nome": "Seraph",
-   "nomeLivro": "SERAPH",
-   "descricao": "Os serafins são lutadores e curandeiros divinos imbuídos de um propósito sagrado. Existe uma grande variedade de divindades nos reinos e, portanto, vários tipos de serafins são designados por esses deuses. Seu ethos tradicionalmente se alinha com o domínio ou os objetivos de seu deus, como defender os fracos, exigir vingança, proteger uma terra ou artefato ou defender uma fé específica. Alguns serafins se aliam a um exército ou localidade, para satisfação de seus governantes, mas outros cruzados lutam em oposição às loucuras do Reino Mortal. É melhor ser aliado de um serafim do que inimigo dele, pois eles são inimigos terríveis para aqueles que desafiam seu propósito.",
+   "nome": "Serafim",
+   "nomeLivro": "SERAFIM",
+   "descricao": "Serafins são guerreiros divinos com poderes curativos imbuídos de um propósito sagrado. Há um grande número de deuses nos planos, e eles escolhem diversos tipos de serafim como seus campeões. O caráter de um serafim tradicionalmente está alinhado ao domínio ou aos objetivos de seu deus, como defender os fracos, vingança, proteger um território ou artefato, ou professar uma fé específica. Alguns serafins se aliam a um exército ou localidade, para satisfação dos governantes, mas outros fazem uma cruzada contra a vaidade do plano mortal. Ser aliado de um serafim é melhor que ser seu inimigo, pois são implacáveis contra aqueles que ousam desafiar seu propósito.",
    "dominios": [
     "SPLENDOR",
     "VALOR"
@@ -1669,27 +1593,27 @@
    "evasaoInicial": 9,
    "pontosDeVidaIniciais": 7,
    "itensDeClasse": [
-    "Um pacote de oferendas ou um símbolo de seu deus"
+    "Algumas oferendas ou um símbolo de seu deus"
    ],
    "caracteristicaEsperanca": {
-    "nome": "Suporte à vida",
-    "texto": "Gaste 3 de Esperança para eliminar um ponto de vida de um aliado que esteja a curta distância."
+    "nome": "Alicerce da Vida",
+    "texto": "Gaste 3 de Esperança para recuperar 1 Ponto de Vida de um aliado Próximo."
    },
    "caracteristicasDeClasse": [
     {
-     "nome": "Dados de oração",
-     "texto": "No início de cada sessão, role um número de d4s igual ao traço Spellcast de sua subclasse e coloque-os em sua ficha de personagem no espaço fornecido. Esses são seus dados de oração. Você pode gastar qualquer número de Dados de Oração para ajudar a si mesmo ou a um aliado dentro do alcance de Longe. Você pode usar o valor de um dado gasto para reduzir o dano recebido, adicionar ao resultado de uma rolagem após a rolagem ou ganhe Esperança igual ao resultado. No final de cada sessão, limpe todos os dados de oração não gastos."
+     "nome": "Dados de Oração",
+     "texto": "No início de cada sessão, role um número de d4 igual ao traço de Conjuração de sua subclasse e coloque-os sobre o espaço apropriado na ficha de personagem. Eles são seus Dados de Oração. Você pode gastar qualquer número de Dados de Oração para auxiliar a si mesmo ou um aliado até o alcance Distante. Você pode usar o valor de um dado gasto para reduzir o dano sofrido, somá-lo ao resultado de uma jogada após ela ser feita ou receber um número de Esperança igual ao resultado. No fim de cada sessão, Dados de Oração não utilizados são perdidos."
     }
    ],
    "perguntasDeFundo": [
-    "A qual deus você se dedicou? Que façanha incrível eles realizaram por você em um momento de desespero?",
-    "Como sua aparência mudou depois de fazer seu juramento?",
-    "De que maneira estranha ou única você se comunica com seu deus?"
+    "Que deus(a) você segue? Que façanha incrível essa divindade realizou em seu momento de desespero?",
+    "O que mudou em sua aparência após seu juramento?",
+    "De que forma estranha ou exclusiva você se comunica com a divindade que segue?"
    ],
    "conexoes": [
-    "Que promessa você me fez fazer, caso morresse no campo de batalha?",
-    "Por que você me faz tantas perguntas sobre meu Deus?",
-    "Você me disse para proteger um membro do nosso grupo acima de todos os outros, até de você mesmo. Quem são eles e por quê?"
+    "O que você me fez prometer caso morra em batalha?",
+    "Por que pergunta tantas coisas sobre minha divindade?",
+    "Você me pediu para proteger um membro do grupo acima de todos, inclusive de você. Quem e por quê?"
    ],
    "subclasses": [
     {
@@ -1839,19 +1763,12 @@
      }
     }
    ],
-   "problemasDeTraducao": [
-    "Cabeçalho 'DOMÉSTICAS' usado para a lista de Domínios da classe (Esplendor e Valor) — tradução incorreta de 'Domains', deveria ser algo como 'DOMÍNIOS'.",
-    "Nome impresso da primeira subclasse é 'SOLDADOR DIVINO', tradução incorreta de 'Divine Wielder' — deveria ser 'Portador Divino', como o próprio texto de introdução das subclasses ('Escolha a subclasse Divine Wielder (Portador Divino) ou Winged Sentinel (Sentinela Alada)') indica.",
-    "Nas frases 'Jogue com X se quiser...' de cada subclasse, os nomes ficaram em inglês ('Divine Wielder' e 'Winged Sentinel') em vez de usar os nomes traduzidos já apresentados no parágrafo anterior.",
-    "Na característica de classe 'Dados de oração', o termo 'traço Spellcast' ficou em inglês (não traduzido para algo como 'traço de Conjuração').",
-    "No recurso de especialização 'Devoto' (Soldador Divino), a habilidade é citada como 'Sparing Touch' em inglês, mas essa mesma habilidade foi traduzida como 'Toque poupador' na seção de Fundação — inconsistência de tradução do mesmo termo.",
-    "No recurso de maestria 'Ressonância sagrada' (Soldador Divino), o termo 'Spirit Weapon' ficou entre aspas em inglês, com 'Arma espiritual' apenas entre parênteses ao lado.",
-    "Nome do recurso de especialização da Sentinela Alada, 'Visage Ethereal', ficou inteiramente em inglês, sem nenhuma tradução para o português.",
-    "Os cabeçalhos do terceiro nível de recursos das subclasses aparecem como 'RECURSO DE DOMÍNIO' / 'RECURSOS DE DOMÍNIO', o que parece ser tradução incorreta de 'Mastery' (deveria ser 'Recurso de Maestria'), já que 'Domínio' é termo distinto usado no jogo para as cartas de domínio da classe.",
-    "Ordem impressa das subclasses na página: primeiro 'Soldador Divino' (Divine Wielder), depois 'Sentinela Alada' (Winged Sentinel). Segundo a errata do livro, a arte e o texto de Divine Wielder e Winged Sentinel foram trocados de lugar nesta página para tentar ficar em ordem alfabética — essa é a ordem tal como impressa, registrada aqui sem correção.",
-    "No título 'CONEXÕES' (página 46), o caractere acentuado 'Õ' aparece renderizado em fonte/peso diferente do restante da palavra, possível artefato de diagramação/OCR, embora a grafia em si esteja correta."
+   "problemasDeTraducao": [],
+   "pastaCartas": "assets/cartas/subclasses/SERAPH",
+   "nomesAlternativos": [
+    "Seraph"
    ],
-   "pastaCartas": "assets/cartas/subclasses/SERAPH"
+   "fonteDasCaracteristicas": "DH-DigitalRegras.pdf (Jambô), pp. 28-51 — reimportado no vocabulário das cartas."
   }
  ]
 }

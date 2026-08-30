@@ -1,0 +1,244 @@
+{
+ "versao": 1,
+ "fonte": "DH-DigitalRegras.pdf (Jambô, Prévia 5), p.194-209. As frases curtas são a lista de tipos da p.194; o Guia de Batalha é da p.196-197.",
+ "nota": "O tipo do adversário é o papel dele no conflito. É o tipo que diz quanto ele custa em Pontos de Batalha, e é por isso que a mesma tabela serve para o catálogo e para montar o encontro.",
+ "tipos": [
+  {
+   "id": "lacaio",
+   "nome": "Lacaio",
+   "ingles": "Minion",
+   "descricao": "Lacaios são derrotados facilmente, mas perigosos em grandes quantidades.",
+   "pontosDeBatalha": 1,
+   "custoPor": "conjunto",
+   "notaDeCusto": "1 PB por CONJUNTO de lacaios do tamanho do grupo de personagens — não por lacaio."
+  },
+  {
+   "id": "horda",
+   "nome": "Horda",
+   "ingles": "Horde",
+   "descricao": "Hordas são criaturas idênticas e agrupadas, agindo em conjunto como uma unidade.",
+   "pontosDeBatalha": 2,
+   "custoPor": "adversario"
+  },
+  {
+   "id": "comum",
+   "nome": "Comum",
+   "ingles": "Standard",
+   "descricao": "Comuns são a base dos grupos de adversários.",
+   "pontosDeBatalha": 2,
+   "custoPor": "adversario"
+  },
+  {
+   "id": "atirador",
+   "nome": "Atirador",
+   "ingles": "Ranged",
+   "descricao": "Atiradores são frágeis quando estão Próximos, mas podem causar muito dano à distância.",
+   "pontosDeBatalha": 2,
+   "custoPor": "adversario"
+  },
+  {
+   "id": "oportunista",
+   "nome": "Oportunista",
+   "ingles": "Skulk",
+   "descricao": "Oportunistas são capazes de explorar fraquezas para emboscar seus oponentes.",
+   "pontosDeBatalha": 2,
+   "custoPor": "adversario"
+  },
+  {
+   "id": "manipulador",
+   "nome": "Manipulador",
+   "ingles": "Social",
+   "descricao": "Manipuladores apresentam desafios únicos a serem superados com diálogo no lugar do combate.",
+   "pontosDeBatalha": 1,
+   "custoPor": "adversario"
+  },
+  {
+   "id": "assistente",
+   "nome": "Assistente",
+   "ingles": "Support",
+   "descricao": "Assistentes ajudam os aliados e prejudicam os oponentes.",
+   "pontosDeBatalha": 1,
+   "custoPor": "adversario"
+  },
+  {
+   "id": "lider",
+   "nome": "Líder",
+   "ingles": "Leader",
+   "descricao": "Líderes comandam e invocam outros adversários.",
+   "pontosDeBatalha": 3,
+   "custoPor": "adversario"
+  },
+  {
+   "id": "brutamonte",
+   "nome": "Brutamonte",
+   "ingles": "Bruiser",
+   "descricao": "Brutamontes são durões e fazem ataques poderosos.",
+   "pontosDeBatalha": 4,
+   "custoPor": "adversario"
+  },
+  {
+   "id": "solo",
+   "nome": "Solo",
+   "ingles": "Solo",
+   "descricao": "Solos apresentam desafios formidáveis para o grupo, com ou sem assistentes.",
+   "pontosDeBatalha": 5,
+   "custoPor": "adversario"
+  }
+ ],
+ "guiaDeBatalha": {
+  "formula": "(3 × personagens no combate) + 2",
+  "base": {
+   "porPersonagem": 3,
+   "mais": 2
+  },
+  "ajustes": [
+   {
+    "id": "mais-facil",
+    "delta": -1,
+    "texto": "a luta deve ser mais fácil ou curta"
+   },
+   {
+    "id": "dois-solos",
+    "delta": -2,
+    "texto": "está usando 2 ou mais adversários solos"
+   },
+   {
+    "id": "dano-extra",
+    "delta": -2,
+    "texto": "quer somar +1d4 (ou +2) à rolagem de dano de todos os adversários"
+   },
+   {
+    "id": "patamar-inferior",
+    "delta": 1,
+    "texto": "escolheu um adversário de um patamar inferior"
+   },
+   {
+    "id": "sem-pesados",
+    "delta": 1,
+    "texto": "não vai incluir nenhum brutamonte, horda, líder ou solo"
+   },
+   {
+    "id": "mais-perigosa",
+    "delta": 2,
+    "texto": "a luta precisa ser mais perigosa ou duradoura"
+   }
+  ],
+  "dica": "Adversários invocados por habilidades não entram na conta dos Pontos de Batalha."
+ },
+ "tiposDeAmbiente": [
+  {
+   "id": "travessia",
+   "nome": "Travessia",
+   "ingles": "Traversal",
+   "descricao": "Locais perigosos nos quais se mover através do espaço já é um desafio por si só."
+  },
+  {
+   "id": "exploracao",
+   "nome": "Exploração",
+   "ingles": "Exploration",
+   "descricao": "Lugares cheios de mistérios e maravilhas a serem descobertas."
+  },
+  {
+   "id": "social",
+   "nome": "Social",
+   "ingles": "Social",
+   "descricao": "Lugares que costumam apresentar desafios interpessoais."
+  },
+  {
+   "id": "evento",
+   "nome": "Evento",
+   "ingles": "Event",
+   "descricao": "Definidos pelas atividades que acontecem, mais do que pelo lugar em si."
+  }
+ ],
+ "estatisticasPorPatamar": {
+  "nota": "As duas tabelas de improviso do livro. Servem para dois trabalhos: montar um adversário ou ambiente do zero, e levar uma ficha pronta para outro patamar.",
+  "adversario": {
+   "fonte": "Livro p.208 — “Estatísticas improvisadas por patamar”.",
+   "linhas": [
+    {
+     "id": "modificadorDeAtaque",
+     "rotulo": "Modificador de ataque",
+     "valores": [
+      "+1",
+      "+2",
+      "+3",
+      "+4"
+     ]
+    },
+    {
+     "id": "dadosDeDano",
+     "rotulo": "Dados de dano",
+     "valores": [
+      "1d6+2 até 1d12+4",
+      "2d6+3 até 2d12+4",
+      "3d8+3 até 3d12+5",
+      "4d8+10 até 4d12+15"
+     ]
+    },
+    {
+     "id": "dificuldade",
+     "rotulo": "Dificuldade",
+     "valores": [
+      "11",
+      "14",
+      "17",
+      "20"
+     ]
+    },
+    {
+     "id": "limiares",
+     "rotulo": "Limiares de dano",
+     "valores": [
+      "7/12",
+      "10/20",
+      "20/32",
+      "25/45"
+     ]
+    }
+   ],
+   "ajuste": "Ao mover um adversário do 1º ou 2º patamar para o 3º ou 4º, aumente os Pontos de Vida e o Estresse de 1 a 3, conforme quanto quiser que ele dure — e olhe as habilidades que causam dano diferente do ataque padrão.",
+   "porTipo": [
+    {
+     "tipo": "horda",
+     "texto": "O ataque padrão deve causar muito dano, reduzido a mais ou menos metade quando a horda tiver marcado metade ou mais dos Pontos de Vida."
+    },
+    {
+     "tipo": "lacaio",
+     "texto": "Dê ao ataque padrão um valor de dano FIXO, geralmente entre 1 e 5, e use esse mesmo valor no Ataque em Grupo. O número do “Lacaio (N)” — quanto dano derruba um lacaio a mais — costuma ficar entre 3 e 15, conforme o patamar."
+    },
+    {
+     "tipo": "solo",
+     "texto": "Muito dano, muitos Pontos de Vida, e habilidades que o deixem agir mais vezes (como Inclemente) ou causar dano em área."
+    }
+   ]
+  },
+  "ambiente": {
+   "fonte": "Livro p.242 — “Estatísticas de Ambientes por Patamar”.",
+   "linhas": [
+    {
+     "id": "dadosDeDano",
+     "rotulo": "Dados de dano",
+     "valores": [
+      "1d6+1 até 1d8+3",
+      "2d6+3 até 2d10+2",
+      "3d8+3 até 3d10+1",
+      "4d8+3 até 4d10+10"
+     ]
+    },
+    {
+     "id": "dificuldade",
+     "rotulo": "Dificuldade",
+     "valores": [
+      "11",
+      "14",
+      "17",
+      "20"
+     ]
+    }
+   ],
+   "ajuste": "Ambiente é mais simples de mudar que adversário: não tem Pontos de Vida, limiares nem Estresse. Basta trocar a Dificuldade padrão, as Dificuldades citadas na descrição e o dano das habilidades. Se alguma habilidade invoca adversário, troque por um do patamar novo — ou mude o patamar dele também.",
+   "habilidades": "Ao SUBIR o patamar, considere acrescentar uma habilidade de Medo se ainda não houver uma. Ao DESCER, considere tirar a habilidade mais poderosa."
+  }
+ }
+}

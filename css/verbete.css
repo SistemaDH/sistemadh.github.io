@@ -1,0 +1,188 @@
+/* ==========================================================================
+   verbete.css — a palavra clicável e o popup da regra.
+
+   O gatilho tinha de resolver um conflito: ficar visível o bastante para
+   alguém descobrir que dá para tocar, e discreto o bastante para não picotar
+   o texto da carta. A saída foi o sublinhado pontilhado — a convenção de
+   "isto tem definição" que vem dos dicionários e dos verbetes impressos.
+   ========================================================================== */
+
+.verbete__gatilho {
+  /* Um botão que não parece botão: ele mora DENTRO de uma frase. */
+  display: inline;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--cor-ouro-escuro);
+
+  /* Sem isto, um termo de duas palavras no fim da linha quebraria o
+     sublinhado no meio e pareceria dois gatilhos diferentes. */
+  border-radius: 3px;
+}
+
+.verbete__gatilho:hover,
+.verbete__gatilho:focus-visible {
+  color: var(--cor-ouro-claro);
+  text-decoration-color: var(--cor-ouro);
+}
+
+.verbete__gatilho:focus-visible {
+  outline: 2px solid var(--cor-ouro);
+  outline-offset: 2px;
+}
+
+/* Um gatilho dentro de um título não deve competir com o título. */
+.cartao__titulo .verbete__gatilho,
+.ficha__secaoTitulo .verbete__gatilho {
+  text-decoration-color: var(--cor-borda-forte);
+}
+
+/* --- o popup ------------------------------------------------------------- */
+
+.verbete {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e3);
+}
+
+.verbete__resumo {
+  margin: 0;
+  font-size: var(--txt-md);
+  color: var(--cor-texto);
+}
+
+.verbete__explicacao {
+  margin: 0;
+  padding-left: var(--e5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+  font-size: var(--txt-sm);
+  color: var(--cor-texto-suave);
+}
+
+.verbete__etiqueta {
+  display: inline-block;
+  margin-right: var(--e2);
+  padding: 1px var(--e2);
+  border-radius: var(--raio-cheio);
+  background: var(--cor-superficie-alta);
+  border: 1px solid var(--cor-borda);
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-fraco);
+  white-space: nowrap;
+}
+
+.verbete__noLivro,
+.verbete__errata {
+  margin: 0;
+  font-size: var(--txt-sm);
+  color: var(--cor-texto-suave);
+}
+
+.verbete__errata .verbete__etiqueta {
+  border-color: var(--cor-alerta);
+  color: var(--cor-alerta);
+}
+
+/* --- quadros ------------------------------------------------------------- */
+
+.verbete__quadro {
+  padding: var(--e3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: var(--cor-fundo-2);
+}
+
+.verbete__quadroTitulo {
+  margin: 0 0 var(--e2);
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-xs);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--cor-texto-fraco);
+}
+
+/* A tabela rola DENTRO da caixa. A página nunca rola para o lado. */
+.verbete__rolagem {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.verbete__tabela {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: var(--txt-sm);
+}
+
+.verbete__tabela th,
+.verbete__tabela td {
+  padding: var(--e2) var(--e3);
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.verbete__tabela th {
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-xs);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--cor-ouro);
+  white-space: nowrap;
+}
+
+.verbete__tabela tr:last-child td { border-bottom: 0; }
+
+.verbete__lista {
+  margin: 0;
+  padding-left: var(--e5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+  font-size: var(--txt-sm);
+  color: var(--cor-texto-suave);
+}
+
+.verbete__formula {
+  margin: 0;
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-lg);
+  color: var(--cor-ouro-claro);
+  text-align: center;
+}
+
+/* --- veja também e a página ---------------------------------------------- */
+
+.verbete__veja {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+}
+
+.verbete__vejaBotoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+}
+
+.verbete__pagina {
+  margin: 0;
+  padding-top: var(--e3);
+  border-top: 1px solid var(--cor-borda);
+  font-size: var(--txt-sm);
+  color: var(--cor-texto-suave);
+}
+
+.verbete__pagina strong { color: var(--cor-ouro); }
