@@ -142,7 +142,7 @@ function validarCondicoes_(ficha) {
 /**
  * A condição VULNERÁVEL que vem de encher o Estresse.
  *
- * O livro (p.99) não dá margem: "Quando marcar seu último Ponto de Fadiga,
+ * O livro (p.92) não dá margem: "Quando marcar seu último Ponto de Fadiga,
  * você fica Vulnerável até que recupere ao menos 1 Ponto de Fadiga." É uma
  * regra sem escolha e sem dado — dá para o app aplicar sozinho, e é melhor que
  * aplique: era a coisa que mais escapava na mesa, porque acontece justo no

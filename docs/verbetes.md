@@ -50,6 +50,9 @@ Todas corrigidas. E, para não acontecer de novo, cada verbete carrega uma
 **âncora**: uma frase curta que TEM de aparecer naquela página do PDF.
 `tools/conferir-paginas.py` abre o livro e confere as 93. Hoje: **0 erradas**.
 
+Isso cobria os verbetes. O que sobrava — as outras citações espalhadas pelo
+código — virou o **J3**, e está na §8.
+
 Isso é o mesmo espírito do `conferir-com-srd.py` do bestiário — a diferença é
 que ali a prova é o SRD em inglês, e aqui é o próprio PDF do livro.
 
@@ -160,6 +163,55 @@ editar o `.json` na mão.
 
 ---
 
+## 8. A varredura das 553 citações (J3)
+
+Os quatro erros do §2 apareceram de passagem, conferindo 93 páginas. Se a taxa
+se mantivesse, haveria dezenas escondidas nas outras — e agora o app **mostra
+página para o jogador**, então cada uma manda alguém folhear em vão no meio da
+cena.
+
+`tools/conferir-citacoes.py` varre o projeto inteiro. Não dá para exigir âncora
+de 553 citações escritas ao longo de meses, então o método é outro: ele recorta
+a **frase em volta** de cada `p.N`, tira dela as palavras que valem como prova
+(jogando fora as que aparecem em toda página) e vê quantas estão naquela página
+do PDF. Quando não bate, procura em que página elas estariam — é isso que
+transforma o erro em conserto.
+
+**Ele não decide.** Heurístico de palavra-chave erra nos dois sentidos: "veja
+p.105" não tem o que provar, e uma página densa contém quase tudo. Então a
+saída vem em três baldes — bate / NÃO BATE / inconclusivo — e a leitura final é
+humana. O valor dele é reduzir 553 a uma lista curta.
+
+E há um segundo corte, que é o que decide a ordem do trabalho: **o jogador lê
+isto?** Página errada num comentário engana quem for mexer no código um dia;
+página errada numa mensagem engana quem está jogando agora.
+
+### O que a varredura achou
+
+| A regra | Dizia | É |
+|---|---|---|
+| Vulnerável ao encher o Estresse | p.99 | **p.92** — a p.99 é resistência |
+| Guia de Batalha | p.196-197 | **p.197** — a 196 é Habilidades de Medo |
+| "criar no nível atual do grupo" | p.105 | **p.109** |
+| traço de Conjuração na multiclasse | p.109 | **p.111** |
+| Forma de Fera | p.33-36 | **p.34-39** |
+| Companheiro Animal | p.41-42 | **p.31-33** — a p.41 é o Primordialista |
+
+Seis afirmações erradas, 22 lugares corrigidos. A do Estresse era a pior: saía
+num **aviso que o jogador lê** ("você fica Vulnerável até limpar ao menos 1
+(livro p.99)").
+
+E um achado de outra natureza: o `guias-de-classe.json` citava "p.369-385" sem
+dizer de qual PDF. O livro tem 368 páginas — essas folhas vêm do
+`Daggerheart regras.pdf`, outra diagramação, de 415. Não era página errada, era
+**documento não dito**, que dá no mesmo para quem procura. Agora a fonte diz
+qual é, e avisa que não é o DH-DigitalRegras.
+
+Hoje: **0 suspeitas em texto que o jogador lê.** Sobram 127 marcadas em
+comentário e proveniência, quase todas falso alarme do heurístico (citação de
+página da *errata* em inglês, faixa de origem tipo "pp. 28-51"). Ficam para
+quando alguém mexer naquele arquivo.
+
 ## 7. Pontos de interesse
 
 - **Não há tela de índice.** Um verbete que não aparece escrito em lugar nenhum
@@ -171,6 +223,6 @@ editar o `.json` na mão.
   A terceira categoria agora se chama **Baús** na tela, como no livro (p.104), e
   "cofre" no app quer dizer só a reserva de cartas. A chave gravada continua
   `cofres`: é rótulo, não migração. O nome antigo virou alias, pela E14.
-- **As páginas de outros documentos não foram auditadas** — só as 93 dos
-  verbetes e as quatro citações erradas que a auditoria pegou de passagem. As
-  outras ~250 citações `p.N` espalhadas pelo código continuam por conferir.
+- ~~**As páginas de outros documentos não foram auditadas**~~ — **feito (J3)**,
+  §8: as 553 citações do projeto passaram pelo conferidor, e as seis afirmações
+  erradas foram corrigidas em 22 lugares.

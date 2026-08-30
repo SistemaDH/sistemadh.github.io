@@ -890,7 +890,7 @@ teste('encher o Estresse liga a Vulnerável, e limpar desliga', () => {
   verdade(/Vulnerável/.test(r.mudancas[0].alerta), r.mudancas[0].alerta);
 
   const cheia = contexto.validarFicha_(f);
-  verdade(contexto.temCondicao_(cheia, 'Vulnerável'), 'o livro p.99 não dá margem');
+  verdade(contexto.temCondicao_(cheia, 'Vulnerável'), 'o livro p.92 não dá margem');
   igual(cheia.condicoes.filter((c) => c.id === 'vulneravel')[0].origem, 'estresse cheio');
 
   contexto.aplicarAjustes_(cheia, [{ tipo: 'recurso', chave: 'estresseMarcado', valor: teto - 1 }]);
@@ -2233,7 +2233,7 @@ teste('encher PV e Estresse avisa o que o livro manda fazer', () => {
     { tipo: 'recurso', chave: 'estresse', valor: f.recursos.estresseMaximo }
   ]);
   verdade(/Vulnerável/.test(es.mudancas[0].alerta || ''), JSON.stringify(es.mudancas[0]));
-  // A leitura mudou: o livro bom (p.99) e o SRD dizem que encher o Estresse
+  // A leitura mudou: o livro bom (p.92) e o SRD dizem que encher o Estresse
   // JÁ deixa Vulnerável. O "não pode marcar" é a outra regra (marca 1 PV).
   verdade(/fica Vulnerável até limpar/.test(es.mudancas[0].alerta || ''), es.mudancas[0].alerta);
 });

@@ -46,7 +46,7 @@ for (const e of c.etapas) {
 }
 L.push('];\n');
 
-L.push('/** Guia de Caráter de cada classe (folhas do apêndice, p.369-385). */');
+L.push('/** Guia de Caráter de cada classe. Vem do apêndice de "Daggerheart regras.pdf" (p.369-385) — NÃO do DH-DigitalRegras.pdf, que acaba na 368. */');
 L.push('const GUIAS_DE_CLASSE = {');
 for (const g of gs.guias) {
   const campos = [
@@ -358,7 +358,7 @@ function aplicarDerivados_(ficha) {
   ficha.formaDeFera = d.formaDeFera;
   ficha.conjuracoesDisponiveis = d.conjuracoesDisponiveis;
 
-  // Encher o Estresse deixa Vulnerável (livro p.99 e SRD). Aqui, depois dos
+  // Encher o Estresse deixa Vulnerável (livro p.92 e SRD). Aqui, depois dos
   // tetos: é o único ponto em que o máximo de Estresse já está calculado.
   if (typeof sincronizarVulneravelPorEstresse_ === 'function') {
     d.vulneravel = sincronizarVulneravelPorEstresse_(ficha);

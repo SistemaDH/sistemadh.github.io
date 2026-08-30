@@ -108,7 +108,7 @@ for (const t of tipos.tiposDeAmbiente) {
 }
 L.push('];\n');
 
-L.push(`/** O Guia de Batalha (livro, p.196-197): ${tipos.guiaDeBatalha.formula}. */`);
+L.push(`/** O Guia de Batalha (livro, p.197): ${tipos.guiaDeBatalha.formula}. */`);
 L.push('const GUIA_DE_BATALHA = {');
 L.push(`  formula: ${j(tipos.guiaDeBatalha.formula)},`);
 L.push(`  base: { porPersonagem: ${tipos.guiaDeBatalha.base.porPersonagem}, mais: ${tipos.guiaDeBatalha.base.mais} },`);

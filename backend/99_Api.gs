@@ -460,7 +460,7 @@ function executar_(p) {
       }
 
       /**
-       * O GUIA DE BATALHA (livro, p.196-197): quantos Pontos de Batalha o
+       * O GUIA DE BATALHA (livro, p.197): quantos Pontos de Batalha o
        * Mestre tem e quanto o encontro que ele montou já gastou.
        *
        * É só conta — nada é gravado. O encontro em jogo (com trilha de PV e

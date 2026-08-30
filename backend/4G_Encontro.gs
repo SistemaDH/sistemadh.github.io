@@ -641,7 +641,7 @@ function quantosPersonagens_() {
 }
 
 /**
- * O encontro montado × os Pontos de Batalha disponíveis (livro p.196-197).
+ * O encontro montado × os Pontos de Batalha disponíveis (livro p.197).
  *
  * Adversário DERROTADO continua contando: o custo é do que foi posto na cena,
  * não do que ainda está de pé.

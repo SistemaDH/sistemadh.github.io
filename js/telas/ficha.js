@@ -524,7 +524,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       acoes: [
         el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar() }, 'Fechar'),
         // A Vulnerável que veio de encher o Estresse não se tira à mão: ela sai
-        // sozinha quando você limpar 1 Estresse (livro p.99). Oferecer o botão
+        // sozinha quando você limpar 1 Estresse (livro p.92). Oferecer o botão
         // seria mentira — o servidor a repõe no salvamento seguinte.
         c.origem === 'estresse cheio'
           ? el('span', { class: 'texto-xs texto-fraco crescer', texto:

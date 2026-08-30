@@ -190,7 +190,7 @@ Mestre souber em que momento o grupo está, isso pode virar automático.
 
 Eu tinha lido esta regra errado. O texto que estava no app dizia "se precisar
 marcar mais 1 e não puder, você fica Vulnerável" — como se a condição
-dependesse de uma segunda coisa acontecer. O livro bom (p.99) e o SRD dizem o
+dependesse de uma segunda coisa acontecer. O livro bom (p.92) e o SRD dizem o
 simples:
 
 > "When a character marks their last Stress, they become Vulnerable until they

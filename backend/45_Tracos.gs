@@ -92,7 +92,7 @@ function conjuracaoDaSubclasse_(classeId, subclasseId) {
  * TODOS os traços de Conjuração a que este personagem tem direito.
  *
  * Quase sempre é um só, o da subclasse. Vira dois quando a multiclasse traz
- * uma carta de fundação com outro traço — e aí o livro (p.109) manda deixar o
+ * uma carta de fundação com outro traço — e aí o livro (p.111) manda deixar o
  * jogador escolher:
  *
  *   "Se a subclasse conceder um traço de Conjuração, você pode escolher usar

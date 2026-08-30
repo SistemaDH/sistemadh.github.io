@@ -48,7 +48,7 @@ const TIPOS_DE_AMBIENTE = [
   { id: "evento", nome: "Evento", ingles: "Event", descricao: "Definidos pelas atividades que acontecem, mais do que pelo lugar em si." },
 ];
 
-/** O Guia de Batalha (livro, p.196-197): (3 × personagens no combate) + 2. */
+/** O Guia de Batalha (livro, p.197): (3 × personagens no combate) + 2. */
 const GUIA_DE_BATALHA = {
   formula: "(3 × personagens no combate) + 2",
   base: { porPersonagem: 3, mais: 2 },
@@ -550,7 +550,7 @@ const HABILIDADES_COM_CUSTO = [
 ];
 
 /**
- * As nove fichas com RESISTÊNCIA permanente a um tipo de dano (livro p.99):
+ * As nove fichas com RESISTÊNCIA permanente a um tipo de dano (livro p.98):
  * o dano desse tipo é reduzido à metade ANTES de ser comparado aos limiares.
  * As resistências condicionais ("enquanto estiver Enraizado") ficam de fora:
  * quem sabe se a condição vale naquele instante é a Mestra.
@@ -682,7 +682,7 @@ function catalogoDeAmbientes_(filtro) {
 }
 
 /* ------------------------------------------------------------------------ *
- *  Guia de Batalha (livro, p.196-197)
+ *  Guia de Batalha (livro, p.197)
  * ------------------------------------------------------------------------ */
 
 /** O tipo de adversário, aceitando o nome em português ou em inglês. */

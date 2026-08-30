@@ -13,7 +13,7 @@ nível 3" e liberar o botão nas fichas entra junto com o painel do Mestre
 
 ## 2. Personagem novo no meio da campanha — FECHADO como AVISO (C4)
 
-O livro (p.105): se alguém perde um personagem, "seu jogador faça um novo
+O livro (p.109): se alguém perde um personagem, "seu jogador faça um novo
 personagem no nível atual do grupo".
 
 Eu tinha anotado que faltava um atalho "criar já no nível N". Ao implementar,
@@ -107,7 +107,7 @@ Dois efeitos colaterais bons:
 ## 6. Traço de Conjuração com duas opções — FECHADO (C6)
 
 Quando a fundação da multiclasse traz um traço de Conjuração diferente do da
-subclasse original, o livro (p.109) manda deixar escolher:
+subclasse original, o livro (p.111) manda deixar escolher:
 
 > "Se a subclasse conceder um traço de Conjuração, você pode escolher usar este
 > traço ou o traço de Conjuração da sua subclasse original ao fazer um teste de

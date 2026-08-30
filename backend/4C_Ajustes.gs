@@ -416,7 +416,7 @@ function ajustarRecurso_(ficha, a) {
     /*
      * Eu tinha lido esta regra errado até aqui: achava que a Vulnerável só
      * chegava quando o personagem PRECISASSE marcar Estresse e não pudesse.
-     * O livro bom (p.99) e o SRD dizem a mesma coisa, e é mais simples:
+     * O livro bom (p.92) e o SRD dizem a mesma coisa, e é mais simples:
      *
      *   "When a character marks their last Stress, they become Vulnerable
      *    until they clear at least 1 Stress."
@@ -426,7 +426,7 @@ function ajustarRecurso_(ficha, a) {
      * condição sozinho (sincronizarVulneravelPorEstresse_) — e o aviso aqui só
      * conta o que aconteceu.
      */
-    m.alerta = 'Estresse cheio: você fica Vulnerável até limpar ao menos 1 (livro p.99).';
+    m.alerta = 'Estresse cheio: você fica Vulnerável até limpar ao menos 1 (livro p.92).';
   }
   if (chave === 'estresseMarcado' && teto && depois < teto && antes >= teto) {
     m.aviso = 'Estresse abaixo do limite — a Vulnerável que veio dele saiu.';

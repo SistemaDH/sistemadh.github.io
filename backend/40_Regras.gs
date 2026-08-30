@@ -150,8 +150,8 @@ function mesclarComEsqueleto_(ficha) {
 /**
  * PONTO DE INTERESSE — encaixe reservado, conteúdo ainda não modelado.
  *
- * O Druida (Beastform, livro p.33-36) e o Patrulheiro Laço Bestial
- * (Companheiro Animal, p.41-42) usam FICHAS PRÓPRIAS, com atributos e
+ * O Druida (Forma de Fera, livro p.34-39) e o Caçador Laço Bestial
+ * (Companheiro Animal, p.31-33) usam FICHAS PRÓPRIAS, com atributos e
  * evolução separados da ficha principal. Não cabem em ficha.tracos nem em
  * ficha.recursos: a forma de besta troca Evasão e traços por completo, e o
  * companheiro sobe de nível na ficha dele.

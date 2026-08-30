@@ -999,7 +999,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
               fechar();
               if (typeof aoCriar === 'function') aoCriar(personagem);
               /*
-               * Entrou no meio da campanha? O livro (p.105) manda criar "no
+               * Entrou no meio da campanha? O livro (p.109) manda criar "no
                * nível atual do grupo". Toda ficha nasce no 1 — porque cada
                * nível é uma escolha do jogador, não do app — então o que dá
                * para fazer é avisar quantos degraus faltam, aqui, na hora em

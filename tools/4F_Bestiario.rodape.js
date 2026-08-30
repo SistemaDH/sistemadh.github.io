@@ -82,7 +82,7 @@ function catalogoDeAmbientes_(filtro) {
 }
 
 /* ------------------------------------------------------------------------ *
- *  Guia de Batalha (livro, p.196-197)
+ *  Guia de Batalha (livro, p.197)
  * ------------------------------------------------------------------------ */
 
 /** O tipo de adversário, aceitando o nome em português ou em inglês. */

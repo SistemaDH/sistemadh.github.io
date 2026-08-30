@@ -193,7 +193,7 @@ o livro chama de "covarde" o *Lackey*, que a Jambô batizou de **Ladrão**, e de
 
 ## 7. O Guia de Batalha
 
-`(3 × personagens no combate) + 2` (livro p.196), com os seis ajustes da mesma
+`(3 × personagens no combate) + 2` (livro p.197), com os seis ajustes da mesma
 página e a tabela de custo por tipo da p.197. Está em `bestiario-tipos.json`,
 vai para o `.gs` e aparece na tela num modal.
 
