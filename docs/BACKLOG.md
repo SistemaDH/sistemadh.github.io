@@ -7,9 +7,12 @@ zerar esta lista.
 Cada item aponta para o documento que tem o detalhe. Nada aqui é bug — é
 trabalho reservado de propósito.
 
-**Última atualização:** a primeira leva de **relatos da mesa** (grupo K) —
-o corretor do celular trocando nomes de personagem, as trilhas viradas ficha de
-papel e a URL fora dos Ajustes. Detalhe em `relatos-da-mesa.md`. Antes deles, o
+**Última atualização:** o **refino do bloco de papel** (K6) — escudos alinhados,
+o contador da Esperança fora, Proficiência dentro da conta do dano, traços em
+cartões, e Guardar/Comprar esperando o servidor. Antes dele, a primeira leva de
+**relatos da mesa** (grupo K) — o corretor do celular trocando nomes de
+personagem, as trilhas viradas ficha de papel e a URL fora dos Ajustes. Detalhe
+em `relatos-da-mesa.md`. Antes deles, o
 **índice das regras** (J4) — 93 verbetes com busca, no
 cabeçalho de todas as telas. Antes dele, a varredura das **553 citações de
 página** (J3): seis afirmações erradas, 22 lugares corrigidos. Detalhe em
@@ -177,6 +180,7 @@ A primeira leva de relatos de quem jogou. Detalhe em `relatos-da-mesa.md`.
 | ~~K2~~ | ~~Confusão com "marcar" Pontos de Vida~~ — **decisão da mesa: não mexer.** Fica como o livro e a ficha de papel. Registrado porque a dúvida volta. | `relatos-da-mesa.md` §2 |
 | ~~K3~~ | ~~Trilhas com + e −~~ — **FECHADO, e virou o desenho inteiro.** O bloco de Defesas/Dano/Esperança agora é a ficha impressa: escudos de Evasão e Armadura lado a lado, a faixa Menor→9→Maior→17→Severo, PV e Estresse compactos com os espaços futuros tracejados, Esperança em losangos. Sem + e −; o quadradinho tem 44px de altura. | `relatos-da-mesa.md` §3 |
 | ~~K4~~ | ~~Campo de URL do servidor nos Ajustes~~ — **FECHADO.** Virou informação de conexão; trocar endereço é trabalho de quem mantém. | `relatos-da-mesa.md` §4 |
+| ~~K6~~ | ~~Refino do bloco de papel~~ — **FECHADO.** Sete arestas: alinhamento dos escudos e das fitas de Evasão/Armadura, contador "2/6" da Esperança removido, texto que estourava, Proficiência trazida para a conta do dano, traços em cartões 3×2, e **Guardar/Comprar esperando o servidor** antes de limpar o campo. | `relatos-da-mesa.md` §6 |
 | K5 | **Foto do personagem**, com recorte e zoom, guardada numa pasta do Drive da mesa. Não cabe na ficha (uma célula, 45.000 caracteres, strings aparadas em 5.000): precisa de endpoint próprio, `DriveApp`, id na ficha e recorte no navegador antes de subir. | `relatos-da-mesa.md` §5 |
 
 ## E. Invariantes que precisam sobreviver a mudanças futuras
@@ -210,6 +214,9 @@ A primeira leva de relatos de quem jogou. Detalhe em `relatos-da-mesa.md`.
 | E38 | **Todo campo de texto nasce sem corretor.** Num app de RPG quase todo campo guarda palavra inventada, e o corretor do celular troca "Ravena" por "Ravana" sem avisar. O padrão é desligado; ligar é que precisa de motivo. | `semCorretor()` + teste `nenhum campo de texto fica exposto ao corretor do celular` |
 | E39 | **As trilhas não têm + e −.** O quadradinho é o único caminho, como no papel — e por isso ele tem de continuar sendo alvo de toque de verdade (44px de altura). Voltar a encolher o quadradinho sem devolver os botões deixaria a trilha impossível de acertar. | passo e2e `as trilhas marcam pelo quadradinho, sem + e −` |
 | E40 | **O bloco de papel é da FICHA DO JOGADOR, não do encontro.** A trilha do adversário continua compacta e com a marcação de sempre: lá o Mestre mexe em vários bichos de uma vez, e o desenho da folha atrapalharia. Unificar os dois pareceria arrumação e seria regressão. | passo e2e `digitar o dano vira PV pelos limiares da ficha` (que usa `.trilha--pv`, a antiga) |
+| E41 | **Não existe contador ao lado de uma trilha.** Os losangos da Esperança, os quadrados do PV e do Estresse **são** a contagem — um "2/6" ao lado é uma segunda fonte da mesma verdade, e a segunda é a que vai discordar um dia. | passo e2e `as trilhas marcam pelo quadradinho, sem + e −` |
+| E42 | **Nada de escrever para a tela antes de o servidor confirmar** nas ações que CRIAM coisa (guardar item, comprar). O botão fica travado e o campo só limpa com a resposta na mão — o desenho otimista aqui fazia o item piscar e, na recusa, mentia. Nas trilhas o otimismo continua certo: a marca é instantânea e a fila é serializada por ficha. | passo e2e `o campo só esvazia depois que o servidor confirma` |
+| E43 | **Os seis cartões de traço têm UMA altura só, e nada cortado.** O rodapé vazio existe para isso: o selo de conjuração e o termo da Jambô só aparecem em alguns, e sem lugar reservado eles empurrariam dois cartões para fora do alinhamento. | passo e2e `os seis traços cabem no cartão, sem texto cortado` (zero elementos cortados, uma altura distinta) |
 | E37 | **O botão das Regras existe nos TRÊS cabeçalhos.** A ficha e o painel do Mestre são telas cheias e cobrem o cabeçalho do app — se o botão só morasse lá, ele sumiria justamente nas duas telas em que a dúvida de regra aparece. É um `botaoDeRegras()` só, usado nos três. | passo e2e `o índice de regras acha pelo termo do livro e abre o verbete` |
 | E36 | **Citação de página é afirmação, e afirmação se confere.** Duas rodadas acharam 10 afirmações erradas em 43 lugares — inclusive avisos que o jogador lê. Antes de citar uma página nova, rode o `conferir-citacoes.py`; e trate como suspeita toda citação que o conferidor marcar como visível ao jogador. | `tools/conferir-citacoes.py` (553 citações, 0 suspeitas visíveis) |
 | E31 | **Toda página citada num verbete é PROVADA contra o PDF.** Cada verbete carrega uma frase-âncora que tem de estar naquela página. Sem isso, o app manda o jogador para a página errada com toda a confiança do mundo — foi exatamente o que aconteceu com as três regras citadas como "p.98". | `tools/conferir-paginas.py` (0 erradas em 93) |

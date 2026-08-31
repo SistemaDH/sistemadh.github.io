@@ -131,3 +131,53 @@ sanitizador. Uma foto não cabe lá — nem perto. Então ela precisa de:
   subiu e para mais ninguém.
 
 Nada disso é difícil; é só maior que os outros quatro juntos.
+
+---
+
+## 6. O refino do bloco de papel
+
+O bloco ficou de pé na primeira tentativa, mas com sete arestas. Todas foram
+lixadas — e três delas mudaram uma decisão, não só um número.
+
+**Os escudos e os nomes.** Evasão e Armadura são um **par**, e o par só lê como
+par se as duas colunas tiverem a mesma altura e a mesma largura de rótulo. As
+notas de apoio ("Começa em 10", "Sem armadura") desalinhavam as duas por uma
+linha de texto e saíram; a fita do rótulo ganhou `min-width` para as duas
+medirem igual. A linha das defesas deixou de terminar num `1fr` — que jogava a
+trilha de armadura contra a borda direita e abria um buraco no meio — e passou
+a distribuir o espaço entre os três blocos.
+
+**O contador da Esperança saiu.** Estava escrito "2/6" ao lado dos losangos.
+No papel não existe esse número, e não existe por um motivo: **os losangos SÃO
+a contagem**. O número ao lado é uma segunda fonte da mesma verdade, e duas
+fontes é uma a mais do que se precisa.
+
+**Proficiência saiu da seção própria.** Ela tinha um bloco inteiro para dizer um
+número. Mas Proficiência não é um recurso da ficha: é **quantos dados de dano a
+arma rola** — ela pertence à conta do dano. Virou uma linha logo abaixo dos
+limiares, onde a pessoa já está olhando quando o assunto é dano.
+
+**O tamanho do texto.** "CONHECIMENTO" não cabia na fita do traço. A saída não
+foi encolher a fonte até sumir: o círculo do valor **saiu do fluxo da fita** e
+passou a flutuar sobre ela, devolvendo a largura inteira para o nome. Isso agora
+é passo de e2e — ele conta os elementos cortados (tem de dar zero) e confere que
+os seis cartões têm **uma** altura só.
+
+**Os traços viraram cartões de ficha**, numa grade 3×2 como na imagem, com a
+fita do nome, o círculo do modificador, o escudo com os três verbos dentro e um
+**rodapé reservado**. O rodapé existe vazio de propósito: sem ele, os dois
+cartões que têm o selo de conjuração ou o termo da Jambô ficavam mais altos que
+os outros quatro.
+
+**Adicionar agora espera o servidor.** Era o pedido mais importante dos sete,
+porque é o único que não é desenho. Ao tocar em "Guardar" ou "Comprar", o botão
+vira "Guardando…", fica travado, e o campo **só se esvazia depois que o servidor
+confirma**. Antes, a tela mostrava o item na hora e a resposta da fila
+sobrescrevia por cima — no melhor caso o item piscava, no pior a pessoa via um
+item que não tinha sido gravado. O e2e checa exatamente isso: o campo continua
+preenchido até a gravação terminar.
+
+⚠ **Ponto de interesse:** o mesmo padrão otimista ainda vale para as trilhas
+(PV, Estresse, Esperança, Armadura) — e ali ele está **certo**, porque a marca é
+instantânea e a fila é serializada por ficha. Se algum dia uma trilha passar a
+depender de conta do servidor, este é o lugar para revisitar.

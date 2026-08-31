@@ -280,6 +280,24 @@ try {
     await pagina.waitForSelector('.chip--condicao', { state: 'detached', timeout: 15000 });
   });
 
+  await passo('os seis traços cabem no cartão, sem texto cortado', async () => {
+    // "CONHECIMENTO" é o nome mais longo e é ele quem manda no tamanho da
+    // fita. Texto cortado com reticências passa despercebido numa revisão e
+    // aparece na mesa — então quem confere é o teste.
+    const cortados = await pagina.evaluate(() =>
+      Array.from(document.querySelectorAll('.traco__nome, .traco__verbos li'))
+        .filter((n) => n.scrollWidth > n.clientWidth + 1)
+        .map((n) => n.textContent));
+    igual(cortados.join(' | '), '', 'texto de traço cortado');
+
+    // E os seis cartões têm a mesma altura: selo e glosa moram num rodapé
+    // reservado justamente para a grade não esticar por causa de dois deles.
+    const alturas = await pagina.evaluate(() =>
+      [...new Set(Array.from(document.querySelectorAll('.traco'))
+        .map((n) => Math.round(n.getBoundingClientRect().height)))]);
+    igual(alturas.length, 1, `alturas diferentes entre os traços: ${alturas.join(', ')}`);
+  });
+
   await passo('a aba Cartas manda uma carta para o cofre e traz de volta', async () => {
     await pagina.getByRole('tab', { name: 'Cartas' }).click();
     await pagina.waitForSelector('.ficha__carta');
@@ -336,6 +354,11 @@ try {
     await esperarGravar(antes);
     const achou = await pagina.locator('.ficha__item', { hasText: 'Um mapa rasgado do porto' }).count();
     igual(achou, 1, 'o item novo não apareceu na mochila');
+
+    // O campo só esvazia DEPOIS do servidor confirmar. Se limpasse antes e a
+    // gravação falhasse, o que a pessoa escreveu sumia sem volta.
+    igual(await pagina.inputValue('.ficha__novoItem .campo__entrada'), '',
+      'o campo devia estar limpo depois de gravar');
 
     // 1 punhado + 9 = 1 bolsa: quem faz a conta é o servidor.
     for (let i = 0; i < 9; i++) {
@@ -584,8 +607,10 @@ try {
   });
 
   await passo('a Proficiência e os limiares subiram na ficha', async () => {
-    const caixas = await pagina.locator('.ficha__caixinha').allTextContents();
-    const prof = caixas.find((t) => /Proficiência/.test(t));
+    // A Proficiência saiu da grade de caixinhas e foi para dentro do bloco de
+    // papel, logo abaixo dos limiares — que é onde ela pertence: é quantos
+    // dados de dano a arma rola.
+    const prof = await pagina.locator('.papel__proficiencia').textContent();
     if (!/2/.test(prof)) throw new Error(`Proficiência na ficha: "${prof}"`);
   });
 

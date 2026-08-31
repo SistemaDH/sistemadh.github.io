@@ -21,14 +21,14 @@
  * da criação de ficha.
  */
 
-import { el, limpar, dataRelativa, semCorretor } from '../util.js';
+import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js';
 import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js';
 import { acoes, obterEstado } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
 import { aguardar, temPendente } from '../fila.js';
 import * as dados from '../dados.js';
 import { nomeQueAbreCarta, daCartaDeDominio } from '../componentes/carta.js';
-import { prepararGlossario, nomeComGlossa } from '../glossario.js';
+import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js';
 import { textoAnotado, nomeAnotado, abrirVerbete, prepararVerbetes } from '../verbete.js';
 import { botaoDeRegras } from './regras.js';
 import { abrirDescanso } from './descanso.js';
@@ -126,6 +126,30 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * ficha em vez de tentar adivinhar — assim a tela nunca fica mostrando um
    * número que não está gravado.
    */
+  /**
+   * ACRESCENTAR alguma coisa: espera o servidor antes de mexer na tela.
+   *
+   * A diferença para o `enviar` cru é de confiança, e veio da mesa. Marcar um
+   * PV pinta na hora porque é reversível e instantâneo — mas ACRESCENTAR um
+   * item limpava o campo antes de o servidor confirmar: se a gravação falhasse,
+   * o texto digitado sumia e não voltava mais. E, mesmo dando certo, o item
+   * aparecia do nada um segundo depois, sem nada indicando que estava indo.
+   *
+   * Aqui o botão fica ocupado enquanto a fila trabalha, e a limpeza só
+   * acontece DEPOIS do "deu certo". Falhou? O que a pessoa escreveu continua lá.
+   */
+  async function acrescentar(botao, ajustes, aoDarCerto) {
+    const rotulo = botao.textContent;
+    botao.textContent = 'Guardando…';
+    try {
+      const r = await travarBotao(botao, enviar(ajustes));
+      if (r && typeof aoDarCerto === 'function') aoDarCerto(r);
+      return r;
+    } finally {
+      botao.textContent = rotulo;
+    }
+  }
+
   async function enviar(ajustes) {
     try {
       const r = await acoes.ajustarFicha(id, ajustes);
@@ -245,6 +269,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       faixa('Dano e Vida'),
       el('p', { class: 'papel__nota', texto: 'Some seu nível atual aos limiares de dano.' }),
       faixaDeLimiares(d),
+      linhaDeProficiencia(r),
       trilhaDePapel({
         chave: 'pontosDeVidaMarcados', rotulo: 'PV', nomeCompleto: 'Pontos de Vida',
         classe: 'pv', marcados: r.pontosDeVidaMarcados || 0, total: r.pontosDeVidaMaximos || 0
@@ -258,6 +283,43 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         'Gaste 1 Esperança para usar uma Experiência ou ajudar um aliado.' }),
       trilhaDeEsperanca(r)
     ]);
+  }
+
+  /**
+   * A Proficiência mora AQUI, e não numa seção só dela.
+   *
+   * Sozinha numa caixa própria ela ficava perdida e ocupava uma tela inteira
+   * para dizer um número. E o lugar dela é este: ela é quantos dados de dano a
+   * arma rola — pertence à conta do dano, logo abaixo dos limiares.
+   */
+  function linhaDeProficiencia(r) {
+    return el('p', { class: 'papel__proficiencia' }, [
+      el('span', {}, nomeAnotado('Proficiência', { comGlossa: false })),
+      el('strong', { class: 'papel__proficienciaValor', texto: String(r.proficiencia ?? '—') }),
+      el('span', { class: 'papel__proficienciaNota', texto: 'dados de dano por ataque com arma' })
+    ]);
+  }
+
+  /**
+   * O escudo do traço: ombros retos, base em ponta — o contorno da ficha
+   * impressa. Mesmo motivo do escudo de Evasão: isto não sai de border-radius.
+   */
+  /** O termo da Jambô do traço, quando ele diverge — "Finesse" → "Acuidade". */
+  function jamboDoTraco(nome) {
+    const outro = jamboDe(nome);
+    return outro ? el('span', { class: 'traco__jambo', texto: outro }) : null;
+  }
+
+  function escudoDeTraco() {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 100 84');
+    svg.setAttribute('preserveAspectRatio', 'none');
+    svg.setAttribute('class', 'traco__forma');
+    svg.setAttribute('aria-hidden', 'true');
+    const caminho = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    caminho.setAttribute('d', 'M3 3 H97 V54 L50 81 L3 54 Z');
+    svg.append(caminho);
+    return svg;
   }
 
   /** A faixa de título, com as pontas chanfradas da ficha impressa. */
@@ -292,9 +354,12 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     }
 
     return el('div', { class: 'papel__defesas' }, [
-      escudo('evasao', 'Evasão', d.evasao, 'Começa em 10'),
+      // Sem notinha embaixo: ela sobrava só de um lado e empurrava aquele
+      // escudo para cima do outro. O que ela dizia ("começa em 10", "sem
+      // armadura") o verbete de cada um diz melhor.
+      escudo('evasao', 'Evasão', d.evasao),
       el('div', { class: 'papel__divisor' }),
-      escudo('armadura', 'Armadura', total || '—', total ? null : 'Sem armadura'),
+      escudo('armadura', 'Armadura', total || '—'),
       slots
     ]);
   }
@@ -307,7 +372,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * um ovo. E era exatamente esse contorno que a Vanessa apontou na foto.
    * Traçado em SVG, ele fica igual e escala sem serrilhar.
    */
-  function escudo(classe, rotulo, valor, nota) {
+  function escudo(classe, rotulo, valor) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('viewBox', '0 0 60 66');
     svg.setAttribute('class', 'papel__escudoForma');
@@ -324,8 +389,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         el('strong', { class: 'papel__escudoValor',
           texto: (valor === null || valor === undefined) ? '—' : String(valor) })
       ]),
-      el('div', { class: 'papel__escudoRotulo' }, nomeAnotado(rotulo, { comGlossa: false })),
-      nota ? el('span', { class: 'papel__escudoNota', texto: nota }) : null
+      el('div', { class: 'papel__escudoRotulo' }, nomeAnotado(rotulo, { comGlossa: false }))
     ]);
   }
 
@@ -426,12 +490,6 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     // --- o bloco da ficha de papel --------------------------------------
     pai.append(blocoDePapel(ficha));
 
-    // Proficiência não está na ficha impressa deste recorte, mas é o número que
-    // manda na rolagem de dano — fica logo abaixo, sozinho.
-    pai.append(secao('Rolagem de dano', el('div', { class: 'ficha__grade' }, [
-      caixinha('Proficiência', r.proficiencia ?? '—', 'Quantos dados de dano a arma rola.')
-    ])));
-
     // --- traços ----------------------------------------------------------
     /*
      * Quem decide o traço de Conjuração é o SERVIDOR — e ele manda duas
@@ -459,23 +517,58 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       opcoesConj.map((o) => catalogo.nomeDoTraco(o.traco)).join(' e ') +
       '). O livro deixa escolher qual usar a cada jogada — toque no outro para trocar.' }) : null;
 
-    pai.append(secao('Traços', el('div', {}, [notaConj, el('div', { class: 'ficha__tracos' },
+    /*
+     * Os seis traços no formato da ficha impressa: fita escura com o nome, o
+     * número num círculo à direita, e o escudo embaixo com os três verbos que
+     * o livro dá como exemplo ("Correr, Saltar, Manobrar").
+     *
+     * Os verbos vão DENTRO do escudo, e não abaixo dele como no papel. No
+     * papel o escudo é decorativo e sobra espaço; num celular, escudo vazio é
+     * espaço roubado de quem precisa ler seis cartões numa tela.
+     */
+    pai.append(secao('Traços', el('div', {}, [notaConj, el('div', { class: 'tracos' },
       TRACOS_ORDEM.map((t) => {
         const v = ficha.tracos ? ficha.tracos[t] : null;
         const ehConjuracao = Boolean(conjuracao) && dados.chave(conjuracao) === dados.chave(t);
         const trocavel = podeTrocar && ehOpcao(t) && !ehConjuracao;
         const texto = (v === null || v === undefined) ? '—' : (v >= 0 ? `+${v}` : String(v));
+        const def = catalogo.tracoPorId ? catalogo.tracoPorId(t) : null;
+        const verbos = (def && def.verbos) ? def.verbos : [];
+
         const dentro = [
-          el('span', { class: 'ficha__tracoValor', texto }),
-          el('span', { class: 'ficha__tracoNome' }, nomeComGlossa(catalogo.nomeDoTraco(t))),
-          ehConjuracao ? el('span', { class: 'ficha__tracoSelo', texto: 'conjuração' }) : null,
-          trocavel ? el('span', { class: 'ficha__tracoSelo ficha__tracoTrocar', texto: 'usar esta' }) : null
+          /*
+           * A fita leva só o nome canônico. "Finesse (Acuidade)" não cabe numa
+           * fita de 110px — ela estourava o cartão da terceira coluna. O termo
+           * da Jambô desceu para uma linha própria embaixo, onde tem largura.
+           */
+          el('div', { class: 'traco__fita' }, [
+            el('span', { class: 'traco__nome', texto: catalogo.nomeDoTraco(t) }),
+            el('span', { class: 'traco__valor', texto })
+          ]),
+          el('div', { class: 'traco__escudo' }, [
+            escudoDeTraco(),
+            el('ul', { class: 'traco__verbos' }, verbos.map((x) => el('li', { texto: x })))
+          ]),
+          /*
+           * Um rodapé só, SEMPRE presente — mesmo vazio.
+           *
+           * Antes a glosa da Jambô e o selo de conjuração eram elementos
+           * soltos: só dois dos seis cartões tinham, e a grade esticava a
+           * linha inteira por causa deles. Reservando a faixa, os seis ficam
+           * do mesmo tamanho.
+           */
+          el('div', { class: 'traco__rodape' }, [
+            ehConjuracao ? el('span', { class: 'traco__selo', texto: 'conjuração' }) : null,
+            trocavel ? el('span', { class: 'traco__selo traco__selo--trocar', texto: 'usar esta' }) : null,
+            (!ehConjuracao && !trocavel) ? jamboDoTraco(catalogo.nomeDoTraco(t)) : null
+          ])
         ];
+
         if (!trocavel) {
-          return el('div', { class: `ficha__traco ${ehConjuracao ? 'e-conjuracao' : ''}` }, dentro);
+          return el('div', { class: `traco ${ehConjuracao ? 'e-conjuracao' : ''}` }, dentro);
         }
         return el('button', {
-          type: 'button', class: 'ficha__traco e-trocavel',
+          type: 'button', class: 'traco e-trocavel',
           'aria-label': `Passar a conjurar com ${catalogo.nomeDoTraco(t)}`,
           onClick: () => trocarConjuracao(t)
         }, dentro);
@@ -640,10 +733,8 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         }
       }));
     }
-    return el('div', { class: 'papel__esperanca' }, [
-      pista,
-      el('span', { class: 'papel__trilhaConta', texto: `${atual}/${max}` })
-    ]);
+    // Sem contador: os losangos SÃO a contagem, como no papel.
+    return el('div', { class: 'papel__esperanca' }, [pista]);
   }
 
   /* --- condições ---------------------------------------------------------- */
@@ -1093,12 +1184,15 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       type: 'text', class: 'campo__entrada', maxlength: 120,
       placeholder: 'O que entrou na mochila?'
     }));
+    const botaoGuardar = el('button', { type: 'button', class: 'btn btn--fantasma' }, 'Guardar');
     const adicionar = () => {
       const texto = campoNovo.value.trim();
       if (!texto) return;
-      campoNovo.value = '';
-      enviar([{ tipo: 'inventario', acao: 'adicionar', item: texto }]);
+      // O campo só é limpo quando o servidor confirma — ver `acrescentar`.
+      acrescentar(botaoGuardar, [{ tipo: 'inventario', acao: 'adicionar', item: texto }],
+        () => { campoNovo.value = ''; });
     };
+    botaoGuardar.addEventListener('click', adicionar);
     campoNovo.addEventListener('keydown', (ev) => {
       if (ev.key === 'Enter') { ev.preventDefault(); adicionar(); }
     });
@@ -1147,30 +1241,31 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           'no total, contando bolsas e baús.' })
       ]);
 
+      const botaoComprar = el('button', { type: 'button', class: 'btn btn--principal' }, 'Comprar');
+      botaoComprar.addEventListener('click', () => {
+        const item = campoItem.value.trim();
+        if (!item) { avisarErro('Escreva o que está sendo comprado.'); return; }
+        const preco = {};
+        Object.keys(campos).forEach((k) => {
+          preco[k] = Math.max(0, Math.trunc(Number(campos[k].value)) || 0);
+        });
+        if (!(preco.punhados + preco.bolsas + preco.cofres)) {
+          avisarErro('Diga quanto custou. Se foi de graça, use "Guardar".');
+          return;
+        }
+        // O modal só fecha depois que o servidor confirmou a compra: fechar
+        // antes deixaria a pessoa achando que pagou quando a gravação falhou.
+        acrescentar(botaoComprar, [{ tipo: 'compra', item, preco }], (r) => {
+          if (!(r.mudancas || []).some((m) => m.tipo === 'compra')) return;
+          campoNovo.value = '';
+          modal.fechar();
+        });
+      });
+
       const modal = abrirModal({
         titulo: 'Comprar',
         conteudo: corpo,
-        acoes: [el('button', {
-          type: 'button', class: 'btn btn--principal',
-          onClick: async () => {
-            const item = campoItem.value.trim();
-            if (!item) { avisarErro('Escreva o que está sendo comprado.'); return; }
-            const preco = {};
-            Object.keys(campos).forEach((k) => {
-              preco[k] = Math.max(0, Math.trunc(Number(campos[k].value)) || 0);
-            });
-            if (!(preco.punhados + preco.bolsas + preco.cofres)) {
-              avisarErro('Diga quanto custou. Se foi de graça, use "Guardar".');
-              return;
-            }
-            const r = await enviar([{ tipo: 'compra', item, preco }]);
-            if (!r) return;
-            const deu = (r.mudancas || []).some((m) => m.tipo === 'compra');
-            if (!deu) return;
-            campoNovo.value = '';
-            modal.fechar();
-          }
-        }, 'Comprar')]
+        acoes: [botaoComprar]
       });
       campoItem.focus();
     };
@@ -1194,7 +1289,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           : el('p', { class: 'texto-sm texto-fraco', texto: 'A mochila está vazia.' }),
         el('div', { class: 'ficha__novoItem' }, [
           campoNovo,
-          el('button', { type: 'button', class: 'btn btn--fantasma', onClick: adicionar }, 'Guardar'),
+          botaoGuardar,
           el('button', {
             type: 'button', class: 'btn btn--fantasma ficha__comprar', onClick: abrirCompra
           }, 'Comprar')
@@ -1483,6 +1578,9 @@ export async function carregarCatalogo() {
       const t = (tr.tracos || []).find((x) => x.id === id);
       return t ? t.nome : id;
     },
+
+    /** A ficha do traço inteira — é dela que saem os três verbos de exemplo. */
+    tracoPorId: (id) => (tr.tracos || []).find((x) => x.id === id) || null,
 
     /**
      * O traço de conjuração vem da SUBCLASSE — igual ao backend

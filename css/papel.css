@@ -71,11 +71,19 @@
 
 /* --- Evasão · Armadura ---------------------------------------------------- */
 
+/*
+ * Escudo | divisor | escudo | gotas, distribuídos na linha.
+ *
+ * Com a última coluna em 1fr, as gotas iam para a borda direita e abriam um
+ * vão no meio da linha — os dois escudos ficavam amontoados à esquerda. Com
+ * space-between, os quatro blocos repartem a sobra por igual.
+ */
 .papel__defesas {
   display: grid;
-  grid-template-columns: auto auto auto 1fr;
+  grid-template-columns: auto auto auto auto;
+  justify-content: space-between;
   align-items: center;
-  gap: var(--e3);
+  gap: var(--e2);
 }
 
 .papel__divisor {
@@ -123,8 +131,13 @@
   color: var(--cor-texto);
 }
 
-/* O rótulo em fita escura, como o impresso. */
+/*
+ * O rótulo em fita escura, como o impresso. Largura mínima igual nos dois para
+ * "Evasão" e "Armadura" lerem como um par, e não como duas etiquetas soltas.
+ */
 .papel__escudoRotulo {
+  min-width: 84px;
+  text-align: center;
   padding: 2px var(--e2);
   border-radius: var(--raio-sm);
   background: var(--cor-fundo);
@@ -145,7 +158,7 @@
   display: grid;
   grid-template-columns: repeat(4, 26px);
   gap: 5px;
-  justify-content: end;
+  justify-content: center;
 }
 
 /* A gota da ficha impressa. Pequena: são doze, e ficam ao lado do escudo. */
@@ -369,4 +382,186 @@
   .papel__escudo { width: 52px; height: 58px; }
   .papel__armaduraSlots { grid-template-columns: repeat(4, 22px); }
   .papel__slot { width: 22px; height: 22px; }
+}
+
+/* ==========================================================================
+   OS TRAÇOS, no formato da ficha impressa.
+
+   Fita escura com o nome, o número num círculo à direita, escudo embaixo. A
+   diferença para o papel é que os três verbos moram DENTRO do escudo: no papel
+   ele é decorativo e há espaço de sobra; num celular, escudo vazio é espaço
+   roubado de quem precisa ler seis cartões numa tela só.
+   ========================================================================== */
+
+.tracos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--e2);
+}
+
+.traco {
+  position: relative;
+  min-width: 0;              /* deixa o cartão encolher em vez de estourar */
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+}
+
+/* --- a fita do nome ------------------------------------------------------- */
+
+/*
+ * O círculo do número saiu do fluxo da fita.
+ *
+ * Disputando a linha com o nome, ele deixava ~74px para "CONHECIMENTO" e o
+ * nome virava "CONHECIM…". Solto no canto — como na ficha impressa, onde ele
+ * pousa na ponta da fita —, o nome fica com a fita inteira.
+ */
+.traco__fita {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 3px 6px;
+  border-radius: var(--raio-sm) var(--raio-sm) 0 0;
+  background: var(--cor-fundo);
+  border: 2px solid var(--cor-borda-forte);
+  border-bottom: 0;
+  /* espaço para o círculo, que pousa por cima do canto */
+  padding-right: 18px;
+}
+
+.traco__nome {
+  flex: 1 1 auto;
+  min-width: 0;
+  /* "CONHECIMENTO" é o nome mais longo e é ele quem manda no tamanho: a fita
+     tem ~110px e o círculo come um pedaço da direita. */
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+  /* nome longo ("Conhecimento") encolhe em vez de estourar a fita */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+/* O círculo do papel, onde se escreve o modificador. */
+.traco__valor {
+  position: absolute;
+  right: -2px;
+  top: -6px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--cor-superficie-alta);
+  border: 2px solid var(--cor-borda-forte);
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-sm);
+  font-weight: 700;
+  color: var(--cor-ouro-claro);
+}
+
+/* --- o escudo com os verbos ----------------------------------------------- */
+
+.traco__escudo {
+  position: relative;
+  min-height: 74px;
+  padding: var(--e2) 4px var(--e4);
+}
+
+.traco__forma {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: var(--cor-fundo-2);
+  stroke: var(--cor-borda-forte);
+  stroke-width: 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.traco__verbos {
+  position: relative;      /* acima do SVG */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 10px;
+  line-height: 1.25;
+  color: var(--cor-texto-suave);
+}
+
+/* --- estados -------------------------------------------------------------- */
+
+.traco.e-conjuracao .traco__forma { stroke: var(--cor-ouro); }
+.traco.e-conjuracao .traco__fita { border-color: var(--cor-ouro-escuro); }
+
+.traco.e-trocavel { cursor: pointer; }
+.traco.e-trocavel .traco__forma { stroke-dasharray: 5 4; }
+.traco.e-trocavel:hover .traco__forma { stroke: var(--cor-ouro-escuro); }
+
+/* Faixa fixa: sem ela, o cartão com selo esticava a linha inteira da grade. */
+.traco__rodape {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 14px;
+  margin-top: 2px;
+}
+
+.traco__selo {
+  font-size: 9px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--cor-ouro);
+}
+
+.traco__selo--trocar { color: var(--cor-texto-fraco); }
+
+/* O termo da Jambô, embaixo, onde há largura para ele. */
+.traco__jambo {
+  font-family: var(--fonte-mono);
+  font-size: 9px;
+  color: var(--cor-texto-fraco);
+}
+
+.traco__jambo::before { content: '('; }
+.traco__jambo::after { content: ')'; }
+
+/* --- Proficiência, dentro do bloco ---------------------------------------- */
+
+.papel__proficiencia {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--e2);
+  margin: 0;
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-suave);
+}
+
+.papel__proficienciaValor {
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-md);
+  color: var(--cor-ouro-claro);
+}
+
+.papel__proficienciaNota { color: var(--cor-texto-fraco); }
+
+@media (max-width: 360px) {
+  .traco__nome { font-size: 8px; }
+  .traco__valor { width: 22px; height: 22px; font-size: var(--txt-xs); }
+  .traco__verbos { font-size: 9px; }
 }

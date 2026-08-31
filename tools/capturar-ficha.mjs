@@ -149,7 +149,7 @@ await p.locator('.modal__caixa .cartao--clicavel').first().click();
 await p.waitForSelector('.chip--condicao', { timeout: 20000 });
 
 // O miolo da aba Jogo: defesas, traços, condições e equipamento.
-await p.locator('.ficha__tracos').scrollIntoViewIfNeeded();
+await p.locator('.tracos').scrollIntoViewIfNeeded();
 await foto('f2b-jogo-meio');
 await p.locator('.ficha__equip').first().scrollIntoViewIfNeeded();
 await foto('f2c-jogo-equipamento');
@@ -310,11 +310,11 @@ await foto('f18-avanco-previa-fim');
   await p.locator('.ficha-cartao__abrir').filter({ hasText: 'multiclasse' }).click();
   await p.waitForSelector('.ficha__rodape', { timeout: 20000 });
   // Os DOIS traços de Conjuração, com o outro clicável (C6).
-  await p.locator('.ficha__tracos').scrollIntoViewIfNeeded();
+  await p.locator('.tracos').scrollIntoViewIfNeeded();
   await foto('f20-multiclasse-conjuracao');
-  await p.locator('.ficha__traco.e-trocavel').first().click();
+  await p.locator('.traco.e-trocavel').first().click();
   await p.waitForTimeout(1200);
-  await p.locator('.ficha__tracos').scrollIntoViewIfNeeded();
+  await p.locator('.tracos').scrollIntoViewIfNeeded();
   await foto('f21-conjuracao-trocada');
 
   await p.locator('.ficha__corpo').evaluate((e) => { e.scrollTop = e.scrollHeight; });

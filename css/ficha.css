@@ -331,68 +331,6 @@
    Traços
    ========================================================================== */
 
-.ficha__tracos {
-  display: grid;
-  /* 84px porque "Conhecimento" e "Finesse (Acuidade)" precisam caber em três
-     colunas num celular de 390px — abaixo disso o nome vazava para fora da
-     caixa. O que garante o resto é a quebra de linha logo abaixo. */
-  grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
-  gap: var(--e2);
-}
-
-.ficha__traco {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  padding: var(--e3) var(--e2);
-  background: var(--cor-fundo-2);
-  border: 1px solid var(--cor-borda);
-  border-radius: var(--raio-sm);
-  text-align: center;
-}
-
-.ficha__traco.e-conjuracao {
-  border-color: var(--cor-ouro-escuro);
-  box-shadow: var(--brilho-ouro);
-}
-
-.ficha__tracoValor {
-  font-family: var(--fonte-titulo);
-  font-size: var(--txt-2xl);
-  color: var(--cor-texto);
-  line-height: 1;
-}
-
-.ficha__tracoNome {
-  font-size: var(--txt-xs);
-  color: var(--cor-texto-suave);
-  line-height: 1.25;
-  /* O nome com glosa ("Finesse (Acuidade)") é mais largo que a coluna: deixa
-     quebrar em vez de escorrer para fora. */
-  display: block;
-  max-width: 100%;
-  overflow-wrap: anywhere;
-}
-
-/* Dentro do quadradinho do traço a glosa desce para a linha de baixo e fica
-   miúda — ela é uma nota de rodapé, não o nome. */
-.ficha__traco .glosa {
-  display: block;
-  font-size: 10px;
-}
-
-.ficha__tracoSelo {
-  font-size: 10px;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  color: var(--cor-ouro);
-}
-
-/* ==========================================================================
-   Condições
-   ========================================================================== */
-
 .ficha__chips {
   display: flex;
   flex-wrap: wrap;
