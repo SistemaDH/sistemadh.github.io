@@ -202,6 +202,16 @@ await foto('f5c-comprar');
 await p.keyboard.press('Escape');
 await p.waitForTimeout(300);
 
+// O ÍNDICE das regras, no cabeçalho: 93 verbetes com busca (J4).
+await p.locator('.ficha__topo button[aria-label="Regras do livro"]').click();
+await p.waitForSelector('.regras__lista');
+await foto('f4d-indice-regras');
+await p.fill('.regras__busca .campo__entrada', 'fadiga');
+await p.waitForTimeout(400);
+await foto('f4e-indice-busca');
+await p.keyboard.press('Escape');
+await p.waitForTimeout(300);
+
 await p.getByRole('tab', { name: 'História' }).click();
 await foto('f6-historia');
 

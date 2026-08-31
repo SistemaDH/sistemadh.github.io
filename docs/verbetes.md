@@ -212,11 +212,44 @@ comentário e proveniência, quase todas falso alarme do heurístico (citação 
 página da *errata* em inglês, faixa de origem tipo "pp. 28-51"). Ficam para
 quando alguém mexer naquele arquivo.
 
+## 9. O índice (J4)
+
+O gatilho na palavra só funciona para a palavra que **está escrita na tela**.
+Quem quisesse conferir "dano massivo" fora de um encontro, ou "cicatrizes" fora
+de um movimento de morte, não tinha por onde chegar — a não ser caindo por
+acaso no "veja também" de outro verbete.
+
+O índice é a porta da frente: os 93, agrupados em 14 seções, com busca.
+
+**Ele mora no cabeçalho, não dentro dos Ajustes.** O plano original era uma
+seção em Ajustes; ao construir ficou claro que seria enterrar a coisa — regra
+se procura no meio da cena, e ninguém abre uma engrenagem no meio da cena.
+
+E precisou estar nos **três** cabeçalhos. A ficha e o painel do Mestre são
+telas cheias: elas cobrem o cabeçalho do app, e são exatamente as duas em que a
+dúvida aparece. É um `botaoDeRegras()` só, escrito num lugar só e usado nos
+três — e o e2e confere que ele existe dentro da ficha, justamente porque essa
+foi a parte fácil de esquecer.
+
+**A busca morde o vocabulário dos dois lados.** Procurar "fadiga" acha
+*Estresse*; "teste" acha *jogada*; "grave" acha *Limiares de Dano*. Isso não é
+enfeite — é o caso de uso real: quem está com o livro da Jambô aberto lê a
+palavra de lá, não a da carta. Também aceita o número da página: digitar "197"
+traz o Guia de Batalha.
+
+Cada linha mostra o nome, o termo do livro, o resumo e a página, alinhada à
+direita para o olho descer por ela. Tocar abre o verbete **por cima** do
+índice, e o Escape volta um de cada vez.
+
+Um detalhe de manutenção: a lista de categorias é fixa no código, para poder ter
+nome e ordem em português. Categoria nova no JSON e esquecida ali cairia num
+grupo "Outras" em vez de sumir da tela.
+
 ## 7. Pontos de interesse
 
-- **Não há tela de índice.** Um verbete que não aparece escrito em lugar nenhum
-  hoje só é alcançável pelo "veja também" de outro. Vale uma seção "Regras" em
-  Ajustes, com busca, quando fizer falta.
+- ~~**Não há tela de índice.**~~ — **feito (J4)**, §9: 93 verbetes agrupados,
+  com busca que aceita o termo da carta, o do livro e o número da página,
+  alcançável dos três cabeçalhos.
 - **`conferir-paginas.py` precisa do PDF**, que não mora no repositório. É
   ferramenta de bancada, como o `conferir-com-srd.py` — roda aqui, não no CI.
 - ~~**O ouro chama de "cofre" o que o livro chama de "baú"**~~ — **resolvido.**

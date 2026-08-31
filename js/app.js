@@ -13,6 +13,7 @@ import { mensagemDoErro } from './api.js';
 import { telaAbertura } from './telas/abertura.js';
 import { telaRoster } from './telas/roster.js';
 import { abrirAjustes } from './telas/ajustes.js';
+import { botaoDeRegras } from './telas/regras.js';
 
 const raiz = document.getElementById('app');
 
@@ -34,6 +35,14 @@ function moldura(conteudo) {
     el('div', { class: 'conta' }, [
       jogador ? el('span', { class: 'conta__nome', texto: jogador.nome }) : null,
       ehMestre() ? el('span', { class: 'selo selo--mestre', texto: 'Mestre' }) : null,
+      /*
+       * As REGRAS moram no cabeçalho, não dentro dos Ajustes.
+       *
+       * Regra se procura no meio da cena — e ninguém abre uma engrenagem no
+       * meio da cena. Um toque daqui, de qualquer tela, e os 93 verbetes estão
+       * abertos com busca.
+       */
+      botaoDeRegras(),
       el('button', {
         type: 'button',
         class: 'btn btn--fantasma btn--icone',

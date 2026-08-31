@@ -26,6 +26,7 @@ import { acoes } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
 import { prepararGlossario, nomeComGlossa } from '../glossario.js';
 import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js';
+import { botaoDeRegras } from './regras.js';
 import { abaBestiario } from './bestiario.js';
 
 const ABAS = [
@@ -161,6 +162,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
           `Sessão ${m.sessao.numero || '—'} · mesa no nível ${m.nivelDaMesa} · ` +
           `${painel.personagens.length} ficha${painel.personagens.length === 1 ? '' : 's'}` })
       ]),
+      botaoDeRegras(),
       el('span', { class: 'selo selo--medo', texto: `Medo ${m.medo}` })
     ]);
   }

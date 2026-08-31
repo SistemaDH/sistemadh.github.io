@@ -30,6 +30,7 @@ import * as dados from '../dados.js';
 import { nomeQueAbreCarta, daCartaDeDominio } from '../componentes/carta.js';
 import { prepararGlossario, nomeComGlossa } from '../glossario.js';
 import { textoAnotado, nomeAnotado, prepararVerbetes } from '../verbete.js';
+import { botaoDeRegras } from './regras.js';
 import { abrirDescanso } from './descanso.js';
 import { abrirAvanco, desfazerAvanco } from './avanco.js';
 import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js';
@@ -189,6 +190,9 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         el('h1', { class: 'ficha__nome', texto: ident.nome || p.nome }),
         linha ? el('p', { class: 'ficha__subtitulo' }, nomeComGlossa(linha)) : null
       ]),
+      // As REGRAS também aqui: a ficha cobre o cabeçalho do app, e é justamente
+      // com a ficha aberta que a dúvida de regra aparece.
+      botaoDeRegras(),
       el('span', { class: 'selo selo--nivel', texto: `Nível ${ident.nivel || p.nivel}` })
     ]);
   }

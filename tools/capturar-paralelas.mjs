@@ -81,7 +81,7 @@ await p.waitForSelector('.modal__caixa--paralela', { state: 'detached' });
 await p.locator('.ficha__paralela').scrollIntoViewIfNeeded();
 await foto('p4-ficha-transformada');
 
-await p.locator('.ficha__topo .btn--icone').first().click();
+await p.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
 await p.waitForSelector('.ficha-cartao__abrir');
 
 /* --- Companheiro Animal -------------------------------------------------- */

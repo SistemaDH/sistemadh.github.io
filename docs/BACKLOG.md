@@ -7,18 +7,22 @@ zerar esta lista.
 Cada item aponta para o documento que tem o detalhe. Nada aqui é bug — é
 trabalho reservado de propósito.
 
-**Última atualização:** a varredura das **553 citações de página** (J3) —
-seis afirmações erradas, 22 lugares corrigidos, detalhe em `verbetes.md` §8.
-Antes dela, a camada de **verbetes** — tocar na palavra de mecânica
-e ler a regra, com a página conferida contra o PDF do livro (grupo J). Antes
-dela, as pontas H e I — adversários personalizados (H2),
-ambientes levados para outro patamar (H3), a Forma Fantasmagórica (H4), comprar
-(I1), as cinco cartas permanentes (I2), o nível anunciado chegando sem
-relogar (I3) e o "teste" que sobrou (I4). Detalhe em `pontas-h-e-i.md`.
+**Última atualização:** o **índice das regras** (J4) — 93 verbetes com busca, no
+cabeçalho de todas as telas. Antes dele, a varredura das **553 citações de
+página** (J3): seis afirmações erradas, 22 lugares corrigidos. Detalhe em
+`verbetes.md` §8 e §9.
 
-A lista está **zerada**, tirando uma decisão de mesa que já foi tomada, três
-itens sem trabalho possível e as três pontas que os verbetes abriram (J3, J4,
-J5) — nenhuma delas bloqueia uma sessão.
+**A lista está zerada de trabalho fazível.** O que resta são duas coisas que não
+são backlog:
+
+1. **Seis itens parados numa decisão de mesa já tomada** — D2, D4, D5, D6, D7 e
+   H6 dependem, todos, de haver **rolagem de dado** no app, e a decisão foi "só
+   ficha, sem dados". Eles destravam juntos no dia em que essa decisão mudar, e
+   só nesse dia.
+2. **Dois itens sem trabalho possível** — o I5 espera uma arte que não existe, e
+   o I6 é o baralho físico.
+
+Nada disso bloqueia uma sessão.
 
 - **Grupo A** (painel do Mestre): **fechado inteiro**. O A7 virou o bestiário:
   129 adversários e 19 ambientes do livro, conferidos ficha a ficha contra o
@@ -39,13 +43,11 @@ J5) — nenhuma delas bloqueia uma sessão.
   que a ficha DELE pede, a mesa cria os adversários dela, o ambiente vai para
   outro patamar e a Forma Fantasmagórica transforma quem está em cena. Sobra o
   **H6**, que depende de rolagem.
-- **Grupo J** (nasceu dos verbetes): **J1 e J2 fecharam** — a palavra de
-  mecânica virou botão, e a auditoria de páginas que isso obrigou pegou quatro
-  citações erradas no código. Sobraram J3 (conferir as outras ~250 citações
-  `p.N`) e J4 (uma tela de índice dos verbetes). Depois disso o **J3 fechou**:
-  as 553 citações do projeto foram conferidas contra o PDF, e seis afirmações
-  erradas viraram 22 correções. O J5 também: o ouro passou a dizer "Baús", como
-  o livro. Sobra o **J4**.
+- **Grupo J** (nasceu dos verbetes): **fechado inteiro.** A palavra de mecânica
+  virou botão (J1); a auditoria que isso obrigou pegou 10 afirmações de página
+  erradas em 43 lugares (J2 e J3); os 93 verbetes ganharam índice com busca no
+  cabeçalho (J4); e o ouro passou a dizer "Baús", como o livro, devolvendo
+  "cofre" à reserva de cartas (J5).
 - **Grupo I**: **I1 a I4 fecharam.** O I1 fechou com a premissa corrigida — não
   existe tabela de preços no livro (p.104), então não havia loja a construir. O
   I5 e o I6 não têm trabalho possível: um espera arte que não existe, o outro é
@@ -159,7 +161,7 @@ contra o PDF do livro. Isso fechou um pedido da mesa e abriu duas pontas novas.
 | ~~J1~~ | ~~Tocar na palavra de mecânica e ler a regra~~ — **FECHADO.** 93 verbetes com explicação curta, quadro com os números, termo da Jambô, o que a errata mudou, e a página conferida contra o PDF. O verbete ganha da glosa na mesma palavra. | `verbetes.md` |
 | ~~J2~~ | ~~Citações de página erradas~~ — **CORRIGIDAS.** Eram 21 ocorrências de "p.98" para três regras diferentes (resistência é p.99, foco é p.100, preços é p.104) e o teto de ouro citando a p.121, que é tabela de armas. | `verbetes.md` §2 |
 | ~~J3~~ | ~~As outras citações `p.N` continuam por conferir~~ — **FECHADO.** As **553** citações do projeto passaram pelo `conferir-citacoes.py`, que recorta a frase em volta e confere as palavras contra aquela página do PDF. Seis afirmações estavam erradas, corrigidas em 22 lugares — a pior saía num aviso que o JOGADOR lê. Hoje: 0 suspeitas em texto visível. | `verbetes.md` §8 |
-| J4 | **Não há tela de índice dos verbetes.** Quem não vê a palavra escrita na tela só chega nela pelo "veja também" de outra. Uma seção "Regras" em Ajustes, com busca, resolveria. | `verbetes.md` §7 |
+| ~~J4~~ | ~~Não há tela de índice dos verbetes~~ — **FECHADO.** Os 93, em 14 grupos, com busca que aceita o termo da carta, o do livro ("fadiga" acha Estresse) e o número da página. Ficou no **cabeçalho**, não em Ajustes: regra se procura no meio da cena. E nos TRÊS cabeçalhos — a ficha e o painel cobrem o do app. | `verbetes.md` §9 |
 | ~~J5~~ | ~~"Cofre" quer dizer duas coisas no app~~ — **FECHADO.** A terceira categoria de ouro passou a se chamar **Baús** na tela, como o livro (p.104); "cofre" agora quer dizer só a reserva de cartas. A chave gravada continua `cofres` — é rótulo, não migração — e "cofre" virou alias de busca, pela E14. | `verbetes.md` §7 |
 
 ## E. Invariantes que precisam sobreviver a mudanças futuras
@@ -190,6 +192,7 @@ contra o PDF do livro. Isso fechou um pedido da mesa e abriu duas pontas novas.
 | E22 | **Foco e Medo acontecem juntos.** Não existe adversário em foco sem o Medo pago: sem Medo sobrando, a operação é recusada inteira. Mesmo princípio do E20. | teste `sem Medo sobrando, pôr em foco é recusado inteiro` |
 | E24 | **O Estresse de uma habilidade sai do PRÓPRIO adversário.** O SRD: "the Stress must come from the adversary whose feature is being activated". Duas cobras-de-vidro em cena são duas trilhas, e uma não paga pela outra. | teste `um adversário não gasta o Estresse do outro` |
 | E25 | **Custo de Estresse × dano no alvo.** No livro, o que o adversário gasta vem no imperativo ("marque N") ou depois de "pode"; o que o ALVO marca vem depois de "deve", e em dado. Trocar os dois faria o monstro se machucar sozinho. | conferência contra o negrito `**Mark a Stress**` do SRD, em `conferir-com-srd.py` |
+| E37 | **O botão das Regras existe nos TRÊS cabeçalhos.** A ficha e o painel do Mestre são telas cheias e cobrem o cabeçalho do app — se o botão só morasse lá, ele sumiria justamente nas duas telas em que a dúvida de regra aparece. É um `botaoDeRegras()` só, usado nos três. | passo e2e `o índice de regras acha pelo termo do livro e abre o verbete` |
 | E36 | **Citação de página é afirmação, e afirmação se confere.** Duas rodadas acharam 10 afirmações erradas em 43 lugares — inclusive avisos que o jogador lê. Antes de citar uma página nova, rode o `conferir-citacoes.py`; e trate como suspeita toda citação que o conferidor marcar como visível ao jogador. | `tools/conferir-citacoes.py` (553 citações, 0 suspeitas visíveis) |
 | E31 | **Toda página citada num verbete é PROVADA contra o PDF.** Cada verbete carrega uma frase-âncora que tem de estar naquela página. Sem isso, o app manda o jogador para a página errada com toda a confiança do mundo — foi exatamente o que aconteceu com as três regras citadas como "p.98". | `tools/conferir-paginas.py` (0 erradas em 93) |
 | E32 | **Nenhuma palavra aciona DOIS verbetes.** Se duas entradas disputassem a mesma palavra, qual abriria dependeria da ordem do arquivo — e a regra errada seria lida sem ninguém desconfiar. | conferência no `montar-verbetes.py` + teste `nenhuma palavra aciona DOIS verbetes` |

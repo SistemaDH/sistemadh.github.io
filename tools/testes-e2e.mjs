@@ -615,7 +615,7 @@ try {
   });
 
   await passo('fechar a ficha volta para a lista', async () => {
-    await pagina.locator('.ficha__topo .btn--icone').click();
+    await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
     await pagina.waitForSelector('.ficha', { state: 'detached', timeout: 15000 });
     await pagina.waitForSelector('.ficha-cartao__abrir');
   });
@@ -1005,7 +1005,7 @@ try {
   });
 
   await passo('fechar o painel volta para a lista', async () => {
-    await pagina.locator('.mestre__topo .btn--icone').click();
+    await pagina.locator('.mestre__topo button[aria-label="Voltar"]').click();
     await pagina.waitForSelector('.mestre', { state: 'detached', timeout: 15000 });
     await pagina.waitForSelector('.ficha-cartao__abrir');
   });
@@ -1051,7 +1051,54 @@ try {
     await pagina.waitForSelector('.ficha__rodape', { timeout: 20000 });
     await pagina.locator('.ficha__corpo').evaluate((e) => { e.scrollTop = e.scrollHeight; });
     await pagina.waitForSelector('.ficha__atrasada', { timeout: 10000 });
-    await pagina.locator('.ficha__topo .btn--icone').first().click();
+    await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+    await pagina.waitForSelector('.ficha-cartao__abrir');
+  });
+
+  await passo('o índice de regras acha pelo termo do livro e abre o verbete (fecha J4)', async () => {
+    // Neste ponto a ficha já fechou: o botão que vale é o do cabeçalho do app.
+    // Ele aparece nos TRÊS cabeçalhos (app, ficha e painel) de propósito — a
+    // ficha e o painel cobrem o do app, e é neles que a dúvida aparece.
+    await pagina.locator('.app__topo button[aria-label="Regras do livro"]').click();
+    await pagina.waitForSelector('.regras__lista', { timeout: 10000 });
+
+    const todas = await pagina.locator('.regras__item').count();
+    if (todas < 90) throw new Error(`o índice abriu com ${todas} regras, esperava ~93`);
+
+    // A busca tem de morder o termo da JAMBÔ, não só o das cartas: quem está com
+    // o livro na mão lê "fadiga", não "Estresse".
+    await pagina.fill('.regras__busca .campo__entrada', 'fadiga');
+    await pagina.waitForTimeout(400);
+    const nomes = await pagina.locator('.regras__nome').allTextContents();
+    if (!nomes.some((t) => /Estresse/.test(t))) {
+      throw new Error(`procurar "fadiga" não achou Estresse: ${nomes.join(' | ')}`);
+    }
+
+    // E pelo número da página.
+    await pagina.fill('.regras__busca .campo__entrada', '197');
+    await pagina.waitForTimeout(400);
+    const porPagina = await pagina.locator('.regras__nome').allTextContents();
+    if (!porPagina.some((t) => /Batalha/.test(t))) {
+      throw new Error(`procurar "197" não achou o Guia de Batalha: ${porPagina.join(' | ')}`);
+    }
+
+    // Tocar na linha abre o verbete POR CIMA do índice, sem fechá-lo.
+    await pagina.locator('.regras__item').first().click();
+    await pagina.waitForSelector('.verbete', { timeout: 5000 });
+    igual(await pagina.locator('.modal__caixa').count(), 2,
+      'o verbete devia empilhar sobre o índice');
+    await pagina.keyboard.press('Escape');
+    await pagina.waitForTimeout(200);
+    await pagina.keyboard.press('Escape');
+    await pagina.waitForTimeout(300);
+    igual(await pagina.locator('.modal__caixa').count(), 0);
+
+    // E o mesmo botão tem de existir DENTRO da ficha, que cobre este cabeçalho.
+    await pagina.locator('.ficha-cartao__abrir').first().click();
+    await pagina.waitForSelector('.ficha__rodape', { timeout: 20000 });
+    igual(await pagina.locator('.ficha__topo button[aria-label="Regras do livro"]').count(), 1,
+      'a ficha cobre o cabeçalho do app — precisa do botão dela');
+    await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
     await pagina.waitForSelector('.ficha-cartao__abrir');
   });
 

@@ -186,3 +186,95 @@
 }
 
 .verbete__pagina strong { color: var(--cor-ouro); }
+
+/* ==========================================================================
+   O ÍNDICE — a porta da frente dos 93 verbetes.
+   ========================================================================== */
+
+.regras {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e3);
+}
+
+/* A busca gruda no topo: rolando 93 regras, o campo continua ao alcance. */
+.regras__busca {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding-bottom: var(--e2);
+  background: var(--cor-superficie);
+}
+
+.regras__lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e5);
+}
+
+.regras__grupoTitulo {
+  margin: 0 0 var(--e2);
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-xs);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--cor-ouro);
+}
+
+.regras__grupoItens {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+}
+
+.regras__item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0 var(--e3);
+  width: 100%;
+  padding: var(--e3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: var(--cor-fundo-2);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.regras__item:hover,
+.regras__item:focus-visible {
+  border-color: var(--cor-ouro-escuro);
+  background: var(--cor-superficie);
+}
+
+.regras__nome {
+  font-weight: 600;
+  color: var(--cor-texto);
+}
+
+/* A página fica na coluna da direita, alinhada, para o olho descer por ela. */
+.regras__pagina {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-xs);
+  color: var(--cor-ouro);
+  white-space: nowrap;
+}
+
+.regras__jambo {
+  grid-column: 1 / -1;
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-fraco);
+}
+
+.regras__jambo::before { content: 'no livro: '; }
+
+.regras__resumo {
+  grid-column: 1 / -1;
+  margin-top: var(--e1);
+  font-size: var(--txt-sm);
+  color: var(--cor-texto-suave);
+}

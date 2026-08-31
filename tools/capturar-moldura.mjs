@@ -38,7 +38,7 @@ await p.waitForTimeout(1500);
 await p.locator('.cartao', { hasText: 'Moldura da campanha' }).scrollIntoViewIfNeeded();
 await foto('mo1-mestre-escolhe-a-moldura');
 
-await p.locator('.mestre__topo .btn--icone').click();
+await p.locator('.mestre__topo button[aria-label="Voltar"]').click();
 await p.waitForSelector('.mestre', { state: 'detached', timeout: 15000 });
 
 /* Uma jogadora cria ficha e vê as tabelas do Festim. */
