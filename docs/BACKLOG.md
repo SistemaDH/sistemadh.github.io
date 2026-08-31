@@ -7,9 +7,12 @@ zerar esta lista.
 Cada item aponta para o documento que tem o detalhe. Nada aqui é bug — é
 trabalho reservado de propósito.
 
-**Última atualização:** o **refino do bloco de papel** (K6) — escudos alinhados,
-o contador da Esperança fora, Proficiência dentro da conta do dano, traços em
-cartões, e Guardar/Comprar esperando o servidor. Antes dele, a primeira leva de
+**Última atualização:** o **flick ao marcar** e a segunda versão dos traços (K7)
+— a tela deixou de ser reconstruída quando o servidor concorda, e o cartão do
+traço passou a dizer só nome e número, com o resto a um toque. Antes dele, o
+**refino do bloco de papel** (K6) — escudos alinhados, o contador da Esperança
+fora, Proficiência dentro da conta do dano, traços em cartões, e Guardar/Comprar
+esperando o servidor. Antes dele, a primeira leva de
 **relatos da mesa** (grupo K) — o corretor do celular trocando nomes de
 personagem, as trilhas viradas ficha de papel e a URL fora dos Ajustes. Detalhe
 em `relatos-da-mesa.md`. Antes deles, o
@@ -18,7 +21,7 @@ cabeçalho de todas as telas. Antes dele, a varredura das **553 citações de
 página** (J3): seis afirmações erradas, 22 lugares corrigidos. Detalhe em
 `verbetes.md` §8 e §9.
 
-**Fora o K5 (a foto), a lista está zerada de trabalho fazível.** O que resta são
+**Fora o K5 (a foto) e o K8 (afinar o conferidor de citações), a lista está zerada de trabalho fazível.** O que resta são
 duas coisas que não são backlog:
 
 1. **Seis itens parados numa decisão de mesa já tomada** — D2, D4, D5, D6, D7 e
@@ -181,6 +184,8 @@ A primeira leva de relatos de quem jogou. Detalhe em `relatos-da-mesa.md`.
 | ~~K3~~ | ~~Trilhas com + e −~~ — **FECHADO, e virou o desenho inteiro.** O bloco de Defesas/Dano/Esperança agora é a ficha impressa: escudos de Evasão e Armadura lado a lado, a faixa Menor→9→Maior→17→Severo, PV e Estresse compactos com os espaços futuros tracejados, Esperança em losangos. Sem + e −; o quadradinho tem 44px de altura. | `relatos-da-mesa.md` §3 |
 | ~~K4~~ | ~~Campo de URL do servidor nos Ajustes~~ — **FECHADO.** Virou informação de conexão; trocar endereço é trabalho de quem mantém. | `relatos-da-mesa.md` §4 |
 | ~~K6~~ | ~~Refino do bloco de papel~~ — **FECHADO.** Sete arestas: alinhamento dos escudos e das fitas de Evasão/Armadura, contador "2/6" da Esperança removido, texto que estourava, Proficiência trazida para a conta do dano, traços em cartões 3×2, e **Guardar/Comprar esperando o servidor** antes de limpar o campo. | `relatos-da-mesa.md` §6 |
+| ~~K7~~ | ~~O "flick" ao marcar PV/Estresse/Armadura e os traços de novo~~ — **FECHADO.** O flick era `desenhar()` reconstruindo a aba inteira a cada resposta, mesmo quando o servidor concordava; agora só redesenha quando ele discorda. Os traços viraram nome + número dentro da moldura, com os verbos e a descrição a um toque. | `relatos-da-mesa.md` §7 e §8 |
+| K8 | **O conferidor de citações precisa saber o que é texto de tela.** Em `.js`/`.gs` ele recorta um trecho de código como se fosse a frase citada, e em `data/classes.json` trata o campo `fonte` como texto que o jogador lê. Resultado: 22 "suspeitas visíveis" que são ruído. Enquanto o número for ruído, ele não serve de alarme. | `BACKLOG.md` E36 |
 | K5 | **Foto do personagem**, com recorte e zoom, guardada numa pasta do Drive da mesa. Não cabe na ficha (uma célula, 45.000 caracteres, strings aparadas em 5.000): precisa de endpoint próprio, `DriveApp`, id na ficha e recorte no navegador antes de subir. | `relatos-da-mesa.md` §5 |
 
 ## E. Invariantes que precisam sobreviver a mudanças futuras
@@ -217,8 +222,12 @@ A primeira leva de relatos de quem jogou. Detalhe em `relatos-da-mesa.md`.
 | E41 | **Não existe contador ao lado de uma trilha.** Os losangos da Esperança, os quadrados do PV e do Estresse **são** a contagem — um "2/6" ao lado é uma segunda fonte da mesma verdade, e a segunda é a que vai discordar um dia. | passo e2e `as trilhas marcam pelo quadradinho, sem + e −` |
 | E42 | **Nada de escrever para a tela antes de o servidor confirmar** nas ações que CRIAM coisa (guardar item, comprar). O botão fica travado e o campo só limpa com a resposta na mão — o desenho otimista aqui fazia o item piscar e, na recusa, mentia. Nas trilhas o otimismo continua certo: a marca é instantânea e a fila é serializada por ficha. | passo e2e `o campo só esvazia depois que o servidor confirma` |
 | E43 | **Os seis cartões de traço têm UMA altura só, e nada cortado.** O rodapé vazio existe para isso: o selo de conjuração e o termo da Jambô só aparecem em alguns, e sem lugar reservado eles empurrariam dois cartões para fora do alinhamento. | passo e2e `os seis traços cabem no cartão, sem texto cortado` (zero elementos cortados, uma altura distinta) |
+| E44 | **A tela só é reconstruída quando o servidor DISCORDA dela.** `desenhar()` é destrutivo; rodá-lo para confirmar o que já está na tela é o "flick" que a mesa relatou. O app compara a impressão digital da ficha otimista com a resposta: igual, troca só o texto do rodapé; diferente, redesenha — e aí o redesenho é a informação (a Vulnerável que apareceu, o teto que recusou). | passo e2e `marcar não reconstrói a tela (o "flick" da mesa)`, que anota um nó da trilha e confere que ele continua no documento |
+| E45 | **Quantos marcadores estão cheios se lê da TELA, não de uma closure.** O número capturado no último desenho envelhece assim que a tela deixa de redesenhar a cada resposta — e o segundo toque no mesmo quadradinho passa a comparar com o valor de duas marcas atrás. A tela é a fonte da verdade do gesto; o servidor, a do dado. | `quantosCheios()` + passo e2e `tocar no último marcado desmarca ele` |
+| E46 | **A pintura otimista mexe no MODELO, não só nas classes do DOM.** Marcada só no DOM, a marca era desfeita por qualquer redesenho vindo de outro caminho. `espelharLocal` grava no `p.ficha` no mesmo instante — e é isso que torna a comparação do E44 possível. | `espelharLocal()` + o mesmo passo do E44 |
+| E47 | **O cartão do traço diz nome e número, e mais nada.** Verbos e descrição dentro do escudo espremiam os dois em letra de 10px e cortavam "CONHECIMENTO". O que se consulta em jogo fica no cartão; o resto abre num toque. | passos e2e `os seis traços cabem no cartão, sem texto cortado` e `tocar num traço abre os exemplos do livro` |
 | E37 | **O botão das Regras existe nos TRÊS cabeçalhos.** A ficha e o painel do Mestre são telas cheias e cobrem o cabeçalho do app — se o botão só morasse lá, ele sumiria justamente nas duas telas em que a dúvida de regra aparece. É um `botaoDeRegras()` só, usado nos três. | passo e2e `o índice de regras acha pelo termo do livro e abre o verbete` |
-| E36 | **Citação de página é afirmação, e afirmação se confere.** Duas rodadas acharam 10 afirmações erradas em 43 lugares — inclusive avisos que o jogador lê. Antes de citar uma página nova, rode o `conferir-citacoes.py`; e trate como suspeita toda citação que o conferidor marcar como visível ao jogador. | `tools/conferir-citacoes.py` (553 citações, 0 suspeitas visíveis) |
+| E36 | **Citação de página é afirmação, e afirmação se confere.** Duas rodadas acharam 10 afirmações erradas em 43 lugares — inclusive avisos que o jogador lê. Antes de citar uma página nova, rode o `conferir-citacoes.py`; e trate como suspeita toda citação que o conferidor marcar como visível ao jogador. | `tools/conferir-citacoes.py` — hoje 571 citações, com 22 marcadas como visíveis ao jogador. **São ruído conhecido do heurístico**, não afirmações erradas: em arquivo de código ele recorta um blob de JS como se fosse a frase, e em `data/classes.json` marca o campo `fonte` ("pp. 28-51") como texto de tela. Foram lidas uma a uma no J3. ⚠ O conferidor precisa aprender a ignorar esses dois casos, senão o número cresce e para de significar alguma coisa. |
 | E31 | **Toda página citada num verbete é PROVADA contra o PDF.** Cada verbete carrega uma frase-âncora que tem de estar naquela página. Sem isso, o app manda o jogador para a página errada com toda a confiança do mundo — foi exatamente o que aconteceu com as três regras citadas como "p.98". | `tools/conferir-paginas.py` (0 erradas em 93) |
 | E32 | **Nenhuma palavra aciona DOIS verbetes.** Se duas entradas disputassem a mesma palavra, qual abriria dependeria da ordem do arquivo — e a regra errada seria lida sem ninguém desconfiar. | conferência no `montar-verbetes.py` + teste `nenhuma palavra aciona DOIS verbetes` |
 | E33 | **O termo da Jambô mora no GLOSSÁRIO, não numa segunda lista.** O verbete puxa de lá; onde ele traz o seu, é porque o glossário não cobre (o "baú" do ouro). Duas listas discordariam na primeira correção feita num lado só. | teste `o termo da Jambô vem do GLOSSÁRIO, não de uma segunda lista` |

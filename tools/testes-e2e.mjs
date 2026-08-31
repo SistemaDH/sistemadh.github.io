@@ -254,6 +254,32 @@ try {
     if (await marcados('pv') !== 2) throw new Error(`ficou com ${await marcados('pv')} marcados`);
   });
 
+  await passo('marcar não reconstrói a tela (o "flick" da mesa)', async () => {
+    /*
+     * O relato foi "aparece e some". A causa era estrutural: a resposta do
+     * servidor chamava `desenhar()`, que joga fora o corpo da aba inteiro e
+     * monta de novo — mesmo quando o servidor confirma exatamente o que já
+     * estava na tela.
+     *
+     * Este passo guarda um NÓ da trilha antes do toque e confere que ele
+     * continua no documento depois da gravação. Se alguém devolver o redesenho
+     * incondicional, o nó velho fica órfão e o passo quebra.
+     */
+    await pagina.evaluate(() => {
+      window.__noDaTrilha = document.querySelector('.papel__trilha--pv .papel__caixa');
+    });
+    const antes = await versaoNaTela();
+    await pagina.locator('.papel__trilha--pv .papel__caixa').nth(3).click();
+    await esperarGravar(antes);
+    const vivo = await pagina.evaluate(() => window.__noDaTrilha.isConnected);
+    if (!vivo) throw new Error('a tela foi reconstruída depois de marcar (volta o flick)');
+    if (await marcados('pv') !== 4) throw new Error(`ficou com ${await marcados('pv')} marcados`);
+    // e desmarca de volta, para os passos seguintes acharem a ficha como estava
+    const antes2 = await versaoNaTela();
+    await pagina.locator('.papel__trilha--pv .papel__caixa').nth(1).click();
+    await esperarGravar(antes2);
+  });
+
   await passo('uma rajada de toques não vira conflito', async () => {
     // O ponto do enfileiramento: quatro toques em sequência, sem esperar.
     const antes = await versaoNaTela();
@@ -282,10 +308,10 @@ try {
 
   await passo('os seis traços cabem no cartão, sem texto cortado', async () => {
     // "CONHECIMENTO" é o nome mais longo e é ele quem manda no tamanho da
-    // fita. Texto cortado com reticências passa despercebido numa revisão e
+    // moldura. Texto cortado com reticências passa despercebido numa revisão e
     // aparece na mesa — então quem confere é o teste.
     const cortados = await pagina.evaluate(() =>
-      Array.from(document.querySelectorAll('.traco__nome, .traco__verbos li'))
+      Array.from(document.querySelectorAll('.traco__nome, .traco__valor'))
         .filter((n) => n.scrollWidth > n.clientWidth + 1)
         .map((n) => n.textContent));
     igual(cortados.join(' | '), '', 'texto de traço cortado');
@@ -296,6 +322,21 @@ try {
       [...new Set(Array.from(document.querySelectorAll('.traco'))
         .map((n) => Math.round(n.getBoundingClientRect().height)))]);
     igual(alturas.length, 1, `alturas diferentes entre os traços: ${alturas.join(', ')}`);
+  });
+
+  await passo('tocar num traço abre os exemplos do livro', async () => {
+    /*
+     * Os verbos saíram do cartão e viraram conteúdo do modal. Se algum dia
+     * alguém devolver os verbos para dentro do escudo, este passo continua
+     * passando — mas o de cima (texto cortado) quebra, que é o ponto.
+     */
+    await pagina.locator('.traco').first().click();
+    await pagina.waitForSelector('.modal__caixa');
+    const texto = await pagina.locator('.modal__caixa').last().textContent();
+    if (!/Exemplos do livro/.test(texto)) throw new Error('sem os verbos no modal do traço');
+    if (!/Correr/.test(texto)) throw new Error('sem "Correr" nos exemplos de Agilidade');
+    await pagina.locator('.modal__caixa').last().getByRole('button', { name: 'Fechar' }).click();
+    await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 5000 });
   });
 
   await passo('a aba Cartas manda uma carta para o cofre e traz de volta', async () => {

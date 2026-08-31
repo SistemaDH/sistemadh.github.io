@@ -385,12 +385,13 @@
 }
 
 /* ==========================================================================
-   OS TRAÇOS, no formato da ficha impressa.
+   OS TRAÇOS — um escudo cada, com o nome e o número dentro.
 
-   Fita escura com o nome, o número num círculo à direita, escudo embaixo. A
-   diferença para o papel é que os três verbos moram DENTRO do escudo: no papel
-   ele é decorativo e há espaço de sobra; num celular, escudo vazio é espaço
-   roubado de quem precisa ler seis cartões numa tela só.
+   A versão anterior tinha fita de nome EM CIMA do escudo e três verbos DENTRO
+   dele. Não cabia: "CONHECIMENTO" estourava a fita e os verbos enchiam o
+   escudo de letra de 10px para uma informação que ninguém consulta no meio de
+   uma cena. Ficou o que se olha em jogo — nome e modificador, um sob o outro,
+   dentro da moldura — e o resto abre num toque.
    ========================================================================== */
 
 .tracos {
@@ -410,72 +411,22 @@
   color: inherit;
   font: inherit;
   text-align: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* --- a fita do nome ------------------------------------------------------- */
+/* --- a moldura ------------------------------------------------------------ */
 
-/*
- * O círculo do número saiu do fluxo da fita.
- *
- * Disputando a linha com o nome, ele deixava ~74px para "CONHECIMENTO" e o
- * nome virava "CONHECIM…". Solto no canto — como na ficha impressa, onde ele
- * pousa na ponta da fita —, o nome fica com a fita inteira.
- */
-.traco__fita {
+.traco__moldura {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  padding: 3px 6px;
-  border-radius: var(--raio-sm) var(--raio-sm) 0 0;
-  background: var(--cor-fundo);
-  border: 2px solid var(--cor-borda-forte);
-  border-bottom: 0;
-  /* espaço para o círculo, que pousa por cima do canto */
-  padding-right: 18px;
-}
-
-.traco__nome {
-  flex: 1 1 auto;
-  min-width: 0;
-  /* "CONHECIMENTO" é o nome mais longo e é ele quem manda no tamanho: a fita
-     tem ~110px e o círculo come um pedaço da direita. */
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: -.01em;
-  text-transform: uppercase;
-  color: var(--cor-texto-suave);
-  /* nome longo ("Conhecimento") encolhe em vez de estourar a fita */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: left;
-}
-
-/* O círculo do papel, onde se escreve o modificador. */
-.traco__valor {
-  position: absolute;
-  right: -2px;
-  top: -6px;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: var(--cor-superficie-alta);
-  border: 2px solid var(--cor-borda-forte);
-  font-family: var(--fonte-mono);
-  font-size: var(--txt-sm);
-  font-weight: 700;
-  color: var(--cor-ouro-claro);
-}
-
-/* --- o escudo com os verbos ----------------------------------------------- */
-
-.traco__escudo {
-  position: relative;
-  min-height: 74px;
-  padding: var(--e2) 4px var(--e4);
+  justify-content: flex-start;
+  gap: 1px;
+  /* o escudo afunila embaixo: a ponta é decorativa e não recebe texto */
+  min-height: 68px;
+  padding: 7px 6px 16px;
 }
 
 .traco__forma {
@@ -489,27 +440,38 @@
   vector-effect: non-scaling-stroke;
 }
 
-.traco__verbos {
-  position: relative;      /* acima do SVG */
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  font-size: 10px;
-  line-height: 1.25;
+/*
+ * O nome fica na parte LARGA do escudo, com a largura inteira à disposição —
+ * é isso que faz "CONHECIMENTO" caber sem virar "CONHECIM…".
+ */
+.traco__nome {
+  position: relative;        /* acima do SVG */
+  max-width: 100%;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  text-transform: uppercase;
   color: var(--cor-texto-suave);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* O número, logo abaixo do nome, dentro da mesma moldura. */
+.traco__valor {
+  position: relative;
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-lg);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--cor-ouro-claro);
 }
 
 /* --- estados -------------------------------------------------------------- */
 
 .traco.e-conjuracao .traco__forma { stroke: var(--cor-ouro); }
-.traco.e-conjuracao .traco__fita { border-color: var(--cor-ouro-escuro); }
-
-.traco.e-trocavel { cursor: pointer; }
 .traco.e-trocavel .traco__forma { stroke-dasharray: 5 4; }
-.traco.e-trocavel:hover .traco__forma { stroke: var(--cor-ouro-escuro); }
+.traco:hover .traco__forma { stroke: var(--cor-ouro-escuro); }
 
 /* Faixa fixa: sem ela, o cartão com selo esticava a linha inteira da grade. */
 .traco__rodape {
@@ -539,6 +501,21 @@
 .traco__jambo::before { content: '('; }
 .traco__jambo::after { content: ')'; }
 
+/* --- o modal do traço ----------------------------------------------------- */
+
+.traco__resumo {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e2);
+  margin: 0;
+}
+
+.traco__resumoValor {
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-xl);
+  color: var(--cor-ouro-claro);
+}
+
 /* --- Proficiência, dentro do bloco ---------------------------------------- */
 
 .papel__proficiencia {
@@ -562,6 +539,6 @@
 
 @media (max-width: 360px) {
   .traco__nome { font-size: 8px; }
-  .traco__valor { width: 22px; height: 22px; font-size: var(--txt-xs); }
-  .traco__verbos { font-size: 9px; }
+  .traco__valor { font-size: var(--txt-md); }
+  .traco__moldura { min-height: 62px; padding: 6px 4px 14px; }
 }

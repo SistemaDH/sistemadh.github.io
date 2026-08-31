@@ -150,7 +150,42 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     }
   }
 
-  async function enviar(ajustes) {
+  /**
+   * A "impressão digital" da ficha — usada para decidir se vale redesenhar.
+   *
+   * `desenhar()` é DESTRUTIVO: joga fora o corpo da aba inteira e monta de
+   * novo. Quando o servidor confirma exatamente o que a tela já mostra, esse
+   * rebuild é trabalho jogado fora que a pessoa VÊ — foi o "flick" relatado na
+   * mesa: o quadradinho acende no toque e, meio segundo depois, a tela inteira
+   * pisca para mostrar o mesmo estado.
+   */
+  function assinatura(ficha) {
+    try { return JSON.stringify(ficha); } catch (e) { return null; }
+  }
+
+  /**
+   * Espelha o ajuste no `p.ficha` LOCAL, na hora.
+   *
+   * Sem isto, a pintura otimista vivia só nas classes do DOM: o modelo em
+   * memória continuava com o número velho, e qualquer redesenho por outro
+   * motivo desfazia a marca na cara da pessoa. Agora o modelo e a tela contam
+   * a mesma história desde o toque.
+   *
+   * Só os ajustes SEM conta do servidor entram aqui. Comprar, recordar carta,
+   * subir de nível — tudo que o servidor calcula — continua esperando resposta.
+   */
+  function espelharLocal(ajustes) {
+    const ficha = p.ficha || (p.ficha = {});
+    ajustes.forEach((a) => {
+      if (a.tipo === 'recurso') {
+        ficha.recursos = ficha.recursos || {};
+        ficha.recursos[a.chave] = a.valor;
+      }
+    });
+  }
+
+  async function enviar(ajustes, { soSeMudou = false } = {}) {
+    const esperado = soSeMudou ? assinatura(p.ficha) : null;
     try {
       const r = await acoes.ajustarFicha(id, ajustes);
       p = r.personagem;
@@ -159,7 +194,24 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         else if (m.aviso) avisar(m.aviso, 'info', 4000);
       });
       (r.avisos || []).forEach((a) => avisarErro(a));
-      desenhar();
+      /*
+       * Redesenha só quando o servidor DISCORDA da tela.
+       *
+       * Ele discorda de verdade às vezes — encher o Estresse traz a condição
+       * Vulnerável, um teto recusa o valor — e aí o redesenho é a informação.
+       * Quando ele concorda, não há nada para mostrar, e piscar seria só
+       * barulho.
+       */
+      if (soSeMudou && esperado !== null && assinatura(p.ficha) === esperado) {
+        /*
+         * Uma coisa muda mesmo quando a ficha não muda: o "Salvo agora ·
+         * versão N" do rodapé, que é a prova visível de que foi para o
+         * servidor. Ela é uma linha de texto — trocar o texto dela não pisca.
+         */
+        atualizarRodape();
+      } else {
+        desenhar();
+      }
       return r;
     } catch (e) {
       avisarErro(mensagemDoErro(e));
@@ -349,7 +401,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           ? `Ponto de Armadura ${i} de ${total}`
           : `Ponto de Armadura ${i}: você ainda não tem`,
         'aria-pressed': cheio ? 'true' : 'false',
-        onClick: (ev) => marcarAte(ev.currentTarget.parentNode, 'armaduraMarcada', i, marcados)
+        onClick: (ev) => marcarAte(ev.currentTarget.parentNode, 'armaduraMarcada', i)
       }));
     }
 
@@ -442,7 +494,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           ? `${nomeCompleto} ${i} de ${total}`
           : `${nomeCompleto} ${i}: só a partir de um nível mais alto`,
         'aria-pressed': cheio ? 'true' : 'false',
-        onClick: (ev) => marcarAte(ev.currentTarget.parentNode, chave, i, marcados)
+        onClick: (ev) => marcarAte(ev.currentTarget.parentNode, chave, i)
       }));
     }
     return el('div', { class: `papel__trilha papel__trilha--${classe}` }, [
@@ -457,10 +509,34 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * É o gesto do lápis, e é o mesmo para as três trilhas — por isso mora aqui e
    * não copiado em cada uma.
    */
-  function marcarAte(container, chave, indice, marcadosAgora) {
-    const alvo = (indice === marcadosAgora) ? indice - 1 : indice;
+  /*
+   * Os marcáveis das três trilhas. Guardado como LISTA, não como string
+   * pronta: colar '.esta-cheio' no fim de uma lista de seletores só qualifica
+   * o ÚLTIMO deles — o erro contava os 12 quadradinhos como se todos
+   * estivessem marcados.
+   */
+  const MARCAVEIS = ['.papel__caixa', '.papel__slot', '.papel__losango'];
+  const seletorMarcaveis = (sufixo = '') => MARCAVEIS.map((c) => c + sufixo).join(', ');
+
+  /**
+   * Quantos estão marcados AGORA, lido da tela.
+   *
+   * Antes esse número vinha da closure do último desenho — e, como a tela
+   * passou a não redesenhar quando o servidor concorda, ele envelhecia: o
+   * segundo toque no mesmo quadradinho comparava com o valor de duas marcas
+   * atrás e não desmarcava. A tela é a fonte da verdade do gesto; o servidor é
+   * a fonte da verdade do dado.
+   */
+  function quantosCheios(container) {
+    return container.querySelectorAll(seletorMarcaveis('.esta-cheio')).length;
+  }
+
+  function marcarAte(container, chave, indice) {
+    const alvo = (indice === quantosCheios(container)) ? indice - 1 : indice;
+    const ajuste = [{ tipo: 'recurso', chave, valor: alvo }];
     pintarNaHora(container, alvo);
-    enviar([{ tipo: 'recurso', chave, valor: alvo }]);
+    espelharLocal(ajuste);
+    enviar(ajuste, { soSeMudou: true });
   }
 
   /**
@@ -471,8 +547,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * no meio, e o índice do filho não serviria.
    */
   function pintarNaHora(container, quantos) {
-    const marcaveis = container.querySelectorAll(
-      '.papel__caixa, .papel__slot, .papel__losango');
+    const marcaveis = container.querySelectorAll(seletorMarcaveis());
     marcaveis.forEach((n, i) => {
       n.classList.toggle('esta-cheio', i < quantos);
       n.setAttribute('aria-pressed', i < quantos ? 'true' : 'false');
@@ -502,29 +577,23 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const podeTrocar = opcoesConj.length > 1;
     const ehOpcao = (t) => opcoesConj.some((o) => dados.chave(o.traco) === dados.chave(t));
 
-    const trocarConjuracao = (t) => {
-      // Pinta na hora e reconcilia com o servidor, como todo toque da ficha.
-      ficha.conjuracaoEscolhida = t;
-      ficha.tracoDeConjuracao = t;
-      desenhar();
-      // `acoes.ajustarFicha` já enfileira por personagem (estado.js), então
-      // dois toques rápidos não se atropelam.
-      enviar([{ tipo: 'conjuracao', traco: t }]);
-    };
-
     const notaConj = podeTrocar ? el('p', { class: 'texto-xs texto-fraco ficha__conjNota', texto:
       'A multiclasse te deu dois traços de Conjuração (' +
       opcoesConj.map((o) => catalogo.nomeDoTraco(o.traco)).join(' e ') +
-      '). O livro deixa escolher qual usar a cada jogada — toque no outro para trocar.' }) : null;
+      '). O livro deixa escolher qual usar a cada jogada — toque no traço para trocar.' }) : null;
 
     /*
-     * Os seis traços no formato da ficha impressa: fita escura com o nome, o
-     * número num círculo à direita, e o escudo embaixo com os três verbos que
-     * o livro dá como exemplo ("Correr, Saltar, Manobrar").
+     * Os seis traços, cada um num escudo só.
      *
-     * Os verbos vão DENTRO do escudo, e não abaixo dele como no papel. No
-     * papel o escudo é decorativo e sobra espaço; num celular, escudo vazio é
-     * espaço roubado de quem precisa ler seis cartões numa tela.
+     * A primeira versão punha uma fita com o nome EM CIMA do escudo e os três
+     * verbos DENTRO dele. Ficou apertado dos dois lados: a fita não cabia
+     * "CONHECIMENTO" e os verbos deixavam o escudo cheio de letra miúda para
+     * uma informação que ninguém lê no meio da mesa.
+     *
+     * Agora o cartão diz só as duas coisas que se consultam durante o jogo —
+     * o NOME e o NÚMERO, um embaixo do outro dentro da moldura, como no papel.
+     * Os verbos de exemplo e o texto do livro ficam a um toque: tocar no traço
+     * abre a explicação dele.
      */
     pai.append(secao('Traços', el('div', {}, [notaConj, el('div', { class: 'tracos' },
       TRACOS_ORDEM.map((t) => {
@@ -532,46 +601,31 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         const ehConjuracao = Boolean(conjuracao) && dados.chave(conjuracao) === dados.chave(t);
         const trocavel = podeTrocar && ehOpcao(t) && !ehConjuracao;
         const texto = (v === null || v === undefined) ? '—' : (v >= 0 ? `+${v}` : String(v));
-        const def = catalogo.tracoPorId ? catalogo.tracoPorId(t) : null;
-        const verbos = (def && def.verbos) ? def.verbos : [];
 
-        const dentro = [
-          /*
-           * A fita leva só o nome canônico. "Finesse (Acuidade)" não cabe numa
-           * fita de 110px — ela estourava o cartão da terceira coluna. O termo
-           * da Jambô desceu para uma linha própria embaixo, onde tem largura.
-           */
-          el('div', { class: 'traco__fita' }, [
-            el('span', { class: 'traco__nome', texto: catalogo.nomeDoTraco(t) }),
-            el('span', { class: 'traco__valor', texto })
-          ]),
-          el('div', { class: 'traco__escudo' }, [
+        return el('button', {
+          type: 'button',
+          class: `traco ${ehConjuracao ? 'e-conjuracao' : ''} ${trocavel ? 'e-trocavel' : ''}`,
+          'aria-label': `${catalogo.nomeDoTraco(t)} ${texto} — ver o que este traço faz`,
+          onClick: () => verTraco(t, { ehConjuracao, trocavel })
+        }, [
+          el('div', { class: 'traco__moldura' }, [
             escudoDeTraco(),
-            el('ul', { class: 'traco__verbos' }, verbos.map((x) => el('li', { texto: x })))
+            el('span', { class: 'traco__nome', texto: catalogo.nomeDoTraco(t) }),
+            el('strong', { class: 'traco__valor', texto })
           ]),
           /*
            * Um rodapé só, SEMPRE presente — mesmo vazio.
            *
-           * Antes a glosa da Jambô e o selo de conjuração eram elementos
-           * soltos: só dois dos seis cartões tinham, e a grade esticava a
-           * linha inteira por causa deles. Reservando a faixa, os seis ficam
-           * do mesmo tamanho.
+           * O selo de conjuração e a glosa da Jambô só existem em alguns
+           * cartões; sem faixa reservada, eles esticavam a linha inteira da
+           * grade e os seis deixavam de ter a mesma altura (E43).
            */
           el('div', { class: 'traco__rodape' }, [
             ehConjuracao ? el('span', { class: 'traco__selo', texto: 'conjuração' }) : null,
-            trocavel ? el('span', { class: 'traco__selo traco__selo--trocar', texto: 'usar esta' }) : null,
+            trocavel ? el('span', { class: 'traco__selo traco__selo--trocar', texto: 'trocável' }) : null,
             (!ehConjuracao && !trocavel) ? jamboDoTraco(catalogo.nomeDoTraco(t)) : null
           ])
-        ];
-
-        if (!trocavel) {
-          return el('div', { class: `traco ${ehConjuracao ? 'e-conjuracao' : ''}` }, dentro);
-        }
-        return el('button', {
-          type: 'button', class: 'traco e-trocavel',
-          'aria-label': `Passar a conjurar com ${catalogo.nomeDoTraco(t)}`,
-          onClick: () => trocarConjuracao(t)
-        }, dentro);
+        ]);
       })
     )])));
 
@@ -720,17 +774,9 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         class: `papel__losango ${cheio ? 'esta-cheio' : ''}`,
         'aria-label': `Esperança: ${i} de ${max}`,
         'aria-pressed': cheio ? 'true' : 'false',
-        onClick: (ev) => {
-          const alvo = (i === atual) ? i - 1 : i;
-          // Os tracinhos ficam no meio, então pintar por índice de filho não
-          // serve aqui: pinta só os losangos.
-          Array.from(ev.currentTarget.parentNode.querySelectorAll('.papel__losango'))
-            .forEach((n, k) => {
-              n.classList.toggle('esta-cheio', k < alvo);
-              n.setAttribute('aria-pressed', k < alvo ? 'true' : 'false');
-            });
-          enviar([{ tipo: 'recurso', chave: 'esperanca', valor: alvo }]);
-        }
+        // Mesmo caminho das outras duas trilhas: os tracinhos no meio não
+        // atrapalham porque `pintarNaHora` conta só os marcáveis.
+        onClick: (ev) => marcarAte(ev.currentTarget.parentNode, 'esperanca', i)
       }));
     }
     // Sem contador: os losangos SÃO a contagem, como no papel.
@@ -756,6 +802,68 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         c.temporaria ? el('span', { class: 'chip__marca', texto: 'temp' }) : null
       ]);
     }));
+  }
+
+  /**
+   * Passa a conjurar com o outro traço.
+   *
+   * Mora aqui, e não dentro da aba, porque quem oferece a troca agora é o
+   * modal do traço — e ele é da ficha inteira.
+   */
+  function trocarConjuracao(t) {
+    const ficha = p.ficha || {};
+    // Pinta na hora e reconcilia com o servidor, como todo toque da ficha.
+    ficha.conjuracaoEscolhida = t;
+    ficha.tracoDeConjuracao = t;
+    desenhar();
+    // `acoes.ajustarFicha` já enfileira por personagem (estado.js), então
+    // dois toques rápidos não se atropelam.
+    enviar([{ tipo: 'conjuracao', traco: t }], { soSeMudou: true });
+  }
+
+  /**
+   * O que o traço faz — a um toque, em vez de espremido no cartão.
+   *
+   * Aqui cabe o que não cabia lá: os verbos que o livro dá como exemplo, a
+   * descrição inteira, o termo da Jambô quando ele diverge, e — quando a
+   * multiclasse deu dois traços de Conjuração — o botão de passar a conjurar
+   * com este. A troca virou botão nomeado justamente porque, no cartão, ela
+   * era um toque que ninguém adivinhava.
+   */
+  function verTraco(t, { ehConjuracao, trocavel } = {}) {
+    const ficha = p.ficha || {};
+    const def = catalogo.tracoPorId ? catalogo.tracoPorId(t) : null;
+    const nome = catalogo.nomeDoTraco(t);
+    const v = ficha.tracos ? ficha.tracos[t] : null;
+    const texto = (v === null || v === undefined) ? '—' : (v >= 0 ? `+${v}` : String(v));
+    const verbos = (def && def.verbos) ? def.verbos : [];
+
+    const modal = abrirModal({
+      titulo: nome,
+      conteudo: el('div', { class: 'pilha' }, [
+        el('p', { class: 'traco__resumo' }, [
+          el('strong', { class: 'traco__resumoValor', texto }),
+          el('span', { class: 'texto-sm texto-fraco', texto: 'em toda jogada de ' + nome })
+        ]),
+        verbos.length ? el('p', { class: 'texto-sm' }, [
+          el('span', { class: 'texto-fraco', texto: 'Exemplos do livro: ' }),
+          el('span', { texto: verbos.join(' · ') })
+        ]) : null,
+        (def && def.descricao)
+          ? el('p', { class: 'texto-sm' }, textoAnotado(def.descricao))
+          : null,
+        ehConjuracao ? el('p', { class: 'texto-xs texto-fraco', texto:
+          'É com este traço que você faz suas jogadas de conjuração.' }) : null
+      ]),
+      acoes: [
+        el('button', { type: 'button', class: 'btn btn--fantasma',
+          onClick: () => modal.fechar() }, 'Fechar'),
+        trocavel ? el('button', {
+          type: 'button', class: 'btn btn--principal',
+          onClick: () => { modal.fechar(); trocarConjuracao(t); }
+        }, `Passar a conjurar com ${nome}`) : null
+      ].filter(Boolean)
+    });
   }
 
   function verCondicao(c, def) {
@@ -1389,10 +1497,18 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
 
   /* --- peça reaproveitada ------------------------------------------------- */
 
+  function textoDoRodape() {
+    return `Salvo ${dataRelativa(p.atualizadoEm)} · versão ${p.versao}`;
+  }
+
   function rodapeDaFicha() {
-    return el('p', {
-      class: 'ficha__rodape',
-      texto: `Salvo ${dataRelativa(p.atualizadoEm)} · versão ${p.versao}`
+    return el('p', { class: 'ficha__rodape', texto: textoDoRodape() });
+  }
+
+  /** Sem redesenhar nada: só a linha do rodapé, que é a prova de gravação. */
+  function atualizarRodape() {
+    corpo.querySelectorAll('.ficha__rodape').forEach((n) => {
+      n.textContent = textoDoRodape();
     });
   }
 }

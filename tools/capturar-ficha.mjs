@@ -312,7 +312,13 @@ await foto('f18-avanco-previa-fim');
   // Os DOIS traços de Conjuração, com o outro clicável (C6).
   await p.locator('.tracos').scrollIntoViewIfNeeded();
   await foto('f20-multiclasse-conjuracao');
+  // A troca agora mora no modal do traço: o cartão só diz nome e número, e o
+  // toque abre a explicação — onde o botão de trocar aparece com nome.
   await p.locator('.traco.e-trocavel').first().click();
+  await p.waitForSelector('.modal__caixa');
+  await foto('f21a-traco-explicado');
+  await p.locator('.modal__caixa').last()
+    .locator('button', { hasText: 'Passar a conjurar com' }).click();
   await p.waitForTimeout(1200);
   await p.locator('.tracos').scrollIntoViewIfNeeded();
   await foto('f21-conjuracao-trocada');

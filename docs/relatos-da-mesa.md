@@ -181,3 +181,68 @@ preenchido até a gravação terminar.
 (PV, Estresse, Esperança, Armadura) — e ali ele está **certo**, porque a marca é
 instantânea e a fila é serializada por ficha. Se algum dia uma trilha passar a
 depender de conta do servidor, este é o lugar para revisitar.
+
+---
+
+## 7. O "flick" ao marcar — a causa era estrutural
+
+O relato: tocar num quadradinho de PV, Estresse ou Armadura e ver a marca
+**aparecer e sumir**, com um atraso.
+
+Não era a rede, e não era animação. Era o desenho. Toda resposta do servidor
+chamava `desenhar()`, e `desenhar()` é **destrutivo**: joga fora o corpo da aba
+inteiro e monta tudo de novo. Mesmo quando o servidor confirmava exatamente o
+que já estava na tela, a pessoa via a aba inteira ser reconstruída meio segundo
+depois do toque — e o que ela lia nisso era "apareceu e sumiu".
+
+Três mudanças, e a última é a que importa:
+
+**1. O modelo em memória passa a marcar junto.** Antes, a pintura otimista
+vivia só nas classes do DOM: `p.ficha` continuava com o número velho, e
+qualquer redesenho por outro motivo desfazia a marca na cara de quem tocou.
+Agora o ajuste é espelhado no `p.ficha` no mesmo instante — modelo e tela
+contam a mesma história desde o toque.
+
+**2. Quantos estão marcados é lido da TELA, não da closure.** O número vinha
+capturado no último desenho; como a tela passou a não redesenhar sempre, ele
+envelhecia e o segundo toque no mesmo quadradinho comparava com o valor de duas
+marcas atrás. A tela é a fonte da verdade do **gesto**; o servidor é a fonte da
+verdade do **dado**.
+
+**3. Só redesenha quando o servidor DISCORDA.** Antes de enviar, o app guarda a
+impressão digital da ficha otimista; quando a resposta chega, compara. Igual:
+não redesenha nada — só troca o texto do rodapé ("Salvo agora · versão N"), que
+é a prova visível de que gravou, e trocar texto não pisca. Diferente: redesenha,
+e aí o redesenho **é a informação** — foi assim que a Vulnerável apareceu ao
+encher o Estresse, ou um teto recusou o valor.
+
+O e2e guarda isso de um jeito difícil de burlar: ele **anota um nó** da trilha
+antes do toque e confere que aquele mesmo nó continua no documento depois da
+gravação. Se alguém devolver o redesenho incondicional, o nó fica órfão e o
+passo quebra.
+
+⚠ **Ponto de interesse:** o **painel do Mestre** tem o mesmo `desenhar()`
+destrutivo em cada ajuste da cena. Lá ninguém reclamou — o Mestre mexe em
+vários adversários e o redesenho quase sempre muda mesmo alguma coisa — mas a
+receita para consertar é esta, se um dia aparecer.
+
+---
+
+## 8. Os traços, segunda tentativa
+
+A primeira versão tinha fita com o nome **em cima** do escudo e os três verbos
+**dentro** dele. Apertado dos dois lados: a fita não cabia "CONHECIMENTO", e os
+verbos enchiam o escudo de letra de 10px para uma informação que ninguém
+consulta no meio de uma cena.
+
+Agora o cartão diz só as duas coisas que se olham em jogo — **o nome e o
+número, um sob o outro, dentro da moldura**, como no papel. Sem fita, o nome tem
+a largura inteira do escudo e cabe inteiro; sem verbos, o cartão encolheu.
+
+O que saiu não sumiu: **tocar no traço abre a explicação** — os verbos que o
+livro dá como exemplo, a descrição inteira, e o termo da Jambô quando diverge.
+
+E a troca de Conjuração da multiclasse **melhorou de tabela**. Ela era um toque
+no cartão tracejado que ninguém adivinhava; agora é um botão com nome dentro do
+modal: "Passar a conjurar com Instinto". O cartão continua marcado como
+`trocável`, mas quem confirma é a pessoa, sabendo o que está confirmando.
