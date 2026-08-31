@@ -23,6 +23,31 @@ export function el(tag, props = {}, filhos = []) {
   return node;
 }
 
+/**
+ * Atributos que impedem o teclado do celular de "consertar" o que a pessoa
+ * digitou.
+ *
+ * Isto nasceu de dois relatos de mesa: alguém digitou **Ravena** e a ficha
+ * saiu **Ravana**; outro digitou **Magnus** e saiu **Magnuz**. Não era corte
+ * nem codificação — era o corretor automático trocando um nome inventado pela
+ * palavra que ele conhece, no instante em que o campo perde o foco.
+ *
+ * Num app de RPG quase todo campo de texto guarda palavra inventada: nome de
+ * personagem, de companheiro animal, de projeto, de contagem, do bicho que a
+ * Mestra criou. Por isso o padrão aqui é DESLIGAR o corretor, e não ligá-lo.
+ *
+ * `autocapitalize` fica de fora de propósito: cada campo quer o seu — nome
+ * próprio quer "words", item de mochila quer "sentences".
+ */
+export function semCorretor(extras = {}) {
+  return {
+    autocomplete: 'off',
+    autocorrect: 'off',        // iOS
+    spellcheck: 'false',       // o resto
+    ...extras
+  };
+}
+
 /** Atalho de querySelector com escopo opcional. */
 export const $ = (seletor, escopo = document) => escopo.querySelector(seletor);
 export const $$ = (seletor, escopo = document) => Array.from(escopo.querySelectorAll(seletor));

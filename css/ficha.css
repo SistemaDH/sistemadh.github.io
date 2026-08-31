@@ -35,17 +35,45 @@
   padding-top: calc(var(--e3) + env(safe-area-inset-top));
 }
 
+/*
+ * O cabeçalho ficou apertado quando o botão das Regras entrou: com voltar,
+ * nome, 📖 e o selo de nível, o nome de "Lyra Sombravento" começou a virar
+ * "Lyra Sombr…". O nome é a coisa mais importante da tela, então o espaço
+ * volta para ele — o gap encolhe e o selo perde o peso visual, que ele não
+ * precisava ter.
+ */
 .ficha__topoLinha {
   display: flex;
   align-items: center;
-  gap: var(--e3);
+  gap: var(--e2);
+}
+
+.ficha__topoLinha .selo--nivel {
+  padding: 2px var(--e2);
+  font-size: var(--txt-xs);
+  letter-spacing: 0;
+  white-space: nowrap;
 }
 
 .ficha__identidade { flex: 1 1 auto; min-width: 0; }
 
+/*
+ * O cabeçalho tem quatro coisas e 390px: voltar, nome, 📖 e o nível. O nome é a
+ * mais importante, então ele fica com o que sobra — e o que sobra aumenta
+ * encolhendo o resto, não o nome. O ícone das regras perde a moldura (é
+ * utilidade, não ação) mas guarda os 44px de alvo de toque.
+ */
+.ficha__topoLinha .btn--icone[aria-label="Regras do livro"],
+.mestre__topoLinha .btn--icone[aria-label="Regras do livro"] {
+  min-width: 44px;
+  padding: 0;
+  border-color: transparent;
+}
+
 .ficha__nome {
   font-family: var(--fonte-titulo);
-  font-size: var(--txt-xl);
+  /* Encolhe até 17px antes de cortar: nome inteiro vale mais que tamanho fixo. */
+  font-size: clamp(1.05rem, 5vw, var(--txt-xl));
   color: var(--cor-ouro-claro);
   margin: 0;
   overflow: hidden;
@@ -195,9 +223,17 @@
   gap: var(--e2);
 }
 
+/*
+ * O QUADRADINHO da ficha de papel.
+ *
+ * Cresceu de 30px para 44 de altura quando os botões + e − saíram: agora ele é
+ * o único jeito de marcar, então precisa ser alvo de toque de verdade — o
+ * mesmo piso que o resto do app respeita. Fica mais largo que alto, como as
+ * caixas impressas de PV e Estresse.
+ */
 .trilha__ponto {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 44px;
   padding: 0;
   border-radius: var(--raio-sm);
   border: 2px solid var(--cor-borda-forte);
@@ -206,10 +242,22 @@
   transition: background var(--transicao), border-color var(--transicao), transform 90ms;
 }
 
-.trilha__ponto:active { transform: scale(.9); }
+.trilha__ponto:active { transform: scale(.92); }
 
+.trilha__ponto:focus-visible {
+  outline: 2px solid var(--cor-ouro);
+  outline-offset: 2px;
+}
+
+/*
+ * A Esperança é LOSANGO na ficha de papel, não bolinha. O clip-path desenha o
+ * losango sem girar o elemento — girar estragaria o alvo de toque e brigaria
+ * com o transform do :active.
+ */
 .trilha__ponto--losango {
-  border-radius: 50%;
+  border-radius: 2px;
+  clip-path: polygon(50% 4%, 96% 50%, 50% 96%, 4% 50%);
+  width: 44px;
 }
 
 .trilha__ajuda {

@@ -15,7 +15,7 @@
  * para…", a habilidade passa a cobrar 1 Medo na cena, igual às impressas.
  */
 
-import { el, limpar } from '../util.js';
+import { el, limpar, semCorretor } from '../util.js';
 import { abrirModal, avisarErro, avisarSucesso, confirmar } from '../ui.js';
 import { acoes } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
@@ -247,7 +247,7 @@ export function abrirEditorDeAdversario({ ficha, tabela, tipos, aoSalvar } = {})
 
   function texto(chave, valor, aoMudar, desligado) {
     const e = el('input', {
-      type: 'text', class: 'campo__entrada', value: String(valor ?? ''),
+      ...semCorretor({}), type: 'text', class: 'campo__entrada', value: String(valor ?? ''),
       'data-campo': chave, disabled: desligado ? 'disabled' : null
     });
     e.addEventListener('input', () => aoMudar(e.value));

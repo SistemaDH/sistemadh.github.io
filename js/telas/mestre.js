@@ -20,7 +20,7 @@
  *  • Nada destrutivo sem prévia — o descanso do grupo mostra antes.
  */
 
-import { el, limpar, dataRelativa, travarBotao } from '../util.js';
+import { el, limpar, dataRelativa, travarBotao, semCorretor } from '../util.js';
 import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js';
 import { acoes } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
@@ -734,7 +734,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     const corpoModal = el('div', { class: 'pilha' });
 
     const nome = el('input', {
-      type: 'text', class: 'campo__entrada', maxlength: 60,
+      ...semCorretor({}), type: 'text', class: 'campo__entrada', maxlength: 60,
       placeholder: 'Ex.: A ponte racha, A invasão avança…', value: c.nome || ''
     });
     const selTipo = el('select', { class: 'campo__entrada' });
@@ -776,7 +776,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       for (let v = total; v >= 0; v--) {
         const existente = (c.etapas || []).find((e) => e.valor === v);
         const campo = el('input', {
-          type: 'text', class: 'campo__entrada', maxlength: 200,
+          ...semCorretor({}), type: 'text', class: 'campo__entrada', maxlength: 200,
           placeholder: v === 0 ? 'O que acontece no zero…' : 'O que se vê nesta etapa…',
           value: existente ? existente.texto : ''
         });

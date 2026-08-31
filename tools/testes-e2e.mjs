@@ -199,7 +199,7 @@ try {
   };
 
   /** Quantos marcadores de uma trilha estão acesos AGORA, na tela. */
-  const marcados = (classe) => pagina.locator(`.trilha--${classe} .trilha__ponto.esta-cheio`).count();
+  const marcados = (classe) => pagina.locator(`.papel__trilha--${classe} .papel__caixa.esta-cheio`).count();
 
   /**
    * A versão que o servidor devolveu, lida do rodapé da ficha.
@@ -226,16 +226,16 @@ try {
     for (const nome of ['Jogo', 'Cartas', 'Mochila', 'História']) {
       await pagina.getByRole('tab', { name: nome }).waitFor({ timeout: 5000 });
     }
-    await pagina.waitForSelector('.trilha--pv');
-    await pagina.waitForSelector('.trilha--estresse');
-    await pagina.waitForSelector('.trilha--esperanca');
+    await pagina.waitForSelector('.papel__trilha--pv');
+    await pagina.waitForSelector('.papel__trilha--estresse');
+    await pagina.waitForSelector('.papel__esperanca');
   });
 
   await passo('marcar um Ponto de Vida grava no servidor', async () => {
     if (await marcados('pv') !== 0) throw new Error('a ficha começou com PV marcado');
     const antes = await versaoNaTela();
     // Toca no 3º marcador: a trilha marca de 1 até 3 de uma vez.
-    await pagina.locator('.trilha--pv .trilha__ponto').nth(2).click();
+    await pagina.locator('.papel__trilha--pv .papel__caixa').nth(2).click();
     await esperarGravar(antes);
     if (await marcados('pv') !== 3) throw new Error(`ficou com ${await marcados('pv')} marcados`);
   });
@@ -249,7 +249,7 @@ try {
 
   await passo('tocar no último marcado desmarca ele', async () => {
     const antes = await versaoNaTela();
-    await pagina.locator('.trilha--pv .trilha__ponto').nth(2).click();
+    await pagina.locator('.papel__trilha--pv .papel__caixa').nth(2).click();
     await esperarGravar(antes);
     if (await marcados('pv') !== 2) throw new Error(`ficou com ${await marcados('pv')} marcados`);
   });
@@ -257,7 +257,7 @@ try {
   await passo('uma rajada de toques não vira conflito', async () => {
     // O ponto do enfileiramento: quatro toques em sequência, sem esperar.
     const antes = await versaoNaTela();
-    const pontos = pagina.locator('.trilha--estresse .trilha__ponto');
+    const pontos = pagina.locator('.papel__trilha--estresse .papel__caixa');
     for (const i of [0, 1, 2, 3]) await pontos.nth(i).click({ noWaitAfter: true });
     // Quatro toques = quatro gravações; a versão tem de subir quatro vezes.
     await pagina.waitForFunction((v) => {
@@ -305,7 +305,7 @@ try {
       await pagina.locator('.modal__caixa').last()
         .getByRole('button', { name: /Marcar \d+ de Estresse/ }).click();
       await pagina.waitForFunction((n) => {
-        const t = document.querySelectorAll('.trilha--estresse .trilha__ponto.esta-cheio').length;
+        const t = document.querySelectorAll('.papel__trilha--estresse .papel__caixa.esta-cheio').length;
         return t > n;
       }, antesDoCusto, { timeout: 15000 });
       const depoisDoCusto = await marcados('estresse');
@@ -363,11 +363,12 @@ try {
 
   await passo('tocar numa palavra de mecânica abre a regra com a página', async () => {
     await pagina.getByRole('tab', { name: 'Jogo' }).click();
-    await pagina.waitForSelector('.trilha');
+    await pagina.waitForSelector('.papel');
 
-    // O rótulo da trilha de PV é um gatilho de verbete.
-    const gatilho = pagina.locator('.trilha__rotulo .verbete__gatilho', {
-      hasText: 'Pontos de Vida'
+    // O rótulo da trilha é "PV", como na ficha impressa — e "PV" é uma das
+    // grafias que abrem o verbete de Pontos de Vida.
+    const gatilho = pagina.locator('.papel__trilhaRotulo .verbete__gatilho', {
+      hasText: 'PV'
     }).first();
     await gatilho.waitFor({ timeout: 10000 });
     await gatilho.click();
@@ -500,10 +501,10 @@ try {
     await pagina.waitForSelector('.modal__caixa--descanso', { state: 'detached' });
     // 2 marcados − (2 do dado + 1 do patamar) = 0.
     await pagina.waitForFunction(() =>
-      document.querySelectorAll('.trilha--pv .trilha__ponto.esta-cheio').length === 0,
+      document.querySelectorAll('.papel__trilha--pv .papel__caixa.esta-cheio').length === 0,
       null, { timeout: 15000 });
     // E a Esperança subiu 1 com o Preparar-se.
-    const esperanca = await pagina.locator('.trilha--esperanca .trilha__ponto.esta-cheio').count();
+    const esperanca = await pagina.locator('.papel__losango.esta-cheio').count();
     if (esperanca !== 3) throw new Error(`Esperança: ${esperanca}, esperava 3 (2 iniciais + 1)`);
   });
 
@@ -1051,6 +1052,43 @@ try {
     await pagina.waitForSelector('.ficha__rodape', { timeout: 20000 });
     await pagina.locator('.ficha__corpo').evaluate((e) => { e.scrollTop = e.scrollHeight; });
     await pagina.waitForSelector('.ficha__atrasada', { timeout: 10000 });
+    await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+    await pagina.waitForSelector('.ficha-cartao__abrir');
+  });
+
+  await passo('as trilhas marcam pelo quadradinho, sem + e − (ficha de papel)', async () => {
+    await pagina.locator('.ficha-cartao__abrir').first().click();
+    await pagina.waitForSelector('.papel', { timeout: 20000 });
+
+    // Nenhum + ou − sobrou no bloco: o quadradinho é o único caminho.
+    const contadores = await pagina.locator('.papel .btn--contador').count();
+    igual(contadores, 0, 'o bloco ainda tem botão de + ou −');
+
+    // E o quadradinho é alvo de toque de verdade — ele ficou sozinho.
+    const baixos = await pagina.evaluate(() =>
+      Array.from(document.querySelectorAll('.papel__caixa, .papel__losango'))
+        .filter((b) => b.offsetParent !== null)
+        .filter((b) => b.getBoundingClientRect().height < 44).length);
+    igual(baixos, 0, 'há quadradinho abaixo de 44px');
+
+    // Os espaços que o personagem ainda não tem aparecem tracejados, como no
+    // papel — e não deixam marcar.
+    const naoTem = await pagina.locator('.papel__trilha--pv .papel__caixa.nao-tem').count();
+    if (naoTem < 1) throw new Error('nenhum espaço futuro tracejado na trilha de PV');
+    igual(await pagina.locator('.papel__trilha--pv .papel__caixa[disabled]').count(), naoTem,
+      'espaço tracejado tem de vir desabilitado');
+
+    // Tocar no terceiro marca três; tocar no terceiro de novo desmarca até dois.
+    const pv = pagina.locator('.papel__trilha--pv .papel__caixa');
+    let v = await versaoNaTela();
+    await pv.nth(2).click();
+    await esperarGravar(v);
+    igual(await pagina.locator('.papel__trilha--pv .papel__caixa.esta-cheio').count(), 3);
+    v = await versaoNaTela();
+    await pagina.locator('.papel__trilha--pv .papel__caixa').nth(2).click();
+    await esperarGravar(v);
+    igual(await pagina.locator('.papel__trilha--pv .papel__caixa.esta-cheio').count(), 2);
+
     await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
     await pagina.waitForSelector('.ficha-cartao__abrir');
   });

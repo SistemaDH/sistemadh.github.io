@@ -136,9 +136,9 @@ const marcarEEsperar = async (seletor, indice) => {
 };
 
 // Machuca a personagem para as trilhas aparecerem com cor.
-await marcarEEsperar('.trilha--pv .trilha__ponto', 2);
-await marcarEEsperar('.trilha--estresse .trilha__ponto', 3);
-await marcarEEsperar('.trilha--armadura .trilha__ponto', 0);
+await marcarEEsperar('.papel__trilha--pv .papel__caixa', 2);
+await marcarEEsperar('.papel__trilha--estresse .papel__caixa', 3);
+await marcarEEsperar('.papel__armaduraSlots .papel__slot', 0);
 await foto('f1-jogo-topo');
 
 // Uma condição marcada, para o chip aparecer.
@@ -165,8 +165,8 @@ await foto('f4-cartas');
 // O VERBETE: tocar na palavra de mecânica e ler a regra com a página.
 // As trilhas moram na aba Jogo, então volta para lá antes.
 await p.getByRole('tab', { name: 'Jogo' }).click();
-await p.waitForSelector('.trilha');
-await p.locator('.trilha__rotulo .verbete__gatilho').first().click();
+await p.waitForSelector('.papel');
+await p.locator('.papel__trilhaRotulo .verbete__gatilho').first().click();
 await p.waitForSelector('.verbete');
 await foto('f4b-verbete-pv');
 {

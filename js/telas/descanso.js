@@ -16,7 +16,7 @@
  * discordar.
  */
 
-import { el, limpar, travarBotao } from '../util.js';
+import { el, limpar, travarBotao, semCorretor } from '../util.js';
 import { abrirModal, avisarErro, avisarSucesso } from '../ui.js';
 import { acoes } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
@@ -188,8 +188,8 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
 
     const pedeProjeto = (m.perguntas || []).some((q) => q.chave === 'projeto');
     const projeto = pedeProjeto
-      ? el('input', { type: 'text', class: 'campo__entrada', maxlength: 200,
-          placeholder: 'Em que projeto você trabalhou?' })
+      ? el('input', semCorretor({ type: 'text', class: 'campo__entrada', maxlength: 200,
+          placeholder: 'Em que projeto você trabalhou?' }))
       : null;
 
     // Se o Mestre já criou uma contagem de projeto para este personagem, o

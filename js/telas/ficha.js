@@ -21,7 +21,7 @@
  * da criação de ficha.
  */
 
-import { el, limpar, dataRelativa } from '../util.js';
+import { el, limpar, dataRelativa, semCorretor } from '../util.js';
 import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js';
 import { acoes, obterEstado } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
@@ -29,11 +29,20 @@ import { aguardar, temPendente } from '../fila.js';
 import * as dados from '../dados.js';
 import { nomeQueAbreCarta, daCartaDeDominio } from '../componentes/carta.js';
 import { prepararGlossario, nomeComGlossa } from '../glossario.js';
-import { textoAnotado, nomeAnotado, prepararVerbetes } from '../verbete.js';
+import { textoAnotado, nomeAnotado, abrirVerbete, prepararVerbetes } from '../verbete.js';
 import { botaoDeRegras } from './regras.js';
 import { abrirDescanso } from './descanso.js';
 import { abrirAvanco, desfazerAvanco } from './avanco.js';
 import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js';
+
+/**
+ * Teto do livro para PV, Estresse e Armadura (errata de 9/9/2025).
+ *
+ * Mora no escopo do MÓDULO de propósito: a ficha desenha antes de o corpo da
+ * função chegar numa declaração interna, e um `const` em zona morta estoura na
+ * primeira pintura.
+ */
+const TETO_TRILHA = 12;
 
 const TRACOS_ORDEM = ['agilidade', 'forca', 'finesse', 'instinto', 'presenca', 'conhecimento'];
 
@@ -186,18 +195,225 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         type: 'button', class: 'btn btn--fantasma btn--icone',
         'aria-label': 'Voltar para a lista', onClick: fechar
       }, '‹'),
+      /*
+       * O 📖 desceu para a linha do subtítulo.
+       *
+       * Na linha do nome ele disputava espaço com o próprio nome — "Lyra
+       * Sombravento" virava "Lyra Sombr…". O nome é a coisa mais importante do
+       * cabeçalho; o atalho das regras é utilidade. Utilidade cede.
+       */
       el('div', { class: 'ficha__identidade' }, [
         el('h1', { class: 'ficha__nome', texto: ident.nome || p.nome }),
         linha ? el('p', { class: 'ficha__subtitulo' }, nomeComGlossa(linha)) : null
       ]),
-      // As REGRAS também aqui: a ficha cobre o cabeçalho do app, e é justamente
-      // com a ficha aberta que a dúvida de regra aparece.
       botaoDeRegras(),
       el('span', { class: 'selo selo--nivel', texto: `Nível ${ident.nivel || p.nivel}` })
     ]);
   }
 
   desenhar();
+
+  /* ======================================================================== *
+   *  O BLOCO DA FICHA DE PAPEL
+   *
+   *  A Vanessa mandou a foto da ficha impressa e perguntou se dava para ser
+   *  assim. Dá — e o desenho dela resolve coisas que a nossa lista de trilhas
+   *  empilhadas não resolvia:
+   *
+   *    • Evasão e Armadura ficam LADO A LADO, como dois escudos, porque são as
+   *      duas coisas que respondem à mesma pergunta ("o golpe me acerta, e
+   *      quanto dói?").
+   *    • Os limiares deixam de ser dois números soltos numa grade e viram a
+   *      FAIXA: Menor → 9 → Maior → 17 → Severo, com o que cada faixa custa
+   *      escrito embaixo. É a conta inteira numa olhada.
+   *    • As trilhas ficam compactas e na horizontal, com os espaços que o
+   *      personagem ainda NÃO tem desenhados tracejados — igual ao papel, onde
+   *      eles esperam a subida de nível.
+   *
+   *  A única coisa que não dá para copiar do papel é o tamanho: 12 quadradinhos
+   *  numa linha de 390px dariam 25px cada, e alvo de toque de 25px no meio de
+   *  uma cena é frustração garantida. Então eles ficam ESTREITOS mas ALTOS — a
+   *  linha continua sendo uma linha, e o dedo continua acertando.
+   * ======================================================================== */
+
+  function blocoDePapel(ficha) {
+    const r = ficha.recursos || {};
+    const d = ficha.defesas || {};
+
+    return el('section', { class: 'papel' }, [
+      linhaDeDefesas(r, d),
+      faixa('Dano e Vida'),
+      el('p', { class: 'papel__nota', texto: 'Some seu nível atual aos limiares de dano.' }),
+      faixaDeLimiares(d),
+      trilhaDePapel({
+        chave: 'pontosDeVidaMarcados', rotulo: 'PV', nomeCompleto: 'Pontos de Vida',
+        classe: 'pv', marcados: r.pontosDeVidaMarcados || 0, total: r.pontosDeVidaMaximos || 0
+      }),
+      trilhaDePapel({
+        chave: 'estresseMarcado', rotulo: 'Estresse', nomeCompleto: 'Estresse',
+        classe: 'estresse', marcados: r.estresseMarcado || 0, total: r.estresseMaximo || 0
+      }),
+      faixa('Esperança'),
+      el('p', { class: 'papel__nota', texto:
+        'Gaste 1 Esperança para usar uma Experiência ou ajudar um aliado.' }),
+      trilhaDeEsperanca(r)
+    ]);
+  }
+
+  /** A faixa de título, com as pontas chanfradas da ficha impressa. */
+  function faixa(texto) {
+    return el('div', { class: 'papel__faixa' }, [
+      el('h3', { class: 'papel__faixaTexto' }, nomeAnotado(texto, { comGlossa: false }))
+    ]);
+  }
+
+  /* --- Evasão · Armadura ---------------------------------------------------- */
+
+  function linhaDeDefesas(r, d) {
+    const total = d.pontuacaoArmadura || 0;
+    const marcados = r.armaduraMarcada || 0;
+
+    const slots = el('div', {
+      class: 'papel__armaduraSlots', role: 'group', 'aria-label': 'Pontos de Armadura'
+    });
+    for (let i = 1; i <= TETO_TRILHA; i++) {
+      const existe = i <= total;
+      const cheio = i <= marcados;
+      slots.append(el('button', {
+        type: 'button',
+        class: `papel__slot ${cheio ? 'esta-cheio' : ''} ${existe ? '' : 'nao-tem'}`,
+        disabled: !existe,
+        'aria-label': existe
+          ? `Ponto de Armadura ${i} de ${total}`
+          : `Ponto de Armadura ${i}: você ainda não tem`,
+        'aria-pressed': cheio ? 'true' : 'false',
+        onClick: (ev) => marcarAte(ev.currentTarget.parentNode, 'armaduraMarcada', i, marcados)
+      }));
+    }
+
+    return el('div', { class: 'papel__defesas' }, [
+      escudo('evasao', 'Evasão', d.evasao, 'Começa em 10'),
+      el('div', { class: 'papel__divisor' }),
+      escudo('armadura', 'Armadura', total || '—', total ? null : 'Sem armadura'),
+      slots
+    ]);
+  }
+
+  /**
+   * O escudo é desenhado em SVG, não em border-radius.
+   *
+   * A silhueta da ficha impressa — reta em cima, afunilando para uma ponta
+   * embaixo — não sai de arredondamento de caixa: o melhor que se consegue é
+   * um ovo. E era exatamente esse contorno que a Vanessa apontou na foto.
+   * Traçado em SVG, ele fica igual e escala sem serrilhar.
+   */
+  function escudo(classe, rotulo, valor, nota) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 60 66');
+    svg.setAttribute('class', 'papel__escudoForma');
+    svg.setAttribute('aria-hidden', 'true');
+    const caminho = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    caminho.setAttribute('d',
+      'M4 12 A8 8 0 0 1 12 4 H48 A8 8 0 0 1 56 12 V36 ' +
+      'C56 50 38 59 30 62 C22 59 4 50 4 36 Z');
+    svg.append(caminho);
+
+    return el('div', { class: `papel__escudoBloco papel__escudoBloco--${classe}` }, [
+      el('div', { class: 'papel__escudo' }, [
+        svg,
+        el('strong', { class: 'papel__escudoValor',
+          texto: (valor === null || valor === undefined) ? '—' : String(valor) })
+      ]),
+      el('div', { class: 'papel__escudoRotulo' }, nomeAnotado(rotulo, { comGlossa: false })),
+      nota ? el('span', { class: 'papel__escudoNota', texto: nota }) : null
+    ]);
+  }
+
+  /* --- a faixa dos limiares -------------------------------------------------- */
+
+  /**
+   * Menor → [9] → Maior → [17] → Severo.
+   *
+   * Os dois números ficam ENTRE as faixas, como no papel, porque é isso que
+   * eles são: a fronteira. "9" não pertence a Menor nem a Maior — é onde uma
+   * vira a outra.
+   */
+  function faixaDeLimiares(d) {
+    const maior = d.limiarMaior;
+    const severo = d.limiarGrave;
+    const bloco = (nome, custo) => el('div', { class: 'papel__limiarBloco' }, [
+      el('span', { class: 'papel__limiarNome', texto: nome }),
+      el('span', { class: 'papel__limiarCusto', texto: custo })
+    ]);
+    const fronteira = (v) => el('span', { class: 'papel__limiarNumero',
+      texto: (v === null || v === undefined) ? '—' : String(v) });
+
+    return el('button', {
+      type: 'button', class: 'papel__limiares',
+      'aria-label': 'Limiares de dano — o que cada faixa custa',
+      onClick: () => abrirVerbete('limiares-de-dano')
+    }, [
+      bloco('Menor', 'marque 1 PV'),
+      fronteira(maior),
+      bloco('Maior', 'marque 2 PV'),
+      fronteira(severo),
+      bloco('Severo', 'marque 3 PV')
+    ]);
+  }
+
+  /* --- PV e Estresse --------------------------------------------------------- */
+
+  function trilhaDePapel({ chave, rotulo, nomeCompleto, classe, marcados, total }) {
+    const caixas = el('div', {
+      class: 'papel__caixas', role: 'group', 'aria-label': nomeCompleto
+    });
+    for (let i = 1; i <= TETO_TRILHA; i++) {
+      const existe = i <= total;
+      const cheio = i <= marcados;
+      caixas.append(el('button', {
+        type: 'button',
+        class: `papel__caixa ${cheio ? 'esta-cheio' : ''} ${existe ? '' : 'nao-tem'}`,
+        disabled: !existe,
+        'aria-label': existe
+          ? `${nomeCompleto} ${i} de ${total}`
+          : `${nomeCompleto} ${i}: só a partir de um nível mais alto`,
+        'aria-pressed': cheio ? 'true' : 'false',
+        onClick: (ev) => marcarAte(ev.currentTarget.parentNode, chave, i, marcados)
+      }));
+    }
+    return el('div', { class: `papel__trilha papel__trilha--${classe}` }, [
+      el('span', { class: 'papel__trilhaRotulo' }, nomeAnotado(rotulo, { comGlossa: false })),
+      caixas
+    ]);
+  }
+
+  /**
+   * Marcar até o quadradinho tocado; tocar no último marcado desmarca.
+   *
+   * É o gesto do lápis, e é o mesmo para as três trilhas — por isso mora aqui e
+   * não copiado em cada uma.
+   */
+  function marcarAte(container, chave, indice, marcadosAgora) {
+    const alvo = (indice === marcadosAgora) ? indice - 1 : indice;
+    pintarNaHora(container, alvo);
+    enviar([{ tipo: 'recurso', chave, valor: alvo }]);
+  }
+
+  /**
+   * Pinta antes de a rede responder: o toque tem de acender na hora, senão a
+   * pessoa toca duas vezes achando que não pegou.
+   *
+   * Conta só os quadradinhos de verdade — a pista da Esperança tem tracinhos
+   * no meio, e o índice do filho não serviria.
+   */
+  function pintarNaHora(container, quantos) {
+    const marcaveis = container.querySelectorAll(
+      '.papel__caixa, .papel__slot, .papel__losango');
+    marcaveis.forEach((n, i) => {
+      n.classList.toggle('esta-cheio', i < quantos);
+      n.setAttribute('aria-pressed', i < quantos ? 'true' : 'false');
+    });
+  }
 
   /* ======================================================================== *
    *  ABA JOGO
@@ -207,34 +423,12 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const r = ficha.recursos || {};
     const d = ficha.defesas || {};
 
-    // --- trilhas ---------------------------------------------------------
-    pai.append(el('section', { class: 'ficha__bloco' }, [
-      trilha({
-        chave: 'pontosDeVidaMarcados', rotulo: 'Pontos de Vida', classe: 'pv',
-        marcados: r.pontosDeVidaMarcados || 0, total: r.pontosDeVidaMaximos || 0,
-        ajuda: 'Marque ao sofrer dano. Com todos marcados, faça uma jogada para Evitar a Morte.'
-      }),
-      trilha({
-        chave: 'estresseMarcado', rotulo: 'Estresse', classe: 'estresse',
-        marcados: r.estresseMarcado || 0, total: r.estresseMaximo || 0,
-        glosa: true,
-        ajuda: 'Se precisar marcar Estresse e não puder, você fica Vulnerável até limpar ao menos 1.'
-      }),
-      trilha({
-        chave: 'armaduraMarcada', rotulo: 'Pontos de Armadura', classe: 'armadura',
-        marcados: r.armaduraMarcada || 0, total: d.pontuacaoArmadura || 0,
-        ajuda: d.pontuacaoArmadura
-          ? 'Marque para reduzir um limiar de dano recebido. Só volta com um movimento de descanso.'
-          : 'Sem armadura equipada.'
-      }),
-      trilhaDeEsperanca(r)
-    ]));
+    // --- o bloco da ficha de papel --------------------------------------
+    pai.append(blocoDePapel(ficha));
 
-    // --- defesas ---------------------------------------------------------
-    pai.append(secao('Defesas', el('div', { class: 'ficha__grade' }, [
-      caixinha('Evasão', d.evasao === null || d.evasao === undefined ? '—' : d.evasao),
-      caixinha('Limiar maior', d.limiarMaior ?? '—', 'Dano a partir daqui: 2 Pontos de Vida.'),
-      caixinha('Limiar grave', d.limiarGrave ?? '—', 'Dano a partir daqui: 3 Pontos de Vida.'),
+    // Proficiência não está na ficha impressa deste recorte, mas é o número que
+    // manda na rolagem de dano — fica logo abaixo, sozinho.
+    pai.append(secao('Rolagem de dano', el('div', { class: 'ficha__grade' }, [
       caixinha('Proficiência', r.proficiencia ?? '—', 'Quantos dados de dano a arma rola.')
     ])));
 
@@ -414,83 +608,41 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * último marcado desmarca ele (o gesto que todo mundo espera de uma trilha
    * de papel). O + e o − existem para quem prefere botão.
    */
-  function trilha({ chave, rotulo, classe, marcados, total, ajuda, glosa }) {
-    const pontos = el('div', { class: 'trilha__pontos', role: 'group', 'aria-label': rotulo });
-
-    for (let i = 1; i <= total; i++) {
-      const cheio = i <= marcados;
-      pontos.append(el('button', {
-        type: 'button',
-        class: `trilha__ponto ${cheio ? 'esta-cheio' : ''}`,
-        'aria-label': `${rotulo}: marcar ${i} de ${total}`,
-        'aria-pressed': cheio ? 'true' : 'false',
-        onClick: (ev) => {
-          const alvo = (i === marcados) ? i - 1 : i;
-          pintarTrilha(ev.currentTarget.parentNode, alvo);
-          enviar([{ tipo: 'recurso', chave, valor: alvo }]);
-        }
-      }));
-    }
-    if (!total) pontos.append(el('span', { class: 'texto-fraco texto-sm', texto: '—' }));
-
-    return el('div', { class: `trilha trilha--${classe}` }, [
-      el('div', { class: 'trilha__topo' }, [
-        el('span', { class: 'trilha__rotulo' }, nomeAnotado(rotulo, { comGlossa: !!glosa })),
-        el('span', { class: 'trilha__conta', texto: total ? `${marcados}/${total}` : '' }),
-        botaoDelta('−', () => mexer(chave, -1, marcados, total), `Diminuir ${rotulo}`),
-        botaoDelta('+', () => mexer(chave, 1, marcados, total), `Aumentar ${rotulo}`)
-      ]),
-      pontos,
-      ajuda ? el('p', { class: 'trilha__ajuda', texto: ajuda }) : null
-    ]);
-  }
-
-  function mexer(chave, delta, atual, total) {
-    const alvo = Math.max(0, Math.min(total, atual + delta));
-    if (alvo === atual) return;
-    enviar([{ tipo: 'recurso', chave, valor: alvo }]);
-  }
-
-  /** Pinta na hora, sem esperar a rede: o toque tem de responder instantâneo. */
-  function pintarTrilha(container, quantos) {
-    Array.from(container.children).forEach((ponto, i) => {
-      if (!ponto.classList.contains('trilha__ponto')) return;
-      ponto.classList.toggle('esta-cheio', i < quantos);
-      ponto.setAttribute('aria-pressed', i < quantos ? 'true' : 'false');
-    });
-    const conta = container.parentNode.querySelector('.trilha__conta');
-    if (conta && conta.textContent.indexOf('/') >= 0) {
-      conta.textContent = `${quantos}/${conta.textContent.split('/')[1]}`;
-    }
-  }
-
+  /**
+   * A Esperança da ficha impressa: losangos numa trilha cinza, com um traço
+   * entre um e outro. Sem rótulo repetido em cima — a faixa "ESPERANÇA" já
+   * disse o nome logo acima.
+   */
   function trilhaDeEsperanca(r) {
     const atual = r.esperanca || 0;
     const max = r.esperancaMaxima || 6;
-    const pontos = el('div', { class: 'trilha__pontos', role: 'group', 'aria-label': 'Esperança' });
+    const pista = el('div', {
+      class: 'papel__pistaEsperanca', role: 'group', 'aria-label': 'Esperança'
+    });
     for (let i = 1; i <= max; i++) {
       const cheio = i <= atual;
-      pontos.append(el('button', {
+      if (i > 1) pista.append(el('span', { class: 'papel__tracinho' }));
+      pista.append(el('button', {
         type: 'button',
-        class: `trilha__ponto trilha__ponto--losango ${cheio ? 'esta-cheio' : ''}`,
+        class: `papel__losango ${cheio ? 'esta-cheio' : ''}`,
         'aria-label': `Esperança: ${i} de ${max}`,
         'aria-pressed': cheio ? 'true' : 'false',
         onClick: (ev) => {
           const alvo = (i === atual) ? i - 1 : i;
-          pintarTrilha(ev.currentTarget.parentNode, alvo);
+          // Os tracinhos ficam no meio, então pintar por índice de filho não
+          // serve aqui: pinta só os losangos.
+          Array.from(ev.currentTarget.parentNode.querySelectorAll('.papel__losango'))
+            .forEach((n, k) => {
+              n.classList.toggle('esta-cheio', k < alvo);
+              n.setAttribute('aria-pressed', k < alvo ? 'true' : 'false');
+            });
           enviar([{ tipo: 'recurso', chave: 'esperanca', valor: alvo }]);
         }
       }));
     }
-    return el('div', { class: 'trilha trilha--esperanca' }, [
-      el('div', { class: 'trilha__topo' }, [
-        el('span', { class: 'trilha__rotulo', texto: 'Esperança' }),
-        el('span', { class: 'trilha__conta', texto: `${atual}/${max}` }),
-        botaoDelta('−', () => mexer('esperanca', -1, atual, max), 'Gastar Esperança'),
-        botaoDelta('+', () => mexer('esperanca', 1, atual, max), 'Ganhar Esperança')
-      ]),
-      pontos,
-      el('p', { class: 'trilha__ajuda', texto: 'Ganha em jogadas com Esperança. Gasta em habilidades e para ajudar um aliado.' })
+    return el('div', { class: 'papel__esperanca' }, [
+      pista,
+      el('span', { class: 'papel__trilhaConta', texto: `${atual}/${max}` })
     ]);
   }
 
@@ -937,10 +1089,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     ])));
 
     const inv = ficha.inventario || [];
-    const campoNovo = el('input', {
+    const campoNovo = el('input', semCorretor({
       type: 'text', class: 'campo__entrada', maxlength: 120,
       placeholder: 'O que entrou na mochila?'
-    });
+    }));
     const adicionar = () => {
       const texto = campoNovo.value.trim();
       if (!texto) return;
@@ -958,10 +1110,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
      * (tirar o ouro, pôr o item) numa gravação só.
      */
     const abrirCompra = () => {
-      const campoItem = el('input', {
+      const campoItem = el('input', semCorretor({
         type: 'text', class: 'campo__entrada', maxlength: 120,
         placeholder: 'O que está comprando?', value: campoNovo.value.trim()
-      });
+      }));
       const campos = {};
       const moedaDoPreco = (rotulo, chave) => {
         const entrada = el('input', {

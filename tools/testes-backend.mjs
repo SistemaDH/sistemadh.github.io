@@ -4426,6 +4426,35 @@ teste('a mensagem de estouro do ouro fala em baú, não em cofre', () => {
   verdade(!/cofre/i.test(r.aviso || ''), 'o aviso ainda diz "cofre": ' + r.aviso);
 });
 
+teste('nenhum campo de texto fica exposto ao corretor do celular', () => {
+  // Ravena virou Ravana e Magnus virou Magnuz em fichas de verdade: o corretor
+  // do teclado "consertou" nomes inventados. Num app de RPG quase todo campo
+  // guarda palavra inventada, então o padrão é o corretor DESLIGADO — e este
+  // teste é o que impede o próximo campo de nascer desprotegido.
+  const desprotegidos = [];
+  const varrer = (pasta) => {
+    for (const nome of fs.readdirSync(pasta)) {
+      const caminho = path.join(pasta, nome);
+      if (fs.statSync(caminho).isDirectory()) { varrer(caminho); continue; }
+      if (!nome.endsWith('.js')) continue;
+      const texto = fs.readFileSync(caminho, 'utf8');
+      texto.split('\n').forEach((linha, i) => {
+        if (!/type:\s*'text'/.test(linha)) return;
+        // A proteção pode aparecer antes (semCorretor({ ... type: 'text')
+        // ou depois (o spread numa linha seguinte), então a janela vai para os
+        // dois lados.
+        const linhas = texto.split('\n');
+        const janela = linhas.slice(Math.max(0, i - 4), i + 5).join(' ');
+        if (!/semCorretor/.test(janela)) {
+          desprotegidos.push(`${path.relative(RAIZ, caminho)}:${i + 1}`);
+        }
+      });
+    }
+  };
+  varrer(path.join(RAIZ, 'js'));
+  igual(desprotegidos.join(' | '), '');
+});
+
 console.log('\nVerbetes');
 
 teste('todo verbete tem página dentro do livro e resumo que cabe no celular', () => {

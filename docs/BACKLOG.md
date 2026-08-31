@@ -7,13 +7,16 @@ zerar esta lista.
 Cada item aponta para o documento que tem o detalhe. Nada aqui é bug — é
 trabalho reservado de propósito.
 
-**Última atualização:** o **índice das regras** (J4) — 93 verbetes com busca, no
+**Última atualização:** a primeira leva de **relatos da mesa** (grupo K) —
+o corretor do celular trocando nomes de personagem, as trilhas viradas ficha de
+papel e a URL fora dos Ajustes. Detalhe em `relatos-da-mesa.md`. Antes deles, o
+**índice das regras** (J4) — 93 verbetes com busca, no
 cabeçalho de todas as telas. Antes dele, a varredura das **553 citações de
 página** (J3): seis afirmações erradas, 22 lugares corrigidos. Detalhe em
 `verbetes.md` §8 e §9.
 
-**A lista está zerada de trabalho fazível.** O que resta são duas coisas que não
-são backlog:
+**Fora o K5 (a foto), a lista está zerada de trabalho fazível.** O que resta são
+duas coisas que não são backlog:
 
 1. **Seis itens parados numa decisão de mesa já tomada** — D2, D4, D5, D6, D7 e
    H6 dependem, todos, de haver **rolagem de dado** no app, e a decisão foi "só
@@ -164,6 +167,18 @@ contra o PDF do livro. Isso fechou um pedido da mesa e abriu duas pontas novas.
 | ~~J4~~ | ~~Não há tela de índice dos verbetes~~ — **FECHADO.** Os 93, em 14 grupos, com busca que aceita o termo da carta, o do livro ("fadiga" acha Estresse) e o número da página. Ficou no **cabeçalho**, não em Ajustes: regra se procura no meio da cena. E nos TRÊS cabeçalhos — a ficha e o painel cobrem o do app. | `verbetes.md` §9 |
 | ~~J5~~ | ~~"Cofre" quer dizer duas coisas no app~~ — **FECHADO.** A terceira categoria de ouro passou a se chamar **Baús** na tela, como o livro (p.104); "cofre" agora quer dizer só a reserva de cartas. A chave gravada continua `cofres` — é rótulo, não migração — e "cofre" virou alias de busca, pela E14. | `verbetes.md` §7 |
 
+## K. Veio da mesa
+
+A primeira leva de relatos de quem jogou. Detalhe em `relatos-da-mesa.md`.
+
+| # | O quê | Onde está o detalhe |
+|---|-------|---------------------|
+| ~~K1~~ | ~~Nome do personagem sai diferente~~ — **FECHADO.** Era o **corretor do teclado** trocando nome inventado ("Ravena"→"Ravana", "Magnus"→"Magnuz"). `semCorretor()` desligou corretor, verificação ortográfica e autocompletar nos **10** campos de texto do app. | `relatos-da-mesa.md` §1 |
+| ~~K2~~ | ~~Confusão com "marcar" Pontos de Vida~~ — **decisão da mesa: não mexer.** Fica como o livro e a ficha de papel. Registrado porque a dúvida volta. | `relatos-da-mesa.md` §2 |
+| ~~K3~~ | ~~Trilhas com + e −~~ — **FECHADO, e virou o desenho inteiro.** O bloco de Defesas/Dano/Esperança agora é a ficha impressa: escudos de Evasão e Armadura lado a lado, a faixa Menor→9→Maior→17→Severo, PV e Estresse compactos com os espaços futuros tracejados, Esperança em losangos. Sem + e −; o quadradinho tem 44px de altura. | `relatos-da-mesa.md` §3 |
+| ~~K4~~ | ~~Campo de URL do servidor nos Ajustes~~ — **FECHADO.** Virou informação de conexão; trocar endereço é trabalho de quem mantém. | `relatos-da-mesa.md` §4 |
+| K5 | **Foto do personagem**, com recorte e zoom, guardada numa pasta do Drive da mesa. Não cabe na ficha (uma célula, 45.000 caracteres, strings aparadas em 5.000): precisa de endpoint próprio, `DriveApp`, id na ficha e recorte no navegador antes de subir. | `relatos-da-mesa.md` §5 |
+
 ## E. Invariantes que precisam sobreviver a mudanças futuras
 
 | # | O quê | Protegido por |
@@ -192,6 +207,9 @@ contra o PDF do livro. Isso fechou um pedido da mesa e abriu duas pontas novas.
 | E22 | **Foco e Medo acontecem juntos.** Não existe adversário em foco sem o Medo pago: sem Medo sobrando, a operação é recusada inteira. Mesmo princípio do E20. | teste `sem Medo sobrando, pôr em foco é recusado inteiro` |
 | E24 | **O Estresse de uma habilidade sai do PRÓPRIO adversário.** O SRD: "the Stress must come from the adversary whose feature is being activated". Duas cobras-de-vidro em cena são duas trilhas, e uma não paga pela outra. | teste `um adversário não gasta o Estresse do outro` |
 | E25 | **Custo de Estresse × dano no alvo.** No livro, o que o adversário gasta vem no imperativo ("marque N") ou depois de "pode"; o que o ALVO marca vem depois de "deve", e em dado. Trocar os dois faria o monstro se machucar sozinho. | conferência contra o negrito `**Mark a Stress**` do SRD, em `conferir-com-srd.py` |
+| E38 | **Todo campo de texto nasce sem corretor.** Num app de RPG quase todo campo guarda palavra inventada, e o corretor do celular troca "Ravena" por "Ravana" sem avisar. O padrão é desligado; ligar é que precisa de motivo. | `semCorretor()` + teste `nenhum campo de texto fica exposto ao corretor do celular` |
+| E39 | **As trilhas não têm + e −.** O quadradinho é o único caminho, como no papel — e por isso ele tem de continuar sendo alvo de toque de verdade (44px de altura). Voltar a encolher o quadradinho sem devolver os botões deixaria a trilha impossível de acertar. | passo e2e `as trilhas marcam pelo quadradinho, sem + e −` |
+| E40 | **O bloco de papel é da FICHA DO JOGADOR, não do encontro.** A trilha do adversário continua compacta e com a marcação de sempre: lá o Mestre mexe em vários bichos de uma vez, e o desenho da folha atrapalharia. Unificar os dois pareceria arrumação e seria regressão. | passo e2e `digitar o dano vira PV pelos limiares da ficha` (que usa `.trilha--pv`, a antiga) |
 | E37 | **O botão das Regras existe nos TRÊS cabeçalhos.** A ficha e o painel do Mestre são telas cheias e cobrem o cabeçalho do app — se o botão só morasse lá, ele sumiria justamente nas duas telas em que a dúvida de regra aparece. É um `botaoDeRegras()` só, usado nos três. | passo e2e `o índice de regras acha pelo termo do livro e abre o verbete` |
 | E36 | **Citação de página é afirmação, e afirmação se confere.** Duas rodadas acharam 10 afirmações erradas em 43 lugares — inclusive avisos que o jogador lê. Antes de citar uma página nova, rode o `conferir-citacoes.py`; e trate como suspeita toda citação que o conferidor marcar como visível ao jogador. | `tools/conferir-citacoes.py` (553 citações, 0 suspeitas visíveis) |
 | E31 | **Toda página citada num verbete é PROVADA contra o PDF.** Cada verbete carrega uma frase-âncora que tem de estar naquela página. Sem isso, o app manda o jogador para a página errada com toda a confiança do mundo — foi exatamente o que aconteceu com as três regras citadas como "p.98". | `tools/conferir-paginas.py` (0 erradas em 93) |

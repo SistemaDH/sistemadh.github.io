@@ -18,7 +18,7 @@
  *    deixa escolher entre subir o dado OU o alcance.
  */
 
-import { el, limpar } from '../util.js';
+import { el, limpar, semCorretor } from '../util.js';
 import { abrirModal, avisarErro, avisarSucesso, blocoVazio } from '../ui.js';
 import { acoes } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
@@ -379,7 +379,9 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
   }
 
   function entrada(valor, placeholder) {
-    const campo = el('input', { type: 'text', class: 'campo__entrada', maxlength: 60, placeholder });
+    const campo = el('input', semCorretor({
+      type: 'text', class: 'campo__entrada', maxlength: 60, placeholder
+    }));
     campo.value = valor || '';
     return campo;
   }

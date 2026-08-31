@@ -16,7 +16,7 @@
  * nenhuma — só desenha e pergunta.
  */
 
-import { el, limpar, travarBotao } from '../util.js';
+import { el, limpar, travarBotao, semCorretor } from '../util.js';
 import { abrirModal, avisarErro, avisarSucesso, confirmar } from '../ui.js';
 import { acoes } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
@@ -122,7 +122,7 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
     const pedeExperiencia = (c.efeitos || []).some((e) => e.tipo === 'experiencia-nova');
     if (pedeExperiencia) {
       const campo = el('input', {
-        type: 'text', class: 'campo__entrada', maxlength: 60,
+        ...semCorretor({}), type: 'text', class: 'campo__entrada', maxlength: 60,
         placeholder: 'Ex.: Criada entre lobos, Diplomata da corte…',
         value: experienciaNova
       });

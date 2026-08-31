@@ -1,8 +1,9 @@
 /**
- * telas/ajustes.js — modal de conexão e conta.
+ * telas/ajustes.js — modal de conta.
  *
- * Serve para dois momentos ruins: quando o Apps Script muda de URL e quando
- * alguém precisa trocar o próprio código de acesso.
+ * Sobrou uma coisa só de verdade: trocar o próprio código de acesso. A troca
+ * de URL do servidor saiu daqui (veja o comentário em abrirAjustes) e a
+ * conexão virou informação, não campo.
  */
 
 import { el, travarBotao } from '../util.js';
@@ -14,54 +15,30 @@ import { obterEstado, acoes } from '../estado.js';
 export function abrirAjustes() {
   const { token, jogador } = obterEstado();
 
-  const entradaUrl = el('input', {
-    class: 'campo__entrada',
-    type: 'url',
-    id: 'url-api',
-    value: CONFIG.urlApi,
-    spellcheck: 'false',
-    placeholder: 'https://script.google.com/macros/s/…/exec'
-  });
-
-  const resultado = el('p', { class: 'campo__ajuda', texto: '' });
-
-  const botaoTestar = el('button', { type: 'button', class: 'btn btn--fantasma' }, 'Testar conexão');
-  botaoTestar.addEventListener('click', () => {
-    CONFIG.urlApi = entradaUrl.value.trim();
-    resultado.textContent = 'Falando com o servidor…';
-    travarBotao(botaoTestar, (async () => {
-      try {
-        const dados = await api.ping();
-        resultado.textContent = `Tudo certo — ${dados.servico}, versão ${dados.versao}.`;
-        avisarSucesso('Conexão funcionando.');
-      } catch (e) {
-        resultado.textContent = mensagemDoErro(e);
-        avisarErro('Não consegui falar com o servidor.');
-      }
-    })());
-  });
+  /*
+   * A URL do Apps Script NÃO se troca mais por aqui.
+   *
+   * Ela era um campo editável desde a primeira parte, de quando o servidor
+   * ainda mudava de endereço a cada implantação. Hoje o endereço é fixo, e um
+   * campo de URL na tela de todo jogador é só uma maneira de alguém colar algo
+   * errado e a mesa inteira achar que o app quebrou. Trocar de endereço agora é
+   * republicar o Apps Script e mexer no config.js — trabalho de quem mantém, não
+   * de quem joga.
+   *
+   * O `CONFIG.urlApi` continua aceitando um valor guardado no navegador: é por
+   * ali que os testes apontam para o servidor local. O que sumiu é a PORTA na
+   * interface, não o mecanismo.
+   */
+  const estado = el('p', { class: 'campo__ajuda', texto: 'Conferindo a conexão…' });
+  api.ping()
+    .then((d) => { estado.textContent = `Servidor respondendo — ${d.servico}, versão ${d.versao}.`; })
+    .catch((e) => { estado.textContent = 'Sem resposta do servidor: ' + mensagemDoErro(e); });
 
   const conteudo = el('div', { class: 'pilha' }, [
     el('div', { class: 'campo' }, [
-      el('label', { class: 'campo__rotulo', for: 'url-api', texto: 'URL do Apps Script' }),
-      entradaUrl,
-      el('span', {
-        class: 'campo__ajuda',
-        texto: 'Termina em /exec. Só mexa aqui se você publicou uma implantação nova.'
-      })
+      el('span', { class: 'campo__rotulo', texto: 'Conexão' }),
+      estado
     ]),
-    el('div', { class: 'linha' }, [
-      botaoTestar,
-      el('button', {
-        type: 'button',
-        class: 'btn btn--fantasma btn--pequeno',
-        onClick: () => {
-          entradaUrl.value = CONFIG.urlPadrao;
-          resultado.textContent = 'Voltou para a URL padrão do projeto.';
-        }
-      }, 'Restaurar padrão')
-    ]),
-    resultado,
     el('p', { class: 'texto-xs texto-fraco', texto: `Aplicativo versão ${CONFIG.VERSAO}` })
   ]);
 
@@ -103,14 +80,8 @@ export function abrirAjustes() {
     conteudo,
     acoes: [
       el('button', {
-        type: 'button',
-        class: 'btn btn--principal',
-        onClick: () => {
-          CONFIG.urlApi = entradaUrl.value.trim();
-          avisarSucesso('Ajustes salvos.');
-          fecharModal();
-        }
-      }, 'Salvar')
+        type: 'button', class: 'btn btn--fantasma', onClick: () => fecharModal()
+      }, 'Fechar')
     ]
   });
 }

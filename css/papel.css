@@ -1,0 +1,372 @@
+/* ==========================================================================
+   papel.css — o bloco de Defesas, Dano/Vida e Esperança desenhado como a
+   ficha impressa.
+
+   A Vanessa mandou a foto da ficha física e perguntou se dava para ser assim.
+   O desenho dela não é decoração: ele agrupa por PERGUNTA. Evasão e Armadura
+   juntas respondem "o golpe me acerta, e quanto dói?"; a faixa dos limiares
+   mostra a conta inteira do dano numa olhada; as trilhas ficam compactas
+   porque são registro, não protagonista.
+
+   A adaptação obrigatória é o TAMANHO. No papel os quadradinhos são pequenos
+   porque o dedo não os toca — o lápis toca. Aqui o dedo toca, então eles ficam
+   estreitos mas com 44px de altura: a linha continua sendo uma linha, e o
+   alvo continua acertável.
+   ========================================================================== */
+
+.papel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e3);
+  padding: var(--e4);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-lg);
+  background: var(--cor-superficie);
+}
+
+/* --- a faixa de título ---------------------------------------------------- */
+
+/*
+ * As pontas chanfradas da ficha impressa, com as linhas saindo para os lados.
+ * O clip-path corta o losango nas pontas; os ::before/::after são os trilhos.
+ */
+.papel__faixa {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--e2);
+}
+
+.papel__faixa::before,
+.papel__faixa::after {
+  content: '';
+  flex: 1 1 auto;
+  height: 2px;
+  background: var(--cor-borda-forte);
+}
+
+.papel__faixaTexto {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: var(--e2) var(--e5);
+  background: var(--cor-superficie-alta);
+  border: 2px solid var(--cor-borda-forte);
+  clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 50%,
+                     calc(100% - 12px) 100%, 12px 100%, 0 50%);
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-md);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--cor-ouro-claro);
+  white-space: nowrap;
+}
+
+.papel__nota {
+  margin: 0;
+  text-align: center;
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-fraco);
+}
+
+/* --- Evasão · Armadura ---------------------------------------------------- */
+
+.papel__defesas {
+  display: grid;
+  grid-template-columns: auto auto auto 1fr;
+  align-items: center;
+  gap: var(--e3);
+}
+
+.papel__divisor {
+  width: 2px;
+  align-self: stretch;
+  background: var(--cor-borda);
+}
+
+.papel__escudoBloco {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+/* O contorno vem do SVG; a caixa só empilha número sobre forma. */
+.papel__escudo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 66px;
+}
+
+.papel__escudoForma {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: var(--cor-fundo-2);
+  stroke: var(--cor-borda-forte);
+  stroke-width: 3;
+}
+
+.papel__escudoBloco--evasao .papel__escudoForma { stroke: var(--cor-info); }
+.papel__escudoBloco--armadura .papel__escudoForma { stroke: var(--cor-ouro-escuro); }
+
+.papel__escudoValor {
+  position: relative;      /* acima do SVG */
+  /* o bico de baixo puxa o centro óptico para cima */
+  margin-bottom: 8px;
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-xl);
+  color: var(--cor-texto);
+}
+
+/* O rótulo em fita escura, como o impresso. */
+.papel__escudoRotulo {
+  padding: 2px var(--e2);
+  border-radius: var(--raio-sm);
+  background: var(--cor-fundo);
+  font-size: var(--txt-xs);
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+
+.papel__escudoNota {
+  font-size: 10px;
+  color: var(--cor-texto-fraco);
+}
+
+/* Os espaços de Armadura, em grade, como as gotas do canto da ficha. */
+.papel__armaduraSlots {
+  display: grid;
+  grid-template-columns: repeat(4, 26px);
+  gap: 5px;
+  justify-content: end;
+}
+
+/* A gota da ficha impressa. Pequena: são doze, e ficam ao lado do escudo. */
+.papel__slot {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 2px solid var(--cor-borda-forte);
+  border-radius: 50% 50% 46% 46% / 46% 46% 54% 54%;
+  background: var(--cor-fundo-2);
+  cursor: pointer;
+  transition: background var(--transicao), border-color var(--transicao);
+}
+
+.papel__slot.esta-cheio {
+  background: var(--cor-ouro);
+  border-color: var(--cor-ouro);
+}
+
+/* --- a faixa dos limiares -------------------------------------------------- */
+
+.papel__limiares {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: stretch;
+  gap: var(--e1);
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.papel__limiarBloco {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: var(--e2) 2px;
+  background: var(--cor-superficie-alta);
+  border: 2px solid var(--cor-borda-forte);
+  /* a seta da ficha impressa: entra reto, sai em ponta */
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
+}
+
+.papel__limiares:hover .papel__limiarBloco,
+.papel__limiares:focus-visible .papel__limiarBloco {
+  border-color: var(--cor-ouro-escuro);
+}
+
+.papel__limiarNome {
+  font-size: var(--txt-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  color: var(--cor-texto);
+  text-align: center;
+  line-height: 1.1;
+}
+
+.papel__limiarCusto {
+  font-size: 10px;
+  color: var(--cor-texto-fraco);
+  text-align: center;
+  line-height: 1.1;
+}
+
+/* O número é a FRONTEIRA entre duas faixas — por isso fica entre elas. */
+.papel__limiarNumero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  padding: 0 var(--e1);
+  border: 2px solid var(--cor-borda-forte);
+  border-radius: var(--raio-sm);
+  background: var(--cor-fundo-2);
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-md);
+  font-weight: 700;
+  color: var(--cor-ouro-claro);
+}
+
+/* --- PV e Estresse --------------------------------------------------------- */
+
+/*
+ * A ficha impressa não tem contador ao lado da trilha — os quadradinhos SÃO a
+ * contagem. Tirar o "3/5" devolveu quase 50px de largura para eles, que é o
+ * que faz doze caberem numa linha só num celular de 390px.
+ */
+.papel__trilha {
+  display: grid;
+  grid-template-columns: 4.2em 1fr;
+  align-items: center;
+  gap: var(--e2);
+}
+
+.papel__trilhaRotulo {
+  font-size: var(--txt-sm);
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--cor-texto);
+}
+
+.papel__trilhaConta {
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-suave);
+  min-width: 3em;
+  text-align: right;
+}
+
+.papel__caixas {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 2px;
+}
+
+/*
+ * Estreito e alto: no papel a caixa é larga e baixa porque o lápis não erra.
+ * Aqui o dedo erra, então a altura vira o alvo de toque e a largura cede.
+ */
+.papel__caixa {
+  width: 100%;
+  height: 44px;
+  padding: 0;
+  border: 2px solid var(--cor-borda-forte);
+  border-radius: 4px;
+  background: var(--cor-fundo-2);
+  cursor: pointer;
+  transition: background var(--transicao), border-color var(--transicao), transform 90ms;
+}
+
+.papel__caixa:active { transform: scaleY(.92); }
+
+/*
+ * O espaço que o personagem ainda NÃO tem fica tracejado, como no papel — onde
+ * ele espera a subida de nível. Mostrar até 12 diz, sem escrever, quanto ainda
+ * dá para crescer.
+ */
+.papel__caixa.nao-tem,
+.papel__slot.nao-tem {
+  border-style: dashed;
+  border-color: var(--cor-borda);
+  background: transparent;
+  cursor: default;
+  opacity: .55;
+}
+
+.papel__trilha--pv .papel__caixa.esta-cheio {
+  background: var(--cor-perigo);
+  border-color: var(--cor-perigo);
+}
+
+.papel__trilha--estresse .papel__caixa.esta-cheio {
+  background: var(--cor-medo);
+  border-color: var(--cor-medo);
+}
+
+.papel__caixa:focus-visible,
+.papel__slot:focus-visible,
+.papel__losango:focus-visible {
+  outline: 2px solid var(--cor-ouro);
+  outline-offset: 2px;
+}
+
+/* --- Esperança ------------------------------------------------------------- */
+
+.papel__esperanca {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+}
+
+/* A pista cinza da ficha impressa, com os losangos dentro. */
+.papel__pistaEsperanca {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 2px;
+  padding: var(--e1) var(--e2);
+  border-radius: var(--raio-cheio);
+  background: var(--cor-superficie-alta);
+  border: 1px solid var(--cor-borda);
+}
+
+.papel__tracinho {
+  width: 1px;
+  height: 16px;
+  background: var(--cor-borda-forte);
+}
+
+.papel__losango {
+  width: 40px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: var(--cor-fundo-2);
+  box-shadow: inset 0 0 0 2px var(--cor-borda-forte);
+  clip-path: polygon(50% 6%, 94% 50%, 50% 94%, 6% 50%);
+  cursor: pointer;
+  transition: background var(--transicao);
+}
+
+.papel__losango.esta-cheio {
+  background: var(--cor-esperanca);
+  box-shadow: inset 0 0 0 2px var(--cor-esperanca);
+}
+
+/* --- telas bem estreitas --------------------------------------------------- */
+
+@media (max-width: 360px) {
+  .papel { padding: var(--e3); }
+  .papel__escudo { width: 54px; height: 58px; }
+  .papel__trilha { grid-template-columns: 3.2em 1fr; }
+  .papel__escudo { width: 52px; height: 58px; }
+  .papel__armaduraSlots { grid-template-columns: repeat(4, 22px); }
+  .papel__slot { width: 22px; height: 22px; }
+}

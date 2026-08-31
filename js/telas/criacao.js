@@ -15,7 +15,7 @@
  * a pessoa não chegar no fim com a ficha errada.
  */
 
-import { el, limpar, travarBotao } from '../util.js';
+import { el, limpar, travarBotao, semCorretor } from '../util.js';
 import { avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js';
 import { acoes, obterEstado } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
@@ -1195,8 +1195,11 @@ async function carregarCatalogo() {
 }
 
 function campoTexto(rotulo, valor, aoMudar, extras = {}) {
+  // Sem corretor por padrão: todo campoTexto do assistente guarda palavra
+  // inventada (nome do personagem, pronomes, Experiências).
   const entrada = el('input', {
-    class: 'campo__entrada', type: 'text', value: valor || '', ...extras,
+    class: 'campo__entrada', type: 'text', value: valor || '',
+    ...semCorretor(extras),
     onInput: (ev) => aoMudar(ev.target.value)
   });
   return el('label', { class: 'campo' }, [
