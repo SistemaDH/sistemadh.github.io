@@ -259,6 +259,15 @@
   gap: var(--e2);
 }
 
+/*
+ * O botão da trilha tem 44px de altura mas só 22px de retângulo: sobram 11px
+ * de ar em cima e embaixo, invisíveis. Duas trilhas seguidas somam 22px desse
+ * ar MAIS o `gap` do bloco, e a distância entre PV e Estresse fica maior do
+ * que a que separa as seções. Este recuo devolve o espaçamento à conta certa,
+ * sem tirar um pixel do alvo de toque.
+ */
+.papel__trilha + .papel__trilha { margin-top: calc(var(--e3) * -1); }
+
 .papel__trilhaRotulo {
   font-size: var(--txt-sm);
   font-weight: 700;
@@ -282,28 +291,54 @@
 }
 
 /*
- * Estreito e alto: no papel a caixa é larga e baixa porque o lápis não erra.
- * Aqui o dedo erra, então a altura vira o alvo de toque e a largura cede.
+ * O ALVO DE TOQUE e o RETÂNGULO QUE SE VÊ são duas coisas.
+ *
+ * A primeira versão pintava o botão inteiro: 44px de altura para o dedo não
+ * errar (E39) viravam 44px de retângulo colorido na tela, e duas trilhas assim
+ * dominavam o bloco — foi o que a mesa apontou como "alto demais".
+ *
+ * Agora o botão continua com os 44px, invisível, e quem se pinta é o
+ * `::before`, com a altura baixa do papel. O dedo ganha a área inteira; o olho
+ * vê a caixinha. Encolher o botão para "arrumar o visual" desfaria a E39 sem
+ * ninguém perceber — por isso a altura mora aqui e o desenho, lá.
  */
 .papel__caixa {
+  display: grid;
+  place-items: center;
   width: 100%;
-  height: 44px;
+  height: 44px;              /* alvo de toque — NÃO encolher (E39) */
   padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.papel__caixa::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 22px;              /* o retângulo que aparece */
   border: 2px solid var(--cor-borda-forte);
   border-radius: 4px;
   background: var(--cor-fundo-2);
-  cursor: pointer;
   transition: background var(--transicao), border-color var(--transicao), transform 90ms;
 }
 
-.papel__caixa:active { transform: scaleY(.92); }
+.papel__caixa:active::before { transform: scaleY(.88); }
 
 /*
  * O espaço que o personagem ainda NÃO tem fica tracejado, como no papel — onde
  * ele espera a subida de nível. Mostrar até 12 diz, sem escrever, quanto ainda
  * dá para crescer.
  */
-.papel__caixa.nao-tem,
+.papel__caixa.nao-tem { cursor: default; opacity: .55; }
+
+.papel__caixa.nao-tem::before {
+  border-style: dashed;
+  border-color: var(--cor-borda);
+  background: transparent;
+}
+
 .papel__slot.nao-tem {
   border-style: dashed;
   border-color: var(--cor-borda);
@@ -312,12 +347,12 @@
   opacity: .55;
 }
 
-.papel__trilha--pv .papel__caixa.esta-cheio {
+.papel__trilha--pv .papel__caixa.esta-cheio::before {
   background: var(--cor-perigo);
   border-color: var(--cor-perigo);
 }
 
-.papel__trilha--estresse .papel__caixa.esta-cheio {
+.papel__trilha--estresse .papel__caixa.esta-cheio::before {
   background: var(--cor-medo);
   border-color: var(--cor-medo);
 }
@@ -554,7 +589,7 @@
 
 .retrato {
   display: grid;
-  grid-template-columns: minmax(96px, 34%) 1fr;
+  grid-template-columns: minmax(112px, 42%) 1fr;
   gap: var(--e3);
   align-items: start;
   padding: var(--e3);
@@ -674,7 +709,7 @@
 .retrato__item--vazio .retrato__rotulo { color: var(--cor-texto-fraco); }
 
 @media (max-width: 360px) {
-  .retrato { grid-template-columns: minmax(84px, 32%) 1fr; gap: var(--e2); }
+  .retrato { grid-template-columns: minmax(100px, 40%) 1fr; gap: var(--e2); }
   .retrato__nome { font-size: var(--txt-sm); }
 }
 

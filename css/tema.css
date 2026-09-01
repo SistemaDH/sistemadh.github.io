@@ -54,12 +54,23 @@
   --fonte-corpo:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --fonte-mono:   ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
 
-  --txt-xs: 0.75rem;
-  --txt-sm: 0.875rem;
-  --txt-md: 1rem;
-  --txt-lg: 1.125rem;
-  --txt-xl: 1.375rem;
-  --txt-2xl: 1.75rem;
+  /*
+   * A escala desceu ~6% na rodada de refino da mesa.
+   *
+   * O corpo saiu de 16px para 15px e os títulos acompanharam. Num app que é
+   * quase todo lista e cartão de ficha, 16px empurrava tudo para baixo e fazia
+   * o celular rolar por texto, não por conteúdo. Os pisos ficam onde estão:
+   * 11,5px é o menor tamanho da escala, e nada de leitura corrida usa menos.
+   *
+   * É proporcional de propósito — mexer numa tela só faria as telas
+   * discordarem entre si.
+   */
+  --txt-xs: 0.72rem;    /* 11,5px */
+  --txt-sm: 0.82rem;    /* 13,1px */
+  --txt-md: 0.94rem;    /* 15px   */
+  --txt-lg: 1.05rem;    /* 16,8px */
+  --txt-xl: 1.25rem;    /* 20px   */
+  --txt-2xl: 1.55rem;   /* 24,8px */
 
   /* ---- Espaçamento (escala de 4px) ------------------------------------ */
   --e1: 4px;  --e2: 8px;  --e3: 12px; --e4: 16px;

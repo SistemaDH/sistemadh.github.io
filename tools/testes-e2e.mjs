@@ -860,24 +860,33 @@ try {
     await pagina.waitForSelector('.modal__caixa');
 
     /*
-     * Os modais são uma PILHA (ui.js), e `document.querySelector` pega o
-     * primeiro do DOM — que pode ser um degrau de baixo ainda montado. Este
-     * passo era intermitente por isso: preenchia o formulário de outro modal e
-     * a contagem nascia com o valor sugerido. Daqui para a frente, sempre o
-     * modal do TOPO.
+     * Os modais são uma PILHA (ui.js), e `.last()` é resolvido A CADA chamada:
+     * se um segundo modal subir entre o `fill` e a leitura, os dois comandos
+     * caem em formulários diferentes e o campo "volta" para o valor sugerido.
+     * Foi essa a intermitência.
+     *
+     * A correção é prender o NÓ uma vez e falar sempre com ele. E, para não
+     * esconder um empilhamento de verdade, o passo confere antes que há
+     * exatamente um modal aberto.
      */
-    const caixa = pagina.locator('.modal__caixa').last();
-    await caixa.locator('input[type="text"]').first().fill('A ponte racha');
-    await caixa.locator('select').first().selectOption('padrao');
-    await caixa.locator('input[type="number"]').first().fill('3');
-    await caixa.locator('textarea').first().fill('A ponte desaba.');
-    const digitado = await caixa.locator('input[type="number"]').first().inputValue();
+    igual(await pagina.locator('.modal__caixa').count(), 1,
+      'devia haver exatamente um modal aberto ao criar a contagem');
+    const caixa = await pagina.locator('.modal__caixa').last().elementHandle();
+    const campo = async (seletor) => caixa.$(seletor);
+
+    await (await campo('input[type="text"]')).fill('A ponte racha');
+    await (await campo('select')).selectOption('padrao');
+    const valor = await campo('input[type="number"]');
+    await valor.fill('3');
+    await (await campo('textarea')).fill('A ponte desaba.');
+    const digitado = await valor.inputValue();
     if (digitado !== '3') throw new Error(`o campo do valor ficou com "${digitado}"`);
-    await caixa.getByRole('button', { name: 'Criar' }).click();
+    await pagina.locator('.modal__caixa').last()
+      .getByRole('button', { name: 'Criar' }).click();
 
     await pagina.waitForSelector('.mestre__contagem', { timeout: 20000 });
-    const valor = await pagina.locator('.mestre__contagemValor').first().textContent();
-    if (valor.trim() !== '3') throw new Error(`a contagem começou em "${valor}"`);
+    const naTela = await pagina.locator('.mestre__contagemValor').first().textContent();
+    if (naTela.trim() !== '3') throw new Error(`a contagem começou em "${naTela}"`);
 
     await pagina.getByRole('button', { name: 'Diminuir 1' }).first().click();
     await pagina.waitForFunction(() => {

@@ -324,3 +324,58 @@ foto secreta.
 ⚠ **`descartarFoto_` engole o erro de propósito.** Uma foto órfã é um
 incômodo; uma ficha que não conseguiu trocar de foto porque a antiga não pôde
 ser apagada é um bug na cara do jogador. Entre os dois, o incômodo.
+
+---
+
+## 10. Alvo de toque não é o mesmo que desenho
+
+Três ajustes de tamanho, e o primeiro escondia uma confusão que valia
+desfazer.
+
+**As trilhas de PV e Estresse estavam altas demais.** Estavam — mas encolher o
+botão seria desfazer o K3 sem ninguém notar: a régua dos 44px existe porque a
+trilha perdeu o + e o −, e o quadradinho virou o único caminho (invariante
+E39). O erro não era a altura do botão; era eu ter pintado o botão inteiro.
+
+Agora são duas coisas separadas: **o botão continua com 44px**, invisível, e
+quem se pinta é um `::before` de 22px dentro dele. O dedo ganha a área inteira,
+o olho vê a caixinha baixa da ficha impressa. Os testes que guardam os 44px
+continuam passando porque continuam medindo o que interessa — o alvo.
+
+Sobrou um efeito colateral bonitinho: com 11px de ar invisível em cima e
+embaixo de cada trilha, PV e Estresse ficavam mais longe uma da outra do que as
+seções ficam entre si. Um recuo negativo entre trilhas seguidas devolve o
+espaçamento à conta certa, sem tirar um pixel do alvo.
+
+**A moldura da foto cresceu** de 34% para 42% da largura do bloco. No tamanho
+anterior o rosto virava miniatura de contato; nesse, ele é o retrato que a
+ficha de papel tem.
+
+**A escala de texto desceu ~6%** — o corpo saiu de 16px para 15px, e o resto
+acompanhou proporcionalmente. Num app que é quase todo lista e cartão de ficha,
+16px empurrava tudo para baixo e fazia o celular rolar por texto em vez de
+rolar por conteúdo. Mexi na escala, e não numa tela: ajustar uma só faria as
+telas discordarem entre si na semana seguinte.
+
+⚠ **Ponto de interesse:** o piso da escala é 11,5px (`--txt-xs`), e alguns
+lugares usam px cravado abaixo disso — 9px na fita do traço, 10px no custo do
+limiar. São rótulos de uma palavra, não leitura corrida, e por isso passaram.
+Se a escala descer de novo, é por eles que se começa a olhar.
+
+---
+
+## 11. Um teste intermitente que era do teste, não do app
+
+Enquanto isto tudo rodava, o passo "criar uma contagem regressiva e fazê-la
+andar" falhava uma vez a cada cinco ou seis rodadas, sempre igual: o campo do
+valor lia **4** (o sugerido) depois de eu ter digitado 3.
+
+A causa é do lado do teste. `pagina.locator('.modal__caixa').last()` não guarda
+um elemento — ele **reavalia "o último" a cada comando**. Se um segundo modal
+sobe entre o `fill` e a leitura, os dois comandos caem em formulários
+diferentes e o campo parece ter voltado sozinho.
+
+Agora o passo prende o nó uma vez (`elementHandle`) e fala sempre com ele. E,
+para não trocar uma intermitência por um ponto cego, ele confere antes que há
+**exatamente um** modal aberto: se algum dia o app empilhar dois de verdade, o
+teste diz isso em vez de ler o campo errado. Três rodadas seguidas limpas.
