@@ -379,3 +379,75 @@ Agora o passo prende o nó uma vez (`elementHandle`) e fala sempre com ele. E,
 para não trocar uma intermitência por um ponto cego, ele confere antes que há
 **exatamente um** modal aberto: se algum dia o app empilhar dois de verdade, o
 teste diz isso em vez de ler o campo errado. Três rodadas seguidas limpas.
+
+---
+
+## 12. A rodada dos prints do celular
+
+A Vanessa mandou prints do aparelho de verdade — não do capturador — e isso
+mostrou coisas que o print de 390px não mostrava.
+
+### O que ela apontou
+
+**As letras do equipamento.** As caixinhas Dano/Traço/Alcance/Mãos usavam a
+fonte de TÍTULO. O Cinzel é caixa alta e largo: "Corpo a Corpo" virava três
+linhas dentro de um quadrado de 76px, e quatro quadrados desses tomavam meia
+tela. Viraram linhas "rótulo … valor" — o valor ali é uma **palavra**, não um
+número, e palavra se lê deitada.
+
+**O ouro ocupando meia tela.** Três caixas empilhadas, cada uma com dois botões
+de 44px, para dizer "1, 0, 0". Agora são três colunas numa linha. Ouro é
+registro, não protagonista.
+
+**O campo que ninguém sabia o que era.** Ele dividia a linha com "Guardar" e
+"Comprar" e sobravam uns 60px: dava para ler "O qu…". Agora tem **rótulo**
+("Acrescentar à mochila") e linha própria, com os três botões embaixo. O passo
+de e2e passou a procurá-lo pelo rótulo, e não por posição — é o jeito de o
+rótulo não sumir de novo sem alguém notar.
+
+### O inventário, que era só uma lista
+
+Ela pediu três coisas, e as três dependiam da mesma mudança: o item deixou de
+ser uma **string solta** e virou `{id, nome, qtd, emUso}`.
+
+- **Quantidade.** Guardar o mesmo item de novo agora **soma** em vez de criar
+  outra linha — era o que a mesa via, a mesma poção repetida três vezes e
+  nenhuma delas dizendo que eram três. E chegar a zero **tira** o item: bebeu a
+  última, ela sai. Uma linha com "×0" seria um item que existe e não existe.
+- **Em uso.** Anel vazio é "guardado", anel cheio e dourado é "na mão agora".
+  É do item, não da mochila — há teste para o vizinho não ir junto.
+- **Pegar um item que existe no jogo.** Os **120 itens do livro** (60 saques e
+  60 consumíveis) entram por um seletor com busca, e chegam com o nome do
+  livro, o id, e o texto que explica o que fazem. **Tocar no nome abre esse
+  texto** — era a outra metade da queixa: uma lista de nomes que não explicavam
+  nada. Ninguém lembra o que a "Aljava de carga" faz no meio de uma cena.
+
+Texto livre continua valendo, porque a maior parte do que entra numa mochila em
+jogo é coisa que o Mestre inventou na hora. E texto livre **não se junta** com
+item do livro de mesmo nome: um tem página, o outro é saque da mesa, e juntar
+faria a tela mostrar a regra errada.
+
+**Não há migração à parte.** `normalizarInventario_` roda na validação da
+ficha, então as fichas antigas — com os itens ainda em texto solto — sobem para
+a forma nova no primeiro salvamento, sem data-limite para ninguém lembrar.
+
+### O que eu vi nos prints e ela não citou
+
+**A lista de equipamento estava com duas gramáticas.** No item preenchido vinha
+nome e depois o rótulo; no vazio, rótulo e depois "nada equipado" — então
+"ARMA SECUNDÁRIA" aparecia na altura em que as outras duas mostram o nome.
+Agora a ordem é a mesma nos dois casos.
+
+**O cabeçalho tinha duas linhas de subtítulo.** "Guerreiro · Chamada do
+Matador" quebrava, e o cabeçalho passava de 130px — fixo no topo, cobrado em
+toda rolagem. Ficou numa linha com reticências e o texto inteiro no `title`.
+
+**O modal de Comprar não tinha saída.** Só "Comprar". No celular ninguém
+adivinha que tocar no fundo fecha, e não há tecla Escape.
+
+⚠ **Ponto de interesse:** os botões da linha do item **não usam a classe
+`.btn`** — cinco molduras por linha, em oito linhas, viravam um muro de
+retângulos. São glifos dentro de uma área de toque de 44px, a mesma separação
+entre **alvo** e **desenho** da trilha de PV (E39). Quem for "padronizar os
+botões" um dia vai querer devolver o `.btn` aqui; é o mesmo erro de antes, com
+outra roupa.

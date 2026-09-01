@@ -296,13 +296,18 @@ function ajustarOuroDaFicha_(ficha, a) {
  * gasto por nada.
  */
 function comprarItem_(ficha, a) {
-  const texto = String(a.item === undefined ? '' : a.item).trim().replace(/\s+/g, ' ');
-  if (!texto) return { erro: 'Escreva o que está sendo comprado.' };
-  if (texto.length > LIMITE_ITEM_INVENTARIO) {
+  if (String(a.item || '').trim().length > LIMITE_ITEM_INVENTARIO) {
     return { erro: 'O nome do item passa de ' + LIMITE_ITEM_INVENTARIO + ' caracteres.' };
   }
-  ficha.inventario = Array.isArray(ficha.inventario) ? ficha.inventario : [];
-  if (ficha.inventario.length >= LIMITE_ITENS_INVENTARIO) {
+  const comprado = itemDeMochila_({ id: a.itemId, nome: a.item, qtd: a.qtd });
+  if (!comprado) return { erro: 'Escreva o que está sendo comprado.' };
+  const texto = comprado.nome;
+  const lista = normalizarInventario_(ficha);
+  const jaTem = lista.filter(function (x) {
+    return comprado.id ? x.id === comprado.id
+                       : (!x.id && chaveTexto_(x.nome) === chaveTexto_(comprado.nome));
+  })[0];
+  if (!jaTem && lista.length >= LIMITE_ITENS_INVENTARIO) {
     return { erro: 'A mochila já tem ' + LIMITE_ITENS_INVENTARIO + ' itens — tire algo antes de comprar.' };
   }
 
@@ -332,48 +337,182 @@ function comprarItem_(ficha, a) {
   // As duas metades, agora que as duas passaram na conferência.
   const novo = ouroNormalizado_(total);
   ficha.ouro = { punhados: novo.punhados, bolsas: novo.bolsas, cofres: novo.cofres };
-  ficha.inventario.push(texto);
+  if (jaTem) jaTem.qtd = Math.min(LIMITE_QUANTIDADE_ITEM, jaTem.qtd + comprado.qtd);
+  else lista.push(comprado);
 
   return {
     tipo: 'compra', item: texto, custo: custo,
-    antes: antes, depois: ficha.ouro, total: ficha.inventario.length,
+    antes: antes, depois: ficha.ouro, total: lista.length,
     aviso: 'Preço é decisão da mesa: o livro (p.104) não define preços.'
   };
 }
 
+/** Teto de unidades do mesmo item. Sessenta poções é um erro de digitação. */
+const LIMITE_QUANTIDADE_ITEM = 99;
+
 /**
- * Acrescenta ou tira um item da mochila.
+ * A forma de um item da mochila: {id, nome, qtd, emUso}.
  *
- * Sem mercado, sem preço, sem catálogo: é uma lista de texto, como a linha em
- * branco da ficha de papel. Quando existir compra de equipamento, ela vai
- * passar por aqui em vez de inventar outro caminho.
+ * Ele já foi uma STRING solta, e as fichas antigas ainda estão assim. Esta
+ * função é a ponte: normaliza tudo para a forma nova, e por isso é chamada
+ * também na validação da ficha — as fichas velhas se consertam sozinhas no
+ * primeiro salvamento, sem migração à parte.
+ *
+ * O `id` é o do catálogo do livro quando o item veio de lá, e vazio quando é
+ * saque que a mesa inventou. Guardar o id é o que permite a tela mostrar O QUE
+ * O ITEM FAZ sem o texto do livro morar dentro da ficha (que tem teto de
+ * 45.000 caracteres numa célula só).
+ */
+function itemDeMochila_(bruto) {
+  if (bruto === null || bruto === undefined) return null;
+
+  let nome = '';
+  let id = '';
+  let qtd = 1;
+  let emUso = false;
+  let nota = '';
+
+  if (typeof bruto === 'object') {
+    nome = String(bruto.nome === undefined ? '' : bruto.nome);
+    id = String(bruto.id === undefined ? '' : bruto.id);
+    qtd = Math.trunc(Number(bruto.qtd));
+    emUso = Boolean(bruto.emUso);
+    nota = String(bruto.nota === undefined ? '' : bruto.nota);
+  } else {
+    nome = String(bruto);
+  }
+
+  nome = nome.trim().replace(/\s+/g, ' ').slice(0, LIMITE_ITEM_INVENTARIO);
+
+  /*
+   * O id é CONFERIDO contra o catálogo, não aceito de palavra. Um id inventado
+   * faria a tela procurar um texto de livro que não existe — e o nome gravado
+   * passa a ser o do catálogo, para a mochila não discordar da página.
+   *
+   * Isto vem ANTES de exigir o nome: escolher do livro é mandar só o id, e o
+   * nome é justamente o que o catálogo tem para dar.
+   */
+  if (id) {
+    const doLivro = acharItem_(id);
+    if (doLivro) { id = doLivro.id; nome = doLivro.nome; }
+    else id = '';
+  }
+
+  if (!nome) return null;
+
+  if (!isFinite(qtd) || qtd < 1) qtd = 1;
+  if (qtd > LIMITE_QUANTIDADE_ITEM) qtd = LIMITE_QUANTIDADE_ITEM;
+
+  const item = { id: id, nome: nome, qtd: qtd, emUso: emUso };
+  if (nota) item.nota = nota.slice(0, LIMITE_ITEM_INVENTARIO);
+  return item;
+}
+
+/** A mochila inteira na forma nova, sem buracos. */
+function normalizarInventario_(ficha) {
+  const lista = Array.isArray(ficha.inventario) ? ficha.inventario : [];
+  const saida = [];
+  for (let i = 0; i < lista.length && saida.length < LIMITE_ITENS_INVENTARIO; i++) {
+    const item = itemDeMochila_(lista[i]);
+    if (item) saida.push(item);
+  }
+  ficha.inventario = saida;
+  return saida;
+}
+
+/**
+ * Acrescenta, tira, conta ou marca em uso um item da mochila.
+ *
+ * O catálogo do livro entrou aqui na rodada da mesa: dá para escolher um dos
+ * 120 itens (saques e consumíveis) em vez de digitar. Texto livre continua
+ * valendo — a maior parte do que entra numa mochila em jogo é coisa que o
+ * Mestre inventou na hora.
  */
 function ajustarInventario_(ficha, a) {
   const acao = chaveTexto_(a.acao);
-  ficha.inventario = Array.isArray(ficha.inventario) ? ficha.inventario : [];
+  const lista = normalizarInventario_(ficha);
 
   if (acao === 'adicionar') {
-    const texto = String(a.item === undefined ? '' : a.item).trim().replace(/\s+/g, ' ');
-    if (!texto) return { erro: 'Escreva o que entra na mochila.' };
-    if (texto.length > LIMITE_ITEM_INVENTARIO) {
+    const novo = itemDeMochila_({
+      id: a.itemId, nome: a.item, qtd: a.qtd, emUso: a.emUso
+    });
+    if (!novo) return { erro: 'Escreva o que entra na mochila.' };
+    if (String(a.item || '').trim().length > LIMITE_ITEM_INVENTARIO) {
       return { erro: 'O nome do item passa de ' + LIMITE_ITEM_INVENTARIO + ' caracteres.' };
     }
-    if (ficha.inventario.length >= LIMITE_ITENS_INVENTARIO) {
+
+    /*
+     * Item repetido SOMA em vez de virar outra linha. Era o que a mesa via:
+     * "Poção de Saúde Menor" três vezes, uma embaixo da outra, e nenhuma delas
+     * dizendo que eram três. Só junta o que é a mesma coisa — id igual, ou o
+     * mesmo nome quando os dois são texto livre.
+     */
+    for (let i = 0; i < lista.length; i++) {
+      const mesmo = novo.id
+        ? lista[i].id === novo.id
+        : (!lista[i].id && chaveTexto_(lista[i].nome) === chaveTexto_(novo.nome));
+      if (mesmo) {
+        const antes = lista[i].qtd;
+        lista[i].qtd = Math.min(LIMITE_QUANTIDADE_ITEM, antes + novo.qtd);
+        return {
+          tipo: 'inventario', acao: 'adicionar', item: lista[i].nome,
+          qtd: lista[i].qtd, juntou: true, total: lista.length
+        };
+      }
+    }
+
+    if (lista.length >= LIMITE_ITENS_INVENTARIO) {
       return { erro: 'A mochila já tem ' + LIMITE_ITENS_INVENTARIO + ' itens.' };
     }
-    ficha.inventario.push(texto);
-    return { tipo: 'inventario', acao: 'adicionar', item: texto, total: ficha.inventario.length };
+    lista.push(novo);
+    return {
+      tipo: 'inventario', acao: 'adicionar', item: novo.nome,
+      qtd: novo.qtd, total: lista.length
+    };
   }
 
+  const i = Math.trunc(Number(a.indice));
+  const achou = isFinite(i) && i >= 0 && i < lista.length;
+
   if (acao === 'remover') {
-    const i = Math.trunc(Number(a.indice));
-    if (!isFinite(i) || i < 0 || i >= ficha.inventario.length) {
-      return { erro: 'Item da mochila não encontrado.' };
+    if (!achou) return { erro: 'Item da mochila não encontrado.' };
+    const nome = lista[i].nome;
+    lista.splice(i, 1);
+    return { tipo: 'inventario', acao: 'remover', item: nome, total: lista.length };
+  }
+
+  if (acao === 'quantidade') {
+    if (!achou) return { erro: 'Item da mochila não encontrado.' };
+    const delta = Math.trunc(Number(a.delta)) || 0;
+    const pedido = (a.valor === undefined || a.valor === null)
+      ? lista[i].qtd + delta
+      : Math.trunc(Number(a.valor));
+    if (!isFinite(pedido)) return { erro: 'Quantidade inválida.' };
+
+    /*
+     * Chegar a zero é TIRAR o item. É o gesto da mesa: bebeu a última poção,
+     * ela sai da lista. Deixar uma linha com "×0" seria um item que existe e
+     * não existe ao mesmo tempo.
+     */
+    if (pedido < 1) {
+      const nome = lista[i].nome;
+      lista.splice(i, 1);
+      return { tipo: 'inventario', acao: 'remover', item: nome, qtd: 0, total: lista.length,
+               aviso: nome + ' acabou e saiu da mochila.' };
     }
-    const bruto = ficha.inventario[i];
-    const nome = (bruto && typeof bruto === 'object') ? (bruto.nome || '') : String(bruto);
-    ficha.inventario.splice(i, 1);
-    return { tipo: 'inventario', acao: 'remover', item: nome, total: ficha.inventario.length };
+    if (pedido > LIMITE_QUANTIDADE_ITEM) {
+      return { erro: 'O máximo por item é ' + LIMITE_QUANTIDADE_ITEM + '.' };
+    }
+    lista[i].qtd = pedido;
+    return { tipo: 'inventario', acao: 'quantidade', item: lista[i].nome, qtd: pedido };
+  }
+
+  if (acao === 'uso') {
+    if (!achou) return { erro: 'Item da mochila não encontrado.' };
+    lista[i].emUso = Boolean(a.ligar);
+    return {
+      tipo: 'inventario', acao: 'uso', item: lista[i].nome, emUso: lista[i].emUso
+    };
   }
 
   return { erro: 'Ação de mochila desconhecida: "' + String(a.acao) + '".' };

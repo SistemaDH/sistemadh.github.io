@@ -227,11 +227,21 @@ await p.getByRole('tab', { name: 'Mochila' }).click();
 await foto('f5-mochila');
 
 // Mochila editável: um item novo e um punhado a mais (C1).
-await p.locator('.ficha__novoItem .campo__entrada').fill('Um mapa rasgado do porto');
+await p.getByLabel('Acrescentar à mochila').fill('Um mapa rasgado do porto');
 await p.getByRole('button', { name: 'Guardar' }).click();
 await p.waitForTimeout(1200);
 await p.locator('.ficha__moedas').scrollIntoViewIfNeeded();
 await foto('f5b-mochila-editavel');
+
+// O catálogo dos 120 itens do livro (K11).
+await p.locator('.ficha__novoItem')
+  .getByRole('button', { name: 'Escolher um item do livro' }).click();
+await p.waitForSelector('.ficha__catalogo');
+await foto('f5d-itens-do-livro');
+await p.locator('.ficha__catalogoItem').first().click();
+await p.waitForTimeout(1500);
+await p.locator('.ficha__inventario').scrollIntoViewIfNeeded();
+await foto('f5e-mochila-com-quantidade');
 
 // Comprar (I1): o livro não tem tabela de preços, então quem digita o preço
 // combinado é o jogador — e as duas metades andam juntas.

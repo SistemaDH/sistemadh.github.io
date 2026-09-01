@@ -281,7 +281,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
        */
       el('div', { class: 'ficha__identidade' }, [
         el('h1', { class: 'ficha__nome', texto: ident.nome || p.nome }),
-        linha ? el('p', { class: 'ficha__subtitulo' }, nomeComGlossa(linha)) : null
+        linha ? el('p', { class: 'ficha__subtitulo', title: linha }, nomeComGlossa(linha)) : null
       ]),
       botaoDeRegras(),
       el('span', { class: 'selo selo--nivel', texto: `Nível ${ident.nivel || p.nivel}` })
@@ -425,10 +425,17 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     return el('ul', { class: 'retrato__lista' }, itens.map((par) => {
       const rotulo = par[0];
       const item = par[1];
+      /*
+       * NOME em cima, rótulo embaixo — nos DOIS casos.
+       *
+       * A linha vazia estava invertida (rótulo primeiro), e no celular isso
+       * fazia "ARMA SECUNDÁRIA / nada equipado" aparecer no lugar onde as
+       * outras duas mostram o nome do item. Três linhas, duas gramáticas.
+       */
       if (!item) {
         return el('li', { class: 'retrato__item retrato__item--vazio' }, [
-          el('span', { class: 'retrato__rotulo', texto: rotulo }),
-          el('span', { class: 'texto-xs texto-fraco', texto: 'nada equipado' })
+          el('span', { class: 'retrato__nome retrato__nome--vazio', texto: 'nada equipado' }),
+          el('span', { class: 'retrato__rotulo', texto: rotulo })
         ]);
       }
       return el('li', { class: 'retrato__item' }, [
@@ -1058,18 +1065,34 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
 
   /* --- equipamento -------------------------------------------------------- */
 
+  /**
+   * Uma linha "rótulo … valor" da ficha de equipamento.
+   *
+   * Substituiu as caixinhas quadradas, que estavam em fonte de TÍTULO: o
+   * Cinzel é caixa alta e largo, e "Corpo a Corpo" virava três linhas dentro
+   * de um quadrado de 76px. Aqui o valor é uma palavra, não um número — e
+   * palavra se lê melhor deitada, ao lado do nome do campo.
+   */
+  function linhaDeAtributo(rotulo, valor) {
+    return el('div', { class: 'ficha__atributo' }, [
+      el('span', { class: 'ficha__atributoRotulo' }, nomeAnotado(rotulo, { comGlossa: false })),
+      el('span', { class: 'ficha__atributoValor', texto: String(valor) })
+    ]);
+  }
+
   function verEquipamento(rotulo, item) {
     const carac = item.caracteristica;
     const numeros = item.dano
-      ? [caixinha('Dano', item.dano), caixinha('Traço', item.atributo),
-         caixinha('Alcance', item.alcance), caixinha('Mãos', item.maos)]
-      : [caixinha('Limiares', item.limiares), caixinha('Armadura', item.pontuacaoArmadura)];
+      ? [linhaDeAtributo('Dano', item.dano), linhaDeAtributo('Traço', item.atributo),
+         linhaDeAtributo('Alcance', item.alcance), linhaDeAtributo('Mãos', item.maos)]
+      : [linhaDeAtributo('Limiares', item.limiares),
+         linhaDeAtributo('Armadura', item.pontuacaoArmadura)];
 
     const modal = abrirModal({
       titulo: item.nome,
       conteudo: el('div', { class: 'pilha' }, [
         el('p', { class: 'texto-sm texto-fraco', texto: `${rotulo} · patamar ${item.tier}` }),
-        el('div', { class: 'ficha__grade' }, numeros),
+        el('div', { class: 'ficha__atributos' }, numeros),
         carac ? el('div', { class: 'ficha__carac' }, [
           el('h4', { class: 'ficha__caracNome' }, nomeComGlossa(carac.nome)),
           el('p', { class: 'texto-sm' }, textoAnotado(carac.texto || ''))
@@ -1329,18 +1352,26 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
      * "+" no punhado quando já há nove vira uma bolsa, como na ficha de papel.
      * A tela nem tenta fazer essa conta — ela pinta o que voltou.
      */
+    /*
+     * Três colunas numa linha só.
+     *
+     * Eram três caixas empilhadas, cada uma com rótulo e dois botões grandes —
+     * meia tela de celular para dizer "1, 0, 0". Ouro é registro, não
+     * protagonista: cabe numa linha, e a linha cabe na tela junto com o que
+     * vem depois.
+     */
     const moeda = (rotulo, singular, chave, valor) => el('div', { class: 'ficha__moeda' }, [
       el('span', { class: 'ficha__moedaRotulo' }, nomeAnotado(rotulo, { comGlossa: false })),
-      el('div', { class: 'linha' }, [
+      el('div', { class: 'ficha__moedaLinha' }, [
         el('button', {
-          type: 'button', class: 'btn btn--contador',
+          type: 'button', class: 'btn btn--contador btn--contadorMiudo',
           'aria-label': `Menos um ${singular}`,
           disabled: !ouroEmPunhados(ouro),
           onClick: () => enviar([{ tipo: 'ouro', chave, delta: -1 }])
         }, '−'),
         el('strong', { class: 'ficha__moedaValor texto-ouro', texto: String(valor || 0) }),
         el('button', {
-          type: 'button', class: 'btn btn--contador',
+          type: 'button', class: 'btn btn--contador btn--contadorMiudo',
           'aria-label': `Mais um ${singular}`,
           onClick: () => enviar([{ tipo: 'ouro', chave, delta: 1 }])
         }, '+')
@@ -1371,7 +1402,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const inv = ficha.inventario || [];
     const campoNovo = el('input', semCorretor({
       type: 'text', class: 'campo__entrada', maxlength: 120,
-      placeholder: 'O que entrou na mochila?'
+      placeholder: 'ex.: um mapa rasgado'
     }));
     const botaoGuardar = el('button', { type: 'button', class: 'btn btn--fantasma' }, 'Guardar');
     const adicionar = () => {
@@ -1385,6 +1416,97 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     campoNovo.addEventListener('keydown', (ev) => {
       if (ev.key === 'Enter') { ev.preventDefault(); adicionar(); }
     });
+
+    /**
+     * O que o item faz, direto do livro.
+     *
+     * A ficha guarda só o id; a prosa mora no catálogo estático. Sem isto, a
+     * mochila era uma lista de nomes que não explicavam nada — ninguém lembra
+     * o que a "Aljava de carga" faz no meio de uma cena.
+     */
+    function verItemDoLivro(doLivro, naMochila) {
+      const modal = abrirModal({
+        titulo: doLivro.nome,
+        conteudo: el('div', { class: 'pilha' }, [
+          el('p', { class: 'texto-xs texto-fraco', texto:
+            `${doLivro.tipo} · ${naMochila && naMochila.qtd > 1 ? `você tem ${naMochila.qtd}` : 'você tem 1'}` }),
+          el('p', { class: 'texto-sm' }, textoAnotado(doLivro.descricao || ''))
+        ]),
+        acoes: [el('button', {
+          type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar()
+        }, 'Fechar')]
+      });
+    }
+
+    /**
+     * Escolher um dos 120 itens do livro, com busca.
+     *
+     * A mochila continua aceitando texto livre — a maior parte do que entra
+     * numa mochila em jogo é coisa que o Mestre inventou na hora. Mas o que
+     * ESTÁ no livro entra pelo livro: assim ele chega com o nome certo, com o
+     * id, e com o texto que explica o que faz.
+     */
+    function abrirCatalogoDeItens() {
+      const todos = catalogo.todosOsItens();
+      const lista = el('div', { class: 'ficha__catalogo' });
+
+      const busca = el('input', semCorretor({
+        type: 'search', class: 'campo__entrada',
+        placeholder: 'Buscar entre os 120 itens do livro…',
+        'aria-label': 'Buscar item do livro'
+      }));
+
+      const contagem = el('p', { class: 'texto-xs texto-fraco' });
+
+      const desenharLista = () => {
+        const termo = dados.chave(busca.value.trim());
+        const achados = !termo ? todos : todos.filter((i) =>
+          dados.chave(i.nome).includes(termo) ||
+          dados.chave(i.descricao || '').includes(termo) ||
+          dados.chave(i.nomeIngles || '').includes(termo));
+
+        contagem.textContent = achados.length === todos.length
+          ? `${todos.length} itens — 60 saques e 60 consumíveis.`
+          : `${achados.length} ${achados.length === 1 ? 'item' : 'itens'}.`;
+
+        limpar(lista);
+        if (!achados.length) {
+          lista.append(el('p', { class: 'texto-sm texto-fraco', texto:
+            'Nada com esse nome. Se for coisa da sua mesa, feche isto e escreva no campo.' }));
+          return;
+        }
+        achados.slice(0, 60).forEach((i) => {
+          lista.append(el('button', {
+            type: 'button', class: 'ficha__catalogoItem',
+            onClick: () => {
+              acrescentar(botaoGuardar, [{ tipo: 'inventario', acao: 'adicionar', itemId: i.id }],
+                () => { campoNovo.value = ''; });
+              modal.fechar();
+            }
+          }, [
+            el('span', { class: 'ficha__catalogoNome', texto: i.nome }),
+            el('span', { class: 'ficha__catalogoTipo', texto: i.tipo }),
+            el('span', { class: 'ficha__catalogoTexto', texto: i.descricao || '' })
+          ]));
+        });
+        if (achados.length > 60) {
+          lista.append(el('p', { class: 'texto-xs texto-fraco', texto:
+            `Mostrando 60 de ${achados.length}. Escreva mais para afinar a busca.` }));
+        }
+      };
+
+      busca.addEventListener('input', desenharLista);
+      desenharLista();
+
+      const modal = abrirModal({
+        titulo: 'Itens do livro',
+        conteudo: el('div', { class: 'pilha' }, [busca, contagem, lista]),
+        acoes: [el('button', {
+          type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar()
+        }, 'Fechar')]
+      });
+      busca.focus();
+    }
 
     /*
      * COMPRAR. O livro (p.104) diz com todas as letras que NÃO define preços:
@@ -1454,30 +1576,111 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       const modal = abrirModal({
         titulo: 'Comprar',
         conteudo: corpo,
-        acoes: [botaoComprar]
+        // Faltava a saída: no celular ninguém adivinha que tocar no fundo
+        // fecha, e não há tecla Escape.
+        acoes: [
+          el('button', { type: 'button', class: 'btn btn--fantasma',
+            onClick: () => modal.fechar() }, 'Fechar'),
+          botaoComprar
+        ]
       });
       campoItem.focus();
     };
 
+    /*
+     * O item da mochila, em UMA linha.
+     *
+     * A mesa reclamou de duas coisas ao mesmo tempo: os cartões eram enormes
+     * para dizer uma palavra, e a lista não servia para nada além de listar.
+     * As duas se resolvem juntas — a linha encolheu e ganhou o que faltava:
+     *
+     *  - o NOME abre o que o item faz (quando ele é do livro);
+     *  - ×N com + e −, porque o que mais aparece é consumível que acaba;
+     *  - "em uso", que separa o que está na mão do que está no fundo da mochila.
+     */
+    const linhaDeItem = (item, indice) => {
+      const doLivro = item.id ? catalogo.acharItem(item.id) : null;
+      const nome = item.nome || '';
+
+      const rotulo = doLivro
+        ? el('button', {
+          type: 'button', class: 'ficha__itemNome ficha__itemNome--doLivro',
+          'aria-label': `${nome} — ver o que faz`,
+          onClick: () => verItemDoLivro(doLivro, item)
+        }, nomeComGlossa(nome))
+        : el('span', { class: 'ficha__itemNome' }, nomeComGlossa(nome));
+
+      const contar = (delta) => enviar(
+        [{ tipo: 'inventario', acao: 'quantidade', indice, delta }]);
+
+      return el('li', { class: `ficha__item ${item.emUso ? 'esta-em-uso' : ''}` }, [
+        el('div', { class: 'ficha__itemTexto' }, [
+          rotulo,
+          item.nota ? el('span', { class: 'ficha__itemNota', texto: item.nota }) : null
+        ]),
+        /*
+         * Os botões da linha NÃO usam a classe `.btn`.
+         *
+         * `.btn` carrega moldura, fundo e 44px de caixa desenhada — cinco
+         * deles por linha, em oito linhas, viram um muro de retângulos. Aqui
+         * eles são glifos dentro de uma área de toque de 44px de altura: a
+         * mesma separação entre ALVO e DESENHO da trilha de PV (E39).
+         */
+        el('div', { class: 'ficha__itemAcoes' }, [
+          el('button', {
+            type: 'button', class: 'ficha__itemBotao ficha__itemUso',
+            'aria-pressed': item.emUso ? 'true' : 'false',
+            'aria-label': item.emUso ? `Guardar ${nome} na mochila` : `Marcar ${nome} como em uso`,
+            title: item.emUso ? 'Em uso — toque para guardar' : 'Guardado — toque para pôr em uso',
+            onClick: () => enviar([{ tipo: 'inventario', acao: 'uso', indice, ligar: !item.emUso }])
+            // Anel vazio = guardado; anel cheio = na mão. Emoji de mão ficava
+            // marrom no meio de uma lista dourada e roubava a atenção da
+            // linha inteira para dizer "não".
+          }, item.emUso ? '●' : '○'),
+          el('button', {
+            type: 'button', class: 'ficha__itemBotao',
+            'aria-label': `Menos um ${nome}`, onClick: () => contar(-1)
+          }, '−'),
+          el('span', { class: 'ficha__itemQtd', texto: `×${item.qtd || 1}` }),
+          el('button', {
+            type: 'button', class: 'ficha__itemBotao',
+            'aria-label': `Mais um ${nome}`, onClick: () => contar(1)
+          }, '+'),
+          el('button', {
+            type: 'button', class: 'ficha__itemBotao ficha__itemTirar',
+            'aria-label': `Tirar ${nome} da mochila`,
+            title: 'Tirar da mochila',
+            onClick: () => enviar([{ tipo: 'inventario', acao: 'remover', indice }])
+          }, '🗑')
+        ])
+      ]);
+    };
+
     pai.append(secao('Inventário',
-      el('div', {}, [
+      el('div', { class: 'coluna' }, [
         inv.length
-          ? el('ul', { class: 'ficha__inventario' }, inv.map((i, indice) => {
-            const nome = typeof i === 'string' ? i : (i.nome || '');
-            const nota = (i && typeof i === 'object') ? i.nota : '';
-            return el('li', { class: 'ficha__item' }, [
-              el('span', { class: 'crescer' }, nomeComGlossa(nome)),
-              nota ? el('span', { class: 'texto-xs texto-fraco', texto: nota }) : null,
-              el('button', {
-                type: 'button', class: 'btn btn--fantasma btn--icone',
-                'aria-label': `Tirar ${nome} da mochila`,
-                onClick: () => enviar([{ tipo: 'inventario', acao: 'remover', indice }])
-              }, '🗑')
-            ]);
-          }))
+          ? el('ul', { class: 'ficha__inventario' }, inv.map(linhaDeItem))
           : el('p', { class: 'texto-sm texto-fraco', texto: 'A mochila está vazia.' }),
+
+        /*
+         * O campo ganhou RÓTULO e linha própria.
+         *
+         * Antes ele dividia a linha com "Guardar" e "Comprar" e sobravam uns
+         * 60px: dava para ver "O qu…" e mais nada. Quem chegasse na tela não
+         * tinha como saber o que era aquilo.
+         */
+        el('label', { class: 'campo' }, [
+          el('span', { class: 'campo__rotulo', texto: 'Acrescentar à mochila' }),
+          campoNovo
+        ]),
         el('div', { class: 'ficha__novoItem' }, [
-          campoNovo,
+          el('button', {
+            type: 'button', class: 'btn btn--fantasma',
+            // O rótulo curto cabe na coluna; o nome acessível diz o que é sem
+            // esbarrar no "Regras do livro" do cabeçalho.
+            'aria-label': 'Escolher um item do livro',
+            onClick: abrirCatalogoDeItens
+          }, 'Do livro'),
           botaoGuardar,
           el('button', {
             type: 'button', class: 'btn btn--fantasma ficha__comprar', onClick: abrirCompra
@@ -1693,6 +1896,18 @@ export async function carregarCatalogo() {
   const porNomeArma = indexar(eq.armas, 'nome');
   const porIdArmadura = indexar(eq.armaduras);
   const porNomeArmadura = indexar(eq.armaduras, 'nome');
+  /*
+   * Os 120 itens do livro — 60 saques e 60 consumíveis — numa lista só.
+   *
+   * A mochila guarda o ID; o TEXTO do que o item faz mora aqui, no catálogo
+   * estático que já vem com o site. É o mesmo arranjo das 189 cartas: mandar
+   * essa prosa toda pelo Apps Script a cada abertura gastaria cota à toa, e a
+   * ficha tem teto de 45.000 caracteres numa célula.
+   */
+  const itensDoLivro = []
+    .concat((eq.loot || []).map((i) => ({ ...i, tipo: 'saque' })))
+    .concat((eq.consumiveis || []).map((i) => ({ ...i, tipo: 'consumível' })));
+  const porIdItem = indexar(itensDoLivro);
   const porCodigoDominio = new Map(doms.dominios.map((d) => [d.codigo, d]));
 
   const achar = (mapa, reserva) => (idOuNome) => {
@@ -1765,6 +1980,8 @@ export async function carregarCatalogo() {
     acharCarta: achar(porIdCarta, porNomeCarta),
     acharArma: achar(porIdArma, porNomeArma),
     acharArmadura: achar(porIdArmadura, porNomeArmadura),
+    acharItem: (id) => porIdItem.get(dados.chave(id)) || null,
+    todosOsItens: () => itensDoLivro,
     condicaoPorId: (id) => cond.condicoes.find((c) => c.id === id) || null,
     textoDaCaracteristica: (nome) => textosDeCaracteristica.get(dados.chave(nome)) || '',
     corDoDominio: (codigo) => (porCodigoDominio.get(codigo) || {}).cor || 'var(--cor-ouro)',

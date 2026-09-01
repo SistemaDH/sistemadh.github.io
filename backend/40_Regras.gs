@@ -350,6 +350,16 @@ function validarFicha_(fichaBruta) {
   if (typeof validarConjuracao_ === 'function') problemas = problemas.concat(validarConjuracao_(ficha));
   problemas = problemas.concat(validarCartasDaFicha_(ficha));
   problemas = problemas.concat(validarFichasFilhas_(ficha));
+  /*
+   * A mochila se conserta sozinha aqui.
+   *
+   * Os itens já foram strings soltas; hoje são {id, nome, qtd, emUso}. Passar
+   * pela normalização em toda validação é o que faz as fichas antigas subirem
+   * para a forma nova no primeiro salvamento, sem migração à parte e sem uma
+   * data-limite para lembrar.
+   */
+  if (typeof normalizarInventario_ === 'function') normalizarInventario_(ficha);
+
   if (typeof validarOuro_ === 'function') {
     const vOuro = validarOuro_(ficha.ouro);
     if (!vOuro.ok) problemas = problemas.concat(vOuro.erros);

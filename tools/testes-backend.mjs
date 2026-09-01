@@ -1050,7 +1050,10 @@ teste('a mochila aceita item novo e devolve item tirado', () => {
   const antes = f.inventario.length;
   const r = contexto.aplicarAjustes_(f, [{ tipo: 'inventario', acao: 'adicionar', item: '  Um mapa   rasgado  ' }]);
   igual(r.erros, []);
-  igual(f.inventario[f.inventario.length - 1], 'Um mapa rasgado', 'espaço sobrando é aparado');
+  const guardado = f.inventario[f.inventario.length - 1];
+  igual(guardado.nome, 'Um mapa rasgado', 'espaço sobrando é aparado');
+  igual(guardado.qtd, 1, 'item novo entra com uma unidade');
+  igual(guardado.id, '', 'texto livre não inventa id de catálogo');
   igual(f.inventario.length, antes + 1);
 
   const tirou = contexto.aplicarAjustes_(f, [{ tipo: 'inventario', acao: 'remover', indice: antes }]);
@@ -3691,7 +3694,7 @@ teste('comprar tira o ouro e põe o item, de uma vez só', () => {
   f.ouro = { punhados: 5, bolsas: 1, cofres: 0 };
   const r = contexto.comprarItem_(f, { item: 'Corda de 15 metros', preco: { punhados: 7 } });
   igual(r.custo, 7);
-  igual(f.inventario, ['Corda de 15 metros']);
+  igual(f.inventario, [{ id: '', nome: 'Corda de 15 metros', qtd: 1, emUso: false }]);
   igual(f.ouro, { punhados: 8, bolsas: 0, cofres: 0 }, '15 punhados menos 7 dá 8');
 });
 
@@ -4524,6 +4527,109 @@ teste('as faixas de dano caem TODAS no mesmo verbete', () => {
     return achado ? achado.id : '(nenhum)';
   });
   igual([...new Set(donos)].join(' | '), 'limiares-de-dano');
+});
+
+console.log('\nA mochila com quantidade, uso e catálogo');
+
+const mochilaDeTeste = () => {
+  const f = contexto.fichaVazia_();
+  f.inventario = [];
+  return f;
+};
+const guardar = (f, ajuste) =>
+  contexto.aplicarAjustes_(f, [Object.assign({ tipo: 'inventario', acao: 'adicionar' }, ajuste)]);
+
+teste('a ficha antiga (item como texto solto) se conserta sozinha', () => {
+  /*
+   * Não há migração à parte: `normalizarInventario_` roda na validação, então
+   * a primeira gravação de uma ficha velha já sobe tudo para a forma nova.
+   */
+  const f = mochilaDeTeste();
+  f.inventario = ['Uma tocha', '  15 metros   de corda ', '', null];
+  contexto.normalizarInventario_(f);
+  igual(f.inventario.length, 2, 'linha vazia e nula somem');
+  igual(f.inventario[0].nome, 'Uma tocha');
+  igual(f.inventario[1].nome, '15 metros de corda', 'espaço sobrando é aparado');
+  igual(f.inventario[0].qtd, 1);
+  igual(f.inventario[0].emUso, false);
+});
+
+teste('guardar o mesmo item de novo SOMA em vez de repetir a linha', () => {
+  // Era o que a mesa via: a mesma poção três vezes, e nenhuma delas dizendo três.
+  const f = mochilaDeTeste();
+  guardar(f, { item: 'Poção de Saúde Menor' });
+  const r = guardar(f, { item: 'poção de saúde menor' });
+  igual(f.inventario.length, 1, 'não pode virar duas linhas');
+  igual(f.inventario[0].qtd, 2);
+  verdade(r.mudancas[0].juntou, 'a resposta diz que juntou');
+});
+
+teste('o item do livro entra com o NOME do livro, e o id é conferido', () => {
+  const f = mochilaDeTeste();
+  guardar(f, { itemId: 'loot-01', item: 'nome que eu inventei' });
+  igual(f.inventario[0].id, 'loot-01');
+  igual(f.inventario[0].nome, 'Saco de Dormir Premium', 'o catálogo manda no nome');
+
+  // Um id que não existe não vira item do livro — vira texto livre.
+  const g = mochilaDeTeste();
+  guardar(g, { itemId: 'loot-inventado', item: 'Coisa estranha' });
+  igual(g.inventario[0].id, '', 'id inventado é descartado');
+  igual(g.inventario[0].nome, 'Coisa estranha');
+});
+
+teste('texto livre e item do livro com o mesmo nome NÃO se juntam', () => {
+  /*
+   * São coisas diferentes: um tem página no livro e o outro é saque que a mesa
+   * inventou. Juntar faria a tela mostrar a regra do livro para o item errado.
+   */
+  const f = mochilaDeTeste();
+  guardar(f, { itemId: 'loot-01' });
+  guardar(f, { item: 'Saco de Dormir Premium' });
+  igual(f.inventario.length, 2);
+});
+
+teste('a quantidade sobe, desce e o zero TIRA o item', () => {
+  const f = mochilaDeTeste();
+  guardar(f, { item: 'Poção', qtd: 2 });
+  contexto.aplicarAjustes_(f, [{ tipo: 'inventario', acao: 'quantidade', indice: 0, delta: 1 }]);
+  igual(f.inventario[0].qtd, 3);
+
+  contexto.aplicarAjustes_(f, [{ tipo: 'inventario', acao: 'quantidade', indice: 0, valor: 1 }]);
+  igual(f.inventario[0].qtd, 1);
+
+  // Bebeu a última: a linha sai. "×0" seria um item que existe e não existe.
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'inventario', acao: 'quantidade', indice: 0, delta: -1 }]);
+  igual(f.inventario.length, 0);
+  verdade(/acabou/.test(r.mudancas[0].aviso || ''), r.mudancas[0].aviso);
+});
+
+teste('a quantidade tem teto', () => {
+  const f = mochilaDeTeste();
+  guardar(f, { item: 'Flecha' });
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'inventario', acao: 'quantidade', indice: 0, valor: 500 }]);
+  verdade(r.erros.length, 'devia recusar 500');
+  igual(f.inventario[0].qtd, 1, 'e não mexer no que estava lá');
+});
+
+teste('marcar em uso é do item, não da mochila', () => {
+  const f = mochilaDeTeste();
+  guardar(f, { item: 'Tocha' });
+  guardar(f, { item: 'Corda' });
+  contexto.aplicarAjustes_(f, [{ tipo: 'inventario', acao: 'uso', indice: 0, ligar: true }]);
+  igual(f.inventario[0].emUso, true);
+  igual(f.inventario[1].emUso, false, 'o vizinho não pode ir junto');
+});
+
+teste('comprar o que já se tem soma a quantidade e cobra uma vez', () => {
+  const f = contexto.fichaVazia_();
+  f.inventario = [];
+  f.ouro = { punhados: 0, bolsas: 2, cofres: 0 };
+  contexto.comprarItem_(f, { item: 'Poção', preco: { punhados: 3 } });
+  const r = contexto.comprarItem_(f, { item: 'Poção', preco: { punhados: 3 } });
+  igual(r.custo, 3);
+  igual(f.inventario.length, 1, 'continua uma linha só');
+  igual(f.inventario[0].qtd, 2);
+  igual(contexto.ouroEmPunhados_(f.ouro), 14, '20 punhados menos 3 e 3');
 });
 
 console.log('\nA foto do personagem');

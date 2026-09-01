@@ -484,8 +484,14 @@ try {
     await pagina.getByRole('tab', { name: 'Mochila' }).click();
     await pagina.waitForSelector('.ficha__moedas');
 
+    /*
+     * O campo tem RÓTULO e linha própria. Ele já dividiu a linha com "Guardar"
+     * e "Comprar", e sobravam uns 60px: dava para ler "O qu…" e mais nada.
+     * Este passo procura pelo rótulo, e não por posição, justamente por isso.
+     */
+    const campoDoItem = pagina.getByLabel('Acrescentar à mochila');
     const antes = await versaoNaTela();
-    await pagina.locator('.ficha__novoItem .campo__entrada').fill('Um mapa rasgado do porto');
+    await campoDoItem.fill('Um mapa rasgado do porto');
     await pagina.locator('.ficha__novoItem').getByRole('button', { name: 'Guardar' }).click();
     await esperarGravar(antes);
     const achou = await pagina.locator('.ficha__item', { hasText: 'Um mapa rasgado do porto' }).count();
@@ -493,7 +499,7 @@ try {
 
     // O campo só esvazia DEPOIS do servidor confirmar. Se limpasse antes e a
     // gravação falhasse, o que a pessoa escreveu sumia sem volta.
-    igual(await pagina.inputValue('.ficha__novoItem .campo__entrada'), '',
+    igual(await campoDoItem.inputValue(), '',
       'o campo devia estar limpo depois de gravar');
 
     // 1 punhado + 9 = 1 bolsa: quem faz a conta é o servidor.
@@ -518,6 +524,54 @@ try {
       .getByRole('button', { name: /Tirar/ }).click();
     await esperarGravar(v2);
     igual(await pagina.locator('.ficha__item', { hasText: 'Um mapa rasgado do porto' }).count(), 0);
+  });
+
+  await passo('a mochila conta, marca em uso e explica o item do livro', async () => {
+    // Guardar o mesmo item de novo SOMA: era a mesma poção repetida em linhas
+    // diferentes, e nenhuma delas dizendo que eram três.
+    const campoDoItem = pagina.getByLabel('Acrescentar à mochila');
+    const linha = pagina.locator('.ficha__item', { hasText: 'Poção da mesa' });
+    for (const _ of [1, 2]) {
+      const v = await versaoNaTela();
+      await campoDoItem.fill('Poção da mesa');
+      await pagina.locator('.ficha__novoItem').getByRole('button', { name: 'Guardar' }).click();
+      await esperarGravar(v);
+    }
+    igual(await linha.count(), 1, 'o item repetido virou duas linhas');
+    igual((await linha.locator('.ficha__itemQtd').textContent()).trim(), '×2');
+
+    // Marcar em uso é do item, não da mochila.
+    const v1 = await versaoNaTela();
+    await linha.getByRole('button', { name: /Marcar .* como em uso/ }).click();
+    await esperarGravar(v1);
+    igual(await pagina.locator('.ficha__item.esta-em-uso').count(), 1);
+
+    // O item do LIVRO entra pelo catálogo, com nome e texto do livro.
+    const v2 = await versaoNaTela();
+    await pagina.locator('.ficha__novoItem')
+      .getByRole('button', { name: 'Escolher um item do livro' }).click();
+    await pagina.waitForSelector('.ficha__catalogo');
+    await pagina.locator('.modal__caixa').last()
+      .getByLabel('Buscar item do livro').fill('Saco de Dormir');
+    await pagina.locator('.ficha__catalogoItem').first().click();
+    await esperarGravar(v2);
+
+    const doLivro = pagina.locator('.ficha__item', { hasText: 'Saco de Dormir Premium' });
+    igual(await doLivro.count(), 1, 'o item do livro não entrou');
+
+    // E ele EXPLICA o que faz — era a queixa: lista de nomes que não diziam nada.
+    await doLivro.locator('.ficha__itemNome--doLivro').click();
+    await pagina.waitForSelector('.modal__caixa');
+    const texto = await pagina.locator('.modal__caixa').last().textContent();
+    if (!/estresse/i.test(texto)) throw new Error(`sem o texto do livro: ${texto}`);
+    await pagina.locator('.modal__caixa').last().getByRole('button', { name: 'Fechar' }).click();
+    await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 5000 });
+
+    // Chegar a zero TIRA o item: bebeu a última, some da lista.
+    const v3 = await versaoNaTela();
+    await doLivro.getByRole('button', { name: /Menos um/ }).click();
+    await esperarGravar(v3);
+    igual(await doLivro.count(), 0, 'no zero o item devia sair da mochila');
   });
 
   await passo('tocar numa palavra de mecânica abre a regra com a página', async () => {

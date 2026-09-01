@@ -81,10 +81,21 @@
   white-space: nowrap;
 }
 
+/*
+ * Uma linha só, com reticências.
+ *
+ * "Guerreiro · Chamada do Matador" quebrava em duas e o cabeçalho passava de
+ * 130px — e ele fica FIXO no topo, então esse custo é cobrado o tempo todo, em
+ * toda rolagem. Classe e subclasse são informação de identidade, não de jogo:
+ * quem precisa do nome inteiro tem o `title`.
+ */
 .ficha__subtitulo {
   margin: 2px 0 0;
   font-size: var(--txt-xs);
   color: var(--cor-texto-suave);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* --- corpo --------------------------------------------------------------- */
@@ -451,33 +462,69 @@
  * 44px (o alvo de toque mínimo) mais o número não cabiam e vazavam por cima
  * do cartão vizinho. 150px cabe; no celular ficam dois por linha.
  */
+/*
+ * As três moedas numa LINHA.
+ *
+ * Eram três caixas empilhadas, cada uma com dois botões de 44px — meia tela de
+ * celular para dizer "1, 0, 0". Ouro é registro, não protagonista.
+ */
 .ficha__moedas {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: var(--e3);
-  margin-bottom: var(--e3);
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--e2);
+  margin-bottom: var(--e2);
 }
 
 .ficha__moeda {
-  padding: var(--e3);
+  min-width: 0;
+  padding: var(--e2) 2px;
   background: var(--cor-fundo-2);
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-sm);
   text-align: center;
 }
 
-.ficha__moeda .linha { justify-content: center; flex-wrap: nowrap; }
-.ficha__moeda .btn--contador { flex: 0 0 auto; }
-.ficha__moedaRotulo { display: block; font-size: var(--txt-xs); color: var(--cor-texto-suave); margin-bottom: var(--e2); }
-.ficha__moedaValor { font-size: var(--txt-lg); min-width: 2ch; display: inline-block; }
-
-.ficha__novoItem {
+.ficha__moedaLinha {
   display: flex;
-  gap: var(--e2);
-  margin-top: var(--e3);
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
 }
 
-.ficha__novoItem .campo__entrada { flex: 1; min-width: 0; }
+.ficha__moedaRotulo {
+  display: block;
+  font-size: 10px;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  color: var(--cor-texto-fraco);
+  margin-bottom: 2px;
+}
+
+.ficha__moedaValor {
+  font-size: var(--txt-md);
+  min-width: 2ch;
+  display: inline-block;
+}
+
+/*
+ * O contador miúdo: 30x30 de desenho dentro de um botão que continua com 44px
+ * de altura de toque, pelo mesmo motivo da trilha (E39). O `::before` daqui é
+ * a borda; o botão é a área.
+ */
+.btn--contadorMiudo {
+  width: 34px;
+  min-width: 34px;
+  height: 34px;
+  padding: 0;
+  font-size: var(--txt-md);
+  line-height: 1;
+}
+
+.ficha__novoItem {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--e2);
+}
 
 /*
  * Preço da compra. Três campos lado a lado, na mesma ordem das moedas da aba —
@@ -625,22 +672,160 @@
 
 .ficha__inventario {
   list-style: none;
-  margin: 0;
+  margin: 0 0 var(--e3);
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--e1);
+  gap: 2px;
 }
 
+/*
+ * O item em UMA linha: nome à esquerda, ações à direita.
+ *
+ * Antes era um cartão alto com uma lixeira de 44px sozinha na ponta — seis
+ * itens tomavam a tela inteira para dizer seis palavras.
+ */
 .ficha__item {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--e3);
-  padding: var(--e2) var(--e3);
+  gap: var(--e2);
+  padding: 2px var(--e2);
   background: var(--cor-fundo-2);
+  border: 1px solid transparent;
   border-radius: var(--raio-sm);
   font-size: var(--txt-sm);
+}
+
+/* Em uso = na mão agora, não no fundo da mochila. */
+.ficha__item.esta-em-uso {
+  border-color: var(--cor-ouro-escuro);
+  background: var(--cor-superficie-alta);
+}
+
+.ficha__itemTexto {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.ficha__itemNome {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Só o que TEM texto no livro convida ao toque. */
+.ficha__itemNome--doLivro {
+  cursor: pointer;
+  border-bottom: 1px solid var(--cor-ouro-escuro);
+  align-self: flex-start;
+}
+
+.ficha__itemNome--doLivro:hover { color: var(--cor-ouro-claro); }
+
+.ficha__itemNota { font-size: 10px; color: var(--cor-texto-fraco); }
+
+.ficha__itemAcoes {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 0 0 auto;
+}
+
+.ficha__itemQtd {
+  min-width: 3ch;
+  text-align: center;
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-suave);
+}
+
+/*
+ * Alvo de 44px, desenho de glifo — a mesma separação da trilha (E39).
+ *
+ * Com a classe `.btn` eram cinco retângulos de moldura própria por linha, em
+ * oito linhas: a mochila virava um muro de botões. Sem moldura, o que se lê é
+ * a lista; o toque continua do tamanho certo.
+ */
+.ficha__itemBotao {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  min-width: 32px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--cor-texto-suave);
+  font: inherit;
+  font-size: var(--txt-md);
+  line-height: 1;
+  cursor: pointer;
+  opacity: .6;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ficha__itemBotao:hover { opacity: 1; color: var(--cor-ouro-claro); }
+
+/* Anel vazio = guardado; anel cheio e dourado = na mão agora. */
+.ficha__itemUso { font-size: var(--txt-sm); opacity: .4; }
+.ficha__itemUso[aria-pressed="true"] { opacity: 1; color: var(--cor-ouro); }
+
+.ficha__itemTirar { font-size: var(--txt-sm); opacity: .45; }
+
+/* --- o catálogo dos 120 itens do livro ------------------------------------ */
+
+.ficha__catalogo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+  max-height: 46vh;
+  overflow-y: auto;
+}
+
+.ficha__catalogoItem {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px var(--e2);
+  width: 100%;
+  padding: var(--e2);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+  background: var(--cor-fundo-2);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ficha__catalogoItem:hover { border-color: var(--cor-ouro-escuro); }
+
+.ficha__catalogoNome { font-size: var(--txt-sm); font-weight: 600; }
+
+.ficha__catalogoTipo {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--cor-texto-fraco);
+  align-self: center;
+}
+
+.ficha__catalogoTexto {
+  grid-column: 1 / -1;
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-fraco);
+  /* duas linhas bastam para reconhecer o item; o resto abre depois de guardar */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* ==========================================================================
@@ -1143,4 +1328,46 @@
   flex-wrap: wrap;
   gap: var(--e2);
   align-items: center;
+}
+
+/* ==========================================================================
+   Atributos de um equipamento — "rótulo … valor", em linha.
+
+   Antes eram caixinhas quadradas com o valor em fonte de TÍTULO. O Cinzel é
+   caixa alta e largo: "Corpo a Corpo" virava três linhas dentro de um quadrado
+   de 76px, e quatro quadrados desses tomavam meia tela de celular. O valor
+   aqui é uma PALAVRA, não um número — e palavra se lê deitada.
+   ========================================================================== */
+
+.ficha__atributos {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+  overflow: hidden;
+}
+
+.ficha__atributo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--e3);
+  padding: 6px var(--e3);
+  background: var(--cor-fundo-2);
+}
+
+.ficha__atributo + .ficha__atributo { border-top: 1px solid var(--cor-borda); }
+
+.ficha__atributoRotulo {
+  font-size: var(--txt-xs);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--cor-texto-fraco);
+}
+
+.ficha__atributoValor {
+  font-size: var(--txt-sm);
+  font-weight: 600;
+  text-align: right;
+  color: var(--cor-ouro-claro);
 }

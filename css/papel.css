@@ -758,3 +758,12 @@
 .foto__escolher { width: 100%; }
 
 .foto__ajuda { text-align: center; }
+
+/* O lugar vazio da lista de equipamento lê como os outros: nome em cima. */
+.retrato__nome--vazio {
+  font-weight: 400;
+  font-style: italic;
+  color: var(--cor-texto-fraco);
+  border-bottom: 0;
+  cursor: default;
+}
