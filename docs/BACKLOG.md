@@ -7,7 +7,10 @@ zerar esta lista.
 Cada item aponta para o documento que tem o detalhe. Nada aqui é bug — é
 trabalho reservado de propósito.
 
-**Última atualização:** o **flick ao marcar** e a segunda versão dos traços (K7)
+**Última atualização:** a **foto do personagem** e o bloco de equipamentos no
+topo da aba Jogo (K5) — recorte no navegador, arquivo no Drive da mesa, só o id
+na ficha, e a lista de equipamento reduzida aos nomes. Antes dela, o **flick ao
+marcar** e a segunda versão dos traços (K7)
 — a tela deixou de ser reconstruída quando o servidor concorda, e o cartão do
 traço passou a dizer só nome e número, com o resto a um toque. Antes dele, o
 **refino do bloco de papel** (K6) — escudos alinhados, o contador da Esperança
@@ -21,7 +24,7 @@ cabeçalho de todas as telas. Antes dele, a varredura das **553 citações de
 página** (J3): seis afirmações erradas, 22 lugares corrigidos. Detalhe em
 `verbetes.md` §8 e §9.
 
-**Fora o K5 (a foto) e o K8 (afinar o conferidor de citações), a lista está zerada de trabalho fazível.** O que resta são
+**Fora o K8 (afinar o conferidor de citações) e o K9 (faxina das fotos órfãs), a lista está zerada de trabalho fazível.** O que resta são
 duas coisas que não são backlog:
 
 1. **Seis itens parados numa decisão de mesa já tomada** — D2, D4, D5, D6, D7 e
@@ -186,7 +189,8 @@ A primeira leva de relatos de quem jogou. Detalhe em `relatos-da-mesa.md`.
 | ~~K6~~ | ~~Refino do bloco de papel~~ — **FECHADO.** Sete arestas: alinhamento dos escudos e das fitas de Evasão/Armadura, contador "2/6" da Esperança removido, texto que estourava, Proficiência trazida para a conta do dano, traços em cartões 3×2, e **Guardar/Comprar esperando o servidor** antes de limpar o campo. | `relatos-da-mesa.md` §6 |
 | ~~K7~~ | ~~O "flick" ao marcar PV/Estresse/Armadura e os traços de novo~~ — **FECHADO.** O flick era `desenhar()` reconstruindo a aba inteira a cada resposta, mesmo quando o servidor concordava; agora só redesenha quando ele discorda. Os traços viraram nome + número dentro da moldura, com os verbos e a descrição a um toque. | `relatos-da-mesa.md` §7 e §8 |
 | K8 | **O conferidor de citações precisa saber o que é texto de tela.** Em `.js`/`.gs` ele recorta um trecho de código como se fosse a frase citada, e em `data/classes.json` trata o campo `fonte` como texto que o jogador lê. Resultado: 22 "suspeitas visíveis" que são ruído. Enquanto o número for ruído, ele não serve de alarme. | `BACKLOG.md` E36 |
-| K5 | **Foto do personagem**, com recorte e zoom, guardada numa pasta do Drive da mesa. Não cabe na ficha (uma célula, 45.000 caracteres, strings aparadas em 5.000): precisa de endpoint próprio, `DriveApp`, id na ficha e recorte no navegador antes de subir. | `relatos-da-mesa.md` §5 |
+| ~~K5~~ | ~~Foto do personagem~~ — **FECHADO.** Recorte e zoom no navegador, upload para a pasta da mesa no Drive, e **só o id** na ficha. Junto veio o bloco do topo: foto à esquerda, nomes dos equipamentos à direita, números a um toque. ⚠ Exige **autorização nova** do Apps Script (`DriveApp`) na próxima publicação. | `relatos-da-mesa.md` §9 |
+| K9 | **Faxina das fotos órfãs.** Excluir uma ficha é arquivá-la (existe `restaurarPersonagem`), então a foto não pode ser apagada junto — e fica na pasta sem ninguém citando. Falta uma função de manutenção que apague o que ficha nenhuma referencia. | `relatos-da-mesa.md` §9 |
 
 ## E. Invariantes que precisam sobreviver a mudanças futuras
 
@@ -226,6 +230,10 @@ A primeira leva de relatos de quem jogou. Detalhe em `relatos-da-mesa.md`.
 | E45 | **Quantos marcadores estão cheios se lê da TELA, não de uma closure.** O número capturado no último desenho envelhece assim que a tela deixa de redesenhar a cada resposta — e o segundo toque no mesmo quadradinho passa a comparar com o valor de duas marcas atrás. A tela é a fonte da verdade do gesto; o servidor, a do dado. | `quantosCheios()` + passo e2e `tocar no último marcado desmarca ele` |
 | E46 | **A pintura otimista mexe no MODELO, não só nas classes do DOM.** Marcada só no DOM, a marca era desfeita por qualquer redesenho vindo de outro caminho. `espelharLocal` grava no `p.ficha` no mesmo instante — e é isso que torna a comparação do E44 possível. | `espelharLocal()` + o mesmo passo do E44 |
 | E47 | **O cartão do traço diz nome e número, e mais nada.** Verbos e descrição dentro do escudo espremiam os dois em letra de 10px e cortavam "CONHECIMENTO". O que se consulta em jogo fica no cartão; o resto abre num toque. | passos e2e `os seis traços cabem no cartão, sem texto cortado` e `tocar num traço abre os exemplos do livro` |
+| E48 | **A ficha guarda o ID do arquivo no Drive, nunca uma URL.** Aceitar URL deixaria qualquer um apontar a foto de uma ficha para um servidor de fora, e cada jogador que a abrisse entregaria o IP para lá sem saber. A checagem é estreita (`[A-Za-z0-9_-]`) e existe **dos dois lados**: no saneamento da identidade e em `urlDaFoto`, que devolve vazio em vez de montar endereço. | testes `guardar a foto grava só o ID na ficha, nunca uma URL` e `salvarPersonagem não deixa passar URL no lugar do id` + passo e2e da miniatura |
+| E49 | **Trocar a foto: escreve → grava o id → só então descarta a antiga.** Na ordem inversa, uma gravação que falhasse deixaria a ficha apontando para um arquivo no lixo e a foto sumiria sem ninguém pedir. | testes `trocar a foto manda a ANTERIOR para a lixeira, e só ela` e `uma foto recusada não mexe na que já está lá` |
+| E50 | **A lista de equipamento do topo mostra NOME, não número.** Dano, alcance e mãos são o que se quer no instante de rolar, não de relance — e três linhas de número por item comem o espaço do que se lê. O toque abre a janela com tudo. | passos e2e `o topo da ficha é foto + equipamentos, acima do bloco de papel` e `tocar no nome do equipamento abre os números` |
+| E51 | **Sublinhado pontilhado dourado quer dizer UMA coisa: "abre a regra do livro".** O nome do equipamento abre os números, não uma regra — por isso ele é sólido. Repetir a marca ensinaria dois significados para o mesmo traço. | `.retrato__nome` (sólido) × `.verbete__gatilho` (pontilhado) |
 | E37 | **O botão das Regras existe nos TRÊS cabeçalhos.** A ficha e o painel do Mestre são telas cheias e cobrem o cabeçalho do app — se o botão só morasse lá, ele sumiria justamente nas duas telas em que a dúvida de regra aparece. É um `botaoDeRegras()` só, usado nos três. | passo e2e `o índice de regras acha pelo termo do livro e abre o verbete` |
 | E36 | **Citação de página é afirmação, e afirmação se confere.** Duas rodadas acharam 10 afirmações erradas em 43 lugares — inclusive avisos que o jogador lê. Antes de citar uma página nova, rode o `conferir-citacoes.py`; e trate como suspeita toda citação que o conferidor marcar como visível ao jogador. | `tools/conferir-citacoes.py` — hoje 571 citações, com 22 marcadas como visíveis ao jogador. **São ruído conhecido do heurístico**, não afirmações erradas: em arquivo de código ele recorta um blob de JS como se fosse a frase, e em `data/classes.json` marca o campo `fonte` ("pp. 28-51") como texto de tela. Foram lidas uma a uma no J3. ⚠ O conferidor precisa aprender a ignorar esses dois casos, senão o número cresce e para de significar alguma coisa. |
 | E31 | **Toda página citada num verbete é PROVADA contra o PDF.** Cada verbete carrega uma frase-âncora que tem de estar naquela página. Sem isso, o app manda o jogador para a página errada com toda a confiança do mundo — foi exatamente o que aconteceu com as três regras citadas como "p.98". | `tools/conferir-paginas.py` (0 erradas em 93) |

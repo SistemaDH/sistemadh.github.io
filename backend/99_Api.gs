@@ -219,6 +219,25 @@ function executar_(p) {
         return ok_({ personagem: restaurarPersonagem_(jogador, p.id) });
       }
 
+      /* --- a foto do personagem ------------------------------------------ */
+
+      /**
+       * Recebe a imagem JÁ RECORTADA E REDUZIDA pelo navegador.
+       *
+       * O recorte é do lado de lá de propósito: é onde a pessoa vê o que está
+       * enquadrando, e é o que mantém o pedido pequeno. O servidor confere o
+       * tipo e o tamanho mesmo assim — o cliente é conveniência, não garantia.
+       */
+      case 'guardarFoto': {
+        const jogador = exigirSessao_(p.token);
+        return ok_(guardarFoto_(jogador, p.id, p.imagem, p.tipo));
+      }
+
+      case 'removerFoto': {
+        const jogador = exigirSessao_(p.token);
+        return ok_(removerFoto_(jogador, p.id));
+      }
+
       /* --- ficha em jogo ------------------------------------------------ */
 
       /**

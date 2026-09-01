@@ -39,7 +39,7 @@ function verdade(valor, msg) {
 
 /* -------------------------------------------------------------------------- */
 
-const { contexto, avaliar } = criarAmbiente({ pastaBackend: path.join(RAIZ, 'backend') });
+const { contexto, avaliar, drive } = criarAmbiente({ pastaBackend: path.join(RAIZ, 'backend') });
 const ABAS = avaliar('ABAS');
 const MAX_TENTATIVAS = avaliar('MAX_TENTATIVAS');
 const APP_VERSAO = avaliar('APP_VERSAO');
@@ -4524,6 +4524,99 @@ teste('as faixas de dano caem TODAS no mesmo verbete', () => {
     return achado ? achado.id : '(nenhum)';
   });
   igual([...new Set(donos)].join(' | '), 'limiares-de-dano');
+});
+
+console.log('\nA foto do personagem');
+
+const FOTO = avaliar('FOTO');
+const imagemDe = (bytes) => Buffer.from('a'.repeat(bytes)).toString('base64');
+const arquivoDe = (id) => drive.arquivos.get(id);
+const fotoDaFicha = (id) =>
+  api('obterPersonagem', { token: tokenAna, id }).dados.personagem.ficha.identidade.foto || '';
+
+let idComFoto = null;
+let primeiraFoto = null;
+
+teste('guardar a foto grava só o ID na ficha, nunca uma URL', () => {
+  idComFoto = api('criarPersonagem', {
+    token: tokenAna, ficha: { identidade: { nome: 'Retratada', nivel: 1, classe: 'Bardo' } }
+  }).dados.personagem.id;
+
+  const r = api('guardarFoto', {
+    token: tokenAna, id: idComFoto, imagem: imagemDe(3000), tipo: 'image/jpeg'
+  });
+  verdade(r.ok, JSON.stringify(r));
+  primeiraFoto = r.dados.foto;
+  verdade(/^[A-Za-z0-9_-]+$/.test(primeiraFoto), `id estranho: ${primeiraFoto}`);
+  igual(fotoDaFicha(idComFoto), primeiraFoto);
+  verdade(!/https?:|drive\.google/.test(fotoDaFicha(idComFoto)),
+    'a ficha não pode guardar URL — só o id (senão dá para apontar para fora)');
+});
+
+teste('o arquivo nasce visível para a mesa', () => {
+  // Sem isto a foto aparece para quem subiu e para mais ninguém.
+  igual(arquivoDe(primeiraFoto).acesso, 'ANYONE_WITH_LINK');
+  igual(arquivoDe(primeiraFoto).lixeira, false);
+});
+
+teste('trocar a foto manda a ANTERIOR para a lixeira, e só ela', () => {
+  const r = api('guardarFoto', {
+    token: tokenAna, id: idComFoto, imagem: imagemDe(3000), tipo: 'image/png'
+  });
+  const segunda = r.dados.foto;
+  verdade(segunda !== primeiraFoto, 'a troca deveria criar um arquivo novo');
+  igual(fotoDaFicha(idComFoto), segunda);
+  igual(arquivoDe(primeiraFoto).lixeira, true, 'a antiga tinha de ir para o lixo');
+  igual(arquivoDe(segunda).lixeira, false, 'a nova NÃO pode ir para o lixo');
+  primeiraFoto = segunda;
+});
+
+teste('uma foto recusada não mexe na que já está lá', () => {
+  /*
+   * É a metade observável da ordem que o endpoint promete: escrever, gravar o
+   * id, e só então descartar a antiga. Se o descarte viesse primeiro, uma
+   * recusa deixaria a ficha sem foto nenhuma.
+   */
+  const r = api('guardarFoto', {
+    token: tokenAna, id: idComFoto, imagem: imagemDe(3000), tipo: 'application/pdf'
+  });
+  igual(r.erro.codigo, 'DADOS_INVALIDOS');
+  igual(fotoDaFicha(idComFoto), primeiraFoto, 'a foto boa continua na ficha');
+  igual(arquivoDe(primeiraFoto).lixeira, false);
+});
+
+teste('recusa imagem maior que o teto', () => {
+  const r = api('guardarFoto', {
+    token: tokenAna, id: idComFoto, imagem: imagemDe(FOTO.BYTES_MAX + 5000), tipo: 'image/jpeg'
+  });
+  igual(r.erro.codigo, 'DADOS_INVALIDOS');
+  verdade(/KB/.test(r.erro.mensagem), `a mensagem devia dizer o tamanho: ${r.erro.mensagem}`);
+});
+
+teste('salvarPersonagem não deixa passar URL no lugar do id', () => {
+  const atual = api('obterPersonagem', { token: tokenAna, id: idComFoto }).dados.personagem;
+  atual.ficha.identidade.foto = 'https://exemplo.invalido/rastreador.png';
+  const r = api('salvarPersonagem', {
+    token: tokenAna, id: idComFoto, ficha: atual.ficha, versao: atual.versao
+  });
+  igual(r.erro.codigo, 'DADOS_INVALIDOS');
+});
+
+teste('a foto de outra pessoa é recusada', () => {
+  const reg = api('registrar', { nome: 'Intrusa da Foto', codigo: 'senha-intrusa' });
+  verdade(reg.ok, JSON.stringify(reg));
+  const outra = reg.dados.token;
+  const r = api('guardarFoto', {
+    token: outra, id: idComFoto, imagem: imagemDe(2000), tipo: 'image/jpeg'
+  });
+  igual(r.erro.codigo, 'SEM_PERMISSAO');
+});
+
+teste('remover a foto limpa a ficha e manda o arquivo para o lixo', () => {
+  const r = api('removerFoto', { token: tokenAna, id: idComFoto });
+  verdade(r.ok, JSON.stringify(r));
+  igual(fotoDaFicha(idComFoto), '');
+  igual(arquivoDe(primeiraFoto).lixeira, true);
 });
 
 console.log('\nZerar planilha');

@@ -316,6 +316,22 @@ function validarFicha_(fichaBruta) {
   });
   id.descricao = String(id.descricao || '').slice(0, LIMITES.TAMANHO_TEXTO);
 
+  /*
+   * A foto é um ID de arquivo do Drive — nunca uma URL.
+   *
+   * Aceitar URL aqui deixaria qualquer um apontar a foto de uma ficha para um
+   * servidor de fora, e cada jogador que abrisse essa ficha entregaria o IP
+   * para aquele servidor sem saber. Com id, a única origem possível é o Drive
+   * da mesa. Quem grava é o endpoint da foto; isto aqui é a rede de proteção
+   * para a ficha que chega por `salvarPersonagem`.
+   */
+  if (id.foto) {
+    if (typeof idDoDrive_ === 'function') id.foto = idDoDrive_(id.foto);
+    else id.foto = '';
+  } else {
+    id.foto = '';
+  }
+
   ficha.meta = ficha.meta || {};
   ficha.meta.schema = SCHEMA_FICHA;
 

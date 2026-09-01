@@ -7,7 +7,38 @@
 
 import { chromium } from 'playwright';
 import { existsSync } from 'node:fs';
+import zlib from 'node:zlib';
 import { criarServidor } from './servidor-teste.mjs';
+
+/**
+ * Um PNG de verdade, montado à mão.
+ *
+ * O editor de foto desenha a imagem num canvas antes de subir — então um
+ * arquivo falso não serve: o `<img>` precisa carregar de fato. São poucas
+ * linhas e evitam carregar um binário de 13 KB em base64 dentro do teste.
+ */
+function pngDeTeste(largura = 60, altura = 80) {
+  const cru = [];
+  for (let y = 0; y < altura; y++) {
+    cru.push(0);                       // filtro "nenhum" no começo de cada linha
+    for (let x = 0; x < largura; x++) cru.push((x * 4) % 256, (y * 3) % 256, 120);
+  }
+  const pedaco = (tipo, dados) => {
+    const corpo = Buffer.concat([Buffer.from(tipo, 'ascii'), dados]);
+    const tamanho = Buffer.alloc(4); tamanho.writeUInt32BE(dados.length);
+    const crc = Buffer.alloc(4); crc.writeUInt32BE(zlib.crc32(corpo) >>> 0);
+    return Buffer.concat([tamanho, corpo, crc]);
+  };
+  const ihdr = Buffer.alloc(13);
+  ihdr.writeUInt32BE(largura, 0); ihdr.writeUInt32BE(altura, 4);
+  ihdr[8] = 8; ihdr[9] = 2;          // 8 bits por canal, RGB
+  return Buffer.concat([
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    pedaco('IHDR', ihdr),
+    pedaco('IDAT', zlib.deflateSync(Buffer.from(cru))),
+    pedaco('IEND', Buffer.alloc(0))
+  ]);
+}
 
 const passos = [];
 let falhou = false;
@@ -229,6 +260,70 @@ try {
     await pagina.waitForSelector('.papel__trilha--pv');
     await pagina.waitForSelector('.papel__trilha--estresse');
     await pagina.waitForSelector('.papel__esperanca');
+  });
+
+  await passo('o topo da ficha é foto + equipamentos, acima do bloco de papel', async () => {
+    /*
+     * A ordem é a decisão: identidade em cima (quem é e com o que está),
+     * recursos logo abaixo (onde a mão volta o tempo todo). Comparar as duas
+     * caixas é o jeito de a ordem não se perder numa refatoração de layout.
+     */
+    const retrato = await pagina.locator('.retrato').boundingBox();
+    const papel = await pagina.locator('.papel').boundingBox();
+    if (!retrato || !papel) throw new Error('faltou o retrato ou o bloco de papel');
+    if (retrato.y >= papel.y) throw new Error('o retrato tem de vir ANTES do bloco de papel');
+
+    // E a lista traz NOME, não número: dano e alcance ficam para o toque.
+    const lista = await pagina.locator('.retrato__lista').textContent();
+    if (/d\d+\s*[+-]/.test(lista)) throw new Error('número de dano vazando na lista: ' + lista);
+  });
+
+  await passo('tocar no nome do equipamento abre os números', async () => {
+    const nome = (await pagina.locator('.retrato__nome').first().textContent()).trim();
+    await pagina.locator('.retrato__nome').first().click();
+    await pagina.waitForSelector('.modal__caixa');
+    const caixa = pagina.locator('.modal__caixa').last();
+    const texto = await caixa.textContent();
+    if (!texto.includes(nome)) throw new Error('o modal não é do item tocado');
+    if (!/Dano|Limiares/.test(texto)) throw new Error('sem os números no modal: ' + texto);
+    await caixa.getByRole('button', { name: 'Fechar' }).click();
+    await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 5000 });
+  });
+
+  await passo('a foto sobe recortada e vira miniatura do Drive', async () => {
+    await pagina.locator('.retrato__moldura').click();
+    await pagina.waitForSelector('.foto__tela');
+    await pagina.locator('.foto__arquivo').setInputFiles({
+      name: 'retrato.png', mimeType: 'image/png', buffer: pngDeTeste()
+    });
+    // O zoom só liga depois de a imagem carregar: esperar por ele é esperar
+    // pelo carregamento, sem tempo cravado.
+    await pagina.waitForFunction(() => {
+      const z = document.querySelector('.foto__zoom');
+      return Boolean(z) && !z.disabled;
+    }, null, { timeout: 10000 });
+    await pagina.locator('.foto__zoom').fill('180');
+    await pagina.getByRole('button', { name: 'Salvar foto' }).click();
+    await pagina.waitForSelector('.retrato__img', { timeout: 20000 });
+
+    const src = await pagina.locator('.retrato__img').getAttribute('src');
+    if (!/^https:\/\/drive\.google\.com\/thumbnail\?id=[A-Za-z0-9_-]+/.test(src)) {
+      throw new Error('endereço de foto inesperado: ' + src);
+    }
+    /*
+     * Esse endereço já é a prova do lado do cliente: `urlDaFoto` só monta a URL
+     * a partir de um id que passa na checagem estreita e devolve vazio para
+     * qualquer outra coisa — uma ficha que tivesse guardado URL não
+     * renderizaria `<img>` nenhum. O lado do servidor tem teste próprio
+     * (`salvarPersonagem não deixa passar URL no lugar do id`).
+     */
+  });
+
+  await passo('a foto sobrevive ao recarregar', async () => {
+    await pagina.reload({ waitUntil: 'networkidle' });
+    await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+    await abrirFichaEmJogo();
+    await pagina.waitForSelector('.retrato__img', { timeout: 15000 });
   });
 
   await passo('marcar um Ponto de Vida grava no servidor', async () => {

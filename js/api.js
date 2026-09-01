@@ -161,6 +161,13 @@ export const api = {
   salvarPersonagem: (token, id, ficha, versao) =>
     chamar('salvarPersonagem', { token, id, ficha, versao }),
   excluirPersonagem: (token, id) => chamar('excluirPersonagem', { token, id }),
+
+  /* --- a foto ------------------------------------------------------------
+     `imagem` é base64 SEM o prefixo `data:`. O recorte e a redução acontecem
+     no navegador, antes daqui — é lá que a pessoa vê o enquadramento, e é o
+     que mantém o pedido pequeno. --------------------------------------- */
+  guardarFoto: (token, id, imagem, tipo) => chamar('guardarFoto', { token, id, imagem, tipo }),
+  removerFoto: (token, id) => chamar('removerFoto', { token, id }),
   restaurarPersonagem: (token, id) => chamar('restaurarPersonagem', { token, id }),
 
   /* --- ficha em jogo ---------------------------------------------------

@@ -41,7 +41,11 @@ const PROP = {
   PLANILHA_ID: 'PLANILHA_ID',
   CODIGO_MESTRE_HASH: 'CODIGO_MESTRE_HASH',
   CODIGO_MESTRE_SALT: 'CODIGO_MESTRE_SALT',
-  PEPPER: 'PEPPER'
+  PEPPER: 'PEPPER',
+  /* A pasta do Drive onde as fotos dos personagens são gravadas. Não é
+     segredo — está aqui junto das outras para trocar de pasta ser mexer numa
+     propriedade, e não no código. */
+  PASTA_FOTOS: 'PASTA_FOTOS'
 };
 
 /** Papéis de usuário. */

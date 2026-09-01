@@ -11,7 +11,34 @@
  * cada aba, mais o descanso nos três momentos (tipo, movimentos, prévia).
  */
 import { chromium } from 'playwright';
+import zlib from 'node:zlib';
 import { criarServidor } from '/home/claude/dh/tools/servidor-teste.mjs';
+
+/** Um PNG de verdade, para o editor de foto ter o que desenhar. */
+function pngDeTeste(largura = 240, altura = 320) {
+  const cru = [];
+  for (let y = 0; y < altura; y++) {
+    cru.push(0);
+    for (let x = 0; x < largura; x++) {
+      cru.push(60 + ((x * 120) / largura) | 0, 40 + ((y * 90) / altura) | 0, 110);
+    }
+  }
+  const pedaco = (tipo, dados) => {
+    const corpo = Buffer.concat([Buffer.from(tipo, 'ascii'), dados]);
+    const tam = Buffer.alloc(4); tam.writeUInt32BE(dados.length);
+    const crc = Buffer.alloc(4); crc.writeUInt32BE(zlib.crc32(corpo) >>> 0);
+    return Buffer.concat([tam, corpo, crc]);
+  };
+  const ihdr = Buffer.alloc(13);
+  ihdr.writeUInt32BE(largura, 0); ihdr.writeUInt32BE(altura, 4);
+  ihdr[8] = 8; ihdr[9] = 2;
+  return Buffer.concat([
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    pedaco('IHDR', ihdr),
+    pedaco('IDAT', zlib.deflateSync(Buffer.from(cru))),
+    pedaco('IEND', Buffer.alloc(0))
+  ]);
+}
 
 const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 const { servidor, porta, ambiente } = await criarServidor({ porta: 0, semarcar: true });
@@ -151,8 +178,25 @@ await p.waitForSelector('.chip--condicao', { timeout: 20000 });
 // O miolo da aba Jogo: defesas, traços, condições e equipamento.
 await p.locator('.tracos').scrollIntoViewIfNeeded();
 await foto('f2b-jogo-meio');
-await p.locator('.ficha__equip').first().scrollIntoViewIfNeeded();
+await p.locator('.retrato').scrollIntoViewIfNeeded();
 await foto('f2c-jogo-equipamento');
+
+// O editor de foto: escolher, enquadrar e subir (K5).
+await p.locator('.retrato__moldura').click();
+await p.waitForSelector('.foto__tela');
+await p.locator('.foto__arquivo').setInputFiles({
+  name: 'retrato.png', mimeType: 'image/png', buffer: pngDeTeste()
+});
+await p.waitForFunction(() => {
+  const z = document.querySelector('.foto__zoom');
+  return Boolean(z) && !z.disabled;
+}, null, { timeout: 10000 });
+await p.locator('.foto__zoom').fill('160');
+await foto('f2d-editor-de-foto');
+await p.getByRole('button', { name: 'Salvar foto' }).click();
+await p.waitForSelector('.retrato__img', { timeout: 20000 });
+await p.locator('.retrato').scrollIntoViewIfNeeded();
+await foto('f2e-ficha-com-foto');
 
 await p.locator('.ficha__corpo').evaluate((e) => { e.scrollTop = e.scrollHeight; });
 await foto('f3-jogo-fim');

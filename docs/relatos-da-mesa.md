@@ -246,3 +246,81 @@ E a troca de Conjuração da multiclasse **melhorou de tabela**. Ela era um toqu
 no cartão tracejado que ninguém adivinhava; agora é um botão com nome dentro do
 modal: "Passar a conjurar com Instinto". O cartão continua marcado como
 `trocável`, mas quem confirma é a pessoa, sabendo o que está confirmando.
+
+---
+
+## 9. A foto e os equipamentos — o topo da aba Jogo (K5)
+
+O desenho que a mesa mandou: a foto à esquerda, e ao lado dela **só os nomes**
+dos equipamentos, com os números aparecendo ao tocar. O bloco fica **acima** do
+de papel.
+
+A ordem não é arbitrária. Em cima vai identidade — quem é o personagem e com o
+que ele está; embaixo vão os recursos, que é onde a mão volta o tempo todo
+durante a cena. Um passo de e2e compara as duas caixas e quebra se a ordem se
+inverter numa refatoração de layout.
+
+**A lista de equipamento perdeu os números de propósito.** A versão anterior
+escrevia "d8+3 · Corpo a Corpo · uma mão" embaixo de cada item. São três linhas
+de número que ninguém lê no meio de uma cena, ocupando o espaço de algo que se
+lê. Agora o nome é o botão, e o toque abre a mesma janela de sempre, com dano,
+traço, alcance, mãos e a característica da arma.
+
+O sublinhado do nome é **sólido**, não pontilhado. O pontilhado dourado já quer
+dizer uma coisa neste app — "esta palavra abre a regra do livro" — e repetir a
+marca ensinaria dois significados para o mesmo traço.
+
+### A foto
+
+**A ficha guarda um ID do Drive, nunca uma URL.** Essa é a regra de segurança
+da parte, e ela tem teste dos dois lados. Um campo de URL na ficha deixaria
+qualquer um apontar a foto para um servidor de fora, e cada jogador que abrisse
+aquela ficha entregaria o IP para lá sem saber. Com id, a única origem possível
+é o Drive da mesa, e quem monta o endereço é a tela (`urlDaFoto`), que devolve
+vazio para qualquer coisa que não passe na checagem estreita.
+
+**O recorte é no navegador**, antes de subir — é onde a pessoa vê o que está
+enquadrando, e é o que mantém o pedido pequeno: a câmera de um celular entrega
+4 MB; o que sobe daqui é um JPEG de 480×600, uns 60 KB. O servidor confere tipo
+e tamanho mesmo assim: o cliente é conveniência, não garantia.
+
+**A ordem da troca é a regra:** escreve o arquivo novo → grava o id na ficha →
+só então manda o antigo para a lixeira. Apagando antes, uma gravação que
+falhasse deixaria a ficha apontando para um arquivo no lixo, e a foto sumiria
+sem ninguém ter pedido. Há teste para as duas metades: a antiga vai para o
+lixo, e uma foto recusada não encosta na que já está lá.
+
+**A foto que não carrega não quebra a tela.** Sem rede, arquivo no lixo,
+permissão revogada — a moldura volta a ser o lugar vazio de sempre, com "Foto
+indisponível", e o toque continua servindo para pôr outra. O `<img>` continua
+no documento, só escondido: é ele que marca que existe uma foto gravada.
+
+### O que precisa da sua mão, uma vez
+
+⚠ **O Apps Script vai pedir autorização nova.** `DriveApp` é um escopo que o
+projeto ainda não usava — na primeira publicação depois desta parte, o Google
+mostra a tela de permissão de novo. É esperado.
+
+⚠ **A pasta padrão é a que você mandou** (`18hB6…umIus`), escrita em
+`4J_Foto.gs`. Para trocar sem mexer no código, é só criar a propriedade de
+script `PASTA_FOTOS` com o id da pasta nova.
+
+### Pontos de interesse
+
+⚠ **Excluir a ficha NÃO apaga a foto.** Exclusão aqui é arquivamento — existe
+`restaurarPersonagem` —, então apagar a imagem junto quebraria a restauração. A
+foto fica órfã na pasta. Uma faxina ("apagar fotos que ficha nenhuma cita")
+resolve, e é trabalho de uma função de manutenção, não do caminho do jogador.
+
+⚠ **A pasta é uma só para a mesa inteira**, sem subpasta por jogador. Quem
+abrir a pasta no Drive vê as fotos de todo mundo. Para a mesa da Vanessa isso é
+o desejado; se um dia a mesa crescer, é aqui que se mexe.
+
+⚠ **A permissão é "qualquer um com o link, pode ver"** — é o que faz a foto
+aparecer para os outros jogadores, que não estão logados como dono do script.
+Quem tiver o link direto do arquivo vê a imagem mesmo sem estar na mesa. Não há
+foto secreta.
+
+⚠ **`descartarFoto_` engole o erro de propósito.** Uma foto órfã é um
+incômodo; uma ficha que não conseguiu trocar de foto porque a antiga não pôde
+ser apagada é um bug na cara do jogador. Entre os dois, o incômodo.

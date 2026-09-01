@@ -34,6 +34,7 @@ import { botaoDeRegras } from './regras.js';
 import { abrirDescanso } from './descanso.js';
 import { abrirAvanco, desfazerAvanco } from './avanco.js';
 import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js';
+import { abrirEditorDeFoto, urlDaFoto } from './foto.js';
 
 /**
  * Teto do livro para PV, Estresse e Armadura (errata de 9/9/2025).
@@ -337,6 +338,110 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     ]);
   }
 
+  /* --- foto + equipamento --------------------------------------------------- */
+
+  /**
+   * O topo da aba Jogo: o retrato à esquerda, os equipamentos à direita.
+   *
+   * É o desenho que a Vanessa mandou, e a razão dele é boa: equipamento é a
+   * coisa que se consulta mais e que menos precisa de número na tela. O que a
+   * pessoa quer saber de relance é O QUE está empunhando; dano, alcance e mãos
+   * ela quer no momento em que vai rolar — e aí um toque resolve.
+   *
+   * Fica ACIMA do bloco de papel porque é identidade: quem é o personagem e
+   * com o que ele está. Vida, dano e Esperança vêm logo abaixo, que é onde a
+   * mão volta o tempo todo durante a cena.
+   */
+  function blocoDeRetrato(ficha) {
+    return el('section', { class: 'retrato' }, [
+      molduraDaFoto(ficha),
+      el('div', { class: 'retrato__equip' }, [
+        el('h3', { class: 'retrato__titulo', texto: 'Equipamentos' }),
+        listaDeEquipamento(ficha)
+      ])
+    ]);
+  }
+
+  function molduraDaFoto(ficha) {
+    const idFoto = (ficha.identidade || {}).foto || '';
+    const endereco = urlDaFoto(idFoto);
+    const nome = (ficha.identidade || {}).nome || 'o personagem';
+
+    const vazio = (texto) => el('span', { class: 'retrato__vazio' }, [
+      el('span', { class: 'retrato__vazioIcone', texto: '👤' }),
+      el('span', { class: 'texto-xs', texto })
+    ]);
+
+    let dentro;
+    if (endereco) {
+      /*
+       * `alt` VAZIO, e a queda tratada à mão.
+       *
+       * Quando o Drive não responde — sem rede, arquivo no lixo, permissão
+       * revogada —, um `alt` com texto derrama "Foto de Lyra Sombravento"
+       * dentro da moldura e fica com cara de quebrado. Trocando pelo mesmo
+       * lugar vazio de quando não há foto, a tela continua inteira e o toque
+       * continua servindo para pôr outra.
+       */
+      const img = el('img', {
+        class: 'retrato__img', src: endereco, alt: '',
+        loading: 'lazy', referrerpolicy: 'no-referrer'
+      });
+      img.addEventListener('error', () => {
+        // O <img> CONTINUA no DOM, só escondido pela classe: tirar o elemento
+        // faria a marca do que a ficha tem sumir junto, e é ela que diz que
+        // existe uma foto gravada — só não deu para carregar agora.
+        const moldura = img.parentNode;
+        if (!moldura || moldura.classList.contains('e-semFoto')) return;
+        moldura.classList.add('e-semFoto');
+        moldura.append(vazio('Foto indisponível'));
+      });
+      dentro = img;
+    } else {
+      dentro = vazio('Adicionar foto');
+    }
+
+    return el('button', {
+      type: 'button', class: 'retrato__moldura',
+      'aria-label': endereco ? `Trocar a foto de ${nome}` : `Adicionar uma foto de ${nome}`,
+      onClick: () => abrirEditorDeFoto(p, (novo) => { p = novo; desenhar(); })
+    }, [dentro]);
+  }
+
+  /**
+   * SÓ OS NOMES. Os números abrem num toque.
+   *
+   * A versão antiga escrevia "d8+3 · Corpo a Corpo · uma mão" embaixo de cada
+   * item, direto na lista. Três linhas de número que ninguém lê no meio de uma
+   * cena, ocupando o espaço de algo que se lê.
+   */
+  function listaDeEquipamento(ficha) {
+    const eq = ficha.equipamento || {};
+    const itens = [
+      ['Arma primária', catalogo.acharArma(eq.primaria)],
+      ['Arma secundária', catalogo.acharArma(eq.secundaria)],
+      ['Armadura', catalogo.acharArmadura(eq.armadura)]
+    ];
+    return el('ul', { class: 'retrato__lista' }, itens.map((par) => {
+      const rotulo = par[0];
+      const item = par[1];
+      if (!item) {
+        return el('li', { class: 'retrato__item retrato__item--vazio' }, [
+          el('span', { class: 'retrato__rotulo', texto: rotulo }),
+          el('span', { class: 'texto-xs texto-fraco', texto: 'nada equipado' })
+        ]);
+      }
+      return el('li', { class: 'retrato__item' }, [
+        el('button', {
+          type: 'button', class: 'retrato__nome',
+          'aria-label': `${item.nome} — ver os números`,
+          onClick: () => verEquipamento(rotulo, item)
+        }, nomeComGlossa(item.nome)),
+        el('span', { class: 'retrato__rotulo', texto: rotulo })
+      ]);
+    }));
+  }
+
   /**
    * A Proficiência mora AQUI, e não numa seção só dela.
    *
@@ -562,6 +667,9 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const r = ficha.recursos || {};
     const d = ficha.defesas || {};
 
+    // --- retrato e equipamento (o topo) ---------------------------------
+    pai.append(blocoDeRetrato(ficha));
+
     // --- o bloco da ficha de papel --------------------------------------
     pai.append(blocoDePapel(ficha));
 
@@ -640,8 +748,11 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         contadores.map((c) => linhaDeContador(c, ficha)))));
     }
 
-    // --- equipamento -----------------------------------------------------
-    pai.append(secao('Equipamento', blocoEquipamento(ficha)));
+    /*
+     * A seção "Equipamento" saiu daqui: ela virou a lista do topo, ao lado da
+     * foto. Duas listas do mesmo equipamento na mesma aba seriam duas versões
+     * da mesma verdade — e a de cima é a que a pessoa alcança sem rolar.
+     */
 
     // --- características -------------------------------------------------
     // A ficha guarda só o NOME e de onde veio — é o backend que decide quais
@@ -946,36 +1057,6 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
   }
 
   /* --- equipamento -------------------------------------------------------- */
-
-  function blocoEquipamento(ficha) {
-    const eq = ficha.equipamento || {};
-    const itens = [
-      ['Arma primária', catalogo.acharArma(eq.primaria)],
-      ['Arma secundária', catalogo.acharArma(eq.secundaria)],
-      ['Armadura', catalogo.acharArmadura(eq.armadura)]
-    ];
-    return el('div', { class: 'pilha' }, itens.map((par) => {
-      const rotulo = par[0];
-      const item = par[1];
-      if (!item) {
-        return el('div', { class: 'ficha__equip' }, [
-          el('span', { class: 'ficha__equipRotulo', texto: rotulo }),
-          el('span', { class: 'texto-fraco texto-sm', texto: '— nada equipado —' })
-        ]);
-      }
-      const numeros = item.dano
-        ? `${item.dano} · ${item.alcance} · ${item.maos}`
-        : `limiares ${item.limiares} · ${item.pontuacaoArmadura} de Armadura`;
-      return el('button', {
-        type: 'button', class: 'ficha__equip ficha__equip--clicavel',
-        onClick: () => verEquipamento(rotulo, item)
-      }, [
-        el('span', { class: 'ficha__equipRotulo', texto: rotulo }),
-        el('strong', { class: 'ficha__equipNome' }, nomeComGlossa(item.nome)),
-        el('span', { class: 'texto-xs texto-suave', texto: numeros })
-      ]);
-    }));
-  }
 
   function verEquipamento(rotulo, item) {
     const carac = item.caracteristica;

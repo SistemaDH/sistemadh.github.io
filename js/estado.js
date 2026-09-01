@@ -234,6 +234,42 @@ export const acoes = {
     });
   },
 
+  /**
+   * A FOTO. Vai pela mesma fila da ficha, por personagem.
+   *
+   * Sem a fila, subir a foto no meio de uma rajada de toques poderia gravar em
+   * cima de uma marcação — as duas coisas escrevem a mesma célula.
+   */
+  guardarFoto(id, imagem, tipo) {
+    marcarPendente(id, 1);
+    return enfileirar(id, async () => {
+      try {
+        const dados = await api.guardarFoto(estado.token, id, imagem, tipo);
+        if (estado.personagemAberto && estado.personagemAberto.id === id) {
+          definir({ personagemAberto: dados.personagem });
+        }
+        return dados;
+      } finally {
+        marcarPendente(id, -1);
+      }
+    });
+  },
+
+  removerFoto(id) {
+    marcarPendente(id, 1);
+    return enfileirar(id, async () => {
+      try {
+        const dados = await api.removerFoto(estado.token, id);
+        if (estado.personagemAberto && estado.personagemAberto.id === id) {
+          definir({ personagemAberto: dados.personagem });
+        }
+        return dados;
+      } finally {
+        marcarPendente(id, -1);
+      }
+    });
+  },
+
   /** Relê a ficha do servidor — usado quando um envio falha. */
   async recarregarPersonagem(id) {
     const dados = await api.obterPersonagem(estado.token, id);

@@ -542,3 +542,184 @@
   .traco__valor { font-size: var(--txt-md); }
   .traco__moldura { min-height: 62px; padding: 6px 4px 14px; }
 }
+
+/* ==========================================================================
+   O RETRATO — foto à esquerda, equipamentos à direita.
+
+   O desenho que a mesa pediu. Equipamento é o que mais se consulta e o que
+   menos precisa de número na tela: de relance a pessoa quer saber O QUE está
+   empunhando; dano, alcance e mãos ela quer no instante de rolar — e aí o
+   toque no nome abre.
+   ========================================================================== */
+
+.retrato {
+  display: grid;
+  grid-template-columns: minmax(96px, 34%) 1fr;
+  gap: var(--e3);
+  align-items: start;
+  padding: var(--e3);
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-md);
+}
+
+/* --- a moldura da foto ---------------------------------------------------- */
+
+.retrato__moldura {
+  position: relative;
+  display: block;
+  width: 100%;
+  /* Retrato 3:4, a mesma proporção do recorte — assim o que a pessoa enquadrou
+     é exatamente o que aparece aqui, sem corte de segunda mão. */
+  aspect-ratio: 3 / 4;
+  padding: 0;
+  overflow: hidden;
+  background: var(--cor-fundo-2);
+  border: 3px solid var(--cor-borda-forte);
+  border-radius: var(--raio-sm);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.retrato__moldura:hover { border-color: var(--cor-ouro-escuro); }
+
+/* Foto que não carregou: some da vista, mas continua no documento. */
+.retrato__moldura.e-semFoto .retrato__img { display: none; }
+
+.retrato__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.retrato__vazio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--e1);
+  height: 100%;
+  color: var(--cor-texto-fraco);
+}
+
+.retrato__vazioIcone { font-size: 26px; opacity: .5; }
+
+/* --- a lista de equipamento ----------------------------------------------- */
+
+.retrato__equip { min-width: 0; }
+
+.retrato__titulo {
+  margin: 0 0 var(--e2);
+  font-size: var(--txt-sm);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--cor-ouro);
+}
+
+.retrato__lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+}
+
+.retrato__item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  min-width: 0;
+}
+
+/*
+ * O nome é o alvo de toque, e tem de ser um alvo de verdade: 44px de altura,
+ * a mesma régua dos quadradinhos da trilha.
+ */
+.retrato__nome {
+  display: block;
+  max-width: 100%;
+  min-height: 30px;
+  padding: 2px 0;
+  border: 0;
+  background: none;
+  color: var(--cor-texto);
+  font: inherit;
+  font-size: var(--txt-md);
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  /*
+   * Sublinhado SÓLIDO, e é de propósito.
+   *
+   * O pontilhado dourado já quer dizer uma coisa neste app: "esta palavra abre
+   * a regra do livro" (o gatilho de verbete). Repeti-lo aqui ensinaria dois
+   * significados para a mesma marca. Sólido diz "toque para ver os números"
+   * sem disputar com aquilo.
+   */
+  border-bottom: 1px solid var(--cor-ouro-escuro);
+}
+
+.retrato__nome:hover { color: var(--cor-ouro-claro); }
+
+.retrato__rotulo {
+  font-size: 10px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--cor-texto-fraco);
+}
+
+.retrato__item--vazio .retrato__rotulo { color: var(--cor-texto-fraco); }
+
+@media (max-width: 360px) {
+  .retrato { grid-template-columns: minmax(84px, 32%) 1fr; gap: var(--e2); }
+  .retrato__nome { font-size: var(--txt-sm); }
+}
+
+/* ==========================================================================
+   O EDITOR DE FOTO
+   ========================================================================== */
+
+.foto__moldura {
+  width: 100%;
+  max-width: 190px;
+  margin: 0 auto;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--cor-fundo-2);
+  border: 3px solid var(--cor-borda-forte);
+  border-radius: var(--raio-sm);
+}
+
+.foto__tela {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;      /* o arrasto é nosso, não da rolagem da página */
+  cursor: grab;
+}
+
+.foto__tela:active { cursor: grabbing; }
+
+/* A barra de zoom no dourado da casa — o azul do sistema destoava de tudo. */
+.foto__zoom {
+  width: 100%;
+  height: 28px;
+  accent-color: var(--cor-ouro);
+  cursor: pointer;
+}
+
+/* Existe, recebe o arquivo, e não aparece: quem aparece é o botão em pt-BR. */
+.foto__arquivo {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.foto__escolher { width: 100%; }
+
+.foto__ajuda { text-align: center; }

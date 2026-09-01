@@ -133,6 +133,13 @@ export function criarAmbiente({ pastaBackend }) {
   const propriedades = new Map();
   const cache = new Map();
   const registros = [];
+  /* O Drive de mentira. A pasta da mesa já existe; o resto nasce nos testes. */
+  const drive = {
+    pastas: new Map([['18hB6LvfFLH4M3eOworv40oWFZIlumIus', true]]),
+    arquivos: new Map(),
+    ordem: [],
+    contador: 0
+  };
 
   const contexto = {
     console,
@@ -181,6 +188,55 @@ export function criarAmbiente({ pastaBackend }) {
       })
     },
 
+    /*
+     * DRIVE DE MENTIRA — o suficiente para o endpoint da foto.
+     *
+     * Guarda os arquivos num Map e registra o que foi para a lixeira e com que
+     * permissão cada um ficou. Os testes leem `drive` para conferir as duas
+     * coisas que importam e que nenhum outro teste alcança: a foto antiga vai
+     * mesmo para o lixo DEPOIS de a nova ser gravada, e o arquivo nasce
+     * visível para a mesa.
+     */
+    DriveApp: {
+      Access: { ANYONE_WITH_LINK: 'ANYONE_WITH_LINK', PRIVATE: 'PRIVATE' },
+      Permission: { VIEW: 'VIEW', EDIT: 'EDIT' },
+      getFolderById: (idPasta) => {
+        if (!drive.pastas.has(idPasta)) {
+          const e = new Error('No item with the given ID could be found: ' + idPasta);
+          throw e;
+        }
+        return {
+          getId: () => idPasta,
+          createFile: (blob) => {
+            const idArquivo = 'arq' + String(++drive.contador).padStart(30, '0');
+            const registro = {
+              id: idArquivo, pasta: idPasta, nome: blob.getName(),
+              tipo: blob.getContentType(), bytes: blob.getBytes(),
+              lixeira: false, acesso: 'PRIVATE'
+            };
+            drive.arquivos.set(idArquivo, registro);
+            drive.ordem.push(idArquivo);
+            return {
+              getId: () => idArquivo,
+              getName: () => registro.nome,
+              setSharing: (acesso) => { registro.acesso = acesso; return this; },
+              setTrashed: (v) => { registro.lixeira = Boolean(v); }
+            };
+          }
+        };
+      },
+      getFileById: (idArquivo) => {
+        const registro = drive.arquivos.get(idArquivo);
+        if (!registro) throw new Error('No item with the given ID could be found: ' + idArquivo);
+        return {
+          getId: () => idArquivo,
+          getName: () => registro.nome,
+          setSharing: (acesso) => { registro.acesso = acesso; },
+          setTrashed: (v) => { registro.lixeira = Boolean(v); }
+        };
+      }
+    },
+
     LockService: {
       getScriptLock: () => ({ waitLock: () => true, releaseLock: () => true })
     },
@@ -194,6 +250,17 @@ export function criarAmbiente({ pastaBackend }) {
         // O Apps Script devolve bytes com sinal (-128..127).
         return Array.from(buf).map((b) => (b > 127 ? b - 256 : b));
       },
+      base64Decode: (texto) => {
+        const buf = Buffer.from(String(texto), 'base64');
+        // O Apps Script devolve bytes com sinal, como no computeDigest.
+        return Array.from(buf).map((b) => (b > 127 ? b - 256 : b));
+      },
+      newBlob: (bytes, tipo, nome) => ({
+        _bytes: bytes, _tipo: tipo, _nome: nome,
+        getBytes() { return this._bytes; },
+        getContentType() { return this._tipo; },
+        getName() { return this._nome; }
+      }),
       formatDate: (data, _tz, formato) => {
         const p = (n, casas = 2) => String(n).padStart(casas, '0');
         return formato
@@ -241,5 +308,5 @@ export function criarAmbiente({ pastaBackend }) {
    */
   const avaliar = (expressao) => vm.runInContext(expressao, contexto);
 
-  return { contexto, avaliar, planilha, propriedades, registros, arquivos };
+  return { contexto, avaliar, planilha, propriedades, registros, arquivos, drive };
 }
