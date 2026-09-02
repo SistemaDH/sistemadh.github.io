@@ -102,6 +102,7 @@ function aplicarAjustes_(ficha, ajustes) {
     if (tipo === 'recurso') r = ajustarRecurso_(ficha, a);
     else if (tipo === 'condicao') r = ajustarCondicao_(ficha, a);
     else if (tipo === 'contador') r = ajustarContador_(ficha, a);
+    else if (tipo === 'marcador') r = ajustarMarcador_(ficha, a);
     else if (tipo === 'carta') r = ajustarCarta_(ficha, a);
     else if (tipo === 'gatilho') r = ajustarGatilho_(ficha, a);
     else if (tipo === 'conjuracao') r = ajustarConjuracao_(ficha, a);
@@ -247,6 +248,9 @@ function ajustarFichaFilha_(ficha, a) {
  */
 const OURO_CATEGORIAS = { punhados: 1, bolsas: 10, cofres: 100 };
 
+/** As mesmas categorias em MOEDAS, com a regra opcional ligada. */
+const OURO_CATEGORIAS_MOEDAS = { moedas: 1, punhados: 10, bolsas: 100, cofres: 1000 };
+
 /**
  * Mexe no ouro por CATEGORIA, com o troco automático.
  *
@@ -260,22 +264,67 @@ const OURO_CATEGORIAS = { punhados: 1, bolsas: 10, cofres: 100 };
  */
 function ajustarOuroDaFicha_(ficha, a) {
   const cat = chaveTexto_(a.chave);
-  if (!OURO_CATEGORIAS[cat]) {
-    return { erro: 'Categoria de ouro desconhecida: "' + String(a.chave) + '".' };
-  }
   if (typeof ouroNormalizado_ !== 'function') {
     return { erro: 'Este servidor não sabe converter ouro.' };
   }
+
+  /*
+   * Duas escadas, e a mesa escolhe qual vale.
+   *
+   * Com a regra opcional ligada a conta é feita em MOEDAS; sem ela, em
+   * punhados. Quem decide é a MESA (`ouroComMoedas_`), não o cliente — se
+   * fosse o cliente, um app desatualizado continuaria mandando moedas depois
+   * de a mesa desligar a regra, e a ficha ganharia um valor que a tela dos
+   * outros jogadores nem mostra.
+   */
+  const comMoedas = (typeof ouroComMoedas_ === 'function') && ouroComMoedas_();
+  const escada = comMoedas ? OURO_CATEGORIAS_MOEDAS : OURO_CATEGORIAS;
+
+  if (!escada[cat]) {
+    if (cat === 'moedas') {
+      return { erro: 'A mesa não está usando a regra opcional das moedas.' };
+    }
+    return { erro: 'Categoria de ouro desconhecida: "' + String(a.chave) + '".' };
+  }
+
   const passo = Math.trunc(Number(a.delta));
   if (!isFinite(passo) || passo === 0) return { erro: 'O ajuste de ouro precisa de um delta.' };
 
   ficha.ouro = ficha.ouro || { punhados: 0, bolsas: 0, cofres: 0 };
-  const antes = { punhados: ficha.ouro.punhados || 0, bolsas: ficha.ouro.bolsas || 0, cofres: ficha.ouro.cofres || 0 };
-  const total = ouroEmPunhados_(antes) + passo * OURO_CATEGORIAS[cat];
+  const antes = {
+    moedas: ficha.ouro.moedas || 0,
+    punhados: ficha.ouro.punhados || 0,
+    bolsas: ficha.ouro.bolsas || 0,
+    cofres: ficha.ouro.cofres || 0
+  };
+
+  if (comMoedas) {
+    const total = ouroEmMoedas_(antes) + passo * escada[cat];
+    if (total < 0) return { erro: 'Não dá para gastar mais ouro do que se tem.' };
+    const novo = ouroNormalizadoDeMoedas_(total);
+    ficha.ouro = {
+      moedas: novo.moedas, punhados: novo.punhados, bolsas: novo.bolsas, cofres: novo.cofres
+    };
+    return {
+      tipo: 'ouro', chave: cat, antes: antes, depois: ficha.ouro,
+      aviso: novo.estourou ? 'O baú encheu — o livro não deixa passar de 1 baú.' : ''
+    };
+  }
+
+  /*
+   * Regra padrão. As moedas soltas ficam GUARDADAS onde estão, sem entrar na
+   * conta: elas nunca passam de nove (a escada converte no décimo), então o
+   * que fica de fora vale menos de um punhado. Apagá-las faria a mesa perder
+   * troco só por experimentar a regra; somá-las inventaria um punhado que o
+   * personagem não tem.
+   */
+  const total = ouroEmPunhados_(antes) + passo * escada[cat];
   if (total < 0) return { erro: 'Não dá para gastar mais ouro do que se tem.' };
 
   const novo = ouroNormalizado_(total);
-  ficha.ouro = { punhados: novo.punhados, bolsas: novo.bolsas, cofres: novo.cofres };
+  ficha.ouro = {
+    moedas: antes.moedas, punhados: novo.punhados, bolsas: novo.bolsas, cofres: novo.cofres
+  };
   return {
     tipo: 'ouro', chave: cat, antes: antes, depois: ficha.ouro,
     aviso: novo.estourou ? 'O baú encheu — o livro não deixa passar de 1 baú.' : ''
@@ -311,12 +360,21 @@ function comprarItem_(ficha, a) {
     return { erro: 'A mochila já tem ' + LIMITE_ITENS_INVENTARIO + ' itens — tire algo antes de comprar.' };
   }
 
+  /*
+   * O preço é cobrado na MESMA escada que a mesa está usando, pelo motivo
+   * óbvio e fácil de errar: com a regra opcional ligada, "3" na coluna de
+   * moedas não pode virar 3 punhados.
+   */
+  const comMoedas = (typeof ouroComMoedas_ === 'function') && ouroComMoedas_();
+  const escada = comMoedas ? OURO_CATEGORIAS_MOEDAS : OURO_CATEGORIAS;
+  const unidade = comMoedas ? 'moeda(s)' : 'punhado(s)';
+
   const preco = (a.preco && typeof a.preco === 'object') ? a.preco : {};
   let custo = 0;
-  const chaves = Object.keys(OURO_CATEGORIAS);
+  const chaves = Object.keys(escada);
   for (let i = 0; i < chaves.length; i++) {
     const quanto = Math.max(0, Math.trunc(Number(preco[chaves[i]])) || 0);
-    custo += quanto * OURO_CATEGORIAS[chaves[i]];
+    custo += quanto * escada[chaves[i]];
   }
   if (custo <= 0) {
     return { erro: 'Diga quanto custou. Se foi de graça, use "acrescentar à mochila".' };
@@ -324,24 +382,32 @@ function comprarItem_(ficha, a) {
 
   ficha.ouro = ficha.ouro || { punhados: 0, bolsas: 0, cofres: 0 };
   const antes = {
+    moedas: ficha.ouro.moedas || 0,
     punhados: ficha.ouro.punhados || 0,
     bolsas: ficha.ouro.bolsas || 0,
     cofres: ficha.ouro.cofres || 0
   };
-  const total = ouroEmPunhados_(antes) - custo;
+
+  const naMao = comMoedas ? ouroEmMoedas_(antes) : ouroEmPunhados_(antes);
+  const total = naMao - custo;
   if (total < 0) {
     return { erro: 'Não dá para gastar mais ouro do que se tem: custou ' + custo +
-                   ' punhado(s) e há ' + ouroEmPunhados_(antes) + '.' };
+                   ' ' + unidade + ' e há ' + naMao + '.' };
   }
 
   // As duas metades, agora que as duas passaram na conferência.
-  const novo = ouroNormalizado_(total);
-  ficha.ouro = { punhados: novo.punhados, bolsas: novo.bolsas, cofres: novo.cofres };
+  const novo = comMoedas ? ouroNormalizadoDeMoedas_(total) : ouroNormalizado_(total);
+  ficha.ouro = {
+    // Sem a regra ligada, as moedas guardadas ficam onde estão (ver
+    // `ajustarOuroDaFicha_`): valem menos de um punhado e não são da conta.
+    moedas: comMoedas ? novo.moedas : antes.moedas,
+    punhados: novo.punhados, bolsas: novo.bolsas, cofres: novo.cofres
+  };
   if (jaTem) jaTem.qtd = Math.min(LIMITE_QUANTIDADE_ITEM, jaTem.qtd + comprado.qtd);
   else lista.push(comprado);
 
   return {
-    tipo: 'compra', item: texto, custo: custo,
+    tipo: 'compra', item: texto, custo: custo, unidade: unidade,
     antes: antes, depois: ficha.ouro, total: lista.length,
     aviso: 'Preço é decisão da mesa: o livro (p.104) não define preços.'
   };
@@ -617,23 +683,37 @@ function ajustarContador_(ficha, a) {
   const chave = normalizarContador_(a.chave);
   if (!chave) return { erro: 'Contador desconhecido: "' + String(a.chave) + '".' };
 
+  const livre = (typeof ehMarcadorLivre_ === 'function') && ehMarcadorLivre_(chave);
   const def = CONTADORES[chave] || {};
   ficha.contadores = ficha.contadores || {};
   const atual = ficha.contadores[chave] || {};
+  if (livre && !atual.nome) {
+    return { erro: 'Esse marcador não existe mais nesta ficha.' };
+  }
   const antes = Math.max(0, Math.trunc(Number(atual.valor)) || 0);
   const teto = (typeof maximoDoContador_ === 'function') ? maximoDoContador_(chave, ficha) : CONTADOR_LIMITE_ABERTO;
+  const nome = livre ? atual.nome : (def.nome || chave);
 
   let alvo;
   if (a.valor !== undefined && a.valor !== null) alvo = Math.trunc(Number(a.valor));
   else if (a.delta !== undefined && a.delta !== null) alvo = antes + Math.trunc(Number(a.delta));
-  else return { erro: 'O ajuste de "' + (def.nome || chave) + '" veio sem valor nem delta.' };
+  else return { erro: 'O ajuste de "' + nome + '" veio sem valor nem delta.' };
 
-  if (!isFinite(alvo)) return { erro: 'Valor inválido para "' + (def.nome || chave) + '".' };
+  if (!isFinite(alvo)) return { erro: 'Valor inválido para "' + nome + '".' };
   const depois = Math.max(0, Math.min(teto, alvo));
 
-  // Contador zerado sai da ficha: ficha limpa, JSON menor.
-  if (depois === 0 && !def.guardarZero) {
+  /*
+   * Contador de catálogo zerado sai da ficha: ficha limpa, JSON menor — ele
+   * volta sozinho porque a carta que o gera continua na mão.
+   *
+   * O marcador À MÃO fica. Ninguém o traz de volta: apagá-lo no zero faria a
+   * pessoa recriá-lo, com nome e teto, a cada vez que a contagem passasse por
+   * zero no meio da cena. Quem tira é o botão de excluir.
+   */
+  if (depois === 0 && !def.guardarZero && !livre) {
     delete ficha.contadores[chave];
+  } else if (livre) {
+    ficha.contadores[chave] = { valor: depois, nome: atual.nome, maximo: atual.maximo };
   } else {
     const novo = { valor: depois };
     const dado = (typeof dadoDoContador_ === 'function') ? dadoDoContador_(chave, ficha) : '';
@@ -643,11 +723,74 @@ function ajustarContador_(ficha, a) {
   }
 
   const m = {
-    tipo: 'contador', chave: chave, nome: def.nome || chave, rotulo: def.rotulo || '',
+    tipo: 'contador', chave: chave, nome: nome, rotulo: def.rotulo || (livre ? 'marcas' : ''),
     antes: antes, depois: depois, maximo: teto
   };
   if (alvo > teto) m.aviso = 'O máximo deste contador é ' + teto + '.';
   return m;
+}
+
+/**
+ * Cria ou apaga um MARCADOR À MÃO.
+ *
+ * O catálogo cobre as 20 cartas e características que o livro traz pedindo
+ * ficha. Não cobre carta nova, característica de expansão, nem o "põe três
+ * marcas aqui" que o Mestre inventou na cena — e sem isto essas contagens
+ * voltavam para o papel no meio de uma ficha digital.
+ */
+function ajustarMarcador_(ficha, a) {
+  if (typeof chaveDeMarcadorLivre_ !== 'function') {
+    return { erro: 'Este servidor não sabe criar marcadores.' };
+  }
+  const acao = chaveTexto_(a.acao) || 'criar';
+  ficha.contadores = ficha.contadores || {};
+
+  if (acao === 'excluir') {
+    const chave = String(a.chave || '');
+    if (!ehMarcadorLivre_(chave) || !ficha.contadores[chave]) {
+      return { erro: 'Esse marcador não existe nesta ficha.' };
+    }
+    const nome = ficha.contadores[chave].nome;
+    delete ficha.contadores[chave];
+    return { tipo: 'marcador', acao: 'excluir', chave: chave, nome: nome };
+  }
+
+  if (acao !== 'criar') return { erro: 'Ação de marcador desconhecida: "' + String(a.acao) + '".' };
+
+  const nome = String(a.nome === undefined ? '' : a.nome).trim().replace(/\s+/g, ' ');
+  if (!nome) return { erro: 'Dê um nome ao marcador.' };
+  if (nome.length > MARCADOR_LIVRE_NOME_MAX) {
+    return { erro: 'O nome do marcador passa de ' + MARCADOR_LIVRE_NOME_MAX + ' caracteres.' };
+  }
+
+  const chave = chaveDeMarcadorLivre_(nome);
+  if (!chave) return { erro: 'Dê um nome ao marcador.' };
+  if (ficha.contadores[chave]) {
+    return { erro: 'Já existe um marcador chamado "' + ficha.contadores[chave].nome + '".' };
+  }
+  /*
+   * Nome de marcador à mão NÃO pode colidir com um do catálogo: se colidisse,
+   * a tela mostraria dois "Dado de Inspiração" e nem quem criou saberia qual
+   * é o da carta.
+   */
+  if (typeof normalizarContador_ === 'function') {
+    const doCatalogo = normalizarContador_(nome);
+    if (doCatalogo && !ehMarcadorLivre_(doCatalogo)) {
+      return { erro: '"' + nome + '" já é um marcador do livro — ele aparece sozinho quando a carta está na mão.' };
+    }
+  }
+
+  const quantos = Object.keys(ficha.contadores).filter(ehMarcadorLivre_).length;
+  if (quantos >= MARCADOR_LIVRE_QUANTOS) {
+    return { erro: 'Só cabem ' + MARCADOR_LIVRE_QUANTOS + ' marcadores criados à mão.' };
+  }
+
+  let teto = Math.trunc(Number(a.maximo));
+  if (!isFinite(teto) || teto < 1) teto = MARCADOR_LIVRE_TETO;
+  teto = Math.min(MARCADOR_LIVRE_TETO, teto);
+
+  ficha.contadores[chave] = { valor: 0, nome: nome, maximo: teto };
+  return { tipo: 'marcador', acao: 'criar', chave: chave, nome: nome, maximo: teto };
 }
 
 function ajustarCarta_(ficha, a) {

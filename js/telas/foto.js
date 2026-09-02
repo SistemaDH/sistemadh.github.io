@@ -193,11 +193,21 @@ export function abrirEditorDeFoto(personagem, aoTrocar) {
 
   salvar.addEventListener('click', async () => {
     if (!imagem) return;
-    const blob = await new Promise((r) => tela.toBlob(r, 'image/jpeg', QUALIDADE));
-    if (!blob) { avisarErro('Não consegui gerar a imagem.'); return; }
+    /*
+     * A TRAVA COMEÇA AQUI, antes de codificar.
+     *
+     * `toBlob` num canvas de 480×600 e o `FileReader` do base64 são dois
+     * `await` que levam um tempo visível num celular devagar — e o botão
+     * ficava clicável nessa janela. Dois toques viravam duas gravações no
+     * Drive, cada uma criando um arquivo.
+     */
     try {
-      const base64 = await paraBase64(blob);
-      const r = await travarBotao(salvar, acoes.guardarFoto(personagem.id, base64, 'image/jpeg'));
+      const r = await travarBotao(salvar, (async () => {
+        const blob = await new Promise((r2) => tela.toBlob(r2, 'image/jpeg', QUALIDADE));
+        if (!blob) throw new Error('Não consegui gerar a imagem.');
+        const base64 = await paraBase64(blob);
+        return acoes.guardarFoto(personagem.id, base64, 'image/jpeg');
+      })());
       avisarSucesso('Foto guardada.');
       if (aoTrocar) aoTrocar(r.personagem);
       modal.fechar();

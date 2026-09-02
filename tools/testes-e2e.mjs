@@ -569,7 +569,7 @@ try {
 
     // Chegar a zero TIRA o item: bebeu a última, some da lista.
     const v3 = await versaoNaTela();
-    await doLivro.getByRole('button', { name: /Menos um/ }).click();
+    await doLivro.getByRole('button', { name: /Menos 1 de/ }).click();
     await esperarGravar(v3);
     igual(await doLivro.count(), 0, 'no zero o item devia sair da mochila');
   });
@@ -620,7 +620,7 @@ try {
   await passo('comprar tira o ouro e guarda o item de uma vez só (fecha I1)', async () => {
     // A mochila ficou com 1 bolsa (os 10 punhados do passo anterior).
     const preencher = async (item, punhados, bolsas) => {
-      await pagina.locator('.ficha__comprar').click();
+      await pagina.locator('.js-comprar').click();
       const caixa = pagina.locator('.modal__caixa').last();
       await caixa.locator('.campo__entrada').first().fill(item);
       await caixa.locator('.ficha__preco', { hasText: 'Punhados' })
@@ -632,14 +632,14 @@ try {
 
     // Sem preço, o app manda usar "Guardar" — e nada é gravado.
     let caixa = await preencher('Uma corda de graça', 0, 0);
-    await caixa.getByRole('button', { name: 'Comprar' }).click();
+    await caixa.getByRole('button', { name: 'Comprar', exact: true }).click();
     await pagina.waitForSelector('.aviso--erro', { timeout: 5000 });
     igual(await pagina.locator('.modal__caixa').count(), 1, 'o modal fechou sem comprar');
 
     // Caro demais: o servidor recusa INTEIRO — nem ouro sai, nem item entra.
     await caixa.locator('.ficha__preco', { hasText: 'Bolsas' }).locator('input').fill('5');
     await caixa.locator('.campo__entrada').first().fill('Um navio');
-    await caixa.getByRole('button', { name: 'Comprar' }).click();
+    await caixa.getByRole('button', { name: 'Comprar', exact: true }).click();
     await pagina.waitForTimeout(1500);
     igual(await pagina.locator('.ficha__item', { hasText: 'Um navio' }).count(), 0,
       'item caro demais entrou na mochila');
@@ -649,7 +649,7 @@ try {
     // 3 punhados de 1 bolsa: sobram 7, e o troco atravessa a categoria.
     const antes = await versaoNaTela();
     caixa = await preencher('Uma tocha da boa', 3, 0);
-    await caixa.getByRole('button', { name: 'Comprar' }).click();
+    await caixa.getByRole('button', { name: 'Comprar', exact: true }).click();
     await esperarGravar(antes);
     igual(await pagina.locator('.ficha__item', { hasText: 'Uma tocha da boa' }).count(), 1,
       'o item comprado não apareceu na mochila');
@@ -661,6 +661,43 @@ try {
       'a bolsa devia ter virado troco: 7 punhados e 0 bolsas');
 
     await pagina.getByRole('tab', { name: 'Cartas' }).click();
+  });
+
+  await passo('a compra também escolhe do catálogo do livro', async () => {
+    /*
+     * O catálogo estava só no "Guardar". Comprar era digitar o nome à mão — e
+     * a mesma poção entrava com id quando achada e sem id quando comprada, o
+     * que fazia a mochila mostrar duas linhas para a mesma coisa.
+     */
+    await pagina.getByRole('tab', { name: 'Mochila' }).click();
+    await pagina.waitForSelector('.js-comprar');
+    await pagina.locator('.js-comprar').click();
+    await pagina.waitForSelector('.modal__caixa');
+    const caixa = pagina.locator('.modal__caixa').last();
+    await caixa.getByRole('button', { name: 'Escolher um item do livro' }).click();
+    await pagina.waitForSelector('.ficha__catalogo');
+    await pagina.locator('.modal__caixa').last()
+      .getByLabel('Buscar item do livro').fill('Apito Piper');
+    await pagina.locator('.ficha__catalogoItem').first().click();
+
+    // Voltou para o formulário de compra com o nome do livro preenchido.
+    const nome = await caixa.locator('.campo__entrada').first().inputValue();
+    igual(nome, 'Apito Piper', 'o nome do livro não foi para o campo');
+
+    const antes = await versaoNaTela();
+    await caixa.locator('.ficha__preco', { hasText: 'Punhados' }).locator('input').fill('1');
+    await caixa.getByRole('button', { name: 'Comprar', exact: true }).click();
+    await esperarGravar(antes);
+
+    const linha = pagina.locator('.ficha__item', { hasText: 'Apito Piper' });
+    igual(await linha.count(), 1);
+    // Veio do catálogo: o nome abre o texto do livro.
+    igual(await linha.locator('.ficha__itemNome--doLivro').count(), 1,
+      'comprado do livro tem de guardar o id, não só o nome');
+
+    // Devolve a tela para onde o passo seguinte espera encontrá-la.
+    await pagina.getByRole('tab', { name: 'Cartas' }).click();
+    await pagina.waitForSelector('.ficha__carta');
   });
 
   await passo('a carta de FUNDAÇÃO da subclasse aparece na aba Cartas', async () => {
@@ -894,6 +931,48 @@ try {
     for (const nome of ['Mesa', 'Contagens', 'Grupo']) {
       await pagina.getByRole('tab', { name: nome }).waitFor({ timeout: 5000 });
     }
+  });
+
+  await passo('mexer no Medo não reconstrói o painel (o mesmo flick da ficha)', async () => {
+    /*
+     * O Medo é o controle mais tocado do painel, e cada toque remontava o
+     * painel inteiro. Aqui há um motivo a mais que na ficha para não fazer
+     * isso: o painel pode estar com uma cena de luta aberta, e remontar a
+     * lista de adversários no meio do combate é pior do que piscar.
+     *
+     * Mesma prova de lá: guarda um NÓ da trilha e confere que ele continua no
+     * documento depois da gravação.
+     */
+    await pagina.evaluate(() => {
+      window.__noDoMedo = document.querySelector('.trilha--medoMesa .trilha__ponto');
+    });
+    await pagina.locator('.trilha--medoMesa .trilha__ponto').nth(2).click();
+    await pagina.waitForFunction(() => {
+      const s = document.querySelector('.mestre__topo .selo--medo');
+      return s && /Medo 3/.test(s.textContent);
+    }, null, { timeout: 20000 });
+    const vivo = await pagina.evaluate(() => window.__noDoMedo.isConnected);
+    if (!vivo) throw new Error('o painel foi reconstruído ao mexer no Medo (volta o flick)');
+  });
+
+  await passo('o Mestre liga as moedas e a ficha ganha a coluna (SRD, regra opcional)', async () => {
+    /*
+     * A regra é do GRUPO, não da ficha: o SRD diz "if your group wants". Ouro
+     * se empresta e se divide na mesa — uma ficha em moedas ao lado de outra em
+     * punhados faria "meio punhado" querer dizer coisas diferentes.
+     *
+     * Por isso o interruptor está no painel do Mestre, e este passo prova o
+     * caminho inteiro: liga aqui, aparece lá.
+     */
+    const caixa = pagina.locator('.cartao', { hasText: 'Ouro em moedas' })
+      .locator('input[type="checkbox"]');
+    igual(await caixa.isChecked(), false, 'o padrão do livro é sem moedas');
+    await caixa.check();
+    await pagina.waitForFunction(() => {
+      const c = Array.from(document.querySelectorAll('.cartao'))
+        .find((x) => /Ouro em moedas/.test(x.textContent));
+      return c && c.querySelector('input[type="checkbox"]').checked;
+    }, null, { timeout: 20000 });
   });
 
   await passo('o Medo respeita o teto de 12', async () => {
@@ -1313,6 +1392,67 @@ try {
     await esperarGravar(v);
     igual(await pagina.locator('.papel__trilha--pv .papel__caixa.esta-cheio').count(), 2);
 
+    await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+    await pagina.waitForSelector('.ficha-cartao__abrir');
+  });
+
+  await passo('a coluna de Moedas chega na ficha, e o marcador à mão funciona', async () => {
+    // O passo anterior fechou a ficha; reabre.
+    await pagina.locator('.ficha-cartao__abrir').first().click();
+    await pagina.waitForSelector('.papel', { timeout: 20000 });
+    await pagina.getByRole('tab', { name: 'Mochila' }).click();
+    await pagina.waitForSelector('.ficha__moedas');
+
+    const rotulos = await pagina.locator('.ficha__moedaRotulo').allTextContents();
+    igual(rotulos.map((t) => t.trim()).join(' | '), 'Moedas | Punhados | Bolsas | Baús',
+      'com a regra ligada pelo Mestre, a menor unidade entra à esquerda');
+
+    // 10 moedas viram 1 punhado — a escada do SRD, feita pelo servidor.
+    const coluna = pagina.locator('.ficha__moeda', { hasText: 'Moedas' });
+    const punhados = pagina.locator('.ficha__moeda', { hasText: 'Punhados' });
+    const antesPunhados = Number((await punhados.locator('.ficha__moedaValor').textContent()).trim());
+    for (let i = 0; i < 10; i++) {
+      const v = await versaoNaTela();
+      await coluna.getByRole('button', { name: /Mais uma moeda/ }).click();
+      await esperarGravar(v);
+    }
+    igual((await coluna.locator('.ficha__moedaValor').textContent()).trim(), '0',
+      'as 10 moedas deviam ter virado 1 punhado');
+    igual(Number((await punhados.locator('.ficha__moedaValor').textContent()).trim()),
+      antesPunhados + 1);
+
+    /*
+     * O MARCADOR À MÃO. O catálogo cobre as 20 do livro; este é para a carta
+     * nova, a característica de expansão e o "põe três marcas aqui" que o
+     * Mestre inventou na cena — que antes voltavam para o papel.
+     */
+    await pagina.getByRole('tab', { name: 'Jogo' }).click();
+    await pagina.waitForSelector('.papel');
+    const v = await versaoNaTela();
+    await pagina.getByRole('button', { name: '+ Marcador' }).click();
+    await pagina.waitForSelector('.modal__caixa');
+    const caixa = pagina.locator('.modal__caixa').last();
+    await caixa.getByLabel('Nome').fill('Marcas do ritual');
+    await caixa.getByLabel('Máximo do marcador').fill('3');
+    await caixa.getByRole('button', { name: 'Criar' }).click();
+    await esperarGravar(v);
+
+    const linha = pagina.locator('.ficha__contador', { hasText: 'Marcas do ritual' });
+    igual(await linha.count(), 1, 'o marcador não apareceu');
+
+    const v2 = await versaoNaTela();
+    await linha.getByRole('button', { name: /Aumentar/ }).click();
+    await esperarGravar(v2);
+    igual((await linha.locator('.ficha__contadorValor').textContent()).trim(), '1');
+
+    // Zerar NÃO apaga: apagar faria a pessoa recriá-lo a cada cena.
+    const v3 = await versaoNaTela();
+    await linha.getByRole('button', { name: /Diminuir/ }).click();
+    await esperarGravar(v3);
+    igual(await pagina.locator('.ficha__contador', { hasText: 'Marcas do ritual' }).count(), 1,
+      'o marcador à mão não pode sumir no zero');
+
+    // Devolve a tela para a lista, que é onde o passo seguinte começa.
     await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
     await pagina.waitForSelector('.ficha-cartao__abrir');
   });

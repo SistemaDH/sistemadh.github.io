@@ -450,7 +450,7 @@ function ajustarAdversarioEmCena_(m, pedido) {
     inst.emFoco = false;
     mudancas.derrotado = true;
     mudancas.aviso = ficha.nome + ' marcou o último Ponto de Vida e foi derrotado ' +
-      '(livro p.203). O que isso significa é decisão da mesa: inconsciente, amarrado, morto.';
+      '(livro p.208). O que isso significa é decisão da mesa: inconsciente, amarrado, morto.';
   }
   if (!inst.derrotado && eraDerrotado) mudancas.voltou = true;
 

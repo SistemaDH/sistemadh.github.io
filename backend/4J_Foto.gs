@@ -151,3 +151,103 @@ function removerFoto_(jogador, personagemId) {
   if (antigo) descartarFoto_(antigo);
   return { personagem: r.personagem, foto: '' };
 }
+
+/* ==========================================================================
+ *  FAXINA DAS FOTOS ÓRFÃS
+ * ==========================================================================
+ *
+ *  POR QUE ELAS EXISTEM
+ *
+ *  Excluir uma ficha aqui é ARQUIVAR: `excluirPersonagem_` marca a linha e
+ *  `restaurarPersonagem_` a traz de volta. Apagar a foto junto quebraria a
+ *  restauração — a ficha voltaria sem rosto. Então a imagem fica no Drive sem
+ *  ninguém mais citando, e trocar de foto também deixa rastro quando o
+ *  descarte da antiga falha (`descartarFoto_` engole o erro de propósito).
+ *
+ *  Isto é UMA FUNÇÃO DE MANUTENÇÃO, chamada à mão pelo editor do Apps Script.
+ *  Não entra no caminho de nenhum jogador, por dois motivos: ela lê a ficha de
+ *  todo mundo (caro) e ela APAGA (perigoso). As duas coisas juntas não podem
+ *  morar num botão que alguém encosta sem querer.
+ *
+ *  Uso:
+ *    faxinaDeFotos()                       → só lista o que sobraria
+ *    faxinaDeFotos('APAGAR FOTOS ÓRFÃS')   → manda para a lixeira do Drive
+ */
+
+/** Os ids de foto citados por alguma ficha — inclusive as ARQUIVADAS. */
+function fotosEmUso_() {
+  const emUso = {};
+  const linhas = lerTudo_(ABAS.PERSONAGENS);
+  for (let i = 0; i < linhas.length; i++) {
+    /*
+     * A ficha excluída CONTA. Ela é arquivo, não lixo: `restaurarPersonagem_`
+     * existe, e uma foto apagada aqui voltaria como um retrato vazio.
+     */
+    let ficha = null;
+    try {
+      ficha = JSON.parse(linhas[i].dados || '{}');
+    } catch (e) {
+      /*
+       * Ficha que não abre é o caso mais perigoso da faxina: não dá para saber
+       * que foto ela cita, e apagar por não saber é apagar no escuro. Ela vira
+       * um aviso e a faxina inteira para.
+       */
+      return { erro: 'A ficha da linha ' + linhas[i]._linha + ' não abre como JSON. ' +
+                     'Enquanto ela não abrir, a faxina não roda: seria apagar às cegas.' };
+    }
+    const id = String(((ficha || {}).identidade || {}).foto || '');
+    if (id) emUso[id] = true;
+  }
+  return { emUso: emUso };
+}
+
+function faxinaDeFotos(confirmacao) {
+  const usadas = fotosEmUso_();
+  if (usadas.erro) {
+    Logger.log(usadas.erro);
+    return usadas.erro;
+  }
+
+  const pasta = pastaDasFotos_();
+  const arquivos = pasta.getFiles();
+  const orfas = [];
+  let vistos = 0;
+
+  while (arquivos.hasNext()) {
+    const arq = arquivos.next();
+    vistos++;
+    if (arq.isTrashed()) continue;
+    /*
+     * Só mexe no que ESTE app criou. A pasta é do Drive da mesa e pode ter
+     * qualquer outra coisa dentro; o prefixo `foto-` é a assinatura de
+     * `guardarFoto_`, e o que não a tem não é nosso para apagar.
+     */
+    if (arq.getName().indexOf('foto-') !== 0) continue;
+    if (usadas.emUso[arq.getId()]) continue;
+    orfas.push({ id: arq.getId(), nome: arq.getName(), quando: arq.getDateCreated() });
+  }
+
+  const resumo = vistos + ' arquivo(s) na pasta · ' +
+                 Object.keys(usadas.emUso).length + ' foto(s) em uso · ' +
+                 orfas.length + ' órfã(s).';
+
+  if (confirmacao !== 'APAGAR FOTOS ÓRFÃS') {
+    const lista = orfas.map(function (o) { return '  ' + o.nome + '  (' + o.quando + ')'; });
+    const texto = [
+      resumo,
+      'Nada foi apagado. Para apagar de verdade:',
+      "  faxinaDeFotos('APAGAR FOTOS ÓRFÃS')"
+    ].concat(lista).join('\n');
+    Logger.log(texto);
+    return texto;
+  }
+
+  let apagadas = 0;
+  for (let i = 0; i < orfas.length; i++) {
+    if (descartarFoto_(orfas[i].id)) apagadas++;
+  }
+  const fim = resumo + ' ' + apagadas + ' mandada(s) para a lixeira do Drive — ' +
+              'de onde dá para recuperar por 30 dias, se der arrependimento.';
+  Logger.log(fim);
+  return fim;
+}

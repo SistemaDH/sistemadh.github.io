@@ -136,7 +136,7 @@ export function abrirEditorDeAdversario({ ficha, tabela, tipos, aoSalvar } = {})
       corpo.append(el('div', { class: 'editor-adversario__linha' }, [
         campo('Experiência', texto(`exp${i}`, e.nome, (v) => { e.nome = v; })),
         campo('Bônus', numero(`expB${i}`, e.bonus || 2, (v) => { e.bonus = v; })),
-        botaoTirar(() => { f.experiencias.splice(i, 1); desenhar(); })
+        botaoTirar(() => { f.experiencias.splice(i, 1); desenhar(); }, `a Experiência ${i + 1}`)
       ]));
     });
     if (f.experiencias.length < 5) {
@@ -156,7 +156,7 @@ export function abrirEditorDeAdversario({ ficha, tabela, tipos, aoSalvar } = {})
           campo('Nome', texto(`hab${i}`, h.nome, (v) => { h.nome = v; })),
           campo('Tipo', seletor(`habT${i}`, TIPOS_DE_HABILIDADE, h.tipo || 'passiva',
             (v) => { h.tipo = v; })),
-          botaoTirar(() => { f.habilidades.splice(i, 1); desenhar(); })
+          botaoTirar(() => { f.habilidades.splice(i, 1); desenhar(); }, `a habilidade ${i + 1}`)
         ]),
         campo('Texto', area(`habTexto${i}`, h.texto || '', (v) => {
           h.texto = v; atualizarCusto(bloco, v);
@@ -277,10 +277,17 @@ export function abrirEditorDeAdversario({ ficha, tabela, tipos, aoSalvar } = {})
     return e;
   }
 
-  function botaoTirar(aoTocar) {
+  /*
+   * O rótulo acessível DIZ o que sai.
+   *
+   * O editor empilha um "−" por Experiência e outro por habilidade: todos se
+   * anunciavam como "Tirar", e o leitor de tela lia a mesma palavra seis vezes
+   * sem dizer de qual linha era. Em todo o resto do app o glifo nomeia o alvo.
+   */
+  function botaoTirar(aoTocar, oQue) {
     return el('button', {
       type: 'button', class: 'btn btn--fantasma btn--pequeno editor-adversario__tirar',
-      'aria-label': 'Tirar', onClick: aoTocar
+      'aria-label': oQue ? `Tirar ${oQue}` : 'Tirar', onClick: aoTocar
     }, '−');
   }
 

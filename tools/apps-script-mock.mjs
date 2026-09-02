@@ -207,6 +207,26 @@ export function criarAmbiente({ pastaBackend }) {
         }
         return {
           getId: () => idPasta,
+          /* A faxina de fotos percorre a pasta: o mock precisa devolver um
+             iterador no formato do Drive (hasNext/next). */
+          getFiles: () => {
+            const ids = drive.ordem.filter((k) => drive.arquivos.get(k).pasta === idPasta);
+            let i = 0;
+            return {
+              hasNext: () => i < ids.length,
+              next: () => {
+                const r = drive.arquivos.get(ids[i++]);
+                return {
+                  getId: () => r.id,
+                  getName: () => r.nome,
+                  isTrashed: () => r.lixeira,
+                  getDateCreated: () => new Date(0),
+                  setSharing: (acesso) => { r.acesso = acesso; },
+                  setTrashed: (v) => { r.lixeira = Boolean(v); }
+                };
+              }
+            };
+          },
           createFile: (blob) => {
             const idArquivo = 'arq' + String(++drive.contador).padStart(30, '0');
             const registro = {

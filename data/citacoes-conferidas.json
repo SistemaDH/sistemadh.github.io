@@ -1,0 +1,12 @@
+{
+  "versao": 1,
+  "porque": "Citações que o heurístico não consegue provar e que EU li no PDF, uma a uma. Sem esta lista o conferidor acusa as mesmas para sempre, e um alarme que toca sempre deixa de ser alarme. Cada entrada diz o que foi visto na página — quem duvidar confere a mesma frase.",
+  "conferidas": [
+    {
+      "pagina": 90,
+      "trecho": "Esperança não tem reset nem ganho automático",
+      "conferidoEm": "2026-09-02",
+      "oQueEuVi": "p.90: \"sua Esperança continua ali entre as sessões, mas você só pode acumular um máximo de 6 pontos de Esperança\". Sustenta as duas metades da frase: não zera entre sessões, e o teto é 6. O heurístico não prova porque a frase fala de descanso e a página fala do recurso."
+    }
+  ]
+}

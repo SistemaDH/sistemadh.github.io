@@ -197,7 +197,13 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
         class: `trilha__ponto trilha__ponto--medo ${cheio ? 'esta-cheio' : ''}`,
         'aria-label': `Medo: ${i} de ${max}`,
         'aria-pressed': cheio ? 'true' : 'false',
-        onClick: () => mexerNoMedo({ valor: (i === m.medo) ? i - 1 : i })
+        // Quantos estão cheios se lê da TELA, não da closure: o painel deixou
+        // de redesenhar a cada resposta, e o número capturado no desenho
+        // envelhecia (mesmo motivo do E45, na ficha).
+        onClick: () => {
+          const agora = medoNaTela();
+          mexerNoMedo({ valor: (i === agora) ? i - 1 : i });
+        }
       }));
     }
 
@@ -219,12 +225,54 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     ]);
   }
 
+  /** Quantos marcadores de Medo estão acesos AGORA, lido da tela. */
+  function medoNaTela() {
+    return corpo.querySelectorAll('.trilha--medoMesa .trilha__ponto.esta-cheio').length;
+  }
+
+  /** Pinta a trilha do Medo antes de a rede responder. */
+  function pintarMedo(quantos) {
+    corpo.querySelectorAll('.trilha--medoMesa .trilha__ponto').forEach((n, i) => {
+      n.classList.toggle('esta-cheio', i < quantos);
+      n.setAttribute('aria-pressed', i < quantos ? 'true' : 'false');
+    });
+    const conta = corpo.querySelector('.trilha--medoMesa .trilha__conta');
+    if (conta) conta.textContent = `${quantos}/${painel.medoRegras.maximo}`;
+  }
+
+  /**
+   * O Medo é o controle mais tocado do painel — e cada toque reconstruía o
+   * painel INTEIRO.
+   *
+   * É o mesmo "flick" que a mesa apontou na ficha, com a mesma receita: pintar
+   * na hora, espelhar no estado local, e só redesenhar quando o servidor
+   * DISCORDAR do que já está na tela. Aqui há um motivo a mais para não
+   * redesenhar à toa: o painel pode estar com uma cena de luta aberta, e
+   * remontar a lista de adversários no meio de um combate é pior do que
+   * piscar.
+   */
   async function mexerNoMedo(pedido) {
+    const alvo = (pedido && pedido.valor !== undefined)
+      ? Math.max(0, Math.min(painel.medoRegras.maximo, pedido.valor))
+      : null;
+    if (alvo !== null) {
+      pintarMedo(alvo);
+      painel.mesa.medo = alvo;
+      limpar(cabecalho).append(montarTopo());
+    }
+    const esperado = JSON.stringify(painel.mesa);
+
     try {
       const r = await acoes.ajustarMedo(pedido);
       painel.mesa = r.mesa;
       if (r.medo.aviso) avisar(r.medo.aviso, 'info', 4000);
-      desenhar();
+      if (JSON.stringify(painel.mesa) === esperado) {
+        // O servidor confirmou o que já está na tela: só o cabeçalho, que é
+        // uma linha de texto e não pisca.
+        limpar(cabecalho).append(montarTopo());
+      } else {
+        desenhar();
+      }
     } catch (e) {
       avisarErro(mensagemDoErro(e));
       recarregar();
@@ -288,7 +336,8 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
           } catch (e) { avisarErro(mensagemDoErro(e)); }
         })
       ]),
-      blocoDaMoldura()
+      blocoDaMoldura(),
+      blocoDasMoedas()
     ]);
   }
 
@@ -300,6 +349,49 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
    * dia sem acesso a armas comuns"), e é por isso que isto mora aqui e não na
    * ficha de cada jogador.
    */
+  /**
+   * A REGRA OPCIONAL DAS MOEDAS do SRD, ligada aqui e não na ficha.
+   *
+   * > "Optional Rule: Gold Coins — If your GROUP wants to track gold with more
+   * > granularity, you can add coins as your lowest denomination. Following the
+   * > established pattern, 10 coins equal 1 handful."
+   *
+   * É "your group", e o motivo é prático: ouro se empresta e se divide na
+   * mesa. Uma ficha contando em moedas ao lado de outra contando em punhados
+   * faria "meio punhado" querer dizer coisas diferentes na mesma conversa.
+   * Mesmo lugar da moldura de campanha, pela mesma razão.
+   */
+  function blocoDasMoedas() {
+    const ligada = Boolean(painel.mesa.ouroComMoedas);
+
+    const chave = el('input', { type: 'checkbox', class: 'criacao__caixa' });
+    chave.checked = ligada;
+    chave.addEventListener('change', async () => {
+      try {
+        const r = await acoes.definirOuroComMoedas(chave.checked);
+        avisarSucesso(r.depois
+          ? 'Moedas ligadas: 10 moedas valem 1 punhado.'
+          : 'Moedas desligadas. A mesa volta a contar em punhados.');
+        recarregar();
+      } catch (e) { avisarErro(mensagemDoErro(e)); recarregar(); }
+    });
+
+    return el('div', { class: 'cartao' }, [
+      el('h4', { class: 'cartao__titulo', texto: 'Ouro em moedas (regra opcional)' }),
+      el('label', { class: 'linha' }, [
+        chave,
+        el('span', { class: 'texto-sm', texto:
+          'Acrescentar moedas como a menor unidade — 10 moedas valem 1 punhado.' })
+      ]),
+      el('p', { class: 'texto-xs texto-fraco', texto: ligada
+        ? 'A coluna de Moedas aparece na Mochila de todas as fichas da mesa.'
+        : 'Regra opcional do livro. Ligando, a mesa inteira passa a contar assim — ' +
+          'ouro se empresta e se divide, então não dá para cada ficha contar de um jeito.' }),
+      ligada ? null : el('p', { class: 'texto-xs texto-fraco', texto:
+        'Desligar não apaga: as moedas já anotadas ficam guardadas e voltam se a regra for religada.' })
+    ]);
+  }
+
   function blocoDaMoldura() {
     const m = painel.mesa;
     const lista = painel.molduras || [];
@@ -351,7 +443,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       el('ul', { class: 'mestre__lista' }, (r.comoGasta || []).map((x) =>
         el('li', {}, [
           document.createTextNode(x.texto),
-          el('span', { class: 'mestre__formula', texto: x.custo ? ` ${x.custo} ponto` : ' custo variável' })
+          el('span', { class: 'mestre__formula', texto: x.custo ? ` ${x.custo} ${x.custo === 1 ? 'ponto' : 'pontos'}` : ' custo variável' })
         ]))),
       el('p', { class: 'mestre__dica' }, textoAnotado(r.dica))
     ]);

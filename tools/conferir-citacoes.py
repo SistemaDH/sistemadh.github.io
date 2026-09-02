@@ -38,6 +38,12 @@ import sys
 import unicodedata
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Citações que o heurístico não consegue provar e que foram lidas no PDF à mão.
+# Sem esta lista, elas seriam acusadas para sempre — e um alarme que toca
+# sempre deixa de ser alarme. O arquivo guarda O QUE FOI VISTO, não só um
+# "confie em mim": quem duvidar abre a mesma página.
+CONFERIDAS = os.path.join(RAIZ, 'data', 'citacoes-conferidas.json')
 PDF_PADRAO = '/mnt/user-data/uploads/Daggerheart/DH-DigitalRegras.pdf'
 
 EXTENSOES = ('.gs', '.js', '.json', '.md', '.mjs')
@@ -55,7 +61,26 @@ METADADOS = {
     'listaDeFormas', 'companheiroAnimal', 'criterioOpcionalDeAvanco',
     'textoLivro', 'textoLivroLiteral', 'errosDeDigitacaoDoOriginal',
     'doisNiveisDeGlosa', 'ancora',
+    # A varredura de 2026-09-01: campos de proveniência que ficaram de fora e
+    # faziam o conferidor acusar 22 "suspeitas visíveis" que eram ruído.
+    'fonteDasCaracteristicas', 'fonteDoTexto', 'origemNome', 'conferencia',
+    'comentario', 'comentarios', 'referencia', 'referencias', 'paginaLivro',
+    'avisoTraducao', 'errosDeTraducao', 'problemasDeTraducao',
+    'pontosDeInteresse', 'observacoesDoLivro', 'observacoes', 'tambemDecidido',
 }
+
+# Um campo que TERMINA em "fonte", "nota", "observacao"… também é proveniência.
+# `fonteDasCaracteristicas` só foi acusado porque a lista era de nomes exatos.
+SUFIXOS_DE_METADADO = ('fonte', 'nota', 'notas', 'observacao', 'comentario',
+                       'referencia', 'errata', 'correcao', 'conferencia',
+                       'textolivro', 'literal', 'ancora')
+
+
+def campo_de_metadado(chave):
+    if chave in METADADOS:
+        return True
+    baixa = chave.lower()
+    return any(baixa.startswith(s) or baixa.endswith(s) for s in SUFIXOS_DE_METADADO)
 
 BANAIS = set("""
 a o as os um uma uns umas de do da dos das em no na nos nas por para com sem
@@ -113,7 +138,7 @@ def citacao_visivel(rel, texto, pos):
         if not chaves:
             return True
         chave = chaves[-1].group(1)
-        return chave not in METADADOS
+        return not campo_de_metadado(chave)
 
     linha_ini = texto.rfind('\n', 0, pos) + 1
     linha = texto[linha_ini:pos]
@@ -127,6 +152,60 @@ def citacao_visivel(rel, texto, pos):
             or linha.count('`') % 2 == 1)
 
 
+def limites_da_string(texto, pos):
+    """
+    Se a citação está DENTRO de uma string, devolve onde essa string começa e
+    acaba. Fora de string, devolve None.
+
+    Isto é o que separa a frase do código em volta dela. Sem essa fronteira, um
+    `p.104` escrito numa mensagem de tela arrastava junto o `const corpo =
+    el('div', { class: 'coluna' }, [...` que vinha antes — e as "palavras de
+    prova" viravam nomes de variável, que não estão em página nenhuma do livro.
+    Era daí que saía metade das suspeitas.
+    """
+    linha_ini = texto.rfind('\n', 0, pos) + 1
+    linha_fim = texto.find('\n', pos)
+    if linha_fim < 0:
+        linha_fim = len(texto)
+    linha = texto[linha_ini:linha_fim]
+    dentro = pos - linha_ini
+
+    for aspa in ("'", '"', '`'):
+        # a abertura é a última aspa deste tipo antes da citação, com contagem ímpar
+        antes = linha[:dentro]
+        if antes.count(aspa) % 2 == 0:
+            continue
+        ini = antes.rfind(aspa)
+        fim = linha.find(aspa, dentro)
+        if fim < 0:
+            fim = len(linha)
+        return linha_ini + ini + 1, linha_ini + fim
+    return None
+
+
+# Uma citação de ERRATA aponta para outro documento (Daggerheart-Erratas.pdf),
+# e o conferidor prova contra o LIVRO. Sem reconhecer isso, "a errata da p.91
+# fixa o teto" era acusada para sempre: a página 91 do livro nunca vai conter
+# uma frase que só existe na errata.
+RE_DE_ERRATA = re.compile(r'\berrata[s]?\b', re.I)
+
+
+def cita_a_errata(texto, pos):
+    """
+    ESTA página é da errata?
+
+    A pergunta é sobre a citação, não sobre a frase. Uma frase pode ter as
+    duas coisas — "Errata p.33: o livro pt-BR imprime 'Força +1' (p.37)" cita a
+    errata E o livro —, e perdoar as duas porque a palavra "errata" aparece em
+    algum lugar deixaria a p.37 sem conferência para sempre.
+
+    Vale a proximidade: "errata" tem de estar nos 40 caracteres antes do
+    "p.N". É o alcance de "errata da p.91" e de "Errata p.332", e não alcança
+    um "(p.37)" no fim da mesma frase.
+    """
+    return bool(RE_DE_ERRATA.search(texto[max(0, pos - 40):pos]))
+
+
 def frase_em_volta(texto, pos):
     """
     O pedaço de texto que a citação está sustentando.
@@ -134,7 +213,15 @@ def frase_em_volta(texto, pos):
     Corta em pontuação forte e em quebra de linha dupla, mas atravessa a quebra
     simples: no código, um comentário de bloco parte a frase no meio e cada
     metade sozinha não prova nada.
+
+    Dentro de uma string, porém, a fronteira é a PRÓPRIA STRING — ver
+    `limites_da_string`.
     """
+    faixa = limites_da_string(texto, pos)
+    if faixa:
+        a, b = faixa
+        return re.sub(r'\s+', ' ', texto[a:b]).strip()
+
     ini = pos
     while ini > 0:
         c = texto[ini - 1]
@@ -187,6 +274,17 @@ def main():
     folhas = paginas_do_pdf(pdf)
     total_paginas = len(folhas)
 
+    conferidas = []
+    if os.path.exists(CONFERIDAS):
+        with open(CONFERIDAS, encoding='utf-8') as fh:
+            conferidas = json.load(fh).get('conferidas', [])
+
+    def foi_conferida(a):
+        for c in conferidas:
+            if int(c['pagina']) == a['pagina'] and achatar(c['trecho']) in achatar(a['frase']):
+                return c
+        return None
+
     achados = []
     for caminho in arquivos():
         rel = os.path.relpath(caminho, RAIZ)
@@ -198,15 +296,32 @@ def main():
                 'arquivo': rel, 'linha': linha, 'pagina': n,
                 'visivel': citacao_visivel(rel, texto, m.start()),
                 'frase': frase_em_volta(texto, m.start()),
+                'daErrata': cita_a_errata(texto, m.start()),
                 # Muita citação é ponteiro seco — "Livro p.102" e nada mais. A
                 # frase sozinha não prova, mas o parágrafo em volta prova: ele
                 # está falando de condições, e a p.102 é a das condições.
                 'volta': texto[max(0, m.start() - 500):m.start() + 200],
             })
 
-    fora, batem, naoBatem, indecisos = [], [], [], []
+    fora, batem, naoBatem, indecisos, deErrata = [], [], [], [], []
+    conferidasNaMao = []
     for a in achados:
         n = a['pagina']
+        # A errata é OUTRO documento. Provar contra o livro é garantir que nunca
+        # vai bater — e uma acusação que não tem conserto possível é só ruído
+        # ocupando a lista das que têm.
+        # Só a PRÓPRIA frase decide. Olhar o parágrafo em volta mandava para cá
+        # 151 citações — qualquer arquivo que falasse de errata em algum ponto
+        # ganhava perdão para todas as páginas de livro que citasse.
+        if a['daErrata']:
+            a['motivo'] = 'aponta para a ERRATA, não para o livro'
+            deErrata.append(a)
+            continue
+        marcada = foi_conferida(a)
+        if marcada:
+            a['motivo'] = 'lida no PDF em %s' % marcada['conferidoEm']
+            conferidasNaMao.append(a)
+            continue
         if not (1 <= n <= total_paginas):
             fora.append(a)
             continue
@@ -267,9 +382,15 @@ def main():
     visiveis = [a for a in suspeitas if a.get('visivel')]
     print('\nResumo: %d batem · %d NÃO batem · %d inconclusivas · %d fora do livro'
           % (len(batem), len(naoBatem), len(indecisos), len(fora)))
+    print('%d apontam para a ERRATA, que é outro documento — não dá para provar aqui.'
+          % len(deErrata))
+    if conferidasNaMao:
+        print('%d foram lidas no PDF à mão (data/citacoes-conferidas.json).'
+              % len(conferidasNaMao))
     print('Das %d suspeitas, %d estão em texto que o JOGADOR lê — são as com pressa.'
           % (len(suspeitas), len(visiveis)))
     print('Nada aqui é veredito: o heurístico separa, quem decide é a leitura.')
+
     return 0
 
 

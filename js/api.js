@@ -211,6 +211,9 @@ export const api = {
   avancarPerseguicao: (token, id, resultado) => chamar('avancarPerseguicao', { token, id, resultado }),
   abrirSessao: (token) => chamar('abrirSessao', { token }),
   anunciarNivelDaMesa: (token, nivel) => chamar('anunciarNivelDaMesa', { token, nivel }),
+  /* Regra opcional do SRD ("Gold Coins"): é de GRUPO, então quem liga é o
+     Mestre e a ficha de todo mundo passa a contar do mesmo jeito. */
+  ouroComMoedas: (token, ligar) => chamar('ouroComMoedas', { token, ligar }),
   definirMoldura: (token, moldura) => chamar('definirMoldura', { token, moldura }),
   molduraDaMesa: (token) => chamar('molduraDaMesa', { token }),
 

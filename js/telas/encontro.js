@@ -133,7 +133,9 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
         onClick: async () => {
           const ok = await confirmar({
             titulo: 'Encerrar a cena',
-            mensagem: `Tirar os ${dados.adversarios.length} adversários e zerar as trilhas? ` +
+            mensagem: (dados.adversarios.length === 1
+        ? 'Tirar o adversário em cena e zerar a trilha dele? '
+        : `Tirar os ${dados.adversarios.length} adversários e zerar as trilhas? `) +
               'O Medo da mesa não é tocado.',
             confirmarTexto: 'Encerrar', perigo: true
           });
@@ -484,7 +486,7 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
         // o Medo saiu da trilha da mesa: o cabeçalho do painel precisa saber
         if (aoMudarMedo) aoMudarMedo(r.medo);
         avisarSucesso(r.custo
-          ? `${a.nome} em foco — 1 de Medo gasto, sobram ${r.medo}.`
+          ? `${a.nome} em foco — 1 de Medo gasto, ${r.medo === 1 ? 'sobra 1' : `sobram ${r.medo}`}.`
           : `${a.nome} em foco, sem custo.`);
       } catch (e) { avisarErro(mensagemDoErro(e)); }
     };

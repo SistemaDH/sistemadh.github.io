@@ -158,7 +158,22 @@ L.push(`const OURO_UNIDADES = ${j(ouro.unidades)};`);
 L.push('/** Quantos punhados vale cada unidade. */');
 L.push('const OURO_EM_PUNHADOS = { punhado: 1, bolsa: 10, cofre: 100 };');
 L.push('/** Teto: não dá para ter mais de 1 baú (livro p.104 / SRD). */');
-L.push('const OURO_MAXIMO_PUNHADOS = 100;\n');
+L.push('const OURO_MAXIMO_PUNHADOS = 100;');
+L.push(`
+/*
+ * A MOEDA — regra opcional do SRD, e a razão de existir uma segunda escada.
+ *
+ * > "Optional Rule: Gold Coins — If your group wants to track gold with more
+ * > granularity, you can add coins as your lowest denomination. Following the
+ * > established pattern, 10 coins equal 1 handful."
+ *
+ * Com ela a menor unidade deixa de ser o punhado. A aritmética passa a ser
+ * feita em MOEDAS e o punhado vira dez — assim a conta continua inteira, em
+ * vez de virar fração de punhado, que é o jeito de errar arredondamento numa
+ * mesa inteira sem ninguém perceber.
+ */
+const OURO_EM_MOEDAS = { moeda: 1, punhado: 10, bolsa: 100, cofre: 1000 };
+const OURO_MAXIMO_MOEDAS = 1000;\n`);
 
 L.push(`/* ------------------------------------------------------------------------ *
  *  Consultas e validação
@@ -332,6 +347,34 @@ function ouroNormalizado_(totalPunhados) {
   return { punhados: punhados, bolsas: bolsas, cofres: cofres, estourou: estourou };
 }
 
+/** O total em MOEDAS — a unidade mais fina, com a regra opcional ligada. */
+function ouroEmMoedas_(ouro) {
+  ouro = ouro || {};
+  return (Number(ouro.moedas) || 0) * OURO_EM_MOEDAS.moeda
+       + (Number(ouro.punhados) || 0) * OURO_EM_MOEDAS.punhado
+       + (Number(ouro.bolsas) || 0) * OURO_EM_MOEDAS.bolsa
+       + (Number(ouro.cofres) || 0) * OURO_EM_MOEDAS.cofre;
+}
+
+/**
+ * Normaliza um total de MOEDAS na forma da ficha, subindo de categoria.
+ *
+ * A mesma escada do \`ouroNormalizado_\`, um degrau abaixo. Ex.: 1234 moedas
+ * viram { moedas: 4, punhados: 3, bolsas: 2, cofres: 1 }.
+ */
+function ouroNormalizadoDeMoedas_(totalMoedas) {
+  let t = Math.max(0, Math.floor(Number(totalMoedas) || 0));
+  const estourou = t > OURO_MAXIMO_MOEDAS;
+  if (estourou) t = OURO_MAXIMO_MOEDAS;
+  const cofres = Math.floor(t / OURO_EM_MOEDAS.cofre);
+  t -= cofres * OURO_EM_MOEDAS.cofre;
+  const bolsas = Math.floor(t / OURO_EM_MOEDAS.bolsa);
+  t -= bolsas * OURO_EM_MOEDAS.bolsa;
+  const punhados = Math.floor(t / OURO_EM_MOEDAS.punhado);
+  const moedas = t - punhados * OURO_EM_MOEDAS.punhado;
+  return { moedas: moedas, punhados: punhados, bolsas: bolsas, cofres: cofres, estourou: estourou };
+}
+
 /** Soma (ou subtrai, com delta negativo) ouro, devolvendo a forma normalizada. */
 function ajustarOuro_(ouro, deltaEmPunhados) {
   return ouroNormalizado_(ouroEmPunhados_(ouro) + (Number(deltaEmPunhados) || 0));
@@ -341,12 +384,13 @@ function ajustarOuro_(ouro, deltaEmPunhados) {
 function validarOuro_(ouro) {
   ouro = ouro || {};
   const erros = [];
-  ['punhados', 'bolsas', 'cofres'].forEach(function (k) {
+  ['moedas', 'punhados', 'bolsas', 'cofres'].forEach(function (k) {
     const v = Number(ouro[k]);
     if (ouro[k] !== undefined && (!isFinite(v) || v < 0 || Math.floor(v) !== v)) {
       erros.push('O valor de ' + k + ' precisa ser um número inteiro não negativo.');
     }
   });
+  if ((Number(ouro.moedas) || 0) > 9) erros.push('A cada 10 moedas, marque 1 punhado e limpe as moedas.');
   if ((Number(ouro.punhados) || 0) > 9) erros.push('A cada 10 punhados, marque 1 bolsa e limpe os punhados.');
   if ((Number(ouro.bolsas) || 0) > 9) erros.push('A cada 10 bolsas, marque 1 baú e limpe as bolsas.');
   if ((Number(ouro.cofres) || 0) > 1) erros.push('Não dá para ter mais de 1 baú.');

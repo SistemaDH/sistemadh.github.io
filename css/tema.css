@@ -179,27 +179,24 @@ button, input, select, textarea {
    Utilitários curtos
    ========================================================================== */
 
-.oculto { display: none !important; }
-
-.so-leitor {
-  position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
-}
-
 .texto-suave { color: var(--cor-texto-suave); }
 .texto-fraco { color: var(--cor-texto-fraco); }
 .texto-ouro  { color: var(--cor-ouro-claro); }
-.texto-centro{ text-align: center; }
+
 .texto-sm    { font-size: var(--txt-sm); }
 .texto-xs    { font-size: var(--txt-xs); }
 
+/*
+ * COLUNA — usada em 12 lugares do JS e que nunca existiu aqui.
+ *
+ * Sem a regra, todo `.coluna` virava um <div> block puro: os campos do modal
+ * de compra, do editor de adversário e do de marcador ficavam colados um no
+ * outro. Não era escolha de ninguém — era uma classe faltando.
+ */
+.coluna { display: flex; flex-direction: column; gap: var(--e3); min-width: 0; }
+
 .pilha  { display: flex; flex-direction: column; gap: var(--e3); }
-.pilha-2{ display: flex; flex-direction: column; gap: var(--e2); }
+
 .linha  { display: flex; align-items: center; gap: var(--e3); }
-.linha-entre { display: flex; align-items: center; justify-content: space-between; gap: var(--e3); }
+
 .crescer{ flex: 1 1 auto; min-width: 0; }

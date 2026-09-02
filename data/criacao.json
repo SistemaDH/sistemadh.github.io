@@ -98,6 +98,6 @@
     "A ficha de personagem impressa tem vários rótulos que a tradução não pegou: \"GOID\" (Gold), \"RA\", \"PESO InvEntáRIo\" (Inventory Weapon), \"Aula\" (Class), \"caractere\" (character), \"DOMICÍLIOS COMPARTILHADOS\" (Shared Domains).",
     "No exemplo de personagem das p.22-23 nenhum losango de Esperança está marcado, mesmo com a regra mandando começar com 2.",
     "O exemplo usa Armadura de couro (6/13) enquanto o Guia de Caráter do Feiticeiro sugere Gambeson (5/11). Não é erro: o guia é sugestão, não obrigação.",
-    "A regra de ancestralidade mista NÃO está no capítulo 1; ela fica na seção Ancestrais (p.72) e já está implementada em 43_Origens.gs."
+    "A regra de ancestralidade mista NÃO está no capítulo 1; ela fica na seção Ancestrais (p.71) e já está implementada em 43_Origens.gs."
   ]
 }

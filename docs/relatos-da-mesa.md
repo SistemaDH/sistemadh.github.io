@@ -451,3 +451,221 @@ retângulos. São glifos dentro de uma área de toque de 44px, a mesma separaç�
 entre **alvo** e **desenho** da trilha de PV (E39). Quem for "padronizar os
 botões" um dia vai querer devolver o `.btn` aqui; é o mesmo erro de antes, com
 outra roupa.
+
+---
+
+## 13. Moedas, catálogo na compra, marcador à mão — e uma varredura
+
+### O ouro em moedas (regra opcional do SRD)
+
+Conferi antes de implementar, como sempre. O SRD tem a regra e ela é explícita:
+
+> **Optional Rule: Gold Coins** — "If your group wants to track gold with more
+> granularity, you can add **coins** as your lowest denomination. Following the
+> established pattern, 10 coins equal 1 handful."
+
+**O interruptor é do MESTRE, não da ficha** — e isso não é burocracia. O SRD diz
+*"if your **group** wants"*, e a razão é prática: ouro se empresta e se divide na
+mesa. Uma ficha contando em moedas ao lado de outra contando em punhados faria
+"meio punhado" querer dizer coisas diferentes na mesma conversa. Mora no painel
+do Mestre, ao lado da moldura de campanha, pelo mesmo motivo que ela mora lá.
+
+Ligada, a escada ganha um degrau e a aritmética inteira passa a ser feita em
+moedas — não em fração de punhado, que é como se erra arredondamento numa mesa
+inteira sem ninguém perceber. O servidor recusa um ajuste em moedas quando a
+regra está desligada: se dependesse do cliente, um app desatualizado continuaria
+mandando moedas depois de a mesa desligar.
+
+**Desligar não apaga.** As moedas soltas ficam guardadas na ficha e voltam se a
+regra for religada. Elas nunca passam de nove (a escada converte no décimo), então
+o que fica escondido vale sempre menos de um punhado — apagar faria a mesa perder
+troco só por experimentar; somar inventaria um punhado que não existe.
+
+**Os botões do ouro perderam a moldura.** Eram dois retângulos por coluna, em três
+(agora quatro) colunas: doze molduras para mexer em três números. Viraram glifos
+dentro de uma área de toque de 44px — a mesma separação entre **alvo** e
+**desenho** da trilha de PV.
+
+### Comprar também escolhe do livro
+
+O catálogo dos 120 itens estava só no "Guardar". Comprar era digitar o nome à
+mão — e a mesma poção entrava **com id** quando achada e **sem id** quando
+comprada, o que fazia a mochila mostrar duas linhas para a mesma coisa. Agora o
+botão "Escolher do livro" preenche o formulário com o nome e o id; digitar por
+cima desfaz a escolha, porque o nome deixou de ser o do catálogo.
+
+### O marcador criado à mão
+
+A queixa era exata: cartas e características que mandam "coloque um marcador" e
+não têm onde marcar. O catálogo cobre **as 20** que o livro traz. Ele não cobre —
+e nunca vai cobrir — o que ainda não existe: carta nova, característica de
+expansão, ou o "põe três marcas aqui" que o Mestre inventou na cena. Isso voltava
+para o papel no meio de uma ficha digital.
+
+Agora a seção **Marcadores** existe sempre (antes ela sumia para quem não tinha
+nenhum do catálogo — justamente quem mais precisava do botão) e tem "+ Marcador":
+nome e máximo. A chave nasce com o prefixo `livre:`, que separa os dois mundos de
+um jeito que não dá para confundir — o mesmo desenho do `mesa:` dos adversários.
+
+Três decisões dentro dele:
+
+- **Não pode ter o nome de um do livro.** Dois "Dado de Inspiração" na tela, e nem
+  quem criou saberia qual é o da carta.
+- **Zerar não apaga.** O de catálogo some no zero e volta sozinho porque a carta
+  continua na mão; este não tem quem o traga de volta. Sumir faria a pessoa
+  recriá-lo, com nome e teto, toda vez que a contagem passasse por zero.
+- **Nome e teto são saneados na validação.** Eles vêm de quem criou, não de um
+  catálogo — sem isso, um cliente qualquer gravaria um nome de 5.000 letras
+  dentro da célula da ficha.
+
+### Descansar e subir de nível
+
+Eram dois botões de largura inteira, 52px de altura, em fonte grande: uns 120px
+no fim da aba Jogo para duas ações que acontecem **uma vez por sessão**, enquanto
+as trilhas — tocadas a cena inteira — vivem em 22px. Ficaram lado a lado, na
+altura de botão normal. O peso na tela passou a acompanhar o peso no jogo.
+
+### A varredura ("algo a mais")
+
+Passei o app inteiro procurando defeitos verificáveis. Doze consertados:
+
+**Rolagem lateral na aba Mochila.** `grid-template-columns: repeat(3, 1fr)` — item
+de grade tem `min-width: auto`, então os três botões se recusavam a encolher
+abaixo do próprio texto, somavam ~322px e estouravam os ~309px úteis de um
+celular de 375px. E como o corpo da ficha rola no eixo Y, o X virava `auto` junto.
+
+**`.coluna` nunca existiu no CSS**, e era usada em 12 lugares. Todo `.coluna`
+virava um `<div>` block puro, sem `gap`: os campos do modal de compra e do editor
+de adversário ficavam colados. Não era escolha de ninguém — era uma classe
+faltando.
+
+**A lixeira do roster passava por cima de "JOGADOR: <nome>".** A faixa reservada
+é da linha dos selos; reservá-la no cartão inteiro consertava isso e quebrava
+outra coisa (o nome do personagem virava duas linhas).
+
+**O rodapé passava por baixo do "+ Nova ficha"** — e é ali que está a versão, que
+é o que alguém quer ler para dizer qual está rodando.
+
+**Concordância**, cinco lugares: "Mais um Adaga" (metade dos nomes do livro é
+feminina), "Tirar os 1 adversários", "As marcações de 1 traços", "sobram 1", e
+"2 ponto". Mais dois avisos que carregavam gênero num nome livre — "Aranha
+Gigante apagado", "Serpente salvo".
+
+**O botão de salvar a foto ficava clicável durante a codificação.** `travarBotao`
+entrava só depois de dois `await` (o `toBlob` do canvas e o `FileReader`); num
+celular devagar, dois toques viravam dois arquivos no Drive.
+
+**"Atributo" na Forma de Fera**, onde o canônico do app é "Traço" — "atributo" é
+o termo da Jambô.
+
+**Rótulo "Tirar" sem dizer o quê**, no editor de adversário: um por Experiência e
+outro por habilidade, todos anunciados igual.
+
+⚠ **Ponto de interesse:** a varredura achou **11 classes CSS órfãs** e **8 usadas
+no JS que não existem no CSS**. Apaguei só a que eu mesmo tinha acabado de deixar
+para trás (`.btn--contadorMiudo`) e criei a que fazia falta (`.coluna`). O resto é
+faxina de baixo risco e nenhum ganho visível — fica anotado como **K13** para não
+se perder, não porque tenha pressa.
+
+---
+
+## 14. As faixas que ficaram abertas (K8, K9, K13) e o flick do Mestre
+
+### K13 — a faxina de CSS, e o conferidor que faltava
+
+A faxina em si era pequena. O que valia a pena era o motivo de ela ter
+acontecido: **CSS não reclama de classe que falta e JS não reclama de classe
+que sobra**. Os dois lados falham em silêncio, e foi assim que a `.coluna` viveu
+doze usos sem existir em lugar nenhum.
+
+Então antes de limpar eu escrevi `tools/conferir-css.mjs`, que cruza os dois
+lados. Ele faz **duas leituras diferentes**, de propósito, porque as duas
+perguntas têm risco oposto:
+
+- *"Está órfã?"* — errar aqui **apaga CSS vivo**. A leitura é grosseira: qualquer
+  palavra em qualquer lugar do JS conta como uso. Erra sempre para o lado de não
+  acusar.
+- *"Falta no CSS?"* — errar aqui é só barulho. A leitura é estrita: só o que está
+  mesmo num `class:`, `classList` ou `setAttribute('class', …)`.
+
+Três armadilhas apareceram enquanto ele ficava confiável, e as três estão
+comentadas no arquivo: a primeira versão casava aspas e o apóstrofo de português
+("d'água") fazia o casamento escorregar e engolir arquivos inteiros; classes
+montadas na hora (`papel__trilha--${classe}`) precisavam virar **prefixos
+dinâmicos**, senão ele mandava apagar metade das variações de estado; e um
+`${c.origem === 'multiclasse' ? 'selo--mestre' : ''}` tem **dois** literais, dos
+quais só o segundo é classe.
+
+Resultado: **14 regras órfãs apagadas**, **7 regras que faltavam escritas** — a
+que tinha efeito de verdade era `.modal__caixa--paralela` sem `max-width`, que
+deixava a Forma de Fera com a largura padrão — e uma convenção nova: **classe
+que começa com `js-` é gancho**, existe para ser encontrada e não para pintar
+nada. `.ficha__comprar` virou `.js-comprar`. O conferidor entrou no
+`npm run teste:tudo` e hoje dá zero dos dois lados.
+
+### K8 — o conferidor de citações voltou a ser alarme
+
+Ele acusava 22 "suspeitas visíveis" que eram ruído dele mesmo, e um alarme que
+toca sempre deixa de ser alarme. Quatro consertos:
+
+**A frase agora para na string.** Quando a citação está dentro de um texto de
+tela, a "frase" é a **própria string** — antes ele andava para trás pelo código e
+arrastava `const corpo = el('div', { class: 'coluna' }, [` junto, e as palavras de
+prova viravam nomes de variável, que não estão em página nenhuma do livro.
+
+**Campo de proveniência é metadado.** A lista era de nomes exatos, então
+`fonteDasCaracteristicas` passava por texto de jogo. Agora vale o **sufixo**:
+qualquer campo que comece ou termine em `fonte`, `nota`, `observacao`,
+`referencia`, `errata`…
+
+**Citação de errata tem balde próprio.** A errata é outro documento; provar
+"a errata da p.91" contra o livro é garantir que nunca vai bater, e acusação sem
+conserto possível só ocupa a lista das que têm. O reconhecimento é **por
+proximidade** — "errata" nos 40 caracteres antes do `p.N`. Isso importa: uma
+frase pode citar as duas coisas ("Errata p.33: o livro pt-BR imprime … (p.37)"),
+e perdoar as duas deixaria a página do livro sem conferência para sempre.
+
+**O que eu li à mão fica escrito.** `data/citacoes-conferidas.json` guarda a
+citação que o heurístico não prova e **o que eu vi na página** — não um "confie
+em mim". Quem duvidar abre a mesma página.
+
+E o conferidor estava certo em três casos, que agora são conserto:
+
+| Onde | Dizia | É |
+|---|---|---|
+| `4G_Encontro.gs` — aviso que o **Mestre lê em cena** | adversário derrotado, p.203 | **p.208** — a p.203 é a passiva Lacaio; a regra ("quando um adversário marca seu último ponto de vida, ele é derrotado… vocês decidem o que isso significa: inconsciente, amarrado ou até mesmo morto") é a p.208 |
+| `data/avanco.json` | personagem novo entra no nível do grupo, p.105 | **p.109** |
+| `data/criacao.json` | ancestralidade mista, p.72 | **p.71** — a p.72 é Comunidades |
+
+Hoje: **0 suspeitas em texto que o jogador lê** — e desta vez o número
+significa alguma coisa, porque cheguei nele consertando páginas erradas, não
+afrouxando o critério.
+
+### K9 — a faxina das fotos órfãs
+
+`faxinaDeFotos()` no editor do Apps Script. **Não é botão de tela** por dois
+motivos que se somam: ela lê a ficha de todo mundo (caro) e ela apaga
+(perigoso) — as duas coisas juntas não moram num controle que alguém encosta
+sem querer. Sem confirmação ela só **lista**; com `faxinaDeFotos('APAGAR FOTOS
+ÓRFÃS')` manda para a lixeira do Drive, de onde dá para voltar por 30 dias.
+
+Três recusas dentro dela, e cada uma tem teste:
+
+- **A foto de uma ficha ARQUIVADA não é órfã.** Excluir aqui é arquivar —
+  `restaurarPersonagem_` existe —, e a ficha voltaria sem rosto.
+- **Só apaga o que este app criou.** A pasta é do Drive da mesa e pode ter
+  qualquer coisa dentro; o prefixo `foto-` é a assinatura de `guardarFoto_`, e o
+  que não a tem não é nosso para apagar.
+- **Ficha que não abre PARA a faxina inteira.** Não dá para saber que foto ela
+  cita, e apagar por não saber é apagar no escuro.
+
+### O flick do painel do Mestre
+
+Ficou anotado quando a ficha foi consertada, com a receita pronta. O Medo é o
+controle mais tocado do painel e cada toque remontava o painel **inteiro** — e
+aqui há um motivo a mais que na ficha para não fazer isso: o painel pode estar
+com uma cena de luta aberta, e remontar a lista de adversários no meio do
+combate é pior do que piscar.
+
+Mesma receita, e a mesma prova: o passo de e2e anota um nó da trilha de Medo e
+confere que ele continua no documento depois da gravação.

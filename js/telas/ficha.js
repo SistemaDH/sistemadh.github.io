@@ -748,12 +748,32 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     pai.append(secao('Condições', blocoCondicoes(ficha),
       botaoPequeno('+ Condição', () => escolherCondicao(ficha))));
 
-    // --- contadores das cartas -------------------------------------------
+    /* --- marcadores ------------------------------------------------------
+     *
+     * Duas fontes na mesma seção, e a seção existe SEMPRE.
+     *
+     * Do catálogo vêm os 20 que o livro traz — a carta está na mão, o marcador
+     * aparece sozinho. À mão vem o resto: carta nova, característica de
+     * expansão, ou o "põe três marcas aqui" que o Mestre inventou na cena.
+     * Antes, esse resto não tinha onde morar e voltava para o papel.
+     *
+     * A seção aparecia só quando havia contador de catálogo — e era justamente
+     * quem NÃO tinha nenhum que precisava do botão de criar.
+     */
     const contadores = catalogo.contadoresDaFicha(ficha);
-    if (contadores.length) {
-      pai.append(secao('Marcadores das cartas', el('div', { class: 'pilha' },
-        contadores.map((c) => linhaDeContador(c, ficha)))));
-    }
+    const livres = Object.keys(ficha.contadores || {})
+      .filter((k) => k.indexOf('livre:') === 0)
+      .map((k) => Object.assign({ chave: k }, ficha.contadores[k]));
+
+    pai.append(secao('Marcadores',
+      (contadores.length || livres.length)
+        ? el('div', { class: 'pilha' }, [
+          ...contadores.map((c) => linhaDeContador(c, ficha)),
+          ...livres.map((c) => linhaDeMarcadorLivre(c))
+        ])
+        : el('p', { class: 'texto-sm texto-fraco', texto:
+          'Nenhum marcador. Os das cartas aparecem sozinhos; o botão cria os que o livro não tem.' }),
+      botaoPequeno('+ Marcador', criarMarcador)));
 
     /*
      * A seção "Equipamento" saiu daqui: ela virou a lista do topo, ao lado da
@@ -828,15 +848,18 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           personagem: p,
           aoAplicar: (novo) => { p = novo; desenhar(); }
         })
-      }, '🌙  Descansar'),
+      }, '🌙 Descansar'),
       nivel < 10 ? el('button', {
         type: 'button',
-          class: 'btn btn--principal ficha__botaoNivel',
+        class: 'btn btn--principal ficha__botaoNivel',
+        // Rótulo curto porque agora são duas colunas; o nome inteiro fica no
+        // rótulo acessível, que é onde ele ainda serve.
+        'aria-label': `Subir para o nível ${nivel + 1}`,
         onClick: () => abrirAvanco({
           personagem: p, catalogo,
           aoAplicar: (novo) => { p = novo; desenhar(); }
         })
-      }, `⬆  Subir para o nível ${nivel + 1}`) : el('p', {
+      }, `⬆ Nível ${nivel + 1}`) : el('p', {
         class: 'ficha__nota', texto: 'Nível 10 — o último. Não há mais para onde subir.'
       }),
       /*
@@ -1061,6 +1084,109 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         () => enviar([{ tipo: 'contador', chave: c.chave, valor: Math.min(c.maximo, atual + 1) }]),
         `Aumentar ${c.nome}`)
     ]);
+  }
+
+  /**
+   * A linha de um marcador CRIADO À MÃO.
+   *
+   * Igual à do catálogo, com uma diferença que importa: tem lixeira. O do
+   * catálogo não pode ser apagado — ele existe porque a carta está na mão, e
+   * some sozinho quando ela sai. Este só existe porque alguém o criou, então
+   * só alguém pode tirá-lo.
+   */
+  function linhaDeMarcadorLivre(c) {
+    const atual = Number(c.valor) || 0;
+    const maximo = Number(c.maximo) || 99;
+    return el('div', { class: 'ficha__contador' }, [
+      el('div', { class: 'crescer' }, [
+        el('h4', { class: 'ficha__contadorNome', texto: c.nome }),
+        el('p', { class: 'texto-xs texto-fraco', texto: `marcas · máx ${maximo} · criado nesta ficha` })
+      ]),
+      botaoDelta('−',
+        () => enviar([{ tipo: 'contador', chave: c.chave, valor: Math.max(0, atual - 1) }]),
+        `Diminuir ${c.nome}`),
+      el('strong', { class: 'ficha__contadorValor', texto: String(atual) }),
+      botaoDelta('+',
+        () => enviar([{ tipo: 'contador', chave: c.chave, valor: Math.min(maximo, atual + 1) }]),
+        `Aumentar ${c.nome}`),
+      el('button', {
+        type: 'button', class: 'ficha__itemBotao ficha__itemTirar',
+        'aria-label': `Apagar o marcador ${c.nome}`,
+        title: 'Apagar este marcador',
+        onClick: () => confirmarApagarMarcador(c)
+      }, '🗑')
+    ]);
+  }
+
+  function confirmarApagarMarcador(c) {
+    const modal = abrirModal({
+      titulo: `Apagar "${c.nome}"?`,
+      conteudo: el('p', { class: 'texto-sm', texto:
+        'O marcador some da ficha com a contagem que estiver nele. Dá para criar outro depois.' }),
+      acoes: [
+        el('button', { type: 'button', class: 'btn btn--fantasma',
+          onClick: () => modal.fechar() }, 'Cancelar'),
+        el('button', {
+          type: 'button', class: 'btn btn--perigo',
+          onClick: () => {
+            modal.fechar();
+            enviar([{ tipo: 'marcador', acao: 'excluir', chave: c.chave }]);
+          }
+        }, 'Apagar')
+      ]
+    });
+  }
+
+  /**
+   * Criar um marcador à mão.
+   *
+   * O catálogo cobre as 20 cartas e características que o LIVRO traz pedindo
+   * ficha. Ele nunca vai cobrir o que ainda não existe — carta nova,
+   * característica de expansão, ou a contagem que o Mestre inventou na cena.
+   */
+  function criarMarcador() {
+    const nome = el('input', semCorretor({
+      type: 'text', class: 'campo__entrada', maxlength: 40,
+      placeholder: 'ex.: marcas do ritual'
+    }));
+    const maximo = el('input', {
+      type: 'number', class: 'campo__entrada', min: '1', max: '99', step: '1',
+      inputmode: 'numeric', value: '6', 'aria-label': 'Máximo do marcador'
+    });
+
+    const criar = el('button', { type: 'button', class: 'btn btn--principal' }, 'Criar');
+    criar.addEventListener('click', () => {
+      const texto = nome.value.trim();
+      if (!texto) { avisarErro('Dê um nome ao marcador.'); return; }
+      const teto = Math.max(1, Math.min(99, Math.trunc(Number(maximo.value)) || 6));
+      // Espera o servidor: o marcador nasce lá, com a chave que ele decide.
+      acrescentar(criar, [{ tipo: 'marcador', acao: 'criar', nome: texto, maximo: teto }],
+        (r) => {
+          if ((r.mudancas || []).some((m) => m.tipo === 'marcador')) modal.fechar();
+        });
+    });
+
+    const modal = abrirModal({
+      titulo: 'Novo marcador',
+      conteudo: el('div', { class: 'coluna' }, [
+        el('label', { class: 'campo' }, [
+          el('span', { class: 'campo__rotulo', texto: 'Nome' }), nome
+        ]),
+        el('label', { class: 'campo' }, [
+          el('span', { class: 'campo__rotulo', texto: 'Máximo' }), maximo
+        ]),
+        el('p', { class: 'campo__ajuda', texto:
+          'Para as cartas e características que pedem marcador e ainda não estão no ' +
+          'catálogo do app — e para as contagens que a mesa inventar. Os marcadores ' +
+          'do livro aparecem sozinhos quando a carta está na mão.' })
+      ]),
+      acoes: [
+        el('button', { type: 'button', class: 'btn btn--fantasma',
+          onClick: () => modal.fechar() }, 'Fechar'),
+        criar
+      ]
+    });
+    nome.focus();
   }
 
   /* --- equipamento -------------------------------------------------------- */
@@ -1340,7 +1466,18 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * ======================================================================== */
 
   /** Total em punhados — só para saber se ainda há ouro para gastar. */
-  function ouroEmPunhados(ouro) {
+  /**
+ * O bolso inteiro em MOEDAS, com a regra opcional ligada.
+ *
+ * O resumo do modal de compra somava só punhados, bolsas e baús — com nove
+ * moedas no bolso ele dizia "0 punhados", que é a única linha da tela que a
+ * pessoa lê antes de decidir se dá para comprar.
+ */
+function ouroEmMoedasDaTela(ouro) {
+  return (Number(ouro.moedas) || 0) + ouroEmPunhados(ouro) * 10;
+}
+
+function ouroEmPunhados(ouro) {
     return (Number(ouro.punhados) || 0) + (Number(ouro.bolsas) || 0) * 10 + (Number(ouro.cofres) || 0) * 100;
   }
 
@@ -1360,28 +1497,44 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
      * protagonista: cabe numa linha, e a linha cabe na tela junto com o que
      * vem depois.
      */
+    /*
+     * A REGRA OPCIONAL DAS MOEDAS é da MESA, não desta ficha.
+     *
+     * O SRD: "If your GROUP wants to track gold with more granularity, you can
+     * add coins as your lowest denomination. 10 coins equal 1 handful." Ouro se
+     * empresta e se divide na mesa — uma ficha contando em moedas ao lado de
+     * outra contando em punhados faria "meio punhado" querer dizer coisas
+     * diferentes na mesma conversa. Quem liga é o Mestre, no painel dele.
+     */
+    const comMoedas = Boolean(obterEstado().ouroComMoedas);
+
     const moeda = (rotulo, singular, chave, valor) => el('div', { class: 'ficha__moeda' }, [
       el('span', { class: 'ficha__moedaRotulo' }, nomeAnotado(rotulo, { comGlossa: false })),
       el('div', { class: 'ficha__moedaLinha' }, [
         el('button', {
-          type: 'button', class: 'btn btn--contador btn--contadorMiudo',
-          'aria-label': `Menos um ${singular}`,
-          disabled: !ouroEmPunhados(ouro),
+          type: 'button', class: 'ficha__moedaBotao',
+          // O artigo vem junto com a palavra: "Menos um bolsa" era o que o
+          // leitor de tela dizia antes.
+          'aria-label': `Menos ${singular}`,
+          disabled: !ouroEmPunhados(ouro) && !(ouro.moedas || 0),
           onClick: () => enviar([{ tipo: 'ouro', chave, delta: -1 }])
         }, '−'),
         el('strong', { class: 'ficha__moedaValor texto-ouro', texto: String(valor || 0) }),
         el('button', {
-          type: 'button', class: 'btn btn--contador btn--contadorMiudo',
-          'aria-label': `Mais um ${singular}`,
+          type: 'button', class: 'ficha__moedaBotao',
+          'aria-label': `Mais ${singular}`,
           onClick: () => enviar([{ tipo: 'ouro', chave, delta: 1 }])
         }, '+')
       ])
     ]);
 
     pai.append(secao('Ouro', el('div', {}, [
-      el('div', { class: 'ficha__moedas' }, [
-        moeda('Punhados', 'punhado', 'punhados', ouro.punhados),
-        moeda('Bolsas', 'bolsa', 'bolsas', ouro.bolsas),
+      el('div', { class: `ficha__moedas ${comMoedas ? 'e-comMoedas' : ''}` }, [
+        // A moeda é a menor unidade e vem primeiro, como na ficha de papel:
+        // a escada se lê da esquerda para a direita.
+        comMoedas ? moeda('Moedas', 'uma moeda', 'moedas', ouro.moedas) : null,
+        moeda('Punhados', 'um punhado', 'punhados', ouro.punhados),
+        moeda('Bolsas', 'uma bolsa', 'bolsas', ouro.bolsas),
         /*
          * BAÚS, não "cofres".
          *
@@ -1393,10 +1546,11 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
          *
          * A chave GRAVADA continua `cofres` — isto é rótulo, não migração.
          */
-        moeda('Baús', 'baú', 'cofres', ouro.cofres)
+        moeda('Baús', 'um baú', 'cofres', ouro.cofres)
       ]),
-      el('p', { class: 'texto-xs texto-fraco', texto:
-        '10 punhados viram 1 bolsa, 10 bolsas viram 1 baú — e o livro não deixa passar de 1 baú.' })
+      el('p', { class: 'texto-xs texto-fraco', texto: comMoedas
+        ? '10 moedas viram 1 punhado, 10 punhados 1 bolsa, 10 bolsas 1 baú — e o livro não deixa passar de 1 baú. As moedas são a regra opcional, ligada pelo Mestre.'
+        : '10 punhados viram 1 bolsa, 10 bolsas viram 1 baú — e o livro não deixa passar de 1 baú.' })
     ])));
 
     const inv = ficha.inventario || [];
@@ -1446,7 +1600,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
      * ESTÁ no livro entra pelo livro: assim ele chega com o nome certo, com o
      * id, e com o texto que explica o que faz.
      */
-    function abrirCatalogoDeItens() {
+    function abrirCatalogoDeItens({ aoEscolher } = {}) {
       const todos = catalogo.todosOsItens();
       const lista = el('div', { class: 'ficha__catalogo' });
 
@@ -1479,8 +1633,16 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           lista.append(el('button', {
             type: 'button', class: 'ficha__catalogoItem',
             onClick: () => {
-              acrescentar(botaoGuardar, [{ tipo: 'inventario', acao: 'adicionar', itemId: i.id }],
-                () => { campoNovo.value = ''; });
+              /*
+               * Duas portas para o mesmo catálogo: da Mochila, escolher GUARDA
+               * o item; da compra, escolher só PREENCHE o formulário — quem
+               * grava lá é o botão Comprar, junto com o ouro.
+               */
+              if (aoEscolher) aoEscolher(i);
+              else {
+                acrescentar(botaoGuardar, [{ tipo: 'inventario', acao: 'adicionar', itemId: i.id }],
+                  () => { campoNovo.value = ''; });
+              }
               modal.fechar();
             }
           }, [
@@ -1519,6 +1681,27 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         type: 'text', class: 'campo__entrada', maxlength: 120,
         placeholder: 'O que está comprando?', value: campoNovo.value.trim()
       }));
+
+      /*
+       * COMPRAR TAMBÉM ESCOLHE DO LIVRO.
+       *
+       * O catálogo estava só no "Guardar", e comprar era digitar o nome à mão —
+       * a mesma poção entrava com id quando achada e sem id quando comprada, e
+       * a mochila mostrava duas linhas para a mesma coisa. Aqui a escolha grava
+       * o id junto com o nome.
+       */
+      let itemEscolhido = '';
+      const escolhido = el('p', { class: 'texto-xs texto-fraco' });
+      const marcarEscolhido = (doLivro) => {
+        itemEscolhido = doLivro ? doLivro.id : '';
+        campoItem.value = doLivro ? doLivro.nome : campoItem.value;
+        escolhido.textContent = doLivro
+          ? `Do livro: ${doLivro.nome} (${doLivro.tipo}).`
+          : '';
+      };
+      // Digitar à mão desfaz a escolha: o nome deixou de ser o do catálogo.
+      campoItem.addEventListener('input', () => { if (itemEscolhido) marcarEscolhido(null); });
+
       const campos = {};
       const moedaDoPreco = (rotulo, chave) => {
         const entrada = el('input', {
@@ -1538,18 +1721,30 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           el('span', { class: 'campo__rotulo', texto: 'Item' }),
           campoItem
         ]),
+        el('button', {
+          type: 'button', class: 'btn btn--fantasma ficha__doLivro',
+          // Sem a palavra "comprar": o botão de confirmar do modal se chama
+          // Comprar, e dois alvos com o mesmo nome confundem leitor de tela.
+          'aria-label': 'Escolher um item do livro',
+          onClick: () => abrirCatalogoDeItens({ aoEscolher: marcarEscolhido })
+        }, 'Escolher do livro'),
+        escolhido,
         el('div', { class: 'ficha__precos' }, [
+          // A escada do preço é a que a MESA está usando: com a regra opcional
+          // ligada, "3" na coluna de moedas não pode virar 3 punhados.
+          comMoedas ? moedaDoPreco('Moedas', 'moedas') : null,
           moedaDoPreco('Punhados', 'punhados'),
           moedaDoPreco('Bolsas', 'bolsas'),
           moedaDoPreco('Baús', 'cofres')
-        ]),
+        ].filter(Boolean)),
         el('p', { class: 'texto-xs texto-fraco', texto:
           'O livro (p.104) não define preços: quem diz quanto custa é a mesa. ' +
           'Digite o valor combinado — o app tira o ouro e guarda o item de uma vez só, ' +
           'ou não faz nenhuma das duas coisas.' }),
         el('p', { class: 'texto-xs texto-fraco', texto:
-          `No bolso: ${ouroEmPunhados(ouro) === 1 ? '1 punhado' : `${ouroEmPunhados(ouro)} punhados`} ` +
-          'no total, contando bolsas e baús.' })
+          comMoedas
+            ? `No bolso: ${ouroEmMoedasDaTela(ouro)} ${ouroEmMoedasDaTela(ouro) === 1 ? 'moeda' : 'moedas'} no total, contando punhados, bolsas e baús.`
+            : `No bolso: ${ouroEmPunhados(ouro)} ${ouroEmPunhados(ouro) === 1 ? 'punhado' : 'punhados'} no total, contando bolsas e baús.` })
       ]);
 
       const botaoComprar = el('button', { type: 'button', class: 'btn btn--principal' }, 'Comprar');
@@ -1560,13 +1755,14 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         Object.keys(campos).forEach((k) => {
           preco[k] = Math.max(0, Math.trunc(Number(campos[k].value)) || 0);
         });
-        if (!(preco.punhados + preco.bolsas + preco.cofres)) {
+        if (!Object.keys(preco).some((k) => preco[k] > 0)) {
           avisarErro('Diga quanto custou. Se foi de graça, use "Guardar".');
           return;
         }
         // O modal só fecha depois que o servidor confirmou a compra: fechar
         // antes deixaria a pessoa achando que pagou quando a gravação falhou.
-        acrescentar(botaoComprar, [{ tipo: 'compra', item, preco }], (r) => {
+        acrescentar(botaoComprar,
+          [{ tipo: 'compra', item, itemId: itemEscolhido, preco }], (r) => {
           if (!(r.mudancas || []).some((m) => m.tipo === 'compra')) return;
           campoNovo.value = '';
           modal.fechar();
@@ -1639,12 +1835,14 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           }, item.emUso ? '●' : '○'),
           el('button', {
             type: 'button', class: 'ficha__itemBotao',
-            'aria-label': `Menos um ${nome}`, onClick: () => contar(-1)
+            // Sem artigo: metade dos nomes do livro é feminina (Adaga, Maça,
+            // Poção), e "Menos um Adaga" é o que o leitor de tela dizia.
+            'aria-label': `Menos 1 de ${nome}`, onClick: () => contar(-1)
           }, '−'),
           el('span', { class: 'ficha__itemQtd', texto: `×${item.qtd || 1}` }),
           el('button', {
             type: 'button', class: 'ficha__itemBotao',
-            'aria-label': `Mais um ${nome}`, onClick: () => contar(1)
+            'aria-label': `Mais 1 de ${nome}`, onClick: () => contar(1)
           }, '+'),
           el('button', {
             type: 'button', class: 'ficha__itemBotao ficha__itemTirar',
@@ -1683,7 +1881,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           }, 'Do livro'),
           botaoGuardar,
           el('button', {
-            type: 'button', class: 'btn btn--fantasma ficha__comprar', onClick: abrirCompra
+            type: 'button', class: 'btn btn--fantasma js-comprar', onClick: abrirCompra
           }, 'Comprar')
         ])
       ])));

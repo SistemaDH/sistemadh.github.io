@@ -97,8 +97,47 @@ function contadoresDoRef_(refId) {
 }
 
 /** Resolve qualquer grafia do nome para a chave do contador. */
+/*
+ * ---------------------------------------------------------------------------
+ *  MARCADORES CRIADOS À MÃO
+ *
+ *  O catálogo cobre as 20 cartas e características que o livro traz pedindo
+ *  ficha/marcador. Não cobre — e nunca vai cobrar — o que ainda não existe:
+ *  carta nova, característica de uma expansão, ou o "põe três marcas aqui" que
+ *  o Mestre inventou na cena. Antes disto, essas contagens não tinham onde
+ *  morar e voltavam para o papel.
+ *
+ *  O prefixo separa os dois mundos de forma que não dá para confundir: chave
+ *  de catálogo nunca começa com "livre:", e marcador à mão sempre começa. É o
+ *  mesmo desenho do "mesa:" dos adversários (E26).
+ * ---------------------------------------------------------------------------
+ */
+const MARCADOR_LIVRE_PREFIXO = 'livre:';
+const MARCADOR_LIVRE_NOME_MAX = 40;
+const MARCADOR_LIVRE_TETO = 99;
+const MARCADOR_LIVRE_QUANTOS = 12;
+
+function ehMarcadorLivre_(chave) {
+  return String(chave || '').indexOf(MARCADOR_LIVRE_PREFIXO) === 0;
+}
+
+/**
+ * Um nome vira uma chave estável: "Marcas do Ritual" -> "livre:marcasdoritual".
+ *
+ * Espaço e pontuação caem fora. A chave vira nome de campo dentro do JSON da
+ * ficha e aparece em seletor de tela; deixá-la com espaço seria convidar o
+ * primeiro bug de escape que aparecesse. O nome bonito continua guardado no
+ * campo "nome" — a chave é só o endereço.
+ */
+function chaveDeMarcadorLivre_(nome) {
+  const limpo = chaveTexto_(nome).replace(/[^a-z0-9]/g, '');
+  return limpo ? MARCADOR_LIVRE_PREFIXO + limpo : '';
+}
+
 function normalizarContador_(nome) {
   if (!nome) return '';
+  // Marcador à mão passa direto: quem valida nome e teto é validarContadores_.
+  if (ehMarcadorLivre_(nome)) return String(nome);
   const alvo = chaveTexto_(nome);
   const chaves = Object.keys(CONTADOR_ALIASES);
   for (let i = 0; i < chaves.length; i++) {
@@ -158,6 +197,18 @@ function temCaracteristicaNaFicha_(ficha, nome) {
  * Devolve o teto aberto quando a carta não declara limite.
  */
 function maximoDoContador_(chave, ficha) {
+  /*
+   * O marcador à mão carrega o próprio teto DENTRO da ficha — não existe
+   * catálogo para consultar. É a única fonte possível, e por isso ela é
+   * saneada toda vez que a ficha é validada.
+   */
+  if (ehMarcadorLivre_(chave)) {
+    const guardado = ((ficha || {}).contadores || {})[chave] || {};
+    const teto = Math.trunc(Number(guardado.maximo));
+    if (!isFinite(teto) || teto < 1) return MARCADOR_LIVRE_TETO;
+    return Math.min(MARCADOR_LIVRE_TETO, teto);
+  }
+
   const def = CONTADORES[chave];
   if (!def) return 0;
   const max = def.maximo || { tipo: 'aberto' };
@@ -252,12 +303,45 @@ function validarContadores_(ficha) {
   const chaves = Object.keys(bruto);
   for (let i = 0; i < chaves.length; i++) {
     const chave = chaves[i];
+    const item = bruto[chave] || {};
+
+    /*
+     * MARCADOR À MÃO. Ele não tem definição no catálogo — o nome e o teto
+     * vieram de quem criou —, então quem os sanea é este trecho. Sem isto,
+     * um cliente qualquer poderia gravar um nome de 5.000 letras ou um teto
+     * de um milhão dentro da célula da ficha.
+     */
+    if (ehMarcadorLivre_(chave)) {
+      const nomeLivre = String(item.nome || '').trim().replace(/\s+/g, ' ')
+        .slice(0, MARCADOR_LIVRE_NOME_MAX);
+      if (!nomeLivre) {
+        problemas.push('Marcador sem nome foi descartado.');
+        continue;
+      }
+      if (Object.keys(saida).filter(ehMarcadorLivre_).length >= MARCADOR_LIVRE_QUANTOS) {
+        problemas.push('Só cabem ' + MARCADOR_LIVRE_QUANTOS + ' marcadores criados à mão.');
+        continue;
+      }
+      let tetoLivre = Math.trunc(Number(item.maximo));
+      if (!isFinite(tetoLivre) || tetoLivre < 1) tetoLivre = MARCADOR_LIVRE_TETO;
+      tetoLivre = Math.min(MARCADOR_LIVRE_TETO, tetoLivre);
+
+      let v = Math.trunc(Number(item.valor));
+      if (!isFinite(v) || v < 0) v = 0;
+      if (v > tetoLivre) v = tetoLivre;
+
+      // "guardarZero" de fato: o marcador em zero PRECISA continuar existindo,
+      // senão ele sumiria da tela no instante em que fosse zerado e a pessoa
+      // teria de criá-lo de novo a cada cena.
+      saida[chave] = { valor: v, nome: nomeLivre, maximo: tetoLivre };
+      continue;
+    }
+
     const def = CONTADORES[chave];
     if (!def) {
       problemas.push('Contador desconhecido: "' + chave + '".');
       continue;
     }
-    const item = bruto[chave] || {};
     let valor = Math.trunc(Number(typeof item === 'object' ? item.valor : item));
     if (!isFinite(valor)) valor = 0;
 

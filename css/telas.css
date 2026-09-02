@@ -49,8 +49,17 @@
   padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
 }
 
+/*
+ * O rodapé passa por baixo do "+ Nova ficha".
+ *
+ * O botão é `position: fixed` no canto inferior direito e não empurra nada; o
+ * rodapé escrevia "Sistema de fichas · versão 2.0.0" exatamente ali embaixo
+ * dele, e a versão — que é o que alguém vai querer ler para dizer qual está
+ * rodando — ficava tapada. O recuo à direita devolve a linha.
+ */
 .app__rodape {
   padding: var(--e5) var(--e4);
+  padding-right: calc(var(--e4) + 170px);
   text-align: center;
   font-size: var(--txt-xs);
   color: var(--cor-texto-fraco);
@@ -236,15 +245,6 @@
   white-space: nowrap;
 }
 
-/* --------------------------------------------------------------------------
-   Faixa de aviso de conexão
-   -------------------------------------------------------------------------- */
-
-.faixa-offline {
-  padding: var(--e2) var(--e4);
-  text-align: center;
-  font-size: var(--txt-sm);
-  background: var(--cor-medo-fundo);
-  border-bottom: 1px solid var(--cor-medo);
-  color: #e2d3ff;
-}
+/* O bloco do roster. Estava no JS e não tinha regra: sem `gap`, o cabeçalho
+   colava na lista. Achado pelo `tools/conferir-css.mjs`. */
+.roster { display: flex; flex-direction: column; gap: var(--e4); }

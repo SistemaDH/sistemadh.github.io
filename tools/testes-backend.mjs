@@ -1021,11 +1021,11 @@ teste('o ouro sobe de categoria sozinho, como na ficha de papel', () => {
   f.ouro = { punhados: 9, bolsas: 0, cofres: 0 };
   const r = contexto.aplicarAjustes_(f, [{ tipo: 'ouro', chave: 'punhados', delta: 1 }]);
   igual(r.erros, []);
-  igual(f.ouro, { punhados: 0, bolsas: 1, cofres: 0 }, '10 punhados viram 1 bolsa');
+  igual(f.ouro, { moedas: 0, punhados: 0, bolsas: 1, cofres: 0 }, '10 punhados viram 1 bolsa');
 
   // E o troco desce igual: 1 bolsa − 1 punhado = 9 punhados.
   contexto.aplicarAjustes_(f, [{ tipo: 'ouro', chave: 'punhados', delta: -1 }]);
-  igual(f.ouro, { punhados: 9, bolsas: 0, cofres: 0 });
+  igual(f.ouro, { moedas: 0, punhados: 9, bolsas: 0, cofres: 0 });
 
   // Não dá para gastar o que não se tem.
   f.ouro = { punhados: 0, bolsas: 0, cofres: 0 };
@@ -3695,7 +3695,7 @@ teste('comprar tira o ouro e põe o item, de uma vez só', () => {
   const r = contexto.comprarItem_(f, { item: 'Corda de 15 metros', preco: { punhados: 7 } });
   igual(r.custo, 7);
   igual(f.inventario, [{ id: '', nome: 'Corda de 15 metros', qtd: 1, emUso: false }]);
-  igual(f.ouro, { punhados: 8, bolsas: 0, cofres: 0 }, '15 punhados menos 7 dá 8');
+  igual(f.ouro, { moedas: 0, punhados: 8, bolsas: 0, cofres: 0 }, '15 punhados menos 7 dá 8');
 });
 
 teste('sem ouro suficiente, NADA acontece', () => {
@@ -3730,7 +3730,7 @@ teste('o troco atravessa as categorias', () => {
   const f = contexto.fichaVazia_();
   f.ouro = { punhados: 0, bolsas: 0, cofres: 1 };
   contexto.comprarItem_(f, { item: 'Cavalo', preco: { bolsas: 3 } });
-  igual(f.ouro, { punhados: 0, bolsas: 7, cofres: 0 }, '1 cofre são 10 bolsas; menos 3 dá 7');
+  igual(f.ouro, { moedas: 0, punhados: 0, bolsas: 7, cofres: 0 }, '1 cofre são 10 bolsas; menos 3 dá 7');
 });
 
 console.log('\nCartas que mudam a ficha para sempre');
@@ -4529,6 +4529,160 @@ teste('as faixas de dano caem TODAS no mesmo verbete', () => {
   igual([...new Set(donos)].join(' | '), 'limiares-de-dano');
 });
 
+console.log('\nA regra opcional das moedas (SRD)');
+
+const ligarMoedas = (ligar) => {
+  const m = contexto.mesaLer_();
+  m.ouroComMoedas = ligar;
+  contexto.mesaGravar_(m);
+};
+
+teste('a regra é da MESA, e o padrão é desligada', () => {
+  /*
+   * O SRD: "If your GROUP wants to track gold with more granularity". Ouro se
+   * empresta e se divide na mesa — uma ficha em moedas ao lado de outra em
+   * punhados faria "meio punhado" querer dizer coisas diferentes.
+   */
+  ligarMoedas(false);
+  igual(contexto.ouroComMoedas_(), false);
+  const f = contexto.fichaVazia_();
+  f.ouro = { punhados: 1, bolsas: 0, cofres: 0 };
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'ouro', chave: 'moedas', delta: 1 }]);
+  verdade(r.erros.length, 'com a regra desligada, moeda tem de ser recusada');
+  verdade(/regra opcional/.test(r.erros[0]), r.erros[0]);
+});
+
+teste('com a regra ligada, 10 moedas viram 1 punhado', () => {
+  ligarMoedas(true);
+  const f = contexto.fichaVazia_();
+  f.ouro = { moedas: 9, punhados: 0, bolsas: 0, cofres: 0 };
+  contexto.aplicarAjustes_(f, [{ tipo: 'ouro', chave: 'moedas', delta: 1 }]);
+  igual(f.ouro, { moedas: 0, punhados: 1, bolsas: 0, cofres: 0 },
+    'a escada do SRD: 10 moedas = 1 punhado');
+});
+
+teste('a escada inteira sobe e desce em moedas', () => {
+  ligarMoedas(true);
+  igual(contexto.ouroNormalizadoDeMoedas_(1234),
+    { moedas: 0, punhados: 0, bolsas: 0, cofres: 1, estourou: true },
+    '1234 moedas passam do teto: sobra 1 baú e o app avisa (livro p.104)');
+  igual(contexto.ouroNormalizadoDeMoedas_(987),
+    { moedas: 7, punhados: 8, bolsas: 9, cofres: 0, estourou: false },
+    'a escada inteira, sem estourar');
+  igual(contexto.ouroEmMoedas_({ moedas: 7, punhados: 8, bolsas: 9, cofres: 0 }), 987);
+
+  const f = contexto.fichaVazia_();
+  f.ouro = { moedas: 0, punhados: 0, bolsas: 1, cofres: 0 };
+  contexto.aplicarAjustes_(f, [{ tipo: 'ouro', chave: 'moedas', delta: -1 }]);
+  igual(f.ouro, { moedas: 9, punhados: 9, bolsas: 0, cofres: 0 },
+    '1 bolsa menos 1 moeda dá 9 punhados e 9 moedas');
+});
+
+teste('desligar a regra GUARDA as moedas em vez de apagar', () => {
+  /*
+   * Elas nunca passam de nove — a escada converte no décimo —, então o que
+   * fica de fora vale menos de um punhado. Apagar faria a mesa perder troco só
+   * por experimentar a regra; somar inventaria um punhado que não existe.
+   */
+  ligarMoedas(true);
+  const f = contexto.fichaVazia_();
+  f.ouro = { moedas: 7, punhados: 2, bolsas: 0, cofres: 0 };
+  ligarMoedas(false);
+  contexto.aplicarAjustes_(f, [{ tipo: 'ouro', chave: 'punhados', delta: 1 }]);
+  igual(f.ouro.moedas, 7, 'as 7 moedas continuam guardadas');
+  igual(f.ouro.punhados, 3);
+
+  ligarMoedas(true);
+  igual(contexto.ouroEmMoedas_(f.ouro), 37, 'religando, elas voltam para a conta');
+  ligarMoedas(false);
+});
+
+teste('comprar cobra na escada que a mesa está usando', () => {
+  ligarMoedas(true);
+  const f = contexto.fichaVazia_();
+  f.inventario = [];
+  f.ouro = { moedas: 0, punhados: 5, bolsas: 0, cofres: 0 };
+  const r = contexto.comprarItem_(f, { item: 'Pão', preco: { moedas: 3 } });
+  igual(r.custo, 3, '3 na coluna de moedas não pode virar 3 punhados');
+  igual(f.ouro, { moedas: 7, punhados: 4, bolsas: 0, cofres: 0 });
+  ligarMoedas(false);
+});
+
+console.log('\nMarcadores criados à mão');
+
+teste('cria um marcador com nome e teto', () => {
+  const f = contexto.fichaVazia_();
+  const r = contexto.aplicarAjustes_(f, [
+    { tipo: 'marcador', acao: 'criar', nome: '  Marcas do   Ritual ', maximo: 4 }]);
+  igual(r.erros, []);
+  const chave = r.mudancas[0].chave;
+  igual(chave, 'livre:marcasdoritual');
+  igual(f.contadores[chave].nome, 'Marcas do Ritual', 'espaço sobrando é aparado');
+  igual(f.contadores[chave].maximo, 4);
+  igual(f.contadores[chave].valor, 0);
+});
+
+teste('o marcador à mão conta, respeita o teto e NÃO some no zero', () => {
+  /*
+   * O de catálogo some no zero e volta sozinho, porque a carta que o gera
+   * continua na mão. Este não tem quem o traga de volta: sumir faria a pessoa
+   * recriá-lo, com nome e teto, toda vez que a contagem passasse por zero.
+   */
+  const f = contexto.fichaVazia_();
+  contexto.aplicarAjustes_(f, [{ tipo: 'marcador', acao: 'criar', nome: 'Marés', maximo: 3 }]);
+  const chave = 'livre:mares';
+
+  contexto.aplicarAjustes_(f, [{ tipo: 'contador', chave: chave, delta: 5 }]);
+  igual(f.contadores[chave].valor, 3, 'o teto vale');
+
+  contexto.aplicarAjustes_(f, [{ tipo: 'contador', chave: chave, valor: 0 }]);
+  verdade(f.contadores[chave], 'o marcador à mão NÃO pode sumir no zero');
+  igual(f.contadores[chave].valor, 0);
+});
+
+teste('o nome do marcador não pode colidir com um do livro', () => {
+  // Dois "Dado de Inspiração" na tela, e nem quem criou saberia qual é da carta.
+  const f = contexto.fichaVazia_();
+  const r = contexto.aplicarAjustes_(f, [
+    { tipo: 'marcador', acao: 'criar', nome: 'Dado de Inspiração' }]);
+  verdade(r.erros.length, 'devia recusar');
+  verdade(/já é um marcador do livro/.test(r.erros[0]), r.erros[0]);
+});
+
+teste('não dá para criar dois marcadores com o mesmo nome', () => {
+  const f = contexto.fichaVazia_();
+  contexto.aplicarAjustes_(f, [{ tipo: 'marcador', acao: 'criar', nome: 'Selos' }]);
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'marcador', acao: 'criar', nome: 'selos' }]);
+  verdade(r.erros.length, 'devia recusar o repetido');
+  igual(Object.keys(f.contadores).length, 1);
+});
+
+teste('a validação saneia nome e teto vindos de fora', () => {
+  /*
+   * O nome e o teto do marcador à mão vêm de quem criou — não há catálogo para
+   * consultar. Sem este saneamento, um cliente qualquer gravaria um nome de
+   * 5.000 letras dentro da célula da ficha.
+   */
+  const f = contexto.fichaVazia_();
+  f.contadores = {
+    'livre:enorme': { valor: 7, nome: 'x'.repeat(200), maximo: 999999 },
+    'livre:semnome': { valor: 1, nome: '   ' }
+  };
+  contexto.validarContadores_(f);
+  igual(f.contadores['livre:enorme'].nome.length, 40, 'nome aparado');
+  igual(f.contadores['livre:enorme'].maximo, 99, 'teto aparado');
+  verdade(!f.contadores['livre:semnome'], 'marcador sem nome é descartado');
+});
+
+teste('excluir tira o marcador da ficha', () => {
+  const f = contexto.fichaVazia_();
+  contexto.aplicarAjustes_(f, [{ tipo: 'marcador', acao: 'criar', nome: 'Runas' }]);
+  const r = contexto.aplicarAjustes_(f, [
+    { tipo: 'marcador', acao: 'excluir', chave: 'livre:runas' }]);
+  igual(r.erros, []);
+  verdade(!f.contadores['livre:runas']);
+});
+
 console.log('\nA mochila com quantidade, uso e catálogo');
 
 const mochilaDeTeste = () => {
@@ -4723,6 +4877,71 @@ teste('remover a foto limpa a ficha e manda o arquivo para o lixo', () => {
   verdade(r.ok, JSON.stringify(r));
   igual(fotoDaFicha(idComFoto), '');
   igual(arquivoDe(primeiraFoto).lixeira, true);
+});
+
+console.log('\nFaxina das fotos órfãs');
+
+teste('a faxina em seco NÃO apaga nada', () => {
+  const r = contexto.faxinaDeFotos();
+  verdade(/Nada foi apagado/.test(r), r);
+  const vivos = [...drive.arquivos.values()].filter((a) => !a.lixeira).length;
+  verdade(vivos > 0, 'deveria haver arquivo vivo para a faxina olhar');
+});
+
+teste('a foto de uma ficha ARQUIVADA não é órfã', () => {
+  /*
+   * Excluir aqui é arquivar — `restaurarPersonagem_` existe. Apagar a foto de
+   * uma ficha excluída faria ela voltar sem rosto, que é exatamente o motivo
+   * de a foto não ser apagada junto com a ficha.
+   */
+  const dono = api('registrar', { nome: 'Dona da Foto', codigo: 'senha-foto-faxina' }).dados.token;
+  const id = api('criarPersonagem', {
+    token: dono, ficha: { identidade: { nome: 'Arquivada', nivel: 1, classe: 'Bardo' } }
+  }).dados.personagem.id;
+  const foto = api('guardarFoto', {
+    token: dono, id: id, imagem: imagemDe(500), tipo: 'image/jpeg'
+  }).dados.foto;
+
+  api('excluirPersonagem', { token: dono, id: id });
+
+  const r = contexto.faxinaDeFotos();
+  verdade(!r.includes(arquivoDe(foto).nome), 'a foto da ficha arquivada apareceu como órfã');
+  igual(arquivoDe(foto).lixeira, false);
+});
+
+teste('a faxina manda a órfã para a lixeira e deixa o resto em paz', () => {
+  // Uma foto que ficha nenhuma cita: é o rastro de uma troca que falhou.
+  const pasta = contexto.pastaDasFotos_();
+  const sobra = pasta.createFile({
+    getName: () => 'foto-perdida-000.jpg', getContentType: () => 'image/jpeg', getBytes: () => []
+  });
+  const idSobra = sobra.getId();
+
+  // E um arquivo que NÃO é nosso: a pasta é do Drive da mesa e pode ter de tudo.
+  const alheio = pasta.createFile({
+    getName: () => 'anotacoes-da-mestra.pdf', getContentType: () => 'application/pdf', getBytes: () => []
+  });
+  const idAlheio = alheio.getId();
+
+  const r = contexto.faxinaDeFotos('APAGAR FOTOS ÓRFÃS');
+  igual(arquivoDe(idSobra).lixeira, true, 'a órfã tinha de ir para o lixo');
+  igual(arquivoDe(idAlheio).lixeira, false,
+    'arquivo sem o prefixo `foto-` não é nosso para apagar');
+  verdade(/lixeira do Drive/.test(r), r);
+});
+
+teste('ficha que não abre PARA a faxina inteira', () => {
+  /*
+   * Não dá para saber que foto uma ficha ilegível cita. Apagar por não saber é
+   * apagar no escuro — então a faxina não roda até alguém arrumar a linha.
+   */
+  const linhas = contexto.lerTudo_(ABAS.PERSONAGENS);
+  const alvoLinha = linhas[0]._linha;
+  const antes = linhas[0].dados;
+  contexto.atualizarLinha_(ABAS.PERSONAGENS, alvoLinha, { dados: '{isto não é json' });
+  const r = contexto.faxinaDeFotos('APAGAR FOTOS ÓRFÃS');
+  verdade(/não abre como JSON/.test(r), r);
+  contexto.atualizarLinha_(ABAS.PERSONAGENS, alvoLinha, { dados: antes });
 });
 
 console.log('\nZerar planilha');

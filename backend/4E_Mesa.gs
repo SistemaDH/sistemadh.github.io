@@ -208,7 +208,28 @@ function normalizarMesa_(m) {
   if (typeof normalizarAdversariosDaMesa_ === 'function') normalizarAdversariosDaMesa_(m);
   if (typeof normalizarEncontro_ === 'function') normalizarEncontro_(m);
 
+  /*
+   * A REGRA OPCIONAL DAS MOEDAS é da MESA, e não de cada ficha.
+   *
+   * O SRD diz "If your GROUP wants to track gold with more granularity". É
+   * decisão de grupo pelo motivo prático: ouro se empresta e se divide na
+   * mesa, e uma ficha contando em moedas ao lado de outra contando em
+   * punhados faria "meio punhado" querer dizer coisas diferentes na mesma
+   * conversa. Mesmo lugar da moldura de campanha, pela mesma razão.
+   */
+  m.ouroComMoedas = Boolean(m.ouroComMoedas);
+
   return m;
+}
+
+/** A mesa está usando a regra opcional das moedas? */
+function ouroComMoedas_() {
+  try {
+    return Boolean(mesaLer_().ouroComMoedas);
+  } catch (e) {
+    // Sem mesa legível, vale a regra padrão do livro: sem moedas.
+    return false;
+  }
 }
 
 function mesaGravar_(m) {

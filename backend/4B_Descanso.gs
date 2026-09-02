@@ -38,7 +38,7 @@ const DESCANSO = {
     "Efeitos que duram \"até o próximo descanso longo\" e habilidades com usos por descanso longo só voltam no descanso LONGO. (p. 105)",
     "Habilidades \"uma vez por sessão\" NÃO voltam em descanso — só no começo da próxima sessão. (p. 105)",
     "Pontos de Vida, Estresse e Pontos de Armadura NÃO se recuperam sozinhos: só pelos movimentos. Descansar, por si só, não cura nada.",
-    "Esperança não tem reset nem ganho automático: a única fonte no repouso é Preparar-se, respeitando o teto de 6. (p. 18, p. 105)",
+    "Esperança não tem reset nem ganho automático: a única fonte no repouso é Preparar-se, respeitando o teto de 6. (p. 90, p. 105)",
     "Personagem inconsciente por Evitar a Morte volta a si ao recuperar 1 Ponto de Vida ou mais, ou quando o grupo fizer um descanso longo. (p. 106)",
     "Cicatrizes não são removidas por descanso; a critério do Mestre podem virar um projeto. Esperança marcada com X por cicatriz é perda permanente. (p. 106)",
     "Troca de armas sem custo de Estresse durante o repouso. (errata p. 112)",

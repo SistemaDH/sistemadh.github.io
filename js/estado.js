@@ -19,6 +19,9 @@ const estado = {
   personagemAberto: null,
   medo: 0,
   nivelDaMesa: 1,
+  /* Regra opcional do SRD ("Gold Coins"): quem liga é o Mestre, e a ficha só
+     obedece. Ver `ouroComMoedas_` em 4E_Mesa.gs. */
+  ouroComMoedas: false,
   versaoServidor: null,
   iniciando: true
 };
@@ -82,6 +85,7 @@ export const acoes = {
         jogador: dados.jogador,
         medo: dados.medo ?? 0,
         nivelDaMesa: dados.nivelDaMesa ?? 1,
+        ouroComMoedas: Boolean(dados.ouroComMoedas),
         versaoServidor: dados.versao,
         iniciando: false
       });
@@ -113,7 +117,13 @@ export const acoes = {
       const dados = await api.sessao(estado.token);
       const de = estado.nivelDaMesa;
       const para = dados.nivelDaMesa ?? de;
-      definir({ medo: dados.medo ?? estado.medo, nivelDaMesa: para });
+      definir({
+        medo: dados.medo ?? estado.medo,
+        nivelDaMesa: para,
+        // Pela mesma porta chega a regra das moedas: se o Mestre ligar com o
+        // jogador já dentro do app, a coluna aparece ao voltar para a tela.
+        ouroComMoedas: Boolean(dados.ouroComMoedas)
+      });
       return { nivelMudou: para !== de, de: de, para: para };
     } catch (e) {
       return null;   // sem rede: fica com o que já estava
@@ -386,6 +396,13 @@ export const acoes = {
   async aplicarDescansoDaMesa(tipo, escolhas) {
     const r = await api.aplicarDescansoDaMesa(estado.token, tipo, escolhas);
     definir({ medo: r.mesa.medo });
+    return r;
+  },
+
+  /** Liga/desliga a regra opcional das moedas. É do Mestre — ver 99_Api.gs. */
+  async definirOuroComMoedas(ligar) {
+    const r = await api.ouroComMoedas(estado.token, ligar);
+    definir({ ouroComMoedas: Boolean(r.depois) });
     return r;
   },
 

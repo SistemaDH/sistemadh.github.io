@@ -8,7 +8,8 @@
     "servir": "node tools/servidor-teste.mjs 8099",
     "teste": "node tools/testes-backend.mjs",
     "teste:e2e": "node tools/testes-e2e.mjs",
-    "teste:tudo": "node tools/testes-backend.mjs && node tools/testes-e2e.mjs"
+    "teste:css": "node tools/conferir-css.mjs",
+    "teste:tudo": "node tools/conferir-css.mjs && node tools/testes-backend.mjs && node tools/testes-e2e.mjs"
   },
   "devDependencies": {
     "playwright": "^1.40.0"

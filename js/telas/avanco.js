@@ -560,9 +560,13 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
         }
         if (c.tipo === 'proficiencia') return el('li', { texto: `Proficiência +${c.delta}.` });
         if (c.tipo === 'limpar-tracos-marcados') {
-          return el('li', { texto: c.quantos
-            ? `As marcações de ${c.quantos} traços foram apagadas — dá para aumentá-los de novo.`
-            : 'Nenhuma marcação de traço para apagar.' });
+          // Subir de patamar com UM traço marcado é o caso mais comum no
+          // nível 5, e é justamente o que dizia "de 1 traços foram apagadas".
+          return el('li', { texto: c.quantos === 1
+            ? 'A marcação de 1 traço foi apagada — dá para aumentá-lo de novo.'
+            : (c.quantos
+              ? `As marcações de ${c.quantos} traços foram apagadas — dá para aumentá-los de novo.`
+              : 'Nenhuma marcação de traço para apagar.') });
         }
         return null;
       }).filter(Boolean)));

@@ -265,11 +265,6 @@
  * losango sem girar o elemento — girar estragaria o alvo de toque e brigaria
  * com o transform do :active.
  */
-.trilha__ponto--losango {
-  border-radius: 2px;
-  clip-path: polygon(50% 4%, 96% 50%, 50% 96%, 4% 50%);
-  width: 44px;
-}
 
 .trilha__ajuda {
   margin: 0;
@@ -430,21 +425,6 @@
  */
 .ficha__carac p { white-space: pre-line; }
 
-/*
- * Traço que dá para virar o traço de Conjuração (multiclasse com duas
- * fundações). Precisa parecer clicável sem competir com o que está valendo:
- * borda pontilhada em vez da dourada cheia da e-conjuracao.
- */
-.ficha__traco.e-trocavel {
-  border-style: dashed;
-  cursor: pointer;
-  font: inherit;
-  text-align: inherit;
-  color: inherit;
-}
-
-.ficha__tracoTrocar { color: var(--cor-ouro-claro); }
-
 .ficha__conjNota { margin: 0 0 var(--e3); }
 
 /*
@@ -474,6 +454,9 @@
   gap: var(--e2);
   margin-bottom: var(--e2);
 }
+
+/* Com a regra opcional do SRD ligada, a escada ganha um degrau: a moeda. */
+.ficha__moedas.e-comMoedas { grid-template-columns: repeat(4, 1fr); gap: var(--e1); }
 
 .ficha__moeda {
   min-width: 0;
@@ -511,19 +494,53 @@
  * de altura de toque, pelo mesmo motivo da trilha (E39). O `::before` daqui é
  * a borda; o botão é a área.
  */
-.btn--contadorMiudo {
-  width: 34px;
-  min-width: 34px;
-  height: 34px;
+/*
+ * Os − e + do ouro, sem moldura.
+ *
+ * Com `.btn` eram dois retângulos de 34px por coluna, em três (ou quatro)
+ * colunas: doze molduras para mexer em três números. São glifos dentro de uma
+ * área de toque de 44px de altura — a mesma separação entre ALVO e DESENHO da
+ * trilha de PV (E39) e da linha do inventário (E56).
+ */
+.ficha__moedaBotao {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  min-width: 30px;
+  height: 44px;
   padding: 0;
-  font-size: var(--txt-md);
+  border: 0;
+  background: none;
+  color: var(--cor-texto-suave);
+  font: inherit;
+  font-size: var(--txt-lg);
   line-height: 1;
+  cursor: pointer;
+  opacity: .65;
+  -webkit-tap-highlight-color: transparent;
 }
 
+.ficha__moedaBotao:hover:not(:disabled) { opacity: 1; color: var(--cor-ouro-claro); }
+.ficha__moedaBotao:disabled { opacity: .2; cursor: default; }
+
+/*
+ * `minmax(0, 1fr)`, não `1fr`.
+ *
+ * Item de grade tem `min-width: auto`: com `1fr` os três botões se recusam a
+ * encolher abaixo do próprio texto, somam ~322px e estouram os ~309px úteis de
+ * um celular de 375px — e, como o corpo da ficha rola no eixo Y, o X vira
+ * `auto` junto e a aba Mochila ganha rolagem lateral.
+ */
 .ficha__novoItem {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--e2);
+}
+
+.ficha__novoItem .btn {
+  min-width: 0;
+  padding-left: var(--e2);
+  padding-right: var(--e2);
 }
 
 /*
@@ -532,9 +549,12 @@
  */
 .ficha__precos {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* Três colunas, ou quatro com a regra opcional das moedas ligada. */
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
   gap: var(--e2);
 }
+
+.ficha__doLivro { width: 100%; }
 
 .ficha__preco {
   display: flex;
@@ -832,16 +852,30 @@
    Botão de descanso
    ========================================================================== */
 
+/*
+ * Descansar e subir de nível, LADO A LADO.
+ *
+ * Eram dois botões de largura inteira e 52px de altura, em fonte grande: uns
+ * 120px no fim da aba Jogo para duas ações que acontecem uma vez por sessão,
+ * enquanto as trilhas — que se tocam a cena inteira — vivem em 22px de
+ * retângulo. O peso na tela agora acompanha o peso no jogo.
+ */
 .ficha__acoesGrandes {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: var(--e2);
 }
 
-.ficha__botaoDescanso {
+/* O que não é botão (avisos, desfazer) ocupa a linha inteira. */
+.ficha__acoesGrandes > .ficha__nota,
+.ficha__acoesGrandes > .btn--pequeno { grid-column: 1 / -1; }
+
+.ficha__botaoDescanso,
+.ficha__botaoNivel {
   width: 100%;
-  min-height: 52px;
-  font-size: var(--txt-lg);
+  min-height: var(--alvo-toque);
+  padding: var(--e2);
+  font-size: var(--txt-sm);
   letter-spacing: .02em;
 }
 
@@ -861,6 +895,16 @@
   text-align: left;
   cursor: pointer;
 }
+
+/*
+ * Só a ÚLTIMA LINHA reserva a faixa da lixeira.
+ *
+ * O botão de excluir é absoluto no canto inferior direito, e "JOGADOR: <nome>"
+ * passava por baixo dele. Reservar o espaço no cartão inteiro consertava isso e
+ * quebrava outra coisa: o nome do personagem perdia largura e virava duas
+ * linhas. A faixa é da linha dos selos, e é lá que ela fica.
+ */
+.ficha-cartao__selos { padding-right: calc(var(--alvo-toque) + var(--e2)); }
 
 .ficha-cartao__excluir {
   position: absolute;
@@ -1300,12 +1344,7 @@
 
 /* --- o botão na ficha ----------------------------------------------------- */
 
-.ficha__botaoNivel {
-  width: 100%;
-  min-height: 52px;
-  font-size: var(--txt-lg);
-  letter-spacing: .02em;
-}
+/* O tamanho dos dois está junto, lá em cima, em `.ficha__acoesGrandes`. */
 
 /* O que o descanso manda para a ficha de OUTRA pessoa. É a única parte que sai
    desta ficha, então ganha borda própria. */
@@ -1371,3 +1410,23 @@
   text-align: right;
   color: var(--cor-ouro-claro);
 }
+
+/* ==========================================================================
+   Ficha paralela (Forma de Fera e Companheiro Animal)
+
+   Estas classes estavam no JS desde a Parte C2 e não existiam em CSS nenhum —
+   o modal herdava a largura padrão e os blocos ficavam sem respiro. Achadas
+   pelo `tools/conferir-css.mjs`.
+   ========================================================================== */
+
+.paralela {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e3);
+}
+
+/* A mesma largura do descanso e do avanço: é uma ficha dentro de uma ficha. */
+.modal__caixa--paralela { max-width: 560px; }
+
+.paralela__tipoDeDano,
+.paralela__dado { display: flex; flex-direction: column; gap: var(--e2); }

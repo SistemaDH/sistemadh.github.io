@@ -283,7 +283,9 @@ export function abaBestiario(pai, painel, { aoMudarMedo, aoCriarContagem } = {})
             try {
               const r = await acoes.excluirAdversarioDaMesa(f.id);
               daMesa = r.adversarios;
-              avisarSucesso(`${f.nome} apagado.`);
+              // Nome de adversário é campo livre e no bestiário é quase sempre feminino
+      // (Aranha, Serpente, Bruxa): a frase não pode carregar gênero.
+      avisarSucesso(`Ficha apagada: ${f.nome}.`);
               desenhar();
             } catch (e) { avisarErro(mensagemDoErro(e)); }
           }

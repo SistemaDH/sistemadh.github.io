@@ -146,14 +146,7 @@
   letter-spacing: .06em;
   text-transform: uppercase;
   color: var(--cor-texto-suave);
-}
-
-.papel__escudoNota {
-  font-size: 10px;
-  color: var(--cor-texto-fraco);
-}
-
-/* Os espaços de Armadura, em grade, como as gotas do canto da ficha. */
+}/* Os espaços de Armadura, em grade, como as gotas do canto da ficha. */
 .papel__armaduraSlots {
   display: grid;
   grid-template-columns: repeat(4, 26px);
@@ -274,14 +267,6 @@
   letter-spacing: .04em;
   text-transform: uppercase;
   color: var(--cor-texto);
-}
-
-.papel__trilhaConta {
-  font-family: var(--fonte-mono);
-  font-size: var(--txt-xs);
-  color: var(--cor-texto-suave);
-  min-width: 3em;
-  text-align: right;
 }
 
 .papel__caixas {
@@ -767,3 +752,12 @@
   border-bottom: 0;
   cursor: default;
 }
+
+/*
+ * As regras que faltavam — achadas pelo `tools/conferir-css.mjs`.
+ *
+ * Todas estas classes já estavam no JS há tempo e não existiam em CSS nenhum:
+ * os blocos ficavam sem espaçamento e ninguém tinha como perceber, porque CSS
+ * não reclama de classe que falta.
+ */
+.foto__editor { align-items: stretch; }

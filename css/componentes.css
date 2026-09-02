@@ -135,13 +135,6 @@
 
 .campo__ajuda { font-size: var(--txt-xs); color: var(--cor-texto-fraco); }
 
-.campo__erro {
-  font-size: var(--txt-sm);
-  color: #ffb4b4;
-}
-
-.campo--erro .campo__entrada,
-.campo--erro .campo__area { border-color: var(--cor-perigo); }
 
 /* Entrada de código: dígitos grandes e espaçados */
 .campo__entrada--codigo {
@@ -201,6 +194,11 @@
   display: inline-flex;
   align-items: center;
   gap: var(--e1);
+  /* `nowrap` sem corte deixava "JOGADOR: <nome de 24 letras>" escorrer para
+     fora do cartão do roster. Mesmo tratamento de `.conta__nome`. */
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   padding: 3px var(--e3);
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-cheio);

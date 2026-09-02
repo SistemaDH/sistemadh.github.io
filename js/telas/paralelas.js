@@ -151,7 +151,10 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
             : `Patamar ${ativa.patamar}` }),
         el('div', { class: 'paralela__numeros' }, [
           numero('Evasão', `+${String(ativa.modificadores.evasao).replace('+', '')}`, 'já somada na ficha'),
-          numero('Atributo', ativa.modificadores.atributo, 'para atacar nesta forma'),
+          // TRAÇO, não "Atributo": "atributo" é o termo da Jambô e o canônico do
+      // app é o da carta (data/glossario.json). A chave dos dados continua
+      // `atributo` — isto é rótulo, não migração.
+      numero('Traço', ativa.modificadores.atributo, 'para atacar nesta forma'),
           numero('Ataque', ativa.ataque.dano, ativa.ataque.alcance)
         ]),
         el('div', { class: 'pilha' }, (ativa.caracteristicas || []).map((c) =>

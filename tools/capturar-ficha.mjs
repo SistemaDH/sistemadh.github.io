@@ -245,7 +245,7 @@ await foto('f5e-mochila-com-quantidade');
 
 // Comprar (I1): o livro não tem tabela de preços, então quem digita o preço
 // combinado é o jogador — e as duas metades andam juntas.
-await p.locator('.ficha__comprar').click();
+await p.locator('.js-comprar').click();
 await p.waitForSelector('.modal__caixa');
 {
   const caixa = p.locator('.modal__caixa').last();

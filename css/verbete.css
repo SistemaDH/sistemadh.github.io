@@ -42,8 +42,7 @@
 }
 
 /* Um gatilho dentro de um título não deve competir com o título. */
-.cartao__titulo .verbete__gatilho,
-.ficha__secaoTitulo .verbete__gatilho {
+.cartao__titulo .verbete__gatilho {
   text-decoration-color: var(--cor-borda-forte);
 }
 
@@ -278,3 +277,13 @@
   font-size: var(--txt-sm);
   color: var(--cor-texto-suave);
 }
+
+/* Cada categoria do índice de regras. Sem a regra, o título colava na lista de
+   verbetes do grupo anterior. Achado pelo `tools/conferir-css.mjs`. */
+.regras__grupo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+}
+
+.regras__grupo + .regras__grupo { margin-top: var(--e4); }

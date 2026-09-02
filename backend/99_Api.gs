@@ -175,7 +175,10 @@ function executar_(p) {
           versao: APP_VERSAO,
           medo: m.medo,
           nivelDaMesa: m.nivelDaMesa,
-          sessaoDaMesa: m.sessao.numero
+          sessaoDaMesa: m.sessao.numero,
+          // A regra opcional das moedas é da MESA: a ficha do jogador precisa
+          // saber para mostrar (ou não) a coluna, e é aqui que ela chega.
+          ouroComMoedas: Boolean(m.ouroComMoedas)
         });
       }
 
@@ -916,6 +919,32 @@ function executar_(p) {
           return ok_({
             antes: antes, depois: m.nivelDaMesa, mesa: m,
             nota: 'Cada jogador ainda precisa subir a própria ficha e escolher os avanços.'
+          });
+        });
+      }
+
+      /**
+       * Liga ou desliga a REGRA OPCIONAL DAS MOEDAS (SRD, "Optional Rule:
+       * Gold Coins").
+       *
+       * É do Mestre porque é do GRUPO: o SRD diz "if your group wants", e ouro
+       * se empresta e se divide na mesa. Uma ficha contando em moedas ao lado
+       * de outra contando em punhados faria "meio punhado" querer dizer coisas
+       * diferentes na mesma conversa.
+       */
+      case 'ouroComMoedas': {
+        const mestre = exigirMestre_(p.token);
+        return comTrava_(function () {
+          const m = mesaLer_();
+          const antes = Boolean(m.ouroComMoedas);
+          m.ouroComMoedas = Boolean(p.ligar);
+          mesaGravar_(m);
+          registrarLog_(mestre, 'ouro-com-moedas', m.ouroComMoedas ? 'ligada' : 'desligada');
+          return ok_({
+            antes: antes, depois: m.ouroComMoedas, mesa: m,
+            nota: m.ouroComMoedas
+              ? '10 moedas valem 1 punhado. A coluna aparece nas fichas da mesa.'
+              : 'As moedas que já estavam anotadas ficam guardadas — elas voltam se a regra for religada.'
           });
         });
       }
