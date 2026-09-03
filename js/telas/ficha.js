@@ -29,12 +29,13 @@ import { aguardar, temPendente } from '../fila.js';
 import * as dados from '../dados.js';
 import { nomeQueAbreCarta, daCartaDeDominio } from '../componentes/carta.js';
 import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js';
-import { textoAnotado, nomeAnotado, abrirVerbete, prepararVerbetes } from '../verbete.js';
+import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js';
 import { botaoDeRegras } from './regras.js';
 import { abrirDescanso } from './descanso.js';
 import { abrirAvanco, desfazerAvanco } from './avanco.js';
 import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js';
 import { abrirEditorDeFoto, urlDaFoto } from './foto.js';
+import { icone } from '../componentes/icone.js';
 
 /**
  * Teto do livro para PV, Estresse e Armadura (errata de 9/9/2025).
@@ -45,13 +46,89 @@ import { abrirEditorDeFoto, urlDaFoto } from './foto.js';
  */
 const TETO_TRILHA = 12;
 
+/*
+ * As seis siglas, escritas e não calculadas.
+ *
+ * `slice(0, 3)` daria as seis certas por acaso hoje, e passaria a dar errado
+ * no dia em que alguém traduzir um nome ou o livro ganhar um traço. O mapa é
+ * a lista de verdade; o corte fica só de rede.
+ *
+ * ⚠ MORA NO MÓDULO, e não dentro de `abrirFichaEmJogo`. `desenhar()` roda
+ * antes do fim daquela função, e `const` declarado lá dentro ainda está na
+ * zona morta quando o primeiro traço é pintado. Isto já custou duas tardes
+ * (FORMA_EVASAO, e agora esta).
+ */
+const SIGLA_DE_TRACO = {
+  'Agilidade': 'AGI', 'Força': 'FOR', 'Finesse': 'FIN',
+  'Instinto': 'INS', 'Presença': 'PRE', 'Conhecimento': 'CON'
+};
+function siglaDeTraco(nome) {
+  return SIGLA_DE_TRACO[nome] || String(nome || '').slice(0, 3).toUpperCase();
+}
+
+/*
+ * O SINAL FICA SEMPRE, inclusive no zero.
+ *
+ * O livro escreve o arranjo como +2 +1 +1 +0 +0 −1, e numa fileira de seis um
+ * "0" solto ao lado de "+1" se lê como sinal que faltou. O menos é o
+ * tipográfico (U+2212), que tem a largura do mais — com hífen, a coluna
+ * negativa fica visivelmente mais estreita que as outras.
+ */
+function valorDeTraco(v) {
+  if (v === null || v === undefined) return '—';
+  return v < 0 ? '\u2212' + Math.abs(v) : '+' + v;
+}
+
+/*
+ * OS CONTORNOS DAS DUAS DEFESAS, COPIADOS DA FICHA OFICIAL.
+ *
+ * Moram no escopo do MÓDULO pelo mesmo motivo do TETO_TRILHA acima (E75).
+ *
+ * ⚠ ERRO CORRIGIDO EM 03/09/2026: a Evasão estava desenhada como um LOSANGO
+ * facetado — e o losango, na ficha da Darrington, é a ESPERANÇA. Usar a mesma
+ * forma para duas coisas diferentes na mesma tela é pior do que usar uma forma
+ * feia: ensina o símbolo errado, e quem aprendeu na ficha de papel lê o número
+ * de Evasão como se fosse Esperança.
+ *
+ * O que a ficha impressa traz de verdade:
+ *   • EVASÃO   — uma PLACA EM ARCO: cúpula em cima, laterais retas, base reta.
+ *   • ARMADURA — um ESCUDO DE BRASÃO: topo com um entalhe no meio, laterais
+ *                descendo e afunilando até a ponta de baixo.
+ *   • ESPERANÇA — os losangos, que já eram losangos aqui.
+ *
+ * As duas ganham uma LINHA INTERNA, que é o que faz o desenho ler como a
+ * chapa da ficha e não como um ícone qualquer.
+ *
+ * O primeiro caminho de cada lista é o CONTORNO (leva o preenchimento do CSS);
+ * o segundo é a linha interna, que é traço e não pode ser preenchida.
+ */
+const FORMA_EVASAO = [
+  'M8 30 A22 22 0 0 1 52 30 V58 H8 Z',
+  'M14 31 A16 16 0 0 1 46 31 V52 H14 Z'
+];
+/*
+ * O ESPAÇO DE ARMADURA é o escudo grande em miniatura.
+ *
+ * Doze deles ficam ao lado do escudo, e é a repetição da silhueta que liga uma
+ * coisa à outra sem precisar de rótulo. Desenhados em SVG, e não com
+ * `clip-path`, porque o espaço que o personagem AINDA NÃO TEM precisa do
+ * contorno tracejado — a mesma língua dos quadradinhos de PV e Estresse — e
+ * `clip-path` recorta a borda junto.
+ */
+const FORMA_SLOT = 'M2 2 H22 V13 C22 18 17 21 12 23 C7 21 2 18 2 13 Z';
+
+const FORMA_ARMADURA = [
+  'M5 9 L27 6 L30 10 L33 6 L55 9 C56 32 47 50 30 62 C13 50 4 32 5 9 Z',
+  'M11 15 L27 12 L30 16 L33 12 L49 15 C50 33 43 46 30 55 C17 46 10 33 11 15 Z'
+];
+
 const TRACOS_ORDEM = ['agilidade', 'forca', 'finesse', 'instinto', 'presenca', 'conhecimento'];
 
 const ABAS = [
-  { id: 'jogo', rotulo: 'Jogo', icone: '⚔' },
-  { id: 'cartas', rotulo: 'Cartas', icone: '🂠' },
-  { id: 'mochila', rotulo: 'Mochila', icone: '🎒' },
-  { id: 'historia', rotulo: 'História', icone: '📜' }
+  { id: 'jogo', rotulo: 'Jogo', icone: 'jogo' },
+  { id: 'cartas', rotulo: 'Cartas', icone: 'cartas' },
+  { id: 'mochila', rotulo: 'Mochila', icone: 'mochila' },
+  { id: 'historia', rotulo: 'História', icone: 'historia' }
 ];
 
 /* ========================================================================== *
@@ -104,6 +181,9 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     overlay.remove();
     document.body.style.overflow = '';
     document.removeEventListener('keydown', aoTeclar);
+    // A memória das dobras é DESTA ficha: outro personagem começa pelo padrão
+    // de cada seção, e não pelo que alguém abriu na ficha do vizinho.
+    DOBRAS.clear();
     acoes.fecharPersonagem();
     if (aoFechar) aoFechar();
   }
@@ -251,7 +331,22 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     corpo.scrollTop = posicaoDaAba[destino] || 0;
   }
 
+  /**
+   * Quantas coisas há na aba — o número que aparece ao lado do rótulo.
+   *
+   * Serve para uma pergunta só, e ela é de mesa: "tenho carta na mão?",
+   * "guardei aquela poção?". Sem o número, descobrir custa trocar de aba e
+   * voltar. Zero NÃO aparece: um "0" ao lado de "Mochila" não diz nada que a
+   * aba vazia não diga melhor, e sujaria as quatro.
+   */
+  function contaDaAba(id, ficha) {
+    if (id === 'cartas') return ((ficha.cartas || {}).ativas || []).length;
+    if (id === 'mochila') return (ficha.inventario || []).length;
+    return 0;
+  }
+
   function botaoDeAba(aba) {
+    const quantas = contaDaAba(aba.id, p.ficha || {});
     return el('button', {
       type: 'button',
       role: 'tab',
@@ -259,8 +354,11 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       class: `ficha__aba ${aba.id === abaAtual ? 'esta-ativa' : ''}`,
       onClick: () => irParaAba(aba.id)
     }, [
-      el('span', { class: 'ficha__abaIcone', 'aria-hidden': 'true' }, aba.icone),
-      el('span', { class: 'ficha__abaRotulo', texto: aba.rotulo })
+      el('span', { class: 'ficha__abaIcone', 'aria-hidden': 'true' }, icone(aba.icone, { grande: true })),
+      el('span', { class: 'ficha__abaRotulo' }, [
+        el('span', { texto: aba.rotulo }),
+        quantas ? el('span', { class: 'ficha__abaConta', texto: String(quantas) }) : null
+      ])
     ]);
   }
 
@@ -271,7 +369,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       el('button', {
         type: 'button', class: 'btn btn--fantasma btn--icone',
         'aria-label': 'Voltar para a lista', onClick: fechar
-      }, '‹'),
+      }, icone('voltar', { grande: true })),
       /*
        * O 📖 desceu para a linha do subtítulo.
        *
@@ -284,7 +382,41 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         linha ? el('p', { class: 'ficha__subtitulo', title: linha }, nomeComGlossa(linha)) : null
       ]),
       botaoDeRegras(),
-      el('span', { class: 'selo selo--nivel', texto: `Nível ${ident.nivel || p.nivel}` })
+      pilhaDeNivel(ident)
+    ]);
+  }
+
+  /**
+   * A PÍLULA DO NÍVEL é o botão de subir de nível.
+   *
+   * O gesto é sobre o nível, e o nível está escrito aqui — procurar um botão
+   * no fim de uma aba para mexer num número que está no cabeçalho era pedir
+   * para rolar a tela inteira. A seta só aparece quando há avanço a escolher:
+   * sem pendência a pílula é um rótulo que também abre o painel.
+   */
+  function pilhaDeNivel(ident) {
+    const nivel = Number(ident.nivel || p.nivel) || 1;
+    const daMesa = Number(obterEstado().nivelDaMesa) || 1;
+    const pendente = nivel < 10 && nivel < daMesa;
+
+    return el('button', {
+      type: 'button',
+      class: `selo selo--nivel ${pendente ? 'tem-pendencia' : ''}`,
+      'aria-label': nivel >= 10
+        ? 'Nível 10 — o último'
+        : (pendente
+          ? `Nível ${nivel}. A mesa está no ${daMesa}: subir de nível`
+          : `Nível ${nivel} — subir de nível`),
+      onClick: () => {
+        if (nivel >= 10) { avisar('Nível 10 — o último. Não há mais para onde subir.', 'info'); return; }
+        abrirAvanco({
+          personagem: p, catalogo,
+          aoAplicar: (novo) => { p = novo; desenhar(); }
+        });
+      }
+    }, [
+      el('span', { texto: `Nível ${nivel}` }),
+      icone('seta-cima')
     ]);
   }
 
@@ -303,14 +435,20 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    *    • Os limiares deixam de ser dois números soltos numa grade e viram a
    *      FAIXA: Menor → 9 → Maior → 17 → Severo, com o que cada faixa custa
    *      escrito embaixo. É a conta inteira numa olhada.
-   *    • As trilhas ficam compactas e na horizontal, com os espaços que o
-   *      personagem ainda NÃO tem desenhados tracejados — igual ao papel, onde
-   *      eles esperam a subida de nível.
+   *    • As trilhas ficam compactas e na horizontal.
    *
-   *  A única coisa que não dá para copiar do papel é o tamanho: 12 quadradinhos
-   *  numa linha de 390px dariam 25px cada, e alvo de toque de 25px no meio de
-   *  uma cena é frustração garantida. Então eles ficam ESTREITOS mas ALTOS — a
-   *  linha continua sendo uma linha, e o dedo continua acertando.
+   *  A ÚNICA COISA QUE NÃO DÁ PARA COPIAR DO PAPEL É O TAMANHO.
+   *
+   *  A ficha impressa desenha as doze caixas de PV sempre, tracejando as que o
+   *  personagem ainda não tem — numa folha A4 isso cabe e é bonito: mostra
+   *  quanto ainda dá para crescer. Numa linha de 390px, doze caixas dão 25px
+   *  cada, e alvo de 25px no meio de uma cena é frustração garantida.
+   *
+   *  Então PV e Estresse mostram só os espaços QUE EXISTEM, e ficam grandes.
+   *  A informação que se perde ("quanto ainda dá para crescer") não some do
+   *  app: o painel de subir de nível diz exatamente isso, na hora em que ela
+   *  importa. Os doze espaços de ARMADURA continuam todos à vista, tracejados
+   *  — lá eles moram numa grade 4×3, onde cabem sem encolher.
    * ======================================================================== */
 
   function blocoDePapel(ficha) {
@@ -320,46 +458,174 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     return el('section', { class: 'papel' }, [
       linhaDeDefesas(r, d),
       faixa('Dano e Vida'),
-      el('p', { class: 'papel__nota', texto: 'Some seu nível atual aos limiares de dano.' }),
+      /*
+       * A nota antiga mandava "some seu nível atual aos limiares" — e o app JÁ
+       * soma (`lim.menor + nivel`, em 48_Criacao). Quem seguisse a instrução
+       * somava o nível duas vezes e levava menos dano do que devia.
+       *
+       * No lugar dela, o que a ficha de papel não diz: o que os dois números
+       * SÃO. O dano recebido cai numa das três faixas, e a faixa é o custo.
+       */
+      el('p', { class: 'papel__nota' }, textoAnotado(
+        'Compare o dano recebido com estes números — a faixa em que ele cai diz ' +
+        'quantos PV marcar.')),
       faixaDeLimiares(d),
-      linhaDeProficiencia(r),
       trilhaDePapel({
         chave: 'pontosDeVidaMarcados', rotulo: 'PV', nomeCompleto: 'Pontos de Vida',
         classe: 'pv', marcados: r.pontosDeVidaMarcados || 0, total: r.pontosDeVidaMaximos || 0
       }),
       trilhaDePapel({
-        chave: 'estresseMarcado', rotulo: 'Estresse', nomeCompleto: 'Estresse',
+        /*
+         * "ESTR." e não "ESTRESSE": em versalete a palavra inteira não cabe na
+         * coluna de rótulo e encostava no primeiro quadradinho. PV já é
+         * abreviação, e a linha fica com as duas do mesmo tamanho.
+         */
+        chave: 'estresseMarcado', rotulo: 'Estr.', nomeCompleto: 'Estresse',
+        verbete: 'estresse',
         classe: 'estresse', marcados: r.estresseMarcado || 0, total: r.estresseMaximo || 0
       }),
       faixa('Esperança'),
-      el('p', { class: 'papel__nota', texto:
-        'Gaste 1 Esperança para usar uma Experiência ou ajudar um aliado.' }),
-      trilhaDeEsperanca(r)
+      /*
+       * Anotado, e não texto puro: "Experiência" só tem gatilho AQUI na aba
+       * Jogo — a seção de Experiências mora na aba História, e quem lê esta
+       * frase é justamente quem ainda não foi lá.
+       */
+      el('p', { class: 'papel__nota' }, textoAnotado(
+        'Gaste 1 Esperança para usar uma Experiência ou ajudar um aliado.')),
+      trilhaDeEsperanca(r),
+      cartaDeEsperanca(ficha)
     ]);
   }
 
-  /* --- foto + equipamento --------------------------------------------------- */
+  /**
+   * A CARACTERÍSTICA DE ESPERANÇA DA CLASSE, logo abaixo da trilha.
+   *
+   * Toda classe tem uma, e ela é a única regra do jogo que responde à pergunta
+   * "para que serve guardar Esperança?". Ficava lá embaixo, no meio das outras
+   * cinco ou seis características, e quem estava olhando a trilha cheia não
+   * tinha como saber que existia.
+   *
+   * Ela sai da lista de Características para não aparecer duas vezes na mesma
+   * aba — duas cópias da mesma regra são duas versões da verdade assim que
+   * alguém editar uma.
+   *
+   * O texto é o do livro, inteiro. A tela não resume regra.
+   */
+  function cartaDeEsperanca(ficha) {
+    const c = (ficha.caracteristicas || []).find((x) => x.origem === 'esperança');
+    if (!c) return null;
+    const texto = c.texto || catalogo.textoDaCaracteristica(c.nome);
+    const classe = (ficha.identidade || {}).classe || '';
+
+    return el('div', { class: 'papel__esperancaCarta' }, [
+      el('h4', { class: 'papel__esperancaNome' }, [
+        el('span', {}, nomeComGlossa(c.nome || '')),
+        classe ? el('span', { class: 'papel__esperancaOrigem',
+          texto: ` · Esperança do ${classe}` }) : null
+      ]),
+      texto
+        ? el('p', { class: 'papel__esperancaTexto' }, textoAnotado(texto))
+        : null
+    ]);
+  }
+
+  /* --- foto + traços (o topo) ----------------------------------------------- */
 
   /**
-   * O topo da aba Jogo: o retrato à esquerda, os equipamentos à direita.
+   * O TOPO É QUEM O PERSONAGEM É: o rosto e os seis números.
    *
-   * É o desenho que a Vanessa mandou, e a razão dele é boa: equipamento é a
-   * coisa que se consulta mais e que menos precisa de número na tela. O que a
-   * pessoa quer saber de relance é O QUE está empunhando; dano, alcance e mãos
-   * ela quer no momento em que vai rolar — e aí um toque resolve.
+   * Antes o retrato dividia a linha com a lista de equipamento, e os traços
+   * moravam numa seção própria mais abaixo, em seis escudos grandes. Os dois
+   * lugares estavam errados pelo mesmo motivo: TRAÇO é o número que se consulta
+   * a cada jogada de dado — é o mais tocado da ficha inteira — e equipamento é
+   * o que menos muda durante uma cena.
    *
-   * Fica ACIMA do bloco de papel porque é identidade: quem é o personagem e
-   * com o que ele está. Vida, dano e Esperança vêm logo abaixo, que é onde a
-   * mão volta o tempo todo durante a cena.
+   * Então trocaram de lugar. Os traços sobem para o lado do retrato, em
+   * ladrilhos que cabem seis numa área que antes cabia três; o equipamento
+   * desce para depois do bloco de papel, em tabela.
    */
   function blocoDeRetrato(ficha) {
     return el('section', { class: 'retrato' }, [
       molduraDaFoto(ficha),
-      el('div', { class: 'retrato__equip' }, [
-        el('h3', { class: 'retrato__titulo', texto: 'Equipamentos' }),
-        listaDeEquipamento(ficha)
-      ])
+      blocoDeTracos(ficha)
     ]);
+  }
+
+  /**
+   * SEIS LADRILHOS DE TRÊS LETRAS.
+   *
+   * A sigla não é economia de espaço por preguiça: é o que permite os seis
+   * caberem ao lado da foto em vez de ocuparem uma tela inteira mais abaixo.
+   * E funciona porque os traços são um conjunto FECHADO de seis nomes do
+   * livro — AGI, FOR, FIN, INS, PRE, CON não disputam entre si, e a pessoa
+   * aprende as seis na primeira sessão.
+   *
+   * O que a sigla não diz, o toque diz: o nome inteiro, o termo da Jambô, os
+   * verbos de exemplo e o texto do livro estão todos no modal — e o nome
+   * inteiro também está no `aria-label`, para quem lê a tela em voz alta.
+   *
+   * De quebra, isto encerra a briga de dois meses com "CONHECIMENTO", que não
+   * cabia em cartão nenhum e vinha sendo hifenizado na mão.
+   */
+  function blocoDeTracos(ficha) {
+    /*
+     * Quem decide o traço de Conjuração é o SERVIDOR — e ele manda duas
+     * coisas: qual vale agora e quais o personagem tem direito de usar. São
+     * duas quando a multiclasse trouxe uma fundação com outro traço; aí o
+     * livro deixa escolher a cada teste, e aqui a escolha é um toque.
+     */
+    const conjuracao = catalogo.conjuracaoDe(ficha);
+    const opcoes = ficha.conjuracoesDisponiveis || [];
+    const podeTrocar = opcoes.length > 1;
+    const ehOpcao = (t) => opcoes.some((o) => dados.chave(o.traco) === dados.chave(t));
+
+    const grade = el('div', { class: 'tracos' }, TRACOS_ORDEM.map((t) => {
+      const v = ficha.tracos ? ficha.tracos[t] : null;
+      const ehConjuracao = Boolean(conjuracao) && dados.chave(conjuracao) === dados.chave(t);
+      const trocavel = podeTrocar && ehOpcao(t) && !ehConjuracao;
+      const nome = catalogo.nomeDoTraco(t);
+      const valor = valorDeTraco(v);
+
+      return el('button', {
+        type: 'button',
+        class: `traco ${ehConjuracao ? 'e-conjuracao' : ''} ${trocavel ? 'e-trocavel' : ''}`,
+        'aria-label': `${nome} ${valor} — ver o que este traço faz`,
+        onClick: () => verTraco(t, { ehConjuracao, trocavel })
+      }, [
+        el('span', { class: 'traco__sigla', texto: siglaDeTraco(nome) }),
+        el('strong', { class: 'traco__valor', texto: valor })
+      ]);
+    }));
+
+    return el('div', { class: 'retrato__tracos' }, [
+      el('h3', { class: 'retrato__titulo', texto: 'Traços' }),
+      grade,
+      notaDeConjuracao(conjuracao, opcoes, podeTrocar)
+    ]);
+  }
+
+  /**
+   * A frase que o ladrilho não cabe.
+   *
+   * O selo "conjuração" dentro do cartão dizia QUE aquele traço era o de
+   * Conjuração, mas não dizia o que isso quer dizer nem que dava para trocar.
+   * Uma frase abaixo da grade diz as duas coisas e ainda leva ao verbete.
+   */
+  function notaDeConjuracao(conjuracao, opcoes, podeTrocar) {
+    if (!conjuracao) return null;
+    const nome = catalogo.nomeDoTraco(conjuracao);
+    const frase = el('p', { class: 'retrato__conj' }, [
+      el('strong', { texto: nome }),
+      ' é seu traço de ',
+      gatilhoPara('Conjuração', 'jogada-de-conjuracao'),
+      '.'
+    ]);
+    if (podeTrocar) {
+      const outros = opcoes.map((o) => catalogo.nomeDoTraco(o.traco)).filter((n) => n !== nome);
+      frase.append(document.createTextNode(
+        ` A multiclasse também te deu ${outros.join(' e ')} — toque para trocar.`));
+    }
+    return frase;
   }
 
   function molduraDaFoto(ficha) {
@@ -409,42 +675,48 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
   }
 
   /**
-   * SÓ OS NOMES. Os números abrem num toque.
+   * O EQUIPAMENTO EM TABELA: rótulo à esquerda, nome à direita.
    *
-   * A versão antiga escrevia "d8+3 · Corpo a Corpo · uma mão" embaixo de cada
-   * item, direto na lista. Três linhas de número que ninguém lê no meio de uma
-   * cena, ocupando o espaço de algo que se lê.
+   * Ele saiu do topo. Lá em cima ele dividia a linha com o retrato e ficava
+   * com meia largura — nome de item comprido quebrava em duas linhas, e o
+   * rótulo embaixo do nome obrigava a ler de baixo para cima. Aqui embaixo ele
+   * tem a largura inteira, e a leitura vira o que ela sempre foi no papel:
+   * "arma primária → Espada Longa".
+   *
+   * Continua SÓ O NOME. Dano, alcance e mãos são o que se quer no instante de
+   * rolar, não de relance — e aí um toque resolve.
    */
-  function listaDeEquipamento(ficha) {
+  function tabelaDeEquipamento(ficha) {
     const eq = ficha.equipamento || {};
-    const itens = [
+    const linhas = [
       ['Arma primária', catalogo.acharArma(eq.primaria)],
       ['Arma secundária', catalogo.acharArma(eq.secundaria)],
       ['Armadura', catalogo.acharArmadura(eq.armadura)]
     ];
-    return el('ul', { class: 'retrato__lista' }, itens.map((par) => {
+
+    return el('ul', { class: 'equip' }, linhas.map((par) => {
       const rotulo = par[0];
       const item = par[1];
       /*
-       * NOME em cima, rótulo embaixo — nos DOIS casos.
+       * A LINHA VAZIA CONTINUA NA TABELA, dizendo "nenhuma".
        *
-       * A linha vazia estava invertida (rótulo primeiro), e no celular isso
-       * fazia "ARMA SECUNDÁRIA / nada equipado" aparecer no lugar onde as
-       * outras duas mostram o nome do item. Três linhas, duas gramáticas.
+       * Sumir com ela faria a tabela mudar de tamanho conforme o personagem, e
+       * o buraco no lugar da arma secundária é exatamente a informação que
+       * alguém procura ao decidir se pega um escudo.
+       *
+       * "nenhuma" no feminino serve aos três: arma primária, arma secundária e
+       * armadura são todas femininas. O "nada equipado" de antes era neutro
+       * justamente por medo disso, e soava a mensagem de sistema.
        */
-      if (!item) {
-        return el('li', { class: 'retrato__item retrato__item--vazio' }, [
-          el('span', { class: 'retrato__nome retrato__nome--vazio', texto: 'nada equipado' }),
-          el('span', { class: 'retrato__rotulo', texto: rotulo })
-        ]);
-      }
-      return el('li', { class: 'retrato__item' }, [
-        el('button', {
-          type: 'button', class: 'retrato__nome',
-          'aria-label': `${item.nome} — ver os números`,
-          onClick: () => verEquipamento(rotulo, item)
-        }, nomeComGlossa(item.nome)),
-        el('span', { class: 'retrato__rotulo', texto: rotulo })
+      return el('li', { class: 'equip__linha' }, [
+        el('span', { class: 'equip__rotulo', texto: rotulo }),
+        item
+          ? el('button', {
+            type: 'button', class: 'equip__valor',
+            'aria-label': `${item.nome} — ver os números`,
+            onClick: () => verEquipamento(rotulo, item)
+          }, nomeComGlossa(item.nome))
+          : el('span', { class: 'equip__valor equip__valor--vazio', texto: 'nenhuma' })
       ]);
     }));
   }
@@ -462,28 +734,6 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       el('strong', { class: 'papel__proficienciaValor', texto: String(r.proficiencia ?? '—') }),
       el('span', { class: 'papel__proficienciaNota', texto: 'dados de dano por ataque com arma' })
     ]);
-  }
-
-  /**
-   * O escudo do traço: ombros retos, base em ponta — o contorno da ficha
-   * impressa. Mesmo motivo do escudo de Evasão: isto não sai de border-radius.
-   */
-  /** O termo da Jambô do traço, quando ele diverge — "Finesse" → "Acuidade". */
-  function jamboDoTraco(nome) {
-    const outro = jamboDe(nome);
-    return outro ? el('span', { class: 'traco__jambo', texto: outro }) : null;
-  }
-
-  function escudoDeTraco() {
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('viewBox', '0 0 100 84');
-    svg.setAttribute('preserveAspectRatio', 'none');
-    svg.setAttribute('class', 'traco__forma');
-    svg.setAttribute('aria-hidden', 'true');
-    const caminho = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    caminho.setAttribute('d', 'M3 3 H97 V54 L50 81 L3 54 Z');
-    svg.append(caminho);
-    return svg;
   }
 
   /** A faixa de título, com as pontas chanfradas da ficha impressa. */
@@ -505,6 +755,14 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     for (let i = 1; i <= TETO_TRILHA; i++) {
       const existe = i <= total;
       const cheio = i <= marcados;
+      const forma = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      forma.setAttribute('viewBox', '0 0 24 25');
+      forma.setAttribute('class', 'papel__slotForma');
+      forma.setAttribute('aria-hidden', 'true');
+      const traco = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      traco.setAttribute('d', FORMA_SLOT);
+      forma.append(traco);
+
       slots.append(el('button', {
         type: 'button',
         class: `papel__slot ${cheio ? 'esta-cheio' : ''} ${existe ? '' : 'nao-tem'}`,
@@ -514,7 +772,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           : `Ponto de Armadura ${i}: você ainda não tem`,
         'aria-pressed': cheio ? 'true' : 'false',
         onClick: (ev) => marcarAte(ev.currentTarget.parentNode, 'armaduraMarcada', i)
-      }));
+      }, [forma]));
     }
 
     return el('div', { class: 'papel__defesas' }, [
@@ -536,16 +794,37 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * um ovo. E era exatamente esse contorno que a Vanessa apontou na foto.
    * Traçado em SVG, ele fica igual e escala sem serrilhar.
    */
+  /*
+   * O que separa Evasão de Armadura é a FORMA, não a cor.
+   *
+   * As duas usavam o mesmo escudo e só a cor da borda mudava — no celular,
+   * com 60px de largura, ninguém lia isso; e a cor era necessária em outro
+   * lugar (o azul foi para o Estresse). Agora cada uma tem o contorno que a
+   * ficha oficial dá a ela: a PLACA EM ARCO da Evasão e o ESCUDO DE BRASÃO da
+   * Armadura. As duas em ouro, distinguíveis de relance pelo desenho.
+   *
+   * ⚠ Não inventar forma aqui. A ficha da Darrington usa cada silhueta para
+   * uma coisa só, e o losango já é da Esperança — foi exatamente esse o erro
+   * que a Vanessa pegou.
+   */
   function escudo(classe, rotulo, valor) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('viewBox', '0 0 60 66');
     svg.setAttribute('class', 'papel__escudoForma');
     svg.setAttribute('aria-hidden', 'true');
-    const caminho = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    caminho.setAttribute('d',
-      'M4 12 A8 8 0 0 1 12 4 H48 A8 8 0 0 1 56 12 V36 ' +
-      'C56 50 38 59 30 62 C22 59 4 50 4 36 Z');
-    svg.append(caminho);
+    const formas = classe === 'evasao' ? FORMA_EVASAO : FORMA_ARMADURA;
+    formas.forEach((d, i) => {
+      const p2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      p2.setAttribute('d', d);
+      // O primeiro traço é o CONTORNO (leva o preenchimento do CSS); o outro é
+      // a linha interna da chapa, que é traço e não pode ser preenchida.
+      if (i > 0) {
+        p2.setAttribute('fill', 'none');
+        p2.setAttribute('stroke-width', '1.5');
+        p2.setAttribute('opacity', '.45');
+      }
+      svg.append(p2);
+    });
 
     return el('div', { class: `papel__escudoBloco papel__escudoBloco--${classe}` }, [
       el('div', { class: 'papel__escudo' }, [
@@ -581,36 +860,60 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       'aria-label': 'Limiares de dano — o que cada faixa custa',
       onClick: () => abrirVerbete('limiares-de-dano')
     }, [
-      bloco('Menor', 'marque 1 PV'),
+      /*
+       * "1 PV", e não "marque 1 PV": com o verbo, o custo quebrava em três
+       * linhas dentro do chevron e a cadeia inteira ficava alta. O verbo já
+       * está na nota logo acima ("...diz quantos PV marcar"), dito uma vez.
+       */
+      bloco('Menor', '1 PV'),
       fronteira(maior),
-      bloco('Maior', 'marque 2 PV'),
+      bloco('Maior', '2 PV'),
       fronteira(severo),
-      bloco('Severo', 'marque 3 PV')
+      bloco('Severo', '3 PV')
     ]);
   }
 
   /* --- PV e Estresse --------------------------------------------------------- */
 
-  function trilhaDePapel({ chave, rotulo, nomeCompleto, classe, marcados, total }) {
+  function trilhaDePapel({ chave, rotulo, nomeCompleto, verbete, classe, marcados, total }) {
+    /*
+     * SÓ OS ESPAÇOS QUE EXISTEM — e por isso eles são grandes.
+     *
+     * A linha desenhava as doze sempre, tracejando as que o personagem ainda
+     * não tinha (é o que a ficha impressa faz). Numa folha A4 aquilo cabe;
+     * numa linha de 390px, doze caixas dão 25px cada, e o dedo erra.
+     *
+     * Com só as que existem — cinco ou seis, quase sempre — cada uma passa dos
+     * 50px e a trilha vira o que ela é: a coisa que a mão procura no meio de
+     * uma cena. Quanto ainda dá para crescer é assunto do painel de subir de
+     * nível, que diz isso na hora em que importa.
+     */
+    const quantas = Math.max(1, Math.min(TETO_TRILHA, total));
     const caixas = el('div', {
-      class: 'papel__caixas', role: 'group', 'aria-label': nomeCompleto
+      class: 'papel__caixas', role: 'group', 'aria-label': nomeCompleto,
+      style: `grid-template-columns: repeat(${quantas}, 1fr)`
     });
-    for (let i = 1; i <= TETO_TRILHA; i++) {
-      const existe = i <= total;
+    for (let i = 1; i <= quantas; i++) {
       const cheio = i <= marcados;
       caixas.append(el('button', {
         type: 'button',
-        class: `papel__caixa ${cheio ? 'esta-cheio' : ''} ${existe ? '' : 'nao-tem'}`,
-        disabled: !existe,
-        'aria-label': existe
-          ? `${nomeCompleto} ${i} de ${total}`
-          : `${nomeCompleto} ${i}: só a partir de um nível mais alto`,
+        class: `papel__caixa ${cheio ? 'esta-cheio' : ''}`,
+        'aria-label': `${nomeCompleto} ${i} de ${total}`,
         'aria-pressed': cheio ? 'true' : 'false',
         onClick: (ev) => marcarAte(ev.currentTarget.parentNode, chave, i)
       }));
     }
     return el('div', { class: `papel__trilha papel__trilha--${classe}` }, [
-      el('span', { class: 'papel__trilhaRotulo' }, nomeAnotado(rotulo, { comGlossa: false })),
+      /*
+       * Quando o rótulo é ABREVIADO, o verbete vem por id.
+       *
+       * "Estr." não é palavra do livro e `nomeAnotado` nunca acharia verbete
+       * para ela — mas a trilha continua sendo Estresse, e é a regra do
+       * Estresse que tem de abrir. O nome inteiro está no `aria-label` do
+       * grupo, que é o que um leitor de tela anuncia.
+       */
+      el('span', { class: 'papel__trilhaRotulo' },
+        verbete ? gatilhoPara(rotulo, verbete) : nomeAnotado(rotulo, { comGlossa: false })),
       caixas
     ]);
   }
@@ -674,79 +977,37 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const r = ficha.recursos || {};
     const d = ficha.defesas || {};
 
-    // --- retrato e equipamento (o topo) ---------------------------------
+    // --- retrato e traços (o topo) ---------------------------------------
     pai.append(blocoDeRetrato(ficha));
 
     // --- o bloco da ficha de papel --------------------------------------
     pai.append(blocoDePapel(ficha));
 
-    // --- traços ----------------------------------------------------------
-    /*
-     * Quem decide o traço de Conjuração é o SERVIDOR — e ele manda duas
-     * coisas: qual vale agora e quais o personagem tem direito de usar. São
-     * duas quando a multiclasse trouxe uma fundação com outro traço; aí o
-     * livro deixa escolher a cada teste, e aqui a escolha é um toque.
-     */
-    const conjuracao = catalogo.conjuracaoDe(ficha);
-    const opcoesConj = (ficha.conjuracoesDisponiveis || []);
-    const podeTrocar = opcoesConj.length > 1;
-    const ehOpcao = (t) => opcoesConj.some((o) => dados.chave(o.traco) === dados.chave(t));
-
-    const notaConj = podeTrocar ? el('p', { class: 'texto-xs texto-fraco ficha__conjNota', texto:
-      'A multiclasse te deu dois traços de Conjuração (' +
-      opcoesConj.map((o) => catalogo.nomeDoTraco(o.traco)).join(' e ') +
-      '). O livro deixa escolher qual usar a cada jogada — toque no traço para trocar.' }) : null;
-
-    /*
-     * Os seis traços, cada um num escudo só.
+    /* --- equipamento -----------------------------------------------------
      *
-     * A primeira versão punha uma fita com o nome EM CIMA do escudo e os três
-     * verbos DENTRO dele. Ficou apertado dos dois lados: a fita não cabia
-     * "CONHECIMENTO" e os verbos deixavam o escudo cheio de letra miúda para
-     * uma informação que ninguém lê no meio da mesa.
-     *
-     * Agora o cartão diz só as duas coisas que se consultam durante o jogo —
-     * o NOME e o NÚMERO, um embaixo do outro dentro da moldura, como no papel.
-     * Os verbos de exemplo e o texto do livro ficam a um toque: tocar no traço
-     * abre a explicação dele.
+     * Logo abaixo do bloco de papel, e não no topo: o número que a mão procura
+     * durante a cena é PV, Estresse e Esperança; a arma equipada muda uma vez
+     * por sessão, quando muda.
      */
-    pai.append(secao('Traços', el('div', {}, [notaConj, el('div', { class: 'tracos' },
-      TRACOS_ORDEM.map((t) => {
-        const v = ficha.tracos ? ficha.tracos[t] : null;
-        const ehConjuracao = Boolean(conjuracao) && dados.chave(conjuracao) === dados.chave(t);
-        const trocavel = podeTrocar && ehOpcao(t) && !ehConjuracao;
-        const texto = (v === null || v === undefined) ? '—' : (v >= 0 ? `+${v}` : String(v));
+    /*
+     * A Proficiência fica ENTRE o bloco de papel e o equipamento, e é o lugar
+     * dela: ela diz quantos dados de dano a arma rola — pertence às duas
+     * coisas, e à conta que se faz entre uma e outra.
+     */
+    pai.append(linhaDeProficiencia(ficha.recursos || {}));
 
-        return el('button', {
-          type: 'button',
-          class: `traco ${ehConjuracao ? 'e-conjuracao' : ''} ${trocavel ? 'e-trocavel' : ''}`,
-          'aria-label': `${catalogo.nomeDoTraco(t)} ${texto} — ver o que este traço faz`,
-          onClick: () => verTraco(t, { ehConjuracao, trocavel })
-        }, [
-          el('div', { class: 'traco__moldura' }, [
-            escudoDeTraco(),
-            el('span', { class: 'traco__nome', texto: catalogo.nomeDoTraco(t) }),
-            el('strong', { class: 'traco__valor', texto })
-          ]),
-          /*
-           * Um rodapé só, SEMPRE presente — mesmo vazio.
-           *
-           * O selo de conjuração e a glosa da Jambô só existem em alguns
-           * cartões; sem faixa reservada, eles esticavam a linha inteira da
-           * grade e os seis deixavam de ter a mesma altura (E43).
-           */
-          el('div', { class: 'traco__rodape' }, [
-            ehConjuracao ? el('span', { class: 'traco__selo', texto: 'conjuração' }) : null,
-            trocavel ? el('span', { class: 'traco__selo traco__selo--trocar', texto: 'trocável' }) : null,
-            (!ehConjuracao && !trocavel) ? jamboDoTraco(catalogo.nomeDoTraco(t)) : null
-          ])
-        ]);
-      })
-    )])));
+    pai.append(tabelaDeEquipamento(ficha));
 
-    // --- condições -------------------------------------------------------
+    /* --- condições -------------------------------------------------------
+     *
+     * O cabeçalho leva a CONTAGEM à direita e nada mais: o "+" desceu para o
+     * fim da fileira de pílulas, que é onde a próxima entra.
+     */
+    const quantasCondicoes = (ficha.condicoes || []).length;
     pai.append(secao('Condições', blocoCondicoes(ficha),
-      botaoPequeno('+ Condição', () => escolherCondicao(ficha))));
+      quantasCondicoes
+        ? el('span', { class: 'ficha__secaoConta', texto: String(quantasCondicoes) })
+        : null));
 
     /* --- marcadores ------------------------------------------------------
      *
@@ -765,15 +1026,36 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       .filter((k) => k.indexOf('livre:') === 0)
       .map((k) => Object.assign({ chave: k }, ficha.contadores[k]));
 
-    pai.append(secao('Marcadores',
-      (contadores.length || livres.length)
-        ? el('div', { class: 'pilha' }, [
-          ...contadores.map((c) => linhaDeContador(c, ficha)),
-          ...livres.map((c) => linhaDeMarcadorLivre(c))
-        ])
-        : el('p', { class: 'texto-sm texto-fraco', texto:
-          'Nenhum marcador. Os das cartas aparecem sozinhos; o botão cria os que o livro não tem.' }),
-      botaoPequeno('+ Marcador', criarMarcador)));
+    const quantosMarcadores = contadores.length + livres.length;
+    /*
+     * "1 ativo" conta MARCADOR COM VALOR, não marcador que existe: um contador
+     * zerado é uma carta na mão, não uma coisa em jogo. O que se quer saber
+     * pela linha fechada é se há alguma contagem correndo agora.
+     */
+    const valorDoContador = (chave) => {
+      const c = (ficha.contadores || {})[chave];
+      if (c === null || c === undefined) return 0;
+      return Number(typeof c === 'object' ? c.valor : c) || 0;
+    };
+    const ativos = [...contadores, ...livres]
+      .filter((c) => valorDoContador(c.chave) > 0).length;
+
+    pai.append(dobra('Marcadores',
+      quantosMarcadores
+        ? (ativos ? `${ativos} ativo${ativos === 1 ? '' : 's'}` : String(quantosMarcadores))
+        : 'nenhum',
+      el('div', { class: 'pilha' }, [
+        quantosMarcadores
+          ? el('div', { class: 'pilha' }, [
+            ...contadores.map((c) => linhaDeContador(c, ficha)),
+            ...livres.map((c) => linhaDeMarcadorLivre(c))
+          ])
+          : el('p', { class: 'texto-sm texto-fraco', texto:
+            'Nenhum marcador. Os das cartas aparecem sozinhos; o botão cria os que o livro não tem.' }),
+        botaoPequeno('+ Marcador', criarMarcador)
+      ]),
+      // Com algo marcado a dobra já abre: é o estado que a mesa precisa ver.
+      { aberta: ativos > 0 }));
 
     /*
      * A seção "Equipamento" saiu daqui: ela virou a lista do topo, ao lado da
@@ -785,9 +1067,14 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     // A ficha guarda só o NOME e de onde veio — é o backend que decide quais
     // características o personagem tem. O TEXTO da regra mora nos data/*.json
     // e é resolvido aqui, na hora de desenhar.
-    const caracs = ficha.caracteristicas || [];
+    /*
+     * A de ESPERANÇA sai daqui: ela já está desenhada dentro do bloco de
+     * papel, colada na trilha que ela ensina a gastar. Repetir aqui daria duas
+     * cópias da mesma regra na mesma aba.
+     */
+    const caracs = (ficha.caracteristicas || []).filter((c) => c.origem !== 'esperança');
     if (caracs.length) {
-      pai.append(secao('Características', el('div', { class: 'pilha' },
+      pai.append(dobra('Características', String(caracs.length), el('div', { class: 'pilha' },
         caracs.map((c) => {
           const texto = c.texto || catalogo.textoDaCaracteristica(c.nome);
           return el('div', { class: 'ficha__carac' }, [
@@ -815,7 +1102,19 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
      */
     const paralelas = paralelasPossiveis(ficha, catalogo);
     if (paralelas.length) {
-      pai.append(secao('Ficha paralela', el('div', { class: 'pilha' }, paralelas.map((q) => {
+      /*
+       * O resumo da linha fechada é o ESTADO, não a contagem: transformado em
+       * quê, ou que não está. Para quem tem Forma de Fera, é essa a pergunta —
+       * e por isso a dobra já vem aberta quando há uma forma ativa.
+       */
+      const formaAtiva = ficha.formaDeFera;
+      const algumaAberta = paralelas.some((q) => acharParalela(ficha, q.filha));
+      const resumoParalela = formaAtiva
+        ? formaAtiva.nome
+        : (algumaAberta ? 'aberta' : 'não usada');
+
+      pai.append(dobra('Ficha paralela', resumoParalela,
+        el('div', { class: 'pilha' }, paralelas.map((q) => {
         const minha = acharParalela(ficha, q.filha);
         const forma = q.filha === 'beastform' ? ficha.formaDeFera : null;
         return el('button', {
@@ -838,7 +1137,8 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
                 ? 'Fora da forma. Toque para se transformar.'
                 : 'Nome, evoluções e o dado de dano do bicho.') })
         ]);
-      }))));
+      })),
+        { aberta: Boolean(formaAtiva) }));
     }
 
     pai.append(el('div', { class: 'ficha__acoesGrandes' }, [
@@ -848,20 +1148,15 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           personagem: p,
           aoAplicar: (novo) => { p = novo; desenhar(); }
         })
-      }, '🌙 Descansar'),
-      nivel < 10 ? el('button', {
-        type: 'button',
-        class: 'btn btn--principal ficha__botaoNivel',
-        // Rótulo curto porque agora são duas colunas; o nome inteiro fica no
-        // rótulo acessível, que é onde ele ainda serve.
-        'aria-label': `Subir para o nível ${nivel + 1}`,
-        onClick: () => abrirAvanco({
-          personagem: p, catalogo,
-          aoAplicar: (novo) => { p = novo; desenhar(); }
-        })
-      }, `⬆ Nível ${nivel + 1}`) : el('p', {
-        class: 'ficha__nota', texto: 'Nível 10 — o último. Não há mais para onde subir.'
-      }),
+      }, [icone('lua'), el('span', { texto: 'Descansar' })]),
+      /*
+        * O "Subir de nível" SAIU daqui e virou a pílula do cabeçalho.
+        *
+        * O gesto é sobre o nível, e o nível está escrito lá em cima: procurar
+        * um botão no fim da aba para mexer num número do cabeçalho era pedir
+        * para rolar a tela inteira. "Descansar" ficou sozinho — e ele é a ação
+        * de mesa de verdade, então ocupa a linha.
+        */
       /*
        * O aviso de que a ficha ficou para trás da mesa.
        *
@@ -926,23 +1221,49 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
 
   /* --- condições ---------------------------------------------------------- */
 
+  /**
+   * As condições em pílulas, com o "+" NO FIM DA FILEIRA.
+   *
+   * O botão "+ Condição" ficava no cabeçalho, do outro lado da tela do lugar
+   * onde as pílulas nascem — e ele é largo, então o cabeçalho de uma seção que
+   * na maior parte do tempo está vazia ocupava a linha inteira.
+   *
+   * Um "+" redondo e tracejado no fim da fileira diz a mesma coisa e diz onde:
+   * a próxima pílula entra ali. É a mesma gramática de "adicionar" que a lista
+   * de etapas do Mestre usa. Os 44px de alvo são do BOTÃO; o círculo desenhado
+   * é menor, para acompanhar a altura das pílulas (E39).
+   */
   function blocoCondicoes(ficha) {
     const lista = ficha.condicoes || [];
+    const mais = el('button', {
+      type: 'button', class: 'chip chip--mais',
+      'aria-label': 'Adicionar uma condição',
+      onClick: () => escolherCondicao(ficha)
+    }, '+');
+
     if (!lista.length) {
-      return el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma condição marcada.' });
-    }
-    return el('div', { class: 'ficha__chips' }, lista.map((c) => {
-      const def = catalogo.condicaoPorId(c.id);
-      return el('button', {
-        type: 'button',
-        class: 'chip chip--condicao',
-        title: def ? def.texto : '',
-        onClick: () => verCondicao(c, def)
-      }, [
-        nomeComGlossa(c.nome || c.id),
-        c.temporaria ? el('span', { class: 'chip__marca', texto: 'temp' }) : null
+      return el('div', { class: 'ficha__chips' }, [
+        el('span', { class: 'texto-sm texto-fraco ficha__chipsVazio',
+          texto: 'Nenhuma condição marcada.' }),
+        mais
       ]);
-    }));
+    }
+
+    return el('div', { class: 'ficha__chips' }, [
+      ...lista.map((c) => {
+        const def = catalogo.condicaoPorId(c.id);
+        return el('button', {
+          type: 'button',
+          class: 'chip chip--condicao',
+          title: def ? def.texto : '',
+          onClick: () => verCondicao(c, def)
+        }, [
+          nomeComGlossa(c.nome || c.id),
+          c.temporaria ? el('span', { class: 'chip__marca', texto: 'temp' }) : null
+        ]);
+      }),
+      mais
+    ]);
   }
 
   /**
@@ -976,8 +1297,16 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const def = catalogo.tracoPorId ? catalogo.tracoPorId(t) : null;
     const nome = catalogo.nomeDoTraco(t);
     const v = ficha.tracos ? ficha.tracos[t] : null;
-    const texto = (v === null || v === undefined) ? '—' : (v >= 0 ? `+${v}` : String(v));
+    const texto = valorDeTraco(v);
     const verbos = (def && def.verbos) ? def.verbos : [];
+    /*
+     * O TERMO DA JAMBÔ MORA AQUI AGORA.
+     *
+     * Ele ficava embaixo do cartão, e o cartão virou uma sigla de três letras.
+     * Este modal é onde o nome inteiro aparece — é o lugar certo para dizer
+     * que a Jambô chama "Finesse" de "Acuidade".
+     */
+    const jambo = jamboDe(nome);
 
     const modal = abrirModal({
       titulo: nome,
@@ -986,6 +1315,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           el('strong', { class: 'traco__resumoValor', texto }),
           el('span', { class: 'texto-sm texto-fraco', texto: 'em toda jogada de ' + nome })
         ]),
+        jambo ? el('p', { class: 'texto-xs texto-fraco', texto: `No livro da Jambô: ${jambo}.` }) : null,
         verbos.length ? el('p', { class: 'texto-sm' }, [
           el('span', { class: 'texto-fraco', texto: 'Exemplos do livro: ' }),
           el('span', { texto: verbos.join(' · ') })
@@ -1114,7 +1444,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         'aria-label': `Apagar o marcador ${c.nome}`,
         title: 'Apagar este marcador',
         onClick: () => confirmarApagarMarcador(c)
-      }, '🗑')
+      }, icone('lixeira'))
     ]);
   }
 
@@ -1849,7 +2179,7 @@ function ouroEmPunhados(ouro) {
             'aria-label': `Tirar ${nome} da mochila`,
             title: 'Tirar da mochila',
             onClick: () => enviar([{ tipo: 'inventario', acao: 'remover', indice }])
-          }, '🗑')
+          }, icone('lixeira'))
         ])
       ]);
     };
@@ -1999,12 +2329,65 @@ function ouroEmPunhados(ouro) {
  *  Peças soltas
  * ========================================================================== */
 
-function secao(titulo, conteudo, acao) {
-  return el('section', { class: 'ficha__bloco' }, [
-    el('div', { class: 'ficha__blocoTopo' }, [
-      el('h2', { class: 'ficha__secao', texto: titulo }),
-      acao || null
+/**
+ * UMA LINHA QUE ABRE — nome à esquerda, resumo à direita, o resto dentro.
+ *
+ * A aba Jogo tinha oito seções abertas ao mesmo tempo, e três delas quase
+ * nunca são olhadas no meio de uma cena: Marcadores, Características e Ficha
+ * paralela. Abertas, empurravam "Descansar" para fora da tela e obrigavam a
+ * rolar por cima da mesma coisa toda vez.
+ *
+ * Fechadas, cada uma custa uma linha — e a linha JÁ DIZ o que tem dentro
+ * ("1 ativo", "4", "não usada"). Quem só queria conferir não precisa abrir.
+ *
+ * É um `<details>` de verdade, e não um modal. Abrir sem sair da página deixa
+ * o marcador a dois toques no meio da cena, e o navegador cuida do teclado, do
+ * leitor de tela e do Ctrl+F sozinho — coisas que um modal caseiro teria de
+ * refazer à mão.
+ */
+/*
+ * QUEM ABRIU, ABRIU — a escolha sobrevive ao redesenho.
+ *
+ * `desenhar()` reconstrói a aba inteira sempre que a ficha muda, e sem memória
+ * a dobra que a pessoa acabou de abrir se fecharia no primeiro toque dentro
+ * dela: marcar um contador fecharia a seção do contador. O mapa guarda só as
+ * dobras que alguém MEXEU; as que ninguém tocou seguem o padrão de cada uma.
+ */
+const DOBRAS = new Map();
+
+function dobra(titulo, resumo, conteudo, { aberta = false } = {}) {
+  const escolhida = DOBRAS.get(titulo);
+  const caixa = el('details', { class: 'dobra' });
+  if (escolhida === undefined ? aberta : escolhida) caixa.open = true;
+  caixa.addEventListener('toggle', () => DOBRAS.set(titulo, caixa.open));
+  caixa.append(
+    el('summary', { class: 'dobra__topo' }, [
+      el('span', { class: 'dobra__nome' }, nomeAnotado(titulo, { comGlossa: false })),
+      resumo ? el('span', { class: 'dobra__resumo', texto: resumo }) : null,
+      el('span', { class: 'dobra__seta', 'aria-hidden': 'true' }, icone('avancar'))
     ]),
+    el('div', { class: 'dobra__corpo' }, conteudo)
+  );
+  return caixa;
+}
+
+/**
+ * O TÍTULO DA SEÇÃO É UM GATILHO quando o termo tem verbete.
+ *
+ * "Condições", "Experiências", "Inventário", "Ouro" — cada um desses é uma
+ * palavra de regra, e a pessoa que abre a seção pela primeira vez é
+ * exatamente quem quer saber o que ela quer dizer. Sem isto, o verbete só
+ * existia dentro do texto das cartas, longe de quem estava perdido.
+ *
+ * `comGlossa: false` porque um cabeçalho de meia linha não comporta o
+ * parêntese da Jambô — o popup já mostra o termo dela.
+ */
+function secao(titulo, conteudo, acao) {
+  const cabeca = el('h2', { class: 'ficha__secao' });
+  if (typeof titulo === 'string') cabeca.append(nomeAnotado(titulo, { comGlossa: false }));
+  else cabeca.append(titulo);
+  return el('section', { class: 'ficha__bloco' }, [
+    el('div', { class: 'ficha__blocoTopo' }, [cabeca, acao || null]),
     conteudo
   ]);
 }

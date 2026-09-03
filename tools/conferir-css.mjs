@@ -85,36 +85,46 @@ const usadaDeAlgumJeito = (c) =>
 
 /* --- leitura ESTRITA: o que é class de verdade ---------------------------- */
 
+function classesDoLiteral(dentro, guardar) {
+  /*
+   * `selo selo--${tipo}` com 'acao' escrito dentro do ${…}: a classe é
+   * `selo--acao`, e o pedaço solto ('acao') não é classe nenhuma. Quando o
+   * template monta uma classe com `--${`, os literais dele são SUFIXOS —
+   * ignorá-los é o que impede o conferidor de pedir `.acao`, `.passiva` e
+   * `.reacao`, que nunca existiram.
+   */
+  const montaSufixo = /--\$\{/.test(dentro);
+  if (!montaSufixo) {
+    /*
+     * `${cond ? 'x' : ''}` aqui é classe de verdade — mas o lado da
+     * COMPARAÇÃO não é: em `${c.origem === 'multiclasse' ? 'selo--mestre' : ''}`
+     * só o segundo literal vira classe. Por isso o que vem logo depois de um
+     * operador de igualdade é descartado.
+     */
+    const semComparacao = dentro.replace(/[=!]==?\s*(?:'[^']*'|"[^"]*")/g, ' ');
+    for (const s of semComparacao.matchAll(/'([\w-]+)'|"([\w-]+)"/g)) guardar(s[1] ?? s[2]);
+  }
+  for (const p of dentro.replace(/\$\{[^}]*\}/g, ' ').split(/\s+/)) {
+    // pedaço terminado em `--` é prefixo de classe montada, não classe
+    if (p && /^[a-zA-Z][\w-]*$/.test(p) && !p.endsWith('--')) guardar(p);
+  }
+}
+
 const usadasMesmo = new Set();
+const guardar = (c) => usadasMesmo.add(c);
+
 for (const [, txt] of JS) {
   for (const m of txt.matchAll(/class:\s*(?:`([^`]*)`|'([^']*)'|"([^"]*)")/g)) {
-    const dentro = m[1] ?? m[2] ?? m[3] ?? '';
-    /*
-     * `selo selo--${tipo}` com 'acao' escrito dentro do ${…}: a classe é
-     * `selo--acao`, e o pedaço solto ('acao') não é classe nenhuma. Quando o
-     * template monta uma classe com `--${`, os literais dele são SUFIXOS —
-     * ignorá-los é o que impede o conferidor de pedir `.acao`, `.passiva` e
-     * `.reacao`, que nunca existiram.
-     */
-    const montaSufixo = /--\$\{/.test(dentro);
-    if (!montaSufixo) {
-      /*
-       * `${cond ? 'x' : ''}` aqui é classe de verdade — mas o lado da
-       * COMPARAÇÃO não é: em `${c.origem === 'multiclasse' ? 'selo--mestre' : ''}`
-       * só o segundo literal vira classe. Por isso o que vem logo depois de um
-       * operador de igualdade é descartado.
-       */
-      const semComparacao = dentro.replace(/[=!]==?\s*(?:'[^']*'|"[^"]*")/g, ' ');
-      for (const s of semComparacao.matchAll(/'([\w-]+)'|"([\w-]+)"/g)) usadasMesmo.add(s[1] ?? s[2]);
-    }
-    for (const p of dentro.replace(/\$\{[^}]*\}/g, ' ').split(/\s+/)) {
-      // pedaço terminado em `--` é prefixo de classe montada, não classe
-      if (p && /^[a-zA-Z][\w-]*$/.test(p) && !p.endsWith('--')) usadasMesmo.add(p);
-    }
+    classesDoLiteral(m[1] ?? m[2] ?? m[3] ?? '', guardar);
   }
-  for (const m of txt.matchAll(/classList\.\w+\(\s*['"`]([\w-]+)/g)) usadasMesmo.add(m[1]);
-  for (const m of txt.matchAll(/setAttribute\(\s*['"`]class['"`]\s*,\s*['"`]([^'"`]+)/g)) {
-    for (const p of m[1].split(/\s+/)) if (p) usadasMesmo.add(p);
+  for (const m of txt.matchAll(/classList\.\w+\(\s*['"`]([\w-]+)/g)) guardar(m[1]);
+  /*
+   * `setAttribute('class', …)` recebe o MESMO tipo de texto que `class:` —
+   * inclusive template com `${…}` dentro. Ler só até o primeiro apóstrofo
+   * fazia o conferidor pedir regra para `.${grande` e `.?`.
+   */
+  for (const m of txt.matchAll(/setAttribute\(\s*['"`]class['"`]\s*,\s*(?:`([^`]*)`|'([^']*)'|"([^"]*)")/g)) {
+    classesDoLiteral(m[1] ?? m[2] ?? m[3] ?? '', guardar);
   }
 }
 for (const [, txt] of HTML) {

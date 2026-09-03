@@ -146,4 +146,12 @@ await p.getByRole('button', { name: 'Ver o que muda' }).click();
 await p.waitForSelector('.descanso__mudancas', { timeout: 20000 });
 await foto('m6-descanso-da-mesa');
 
+// O fim da página da Mesa: descanso e as dobras de ajuste.
+// Fecha o modal que ficou aberto do passo anterior — ele intercepta o clique.
+await p.keyboard.press('Escape');
+await p.waitForSelector('.modal', { state: 'detached', timeout: 10000 }).catch(() => {});
+await p.getByRole('tab', { name: 'Mesa' }).click();
+await p.locator('.mestre__corpo').evaluate((e) => { e.scrollTop = e.scrollHeight; });
+await foto('m1b-mesa-fim');
+
 await nav.close(); servidor.close(); process.exit(0);

@@ -68,11 +68,14 @@
   gap: 6px;
   min-height: var(--alvo-min);
   padding: 4px 10px;
+  border: 1px solid var(--cor-ouro-escuro);
+  background: rgba(0, 0, 0, .25);
+  color: var(--cor-ouro-claro);
   font-size: var(--txt-xs);
-  padding: 2px var(--e2);
-  font-size: var(--txt-xs);
+  font-weight: 600;
   letter-spacing: 0;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .ficha__identidade { flex: 1 1 auto; min-width: 0; }
@@ -152,6 +155,79 @@
   gap: var(--e3);
 }
 
+/*
+ * A contagem à direita do título da seção.
+ *
+ * Não é enfeite: é a mesma pergunta que o resumo da dobra responde ("quantas
+ * condições eu tenho agora?"), respondida sem descer os olhos até as pílulas.
+ */
+.ficha__secaoConta {
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-sm);
+  font-weight: 700;
+  color: var(--cor-texto-fraco);
+}
+
+/* ==========================================================================
+   DOBRA — a seção que fica fechada até alguém precisar dela
+
+   Marcadores, Características e Ficha paralela quase nunca são olhadas no meio
+   de uma cena, e abertas empurravam "Descansar" para fora da tela. Fechadas,
+   custam uma linha cada — e a linha já diz o que tem dentro.
+   ========================================================================== */
+
+.dobra {
+  border-top: 1px solid var(--cor-borda);
+}
+
+/* A primeira da pilha não precisa do filete: o bloco acima já separou. */
+.dobra + .dobra { border-top: 1px solid var(--cor-borda); }
+
+.dobra__topo {
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+  min-height: var(--alvo-toque);
+  padding: var(--e2) var(--e1);
+  cursor: pointer;
+  list-style: none;          /* mata o triângulo do navegador */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Safari desenha o marcador por um pseudo-elemento próprio. */
+.dobra__topo::-webkit-details-marker { display: none; }
+
+.dobra__topo:hover .dobra__nome { color: var(--cor-ouro-claro); }
+
+.dobra__nome {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-md);
+  color: var(--cor-texto);
+}
+
+/* O resumo é a informação da linha fechada — "1 ativo", "4", "não usada". */
+.dobra__resumo {
+  flex: 0 0 auto;
+  font-size: var(--txt-xs);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--cor-texto-fraco);
+}
+
+.dobra__seta {
+  flex: 0 0 auto;
+  display: flex;
+  color: var(--cor-texto-fraco);
+  transition: transform var(--transicao);
+}
+
+/* Aberta, a seta aponta para baixo — para o conteúdo que ela revelou. */
+.dobra[open] > .dobra__topo .dobra__seta { transform: rotate(90deg); }
+
+.dobra__corpo { padding: var(--e2) var(--e1) var(--e4); }
+
 .ficha__secao {
   font-family: var(--fonte-titulo);
   font-size: var(--txt-md);
@@ -209,7 +285,25 @@
 }
 
 .ficha__abaIcone { font-size: 1.15rem; line-height: 1; }
-.ficha__abaRotulo { font-size: var(--txt-xs); letter-spacing: .02em; }
+.ficha__abaRotulo {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: var(--txt-xs);
+  letter-spacing: .02em;
+}
+
+/*
+ * O número ao lado do rótulo da aba: quantas cartas na mão, quantos itens na
+ * mochila. Fica em ouro e um pouco menor — ele acompanha a palavra, não
+ * disputa com ela. Zero não é desenhado (o JS não cria o nó).
+ */
+.ficha__abaConta {
+  font-family: var(--fonte-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cor-ouro);
+}
 
 /* ==========================================================================
    Trilhas de marcador — PV, Estresse, Armadura, Esperança
@@ -382,10 +476,17 @@
    Traços
    ========================================================================== */
 
+/*
+ * As pílulas de condição já trazem `margin-block: 6px` — é essa margem que
+ * abre a fileira de baixo e completa os 44px de alvo. Um `gap` vertical por
+ * cima dela somava duas vezes e a lista de condições virava um bloco alto.
+ * Só a folga HORIZONTAL fica com o contêiner.
+ */
 .ficha__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--e2);
+  column-gap: 6px;
+  row-gap: 0;
 }
 
 .chip {
@@ -415,6 +516,42 @@
   color: #f0d9a8;
   background: rgba(224, 162, 58, .12);
 }
+
+/*
+ * O "+" no fim da fileira de pílulas.
+ *
+ * Tracejado e redondo: a mesma língua de "aqui entra mais um" que os espaços
+ * vazios usam no resto da ficha. O BOTÃO guarda os 44px de alvo; o que se
+ * desenha tem 32px, para não ficar mais alto que as pílulas ao lado (E39).
+ */
+.chip--mais {
+  position: relative;        /* o círculo de 32px é um ::before ancorado aqui */
+  display: grid;
+  place-items: center;
+  width: var(--alvo-toque);
+  min-height: var(--alvo-toque);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--cor-texto-fraco);
+  font-size: var(--txt-lg);
+  line-height: 1;
+}
+
+.chip--mais::before {
+  content: '';
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border: 1px dashed var(--cor-borda-forte);
+  border-radius: 50%;
+}
+
+.chip--mais:hover { color: var(--cor-ouro-claro); }
+.chip--mais:hover::before { border-color: var(--cor-ouro-escuro); }
+
+/* O aviso de "nenhuma" divide a linha com o "+", em vez de ocupar uma só. */
+.ficha__chipsVazio { align-self: center; }
 
 .chip__marca {
   font-size: var(--txt-xs);
@@ -476,8 +613,6 @@
  * viravam um parágrafo corrido e ninguém achava onde uma acabava.
  */
 .ficha__carac p { white-space: pre-line; }
-
-.ficha__conjNota { margin: 0 0 var(--e3); }
 
 /*
  * Carta de subclasse: a barra lateral colorida das cartas de domínio marca o
@@ -912,9 +1047,15 @@
  * enquanto as trilhas — que se tocam a cena inteira — vivem em 22px de
  * retângulo. O peso na tela agora acompanha o peso no jogo.
  */
+/*
+ * Uma coluna, não duas.
+ *
+ * "Subir de nível" virou a pílula do cabeçalho, e sobrou só "Descansar" — que
+ * é a ação de mesa de verdade e pode ocupar a linha.
+ */
 .ficha__acoesGrandes {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: var(--e2);
 }
 
@@ -922,8 +1063,7 @@
 .ficha__acoesGrandes > .ficha__nota,
 .ficha__acoesGrandes > .btn--pequeno { grid-column: 1 / -1; }
 
-.ficha__botaoDescanso,
-.ficha__botaoNivel {
+.ficha__botaoDescanso {
   width: 100%;
   min-height: var(--alvo-toque);
   padding: var(--e2);

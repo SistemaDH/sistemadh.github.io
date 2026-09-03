@@ -113,9 +113,29 @@ export function abrirModal({ titulo, conteudo, acoes = [], aoFechar } = {}) {
   document.body.style.overflow = 'hidden';
   pilhaDeModais.push(registro);
 
-  // Foco no primeiro campo/botão, para o teclado do celular já aparecer.
+  /*
+   * Foco no primeiro campo/botão, para o teclado do celular já aparecer — MAS
+   * só se a pessoa não tiver chegado lá antes.
+   *
+   * Os 60ms existem porque o modal entra animado e focar durante a animação
+   * faz a tela pular. O problema é que são 60ms em que a caixa JÁ ESTÁ na
+   * tela e já aceita toque: quem tocar direto no terceiro campo tem o foco
+   * roubado no meio da digitação, e a tecla seguinte cai na caixa errada.
+   *
+   * Foi isso que produziu, num teste, uma contagem chamada "A ponte racha3"
+   * com o valor inicial intacto em 4: o "3" foi digitado no campo certo e
+   * pousou no primeiro, porque o `focus()` atrasado chegou entre uma coisa e
+   * outra. Num celular lento a janela é maior que 60ms, e o dedo é rápido.
+   *
+   * A regra: o foco automático é uma CORTESIA, e cortesia não passa na frente
+   * de quem já está fazendo.
+   */
   const focavel = caixa.querySelector('input, textarea, select, button');
-  if (focavel) setTimeout(() => focavel.focus(), 60);
+  if (focavel) setTimeout(() => {
+    const agora = document.activeElement;
+    if (agora && agora !== focavel && caixa.contains(agora)) return;
+    focavel.focus();
+  }, 60);
 
   return { fechar, caixa };
 }

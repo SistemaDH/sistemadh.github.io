@@ -28,12 +28,13 @@ import { prepararGlossario, nomeComGlossa } from '../glossario.js';
 import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js';
 import { botaoDeRegras } from './regras.js';
 import { abaBestiario } from './bestiario.js';
+import { icone } from '../componentes/icone.js';
 
 const ABAS = [
-  { id: 'mesa', rotulo: 'Mesa', icone: '👑' },
-  { id: 'contagens', rotulo: 'Contagens', icone: '⏳' },
-  { id: 'grupo', rotulo: 'Grupo', icone: '🛡' },
-  { id: 'bestiario', rotulo: 'Bestiário', icone: '🐉' }
+  { id: 'mesa', rotulo: 'Mesa', icone: 'mesa' },
+  { id: 'contagens', rotulo: 'Contagens', icone: 'contagens' },
+  { id: 'grupo', rotulo: 'Grupo', icone: 'grupo' },
+  { id: 'bestiario', rotulo: 'Bestiário', icone: 'bestiario' }
 ];
 
 /**
@@ -78,6 +79,9 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     overlay.remove();
     document.body.style.overflow = '';
     document.removeEventListener('keydown', aoTeclar);
+    // A memória das dobras vale por VISITA: quem volta ao painel encontra a
+    // página de relance de novo, e não os ajustes que abriu da última vez.
+    DOBRAS_DO_MESTRE.clear();
     if (aoFechar) aoFechar();
   }
 
@@ -144,7 +148,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       class: `mestre__aba ${aba.id === abaAtual ? 'esta-ativa' : ''}`,
       onClick: () => { abaAtual = aba.id; desenhar(); corpo.scrollTop = 0; }
     }, [
-      el('span', { class: 'mestre__abaIcone', 'aria-hidden': 'true' }, aba.icone),
+      el('span', { class: 'mestre__abaIcone', 'aria-hidden': 'true' }, icone(aba.icone, { grande: true })),
       el('span', { class: 'mestre__abaRotulo', texto: aba.rotulo })
     ]);
   }
@@ -155,7 +159,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       el('button', {
         type: 'button', class: 'btn btn--fantasma btn--icone',
         'aria-label': 'Voltar', onClick: fechar
-      }, '‹'),
+      }, icone('voltar', { grande: true })),
       el('div', { class: 'mestre__identidade' }, [
         el('h1', { class: 'mestre__titulo', texto: 'Painel do Mestre' }),
         el('p', { class: 'mestre__subtitulo', texto:
@@ -173,11 +177,150 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
    *  ABA MESA
    * ======================================================================== */
 
+  /**
+   * A MESA VIROU A PÁGINA DE RELANCE.
+   *
+   * Antes ela era mais uma aba de conteúdo: Medo, descanso, sessão e um texto
+   * de regras — e as três perguntas que o Mestre faz o tempo todo no meio de
+   * uma cena ("como está o grupo?", "que contagem está correndo?", "quem está
+   * em cena?") moravam cada uma numa aba diferente. Descobrir as três custava
+   * três trocas de aba e três voltas.
+   *
+   * Agora a Mesa RESUME as outras, cada bloco com o seu "abrir" para a tela
+   * cheia. É a mesma informação, na ordem em que ela é perguntada.
+   *
+   * O Medo continua INTEIRO aqui, e não resumido: ele é o único recurso que só
+   * o Mestre mexe, e é o mais tocado do painel. Resumir seria trocar um toque
+   * por dois na coisa mais frequente da tela.
+   */
   function abaMesa(pai) {
-    pai.append(secao(nomeAnotado('Medo'), blocoDeMedo()));
+    const m = painel.mesa;
+    pai.append(el('section', { class: 'mestre__bloco mestre__blocoDoMedo' }, [
+      topoDeResumo(nomeAnotado('Medo da mesa', { comGlossa: false }),
+        { conta: `${m.medo}/${painel.medoRegras.maximo}` }),
+      blocoDeMedo()
+    ]));
+    pai.append(resumoDoGrupo());
+    pai.append(resumoDasContagens());
+    pai.append(resumoDaCena());
     pai.append(secao('Descanso do grupo', blocoDeDescanso()));
-    pai.append(secao('Sessão e nível', blocoDeSessao()));
-    pai.append(secao('Como o Medo funciona', blocoDeRegrasDoMedo()));
+    pai.append(dobraDoMestre('Sessão e nível', `Sessão ${painel.mesa.sessao.numero || '—'}`,
+      blocoDeSessao()));
+    pai.append(dobraDoMestre('Ajustes da mesa',
+      painel.mesa.ouroComMoedas ? 'moedas ligadas' : '', blocoDeAjustesDaMesa()));
+    pai.append(dobraDoMestre('Como o Medo funciona', '', blocoDeRegrasDoMedo()));
+  }
+
+  /**
+   * O cabeçalho de um bloco-resumo: título à esquerda, "abrir" à direita.
+   *
+   * O "abrir" é um botão de verdade e leva para a aba inteira — não é um link
+   * decorativo. Quem só queria conferir para na linha de resumo.
+   */
+  function topoDeResumo(titulo, { conta = '', paraAba = null } = {}) {
+    return el('div', { class: 'mestre__resumoTopo' }, [
+      el('h2', { class: 'mestre__secao crescer' },
+        typeof titulo === 'string' ? nomeAnotado(titulo, { comGlossa: false }) : titulo),
+      conta ? el('span', { class: 'mestre__resumoConta', texto: conta }) : null,
+      paraAba ? el('button', {
+        type: 'button', class: 'mestre__abrir',
+        'aria-label': `Abrir ${paraAba.rotulo}`,
+        onClick: () => { abaAtual = paraAba.id; desenhar(); corpo.scrollTop = 0; }
+      }, [el('span', { texto: 'Abrir' }), icone('avancar')]) : null
+    ]);
+  }
+
+  /** "Como está o grupo" — uma linha por ficha, com as duas trilhas que doem. */
+  function resumoDoGrupo() {
+    const bloco = el('section', { class: 'mestre__bloco' }, [
+      topoDeResumo('Como está o grupo', { paraAba: { id: 'grupo', rotulo: 'a aba Grupo' } })
+    ]);
+
+    if (!painel.personagens.length) {
+      bloco.append(el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma ficha na mesa ainda.' }));
+      return bloco;
+    }
+
+    bloco.append(el('div', { class: 'mestre__resumoLista' }, painel.personagens.map((p) =>
+      el('div', { class: 'mestre__linhaDoGrupo' }, [
+        el('div', { class: 'mestre__linhaNome' }, [
+          el('span', { class: 'crescer', texto: p.nome }),
+          el('span', { class: 'mestre__linhaNivel', texto: `nv ${p.nivel}` })
+        ]),
+        /*
+         * PV e Estresse, e só. Armadura e Esperança estão na aba Grupo — aqui
+         * a pergunta é "quem está perto de cair?", e são estas duas que
+         * respondem.
+         */
+        el('div', { class: 'mestre__linhaTrilhas' }, [
+          miniPontos(p.pontosDeVida.marcados, p.pontosDeVida.maximo, 'pv',
+            `${p.nome}: ${p.pontosDeVida.marcados} de ${p.pontosDeVida.maximo} PV marcados`),
+          miniPontos(p.estresse.marcados, p.estresse.maximo, 'estresse',
+            `${p.nome}: ${p.estresse.marcados} de ${p.estresse.maximo} de Estresse`)
+        ]),
+        el('span', { class: 'mestre__linhaEsperanca',
+          title: `Esperança de ${p.nome}`, texto: String(p.esperanca.valor) })
+      ]))));
+    return bloco;
+  }
+
+  /** "Contagens em jogo" — só as que estão correndo. */
+  function resumoDasContagens() {
+    const ativas = painel.mesa.contagens.filter((c) => !c.encerrada);
+    const MOSTRA = 3;
+    const sobra = Math.max(0, ativas.length - MOSTRA);
+
+    const bloco = el('section', { class: 'mestre__bloco' }, [
+      // "+2" quer dizer "há mais duas que não couberam", e não um botão de
+      // somar: por isso vem antes do "Abrir", que é onde elas estão.
+      topoDeResumo('Contagens em jogo', {
+        conta: sobra ? `+${sobra}` : '',
+        paraAba: { id: 'contagens', rotulo: 'a aba Contagens' }
+      })
+    ]);
+
+    if (!ativas.length) {
+      bloco.append(el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma contagem correndo.' }));
+      return bloco;
+    }
+
+    bloco.append(el('div', { class: 'mestre__resumoLista' },
+      ativas.slice(0, MOSTRA).map((c) => el('div', { class: 'mestre__linhaSimples' }, [
+        el('span', { class: 'crescer', texto: c.nome }),
+        miniPontos(c.valor, c.valorInicial, 'contagem',
+          `${c.nome}: ${c.valor} de ${c.valorInicial}`),
+        el('span', { class: 'mestre__linhaConta', texto: `${c.valor}/${c.valorInicial}` })
+      ]))));
+    return bloco;
+  }
+
+  /** "Em cena" — os adversários que estão na mesa agora. */
+  function resumoDaCena() {
+    const enc = painel.encontro || { adversarios: [] };
+    const vivos = enc.adversarios || [];
+
+    const bloco = el('section', { class: 'mestre__bloco' }, [
+      topoDeResumo('Em cena', {
+        conta: enc.nome || '',
+        paraAba: { id: 'bestiario', rotulo: 'o bestiário e a cena' }
+      })
+    ]);
+
+    if (!vivos.length) {
+      bloco.append(el('p', { class: 'texto-sm texto-fraco', texto: 'Ninguém em cena.' }));
+      return bloco;
+    }
+
+    bloco.append(el('div', { class: 'mestre__resumoLista' },
+      vivos.slice(0, 5).map((a) => el('div', {
+        class: `mestre__linhaSimples ${a.derrotado ? 'esta-derrotado' : ''}`
+      }, [
+        el('span', { class: 'crescer', texto: a.nome }),
+        el('span', { class: 'mestre__linhaConta', texto: `DIF ${a.dificuldade ?? '—'}` }),
+        miniPontos(a.pvMarcados || 0, a.pontosDeVida || 0, 'pv',
+          `${a.nome}: ${a.pvMarcados || 0} de ${a.pontosDeVida || 0} PV`)
+      ]))));
+    return bloco;
   }
 
   /**
@@ -188,13 +331,21 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
   function blocoDeMedo() {
     const m = painel.mesa;
     const max = painel.medoRegras.maximo;
-    const pontos = el('div', { class: 'trilha__pontos', role: 'group', 'aria-label': 'Medo' });
+    /*
+     * O Medo tem GLIFO PRÓPRIO — a chama.
+     *
+     * Ele usava o mesmo retângulo do Estresse da ficha, na mesma cor: dois
+     * conceitos com um desenho só, e a mesa tinha de lembrar em qual tela
+     * estava para saber o que estava olhando. Agora o violeta e a chama são
+     * dele, e o Estresse ficou com o azul.
+     */
+    const pontos = el('div', { class: 'medo__trilha', role: 'group', 'aria-label': 'Medo' });
 
     for (let i = 1; i <= max; i++) {
       const cheio = i <= m.medo;
       pontos.append(el('button', {
         type: 'button',
-        class: `trilha__ponto trilha__ponto--medo ${cheio ? 'esta-cheio' : ''}`,
+        class: `medo__chama trilha__ponto trilha__ponto--medo ${cheio ? 'esta-cheio' : ''}`,
         'aria-label': `Medo: ${i} de ${max}`,
         'aria-pressed': cheio ? 'true' : 'false',
         // Quantos estão cheios se lê da TELA, não da closure: o painel deixou
@@ -207,19 +358,16 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       }));
     }
 
+    /*
+     * SEM + E −, como as trilhas da ficha (K3).
+     *
+     * Os dois botões diziam a mesma coisa que a chama já dizia, e ocupavam a
+     * linha inteira do topo do bloco. O gesto do Medo é o mesmo das trilhas de
+     * PV e Estresse — tocar na chama N põe o Medo em N, tocar na última acesa
+     * apaga ela —, e o dedo não deve aprender duas gramáticas para a mesma
+     * coisa. A conta subiu para o cabeçalho da seção.
+     */
     return el('div', { class: 'trilha trilha--medoMesa' }, [
-      el('div', { class: 'trilha__topo' }, [
-        el('span', { class: 'trilha__rotulo', texto: 'Pontos de Medo' }),
-        el('span', { class: 'trilha__conta', texto: `${m.medo}/${max}` }),
-        el('button', {
-          type: 'button', class: 'btn btn--contador', 'aria-label': 'Gastar 1 Medo',
-          onClick: () => mexerNoMedo({ delta: -1 })
-        }, '−'),
-        el('button', {
-          type: 'button', class: 'btn btn--contador', 'aria-label': 'Ganhar 1 Medo',
-          onClick: () => mexerNoMedo({ delta: 1 })
-        }, '+')
-      ]),
       pontos,
       el('p', { class: 'trilha__ajuda', texto: painel.medoRegras.entreSessoes })
     ]);
@@ -236,7 +384,12 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       n.classList.toggle('esta-cheio', i < quantos);
       n.setAttribute('aria-pressed', i < quantos ? 'true' : 'false');
     });
-    const conta = corpo.querySelector('.trilha--medoMesa .trilha__conta');
+    /*
+     * A conta subiu para o CABEÇALHO da seção quando o + e o − saíram — e o
+     * painel não é redesenhado quando o servidor concorda, então quem atualiza
+     * o número é este pincel, como faz com as chamas.
+     */
+    const conta = corpo.querySelector('.mestre__blocoDoMedo .mestre__resumoConta');
     if (conta) conta.textContent = `${quantos}/${painel.medoRegras.maximo}`;
   }
 
@@ -301,8 +454,8 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     const m = painel.mesa;
     return el('div', { class: 'pilha' }, [
       el('div', { class: 'ficha__grade' }, [
-        caixinha('Sessão', m.sessao.numero || '—'),
-        caixinha('Nível da mesa', m.nivelDaMesa),
+        caixinha(gatilhoPara('Sessão', 'limites-de-uso'), m.sessao.numero || '—'),
+        caixinha(gatilhoPara('Nível da mesa', 'avanco'), m.nivelDaMesa),
         caixinha('Fichas', painel.personagens.length)
       ]),
       el('div', { class: 'mestre__botoes' }, [
@@ -336,6 +489,20 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
           } catch (e) { avisarErro(mensagemDoErro(e)); }
         })
       ]),
+    ]);
+  }
+
+  /**
+   * OS AJUSTES DA MESA, separados de "Sessão e nível".
+   *
+   * Moldura de campanha e ouro em moedas não são sessão nem nível: são
+   * escolhas que valem para a mesa inteira e se mexem uma vez, no começo da
+   * campanha. Estavam penduradas no fim do bloco de sessão só porque não
+   * tinham outro lugar — e quando a Mesa virou página de relance, ficaram
+   * escondidas dentro de uma dobra com o nome errado.
+   */
+  function blocoDeAjustesDaMesa() {
+    return el('div', { class: 'pilha' }, [
       blocoDaMoldura(),
       blocoDasMoedas()
     ]);
@@ -1049,6 +1216,26 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     ]);
   }
 
+  /**
+   * Só os pontinhos, sem rótulo nem conta — para caber numa linha de resumo.
+   *
+   * O `title` carrega o que o rótulo diria, e o `aria-label` faz o grupo ser
+   * anunciado inteiro em vez de ponto a ponto.
+   */
+  function miniPontos(valor, maximo, classe, descricao) {
+    const pontos = el('div', {
+      class: 'mestre__miniPontos', role: 'img',
+      'aria-label': descricao, title: descricao
+    });
+    for (let i = 1; i <= Math.max(0, maximo); i++) {
+      pontos.append(el('span', {
+        class: `mestre__miniPonto mestre__miniPonto--${classe} ${i <= valor ? 'esta-cheio' : ''}`,
+        'aria-hidden': 'true'
+      }));
+    }
+    return pontos;
+  }
+
   /** Uma trilha em miniatura, só para ver de relance. */
   function mini(rotulo, valor, maximo, classe) {
     const pontos = el('div', { class: 'mestre__miniPontos' });
@@ -1070,17 +1257,70 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
  *  Peças soltas
  * ========================================================================== */
 
+/**
+ * A mesma dobra da ficha, no painel.
+ *
+ * "Sessão e nível" e "Como o Medo funciona" são consulta, não jogo: a primeira
+ * se mexe uma vez por sessão, a segunda é texto de regra que se lê uma vez.
+ * Abertas, empurravam para fora da tela justamente os três resumos que a Mesa
+ * passou a existir para mostrar.
+ *
+ * Reaproveita a classe `.dobra` (mora em `ficha.css`, e é da interface inteira)
+ * em vez de uma cópia local: duas dobras com aparências diferentes na mesma
+ * mesa seriam duas coisas para o dedo aprender.
+ */
+const DOBRAS_DO_MESTRE = new Map();
+
+function dobraDoMestre(titulo, resumo, conteudo) {
+  const caixa = el('details', { class: 'dobra' });
+  /*
+   * QUEM ABRIU, ABRIU — mesma regra da ficha.
+   *
+   * `desenhar()` reconstrói o painel a cada ação, e sem memória a dobra se
+   * fecharia no primeiro botão apertado dentro dela: abrir sessão nova
+   * fecharia a seção de sessão antes de dar tempo de anunciar o nível.
+   */
+  if (DOBRAS_DO_MESTRE.get(titulo)) caixa.open = true;
+  caixa.addEventListener('toggle', () => DOBRAS_DO_MESTRE.set(titulo, caixa.open));
+  caixa.append(
+    el('summary', { class: 'dobra__topo' }, [
+      el('span', { class: 'dobra__nome' }, nomeAnotado(titulo, { comGlossa: false })),
+      resumo ? el('span', { class: 'dobra__resumo', texto: resumo }) : null,
+      el('span', { class: 'dobra__seta', 'aria-hidden': 'true' }, icone('avancar'))
+    ]),
+    el('div', { class: 'dobra__corpo' }, conteudo)
+  );
+  return caixa;
+}
+
 function secao(titulo, conteudo) {
-  // O título pode vir como NÓ (um rótulo com verbete), não só como texto.
+  /*
+   * O título pode vir como NÓ (um rótulo com verbete já montado à mão), e
+   * quando vem como texto ele mesmo tenta virar gatilho: "Contagens",
+   * "Adversários", "Ambientes" são palavras de regra, e o cabeçalho é onde
+   * quem não conhece a palavra passa primeiro.
+   */
   const cabeca = el('h2', { class: 'mestre__secao' });
-  if (typeof titulo === 'string') cabeca.textContent = titulo;
+  if (typeof titulo === 'string') cabeca.append(nomeAnotado(titulo, { comGlossa: false }));
   else cabeca.append(titulo);
   return el('section', { class: 'mestre__bloco' }, [cabeca, conteudo]);
 }
 
+/**
+ * A caixinha aceita um NÓ no rótulo além do texto.
+ *
+ * "Sessão" e "Nível da mesa" são rótulos NOSSOS: não existem com esse nome no
+ * livro, então `nomeAnotado` nunca acharia verbete para eles. Mas o que eles
+ * significam está no livro — o que uma sessão delimita, e o que subir de
+ * nível quer dizer. `gatilhoPara` liga o rótulo da tela ao verbete certo sem
+ * fingir que o livro usa a nossa palavra.
+ */
 function caixinha(rotulo, valor) {
+  const nome = el('span', { class: 'ficha__caixinhaRotulo' });
+  if (typeof rotulo === 'string') nome.append(nomeAnotado(rotulo, { comGlossa: false }));
+  else nome.append(rotulo);
   return el('div', { class: 'ficha__caixinha' }, [
-    el('span', { class: 'ficha__caixinhaRotulo', texto: rotulo }),
+    nome,
     el('strong', { class: 'ficha__caixinhaValor', texto: String(valor) })
   ]);
 }

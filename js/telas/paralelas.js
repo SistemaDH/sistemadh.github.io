@@ -25,6 +25,7 @@ import { mensagemDoErro } from '../api.js';
 import * as dados from '../dados.js';
 import { nomeComGlossa } from '../glossario.js';
 import { textoAnotado } from '../verbete.js';
+import { icone } from '../componentes/icone.js';
 
 /** Qual ficha paralela cada classe/subclasse pode ter. */
 const QUEM_PODE = [
@@ -296,7 +297,7 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
             type: 'button', class: 'btn btn--fantasma btn--icone',
             'aria-label': `Tirar ${x.nome}`,
             onClick: () => salvarExps(exps.filter((_, i) => i !== indice), 'Experiência removida.')
-          }, '🗑')
+          }, icone('lixeira'))
         ])))
         : el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma Experiência anotada ainda.' }),
       el('div', { class: 'ficha__novoItem' }, [

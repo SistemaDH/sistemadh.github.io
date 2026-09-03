@@ -477,7 +477,19 @@ function executar_(p) {
           tiposDeAdversario: TIPOS_DE_ADVERSARIO,
           tiposDeAmbiente: TIPOS_DE_AMBIENTE,
           guiaDeBatalha: GUIA_DE_BATALHA,
-          pontosDeBatalha: pontosDeBatalha_(fichas.length, [])
+          pontosDeBatalha: pontosDeBatalha_(fichas.length, []),
+          /*
+           * O ENCONTRO VEM JUNTO.
+           *
+           * A página da Mesa passou a resumir o que está em cena, e ela é
+           * desenhada de uma vez a partir deste payload. Sem isto seria uma
+           * segunda chamada de rede só para escrever duas linhas — e no meio
+           * de um combate, com o Mestre alternando entre as abas, era a
+           * chamada que mais se repetiria.
+           *
+           * Já sai da mesma leitura de `m`: não custa nada além do tamanho.
+           */
+          encontro: encontroParaTela_(m, fichas.length)
         });
       }
 

@@ -15,6 +15,7 @@
 import { el, limpar, adiar } from '../util.js';
 import { abrirModal } from '../ui.js';
 import { prepararVerbetes, todosOsVerbetes, abrirVerbete } from '../verbete.js';
+import { icone } from '../componentes/icone.js';
 
 /**
  * O nome de cada categoria e a ORDEM em que aparecem.
@@ -154,5 +155,5 @@ export function botaoDeRegras() {
     'aria-label': 'Regras do livro',
     title: 'Procurar uma regra',
     onClick: () => abrirIndiceDeRegras()
-  }, '📖');
+  }, icone('regras'));
 }

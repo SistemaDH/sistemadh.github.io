@@ -169,16 +169,17 @@ await marcarEEsperar('.papel__armaduraSlots .papel__slot', 0);
 await foto('f1-jogo-topo');
 
 // Uma condição marcada, para o chip aparecer.
-await p.getByRole('button', { name: '+ Condição' }).click();
+await p.getByRole('button', { name: 'Adicionar uma condição' }).click();
 await p.waitForSelector('.modal__caixa');
 await foto('f2-escolher-condicao');
 await p.locator('.modal__caixa .cartao--clicavel').first().click();
 await p.waitForSelector('.chip--condicao', { timeout: 20000 });
 
-// O miolo da aba Jogo: defesas, traços, condições e equipamento.
-await p.locator('.tracos').scrollIntoViewIfNeeded();
-await foto('f2b-jogo-meio');
+// O miolo da aba Jogo: o topo (foto + traços), a tabela de equipamento e as
+// condições logo abaixo dela.
 await p.locator('.retrato').scrollIntoViewIfNeeded();
+await foto('f2b-jogo-meio');
+await p.locator('.equip').scrollIntoViewIfNeeded();
 await foto('f2c-jogo-equipamento');
 
 // O editor de foto: escolher, enquadrar e subir (K5).
@@ -309,10 +310,12 @@ await p.keyboard.press('Escape');
 await p.waitForSelector('.modal__caixa--descanso', { state: 'detached', timeout: 10000 });
 
 await p.getByRole('tab', { name: 'Jogo' }).click();
-await p.locator('.ficha__botaoNivel').scrollIntoViewIfNeeded();
+// O rodapé da aba Jogo ficou só com "Descansar": subir de nível é a pílula do
+// cabeçalho agora.
+await p.locator('.ficha__botaoDescanso').scrollIntoViewIfNeeded();
 await foto('f11-botoes-da-ficha');
 
-await p.getByRole('button', { name: /Subir para o nível/ }).click();
+await p.locator('.ficha__topo .selo--nivel').click();
 await p.waitForSelector('.avanco__opcao', { timeout: 25000 });
 await foto('f12-avanco-conquista');
 

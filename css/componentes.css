@@ -342,3 +342,25 @@
   color: var(--cor-texto);
   margin-bottom: var(--e2);
 }
+
+/* ==========================================================================
+   ÍCONES DE TRAÇO
+
+   Os emoji do sistema operacional entram na tela com a paleta deles: um 🎒
+   vermelho e um 🐉 verde no meio de uma interface dourada sobre roxo, cada
+   aparelho desenhando de um jeito. O ícone de traço único usa a cor do texto
+   em volta — ele pertence à tela em vez de visitá-la.
+   ========================================================================== */
+
+.icone {
+  width: 1.15em;
+  height: 1.15em;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icone--grande { width: 1.4em; height: 1.4em; }

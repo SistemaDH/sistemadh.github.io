@@ -669,3 +669,307 @@ combate é pior do que piscar.
 
 Mesma receita, e a mesma prova: o passo de e2e anota um nó da trilha de Medo e
 confere que ele continua no documento depois da gravação.
+
+## 15. O pacote do Claude Design, integrado (K14)
+
+A Vanessa mandou `Verificação do sistema compartilhado.zip` — seis folhas de
+CSS reescritas ("direção 1d") e um LEIA-ME listando o que só o JS/HTML podia
+fazer. As folhas entraram; este item é o resto da lista.
+
+### As duas decisões que o pacote pedia para confirmar
+
+Ele propunha uma **troca de cores** e uma **mudança de lugar**, e as duas
+mexem em hábito de mesa, então foram perguntadas antes:
+
+- **Estresse fica azul, Armadura vai para o ouro.** Estresse dividia o violeta
+  com o Medo e a Armadura dividia o azul. Uma das duas tinha de sair. Com o
+  violeta exclusivo do Medo, a trilha cheia de Estresse na ficha e o Medo no
+  cabeçalho do Mestre deixam de ser a mesma cor — e são as duas coisas que
+  ninguém pode confundir no meio de uma cena. Evasão e Armadura ficam as duas
+  em ouro, e o que separa uma da outra passa a ser a **forma**: losango
+  facetado para a Evasão (esquivar é desviar), escudo com nervuras para a
+  Armadura. No celular, com 60px, a forma se lê e a cor não.
+- **Subir de nível sai do rodapé e vira a pílula do cabeçalho.** O gesto é
+  sobre o nível, e o nível está escrito lá em cima; procurar um botão no fim
+  da aba Jogo para mexer num número do cabeçalho era pedir para rolar a tela
+  inteira. A seta só aparece quando **há avanço a escolher** — sem pendência a
+  pílula continua sendo o rótulo que ela sempre foi, e que também abre o
+  painel. "Descansar" ficou sozinho no rodapé, em largura inteira, que é o
+  tamanho de uma ação de mesa.
+
+### Os emoji saíram
+
+Emoji não é desenho da interface: é um caractere que cada sistema desenha do
+jeito dele, com a paleta dele. Um 🎒 vermelho e um 🐉 verde no meio de uma tela
+dourada sobre roxo não são escolha de ninguém — são o Android e o iOS
+discordando dentro da mesma mesa, e o mesmo ícone mudando de forma entre dois
+celulares. Ruim em qualquer lugar; pior numa **barra de abas**, que a pessoa
+aprende pelo formato.
+
+`js/componentes/icone.js` tem 15 ícones de traço único numa grade de 24, e a
+espessura mora no CSS — o conjunto inteiro muda de peso num lugar só. Como
+herdam `currentColor`, o ícone da aba ativa fica dourado com a aba e o da
+lixeira apaga junto com o botão: ele pertence à tela em vez de visitá-la.
+
+### As palavras que faltavam explicar
+
+O pacote pedia gatilho de verbete em dez lugares. A maioria já tinha — o que
+faltava era estrutural, e virou duas mudanças de uma linha cada:
+
+- **O título da seção é um gatilho** quando o termo tem verbete. "Condições",
+  "Experiências", "Inventário", "Ouro" são palavras de regra, e quem abre a
+  seção pela primeira vez é exatamente quem quer saber o que ela quer dizer.
+  Antes o verbete só existia dentro do texto das cartas — longe de quem estava
+  perdido.
+- **A caixinha aceita um nó no rótulo.** "Sessão" e "Nível da mesa" são
+  rótulos NOSSOS: não existem com esse nome no livro, e `nomeAnotado` nunca
+  acharia verbete para eles. Mas o que eles significam está lá, e
+  `gatilhoPara` liga o rótulo da tela ao verbete certo sem fingir que o livro
+  usa a nossa palavra.
+
+A faixa dos limiares já era um botão que abre "Limiares de Dano" — mas **nada
+na tela dizia isso**, e quem não sabe o que "Severo" quer dizer é justamente
+quem não vai adivinhar que dá para tocar. MENOR · MAIOR · SEVERO herdaram o
+pontilhado do verbete. Não podem receber a classe de verdade porque ela é um
+`<button>`, e botão dentro de botão não existe.
+
+### Dois defeitos que só aparecem quando se olha
+
+- **`font: inherit` não carrega `text-transform`** — e a folha do próprio
+  navegador põe `text-transform: none` em todo controle de formulário. O
+  gatilho recém-nascido no cabeçalho saía "Condições" no meio de "MARCADORES"
+  e "CARACTERÍSTICAS", como se fosse outro tipo de título.
+- **`overflow-wrap: anywhere` mata a hifenização.** Com ponto de quebra em
+  toda letra, o navegador nunca chega a tentar o hífen, e "CONHECIMENTO"
+  quebrava em "CONHECIMEN / TO" — que se lê como duas palavras. `break-word`
+  só parte no meio depois que a hifenização não deu conta; e como o dicionário
+  de português pode não existir no celular, o ponto de quebra é dito na mão,
+  com um hífen invisível (U+00AD). Se couber numa linha ele não aparece.
+
+### O texto que mentia
+
+"Some seu nível atual aos limiares de dano" estava embaixo da faixa desde o
+começo — e o app **já soma** (`lim.menor + nivel`, em `48_Criacao`). Quem
+seguisse a instrução somaria o nível duas vezes e levaria menos dano do que
+devia, na direção que ninguém percebe. No lugar dela entrou o que a ficha de
+papel não diz: o que os dois números **são**.
+
+### O conferidor de CSS aprendeu a ler `setAttribute`
+
+Ele lia `class:` com cuidado e `setAttribute('class', …)` na força bruta,
+parando no primeiro apóstrofo de dentro de um `${…}`. Com o `icone.js` novo,
+passou a pedir regra para `.${grande` e `.?`. Os dois literais carregam o
+mesmo tipo de texto, e agora passam pela mesma função.
+
+## 16. Os mockups do Claude Design (K15) — parte 1: o topo
+
+A Vanessa mandou três imagens dizendo "que isso, tá tudo errado". Elas não são
+o app rodando: a Lyra Sombravento é a personagem de teste do nosso sistema, mas
+lá ela é Guerreiro/Chamada do Matador nível 5, e a nossa é Bardo/Músico Errante
+nível 1 — e "Bren Mãodepedra", "Nima Trêsluas" e "Ritual do porão" não existem
+em lugar nenhum do repositório. São **mockups do Claude Design**, feitos a
+partir das nossas capturas, e o que eu tinha entregue não chegava perto.
+
+O pacote anterior era só CSS com um LEIA-ME de sete itens; os mockups pedem
+outra arquitetura de tela. Ficou combinado fazer parte por parte, e esta é a
+primeira: o topo.
+
+### Traço e equipamento trocaram de lugar
+
+Os dois estavam no lugar errado pelo mesmo motivo, e ninguém tinha percebido
+porque cada um foi decidido numa rodada diferente:
+
+- **Traço é o número mais tocado da ficha inteira** — um por jogada de dado — e
+  morava numa seção própria abaixo do bloco de papel, em seis escudos grandes.
+- **Equipamento é o que menos muda durante uma cena** — troca-se de arma uma
+  vez por sessão, quando se troca — e ocupava metade do topo.
+
+Trocaram. Os traços sobem para o lado do retrato; o equipamento desce para
+depois do bloco de papel. A regra que saiu disso vale para a ficha inteira e
+agora é medida por teste: **a ordem dos blocos segue a frequência de uso**.
+
+### A sigla de três letras
+
+O que permite os seis caberem ao lado da foto é a abreviação: AGI, FOR, FIN,
+INS, PRE, CON. Isso encerra de vez a briga de dois meses com "CONHECIMENTO",
+que não cabia em cartão nenhum e vinha sendo hifenizado à mão.
+
+Abreviar rótulo é perigoso em geral — duas siglas iguais fazem a pessoa tocar
+no errado —, e aqui é seguro por dois motivos: os traços são um conjunto
+**fechado** de seis nomes do livro, e as seis siglas não colidem. Como isso é
+uma condição e não uma garantia, o mapa é escrito à mão (e não cortado com
+`slice`, que daria as seis certas hoje e erradas no dia em que alguém traduzir
+um nome), e o teste confere que continuam seis e diferentes.
+
+O que a sigla não diz, o toque diz: nome inteiro, termo da Jambô, verbos de
+exemplo e texto do livro estão todos no modal — e o nome inteiro também está no
+`aria-label`, para quem ouve a tela.
+
+### A frase que a cor sozinha não dá
+
+O selo "conjuração" dentro do cartão dizia QUE aquele traço era o de
+Conjuração, mas não dizia o que isso significa nem que dava para trocar. No
+lugar dele, uma frase fecha o bloco: **"Presença é seu traço de Conjuração."** —
+com "Conjuração" levando ao verbete, e com a menção à troca quando a
+multiclasse deu dois. O ladrilho dourado passa a ter legenda; antes a cor era
+enfeite.
+
+### "nenhuma", e a linha que não some
+
+A tabela de equipamento tem sempre três linhas, esteja o personagem equipado ou
+não. O buraco no lugar da arma secundária **é informação** — é o que alguém
+olha ao decidir se pega um escudo —, e uma tabela que muda de tamanho conforme
+a ficha não se lê de relance.
+
+O texto virou "nenhuma", como pedia o LEIA-ME. O "nada equipado" de antes era
+neutro por medo de errar o gênero; não precisava — arma primária, arma
+secundária e armadura são as três femininas.
+
+### Dois efeitos colaterais
+
+- **"ESTRESSE" passou a estourar a coluna do rótulo.** Não foi esta rodada: foi
+  o `text-transform: inherit` da rodada passada, que fez o gatilho de verbete
+  finalmente herdar o versalete da linha — e em versalete a palavra não cabe.
+  Virou "ESTR.", como no mockup, com o verbete ligado por id (`gatilhoPara`),
+  porque "Estr." não é palavra do livro e nenhuma busca por texto acharia a
+  regra do Estresse.
+- **A zona morta cobrou pela terceira vez.** `const SIGLA_DE_TRACO` nasceu
+  dentro de `abrirFichaEmJogo`, e `desenhar()` roda antes do fim dela: tela
+  branca com "Cannot access 'SIGLA_DE_TRACO' before initialization". Já tinha
+  acontecido com `FORMA_EVASAO`. Agora é invariante escrito (E75), com as
+  constantes todas no topo do módulo e o comentário dizendo o porquê.
+
+### O que continua aberto
+
+Os mockups pedem mais três partes, e elas estão no BACKLOG como K16, K17 e K18:
+o bloco de papel (trilhas só com o que o personagem tem, limiares em uma linha,
+Esperança em pílula, carta de Esperança inline), as seções que colapsam
+(Marcadores, Características, Ficha paralela viram linhas com resumo à direita;
+contadores nas abas) e o painel do Mestre em página única.
+
+### Um bônus: o teste intermitente era bug de verdade
+
+O passo "criar uma contagem regressiva" já tinha falhado uma vez lendo `4` onde
+devia ler `3`, e da outra vez o culpado foi o próprio teste (um `.last()` que
+reavaliava). Desta vez a captura da falha entregou a coisa: a contagem tinha
+saído chamada **"A ponte racha3"**, com o valor inicial intacto em 4. O "3" foi
+digitado no campo certo e pousou no primeiro.
+
+O modal foca o primeiro campo 60ms depois de abrir — o atraso existe para não
+fazer a tela pular durante a animação de entrada. Só que nesses 60ms a caixa
+**já está na tela e já aceita toque**. Quem toca direto no terceiro campo tem o
+foco arrancado no meio da digitação, e a tecla seguinte cai onde o app decidiu,
+não onde a pessoa está olhando.
+
+Num teste automatizado isso acontece quase sempre que a máquina está rápida.
+Num celular lento a janela é maior que 60ms — e o dedo é rápido. Vale a regra:
+foco automático é cortesia, e cortesia não passa na frente de quem já está
+fazendo. Agora o `focus()` atrasado desiste se a pessoa já estiver num campo do
+próprio modal (E76).
+
+### As formas das defesas estavam trocadas
+
+A Vanessa olhou o topo pronto e apontou uma coisa que eu não teria achado
+sozinho: **o losango que eu tinha dado à Evasão é a forma da Esperança**.
+
+Fui à ficha oficial (`Character-Sheets-and-Guides-Daggerheart`, p.1) e é isso:
+
+| Na ficha impressa | O que é |
+|---|---|
+| Losango | **Esperança** — seis deles numa barra com separadores |
+| Placa em arco (cúpula em cima, base reta) | **Evasão** |
+| Escudo de brasão (entalhe no topo, ponta embaixo) | **Armadura** |
+| O mesmo escudo em miniatura, doze vezes | **espaços de Armadura** |
+
+O erro não é estético. Duas coisas diferentes com a mesma silhueta na mesma
+tela **ensinam o símbolo errado** — quem aprendeu na ficha de papel bate o olho
+no losango e lê Esperança. E a justificativa que eu tinha escrito no código
+("esquivar é desviar, não aparar") era raciocínio meu, não coisa do livro: é
+exatamente o tipo de invenção que a regra da mesa proíbe.
+
+De quebra, os doze espaços de Armadura eram gotas arredondadas, também
+inventadas aqui. Viraram o escudo grande em miniatura, que é o que a ficha traz
+— e a repetição da forma é o que liga o espaço ao escudo sem precisar de
+rótulo. Continuam com o tracejado nos que o personagem ainda não tem, a mesma
+língua dos quadradinhos de PV e Estresse; por isso são SVG e não `clip-path`,
+que recortaria a borda tracejada junto (E77).
+
+## 17. As outras três partes dos mockups (K16, K17, K18)
+
+### O bloco de papel: trilhas grandes, e uma divergência assumida
+
+A ficha impressa desenha as **doze** caixas de PV sempre, tracejando as que o
+personagem ainda não tem. Numa folha A4 aquilo cabe e é bonito — diz, sem
+escrever, quanto ainda dá para crescer. Numa linha de 390px, doze caixas dão
+25px cada, e alvo de 25px no meio de uma cena é frustração garantida.
+
+PV e Estresse passaram a mostrar **só os espaços que existem** — cinco ou seis,
+grandes. Os doze de Armadura continuam todos à vista, tracejados, porque lá eles
+moram numa grade 4×3 e cabem sem encolher. A informação que se perde não some do
+app: o painel de subir de nível diz exatamente quanto ainda dá para crescer, na
+hora em que isso importa (E80).
+
+Junto vieram: o custo dos limiares em uma linha ("1 PV" em vez de "marque 1
+PV" — o verbo já está na nota, dito uma vez), a Proficiência saindo de dentro do
+bloco para entre ele e o equipamento, e a **característica de Esperança da
+classe colada na trilha**. Toda classe tem uma, e ela é a única regra do jogo
+que responde "para que serve guardar Esperança?" — vivia lá embaixo, no meio das
+outras cinco ou seis. Sai da lista de Características para não aparecer duas
+vezes na mesma aba, e o texto é o do livro inteiro: a tela não resume regra.
+
+### As seções que colapsam, e a memória que elas precisaram
+
+Marcadores, Características e Ficha paralela quase nunca são olhadas no meio de
+uma cena, e abertas empurravam "Descansar" para fora da tela. Viraram linhas com
+o resumo à direita — "1 ativo", "5", "não usada" —, e quem só queria conferir
+não precisa abrir.
+
+Uma coisa que a maquete não podia mostrar apareceu na primeira execução: **a
+dobra tem de lembrar que você a abriu**. `desenhar()` reconstrói a aba inteira
+sempre que a ficha muda, então marcar um contador fecharia a seção do próprio
+contador — no meio da cena, com o dedo já a caminho do segundo toque. É a mesma
+família do "redesenhar só quando o servidor discorda" (E44–E46), agora valendo
+para o que a mão escolheu e não só para o que o servidor mandou (E78).
+
+O "+" das condições desceu do cabeçalho para o **fim da fileira de pílulas**: é
+ali que a próxima entra, e o botão largo no cabeçalho ocupava a linha inteira de
+uma seção que na maior parte do tempo está vazia. As abas ganharam contador
+(Cartas 5, Mochila 8) — zero não aparece, porque "0" ao lado de "Mochila" não
+diz nada que a aba vazia não diga melhor.
+
+### A Mesa virou a página de relance
+
+O painel tinha as três perguntas que o Mestre faz o tempo todo — "como está o
+grupo?", "que contagem está correndo?", "quem está em cena?" — cada uma numa aba
+diferente. Descobrir as três custava três trocas de aba e três voltas.
+
+Agora a Mesa **resume** as outras, cada bloco com o seu "Abrir" para a tela
+cheia. O Medo é a exceção deliberada: continua inteiro, porque é o recurso mais
+tocado do painel e resumir seria trocar um toque por dois na coisa mais
+frequente da tela (E79). De quebra ele perdeu o `+` e o `−`: a chama já é o
+controle, e o dedo não deve aprender duas gramáticas para a mesma coisa — é a
+mesma decisão que as trilhas da ficha tomaram no K3.
+
+`painelDoMestre` passou a trazer o **encontro** junto. Sem isso, resumir "Em
+cena" custaria uma segunda chamada de rede — e, com o Mestre alternando entre
+abas durante um combate, seria a chamada mais repetida do sistema. Ela já sai da
+mesma leitura da mesa: não custa nada além do tamanho.
+
+Moldura de campanha e ouro em moedas ganharam dobra própria, "Ajustes da mesa".
+Estavam penduradas no fim de "Sessão e nível" só porque não tinham outro lugar,
+e quando a Mesa virou página de relance ficaram escondidas dentro de uma dobra
+com o nome errado.
+
+### O que ficou de fora, e por quê
+
+O mockup traz uma linha **"Notas da sessão"** na página da Mesa. Anotação de
+sessão não existe em lugar nenhum do sistema — não é desenhar uma linha, é
+gravar texto novo na planilha, com tamanho, quem escreve e quem lê. Ficou como
+ponto de interesse no K18.
+
+E uma ponte que não existe: o Claude Design e o Claude Code **não são
+interligados**. O que atravessa é o que a Vanessa traz na mão. Existe um botão
+"Send to Claude Code Web" no Design que semeia o projeto no workspace, mas ele
+ainda não chegou aqui — o vínculo feito em 03/09 trouxe o **Canva**, que é outro
+produto. Enquanto isso, os mockups continuam sendo lidos por imagem, e é por
+isso que um erro como o losango da Evasão passou.

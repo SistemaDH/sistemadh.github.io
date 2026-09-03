@@ -262,25 +262,61 @@ try {
     await pagina.waitForSelector('.papel__esperanca');
   });
 
-  await passo('o topo da ficha é foto + equipamentos, acima do bloco de papel', async () => {
+  await passo('a ordem do topo: foto + traços, depois o papel, depois o equipamento', async () => {
     /*
-     * A ordem é a decisão: identidade em cima (quem é e com o que está),
-     * recursos logo abaixo (onde a mão volta o tempo todo). Comparar as duas
-     * caixas é o jeito de a ordem não se perder numa refatoração de layout.
+     * A ordem é a decisão, e ela segue a FREQUÊNCIA: traço é o número mais
+     * tocado da ficha (um por jogada de dado) e fica no topo, ao lado do
+     * rosto; PV/Estresse/Esperança vêm logo abaixo, que é onde a mão volta
+     * durante a cena; equipamento muda uma vez por sessão e fecha.
+     *
+     * Comparar as três caixas é o jeito de a ordem não se perder numa
+     * refatoração de layout — ela já se perdeu uma vez.
      */
     const retrato = await pagina.locator('.retrato').boundingBox();
     const papel = await pagina.locator('.papel').boundingBox();
-    if (!retrato || !papel) throw new Error('faltou o retrato ou o bloco de papel');
+    const equip = await pagina.locator('.equip').boundingBox();
+    if (!retrato || !papel || !equip) throw new Error('faltou retrato, papel ou equipamento');
     if (retrato.y >= papel.y) throw new Error('o retrato tem de vir ANTES do bloco de papel');
+    if (papel.y >= equip.y) throw new Error('o equipamento tem de vir DEPOIS do bloco de papel');
 
-    // E a lista traz NOME, não número: dano e alcance ficam para o toque.
-    const lista = await pagina.locator('.retrato__lista').textContent();
-    if (/d\d+\s*[+-]/.test(lista)) throw new Error('número de dano vazando na lista: ' + lista);
+    // Os seis traços moram no topo, dentro do retrato — não numa seção solta.
+    const tracos = await pagina.locator('.retrato .traco').count();
+    igual(tracos, 6, 'traços dentro do bloco do retrato');
+
+    // E a tabela traz NOME, não número: dano e alcance ficam para o toque.
+    const lista = await pagina.locator('.equip').textContent();
+    if (/d\d+\s*[+-]/.test(lista)) throw new Error('número de dano vazando na tabela: ' + lista);
+
+    /*
+     * A tabela tem SEMPRE três linhas, esteja o personagem equipado ou não —
+     * o buraco no lugar da arma secundária é informação (é o que alguém olha
+     * ao decidir se pega um escudo), e uma tabela que muda de tamanho conforme
+     * a ficha não se lê de relance.
+     *
+     * Onde não há item, o valor é o texto "nenhuma" e não um botão: não há o
+     * que abrir.
+     */
+    const equipamento = await pagina.evaluate(() =>
+      Array.from(document.querySelectorAll('.equip__linha')).map((li) => ({
+        rotulo: li.querySelector('.equip__rotulo').textContent.trim(),
+        vazia: !!li.querySelector('.equip__valor--vazio'),
+        botao: li.querySelector('button.equip__valor') !== null,
+        valor: li.querySelector('.equip__valor').textContent.trim()
+      })));
+    igual(equipamento.length, 3, 'três linhas na tabela de equipamento');
+    equipamento.forEach((linha) => {
+      if (linha.vazia && linha.valor !== 'nenhuma') {
+        throw new Error(`linha vazia sem "nenhuma": ${linha.rotulo} = "${linha.valor}"`);
+      }
+      if (linha.vazia === linha.botao) {
+        throw new Error(`${linha.rotulo}: vazia e botão não podem concordar`);
+      }
+    });
   });
 
   await passo('tocar no nome do equipamento abre os números', async () => {
-    const nome = (await pagina.locator('.retrato__nome').first().textContent()).trim();
-    await pagina.locator('.retrato__nome').first().click();
+    const nome = (await pagina.locator('.equip__valor').first().textContent()).trim();
+    await pagina.locator('.equip__valor').first().click();
     await pagina.waitForSelector('.modal__caixa');
     const caixa = pagina.locator('.modal__caixa').last();
     const texto = await caixa.textContent();
@@ -392,7 +428,9 @@ try {
   });
 
   await passo('ligar e desligar uma condição', async () => {
-    await pagina.getByRole('button', { name: '+ Condição' }).click();
+    // O "+" mora no FIM da fileira de pílulas agora, e não no cabeçalho: é ali
+    // que a próxima pílula entra.
+    await pagina.getByRole('button', { name: 'Adicionar uma condição' }).click();
     await pagina.waitForSelector('.modal__caixa');
     await pagina.locator('.modal__caixa .cartao--clicavel').first().click();
     await pagina.waitForSelector('.chip--condicao', { timeout: 15000 });
@@ -401,18 +439,23 @@ try {
     await pagina.waitForSelector('.chip--condicao', { state: 'detached', timeout: 15000 });
   });
 
-  await passo('os seis traços cabem no cartão, sem texto cortado', async () => {
-    // "CONHECIMENTO" é o nome mais longo e é ele quem manda no tamanho da
-    // moldura. Texto cortado com reticências passa despercebido numa revisão e
-    // aparece na mesa — então quem confere é o teste.
+  await passo('os seis traços cabem no ladrilho, sem texto cortado', async () => {
+    // A sigla de três letras existe para caber; se algum dia alguém devolver o
+    // nome inteiro para dentro do ladrilho, é aqui que estoura.
     const cortados = await pagina.evaluate(() =>
-      Array.from(document.querySelectorAll('.traco__nome, .traco__valor'))
+      Array.from(document.querySelectorAll('.traco__sigla, .traco__valor'))
         .filter((n) => n.scrollWidth > n.clientWidth + 1)
         .map((n) => n.textContent));
     igual(cortados.join(' | '), '', 'texto de traço cortado');
 
-    // E os seis cartões têm a mesma altura: selo e glosa moram num rodapé
-    // reservado justamente para a grade não esticar por causa de dois deles.
+    // As seis siglas são DIFERENTES entre si — abreviação que colide é pior
+    // que nome comprido, porque o jogador toca no traço errado.
+    const siglas = await pagina.evaluate(() =>
+      Array.from(document.querySelectorAll('.traco__sigla')).map((n) => n.textContent.trim()));
+    igual(siglas.length, 6, 'seis siglas na grade');
+    igual(new Set(siglas).size, 6, `siglas repetidas: ${siglas.join(', ')}`);
+
+    // E os seis ladrilhos têm a mesma altura.
     const alturas = await pagina.evaluate(() =>
       [...new Set(Array.from(document.querySelectorAll('.traco'))
         .map((n) => Math.round(n.getBoundingClientRect().height)))]);
@@ -790,7 +833,10 @@ try {
 
   await passo('subir para o nível 2, com prévia antes de aplicar', async () => {
     await pagina.getByRole('tab', { name: 'Jogo' }).click();
-    await pagina.getByRole('button', { name: /Subir para o nível 2/ }).click();
+    // O botão de subir de nível é a PRÓPRIA pílula do cabeçalho: o gesto é
+    // sobre o nível, e o nível está escrito ali. Não existe mais botão no
+    // rodapé da aba Jogo.
+    await pagina.locator('.ficha__topo .selo--nivel').click();
     await pagina.waitForSelector('.avanco__opcao', { timeout: 20000 });
 
     // O nível 2 tem conquista de patamar: Experiência nova + Proficiência.
@@ -964,6 +1010,11 @@ try {
      * Por isso o interruptor está no painel do Mestre, e este passo prova o
      * caminho inteiro: liga aqui, aparece lá.
      */
+    /*
+     * Moldura e moedas moram numa dobra "Ajustes da mesa": são escolhas de
+     * começo de campanha, e a página da Mesa é para o que se olha em cena.
+     */
+    await pagina.locator('.dobra__topo', { hasText: 'Ajustes da mesa' }).click();
     const caixa = pagina.locator('.cartao', { hasText: 'Ouro em moedas' })
       .locator('input[type="checkbox"]');
     igual(await caixa.isChecked(), false, 'o padrão do livro é sem moedas');
@@ -1065,6 +1116,9 @@ try {
   });
 
   await passo('abrir sessão nova NÃO zera o Medo', async () => {
+    // "Sessão e nível" é uma dobra: mexe-se uma vez por sessão, e a página da
+    // Mesa é para o que se olha durante ela.
+    await pagina.locator('.dobra__topo', { hasText: 'Sessão e nível' }).click();
     await pagina.getByRole('button', { name: 'Abrir sessão nova' }).click();
     await pagina.getByRole('button', { name: 'Abrir', exact: true }).click();
     await pagina.waitForSelector('.aviso--sucesso', { timeout: 25000 });
@@ -1374,12 +1428,28 @@ try {
         .filter((b) => b.getBoundingClientRect().height < 44).length);
     igual(baixos, 0, 'há quadradinho abaixo de 44px');
 
-    // Os espaços que o personagem ainda não tem aparecem tracejados, como no
-    // papel — e não deixam marcar.
-    const naoTem = await pagina.locator('.papel__trilha--pv .papel__caixa.nao-tem').count();
-    if (naoTem < 1) throw new Error('nenhum espaço futuro tracejado na trilha de PV');
-    igual(await pagina.locator('.papel__trilha--pv .papel__caixa[disabled]').count(), naoTem,
-      'espaço tracejado tem de vir desabilitado');
+    /*
+     * PV e Estresse mostram SÓ os espaços que existem.
+     *
+     * A ficha impressa desenha as doze e traceja as que faltam; numa linha de
+     * 390px isso dava 25px por caixa. Aqui a trilha tem exatamente o máximo do
+     * personagem — e por isso nenhuma caixa vem desabilitada: toda caixa na
+     * tela é uma caixa que dá para marcar.
+     *
+     * Os doze espaços de ARMADURA continuam todos à vista, tracejados, porque
+     * lá eles moram numa grade 4×3 e cabem sem encolher.
+     */
+    const quantasPV = await pagina.locator('.papel__trilha--pv .papel__caixa').count();
+    const maximoPV = await pagina.evaluate(() => {
+      const g = document.querySelector('.papel__trilha--pv .papel__caixas .papel__caixa');
+      return Number((g.getAttribute('aria-label').match(/de (\d+)$/) || [])[1]);
+    });
+    igual(quantasPV, maximoPV, 'a trilha de PV tem uma caixa por espaço que existe');
+    igual(await pagina.locator('.papel__trilha--pv .papel__caixa[disabled]').count(), 0,
+      'nenhuma caixa de PV pode vir desabilitada');
+    if (!(await pagina.locator('.papel__slot.nao-tem').count())) {
+      throw new Error('os espaços futuros de Armadura deviam continuar tracejados');
+    }
 
     // Tocar no terceiro marca três; tocar no terceiro de novo desmarca até dois.
     const pv = pagina.locator('.papel__trilha--pv .papel__caixa');
@@ -1429,6 +1499,13 @@ try {
     await pagina.getByRole('tab', { name: 'Jogo' }).click();
     await pagina.waitForSelector('.papel');
     const v = await versaoNaTela();
+    /*
+     * Marcadores é uma DOBRA: fechada por padrão quando nada está ativo. Abrir
+     * é o primeiro gesto, e a escolha tem de sobreviver ao redesenho — se não
+     * sobrevivesse, criar o marcador fecharia a seção do marcador recém-criado
+     * e o resto deste passo falharia.
+     */
+    await pagina.locator('.dobra__topo', { hasText: 'Marcadores' }).click();
     await pagina.getByRole('button', { name: '+ Marcador' }).click();
     await pagina.waitForSelector('.modal__caixa');
     const caixa = pagina.locator('.modal__caixa').last();

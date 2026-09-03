@@ -6,7 +6,6 @@
  */
 
 import { el, limpar } from './util.js';
-import { CONFIG } from './config.js';
 import { obterEstado, assinar, acoes, estaLogado, ehMestre } from './estado.js';
 import { avisarErro, avisar } from './ui.js';
 import { mensagemDoErro } from './api.js';
@@ -14,6 +13,7 @@ import { telaAbertura } from './telas/abertura.js';
 import { telaRoster } from './telas/roster.js';
 import { abrirAjustes } from './telas/ajustes.js';
 import { botaoDeRegras } from './telas/regras.js';
+import { icone } from './componentes/icone.js';
 
 const raiz = document.getElementById('app');
 
@@ -48,14 +48,20 @@ function moldura(conteudo) {
         class: 'btn btn--fantasma btn--icone',
         'aria-label': 'Ajustes',
         onClick: () => abrirAjustes()
-      }, '⚙')
+      }, icone('ajustes'))
     ])
   ]);
 
+  /*
+   * A linha de versão desceu para o RODAPÉ DO ROSTER.
+   *
+   * Aqui ela era o pé do documento e ficava atrás do "+ Nova ficha" flutuante.
+   * Lá ela é o pé daquela tela, logo abaixo da ação — que é onde alguém
+   * procura quando quer dizer qual versão está rodando.
+   */
   return el('div', { class: 'app' }, [
     topo,
-    el('main', { class: 'app__conteudo' }, [conteudo]),
-    el('footer', { class: 'app__rodape', texto: `Sistema de fichas · versão ${CONFIG.VERSAO}` })
+    el('main', { class: 'app__conteudo' }, [conteudo])
   ]);
 }
 

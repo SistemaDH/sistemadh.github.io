@@ -7,12 +7,14 @@
  */
 
 import { el, dataRelativa } from '../util.js';
+import { CONFIG } from '../config.js';
 import { obterEstado, acoes, ehMestre, assinar } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
 import { confirmar, avisarErro, avisarSucesso, blocoVazio } from '../ui.js';
 import { abrirCriacao } from './criacao.js';
 import { abrirFichaEmJogo } from './ficha.js';
 import { abrirPainelDoMestre } from './mestre.js';
+import { icone } from '../componentes/icone.js';
 
 /** O nível em que a mesa está, para marcar quem ficou para trás. */
 function nivelDaMesa() {
@@ -37,7 +39,23 @@ export function telaRoster() {
     onClick: () => abrirCriacao({ aoCriar: () => desenharLista() })
   }, '+ Nova ficha');
 
-  raiz.append(cabecalho, lista, botaoNovo);
+  /*
+   * O "+ Nova ficha" saiu de FLUTUANTE e virou AÇÃO DE RODAPÉ.
+   *
+   * Fixo no canto, ele cobria o último cartão da lista e a linha de versão, e
+   * o que ficava atrás dele era inalcançável — a solução anterior era um recuo
+   * de 170px no rodapé, remendo em cima de um problema que o próprio botão
+   * criava. Ancorado embaixo, com a versão logo abaixo, nada some.
+   *
+   * A linha de versão vem para cá junto: ela pertence ao pé desta tela, não ao
+   * pé do documento.
+   */
+  const rodape = el('div', { class: 'roster__rodape' }, [
+    botaoNovo,
+    el('p', { class: 'app__rodape', texto: `Sistema de fichas · versão ${CONFIG.VERSAO}` })
+  ]);
+
+  raiz.append(cabecalho, lista, rodape);
 
   const medo = ehMestre() ? controleDeMedo() : null;
   if (medo) cabecalho.append(medo.node);
@@ -129,7 +147,7 @@ export function telaRoster() {
       class: 'btn btn--fantasma btn--icone ficha-cartao__excluir',
       'aria-label': `Excluir a ficha de ${p.nome}`,
       onClick: (ev) => { ev.stopPropagation(); pedirExclusao(p); }
-    }, '🗑');
+    }, icone('lixeira'));
 
     return el('div', {
       class: 'cartao cartao--clicavel cartao--ornamentado ficha-cartao'

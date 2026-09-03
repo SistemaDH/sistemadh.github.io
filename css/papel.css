@@ -120,8 +120,8 @@
 }
 
 /*
- * As duas defesas são OURO: o que separa uma da outra é a FORMA (losango
- * facetado na Evasão, escudo com nervuras na Armadura). Antes as duas usavam
+ * As duas defesas são OURO: o que separa uma da outra é a FORMA (placa em arco
+ * na Evasão, escudo de brasão na Armadura). Antes as duas usavam
  * o mesmo escudo e só a cor da borda mudava — no celular, ninguém lia isso.
  * O azul saiu daqui e foi para o Estresse.
  */
@@ -131,10 +131,17 @@
   stroke-width: 3;
 }
 
-/* O valor da Armadura desce ao centro óptico do escudo: a ponta de baixo puxa
-   o olho e um número centrado geometricamente parece alto. */
-.papel__escudoBloco--armadura .papel__escudoValor { margin-top: 14px; }
-.papel__escudoBloco--evasao .papel__escudoValor { margin-top: 0; }
+/*
+ * Cada forma tem o SEU centro óptico, e nenhum dos dois é o centro geométrico.
+ *
+ * No escudo a ponta de baixo puxa o olho, e um número centrado no meio da
+ * caixa parece alto — por isso ele desce. Na placa em arco acontece o
+ * contrário do que acontecia no losango: a massa termina em cima da base
+ * reta, e o recuo de baixo (pensado para a ponta do losango) empurrava o
+ * número para longe do miolo.
+ */
+.papel__escudoBloco--armadura .papel__escudoValor { margin-top: 12px; }
+.papel__escudoBloco--evasao .papel__escudoValor { margin-top: 4px; margin-bottom: 0; }
 
 .papel__escudoValor {
   position: relative;      /* acima do SVG */
@@ -168,21 +175,38 @@
   justify-content: center;
 }
 
-/* A gota da ficha impressa. Pequena: são doze, e ficam ao lado do escudo. */
+/*
+ * OS ESPAÇOS DE ARMADURA SÃO ESCUDINHOS, como na ficha impressa — doze deles,
+ * ao lado do escudo grande, cada um repetindo a silhueta dele em miniatura.
+ *
+ * Eram gotas arredondadas, inventadas aqui. Nada errado com uma gota, mas ela
+ * não dizia de onde vinha: a repetição da forma é o que faz o olho ligar o
+ * espaço ao escudo sem precisar de rótulo.
+ */
 .papel__slot {
+  display: grid;
+  place-items: center;
   width: 26px;
   height: 26px;
   padding: 0;
-  border: 2px solid var(--cor-borda-forte);
-  border-radius: 50% 50% 46% 46% / 46% 46% 54% 54%;
-  background: var(--cor-fundo-2);
+  border: 0;
+  background: none;
   cursor: pointer;
-  transition: background var(--transicao), border-color var(--transicao);
 }
 
-.papel__slot.esta-cheio {
-  background: var(--cor-ouro);
-  border-color: var(--cor-ouro);
+.papel__slotForma {
+  width: 100%;
+  height: 100%;
+  fill: var(--cor-fundo-2);
+  stroke: var(--cor-borda-forte);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  transition: fill var(--transicao), stroke var(--transicao);
+}
+
+.papel__slot.esta-cheio .papel__slotForma {
+  fill: var(--cor-ouro);
+  stroke: var(--cor-ouro);
 }
 
 /* --- a faixa dos limiares -------------------------------------------------- */
@@ -258,6 +282,15 @@
   background: var(--cor-ouro-escuro);
 }
 
+/*
+ * MENOR · MAIOR · SEVERO herdam o pontilhado do verbete.
+ *
+ * A faixa inteira é um botão que abre "Limiares de Dano" — mas nada na tela
+ * dizia isso, e a pessoa que não sabe o que "Severo" quer dizer é a que menos
+ * vai adivinhar que dá para tocar. O sublinhado pontilhado é a mesma
+ * convenção de `.verbete__gatilho`; não pode ser a classe de verdade porque
+ * ela é um <button>, e botão dentro de botão não existe.
+ */
 .papel__limiarNome {
   font-size: var(--txt-xs);
   font-weight: 700;
@@ -266,6 +299,17 @@
   color: var(--cor-texto);
   text-align: center;
   line-height: 1.1;
+
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--cor-ouro-escuro);
+}
+
+.papel__limiares:hover .papel__limiarNome,
+.papel__limiares:focus-visible .papel__limiarNome {
+  text-decoration-color: var(--cor-ouro);
 }
 
 .papel__limiarCusto {
@@ -322,10 +366,10 @@
   color: var(--cor-texto);
 }
 
+/* As colunas vêm do JS: são tantas quantos os espaços que o personagem tem. */
 .papel__caixas {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 2px;
+  gap: 3px;
 }
 
 /*
@@ -355,7 +399,7 @@
   content: '';
   display: block;
   width: 100%;
-  height: 22px;              /* o retângulo que aparece */
+  height: 26px;              /* o retângulo que aparece */
   border: 2px solid var(--cor-borda-forte);
   border-radius: 4px;
   background: var(--cor-fundo-2);
@@ -364,25 +408,13 @@
 
 .papel__caixa:active::before { transform: scaleY(.88); }
 
-/*
- * O espaço que o personagem ainda NÃO tem fica tracejado, como no papel — onde
- * ele espera a subida de nível. Mostrar até 12 diz, sem escrever, quanto ainda
- * dá para crescer.
- */
-.papel__caixa.nao-tem { cursor: default; opacity: .55; }
+/* O espaço que o personagem ainda não tem: tracejado, como os quadradinhos. */
+.papel__slot.nao-tem { cursor: default; opacity: .55; }
 
-.papel__caixa.nao-tem::before {
-  border-style: dashed;
-  border-color: var(--cor-borda);
-  background: transparent;
-}
-
-.papel__slot.nao-tem {
-  border-style: dashed;
-  border-color: var(--cor-borda);
-  background: transparent;
-  cursor: default;
-  opacity: .55;
+.papel__slot.nao-tem .papel__slotForma {
+  fill: none;
+  stroke: var(--cor-borda);
+  stroke-dasharray: 3 3;
 }
 
 .papel__trilha--pv .papel__caixa.esta-cheio::before {
@@ -390,9 +422,17 @@
   border-color: var(--cor-perigo);
 }
 
+/*
+ * ESTRESSE É AZUL, e o violeta ficou só do Medo.
+ *
+ * Enquanto os dois dividiam o violeta, a trilha cheia de Estresse na ficha e o
+ * Medo no cabeçalho do Mestre eram a mesma cor — e são coisas que ninguém
+ * pode confundir no meio de uma cena. O azul saiu da Armadura, que passou ao
+ * ouro junto com a Evasão (lá o que separa as duas é a FORMA).
+ */
 .papel__trilha--estresse .papel__caixa.esta-cheio::before {
-  background: var(--cor-medo);
-  border-color: var(--cor-medo);
+  background: var(--cor-estresse);
+  border-color: var(--cor-estresse);
 }
 
 .papel__caixa:focus-visible,
@@ -458,13 +498,18 @@
 }
 
 /* ==========================================================================
-   OS TRAÇOS — um escudo cada, com o nome e o número dentro.
+   OS SEIS TRAÇOS, EM LADRILHO
 
-   A versão anterior tinha fita de nome EM CIMA do escudo e três verbos DENTRO
-   dele. Não cabia: "CONHECIMENTO" estourava a fita e os verbos enchiam o
-   escudo de letra de 10px para uma informação que ninguém consulta no meio de
-   uma cena. Ficou o que se olha em jogo — nome e modificador, um sob o outro,
-   dentro da moldura — e o resto abre num toque.
+   Terceira versão, e a que finalmente cabe. A primeira tinha fita de nome
+   sobre o escudo e três verbos dentro dele; a segunda ficou só com nome e
+   número, mas o nome mais longo ("CONHECIMENTO") mandava no tamanho do
+   cartão — e um cartão desse tamanho só cabia numa seção própria, longe do
+   topo.
+
+   Agora o nome vira SIGLA de três letras e o ladrilho encolhe até caber seis
+   ao lado do retrato, que é onde eles pertencem: traço é o número mais
+   consultado da ficha, um por jogada de dado. O nome inteiro, a glosa da
+   Jambô e os verbos de exemplo estão a um toque.
    ========================================================================== */
 
 .tracos {
@@ -474,106 +519,61 @@
 }
 
 .traco {
-  position: relative;
-  min-width: 0;              /* deixa o cartão encolher em vez de estourar */
+  min-width: 0;              /* deixa o ladrilho encolher em vez de estourar */
   display: flex;
   flex-direction: column;
-  padding: 0;
-  border: 0;
-  background: none;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  min-height: 52px;
+  padding: var(--e2) 2px;
+  border: 1px solid var(--cor-borda-forte);
+  border-radius: var(--raio-sm);
+  background: var(--cor-fundo-2);
   color: inherit;
   font: inherit;
   text-align: center;
   cursor: pointer;
+  transition: border-color var(--transicao), background var(--transicao);
   -webkit-tap-highlight-color: transparent;
 }
 
-/* --- a moldura ------------------------------------------------------------ */
+.traco:hover { border-color: var(--cor-ouro-escuro); }
+.traco:active { background: var(--cor-superficie-alta); }
 
-.traco__moldura {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 1px;
-  /* o escudo afunila embaixo: a ponta é decorativa e não recebe texto */
-  min-height: 68px;
-  padding: 7px 6px 16px;
-}
-
-.traco__forma {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  fill: var(--cor-fundo-2);
-  stroke: var(--cor-borda-forte);
-  stroke-width: 3;
-  vector-effect: non-scaling-stroke;
-}
-
-/*
- * O nome fica na parte LARGA do escudo, com a largura inteira à disposição —
- * é isso que faz "CONHECIMENTO" caber sem virar "CONHECIM…".
- */
-.traco__nome {
-  position: relative;        /* acima do SVG */
-  max-width: 100%;
-  padding-inline: 2px;
+.traco__sigla {
   font-size: var(--txt-xs);
   font-weight: 700;
-  letter-spacing: 0;
+  letter-spacing: .08em;     /* três letras juntas viram borrão sem isto */
   text-transform: uppercase;
-  color: var(--cor-texto-suave);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  color: var(--cor-texto-fraco);
+  line-height: 1;
 }
 
-/* O número, logo abaixo do nome, dentro da mesma moldura. */
 .traco__valor {
-  position: relative;
   font-family: var(--fonte-mono);
   font-size: var(--txt-lg);
   font-weight: 700;
   line-height: 1.1;
-  color: var(--cor-ouro-claro);
+  color: var(--cor-texto);
 }
 
 /* --- estados -------------------------------------------------------------- */
 
-.traco.e-conjuracao .traco__forma { stroke: var(--cor-ouro); }
-.traco.e-trocavel .traco__forma { stroke-dasharray: 5 4; }
-.traco:hover .traco__forma { stroke: var(--cor-ouro-escuro); }
-
-/* Faixa fixa: sem ela, o cartão com selo esticava a linha inteira da grade. */
-.traco__rodape {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 14px;
-  margin-top: 2px;
+/*
+ * O traço de Conjuração é o único ladrilho em ouro — e a frase logo abaixo da
+ * grade diz por quê. Cor sozinha não explica nada; cor mais frase, sim.
+ */
+.traco.e-conjuracao {
+  border-color: var(--cor-ouro);
+  background: rgba(217, 171, 91, .08);
 }
 
-.traco__selo {
-  font-size: var(--txt-xs);
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  color: var(--cor-ouro);
-}
+.traco.e-conjuracao .traco__sigla,
+.traco.e-conjuracao .traco__valor { color: var(--cor-ouro-claro); }
 
-.traco__selo--trocar { color: var(--cor-texto-fraco); }
-
-/* O termo da Jambô, embaixo, onde há largura para ele. */
-.traco__jambo {
-  font-family: var(--fonte-mono);
-  font-size: var(--txt-xs);
-  color: var(--cor-texto-fraco);
-}
-
-.traco__jambo::before { content: '('; }
-.traco__jambo::after { content: ')'; }
+/* O outro traço que a multiclasse deixa escolher: tracejado é "dá para virar". */
+.traco.e-trocavel { border-style: dashed; border-color: var(--cor-ouro-escuro); }
 
 /* --- o modal do traço ----------------------------------------------------- */
 
@@ -588,6 +588,43 @@
   font-family: var(--fonte-mono);
   font-size: var(--txt-xl);
   color: var(--cor-ouro-claro);
+}
+
+/* --- a característica de Esperança da classe ------------------------------ */
+
+/*
+ * Colada na trilha que ela ensina a gastar.
+ *
+ * Barra dourada à esquerda, como as cartas: é regra de classe, não anotação
+ * da tela. Discreta o bastante para não competir com os losangos logo acima,
+ * que é onde a mão vai.
+ */
+.papel__esperancaCarta {
+  margin-top: var(--e2);
+  padding: var(--e3) var(--e4);
+  border: 1px solid var(--cor-ouro-escuro);
+  border-left-width: 3px;
+  border-radius: var(--raio-sm);
+  background: rgba(217, 171, 91, .07);
+}
+
+.papel__esperancaNome {
+  margin: 0 0 var(--e1);
+  font-size: var(--txt-xs);
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--cor-ouro-claro);
+}
+
+/* A origem é contexto, não nome: fica no mesmo peso e sem o brilho. */
+.papel__esperancaOrigem { color: var(--cor-texto-fraco); font-weight: 400; }
+
+.papel__esperancaTexto {
+  margin: 0;
+  font-size: var(--txt-sm);
+  line-height: 1.5;
+  color: var(--cor-texto-suave);
 }
 
 /* --- Proficiência, dentro do bloco ---------------------------------------- */
@@ -612,23 +649,22 @@
 .papel__proficienciaNota { color: var(--cor-texto-fraco); }
 
 @media (max-width: 360px) {
-  .traco__nome { font-size: var(--txt-xs); }
+  .traco { min-height: 46px; }
   .traco__valor { font-size: var(--txt-md); }
-  .traco__moldura { min-height: 62px; padding: 6px 4px 14px; }
 }
 
 /* ==========================================================================
-   O RETRATO — foto à esquerda, equipamentos à direita.
+   O TOPO — foto à esquerda, os seis traços à direita.
 
-   O desenho que a mesa pediu. Equipamento é o que mais se consulta e o que
-   menos precisa de número na tela: de relance a pessoa quer saber O QUE está
-   empunhando; dano, alcance e mãos ela quer no instante de rolar — e aí o
-   toque no nome abre.
+   O retrato dividia esta linha com a lista de equipamento. Os dois trocaram
+   de lugar porque a frequência é o contrário do que estava na tela: traço é
+   o número mais tocado da ficha (um por jogada de dado) e vivia numa seção
+   lá embaixo; equipamento muda uma vez por sessão e ocupava o topo.
    ========================================================================== */
 
 .retrato {
   display: grid;
-  grid-template-columns: minmax(112px, 42%) 1fr;
+  grid-template-columns: minmax(96px, 34%) 1fr;
   gap: var(--e3);
   align-items: start;
   padding: var(--e3);
@@ -679,77 +715,107 @@
 
 .retrato__vazioIcone { font-size: 26px; opacity: .5; }
 
-/* --- a lista de equipamento ----------------------------------------------- */
+/* --- os traços, ao lado da foto ------------------------------------------- */
 
-.retrato__equip { min-width: 0; }
+.retrato__tracos { min-width: 0; }
 
 .retrato__titulo {
   margin: 0 0 var(--e2);
-  font-size: var(--txt-sm);
-  letter-spacing: .06em;
+  font-size: var(--txt-xs);
+  font-weight: 700;
+  letter-spacing: .08em;
   text-transform: uppercase;
-  color: var(--cor-ouro);
-}
-
-.retrato__lista {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: var(--e2);
-}
-
-.retrato__item {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0;
-  min-width: 0;
+  color: var(--cor-texto-fraco);
 }
 
 /*
- * O nome é o alvo de toque, e tem de ser um alvo de verdade: 44px de altura,
- * a mesma régua dos quadradinhos da trilha.
+ * A frase da Conjuração fecha o bloco. Ela é a legenda do único ladrilho
+ * dourado — sem ela, a cor seria enfeite.
  */
-.retrato__nome {
-  display: block;
-  max-width: 100%;
-  min-height: 30px;
-  padding: 2px 0;
+.retrato__conj {
+  margin: var(--e2) 0 0;
+  font-size: var(--txt-xs);
+  line-height: 1.4;
+  color: var(--cor-texto-fraco);
+}
+
+.retrato__conj strong { color: var(--cor-texto-suave); font-weight: 700; }
+
+@media (max-width: 360px) {
+  .retrato { grid-template-columns: minmax(84px, 32%) 1fr; gap: var(--e2); }
+}
+
+/* ==========================================================================
+   O EQUIPAMENTO — tabela de rótulo e nome, abaixo do bloco de papel.
+
+   Rótulo à esquerda, nome à direita: é a leitura da ficha impressa, e com a
+   largura inteira o nome comprido cabe numa linha só. A linha vazia continua
+   aparecendo, dizendo "nenhuma" — o buraco no lugar da arma secundária é
+   informação, não falta de informação.
+   ========================================================================== */
+
+.equip {
+  margin: 0;
+  padding: var(--e2) var(--e4);
+  list-style: none;
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-md);
+}
+
+.equip__linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e3);
+  min-height: var(--alvo-toque);
+  border-top: 1px solid var(--cor-borda);
+}
+
+.equip__linha:first-child { border-top: 0; }
+
+.equip__rotulo {
+  flex: 0 0 auto;
+  font-size: var(--txt-xs);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--cor-texto-fraco);
+}
+
+/*
+ * O nome é o alvo de toque e ocupa a altura inteira da linha: a régua dos
+ * 44px vale aqui como vale nos quadradinhos da trilha.
+ *
+ * Sublinhado SÓLIDO, e é de propósito. O pontilhado dourado já quer dizer uma
+ * coisa neste app — "esta palavra abre a regra do livro" —, e repeti-lo aqui
+ * ensinaria dois significados para a mesma marca.
+ */
+.equip__valor {
+  min-width: 0;
+  min-height: var(--alvo-toque);
+  display: flex;
+  align-items: center;
+  padding: 0;
   border: 0;
   background: none;
   color: var(--cor-texto);
   font: inherit;
   font-size: var(--txt-md);
   font-weight: 600;
-  text-align: left;
+  text-align: right;
   cursor: pointer;
-  /*
-   * Sublinhado SÓLIDO, e é de propósito.
-   *
-   * O pontilhado dourado já quer dizer uma coisa neste app: "esta palavra abre
-   * a regra do livro" (o gatilho de verbete). Repeti-lo aqui ensinaria dois
-   * significados para a mesma marca. Sólido diz "toque para ver os números"
-   * sem disputar com aquilo.
-   */
   border-bottom: 1px solid var(--cor-ouro-escuro);
+  -webkit-tap-highlight-color: transparent;
 }
 
-.retrato__nome:hover { color: var(--cor-ouro-claro); }
+.equip__valor:hover { color: var(--cor-ouro-claro); }
 
-.retrato__rotulo {
-  font-size: var(--txt-xs);
-  letter-spacing: .04em;
-  text-transform: uppercase;
+/* Sem item não há o que abrir: some o sublinhado, e o texto recua de peso. */
+.equip__valor--vazio {
+  border-bottom: 0;
+  font-weight: 400;
   color: var(--cor-texto-fraco);
-}
-
-.retrato__item--vazio .retrato__rotulo { color: var(--cor-texto-fraco); }
-
-@media (max-width: 360px) {
-  .retrato { grid-template-columns: minmax(100px, 40%) 1fr; gap: var(--e2); }
-  .retrato__nome { font-size: var(--txt-sm); }
+  cursor: default;
 }
 
 /* ==========================================================================
@@ -798,14 +864,6 @@
 
 .foto__ajuda { text-align: center; }
 
-/* O lugar vazio da lista de equipamento lê como os outros: nome em cima. */
-.retrato__nome--vazio {
-  font-weight: 400;
-  font-style: italic;
-  color: var(--cor-texto-fraco);
-  border-bottom: 0;
-  cursor: default;
-}
 
 /*
  * As regras que faltavam — achadas pelo `tools/conferir-css.mjs`.

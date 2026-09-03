@@ -15,6 +15,14 @@
   border: 0;
   background: none;
   font: inherit;
+  /*
+   * `font: inherit` NÃO carrega estes dois — e a folha do próprio navegador
+   * põe `text-transform: none` em TODO controle de formulário. Sem eles, o
+   * gatilho dentro de um cabeçalho em versalete saía "Condições" no meio de
+   * "MARCADORES" e "CARACTERÍSTICAS", como se fosse outro tipo de título.
+   */
+  text-transform: inherit;
+  letter-spacing: inherit;
   color: inherit;
   text-align: left;
   cursor: pointer;
@@ -42,9 +50,18 @@
 }
 
 /* Um gatilho dentro de um título não deve competir com o título. */
-.cartao__titulo .verbete__gatilho {
+.cartao__titulo .verbete__gatilho,
+.ficha__secao .verbete__gatilho,
+.mestre__secao .verbete__gatilho,
+.papel__faixaTexto .verbete__gatilho {
   text-decoration-color: var(--cor-borda-forte);
 }
+
+/*
+ * Num RÓTULO de caixinha o pontilhado ficaria colado na base das maiúsculas
+ * de 11px. Empurrado 2px, ele volta a parecer sublinhado e não risco.
+ */
+.ficha__caixinhaRotulo .verbete__gatilho { text-underline-offset: 2px; }
 
 /* --- o popup ------------------------------------------------------------- */
 

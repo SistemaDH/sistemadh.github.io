@@ -328,6 +328,167 @@
   flex: 1 1 auto;
 }
 
+/*
+ * Na linha de resumo os pontinhos NÃO esticam: duas trilhas lado a lado com
+ * `flex: 1` acabavam nas duas pontas da tela, e o olho lia duas coisas
+ * separadas em vez de "PV e Estresse desta pessoa".
+ */
+.mestre__linhaTrilhas .mestre__miniPontos { flex: 0 0 auto; }
+
+/* ==========================================================================
+   OS BLOCOS-RESUMO DA PÁGINA DA MESA
+
+   A Mesa deixou de ser mais uma aba de conteúdo e virou a página de relance:
+   ela resume Grupo, Contagens e Cena, cada uma com o seu "Abrir" para a tela
+   inteira. As três perguntas que o Mestre faz no meio de uma cena passaram a
+   caber numa rolagem só.
+   ========================================================================== */
+
+.mestre__resumoTopo {
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+}
+
+/*
+ * O bloco do Medo é o único que fica INTEIRO na página da Mesa: ele é o
+ * recurso mais tocado do painel, e resumi-lo trocaria um toque por dois na
+ * coisa mais frequente da tela. A classe existe para o pincel de `pintarMedo`
+ * achar a conta do cabeçalho sem esbarrar nas contas dos outros resumos.
+ */
+.mestre__blocoDoMedo .mestre__resumoConta {
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-sm);
+  color: var(--cor-texto-suave);
+}
+
+/* O "+2" (contagens que não couberam) ou o nome da cena. */
+.mestre__resumoConta {
+  flex: 0 0 auto;
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-fraco);
+}
+
+/*
+ * "Abrir ›" é BOTÃO, e leva para a aba inteira. Os 44px de alvo são dele; o
+ * que se desenha é a palavra e a seta, que não engordam a linha (E39).
+ */
+.mestre__abrir {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  min-height: var(--alvo-toque);
+  padding: 0 0 0 var(--e2);
+  border: 0;
+  background: none;
+  color: var(--cor-ouro);
+  font: inherit;
+  font-size: var(--txt-xs);
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mestre__abrir:hover { color: var(--cor-ouro-claro); }
+
+.mestre__resumoLista {
+  display: flex;
+  flex-direction: column;
+}
+
+/*
+ * Uma ficha por linha: nome e nível em cima, as duas trilhas embaixo, a
+ * Esperança à direita. Duas fileiras, e não uma, porque nome de personagem
+ * mais duas trilhas não cabem lado a lado em 390px sem espremer as trilhas —
+ * e a trilha espremida é justamente o que se veio olhar.
+ */
+.mestre__linhaDoGrupo {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: 'nome esperanca' 'trilhas esperanca';
+  align-items: center;
+  gap: 2px var(--e3);
+  padding: var(--e2) 0;
+  border-top: 1px solid var(--cor-borda);
+}
+
+.mestre__resumoLista > :first-child { border-top: 0; }
+
+.mestre__linhaNome {
+  grid-area: nome;
+  display: flex;
+  align-items: baseline;
+  gap: var(--e2);
+  min-width: 0;
+  font-size: var(--txt-sm);
+  font-weight: 600;
+}
+
+.mestre__linhaNome .crescer {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mestre__linhaNivel {
+  flex: 0 0 auto;
+  font-size: var(--txt-xs);
+  font-weight: 400;
+  color: var(--cor-texto-fraco);
+}
+
+.mestre__linhaTrilhas {
+  grid-area: trilhas;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2) var(--e3);
+}
+
+/* A Esperança é UM número: os losangos não cabem aqui, e o número basta. */
+.mestre__linhaEsperanca {
+  grid-area: esperanca;
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-lg);
+  font-weight: 700;
+  color: var(--cor-esperanca);
+}
+
+/* Contagem e adversário cabem numa fileira só: o nome é mais curto. */
+.mestre__linhaSimples {
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+  min-height: 34px;
+  padding: var(--e2) 0;
+  border-top: 1px solid var(--cor-borda);
+  font-size: var(--txt-sm);
+}
+
+.mestre__linhaSimples .crescer {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mestre__linhaConta {
+  flex: 0 0 auto;
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-fraco);
+}
+
+/* Derrotado continua na lista — ele ainda conta Pontos de Batalha (E23). */
+.mestre__linhaSimples.esta-derrotado { opacity: .5; }
+.mestre__linhaSimples.esta-derrotado .crescer { text-decoration: line-through; }
+
 .mestre__miniPonto {
   width: 10px;
   height: 10px;
@@ -336,6 +497,8 @@
   background: var(--cor-fundo-2);
 }
 
+/* A contagem usa o ouro: ela não é dano nem recurso de ninguém — é o relógio. */
+.mestre__miniPonto--contagem.esta-cheio { background: var(--cor-ouro); border-color: var(--cor-ouro); }
 .mestre__miniPonto--pv.esta-cheio { background: var(--cor-perigo); border-color: var(--cor-perigo); }
 .mestre__miniPonto--estresse.esta-cheio { background: var(--cor-estresse); border-color: var(--cor-estresse); }
 .mestre__miniPonto--armadura.esta-cheio { background: var(--cor-ouro); border-color: var(--cor-ouro); }

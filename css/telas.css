@@ -45,21 +45,17 @@
   max-width: 720px;
   margin: 0 auto;
   padding: var(--e5) var(--e4);
-  /* espaço para o botão flutuante não cobrir o último card */
-  padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
 }
 
 /*
- * O rodapé passa por baixo do "+ Nova ficha".
+ * O recuo de 170px à direita SAIU.
  *
- * O botão é `position: fixed` no canto inferior direito e não empurra nada; o
- * rodapé escrevia "Sistema de fichas · versão 2.0.0" exatamente ali embaixo
- * dele, e a versão — que é o que alguém vai querer ler para dizer qual está
- * rodando — ficava tapada. O recuo à direita devolve a linha.
+ * Ele existia para o rodapé não passar por baixo do "+ Nova ficha" flutuante —
+ * um remendo em cima de um problema que o botão flutuante criava. Com a ação
+ * dentro do rodapé, o problema deixou de existir e o remendo também.
  */
 .app__rodape {
   padding: var(--e5) var(--e4);
-  padding-right: calc(var(--e4) + 170px);
   text-align: center;
   font-size: var(--txt-xs);
   color: var(--cor-texto-fraco);
