@@ -1238,3 +1238,29 @@ de novo na hora de escalar a máscara.
 
 A lição é sobre a ferramenta, não sobre o desenho: corte por raio não sabe o
 que é anel e o que é estrela. Ele só sabe distância.
+
+### O SVG que a Vanessa pediu
+
+*"trocar uma arte por um svg deixa mais moderno o app né"* — sim, e por um
+motivo que se mede, não por moda.
+
+O PNG da estrela tem 128px. Isso basta para os 32px da trilha e **borra em
+qualquer uso maior** — e "32px" num celular de tela 3x já são 96 pixels de
+verdade, então nem o uso pequeno estava garantido. O contorno vetorial é a
+mesma matemática em qualquer escala.
+
+Eu já tinha tentado traçar antes, na Parte 20, e tinha desistido: o potrace
+traçava o brilho da arte original junto e saía ruído. O que mudou não foi a
+ferramenta — foi a **entrada**. Traçando a máscara já limpa (alfa binário, sem
+brilho, sem fundo), não sobra nada para o traçador confundir com figura. O
+obstáculo tinha sumido sem eu perceber, quando a máscara ficou pronta.
+
+A armadilha: **o potrace trata preto como figura**, e a máscara tem a figura em
+branco. Sem inverter antes, ele traça o fundo e devolve o retângulo inteiro da
+tela — foi o primeiro resultado que saiu, e é o tipo de erro que parece bug do
+desenho quando é só uma convenção invertida. Está anotado no
+`tools/tracar-mascara.py`, que agora faz isso sozinho.
+
+Os dois PNG saíram do repositório. A estrela ficou em 4,5 KB de SVG (era 5 KB
+de PNG) e a caveira em 7,6 KB (era 3,5 KB) — a caveira cresceu, e vale a pena:
+ela é a peça mais detalhada do app e a que mais aparece ampliada.

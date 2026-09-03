@@ -476,6 +476,15 @@
  * a estrela de quatro pontas que a Vanessa desenhou, que é prima do losango
  * (um losango de lados côncavos) e sobrevive aos 40px, que é o tamanho real.
  *
+ * A máscara é SVG, e isso importa: contorno não tem tamanho.
+ *
+ * Ela nasceu PNG de 128px, que basta para os 32px da trilha e borra em
+ * qualquer uso maior — e num celular de tela 3x "32px" já são 96 pixels de
+ * verdade. O SVG é a mesma matemática em qualquer escala. O traçado sai do
+ * `tools/tracar-mascara.py`; traçar a MÁSCARA (alfa binário) funciona onde
+ * traçar a arte original tinha falhado, porque não há brilho nem fundo para
+ * o potrace confundir com figura.
+ *
  * A imagem é MÁSCARA, não fundo: ela só diz o formato, e a cor vem do tema.
  * Isso dá de graça o que a trilha precisa — mesma silhueta, dois
  * preenchimentos — com um arquivo só de 4 KB, sem duas imagens para trocar no
@@ -502,8 +511,8 @@
   padding: 0;
   border: 0;
   background-color: var(--cor-esperanca-apagada);
-  -webkit-mask: url('../assets/marca/esperanca.png') no-repeat center / 32px 32px;
-  mask: url('../assets/marca/esperanca.png') no-repeat center / 32px 32px;
+  -webkit-mask: url('../assets/marca/esperanca.svg') no-repeat center / 32px 32px;
+  mask: url('../assets/marca/esperanca.svg') no-repeat center / 32px 32px;
   cursor: pointer;
   transition: background-color var(--transicao);
 }

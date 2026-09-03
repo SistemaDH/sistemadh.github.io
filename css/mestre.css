@@ -1084,8 +1084,8 @@
   height: var(--alvo-min);
   cursor: pointer;
   background-color: var(--cor-medo-apagado);
-  -webkit-mask: url('../assets/marca/medo.png') no-repeat center / 24px 24px;
-  mask: url('../assets/marca/medo.png') no-repeat center / 24px 24px;
+  -webkit-mask: url('../assets/marca/medo.svg') no-repeat center / 24px 24px;
+  mask: url('../assets/marca/medo.svg') no-repeat center / 24px 24px;
   transition: background-color var(--transicao);
 }
 
