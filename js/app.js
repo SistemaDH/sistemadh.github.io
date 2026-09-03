@@ -122,8 +122,59 @@ document.addEventListener('visibilitychange', () => {
 window.addEventListener('offline', () => avisar('Você está sem internet. As alterações não vão salvar.', 'alerta', 8000));
 window.addEventListener('online', () => avisar('Conexão de volta.', 'sucesso'));
 
+/**
+ * FOLHA DE ESTILO QUE NÃO CHEGOU AVISA — em vez de sumir em silêncio.
+ *
+ * Isto nasceu de um print da mesa: no celular da Vanessa, toda palavra que
+ * devia ser um gatilho de verbete tinha uma caixa cinza atrás, e o índice de
+ * regras era um bloco de texto grudado. Nada disso aparecia aqui — e a causa
+ * era simples e invisível: `css/verbete.css` não estava no ar naquele
+ * endereço. O navegador pede o arquivo, leva 404, **não diz nada**, e a tela
+ * apenas fica errada.
+ *
+ * É o mesmo tipo de falha muda que os conferidores do projeto existem para
+ * acabar: CSS não reclama do que falta. Aqui a diferença é que a falta só
+ * acontece no SERVIDOR — nenhum conferidor de código pega, porque no
+ * repositório o arquivo está lá.
+ *
+ * ⚠ NÃO DÁ para perguntar se a folha ESTÁ em `document.styleSheets`: o
+ * navegador cria a folha do mesmo jeito quando o pedido volta 404 — ela só
+ * fica VAZIA. Foi a primeira versão desta conferência, e ela não pegava nada.
+ * A pergunta certa é quantas regras vieram dentro.
+ *
+ * A do Google Fonts fica de fora de propósito: ela é de outro domínio, e ler
+ * `cssRules` de outro domínio estoura por segurança — não dá para conferir, e
+ * a ausência dela não deixa a tela errada do mesmo jeito.
+ */
+function conferirFolhasDeEstilo() {
+  const nossas = [...document.querySelectorAll('link[rel="stylesheet"]')]
+    .map((l) => l.getAttribute('href'))
+    .filter((h) => h && !/^https?:/i.test(h));
+
+  const comRegras = new Set();
+  [...document.styleSheets].forEach((f) => {
+    if (!f.href) return;
+    try {
+      if (f.cssRules.length) comRegras.add(f.href);
+    } catch (e) {
+      /* outro domínio: não dá para ler, e não é conosco */
+    }
+  });
+
+  const faltando = nossas.filter((h) => ![...comRegras].some((c) => c.endsWith(h)));
+  if (!faltando.length) return;
+
+  avisarErro(
+    `Folha de estilo não carregou: ${faltando.join(', ')}. ` +
+    'A tela vai aparecer sem parte do visual. Confira se o arquivo subiu para o servidor.'
+  );
+}
+
 desenhar();
 
 acoes.iniciar().catch((e) => {
   avisarErro(mensagemDoErro(e));
 });
+
+// Depois do primeiro desenho: a essa altura toda folha já teve chance de chegar.
+window.addEventListener('load', conferirFolhasDeEstilo);

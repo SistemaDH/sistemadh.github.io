@@ -225,10 +225,20 @@
   .roster__lista { grid-template-columns: 1fr 1fr; }
 }
 
+/*
+ * O cartão do roster mora INTEIRO aqui.
+ *
+ * Metade dele estava em `ficha.css` (o `position: relative` que ancora a
+ * lixeira, e o `padding: 0` que deixa o botão de abrir ocupar o cartão) e
+ * metade aqui. Duas folhas descrevendo a mesma caixa: quem for mexer no
+ * espaçamento acha a metade errada e conclui que o CSS "não pega".
+ */
 .ficha-cartao {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--e2);
+  padding: 0;
 }
 
 .ficha-cartao__topo {
@@ -263,6 +273,13 @@
   letter-spacing: .05em;
   text-transform: uppercase;
   color: var(--cor-texto-fraco);
+  /*
+   * Só a ÚLTIMA LINHA reserva a faixa da lixeira. O botão de excluir é
+   * absoluto no canto inferior direito, e o nome do jogador passava por baixo
+   * dele. Reservar o espaço no cartão inteiro consertava isso e quebrava outra
+   * coisa: o nome do personagem perdia largura e virava duas linhas.
+   */
+  padding-right: calc(var(--alvo-toque) + var(--e2));
 }
 
 /*

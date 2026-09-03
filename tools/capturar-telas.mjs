@@ -41,7 +41,7 @@ await p.screenshot({ path: '/tmp/s4-heranca.png' });
 await p.locator('.grade-opcoes__item .btn').first().click();
 await p.locator('.grade-opcoes').last().locator('.btn').first().click();
 await p.locator('.criacao__rodape .btn--principal').click();
-await p.waitForSelector('.traco');
+await p.waitForSelector('.criacao__traco');
 await p.screenshot({ path: '/tmp/s5-tracos.png' });
 await p.getByRole('button', { name: /Usar a sugestão do livro/ }).click();
 await p.locator('.criacao__rodape .btn--principal').click();

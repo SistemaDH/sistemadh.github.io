@@ -133,6 +133,71 @@ for (const [, txt] of HTML) {
   }
 }
 
+/* --- seletor repetido ------------------------------------------------------ */
+
+/*
+ * O MESMO SELETOR EM DOIS LUGARES é a falha que mais custou até hoje.
+ *
+ * `.traco` existia em `papel.css` (os seis ladrilhos do topo da ficha) e em
+ * `criacao.css` (o cartão de traço do assistente). As duas classes existem, as
+ * duas são usadas, nenhum conferidor reclamava — e no dia em que o ladrilho da
+ * ficha virou um quadrado centralizado com borda, a tela de criação virou
+ * junto, porque `papel.css` carrega depois.
+ *
+ * O que aparece na tela nesses casos não é nem uma regra nem a outra: é a
+ * COLAGEM das duas, propriedade por propriedade, decidida pela ordem dos
+ * `<link>` no index.html. Ninguém consegue prever isso lendo um arquivo só, e
+ * é por isso que aqui é ERRO e não aviso — dentro do mesmo arquivo ou entre
+ * arquivos, tanto faz.
+ *
+ * A saída, quando duas telas querem o mesmo nome, é uma das duas: dar nome
+ * próprio à variação (`criacao__traco`) ou promover a peça a componente e
+ * defini-la uma vez só em `componentes.css`.
+ *
+ * A leitura ignora o que está dentro de regra-@ com bloco (`@media`,
+ * `@keyframes`, `@supports`): ali repetir o seletor é o mecanismo, não o
+ * defeito — `to {}` aparece em toda animação.
+ */
+const ondeCadaSeletor = new Map();
+for (const [arquivo, css] of CSS) {
+  const semMedia = css.replace(/@[a-z-]+[^{]*\{(?:[^{}]*\{[^{}]*\}\s*)*\}/g, ' ');
+  for (const m of semMedia.matchAll(/(^|\})\s*([^{}@]+?)\s*\{/g)) {
+    const seletor = m[2].replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/\s+/g, ' ').trim();
+    if (!seletor || seletor.startsWith('/*') || /^\d/.test(seletor)) continue;
+    if (!ondeCadaSeletor.has(seletor)) ondeCadaSeletor.set(seletor, []);
+    ondeCadaSeletor.get(seletor).push(arquivo);
+  }
+}
+const repetidos = [...ondeCadaSeletor.entries()]
+  .filter(([, onde]) => onde.length > 1)
+  .sort((a, b) => a[0].localeCompare(b[0]));
+
+/* --- variáveis fantasma ---------------------------------------------------- */
+
+/*
+ * `var(--nao-existe)` FALHA EM SILÊNCIO, e é a pior das três falhas.
+ *
+ * Classe que falta some do estilo inteiro e alguém percebe. Classe que sobra é
+ * peso morto. Mas uma variável que não existe derruba só AQUELA declaração: o
+ * cartão continua lá, com a cor certa e o padding certo, e só o canto fica
+ * quadrado. Ninguém olha para um canto quadrado e pensa "isso é um erro de
+ * digitação num token".
+ *
+ * Foi exatamente o que aconteceu com `--raio-md`, que nunca existiu (o token é
+ * `--raio`): dois blocos novos ficaram com canto reto e passaram pela suíte
+ * inteira, porque nenhum teste olha para border-radius.
+ */
+const varsDefinidas = new Set();
+const varsUsadas = new Map();
+for (const [arquivo, css] of CSS) {
+  for (const m of css.matchAll(/(--[\w-]+)\s*:/g)) varsDefinidas.add(m[1]);
+  for (const m of css.matchAll(/var\(\s*(--[\w-]+)/g)) {
+    if (!varsUsadas.has(m[1])) varsUsadas.set(m[1], new Set());
+    varsUsadas.get(m[1]).add(arquivo);
+  }
+}
+const varsFantasma = [...varsUsadas.keys()].filter((v) => !varsDefinidas.has(v)).sort();
+
 /* --- relatório ------------------------------------------------------------ */
 
 /*
@@ -161,6 +226,20 @@ if (semCss.length) {
   semCss.forEach((c) => console.log(`  .${c}`));
   console.log('');
 }
-if (!orfas.length && !semCss.length) console.log('Nada a limpar nem a escrever.\n');
+if (repetidos.length) {
+  console.log(`SELETOR REPETIDO — a tela recebe a colagem dos dois (${repetidos.length}):`);
+  repetidos.forEach(([sel, onde]) => console.log(`  ${sel}   ${onde.join(' , ')}`));
+  console.log('');
+}
 
-process.exit(orfas.length + semCss.length ? 1 : 0);
+if (varsFantasma.length) {
+  console.log(`VARIÁVEL FANTASMA — o CSS usa e ninguém define (${varsFantasma.length}):`);
+  varsFantasma.forEach((v) => console.log(`  var(${v})   ${[...varsUsadas.get(v)].join(', ')}`));
+  console.log('');
+}
+
+if (!orfas.length && !semCss.length && !varsFantasma.length && !repetidos.length) {
+  console.log('Nada a limpar nem a escrever.\n');
+}
+
+process.exit(orfas.length + semCss.length + varsFantasma.length + repetidos.length ? 1 : 0);

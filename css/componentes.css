@@ -64,7 +64,12 @@
 .btn--perigo:hover:not(:disabled) { border-color: var(--cor-perigo); }
 
 .btn--bloco { width: 100%; }
-.btn--pequeno { min-height: 38px; padding: var(--e2) var(--e3); font-size: var(--txt-sm); }
+/*
+ * Os valores vieram de `criacao.css`, que redefinia esta classe e ganhava por
+ * ordem de carga — ou seja, era ELA que valia no app inteiro. Trazer os
+ * números para cá não mudou um pixel; só acabou com as duas versões.
+ */
+.btn--pequeno { min-height: 40px; padding: 8px 14px; font-size: 14px; }
 
 .btn--contador {
   min-height: 44px;
@@ -91,6 +96,36 @@
 }
 
 @keyframes girar { to { transform: rotate(360deg); } }
+
+/* --------------------------------------------------------------------------
+   Pílula (chip)
+
+   Estava definida DUAS vezes — em `criacao.css` e em `ficha.css` — com valores
+   diferentes, e o que aparecia na tela era uma colagem das duas: `ficha.css`
+   carrega depois e ganhava no que ambas declaravam, enquanto o que só a outra
+   tinha sobrevivia. Ninguém conseguia prever a pílula lendo um arquivo só.
+
+   Os valores abaixo são exatamente os que já venciam; trazer para cá não mudou
+   um pixel. Variação de tela (`--ativo`, `--valor`, `--condicao`) continua na
+   folha da tela; o componente é daqui.
+   -------------------------------------------------------------------------- */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e1);
+  min-height: 36px;
+  padding: var(--e1) var(--e3);
+  border-radius: var(--raio-cheio);
+  border: 1px solid var(--cor-borda-forte);
+  background: var(--cor-superficie-alta);
+  color: var(--cor-texto);
+  font: inherit;
+  font-size: var(--txt-sm);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 120ms, background 120ms;
+}
 
 /* --------------------------------------------------------------------------
    Campos de formulário

@@ -1617,6 +1617,33 @@ try {
         .filter((b) => b.altura < 44));
     if (pequenos.length) throw new Error('botões pequenos demais: ' + JSON.stringify(pequenos));
   });
+
+  await passo('folha de estilo que não sobe para o servidor AVISA', async () => {
+    /*
+     * Um print da mesa mostrou a ficha com caixas cinzas atrás de cada palavra
+     * clicável e o índice de regras como um bloco de texto grudado. A causa
+     * não estava no código: `css/verbete.css` simplesmente não estava no ar
+     * naquele endereço. O navegador pede, leva 404 e **não diz nada** — a tela
+     * só fica errada, e nenhum conferidor de código pega, porque no
+     * repositório o arquivo está lá.
+     *
+     * ⚠ A folha que faltou CONTINUA em `document.styleSheets` — o navegador
+     * cria o objeto do mesmo jeito, só que vazio. Foi assim que a primeira
+     * versão desta conferência não pegou nada. Quem responde é o número de
+     * regras, e é isso que este passo protege.
+     *
+     * Página própria, para não sujar a sessão dos outros passos.
+     */
+    const isolada = await contexto.newPage();
+    await isolada.route('**/css/verbete.css', (rota) => rota.fulfill({ status: 404, body: '' }));
+    await isolada.goto(base, { waitUntil: 'load' });
+    await isolada.waitForSelector('.aviso--erro', { timeout: 15000 });
+    const texto = await isolada.locator('.aviso--erro').first().textContent();
+    if (!/verbete\.css/.test(texto)) {
+      throw new Error(`o aviso não nomeia a folha que faltou: "${texto}"`);
+    }
+    await isolada.close();
+  });
 } catch (e) {
   await pagina.screenshot({ path: '/tmp/dh-falha.png', fullPage: true }).catch(() => {});
   console.log('\nScreenshot da falha: /tmp/dh-falha.png');

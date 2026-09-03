@@ -670,7 +670,7 @@
   padding: var(--e3);
   background: var(--cor-superficie);
   border: 1px solid var(--cor-borda);
-  border-radius: var(--raio-md);
+  border-radius: var(--raio);
 }
 
 /* --- a moldura da foto ---------------------------------------------------- */
@@ -760,7 +760,7 @@
   list-style: none;
   background: var(--cor-superficie);
   border: 1px solid var(--cor-borda);
-  border-radius: var(--raio-md);
+  border-radius: var(--raio);
 }
 
 .equip__linha {

@@ -517,12 +517,12 @@ export async function abrirCriacao({ aoCriar } = {}) {
             }, formatarValor(v)));
           });
 
-          pai.append(el('div', { class: 'cartao traco' }, [
-            el('div', { class: 'traco__topo' }, [
+          pai.append(el('div', { class: 'cartao criacao__traco' }, [
+            el('div', { class: 'criacao__tracoTopo' }, [
               el('strong', { texto: t.nome }),
               conjuracao === id ? el('span', { class: 'selo selo--mestre', texto: 'Conjuração' }) : null,
               el('span', { class: 'crescer' }),
-              el('span', { class: 'traco__valor', texto: atual === null || atual === undefined ? '—' : formatarValor(atual) })
+              el('span', { class: 'criacao__tracoValor', texto: atual === null || atual === undefined ? '—' : formatarValor(atual) })
             ]),
             el('p', { class: 'texto-sm texto-suave', texto: t.verbos.join(' · ') }),
             chips

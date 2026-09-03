@@ -1030,3 +1030,66 @@ Isso quebrou um teste de um jeito instrutivo: o passo lia
 `.bestiario__lista` `.first()` para contar os bichos em cena, e passou a contar
 os 129 do catálogo — **sem falhar**, porque 129 também é um número. Endereçar
 pela posição é assim: só se descobre o erro quando a ordem muda (E82).
+
+## 19. "Muita coisa ficou desconfigurada no CSS"
+
+A Vanessa mandou dois prints do celular: na ficha, toda palavra que devia ser
+um gatilho de verbete — PV, Evasão, Armadura, Esperança, Experiência — aparecia
+com uma **caixa cinza atrás**; no índice de regras, cada item era um bloco
+cinza com o texto todo grudado.
+
+A varredura achou quatro coisas, e só uma delas é a do print.
+
+### O que estava quebrado de verdade, e eu não tinha visto
+
+**`.traco` existia em dois arquivos.** Em `papel.css` são os seis ladrilhos do
+topo da ficha; em `criacao.css` é o cartão de traço do assistente de criação.
+Quando o ladrilho virou um quadrado centralizado com borda (K15), **a tela de
+criação virou junto** — cartões centralizados, borda dupla, o valor em fonte
+mono no meio em vez de dourado à direita.
+
+O conferidor de CSS não pegava: as duas classes existem e as duas são usadas.
+O que faltava era ver que são **duas coisas diferentes com um nome só** — e que
+o que aparece na tela nesses casos não é uma regra nem a outra, é a colagem das
+duas, decidida pela ordem dos `<link>` no index.html (E83).
+
+Achei mais cinco pares repetidos e desfiz todos: `.chip` e `.btn--pequeno`
+estavam sendo redefinidos por folhas de tela e valiam no app inteiro (foram
+para `componentes.css`, com os valores que já venciam — zero pixel de
+diferença); `.trilha--esperanca .trilha__ponto.esta-cheio` aparecia duas vezes
+no mesmo arquivo e a segunda usava `background:` na forma curta, que ZERA o
+`background-image` — o losango desenhado sumia e virava um quadrado dourado.
+
+**E `--raio-md` nunca existiu** (o token é `--raio`): os dois blocos que escrevi
+no K19 ficaram com canto reto. Uma variável fantasma derruba só aquela linha —
+nada quebra, nada alarma, e nenhum teste olha para `border-radius` (E84).
+
+O conferidor aprendeu as duas coisas: **seletor repetido** e **variável
+fantasma** agora são erro, não silêncio.
+
+### O do print, que eu não consegui reproduzir
+
+Nenhum dos quatro explica a caixa cinza. Aqui a ficha renderiza certa: as oito
+folhas carregam, as 38 regras de `verbete.css` estão lá, os gatilhos saem
+pontilhados. Tentei até o modo escuro forçado do Chromium — não reproduz.
+
+O que os dois sintomas têm em comum é serem `<button>` que **não parecem
+botão**: o gatilho é uma palavra dentro de uma frase, o item do índice é uma
+linha de lista. Os dois apagavam o fundo com `background: none` — o que basta
+no Chromium do computador e **não basta em todo motor de celular**, onde a
+aparência nativa continua ligada e o navegador pinta o `buttonface` por cima.
+Cinza claro, porque o motor considera a página clara.
+
+Duas linhas fecham isso na raiz, e valem independentemente de a causa ser essa:
+`appearance: none` em todo `button`, e `color-scheme: dark` no `:root` — que
+também faz o modo escuro automático do celular desistir de "ajudar" (E85). O
+`<meta name="color-scheme">` já existia no index.html, mas nem todo motor lê o
+meta; a propriedade CSS todos leem.
+
+### Uma armadilha minha, de brinde
+
+Passei um bom tempo olhando um print da tela de criação que eu mesmo tinha
+gerado, tentando entender por que o conserto não aparecia. O arquivo era
+**velho**: a captura falhava no seletor renomeado e eu tinha rodado o comando
+com `2>&1 >/dev/null`. Erro engolido, print antigo no disco, e eu depurando
+uma tela que não existia mais.

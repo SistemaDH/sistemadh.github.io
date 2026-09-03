@@ -398,8 +398,20 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 44'%3E%3Cpath d='M20 3 37 22 20 41 3 22z' fill='%23131020' stroke='%23574672' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
+/*
+ * O losango cheio da Esperança — UMA regra só.
+ *
+ * Havia duas, a trinta linhas de distância, e elas brigavam: esta desenha o
+ * losango como imagem e apaga o brilho; a de baixo escrevia `background:` na
+ * forma curta, o que ZERA `background-image` — o desenho sumia e voltava um
+ * quadrado dourado com brilho. Quem ganhava era a última, e ninguém percebeu
+ * porque a ficha usa `.papel__losango` hoje; quem paga é o encontro e as
+ * fichas filhas, que ainda usam esta trilha.
+ */
 .trilha--esperanca .trilha__ponto.esta-cheio {
   box-shadow: none;
+  border-color: transparent;
+  background-color: transparent;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 44'%3E%3Cpath d='M20 3 37 22 20 41 3 22z' fill='%23ffc94a' stroke='%238a6a2f' stroke-width='1.5' stroke-linejoin='round'/%3E%3Cpath d='M20 3 12 22 20 41M20 3 28 22 20 41M3 22h34' fill='none' stroke='%238a6a2f' stroke-width='1' opacity='.5'/%3E%3C/svg%3E");
 }
 
@@ -425,11 +437,6 @@
 .trilha--armadura .trilha__ponto.esta-cheio {
   background: var(--cor-ouro);
   border-color: var(--cor-ouro);
-}
-.trilha--esperanca .trilha__ponto.esta-cheio {
-  background: var(--cor-esperanca);
-  border-color: var(--cor-esperanca);
-  box-shadow: 0 0 10px rgba(255, 201, 74, .35);
 }
 
 .trilha--pv .trilha__rotulo { color: #f0b3b3; }
@@ -487,21 +494,6 @@
   flex-wrap: wrap;
   column-gap: 6px;
   row-gap: 0;
-}
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--e1);
-  min-height: 36px;
-  padding: var(--e1) var(--e3);
-  border-radius: var(--raio-cheio);
-  border: 1px solid var(--cor-borda-forte);
-  background: var(--cor-superficie-alta);
-  color: var(--cor-texto);
-  font-size: var(--txt-sm);
-  cursor: pointer;
-  text-align: left;
 }
 
 /*
@@ -1075,7 +1067,6 @@
    Cartão do roster — agora com um botão de excluir por cima
    ========================================================================== */
 
-.ficha-cartao { position: relative; padding: 0; }
 
 .ficha-cartao__abrir {
   display: block;
@@ -1087,16 +1078,6 @@
   text-align: left;
   cursor: pointer;
 }
-
-/*
- * Só a ÚLTIMA LINHA reserva a faixa da lixeira.
- *
- * O botão de excluir é absoluto no canto inferior direito, e o nome do jogador
- * passava por baixo dele. Reservar o espaço no cartão inteiro consertava isso e
- * quebrava outra coisa: o nome do personagem perdia largura e virava duas
- * linhas. A faixa é da última linha, e é lá que ela fica.
- */
-.ficha-cartao__rodape { padding-right: calc(var(--alvo-toque) + var(--e2)); }
 
 .ficha-cartao__excluir {
   position: absolute;
@@ -1209,9 +1190,9 @@
  * muda") e virava um bloco alto no canto. Quem cede espaço é a contagem.
  */
 .modal__caixa--descanso .modal__acoes .btn { white-space: nowrap; }
-.descanso__contagem { min-width: 0; }
 
 .descanso__contagem {
+  min-width: 0;
   text-align: center;
   font-size: var(--txt-sm);
   color: var(--cor-texto-suave);

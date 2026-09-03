@@ -253,19 +253,17 @@
   gap: 8px;
 }
 
-.chip {
-  min-height: 40px;
-  padding: 8px 12px;
-  border-radius: 999px;
-  border: 1px solid var(--cor-borda);
-  background: var(--cor-fundo-2);
-  color: var(--cor-texto);
-  font: inherit;
-  font-size: 13px;
-  cursor: pointer;
-  transition: border-color 120ms, background 120ms;
-}
-
+/*
+ * `.chip` NÃO mora mais aqui — foi para `componentes.css`, junto com `.btn`.
+ *
+ * Ele estava definido nas duas folhas, com valores diferentes, e o resultado
+ * na tela era uma COLAGEM: `ficha.css` carrega depois e ganhava no que as duas
+ * declaravam, enquanto o que só esta tinha (a transição, o `font: inherit`)
+ * sobrevivia. Ninguém conseguia prever a pílula lendo um arquivo só.
+ *
+ * Os estados (`:hover`, `:disabled`) e as variações da criação continuam
+ * abaixo — variação de tela é daqui; o componente, não.
+ */
 .chip:hover:not(:disabled) { border-color: var(--cor-ouro-escuro); }
 .chip:disabled { opacity: 0.35; cursor: not-allowed; }
 
@@ -287,10 +285,24 @@
 
 /* --------------------------------------------------------------- traços --- */
 
-.traco { display: flex; flex-direction: column; gap: 6px; }
-.traco__topo { display: flex; align-items: center; gap: 8px; }
+/*
+ * NOME PRÓPRIO, e é o remendo de um estrago.
+ *
+ * Estas regras se chamavam `.traco`, `.traco__topo` e `.traco__valor` — os
+ * mesmos nomes que a FICHA usa para os seis ladrilhos do topo. Os dois arquivos
+ * são carregados juntos, `papel.css` vem depois, e no dia em que o ladrilho da
+ * ficha virou um quadrado centralizado com borda, esta tela virou junto: os
+ * cartões de traço da criação ficaram centralizados, com borda dupla e o valor
+ * em fonte mono.
+ *
+ * Nada no conferidor de CSS pegava isso — as duas classes EXISTEM e as duas são
+ * USADAS. O que faltava era ver que são duas coisas diferentes com um nome só.
+ * Prefixo `criacao__` para o nome ser desta tela e de mais ninguém.
+ */
+.criacao__traco { display: flex; flex-direction: column; gap: 6px; }
+.criacao__tracoTopo { display: flex; align-items: center; gap: 8px; }
 
-.traco__valor {
+.criacao__tracoValor {
   font-family: var(--fonte-titulo);
   font-size: 20px;
   color: var(--cor-ouro);
@@ -479,11 +491,13 @@
   line-height: 1.5;
 }
 
-.btn--pequeno {
-  min-height: 40px;
-  padding: 8px 14px;
-  font-size: 14px;
-}
+/*
+ * `.btn--pequeno` NÃO mora mais aqui — ele é do sistema de componentes.
+ *
+ * Esta folha o redefinia, e como ela carrega depois de `componentes.css` a
+ * redefinição valia para o app INTEIRO, não só para a criação. Os valores
+ * que ganhavam foram levados para lá; aqui não sobrou nada.
+ */
 
 @media (min-width: 720px) {
   .criacao__corpo { padding: 20px max(16px, calc((100vw - 720px) / 2)) 32px; }

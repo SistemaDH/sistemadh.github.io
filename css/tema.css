@@ -8,6 +8,24 @@
    ========================================================================== */
 
 :root {
+  /*
+   * O TEMA É ESCURO, E ISSO PRECISA SER DITO EM CSS — não só no <meta>.
+   *
+   * Sem esta linha, o navegador considera a página "clara" para efeito dos
+   * controles nativos: `buttonface` (o fundo padrão de todo <button>) vira
+   * CINZA CLARO, e todo botão que só faz `background: none` fica à mercê de
+   * qualquer motor que insista em pintar o fundo nativo.
+   *
+   * É também o que faz o modo escuro automático do celular (Samsung Internet,
+   * Chrome Android) DESISTIR de inverter as cores da página: ele entende que
+   * ela já está no escuro. Sem isso, ele "ajuda" — e o resultado são caixas
+   * cinzas atrás de palavras que deviam ser texto sublinhado.
+   *
+   * O `<meta name="color-scheme">` do index.html diz a mesma coisa, mas nem
+   * todo motor lê o meta; a propriedade CSS todos leem.
+   */
+  color-scheme: dark;
+
   /* ---- Cores base: pergaminho sobre noite ----------------------------- */
   --cor-fundo:            #0c0a12;
   --cor-fundo-2:         #131020;
@@ -166,6 +184,26 @@ img { max-width: 100%; display: block; }
 button, input, select, textarea {
   font: inherit;
   color: inherit;
+}
+
+/*
+ * NENHUM BOTÃO USA A APARÊNCIA NATIVA — e isso tem de ser dito uma vez, aqui.
+ *
+ * Metade dos botões deste app não parece botão de propósito: o gatilho de
+ * verbete é uma palavra sublinhada dentro de uma frase, o quadradinho da
+ * trilha é um retângulo, o item do índice de regras é uma linha de lista.
+ * Todos eles apagavam o fundo com `background: none` — e isso basta no
+ * Chromium do computador, mas não em todo motor de celular: onde a aparência
+ * nativa continua ligada, o navegador pinta o `buttonface` por cima e a
+ * palavra ganha uma caixa cinza atrás.
+ *
+ * `appearance: none` desliga isso na raiz, para todos, de uma vez. Quem quer
+ * fundo continua declarando o seu — a regra só tira o que ninguém pediu.
+ */
+button {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: transparent;
 }
 
 /* Foco visível de verdade — acessibilidade também na mesa. */
