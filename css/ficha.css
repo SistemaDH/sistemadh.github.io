@@ -1091,12 +1091,12 @@
 /*
  * Só a ÚLTIMA LINHA reserva a faixa da lixeira.
  *
- * O botão de excluir é absoluto no canto inferior direito, e "JOGADOR: <nome>"
+ * O botão de excluir é absoluto no canto inferior direito, e o nome do jogador
  * passava por baixo dele. Reservar o espaço no cartão inteiro consertava isso e
  * quebrava outra coisa: o nome do personagem perdia largura e virava duas
- * linhas. A faixa é da linha dos selos, e é lá que ela fica.
+ * linhas. A faixa é da última linha, e é lá que ela fica.
  */
-.ficha-cartao__selos { padding-right: calc(var(--alvo-toque) + var(--e2)); }
+.ficha-cartao__rodape { padding-right: calc(var(--alvo-toque) + var(--e2)); }
 
 .ficha-cartao__excluir {
   position: absolute;

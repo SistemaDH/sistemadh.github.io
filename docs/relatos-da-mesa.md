@@ -973,3 +973,60 @@ interligados**. O que atravessa é o que a Vanessa traz na mão. Existe um botã
 ainda não chegou aqui — o vínculo feito em 03/09 trouxe o **Canva**, que é outro
 produto. Enquanto isso, os mockups continuam sendo lidos por imagem, e é por
 isso que um erro como o losango da Evasão passou.
+
+## 18. O canvas chegou — pelo Canva (K19)
+
+Depois de três tentativas, o desenho da Vanessa atravessou. Não pelo caminho
+que parecia óbvio: **Claude Design e Claude Code não são interligados**, e o
+botão "Send to Claude Code Web" semeia o projeto no workspace de *outra*
+sessão. Ela exportou para o **Canva** e mandou o link — e daí deu para ler não
+só as imagens, mas o **texto** de cada tela. Isso importa mais do que parece:
+com o texto na mão, "Estr" e "Estresse", "Cena" e "Em cena" deixam de ser
+adivinhação de quem espia um thumbnail de 219px.
+
+São cinco telas: **abertura** (já batia sem que eu soubesse), **ficha** (K15 a
+K17), **painel da Mesa** (K18) e as duas que faltavam.
+
+### Roster: o Medo à vista de todo mundo
+
+O cabeçalho ganhou o Medo da mesa. A pergunta que isso levanta não é de tela, é
+de jogo — e a resposta da Vanessa foi a boa: **quem mexe é o Mestre, quem vê é
+a mesa inteira.**
+
+O servidor já recusava alteração de qualquer um que não fosse o Mestre; o que
+mudou é que o jogador passou a enxergar o número, sem os botões. Faz sentido de
+mesa: numa mesa de papel a pilha de fichas de Medo está na frente de todo
+mundo, e saber que a Mestra está com 9 muda como o grupo decide arriscar.
+Esconder um número por causa de quem pode mexer nele é confundir permissão com
+sigilo (E81).
+
+Junto vieram duas limpezas. O botão do painel ainda carregava um 👑 — o último
+emoji que sobrou do E68. E o cartão tinha duas pílulas, "Jogador: Vanessa" e
+"Salvo há 4 min", que embrulhavam em duas fileiras num cartão que já tem três
+linhas de texto; viraram uma linha de rodapé, porque quem é e quando mexeu são
+a mesma pergunta.
+
+### Bestiário: a grade de quatro
+
+O cartão do adversário dizia os quatro números numa frase corrida — "Dif 11
+Limiares nenhum PV 1 Estresse 1". No meio de um combate, achar o limiar ali
+custa ler a linha inteira. Em quatro colunas com o rótulo em cima, cada número
+tem o mesmo lugar em todos os cartões, e o olho vai direto.
+
+Patamar e tipo viraram uma linha só à direita do nome ("1º · Comandante"): eram
+uma pílula em cima e uma palavra embaixo, com o PB e o Medo do lado — três
+informações em duas fileiras, e nenhuma delas é o que se procura primeiro.
+
+E o custo virou frase: **"Ataque custa 1 Medo · 2 PB"**. Como pílula solta ao
+lado do tipo, o Medo parecia atributo do bicho; escrito, fica claro que é
+preço — é o orçamento do encontro falando.
+
+A aba "Em cena" virou **"Cena"** e foi para o fim da fileira. Ela era a
+primeira, e é a única das três que costuma estar vazia: a tela de montar
+encontro abria por um zero. Adversários é de onde se parte, Ambientes é o
+vizinho, e a Cena é onde o escolhido cai — ela é o fim do gesto.
+
+Isso quebrou um teste de um jeito instrutivo: o passo lia
+`.bestiario__lista` `.first()` para contar os bichos em cena, e passou a contar
+os 129 do catálogo — **sem falhar**, porque 129 também é um número. Endereçar
+pela posição é assim: só se descobre o erro quando a ordem muda (E82).

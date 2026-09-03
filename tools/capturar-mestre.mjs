@@ -65,6 +65,9 @@ await p.getByRole('button', { name: 'Entrar como Mestre' }).click();
 await p.waitForSelector('.roster__painel', { timeout: 20000 });
 
 console.log('\nPrints:');
+// O roster visto pelo MESTRE: o Medo com os dois botões e a porta do painel.
+await foto('m0-roster-do-mestre');
+
 await p.getByRole('button', { name: /Abrir o painel do Mestre/ }).click();
 await p.waitForSelector('.trilha--medoMesa', { timeout: 25000 });
 

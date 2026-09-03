@@ -165,11 +165,55 @@
 
 .roster__cabecalho {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: var(--e3);
-  margin-bottom: var(--e5);
+  margin-bottom: var(--e4);
 }
+
+/* ==========================================================================
+   O MEDO NO CABEÇALHO DO ROSTER
+
+   Quem mexe é o Mestre — o servidor recusa de qualquer outro. Quem VÊ é a mesa
+   inteira: saber que a Mestra está com 9 de Medo muda como o grupo decide
+   arriscar, e na mesa de papel esse número está à vista de todo mundo.
+   ========================================================================== */
+
+.roster__medo {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  flex: 0 0 auto;
+}
+
+.roster__medoRotulo {
+  font-size: var(--txt-xs);
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--cor-medo);
+}
+
+.roster__medoValor {
+  min-width: 1.2em;
+  text-align: center;
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-lg);
+  color: #d8c2ff;
+}
+
+/*
+ * Para o jogador o número é INFORMAÇÃO, não controle: sem botões, e a pílula
+ * fecha em volta dele para não parecer um botão desligado.
+ */
+.roster__medo.e-soLeitura {
+  padding: 2px var(--e3);
+  border: 1px solid var(--cor-medo);
+  border-radius: var(--raio-cheio);
+  background: var(--cor-medo-fundo);
+}
+
+.roster__medo.e-soLeitura .roster__medoValor { font-size: var(--txt-md); }
 
 .roster__lista {
   display: grid;
@@ -206,11 +250,19 @@
   color: var(--cor-texto-suave);
 }
 
-.ficha-cartao__selos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--e2);
-  margin-top: var(--e1);
+/*
+ * DONO E HORA NUMA LINHA SÓ.
+ *
+ * Eram duas pílulas ("Jogador: Vanessa" e "Salvo há 4 min") e embrulhavam em
+ * duas fileiras num cartão que já tem três linhas de texto. Quem é e quando
+ * mexeu são a mesma pergunta, e ela cabe numa frase de rodapé.
+ */
+.ficha-cartao__rodape {
+  margin: var(--e3) 0 0;
+  font-size: var(--txt-xs);
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--cor-texto-fraco);
 }
 
 /*

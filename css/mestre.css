@@ -674,15 +674,56 @@
 .selo--acao { border-color: var(--cor-ouro-escuro); color: var(--cor-ouro-claro); }
 .selo--reacao { border-color: var(--cor-medo); color: #d8c2ff; }
 
+/*
+ * A GRADE DE QUATRO NÚMEROS.
+ *
+ * Eram quatro pares numa frase corrida, e no meio de um combate achar o limiar
+ * ali custava ler a linha inteira. Em quatro colunas fixas, cada número tem o
+ * mesmo lugar em todos os cartões e o olho vai direto.
+ */
 .bestiario__stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--e3);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--e2);
 }
 
-.bestiario__mini { display: flex; align-items: baseline; gap: 4px; }
-.bestiario__miniRotulo { font-size: var(--txt-xs); color: var(--cor-texto-fraco); }
-.bestiario__miniValor { font-family: var(--fonte-mono); font-size: var(--txt-sm); }
+.bestiario__mini {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.bestiario__miniRotulo {
+  font-size: var(--txt-xs);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--cor-texto-fraco);
+}
+
+.bestiario__miniValor {
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-md);
+  color: var(--cor-texto);
+  /* "nenhum" no lugar dos limiares é a única palavra que entra na grade. */
+  overflow-wrap: break-word;
+}
+
+/* Patamar e tipo, à direita do nome: "1º · Comandante". */
+.bestiario__patamarTipo {
+  flex: 0 0 auto;
+  font-size: var(--txt-xs);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--cor-ouro-claro);
+}
+
+/* O preço do bicho no orçamento do encontro, escrito como frase. */
+.bestiario__custo {
+  margin: 0;
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-fraco);
+}
 
 .bestiario__nota { margin-top: var(--e3); }
 .bestiario__nota summary { cursor: pointer; color: var(--cor-texto-fraco); }

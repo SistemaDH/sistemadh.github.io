@@ -122,10 +122,18 @@ export function abaBestiario(pai, painel, { aoMudarMedo, aoCriarContagem } = {})
   function barraDeListas() {
     const troca = (id) => () => { filtro.lista = id; filtro.tipo = ''; desenhar(); };
     return el('div', { class: 'bestiario__listas bestiario__listas--tres', role: 'tablist' }, [
-      alternador('Em cena', emCena, filtro.lista === 'encontro', troca('encontro')),
+      /*
+       * A ORDEM É A DO CATÁLOGO, e "Cena" fecha.
+       *
+       * "Em cena" abria a fileira, e ele é o único dos três que costuma estar
+       * vazio — a tela de montar encontro começava por um zero. Adversários é
+       * de onde se parte, Ambientes é o vizinho, e a Cena é onde o que foi
+       * escolhido cai: ela é o FIM do gesto, não o começo.
+       */
       alternador('Adversários', catalogo.adversarios.length + daMesa.length,
         filtro.lista === 'adversarios', troca('adversarios')),
-      alternador('Ambientes', catalogo.ambientes.length, filtro.lista === 'ambientes', troca('ambientes'))
+      alternador('Ambientes', catalogo.ambientes.length, filtro.lista === 'ambientes', troca('ambientes')),
+      alternador('Cena', emCena, filtro.lista === 'encontro', troca('encontro'))
     ]);
   }
 
@@ -243,26 +251,47 @@ export function abaBestiario(pai, painel, { aoMudarMedo, aoCriarContagem } = {})
       },
       onKeydown: (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); abrirAdversario(f); } }
     }, [
+      /*
+       * PATAMAR E TIPO NUMA LINHA SÓ, à direita do nome.
+       *
+       * Eram duas linhas: uma pílula "1º" no alto e "Lacaio" logo abaixo, com
+       * o PB e o Medo do lado. Três informações em duas fileiras num cartão que
+       * ainda tinha a grade de números — e nenhuma delas é o que se procura
+       * primeiro. "1º · Comandante" responde de uma vez "que bicho é este".
+       */
       el('div', { class: 'bestiario__linhaTopo' }, [
         el('strong', { class: 'bestiario__nome', texto: f.nome }),
         f.daMesa ? el('span', { class: 'selo selo--ouro', texto: 'da mesa' }) : null,
-        el('span', { class: 'selo selo--patamar', texto: `${f.patamar}º` })
+        el('span', { class: 'bestiario__patamarTipo', texto: `${f.patamar}º · ${f.tipo}` })
       ].filter(Boolean)),
-      el('div', { class: 'bestiario__linhaMeio' }, [
-        el('span', { class: 'bestiario__tipo', texto: f.tipo }),
-        el('span', { class: 'bestiario__pb', title: 'Pontos de Batalha',
-          texto: `${custoDoTipo(f.tipo)} PB` }),
-        f.custoDeMedoMaximo
-          ? el('span', { class: 'selo selo--medo', title: 'tem habilidade que custa Medo',
-              texto: `Medo ${f.custoDeMedoMaximo}` })
-          : null
-      ].filter(Boolean)),
+      /*
+       * A GRADE DE QUATRO: rótulo em cima, número embaixo.
+       *
+       * Os quatro números vinham numa frase corrida ("Dif 11 Limiares nenhum
+       * PV 1 Estresse 1") e, no meio de um combate, achar o limiar naquilo
+       * custava ler a linha inteira. Em colunas, cada um tem lugar fixo — o
+       * olho vai direto, e é o mesmo arranjo em todos os cartões.
+       */
       el('div', { class: 'bestiario__stats' }, [
         mini('Dif', f.dificuldade),
         mini('Limiares', f.limiares || 'nenhum'),
         mini('PV', f.pontosDeVida),
-        mini('Estresse', f.estresse)
+        mini('Estr', f.estresse)
       ]),
+      /*
+       * O CUSTO VIRA FRASE, e ela é sobre o orçamento do encontro: o que o
+       * bicho custa em Pontos de Batalha, e se ele cobra Medo para atacar.
+       * Como pílula solta no meio da linha do tipo, o Medo parecia atributo
+       * dele; escrito, fica claro que é preço.
+       */
+      el('p', { class: 'bestiario__custo' }, [
+        f.custoDeMedoMaximo
+          ? el('span', { texto: `Ataque custa ${f.custoDeMedoMaximo} ` })
+          : null,
+        f.custoDeMedoMaximo ? gatilhoPara('Medo', 'medo') : null,
+        f.custoDeMedoMaximo ? el('span', { texto: ' · ' }) : null,
+        el('span', { title: 'Pontos de Batalha', texto: `${custoDoTipo(f.tipo)} PB` })
+      ].filter(Boolean)),
       el('div', { class: 'encontro__acoes' }, [
         botaoPorEmCena(f),
         f.daMesa ? el('button', {

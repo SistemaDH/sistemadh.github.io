@@ -950,8 +950,13 @@ try {
     await pagina.fill('#codigo', 'mestre-teste');
     await pagina.getByRole('button', { name: 'Entrar como Mestre' }).click();
     await pagina.waitForSelector('.ficha-cartao__nome', { timeout: 15000 });
-    const selo = await pagina.textContent('.ficha-cartao .selo--mestre');
-    if (!selo.includes('Vanessa')) throw new Error(`selo do dono: "${selo}"`);
+    /*
+     * Dono e hora viraram UMA linha de rodapé: eram duas pílulas que
+     * embrulhavam em duas fileiras num cartão que já tem três linhas.
+     */
+    const rodape = await pagina.textContent('.ficha-cartao .ficha-cartao__rodape');
+    if (!rodape.includes('Vanessa')) throw new Error(`rodapé do cartão: "${rodape}"`);
+    if (!/salvo/i.test(rodape)) throw new Error(`rodapé sem a hora: "${rodape}"`);
   });
 
   await passo('o Mestre ajusta o Medo e o valor persiste', async () => {
@@ -1222,12 +1227,20 @@ try {
     await pagina.waitForTimeout(700);
     await pagina.locator('.bestiario__linha').first().locator('.bestiario__porEmCena').click();
     await pagina.waitForTimeout(700);
-    const conta = await pagina.locator('.bestiario__lista').first().locator('.bestiario__conta').textContent();
+    /*
+     * O contador é lido pelo NOME da aba, não pela posição.
+     *
+     * "Em cena" abria a fileira e virou "Cena", no fim dela — e um `.first()`
+     * passou a ler os 129 adversários como se fossem os ursos em cena. Pela
+     * posição, o teste dependia da ordem das abas; pelo nome, não.
+     */
+    const conta = await pagina.getByRole('tab', { name: /Cena/ })
+      .locator('.bestiario__conta').textContent();
     igual(conta.trim(), '2', 'dois ursos em cena');
   });
 
   await passo('a cena mostra uma trilha por adversário, independentes', async () => {
-    await pagina.getByRole('tab', { name: /Em cena/ }).click();
+    await pagina.getByRole('tab', { name: /Cena/ }).click();
     await pagina.waitForSelector('.encontro__cartao', { timeout: 15000 });
     const cartoes = await pagina.locator('.encontro__cartao').count();
     igual(cartoes, 2);
@@ -1285,7 +1298,7 @@ try {
     await pagina.waitForTimeout(400);
     await pagina.locator('.bestiario__linha').first().locator('.bestiario__porEmCena').click();
     await pagina.waitForTimeout(700);
-    await pagina.getByRole('tab', { name: /Em cena/ }).click();
+    await pagina.getByRole('tab', { name: /Cena/ }).click();
     await pagina.waitForSelector('.encontro__cartao', { timeout: 15000 });
 
     const chefe = pagina.locator('.encontro__cartao').filter({ hasText: 'Guarda Chefe' });
@@ -1588,8 +1601,17 @@ try {
   });
 
   await passo('alvos de toque com pelo menos 44px', async () => {
+    /*
+     * O GATILHO DE VERBETE É A ÚNICA EXCEÇÃO, e é deliberada.
+     *
+     * Ele é um alvo EMBUTIDO numa frase — a palavra sublinhada no texto da
+     * carta, ou o rótulo "Medo" no cabeçalho do roster. Esticá-lo para 44px
+     * arrebentaria a entrelinha do parágrafo em volta, e a própria WCAG abre
+     * essa exceção para alvo inline. Está escrito em `gatilho()`, em
+     * verbete.js. A régua dos 44px vale para todo o resto.
+     */
     const pequenos = await pagina.evaluate(() =>
-      Array.from(document.querySelectorAll('button'))
+      Array.from(document.querySelectorAll('button:not(.verbete__gatilho)'))
         .filter((b) => b.offsetParent !== null)
         .map((b) => ({ texto: b.textContent.trim().slice(0, 20), altura: b.getBoundingClientRect().height }))
         .filter((b) => b.altura < 44));

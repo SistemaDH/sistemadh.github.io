@@ -15,6 +15,7 @@ import { abrirCriacao } from './criacao.js';
 import { abrirFichaEmJogo } from './ficha.js';
 import { abrirPainelDoMestre } from './mestre.js';
 import { icone } from '../componentes/icone.js';
+import { nomeAnotado, prepararVerbetes } from '../verbete.js';
 
 /** O nível em que a mesa está, para marcar quem ficou para trás. */
 function nivelDaMesa() {
@@ -25,6 +26,7 @@ export function telaRoster() {
   // A lista é onde o selo "mesa no nível N" aparece, então é o lugar certo
   // para perguntar se a mesa subiu enquanto o jogador estava em outra tela.
   acoes.atualizarSessao().catch(() => {});
+
 
   const raiz = el('div', { class: 'roster' });
   const lista = el('div', { class: 'roster__lista' });
@@ -57,8 +59,8 @@ export function telaRoster() {
 
   raiz.append(cabecalho, lista, rodape);
 
-  const medo = ehMestre() ? controleDeMedo() : null;
-  if (medo) cabecalho.append(medo.node);
+  const medo = controleDeMedo();
+  cabecalho.append(medo.node);
 
   // O painel do Mestre é uma tela inteira, não um controle de cabeçalho: o
   // Medo é só a ponta dele. O contador rápido continua aqui para o gesto mais
@@ -68,7 +70,7 @@ export function telaRoster() {
     raiz.insertBefore(el('button', {
       type: 'button', class: 'btn btn--fantasma roster__painel',
       onClick: () => abrirPainelDoMestre({ aoFechar: () => desenharLista() })
-    }, '👑  Abrir o painel do Mestre'), lista);
+    }, [icone('mesa', { grande: true }), el('span', { texto: 'Abrir o painel do Mestre' })]), lista);
   }
 
   desenharLista();
@@ -136,10 +138,18 @@ export function telaRoster() {
       ]),
       classe ? el('p', { class: 'ficha-cartao__linha', texto: classe }) : null,
       detalhes ? el('p', { class: 'ficha-cartao__linha', texto: detalhes }) : null,
-      el('div', { class: 'ficha-cartao__selos' }, [
-        ehMestre() && p.donoNome ? el('span', { class: 'selo selo--mestre', texto: `Jogador: ${p.donoNome}` }) : null,
-        el('span', { class: 'selo', texto: `Salvo ${dataRelativa(p.atualizadoEm)}` })
-      ])
+      /*
+       * DONO E HORA NUMA LINHA SÓ.
+       *
+       * Eram duas pílulas — "Jogador: Vanessa" e "Salvo há 4 min" — e duas
+       * pílulas embrulhavam em duas fileiras num cartão que já tem três linhas
+       * de texto. Viraram uma linha de rodapé: quem é e quando mexeu são a
+       * mesma pergunta ("de quem é esta ficha e ela está fresca?"), e a
+       * resposta cabe numa frase.
+       */
+      el('p', { class: 'ficha-cartao__rodape', texto:
+        [ehMestre() && p.donoNome ? p.donoNome : null, `salvo ${dataRelativa(p.atualizadoEm)}`]
+          .filter(Boolean).join(' · ') })
     ]);
 
     const excluir = el('button', {
@@ -189,8 +199,23 @@ export function telaRoster() {
 
   /* ---------------------------------------------------------------- */
 
+  /**
+   * O MEDO NO CABEÇALHO DO ROSTER.
+   *
+   * Quem MEXE é o Mestre — o servidor recusa de qualquer outro, e é regra do
+   * livro: o Medo é recurso dele. Mas quem VÊ é a mesa inteira, e isso é
+   * decisão da Vanessa com razão de jogo: saber que a Mestra está com 9 de
+   * Medo muda como o grupo decide arriscar. Esconder o número tiraria da mesa
+   * uma informação que, na mesa de papel, está à vista em fichas na frente de
+   * todo mundo.
+   *
+   * Então o jogador recebe o mesmo número, sem os dois botões. Não é o botão
+   * que protege o recurso — é o servidor; o botão só some porque não teria o
+   * que fazer ali.
+   */
   function controleDeMedo() {
-    const valor = el('strong', { class: 'texto-ouro', texto: String(obterEstado().medo || 0) });
+    const mestre = ehMestre();
+    const valor = el('strong', { class: 'roster__medoValor', texto: String(obterEstado().medo || 0) });
 
     const ajustar = (delta) => async () => {
       const novo = Math.max(0, (obterEstado().medo || 0) + delta);
@@ -201,16 +226,42 @@ export function telaRoster() {
       }
     };
 
-    const node = el('div', { class: 'linha' }, [
-      el('span', { class: 'selo selo--mestre', texto: 'Medo' }),
-      el('button', { type: 'button', class: 'btn btn--contador', onClick: ajustar(-1), 'aria-label': 'Diminuir Medo' }, '−'),
+    /*
+     * "Medo" é palavra de regra, e esta é a primeira tela depois do login —
+     * para muita gente, o primeiro lugar onde ela aparece. Os verbetes podem
+     * ainda não ter chegado quando o cabeçalho é montado: então o rótulo nasce
+     * como texto puro e vira gatilho quando eles chegam. Se não chegarem, fica
+     * o texto e nada quebra.
+     */
+    const rotulo = el('span', { class: 'roster__medoRotulo', texto: 'Medo' });
+    prepararVerbetes()
+      .then(() => rotulo.replaceChildren(nomeAnotado('Medo', { comGlossa: false })))
+      .catch(() => {});
+
+    const node = el('div', {
+      class: `roster__medo ${mestre ? '' : 'e-soLeitura'}`,
+      role: mestre ? null : 'img',
+      'aria-label': mestre ? null : `Medo da mesa: ${obterEstado().medo || 0}`
+    }, [
+      rotulo,
+      mestre ? el('button', {
+        type: 'button', class: 'btn btn--contador',
+        onClick: ajustar(-1), 'aria-label': 'Diminuir Medo'
+      }, '−') : null,
       valor,
-      el('button', { type: 'button', class: 'btn btn--contador', onClick: ajustar(1), 'aria-label': 'Aumentar Medo' }, '+')
+      mestre ? el('button', {
+        type: 'button', class: 'btn btn--contador',
+        onClick: ajustar(1), 'aria-label': 'Aumentar Medo'
+      }, '+') : null
     ]);
 
     return {
       node,
-      atualizar: () => { valor.textContent = String(obterEstado().medo || 0); }
+      atualizar: () => {
+        const agora = String(obterEstado().medo || 0);
+        valor.textContent = agora;
+        if (!mestre) node.setAttribute('aria-label', `Medo da mesa: ${agora}`);
+      }
     };
   }
 

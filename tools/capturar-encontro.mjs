@@ -90,7 +90,7 @@ await p.fill('.bestiario input[type="search"]', '');
 await p.waitForTimeout(300);
 await foto('e1-catalogo-com-botao');
 
-await p.getByRole('tab', { name: /Em cena/ }).click();
+await p.getByRole('tab', { name: /Cena/ }).click();
 await p.waitForSelector('.encontro__cartao', { timeout: 15000 });
 await foto('e2-cena');
 

@@ -61,7 +61,7 @@ await foto('p3-na-lista');
 await semAviso();
 await p.locator('.bestiario__linha').first().getByRole('button', { name: '+ cena' }).click();
 await p.waitForTimeout(800);
-await p.getByRole('tab', { name: /Em cena/ }).click();
+await p.getByRole('tab', { name: /Cena/ }).click();
 await p.waitForSelector('.encontro__cartao', { timeout: 15000 });
 await foto('p4-em-cena');
 
