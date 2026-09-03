@@ -797,7 +797,7 @@ try {
       document.querySelectorAll('.papel__trilha--pv .papel__caixa.esta-cheio').length === 0,
       null, { timeout: 15000 });
     // E a Esperança subiu 1 com o Preparar-se.
-    const esperanca = await pagina.locator('.papel__losango.esta-cheio').count();
+    const esperanca = await pagina.locator('.papel__esperancaPonto.esta-cheio').count();
     if (esperanca !== 3) throw new Error(`Esperança: ${esperanca}, esperava 3 (2 iniciais + 1)`);
   });
 
@@ -1436,7 +1436,7 @@ try {
 
     // E o quadradinho é alvo de toque de verdade — ele ficou sozinho.
     const baixos = await pagina.evaluate(() =>
-      Array.from(document.querySelectorAll('.papel__caixa, .papel__losango'))
+      Array.from(document.querySelectorAll('.papel__caixa, .papel__esperancaPonto'))
         .filter((b) => b.offsetParent !== null)
         .filter((b) => b.getBoundingClientRect().height < 44).length);
     igual(baixos, 0, 'há quadradinho abaixo de 44px');

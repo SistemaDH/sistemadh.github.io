@@ -930,7 +930,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * o ÚLTIMO deles — o erro contava os 12 quadradinhos como se todos
    * estivessem marcados.
    */
-  const MARCAVEIS = ['.papel__caixa', '.papel__slot', '.papel__losango'];
+  const MARCAVEIS = ['.papel__caixa', '.papel__slot', '.papel__esperancaPonto'];
   const seletorMarcaveis = (sufixo = '') => MARCAVEIS.map((c) => c + sufixo).join(', ');
 
   /**
@@ -1207,7 +1207,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       if (i > 1) pista.append(el('span', { class: 'papel__tracinho' }));
       pista.append(el('button', {
         type: 'button',
-        class: `papel__losango ${cheio ? 'esta-cheio' : ''}`,
+        class: `papel__esperancaPonto ${cheio ? 'esta-cheio' : ''}`,
         'aria-label': `Esperança: ${i} de ${max}`,
         'aria-pressed': cheio ? 'true' : 'false',
         // Mesmo caminho das outras duas trilhas: os tracinhos no meio não

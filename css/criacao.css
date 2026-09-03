@@ -45,7 +45,7 @@
   font-size: var(--txt-xs);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
 }
 
 .criacao__titulo {
@@ -98,7 +98,7 @@
   margin: 12px 0 0;
   padding-bottom: 6px;
   border-bottom: 1px solid var(--cor-borda);
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
 }
 
 .criacao__subsecao {
@@ -305,7 +305,7 @@
 .criacao__tracoValor {
   font-family: var(--fonte-titulo);
   font-size: 20px;
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
   font-variant-numeric: tabular-nums;
 }
 
@@ -339,7 +339,7 @@
 .derivado__valor {
   font-family: var(--fonte-titulo);
   font-size: 20px;
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
   font-variant-numeric: tabular-nums;
 }
 
@@ -374,7 +374,7 @@
   padding: 4px 2px;
   border: 0;
   background: none;
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
   font: inherit;
   font-family: var(--fonte-titulo);
   font-size: 16px;
@@ -437,7 +437,7 @@
   border-radius: 999px;
   border: 1px solid var(--cor-borda);
   background: rgba(12, 10, 18, 0.75);
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
   font-size: 26px;
   line-height: 1;
   cursor: pointer;
@@ -452,7 +452,7 @@
   margin: 0;
   font-family: var(--fonte-titulo);
   font-size: 17px;
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
   text-align: center;
 }
 
@@ -473,7 +473,7 @@
 .carta-visor__reservaTitulo {
   margin: 0 0 4px;
   font-family: var(--fonte-titulo);
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
 }
 
 .carta-visor__reservaTexto {
@@ -537,7 +537,7 @@
 .nome-carta .glosa,
 .carta-visor__legenda .glosa,
 .criacao__secao .glosa {
-  color: var(--cor-ouro-escuro);
+  color: var(--cor-titulo);
 }
 
 /* --------------------------------------------------------------------------
@@ -560,5 +560,5 @@
 .criacao__molduraNome {
   margin: 0 0 var(--e2);
   font-size: var(--txt-md);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
 }

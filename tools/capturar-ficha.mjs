@@ -182,6 +182,10 @@ await foto('f2b-jogo-meio');
 await p.locator('.equip').scrollIntoViewIfNeeded();
 await foto('f2c-jogo-equipamento');
 
+// A carta de Esperança da classe — é onde o emblema da marca cabe inteiro.
+await p.locator('.papel__esperancaCarta').scrollIntoViewIfNeeded();
+await foto('f2f-carta-de-esperanca');
+
 // O editor de foto: escolher, enquadrar e subir (K5).
 await p.locator('.retrato__moldura').click();
 await p.waitForSelector('.foto__tela');

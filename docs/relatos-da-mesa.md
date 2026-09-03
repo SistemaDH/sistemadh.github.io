@@ -1093,3 +1093,148 @@ gerado, tentando entender por que o conserto não aparecia. O arquivo era
 **velho**: a captura falhava no seletor renomeado e eu tinha rodado o comando
 com `2>&1 >/dev/null`. Erro engolido, print antigo no disco, e eu depurando
 uma tela que não existia mais.
+
+## 20. A marca, os tokens e a cor que estava mentindo
+
+Três rodadas de identidade visual, e a mais importante começou com uma pergunta
+da Vanessa: *"todo aplicativo tá na cor violeta ou roxo né... mas isso seria a
+cor do Medo"*.
+
+Ela estava certa, e dava para medir. Fundo, superfícies e bordas estavam todos
+no matiz **251–263**. O Medo é **258**. O app inteiro estava pintado com a cor
+do Medo, e ele só se destacava por ser mais saturado — sinal fraco, e
+contradizendo o E67, que a gente tinha escrito três dias antes.
+
+O roxo não era arbitrário: veio do livro, que é roxo com dourado, e a paleta
+nasceu copiando isso na Parte 1. O que ninguém viu foi que a decisão de **esta
+semana** — violeta é do Medo e só dele — tornou o fundo incoerente com ela.
+
+**A saída não era o azul.** O azul já é do Estresse (205); trocar só mudaria a
+vítima. O princípio é outro: **o cromo não deve ser nenhuma das cores que
+significam algo**. Ele foi para o matiz 232 — o lado azul do degradê da logo,
+longe do Estresse — com a saturação cortada pela metade e a **luminância
+intacta, dígito por dígito**, para nenhum contraste de texto se mexer (E86).
+
+Dois clarões roxos escritos à mão no `body` foram junto; sem eles, o app trocava
+de cor e o fundo continuava denunciando o roxo.
+
+### Os tokens: o tamanho decidiu o desenho
+
+A Vanessa quis fazer tokens de Esperança e Medo, aceso e apagado. Antes de
+opinar, medi o espaço real: são **12 Medos numa fileira de 390px — 27px por
+peça**; a Esperança são 6, com 40px.
+
+Esse número decidiu tudo. Aos 27px o que sobrevive é a **silhueta**: nada de
+contorno fino, detalhe interno ou brilho — doze halos grudados viram uma faixa
+borrada. A caveira que ela desenhou passou no teste inteira. A Esperança não:
+aos 40px o anel, as mãos e as estrelinhas viravam um borrão, e só a estrela de
+quatro pontas se reconhecia. Ficou a estrela — que, por acaso feliz, é prima do
+losango que a ficha oficial usa para Esperança (um losango de lados côncavos).
+
+**As duas entraram como MÁSCARA, não como imagem.** A máscara diz só o formato;
+a cor vem do tema. Isso dá de graça exatamente o que a trilha precisa — mesma
+silhueta, dois preenchimentos — com um arquivo em vez de dois, e sem a piscada
+da segunda imagem carregando no primeiro toque (E87). O `.papel__losango`
+virou `.papel__esperancaPonto`: uma classe chamada "losango" pintando uma
+estrela é o tipo de nome que engana o próximo leitor, e a gente já pagou por
+isso com o `.traco`.
+
+### A marca
+
+O hexágono sem texto virou o brasão da abertura, no lugar do losango dourado em
+CSS que era marcador de lugar desde a Parte 1. O emblema circular virou o
+ícone — favicon, iPhone e "adicionar à tela inicial", com manifesto — porque o
+lançador do Android recorta em círculo, e o hexágono perderia as pontas.
+
+E o papel de parede ficou **só na abertura**, com **véu em vez de
+transparência**: baixar a opacidade da arte sobre fundo escuro mata os azuis e
+os violetas dela. A imagem entra com força total e leva um gradiente escuro por
+cima, mais fechado na faixa do meio, onde mora o formulário. A cor sobrevive e
+o contraste fica garantido, em vez de os dois ficarem meio ruins.
+
+---
+
+## 21. O ouro que queria dizer três coisas
+
+A Vanessa fez a pergunta certa duas vezes seguidas. Primeiro sobre o fundo:
+*"todo aplicativo tá na cor violeta… mas isso seria a cor do medo"*. Depois
+sobre o texto: *"os textos sairem do dourado, já que é a cor da esperança"*.
+
+É a mesma pergunta, um andar acima — e a segunda é pior que a primeira.
+
+Contando as ocorrências, o dourado fazia **três trabalhos que não têm nada a
+ver entre si**:
+
+1. **Cromo** — o nome do personagem, todo título de seção, todo rótulo, toda
+   fórmula, todo valor. Sessenta lugares.
+2. **Seleção** — a aba ativa, o chip escolhido, a borda sob o dedo, o contorno
+   de foco. Quase todos os `:hover`.
+3. **Significado** — a Armadura, a moeda, a Esperança, o botão principal.
+
+Uma cor que quer dizer três coisas não quer dizer nenhuma. Se o nome da seção
+e o marcador de Armadura têm exatamente o mesmo dourado, o dourado da Armadura
+não avisa mais nada — ele é só o padrão do app.
+
+### A prata não foi escolha de gosto
+
+O corpo do texto é pergaminho quente (`#efe7d8`). Se o título fosse um
+pergaminho um pouco mais claro, ninguém veria diferença nenhuma — dois tons da
+mesma temperatura, separados por 3% de luminância, é o mesmo que nada.
+
+Sendo **prata fria** (`#e6ecf5`), o título se separa do corpo por
+*temperatura*, não por brilho: não precisa ser maior nem mais forte, e não
+rouba contraste de ninguém. E combina com o emblema prateado da marca — que é
+o que a Vanessa tinha visto antes de mim quando disse *"no texto da logo dá um
+destaque melhor"*. Dá mesmo: o brasão é prata e azul, e a palavra
+DAGGERHEART estava dourada em cima dele.
+
+### E a seleção?
+
+Ela perguntou se a seleção devia virar outra cor. A resposta é **não, e por um
+motivo que se mede**: eu tirei os matizes do brasão e eles são **190–210**. O
+Estresse é 205. O azul da logo não está livre — é a mesma faixa. Puxar a
+seleção para lá repetiria o erro do violeta com outra vítima.
+
+Não fazia falta. Quando o ouro **saiu** dos títulos, ele ficou raro — e o que
+ficou raro ficou alto. Hoje o dourado na ficha aparece em cinco lugares
+(o selo de nível, o traço de Conjuração, o escudo da Armadura, o slot cheio,
+a aba ativa) em vez de cinquenta. A seleção não precisou de cor nova; precisou
+que as outras cinquenta parassem de usar a dela.
+
+### O emblema que não coube na trilha, mas coube na carta
+
+A arte nova da Esperança — anel, mãos e estrela, em ouro e em prata — não passa
+no teste do E88. A 40px, que é o tamanho de um ponto da trilha, os três
+elementos viram um borrão só; a estrela sozinha se lê até 32px. A trilha ficou
+como estava.
+
+Mas o teste do E88 diz onde a arte **não** cabe — ele não diz para jogá-la
+fora. Aos 96px os três se separam, e 96px é exatamente o que sobra na carta de
+Esperança da classe. Ela entrou lá como marca-d'água a 10%, sangrando pela
+direita, atrás do texto. E a carta, que era dourada só porque tudo era
+dourado, ganhou a cor da Esperança na barra e no título: a regra que fala de
+Esperança agora usa a cor da Esperança.
+
+A versão prateada ficou guardada. Sobre fundo escuro ela some — o cinza da
+arte é mais escuro que o nosso pergaminho — então ela serve para fundo claro,
+não para cá. Está em `assets/marca/esperanca-emblema-prata.png` esperando.
+
+### A ponta que faltava
+
+A Vanessa: *"eu gosto do símbolo que usou para esperança, o negócio que me pega
+é que a parte debaixo da estrela você cortou e isso me dá agonia."*
+
+Ela está certa e a culpa é do método. Para tirar o anel da arte original eu
+usei um **corte radial** — tudo além de certo raio vira transparente. O anel
+saiu, e a ponta de baixo da estrela saiu junto: virou um toco reto encostado
+na borda do arquivo. No código não se vê nada; na tela se vê, e incomoda.
+
+A correção não redesenhou a estrela — redesenhar teria perdido justamente o
+que ela gostou. Eu **espelhei a metade de cima**, que estava inteira, sobre a
+de baixo, usando a linha das pontas laterais como eixo. A estrela ficou
+simétrica, com a ponta de baixo do mesmo comprimento da de cima, e sobrou 5%
+de folga em volta: **nada encosta na borda**, que é o que fazia o motor cortar
+de novo na hora de escalar a máscara.
+
+A lição é sobre a ferramenta, não sobre o desenho: corte por raio não sabe o
+que é anel e o que é estrela. Ele só sabe distância.

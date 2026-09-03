@@ -99,7 +99,7 @@
 .mestre__subsecao {
   font-family: var(--fonte-titulo);
   font-size: var(--txt-sm);
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
   margin: var(--e2) 0 0;
 }
 
@@ -165,7 +165,7 @@
 .mestre__formula {
   font-family: var(--fonte-mono);
   font-size: var(--txt-xs);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
 }
 
 .mestre__dica {
@@ -206,7 +206,7 @@
 .mestre__contagemValor {
   font-family: var(--fonte-titulo);
   font-size: var(--txt-2xl);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
   line-height: 1;
   min-width: 1.5em;
   text-align: right;
@@ -250,7 +250,7 @@
 .mestre__tabelaTitulo {
   cursor: pointer;
   font-size: var(--txt-sm);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
   min-height: 32px;
   display: flex;
   align-items: center;
@@ -276,7 +276,7 @@
   font-family: var(--fonte-mono);
   min-width: 2.5em;
   text-align: right;
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
 }
 
 /* --- grupo ---------------------------------------------------------------- */
@@ -386,7 +386,7 @@
   padding: 0 0 0 var(--e2);
   border: 0;
   background: none;
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
   font: inherit;
   font-size: var(--txt-xs);
   font-weight: 600;
@@ -548,7 +548,7 @@
 
 .mestre__etapaValor {
   font-family: var(--fonte-mono);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
   min-width: 2ch;
   text-align: right;
   flex: 0 0 auto;
@@ -665,7 +665,7 @@
 .bestiario__pb {
   font-family: var(--fonte-mono);
   font-size: var(--txt-xs);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
 }
 .bestiario__desc { margin: 0; }
 
@@ -715,7 +715,7 @@
   font-size: var(--txt-xs);
   letter-spacing: .04em;
   text-transform: uppercase;
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
 }
 
 /* O preço do bicho no orçamento do encontro, escrito como frase. */
@@ -735,7 +735,7 @@
 .ficha-adversario__tipo {
   margin: 0;
   font-style: italic;
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
 }
 
 .ficha-adversario__stats {
@@ -812,7 +812,7 @@
   padding: 0;
   border: none;
   background: none;
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
   font: inherit;
   text-decoration: underline dotted;
   cursor: pointer;
@@ -823,7 +823,7 @@
 .bestiario__pbTotal {
   font-family: var(--fonte-mono);
   font-size: var(--txt-lg);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
 }
 
 .guia-batalha__ajuste {
@@ -881,7 +881,7 @@
 .encontro__pb {
   font-family: var(--fonte-mono);
   font-size: var(--txt-lg);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
 }
 
 .encontro__acoes {
@@ -1064,15 +1064,29 @@
 
 .medo__trilha { display: flex; gap: 2px; }
 
+/*
+ * A CAVEIRA DO MEDO, desenhada por MÁSCARA.
+ *
+ * Era uma gota de chama em SVG embutido, com o desenho duplicado nos dois
+ * estados — duas cópias do mesmo caminho, uma clara e uma escura. Virou a
+ * caveira que a Vanessa desenhou, entrando como máscara: a imagem diz só o
+ * formato e a cor vem do tema, então os dois estados são a MESMA silhueta com
+ * preenchimentos diferentes, escritos numa linha cada.
+ *
+ * ⚠ São DOZE numa fileira só: cada peça tem 27px de largura numa tela de
+ * 390px. Foi esse número que decidiu o desenho — o que sobrevive aos 27px é a
+ * silhueta, e por isso a caveira entra CHEIA, sem contorno e sem brilho. Doze
+ * peças com halo grudadas viram uma faixa borrada.
+ */
 .medo__chama {
   flex: 1 1 0;
   min-width: 0;
   height: var(--alvo-min);
   cursor: pointer;
-  background: no-repeat center / 24px 32px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 40'%3E%3Cpath d='M15 3C21 13 25 20 25 25a10 10 0 0 1-20 0c0-5 4-12 10-22z' fill='%23131020' stroke='%23574672' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-color: var(--cor-medo-apagado);
+  -webkit-mask: url('../assets/marca/medo.png') no-repeat center / 24px 24px;
+  mask: url('../assets/marca/medo.png') no-repeat center / 24px 24px;
+  transition: background-color var(--transicao);
 }
 
-.medo__chama.esta-cheio {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 40'%3E%3Cpath d='M15 3C21 13 25 20 25 25a10 10 0 0 1-20 0c0-5 4-12 10-22z' fill='%238b5cf6' stroke='%236d3fd4' stroke-width='1.5' stroke-linejoin='round'/%3E%3Cpath d='M15 12c3 6 5 10 5 13a5 5 0 0 1-10 0c0-3 2-7 5-13z' fill='none' stroke='%234a2a94' stroke-width='1' opacity='.6'/%3E%3C/svg%3E");
-}
+.medo__chama.esta-cheio { background-color: var(--cor-medo); }

@@ -26,27 +26,84 @@
    */
   color-scheme: dark;
 
-  /* ---- Cores base: pergaminho sobre noite ----------------------------- */
-  --cor-fundo:            #0c0a12;
-  --cor-fundo-2:         #131020;
-  --cor-superficie:      #1a1528;
-  --cor-superficie-alta: #241d36;
-  --cor-borda:           #3a3050;
-  --cor-borda-forte:     #574672;
+  /* ---- Cores base: pergaminho sobre noite -----------------------------
+   *
+   * O CROMO SAIU DA DISPUTA — e essa foi a Vanessa quem viu.
+   *
+   * Até 03/09 o fundo, as superfícies e as bordas estavam todos no matiz
+   * 251–263. O Medo é 258. Ou seja: o app inteiro estava pintado com a cor do
+   * Medo, e ele só se destacava por ser mais saturado — sinal fraco, e
+   * contradizendo o E67, que a gente tinha acabado de escrever.
+   *
+   * A saída não era trocar para o azul: o azul é do Estresse (205), e a troca
+   * só mudaria a vítima. O cromo não deve ser NENHUMA das cores que
+   * significam algo. Aqui ele foi para o matiz 232 — o lado azul do degradê
+   * da logo, longe dos 205 do Estresse — com a saturação cortada pela metade.
+   *
+   * ⚠ A LUMINÂNCIA de cada token é a mesma de antes, dígito por dígito. Só
+   * matiz e saturação mudaram, para nenhum contraste de texto se mexer.
+   */
+  --cor-fundo:            #0b0b0f;
+  --cor-fundo-2:         #13141b;
+  --cor-superficie:      #1a1b23;
+  --cor-superficie-alta: #23242f;
+  --cor-borda:           #383a48;
+  --cor-borda-forte:     #515467;
 
   /* ---- Texto ---------------------------------------------------------- */
   --cor-texto:      #efe7d8;
   --cor-texto-suave:#b8ae9c;
   --cor-texto-fraco:#9c9284;
 
-  /* ---- Acento dourado (o "ouro" do Daggerheart) ----------------------- */
+  /* ---- Acento dourado (o "ouro" do Daggerheart) -----------------------
+   *
+   * O OURO PAROU DE SIGNIFICAR "TÍTULO" — e de novo foi a Vanessa quem viu.
+   *
+   * Até aqui o dourado fazia TRÊS trabalhos que não têm nada a ver entre si:
+   * era a cor de todo título e rótulo do app (o cromo), era a cor de tudo
+   * que estava escolhido/sob o dedo (a seleção), e era a cor das coisas que
+   * SÃO douradas — a Armadura, as moedas, a Esperança.
+   *
+   * É o mesmo erro do violeta, um andar acima: uma cor que quer dizer três
+   * coisas não quer dizer nenhuma (E86). Se o nome da seção, a aba escolhida
+   * e o marcador de Armadura têm todos o mesmo dourado, o dourado da
+   * Armadura não avisa nada.
+   *
+   * A divisão agora é:
+   *   --cor-titulo  → todo título, rótulo, nome e valor. É CROMO, é prata.
+   *   --cor-ouro*   → o que é precioso: Armadura, moeda, botão principal,
+   *                   e o que está ESCOLHIDO (borda, contorno, aba ativa).
+   *   --cor-esperanca → a Esperança, que tem cor própria e não é "o ouro".
+   *
+   * O ouro ficou mais raro, e por isso ficou mais alto.
+   */
   --cor-ouro:       #d9ab5b;
   --cor-ouro-claro: #f2cd83;
   --cor-ouro-escuro:#8a6a2f;
 
+  /* ---- Título: a prata do brasão --------------------------------------
+   *
+   * Frio de propósito. O corpo do texto é pergaminho quente (#efe7d8); se o
+   * título fosse um pergaminho um pouco mais claro, ninguém veria diferença
+   * nenhuma. Sendo prata — mesma luminância, temperatura oposta — o título
+   * se separa do corpo sem precisar ser maior nem mais forte, e combina com
+   * o emblema prateado da marca.
+   */
+  --cor-titulo:       #e6ecf5;
+  --cor-titulo-suave: #c3cbd8;
+
   /* ---- Dualidade ------------------------------------------------------ */
   --cor-esperanca:      #ffc94a;
   --cor-esperanca-fundo:#3a2b06;
+  /*
+   * O APAGADO É A MESMA SILHUETA, com outro preenchimento — não outro
+   * desenho. A trilha se conta pelo formato; se cheio e vazio tivessem
+   * contornos diferentes, contar ficaria mais lento, e isso acontece no meio
+   * de um combate.
+   */
+  --cor-medo-apagado:      #3b2f56;
+  --cor-esperanca-apagada: #4a3f24;
+
   --cor-medo:           #8b5cf6;
   --cor-medo-fundo:     #241141;
 
@@ -150,9 +207,15 @@ body {
   font-size: var(--txt-md);
   line-height: 1.55;
   color: var(--cor-texto);
+  /*
+   * Os dois clarões do fundo também eram roxos (#1d1533, #17122a) e vinham
+   * escritos à mão aqui. Foram para o mesmo matiz 232 do resto do cromo, com
+   * a luminância intacta — senão o app trocava de cor e o fundo continuava
+   * denunciando o roxo.
+   */
   background:
-    radial-gradient(1200px 600px at 50% -10%, #1d1533 0%, transparent 60%),
-    radial-gradient(800px 500px at 100% 100%, #17122a 0%, transparent 55%),
+    radial-gradient(1200px 600px at 50% -10%, #1c1e2c 0%, transparent 60%),
+    radial-gradient(800px 500px at 100% 100%, #181a24 0%, transparent 55%),
     var(--cor-fundo);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;

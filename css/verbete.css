@@ -155,7 +155,7 @@
   font-size: var(--txt-xs);
   text-transform: uppercase;
   letter-spacing: .04em;
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
   white-space: nowrap;
 }
 
@@ -175,7 +175,7 @@
   margin: 0;
   font-family: var(--fonte-mono);
   font-size: var(--txt-lg);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
   text-align: center;
 }
 
@@ -201,7 +201,7 @@
   color: var(--cor-texto-suave);
 }
 
-.verbete__pagina strong { color: var(--cor-ouro); }
+.verbete__pagina strong { color: var(--cor-titulo); }
 
 /* ==========================================================================
    O ÍNDICE — a porta da frente dos 93 verbetes.
@@ -234,7 +234,7 @@
   font-size: var(--txt-xs);
   text-transform: uppercase;
   letter-spacing: .08em;
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
 }
 
 .regras__grupoItens {
@@ -276,7 +276,7 @@
   align-self: start;
   font-family: var(--fonte-mono);
   font-size: var(--txt-xs);
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
   white-space: nowrap;
 }
 

@@ -33,7 +33,7 @@
   font-size: var(--txt-md);
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -132,7 +132,7 @@
   font-size: var(--txt-2xl);
   letter-spacing: .18em;
   text-transform: uppercase;
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
   margin: 0 0 var(--e1);
 }
 

@@ -70,7 +70,7 @@
   padding: 4px 10px;
   border: 1px solid var(--cor-ouro-escuro);
   background: rgba(0, 0, 0, .25);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
   font-size: var(--txt-xs);
   font-weight: 600;
   letter-spacing: 0;
@@ -97,7 +97,7 @@
   font-family: var(--fonte-titulo);
   /* Encolhe até 17px antes de cortar: nome inteiro vale mais que tamanho fixo. */
   font-size: clamp(1.05rem, 5vw, var(--txt-xl));
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -231,7 +231,7 @@
 .ficha__secao {
   font-family: var(--fonte-titulo);
   font-size: var(--txt-md);
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
   margin: 0;
   letter-spacing: .04em;
   text-transform: uppercase;
@@ -302,7 +302,7 @@
   font-family: var(--fonte-mono);
   font-size: 11px;
   font-weight: 700;
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
 }
 
 /* ==========================================================================
@@ -405,7 +405,7 @@
  * losango como imagem e apaga o brilho; a de baixo escrevia `background:` na
  * forma curta, o que ZERA `background-image` — o desenho sumia e voltava um
  * quadrado dourado com brilho. Quem ganhava era a última, e ninguém percebeu
- * porque a ficha usa `.papel__losango` hoje; quem paga é o encontro e as
+ * porque a ficha usa `.papel__esperancaPonto` hoje; quem paga é o encontro e as
  * fichas filhas, que ainda usam esta trilha.
  */
 .trilha--esperanca .trilha__ponto.esta-cheio {
@@ -475,7 +475,7 @@
 .ficha__caixinhaValor {
   font-family: var(--fonte-titulo);
   font-size: var(--txt-xl);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
   line-height: 1.1;
 }
 
@@ -576,7 +576,7 @@
 .ficha__contadorValor {
   font-family: var(--fonte-mono);
   font-size: var(--txt-lg);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
   min-width: 2ch;
   text-align: center;
 }
@@ -596,7 +596,7 @@
 .ficha__caracNome {
   margin: 0 0 var(--e1);
   font-size: var(--txt-sm);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
 }
 
 /*
@@ -763,7 +763,7 @@
   font-size: var(--txt-xs);
   letter-spacing: .06em;
   text-transform: uppercase;
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
 }
 
 .paralela__titulo { margin: var(--e5) 0 var(--e2); font-size: var(--txt-md); }
@@ -803,12 +803,12 @@
 .paralela__numero .texto-xs { display: block; }
 
 .paralela__carac { margin-bottom: var(--e2); }
-.paralela__caracNome { margin: 0 0 var(--e1); color: var(--cor-ouro-claro); font-size: var(--txt-sm); }
+.paralela__caracNome { margin: 0 0 var(--e1); color: var(--cor-titulo); font-size: var(--txt-sm); }
 .paralela__forma.esta-ativa, .paralela__evolucao.esta-ativa { border-color: var(--cor-ouro); }
 /* As características da forma vêm uma por linha, como na ficha do livro. */
 .paralela__forma p, .paralela__carac p { white-space: pre-line; }
 .paralela__formaTopo { display: flex; align-items: center; gap: var(--e2); }
-.paralela__aprimoramento { color: var(--cor-ouro-claro); }
+.paralela__aprimoramento { color: var(--cor-titulo); }
 .paralela__remover { margin-top: var(--e5); }
 
 /* A ficha que ficou para trás do grupo. Aviso, não bloqueio. */
@@ -816,7 +816,7 @@
   border: 1px dashed var(--cor-ouro-escuro);
   border-radius: var(--raio-sm);
   padding: var(--e3);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
 }
 
 .ficha__exp {
@@ -1118,7 +1118,7 @@
   font-size: var(--txt-xs);
   text-transform: uppercase;
   letter-spacing: .06em;
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
 }
 
 .descanso__titulo {
@@ -1131,7 +1131,7 @@
 .descanso__subtitulo {
   font-family: var(--fonte-titulo);
   font-size: var(--txt-sm);
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
   text-transform: uppercase;
   letter-spacing: .05em;
   margin: var(--e2) 0 0;
@@ -1159,7 +1159,7 @@
   margin: 0;
   font-family: var(--fonte-mono);
   font-size: var(--txt-xs);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
 }
 
 .descanso__dado { max-width: 12ch; }
@@ -1176,7 +1176,7 @@
 .descanso__interrompido summary {
   cursor: pointer;
   font-size: var(--txt-sm);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
   min-height: var(--alvo-toque);
   display: flex;
   align-items: center;
@@ -1220,11 +1220,11 @@
   text-decoration: line-through;
 }
 
-.descanso__seta { color: var(--cor-ouro); }
+.descanso__seta { color: var(--cor-titulo); }
 
 .descanso__para {
   font-family: var(--fonte-mono);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
 }
 
 .descanso__resumo {
@@ -1239,7 +1239,7 @@
 .descanso__conta {
   font-family: var(--fonte-mono);
   font-size: var(--txt-xs);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
 }
 
 .descanso__mestre {
@@ -1291,7 +1291,7 @@
   font-size: var(--txt-xs);
   text-transform: uppercase;
   letter-spacing: .06em;
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
 }
 
 .avanco__titulo {
@@ -1304,7 +1304,7 @@
 .avanco__subtitulo {
   font-family: var(--fonte-titulo);
   font-size: var(--txt-sm);
-  color: var(--cor-ouro);
+  color: var(--cor-titulo);
   text-transform: uppercase;
   letter-spacing: .05em;
   margin: var(--e2) 0 0;
@@ -1332,7 +1332,7 @@
   margin: 0;
   font-family: var(--fonte-titulo);
   font-size: var(--txt-md);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
 }
 
 /* --- as opções ------------------------------------------------------------ */
@@ -1388,7 +1388,7 @@
 .avanco__negrito {
   margin: 0;
   font-size: var(--txt-xs);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
   font-weight: 600;
 }
 
@@ -1447,7 +1447,7 @@
 .avanco__trocaTitulo {
   cursor: pointer;
   font-size: var(--txt-sm);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
   min-height: 32px;
   display: flex;
   align-items: center;
@@ -1475,11 +1475,11 @@
   text-decoration: line-through;
 }
 
-.avanco__seta { color: var(--cor-ouro); }
+.avanco__seta { color: var(--cor-titulo); }
 
 .avanco__para {
   font-family: var(--fonte-mono);
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
 }
 
 .avanco__resumo {
@@ -1581,7 +1581,7 @@
   font-size: var(--txt-sm);
   font-weight: 600;
   text-align: right;
-  color: var(--cor-ouro-claro);
+  color: var(--cor-titulo);
 }
 
 /* ==========================================================================
