@@ -119,8 +119,22 @@
   stroke-width: 3;
 }
 
-.papel__escudoBloco--evasao .papel__escudoForma { stroke: var(--cor-info); }
-.papel__escudoBloco--armadura .papel__escudoForma { stroke: var(--cor-ouro-escuro); }
+/*
+ * As duas defesas são OURO: o que separa uma da outra é a FORMA (losango
+ * facetado na Evasão, escudo com nervuras na Armadura). Antes as duas usavam
+ * o mesmo escudo e só a cor da borda mudava — no celular, ninguém lia isso.
+ * O azul saiu daqui e foi para o Estresse.
+ */
+.papel__escudoBloco--evasao .papel__escudoForma,
+.papel__escudoBloco--armadura .papel__escudoForma {
+  stroke: var(--cor-ouro);
+  stroke-width: 3;
+}
+
+/* O valor da Armadura desce ao centro óptico do escudo: a ponta de baixo puxa
+   o olho e um número centrado geometricamente parece alto. */
+.papel__escudoBloco--armadura .papel__escudoValor { margin-top: 14px; }
+.papel__escudoBloco--evasao .papel__escudoValor { margin-top: 0; }
 
 .papel__escudoValor {
   position: relative;      /* acima do SVG */
@@ -177,7 +191,7 @@
   display: grid;
   grid-template-columns: 1fr auto 1fr auto 1fr;
   align-items: stretch;
-  gap: var(--e1);
+  gap: 2px;
   width: 100%;
   padding: 0;
   border: 0;
@@ -187,22 +201,61 @@
   cursor: pointer;
 }
 
+/*
+ * CADEIA DE CHEVRONS.
+ *
+ * Antes: `border` + `clip-path` no mesmo elemento — o recorte cortava a
+ * própria borda, e as três setas apontavam para o mesmo lado sem encaixar.
+ * Agora o contorno é o FUNDO do bloco e o miolo é um ::before recortado
+ * igual, 2px por dentro; cada bloco recebe a ponta do anterior e passa a sua
+ * adiante, como as faixas da ficha impressa.
+ */
 .papel__limiarBloco {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2px;
   padding: var(--e2) 2px;
-  background: var(--cor-superficie-alta);
-  border: 2px solid var(--cor-borda-forte);
-  /* a seta da ficha impressa: entra reto, sai em ponta */
-  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
+  border: 0;
+  background: var(--cor-borda-forte);
 }
+
+.papel__limiarBloco::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: var(--cor-superficie-alta);
+  clip-path: inherit;
+}
+
+.papel__limiarBloco > * { position: relative; z-index: 1; }
+
+/* Menor: entra reto, sai em ponta. */
+.papel__limiarBloco:nth-of-type(1),
+.papel__limiarBloco:nth-of-type(1)::before {
+  clip-path: polygon(0 0, calc(100% - 11px) 0, 100% 50%, calc(100% - 11px) 100%, 0 100%);
+}
+/* Maior: recebe a ponta anterior e passa a sua adiante. */
+.papel__limiarBloco:nth-of-type(2),
+.papel__limiarBloco:nth-of-type(2)::before {
+  clip-path: polygon(0 0, calc(100% - 11px) 0, 100% 50%, calc(100% - 11px) 100%, 0 100%, 11px 50%);
+}
+/* Severo: só recebe — é o fim da cadeia. */
+.papel__limiarBloco:nth-of-type(3),
+.papel__limiarBloco:nth-of-type(3)::before {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 11px 50%);
+}
+
+/* O encaixe come 11px de um lado: o texto recua para não entrar na ponta. */
+.papel__limiarBloco:nth-of-type(1) { padding-right: 12px; }
+.papel__limiarBloco:nth-of-type(2) { padding-inline: 12px; }
+.papel__limiarBloco:nth-of-type(3) { padding-left: 12px; }
 
 .papel__limiares:hover .papel__limiarBloco,
 .papel__limiares:focus-visible .papel__limiarBloco {
-  border-color: var(--cor-ouro-escuro);
+  background: var(--cor-ouro-escuro);
 }
 
 .papel__limiarNome {
@@ -216,7 +269,7 @@
 }
 
 .papel__limiarCusto {
-  font-size: 10px;
+  font-size: var(--txt-xs);
   color: var(--cor-texto-fraco);
   text-align: center;
   line-height: 1.1;
@@ -467,9 +520,10 @@
 .traco__nome {
   position: relative;        /* acima do SVG */
   max-width: 100%;
-  font-size: 9px;
+  padding-inline: 2px;
+  font-size: var(--txt-xs);
   font-weight: 700;
-  letter-spacing: -.01em;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: var(--cor-texto-suave);
   overflow: hidden;
@@ -503,7 +557,7 @@
 }
 
 .traco__selo {
-  font-size: 9px;
+  font-size: var(--txt-xs);
   letter-spacing: .04em;
   text-transform: uppercase;
   color: var(--cor-ouro);
@@ -514,7 +568,7 @@
 /* O termo da Jambô, embaixo, onde há largura para ele. */
 .traco__jambo {
   font-family: var(--fonte-mono);
-  font-size: 9px;
+  font-size: var(--txt-xs);
   color: var(--cor-texto-fraco);
 }
 
@@ -558,7 +612,7 @@
 .papel__proficienciaNota { color: var(--cor-texto-fraco); }
 
 @media (max-width: 360px) {
-  .traco__nome { font-size: 8px; }
+  .traco__nome { font-size: var(--txt-xs); }
   .traco__valor { font-size: var(--txt-md); }
   .traco__moldura { min-height: 62px; padding: 6px 4px 14px; }
 }
@@ -685,7 +739,7 @@
 .retrato__nome:hover { color: var(--cor-ouro-claro); }
 
 .retrato__rotulo {
-  font-size: 10px;
+  font-size: var(--txt-xs);
   letter-spacing: .04em;
   text-transform: uppercase;
   color: var(--cor-texto-fraco);

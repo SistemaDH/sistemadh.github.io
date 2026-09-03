@@ -42,7 +42,7 @@
 }
 
 .criacao__etiqueta {
-  font-size: 11px;
+  font-size: var(--txt-xs);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--cor-ouro);
@@ -318,7 +318,7 @@
 }
 
 .derivado__rotulo {
-  font-size: 11px;
+  font-size: var(--txt-xs);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--cor-texto-suave);
@@ -331,7 +331,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-.derivado__nota { font-size: 10px; color: var(--cor-texto-suave); }
+.derivado__nota { font-size: var(--txt-xs); color: var(--cor-texto-suave); }
 
 .painel-derivados { margin-top: 8px; }
 

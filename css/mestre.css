@@ -337,8 +337,8 @@
 }
 
 .mestre__miniPonto--pv.esta-cheio { background: var(--cor-perigo); border-color: var(--cor-perigo); }
-.mestre__miniPonto--estresse.esta-cheio { background: var(--cor-medo); border-color: var(--cor-medo); }
-.mestre__miniPonto--armadura.esta-cheio { background: var(--cor-info); border-color: var(--cor-info); }
+.mestre__miniPonto--estresse.esta-cheio { background: var(--cor-estresse); border-color: var(--cor-estresse); }
+.mestre__miniPonto--armadura.esta-cheio { background: var(--cor-ouro); border-color: var(--cor-ouro); }
 .mestre__miniPonto--esperanca.esta-cheio {
   background: var(--cor-esperanca);
   border-color: var(--cor-esperanca);
@@ -849,3 +849,26 @@
 
 /* O tipo de dano só aparece quando o adversário resiste a alguma coisa. */
 .encontro__dano-bloco { display: flex; flex-direction: column; gap: var(--e1); }
+
+/* ==========================================================================
+   Medo da mesa — a CHAMA
+   O Medo usava o mesmo retângulo do Estresse, na mesma cor: dois conceitos,
+   um desenho. Agora tem glifo próprio (chama) e o violeta é só dele.
+   Marcação: 12 <span class="medo__chama"> dentro de .medo__trilha, com
+   .esta-cheio nas acesas.
+   ========================================================================== */
+
+.medo__trilha { display: flex; gap: 2px; }
+
+.medo__chama {
+  flex: 1 1 0;
+  min-width: 0;
+  height: var(--alvo-min);
+  cursor: pointer;
+  background: no-repeat center / 24px 32px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 40'%3E%3Cpath d='M15 3C21 13 25 20 25 25a10 10 0 0 1-20 0c0-5 4-12 10-22z' fill='%23131020' stroke='%23574672' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.medo__chama.esta-cheio {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 40'%3E%3Cpath d='M15 3C21 13 25 20 25 25a10 10 0 0 1-20 0c0-5 4-12 10-22z' fill='%238b5cf6' stroke='%236d3fd4' stroke-width='1.5' stroke-linejoin='round'/%3E%3Cpath d='M15 12c3 6 5 10 5 13a5 5 0 0 1-10 0c0-3 2-7 5-13z' fill='none' stroke='%234a2a94' stroke-width='1' opacity='.6'/%3E%3C/svg%3E");
+}

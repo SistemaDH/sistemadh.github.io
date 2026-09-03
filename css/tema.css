@@ -19,7 +19,7 @@
   /* ---- Texto ---------------------------------------------------------- */
   --cor-texto:      #efe7d8;
   --cor-texto-suave:#b8ae9c;
-  --cor-texto-fraco:#867c6d;
+  --cor-texto-fraco:#9c9284;
 
   /* ---- Acento dourado (o "ouro" do Daggerheart) ----------------------- */
   --cor-ouro:       #d9ab5b;
@@ -37,6 +37,10 @@
   --cor-sucesso: #4fbf7b;
   --cor-alerta:  #e0a23a;
   --cor-info:    #5aa9e0;
+
+  /* Estresse tem cor própria: violeta ficou exclusivo do Medo do Mestre, e a
+     Armadura passou ao ouro para não dividir o azul com o Estresse. */
+  --cor-estresse: #5aa9e0;
 
   /* ---- Domínios (usado nas cartas, a partir da Parte 3) --------------- */
   --dom-arcana:   #8a5cf0;
@@ -60,12 +64,14 @@
    * O corpo saiu de 16px para 15px e os títulos acompanharam. Num app que é
    * quase todo lista e cartão de ficha, 16px empurrava tudo para baixo e fazia
    * o celular rolar por texto, não por conteúdo. Os pisos ficam onde estão:
-   * 11,5px é o menor tamanho da escala, e nada de leitura corrida usa menos.
+   * 12px é o menor tamanho da escala, e nada de leitura corrida usa menos.
+   * (Era 11,5px, mas havia dez regras com 8px/9px/10px/11px cru por fora —
+   * um piso que ninguém cumpria não é piso.)
    *
    * É proporcional de propósito — mexer numa tela só faria as telas
    * discordarem entre si.
    */
-  --txt-xs: 0.72rem;    /* 11,5px */
+  --txt-xs: 0.75rem;    /* 12px — piso real da escala */
   --txt-sm: 0.82rem;    /* 13,1px */
   --txt-md: 0.94rem;    /* 15px   */
   --txt-lg: 1.05rem;    /* 16,8px */
@@ -88,6 +94,10 @@
 
   /* ---- Toque: alvo mínimo confortável na mesa de jogo ----------------- */
   --alvo-toque: 48px;
+
+  /* Quando o DESENHO é menor que o alvo (pílula de condição, gema de
+     Esperança, chama de Medo), a área tocável ainda tem de chegar a 44px. */
+  --alvo-min: 44px;
 
   /* ---- Camadas -------------------------------------------------------- */
   --z-topo: 100;

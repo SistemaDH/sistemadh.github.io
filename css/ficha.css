@@ -48,7 +48,27 @@
   gap: var(--e2);
 }
 
+/*
+ * SUBIR DE NÍVEL mora aqui, na pílula do nível: o gesto é sobre o nível, não
+ * uma ação de mesa. A seta só aparece quando há avanço pendente — sem
+ * pendência a pílula é só um rótulo que abre o painel.
+ */
+.ficha__topoLinha .selo--nivel .icone { display: none; }
+
+.ficha__topoLinha .selo--nivel.tem-pendencia {
+  border-color: var(--cor-alerta);
+  color: #f0d9a8;
+}
+
+.ficha__topoLinha .selo--nivel.tem-pendencia .icone { display: block; }
+
 .ficha__topoLinha .selo--nivel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--alvo-min);
+  padding: 4px 10px;
+  font-size: var(--txt-xs);
   padding: 2px var(--e2);
   font-size: var(--txt-xs);
   letter-spacing: 0;
@@ -231,8 +251,15 @@
 .trilha__pontos {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--e2);
+  gap: 3px;
 }
+
+/*
+ * A trilha desenha o TOTAL da ficha, não um número fixo de caixas: 6 de
+ * Estresse desenha 6, 8 desenha 8. Cada caixa divide a linha disponível e
+ * embrulha quando não cabe mais.
+ */
+.trilha__pontos > .trilha__ponto { flex: 1 1 26px; min-width: 22px; }
 
 /*
  * O QUADRADINHO da ficha de papel.
@@ -261,10 +288,26 @@
 }
 
 /*
- * A Esperança é LOSANGO na ficha de papel, não bolinha. O clip-path desenha o
- * losango sem girar o elemento — girar estragaria o alvo de toque e brigaria
- * com o transform do :active.
+ * A Esperança é LOSANGO na ficha de papel, não bolinha — e agora é uma GEMA:
+ * o losango facetado desenhado em SVG, porque o clip-path não aceita as
+ * facetas internas e um losango liso era igualzinho aos outros marcadores.
+ * O SVG vai no background para não girar o elemento: girar estragaria o alvo
+ * de toque e brigaria com o transform do :active.
  */
+.trilha--esperanca .trilha__ponto {
+  width: 34px;
+  height: 38px;
+  min-height: var(--alvo-min);
+  border: 0;
+  box-shadow: none;
+  background: no-repeat center / contain;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 44'%3E%3Cpath d='M20 3 37 22 20 41 3 22z' fill='%23131020' stroke='%23574672' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.trilha--esperanca .trilha__ponto.esta-cheio {
+  box-shadow: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 44'%3E%3Cpath d='M20 3 37 22 20 41 3 22z' fill='%23ffc94a' stroke='%238a6a2f' stroke-width='1.5' stroke-linejoin='round'/%3E%3Cpath d='M20 3 12 22 20 41M20 3 28 22 20 41M3 22h34' fill='none' stroke='%238a6a2f' stroke-width='1' opacity='.5'/%3E%3C/svg%3E");
+}
 
 .trilha__ajuda {
   margin: 0;
@@ -279,13 +322,15 @@
   background: var(--cor-perigo);
   border-color: var(--cor-perigo);
 }
+/* Estresse tem cor própria (violeta é do Medo, no painel do Mestre). */
 .trilha--estresse .trilha__ponto.esta-cheio {
-  background: var(--cor-medo);
-  border-color: var(--cor-medo);
+  background: var(--cor-estresse);
+  border-color: var(--cor-estresse);
 }
+/* A Armadura passou ao ouro: o azul agora é do Estresse. */
 .trilha--armadura .trilha__ponto.esta-cheio {
-  background: var(--cor-info);
-  border-color: var(--cor-info);
+  background: var(--cor-ouro);
+  border-color: var(--cor-ouro);
 }
 .trilha--esperanca .trilha__ponto.esta-cheio {
   background: var(--cor-esperanca);
@@ -294,8 +339,8 @@
 }
 
 .trilha--pv .trilha__rotulo { color: #f0b3b3; }
-.trilha--estresse .trilha__rotulo { color: #d8c2ff; }
-.trilha--armadura .trilha__rotulo { color: #b5d8f2; }
+.trilha--estresse .trilha__rotulo { color: #b5d8f2; }
+.trilha--armadura .trilha__rotulo { color: var(--cor-ouro-claro); }
 .trilha--esperanca .trilha__rotulo { color: var(--cor-esperanca); }
 
 /* ==========================================================================
@@ -358,14 +403,21 @@
   text-align: left;
 }
 
+/*
+ * A pílula desenha 32px e a margem completa os 44px de alvo: com 4+ condições
+ * a lista embrulha em duas fileiras sem virar um bloco maciço.
+ */
 .chip--condicao {
+  min-height: 32px;
+  padding-inline: 12px;
+  margin-block: 6px;
   border-color: var(--cor-alerta);
   color: #f0d9a8;
   background: rgba(224, 162, 58, .12);
 }
 
 .chip__marca {
-  font-size: 10px;
+  font-size: var(--txt-xs);
   text-transform: uppercase;
   letter-spacing: .05em;
   opacity: .8;
@@ -476,7 +528,7 @@
 
 .ficha__moedaRotulo {
   display: block;
-  font-size: 10px;
+  font-size: var(--txt-xs);
   letter-spacing: .03em;
   text-transform: uppercase;
   color: var(--cor-texto-fraco);
@@ -750,7 +802,7 @@
 
 .ficha__itemNome--doLivro:hover { color: var(--cor-ouro-claro); }
 
-.ficha__itemNota { font-size: 10px; color: var(--cor-texto-fraco); }
+.ficha__itemNota { font-size: var(--txt-xs); color: var(--cor-texto-fraco); }
 
 .ficha__itemAcoes {
   display: flex;
@@ -830,7 +882,7 @@
 .ficha__catalogoNome { font-size: var(--txt-sm); font-weight: 600; }
 
 .ficha__catalogoTipo {
-  font-size: 10px;
+  font-size: var(--txt-xs);
   text-transform: uppercase;
   letter-spacing: .04em;
   color: var(--cor-texto-fraco);
