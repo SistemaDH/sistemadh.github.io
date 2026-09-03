@@ -65,13 +65,42 @@
    Tela de abertura / login
    -------------------------------------------------------------------------- */
 
+/*
+ * A ARTE FICA NA ABERTURA, e só nela.
+ *
+ * É a única tela do sistema que não rola e não tem nada denso para ler: um
+ * formulário de dois campos no meio. Atmosfera aqui não custa nada. Na ficha
+ * custaria caro — seis ladrilhos de traço, três trilhas e a cadeia de
+ * limiares, tudo no piso de 12px, não convivem com textura atrás.
+ *
+ * O VÉU, e não transparência na imagem.
+ *
+ * Baixar a opacidade da arte sobre fundo escuro mata justamente o que ela tem:
+ * os azuis e violetas viram cinza. Aqui a imagem entra com força total e leva
+ * um gradiente escuro por cima — opaco na faixa do meio, onde mora o
+ * formulário, e leve em cima e embaixo, onde não há o que ler. A cor sobrevive
+ * e o contraste fica garantido, em vez de os dois ficarem meio ruins.
+ */
 .abertura {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   min-height: 100dvh;
   padding: var(--e6) var(--e4);
   padding-top: calc(var(--e6) + env(safe-area-inset-top, 0px));
+
+  background-color: var(--cor-fundo);
+  background-image:
+    linear-gradient(180deg,
+      rgba(12, 10, 18, .42) 0%,
+      rgba(12, 10, 18, .82) 30%,
+      rgba(12, 10, 18, .86) 70%,
+      rgba(12, 10, 18, .58) 100%),
+    url('../assets/marca/fundo.jpg');
+  background-size: auto, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
 }
 
 .abertura__miolo {
@@ -85,15 +114,17 @@
   margin-bottom: var(--e8);
 }
 
-.abertura__losango {
-  width: 56px;
-  height: 56px;
+/*
+ * O losango dourado em CSS saiu: virou o brasão de verdade. Ele era um
+ * marcador de lugar desde a Parte 1 — um quadrado girado com brilho, que dizia
+ * "aqui vai a marca" e nunca disse mais que isso.
+ */
+.abertura__brasaoImagem {
+  width: 128px;
+  height: auto;
   margin: 0 auto var(--e4);
-  border: 2px solid var(--cor-ouro);
-  border-radius: 8px;
-  transform: rotate(45deg);
-  background: linear-gradient(135deg, rgba(217, 171, 91, .22), transparent 60%);
-  box-shadow: var(--brilho-ouro);
+  /* O halo azul da arte já é o brilho; sombra por cima só sujaria. */
+  filter: drop-shadow(0 6px 20px rgba(80, 120, 255, .18));
 }
 
 .abertura__titulo {

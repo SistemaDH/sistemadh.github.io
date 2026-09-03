@@ -29,7 +29,15 @@ export function telaAbertura({ aoEntrar }) {
 
   function brasao() {
     return el('div', { class: 'abertura__brasao' }, [
-      el('div', { class: 'abertura__losango', 'aria-hidden': 'true' }),
+      /*
+       * O brasão é IMAGEM, e `alt` vazio de propósito: o nome da mesa vem
+       * escrito logo abaixo, no <h1>. Um `alt` com "Daggerheart" faria o
+       * leitor de tela anunciar a mesma palavra duas vezes seguidas.
+       */
+      el('img', {
+        class: 'abertura__brasaoImagem', src: 'assets/marca/brasao.png',
+        alt: '', width: 128, height: 149, fetchpriority: 'high'
+      }),
       el('h1', { class: 'abertura__titulo', texto: 'Daggerheart' }),
       el('p', {
         class: 'abertura__subtitulo',

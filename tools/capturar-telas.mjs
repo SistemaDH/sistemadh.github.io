@@ -17,6 +17,10 @@ const ctx = await nav.newContext({ viewport: { width: 390, height: 844 }, device
 const p = await ctx.newPage();
 await p.addInitScript(([url]) => { localStorage.setItem('dh:urlApi', JSON.stringify(url).slice(1, -1)); }, [`${base}/exec`]);
 await p.goto(base, { waitUntil: 'networkidle' });
+// A abertura é a única tela com arte de fundo — vale um print próprio.
+await p.waitForSelector('.abertura__brasaoImagem');
+await p.waitForTimeout(400);
+await p.screenshot({ path: '/tmp/s0-abertura.png' });
 await p.getByRole('button', { name: 'Criar acesso' }).click();
 await p.fill('#nome', 'Vanessa'); await p.fill('#codigo', 'mesa2026'); await p.fill('#codigo2', 'mesa2026');
 await p.getByRole('button', { name: 'Criar meu acesso' }).click();

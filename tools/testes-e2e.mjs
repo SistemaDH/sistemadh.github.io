@@ -1618,6 +1618,32 @@ try {
     if (pequenos.length) throw new Error('botões pequenos demais: ' + JSON.stringify(pequenos));
   });
 
+  await passo('a marca da mesa carrega de verdade', async () => {
+    /*
+     * Imagem que não sobe para o servidor falha do mesmo jeito mudo que a
+     * folha de estilo: o `<img>` fica lá, vazio, e a tela só fica pobre. Aqui
+     * a pergunta é se o pixel chegou — `naturalWidth` só passa de zero quando
+     * o arquivo carregou de fato.
+     */
+    const isolada = await contexto.newPage();
+    await isolada.goto(base, { waitUntil: 'load' });
+    /*
+     * A sessão dos outros passos já está logada, e o brasão mora na ABERTURA.
+     * Limpa a sessão sem levar junto o endereço do servidor — sem ele o app
+     * mostraria a tela de configuração em vez do login.
+     */
+    await isolada.evaluate(() => {
+      const url = localStorage.getItem('dh:urlApi');
+      localStorage.clear();
+      if (url) localStorage.setItem('dh:urlApi', url);
+    });
+    await isolada.reload({ waitUntil: 'load' });
+    const largura = await isolada.locator('.abertura__brasaoImagem')
+      .evaluate((n) => n.naturalWidth);
+    if (!largura) throw new Error('o brasão da abertura não carregou');
+    await isolada.close();
+  });
+
   await passo('folha de estilo que não sobe para o servidor AVISA', async () => {
     /*
      * Um print da mesa mostrou a ficha com caixas cinzas atrás de cada palavra

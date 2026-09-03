@@ -1,0 +1,17 @@
+{
+  "name": "Daggerheart — Fichas da mesa",
+  "short_name": "Daggerheart",
+  "description": "As fichas da mesa, o painel do Mestre e o bestiário, no celular.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0c0a12",
+  "theme_color": "#0c0a12",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "assets/marca/icone-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/marca/icone-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/marca/icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
