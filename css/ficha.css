@@ -841,6 +841,8 @@
 }
 
 .ficha__carta {
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: var(--e2);
@@ -851,6 +853,43 @@
   border-left: 4px solid var(--cor-dominio, var(--cor-ouro));
   border-radius: var(--raio-sm);
 }
+
+/*
+ * A MARCA-D'ÁGUA É A ARTE DA PRÓPRIA CARTA — o mesmo gesto da carta de
+ * Esperança, aplicado às 189 cartas de domínio.
+ *
+ * Três decisões que não são de gosto:
+ *
+ * 1. CINZA, não colorida. A ilustração colorida atrás do texto vira sujeira, e
+ *    cada domínio puxaria a carta para um clima diferente. Em cinza, a única
+ *    cor da peça continua sendo a barra do domínio na borda esquerda — que é
+ *    quem tem a informação. (Testei tingir com a cor do domínio: ficou bonito
+ *    no roxo e ilegível no amarelo do Esplendor.)
+ *
+ * 2. 12%, e não mais. O texto da carta é o que se lê no meio de um combate.
+ *    Marca-d'água que disputa com ele custa a rolagem inteira de alguém.
+ *
+ * 3. ESMAECE PARA A ESQUERDA. A máscara em degradê deixa a arte inteira só na
+ *    borda direita e some antes de chegar ao começo das linhas, onde o olho
+ *    entra em cada frase. É por isso que ela ocupa 58% e não a largura toda.
+ *
+ * `var(--marca, none)` faz a regra não fazer nada quando o cartão não tem arte
+ * — a carta de subclasse usa a mesma classe e não passa a variável.
+ */
+.ficha__carta::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 58%;
+  background: var(--marca, none) right center / cover no-repeat;
+  -webkit-mask-image: linear-gradient(to left, #000, transparent);
+  mask-image: linear-gradient(to left, #000, transparent);
+  opacity: .12;
+  pointer-events: none;
+}
+
+/* O conteúdo passa POR CIMA da marca — senão o degradê come o texto. */
+.ficha__carta > * { position: relative; z-index: 1; }
 
 .ficha__cartaTopo {
   display: flex;

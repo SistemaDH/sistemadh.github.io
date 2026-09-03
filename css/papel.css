@@ -38,25 +38,54 @@
   margin-top: var(--e2);
 }
 
+/*
+ * OS BRAÇOS DA FAIXA SÃO UM FLOREIO, e ele é SVG desenhado à mão.
+ *
+ * Eram duas barras de 2px. A barra funciona, mas não diz nada — e a faixa é a
+ * única moldura de seção da ficha, o lugar mais barato de colocar identidade
+ * sem atrapalhar leitura nenhuma.
+ *
+ * O desenho é máscara (E87): a forma vem do arquivo, a cor vem do tema, e ele
+ * acompanha qualquer mudança de paleta sem ser reexportado. É SVG e não PNG
+ * pelo motivo do E91 — o braço estica conforme o título é mais curto ou mais
+ * longo, então não existe "tamanho certo" para rasterizar.
+ *
+ * O arquivo aponta para a ESQUERDA (ponta fina fora, volutas junto da placa);
+ * o braço da direita é o mesmo arquivo espelhado. Um desenho, dois lados.
+ */
 .papel__faixa::before,
 .papel__faixa::after {
   content: '';
   flex: 1 1 auto;
-  height: 2px;
-  background: var(--cor-borda-forte);
+  height: 16px;
+  min-width: 40px;
+  background-color: var(--cor-borda-forte);
+  opacity: .85;
+  -webkit-mask: url('../assets/marca/floreio.svg') no-repeat center / contain;
+  mask: url('../assets/marca/floreio.svg') no-repeat center / contain;
 }
 
+.papel__faixa::after { transform: scaleX(-1); }
+
+/*
+ * O TÍTULO NÃO TEM MAIS PLACA — e a ficha ganhou com isso.
+ *
+ * Ele era um hexágono com fundo, borda de 2px e canto recortado. Funcionava
+ * como marcador de seção, mas era a caixa que chamava atenção, não a palavra:
+ * um retângulo grande com o nome dentro, no meio de uma tela que já é toda
+ * feita de caixas (traços, limiares, trilhas, cartas).
+ *
+ * Sem a placa, o peso volta para o texto. Ele cresceu um degrau e abriu a
+ * letra (.10em) para segurar o centro sozinho, e o floreio de cada lado dá o
+ * enquadramento que a borda dava — só que sem fechar mais uma caixa.
+ */
 .papel__faixaTexto {
   flex: 0 0 auto;
   margin: 0;
-  padding: var(--e2) var(--e5);
-  background: var(--cor-superficie-alta);
-  border: 2px solid var(--cor-borda-forte);
-  clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 50%,
-                     calc(100% - 12px) 100%, 12px 100%, 0 50%);
+  padding: 0 var(--e4);
   font-family: var(--fonte-titulo);
-  font-size: var(--txt-md);
-  letter-spacing: .04em;
+  font-size: var(--txt-lg);
+  letter-spacing: .10em;
   text-transform: uppercase;
   color: var(--cor-titulo);
   white-space: nowrap;
@@ -156,17 +185,47 @@
  * O rótulo em fita escura, como o impresso. Largura mínima igual nos dois para
  * "Evasão" e "Armadura" lerem como um par, e não como duas etiquetas soltas.
  */
+/*
+ * O RÓTULO PERDEU A CAIXINHA, pelo mesmo motivo da faixa de seção.
+ *
+ * Ele era uma pílula preta (`--cor-fundo`) dentro de um cartão claro: mais uma
+ * caixa numa tela que já é toda caixa, e a caixa chamava mais atenção que a
+ * palavra. Depois que a faixa de seção largou a placa, estes dois rótulos
+ * ficaram sendo as únicas palavras-dentro-de-quadro da ficha — sozinhos, o que
+ * antes era um padrão virou exceção.
+ *
+ * No lugar da borda, um FIO afilado: fino nas pontas, cheio no meio, com um
+ * losango no centro. É o mesmo vocabulário do floreio da faixa — losango,
+ * corpo que engrossa, ponta que some.
+ *
+ * ⚠ ELE VAI ACIMA DA PALAVRA, e isso não é gosto. "Evasão" e "Armadura" são
+ * gatilhos de verbete, e gatilho de verbete JÁ tem sublinhado pontilhado —
+ * a convenção vale no app inteiro e não pode virar exceção aqui. Um fio por
+ * baixo somava uma segunda sublinha e o par lia como erro de renderização.
+ * Em cima, ele separa o desenho do rótulo e não disputa com nada.
+ *
+ * É máscara SVG (E87, E91): a cor vem do tema e o desenho estica com a largura
+ * do rótulo, que muda entre "Evasão" e "Armadura".
+ */
 .papel__escudoRotulo {
   min-width: 84px;
   text-align: center;
-  padding: 2px var(--e2);
-  border-radius: var(--raio-sm);
-  background: var(--cor-fundo);
+  padding: 0 var(--e1);
   font-size: var(--txt-xs);
   font-weight: 700;
-  letter-spacing: .06em;
+  letter-spacing: .10em;
   text-transform: uppercase;
-  color: var(--cor-texto-suave);
+  color: var(--cor-titulo);
+}
+
+.papel__escudoRotulo::before {
+  content: '';
+  display: block;
+  height: 8px;
+  margin-bottom: 4px;
+  background-color: var(--cor-borda-forte);
+  -webkit-mask: url('../assets/marca/fio.svg') no-repeat center / 100% 100%;
+  mask: url('../assets/marca/fio.svg') no-repeat center / 100% 100%;
 }/* Os espaços de Armadura, em grade, como as gotas do canto da ficha. */
 .papel__armaduraSlots {
   display: grid;

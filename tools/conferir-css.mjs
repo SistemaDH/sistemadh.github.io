@@ -196,6 +196,22 @@ for (const [arquivo, css] of CSS) {
     varsUsadas.get(m[1]).add(arquivo);
   }
 }
+
+/*
+ * NEM TODA VARIÁVEL NASCE NO CSS — e o conferidor precisou aprender isso.
+ *
+ * `--cor-dominio` e `--marca` não são tokens do tema: o JS escreve as duas no
+ * atributo `style` do cartão, uma por carta. Olhando só para os .css elas
+ * parecem fantasmas, e a primeira versão desta seção acusou `--marca` como
+ * erro quando ela estava certa.
+ *
+ * Um conferidor que grita quando está tudo certo é pior que nenhum: em pouco
+ * tempo alguém aprende a ignorar a saída, e no dia do erro de verdade ela
+ * também é ignorada. Por isso ele lê os .js atrás de declarações de variável.
+ */
+for (const [, js] of JS) {
+  for (const m of js.matchAll(/(--[\w-]+)\s*:/g)) varsDefinidas.add(m[1]);
+}
 const varsFantasma = [...varsUsadas.keys()].filter((v) => !varsDefinidas.has(v)).sort();
 
 /* --- relatório ------------------------------------------------------------ */

@@ -1644,6 +1644,45 @@ try {
     await isolada.close();
   });
 
+  await passo('a marca-d\'água da carta de domínio chega mesmo', async () => {
+    /*
+     * A terceira falha muda da mesma família — e a mais escorregadia das três.
+     *
+     * A marca-d'água entra por uma custom property que o JS escreve no cartão:
+     * `--marca: url("assets/marcas-dagua/...")`. Um `url()` relativo dentro de
+     * custom property NÃO resolve contra a página; resolve contra a FOLHA DE
+     * ESTILO onde o `var()` é usado. Como quem usa é `css/ficha.css`, o
+     * caminho honesto virava `/css/assets/...` — 404, carta sem fundo, e
+     * silêncio: nem o console da página reclama de um `background-image` que
+     * não carregou.
+     *
+     * Por isso a pergunta aqui não é "a regra existe?" nem "a variável está
+     * lá?", que é o que um teste de DOM responderia. É: **o servidor devolve
+     * 200 nesse endereço?** Só isso separa o certo do quase-certo.
+     */
+    /*
+     * Este passo roda depois dos de layout, que voltam para o roster — por
+     * isso ele abre a ficha do zero em vez de assumir onde a tela parou.
+     */
+    await pagina.getByRole('button', { name: /Lyra Sombravento/ }).first().click();
+    await pagina.getByRole('tab', { name: 'Cartas' }).click();
+    const cartao = pagina.locator('.ficha__carta[style*="--marca"]').first();
+    await cartao.waitFor({ timeout: 20000 });
+    const endereco = await cartao.evaluate((n) => {
+      const v = getComputedStyle(n).getPropertyValue('--marca');
+      const m = v.match(/url\(["']?([^"')]+)/);
+      return m ? m[1] : '';
+    });
+    if (!endereco) throw new Error('nenhuma carta de domínio recebeu --marca');
+    if (!/^https?:/.test(endereco)) {
+      throw new Error(`--marca ficou relativa (${endereco}) — vai resolver contra o CSS`);
+    }
+    const resposta = await pagina.request.get(endereco);
+    if (!resposta.ok()) {
+      throw new Error(`a marca-d'água deu ${resposta.status()} em ${endereco}`);
+    }
+  });
+
   await passo('folha de estilo que não sobe para o servidor AVISA', async () => {
     /*
      * Um print da mesa mostrou a ficha com caixas cinzas atrás de cada palavra

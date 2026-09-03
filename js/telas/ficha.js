@@ -1645,9 +1645,41 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     return modal;
   }
 
+  /**
+   * O caminho da MARCA-D'ÁGUA da carta, ou '' se ela não tiver arte.
+   *
+   * É derivado do campo `imagem` — a mesma pasta, o mesmo nome de arquivo,
+   * outra raiz e outra extensão. Derivar em vez de guardar no JSON é de
+   * propósito: as marcas são geradas por `tools/gerar-marcas-dagua.py` e
+   * podem ser apagadas e refeitas sem ninguém tocar nos dados.
+   *
+   * ⚠ `encodeURI` não é enfeite: os arquivos têm ESPAÇO e ACENTO no nome
+   * ("Aperto de Cinzas.png", "Presságio.png"). Sem codificar, o navegador
+   * monta um url() quebrado e a carta simplesmente aparece sem fundo — falha
+   * silenciosa, do tipo que ninguém vê num teste que só conta elementos.
+   *
+   * ⚠⚠ E O CAMINHO PRECISA SER ABSOLUTO. Um `url()` relativo dentro de uma
+   * custom property NÃO resolve contra a página: resolve contra a FOLHA DE
+   * ESTILO onde o `var()` é usado. Como quem usa é `css/ficha.css`, um
+   * "assets/..." honesto virava "/css/assets/..." e dava 404 — a carta ficava
+   * sem fundo e nada no console da página gritava. `new URL(..., baseURI)`
+   * fecha isso de uma vez e continua funcionando no GitHub Pages, que serve o
+   * app de dentro de um subdiretório.
+   */
+  function marcaDaCarta(c) {
+    if (!c.imagem) return '';
+    const caminho = c.imagem
+      .replace('assets/cartas/dominios/', 'assets/marcas-dagua/')
+      .replace(/\.png$/i, '.jpg');
+    return `--marca:url("${new URL(encodeURI(caminho), document.baseURI).href}")`;
+  }
+
   function cartaoDeCarta(c, lista, destino) {
     const cor = catalogo.corDoDominio(c.dominio);
-    return el('div', { class: 'ficha__carta', style: `--cor-dominio:${cor}` }, [
+    return el('div', {
+      class: 'ficha__carta',
+      style: `--cor-dominio:${cor};${marcaDaCarta(c)}`
+    }, [
       el('div', { class: 'ficha__cartaTopo' }, [
         nomeQueAbreCarta(c.nome, () => ({
           itens: lista.map(daCartaDeDominio),

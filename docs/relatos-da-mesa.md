@@ -1264,3 +1264,145 @@ desenho quando é só uma convenção invertida. Está anotado no
 Os dois PNG saíram do repositório. A estrela ficou em 4,5 KB de SVG (era 5 KB
 de PNG) e a caveira em 7,6 KB (era 3,5 KB) — a caveira cresceu, e vale a pena:
 ela é a peça mais detalhada do app e a que mais aparece ampliada.
+
+### O ornamento que não veio do Canva
+
+O Canva gerou uma filigrana muito bonita para as faixas de seção. Ela nunca
+entrou no app, e o motivo vale mais que o desenho.
+
+Primeiro, o transporte: o link de exportação não abre daqui — a rede desta
+sessão bloqueia o download, e o link assinado que sobrou expirava em horas.
+Segundo, e pior: o que ele entrega é **PNG**. Depois do E91, um PNG é um
+formato que a gente já sabe que vai ter de traçar de volta para SVG.
+
+E aí o terceiro motivo, que só apareceu quando eu parei para pensar em vez de
+insistir no link: o braço da faixa **estica**. Ele ocupa o que sobra depois do
+título, e "DANO E VIDA" e "ESPERANÇA" deixam sobras diferentes. Não existe
+"tamanho certo" para rasterizar — o ativo tem de ser vetor por natureza, não
+por preferência.
+
+Desenhei em `path`: espinha que engrossa da ponta para dentro, losango na
+ponta, dois pares de folhas e um gancho aberto junto da placa. Um quilobyte.
+A primeira tentativa saiu grossa demais — parecia âncora, não filigrana — e a
+segunda fez os ganchos virarem um laço fechado com cara de óculos. A terceira
+prestou. É o mesmo método de sempre: ampliar o desenho até o defeito aparecer,
+que no tamanho real ele se esconde.
+
+O arquivo aponta só para a esquerda. O braço da direita é o mesmo arquivo com
+`scaleX(-1)`: um desenho, dois lados.
+
+**A regra que fica:** ferramenta de arte serve para *referência*. O ativo que
+entra no app se desenha aqui, onde ele é texto, entra no controle de versão e
+muda de cor junto com o tema.
+
+### A placa que saiu no dia seguinte ao ornamento
+
+*"eu tava pensando em tirar pq tá esquisito esse retângulo gigante com o nome
+escrito dentro"* — e ela tinha acabado de me ver enfeitar exatamente esse
+retângulo.
+
+O título de seção era um hexágono com fundo, borda de 2px e canto recortado.
+Funcionava, mas num lugar errado: a ficha inteira já é feita de caixas —
+ladrilhos de traço, blocos de limiar, quadradinhos de trilha, cartas. Mais uma
+caixa não marca seção nenhuma; ela só entra na fila. E a caixa chamava mais
+atenção que a palavra dentro dela.
+
+Sem a placa, o peso volta para o texto: um degrau maior, letra mais aberta
+(.10em), e o floreio de cada lado dando o enquadramento que a borda dava — só
+que sem fechar mais uma caixa. O floreio encolheu de 20 para 16px de altura no
+caminho, porque sem borda para disputar ele não precisava mais gritar.
+
+O ornamento não foi trabalho perdido: ele é justamente o que tornou possível
+tirar a placa. Sem os braços desenhados, o título sozinho no meio de duas
+barras de 2px teria ficado solto.
+
+### O rótulo e a segunda sublinha
+
+Tirada a placa da faixa de seção, "EVASÃO" e "ARMADURA" ficaram sendo as
+últimas palavras-dentro-de-quadro da ficha — uma pílula preta dentro de um
+cartão claro. O que era padrão virou exceção, e exceção de um só chama atenção
+pelo motivo errado. A caixinha saiu.
+
+No lugar da borda entrou um **fio afilado**: fino nas pontas, cheio no meio,
+losango no centro. Mesmo vocabulário do floreio da faixa, para os dois enfeites
+conversarem em vez de serem duas ideias diferentes na mesma tela.
+
+Ele nasceu **embaixo** da palavra e estava errado. "Evasão" e "Armadura" são
+gatilhos de verbete, e gatilho de verbete já tem sublinhado pontilhado — uma
+convenção que vale no app inteiro. O fio somava uma segunda sublinha e o par
+lia como erro de renderização: duas linhas quase iguais, quase coladas.
+
+Foi para **cima** da palavra. Ali ele separa o desenho do rótulo, não disputa
+com nada, e o pontilhado do verbete continua sendo a única coisa que sublinha.
+A regra por trás: enfeite novo não pode ocupar o lugar de um sinal que já
+significa alguma coisa.
+
+---
+
+## 22. A arte da carta atrás da carta
+
+A Vanessa: *"será que dá pra colocar uma marca d'água nas cartas de domínio
+igual foi feito para aquele poder que usa esperança?"* Dá — e o caminho até lá
+teve uma falha muda que vale mais que o resultado.
+
+### O recorte é automático porque o gabarito é fixo
+
+As 189 cartas de domínio têm o mesmo desenho: fita do nível à esquerda, selo de
+custo à direita, arte no meio, faixa do tipo ("SPELL", "ABILITY") e a área
+branca do texto. A janela limpa é `x 12–348, y 108–218`.
+
+O limite de baixo saiu de medição, não de olho: a faixa do tipo começa entre
+222 e 232 **conforme a carta**. Parando em 218, nenhuma vaza a palavra "SPELL"
+para dentro do app — e foi o que aconteceu na primeira tentativa, com a
+"Disfarce em Massa" carregando um fantasma de letra branca no fundo.
+
+### Cinza, 12%, esmaecendo para a esquerda
+
+Três decisões, nenhuma de gosto:
+
+**Cinza.** Testei tingir com a cor do domínio. Ficou lindo no roxo do Arcana e
+ilegível no amarelo do Esplendor — e cada domínio puxava a carta para um clima
+diferente. Em cinza, a única cor da peça continua sendo a barra do domínio na
+borda esquerda, que é quem carrega a informação.
+
+**12%.** O texto da carta é o que se lê no meio de um combate. Marca-d'água que
+disputa com ele custa a rolagem inteira de alguém.
+
+**Esmaecendo para a esquerda.** Ela ocupa 58% da largura e some antes de chegar
+ao começo das linhas, onde o olho entra em cada frase.
+
+### O tamanho, que era o risco de verdade
+
+A arte original tem 189 KB por carta, 36 MB no total. Usar os PNG como fundo
+seria baixar megabytes para desenhar uma sombra a 12% — no celular, no meio de
+uma sessão, no 4G da casa de alguém. As marcas geradas têm **5,2 KB em média e
+0,96 MB somadas**, e o navegador só busca a da carta que está na tela.
+
+### A falha muda número três
+
+O JS escrevia `--marca: url("assets/marcas-dagua/…")` no cartão. A carta
+aparecia sem fundo nenhum.
+
+O motivo: **`url()` relativo dentro de custom property não resolve contra a
+página — resolve contra a folha de estilo onde o `var()` é usado.** Quem usa é
+`css/ficha.css`, então o navegador pediu `/css/assets/marcas-dagua/…`, levou
+404, e não disse nada: imagem de fundo que não carrega não reclama no console.
+É a terceira falha desta família no projeto, depois do CSS que não subiu e do
+token que não existia — todas invisíveis para quem lê o código.
+
+A saída é `new URL(caminho, document.baseURI).href`, que ainda por cima
+sobrevive ao subdiretório do GitHub Pages. E o passo e2e novo não pergunta se a
+regra existe nem se a variável está lá, que é o que um teste de DOM
+responderia: pergunta se o **servidor devolve 200 naquele endereço**. Só isso
+separa o certo do quase-certo.
+
+### O conferidor também aprendeu
+
+A seção VARIÁVEL FANTASMA acusou `--marca` como erro — quando ela estava certa.
+Ele só lia os `.css`, e `--marca` (como `--cor-dominio`) nasce no `style` que o
+JS escreve.
+
+Isso não é detalhe. Um conferidor que grita quando está tudo certo é pior que
+nenhum: em pouco tempo alguém aprende a ignorar a saída, e no dia do erro de
+verdade ela também é ignorada. Ele passou a ler os `.js` atrás de declarações
+de variável.
