@@ -19,6 +19,7 @@ const ACOES_SUPABASE_DIRETAS = new Set([
   'restaurarPersonagem',
   'sair',
   'lerConfig',
+  'gravarConfig',
   'listarJogadores'
 ]);
 
