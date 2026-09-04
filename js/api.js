@@ -1,32 +1,45 @@
 /**
  * api.js — porta única da API.
  *
- * Migração em andamento:
- *  - operações portadas vão direto para Supabase Edge Functions;
- *  - ações ainda não portadas continuam no Google Apps Script;
- *  - contas antigas têm fallback automático para a autenticação legada.
+ * Backend principal: Supabase Edge Functions.
+ * O Google Apps Script só permanece como ponte de UMA autenticação legada:
+ * no primeiro login de uma conta antiga, a credencial é validada lá e
+ * imediatamente convertida para bcrypt no Supabase. Depois disso, não volta.
  */
 
 import { CONFIG, MENSAGENS_ERRO } from './config.js';
 import { esperar } from './util.js';
 
-const SUPABASE_APP_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/app-api';
-const SUPABASE_MESA_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/mesa-api';
-const SUPABASE_AUTH_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/auth-api';
-const SUPABASE_CHARACTER_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/character-api';
-const SUPABASE_PLAYER_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/player-api';
+const BASE = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1';
+const URLS = {
+  app: `${BASE}/app-api`,
+  mesa: `${BASE}/mesa-api`,
+  auth: `${BASE}/auth-api`,
+  player: `${BASE}/player-api`,
+  engine: `${BASE}/engine-api`,
+  photo: `${BASE}/photo-api`
+};
 
-const ACOES_SUPABASE_AUTH = new Set(['registrar','entrar','trocarCodigo']);
-const ACOES_SUPABASE_CHARACTER = new Set(['criarPersonagem','salvarPersonagem']);
-const ACOES_SUPABASE_MESA = new Set([
+const ACOES_AUTH = new Set(['registrar','entrar','entrarMestre','trocarCodigo']);
+const ACOES_MESA = new Set([
   'ajustarMedo','criarContagem','avancarContagem','editarContagem','excluirContagem',
   'parearContagens','desparearContagem','avancarPerseguicao','previaDescansoDaMesa','aplicarDescansoDaMesa'
 ]);
-const ACOES_SUPABASE_PLAYER = new Set(['aliadosDaMesa','meusProjetos']);
-const ACOES_SUPABASE_APP = new Set([
+const ACOES_PLAYER = new Set(['aliadosDaMesa','meusProjetos']);
+const ACOES_APP = new Set([
   'ping','sessao','listarPersonagens','obterPersonagem','excluirPersonagem','restaurarPersonagem',
   'sair','lerConfig','gravarConfig','listarJogadores','abrirSessao','anunciarNivelDaMesa',
   'ouroComMoedas','definirDanoMassivo'
+]);
+const ACOES_FOTO = new Set(['guardarFoto','removerFoto']);
+const ACOES_ENGINE = new Set([
+  'criarPersonagem','salvarPersonagem','ajustarFicha',
+  'previaDescanso','movimentosDeDescanso','aplicarDescanso',
+  'opcoesDeAvanco','previaDeAvanco','aplicarAvanco','desfazerAvanco','aplicarCartaPermanente',
+  'painelDoMestre','definirMoldura','molduraDaMesa',
+  'encontro','definirEncontro','acrescentarAoEncontro','ajustarAdversario',
+  'porEmFoco','limparFoco','usarHabilidade','removerDoEncontro','limparEncontro',
+  'adversariosDaMesa','salvarAdversarioDaMesa','excluirAdversarioDaMesa'
 ]);
 
 export class ErroApi extends Error {
@@ -39,6 +52,7 @@ export function mensagemDoErro(erro) {
   if (erro instanceof ErroApi) return erro.message || MENSAGENS_ERRO[erro.codigo] || 'Erro desconhecido.';
   return MENSAGENS_ERRO.INTERNO;
 }
+
 async function lerEnvelope(resposta, nome) {
   let envelope;
   try { envelope = await resposta.json(); }
@@ -46,87 +60,103 @@ async function lerEnvelope(resposta, nome) {
   if (!resposta.ok && (!envelope || !envelope.erro)) throw new ErroApi('SEM_REDE', `${nome} respondeu ${resposta.status}.`);
   return envelope;
 }
-function urlSupabaseDaAcao(corpo) {
-  const acao = corpo && corpo.acao;
-  if (ACOES_SUPABASE_AUTH.has(acao)) return SUPABASE_AUTH_URL;
-  if (ACOES_SUPABASE_CHARACTER.has(acao)) return SUPABASE_CHARACTER_URL;
-  if (ACOES_SUPABASE_MESA.has(acao)) return SUPABASE_MESA_URL;
-  if (ACOES_SUPABASE_PLAYER.has(acao)) return SUPABASE_PLAYER_URL;
-  if (ACOES_SUPABASE_APP.has(acao)) return SUPABASE_APP_URL;
+function urlDaAcao(acao) {
+  if (ACOES_AUTH.has(acao)) return URLS.auth;
+  if (ACOES_MESA.has(acao)) return URLS.mesa;
+  if (ACOES_PLAYER.has(acao)) return URLS.player;
+  if (ACOES_APP.has(acao)) return URLS.app;
+  if (ACOES_FOTO.has(acao)) return URLS.photo;
+  if (ACOES_ENGINE.has(acao)) return URLS.engine;
   return null;
 }
-async function postarSupabase(corpo, sinal) {
-  const url = urlSupabaseDaAcao(corpo);
-  if (!url) throw new ErroApi('INTERNO', 'Ação sem destino Supabase.');
+async function postar(url, corpo, sinal) {
   const resposta = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(corpo), signal:sinal });
   return lerEnvelope(resposta, 'Supabase');
 }
-async function postarAppsScript(corpo, sinal) {
+async function chamarSupabase(corpo) {
+  const url = urlDaAcao(corpo.acao);
+  if (!url) throw new ErroApi('ACAO_DESCONHECIDA', `Ação sem destino: ${corpo.acao}.`);
+  let ultimoErro = null;
+  for (let tentativa=0; tentativa<CONFIG.TENTATIVAS; tentativa++) {
+    const controle = new AbortController(); const prazo = setTimeout(() => controle.abort(), CONFIG.TEMPO_LIMITE);
+    try {
+      const envelope = await postar(url, corpo, controle.signal);
+      if (envelope && envelope.ok) return envelope.dados;
+      const erro = (envelope && envelope.erro) || {};
+      throw new ErroApi(erro.codigo || 'INTERNO', erro.mensagem, erro.extra);
+    } catch (e) {
+      if (e instanceof ErroApi && e.codigo !== 'SEM_REDE') throw e;
+      ultimoErro = e;
+      if (tentativa < CONFIG.TENTATIVAS-1) await esperar(600*(tentativa+1));
+    } finally { clearTimeout(prazo); }
+  }
+  throw new ErroApi('SEM_REDE', MENSAGENS_ERRO.SEM_REDE, { original:ultimoErro ? String(ultimoErro.message || ultimoErro) : null });
+}
+
+/* Ponte transitória: só para converter hashes antigos no primeiro login. */
+async function postarLegado(corpo, sinal) {
   const resposta = await fetch(CONFIG.urlApi, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(corpo), redirect:'follow', signal:sinal });
-  if (!resposta.ok) throw new ErroApi('SEM_REDE', `O servidor respondeu ${resposta.status}.`);
+  if (!resposta.ok) throw new ErroApi('SEM_REDE', `O servidor legado respondeu ${resposta.status}.`);
   const texto = await resposta.text();
   try { return JSON.parse(texto); }
-  catch { throw new ErroApi('SEM_REDE', 'O Apps Script respondeu algo que não é JSON. Confira a implantação.'); }
+  catch { throw new ErroApi('SEM_REDE', 'O servidor legado respondeu algo que não é JSON.'); }
 }
 let contadorJsonp = 0;
-function viaJsonp(corpo) {
+function viaJsonpLegado(corpo) {
   return new Promise((resolve, reject) => {
     const nome = `dhcb${Date.now()}${contadorJsonp++}`;
     const params = new URLSearchParams({ acao:corpo.acao, payload:JSON.stringify(corpo), callback:nome });
-    const url = `${CONFIG.urlApi}?${params.toString()}`;
-    if (url.length > 7500) { reject(new ErroApi('SEM_REDE','Não consegui falar com o servidor (dados grandes demais para o plano B).')); return; }
     const script = document.createElement('script');
     const limpar = () => { delete window[nome]; script.remove(); clearTimeout(prazo); };
     const prazo = setTimeout(() => { limpar(); reject(new ErroApi('SEM_REDE', MENSAGENS_ERRO.SEM_REDE)); }, CONFIG.TEMPO_LIMITE);
     window[nome] = dados => { limpar(); resolve(dados); };
     script.onerror = () => { limpar(); reject(new ErroApi('SEM_REDE', MENSAGENS_ERRO.SEM_REDE)); };
-    script.src = url; document.head.append(script);
+    script.src = `${CONFIG.urlApi}?${params.toString()}`;
+    document.head.append(script);
   });
 }
-async function chamarAppsScript(corpo) {
-  let ultimoErroDeRede = null;
+async function chamarLegado(corpo) {
+  let ultimoErro = null;
   for (let tentativa=0; tentativa<CONFIG.TENTATIVAS; tentativa++) {
     const controle = new AbortController(); const prazo = setTimeout(() => controle.abort(), CONFIG.TEMPO_LIMITE);
     try {
-      const envelope = await postarAppsScript(corpo, controle.signal);
+      const envelope = await postarLegado(corpo, controle.signal);
       if (envelope && envelope.ok) return envelope.dados;
       const erro = (envelope && envelope.erro) || {};
       throw new ErroApi(erro.codigo || 'INTERNO', erro.mensagem, erro.extra);
     } catch (e) {
       if (e instanceof ErroApi && e.codigo !== 'SEM_REDE') throw e;
-      ultimoErroDeRede = e;
+      ultimoErro = e;
       if (tentativa < CONFIG.TENTATIVAS-1) await esperar(600*(tentativa+1));
     } finally { clearTimeout(prazo); }
   }
   try {
-    const envelope = await viaJsonp(corpo);
+    const envelope = await viaJsonpLegado(corpo);
     if (envelope && envelope.ok) return envelope.dados;
     const erro = (envelope && envelope.erro) || {};
     throw new ErroApi(erro.codigo || 'INTERNO', erro.mensagem, erro.extra);
   } catch (e) {
     if (e instanceof ErroApi && e.codigo !== 'SEM_REDE') throw e;
-    throw new ErroApi('SEM_REDE', MENSAGENS_ERRO.SEM_REDE, { original:ultimoErroDeRede ? String(ultimoErroDeRede.message || ultimoErroDeRede) : null });
+    throw new ErroApi('SEM_REDE', MENSAGENS_ERRO.SEM_REDE, { original:ultimoErro ? String(ultimoErro.message || ultimoErro) : null });
   }
 }
+async function migrarCredencialSilenciosamente(token, codigo) {
+  if (!token || !codigo) return;
+  try { await chamarSupabase({ acao:'migrarCredencial', token, codigo }); }
+  catch (e) { console.warn('Credencial legada ainda não foi convertida.', e); }
+}
+
 export async function chamar(acao, dados = {}) {
-  const corpo = { acao, ...dados }; const urlSupabase = urlSupabaseDaAcao(corpo);
-  if (!urlSupabase) return chamarAppsScript(corpo);
-  let ultimoErroDeRede = null;
-  for (let tentativa=0; tentativa<CONFIG.TENTATIVAS; tentativa++) {
-    const controle = new AbortController(); const prazo = setTimeout(() => controle.abort(), CONFIG.TEMPO_LIMITE);
-    try {
-      const envelope = await postarSupabase(corpo, controle.signal);
-      if (envelope && envelope.ok) return envelope.dados;
-      const erro = (envelope && envelope.erro) || {};
-      if (erro.codigo === 'LEGACY_AUTH' && (acao === 'entrar' || acao === 'trocarCodigo')) return chamarAppsScript(corpo);
-      throw new ErroApi(erro.codigo || 'INTERNO', erro.mensagem, erro.extra);
-    } catch (e) {
-      if (e instanceof ErroApi && e.codigo !== 'SEM_REDE') throw e;
-      ultimoErroDeRede = e;
-      if (tentativa < CONFIG.TENTATIVAS-1) await esperar(600*(tentativa+1));
-    } finally { clearTimeout(prazo); }
+  const corpo = { acao, ...dados };
+  try { return await chamarSupabase(corpo); }
+  catch (e) {
+    const legado = e instanceof ErroApi && e.codigo === 'LEGACY_AUTH';
+    if (!legado || !['entrar','entrarMestre','trocarCodigo'].includes(acao)) throw e;
+    const r = await chamarLegado(corpo);
+    if (acao === 'entrar' || acao === 'entrarMestre') await migrarCredencialSilenciosamente(r && r.token, dados.codigo);
+    if (acao === 'trocarCodigo') await migrarCredencialSilenciosamente(dados.token, dados.codigoNovo);
+    return r;
   }
-  throw new ErroApi('SEM_REDE', MENSAGENS_ERRO.SEM_REDE, { original:ultimoErroDeRede ? String(ultimoErroDeRede.message || ultimoErroDeRede) : null });
 }
 
 export const api = {
