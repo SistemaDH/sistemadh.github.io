@@ -11,11 +11,15 @@ import { esperar } from './util.js';
 
 const SUPABASE_API_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/app-api';
 const ACOES_SUPABASE_DIRETAS = new Set([
+  'ping',
+  'sessao',
   'listarPersonagens',
   'obterPersonagem',
   'excluirPersonagem',
   'restaurarPersonagem',
-  'sair'
+  'sair',
+  'lerConfig',
+  'listarJogadores'
 ]);
 
 export class ErroApi extends Error {
