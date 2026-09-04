@@ -27,7 +27,12 @@ const ACOES_SUPABASE_MESA = new Set([
   'criarContagem',
   'avancarContagem',
   'editarContagem',
-  'excluirContagem'
+  'excluirContagem',
+  'parearContagens',
+  'desparearContagem',
+  'avancarPerseguicao',
+  'previaDescansoDaMesa',
+  'aplicarDescansoDaMesa'
 ]);
 
 const ACOES_SUPABASE_PLAYER = new Set([
@@ -88,8 +93,6 @@ function urlSupabaseDaAcao(corpo) {
   if (ACOES_SUPABASE_PLAYER.has(acao)) return SUPABASE_PLAYER_URL;
   if (ACOES_SUPABASE_APP.has(acao)) return SUPABASE_APP_URL;
 
-  // Durante a criação, rascunhos podem ser persistidos direto no Supabase.
-  // Fichas finais continuam no Apps Script até todo o motor de regras ser portado.
   if ((acao === 'criarPersonagem' || acao === 'salvarPersonagem') &&
       corpo.ficha && corpo.ficha.meta && corpo.ficha.meta.rascunho === true) {
     return SUPABASE_CHARACTER_URL;
