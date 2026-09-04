@@ -14,6 +14,7 @@ const SUPABASE_APP_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/
 const SUPABASE_MESA_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/mesa-api';
 const SUPABASE_AUTH_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/auth-api';
 const SUPABASE_CHARACTER_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/character-api';
+const SUPABASE_PLAYER_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/player-api';
 
 const ACOES_SUPABASE_AUTH = new Set([
   'registrar',
@@ -27,6 +28,11 @@ const ACOES_SUPABASE_MESA = new Set([
   'avancarContagem',
   'editarContagem',
   'excluirContagem'
+]);
+
+const ACOES_SUPABASE_PLAYER = new Set([
+  'aliadosDaMesa',
+  'meusProjetos'
 ]);
 
 const ACOES_SUPABASE_APP = new Set([
@@ -79,6 +85,7 @@ function urlSupabaseDaAcao(corpo) {
   const acao = corpo && corpo.acao;
   if (ACOES_SUPABASE_AUTH.has(acao)) return SUPABASE_AUTH_URL;
   if (ACOES_SUPABASE_MESA.has(acao)) return SUPABASE_MESA_URL;
+  if (ACOES_SUPABASE_PLAYER.has(acao)) return SUPABASE_PLAYER_URL;
   if (ACOES_SUPABASE_APP.has(acao)) return SUPABASE_APP_URL;
 
   // Durante a criação, rascunhos podem ser persistidos direto no Supabase.
@@ -199,8 +206,6 @@ export async function chamar(acao, dados = {}) {
       if (envelope && envelope.ok) return envelope.dados;
       const erro = (envelope && envelope.erro) || {};
 
-      // Hashes antigos dependem do pepper que só existe no Apps Script.
-      // Enquanto houver conta legada, login/troca de código caem para lá.
       if (erro.codigo === 'LEGACY_AUTH' && (acao === 'entrar' || acao === 'trocarCodigo')) {
         return chamarAppsScript(corpo);
       }
