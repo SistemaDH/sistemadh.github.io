@@ -1,12 +1,12 @@
 # Arquitetura Supabase
 
-O backend principal do SistemaDH usa Supabase. O frontend continua estático no GitHub Pages.
+O SistemaDH usa **Supabase como backend único**. O frontend continua estático no GitHub Pages.
 
 ## Fluxo atual
 
 ```text
 GitHub Pages
-  ├─ auth-api      → registro, login, Mestre, troca/migração de código
+  ├─ auth-api      → registro, login, Mestre e troca de código
   ├─ app-api       → sessão, roster, config e operações simples
   ├─ mesa-api      → Medo, contagens, perseguições e descanso da mesa
   ├─ player-api    → aliados e projetos
@@ -15,6 +15,8 @@ GitHub Pages
                      ↓
               PostgreSQL / Storage
 ```
+
+Não existe mais fallback de autenticação ou persistência para Google Apps Script.
 
 As tabelas públicas têm RLS habilitado e não possuem policies para `anon` ou `authenticated`. O navegador não acessa o banco diretamente: as Edge Functions autenticam o token de sessão do app e usam a credencial de serviço somente no servidor.
 
@@ -37,8 +39,9 @@ Tabelas principais:
 - `personagens`: colunas-espelho + JSONB `dados` com a ficha completa;
 - `config`: estado geral da mesa em JSON;
 - `log`: auditoria funcional;
-- `auth_rate_limits`: bloqueio de tentativas de autenticação;
-- `backend_secrets`: segredo da ponte legada, enquanto ela existir.
+- `auth_rate_limits`: bloqueio de tentativas de autenticação.
+
+A antiga tabela `backend_secrets`, usada exclusivamente pela ponte Apps Script → Supabase, foi removida após o corte definitivo.
 
 A exclusão de personagem continua lógica (`excluido=true`). Salvamentos continuam usando `versao` otimista para evitar sobrescrever mudanças feitas em outro aparelho.
 
@@ -48,26 +51,17 @@ Fotos novas são gravadas no bucket público `character-photos`, limitado a 1 Mi
 
 `characters/<personagem-id>/<uuid>.jpg`
 
-`js/telas/foto.js` aceita esse formato e também reconhece IDs antigos do Google Drive. Portanto fotos já existentes não quebram; ao serem substituídas, passam naturalmente para o Storage.
+`js/telas/foto.js` também reconhece IDs antigos do Google Drive para compatibilidade com fotos históricas ainda gravadas nas fichas. Nenhum upload novo usa Google Drive.
 
-## Autenticação e ponte legada
+## Autenticação
 
-Novas contas usam bcrypt diretamente no Supabase.
+Contas ativas usam bcrypt diretamente no Supabase. O Mestre e a conta principal já foram migrados.
 
-Contas criadas antes da migração possuem hash SHA-256 dependente de um `pepper` que existe somente nas propriedades do Apps Script. Esse hash não pode ser convertido sem conhecer o código em texto puro. Por isso existe uma ponte transitória no primeiro login:
-
-1. `auth-api` detecta `LEGACY_AUTH`;
-2. o frontend envia somente esse login ao Apps Script antigo;
-3. se o login antigo for aceito, ele emite uma sessão válida já armazenada no Supabase;
-4. o frontend chama `migrarCredencial` com essa sessão e o código informado;
-5. `auth-api` grava bcrypt;
-6. todos os próximos logins daquela conta são 100% Supabase.
-
-O mesmo vale para o Mestre. Depois que todas as contas que serão mantidas tiverem feito um login com a versão nova, o fallback do Apps Script e a função `apps-script-db` podem ser removidos.
+A ponte de primeiro login para hashes antigos foi removida do frontend. Contas legadas que não seriam preservadas foram removidas ou desativadas antes do corte.
 
 ## Edge Functions desativadas
 
-`runtime-test`, `rules-engine`, `game-api` e `character-api` foram substituídas/desativadas e respondem somente como endpoint encerrado, com JWT obrigatório. Elas não fazem parte do roteamento do frontend.
+`apps-script-db`, `runtime-test`, `rules-engine`, `game-api` e `character-api` foram substituídas/desativadas e respondem somente como endpoint encerrado, com JWT obrigatório. Elas não fazem parte do roteamento do frontend.
 
 ## Segurança
 
@@ -77,16 +71,11 @@ O mesmo vale para o Mestre. Depois que todas as contas que serão mantidas tiver
 - toda Edge Function pública valida o token customizado ou outro segredo próprio;
 - o motor de regras usa commit fixado;
 - fotos têm limite de tamanho/tipo no Storage e no endpoint;
-- a RPC transacional só pode ser executada por `service_role`.
+- a RPC transacional só pode ser executada por `service_role`;
+- não existe mais segredo compartilhado do Apps Script no banco.
 
 O advisor de segurança pode informar `RLS Enabled No Policy`. Neste projeto isso é esperado: a ausência de policy é justamente o que impede o browser de acessar as tabelas diretamente.
 
-## Depois da migração de credenciais
+## Estado da migração
 
-Quando todas as contas mantidas estiverem com `codigoHash` começando em `$2` (bcrypt):
-
-1. remover do `js/api.js` a ponte `chamarLegado`;
-2. desativar/remover `apps-script-db`;
-3. revogar/rotacionar `SUPABASE_BACKEND_SECRET` usado pelo Apps Script;
-4. arquivar o projeto Apps Script;
-5. manter `backend/*.gs` no GitHub como fonte de regras do motor, não como backend implantado no Google.
+**Concluída.** O runtime do SistemaDH não depende mais de Apps Script, Google Sheets ou Google Drive para novas operações. Os arquivos `backend/*.gs` continuam no GitHub apenas como fonte do motor de regras carregado pelo `engine-api` e como histórico do backend anterior.
