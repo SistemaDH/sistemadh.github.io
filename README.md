@@ -1,263 +1,396 @@
 # Daggerheart · Sistema de Fichas
 
-Sistema web **mobile-first** para as fichas da mesa de Daggerheart.
-Frontend estático (GitHub Pages) + backend em Google Apps Script gravando numa
-planilha do Google Sheets.
+Sistema web **mobile-first** para fichas e gerenciamento de mesa de Daggerheart.
 
-> **Progresso.** Parte 1: login, sessão e persistência. Parte 2: os 9 domínios e
-> as 189 cartas de domínio. Parte 3: as 9 classes, 18 subclasses e 54 cartas de
-> subclasse. Parte 4: 18 ancestralidades e 9 comunidades, com a regra de
-> ancestralidade mista validada no servidor. Parte 5: 192 armas, 34 armaduras e
-> 120 itens, com os números vindos do SRD oficial porque o livro em pt-BR está
-> numa versão anterior à errata. **Pontas soltas** amarradas antes da criação
-> de ficha: traços, condições, contadores com estado e o encaixe das fichas
-> paralelas (ver `docs/pontas-soltas.md`).
+A aplicação é publicada como frontend estático no **GitHub Pages** e usa **Supabase** como backend oficial: Edge Functions para a API e motor de regras, PostgreSQL para persistência e Supabase Storage para imagens.
+
+> **Estado atual:** a antiga arquitetura Google Apps Script + Google Sheets foi aposentada. O runtime de produção não depende mais do Google Apps Script. Os arquivos `backend/*.gs` continuam no repositório porque são a fonte do motor de regras executado pelo `engine-api` no Supabase.
 >
-> **Parte 6:** criação de ficha guiada — as 9 etapas do capítulo 1, com os
-> guias de classe do apêndice e o visualizador de cartas em PNG.
->
-> **Regra de fonte:** as CARTAS em PNG são a fonte confiável em português.
-> Existem DOIS PDFs do livro em pt-BR: `Daggerheart regras.pdf` (tradução
-> automática ruim) e `DH-DigitalRegras.pdf` (**tradução oficial da Jambô,
-> Prévia 5** — bem melhor). Os dois são PRÉ-ERRATA, então as erratas oficiais
-> em inglês continuam valendo sobre os dois. A conferência completa contra o
-> livro da Jambô está em `docs/conferencia-livro-jambo.md`: nenhum número do
-> sistema precisou de correção.
+> Para detalhes técnicos da arquitetura, leia [`docs/arquitetura-supabase.md`](docs/arquitetura-supabase.md) **antes de alterar backend, persistência ou autenticação**.
+
+## Conteúdo implementado
+
+O projeto já reúne, entre outras partes:
+
+- login, sessões e persistência;
+- 9 domínios e 189 cartas de domínio;
+- 9 classes, 18 subclasses e 54 cartas de subclasse;
+- 18 ancestralidades e 9 comunidades;
+- 192 armas, 34 armaduras e 120 itens, além das molduras de campanha;
+- criação guiada de personagem;
+- traços, condições e contadores com estado;
+- fichas paralelas, incluindo Formas de Fera e Companheiro Animal;
+- ficha em jogo e ajustes de recursos;
+- descanso e movimentos de descanso;
+- avanço/subida de nível;
+- cartas permanentes;
+- painel do Mestre;
+- Medo e contagens da mesa;
+- encontros, foco e adversários;
+- bestiário e adversários personalizados;
+- fotos de personagem no Supabase Storage.
+
+### Fonte das regras e traduções
+
+As cartas em PNG são a referência principal de texto em português quando existe carta correspondente. O projeto também mantém a comparação com o livro da Jambô e com as erratas oficiais.
+
+Os PDFs em pt-BR usados durante a conferência são pré-errata. Quando existe divergência mecânica, os dados do sistema seguem a fonte oficial/errata mais recente adotada pelo projeto. A conferência detalhada está em [`docs/conferencia-livro-jambo.md`](docs/conferencia-livro-jambo.md).
 
 ---
 
-## Estrutura
+# Arquitetura
 
+```text
+GitHub Pages
+      │
+      ▼
+ js/api.js
+      │
+      ├── auth-api
+      ├── app-api
+      ├── mesa-api
+      ├── player-api
+      ├── engine-api
+      └── photo-api
+             │
+             ▼
+      Supabase PostgreSQL
+      + Supabase Storage
 ```
+
+O navegador **não acessa diretamente as tabelas PostgreSQL**. `js/api.js` é a porta central da API do frontend e distribui as ações para as Edge Functions responsáveis.
+
+## Edge Functions
+
+### `auth-api`
+
+Responsável por:
+
+- registro;
+- login de jogador;
+- login do Mestre;
+- troca de código;
+- sessões/autenticação relacionadas ao acesso.
+
+As contas ativas usam **bcrypt**. Não existe mais fallback de autenticação para Google Apps Script.
+
+### `app-api`
+
+Operações gerais e de menor acoplamento, incluindo:
+
+- sessão;
+- roster/listagem de personagens;
+- obtenção, exclusão e restauração de personagem;
+- configurações;
+- jogadores;
+- abertura de sessão;
+- nível da mesa;
+- opções gerais da campanha.
+
+### `mesa-api`
+
+Domínio da mesa:
+
+- Medo;
+- contagens;
+- pareamento de contagens;
+- perseguições;
+- descanso da mesa.
+
+### `player-api`
+
+Operações auxiliares do jogador, como:
+
+- aliados da mesa;
+- projetos do personagem.
+
+### `engine-api`
+
+Motor principal das regras. Entre outras ações, executa:
+
+- criação e salvamento de personagem;
+- validação completa da ficha;
+- ajustes da ficha em jogo;
+- descanso;
+- avanço/subida de nível;
+- cartas permanentes;
+- painel do Mestre;
+- moldura da campanha;
+- encontro;
+- adversários e adversários personalizados.
+
+O `engine-api` reaproveita o motor mantido em `backend/*.gs` por meio de uma camada de compatibilidade que substitui as antigas APIs do Google por estado carregado do PostgreSQL.
+
+**Importante:** o motor não acompanha `main` automaticamente. Ele usa um commit fixado para evitar que uma alteração não revisada no GitHub passe a executar imediatamente com privilégios de backend.
+
+Commit atualmente fixado no motor:
+
+```text
+e711cfc85341f14565a4906cdbe321009db9fef9
+```
+
+Ao alterar regras em `backend/*.gs`, revise/teste a mudança e depois atualize explicitamente o `ENGINE_COMMIT` do `engine-api` quando quiser promovê-la para produção.
+
+### `photo-api`
+
+Responsável por upload e remoção de fotos de personagem.
+
+Fotos novas são armazenadas no bucket:
+
+```text
+character-photos
+```
+
+O upload é limitado no backend a JPEG/PNG e aproximadamente 1 MiB. O sistema ainda consegue exibir referências antigas do Google Drive que tenham permanecido em alguma ficha histórica, mas novos uploads usam Supabase Storage.
+
+## Edge Functions aposentadas
+
+Estas funções surgiram durante a migração e **não fazem parte da arquitetura atual**:
+
+- `apps-script-db`;
+- `character-api`;
+- `game-api`;
+- `rules-engine`;
+- `runtime-test`.
+
+Não criar novas dependências nelas.
+
+---
+
+# Banco de dados
+
+As tabelas principais são:
+
+- `jogadores` — identidade, papel, hash da credencial e datas;
+- `sessoes` — sessões do sistema; o banco armazena o hash do token;
+- `personagens` — ficha completa e colunas-espelho;
+- `config` — estado/configuração geral da mesa;
+- `log` — auditoria funcional;
+- `auth_rate_limits` — controle de tentativas de autenticação.
+
+A antiga tabela `backend_secrets`, usada apenas pela ponte Apps Script → Supabase durante a migração, foi removida.
+
+## Personagens
+
+A fonte completa da ficha fica em:
+
+```text
+personagens.dados
+```
+
+`dados` é um campo JSONB. As demais colunas de `personagens` funcionam como espelho de informações importantes, como:
+
+- nome;
+- dono;
+- classe;
+- subclasse;
+- ancestralidade;
+- comunidade;
+- nível;
+- versão;
+- schema;
+- datas;
+- estado de exclusão.
+
+Isso permite evoluir a estrutura interna da ficha sem criar uma coluna PostgreSQL para cada campo de Daggerheart.
+
+## Concorrência e transações
+
+A ficha mantém **controle otimista por `versao`**. Se dois aparelhos tentarem salvar versões concorrentes, o backend deve responder com conflito em vez de sobrescrever silenciosamente a alteração anterior.
+
+O motor de regras persiste alterações relacionadas pela RPC PostgreSQL:
+
+```text
+apply_engine_mutations
+```
+
+Ela aplica alterações de personagens, configuração e logs de forma transacional e verifica a versão/timestamp esperado quando necessário.
+
+Não substituir operações transacionais do motor por vários `update()` independentes sem analisar atomicidade e concorrência.
+
+## Exclusão
+
+A exclusão normal de personagem continua sendo lógica:
+
+```text
+excluido = true
+```
+
+Assim o Mestre pode restaurar uma ficha quando a funcionalidade correspondente permitir.
+
+---
+
+# Segurança
+
+As tabelas expostas possuem **Row Level Security (RLS)** habilitado.
+
+Não existem policies públicas para permitir que `anon` ou `authenticated` manipulem diretamente os dados da aplicação. Isso é intencional: o browser conversa com as Edge Functions, não diretamente com as tabelas.
+
+Regras importantes:
+
+1. Nunca colocar `SUPABASE_SERVICE_ROLE_KEY`, secret key ou outro segredo no frontend/GitHub Pages.
+2. Edge Functions públicas devem validar o token customizado de sessão ou outro mecanismo próprio de autenticação antes de usar privilégios de serviço.
+3. Preservar RLS nas tabelas da aplicação.
+4. Preservar o controle otimista de versão das fichas.
+5. Operações compostas devem preservar atomicidade.
+6. Não reintroduzir Google Sheets ou Google Apps Script como backend.
+7. Não apontar o motor privilegiado diretamente para a branch `main`.
+
+O advisor do Supabase pode exibir `RLS Enabled No Policy` como INFO. Nesta arquitetura isso é esperado: a ausência de policy pública ajuda a impedir acesso direto às tabelas pelo navegador.
+
+---
+
+# Estrutura do repositório
+
+```text
 sistema/
-├── index.html              página única; carrega os módulos ES
-├── css/
-│   ├── tema.css            cores, tipografia, espaçamento (todas as variáveis)
-│   ├── componentes.css     botões, campos, cartões, modal, avisos
-│   ├── telas.css           moldura do app, abertura e roster
-│   └── criacao.css         assistente de criação e visor de cartas
+├── index.html
+├── css/                         estilos e componentes visuais
 ├── js/
-│   ├── config.js           URL da API, versões, mensagens de erro
-│   ├── util.js             helpers de DOM, datas, localStorage
-│   ├── api.js              conversa com o Apps Script (POST + plano B JSONP)
-│   ├── dados.js            carrega os catálogos de data/*.json sob demanda
-│   ├── glossario.js        o parêntese com o termo da Jambô
-│   ├── estado.js           estado único do app + ações
-│   ├── ui.js               avisos, modais, confirmações
-│   ├── app.js              ponto de entrada e troca de telas
-│   ├── componentes/
-│   │   └── carta.js        visualizador de carta em PNG (tela cheia)
-│   └── telas/
-│       ├── abertura.js     login e criação de acesso
-│       ├── roster.js       lista de personagens
-│       ├── criacao.js      assistente de criação (9 etapas)
-│       └── ajustes.js      conexão e troca de código
-├── data/
-│   ├── dominios.json       9 domínios (Parte 2)
-│   ├── cartas-dominio.json 189 cartas de domínio (Parte 2)
-│   ├── classes.json        9 classes + 18 subclasses (Parte 3)
-│   ├── ancestralidades.json 18 ancestralidades + regra de mista (Parte 4)
-│   ├── comunidades.json    9 comunidades (Parte 4)
-│   ├── equipamentos.json   armas, armaduras, saque e consumíveis (Parte 5)
-│   ├── equipamentos-correcoes.json  toda correção feita nas tabelas
-│   ├── tracos.json         os seis traços e a distribuição inicial
-│   ├── condicoes.json      condições oficiais + os sinônimos do livro
-│   ├── contadores.json     as 20 cartas/características que guardam estado
-│   ├── criacao.json        as 9 etapas e os números fixos do nível 1
-│   ├── guias-de-classe.json as 9 folhas "Guia de Caráter" do apêndice
-│   ├── fichas-filhas.json  24 Formas de Fera + 8 evoluções do Companheiro
-│   └── glossario.json      as duas traduções pt-BR lado a lado
-├── assets/cartas/
-│   ├── dominios/<DOM>/     189 PNGs oficiais
-│   ├── subclasses/<CLASSE>/ 54 PNGs oficiais
-│   ├── ancestralidades/    18 PNGs oficiais
-│   └── comunidades/        9 PNGs oficiais
-├── docs/                   pontos de interesse de cada parte
-├── backend/                arquivos .gs que vão para o Apps Script
-│   ├── 00_Config.gs        constantes e estrutura das abas
-│   ├── 10_Planilha.gs      leitura/escrita na planilha
-│   ├── 20_Auth.gs          jogadores, códigos e sessões
-│   ├── 30_Personagens.gs   CRUD das fichas
-│   ├── 40_Regras.gs        validação da ficha (cresce a cada parte)
-│   ├── 41_Dominios.gs      domínios e cartas — GERADO do JSON
-│   ├── 42_Classes.gs       classes e subclasses — GERADO do JSON
-│   ├── 43_Origens.gs       ancestralidades e comunidades — GERADO do JSON
-│   ├── 44_Equipamento.gs   armas, armaduras e itens — GERADO do JSON
-│   ├── 50_Setup.gs         setup(), reset, código do Mestre
-│   └── 99_Api.gs           doGet/doPost e roteamento
-└── tools/                  só para desenvolvimento (não vai para o Pages)
-    ├── apps-script-mock.mjs  imitação do Apps Script para rodar em Node
-    ├── servidor-teste.mjs    servidor local com o backend real
-    ├── testes-backend.mjs    testes de lógica do backend
-    ├── testes-e2e.mjs        teste no navegador (Playwright)
-    ├── gerar-42-classes.mjs  regenera backend/42_Classes.gs a partir do JSON
-    ├── gerar-43-origens.mjs  regenera backend/43_Origens.gs a partir do JSON
-    ├── gerar-44-equipamento.mjs  regenera backend/44_Equipamento.gs
-    ├── gerar-45-tracos.mjs   regenera backend/45_Tracos.gs
-    ├── gerar-46-condicoes.mjs  regenera backend/46_Condicoes.gs
-    ├── gerar-47-contadores.mjs regenera backend/47_Contadores.gs
-    ├── gerar-48-criacao.mjs    regenera backend/48_Criacao.gs
-    ├── gerar-41-dominios.mjs   regenera backend/41_Dominios.gs
-    ├── gerar-49-fichas-filhas.mjs regenera backend/49_FichasFilhas.gs
-    ├── gerar-4A-glossario.mjs  regenera backend/4A_Glossario.gs
-    ├── lib-glossario.mjs       põe os nomes da Jambô nas tabelas de alias
-    ├── montar-guias-de-classe.py  monta data/guias-de-classe.json
-    ├── montar-fichas-filhas.py    monta data/fichas-filhas.json
-    └── capturar-telas.mjs      prints do assistente num "celular"
+│   ├── api.js                   porta única do frontend para as Edge Functions
+│   ├── config.js                configuração e mensagens
+│   ├── estado.js                estado e ações do app
+│   ├── dados.js                 carregamento dos catálogos
+│   ├── glossario.js             terminologia cartas ↔ livro
+│   ├── verbete.js               verbetes/regras auxiliares
+│   ├── componentes/             componentes reutilizáveis
+│   └── telas/                   abertura, roster, ficha, Mestre, bestiário etc.
+├── data/                         catálogos e dados estáticos de Daggerheart
+├── assets/                       cartas, ícones e demais recursos visuais
+├── docs/
+│   ├── arquitetura-supabase.md  arquitetura oficial do backend atual
+│   └── ...                      conferências e documentação das regras
+├── backend/
+│   ├── *.gs                     fonte do motor de regras usado pelo engine-api
+│   └── supabase/                código/versionamento das peças Supabase do projeto
+└── tools/                        geradores, testes e utilitários de desenvolvimento
+```
+
+## Sobre `backend/*.gs`
+
+O nome da pasta é histórico.
+
+Esses arquivos **não devem ser copiados nem implantados em Google Apps Script**. Eles permanecem porque concentram o motor de regras desenvolvido ao longo do projeto e são executados pelo `engine-api` através da camada de compatibilidade Supabase.
+
+Portanto:
+
+```text
+backend/*.gs ≠ backend Google Apps Script em produção
+backend/*.gs = fonte do motor de regras do engine-api
 ```
 
 ---
 
-## Como publicar
+# Publicação
 
-### 1. Backend (Google Apps Script)
+## Frontend
 
-1. Abra o projeto do Apps Script já ligado à sua planilha.
-2. **Apague os arquivos antigos** e crie um arquivo para cada `.gs` da pasta
-   `backend/`, com o mesmo nome (a ordem alfabética importa só para leitura).
-3. Rode `setup()` uma vez (menu ▷ Executar). Ele cria as abas
-   `Jogadores`, `Sessoes`, `Personagens`, `Config` e `Log`.
-4. Rode `definirCodigoMestre('seu-codigo')` e depois **apague o código do
-   editor** — ele fica guardado como hash nas Propriedades do Script.
-5. Para zerar a planilha antiga mantendo a mesma URL:
-   - `arquivarEResetar()` — renomeia as abas atuais para `zz_backup_*` (ocultas)
-     e cria as novas vazias. **Recomendado.**
-   - `apagarTudoDeVez('APAGAR TUDO')` — apaga de verdade, sem desfazer.
-6. **Implantar ▸ Gerenciar implantações ▸ ✏️ ▸ Nova versão ▸ Implantar.**
-   Assim a URL `/exec` continua a mesma.
-   A implantação precisa estar como *Executar como: eu* e
-   *Quem pode acessar: qualquer pessoa*.
-7. Confira com `diagnostico()` (Executar) ou abrindo a URL `/exec?acao=ping`
-   no navegador.
+O frontend é publicado pelo GitHub Pages a partir do repositório.
 
-### 2. Frontend (GitHub Pages)
+Alterações em HTML/CSS/JS seguem o fluxo normal do Pages. Após uma publicação, durante testes pode ser necessário usar `Ctrl+F5` para evitar cache de módulos JavaScript antigos.
 
-Suba o conteúdo desta pasta (sem `tools/`) para o repositório e ligue o Pages.
-A URL do Apps Script já vem preenchida em `js/config.js`; se ela mudar, dá para
-trocar pelo próprio app em **Ajustes de conexão**, sem editar código.
+## Backend
+
+O backend é implantado no projeto Supabase correspondente ao SistemaDH.
+
+Alterações em Edge Functions ou migrations precisam ser aplicadas ao Supabase; apenas alterar um arquivo versionado no GitHub não implanta automaticamente uma nova versão da função.
+
+Da mesma forma, alterar `backend/*.gs` não muda automaticamente o motor em produção porque o `engine-api` usa um commit fixado.
+
+Consulte [`docs/arquitetura-supabase.md`](docs/arquitetura-supabase.md) para o fluxo técnico atual.
 
 ---
 
-## Como rodar e testar localmente
+# Desenvolvimento e testes
+
+O projeto ainda possui ferramentas históricas que executam os `.gs` em Node para validar a lógica do motor. Elas continuam úteis para testar regras isoladamente, mesmo que o Apps Script não seja mais o backend de produção.
+
+Exemplos existentes no projeto incluem:
 
 ```bash
-# testes de lógica do backend (roda os .gs reais dentro do Node)
 node tools/testes-backend.mjs
-
-# app + backend falso na mesma máquina, em http://localhost:8099
 node tools/servidor-teste.mjs
-
-# teste ponta a ponta no navegador (precisa de: npm i playwright)
 node tools/testes-e2e.mjs
 ```
 
-O servidor de teste executa **os mesmos arquivos `.gs`** que vão para o Apps
-Script — não uma reimplementação. Se o teste passa aqui, é aquele código que
-passou.
+Antes de assumir que um comando histórico representa fielmente o ambiente de produção, confira a implementação atual da ferramenta: o runtime oficial agora é Supabase Edge Functions + PostgreSQL.
 
 ---
 
-## Decisões que valem a pena saber
+# Decisões importantes do sistema
 
-**A ficha é um JSON dentro de uma célula.** A aba `Personagens` tem colunas
-"espelho" (nome, classe, nível…) só para a planilha ficar legível, mas a fonte
-da verdade é a coluna `dados`. Assim, cada parte nova do sistema acrescenta
-campos à ficha **sem precisar migrar colunas nem rodar `setup()` de novo**.
+## O servidor é a fonte da verdade
 
-**Trava otimista ao salvar.** O cliente manda a versão que leu; se a ficha mudou
-em outro aparelho no meio do caminho, o servidor recusa com `CONFLITO` em vez de
-sobrescrever.
+Validações importantes não devem existir apenas no frontend.
 
-**Exclusão é lógica.** Excluir marca `excluido = TRUE`; a linha continua na
-planilha e o Mestre pode restaurar.
+O motor recalcula derivados como Evasão, Pontos de Vida, limiares, proficiência e pontuação de armadura durante as gravações pertinentes. Valores correntes, como PV marcados e Esperança já gasta, devem ser preservados conforme as regras do sistema.
 
-**Segurança "de mesa entre amigos".** Códigos viram SHA-256 com salt por jogador
-mais um segredo global guardado fora da planilha. O código do Mestre nem aparece
-na planilha. Não é segurança bancária — é o suficiente para ninguém abrir a
-ficha do outro por acidente.
+## Terminologia
 
-**O servidor recalcula os derivados.** Evasão, Pontos de Vida, limiares,
-proficiência e pontuação de armadura nunca vêm do cliente: `validarFicha_()`
-chama `aplicarDerivados_()` em toda gravação. Os valores CORRENTES (PV
-marcados, Esperança gasta) são preservados; só os máximos são recalculados.
+O app usa os nomes canônicos adotados nas cartas e mostra termos alternativos do livro quando isso ajuda a localizar a regra. Essa camada de exibição fica principalmente no frontend; a ficha deve guardar valores canônicos.
 
-**O app fala a língua das cartas, e mostra a do livro do lado.** As cartas em
-PNG e o livro da Jambô traduzem quase tudo com nomes diferentes. O app usa o
-nome da carta — é o que o jogador vê quando toca e a imagem abre — e mostra o
-termo da Jambô entre parênteses, para quem estiver com o livro na mão achar. É
-uma camada de EXIBIÇÃO (`js/glossario.js`): o que fica gravado na ficha é só o
-nome canônico.
+## Cartas em PNG
 
-**"Oculto" é uma armadilha, e o gerador sabe disso.** Nas cartas é *Hidden*; na
-Jambô é *Cloaked*. Por isso o termo da Jambô não entra como sinônimo quando ele
-já é o nome canônico de outra coisa — `tools/lib-glossario.mjs` barra e avisa.
+O visualizador de cartas é compartilhado entre diferentes tipos de carta. Sempre que possível, alterações de visualização devem reutilizar os componentes existentes em vez de criar implementações independentes para cada tela.
 
-**A carta em PNG é um componente só.** `js/componentes/carta.js` serve classe,
-subclasse, ancestralidade, comunidade e carta de domínio. Em qualquer lugar,
-tocar no nome abre a carta em tela cheia, com setas e arrastar para o lado.
+## Dados estáticos x persistência
 
-**`text/plain` no POST é de propósito.** Com esse Content-Type o navegador não
-faz preflight de CORS, que o Apps Script não sabe responder. O corpo continua
-sendo JSON.
+Catálogos estáticos de Daggerheart continuam em `data/*.json` e/ou no motor versionado. Eles não precisam ser transformados em tabelas PostgreSQL apenas porque o projeto usa Supabase.
+
+Supabase é usado para o estado mutável da aplicação: jogadores, sessões, personagens, mesa, logs, fotos etc.
 
 ---
 
-## Roteiro
+# Estado da migração
 
-1. ✅ Login, sessão e persistência
-2. ✅ Domínios e cartas de domínio (189 cartas + imagens)
-3. ✅ Classes e subclasses (54 cartas + imagens)
-4. ✅ Ancestralidades e comunidades (27 cartas + imagens)
-5. ✅ Equipamento, inventário e itens (192 armas, 34 armaduras, 120 itens,
-   46 itens de moldura de campanha e as regras de ouro)
-6. ✅ Criação de ficha guiada (9 etapas, guiada e rápida, cartas em PNG)
-7. ⬜ Condições em jogo e estados (o vocabulário já está pronto)
-8. ⬜ Subida de nível
-9. ⬜ Painel do Mestre
+A migração Google Sheets / Apps Script → Supabase foi concluída em setembro de 2026.
 
-Cada parte traz os dados em `data/*.json`, a validação no `backend/4X_*.gs`
-correspondente, um documento em `docs/pontos-de-interesse-*.md` com o que ficou
-pendente, e (depois) a tela em `js/telas/`.
+Estado atual:
 
-### Pendências conhecidas, herdadas das partes já feitas
+- ✅ PostgreSQL como persistência oficial;
+- ✅ Edge Functions como backend HTTP;
+- ✅ autenticação ativa em bcrypt;
+- ✅ sessões no PostgreSQL;
+- ✅ personagens em JSONB;
+- ✅ motor completo de regras via `engine-api`;
+- ✅ gravações compostas transacionais;
+- ✅ painel do Mestre no backend novo;
+- ✅ encontros e adversários no backend novo;
+- ✅ Medo, contagens e descanso da mesa no backend novo;
+- ✅ fotos novas no Supabase Storage;
+- ✅ fallback do Apps Script removido do frontend;
+- ✅ ponte `apps-script-db` desativada;
+- ✅ segredo/tabela da ponte removidos;
+- ✅ nenhuma credencial legada ativa.
 
-Amarradas em `docs/pontas-soltas.md` (feito antes da Parte 6):
+O Google Apps Script não faz parte do runtime normal do SistemaDH.
 
-- ✅ **Traços** — o termo virou "traço" (e não "característica", que já é usada
-  para as características de ancestralidade/classe/equipamento). Os seis são
-  Agilidade, Força, **Finesse**, Instinto, Presença e Conhecimento, com
-  distribuição inicial +2, +1, +1, 0, 0, -1. Conjuração não é um sétimo traço:
-  é o apelido de um dos seis, apontado pela subclasse.
-- ✅ **Contadores com estado** — 20 cartas e características guardam
-  fichas/marcadores/dados. Mecanismo genérico em `47_Contadores.gs`, com
-  zeragem por gatilho (descanso, sessão, cena).
-- ✅ **Terminologia de condições** — canônicos: Oculto, Restrito, Vulnerável e
-  Camuflado. O livro tem CINCO nomes diferentes para "Restrained"; todos viraram
-  sinônimo de busca.
-- ✅ **Fichas paralelas** — feitas. 24 Formas de Fera (6 por patamar) e 8
-  evoluções do Companheiro Animal, tiradas do livro da Jambô com as erratas
-  aplicadas. O texto está gravado nas duas traduções (`texto` e `textoLivro`),
-  para a decisão de vocabulário poder virar sem reextrair nada.
-- ✅ **Revólver da errata p.317** — vale só para a arma primária da moldura
-  Colosso das Terras Secas (d8+1/+4/+7/+10). O Revólver pequeno segue d6.
+---
 
-Ainda abertas:
+# Antes de continuar o desenvolvimento
 
-- **Livro pt-BR é pré-errata** — provado nas tabelas de equipamento: Espada
-  Longa, Lança e Anéis Brilhantes têm os números velhos lá. Os números do app
-  vêm do SRD oficial.
-- **Numeração da errata** — as páginas citadas na errata são as IMPRESSAS no
-  rodapé, sempre o número do PDF menos 1. A "p.317" da errata é a página 318 do
-  arquivo. Conferir sempre pelo rodapé impresso.
-- **4 itens da moldura Festa da Besta** seguem ilegíveis no PDF.
-- **22 das 68 traduções de característica de equipamento** são minhas e esperam
-  revisão (listadas em `docs/relatorio-equipamento.md`).
-- ✅ **Qual tradução é a oficial do app** — DECIDIDO. Onde existe carta, vale o
-  texto da carta; onde a mecânica diverge, vale quem bate com o oficial em
-  inglês; onde não existe carta, vale o livro da Jambô. E onde o nome de uma
-  mecânica muda, os dois aparecem, com o outro entre parênteses. Ver
-  `docs/conferencia-livro-jambo.md`.
-- **Trechos corrompidos do livro** (Ataque Furtivo, Caçador, Passo Sombrio,
-  dica do Imparável) — todos de subida de nível, entram na Parte 8.
-- **Proficiência** ainda não tem regra própria; cai no tier do nível até a
-  Parte 8.
+Para evitar regressões arquiteturais, qualquer pessoa ou agente de IA que for continuar o projeto deve, antes de alterar backend ou regras:
+
+1. ler este `README.md`;
+2. ler [`docs/arquitetura-supabase.md`](docs/arquitetura-supabase.md);
+3. conferir `js/api.js` para saber qual Edge Function atende cada ação;
+4. identificar se a mudança é frontend, persistência, domínio da mesa ou motor de regras;
+5. lembrar que `backend/*.gs` alimenta o `engine-api`, mas o motor em produção está preso a um commit explícito;
+6. preservar RLS, autenticação server-side, transações e controle de versão;
+7. nunca expor credenciais privilegiadas no browser;
+8. não reintroduzir dependências do Google Apps Script.
+
+Se uma alteração mudar a arquitetura, atualizar também este README e `docs/arquitetura-supabase.md` no mesmo trabalho.
+
+---
+
+# Notas de regras ainda relevantes
+
+- Os seis traços são Agilidade, Força, **Finesse**, Instinto, Presença e Conhecimento; a distribuição inicial é +2, +1, +1, 0, 0, -1.
+- Conjuração não é um sétimo traço: aponta para um dos seis conforme a subclasse.
+- Os canônicos de condições adotados pelo projeto incluem Oculto, Restrito, Vulnerável e Camuflado, com sinônimos de busca para variações do material traduzido.
+- Existem 24 Formas de Fera e 8 evoluções do Companheiro Animal catalogadas nas fichas paralelas.
+- A correção do Revólver da errata p.317 vale para a arma primária da moldura Colosso das Terras Secas; o Revólver pequeno segue sua própria progressão.
+- O material pt-BR usado na conferência é pré-errata; conferir sempre as decisões documentadas antes de alterar números de equipamento ou regras.
+
+Para histórico detalhado das decisões de conteúdo e tradução, consulte os arquivos em `docs/`.
