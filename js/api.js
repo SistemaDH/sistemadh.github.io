@@ -3,7 +3,8 @@
  *
  * Migração em andamento:
  *  - operações portadas vão direto para Supabase Edge Functions;
- *  - ações ainda não portadas continuam no Google Apps Script.
+ *  - ações ainda não portadas continuam no Google Apps Script;
+ *  - contas antigas têm fallback automático para a autenticação legada.
  */
 
 import { CONFIG, MENSAGENS_ERRO } from './config.js';
@@ -11,6 +12,13 @@ import { esperar } from './util.js';
 
 const SUPABASE_APP_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/app-api';
 const SUPABASE_MESA_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/mesa-api';
+const SUPABASE_AUTH_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/auth-api';
+
+const ACOES_SUPABASE_AUTH = new Set([
+  'registrar',
+  'entrar',
+  'trocarCodigo'
+]);
 
 const ACOES_SUPABASE_MESA = new Set([
   'ajustarMedo',
@@ -20,7 +28,7 @@ const ACOES_SUPABASE_MESA = new Set([
   'excluirContagem'
 ]);
 
-const ACOES_SUPABASE_DIRETAS = new Set([
+const ACOES_SUPABASE_APP = new Set([
   'ping',
   'sessao',
   'listarPersonagens',
@@ -34,8 +42,7 @@ const ACOES_SUPABASE_DIRETAS = new Set([
   'abrirSessao',
   'anunciarNivelDaMesa',
   'ouroComMoedas',
-  'definirDanoMassivo',
-  ...ACOES_SUPABASE_MESA
+  'definirDanoMassivo'
 ]);
 
 export class ErroApi extends Error {
@@ -67,8 +74,16 @@ async function lerEnvelope(resposta, nome) {
   return envelope;
 }
 
+function urlSupabaseDaAcao(acao) {
+  if (ACOES_SUPABASE_AUTH.has(acao)) return SUPABASE_AUTH_URL;
+  if (ACOES_SUPABASE_MESA.has(acao)) return SUPABASE_MESA_URL;
+  if (ACOES_SUPABASE_APP.has(acao)) return SUPABASE_APP_URL;
+  return null;
+}
+
 async function postarSupabase(corpo, sinal) {
-  const url = ACOES_SUPABASE_MESA.has(corpo.acao) ? SUPABASE_MESA_URL : SUPABASE_APP_URL;
+  const url = urlSupabaseDaAcao(corpo.acao);
+  if (!url) throw new ErroApi('INTERNO', 'Ação sem destino Supabase.');
   const resposta = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -128,18 +143,13 @@ function viaJsonp(corpo) {
   });
 }
 
-export async function chamar(acao, dados = {}) {
-  const corpo = { acao, ...dados };
-  const direta = ACOES_SUPABASE_DIRETAS.has(acao);
+async function chamarAppsScript(corpo) {
   let ultimoErroDeRede = null;
-
   for (let tentativa = 0; tentativa < CONFIG.TENTATIVAS; tentativa++) {
     const controle = new AbortController();
     const prazo = setTimeout(() => controle.abort(), CONFIG.TEMPO_LIMITE);
     try {
-      const envelope = direta
-        ? await postarSupabase(corpo, controle.signal)
-        : await postarAppsScript(corpo, controle.signal);
+      const envelope = await postarAppsScript(corpo, controle.signal);
       if (envelope && envelope.ok) return envelope.dados;
       const erro = (envelope && envelope.erro) || {};
       throw new ErroApi(erro.codigo || 'INTERNO', erro.mensagem, erro.extra);
@@ -150,12 +160,6 @@ export async function chamar(acao, dados = {}) {
     } finally {
       clearTimeout(prazo);
     }
-  }
-
-  if (direta) {
-    throw new ErroApi('SEM_REDE', MENSAGENS_ERRO.SEM_REDE, {
-      original: ultimoErroDeRede ? String(ultimoErroDeRede.message || ultimoErroDeRede) : null
-    });
   }
 
   try {
@@ -169,6 +173,41 @@ export async function chamar(acao, dados = {}) {
       original: ultimoErroDeRede ? String(ultimoErroDeRede.message || ultimoErroDeRede) : null
     });
   }
+}
+
+export async function chamar(acao, dados = {}) {
+  const corpo = { acao, ...dados };
+  const urlSupabase = urlSupabaseDaAcao(acao);
+  if (!urlSupabase) return chamarAppsScript(corpo);
+
+  let ultimoErroDeRede = null;
+  for (let tentativa = 0; tentativa < CONFIG.TENTATIVAS; tentativa++) {
+    const controle = new AbortController();
+    const prazo = setTimeout(() => controle.abort(), CONFIG.TEMPO_LIMITE);
+    try {
+      const envelope = await postarSupabase(corpo, controle.signal);
+      if (envelope && envelope.ok) return envelope.dados;
+      const erro = (envelope && envelope.erro) || {};
+
+      // Hashes antigos dependem do pepper que só existe no Apps Script.
+      // Enquanto houver conta legada, login/troca de código caem para lá.
+      if (erro.codigo === 'LEGACY_AUTH' && (acao === 'entrar' || acao === 'trocarCodigo')) {
+        return chamarAppsScript(corpo);
+      }
+
+      throw new ErroApi(erro.codigo || 'INTERNO', erro.mensagem, erro.extra);
+    } catch (e) {
+      if (e instanceof ErroApi && e.codigo !== 'SEM_REDE') throw e;
+      ultimoErroDeRede = e;
+      if (tentativa < CONFIG.TENTATIVAS - 1) await esperar(600 * (tentativa + 1));
+    } finally {
+      clearTimeout(prazo);
+    }
+  }
+
+  throw new ErroApi('SEM_REDE', MENSAGENS_ERRO.SEM_REDE, {
+    original: ultimoErroDeRede ? String(ultimoErroDeRede.message || ultimoErroDeRede) : null
+  });
 }
 
 export const api = {
