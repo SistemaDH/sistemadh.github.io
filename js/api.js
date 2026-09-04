@@ -2,7 +2,7 @@
  * api.js — porta única da API.
  *
  * Migração em andamento:
- *  - leituras de personagens já vão direto para Supabase Edge Functions;
+ *  - leituras e algumas operações simples já vão direto para Supabase Edge Functions;
  *  - ações ainda não portadas continuam no Google Apps Script.
  */
 
@@ -10,7 +10,13 @@ import { CONFIG, MENSAGENS_ERRO } from './config.js';
 import { esperar } from './util.js';
 
 const SUPABASE_API_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/app-api';
-const ACOES_SUPABASE_DIRETAS = new Set(['listarPersonagens', 'obterPersonagem']);
+const ACOES_SUPABASE_DIRETAS = new Set([
+  'listarPersonagens',
+  'obterPersonagem',
+  'excluirPersonagem',
+  'restaurarPersonagem',
+  'sair'
+]);
 
 export class ErroApi extends Error {
   constructor(codigo, mensagem, extra = null) {
