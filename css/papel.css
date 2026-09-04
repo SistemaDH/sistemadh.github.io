@@ -101,10 +101,10 @@
 /* --- Evasão · Armadura ---------------------------------------------------- */
 
 /*
- * Escudo | divisor | escudo | gotas, distribuídos na linha.
+ * Rastro | divisor | couraça | lâminas, distribuídos na linha.
  *
- * Com a última coluna em 1fr, as gotas iam para a borda direita e abriam um
- * vão no meio da linha — os dois escudos ficavam amontoados à esquerda. Com
+ * Com a última coluna em 1fr, as lâminas iam para a borda direita e abriam um
+ * vão no meio da linha — as duas defesas ficavam amontoadas à esquerda. Com
  * space-between, os quatro blocos repartem a sobra por igual.
  */
 .papel__defesas {
@@ -149,42 +149,66 @@
 }
 
 /*
- * As duas defesas são OURO: o que separa uma da outra é a FORMA (placa em arco
- * na Evasão, escudo de brasão na Armadura). Antes as duas usavam
- * o mesmo escudo e só a cor da borda mudava — no celular, ninguém lia isso.
- * O azul saiu daqui e foi para o Estresse.
+ * AS DUAS DEFESAS SÃO DE AÇO, e cada uma se desenha de um jeito.
+ *
+ * O que separa uma da outra é a FORMA — rastro que gira na Evasão, peça de
+ * peito na Armadura — e agora também o PESO: a Evasão é maciça, a Armadura é
+ * contorno. Massa contra linha se distingue de relance, antes de o olho
+ * reconhecer o desenho; e é a diferença certa, porque armadura é uma casca
+ * (contorno) e esquiva é um movimento (mancha).
+ *
+ * O ouro saiu daqui. Armadura é aço, e com ela fora do dourado o ouro fica
+ * com um significado só (E89).
  */
-.papel__escudoBloco--evasao .papel__escudoForma,
-.papel__escudoBloco--armadura .papel__escudoForma {
-  stroke: var(--cor-ouro);
-  stroke-width: 3;
+.papel__escudoBloco--evasao .papel__escudoTraco,
+.papel__escudoBloco--evasao .papel__escudoDetalhe {
+  fill: var(--cor-aco);
+  stroke: none;
+}
+
+.papel__escudoBloco--armadura .papel__escudoTraco {
+  fill: var(--cor-fundo-2);
+  stroke: var(--cor-aco);
+  stroke-width: 2.6;
+  stroke-linejoin: round;
+}
+
+/* As lâminas do abdome: traço fino, sem preenchimento — são vincos na chapa. */
+.papel__escudoBloco--armadura .papel__escudoDetalhe {
+  fill: none;
+  stroke: var(--cor-aco);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  opacity: .7;
 }
 
 /*
  * Cada forma tem o SEU centro óptico, e nenhum dos dois é o centro geométrico.
  *
- * No escudo a ponta de baixo puxa o olho, e um número centrado no meio da
- * caixa parece alto — por isso ele desce. Na placa em arco acontece o
- * contrário do que acontecia no losango: a massa termina em cima da base
- * reta, e o recuo de baixo (pensado para a ponta do losango) empurrava o
- * número para longe do miolo.
+ * Na COURAÇA o número mora no PEITO, não no meio da peça: abaixo da metade
+ * ficam as lâminas do abdome, e um número centrado geometricamente cai em
+ * cima delas. Ele sobe.
+ *
+ * No RASTRO da Evasão o miolo é redondo e o centro óptico é o geométrico —
+ * este é o único desenho da ficha que não precisa de correção nenhuma.
  */
-.papel__escudoBloco--armadura .papel__escudoValor { margin-top: 12px; }
-.papel__escudoBloco--evasao .papel__escudoValor { margin-top: 4px; margin-bottom: 0; }
+.papel__escudoBloco--armadura .papel__escudoValor {
+  margin-top: 0;
+  margin-bottom: 4px;
+}
+.papel__escudoBloco--evasao .papel__escudoValor { margin-top: 0; margin-bottom: 0; }
 
 .papel__escudoValor {
   position: relative;      /* acima do SVG */
-  /* o bico de baixo puxa o centro óptico para cima */
-  margin-bottom: 8px;
+  /* Cada forma corrige o seu deslocamento nas regras acima; aqui só o padrão.
+     Largura mínima igual nos dois rótulos para "Evasão" e "Armadura" lerem
+     como um par, e não como duas etiquetas soltas. */
+  margin-bottom: 0;
   font-family: var(--fonte-titulo);
   font-size: var(--txt-xl);
   color: var(--cor-texto);
 }
 
-/*
- * O rótulo em fita escura, como o impresso. Largura mínima igual nos dois para
- * "Evasão" e "Armadura" lerem como um par, e não como duas etiquetas soltas.
- */
 /*
  * O RÓTULO PERDEU A CAIXINHA, pelo mesmo motivo da faixa de seção.
  *
@@ -235,12 +259,16 @@
 }
 
 /*
- * OS ESPAÇOS DE ARMADURA SÃO ESCUDINHOS, como na ficha impressa — doze deles,
- * ao lado do escudo grande, cada um repetindo a silhueta dele em miniatura.
+ * OS ESPAÇOS DE ARMADURA SÃO LÂMINAS — a mesma peça que a couraça mostra duas
+ * vezes no abdome, aqui inteira e repetida doze vezes.
  *
- * Eram gotas arredondadas, inventadas aqui. Nada errado com uma gota, mas ela
- * não dizia de onde vinha: a repetição da forma é o que faz o olho ligar o
- * espaço ao escudo sem precisar de rótulo.
+ * Já foram gota (inventada) e escudinho (citando o escudo grande, quando ele
+ * existia). A regra não mudou: a forma pequena tem de dizer de onde vem. O que
+ * mudou foi o desenho grande — e quando ele virou couraça, doze escudos ao
+ * lado dele passaram a não citar coisa nenhuma.
+ *
+ * De aço, como a couraça. Marcado é lâmina cheia; vazio é lâmina de contorno;
+ * o que o personagem não tem é tracejado — a mesma língua dos quadradinhos.
  */
 .papel__slot {
   display: grid;
@@ -264,8 +292,8 @@
 }
 
 .papel__slot.esta-cheio .papel__slotForma {
-  fill: var(--cor-ouro);
-  stroke: var(--cor-ouro);
+  fill: var(--cor-aco);
+  stroke: var(--cor-aco);
 }
 
 /* --- a faixa dos limiares -------------------------------------------------- */
@@ -417,6 +445,27 @@
  */
 .papel__trilha + .papel__trilha { margin-top: calc(var(--e3) * -1); }
 
+/*
+ * O RÓTULO DA TRILHA É SÓ A PALAVRA — e chegou a ter um glifo, que saiu.
+ *
+ * Cheguei a pôr um coração no PV e um raio no Estresse, empilhados sobre a
+ * palavra. A Vanessa derrubou os dois, e nos dois casos tinha razão:
+ *
+ *  • O RAIO DIZ O CONTRÁRIO. Raio é energia, carga, adrenalina — e Estresse é
+ *    justamente o desgaste. O símbolo estava contando a história invertida.
+ *    Antes dele eu tinha testado rachadura, corda desfiando e o sinal de
+ *    pressão; a 19px viraram rabisco, wi-fi e seta de redimensionar. Quatro
+ *    tentativas falhando é dado: Estresse é um estado abstrato e resiste a um
+ *    glifo desse tamanho.
+ *
+ *  • E A TRILHA NÃO TINHA O PROBLEMA. As duas defesas precisavam de desenho
+ *    porque eram dois números soltos com a mesma cara. As trilhas já se
+ *    distinguem por cor, por comprimento, por posição E por um rótulo escrito.
+ *    Símbolo ali resolvia o que não estava quebrado, e ainda somava 19px de
+ *    peso a uma linha que é registro, não protagonista.
+ *
+ * Fica anotado para ninguém "melhorar" isso de novo sem motivo novo.
+ */
 .papel__trilhaRotulo {
   font-size: var(--txt-sm);
   font-weight: 700;

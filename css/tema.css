@@ -92,6 +92,22 @@
   --cor-titulo:       #e6ecf5;
   --cor-titulo-suave: #c3cbd8;
 
+  /* ---- Aço: a cor das defesas -----------------------------------------
+   *
+   * Armadura É aço. Ela estava dourada por herança da época em que tudo era
+   * dourado, e a Vanessa reclamou do ouro nela antes de eu perceber o motivo.
+   *
+   * Tirar a Armadura do ouro fecha o E89 de vez: o dourado passa a querer
+   * dizer UMA coisa — Esperança, moeda e o que está escolhido. A Evasão veio
+   * junto porque as duas são o mesmo assunto (o quanto é difícil te acertar),
+   * e porque um par com duas cores diferentes sugeriria uma oposição que não
+   * existe nas regras.
+   *
+   * Mais frio que o título (218 contra 213) e mais escuro, para o número por
+   * cima continuar sendo a coisa mais clara do bloco.
+   */
+  --cor-aco: #aeb6c4;
+
   /* ---- Dualidade ------------------------------------------------------ */
   --cor-esperanca:      #ffc94a;
   --cor-esperanca-fundo:#3a2b06;

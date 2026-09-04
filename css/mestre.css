@@ -501,7 +501,7 @@
 .mestre__miniPonto--contagem.esta-cheio { background: var(--cor-ouro); border-color: var(--cor-ouro); }
 .mestre__miniPonto--pv.esta-cheio { background: var(--cor-perigo); border-color: var(--cor-perigo); }
 .mestre__miniPonto--estresse.esta-cheio { background: var(--cor-estresse); border-color: var(--cor-estresse); }
-.mestre__miniPonto--armadura.esta-cheio { background: var(--cor-ouro); border-color: var(--cor-ouro); }
+.mestre__miniPonto--armadura.esta-cheio { background: var(--cor-aco); border-color: var(--cor-aco); }
 .mestre__miniPonto--esperanca.esta-cheio {
   background: var(--cor-esperanca);
   border-color: var(--cor-esperanca);

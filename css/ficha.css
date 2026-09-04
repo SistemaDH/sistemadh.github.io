@@ -433,15 +433,21 @@
   background: var(--cor-estresse);
   border-color: var(--cor-estresse);
 }
-/* A Armadura passou ao ouro: o azul agora é do Estresse. */
+/*
+ * A Armadura é de AÇO aqui também.
+ *
+ * Ela já foi azul (dividindo com o Estresse) e depois ouro (dividindo com a
+ * Esperança e com metade do cromo). O aço não divide com ninguém, e é a cor
+ * do material — a mesma da couraça e das lâminas no bloco de defesas.
+ */
 .trilha--armadura .trilha__ponto.esta-cheio {
-  background: var(--cor-ouro);
-  border-color: var(--cor-ouro);
+  background: var(--cor-aco);
+  border-color: var(--cor-aco);
 }
 
 .trilha--pv .trilha__rotulo { color: #f0b3b3; }
 .trilha--estresse .trilha__rotulo { color: #b5d8f2; }
-.trilha--armadura .trilha__rotulo { color: var(--cor-ouro-claro); }
+.trilha--armadura .trilha__rotulo { color: var(--cor-aco); }
 .trilha--esperanca .trilha__rotulo { color: var(--cor-esperanca); }
 
 /* ==========================================================================

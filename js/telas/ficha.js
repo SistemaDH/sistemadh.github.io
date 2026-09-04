@@ -102,24 +102,71 @@ function valorDeTraco(v) {
  * O primeiro caminho de cada lista é o CONTORNO (leva o preenchimento do CSS);
  * o segundo é a linha interna, que é traço e não pode ser preenchida.
  */
+/*
+ * EVASÃO É UM RASTRO, e ARMADURA É UMA COURAÇA — e a segunda foi a Vanessa
+ * quem resolveu, com uma frase: "não é toda classe que tem escudo, mas todas
+ * têm armadura".
+ *
+ * É verdade e derruba o desenho antigo. Escudo se CARREGA; armadura se VESTE.
+ * O escudo de brasão contava a história de um equipamento que metade da mesa
+ * não usa, para representar um número que todo mundo tem.
+ *
+ * A Evasão virou dois arcos que giram e afinam até sumir: diz movimento, e o
+ * miolo grande segura o número com folga. A Armadura virou a peça de peito.
+ *
+ * ⚠ O que separa COURAÇA de ESCUDO são duas coisas, e desenhar sem elas leva
+ * de volta ao escudo — aconteceu duas vezes aqui:
+ *   • ombreiras que saem PARA FORA nos cantos de cima (escudo é liso lá);
+ *   • barra RETA embaixo, com cintura e quadril (escudo fecha numa ponta).
+ * As duas lâminas do abdome são o que diz "metal articulado" e não "roupa".
+ * Sem elas o desenho vira regata — também aconteceu.
+ *
+ * As duas são de AÇO, não de ouro. Armadura é aço, e tirá-la do dourado deixa
+ * o ouro com um significado só (E89): Esperança, moeda e o que está escolhido.
+ */
 const FORMA_EVASAO = [
-  'M8 30 A22 22 0 0 1 52 30 V58 H8 Z',
-  'M14 31 A16 16 0 0 1 46 31 V52 H14 Z'
+  'M13.5 51.6L9.8 47.6L7.1 42.9L5.4 37.8L4.8 32.4L5.4 27.1L7.1 22.0L9.9 17.4L13.5 13.5'
+  + 'L17.8 10.5L22.7 8.6L27.9 7.6L33.1 7.9L38.1 9.2L42.7 11.5L46.7 14.7L49.9 18.7'
+  + 'L52.2 23.3L53.4 28.3L53.6 33.3L52.7 38.3L50.7 42.9L47.8 47.0L47.4 46.6L50.0 42.5'
+  + 'L51.7 38.0L52.4 33.2L52.0 28.5L50.7 23.9L48.4 19.8L45.3 16.2L41.5 13.4L37.3 11.5'
+  + 'L32.7 10.5L28.1 10.5L23.6 11.5L19.5 13.4L15.8 16.2L12.9 19.6L10.7 23.6L9.5 27.9'
+  + 'L9.2 32.3L9.8 36.7L11.4 40.9L13.8 44.5L16.9 47.6Z',
+  'M38.5 17.3L40.5 18.7L42.2 20.4L43.7 22.2L44.9 24.3L45.8 26.5L46.3 28.8L46.6 31.2'
+  + 'L46.5 33.6L46.0 35.9L45.2 38.1L44.2 40.2L42.8 42.1L41.2 43.7L39.4 45.2L37.4 46.3'
+  + 'L35.3 47.2L33.0 47.7L30.8 47.9L28.5 47.8L26.3 47.4L24.1 46.6L22.2 45.6L22.4 45.3'
+  + 'L24.3 46.1L26.4 46.8L28.6 47.1L30.7 47.0L32.8 46.7L34.9 46.1L36.8 45.2L38.6 44.1'
+  + 'L40.2 42.7L41.6 41.1L42.7 39.3L43.5 37.4L44.1 35.4L44.4 33.4L44.4 31.3L44.1 29.3'
+  + 'L43.5 27.3L42.7 25.5L41.5 23.8L40.2 22.3L38.7 20.9L37.0 19.9Z'
 ];
 /*
  * O ESPAÇO DE ARMADURA é o escudo grande em miniatura.
  *
- * Doze deles ficam ao lado do escudo, e é a repetição da silhueta que liga uma
+ * Doze deles ficam ao lado da couraça, e é a repetição da forma que liga uma
  * coisa à outra sem precisar de rótulo. Desenhados em SVG, e não com
  * `clip-path`, porque o espaço que o personagem AINDA NÃO TEM precisa do
  * contorno tracejado — a mesma língua dos quadradinhos de PV e Estresse — e
  * `clip-path` recorta a borda junto.
+ *
+ * ⚠ ELE ERA UM ESCUDINHO, e virou LÂMINA quando o desenho grande deixou de
+ * ser escudo. A silhueta pequena tem de citar a grande: doze escudos ao lado
+ * de uma couraça não citam nada — ficam órfãos, e o olho pergunta de onde
+ * vieram. A lâmina é a mesma peça que aparece duas vezes no abdome da
+ * couraça, agora inteira. Repetir o desenho grande em miniatura era
+ * impossível: a 26px a couraça vira borrão (E88).
  */
-const FORMA_SLOT = 'M2 2 H22 V13 C22 18 17 21 12 23 C7 21 2 18 2 13 Z';
+const FORMA_SLOT = 'M4 2 H20 A2 2 0 0 1 22 4 V17 A2 2 0 0 1 20 19 '
+  + 'L12 23 L4 19 A2 2 0 0 1 2 17 V4 A2 2 0 0 1 4 2 Z';
 
 const FORMA_ARMADURA = [
-  'M5 9 L27 6 L30 10 L33 6 L55 9 C56 32 47 50 30 62 C13 50 4 32 5 9 Z',
-  'M11 15 L27 12 L30 16 L33 12 L49 15 C50 33 43 46 30 55 C17 46 10 33 11 15 Z'
+  'M5 15 C 5 13, 6 12, 8 12 L18 11 C 19.5 11, 20.5 12, 20.5 13.5 '
+  + 'C 20.5 17.5, 24 20.5, 30 20.5 C 36 20.5, 39.5 17.5, 39.5 13.5 '
+  + 'C 39.5 12, 40.5 11, 42 11 L52 12 C 54 12, 55 13, 55 15 '
+  + 'C 55 22, 53 28, 49 33 C 46.5 36, 45.5 39, 46 42 '
+  + 'C 46.5 47, 47.5 52, 48 56 L12 56 '
+  + 'C 12.5 52, 13.5 47, 14 42 C 14.5 39, 13.5 36, 11 33 '
+  + 'C 7 28, 5 22, 5 15 Z',
+  'M14.6 45 H45.4',
+  'M13.6 51 H46.4'
 ];
 
 const TRACOS_ORDEM = ['agilidade', 'forca', 'finesse', 'instinto', 'presenca', 'conhecimento'];
@@ -809,20 +856,24 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    */
   function escudo(classe, rotulo, valor) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('viewBox', '0 0 60 66');
+    svg.setAttribute('viewBox', '0 0 60 68');
     svg.setAttribute('class', 'papel__escudoForma');
     svg.setAttribute('aria-hidden', 'true');
     const formas = classe === 'evasao' ? FORMA_EVASAO : FORMA_ARMADURA;
+    /*
+     * QUEM DECIDE PREENCHIMENTO É O CSS, e isso mudou junto com os desenhos.
+     *
+     * Antes as duas formas eram contorno + linha interna, e dava para fixar
+     * `fill:none` aqui no traço de dentro. Agora elas não são mais parecidas:
+     * a Evasão é MACIÇA (dois rastros preenchidos, sem contorno) e a Armadura
+     * é CONTORNO com duas lâminas por dentro. Uma regra de JS que serve para
+     * as duas não existe — então cada caminho só ganha um nome, e a folha de
+     * estilo diz o que fazer com ele.
+     */
     formas.forEach((d, i) => {
       const p2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       p2.setAttribute('d', d);
-      // O primeiro traço é o CONTORNO (leva o preenchimento do CSS); o outro é
-      // a linha interna da chapa, que é traço e não pode ser preenchida.
-      if (i > 0) {
-        p2.setAttribute('fill', 'none');
-        p2.setAttribute('stroke-width', '1.5');
-        p2.setAttribute('opacity', '.45');
-      }
+      p2.setAttribute('class', i === 0 ? 'papel__escudoTraco' : 'papel__escudoDetalhe');
       svg.append(p2);
     });
 

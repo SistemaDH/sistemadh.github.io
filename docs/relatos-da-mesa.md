@@ -1406,3 +1406,106 @@ Isso não é detalhe. Um conferidor que grita quando está tudo certo é pior qu
 nenhum: em pouco tempo alguém aprende a ignorar a saída, e no dia do erro de
 verdade ela também é ignorada. Ele passou a ler os `.js` atrás de declarações
 de variável.
+
+---
+
+## 23. Escudo se carrega, armadura se veste
+
+A Vanessa derrubou o desenho da Armadura com uma frase: *"não é toda classe
+que tem escudo, mas todas têm armadura"*.
+
+É verdade e não tem defesa. O escudo de brasão contava a história de um
+equipamento que metade da mesa não usa, para representar um número que todo
+mundo tem. E a queixa anterior dela — *"parece um alvo"*, sobre o anel de
+placas — vinha do mesmo lugar: eu estava procurando uma forma bonita em vez de
+uma forma que dissesse a coisa certa.
+
+### O que falhou primeiro
+
+**Escamas** viraram girassol. **Lamelar** continuou spinner, só que com mais
+peças. E o **peitoral**, na primeira tentativa, virou escudo de novo.
+
+Esse terceiro erro é o que ensinou. O que separa couraça de escudo são duas
+coisas específicas:
+
+- **ombreiras que saem PARA FORA** nos cantos de cima (escudo é liso ali);
+- **barra RETA embaixo**, com cintura e quadril (escudo fecha numa ponta).
+
+Sem as duas, qualquer torso desenhado vira escudo. Com elas, para de virar.
+
+Ainda errei mais duas vezes: a barra recortada virou **dente de molar**, e a
+versão sem cintura virou **regata**. As lâminas do abdome foram o que consertou
+a segunda — são elas que dizem "metal articulado" em vez de "roupa".
+
+Os dois defeitos só apareceram **ampliando**. No tamanho real eles se
+escondiam, e eu teria aprovado os dois.
+
+### O aço, que a Vanessa também tinha pedido
+
+Ela disse que não gostava do dourado no escudo. Estava certa por um motivo
+maior do que gosto: **armadura é aço**. O ouro ali era herança da época em que
+tudo era dourado.
+
+Tirando a Armadura do ouro — no bloco de defesas, na trilha, nos espaços e no
+painel do Mestre — o dourado fica com **um significado só**: Esperança, moeda e
+o que está escolhido. É o E89 fechando de vez.
+
+### E o peso, que ninguém tinha pedido
+
+A queixa original era que as duas formas eram "a mesma coisa duas vezes":
+contorno dourado, miolo escuro, número no meio. Trocar as duas silhuetas
+resolveria metade.
+
+A outra metade foi o **peso**: a Evasão ficou maciça e a Armadura, contorno.
+Massa contra linha se distingue de relance, antes de o olho reconhecer a
+figura — e é a diferença certa, não uma escolha arbitrária: armadura é uma
+casca, esquiva é um movimento.
+
+### O órfão que sobrou
+
+Trocado o desenho grande, os doze espaços de Armadura ao lado dele continuaram
+escudinhos — e escudinhos ao lado de uma couraça não citam nada. A forma
+pequena existe para citar a grande; quando a grande muda, ela muda junto.
+
+Repetir a couraça em miniatura estava fora de questão: a 26px ela vira borrão
+(E88). Então o espaço virou **lâmina** — a mesma peça que a couraça mostra duas
+vezes no abdome, agora inteira. A citação passou do contorno para o detalhe, que
+é o que cabe naquele tamanho.
+
+### O número que subiu demais, e os glifos das trilhas
+
+A Vanessa: *"o número da armadura tá ficando em cima da armadura e não no
+meio"*. Verdade — eu tinha corrigido o centro óptico da couraça com 17px de
+recuo, e 17px de recuo em caixa centrada sobe o número **8,5px**. Era o dobro
+do necessário. Com 4px ele entra no peito, entre o recorte do pescoço e a
+primeira lâmina do abdome.
+
+O erro é instrutivo: eu calculei o deslocamento do desenho, não o do texto.
+Numa caixa flex, uma margem de baixo empurra o conteúdo para cima pela METADE
+do valor, porque a sobra se reparte entre as duas pontas.
+
+### PV e Estresse quase ganharam símbolo
+
+As duas trilhas se identificam por cor e por um rótulo abreviado, e eu achei
+que faltava desenho — o mesmo raciocínio que tinha acabado de funcionar nas
+defesas. Pus um coração no PV e um raio no Estresse, empilhados sobre a
+palavra. A Vanessa derrubou os dois, e nos dois casos tinha razão.
+
+**O raio dizia o contrário.** *"raio não seria algo como energia, energizado,
+adrenalina?"* — sim. Estresse é desgaste, não carga. O símbolo passava no teste
+de tamanho (silhueta cheia, legível a 19px) e reprovava no de significado, que
+é o que importa. Antes dele eu tinha testado rachadura, corda desfiando e o
+sinal de pressão: a 19px viraram rabisco, wi-fi e seta de redimensionar.
+
+Quatro tentativas falhando é dado, não azar. Estresse é um estado abstrato e
+resiste a um glifo desse tamanho — e **símbolo errado é pior que símbolo
+nenhum**, porque ele ensina a coisa errada com confiança.
+
+**E a trilha não tinha o problema.** Este é o erro maior, e é meu. As defesas
+precisavam de desenho porque eram dois números soltos com a mesma cara. As
+trilhas já se distinguem por cor, por comprimento, por posição E por um rótulo
+escrito. Eu peguei um argumento que tinha acabado de funcionar e apliquei onde
+ele não valia — que é exatamente como uma boa ideia vira maneirismo.
+
+*"talvez a gente nem mexe nisso"*, ela disse. Não mexemos. Ficou anotado no
+CSS para ninguém "melhorar" isso de novo sem motivo novo.
