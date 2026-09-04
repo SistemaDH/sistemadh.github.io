@@ -20,7 +20,7 @@ const URLS = {
   photo: `${BASE}/photo-api`
 };
 
-const ACOES_AUTH = new Set(['registrar','entrar','entrarMestre','trocarCodigo']);
+const ACOES_AUTH = new Set(['registrar','entrar','entrarMestre','trocarCodigo','migrarCredencial']);
 const ACOES_MESA = new Set([
   'ajustarMedo','criarContagem','avancarContagem','editarContagem','excluirContagem',
   'parearContagens','desparearContagem','avancarPerseguicao','previaDescansoDaMesa','aplicarDescansoDaMesa'
