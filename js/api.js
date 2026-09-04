@@ -2,14 +2,24 @@
  * api.js — porta única da API.
  *
  * Migração em andamento:
- *  - leituras e algumas operações simples já vão direto para Supabase Edge Functions;
+ *  - operações portadas vão direto para Supabase Edge Functions;
  *  - ações ainda não portadas continuam no Google Apps Script.
  */
 
 import { CONFIG, MENSAGENS_ERRO } from './config.js';
 import { esperar } from './util.js';
 
-const SUPABASE_API_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/app-api';
+const SUPABASE_APP_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/app-api';
+const SUPABASE_MESA_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/mesa-api';
+
+const ACOES_SUPABASE_MESA = new Set([
+  'ajustarMedo',
+  'criarContagem',
+  'avancarContagem',
+  'editarContagem',
+  'excluirContagem'
+]);
+
 const ACOES_SUPABASE_DIRETAS = new Set([
   'ping',
   'sessao',
@@ -24,7 +34,8 @@ const ACOES_SUPABASE_DIRETAS = new Set([
   'abrirSessao',
   'anunciarNivelDaMesa',
   'ouroComMoedas',
-  'definirDanoMassivo'
+  'definirDanoMassivo',
+  ...ACOES_SUPABASE_MESA
 ]);
 
 export class ErroApi extends Error {
@@ -57,7 +68,8 @@ async function lerEnvelope(resposta, nome) {
 }
 
 async function postarSupabase(corpo, sinal) {
-  const resposta = await fetch(SUPABASE_API_URL, {
+  const url = ACOES_SUPABASE_MESA.has(corpo.acao) ? SUPABASE_MESA_URL : SUPABASE_APP_URL;
+  const resposta = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(corpo),
@@ -81,10 +93,7 @@ async function postarAppsScript(corpo, sinal) {
   try {
     return JSON.parse(texto);
   } catch (e) {
-    throw new ErroApi(
-      'SEM_REDE',
-      'O Apps Script respondeu algo que não é JSON. Confira a implantação.'
-    );
+    throw new ErroApi('SEM_REDE', 'O Apps Script respondeu algo que não é JSON. Confira a implantação.');
   }
 }
 
