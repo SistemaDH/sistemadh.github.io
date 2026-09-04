@@ -13,6 +13,7 @@ import { esperar } from './util.js';
 const SUPABASE_APP_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/app-api';
 const SUPABASE_MESA_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/mesa-api';
 const SUPABASE_AUTH_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/auth-api';
+const SUPABASE_CHARACTER_URL = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1/character-api';
 
 const ACOES_SUPABASE_AUTH = new Set([
   'registrar',
@@ -74,15 +75,24 @@ async function lerEnvelope(resposta, nome) {
   return envelope;
 }
 
-function urlSupabaseDaAcao(acao) {
+function urlSupabaseDaAcao(corpo) {
+  const acao = corpo && corpo.acao;
   if (ACOES_SUPABASE_AUTH.has(acao)) return SUPABASE_AUTH_URL;
   if (ACOES_SUPABASE_MESA.has(acao)) return SUPABASE_MESA_URL;
   if (ACOES_SUPABASE_APP.has(acao)) return SUPABASE_APP_URL;
+
+  // Durante a criação, rascunhos podem ser persistidos direto no Supabase.
+  // Fichas finais continuam no Apps Script até todo o motor de regras ser portado.
+  if ((acao === 'criarPersonagem' || acao === 'salvarPersonagem') &&
+      corpo.ficha && corpo.ficha.meta && corpo.ficha.meta.rascunho === true) {
+    return SUPABASE_CHARACTER_URL;
+  }
+
   return null;
 }
 
 async function postarSupabase(corpo, sinal) {
-  const url = urlSupabaseDaAcao(corpo.acao);
+  const url = urlSupabaseDaAcao(corpo);
   if (!url) throw new ErroApi('INTERNO', 'Ação sem destino Supabase.');
   const resposta = await fetch(url, {
     method: 'POST',
@@ -177,7 +187,7 @@ async function chamarAppsScript(corpo) {
 
 export async function chamar(acao, dados = {}) {
   const corpo = { acao, ...dados };
-  const urlSupabase = urlSupabaseDaAcao(acao);
+  const urlSupabase = urlSupabaseDaAcao(corpo);
   if (!urlSupabase) return chamarAppsScript(corpo);
 
   let ultimoErroDeRede = null;
