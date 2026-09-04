@@ -20,7 +20,11 @@ const ACOES_SUPABASE_DIRETAS = new Set([
   'sair',
   'lerConfig',
   'gravarConfig',
-  'listarJogadores'
+  'listarJogadores',
+  'abrirSessao',
+  'anunciarNivelDaMesa',
+  'ouroComMoedas',
+  'definirDanoMassivo'
 ]);
 
 export class ErroApi extends Error {
