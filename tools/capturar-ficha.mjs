@@ -209,6 +209,45 @@ await foto('f3-jogo-fim');
 await p.getByRole('tab', { name: 'Cartas' }).click();
 await foto('f4-cartas');
 
+/*
+ * O MARCADOR DENTRO DA CARTA (ponto 9).
+ *
+ * Só dezessete cartas do baralho guardam estado, e a ficha rápida deste script
+ * chega aqui sem nenhuma delas na mão — carta se ganha subindo de nível. Como
+ * o que interessa no print é a TELA, a carta entra pelo banco.
+ */
+{
+  const c = ambiente.contexto;
+  const def = ambiente.avaliar('ABAS.PERSONAGENS');
+  /*
+   * Semeia em TODAS as fichas vivas: a lista é ordenada por data de alteração,
+   * e este script já criou mais de um personagem — escolher "a primeira linha"
+   * acertaria a ficha errada metade das vezes.
+   */
+  c.lerTudo_(def)
+    .filter((l) => String(l.excluido).toUpperCase() !== 'TRUE')
+    .forEach((linha) => {
+      const d = JSON.parse(linha.dados || '{}');
+      d.cartas = d.cartas || { ativas: [], cofre: [] };
+      const tem = (d.cartas.ativas || [])
+        .some((x) => ((x && typeof x === 'object') ? x.id : x) === 'grace-palavras-inspiradoras');
+      if (!tem) d.cartas.ativas = ['grace-palavras-inspiradoras'].concat(d.cartas.ativas || []);
+      c.atualizarLinha_(def, linha._linha, { dados: JSON.stringify(d) });
+    });
+
+  await p.reload({ waitUntil: 'networkidle' });
+  await p.waitForSelector('.ficha-cartao__abrir', { timeout: 20000 });
+  await p.locator('.ficha-cartao__abrir').first().click();
+  await p.waitForSelector('.papel', { timeout: 20000 });
+  await p.getByRole('tab', { name: 'Cartas' }).click();
+  await p.waitForSelector('.ficha__cartaMarcador', { timeout: 15000 });
+  await p.locator('.ficha__cartaMarcador').first()
+    .getByRole('button', { name: /^Aumentar/ }).click();
+  await p.waitForTimeout(1200);
+  await p.locator('.ficha__cartaMarcador').first().scrollIntoViewIfNeeded();
+  await foto('f4e-marcador-na-carta');
+}
+
 
 
 // O VERBETE: tocar na palavra de mecânica e ler a regra com a página.

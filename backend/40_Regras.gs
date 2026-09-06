@@ -89,6 +89,19 @@ function fichaVazia_() {
       bonus: {}          //   soma dos efeitos permanentes (Evasão, PV, Estresse, Proficiência)
     },
     anotacoes: '',
+    /*
+     * QUAL SESSÃO DA MESA ESTA FICHA JÁ ACERTOU.
+     *
+     * O Mestre não escreve na ficha dos outros, e jogador pode estar offline
+     * quando a sessão vira. Então a sessão é ESTADO NA MESA, e cada ficha
+     * guarda até onde já reconciliou: quando o jogador abre a ficha e a mesa
+     * está à frente, a própria ficha dele aplica os gatilhos de fim e começo
+     * de sessão nos contadores e anota o número novo aqui.
+     *
+     * Zero = ficha que nunca viu sessão nenhuma. Ver `ajustarSessaoDaFicha_`
+     * em 4C_Ajustes.gs.
+     */
+    sessaoVista: 0,
     meta: { schema: SCHEMA_FICHA }
   };
 }

@@ -2312,6 +2312,81 @@ teste('o gatilho de início de sessão recarrega os contadores certos', () => {
   verdade(r.mudancas[0].contadores.length > 0, JSON.stringify(r.mudancas[0]));
 });
 
+teste('a ficha se acerta com a sessão da mesa — e o número vem da MESA', () => {
+  /*
+   * O Mestre não escreve na ficha dos outros, e metade da mesa costuma estar
+   * com o app fechado quando a sessão vira. Então a sessão é ESTADO NA MESA e
+   * cada ficha se acerta sozinha, com o token do próprio jogador.
+   *
+   * ⚠ O NÚMERO NÃO VEM DO PEDIDO. Este teste manda um número absurdo junto e
+   * confere que ele foi IGNORADO: se o cliente pudesse dizer em que sessão a
+   * mesa está, qualquer tela poderia recarregar os contadores fora de hora —
+   * que é exatamente o recurso que "uma vez por sessão" existe para limitar.
+   */
+  /*
+   * ⚠ ESTE TESTE PRECISA MEXER NA MESA DE VERDADE, e por isso devolve o que
+   * achou. `ajustarSessaoDaFicha_` lê a mesa por dentro (é o ponto: o número
+   * não vem do cliente), então não dá para trabalhar numa cópia. Deixar a mesa
+   * numa sessão qualquer vazaria para os testes de painel que rodam depois —
+   * foi assim que um Medo 7 esquecido já quebrou uma bateria inteira.
+   */
+  const original = JSON.parse(JSON.stringify(contexto.mesaLer_()));
+  try {
+    const mesa = contexto.mesaLer_();
+    mesa.sessao.numero = 5;
+    mesa.sessao.aberta = true;
+    contexto.mesaGravar_(mesa);
+
+    const f = fichaCansada();
+    f.sessaoVista = 0;
+    const r = contexto.aplicarAjustes_(f, [{ tipo: 'sessao', numero: 999 }]);
+    igual(r.erros, []);
+    igual(f.sessaoVista, 5, 'o número gravado é o da mesa, não o do pedido');
+    igual(r.mudancas[0].sessao, 5);
+    verdade(r.mudancas[0].contadores.length > 0,
+      'os contadores de fim e começo de sessão tinham de ter sido mexidos');
+
+    // Rodar de novo não faz nada: a ficha já está em dia.
+    const outra = contexto.aplicarAjustes_(f, [{ tipo: 'sessao' }]);
+    verdade(outra.mudancas[0].jaEstava, JSON.stringify(outra.mudancas[0]));
+    igual(outra.mudancas[0].contadores, []);
+  } finally {
+    contexto.mesaGravar_(original);
+  }
+});
+
+teste('quem faltou a três sessões volta com UMA recarga, não três', () => {
+  /*
+   * "Uma vez por sessão" nunca quis dizer "três vezes de uma vez". Recarregar
+   * não acumula — o contador vai ao máximo e para lá —, e este passo existe
+   * para ninguém "melhorar" isso depois aplicando os gatilhos em laço.
+   */
+  const original = JSON.parse(JSON.stringify(contexto.mesaLer_()));
+  try {
+    const mesa = contexto.mesaLer_();
+    mesa.sessao.numero = 5;
+    mesa.sessao.aberta = true;
+    contexto.mesaGravar_(mesa);
+
+    const CONTADORES = avaliar('CONTADORES');
+    const chave = Object.keys(CONTADORES)
+      .find((k) => (CONTADORES[k].recarregaEm || []).includes('inicio-de-sessao'));
+
+    const f = fichaCansada();
+    f.sessaoVista = 2;                 // faltou às sessões 3, 4 e 5
+    contexto.aplicarAjustes_(f, [{ tipo: 'sessao' }]);
+    const cheio = (f.contadores[chave] || {}).valor;
+
+    const g = fichaCansada();
+    g.sessaoVista = 4;                 // faltou só à 5
+    contexto.aplicarAjustes_(g, [{ tipo: 'sessao' }]);
+    igual((g.contadores[chave] || {}).valor, cheio,
+      'faltar três sessões ou uma dá no mesmo: o contador volta cheio, não mais que cheio');
+  } finally {
+    contexto.mesaGravar_(original);
+  }
+});
+
 teste('gatilho inventado é recusado', () => {
   const f = fichaCansada();
   const r = contexto.aplicarAjustes_(f, [{ tipo: 'gatilho', gatilho: 'lua-cheia' }]);
@@ -3141,13 +3216,78 @@ teste('o Medo inicial é um por personagem (livro p.154)', () => {
   igual(contexto.medoInicial_(50), MEDO_MAXIMO, 'nem o inicial passa do teto');
 });
 
-teste('abrir sessão NÃO zera o Medo — ele transfere entre sessões', () => {
+teste('a sessão 1 põe o Medo em 1 por personagem — é regra de CAMPANHA', () => {
+  /*
+   * "No início da campanha, você começa com um número de Pontos de Medo igual
+   * ao número de personagens" (p.154, registrado em data/mesa.json).
+   *
+   * ⚠ CAMPANHA, NÃO SESSÃO. É a única abertura que encosta no Medo; da 2 em
+   * diante ele transfere (o teste seguinte). Este passo existe porque a versão
+   * anterior do app tinha o número inicial só como SUGESTÃO na tela, e a mesa
+   * tinha de digitar à mão — dava para começar a campanha com o Medo errado
+   * sem nada avisando.
+   */
+  api('voltarParaAPrimeiraSessao', { token: tokenPainel });
   api('ajustarMedo', { token: tokenPainel, valor: 7 });
+
   const r = api('abrirSessao', { token: tokenPainel });
   verdade(r.ok, JSON.stringify(r));
+  igual(r.dados.sessao.numero, 1);
+  verdade(r.dados.sessao.primeira, 'a resposta precisa dizer que é a primeira');
+
+  const quantos = contexto.quantosPersonagens_();
+  igual(r.dados.sessao.medo, contexto.medoInicial_(quantos),
+    'a sessão 1 põe o Medo em 1 por personagem');
+  igual(r.dados.mesa.medo, r.dados.sessao.medo);
+});
+
+teste('abrir sessão NÃO zera o Medo — ele transfere entre sessões', () => {
+  // A sessão 1 já foi aberta pelo teste anterior; encerra e vai para a 2.
+  api('encerrarSessaoDaMesa', { token: tokenPainel });
+  api('ajustarMedo', { token: tokenPainel, valor: 7 });
+
+  const r = api('abrirSessao', { token: tokenPainel });
+  verdade(r.ok, JSON.stringify(r));
+  igual(r.dados.sessao.numero, 2);
+  verdade(!r.dados.sessao.primeira);
   igual(r.dados.sessao.medo, 7, 'o livro p.154 manda transferir o Medo');
   igual(r.dados.mesa.medo, 7);
-  verdade(r.dados.sessao.numero >= 1);
+});
+
+teste('não dá para abrir duas sessões, nem encerrar duas vezes', () => {
+  /*
+   * O número da sessão é o que as FICHAS usam para saber que precisam
+   * recarregar os contadores de "uma vez por sessão". Um número pulado por
+   * dois toques no botão viraria uma recarga a mais na ficha de todo mundo —
+   * silenciosa, e do lado errado da regra que limita o recurso.
+   */
+  const duas = api('abrirSessao', { token: tokenPainel });
+  verdade(!duas.ok, 'abrir com uma sessão aberta tinha de ser recusado');
+
+  verdade(api('encerrarSessaoDaMesa', { token: tokenPainel }).ok);
+  const duasVezes = api('encerrarSessaoDaMesa', { token: tokenPainel });
+  verdade(!duasVezes.ok, 'encerrar duas vezes tinha de ser recusado');
+});
+
+teste('voltar para antes da primeira sessão devolve a campanha ao começo', () => {
+  const r = api('voltarParaAPrimeiraSessao', { token: tokenPainel });
+  verdade(r.ok, JSON.stringify(r));
+  igual(r.dados.sessao.numero, 0);
+  igual(r.dados.mesa.sessao.aberta, false);
+
+  /*
+   * O Medo NÃO é zerado aqui: quem o põe no lugar é a abertura da sessão 1, e
+   * é lá que a regra mora. Zerar nos dois lugares seria a mesma regra escrita
+   * duas vezes — e um dia as duas discordariam.
+   */
+  igual(r.dados.mesa.medo, 7, 'voltar não mexe no Medo');
+
+  // E a sessão 1 volta a valer como começo de campanha: abrir de novo repõe o
+  // Medo inicial, que é o único jeito de uma mesa montada errado se consertar.
+  const outraVez = api('abrirSessao', { token: tokenPainel });
+  verdade(outraVez.dados.sessao.primeira, 'depois de voltar, a próxima é a 1 de novo');
+  igual(outraVez.dados.sessao.medo,
+    contexto.medoInicial_(contexto.quantosPersonagens_()));
 });
 
 console.log('\nPainel do Mestre — contagens regressivas');

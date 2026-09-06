@@ -962,6 +962,53 @@
  * continua sendo a única forma que funciona em todos os navegadores de
  * celular que a mesa usa.
  */
+/*
+ * O MARCADOR DENTRO DA CARTA.
+ *
+ * Dezessete cartas mandam "coloque fichas nesta carta", e o número morava a
+ * duas abas de distância do desenho que fala dele. Aqui ele fica onde a mão
+ * procura — e é o MESMO contador da dobra "Marcadores", não uma cópia.
+ *
+ * ⚠ Fica ACIMA do corte do texto na ordem visual? Não: vem depois, e é de
+ * propósito. O texto cortado dá o que a carta faz; o marcador é o estado dela
+ * agora. Ler primeiro, contar depois — é a ordem da mesa.
+ */
+.ficha__cartaMarcador {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  flex-wrap: wrap;
+  margin-top: var(--e2);
+  padding-top: var(--e2);
+  border-top: 1px solid var(--cor-borda);
+}
+
+.ficha__cartaMarcadorNome {
+  font-size: var(--txt-xs);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--cor-texto-fraco);
+}
+
+.ficha__cartaMarcadorValor {
+  min-width: 2ch;
+  text-align: center;
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-lg);
+  color: var(--cor-ouro);
+}
+
+/*
+ * "quando zera" fica na LINHA DE BAIXO quando não cabe — `flex-basis: 100%`
+ * com `flex-wrap` na caixa. É a única parte que pode quebrar sem prejuízo: o
+ * número e os dois botões precisam ficar juntos.
+ */
+.ficha__cartaMarcadorQuando {
+  flex: 1 0 100%;
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-fraco);
+}
+
 .ficha__cartaTexto--cortado {
   display: -webkit-box;
   -webkit-box-orient: vertical;

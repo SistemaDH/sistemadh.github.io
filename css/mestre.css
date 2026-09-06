@@ -1132,3 +1132,60 @@
 }
 
 .medo__chama.esta-cheio { background-color: var(--cor-medo); }
+
+/*
+ * O ESTADO DA SESSÃO, EM UMA FRASE.
+ *
+ * O painel dizia só o número, que só subia — e um número sozinho não responde
+ * a pergunta que o Mestre faz ao abrir a tela: "a gente está jogando ou está
+ * entre sessões?". A frase responde, e o botão embaixo dela é sempre o gesto
+ * que faz sentido no estado em que a mesa está.
+ *
+ * ⚠ A COR NÃO É DECORAÇÃO. Sessão em jogo acende no dourado de "isto está
+ * valendo agora" — o mesmo que a ficha usa para o que está em uso. Fora de
+ * sessão fica no texto fraco, que é o tom de "registro, não protagonista".
+ */
+.mestre__situacaoDaSessao {
+  margin: 0;
+  font-size: var(--txt-sm);
+  color: var(--cor-texto-fraco);
+  line-height: 1.4;
+}
+
+.mestre__situacaoDaSessao.esta-emJogo { color: var(--cor-ouro); }
+
+/*
+ * O gesto que DESFAZ mora sozinho, embaixo, apagado.
+ *
+ * Lado a lado com "Abrir sessão" ele seria tocado por engano; dentro de uma
+ * dobra, ninguém o acharia no dia em que precisasse. Alinhado à esquerda e em
+ * meio-tom, ele existe sem competir.
+ */
+/*
+ * ⚠ SEM MOLDURA, DE PROPÓSITO.
+ *
+ * Com borda ele lia como o terceiro botão da fileira — mesmo tamanho, mesmo
+ * peso, mesma promessa —, e "desmontar a campanha" não pode parecer irmão de
+ * "encerrar sessão". Sem moldura ele vira o que é: um caminho de saída, que
+ * existe para quem for procurar e não convida quem só está passando.
+ *
+ * Continua com 44px de altura de toque, porque quem VAI usar precisa acertar.
+ */
+.mestre__desfazer {
+  align-self: flex-start;
+  min-height: var(--alvo-min, 44px);
+  padding-left: 0;
+  padding-right: 0;
+  border: 0;
+  background: none;
+  color: var(--cor-texto-fraco);
+  font-size: var(--txt-xs);
+  text-decoration: underline;
+  text-decoration-color: var(--cor-borda-forte);
+  text-underline-offset: 3px;
+}
+
+.mestre__desfazer:hover {
+  color: var(--cor-texto-suave);
+  text-decoration-color: var(--cor-texto-fraco);
+}

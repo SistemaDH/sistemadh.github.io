@@ -171,6 +171,23 @@ function normalizarMesa_(m) {
   m.sessao = (m.sessao && typeof m.sessao === 'object') ? m.sessao : {};
   m.sessao.numero = Math.max(0, Math.trunc(Number(m.sessao.numero)) || 0);
   m.sessao.comecouEm = String(m.sessao.comecouEm || '');
+  m.sessao.terminouEm = String(m.sessao.terminouEm || '');
+
+  /*
+   * ⚠ `aberta` é DEDUZIDA quando não está gravada, e não posta como `false`.
+   *
+   * Mesas que já existiam antes desta parte têm `numero` e `comecouEm`, e
+   * nenhum campo dizendo se a sessão está de pé. Normalizar para `false` faria
+   * o painel do Mestre anunciar "nenhuma sessão aberta" numa mesa que estava
+   * no meio de uma — e o gesto de conserto (abrir sessão) pularia um número.
+   *
+   * Começou e não terminou = está aberta. É a mesma coisa que a mesa diria.
+   */
+  if (m.sessao.aberta === undefined || m.sessao.aberta === null) {
+    m.sessao.aberta = Boolean(m.sessao.comecouEm) && !m.sessao.terminouEm;
+  } else {
+    m.sessao.aberta = Boolean(m.sessao.aberta);
+  }
 
   // A contagem de descansos curtos é do GRUPO — o livro é claro (p.105), e
   // por isso ela mora aqui e não na ficha de cada um.
@@ -638,19 +655,107 @@ function aplicarDescansoDaMesa_(m, tipo, escolhas) {
  *  Sessão
  * ------------------------------------------------------------------------ */
 
+/*
+ * ⚠ POR QUE ESTES NOMES SÃO LONGOS.
+ *
+ * `encerrarSessao_` JÁ EXISTE neste projeto e quer dizer outra coisa: encerrar
+ * a sessão de LOGIN de um jogador (20_Auth.gs, usado pela ação `sair`). Em
+ * Apps Script tudo mora no mesmo escopo global: uma segunda função com esse
+ * nome não daria erro nenhum — simplesmente substituiria a primeira, e o app
+ * pararia de deslogar. Daí o sufixo `DaMesa`, que o projeto já usa em
+ * `aplicarDescansoDaMesa_`, `adversariosDaMesa` e `anunciarNivelDaMesa`.
+ */
+
 /**
  * Abre uma sessão nova.
  *
  * O Medo NÃO zera: o livro é explícito (p.154) que Pontos de Medo são
  * transferidos entre as sessões. O que muda é o contador de sessão, que
  * dispara os gatilhos de "uma vez por sessão" nas fichas.
+ *
+ * ⚠ A SESSÃO 1 É DIFERENTE DE TODAS AS OUTRAS. "No início da campanha, você
+ * começa com um número de Pontos de Medo igual ao número de personagens"
+ * (p.154) — é regra de CAMPANHA, não de sessão. Abrir a sessão 1 põe o Medo
+ * nesse número; abrir a 2, a 3 e as seguintes não encosta nele.
+ *
+ * ⚠ E NÃO DÁ PARA ABRIR DUAS. Sem essa recusa, dois toques no botão (ou um
+ * toque e uma reconexão) pulariam um número de sessão — e o número da sessão é
+ * justamente o que as fichas usam para saber que precisam recarregar os
+ * contadores. Um pulo silencioso viraria uma recarga a mais na ficha de todos.
  */
-function abrirSessao_(m) {
+function abrirSessaoDaMesa_(m, quantosPersonagens) {
+  if (m.sessao.aberta) {
+    throw erroApi_(ERRO.DADOS_INVALIDOS,
+      'A sessão ' + m.sessao.numero + ' ainda está aberta. Encerre antes de abrir a próxima.',
+      { numero: m.sessao.numero });
+  }
+
   m.sessao.numero = (m.sessao.numero || 0) + 1;
   m.sessao.comecouEm = agoraIso_();
+  m.sessao.terminouEm = '';
+  m.sessao.aberta = true;
+
+  const primeira = m.sessao.numero === 1;
+  const medoAntes = m.medo;
+  if (primeira) m.medo = medoInicial_(quantosPersonagens);
+
+  return {
+    numero: m.sessao.numero,
+    primeira: primeira,
+    medo: m.medo,
+    medoAntes: medoAntes,
+    nota: primeira
+      ? 'Começo de campanha: o Medo entra com 1 por personagem (' + m.medo + '), como manda o livro (p.154).'
+      : 'O Medo continua de onde parou — o livro (p.154) manda transferir entre sessões.'
+  };
+}
+
+/**
+ * Encerra a sessão aberta.
+ *
+ * Não mexe no Medo, pelo mesmo p.154: "anote quantos tem no fim de cada sessão
+ * e comece a próxima com a mesma quantidade". Encerrar é registrar a hora e
+ * fechar o portão — o efeito de verdade acontece nas FICHAS, que ao abrirem
+ * veem que a mesa passou de sessão e aplicam os gatilhos nelas mesmas.
+ */
+function encerrarSessaoDaMesa_(m) {
+  if (!m.sessao.aberta) {
+    throw erroApi_(ERRO.DADOS_INVALIDOS,
+      m.sessao.numero
+        ? 'A sessão ' + m.sessao.numero + ' já está encerrada.'
+        : 'Nenhuma sessão foi aberta ainda.',
+      { numero: m.sessao.numero });
+  }
+  m.sessao.terminouEm = agoraIso_();
+  m.sessao.aberta = false;
   return {
     numero: m.sessao.numero,
     medo: m.medo,
-    nota: 'O Medo continua de onde parou — o livro (p.154) manda transferir entre sessões.'
+    nota: 'O Medo fica em ' + m.medo + ' para a próxima sessão (p.154).'
+  };
+}
+
+/**
+ * Volta a mesa para antes da primeira sessão.
+ *
+ * É o botão de "montamos errado, vamos começar de novo" — e o único caminho
+ * para uma mesa que já rodou uma sessão de teste voltar a receber o Medo
+ * inicial de campanha, já que ele só entra na sessão 1.
+ *
+ * ⚠ NÃO ZERA O MEDO AQUI. Quem põe o Medo no lugar é a abertura da sessão 1,
+ * e é lá que a regra mora. Zerar aqui também seria a mesma regra escrita em
+ * dois lugares — e um dia as duas discordariam.
+ */
+function voltarParaAPrimeiraSessaoDaMesa_(m) {
+  const antes = m.sessao.numero;
+  m.sessao.numero = 0;
+  m.sessao.comecouEm = '';
+  m.sessao.terminouEm = '';
+  m.sessao.aberta = false;
+  return {
+    numero: 0,
+    antes: antes,
+    medo: m.medo,
+    nota: 'A mesa voltou para antes da primeira sessão. Abrir a sessão 1 põe o Medo em 1 por personagem.'
   };
 }

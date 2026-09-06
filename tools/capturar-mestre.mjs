@@ -79,6 +79,27 @@ await foto('m1-mesa-medo');
 await p.locator('.mestre__dica').scrollIntoViewIfNeeded();
 await foto('m2-mesa-regras');
 
+/*
+ * O CICLO DE SESSÃO (ponto 12). Três estados: antes da primeira, jogando,
+ * entre sessões — e o print mostra os dois primeiros, que é onde a diferença
+ * aparece (o botão muda de nome e a frase de estado muda de cor).
+ */
+{
+  const dobra = p.locator('details.dobra', { hasText: 'Sessão e nível' }).first();
+  if (!(await dobra.evaluate((n) => n.open))) await dobra.locator('.dobra__topo').click();
+  await dobra.locator('.dobra__corpo').waitFor({ state: 'visible' });
+  await dobra.scrollIntoViewIfNeeded();
+  await foto('m2b-sessao-antes-da-campanha');
+
+  await p.getByRole('button', { name: 'Começar a campanha' }).click();
+  await p.waitForSelector('.modal__caixa');
+  await foto('m2c-comecar-a-campanha');
+  await p.getByRole('button', { name: 'Começar', exact: true }).click();
+  await p.waitForTimeout(1200);
+  await dobra.scrollIntoViewIfNeeded();
+  await foto('m2d-sessao-em-andamento');
+}
+
 /* Três contagens de tipos diferentes, para as cores aparecerem. */
 await p.getByRole('tab', { name: 'Contagens' }).click();
 const criarContagem = async (nome, tipo, valor, efeito) => {
