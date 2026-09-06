@@ -21,6 +21,7 @@ O projeto já reúne, entre outras partes:
 - traços, condições e contadores com estado;
 - fichas paralelas, incluindo Formas de Fera e Companheiro Animal;
 - ficha em jogo e ajustes de recursos;
+- movimentos de morte, cicatrizes, inconsciência e encerramento de jornada;
 - descanso e movimentos de descanso;
 - avanço/subida de nível;
 - cartas permanentes;
@@ -127,7 +128,7 @@ O `engine-api` reaproveita o motor mantido em `backend/*.gs` por meio de uma cam
 Commit atualmente fixado no motor:
 
 ```text
-184c3e32b6f201187eb92b412b1c40b8f1068077
+f0e00a6bd86d79f51d3a57e4c948b7fed861bada
 ```
 
 Ao alterar regras em `backend/*.gs`, revise/teste a mudança e depois atualize explicitamente o `ENGINE_COMMIT` do `engine-api` quando quiser promovê-la para produção.
