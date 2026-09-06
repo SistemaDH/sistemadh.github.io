@@ -33,9 +33,6 @@ const ACOES_PLAYER = new Set(['aliadosDaMesa','meusProjetos']);
 const ACOES_APP = new Set([
   'ping','sessao','listarPersonagens','obterPersonagem','excluirPersonagem','restaurarPersonagem',
   'sair','lerConfig','gravarConfig','listarJogadores','anunciarNivelDaMesa',
-  // O ciclo de sessão inteiro mora na mesma função: separar as irmãs entre
-  // duas Edge Functions só criaria uma pergunta que nada responde.
-  'abrirSessao','encerrarSessaoDaMesa','voltarParaAPrimeiraSessao',
   'ouroComMoedas','definirDanoMassivo'
 ]);
 const ACOES_FOTO = new Set(['guardarFoto','removerFoto']);
@@ -44,6 +41,7 @@ const ACOES_ENGINE = new Set([
   'previaDescanso','movimentosDeDescanso','aplicarDescanso',
   'opcoesDeAvanco','previaDeAvanco','aplicarAvanco','desfazerAvanco','aplicarCartaPermanente',
   'painelDoMestre','definirMoldura','molduraDaMesa',
+  'abrirSessao','encerrarSessaoDaMesa','voltarParaAPrimeiraSessao',
   'encontro','definirEncontro','acrescentarAoEncontro','ajustarAdversario',
   'porEmFoco','limparFoco','usarHabilidade','removerDoEncontro','limparEncontro',
   'adversariosDaMesa','salvarAdversarioDaMesa','excluirAdversarioDaMesa'
