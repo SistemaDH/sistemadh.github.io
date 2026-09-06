@@ -2,74 +2,35 @@
 
 > Documento de continuidade entre desenvolvedores e agentes de IA.
 >
-> **Objetivo:** permitir que ChatGPT, Claude ou outro agente continue o projeto sem depender do histórico de uma conversa específica.
->
-> Antes de trabalhar no projeto, leia nesta ordem:
->
-> 1. `README.md`
-> 2. `docs/arquitetura-supabase.md`
-> 3. este `docs/HANDOFF.md`
-> 4. `js/api.js` se a tarefa envolver backend/API
-> 5. os arquivos específicos da funcionalidade que será alterada
+> **Fonte da verdade:** GitHub + estado real do Supabase. Não confiar em memória de chat quando o repositório ou o backend puderem ser conferidos.
 
----
+## Antes de trabalhar
 
-## Regra principal de continuidade
+Leia, nesta ordem:
 
-O **GitHub é a fonte da verdade do projeto**, não a memória de uma IA ou de um chat.
-
-Ao assumir uma tarefa:
-
-- confira a branch `main` atual;
-- não presuma que um resumo antigo ainda representa o código;
-- leia os commits recentes quando houver dúvida;
-- confira o estado real do Supabase antes de alterar banco ou Edge Functions;
-- não sobrescreva mudanças recentes de outro agente sem entendê-las;
-- ao concluir uma etapa importante, atualize este arquivo se o estado, as pendências ou as decisões mudarem.
-
-Se duas IAs estiverem sendo usadas pelo proprietário do projeto, evite que ambas alterem os mesmos arquivos simultaneamente na `main`.
-
----
+1. `README.md`
+2. `docs/arquitetura-supabase.md`
+3. este `docs/HANDOFF.md`
+4. `js/api.js` se a tarefa envolver API/backend
+5. os arquivos específicos da funcionalidade
 
 ## Regras de convivência entre agentes
 
-Acordadas em 06/09/2026 entre o proprietário, o ChatGPT e o Claude, depois de os
-dois passarem a trabalhar no mesmo repositório.
+Acordadas em 06/09/2026 entre o proprietário, ChatGPT e Claude:
 
-O problema que elas resolvem é de **momento**, não de registro: este HANDOFF é
-escrito no fim de uma etapa, e uma colisão de arquivos acontece no meio dela.
-Sem um aviso antes, os dois agentes só descobrem o conflito na hora de integrar.
+1. Antes de uma tarefa relevante, informar quais arquivos pretende alterar.
+2. Não colocar dois agentes alterando os mesmos arquivos ao mesmo tempo.
+3. Código/backend relevante vai em branch; documentação pequena e isolada pode ir direto na `main`.
+4. Ao concluir etapa grande, atualizar este HANDOFF.
+5. Mudança de regra de Daggerheart deve registrar a fonte usada.
+6. Respeitar a hierarquia de fontes já adotada; o material pt-BR é pré-errata.
+7. Nunca substituir mudanças recentes de outro agente sem entender o estado atual.
 
-1. **Antes de começar uma tarefa relevante, informe quais arquivos pretende
-   alterar.** Uma frase basta; o proprietário é o canal entre os dois agentes.
-2. **Não colocar ChatGPT e Claude trabalhando nos mesmos arquivos ao mesmo
-   tempo.**
-3. **Alteração relevante de código ou backend vai em branch separada** e só
-   depois é integrada na `main`.
-4. **Mudança pequena e isolada de documentação pode ir direto para a `main`.**
-5. **Ao terminar uma etapa grande, atualizar este `docs/HANDOFF.md`.**
-6. **Quando a mudança envolver uma regra de Daggerheart, registrar qual fonte
-   sustentou a decisão** — carta, errata, SRD ou livro — aqui ou na
-   documentação correspondente.
-7. **Manter a hierarquia de fontes já adotada pelo projeto.** Não alterar uma
-   regra existente sem antes conferir a decisão já documentada.
-
-### Por que a regra 6 existe
-
-O material pt-BR usado na conferência é **pré-errata**. Uma decisão de regra
-tomada com a fonte certa e registrada sem dizer QUAL fonte foi parece, seis
-semanas depois, um número escolhido a esmo — e o próximo agente "corrige" uma
-decisão que estava certa, ou reabre a mesma discussão do zero.
-
-Registrar a fonte custa uma linha e evita as duas coisas.
+O proprietário é o canal de comunicação entre os agentes.
 
 ---
 
-# Estado atual
-
-**Última atualização deste handoff:** 06/09/2026
-
-O SistemaDH está em produção/desenvolvimento com:
+# Arquitetura atual
 
 ```text
 GitHub Pages
@@ -89,167 +50,72 @@ GitHub Pages
        + Supabase Storage
 ```
 
-A migração de Google Sheets / Google Apps Script para Supabase foi concluída.
+A migração de Google Sheets / Google Apps Script para Supabase está concluída.
 
-**Não existe mais dependência normal de Google Apps Script no runtime.**
+- runtime ativo: Supabase Edge Functions + PostgreSQL + Storage;
+- nenhum fallback normal para Apps Script;
+- novos uploads de foto usam bucket `character-photos`;
+- IDs antigos do Drive ainda podem ser lidos por compatibilidade;
+- o navegador não acessa tabelas diretamente;
+- RLS sem policies públicas é intencional;
+- nunca expor `service_role` ou segredo de backend no frontend.
 
-O frontend usa como padrão o base das Supabase Edge Functions. Para testes ou ambientes alternativos, o override é `dh:baseApi`, contendo somente o endereço base; `js/api.js` acrescenta o nome da Edge Function em cada chamada. A chave legada `dh:urlApi` não deve ser reutilizada.
+O frontend usa `dh:baseApi` como override opcional de base. `js/api.js` acrescenta o nome da Edge Function por ação. A chave antiga `dh:urlApi` é legado e não deve voltar.
+
+O repositório usa `.gitattributes` com `* text=auto eol=lf` para evitar diffs falsos por CRLF/LF.
 
 ---
 
-# Último trabalho realizado
+# Estado do motor de regras
 
-A etapa mais recente foi o **Lote 3 — ciclo de sessão e contadores**, que fecha os
-pontos 12 e 9 dos prints do celular.
+`engine-api` carrega os arquivos `backend/*.gs` de um commit fixado do GitHub. Isso é deliberado: alterar `backend/*.gs` na `main` não muda produção sozinho.
 
-## Lote 3 — ciclo de sessão (12) e contadores nas cartas (9)
+## Produção confirmada antes do Lote 3
 
-### O desenho, e por que ele é assim
-
-A sessão é **estado na mesa**, não um evento que o Mestre dispara nas fichas.
-
-O Mestre não escreve na ficha dos outros — a gravação é otimista por versão, e um
-botão que salvasse cinco fichas de uma vez ou falharia pela metade ou precisaria de um
-caminho privilegiado que não existe. Pior: metade da mesa costuma estar com o app
-fechado na hora em que a sessão vira.
-
-Então: a mesa guarda o número da sessão; cada ficha guarda em `sessaoVista` até onde já
-reconciliou; e **a própria ficha do jogador** aplica os gatilhos `fim-de-sessao` e
-`inicio-de-sessao` quando ele a abre com a mesa à frente. Ninguém escreve na ficha de
-ninguém, e quem estava offline acerta o relógio quando volta.
-
-### O que mudou
-
-| Onde | O quê |
-| --- | --- |
-| `backend/4E_Mesa.gs` | `m.sessao` ganhou `terminouEm` e `aberta`. Três funções: `abrirSessaoDaMesa_`, `encerrarSessaoDaMesa_`, `voltarParaAPrimeiraSessaoDaMesa_`. |
-| `backend/99_Api.gs` | ações `encerrarSessaoDaMesa` e `voltarParaAPrimeiraSessao`; `abrirSessao` passou a receber a contagem de personagens. |
-| `backend/4C_Ajustes.gs` | mutação nova `{ tipo: 'sessao' }` → `ajustarSessaoDaFicha_`. |
-| `backend/40_Regras.gs` | campo `sessaoVista` na forma padrão da ficha. |
-| `js/telas/mestre.js`, `css/mestre.css` | o bloco de sessão passou a ter estado, com uma frase que diz em qual ele está e o botão que faz sentido nele. |
-| `js/telas/ficha.js`, `css/ficha.css` | a sincronia ao abrir, e o marcador **dentro da carta**. |
-| `js/api.js`, `js/estado.js` | as duas ações novas e `sessaoDaMesa` no estado local. |
-
-### Regras que este lote implementa (fonte registrada)
-
-- **p.154**, via `data/mesa.json`: "No início da **campanha**, você começa com um número
-  de Pontos de Medo igual ao número de personagens." É regra de campanha, não de sessão:
-  só a abertura da **sessão 1** encosta no Medo.
-- **p.154**: "Pontos de Medo são transferidos entre as sessões" — abrir a 2, a 3 e as
-  seguintes não mexe no Medo; encerrar também não.
-- **p.105**, via `data/descanso.json`: habilidades "uma vez por sessão" **não** voltam em
-  descanso, só no começo da próxima sessão.
-
-### Detalhes que o próximo agente precisa saber
-
-1. **`encerrarSessao_` já existia** e quer dizer outra coisa: encerrar a sessão de
-   **login** (20_Auth.gs, ação `sair`). Em Apps Script tudo é escopo global — uma segunda
-   função com esse nome não daria erro, só substituiria a primeira, e o app pararia de
-   deslogar. Daí o sufixo `DaMesa`.
-2. **`aberta` é deduzida quando não está gravada**, não posta como `false`. Mesa antiga
-   tem `numero` e `comecouEm` e nenhum campo de estado; normalizar para `false` diria
-   "nenhuma sessão aberta" no meio de uma, e o conserto pularia um número.
-3. **Não dá para abrir duas sessões nem encerrar duas vezes** — o servidor recusa. O
-   número da sessão é o que as fichas usam para saber que precisam recarregar; um número
-   pulado viraria uma recarga a mais na ficha de todo mundo, calada.
-4. **O número da sessão não vem do cliente.** `ajustarSessaoDaFicha_` lê a mesa por
-   dentro. Se viesse no pedido, uma tela desatualizada poderia recarregar os contadores
-   fora de hora — que é o recurso que "uma vez por sessão" existe para limitar.
-5. **Fim antes de começo, nessa ordem.** Há contador que zera no fim e recarrega no
-   começo (o Dado de Inspiração do Bardo é os dois). Invertendo, a zeragem apagaria a
-   recarga e o jogador abriria a sessão nova com a carta vazia.
-6. **Faltar três sessões dá uma recarga, não três.** Recarregar não acumula.
-
-### Validação do Lote 3
+O Lote 2 foi integrado e a `engine-api` foi implantada como versão 2, fixada no commit:
 
 ```text
-testes-e2e.mjs     → 88 passos ok, 0 falharam
-testes-backend.mjs → 421 passaram, 0 falharam
-conferir-css.mjs   → nada a limpar nem a escrever
+b6a68644167ad3f6628066b6d9426f6fc0ae9661
 ```
 
-Passos novos no E2E: `a campanha COMEÇA pondo o Medo em 1 por personagem`,
-`não dá para abrir duas sessões — o botão vira "Encerrar"`,
-`encerrar e abrir a sessão 2 NÃO zera o Medo`,
-`a virada de sessão chega na ficha sem o Mestre tocar nela (ponto 12)` e
-`o marcador da carta mora NA carta — e é o mesmo da aba Jogo (ponto 9)`.
+Esse estado inclui `inventario/nota` em produção.
 
-Testes novos no backend: o Medo inicial de campanha, a recusa de abrir/encerrar duas
-vezes, o voltar para antes da primeira, a sincronia da ficha (com o número do pedido
-sendo ignorado) e o salto de várias sessões.
+## Lote 3 — estado da branch `ediçãoclaude`
 
-⚠ **Ferramenta de teste:** `abrirDobra(nome)` foi acrescentado ao E2E. Clicar numa dobra
-é um **interruptor**, não um "abrir", e a escolha sobrevive ao redesenho — dois passos
-clicando às cegas fechavam a dobra um do outro. Além disso a ficha **grava ao abrir**
-(a sincronia de sessão), e um clique que caia no meio do redesenho não registra o
-`toggle`. Nenhum passo novo deve voltar a clicar `.dobra__topo` direto.
+O código do Lote 3 foi revisado e a source-control da `engine-api` já está preparada para carregar:
 
-## Antes disso
+```text
+f909fb2d270f55d16e57f6ebf003e7af90c4d7c2
+```
 
-A etapa anterior foi o **Lote 2 — ficha do jogador**, que fecha quatro dos catorze
-pontos levantados pela proprietária em prints do celular (branch `feat/lote2-ficha-jogador`).
+Esse commit contém o backend do Lote 3 e a correção de roteamento das ações do ciclo de sessão.
 
-## Lote 2 — ficha do jogador
+**Importante:** enquanto a nova versão da `engine-api` não for implantada no Supabase, o Lote 3 NÃO deve ser mesclado na `main`. O frontend novo depende do motor novo.
 
-| Ponto | O que mudou |
-| --- | --- |
-| 2 | O ouro deixou de ser uma tabela de quatro colunas com botões de ±1 e virou uma **frase** ("1 baú, 2 bolsas e 3 punhados") com dois botões que abrem um diálogo de **lote**. Ouro chega e sai em lote na mesa; registrar três bolsas custava oito toques. Sem mudança de backend: `ajustarOuroDaFicha_` já aceitava qualquer `delta`, com troco e recusa de saldo negativo. |
-| 3 | **Todo item da mochila responde ao toque.** Item do livro abre a página oficial (já era assim); item escrito à mão abre uma **nota editável**. Exigiu uma ação nova no backend — ver abaixo. |
-| 4 | **Classe e subclasse abrem o que está atrás delas.** Subclasse abre a carta oficial em PNG; classe abre a **página do livro** montada de `data/classes.json` — classe não tem carta no jogo, e inventar uma seria pôr no app algo que não existe na mesa. |
-| 10 | Os botões da carta (**Guardar no cofre** / **Trazer para a mão** / efeito permanente) saíram da lista e foram para dentro do **visor da carta**; o texto na lista foi cortado em três linhas, o que devolve a **marca-d'água do domínio**. A lista passou a ser para reconhecer; o visor, para agir. |
+Fluxo obrigatório para qualquer mudança futura em `backend/*.gs`:
 
-### Ação nova no backend
+1. alterar e revisar;
+2. executar testes;
+3. revisar o diff;
+4. atualizar explicitamente `ENGINE_COMMIT`;
+5. implantar `engine-api`;
+6. testar a funcionalidade real;
+7. só então considerar a etapa encerrada.
 
-`backend/4C_Ajustes.gs` ganhou `inventario/nota`. O campo `nota` **já existia** na forma
-do item e já era preservado por `itemDeMochila_`; faltava a ação que escreve nele. Regras:
+Nunca trocar o pin por `main` automática.
 
-- só aceita item **sem `id`** — item do livro já tem descrição oficial, e duas descrições
-  para a mesma coisa fariam a da ficha ganhar da do livro sem ninguém decidir isso;
-- nota vazia **apaga** o campo em vez de gravar string vazia;
-- limite de 120 caracteres, o mesmo do nome do item.
+---
 
-> ⚠ **Isto não chega em produção sozinho.** `4C_Ajustes.gs` está sob o commit fixado do
-> motor. Enquanto o `ENGINE_COMMIT` da `engine-api` não for atualizado e a função
-> reimplantada (passos 5–7 de "Motor de regras — cuidado crítico"), a ação `nota` responde
-> como desconhecida no ar. Os outros três pontos do lote são só frontend e não dependem disso.
+# Lote 2 — concluído
 
-### Decisão de escopo registrada
+Fechou os pontos 2, 3, 4 e 10 dos prints:
 
-O cartão de **subclasse** continua com o texto inteiro, sem corte. Ele não tem
-marca-d'água (o motivo do corte no ponto 10), são no máximo três por ficha, e o texto é
-o que a mesa lê durante a cena. Fica registrado como escolha, não como esquecimento.
+- ouro virou frase com diálogo de lote;
+- item escrito à mão ganhou nota editável;
+- classe e subclasse passaram a abrir o conteúdo correto;
+- ações das cartas foram para o visor e o texto da lista foi reduzido.
 
-## Antes disso
-
-A etapa anterior foi a correção do roteamento dos testes E2E para reproduzir a arquitetura real das Supabase Edge Functions.
-
-Foram concluídos:
-
-- migração da persistência de Google Sheets para PostgreSQL;
-- migração das operações HTTP para Supabase Edge Functions;
-- autenticação ativa em bcrypt;
-- sessões no PostgreSQL;
-- personagens persistidos em JSONB;
-- motor completo de regras funcionando por `engine-api`;
-- persistência transacional pelo RPC `apply_engine_mutations`;
-- operações de Mestre, mesa e encontro no backend novo;
-- fotos novas no Supabase Storage;
-- remoção do fallback de Apps Script do frontend;
-- desativação da antiga ponte `apps-script-db`;
-- remoção da tabela/segredo usados exclusivamente pela ponte;
-- remoção das contas antigas Magnus e Vanessa e de suas fichas, autorizada pelo proprietário;
-- conta `TesteSupabase` mantida desativada com sua ficha arquivada;
-- nenhuma credencial legada ativa restante;
-- atualização de `docs/arquitetura-supabase.md`;
-- atualização completa do `README.md` para refletir a arquitetura atual;
-- substituição do antigo override `dh:urlApi` por `dh:baseApi`;
-- `js/api.js` passou a montar `<base>/<nome-da-função>` a cada chamada;
-- servidor E2E passou a responder às seis rotas reais: `/auth-api`, `/app-api`, `/mesa-api`, `/player-api`, `/engine-api` e `/photo-api`;
-- `/exec` permanece apenas no servidor de teste para compatibilidade com scripts antigos, não no roteamento de produção;
-- scripts de captura passaram a usar import relativo de `servidor-teste.mjs`, removendo dependência de caminho absoluto do ambiente Claude;
-- suíte E2E ganhou validação explícita de que o frontend chama as seis Edge Functions pelo nome.
-
-## Validação do Lote 2
+Validação registrada:
 
 ```text
 testes-e2e.mjs     → 84 passos ok, 0 falharam
@@ -257,132 +123,98 @@ testes-backend.mjs → 416 passaram, 0 falharam
 conferir-css.mjs   → nada a limpar nem a escrever
 ```
 
-Passos novos na suíte E2E:
+O backend necessário do Lote 2 já foi implantado no Supabase.
 
-- `classe e subclasse abrem o que está atrás delas (ponto 4)` — cobra que a classe **não**
-  abra um visor de carta, para ninguém "uniformizar" as duas coisas depois e inventar uma
-  carta de classe;
-- `o texto da carta na lista é cortado — a marca-d'água precisa aparecer` — mede pixel, não
-  classe. Se nenhuma carta na tela for longa o bastante, o passo enche uma de texto para
-  provar a regra em vez de medir a sorte do sorteio;
-- `o item escrito à mão ganha uma nota — e ela volta do servidor` — inclui a metade que
-  importa: item **do livro** não pode aceitar nota.
+---
 
-Teste novo no backend: `a NOTA só entra em item escrito à mão, e apagar tira o campo`.
+# Lote 3 — ciclo de sessão e contadores nas cartas
 
-## Validação do lote E2E anterior
+Fecha os pontos **12** e **9** dos prints.
+
+## Conceito
+
+A sessão é estado da **mesa**, não um evento que o Mestre grava diretamente nas fichas.
+
+- a mesa guarda número da sessão e se está aberta;
+- cada ficha guarda `sessaoVista`;
+- quando a ficha abre e a mesa está à frente, a própria ficha do jogador aplica `fim-de-sessao` e depois `inicio-de-sessao`;
+- quem ficou offline se acerta quando voltar;
+- o número usado vem da mesa no servidor, nunca do cliente.
+
+## Backend
+
+Arquivos principais:
+
+- `backend/4E_Mesa.gs`
+- `backend/99_Api.gs`
+- `backend/4C_Ajustes.gs`
+- `backend/40_Regras.gs`
+
+Mudanças:
+
+- `m.sessao` ganhou `terminouEm` e `aberta`;
+- funções `abrirSessaoDaMesa_`, `encerrarSessaoDaMesa_` e `voltarParaAPrimeiraSessaoDaMesa_`;
+- mutação `{ tipo: 'sessao' }` para reconciliar a ficha com a mesa;
+- `sessaoVista` na ficha padrão;
+- duas aberturas ou dois encerramentos seguidos são recusados;
+- salto de várias sessões aplica a recarga uma vez só;
+- ordem dos gatilhos: fim da sessão primeiro, começo depois.
+
+## Frontend
+
+Arquivos principais:
+
+- `js/telas/mestre.js`
+- `js/telas/ficha.js`
+- `js/api.js`
+- `js/estado.js`
+- `css/mestre.css`
+- `css/ficha.css`
+
+Mudanças:
+
+- painel do Mestre mostra estado real da sessão e ações coerentes;
+- campanha pode voltar para antes da sessão 1;
+- ficha reconcilia `sessaoVista` ao abrir;
+- marcadores que pertencem a cartas aparecem na própria carta e continuam sendo o MESMO contador da aba Jogo.
+
+## Correção de revisão feita pelo ChatGPT
+
+O E2E local usa um único mock de `99_Api.gs` por trás de todas as seis URLs. Isso não prova que uma ação está na Edge Function certa em produção.
+
+Por isso as ações:
 
 ```text
-testes-backend.mjs → 415 passaram, 0 falharam
+abrirSessao
+encerrarSessaoDaMesa
+voltarParaAPrimeiraSessao
+```
+
+foram movidas de `ACOES_APP` para `ACOES_ENGINE` em `js/api.js`, e também adicionadas à allowlist da `engine-api`.
+
+Isso garante que o código novo de `backend/99_Api.gs` seja executado pela função que realmente carrega o motor fixado.
+
+## Regras e fontes
+
+- **p.154**: no início da campanha, Medo = quantidade de personagens. Isso acontece só na sessão 1.
+- **p.154**: Pontos de Medo atravessam sessões; abrir sessão 2+ e encerrar sessão não zeram Medo.
+- **p.105**: habilidades de uma vez por sessão não voltam em descanso; voltam no começo da próxima sessão.
+
+## Validação do Claude antes da correção de roteamento
+
+```text
+testes-e2e.mjs     → 88 passos ok, 0 falharam
+testes-backend.mjs → 421 passaram, 0 falharam
 conferir-css.mjs   → nada a limpar nem a escrever
-testes-e2e.mjs     → 81 passos ok, 0 falharam
 ```
 
-O último passo do E2E confirma explicitamente que o app fala com as seis Edge Functions pelo nome, e não com uma rota única de compatibilidade.
+Novos E2E cobrem Medo inicial da campanha, recusa de duas sessões abertas, preservação do Medo, sincronização `sessaoVista` e marcador dentro da carta.
+
+A correção de roteamento feita na revisão é estrutural e não altera a regra; antes do merge definitivo deve-se confirmar o deploy real da nova `engine-api`.
 
 ---
 
-# Commits importantes recentes
-
-## Base da API e E2E alinhados às Edge Functions
-
-```text
-2d2bc0b25fcf8a813e5b778047d3ba1e60f83187
-```
-
-Corrige `js/config.js`, `js/api.js`, o servidor local de teste, a suíte E2E e os scripts de captura para usar `dh:baseApi` e as seis rotas reais das Edge Functions. Este commit foi desenvolvido na branch `fix/e2e-base-api` e deve ser integrado à `main` junto com esta atualização do HANDOFF.
-
-## Corte definitivo do Apps Script no frontend
-
-```text
-af2f696b36bd9af649bed6daf40b1e602338293e
-```
-
-Removeu do `js/api.js` o fallback de autenticação legado e as chamadas ao Google Apps Script.
-
-## Documentação da arquitetura após o corte
-
-```text
-d75b10effb8caab71a302e9168bef3480e1106a9
-```
-
-Atualização de `docs/arquitetura-supabase.md`.
-
-## README atualizado
-
-```text
-4a437b365595a6f73903934d329c3e50c5a52edf
-```
-
-Substituiu a documentação antiga baseada em Apps Script/Sheets pela arquitetura atual Supabase.
-
-## Engine API versionado
-
-```text
-62b9bb61056ab80f6e16eaef14b2c3b50f0976a2
-```
-
-Código do `engine-api` versionado no repositório.
-
-## Auth API versionado
-
-```text
-f479d456e01c352d1b232e1ca6aa684816bdd780
-```
-
-Código do `auth-api` versionado no repositório.
-
-## Photo API versionado
-
-```text
-2c7bb54a910c0b6e7676b998246f0cfb0caa517b
-```
-
-Código do `photo-api` versionado no repositório.
-
-## RPC transacional
-
-```text
-b2f7b88369e77a1589f6f9d8fddf0093502cbc5c
-```
-
-Adicionou/versionou `apply_engine_mutations`.
-
----
-
-# Motor de regras — cuidado crítico
-
-O `engine-api` reutiliza o código de regras mantido em `backend/*.gs`.
-
-Esses arquivos **não são mais implantados no Google Apps Script**.
-
-Eles são carregados/executados pelo motor Supabase através de uma camada de compatibilidade.
-
-O motor está deliberadamente fixado no commit:
-
-```text
-e711cfc85341f14565a4906cdbe321009db9fef9
-```
-
-Portanto:
-
-> Alterar `backend/*.gs` na `main` NÃO altera automaticamente as regras em produção.
-
-Fluxo correto para mudança de regra:
-
-1. alterar os arquivos necessários;
-2. revisar a regra;
-3. executar/testar o que for aplicável;
-4. revisar o diff;
-5. só então atualizar explicitamente o `ENGINE_COMMIT` do `engine-api` para o commit aprovado;
-6. implantar a nova versão da Edge Function;
-7. testar a funcionalidade real após o deploy.
-
-**Nunca mudar o engine para buscar automaticamente a branch `main`.**
-
----
-
-# Banco de dados atual
+# Segurança e persistência — não regredir
 
 Tabelas principais:
 
@@ -393,102 +225,33 @@ Tabelas principais:
 - `log`
 - `auth_rate_limits`
 
-A tabela `backend_secrets` não faz mais parte da arquitetura.
+A ficha completa fica em `personagens.dados` (JSONB), com `versao` otimista. Não sobrescrever silenciosamente uma ficha alterada por outro dispositivo.
 
-## Personagens
+`engine-api` aplica mutações por `apply_engine_mutations`. Não substituir isso por updates independentes sem analisar atomicidade e concorrência.
 
-A ficha completa fica em:
+Contas conhecidas após a migração:
 
-```text
-personagens.dados
-```
+- Mestre — ativa, bcrypt;
+- Max — ativo, bcrypt;
+- `TesteSupabase` — desativado, ficha arquivada preservada;
+- Magnus e Vanessa — removidos com autorização do proprietário.
 
-Tipo: JSONB.
-
-Existem colunas-espelho para dados importantes como nome, dono, classe, subclasse, ancestralidade, comunidade, nível, versão, schema e datas.
-
-## Concorrência
-
-Preservar `versao` otimista.
-
-Nunca substituir silenciosamente uma ficha que foi alterada em outro dispositivo.
-
-## Persistência do engine
-
-O `engine-api` usa:
-
-```text
-apply_engine_mutations
-```
-
-para aplicar mutações relacionadas de forma transacional.
-
-Não trocar isso por uma sequência de updates independentes sem analisar atomicidade e concorrência.
+Não recriar dados removidos a partir da documentação.
 
 ---
 
-# Segurança — não regredir
+# Edge Functions
 
-- RLS está habilitado nas tabelas da aplicação.
-- O navegador não deve ter acesso direto às tabelas.
-- Não criar policies públicas apenas para eliminar o aviso `RLS Enabled No Policy`.
-- `RLS Enabled No Policy` é esperado nesta arquitetura.
-- Nunca colocar `service_role`, secret key ou segredo de backend em JavaScript público.
-- Edge Functions públicas precisam validar a autenticação customizada antes de usar privilégios elevados.
-- Tokens de sessão são armazenados no banco como hash.
-- Credenciais ativas usam bcrypt.
-- Não reintroduzir autenticação SHA-256 + pepper do Apps Script.
-- Não reintroduzir JSONP ou `script.google.com` no frontend.
+Ativas relevantes:
 
----
+- `auth-api`
+- `app-api`
+- `mesa-api`
+- `player-api`
+- `engine-api`
+- `photo-api`
 
-# Fotos
-
-Novos uploads usam Supabase Storage.
-
-Bucket:
-
-```text
-character-photos
-```
-
-O sistema mantém compatibilidade de leitura com IDs antigos do Google Drive que eventualmente existam em fichas históricas.
-
-Não usar Google Drive para novos uploads.
-
----
-
-# Edge Functions ativas relevantes
-
-## `auth-api`
-
-Autenticação, registro e códigos.
-
-## `app-api`
-
-Sessão, roster, config e operações gerais.
-
-## `mesa-api`
-
-Medo, contagens, perseguições e descanso da mesa.
-
-## `player-api`
-
-Aliados e projetos.
-
-## `engine-api`
-
-Motor completo de regras, ficha, descanso, avanço, Mestre, encontros e adversários.
-
-## `photo-api`
-
-Fotos no Supabase Storage.
-
----
-
-# Edge Functions aposentadas
-
-Não criar dependências novas em:
+Aposentadas/históricas — não criar dependência nova:
 
 - `apps-script-db`
 - `character-api`
@@ -496,130 +259,23 @@ Não criar dependências novas em:
 - `rules-engine`
 - `runtime-test`
 
-Elas pertencem ao histórico da migração, não à arquitetura atual.
-
 ---
 
-# Roteamento do frontend
+# Próximos pontos dos prints
 
-`js/api.js` é a porta central das chamadas do frontend.
+Depois de fechar e implantar o Lote 3, permanecem:
 
-O endereço padrão é o base das Supabase Edge Functions. O override opcional de ambiente/teste fica em `localStorage` sob `dh:baseApi` e deve conter apenas o base, sem `/exec`, sem `/app-api` e sem outro nome de função no final.
+- **8** — melhorar o fluxo de cena/bestiário, retirada de adversário derrotado e popup de movimentos;
+- **11** — classes com descanso próprio (ex.: Clank) mostram opções que podem confundir.
 
-`js/api.js` resolve a ação e acrescenta o nome da função correspondente (`auth-api`, `app-api`, `mesa-api`, `player-api`, `engine-api` ou `photo-api`) no momento da chamada.
-
-A chave antiga `dh:urlApi`, usada na época do Apps Script, é legado e não deve ser reaproveitada.
-
-Antes de criar uma chamada HTTP nova diretamente dentro de uma tela, verifique se ela deve ser adicionada ao roteamento central de `api.js`.
-
-Evitar espalhar URLs de Edge Functions pelas telas.
-
----
-
-# Dados estáticos de Daggerheart
-
-Não migrar automaticamente catálogos estáticos para PostgreSQL apenas porque o backend usa Supabase.
-
-Dados estáticos continuam adequados em `data/*.json` e/ou no motor versionado.
-
-Supabase deve guardar principalmente estado mutável da aplicação:
-
-- jogadores;
-- sessões;
-- personagens;
-- mesa;
-- logs;
-- fotos;
-- demais estados persistentes.
-
----
-
-# Estado conhecido dos usuários após a migração
-
-Contas ativas relevantes:
-
-- Mestre — bcrypt
-- Max — bcrypt
-
-Não existem credenciais legadas ativas.
-
-Durante o encerramento da migração:
-
-- Magnus foi removido junto com sua ficha;
-- Vanessa foi removida junto com sua ficha;
-- `TesteSupabase` ficou desativado e sua ficha arquivada foi preservada.
-
-Não recriar esses dados automaticamente a partir de documentação ou histórico.
-
----
-
-# Próxima tarefa
-
-## Pendência aberta pelo Lote 3
-
-**Atualizar o `ENGINE_COMMIT` da `engine-api` e reimplantar.** O Lote 3 mexeu em
-`4E_Mesa.gs`, `99_Api.gs`, `4C_Ajustes.gs` e `40_Regras.gs` — todos sob o commit fixado.
-Seguir os passos 5–7 de "Motor de regras — cuidado crítico". Enquanto isso não acontecer:
-
-- as ações `encerrarSessaoDaMesa` e `voltarParaAPrimeiraSessao` não existem no ar;
-- `abrirSessao` continua sem pôr o Medo inicial de campanha;
-- a mutação `{ tipo: 'sessao' }` responde como tipo desconhecido, e a ficha do jogador
-  tenta a sincronia a cada abertura e recebe erro.
-
-⚠ **Este último merece atenção no deploy:** a parte de frontend do Lote 3 assume o motor
-novo. Subir só o frontend deixaria a ficha mostrando um aviso de erro ao abrir.
-
-## Pontos dos prints ainda em aberto
-
-Restam dois dos catorze levantados pela proprietária:
-
-- **8** — a cena não existe como lugar: leva ao bestiário, não dá para tirar adversário
-  derrotado, e falta o popup de movimentos do adversário. **Só frontend**
-  (`js/telas/encontro.js`, `css/mestre.css`): é o único que sobe sem redeploy do motor.
-- **11** — classes com descanso próprio mostram os dois e confundem. É questão de
-  **regra**, não de tela: `data/descanso.json` registra que a Clank com a característica
-  **Eficiente** pode, num descanso curto, escolher um movimento de descanso longo no
-  lugar de um de curto (p.54). O material pt-BR é pré-errata, então **conferir na errata
-  em inglês antes de implementar** (regra 6).
-
-## Antes de começar
-
-Confirme que a branch do Lote 3 já foi integrada à `main` e que o motor foi
-reimplantado. Depois disso, a próxima funcionalidade deve ser definida pelo proprietário.
-
-Ao receber a próxima tarefa:
-
-1. leia o código atual relacionado;
-2. confira commits recentes se outro agente trabalhou depois deste handoff;
-3. determine se a mudança é frontend, regra ou persistência;
-4. implemente sem quebrar as decisões arquiteturais acima;
-5. teste;
-6. atualize documentação/handoff se houver mudança estrutural ou uma nova pendência importante.
+Os pontos 9 e 12 pertencem ao Lote 3 e ficam considerados concluídos somente após o deploy da nova `engine-api` e merge na `main`.
 
 ---
 
 # Como entregar para outra IA
 
-O proprietário pode iniciar uma conversa nova e informar simplesmente:
+Basta informar:
 
-> Este projeto já foi desenvolvido por outras IAs. Antes de alterar qualquer coisa, leia `README.md`, `docs/arquitetura-supabase.md` e `docs/HANDOFF.md` na branch `main`. Considere o GitHub como fonte da verdade e confira o código atual antes de continuar.
+> Leia `README.md`, `docs/arquitetura-supabase.md` e `docs/HANDOFF.md` na branch `main` antes de alterar qualquer coisa. O GitHub é a fonte da verdade e o estado real do Supabase deve ser conferido para mudanças de backend.
 
-Isso deve ser suficiente para reconstruir o contexto técnico principal sem copiar conversas anteriores.
-
----
-
-# Regra para atualizar este HANDOFF
-
-Atualize este documento quando ocorrer pelo menos uma destas situações:
-
-- mudança de arquitetura;
-- criação/remoção de Edge Function importante;
-- migration relevante no banco;
-- mudança no fluxo de autenticação;
-- alteração na estratégia do motor de regras;
-- mudança importante no modelo de dados;
-- conclusão de uma etapa grande;
-- descoberta de bug/risco que a próxima pessoa precisa conhecer;
-- interrupção de trabalho no meio de uma tarefa relevante.
-
-Não transforme este arquivo em um changelog de cada pequeno ajuste visual. Commits continuam sendo o histórico detalhado. O HANDOFF deve registrar apenas o contexto necessário para alguém assumir o projeto com segurança.
+Atualize este arquivo ao concluir etapas grandes, alterar arquitetura, Edge Functions, autenticação, modelo de dados, estratégia do motor ou descobrir risco que o próximo agente precise conhecer.
