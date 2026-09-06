@@ -90,6 +90,37 @@ function fichaVazia_() {
     },
     anotacoes: '',
     /*
+     * CICATRIZES — cada uma apaga PARA SEMPRE um espaço de Esperança (p.106).
+     *
+     * É uma lista, não um número, porque a cicatriz tem história: o livro diz
+     * que o que ela significa é do jogador ("física, uma lembrança, um medo"),
+     * e que o Mestre pode curá-la como projeto. Um contador guardaria quantas
+     * são e perderia quais foram.
+     *
+     * Quem desconta o teto é `derivarRecursos_` (48_Criacao.gs), num lugar só:
+     * `esperancaMaxima` já sai reduzido, e todo teto do app obedece sem saber
+     * que cicatriz existe.
+     */
+    cicatrizes: [],
+    /*
+     * INCONSCIENTE é estado, não condição.
+     *
+     * As condições do livro são Oculto, Restrito e Vulnerável (o resto vem de
+     * carta). Inconsciente não é nenhuma delas: vem de "Evitar a Morte" e sai
+     * ao recuperar 1 PV ou num descanso longo (p.106). Como não se liga e
+     * desliga à mão, mora fora da lista de condições.
+     */
+    inconsciente: false,
+    /*
+     * O FIM DA FICHA — atravessar o véu, ou a cicatriz que tomou o último
+     * espaço de Esperança. Vazio = a ficha está em jogo.
+     *
+     * A decisão da mesa foi MARCAR E GUARDAR: a ficha sai da lista ativa e
+     * continua abrindo em leitura. Não usa o `excluido` das planilhas, que é
+     * outra coisa (lixeira, com restaurar) — e ressurreição existe no livro.
+     */
+    encerrada: null,
+    /*
      * QUAL SESSÃO DA MESA ESTA FICHA JÁ ACERTOU.
      *
      * O Mestre não escreve na ficha dos outros, e jogador pode estar offline

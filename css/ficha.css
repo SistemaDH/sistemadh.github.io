@@ -1806,3 +1806,77 @@
 }
 
 .descanso__grupoEmprestado > .pilha { margin-top: var(--e3); }
+
+/* ==========================================================================
+   A FAIXA DE ESTADO DA VIDA — no limite, inconsciente, encerrada.
+
+   Ela vem ANTES de tudo, em qualquer aba, porque muda o sentido do resto:
+   os traços de quem está caído não são jogáveis, e a mochila de quem
+   atravessou o véu é história.
+
+   ⚠ Os três tons são os que a ficha já usa, não uma paleta nova: perigo para
+   o limite (a mesma da trilha de PV), aço para a inconsciência (estado, não
+   ferimento) e o texto fraco para a jornada encerrada — o tom de "isto é
+   registro agora".
+   ========================================================================== */
+
+.ficha__faixaEstado {
+  margin-bottom: var(--e4);
+  padding: var(--e3);
+  border-left: 3px solid var(--cor-borda-forte);
+  border-radius: var(--raio);
+  background: var(--cor-fundo-2);
+}
+
+.ficha__faixaEstado p { margin: var(--e1) 0 0; }
+.ficha__faixaEstado .btn { margin-top: var(--e3); }
+
+.ficha__faixaTitulo {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-md);
+  letter-spacing: .02em;
+}
+
+.ficha__faixaEstado.esta-noLimite { border-left-color: var(--cor-perigo); }
+.ficha__faixaEstado.esta-noLimite .ficha__faixaTitulo { color: var(--cor-perigo); }
+
+.ficha__faixaEstado.esta-inconsciente { border-left-color: var(--cor-aco); }
+.ficha__faixaEstado.esta-inconsciente .ficha__faixaTitulo { color: var(--cor-aco); }
+
+/* Encerrada não grita: a decisão já foi tomada, e a cor de alarme aqui só
+   faria a mesa reviver o susto toda vez que abrisse a ficha para lembrar. */
+.ficha__faixaEstado.esta-encerrada {
+  border-left-color: var(--cor-texto-fraco);
+  opacity: .9;
+}
+.ficha__faixaEstado.esta-encerrada .ficha__faixaTitulo { color: var(--cor-texto-suave); }
+
+/* --- o diálogo dos três movimentos ---------------------------------------- */
+
+.ficha__morteOpcao {
+  padding: var(--e3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+}
+
+.ficha__morteOpcao + .ficha__morteOpcao { margin-top: var(--e3); }
+.ficha__morteOpcao p { margin: var(--e1) 0 var(--e2); }
+.ficha__morteOpcao .campo { margin-top: var(--e2); }
+
+.ficha__morteNome {
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-md);
+  color: var(--cor-ouro);
+}
+
+/*
+ * O veredito do Arriscar Tudo aparece ANTES de confirmar — é o único dos três
+ * que pode matar sem o jogador ter escolhido morrer, e ver "o Medo veio mais
+ * alto" escrito na tela é a diferença entre uma morte que a mesa viu chegar e
+ * uma que apareceu depois do toque.
+ */
+.ficha__morteVeredito {
+  min-height: 1.4em;
+  color: var(--cor-texto);
+}

@@ -2149,6 +2149,92 @@ try {
     await pagina.waitForSelector('.ficha-cartao__abrir');
   });
 
+  await passo('encher os PV abre o movimento de morte sozinho (D2)', async () => {
+    /*
+     * Marcar o último Ponto de Vida NÃO mata: obriga a escolher um dos três
+     * movimentos (p.106). Até este lote o app mostrava uma frase e devolvia o
+     * problema para o papel — no momento mais dramático da mesa.
+     *
+     * ⚠ O DIÁLOGO ABRE SOZINHO, e é isso que este passo guarda. Um botão que
+     * a pessoa precisasse achar seria a mesma frase de antes, com mais passos:
+     * quem acabou de ver a trilha encher está olhando para a trilha.
+     */
+    await pagina.locator('.ficha-cartao__abrir').first().click();
+    await pagina.waitForSelector('.papel', { timeout: 20000 });
+
+    const caixas = pagina.locator('.papel__trilha--pv .papel__caixa');
+    const quantas = await caixas.count();
+    const antes = await versaoNaTela();
+    await caixas.nth(quantas - 1).click();
+    await esperarGravar(antes);
+
+    const modal = pagina.locator('.modal__caixa', { hasText: 'Movimento de morte' });
+    await modal.waitFor({ timeout: 10000 });
+    const texto = await modal.textContent();
+    for (const nome of ['Sacrifício Glorioso', 'Evitar a Morte', 'Arriscar Tudo']) {
+      if (!texto.includes(nome)) throw new Error(`o diálogo não oferece "${nome}"`);
+    }
+  });
+
+  await passo('Evitar a Morte: o dado até o nível risca um espaço de Esperança', async () => {
+    /*
+     * SRD: "roll your Hope Die. If its value is equal to or under your
+     * character's level, they gain a scar." A cicatriz apaga um espaço de
+     * Esperança PARA SEMPRE (p.106) — e este passo confere no pixel, porque a
+     * trilha continua desenhando os seis do papel e riscando o que se foi.
+     */
+    const modal = pagina.locator('.modal__caixa', { hasText: 'Movimento de morte' });
+    const bloco = modal.locator('.ficha__morteOpcao', { hasText: 'Evitar a Morte' });
+
+    const cheiosAntes = await pagina.locator('.papel__esperancaPonto').count();
+
+    const antes = await versaoNaTela();
+    // 1 nunca passa do nível: cicatriz garantida, seja qual for o nível.
+    await bloco.getByLabel('Resultado do Dado de Esperança (d12)').fill('1');
+    await bloco.getByRole('button', { name: 'Escolher este' }).click();
+    await esperarGravar(antes);
+
+    // Os seis losangos continuam na fileira — um deles agora é um X.
+    igual(await pagina.locator('.papel__esperancaPonto').count(), cheiosAntes,
+      'a fileira não pode encolher: a perda sumiria junto com o espaço');
+    igual(await pagina.locator('.papel__esperancaPonto.esta-cicatriz').count(), 1,
+      'o espaço cicatrizado tinha de aparecer riscado');
+    igual(await pagina.locator('.papel__esperancaPonto.esta-cicatriz[disabled]').count(), 1,
+      'e não pode mais ser marcado');
+
+    // E a ficha diz que ficou inconsciente.
+    const faixa = pagina.locator('.ficha__faixaEstado.esta-inconsciente');
+    await faixa.waitFor({ timeout: 10000 });
+    if (!/1 Ponto de Vida|descanso longo/.test(await faixa.textContent())) {
+      throw new Error('a faixa não diz como se volta a si');
+    }
+  });
+
+  await passo('recuperar 1 Ponto de Vida acorda quem está inconsciente', async () => {
+    /*
+     * "Volta a si ao recuperar 1 Ponto de Vida ou mais, ou quando o grupo
+     * fizer um descanso longo" (p.106). Acontece SOZINHO: quem está
+     * inconsciente não vai abrir a ficha para desmarcar um estado, e quem cura
+     * é outra pessoa — acordar é consequência da cura, não um segundo botão.
+     */
+    const caixas = pagina.locator('.papel__trilha--pv .papel__caixa');
+    const quantas = await caixas.count();
+    const antes = await versaoNaTela();
+    await caixas.nth(quantas - 1).click();      // desmarca o último PV
+    await esperarGravar(antes);
+
+    await pagina.waitForFunction(() =>
+      !document.querySelector('.ficha__faixaEstado.esta-inconsciente'),
+    null, { timeout: 15000 });
+
+    // A cicatriz FICA: ela é permanente, ao contrário da inconsciência.
+    igual(await pagina.locator('.papel__esperancaPonto.esta-cicatriz').count(), 1,
+      'a cicatriz não sai com a cura');
+
+    await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+    await pagina.waitForSelector('.ficha-cartao__abrir');
+  });
+
   await passo('o índice de regras acha pelo termo do livro e abre o verbete (fecha J4)', async () => {
     // Neste ponto a ficha já fechou: o botão que vale é o do cabeçalho do app.
     // Ele aparece nos TRÊS cabeçalhos (app, ficha e painel) de propósito — a

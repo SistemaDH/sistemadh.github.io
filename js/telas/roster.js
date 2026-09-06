@@ -109,10 +109,37 @@ export function telaRoster() {
       return;
     }
 
-    personagens.forEach((p) => lista.append(cartaoPersonagem(p)));
+    /*
+     * AS ENCERRADAS DESCEM PARA O FIM DA LISTA.
+     *
+     * "Sai da lista ativa" foi a decisão da mesa, e este é o jeito de fazer
+     * isso sem esconder: quem está em jogo aparece primeiro, e as jornadas
+     * que terminaram ficam embaixo, inteiras, abrindo com um toque. Sumir de
+     * vez seria a outra opção — e ninguém quer perder a Lyra de vista.
+     */
+    const emJogo = personagens.filter((p) => !p.encerrada);
+    const encerradas = personagens.filter((p) => p.encerrada);
+    emJogo.forEach((p) => lista.append(cartaoPersonagem(p)));
+
+    if (encerradas.length) {
+      lista.append(el('h2', { class: 'roster__secaoEncerradas', texto:
+        encerradas.length === 1 ? 'Jornada encerrada' : 'Jornadas encerradas' }));
+      encerradas.forEach((p) => lista.append(cartaoPersonagem(p)));
+    }
+  }
+
+  /** O selo do fim, curto o bastante para caber ao lado do nome. */
+  function rotuloDoFim(fim) {
+    return {
+      sacrificio: 'Sacrifício Glorioso',
+      veu: 'Atravessou o véu',
+      aposentado: 'Aposentado'
+    }[fim && fim.motivo] || 'Encerrada';
   }
 
   function cartaoPersonagem(p) {
+    // A ficha encerrada fica em meio-tom: continua legível, deixa de competir.
+    const encerrada = p.encerrada ? ' esta-encerrada' : '';
     const detalhes = [p.ancestralidade, p.comunidade].filter(Boolean).join(' · ');
     const classe = [p.classe, p.subclasse].filter(Boolean).join(' · ');
 
@@ -129,12 +156,21 @@ export function telaRoster() {
         el('h2', { class: 'ficha-cartao__nome', texto: p.nome }),
         // Ficha atrás do grupo ganha o selo de alerta em vez do de nível: é o
         // caso de quem entrou no meio da campanha (livro p.105).
-        el('span', {
-          class: `selo ${p.nivel < nivelDaMesa() ? 'selo--alerta' : 'selo--nivel'}`,
-          texto: p.nivel < nivelDaMesa()
-            ? `Nível ${p.nivel} · mesa no ${nivelDaMesa()}`
-            : `Nível ${p.nivel}`
-        })
+        /*
+         * A JORNADA ENCERRADA GANHA O SELO, e ele ganha do nível.
+         *
+         * Uma ficha que atravessou o véu não está "atrás da mesa" nem "no
+         * nível 3": ela saiu do jogo. Mostrar o nível dela ao lado das outras
+         * a deixaria parecendo jogável, e é a única coisa que ela não é.
+         */
+        p.encerrada
+          ? el('span', { class: 'selo selo--encerrada', texto: rotuloDoFim(p.encerrada) })
+          : el('span', {
+            class: `selo ${p.nivel < nivelDaMesa() ? 'selo--alerta' : 'selo--nivel'}`,
+            texto: p.nivel < nivelDaMesa()
+              ? `Nível ${p.nivel} · mesa no ${nivelDaMesa()}`
+              : `Nível ${p.nivel}`
+          })
       ]),
       classe ? el('p', { class: 'ficha-cartao__linha', texto: classe }) : null,
       detalhes ? el('p', { class: 'ficha-cartao__linha', texto: detalhes }) : null,
@@ -160,7 +196,7 @@ export function telaRoster() {
     }, icone('lixeira'));
 
     return el('div', {
-      class: 'cartao cartao--clicavel cartao--ornamentado ficha-cartao'
+      class: `cartao cartao--clicavel cartao--ornamentado ficha-cartao${encerrada}`
     }, [abrir, excluir]);
   }
 

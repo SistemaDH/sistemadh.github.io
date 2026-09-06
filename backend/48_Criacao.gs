@@ -332,8 +332,27 @@ function aplicarDerivados_(ficha) {
   const r = ficha.recursos;
   r.pontosDeVidaMaximos = d.pontosDeVidaMaximos;
   r.estresseMaximo = d.estresseMaximo;
-  r.esperancaMaxima = d.esperancaMaxima;
   r.proficiencia = d.proficiencia;
+
+  /*
+   * A ESPERANÇA TEM DOIS NÚMEROS, E ISSO É DE PROPÓSITO.
+   *
+   * `esperancaImpressa` é o que a ficha de papel traz: seis losangos, sempre.
+   * `esperancaMaxima` é quantos ainda ENCHEM — seis menos as cicatrizes, que
+   * apagam um espaço para sempre (p.106).
+   *
+   * ⚠ O DESCONTO MORA AQUI, E SÓ AQUI. `esperancaMaxima` é o nome que o resto
+   * do app já usa como teto: a mutação de recurso (4C_Ajustes), a cura do
+   * descanso (4B_Descanso), o painel do Mestre (99_Api). Descontando na
+   * derivação, todos passam a respeitar cicatriz sem saber que ela existe — e
+   * uma ficha antiga se conserta na primeira gravação, como o resto daqui.
+   *
+   * A tela desenha `esperancaImpressa` losangos e risca com X os que passam de
+   * `esperancaMaxima`, que é exatamente o que a mesa faz no papel.
+   */
+  const quantasCicatrizes = Array.isArray(ficha.cicatrizes) ? ficha.cicatrizes.length : 0;
+  r.esperancaImpressa = d.esperancaMaxima;
+  r.esperancaMaxima = Math.max(0, d.esperancaMaxima - quantasCicatrizes);
 
   // Valores correntes: se ainda não existem, começam onde o livro manda.
   if (r.pontosDeVidaMarcados === undefined || r.pontosDeVidaMarcados === null) r.pontosDeVidaMarcados = 0;
@@ -344,7 +363,9 @@ function aplicarDerivados_(ficha) {
   // E nunca podem passar do máximo.
   r.pontosDeVidaMarcados = limitar_(r.pontosDeVidaMarcados, 0, d.pontosDeVidaMaximos);
   r.estresseMarcado = limitar_(r.estresseMarcado, 0, d.estresseMaximo);
-  r.esperanca = limitar_(r.esperanca, 0, d.esperancaMaxima);
+  // ⚠ Contra `r.esperancaMaxima` (já descontado), não contra `d`: quem ganhou
+  // uma cicatriz com a Esperança cheia perde o ponto que não cabe mais.
+  r.esperanca = limitar_(r.esperanca, 0, r.esperancaMaxima);
   r.armaduraMarcada = limitar_(r.armaduraMarcada, 0, d.pontuacaoArmadura);
 
   ficha.dominios = d.dominios;

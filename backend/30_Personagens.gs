@@ -54,6 +54,26 @@ function personagemDaLinha_(linha, incluirFicha) {
     criadoEm: linha.criadoEm,
     atualizadoEm: linha.atualizadoEm
   };
+
+  /*
+   * A JORNADA ENCERRADA VIAJA NA LISTA, mesmo sem a ficha.
+   *
+   * A lista do roster não manda a ficha inteira (é o que `incluirFicha` faz),
+   * mas precisa saber quem já atravessou o véu para tirar da lista ativa. Não
+   * há coluna espelho para isso, e criar uma pediria migração.
+   *
+   * ⚠ ABRIR O JSON AQUI É BARATO, e é diferente de MANDAR o JSON. `lerTudo_`
+   * já trouxe a linha inteira da tabela — `dados` está na memória de qualquer
+   * jeito. O que `incluirFicha: false` economiza é a rede, não o parse; e uma
+   * mesa tem cinco fichas, não cinco mil.
+   */
+  if (!incluirFicha) {
+    try {
+      const so = JSON.parse(linha.dados || '{}');
+      if (so && so.encerrada) base.encerrada = so.encerrada;
+    } catch (e) { /* ficha ilegível: some da lista de encerradas, não quebra */ }
+  }
+
   if (incluirFicha) {
     let ficha;
     try {

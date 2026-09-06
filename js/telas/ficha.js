@@ -317,7 +317,20 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     try {
       const r = await acoes.ajustarFicha(id, ajustes);
       p = r.personagem;
+      let chamaAMorte = false;
       (r.mudancas || []).forEach((m) => {
+        /*
+         * ⚠ QUANDO A ESCOLHA VAI ABRIR, O AVISO SOBRA.
+         *
+         * O servidor manda os dois: o alerta ("escolha um movimento de morte")
+         * e o sinal de abrir o diálogo. Mostrar o alerta também punha a tapa
+         * por cima do título do próprio diálogo — dizendo, atrás dele, a mesma
+         * frase que ele diz na primeira linha.
+         *
+         * O diálogo É a mensagem. O alerta só volta a valer se alguém fechar
+         * com "Agora não", e aí quem avisa é a faixa no topo da ficha.
+         */
+        if (m.movimentoDeMorte) { chamaAMorte = true; return; }
         if (m.alerta) avisar(m.alerta, 'alerta', 6000);
         else if (m.aviso) avisar(m.aviso, 'info', 4000);
       });
@@ -330,6 +343,17 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
        * Quando ele concorda, não há nada para mostrar, e piscar seria só
        * barulho.
        */
+      /*
+       * ⚠ O DIÁLOGO ABRE DEPOIS DO REDESENHO, não antes.
+       *
+       * Ele lê o nível e as trilhas de `p.ficha`; abrindo antes, leria o
+       * estado de uma marcação atrás — e o "se der até o seu nível" apareceria
+       * com o nível errado justamente na hora em que ninguém confere.
+       */
+      if (chamaAMorte && !temModalAberto()) {
+        setTimeout(() => { if (!temModalAberto()) abrirMovimentoDeMorte(); }, 0);
+      }
+
       if (soSeMudou && esperado !== null && assinatura(p.ficha) === esperado) {
         /*
          * Uma coisa muda mesmo quando a ficha não muda: o "Salvo agora ·
@@ -364,11 +388,78 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
 
     const anterior = corpo.scrollTop;
     limpar(corpo);
+    /*
+     * O ESTADO DA VIDA VEM ANTES DE TUDO, em qualquer aba.
+     *
+     * Inconsciente e encerrada mudam o sentido de todo o resto da ficha: os
+     * traços de quem está caído não são jogáveis, e a mochila de quem
+     * atravessou o véu é história. Pôr isso só na aba Jogo deixaria a pessoa
+     * mexer numa carta sem lembrar de qual ficha é.
+     */
+    const faixa = faixaDeEstado(ficha);
+    if (faixa) corpo.append(faixa);
     if (abaAtual === 'jogo') abaJogo(corpo, ficha);
     if (abaAtual === 'cartas') abaCartas(corpo, ficha);
     if (abaAtual === 'mochila') abaMochila(corpo, ficha);
     if (abaAtual === 'historia') abaHistoria(corpo, ficha);
     corpo.scrollTop = anterior;
+  }
+
+  /**
+   * A faixa de "esta ficha não está inteira": inconsciente ou encerrada.
+   *
+   * Devolve `null` quando a ficha está em jogo — o caso normal não merece
+   * uma linha de tela.
+   */
+  function faixaDeEstado(ficha) {
+    const fim = ficha.encerrada;
+    if (fim) {
+      const porque = {
+        sacrificio: 'Sacrifício Glorioso — a última ação teve sucesso crítico automático.',
+        veu: 'Arriscou Tudo e o Medo veio mais alto.',
+        aposentado: 'A última cicatriz apagou o último espaço de Esperança.'
+      }[fim.motivo] || 'A jornada deste personagem terminou.';
+      return el('div', { class: 'ficha__faixaEstado esta-encerrada' }, [
+        el('strong', { class: 'ficha__faixaTitulo', texto: 'Jornada encerrada' }),
+        el('p', { class: 'texto-sm', texto: porque }),
+        fim.nota ? el('p', { class: 'texto-sm texto-suave', texto: `"${fim.nota}"` }) : null,
+        /*
+         * ⚠ A FICHA CONTINUA EDITÁVEL, e isso é escolha, não esquecimento.
+         * Ressurreição existe no livro, e uma mesa pode ter tocado no botão
+         * errado. Trancar tudo transformaria um engano de um toque num
+         * problema sem saída — a faixa avisa, quem decide é a mesa.
+         */
+        el('p', { class: 'texto-xs texto-fraco', texto:
+          'A ficha continua aberta para leitura e correção — ressurreição existe no livro.' })
+      ].filter(Boolean));
+    }
+
+    if (ficha.inconsciente) {
+      return el('div', { class: 'ficha__faixaEstado esta-inconsciente' }, [
+        el('strong', { class: 'ficha__faixaTitulo', texto: 'Inconsciente' }),
+        el('p', { class: 'texto-sm' }, textoAnotado(
+          'Volta a si ao recuperar 1 Ponto de Vida ou num descanso longo (p.106).'))
+      ]);
+    }
+
+    /*
+     * PV cheios e ninguém escolheu ainda: o diálogo já abriu uma vez e foi
+     * fechado com "Agora não". A faixa é o caminho de volta — sem ela, a mesa
+     * teria de desmarcar e remarcar um Ponto de Vida para reabrir a escolha.
+     */
+    const r = ficha.recursos || {};
+    const maxPV = Number(r.pontosDeVidaMaximos) || 0;
+    if (maxPV && (Number(r.pontosDeVidaMarcados) || 0) >= maxPV) {
+      return el('div', { class: 'ficha__faixaEstado esta-noLimite' }, [
+        el('strong', { class: 'ficha__faixaTitulo', texto: 'Pontos de Vida no limite' }),
+        el('p', { class: 'texto-sm' }, textoAnotado(
+          'Marcar o último Ponto de Vida obriga a escolher um movimento de morte (p.106).')),
+        el('button', {
+          type: 'button', class: 'btn btn--pequeno', onClick: abrirMovimentoDeMorte
+        }, 'Escolher agora')
+      ]);
+    }
+    return null;
   }
 
   function irParaAba(destino) {
@@ -466,6 +557,185 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       botaoDeRegras(),
       pilhaDeNivel(ident)
     ]);
+  }
+
+  /* ======================================================================== *
+   *  MOVIMENTO DE MORTE (livro p.106)
+   * ======================================================================== */
+
+  /**
+   * Marcar o último Ponto de Vida não mata: obriga a ESCOLHER um dos três.
+   *
+   * Até aqui o app mostrava uma frase e devolvia o problema para o papel — no
+   * momento mais dramático da mesa, e o único em que a ficha desistia.
+   *
+   * ⚠ O APP NÃO ROLA O DADO. Ele pergunta o resultado, como o descanso e o
+   * Medo já fazem: a decisão desta mesa é "só ficha, sem dados". O que ele faz
+   * é o que a pessoa erraria às onze da noite — comparar o dado com o nível,
+   * riscar o espaço certo de Esperança e lembrar que o último espaço encerra a
+   * ficha.
+   */
+  function abrirMovimentoDeMorte() {
+    const ficha = p.ficha || {};
+    const nivel = Number((ficha.identidade || {}).nivel) || 1;
+    const r = ficha.recursos || {};
+    const nome = (ficha.identidade || {}).nome || 'este personagem';
+
+    const corpo = el('div', { class: 'pilha' });
+    corpo.append(el('p', { class: 'texto-sm' }, textoAnotado(
+      'Marcar o último Ponto de Vida não mata: obriga a escolher um dos três ' +
+      'movimentos de morte (p.106).')));
+
+    /* --- Sacrifício Glorioso -------------------------------------------- */
+    const notaSacrificio = el('input', semCorretor({
+      type: 'text', class: 'campo__entrada', maxlength: 120,
+      placeholder: 'ex.: segurou a ponte sozinho'
+    }));
+    const sacrificio = bloco('Sacrifício Glorioso',
+      'Uma última ação, com sucesso crítico automático. Depois, ' + nome + ' atravessa o véu.',
+      [rotulado('O que ele fez (opcional)', notaSacrificio)],
+      () => enviarMorte({ movimento: 'sacrificio', nota: notaSacrificio.value }));
+
+    /* --- Evitar a Morte -------------------------------------------------- */
+    const dadoEvitar = campoDeDado('Resultado do Dado de Esperança (d12)');
+    const avisoEvitar = el('p', { class: 'texto-xs texto-fraco' });
+    const contarEvitar = () => {
+      const n = Number(dadoEvitar.value);
+      if (!n) { avisoEvitar.textContent = ''; return; }
+      avisoEvitar.textContent = n <= nivel
+        ? `${n} não passa do nível ${nivel}: cicatriz — um espaço de Esperança apagado para sempre.`
+        : `${n} passa do nível ${nivel}: sem cicatriz desta vez.`;
+    };
+    dadoEvitar.addEventListener('input', contarEvitar);
+    const notaEvitar = el('input', semCorretor({
+      type: 'text', class: 'campo__entrada', maxlength: 120,
+      placeholder: 'o que a cicatriz é, se houver'
+    }));
+    const evitar = bloco('Evitar a Morte',
+      `${nome} fica inconsciente e volta ao recuperar 1 Ponto de Vida ou num descanso longo. ` +
+      `Role o Dado de Esperança: se der até ${nivel} (o seu nível), ganha uma cicatriz.`,
+      [rotulado('Dado de Esperança', dadoEvitar), avisoEvitar, rotulado('A cicatriz (opcional)', notaEvitar)],
+      () => enviarMorte({
+        movimento: 'evitar',
+        dadoEsperanca: Number(dadoEvitar.value),
+        nota: notaEvitar.value
+      }));
+
+    /* --- Arriscar Tudo --------------------------------------------------- */
+    const dadoEsp = campoDeDado('Dado de Esperança');
+    const dadoMedo = campoDeDado('Dado de Medo');
+    const veredito = el('p', { class: 'texto-sm ficha__morteVeredito' });
+    const paraPV = campoDeDado('Para Pontos de Vida');
+    const paraEstresse = campoDeDado('Para Estresse');
+    const reparticao = el('div', { class: 'ficha__precos', hidden: true }, [
+      el('label', { class: 'ficha__preco' }, [
+        el('span', { class: 'texto-xs texto-fraco', texto: 'Pontos de Vida' }), paraPV
+      ]),
+      el('label', { class: 'ficha__preco' }, [
+        el('span', { class: 'texto-xs texto-fraco', texto: 'Estresse' }), paraEstresse
+      ])
+    ]);
+
+    /*
+     * O VEREDITO APARECE ANTES DE CONFIRMAR.
+     *
+     * Arriscar Tudo é o único dos três que pode matar sem o jogador ter
+     * escolhido morrer. Ver "o Medo veio mais alto" escrito na tela antes de
+     * tocar em Confirmar é a diferença entre uma morte que a mesa viu chegar e
+     * uma que apareceu depois do toque.
+     */
+    const lerArriscar = () => {
+      const e = Number(dadoEsp.value);
+      const m = Number(dadoMedo.value);
+      if (!e || !m) { veredito.textContent = ''; reparticao.hidden = true; return; }
+      if (e === m) {
+        veredito.textContent = 'Crítico: de pé, com Pontos de Vida e Estresse todos limpos.';
+        reparticao.hidden = true;
+      } else if (m > e) {
+        veredito.textContent = `O Medo veio mais alto (${m} contra ${e}): ${nome} atravessa o véu.`;
+        reparticao.hidden = true;
+      } else {
+        veredito.textContent = `A Esperança veio mais alta (${e} contra ${m}): de pé, e você reparte ${e} entre as duas trilhas.`;
+        reparticao.hidden = false;
+        paraPV.max = String(Math.min(e, Number(r.pontosDeVidaMarcados) || 0));
+        paraEstresse.max = String(Math.min(e, Number(r.estresseMarcado) || 0));
+      }
+    };
+    [dadoEsp, dadoMedo, paraPV, paraEstresse].forEach((c) => c.addEventListener('input', lerArriscar));
+
+    const arriscar = bloco('Arriscar Tudo',
+      'Role os Dados de Dualidade. Esperança mais alto: de pé, limpando o valor do dado ' +
+      'entre Pontos de Vida e Estresse. Medo mais alto: atravessa o véu. Iguais: crítico, tudo limpo.',
+      [
+        el('div', { class: 'ficha__precos' }, [
+          el('label', { class: 'ficha__preco' }, [
+            el('span', { class: 'texto-xs texto-fraco', texto: 'Esperança' }), dadoEsp
+          ]),
+          el('label', { class: 'ficha__preco' }, [
+            el('span', { class: 'texto-xs texto-fraco', texto: 'Medo' }), dadoMedo
+          ])
+        ]),
+        veredito,
+        reparticao
+      ],
+      () => enviarMorte({
+        movimento: 'arriscar',
+        dadoEsperanca: Number(dadoEsp.value),
+        dadoMedo: Number(dadoMedo.value),
+        reparticao: {
+          pontosDeVida: Number(paraPV.value) || 0,
+          estresse: Number(paraEstresse.value) || 0
+        }
+      }));
+
+    corpo.append(sacrificio, evitar, arriscar);
+
+    const modal = abrirModal({
+      titulo: 'Movimento de morte',
+      conteudo: corpo,
+      /*
+       * SEM "Cancelar", e é de propósito: a regra não oferece a saída de não
+       * escolher. O Escape e o toque fora ainda fecham — se a mesa precisar
+       * conversar antes, o diálogo volta pelo aviso no topo da ficha.
+       */
+      acoes: [el('button', {
+        type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar()
+      }, 'Agora não')]
+    });
+
+    function enviarMorte(ajuste) {
+      modal.fechar();
+      enviar([Object.assign({ tipo: 'morte' }, ajuste)]);
+    }
+
+    /** Um dos três, com o texto do livro e o botão de confirmar. */
+    function bloco(titulo, texto, campos, aoConfirmar) {
+      const caixa = el('section', { class: 'ficha__morteOpcao' }, [
+        el('h4', { class: 'ficha__morteNome' }, nomeComGlossa(titulo)),
+        el('p', { class: 'texto-sm texto-suave' }, textoAnotado(texto)),
+        ...campos,
+        el('button', {
+          type: 'button', class: 'btn btn--pequeno', onClick: aoConfirmar
+        }, 'Escolher este')
+      ]);
+      return caixa;
+    }
+
+    function campoDeDado(rotulo) {
+      return el('input', semCorretor({
+        type: 'number', class: 'campo__entrada ficha__precoCampo',
+        min: '0', max: '12', step: '1', inputmode: 'numeric',
+        'aria-label': rotulo
+      }));
+    }
+
+    function rotulado(texto, campo) {
+      return el('label', { class: 'campo' }, [
+        el('span', { class: 'campo__rotulo', texto: texto }), campo
+      ]);
+    }
+
+    return modal;
   }
 
   /**
@@ -1381,21 +1651,39 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    */
   function trilhaDeEsperanca(r) {
     const atual = r.esperanca || 0;
-    const max = r.esperancaMaxima || 6;
+    /*
+     * ⚠ DESENHA OS SEIS DO PAPEL, MARCA SÓ OS QUE ENCHEM.
+     *
+     * `esperancaImpressa` é o que a ficha de papel traz — seis losangos,
+     * sempre. `esperancaMaxima` é quantos ainda enchem: seis menos as
+     * cicatrizes, que apagam um espaço para sempre (p.106).
+     *
+     * Desenhar só os que enchem faria a trilha ENCOLHER a cada cicatriz, e a
+     * perda sumiria junto com o espaço: a pessoa veria cinco losangos e não
+     * saberia que já teve seis. No papel a mesa faz um X e o quadrado continua
+     * lá, olhando de volta. Aqui também.
+     */
+    const impressos = r.esperancaImpressa || r.esperancaMaxima || 6;
+    const max = r.esperancaMaxima === undefined ? impressos : r.esperancaMaxima;
     const pista = el('div', {
       class: 'papel__pistaEsperanca', role: 'group', 'aria-label': 'Esperança'
     });
-    for (let i = 1; i <= max; i++) {
-      const cheio = i <= atual;
+    for (let i = 1; i <= impressos; i++) {
+      const cicatriz = i > max;
+      const cheio = !cicatriz && i <= atual;
       if (i > 1) pista.append(el('span', { class: 'papel__tracinho' }));
       pista.append(el('button', {
         type: 'button',
-        class: `papel__esperancaPonto ${cheio ? 'esta-cheio' : ''}`,
-        'aria-label': `Esperança: ${i} de ${max}`,
+        class: `papel__esperancaPonto ${cheio ? 'esta-cheio' : ''} ${cicatriz ? 'esta-cicatriz' : ''}`,
+        disabled: cicatriz,
+        'aria-label': cicatriz
+          ? `Esperança: espaço ${i} apagado por uma cicatriz`
+          : `Esperança: ${i} de ${max}`,
         'aria-pressed': cheio ? 'true' : 'false',
+        title: cicatriz ? 'Cicatriz: este espaço não enche mais (p.106)' : '',
         // Mesmo caminho das outras duas trilhas: os tracinhos no meio não
         // atrapalham porque `pintarNaHora` conta só os marcáveis.
-        onClick: (ev) => marcarAte(ev.currentTarget.parentNode, 'esperanca', i)
+        onClick: cicatriz ? null : ((ev) => marcarAte(ev.currentTarget.parentNode, 'esperanca', i))
       }));
     }
     // Sem contador: os losangos SÃO a contagem, como no papel.

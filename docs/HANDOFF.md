@@ -70,19 +70,27 @@ O repositório usa `.gitattributes` com `* text=auto eol=lf` para evitar diffs f
 
 `engine-api` carrega os arquivos `backend/*.gs` de um commit fixado do GitHub. Isso é deliberado: alterar `backend/*.gs` na `main` não muda produção sozinho.
 
-## Produção atual — Lote 3
+## Produção atual — Lote 4
 
-O **Lote 3 — ciclo de sessão e contadores nas cartas** foi integrado na `main` pelo PR #2 em 06/09/2026.
+Os Lotes 3 e 4 foram integrados na `main` e implantados. A `engine-api` de produção está
+na **versão 4**, `ACTIVE`, com `verify_jwt=false` porque a função implementa autenticação
+própria por token de sessão.
 
-A `engine-api` de produção está implantada como **versão 3**, `ACTIVE`, com `verify_jwt=false` porque a função implementa autenticação própria por token de sessão.
-
-O motor está fixado no commit revisado:
+O motor está fixado em:
 
 ```text
-f909fb2d270f55d16e57f6ebf003e7af90c4d7c2
+184c3e32b6f201187eb92b412b1c40b8f1068077
 ```
 
-Esse commit contém o backend aprovado do Lote 3. As ações:
+Conferido em 06/09/2026 lendo a função implantada e o conteúdo desse commit no GitHub:
+ele contém o teto do "Eficiente" da Clank (`emprestadosUsados`, Lote 4), o
+`ajustarSessaoDaFicha_` e a ação `inventario/nota`. **Os catorze pontos dos prints estão
+no ar.**
+
+> A versão anterior deste arquivo registrava a versão 3 e o commit `f909fb2…`, que era o
+> estado logo depois do Lote 3. O deploy do Lote 4 avançou os dois.
+
+As ações:
 
 ```text
 abrirSessao
@@ -271,6 +279,104 @@ Aposentadas/históricas — não criar dependência nova:
 
 ---
 
+# Lote 5 — Evitar a Morte (D2)
+
+Fecha o **D2**, o maior buraco de regra que sobrou depois dos catorze prints: marcar o
+último Ponto de Vida obriga a escolher um dos três movimentos de morte (p.106), e até
+aqui o app mostrava uma frase e devolvia o problema para o papel — no momento mais
+dramático da mesa.
+
+Branch `ediçãoclaude`, em cima do Lote 4.
+
+## Regra, conferida antes
+
+Errata oficial de 09/09/2025: **nenhuma entrada** sobre movimentos de morte, cicatrizes ou
+Dado de Esperança. SRD em inglês, confirmado em duas fontes:
+
+- **Sacrifício Glorioso** — uma última ação com sucesso crítico automático; depois
+  atravessa o véu.
+- **Evitar a Morte** — "roll your Hope Die. If its value is **equal to or under** your
+  character's level, they gain a scar." Inconsciente até recuperar 1 PV ou até um descanso
+  longo. "If the character has only one Hope slot remaining and gains a scar, the player
+  must retire the character."
+- **Arriscar Tudo** — Esperança maior: de pé, limpando o valor do dado; Medo maior:
+  atravessa o véu; crítico (dados iguais): de pé com tudo limpo.
+
+⚠ **Ambiguidade resolvida por decisão da mesa.** Uma fonte diz "clears an amount of Hit
+Points **or** Stress equal to the value", outra diz "**divide** the Hope Die's value
+between restoring Hit Points and clearing Stress". As duas convergem no total — o dado diz
+QUANTO, não ONDE. A proprietária escolheu **repartir**, que atende as duas leituras e é o
+que o verbete já gravado no app descrevia.
+
+## O buraco era de modelo
+
+**Cicatriz não existia na ficha.** Havia só prosa numa lista de regras; `esperancaMaxima`
+era 6 fixo e nada riscava um espaço. A ficha ganhou três campos:
+
+| Campo | O que é |
+| --- | --- |
+| `cicatrizes: []` | lista, não contador — a cicatriz tem história, e o Mestre pode curá-la como projeto |
+| `inconsciente: false` | estado, não condição: as condições do livro são Oculto, Restrito e Vulnerável |
+| `encerrada: null` | `{ motivo, em, nota }` — `sacrificio`, `veu` ou `aposentado` |
+
+⚠ **O desconto do teto mora num lugar só.** `aplicarDerivados_` (48_Criacao.gs) passou a
+publicar dois números: `esperancaImpressa` (o que o papel traz: seis) e `esperancaMaxima`
+(quantos ainda enchem: seis menos as cicatrizes). Como `esperancaMaxima` é o nome que o
+resto do app já usa como teto — a mutação de recurso, a cura do descanso, o painel do
+Mestre —, **todos passaram a respeitar cicatriz sem saber que ela existe**, e uma ficha
+antiga se conserta na primeira gravação.
+
+## Decisões de tela
+
+1. **O diálogo abre sozinho** quando os PV enchem. Um botão a procurar seria a mesma frase
+   de antes com mais passos: quem viu a trilha encher está olhando para a trilha.
+2. **A trilha desenha os SEIS do papel** e risca com X os perdidos. Desenhar só os que
+   enchem faria a fileira encolher, e a perda sumiria junto com o espaço.
+3. **O veredito do Arriscar Tudo aparece antes de confirmar.** É o único dos três que pode
+   matar sem o jogador ter escolhido morrer.
+4. **A ficha encerrada continua editável**, e isso é escolha: ressurreição existe no livro,
+   e uma mesa pode ter tocado no botão errado. A faixa avisa; quem decide é a mesa.
+5. **O roster desce as encerradas para o fim**, em meio-tom, com selo próprio — em vez de
+   escondê-las.
+
+## Detalhes para o próximo agente
+
+- **`personagemDaLinha_` abre o JSON quando `incluirFicha` é falso**, só para ler
+  `encerrada`. Parece contraditório e não é: `lerTudo_` já trouxe a linha inteira, e o que
+  `incluirFicha: false` economiza é a REDE, não o parse. A alternativa era uma coluna
+  espelho com migração.
+- **Só há movimento de morte com os PV cheios.** Sem essa trava, um toque errado no
+  diálogo aposentaria um personagem vivo — e cicatriz não tem desfazer.
+- **Acordar acontece sozinho**, nas duas portas do livro: recuperar 1 PV (`ajustarRecurso_`)
+  e o descanso longo (`4B_Descanso.gs`). Quem está inconsciente não vai abrir a ficha para
+  desmarcar um estado.
+- O aviso de "PV no limite" **não** aparece como tapa quando o diálogo vai abrir: ele
+  cobria o título do próprio diálogo, dizendo a mesma frase atrás dele.
+
+## Validação
+
+```text
+testes-e2e.mjs     → 93 passos ok, 0 falharam
+testes-backend.mjs → 435 passaram, 0 falharam
+conferir-css.mjs   → nada a limpar nem a escrever
+```
+
+Dez testes novos no backend cobrem: a trava dos PV cheios; o dado IGUAL ao nível
+cicatrizando (o "equal to" que um `<` esqueceria); a cicatriz aparando a Esperança que não
+cabe mais; a sexta cicatriz encerrando a ficha; as três saídas do Arriscar Tudo; a recusa
+de repartir mais do que o dado deu; e as duas portas de acordar.
+
+Três no E2E: o diálogo abrindo sozinho, o X no losango (contando que a fileira **não**
+encolheu) e a cura acordando sem tirar a cicatriz.
+
+## Deploy
+
+Motor fixado: `40_Regras.gs`, `48_Criacao.gs`, `4C_Ajustes.gs`, `4B_Descanso.gs` e
+`30_Personagens.gs`. Precisa de `ENGINE_COMMIT` novo + redeploy — o frontend depende do
+motor novo (sem ele, `{ tipo: 'morte' }` responde como tipo desconhecido).
+
+---
+
 # Lote 4 — a cena e o descanso da Clank
 
 Fecha os pontos **8** e **11**, os dois últimos dos catorze prints. Desenvolvido na branch
@@ -358,7 +464,10 @@ mesmo fluxo do Lote 3. O ponto 8 é só frontend.
 
 # Próximos pontos dos prints
 
-**Nenhum.** Os catorze pontos estão fechados no código.
+**Nenhum.** Os catorze pontos estão fechados e no ar (commit `184c3e3…`, engine v4).
+
+O **Lote 5 (D2 — Evitar a Morte)** está na branch `ediçãoclaude` e **ainda não foi
+implantado**: ele mexe em cinco arquivos do motor fixado.
 
 Ficam pendentes de **deploy**, não de desenvolvimento:
 

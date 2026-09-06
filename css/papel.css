@@ -627,6 +627,30 @@
 
 .papel__esperancaPonto.esta-cheio { background-color: var(--cor-esperanca); }
 
+/*
+ * O ESPAÇO APAGADO POR UMA CICATRIZ (p.106).
+ *
+ * A máscara troca do losango para um X. No papel a mesa RISCA o espaço, e o
+ * que fica na folha é a marca do risco — não o desenho de baixo, meio apagado.
+ *
+ * ⚠ E O ESPAÇO CONTINUA NA FILEIRA. A trilha desenha os SEIS que o papel
+ * imprime, não os que ainda enchem: encolher a fileira a cada cicatriz faria a
+ * perda sumir junto com o espaço, e quem olhasse veria cinco losangos sem
+ * saber que já foram seis. O X existe para ser visto.
+ *
+ * A cor é a do PERIGO — a mesma da trilha de Pontos de Vida. Cicatriz é o que
+ * o dano tirou da Esperança, e as duas coisas falam a mesma língua na ficha.
+ */
+.papel__esperancaPonto.esta-cicatriz {
+  background-color: var(--cor-perigo);
+  opacity: .75;
+  cursor: default;
+  -webkit-mask-image: url('../assets/marca/cicatriz.svg');
+  mask-image: url('../assets/marca/cicatriz.svg');
+  -webkit-mask-size: 26px 26px;
+  mask-size: 26px 26px;
+}
+
 /* --- telas bem estreitas --------------------------------------------------- */
 
 @media (max-width: 360px) {
