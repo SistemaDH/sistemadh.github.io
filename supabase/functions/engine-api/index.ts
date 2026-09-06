@@ -7,7 +7,7 @@ const cors = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const ENGINE_COMMIT = "e711cfc85341f14565a4906cdbe321009db9fef9";
+const ENGINE_COMMIT = "b6a68644167ad3f6628066b6d9426f6fc0ae9661";
 const SOURCE_FILES = [
   "00_Config.gs","30_Personagens.gs","40_Regras.gs","41_Dominios.gs","42_Classes.gs",
   "43_Origens.gs","44_Equipamento.gs","45_Tracos.gs","46_Condicoes.gs","47_Contadores.gs",
@@ -63,7 +63,7 @@ function jogadorPublico_(j) { return { id:j.id, nome:j.nome, papel:j.papel, ehMe
 function idDoDrive_(valor) {
   const s = String(valor || '').trim();
   if (!s || s.length > 300) return '';
-  return /^[A-Za-z0-9_.:\/-]+$/.test(s) ? s : '';
+  return /^[A-Za-z0-9_.:\\/-]+$/.test(s) ? s : '';
 }
 const Utilities = { getUuid: function () { return runtimeCrypto.randomUUID(); } };
 const LockService = { getScriptLock: function () { return { waitLock:function(){}, releaseLock:function(){} }; } };
