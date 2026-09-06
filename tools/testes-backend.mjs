@@ -2300,7 +2300,17 @@ teste('encher PV e Estresse avisa o que o livro manda fazer', () => {
   const pv = contexto.aplicarAjustes_(f, [
     { tipo: 'recurso', chave: 'pv', valor: f.recursos.pontosDeVidaMaximos }
   ]);
-  verdade(/Evitar a Morte/.test(pv.mudancas[0].alerta || ''), JSON.stringify(pv.mudancas[0]));
+  /*
+   * ⚠ O AVISO MUDOU DE TEXTO, E A MUDANÇA É DE REGRA.
+   *
+   * Ele dizia "é hora de fazer uma jogada para Evitar a Morte" — mas Evitar a
+   * Morte é UM dos três movimentos de morte (p.106), ao lado do Sacrifício
+   * Glorioso e do Arriscar Tudo, e é o único que pede rolagem. Nomear ele
+   * ensinava a mesa que era o único caminho.
+   */
+  verdade(/movimento de morte/.test(pv.mudancas[0].alerta || ''), JSON.stringify(pv.mudancas[0]));
+  verdade(pv.mudancas[0].movimentoDeMorte === true,
+    'a resposta precisa dizer que o momento chegou, para a tela poder abrir a escolha');
 
   f.recursos.estresseMarcado = 0;
   const es = contexto.aplicarAjustes_(f, [
@@ -2456,6 +2466,180 @@ teste('quem faltou a três sessões volta com UMA recarga, não três', () => {
   } finally {
     contexto.mesaGravar_(original);
   }
+});
+
+console.log('\nMovimentos de morte (p.106)');
+
+/** Uma ficha com os Pontos de Vida cheios — é o gatilho da regra. */
+function fichaNoLimite(nivel = 3) {
+  const f = fichaCansada();
+  f.identidade.nivel = nivel;
+  f.recursos.pontosDeVidaMarcados = f.recursos.pontosDeVidaMaximos;
+  f.recursos.estresseMarcado = 3;
+  return f;
+}
+const morrer = (f, a) => contexto.aplicarAjustes_(f, [Object.assign({ tipo: 'morte' }, a)]);
+
+teste('sem os PV cheios não há movimento de morte', () => {
+  /*
+   * O gatilho da regra é marcar o ÚLTIMO Ponto de Vida. Sem esta trava, um
+   * toque errado no diálogo aposentaria um personagem vivo — e cicatriz não
+   * tem desfazer.
+   */
+  const f = fichaCansada();
+  f.recursos.pontosDeVidaMarcados = 0;
+  igual(morrer(f, { movimento: 'evitar', dadoEsperanca: 1 }).erros.length, 1);
+});
+
+teste('Evitar a Morte: o dado IGUAL ao nível cicatriza', () => {
+  /*
+   * SRD: "roll your Hope Die. If its value is equal to or under your
+   * character's level, they gain a scar." O "equal to" é a metade que um
+   * `<` esqueceria — e a errata de 09/09/2025 não toca nisto.
+   */
+  const f = fichaNoLimite(3);
+  const r = morrer(f, { movimento: 'evitar', dadoEsperanca: 3 });
+  igual(r.erros, []);
+  verdade(r.mudancas[0].cicatrizou, JSON.stringify(r.mudancas[0]));
+  igual(f.cicatrizes.length, 1);
+  igual(f.inconsciente, true);
+
+  // Um a mais que o nível não cicatriza.
+  const g = fichaNoLimite(3);
+  const s = morrer(g, { movimento: 'evitar', dadoEsperanca: 4 });
+  verdade(!s.mudancas[0].cicatrizou, JSON.stringify(s.mudancas[0]));
+  igual(g.cicatrizes.length, 0);
+  igual(g.inconsciente, true, 'sem cicatriz, mas inconsciente do mesmo jeito');
+});
+
+teste('a cicatriz apaga um espaço de Esperança PARA SEMPRE', () => {
+  const f = fichaNoLimite(12);          // nível 12: qualquer d12 cicatriza
+  f.recursos.esperanca = 6;
+  morrer(f, { movimento: 'evitar', dadoEsperanca: 5 });
+  contexto.aplicarDerivados_(f);
+
+  igual(f.recursos.esperancaImpressa, 6, 'o papel continua com seis losangos');
+  igual(f.recursos.esperancaMaxima, 5, 'mas só cinco enchem');
+  igual(f.recursos.esperanca, 5, 'a Esperança que não cabia mais foi aparada');
+
+  // E o teto novo vale para o resto do app sem ninguém avisar.
+  const sobe = contexto.aplicarAjustes_(f, [{ tipo: 'recurso', chave: 'esperanca', valor: 6 }]);
+  contexto.aplicarDerivados_(f);
+  igual(f.recursos.esperanca, 5, 'não dá para encher um espaço cicatrizado');
+  verdade(/máximo é 5/.test(sobe.mudancas[0].aviso || ''), JSON.stringify(sobe.mudancas[0]));
+});
+
+teste('a cicatriz que toma o ÚLTIMO espaço encerra a ficha', () => {
+  /*
+   * "If the character has only one Hope slot remaining and gains a scar, the
+   * player must retire the character."
+   */
+  const f = fichaNoLimite(12);
+  f.cicatrizes = [];
+  for (let i = 0; i < 5; i++) {
+    f.recursos.pontosDeVidaMarcados = f.recursos.pontosDeVidaMaximos;
+    f.inconsciente = false;
+    morrer(f, { movimento: 'evitar', dadoEsperanca: 1 });
+    contexto.aplicarDerivados_(f);
+  }
+  igual(f.cicatrizes.length, 5);
+  igual(f.recursos.esperancaMaxima, 1, 'sobrou um espaço');
+  verdade(!f.encerrada, 'com um espaço de pé, a ficha continua em jogo');
+
+  f.recursos.pontosDeVidaMarcados = f.recursos.pontosDeVidaMaximos;
+  const r = morrer(f, { movimento: 'evitar', dadoEsperanca: 1 });
+  igual(f.cicatrizes.length, 6);
+  verdade(f.encerrada, 'a sexta cicatriz apaga o último espaço');
+  igual(f.encerrada.motivo, 'aposentado');
+  igual(f.inconsciente, false, 'quem se aposenta não fica inconsciente — acabou');
+  verdade(/jornada/.test(r.mudancas[0].alerta || ''), r.mudancas[0].alerta);
+
+  // E ficha encerrada não aceita outro movimento.
+  igual(morrer(f, { movimento: 'evitar', dadoEsperanca: 1 }).erros.length, 1);
+});
+
+teste('Arriscar Tudo: Medo maior atravessa o véu', () => {
+  const f = fichaNoLimite();
+  const r = morrer(f, { movimento: 'arriscar', dadoEsperanca: 4, dadoMedo: 9 });
+  igual(r.erros, []);
+  igual(r.mudancas[0].resultado, 'veu');
+  igual(f.encerrada.motivo, 'veu');
+});
+
+teste('Arriscar Tudo: dados iguais são CRÍTICO e limpam tudo', () => {
+  const f = fichaNoLimite();
+  const r = morrer(f, { movimento: 'arriscar', dadoEsperanca: 7, dadoMedo: 7 });
+  igual(r.mudancas[0].resultado, 'critico');
+  igual(f.recursos.pontosDeVidaMarcados, 0);
+  igual(f.recursos.estresseMarcado, 0);
+  verdade(!f.encerrada);
+  igual(f.inconsciente, false);
+});
+
+teste('Arriscar Tudo: o valor é REPARTIDO entre PV e Estresse', () => {
+  /*
+   * As duas fontes em inglês discordam na letra — "clears an amount of Hit
+   * Points OR Stress" contra "divide the Hope Die's value between" — mas
+   * convergem no total: o dado diz QUANTO, não ONDE. A mesa decidiu repartir.
+   */
+  const f = fichaNoLimite();
+  const pvAntes = f.recursos.pontosDeVidaMarcados;
+  const r = morrer(f, {
+    movimento: 'arriscar', dadoEsperanca: 5, dadoMedo: 2,
+    reparticao: { pontosDeVida: 3, estresse: 2 }
+  });
+  igual(r.erros, []);
+  igual(f.recursos.pontosDeVidaMarcados, pvAntes - 3);
+  igual(f.recursos.estresseMarcado, 1);
+  igual(f.inconsciente, false);
+
+  // Não dá para repartir mais do que o dado deu.
+  const g = fichaNoLimite();
+  const demais = morrer(g, {
+    movimento: 'arriscar', dadoEsperanca: 5, dadoMedo: 2,
+    reparticao: { pontosDeVida: 4, estresse: 4 }
+  });
+  igual(demais.erros.length, 1, JSON.stringify(demais));
+});
+
+teste('Sacrifício Glorioso encerra a ficha sem dado nenhum', () => {
+  const f = fichaNoLimite();
+  const r = morrer(f, { movimento: 'sacrificio', nota: 'Segurou a ponte' });
+  igual(r.erros, []);
+  igual(f.encerrada.motivo, 'sacrificio');
+  igual(f.encerrada.nota, 'Segurou a ponte');
+  verdade(/crítico/.test(r.mudancas[0].alerta || ''), r.mudancas[0].alerta);
+});
+
+teste('recuperar 1 Ponto de Vida acorda quem está inconsciente', () => {
+  const f = fichaNoLimite(12);
+  morrer(f, { movimento: 'evitar', dadoEsperanca: 1 });
+  igual(f.inconsciente, true);
+
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'recurso', chave: 'pv', valor: f.recursos.pontosDeVidaMaximos - 1
+  }]);
+  igual(f.inconsciente, false, 'a cura é o gesto; acordar é consequência dela');
+  verdade(r.mudancas[0].acordou, JSON.stringify(r.mudancas[0]));
+});
+
+teste('o descanso LONGO acorda; o curto não', () => {
+  const curto = fichaNoLimite(12);
+  morrer(curto, { movimento: 'evitar', dadoEsperanca: 1 });
+  curto.recursos.pontosDeVidaMarcados = curto.recursos.pontosDeVidaMaximos;
+  const rc = contexto.aplicarDescanso_(curto, 'curto', [
+    { movimento: 'reduzir-estresse', rolagem: 2 },
+    { movimento: 'reparar-armadura', rolagem: 2 }
+  ]);
+  igual(rc.ficha.inconsciente, true, 'descanso curto não acorda ninguém (p.106)');
+
+  const longo = fichaNoLimite(12);
+  morrer(longo, { movimento: 'evitar', dadoEsperanca: 1 });
+  const rl = contexto.aplicarDescanso_(longo, 'longo', [
+    { movimento: 'zerar-estresse' },
+    { movimento: 'trabalhar-em-um-projeto' }
+  ]);
+  igual(rl.ficha.inconsciente, false, 'o descanso longo tira a inconsciência');
 });
 
 teste('gatilho inventado é recusado', () => {

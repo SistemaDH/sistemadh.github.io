@@ -429,3 +429,32 @@
 /* O bloco do roster. Estava no JS e não tinha regra: sem `gap`, o cabeçalho
    colava na lista. Achado pelo `tools/conferir-css.mjs`. */
 .roster { display: flex; flex-direction: column; gap: var(--e4); }
+
+/* ==========================================================================
+   AS JORNADAS ENCERRADAS, no fim do roster.
+
+   A decisão da mesa foi "marca e guarda": a ficha sai da lista ativa e
+   continua abrindo. Descer para o fim, em meio-tom, faz as duas coisas —
+   quem está em jogo aparece primeiro, e ninguém perde a Lyra de vista.
+   ========================================================================== */
+
+.roster__secaoEncerradas {
+  margin: var(--e5) 0 var(--e3);
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-md);
+  color: var(--cor-texto-fraco);
+  letter-spacing: .03em;
+}
+
+.ficha-cartao.esta-encerrada { opacity: .72; }
+.ficha-cartao.esta-encerrada:hover { opacity: 1; }
+
+/*
+ * O selo do fim não usa a cor de alerta: alerta é "olha isto, resolve". Uma
+ * jornada encerrada não pede providência — ela é registro.
+ */
+.selo--encerrada {
+  border-color: var(--cor-borda-forte);
+  color: var(--cor-texto-fraco);
+  background: transparent;
+}

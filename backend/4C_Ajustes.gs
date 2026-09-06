@@ -79,6 +79,7 @@ function tetoDoRecursoAjustavel_(ficha, chave) {
  *   { tipo: 'carta',    carta: 'blade-redemoinho', para: 'cofre' }
  *   { tipo: 'gatilho',  gatilho: 'inicio-de-sessao' }
  *   { tipo: 'sessao' }                                 // acerta com a mesa
+ *   { tipo: 'morte', movimento: 'evitar', dadoEsperanca: 4 }
  *
  * `valor` manda o número final (é o toque no 3º marcador da trilha) e `delta`
  * soma (é o botão de + e −). Quando os dois vêm, `valor` ganha.
@@ -107,6 +108,7 @@ function aplicarAjustes_(ficha, ajustes) {
     else if (tipo === 'carta') r = ajustarCarta_(ficha, a);
     else if (tipo === 'gatilho') r = ajustarGatilho_(ficha, a);
     else if (tipo === 'sessao') r = ajustarSessaoDaFicha_(ficha, a);
+    else if (tipo === 'morte') r = ajustarMovimentoDeMorte_(ficha, a);
     else if (tipo === 'conjuracao') r = ajustarConjuracao_(ficha, a);
     else if (tipo === 'ouro') r = ajustarOuroDaFicha_(ficha, a);
     else if (tipo === 'inventario') r = ajustarInventario_(ficha, a);
@@ -648,7 +650,25 @@ function ajustarRecurso_(ficha, a) {
   if (alvo > teto) m.aviso = 'O máximo é ' + teto + '.';
   if (alvo < 0) m.aviso = 'Não dá para ficar abaixo de zero.';
   if (chave === 'pontosDeVidaMarcados' && teto && depois >= teto && antes < teto) {
-    m.alerta = 'Pontos de Vida no limite: é hora de fazer uma jogada para Evitar a Morte (livro p. 106).';
+    m.alerta = 'Pontos de Vida no limite: escolha um movimento de morte (livro p.106).';
+    m.movimentoDeMorte = true;
+  }
+
+  /*
+   * RECUPERAR 1 PONTO DE VIDA ACORDA QUEM ESTÁ INCONSCIENTE (p.106).
+   *
+   * "Personagem inconsciente por Evitar a Morte volta a si ao recuperar 1
+   * Ponto de Vida ou mais, ou quando o grupo fizer um descanso longo."
+   *
+   * ⚠ ACONTECE SOZINHO, e tem de ser assim: quem está inconsciente não vai
+   * abrir a ficha para desmarcar um estado. Quem cura é outra pessoa, e a
+   * cura é o gesto — acordar é consequência dela, não um segundo botão.
+   */
+  if (chave === 'pontosDeVidaMarcados' && depois < antes && ficha.inconsciente) {
+    ficha.inconsciente = false;
+    m.acordou = true;
+    m.aviso = ((ficha.identidade || {}).nome || 'O personagem') +
+      ' voltou a si — 1 Ponto de Vida recuperado tira a inconsciência (p.106).';
   }
   if (chave === 'estresseMarcado' && teto && depois >= teto && antes < teto) {
     /*
@@ -986,6 +1006,211 @@ function ajustarSessaoDaFicha_(ficha, a) {
       ? 'Sessão ' + daMesa + ' na mesa: os marcadores de "uma vez por sessão" voltaram (livro p.105).'
       : ''
   };
+}
+
+/* ------------------------------------------------------------------------ *
+ *  Movimentos de morte (livro p.106)
+ * ------------------------------------------------------------------------ */
+
+/** O Dado de Esperança é um d12 — os dois dados da Dualidade são d12. */
+const LADOS_DADO_DUALIDADE = 12;
+const LIMITE_CICATRIZES = 12;
+
+/**
+ * O teto de Esperança que a ficha teria com N cicatrizes.
+ *
+ * Espelha `aplicarDerivados_` (48_Criacao.gs) só para a mutação poder PERGUNTAR
+ * "esta cicatriz toma o último espaço?" antes de gravá-la. Quem manda continua
+ * sendo a derivação, que roda na gravação.
+ */
+function esperancaComCicatrizes_(ficha, quantas) {
+  const r = ficha.recursos || {};
+  const impressa = Number(r.esperancaImpressa) || Number(r.esperancaMaxima) || 6;
+  return Math.max(0, impressa - quantas);
+}
+
+function encerrarFicha_(ficha, motivo, nota) {
+  ficha.encerrada = {
+    motivo: motivo,
+    em: agoraIso_(),
+    nota: String(nota || '').trim().slice(0, LIMITES.TAMANHO_NOME * 5)
+  };
+  return ficha.encerrada;
+}
+
+/**
+ * UM MOVIMENTO DE MORTE.
+ *
+ * Marcar o último Ponto de Vida não mata: obriga a ESCOLHER um dos três
+ * (p.106). Até aqui o app só avisava e devolvia o problema para o papel — no
+ * momento mais dramático da mesa.
+ *
+ * ⚠ O APP NÃO ROLA. Ele pergunta o resultado, como já faz no descanso e no
+ * Medo: a decisão da mesa é "só ficha, sem dados". O que ele faz é o que a
+ * pessoa erraria com sono às onze da noite — comparar o dado com o nível,
+ * riscar o espaço de Esperança certo, aparar a Esperança que não cabe mais e
+ * lembrar que o último espaço encerra a ficha.
+ *
+ * ⚠ SÓ COM OS PONTOS DE VIDA CHEIOS. O gatilho da regra é marcar o último PV;
+ * sem essa trava, um toque errado no diálogo aposentaria um personagem vivo.
+ */
+function ajustarMovimentoDeMorte_(ficha, a) {
+  if (ficha.encerrada) {
+    return { erro: 'Esta ficha já foi encerrada.' };
+  }
+
+  const r = ficha.recursos || (ficha.recursos = {});
+  const maxPV = Number(r.pontosDeVidaMaximos) || 0;
+  if (!maxPV || (Number(r.pontosDeVidaMarcados) || 0) < maxPV) {
+    return { erro: 'O movimento de morte só acontece ao marcar o último Ponto de Vida (livro p.106).' };
+  }
+
+  const movimento = chaveTexto_(a.movimento);
+  const nota = String(a.nota || '').trim();
+  const nivel = Number((ficha.identidade || {}).nivel) || 1;
+
+  /* --- Sacrifício Glorioso ---------------------------------------------- *
+   * Uma última ação com sucesso crítico automático, e o personagem atravessa
+   * o véu. Não há dado nem conta: o que acontece é ficção, e o app só registra
+   * que aconteceu e fecha a ficha.
+   */
+  if (movimento === 'sacrificio') {
+    ficha.inconsciente = false;
+    const fim = encerrarFicha_(ficha, 'sacrificio', nota);
+    return {
+      tipo: 'morte', movimento: 'sacrificio', encerrada: fim,
+      alerta: 'Sacrifício Glorioso: a última ação tem sucesso crítico automático, e ' +
+        ((ficha.identidade || {}).nome || 'o personagem') + ' atravessa o véu.'
+    };
+  }
+
+  /* --- Evitar a Morte ---------------------------------------------------- *
+   * "Roll your Hope Die. If its value is equal to or under your character's
+   * level, they gain a scar." Fica inconsciente até recuperar 1 PV ou até um
+   * descanso longo.
+   */
+  if (movimento === 'evitar') {
+    const dado = Math.trunc(Number(a.dadoEsperanca));
+    if (!isFinite(dado) || dado < 1 || dado > LADOS_DADO_DUALIDADE) {
+      return { erro: 'Diga o resultado do Dado de Esperança (1 a ' + LADOS_DADO_DUALIDADE + ').' };
+    }
+
+    ficha.inconsciente = true;
+    if (!Array.isArray(ficha.cicatrizes)) ficha.cicatrizes = [];
+
+    // ⚠ "equal to or under": o dado IGUAL ao nível também cicatriza.
+    const cicatrizou = dado <= nivel;
+    let fim = null;
+    if (cicatrizou) {
+      if (ficha.cicatrizes.length >= LIMITE_CICATRIZES) {
+        return { erro: 'Esta ficha já tem cicatrizes demais.' };
+      }
+      ficha.cicatrizes.push({ em: agoraIso_(), nota: nota.slice(0, 120) });
+
+      /*
+       * "If the character has only one Hope slot remaining and gains a scar,
+       * the player must retire the character." Aqui a conta já foi feita: se
+       * não sobrou espaço nenhum, a jornada acabou.
+       */
+      if (esperancaComCicatrizes_(ficha, ficha.cicatrizes.length) <= 0) {
+        ficha.inconsciente = false;
+        fim = encerrarFicha_(ficha, 'aposentado', nota);
+      }
+    }
+
+    return {
+      tipo: 'morte', movimento: 'evitar',
+      dado: dado, nivel: nivel, cicatrizou: cicatrizou,
+      cicatrizes: ficha.cicatrizes.length,
+      encerrada: fim,
+      alerta: fim
+        ? 'A última cicatriz apagou o último espaço de Esperança: a jornada deste personagem acabou (p.106).'
+        : (cicatrizou
+          ? 'O dado (' + dado + ') não passou do nível ' + nivel + ': uma cicatriz apaga um espaço de Esperança para sempre.'
+          : 'O dado (' + dado + ') passou do nível ' + nivel + ': sem cicatriz desta vez.'),
+      aviso: fim ? '' : 'Inconsciente até recuperar 1 Ponto de Vida ou até um descanso longo (p.106).'
+    };
+  }
+
+  /* --- Arriscar Tudo ----------------------------------------------------- *
+   * Rola os Dados de Dualidade. Esperança maior: fica de pé e limpa PV/Estresse
+   * igual ao valor do dado. Medo maior: atravessa o véu. Crítico (iguais): fica
+   * de pé com tudo limpo.
+   */
+  if (movimento === 'arriscar') {
+    const esperanca = Math.trunc(Number(a.dadoEsperanca));
+    const medo = Math.trunc(Number(a.dadoMedo));
+    const valido = (n) => isFinite(n) && n >= 1 && n <= LADOS_DADO_DUALIDADE;
+    if (!valido(esperanca) || !valido(medo)) {
+      return { erro: 'Diga os dois dados da Dualidade (1 a ' + LADOS_DADO_DUALIDADE + ' cada).' };
+    }
+
+    // Dados iguais são SUCESSO CRÍTICO — a mesma regra de qualquer jogada.
+    if (esperanca === medo) {
+      ficha.inconsciente = false;
+      r.pontosDeVidaMarcados = 0;
+      r.estresseMarcado = 0;
+      return {
+        tipo: 'morte', movimento: 'arriscar', resultado: 'critico',
+        dadoEsperanca: esperanca, dadoMedo: medo,
+        alerta: 'Crítico: de pé, com os Pontos de Vida e o Estresse todos limpos.'
+      };
+    }
+
+    if (medo > esperanca) {
+      ficha.inconsciente = false;
+      const fim = encerrarFicha_(ficha, 'veu', nota);
+      return {
+        tipo: 'morte', movimento: 'arriscar', resultado: 'veu',
+        dadoEsperanca: esperanca, dadoMedo: medo, encerrada: fim,
+        alerta: 'O Medo veio mais alto (' + medo + ' contra ' + esperanca + '): ' +
+          ((ficha.identidade || {}).nome || 'o personagem') + ' atravessa o véu.'
+      };
+    }
+
+    /*
+     * ⚠ O VALOR É REPARTIDO ENTRE AS DUAS TRILHAS, e a mesa decidiu assim.
+     *
+     * As duas fontes em inglês discordam na letra — uma diz "clears an amount
+     * of Hit Points OR Stress equal to the value", outra diz "divide the Hope
+     * Die's value between restoring Hit Points and clearing Stress" — mas
+     * convergem no total: o dado diz QUANTO, não ONDE. Repartir atende as
+     * duas leituras, e é o que o verbete gravado no app já descrevia.
+     *
+     * O servidor apara: não dá para limpar mais do que está marcado, nem
+     * somar mais do que o dado deu.
+     */
+    const pedido = a.reparticao || {};
+    let paraPV = Math.max(0, Math.trunc(Number(pedido.pontosDeVida)) || 0);
+    let paraEstresse = Math.max(0, Math.trunc(Number(pedido.estresse)) || 0);
+
+    paraPV = Math.min(paraPV, Number(r.pontosDeVidaMarcados) || 0);
+    paraEstresse = Math.min(paraEstresse, Number(r.estresseMarcado) || 0);
+
+    if (paraPV + paraEstresse > esperanca) {
+      return { erro: 'O dado deu ' + esperanca + ': dá para limpar ' + esperanca +
+        ' no total entre Pontos de Vida e Estresse.' };
+    }
+    if (paraPV + paraEstresse < 1) {
+      return { erro: 'Diga quanto do dado (' + esperanca + ') vai para Pontos de Vida e quanto vai para Estresse.' };
+    }
+
+    ficha.inconsciente = false;
+    r.pontosDeVidaMarcados = (Number(r.pontosDeVidaMarcados) || 0) - paraPV;
+    r.estresseMarcado = (Number(r.estresseMarcado) || 0) - paraEstresse;
+
+    const sobrou = esperanca - (paraPV + paraEstresse);
+    return {
+      tipo: 'morte', movimento: 'arriscar', resultado: 'esperanca',
+      dadoEsperanca: esperanca, dadoMedo: medo,
+      limpou: { pontosDeVida: paraPV, estresse: paraEstresse },
+      alerta: 'A Esperança veio mais alta (' + esperanca + ' contra ' + medo + '): de pé, com ' +
+        paraPV + ' de Pontos de Vida e ' + paraEstresse + ' de Estresse limpos.',
+      aviso: sobrou ? ('Sobraram ' + sobrou + ' do dado sem uso — as trilhas não tinham mais o que limpar.') : ''
+    };
+  }
+
+  return { erro: 'Movimento de morte desconhecido: "' + String(a.movimento) + '".' };
 }
 
 function ajustarGatilho_(ficha, a) {

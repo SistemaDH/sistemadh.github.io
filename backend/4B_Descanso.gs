@@ -497,6 +497,22 @@ function simularDescanso_(ficha, tipo, escolhas) {
     avisos.push('O grupo já fez ' + seguidosAntes + ' descansos curtos seguidos. Pelo livro (p. 105), ' +
       'o próximo precisa ser longo — mas a contagem é do grupo, então quem decide é a mesa.');
   }
+  /*
+   * O DESCANSO LONGO ACORDA QUEM ESTÁ INCONSCIENTE (p.106).
+   *
+   * "Personagem inconsciente por Evitar a Morte volta a si ao recuperar 1
+   * Ponto de Vida ou mais, OU quando o grupo fizer um descanso longo." A
+   * primeira porta é a cura, e mora em `ajustarRecurso_`; esta é a segunda.
+   *
+   * ⚠ SÓ O LONGO. O curto não acorda ninguém — e é a diferença que faz a mesa
+   * escolher parar de verdade quando alguém cai.
+   */
+  if (t.id === 'longo' && copia.inconsciente) {
+    copia.inconsciente = false;
+    avisos.push(((copia.identidade || {}).nome || 'O personagem') +
+      ' volta a si: o descanso longo tira a inconsciência (p.106).');
+  }
+
   copia.descanso.curtosSeguidos = seguidosDepois;
   copia.descanso.ultimo = {
     tipo: t.id,

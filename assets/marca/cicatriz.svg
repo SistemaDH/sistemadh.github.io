@@ -1,0 +1,11 @@
+<!--
+  cicatriz.svg — o X que apaga um espaço de Esperança (livro p.106).
+
+  É um X e não um losango riscado de propósito: no papel a mesa RISCA o
+  espaço, e o que sobra na folha é a marca do risco, não o desenho de baixo.
+  Usado como máscara, então a cor vem do CSS.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <path d="M7 7 L25 25 M25 7 L7 25"
+        fill="none" stroke="#000" stroke-width="4.5" stroke-linecap="round"/>
+</svg>

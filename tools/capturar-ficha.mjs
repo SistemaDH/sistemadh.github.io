@@ -206,6 +206,37 @@ await foto('f2e-ficha-com-foto');
 await p.locator('.ficha__corpo').evaluate((e) => { e.scrollTop = e.scrollHeight; });
 await foto('f3-jogo-fim');
 
+/*
+ * O MOVIMENTO DE MORTE (D2). Encher os Pontos de Vida abre a escolha sozinha.
+ */
+{
+  const caixas = p.locator('.papel__trilha--pv .papel__caixa');
+  await caixas.nth((await caixas.count()) - 1).click();
+  await p.waitForSelector('.modal__caixa', { timeout: 15000 });
+  await p.waitForTimeout(900);
+  await foto('f3b-movimento-de-morte');
+
+  // Evitar a Morte com o dado 1: cicatriz garantida.
+  const bloco = p.locator('.ficha__morteOpcao', { hasText: 'Evitar a Morte' });
+  await bloco.getByLabel('Resultado do Dado de Esperança (d12)').fill('1');
+  await p.waitForTimeout(300);
+  await foto('f3c-evitar-a-morte');
+  await bloco.getByRole('button', { name: 'Escolher este' }).click();
+  await p.waitForTimeout(1500);
+  await foto('f3d-cicatriz-e-inconsciente');
+
+  // A faixa de estado mora no TOPO do corpo, e a tapa do aviso a cobre por
+  // alguns segundos. Espera ela sair e rola para cima antes do print.
+  await p.waitForTimeout(6500);
+  await p.locator('.ficha__corpo').evaluate((e) => { e.scrollTop = 0; });
+  await p.waitForTimeout(400);
+  await foto('f3e-faixa-inconsciente');
+
+  // Acorda de volta, para os prints seguintes seguirem com a ficha em jogo.
+  await caixas.nth((await caixas.count()) - 1).click();
+  await p.waitForTimeout(1400);
+}
+
 await p.getByRole('tab', { name: 'Cartas' }).click();
 await foto('f4-cartas');
 
