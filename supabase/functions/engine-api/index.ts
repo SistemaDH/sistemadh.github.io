@@ -166,7 +166,7 @@ Deno.serve(async(req)=>{
     const p=await req.json(),acao=String(p?.acao||"");
     if(!ACOES.has(acao))return falha("ACAO_DESCONHECIDA","Essa ação não pertence ao motor migrado.",null,404);
     const db=createClient(Deno.env.get("SUPABASE_URL")!,Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,{auth:{persistSession:false}});
-    const jogador=await autenticar(db,String(p?.token||""));if(!jogador)return falha("NAO_AUTENTICADO","Faça login para continuar.\",null,401);
+    const jogador=await autenticar(db,String(p?.token||""));if(!jogador)return falha("NAO_AUTENTICADO","Faça login para continuar.",null,401);
     const[{data:personagens,error:ep},{data:configs,error:ec},{data:jogadores,error:ej}]=await Promise.all([
       db.from("personagens").select("*").order("row_id",{ascending:true}),
       db.from("config").select("*").order("row_id",{ascending:true}),
