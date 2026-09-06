@@ -10,7 +10,7 @@ GitHub Pages
   ├─ app-api       → sessão, roster, config e operações simples
   ├─ mesa-api      → Medo, contagens, perseguições e descanso da mesa
   ├─ player-api    → aliados e projetos
-  ├─ engine-api    → regras completas de ficha, descanso, avanço, Mestre e encontro
+  ├─ engine-api    → regras completas de ficha, ciclo de sessão, descanso, avanço, Mestre e encontro
   └─ photo-api     → fotos no Supabase Storage
                      ↓
               PostgreSQL / Storage
@@ -24,7 +24,9 @@ As tabelas públicas têm RLS habilitado e não possuem policies para `anon` ou 
 
 `engine-api` executa o mesmo código de regras mantido em `backend/*.gs`, mas não usa APIs do Google. Ele carrega um conjunto fixo de arquivos do commit:
 
-`e711cfc85341f14565a4906cdbe321009db9fef9`
+`f909fb2d270f55d16e57f6ebf003e7af90c4d7c2`
+
+Esse pin corresponde ao motor aprovado do **Lote 3 — ciclo de sessão e contadores nas cartas**, implantado no Supabase como `engine-api` versão 3 em 06/09/2026, com `verify_jwt=false` porque a função faz autenticação própria por token de sessão.
 
 O pin é intencional: alterações futuras na branch `main` não passam a executar automaticamente com privilégios de backend. Quando uma regra em `backend/` mudar, primeiro ela deve ser revisada/testada e depois o `ENGINE_COMMIT` da Edge Function deve ser atualizado explicitamente.
 
