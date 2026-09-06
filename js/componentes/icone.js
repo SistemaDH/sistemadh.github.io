@@ -45,6 +45,14 @@ const CAMINHOS = {
           'M16 6a3 3 0 0 1 0 6', 'M17 20a5 5 0 0 0-1-3'],
   bestiario: ['M4 12c0-4 3-7 8-7s8 3 8 7-3 7-8 7c-2 0-3 1-4 2v-3c-2-1-4-3-4-6z',
               'M9 11h.01M15 11h.01', 'M9 15c1 1 5 1 6 0'],
+  /*
+   * CENA: duas espadas cruzadas.
+   *
+   * Não é uma máscara de teatro nem um holofote — "cena" aqui quer dizer o
+   * combate em jogo, e o desenho tem de dizer isso antes do rótulo. Espadas
+   * cruzadas é o símbolo que a mesa já lê como "briga acontecendo".
+   */
+  encontro: ['M5 4l9 9', 'M19 4l-9 9', 'M4 18l4 2 1-3', 'M20 18l-4 2-1-3', 'M9 13l2 2', 'M15 13l-2 2'],
 
   /* ações */
   regras: ['M4 5a2 2 0 0 1 2-2h5v16H6a2 2 0 0 0-2 2z', 'M20 5a2 2 0 0 0-2-2h-5v16h5a2 2 0 0 1 2 2z'],

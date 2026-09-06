@@ -302,6 +302,8 @@ function simularDescanso_(ficha, tipo, escolhas) {
 
   const disponiveis = movimentosDoDescanso_(t.id, copia);
   const patamar = patamarDaFicha_(copia);
+  /* Quantos movimentos vieram do OUTRO tipo de descanso — ver o teto abaixo. */
+  let emprestadosUsados = 0;
   const feitos = [];
   // A cura que este descanso manda para OUTRAS fichas.
   const paraAliados = [];
@@ -316,12 +318,39 @@ function simularDescanso_(ficha, tipo, escolhas) {
       continue;
     }
     let permitido = false;
+    let emprestado = false;
     for (let k = 0; k < disponiveis.length; k++) {
-      if (disponiveis[k].id === def.id) { permitido = true; break; }
+      if (disponiveis[k].id === def.id) {
+        permitido = true;
+        emprestado = !!disponiveis[k].deOutroDescanso;
+        break;
+      }
     }
     if (!permitido) {
       erros.push('"' + def.nome + '" não é um movimento de ' + t.nome.toLowerCase() + '.');
       continue;
+    }
+
+    /*
+     * ⚠ "EFICIENTE" TROCA **UM** MOVIMENTO, NÃO OS DOIS.
+     *
+     * O SRD em inglês é singular e não tem errata nenhuma sobre isto:
+     * "When you take a short rest, you can choose A long rest move instead of
+     * A short rest move." O livro pt-BR (p.54) diz o mesmo — "um movimento de
+     * descanso longo no lugar de um de curto".
+     *
+     * Sem esta conta a lista misturada deixava a Clank escolher DOIS
+     * movimentos de descanso longo num descanso curto: zerar o Estresse e
+     * tratar todas as feridas de uma vez, com um descanso curto. É a diferença
+     * entre uma vantagem de ancestralidade e um descanso longo de graça.
+     */
+    if (emprestado) {
+      emprestadosUsados++;
+      if (emprestadosUsados > 1) {
+        erros.push('"Eficiente" troca UM movimento (livro p.54): "' + def.nome +
+          '" seria o segundo movimento de descanso longo neste descanso curto.');
+        continue;
+      }
     }
 
     const emAliado = def.podeMirarAliado && chaveTexto_(escolha.alvo) === 'aliado';

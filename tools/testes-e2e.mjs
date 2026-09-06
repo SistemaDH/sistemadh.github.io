@@ -1603,25 +1603,108 @@ try {
     await pagina.locator('.bestiario__linha').first().locator('.bestiario__porEmCena').click();
     await pagina.waitForTimeout(700);
     /*
-     * O contador é lido pelo NOME da aba, não pela posição.
+     * ⚠ A CENA VIROU ABA DO PAINEL — não é mais uma lista do Bestiário.
      *
-     * "Em cena" abria a fileira e virou "Cena", no fim dela — e um `.first()`
-     * passou a ler os 129 adversários como se fossem os ursos em cena. Pela
-     * posição, o teste dependia da ordem das abas; pelo nome, não.
+     * O contador "Cena" que existia na fileira do catálogo saiu junto. Quem
+     * responde "quantos entraram" agora é a própria cena, contando cartões: é
+     * a mesma pergunta feita ao lugar onde a resposta mora.
      */
-    const conta = await pagina.getByRole('tab', { name: /Cena/ })
-      .locator('.bestiario__conta').textContent();
-    igual(conta.trim(), '2', 'dois ursos em cena');
+    await pagina.getByRole('tab', { name: 'Cena' }).click();
+    await pagina.waitForSelector('.encontro__cartao', { timeout: 15000 });
+    igual(await pagina.locator('.encontro__cartao').count(), 2, 'dois ursos em cena');
   });
 
   await passo('a cena mostra uma trilha por adversário, independentes', async () => {
-    await pagina.getByRole('tab', { name: /Cena/ }).click();
+    await pagina.getByRole('tab', { name: 'Cena' }).click();
     await pagina.waitForSelector('.encontro__cartao', { timeout: 15000 });
     const cartoes = await pagina.locator('.encontro__cartao').count();
     igual(cartoes, 2);
     // o igual() daqui compara com ===, então lista vira texto
     const nomes = (await pagina.locator('.encontro__nome strong').allTextContents()).join(' | ');
     igual(nomes, 'Urso 1 | Urso 2', 'apelido numerado quando há mais de um');
+  });
+
+  await passo('a Cena é um LUGAR: o resumo da Mesa leva até ela (ponto 8)', async () => {
+    /*
+     * PONTO 8 DOS PRINTS: "cena não existe — leva ao bestiário".
+     *
+     * Ela era uma lista dentro da aba Bestiário, e o "Abrir" do resumo "Em
+     * cena" trocava para o Bestiário no CATÁLOGO. Quem tocava ali caía numa
+     * lista de 129 adversários, não na cena — e por isso nunca chegava aos
+     * botões de tirar da cena, que já existiam.
+     *
+     * ⚠ A decisão antiga tinha um motivo escrito ("em 390px cinco rótulos no
+     * rodapé começam a quebrar") e foi derrubada por medição — que este passo
+     * agora guarda, para ninguém precisar confiar na minha palavra.
+     */
+    await pagina.getByRole('tab', { name: 'Mesa' }).click();
+    await pagina.waitForSelector('.mestre__bloco');
+
+    const resumo = pagina.locator('.mestre__bloco', { hasText: 'Em cena' }).first();
+    await resumo.getByRole('button', { name: /Abrir a cena/ }).click();
+    await pagina.waitForSelector('.encontro__cartao', { timeout: 15000 });
+    igual(await pagina.locator('.bestiario__linha').count(), 0,
+      'o resumo da cena não pode cair no catálogo do bestiário');
+
+    /*
+     * As cinco abas cabem em 390px — EM UMA LINHA SÓ.
+     *
+     * ⚠ A CONTA DE LINHAS É A PERGUNTA QUE IMPORTA, e quase ficou de fora.
+     * A primeira versão deste passo conferia só rolagem horizontal e corte de
+     * rótulo, e passou verde com a barra QUEBRADA em duas fileiras: a grade
+     * estava presa em `repeat(4, 1fr)` e a quinta aba desceu para uma segunda
+     * linha. Grade que quebra não estoura para o lado — some para baixo, e
+     * nenhuma das duas medidas anteriores enxerga isso.
+     *
+     * Contar `offsetTop` distintos pega exatamente esse caso.
+     */
+    const abas = await pagina.locator('.mestre__abas').evaluate((barra) => {
+      const botoes = Array.from(barra.querySelectorAll('.mestre__aba'));
+      return {
+        quantas: botoes.length,
+        linhas: new Set(botoes.map((b) => Math.round(b.offsetTop))).size,
+        rolando: barra.scrollWidth > barra.clientWidth + 1,
+        cortados: Array.from(barra.querySelectorAll('.mestre__abaRotulo'))
+          .filter((r) => r.scrollWidth > r.clientWidth + 1)
+          .map((r) => r.textContent)
+      };
+    });
+    igual(abas.quantas, 5, 'a Cena é a quinta aba');
+    igual(abas.linhas, 1, 'as abas têm de caber numa linha só — a barra quebrou');
+    igual(abas.rolando, false, 'a barra de abas não pode rolar de lado');
+    igual(abas.cortados.join(', '), '', 'nenhum rótulo de aba pode cortar em 390px');
+  });
+
+  await passo('"Movimentos" abre a ficha com o que NÃO custa nada (ponto 8)', async () => {
+    /*
+     * A cena só recebe do servidor as habilidades que CUSTAM recurso
+     * (`habilidadesComCusto_`): o ataque e as passivas nunca chegam nela. A
+     * ficha completa mora no catálogo, e até agora só abria tocando no nome —
+     * que ninguém descobriu, tanto que a mesa pediu "um popup de movimentos"
+     * mesmo já existindo um.
+     *
+     * ⚠ O passo espera o botão APARECER em vez de exigir que ele já esteja
+     * lá: a aba Cena desenha antes do catálogo chegar, de propósito, para não
+     * fazer a tela mais usada esperar pelos 129 adversários.
+     */
+    const cartao = pagina.locator('.encontro__cartao').first();
+    const botaoMov = cartao.getByRole('button', { name: 'Movimentos' });
+    await botaoMov.waitFor({ timeout: 20000 });
+    await botaoMov.click();
+
+    const caixa = pagina.locator('.modal__caixa').last();
+    await caixa.waitFor({ timeout: 10000 });
+    const texto = await caixa.textContent();
+    if (!/ATQ/.test(texto)) throw new Error(`a ficha não traz o ataque: ${texto.slice(0, 160)}`);
+    if (!(await caixa.locator('.habilidade').count())) {
+      throw new Error('a ficha tinha de listar as habilidades com o texto do livro');
+    }
+
+    // Vindo da cena, não pode haver "Pôr em cena": o bicho já está lá.
+    igual(await caixa.getByRole('button', { name: /Pôr em cena/ }).count(), 0,
+      'a ficha aberta pela cena não oferece pôr em cena de novo');
+    await caixa.getByRole('button', { name: 'Fechar' }).click();
+    await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 5000 });
   });
 
   await passo('digitar o dano vira PV pelos limiares da ficha', async () => {
@@ -1667,13 +1750,15 @@ try {
 
   await passo('a habilidade do adversário diz quanto custa e cobra ao ser usada', async () => {
     // o Guarda Chefe tem "Ao Meu Sinal", que traz Contagem (5)
+    // O catálogo mora no Bestiário; a cena é outra aba desde o Lote 4.
+    await pagina.getByRole('tab', { name: 'Bestiário' }).click();
     await pagina.getByRole('tab', { name: /Adversários/ }).click();
     await pagina.waitForSelector('.bestiario__porEmCena', { timeout: 15000 });
     await pagina.fill('.bestiario input[type="search"]', 'guarda chefe');
     await pagina.waitForTimeout(400);
     await pagina.locator('.bestiario__linha').first().locator('.bestiario__porEmCena').click();
     await pagina.waitForTimeout(700);
-    await pagina.getByRole('tab', { name: /Cena/ }).click();
+    await pagina.getByRole('tab', { name: 'Cena' }).click();
     await pagina.waitForSelector('.encontro__cartao', { timeout: 15000 });
 
     const chefe = pagina.locator('.encontro__cartao').filter({ hasText: 'Guarda Chefe' });
@@ -1698,7 +1783,7 @@ try {
     await pagina.waitForSelector('.mestre__contagem', { timeout: 15000 });
     const nomes = (await pagina.locator('.mestre__contagem h4.cartao__titulo').allTextContents()).join(' | ');
     if (!/Ao Meu Sinal/.test(nomes)) throw new Error(`as contagens são: ${nomes}`);
-    await pagina.getByRole('tab', { name: 'Bestiário' }).click();
+    await pagina.getByRole('tab', { name: 'Cena' }).click();
     await pagina.waitForSelector('.encontro__cartao', { timeout: 15000 });
   });
 
@@ -1711,7 +1796,7 @@ try {
       await marcados.first().click();
       await pagina.waitForTimeout(500);
     }
-    await pagina.getByRole('tab', { name: 'Bestiário' }).click();
+    await pagina.getByRole('tab', { name: 'Cena' }).click();
     await pagina.waitForSelector('.encontro__cartao', { timeout: 15000 });
     const botao = pagina.locator('.encontro__cartao').filter({ hasText: 'Guarda Chefe' })
       .locator('.encontro__habilidade').filter({ hasText: 'Reunir a Guarda' });

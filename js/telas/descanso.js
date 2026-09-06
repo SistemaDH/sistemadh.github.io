@@ -138,9 +138,36 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
       ]));
     }
 
+    /*
+     * OS EMPRESTADOS FICAM NUM GRUPO PRÓPRIO.
+     *
+     * Numa lista só, os movimentos de descanso longo que a Clank pode pegar
+     * apareciam misturados com os de curto — cada um com um seloizinho
+     * explicando —, e a mesa relatou exatamente isso: "mostra os dois e
+     * confunde". Não dava para ver de relance o que era seu e o que era a
+     * exceção, nem que a exceção vale UMA vez.
+     *
+     * Dois blocos com título resolvem as duas coisas de uma vez: o de cima é o
+     * descanso que você está fazendo, o de baixo é a troca, e o título dele
+     * diz o limite antes de alguém tentar gastar dois.
+     */
+    const proprios = disponiveis.filter((m) => !m.deOutroDescanso);
+    const emprestados = disponiveis.filter((m) => m.deOutroDescanso);
+
     const lista = el('div', { class: 'pilha' });
-    disponiveis.forEach((m) => lista.append(cartaoDeMovimento(m)));
+    proprios.forEach((m) => lista.append(cartaoDeMovimento(m)));
     corpo.append(lista);
+
+    if (emprestados.length) {
+      corpo.append(el('div', { class: 'descanso__grupoEmprestado' }, [
+        el('h4', { class: 'descanso__grupoTitulo' },
+          nomeComGlossa(`Por "Eficiente" — pode trocar ${porDescanso === 1 ? 'o movimento' : 'um dos ' + porDescanso}`)),
+        el('p', { class: 'texto-xs texto-fraco', texto:
+          'A Clank troca UM movimento de descanso curto por um de longo (livro p.54). ' +
+          'O segundo é recusado.' }),
+        el('div', { class: 'pilha' }, emprestados.map(cartaoDeMovimento))
+      ]));
+    }
 
     limpar(acoesModal).append(
       el('button', { type: 'button', class: 'btn btn--fantasma', onClick: passoTipo }, 'Voltar'),
@@ -165,9 +192,11 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
     ]);
     cartao.append(titulo);
 
-    if (m.deOutroDescanso) {
-      cartao.append(el('p', { class: 'selo selo--mestre', texto: m.deOutroDescanso }));
-    }
+    /*
+     * O selo "Entrou por Eficiente" saiu daqui: quem diz isso agora é o TÍTULO
+     * do grupo em que o cartão está. Repetir em cada cartão era a mesma frase
+     * três vezes na mesma tela — e foi parte do que a mesa chamou de confuso.
+     */
     cartao.append(el('p', { class: 'texto-sm' }, textoAnotado(m.texto || '')));
     if (m.formula) {
       cartao.append(el('p', { class: 'descanso__formula', texto: m.formula }));
