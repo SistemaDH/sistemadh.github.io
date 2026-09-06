@@ -452,13 +452,55 @@
 }
 
 /* A Esperança é UM número: os losangos não cabem aqui, e o número basta. */
+/*
+ * A Esperança empilha NOME sobre número, e não fica só o número.
+ *
+ * Ela era um algarismo dourado solto no canto da linha — sem rótulo, sem
+ * unidade. Quem olhava não tinha como saber se era Esperança, Armadura ou o
+ * nível. Empilhado, o nome cabe sem roubar largura das trilhas.
+ */
 .mestre__linhaEsperanca {
   grid-area: esperanca;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.1;
+}
+
+.mestre__linhaEsperancaNome {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--cor-texto-fraco);
+}
+
+.mestre__linhaEsperancaValor {
   font-family: var(--fonte-mono);
   font-size: var(--txt-lg);
   font-weight: 700;
   color: var(--cor-esperanca);
 }
+
+/* Cada trilha com o nome dela na frente: sem isso, duas fileiras de
+   quadradinhos numa linha só são um enigma. */
+.mestre__linhaTrilha {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.mestre__linhaTrilhaNome {
+  flex: 0 0 auto;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.mestre__linhaTrilhaNome--pv { color: #f0b3b3; }
+.mestre__linhaTrilhaNome--estresse { color: #b5d8f2; }
 
 /* Contagem e adversário cabem numa fileira só: o nome é mais curto. */
 .mestre__linhaSimples {

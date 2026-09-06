@@ -18,14 +18,21 @@
   top: 0;
   z-index: var(--z-topo);
   display: flex;
-  align-items: center;
-  gap: var(--e3);
-  min-height: 56px;
+  flex-direction: column;
+  gap: 2px;
   padding: var(--e2) var(--e4);
   padding-top: calc(var(--e2) + env(safe-area-inset-top, 0px));
   border-bottom: 1px solid var(--cor-borda);
   background: rgba(12, 10, 18, .85);
   backdrop-filter: blur(10px);
+}
+
+/* A linha de cima: marca à esquerda, os dois atalhos à direita. */
+.app__topoLinha {
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+  min-height: 48px;
 }
 
 .app__marca {
@@ -194,13 +201,25 @@
    Roster de personagens
    -------------------------------------------------------------------------- */
 
+/*
+ * O TÍTULO E O MEDO QUEBRAM EM DUAS LINHAS QUANDO NÃO CABEM.
+ *
+ * "Fichas da mesa" com a pílula de Medo ao lado passa dos 358px úteis num
+ * celular estreito, e quem quebrava era o TÍTULO — virava "Fichas da / mesa",
+ * com a pílula flutuando na primeira linha. Com `flex-wrap`, quem desce é a
+ * pílula INTEIRA. Uma peça inteira embaixo lê melhor que um título partido no
+ * meio.
+ */
 .roster__cabecalho {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--e3);
+  flex-wrap: wrap;
+  gap: var(--e2) var(--e3);
   margin-bottom: var(--e4);
 }
+
+.roster__cabecalho > h1 { margin: 0; }
 
 /* ==========================================================================
    O MEDO NO CABEÇALHO DO ROSTER
@@ -215,7 +234,52 @@
   align-items: center;
   gap: var(--e2);
   flex: 0 0 auto;
+  padding: 2px var(--e3);
+  border: 1px solid var(--cor-medo);
+  border-radius: var(--raio-cheio);
+  background: var(--cor-medo-fundo);
 }
+
+/* A mesma caveira da trilha do Mestre, em máscara: a forma vem do arquivo, a
+   cor vem do tema. */
+.roster__medoChama {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  background-color: var(--cor-medo);
+  -webkit-mask: url('../assets/marca/medo.svg') no-repeat center / contain;
+  mask: url('../assets/marca/medo.svg') no-repeat center / contain;
+}
+
+/*
+ * OS PASSOS DESENHAM PEQUENO E TOCAM GRANDE.
+ *
+ * Como `btn--contador` eles tinham 44×44 PINTADOS e faziam a pílula virar uma
+ * barra. Aqui o desenho tem 26px e o `::after` estica o alvo até 44 — o dedo
+ * ganha a área inteira, o olho vê um passo discreto. Mesma separação do selo
+ * de nível e da trilha de PV.
+ */
+.roster__medoPasso {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--cor-medo);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, .3);
+  color: #d8c2ff;
+  font-size: var(--txt-md);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.roster__medoPasso::after {
+  content: '';
+  position: absolute;
+  inset: -9px;
+}
+
+.roster__medoPasso:active { background: var(--cor-medo); color: #10061f; }
 
 .roster__medoRotulo {
   font-size: var(--txt-xs);
@@ -233,17 +297,8 @@
   color: #d8c2ff;
 }
 
-/*
- * Para o jogador o número é INFORMAÇÃO, não controle: sem botões, e a pílula
- * fecha em volta dele para não parecer um botão desligado.
- */
-.roster__medo.e-soLeitura {
-  padding: 2px var(--e3);
-  border: 1px solid var(--cor-medo);
-  border-radius: var(--raio-cheio);
-  background: var(--cor-medo-fundo);
-}
-
+/* Para o jogador o número é INFORMAÇÃO, não controle: a MESMA pílula, sem os
+   passos. É de propósito que as duas contas vejam a mesma peça. */
 .roster__medo.e-soLeitura .roster__medoValor { font-size: var(--txt-md); }
 
 .roster__lista {
@@ -348,14 +403,22 @@
    Menu da conta
    -------------------------------------------------------------------------- */
 
+/*
+ * A segunda linha do cabeçalho: quem está logado.
+ *
+ * Alinhada à ESQUERDA, embaixo da marca — é legenda dela, não uma barra de
+ * ferramentas. O recuo de baixo entra aqui e não como `gap` do pai, para a
+ * linha não encostar na borda quando ela existe.
+ */
 .conta {
   display: flex;
   align-items: center;
   gap: var(--e2);
+  padding-bottom: var(--e1);
 }
 
 .conta__nome {
-  font-size: var(--txt-sm);
+  font-size: var(--txt-xs);
   color: var(--cor-texto-suave);
   max-width: 12ch;
   overflow: hidden;

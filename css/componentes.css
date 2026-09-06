@@ -234,7 +234,20 @@
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 3px var(--e3);
+  /*
+   * ⚠ PÍLULA DE PONTA REDONDA PRECISA DE RECUO ≥ METADE DA ALTURA.
+   *
+   * Com `border-radius: 999px`, cada ponta vira um semicírculo de raio igual a
+   * metade da altura. Recuo menor que isso põe a primeira e a última letra
+   * DENTRO do arco: o texto continua centrado por geometria e parece torto por
+   * desenho.
+   *
+   * Medido: a pílula curta tem 27px de altura, logo o arco pede 13,5px. Com os
+   * 12px do `--e3` mais 1px de borda dava 13 — meio pixel curto, e era isso que
+   * a Vanessa via no selo de Medo. A pílula ALTA (o selo de nível) tem regra
+   * própria, em `ficha.css`.
+   */
+  padding: 3px 14px;
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-cheio);
   background: rgba(0, 0, 0, .25);

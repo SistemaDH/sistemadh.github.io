@@ -238,19 +238,32 @@ export function telaRoster() {
       .then(() => rotulo.replaceChildren(nomeAnotado('Medo', { comGlossa: false })))
       .catch(() => {});
 
+    /*
+     * UMA PEÇA SÓ, e não quatro coisas soltas do lado do título.
+     *
+     * A versão anterior punha o rótulo, um botão de 44px, o número e outro
+     * botão de 44px direto na linha de "Fichas da mesa": 88px de botão sem
+     * moldura nenhuma, competindo com o título. Não era um controle, era uma
+     * pilha.
+     *
+     * Agora é a pílula fechada, com a caveira do Medo dentro. O jogador já via
+     * a versão de leitura assim; o Mestre passa a ver A MESMA peça, com os dois
+     * passos embutidos. Uma coisa só, reconhecível nas duas contas.
+     */
     const node = el('div', {
       class: `roster__medo ${mestre ? '' : 'e-soLeitura'}`,
       role: mestre ? null : 'img',
       'aria-label': mestre ? null : `Medo da mesa: ${obterEstado().medo || 0}`
     }, [
+      el('span', { class: 'roster__medoChama', 'aria-hidden': 'true' }),
       rotulo,
       mestre ? el('button', {
-        type: 'button', class: 'btn btn--contador',
+        type: 'button', class: 'roster__medoPasso',
         onClick: ajustar(-1), 'aria-label': 'Diminuir Medo'
       }, '−') : null,
       valor,
       mestre ? el('button', {
-        type: 'button', class: 'btn btn--contador',
+        type: 'button', class: 'roster__medoPasso',
         onClick: ajustar(1), 'aria-label': 'Aumentar Medo'
       }, '+') : null
     ]);

@@ -162,9 +162,15 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       }, icone('voltar', { grande: true })),
       el('div', { class: 'mestre__identidade' }, [
         el('h1', { class: 'mestre__titulo', texto: 'Painel do Mestre' }),
-        el('p', { class: 'mestre__subtitulo', texto:
-          `Sessão ${m.sessao.numero || '—'} · mesa no nível ${m.nivelDaMesa} · ` +
-          `${painel.personagens.length} ficha${painel.personagens.length === 1 ? '' : 's'}` })
+        /*
+         * SÓ A SESSÃO. Nível da mesa e contagem de fichas saíram: os dois já
+         * estão escritos no bloco "Sessão e nível", que é onde alguém vai
+         * quando quer mexer neles. No cabeçalho eles quebravam o título em
+         * duas linhas e faziam a barra crescer — custo cobrado em toda
+         * rolagem, para responder uma pergunta que ninguém faz de relance.
+         */
+        el('p', { class: 'mestre__subtitulo',
+          texto: `Sessão ${m.sessao.numero || '—'}` })
       ]),
       botaoDeRegras(),
       el('span', { class: 'selo selo--medo', texto: `Medo ${m.medo}` })
@@ -248,18 +254,34 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
           el('span', { class: 'mestre__linhaNivel', texto: `nv ${p.nivel}` })
         ]),
         /*
-         * PV e Estresse, e só. Armadura e Esperança estão na aba Grupo — aqui
-         * a pergunta é "quem está perto de cair?", e são estas duas que
-         * respondem.
+         * PV e Estresse, e só. Armadura está na aba Grupo — aqui a pergunta é
+         * "quem está perto de cair?", e são estas duas que respondem.
+         *
+         * ⚠ CADA TRILHA LEVA O NOME DELA, e isso não é enfeite: eram duas
+         * fileiras de quadradinhos sem rótulo nenhum, e ninguém sabia qual era
+         * PV e qual era Estresse. A cor sozinha não resolve — quem não separa
+         * vermelho de azul via duas fileiras idênticas, e mesmo quem separa
+         * precisava lembrar a convenção.
+         *
+         * O rótulo é curto de propósito ("PV", "ESTR"): a linha inteira tem de
+         * caber em 358px com as duas trilhas e a Esperança.
          */
         el('div', { class: 'mestre__linhaTrilhas' }, [
-          miniPontos(p.pontosDeVida.marcados, p.pontosDeVida.maximo, 'pv',
+          trilhaComNome('PV', p.pontosDeVida.marcados, p.pontosDeVida.maximo, 'pv',
             `${p.nome}: ${p.pontosDeVida.marcados} de ${p.pontosDeVida.maximo} PV marcados`),
-          miniPontos(p.estresse.marcados, p.estresse.maximo, 'estresse',
+          trilhaComNome('Estr', p.estresse.marcados, p.estresse.maximo, 'estresse',
             `${p.nome}: ${p.estresse.marcados} de ${p.estresse.maximo} de Estresse`)
         ]),
+        /*
+         * A Esperança era um número dourado SOLTO no canto — sem rótulo, sem
+         * unidade, sem nada que dissesse o que era. Ganhou o nome junto.
+         */
         el('span', { class: 'mestre__linhaEsperanca',
-          title: `Esperança de ${p.nome}`, texto: String(p.esperanca.valor) })
+          title: `Esperança de ${p.nome}` }, [
+          el('span', { class: 'mestre__linhaEsperancaNome', texto: 'Esp' }),
+          el('strong', { class: 'mestre__linhaEsperancaValor',
+            texto: String(p.esperanca.valor) })
+        ])
       ]))));
     return bloco;
   }
@@ -1222,6 +1244,20 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
    * O `title` carrega o que o rótulo diria, e o `aria-label` faz o grupo ser
    * anunciado inteiro em vez de ponto a ponto.
    */
+  /**
+   * Uma trilha em miniatura COM O NOME dela na frente.
+   *
+   * Sem o nome, duas fileiras de quadradinhos numa linha só são um enigma: a
+   * primeira é PV ou Estresse? Duas letras resolvem, e cabem.
+   */
+  function trilhaComNome(rotulo, valor, maximo, classe, descricao) {
+    return el('div', { class: 'mestre__linhaTrilha' }, [
+      el('span', { class: `mestre__linhaTrilhaNome mestre__linhaTrilhaNome--${classe}`,
+        texto: rotulo }),
+      miniPontos(valor, maximo, classe, descricao)
+    ]);
+  }
+
   function miniPontos(valor, maximo, classe, descricao) {
     const pontos = el('div', {
       class: 'mestre__miniPontos', role: 'img',

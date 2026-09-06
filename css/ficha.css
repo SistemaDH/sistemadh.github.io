@@ -62,12 +62,32 @@
 
 .ficha__topoLinha .selo--nivel.tem-pendencia .icone { display: block; }
 
+/* O alvo de toque, invisível, em volta do desenho menor. */
+.ficha__topoLinha .selo--nivel::after {
+  content: '';
+  position: absolute;
+  inset: -8px -2px;
+}
+
+/*
+ * O SELO DE NÍVEL DESENHA PEQUENO E TOCA GRANDE — e eu tinha esquecido disso.
+ *
+ * Ele pedia 44px porque precisa de 44px de ALVO DE TOQUE, e eu pintei os 44px.
+ * Numa pílula de ponta redonda isso faz cada ponta virar um semicírculo de
+ * 22px; com 10px de recuo, o "N" de NÍVEL caía dentro do arco. Medido: pílula
+ * de 67×44 com 11px de folga de cada lado.
+ *
+ * A separação entre ALVO e DESENHO é a mesma que a trilha de PV e a estrela de
+ * Esperança já usavam: o desenho fica com ~29px (recuo de 16px, folgado para o
+ * arco de 14,5px) e o `::after` invisível estica o toque até os 44px.
+ */
 .ficha__topoLinha .selo--nivel {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: var(--alvo-min);
-  padding: 4px 10px;
+  min-height: 0;
+  padding: 5px 16px;
   border: 1px solid var(--cor-ouro-escuro);
   background: rgba(0, 0, 0, .25);
   color: var(--cor-titulo);
@@ -105,12 +125,16 @@
 }
 
 /*
- * Uma linha só, com reticências.
+ * UMA LINHA POR ITEM, com reticências — e agora são duas linhas.
  *
- * "Guerreiro · Chamada do Matador" quebrava em duas e o cabeçalho passava de
- * 130px — e ele fica FIXO no topo, então esse custo é cobrado o tempo todo, em
- * toda rolagem. Classe e subclasse são informação de identidade, não de jogo:
- * quem precisa do nome inteiro tem o `title`.
+ * Elas já foram uma só, com "·" no meio, para o cabeçalho não passar de 130px.
+ * Só que "Guerreiro · Chamada do Matador" não cabe em 390px de jeito nenhum, e
+ * o que se perdia no corte era sempre a SUBCLASSE — justamente a metade que
+ * distingue um Guerreiro de outro.
+ *
+ * Duas linhas de 12px custam ~16px de cabeçalho e devolvem a informação
+ * inteira. Cada uma continua com corte próprio, para um nome muito longo
+ * encurtar sozinho sem empurrar a outra.
  */
 .ficha__subtitulo {
   margin: 2px 0 0;

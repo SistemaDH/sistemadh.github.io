@@ -29,12 +29,27 @@ function chaveDaTela(estado) {
 function moldura(conteudo) {
   const { jogador } = obterEstado();
 
+  /*
+   * O CABEÇALHO TEM DUAS LINHAS, e a de cima é só a marca.
+   *
+   * Numa linha só cabiam marca, nome do jogador, selo de Mestre, 📖 e ⚙ — e o
+   * que cedia era sempre a marca: "DAGGERHEART" virava "DAGG…". A conta:
+   * 390px menos os recuos dão 358; dois ícones de 44, o selo com ~76 e o nome
+   * com ~50 deixam 108px para uma palavra que precisa de 130.
+   *
+   * Quem identifica a tela é a marca; nome e selo são contexto de quem está
+   * logado. Contexto desce. A segunda linha custa ~22px e só existe quando há
+   * alguém logado — na abertura o cabeçalho continua de uma linha só.
+   */
+  const conta = el('div', { class: 'conta' }, [
+    jogador ? el('span', { class: 'conta__nome', texto: jogador.nome }) : null,
+    ehMestre() ? el('span', { class: 'selo selo--mestre', texto: 'Mestre' }) : null
+  ]);
+
   const topo = el('header', { class: 'app__topo' }, [
-    el('span', { class: 'app__marca', texto: 'Daggerheart' }),
-    el('span', { class: 'crescer' }),
-    el('div', { class: 'conta' }, [
-      jogador ? el('span', { class: 'conta__nome', texto: jogador.nome }) : null,
-      ehMestre() ? el('span', { class: 'selo selo--mestre', texto: 'Mestre' }) : null,
+    el('div', { class: 'app__topoLinha' }, [
+      el('span', { class: 'app__marca', texto: 'Daggerheart' }),
+      el('span', { class: 'crescer' }),
       /*
        * As REGRAS moram no cabeçalho, não dentro dos Ajustes.
        *
@@ -49,7 +64,8 @@ function moldura(conteudo) {
         'aria-label': 'Ajustes',
         onClick: () => abrirAjustes()
       }, icone('ajustes'))
-    ])
+    ]),
+    (jogador || ehMestre()) ? conta : null
   ]);
 
   /*

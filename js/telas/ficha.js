@@ -411,7 +411,18 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
 
   function montarTopo(ficha) {
     const ident = ficha.identidade || {};
-    const linha = [ident.classe, ident.subclasse].filter(Boolean).join(' · ');
+    /*
+     * CLASSE E SUBCLASSE EM LINHAS SEPARADAS.
+     *
+     * Juntas num "·" só, "Guerreiro · Chamada do Matador" não cabe em 390px e
+     * virava "Guerreiro · Chamada do …" — a subclasse, que é a metade que
+     * distingue um Guerreiro de outro, era justamente a que sumia no corte.
+     *
+     * Duas linhas de 12px custam ~16px de cabeçalho e devolvem a informação
+     * inteira. Cada uma corta sozinha, para um nome muito longo não empurrar
+     * a outra.
+     */
+    const partes = [ident.classe, ident.subclasse].filter(Boolean);
     return el('div', { class: 'ficha__topoLinha' }, [
       el('button', {
         type: 'button', class: 'btn btn--fantasma btn--icone',
@@ -426,7 +437,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
        */
       el('div', { class: 'ficha__identidade' }, [
         el('h1', { class: 'ficha__nome', texto: ident.nome || p.nome }),
-        linha ? el('p', { class: 'ficha__subtitulo', title: linha }, nomeComGlossa(linha)) : null
+        ...partes.map((t) => el('p', { class: 'ficha__subtitulo', title: t }, nomeComGlossa(t)))
       ]),
       botaoDeRegras(),
       pilhaDeNivel(ident)
