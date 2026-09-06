@@ -70,27 +70,21 @@ O repositório usa `.gitattributes` com `* text=auto eol=lf` para evitar diffs f
 
 `engine-api` carrega os arquivos `backend/*.gs` de um commit fixado do GitHub. Isso é deliberado: alterar `backend/*.gs` na `main` não muda produção sozinho.
 
-## Produção atual — Lote 3
+## Produção atual — Lote 4
 
-O **Lote 3 — ciclo de sessão e contadores nas cartas** foi integrado na `main` pelo PR #2 em 06/09/2026.
+O **Lote 4 — cena e descanso da Clank** foi integrado na `main` pelo PR #4 em 06/09/2026.
 
-A `engine-api` de produção está implantada como **versão 3**, `ACTIVE`, com `verify_jwt=false` porque a função implementa autenticação própria por token de sessão.
+A `engine-api` de produção está implantada como **versão 4**, `ACTIVE`, com `verify_jwt=false` porque a função implementa autenticação própria por token de sessão.
 
 O motor está fixado no commit revisado:
 
 ```text
-f909fb2d270f55d16e57f6ebf003e7af90c4d7c2
+184c3e32b6f201187eb92b412b1c40b8f1068077
 ```
 
-Esse commit contém o backend aprovado do Lote 3. As ações:
+Esse commit contém o backend aprovado do Lote 4, incluindo o limite correto de um movimento emprestado pela característica **Eficiente** da Clank durante descanso curto.
 
-```text
-abrirSessao
-encerrarSessaoDaMesa
-voltarParaAPrimeiraSessao
-```
-
-são roteadas pelo frontend para `engine-api` e fazem parte da allowlist da função implantada.
+O deploy foi confirmado pelo estado da Edge Function no Supabase e pela leitura do código implantado. O conector disponível nesta etapa não expunha uma ação de invocação HTTP/logs, então não foi inventado smoke test remoto; a validação funcional disponível continua sendo a bateria registrada do lote.
 
 Fluxo obrigatório para qualquer mudança futura em `backend/*.gs`:
 
@@ -99,7 +93,7 @@ Fluxo obrigatório para qualquer mudança futura em `backend/*.gs`:
 3. revisar o diff;
 4. atualizar explicitamente `ENGINE_COMMIT`;
 5. implantar `engine-api`;
-6. testar a funcionalidade real;
+6. testar a funcionalidade real quando houver meio de invocação disponível;
 7. só então considerar a etapa encerrada.
 
 Nunca trocar o pin por `main` automática.
@@ -271,10 +265,9 @@ Aposentadas/históricas — não criar dependência nova:
 
 ---
 
-# Lote 4 — a cena e o descanso da Clank
+# Lote 4 — concluído
 
-Fecha os pontos **8** e **11**, os dois últimos dos catorze prints. Desenvolvido na branch
-`ediçãoclaude`, **em cima do Lote 3** — depende dele.
+Fecha os pontos **8** e **11**, os dois últimos dos catorze prints.
 
 ## Ponto 11 — conferência de errata, e um bug de regra
 
@@ -349,22 +342,23 @@ grade nova (auto)          linhas 1 · rolando false · cortados 0
 grade velha repeat(4,1fr)  linhas 2 · rolando false · cortados 0
 ```
 
-## Deploy
+## Integração e deploy
 
-`backend/4B_Descanso.gs` é motor fixado: precisa de `ENGINE_COMMIT` novo e redeploy, pelo
-mesmo fluxo do Lote 3. O ponto 8 é só frontend.
+- PR #4 — `Lote 4: cena como lugar e descanso da Clank` — mesclado na `main` em 06/09/2026;
+- merge commit: `97bff3aacc7adcde4547bbe967dc03e77f8f9932`;
+- `engine-api` implantada antes do merge;
+- versão Supabase: **4**;
+- status: **ACTIVE**;
+- `verify_jwt=false` preservado;
+- `ENGINE_COMMIT=184c3e32b6f201187eb92b412b1c40b8f1068077`.
+
+O ponto 8 subiu pelo frontend no merge e o ponto 11 está no motor implantado. O Lote 4 está encerrado.
 
 ---
 
 # Próximos pontos dos prints
 
-**Nenhum.** Os catorze pontos estão fechados no código.
-
-Ficam pendentes de **deploy**, não de desenvolvimento:
-
-- pontos 9 e 12 (Lote 3) — concluídos após o deploy da nova `engine-api` e merge na `main`;
-- ponto 11 (Lote 4) — idem, pelo mesmo motivo;
-- ponto 8 (Lote 4) — só frontend, sobe com o merge.
+**Nenhum.** Os catorze pontos estão concluídos e integrados na `main`.
 
 A próxima funcionalidade deve ser definida pelo proprietário.
 
