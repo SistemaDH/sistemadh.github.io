@@ -4757,6 +4757,46 @@ teste('a quantidade sobe, desce e o zero TIRA o item', () => {
   verdade(/acabou/.test(r.mudancas[0].aviso || ''), r.mudancas[0].aviso);
 });
 
+teste('a NOTA só entra em item escrito à mão, e apagar tira o campo', () => {
+  /*
+   * Ponto 3 dos prints. O campo `nota` já existia na forma do item e já era
+   * preservado; faltava a ação que escreve nele depois de o item entrar.
+   *
+   * ⚠ A METADE QUE IMPORTA É A RECUSA. Item do livro já tem descrição
+   * oficial: deixar escrever por cima criaria duas verdades para a mesma
+   * coisa, e a da ficha ganharia da do livro sem ninguém ter decidido isso.
+   */
+  const f = mochilaDeTeste();
+  guardar(f, { item: 'Uma chave enferrujada' });
+
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'inventario', acao: 'nota', indice: 0,
+    nota: '  Achada   no porão da estalagem.  '
+  }]);
+  igual(f.inventario[0].nota, 'Achada no porão da estalagem.', 'espaço sobrando é aparado');
+  igual(r.erros.length, 0);
+
+  // Nota em branco APAGA o campo: item sem nota e item com nota vazia são a
+  // mesma coisa para quem lê a ficha, e um `nota: ''` gravado faria a tela
+  // desenhar uma linha vazia embaixo do nome.
+  contexto.aplicarAjustes_(f, [{ tipo: 'inventario', acao: 'nota', indice: 0, nota: '   ' }]);
+  verdade(!('nota' in f.inventario[0]), 'a nota vazia devia sumir do objeto');
+
+  // Item do livro recusa.
+  const g = mochilaDeTeste();
+  guardar(g, { itemId: 'loot-01' });
+  const recusa = contexto.aplicarAjustes_(g, [{
+    tipo: 'inventario', acao: 'nota', indice: 0, nota: 'minha versão do saco'
+  }]);
+  igual(recusa.erros.length, 1, 'item do livro não aceita nota');
+  verdade(!g.inventario[0].nota, 'e nada foi gravado');
+
+  // Índice que não existe também recusa, como as outras ações da mochila.
+  igual(contexto.aplicarAjustes_(f, [{
+    tipo: 'inventario', acao: 'nota', indice: 99, nota: 'x'
+  }]).erros.length, 1);
+});
+
 teste('a quantidade tem teto', () => {
   const f = mochilaDeTeste();
   guardar(f, { item: 'Flecha' });

@@ -233,10 +233,35 @@ await foto('f5-mochila');
 
 // Mochila editável: um item novo e um punhado a mais (C1).
 await p.getByLabel('Acrescentar à mochila').fill('Um mapa rasgado do porto');
-await p.getByRole('button', { name: 'Guardar' }).click();
+// Escopo na linha do item: a seção Ouro agora tem "Guardar ouro", e um
+// `name: 'Guardar'` solto casa com os dois.
+await p.locator('.ficha__novoItem').getByRole('button', { name: 'Guardar' }).click();
 await p.waitForTimeout(1200);
-await p.locator('.ficha__moedas').scrollIntoViewIfNeeded();
+await p.locator('.ficha__ouroFrase').scrollIntoViewIfNeeded();
 await foto('f5b-mochila-editavel');
+
+// O ouro vira frase, e o lote entra por um diálogo (ponto 2 dos prints).
+await p.locator('.ficha__ouroAcoes').getByRole('button', { name: 'Guardar ouro' }).click();
+await p.waitForSelector('.ficha__precos');
+await foto('f5g-ouro-em-lote');
+await p.locator('.modal__caixa').last().getByRole('button', { name: 'Cancelar' }).click();
+await p.waitForSelector('.modal__caixa', { state: 'detached' });
+
+// A nota do item escrito à mão (ponto 3).
+await p.locator('.ficha__item').first().locator('.ficha__itemNome--nota').click();
+await p.waitForSelector('.ficha__notaCampo');
+await p.locator('.ficha__notaCampo').fill('Achada no porão da estalagem. Abre o quê?');
+await foto('f5h-nota-do-item');
+await p.locator('.modal__caixa').last().getByRole('button', { name: 'Salvar' }).click();
+await p.waitForTimeout(1200);
+await foto('f5i-item-com-nota');
+
+// Classe e subclasse abrem o que está atrás delas (ponto 4).
+await p.locator('.ficha__subtituloBotao').first().click();
+await p.waitForSelector('.modal__caixa');
+await foto('f5j-pagina-da-classe');
+await p.locator('.modal__caixa').last().getByRole('button', { name: 'Fechar' }).click();
+await p.waitForSelector('.modal__caixa', { state: 'detached' });
 
 // O catálogo dos 120 itens do livro (K11).
 await p.locator('.ficha__novoItem')
@@ -403,12 +428,25 @@ await foto('f18-avanco-previa-fim');
    * O custo de recordar (D3). Esta ficha tem cartas com custo 1 e 2 — a da
    * criação rápida vem com duas de custo 0, e aí não haveria o que mostrar.
    */
-  await p.locator('.ficha__carta:not(.ficha__carta--subclasse)')
-    .filter({ hasText: 'Guardar no cofre' }).first()
-    .getByRole('button', { name: 'Guardar no cofre' }).click();
+  /*
+   * Os botões saíram da lista e foram para dentro do visor (ponto 10 dos
+   * prints): a lista é para RECONHECER a carta, o visor é para AGIR sobre
+   * ela. Então o caminho aqui é tocar no nome primeiro.
+   */
+  const abrirPrimeiraDa = async (secao) => {
+    await p.locator('.ficha__bloco', { hasText: secao }).first()
+      .locator('.ficha__carta .nome-carta').first().click();
+    const caixa = p.locator('.modal__caixa--carta').last();
+    await caixa.waitFor({ timeout: 10000 });
+    return caixa;
+  };
+
+  let visor = await abrirPrimeiraDa('Mão —');
+  await visor.getByRole('button', { name: 'Guardar no cofre' }).click();
   await p.waitForTimeout(1200);
-  await p.locator('.ficha__carta', { hasText: 'Trazer para a mão' }).first()
-    .getByRole('button', { name: 'Trazer para a mão' }).click();
+  visor = await abrirPrimeiraDa('Cofre');
+  await foto('f25b-carta-com-acoes-no-visor');
+  await visor.getByRole('button', { name: 'Trazer para a mão' }).click();
   await p.waitForSelector('.modal__caixa');
   await foto('f26-custo-de-recordar');
   await p.locator('.modal__caixa').last().getByRole('button', { name: /Marcar/ }).click();

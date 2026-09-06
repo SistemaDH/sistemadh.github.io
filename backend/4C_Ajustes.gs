@@ -581,6 +581,37 @@ function ajustarInventario_(ficha, a) {
     };
   }
 
+  /*
+   * A NOTA do item escrito à mão.
+   *
+   * O campo `nota` já existia na forma do item e já era preservado por
+   * `itemDeMochila_` — só não havia como escrever nele depois de o item entrar
+   * na mochila. Faltava exatamente para o que a mesa usa: o item do livro chega
+   * com a prosa do livro, e o que o Mestre inventou na hora chegava mudo, um
+   * nome sem nada atrás ("a chave enferrujada" — de onde? abre o quê?).
+   *
+   * ⚠ SÓ PARA ITEM SEM `id`. Item do livro já tem texto oficial; deixar
+   * escrever por cima criaria duas descrições para a mesma coisa, e a da ficha
+   * ganharia da do livro sem ninguém decidir isso. Quem tem id, tem página.
+   *
+   * Nota vazia APAGA o campo em vez de gravar string vazia: item sem nota e
+   * item com nota em branco são a mesma coisa para quem lê a ficha, e um
+   * `nota: ''` gravado faria a tela mostrar um espaço vazio embaixo do nome.
+   */
+  if (acao === 'nota') {
+    if (!achou) return { erro: 'Item da mochila não encontrado.' };
+    if (lista[i].id) {
+      return { erro: 'Item do livro já tem a descrição oficial — a nota é para o que a mesa inventou.' };
+    }
+    const nota = String(a.nota === undefined || a.nota === null ? '' : a.nota)
+      .trim().replace(/\s+/g, ' ').slice(0, LIMITE_ITEM_INVENTARIO);
+    if (nota) lista[i].nota = nota;
+    else delete lista[i].nota;
+    return {
+      tipo: 'inventario', acao: 'nota', item: lista[i].nome, nota: nota
+    };
+  }
+
   return { erro: 'Ação de mochila desconhecida: "' + String(a.acao) + '".' };
 }
 

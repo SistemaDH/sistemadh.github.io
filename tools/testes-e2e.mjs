@@ -270,6 +270,37 @@ try {
     }, versaoAnterior, { timeout: 20000 });
   };
 
+  /**
+   * O OURO É UMA FRASE, e é assim que se lê.
+   *
+   * A aba Mochila mostra "1 baú, 2 bolsas e 3 punhados" em vez de quatro
+   * colunas com ±1. Comparar a frase inteira é de propósito: ela é o que a
+   * mesa lê, e é onde o troco do servidor aparece.
+   */
+  const fraseDoOuro = async () =>
+    (await pagina.locator('.ficha__ouroFrase').textContent()).replace(/\s+/g, ' ').trim();
+
+  /**
+   * Guardar ou gastar um lote de ouro pelo diálogo.
+   *
+   * `valores` é { punhados: 9, bolsas: 1, ... } — só as categorias que
+   * importam. Espera a gravação, porque o troco quem faz é o servidor.
+   */
+  const mexerNoOuro = async (qual, valores) => {
+    const antes = await versaoNaTela();
+    await pagina.locator('.ficha__ouroAcoes')
+      .getByRole('button', { name: qual === 'guardar' ? 'Guardar ouro' : 'Gastar ouro' }).click();
+    const caixa = pagina.locator('.modal__caixa').last();
+    await caixa.waitFor({ timeout: 5000 });
+    for (const [chave, n] of Object.entries(valores)) {
+      const rotulo = { moedas: 'Moedas', punhados: 'Punhados', bolsas: 'Bolsas', cofres: 'Baús' }[chave];
+      await caixa.locator('.ficha__preco', { hasText: rotulo })
+        .locator('input').fill(String(n));
+    }
+    await caixa.getByRole('button', { name: qual === 'guardar' ? 'Guardar' : 'Gastar', exact: true }).click();
+    await esperarGravar(antes);
+  };
+
   await passo('a ficha em jogo abre com as quatro abas', async () => {
     await abrirFichaEmJogo();
     for (const nome of ['Jogo', 'Cartas', 'Mochila', 'História']) {
@@ -278,6 +309,48 @@ try {
     await pagina.waitForSelector('.papel__trilha--pv');
     await pagina.waitForSelector('.papel__trilha--estresse');
     await pagina.waitForSelector('.papel__esperanca');
+  });
+
+  await passo('classe e subclasse abrem o que está atrás delas (ponto 4)', async () => {
+    /*
+     * PONTO 4 DOS PRINTS. Classe e subclasse eram duas linhas de texto morto
+     * no lugar mais olhado da ficha: a regra que a mesa já aprendeu no resto
+     * do app — tocar num nome abre a carta — parava justo no nome que define o
+     * personagem.
+     *
+     * ⚠ AS DUAS ABREM COISAS DIFERENTES, E O TESTE COBRA ISSO. Subclasse TEM
+     * carta oficial em PNG; classe NÃO tem carta nenhuma no jogo — é uma
+     * página de livro. Se um dia alguém "uniformizar" as duas num visor só,
+     * terá inventado uma carta que não existe na mesa de ninguém, e é aqui que
+     * isso apita.
+     */
+    const subtitulos = pagina.locator('.ficha__subtituloBotao');
+    igual(await subtitulos.count(), 2, 'classe e subclasse, uma linha cada');
+
+    // A CLASSE abre a página do livro: descrição, domínios e características.
+    await subtitulos.first().click();
+    const pagClasse = pagina.locator('.modal__caixa').last();
+    await pagClasse.waitFor({ timeout: 5000 });
+    igual(await pagClasse.locator('.carta-visor').count(), 0,
+      'classe não tem carta no jogo — não pode abrir um visor de carta');
+    const textoDaClasse = await pagClasse.textContent();
+    for (const esperado of ['Domínios', 'Evasão inicial', 'Inspiração']) {
+      if (!textoDaClasse.includes(esperado)) {
+        throw new Error(`a página da classe não traz "${esperado}": ${textoDaClasse.slice(0, 200)}`);
+      }
+    }
+    await pagClasse.getByRole('button', { name: 'Fechar' }).click();
+    await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 5000 });
+
+    // A SUBCLASSE abre a carta oficial, com o PNG.
+    await subtitulos.nth(1).click();
+    const visor = pagina.locator('.modal__caixa--carta').last();
+    await visor.waitFor({ timeout: 5000 });
+    const largura = await visor.locator('.carta-visor__img').first()
+      .evaluate((n) => n.naturalWidth);
+    if (!largura) throw new Error('a carta da subclasse abriu sem a arte');
+    await visor.getByRole('button', { name: 'Fechar' }).click();
+    await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 5000 });
   });
 
   await passo('a ordem do topo: foto + traços, depois o papel, depois o equipamento', async () => {
@@ -496,25 +569,54 @@ try {
   });
 
   await passo('a aba Cartas manda uma carta para o cofre e traz de volta', async () => {
+    /*
+     * ⚠ OS BOTÕES DA CARTA MUDARAM DE LUGAR — E É POR ISSO QUE ESTE PASSO
+     * MUDOU.
+     *
+     * Cada cartão da mão trazia o texto inteiro mais uma fileira de botões:
+     * oito cartas assim e a aba virava uma parede de prosa, com a marca-d'água
+     * do domínio (a única coisa que distingue um cartão do outro de relance)
+     * soterrada atrás do próprio texto. Agora a lista é para RECONHECER e o
+     * visor é para AGIR — o mesmo gesto da mesa com carta de papel: olha a
+     * fileira, pega uma, decide com ela na mão.
+     *
+     * Então o caminho aqui é: tocar no nome → o visor abre → o botão está lá.
+     */
     await pagina.getByRole('tab', { name: 'Cartas' }).click();
     await pagina.waitForSelector('.ficha__carta');
-    const naMao = pagina.locator('button', { hasText: 'Guardar no cofre' });
-    const noCofre = pagina.locator('button', { hasText: 'Trazer para a mão' });
-    const antes = await naMao.count();
 
-    await naMao.first().click();
-    await pagina.waitForFunction(() => document.querySelectorAll(
-      '.ficha__cartas button').length > 0 &&
-      Array.from(document.querySelectorAll('.ficha__cartas button'))
-        .some((b) => b.textContent.trim() === 'Trazer para a mão'),
-    null, { timeout: 15000 });
+    /** Abre a primeira carta da seção pedida e devolve a caixa do visor. */
+    const abrirPrimeiraCarta = async (secao) => {
+      const bloco = pagina.locator('.ficha__bloco', { hasText: secao }).first();
+      await bloco.locator('.ficha__carta .nome-carta').first().click();
+      const caixa = pagina.locator('.modal__caixa--carta').last();
+      await caixa.waitFor({ timeout: 10000 });
+      return caixa;
+    };
 
-    await noCofre.first().click();
+    const naMaoAgora = () => pagina.locator('.ficha__bloco', { hasText: 'Mão —' })
+      .locator('.ficha__carta').count();
+    const antes = await naMaoAgora();
+
+    // Guardar: da mão para o cofre.
+    let visor = await abrirPrimeiraCarta('Mão —');
+    await visor.getByRole('button', { name: 'Guardar no cofre' }).click();
+    await pagina.waitForFunction((n) => {
+      const secoes = Array.from(document.querySelectorAll('.ficha__bloco'));
+      const mao = secoes.find((c) => /Mão —/.test(c.textContent || ''));
+      return mao && mao.querySelectorAll('.ficha__carta').length === n - 1;
+    }, antes, { timeout: 15000 });
+
+    // E de volta: do cofre para a mão.
+    visor = await abrirPrimeiraCarta('Cofre');
+    await visor.getByRole('button', { name: 'Trazer para a mão' }).click();
+
     /*
      * Trazer do cofre com custo de recordar abre a pergunta: cobrar o Estresse
      * ou está num descanso (livro: durante o descanso a troca é livre). Carta
      * de custo 0 não pergunta nada — daí o `count()` antes de responder.
      */
+    await pagina.waitForTimeout(400);
     if (await pagina.locator('.modal__caixa').count()) {
       const antesDoCusto = await marcados('estresse');
       await pagina.locator('.modal__caixa').last()
@@ -528,11 +630,67 @@ try {
         throw new Error(`o custo de recordar não marcou Estresse (${antesDoCusto} → ${depoisDoCusto})`);
       }
     }
-    await pagina.waitForFunction((n) =>
-      document.querySelectorAll('.ficha__cartas button').length &&
-      Array.from(document.querySelectorAll('.ficha__cartas button'))
-        .filter((b) => b.textContent.trim() === 'Guardar no cofre').length === n,
-    antes, { timeout: 15000 });
+    await pagina.waitForFunction((n) => {
+      const secoes = Array.from(document.querySelectorAll('.ficha__bloco'));
+      const mao = secoes.find((c) => /Mão —/.test(c.textContent || ''));
+      return mao && mao.querySelectorAll('.ficha__carta').length === n;
+    }, antes, { timeout: 15000 });
+  });
+
+  await passo('o texto da carta na lista é cortado — a marca-d\'água precisa aparecer', async () => {
+    /*
+     * O corte é a metade VISÍVEL do ponto 10 dos prints: sem ele o cartão
+     * cresce com o texto, a marca-d'água some atrás da prosa e a fileira de
+     * cartas deixa de ser uma fileira.
+     *
+     * ⚠ A PERGUNTA É SOBRE PIXEL, NÃO SOBRE CLASSE. Um teste que só
+     * procurasse `.ficha__cartaTexto--cortado` passaria com o
+     * `-webkit-line-clamp` escrito errado — e as três declarações de que ele
+     * precisa (box, orient, clamp) são fáceis de quebrar uma de cada vez.
+     *
+     * ⚠⚠ E NÃO DÁ PARA CONFERIR `display: -webkit-box`. Do Chromium 141 em
+     * diante o `getComputedStyle` devolve `flow-root` para essa regra — a
+     * implementação nova do line-clamp "blockifica" a caixa. Conferir o nome
+     * seria um teste que quebra sozinho na próxima versão do navegador sem
+     * nada ter piorado na tela.
+     *
+     * ⚠⚠⚠ E `scrollHeight > clientHeight` sozinho mede a SORTE DO SORTEIO: se
+     * a carta que calhar de estar na mão tiver duas linhas, ela não
+     * transborda e o teste passa a não provar nada. Então, se nenhuma das
+     * cartas na tela for longa o bastante, o passo enche uma delas de texto,
+     * mede, e devolve o texto original.
+     */
+    const textos = pagina.locator('.ficha__carta .ficha__cartaTexto--cortado');
+    await textos.first().waitFor({ timeout: 10000 });
+
+    const medida = await textos.first().evaluate((primeiro) => {
+      const todos = Array.from(document.querySelectorAll(
+        '.ficha__carta .ficha__cartaTexto--cortado'));
+      const transborda = todos.find((n) => n.scrollHeight > n.clientHeight + 1);
+
+      const ler = (n) => ({
+        visivel: n.clientHeight,
+        inteiro: n.scrollHeight,
+        linhas: getComputedStyle(n).webkitLineClamp
+      });
+
+      if (transborda) return { ...ler(transborda), forcado: false };
+
+      // Nenhuma carta na tela é longa: enche uma para provar a regra.
+      const alvo = transborda || primeiro;
+      const original = alvo.innerHTML;
+      alvo.textContent = 'palavra '.repeat(120);
+      const r = ler(alvo);
+      alvo.innerHTML = original;
+      return { ...r, forcado: true };
+    });
+
+    igual(medida.linhas, '3', 'o corte devia ser de três linhas');
+    if (medida.inteiro <= medida.visivel + 1) {
+      throw new Error(
+        `o texto não está sendo cortado (${medida.visivel}px na tela, ${medida.inteiro}px no total)` +
+        (medida.forcado ? ' — medido com texto de enchimento, então é a regra que não pega' : ''));
+    }
   });
 
   await passo('a Barda NÃO tem ficha paralela (fecha C2)', async () => {
@@ -543,7 +701,7 @@ try {
 
   await passo('a mochila aceita item novo e o ouro troca de categoria (fecha C1)', async () => {
     await pagina.getByRole('tab', { name: 'Mochila' }).click();
-    await pagina.waitForSelector('.ficha__moedas');
+    await pagina.waitForSelector('.ficha__ouroFrase');
 
     /*
      * O campo tem RÓTULO e linha própria. Ele já dividiu a linha com "Guardar"
@@ -563,21 +721,30 @@ try {
     igual(await campoDoItem.inputValue(), '',
       'o campo devia estar limpo depois de gravar');
 
-    // 1 punhado + 9 = 1 bolsa: quem faz a conta é o servidor.
-    for (let i = 0; i < 9; i++) {
-      const v = await versaoNaTela();
-      await pagina.locator('.ficha__moeda', { hasText: 'Punhados' })
-        .getByRole('button', { name: /Mais um/ }).click();
-      await esperarGravar(v);
-    }
-    const bolsas = await pagina.locator('.ficha__moeda', { hasText: 'Bolsas' })
-      .locator('.ficha__moedaValor').textContent();
-    igual(bolsas.trim(), '1', 'os 10 punhados deviam ter virado 1 bolsa');
+    /*
+     * 1 punhado + 9 = 1 bolsa: quem faz a conta é o servidor.
+     *
+     * ⚠ NOVE DE UMA VEZ, NÃO NOVE TOQUES. O ouro deixou de ser quatro colunas
+     * de ±1 e virou uma frase com um diálogo de lote — porque na mesa ouro
+     * chega em lote ("acharam 3 bolsas"), e registrar isso custava oito
+     * toques. Este passo agora prova as duas coisas juntas: que o lote chega
+     * inteiro e que o troco atravessa a categoria.
+     */
+    igual(await fraseDoOuro(), '1 punhado', 'a ficha nasce com 1 punhado (p.104)');
+    await mexerNoOuro('guardar', { punhados: 9 });
+    igual(await fraseDoOuro(), '1 bolsa', 'os 10 punhados deviam ter virado 1 bolsa');
 
-    // A terceira categoria chama-se BAÚ, como no livro (p.104) — "cofre", neste
-    // app, é a reserva de cartas, e as duas não podem ter o mesmo nome (J5).
-    const rotulos = await pagina.locator('.ficha__moedaRotulo').allTextContents();
-    igual(rotulos.map((t) => t.trim()).join(' | '), 'Punhados | Bolsas | Baús');
+    /*
+     * A terceira categoria chama-se BAÚ, como no livro (p.104) — "cofre",
+     * neste app, é a reserva de cartas, e as duas não podem ter o mesmo nome
+     * (J5). O nome mora no diálogo agora, que é onde a escada inteira aparece.
+     */
+    await pagina.locator('.ficha__ouroAcoes').getByRole('button', { name: 'Guardar ouro' }).click();
+    const caixaDoOuro = pagina.locator('.modal__caixa').last();
+    const rotulos = await caixaDoOuro.locator('.ficha__preco').allTextContents();
+    igual(rotulos.map((t) => t.trim()).join(' | '), 'Baús | Bolsas | Punhados',
+      'sem a regra opcional, a escada vai do maior para o menor e sem moedas');
+    await caixaDoOuro.getByRole('button', { name: 'Cancelar' }).click();
 
     // E o item sai de novo.
     const v2 = await versaoNaTela();
@@ -635,6 +802,84 @@ try {
     igual(await doLivro.count(), 0, 'no zero o item devia sair da mochila');
   });
 
+  await passo('o item escrito à mão ganha uma nota — e ela volta do servidor', async () => {
+    /*
+     * PONTO 3 DOS PRINTS. Metade da mochila de uma mesa em jogo é coisa que o
+     * Mestre inventou na hora: "a chave enferrujada", "o bilhete do
+     * estalajadeiro". O item do livro chegava com a página inteira atrás do
+     * nome; esses chegavam mudos — e três sessões depois ninguém lembra de
+     * onde veio a chave nem o que ela abre.
+     *
+     * ⚠ E ESTE PASSO CONFERE OS DOIS LADOS DA REGRA. Não basta a nota entrar:
+     * o item DO LIVRO não pode aceitar nota, senão a mesma coisa passa a ter
+     * duas descrições e a da ficha ganha da do livro sem ninguém decidir isso.
+     */
+    const campoDoItem = pagina.getByLabel('Acrescentar à mochila');
+    const v = await versaoNaTela();
+    await campoDoItem.fill('Uma chave enferrujada');
+    await pagina.locator('.ficha__novoItem').getByRole('button', { name: 'Guardar' }).click();
+    await esperarGravar(v);
+
+    const linha = pagina.locator('.ficha__item', { hasText: 'Uma chave enferrujada' });
+    igual(await linha.count(), 1, 'o item escrito à mão não entrou');
+
+    // Antes só o item do livro respondia ao toque, e a lista não dava pista
+    // nenhuma de qual era qual. Agora os dois respondem.
+    const v2 = await versaoNaTela();
+    await linha.locator('.ficha__itemNome--nota').click();
+    const caixa = pagina.locator('.modal__caixa').last();
+    await caixa.waitFor({ timeout: 5000 });
+    await caixa.locator('.ficha__notaCampo').fill('Achada no porão da estalagem. Abre o quê?');
+    await caixa.getByRole('button', { name: 'Salvar' }).click();
+    await esperarGravar(v2);
+
+    igual((await linha.locator('.ficha__itemNota').textContent()).trim(),
+      'Achada no porão da estalagem. Abre o quê?', 'a nota não apareceu na linha');
+
+    // Recarregar prova que foi para o servidor, não só para a tela.
+    // O recarregamento volta para a LISTA — a ficha precisa ser reaberta.
+    await pagina.reload({ waitUntil: 'networkidle' });
+    await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+    await abrirFichaEmJogo();
+    await pagina.getByRole('tab', { name: 'Mochila' }).click();
+    await pagina.waitForSelector('.ficha__ouroFrase');
+    const depois = pagina.locator('.ficha__item', { hasText: 'Uma chave enferrujada' });
+    igual((await depois.locator('.ficha__itemNota').textContent()).trim(),
+      'Achada no porão da estalagem. Abre o quê?', 'a nota não sobreviveu ao recarregar');
+
+    // Apagar tudo e salvar TIRA a nota — nota em branco e sem nota são a
+    // mesma coisa para quem lê a ficha.
+    const v3 = await versaoNaTela();
+    await depois.locator('.ficha__itemNome--nota').click();
+    const caixa2 = pagina.locator('.modal__caixa').last();
+    await caixa2.locator('.ficha__notaCampo').fill('');
+    await caixa2.getByRole('button', { name: 'Salvar' }).click();
+    await esperarGravar(v3);
+    igual(await depois.locator('.ficha__itemNota').count(), 0,
+      'a nota apagada devia sumir da linha');
+
+    // Item do LIVRO não tem botão de nota: ele já tem a página oficial.
+    const v4 = await versaoNaTela();
+    await pagina.locator('.ficha__novoItem').getByRole('button', { name: 'Do livro' }).click();
+    await pagina.locator('.modal__caixa').last()
+      .getByLabel('Buscar item do livro').fill('Saco de Dormir');
+    await pagina.locator('.ficha__catalogoItem').first().click();
+    await esperarGravar(v4);
+    const doLivro = pagina.locator('.ficha__item', { hasText: 'Saco de Dormir Premium' });
+    igual(await doLivro.locator('.ficha__itemNome--nota').count(), 0,
+      'item do livro não pode aceitar nota — ele já tem a descrição oficial');
+    igual(await doLivro.locator('.ficha__itemNome--doLivro').count(), 1,
+      'e continua abrindo a página do livro');
+
+    // Limpa o que este passo criou.
+    const v5 = await versaoNaTela();
+    await depois.getByRole('button', { name: /Tirar/ }).click();
+    await esperarGravar(v5);
+    const v6 = await versaoNaTela();
+    await doLivro.getByRole('button', { name: /Tirar/ }).click();
+    await esperarGravar(v6);
+  });
+
   await passo('tocar numa palavra de mecânica abre a regra com a página', async () => {
     await pagina.getByRole('tab', { name: 'Jogo' }).click();
     await pagina.waitForSelector('.papel');
@@ -675,7 +920,7 @@ try {
     igual(await pagina.locator('.modal__caixa').count(), 0);
 
     await pagina.getByRole('tab', { name: 'Mochila' }).click();
-    await pagina.waitForSelector('.ficha__moedas');
+    await pagina.waitForSelector('.ficha__ouroFrase');
   });
 
   await passo('comprar tira o ouro e guarda o item de uma vez só (fecha I1)', async () => {
@@ -714,12 +959,8 @@ try {
     await esperarGravar(antes);
     igual(await pagina.locator('.ficha__item', { hasText: 'Uma tocha da boa' }).count(), 1,
       'o item comprado não apareceu na mochila');
-    const punhados = await pagina.locator('.ficha__moeda', { hasText: 'Punhados' })
-      .locator('.ficha__moedaValor').textContent();
-    const bolsasDepois = await pagina.locator('.ficha__moeda', { hasText: 'Bolsas' })
-      .locator('.ficha__moedaValor').textContent();
-    igual(`${punhados.trim()}/${bolsasDepois.trim()}`, '7/0',
-      'a bolsa devia ter virado troco: 7 punhados e 0 bolsas');
+    igual(await fraseDoOuro(), '7 punhados',
+      'a bolsa devia ter virado troco: 7 punhados, e a bolsa some da frase');
 
     await pagina.getByRole('tab', { name: 'Cartas' }).click();
   });
@@ -1502,25 +1743,29 @@ try {
     await pagina.locator('.ficha-cartao__abrir').first().click();
     await pagina.waitForSelector('.papel', { timeout: 20000 });
     await pagina.getByRole('tab', { name: 'Mochila' }).click();
-    await pagina.waitForSelector('.ficha__moedas');
+    await pagina.waitForSelector('.ficha__ouroFrase');
 
-    const rotulos = await pagina.locator('.ficha__moedaRotulo').allTextContents();
-    igual(rotulos.map((t) => t.trim()).join(' | '), 'Moedas | Punhados | Bolsas | Baús',
-      'com a regra ligada pelo Mestre, a menor unidade entra à esquerda');
+    /*
+     * Com a regra ligada, a escada ganha um degrau — e ele aparece no
+     * DIÁLOGO, que é onde se mexe no ouro desde que a tela virou frase.
+     */
+    await pagina.locator('.ficha__ouroAcoes').getByRole('button', { name: 'Guardar ouro' }).click();
+    const caixaMoedas = pagina.locator('.modal__caixa').last();
+    const rotulos = await caixaMoedas.locator('.ficha__preco').allTextContents();
+    igual(rotulos.map((t) => t.trim()).join(' | '), 'Baús | Bolsas | Punhados | Moedas',
+      'com a regra ligada pelo Mestre, a moeda entra como último degrau');
+    await caixaMoedas.getByRole('button', { name: 'Cancelar' }).click();
 
     // 10 moedas viram 1 punhado — a escada do SRD, feita pelo servidor.
-    const coluna = pagina.locator('.ficha__moeda', { hasText: 'Moedas' });
-    const punhados = pagina.locator('.ficha__moeda', { hasText: 'Punhados' });
-    const antesPunhados = Number((await punhados.locator('.ficha__moedaValor').textContent()).trim());
-    for (let i = 0; i < 10; i++) {
-      const v = await versaoNaTela();
-      await coluna.getByRole('button', { name: /Mais uma moeda/ }).click();
-      await esperarGravar(v);
+    const antesDasMoedas = await fraseDoOuro();
+    await mexerNoOuro('guardar', { moedas: 10 });
+    const depoisDasMoedas = await fraseDoOuro();
+    if (/moeda/.test(depoisDasMoedas)) {
+      throw new Error(`as 10 moedas deviam ter virado 1 punhado: "${depoisDasMoedas}"`);
     }
-    igual((await coluna.locator('.ficha__moedaValor').textContent()).trim(), '0',
-      'as 10 moedas deviam ter virado 1 punhado');
-    igual(Number((await punhados.locator('.ficha__moedaValor').textContent()).trim()),
-      antesPunhados + 1);
+    const punhadosDe = (frase) => Number((/(\d+) punhado/.exec(frase) || [0, 0])[1]);
+    igual(punhadosDe(depoisDasMoedas), punhadosDe(antesDasMoedas) + 1,
+      `a frase devia ter ganho 1 punhado: "${antesDasMoedas}" → "${depoisDasMoedas}"`);
 
     /*
      * O MARCADOR À MÃO. O catálogo cobre as 20 do livro; este é para a carta

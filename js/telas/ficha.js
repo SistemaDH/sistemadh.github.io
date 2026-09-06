@@ -27,7 +27,7 @@ import { acoes, obterEstado } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
 import { aguardar, temPendente } from '../fila.js';
 import * as dados from '../dados.js';
-import { nomeQueAbreCarta, daCartaDeDominio } from '../componentes/carta.js';
+import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio } from '../componentes/carta.js';
 import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js';
 import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js';
 import { botaoDeRegras } from './regras.js';
@@ -422,7 +422,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
      * inteira. Cada uma corta sozinha, para um nome muito longo não empurrar
      * a outra.
      */
-    const partes = [ident.classe, ident.subclasse].filter(Boolean);
+    const partes = [
+      ident.classe ? { texto: ident.classe, aoTocar: () => abrirPaginaDaClasse(ident.classe) } : null,
+      ident.subclasse ? { texto: ident.subclasse, aoTocar: () => abrirCartasDaSubclasse(ficha) } : null
+    ].filter(Boolean);
     return el('div', { class: 'ficha__topoLinha' }, [
       el('button', {
         type: 'button', class: 'btn btn--fantasma btn--icone',
@@ -437,11 +440,104 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
        */
       el('div', { class: 'ficha__identidade' }, [
         el('h1', { class: 'ficha__nome', texto: ident.nome || p.nome }),
-        ...partes.map((t) => el('p', { class: 'ficha__subtitulo', title: t }, nomeComGlossa(t)))
+        /*
+         * CLASSE E SUBCLASSE ABREM O QUE ESTÁ ATRÁS DELAS.
+         *
+         * Eram duas linhas de texto morto no lugar mais olhado da ficha. A
+         * regra que a mesa já aprendeu no resto do app — tocar num nome abre a
+         * carta — parava justo aqui, no nome que define o personagem.
+         *
+         * ⚠ AS DUAS ABREM COISAS DIFERENTES, E É DE PROPÓSITO. Subclasse TEM
+         * carta oficial em PNG (fundação, especialização, maestria), então
+         * abre a carta. Classe NÃO tem carta nenhuma — é uma página do livro —
+         * então abre a página, montada de `data/classes.json`. Inventar um
+         * cartão falso para a classe seria pôr no app uma carta que não existe
+         * na mesa de ninguém.
+         */
+        ...partes.map((parte) => el('p', { class: 'ficha__subtitulo' }, [
+          el('button', {
+            type: 'button', class: 'ficha__subtituloBotao',
+            title: parte.texto,
+            'aria-label': `${parte.texto} — ver o que é`,
+            onClick: parte.aoTocar
+          }, nomeComGlossa(parte.texto))
+        ]))
       ]),
       botaoDeRegras(),
       pilhaDeNivel(ident)
     ]);
+  }
+
+  /**
+   * A PÁGINA DA CLASSE, montada do livro.
+   *
+   * Classe não tem carta: o que existe no livro é uma página com a descrição,
+   * os domínios, os números iniciais e as características. É isso que abre —
+   * nada de PNG inventado.
+   *
+   * Os textos passam por `textoAnotado` para os termos de regra continuarem
+   * clicáveis aqui dentro, como em qualquer outro lugar do app.
+   */
+  function abrirPaginaDaClasse(nomeDaClasse) {
+    const c = catalogo.acharClasse(nomeDaClasse);
+    if (!c) {
+      avisarErro(`Não achei "${nomeDaClasse}" no livro.`);
+      return null;
+    }
+
+    const bloco = (titulo, conteudo) => el('div', { class: 'ficha__carac' }, [
+      el('h4', { class: 'ficha__caracNome' }, nomeComGlossa(titulo)),
+      conteudo
+    ]);
+
+    const corpo = el('div', { class: 'pilha' }, [
+      c.descricao ? el('p', { class: 'texto-sm' }, textoAnotado(c.descricao)) : null,
+
+      el('p', { class: 'texto-xs texto-fraco' }, nomeAnotado(
+        `Domínios: ${(c.dominiosNomes || []).join(' e ') || '—'} · ` +
+        `Evasão inicial ${c.evasaoInicial} · ${c.pontosDeVidaIniciais} Pontos de Vida iniciais`,
+        { comGlossa: false })),
+
+      (c.itensDeClasse || []).length
+        ? bloco('Item de classe', el('p', { class: 'texto-sm' },
+          textoAnotado(c.itensDeClasse.join(' ou '))))
+        : null,
+
+      c.caracteristicaEsperanca
+        ? bloco(`Esperança — ${c.caracteristicaEsperanca.nome}`,
+          el('p', { class: 'texto-sm' }, textoAnotado(c.caracteristicaEsperanca.texto || '')))
+        : null,
+
+      ...(c.caracteristicasDeClasse || []).map((f) =>
+        bloco(f.nome, el('p', { class: 'texto-sm ficha__caracTexto' }, textoAnotado(f.texto || ''))))
+    ].filter(Boolean));
+
+    const modal = abrirModal({
+      titulo: c.nome,
+      conteudo: corpo,
+      acoes: [el('button', {
+        type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar()
+      }, 'Fechar')]
+    });
+    return modal;
+  }
+
+  /**
+   * As CARTAS da subclasse, em PNG.
+   *
+   * A mesma lista que a aba Cartas mostra — `cartasDeSubclasse` já junta cada
+   * uma com a arte e o texto. Aqui ela abre direto no visor, folheável.
+   *
+   * Se a ficha ainda não tem nenhuma (ficha antiga, gravada antes de o campo
+   * existir), o toque avisa em vez de abrir um visor vazio.
+   */
+  function abrirCartasDaSubclasse(ficha) {
+    const lista = catalogo.cartasDeSubclasse(ficha);
+    if (!lista.length) {
+      avisarErro('Esta ficha ainda não tem cartas de subclasse.');
+      return null;
+    }
+    return abrirCarta({ itens: lista, indice: 0 });
   }
 
   /**
@@ -1743,52 +1839,76 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       style: `--cor-dominio:${cor};${marcaDaCarta(c)}`
     }, [
       el('div', { class: 'ficha__cartaTopo' }, [
+        /*
+         * O NOME ABRE A CARTA — E É LÁ QUE ESTÃO OS BOTÕES.
+         *
+         * `acoes` recebe o índice do que está sendo mostrado no visor, e a
+         * lista convertida tem a mesma ordem da original: `lista[i]` é a
+         * carta que está na tela, mesmo depois de folhear.
+         */
         nomeQueAbreCarta(c.nome, () => ({
           itens: lista.map(daCartaDeDominio),
-          indice: lista.indexOf(c)
+          indice: lista.indexOf(c),
+          acoes: (item, i, modal) => botoesDaCarta(lista[i], destino, modal)
         })),
         el('span', { class: 'selo', texto: `recordar ${c.custoRecordar}` })
       ]),
       el('p', { class: 'texto-xs texto-fraco' },
         nomeComGlossa(`${c.dominioNome} · nível ${c.nivel} · ${c.tipo}`)),
-      el('p', { class: 'texto-sm ficha__cartaTexto' }, textoAnotado(c.texto || '')),
-      linhaDeAcoesDaCarta(c, destino)
+      el('p', { class: 'texto-sm ficha__cartaTexto ficha__cartaTexto--cortado' },
+        textoAnotado(c.texto || ''))
     ]);
   }
 
   /**
-   * Os botões do rodapé da carta.
+   * Os botões da carta — que agora moram DENTRO do visor.
+   *
+   * ⚠ ELES SAÍRAM DA LISTA DE PROPÓSITO. Cada cartão da mão trazia o texto
+   * inteiro da carta mais uma fileira de botões; oito cartas assim e a aba
+   * Cartas virava uma parede de prosa com nada para olhar. Pior: a
+   * marca-d'água do domínio — que é a única coisa que distingue um cartão do
+   * outro de relance — ficava soterrada atrás do próprio texto.
+   *
+   * Agora a lista é para RECONHECER (nome, selo, três linhas e a marca
+   * aparecendo) e o visor é para AGIR. É o mesmo gesto que a mesa já faz com
+   * as cartas de papel: você olha a fileira, pega uma, e é com ela na mão que
+   * decide guardar ou usar.
    *
    * Cinco cartas do jogo mudam alguma coisa PARA SEMPRE. Três mexem na própria
    * ficha e depois ficam trancadas no cofre — para essas aparece um botão a
    * mais, e o de "trazer para a mão" some, porque o livro diz
    * "permanentemente".
    */
-  function linhaDeAcoesDaCarta(c, destino) {
+  function botoesDaCarta(c, destino, modal) {
+    if (!c) return [];
     const permanente = c.efeitoPermanente || null;
     const jaAplicada = !!(((p.ficha || {}).cartasPermanentes || {})[c.id]);
-    const linha = el('div', { class: 'ficha__cartaAcoes' });
 
     if (jaAplicada) {
-      linha.append(el('span', { class: 'selo selo--ouro', texto: 'efeito já aplicado' }));
-      return linha;
+      return [el('span', { class: 'selo selo--ouro', texto: 'efeito já aplicado' })];
     }
+
+    const saida = [];
     if (permanente && !permanente.noAlvo) {
-      linha.append(el('button', {
+      saida.push(el('button', {
         type: 'button', class: 'btn btn--pequeno',
-        onClick: () => abrirEfeitoPermanente(c, permanente)
+        onClick: () => { if (modal) modal.fechar(); abrirEfeitoPermanente(c, permanente); }
       }, 'Usar o efeito permanente'));
     }
     if (permanente && permanente.noAlvo) {
-      linha.append(el('p', { class: 'texto-xs texto-suave', texto: permanente.noAlvo }));
+      saida.push(el('p', { class: 'texto-xs texto-suave', texto: permanente.noAlvo }));
     }
-    linha.append(el('button', {
+    saida.push(el('button', {
       type: 'button', class: 'btn btn--fantasma btn--pequeno',
-      onClick: () => (destino === 'ativas' && c.custoRecordar)
-        ? perguntarCustoDeRecordar(c)
-        : enviar([{ tipo: 'carta', carta: c.id, para: destino }])
+      // Fecha ANTES de agir: quem acabou de guardar a carta no cofre não quer
+      // continuar olhando para ela em tela cheia.
+      onClick: () => {
+        if (modal) modal.fechar();
+        if (destino === 'ativas' && c.custoRecordar) perguntarCustoDeRecordar(c);
+        else enviar([{ tipo: 'carta', carta: c.id, para: destino }]);
+      }
     }, destino === 'cofre' ? 'Guardar no cofre' : 'Trazer para a mão'));
-    return linha;
+    return saida;
   }
 
   /**
@@ -1932,45 +2052,136 @@ function ouroEmPunhados(ouro) {
      */
     const comMoedas = Boolean(obterEstado().ouroComMoedas);
 
-    const moeda = (rotulo, singular, chave, valor) => el('div', { class: 'ficha__moeda' }, [
-      el('span', { class: 'ficha__moedaRotulo' }, nomeAnotado(rotulo, { comGlossa: false })),
-      el('div', { class: 'ficha__moedaLinha' }, [
-        el('button', {
-          type: 'button', class: 'ficha__moedaBotao',
-          // O artigo vem junto com a palavra: "Menos um bolsa" era o que o
-          // leitor de tela dizia antes.
-          'aria-label': `Menos ${singular}`,
-          disabled: !ouroEmPunhados(ouro) && !(ouro.moedas || 0),
-          onClick: () => enviar([{ tipo: 'ouro', chave, delta: -1 }])
-        }, '−'),
-        el('strong', { class: 'ficha__moedaValor texto-ouro', texto: String(valor || 0) }),
-        el('button', {
-          type: 'button', class: 'ficha__moedaBotao',
-          'aria-label': `Mais ${singular}`,
-          onClick: () => enviar([{ tipo: 'ouro', chave, delta: 1 }])
-        }, '+')
-      ])
-    ]);
+    /*
+     * O OURO É UMA FRASE, NÃO UMA TABELA.
+     *
+     * Eram quatro colunas com oito botões de ±1 — meia tela de celular, e a
+     * mesa olhava aquilo como quem olha uma planilha. Mas ouro não é um
+     * recurso que se ajusta de um em um como PV: ele chega em lote ("acharam
+     * 3 bolsas no baú do capitão") e sai em lote. Oito toques para registrar
+     * três bolsas era o gesto errado repetido.
+     *
+     * Então a tela lê o bolso em voz de gente — "1 baú, 2 bolsas e 3
+     * punhados" — e o lote entra por um diálogo, de uma vez.
+     *
+     * ⚠ AS CATEGORIAS VÊM DA MESA, NÃO DAQUI. `comMoedas` decide se a escada
+     * começa em moedas ou em punhados; a mesma lista serve para a frase e para
+     * o diálogo, para os dois nunca discordarem.
+     */
+    const ESCADA = [
+      { chave: 'cofres', um: 'baú', muitos: 'baús' },
+      { chave: 'bolsas', um: 'bolsa', muitos: 'bolsas' },
+      { chave: 'punhados', um: 'punhado', muitos: 'punhados' },
+      { chave: 'moedas', um: 'moeda', muitos: 'moedas' }
+    ].filter((d) => d.chave !== 'moedas' || comMoedas);
 
-    pai.append(secao('Ouro', el('div', {}, [
-      el('div', { class: `ficha__moedas ${comMoedas ? 'e-comMoedas' : ''}` }, [
-        // A moeda é a menor unidade e vem primeiro, como na ficha de papel:
-        // a escada se lê da esquerda para a direita.
-        comMoedas ? moeda('Moedas', 'uma moeda', 'moedas', ouro.moedas) : null,
-        moeda('Punhados', 'um punhado', 'punhados', ouro.punhados),
-        moeda('Bolsas', 'uma bolsa', 'bolsas', ouro.bolsas),
+    /**
+     * O bolso escrito como se lê em voz alta.
+     *
+     * Só entra o que existe: "0 baús, 0 bolsas, 3 punhados" é ruído de
+     * planilha. E a última junção é "e", não vírgula — é o que separa uma
+     * frase de uma lista.
+     */
+    function fraseDoOuro() {
+      const partes = ESCADA
+        .map((d) => ({ d, n: Number(ouro[d.chave]) || 0 }))
+        .filter((x) => x.n > 0);
+
+      if (!partes.length) {
+        return [el('span', { class: 'texto-fraco', texto: 'Nada no bolso.' })];
+      }
+
+      const saida = [];
+      partes.forEach((x, i) => {
+        if (i > 0) saida.push(document.createTextNode(i === partes.length - 1 ? ' e ' : ', '));
+        saida.push(el('strong', { class: 'ficha__ouroNumero', texto: String(x.n) }));
+        saida.push(document.createTextNode(' ' + (x.n === 1 ? x.d.um : x.d.muitos)));
+      });
+      return saida;
+    }
+
+    /**
+     * Guardar ou gastar um lote de ouro.
+     *
+     * O servidor já sabia receber qualquer `delta`, não só ±1 — e é ele quem
+     * faz o troco e quem recusa gastar mais do que se tem. Aqui é só o
+     * formulário: uma caixa por categoria, e um botão que manda tudo junto.
+     *
+     * ⚠ VAI TUDO NUMA GRAVAÇÃO SÓ. Se cada categoria fosse uma chamada, gastar
+     * "1 bolsa e 2 punhados" com 1 bolsa no bolso poderia gravar a bolsa e
+     * falhar nos punhados — metade da compra registrada, e a ficha mentindo.
+     */
+    const abrirLoteDeOuro = (sinal) => {
+      const guardando = sinal > 0;
+      const campos = {};
+
+      const linha = (d) => {
+        const entrada = el('input', semCorretor({
+          type: 'number', class: 'campo__entrada ficha__precoCampo',
+          min: '0', max: '999', step: '1', inputmode: 'numeric', value: '0',
+          'aria-label': `Quantos ${d.muitos}`
+        }));
+        campos[d.chave] = entrada;
         /*
-         * BAÚS, não "cofres".
-         *
-         * O livro (p.104) escreve "punhados, bolsas e baús", e não existe carta
-         * nenhuma que fale de ouro — então, pela regra de vocabulário da mesa,
-         * aqui vale o livro. E havia um motivo a mais: "cofre" já quer dizer a
-         * reserva de cartas neste app. Duas coisas com o mesmo nome na mesma
-         * ficha é o tipo de colisão que a mesa já decidiu não ter (o "Oculto").
-         *
-         * A chave GRAVADA continua `cofres` — isto é rótulo, não migração.
+         * Reaproveita a grade do PREÇO de propósito: guardar ouro, gastar ouro
+         * e comprar são o mesmo gesto — dizer quanto, por categoria. Duas
+         * grades diferentes para a mesma pergunta só ensinariam a mesa a
+         * desconfiar da segunda.
          */
-        moeda('Baús', 'um baú', 'cofres', ouro.cofres)
+        return el('label', { class: 'ficha__preco' }, [
+          el('span', { class: 'texto-xs texto-fraco' },
+            nomeAnotado(d.muitos[0].toUpperCase() + d.muitos.slice(1), { comGlossa: false })),
+          entrada
+        ]);
+      };
+
+      const confirmar = el('button', { type: 'button', class: 'btn btn--principal' },
+        guardando ? 'Guardar' : 'Gastar');
+
+      confirmar.addEventListener('click', () => {
+        const mutacoes = ESCADA
+          .map((d) => ({ d, n: Math.trunc(Number(campos[d.chave].value)) || 0 }))
+          .filter((x) => x.n > 0)
+          .map((x) => ({ tipo: 'ouro', chave: x.d.chave, delta: sinal * x.n }));
+
+        if (!mutacoes.length) {
+          avisarErro('Diga quanto ouro entra ou sai.');
+          return;
+        }
+        modal.fechar();
+        enviar(mutacoes);
+      });
+
+      const modal = abrirModal({
+        titulo: guardando ? 'Guardar ouro' : 'Gastar ouro',
+        conteudo: el('div', { class: 'pilha' }, [
+          el('p', { class: 'texto-sm texto-fraco ficha__ouroBolso' },
+            [document.createTextNode('No bolso: ')].concat(fraseDoOuro())),
+          el('div', { class: 'ficha__precos' }, ESCADA.map(linha)),
+          el('p', { class: 'texto-xs texto-fraco', texto: guardando
+            ? 'O troco é automático: 10 punhados viram 1 bolsa sozinhos.'
+            : 'Pode gastar em qualquer categoria — o servidor troca o que faltar.' })
+        ]),
+        acoes: [
+          el('button', { type: 'button', class: 'btn btn--fantasma',
+            onClick: () => modal.fechar() }, 'Cancelar'),
+          confirmar
+        ]
+      });
+      const primeiro = campos[ESCADA[ESCADA.length - 1].chave];
+      if (primeiro) { primeiro.focus(); primeiro.select(); }
+      return modal;
+    };
+
+    pai.append(secao('Ouro', el('div', { class: 'coluna' }, [
+      el('div', { class: 'ficha__ouroLinha' }, [
+        el('p', { class: 'ficha__ouroFrase' }, fraseDoOuro()),
+        el('div', { class: 'ficha__ouroAcoes' }, [
+          el('button', { type: 'button', class: 'btn btn--fantasma btn--pequeno',
+            onClick: () => abrirLoteDeOuro(1) }, 'Guardar ouro'),
+          el('button', { type: 'button', class: 'btn btn--fantasma btn--pequeno',
+            onClick: () => abrirLoteDeOuro(-1) }, 'Gastar ouro')
+        ])
       ]),
       el('p', { class: 'texto-xs texto-fraco', texto: comMoedas
         ? '10 moedas viram 1 punhado, 10 punhados 1 bolsa, 10 bolsas 1 baú — e o livro não deixa passar de 1 baú. As moedas são a regra opcional, ligada pelo Mestre.'
@@ -2218,6 +2429,58 @@ function ouroEmPunhados(ouro) {
      *  - ×N com + e −, porque o que mais aparece é consumível que acaba;
      *  - "em uso", que separa o que está na mão do que está no fundo da mochila.
      */
+    /**
+     * A NOTA do item escrito à mão.
+     *
+     * Metade da mochila de uma mesa em jogo é coisa que o Mestre inventou na
+     * hora: "a chave enferrujada", "o bilhete do estalajadeiro". O item do
+     * livro chegava com a página inteira atrás do nome; esses chegavam mudos —
+     * e três sessões depois ninguém lembra de onde veio a chave nem o que ela
+     * abre.
+     *
+     * ⚠ SÓ PARA ITEM SEM `id`. Quem é do livro já tem descrição oficial;
+     * deixar escrever por cima criaria duas verdades para a mesma coisa. O
+     * servidor recusa de novo, pelo mesmo motivo.
+     */
+    function editarNota(item, indice) {
+      const area = el('textarea', semCorretor({
+        class: 'campo__area ficha__notaCampo', maxlength: 120, rows: 3,
+        placeholder: 'De onde veio? O que faz?'
+      }));
+      area.value = item.nota || '';
+
+      const salvar = el('button', { type: 'button', class: 'btn btn--principal' }, 'Salvar');
+      salvar.addEventListener('click', () => {
+        modal.fechar();
+        enviar([{ tipo: 'inventario', acao: 'nota', indice, nota: area.value }]);
+      });
+
+      const modal = abrirModal({
+        titulo: item.nome || 'Item',
+        conteudo: el('div', { class: 'pilha' }, [
+          el('p', { class: 'texto-xs texto-fraco', texto:
+            'Este item não é do livro — a nota é o que a sua mesa combinou sobre ele. ' +
+            'Apagar tudo e salvar tira a nota.' }),
+          area
+        ]),
+        acoes: [
+          el('button', { type: 'button', class: 'btn btn--fantasma',
+            onClick: () => modal.fechar() }, 'Cancelar'),
+          salvar
+        ]
+      });
+      area.focus();
+      return modal;
+    }
+
+    /*
+     * TODO NOME DE ITEM ABRE ALGUMA COISA.
+     *
+     * Antes só o item do livro era tocável, e a mesa não tinha como saber
+     * disso olhando: dois nomes na mesma lista, um respondia ao toque e o
+     * outro não. Agora os dois respondem — o do livro abre a página, o de
+     * texto livre abre a nota — e a lista volta a ter uma regra só.
+     */
     const linhaDeItem = (item, indice) => {
       const doLivro = item.id ? catalogo.acharItem(item.id) : null;
       const nome = item.nome || '';
@@ -2228,7 +2491,13 @@ function ouroEmPunhados(ouro) {
           'aria-label': `${nome} — ver o que faz`,
           onClick: () => verItemDoLivro(doLivro, item)
         }, nomeComGlossa(nome))
-        : el('span', { class: 'ficha__itemNome' }, nomeComGlossa(nome));
+        : el('button', {
+          type: 'button',
+          class: `ficha__itemNome ficha__itemNome--nota ${item.nota ? 'esta-comNota' : ''}`,
+          'aria-label': item.nota ? `${nome} — ver ou mudar a nota` : `${nome} — escrever uma nota`,
+          title: item.nota ? 'Toque para mudar a nota' : 'Toque para escrever uma nota',
+          onClick: () => editarNota(item, indice)
+        }, nomeComGlossa(nome));
 
       const contar = (delta) => enviar(
         [{ tipo: 'inventario', acao: 'quantidade', indice, delta }]);
@@ -2670,6 +2939,18 @@ export async function carregarCatalogo() {
 
     /** A ficha do traço inteira — é dela que saem os três verbos de exemplo. */
     tracoPorId: (id) => (tr.tracos || []).find((x) => x.id === id) || null,
+
+    /**
+     * A CLASSE inteira, pelo nome ou pelo id.
+     *
+     * A ficha grava o nome ("Bardo"), não o id — então a busca aceita os dois,
+     * como já fazem `acharClasse`/`acharSub` de `cartasDeSubclasse`. Serve ao
+     * toque no nome da classe no cabeçalho: ao contrário da subclasse, classe
+     * não tem PNG de carta, então o que abre é a página dela montada do JSON.
+     */
+    acharClasse: (nome) => (classes.classes || []).find((x) =>
+      dados.chave(x.nome) === dados.chave(nome) ||
+      dados.chave(x.id) === dados.chave(nome)) || null,
 
     /**
      * O traço de conjuração vem da SUBCLASSE — igual ao backend

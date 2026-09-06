@@ -145,6 +145,45 @@
   white-space: nowrap;
 }
 
+/*
+ * O botão que virou o subtítulo.
+ *
+ * ⚠ O CORTE COM "…" MORA NO <p>, NÃO AQUI. `text-overflow` só age em quem tem
+ * a largura limitada; o botão é `inline` e se estica com o texto. Se o corte
+ * viesse para cá, o nome longo empurraria o cabeçalho em vez de cortar — que é
+ * exatamente o que a mesa reclamou quando classe e subclasse dividiam a linha.
+ *
+ * ⚠ E O ALVO DE TOQUE É O `::after`, NÃO A CAIXA. Duas linhas de 12px coladas
+ * uma na outra: dar 44px de altura desenhada a cada uma empurraria o nome do
+ * personagem para fora do topo. Alvo grande, desenho pequeno — E39, o mesmo
+ * arranjo da trilha de PV e da pílula de nível.
+ */
+.ficha__subtituloBotao {
+  position: relative;
+  display: inline;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--cor-borda-forte);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ficha__subtituloBotao::after {
+  content: '';
+  position: absolute;
+  inset: -10px -4px;
+}
+
+.ficha__subtituloBotao:hover {
+  color: var(--cor-texto);
+  border-bottom-color: var(--cor-texto-suave);
+}
+
 /* --- corpo --------------------------------------------------------------- */
 
 .ficha__corpo {
@@ -630,6 +669,15 @@
 }
 
 /*
+ * O texto da característica de classe tem QUEBRA DE LINHA de verdade.
+ *
+ * "No 5º nível, seu Dado de Inspiração aumenta para d8" vem depois de um \n no
+ * JSON, porque no livro é um parágrafo à parte. Sem `pre-line` as duas frases
+ * grudam numa só e a progressão de nível some no meio da anterior.
+ */
+.ficha__caracTexto { white-space: pre-line; }
+
+/*
  * As características de subclasse vêm da carta com quebra de linha e marcador
  * ("• Canção Relaxante: ..."). Sem isto as três canções do Músico Errante
  * viravam um parágrafo corrido e ninguém achava onde uma acabava.
@@ -647,90 +695,55 @@
 /* --- mochila -------------------------------------------------------------- */
 
 /*
- * Cada moeda é um cartão com "− valor +" dentro. Com 100px os dois botões de
- * 44px (o alvo de toque mínimo) mais o número não cabiam e vazavam por cima
- * do cartão vizinho. 150px cabe; no celular ficam dois por linha.
+ * O OURO É UMA FRASE.
+ *
+ * Aqui moravam quatro cartões com "− valor +" dentro: oito botões de 44px para
+ * dizer três números. Ouro chega e sai em LOTE ("acharam 3 bolsas"), então o
+ * lote foi para um diálogo e a tela ficou com a leitura — que é o que a mesa
+ * olha noventa por cento do tempo.
+ *
+ * ⚠ SÓ O NÚMERO É DOURADO. A palavra ("bolsas") é texto comum. O ouro é uma
+ * das três coisas que a cor dourada quer dizer neste app (E89); pintar a frase
+ * inteira faria a linha competir com a Esperança pelo mesmo significado.
  */
 /*
- * As três moedas numa LINHA.
+ * A frase e os dois botões dividem a MESMA linha quando cabem.
  *
- * Eram três caixas empilhadas, cada uma com dois botões de 44px — meia tela de
- * celular para dizer "1, 0, 0". Ouro é registro, não protagonista.
+ * Empilhados, "1 punhado" mais dois botões tomavam três alturas de linha para
+ * dizer uma coisa só — e a seção Ouro voltava a ocupar o espaço de uma tabela,
+ * que era exatamente o que ela deixou de ser. Bolso cheio ("1 baú, 2 bolsas e
+ * 3 punhados") a frase cresce, os botões descem sozinhos, e ninguém perde
+ * nada.
  */
-.ficha__moedas {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--e2);
-  margin-bottom: var(--e2);
-}
-
-/* Com a regra opcional do SRD ligada, a escada ganha um degrau: a moeda. */
-.ficha__moedas.e-comMoedas { grid-template-columns: repeat(4, 1fr); gap: var(--e1); }
-
-.ficha__moeda {
-  min-width: 0;
-  padding: var(--e2) 2px;
-  background: var(--cor-fundo-2);
-  border: 1px solid var(--cor-borda);
-  border-radius: var(--raio-sm);
-  text-align: center;
-}
-
-.ficha__moedaLinha {
+.ficha__ouroLinha {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  gap: 2px;
+  justify-content: space-between;
+  gap: var(--e2) var(--e3);
 }
 
-.ficha__moedaRotulo {
-  display: block;
-  font-size: var(--txt-xs);
-  letter-spacing: .03em;
-  text-transform: uppercase;
-  color: var(--cor-texto-fraco);
-  margin-bottom: 2px;
-}
-
-.ficha__moedaValor {
+.ficha__ouroFrase {
+  margin: 0;
   font-size: var(--txt-md);
-  min-width: 2ch;
-  display: inline-block;
+  line-height: 1.4;
 }
 
-/*
- * O contador miúdo: 30x30 de desenho dentro de um botão que continua com 44px
- * de altura de toque, pelo mesmo motivo da trilha (E39). O `::before` daqui é
- * a borda; o botão é a área.
- */
-/*
- * Os − e + do ouro, sem moldura.
- *
- * Com `.btn` eram dois retângulos de 34px por coluna, em três (ou quatro)
- * colunas: doze molduras para mexer em três números. São glifos dentro de uma
- * área de toque de 44px de altura — a mesma separação entre ALVO e DESENHO da
- * trilha de PV (E39) e da linha do inventário (E56).
- */
-.ficha__moedaBotao {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  min-width: 30px;
-  height: 44px;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--cor-texto-suave);
-  font: inherit;
+.ficha__ouroNumero {
+  font-family: var(--fonte-mono);
   font-size: var(--txt-lg);
-  line-height: 1;
-  cursor: pointer;
-  opacity: .65;
-  -webkit-tap-highlight-color: transparent;
+  color: var(--cor-ouro);
 }
 
-.ficha__moedaBotao:hover:not(:disabled) { opacity: 1; color: var(--cor-ouro-claro); }
-.ficha__moedaBotao:disabled { opacity: .2; cursor: default; }
+/* No diálogo a frase é lembrete, não manchete: mesma cor, tamanho de rodapé. */
+.ficha__ouroBolso { margin: 0; }
+.ficha__ouroBolso .ficha__ouroNumero { font-size: inherit; }
+
+.ficha__ouroAcoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+}
 
 /*
  * `minmax(0, 1fr)`, não `1fr`.
@@ -934,6 +947,29 @@
   line-height: 1.5;
 }
 
+/*
+ * O TEXTO DA CARTA NA LISTA É UM APERITIVO, NÃO A CARTA.
+ *
+ * A marca-d'água do domínio é a única coisa que separa um cartão do outro de
+ * relance — e ela estava atrás de dez linhas de prosa, num cartão que já não
+ * cabia na tela. Cortar em três linhas devolve o fundo e devolve a fileira:
+ * dá para ver quatro cartas de uma vez em vez de uma e meia.
+ *
+ * O texto inteiro está a um toque, no visor, junto com a arte oficial.
+ *
+ * ⚠ `-webkit-line-clamp` precisa das TRÊS declarações juntas (box, orient,
+ * clamp) e de `overflow:hidden`; sozinho ele não faz nada. É prefixado e
+ * continua sendo a única forma que funciona em todos os navegadores de
+ * celular que a mesa usa.
+ */
+.ficha__cartaTexto--cortado {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
 /* ==========================================================================
    Inventário
    ========================================================================== */
@@ -989,16 +1025,48 @@
   text-overflow: ellipsis;
 }
 
-/* Só o que TEM texto no livro convida ao toque. */
-.ficha__itemNome--doLivro {
+/*
+ * TODO NOME DE ITEM ABRE ALGUMA COISA — e o RISCO diz o quê.
+ *
+ * Antes só o item do livro tinha risco, e a lista misturava dois nomes com
+ * comportamentos diferentes sem nada que os separasse: um respondia ao toque,
+ * o outro não, e a mesa só descobria tocando. Agora os dois respondem, e o que
+ * muda é a COR do risco: dourado = a página do livro; neutro = a nota que a
+ * sua mesa escreveu.
+ *
+ * ⚠ Risco SÓLIDO nos dois, nunca pontilhado. O pontilhado já quer dizer
+ * "termo de regra com verbete" em todo o app; um terceiro significado na mesma
+ * linha e o traço deixa de significar coisa alguma.
+ */
+.ficha__itemNome--doLivro,
+.ficha__itemNome--nota {
   cursor: pointer;
-  border-bottom: 1px solid var(--cor-ouro-escuro);
   align-self: flex-start;
 }
 
+.ficha__itemNome--doLivro { border-bottom: 1px solid var(--cor-ouro-escuro); }
 .ficha__itemNome--doLivro:hover { color: var(--cor-ouro-claro); }
 
+/*
+ * ⚠ O RISCO DA NOTA TEM DOIS TONS, E O MOTIVO É A LISTA CHEIA.
+ *
+ * Quase tudo que entra numa mochila é texto livre — o equipamento inicial da
+ * classe inclusive. Com um risco forte em todos, sete itens viravam sete
+ * sublinhados e a lista ficava mais riscada do que legível: o traço deixava de
+ * apontar coisa alguma por estar em toda parte.
+ *
+ * Então o tom fraco diz "dá para escrever aqui" e o tom forte diz "TEM coisa
+ * escrita aqui" — e o segundo anda junto com a própria nota, logo abaixo do
+ * nome. Quem varre a lista com o olho acha o que tem conteúdo sem ler nada.
+ */
+.ficha__itemNome--nota { border-bottom: 1px solid var(--cor-borda); }
+.ficha__itemNome--nota.esta-comNota { border-bottom-color: var(--cor-borda-forte); }
+.ficha__itemNome--nota:hover { color: var(--cor-texto); border-bottom-color: var(--cor-texto-suave); }
+
 .ficha__itemNota { font-size: var(--txt-xs); color: var(--cor-texto-fraco); }
+
+/* A nota é curta por limite do servidor (120); três linhas sobram. */
+.ficha__notaCampo { min-height: 4.5em; }
 
 .ficha__itemAcoes {
   display: flex;
@@ -1601,15 +1669,6 @@
 }
 
 .descanso__paraAliado p { margin: 0; }
-
-/* O rodapé da carta pode ter dois botões: o efeito permanente (cinco cartas no
-   jogo inteiro) e o de guardar/trazer. */
-.ficha__cartaAcoes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--e2);
-  align-items: center;
-}
 
 /* ==========================================================================
    Atributos de um equipamento — "rótulo … valor", em linha.

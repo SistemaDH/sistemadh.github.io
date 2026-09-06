@@ -402,6 +402,20 @@
   align-items: center;
 }
 
+/*
+ * Os botões da carta agora moram no RODAPÉ DO VISOR, não na lista.
+ *
+ * `.modal__acoes` já é uma linha flexível; isto só evita que os dois botões
+ * (efeito permanente + guardar/trazer) briguem por espaço com o "Fechar" num
+ * celular de 390px.
+ */
+.carta-visor__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+  align-items: center;
+}
+
 .carta-visor__quadro {
   position: relative;
   width: 100%;

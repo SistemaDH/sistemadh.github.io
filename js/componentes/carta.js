@@ -22,8 +22,9 @@ import { textoAnotado } from '../verbete.js';
  * @param {number} opcoes.indice  qual mostrar primeiro
  * @param {Function} [opcoes.aoEscolher]  se vier, aparece o botão "Escolher esta"
  * @param {string} [opcoes.textoEscolher]
+ * @param {Function} [opcoes.acoes]  (item, indice) => botões extras do rodapé
  */
-export function abrirCarta({ itens, indice = 0, aoEscolher, textoEscolher = 'Escolher esta' } = {}) {
+export function abrirCarta({ itens, indice = 0, aoEscolher, textoEscolher = 'Escolher esta', acoes } = {}) {
   const lista = (Array.isArray(itens) ? itens : [itens]).filter(Boolean);
   if (!lista.length) return null;
 
@@ -52,10 +53,22 @@ export function abrirCarta({ itens, indice = 0, aoEscolher, textoEscolher = 'Esc
     ? el('button', { type: 'button', class: 'btn btn--principal' }, textoEscolher)
     : null;
 
+  /*
+   * OS BOTÕES DA CARTA VIVEM AQUI DENTRO, E MUDAM COM A CARTA MOSTRADA.
+   *
+   * ⚠ `acoes` é uma FUNÇÃO, não uma lista pronta. O visor folheia: quem abre
+   * na carta 2 e arrasta para a 3 está olhando outra carta, e um botão
+   * "Guardar no cofre" montado uma vez só guardaria a carta ERRADA — sem
+   * nenhum aviso, porque a tela mostraria a 3 e o gesto valeria para a 2.
+   * Recalcular a cada `desenhar()` fecha isso.
+   */
+  const rodapeDeAcoes = el('div', { class: 'carta-visor__acoes' });
+
   const modal = abrirModal({
     conteudo: corpo,
     acoes: [
       el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar() }, 'Fechar'),
+      typeof acoes === 'function' ? rodapeDeAcoes : null,
       botaoEscolher
     ].filter(Boolean)
   });
@@ -95,6 +108,13 @@ export function abrirCarta({ itens, indice = 0, aoEscolher, textoEscolher = 'Esc
     contador.textContent = lista.length > 1 ? `${atual + 1} de ${lista.length}` : (item.rodape || '');
     anterior.hidden = lista.length < 2;
     proxima.hidden = lista.length < 2;
+
+    if (typeof acoes === 'function') {
+      // Os botões pedem o modal para poder fechá-lo ao agir — quem guardou a
+      // carta no cofre não quer continuar olhando para ela.
+      rodapeDeAcoes.replaceChildren(
+        ...(acoes(item, atual, modal) || []).filter(Boolean));
+    }
   }
 
   function reserva(item) {

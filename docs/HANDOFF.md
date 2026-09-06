@@ -99,7 +99,42 @@ O frontend usa como padrão o base das Supabase Edge Functions. Para testes ou a
 
 # Último trabalho realizado
 
-A etapa mais recente foi a correção do roteamento dos testes E2E para reproduzir a arquitetura real das Supabase Edge Functions.
+A etapa mais recente foi o **Lote 2 — ficha do jogador**, que fecha quatro dos catorze
+pontos levantados pela proprietária em prints do celular (branch `feat/lote2-ficha-jogador`).
+
+## Lote 2 — ficha do jogador
+
+| Ponto | O que mudou |
+| --- | --- |
+| 2 | O ouro deixou de ser uma tabela de quatro colunas com botões de ±1 e virou uma **frase** ("1 baú, 2 bolsas e 3 punhados") com dois botões que abrem um diálogo de **lote**. Ouro chega e sai em lote na mesa; registrar três bolsas custava oito toques. Sem mudança de backend: `ajustarOuroDaFicha_` já aceitava qualquer `delta`, com troco e recusa de saldo negativo. |
+| 3 | **Todo item da mochila responde ao toque.** Item do livro abre a página oficial (já era assim); item escrito à mão abre uma **nota editável**. Exigiu uma ação nova no backend — ver abaixo. |
+| 4 | **Classe e subclasse abrem o que está atrás delas.** Subclasse abre a carta oficial em PNG; classe abre a **página do livro** montada de `data/classes.json` — classe não tem carta no jogo, e inventar uma seria pôr no app algo que não existe na mesa. |
+| 10 | Os botões da carta (**Guardar no cofre** / **Trazer para a mão** / efeito permanente) saíram da lista e foram para dentro do **visor da carta**; o texto na lista foi cortado em três linhas, o que devolve a **marca-d'água do domínio**. A lista passou a ser para reconhecer; o visor, para agir. |
+
+### Ação nova no backend
+
+`backend/4C_Ajustes.gs` ganhou `inventario/nota`. O campo `nota` **já existia** na forma
+do item e já era preservado por `itemDeMochila_`; faltava a ação que escreve nele. Regras:
+
+- só aceita item **sem `id`** — item do livro já tem descrição oficial, e duas descrições
+  para a mesma coisa fariam a da ficha ganhar da do livro sem ninguém decidir isso;
+- nota vazia **apaga** o campo em vez de gravar string vazia;
+- limite de 120 caracteres, o mesmo do nome do item.
+
+> ⚠ **Isto não chega em produção sozinho.** `4C_Ajustes.gs` está sob o commit fixado do
+> motor. Enquanto o `ENGINE_COMMIT` da `engine-api` não for atualizado e a função
+> reimplantada (passos 5–7 de "Motor de regras — cuidado crítico"), a ação `nota` responde
+> como desconhecida no ar. Os outros três pontos do lote são só frontend e não dependem disso.
+
+### Decisão de escopo registrada
+
+O cartão de **subclasse** continua com o texto inteiro, sem corte. Ele não tem
+marca-d'água (o motivo do corte no ponto 10), são no máximo três por ficha, e o texto é
+o que a mesa lê durante a cena. Fica registrado como escolha, não como esquecimento.
+
+## Antes disso
+
+A etapa anterior foi a correção do roteamento dos testes E2E para reproduzir a arquitetura real das Supabase Edge Functions.
 
 Foram concluídos:
 
@@ -127,9 +162,28 @@ Foram concluídos:
 - scripts de captura passaram a usar import relativo de `servidor-teste.mjs`, removendo dependência de caminho absoluto do ambiente Claude;
 - suíte E2E ganhou validação explícita de que o frontend chama as seis Edge Functions pelo nome.
 
-## Validação do lote E2E
+## Validação do Lote 2
 
-Resultados informados após a implementação:
+```text
+testes-e2e.mjs     → 84 passos ok, 0 falharam
+testes-backend.mjs → 416 passaram, 0 falharam
+conferir-css.mjs   → nada a limpar nem a escrever
+```
+
+Passos novos na suíte E2E:
+
+- `classe e subclasse abrem o que está atrás delas (ponto 4)` — cobra que a classe **não**
+  abra um visor de carta, para ninguém "uniformizar" as duas coisas depois e inventar uma
+  carta de classe;
+- `o texto da carta na lista é cortado — a marca-d'água precisa aparecer` — mede pixel, não
+  classe. Se nenhuma carta na tela for longa o bastante, o passo enche uma de texto para
+  provar a regra em vez de medir a sorte do sorteio;
+- `o item escrito à mão ganha uma nota — e ela volta do servidor` — inclui a metade que
+  importa: item **do livro** não pode aceitar nota.
+
+Teste novo no backend: `a NOTA só entra em item escrito à mão, e apagar tira o campo`.
+
+## Validação do lote E2E anterior
 
 ```text
 testes-backend.mjs → 415 passaram, 0 falharam
@@ -414,11 +468,31 @@ Não recriar esses dados automaticamente a partir de documentação ou históric
 
 # Próxima tarefa
 
-**Não existe neste momento uma próxima tarefa técnica obrigatória definida neste handoff.**
+## Pendência aberta pelo Lote 2
 
-A migração para Supabase foi encerrada e o lote que alinha o E2E à arquitetura real das Edge Functions foi validado integralmente.
+**Atualizar o `ENGINE_COMMIT` da `engine-api` e reimplantar**, para a ação
+`inventario/nota` (ponto 3) existir em produção. Seguir os passos 5–7 de
+"Motor de regras — cuidado crítico". Enquanto isso não acontecer, a nota funciona
+em teste e responde como ação desconhecida no ar.
 
-Antes de iniciar desenvolvimento novo, confirme que `fix/e2e-base-api` já foi integrada à `main`. Depois disso, a próxima funcionalidade deve ser definida pelo proprietário.
+## Pontos dos prints ainda em aberto
+
+Restam quatro dos catorze levantados pela proprietária:
+
+- **8** — a cena não existe como lugar: leva ao bestiário, não dá para tirar adversário
+  derrotado, e falta o popup de movimentos do adversário;
+- **9** — contadores dentro das cartas, presos à sessão do Mestre (depende do 12);
+- **11** — classes com descanso próprio (Clank) mostram os dois e confundem;
+- **12** — ciclo de sessão: encerrar, voltar à primeira, montar a primeira.
+  Já conferido no SRD: começa-se uma **campanha** com 1 Medo por personagem, teto 12,
+  e o Medo **atravessa** sessões.
+
+Os pontos 9 e 12 mexem em `backend/*.gs` e portanto também dependem do redeploy do motor.
+
+## Antes de começar
+
+Confirme que `feat/lote2-ficha-jogador` já foi integrada à `main`. Depois disso, a próxima
+funcionalidade deve ser definida pelo proprietário.
 
 Ao receber a próxima tarefa:
 
