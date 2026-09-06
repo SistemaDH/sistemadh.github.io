@@ -6,14 +6,22 @@
 import { CONFIG, MENSAGENS_ERRO } from './config.js';
 import { esperar } from './util.js';
 
-const BASE = 'https://btgkhbzrfzhyzcgwrtzj.supabase.co/functions/v1';
-const URLS = {
-  app: `${BASE}/app-api`,
-  mesa: `${BASE}/mesa-api`,
-  auth: `${BASE}/auth-api`,
-  player: `${BASE}/player-api`,
-  engine: `${BASE}/engine-api`,
-  photo: `${BASE}/photo-api`
+/*
+ * ⚠ O ENDEREÇO É LIDO A CADA CHAMADA, NÃO NA IMPORTAÇÃO.
+ * Os testes escrevem `dh:baseApi` num addInitScript, que roda antes do app —
+ * mas se guardássemos a URL numa constante de módulo, qualquer troca depois
+ * (tela de Ajustes, teste que muda de servidor no meio) ficaria sem efeito e
+ * o app continuaria falando com o servidor antigo, calado.
+ *
+ * `CONFIG.baseApi` devolve só o BASE. O nome da função entra aqui embaixo.
+ */
+const FUNCOES = {
+  app: 'app-api',
+  mesa: 'mesa-api',
+  auth: 'auth-api',
+  player: 'player-api',
+  engine: 'engine-api',
+  photo: 'photo-api'
 };
 
 const ACOES_AUTH = new Set(['registrar','entrar','entrarMestre','trocarCodigo']);
@@ -62,14 +70,20 @@ async function lerEnvelope(resposta, nome) {
   return envelope;
 }
 
-function urlDaAcao(acao) {
-  if (ACOES_AUTH.has(acao)) return URLS.auth;
-  if (ACOES_MESA.has(acao)) return URLS.mesa;
-  if (ACOES_PLAYER.has(acao)) return URLS.player;
-  if (ACOES_APP.has(acao)) return URLS.app;
-  if (ACOES_FOTO.has(acao)) return URLS.photo;
-  if (ACOES_ENGINE.has(acao)) return URLS.engine;
+function funcaoDaAcao(acao) {
+  if (ACOES_AUTH.has(acao)) return FUNCOES.auth;
+  if (ACOES_MESA.has(acao)) return FUNCOES.mesa;
+  if (ACOES_PLAYER.has(acao)) return FUNCOES.player;
+  if (ACOES_APP.has(acao)) return FUNCOES.app;
+  if (ACOES_FOTO.has(acao)) return FUNCOES.photo;
+  if (ACOES_ENGINE.has(acao)) return FUNCOES.engine;
   return null;
+}
+
+function urlDaAcao(acao) {
+  const funcao = funcaoDaAcao(acao);
+  if (!funcao) return null;
+  return `${CONFIG.baseApi}/${funcao}`;
 }
 
 async function postar(url, corpo, sinal) {

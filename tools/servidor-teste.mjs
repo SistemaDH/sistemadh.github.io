@@ -3,8 +3,19 @@
  * ---------------------------------------------------------------------------
  * Sobe um servidor local que:
  *   • serve os arquivos estáticos do projeto (como o GitHub Pages faria);
- *   • responde /exec executando o Code.gs REAL dentro das imitações do
- *     Apps Script (ver apps-script-mock.mjs).
+ *   • imita as seis Edge Functions do Supabase (/auth-api, /app-api,
+ *     /mesa-api, /player-api, /engine-api, /photo-api), executando o
+ *     backend REAL dentro das imitações do Apps Script (apps-script-mock.mjs).
+ *
+ * ⚠ POR QUE SEIS ROTAS E NÃO UMA.
+ * Em produção o api.js monta `<base>/<nome-da-função>`. Se o teste apontasse
+ * o app para uma rota única, o teste passaria a exercitar um caminho que não
+ * existe no ar — e a primeira coisa que quebraria em produção seria
+ * justamente a parte que o teste garantia estar boa. Aqui todas as seis caem
+ * no MESMO doPost porque o backend é um só; o que importa é que o app monte
+ * a URL do jeito de verdade.
+ *
+ * A rota /exec continua de pé só por compatibilidade com scripts antigos.
  *
  * Uso: node tools/servidor-teste.mjs [porta]
  */
@@ -30,6 +41,12 @@ const TIPOS = {
   '.webp': 'image/webp'
 };
 
+/** As seis Edge Functions publicadas, mais a rota velha do Apps Script. */
+const ROTAS_API = new Set([
+  '/auth-api', '/app-api', '/mesa-api', '/player-api', '/engine-api', '/photo-api',
+  '/exec'
+]);
+
 export function criarServidor({ porta = 0, semarcar = false } = {}) {
   const ambiente = criarAmbiente({ pastaBackend: path.join(RAIZ, 'backend') });
 
@@ -40,7 +57,7 @@ export function criarServidor({ porta = 0, semarcar = false } = {}) {
   const servidor = http.createServer((req, res) => {
     const url = new URL(req.url, `http://${req.headers.host}`);
 
-    if (url.pathname === '/exec') {
+    if (ROTAS_API.has(url.pathname)) {
       if (req.method === 'OPTIONS') {
         res.writeHead(204, cabecalhosCors());
         res.end();

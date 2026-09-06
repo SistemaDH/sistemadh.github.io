@@ -93,11 +93,13 @@ A migração de Google Sheets / Google Apps Script para Supabase foi concluída.
 
 **Não existe mais dependência normal de Google Apps Script no runtime.**
 
+O frontend usa como padrão o base das Supabase Edge Functions. Para testes ou ambientes alternativos, o override é `dh:baseApi`, contendo somente o endereço base; `js/api.js` acrescenta o nome da Edge Function em cada chamada. A chave legada `dh:urlApi` não deve ser reutilizada.
+
 ---
 
 # Último trabalho realizado
 
-A etapa mais recente foi o encerramento da migração para Supabase e a atualização da documentação do projeto.
+A etapa mais recente foi a correção do roteamento dos testes E2E para reproduzir a arquitetura real das Supabase Edge Functions.
 
 Foram concluídos:
 
@@ -117,11 +119,37 @@ Foram concluídos:
 - conta `TesteSupabase` mantida desativada com sua ficha arquivada;
 - nenhuma credencial legada ativa restante;
 - atualização de `docs/arquitetura-supabase.md`;
-- atualização completa do `README.md` para refletir a arquitetura atual.
+- atualização completa do `README.md` para refletir a arquitetura atual;
+- substituição do antigo override `dh:urlApi` por `dh:baseApi`;
+- `js/api.js` passou a montar `<base>/<nome-da-função>` a cada chamada;
+- servidor E2E passou a responder às seis rotas reais: `/auth-api`, `/app-api`, `/mesa-api`, `/player-api`, `/engine-api` e `/photo-api`;
+- `/exec` permanece apenas no servidor de teste para compatibilidade com scripts antigos, não no roteamento de produção;
+- scripts de captura passaram a usar import relativo de `servidor-teste.mjs`, removendo dependência de caminho absoluto do ambiente Claude;
+- suíte E2E ganhou validação explícita de que o frontend chama as seis Edge Functions pelo nome.
+
+## Validação do lote E2E
+
+Resultados informados após a implementação:
+
+```text
+testes-backend.mjs → 415 passaram, 0 falharam
+conferir-css.mjs   → nada a limpar nem a escrever
+testes-e2e.mjs     → 81 passos ok, 0 falharam
+```
+
+O último passo do E2E confirma explicitamente que o app fala com as seis Edge Functions pelo nome, e não com uma rota única de compatibilidade.
 
 ---
 
 # Commits importantes recentes
+
+## Base da API e E2E alinhados às Edge Functions
+
+```text
+2d2bc0b25fcf8a813e5b778047d3ba1e60f83187
+```
+
+Corrige `js/config.js`, `js/api.js`, o servidor local de teste, a suíte E2E e os scripts de captura para usar `dh:baseApi` e as seis rotas reais das Edge Functions. Este commit foi desenvolvido na branch `fix/e2e-base-api` e deve ser integrado à `main` junto com esta atualização do HANDOFF.
 
 ## Corte definitivo do Apps Script no frontend
 
@@ -335,6 +363,12 @@ Elas pertencem ao histórico da migração, não à arquitetura atual.
 
 `js/api.js` é a porta central das chamadas do frontend.
 
+O endereço padrão é o base das Supabase Edge Functions. O override opcional de ambiente/teste fica em `localStorage` sob `dh:baseApi` e deve conter apenas o base, sem `/exec`, sem `/app-api` e sem outro nome de função no final.
+
+`js/api.js` resolve a ação e acrescenta o nome da função correspondente (`auth-api`, `app-api`, `mesa-api`, `player-api`, `engine-api` ou `photo-api`) no momento da chamada.
+
+A chave antiga `dh:urlApi`, usada na época do Apps Script, é legado e não deve ser reaproveitada.
+
 Antes de criar uma chamada HTTP nova diretamente dentro de uma tela, verifique se ela deve ser adicionada ao roteamento central de `api.js`.
 
 Evitar espalhar URLs de Edge Functions pelas telas.
@@ -382,9 +416,9 @@ Não recriar esses dados automaticamente a partir de documentação ou históric
 
 **Não existe neste momento uma próxima tarefa técnica obrigatória definida neste handoff.**
 
-A migração para Supabase foi encerrada e o proprietário confirmou que o sistema aparentemente está funcionando.
+A migração para Supabase foi encerrada e o lote que alinha o E2E à arquitetura real das Edge Functions foi validado integralmente.
 
-A próxima funcionalidade deve ser definida pelo proprietário antes de iniciar desenvolvimento novo.
+Antes de iniciar desenvolvimento novo, confirme que `fix/e2e-base-api` já foi integrada à `main`. Depois disso, a próxima funcionalidade deve ser definida pelo proprietário.
 
 Ao receber a próxima tarefa:
 

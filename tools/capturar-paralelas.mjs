@@ -7,7 +7,7 @@
  * companheiro.
  */
 import { chromium } from 'playwright';
-import { criarServidor } from '/home/claude/dh/tools/servidor-teste.mjs';
+import { criarServidor } from './servidor-teste.mjs';
 
 const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 const { servidor, porta, ambiente } = await criarServidor({ porta: 0, semarcar: true });
@@ -19,7 +19,7 @@ const ctx = await nav.newContext({
   isMobile: true, hasTouch: true, locale: 'pt-BR'
 });
 const p = await ctx.newPage();
-await p.addInitScript(([u]) => localStorage.setItem('dh:urlApi', JSON.stringify(u).slice(1, -1)), [`${base}/exec`]);
+await p.addInitScript(([u]) => localStorage.setItem('dh:baseApi', JSON.stringify(u).slice(1, -1)), [base]);
 
 const semAviso = () => p.waitForSelector('#avisos .aviso', { state: 'detached', timeout: 5000 }).catch(() => {});
 const foto = async (n) => { await semAviso(); await p.waitForTimeout(300); await p.screenshot({ path: `/tmp/${n}.png` }); console.log(`  /tmp/${n}.png`); };
