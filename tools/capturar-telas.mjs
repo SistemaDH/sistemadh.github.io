@@ -8,14 +8,14 @@
  * caixa, botão travado que continua com cara de clicável, contraste ruim.
  */
 import { chromium } from 'playwright';
-import { criarServidor } from '/home/claude/dh/tools/servidor-teste.mjs';
+import { criarServidor } from './servidor-teste.mjs';
 const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 const { servidor, porta } = await criarServidor({ porta: 0, semarcar: true });
 const base = `http://localhost:${porta}`;
 const nav = await chromium.launch({ executablePath: CHROME, args: ['--no-sandbox'] });
 const ctx = await nav.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, locale: 'pt-BR' });
 const p = await ctx.newPage();
-await p.addInitScript(([url]) => { localStorage.setItem('dh:urlApi', JSON.stringify(url).slice(1, -1)); }, [`${base}/exec`]);
+await p.addInitScript(([url]) => { localStorage.setItem('dh:baseApi', JSON.stringify(url).slice(1, -1)); }, [base]);
 await p.goto(base, { waitUntil: 'networkidle' });
 // A abertura é a única tela com arte de fundo — vale um print próprio.
 await p.waitForSelector('.abertura__brasaoImagem');

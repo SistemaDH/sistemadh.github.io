@@ -12,7 +12,7 @@
  */
 import { chromium } from 'playwright';
 import zlib from 'node:zlib';
-import { criarServidor } from '/home/claude/dh/tools/servidor-teste.mjs';
+import { criarServidor } from './servidor-teste.mjs';
 
 /** Um PNG de verdade, para o editor de foto ter o que desenhar. */
 function pngDeTeste(largura = 240, altura = 320) {
@@ -75,8 +75,8 @@ const ctx = await nav.newContext({
 });
 const p = await ctx.newPage();
 await p.addInitScript(([url]) => {
-  localStorage.setItem('dh:urlApi', JSON.stringify(url).slice(1, -1));
-}, [`${base}/exec`]);
+  localStorage.setItem('dh:baseApi', JSON.stringify(url).slice(1, -1));
+}, [base]);
 
 const foto = async (nome) => {
   await p.waitForTimeout(350);

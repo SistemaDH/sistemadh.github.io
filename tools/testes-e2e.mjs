@@ -97,9 +97,27 @@ pagina.on('console', (msg) => {
 });
 pagina.on('pageerror', (e) => anotarErro(e));
 
+/*
+ * ⚠ AQUI VAI O BASE PELADO, SEM NOME DE FUNÇÃO NO FIM.
+ * O api.js monta `<base>/app-api`, `<base>/auth-api` e por aí. Se este valor
+ * terminasse em `/exec` (como na época do Apps Script), o app pediria
+ * `/exec/app-api` — 404 mudo e teste vermelho por motivo errado.
+ */
 await pagina.addInitScript(([url]) => {
-  localStorage.setItem('dh:urlApi', JSON.stringify(url).slice(1, -1));
-}, [`${base}/exec`]);
+  localStorage.setItem('dh:baseApi', JSON.stringify(url).slice(1, -1));
+}, [base]);
+
+/*
+ * Registra TODA chamada POST que sair do navegador durante a suíte inteira.
+ * O último passo confere para onde elas foram. Sem isso, o teste continuaria
+ * verde mesmo se o app voltasse a falar com uma rota única — que é
+ * exatamente a diferença entre o que o teste exercita e o que está no ar.
+ */
+const rotasChamadas = new Set();
+contexto.on('request', (req) => {
+  if (req.method() !== 'POST') return;
+  try { rotasChamadas.add(new URL(req.url()).pathname); } catch (e) { /* url estranha */ }
+});
 
 try {
   await passo('a tela de abertura carrega', async () => {
@@ -1633,9 +1651,9 @@ try {
      * mostraria a tela de configuração em vez do login.
      */
     await isolada.evaluate(() => {
-      const url = localStorage.getItem('dh:urlApi');
+      const url = localStorage.getItem('dh:baseApi');
       localStorage.clear();
-      if (url) localStorage.setItem('dh:urlApi', url);
+      if (url) localStorage.setItem('dh:baseApi', url);
     });
     await isolada.reload({ waitUntil: 'load' });
     const largura = await isolada.locator('.abertura__brasaoImagem')
@@ -1708,6 +1726,35 @@ try {
       throw new Error(`o aviso não nomeia a folha que faltou: "${texto}"`);
     }
     await isolada.close();
+  });
+
+  await passo('o app fala com as seis Edge Functions pelo nome, não com uma rota só', async () => {
+    /*
+     * ⚠ ESTE PASSO GUARDA A FORMA DA URL, NÃO O RESULTADO DA CHAMADA.
+     *
+     * Na migração para o Supabase o backend deixou de ser um endereço só
+     * (`/exec`, do Apps Script) e virou seis funções penduradas num base:
+     * `<base>/auth-api`, `<base>/app-api` e assim por diante. Enquanto o teste
+     * apontava o app para `<base>/exec`, todos os outros 79 passos passavam
+     * exercitando um caminho que NÃO existe em produção — o app montaria
+     * `/exec/app-api`, tomaria 404 e o jogo não abriria, com a suíte verde.
+     *
+     * A conferência é sobre o pathname porque é ele que muda entre o mundo do
+     * teste e o mundo real. Se alguém voltar a colar o nome da função dentro
+     * do valor guardado, ou centralizar tudo numa rota, isto aqui apita.
+     */
+    const esperadas = ['/auth-api', '/app-api', '/mesa-api', '/player-api', '/engine-api', '/photo-api'];
+    const faltando = esperadas.filter((r) => !rotasChamadas.has(r));
+    if (faltando.length) {
+      throw new Error(
+        `estas funções nunca foram chamadas: ${faltando.join(', ')} — ` +
+        `o app usou ${[...rotasChamadas].sort().join(', ') || '(nada)'}`
+      );
+    }
+    const proibidas = [...rotasChamadas].filter((r) => r === '/exec' || /script\.google\.com/.test(r));
+    if (proibidas.length) {
+      throw new Error(`o app ainda chama rota de Apps Script: ${proibidas.join(', ')}`);
+    }
   });
 } catch (e) {
   await pagina.screenshot({ path: '/tmp/dh-falha.png', fullPage: true }).catch(() => {});

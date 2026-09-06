@@ -7,7 +7,7 @@
  * personagens o print não mostraria o número que interessa.
  */
 import { chromium } from 'playwright';
-import { criarServidor } from '/home/claude/dh/tools/servidor-teste.mjs';
+import { criarServidor } from './servidor-teste.mjs';
 
 const { servidor, porta } = await criarServidor({ porta: 0, semarcar: true });
 const base = `http://localhost:${porta}`;
@@ -19,8 +19,8 @@ const ctx = await nav.newContext({
   isMobile: true, hasTouch: true, locale: 'pt-BR'
 });
 const p = await ctx.newPage();
-await p.addInitScript(([u]) => localStorage.setItem('dh:urlApi', JSON.stringify(u).slice(1, -1)),
-  [`${base}/exec`]);
+await p.addInitScript(([u]) => localStorage.setItem('dh:baseApi', JSON.stringify(u).slice(1, -1)),
+  [base]);
 
 const semAviso = () => p.waitForSelector('#avisos .aviso', { state: 'detached', timeout: 6000 }).catch(() => {});
 const foto = async (n) => { await semAviso(); await p.waitForTimeout(350); await p.screenshot({ path: `/tmp/${n}.png` }); console.log(`  /tmp/${n}.png`); };
