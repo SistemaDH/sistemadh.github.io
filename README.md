@@ -25,6 +25,7 @@ O projeto já reúne, entre outras partes:
 - avanço/subida de nível;
 - cartas permanentes;
 - painel do Mestre;
+- ciclo de sessão da mesa;
 - Medo e contagens da mesa;
 - encontros, foco e adversários;
 - bestiário e adversários personalizados;
@@ -83,7 +84,6 @@ Operações gerais e de menor acoplamento, incluindo:
 - obtenção, exclusão e restauração de personagem;
 - configurações;
 - jogadores;
-- abertura de sessão;
 - nível da mesa;
 - opções gerais da campanha.
 
@@ -111,6 +111,7 @@ Motor principal das regras. Entre outras ações, executa:
 - criação e salvamento de personagem;
 - validação completa da ficha;
 - ajustes da ficha em jogo;
+- ciclo de sessão da mesa;
 - descanso;
 - avanço/subida de nível;
 - cartas permanentes;
@@ -126,7 +127,7 @@ O `engine-api` reaproveita o motor mantido em `backend/*.gs` por meio de uma cam
 Commit atualmente fixado no motor:
 
 ```text
-e711cfc85341f14565a4906cdbe321009db9fef9
+f909fb2d270f55d16e57f6ebf003e7af90c4d7c2
 ```
 
 Ao alterar regras em `backend/*.gs`, revise/teste a mudança e depois atualize explicitamente o `ENGINE_COMMIT` do `engine-api` quando quiser promovê-la para produção.
