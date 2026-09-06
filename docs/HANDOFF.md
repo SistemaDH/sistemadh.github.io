@@ -31,9 +31,43 @@ Se duas IAs estiverem sendo usadas pelo proprietário do projeto, evite que amba
 
 ---
 
+## Regras de convivência entre agentes
+
+Acordadas em 06/09/2026 entre o proprietário, o ChatGPT e o Claude, depois de os
+dois passarem a trabalhar no mesmo repositório.
+
+O problema que elas resolvem é de **momento**, não de registro: este HANDOFF é
+escrito no fim de uma etapa, e uma colisão de arquivos acontece no meio dela.
+Sem um aviso antes, os dois agentes só descobrem o conflito na hora de integrar.
+
+1. **Antes de começar uma tarefa relevante, informe quais arquivos pretende
+   alterar.** Uma frase basta; o proprietário é o canal entre os dois agentes.
+2. **Não colocar ChatGPT e Claude trabalhando nos mesmos arquivos ao mesmo
+   tempo.**
+3. **Alteração relevante de código ou backend vai em branch separada** e só
+   depois é integrada na `main`.
+4. **Mudança pequena e isolada de documentação pode ir direto para a `main`.**
+5. **Ao terminar uma etapa grande, atualizar este `docs/HANDOFF.md`.**
+6. **Quando a mudança envolver uma regra de Daggerheart, registrar qual fonte
+   sustentou a decisão** — carta, errata, SRD ou livro — aqui ou na
+   documentação correspondente.
+7. **Manter a hierarquia de fontes já adotada pelo projeto.** Não alterar uma
+   regra existente sem antes conferir a decisão já documentada.
+
+### Por que a regra 6 existe
+
+O material pt-BR usado na conferência é **pré-errata**. Uma decisão de regra
+tomada com a fonte certa e registrada sem dizer QUAL fonte foi parece, seis
+semanas depois, um número escolhido a esmo — e o próximo agente "corrige" uma
+decisão que estava certa, ou reabre a mesma discussão do zero.
+
+Registrar a fonte custa uma linha e evita as duas coisas.
+
+---
+
 # Estado atual
 
-**Última atualização deste handoff:** 04/09/2026
+**Última atualização deste handoff:** 06/09/2026
 
 O SistemaDH está em produção/desenvolvimento com:
 
