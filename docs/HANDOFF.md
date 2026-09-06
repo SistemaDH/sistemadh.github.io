@@ -70,21 +70,21 @@ O repositório usa `.gitattributes` com `* text=auto eol=lf` para evitar diffs f
 
 `engine-api` carrega os arquivos `backend/*.gs` de um commit fixado do GitHub. Isso é deliberado: alterar `backend/*.gs` na `main` não muda produção sozinho.
 
-## Produção atual — Lote 4
+## Produção atual — Lote 5
 
-O **Lote 4 — cena e descanso da Clank** foi integrado na `main` pelo PR #4 em 06/09/2026.
+O **Lote 5 — movimentos de morte e cicatrizes** foi integrado na `main` pelo PR #5 em 06/09/2026.
 
-A `engine-api` de produção está implantada como **versão 4**, `ACTIVE`, com `verify_jwt=false` porque a função implementa autenticação própria por token de sessão.
+A `engine-api` de produção está implantada como **versão 5**, `ACTIVE`, com `verify_jwt=false` porque a função implementa autenticação própria por token de sessão.
 
 O motor está fixado no commit revisado:
 
 ```text
-184c3e32b6f201187eb92b412b1c40b8f1068077
+f0e00a6bd86d79f51d3a57e4c948b7fed861bada
 ```
 
-Esse commit contém o backend aprovado do Lote 4, incluindo o limite correto de um movimento emprestado pela característica **Eficiente** da Clank durante descanso curto.
+Esse commit contém os cinco arquivos do motor alterados no Lote 5: `30_Personagens.gs`, `40_Regras.gs`, `48_Criacao.gs`, `4B_Descanso.gs` e `4C_Ajustes.gs`. O pin foi conferido no código efetivamente implantado no Supabase.
 
-O deploy foi confirmado pelo estado da Edge Function no Supabase e pela leitura do código implantado. O conector disponível nesta etapa não expunha uma ação de invocação HTTP/logs, então não foi inventado smoke test remoto; a validação funcional disponível continua sendo a bateria registrada do lote.
+O deploy foi confirmado pelo estado da Edge Function no Supabase e pela leitura do código implantado. O conector disponível nesta etapa não expunha uma ação de invocação HTTP/logs com sessão real, então não foi inventado smoke test remoto; a validação funcional disponível é a bateria registrada do lote.
 
 Fluxo obrigatório para qualquer mudança futura em `backend/*.gs`:
 
@@ -265,6 +265,65 @@ Aposentadas/históricas — não criar dependência nova:
 
 ---
 
+# Lote 5 — concluído
+
+Fecha o **D2 — Evitar a Morte**. Marcar o último Ponto de Vida não mata automaticamente: obriga a escolher um dos três movimentos de morte da p.106.
+
+## Regra implementada
+
+- **Sacrifício Glorioso** — última ação com sucesso crítico automático; depois o personagem atravessa o véu.
+- **Evitar a Morte** — informa o resultado do Dado de Esperança; resultado igual ou abaixo do nível gera cicatriz; o personagem fica inconsciente até recuperar 1 PV ou até um descanso longo.
+- **Arriscar Tudo** — Esperança maior levanta o personagem e limpa recursos conforme o valor; Medo maior atravessa o véu; dados iguais são crítico e limpam PV/Estresse.
+
+A mesa adotou a leitura de **repartir** o valor do Dado de Esperança entre Pontos de Vida e Estresse quando a Esperança vence no Arriscar Tudo.
+
+A errata oficial de 09/09/2025 não possui entrada sobre movimentos de morte, cicatrizes ou Dado de Esperança, conforme conferência registrada no lote.
+
+## Modelo da ficha
+
+A ficha ganhou:
+
+- `cicatrizes: []` — lista com histórico/nota de cada cicatriz;
+- `inconsciente: false` — estado separado das condições;
+- `encerrada: null` — registra `{ motivo, em, nota }` para `sacrificio`, `veu` ou `aposentado`.
+
+`aplicarDerivados_` publica `esperancaImpressa` e `esperancaMaxima`. A primeira preserva os seis espaços impressos da ficha; a segunda desconta permanentemente as cicatrizes e continua sendo o teto usado pelo restante do app.
+
+A cicatriz que elimina o último espaço de Esperança encerra a jornada. Fichas encerradas continuam disponíveis para leitura/correção e aparecem no fim do roster, em meio-tom e com selo próprio.
+
+## Tela e fluxo
+
+- encher os PV abre automaticamente o diálogo dos três movimentos;
+- se o diálogo for fechado, a faixa de “PV no limite” permite reabri-lo;
+- a trilha de Esperança mantém os seis espaços e marca os perdidos com `assets/marca/cicatriz.svg`;
+- o veredito de Arriscar Tudo aparece antes da confirmação;
+- inconsciência some automaticamente ao recuperar 1 PV ou ao concluir descanso longo;
+- descanso curto não remove inconsciência.
+
+## Validação
+
+```text
+testes-e2e.mjs     → 93 passos ok, 0 falharam
+testes-backend.mjs → 435 passaram, 0 falharam
+conferir-css.mjs   → nada a limpar nem a escrever
+```
+
+Os testes novos cobrem a trava de PV no limite, resultado igual ao nível cicatrizando, redução permanente da Esperança máxima, última cicatriz encerrando a ficha, os três desfechos de Arriscar Tudo, repartição do dado, Sacrifício Glorioso e as duas formas de sair da inconsciência.
+
+## Integração e deploy
+
+- PR #5 — `Lote 5: movimentos de morte e cicatrizes` — mesclado na `main` em 06/09/2026;
+- merge commit: `c7e019b5c5b95b8370ec62e8bbc5679beb5d6fdd`;
+- `engine-api` implantada antes do merge;
+- versão Supabase: **5**;
+- status: **ACTIVE**;
+- `verify_jwt=false` preservado;
+- `ENGINE_COMMIT=f0e00a6bd86d79f51d3a57e4c948b7fed861bada`.
+
+O Lote 5 está encerrado.
+
+---
+
 # Lote 4 — concluído
 
 Fecha os pontos **8** e **11**, os dois últimos dos catorze prints.
@@ -358,7 +417,7 @@ O ponto 8 subiu pelo frontend no merge e o ponto 11 está no motor implantado. O
 
 # Próximos pontos dos prints
 
-**Nenhum.** Os catorze pontos estão concluídos e integrados na `main`.
+**Nenhum.** Os catorze pontos estão concluídos e integrados na `main`, e o D2 do Lote 5 também está implantado.
 
 A próxima funcionalidade deve ser definida pelo proprietário.
 
