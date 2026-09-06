@@ -95,12 +95,13 @@ A migração de Google Sheets / Google Apps Script para Supabase foi concluída.
 
 O frontend usa como padrão o base das Supabase Edge Functions. Para testes ou ambientes alternativos, o override é `dh:baseApi`, contendo somente o endereço base; `js/api.js` acrescenta o nome da Edge Function em cada chamada. A chave legada `dh:urlApi` não deve ser reutilizada.
 
+O repositório agora também possui `.gitattributes` com `* text=auto eol=lf`, para evitar que gravações por ambientes diferentes convertam arquivos inteiros para CRLF e poluam os diffs.
+
 ---
 
 # Último trabalho realizado
 
-A etapa mais recente foi o **Lote 2 — ficha do jogador**, que fecha quatro dos catorze
-pontos levantados pela proprietária em prints do celular (branch `feat/lote2-ficha-jogador`).
+A etapa mais recente foi o **Lote 2 — ficha do jogador**, desenvolvido na branch `ediçãoclaude`, revisado, integrado à `main` e com o motor necessário já implantado no Supabase.
 
 ## Lote 2 — ficha do jogador
 
@@ -121,10 +122,7 @@ do item e já era preservado por `itemDeMochila_`; faltava a ação que escreve 
 - nota vazia **apaga** o campo em vez de gravar string vazia;
 - limite de 120 caracteres, o mesmo do nome do item.
 
-> ⚠ **Isto não chega em produção sozinho.** `4C_Ajustes.gs` está sob o commit fixado do
-> motor. Enquanto o `ENGINE_COMMIT` da `engine-api` não for atualizado e a função
-> reimplantada (passos 5–7 de "Motor de regras — cuidado crítico"), a ação `nota` responde
-> como desconhecida no ar. Os outros três pontos do lote são só frontend e não dependem disso.
+**Estado de produção:** concluído. O `ENGINE_COMMIT` da `engine-api` foi atualizado para `b6a68644167ad3f6628066b6d9426f6fc0ae9661`, a função foi reimplantada no Supabase como versão 2 e ficou `ACTIVE`. Portanto `inventario/nota` já faz parte do motor carregado pela Edge Function.
 
 ### Decisão de escopo registrada
 
@@ -197,13 +195,29 @@ O último passo do E2E confirma explicitamente que o app fala com as seis Edge F
 
 # Commits importantes recentes
 
+## Lote 2 — ficha do jogador
+
+```text
+b6a68644167ad3f6628066b6d9426f6fc0ae9661
+```
+
+Contém as mudanças de interface, a nova ação `inventario/nota`, testes e documentação produzidos na branch `ediçãoclaude`.
+
+## Atualização do pin do motor
+
+```text
+50ba1f5b69c1d1114ba35120bf4e929590a27339
+```
+
+Atualizou `supabase/functions/engine-api/index.ts` para carregar o Lote 2 pelo commit fixado e foi integrado à `main`. A Edge Function correspondente foi implantada no Supabase como `engine-api` versão 2.
+
 ## Base da API e E2E alinhados às Edge Functions
 
 ```text
 2d2bc0b25fcf8a813e5b778047d3ba1e60f83187
 ```
 
-Corrige `js/config.js`, `js/api.js`, o servidor local de teste, a suíte E2E e os scripts de captura para usar `dh:baseApi` e as seis rotas reais das Edge Functions. Este commit foi desenvolvido na branch `fix/e2e-base-api` e deve ser integrado à `main` junto com esta atualização do HANDOFF.
+Corrigiu `js/config.js`, `js/api.js`, o servidor local de teste, a suíte E2E e os scripts de captura para usar `dh:baseApi` e as seis rotas reais das Edge Functions. Esse lote já foi integrado à `main`.
 
 ## Corte definitivo do Apps Script no frontend
 
@@ -274,8 +288,10 @@ Eles são carregados/executados pelo motor Supabase através de uma camada de co
 O motor está deliberadamente fixado no commit:
 
 ```text
-e711cfc85341f14565a4906cdbe321009db9fef9
+b6a68644167ad3f6628066b6d9426f6fc0ae9661
 ```
+
+Esse pin foi implantado na `engine-api` versão 2 em 06/09/2026.
 
 Portanto:
 
@@ -393,6 +409,8 @@ Aliados e projetos.
 
 Motor completo de regras, ficha, descanso, avanço, Mestre, encontros e adversários.
 
+Estado conhecido após o Lote 2: versão 2 `ACTIVE`, com `ENGINE_COMMIT=b6a68644167ad3f6628066b6d9426f6fc0ae9661`.
+
 ## `photo-api`
 
 Fotos no Supabase Storage.
@@ -468,12 +486,7 @@ Não recriar esses dados automaticamente a partir de documentação ou históric
 
 # Próxima tarefa
 
-## Pendência aberta pelo Lote 2
-
-**Atualizar o `ENGINE_COMMIT` da `engine-api` e reimplantar**, para a ação
-`inventario/nota` (ponto 3) existir em produção. Seguir os passos 5–7 de
-"Motor de regras — cuidado crítico". Enquanto isso não acontecer, a nota funciona
-em teste e responde como ação desconhecida no ar.
+O Lote 2 está concluído: código integrado na `main`, pin do motor atualizado e `engine-api` versão 2 implantada no Supabase.
 
 ## Pontos dos prints ainda em aberto
 
@@ -487,12 +500,7 @@ Restam quatro dos catorze levantados pela proprietária:
   Já conferido no SRD: começa-se uma **campanha** com 1 Medo por personagem, teto 12,
   e o Medo **atravessa** sessões.
 
-Os pontos 9 e 12 mexem em `backend/*.gs` e portanto também dependem do redeploy do motor.
-
-## Antes de começar
-
-Confirme que `feat/lote2-ficha-jogador` já foi integrada à `main`. Depois disso, a próxima
-funcionalidade deve ser definida pelo proprietário.
+Os pontos 9 e 12 mexem em `backend/*.gs`; qualquer mudança aprovada neles exige novo commit fixado e novo deploy da `engine-api`.
 
 Ao receber a próxima tarefa:
 
