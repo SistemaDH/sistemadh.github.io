@@ -24,9 +24,9 @@ As tabelas públicas têm RLS habilitado e não possuem policies para `anon` ou 
 
 `engine-api` executa o mesmo código de regras mantido em `backend/*.gs`, mas não usa APIs do Google. Ele carrega um conjunto fixo de arquivos do commit:
 
-`f909fb2d270f55d16e57f6ebf003e7af90c4d7c2`
+`184c3e32b6f201187eb92b412b1c40b8f1068077`
 
-Esse pin corresponde ao motor aprovado do **Lote 3 — ciclo de sessão e contadores nas cartas**, implantado no Supabase como `engine-api` versão 3 em 06/09/2026, com `verify_jwt=false` porque a função faz autenticação própria por token de sessão.
+Esse pin corresponde ao motor aprovado do **Lote 4 — cena e descanso da Clank**, implantado no Supabase como `engine-api` versão 4 em 06/09/2026, com `verify_jwt=false` porque a função faz autenticação própria por token de sessão.
 
 O pin é intencional: alterações futuras na branch `main` não passam a executar automaticamente com privilégios de backend. Quando uma regra em `backend/` mudar, primeiro ela deve ser revisada/testada e depois o `ENGINE_COMMIT` da Edge Function deve ser atualizado explicitamente.
 

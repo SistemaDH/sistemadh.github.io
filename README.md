@@ -127,7 +127,7 @@ O `engine-api` reaproveita o motor mantido em `backend/*.gs` por meio de uma cam
 Commit atualmente fixado no motor:
 
 ```text
-f909fb2d270f55d16e57f6ebf003e7af90c4d7c2
+184c3e32b6f201187eb92b412b1c40b8f1068077
 ```
 
 Ao alterar regras em `backend/*.gs`, revise/teste a mudança e depois atualize explicitamente o `ENGINE_COMMIT` do `engine-api` quando quiser promovê-la para produção.
