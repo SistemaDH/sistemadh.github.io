@@ -70,27 +70,27 @@ O repositório usa `.gitattributes` com `* text=auto eol=lf` para evitar diffs f
 
 `engine-api` carrega os arquivos `backend/*.gs` de um commit fixado do GitHub. Isso é deliberado: alterar `backend/*.gs` na `main` não muda produção sozinho.
 
-## Produção confirmada antes do Lote 3
+## Produção atual — Lote 3
 
-O Lote 2 foi integrado e a `engine-api` foi implantada como versão 2, fixada no commit:
+O **Lote 3 — ciclo de sessão e contadores nas cartas** foi integrado na `main` pelo PR #2 em 06/09/2026.
 
-```text
-b6a68644167ad3f6628066b6d9426f6fc0ae9661
-```
+A `engine-api` de produção está implantada como **versão 3**, `ACTIVE`, com `verify_jwt=false` porque a função implementa autenticação própria por token de sessão.
 
-Esse estado inclui `inventario/nota` em produção.
-
-## Lote 3 — estado da branch `ediçãoclaude`
-
-O código do Lote 3 foi revisado e a source-control da `engine-api` já está preparada para carregar:
+O motor está fixado no commit revisado:
 
 ```text
 f909fb2d270f55d16e57f6ebf003e7af90c4d7c2
 ```
 
-Esse commit contém o backend do Lote 3 e a correção de roteamento das ações do ciclo de sessão.
+Esse commit contém o backend aprovado do Lote 3. As ações:
 
-**Importante:** enquanto a nova versão da `engine-api` não for implantada no Supabase, o Lote 3 NÃO deve ser mesclado na `main`. O frontend novo depende do motor novo.
+```text
+abrirSessao
+encerrarSessaoDaMesa
+voltarParaAPrimeiraSessao
+```
+
+são roteadas pelo frontend para `engine-api` e fazem parte da allowlist da função implantada.
 
 Fluxo obrigatório para qualquer mudança futura em `backend/*.gs`:
 
@@ -127,7 +127,7 @@ O backend necessário do Lote 2 já foi implantado no Supabase.
 
 ---
 
-# Lote 3 — ciclo de sessão e contadores nas cartas
+# Lote 3 — concluído
 
 Fecha os pontos **12** e **9** dos prints.
 
@@ -200,7 +200,7 @@ Isso garante que o código novo de `backend/99_Api.gs` seja executado pela funç
 - **p.154**: Pontos de Medo atravessam sessões; abrir sessão 2+ e encerrar sessão não zeram Medo.
 - **p.105**: habilidades de uma vez por sessão não voltam em descanso; voltam no começo da próxima sessão.
 
-## Validação do Claude antes da correção de roteamento
+## Validação registrada pelo Claude
 
 ```text
 testes-e2e.mjs     → 88 passos ok, 0 falharam
@@ -210,7 +210,17 @@ conferir-css.mjs   → nada a limpar nem a escrever
 
 Novos E2E cobrem Medo inicial da campanha, recusa de duas sessões abertas, preservação do Medo, sincronização `sessaoVista` e marcador dentro da carta.
 
-A correção de roteamento feita na revisão é estrutural e não altera a regra; antes do merge definitivo deve-se confirmar o deploy real da nova `engine-api`.
+## Integração e deploy
+
+- PR #2 — `Lote 3: ciclo de sessão e contadores nas cartas` — mesclado na `main` em 06/09/2026;
+- merge commit: `4ef7a2a9e173aa32a7b8dd99f2f27e114eda62d9`;
+- `engine-api` implantada antes do merge;
+- versão Supabase: **3**;
+- status: **ACTIVE**;
+- `verify_jwt=false` preservado;
+- `ENGINE_COMMIT=f909fb2d270f55d16e57f6ebf003e7af90c4d7c2`.
+
+O Lote 3 está encerrado e os pontos 9 e 12 dos prints são considerados concluídos.
 
 ---
 
@@ -263,12 +273,10 @@ Aposentadas/históricas — não criar dependência nova:
 
 # Próximos pontos dos prints
 
-Depois de fechar e implantar o Lote 3, permanecem:
+Depois do fechamento do Lote 3, permanecem:
 
 - **8** — melhorar o fluxo de cena/bestiário, retirada de adversário derrotado e popup de movimentos;
 - **11** — classes com descanso próprio (ex.: Clank) mostram opções que podem confundir.
-
-Os pontos 9 e 12 pertencem ao Lote 3 e ficam considerados concluídos somente após o deploy da nova `engine-api` e merge na `main`.
 
 ---
 
