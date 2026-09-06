@@ -99,7 +99,94 @@ O frontend usa como padrão o base das Supabase Edge Functions. Para testes ou a
 
 # Último trabalho realizado
 
-A etapa mais recente foi o **Lote 2 — ficha do jogador**, que fecha quatro dos catorze
+A etapa mais recente foi o **Lote 3 — ciclo de sessão e contadores**, que fecha os
+pontos 12 e 9 dos prints do celular.
+
+## Lote 3 — ciclo de sessão (12) e contadores nas cartas (9)
+
+### O desenho, e por que ele é assim
+
+A sessão é **estado na mesa**, não um evento que o Mestre dispara nas fichas.
+
+O Mestre não escreve na ficha dos outros — a gravação é otimista por versão, e um
+botão que salvasse cinco fichas de uma vez ou falharia pela metade ou precisaria de um
+caminho privilegiado que não existe. Pior: metade da mesa costuma estar com o app
+fechado na hora em que a sessão vira.
+
+Então: a mesa guarda o número da sessão; cada ficha guarda em `sessaoVista` até onde já
+reconciliou; e **a própria ficha do jogador** aplica os gatilhos `fim-de-sessao` e
+`inicio-de-sessao` quando ele a abre com a mesa à frente. Ninguém escreve na ficha de
+ninguém, e quem estava offline acerta o relógio quando volta.
+
+### O que mudou
+
+| Onde | O quê |
+| --- | --- |
+| `backend/4E_Mesa.gs` | `m.sessao` ganhou `terminouEm` e `aberta`. Três funções: `abrirSessaoDaMesa_`, `encerrarSessaoDaMesa_`, `voltarParaAPrimeiraSessaoDaMesa_`. |
+| `backend/99_Api.gs` | ações `encerrarSessaoDaMesa` e `voltarParaAPrimeiraSessao`; `abrirSessao` passou a receber a contagem de personagens. |
+| `backend/4C_Ajustes.gs` | mutação nova `{ tipo: 'sessao' }` → `ajustarSessaoDaFicha_`. |
+| `backend/40_Regras.gs` | campo `sessaoVista` na forma padrão da ficha. |
+| `js/telas/mestre.js`, `css/mestre.css` | o bloco de sessão passou a ter estado, com uma frase que diz em qual ele está e o botão que faz sentido nele. |
+| `js/telas/ficha.js`, `css/ficha.css` | a sincronia ao abrir, e o marcador **dentro da carta**. |
+| `js/api.js`, `js/estado.js` | as duas ações novas e `sessaoDaMesa` no estado local. |
+
+### Regras que este lote implementa (fonte registrada)
+
+- **p.154**, via `data/mesa.json`: "No início da **campanha**, você começa com um número
+  de Pontos de Medo igual ao número de personagens." É regra de campanha, não de sessão:
+  só a abertura da **sessão 1** encosta no Medo.
+- **p.154**: "Pontos de Medo são transferidos entre as sessões" — abrir a 2, a 3 e as
+  seguintes não mexe no Medo; encerrar também não.
+- **p.105**, via `data/descanso.json`: habilidades "uma vez por sessão" **não** voltam em
+  descanso, só no começo da próxima sessão.
+
+### Detalhes que o próximo agente precisa saber
+
+1. **`encerrarSessao_` já existia** e quer dizer outra coisa: encerrar a sessão de
+   **login** (20_Auth.gs, ação `sair`). Em Apps Script tudo é escopo global — uma segunda
+   função com esse nome não daria erro, só substituiria a primeira, e o app pararia de
+   deslogar. Daí o sufixo `DaMesa`.
+2. **`aberta` é deduzida quando não está gravada**, não posta como `false`. Mesa antiga
+   tem `numero` e `comecouEm` e nenhum campo de estado; normalizar para `false` diria
+   "nenhuma sessão aberta" no meio de uma, e o conserto pularia um número.
+3. **Não dá para abrir duas sessões nem encerrar duas vezes** — o servidor recusa. O
+   número da sessão é o que as fichas usam para saber que precisam recarregar; um número
+   pulado viraria uma recarga a mais na ficha de todo mundo, calada.
+4. **O número da sessão não vem do cliente.** `ajustarSessaoDaFicha_` lê a mesa por
+   dentro. Se viesse no pedido, uma tela desatualizada poderia recarregar os contadores
+   fora de hora — que é o recurso que "uma vez por sessão" existe para limitar.
+5. **Fim antes de começo, nessa ordem.** Há contador que zera no fim e recarrega no
+   começo (o Dado de Inspiração do Bardo é os dois). Invertendo, a zeragem apagaria a
+   recarga e o jogador abriria a sessão nova com a carta vazia.
+6. **Faltar três sessões dá uma recarga, não três.** Recarregar não acumula.
+
+### Validação do Lote 3
+
+```text
+testes-e2e.mjs     → 88 passos ok, 0 falharam
+testes-backend.mjs → 421 passaram, 0 falharam
+conferir-css.mjs   → nada a limpar nem a escrever
+```
+
+Passos novos no E2E: `a campanha COMEÇA pondo o Medo em 1 por personagem`,
+`não dá para abrir duas sessões — o botão vira "Encerrar"`,
+`encerrar e abrir a sessão 2 NÃO zera o Medo`,
+`a virada de sessão chega na ficha sem o Mestre tocar nela (ponto 12)` e
+`o marcador da carta mora NA carta — e é o mesmo da aba Jogo (ponto 9)`.
+
+Testes novos no backend: o Medo inicial de campanha, a recusa de abrir/encerrar duas
+vezes, o voltar para antes da primeira, a sincronia da ficha (com o número do pedido
+sendo ignorado) e o salto de várias sessões.
+
+⚠ **Ferramenta de teste:** `abrirDobra(nome)` foi acrescentado ao E2E. Clicar numa dobra
+é um **interruptor**, não um "abrir", e a escolha sobrevive ao redesenho — dois passos
+clicando às cegas fechavam a dobra um do outro. Além disso a ficha **grava ao abrir**
+(a sincronia de sessão), e um clique que caia no meio do redesenho não registra o
+`toggle`. Nenhum passo novo deve voltar a clicar `.dobra__topo` direto.
+
+## Antes disso
+
+A etapa anterior foi o **Lote 2 — ficha do jogador**, que fecha quatro dos catorze
 pontos levantados pela proprietária em prints do celular (branch `feat/lote2-ficha-jogador`).
 
 ## Lote 2 — ficha do jogador
@@ -468,31 +555,37 @@ Não recriar esses dados automaticamente a partir de documentação ou históric
 
 # Próxima tarefa
 
-## Pendência aberta pelo Lote 2
+## Pendência aberta pelo Lote 3
 
-**Atualizar o `ENGINE_COMMIT` da `engine-api` e reimplantar**, para a ação
-`inventario/nota` (ponto 3) existir em produção. Seguir os passos 5–7 de
-"Motor de regras — cuidado crítico". Enquanto isso não acontecer, a nota funciona
-em teste e responde como ação desconhecida no ar.
+**Atualizar o `ENGINE_COMMIT` da `engine-api` e reimplantar.** O Lote 3 mexeu em
+`4E_Mesa.gs`, `99_Api.gs`, `4C_Ajustes.gs` e `40_Regras.gs` — todos sob o commit fixado.
+Seguir os passos 5–7 de "Motor de regras — cuidado crítico". Enquanto isso não acontecer:
+
+- as ações `encerrarSessaoDaMesa` e `voltarParaAPrimeiraSessao` não existem no ar;
+- `abrirSessao` continua sem pôr o Medo inicial de campanha;
+- a mutação `{ tipo: 'sessao' }` responde como tipo desconhecido, e a ficha do jogador
+  tenta a sincronia a cada abertura e recebe erro.
+
+⚠ **Este último merece atenção no deploy:** a parte de frontend do Lote 3 assume o motor
+novo. Subir só o frontend deixaria a ficha mostrando um aviso de erro ao abrir.
 
 ## Pontos dos prints ainda em aberto
 
-Restam quatro dos catorze levantados pela proprietária:
+Restam dois dos catorze levantados pela proprietária:
 
 - **8** — a cena não existe como lugar: leva ao bestiário, não dá para tirar adversário
-  derrotado, e falta o popup de movimentos do adversário;
-- **9** — contadores dentro das cartas, presos à sessão do Mestre (depende do 12);
-- **11** — classes com descanso próprio (Clank) mostram os dois e confundem;
-- **12** — ciclo de sessão: encerrar, voltar à primeira, montar a primeira.
-  Já conferido no SRD: começa-se uma **campanha** com 1 Medo por personagem, teto 12,
-  e o Medo **atravessa** sessões.
-
-Os pontos 9 e 12 mexem em `backend/*.gs` e portanto também dependem do redeploy do motor.
+  derrotado, e falta o popup de movimentos do adversário. **Só frontend**
+  (`js/telas/encontro.js`, `css/mestre.css`): é o único que sobe sem redeploy do motor.
+- **11** — classes com descanso próprio mostram os dois e confundem. É questão de
+  **regra**, não de tela: `data/descanso.json` registra que a Clank com a característica
+  **Eficiente** pode, num descanso curto, escolher um movimento de descanso longo no
+  lugar de um de curto (p.54). O material pt-BR é pré-errata, então **conferir na errata
+  em inglês antes de implementar** (regra 6).
 
 ## Antes de começar
 
-Confirme que `feat/lote2-ficha-jogador` já foi integrada à `main`. Depois disso, a próxima
-funcionalidade deve ser definida pelo proprietário.
+Confirme que a branch do Lote 3 já foi integrada à `main` e que o motor foi
+reimplantado. Depois disso, a próxima funcionalidade deve ser definida pelo proprietário.
 
 Ao receber a próxima tarefa:
 

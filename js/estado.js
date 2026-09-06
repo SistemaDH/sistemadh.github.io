@@ -19,6 +19,9 @@ const estado = {
   personagemAberto: null,
   medo: 0,
   nivelDaMesa: 1,
+  // Qual sessão a MESA está. A ficha compara com o que ela mesma já viu e se
+  // acerta sozinha — ver `ajustarSessaoDaFicha_` (backend/4C_Ajustes.gs).
+  sessaoDaMesa: 0,
   /* Regra opcional do SRD ("Gold Coins"): quem liga é o Mestre, e a ficha só
      obedece. Ver `ouroComMoedas_` em 4E_Mesa.gs. */
   ouroComMoedas: false,
@@ -85,6 +88,7 @@ export const acoes = {
         jogador: dados.jogador,
         medo: dados.medo ?? 0,
         nivelDaMesa: dados.nivelDaMesa ?? 1,
+        sessaoDaMesa: dados.sessaoDaMesa ?? 0,
         ouroComMoedas: Boolean(dados.ouroComMoedas),
         versaoServidor: dados.versao,
         iniciando: false
@@ -120,6 +124,7 @@ export const acoes = {
       definir({
         medo: dados.medo ?? estado.medo,
         nivelDaMesa: para,
+        sessaoDaMesa: dados.sessaoDaMesa ?? estado.sessaoDaMesa,
         // Pela mesma porta chega a regra das moedas: se o Mestre ligar com o
         // jogador já dentro do app, a coluna aparece ao voltar para a tela.
         ouroComMoedas: Boolean(dados.ouroComMoedas)
@@ -391,7 +396,26 @@ export const acoes = {
   parearContagens: (idA, idB) => api.parearContagens(estado.token, idA, idB),
   desparearContagem: (id) => api.desparearContagem(estado.token, id),
   avancarPerseguicao: (id, resultado) => api.avancarPerseguicao(estado.token, id, resultado),
-  abrirSessao: () => api.abrirSessao(estado.token),
+  /*
+   * O CICLO DE SESSÃO. As três devolvem a mesa inteira, e o Medo pode ter
+   * mudado (abrir a sessão 1 põe 1 por personagem, p.154) — por isso o estado
+   * local acompanha em vez de esperar o próximo `atualizarSessao`.
+   */
+  async abrirSessao() {
+    const r = await api.abrirSessao(estado.token);
+    definir({ medo: r.mesa.medo });
+    return r;
+  },
+  async encerrarSessaoDaMesa() {
+    const r = await api.encerrarSessaoDaMesa(estado.token);
+    definir({ medo: r.mesa.medo });
+    return r;
+  },
+  async voltarParaAPrimeiraSessao() {
+    const r = await api.voltarParaAPrimeiraSessao(estado.token);
+    definir({ medo: r.mesa.medo });
+    return r;
+  },
 
   async aplicarDescansoDaMesa(tipo, escolhas) {
     const r = await api.aplicarDescansoDaMesa(estado.token, tipo, escolhas);

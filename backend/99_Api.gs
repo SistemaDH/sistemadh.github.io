@@ -961,13 +961,42 @@ function executar_(p) {
         });
       }
 
+      /* --- ciclo de sessão ---------------------------------------------- */
+      /*
+       * As três moram aqui, junto de `abrirSessao`, e não em `mesa-api`: são o
+       * mesmo assunto, e separar as irmãs entre duas Edge Functions só criaria
+       * uma pergunta ("por que essa fica lá?") que nada responde.
+       */
       case 'abrirSessao': {
         const jogador = exigirMestre_(p.token);
         return comTrava_(function () {
           const m = mesaLer_();
-          const r = abrirSessao_(m);
+          const r = abrirSessaoDaMesa_(m, quantosPersonagens_());
           mesaGravar_(m);
-          registrarLog_(jogador, 'sessao-aberta', 'Sessão ' + r.numero);
+          registrarLog_(jogador, 'sessao-aberta', 'Sessão ' + r.numero +
+            (r.primeira ? ' (campanha começou com Medo ' + r.medo + ')' : ''));
+          return ok_({ sessao: r, mesa: m });
+        });
+      }
+
+      case 'encerrarSessaoDaMesa': {
+        const jogador = exigirMestre_(p.token);
+        return comTrava_(function () {
+          const m = mesaLer_();
+          const r = encerrarSessaoDaMesa_(m);
+          mesaGravar_(m);
+          registrarLog_(jogador, 'sessao-encerrada', 'Sessão ' + r.numero + ' · Medo ' + r.medo);
+          return ok_({ sessao: r, mesa: m });
+        });
+      }
+
+      case 'voltarParaAPrimeiraSessao': {
+        const jogador = exigirMestre_(p.token);
+        return comTrava_(function () {
+          const m = mesaLer_();
+          const r = voltarParaAPrimeiraSessaoDaMesa_(m);
+          mesaGravar_(m);
+          registrarLog_(jogador, 'sessao-reiniciada', 'Voltou da sessão ' + r.antes + ' para antes da 1');
           return ok_({ sessao: r, mesa: m });
         });
       }

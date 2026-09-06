@@ -32,7 +32,10 @@ const ACOES_MESA = new Set([
 const ACOES_PLAYER = new Set(['aliadosDaMesa','meusProjetos']);
 const ACOES_APP = new Set([
   'ping','sessao','listarPersonagens','obterPersonagem','excluirPersonagem','restaurarPersonagem',
-  'sair','lerConfig','gravarConfig','listarJogadores','abrirSessao','anunciarNivelDaMesa',
+  'sair','lerConfig','gravarConfig','listarJogadores','anunciarNivelDaMesa',
+  // O ciclo de sessão inteiro mora na mesma função: separar as irmãs entre
+  // duas Edge Functions só criaria uma pergunta que nada responde.
+  'abrirSessao','encerrarSessaoDaMesa','voltarParaAPrimeiraSessao',
   'ouroComMoedas','definirDanoMassivo'
 ]);
 const ACOES_FOTO = new Set(['guardarFoto','removerFoto']);
@@ -167,6 +170,8 @@ export const api = {
   desparearContagem: (token,id) => chamar('desparearContagem',{token,id}),
   avancarPerseguicao: (token,id,resultado) => chamar('avancarPerseguicao',{token,id,resultado}),
   abrirSessao: token => chamar('abrirSessao',{token}),
+  encerrarSessaoDaMesa: token => chamar('encerrarSessaoDaMesa',{token}),
+  voltarParaAPrimeiraSessao: token => chamar('voltarParaAPrimeiraSessao',{token}),
   anunciarNivelDaMesa: (token,nivel) => chamar('anunciarNivelDaMesa',{token,nivel}),
   ouroComMoedas: (token,ligar) => chamar('ouroComMoedas',{token,ligar}),
   definirMoldura: (token,moldura) => chamar('definirMoldura',{token,moldura}),

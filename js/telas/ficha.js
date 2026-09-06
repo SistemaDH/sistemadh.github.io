@@ -576,6 +576,31 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
 
   desenhar();
 
+  /**
+   * ACERTA O RELÓGIO DESTA FICHA COM A SESSÃO DA MESA.
+   *
+   * O Mestre não escreve na ficha dos outros — e metade da mesa costuma estar
+   * com o app fechado na hora em que a sessão vira. Então a sessão é estado na
+   * MESA, e cada ficha se acerta sozinha, na primeira vez que o jogador abre.
+   *
+   * ⚠ NÃO SEGURA A ABERTURA. Roda depois do primeiro `desenhar()` e sem
+   * `await`: a ficha tem de aparecer na hora, mesmo que a rede esteja ruim.
+   * Quando a resposta chega, o `enviar` redesenha sozinho.
+   *
+   * ⚠ E QUEM DECIDE SE HÁ O QUE FAZER É O SERVIDOR. A comparação aqui é só
+   * para não gastar uma gravação à toa; o número que vale é o que o servidor
+   * lê da mesa, porque uma tela aberta há três horas não sabe mais em que
+   * sessão a mesa está.
+   */
+  function acertarComASessaoDaMesa() {
+    const daMesa = Number(obterEstado().sessaoDaMesa) || 0;
+    const vista = Number((p.ficha || {}).sessaoVista) || 0;
+    if (!daMesa || daMesa <= vista) return;
+    enviar([{ tipo: 'sessao' }]);
+  }
+
+  acertarComASessaoDaMesa();
+
   /* ======================================================================== *
    *  O BLOCO DA FICHA DE PAPEL
    *
@@ -1761,7 +1786,13 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         el('span', { class: `selo ${c.origem === 'multiclasse' ? 'selo--mestre' : ''}`,
           texto: c.origem === 'multiclasse' ? 'multiclasse' : c.rodape })
       ]),
-      el('p', { class: 'texto-sm ficha__cartaTexto' }, textoAnotado(c.texto || ''))
+      el('p', { class: 'texto-sm ficha__cartaTexto' }, textoAnotado(c.texto || '')),
+      /*
+       * A carta de subclasse aponta para a SUBCLASSE, não para si mesma: o
+       * Dado de Matador é do Guerreiro Chamado do Matador, e vive na carta de
+       * fundação dele. `c.subclasse` é o nome que `cartasDeSubclasse` carrega.
+       */
+      marcadorDaCarta(c.subclasse, p.ficha || {})
     ]);
   }
 
@@ -1832,6 +1863,43 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     return `--marca:url("${new URL(encodeURI(caminho), document.baseURI).href}")`;
   }
 
+  /**
+   * O MARCADOR DA CARTA, NA PRÓPRIA CARTA.
+   *
+   * Dezessete cartas do jogo mandam "coloque fichas nesta carta", e o valor
+   * morava só na dobra "Marcadores" da aba Jogo — a duas abas de distância do
+   * desenho que fala dele. Na mesa a pessoa olha a carta e procura o número
+   * ali; não achava, e ia no papel.
+   *
+   * ⚠ É O MESMO CONTADOR, NÃO UMA CÓPIA. Chave igual, mesma mutação, mesmo
+   * teto: mexer aqui muda o número lá, porque é um número só. Duas telas para
+   * o mesmo dado é normal; dois dados para a mesma carta seria o começo de uma
+   * discordância.
+   */
+  function marcadorDaCarta(refId, ficha) {
+    if (!refId) return null;
+    const alvo = dados.chave(refId);
+    const def = catalogo.contadoresDaFicha(ficha)
+      .find((x) => dados.chave(x.refId) === alvo);
+    if (!def) return null;
+
+    const atual = ((ficha.contadores || {})[def.chave] || {}).valor || 0;
+    return el('div', { class: 'ficha__cartaMarcador' }, [
+      el('span', { class: 'ficha__cartaMarcadorNome' },
+        nomeComGlossa(def.rotulo || 'marcadores')),
+      botaoDelta('−',
+        () => enviar([{ tipo: 'contador', chave: def.chave, valor: Math.max(0, atual - 1) }]),
+        `Diminuir ${def.nome}`),
+      el('strong', { class: 'ficha__cartaMarcadorValor', texto: String(atual) }),
+      botaoDelta('+',
+        () => enviar([{ tipo: 'contador', chave: def.chave, valor: Math.min(def.maximo, atual + 1) }]),
+        `Aumentar ${def.nome}`),
+      def.quando
+        ? el('span', { class: 'ficha__cartaMarcadorQuando', texto: def.quando })
+        : null
+    ]);
+  }
+
   function cartaoDeCarta(c, lista, destino) {
     const cor = catalogo.corDoDominio(c.dominio);
     return el('div', {
@@ -1856,7 +1924,8 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       el('p', { class: 'texto-xs texto-fraco' },
         nomeComGlossa(`${c.dominioNome} · nível ${c.nivel} · ${c.tipo}`)),
       el('p', { class: 'texto-sm ficha__cartaTexto ficha__cartaTexto--cortado' },
-        textoAnotado(c.texto || ''))
+        textoAnotado(c.texto || '')),
+      marcadorDaCarta(c.id, p.ficha || {})
     ]);
   }
 

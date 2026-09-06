@@ -78,6 +78,7 @@ function tetoDoRecursoAjustavel_(ficha, chave) {
  *   { tipo: 'contador', chave: 'carta:...', delta: -1 }
  *   { tipo: 'carta',    carta: 'blade-redemoinho', para: 'cofre' }
  *   { tipo: 'gatilho',  gatilho: 'inicio-de-sessao' }
+ *   { tipo: 'sessao' }                                 // acerta com a mesa
  *
  * `valor` manda o número final (é o toque no 3º marcador da trilha) e `delta`
  * soma (é o botão de + e −). Quando os dois vêm, `valor` ganha.
@@ -105,6 +106,7 @@ function aplicarAjustes_(ficha, ajustes) {
     else if (tipo === 'marcador') r = ajustarMarcador_(ficha, a);
     else if (tipo === 'carta') r = ajustarCarta_(ficha, a);
     else if (tipo === 'gatilho') r = ajustarGatilho_(ficha, a);
+    else if (tipo === 'sessao') r = ajustarSessaoDaFicha_(ficha, a);
     else if (tipo === 'conjuracao') r = ajustarConjuracao_(ficha, a);
     else if (tipo === 'ouro') r = ajustarOuroDaFicha_(ficha, a);
     else if (tipo === 'inventario') r = ajustarInventario_(ficha, a);
@@ -910,6 +912,80 @@ function ajustarCarta_(ficha, a) {
     m.aviso = 'Troca livre: "' + carta.nome + '" voltou para a mão sem pagar o custo de recordar.';
   }
   return m;
+}
+
+/**
+ * Acerta o relógio desta ficha com o número de sessão da MESA.
+ *
+ * ⚠ POR QUE ISTO EXISTE EM VEZ DE O MESTRE APERTAR UM BOTÃO QUE MEXE EM TODOS.
+ *
+ * O Mestre não escreve na ficha dos outros — e não deveria: a gravação é
+ * otimista por versão, e um botão que salvasse cinco fichas de uma vez ou
+ * falharia pela metade ou precisaria de um caminho privilegiado que hoje não
+ * existe. Pior: metade da mesa costuma estar com o app fechado na hora em que
+ * a sessão vira.
+ *
+ * Então a sessão é ESTADO NA MESA e cada ficha se acerta sozinha, com o token
+ * do próprio jogador, na primeira vez que ele abre. Quem estava offline acerta
+ * quando volta; ninguém escreve na ficha de ninguém.
+ *
+ * ⚠ O NÚMERO NÃO VEM DO CLIENTE. Ele é lido da mesa aqui dentro. Se viesse no
+ * pedido, uma tela desatualizada (ou curiosa) poderia mandar um número
+ * qualquer e recarregar os contadores fora de hora — que é exatamente o
+ * recurso que a regra "uma vez por sessão" existe para limitar.
+ *
+ * ⚠ E O SALTO DE VÁRIAS SESSÕES APLICA OS GATILHOS UMA VEZ SÓ. Quem faltou a
+ * três sessões volta com os contadores no estado de começo de sessão, não com
+ * três recargas — recarregar não acumula, e "uma vez por sessão" nunca quis
+ * dizer "três vezes de uma vez".
+ */
+function ajustarSessaoDaFicha_(ficha, a) {
+  if (typeof mesaLer_ !== 'function') {
+    return { erro: 'Este servidor não sabe ler a mesa.' };
+  }
+  const daMesa = Math.max(0, Math.trunc(Number(mesaLer_().sessao.numero)) || 0);
+  const vista = Math.max(0, Math.trunc(Number(ficha.sessaoVista)) || 0);
+
+  if (daMesa <= vista) {
+    return { tipo: 'sessao', sessao: daMesa, jaEstava: true, contadores: [] };
+  }
+
+  /*
+   * Fim primeiro, começo depois — nessa ordem, e não em qualquer uma.
+   *
+   * Há contador que ZERA no fim e RECARREGA no começo (o Dado de Inspiração do
+   * Bardo é os dois). Invertendo, a recarga entraria antes e a zeragem
+   * apagaria logo em seguida: o jogador abriria a sessão nova com a carta
+   * vazia, sem nada na tela explicando por quê.
+   */
+  const mexidos = {};
+  ['fim-de-sessao', 'inicio-de-sessao'].forEach(function (gatilho) {
+    (aplicarGatilhoContadores_(ficha, gatilho) || []).forEach(function (chave) {
+      mexidos[chave] = true;
+    });
+  });
+
+  ficha.sessaoVista = daMesa;
+
+  const chaves = Object.keys(mexidos);
+  return {
+    tipo: 'sessao',
+    sessao: daMesa,
+    antes: vista,
+    pulou: daMesa - vista,
+    contadores: chaves.map(function (chave) {
+      const def = (typeof CONTADORES !== 'undefined' && CONTADORES[chave]) || {};
+      const agora = (ficha.contadores || {})[chave];
+      return {
+        chave: chave, nome: def.nome || chave,
+        acao: agora ? 'recarregado' : 'zerado',
+        valor: agora ? (agora.valor || 0) : 0
+      };
+    }),
+    aviso: chaves.length
+      ? 'Sessão ' + daMesa + ' na mesa: os marcadores de "uma vez por sessão" voltaram (livro p.105).'
+      : ''
+  };
 }
 
 function ajustarGatilho_(ficha, a) {

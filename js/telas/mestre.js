@@ -474,43 +474,120 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
 
   function blocoDeSessao() {
     const m = painel.mesa;
+    const sessao = m.sessao || {};
+    const numero = Number(sessao.numero) || 0;
+    const aberta = Boolean(sessao.aberta);
+    const quantasFichas = painel.personagens.length;
+
+    /*
+     * A SESSÃO TEM ESTADO, E A TELA DIZ QUAL É.
+     *
+     * Antes havia um botão só, "Abrir sessão nova", e um número que só subia.
+     * Não dava para saber se a mesa estava jogando ou entre sessões, não dava
+     * para encerrar, e uma mesa montada errado ficava presa: o Medo inicial de
+     * campanha só entra na sessão 1, e não havia como voltar para lá.
+     *
+     * As três frases abaixo são o estado inteiro — antes da primeira, jogando,
+     * entre sessões — e cada uma leva ao gesto que faz sentido nela.
+     */
+    const situacao = !numero
+      ? `A campanha ainda não começou. Abrir a sessão 1 põe o Medo em ${quantasFichas} — 1 por personagem (p.154).`
+      : aberta
+        ? `Sessão ${numero} em andamento.`
+        : `Sessão ${numero} encerrada. O Medo fica em ${m.medo} para a próxima (p.154).`;
+
+    const botoes = [];
+
+    if (aberta) {
+      botoes.push(botao(`Encerrar sessão ${numero}`, async () => {
+        const ok = await confirmar({
+          titulo: `Encerrar a sessão ${numero}`,
+          mensagem: 'Os marcadores de "uma vez por sessão" voltam na ficha de cada ' +
+            'jogador quando ele abrir a ficha na sessão seguinte. O Medo fica como está.',
+          confirmarTexto: 'Encerrar'
+        });
+        if (!ok) return;
+        try {
+          const r = await acoes.encerrarSessaoDaMesa();
+          avisarSucesso(`Sessão ${r.sessao.numero} encerrada. Medo em ${r.sessao.medo}.`);
+          recarregar();
+        } catch (e) { avisarErro(mensagemDoErro(e)); }
+      }));
+    } else {
+      const primeira = numero === 0;
+      botoes.push(botao(primeira ? 'Começar a campanha' : `Abrir sessão ${numero + 1}`, async () => {
+        const ok = await confirmar({
+          titulo: primeira ? 'Começar a campanha' : `Abrir a sessão ${numero + 1}`,
+          mensagem: primeira
+            ? `A sessão 1 abre e o Medo entra com ${quantasFichas} — um por personagem, ` +
+              'como manda o livro (p.154). Isto só acontece na primeira.'
+            : 'O Medo NÃO zera — o livro manda transferir entre as sessões. O que volta ' +
+              'são os marcadores de "uma vez por sessão", na ficha de cada jogador.',
+          confirmarTexto: primeira ? 'Começar' : 'Abrir'
+        });
+        if (!ok) return;
+        try {
+          const r = await acoes.abrirSessao();
+          avisarSucesso(r.sessao.primeira
+            ? `Campanha começou. Medo em ${r.sessao.medo}.`
+            : `Sessão ${r.sessao.numero} aberta. Medo continua em ${r.sessao.medo}.`);
+          recarregar();
+        } catch (e) { avisarErro(mensagemDoErro(e)); }
+      }));
+    }
+
+    botoes.push(botao(`Anunciar nível ${m.nivelDaMesa + 1}`, async () => {
+      if (m.nivelDaMesa >= 10) { avisar('A mesa já está no nível 10.', 'info'); return; }
+      const ok = await confirmar({
+        titulo: `Mesa no nível ${m.nivelDaMesa + 1}`,
+        mensagem: 'Isso avisa os jogadores. As fichas NÃO sobem sozinhas — cada um ' +
+          'escolhe os próprios avanços na ficha dele.',
+        confirmarTexto: 'Anunciar'
+      });
+      if (!ok) return;
+      try {
+        const r = await acoes.anunciarNivelDaMesa(m.nivelDaMesa + 1);
+        avisarSucesso(`Mesa no nível ${r.depois}.`);
+        recarregar();
+      } catch (e) { avisarErro(mensagemDoErro(e)); }
+    }));
+
+    /*
+     * "Voltar para antes da primeira" fica FORA da fileira dos outros dois, e
+     * apagado. É o gesto de desmontar a campanha — raro, e o único da tela que
+     * desfaz coisa. Lado a lado com "Abrir sessão" ele seria tocado por
+     * engano; escondido numa dobra, ninguém acharia no dia em que precisasse.
+     */
+    const reiniciar = numero
+      ? el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--pequeno mestre__desfazer',
+        onClick: async () => {
+          const ok = await confirmar({
+            titulo: 'Voltar para antes da primeira sessão',
+            mensagem: `A mesa volta da sessão ${numero} para a contagem zerada, como se a ` +
+              'campanha não tivesse começado. As fichas não são tocadas, e o Medo fica ' +
+              'como está até a sessão 1 ser aberta de novo.',
+            confirmarTexto: 'Voltar para o começo'
+          });
+          if (!ok) return;
+          try {
+            const r = await acoes.voltarParaAPrimeiraSessao();
+            avisarSucesso(`A mesa voltou para antes da sessão 1 (estava na ${r.sessao.antes}).`);
+            recarregar();
+          } catch (e) { avisarErro(mensagemDoErro(e)); }
+        }
+      }, 'Voltar para antes da primeira sessão')
+      : null;
+
     return el('div', { class: 'pilha' }, [
       el('div', { class: 'ficha__grade' }, [
-        caixinha(gatilhoPara('Sessão', 'limites-de-uso'), m.sessao.numero || '—'),
+        caixinha(gatilhoPara('Sessão', 'limites-de-uso'), numero || '—'),
         caixinha(gatilhoPara('Nível da mesa', 'avanco'), m.nivelDaMesa),
-        caixinha('Fichas', painel.personagens.length)
+        caixinha('Fichas', quantasFichas)
       ]),
-      el('div', { class: 'mestre__botoes' }, [
-        botao('Abrir sessão nova', async () => {
-          const ok = await confirmar({
-            titulo: 'Abrir sessão nova',
-            mensagem: 'O contador de sessão avança. O Medo NÃO zera — o livro manda ' +
-              'transferir entre as sessões.',
-            confirmarTexto: 'Abrir'
-          });
-          if (!ok) return;
-          try {
-            const r = await acoes.abrirSessao();
-            avisarSucesso(`Sessão ${r.sessao.numero} aberta. Medo continua em ${r.sessao.medo}.`);
-            recarregar();
-          } catch (e) { avisarErro(mensagemDoErro(e)); }
-        }),
-        botao(`Anunciar nível ${m.nivelDaMesa + 1}`, async () => {
-          if (m.nivelDaMesa >= 10) { avisar('A mesa já está no nível 10.', 'info'); return; }
-          const ok = await confirmar({
-            titulo: `Mesa no nível ${m.nivelDaMesa + 1}`,
-            mensagem: 'Isso avisa os jogadores. As fichas NÃO sobem sozinhas — cada um ' +
-              'escolhe os próprios avanços na ficha dele.',
-            confirmarTexto: 'Anunciar'
-          });
-          if (!ok) return;
-          try {
-            const r = await acoes.anunciarNivelDaMesa(m.nivelDaMesa + 1);
-            avisarSucesso(`Mesa no nível ${r.depois}.`);
-            recarregar();
-          } catch (e) { avisarErro(mensagemDoErro(e)); }
-        })
-      ]),
+      el('p', { class: `mestre__situacaoDaSessao ${aberta ? 'esta-emJogo' : ''}`, texto: situacao }),
+      el('div', { class: 'mestre__botoes' }, botoes),
+      reiniciar
     ]);
   }
 

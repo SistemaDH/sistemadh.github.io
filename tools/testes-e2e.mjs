@@ -67,7 +67,19 @@ async function passo(nome, fn) {
   }
 }
 
-const { servidor, porta } = await criarServidor({ porta: 0, semarcar: true });
+/*
+ * `ambiente` é o backend REAL rodando dentro das imitações do Apps Script.
+ * Alguns passos precisam olhar o que foi GRAVADO, não o que a tela desenhou —
+ * é a única forma de provar que uma escrita saiu do navegador e chegou lá.
+ */
+const { servidor, porta, ambiente } = await criarServidor({ porta: 0, semarcar: true });
+
+/*
+ * ⚠ `const` e `function` do backend NÃO viram propriedades do sandbox — só as
+ * funções que o mock republica. Para chegar num `const` (ABAS, CONTADORES) é
+ * preciso AVALIAR a expressão dentro do contexto. Daí este atalho.
+ */
+const noBackend = (expressao) => ambiente.avaliar(expressao);
 const base = `http://localhost:${porta}`;
 console.log(`\nServidor de teste: ${base}\n`);
 
@@ -277,6 +289,30 @@ try {
    * colunas com ±1. Comparar a frase inteira é de propósito: ela é o que a
    * mesa lê, e é onde o troco do servidor aparece.
    */
+  /**
+   * Garante que uma dobra esteja ABERTA, sem alternar.
+   *
+   * ⚠ `.click()` numa dobra é um interruptor, não um "abrir". A escolha
+   * sobrevive ao redesenho (o painel guarda por título), então um passo que
+   * clica às cegas depois de outro que já abriu simplesmente FECHA — e o teste
+   * seguinte procura um botão que existe, está montado, e está escondido
+   * dentro de um `<details>` fechado.
+   *
+   * ⚠⚠ E TEM CORRIDA: a ficha GRAVA ao abrir (ela se acerta com a sessão da
+   * mesa), e a resposta redesenha a tela. Um clique que caia exatamente nesse
+   * meio não registra o `toggle`, a dobra é remontada fechada, e o passo
+   * seguinte falha por um motivo que não é o dele. Perguntar o estado antes de
+   * clicar fecha as duas portas de uma vez.
+   */
+  const abrirDobra = async (nome) => {
+    const caixa = pagina.locator('details.dobra', { hasText: nome }).first();
+    await caixa.waitFor({ timeout: 10000 });
+    if (!(await caixa.evaluate((n) => n.open))) {
+      await caixa.locator('.dobra__topo').click();
+    }
+    await caixa.locator('.dobra__corpo').waitFor({ state: 'visible', timeout: 5000 });
+  };
+
   const fraseDoOuro = async () =>
     (await pagina.locator('.ficha__ouroFrase').textContent()).replace(/\s+/g, ' ').trim();
 
@@ -1278,7 +1314,7 @@ try {
      * Moldura e moedas moram numa dobra "Ajustes da mesa": são escolhas de
      * começo de campanha, e a página da Mesa é para o que se olha em cena.
      */
-    await pagina.locator('.dobra__topo', { hasText: 'Ajustes da mesa' }).click();
+    await abrirDobra('Ajustes da mesa');
     const caixa = pagina.locator('.cartao', { hasText: 'Ouro em moedas' })
       .locator('input[type="checkbox"]');
     igual(await caixa.isChecked(), false, 'o padrão do livro é sem moedas');
@@ -1379,17 +1415,97 @@ try {
     }, null, { timeout: 20000 });
   });
 
-  await passo('abrir sessão nova NÃO zera o Medo', async () => {
-    // "Sessão e nível" é uma dobra: mexe-se uma vez por sessão, e a página da
-    // Mesa é para o que se olha durante ela.
-    await pagina.locator('.dobra__topo', { hasText: 'Sessão e nível' }).click();
-    await pagina.getByRole('button', { name: 'Abrir sessão nova' }).click();
-    await pagina.getByRole('button', { name: 'Abrir', exact: true }).click();
+  /** O Medo que o selo do topo do painel está mostrando agora. */
+  const medoNoPainel = async () => {
+    const t = await pagina.locator('.mestre__topo .selo--medo').textContent();
+    return Number((/Medo (\d+)/.exec(t || '') || [0, -1])[1]);
+  };
+
+  const esperarMedo = (n) => pagina.waitForFunction((alvo) => {
+    const s = document.querySelector('.mestre__topo .selo--medo');
+    return s && new RegExp(`Medo ${alvo}(\\D|$)`).test(s.textContent.trim());
+  }, n, { timeout: 20000 });
+
+  await passo('a campanha COMEÇA pondo o Medo em 1 por personagem', async () => {
+    /*
+     * "No início da campanha, você começa com um número de Pontos de Medo
+     * igual ao número de personagens" (p.154, registrado em data/mesa.json).
+     *
+     * ⚠ CAMPANHA, NÃO SESSÃO — e é a diferença inteira deste lote. Antes havia
+     * um botão só, "Abrir sessão nova", e o número inicial era uma SUGESTÃO na
+     * tela que a mesa tinha de digitar à mão: dava para começar a campanha com
+     * o Medo errado sem nada avisando.
+     *
+     * "Sessão e nível" é uma dobra: mexe-se uma vez por sessão, e a página da
+     * Mesa é para o que se olha durante ela.
+     */
+    await abrirDobra('Sessão e nível');
+
+    const fichas = Number((await pagina.locator('.ficha__caixinha', { hasText: 'Fichas' })
+      .locator('.ficha__caixinhaValor').textContent()).trim());
+    if (!fichas) throw new Error('o painel não sabe quantas fichas a mesa tem');
+
+    await pagina.getByRole('button', { name: 'Começar a campanha' }).click();
+    await pagina.getByRole('button', { name: 'Começar', exact: true }).click();
     await pagina.waitForSelector('.aviso--sucesso', { timeout: 25000 });
-    await pagina.waitForFunction(() => {
-      const s = document.querySelector('.mestre__topo .selo--medo');
-      return s && /Medo 6/.test(s.textContent);
-    }, null, { timeout: 20000 });
+    await esperarMedo(fichas);
+
+    // E a tela passa a dizer em que estado a mesa está, não só um número.
+    const situacao = await pagina.locator('.mestre__situacaoDaSessao').textContent();
+    if (!/Sessão 1 em andamento/.test(situacao)) {
+      throw new Error(`a tela não diz que a sessão está de pé: "${situacao}"`);
+    }
+  });
+
+  await passo('não dá para abrir duas sessões — o botão vira "Encerrar"', async () => {
+    /*
+     * O número da sessão é o que as FICHAS usam para saber que precisam
+     * recarregar os contadores de "uma vez por sessão". Um número pulado por
+     * dois toques viraria uma recarga a mais na ficha de todo mundo, calada.
+     *
+     * A tela fecha essa porta antes do servidor: com a sessão aberta, o botão
+     * de abrir simplesmente não existe.
+     */
+    igual(await pagina.getByRole('button', { name: /^Abrir sessão/ }).count(), 0,
+      'com a sessão aberta não pode haver botão de abrir outra');
+    await pagina.getByRole('button', { name: 'Encerrar sessão 1' }).waitFor({ timeout: 5000 });
+  });
+
+  await passo('encerrar e abrir a sessão 2 NÃO zera o Medo', async () => {
+    // Devolve o Medo ao 6 que o descanso do grupo tinha deixado, para a
+    // pergunta deste passo ser só sobre a virada de sessão.
+    await pagina.getByRole('tab', { name: 'Mesa' }).click();
+    while (await medoNoPainel() < 6) {
+      await pagina.locator('.trilha--medoMesa .trilha__ponto').nth(await medoNoPainel()).click();
+      await pagina.waitForTimeout(400);
+    }
+    await esperarMedo(6);
+
+    /*
+     * ⚠ QUEM DIZ QUE ACABOU É A FRASE DE ESTADO, NÃO O AVISO VERDE.
+     *
+     * O aviso de sucesso do "Encerrar" continua na tela por alguns segundos, e
+     * um `waitForSelector('.aviso--sucesso')` depois do "Abrir" casaria com o
+     * aviso ANTERIOR — o passo seguiria sem que a sessão 2 tivesse aberto, e
+     * falharia lá na frente por um motivo que não é o dele.
+     */
+    const esperarSituacao = (texto) => pagina.waitForFunction((alvo) => {
+      const p = document.querySelector('.mestre__situacaoDaSessao');
+      return p && p.textContent.includes(alvo);
+    }, texto, { timeout: 25000 });
+
+    await abrirDobra('Sessão e nível');
+    await pagina.getByRole('button', { name: 'Encerrar sessão 1' }).click();
+    await pagina.getByRole('button', { name: 'Encerrar', exact: true }).click();
+    await esperarSituacao('Sessão 1 encerrada');
+
+    await abrirDobra('Sessão e nível');
+    await pagina.getByRole('button', { name: 'Abrir sessão 2' }).click();
+    await pagina.getByRole('button', { name: 'Abrir', exact: true }).click();
+    await esperarSituacao('Sessão 2 em andamento');
+
+    // p.154: o Medo transfere. Só a sessão 1 encosta nele.
+    await esperarMedo(6);
   });
 
   await passo('anunciar o nível da mesa não mexe na ficha do jogador', async () => {
@@ -1685,6 +1801,144 @@ try {
     await pagina.waitForSelector('.ficha-cartao__abrir');
   });
 
+  await passo('a virada de sessão chega na ficha sem o Mestre tocar nela (ponto 12)', async () => {
+    /*
+     * O DESENHO INTEIRO DO PONTO 12 CABE NESTE PASSO.
+     *
+     * O Mestre não escreve na ficha dos outros — a gravação é otimista por
+     * versão, e um botão que salvasse cinco fichas de uma vez ou falharia pela
+     * metade ou precisaria de um caminho privilegiado que não existe. Pior:
+     * metade da mesa costuma estar com o app fechado quando a sessão vira.
+     *
+     * Então a sessão é ESTADO NA MESA e cada ficha se acerta sozinha, com o
+     * token do próprio jogador, na primeira vez que ele abre. Este passo prova
+     * a corrente inteira: o Mestre abriu duas sessões alguns passos atrás, a
+     * jogadora voltou a entrar, e a ficha dela — sem ninguém pedir — está em
+     * dia com a mesa.
+     *
+     * ⚠ A PERGUNTA É FEITA AO BANCO, NÃO À TELA. Nenhuma parte da interface
+     * mostra "qual sessão esta ficha já viu": é estado interno. Conferir na
+     * tela seria conferir outra coisa; conferir no que foi GRAVADO é o que
+     * prova que a escrita saiu do navegador e chegou ao servidor.
+     */
+    const daMesa = ambiente.contexto.mesaLer_().sessao.numero;
+    if (daMesa < 2) throw new Error(`a mesa devia estar na sessão 2, está na ${daMesa}`);
+
+    await pagina.locator('.ficha-cartao__abrir').first().click();
+    await pagina.waitForSelector('.papel', { timeout: 20000 });
+
+    await pagina.waitForFunction(() => {
+      const r = document.querySelector('.ficha__rodape');
+      return r && /versão \d+/.test(r.textContent || '');
+    }, null, { timeout: 20000 });
+
+    // Dá tempo de a sincronia (que roda solta, sem segurar a abertura) gravar.
+    await pagina.waitForTimeout(2500);
+
+    const fichas = ambiente.contexto.lerTudo_(noBackend('ABAS.PERSONAGENS'))
+      .filter((l) => String(l.excluido).toUpperCase() !== 'TRUE');
+    const dados = JSON.parse(fichas[0].dados || '{}');
+    igual(Number(dados.sessaoVista) || 0, daMesa,
+      'a ficha devia ter se acertado sozinha com a sessão da mesa');
+
+    await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+    await pagina.waitForSelector('.ficha-cartao__abrir');
+  });
+
+  await passo('o marcador da carta mora NA carta — e é o mesmo da aba Jogo (ponto 9)', async () => {
+    /*
+     * Dezessete cartas do jogo mandam "coloque fichas nesta carta", e o valor
+     * morava só na dobra "Marcadores" da aba Jogo — a duas abas de distância
+     * do desenho que fala dele. Na mesa a pessoa olha a carta e procura o
+     * número ali; não achava, e ia no papel.
+     *
+     * ⚠ E É UM NÚMERO SÓ. Duas telas para o mesmo dado é normal; dois dados
+     * para a mesma carta seria o começo de uma discordância — a aba Jogo
+     * dizendo 2 e a carta dizendo 3, e nenhuma das duas errada por conta
+     * própria. Este passo mexe numa e confere na outra.
+     */
+    /*
+     * ⚠ MONTAGEM: A CARTA COM MARCADOR ENTRA NA MÃO PELO BANCO.
+     *
+     * Só dezessete cartas do baralho guardam estado, e a Barda deste teste
+     * chegou aqui sem nenhuma delas na mão — carta se ganha subindo de nível,
+     * e forçar uma subida só para isto tornaria o passo sobre outra coisa.
+     *
+     * O que está sendo testado é a TELA (o marcador aparece na carta, e é o
+     * mesmo contador da aba Jogo), não o caminho pelo qual a carta chegou. Por
+     * isso a montagem é direta, e o gesto testado continua sendo o da mesa.
+     *
+     * ⚠⚠ E O MARCADOR SÓ VALE PARA CARTA NA MÃO. Carta no cofre não está em
+     * jogo; um contador correndo numa carta guardada seria estado de uma coisa
+     * que o personagem não pode usar. Daí `ativas`, e não `cofre`.
+     */
+    const CARTA_COM_MARCADOR = 'grace-palavras-inspiradoras';
+    {
+      const def = noBackend('ABAS.PERSONAGENS');
+      const linhas = ambiente.contexto.lerTudo_(def)
+        .filter((l) => String(l.excluido).toUpperCase() !== 'TRUE');
+      const linha = linhas[0];
+      const dados = JSON.parse(linha.dados || '{}');
+      dados.cartas = dados.cartas || { ativas: [], cofre: [] };
+      const jaTem = (dados.cartas.ativas || [])
+        .some((c) => ((c && typeof c === 'object') ? c.id : c) === CARTA_COM_MARCADOR);
+      if (!jaTem) dados.cartas.ativas = [CARTA_COM_MARCADOR].concat(dados.cartas.ativas || []);
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: JSON.stringify(dados) });
+    }
+
+    await pagina.locator('.ficha-cartao__abrir').first().click();
+    await pagina.waitForSelector('.papel', { timeout: 20000 });
+    await pagina.getByRole('tab', { name: 'Cartas' }).click();
+    await pagina.waitForSelector('.ficha__carta');
+
+    const naCarta = pagina.locator('.ficha__carta .ficha__cartaMarcador').first();
+    await naCarta.waitFor({ timeout: 10000 });
+
+    /*
+     * O nome da carta, SEM o 🂠 que marca "isto abre a carta".
+     * Ele entra no `textContent` do botão e não existe no rótulo do contador
+     * da aba Jogo — procurar com ele nunca acharia nada.
+     */
+    const nomeDaCarta = (await naCarta.evaluate((n) => {
+      const cartao = n.closest('.ficha__carta');
+      const nome = cartao && cartao.querySelector('.nome-carta');
+      return nome ? nome.textContent.replace(/[\u{1F0A0}-\u{1F0FF}\u{1F900}-\u{1F9FF}]/gu, '') : '';
+    })).trim();
+    if (!nomeDaCarta) throw new Error('não achei o nome da carta que tem marcador');
+
+    const antes = await versaoNaTela();
+    await naCarta.getByRole('button', { name: /^Aumentar/ }).click();
+    await esperarGravar(antes);
+    const valorNaCarta = (await naCarta.locator('.ficha__cartaMarcadorValor').textContent()).trim();
+    igual(valorNaCarta, '1', `o marcador de "${nomeDaCarta}" não subiu na carta`);
+
+    /*
+     * O mesmo número, visto pela dobra Marcadores da aba Jogo.
+     *
+     * ⚠ ACHA PELO NOME, NÃO PELA POSIÇÃO. A ficha tem outros marcadores (um
+     * criado à mão num passo anterior, com valor próprio), e `.first()` casaria
+     * com o vizinho — o passo falharia comparando dois contadores diferentes,
+     * que é justamente o erro que ele existe para pegar.
+     */
+    await pagina.getByRole('tab', { name: 'Jogo' }).click();
+    await pagina.waitForSelector('.papel');
+    await abrirDobra('Marcadores');
+    const naDobra = await pagina.locator('.ficha__contador', { hasText: nomeDaCarta })
+      .first().locator('.ficha__contadorValor').textContent();
+    igual(naDobra.trim(), valorNaCarta,
+      `a carta "${nomeDaCarta}" e a aba Jogo têm de mostrar o MESMO contador`);
+
+    // E desce de volta pela carta, para não deixar estado para o passo seguinte.
+    await pagina.getByRole('tab', { name: 'Cartas' }).click();
+    const v2 = await versaoNaTela();
+    await naCarta.getByRole('button', { name: /^Diminuir/ }).click();
+    await esperarGravar(v2);
+    igual((await naCarta.locator('.ficha__cartaMarcadorValor').textContent()).trim(), '0');
+
+    await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+    await pagina.waitForSelector('.ficha-cartao__abrir');
+  });
+
   await passo('as trilhas marcam pelo quadradinho, sem + e − (ficha de papel)', async () => {
     await pagina.locator('.ficha-cartao__abrir').first().click();
     await pagina.waitForSelector('.papel', { timeout: 20000 });
@@ -1781,7 +2035,7 @@ try {
      * sobrevivesse, criar o marcador fecharia a seção do marcador recém-criado
      * e o resto deste passo falharia.
      */
-    await pagina.locator('.dobra__topo', { hasText: 'Marcadores' }).click();
+    await abrirDobra('Marcadores');
     await pagina.getByRole('button', { name: '+ Marcador' }).click();
     await pagina.waitForSelector('.modal__caixa');
     const caixa = pagina.locator('.modal__caixa').last();
