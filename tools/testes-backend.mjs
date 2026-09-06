@@ -1982,6 +1982,77 @@ teste('o nome da Jambô continua achando o movimento', () => {
   igual(contexto.normalizarMovimento_('inventado'), null);
 });
 
+console.log('\nDescanso — Clank "Eficiente"');
+
+/** Uma Clank: a mesma ficha cansada, com a característica que troca movimentos. */
+function fichaClank() {
+  const f = fichaCansada();
+  f.caracteristicas = (f.caracteristicas || []).concat([
+    { nome: 'Projeto Intencional', origem: 'ancestralidade' },
+    { nome: 'Eficiente', origem: 'ancestralidade' }
+  ]);
+  return f;
+}
+
+teste('sem "Eficiente", o descanso curto só oferece movimentos de curto', () => {
+  const f = fichaCansada();
+  const ids = contexto.movimentosDoDescanso_('curto', f).map((m) => m.id);
+  verdade(ids.indexOf('zerar-estresse') === -1,
+    'zerar Estresse é movimento de descanso LONGO: ' + ids.join(', '));
+  verdade(ids.indexOf('tratar-feridas') !== -1);
+});
+
+teste('com "Eficiente", os movimentos de longo entram MARCADOS como emprestados', () => {
+  /*
+   * SRD em inglês: "When you take a short rest, you can choose a long rest
+   * move instead of a short rest move." Livro pt-BR, p.54, igual. A errata
+   * oficial de 09/09/2025 não tem nenhuma entrada sobre Clank ou Eficiente —
+   * conferido antes de mexer (regra 6).
+   */
+  const f = fichaClank();
+  const lista = contexto.movimentosDoDescanso_('curto', f);
+  const zerar = lista.find((m) => m.id === 'zerar-estresse');
+  verdade(zerar, 'o movimento de descanso longo devia estar disponível');
+  verdade(/Eficiente/.test(zerar.deOutroDescanso || ''),
+    'ele precisa dizer POR QUE está aqui: ' + JSON.stringify(zerar.deOutroDescanso));
+
+  const tratar = lista.find((m) => m.id === 'tratar-feridas');
+  igual(tratar.deOutroDescanso, '', 'movimento próprio não é emprestado');
+});
+
+teste('"Eficiente" troca UM movimento, não os dois', () => {
+  /*
+   * ⚠ ESTE É O BUG QUE A CONFERÊNCIA DA ERRATA ACHOU.
+   *
+   * A lista misturada deixava escolher DOIS movimentos de descanso longo num
+   * descanso curto — zerar o Estresse e tratar todas as feridas de uma vez.
+   * É a diferença entre uma vantagem de ancestralidade e um descanso longo de
+   * graça. O SRD e o livro são singulares: UM movimento.
+   */
+  const f = fichaClank();
+
+  // Um emprestado + um próprio: passa.
+  const ok = contexto.previaDoDescanso_(f, 'curto', [
+    { movimento: 'zerar-estresse' },
+    { movimento: 'tratar-feridas', rolagem: 3 }
+  ]);
+  igual(ok.erros, [], JSON.stringify(ok.erros));
+
+  // Dois emprestados: recusa, e o aviso diz qual regra é.
+  const dois = contexto.previaDoDescanso_(f, 'curto', [
+    { movimento: 'zerar-estresse' },
+    { movimento: 'tratar-todas-as-feridas' }
+  ]);
+  igual(dois.erros.length, 1, JSON.stringify(dois.erros));
+  verdade(/p\.54/.test(dois.erros[0]), dois.erros[0]);
+});
+
+teste('quem não é Clank continua sem poder pegar movimento de longo', () => {
+  const f = fichaCansada();
+  const p = contexto.previaDoDescanso_(f, 'curto', [{ movimento: 'zerar-estresse' }]);
+  igual(p.erros.length, 1, JSON.stringify(p.erros));
+});
+
 console.log('\nDescanso — a prévia');
 
 teste('a prévia não encosta na ficha original', () => {

@@ -106,9 +106,20 @@
 .mestre__abas {
   flex: 0 0 auto;
   display: grid;
-  /* quatro abas desde o bestiário: em 390px cada uma fica com ~97px, que ainda
-     cabe o rótulo inteiro sem quebrar. */
-  grid-template-columns: repeat(4, 1fr);
+  /*
+   * ⚠ O NÚMERO DE COLUNAS É O NÚMERO DE ABAS. Estava fixo em 4, e a quinta
+   * (Cena) caiu numa segunda linha — a barra do rodapé virou duas.
+   *
+   * `grid-auto-flow: column` com `grid-auto-columns` conta as abas sozinho:
+   * quem acrescentar uma sexta não precisa lembrar de mexer aqui. O `0` do
+   * `minmax(0, 1fr)` é o que deixa a coluna encolher abaixo do próprio
+   * conteúdo em vez de estourar a barra.
+   *
+   * Medido a 390px com cinco abas: barra de 374px, ~75px por aba, e o rótulo
+   * mais largo (Contagens, 64px) continua sem quebrar nem cortar.
+   */
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
   background: var(--cor-fundo-2);
   border-top: 1px solid var(--cor-borda);
 }
@@ -891,8 +902,11 @@
 
 /* Com a cena, o alternador virou de três. Em 390px cada um fica com ~120px,
    que ainda cabe "Adversários" sem quebrar. */
-.bestiario__listas--tres { grid-template-columns: 1fr 1fr 1fr; }
-.bestiario__listas--tres .bestiario__lista { flex-direction: column; gap: 0; }
+/*
+ * Duas colunas: a Cena saiu desta fileira e virou aba própria do painel.
+ * Com duas, o rótulo e a contagem voltam a caber lado a lado.
+ */
+.bestiario__listas--duas { grid-template-columns: 1fr 1fr; }
 
 .bestiario__linha--comAcao { position: relative; }
 

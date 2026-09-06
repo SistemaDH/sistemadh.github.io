@@ -27,13 +27,32 @@ import { mensagemDoErro } from '../api.js';
 import { prepararGlossario, nomeComGlossa } from '../glossario.js';
 import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js';
 import { botaoDeRegras } from './regras.js';
-import { abaBestiario } from './bestiario.js';
+import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js';
+import { secaoDoEncontro } from './encontro.js';
 import { icone } from '../componentes/icone.js';
 
+/*
+ * ⚠ A CENA GANHOU ABA PRÓPRIA — E ISSO DERRUBA UMA DECISÃO ANTIGA.
+ *
+ * Ela morava dentro do Bestiário, com esta justificativa registrada lá:
+ * "a cena entra aqui, e não numa quinta aba, porque em 390px cinco rótulos no
+ * rodapé começam a quebrar". A mesa relatou o efeito colateral: tocar em
+ * "Abrir" no resumo "Em cena" levava ao CATÁLOGO, e a cena parecia não
+ * existir como lugar.
+ *
+ * Medido antes de mudar, num viewport de 390px com o CSS atual: a barra tem
+ * 374px úteis, os cinco rótulos somam 218px (Mesa 33 · Contagens 64 · Grupo
+ * 37 · Cena 32 · Bestiário 52), dá ~75px por aba, e nenhum rótulo quebra nem
+ * corta — `scrollWidth === clientWidth` na barra e em cada rótulo.
+ *
+ * A restrição não existe mais (ou nunca existiu com este CSS). Quem for mexer
+ * aqui de novo: meça, não deduza.
+ */
 const ABAS = [
   { id: 'mesa', rotulo: 'Mesa', icone: 'mesa' },
   { id: 'contagens', rotulo: 'Contagens', icone: 'contagens' },
   { id: 'grupo', rotulo: 'Grupo', icone: 'grupo' },
+  { id: 'cena', rotulo: 'Cena', icone: 'encontro' },
   { id: 'bestiario', rotulo: 'Bestiário', icone: 'bestiario' }
 ];
 
@@ -137,6 +156,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     if (abaAtual === 'mesa') abaMesa(corpo);
     if (abaAtual === 'contagens') abaContagens(corpo);
     if (abaAtual === 'grupo') abaGrupo(corpo);
+    if (abaAtual === 'cena') abaCena(corpo);
     if (abaAtual === 'bestiario') abaBestiario(corpo, painel, { aoMudarMedo, aoCriarContagem });
     corpo.scrollTop = anterior;
   }
@@ -316,6 +336,45 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     return bloco;
   }
 
+  /**
+   * A ABA CENA — a cena como lugar, não como filtro do bestiário.
+   *
+   * Ela usa a MESMA `secaoDoEncontro` que morava dentro do Bestiário: nada do
+   * que a mesa já sabia fazer mudou de gesto, só de endereço. O catálogo
+   * continua no Bestiário, onde se ESCOLHE quem entra; aqui é onde se joga.
+   *
+   * ⚠ `catalogo: null` é de propósito e não é falta. `secaoDoEncontro` usa o
+   * catálogo só para abrir a ficha completa de um adversário ao tocar no nome,
+   * e essa ficha mora no Bestiário — que carrega 129 fichas. Puxar tudo isso
+   * para abrir a cena faria a aba mais usada da mesa esperar pela menos usada.
+   * Sem catálogo, o nome simplesmente não abre nada, e todo o resto funciona.
+   */
+  function abaCena(pai) {
+    const cena = secaoDoEncontro(pai, {
+      catalogo: null,
+      aoAbrirFicha: abrirFichaDeAdversario,
+      aoMudarMedo,
+      aoCriarContagem
+    });
+
+    /*
+     * ⚠ O CATÁLOGO CHEGA DEPOIS, DE PROPÓSITO.
+     *
+     * `secaoDoEncontro` só precisa dele para uma coisa: traduzir o id do
+     * adversário na ficha completa quando alguém toca no nome. Esperar os 129
+     * adversários carregarem antes de desenhar faria a aba mais usada da mesa
+     * abrir devagar por causa do gesto menos usado — e a cena inteira (trilhas,
+     * dano, foco) funciona sem ele.
+     *
+     * Então a cena aparece na hora e o nome vira tocável quando o catálogo
+     * chega. O `carregarCatalogo` é memoizado: quem já passou pelo Bestiário
+     * nesta sessão não paga nada.
+     */
+    catalogoDoBestiario()
+      .then((cat) => { if (cena && cena.definirCatalogo) cena.definirCatalogo(cat); })
+      .catch(() => { /* sem catálogo: o nome só não abre a ficha */ });
+  }
+
   /** "Em cena" — os adversários que estão na mesa agora. */
   function resumoDaCena() {
     const enc = painel.encontro || { adversarios: [] };
@@ -324,7 +383,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     const bloco = el('section', { class: 'mestre__bloco' }, [
       topoDeResumo('Em cena', {
         conta: enc.nome || '',
-        paraAba: { id: 'bestiario', rotulo: 'o bestiário e a cena' }
+        paraAba: { id: 'cena', rotulo: 'a cena' }
       })
     ]);
 

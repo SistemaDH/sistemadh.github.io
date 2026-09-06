@@ -40,6 +40,15 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
   const area = el('div', { class: 'encontro' });
   pai.append(area);
 
+  /*
+   * O catálogo pode chegar DEPOIS.
+   *
+   * Vindo do Bestiário ele já está carregado; vindo da aba Cena ele chega
+   * quando terminar de carregar, porque a cena não pode esperar 129 fichas
+   * para desenhar as trilhas que a mesa está usando agora.
+   */
+  let catalogoAtual = catalogo || null;
+
   let dados = null;
   /** Guarda o texto digitado por adversário para o redesenho não apagar. */
   const danoDigitado = new Map();
@@ -149,6 +158,17 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
 
   /* ------------------------------------------------------------ cartão --- */
 
+  /** A ficha do catálogo já chegou para este adversário? */
+  function fichaDisponivel(a) {
+    return !!(catalogoAtual && aoAbrirFicha && catalogoAtual.porId.get(a.adversario));
+  }
+
+  /** Abre a ficha completa — é onde moram o ataque e os movimentos sem custo. */
+  function abrirFichaDoAdversario(a) {
+    const ficha = catalogoAtual && catalogoAtual.porId.get(a.adversario);
+    if (ficha && aoAbrirFicha) aoAbrirFicha(ficha);
+  }
+
   function cartao(a) {
     const caixa = el('article', {
       class: `encontro__cartao ${a.derrotado ? 'esta-derrotado' : ''} ${a.emFoco ? 'esta-em-foco' : ''}`
@@ -158,10 +178,7 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
       el('button', {
         type: 'button', class: 'encontro__nome',
         title: 'Abrir a ficha completa',
-        onClick: () => {
-          const ficha = catalogo && catalogo.porId.get(a.adversario);
-          if (ficha && aoAbrirFicha) aoAbrirFicha(ficha);
-        }
+        onClick: () => abrirFichaDoAdversario(a)
       }, [
         el('strong', { texto: a.nome }),
         el('span', { class: 'texto-xs texto-suave', texto:
@@ -174,8 +191,9 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
     if (a.derrotado) {
       caixa.append(el('div', { class: 'encontro__acoes' }, [
         botao('Voltou à cena', () => mexer(a, { pontosDeVida: a.pontosDeVida - 1 })),
+        fichaDisponivel(a) ? botao('Movimentos', () => abrirFichaDoAdversario(a)) : null,
         botao('Tirar da cena', () => remover(a))
-      ]));
+      ].filter(Boolean)));
       return caixa;
     }
 
@@ -216,6 +234,22 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
 
     caixa.append(el('div', { class: 'encontro__acoes' }, [
       botao(a.emFoco ? 'Já em foco' : 'Pôr em foco', () => abrirFoco(a), a.emFoco),
+      /*
+       * ⚠ "MOVIMENTOS" É UM BOTÃO, e não só o toque no nome.
+       *
+       * A ficha completa já abria tocando no nome do adversário — mas a mesa
+       * pediu "um popup dos movimentos" mesmo tendo isso, o que quer dizer que
+       * ninguém descobriu. Nome sublinhado no topo de um cartão cheio de
+       * trilhas e botões não se lê como porta.
+       *
+       * O botão diz o que tem atrás dele. E é a única fonte dos movimentos que
+       * NÃO custam nada: o servidor só manda para a cena as habilidades com
+       * custo (`habilidadesComCusto_`), então ataque e passivas só existem na
+       * ficha do catálogo.
+       *
+       * Ele some quando o catálogo ainda não chegou, em vez de abrir vazio.
+       */
+      fichaDisponivel(a) ? botao('Movimentos', () => abrirFichaDoAdversario(a)) : null,
       botao('Condições', () => abrirCondicoes(a)),
       (dados.efeitosDisponiveis || []).length
         ? botao('Efeito do ambiente', () => abrirEfeitos(a)) : null,
@@ -570,5 +604,16 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
     }, texto);
   }
 
-  return { recarregar };
+  return {
+    recarregar,
+    /*
+     * A aba Cena chama isto quando o catálogo termina de carregar. Redesenha,
+     * porque é o redesenho que liga o nome do adversário à ficha completa dele
+     * — sem ele o toque continuaria mudo até o próximo motivo de redesenhar.
+     */
+    definirCatalogo(cat) {
+      catalogoAtual = cat || null;
+      if (dados) desenhar();
+    }
+  };
 }

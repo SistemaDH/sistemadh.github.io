@@ -1778,3 +1778,31 @@
 
 .paralela__tipoDeDano,
 .paralela__dado { display: flex; flex-direction: column; gap: var(--e2); }
+
+/*
+ * O GRUPO DOS MOVIMENTOS EMPRESTADOS (Clank "Eficiente").
+ *
+ * Numa lista só, os movimentos de descanso longo apareciam misturados com os
+ * de curto, cada um com um selo explicando — a mesa relatou como "mostra os
+ * dois e confunde". O bloco separado responde às duas perguntas de relance:
+ * o que é meu, e quantos posso trocar.
+ *
+ * ⚠ A moldura é TRACEJADA de propósito. Sólida, o grupo lia como um cartão
+ * irmão dos outros; tracejada, lê como "isto entra por exceção" — que é
+ * exatamente o que ele é.
+ */
+.descanso__grupoEmprestado {
+  margin-top: var(--e4);
+  padding: var(--e3);
+  border: 1px dashed var(--cor-borda-forte);
+  border-radius: var(--raio);
+}
+
+.descanso__grupoTitulo {
+  margin: 0 0 var(--e1);
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-md);
+  color: var(--cor-texto-suave);
+}
+
+.descanso__grupoEmprestado > .pilha { margin-top: var(--e3); }

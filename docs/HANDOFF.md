@@ -271,12 +271,102 @@ Aposentadas/históricas — não criar dependência nova:
 
 ---
 
+# Lote 4 — a cena e o descanso da Clank
+
+Fecha os pontos **8** e **11**, os dois últimos dos catorze prints. Desenvolvido na branch
+`ediçãoclaude`, **em cima do Lote 3** — depende dele.
+
+## Ponto 11 — conferência de errata, e um bug de regra
+
+Conferido antes de mexer. SRD em inglês:
+
+> **Efficient:** "When you take a short rest, you can choose **a** long rest move instead
+> of **a** short rest move."
+
+A **errata oficial de 09/09/2025 não tem entrada** sobre Clank ou Efficient. O texto pt-BR
+de `data/descanso.json` (p.54) está correto, e o singular bate nos dois.
+
+⚠ **O bug que a conferência achou:** `movimentosDoDescanso_` acrescentava os movimentos de
+descanso longo à lista do curto e **nada limitava quantos podiam ser emprestados**. Uma
+Clank conseguia escolher DOIS movimentos de descanso longo num descanso curto — zerar o
+Estresse e tratar todas as feridas de uma vez. `simularDescanso_` agora conta os
+emprestados e recusa o segundo, citando a página.
+
+Backend: `backend/4B_Descanso.gs`. Tela: `js/telas/descanso.js` — os emprestados saíram da
+lista misturada e ganharam bloco próprio com moldura tracejada, cujo título já diz o
+limite. O selo "Entrou por Eficiente" que ia em cada cartão saiu (era a mesma frase
+repetida, e foi parte do que a mesa chamou de confuso).
+
+## Ponto 8 — a cena virou um lugar
+
+A cena era uma lista dentro da aba Bestiário, e o "Abrir" do resumo "Em cena" caía no
+**catálogo**. Por isso ela "não existia" — e por isso ninguém chegava aos botões de tirar
+da cena, que já estavam lá.
+
+Agora é a **quinta aba** do painel (`js/telas/mestre.js`). O catálogo continua no
+Bestiário, de onde se escolhe quem entra; a Cena é onde se joga.
+
+⚠ **Isto derrubou uma decisão documentada** em `js/telas/bestiario.js`: "não numa quinta
+aba, porque em 390px cinco rótulos no rodapé começam a quebrar". A restrição era real, mas
+a causa não era o rótulo: `.mestre__abas` tinha `grid-template-columns: repeat(4, 1fr)`
+**fixo**. A grade agora se conta sozinha (`grid-auto-flow: column`), e cinco abas cabem
+numa linha a 390px — barra de 374px, ~75px por aba, rótulo mais largo 64px.
+
+Terceira parte do ponto: a cena só recebe do servidor as habilidades que **custam** recurso
+(`habilidadesComCusto_`), então ataque e passivas nunca chegavam nela. A ficha completa já
+abria tocando no nome do adversário, mas ninguém descobriu — a mesa pediu "um popup de
+movimentos" tendo um. Virou **botão**, com nome.
+
+## Detalhes para o próximo agente
+
+1. `fichaDeAdversario`, `blocoDeHabilidade` e `notaDoLivro` subiram para o escopo do MÓDULO
+   em `js/telas/bestiario.js`, que passou a exportar `catalogoDoBestiario()` e
+   `abrirFichaDeAdversario()`. Nenhuma usa estado da tela.
+2. O catálogo chega **depois** na aba Cena: `secaoDoEncontro` ganhou `definirCatalogo()`.
+   A cena desenha na hora e "Movimentos" aparece quando os 129 adversários carregam — a
+   aba mais usada da mesa não espera pela menos usada.
+3. `abrirFichaDeAdversario` não oferece "Pôr em cena": quem chega por lá já pôs o bicho
+   em jogo.
+
+## Validação
+
+```text
+testes-e2e.mjs     → 90 passos ok, 0 falharam
+testes-backend.mjs → 425 passaram, 0 falharam
+conferir-css.mjs   → nada a limpar nem a escrever
+```
+
+Rodado **já com a correção de roteamento do ChatGPT** em `js/api.js` (as três ações de
+sessão em `ACOES_ENGINE`). O Lote 4 não toca nesse arquivo.
+
+⚠ **Lição de teste registrada.** A primeira versão do passo que guarda a barra de abas
+conferia rolagem horizontal e corte de rótulo — e **passou verde com a barra quebrada em
+duas fileiras**. Grade que quebra não estoura para o lado; some para baixo. O passo agora
+conta `offsetTop` distintos. Medido nas duas grades:
+
+```text
+grade nova (auto)          linhas 1 · rolando false · cortados 0
+grade velha repeat(4,1fr)  linhas 2 · rolando false · cortados 0
+```
+
+## Deploy
+
+`backend/4B_Descanso.gs` é motor fixado: precisa de `ENGINE_COMMIT` novo e redeploy, pelo
+mesmo fluxo do Lote 3. O ponto 8 é só frontend.
+
+---
+
 # Próximos pontos dos prints
 
-Depois do fechamento do Lote 3, permanecem:
+**Nenhum.** Os catorze pontos estão fechados no código.
 
-- **8** — melhorar o fluxo de cena/bestiário, retirada de adversário derrotado e popup de movimentos;
-- **11** — classes com descanso próprio (ex.: Clank) mostram opções que podem confundir.
+Ficam pendentes de **deploy**, não de desenvolvimento:
+
+- pontos 9 e 12 (Lote 3) — concluídos após o deploy da nova `engine-api` e merge na `main`;
+- ponto 11 (Lote 4) — idem, pelo mesmo motivo;
+- ponto 8 (Lote 4) — só frontend, sobe com o merge.
+
+A próxima funcionalidade deve ser definida pelo proprietário.
 
 ---
 

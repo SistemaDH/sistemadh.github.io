@@ -28,7 +28,6 @@ import { mensagemDoErro } from '../api.js';
 import * as dados from '../dados.js';
 import { prepararGlossario, nomeComGlossa } from '../glossario.js';
 import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js';
-import { secaoDoEncontro } from './encontro.js';
 import { abrirEditorDeAdversario, confirmarExclusao } from './adversario-da-mesa.js';
 
 const PATAMARES = [
@@ -42,10 +41,17 @@ const PATAMARES = [
 /**
  * Estado da tela — vive fora do desenho para o filtro sobreviver ao redesenho.
  *
- * `lista` tem três valores: a CENA (os adversários em jogo agora) e as duas
- * listas do catálogo. A cena entra aqui, e não numa quinta aba, porque em
- * 390px cinco rótulos no rodapé começam a quebrar — e porque ela é feita das
- * fichas que estão ao lado.
+ * ⚠ A CENA SAIU DAQUI. Ela era um terceiro valor de `lista`, com esta
+ * justificativa: "não numa quinta aba, porque em 390px cinco rótulos no rodapé
+ * começam a quebrar". A mesa relatou o efeito colateral — tocar em "Abrir" no
+ * resumo "Em cena" caía no CATÁLOGO, e a cena parecia não existir como lugar.
+ *
+ * A restrição foi MEDIDA antes de ser derrubada: a 390px a barra de abas tem
+ * 374px úteis e os cinco rótulos somam 218px, sem quebra e sem corte. A cena
+ * agora tem aba própria (ver `ABAS` em telas/mestre.js).
+ *
+ * Aqui ficou o que sempre foi deste lugar: o CATÁLOGO, de onde se escolhe quem
+ * entra em cena.
  */
 const filtro = { lista: 'adversarios', patamar: 0, tipo: '', busca: '' };
 
@@ -85,8 +91,12 @@ export function abaBestiario(pai, painel, { aoMudarMedo, aoCriarContagem } = {})
   const area = el('div', { class: 'bestiario' });
   pai.append(area);
   /** Quantos adversários estão em cena — só para o número no alternador. */
+  /*
+   * `emCena` continua sendo lido: o aviso de "entrou na cena (N em cena)" é o
+   * único retorno que o Mestre tem de que o toque funcionou, agora que a lista
+   * da cena não está mais nesta tela para ele conferir com o olho.
+   */
   let emCena = 0;
-  let cena = null;
   /** As fichas que a MESA inventou — entram na lista junto com as do livro. */
   let daMesa = [];
 
@@ -107,33 +117,21 @@ export function abaBestiario(pai, painel, { aoMudarMedo, aoCriarContagem } = {})
 
   function desenhar() {
     limpar(area);
-    area.append(barraDeListas());
-    if (filtro.lista === 'encontro') {
-      cena = secaoDoEncontro(area, {
-        catalogo, aoAbrirFicha: abrirAdversario, aoMudarMedo, aoCriarContagem
-      });
-      return;
-    }
-    area.append(barraDeFiltros(), barraDeFerramentas(painel), lista());
+    area.append(barraDeListas(), barraDeFiltros(), barraDeFerramentas(painel), lista());
   }
 
   /* ----------------------------------------------------------- filtros --- */
 
   function barraDeListas() {
     const troca = (id) => () => { filtro.lista = id; filtro.tipo = ''; desenhar(); };
-    return el('div', { class: 'bestiario__listas bestiario__listas--tres', role: 'tablist' }, [
-      /*
-       * A ORDEM É A DO CATÁLOGO, e "Cena" fecha.
-       *
-       * "Em cena" abria a fileira, e ele é o único dos três que costuma estar
-       * vazio — a tela de montar encontro começava por um zero. Adversários é
-       * de onde se parte, Ambientes é o vizinho, e a Cena é onde o que foi
-       * escolhido cai: ela é o FIM do gesto, não o começo.
-       */
+    /*
+     * Duas listas, não três: a Cena virou aba. Adversários é de onde se parte,
+     * Ambientes é o vizinho — os dois são catálogo, que é o que esta tela é.
+     */
+    return el('div', { class: 'bestiario__listas bestiario__listas--duas', role: 'tablist' }, [
       alternador('Adversários', catalogo.adversarios.length + daMesa.length,
         filtro.lista === 'adversarios', troca('adversarios')),
-      alternador('Ambientes', catalogo.ambientes.length, filtro.lista === 'ambientes', troca('ambientes')),
-      alternador('Cena', emCena, filtro.lista === 'encontro', troca('encontro'))
+      alternador('Ambientes', catalogo.ambientes.length, filtro.lista === 'ambientes', troca('ambientes'))
     ]);
   }
 
@@ -357,50 +355,6 @@ export function abaBestiario(pai, painel, { aoMudarMedo, aoCriarContagem } = {})
     abrirModal({ titulo: a.nome, conteudo: fichaDeAmbiente(a) });
   }
 
-  function fichaDeAdversario(f) {
-    const caixa = el('div', { class: 'ficha-adversario' });
-    caixa.append(el('p', { class: 'ficha-adversario__tipo' }, [
-      gatilhoPara(f.tipo, verbeteDoTipo(f.tipo)),
-      document.createTextNode(` (${f.patamar}º patamar)` +
-        (f.sufixoDoTipo ? ' ' + f.sufixoDoTipo : ''))
-    ]));
-    if (f.descricao) caixa.append(el('p', { class: 'texto-suave', texto: f.descricao }));
-    if (f.motivacoes && f.motivacoes.length) {
-      caixa.append(el('p', { class: 'texto-sm' }, [
-        el('strong', { texto: 'Motivações e táticas: ' }),
-        el('span', { texto: f.motivacoes.join(', ') })
-      ]));
-    }
-    caixa.append(el('div', { class: 'ficha-adversario__stats' }, [
-      // Os rótulos apontam para o verbete do ADVERSÁRIO, não o do jogador: a
-      // Dificuldade dele é a que substitui a Evasão (p.193), e os limiares dele
-      // não somam nível nenhum.
-      mini(gatilhoPara('Dificuldade', 'dificuldade-do-adversario'), f.dificuldade),
-      mini(gatilhoPara('Limiares', 'limiares-do-adversario'), f.limiares || 'nenhum'),
-      mini(gatilhoPara('PV', 'pontos-de-vida'), f.pontosDeVida),
-      mini(nomeAnotado('Estresse'), f.estresse)
-    ]));
-    if (f.ataque) {
-      caixa.append(el('p', { class: 'ficha-adversario__ataque' }, [
-        el('strong', { texto: `ATQ ${f.ataque.modificador}` }),
-        el('span', { texto: ` · ${f.ataque.nome} · ${f.ataque.alcance} · ${f.ataque.dano}` })
-      ]));
-    }
-    if (f.experiencias && f.experiencias.length) {
-      caixa.append(el('p', { class: 'texto-sm' }, [
-        el('strong', { texto: 'Experiências: ' }),
-        el('span', { texto: f.experiencias.map((x) => `${x.nome} ${x.bonus >= 0 ? '+' : ''}${x.bonus}`).join(', ') })
-      ]));
-    }
-    caixa.append(el('h3', { class: 'ficha-adversario__secao', texto: 'Habilidades' }));
-    f.habilidades.forEach((h) => caixa.append(blocoDeHabilidade(h)));
-    if (f.errosDeDigitacaoDoOriginal) caixa.append(notaDoLivro(f.errosDeDigitacaoDoOriginal));
-    if (f.nomeNoIndice) {
-      caixa.append(el('p', { class: 'texto-xs texto-suave', texto:
-        `No índice do livro: "${f.nomeNoIndice}".` }));
-    }
-    return caixa;
-  }
 
   function fichaDeAmbiente(a) {
     const caixa = el('div', { class: 'ficha-adversario' });
@@ -512,48 +466,7 @@ export function abaBestiario(pai, painel, { aoMudarMedo, aoCriarContagem } = {})
     return linha;
   }
 
-  function blocoDeHabilidade(h) {
-    const caixa = el('article', { class: 'habilidade' });
-    caixa.append(el('h4', { class: 'habilidade__nome' }, [
-      el('span', { texto: h.nome }),
-      el('span', { class: `selo selo--${h.tipo === 'passiva' ? 'passiva' : h.tipo === 'reacao' ? 'reacao' : 'acao'}`,
-        texto: h.tipo })
-    ]));
-    // o texto é quebrado em linhas porque as listas do livro ("• Sucesso
-    // crítico: …") são regra, não enfeite
-    String(h.texto).split('\n').forEach((linha) => {
-      caixa.append(el('p', { class: 'habilidade__texto' }, [textoAnotado(linha)]));
-    });
-    // a glosa volta como fragmento de DOM, então o custo é montado por partes
-    // (num template literal ela virava "[object DocumentFragment]")
-    const custos = [];
-    if (h.custoDeMedo) custos.push([h.custoDeMedo, 'Medo']);
-    if (h.custoDeEstresse) custos.push([h.custoDeEstresse, 'Estresse']);
-    if (custos.length) {
-      const linha = el('p', { class: 'habilidade__custo' }, [el('span', { texto: 'Custa ' })]);
-      custos.forEach(([quanto, recurso], i) => {
-        if (i) linha.append(el('span', { texto: ' e ' }));
-        linha.append(el('span', { texto: `${quanto} de ` }), nomeAnotado(recurso));
-      });
-      linha.append(el('span', { texto: '.' }));
-      caixa.append(linha);
-    }
-    (h.perguntas || []).forEach((q) => {
-      caixa.append(el('p', { class: 'habilidade__pergunta', texto: q }));
-    });
-    if (h.correcao) {
-      caixa.append(el('p', { class: 'habilidade__correcao', texto:
-        `Corrigido: o livro diz "${h.correcao.noLivro}". ${h.correcao.porque}` }));
-    }
-    return caixa;
-  }
 
-  function notaDoLivro(erros) {
-    return el('details', { class: 'bestiario__nota' }, [
-      el('summary', { class: 'texto-xs', texto: 'Erros de digitação do livro nesta ficha' }),
-      el('ul', { class: 'texto-xs texto-suave' }, erros.map((e) => el('li', { texto: e })))
-    ]);
-  }
 
   /* --------------------------------------------------- Guia de Batalha --- */
 
@@ -647,4 +560,130 @@ function mini(rotulo, valor) {
     alvo,
     el('strong', { class: 'bestiario__miniValor', texto: String(valor) })
   ]);
+}
+
+/* ==========================================================================
+   A FICHA DE UM ADVERSÁRIO — no escopo do MÓDULO, não da tela.
+
+   Ela subiu para cá quando a Cena ganhou aba própria: tocar no nome de um
+   adversário em jogo abre a ficha completa dele, e a Cena não tem (nem deve
+   ter) acesso ao interior de `abaBestiario`. As três funções abaixo não usam
+   nada do estado da tela — são desenho puro sobre a ficha recebida.
+   ========================================================================== */
+
+function fichaDeAdversario(f) {
+  const caixa = el('div', { class: 'ficha-adversario' });
+  caixa.append(el('p', { class: 'ficha-adversario__tipo' }, [
+    gatilhoPara(f.tipo, verbeteDoTipo(f.tipo)),
+    document.createTextNode(` (${f.patamar}º patamar)` +
+      (f.sufixoDoTipo ? ' ' + f.sufixoDoTipo : ''))
+  ]));
+  if (f.descricao) caixa.append(el('p', { class: 'texto-suave', texto: f.descricao }));
+  if (f.motivacoes && f.motivacoes.length) {
+    caixa.append(el('p', { class: 'texto-sm' }, [
+      el('strong', { texto: 'Motivações e táticas: ' }),
+      el('span', { texto: f.motivacoes.join(', ') })
+    ]));
+  }
+  caixa.append(el('div', { class: 'ficha-adversario__stats' }, [
+    // Os rótulos apontam para o verbete do ADVERSÁRIO, não o do jogador: a
+    // Dificuldade dele é a que substitui a Evasão (p.193), e os limiares dele
+    // não somam nível nenhum.
+    mini(gatilhoPara('Dificuldade', 'dificuldade-do-adversario'), f.dificuldade),
+    mini(gatilhoPara('Limiares', 'limiares-do-adversario'), f.limiares || 'nenhum'),
+    mini(gatilhoPara('PV', 'pontos-de-vida'), f.pontosDeVida),
+    mini(nomeAnotado('Estresse'), f.estresse)
+  ]));
+  if (f.ataque) {
+    caixa.append(el('p', { class: 'ficha-adversario__ataque' }, [
+      el('strong', { texto: `ATQ ${f.ataque.modificador}` }),
+      el('span', { texto: ` · ${f.ataque.nome} · ${f.ataque.alcance} · ${f.ataque.dano}` })
+    ]));
+  }
+  if (f.experiencias && f.experiencias.length) {
+    caixa.append(el('p', { class: 'texto-sm' }, [
+      el('strong', { texto: 'Experiências: ' }),
+      el('span', { texto: f.experiencias.map((x) => `${x.nome} ${x.bonus >= 0 ? '+' : ''}${x.bonus}`).join(', ') })
+    ]));
+  }
+  caixa.append(el('h3', { class: 'ficha-adversario__secao', texto: 'Habilidades' }));
+  f.habilidades.forEach((h) => caixa.append(blocoDeHabilidade(h)));
+  if (f.errosDeDigitacaoDoOriginal) caixa.append(notaDoLivro(f.errosDeDigitacaoDoOriginal));
+  if (f.nomeNoIndice) {
+    caixa.append(el('p', { class: 'texto-xs texto-suave', texto:
+      `No índice do livro: "${f.nomeNoIndice}".` }));
+  }
+  return caixa;
+}
+
+function blocoDeHabilidade(h) {
+  const caixa = el('article', { class: 'habilidade' });
+  caixa.append(el('h4', { class: 'habilidade__nome' }, [
+    el('span', { texto: h.nome }),
+    el('span', { class: `selo selo--${h.tipo === 'passiva' ? 'passiva' : h.tipo === 'reacao' ? 'reacao' : 'acao'}`,
+      texto: h.tipo })
+  ]));
+  // o texto é quebrado em linhas porque as listas do livro ("• Sucesso
+  // crítico: …") são regra, não enfeite
+  String(h.texto).split('\n').forEach((linha) => {
+    caixa.append(el('p', { class: 'habilidade__texto' }, [textoAnotado(linha)]));
+  });
+  // a glosa volta como fragmento de DOM, então o custo é montado por partes
+  // (num template literal ela virava "[object DocumentFragment]")
+  const custos = [];
+  if (h.custoDeMedo) custos.push([h.custoDeMedo, 'Medo']);
+  if (h.custoDeEstresse) custos.push([h.custoDeEstresse, 'Estresse']);
+  if (custos.length) {
+    const linha = el('p', { class: 'habilidade__custo' }, [el('span', { texto: 'Custa ' })]);
+    custos.forEach(([quanto, recurso], i) => {
+      if (i) linha.append(el('span', { texto: ' e ' }));
+      linha.append(el('span', { texto: `${quanto} de ` }), nomeAnotado(recurso));
+    });
+    linha.append(el('span', { texto: '.' }));
+    caixa.append(linha);
+  }
+  (h.perguntas || []).forEach((q) => {
+    caixa.append(el('p', { class: 'habilidade__pergunta', texto: q }));
+  });
+  if (h.correcao) {
+    caixa.append(el('p', { class: 'habilidade__correcao', texto:
+      `Corrigido: o livro diz "${h.correcao.noLivro}". ${h.correcao.porque}` }));
+  }
+  return caixa;
+}
+
+function notaDoLivro(erros) {
+  return el('details', { class: 'bestiario__nota' }, [
+    el('summary', { class: 'texto-xs', texto: 'Erros de digitação do livro nesta ficha' }),
+    el('ul', { class: 'texto-xs texto-suave' }, erros.map((e) => el('li', { texto: e })))
+  ]);
+}
+
+/**
+ * O catálogo, para quem está FORA desta tela.
+ *
+ * A aba Cena precisa dele por um motivo só: abrir a ficha completa de um
+ * adversário em jogo. Exportar o carregador memoizado evita que a Cena carregue
+ * os 129 adversários por conta própria — e evita a alternativa pior, que era a
+ * Cena deixar o nome morto.
+ */
+export function catalogoDoBestiario() {
+  return carregarCatalogo();
+}
+
+/**
+ * Abre a ficha completa de um adversário, SEM os botões de pôr em cena.
+ *
+ * Quem chega aqui pela Cena já pôs o bicho em jogo; oferecer "Pôr em cena" de
+ * novo seria convidar a duplicar o adversário que ele está justamente olhando.
+ */
+export function abrirFichaDeAdversario(f) {
+  const modal = abrirModal({
+    titulo: f.nome,
+    conteudo: fichaDeAdversario(f),
+    acoes: [el('button', {
+      type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar()
+    }, 'Fechar')]
+  });
+  return modal;
 }
