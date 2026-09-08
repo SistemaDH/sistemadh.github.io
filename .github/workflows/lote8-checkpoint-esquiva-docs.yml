@@ -1,0 +1,43 @@
+name: Lote 8 - checkpoint Esquiva docs
+
+on:
+  push:
+    branches:
+      - 'ediçãoclaude'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  atualizar:
+    if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[run-checkpoint-esquiva]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 'ediçãoclaude'
+          fetch-depth: 0
+      - name: Guardar HEAD
+        run: echo "BASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Atualizar diário e auditoria
+        run: python3 tools/lote8-checkpoint-esquiva-docs.py
+      - name: Recusar push sobre branch avançada
+        run: |
+          git fetch origin 'ediçãoclaude'
+          ATUAL=$(git rev-parse origin/ediçãoclaude)
+          if [ "$ATUAL" != "$BASE_SHA" ]; then
+            echo "Branch avançou durante o checkpoint: $BASE_SHA -> $ATUAL"
+            exit 1
+          fi
+      - name: Commitar documentação
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/HANDOFF.md docs/AUDITORIA-CORE-1.0.md
+          if git diff --cached --quiet; then
+            echo 'Documentação já estava atualizada.'
+          else
+            git commit -m 'docs: registrar Esquiva de Ladino validada'
+            git push origin HEAD:'ediçãoclaude'
+          fi
