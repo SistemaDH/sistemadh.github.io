@@ -21,33 +21,37 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          nl = chr(10)
 
           hand = Path('docs/HANDOFF.md')
           t = hand.read_text(encoding='utf-8')
-          antigo = "Próximo bloco de auditoria/implementação: **modificadores derivados permanentes e condicionais puros** de ancestralidades, subclasses e equipamentos; estados que exigem ativação/escolha ficam em bloco próprio."
-          novo = """### Diário — Modificadores derivados/passivos do Core
-
-Fonte: características de ancestralidade, subclasse, armas, armaduras e equipamentos de moldura do **livro básico PT-BR**, mantendo a errata oficial já incorporada ao catálogo. As páginas individuais permanecem registradas nas fontes `data/ancestralidades.json`, `data/classes.json` e `data/equipamentos.json`; nenhuma regra do SRD 2.0 foi incorporada neste bloco.
-
-Fechado e validado no commit funcional `e4618015b6494de1f3e72ca5617538cec4ccefc0`:
-
-- **4 modificadores de ancestralidade** estruturados: Carapaça/Galapa, Resistência/Gigante, Alta Resistência/Humanos e Ágil/Simiah;
-- **9 modificadores de subclasse** estruturados, incluindo os três estágios do Guardião Robusto, À Vontade, Adrenalina, Sombra Fugaz, Mago de Batalha, Escudo Conjurado e Ascendente;
-- **69 equipamentos** com efeito derivado estruturado, incluindo armas, secundárias, armaduras e equipamento de moldura;
-- bônus/penalidades de Evasão, limiares, Armadura, PV, Estresse e traços entram nos derivados do servidor;
-- `ficha.tracos` continua guardando o valor base escolhido; modificadores efetivos ficam separados e são recalculados pelo servidor;
-- arma na **reserva não concede benefício**; somente o equipamento ativo participa da derivação;
-- efeitos de arma secundária que alteram defesa/Armadura entram corretamente, e a Pontuação de Armadura final respeita o teto 12;
-- bônus passivos de dano como Fugaz/Ligação e condicionais como Emparelhado/Par/Afiada são publicados sem rolar dado;
-- Adrenalina é aplicada quando a condição Vulnerável já está no estado conhecido da ficha;
-- condições que dependem da posição/alvo/ficção continuam publicadas como **condicionais**, sem o sistema fingir conhecer a cena;
-- valores derivados enviados pelo cliente são sobrescritos pelo servidor.
-
-Validação real: GitHub Actions run `34286551186` — **480/480 backend**, **101/101 E2E**, **14 geradores consistentes**, **CSS limpo**, proteção de concorrência aprovada. A materialização registrou 4 modificadores de ancestralidade, 9 de subclasse e 69 de equipamento. Nenhuma rolagem automática foi adicionada.
-
-Os artefatos temporários de auditoria/materialização foram removidos no commit `3deaa45031035d9900f3c42f7ddec2ddcc418b41`.
-
-Próximo bloco de auditoria/implementação: **características ativas determinísticas** de ancestralidades, subclasses e equipamentos — custos, estados, duração/reset e consequências de resultado de dado informado pelo usuário. Efeitos puramente narrativos/posicionais serão classificados explicitamente em vez de automatizados à força."""
+          antigo = 'Próximo bloco de auditoria/implementação: **modificadores derivados permanentes e condicionais puros** de ancestralidades, subclasses e equipamentos; estados que exigem ativação/escolha ficam em bloco próprio.'
+          linhas = [
+              '### Diário — Modificadores derivados/passivos do Core',
+              '',
+              'Fonte: características de ancestralidade, subclasse, armas, armaduras e equipamentos de moldura do **livro básico PT-BR**, mantendo a errata oficial já incorporada ao catálogo. As páginas individuais permanecem registradas nas fontes `data/ancestralidades.json`, `data/classes.json` e `data/equipamentos.json`; nenhuma regra do SRD 2.0 foi incorporada neste bloco.',
+              '',
+              'Fechado e validado no commit funcional `e4618015b6494de1f3e72ca5617538cec4ccefc0`:',
+              '',
+              '- **4 modificadores de ancestralidade** estruturados: Carapaça/Galapa, Resistência/Gigante, Alta Resistência/Humanos e Ágil/Simiah;',
+              '- **9 modificadores de subclasse** estruturados, incluindo os três estágios do Guardião Robusto, À Vontade, Adrenalina, Sombra Fugaz, Mago de Batalha, Escudo Conjurado e Ascendente;',
+              '- **69 equipamentos** com efeito derivado estruturado, incluindo armas, secundárias, armaduras e equipamento de moldura;',
+              '- bônus/penalidades de Evasão, limiares, Armadura, PV, Estresse e traços entram nos derivados do servidor;',
+              '- `ficha.tracos` continua guardando o valor base escolhido; modificadores efetivos ficam separados e são recalculados pelo servidor;',
+              '- arma na **reserva não concede benefício**; somente o equipamento ativo participa da derivação;',
+              '- efeitos de arma secundária que alteram defesa/Armadura entram corretamente, e a Pontuação de Armadura final respeita o teto 12;',
+              '- bônus passivos de dano como Fugaz/Ligação e condicionais como Emparelhado/Par/Afiada são publicados sem rolar dado;',
+              '- Adrenalina é aplicada quando a condição Vulnerável já está no estado conhecido da ficha;',
+              '- condições que dependem da posição/alvo/ficção continuam publicadas como **condicionais**, sem o sistema fingir conhecer a cena;',
+              '- valores derivados enviados pelo cliente são sobrescritos pelo servidor.',
+              '',
+              'Validação real: GitHub Actions run `34286551186` — **480/480 backend**, **101/101 E2E**, **14 geradores consistentes**, **CSS limpo**, proteção de concorrência aprovada. A materialização registrou 4 modificadores de ancestralidade, 9 de subclasse e 69 de equipamento. Nenhuma rolagem automática foi adicionada.',
+              '',
+              'Os artefatos temporários de auditoria/materialização foram removidos no commit `3deaa45031035d9900f3c42f7ddec2ddcc418b41`.',
+              '',
+              'Próximo bloco de auditoria/implementação: **características ativas determinísticas** de ancestralidades, subclasses e equipamentos — custos, estados, duração/reset e consequências de resultado de dado informado pelo usuário. Efeitos puramente narrativos/posicionais serão classificados explicitamente em vez de automatizados à força.'
+          ]
+          novo = nl.join(linhas)
           if t.count(antigo) != 1:
               raise SystemExit(f'HANDOFF: âncora esperada 1x, achei {t.count(antigo)}')
           hand.write_text(t.replace(antigo, novo, 1), encoding='utf-8')
@@ -55,12 +59,9 @@ Próximo bloco de auditoria/implementação: **características ativas determin�
           audit = Path('docs/AUDITORIA-CORE-1.0.md')
           t = audit.read_text(encoding='utf-8')
           trocas = [
-            ("- ⏳ custos, usos por descanso/sessão, bônus permanentes e estados derivados.",
-             "- ✅ bônus permanentes/derivados puros de ancestralidades automatizados no checkpoint de modificadores;\n- ⏳ características ativas, custos, usos por descanso/sessão e estados que exigem escolha/resultado informado."),
-            ("- ⏳ características de armas/armaduras e efeitos derivados;",
-             "- ✅ efeitos **passivos/derivados** de armas, secundárias e armaduras estruturados e aplicados pelo servidor;\n- ⏳ características **ativas** de equipamento, custos, estados e efeitos que dependem de resultado de dado informado;"),
-            ("- ⏳ Próximo bloco: varredura integral de modificadores derivados permanentes/condicionais puros de ancestralidade, subclasse e equipamento.",
-             "- ✅ Modificadores derivados/passivos do Core: commit `e4618015b6494de1f3e72ca5617538cec4ccefc0`; run `34286551186`: **480/480 backend**, **101/101 E2E**, **14 geradores**, CSS limpo e proteção de concorrência aprovada. Foram estruturados 4 efeitos de ancestralidade, 9 de subclasse e 69 de equipamento; reserva não concede benefício, traços-base são preservados e condicionais de cena não são aplicados cegamente.\n- ⏳ Próximo bloco: características ativas determinísticas de ancestralidade, subclasse e equipamento — custo, estado, reset e entrada manual de resultado de dado quando aplicável.")
+              ('- ⏳ custos, usos por descanso/sessão, bônus permanentes e estados derivados.', '- ✅ bônus permanentes/derivados puros de ancestralidades automatizados no checkpoint de modificadores;' + nl + '- ⏳ características ativas, custos, usos por descanso/sessão e estados que exigem escolha/resultado informado.'),
+              ('- ⏳ características de armas/armaduras e efeitos derivados;', '- ✅ efeitos **passivos/derivados** de armas, secundárias e armaduras estruturados e aplicados pelo servidor;' + nl + '- ⏳ características **ativas** de equipamento, custos, estados e efeitos que dependem de resultado de dado informado;'),
+              ('- ⏳ Próximo bloco: varredura integral de modificadores derivados permanentes/condicionais puros de ancestralidade, subclasse e equipamento.', '- ✅ Modificadores derivados/passivos do Core: commit `e4618015b6494de1f3e72ca5617538cec4ccefc0`; run `34286551186`: **480/480 backend**, **101/101 E2E**, **14 geradores**, CSS limpo e proteção de concorrência aprovada. Foram estruturados 4 efeitos de ancestralidade, 9 de subclasse e 69 de equipamento; reserva não concede benefício, traços-base são preservados e condicionais de cena não são aplicados cegamente.' + nl + '- ⏳ Próximo bloco: características ativas determinísticas de ancestralidade, subclasse e equipamento — custo, estado, reset e entrada manual de resultado de dado quando aplicável.')
           ]
           for velho, novo in trocas:
               if t.count(velho) != 1:
