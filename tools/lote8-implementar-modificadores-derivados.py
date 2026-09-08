@@ -41,7 +41,7 @@ d = json.loads(p.read_text(encoding='utf-8'))
 origens = {
     ('galapa', 'carapaca'): {'limiaresPorProficiencia': 1},
     ('gigante', 'resistencia'): {'pontosDeVidaMaximos': 1},
-    ('humano', 'alta resistencia'): {'estresseMaximo': 1},
+    ('humanos', 'alta resistencia'): {'estresseMaximo': 1},
     ('simiah', 'agil'): {'evasao': 1},
 }
 achados = set()
