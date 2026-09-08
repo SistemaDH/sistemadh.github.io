@@ -665,6 +665,80 @@ teste('recusa arma secundária no lugar da primária', () => {
   verdade(r.erros[0].indexOf('secundária') >= 0, JSON.stringify(r.erros));
 });
 
+teste('ficha antiga ganha reserva de armas vazia ao normalizar', () => {
+  const ficha = { identidade: { nivel: 1 }, equipamento: { primaria: 'Espada Larga' } };
+  igual(contexto.validarArmasReserva_(ficha), []);
+  igual(ficha.equipamento.reserva, []);
+});
+
+teste('reserva aceita até duas armas e normaliza para ids', () => {
+  const ficha = { identidade: { nivel: 1 }, equipamento: { reserva: ['Espada Larga', 'Besta'] } };
+  igual(contexto.validarArmasReserva_(ficha), []);
+  igual(ficha.equipamento.reserva, ['primaria-t1-espada-larga', 'primaria-t1-besta']);
+});
+
+teste('reserva recusa terceira arma e arma acima do nível', () => {
+  const cheia = { identidade: { nivel: 1 }, equipamento: { reserva: ['Espada Larga', 'Besta', 'Adaga'] } };
+  verdade(contexto.validarArmasReserva_(cheia).some((e) => e.includes('Só cabem 2')));
+  const alta = { identidade: { nivel: 1 }, equipamento: { reserva: ['Espada Longa Lendária'] } };
+  verdade(contexto.validarArmasReserva_(alta).some((e) => e.includes('nível 4')));
+});
+
+teste('adicionar e remover arma da reserva não inventa benefício equipado', () => {
+  const ficha = { identidade: { nivel: 1 }, recursos: {}, equipamento: { primaria: 'primaria-t1-espada-larga', secundaria: null, armadura: null, reserva: [] } };
+  const add = contexto.ajustarArmasDaFicha_(ficha, { acao: 'adicionar', arma: 'Besta' });
+  igual(add.erro, undefined);
+  igual(ficha.equipamento.primaria, 'primaria-t1-espada-larga');
+  igual(ficha.equipamento.reserva, ['primaria-t1-besta']);
+  const rem = contexto.ajustarArmasDaFicha_(ficha, { acao: 'remover', indice: 0 });
+  igual(rem.erro, undefined);
+  igual(ficha.equipamento.reserva, []);
+});
+
+teste('troca calma é atômica e custa zero Fadiga', () => {
+  const ficha = { identidade: { nivel: 1, classe: 'Bardo' }, recursos: { estresseMarcado: 2, estresseMaximo: 6 }, equipamento: {
+    primaria: 'primaria-t1-espada-larga', secundaria: 'secundaria-t1-espada-curta', armadura: null,
+    reserva: ['primaria-t1-espada-longa']
+  } };
+  const r = contexto.ajustarArmasDaFicha_(ficha, { acao: 'trocar', primaria: 'primaria-t1-espada-longa', secundaria: null, cobrarCusto: false });
+  igual(r.erro, undefined);
+  igual(r.custoCobrado, 0);
+  igual(ficha.recursos.estresseMarcado, 2);
+  igual(ficha.equipamento.primaria, 'primaria-t1-espada-longa');
+  igual(ficha.equipamento.secundaria, null);
+  igual(ficha.equipamento.reserva.sort(), ['primaria-t1-espada-larga', 'secundaria-t1-espada-curta'].sort());
+});
+
+teste('troca perigosa cobra exatamente 1 Fadiga', () => {
+  const ficha = { identidade: { nivel: 1, classe: 'Bardo' }, recursos: { estresseMarcado: 2, estresseMaximo: 6 }, equipamento: {
+    primaria: 'primaria-t1-espada-larga', secundaria: null, armadura: null, reserva: ['primaria-t1-besta']
+  } };
+  const r = contexto.ajustarArmasDaFicha_(ficha, { acao: 'trocar', primaria: 'primaria-t1-besta', secundaria: null, cobrarCusto: true });
+  igual(r.erro, undefined);
+  igual(r.custoCobrado, 1);
+  igual(ficha.recursos.estresseMarcado, 3);
+  igual(ficha.equipamento.reserva, ['primaria-t1-espada-larga']);
+});
+
+teste('sem Fadiga disponível a troca perigosa não altera nada', () => {
+  const ficha = { identidade: { nivel: 1, classe: 'Bardo' }, recursos: { estresseMarcado: 6, estresseMaximo: 6 }, equipamento: {
+    primaria: 'primaria-t1-espada-larga', secundaria: null, armadura: null, reserva: ['primaria-t1-besta']
+  } };
+  const antes = JSON.stringify(ficha);
+  const r = contexto.ajustarArmasDaFicha_(ficha, { acao: 'trocar', primaria: 'primaria-t1-besta', secundaria: null, cobrarCusto: true });
+  verdade(r.erro.includes('Não sobra Fadiga'));
+  igual(JSON.stringify(ficha), antes);
+});
+
+teste('troca não pode equipar arma que o personagem não possui', () => {
+  const ficha = { identidade: { nivel: 1, classe: 'Bardo' }, recursos: { estresseMarcado: 0, estresseMaximo: 6 }, equipamento: {
+    primaria: 'primaria-t1-espada-larga', secundaria: null, armadura: null, reserva: []
+  } };
+  const r = contexto.ajustarArmasDaFicha_(ficha, { acao: 'trocar', primaria: 'primaria-t1-besta', secundaria: null, cobrarCusto: false });
+  verdade(r.erro.includes('não está equipada nem na reserva'));
+  igual(ficha.equipamento.primaria, 'primaria-t1-espada-larga');
+});
+
 teste('limiares da armadura viram números', () => {
   const l = contexto.limiaresDaArmadura_('Armadura de couro');
   igual(l, { maior: 6, severo: 13 });

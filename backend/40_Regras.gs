@@ -61,7 +61,7 @@ function fichaVazia_() {
     alvosDeHabilidade: {},// quem está Marcado/Priorizado — um por habilidade
     experiencias: [],    // duas no nível 1, +2 cada — ver 48_Criacao.gs
     equipamento: {       // ids das tabelas do capítulo 2
-      primaria: null, secundaria: null, armadura: null
+      primaria: null, secundaria: null, armadura: null, reserva: []
     },
     inventario: [],
     ouro: { punhados: 0, bolsas: 0, cofres: 0 },
@@ -416,6 +416,12 @@ function validarFicha_(fichaBruta) {
    * data-limite para lembrar.
    */
   if (typeof normalizarInventario_ === 'function') normalizarInventario_(ficha);
+
+  // Armas guardadas são inventário de equipamento, não itens da mochila.
+  // Elas não concedem benefício porque os derivados leem somente primaria/secundaria.
+  if (typeof validarArmasReserva_ === 'function') {
+    problemas = problemas.concat(validarArmasReserva_(ficha));
+  }
 
   if (typeof validarOuro_ === 'function') {
     const vOuro = validarOuro_(ficha.ouro);
