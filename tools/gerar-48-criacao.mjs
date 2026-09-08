@@ -222,6 +222,66 @@ function dominiosDoPersonagem_(ficha) {
 }
 
 /**
+ * BÔNUS DE DANO DERIVADOS DAS CARACTERÍSTICAS DE CLASSE.
+ *
+ * O sistema não rola os dados. Ele publica apenas o que a ficha determina:
+ *   • Guerreiro / Treinamento de Combate: +nível ao dano FÍSICO;
+ *   • Ladino / Ataque Furtivo: +Nd6, N = patamar, quando a condição da cena vale;
+ *   • Guardião / Determinação: +valor atual do Dado de Determinação.
+ *
+ * fichaTemCaracteristicaDeClasse_ inclui multiclasse, então adquirir a
+ * característica de classe por multiclasse também adquire seu efeito mecânico.
+ */
+function bonusDeDanoDaFicha_(ficha) {
+  const id = (ficha && ficha.identidade) || {};
+  const nivel = Math.max(1, Math.min(10, Math.trunc(Number(id.nivel)) || 1));
+  const patamar = (typeof tierDoNivel_ === 'function') ? tierDoNivel_(nivel)
+    : (nivel <= 1 ? 1 : nivel <= 4 ? 2 : nivel <= 7 ? 3 : 4);
+  const tem = function (nome) {
+    return typeof fichaTemCaracteristicaDeClasse_ === 'function' &&
+      fichaTemCaracteristicaDeClasse_(ficha, nome);
+  };
+
+  const saida = {};
+
+  if (tem('Treinamento de Combate')) {
+    saida.guerreiroFisico = {
+      fonte: 'Treinamento de Combate',
+      tipo: 'fixo',
+      valor: nivel,
+      aplicaEm: 'dano-fisico'
+    };
+  }
+
+  if (tem('Ataque Furtivo')) {
+    saida.ataqueFurtivo = {
+      fonte: 'Ataque Furtivo',
+      tipo: 'dados',
+      quantidade: patamar,
+      dado: 'd6',
+      aplicaEm: 'ataque-com-condicao',
+      condicao: 'Camuflado ou aliado em alcance Corpo a Corpo do alvo'
+    };
+  }
+
+  const itemDeterminacao = ((ficha && ficha.contadores) || {})['classe:guardiao:imparavel'];
+  const valorDeterminacao = Math.max(0, Math.trunc(Number(
+    itemDeterminacao && typeof itemDeterminacao === 'object'
+      ? itemDeterminacao.valor : itemDeterminacao
+  )) || 0);
+  if (tem('Determinação') && valorDeterminacao > 0) {
+    saida.determinacao = {
+      fonte: 'Determinação',
+      tipo: 'fixo',
+      valor: valorDeterminacao,
+      aplicaEm: 'jogada-de-dano'
+    };
+  }
+
+  return saida;
+}
+
+/**
  * Tudo que é DERIVADO da ficha — nada aqui é escolha do jogador.
  * Devolve os números; quem grava é aplicarDerivados_().
  */
@@ -296,6 +356,7 @@ function derivadosDoPersonagem_(ficha) {
     limiarGrave: limiarGrave,
     dominios: dominiosDoPersonagem_(ficha),
     caracteristicas: caracteristicasDaOrigem_(ficha).concat(caracteristicasDaClasse_(ficha)),
+    bonusDeDano: bonusDeDanoDaFicha_(ficha),
     /*
      * A FORMA INTEIRA, JÁ COMPOSTA, VAI PARA A TELA — e ela mexe em DOIS
      * números da ficha, não em um.
@@ -424,6 +485,10 @@ function aplicarDerivados_(ficha) {
    * congelou a Proficiência por três partes (E4 no BACKLOG).
    */
   ficha.caracteristicas = d.caracteristicas;
+
+  // O cliente recebe o perfil de dano já calculado pelo servidor. Qualquer
+  // valor que tenha vindo no payload é sobrescrito aqui, como os outros derivados.
+  ficha.bonusDeDano = d.bonusDeDano;
 
   /*
    * O traço de Conjuração também é derivado. A tela desenhava o dele sozinha,

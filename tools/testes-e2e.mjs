@@ -456,6 +456,18 @@ try {
     await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 5000 });
   });
 
+  await passo('o dano da ficha aplica a Proficiência sem rolar dados', async () => {
+    const corpo = pagina.locator('.ficha__corpo');
+    await corpo.getByText('Dano da ficha', { exact: true }).waitFor({ timeout: 5000 });
+    const texto = (await corpo.textContent()).replace(/\s+/g, ' ');
+    if (!/Florete:\s*1d\d+/i.test(texto)) {
+      throw new Error('a arma não mostrou o dado multiplicado pela Proficiência: ' + texto);
+    }
+    if (/rolar agora|rolou|resultado aleat/i.test(texto)) {
+      throw new Error('o painel de dano não pode rolar dados: ' + texto);
+    }
+  });
+
   await passo('a reserva registra e troca uma arma pela ficha', async () => {
     const estresseAntes = await pagina.locator('.papel__trilha--estresse .papel__caixa.esta-cheio').count();
 

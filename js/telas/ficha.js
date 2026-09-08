@@ -1321,6 +1321,79 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * Continua SÓ O NOME. Dano, alcance e mãos são o que se quer no instante de
    * rolar, não de relance — e aí um toque resolve.
    */
+  /**
+   * Converte o dado impresso da arma para a quantidade ditada pela Proficiência.
+   * Ex.: Proficiência 3 + "d10+3 fís" => "3d10+3 fís".
+   * Não existe Math.random aqui: a mesa continua rolando os dados.
+   */
+  function danoDaArmaComProficiencia(ficha, arma) {
+    const bruto = String((arma || {}).dano || '').trim();
+    if (!bruto) return '—';
+    const m = /^d(\d+)([+-]\d+)?\s*(.*)$/i.exec(bruto);
+    if (!m) return bruto;
+    const prof = Math.max(1, Math.trunc(Number(((ficha || {}).recursos || {}).proficiencia) || 1));
+    const resto = m[3] ? ` ${m[3]}` : '';
+    return `${prof}d${m[1]}${m[2] || ''}${resto}`;
+  }
+
+  /** Bônus fixos que já se aplicam à jogada desta arma. */
+  function bonusFixosDaArma(ficha, arma) {
+    const b = (ficha || {}).bonusDeDano || {};
+    const extras = [];
+    const dano = String((arma || {}).dano || '');
+    if (b.guerreiroFisico && /f[ií]s/i.test(dano)) {
+      extras.push(`+${b.guerreiroFisico.valor} Treinamento de Combate`);
+    }
+    if (b.determinacao) {
+      extras.push(`+${b.determinacao.valor} Determinação`);
+    }
+    return extras;
+  }
+
+  /**
+   * RESUMO DE DANO: automatiza a conta, não a rolagem nem a ficção.
+   * Ataque Furtivo depende do alvo/posição; por isso aparece como alternativa
+   * calculada, em vez de ser somado cegamente a toda arma.
+   */
+  function painelDeDano(ficha) {
+    const eq = (ficha || {}).equipamento || {};
+    const b = (ficha || {}).bonusDeDano || {};
+    const armas = [eq.primaria, eq.secundaria]
+      .filter(Boolean)
+      .map(catalogo.acharArma)
+      .filter(Boolean);
+
+    const linhas = armas.map((arma) => {
+      const extras = bonusFixosDaArma(ficha, arma);
+      const sufixo = extras.length ? ` · ${extras.join(' · ')}` : '';
+      return el('p', { class: 'texto-sm', texto: `${arma.nome}: ${danoDaArmaComProficiencia(ficha, arma)}${sufixo}` });
+    });
+
+    if (!linhas.length) {
+      linhas.push(el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma arma equipada.' }));
+    }
+
+    if (b.ataqueFurtivo) {
+      linhas.push(el('p', { class: 'texto-xs texto-fraco', texto:
+        `Ataque Furtivo: +${b.ataqueFurtivo.quantidade}${b.ataqueFurtivo.dado} quando estiver Camuflado ou um aliado estiver Corpo a Corpo do alvo.` }));
+    }
+
+    if (b.guerreiroFisico) {
+      linhas.push(el('p', { class: 'texto-xs texto-fraco', texto:
+        `Treinamento de Combate: +${b.guerreiroFisico.valor} em toda jogada de dano físico.` }));
+    }
+
+    if (b.determinacao) {
+      linhas.push(el('p', { class: 'texto-xs texto-fraco', texto:
+        `Determinação: +${b.determinacao.valor} em toda jogada de dano enquanto o dado estiver ativo.` }));
+    }
+
+    return el('div', { class: 'pilha' }, [
+      el('strong', { texto: 'Dano da ficha' }),
+      ...linhas
+    ]);
+  }
+
   function tabelaDeEquipamento(ficha) {
     const eq = ficha.equipamento || {};
     const linhas = [
@@ -1784,6 +1857,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
      * coisas, e à conta que se faz entre uma e outra.
      */
     pai.append(linhaDeProficiencia(ficha.recursos || {}));
+    pai.append(painelDeDano(ficha));
 
     pai.append(tabelaDeEquipamento(ficha));
     pai.append(controleDeArmas(ficha));

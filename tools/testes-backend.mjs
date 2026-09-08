@@ -2523,6 +2523,50 @@ teste('as perguntas de origem e vínculos vieram do livro bom (fecha B6)', () =>
   });
 });
 
+console.log('\nBônus de dano de classe — Lote 8');
+
+teste('Guerreiro recebe +nível somente como bônus físico derivado', () => {
+  const f = { identidade: { classe: 'Guerreiro', nivel: 4 }, contadores: {} };
+  const b = contexto.bonusDeDanoDaFicha_(f);
+  igual(b.guerreiroFisico.valor, 4);
+  igual(b.guerreiroFisico.aplicaEm, 'dano-fisico');
+  igual(b.ataqueFurtivo, undefined);
+});
+
+teste('Ataque Furtivo calcula Nd6 pelo PATAMAR em todos os níveis-chave', () => {
+  const casos = [[1,1], [2,2], [4,2], [5,3], [7,3], [8,4], [10,4]];
+  casos.forEach(([nivel, quantidade]) => {
+    const f = { identidade: { classe: 'Ladino', nivel }, contadores: {} };
+    const b = contexto.bonusDeDanoDaFicha_(f);
+    igual(b.ataqueFurtivo.quantidade, quantidade, `nível ${nivel}`);
+    igual(b.ataqueFurtivo.dado, 'd6');
+  });
+});
+
+teste('Determinação soma a face atual do dado e some quando o dado não está ativo', () => {
+  const f = {
+    identidade: { classe: 'Guardião', nivel: 3 },
+    contadores: { 'classe:guardiao:imparavel': { valor: 3, dado: 'd4' } }
+  };
+  igual(contexto.bonusDeDanoDaFicha_(f).determinacao.valor, 3);
+  f.contadores['classe:guardiao:imparavel'].valor = 0;
+  igual(contexto.bonusDeDanoDaFicha_(f).determinacao, undefined);
+});
+
+teste('multiclasse recebe o efeito de dano da característica de classe adquirida', () => {
+  const f = {
+    identidade: { classe: 'Bardo', subclasse: 'bardo-musico-errante', nivel: 6 },
+    subclasseCartas: ['fundacao'],
+    multiclasse: {
+      classe: 'guerreiro', subclasse: 'guerreiro-chamada-dos-bravos',
+      dominio: 'BLADE', cartas: ['fundacao']
+    },
+    contadores: {}
+  };
+  const b = contexto.bonusDeDanoDaFicha_(f);
+  igual(b.guerreiroFisico.valor, 6);
+});
+
 teste('Ataque Furtivo soma d6 igual ao PATAMAR, não ao nível', () => {
   const dados = JSON.parse(fs.readFileSync(new URL('../data/classes.json', import.meta.url), 'utf8'));
   const ladino = dados.classes.find((c) => c.id === 'ladino');
