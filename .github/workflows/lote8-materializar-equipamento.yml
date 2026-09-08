@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   equipamento:
-    if: ${{ !contains(github.event.head_commit.message || '', '[lote8-generated]') }}
+    if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message || '', '[run-lote8]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,10 +23,11 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Materializar correções do catálogo
+      - name: Materializar correções do catálogo e testes
         run: |
           python3 tools/auditoria-equipamento.py
           python3 tools/lote8-adicionar-cadeiras.py
+          python3 tools/lote8-atualizar-testes-equipamento.py
           node tools/gerar-44-equipamento.mjs
           python3 tools/conferir-equipamento-lote8.py
           node tools/conferir-gerados.mjs
@@ -49,7 +50,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/equipamentos.json data/equipamentos-correcoes.json backend/44_Equipamento.gs
+          git add data/equipamentos.json data/equipamentos-correcoes.json backend/44_Equipamento.gs tools/testes-backend.mjs
           if git diff --cached --quiet; then
             echo 'Nenhuma materialização pendente.'
           else
