@@ -224,3 +224,8 @@ Este bloco só será marcado como implementado quando a fonte de dados, o gerado
 - neste runtime os scripts ainda **não foram executados**, pois não há checkout local funcional e o repositório não possui GitHub Actions. Não registrar resultado verde até execução real.
 
 Pendentes para fechar esta parte: executar os preparadores, materializar o JSON, regenerar `backend/44_Equipamento.gs` e executar os conferidores/suítes.
+
+## Checkpoint de implementação — equipamento Core validado
+
+Em 08/09/2026, o bloco Broquel + Chicote + 12 Cadeiras de Rodas de Combate foi materializado no catálogo e no backend gerado no commit `0630ad5`. Validação real via GitHub Actions run `34272839636`: backend 454/454, E2E 98/98, 14 geradores consistentes e CSS limpo. O bloco de catálogo passa de “preparado” para **implementado e validado na branch**, ainda não implantado em produção.
+

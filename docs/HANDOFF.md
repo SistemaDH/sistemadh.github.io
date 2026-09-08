@@ -282,3 +282,27 @@ Documentação detalhada das entregas anteriores:
 - `docs/ENTREGA-LOTES-6-7.md`;
 - `docs/pontos-de-interesse-descanso.md` §11-B;
 - `docs/pontos-de-interesse-classes.md`.
+
+### Checkpoint validado — Equipamentos Core, partes 1 e 2
+
+A terceira execução do executor temporário concluiu com sucesso: GitHub Actions run `34272839636`.
+
+Resultado real do runner Ubuntu 24.04:
+
+```text
+correções mecânicas/materialização: OK
+Cadeiras de Rodas de Combate adicionadas: 12
+backend/44_Equipamento.gs: 204 armas, 34 armaduras, 120 itens, 64 de campanha
+conferir-equipamento-lote8: OK
+conferir-gerados: 14 geradores, todos consistentes
+backend: 454 passaram, 0 falharam
+E2E: 98 passos ok, 0 falharam
+CSS: nada a limpar nem a escrever
+```
+
+Commit automático da materialização: `0630ad5` (`chore: materializar equipamento do Lote 8 [lote8-generated]`). Ele gravou `data/equipamentos.json`, `data/equipamentos-correcoes.json`, `backend/44_Equipamento.gs`, `tools/testes-backend.mjs` e a correção de sincronização do `tools/testes-e2e.mjs`.
+
+A falha E2E da execução anterior era uma corrida do próprio teste: o modal surgia antes de o PNG assíncrono terminar de carregar e o teste lia `naturalWidth` imediatamente. O asset `assets/cartas/subclasses/BARDO/Músico Errante.png` existe e o caminho do catálogo é exato. O E2E agora espera `complete && naturalWidth > 0`; 404 ou arte ausente continuam falhando. A comparação contra `e29b414...` confirmou que o E2E final difere apenas nesse pequeno ajuste (5 linhas adicionadas / 2 removidas).
+
+Com este checkpoint, Broquel/Deflecting, Chicote/Alarmante e as 12 Cadeiras de Rodas de Combate estão materializados e validados na branch. O próximo bloco é armas de reserva/troca de armas. Ainda não houve deploy, PR ou mudança de `ENGINE_COMMIT` do Lote 8.
+
