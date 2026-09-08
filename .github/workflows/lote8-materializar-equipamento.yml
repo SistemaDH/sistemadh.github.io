@@ -1,0 +1,58 @@
+name: Lote 8 - materializar equipamento
+
+on:
+  push:
+    branches:
+      - 'ediçãoclaude'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  equipamento:
+    if: ${{ !contains(github.event.head_commit.message || '', '[lote8-generated]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 'ediçãoclaude'
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Materializar correções do catálogo
+        run: |
+          python3 tools/auditoria-equipamento.py
+          python3 tools/lote8-adicionar-cadeiras.py
+          node tools/gerar-44-equipamento.mjs
+          python3 tools/conferir-equipamento-lote8.py
+          node tools/conferir-gerados.mjs
+
+      - name: Instalar dependências de teste
+        run: |
+          npm install --ignore-scripts
+          npx playwright install --with-deps chromium
+
+      - name: Testes do backend
+        run: node tools/testes-backend.mjs
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferência CSS
+        run: node tools/conferir-css.mjs
+
+      - name: Commitar somente materialização validada
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/equipamentos.json data/equipamentos-correcoes.json backend/44_Equipamento.gs
+          if git diff --cached --quiet; then
+            echo 'Nenhuma materialização pendente.'
+          else
+            git commit -m 'chore: materializar equipamento do Lote 8 [lote8-generated]'
+            git push origin HEAD:'ediçãoclaude'
+          fi
