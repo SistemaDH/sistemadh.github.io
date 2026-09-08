@@ -136,7 +136,7 @@ def efeito_equip(item):
         return {'tracos': {'presenca': 1}}
     if nome in ('fatigante', 'dificil'):
         return {'evasao': -1, 'tracosTodos': -1}
-    if nome in ('cortante', 'afiada') and cat == 'armadura' and '1d4' in texto and 'dano' in texto:
+    if nome in ('cortante', 'afiada') and '1d4' in texto and 'dano' in texto:
         return {'danoAdicionalCorpoACorpo': {'quantidade': 1, 'dado': 'd4'}}
     return None
 
