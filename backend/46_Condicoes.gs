@@ -159,7 +159,18 @@ function sincronizarVulneravelPorEstresse_(ficha) {
   const r = ficha.recursos || {};
   const maximo = Number(r.estresseMaximo) || 0;
   const marcado = Number(r.estresseMarcado) || 0;
-  const cheio = maximo > 0 && marcado >= maximo;
+  /*
+   * ⚠ NEM TODA FICHA PODE FICAR VULNERÁVEL.
+   *
+   * O Guardião Determinado "não pode ser Restrito ou ficar Vulnerável" (livro
+   * p.44) — e este automatismo passava por cima da classe, marcando Vulnerável
+   * num personagem cuja habilidade existe justamente para impedir isso. Quem
+   * sabe quais condições estão barradas agora é o CONTADOR ativo: ter a
+   * habilidade não é estar Determinado.
+   */
+  const impedidas = (typeof condicoesImpedidasPorContador_ === 'function')
+    ? condicoesImpedidasPorContador_(ficha) : {};
+  const cheio = maximo > 0 && marcado >= maximo && !impedidas['vulneravel'];
 
   const lista = Array.isArray(ficha.condicoes) ? ficha.condicoes : [];
   let indiceAutomatica = -1;
@@ -185,6 +196,40 @@ function sincronizarVulneravelPorEstresse_(ficha) {
     return 'desligou';
   }
   return null;
+}
+
+/**
+ * Tira da ficha as condições que uma habilidade ativa IMPEDE.
+ *
+ * O caso é o Guardião Determinado: "você não pode ser Restrito ou ficar
+ * Vulnerável" (p.44). Não basta o automatismo do Estresse deixar de marcar —
+ * uma Vulnerável que já estava lá quando ele ficou Determinado, ou uma que o
+ * Mestre pôs, também não pode continuar. A habilidade não diz "não ganha";
+ * diz "não pode ser".
+ *
+ * Devolve o que tirou, para a tela poder dizer por quê em vez de a condição
+ * simplesmente sumir enquanto a mesa olha.
+ */
+function sincronizarCondicoesImpedidas_(ficha) {
+  if (!ficha) return [];
+  const impedidas = (typeof condicoesImpedidasPorContador_ === 'function')
+    ? condicoesImpedidasPorContador_(ficha) : {};
+  const ids = Object.keys(impedidas);
+  if (!ids.length) return [];
+
+  const lista = Array.isArray(ficha.condicoes) ? ficha.condicoes : [];
+  const tirados = [];
+  const ficam = [];
+  for (let i = 0; i < lista.length; i++) {
+    const c = lista[i] || {};
+    if (impedidas[c.id]) {
+      tirados.push({ id: c.id, nome: c.nome, porCausaDe: impedidas[c.id] });
+    } else {
+      ficam.push(lista[i]);
+    }
+  }
+  if (tirados.length) ficha.condicoes = ficam;
+  return tirados;
 }
 
 /** true se o personagem está com a condição (aceita qualquer sinônimo). */

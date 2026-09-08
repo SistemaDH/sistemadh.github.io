@@ -302,11 +302,12 @@ function simularDescanso_(ficha, tipo, escolhas) {
 
   const disponiveis = movimentosDoDescanso_(t.id, copia);
   const patamar = patamarDaFicha_(copia);
-  /* Quantos movimentos vieram do OUTRO tipo de descanso — ver o teto abaixo. */
-  let emprestadosUsados = 0;
   const feitos = [];
   // A cura que este descanso manda para OUTRAS fichas.
   const paraAliados = [];
+
+  /* Quantos movimentos vieram do OUTRO tipo de descanso — ver o teto abaixo. */
+  let emprestadosUsados = 0;
 
   for (let i = 0; i < lista.length && i < DESCANSO.movimentosPorDescanso; i++) {
     const escolha = lista[i] || {};
@@ -497,6 +498,7 @@ function simularDescanso_(ficha, tipo, escolhas) {
     avisos.push('O grupo já fez ' + seguidosAntes + ' descansos curtos seguidos. Pelo livro (p. 105), ' +
       'o próximo precisa ser longo — mas a contagem é do grupo, então quem decide é a mesa.');
   }
+
   /*
    * O DESCANSO LONGO ACORDA QUEM ESTÁ INCONSCIENTE (p.106).
    *
@@ -512,7 +514,6 @@ function simularDescanso_(ficha, tipo, escolhas) {
     avisos.push(((copia.identidade || {}).nome || 'O personagem') +
       ' volta a si: o descanso longo tira a inconsciência (p.106).');
   }
-
   copia.descanso.curtosSeguidos = seguidosDepois;
   copia.descanso.ultimo = {
     tipo: t.id,

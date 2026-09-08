@@ -102,6 +102,254 @@ const CLASSES = {
   },
 };
 
+/** Habilidades de CLASSE que cobram Esperança (ou Estresse) para serem usadas. */
+const HABILIDADES_DE_CLASSE_COM_CUSTO = {
+  "Fazer uma Cena": {
+    "classe": "bardo",
+    "origem": "esperança",
+    "custo": {
+      "esperanca": 3
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": ""
+  },
+  "Magia Volátil": {
+    "classe": "feiticeiro",
+    "origem": "esperança",
+    "custo": {
+      "esperanca": 3
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": ""
+  },
+  "Canalizar Poder Bruto": {
+    "classe": "feiticeiro",
+    "origem": "classe",
+    "custo": {},
+    "alvo": null,
+    "cartaDaMao": {
+      "para": "cofre"
+    },
+    "opcoes": [
+      {
+        "id": "esperanca",
+        "rotulo": "Receber Esperança igual ao nível da carta",
+        "ganhaEsperancaPorNivel": 1
+      },
+      {
+        "id": "dano",
+        "rotulo": "Bônus de dano igual ao dobro do nível da carta",
+        "lembrete": "O bônus é da jogada de dano, que é da mesa — o app não rola."
+      }
+    ],
+    "marcaUso": "uso:feiticeiro:canalizar-poder-bruto"
+  },
+  "Linha de Frente": {
+    "classe": "guardiao",
+    "origem": "esperança",
+    "custo": {
+      "esperanca": 3
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": ""
+  },
+  "Nêmesis": {
+    "classe": "guardiao",
+    "origem": "subclasse",
+    "custo": {
+      "esperanca": 2
+    },
+    "alvo": {
+      "rotulo": "Adversário Priorizado",
+      "verbo": "Priorizar"
+    },
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": ""
+  },
+  "Sem Piedade": {
+    "classe": "guerreiro",
+    "origem": "esperança",
+    "custo": {
+      "esperanca": 3
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": ""
+  },
+  "Esquiva de Ladino": {
+    "classe": "ladino",
+    "origem": "esperança",
+    "custo": {
+      "esperanca": 3
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": ""
+  },
+  "Não Dessa Vez": {
+    "classe": "mago",
+    "origem": "esperança",
+    "custo": {
+      "esperanca": 3
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": ""
+  },
+  "Segurem Eles": {
+    "classe": "patrulheiro",
+    "origem": "esperança",
+    "custo": {
+      "esperanca": 3
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": ""
+  },
+  "Marca da Presa": {
+    "classe": "patrulheiro",
+    "origem": "classe",
+    "custo": {
+      "esperanca": 1
+    },
+    "alvo": {
+      "rotulo": "Alvo Marcado",
+      "verbo": "Marcar"
+    },
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": ""
+  },
+  "Alicerce da Vida": {
+    "classe": "seraph",
+    "origem": "esperança",
+    "custo": {
+      "esperanca": 3
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": ""
+  }
+};
+
+/**
+ * Valida e normaliza ficha.alvosDeHabilidade — quem está Marcado/Priorizado.
+ *
+ * ⚠ SILENCIOSO, como o resto da normalização: um alvo sobrando numa ficha que
+ * trocou de subclasse não é motivo para travar a gravação de ninguém.
+ */
+function validarAlvosDeHabilidade_(ficha) {
+  const bruto = (ficha && ficha.alvosDeHabilidade) || {};
+  const saida = {};
+  const nomes = Object.keys(HABILIDADES_DE_CLASSE_COM_CUSTO);
+  for (let i = 0; i < nomes.length; i++) {
+    const def = HABILIDADES_DE_CLASSE_COM_CUSTO[nomes[i]];
+    if (!def.alvo) continue;
+    if (!fichaTemCaracteristicaDeClasse_(ficha, nomes[i])) continue;
+    const alvo = String(bruto[nomes[i]] || '').trim().slice(0, 60);
+    if (alvo) saida[nomes[i]] = alvo;
+  }
+  ficha.alvosDeHabilidade = saida;
+  return [];
+}
+
+/** Acha a habilidade com custo pelo nome, aceitando qualquer grafia. */
+function habilidadeComCusto_(nome) {
+  const alvo = chaveTexto_(nome);
+  const nomes = Object.keys(HABILIDADES_DE_CLASSE_COM_CUSTO);
+  for (let i = 0; i < nomes.length; i++) {
+    if (chaveTexto_(nomes[i]) === alvo) {
+      return Object.assign({ nome: nomes[i] }, HABILIDADES_DE_CLASSE_COM_CUSTO[nomes[i]]);
+    }
+  }
+  return null;
+}
+
+/** Escolhas de classe que ficam gravadas na ficha (o número do Mago). */
+const ESCOLHAS_DE_CLASSE = {
+  "padroesEstranhos": {
+    "caracteristica": "Padrões Estranhos",
+    "classe": "mago",
+    "tipo": "numero",
+    "minimo": 1,
+    "maximo": 12,
+    "rotulo": "Seu número",
+    "ajuda": "Ao tirar esse número num Dado de Dualidade: 1 de Esperança ou 1 Estresse limpo.",
+    "trocaEm": "descanso-longo"
+  }
+};
+
+/**
+ * Valida e normaliza ficha.escolhasDeClasse.
+ *
+ * ⚠ SILENCIOSO, como o resto da normalização: qualquer item na lista de
+ * problemas faz validarFicha_ RECUSAR a gravação, e uma escolha sobrando numa
+ * ficha que trocou de classe não é motivo para travar a ficha de ninguém. O
+ * que não pertence à ficha some; o que está fora da faixa é aparado.
+ */
+function validarEscolhasDeClasse_(ficha) {
+  const bruto = (ficha && ficha.escolhasDeClasse) || {};
+  const saida = {};
+  const chaves = Object.keys(ESCOLHAS_DE_CLASSE);
+  for (let i = 0; i < chaves.length; i++) {
+    const chave = chaves[i];
+    const def = ESCOLHAS_DE_CLASSE[chave];
+    if (!fichaTemCaracteristicaDeClasse_(ficha, def.caracteristica)) continue;
+    const valor = Math.trunc(Number(bruto[chave]));
+    if (!isFinite(valor)) continue;
+    saida[chave] = Math.max(def.minimo, Math.min(def.maximo, valor));
+  }
+  ficha.escolhasDeClasse = saida;
+  return [];
+}
+
+/** Esta ficha tem esta característica de classe? (multiclasse incluída) */
+function fichaTemCaracteristicaDeClasse_(ficha, nome) {
+  if (!ficha || typeof caracteristicasDaClasse_ !== 'function') return false;
+  const alvo = chaveTexto_(nome);
+  const tem = caracteristicasDaClasse_(ficha) || [];
+  for (let i = 0; i < tem.length; i++) {
+    if (chaveTexto_((tem[i] || {}).nome) === alvo) return true;
+  }
+  return false;
+}
+
+/** Características de classe que mexem numa regra aplicada pelo servidor. */
+const CARACTERISTICAS_COM_EFEITO = {
+  "ignora-empunhadura": [
+    "Treinamento de Combate"
+  ]
+};
+
+/**
+ * Esta ficha tem alguma característica com este efeito?
+ *
+ * Lê caracteristicasDaClasse_, que já resolve classe, subclasse e MULTICLASSE
+ * — então um Bardo que multiclassou em Guerreiro é reconhecido sem nenhuma
+ * linha a mais.
+ */
+function fichaTemEfeito_(ficha, efeito) {
+  const nomes = CARACTERISTICAS_COM_EFEITO[efeito] || [];
+  if (!nomes.length || !ficha) return false;
+  if (typeof caracteristicasDaClasse_ !== 'function') return false;
+  for (let k = 0; k < nomes.length; k++) {
+    if (fichaTemCaracteristicaDeClasse_(ficha, nomes[k])) return true;
+  }
+  return false;
+}
+
 /** Nomes alternativos de classe que aparecem no livro e nas cartas. */
 const CLASSE_ALIASES = {
   "bardo": ["Bardo"],

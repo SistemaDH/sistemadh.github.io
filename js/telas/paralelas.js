@@ -72,6 +72,45 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
   let p = personagem;
   let catalogoFilhas = null;
 
+  /*
+   * A EVOLUÇÃO É UM MODO DE ENTRAR, não um botão separado.
+   *
+   * Ela muda o PREÇO de toda transformação ("gaste 3 de Esperança para usar
+   * Forma de Fera sem marcar Estresse"), então vira um interruptor que fica
+   * ligado enquanto o jogador escolhe a forma. Botão próprio em cada uma das
+   * 24 formas seria a mesma escolha repetida 24 vezes.
+   *
+   * Mora no escopo do modal, não dentro de `desenhar()`: cada gravação
+   * redesenha a tela inteira, e um estado dentro do desenho se perderia entre
+   * ligar o interruptor e tocar na forma.
+   */
+  let comEvolucao = false;
+  let tracoDaEvolucao = null;
+
+  /*
+   * ⚠ TUDO O QUE É `let`/`const` DO MODAL MORA AQUI EM CIMA, e não junto da
+   * função que usa. `desenhar()` é chamado logo abaixo, na abertura: uma
+   * declaração escrita depois dele ainda não existe quando ele roda, e o
+   * primeiro toque que chegasse nela estouraria uma zona morta temporal —
+   * sem erro na tela, sem nada no console, só um botão que não faz nada.
+   * (Foi exatamente o que aconteceu com estas cinco linhas.) Função declarada
+   * com `function` não tem esse problema: ela sobe sozinha.
+   */
+  let escolhaAberta = null;      // id da forma cujo painel de escolha está aberto
+  let escolhaBase = null;        // aprimoramento: id da forma-base
+  let escolhaHibrido = null;     // híbrida: { opcoes, vantagens, habilidades }
+
+  /** Os seis traços, na ordem impressa da ficha. */
+  const ORDEM_TRACOS = ['agilidade', 'forca', 'finesse', 'instinto', 'presenca', 'conhecimento'];
+
+  const regraDeAprimoramento = (id) => (catalogoFilhas.formaDeFera.regras.aprimoramentos || {})[id] || null;
+  const regraDeHibrido = (id) => (catalogoFilhas.formaDeFera.regras.hibridos || {})[id] || null;
+  const pedeEscolha = (id) => Boolean(regraDeAprimoramento(id) || regraDeHibrido(id));
+
+  const formaPorId = (id) => catalogoFilhas.formaDeFera.formas.find((x) => x.id === id) || null;
+  const formasDosPatamares = (patamares) => catalogoFilhas.formaDeFera.formas
+    .filter((x) => x.tipo !== 'aprimoramento' && patamares.indexOf(x.patamar) !== -1);
+
   limpar(corpo).append(el('div', { class: 'carregando' }, [
     el('div', { class: 'carregando__roda' }),
     el('span', { class: 'texto-sm', texto: 'Abrindo…' })
@@ -91,6 +130,16 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
     const r = await enviar([ajuste]);
     if (!r) return false;
     p = r.personagem || p;
+    /*
+     * Entrou ou saiu: o interruptor da Evolução volta ao lugar. Sem isto ele
+     * ficaria ligado da transformação anterior e a PRÓXIMA cobraria Esperança
+     * sem ninguém ter pedido.
+     */
+    if (ajuste.acao === 'entrar' || ajuste.acao === 'sair') {
+      comEvolucao = false;
+      tracoDaEvolucao = null;
+      fecharEscolha();
+    }
     if (mensagem) avisarSucesso(mensagem);
     desenhar();
     // A tela inteira mudou de assunto (entrou numa forma, criou a ficha); sem
@@ -134,8 +183,19 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
     const regras = catalogoFilhas.formaDeFera.regras;
     const nivel = Number((ficha.identidade || {}).nivel) || 1;
     const patamar = catalogo.patamarDoNivel(nivel);
-    const ativa = minha.dados.formaAtiva
-      ? catalogoFilhas.formaDeFera.formas.find((f) => f.id === minha.dados.formaAtiva)
+    /*
+     * ⚠ A FORMA ATIVA VEM DO SERVIDOR, NÃO DO CATÁLOGO.
+     *
+     * Ela pode ser uma COMPOSIÇÃO: Fera Lendária turbinando um Explorador
+     * Ágil tem Evasão, traço, dano e habilidades que não existem em entrada
+     * nenhuma do JSON. Quem monta isso é formaComposta_, no motor, junto com a
+     * Evasão que já entra na ficha. Remontar aqui seria a mesma regra escrita
+     * duas vezes, e a segunda cópia é a que fica para trás (E4).
+     */
+    const ativa = ficha.formaDeFera || null;
+    // Só isto continua vindo do catálogo, e não é regra: os bichos de exemplo.
+    const noCatalogo = ativa
+      ? catalogoFilhas.formaDeFera.formas.find((f) => f.id === ativa.id)
       : null;
 
     corpo.append(el('p', { class: 'paralela__migalha', texto:
@@ -150,21 +210,50 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
           (ativa.grupo && ativa.grupo !== ativa.nome)
             ? `${ativa.grupo} · patamar ${ativa.patamar}`
             : `Patamar ${ativa.patamar}` }),
-        el('div', { class: 'paralela__numeros' }, [
-          numero('Evasão', `+${String(ativa.modificadores.evasao).replace('+', '')}`, 'já somada na ficha'),
-          // TRAÇO, não "Atributo": "atributo" é o termo da Jambô e o canônico do
-      // app é o da carta (data/glossario.json). A chave dos dados continua
-      // `atributo` — isto é rótulo, não migração.
-      numero('Traço', ativa.modificadores.atributo, 'para atacar nesta forma'),
-          numero('Ataque', ativa.ataque.dano, ativa.ataque.alcance)
-        ]),
+        /*
+         * ⚠ APRIMORAMENTO NÃO TEM NÚMEROS PRÓPRIOS.
+         *
+         * Fera Lendária e Fera Mítica não são formas: elas turbinam uma forma
+         * de patamar menor. No JSON isso é `modificadores: {atributo: null,
+         * evasao: null}` e `ataque: {}` — e a tela desenhava isso cru, dando
+         * "Evasão null" e "null · undefined · undefined" na cara do jogador.
+         */
+        temNumeros(ativa)
+          ? el('div', { class: 'paralela__numeros' }, [
+            numero('Evasão', `+${String(ativa.modificadores.evasao).replace('+', '')}`, 'já somada na ficha'),
+            // TRAÇO, não "Atributo": "atributo" é o termo da Jambô e o canônico
+            // do app é o da carta (data/glossario.json). A chave dos dados
+            // continua `atributo` — isto é rótulo, não migração.
+            /*
+             * ⚠ "já somado nos traços", e não "para atacar nesta forma".
+             *
+             * O rótulo antigo estreitava a regra: o livro (p.35) diz "você
+             * recebe um bônus no atributo listado", e traço vale em toda
+             * jogada dele, não só no ataque. Hoje o número entra na ficha e o
+             * ladrilho do traço mostra o total — a nota diz onde procurar.
+             */
+            numero('Traço', ativa.modificadores.atributo, 'já somado nos traços'),
+            numero('Ataque', ativa.ataque.dano, ativa.ataque.alcance)
+          ])
+          : el('p', { class: 'texto-sm paralela__aprimoramento', texto:
+            'Aprimoramento: os números vêm da forma de patamar menor que ele turbina.' }),
+        vantagens(ativa),
         el('div', { class: 'pilha' }, (ativa.caracteristicas || []).map((c) =>
           el('div', { class: 'paralela__carac' }, [
             el('h4', { class: 'paralela__caracNome' }, nomeComGlossa(c.nome)),
             el('p', { class: 'texto-sm' }, textoAnotado(c.texto))
           ]))),
-        ativa.exemplos && ativa.exemplos.length
-          ? el('p', { class: 'texto-xs texto-fraco', texto: `Exemplos: ${ativa.exemplos.join(', ')}.` })
+        (noCatalogo && noCatalogo.exemplos && noCatalogo.exemplos.length)
+          ? el('p', { class: 'texto-xs texto-fraco', texto: `Exemplos: ${noCatalogo.exemplos.join(', ')}.` })
+          : null,
+        // De onde saiu o que ela virou: a base do aprimoramento, ou as formas
+        // de onde a híbrida pegou emprestado.
+        ativa.base
+          ? el('p', { class: 'texto-xs texto-fraco', texto: `Turbinando: ${ativa.base.nome}.` })
+          : null,
+        (ativa.hibrido && ativa.hibrido.opcoes.length)
+          ? el('p', { class: 'texto-xs texto-fraco', texto:
+            `Emprestado de: ${ativa.hibrido.opcoes.map((o) => o.nome).join(' e ')}.` })
           : null,
         el('button', {
           type: 'button', class: 'btn btn--principal',
@@ -174,6 +263,19 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
     } else {
       corpo.append(el('p', { class: 'ficha__nota' }, textoAnotado(regras.comoEntra)));
     }
+
+    /*
+     * A EVOLUÇÃO — a Habilidade de Esperança do Druida (livro p.34).
+     *
+     * "Gaste 3 de Esperança para usar Forma de Fera sem marcar Estresse. Ao
+     * fazer isso, aumente um traço em +1 até sair da Forma de Fera."
+     *
+     * Ela não tinha lugar nenhum no app: o jogador lia a habilidade na aba
+     * Ficha e resolvia no papel. Agora é um interruptor ao lado das formas —
+     * ligado, os botões de entrar passam a cobrar Esperança em vez de
+     * Estresse, e perguntam qual traço sobe.
+     */
+    corpo.append(cartaoDaEvolucao(ficha, ativa));
 
     corpo.append(el('h3', { class: 'paralela__titulo', texto: ativa ? 'Trocar de forma' : 'Escolha uma forma' }));
 
@@ -192,27 +294,281 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
 
   function cartaoDeForma(f, ativa) {
     const ehAtiva = ativa && ativa.id === f.id;
+    const numeros = temNumeros(f);
     return el('div', { class: `cartao paralela__forma ${ehAtiva ? 'esta-ativa' : ''}` }, [
       el('div', { class: 'paralela__formaTopo' }, [
         el('h4', { class: 'cartao__titulo crescer' }, nomeComGlossa(f.nome)),
-        el('span', { class: 'selo', texto: `Evasão ${f.modificadores.evasao}` })
+        numeros
+          ? el('span', { class: 'selo', texto: `Evasão ${f.modificadores.evasao}` })
+          : el('span', { class: 'selo', texto: 'aprimoramento' })
       ]),
-      el('p', { class: 'texto-xs texto-fraco', texto:
-        `${f.modificadores.atributo} · ${f.ataque.dano} · ${f.ataque.alcance}` }),
-      f.tipo === 'aprimoramento'
-        ? el('p', { class: 'texto-xs paralela__aprimoramento', texto:
-          'Aprimoramento: não é uma forma sozinha — turbina uma forma de patamar menor.' })
-        : null,
+      numeros
+        ? el('p', { class: 'texto-xs texto-fraco', texto:
+          `${f.modificadores.atributo} · ${f.ataque.dano} · ${f.ataque.alcance}` })
+        : el('p', { class: 'texto-xs paralela__aprimoramento', texto:
+          'Não é uma forma sozinha — turbina uma forma de patamar menor.' }),
+      vantagens(f),
       el('p', { class: 'texto-sm' }, textoAnotado(
         (f.caracteristicas || []).map((c) => `${c.nome}: ${c.texto}`).join('\n'))),
       ehAtiva
         ? el('span', { class: 'selo selo--nivel', texto: 'você está nesta forma' })
-        : el('button', {
-          type: 'button', class: 'btn btn--fantasma btn--pequeno',
-          onClick: () => mandar(
-            { tipo: 'fichaFilha', filha, acao: 'entrar', forma: f.id },
-            `Você virou ${f.nome}.`)
-        }, 'Entrar nesta forma')
+        : botaoDeEntrar(f),
+      escolhaAberta === f.id ? painelDeEscolha(f) : null
+    ]);
+  }
+
+  /* ------------------------------------------------------------------ *
+   *  As escolhas das formas grandes
+   *
+   *  Quatro das 24 entradas pedem uma escolha ANTES de transformar:
+   *  Fera Lendária e Fera Mítica precisam da forma de patamar menor que
+   *  vão turbinar; Híbrido Lendário e Mítico precisam das formas de onde
+   *  saem as vantagens e as habilidades emprestadas.
+   *
+   *  Fica dentro do próprio cartão, e não em outro modal: já se está num
+   *  modal de tela cheia, e um segundo por cima esconderia justamente o
+   *  texto da forma que explica o que se está escolhendo.
+   * ------------------------------------------------------------------ */
+
+  /** A escolha está fechada? O servidor pergunta o mesmo antes de cobrar. */
+  function escolhaCompleta(f) {
+    const apr = regraDeAprimoramento(f.id);
+    if (apr) return Boolean(escolhaBase);
+    const hib = regraDeHibrido(f.id);
+    if (hib) return Boolean(escolhaHibrido) && escolhaHibrido.opcoes.length === hib.quantasOpcoes;
+    return true;
+  }
+
+  function ajusteDeEntrar(f) {
+    const a = { tipo: 'fichaFilha', filha, acao: 'entrar', forma: f.id };
+    if (comEvolucao) { a.evolucao = true; a.traco = tracoDaEvolucao; }
+    if (regraDeAprimoramento(f.id)) a.base = escolhaBase;
+    if (regraDeHibrido(f.id)) a.hibrido = escolhaHibrido;
+    return a;
+  }
+
+  function fecharEscolha() {
+    escolhaAberta = null;
+    escolhaBase = null;
+    escolhaHibrido = null;
+  }
+
+  function botaoDeEntrar(f) {
+    const preco = precoEmPalavras(f);
+
+    if (pedeEscolha(f.id) && escolhaAberta !== f.id) {
+      return el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--pequeno',
+        disabled: comEvolucao && !tracoDaEvolucao,
+        onClick: () => {
+          escolhaAberta = f.id;
+          escolhaBase = null;
+          escolhaHibrido = regraDeHibrido(f.id)
+            ? { opcoes: [], vantagens: [], habilidades: [] } : null;
+          desenhar();
+        }
+      }, `Escolher e entrar — ${preco}`);
+    }
+
+    return el('button', {
+      type: 'button', class: 'btn btn--fantasma btn--pequeno',
+      disabled: (comEvolucao && !tracoDaEvolucao) || !escolhaCompleta(f),
+      onClick: () => mandar(ajusteDeEntrar(f), `Você virou ${f.nome}.`)
+    }, `Entrar — ${preco}`);
+  }
+
+  function painelDeEscolha(f) {
+    const apr = regraDeAprimoramento(f.id);
+    const hib = regraDeHibrido(f.id);
+    return el('div', { class: 'paralela__escolha' }, [
+      apr ? escolhaDaBase(apr) : null,
+      hib ? escolhaDaHibrida(hib) : null,
+      el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--pequeno',
+        onClick: () => { fecharEscolha(); desenhar(); }
+      }, 'Cancelar')
+    ].filter(Boolean));
+  }
+
+  function escolhaDaBase(apr) {
+    const quais = apr.patamaresDaBase.map((t) => `${t}º`).join(' ou ');
+    return el('div', { class: 'pilha' }, [
+      el('p', { class: 'texto-xs texto-fraco', texto:
+        `Qual forma de ${quais} patamar você vira, maior e mais poderosa?` }),
+      el('div', { class: 'linha paralela__opcoes' },
+        formasDosPatamares(apr.patamaresDaBase).map((b) => el('button', {
+          type: 'button',
+          class: `btn ${escolhaBase === b.id ? 'btn--principal' : 'btn--fantasma'} btn--pequeno`,
+          onClick: () => { escolhaBase = b.id; desenhar(); }
+        }, b.nome))),
+      escolhaBase
+        ? el('p', { class: 'texto-xs texto-fraco', texto: resumoDoAprimoramento(apr) })
+        : null
+    ]);
+  }
+
+  /*
+   * O que o aprimoramento soma, dito em número e não em texto corrido — é o
+   * que a pessoa quer saber para escolher entre as seis bases.
+   */
+  function resumoDoAprimoramento(apr) {
+    const partes = [`+${apr.evasao} de Evasão`, `+${apr.traco} no traço`, `+${apr.dano} no dano`];
+    if (apr.sobeDado) partes.push('e o dado sobe um passo');
+    return `Por cima da forma escolhida: ${partes.join(', ')}.`;
+  }
+
+  function escolhaDaHibrida(hib) {
+    const e = escolhaHibrido || { opcoes: [], vantagens: [], habilidades: [] };
+    const escolhidas = e.opcoes.map(formaPorId).filter(Boolean);
+    const quais = hib.patamaresDasOpcoes.map((t) => `${t}º`).join(', ');
+
+    /*
+     * A ordem importa: sem as opções escolhidas não existe de onde tirar
+     * vantagem nem habilidade, então as duas listas de baixo só aparecem
+     * depois — em vez de aparecerem vazias e sem explicação.
+     */
+    const vantagensPossiveis = [];
+    const habilidadesPossiveis = [];
+    escolhidas.forEach((o) => {
+      (o.verbos || []).forEach((v) => {
+        if (!vantagensPossiveis.some((x) => x.verbo === v)) vantagensPossiveis.push({ verbo: v, de: o.nome });
+      });
+      (o.caracteristicas || []).forEach((c) => {
+        if (!habilidadesPossiveis.some((x) => x.nome === c.nome)) {
+          habilidadesPossiveis.push({ nome: c.nome, de: o.nome });
+        }
+      });
+    });
+
+    const alternar = (lista, valor, teto) => {
+      const i = lista.indexOf(valor);
+      if (i !== -1) lista.splice(i, 1);
+      else if (lista.length < teto) lista.push(valor);
+      desenhar();
+    };
+
+    return el('div', { class: 'pilha' }, [
+      el('p', { class: 'texto-xs texto-fraco', texto:
+        `Escolha ${hib.quantasOpcoes} formas de ${quais} patamar ` +
+        `(${e.opcoes.length} de ${hib.quantasOpcoes}).` }),
+      el('div', { class: 'linha paralela__opcoes' },
+        formasDosPatamares(hib.patamaresDasOpcoes).map((o) => el('button', {
+          type: 'button',
+          class: `btn ${e.opcoes.indexOf(o.id) !== -1 ? 'btn--principal' : 'btn--fantasma'} btn--pequeno`,
+          disabled: e.opcoes.indexOf(o.id) === -1 && e.opcoes.length >= hib.quantasOpcoes,
+          onClick: () => {
+            const i = e.opcoes.indexOf(o.id);
+            if (i !== -1) {
+              e.opcoes.splice(i, 1);
+              /*
+               * Tirar uma opção tira junto o que veio dela. Sem isto, uma
+               * vantagem órfã ficaria marcada na tela e o servidor a
+               * descartaria em silêncio na gravação — a tela mostrando uma
+               * coisa e a ficha guardando outra.
+               */
+              const aindaValem = e.opcoes.map(formaPorId).filter(Boolean);
+              e.vantagens = e.vantagens.filter((v) =>
+                aindaValem.some((x) => (x.verbos || []).indexOf(v) !== -1));
+              e.habilidades = e.habilidades.filter((h) =>
+                aindaValem.some((x) => (x.caracteristicas || []).some((c) => c.nome === h)));
+            } else if (e.opcoes.length < hib.quantasOpcoes) {
+              e.opcoes.push(o.id);
+            }
+            escolhaHibrido = e;
+            desenhar();
+          }
+        }, `${o.nome} (${o.patamar}º)`))),
+
+      escolhidas.length ? el('p', { class: 'texto-xs texto-fraco', texto:
+        `Quais ${hib.vantagens} vantagens você leva? (${e.vantagens.length} de ${hib.vantagens})` }) : null,
+      escolhidas.length ? el('div', { class: 'linha paralela__opcoes' },
+        vantagensPossiveis.map((v) => el('button', {
+          type: 'button',
+          class: `btn ${e.vantagens.indexOf(v.verbo) !== -1 ? 'btn--principal' : 'btn--fantasma'} btn--pequeno`,
+          disabled: e.vantagens.indexOf(v.verbo) === -1 && e.vantagens.length >= hib.vantagens,
+          onClick: () => alternar(e.vantagens, v.verbo, hib.vantagens)
+        }, v.verbo))) : null,
+
+      escolhidas.length ? el('p', { class: 'texto-xs texto-fraco', texto:
+        `E quais ${hib.habilidades} habilidades? (${e.habilidades.length} de ${hib.habilidades})` }) : null,
+      escolhidas.length ? el('div', { class: 'pilha' },
+        habilidadesPossiveis.map((h) => el('button', {
+          type: 'button',
+          class: `btn ${e.habilidades.indexOf(h.nome) !== -1 ? 'btn--principal' : 'btn--fantasma'} btn--pequeno`,
+          disabled: e.habilidades.indexOf(h.nome) === -1 && e.habilidades.length >= hib.habilidades,
+          onClick: () => alternar(e.habilidades, h.nome, hib.habilidades)
+        }, `${h.nome} — ${h.de}`))) : null
+    ].filter(Boolean));
+  }
+
+  /*
+   * O PREÇO NO BOTÃO.
+   *
+   * O servidor é quem cobra e quem recusa (4C_Ajustes.gs) — isto é rótulo,
+   * como a escada de dados do Companheiro. Mas precisa estar no botão: o
+   * custo passou a sair da ficha de verdade, e um botão que gasta Estresse
+   * sem dizer que gasta é uma armadilha.
+   */
+  function precoEmPalavras(f) {
+    const custo = catalogoFilhas.formaDeFera.regras.custo;
+    const adicional = Number(f.custoAdicional) || 0;
+    if (comEvolucao) {
+      const evo = catalogoFilhas.formaDeFera.regras.evolucao;
+      return adicional
+        ? `${evo.esperanca} Esperança e ${adicional} Estresse`
+        : `${evo.esperanca} Esperança`;
+    }
+    const total = (Number(custo.estresseBase) || 1) + adicional;
+    return `${total} Estresse`;
+  }
+
+  function cartaoDaEvolucao(ficha, ativa) {
+    const evo = catalogoFilhas.formaDeFera.regras.evolucao;
+    const jaEvoluida = (ficha.formaDeFera || {}).evolucaoTraco || null;
+
+    // Já transformado COM Evolução: aqui não há o que escolher, só o que ler.
+    if (ativa && jaEvoluida) {
+      return el('div', { class: 'cartao paralela__evolucaoDruida esta-ativa' }, [
+        el('h4', { class: 'cartao__titulo' }, nomeComGlossa('Evolução')),
+        el('p', { class: 'texto-sm', texto:
+          `Você entrou pela Evolução: ${catalogo.nomeDoTraco(jaEvoluida)} está ` +
+          `+${evo.tracoBonus} até você sair da forma.` })
+      ]);
+    }
+    // Já transformado SEM Evolução: ela não se aplica a quem já é fera.
+    if (ativa) return null;
+
+    const esperanca = Number((ficha.recursos || {}).esperanca) || 0;
+    const falta = esperanca < evo.esperanca;
+
+    return el('div', { class: `cartao paralela__evolucaoDruida ${comEvolucao ? 'esta-ativa' : ''}` }, [
+      el('h4', { class: 'cartao__titulo' }, nomeComGlossa('Evolução')),
+      el('p', { class: 'texto-sm' }, textoAnotado(evo.texto)),
+      el('button', {
+        type: 'button',
+        class: `btn ${comEvolucao ? 'btn--principal' : 'btn--fantasma'} btn--pequeno`,
+        disabled: falta && !comEvolucao,
+        onClick: () => {
+          comEvolucao = !comEvolucao;
+          if (!comEvolucao) tracoDaEvolucao = null;
+          desenhar();
+        }
+      }, comEvolucao ? 'Entrar sem a Evolução' : `Usar a Evolução (${evo.esperanca} Esperança)`),
+      falta && !comEvolucao
+        ? el('p', { class: 'texto-xs texto-fraco', texto:
+          `Você tem ${esperanca} de Esperança; a Evolução pede ${evo.esperanca}.` })
+        : null,
+      comEvolucao
+        ? el('div', { class: 'pilha' }, [
+          el('p', { class: 'texto-xs texto-fraco', texto:
+            `Qual traço sobe +${evo.tracoBonus} enquanto a forma durar?` }),
+          el('div', { class: 'linha paralela__tracos' }, ORDEM_TRACOS.map((t) => el('button', {
+            type: 'button',
+            class: `btn ${tracoDaEvolucao === t ? 'btn--principal' : 'btn--fantasma'} btn--pequeno`,
+            onClick: () => { tracoDaEvolucao = t; desenhar(); }
+          }, catalogo.nomeDoTraco(t))))
+        ])
+        : null
     ]);
   }
 
@@ -373,6 +729,38 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
   }
 
   /* --------------------------------------------------------------------- */
+
+  /**
+   * A forma tem estatísticas próprias?
+   *
+   * Só os APRIMORAMENTOS não têm: eles emprestam os números da forma que
+   * turbinam. Perguntar isso num lugar só evita que o próximo desenho volte a
+   * imprimir "null".
+   */
+  function temNumeros(f) {
+    return Boolean(f && f.modificadores && f.modificadores.evasao);
+  }
+
+  /**
+   * AS VANTAGENS DA FORMA.
+   *
+   * É um dos cinco itens do bloco de cada forma no livro (p.35: "Vantagens:
+   * sua forma faz com que você seja especialmente melhor em determinadas
+   * ações"), e é o único que o jogador usa em TODA jogada — não só ao atacar.
+   * Estava no JSON (`verbos`) desde a importação e não era desenhado em lugar
+   * nenhum: quem quisesse saber tinha de abrir o livro.
+   */
+  function vantagens(f) {
+    const verbos = (f && f.verbos) || [];
+    if (!verbos.length) return null;
+    return el('p', { class: 'texto-xs paralela__vantagens' }, [
+      el('strong', { texto: 'Vantagem: ' }),
+      // Sem "ao"/"em" antes da lista: o livro alterna as duas conforme o verbo
+      // ("Vantagem ao escalar", "Vantagem em enganar") e uma lista com um
+      // único conector erra a metade dos casos.
+      document.createTextNode(verbos.join(', ') + '.')
+    ]);
+  }
 
   function numero(rotulo, valor, nota) {
     return el('div', { class: 'paralela__numero' }, [

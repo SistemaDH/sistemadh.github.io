@@ -120,6 +120,184 @@ for (const c of dados.classes) {
 }
 L.push('};\n');
 
+/*
+ * AS CARACTERÍSTICAS QUE MEXEM EM OUTRA REGRA DO APP.
+ *
+ * A maioria das características de classe é texto que a mesa lê. Umas poucas
+ * mudam uma regra que o servidor aplica sozinho, e essas precisam de um nome
+ * que o código possa perguntar. Em vez de o código procurar por
+ * "Treinamento de Combate" escrito à mão em algum `if`, o JSON marca a
+ * característica com um `efeito` e o gerador junta as marcadas por aqui.
+ *
+ * Assim a multiclasse funciona de graça: quem multiclassou em Guerreiro tem a
+ * característica de classe dele, e quem responde "esta ficha tem?" é a mesma
+ * função que lista as características.
+ */
+const porEfeito = {};
+for (const c of dados.classes) {
+  for (const f of c.caracteristicasDeClasse) {
+    if (!f.efeito) continue;
+    (porEfeito[f.efeito] = porEfeito[f.efeito] || []).push(f.nome);
+  }
+}
+/*
+ * AS ESCOLHAS QUE A FICHA PRECISA GUARDAR.
+ *
+ * "Padrões Estranhos: ESCOLHA UM NÚMERO de 1 a 12" (Mago, p.48). Não é
+ * contador nem recurso: é uma escolha que vale o jogo inteiro e muda num
+ * descanso longo. Sem um campo na ficha, ela vive na memória de quem está na
+ * mesa — que é onde as coisas se perdem entre uma sessão e a seguinte.
+ */
+const escolhas = {};
+for (const c of dados.classes) {
+  for (const f of c.caracteristicasDeClasse) {
+    if (!f.escolha) continue;
+    escolhas[f.escolha.chave] = {
+      caracteristica: f.nome, classe: c.id, tipo: f.escolha.tipo,
+      minimo: f.escolha.minimo, maximo: f.escolha.maximo,
+      rotulo: f.escolha.rotulo, ajuda: f.escolha.ajuda || '',
+      trocaEm: f.escolha.trocaEm || ''
+    };
+  }
+}
+/*
+ * AS HABILIDADES QUE CUSTAM ALGUMA COISA.
+ *
+ * Nove habilidades de Esperança ("gaste 3 de Esperança para…"), a Marca da
+ * Presa do Caçador (1 de Esperança e um alvo Marcado) e o Nêmesis do Guardião
+ * Vingança (2 de Esperança e um adversário Priorizado). Nenhuma delas tinha
+ * botão: o texto dizia o preço e a mesa pagava no papel — enquanto o app já
+ * cobrava o custo de recordar, o Medo do foco e, agora, a Forma de Fera.
+ *
+ * Varre CLASSE e SUBCLASSE: o Nêmesis é uma carta de maestria.
+ */
+const comCusto = {};
+for (const c of dados.classes) {
+  const anota = (f, origem) => {
+    if (!f || !f.uso) return;
+    comCusto[f.nome] = {
+      classe: c.id, origem,
+      custo: f.uso.custo || {},
+      alvo: f.uso.alvo || null,
+      // Canalizar Poder Bruto não paga em recurso: paga com uma CARTA da mão.
+      cartaDaMao: f.uso.cartaDaMao || null,
+      opcoes: f.uso.opcoes || null,
+      marcaUso: f.uso.marcaUso || ''
+    };
+  };
+  anota(c.caracteristicaEsperanca, 'esperança');
+  for (const f of c.caracteristicasDeClasse) anota(f, 'classe');
+  for (const s of c.subclasses) {
+    for (const qual of ['fundacao', 'especializacao', 'maestria']) {
+      for (const f of (s.cartas[qual].caracteristicas || [])) anota(f, 'subclasse');
+    }
+  }
+}
+/*
+ * ⚠ O NOME É LONGO POR NECESSIDADE. HABILIDADES_COM_CUSTO já existe em
+ * 4F_Bestiario.gs e quer dizer outra coisa: as habilidades de ADVERSÁRIO que
+ * custam Medo. Em Apps Script tudo mora no mesmo escopo global — uma segunda
+ * constante com esse nome não daria erro nenhum, apenas substituiria a
+ * primeira, e a Cena pararia de cobrar Medo. Mesma armadilha que deu o sufixo
+ * DaMesa em encerrarSessaoDaMesa_.
+ */
+L.push('/** Habilidades de CLASSE que cobram Esperança (ou Estresse) para serem usadas. */');
+L.push(`const HABILIDADES_DE_CLASSE_COM_CUSTO = ${JSON.stringify(comCusto, null, 2)};`);
+L.push(`
+/**
+ * Valida e normaliza ficha.alvosDeHabilidade — quem está Marcado/Priorizado.
+ *
+ * ⚠ SILENCIOSO, como o resto da normalização: um alvo sobrando numa ficha que
+ * trocou de subclasse não é motivo para travar a gravação de ninguém.
+ */
+function validarAlvosDeHabilidade_(ficha) {
+  const bruto = (ficha && ficha.alvosDeHabilidade) || {};
+  const saida = {};
+  const nomes = Object.keys(HABILIDADES_DE_CLASSE_COM_CUSTO);
+  for (let i = 0; i < nomes.length; i++) {
+    const def = HABILIDADES_DE_CLASSE_COM_CUSTO[nomes[i]];
+    if (!def.alvo) continue;
+    if (!fichaTemCaracteristicaDeClasse_(ficha, nomes[i])) continue;
+    const alvo = String(bruto[nomes[i]] || '').trim().slice(0, 60);
+    if (alvo) saida[nomes[i]] = alvo;
+  }
+  ficha.alvosDeHabilidade = saida;
+  return [];
+}
+
+/** Acha a habilidade com custo pelo nome, aceitando qualquer grafia. */
+function habilidadeComCusto_(nome) {
+  const alvo = chaveTexto_(nome);
+  const nomes = Object.keys(HABILIDADES_DE_CLASSE_COM_CUSTO);
+  for (let i = 0; i < nomes.length; i++) {
+    if (chaveTexto_(nomes[i]) === alvo) {
+      return Object.assign({ nome: nomes[i] }, HABILIDADES_DE_CLASSE_COM_CUSTO[nomes[i]]);
+    }
+  }
+  return null;
+}
+`);
+
+L.push('/** Escolhas de classe que ficam gravadas na ficha (o número do Mago). */');
+L.push(`const ESCOLHAS_DE_CLASSE = ${JSON.stringify(escolhas, null, 2)};`);
+L.push(`
+/**
+ * Valida e normaliza ficha.escolhasDeClasse.
+ *
+ * ⚠ SILENCIOSO, como o resto da normalização: qualquer item na lista de
+ * problemas faz validarFicha_ RECUSAR a gravação, e uma escolha sobrando numa
+ * ficha que trocou de classe não é motivo para travar a ficha de ninguém. O
+ * que não pertence à ficha some; o que está fora da faixa é aparado.
+ */
+function validarEscolhasDeClasse_(ficha) {
+  const bruto = (ficha && ficha.escolhasDeClasse) || {};
+  const saida = {};
+  const chaves = Object.keys(ESCOLHAS_DE_CLASSE);
+  for (let i = 0; i < chaves.length; i++) {
+    const chave = chaves[i];
+    const def = ESCOLHAS_DE_CLASSE[chave];
+    if (!fichaTemCaracteristicaDeClasse_(ficha, def.caracteristica)) continue;
+    const valor = Math.trunc(Number(bruto[chave]));
+    if (!isFinite(valor)) continue;
+    saida[chave] = Math.max(def.minimo, Math.min(def.maximo, valor));
+  }
+  ficha.escolhasDeClasse = saida;
+  return [];
+}
+
+/** Esta ficha tem esta característica de classe? (multiclasse incluída) */
+function fichaTemCaracteristicaDeClasse_(ficha, nome) {
+  if (!ficha || typeof caracteristicasDaClasse_ !== 'function') return false;
+  const alvo = chaveTexto_(nome);
+  const tem = caracteristicasDaClasse_(ficha) || [];
+  for (let i = 0; i < tem.length; i++) {
+    if (chaveTexto_((tem[i] || {}).nome) === alvo) return true;
+  }
+  return false;
+}
+`);
+
+L.push('/** Características de classe que mexem numa regra aplicada pelo servidor. */');
+L.push(`const CARACTERISTICAS_COM_EFEITO = ${JSON.stringify(porEfeito, null, 2)};`);
+L.push(`
+/**
+ * Esta ficha tem alguma característica com este efeito?
+ *
+ * Lê caracteristicasDaClasse_, que já resolve classe, subclasse e MULTICLASSE
+ * — então um Bardo que multiclassou em Guerreiro é reconhecido sem nenhuma
+ * linha a mais.
+ */
+function fichaTemEfeito_(ficha, efeito) {
+  const nomes = CARACTERISTICAS_COM_EFEITO[efeito] || [];
+  if (!nomes.length || !ficha) return false;
+  if (typeof caracteristicasDaClasse_ !== 'function') return false;
+  for (let k = 0; k < nomes.length; k++) {
+    if (fichaTemCaracteristicaDeClasse_(ficha, nomes[k])) return true;
+  }
+  return false;
+}
+`);
+
 L.push('/** Nomes alternativos de classe que aparecem no livro e nas cartas. */');
 L.push('const CLASSE_ALIASES = {');
 for (const c of dados.classes) {

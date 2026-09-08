@@ -114,6 +114,8 @@ function aplicarAjustes_(ficha, ajustes) {
     else if (tipo === 'inventario') r = ajustarInventario_(ficha, a);
     else if (tipo === 'compra') r = comprarItem_(ficha, a);
     else if (tipo === 'fichafilha') r = ajustarFichaFilha_(ficha, a);
+    else if (tipo === 'escolhadeclasse') r = ajustarEscolhaDeClasse_(ficha, a);
+    else if (tipo === 'habilidade') r = usarHabilidadeDeClasse_(ficha, a);
     else r = { erro: 'Tipo de ajuste desconhecido: "' + String(a.tipo) + '".' };
 
     if (r && r.erro) erros.push(r.erro);
@@ -205,14 +207,100 @@ function ajustarFichaFilha_(ficha, a) {
     const forma = (typeof normalizarFormaDeFera_ === 'function') ? normalizarFormaDeFera_(a.forma) : '';
     if (!forma) return { erro: 'Forma de Fera desconhecida: "' + String(a.forma) + '".' };
     const antes = filha.dados.formaAtiva || null;
-    filha.dados.formaAtiva = forma;
-    return {
-      tipo: 'fichaFilha', filha: tipo, acao: 'entrar', forma: forma,
-      nome: FORMAS_DE_FERA[forma] ? FORMAS_DE_FERA[forma].nome : forma, antes: antes,
-      // O custo é do jogador: o app não marca Estresse sozinho, do mesmo jeito
-      // que não rola dado. Ele lembra.
-      aviso: antes ? '' : 'Entrar na Forma de Fera custa 1 Estresse (mais 1 ou 2 nas híbridas) — marque na trilha.'
+
+    /*
+     * O CUSTO DE TRANSFORMAR É COBRADO AQUI — e junto com a transformação.
+     *
+     * Antes o servidor só AVISAVA ("custa 1 Estresse, marque na trilha"), pelo
+     * mesmo argumento do "só ficha, sem dados". Mas aquela decisão é sobre
+     * DADOS: o app não rola. Custo ele já cobra em toda parte — o custo de
+     * recordar tira Estresse ao trazer carta do cofre, pôr adversário em foco
+     * tira Medo da mesa. Lembrar de marcar era a única coisa que a Forma de
+     * Fera pedia da mesa que o resto do app não pedia.
+     *
+     * Cobrar e transformar acontecem no MESMO ajuste, como no custo de
+     * recordar (E20): não existe o estado meio-termo de fera sem custo pago.
+     *
+     * ⚠ TROCAR DE FORMA TAMBÉM CUSTA. Trocar é sair e transformar de novo, e
+     * transformar é o que o livro cobra. A tela diz o preço no botão, então
+     * não é surpresa de ninguém.
+     */
+    /*
+     * AS ESCOLHAS VÊM JUNTO COM A TRANSFORMAÇÃO, não depois.
+     *
+     * Fera Lendária e Fera Mítica não são formas: sem a forma-base escolhida
+     * elas não têm Evasão, traço nem ataque. As híbridas sem as opções não têm
+     * vantagem nem habilidade nenhuma. Deixar entrar assim poria na mesa um
+     * personagem transformado em nada — e o custo já teria sido pago.
+     */
+    const escolhas = {
+      base: a.base || null,
+      hibrido: (a.hibrido && typeof a.hibrido === 'object') ? a.hibrido : null
     };
+    const composta = (typeof formaComposta_ === 'function')
+      ? formaComposta_(forma, escolhas) : null;
+    if (composta && composta.incompleta) {
+      return { erro: composta.base === null && composta.tipo === 'aprimoramento'
+        ? 'Escolha a forma de patamar menor que ' + composta.nome + ' vai turbinar.'
+        : 'Escolha as formas de onde saem as vantagens e habilidades desta híbrida.' };
+    }
+
+    const evoluir = a.evolucao === true;
+    const custo = (typeof custoDeEntrarNaForma_ === 'function')
+      ? custoDeEntrarNaForma_(forma, evoluir) : { estresse: 1, esperanca: 0 };
+
+    const r = ficha.recursos || {};
+    const nomeDaForma = FORMAS_DE_FERA[forma] ? FORMAS_DE_FERA[forma].nome : forma;
+
+    if (custo.estresse > 0) {
+      const teto = Number(r.estresseMaximo) || 0;
+      const marcado = Math.max(0, Number(r.estresseMarcado) || 0);
+      if (marcado + custo.estresse > teto) {
+        return { erro: 'Não sobra Estresse para virar ' + nomeDaForma + ' (custa ' +
+          custo.estresse + '). Limpe Estresse — ou gaste 3 de Esperança pela Evolução.' };
+      }
+    }
+    if (custo.esperanca > 0 && (Number(r.esperanca) || 0) < custo.esperanca) {
+      return { erro: 'A Evolução custa ' + custo.esperanca + ' de Esperança, e você tem ' +
+        (Number(r.esperanca) || 0) + '.' };
+    }
+
+    /*
+     * O TRAÇO DA EVOLUÇÃO. "Aumente um traço em +1 até sair da Forma de Fera" —
+     * quem escolhe é o jogador, e sem escolha não há o que aumentar.
+     */
+    let tracoEvolucao = null;
+    if (evoluir) {
+      tracoEvolucao = (typeof normalizarTraco_ === 'function') ? normalizarTraco_(a.traco) : '';
+      if (!tracoEvolucao) {
+        return { erro: 'A Evolução aumenta um traço em +1: escolha qual.' };
+      }
+    }
+
+    ficha.recursos = r;
+    if (custo.estresse > 0) r.estresseMarcado = (Number(r.estresseMarcado) || 0) + custo.estresse;
+    if (custo.esperanca > 0) r.esperanca = (Number(r.esperanca) || 0) - custo.esperanca;
+
+    filha.dados.formaAtiva = forma;
+    filha.dados.evolucaoTraco = tracoEvolucao;
+    // Guarda as escolhas CRUAS; quem apara é validarFichaDeFera_, com a mesma
+    // composição que acabou de aprovar a entrada.
+    filha.dados.base = escolhas.base;
+    filha.dados.hibrido = escolhas.hibrido;
+
+    const m = {
+      tipo: 'fichaFilha', filha: tipo, acao: 'entrar', forma: forma,
+      nome: nomeDaForma, antes: antes,
+      custoEstresse: custo.estresse, custoEsperanca: custo.esperanca,
+      evolucao: evoluir, traco: tracoEvolucao,
+      estresseMarcado: r.estresseMarcado, esperanca: r.esperanca
+    };
+    const pago = [];
+    if (custo.estresse > 0) pago.push(custo.estresse + ' de Estresse');
+    if (custo.esperanca > 0) pago.push(custo.esperanca + ' de Esperança');
+    if (pago.length) m.aviso = 'Virar ' + nomeDaForma + ' custou ' + pago.join(' e ') + '.';
+    else m.aviso = 'A Evolução pagou a transformação: nenhum Estresse marcado.';
+    return m;
   }
 
   if (acao === 'sair') {
@@ -220,6 +308,12 @@ function ajustarFichaFilha_(ficha, a) {
     const antes = filha.dados.formaAtiva || null;
     if (!antes) return { erro: 'Este personagem não está em Forma de Fera.' };
     filha.dados.formaAtiva = null;
+    // O +1 da Evolução vale "até sair da Forma de Fera": sair apaga. As
+    // escolhas da forma vão junto — a próxima transformação escolhe de novo,
+    // que é o que o livro manda ("escolha uma Forma de Fera…", toda vez).
+    filha.dados.evolucaoTraco = null;
+    filha.dados.base = null;
+    filha.dados.hibrido = null;
     return { tipo: 'fichaFilha', filha: tipo, acao: 'sair', antes: antes };
   }
 
@@ -241,6 +335,213 @@ function ajustarFichaFilha_(ficha, a) {
   }
 
   return { erro: 'Ação de ficha paralela desconhecida: "' + String(a.acao) + '".' };
+}
+
+/**
+ * USAR UMA HABILIDADE QUE CUSTA ALGUMA COISA.
+ *
+ * Nove habilidades de Esperança ("gaste 3 de Esperança para…"), a Marca da
+ * Presa do Caçador (1 de Esperança) e o Nêmesis do Guardião Vingança (2). O
+ * app já cobrava o custo de recordar, o Medo do foco e o Estresse da Forma de
+ * Fera; estas eram as que continuavam sendo pagas no papel.
+ *
+ * ⚠ COBRA E APLICA JUNTO, ou nada — o mesmo desenho do E20/E22. Sem Esperança
+ * sobrando não existe habilidade usada pela metade.
+ *
+ * ⚠ E O APP NÃO FAZ O EFEITO. "Distrair um alvo com −2 na Dificuldade",
+ * "rolar novamente os dados de dano", "refazer a jogada do adversário" — isso
+ * é da mesa. O que o app faz é o que a ficha faz: tirar o custo e lembrar o
+ * que ficou marcado.
+ */
+function usarHabilidadeDeClasse_(ficha, a) {
+  const def = (typeof habilidadeComCusto_ === 'function') ? habilidadeComCusto_(a.nome) : null;
+  if (!def) return { erro: 'Habilidade desconhecida: "' + String(a.nome) + '".' };
+
+  if (typeof fichaTemCaracteristicaDeClasse_ === 'function' &&
+      !fichaTemCaracteristicaDeClasse_(ficha, def.nome)) {
+    return { erro: 'Este personagem não tem "' + def.nome + '".' };
+  }
+
+  ficha.alvosDeHabilidade = (ficha.alvosDeHabilidade && typeof ficha.alvosDeHabilidade === 'object' &&
+    !Array.isArray(ficha.alvosDeHabilidade)) ? ficha.alvosDeHabilidade : {};
+
+  /*
+   * ENCERRAR não devolve nada: "até você Marcar outra criatura" acaba a Marca,
+   * e a Esperança gasta já foi. É o mesmo que largar a marca na mesa.
+   */
+  if (a.encerrar === true) {
+    if (!def.alvo) return { erro: '"' + def.nome + '" não marca alvo nenhum.' };
+    const antes = ficha.alvosDeHabilidade[def.nome] || '';
+    if (!antes) return { erro: 'Não há alvo de "' + def.nome + '" para encerrar.' };
+    delete ficha.alvosDeHabilidade[def.nome];
+    return { tipo: 'habilidade', nome: def.nome, encerrada: true, alvoAntes: antes,
+             aviso: def.nome + ': ' + antes + ' não está mais marcado.' };
+  }
+
+  /*
+   * ⚠ "UMA VEZ POR" É CONFERIDO AQUI. O marcador de uso existe desde o lote dos
+   * contadores; sem esta conferência ele seria enfeite — o app deixaria usar de
+   * novo e o marcador continuaria mostrando "1 de 1".
+   */
+  if (def.marcaUso) {
+    const gasto = Math.trunc(Number(((ficha.contadores || {})[def.marcaUso] || {}).valor)) || 0;
+    const teto = (typeof maximoDoContador_ === 'function') ? maximoDoContador_(def.marcaUso, ficha) : 1;
+    if (gasto >= teto) {
+      return { erro: '"' + def.nome + '" já foi usada ' + gasto + ' vez(es) — o limite é ' + teto +
+        '. Ela volta no descanso.' };
+    }
+  }
+
+  const r = ficha.recursos || {};
+  const custoEsperanca = Math.max(0, Math.trunc(Number((def.custo || {}).esperanca)) || 0);
+  const custoEstresse = Math.max(0, Math.trunc(Number((def.custo || {}).estresse)) || 0);
+
+  /*
+   * A HABILIDADE QUE PAGA COM UMA CARTA — Canalizar Poder Bruto (p.42).
+   *
+   * "Coloque uma carta de domínio de sua MÃO no cofre e escolha entre receber
+   * Esperança igual ao nível da carta, ou um bônus de dano igual ao dobro."
+   *
+   * A carta sai da mão e a Esperança entra NA MESMA gravação — separado, dava
+   * para guardar a carta e esquecer a Esperança, ou o contrário. É o mesmo
+   * desenho do custo de recordar (E20) de cabeça para baixo: ali a carta custa
+   * Estresse, aqui a carta É o custo.
+   */
+  let cartaMovida = null;
+  let opcaoEscolhida = null;
+  let esperancaGanha = 0;
+  if (def.cartaDaMao) {
+    const carta = (typeof acharCarta_ === 'function') ? acharCarta_(a.carta) : null;
+    if (!carta) return { erro: 'Carta de domínio desconhecida: "' + String(a.carta) + '".' };
+
+    const naMao = ((ficha.cartas || {}).ativas || []);
+    let onde = -1;
+    for (let i = 0; i < naMao.length; i++) {
+      const id = (naMao[i] && typeof naMao[i] === 'object') ? naMao[i].id : naMao[i];
+      if (chaveTexto_(id) === chaveTexto_(carta.id)) { onde = i; break; }
+    }
+    if (onde === -1) return { erro: '"' + carta.nome + '" não está na sua mão.' };
+
+    const opcoes = def.opcoes || [];
+    for (let i = 0; i < opcoes.length; i++) {
+      if (opcoes[i].id === String(a.opcao || '')) opcaoEscolhida = opcoes[i];
+    }
+    if (!opcaoEscolhida) {
+      return { erro: def.nome + ': escolha o que a carta vira (' +
+        opcoes.map(function (o) { return o.id; }).join(' ou ') + ').' };
+    }
+
+    naMao.splice(onde, 1);
+    ficha.cartas.cofre = ficha.cartas.cofre || [];
+    ficha.cartas.cofre.push(carta.id);
+    cartaMovida = carta;
+
+    if (opcaoEscolhida.ganhaEsperancaPorNivel) {
+      const teto = Number((ficha.recursos || {}).esperancaMaxima) || 0;
+      const antes = Number((ficha.recursos || {}).esperanca) || 0;
+      const quer = antes + (Number(carta.nivel) || 0) * Number(opcaoEscolhida.ganhaEsperancaPorNivel);
+      ficha.recursos.esperanca = Math.min(teto, quer);
+      esperancaGanha = ficha.recursos.esperanca - antes;
+    }
+  }
+
+  if (custoEsperanca > 0 && (Number(r.esperanca) || 0) < custoEsperanca) {
+    return { erro: '"' + def.nome + '" custa ' + custoEsperanca + ' de Esperança, e você tem ' +
+      (Number(r.esperanca) || 0) + '.' };
+  }
+  if (custoEstresse > 0) {
+    const teto = Number(r.estresseMaximo) || 0;
+    const marcado = Math.max(0, Number(r.estresseMarcado) || 0);
+    if (marcado + custoEstresse > teto) {
+      return { erro: 'Não sobra Estresse para "' + def.nome + '" (custa ' + custoEstresse + ').' };
+    }
+  }
+
+  let alvo = '';
+  if (def.alvo) {
+    alvo = String(a.alvo || '').trim().replace(/\s+/g, ' ').slice(0, 60);
+    if (!alvo) return { erro: def.nome + ': diga em quem. (' + def.alvo.rotulo + ')' };
+  }
+
+  ficha.recursos = r;
+  if (custoEsperanca > 0) r.esperanca = (Number(r.esperanca) || 0) - custoEsperanca;
+  if (custoEstresse > 0) r.estresseMarcado = (Number(r.estresseMarcado) || 0) + custoEstresse;
+
+  /*
+   * UM ALVO POR VEZ, e o de antes vai embora sozinho: "até você Marcar OUTRA
+   * criatura" (Marca da Presa) e "você só pode Priorizar um adversário por
+   * vez" (Nêmesis) dizem a mesma coisa.
+   */
+  const alvoAntes = def.alvo ? (ficha.alvosDeHabilidade[def.nome] || '') : '';
+  if (def.alvo) ficha.alvosDeHabilidade[def.nome] = alvo;
+
+  // O uso gasto entra depois de tudo dar certo: recusa não gasta uso.
+  if (def.marcaUso) {
+    ficha.contadores = ficha.contadores || {};
+    const gasto = Math.trunc(Number((ficha.contadores[def.marcaUso] || {}).valor)) || 0;
+    ficha.contadores[def.marcaUso] = { valor: gasto + 1 };
+  }
+
+  const pago = [];
+  if (custoEsperanca > 0) pago.push(custoEsperanca + ' de Esperança');
+  if (custoEstresse > 0) pago.push(custoEstresse + ' de Estresse');
+  if (cartaMovida) pago.push('"' + cartaMovida.nome + '" (foi para o cofre)');
+
+  const ganho = [];
+  if (esperancaGanha > 0) ganho.push(esperancaGanha + ' de Esperança');
+  if (opcaoEscolhida && opcaoEscolhida.lembrete) ganho.push(opcaoEscolhida.lembrete);
+
+  return {
+    tipo: 'habilidade', nome: def.nome,
+    custoEsperanca: custoEsperanca, custoEstresse: custoEstresse,
+    esperanca: r.esperanca, estresseMarcado: r.estresseMarcado,
+    alvo: alvo || null, alvoAntes: alvoAntes || null,
+    carta: cartaMovida ? cartaMovida.id : null,
+    opcao: opcaoEscolhida ? opcaoEscolhida.id : null,
+    esperancaGanha: esperancaGanha,
+    aviso: def.nome + (pago.length ? ' custou ' + pago.join(' e ') : '') +
+      (alvo ? ' — ' + def.alvo.verbo.toLowerCase() + ' ' + alvo : '') +
+      (ganho.length ? '. Você recebeu ' + ganho.join('; ') : '') + '.'
+  };
+}
+
+/**
+ * A ESCOLHA DE CLASSE — hoje só o número de 1 a 12 do Mago.
+ *
+ * "Padrões Estranhos: escolha um número de 1 a 12. Ao rolar esse número em um
+ * Dado de Dualidade, receba 1 de Esperança ou limpe 1 Estresse. Você pode
+ * mudar o número escolhido durante um descanso longo" (livro p.48).
+ *
+ * ⚠ O APP NÃO CONFERE SE É DESCANSO LONGO. Ele não rola dado e não sabe em que
+ * momento da mesa está; travar a troca faria o jogador que digitou errado ter
+ * de esperar um descanso para consertar um dedo torto. A regra de QUANDO
+ * trocar é da mesa — o app guarda a escolha e diz na tela quando ela vale.
+ */
+function ajustarEscolhaDeClasse_(ficha, a) {
+  const chave = String(a.chave || '');
+  const def = (typeof ESCOLHAS_DE_CLASSE !== 'undefined') ? ESCOLHAS_DE_CLASSE[chave] : null;
+  if (!def) return { erro: 'Escolha de classe desconhecida: "' + chave + '".' };
+
+  if (typeof fichaTemCaracteristicaDeClasse_ === 'function' &&
+      !fichaTemCaracteristicaDeClasse_(ficha, def.caracteristica)) {
+    return { erro: 'Este personagem não tem "' + def.caracteristica + '".' };
+  }
+
+  const valor = Math.trunc(Number(a.valor));
+  if (!isFinite(valor) || valor < def.minimo || valor > def.maximo) {
+    return { erro: def.caracteristica + ': escolha um número de ' + def.minimo +
+      ' a ' + def.maximo + '.' };
+  }
+
+  ficha.escolhasDeClasse = ficha.escolhasDeClasse || {};
+  const antes = ficha.escolhasDeClasse[chave];
+  ficha.escolhasDeClasse[chave] = valor;
+
+  return {
+    tipo: 'escolhaDeClasse', chave: chave, caracteristica: def.caracteristica,
+    antes: (antes === undefined ? null : antes), valor: valor,
+    aviso: def.caracteristica + ': seu número agora é ' + valor + '.'
+  };
 }
 
 /**

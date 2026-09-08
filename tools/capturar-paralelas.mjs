@@ -57,9 +57,24 @@ await p.waitForSelector('.ficha-cartao__abrir', { timeout: 20000 });
 
 console.log('\nPrints:');
 
+/*
+ * A dobra "Ficha paralela" nasce FECHADA para quem não está transformado — o
+ * cartão de dentro existe mas não é visível, e um clique nele espera para
+ * sempre. Abrir antes é obrigatório, e perguntar o estado antes de clicar
+ * evita fechá-la quando ela já estava aberta (é um toggle).
+ */
+const abrirDobraParalela = async () => {
+  const caixa = p.locator('details.dobra', { hasText: 'Ficha paralela' }).first();
+  await caixa.waitFor({ timeout: 10000 });
+  if (!(await caixa.evaluate((n) => n.open))) await caixa.locator('.dobra__topo').click();
+  await caixa.locator('.dobra__corpo').waitFor({ state: 'visible', timeout: 5000 });
+};
+
+
 /* --- Forma de Fera ------------------------------------------------------- */
 await p.locator('.ficha-cartao__abrir').filter({ hasText: 'Sálvia' }).click();
 await p.waitForSelector('.ficha__rodape', { timeout: 20000 });
+await abrirDobraParalela();
 await p.locator('.ficha__paralela').scrollIntoViewIfNeeded();
 await foto('p1-secao-na-ficha');
 
@@ -69,17 +84,41 @@ await p.locator('.modal__caixa--paralela').getByRole('button', { name: 'Abrir a 
 await p.waitForSelector('.paralela__forma', { timeout: 20000 });
 await foto('p2-escolher-forma');
 
+// A Evolução é um interruptor ao lado da lista, e não um botão por forma.
+await p.locator('.paralela__evolucaoDruida').scrollIntoViewIfNeeded();
+await foto('p2b-evolucao');
+
 // Pelo TÍTULO exato: "Fera Alada" também casa com "Grande Fera Alada".
-await p.locator('.paralela__forma')
-  .filter({ has: p.getByRole('heading', { name: 'Fera Alada', exact: true }) })
-  .getByRole('button', { name: 'Entrar nesta forma' }).click();
+const feraAlada = p.locator('.paralela__forma')
+  .filter({ has: p.getByRole('heading', { name: 'Fera Alada', exact: true }) });
+await feraAlada.scrollIntoViewIfNeeded();
+await foto('p2c-preco-no-botao');
+await feraAlada.getByRole('button', { name: /^Entrar —/ }).click();
 await p.waitForSelector('.paralela__ativa', { timeout: 20000 });
 await foto('p3-na-forma');
+
+/* O aprimoramento pergunta qual forma ele turbina — e só então tem números. */
+await p.locator('.paralela__ativa').getByRole('button', { name: 'Sair da Forma de Fera' }).click();
+await p.waitForTimeout(1200);
+const lendaria = p.locator('.paralela__forma')
+  .filter({ has: p.getByRole('heading', { name: 'Fera Lendária', exact: true }) });
+await lendaria.getByRole('button', { name: /^Escolher e entrar/ }).click();
+await lendaria.locator('.paralela__escolha').scrollIntoViewIfNeeded();
+await foto('p3b-aprimoramento-escolhe-a-base');
+await lendaria.locator('.paralela__escolha').getByRole('button', { name: 'Explorador Ágil' }).click();
+await lendaria.getByRole('button', { name: /^Entrar —/ }).click();
+await p.waitForSelector('.paralela__ativa', { timeout: 20000 });
+await foto('p3c-aprimoramento-composto');
 
 await p.getByRole('button', { name: 'Fechar' }).click();
 await p.waitForSelector('.modal__caixa--paralela', { state: 'detached' });
 await p.locator('.ficha__paralela').scrollIntoViewIfNeeded();
 await foto('p4-ficha-transformada');
+
+// A faixa de estado no topo diz o que a forma TIRA, e o traço vem somado.
+await p.evaluate(() => window.scrollTo(0, 0));
+await p.locator('.ficha__faixaEstado.esta-emForma').scrollIntoViewIfNeeded();
+await foto('p4b-faixa-e-traco');
 
 await p.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
 await p.waitForSelector('.ficha-cartao__abrir');
@@ -87,6 +126,7 @@ await p.waitForSelector('.ficha-cartao__abrir');
 /* --- Companheiro Animal -------------------------------------------------- */
 await p.locator('.ficha-cartao__abrir').filter({ hasText: 'Íris' }).click();
 await p.waitForSelector('.ficha__rodape', { timeout: 20000 });
+await abrirDobraParalela();
 await p.locator('.ficha__paralela').scrollIntoViewIfNeeded();
 await p.locator('.ficha__paralela').click();
 await p.waitForSelector('.modal__caixa--paralela');

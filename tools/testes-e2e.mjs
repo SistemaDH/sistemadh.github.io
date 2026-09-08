@@ -1976,7 +1976,16 @@ try {
     await pagina.getByRole('tab', { name: 'Cartas' }).click();
     await pagina.waitForSelector('.ficha__carta');
 
-    const naCarta = pagina.locator('.ficha__carta .ficha__cartaMarcador').first();
+    /*
+     * ⚠ UMA CARTA DE DOMÍNIO, e não a primeira que tiver marcador.
+     *
+     * As cartas de SUBCLASSE vêm antes na aba e hoje também carregam
+     * marcador — o "uma vez por descanso longo" das habilidades delas. Um
+     * `.first()` solto passou a pegar a carta de subclasse, e o passo, que é
+     * sobre carta de domínio, falhava dizendo que não achava o valor.
+     */
+    const naCarta = pagina
+      .locator('.ficha__carta:not(.ficha__carta--subclasse) .ficha__cartaMarcador').first();
     await naCarta.waitFor({ timeout: 10000 });
 
     /*
@@ -2022,6 +2031,357 @@ try {
 
     await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
     await pagina.waitForSelector('.ficha-cartao__abrir');
+  });
+
+  await passo('o marcador da subclasse aparece — e o dos OUTROS não (bug do Aeon)', async () => {
+    /*
+     * DOIS ERROS QUE SE ESCONDIAM UM ATRÁS DO OUTRO.
+     *
+     * Um Guerreiro Chamada do Matador chegou à mesa com a dobra "Marcadores"
+     * cheia de coisa alheia — Dado de Inspiração (Bardo), Liberar o Caos
+     * (Arcana) — e SEM o único marcador que ele de fato tem, os Dados de
+     * Matador. Duas causas opostas:
+     *
+     *   1. o gatilho de descanso varria o catálogo inteiro e criava todo
+     *      contador com recarga, sem perguntar de quem era (backend);
+     *   2. o catálogo aponta para o ID da subclasse
+     *      ("guerreiro-chamada-do-matador") e a ficha guarda o NOME ("Chamada
+     *      do Matador") — nunca casavam, então o contador legítimo sumia da
+     *      dobra E da própria carta.
+     *
+     * Por isso "a opção de marcador nas cartas não foi colocada": ela estava
+     * lá, e não tinha o que mostrar.
+     *
+     * ⚠ MONTAGEM DIRETA, e ela é reversível. Trocar de classe pela tela é
+     * outra história (criação de personagem); o que se testa aqui é o
+     * casamento nome↔id no desenho. A linha é restaurada byte a byte no fim.
+     */
+    const def = noBackend('ABAS.PERSONAGENS');
+    const linhas = ambiente.contexto.lerTudo_(def)
+      .filter((l) => String(l.excluido).toUpperCase() !== 'TRUE');
+    const linha = linhas[0];
+    const original = linha.dados || '{}';
+
+    try {
+      const dados = JSON.parse(original);
+      dados.identidade = Object.assign({}, dados.identidade, {
+        classe: 'Guerreiro', subclasse: 'Chamada do Matador'
+      });
+      // O lixo do gatilho antigo, escrito à mão para provar que some.
+      dados.contadores = Object.assign({}, dados.contadores, {
+        'classe:bardo:rally': { valor: 3 }
+      });
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: JSON.stringify(dados) });
+
+      await pagina.locator('.ficha-cartao__abrir').first().click();
+      await pagina.waitForSelector('.papel', { timeout: 20000 });
+
+      // A dobra mostra o que é dele...
+      await pagina.getByRole('tab', { name: 'Jogo' }).click();
+      await pagina.waitForSelector('.papel');
+      await abrirDobra('Marcadores');
+      const meus = await pagina.locator('.ficha__contador', { hasText: 'Dados de Matador' }).count();
+      igual(meus, 1, 'os Dados de Matador não apareceram na dobra Marcadores');
+
+      // ...e não mostra o que é dos outros.
+      const alheios = await pagina.locator('.ficha__contador', { hasText: 'Dado de Inspiração' }).count();
+      igual(alheios, 0, 'a dobra Marcadores ainda mostra contador de outra classe');
+
+      // E o mesmo marcador mora na carta da subclasse, uma vez só.
+      await pagina.getByRole('tab', { name: 'Cartas' }).click();
+      await pagina.waitForSelector('.ficha__carta--subclasse');
+      const naCarta = pagina.locator('.ficha__carta--subclasse .ficha__cartaMarcador');
+      igual(await naCarta.count(), 1,
+        'a carta da subclasse tem de mostrar o marcador dela — uma vez só');
+      /*
+       * O NOME COMPLETO ESTÁ NO BOTÃO, não no rótulo visível: na carta o
+       * rótulo é a unidade ("dados", "fichas") porque o contexto é a própria
+       * carta. Quem diz de qual contador se trata é o rótulo acessível.
+       */
+      igual(await naCarta.getByRole('button', { name: 'Aumentar Dados de Matador' }).count(), 1,
+        'o marcador na carta da subclasse não é o dos Dados de Matador');
+    } finally {
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: original });
+    }
+
+    await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+    await pagina.waitForSelector('.ficha-cartao__abrir');
+  });
+
+  /**
+   * A FICHA VIRA DRUIDA DE NÍVEL 5 POR UM PASSO, E VOLTA.
+   *
+   * A mesa deste teste não tem Druida, e criar um personagem inteiro só para
+   * isto tornaria os passos abaixo sobre criação de personagem. Trocar classe
+   * pela tela também é outra história. O que se testa aqui é a Forma de Fera —
+   * o caminho pelo qual o Druida chegou não muda nenhuma das regras dela.
+   *
+   * A linha é restaurada byte a byte no `finally`, aconteça o que acontecer.
+   */
+  const comDruida = async (fn) => {
+    const def = noBackend('ABAS.PERSONAGENS');
+    const linhas = ambiente.contexto.lerTudo_(def)
+      .filter((l) => String(l.excluido).toUpperCase() !== 'TRUE');
+    const linha = linhas[0];
+    const original = linha.dados || '{}';
+    try {
+      const dados = JSON.parse(original);
+      dados.identidade = Object.assign({}, dados.identidade, {
+        classe: 'Druida', subclasse: 'Guardião dos Elementos', nivel: 5
+      });
+      /*
+       * ⚠ AS CARTAS VÃO JUNTO COM A CLASSE. A Barda carrega cartas de Graça, e
+       * o servidor recusa a ficha inteira quando uma carta não é de um domínio
+       * do personagem — a criação da ficha da fera nem chegava a acontecer. O
+       * Druida é Sábio e Arcano.
+       */
+      dados.cartas = { ativas: ['sage-emaranhado-cruel'], cofre: ['arcana-talisma-runico'] };
+      dados.contadores = {};
+      // Estresse limpo e Esperança cheia: os passos abaixo são sobre o custo
+      // da transformação, não sobre o que sobrou de um passo anterior.
+      dados.recursos = Object.assign({}, dados.recursos, { estresseMarcado: 0, esperanca: 5 });
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: JSON.stringify(dados) });
+      await fn();
+    } finally {
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: original });
+    }
+  };
+
+  /** Abre o modal da Forma de Fera, criando a ficha paralela se preciso. */
+  const abrirFormaDeFera = async () => {
+    await pagina.getByRole('tab', { name: 'Jogo' }).click();
+    await pagina.waitForSelector('.papel');
+    await abrirDobra('Ficha paralela');
+    await pagina.locator('.ficha__paralela').first().click();
+    await pagina.waitForSelector('.modal__caixa--paralela');
+    /*
+     * ⚠ ESPERAR O CONTEÚDO, NÃO A CAIXA. O modal aparece com um "Abrindo…"
+     * enquanto carrega data/fichas-filhas.json; perguntar nessa fresta se o
+     * botão "Abrir a ficha" existe responde "não" para uma ficha que ainda
+     * nem foi desenhada, e o passo segue em frente esperando para sempre uma
+     * lista que ninguém mandou criar.
+     */
+    await pagina.locator(
+      '.modal__caixa--paralela .paralela__forma, .modal__caixa--paralela .vazio'
+    ).first().waitFor({ timeout: 20000 });
+    const abrir = pagina.locator('.modal__caixa--paralela').getByRole('button', { name: 'Abrir a ficha' });
+    if (await abrir.count()) {
+      await abrir.click();
+      /*
+       * Espera a LISTA, não a versão do rodapé: o rodapé fica atrás do modal
+       * de tela cheia, e a prova de que criou é a lista de formas aparecer.
+       *
+       * ⚠ E ESPERA O ERRO TAMBÉM. Quando o servidor recusa, o app mostra uma
+       * tapa que some em segundos — muito antes do timeout — e a falha chega
+       * aqui como "esperei um seletor e ele não veio", sem dizer por quê. Um
+       * dia inteiro pode ir embora nisso.
+       */
+      try {
+        await pagina.locator('.paralela__forma').first().waitFor({ timeout: 15000 });
+      } catch (e) {
+        const tapa = (await pagina.locator('#avisos').textContent() || '').trim();
+        const dentro = (await pagina.locator('.modal__caixa--paralela').textContent() || '')
+          .replace(/\s+/g, ' ').slice(0, 300);
+        throw new Error(tapa
+          ? `o servidor recusou criar a ficha da fera: "${tapa}"`
+          : `a lista de formas não apareceu. No modal: "${dentro}"`);
+      }
+    }
+    await pagina.waitForSelector('.paralela__forma');
+  };
+
+  // A trilha é 'papel__trilha--estresse' e a caixa marcada é 'esta-cheio' — os
+  // dois nomes vêm da ficha de papel, não do CSS de estado genérico.
+  const estresseMarcadoNaTela = () =>
+    pagina.locator('.papel__trilha--estresse .papel__caixa.esta-cheio').count();
+
+  await passo('a habilidade de Esperança GASTA a Esperança (as nove ganharam botão)', async () => {
+    /*
+     * As nove habilidades de Esperança custam 3 ("gaste 3 de Esperança para…")
+     * e nenhuma tinha botão: o texto dizia o preço, a mesa descontava no papel,
+     * e o app — que já cobrava o custo de recordar e o Medo do foco — ficava
+     * olhando. A Barda desta mesa tem "Fazer uma Cena".
+     */
+    const def = noBackend('ABAS.PERSONAGENS');
+    const linhas = ambiente.contexto.lerTudo_(def)
+      .filter((l) => String(l.excluido).toUpperCase() !== 'TRUE');
+    const linha = linhas[0];
+    const original = linha.dados || '{}';
+
+    try {
+      const dados = JSON.parse(original);
+      dados.recursos = Object.assign({}, dados.recursos, { esperanca: 5 });
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: JSON.stringify(dados) });
+
+      await pagina.locator('.ficha-cartao__abrir').first().click();
+      await pagina.waitForSelector('.papel', { timeout: 20000 });
+
+      const cheios = () => pagina.locator('.papel__esperancaPonto.esta-cheio').count();
+      igual(await cheios(), 5, 'a montagem devia deixar 5 de Esperança');
+
+      const botao = pagina.locator('.papel__esperancaCarta')
+        .getByRole('button', { name: 'Usar — 3 Esperança' });
+      const antes = await versaoNaTela();
+      await botao.click();
+      await esperarGravar(antes);
+
+      igual(await cheios(), 2, 'a habilidade tinha de gastar 3');
+
+      /*
+       * ⚠ E O BOTÃO SE APAGA QUANDO NÃO DÁ. Com 2 de Esperança não dá para
+       * pagar 3 — um botão que aceita o toque e devolve erro é pior que um
+       * botão apagado, porque só diz "não" depois de ir ao servidor.
+       */
+      const apagado = await pagina.locator('.papel__esperancaCarta')
+        .getByRole('button', { name: 'Usar — 3 Esperança' }).isDisabled();
+      if (!apagado) throw new Error('com 2 de Esperança o botão devia estar apagado');
+    } finally {
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: original });
+    }
+
+    await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+    await pagina.waitForSelector('.ficha-cartao__abrir');
+  });
+
+  await passo('virar fera COBRA o Estresse, e a ficha diz o que a forma tira', async () => {
+    await comDruida(async () => {
+      await pagina.locator('.ficha-cartao__abrir').first().click();
+      await pagina.waitForSelector('.papel', { timeout: 20000 });
+      await abrirFormaDeFera();
+
+      /*
+       * ⚠ O CUSTO É COBRADO, NÃO LEMBRADO.
+       *
+       * O botão dizia "Entrar nesta forma" e o servidor mandava um aviso de
+       * "custa 1 Estresse — marque na trilha". Custo o app já cobra em toda
+       * parte (custo de recordar, Medo do foco); era a única conta que a Forma
+       * de Fera devolvia para a mesa fazer no papel.
+       */
+      const cartao = pagina.locator('.paralela__forma', { hasText: 'Explorador Ágil' }).first();
+      const versao = await versaoNaTela();
+      await cartao.getByRole('button', { name: 'Entrar — 1 Estresse' }).click();
+      await esperarGravar(versao);
+
+      // Fechar o modal para ver a ficha por baixo.
+      await pagina.locator('.modal__caixa--paralela').getByRole('button', { name: 'Fechar' }).click();
+      await pagina.waitForSelector('.papel');
+
+      igual(await estresseMarcadoNaTela(), 1, 'entrar na forma tinha de marcar 1 Estresse');
+
+      /*
+       * O QUE A FORMA TIRA — que a tela da fera não dizia em lugar nenhum.
+       * Ela lista o que a forma dá; a trava ("sem armas, sem feitiços de
+       * carta de domínio") morava no texto da classe, a duas abas dali.
+       */
+      const faixa = pagina.locator('.ficha__faixaEstado.esta-emForma');
+      igual(await faixa.count(), 1, 'faltou a faixa de estado da Forma de Fera');
+      const textoDaFaixa = await faixa.textContent();
+      if (!/armas/.test(textoDaFaixa) || !/dom[íi]nio/i.test(textoDaFaixa)) {
+        throw new Error(`a faixa não diz o que a forma tira: "${textoDaFaixa}"`);
+      }
+
+      /*
+       * E O TRAÇO SOBE. Explorador Ágil dá "Agilidade +1", e o livro (p.35) diz
+       * que é um bônus NO TRAÇO enquanto durar — não um bônus só de ataque, que
+       * era como a tela rotulava. O ladrilho vem marcado para o número não
+       * parecer permanente.
+       */
+      igual(await pagina.locator('.traco.e-forma').count(), 1,
+        'o traço da forma tinha de aparecer somado e marcado');
+
+      // Sair pela própria faixa devolve tudo.
+      const v2 = await versaoNaTela();
+      await faixa.getByRole('button', { name: 'Sair da forma' }).click();
+      await esperarGravar(v2);
+      igual(await pagina.locator('.ficha__faixaEstado.esta-emForma').count(), 0);
+      igual(await pagina.locator('.traco.e-forma').count(), 0, 'o bônus some ao sair');
+
+      await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+      await pagina.waitForSelector('.ficha-cartao__abrir');
+    });
+  });
+
+  await passo('a Evolução troca o Estresse por 3 de Esperança e sobe um traço', async () => {
+    await comDruida(async () => {
+      await pagina.locator('.ficha-cartao__abrir').first().click();
+      await pagina.waitForSelector('.papel', { timeout: 20000 });
+      await abrirFormaDeFera();
+
+      /*
+       * A Habilidade de Esperança do Druida não existia no app: o jogador lia
+       * "gaste 3 de Esperança para usar Forma de Fera sem marcar Estresse" na
+       * aba Ficha e resolvia no papel.
+       */
+      const caixa = pagina.locator('.paralela__evolucaoDruida');
+      await caixa.getByRole('button', { name: /Usar a Evolução/ }).click();
+      await caixa.getByRole('button', { name: 'Força' }).click();
+
+      const cartao = pagina.locator('.paralela__forma', { hasText: 'Explorador Ágil' }).first();
+      const versao = await versaoNaTela();
+      await cartao.getByRole('button', { name: 'Entrar — 3 Esperança' }).click();
+      await esperarGravar(versao);
+
+      await pagina.locator('.modal__caixa--paralela').getByRole('button', { name: 'Fechar' }).click();
+      await pagina.waitForSelector('.papel');
+
+      igual(await estresseMarcadoNaTela(), 0, 'a Evolução não marca Estresse');
+      /*
+       * DOIS traços marcados: o da forma (Agilidade) e o escolhido pela
+       * Evolução (Força). São regras diferentes dando +1 cada.
+       */
+      igual(await pagina.locator('.traco.e-forma').count(), 2);
+
+      await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+      await pagina.waitForSelector('.ficha-cartao__abrir');
+    });
+  });
+
+  await passo('o aprimoramento pergunta qual forma ele turbina (fim do "Evasão null")', async () => {
+    await comDruida(async () => {
+      await pagina.locator('.ficha-cartao__abrir').first().click();
+      await pagina.waitForSelector('.papel', { timeout: 20000 });
+      await abrirFormaDeFera();
+
+      /*
+       * Fera Lendária não é uma forma: ela turbina uma de 1º patamar. Sem base
+       * escolhida não tem Evasão, traço nem ataque — e a tela desenhava esses
+       * campos vazios crus, mostrando "Evasão null" e "null · undefined ·
+       * undefined" na cara do jogador.
+       */
+      const cartao = pagina.locator('.paralela__forma', { hasText: 'Fera Lendária' }).first();
+      const textoDoCartao = await cartao.textContent();
+      if (/null|undefined/.test(textoDoCartao)) {
+        throw new Error(`o cartão do aprimoramento ainda imprime vazio: "${textoDoCartao}"`);
+      }
+
+      await cartao.getByRole('button', { name: /^Escolher e entrar/ }).click();
+      await cartao.locator('.paralela__escolha').waitFor();
+      await cartao.locator('.paralela__escolha').getByRole('button', { name: 'Explorador Ágil' }).click();
+
+      const versao = await versaoNaTela();
+      await cartao.getByRole('button', { name: /^Entrar —/ }).click();
+      await esperarGravar(versao);
+
+      /*
+       * Agora ela TEM números, e são os da base somados: Explorador Ágil é
+       * Agilidade +1, Evasão +2, d4 de dano físico; a Fera Lendária soma +1 no
+       * traço, +2 na Evasão e +6 no dano (livro p.38).
+       */
+      const ativa = pagina.locator('.paralela__ativa');
+      await ativa.waitFor();
+      const texto = (await ativa.textContent()).replace(/\s+/g, ' ');
+      if (!/Evasão \+4|\+4/.test(texto)) throw new Error(`a Evasão composta não apareceu: "${texto}"`);
+      if (!/d4\+6/.test(texto)) throw new Error(`o dano composto não apareceu: "${texto}"`);
+      if (!/Agilidade \+2/.test(texto)) throw new Error(`o traço composto não apareceu: "${texto}"`);
+
+      const v2 = await versaoNaTela();
+      await ativa.getByRole('button', { name: 'Sair da Forma de Fera' }).click();
+      await esperarGravar(v2);
+
+      await pagina.locator('.modal__caixa--paralela').getByRole('button', { name: 'Fechar' }).click();
+      await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+      await pagina.waitForSelector('.ficha-cartao__abrir');
+    });
   });
 
   await passo('as trilhas marcam pelo quadradinho, sem + e − (ficha de papel)', async () => {

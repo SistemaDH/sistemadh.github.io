@@ -216,6 +216,21 @@ await foto('f3-jogo-fim');
   await p.waitForTimeout(900);
   await foto('f3b-movimento-de-morte');
 
+  /*
+   * ARRISCAR TUDO — o único dos três com dois dados e uma repartição.
+   * O print mostra o veredito, que aparece ANTES de confirmar: é o único
+   * movimento que pode matar sem o jogador ter escolhido morrer.
+   */
+  {
+    const arriscar = p.locator('.ficha__morteOpcao', { hasText: 'Arriscar Tudo' });
+    await arriscar.scrollIntoViewIfNeeded();
+    await arriscar.getByLabel('Dado de Esperança que você tirou').fill('7');
+    await arriscar.getByLabel('Dado de Medo que você tirou').fill('3');
+    await p.waitForTimeout(400);
+    await arriscar.scrollIntoViewIfNeeded();
+    await foto('f3c2-arriscar-tudo');
+  }
+
   // Evitar a Morte com o dado 1: cicatriz garantida.
   const bloco = p.locator('.ficha__morteOpcao', { hasText: 'Evitar a Morte' });
   await bloco.getByLabel('Resultado do Dado de Esperança (d12)').fill('1');

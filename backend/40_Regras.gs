@@ -57,6 +57,8 @@ function fichaVazia_() {
     dominios: [],        // domínios da classe
     cartas: { ativas: [], cofre: [] },
     caracteristicas: [], // ancestralidade, comunidade, classe, subclasse
+    escolhasDeClasse: {},// o número de 1 a 12 do Mago — ver 42_Classes.gs
+    alvosDeHabilidade: {},// quem está Marcado/Priorizado — um por habilidade
     experiencias: [],    // duas no nível 1, +2 cada — ver 48_Criacao.gs
     equipamento: {       // ids das tabelas do capítulo 2
       primaria: null, secundaria: null, armadura: null
@@ -386,6 +388,17 @@ function validarFicha_(fichaBruta) {
   if (typeof validarExperiencias_ === 'function') problemas = problemas.concat(validarExperiencias_(ficha));
   if (typeof validarCondicoes_ === 'function') problemas = problemas.concat(validarCondicoes_(ficha));
   if (typeof validarContadores_ === 'function') problemas = problemas.concat(validarContadores_(ficha));
+  /*
+   * As ESCOLHAS de classe — hoje só o número de 1 a 12 do Mago (p.48). Vêm
+   * depois dos contadores por conveniência, e não por dependência: elas não
+   * dependem de nada e nada depende delas.
+   */
+  if (typeof validarEscolhasDeClasse_ === 'function') {
+    problemas = problemas.concat(validarEscolhasDeClasse_(ficha));
+  }
+  if (typeof validarAlvosDeHabilidade_ === 'function') {
+    problemas = problemas.concat(validarAlvosDeHabilidade_(ficha));
+  }
   // A multiclasse precisa estar resolvida ANTES das cartas: é ela que define
   // o teto de nível das cartas do domínio novo.
   if (typeof validarAvancos_ === 'function') problemas = problemas.concat(validarAvancos_(ficha));

@@ -53,6 +53,20 @@ export function jamboDe(canonico) {
   const alvo = chave(canonico);
   const t = termos.find((x) => chave(x.canonico) === alvo);
   if (!t || t.glosarNome === false) return '';
+  /*
+   * ⚠ TERMO QUE NÃO MUDA DE NOME NÃO GANHA PARÊNTESE.
+   *
+   * O cabeçalho da ficha estava escrevendo "Caçador (Caçador)". Acontece
+   * quando o canônico passou a ser o próprio nome do livro — Caçador e Serafim
+   * são assim: quem diverge é a CARTA (RANGER, SERAPH), e essa diferença já
+   * vive nos aliases de busca. O termo continua no glossário porque a decisão
+   * dele está registrada ali.
+   *
+   * O backend já tinha esta guarda (jamboDe_ em 4A_Glossario.gs); esta cópia
+   * na tela é que tinha ficado para trás — a mesma regra escrita duas vezes,
+   * e a segunda envelhecendo sozinha.
+   */
+  if (chave(t.jambo) === alvo) return '';
   return t.jambo;
 }
 

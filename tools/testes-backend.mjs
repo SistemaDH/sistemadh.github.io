@@ -931,6 +931,16 @@ function druidaNivel5() {
   return contexto.validarFicha_(f);
 }
 
+/*
+ * Uma escolha de Híbrido Lendário que FECHA: duas opções de 1º-2º patamar,
+ * quatro vantagens e duas habilidades tiradas delas (livro p.38 / SRD 1.0).
+ */
+const HIBRIDA_COMPLETA = () => ({
+  opcoes: ['explorador-agil', 'fera-poderosa'],
+  vantagens: ['enganar', 'localizar', 'mover-se furtivamente', 'intimidar'],
+  habilidades: ['Ágil', 'Couro Espesso']
+});
+
 teste('entrar e sair da Forma de Fera pela tela', () => {
   const f = druidaNivel5();
   const evasaoNormal = f.defesas.evasao;
@@ -941,20 +951,246 @@ teste('entrar e sair da Forma de Fera pela tela', () => {
   const criou = contexto.aplicarAjustes_(f, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'criar' }]);
   igual(criou.erros, []);
 
+  const estresseAntes = f.recursos.estresseMarcado;
   const entrou = contexto.aplicarAjustes_(f, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'entrar', forma: 'fera-alada' }]);
   igual(entrou.erros, []);
-  verdade(/1 Estresse/.test(entrou.mudancas[0].aviso), 'o custo é lembrado, não cobrado');
+  /*
+   * O CUSTO É COBRADO, não lembrado.
+   *
+   * Este passo já foi o contrário: o servidor avisava "custa 1 Estresse,
+   * marque na trilha", pelo argumento do "só ficha, sem dados". Mas aquela
+   * decisão é sobre DADOS — custo o app cobra em toda parte (custo de
+   * recordar, Medo do foco). Era a única conta que a Forma de Fera devolvia
+   * para a mesa fazer no papel.
+   */
+  igual(entrou.mudancas[0].custoEstresse, 1);
+  igual(f.recursos.estresseMarcado, estresseAntes + 1, 'entrar na forma marca o Estresse');
 
   // A Evasão da forma entra na conta da ficha principal (livro p.34).
   const depois = contexto.validarFicha_(f);
   igual(depois.formaDeFera.id, 'fera-alada');
   igual(depois.defesas.evasao, evasaoNormal + depois.formaDeFera.evasao);
 
+  /*
+   * E o TRAÇO também. A Fera Alada dá "Finesse +1" — o livro (p.35) diz que é
+   * um bônus no traço enquanto durar, não um bônus só de ataque.
+   */
+  igual(depois.formaDeFera.tracos.finesse, 1, 'o bônus de traço da forma chega derivado');
+  igual(depois.tracos.finesse, f.tracos.finesse, 'e NÃO é gravado por cima do traço (E17)');
+
   const saiu = contexto.aplicarAjustes_(depois, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'sair' }]);
   igual(saiu.erros, []);
   const fora = contexto.validarFicha_(depois);
   igual(fora.formaDeFera, null);
   igual(fora.defesas.evasao, evasaoNormal, 'saiu da forma, a Evasão volta ao que era');
+});
+
+teste('a Evolução troca o Estresse por 3 de Esperança e sobe um traço', () => {
+  const f = druidaNivel5();
+  contexto.aplicarAjustes_(f, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'criar' }]);
+  f.recursos.esperanca = 4;
+  const estresseAntes = f.recursos.estresseMarcado;
+
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'fichaFilha', filha: 'beastform', acao: 'entrar',
+    forma: 'fera-alada', evolucao: true, traco: 'forca'
+  }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, estresseAntes, 'a Evolução não marca Estresse');
+  igual(f.recursos.esperanca, 1, 'e cobra 3 de Esperança');
+
+  const dentro = contexto.validarFicha_(f);
+  igual(dentro.formaDeFera.evolucaoTraco, 'forca');
+  igual(dentro.formaDeFera.tracos.forca, 1, 'o traço escolhido sobe +1');
+  igual(dentro.formaDeFera.tracos.finesse, 1, 'e o da própria forma continua valendo');
+
+  // "até sair da Forma de Fera": sair apaga o bônus escolhido.
+  contexto.aplicarAjustes_(dentro, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'sair' }]);
+  const fora = contexto.validarFicha_(dentro);
+  igual(fora.formaDeFera, null);
+  igual(fora.fichasFilhas[0].dados.evolucaoTraco, null);
+});
+
+teste('a Evolução sem traço escolhido é recusada, e sem Esperança também', () => {
+  const f = druidaNivel5();
+  contexto.aplicarAjustes_(f, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'criar' }]);
+  f.recursos.esperanca = 5;
+
+  const semTraco = contexto.aplicarAjustes_(f, [{
+    tipo: 'fichaFilha', filha: 'beastform', acao: 'entrar', forma: 'fera-alada', evolucao: true
+  }]);
+  igual(semTraco.erros.length, 1, 'a Evolução aumenta UM traço: sem escolha não há o que aumentar');
+  igual(f.recursos.esperanca, 5, 'e nada foi cobrado pela tentativa');
+
+  f.recursos.esperanca = 2;
+  const semEsperanca = contexto.aplicarAjustes_(f, [{
+    tipo: 'fichaFilha', filha: 'beastform', acao: 'entrar',
+    forma: 'fera-alada', evolucao: true, traco: 'forca'
+  }]);
+  igual(semEsperanca.erros.length, 1);
+  igual(f.recursos.esperanca, 2, 'recusa não cobra');
+  igual((f.fichasFilhas[0].dados || {}).formaAtiva, null, 'e não transforma');
+});
+
+teste('a híbrida cobra o Estresse adicional, e o Estresse que falta recusa a forma', () => {
+  const f = druidaNivel5();
+  contexto.aplicarAjustes_(f, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'criar' }]);
+
+  // Híbrido Lendário: 1 de base + 1 adicional (livro p.38).
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'fichaFilha', filha: 'beastform', acao: 'entrar', forma: 'hibrido-lendario',
+    hibrido: HIBRIDA_COMPLETA()
+  }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].custoEstresse, 2);
+  igual(f.recursos.estresseMarcado, 2);
+
+  /*
+   * ⚠ SEM ESTRESSE, SEM FERA — e a recusa não pode transformar mesmo assim.
+   * É o mesmo desenho do custo de recordar (E20): o custo e o efeito são um
+   * ajuste só, ou nenhum.
+   */
+  f.recursos.estresseMarcado = f.recursos.estresseMaximo;
+  f.fichasFilhas[0].dados.formaAtiva = null;
+  const semEstresse = contexto.aplicarAjustes_(f, [{
+    tipo: 'fichaFilha', filha: 'beastform', acao: 'entrar', forma: 'fera-alada'
+  }]);
+  igual(semEstresse.erros.length, 1);
+  igual((f.fichasFilhas[0].dados || {}).formaAtiva, null);
+});
+
+teste('o aprimoramento sem forma-base é recusado, e com base soma os bônus', () => {
+  /*
+   * Fera Lendária e Fera Mítica não são formas: não têm Evasão, traço nem
+   * ataque próprios. A tela desenhava os campos vazios cru — "Evasão null" — e
+   * o servidor deixava entrar assim, pondo na mesa um personagem transformado
+   * em nada, com o Estresse já pago.
+   */
+  const f = druidaNivel5();
+  contexto.aplicarAjustes_(f, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'criar' }]);
+
+  const semBase = contexto.aplicarAjustes_(f, [{
+    tipo: 'fichaFilha', filha: 'beastform', acao: 'entrar', forma: 'fera-lendaria'
+  }]);
+  igual(semBase.erros.length, 1, 'aprimoramento sem base não entra');
+  igual(f.recursos.estresseMarcado, 0, 'e a recusa não cobra Estresse');
+
+  // Base de patamar 2 não serve para a Fera LENDÁRIA (só 1º patamar).
+  const basePatamarErrado = contexto.aplicarAjustes_(f, [{
+    tipo: 'fichaFilha', filha: 'beastform', acao: 'entrar',
+    forma: 'fera-lendaria', base: 'fera-poderosa'
+  }]);
+  igual(basePatamarErrado.erros.length, 1);
+
+  const ok = contexto.aplicarAjustes_(f, [{
+    tipo: 'fichaFilha', filha: 'beastform', acao: 'entrar',
+    forma: 'fera-lendaria', base: 'explorador-agil'
+  }]);
+  igual(ok.erros, []);
+
+  /*
+   * Explorador Ágil: Agilidade +1, Evasão +2, d4 de dano físico.
+   * Fera Lendária soma +1 no traço, +2 na Evasão e +6 no dano (livro p.38).
+   */
+  const dentro = contexto.validarFicha_(f);
+  igual(dentro.formaDeFera.evasao, 4, 'Evasão +2 da base mais +2 do aprimoramento');
+  igual(dentro.formaDeFera.tracos.agilidade, 2, 'Agilidade +1 da base mais +1 do aprimoramento');
+  igual(dentro.formaDeFera.ataque.dano, 'd4+6 de dano físico');
+  // "você mantém todos os atributos e habilidades da forma original"
+  verdade(dentro.formaDeFera.verbos.indexOf('enganar') !== -1, 'as vantagens da base vêm junto');
+  verdade(dentro.formaDeFera.caracteristicas.some((c) => c.nome === 'Frágil'),
+    'e as habilidades da base também');
+});
+
+teste('a Fera Mítica sobe o dado um passo e aceita base de 1º OU 2º patamar', () => {
+  /*
+   * ⚠ DIVERGÊNCIA LIVRO x SRD, resolvida pelo SRD (a hierarquia do projeto).
+   * O título pt-BR diz "(Aprimoramento de 1º ou 2º patamar)" e o corpo, na
+   * mesma caixa, diz "escolha uma Forma de Fera de 1º patamar" — o livro se
+   * contradiz. SRD 1.0 (09/09/2025): "Pick a Tier 1 or Tier 2 Beastform
+   * option". A errata de 09/09/2025 mexe nessa caixa e não toca no patamar.
+   */
+  const f = druidaNivel5();
+  f.identidade.nivel = 8;                      // patamar 4
+  const oitavo = contexto.validarFicha_(f);
+  contexto.aplicarAjustes_(oitavo, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'criar' }]);
+
+  const r = contexto.aplicarAjustes_(oitavo, [{
+    tipo: 'fichaFilha', filha: 'beastform', acao: 'entrar',
+    forma: 'fera-mitica', base: 'fera-poderosa'      // 2º patamar
+  }]);
+  igual(r.erros, [], 'base de 2º patamar vale para a Fera Mítica');
+
+  /*
+   * Fera Poderosa: Força +3, Evasão +1, d10+4 de dano físico (a errata de
+   * 09/09/2025 trocou Força e Evasão desta forma).
+   * Fera Mítica soma +2 no traço, +3 na Evasão, +9 no dano e sobe o dado um
+   * passo: d10 -> d12, 4+9 = 13.
+   */
+  const dentro = contexto.validarFicha_(oitavo);
+  igual(dentro.formaDeFera.evasao, 4);
+  igual(dentro.formaDeFera.tracos.forca, 5);
+  igual(dentro.formaDeFera.ataque.dano, 'd12+13 de dano físico');
+});
+
+teste('a híbrida só empresta vantagem e habilidade das opções escolhidas', () => {
+  const f = druidaNivel5();
+  contexto.aplicarAjustes_(f, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'criar' }]);
+
+  const escolha = HIBRIDA_COMPLETA();
+  // Uma vantagem que não pertence a nenhuma das duas opções, e uma habilidade
+  // de uma terceira forma: as duas têm de cair fora.
+  escolha.vantagens = escolha.vantagens.concat(['nadar']);
+  escolha.habilidades = escolha.habilidades.concat(['Aquático']);
+
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'fichaFilha', filha: 'beastform', acao: 'entrar',
+    forma: 'hibrido-lendario', hibrido: escolha
+  }]);
+  igual(r.erros, []);
+
+  const dentro = contexto.validarFicha_(f);
+  const h = dentro.formaDeFera.hibrido;
+  igual(h.vantagens.length, 4, 'o teto é quatro vantagens');
+  verdade(h.vantagens.indexOf('nadar') === -1, 'vantagem de fora das opções não entra');
+  igual(h.habilidades.length, 2, 'o teto é duas habilidades');
+  verdade(!h.habilidades.some((c) => c.nome === 'Aquático'), 'habilidade de fora não entra');
+  igual(h.teto.opcoes, 2);
+
+  // Sair apaga as escolhas: a próxima transformação escolhe de novo.
+  contexto.aplicarAjustes_(dentro, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'sair' }]);
+  const fora = contexto.validarFicha_(dentro);
+  igual(fora.fichasFilhas[0].dados.hibrido, null);
+  igual(fora.fichasFilhas[0].dados.base, null);
+});
+
+teste('marcar o último Ponto de Vida tira da Forma de Fera sozinho', () => {
+  /*
+   * Livro p.34: "Marcar seu último Ponto de Vida faz com que você saia da
+   * Forma de Fera automaticamente." A ficha abria o movimento de morte e
+   * deixava o Druida deitado no chão em forma de pássaro.
+   */
+  const f = druidaNivel5();
+  const evasaoNormal = f.defesas.evasao;
+  contexto.aplicarAjustes_(f, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'criar' }]);
+  contexto.aplicarAjustes_(f, [{ tipo: 'fichaFilha', filha: 'beastform', acao: 'entrar', forma: 'fera-alada' }]);
+
+  const dentro = contexto.validarFicha_(f);
+  igual(dentro.formaDeFera.id, 'fera-alada');
+
+  contexto.aplicarAjustes_(dentro, [{
+    tipo: 'recurso', chave: 'pontosDeVidaMarcados', valor: dentro.recursos.pontosDeVidaMaximos
+  }]);
+  const caido = contexto.validarFicha_(dentro);
+
+  igual(caido.formaDeFera, null, 'o último PV tira da forma');
+  igual(caido.fichasFilhas[0].dados.formaAtiva, null);
+  /*
+   * ⚠ E A EVASÃO DA FERA SAI NA MESMA GRAVAÇÃO. Publicar os derivados da forma
+   * e só depois apagá-la deixaria a ficha com a Evasão de uma fera que não
+   * existe — exatamente no instante em que a mesa está olhando.
+   */
+  igual(caido.defesas.evasao, evasaoNormal, 'a Evasão da fera sai junto');
 });
 
 teste('forma acima do patamar do personagem é recusada', () => {
@@ -1122,6 +1358,22 @@ const fichaBase = (extra = {}) => Object.assign({
   tracos: { agilidade: 0, forca: -1, finesse: 1, instinto: 1, presenca: 0, conhecimento: 2 }
 }, extra);
 
+/**
+ * A mesma ficha, COM as cartas que sustentam os contadores testados.
+ *
+ * ⚠ Sem isto, os testes de contador viviam uma mentira. Eles punham
+ * `carta:splendor-restauracao` numa ficha que não tinha a carta e esperavam
+ * que ficasse — o que só passava porque o servidor não conferia de quem era o
+ * contador. Foi essa falta de crivo que pôs o "Dado de Inspiração" do Bardo na
+ * ficha de um Guerreiro, na mesa de verdade.
+ *
+ * Agora a ficha de teste carrega as cartas, e o teste mede a regra em vez de
+ * medir a ausência dela.
+ */
+const fichaComCartas = (cartas, extra = {}) => fichaBase(Object.assign({
+  cartas: { ativas: cartas, cofre: [] }
+}, extra));
+
 teste('normaliza traço pelo nome pt, en e apelido', () => {
   igual(contexto.normalizarTraco_('Conhecimento'), 'conhecimento');
   igual(contexto.normalizarTraco_('KNOWLEDGE'), 'conhecimento');
@@ -1221,12 +1473,86 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('as 20 cartas/características com estado estão no catálogo', () => {
+teste('o catálogo tem os 36 contadores: 17 de carta e 19 de classe/subclasse', () => {
   const CONTADORES = avaliar('CONTADORES');
-  igual(Object.keys(CONTADORES).length, 20);
+  /*
+   * Eram 20 no fim da rodada das cartas. Vieram depois:
+   *
+   *  • os DADOS DE ORAÇÃO do Serafim — um recurso de classe inteiro que não
+   *    tinha onde morar, embora o Bardo, com uma habilidade da mesma forma,
+   *    tivesse contador desde sempre;
+   *  • quinze marcadores de "UMA VEZ POR". Eram 18 habilidades assim nas nove
+   *    classes e só duas tinham marcador; as outras dezesseis viviam da
+   *    memória de quem estava na mesa. (Dezesseis menos uma: o "três vezes por
+   *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
+   *    Contatos em Todo Lugar, que é a mesma habilidade.)
+   */
+  igual(Object.keys(CONTADORES).length, 36);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 17);
+  igual(porOrigem['caracteristica-classe'], 4);
+  igual(porOrigem['caracteristica-subclasse'], 15);
+});
+
+teste('"uma vez por" conta o uso GASTO, e o gatilho certo o apaga', () => {
+  const bardo = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Lyra', classe: 'Bardo', subclasse: 'Artífice das Palavras',
+    ancestralidade: 'Humano', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+
+  /*
+   * ⚠ CONTA O QUE JÁ FOI GASTO, e não o que resta. Ficha nova tem o contador
+   * em zero — que é a verdade: ninguém usou nada ainda. Contar o que RESTA
+   * obrigaria o app a criar o contador cheio no momento em que a ficha nasce,
+   * e uma ficha antiga apareceria com "0 usos restantes" de uma habilidade
+   * que nunca usou.
+   */
+  igual(Object.keys(bardo.contadores || {}).length, 0, 'ficha nova não precisa de contador nenhum');
+
+  /*
+   * ⚠ TER A SUBCLASSE NÃO É TER A CARTA. Este Bardo é Artífice das Palavras de
+   * 1º nível: tem "Discurso Empolgante" (fundação) e NÃO tem "Eloquente"
+   * (especialização). O marcador de Eloquente não é dele — some na gravação,
+   * em silêncio, como todo contador sem dono.
+   */
+  const daFundacao = 'uso:bardo-artifice-das-palavras:discurso-empolgante';
+  const daEspecializacao = 'uso:bardo-artifice-das-palavras:eloquente';
+
+  bardo.contadores = { [daFundacao]: { valor: 1 }, [daEspecializacao]: { valor: 1 } };
+  const usado = contexto.validarFicha_(bardo);
+  igual(usado.contadores[daFundacao].valor, 1);
+  verdade(!usado.contadores[daEspecializacao],
+    'marcador de carta que a ficha não pegou não pode ficar');
+
+  // "Uma vez por descanso longo": o descanso longo devolve o uso.
+  contexto.aplicarGatilhoContadores_(usado, 'descanso-longo');
+  verdade(!usado.contadores[daFundacao], 'o descanso longo devia devolver o uso');
+
+  // E o teto é 1: o segundo uso não cabe.
+  igual(contexto.maximoDoContador_(daFundacao, usado), 1);
+});
+
+teste('o Apoio Confiável SOBE O TETO do Contatos em Todo Lugar', () => {
+  /*
+   * "Apoio Confiável: você pode usar sua habilidade Contatos em Todo Lugar
+   * TRÊS vezes por sessão." A maestria não cria uma habilidade nova — ela
+   * muda o teto da que já existe. Um contador separado faria a ficha mostrar
+   * duas linhas para a mesma coisa.
+   */
+  const ladino = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Vex', classe: 'Ladino', subclasse: 'Sindicato',
+    ancestralidade: 'Humano', comunidade: 'Highborne',
+    cartas: ['midnight-disfarce-incrivel', 'grace-encantar'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  const chave = 'uso:ladino-sindicato:contatos-em-todo-lugar';
+  igual(contexto.maximoDoContador_(chave, ladino), 1, 'sem a maestria, uma vez por sessão');
+
+  ladino.caracteristicas = (ladino.caracteristicas || []).concat([{ nome: 'Apoio Confiável', origem: 'subclasse' }]);
+  igual(contexto.maximoDoContador_(chave, ladino), 3, 'com a maestria, três');
 });
 
 teste('toda carta marcada como "guarda estado" tem contador', async () => {
@@ -1281,7 +1607,8 @@ teste('Templo das Selvas conta as cartas Sábias do conjunto e do cofre', () => 
 });
 
 teste('contador acima do máximo é cortado e avisado', () => {
-  const f = fichaBase({ contadores: { 'carta:splendor-restauracao': { valor: 9 } } });
+  const f = fichaComCartas(['splendor-restauracao'],
+    { contadores: { 'carta:splendor-restauracao': { valor: 9 } } });
   const p = contexto.validarContadores_(f);
   igual(f.contadores['carta:splendor-restauracao'].valor, 2);
   verdade(p.length > 0, 'deveria avisar do corte');
@@ -1309,12 +1636,71 @@ teste('descanso longo recarrega umas e zera outras', () => {
 });
 
 teste('fim de sessão zera os Dados de Matador e enche Liberar o Caos no início', () => {
-  const f = fichaBase({ contadores: { 'classe:guerreiro:matador': { valor: 2 } } });
+  const f = fichaBase({
+    identidade: { nome: 'G', nivel: 1, classe: 'Guerreiro', subclasse: 'Chamada do Matador' },
+    contadores: { 'classe:guerreiro:matador': { valor: 2 } }
+  });
   contexto.aplicarGatilhoContadores_(f, 'fim-de-sessao');
   verdade(!f.contadores['classe:guerreiro:matador'], 'deveria ter zerado');
-  const mago = fichaBase();
+
+  const mago = fichaComCartas(['arcana-liberar-o-caos']);
   contexto.aplicarGatilhoContadores_(mago, 'inicio-de-sessao');
   igual(mago.contadores['carta:arcana-liberar-o-caos'].valor, 2); // Conhecimento +2
+});
+
+teste('o gatilho NÃO inventa contador de carta que a ficha não tem', () => {
+  /*
+   * ⚠ ESTE É O BUG QUE A MESA VIU.
+   *
+   * `aplicarGatilhoContadores_` varria os 20 contadores do jogo e criava
+   * qualquer um com `recarregaEm`, sem perguntar de quem era. Um Guerreiro
+   * abriu a sessão com o "Dado de Inspiração" do BARDO em 1 e com "Liberar o
+   * Caos" (carta de Arcana) em "máx 0" — dois marcadores de coisas que ele não
+   * tem, num painel que existe para mostrar o que ele tem.
+   *
+   * O erro era antigo (os descansos já faziam isso) e ficava escondido: a
+   * virada de sessão, que roda para todo mundo toda sessão, tornou rotina.
+   */
+  const guerreiro = fichaBase({
+    identidade: { nome: 'Aeon', nivel: 2, classe: 'Guerreiro', subclasse: 'Chamada do Matador' }
+  });
+  contexto.aplicarGatilhoContadores_(guerreiro, 'inicio-de-sessao');
+
+  verdade(!guerreiro.contadores['classe:bardo:rally'],
+    'o Dado de Inspiração é do Bardo: ' + JSON.stringify(guerreiro.contadores));
+  verdade(!guerreiro.contadores['carta:arcana-liberar-o-caos'],
+    'Liberar o Caos é carta de Arcana, e o Guerreiro não tem Arcana');
+});
+
+teste('o contador da SUBCLASSE casa pelo id, não só pelo nome', () => {
+  /*
+   * ⚠ O BUG IRMÃO, e o mais silencioso dos dois.
+   *
+   * O catálogo aponta `classe:guerreiro:matador` para o id
+   * `guerreiro-chamada-do-matador`; a ficha guarda o nome de exibição
+   * ("Chamada do Matador"). Nunca casavam — o único contador que essa ficha
+   * deveria ter era o único que não aparecia, e por isso o marcador dentro da
+   * carta parecia não ter sido feito.
+   */
+  const guerreiro = fichaBase({
+    identidade: { nome: 'Aeon', nivel: 2, classe: 'Guerreiro', subclasse: 'Chamada do Matador' },
+    contadores: { 'classe:guerreiro:matador': { valor: 1 } }
+  });
+  contexto.validarContadores_(guerreiro);
+  verdade(guerreiro.contadores['classe:guerreiro:matador'],
+    'os Dados de Matador são dele e não podem ser descartados');
+
+  const refs = contexto.refsDeContadorDaFicha_(guerreiro);
+  verdade(refs['guerreiro-chamada-do-matador'], JSON.stringify(Object.keys(refs)));
+});
+
+teste('a ficha suja se limpa sozinha na gravação', () => {
+  // O contador do Bardo numa ficha de Mago: some na validação, sem recusar a
+  // gravação — reclamar aqui deixaria toda ficha já suja impossível de salvar.
+  const f = fichaBase({ contadores: { 'classe:bardo:rally': { valor: 1 } } });
+  const problemas = contexto.validarContadores_(f);
+  igual(Object.keys(f.contadores), []);
+  igual(problemas, [], 'a limpeza é silenciosa de propósito');
 });
 
 teste('Dado de Reunião tem nome canônico e os dois sinônimos das cartas', () => {
@@ -1376,16 +1762,28 @@ teste('Beastform só para Druida, Companheiro só para Laço Bestial', () => {
 teste('salvar e reler a ficha preserva contadores e condições', () => {
   const reg = api('registrar', { nome: 'Contadora', codigo: 'segredo123' });
   const token = (reg.ok ? reg : api('entrar', { nome: 'Contadora', codigo: 'segredo123' })).dados.token;
+  /*
+   * ⚠ O CONTADOR AQUI É DE CLASSE, não de carta, e a troca tem motivo.
+   *
+   * O teste usava `carta:splendor-restauracao` numa Maga de nível 1 — e essa
+   * carta é de NÍVEL 6. Passava só porque o servidor não conferia de quem era
+   * o contador; com o crivo novo, ele descarta marcador de coisa que a ficha
+   * não tem, e a mentira apareceu.
+   *
+   * Os Dados de Matador vêm da subclasse e existem desde o nível 1. De quebra,
+   * exercitam no caminho real de gravação o casamento por ID: o catálogo
+   * aponta para `guerreiro-chamada-do-matador` e a ficha guarda o nome.
+   */
   const criada = api('criarPersonagem', { token, ficha: {
-    identidade: { nome: 'Elowen', nivel: 1, classe: 'Mago', subclasse: 'Escola do Conhecimento' },
+    identidade: { nome: 'Elowen', nivel: 1, classe: 'Guerreiro', subclasse: 'Chamada do Matador' },
     tracos: { agilidade: 0, forca: -1, finesse: 1, instinto: 1, presenca: 0, conhecimento: 2 },
     condicoes: ['Encoberto'],
-    contadores: { 'carta:splendor-restauracao': { valor: 2 } }
+    contadores: { 'classe:guerreiro:matador': { valor: 1 } }
   } });
   verdade(criada.ok, 'deveria criar: ' + JSON.stringify(criada.erro || {}));
   const lida = api('obterPersonagem', { token, id: criada.dados.personagem.id });
   igual(lida.dados.personagem.ficha.condicoes[0].nome, 'Camuflado');
-  igual(lida.dados.personagem.ficha.contadores['carta:splendor-restauracao'].valor, 2);
+  igual(lida.dados.personagem.ficha.contadores['classe:guerreiro:matador'].valor, 1);
 });
 
 console.log('\nCriação de ficha');
@@ -1561,6 +1959,313 @@ teste('arma de duas mãos não deixa levar secundária na criação', () => {
     cartas: { ativas: ['arcana-andar-na-parede', 'midnight-disfarce-incrivel'], cofre: [] }
   });
   verdade(contexto.validarCriacao_(f).some((p) => /duas mãos/i.test(p)), 'deveria reclamar das mãos');
+});
+
+teste('a habilidade de Esperança COBRA os 3 — e recusa quando não tem', () => {
+  /*
+   * As nove habilidades de Esperança custam 3 ("gaste 3 de Esperança para…") e
+   * nenhuma tinha botão: o texto dizia o preço e a mesa pagava no papel,
+   * enquanto o app já cobrava o custo de recordar e o Medo do foco.
+   */
+  const g = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Bran', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade: 'Anão', comunidade: 'Ridgeborne',
+    cartas: ['blade-redemoinho', 'bone-intocavel'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  g.recursos.esperanca = 4;
+
+  const r = contexto.aplicarAjustes_(g, [{ tipo: 'habilidade', nome: 'Sem Piedade' }]);
+  igual(r.erros, []);
+  igual(g.recursos.esperanca, 1, 'Sem Piedade custa 3 de Esperança');
+
+  // Sem Esperança sobrando, a habilidade é recusada inteira (E20/E22).
+  const semEsperanca = contexto.aplicarAjustes_(g, [{ tipo: 'habilidade', nome: 'Sem Piedade' }]);
+  igual(semEsperanca.erros.length, 1);
+  igual(g.recursos.esperanca, 1, 'recusa não cobra');
+
+  // E a habilidade de OUTRA classe não é usável nesta ficha.
+  g.recursos.esperanca = 5;
+  igual(contexto.aplicarAjustes_(g, [{ tipo: 'habilidade', nome: 'Fazer uma Cena' }]).erros.length, 1);
+  igual(g.recursos.esperanca, 5);
+
+  /*
+   * ⚠ A EVOLUÇÃO DO DRUIDA FICA DE FORA DE PROPÓSITO. Ela é um jeito de ENTRAR
+   * na Forma de Fera, e quem cobra os 3 de Esperança é o ajuste de entrar. Dois
+   * caminhos para o mesmo gasto deixariam pagar duas vezes pela transformação.
+   */
+  const HAB = avaliar('HABILIDADES_DE_CLASSE_COM_CUSTO');
+  verdade(!HAB['Evolução'], 'a Evolução não pode ter um segundo caminho de cobrança');
+  igual(Object.keys(HAB).filter((n) => HAB[n].origem === 'esperança').length, 8,
+    'oito habilidades de Esperança com botão — a nona é a Evolução');
+});
+
+teste('Canalizar Poder Bruto troca a carta por Esperança na MESMA gravação', () => {
+  /*
+   * "Uma vez por descanso longo, você pode colocar uma carta de domínio de sua
+   * MÃO no cofre e escolher entre: receber Esperança igual ao nível da carta,
+   * ou um bônus de dano igual ao dobro do nível" (livro p.42).
+   *
+   * O app já sabia mover carta e já sabia mexer em Esperança — separado. Fazer
+   * as duas juntas é o que faltava: separado, dava para guardar a carta e
+   * esquecer a Esperança. É o custo de recordar (E20) de cabeça para baixo:
+   * ali a carta custa Estresse, aqui a carta É o custo.
+   */
+  const fe = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Zia', classe: 'Feiticeiro', subclasse: 'Origem Primal',
+    ancestralidade: 'Humano', comunidade: 'Highborne',
+    cartas: ['arcana-andar-na-parede', 'midnight-disfarce-incrivel'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  fe.recursos.esperanca = 0;
+
+  igual(contexto.aplicarAjustes_(fe, [{
+    tipo: 'habilidade', nome: 'Canalizar Poder Bruto', carta: 'arcana-andar-na-parede'
+  }]).erros.length, 1, 'sem escolher o que a carta vira, não faz nada');
+
+  const r = contexto.aplicarAjustes_(fe, [{
+    tipo: 'habilidade', nome: 'Canalizar Poder Bruto',
+    carta: 'arcana-andar-na-parede', opcao: 'esperanca'
+  }]);
+  igual(r.erros, []);
+
+  const depois = contexto.validarFicha_(fe);
+  verdade(depois.cartas.ativas.indexOf('arcana-andar-na-parede') === -1, 'a carta saiu da mão');
+  verdade(depois.cartas.cofre.indexOf('arcana-andar-na-parede') !== -1, 'e foi para o cofre');
+  igual(depois.recursos.esperanca, 1, 'carta de nível 1 dá 1 de Esperança');
+  igual(depois.contadores['uso:feiticeiro:canalizar-poder-bruto'].valor, 1, 'e gastou o uso');
+
+  /*
+   * ⚠ "UMA VEZ POR DESCANSO LONGO" É CONFERIDO. Sem isto o marcador seria
+   * enfeite: o app deixaria usar de novo e o contador continuaria em 1 de 1.
+   */
+  const denovo = contexto.aplicarAjustes_(depois, [{
+    tipo: 'habilidade', nome: 'Canalizar Poder Bruto',
+    carta: 'midnight-disfarce-incrivel', opcao: 'esperanca'
+  }]);
+  igual(denovo.erros.length, 1, 'a segunda vez no mesmo descanso é recusada');
+  verdade(depois.cartas.ativas.indexOf('midnight-disfarce-incrivel') !== -1,
+    'e a recusa não pode ter guardado a carta');
+
+  // O descanso longo devolve o uso.
+  contexto.aplicarGatilhoContadores_(depois, 'descanso-longo');
+  igual(contexto.aplicarAjustes_(depois, [{
+    tipo: 'habilidade', nome: 'Canalizar Poder Bruto',
+    carta: 'midnight-disfarce-incrivel', opcao: 'esperanca'
+  }]).erros, []);
+});
+
+teste('a Marca da Presa cobra 1 e guarda UM alvo por vez', () => {
+  /*
+   * "Gaste 1 de Esperança e ataque um alvo. (…) Até o efeito desta habilidade
+   * acabar ou até você Marcar OUTRA criatura" (livro p.41). Um alvo por vez —
+   * e o app não tinha onde guardar nem esse nome nem o gasto.
+   */
+  const cac = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Íris', classe: 'Caçador', subclasse: 'Explorador',
+    ancestralidade: 'Halfling', comunidade: 'Wildborne',
+    cartas: ['bone-intocavel', 'sage-emaranhado-cruel'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  cac.recursos.esperanca = 3;
+
+  igual(contexto.aplicarAjustes_(cac, [{ tipo: 'habilidade', nome: 'Marca da Presa' }]).erros.length, 1,
+    'sem dizer em quem, não marca');
+
+  const r = contexto.aplicarAjustes_(cac,
+    [{ tipo: 'habilidade', nome: 'Marca da Presa', alvo: 'Cocatriz' }]);
+  igual(r.erros, []);
+  igual(cac.recursos.esperanca, 2);
+  igual(contexto.validarFicha_(cac).alvosDeHabilidade['Marca da Presa'], 'Cocatriz');
+
+  // Marcar outra troca a marca — não acumula.
+  contexto.aplicarAjustes_(cac, [{ tipo: 'habilidade', nome: 'Marca da Presa', alvo: 'Mantícora' }]);
+  const depois = contexto.validarFicha_(cac);
+  igual(Object.keys(depois.alvosDeHabilidade).length, 1, 'um alvo por vez');
+  igual(depois.alvosDeHabilidade['Marca da Presa'], 'Mantícora');
+  igual(depois.recursos.esperanca, 1, 'e a segunda marca custa de novo');
+
+  // Encerrar tira a marca e não devolve nada.
+  contexto.aplicarAjustes_(depois, [{ tipo: 'habilidade', nome: 'Marca da Presa', encerrar: true }]);
+  const fim = contexto.validarFicha_(depois);
+  igual(Object.keys(fim.alvosDeHabilidade).length, 0);
+  igual(fim.recursos.esperanca, 1, 'encerrar não devolve Esperança');
+});
+
+teste('o Serafim recebe os Dados de Oração na virada de sessão', () => {
+  /*
+   * "No início de cada sessão, role um número de d4 igual ao traço de
+   * Conjuração da sua subclasse e coloque-os sobre o espaço apropriado na
+   * ficha" (livro p.50). Era um recurso de CLASSE inteiro sem lugar nenhum no
+   * app: o Bardo, que tem uma habilidade da mesma forma, tinha contador desde
+   * sempre; o Serafim não tinha.
+   *
+   * O app conta QUANTOS dados sobraram, não o valor de cada um — quem rola é o
+   * jogador ("só ficha, sem dados").
+   */
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Aurel', classe: 'Serafim', subclasse: 'Portador Divino',
+    ancestralidade: 'Humano', comunidade: 'Highborne',
+    cartas: ['splendor-toque-curativo', 'valor-pele-dura'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+
+  // Portador Divino conjura por Força, e a ficha rápida põe Força 2.
+  igual(contexto.chaveTexto_(f.tracoDeConjuracao), 'forca');
+  igual(f.tracos.forca, 2);
+
+  const mexidos = contexto.aplicarGatilhoContadores_(f, 'inicio-de-sessao');
+  verdade(mexidos.indexOf('classe:seraph:oracao') !== -1,
+    'a virada de sessão devia encher os Dados de Oração: ' + JSON.stringify(mexidos));
+  igual(f.contadores['classe:seraph:oracao'].valor, 2, 'um d4 por ponto do traço de Conjuração');
+  igual(f.contadores['classe:seraph:oracao'].dado, 'd4');
+
+  // "No fim de cada sessão, Dados de Oração não utilizados são perdidos."
+  contexto.aplicarGatilhoContadores_(f, 'fim-de-sessao');
+  verdade(!f.contadores['classe:seraph:oracao'], 'o que sobra some no fim da sessão');
+
+  /*
+   * ⚠ E NÃO CHEGA EM QUEM NÃO É SERAFIM. É o mesmo crivo do bug do Aeon: o
+   * gatilho só mexe no que é da ficha.
+   */
+  const bardo = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Lyra', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Humano', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  contexto.aplicarGatilhoContadores_(bardo, 'inicio-de-sessao');
+  verdade(!bardo.contadores['classe:seraph:oracao'],
+    'o Bardo não pode acordar com os Dados de Oração do Serafim');
+});
+
+teste('o número de 1 a 12 do Mago fica gravado na ficha', () => {
+  /*
+   * "Padrões Estranhos: escolha um número de 1 a 12" (livro p.48). A escolha
+   * vale o jogo inteiro e muda num descanso longo — e não tinha campo nenhum
+   * na ficha, então vivia na memória de quem estava na mesa.
+   */
+  const mago = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Orin', classe: 'Mago', subclasse: 'Escola do Conhecimento',
+    ancestralidade: 'Humano', comunidade: 'Highborne',
+    cartas: ['codex-livro-de-ava', 'splendor-farol-brilhante'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+
+  const r = contexto.aplicarAjustes_(mago, [{ tipo: 'escolhaDeClasse', chave: 'padroesEstranhos', valor: 7 }]);
+  igual(r.erros, []);
+  igual(contexto.validarFicha_(mago).escolhasDeClasse.padroesEstranhos, 7,
+    'o número tem de sobreviver à gravação');
+
+  // Fora da faixa é recusado, e a recusa não muda o que já estava lá.
+  igual(contexto.aplicarAjustes_(mago, [{ tipo: 'escolhaDeClasse', chave: 'padroesEstranhos', valor: 13 }])
+    .erros.length, 1);
+  igual(mago.escolhasDeClasse.padroesEstranhos, 7);
+
+  /*
+   * ⚠ E É DE QUEM TEM A CARACTERÍSTICA. Um Bardo não escolhe número nenhum —
+   * e uma escolha que sobrou de uma ficha que trocou de classe some sozinha na
+   * gravação, em silêncio, como o resto da normalização.
+   */
+  const bardo = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Lyra', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Humano', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  igual(contexto.aplicarAjustes_(bardo, [{ tipo: 'escolhaDeClasse', chave: 'padroesEstranhos', valor: 7 }])
+    .erros.length, 1);
+  bardo.escolhasDeClasse = { padroesEstranhos: 7 };
+  igual(Object.keys(contexto.validarFicha_(bardo).escolhasDeClasse).length, 0,
+    'escolha de quem não tem a característica some na gravação, sem travar a ficha');
+});
+
+teste('o Guardião DETERMINADO não fica Vulnerável nem Restrito', () => {
+  /*
+   * "Enquanto estiver Determinado (…) você não pode ser Restrito ou ficar
+   * Vulnerável" (livro p.44; SRD 1.0: "You can't be Restrained or
+   * Vulnerable"). O app marca Vulnerável sozinho quando o Estresse enche — e
+   * marcava também no Guardião, passando por cima da habilidade que existe
+   * justamente para impedir isso.
+   */
+  const g = contexto.fichaRapida_({
+    nome: 'Torr', classe: 'Guardião', subclasse: 'Robusto',
+    ancestralidade: 'Anão', comunidade: 'Ridgeborne',
+    cartas: ['blade-redemoinho', 'valor-pele-dura'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  let f = contexto.validarFicha_(g);
+
+  // Sem estar Determinado, o Estresse cheio deixa Vulnerável, como sempre.
+  f.recursos.estresseMarcado = f.recursos.estresseMaximo;
+  f = contexto.validarFicha_(f);
+  verdade((f.condicoes || []).some((c) => c.id === 'vulneravel'),
+    'fora da Determinação a regra do Estresse continua valendo');
+
+  // Determinado: a condição SAI, mesmo já estando lá.
+  f.contadores = { 'classe:guardiao:imparavel': { valor: 1 } };
+  f = contexto.validarFicha_(f);
+  igual((f.condicoes || []).filter((c) => c.id === 'vulneravel').length, 0,
+    'Determinado não pode ficar Vulnerável');
+
+  /*
+   * ⚠ E VOLTA QUANDO A DETERMINAÇÃO ACABA. A proteção é do DADO na ficha, não
+   * da habilidade: quem tem Determinação e não está Determinado é vulnerável
+   * como todo mundo. Sem isto o Guardião ficaria imune para sempre depois da
+   * primeira cena.
+   */
+  f.contadores = {};
+  f = contexto.validarFicha_(f);
+  verdade((f.condicoes || []).some((c) => c.id === 'vulneravel'),
+    'acabou a Determinação, a Vulnerável do Estresse cheio volta');
+
+  // O Restrito também é barrado enquanto ela dura.
+  f.contadores = { 'classe:guardiao:imparavel': { valor: 1 } };
+  f.condicoes = [{ id: 'restrito', nome: 'Restrito' }];
+  f = contexto.validarFicha_(f);
+  igual((f.condicoes || []).filter((c) => c.id === 'restrito').length, 0,
+    'Determinado também não pode ser Restrito');
+});
+
+teste('o GUERREIRO leva arma de duas mãos E secundária', () => {
+  /*
+   * "Treinamento de Combate: você IGNORA O TIPO DE EMPUNHADURA de armas
+   * equipadas" (livro p.46; SRD 1.0: "You ignore Burden when equipping
+   * weapons"). Empunhadura é o campo `maos` das armas, e a conta de mãos era a
+   * única coisa que o consultava — então a criação recusava o Guerreiro de
+   * machado com escudo. Não era rigor: era o app negando o que a classe existe
+   * para fazer.
+   */
+  const g = fichaCompleta({
+    identidade: { nome: 'Bran', pronomes: 'ele/dele', nivel: 1,
+                  classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+                  ancestralidade: 'Anão', comunidade: 'Ridgeborne' },
+    equipamento: { primaria: 'Espada longa', secundaria: 'Escudo redondo',
+                   armadura: 'Armadura de couro' },
+    cartas: { ativas: ['blade-redemoinho', 'bone-intocavel'], cofre: [] }
+  });
+  const problemas = contexto.validarCriacao_(g);
+  verdade(!problemas.some((x) => /duas mãos/i.test(x)),
+    'o Guerreiro não devia esbarrar na conta de mãos: ' + JSON.stringify(problemas));
+
+  /*
+   * E a exceção é DA CARACTERÍSTICA, não da palavra "Guerreiro": quem
+   * multiclassou em Guerreiro recebe a característica de classe dele e leva a
+   * exceção junto, porque quem responde é a lista de características
+   * resolvidas (que já inclui multiclasse).
+   */
+  const bardo = fichaCompleta({
+    equipamento: { primaria: 'Bastão Duplo', secundaria: 'Escudo redondo', armadura: 'Armadura de couro' },
+    cartas: { ativas: ['arcana-andar-na-parede', 'midnight-disfarce-incrivel'], cofre: [] }
+  });
+  verdade(contexto.validarCriacao_(bardo).some((x) => /duas mãos/i.test(x)),
+    'quem NÃO tem Treinamento de Combate continua preso à conta de mãos');
+
+  bardo.identidade.nivel = 2;
+  bardo.multiclasse = { classe: 'Guerreiro', subclasse: 'Chamada dos Bravos', cartas: ['fundacao'] };
+  verdade(!contexto.validarEquipamento_(bardo.equipamento, 2, bardo).erros
+    .some((x) => /duas mãos/i.test(x)),
+    'a multiclasse em Guerreiro traz a característica — e a exceção com ela');
 });
 
 teste('sem armadura o app avisa que não dá para calcular limiar', () => {

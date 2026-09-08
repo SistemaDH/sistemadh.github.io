@@ -79,6 +79,23 @@ function valorDeTraco(v) {
   return v < 0 ? '\u2212' + Math.abs(v) : '+' + v;
 }
 
+/**
+ * O QUE A FORMA DE FERA SOMA NESTE TRAÇO — 0 quando não há forma.
+ *
+ * O livro (p.35): "enquanto estiver transformado, você recebe um bônus no
+ * atributo listado (…) você perde esse bônus quando sai da Forma de Fera".
+ * Some o +1 da Evolução quando ela está em jogo.
+ *
+ * ⚠ O NÚMERO VEM DO SERVIDOR (`ficha.formaDeFera.tracos`), DERIVADO. A tela
+ * não interpreta "Instinto +1" por conta própria: repetir a regra aqui em
+ * JavaScript é como a Proficiência ficou errada por três partes (E4).
+ */
+function bonusDaFormaNoTraco(ficha, traco) {
+  const f = (ficha || {}).formaDeFera;
+  if (!f || !f.tracos) return 0;
+  return Number(f.tracos[traco]) || 0;
+}
+
 /*
  * OS CONTORNOS DAS DUAS DEFESAS, COPIADOS DA FICHA OFICIAL.
  *
@@ -459,6 +476,37 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         }, 'Escolher agora')
       ]);
     }
+
+    /*
+     * EM FORMA DE FERA — o que a forma TIRA, que a tela da fera não dizia.
+     *
+     * A tela da fera lista o que ela dá (Evasão, traço, ataque, habilidades).
+     * O que ela tira está no texto da classe, a duas abas dali: enquanto
+     * transformado não dá para usar armas nem lançar feitiços de carta de
+     * domínio. Isso vale para toda jogada da cena, então mora na faixa de
+     * estado, junto com Inconsciente — não escondido numa dobra.
+     *
+     * Fica por último na fila de faixas de propósito: encerrada, inconsciente
+     * e PV no limite são coisas mais graves. E o PV no limite nem concorre com
+     * esta — quando ele enche, a forma já caiu sozinha (livro p.34).
+     */
+    const forma = ficha.formaDeFera;
+    if (forma) {
+      return el('div', { class: 'ficha__faixaEstado esta-emForma' }, [
+        el('strong', { class: 'ficha__faixaTitulo', texto: `Em Forma de Fera — ${forma.nome}` }),
+        el('p', { class: 'texto-sm' }, textoAnotado(
+          'Sem armas e sem feitiços de cartas de domínio enquanto durar. Os feitiços ' +
+          'lançados antes continuam pela duração normal, e as outras habilidades valem.')),
+        forma.fragil
+          ? el('p', { class: 'texto-sm' }, textoAnotado(
+            'Frágil: sofrer dano maior ou grave tira você da forma.'))
+          : null,
+        el('button', {
+          type: 'button', class: 'btn btn--pequeno',
+          onClick: () => enviar([{ tipo: 'fichaFilha', filha: 'beastform', acao: 'sair' }])
+        }, 'Sair da forma')
+      ].filter(Boolean));
+    }
     return null;
   }
 
@@ -622,8 +670,8 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       }));
 
     /* --- Arriscar Tudo --------------------------------------------------- */
-    const dadoEsp = campoDeDado('Dado de Esperança');
-    const dadoMedo = campoDeDado('Dado de Medo');
+    const dadoEsp = campoDeDado('Dado de Esperança que você tirou');
+    const dadoMedo = campoDeDado('Dado de Medo que você tirou');
     const veredito = el('p', { class: 'texto-sm ficha__morteVeredito' });
     const paraPV = campoDeDado('Para Pontos de Vida');
     const paraEstresse = campoDeDado('Para Estresse');
@@ -655,7 +703,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         veredito.textContent = `O Medo veio mais alto (${m} contra ${e}): ${nome} atravessa o véu.`;
         reparticao.hidden = true;
       } else {
-        veredito.textContent = `A Esperança veio mais alta (${e} contra ${m}): de pé, e você reparte ${e} entre as duas trilhas.`;
+        veredito.textContent = `A Esperança veio mais alta (${e} contra ${m}): de pé. Você escolhe como repartir os ${e} entre as duas trilhas.`;
         reparticao.hidden = false;
         paraPV.max = String(Math.min(e, Number(r.pontosDeVidaMarcados) || 0));
         paraEstresse.max = String(Math.min(e, Number(r.estresseMarcado) || 0));
@@ -663,16 +711,30 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     };
     [dadoEsp, dadoMedo, paraPV, paraEstresse].forEach((c) => c.addEventListener('input', lerArriscar));
 
+    /*
+     * ⚠ OS RÓTULOS DIZEM QUE O DADO É SEU.
+     *
+     * Eles eram só "Esperança" e "Medo", e a proprietária perguntou se o app
+     * estava rolando os dados — olhando para a mesma tela que eu tinha
+     * escrito. O campo do Evitar a Morte já dizia "Resultado do Dado de
+     * Esperança (d12)" e não levantou dúvida nenhuma; estes não diziam de onde
+     * vinha o número, e num app que às vezes calcula sozinho, silêncio lê como
+     * "eu faço".
+     *
+     * Quem rola é o jogador, sempre. A tela agora fala isso duas vezes: na
+     * frase de cima e no rótulo de cada campo.
+     */
     const arriscar = bloco('Arriscar Tudo',
-      'Role os Dados de Dualidade. Esperança mais alto: de pé, limpando o valor do dado ' +
-      'entre Pontos de Vida e Estresse. Medo mais alto: atravessa o véu. Iguais: crítico, tudo limpo.',
+      'Role os Dados de Dualidade e digite o que saiu. Esperança mais alto: de pé, ' +
+      'limpando o valor do dado entre Pontos de Vida e Estresse. Medo mais alto: ' +
+      'atravessa o véu. Iguais: crítico, tudo limpo.',
       [
         el('div', { class: 'ficha__precos' }, [
           el('label', { class: 'ficha__preco' }, [
-            el('span', { class: 'texto-xs texto-fraco', texto: 'Esperança' }), dadoEsp
+            el('span', { class: 'texto-xs texto-fraco', texto: 'Você tirou · Esperança' }), dadoEsp
           ]),
           el('label', { class: 'ficha__preco' }, [
-            el('span', { class: 'texto-xs texto-fraco', texto: 'Medo' }), dadoMedo
+            el('span', { class: 'texto-xs texto-fraco', texto: 'Você tirou · Medo' }), dadoMedo
           ])
         ]),
         veredito,
@@ -974,8 +1036,121 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       ]),
       texto
         ? el('p', { class: 'papel__esperancaTexto' }, textoAnotado(texto))
-        : null
-    ]);
+        : null,
+      /*
+       * O BOTÃO QUE GASTA. Todas as nove habilidades de Esperança custam 3, e
+       * nenhuma tinha onde ser paga: o texto dizia o preço e a mesa descontava
+       * no papel, enquanto o app já cobrava o custo de recordar e o Medo do
+       * foco. Aqui, colado na trilha que a habilidade ensina a gastar.
+       */
+      botaoDeHabilidade(c.nome, ficha)
+    ].filter(Boolean));
+  }
+
+  /**
+   * O BOTÃO DE USAR UMA HABILIDADE QUE CUSTA.
+   *
+   * Serve às nove de Esperança, à Marca da Presa (1 de Esperança e um alvo) e
+   * ao Nêmesis (2 e um adversário). Quem cobra é o servidor, no mesmo ajuste —
+   * aqui só se escreve o preço no botão e se apaga o botão quando não dá.
+   *
+   * ⚠ O APP NÃO FAZ O EFEITO. "Distrair com −2 na Dificuldade", "rolar de novo
+   * os dados de dano": isso é da mesa. O que a ficha faz é tirar o custo e
+   * lembrar quem ficou marcado.
+   */
+  function botaoDeHabilidade(nome, ficha) {
+    const uso = catalogo.usoDaCaracteristica(nome);
+    if (!uso) return null;
+
+    const custo = uso.custo || {};
+    const precisaEsperanca = Number(custo.esperanca) || 0;
+    const precisaEstresse = Number(custo.estresse) || 0;
+    const r = ficha.recursos || {};
+    const temEsperanca = (Number(r.esperanca) || 0) >= precisaEsperanca;
+    const cabeEstresse = !precisaEstresse ||
+      ((Number(r.estresseMarcado) || 0) + precisaEstresse) <= (Number(r.estresseMaximo) || 0);
+
+    const preco = [
+      precisaEsperanca ? `${precisaEsperanca} Esperança` : '',
+      precisaEstresse ? `${precisaEstresse} Estresse` : ''
+    ].filter(Boolean).join(' e ');
+
+    /*
+     * A HABILIDADE QUE PAGA COM UMA CARTA — Canalizar Poder Bruto (p.42).
+     * Escolhe-se a carta da mão e o que ela vira; o servidor faz as duas
+     * coisas na mesma gravação.
+     */
+    if (uso.cartaDaMao) {
+      const naMao = ((ficha.cartas || {}).ativas || [])
+        .map(catalogo.acharCarta).filter(Boolean);
+      if (!naMao.length) {
+        return el('p', { class: 'texto-xs texto-fraco', texto:
+          'Sem cartas na mão para canalizar.' });
+      }
+      const gasto = Number(((ficha.contadores || {})[uso.marcaUso] || {}).valor) || 0;
+      if (gasto > 0) {
+        return el('p', { class: 'texto-xs texto-fraco', texto:
+          'Já usada neste descanso longo — volta no próximo.' });
+      }
+
+      const seletor = el('select', { class: 'campo__entrada' },
+        naMao.map((c) => el('option', { value: c.id }, `${c.nome} (nível ${c.nivel})`)));
+
+      return el('div', { class: 'pilha ficha__habilidadeComAlvo' }, [
+        seletor,
+        el('div', { class: 'linha' }, (uso.opcoes || []).map((o) => el('button', {
+          type: 'button', class: 'btn btn--fantasma btn--pequeno',
+          onClick: () => enviar([{ tipo: 'habilidade', nome, carta: seletor.value, opcao: o.id }])
+        }, o.rotulo)))
+      ]);
+    }
+
+    if (!uso.alvo) {
+      return el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--pequeno ficha__usarHabilidade',
+        disabled: !temEsperanca || !cabeEstresse,
+        onClick: () => enviar([{ tipo: 'habilidade', nome }])
+      }, `Usar — ${preco}`);
+    }
+
+    /*
+     * Com alvo, o botão precisa de um nome — e o nome é digitado, não escolhido
+     * numa lista: a Marca da Presa vale contra qualquer criatura que o Mestre
+     * puser na cena, inclusive uma que ele acabou de inventar.
+     */
+    const atual = (ficha.alvosDeHabilidade || {})[nome] || '';
+    const campo = el('input', semCorretor({
+      type: 'text', class: 'campo__entrada', maxlength: 60,
+      placeholder: uso.alvo.rotulo
+    }));
+
+    return el('div', { class: 'pilha ficha__habilidadeComAlvo' }, [
+      atual
+        ? el('div', { class: 'linha' }, [
+          el('span', { class: 'selo crescer', texto: `${uso.alvo.rotulo}: ${atual}` }),
+          el('button', {
+            type: 'button', class: 'btn btn--fantasma btn--pequeno',
+            onClick: () => enviar([{ tipo: 'habilidade', nome, encerrar: true }])
+          }, 'Encerrar')
+        ])
+        : null,
+      /*
+       * O campo em cima e o botão embaixo, cada um na sua linha: lado a lado
+       * numa tela de 390px o rótulo do botão quebra em duas linhas e o campo
+       * fica com uns 100px, mostrando "Alvo Marc…". O nome do alvo é o que se
+       * digita — ele precisa de largura.
+       */
+      campo,
+      el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--pequeno',
+        disabled: !temEsperanca || !cabeEstresse,
+        onClick: () => {
+          const alvo = campo.value.trim();
+          if (!alvo) return;
+          enviar([{ tipo: 'habilidade', nome, alvo }]);
+        }
+      }, `${uso.alvo.verbo} — ${preco}`)
+    ].filter(Boolean));
   }
 
   /* --- foto + traços (o topo) ----------------------------------------------- */
@@ -1033,12 +1208,23 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       const ehConjuracao = Boolean(conjuracao) && dados.chave(conjuracao) === dados.chave(t);
       const trocavel = podeTrocar && ehOpcao(t) && !ehConjuracao;
       const nome = catalogo.nomeDoTraco(t);
-      const valor = valorDeTraco(v);
+      /*
+       * O NÚMERO DO LADRILHO É O QUE VALE AGORA — com a fera dentro.
+       *
+       * Quem está em Forma de Fera rola com o traço somado; mostrar o valor de
+       * gente teria o Druida somando +1 de cabeça em toda jogada, que é
+       * exatamente o tipo de conta que a ficha existe para tirar da mesa.
+       * O ladrilho ganha uma marca para o número não parecer permanente.
+       */
+      const extra = (v === null || v === undefined) ? 0 : bonusDaFormaNoTraco(ficha, t);
+      const valor = valorDeTraco(v === null || v === undefined ? v : v + extra);
 
       return el('button', {
         type: 'button',
-        class: `traco ${ehConjuracao ? 'e-conjuracao' : ''} ${trocavel ? 'e-trocavel' : ''}`,
-        'aria-label': `${nome} ${valor} — ver o que este traço faz`,
+        class: `traco ${ehConjuracao ? 'e-conjuracao' : ''} ${trocavel ? 'e-trocavel' : ''} ${extra ? 'e-forma' : ''}`,
+        'aria-label': extra
+          ? `${nome} ${valor}, já com ${valorDeTraco(extra)} da Forma de Fera — ver o que este traço faz`
+          : `${nome} ${valor} — ver o que este traço faz`,
         onClick: () => verTraco(t, { ehConjuracao, trocavel })
       }, [
         el('span', { class: 'traco__sigla', texto: siglaDeTraco(nome) }),
@@ -1457,7 +1643,18 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
      * fim da fileira de pílulas, que é onde a próxima entra.
      */
     const quantasCondicoes = (ficha.condicoes || []).length;
-    pai.append(secao('Condições', blocoCondicoes(ficha),
+    pai.append(secao('Condições', el('div', { class: 'pilha' }, [
+      blocoCondicoes(ficha),
+      /*
+       * O QUE ESTÁ BARRADO, E POR QUÊ.
+       *
+       * O Guardião Determinado "não pode ser Restrito ou ficar Vulnerável"
+       * (p.44), e o servidor tira essas condições dele. Sem esta linha a
+       * condição simplesmente SOME da lista enquanto a mesa olha — e sumir sem
+       * explicação parece defeito, não regra.
+       */
+      notaDeCondicoesBarradas(ficha)
+    ]),
       quantasCondicoes
         ? el('span', { class: 'ficha__secaoConta', texto: String(quantasCondicoes) })
         : null));
@@ -1535,6 +1732,17 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
             texto
               ? el('p', { class: 'texto-sm' }, textoAnotado(texto))
               : el('p', { class: 'texto-sm texto-fraco', texto: 'Texto não encontrado no catálogo.' }),
+            /*
+             * A ESCOLHA QUE A CARACTERÍSTICA PEDE, logo abaixo do texto dela.
+             *
+             * "Padrões Estranhos: escolha um número de 1 a 12" (p.48). O
+             * número não tinha onde morar: ficava na cabeça de quem estava na
+             * mesa, que é onde as coisas se perdem entre uma sessão e outra.
+             * Fica aqui, colado na regra que o explica, e não numa seção nova.
+             */
+            escolhaDaCaracteristica(c.nome, ficha),
+            // Marca da Presa e Nêmesis custam Esperança e guardam um alvo.
+            botaoDeHabilidade(c.nome, ficha),
             c.origem ? el('span', { class: 'selo', texto: c.origem }) : null
           ]);
         }))));
@@ -1704,6 +1912,64 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * de etapas do Mestre usa. Os 44px de alvo são do BOTÃO; o círculo desenhado
    * é menor, para acompanhar a altura das pílulas (E39).
    */
+  /**
+   * O seletor de uma escolha de característica — hoje o número do Mago.
+   *
+   * Doze botões numa linha que quebra, e não um campo de digitar: o valor é de
+   * 1 a 12, a escolha é rara, e um teclado numérico aberto no meio da mesa
+   * para digitar "7" é mais gesto do que a regra pede.
+   */
+  function escolhaDaCaracteristica(nome, ficha) {
+    const def = catalogo.escolhaDaCaracteristica(nome);
+    if (!def || def.tipo !== 'numero') return null;
+
+    const atual = Number((ficha.escolhasDeClasse || {})[def.chave]);
+    const numeros = [];
+    for (let n = def.minimo; n <= def.maximo; n++) numeros.push(n);
+
+    return el('div', { class: 'pilha ficha__escolha' }, [
+      el('p', { class: 'texto-xs texto-fraco', texto:
+        atual ? `${def.rotulo}: ${atual}. ${def.ajuda}` : `${def.rotulo}: ainda não escolhido.` }),
+      el('div', { class: 'linha ficha__escolhaNumeros' }, numeros.map((n) => el('button', {
+        type: 'button',
+        class: `btn ${atual === n ? 'btn--principal' : 'btn--fantasma'} btn--pequeno`,
+        'aria-pressed': atual === n ? 'true' : 'false',
+        onClick: () => enviar([{ tipo: 'escolhaDeClasse', chave: def.chave, valor: n }])
+      }, String(n)))),
+      def.trocaEm === 'descanso-longo'
+        ? el('p', { class: 'texto-xs texto-fraco', texto:
+          'Pelo livro, o número muda num descanso longo — a troca aqui é livre, quem marca a hora é a mesa.' })
+        : null
+    ].filter(Boolean));
+  }
+
+  /**
+   * "Determinado: não pode ficar Vulnerável nem Restrito."
+   *
+   * O servidor manda um mapa { idDaCondicao: nomeDoContador }; aqui ele vira
+   * uma frase. Agrupa por contador porque a habilidade é uma só e as condições
+   * barradas são duas — duas linhas dizendo "Dado de Determinação" seria a
+   * mesma informação repetida.
+   */
+  function notaDeCondicoesBarradas(ficha) {
+    const barradas = ficha.condicoesImpedidas || {};
+    const ids = Object.keys(barradas);
+    if (!ids.length) return null;
+
+    const porHabilidade = new Map();
+    ids.forEach((id) => {
+      const def = catalogo.condicaoPorId(id);
+      const nome = def ? def.nome : id;
+      const chave = barradas[id];
+      if (!porHabilidade.has(chave)) porHabilidade.set(chave, []);
+      porHabilidade.get(chave).push(nome);
+    });
+
+    return el('div', { class: 'pilha' }, [...porHabilidade.entries()].map(([habilidade, nomes]) =>
+      el('p', { class: 'texto-xs texto-fraco', texto:
+        `Enquanto ${habilidade} estiver em jogo, não dá para ficar ${nomes.join(' nem ')}.` })));
+  }
+
   function blocoCondicoes(ficha) {
     const lista = ficha.condicoes || [];
     const mais = el('button', {
@@ -1768,7 +2034,8 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const def = catalogo.tracoPorId ? catalogo.tracoPorId(t) : null;
     const nome = catalogo.nomeDoTraco(t);
     const v = ficha.tracos ? ficha.tracos[t] : null;
-    const texto = valorDeTraco(v);
+    const extra = (v === null || v === undefined) ? 0 : bonusDaFormaNoTraco(ficha, t);
+    const texto = valorDeTraco(v === null || v === undefined ? v : v + extra);
     const verbos = (def && def.verbos) ? def.verbos : [];
     /*
      * O TERMO DA JAMBÔ MORA AQUI AGORA.
@@ -1786,6 +2053,17 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           el('strong', { class: 'traco__resumoValor', texto }),
           el('span', { class: 'texto-sm texto-fraco', texto: 'em toda jogada de ' + nome })
         ]),
+        /*
+         * De onde veio o número somado. Sem esta linha o ladrilho mostraria um
+         * valor que não bate com nada da ficha, e a mesa iria conferir no
+         * papel — o oposto do que a ficha existe para fazer.
+         */
+        extra
+          ? el('p', { class: 'texto-sm ficha__nota', texto:
+            `${valorDeTraco(v)} de ${nome} do personagem, ${valorDeTraco(extra)} da Forma de Fera` +
+            `${(ficha.formaDeFera && ficha.formaDeFera.evolucaoTraco === t) ? ' (com a Evolução)' : ''}` +
+            '. O bônus da forma some ao sair dela.' })
+          : null,
         jambo ? el('p', { class: 'texto-xs texto-fraco', texto: `No livro da Jambô: ${jambo}.` }) : null,
         verbos.length ? el('p', { class: 'texto-sm' }, [
           el('span', { class: 'texto-fraco', texto: 'Exemplos do livro: ' }),
@@ -2050,6 +2328,21 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       textoAnotado('Trazer uma carta do cofre para a mão custa o custo de recordar em Estresse. ' +
         'Durante um descanso, a troca é livre.')));
 
+    /*
+     * A trava da Forma de Fera, DITA ONDE ELA MORDE.
+     *
+     * A faixa de estado no topo da ficha já avisa, mas quem vem para esta aba
+     * vem escolher um feitiço — e é aqui, com a carta na frente, que a trava
+     * precisa aparecer. As cartas continuam à vista e mexíveis de propósito:
+     * guardar e recordar não é conjurar, e a duração do que já estava no ar
+     * continua correndo.
+     */
+    if (ficha.formaDeFera) {
+      pai.append(el('p', { class: 'ficha__nota' }, textoAnotado(
+        `Em Forma de Fera (${ficha.formaDeFera.nome}): não dá para lançar feitiços destas ` +
+        'cartas. Os que já estavam no ar continuam pela duração normal.')));
+    }
+
     pai.append(secao(`Mão — ${naMao.length} de ${catalogo.maxCartasAtivas}`,
       naMao.length
         ? el('div', { class: 'ficha__cartas' }, naMao.map((c) => cartaoDeCarta(c, naMao, 'cofre')))
@@ -2076,11 +2369,12 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       ]),
       el('p', { class: 'texto-sm ficha__cartaTexto' }, textoAnotado(c.texto || '')),
       /*
-       * A carta de subclasse aponta para a SUBCLASSE, não para si mesma: o
-       * Dado de Matador é do Guerreiro Chamado do Matador, e vive na carta de
-       * fundação dele. `c.subclasse` é o nome que `cartasDeSubclasse` carrega.
+       * Os marcadores da subclasse, cada um na carta certa — ver
+       * `marcadoresDeSubclasse`. O contador aponta para a SUBCLASSE, não para
+       * a carta; sem escolher, os dois marcadores do Guerreiro Chamada do
+       * Matador cairiam na mesma e a outra carta ficaria vazia.
        */
-      marcadorDaCarta(c.subclasse, p.ficha || {})
+      ...marcadoresDeSubclasse(c, lista, p.ficha || {})
     ]);
   }
 
@@ -2166,11 +2460,44 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    */
   function marcadorDaCarta(refId, ficha) {
     if (!refId) return null;
-    const alvo = dados.chave(refId);
+    const alvos = catalogo.chavesDoRef(refId, ficha);
     const def = catalogo.contadoresDaFicha(ficha)
-      .find((x) => dados.chave(x.refId) === alvo);
-    if (!def) return null;
+      .find((x) => alvos.has(dados.chave(x.refId)));
+    return def ? desenharMarcadorDaCarta(def, ficha) : null;
+  }
 
+  /**
+   * OS MARCADORES DE UMA CARTA DE SUBCLASSE — no plural, e cada um na carta
+   * certa.
+   *
+   * Uma subclasse pode ter mais de um marcador: o Guerreiro Chamada do Matador
+   * tem os Dados de Matador (fundação) e o "uma vez por descanso longo" do
+   * Especialista em Armas (especialização). Todos apontam para o mesmo id de
+   * subclasse — então, sem escolher, os dois cairiam na mesma carta e a outra
+   * ficaria sem nada.
+   *
+   * A regra é simples: quem NOMEIA uma característica mora na carta que traz
+   * essa característica; quem não nomeia (o marcador da subclasse inteira) fica
+   * na primeira carta dela.
+   */
+  function marcadoresDeSubclasse(c, lista, ficha) {
+    const alvos = catalogo.chavesDoRef(c.subclasse, ficha);
+    const daSubclasse = catalogo.contadoresDaFicha(ficha)
+      .filter((x) => alvos.has(dados.chave(x.refId)));
+    if (!daSubclasse.length) return [];
+
+    const ehPrimeira = lista.find((x) =>
+      x.subclasse === c.subclasse && x.origem === c.origem) === c;
+    const minhas = (c.caracteristicas || []).map(dados.chave);
+
+    return daSubclasse
+      .filter((x) => (x.exigeCaracteristica
+        ? minhas.indexOf(dados.chave(x.exigeCaracteristica)) !== -1
+        : ehPrimeira))
+      .map((x) => desenharMarcadorDaCarta(x, ficha));
+  }
+
+  function desenharMarcadorDaCarta(def, ficha) {
     const atual = ((ficha.contadores || {})[def.chave] || {}).valor || 0;
     return el('div', { class: 'ficha__cartaMarcador' }, [
       el('span', { class: 'ficha__cartaMarcadorNome' },
@@ -3186,6 +3513,32 @@ export async function carregarCatalogo() {
     });
   });
 
+  /*
+   * AS ESCOLHAS que uma característica de classe exige — hoje só o número de
+   * 1 a 12 do Mago (Padrões Estranhos, p.48). Indexadas pelo nome da
+   * característica, que é o que a ficha guarda.
+   */
+  const escolhasDeCaracteristica = new Map();
+  (classes.classes || []).forEach((c) =>
+    (c.caracteristicasDeClasse || []).forEach((f) => {
+      if (f.escolha) escolhasDeCaracteristica.set(dados.chave(f.nome), f.escolha);
+    }));
+
+  /*
+   * O QUE CADA HABILIDADE CUSTA — as nove de Esperança, a Marca da Presa e o
+   * Nêmesis. Varre classe, Esperança e as três cartas de cada subclasse: o
+   * Nêmesis é uma maestria.
+   */
+  const usosComCusto = new Map();
+  (classes.classes || []).forEach((c) => {
+    const anota = (f) => { if (f && f.uso) usosComCusto.set(dados.chave(f.nome), f.uso); };
+    anota(c.caracteristicaEsperanca);
+    (c.caracteristicasDeClasse || []).forEach(anota);
+    (c.subclasses || []).forEach((sub) =>
+      Object.keys(sub.cartas || {}).forEach((qual) =>
+        ((sub.cartas[qual] || {}).caracteristicas || []).forEach(anota)));
+  });
+
   const indexar = (lista, campo) => {
     const m = new Map();
     lista.forEach((x) => m.set(dados.chave(x[campo || 'id']), x));
@@ -3232,7 +3585,23 @@ export async function carregarCatalogo() {
 
     if (max.tipo === 'traco') {
       const alvo = dados.chave(max.traco);
-      const chaveTraco = TRACOS_ORDEM.find((x) => dados.chave(x) === alvo) || alvo;
+      /*
+       * ⚠ "CONJURAÇÃO" NÃO É UM DOS SEIS TRAÇOS.
+       *
+       * Ela é o APELIDO de um deles, apontado pela subclasse — e sete
+       * contadores dizem "igual ao seu traço de Conjuração" (seis cartas de
+       * domínio e os Dados de Oração do Serafim). A tela procurava um traço
+       * chamado "conjuracao", não achava, e mostrava **máx 0**: o botão de +
+       * ficava travado em zero numa carta que o servidor aceitaria encher.
+       *
+       * Quem resolve o apelido é o servidor, e ele já manda a resposta em
+       * `ficha.tracoDeConjuracao` (48_Criacao.gs). Ler dali, em vez de
+       * repetir a regra aqui, é o que impede a segunda cópia de envelhecer —
+       * foi assim que a Proficiência ficou errada por três partes (E4).
+       */
+      const nome = (alvo === dados.chave('Conjuração') && ficha.tracoDeConjuracao)
+        ? ficha.tracoDeConjuracao : max.traco;
+      const chaveTraco = TRACOS_ORDEM.find((x) => dados.chave(x) === dados.chave(nome)) || dados.chave(nome);
       const v = Number((ficha.tracos || {})[chaveTraco]);
       // Regra do livro p.17: traço negativo conta como 0.
       const fichas = isFinite(v) ? Math.max(0, v) : 0;
@@ -3274,9 +3643,88 @@ export async function carregarCatalogo() {
     return dado;
   }
 
+  /**
+   * DE NOME PARA ID — O CASAMENTO QUE FALTAVA.
+   *
+   * O catálogo de contadores aponta para o ID ("guerreiro-chamada-do-matador");
+   * a ficha guarda o NOME ("Chamada do Matador"). Comparados crus eles nunca
+   * casavam, e o efeito era duplo: o contador da subclasse não aparecia na
+   * dobra "Marcadores" nem na própria carta — enquanto contadores de OUTRAS
+   * fichas apareciam, porque o backend antigo os criava sem conferir de quem
+   * eram. Um lado inventava, o outro escondia.
+   */
+  function idDeClasse_(nome) {
+    if (!nome) return '';
+    const c = (classes.classes || []).find((x) =>
+      dados.chave(x.nome) === dados.chave(nome) ||
+      dados.chave(x.id) === dados.chave(nome));
+    return c ? dados.chave(c.id) : '';
+  }
+
+  /**
+   * A subclasse é procurada DENTRO da classe quando ela é conhecida: dois
+   * nomes de subclasse podem se repetir entre classes, e o id não.
+   */
+  function idDeSubclasse_(classeNome, nome) {
+    if (!nome) return '';
+    const dona = (classes.classes || []).find((x) =>
+      dados.chave(x.nome) === dados.chave(classeNome) ||
+      dados.chave(x.id) === dados.chave(classeNome));
+    const onde = dona ? [dona] : (classes.classes || []);
+    let achada = null;
+    onde.some((cl) => {
+      const s = (cl.subclasses || []).find((x) =>
+        dados.chave(x.nome) === dados.chave(nome) ||
+        dados.chave(x.id) === dados.chave(nome));
+      if (s) { achada = s; return true; }
+      return false;
+    });
+    return achada ? dados.chave(achada.id) : '';
+  }
+
+  /** Todo id que ESTA ficha carrega: cartas na mão, classe, subclasse, multiclasse. */
+  function refsDaFicha_(ficha) {
+    const refs = new Set();
+    const por = (v) => { const k = dados.chave(v); if (k) refs.add(k); };
+    // A MÃO E O COFRE, como no backend (`refsDeContadorDaFicha_`): carta
+    // guardada não está em jogo, mas as marcas que ela tinha continuam sendo
+    // estado do personagem — sumir com elas ao guardar apagaria contagem.
+    const cartasDaFicha = (ficha || {}).cartas || {};
+    ['ativas', 'cofre'].forEach((onde) => (cartasDaFicha[onde] || []).forEach((c) =>
+      por((c && typeof c === 'object') ? c.id : c)));
+    const ident = (ficha || {}).identidade || {};
+    const mc = (ficha || {}).multiclasse || {};
+    [[ident.classe, ident.subclasse], [mc.classe, mc.subclasse]].forEach((par) => {
+      const cl = par[0];
+      const sub = par[1];
+      if (cl) { por(cl); por(idDeClasse_(cl)); }
+      if (sub) { por(sub); por(idDeSubclasse_(cl, sub)); }
+    });
+    return refs;
+  }
+
+  /**
+   * As chaves pelas quais um ref pode ser reconhecido nesta ficha: ele mesmo e,
+   * se for o nome de uma classe ou subclasse que a ficha tem, o id dela.
+   */
+  function chavesDoRef_(valor, ficha) {
+    const s = new Set();
+    const por = (v) => { const k = dados.chave(v); if (k) s.add(k); };
+    const ident = (ficha || {}).identidade || {};
+    const mc = (ficha || {}).multiclasse || {};
+    por(valor);
+    por(idDeClasse_(valor));
+    if (ident.classe) por(idDeSubclasse_(ident.classe, valor));
+    if (mc.classe) por(idDeSubclasse_(mc.classe, valor));
+    return s;
+  }
+
   return {
     condicoes: cond.condicoes,
     maxCartasAtivas: 5,
+
+    /** Ver `chavesDoRef_`: o marcador da carta casa por id, não pelo nome. */
+    chavesDoRef: (valor, ficha) => chavesDoRef_(valor, ficha),
 
     acharCarta: achar(porIdCarta, porNomeCarta),
     acharArma: achar(porIdArma, porNomeArma),
@@ -3285,6 +3733,10 @@ export async function carregarCatalogo() {
     todosOsItens: () => itensDoLivro,
     condicaoPorId: (id) => cond.condicoes.find((c) => c.id === id) || null,
     textoDaCaracteristica: (nome) => textosDeCaracteristica.get(dados.chave(nome)) || '',
+    /** A escolha que esta característica pede, ou null. */
+    escolhaDaCaracteristica: (nome) => escolhasDeCaracteristica.get(dados.chave(nome)) || null,
+    /** O custo (e o alvo) que esta habilidade cobra ao ser usada, ou null. */
+    usoDaCaracteristica: (nome) => usosComCusto.get(dados.chave(nome)) || null,
     corDoDominio: (codigo) => (porCodigoDominio.get(codigo) || {}).cor || 'var(--cor-ouro)',
     nomeDoDominio: (codigo) => (porCodigoDominio.get(codigo) || {}).nome || codigo,
     /** Usado pela tela de avanço para listar as cartas que cabem no teto. */
@@ -3395,6 +3847,9 @@ export async function carregarCatalogo() {
           saida.push({
             qual: q, origem,
             subclasse: sub.nome,
+            // Os nomes das características DESTA carta — é por eles que o
+            // marcador de "uma vez por" sabe em qual das três ele mora.
+            caracteristicas: (carta.caracteristicas || []).map((f) => f.nome),
             nome: `${sub.nome} · ${ROTULO[q]}`,
             imagem: carta.imagem || '',
             texto: feitos,
@@ -3420,22 +3875,36 @@ export async function carregarCatalogo() {
      * jogo inteiro.
      */
     contadoresDaFicha: (ficha) => {
-      const refs = new Set();
-      ((ficha.cartas || {}).ativas || []).forEach((c) =>
-        refs.add(dados.chave((c && typeof c === 'object') ? c.id : c)));
-      const ident = ficha.identidade || {};
-      const mc = ficha.multiclasse || {};
       // A multiclasse entra aqui também: quem multiclassou em Bardo ganhou o
       // Rally, e sem isto o Dado de Reunião não apareceria na aba Jogo.
-      [ident.classe, ident.subclasse, mc.classe, mc.subclasse]
-        .filter(Boolean).forEach((x) => refs.add(dados.chave(x)));
+      // O nome vira id no caminho — ver `refsDaFicha_`.
+      const refs = refsDaFicha_(ficha);
 
-      return (cont.contadores || []).filter((c) => {
-        if (refs.has(dados.chave(c.refId))) return true;
-        // Contador já marcado continua aparecendo mesmo que a carta tenha ido
-        // para o cofre — senão o valor sumiria da tela sem explicação.
-        return Boolean((ficha.contadores || {})[c.chave]);
-      }).map((c) => Object.assign({}, c, {
+      /*
+       * ⚠ SÓ O QUE É DESTA FICHA — sem exceção para "já tem valor gravado".
+       *
+       * A exceção existia para o caso da carta guardada no cofre, e agora o
+       * cofre entra em `refsDaFicha_`. O que sobrava dela era mostrar lixo:
+       * fichas sujas pelo gatilho antigo exibiam o Dado de Inspiração do Bardo
+       * num Guerreiro só porque o valor estava lá. O backend apaga isso na
+       * primeira gravação; aqui some na hora.
+       */
+      /*
+       * ⚠ E TER A SUBCLASSE NÃO É TER A CARTA.
+       *
+       * O contador de uma habilidade de especialização ou maestria nomeia a
+       * característica que o dá. Um Bardo de 1º nível é Artífice das Palavras
+       * e ainda não pegou a carta de especialização — o marcador de
+       * "Eloquente" não pode aparecer na dobra dele. Mesma pergunta que o
+       * servidor faz em contadorEDaFicha_.
+       */
+      const temCaracteristica = (nome) => (ficha.caracteristicas || [])
+        .some((f) => dados.chave((f && typeof f === 'object') ? f.nome : f) === dados.chave(nome));
+
+      return (cont.contadores || []).filter((c) =>
+        refs.has(dados.chave(c.refId)) &&
+        (!c.exigeCaracteristica || temCaracteristica(c.exigeCaracteristica))
+      ).map((c) => Object.assign({}, c, {
         maximo: maximoLocal(c, ficha),
         quando: (c.zeraEm || []).map((g) => cont.gatilhos[g]).filter(Boolean)[0] || ''
       }));

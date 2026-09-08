@@ -22,7 +22,13 @@
    ],
    "caracteristicaEsperanca": {
     "nome": "Fazer uma Cena",
-    "texto": "Gaste 3 de Esperança para distrair temporariamente um alvo Próximo, aplicando uma penalidade de −2 à Dificuldade dele."
+    "texto": "Gaste 3 de Esperança para distrair temporariamente um alvo Próximo, aplicando uma penalidade de −2 à Dificuldade dele.",
+    "uso": {
+     "custo": {
+      "esperanca": 3
+     }
+    },
+    "fonteDoCusto": "As nove habilidades de Esperança custam 3 de Esperança — texto de cada classe em DH-DigitalRegras.pdf (Jambô, Prévia 5), pp. 28-51, e SRD 1.0 (09/09/2025). A errata de 09/09/2025 toca numa delas (Ladino, p.42: 'Otherwise, this bonus lasts until your next rest'), e a correção já está no texto — o custo não muda."
    },
    "caracteristicasDeClasse": [
     {
@@ -204,7 +210,9 @@
    ],
    "caracteristicaEsperanca": {
     "nome": "Evolução",
-    "texto": "Gaste 3 de Esperança para usar Forma de Fera sem marcar Estresse. Ao fazer isso, aumente um traço em +1 até sair da Forma de Fera."
+    "texto": "Gaste 3 de Esperança para usar Forma de Fera sem marcar Estresse. Ao fazer isso, aumente um traço em +1 até sair da Forma de Fera.",
+    "custoAplicadoEm": "Forma de Fera",
+    "observacaoDoCusto": "A Evolução NÃO ganha botão próprio: ela é um jeito de ENTRAR na Forma de Fera, e quem cobra os 3 de Esperança é o ajuste de entrar (4C_Ajustes.gs). Dois caminhos para o mesmo gasto deixariam o jogador pagar duas vezes pela mesma transformação."
    },
    "caracteristicasDeClasse": [
     {
@@ -398,7 +406,13 @@
    ],
    "caracteristicaEsperanca": {
     "nome": "Magia Volátil",
-    "texto": "Gaste 3 de Esperança para rolar novamente uma quantidade qualquer de dados de dano em um ataque que causa dano mágico."
+    "texto": "Gaste 3 de Esperança para rolar novamente uma quantidade qualquer de dados de dano em um ataque que causa dano mágico.",
+    "uso": {
+     "custo": {
+      "esperanca": 3
+     }
+    },
+    "fonteDoCusto": "As nove habilidades de Esperança custam 3 de Esperança — texto de cada classe em DH-DigitalRegras.pdf (Jambô, Prévia 5), pp. 28-51, e SRD 1.0 (09/09/2025). A errata de 09/09/2025 toca numa delas (Ladino, p.42: 'Otherwise, this bonus lasts until your next rest'), e a correção já está no texto — o custo não muda."
    },
    "caracteristicasDeClasse": [
     {
@@ -411,7 +425,27 @@
     },
     {
      "nome": "Canalizar Poder Bruto",
-     "texto": "Uma vez por descanso longo, você pode colocar uma carta de domínio de sua mão no cofre e escolher entre:\n• Receber Esperança igual ao nível da carta.\n• Aprimorar um feitiço que cause dano, recebendo um bônus na jogada de dano igual ao dobro do nível da carta."
+     "texto": "Uma vez por descanso longo, você pode colocar uma carta de domínio de sua mão no cofre e escolher entre:\n• Receber Esperança igual ao nível da carta.\n• Aprimorar um feitiço que cause dano, recebendo um bônus na jogada de dano igual ao dobro do nível da carta.",
+     "uso": {
+      "custo": {},
+      "cartaDaMao": {
+       "para": "cofre"
+      },
+      "opcoes": [
+       {
+        "id": "esperanca",
+        "rotulo": "Receber Esperança igual ao nível da carta",
+        "ganhaEsperancaPorNivel": 1
+       },
+       {
+        "id": "dano",
+        "rotulo": "Bônus de dano igual ao dobro do nível da carta",
+        "lembrete": "O bônus é da jogada de dano, que é da mesa — o app não rola."
+       }
+      ],
+      "marcaUso": "uso:feiticeiro:canalizar-poder-bruto"
+     },
+     "fonteDoCusto": "DH-DigitalRegras.pdf p.42, FEITICEIRO — 'Canalizar Poder Bruto: uma vez por descanso longo, você pode colocar uma carta de domínio de sua mão no cofre e escolher entre: • Receber Esperança igual ao nível da carta. • Aprimorar um feitiço que cause dano, recebendo um bônus na jogada de dano igual ao dobro do nível da carta.' SRD 1.0 (09/09/2025), Sorcerer 'Channel Raw Power'. A errata de 09/09/2025 não toca nesta habilidade."
     }
    ],
    "perguntasDeFundo": [
@@ -580,7 +614,13 @@
    ],
    "caracteristicaEsperanca": {
     "nome": "Linha de Frente",
-    "texto": "Gaste 3 de Esperança para recuperar 2 Pontos de Armadura."
+    "texto": "Gaste 3 de Esperança para recuperar 2 Pontos de Armadura.",
+    "uso": {
+     "custo": {
+      "esperanca": 3
+     }
+    },
+    "fonteDoCusto": "As nove habilidades de Esperança custam 3 de Esperança — texto de cada classe em DH-DigitalRegras.pdf (Jambô, Prévia 5), pp. 28-51, e SRD 1.0 (09/09/2025). A errata de 09/09/2025 toca numa delas (Ladino, p.42: 'Otherwise, this bonus lasts until your next rest'), e a correção já está no texto — o custo não muda."
    },
    "caracteristicasDeClasse": [
     {
@@ -747,7 +787,17 @@
        "caracteristicas": [
         {
          "nome": "Nêmesis",
-         "texto": "Gaste 2 Esperanças para Priorizar um adversário até seu próximo descanso. Quando fizer um ataque contra seu adversário Priorizado, você pode trocar os resultados dos seus Dados de Esperança e Medo. Você só pode Priorizar um adversário por vez."
+         "texto": "Gaste 2 Esperanças para Priorizar um adversário até seu próximo descanso. Quando fizer um ataque contra seu adversário Priorizado, você pode trocar os resultados dos seus Dados de Esperança e Medo. Você só pode Priorizar um adversário por vez.",
+         "uso": {
+          "custo": {
+           "esperanca": 2
+          },
+          "alvo": {
+           "rotulo": "Adversário Priorizado",
+           "verbo": "Priorizar"
+          }
+         },
+         "fonteDoCusto": "Carta oficial em PNG da maestria de Vingança: 'Gaste 2 Esperanças para Priorizar um adversário até seu próximo descanso. (…) Você só pode Priorizar um adversário por vez.' A errata de 09/09/2025 não toca nesta carta."
         }
        ],
        "texto": "Nêmesis: Gaste 2 Esperanças para Priorizar um adversário até seu próximo descanso. Quando fizer um ataque contra seu adversário Priorizado, você pode trocar os resultados dos seus Dados de Esperança e Medo. Você só pode Priorizar um adversário por vez.",
@@ -786,7 +836,13 @@
    ],
    "caracteristicaEsperanca": {
     "nome": "Sem Piedade",
-    "texto": "Gaste 3 de Esperança para receber um bônus de +1 em jogadas de ataque até seu próximo descanso."
+    "texto": "Gaste 3 de Esperança para receber um bônus de +1 em jogadas de ataque até seu próximo descanso.",
+    "uso": {
+     "custo": {
+      "esperanca": 3
+     }
+    },
+    "fonteDoCusto": "As nove habilidades de Esperança custam 3 de Esperança — texto de cada classe em DH-DigitalRegras.pdf (Jambô, Prévia 5), pp. 28-51, e SRD 1.0 (09/09/2025). A errata de 09/09/2025 toca numa delas (Ladino, p.42: 'Otherwise, this bonus lasts until your next rest'), e a correção já está no texto — o custo não muda."
    },
    "caracteristicasDeClasse": [
     {
@@ -795,7 +851,9 @@
     },
     {
      "nome": "Treinamento de Combate",
-     "texto": "Você ignora o tipo de empunhadura de armas equipadas. Ao causar dano físico, você recebe um bônus igual ao seu nível na jogada de dano."
+     "texto": "Você ignora o tipo de empunhadura de armas equipadas. Ao causar dano físico, você recebe um bônus igual ao seu nível na jogada de dano.",
+     "efeito": "ignora-empunhadura",
+     "fonteDoEfeito": "DH-DigitalRegras.pdf (Jambô, Prévia 5) p.46, GUERREIRO — 'Treinamento de Combate: Você ignora o tipo de empunhadura de armas equipadas.' SRD 1.0 (09/09/2025), Fighter: 'Combat Training: You ignore Burden when equipping weapons.' A errata de 09/09/2025 não toca nesta habilidade. Empunhadura (Burden) é o campo 'maos' das armas: sem esta marca, a criação recusa o Guerreiro que leva arma de duas mãos e uma secundária — que é justamente o que a classe permite."
     }
    ],
    "perguntasDeFundo": [
@@ -972,12 +1030,19 @@
    ],
    "caracteristicaEsperanca": {
     "nome": "Esquiva de Ladino",
-    "texto": "Gaste 3 de Esperança para receber um bônus de +2 na Evasão até o próximo ataque que acertar você. Caso contrário, esse bônus dura até seu próximo descanso."
+    "texto": "Gaste 3 de Esperança para receber um bônus de +2 na Evasão até o próximo ataque que acertar você. Caso contrário, esse bônus dura até seu próximo descanso.",
+    "uso": {
+     "custo": {
+      "esperanca": 3
+     }
+    },
+    "fonteDoCusto": "As nove habilidades de Esperança custam 3 de Esperança — texto de cada classe em DH-DigitalRegras.pdf (Jambô, Prévia 5), pp. 28-51, e SRD 1.0 (09/09/2025). A errata de 09/09/2025 toca numa delas (Ladino, p.42: 'Otherwise, this bonus lasts until your next rest'), e a correção já está no texto — o custo não muda."
    },
    "caracteristicasDeClasse": [
     {
      "nome": "Camuflado",
-     "texto": "Sempre que estiver Oculto, em vez disso você fica Camuflado. Além dos benefícios da condição Oculto, enquanto estiver Camuflado, quando um adversário se movimentar para onde normalmente veria você, ele não pode vê-lo se você estiver parado. Ao entrar ou se movimentar dentro da linha de visão de um adversário, ou ao atacar, você deixa de estar Camuflado."
+     "texto": "Sempre que estiver Oculto, em vez disso você fica Camuflado. Além dos benefícios da condição Oculto, enquanto estiver Camuflado, quando um adversário se movimentar para onde normalmente veria você, ele não pode vê-lo se você estiver parado. Depois de fazer um ataque ou terminar um movimento dentro da linha de visão de um adversário, você deixa de estar Camuflado.",
+     "errata": "Errata oficial de 09/09/2025, p.42: \"'Cloaked' Class Feature's last sentence now reads: 'After you make an attack or end a move within line of sight of an adversary, you are no longer Cloaked.'\" O texto impresso do livro pt-BR ('ao entrar ou se movimentar dentro da linha de visão') é mais rígido: pela errata dá para atravessar a linha de visão sem perder a condição, desde que o movimento não TERMINE ali. A mesma frase já estava corrigida em data/condicoes.json — este arquivo tinha ficado para trás, e o app dizia a regra de dois jeitos."
     },
     {
      "nome": "Ataque Furtivo",
@@ -1166,12 +1231,28 @@
    ],
    "caracteristicaEsperanca": {
     "nome": "Não Dessa Vez",
-    "texto": "Gaste 3 de Esperança para forçar um adversário Distante ou mais próximo a refazer uma jogada de ataque ou uma jogada de dano."
+    "texto": "Gaste 3 de Esperança para forçar um adversário Distante ou mais próximo a refazer uma jogada de ataque ou uma jogada de dano.",
+    "uso": {
+     "custo": {
+      "esperanca": 3
+     }
+    },
+    "fonteDoCusto": "As nove habilidades de Esperança custam 3 de Esperança — texto de cada classe em DH-DigitalRegras.pdf (Jambô, Prévia 5), pp. 28-51, e SRD 1.0 (09/09/2025). A errata de 09/09/2025 toca numa delas (Ladino, p.42: 'Otherwise, this bonus lasts until your next rest'), e a correção já está no texto — o custo não muda."
    },
    "caracteristicasDeClasse": [
     {
      "nome": "Padrões Estranhos",
-     "texto": "Escolha um número de 1 a 12. Ao rolar esse número em um Dado de Dualidade, receba 1 de Esperança ou limpe 1 Estresse. Você pode mudar o número escolhido durante um descanso longo."
+     "texto": "Escolha um número de 1 a 12. Ao rolar esse número em um Dado de Dualidade, receba 1 de Esperança ou limpe 1 Estresse. Você pode mudar o número escolhido durante um descanso longo.",
+     "escolha": {
+      "chave": "padroesEstranhos",
+      "tipo": "numero",
+      "minimo": 1,
+      "maximo": 12,
+      "rotulo": "Seu número",
+      "ajuda": "Ao tirar esse número num Dado de Dualidade: 1 de Esperança ou 1 Estresse limpo.",
+      "trocaEm": "descanso-longo",
+      "fonte": "DH-DigitalRegras.pdf (Jambô, Prévia 5) p.48, MAGO — 'Padrões Estranhos: escolha um número de 1 a 12. Ao rolar esse número em um Dado de Dualidade, receba 1 de Esperança ou limpe 1 Estresse. Você pode mudar o número escolhido durante um descanso longo.' SRD 1.0 (09/09/2025), Wizard 'Prestidigitation' e 'Strange Patterns' — mesmo texto. A errata de 09/09/2025 não toca nesta habilidade. É uma ESCOLHA que a ficha precisa guardar: sem ela o número do Mago vive na memória da mesa."
+     }
     },
     {
      "nome": "Prestidigitação",
@@ -1395,12 +1476,28 @@
     "texto": "Quando acertar um ataque com uma arma, você pode gastar 3 de Esperança para usar a mesma jogada contra dois adversários adicionais no alcance do ataque.",
     "errosDeDigitacaoDoOriginal": [
      "O livro imprime \"Sergurem Eles\", com um R a mais."
-    ]
+    ],
+    "uso": {
+     "custo": {
+      "esperanca": 3
+     }
+    },
+    "fonteDoCusto": "As nove habilidades de Esperança custam 3 de Esperança — texto de cada classe em DH-DigitalRegras.pdf (Jambô, Prévia 5), pp. 28-51, e SRD 1.0 (09/09/2025). A errata de 09/09/2025 toca numa delas (Ladino, p.42: 'Otherwise, this bonus lasts until your next rest'), e a correção já está no texto — o custo não muda."
    },
    "caracteristicasDeClasse": [
     {
      "nome": "Marca da Presa",
-     "texto": "Gaste 1 de Esperança e ataque um alvo. Se acertar, cause o dano normal e Marque o alvo do ataque temporariamente. Até o efeito desta habilidade acabar ou até você Marcar outra criatura, receba os seguintes benefícios contra o alvo Marcado:\n• Você sabe precisamente em que direção ele está.\n• Quando causar dano a esse alvo, ele deve marcar 1 Estresse.\n• Quando errar um ataque contra ele, você pode encerrar sua Marca da Presa para rolar seus Dados de Dualidade novamente."
+     "texto": "Gaste 1 de Esperança e ataque um alvo. Se acertar, cause o dano normal e Marque o alvo do ataque temporariamente. Até o efeito desta habilidade acabar ou até você Marcar outra criatura, receba os seguintes benefícios contra o alvo Marcado:\n• Você sabe precisamente em que direção ele está.\n• Quando causar dano a esse alvo, ele deve marcar 1 Estresse.\n• Quando errar um ataque contra ele, você pode encerrar sua Marca da Presa para rolar seus Dados de Dualidade novamente.",
+     "uso": {
+      "custo": {
+       "esperanca": 1
+      },
+      "alvo": {
+       "rotulo": "Alvo Marcado",
+       "verbo": "Marcar"
+      }
+     },
+     "fonteDoCusto": "DH-DigitalRegras.pdf p.41, CAÇADOR — 'Marca da Presa: gaste 1 de Esperança e ataque um alvo. (…) Até o efeito desta habilidade acabar ou até você Marcar OUTRA criatura'. SRD 1.0 (09/09/2025), Ranger 'Ranger's Focus'. Um alvo por vez — por isso a ficha guarda um nome só."
     }
    ],
    "perguntasDeFundo": [
@@ -1597,7 +1694,13 @@
    ],
    "caracteristicaEsperanca": {
     "nome": "Alicerce da Vida",
-    "texto": "Gaste 3 de Esperança para recuperar 1 Ponto de Vida de um aliado Próximo."
+    "texto": "Gaste 3 de Esperança para recuperar 1 Ponto de Vida de um aliado Próximo.",
+    "uso": {
+     "custo": {
+      "esperanca": 3
+     }
+    },
+    "fonteDoCusto": "As nove habilidades de Esperança custam 3 de Esperança — texto de cada classe em DH-DigitalRegras.pdf (Jambô, Prévia 5), pp. 28-51, e SRD 1.0 (09/09/2025). A errata de 09/09/2025 toca numa delas (Ladino, p.42: 'Otherwise, this bonus lasts until your next rest'), e a correção já está no texto — o custo não muda."
    },
    "caracteristicasDeClasse": [
     {

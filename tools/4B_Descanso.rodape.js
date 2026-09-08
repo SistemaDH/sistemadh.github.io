@@ -146,6 +146,9 @@ function simularDescanso_(ficha, tipo, escolhas) {
   // A cura que este descanso manda para OUTRAS fichas.
   const paraAliados = [];
 
+  /* Quantos movimentos vieram do OUTRO tipo de descanso — ver o teto abaixo. */
+  let emprestadosUsados = 0;
+
   for (let i = 0; i < lista.length && i < DESCANSO.movimentosPorDescanso; i++) {
     const escolha = lista[i] || {};
     const id = normalizarMovimento_(escolha.movimento);
@@ -156,12 +159,39 @@ function simularDescanso_(ficha, tipo, escolhas) {
       continue;
     }
     let permitido = false;
+    let emprestado = false;
     for (let k = 0; k < disponiveis.length; k++) {
-      if (disponiveis[k].id === def.id) { permitido = true; break; }
+      if (disponiveis[k].id === def.id) {
+        permitido = true;
+        emprestado = !!disponiveis[k].deOutroDescanso;
+        break;
+      }
     }
     if (!permitido) {
       erros.push('"' + def.nome + '" não é um movimento de ' + t.nome.toLowerCase() + '.');
       continue;
+    }
+
+    /*
+     * ⚠ "EFICIENTE" TROCA **UM** MOVIMENTO, NÃO OS DOIS.
+     *
+     * O SRD em inglês é singular e não tem errata nenhuma sobre isto:
+     * "When you take a short rest, you can choose A long rest move instead of
+     * A short rest move." O livro pt-BR (p.54) diz o mesmo — "um movimento de
+     * descanso longo no lugar de um de curto".
+     *
+     * Sem esta conta a lista misturada deixava a Clank escolher DOIS
+     * movimentos de descanso longo num descanso curto: zerar o Estresse e
+     * tratar todas as feridas de uma vez, com um descanso curto. É a diferença
+     * entre uma vantagem de ancestralidade e um descanso longo de graça.
+     */
+    if (emprestado) {
+      emprestadosUsados++;
+      if (emprestadosUsados > 1) {
+        erros.push('"Eficiente" troca UM movimento (livro p.54): "' + def.nome +
+          '" seria o segundo movimento de descanso longo neste descanso curto.');
+        continue;
+      }
     }
 
     const emAliado = def.podeMirarAliado && chaveTexto_(escolha.alvo) === 'aliado';
@@ -307,6 +337,22 @@ function simularDescanso_(ficha, tipo, escolhas) {
   if (t.id === 'curto' && seguidosAntes >= DESCANSO.maxDescansosCurtosSeguidos) {
     avisos.push('O grupo já fez ' + seguidosAntes + ' descansos curtos seguidos. Pelo livro (p. 105), ' +
       'o próximo precisa ser longo — mas a contagem é do grupo, então quem decide é a mesa.');
+  }
+
+  /*
+   * O DESCANSO LONGO ACORDA QUEM ESTÁ INCONSCIENTE (p.106).
+   *
+   * "Personagem inconsciente por Evitar a Morte volta a si ao recuperar 1
+   * Ponto de Vida ou mais, OU quando o grupo fizer um descanso longo." A
+   * primeira porta é a cura, e mora em `ajustarRecurso_`; esta é a segunda.
+   *
+   * ⚠ SÓ O LONGO. O curto não acorda ninguém — e é a diferença que faz a mesa
+   * escolher parar de verdade quando alguém cai.
+   */
+  if (t.id === 'longo' && copia.inconsciente) {
+    copia.inconsciente = false;
+    avisos.push(((copia.identidade || {}).nome || 'O personagem') +
+      ' volta a si: o descanso longo tira a inconsciência (p.106).');
   }
   copia.descanso.curtosSeguidos = seguidosDepois;
   copia.descanso.ultimo = {
