@@ -23,6 +23,11 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Restaurar E2E bom e aplicar espera explícita da arte
+        run: |
+          git show e29b414ee3b16ebd8dc6a9d0a5200ccf260505d6:tools/testes-e2e.mjs > tools/testes-e2e.mjs
+          python3 tools/lote8-corrigir-e2e-arte.py
+
       - name: Materializar correções do catálogo e testes
         run: |
           python3 tools/auditoria-equipamento.py
@@ -50,7 +55,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/equipamentos.json data/equipamentos-correcoes.json backend/44_Equipamento.gs tools/testes-backend.mjs
+          git add data/equipamentos.json data/equipamentos-correcoes.json backend/44_Equipamento.gs tools/testes-backend.mjs tools/testes-e2e.mjs
           if git diff --cached --quiet; then
             echo 'Nenhuma materialização pendente.'
           else
