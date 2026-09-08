@@ -1,0 +1,69 @@
+name: Lote 8 - Livro de Grynn
+
+on:
+  push:
+    branches:
+      - 'ediçãoclaude'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validar:
+    if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[run-grynn]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 'ediçãoclaude'
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Guardar HEAD testado
+        run: echo "BASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Aplicar errata e regenerar domínio
+        run: |
+          python3 tools/lote8-corrigir-grynn.py
+          node tools/gerar-41-dominios.mjs
+          python3 tools/conferir-cartas-lote8.py
+          node tools/conferir-gerados.mjs
+
+      - name: Instalar dependências E2E
+        run: |
+          npm install --ignore-scripts
+          npx playwright install --with-deps chromium
+
+      - name: Testes backend
+        run: node tools/testes-backend.mjs
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir CSS
+        run: node tools/conferir-css.mjs
+
+      - name: Recusar push sobre branch que avançou
+        run: |
+          git fetch origin 'ediçãoclaude'
+          ATUAL=$(git rev-parse origin/ediçãoclaude)
+          if [ "$ATUAL" != "$BASE_SHA" ]; then
+            echo "Branch avançou durante os testes: $BASE_SHA -> $ATUAL"
+            exit 1
+          fi
+
+      - name: Commitar somente fonte validada
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/cartas-dominio.json backend/41_Dominios.gs
+          if git diff --cached --quiet; then
+            echo 'Nenhuma materialização pendente.'
+          else
+            git commit -m 'fix: aplicar errata da Muralha de Chamas [lote8-generated]'
+            git push origin HEAD:'ediçãoclaude'
+          fi
