@@ -1,17 +1,16 @@
-name: Lote 8 - materializar equipamento
+name: Lote 8 - fechar executor temporario
 
 on:
   push:
     branches:
       - 'ediçãoclaude'
-  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  equipamento:
-    if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message || '', '[run-lote8]') }}
+  fechar:
+    if: ${{ contains(github.event.head_commit.message || '', '[cleanup-lote8]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,46 +18,50 @@ jobs:
           ref: 'ediçãoclaude'
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Restaurar E2E bom e aplicar espera explícita da arte
+      - name: Registrar checkpoint validado
         run: |
-          git show e29b414ee3b16ebd8dc6a9d0a5200ccf260505d6:tools/testes-e2e.mjs > tools/testes-e2e.mjs
-          python3 tools/lote8-corrigir-e2e-arte.py
+          cat >> docs/HANDOFF.md <<'EOF'
 
-      - name: Materializar correções do catálogo e testes
+### Checkpoint validado — Equipamentos Core, partes 1 e 2
+
+A terceira execução do executor temporário concluiu com sucesso: GitHub Actions run `34272839636`.
+
+Resultado real do runner Ubuntu 24.04:
+
+```text
+correções mecânicas/materialização: OK
+Cadeiras de Rodas de Combate adicionadas: 12
+backend/44_Equipamento.gs: 204 armas, 34 armaduras, 120 itens, 64 de campanha
+conferir-equipamento-lote8: OK
+conferir-gerados: 14 geradores, todos consistentes
+backend: 454 passaram, 0 falharam
+E2E: 98 passos ok, 0 falharam
+CSS: nada a limpar nem a escrever
+```
+
+Commit automático da materialização: `0630ad5` (`chore: materializar equipamento do Lote 8 [lote8-generated]`). Ele gravou `data/equipamentos.json`, `data/equipamentos-correcoes.json`, `backend/44_Equipamento.gs`, `tools/testes-backend.mjs` e a correção de sincronização do `tools/testes-e2e.mjs`.
+
+A falha E2E da execução anterior era uma corrida do próprio teste: o modal surgia antes de o PNG assíncrono terminar de carregar e o teste lia `naturalWidth` imediatamente. O asset `assets/cartas/subclasses/BARDO/Músico Errante.png` existe e o caminho do catálogo é exato. O E2E agora espera `complete && naturalWidth > 0`; 404 ou arte ausente continuam falhando. A comparação contra `e29b414...` confirmou que o E2E final difere apenas nesse pequeno ajuste (5 linhas adicionadas / 2 removidas).
+
+Com este checkpoint, Broquel/Deflecting, Chicote/Alarmante e as 12 Cadeiras de Rodas de Combate estão materializados e validados na branch. O próximo bloco é armas de reserva/troca de armas. Ainda não houve deploy, PR ou mudança de `ENGINE_COMMIT` do Lote 8.
+EOF
+
+          cat >> docs/AUDITORIA-CORE-1.0.md <<'EOF'
+
+## Checkpoint de implementação — equipamento Core validado
+
+Em 08/09/2026, o bloco Broquel + Chicote + 12 Cadeiras de Rodas de Combate foi materializado no catálogo e no backend gerado no commit `0630ad5`. Validação real via GitHub Actions run `34272839636`: backend 454/454, E2E 98/98, 14 geradores consistentes e CSS limpo. O bloco de catálogo passa de “preparado” para **implementado e validado na branch**, ainda não implantado em produção.
+EOF
+
+      - name: Remover executor temporário e transformação de reparo
         run: |
-          python3 tools/auditoria-equipamento.py
-          python3 tools/lote8-adicionar-cadeiras.py
-          python3 tools/lote8-atualizar-testes-equipamento.py
-          node tools/gerar-44-equipamento.mjs
-          python3 tools/conferir-equipamento-lote8.py
-          node tools/conferir-gerados.mjs
+          rm -f .github/workflows/lote8-materializar-equipamento.yml
+          rm -f tools/lote8-corrigir-e2e-arte.py
 
-      - name: Instalar dependências de teste
-        run: |
-          npm install --ignore-scripts
-          npx playwright install --with-deps chromium
-
-      - name: Testes do backend
-        run: node tools/testes-backend.mjs
-
-      - name: Testes E2E
-        run: node tools/testes-e2e.mjs
-
-      - name: Conferência CSS
-        run: node tools/conferir-css.mjs
-
-      - name: Commitar somente materialização validada
+      - name: Commitar diário e limpeza
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/equipamentos.json data/equipamentos-correcoes.json backend/44_Equipamento.gs tools/testes-backend.mjs tools/testes-e2e.mjs
-          if git diff --cached --quiet; then
-            echo 'Nenhuma materialização pendente.'
-          else
-            git commit -m 'chore: materializar equipamento do Lote 8 [lote8-generated]'
-            git push origin HEAD:'ediçãoclaude'
-          fi
+          git add docs/HANDOFF.md docs/AUDITORIA-CORE-1.0.md .github/workflows/lote8-materializar-equipamento.yml tools/lote8-corrigir-e2e-arte.py
+          git commit -m 'docs: fechar checkpoint validado de equipamento do Lote 8'
+          git push origin HEAD:'ediçãoclaude'
