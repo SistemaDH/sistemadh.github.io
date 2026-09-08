@@ -216,7 +216,24 @@ Antes, os três efeitos estavam corretos em texto, mas a ficha não montava meca
 
 Primeiro run (`34279437883`) abortou antes de qualquer commit funcional por um delimitador inválido no transformador temporário. A causa foi corrigida e o run final `34279545273` passou com **466/466 backend**, **100/100 E2E**, **14 geradores consistentes** e **CSS limpo**. Commit funcional: `bf534a17ad81c6f96d3af6ea09778dc782f60847`.
 
-Próximo ponto concreto já identificado: **Esquiva de Ladino**. O texto corrigido pela errata já existe e o custo de 3 Esperanças já é cobrado, mas o +2 de Evasão ainda precisa virar estado persistente/derivado e ser encerrado no próximo ataque que acertar ou no próximo descanso.
+### Diário — Classes, parte 2: Esquiva de Ladino
+
+Fontes: livro básico PT-BR p.46 e errata oficial de 09/09/2025 p.42. A errata acrescenta que, se nenhum ataque acertar antes, o bônus termina no próximo descanso.
+
+Implementado e validado:
+
+- usar **Esquiva de Ladino** cobra 3 Esperanças e liga o estado na mesma mutação;
+- enquanto ativa, a derivação soma **+2 Evasão**;
+- não é possível pagar/empilhar a habilidade novamente enquanto o estado já está ativo;
+- a ficha mostra que a Esquiva está ativa e oferece **“Ataque acertou — encerrar Esquiva”**; o app não presume que toda perda de PV veio de um ataque;
+- qualquer descanso curto ou longo encerra o efeito automaticamente;
+- multiclasse em Ladino não recebe a Habilidade de Esperança, conforme a regra de multiclasse já adotada.
+
+Validação real: GitHub Actions run `34280954705` — **471/471 backend**, **100/100 E2E**, **14 geradores consistentes**, **CSS limpo**, com proteção de concorrência aprovada. Commit funcional: `6f720f5` (`feat: automatizar Esquiva de Ladino [lote8-generated]`).
+
+Os artefatos temporários usados para materializar/testar este bloco foram removidos após o run verde.
+
+Próximo bloco de auditoria/implementação: **modificadores derivados permanentes e condicionais puros** de ancestralidades, subclasses e equipamentos; estados que exigem ativação/escolha ficam em bloco próprio.
 
 ### Estado atual do Lote 8
 

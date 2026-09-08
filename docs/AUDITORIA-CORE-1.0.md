@@ -174,7 +174,7 @@ Arquivos `backend/*.gs` gerados só podem ser alterados junto do gerador corresp
 - ✅ Híbrida Lendária: tipo físico;
 - ✅ companheiro do Caçador: físico ou mágico;
 - ✅ Camuflado do Ladino alinhado no Lote 7;
-- ⏳ Habilidade de Esperança do Ladino até próximo descanso;
+- ✅ Habilidade de Esperança do Ladino: 3 Esperanças, +2 Evasão até o próximo ataque que acertar; se isso não ocorrer, até o próximo descanso. Estado/custo/reset automatizados no run `34280954705`;
 - ✅ Anéis Brilhantes T1 d10+2;
 - ✅ Lança: sem Incômoda e dano corrigido por patamar;
 - ✅ Espada Longa: dano corrigido por patamar;
@@ -235,5 +235,6 @@ Em 08/09/2026, o bloco Broquel + Chicote + 12 Cadeiras de Rodas de Combate foi m
 - ✅ Contagem de longo prazo reclassificada de lacuna para já implementada/correta conforme errata p.164.
 - ✅ Livro de Grynn/Muralha de Chamas corrigido e validado no run `34276060393`.
 - ✅ Bônus de dano de Guerreiro/Ladino/Guardião automatizados no commit `bf534a17ad81c6f96d3af6ea09778dc782f60847`; run `34279545273`: 466/466 backend, 100/100 E2E, 14 geradores, CSS limpo.
-- ⏳ Próxima lacuna de classe: Esquiva de Ladino já cobra 3 Esperanças e possui texto pós-errata, mas ainda precisa persistir/aplicar +2 Evasão até ataque acertar ou descanso.
+- ✅ Esquiva de Ladino automatizada no commit `6f720f5`; run `34280954705`: 471/471 backend, 100/100 E2E, 14 geradores, CSS limpo.
+- ⏳ Próximo bloco: varredura integral de modificadores derivados permanentes/condicionais puros de ancestralidade, subclasse e equipamento.
 
