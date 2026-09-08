@@ -52,10 +52,10 @@ Objetivo: não repetir auditorias já concluídas e não depender da memória da
 ### Auditoria já confirmada nesta etapa inicial
 
 - A errata muda **contagem regressiva de longo prazo**: durante um descanso longo, em geral avança uma vez; a regra antiga de avançar em descanso curto e pelo menos duas vezes no longo foi removida. Fonte: errata p.164.
-- O livro possui **Cadeira de Rodas de Combate** na p.122 e ela ainda precisa ser tratada como equipamento mecânico do Core.
+- O livro possui **Cadeira de Rodas de Combate** nas pp.122–123 e ela deve ser tratada como equipamento mecânico do Core.
 - A errata confirma a troca de armas sem custo de Estresse em situação calma/preparação durante descanso; a regra de inventário/equipamento será auditada por completo.
 - Pontos já encontrados antes do início do lote e que entram na auditoria: texto/regra do Broquel, `Livro de Grynn`/Muralha de Chamas, derivados de dano do Guerreiro/Ladino/Guardião e automação de efeitos de cartas/origens/equipamentos que hoje sejam apenas informativos.
-- O sistema já possui contagens regressivas de cena/adversário; a auditoria deve separar isso da nova necessidade de **contagens de longo prazo persistentes de campanha**.
+- O sistema já possui contagens regressivas de cena/adversário; a auditoria deve separar isso da necessidade de **contagens de longo prazo persistentes de campanha**.
 
 ### Escopo da auditoria integral
 
@@ -86,9 +86,7 @@ Automatizar quando a consequência for determinística a partir do estado conhec
 
 Não automatizar a geração aleatória da rolagem. Quando uma regra exigir dado, a interface deve pedir o resultado ao jogador/Mestre e o motor deve validar faixa e aplicar o efeito correspondente.
 
-### Diário — Equipamentos, parte 1
-
-Em 08/09/2026 foi iniciada a implementação das inconsistências inequívocas encontradas no catálogo.
+### Diário — Equipamentos, parte 1: Broquel e Chicote
 
 Fontes:
 
@@ -107,30 +105,74 @@ Alteração persistida no commit `185a28c00e0a71edcee6f56436482d258543b7be`:
 - correções mecânicas de `Deflecting` e `Startling` foram centralizadas por nome inglês estável;
 - a aplicação é idempotente e registra fonte/motivo em `data/equipamentos-correcoes.json` somente quando há mudança real.
 
-Teste de aceitação persistido no commit `433d79092ea97c02206911ec7a01c68ff48f60d0`:
+Teste de aceitação inicial: `tools/conferir-equipamento-lote8.py`, criado em `433d79092ea97c02206911ec7a01c68ff48f60d0`.
 
-- novo `tools/conferir-equipamento-lote8.py`;
-- exige que `Deflecting` use **Pontos de Armadura disponíveis** e não Pontuação de Armadura;
-- exige quatro variantes T1–T4 de `Startling`, com nome PT **Alarmante** e deslocamento Corpo a Corpo → Próximo;
-- o script é somente leitura: detecta regressões, não altera o catálogo;
-- **não foi executado neste runtime**: o ambiente continua sem checkout por falha de DNS para `github.com`, e o repositório não possui `.github/workflows` para CI remoto.
+### Diário — Equipamentos, parte 2: Cadeira de Rodas de Combate
 
-Arquitetura confirmada nesta etapa:
+Conferência das pp.122–123 mostrou que não são três entradas simples: são **3 modelos × 4 patamares = 12 armas principais**.
+
+- Leve T1–T4: Agilidade, Corpo a Corpo, uma mão, `Veloz`; d8 / d8+3 / d8+6 / d8+9 físico.
+- Pesada T1–T4: Força, Corpo a Corpo, duas mãos, `Pesada`; d12+3 / +6 / +9 / +12 físico; a característica dá −1 Evasão.
+- Arcana T1–T4: Conjuração, Distante, uma mão, `Confiável`; d6 / +3 / +6 / +9 físico no livro PT-BR.
+
+Decisão de fonte: o SRD 2.0 diverge no dano da cadeira arcana, mas não pertence ao Lote 8. A errata 09/09/2025 não altera a linha da p.123; portanto o Core PT-BR + errata mantém **dano físico** e a divergência fica documentada para o lote de SRD 2.0.
+
+Implementação preparada:
+
+- `tools/lote8-adicionar-cadeiras.py`, commit `914ddb5749d64baf183c44013f7e0e894b131e62`, adiciona idempotentemente as 12 entradas;
+- `tools/conferir-equipamento-lote8.py` foi ampliado em `9b11980233987c49fac2bda583709008000edb51` para conferir todas as estatísticas e proteger o dano físico das arcanas;
+- `Confiável` foi alinhado ao vocabulário canônico do app como “+1 em **jogadas** de ataque” no commit `2388f86ed735ffa090343a7eedace5babbce7e49`;
+- `tools/lote8-atualizar-testes-equipamento.py`, commit `ce1e8271aea86b4ec740e1edec51aa8cb852254f`, atualiza de forma estrita as expectativas históricas: 155 → 167 armas principais e permite `Conjuração` como atributo especial de arma.
+
+### Execução real via GitHub Actions
+
+Como o runtime do ChatGPT não conseguia resolver `github.com`, foi criado um workflow **temporário apenas na branch de trabalho**: `.github/workflows/lote8-materializar-equipamento.yml`.
+
+Primeira execução real: run `34271985882`.
+
+Passou antes da suíte geral:
+
+```text
+correções da auditoria aplicadas: 5
+Cadeiras de Rodas de Combate adicionadas: 12
+backend/44_Equipamento.gs gerado — 204 armas, 34 armaduras, 120 itens, 64 de campanha
+Lote 8 — equipamento: OK
+Deflecting: 1
+Startling/Alarmante: 4, T1–T4
+Cadeiras: 12, T1–T4
+14 geradores conferidos
+todo arquivo gerado bate com o seu gerador
+```
+
+A primeira execução **não foi considerada verde**: `testes-backend` terminou com 451 passando / 3 falhando. As três falhas foram diagnosticadas, não ignoradas:
+
+1. teste antigo fixava 155 armas primárias, anterior às 12 cadeiras;
+2. lista de atributos de arma não aceitava `Conjuração`, necessária ao modelo arcano;
+3. texto inicial de `Confiável` dizia “testes de ataque”, enquanto o vocabulário canônico do projeto exige “jogadas de ataque”.
+
+E2E/CSS/commit foram corretamente pulados pela falha. Nenhum JSON/backend parcialmente materializado foi gravado na branch nessa execução.
+
+O workflow foi então restringido para só rodar em commits marcados `[run-lote8]`, evitando execuções a cada ajuste intermediário. Esta atualização do HANDOFF dispara a segunda execução completa já com as três causas corrigidas.
+
+### Arquitetura confirmada no bloco
 
 - `js/dados.js` lê `data/equipamentos.json` diretamente para o frontend;
-- portanto corrigir somente `backend/44_Equipamento.gs`/gerador deixaria interface e motor divergentes e é proibido;
-- o fechamento do bloco exige JSON estático + backend gerado coerentes.
+- portanto JSON estático e `backend/44_Equipamento.gs` precisam permanecer coerentes;
+- `backend/44_Equipamento.gs` é gerado por `tools/gerar-44-equipamento.mjs` e não deve ser editado à mão.
 
-Pendências deste bloco:
+### Próximo bloco de equipamento
 
-- ainda não materializar as correções em `data/equipamentos.json`;
-- ainda não regenerar `backend/44_Equipamento.gs`;
-- ainda não executar `tools/conferir-equipamento-lote8.py`, `conferir-gerados` e suítes;
-- Cadeira de Rodas de Combate ainda não foi adicionada. O livro PT-BR p.123 imprime os modelos arcanos com dano físico, enquanto o SRD 2.0 usa dano mágico; como a errata 09/09/2025 não corrige essa linha, a divergência fica registrada e não será resolvida silenciosamente por SRD 2.0.
+Depois de materializar/validar este catálogo, implementar **armas de reserva e troca de armas**:
+
+- inventário comum hoje guarda saque/consumíveis e possui apenas `emUso` genérico;
+- armas equipadas moram em `ficha.equipamento.primaria/secundaria`;
+- o Core exige modelar até duas armas extras como não equipadas, portanto sem benefícios;
+- troca em situação perigosa cobra 1 Fadiga; em situação calma/preparo durante descanso custa 0;
+- a troca deve ser atômica no servidor, movendo equipada ↔ reserva e cobrando o recurso no mesmo ajuste.
 
 ### Estado atual do Lote 8
 
-Auditoria e implementação em andamento. Nenhum deploy/merge do Lote 8 foi feito ainda. Não alterar o pin da `engine-api` até o lote estar revisado e testado.
+Auditoria e implementação em andamento. Nenhum deploy/merge do Lote 8 foi feito. Não alterar o pin da `engine-api` até o lote estar revisado e testado.
 
 ## Produção atual — Lotes 6 e 7 concluídos
 
@@ -192,9 +234,9 @@ Ponto ainda aberto de regra: com Evolução, o Estresse adicional das híbridas 
 - contadores cujo máximo usa Conjuração não ficam mais travados em 0;
 - cabeçalho não glosa mais `Caçador (Caçador)`.
 
-## Arquivos gerados — nova regra de fluxo
+## Arquivos gerados — regra de fluxo
 
-Correções de arquivos gerados agora também estão nos geradores. Antes de qualquer deploy que toque `backend/*.gs`, rodar:
+Antes de deploy que toque motor, rodar:
 
 ```bash
 node tools/testes-backend.mjs
@@ -203,20 +245,9 @@ node tools/conferir-gerados.mjs
 node tools/conferir-css.mjs
 ```
 
-Esperado na entrega dos Lotes 6/7:
-
-```text
-backend: 454 passaram, 0 falharam
-E2E: 98 passos ok, 0 falharam
-gerados: todos batem com o gerador
-CSS: nada a limpar nem a escrever
-```
-
-Esses resultados foram registrados pelo Claude na entrega. O agente ChatGPT que implantou não conseguiu rerodá-los localmente porque o runtime isolado não resolvia `github.com`; portanto não registrar como reexecução independente.
+Resultados dos Lotes 6/7 foram registrados pelo Claude como backend 454/454, E2E 98/98, gerados consistentes e CSS limpo. O ChatGPT que implantou não os rerodou naquele runtime por falha de DNS; não confundir esses números com execuções do Lote 8.
 
 ## Ordem obrigatória para próximas mudanças de motor + frontend
-
-Quando frontend novo depender do motor novo:
 
 1. terminar e revisar a branch;
 2. escolher commit imutável do motor;
