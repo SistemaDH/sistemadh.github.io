@@ -24,8 +24,10 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Aplicar transformação estrita
-        run: python3 tools/lote8-implementar-troca-armas.py
+      - name: Aplicar transformações estritas
+        run: |
+          python3 tools/lote8-implementar-troca-armas.py
+          python3 tools/lote8-implementar-ui-troca-armas.py
 
       - name: Conferir gerados
         run: node tools/conferir-gerados.mjs
@@ -48,10 +50,10 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add backend/40_Regras.gs backend/4C_Ajustes.gs tools/testes-backend.mjs
+          git add backend/40_Regras.gs backend/4C_Ajustes.gs js/telas/ficha.js tools/testes-backend.mjs tools/testes-e2e.mjs
           if git diff --cached --quiet; then
             echo 'Nenhuma alteração pendente.'
           else
-            git commit -m 'feat: implementar armas de reserva e troca atômica [lote8-generated]'
+            git commit -m 'feat: concluir UI de armas de reserva e troca [lote8-generated]'
             git push origin HEAD:'ediçãoclaude'
           fi
