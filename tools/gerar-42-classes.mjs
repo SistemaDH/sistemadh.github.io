@@ -182,7 +182,9 @@ for (const c of dados.classes) {
       // Canalizar Poder Bruto não paga em recurso: paga com uma CARTA da mão.
       cartaDaMao: f.uso.cartaDaMao || null,
       opcoes: f.uso.opcoes || null,
-      marcaUso: f.uso.marcaUso || ''
+      marcaUso: f.uso.marcaUso || '',
+      // Algumas habilidades ligam um estado persistente depois de pagar.
+      estado: f.uso.estado || null
     };
   };
   anota(c.caracteristicaEsperanca, 'esperança');

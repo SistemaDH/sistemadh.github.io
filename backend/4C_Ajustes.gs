@@ -371,6 +371,18 @@ function usarHabilidadeDeClasse_(ficha, a) {
    * e a Esperança gasta já foi. É o mesmo que largar a marca na mesa.
    */
   if (a.encerrar === true) {
+    // Estado sem alvo: a mesa informa o gatilho que encerra. Esquiva de Ladino
+    // termina no próximo ATAQUE que acertar, não em qualquer perda de PV.
+    if (def.estado && def.estado.chave) {
+      ficha.contadores = ficha.contadores || {};
+      const item = ficha.contadores[def.estado.chave] || {};
+      const antes = Math.max(0, Math.trunc(Number(item.valor)) || 0);
+      if (!antes) return { erro: '"' + def.nome + '" não está ativa.' };
+      delete ficha.contadores[def.estado.chave];
+      return { tipo: 'habilidade', nome: def.nome, encerrada: true,
+               estado: def.estado.chave, estadoAntes: antes,
+               aviso: def.nome + ' terminou: o ataque acertou.' };
+    }
     if (!def.alvo) return { erro: '"' + def.nome + '" não marca alvo nenhum.' };
     const antes = ficha.alvosDeHabilidade[def.nome] || '';
     if (!antes) return { erro: 'Não há alvo de "' + def.nome + '" para encerrar.' };
@@ -384,6 +396,12 @@ function usarHabilidadeDeClasse_(ficha, a) {
    * contadores; sem esta conferência ele seria enfeite — o app deixaria usar de
    * novo e o marcador continuaria mostrando "1 de 1".
    */
+  // Não deixa pagar duas vezes por um efeito que já está ativo.
+  if (def.estado && def.estado.chave) {
+    const ativo = Math.trunc(Number((((ficha.contadores || {})[def.estado.chave]) || {}).valor)) || 0;
+    if (ativo > 0) return { erro: '"' + def.nome + '" já está ativa.' };
+  }
+
   if (def.marcaUso) {
     const gasto = Math.trunc(Number(((ficha.contadores || {})[def.marcaUso] || {}).valor)) || 0;
     const teto = (typeof maximoDoContador_ === 'function') ? maximoDoContador_(def.marcaUso, ficha) : 1;
@@ -476,6 +494,13 @@ function usarHabilidadeDeClasse_(ficha, a) {
   const alvoAntes = def.alvo ? (ficha.alvosDeHabilidade[def.nome] || '') : '';
   if (def.alvo) ficha.alvosDeHabilidade[def.nome] = alvo;
 
+  // Estado entra DEPOIS de custos/alvo darem certo: pagamento e efeito são
+  // uma única mutação, como Forma de Fera e custo de recordar.
+  if (def.estado && def.estado.chave) {
+    ficha.contadores = ficha.contadores || {};
+    ficha.contadores[def.estado.chave] = { valor: Math.max(1, Math.trunc(Number(def.estado.valor)) || 1) };
+  }
+
   // O uso gasto entra depois de tudo dar certo: recusa não gasta uso.
   if (def.marcaUso) {
     ficha.contadores = ficha.contadores || {};
@@ -500,6 +525,8 @@ function usarHabilidadeDeClasse_(ficha, a) {
     carta: cartaMovida ? cartaMovida.id : null,
     opcao: opcaoEscolhida ? opcaoEscolhida.id : null,
     esperancaGanha: esperancaGanha,
+    estado: (def.estado && def.estado.chave) ? def.estado.chave : null,
+    estadoAtivo: !!(def.estado && def.estado.chave),
     aviso: def.nome + (pago.length ? ' custou ' + pago.join(' e ') : '') +
       (alvo ? ' — ' + def.alvo.verbo.toLowerCase() + ' ' + alvo : '') +
       (ganho.length ? '. Você recebeu ' + ganho.join('; ') : '') + '.'

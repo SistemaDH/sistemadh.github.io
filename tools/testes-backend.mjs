@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem os 36 contadores: 17 de carta e 19 de classe/subclasse', () => {
+teste('o catálogo tem os 37 contadores: 17 de carta e 20 de classe/subclasse', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,11 +1561,11 @@ teste('o catálogo tem os 36 contadores: 17 de carta e 19 de classe/subclasse', 
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 36);
+  igual(Object.keys(CONTADORES).length, 37);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 17);
-  igual(porOrigem['caracteristica-classe'], 4);
+  igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 15);
 });
 
@@ -2521,6 +2521,74 @@ teste('as perguntas de origem e vínculos vieram do livro bom (fecha B6)', () =>
     igual(g.perguntasDeFundo.map((x) => x.texto), c.perguntasDeFundo, `${c.nome}: guia x classe`);
     igual(g.perguntasDeConexao.map((x) => x.texto), c.conexoes, `${c.nome}: guia x classe`);
   });
+});
+
+console.log('\nEsquiva de Ladino — Lote 8');
+
+teste('Esquiva de Ladino paga 3 Esperanças e liga +2 Evasão na mesma mutação', () => {
+  const f = {
+    identidade: { classe: 'Ladino', nivel: 1 },
+    recursos: { esperanca: 5, esperancaMaxima: 6, estresseMarcado: 0, estresseMaximo: 6 },
+    contadores: {}, equipamento: {}
+  };
+  const antes = contexto.derivadosDoPersonagem_(f).evasao;
+  igual(antes, 12);
+  const r = contexto.usarHabilidadeDeClasse_(f, { nome: 'Esquiva de Ladino' });
+  verdade(!r.erro, r.erro || 'uso devia passar');
+  igual(f.recursos.esperanca, 2);
+  igual(f.contadores['estado:ladino:esquiva'].valor, 1);
+  igual(contexto.derivadosDoPersonagem_(f).evasao, 14);
+});
+
+teste('Esquiva de Ladino não empilha nem cobra de novo enquanto já está ativa', () => {
+  const f = {
+    identidade: { classe: 'Ladino', nivel: 1 },
+    recursos: { esperanca: 6, esperancaMaxima: 6, estresseMarcado: 0, estresseMaximo: 6 },
+    contadores: { 'estado:ladino:esquiva': { valor: 1 } }, equipamento: {}
+  };
+  const r = contexto.usarHabilidadeDeClasse_(f, { nome: 'Esquiva de Ladino' });
+  verdade(!!r.erro);
+  igual(f.recursos.esperanca, 6);
+  igual(contexto.derivadosDoPersonagem_(f).evasao, 14);
+});
+
+teste('ataque que acerta encerra Esquiva sem devolver Esperança', () => {
+  const f = {
+    identidade: { classe: 'Ladino', nivel: 1 },
+    recursos: { esperanca: 2, esperancaMaxima: 6 },
+    contadores: { 'estado:ladino:esquiva': { valor: 1 } }, equipamento: {}
+  };
+  const r = contexto.usarHabilidadeDeClasse_(f, { nome: 'Esquiva de Ladino', encerrar: true });
+  verdade(!r.erro, r.erro || 'encerrar devia passar');
+  igual(f.contadores['estado:ladino:esquiva'], undefined);
+  igual(f.recursos.esperanca, 2);
+  igual(contexto.derivadosDoPersonagem_(f).evasao, 12);
+});
+
+teste('qualquer descanso encerra Esquiva de Ladino conforme a errata', () => {
+  const montar = () => ({
+    identidade: { classe: 'Ladino', nivel: 1 },
+    recursos: {}, equipamento: {},
+    contadores: { 'estado:ladino:esquiva': { valor: 1 } }
+  });
+  const curto = montar();
+  contexto.aplicarGatilhoContadores_(curto, 'descanso');
+  igual(curto.contadores['estado:ladino:esquiva'], undefined);
+  const longo = montar();
+  contexto.aplicarGatilhoContadores_(longo, 'descanso-longo');
+  igual(longo.contadores['estado:ladino:esquiva'], undefined);
+});
+
+teste('multiclasse em Ladino NÃO recebe a habilidade de Esperança Esquiva de Ladino', () => {
+  const f = {
+    identidade: { classe: 'Bardo', subclasse: 'bardo-musico-errante', nivel: 6 },
+    subclasseCartas: ['fundacao'],
+    multiclasse: { classe: 'ladino', subclasse: 'ladino-caminhante-noturno', dominio: 'MIDNIGHT', cartas: ['fundacao'] },
+    recursos: { esperanca: 6, esperancaMaxima: 6 }, contadores: {}, equipamento: {}
+  };
+  const r = contexto.usarHabilidadeDeClasse_(f, { nome: 'Esquiva de Ladino' });
+  verdade(!!r.erro);
+  igual(f.recursos.esperanca, 6);
 });
 
 console.log('\nBônus de dano de classe — Lote 8');

@@ -1,6 +1,6 @@
 {
  "versao": 1,
- "fonte": "Textos das 17 cartas de domínio que guardam estado (data/cartas-dominio.json) e das 3 características de classe com dados próprios (data/classes.json).",
+ "fonte": "Textos das cartas de domínio e características de classe/subclasse que guardam estado (data/cartas-dominio.json e data/classes.json).",
  "explicacao": "Várias cartas e características mandam 'colocar fichas/marcadores/um dado nesta carta'. Esse valor é ESTADO DO PERSONAGEM, não da carta: precisa ser gravado na ficha e zerado na hora certa. Este catálogo diz, para cada um: qual é o máximo, que dado usa e quando zera.",
  "gatilhos": {
   "inicio-de-sessao": "Na abertura da sessão.",
@@ -787,6 +787,26 @@
    "fonte": "O gatilho vem do texto da própria habilidade, importado em data/classes.json a partir das cartas oficiais em PNG (subclasses) e do DH-DigitalRegras.pdf (habilidades de classe). A errata de 09/09/2025 não altera nenhuma destas habilidades.",
    "exigeCaracteristica": "Toque Moderado",
    "observacaoDaPosse": "A ficha só TEM este marcador se tiver a característica: ter a subclasse não é ter a carta. Um Bardo de 1º nível tem 'Artífice das Palavras' e ainda não pegou a carta de especialização — o marcador de Eloquente não pode aparecer na dobra dele."
+  },
+  {
+   "chave": "estado:ladino:esquiva",
+   "origem": "caracteristica-classe",
+   "refId": "ladino",
+   "nome": "Esquiva de Ladino",
+   "rotulo": "ativa",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso",
+    "descanso-longo"
+   ],
+   "exigeCaracteristica": "Esquiva de Ladino",
+   "observacao": "Estado da habilidade de Esperança do Ladino. +2 Evasão até o próximo ataque que acertar; se isso não acontecer, até o próximo descanso. O ataque que acertou é informado pela mesa; o app não adivinha a origem de todo dano.",
+   "fonte": "DH-DigitalRegras.pdf p.46; errata oficial 09/09/2025 p.42."
   }
  ]
 }

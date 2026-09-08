@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 36 cartas e características mandam
+ *  O problema que este arquivo resolve: 37 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -76,6 +76,7 @@ const CONTADORES = {
   "uso:mago-escola-do-conhecimento:memoria-perfeita": { origem: "caracteristica-subclasse", refId: "mago-escola-do-conhecimento", nome: "Memória Perfeita", rotulo: "já usou", tipo: "usos", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso","descanso-longo"], recarregaEm: [], exigeCaracteristica: "Memória Perfeita" },
   "uso:patrulheiro-laco-bestial:amigo-leal": { origem: "caracteristica-subclasse", refId: "patrulheiro-laco-bestial", nome: "Amigo Leal", rotulo: "já usou", tipo: "usos", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [], exigeCaracteristica: "Amigo Leal" },
   "uso:seraph-portador-divino:toque-moderado": { origem: "caracteristica-subclasse", refId: "seraph-portador-divino", nome: "Toque Moderado", rotulo: "já usou", tipo: "usos", maximo: {"tipo":"fixo","valor":1,"progressao":[{"caracteristica":"Devoto","valor":2,"motivo":"Especialização do Portador Divino: \"pode usar a habilidade Toque Moderado duas vezes em vez de uma por descanso longo\""}]}, zeraEm: ["descanso-longo"], recarregaEm: [], exigeCaracteristica: "Toque Moderado" },
+  "estado:ladino:esquiva": { origem: "caracteristica-classe", refId: "ladino", nome: "Esquiva de Ladino", rotulo: "ativa", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso","descanso-longo"], recarregaEm: [], exigeCaracteristica: "Esquiva de Ladino" },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -116,6 +117,7 @@ const CONTADOR_ALIASES = {
   "uso:mago-escola-do-conhecimento:memoria-perfeita": ["Memória Perfeita"],
   "uso:patrulheiro-laco-bestial:amigo-leal": ["Amigo Leal"],
   "uso:seraph-portador-divino:toque-moderado": ["Toque Moderado"],
+  "estado:ladino:esquiva": ["Esquiva de Ladino"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

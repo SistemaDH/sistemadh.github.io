@@ -1034,6 +1034,12 @@
     "uso": {
      "custo": {
       "esperanca": 3
+     },
+     "estado": {
+      "chave": "estado:ladino:esquiva",
+      "valor": 1,
+      "rotuloAtivo": "Esquiva ativa · +2 Evasão",
+      "rotuloEncerrar": "Ataque acertou — encerrar Esquiva"
      }
     },
     "fonteDoCusto": "As nove habilidades de Esperança custam 3 de Esperança — texto de cada classe em DH-DigitalRegras.pdf (Jambô, Prévia 5), pp. 28-51, e SRD 1.0 (09/09/2025). A errata de 09/09/2025 toca numa delas (Ladino, p.42: 'Otherwise, this bonus lasts until your next rest'), e a correção já está no texto — o custo não muda."

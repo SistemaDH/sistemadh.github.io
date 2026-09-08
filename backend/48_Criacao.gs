@@ -317,6 +317,15 @@ function derivadosDoPersonagem_(ficha) {
   const bonusDaForma = (formaAtiva && formaAtiva.modificadores)
     ? (Math.trunc(Number(String(formaAtiva.modificadores.evasao || '0').replace('+', ''))) || 0) : 0;
 
+  // Esquiva de Ladino é estado pago: +2 até um ataque acertar ou até descanso.
+  const itemEsquiva = ((ficha && ficha.contadores) || {})['estado:ladino:esquiva'];
+  const esquivaDeLadinoAtiva = !!(
+    typeof fichaTemCaracteristicaDeClasse_ === 'function' &&
+    fichaTemCaracteristicaDeClasse_(ficha, 'Esquiva de Ladino') &&
+    (Math.trunc(Number(itemEsquiva && typeof itemEsquiva === 'object' ? itemEsquiva.valor : itemEsquiva)) || 0) > 0
+  );
+  const bonusEsquivaLadino = esquivaDeLadinoAtiva ? 2 : 0;
+
   let evasao = bases ? bases.evasaoInicial : null;
   const pontuacaoArmadura = armadura ? (armadura.pontuacao || 0) : 0;
   let limiarMaior = null, limiarGrave = null;
@@ -356,7 +365,7 @@ function derivadosDoPersonagem_(ficha) {
     limiarMaior += bc.limiares;
     limiarGrave += bc.limiares;
   }
-  if (evasao !== null) evasao += (b.evasao || 0) + bonusDaForma;
+  if (evasao !== null) evasao += (b.evasao || 0) + bonusDaForma + bonusEsquivaLadino;
 
   return {
     evasao: evasao,
@@ -370,6 +379,7 @@ function derivadosDoPersonagem_(ficha) {
     dominios: dominiosDoPersonagem_(ficha),
     caracteristicas: caracteristicasDaOrigem_(ficha).concat(caracteristicasDaClasse_(ficha)),
     bonusDeDano: bonusDeDanoDaFicha_(ficha),
+    esquivaDeLadinoAtiva: esquivaDeLadinoAtiva,
     /*
      * A FORMA INTEIRA, JÁ COMPOSTA, VAI PARA A TELA — e ela mexe em DOIS
      * números da ficha, não em um.
@@ -502,6 +512,7 @@ function aplicarDerivados_(ficha) {
   // O cliente recebe o perfil de dano já calculado pelo servidor. Qualquer
   // valor que tenha vindo no payload é sobrescrito aqui, como os outros derivados.
   ficha.bonusDeDano = d.bonusDeDano;
+  ficha.esquivaDeLadinoAtiva = d.esquivaDeLadinoAtiva;
 
   /*
    * O traço de Conjuração também é derivado. A tela desenhava o dele sozinha,

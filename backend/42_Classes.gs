@@ -113,7 +113,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "alvo": null,
     "cartaDaMao": null,
     "opcoes": null,
-    "marcaUso": ""
+    "marcaUso": "",
+    "estado": null
   },
   "Magia Volátil": {
     "classe": "feiticeiro",
@@ -124,7 +125,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "alvo": null,
     "cartaDaMao": null,
     "opcoes": null,
-    "marcaUso": ""
+    "marcaUso": "",
+    "estado": null
   },
   "Canalizar Poder Bruto": {
     "classe": "feiticeiro",
@@ -146,7 +148,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
         "lembrete": "O bônus é da jogada de dano, que é da mesa — o app não rola."
       }
     ],
-    "marcaUso": "uso:feiticeiro:canalizar-poder-bruto"
+    "marcaUso": "uso:feiticeiro:canalizar-poder-bruto",
+    "estado": null
   },
   "Linha de Frente": {
     "classe": "guardiao",
@@ -157,7 +160,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "alvo": null,
     "cartaDaMao": null,
     "opcoes": null,
-    "marcaUso": ""
+    "marcaUso": "",
+    "estado": null
   },
   "Nêmesis": {
     "classe": "guardiao",
@@ -171,7 +175,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     },
     "cartaDaMao": null,
     "opcoes": null,
-    "marcaUso": ""
+    "marcaUso": "",
+    "estado": null
   },
   "Sem Piedade": {
     "classe": "guerreiro",
@@ -182,7 +187,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "alvo": null,
     "cartaDaMao": null,
     "opcoes": null,
-    "marcaUso": ""
+    "marcaUso": "",
+    "estado": null
   },
   "Esquiva de Ladino": {
     "classe": "ladino",
@@ -193,7 +199,13 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "alvo": null,
     "cartaDaMao": null,
     "opcoes": null,
-    "marcaUso": ""
+    "marcaUso": "",
+    "estado": {
+      "chave": "estado:ladino:esquiva",
+      "valor": 1,
+      "rotuloAtivo": "Esquiva ativa · +2 Evasão",
+      "rotuloEncerrar": "Ataque acertou — encerrar Esquiva"
+    }
   },
   "Não Dessa Vez": {
     "classe": "mago",
@@ -204,7 +216,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "alvo": null,
     "cartaDaMao": null,
     "opcoes": null,
-    "marcaUso": ""
+    "marcaUso": "",
+    "estado": null
   },
   "Segurem Eles": {
     "classe": "patrulheiro",
@@ -215,7 +228,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "alvo": null,
     "cartaDaMao": null,
     "opcoes": null,
-    "marcaUso": ""
+    "marcaUso": "",
+    "estado": null
   },
   "Marca da Presa": {
     "classe": "patrulheiro",
@@ -229,7 +243,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     },
     "cartaDaMao": null,
     "opcoes": null,
-    "marcaUso": ""
+    "marcaUso": "",
+    "estado": null
   },
   "Alicerce da Vida": {
     "classe": "seraph",
@@ -240,7 +255,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "alvo": null,
     "cartaDaMao": null,
     "opcoes": null,
-    "marcaUso": ""
+    "marcaUso": "",
+    "estado": null
   }
 };
 

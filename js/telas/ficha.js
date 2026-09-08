@@ -1105,6 +1105,20 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       ]);
     }
 
+    if (uso.estado && uso.estado.chave) {
+      const item = ((ficha.contadores || {})[uso.estado.chave]) || {};
+      const ativo = (Number(item.valor) || 0) > 0;
+      if (ativo) {
+        return el('div', { class: 'pilha' }, [
+          el('span', { class: 'texto-xs texto-fraco', texto: uso.estado.rotuloAtivo || `${nome} ativa` }),
+          el('button', {
+            type: 'button', class: 'btn btn--fantasma btn--pequeno ficha__usarHabilidade',
+            onClick: () => enviar([{ tipo: 'habilidade', nome, encerrar: true }])
+          }, uso.estado.rotuloEncerrar || 'Encerrar efeito')
+        ]);
+      }
+    }
+
     if (!uso.alvo) {
       return el('button', {
         type: 'button', class: 'btn btn--fantasma btn--pequeno ficha__usarHabilidade',
