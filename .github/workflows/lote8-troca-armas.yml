@@ -2,6 +2,7 @@ name: Lote 8 - troca de armas
 
 # Executor temporário do checkpoint de armas de reserva.
 # data/equipamentos.json usa `categoria`; o backend gerado usa `cat`.
+# Rerun final sobre o HEAD reconciliado após concorrência de commits.
 on:
   push:
     branches:
