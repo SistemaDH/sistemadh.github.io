@@ -114,6 +114,7 @@ Arquivos `backend/*.gs` gerados só podem ser alterados junto do gerador corresp
 
 - 🔧 Broquel (`Buckler`) está com o texto PT mecânico errado: precisa usar **Pontos de Armadura disponíveis**, conforme errata p.125;
 - 🔧 Cadeira de Rodas de Combate do livro não está no catálogo atual;
+- 🔧 Chicote (`Whip`) está com tradução mecânica incorreta no catálogo atual: o original manda empurrar adversários de alcance Corpo a Corpo para alcance Próximo; o texto armazenado hoje termina novamente em Corpo a Corpo;
 - 🔧 inventário/troca de armas: até duas armas extras e 1 Fadiga para troca em situação perigosa; sem custo em situação calma/preparo durante descanso;
 - ⏳ todas as armas principais;
 - ⏳ todas as armas secundárias;
@@ -190,6 +191,21 @@ Arquivos `backend/*.gs` gerados só podem ser alterados junto do gerador corresp
 - ⏳ Golpe Estilhaçante;
 - ⏳ Livro de Grynn — Deflexão Arcana e Muralha temporária;
 - ⏳ demais entradas de clareza que alterem texto mecânico exibido.
+
+---
+
+# Blocos de auditoria fechados
+
+## Parte 1 — inconsistências confirmadas de equipamento
+
+Fechado em 08/09/2026 como bloco de auditoria, ainda sem implantação. Conferência feita contra as fontes declaradas do Lote 8 e o catálogo atual em `data/equipamentos.json`.
+
+- ✅ `Buckler` existe no catálogo como `Broquel`, mas a mecânica PT exibida precisa ser corrigida para referenciar **Pontos de Armadura disponíveis**, conforme errata.
+- ✅ `Combat Wheelchair` / Cadeira de Rodas de Combate não foi encontrada no catálogo atual e deve ser adicionada antes de a seção de equipamento ser considerada completa.
+- ✅ `Whip` existe em todos os patamares relevantes, mas a característica `Startling` está traduzida de forma mecanicamente errada: o texto inglês manda mover adversários de Melee para Close; o texto PT atual termina novamente em Corpo a Corpo. Corrigir a tradução em todas as variantes geradas a partir da mesma fonte.
+- ✅ O equipamento exclusivo de moldura permanece separado no catálogo, o que evita colisão por nome com equipamento do Capítulo 2 e deve ser preservado.
+
+Este bloco só será marcado como implementado quando a fonte de dados, o gerador correspondente e o arquivo gerado estiverem coerentes, com `conferir-gerados` verde.
 
 ---
 
