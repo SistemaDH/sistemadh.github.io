@@ -5,6 +5,9 @@ O modal aparece antes de um PNG terminar de decodificar. O teste antigo lia
 naturalWidth imediatamente e podia receber 0 num runner limpo. Esta transformação
 não afrouxa a asserção: ela espera a imagem terminar e continua exigindo largura > 0.
 Falha se o trecho histórico não existir exatamente como esperado.
+
+Este arquivo também serve como transformação reproduzível enquanto o workflow
+temporário do Lote 8 estiver sendo usado para materializar o catálogo.
 """
 from pathlib import Path
 
