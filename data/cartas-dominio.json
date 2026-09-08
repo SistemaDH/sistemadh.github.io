@@ -1605,7 +1605,7 @@
    "tipo": "Grimório",
    "tipoImpresso": "GRIMOIRE",
    "custoRecordar": 2,
-   "texto": "**Deflexão Arcana:** Uma vez por descanso longo, gaste 1 Esperança para anular o dano de um ataque que esteja mirando em você ou em um aliado a Alcance Muito Próximo.\n**Tranca Temporal:** Aponte para um objeto em Alcance Longo. Esse objeto fica completamente congelado no tempo e espaço até o seu próximo descanso. Se uma criatura tentar movê-lo, faça uma jogada de Spellcast contra ela para manter o efeito ativo.\n**Muralha de Chamas:** Faça uma jogada de Spellcast (15). Em caso de sucesso, você cria uma muralha de chamas mágicas entre dois pontos dentro de Alcance Longo. Todas as criaturas no trajeto da muralha devem escolher de qual lado ficar, e qualquer coisa que atravessar a muralha posteriormente sofre 4d10+3 de dano mágico.",
+   "texto": "**Deflexão Arcana:** Uma vez por descanso longo, gaste 1 Esperança para anular o dano de um ataque que esteja mirando em você ou em um aliado a Alcance Muito Próximo.\n**Tranca Temporal:** Aponte para um objeto em Alcance Longo. Esse objeto fica completamente congelado no tempo e espaço até o seu próximo descanso. Se uma criatura tentar movê-lo, faça uma jogada de Spellcast contra ela para manter o efeito ativo.\n**Muralha de Chamas:** Faça uma jogada de Spellcast (15). Em caso de sucesso, você cria uma muralha temporária de chamas mágicas entre dois pontos dentro de Alcance Longo. Todas as criaturas no trajeto da muralha devem escolher de qual lado ficar, e qualquer coisa que atravessar a muralha posteriormente sofre 4d10+3 de dano mágico.",
    "imagem": "assets/cartas/dominios/CODEX/Livro de Grynn.png",
    "arquivo": "Livro de Grynn.png",
    "condicoes": [],
@@ -1614,7 +1614,7 @@
     "esperanca"
    ],
    "pendenteTraducao": false,
-   "errata": "Errata p.333 (Book of Grynn, Códex 4): \"Gaste uma Esperança\" virou custo em negrito (a carta já reflete) E a Muralha de Chamas passou a ser \"temporária\" — ESSA palavra NÃO aparece na carta impressa. Divergência real entre carta e errata.",
+   "errata": "Errata oficial 09/09/2025, p.333: Muralha de Chamas cria uma muralha temporária de chamas mágicas. Aplicada no texto exibido.",
    "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'."
   },
   {
