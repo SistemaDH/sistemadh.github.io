@@ -211,4 +211,12 @@ Este bloco só será marcado como implementado quando a fonte de dados, o gerado
 
 # Implementação do Lote 8
 
-Ainda não iniciada. A auditoria completa precede cada bloco de código; os achados serão implementados em blocos pequenos e registrados aqui e no `docs/HANDOFF.md`.
+## Equipamentos — preparação reproduzível
+
+- `tools/auditoria-equipamento.py` contém as correções idempotentes de `Deflecting`/Broquel e `Startling`/Alarmante, com fonte registrada;
+- `tools/conferir-equipamento-lote8.py` foi adicionado como teste de aceitação do catálogo estático: ele exige Broquel baseado em **Pontos de Armadura disponíveis** e exige as quatro variantes T1–T4 do Chicote como **Alarmante**, deslocando de Corpo a Corpo para Próximo;
+- o conferidor apenas lê o JSON e falha em regressões; ele não corrige dados;
+- o frontend lê `data/equipamentos.json` diretamente, portanto não é permitido considerar o backend gerado como suficiente sem materializar as mesmas correções no JSON;
+- neste runtime o conferidor ainda **não foi executado**, pois não há checkout local funcional e o repositório não possui GitHub Actions. Não registrar resultado verde até execução real.
+
+Pendentes para fechar esta parte: materializar o JSON, regenerar `backend/44_Equipamento.gs` e executar os conferidores/suítes.
