@@ -65,7 +65,7 @@ Arquivos `backend/*.gs` gerados só podem ser alterados junto do gerador corresp
 
 - ⏳ 9 classes;
 - ⏳ 18 subclasses;
-- 🔧 bônus derivados que o Lote 7 deixou apenas em texto: Guerreiro (+nível no dano físico), Ladino (Ataque Furtivo por patamar), Guardião (Dado de Determinação no dano). Devem receber suporte mecânico sem o app rolar dados.
+- ✅ bônus derivados de dano de Guerreiro, Ladino e Guardião automatizados no Lote 8; o app monta os dados/bônus e **não rola**.
 
 ### Ancestralidades e comunidades
 
@@ -96,7 +96,7 @@ Arquivos `backend/*.gs` gerados só podem ser alterados junto do gerador corresp
 - ⏳ movimentos disponíveis e limites;
 - ⏳ resets por descanso;
 - ✅ Clank Eficiente: um único movimento de descanso longo substitui um de curto (Lote 4, já testado);
-- 🔧 contagem regressiva de longo prazo: errata p.164 manda, em geral, avançar uma vez durante descanso longo; falta um subsistema completo de contagens longas de campanha.
+- ✅ contagem regressiva de longo prazo: o subsistema já existia; a suíte confirma que não anda por teste/descanso curto e avança uma vez no descanso longo conforme errata p.164.
 
 ### Morte
 
@@ -112,10 +112,10 @@ Arquivos `backend/*.gs` gerados só podem ser alterados junto do gerador corresp
 
 ### Equipamento
 
-- 🔧 Broquel (`Buckler`) está com o texto PT mecânico errado: precisa usar **Pontos de Armadura disponíveis**, conforme errata p.125;
-- 🔧 Cadeira de Rodas de Combate: confirmado que são **12 armas principais** (modelos leve, pesado e arcano × T1–T4), pp.122–123; preparação/teste já codificados, catálogo ainda não materializado;
-- 🔧 Chicote (`Whip`) está com tradução mecânica incorreta no catálogo atual: o original manda empurrar adversários de alcance Corpo a Corpo para alcance Próximo; o texto armazenado hoje termina novamente em Corpo a Corpo;
-- 🔧 inventário/troca de armas: até duas armas extras e 1 Fadiga para troca em situação perigosa; sem custo em situação calma/preparo durante descanso;
+- ✅ Broquel (`Buckler`) corrigido para usar **Pontos de Armadura disponíveis**, conforme errata p.125;
+- ✅ Cadeira de Rodas de Combate: **12 armas principais** (leve, pesada e arcana × T1–T4) materializadas e validadas, pp.122–123;
+- ✅ Chicote (`Whip`) corrigido: Alarmante empurra adversários de Corpo a Corpo para Próximo;
+- ✅ inventário/troca de armas: até duas armas extras; troca perigosa custa 1 Fadiga e troca calma/preparo durante descanso custa 0; operação atômica e validada no servidor;
 - ⏳ todas as armas principais;
 - ⏳ todas as armas secundárias;
 - ⏳ todas as armaduras;
@@ -125,7 +125,7 @@ Arquivos `backend/*.gs` gerados só podem ser alterados junto do gerador corresp
 
 ### Cartas de domínio
 
-- 🔧 Livro de Grynn — Muralha de Chamas precisa dizer **temporária** conforme errata p.333;
+- ✅ Livro de Grynn — Muralha de Chamas diz **temporária** conforme errata p.333; conferidor permanente adicionado.
 - ⏳ 189 cartas, incluindo custos, duração, estado, usos por descanso/sessão e efeitos determinísticos.
 
 ---
@@ -178,10 +178,10 @@ Arquivos `backend/*.gs` gerados só podem ser alterados junto do gerador corresp
 - ✅ Anéis Brilhantes T1 d10+2;
 - ✅ Lança: sem Incômoda e dano corrigido por patamar;
 - ✅ Espada Longa: dano corrigido por patamar;
-- 🔧 Broquel: texto/efeito PT incorreto no catálogo atual;
+- ✅ Broquel: texto/efeito PT corrigido e validado;
 - ✅ Garras de Punho T4: uma mão;
 - ✅ Musgo Doce: 1d10 PV ou Estresse durante descanso;
-- 🔧 avanço de contagem de longo prazo;
+- ✅ avanço de contagem de longo prazo conforme errata p.164;
 - ⏳ Cobra-de-Vidro;
 - ⏳ Oscilume Adulto — Sopro Alucinógeno como reação;
 - ⏳ Marreta — Enorme penaliza Evasão;
@@ -228,4 +228,12 @@ Pendentes para fechar esta parte: executar os preparadores, materializar o JSON,
 ## Checkpoint de implementação — equipamento Core validado
 
 Em 08/09/2026, o bloco Broquel + Chicote + 12 Cadeiras de Rodas de Combate foi materializado no catálogo e no backend gerado no commit `0630ad5`. Validação real via GitHub Actions run `34272839636`: backend 454/454, E2E 98/98, 14 geradores consistentes e CSS limpo. O bloco de catálogo passa de “preparado” para **implementado e validado na branch**, ainda não implantado em produção.
+
+## Checkpoint — reserva/troca, contagem longa, Grynn e dano de classe
+
+- ✅ Reserva/troca de armas validada no run `34275324930`: 462/462 backend, 99/99 E2E, 14 geradores, CSS limpo.
+- ✅ Contagem de longo prazo reclassificada de lacuna para já implementada/correta conforme errata p.164.
+- ✅ Livro de Grynn/Muralha de Chamas corrigido e validado no run `34276060393`.
+- ✅ Bônus de dano de Guerreiro/Ladino/Guardião automatizados no commit `bf534a17ad81c6f96d3af6ea09778dc782f60847`; run `34279545273`: 466/466 backend, 100/100 E2E, 14 geradores, CSS limpo.
+- ⏳ Próxima lacuna de classe: Esquiva de Ladino já cobra 3 Esperanças e possui texto pós-errata, mas ainda precisa persistir/aplicar +2 Evasão até ataque acertar ou descanso.
 

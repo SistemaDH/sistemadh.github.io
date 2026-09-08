@@ -160,15 +160,63 @@ O workflow foi então restringido para só rodar em commits marcados `[run-lote8
 - portanto JSON estático e `backend/44_Equipamento.gs` precisam permanecer coerentes;
 - `backend/44_Equipamento.gs` é gerado por `tools/gerar-44-equipamento.mjs` e não deve ser editado à mão.
 
-### Próximo bloco de equipamento
+### Diário — Equipamentos, parte 3: reserva e troca de armas
 
-Depois de materializar/validar este catálogo, implementar **armas de reserva e troca de armas**:
+Fonte: livro básico PT-BR, regra de equipamento/troca, com errata oficial de 09/09/2025.
 
-- inventário comum hoje guarda saque/consumíveis e possui apenas `emUso` genérico;
-- armas equipadas moram em `ficha.equipamento.primaria/secundaria`;
-- o Core exige modelar até duas armas extras como não equipadas, portanto sem benefícios;
-- troca em situação perigosa cobra 1 Fadiga; em situação calma/preparo durante descanso custa 0;
-- a troca deve ser atômica no servidor, movendo equipada ↔ reserva e cobrando o recurso no mesmo ajuste.
+Implementado na branch de trabalho:
+
+- `ficha.equipamento.reserva` guarda até **duas armas adicionais**;
+- armas na reserva não participam dos derivados nem concedem benefícios;
+- adicionar/remover reserva e trocar o conjunto equipado são validados no servidor;
+- a troca recebe o estado final de primária/secundária e é aplicada de forma atômica;
+- troca em situação perigosa marca **1 Fadiga**; se não houver espaço de Fadiga, nada é alterado;
+- troca em situação calma ou durante preparação num descanso custa **0**;
+- categoria, patamar, propriedade da arma e restrições de empunhadura continuam validadas pelo motor;
+- a exceção de Treinamento de Combate do Guerreiro continua valendo, inclusive por multiclasse;
+- a ficha ganhou `Gerenciar armas`, mostrando reserva 0/2–2/2 e permitindo registrar, remover e trocar.
+
+Validação final do HEAD funcional: GitHub Actions run `34275324930` — **462/462 backend**, **99/99 E2E**, **14 geradores consistentes**, **CSS limpo**. O E2E registra uma arma, troca o loadout e confirma que a troca calma não marca Fadiga.
+
+### Diário — Contagem regressiva de longo prazo
+
+A auditoria inicialmente tratou esta regra como lacuna, mas a inspeção e a suíte mostraram que o subsistema completo **já existia e já obedecia à errata p.164**.
+
+Confirmado:
+
+- contagem de longo prazo não avança por teste comum;
+- descanso curto não a avança;
+- no descanso longo o Mestre pode escolher uma contagem de longo prazo para avançar **uma vez**;
+- uma contagem de outro tipo é recusada nesse fluxo;
+- projetos e perseguições continuam sendo subsistemas distintos e não foram confundidos com esta regra.
+
+Portanto este ponto saiu da lista de implementação pendente e passou a **conferido/correto**.
+
+### Diário — Cartas, parte 1: Livro de Grynn
+
+Fonte: errata oficial de 09/09/2025, p.333.
+
+A entrada `codex-livro-de-grynn` já registrava a divergência da errata, mas o texto exibido ainda dizia apenas que Muralha de Chamas criava uma muralha de chamas mágicas. Foi materializada a palavra **temporária** na fonte `data/cartas-dominio.json`.
+
+Proteção permanente adicionada: `tools/conferir-cartas-lote8.py`.
+
+Validação: GitHub Actions run `34276060393` — **462/462 backend**, **99/99 E2E**, **14 geradores consistentes**, **CSS limpo**. Commit materializado: `8f07a50`.
+
+### Diário — Classes, parte 1: bônus de dano derivados
+
+Fontes: características de classe do livro básico PT-BR — Guerreiro/Treinamento de Combate, Ladino/Ataque Furtivo e Guardião/Determinação.
+
+Antes, os três efeitos estavam corretos em texto, mas a ficha não montava mecanicamente a jogada de dano. Agora o servidor deriva `bonusDeDano` e sobrescreve qualquer valor enviado pelo cliente:
+
+- **Guerreiro — Treinamento de Combate:** +nível em dano físico;
+- **Ladino — Ataque Furtivo:** +Nd6, onde N é o patamar (1/2/3/4); a condição de Camuflado ou aliado Corpo a Corpo do alvo permanece explícita porque depende da cena;
+- **Guardião — Determinação:** soma o valor atual do Dado de Determinação enquanto ele estiver ativo;
+- características adquiridas por **multiclasse** recebem o mesmo efeito mecânico;
+- a ficha mostra `Dano da ficha`, aplica a Proficiência à quantidade de dados da arma e exibe os bônus aplicáveis, sem rolar nenhum dado.
+
+Primeiro run (`34279437883`) abortou antes de qualquer commit funcional por um delimitador inválido no transformador temporário. A causa foi corrigida e o run final `34279545273` passou com **466/466 backend**, **100/100 E2E**, **14 geradores consistentes** e **CSS limpo**. Commit funcional: `bf534a17ad81c6f96d3af6ea09778dc782f60847`.
+
+Próximo ponto concreto já identificado: **Esquiva de Ladino**. O texto corrigido pela errata já existe e o custo de 3 Esperanças já é cobrado, mas o +2 de Evasão ainda precisa virar estado persistente/derivado e ser encerrado no próximo ataque que acertar ou no próximo descanso.
 
 ### Estado atual do Lote 8
 
