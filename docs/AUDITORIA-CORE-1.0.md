@@ -113,7 +113,7 @@ Arquivos `backend/*.gs` gerados só podem ser alterados junto do gerador corresp
 ### Equipamento
 
 - 🔧 Broquel (`Buckler`) está com o texto PT mecânico errado: precisa usar **Pontos de Armadura disponíveis**, conforme errata p.125;
-- 🔧 Cadeira de Rodas de Combate do livro não está no catálogo atual;
+- 🔧 Cadeira de Rodas de Combate: confirmado que são **12 armas principais** (modelos leve, pesado e arcano × T1–T4), pp.122–123; preparação/teste já codificados, catálogo ainda não materializado;
 - 🔧 Chicote (`Whip`) está com tradução mecânica incorreta no catálogo atual: o original manda empurrar adversários de alcance Corpo a Corpo para alcance Próximo; o texto armazenado hoje termina novamente em Corpo a Corpo;
 - 🔧 inventário/troca de armas: até duas armas extras e 1 Fadiga para troca em situação perigosa; sem custo em situação calma/preparo durante descanso;
 - ⏳ todas as armas principais;
@@ -201,7 +201,10 @@ Arquivos `backend/*.gs` gerados só podem ser alterados junto do gerador corresp
 Fechado em 08/09/2026 como bloco de auditoria, ainda sem implantação. Conferência feita contra as fontes declaradas do Lote 8 e o catálogo atual em `data/equipamentos.json`.
 
 - ✅ `Buckler` existe no catálogo como `Broquel`, mas a mecânica PT exibida precisa ser corrigida para referenciar **Pontos de Armadura disponíveis**, conforme errata.
-- ✅ `Combat Wheelchair` / Cadeira de Rodas de Combate não foi encontrada no catálogo atual e deve ser adicionada antes de a seção de equipamento ser considerada completa.
+- ✅ `Combat Wheelchair` / Cadeira de Rodas de Combate não foi encontrada no catálogo atual. O livro traz **12 entradas**: leve, pesada e arcana, cada uma em T1–T4. Todas são armas principais.
+- ✅ Modelos leves: Agilidade, Corpo a Corpo, uma mão, `Veloz`; dano d8 / d8+3 / d8+6 / d8+9 físico.
+- ✅ Modelos pesados: Força, Corpo a Corpo, duas mãos, `Pesada` (−1 Evasão); dano d12+3 / +6 / +9 / +12 físico.
+- ✅ Modelos arcanos: Conjuração, Distante, uma mão, `Confiável`; o livro PT-BR p.123 imprime d6 / +3 / +6 / +9 **físico**. A errata não altera essa linha, então o Lote 8 mantém físico; a divergência com SRD 2.0 fica para o lote de SRD 2.0.
 - ✅ `Whip` existe em todos os patamares relevantes, mas a característica `Startling` está traduzida de forma mecanicamente errada: o texto inglês manda mover adversários de Melee para Close; o texto PT atual termina novamente em Corpo a Corpo. Corrigir a tradução em todas as variantes geradas a partir da mesma fonte.
 - ✅ O equipamento exclusivo de moldura permanece separado no catálogo, o que evita colisão por nome com equipamento do Capítulo 2 e deve ser preservado.
 
@@ -214,9 +217,10 @@ Este bloco só será marcado como implementado quando a fonte de dados, o gerado
 ## Equipamentos — preparação reproduzível
 
 - `tools/auditoria-equipamento.py` contém as correções idempotentes de `Deflecting`/Broquel e `Startling`/Alarmante, com fonte registrada;
-- `tools/conferir-equipamento-lote8.py` foi adicionado como teste de aceitação do catálogo estático: ele exige Broquel baseado em **Pontos de Armadura disponíveis** e exige as quatro variantes T1–T4 do Chicote como **Alarmante**, deslocando de Corpo a Corpo para Próximo;
-- o conferidor apenas lê o JSON e falha em regressões; ele não corrige dados;
+- `tools/lote8-adicionar-cadeiras.py` adiciona idempotentemente as 12 Cadeiras de Rodas de Combate conforme pp.122–123; commit de criação `914ddb5749d64baf183c44013f7e0e894b131e62`;
+- `tools/conferir-equipamento-lote8.py` exige Broquel, quatro Chicotes e agora também as 12 cadeiras com categoria, patamar, atributo, alcance, dano, empunhadura e característica corretos; atualização `9b11980233987c49fac2bda583709008000edb51`;
+- o conferidor também protege deliberadamente o dano físico dos quatro modelos arcanos enquanto o escopo for Core PT-BR + errata;
 - o frontend lê `data/equipamentos.json` diretamente, portanto não é permitido considerar o backend gerado como suficiente sem materializar as mesmas correções no JSON;
-- neste runtime o conferidor ainda **não foi executado**, pois não há checkout local funcional e o repositório não possui GitHub Actions. Não registrar resultado verde até execução real.
+- neste runtime os scripts ainda **não foram executados**, pois não há checkout local funcional e o repositório não possui GitHub Actions. Não registrar resultado verde até execução real.
 
-Pendentes para fechar esta parte: materializar o JSON, regenerar `backend/44_Equipamento.gs` e executar os conferidores/suítes.
+Pendentes para fechar esta parte: executar os preparadores, materializar o JSON, regenerar `backend/44_Equipamento.gs` e executar os conferidores/suítes.
