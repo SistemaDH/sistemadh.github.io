@@ -26,6 +26,9 @@ jobs:
 
       - name: Aplicar transformações estritas
         run: |
+          # O backend gerado usa `cat`; data/equipamentos.json, lido pelo browser, usa `categoria`.
+          # O script temporário foi escrito com o nome do backend; corrige-o antes de materializar a UI.
+          sed -i 's/a\.cat/a.categoria/g' tools/lote8-implementar-ui-troca-armas.py
           python3 tools/lote8-implementar-troca-armas.py
           python3 tools/lote8-implementar-ui-troca-armas.py
 
