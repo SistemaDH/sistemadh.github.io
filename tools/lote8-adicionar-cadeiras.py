@@ -65,7 +65,7 @@ PESADA = caracteristica(
 CONFIAVEL = caracteristica(
     'Reliable', 'Confiável',
     'Reliable: +1 to attack rolls',
-    'Confiável: +1 em testes de ataque.'
+    'Confiável: +1 em jogadas de ataque.'
 )
 
 CADEIRAS = [
