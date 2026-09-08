@@ -107,11 +107,25 @@ Alteração persistida no commit `185a28c00e0a71edcee6f56436482d258543b7be`:
 - correções mecânicas de `Deflecting` e `Startling` foram centralizadas por nome inglês estável;
 - a aplicação é idempotente e registra fonte/motivo em `data/equipamentos-correcoes.json` somente quando há mudança real.
 
+Teste de aceitação persistido no commit `433d79092ea97c02206911ec7a01c68ff48f60d0`:
+
+- novo `tools/conferir-equipamento-lote8.py`;
+- exige que `Deflecting` use **Pontos de Armadura disponíveis** e não Pontuação de Armadura;
+- exige quatro variantes T1–T4 de `Startling`, com nome PT **Alarmante** e deslocamento Corpo a Corpo → Próximo;
+- o script é somente leitura: detecta regressões, não altera o catálogo;
+- **não foi executado neste runtime**: o ambiente continua sem checkout por falha de DNS para `github.com`, e o repositório não possui `.github/workflows` para CI remoto.
+
+Arquitetura confirmada nesta etapa:
+
+- `js/dados.js` lê `data/equipamentos.json` diretamente para o frontend;
+- portanto corrigir somente `backend/44_Equipamento.gs`/gerador deixaria interface e motor divergentes e é proibido;
+- o fechamento do bloco exige JSON estático + backend gerado coerentes.
+
 Pendências deste bloco:
 
 - ainda não materializar as correções em `data/equipamentos.json`;
 - ainda não regenerar `backend/44_Equipamento.gs`;
-- ainda não executar `conferir-gerados`/suítes;
+- ainda não executar `tools/conferir-equipamento-lote8.py`, `conferir-gerados` e suítes;
 - Cadeira de Rodas de Combate ainda não foi adicionada. O livro PT-BR p.123 imprime os modelos arcanos com dano físico, enquanto o SRD 2.0 usa dano mágico; como a errata 09/09/2025 não corrige essa linha, a divergência fica registrada e não será resolvida silenciosamente por SRD 2.0.
 
 ### Estado atual do Lote 8
