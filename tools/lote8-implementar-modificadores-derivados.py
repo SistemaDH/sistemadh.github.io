@@ -136,7 +136,7 @@ def efeito_equip(item):
         return {'tracos': {'presenca': 1}}
     if nome in ('fatigante', 'dificil'):
         return {'evasao': -1, 'tracosTodos': -1}
-    if nome == 'cortante' and cat == 'armadura' and '1d4' in texto and 'dano' in texto:
+    if nome in ('cortante', 'afiada') and cat == 'armadura' and '1d4' in texto and 'dano' in texto:
         return {'danoAdicionalCorpoACorpo': {'quantidade': 1, 'dado': 'd4'}}
     return None
 
@@ -698,7 +698,7 @@ teste('subclasses aplicam PV, Estresse, Evasão, limiar Grave e Adrenalina só q
   igual(contexto.derivadosDoPersonagem_(serafim).limiarGrave, 18, '13 + nível 1 + Ascendente 4');
 
   const ladino = fichaDeModificador({ classe: 'ladino', subclasse: 'ladino-caminhante-noturno', nivel: 5,
-    subclasseCartas: ['fundacao', 'especializacao', 'maestria'], condicoes: ['Vulnerável'] });
+    subclasseCartas: ['fundacao', 'especializacao', 'maestria'], condicoes: [{ id: 'vulneravel', nome: 'Vulnerável', temporaria: false, origem: 'teste' }] });
   igual(contexto.derivadosDoPersonagem_(ladino).evasao, 13, 'Sombra Fugaz +1 Evasão');
   const bd = contexto.bonusDeDanoDaFicha_(ladino);
   verdade((bd.caracteristicasFixas || []).some((x) => x.fonte === 'Adrenalina' && x.valor === 5),
