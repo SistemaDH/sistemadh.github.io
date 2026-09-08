@@ -1,0 +1,36 @@
+name: Lote 8 - diário operacional
+
+on:
+  push:
+    branches:
+      - 'ediçãoclaude'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  atualizar:
+    if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[run-diario]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 'ediçãoclaude'
+          fetch-depth: 0
+      - name: Guardar HEAD
+        run: echo "BASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Atualizar documentos
+        run: python3 tools/lote8-atualizar-diario-20260908.py
+      - name: Recusar push sobre branch avançada
+        run: |
+          git fetch origin 'ediçãoclaude'
+          ATUAL=$(git rev-parse origin/ediçãoclaude)
+          test "$ATUAL" = "$BASE_SHA" || { echo "Branch avançou: $BASE_SHA -> $ATUAL"; exit 1; }
+      - name: Commitar diário
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/HANDOFF.md docs/AUDITORIA-CORE-1.0.md
+          git commit -m 'docs: registrar checkpoints mecânicos do Lote 8'
+          git push origin HEAD:'ediçãoclaude'
