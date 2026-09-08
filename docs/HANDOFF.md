@@ -1,554 +1,140 @@
 # HANDOFF — SistemaDH
 
-> Documento de continuidade entre desenvolvedores e agentes de IA.
->
-> **Fonte da verdade:** GitHub + estado real do Supabase. Não confiar em memória de chat quando o repositório ou o backend puderem ser conferidos.
+> Documento operacional de continuidade. Fonte da verdade: GitHub + estado real do Supabase.
 
 ## Antes de trabalhar
 
-Leia, nesta ordem:
+Leia nesta ordem:
 
-1. `README.md`
-2. `docs/arquitetura-supabase.md`
-3. este `docs/HANDOFF.md`
-4. `js/api.js` se a tarefa envolver API/backend
-5. os arquivos específicos da funcionalidade
+1. `README.md`;
+2. `docs/arquitetura-supabase.md`;
+3. este `docs/HANDOFF.md`;
+4. `js/api.js` se a tarefa envolver API/backend;
+5. arquivos específicos da funcionalidade.
 
-## Regras de convivência entre agentes
+## Regras de convivência
 
-Acordadas em 06/09/2026 entre o proprietário, ChatGPT e Claude:
+- antes de mudança relevante, informar arquivos que pretende alterar;
+- não colocar dois agentes alterando os mesmos arquivos simultaneamente;
+- código/backend relevante vai por branch e PR;
+- atualizar este HANDOFF após etapa grande;
+- mudança de regra de Daggerheart deve registrar a fonte;
+- nunca sobrescrever mudança recente de outro agente sem entender o estado atual.
 
-1. Antes de uma tarefa relevante, informar quais arquivos pretende alterar.
-2. Não colocar dois agentes alterando os mesmos arquivos ao mesmo tempo.
-3. Código/backend relevante vai em branch; documentação pequena e isolada pode ir direto na `main`.
-4. Ao concluir etapa grande, atualizar este HANDOFF.
-5. Mudança de regra de Daggerheart deve registrar a fonte usada.
-6. Respeitar a hierarquia de fontes já adotada; o material pt-BR é pré-errata.
-7. Nunca substituir mudanças recentes de outro agente sem entender o estado atual.
+## Produção atual — Lotes 6 e 7 concluídos
 
-O proprietário é o canal de comunicação entre os agentes.
+Em 08/09/2026, os Lotes 6 e 7 foram implantados por completo.
 
----
-
-# Arquitetura atual
+GitHub:
 
 ```text
-GitHub Pages
-      │
-      ▼
-   js/api.js
-      │
-      ├── auth-api
-      ├── app-api
-      ├── mesa-api
-      ├── player-api
-      ├── engine-api
-      └── photo-api
-             │
-             ▼
-       PostgreSQL
-       + Supabase Storage
+branch de trabalho: ediçãoclaude
+commit fonte do motor: c52b87cd1657ff7904554f2cc3035f552df7f8c8
+commit do pin: bc8849b2493bc435ea9d74bb4c3b19993ecde204
+PR: #6
+merge commit: 8de4eec2b7fcc10658bf10443cff4b97a80a7a3c
 ```
 
-A migração de Google Sheets / Google Apps Script para Supabase está concluída.
+Supabase:
 
-- runtime ativo: Supabase Edge Functions + PostgreSQL + Storage;
-- nenhum fallback normal para Apps Script;
-- novos uploads de foto usam bucket `character-photos`;
-- IDs antigos do Drive ainda podem ser lidos por compatibilidade;
-- o navegador não acessa tabelas diretamente;
+```text
+engine-api: v6
+status: ACTIVE
+verify_jwt: false
+ENGINE_COMMIT: c52b87cd1657ff7904554f2cc3035f552df7f8c8
+ezbr_sha256: 2a24c40978e5a885c524832c35394a1a5b347ead1c595648f01276afe9a34f28
+```
+
+O código implantado foi relido após o deploy e o pin acima foi confirmado. `verify_jwt=false` continua correto para a arquitetura atual porque `engine-api` valida o token customizado de sessão no próprio handler.
+
+Não houve migração de banco.
+
+## O que entrou
+
+### Correção do Aeon / posse de contadores
+
+`refsDeContadorDaFicha_` limita gatilhos e normalização aos contadores que realmente pertencem à ficha. Fichas antigas com marcadores indevidos se limpam silenciosamente na primeira gravação.
+
+### Lote 6 — Forma de Fera
+
+- formas aprimoradas passam a compor corretamente os números da forma base;
+- Vantagens são exibidas;
+- entrar em Forma de Fera cobra Estresse no mesmo ajuste da transformação;
+- Evolução permite pagar Esperança conforme a regra implementada;
+- bônus de traço da forma entra nos derivados;
+- último PV tira automaticamente da forma;
+- híbridos e aprimoramentos registram as escolhas necessárias;
+- Fera Mítica usa base de 1º ou 2º patamar;
+- Híbrido Mítico escolhe três opções, conforme SRD 1.0 adotado pelo projeto.
+
+Ponto ainda aberto de regra: com Evolução, o Estresse adicional das híbridas continua sendo cobrado. A decisão está centralizada em `custoDeEntrarNaForma_`.
+
+### Lote 7 — classes
+
+- Guerreiro com Treinamento de Combate ignora a restrição de empunhadura, inclusive via multiclasse;
+- Guardião Determinado não pode ficar Vulnerável ou Restrito enquanto o contador estiver ativo;
+- Serafim ganhou Dados de Oração, com máximo resolvido pelo traço de Conjuração;
+- Mago ganhou `escolhasDeClasse` para o número de 1 a 12;
+- custos e alvos das habilidades de classe foram trazidos para o app;
+- usos “uma vez por” ganharam contadores persistentes;
+- Camuflado foi alinhado ao texto pós-errata já adotado;
+- contadores cujo máximo usa Conjuração não ficam mais travados em 0;
+- cabeçalho não glosa mais `Caçador (Caçador)`.
+
+## Arquivos gerados — nova regra de fluxo
+
+Correções de arquivos gerados agora também estão nos geradores. Antes de qualquer deploy que toque `backend/*.gs`, rodar:
+
+```bash
+node tools/testes-backend.mjs
+node tools/testes-e2e.mjs
+node tools/conferir-gerados.mjs
+node tools/conferir-css.mjs
+```
+
+Esperado na entrega dos Lotes 6/7:
+
+```text
+backend: 454 passaram, 0 falharam
+E2E: 98 passos ok, 0 falharam
+gerados: todos batem com o gerador
+CSS: nada a limpar nem a escrever
+```
+
+Esses resultados foram registrados pelo Claude na entrega. O agente ChatGPT que implantou não conseguiu rerodá-los localmente porque o runtime isolado não resolvia `github.com`; portanto não registrar como reexecução independente.
+
+## Ordem obrigatória para próximas mudanças de motor + frontend
+
+Quando frontend novo depender do motor novo:
+
+1. terminar e revisar a branch;
+2. escolher commit imutável do motor;
+3. atualizar `ENGINE_COMMIT`;
+4. implantar `engine-api`;
+5. reler a função implantada e confirmar pin/status/auth;
+6. só depois fazer merge na `main`;
+7. atualizar documentação de produção.
+
+Nunca apontar o motor para `main` automaticamente.
+
+## Segurança e persistência — não regredir
+
+- browser não acessa tabelas diretamente;
 - RLS sem policies públicas é intencional;
-- nunca expor `service_role` ou segredo de backend no frontend.
+- nenhum segredo privilegiado pode ir ao frontend;
+- `engine-api` usa autenticação customizada por token de sessão;
+- a ficha usa controle otimista por versão;
+- `apply_engine_mutations` preserva atomicidade das operações compostas;
+- Edge Functions históricas não devem voltar ao roteamento.
 
-O frontend usa `dh:baseApi` como override opcional de base. `js/api.js` acrescenta o nome da Edge Function por ação. A chave antiga `dh:urlApi` é legado e não deve voltar.
+Ativas relevantes: `auth-api`, `app-api`, `mesa-api`, `player-api`, `engine-api`, `photo-api`.
 
-O repositório usa `.gitattributes` com `* text=auto eol=lf` para evitar diffs falsos por CRLF/LF.
+## Próximos passos
 
----
+Os catorze pontos antigos dos prints, o D2 do Lote 5 e os Lotes 6 e 7 estão concluídos. A próxima funcionalidade deve ser definida pelo proprietário.
 
-# Estado do motor de regras
+Documentação detalhada desta entrega:
 
-`engine-api` carrega os arquivos `backend/*.gs` de um commit fixado do GitHub. Isso é deliberado: alterar `backend/*.gs` na `main` não muda produção sozinho.
-
-## Produção atual — Lote 5
-
-O **Lote 5 — movimentos de morte e cicatrizes** foi integrado na `main` pelo PR #5 em 06/09/2026.
-
-A `engine-api` de produção está implantada como **versão 5**, `ACTIVE`, com `verify_jwt=false` porque a função implementa autenticação própria por token de sessão.
-
-O motor está fixado no commit revisado:
-
-```text
-f0e00a6bd86d79f51d3a57e4c948b7fed861bada
-```
-
-Esse commit contém os cinco arquivos do motor alterados no Lote 5: `30_Personagens.gs`, `40_Regras.gs`, `48_Criacao.gs`, `4B_Descanso.gs` e `4C_Ajustes.gs`. O pin foi conferido no código efetivamente implantado no Supabase.
-
-O deploy foi confirmado pelo estado da Edge Function no Supabase e pela leitura do código implantado. O conector disponível nesta etapa não expunha uma ação de invocação HTTP/logs com sessão real, então não foi inventado smoke test remoto; a validação funcional disponível é a bateria registrada do lote.
-
-Fluxo obrigatório para qualquer mudança futura em `backend/*.gs`:
-
-1. alterar e revisar;
-2. executar testes;
-3. revisar o diff;
-4. atualizar explicitamente `ENGINE_COMMIT`;
-5. implantar `engine-api`;
-6. testar a funcionalidade real quando houver meio de invocação disponível;
-7. só então considerar a etapa encerrada.
-
-Nunca trocar o pin por `main` automática.
-
-### O que ainda NÃO está neste pin (medido em 08/09/2026)
-
-Conferido buscando o commit `f0e00a6…` no GitHub e procurando marcas de cada lote:
-
-| Marca no código | Lote | No ar? |
-|---|---|---|
-| `cicatrizes`, `ajustarMovimentoDeMorte_`, `esperancaImpressa` | 5 | sim |
-| `refsDeContadorDaFicha_` | conserto do bug do Aeon | **não** |
-| `custoDeEntrarNaForma_`, `sairDaFormaPorPontosDeVida_` | 6 | **não** |
-| `condicoesImpedidasPorContador_`, `ESCOLHAS_DE_CLASSE`, `classe:seraph:oracao` | 7 | **não** |
-
----
-
-# Lote 2 — concluído
-
-Fechou os pontos 2, 3, 4 e 10 dos prints:
-
-- ouro virou frase com diálogo de lote;
-- item escrito à mão ganhou nota editável;
-- classe e subclasse passaram a abrir o conteúdo correto;
-- ações das cartas foram para o visor e o texto da lista foi reduzido.
-
-Validação registrada:
-
-```text
-testes-e2e.mjs     → 84 passos ok, 0 falharam
-testes-backend.mjs → 416 passaram, 0 falharam
-conferir-css.mjs   → nada a limpar nem a escrever
-```
-
-O backend necessário do Lote 2 já foi implantado no Supabase.
-
----
-
-# Lote 3 — concluído
-
-Fecha os pontos **12** e **9** dos prints.
-
-## Conceito
-
-A sessão é estado da **mesa**, não um evento que o Mestre grava diretamente nas fichas.
-
-- a mesa guarda número da sessão e se está aberta;
-- cada ficha guarda `sessaoVista`;
-- quando a ficha abre e a mesa está à frente, a própria ficha do jogador aplica `fim-de-sessao` e depois `inicio-de-sessao`;
-- quem ficou offline se acerta quando voltar;
-- o número usado vem da mesa no servidor, nunca do cliente.
-
-## Backend
-
-Arquivos principais:
-
-- `backend/4E_Mesa.gs`
-- `backend/99_Api.gs`
-- `backend/4C_Ajustes.gs`
-- `backend/40_Regras.gs`
-
-Mudanças:
-
-- `m.sessao` ganhou `terminouEm` e `aberta`;
-- funções `abrirSessaoDaMesa_`, `encerrarSessaoDaMesa_` e `voltarParaAPrimeiraSessaoDaMesa_`;
-- mutação `{ tipo: 'sessao' }` para reconciliar a ficha com a mesa;
-- `sessaoVista` na ficha padrão;
-- duas aberturas ou dois encerramentos seguidos são recusados;
-- salto de várias sessões aplica a recarga uma vez só;
-- ordem dos gatilhos: fim da sessão primeiro, começo depois.
-
-## Frontend
-
-Arquivos principais:
-
-- `js/telas/mestre.js`
-- `js/telas/ficha.js`
-- `js/api.js`
-- `js/estado.js`
-- `css/mestre.css`
-- `css/ficha.css`
-
-Mudanças:
-
-- painel do Mestre mostra estado real da sessão e ações coerentes;
-- campanha pode voltar para antes da sessão 1;
-- ficha reconcilia `sessaoVista` ao abrir;
-- marcadores que pertencem a cartas aparecem na própria carta e continuam sendo o MESMO contador da aba Jogo.
-
-## Correção de revisão feita pelo ChatGPT
-
-O E2E local usa um único mock de `99_Api.gs` por trás de todas as seis URLs. Isso não prova que uma ação está na Edge Function certa em produção.
-
-Por isso as ações:
-
-```text
-abrirSessao
-encerrarSessaoDaMesa
-voltarParaAPrimeiraSessao
-```
-
-foram movidas de `ACOES_APP` para `ACOES_ENGINE` em `js/api.js`, e também adicionadas à allowlist da `engine-api`.
-
-Isso garante que o código novo de `backend/99_Api.gs` seja executado pela função que realmente carrega o motor fixado.
-
-## Regras e fontes
-
-- **p.154**: no início da campanha, Medo = quantidade de personagens. Isso acontece só na sessão 1.
-- **p.154**: Pontos de Medo atravessam sessões; abrir sessão 2+ e encerrar sessão não zeram Medo.
-- **p.105**: habilidades de uma vez por sessão não voltam em descanso; voltam no começo da próxima sessão.
-
-## Validação registrada pelo Claude
-
-```text
-testes-e2e.mjs     → 88 passos ok, 0 falharam
-testes-backend.mjs → 421 passaram, 0 falharam
-conferir-css.mjs   → nada a limpar nem a escrever
-```
-
-Novos E2E cobrem Medo inicial da campanha, recusa de duas sessões abertas, preservação do Medo, sincronização `sessaoVista` e marcador dentro da carta.
-
-## Integração e deploy
-
-- PR #2 — `Lote 3: ciclo de sessão e contadores nas cartas` — mesclado na `main` em 06/09/2026;
-- merge commit: `4ef7a2a9e173aa32a7b8dd99f2f27e114eda62d9`;
-- `engine-api` implantada antes do merge;
-- versão Supabase: **3**;
-- status: **ACTIVE**;
-- `verify_jwt=false` preservado;
-- `ENGINE_COMMIT=f909fb2d270f55d16e57f6ebf003e7af90c4d7c2`.
-
-O Lote 3 está encerrado e os pontos 9 e 12 dos prints são considerados concluídos.
-
----
-
-# Segurança e persistência — não regredir
-
-Tabelas principais:
-
-- `jogadores`
-- `sessoes`
-- `personagens`
-- `config`
-- `log`
-- `auth_rate_limits`
-
-A ficha completa fica em `personagens.dados` (JSONB), com `versao` otimista. Não sobrescrever silenciosamente uma ficha alterada por outro dispositivo.
-
-`engine-api` aplica mutações por `apply_engine_mutations`. Não substituir isso por updates independentes sem analisar atomicidade e concorrência.
-
-Contas conhecidas após a migração:
-
-- Mestre — ativa, bcrypt;
-- Max — ativo, bcrypt;
-- `TesteSupabase` — desativado, ficha arquivada preservada;
-- Magnus e Vanessa — removidos com autorização do proprietário.
-
-Não recriar dados removidos a partir da documentação.
-
----
-
-# Edge Functions
-
-Ativas relevantes:
-
-- `auth-api`
-- `app-api`
-- `mesa-api`
-- `player-api`
-- `engine-api`
-- `photo-api`
-
-Aposentadas/históricas — não criar dependência nova:
-
-- `apps-script-db`
-- `character-api`
-- `game-api`
-- `rules-engine`
-- `runtime-test`
-
----
-
-# Lote 5 — concluído
-
-Fecha o **D2 — Evitar a Morte**. Marcar o último Ponto de Vida não mata automaticamente: obriga a escolher um dos três movimentos de morte da p.106.
-
-## Regra implementada
-
-- **Sacrifício Glorioso** — última ação com sucesso crítico automático; depois o personagem atravessa o véu.
-- **Evitar a Morte** — informa o resultado do Dado de Esperança; resultado igual ou abaixo do nível gera cicatriz; o personagem fica inconsciente até recuperar 1 PV ou até um descanso longo.
-- **Arriscar Tudo** — Esperança maior levanta o personagem e limpa recursos conforme o valor; Medo maior atravessa o véu; dados iguais são crítico e limpam PV/Estresse.
-
-A mesa adotou a leitura de **repartir** o valor do Dado de Esperança entre Pontos de Vida e Estresse quando a Esperança vence no Arriscar Tudo.
-
-A errata oficial de 09/09/2025 não possui entrada sobre movimentos de morte, cicatrizes ou Dado de Esperança, conforme conferência registrada no lote.
-
-## Modelo da ficha
-
-A ficha ganhou:
-
-- `cicatrizes: []` — lista com histórico/nota de cada cicatriz;
-- `inconsciente: false` — estado separado das condições;
-- `encerrada: null` — registra `{ motivo, em, nota }` para `sacrificio`, `veu` ou `aposentado`.
-
-`aplicarDerivados_` publica `esperancaImpressa` e `esperancaMaxima`. A primeira preserva os seis espaços impressos da ficha; a segunda desconta permanentemente as cicatrizes e continua sendo o teto usado pelo restante do app.
-
-A cicatriz que elimina o último espaço de Esperança encerra a jornada. Fichas encerradas continuam disponíveis para leitura/correção e aparecem no fim do roster, em meio-tom e com selo próprio.
-
-## Tela e fluxo
-
-- encher os PV abre automaticamente o diálogo dos três movimentos;
-- se o diálogo for fechado, a faixa de “PV no limite” permite reabri-lo;
-- a trilha de Esperança mantém os seis espaços e marca os perdidos com `assets/marca/cicatriz.svg`;
-- o veredito de Arriscar Tudo aparece antes da confirmação;
-- inconsciência some automaticamente ao recuperar 1 PV ou ao concluir descanso longo;
-- descanso curto não remove inconsciência.
-
-## Validação
-
-```text
-testes-e2e.mjs     → 93 passos ok, 0 falharam
-testes-backend.mjs → 435 passaram, 0 falharam
-conferir-css.mjs   → nada a limpar nem a escrever
-```
-
-Os testes novos cobrem a trava de PV no limite, resultado igual ao nível cicatrizando, redução permanente da Esperança máxima, última cicatriz encerrando a ficha, os três desfechos de Arriscar Tudo, repartição do dado, Sacrifício Glorioso e as duas formas de sair da inconsciência.
-
-## Integração e deploy
-
-- PR #5 — `Lote 5: movimentos de morte e cicatrizes` — mesclado na `main` em 06/09/2026;
-- merge commit: `c7e019b5c5b95b8370ec62e8bbc5679beb5d6fdd`;
-- `engine-api` implantada antes do merge;
-- versão Supabase: **5**;
-- status: **ACTIVE**;
-- `verify_jwt=false` preservado;
-- `ENGINE_COMMIT=f0e00a6bd86d79f51d3a57e4c948b7fed861bada`.
-
-O Lote 5 está encerrado.
-
----
-
-# Lote 4 — concluído
-
-Fecha os pontos **8** e **11**, os dois últimos dos catorze prints.
-
-## Ponto 11 — conferência de errata, e um bug de regra
-
-Conferido antes de mexer. SRD em inglês:
-
-> **Efficient:** "When you take a short rest, you can choose **a** long rest move instead
-> of **a** short rest move."
-
-A **errata oficial de 09/09/2025 não tem entrada** sobre Clank ou Efficient. O texto pt-BR
-de `data/descanso.json` (p.54) está correto, e o singular bate nos dois.
-
-⚠ **O bug que a conferência achou:** `movimentosDoDescanso_` acrescentava os movimentos de
-descanso longo à lista do curto e **nada limitava quantos podiam ser emprestados**. Uma
-Clank conseguia escolher DOIS movimentos de descanso longo num descanso curto — zerar o
-Estresse e tratar todas as feridas de uma vez. `simularDescanso_` agora conta os
-emprestados e recusa o segundo, citando a página.
-
-Backend: `backend/4B_Descanso.gs`. Tela: `js/telas/descanso.js` — os emprestados saíram da
-lista misturada e ganharam bloco próprio com moldura tracejada, cujo título já diz o
-limite. O selo "Entrou por Eficiente" que ia em cada cartão saiu (era a mesma frase
-repetida, e foi parte do que a mesa chamou de confuso).
-
-## Ponto 8 — a cena virou um lugar
-
-A cena era uma lista dentro da aba Bestiário, e o "Abrir" do resumo "Em cena" caía no
-**catálogo**. Por isso ela "não existia" — e por isso ninguém chegava aos botões de tirar
-da cena, que já estavam lá.
-
-Agora é a **quinta aba** do painel (`js/telas/mestre.js`). O catálogo continua no
-Bestiário, de onde se escolhe quem entra; a Cena é onde se joga.
-
-⚠ **Isto derrubou uma decisão documentada** em `js/telas/bestiario.js`: "não numa quinta
-aba, porque em 390px cinco rótulos no rodapé começam a quebrar". A restrição era real, mas
-a causa não era o rótulo: `.mestre__abas` tinha `grid-template-columns: repeat(4, 1fr)`
-**fixo**. A grade agora se conta sozinha (`grid-auto-flow: column`), e cinco abas cabem
-numa linha a 390px — barra de 374px, ~75px por aba, rótulo mais largo 64px.
-
-Terceira parte do ponto: a cena só recebe do servidor as habilidades que **custam** recurso
-(`habilidadesComCusto_`), então ataque e passivas nunca chegavam nela. A ficha completa já
-abria tocando no nome do adversário, mas ninguém descobriu — a mesa pediu "um popup de
-movimentos" tendo um. Virou **botão**, com nome.
-
-## Detalhes para o próximo agente
-
-1. `fichaDeAdversario`, `blocoDeHabilidade` e `notaDoLivro` subiram para o escopo do MÓDULO
-   em `js/telas/bestiario.js`, que passou a exportar `catalogoDoBestiario()` e
-   `abrirFichaDeAdversario()`. Nenhuma usa estado da tela.
-2. O catálogo chega **depois** na aba Cena: `secaoDoEncontro` ganhou `definirCatalogo()`.
-   A cena desenha na hora e "Movimentos" aparece quando os 129 adversários carregam — a
-   aba mais usada da mesa não espera pela menos usada.
-3. `abrirFichaDeAdversario` não oferece "Pôr em cena": quem chega por lá já pôs o bicho
-   em jogo.
-
-## Validação
-
-```text
-testes-e2e.mjs     → 90 passos ok, 0 falharam
-testes-backend.mjs → 425 passaram, 0 falharam
-conferir-css.mjs   → nada a limpar nem a escrever
-```
-
-Rodado **já com a correção de roteamento do ChatGPT** em `js/api.js` (as três ações de
-sessão em `ACOES_ENGINE`). O Lote 4 não toca nesse arquivo.
-
-⚠ **Lição de teste registrada.** A primeira versão do passo que guarda a barra de abas
-conferia rolagem horizontal e corte de rótulo — e **passou verde com a barra quebrada em
-duas fileiras**. Grade que quebra não estoura para o lado; some para baixo. O passo agora
-conta `offsetTop` distintos. Medido nas duas grades:
-
-```text
-grade nova (auto)          linhas 1 · rolando false · cortados 0
-grade velha repeat(4,1fr)  linhas 2 · rolando false · cortados 0
-```
-
-## Integração e deploy
-
-- PR #4 — `Lote 4: cena como lugar e descanso da Clank` — mesclado na `main` em 06/09/2026;
-- merge commit: `97bff3aacc7adcde4547bbe967dc03e77f8f9932`;
-- `engine-api` implantada antes do merge;
-- versão Supabase: **4**;
-- status: **ACTIVE**;
-- `verify_jwt=false` preservado;
-- `ENGINE_COMMIT=184c3e32b6f201187eb92b412b1c40b8f1068077`.
-
-O ponto 8 subiu pelo frontend no merge e o ponto 11 está no motor implantado. O Lote 4 está encerrado.
-
----
-
-# Lote 6 — Forma de Fera (Druida), a segunda passada
-
-Branch `ediçãoclaude`, em cima do Lote 5. **Ainda não implantado.**
-
-A tela da fera existia desde o C2 e a mesa achou dez buracos: *"o custo de transformar
-não está automático, não existe a forma de gastar 3 de Esperança para melhorar, além de
-outras coisas."* O detalhe inteiro está em `docs/pontos-de-interesse-descanso.md` §11-B.
-
-## Arquivos alterados
-
-| Arquivo | O quê |
-|---|---|
-| `data/fichas-filhas.json` | custo, Evolução, aprimoramentos, híbridos, escada de dados, `custoAdicional` por forma — cada um com a fonte anotada |
-| `tools/gerar-49-fichas-filhas.mjs` | emite as constantes novas e as funções de composição |
-| `backend/49_FichasFilhas.gs` | **gerado** — não editar à mão |
-| `backend/4C_Ajustes.gs` | `entrar` passou a cobrar, a exigir as escolhas e a guardá-las; `sair` limpa |
-| `backend/48_Criacao.gs` | publica a forma composta e o bônus de traço; tira da forma no último PV |
-| `js/telas/paralelas.js` | Vantagens, painel de escolha, interruptor da Evolução, preço no botão |
-| `js/telas/ficha.js` | traço somado com marca, faixa de estado, nota na aba Cartas |
-| `css/ficha.css`, `css/papel.css` | painel de escolha, faixa nova, sublinhado do traço |
-| `tools/testes-backend.mjs`, `tools/testes-e2e.mjs` | 7 testes de motor e 3 passos de tela novos |
-
-## Regra, conferida antes
-
-Errata oficial de **09/09/2025** (a mesma que o repositório já tinha): quatro entradas
-sobre Beastform, todas de digitação ou de estatística de forma, **nenhuma** sobre custo,
-Evolução ou composição. Confirmado que não há errata mais nova do livro básico — a de
-25/08/2026 é do **Hope & Fear**, produto separado, e não menciona Druida nem Beastform.
-
-Duas divergências livro × SRD foram resolvidas pelo SRD, com a fonte gravada no JSON:
-Fera Mítica aceita base de **1º ou 2º** patamar, e Híbrido Mítico escolhe **três** opções.
-
-> ⚠ **Existe um SRD 2.0 (25/08/2026).** Este lote NÃO o adotou: a edição pt-BR da Jambô é
-> da linha 1.0, e trocar de SRD é decisão de projeto, não de tarefa. Fica anotado para o
-> proprietário decidir se vale uma passada comparando as duas versões.
-
-## Ponto de interesse aberto
-
-Com a Evolução, o Estresse **adicional** das híbridas continua sendo cobrado — leitura ao
-pé da letra, que nem o livro nem o SRD nem a errata resolvem. Virar a decisão é uma função
-só: `custoDeEntrarNaForma_`.
-
-## Deploy
-
-`49_FichasFilhas.gs`, `4C_Ajustes.gs` e `48_Criacao.gs` são **motor fixado**: precisam de
-`ENGINE_COMMIT` novo e redeploy da `engine-api`, pelo mesmo fluxo dos lotes 3, 4 e 5. Sem
-isso, só a metade da tela chega à produção.
-
----
-
-# Lote 7 — as outras oito classes
-
-Branch `ediçãoclaude`, em cima do Lote 6. **Ainda não implantado.** O
-levantamento inteiro está em `docs/pontos-de-interesse-classes.md`.
-
-Depois da Forma de Fera, a pergunta foi se as outras classes tinham o mesmo
-tipo de buraco. Tinham, em quatro formatos: duas regras que o app CONTRARIAVA
-(o Guerreiro que não conseguia equipar o que a classe permite, o Guardião
-Determinado que ficava Vulnerável), dois recursos de classe sem lugar nenhum
-(Dados de Oração do Serafim, o número de 1 a 12 do Mago), doze custos que a
-mesa pagava no papel (as nove habilidades de Esperança, Marca da Presa,
-Nêmesis, Canalizar Poder Bruto) e dezesseis "uma vez por" sem marcador.
-
-## ⚠ ACHADO QUE VALE PARA TODO MUNDO: arquivo gerado perdia conserto
-
-`backend/47_Contadores.gs` diz "GERADO … NÃO edite à mão" — e o crivo de posse
-dos contadores (o bug do Aeon) tinha sido escrito **no `.gs`**, não no gerador.
-A próxima regeneração o apagaria em silêncio, com a suíte inteira verde, porque
-os testes leem o `.gs`.
-
-Ao conferir os outros, **mais três** estavam assim:
-
-| Arquivo | O que ia embora |
-|---|---|
-| `48_Criacao.gs` | Forma de Fera composta (Lote 6) e o desconto de cicatrizes na Esperança (Lote 5) |
-| `4B_Descanso.gs` | teto do "Eficiente" da Clank (Lote 4) e o descanso longo que acorda (Lote 5) |
-| `4E_Mesa.gs` | abrir/encerrar sessão inteiro (Lote 3) e a regra opcional das moedas |
-
-Tudo foi levado para os geradores. **`tools/conferir-gerados.mjs`** roda os 14
-geradores e compara byte a byte com o repositório — sem destruir nada: guarda o
-conteúdo antes e devolve o que estava lá, mesmo quando acha diferença. Vale
-rodar junto com os testes antes de qualquer deploy.
-
-## Arquivos alterados
-
-| Arquivo | O quê |
-|---|---|
-| `data/classes.json` | errata do Camuflado; `efeito` do Treinamento de Combate; `escolha` do Mago; `uso` (custo/alvo) em 12 habilidades |
-| `data/contadores.json` | Dados de Oração; 15 marcadores de "uma vez por"; `impedeCondicoes` na Determinação; `exigeCaracteristica` |
-| `tools/gerar-42-classes.mjs` | `CARACTERISTICAS_COM_EFEITO`, `ESCOLHAS_DE_CLASSE`, `HABILIDADES_DE_CLASSE_COM_CUSTO` e os validadores |
-| `tools/gerar-44-equipamento.mjs` | a conta de mãos passa a receber a ficha |
-| `tools/gerar-46-condicoes.mjs` | condição impedida por habilidade ativa |
-| `tools/gerar-47-contadores.mjs` | posse por característica, teto com progressão, condições impedidas |
-| `tools/gerar-48-criacao.mjs` | passa a ficha para a validação de equipamento; publica as condições barradas |
-| `backend/40_Regras.gs`, `backend/4C_Ajustes.gs` | campos novos da ficha e os ajustes `habilidade` e `escolhaDeClasse` |
-| `js/telas/ficha.js`, `js/glossario.js`, `css/ficha.css` | botões de habilidade, escolha do Mago, nota das condições barradas, dois consertos antigos |
-| `tools/conferir-gerados.mjs`, `tools/capturar-classes.mjs` | novos |
-
-## Deploy
-
-Motor fixado: `40_Regras.gs`, `42_Classes.gs`, `44_Equipamento.gs`,
-`46_Condicoes.gs`, `47_Contadores.gs`, `48_Criacao.gs` e `4C_Ajustes.gs`.
-Precisa de `ENGINE_COMMIT` novo e redeploy da `engine-api`.
-
----
-
-# Próximos pontos dos prints
-
-**Nenhum dos prints.** Os catorze pontos e o D2 do Lote 5 estão implantados.
-
-Pendentes de **deploy**, não de desenvolvimento — todos na branch `ediçãoclaude`:
-o conserto do bug do Aeon, o **Lote 6** (Forma de Fera) e o **Lote 7** (as outras oito
-classes). O passo a passo está em `docs/ENTREGA-LOTES-6-7.md`, incluindo a ordem
-obrigatória (motor primeiro, merge depois) e o motivo.
-
-A próxima funcionalidade deve ser definida pelo proprietário.
-
----
-
-# Como entregar para outra IA
-
-Basta informar:
-
-> Leia `README.md`, `docs/arquitetura-supabase.md` e `docs/HANDOFF.md` na branch `main` antes de alterar qualquer coisa. O GitHub é a fonte da verdade e o estado real do Supabase deve ser conferido para mudanças de backend.
-
-Atualize este arquivo ao concluir etapas grandes, alterar arquitetura, Edge Functions, autenticação, modelo de dados, estratégia do motor ou descobrir risco que o próximo agente precise conhecer.
+- `docs/ENTREGA-LOTES-6-7.md`;
+- `docs/pontos-de-interesse-descanso.md` §11-B;
+- `docs/pontos-de-interesse-classes.md`.
