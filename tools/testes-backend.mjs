@@ -2523,6 +2523,160 @@ teste('as perguntas de origem e vínculos vieram do livro bom (fecha B6)', () =>
   });
 });
 
+console.log('\nModificadores derivados do Core — Lote 8');
+
+const fichaDeModificador = (o = {}) => ({
+  identidade: {
+    nome: o.nome || 'Teste', nivel: o.nivel || 1,
+    classe: o.classe || 'bardo', subclasse: o.subclasse || 'bardo-musico-errante',
+    ancestralidade: o.ancestralidade || 'elfo', comunidade: o.comunidade || 'highborne'
+  },
+  origem: o.origem || { ancestralidadeMista: [], caracteristicasEscolhidas: [] },
+  tracos: Object.assign({ agilidade: 2, forca: 1, finesse: 1, instinto: 0, presenca: 0, conhecimento: -1 }, o.tracos || {}),
+  recursos: Object.assign({ esperanca: 2, armaduraMarcada: 0 }, o.recursos || {}),
+  equipamento: Object.assign({ primaria: null, secundaria: null, armadura: null, reserva: [] }, o.equipamento || {}),
+  subclasseCartas: o.subclasseCartas || ['fundacao'],
+  multiclasse: null, avancos: { bonus: {} }, bonusDeCartas: {}, cartasPermanentes: {},
+  fichasFilhas: [], contadores: {}, condicoes: o.condicoes || [], cartas: { ativas: [], cofre: [] }
+});
+
+teste('Galapa soma a Proficiência aos dois limiares, inclusive em ancestralidade mista', () => {
+  const puro = fichaDeModificador({ ancestralidade: 'galapa', nivel: 5,
+    equipamento: { armadura: 'Armadura de couro', primaria: null, secundaria: null, reserva: [] } });
+  const d = contexto.derivadosDoPersonagem_(puro);
+  igual(d.proficiencia, 3);
+  igual(d.limiarMaior, 14); // 6 base + nível 5 + Prof 3
+  igual(d.limiarGrave, 21); // 13 + 5 + 3
+
+  const misto = fichaDeModificador({ ancestralidade: 'galapa', nivel: 5,
+    origem: { ancestralidadeMista: ['galapa', 'orc'], caracteristicasEscolhidas: ['Carapaça', 'Presas'] },
+    equipamento: { armadura: 'Armadura de couro', primaria: null, secundaria: null, reserva: [] } });
+  igual(contexto.derivadosDoPersonagem_(misto).limiarMaior, 14,
+    'a característica escolhida na herança mista mantém o efeito');
+});
+
+teste('Gigante, Humano e Simiah alteram PV, Estresse e Evasão sem mexer nos valores-base', () => {
+  igual(contexto.derivadosDoPersonagem_(fichaDeModificador({ ancestralidade: 'gigante' })).pontosDeVidaMaximos, 6,
+    'Bardo 5 PV + Resistência do Gigante');
+  igual(contexto.derivadosDoPersonagem_(fichaDeModificador({ ancestralidade: 'humano' })).estresseMaximo, 7,
+    'Alta Resistência soma um espaço de Estresse');
+  igual(contexto.derivadosDoPersonagem_(fichaDeModificador({ ancestralidade: 'simiah' })).evasao, 11,
+    'Ágil soma +1 na Evasão');
+});
+
+teste('Guardião Robusto acumula +1, +2 e +3 nos limiares conforme as cartas adquiridas', () => {
+  const base = { classe: 'guardiao', subclasse: 'guardiao-robusto', ancestralidade: 'elfo',
+    equipamento: { armadura: 'Armadura de couro', primaria: null, secundaria: null, reserva: [] } };
+  igual(contexto.derivadosDoPersonagem_(fichaDeModificador(base)).limiarMaior, 8); // 6+1 nível +1
+  igual(contexto.derivadosDoPersonagem_(fichaDeModificador(Object.assign({}, base,
+    { subclasseCartas: ['fundacao', 'especializacao'] }))).limiarMaior, 10); // +1+2
+  igual(contexto.derivadosDoPersonagem_(fichaDeModificador(Object.assign({}, base,
+    { subclasseCartas: ['fundacao', 'especializacao', 'maestria'] }))).limiarMaior, 13); // +1+2+3
+});
+
+teste('subclasses aplicam PV, Estresse, Evasão, limiar Grave e Adrenalina só quando cabem', () => {
+  const vinganca = fichaDeModificador({ classe: 'guardiao', subclasse: 'guardiao-vinganca' });
+  igual(contexto.derivadosDoPersonagem_(vinganca).estresseMaximo, 7, 'À Vontade +1 Estresse');
+
+  const mago = fichaDeModificador({ classe: 'mago', subclasse: 'mago-escola-da-guerra', nivel: 5,
+    subclasseCartas: ['fundacao', 'especializacao'], recursos: { esperanca: 2 } });
+  let dm = contexto.derivadosDoPersonagem_(mago);
+  igual(dm.pontosDeVidaMaximos, 6, 'Mago de Batalha +1 PV');
+  igual(dm.evasao, 14, 'Escudo Conjurado soma Proficiência 3 à Evasão');
+  mago.recursos.esperanca = 1;
+  igual(contexto.derivadosDoPersonagem_(mago).evasao, 11, 'com menos de 2 Esperanças o Escudo Conjurado some');
+
+  const serafim = fichaDeModificador({ classe: 'seraph', subclasse: 'seraph-sentinela-alado',
+    subclasseCartas: ['fundacao', 'especializacao', 'maestria'],
+    equipamento: { armadura: 'Armadura de couro', primaria: null, secundaria: null, reserva: [] } });
+  igual(contexto.derivadosDoPersonagem_(serafim).limiarGrave, 18, '13 + nível 1 + Ascendente 4');
+
+  const ladino = fichaDeModificador({ classe: 'ladino', subclasse: 'ladino-caminhante-noturno', nivel: 5,
+    subclasseCartas: ['fundacao', 'especializacao', 'maestria'], condicoes: [{ id: 'vulneravel', nome: 'Vulnerável', temporaria: false, origem: 'teste' }] });
+  igual(contexto.derivadosDoPersonagem_(ladino).evasao, 13, 'Sombra Fugaz +1 Evasão');
+  const bd = contexto.bonusDeDanoDaFicha_(ladino);
+  verdade((bd.caracteristicasFixas || []).some((x) => x.fonte === 'Adrenalina' && x.valor === 5),
+    'Adrenalina devia somar o nível ao dano enquanto Vulnerável');
+  ladino.condicoes = [];
+  verdade(!(contexto.bonusDeDanoDaFicha_(ladino).caracteristicasFixas || []).some((x) => x.fonte === 'Adrenalina'),
+    'Adrenalina não vale fora de Vulnerável');
+});
+
+teste('equipamento ativo altera Evasão, Armadura e traços; reserva não concede benefício', () => {
+  const ARMAS = avaliar('ARMAS');
+  const ARMADURAS = avaliar('ARMADURAS');
+  const torre = ARMAS.find((a) => a.cat === 'secundaria' && a.efeitoDerivado && a.efeitoDerivado.pontuacaoArmadura === 2);
+  const placas = ARMADURAS.find((a) => a.tier === 1 && a.efeitoDerivado && a.efeitoDerivado.evasao === -2);
+  verdade(torre && placas, 'faltou escudo-torre ou placas estruturados');
+
+  const f = fichaDeModificador({ equipamento: { primaria: null, secundaria: torre.id, armadura: placas.id, reserva: [] } });
+  const d = contexto.derivadosDoPersonagem_(f);
+  igual(d.pontuacaoArmadura, 6, 'placas 4 + escudo-torre 2');
+  igual(d.evasao, 7, 'Bardo 10 -2 placas -1 escudo-torre');
+  igual(contexto.valorDoTraco_(f, 'Agilidade'), 1, 'Muito Pesada também reduz Agilidade no servidor');
+
+  const guardado = fichaDeModificador({ equipamento: { primaria: null, secundaria: null, armadura: null, reserva: [torre.id] } });
+  igual(contexto.derivadosDoPersonagem_(guardado).pontuacaoArmadura, 0,
+    'arma na reserva não concede Armadura');
+  igual(contexto.derivadosDoPersonagem_(guardado).evasao, 10,
+    'arma na reserva não concede penalidade');
+});
+
+teste('Bellamoi e Cota Salvadora alteram o valor efetivo dos traços sem sobrescrever ficha.tracos', () => {
+  const ARMADURAS = avaliar('ARMADURAS');
+  const bellamoi = ARMADURAS.find((a) => a.efeitoDerivado && a.efeitoDerivado.tracos && a.efeitoDerivado.tracos.presenca === 1);
+  const salvadora = ARMADURAS.find((a) => a.efeitoDerivado && a.efeitoDerivado.tracosTodos === -1);
+  verdade(bellamoi && salvadora, 'faltaram armaduras especiais estruturadas');
+  const f = fichaDeModificador({ equipamento: { armadura: bellamoi.id, primaria: null, secundaria: null, reserva: [] } });
+  igual(f.tracos.presenca, 0, 'o valor escolhido continua intocado');
+  igual(contexto.valorDoTraco_(f, 'Presença'), 1, 'o valor efetivo recebe Bellamoi');
+  f.equipamento.armadura = salvadora.id;
+  igual(contexto.valorDoTraco_(f, 'Força'), 0, 'Cota Salvadora tira 1 de todos os traços');
+});
+
+teste('Pau-Ferro só aumenta os limiares depois de marcar o último espaço da Armadura final', () => {
+  const ARMADURAS = avaliar('ARMADURAS');
+  const pau = ARMADURAS.find((a) => a.efeitoDerivado && a.efeitoDerivado.limiaresSeUltimaArmaduraMarcada === 2);
+  verdade(pau, 'Peitoral de Pau-Ferro não foi estruturado');
+  const f = fichaDeModificador({ equipamento: { armadura: pau.id, primaria: null, secundaria: null, reserva: [] },
+    recursos: { armaduraMarcada: Math.max(0, Number(pau.pontuacao) - 1) } });
+  const antes = contexto.derivadosDoPersonagem_(f);
+  f.recursos.armaduraMarcada = pau.pontuacao;
+  const depois = contexto.derivadosDoPersonagem_(f);
+  igual(depois.limiarMaior, antes.limiarMaior + 2);
+  igual(depois.limiarGrave, antes.limiarGrave + 2);
+});
+
+teste('passivos de dano de arma/armadura são calculados sem rolar e condicionais ficam explícitos', () => {
+  const ARMAS = avaliar('ARMAS');
+  const ARMADURAS = avaliar('ARMADURAS');
+  const porTraco = ARMAS.find((a) => a.efeitoDerivado && a.efeitoDerivado.danoDaArmaPorTraco);
+  const pareada = ARMAS.find((a) => a.cat === 'secundaria' && a.efeitoDerivado && a.efeitoDerivado.danoPrimariaCorpoACorpo === 2);
+  const espinhos = ARMADURAS.find((a) => a.efeitoDerivado && a.efeitoDerivado.danoAdicionalCorpoACorpo);
+  verdade(porTraco && pareada && espinhos, 'faltaram passivos de dano estruturados');
+  const f = fichaDeModificador({ equipamento: { primaria: porTraco.id, secundaria: pareada.id, armadura: espinhos.id, reserva: [] } });
+  const b = contexto.bonusDeDanoDaFicha_(f);
+  verdade((b.equipamento || []).some((x) => x.armaId === porTraco.id && x.valor === 2),
+    'a arma devia somar a Agilidade efetiva (+2)');
+  verdade((b.condicionais || []).some((x) => x.valor === 2 && /Corpo a Corpo/.test(x.condicao)),
+    'arma pareada devia publicar +2 Corpo a Corpo');
+  verdade((b.condicionais || []).some((x) => x.dado === 'd4'),
+    'placas com espinhos deviam publicar +1d4 condicional');
+});
+
+teste('equipamento de moldura usa o mesmo resolvedor de passivos', () => {
+  const CAMP = avaliar('EQUIPAMENTO_CAMPANHA');
+  const item = CAMP.find((x) => x.efeitoDerivado && x.efeitoDerivado.evasao === -1 &&
+    (x.cat === 'primaria' || x.cat === 'secundaria'));
+  verdade(item, 'nenhum equipamento de moldura com -1 Evasão foi estruturado');
+  const f = fichaDeModificador({ equipamento: {
+    primaria: item.cat === 'primaria' ? item.id : null,
+    secundaria: item.cat === 'secundaria' ? item.id : null,
+    armadura: null, reserva: []
+  }});
+  igual(contexto.derivadosDoPersonagem_(f).evasao, 9);
+});
+
 console.log('\nEsquiva de Ladino — Lote 8');
 
 teste('Esquiva de Ladino paga 3 Esperanças e liga +2 Evasão na mesma mutação', () => {

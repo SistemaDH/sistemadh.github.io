@@ -16,6 +16,19 @@ const com = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/comunidades.json'),
 const j = (v) => JSON.stringify(v);
 const L = [];
 
+/* Efeitos numéricos que a ficha consegue aplicar sem escolha/rolagem. */
+const efeitosDerivadosDeOrigem = {};
+for (const a of anc.ancestralidades) {
+  for (const f of a.caracteristicas || []) {
+    if (!f.efeitoDerivado) continue;
+    if (efeitosDerivadosDeOrigem[f.nome] &&
+        JSON.stringify(efeitosDerivadosDeOrigem[f.nome]) !== JSON.stringify(f.efeitoDerivado)) {
+      throw new Error(`efeito derivado ambíguo para ${f.nome}`);
+    }
+    efeitosDerivadosDeOrigem[f.nome] = f.efeitoDerivado;
+  }
+}
+
 L.push(`/**
  * ============================================================================
  *  Arquivo: 43_Origens.gs
@@ -47,6 +60,9 @@ for (const a of anc.ancestralidades) {
   L.push(`  ${j(a.id)}: { nome: ${j(a.nome)}, caracteristicas: [${feats}] },`);
 }
 L.push('};\n');
+
+L.push('/** Modificadores derivados das características de ancestralidade. */');
+L.push(`const EFEITOS_DERIVADOS_DE_ORIGEM = ${JSON.stringify(efeitosDerivadosDeOrigem, null, 2)};\n`);
 
 L.push('/** Nomes alternativos de ancestralidade (carta x livro). */');
 L.push('const ANCESTRALIDADE_ALIASES = {');

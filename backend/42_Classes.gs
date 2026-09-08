@@ -102,6 +102,39 @@ const CLASSES = {
   },
 };
 
+/** Modificadores derivados das características de classe/subclasse. */
+const EFEITOS_DERIVADOS_DE_CLASSE = {
+  "Inabalável": {
+    "limiares": 1
+  },
+  "Implacável": {
+    "limiares": 2
+  },
+  "Destemido": {
+    "limiares": 3
+  },
+  "À Vontade": {
+    "estresseMaximo": 1
+  },
+  "Adrenalina": {
+    "danoPorNivelSeCondicao": "vulneravel"
+  },
+  "Sombra Fugaz": {
+    "evasao": 1
+  },
+  "Mago de Batalha": {
+    "pontosDeVidaMaximos": 1
+  },
+  "Escudo Conjurado": {
+    "evasaoPorProficienciaSeEsperancaMinima": {
+      "esperanca": 2,
+      "multiplicador": 1
+    }
+  },
+  "Ascendente": {
+    "limiarGrave": 4
+  }
+};
 /** Habilidades de CLASSE que cobram Esperança (ou Estresse) para serem usadas. */
 const HABILIDADES_DE_CLASSE_COM_CUSTO = {
   "Fazer uma Cena": {

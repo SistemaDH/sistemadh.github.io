@@ -173,7 +173,13 @@ function valorDoTraco_(ficha, nomeTraco) {
   if (!id) return 0;
   const tr = (ficha && ficha.tracos) || {};
   const n = Number(tr[id]);
-  return isFinite(n) ? n : 0;
+  const base = isFinite(n) ? n : 0;
+  // O cliente nunca dita este bônus: ele é refeito das características e do
+  // equipamento ativo. Assim Bellamoi, Placas e armas Incômodas valem também
+  // para Conjuração/contadores, e não apenas para o número desenhado na tela.
+  const mods = (typeof modificadoresDeTracoDaFicha_ === 'function')
+    ? modificadoresDeTracoDaFicha_(ficha) : {};
+  return base + (Number(mods[id]) || 0);
 }
 
 /**

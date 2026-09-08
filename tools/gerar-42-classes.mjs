@@ -14,6 +14,26 @@ const dados = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/classes.json'), '
 const j = (v) => JSON.stringify(v);
 const L = [];
 
+/* Efeitos derivados de classe/subclasse que não exigem um estado novo. */
+const efeitosDerivadosDeClasse = {};
+const registrarEfeitoDerivado = (f) => {
+  if (!f || !f.efeitoDerivado) return;
+  if (efeitosDerivadosDeClasse[f.nome] &&
+      JSON.stringify(efeitosDerivadosDeClasse[f.nome]) !== JSON.stringify(f.efeitoDerivado)) {
+    throw new Error(`efeito derivado ambíguo para ${f.nome}`);
+  }
+  efeitosDerivadosDeClasse[f.nome] = f.efeitoDerivado;
+};
+for (const c of dados.classes) {
+  registrarEfeitoDerivado(c.caracteristicaEsperanca);
+  for (const f of c.caracteristicasDeClasse || []) registrarEfeitoDerivado(f);
+  for (const s of c.subclasses || []) {
+    for (const qual of ['fundacao', 'especializacao', 'maestria']) {
+      for (const f of ((s.cartas || {})[qual] || {}).caracteristicas || []) registrarEfeitoDerivado(f);
+    }
+  }
+}
+
 /* --- conferência estrutural ----------------------------------------------
  *
  * A distinção que o SRD faz — e que o livro pt-BR embaralha — é entre a
@@ -203,6 +223,9 @@ for (const c of dados.classes) {
  * primeira, e a Cena pararia de cobrar Medo. Mesma armadilha que deu o sufixo
  * DaMesa em encerrarSessaoDaMesa_.
  */
+L.push('/** Modificadores derivados das características de classe/subclasse. */');
+L.push(`const EFEITOS_DERIVADOS_DE_CLASSE = ${JSON.stringify(efeitosDerivadosDeClasse, null, 2)};`);
+
 L.push('/** Habilidades de CLASSE que cobram Esperança (ou Estresse) para serem usadas. */');
 L.push(`const HABILIDADES_DE_CLASSE_COM_CUSTO = ${JSON.stringify(comCusto, null, 2)};`);
 L.push(`

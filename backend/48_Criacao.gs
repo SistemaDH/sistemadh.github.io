@@ -235,6 +235,98 @@ function dominiosDoPersonagem_(ficha) {
 }
 
 /**
+ * MODIFICADORES DERIVADOS DO QUE ESTÁ REALMENTE ATIVO NA FICHA.
+ *
+ * Nada aqui é digitado pelo cliente: ancestralidade mista passa primeiro por
+ * caracteristicasDaOrigem_; subclasse só entrega as cartas adquiridas; e o
+ * equipamento lê SOMENTE primária/secundária/armadura — nunca a reserva.
+ */
+function efeitosDeCaracteristicasDaFicha_(ficha) {
+  const saida = [];
+  const adiciona = function (c, mapa) {
+    const e = mapa && mapa[c.nome];
+    if (e) saida.push({ nome: c.nome, origem: c.origem || '', efeito: e });
+  };
+  const origem = (typeof caracteristicasDaOrigem_ === 'function') ? caracteristicasDaOrigem_(ficha) : [];
+  for (let i = 0; i < origem.length; i++) {
+    adiciona(origem[i], (typeof EFEITOS_DERIVADOS_DE_ORIGEM !== 'undefined') ? EFEITOS_DERIVADOS_DE_ORIGEM : null);
+  }
+  const classe = (typeof caracteristicasDaClasse_ === 'function') ? caracteristicasDaClasse_(ficha) : [];
+  for (let i = 0; i < classe.length; i++) {
+    adiciona(classe[i], (typeof EFEITOS_DERIVADOS_DE_CLASSE !== 'undefined') ? EFEITOS_DERIVADOS_DE_CLASSE : null);
+  }
+  return saida;
+}
+
+function equipamentoAtivoDaFicha_(ficha) {
+  const eq = (ficha && ficha.equipamento) || {};
+  const saida = [];
+  const primaria = (typeof acharArma_ === 'function') ? acharArma_(eq.primaria) : null;
+  const secundaria = (typeof acharArma_ === 'function') ? acharArma_(eq.secundaria) : null;
+  const armadura = (typeof acharArmadura_ === 'function') ? acharArmadura_(eq.armadura) : null;
+  if (primaria) saida.push({ papel: 'primaria', item: primaria });
+  if (secundaria) saida.push({ papel: 'secundaria', item: secundaria });
+  if (armadura) saida.push({ papel: 'armadura', item: armadura });
+  return saida;
+}
+
+function modificadoresDerivadosDaFicha_(ficha) {
+  const saida = {
+    evasao: 0, limiares: 0, limiarMaior: 0, limiarGrave: 0,
+    pontosDeVidaMaximos: 0, estresseMaximo: 0, pontuacaoArmadura: 0,
+    limiaresSeUltimaArmaduraMarcada: 0,
+    tracos: { agilidade: 0, forca: 0, finesse: 0, instinto: 0, presenca: 0, conhecimento: 0 },
+    fontes: []
+  };
+  const prof = (typeof proficienciaDaFicha_ === 'function') ? proficienciaDaFicha_(ficha) : 1;
+  const r = (ficha && ficha.recursos) || {};
+  const esperanca = (r.esperanca === undefined || r.esperanca === null)
+    ? ((typeof CRIACAO !== 'undefined' && CRIACAO.esperancaInicial) || 2)
+    : (Number(r.esperanca) || 0);
+
+  const aplicar = function (e, fonte) {
+    if (!e) return;
+    const numero = function (k) { return Number(e[k]) || 0; };
+    saida.evasao += numero('evasao');
+    saida.limiares += numero('limiares');
+    saida.limiarMaior += numero('limiarMaior');
+    saida.limiarGrave += numero('limiarGrave');
+    saida.pontosDeVidaMaximos += numero('pontosDeVidaMaximos');
+    saida.estresseMaximo += numero('estresseMaximo');
+    saida.pontuacaoArmadura += numero('pontuacaoArmadura');
+    saida.limiaresSeUltimaArmaduraMarcada += numero('limiaresSeUltimaArmaduraMarcada');
+    if (e.limiaresPorProficiencia) saida.limiares += prof * Number(e.limiaresPorProficiencia);
+    if (e.tracosTodos) {
+      Object.keys(saida.tracos).forEach(function (k) { saida.tracos[k] += Number(e.tracosTodos) || 0; });
+    }
+    const tr = e.tracos || {};
+    Object.keys(tr).forEach(function (k) {
+      if (saida.tracos[k] !== undefined) saida.tracos[k] += Number(tr[k]) || 0;
+    });
+    const escudo = e.evasaoPorProficienciaSeEsperancaMinima;
+    if (escudo && esperanca >= (Number(escudo.esperanca) || 0)) {
+      saida.evasao += prof * (Number(escudo.multiplicador) || 1);
+    }
+    if (fonte) saida.fontes.push(fonte);
+  };
+
+  const feats = efeitosDeCaracteristicasDaFicha_(ficha);
+  for (let i = 0; i < feats.length; i++) aplicar(feats[i].efeito, feats[i].nome);
+
+  const equipados = equipamentoAtivoDaFicha_(ficha);
+  for (let i = 0; i < equipados.length; i++) {
+    const item = equipados[i].item;
+    aplicar(item.efeitoDerivado, item.nome);
+  }
+  return saida;
+}
+
+/** Usado por 45_Tracos.gs: sempre recalculado do estado confiável da ficha. */
+function modificadoresDeTracoDaFicha_(ficha) {
+  return modificadoresDerivadosDaFicha_(ficha).tracos;
+}
+
+/**
  * BÔNUS DE DANO DERIVADOS DAS CARACTERÍSTICAS DE CLASSE.
  *
  * O sistema não rola os dados. Ele publica apenas o que a ficha determina:
@@ -255,7 +347,52 @@ function bonusDeDanoDaFicha_(ficha) {
       fichaTemCaracteristicaDeClasse_(ficha, nome);
   };
 
-  const saida = {};
+  const saida = { caracteristicasFixas: [], equipamento: [], condicionais: [] };
+
+  // Efeitos de subclasse cuja condição já está escrita na própria ficha.
+  const featsDerivados = efeitosDeCaracteristicasDaFicha_(ficha);
+  for (let i = 0; i < featsDerivados.length; i++) {
+    const e = featsDerivados[i].efeito || {};
+    if (e.danoPorNivelSeCondicao && typeof temCondicao_ === 'function' &&
+        temCondicao_(ficha, e.danoPorNivelSeCondicao)) {
+      saida.caracteristicasFixas.push({
+        fonte: featsDerivados[i].nome, tipo: 'fixo', valor: nivel,
+        aplicaEm: 'jogada-de-dano'
+      });
+    }
+  }
+
+  // Passivos do equipamento: os que são incondicionais entram na arma; os que
+  // dependem da distância do alvo são publicados como condicionais calculados.
+  const equipados = equipamentoAtivoDaFicha_(ficha);
+  for (let i = 0; i < equipados.length; i++) {
+    const papel = equipados[i].papel;
+    const item = equipados[i].item;
+    const e = item.efeitoDerivado || {};
+    if (papel === 'primaria' && e.danoDaArmaPorTraco) {
+      saida.equipamento.push({ fonte: item.carac || item.nome, tipo: 'fixo',
+        valor: (typeof valorDoTraco_ === 'function') ? valorDoTraco_(ficha, e.danoDaArmaPorTraco) : 0,
+        armaId: item.id, aplicaEm: 'arma' });
+    }
+    if (papel === 'primaria' && e.danoDaArmaPorNivel) {
+      saida.equipamento.push({ fonte: item.carac || item.nome, tipo: 'fixo',
+        valor: nivel * Number(e.danoDaArmaPorNivel), armaId: item.id, aplicaEm: 'arma' });
+    }
+    if (papel === 'secundaria' && e.danoPrimariaCorpoACorpo) {
+      const primaria = ((ficha || {}).equipamento || {}).primaria;
+      const armaPrimaria = (typeof acharArma_ === 'function') ? acharArma_(primaria) : null;
+      saida.condicionais.push({ fonte: item.carac || item.nome, tipo: 'fixo',
+        valor: Number(e.danoPrimariaCorpoACorpo) || 0,
+        armaId: armaPrimaria ? armaPrimaria.id : null,
+        condicao: 'alvo em alcance Corpo a Corpo', aplicaEm: 'arma-primaria' });
+    }
+    if (papel === 'armadura' && e.danoAdicionalCorpoACorpo) {
+      saida.condicionais.push({ fonte: item.carac || item.nome, tipo: 'dados',
+        quantidade: Number(e.danoAdicionalCorpoACorpo.quantidade) || 1,
+        dado: e.danoAdicionalCorpoACorpo.dado || 'd4',
+        condicao: 'ataque bem-sucedido contra alvo Corpo a Corpo', aplicaEm: 'jogada-de-dano' });
+    }
+  }
 
   if (tem('Treinamento de Combate')) {
     saida.guerreiroFisico = {
@@ -327,18 +464,19 @@ function derivadosDoPersonagem_(ficha) {
   const bonusEsquivaLadino = esquivaDeLadinoAtiva ? 2 : 0;
 
   let evasao = bases ? bases.evasaoInicial : null;
-  const pontuacaoArmadura = armadura ? (armadura.pontuacao || 0) : 0;
   let limiarMaior = null, limiarGrave = null;
 
   if (armadura) {
     const lim = partirLimiares_(armadura.limiares);
     if (lim) { limiarMaior = lim.menor + nivel; limiarGrave = lim.maior + nivel; }
-    // A característica Flexível da armadura soma +1 na Evasão.
-    if (evasao !== null && chaveTexto_(armadura.carac || '') === 'flexivel') evasao += 1;
   }
 
   const proficiencia = (typeof proficienciaDaFicha_ === 'function')
     ? proficienciaDaFicha_(ficha) : CRIACAO.proficienciaInicial;
+  const md = modificadoresDerivadosDaFicha_(ficha);
+  // Armadura final inclui escudos/armas e nunca passa de 12 (livro p.112).
+  const pontuacaoArmadura = Math.max(0, Math.min(12,
+    (armadura ? (Number(armadura.pontuacao) || 0) : 0) + (Number(md.pontuacaoArmadura) || 0)));
 
   // Os bônus PERMANENTES que a subida de nível deixou na ficha. Ficam num
   // balde separado (ficha.avancos.bonus) de propósito: assim a base continua
@@ -359,18 +497,24 @@ function derivadosDoPersonagem_(ficha) {
     : { pontosDeVidaMaximos: 0, estresseMaximo: 0, limiares: 0 };
 
   if (pontosDeVidaMaximos !== null) {
-    pontosDeVidaMaximos += (b.pontosDeVidaMaximos || 0) + bc.pontosDeVidaMaximos;
+    pontosDeVidaMaximos += (b.pontosDeVidaMaximos || 0) + bc.pontosDeVidaMaximos + md.pontosDeVidaMaximos;
   }
-  if (bc.limiares && limiarMaior !== null) {
-    limiarMaior += bc.limiares;
-    limiarGrave += bc.limiares;
+  if (limiarMaior !== null) {
+    limiarMaior += bc.limiares + md.limiares + md.limiarMaior;
+    limiarGrave += bc.limiares + md.limiares + md.limiarGrave;
+    // Pau-Ferro: vale enquanto o ÚLTIMO espaço da Armadura FINAL estiver marcado.
+    const marcado = Math.max(0, Number(((ficha || {}).recursos || {}).armaduraMarcada) || 0);
+    if (md.limiaresSeUltimaArmaduraMarcada && pontuacaoArmadura > 0 && marcado >= pontuacaoArmadura) {
+      limiarMaior += md.limiaresSeUltimaArmaduraMarcada;
+      limiarGrave += md.limiaresSeUltimaArmaduraMarcada;
+    }
   }
-  if (evasao !== null) evasao += (b.evasao || 0) + bonusDaForma + bonusEsquivaLadino;
+  if (evasao !== null) evasao += (b.evasao || 0) + bonusDaForma + bonusEsquivaLadino + md.evasao;
 
   return {
     evasao: evasao,
     pontosDeVidaMaximos: pontosDeVidaMaximos,
-    estresseMaximo: CRIACAO.estresse + (b.estresseMaximo || 0) + bc.estresseMaximo,
+    estresseMaximo: CRIACAO.estresse + (b.estresseMaximo || 0) + bc.estresseMaximo + md.estresseMaximo,
     esperancaMaxima: CRIACAO.esperancaMaxima,
     proficiencia: proficiencia,
     pontuacaoArmadura: pontuacaoArmadura,
@@ -379,6 +523,8 @@ function derivadosDoPersonagem_(ficha) {
     dominios: dominiosDoPersonagem_(ficha),
     caracteristicas: caracteristicasDaOrigem_(ficha).concat(caracteristicasDaClasse_(ficha)),
     bonusDeDano: bonusDeDanoDaFicha_(ficha),
+    modificadoresDeTraco: md.tracos,
+    fontesDeModificadores: md.fontes,
     esquivaDeLadinoAtiva: esquivaDeLadinoAtiva,
     /*
      * A FORMA INTEIRA, JÁ COMPOSTA, VAI PARA A TELA — e ela mexe em DOIS
@@ -512,6 +658,8 @@ function aplicarDerivados_(ficha) {
   // O cliente recebe o perfil de dano já calculado pelo servidor. Qualquer
   // valor que tenha vindo no payload é sobrescrito aqui, como os outros derivados.
   ficha.bonusDeDano = d.bonusDeDano;
+  ficha.modificadoresDeTraco = d.modificadoresDeTraco;
+  ficha.fontesDeModificadores = d.fontesDeModificadores;
   ficha.esquivaDeLadinoAtiva = d.esquivaDeLadinoAtiva;
 
   /*

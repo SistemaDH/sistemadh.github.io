@@ -324,7 +324,10 @@
     {
      "ordem": 1,
      "nome": "Carapaça",
-     "texto": "Ganhe um bônus em seus limiares de dano igual à sua Proficiência."
+     "texto": "Ganhe um bônus em seus limiares de dano igual à sua Proficiência.",
+     "efeitoDerivado": {
+      "limiaresPorProficiencia": 1
+     }
     },
     {
      "ordem": 2,
@@ -361,7 +364,10 @@
     {
      "ordem": 1,
      "nome": "Resistência",
-     "texto": "Ganhe um espaço adicional de Pontos de Vida na criação do personagem."
+     "texto": "Ganhe um espaço adicional de Pontos de Vida na criação do personagem.",
+     "efeitoDerivado": {
+      "pontosDeVidaMaximos": 1
+     }
     },
     {
      "ordem": 2,
@@ -474,7 +480,10 @@
     {
      "ordem": 1,
      "nome": "Alta Resistência",
-     "texto": "Ganhe um espaço adicional de Estresse na criação do personagem."
+     "texto": "Ganhe um espaço adicional de Estresse na criação do personagem.",
+     "efeitoDerivado": {
+      "estresseMaximo": 1
+     }
     },
     {
      "ordem": 2,
@@ -668,7 +677,10 @@
     {
      "ordem": 2,
      "nome": "Ágil",
-     "texto": "Ganhe um bônus permanente de +1 em sua Evasão na criação do personagem."
+     "texto": "Ganhe um bônus permanente de +1 em sua Evasão na criação do personagem.",
+     "efeitoDerivado": {
+      "evasao": 1
+     }
     }
    ],
    "caracteristicasNoLivro": [

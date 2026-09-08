@@ -43,6 +43,22 @@ const ANCESTRALIDADES = {
   "simiah": { nome: "Simiah", caracteristicas: [{"ordem":1,"nome":"Escalador Nato"}, {"ordem":2,"nome":"Ágil"}] },
 };
 
+/** Modificadores derivados das características de ancestralidade. */
+const EFEITOS_DERIVADOS_DE_ORIGEM = {
+  "Carapaça": {
+    "limiaresPorProficiencia": 1
+  },
+  "Resistência": {
+    "pontosDeVidaMaximos": 1
+  },
+  "Alta Resistência": {
+    "estresseMaximo": 1
+  },
+  "Ágil": {
+    "evasao": 1
+  }
+};
+
 /** Nomes alternativos de ancestralidade (carta x livro). */
 const ANCESTRALIDADE_ALIASES = {
   "anao": ["Anão","DWARF"],

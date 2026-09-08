@@ -654,7 +654,10 @@
        "caracteristicas": [
         {
          "nome": "Inabalável",
-         "texto": "Ganhe um bônus permanente de +1 nos seus limiares de dano."
+         "texto": "Ganhe um bônus permanente de +1 nos seus limiares de dano.",
+         "efeitoDerivado": {
+          "limiares": 1
+         }
         },
         {
          "nome": "Vontade de Ferro",
@@ -680,7 +683,10 @@
        "caracteristicas": [
         {
          "nome": "Implacável",
-         "texto": "Ganhe um bônus permanente de +2 nos seus limiares de dano."
+         "texto": "Ganhe um bônus permanente de +2 nos seus limiares de dano.",
+         "efeitoDerivado": {
+          "limiares": 2
+         }
         },
         {
          "nome": "Parceiros de Armas",
@@ -706,7 +712,10 @@
        "caracteristicas": [
         {
          "nome": "Destemido",
-         "texto": "Ganhe um bônus permanente de +3 nos seus limiares de dano."
+         "texto": "Ganhe um bônus permanente de +3 nos seus limiares de dano.",
+         "efeitoDerivado": {
+          "limiares": 3
+         }
         },
         {
          "nome": "Protetor Leal",
@@ -743,7 +752,10 @@
        "caracteristicas": [
         {
          "nome": "À Vontade",
-         "texto": "Ganhe um espaço adicional de Estresse."
+         "texto": "Ganhe um espaço adicional de Estresse.",
+         "efeitoDerivado": {
+          "estresseMaximo": 1
+         }
         },
         {
          "nome": "Vingança",
@@ -1103,7 +1115,10 @@
         },
         {
          "nome": "Adrenalina",
-         "texto": "Enquanto estiver Vulnerável, adicione seu nível às suas jogadas de dano."
+         "texto": "Enquanto estiver Vulnerável, adicione seu nível às suas jogadas de dano.",
+         "efeitoDerivado": {
+          "danoPorNivelSeCondicao": "vulneravel"
+         }
         }
        ],
        "texto": "ROGUE\nCAMINHANTE NOTURNO\nSpecialization\nSPELLCAST TRAIT: FINESSE\nNuvem Sombria: Faça uma Jogada de Magia (15). Em caso de sucesso, crie uma nuvem sombria temporária que cobre qualquer área em alcance Próximo. Quem estiver dentro dessa nuvem não pode ver por fora, e quem estiver fora não pode ver por dentro. Você é considerado Encoberto para qualquer adversário cuja linha de visão seja bloqueada pela nuvem.\nAdrenalina: Enquanto estiver Vulnerável, adicione seu nível às suas jogadas de dano.\nDaggerheart™ Compatible. Terms at Daggerheart.com.",
@@ -1125,7 +1140,10 @@
        "caracteristicas": [
         {
          "nome": "Sombra Fugaz",
-         "texto": "Ganhe um bônus permanente de +1 em sua Evasão. Você pode usar sua habilidade Passo Sombrio para se mover em alcance Muito Longo."
+         "texto": "Ganhe um bônus permanente de +1 em sua Evasão. Você pode usar sua habilidade Passo Sombrio para se mover em alcance Muito Longo.",
+         "efeitoDerivado": {
+          "evasao": 1
+         }
         },
         {
          "nome": "Ato de Desaparecimento",
@@ -1380,7 +1398,10 @@
        "caracteristicas": [
         {
          "nome": "Mago de Batalha",
-         "texto": "Você focou seus estudos para se tornar uma força invencível no campo de batalha. Ganhe um espaço adicional de Pontos de Vida."
+         "texto": "Você focou seus estudos para se tornar uma força invencível no campo de batalha. Ganhe um espaço adicional de Pontos de Vida.",
+         "efeitoDerivado": {
+          "pontosDeVidaMaximos": 1
+         }
         },
         {
          "nome": "Enfrente Seu Medo",
@@ -1406,7 +1427,13 @@
        "caracteristicas": [
         {
          "nome": "Escudo Conjurado",
-         "texto": "Você pode manter uma barreira protetora de magia. Enquanto tiver pelo menos 2 Esperanças, você adiciona sua Proficiência à sua Evasão."
+         "texto": "Você pode manter uma barreira protetora de magia. Enquanto tiver pelo menos 2 Esperanças, você adiciona sua Proficiência à sua Evasão.",
+         "efeitoDerivado": {
+          "evasaoPorProficienciaSeEsperancaMinima": {
+           "esperanca": 2,
+           "multiplicador": 1
+          }
+         }
         },
         {
          "nome": "Movido pelo Medo",
@@ -1849,7 +1876,10 @@
        "caracteristicas": [
         {
          "nome": "Ascendente",
-         "texto": "Ganhe um bônus permanente de +4 no seu limiar de dano Severo."
+         "texto": "Ganhe um bônus permanente de +4 no seu limiar de dano Severo.",
+         "efeitoDerivado": {
+          "limiarGrave": 4
+         }
         },
         {
          "nome": "Poder dos Deuses",

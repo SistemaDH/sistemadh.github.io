@@ -75,7 +75,8 @@ const MAOS_DISPONIVEIS = 2;
 const arma = (a) => j({
   id: a.id, nome: a.nome, cat: a.categoria, tier: a.tier, tabela: a.tabela,
   atributo: a.atributo, alcance: a.alcance, dano: emPortugues(a.dano), maos: a.maos,
-  carac: a.caracteristica ? a.caracteristica.nome : null
+  carac: a.caracteristica ? a.caracteristica.nome : null,
+  efeitoDerivado: (a.caracteristica && a.caracteristica.efeitoDerivado) || null
 });
 
 /*
@@ -95,7 +96,8 @@ L.push('const ARMADURAS = [');
 for (const a of d.armaduras) {
   L.push(`  ${j({ id: a.id, nome: a.nome, tier: a.tier || 1, limiares: a.limiares,
                   pontuacao: a.pontuacaoArmadura,
-                  carac: a.caracteristica ? a.caracteristica.nome : null })},`);
+                  carac: a.caracteristica ? a.caracteristica.nome : null,
+                  efeitoDerivado: (a.caracteristica && a.caracteristica.efeitoDerivado) || null })},`);
 }
 L.push('];\n');
 
@@ -147,6 +149,7 @@ for (const m of (d.campanhas || [])) {
                     dano: i.dano ? emPortugues(i.dano) : null, maos: i.maos || null,
                     limiares: i.limiares || null, pontuacao: i.pontuacaoArmadura || null,
                     carac: (i.caracteristica && i.caracteristica.nome) || null,
+                    efeitoDerivado: (i.caracteristica && i.caracteristica.efeitoDerivado) || null,
                     nomes: [...new Set([i.nome, i.nomeAntigo].filter(Boolean))] })},`);
   }
 }
@@ -220,7 +223,7 @@ function acharArmadura_(idOuNome) {
     // A forma que validarEquipamento_ espera.
     return { id: daMoldura.id, nome: daMoldura.nome, tier: daMoldura.tier || 1,
              limiares: daMoldura.limiares, pontuacao: daMoldura.pontuacao, carac: daMoldura.carac,
-             moldura: daMoldura.moldura };
+             efeitoDerivado: daMoldura.efeitoDerivado || null, moldura: daMoldura.moldura };
   }
   for (let i = 0; i < ARMADURAS.length; i++) {
     if (baterNome_(ARMADURAS[i], alvo)) return ARMADURAS[i];

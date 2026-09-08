@@ -468,6 +468,52 @@ try {
     }
   });
 
+  await passo('a ficha mostra os modificadores passivos de equipamento nos números finais', async () => {
+    // Fecha a ficha, altera uma cópia da ficha de teste direto no banco fake e
+    // restaura byte a byte ao final. O que se testa é o casamento engine↔UI.
+    await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+    await pagina.waitForSelector('.ficha-cartao__abrir');
+    const def = noBackend('ABAS.PERSONAGENS');
+    const linhas = ambiente.contexto.lerTudo_(def)
+      .filter((l) => String(l.excluido).toUpperCase() !== 'TRUE');
+    const linha = linhas[0];
+    const original = linha.dados || '{}';
+    try {
+      const dadosFicha = JSON.parse(original);
+      const placas = noBackend("ARMADURAS.filter(function(a){ return a.tier === 1 && a.efeitoDerivado && a.efeitoDerivado.evasao === -2; })[0]");
+      const torre = noBackend("ARMAS.filter(function(a){ return a.cat === 'secundaria' && a.efeitoDerivado && a.efeitoDerivado.pontuacaoArmadura === 2; })[0]");
+      if (!placas || !torre) throw new Error('equipamento passivo não chegou ao engine');
+      dadosFicha.equipamento = dadosFicha.equipamento || {};
+      dadosFicha.equipamento.armadura = placas.id;
+      dadosFicha.equipamento.secundaria = torre.id;
+      dadosFicha.equipamento.reserva = [];
+      const validada = ambiente.contexto.validarFicha_(dadosFicha);
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: JSON.stringify(validada) });
+
+      await pagina.locator('.ficha-cartao__abrir').first().click();
+      await pagina.waitForSelector('.papel', { timeout: 20000 });
+      const texto = (await pagina.locator('.ficha__corpo').textContent()).replace(/\s+/g, ' ');
+      if (!texto.includes(String(validada.defesas.pontuacaoArmadura))) {
+        throw new Error('pontuação final de Armadura não apareceu na ficha: ' + texto);
+      }
+      const agi = pagina.locator('.traco').filter({ has: pagina.locator('.traco__sigla', { hasText: 'AGI' }) }).first();
+      const valorAgi = (await agi.locator('.traco__valor').textContent()).trim();
+      const efetiva = Number(validada.tracos.agilidade) + Number((validada.modificadoresDeTraco || {}).agilidade || 0);
+      const esperado = efetiva < 0 ? `−${Math.abs(efetiva)}` : `+${efetiva}`;
+      igual(valorAgi, esperado, 'o ladrilho de Agilidade devia incluir a penalidade da armadura');
+    } finally {
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: original });
+      if (await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').count()) {
+        await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+        await pagina.waitForSelector('.ficha-cartao__abrir');
+      }
+      await pagina.reload({ waitUntil: 'networkidle' });
+      await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+      await pagina.locator('.ficha-cartao__abrir').first().click();
+      await pagina.waitForSelector('.papel', { timeout: 20000 });
+    }
+  });
+
   await passo('a reserva registra e troca uma arma pela ficha', async () => {
     const estresseAntes = await pagina.locator('.papel__trilha--estresse .papel__caixa.esta-cheio').count();
 

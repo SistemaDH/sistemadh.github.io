@@ -1230,14 +1230,21 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
        * exatamente o tipo de conta que a ficha existe para tirar da mesa.
        * O ladrilho ganha uma marca para o número não parecer permanente.
        */
-      const extra = (v === null || v === undefined) ? 0 : bonusDaFormaNoTraco(ficha, t);
+      const extraForma = (v === null || v === undefined) ? 0 : bonusDaFormaNoTraco(ficha, t);
+      const extraDerivado = (v === null || v === undefined) ? 0
+        : (Number(((ficha || {}).modificadoresDeTraco || {})[t]) || 0);
+      const extra = extraForma + extraDerivado;
       const valor = valorDeTraco(v === null || v === undefined ? v : v + extra);
+      const detalhe = [
+        extraDerivado ? `${valorDeTraco(extraDerivado)} de características/equipamento` : '',
+        extraForma ? `${valorDeTraco(extraForma)} da Forma de Fera` : ''
+      ].filter(Boolean).join(' e ');
 
       return el('button', {
         type: 'button',
-        class: `traco ${ehConjuracao ? 'e-conjuracao' : ''} ${trocavel ? 'e-trocavel' : ''} ${extra ? 'e-forma' : ''}`,
-        'aria-label': extra
-          ? `${nome} ${valor}, já com ${valorDeTraco(extra)} da Forma de Fera — ver o que este traço faz`
+        class: `traco ${ehConjuracao ? 'e-conjuracao' : ''} ${trocavel ? 'e-trocavel' : ''} ${extraForma ? 'e-forma' : ''}`,
+        'aria-label': detalhe
+          ? `${nome} ${valor}, já com ${detalhe} — ver o que este traço faz`
           : `${nome} ${valor} — ver o que este traço faz`,
         onClick: () => verTraco(t, { ehConjuracao, trocavel })
       }, [
@@ -1361,6 +1368,12 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     if (b.determinacao) {
       extras.push(`+${b.determinacao.valor} Determinação`);
     }
+    for (const x of (b.caracteristicasFixas || [])) {
+      extras.push(`${x.valor >= 0 ? '+' : ''}${x.valor} ${x.fonte}`);
+    }
+    for (const x of (b.equipamento || [])) {
+      if (x.armaId === arma.id) extras.push(`${x.valor >= 0 ? '+' : ''}${x.valor} ${x.fonte}`);
+    }
     return extras;
   }
 
@@ -1400,6 +1413,14 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     if (b.determinacao) {
       linhas.push(el('p', { class: 'texto-xs texto-fraco', texto:
         `Determinação: +${b.determinacao.valor} em toda jogada de dano enquanto o dado estiver ativo.` }));
+    }
+
+    for (const x of (b.condicionais || [])) {
+      const bonus = x.tipo === 'dados'
+        ? `+${x.quantidade || 1}${x.dado || 'd4'}`
+        : `${x.valor >= 0 ? '+' : ''}${x.valor}`;
+      linhas.push(el('p', { class: 'texto-xs texto-fraco', texto:
+        `${x.fonte}: ${bonus} quando ${x.condicao}.` }));
     }
 
     return el('div', { class: 'pilha' }, [
