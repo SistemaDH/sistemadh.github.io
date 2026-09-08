@@ -149,8 +149,12 @@ modal de tela cheia — o mesmo formato do descanso e da subida de nível.
 **Forma de Fera:** lista as formas do patamar do personagem, entra, troca e sai.
 A **Evasão da forma é somada na ficha principal** enquanto ela dura (livro
 p.34) — e some sozinha ao sair, porque é derivada, não gravada (invariante
-E17). O **Estresse de entrar não é cobrado**: o app mostra o custo e o jogador
-marca, a mesma regra do "só ficha, sem dados".
+E17). ~~O **Estresse de entrar não é cobrado**: o app mostra o custo e o
+jogador marca, a mesma regra do "só ficha, sem dados".~~
+
+> **Revisto — ver §11-B.** Aquele argumento estava errado: "só ficha, sem
+> dados" é sobre DADOS, e custo o app já cobra em toda parte (custo de
+> recordar, Medo do foco). Hoje o Estresse é cobrado.
 
 **Companheiro Animal:** nome, animal, as Experiências (duas na criação, +2 cada),
 as evoluções — inclusive "Feroz" repetida — e a escada do dado d6 → d12. O app
@@ -160,6 +164,106 @@ desligados, e o servidor recusa de novo se alguém insistir.
 
 O tipo de dano (físico ou mágico) está lá porque a **errata** o acrescentou —
 a edição pt-BR não traz essa escolha nem no texto nem na ficha.
+
+## 11-B. Forma de Fera — a segunda passada
+
+A tela da fera nasceu listando as formas e trocando entre elas. A mesa usou, e
+apareceu o resto: *"o custo de transformar não está automático, não existe a
+forma de gastar 3 de Esperança para melhorar, além de outras coisas."* Eram
+dez coisas, em quatro grupos.
+
+### O que estava errado na tela
+
+Quatro das 24 entradas **não são formas**. Fera Lendária e Fera Mítica são
+APRIMORAMENTOS: não têm Evasão, traço nem ataque próprios — turbinam uma forma
+de patamar menor. No JSON isso é `modificadores: {atributo: null, evasao:
+null}`, e a tela desenhava aquilo cru: **"Evasão null"** no selo e **"null ·
+undefined · undefined"** na linha de números.
+
+E as **Vantagens** não apareciam em lugar nenhum. É um dos cinco itens do
+bloco de cada forma no livro (p.35: *"sua forma faz com que você seja
+especialmente melhor em determinadas ações"*) e o único que vale em TODA
+jogada, não só ao atacar. Estava no JSON (`verbos`) desde a importação, sem
+nunca ter sido desenhado.
+
+### O custo passou a ser cobrado
+
+Entrar custa 1 Estresse, mais 1 no Híbrido Lendário e mais 2 no Híbrido
+Mítico. O servidor só avisava; agora **cobra, no mesmo ajuste que transforma**
+— ou os dois, ou nenhum, como o custo de recordar (E20). Sem Estresse
+sobrando, ele recusa a transformação em vez de deixar a fera de graça.
+
+**Trocar de forma também custa**, porque trocar é transformar de novo. O preço
+está escrito no próprio botão ("Entrar — 1 Estresse"), então não é surpresa.
+
+### A Evolução existe
+
+A Habilidade de Esperança do Druida (p.34) não tinha lugar no app: *"gaste 3 de
+Esperança para usar Forma de Fera sem marcar Estresse. Ao fazer isso, aumente
+um traço em +1 até sair da Forma de Fera."* Virou um **interruptor** ao lado da
+lista — ligado, os botões passam a cobrar Esperança em vez de Estresse e
+perguntam qual traço sobe. Interruptor, e não um botão em cada forma, porque
+seria a mesma escolha repetida 24 vezes.
+
+> **Ponto de interesse — decisão de mesa.** Com a Evolução, o Estresse
+> ADICIONAL das híbridas **continua sendo cobrado**. A Evolução diz "sem marcar
+> Estresse"; a híbrida diz "marque 1 (ou 2) Estresse ADICIONAL para se
+> transformar NESTA criatura". Lido ao pé da letra, a Evolução paga o custo de
+> transformar e a criatura cobra o dela por cima — mas nem o livro, nem o SRD,
+> nem a errata de 09/09/2025 resolvem a soma. Para virar a decisão é uma função
+> só: `custoDeEntrarNaForma_` em `49_FichasFilhas.gs`.
+
+### O bônus de traço entrou na ficha
+
+Só a Evasão da forma entrava na conta. O traço ("Instinto +1") era texto na
+tela da fera, rotulado *"para atacar nesta forma"* — mas o livro (p.35) diz
+"você recebe um bônus no atributo listado", e traço vale em toda jogada dele.
+Agora o ladrilho do traço mostra o total, com **sublinhado pontilhado** para
+dizer que aquele número é de agora. Sem cor nova: ouro já é Conjuração e
+tracejado já é "dá para virar" (E89).
+
+### O corpo muda
+
+Marcar o último Ponto de Vida **tira da forma sozinho** (regra explícita, p.34).
+Mora na DERIVAÇÃO, não no toque que marca o PV: os Pontos de Vida enchem por
+caminhos demais — a trilha, o dano da Cena, o painel do Mestre — e um conserto
+em cada um deixaria a fera de pé no caminho esquecido. Mesma escolha do
+Vulnerável por Estresse.
+
+E uma **faixa de estado** diz o que a forma TIRA: sem armas, sem feitiços de
+carta de domínio, e o aviso de Frágil quando a forma é frágil. A tela da fera
+só dizia o que ela dá; a trava morava no texto da classe, a duas abas dali.
+
+### Aprimoramentos e híbridos escolhem
+
+Aprimoramento pergunta **qual forma ele turbina** e compõe: Evasão, traço, dano
+e habilidades da base, com os bônus por cima (+6 no dano / +1 no traço / +2 na
+Evasão para a Lendária; +9 / +2 / +3 e o dado sobe um passo para a Mítica).
+Híbrido pergunta as formas de onde saem as vantagens e habilidades emprestadas,
+com os tetos do livro.
+
+**Compor mora no servidor** (`formaComposta_`), não na tela: a Evasão e o bônus
+de traço já saem dali, e a mesma regra escrita nos dois lados foi como a
+Proficiência ficou errada por três partes (E4). A tela desenha a forma ativa a
+partir de `ficha.formaDeFera`, não do catálogo.
+
+### Duas divergências livro × SRD
+
+Resolvidas pela hierarquia do projeto (errata > SRD em inglês > livro), com a
+fonte anotada no `data/fichas-filhas.json`:
+
+| Onde | O livro (Jambô, Prévia 5) | O SRD 1.0 (09/09/2025) | Vale |
+|---|---|---|---|
+| **Fera Mítica** | o título diz "1º ou 2º patamar", o corpo diz "de 1º patamar" — a mesma caixa se contradiz | *"Pick a Tier 1 or Tier 2 Beastform option"* | 1º **ou** 2º |
+| **Híbrido Mítico** | "escolha **duas** opções… um total de cinco vantagens e três habilidades" | *"Choose any **three** Beastform options from Tiers 1-3"* | **três** opções |
+
+Cinco vantagens e três habilidades tiradas de duas formas não fecha: cada forma
+tem uma lista de vantagens e duas habilidades. A errata de 09/09/2025 mexe na
+caixa da Fera Mítica (tira um "the" repetido) e não toca em nenhum dos dois
+pontos.
+
+Corrigido também um erro de digitação do livro: o título da Fera Lendária sai
+como *"(Aprimoradamento de 1º patamar)"* na p.38.
 
 ## 12. Nível e avanço
 

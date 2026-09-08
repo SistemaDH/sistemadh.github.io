@@ -309,7 +309,45 @@ function derivadosDoPersonagem_(ficha) {
     limiarGrave: limiarGrave,
     dominios: dominiosDoPersonagem_(ficha),
     caracteristicas: caracteristicasDaOrigem_(ficha).concat(caracteristicasDaClasse_(ficha)),
-    formaDeFera: formaAtiva ? { id: formaAtiva.id, nome: formaAtiva.nome, evasao: bonusDaForma } : null,
+    /*
+     * A FORMA INTEIRA, JÁ COMPOSTA, VAI PARA A TELA — e ela mexe em DOIS
+     * números da ficha, não em um.
+     *
+     * A Evasão já entrava. O bônus de TRAÇO ("Instinto +1") ficava só como
+     * texto na tela da fera, com o rótulo "para atacar nesta forma" — mas o
+     * livro (p.35) diz "você recebe um bônus no atributo listado", e traço
+     * vale em toda jogada dele, não só no ataque. Junto vem o +1 da Evolução,
+     * no traço que o jogador escolheu.
+     *
+     * Aprimoramento sem base e híbrida sem opções não têm números; quem os
+     * monta é formaComposta_, no motor. A tela desenha o que vem daqui em vez
+     * de recompor do catálogo — a mesma regra escrita nos dois lados foi o que
+     * congelou a Proficiência por três partes (E4).
+     *
+     * ⚠ DERIVADO, NUNCA GRAVADO (E17). Os traços da ficha continuam sendo os
+     * do personagem; quem soma é a tela, na hora de desenhar, como faz a
+     * Evasão. O campo modificadores é o texto IMPRESSO ("Instinto +1", "+2") e
+     * evasao/tracos são os mesmos valores em número: a tela mostra o impresso,
+     * a ficha soma o número, e nenhum dos dois reinterpreta o outro.
+     */
+    formaDeFera: formaAtiva ? {
+      id: formaAtiva.id,
+      nome: formaAtiva.nome,
+      patamar: formaAtiva.patamar,
+      grupo: formaAtiva.grupo,
+      verbos: formaAtiva.verbos || [],
+      modificadores: formaAtiva.modificadores || {},
+      ataque: formaAtiva.ataque || {},
+      caracteristicas: formaAtiva.caracteristicas || [],
+      base: formaAtiva.base || null,
+      hibrido: formaAtiva.hibrido || null,
+      evasao: bonusDaForma,
+      tracos: (typeof bonusDeTracosDaForma_ === 'function') ? bonusDeTracosDaForma_(formaAtiva) : {},
+      evolucaoTraco: formaAtiva.evolucaoTraco || null,
+      // Frágil sai da forma com dano maior ou grave — quem digita o dano é a
+      // mesa, então isto vira aviso na tela, não automatismo.
+      fragil: (typeof formaEhFragil_ === 'function') ? formaEhFragil_(formaAtiva.id) : false
+    } : null,
     tracoDeConjuracao: (typeof conjuracaoDoPersonagem_ === 'function') ? conjuracaoDoPersonagem_(ficha) : '',
     conjuracoesDisponiveis: (typeof conjuracoesDaFicha_ === 'function') ? conjuracoesDaFicha_(ficha) : []
   };
@@ -320,7 +358,25 @@ function derivadosDoPersonagem_(ficha) {
  * correntes (PV marcados, Estresse marcado, Esperança gasta).
  */
 function aplicarDerivados_(ficha) {
-  const d = derivadosDoPersonagem_(ficha);
+  let d = derivadosDoPersonagem_(ficha);
+
+  /*
+   * MARCAR O ÚLTIMO PONTO DE VIDA TIRA DA FORMA DE FERA (livro p.34).
+   *
+   * ⚠ ANTES DE PUBLICAR OS DERIVADOS, e por isso a derivação roda duas vezes
+   * neste caso: a Evasão e o bônus de traço da fera precisam sair da conta na
+   * mesma gravação em que ela cai. Publicar os números da forma e só depois
+   * apagá-la deixaria a ficha um instante com a Evasão de uma fera que não
+   * existe mais — e é justamente um instante em que a mesa está olhando.
+   *
+   * Comparar com o valor CRU de pontosDeVidaMarcados é seguro: o corte para o
+   * teto acontece logo abaixo e só pode baixar o número, então "cru >= teto" e
+   * "cortado >= teto" dizem a mesma coisa.
+   */
+  const saiuDaForma = (typeof sairDaFormaPorPontosDeVida_ === 'function')
+    ? sairDaFormaPorPontosDeVida_(ficha, d.pontosDeVidaMaximos) : null;
+  if (saiuDaForma) d = derivadosDoPersonagem_(ficha);
+
   ficha.defesas = ficha.defesas || {};
   ficha.recursos = ficha.recursos || {};
 
@@ -337,18 +393,18 @@ function aplicarDerivados_(ficha) {
   /*
    * A ESPERANÇA TEM DOIS NÚMEROS, E ISSO É DE PROPÓSITO.
    *
-   * `esperancaImpressa` é o que a ficha de papel traz: seis losangos, sempre.
-   * `esperancaMaxima` é quantos ainda ENCHEM — seis menos as cicatrizes, que
+   * esperancaImpressa é o que a ficha de papel traz: seis losangos, sempre.
+   * esperancaMaxima é quantos ainda ENCHEM — seis menos as cicatrizes, que
    * apagam um espaço para sempre (p.106).
    *
-   * ⚠ O DESCONTO MORA AQUI, E SÓ AQUI. `esperancaMaxima` é o nome que o resto
-   * do app já usa como teto: a mutação de recurso (4C_Ajustes), a cura do
-   * descanso (4B_Descanso), o painel do Mestre (99_Api). Descontando na
-   * derivação, todos passam a respeitar cicatriz sem saber que ela existe — e
-   * uma ficha antiga se conserta na primeira gravação, como o resto daqui.
+   * ⚠ O DESCONTO MORA AQUI, E SÓ AQUI. esperancaMaxima é o nome que o resto do
+   * app já usa como teto: a mutação de recurso (4C_Ajustes), a cura do descanso
+   * (4B_Descanso), o painel do Mestre (99_Api). Descontando na derivação, todos
+   * passam a respeitar cicatriz sem saber que ela existe — e uma ficha antiga
+   * se conserta na primeira gravação, como o resto daqui.
    *
-   * A tela desenha `esperancaImpressa` losangos e risca com X os que passam de
-   * `esperancaMaxima`, que é exatamente o que a mesa faz no papel.
+   * A tela desenha esperancaImpressa losangos e risca com X os que passam de
+   * esperancaMaxima, que é exatamente o que a mesa faz no papel.
    */
   const quantasCicatrizes = Array.isArray(ficha.cicatrizes) ? ficha.cicatrizes.length : 0;
   r.esperancaImpressa = d.esperancaMaxima;
@@ -363,8 +419,8 @@ function aplicarDerivados_(ficha) {
   // E nunca podem passar do máximo.
   r.pontosDeVidaMarcados = limitar_(r.pontosDeVidaMarcados, 0, d.pontosDeVidaMaximos);
   r.estresseMarcado = limitar_(r.estresseMarcado, 0, d.estresseMaximo);
-  // ⚠ Contra `r.esperancaMaxima` (já descontado), não contra `d`: quem ganhou
-  // uma cicatriz com a Esperança cheia perde o ponto que não cabe mais.
+  // ⚠ Contra r.esperancaMaxima (já descontado), não contra d: quem ganhou uma
+  // cicatriz com a Esperança cheia perde o ponto que não cabe mais.
   r.esperanca = limitar_(r.esperanca, 0, r.esperancaMaxima);
   r.armaduraMarcada = limitar_(r.armaduraMarcada, 0, d.pontuacaoArmadura);
 
@@ -391,6 +447,25 @@ function aplicarDerivados_(ficha) {
   ficha.tracoDeConjuracao = d.tracoDeConjuracao;
   ficha.formaDeFera = d.formaDeFera;
   ficha.conjuracoesDisponiveis = d.conjuracoesDisponiveis;
+
+  /*
+   * O que uma habilidade ativa IMPEDE vem PRIMEIRO.
+   *
+   * O Guardião Determinado não pode ficar Vulnerável nem Restrito (p.44).
+   * Limpar antes e só então rodar o automatismo do Estresse deixa os dois na
+   * ordem certa: o que estava lá sai, e o que entraria não entra.
+   */
+  if (typeof sincronizarCondicoesImpedidas_ === 'function') {
+    d.condicoesImpedidas = sincronizarCondicoesImpedidas_(ficha);
+  }
+  /*
+   * E a tela precisa saber QUAIS estão barradas AGORA — não só as que saíram
+   * nesta gravação. Sem isso, a condição some da lista e ninguém entende por
+   * quê; com isso, a seção de condições diz "Determinado: não pode ficar
+   * Vulnerável nem Restrito", que é a mesma frase que a mesa diria.
+   */
+  ficha.condicoesImpedidas = (typeof condicoesImpedidasPorContador_ === 'function')
+    ? condicoesImpedidasPorContador_(ficha) : {};
 
   // Encher o Estresse deixa Vulnerável (livro p.92 e SRD). Aqui, depois dos
   // tetos: é o único ponto em que o máximo de Estresse já está calculado.
@@ -460,7 +535,9 @@ function validarCriacao_(ficha) {
   const eq = (ficha && ficha.equipamento) || {};
   if (!eq.primaria) problemas.push('Escolha uma arma primária.');
   if (!eq.armadura) problemas.push('Escolha uma armadura.');
-  const vEq = validarEquipamento_(eq, nivel);
+  // A ficha inteira vai junto: a conta de mãos precisa saber se esta classe
+  // ignora empunhadura (Treinamento de Combate, do Guerreiro).
+  const vEq = validarEquipamento_(eq, nivel, ficha);
   if (!vEq.ok) problemas.push.apply(problemas, vEq.erros);
 
   // Etapa 7 — Experiências

@@ -98,6 +98,17 @@ Fluxo obrigatório para qualquer mudança futura em `backend/*.gs`:
 
 Nunca trocar o pin por `main` automática.
 
+### O que ainda NÃO está neste pin (medido em 08/09/2026)
+
+Conferido buscando o commit `f0e00a6…` no GitHub e procurando marcas de cada lote:
+
+| Marca no código | Lote | No ar? |
+|---|---|---|
+| `cicatrizes`, `ajustarMovimentoDeMorte_`, `esperancaImpressa` | 5 | sim |
+| `refsDeContadorDaFicha_` | conserto do bug do Aeon | **não** |
+| `custoDeEntrarNaForma_`, `sairDaFormaPorPontosDeVida_` | 6 | **não** |
+| `condicoesImpedidasPorContador_`, `ESCOLHAS_DE_CLASSE`, `classe:seraph:oracao` | 7 | **não** |
+
 ---
 
 # Lote 2 — concluído
@@ -415,9 +426,120 @@ O ponto 8 subiu pelo frontend no merge e o ponto 11 está no motor implantado. O
 
 ---
 
+# Lote 6 — Forma de Fera (Druida), a segunda passada
+
+Branch `ediçãoclaude`, em cima do Lote 5. **Ainda não implantado.**
+
+A tela da fera existia desde o C2 e a mesa achou dez buracos: *"o custo de transformar
+não está automático, não existe a forma de gastar 3 de Esperança para melhorar, além de
+outras coisas."* O detalhe inteiro está em `docs/pontos-de-interesse-descanso.md` §11-B.
+
+## Arquivos alterados
+
+| Arquivo | O quê |
+|---|---|
+| `data/fichas-filhas.json` | custo, Evolução, aprimoramentos, híbridos, escada de dados, `custoAdicional` por forma — cada um com a fonte anotada |
+| `tools/gerar-49-fichas-filhas.mjs` | emite as constantes novas e as funções de composição |
+| `backend/49_FichasFilhas.gs` | **gerado** — não editar à mão |
+| `backend/4C_Ajustes.gs` | `entrar` passou a cobrar, a exigir as escolhas e a guardá-las; `sair` limpa |
+| `backend/48_Criacao.gs` | publica a forma composta e o bônus de traço; tira da forma no último PV |
+| `js/telas/paralelas.js` | Vantagens, painel de escolha, interruptor da Evolução, preço no botão |
+| `js/telas/ficha.js` | traço somado com marca, faixa de estado, nota na aba Cartas |
+| `css/ficha.css`, `css/papel.css` | painel de escolha, faixa nova, sublinhado do traço |
+| `tools/testes-backend.mjs`, `tools/testes-e2e.mjs` | 7 testes de motor e 3 passos de tela novos |
+
+## Regra, conferida antes
+
+Errata oficial de **09/09/2025** (a mesma que o repositório já tinha): quatro entradas
+sobre Beastform, todas de digitação ou de estatística de forma, **nenhuma** sobre custo,
+Evolução ou composição. Confirmado que não há errata mais nova do livro básico — a de
+25/08/2026 é do **Hope & Fear**, produto separado, e não menciona Druida nem Beastform.
+
+Duas divergências livro × SRD foram resolvidas pelo SRD, com a fonte gravada no JSON:
+Fera Mítica aceita base de **1º ou 2º** patamar, e Híbrido Mítico escolhe **três** opções.
+
+> ⚠ **Existe um SRD 2.0 (25/08/2026).** Este lote NÃO o adotou: a edição pt-BR da Jambô é
+> da linha 1.0, e trocar de SRD é decisão de projeto, não de tarefa. Fica anotado para o
+> proprietário decidir se vale uma passada comparando as duas versões.
+
+## Ponto de interesse aberto
+
+Com a Evolução, o Estresse **adicional** das híbridas continua sendo cobrado — leitura ao
+pé da letra, que nem o livro nem o SRD nem a errata resolvem. Virar a decisão é uma função
+só: `custoDeEntrarNaForma_`.
+
+## Deploy
+
+`49_FichasFilhas.gs`, `4C_Ajustes.gs` e `48_Criacao.gs` são **motor fixado**: precisam de
+`ENGINE_COMMIT` novo e redeploy da `engine-api`, pelo mesmo fluxo dos lotes 3, 4 e 5. Sem
+isso, só a metade da tela chega à produção.
+
+---
+
+# Lote 7 — as outras oito classes
+
+Branch `ediçãoclaude`, em cima do Lote 6. **Ainda não implantado.** O
+levantamento inteiro está em `docs/pontos-de-interesse-classes.md`.
+
+Depois da Forma de Fera, a pergunta foi se as outras classes tinham o mesmo
+tipo de buraco. Tinham, em quatro formatos: duas regras que o app CONTRARIAVA
+(o Guerreiro que não conseguia equipar o que a classe permite, o Guardião
+Determinado que ficava Vulnerável), dois recursos de classe sem lugar nenhum
+(Dados de Oração do Serafim, o número de 1 a 12 do Mago), doze custos que a
+mesa pagava no papel (as nove habilidades de Esperança, Marca da Presa,
+Nêmesis, Canalizar Poder Bruto) e dezesseis "uma vez por" sem marcador.
+
+## ⚠ ACHADO QUE VALE PARA TODO MUNDO: arquivo gerado perdia conserto
+
+`backend/47_Contadores.gs` diz "GERADO … NÃO edite à mão" — e o crivo de posse
+dos contadores (o bug do Aeon) tinha sido escrito **no `.gs`**, não no gerador.
+A próxima regeneração o apagaria em silêncio, com a suíte inteira verde, porque
+os testes leem o `.gs`.
+
+Ao conferir os outros, **mais três** estavam assim:
+
+| Arquivo | O que ia embora |
+|---|---|
+| `48_Criacao.gs` | Forma de Fera composta (Lote 6) e o desconto de cicatrizes na Esperança (Lote 5) |
+| `4B_Descanso.gs` | teto do "Eficiente" da Clank (Lote 4) e o descanso longo que acorda (Lote 5) |
+| `4E_Mesa.gs` | abrir/encerrar sessão inteiro (Lote 3) e a regra opcional das moedas |
+
+Tudo foi levado para os geradores. **`tools/conferir-gerados.mjs`** roda os 14
+geradores e compara byte a byte com o repositório — sem destruir nada: guarda o
+conteúdo antes e devolve o que estava lá, mesmo quando acha diferença. Vale
+rodar junto com os testes antes de qualquer deploy.
+
+## Arquivos alterados
+
+| Arquivo | O quê |
+|---|---|
+| `data/classes.json` | errata do Camuflado; `efeito` do Treinamento de Combate; `escolha` do Mago; `uso` (custo/alvo) em 12 habilidades |
+| `data/contadores.json` | Dados de Oração; 15 marcadores de "uma vez por"; `impedeCondicoes` na Determinação; `exigeCaracteristica` |
+| `tools/gerar-42-classes.mjs` | `CARACTERISTICAS_COM_EFEITO`, `ESCOLHAS_DE_CLASSE`, `HABILIDADES_DE_CLASSE_COM_CUSTO` e os validadores |
+| `tools/gerar-44-equipamento.mjs` | a conta de mãos passa a receber a ficha |
+| `tools/gerar-46-condicoes.mjs` | condição impedida por habilidade ativa |
+| `tools/gerar-47-contadores.mjs` | posse por característica, teto com progressão, condições impedidas |
+| `tools/gerar-48-criacao.mjs` | passa a ficha para a validação de equipamento; publica as condições barradas |
+| `backend/40_Regras.gs`, `backend/4C_Ajustes.gs` | campos novos da ficha e os ajustes `habilidade` e `escolhaDeClasse` |
+| `js/telas/ficha.js`, `js/glossario.js`, `css/ficha.css` | botões de habilidade, escolha do Mago, nota das condições barradas, dois consertos antigos |
+| `tools/conferir-gerados.mjs`, `tools/capturar-classes.mjs` | novos |
+
+## Deploy
+
+Motor fixado: `40_Regras.gs`, `42_Classes.gs`, `44_Equipamento.gs`,
+`46_Condicoes.gs`, `47_Contadores.gs`, `48_Criacao.gs` e `4C_Ajustes.gs`.
+Precisa de `ENGINE_COMMIT` novo e redeploy da `engine-api`.
+
+---
+
 # Próximos pontos dos prints
 
-**Nenhum.** Os catorze pontos estão concluídos e integrados na `main`, e o D2 do Lote 5 também está implantado.
+**Nenhum dos prints.** Os catorze pontos e o D2 do Lote 5 estão implantados.
+
+Pendentes de **deploy**, não de desenvolvimento — todos na branch `ediçãoclaude`:
+o conserto do bug do Aeon, o **Lote 6** (Forma de Fera) e o **Lote 7** (as outras oito
+classes). O passo a passo está em `docs/ENTREGA-LOTES-6-7.md`, incluindo a ordem
+obrigatória (motor primeiro, merge depois) e o motivo.
 
 A próxima funcionalidade deve ser definida pelo proprietário.
 

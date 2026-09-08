@@ -740,6 +740,20 @@
 /* O outro traço que a multiclasse deixa escolher: tracejado é "dá para virar". */
 .traco.e-trocavel { border-style: dashed; border-color: var(--cor-ouro-escuro); }
 
+/*
+ * O traço turbinado pela Forma de Fera.
+ *
+ * ⚠ SEM COR NOVA, de propósito (E89: uma cor, um significado). O ouro já é
+ * "Conjuração" e o tracejado já é "dá para virar" — um terceiro significado
+ * pintado de outra cor faria a grade precisar de legenda. Um sublinhado
+ * pontilhado sob o NÚMERO diz o que precisa dizer: este valor é de agora, não
+ * é do personagem. Quem quiser a conta abre o ladrilho e lê de onde veio.
+ */
+.traco.e-forma .traco__valor {
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
 /* --- o modal do traço ----------------------------------------------------- */
 
 .traco__resumo {

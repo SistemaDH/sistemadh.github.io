@@ -202,3 +202,95 @@ Parte 2 já tinha registrado.
 - Beastform e Companheiro Animal
 - Aplicar automaticamente evasão/PV/domínios na ficha (Parte 4)
 - Multiclasse (Parte 7 — subida de nível)
+
+---
+
+## Auditoria das nove classes contra o app (Lote 7)
+
+Depois da segunda passada na Forma de Fera, a pergunta foi: *"as outras classes
+têm o mesmo tipo de problema?"* Têm. A varredura cobriu as 9 classes, as 18
+subclasses e as 54 cartas de subclasse.
+
+**Errata conferida antes de tudo:** a do livro básico continua sendo a de
+**09/09/2025**. A de 25/08/2026 é do **Hope & Fear**, produto separado, e não
+menciona nenhuma das classes. As duas entradas de errata que tocam classe são
+do Ladino (p.42): a da habilidade de Esperança já estava aplicada; a do
+**Camuflado** estava aplicada em `data/condicoes.json` e **não** em
+`data/classes.json` — o app dizia a mesma regra de dois jeitos, e o que aparecia
+na dobra "Características" era o texto anterior à errata. Corrigido.
+
+### O que o app CONTRARIAVA
+
+| Onde | O que acontecia | A regra |
+|---|---|---|
+| **Guerreiro** | a criação recusava arma de duas mãos + secundária | "Treinamento de Combate: você IGNORA O TIPO DE EMPUNHADURA de armas equipadas" (p.46; SRD: "You ignore Burden when equipping weapons") |
+| **Guardião Determinado** | o Estresse cheio o deixava Vulnerável | "Enquanto estiver Determinado (…) você não pode ser Restrito ou ficar Vulnerável" (p.44) |
+
+A exceção do Guerreiro é da CARACTERÍSTICA, não da palavra "Guerreiro": quem
+multiclassou nele recebe a característica de classe e leva a exceção junto, sem
+nenhuma linha a mais. A do Guardião pendura no CONTADOR e não na
+característica — **ter Determinação não é estar Determinado**, e a proteção
+some junto com o dado no fim da cena.
+
+### Dois recursos de classe inteiros sem lugar
+
+**Dados de Oração** (Serafim, p.50): "no início de cada sessão, role um número
+de d4 igual ao traço de Conjuração da subclasse". É a mesma forma do Dado de
+Inspiração do Bardo — que tinha contador desde sempre. Agora tem: máximo pelo
+traço de Conjuração, enche na abertura da sessão, some no encerramento. O app
+conta QUANTOS dados sobraram, não o valor de cada um: quem rola é o jogador.
+
+**Padrões Estranhos** (Mago, p.48): "escolha um número de 1 a 12". Uma escolha
+que vale o jogo inteiro e muda num descanso longo — e não tinha campo nenhum na
+ficha. Virou `ficha.escolhasDeClasse`, com doze botões colados no texto da
+regra. O app **não confere se é descanso longo**: ele não sabe em que momento
+da mesa está, e travar a troca faria quem digitou errado esperar um descanso
+para consertar um dedo torto.
+
+### Os custos que a mesa pagava no papel
+
+Nove habilidades de Esperança custam 3 e nenhuma tinha botão — a Evolução do
+Druida era uma delas. Junto vieram a **Marca da Presa** (1 de Esperança e um
+alvo Marcado), o **Nêmesis** (2 e um adversário Priorizado) e o **Canalizar
+Poder Bruto** (uma carta da mão para o cofre, e Esperança igual ao nível dela).
+
+Todos cobram **no mesmo ajuste** que aplicam, como o custo de recordar (E20) e
+o Medo do foco (E22): sem Esperança sobrando, a habilidade é recusada inteira.
+"Marcado" e "Priorizado" guardam **um alvo por vez**, porque é o que as duas
+regras dizem — marcar outro larga o anterior.
+
+> A **Evolução do Druida continua fora** desta lista, de propósito: ela é um
+> jeito de ENTRAR na Forma de Fera, e quem cobra os 3 é o ajuste de entrar.
+> Dois caminhos para o mesmo gasto deixariam pagar duas vezes.
+
+### "Uma vez por": eram 18, duas tinham marcador
+
+Inspiração e Determinação tinham; as outras dezesseis viviam da memória da
+mesa. Agora são quinze contadores novos — dezesseis menos uma, porque o "três
+vezes por sessão" do **Apoio Confiável** não é habilidade nova: ele SOBE O TETO
+do Contatos em Todo Lugar, e um contador separado mostraria duas linhas para a
+mesma coisa. Mesma coisa com o **Devoto**, que dobra o Toque Moderado.
+
+O marcador conta o uso **JÁ GASTO**, não o que resta. Ficha nova fica em zero —
+que é a verdade — e o gatilho certo (sessão, descanso, descanso longo) apaga.
+Contar o que resta obrigaria a criar o contador cheio no nascimento da ficha, e
+toda ficha antiga apareceria com "0 restantes" de coisa que nunca usou.
+
+### O que apareceu no caminho
+
+**Todo contador "igual ao seu traço de Conjuração" mostrava "máx 0" na tela.**
+Conjuração não é um dos seis traços — é o apelido de um deles, e quem resolve é
+o servidor. A tela procurava um traço com esse nome e não achava. Eram sete
+contadores (seis cartas de domínio e os Dados de Oração), e o botão de + ficava
+travado em zero numa carta que o servidor aceitaria encher.
+
+**"Caçador (Caçador)"** no cabeçalho da ficha. A guarda contra glosar um termo
+que não muda de nome existia no backend e faltava na cópia da tela.
+
+### O que ficou de fora, e por quê
+
+Os **bônus de dano derivados** — o +nível do Guerreiro em todo dano físico, os
+Nd6 do Ataque Furtivo, o Dado de Determinação somado ao dano — continuam só
+como texto. O do Guerreiro é incondicional e caberia num número; os outros dois
+dependem da situação da cena, e um número somado que só vale às vezes engana
+mais do que ajuda. Fica como ponto de interesse para a mesa decidir.

@@ -62,6 +62,11 @@ for (const c of d.contadores) {
   if (c.dado) campos.push(`dado: ${j(c.dado)}`);
   if (c.inicial !== undefined) campos.push(`inicial: ${j(c.inicial)}`);
   if (c.condicaoLigada) campos.push(`condicaoLigada: ${j(c.condicaoLigada)}`);
+  // Condições que este contador IMPEDE enquanto estiver acima de zero.
+  if (c.impedeCondicoes) campos.push(`impedeCondicoes: ${j(c.impedeCondicoes)}`);
+  // Ter a subclasse não é ter a carta: este contador só é da ficha que tem a
+  // característica nomeada aqui.
+  if (c.exigeCaracteristica) campos.push(`exigeCaracteristica: ${j(c.exigeCaracteristica)}`);
   L.push(`  ${j(c.chave)}: { ${campos.join(', ')} },`);
 }
 L.push('};\n');
@@ -201,7 +206,28 @@ function maximoDoContador_(chave, ficha) {
   if (!def) return 0;
   const max = def.maximo || { tipo: 'aberto' };
 
-  if (max.tipo === 'fixo') return Math.max(0, Number(max.valor) || 0);
+  if (max.tipo === 'fixo') {
+    /*
+     * O teto fixo pode CRESCER com uma carta.
+     *
+     * "Apoio Confiável: você pode usar sua habilidade Contatos em Todo Lugar
+     * TRÊS vezes por sessão" (Ladino Sindicato, maestria) — a maestria não
+     * cria um contador novo, ela sobe o teto do que já existe. É a mesma forma
+     * da progressão do dado, e por isso o mesmo campo.
+     */
+    let valor = Math.max(0, Number(max.valor) || 0);
+    const passos = max.progressao || [];
+    for (let i = 0; i < passos.length; i++) {
+      const p = passos[i];
+      if (p.nivelMinimo && (Number(((ficha || {}).identidade || {}).nivel) || 1) >= p.nivelMinimo) {
+        valor = Math.max(0, Number(p.valor) || 0);
+      }
+      if (p.caracteristica && temCaracteristicaNaFicha_(ficha, p.caracteristica)) {
+        valor = Math.max(0, Number(p.valor) || 0);
+      }
+    }
+    return valor;
+  }
   if (max.tipo === 'aberto') return CONTADOR_LIMITE_ABERTO;
 
   if (max.tipo === 'nivel') {
@@ -281,6 +307,7 @@ function inicialDoContador_(chave, ficha) {
 function validarContadores_(ficha) {
   const problemas = [];
   const bruto = (ficha && ficha.contadores) || {};
+  const refsDaFicha = refsDeContadorDaFicha_(ficha || {});
   if (typeof bruto !== 'object' || Array.isArray(bruto)) {
     ficha.contadores = {};
     problemas.push('O campo de contadores precisa ser um objeto.');
@@ -330,6 +357,29 @@ function validarContadores_(ficha) {
       problemas.push('Contador desconhecido: "' + chave + '".');
       continue;
     }
+
+    /*
+     * ⚠ CONTADOR DE COISA QUE ESTA FICHA NÃO TEM É DESCARTADO.
+     *
+     * Um Guerreiro apareceu na mesa com o "Dado de Inspiração" do Bardo e com
+     * "Liberar o Caos" (carta de Arcana) — escritos por um gatilho que varria
+     * o catálogo inteiro sem perguntar de quem era (ver
+     * aplicarGatilhoContadores_). O gatilho foi consertado; isto limpa as
+     * fichas que ele já sujou, na primeira gravação, como o resto da derivação
+     * faz.
+     *
+     * O crivo inclui o COFRE: carta guardada não está em jogo, mas as marcas
+     * que ela tinha são estado do personagem e não podem sumir ao guardá-la.
+     * Some só o que não tem dono nenhum na ficha.
+     *
+     * ⚠ SILENCIOSO, e isso não é descuido: qualquer item na lista de problemas
+     * faz validarFicha_ RECUSAR a gravação. Reclamar aqui deixaria toda ficha
+     * já suja impossível de salvar — um estrago muito maior que o bug original.
+     * É a mesma escolha de normalizarInventario_, que sobe as fichas antigas
+     * para a forma nova sem avisar ninguém.
+     */
+    if (!contadorEDaFicha_(def, ficha, refsDaFicha)) continue;
+
     let valor = Math.trunc(Number(typeof item === 'object' ? item.valor : item));
     if (!isFinite(valor)) valor = 0;
 
@@ -355,6 +405,102 @@ function validarContadores_(ficha) {
 }
 
 /**
+ * ESTE CONTADOR É DESTA FICHA?
+ *
+ * Duas perguntas, e as duas importam:
+ *
+ *  1. a REFERÊNCIA bate — a carta está na mão ou no cofre, ou a classe/
+ *     subclasse é dela (crivo do bug do Aeon);
+ *  2. quando o contador nomeia uma CARACTERÍSTICA, a ficha precisa tê-la.
+ *
+ * A segunda existe porque ter a subclasse não é ter a carta: um Bardo de 1º
+ * nível é Artífice das Palavras e ainda não pegou a especialização, então o
+ * marcador de "Eloquente" não pode aparecer na dobra dele.
+ *
+ * O parâmetro refs é o resultado de refsDeContadorDaFicha_, passado de fora para não
+ * recalcular a cada contador do catálogo.
+ */
+function contadorEDaFicha_(def, ficha, refs) {
+  if (!def) return false;
+  if (refs[chaveTexto_(def.refId)] !== true) return false;
+  if (def.exigeCaracteristica && !temCaracteristicaNaFicha_(ficha, def.exigeCaracteristica)) return false;
+  return true;
+}
+
+/**
+ * AS CONDIÇÕES QUE UM CONTADOR ATIVO IMPEDE.
+ *
+ * O Guardião Determinado "não pode ser Restrito ou ficar Vulnerável" (livro
+ * p.44) — e o app aplica Vulnerável sozinho quando o Estresse enche. Sem esta
+ * consulta, o automatismo passava por cima da regra da classe: um Guardião
+ * Determinado com o Estresse cheio saía Vulnerável, que é exatamente o que a
+ * habilidade existe para impedir.
+ *
+ * ⚠ PENDURA NO CONTADOR, NÃO NA CARACTERÍSTICA. Ter Determinação não é estar
+ * Determinado: a proteção vale enquanto o Dado de Determinação está na ficha,
+ * e some junto com ele no fim da cena. O contador é o único que sabe disso.
+ *
+ * Devolve um objeto { idDaCondicao: nomeDoContador } — o nome serve para o
+ * aviso na tela dizer de onde veio a proteção.
+ */
+function condicoesImpedidasPorContador_(ficha) {
+  const saida = {};
+  const contadores = (ficha && ficha.contadores) || {};
+  const chaves = Object.keys(contadores);
+  for (let i = 0; i < chaves.length; i++) {
+    const def = CONTADORES[chaves[i]];
+    if (!def || !def.impedeCondicoes) continue;
+    const item = contadores[chaves[i]] || {};
+    const valor = Math.trunc(Number(typeof item === 'object' ? item.valor : item)) || 0;
+    if (valor <= 0) continue;
+    for (let k = 0; k < def.impedeCondicoes.length; k++) {
+      saida[def.impedeCondicoes[k]] = def.nome;
+    }
+  }
+  return saida;
+}
+
+/**
+ * As REFERÊNCIAS que esta ficha tem: cartas que ela carrega, a classe e a
+ * subclasse (e a multiclasse). É o crivo de "este contador é meu?".
+ *
+ * ⚠ ENTRAM O NOME E O ID. A ficha guarda o nome de exibição ("Chamada do
+ * Matador"); o catálogo de contadores aponta para o id canônico
+ * ("guerreiro-chamada-do-matador"). Sem resolver os dois, o contador dos Dados
+ * de Matador nunca casava com o Guerreiro que o tem — e foi exatamente o que
+ * aconteceu: o único contador daquela ficha era o único que não aparecia.
+ *
+ * O COFRE entra junto com a mão. Carta guardada não está em jogo, mas as
+ * marcas que ela já tinha são estado do personagem: sumir com elas ao guardar
+ * a carta apagaria contagem no meio da cena.
+ */
+function refsDeContadorDaFicha_(ficha) {
+  const refs = {};
+  const por = function (v) {
+    const k = chaveTexto_(v);
+    if (k) refs[k] = true;
+  };
+
+  const cartas = ficha.cartas || {};
+  ['ativas', 'cofre'].forEach(function (onde) {
+    (cartas[onde] || []).forEach(function (c) {
+      por((c && typeof c === 'object') ? c.id : c);
+    });
+  });
+
+  const ident = ficha.identidade || {};
+  const mc = ficha.multiclasse || {};
+  [ident.classe, ident.subclasse, mc.classe, mc.subclasse].forEach(function (nome) {
+    if (!nome) return;
+    por(nome);
+    if (typeof normalizarClasse_ === 'function') por(normalizarClasse_(nome));
+    if (typeof normalizarSubclasse_ === 'function') por(normalizarSubclasse_(nome));
+  });
+
+  return refs;
+}
+
+/**
  * Aplica um gatilho de descanso/sessão/cena: zera e recarrega o que for do
  * gatilho. Devolve a lista de chaves mexidas.
  * Gatilhos válidos: as chaves de CONTADOR_GATILHOS.
@@ -364,10 +510,33 @@ function aplicarGatilhoContadores_(ficha, gatilho) {
   if (!ficha || !gatilho) return mexidos;
   ficha.contadores = ficha.contadores || {};
 
+  /*
+   * ⚠ O GATILHO SÓ MEXE NO QUE É DESTA FICHA.
+   *
+   * Antes ele varria os 20 contadores do jogo inteiro e CRIAVA qualquer um com
+   * recarga, sem perguntar de quem era. O resultado apareceu na mesa: um
+   * Guerreiro abriu a sessão com o "Dado de Inspiração" do BARDO em 1 e com
+   * "Liberar o Caos" (carta de Arcana) em "máx 0" — dois marcadores de coisas
+   * que ele não tem, num painel que deveria mostrar o que ele tem.
+   *
+   * O erro era antigo (os descansos já faziam isso), mas ficava escondido:
+   * descanso longo é raro e os contadores dele são de cartas comuns. A virada
+   * de sessão, que roda para todo mundo toda sessão, tornou aquilo rotina.
+   *
+   * O teste de propriedade própria continua deixando passar o que já está
+   * gravado: contador de carta que foi para o cofre precisa poder zerar.
+   */
+  const refs = refsDeContadorDaFicha_(ficha);
+
   const chaves = Object.keys(CONTADORES);
   for (let i = 0; i < chaves.length; i++) {
     const chave = chaves[i];
     const def = CONTADORES[chave];
+
+    const eDaFicha = contadorEDaFicha_(def, ficha, refs) ||
+      Object.prototype.hasOwnProperty.call(ficha.contadores, chave);
+    if (!eDaFicha) continue;
+
     const zera = (def.zeraEm || []).indexOf(gatilho) !== -1 ||
       (gatilho === 'descanso-longo' && (def.zeraEm || []).indexOf('descanso') !== -1);
     const recarrega = (def.recarregaEm || []).indexOf(gatilho) !== -1;

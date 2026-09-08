@@ -69,7 +69,78 @@
    "equipamento": "Enquanto estiver transformado, você não pode usar armas. O livro não traz regra explícita sobre outros itens de inventário ou consumíveis enquanto transformado.",
    "cartasDeDominio": "Enquanto estiver transformado, você não pode usar feitiços das cartas de domínio, mas ainda pode usar outras habilidades ou talentos aos quais tenha acesso. Os feitiços conjurados antes da transformação permanecem ativos, com sua duração normal.",
    "falarEConjurar": "Você pode falar e se comunicar normalmente. Conjurar feitiços de cartas de domínio é proibido enquanto transformado; feitiços já conjurados antes da transformação continuam ativos pela duração normal.",
-   "limitePorDescanso": null
+   "limitePorDescanso": null,
+   "custo": {
+    "estresseBase": 1,
+    "adicional": {
+     "hibrido-lendario": 1,
+     "hibrido-mitico": 2
+    },
+    "fonte": "DH-DigitalRegras.pdf (Jambô, Prévia 5) p.34, 'Forma de Fera' — 'Marque 1 Ponto de Fadiga para se transformar'; e as próprias habilidades Híbridas (p.38 e p.39): 'marque 1 Ponto de Fadiga adicional' (Híbrido Lendário) e 'marque 2 Pontos de Fadiga adicionais' (Híbrido Mítico). Confere com o SRD 1.0 de 09/09/2025: 'Mark a Stress to magically transform...', 'mark an additional Stress', 'mark 2 additional Stress'."
+   },
+   "evolucao": {
+    "esperanca": 3,
+    "tracoBonus": 1,
+    "texto": "Gaste 3 de Esperança para usar Forma de Fera sem marcar Estresse. Ao fazer isso, aumente um traço em +1 até sair da Forma de Fera.",
+    "textoLivro": "Evolução: gaste 3 Pontos de Esperança para usar Forma de Fera sem marcar Fadiga. Ao fazer isso, aumente um atributo em +1 até sair da Forma de Fera.",
+    "fonte": "DH-DigitalRegras.pdf p.34, 'HABILIDADE DE ESPERANÇA — Evolução'. SRD 1.0 (09/09/2025), Druid Hope Feature: 'Spend 3 Hope to transform into a Beastform without marking a Stress. When you do, choose one trait to raise by +1 until you drop out of that Beastform.' A errata de 09/09/2025 não toca nesta habilidade."
+   },
+   "aprimoramentos": {
+    "fera-lendaria": {
+     "patamaresDaBase": [
+      1
+     ],
+     "dano": 6,
+     "traco": 1,
+     "evasao": 2,
+     "sobeDado": false,
+     "fonte": "DH-DigitalRegras.pdf p.38, 'FERA LENDÁRIA (Aprimoramento de 1º patamar) — Evoluído'. SRD 1.0 (09/09/2025), Legendary Beast: 'Pick a Tier 1 Beastform option and become a larger, more powerful version of that creature.' Livro e SRD dizem o mesmo."
+    },
+    "fera-mitica": {
+     "patamaresDaBase": [
+      1,
+      2
+     ],
+     "dano": 9,
+     "traco": 2,
+     "evasao": 3,
+     "sobeDado": true,
+     "fonte": "DH-DigitalRegras.pdf p.39, 'FERA MÍTICA'. ⚠ DIVERGÊNCIA RESOLVIDA PELO SRD: o TÍTULO em pt-BR diz '(Aprimoramento de 1º ou 2º patamar)' e o CORPO diz 'escolha uma Forma de Fera de 1º patamar' — o livro se contradiz na mesma caixa. SRD 1.0 (09/09/2025), Mythic Beast: 'Pick a Tier 1 or Tier 2 Beastform option'. A errata de 09/09/2025 mexe nesta caixa (remoção de um 'the' repetido) e não toca no patamar. Vale 1º OU 2º, que é o que o próprio título pt-BR diz."
+    }
+   },
+   "hibridos": {
+    "hibrido-lendario": {
+     "patamaresDasOpcoes": [
+      1,
+      2
+     ],
+     "quantasOpcoes": 2,
+     "vantagens": 4,
+     "habilidades": 2,
+     "fonte": "DH-DigitalRegras.pdf p.38, 'HÍBRIDO LENDÁRIO — Habilidades Híbridas'. SRD 1.0 (09/09/2025), Legendary Hybrid: 'Choose any two Beastform options from Tiers 1–2. Choose a total of four advantages and two features from those options.' Livro e SRD batem."
+    },
+    "hibrido-mitico": {
+     "patamaresDasOpcoes": [
+      1,
+      2,
+      3
+     ],
+     "quantasOpcoes": 3,
+     "vantagens": 5,
+     "habilidades": 3,
+     "fonte": "DH-DigitalRegras.pdf p.39, 'HÍBRIDO MÍTICO'. ⚠ DIVERGÊNCIA RESOLVIDA PELO SRD: o livro pt-BR diz 'Escolha DUAS opções quaisquer de Forma de Fera de 1º a 3º patamar. Escolha um total de cinco vantagens e três habilidades'. Cinco vantagens e três habilidades tiradas de duas opções não fecha — cada forma tem uma lista de vantagens e duas habilidades. SRD 1.0 (09/09/2025), Mythic Hybrid: 'Choose any THREE Beastform options from Tiers 1-3.' A errata de 09/09/2025 não toca neste ponto. Vale três."
+    }
+   },
+   "escadaDeDados": {
+    "degraus": [
+     "d4",
+     "d6",
+     "d8",
+     "d10",
+     "d12"
+    ],
+    "fonte": "DH-DigitalRegras.pdf p.39, Fera Mítica: 'Seu dado de dano aumenta em um passo (d6 para d8, d8 para d10 etc.)'. A Fera Mítica só turbina formas de 1º e 2º patamar, cujo dado mais alto é d10 — a escada nunca precisa passar de d12."
+   }
   },
   "total": 24,
   "formas": [
@@ -109,7 +180,8 @@
      "coelho",
      "gato"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    },
    {
     "id": "aracnideo-espreitador",
@@ -147,7 +219,8 @@
      "Aranha-lobo",
      "tarântula"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    },
    {
     "id": "explorador-agil",
@@ -186,7 +259,8 @@
      "doninha",
      "raposa"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    },
    {
     "id": "explorador-aquatico",
@@ -224,7 +298,8 @@
      "peixe",
      "polvo"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    },
    {
     "id": "predador-de-bando",
@@ -263,7 +338,8 @@
      "hiena",
      "lobo"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    },
    {
     "id": "ruminante-arisco",
@@ -302,7 +378,8 @@
      "cervo",
      "gazela"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    },
    {
     "id": "carapaca-vigilante",
@@ -341,7 +418,8 @@
      "tartaruga",
      "tatu"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    },
    {
     "id": "fera-alada",
@@ -379,7 +457,8 @@
      "corvo",
      "gavião"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    },
    {
     "id": "fera-poderosa",
@@ -418,7 +497,8 @@
      "touro",
      "urso"
     ],
-    "errataAplicada": "Errata p.33 (Powerful Beast): os valores foram trocados. O livro pt-BR imprime 'Força +1 | Evasão +3' (p.37 e ficha p.350); o valor corrigido é 'Força +3 | Evasão +1'."
+    "errataAplicada": "Errata p.33 (Powerful Beast): os valores foram trocados. O livro pt-BR imprime 'Força +1 | Evasão +3' (p.37 e ficha p.350); o valor corrigido é 'Força +3 | Evasão +1'.",
+    "custoAdicional": 0
    },
    {
     "id": "predador-furtivo",
@@ -458,7 +538,8 @@
      "leão",
      "pantera"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    },
    {
     "id": "serpente-traicoeira",
@@ -497,7 +578,8 @@
      "naja",
      "víbora"
     ],
-    "errataAplicada": "Errata p.33 (Striking Serpent / Venomous Strike, 'direct physical damage'): nenhuma mudança necessária — a edição pt-BR já imprime 'dano físico direto' em Bote Peçonhento."
+    "errataAplicada": "Errata p.33 (Striking Serpent / Venomous Strike, 'direct physical damage'): nenhuma mudança necessária — a edição pt-BR já imprime 'dano físico direto' em Bote Peçonhento.",
+    "custoAdicional": 0
    },
    {
     "id": "trotador-robusto",
@@ -536,7 +618,8 @@
      "cavalo",
      "zebra"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    },
    {
     "id": "fera-lendaria",
@@ -544,7 +627,7 @@
     "tipo": "aprimoramento",
     "patamar": 3,
     "nivelMinimo": 5,
-    "grupo": "Fera Lendária (Aprimoradamento de 1º patamar)",
+    "grupo": "Fera Lendária (Aprimoramento de 1º patamar)",
     "verbos": [],
     "modificadores": {
      "atributo": null,
@@ -558,7 +641,8 @@
      }
     ],
     "exemplos": [],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    },
    {
     "id": "grande-fera-alada",
@@ -595,7 +679,8 @@
      "Águia gigante",
      "falcão"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    },
    {
     "id": "grande-predador",
@@ -634,7 +719,8 @@
      "tigre dente-de-sabre",
      "velocirraptor"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    },
    {
     "id": "hibrido-lendario",
@@ -664,7 +750,8 @@
      "Esfinge",
      "grifo"
     ],
-    "errataAplicada": "Errata p.34 (Legendary Hybrid, adicionar o tipo de dano 'phy'): nenhuma mudança necessária — a edição pt-BR já imprime 'd10+8 de dano fís.'."
+    "errataAplicada": "Errata p.34 (Legendary Hybrid, adicionar o tipo de dano 'phy'): nenhuma mudança necessária — a edição pt-BR já imprime 'd10+8 de dano fís.'.",
+    "custoAdicional": 1
    },
    {
     "id": "lagarto-poderoso",
@@ -703,7 +790,8 @@
      "jacaré",
      "monstro-de-gila"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    },
    {
     "id": "predador-aquatico",
@@ -742,7 +830,8 @@
      "orca",
      "tubarão"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    },
    {
     "id": "cacador-aereo-mitico",
@@ -782,7 +871,8 @@
      "roca",
      "serpe"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    },
    {
     "id": "fera-aquatica-epica",
@@ -820,7 +910,8 @@
      "Baleia",
      "lula gigante"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    },
    {
     "id": "fera-massiva",
@@ -864,7 +955,8 @@
      "mamute",
      "rinoceronte"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    },
    {
     "id": "fera-mitica",
@@ -886,7 +978,8 @@
      }
     ],
     "exemplos": [],
-    "errataAplicada": "Errata p.35 (Mythic Beast / 'Evolved', remoção de um 'the' duplicado): nenhuma mudança necessária — o erro é exclusivo do texto em inglês e não existe na edição pt-BR."
+    "errataAplicada": "Errata p.35 (Mythic Beast / 'Evolved', remoção de um 'the' duplicado): nenhuma mudança necessária — o erro é exclusivo do texto em inglês e não existe na edição pt-BR.",
+    "custoAdicional": 0
    },
    {
     "id": "hibrido-mitico",
@@ -917,7 +1010,8 @@
      "mantícora",
      "quimera"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 2
    },
    {
     "id": "lagarto-terrivel",
@@ -956,7 +1050,8 @@
      "Braquiossauro",
      "tiranossauro"
     ],
-    "errataAplicada": null
+    "errataAplicada": null,
+    "custoAdicional": 0
    }
   ]
  },
@@ -1032,6 +1127,8 @@
   "limitePorDescanso ficou null: o livro NÃO impõe limite de usos de Forma de Fera por descanso. O custo é 1 Ponto de Fadiga por transformação (mais Fadiga nas híbridas). Os limites 'uma vez por descanso' que aparecem são de habilidades internas das formas (Visão Aérea) ou da subclasse.",
   "Fera Lendária e Fera Mítica não têm linha de atributo/Evasão/ataque próprios (herdam da forma escolhida); por isso 'modificadores' e 'ataque' vêm com null nessas duas entradas.",
   "Fera Lendária, Híbrido Lendário, Fera Mítica e Híbrido Mítico não listam verbos de vantagem próprios (as híbridas escolhem vantagens de outras formas); 'verbos' vem como lista vazia nessas quatro.",
-  "Não há no livro nenhuma regra explícita sobre usar itens de inventário/consumíveis enquanto em Forma de Fera; o texto só proíbe armas e feitiços de cartas de domínio. Registrado como tal em regras.equipamento."
+  "Não há no livro nenhuma regra explícita sobre usar itens de inventário/consumíveis enquanto em Forma de Fera; o texto só proíbe armas e feitiços de cartas de domínio. Registrado como tal em regras.equipamento.",
+  "Os campos `custo`, `evolucao`, `aprimoramentos`, `hibridos`, `escadaDeDados` e o `custoAdicional` de cada forma foram acrescentados DEPOIS da extração original, à mão, com a fonte anotada em cada um. tools/montar-fichas-filhas.py é o script histórico da extração (lê /tmp e aponta para um caminho antigo): ele NÃO regenera este arquivo, e rodá-lo perderia estes campos.",
+  "Erro de digitação do livro corrigido na exibição: o título da FERA LENDÁRIA em DH-DigitalRegras.pdf p.38 sai como '(Aprimoradamento de 1º patamar)'. A Fera Mítica, na página seguinte, traz '(Aprimoramento de 1º ou 2º patamar)', e o SRD 1.0 diz 'Tier 1 Upgrade'. É lapso de digitação, não escolha de tradução — o campo `grupo` guarda 'Aprimoramento'."
  ]
 }

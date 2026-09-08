@@ -404,7 +404,12 @@
     ],
     "motivo": "O livro da Jambô chama de Determinação; a tradução velha dizia \"Imparável\" e deixava \"Unstoppable Die\" em inglês no meio do mesmo parágrafo."
    },
-   "observacaoDaChave": "A chave continua \"imparavel\" pelo mesmo motivo da do Bardo."
+   "observacaoDaChave": "A chave continua \"imparavel\" pelo mesmo motivo da do Bardo.",
+   "impedeCondicoes": [
+    "vulneravel",
+    "restrito"
+   ],
+   "fonteDoImpedimento": "DH-DigitalRegras.pdf (Jambô, Prévia 5) p.44, GUARDIÃO — 'Determinação': \"Enquanto estiver Determinado, você recebe os seguintes benefícios: (…) Você não pode ser Restrito ou ficar Vulnerável.\" SRD 1.0 (09/09/2025), Guardian 'Unstoppable': 'You can't be Restrained or Vulnerable.' A errata de 09/09/2025 não toca nesta habilidade. Vale enquanto o Dado de Determinação estiver na ficha — por isso o impedimento pendura no CONTADOR, e não na característica: ter a habilidade não é estar Determinado."
   },
   {
    "chave": "classe:guerreiro:matador",
@@ -434,6 +439,354 @@
      "Slayer Die"
     ]
    }
+  },
+  {
+   "chave": "classe:seraph:oracao",
+   "origem": "caracteristica-classe",
+   "refId": "seraph",
+   "nome": "Dados de Oração",
+   "rotulo": "dados",
+   "tipo": "dados",
+   "dado": {
+    "padrao": "d4"
+   },
+   "maximo": {
+    "tipo": "traco",
+    "traco": "Conjuração"
+   },
+   "recarregaEm": [
+    "inicio-de-sessao"
+   ],
+   "zeraEm": [
+    "fim-de-sessao"
+   ],
+   "observacao": "No início de cada sessão o Serafim rola um número de d4 igual ao traço de Conjuração da subclasse e os guarda na ficha; gasta quantos quiser para reduzir dano sofrido, somar a uma jogada já feita ou ganhar Esperança igual ao resultado. No fim da sessão, os não usados são perdidos. O app conta QUANTOS dados sobraram — não guarda o valor de cada um: quem rola é o jogador (decisão \"só ficha, sem dados\"). A carta Devoto (Portador Divino, especialização) manda rolar um dado a mais e descartar o mais baixo: isso muda a rolagem, não a quantidade que fica na ficha.",
+   "fonte": "DH-DigitalRegras.pdf (Jambô, Prévia 5) p.50, SERAFIM — 'HABILIDADES DE CLASSE: Dados de Oração'. SRD 1.0 (09/09/2025), Seraph 'Prayer Dice': 'At the start of each session, roll a number of d4s equal to your subclass' Spellcast trait and place them on your character sheet.' A errata de 09/09/2025 não toca nesta habilidade — a única menção a Seraph nela é a de um ADVERSÁRIO ('Relentless (3)', p.236), que já está aplicada em data/adversarios.json.",
+   "observacaoDoMaximo": "Sem mínimo, de propósito: o livro diz 'igual ao traço de Conjuração' e não põe piso. Um Serafim com Conjuração 0 rola zero dados, e a ficha mostra zero — que é a verdade da mesa, não um defeito.",
+   "termo": {
+    "canonico": "Dados de Oração",
+    "sinonimos": [
+     "Dado de Oração",
+     "Prayer Dice",
+     "Prayer Die"
+    ]
+   }
+  },
+  {
+   "chave": "uso:bardo-musico-errante:interprete-talentoso",
+   "origem": "caracteristica-subclasse",
+   "refId": "bardo-musico-errante",
+   "nome": "Intérprete Talentoso",
+   "rotulo": "já usou",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Marcador de \"uma vez por\": conta os usos JÁ GASTOS, e some no descanso longo. Começa em zero porque ficha nova é ficha que ainda não usou nada — e o app não precisa criar nada para isso ser verdade.",
+   "fonte": "O gatilho vem do texto da própria habilidade, importado em data/classes.json a partir das cartas oficiais em PNG (subclasses) e do DH-DigitalRegras.pdf (habilidades de classe). A errata de 09/09/2025 não altera nenhuma destas habilidades.",
+   "exigeCaracteristica": "Intérprete Talentoso",
+   "observacaoDaPosse": "A ficha só TEM este marcador se tiver a característica: ter a subclasse não é ter a carta. Um Bardo de 1º nível tem 'Artífice das Palavras' e ainda não pegou a carta de especialização — o marcador de Eloquente não pode aparecer na dobra dele."
+  },
+  {
+   "chave": "uso:bardo-artifice-das-palavras:discurso-empolgante",
+   "origem": "caracteristica-subclasse",
+   "refId": "bardo-artifice-das-palavras",
+   "nome": "Discurso Empolgante",
+   "rotulo": "já usou",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Marcador de \"uma vez por\": conta os usos JÁ GASTOS, e some no descanso longo. Começa em zero porque ficha nova é ficha que ainda não usou nada — e o app não precisa criar nada para isso ser verdade.",
+   "fonte": "O gatilho vem do texto da própria habilidade, importado em data/classes.json a partir das cartas oficiais em PNG (subclasses) e do DH-DigitalRegras.pdf (habilidades de classe). A errata de 09/09/2025 não altera nenhuma destas habilidades.",
+   "exigeCaracteristica": "Discurso Empolgante",
+   "observacaoDaPosse": "A ficha só TEM este marcador se tiver a característica: ter a subclasse não é ter a carta. Um Bardo de 1º nível tem 'Artífice das Palavras' e ainda não pegou a carta de especialização — o marcador de Eloquente não pode aparecer na dobra dele."
+  },
+  {
+   "chave": "uso:bardo-artifice-das-palavras:eloquente",
+   "origem": "caracteristica-subclasse",
+   "refId": "bardo-artifice-das-palavras",
+   "nome": "Eloquente",
+   "rotulo": "já usou",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "fim-de-sessao"
+   ],
+   "observacao": "Marcador de \"uma vez por\": conta os usos JÁ GASTOS, e some no fim da sessão. Começa em zero porque ficha nova é ficha que ainda não usou nada — e o app não precisa criar nada para isso ser verdade.",
+   "fonte": "O gatilho vem do texto da própria habilidade, importado em data/classes.json a partir das cartas oficiais em PNG (subclasses) e do DH-DigitalRegras.pdf (habilidades de classe). A errata de 09/09/2025 não altera nenhuma destas habilidades.",
+   "exigeCaracteristica": "Eloquente",
+   "observacaoDaPosse": "A ficha só TEM este marcador se tiver a característica: ter a subclasse não é ter a carta. Um Bardo de 1º nível tem 'Artífice das Palavras' e ainda não pegou a carta de especialização — o marcador de Eloquente não pode aparecer na dobra dele."
+  },
+  {
+   "chave": "uso:druida-guardiao-dos-elementos:aura-elemental",
+   "origem": "caracteristica-subclasse",
+   "refId": "druida-guardiao-dos-elementos",
+   "nome": "Aura Elemental",
+   "rotulo": "já usou",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso",
+    "descanso-longo"
+   ],
+   "observacao": "Marcador de \"uma vez por\": conta os usos JÁ GASTOS, e some em qualquer descanso. Começa em zero porque ficha nova é ficha que ainda não usou nada — e o app não precisa criar nada para isso ser verdade.",
+   "fonte": "O gatilho vem do texto da própria habilidade, importado em data/classes.json a partir das cartas oficiais em PNG (subclasses) e do DH-DigitalRegras.pdf (habilidades de classe). A errata de 09/09/2025 não altera nenhuma destas habilidades.",
+   "exigeCaracteristica": "Aura Elemental",
+   "observacaoDaPosse": "A ficha só TEM este marcador se tiver a característica: ter a subclasse não é ter a carta. Um Bardo de 1º nível tem 'Artífice das Palavras' e ainda não pegou a carta de especialização — o marcador de Eloquente não pode aparecer na dobra dele."
+  },
+  {
+   "chave": "uso:druida-guardiao-da-renovacao:clareza-da-natureza",
+   "origem": "caracteristica-subclasse",
+   "refId": "druida-guardiao-da-renovacao",
+   "nome": "Clareza da Natureza",
+   "rotulo": "já usou",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Marcador de \"uma vez por\": conta os usos JÁ GASTOS, e some no descanso longo. Começa em zero porque ficha nova é ficha que ainda não usou nada — e o app não precisa criar nada para isso ser verdade.",
+   "fonte": "O gatilho vem do texto da própria habilidade, importado em data/classes.json a partir das cartas oficiais em PNG (subclasses) e do DH-DigitalRegras.pdf (habilidades de classe). A errata de 09/09/2025 não altera nenhuma destas habilidades.",
+   "exigeCaracteristica": "Clareza da Natureza",
+   "observacaoDaPosse": "A ficha só TEM este marcador se tiver a característica: ter a subclasse não é ter a carta. Um Bardo de 1º nível tem 'Artífice das Palavras' e ainda não pegou a carta de especialização — o marcador de Eloquente não pode aparecer na dobra dele."
+  },
+  {
+   "chave": "uso:druida-guardiao-da-renovacao:protecao-do-guardiao",
+   "origem": "caracteristica-subclasse",
+   "refId": "druida-guardiao-da-renovacao",
+   "nome": "Proteção do Guardião",
+   "rotulo": "já usou",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Marcador de \"uma vez por\": conta os usos JÁ GASTOS, e some no descanso longo. Começa em zero porque ficha nova é ficha que ainda não usou nada — e o app não precisa criar nada para isso ser verdade.",
+   "fonte": "O gatilho vem do texto da própria habilidade, importado em data/classes.json a partir das cartas oficiais em PNG (subclasses) e do DH-DigitalRegras.pdf (habilidades de classe). A errata de 09/09/2025 não altera nenhuma destas habilidades.",
+   "exigeCaracteristica": "Proteção do Guardião",
+   "observacaoDaPosse": "A ficha só TEM este marcador se tiver a característica: ter a subclasse não é ter a carta. Um Bardo de 1º nível tem 'Artífice das Palavras' e ainda não pegou a carta de especialização — o marcador de Eloquente não pode aparecer na dobra dele."
+  },
+  {
+   "chave": "uso:feiticeiro:canalizar-poder-bruto",
+   "origem": "caracteristica-classe",
+   "refId": "feiticeiro",
+   "nome": "Canalizar Poder Bruto",
+   "rotulo": "já usou",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Marcador de \"uma vez por\": conta os usos JÁ GASTOS, e some no descanso longo. Começa em zero porque ficha nova é ficha que ainda não usou nada — e o app não precisa criar nada para isso ser verdade.",
+   "fonte": "O gatilho vem do texto da própria habilidade, importado em data/classes.json a partir das cartas oficiais em PNG (subclasses) e do DH-DigitalRegras.pdf (habilidades de classe). A errata de 09/09/2025 não altera nenhuma destas habilidades.",
+   "exigeCaracteristica": "Canalizar Poder Bruto",
+   "observacaoDaPosse": "A ficha só TEM este marcador se tiver a característica: ter a subclasse não é ter a carta. Um Bardo de 1º nível tem 'Artífice das Palavras' e ainda não pegou a carta de especialização — o marcador de Eloquente não pode aparecer na dobra dele."
+  },
+  {
+   "chave": "uso:feiticeiro-origem-elemental:transcendencia",
+   "origem": "caracteristica-subclasse",
+   "refId": "feiticeiro-origem-elemental",
+   "nome": "Transcendência",
+   "rotulo": "já usou",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Marcador de \"uma vez por\": conta os usos JÁ GASTOS, e some no descanso longo. Começa em zero porque ficha nova é ficha que ainda não usou nada — e o app não precisa criar nada para isso ser verdade.",
+   "fonte": "O gatilho vem do texto da própria habilidade, importado em data/classes.json a partir das cartas oficiais em PNG (subclasses) e do DH-DigitalRegras.pdf (habilidades de classe). A errata de 09/09/2025 não altera nenhuma destas habilidades.",
+   "exigeCaracteristica": "Transcendência",
+   "observacaoDaPosse": "A ficha só TEM este marcador se tiver a característica: ter a subclasse não é ter a carta. Um Bardo de 1º nível tem 'Artífice das Palavras' e ainda não pegou a carta de especialização — o marcador de Eloquente não pode aparecer na dobra dele."
+  },
+  {
+   "chave": "uso:feiticeiro-origem-primal:ajuda-encantada",
+   "origem": "caracteristica-subclasse",
+   "refId": "feiticeiro-origem-primal",
+   "nome": "Ajuda Encantada",
+   "rotulo": "já usou",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Marcador de \"uma vez por\": conta os usos JÁ GASTOS, e some no descanso longo. Começa em zero porque ficha nova é ficha que ainda não usou nada — e o app não precisa criar nada para isso ser verdade.",
+   "fonte": "O gatilho vem do texto da própria habilidade, importado em data/classes.json a partir das cartas oficiais em PNG (subclasses) e do DH-DigitalRegras.pdf (habilidades de classe). A errata de 09/09/2025 não altera nenhuma destas habilidades.",
+   "exigeCaracteristica": "Ajuda Encantada",
+   "observacaoDaPosse": "A ficha só TEM este marcador se tiver a característica: ter a subclasse não é ter a carta. Um Bardo de 1º nível tem 'Artífice das Palavras' e ainda não pegou a carta de especialização — o marcador de Eloquente não pode aparecer na dobra dele."
+  },
+  {
+   "chave": "uso:guerreiro-chamada-dos-bravos:ritual-de-batalha",
+   "origem": "caracteristica-subclasse",
+   "refId": "guerreiro-chamada-dos-bravos",
+   "nome": "Ritual de Batalha",
+   "rotulo": "já usou",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Marcador de \"uma vez por\": conta os usos JÁ GASTOS, e some no descanso longo. Começa em zero porque ficha nova é ficha que ainda não usou nada — e o app não precisa criar nada para isso ser verdade.",
+   "fonte": "O gatilho vem do texto da própria habilidade, importado em data/classes.json a partir das cartas oficiais em PNG (subclasses) e do DH-DigitalRegras.pdf (habilidades de classe). A errata de 09/09/2025 não altera nenhuma destas habilidades.",
+   "exigeCaracteristica": "Ritual de Batalha",
+   "observacaoDaPosse": "A ficha só TEM este marcador se tiver a característica: ter a subclasse não é ter a carta. Um Bardo de 1º nível tem 'Artífice das Palavras' e ainda não pegou a carta de especialização — o marcador de Eloquente não pode aparecer na dobra dele."
+  },
+  {
+   "chave": "uso:guerreiro-chamada-do-matador:especialista-em-armas",
+   "origem": "caracteristica-subclasse",
+   "refId": "guerreiro-chamada-do-matador",
+   "nome": "Especialista em Armas",
+   "rotulo": "já usou",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Marcador de \"uma vez por\": conta os usos JÁ GASTOS, e some no descanso longo. Começa em zero porque ficha nova é ficha que ainda não usou nada — e o app não precisa criar nada para isso ser verdade.",
+   "fonte": "O gatilho vem do texto da própria habilidade, importado em data/classes.json a partir das cartas oficiais em PNG (subclasses) e do DH-DigitalRegras.pdf (habilidades de classe). A errata de 09/09/2025 não altera nenhuma destas habilidades.",
+   "exigeCaracteristica": "Especialista em Armas",
+   "observacaoDaPosse": "A ficha só TEM este marcador se tiver a característica: ter a subclasse não é ter a carta. Um Bardo de 1º nível tem 'Artífice das Palavras' e ainda não pegou a carta de especialização — o marcador de Eloquente não pode aparecer na dobra dele."
+  },
+  {
+   "chave": "uso:ladino-sindicato:contatos-em-todo-lugar",
+   "origem": "caracteristica-subclasse",
+   "refId": "ladino-sindicato",
+   "nome": "Contatos em Todo Lugar",
+   "rotulo": "já usou",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1,
+    "progressao": [
+     {
+      "caracteristica": "Apoio Confiável",
+      "valor": 3,
+      "motivo": "Maestria do Sindicato: \"você pode usar sua habilidade Contatos em Todo Lugar três vezes por sessão\""
+     }
+    ]
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "fim-de-sessao"
+   ],
+   "observacao": "Marcador de \"uma vez por\": conta os usos JÁ GASTOS, e some no fim da sessão. Começa em zero porque ficha nova é ficha que ainda não usou nada — e o app não precisa criar nada para isso ser verdade.",
+   "fonte": "O gatilho vem do texto da própria habilidade, importado em data/classes.json a partir das cartas oficiais em PNG (subclasses) e do DH-DigitalRegras.pdf (habilidades de classe). A errata de 09/09/2025 não altera nenhuma destas habilidades.",
+   "exigeCaracteristica": "Contatos em Todo Lugar",
+   "observacaoDaPosse": "A ficha só TEM este marcador se tiver a característica: ter a subclasse não é ter a carta. Um Bardo de 1º nível tem 'Artífice das Palavras' e ainda não pegou a carta de especialização — o marcador de Eloquente não pode aparecer na dobra dele."
+  },
+  {
+   "chave": "uso:mago-escola-do-conhecimento:memoria-perfeita",
+   "origem": "caracteristica-subclasse",
+   "refId": "mago-escola-do-conhecimento",
+   "nome": "Memória Perfeita",
+   "rotulo": "já usou",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso",
+    "descanso-longo"
+   ],
+   "observacao": "Marcador de \"uma vez por\": conta os usos JÁ GASTOS, e some em qualquer descanso. Começa em zero porque ficha nova é ficha que ainda não usou nada — e o app não precisa criar nada para isso ser verdade.",
+   "fonte": "O gatilho vem do texto da própria habilidade, importado em data/classes.json a partir das cartas oficiais em PNG (subclasses) e do DH-DigitalRegras.pdf (habilidades de classe). A errata de 09/09/2025 não altera nenhuma destas habilidades.",
+   "exigeCaracteristica": "Memória Perfeita",
+   "observacaoDaPosse": "A ficha só TEM este marcador se tiver a característica: ter a subclasse não é ter a carta. Um Bardo de 1º nível tem 'Artífice das Palavras' e ainda não pegou a carta de especialização — o marcador de Eloquente não pode aparecer na dobra dele."
+  },
+  {
+   "chave": "uso:patrulheiro-laco-bestial:amigo-leal",
+   "origem": "caracteristica-subclasse",
+   "refId": "patrulheiro-laco-bestial",
+   "nome": "Amigo Leal",
+   "rotulo": "já usou",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Marcador de \"uma vez por\": conta os usos JÁ GASTOS, e some no descanso longo. Começa em zero porque ficha nova é ficha que ainda não usou nada — e o app não precisa criar nada para isso ser verdade.",
+   "fonte": "O gatilho vem do texto da própria habilidade, importado em data/classes.json a partir das cartas oficiais em PNG (subclasses) e do DH-DigitalRegras.pdf (habilidades de classe). A errata de 09/09/2025 não altera nenhuma destas habilidades.",
+   "exigeCaracteristica": "Amigo Leal",
+   "observacaoDaPosse": "A ficha só TEM este marcador se tiver a característica: ter a subclasse não é ter a carta. Um Bardo de 1º nível tem 'Artífice das Palavras' e ainda não pegou a carta de especialização — o marcador de Eloquente não pode aparecer na dobra dele."
+  },
+  {
+   "chave": "uso:seraph-portador-divino:toque-moderado",
+   "origem": "caracteristica-subclasse",
+   "refId": "seraph-portador-divino",
+   "nome": "Toque Moderado",
+   "rotulo": "já usou",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1,
+    "progressao": [
+     {
+      "caracteristica": "Devoto",
+      "valor": 2,
+      "motivo": "Especialização do Portador Divino: \"pode usar a habilidade Toque Moderado duas vezes em vez de uma por descanso longo\""
+     }
+    ]
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Marcador de \"uma vez por\": conta os usos JÁ GASTOS, e some no descanso longo. Começa em zero porque ficha nova é ficha que ainda não usou nada — e o app não precisa criar nada para isso ser verdade.",
+   "fonte": "O gatilho vem do texto da própria habilidade, importado em data/classes.json a partir das cartas oficiais em PNG (subclasses) e do DH-DigitalRegras.pdf (habilidades de classe). A errata de 09/09/2025 não altera nenhuma destas habilidades.",
+   "exigeCaracteristica": "Toque Moderado",
+   "observacaoDaPosse": "A ficha só TEM este marcador se tiver a característica: ter a subclasse não é ter a carta. Um Bardo de 1º nível tem 'Artífice das Palavras' e ainda não pegou a carta de especialização — o marcador de Eloquente não pode aparecer na dobra dele."
   }
  ]
 }

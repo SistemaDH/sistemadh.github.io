@@ -852,7 +852,39 @@
 .paralela__forma p, .paralela__carac p { white-space: pre-line; }
 .paralela__formaTopo { display: flex; align-items: center; gap: var(--e2); }
 .paralela__aprimoramento { color: var(--cor-titulo); }
+/* As Vantagens são regra de TODA jogada, não enfeite: ficam legíveis, não em
+   texto-fraco como a linha de números. */
+.paralela__vantagens { color: var(--cor-texto); margin: var(--e1) 0 var(--e2); }
 .paralela__remover { margin-top: var(--e5); }
+.paralela__evolucaoDruida { display: flex; flex-direction: column; gap: var(--e2); }
+.paralela__evolucaoDruida.esta-ativa { border-color: var(--cor-ouro); }
+/* Seis nomes de traço não cabem numa linha de 390px — eles quebram, não somem. */
+.paralela__tracos { flex-wrap: wrap; }
+
+/* O painel de escolha do aprimoramento e das híbridas, dentro do cartão. */
+.paralela__escolha {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e3);
+  margin-top: var(--e3);
+  padding-top: var(--e3);
+  border-top: 1px solid var(--cor-borda);
+}
+/*
+ * Doze nomes de forma numa linha de 390px não cabem de jeito nenhum: eles
+ * QUEBRAM. Uma grade de largura fixa aqui sumiria com a metade de baixo sem
+ * rolagem horizontal para avisar — foi o que aconteceu com a barra de abas.
+ */
+.paralela__opcoes { flex-wrap: wrap; }
+
+/* A escolha de uma característica (o número do Mago), colada no texto dela. */
+.ficha__escolha { margin-top: var(--e2); }
+/* Doze botões não cabem numa linha de 390px: eles QUEBRAM, não somem. */
+.ficha__escolhaNumeros { flex-wrap: wrap; }
+
+/* O botão de gastar a habilidade, e o campo de quem foi marcado. */
+.ficha__usarHabilidade { margin-top: var(--e2); align-self: flex-start; }
+.ficha__habilidadeComAlvo { margin-top: var(--e2); gap: var(--e2); }
 
 /* A ficha que ficou para trás do grupo. Aviso, não bloqueio. */
 .ficha__atrasada {
@@ -1850,6 +1882,18 @@
   opacity: .9;
 }
 .ficha__faixaEstado.esta-encerrada .ficha__faixaTitulo { color: var(--cor-texto-suave); }
+
+/*
+ * Em Forma de Fera: um ESTADO ESCOLHIDO, não um alarme.
+ *
+ * ⚠ SEM COR DE SIGNIFICADO NOVA (E89). Vermelho já é "PV no limite", aço é
+ * "Inconsciente", e o ouro é o cromo do app, que por decisão não significa
+ * nada (E86). Uma quarta cor aqui obrigaria a faixa a ter legenda. A borda
+ * forte e o título na cor de título bastam: a faixa se distingue das outras
+ * por estar lá, e o texto dela diz tudo o que ela quer dizer.
+ */
+.ficha__faixaEstado.esta-emForma { border-left-color: var(--cor-borda-forte); }
+.ficha__faixaEstado.esta-emForma .ficha__faixaTitulo { color: var(--cor-titulo); }
 
 /* --- o diálogo dos três movimentos ---------------------------------------- */
 

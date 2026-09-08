@@ -251,9 +251,10 @@ function maosDaArma_(arma) {
  * Valida o equipamento equipado de um personagem.
  * @param {{primaria?:string, secundaria?:string, armadura?:string}} equipado
  * @param {number} nivelPersonagem
+ * @param {Object} [ficha] a ficha inteira — só para saber se ela ignora empunhadura
  * @return {{ok:boolean, erros:string[], resolvido:Object}}
  */
-function validarEquipamento_(equipado, nivelPersonagem) {
+function validarEquipamento_(equipado, nivelPersonagem, ficha) {
   equipado = equipado || {};
   const erros = [];
   const resolvido = {};
@@ -281,7 +282,25 @@ function validarEquipamento_(equipado, nivelPersonagem) {
   resolvido.primaria = conferirArma(equipado.primaria, 'primaria');
   resolvido.secundaria = conferirArma(equipado.secundaria, 'secundaria');
 
-  if (maosUsadas > MAOS_DISPONIVEIS) {
+  /*
+   * ⚠ O GUERREIRO NÃO OBEDECE À CONTA DE MÃOS.
+   *
+   * "Treinamento de Combate: você IGNORA O TIPO DE EMPUNHADURA de armas
+   * equipadas" (livro p.46; SRD 1.0 de 09/09/2025: "You ignore Burden when
+   * equipping weapons"). Empunhadura é este campo maos das armas, e esta era a única
+   * conta que o consultava — então, sem a exceção, a criação recusava o
+   * Guerreiro de machado de batalha com escudo. Não é rigor: é o app negando
+   * o que a classe existe para fazer.
+   *
+   * Quem responde "esta ficha ignora?" é fichaTemEfeito_ (42_Classes.gs),
+   * que lê as características resolvidas — inclusive as da MULTICLASSE. Quem
+   * multiclassou em Guerreiro ganhou a característica de classe dele, e ganha
+   * a exceção junto, sem nenhuma linha a mais aqui.
+   */
+  const ignoraEmpunhadura = (typeof fichaTemEfeito_ === 'function') &&
+    fichaTemEfeito_(ficha, 'ignora-empunhadura');
+
+  if (maosUsadas > MAOS_DISPONIVEIS && !ignoraEmpunhadura) {
     erros.push('Não cabe nas duas mãos: uma arma de duas mãos já ocupa as duas, ' +
                'então não dá para levar uma secundária junto.');
   }
