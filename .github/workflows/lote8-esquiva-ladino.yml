@@ -23,9 +23,33 @@ jobs:
           node-version: '22'
       - name: Guardar HEAD testado
         run: echo "BASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Corrigir localizador estrutural do transformador temporário
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('tools/lote8-implementar-esquiva-ladino.py')
+          t = p.read_text(encoding='utf-8')
+          t2 = t.replace(r'contexto\.CONTADORES', r'CONTADORES')
+          t2 = t2.replace('contexto.CONTADORES', 'CONTADORES')
+          if t2 == t:
+              raise SystemExit('localizador antigo contexto.CONTADORES não encontrado')
+          p.write_text(t2, encoding='utf-8')
+          PY
       - name: Materializar Esquiva e regenerar
         run: |
           python3 tools/lote8-implementar-esquiva-ladino.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('tools/testes-backend.mjs')
+          t = p.read_text(encoding='utf-8')
+          velho = "igual(porOrigem['caracteristica-classe'], 4);"
+          novo = "igual(porOrigem['caracteristica-classe'], 5);"
+          if novo not in t:
+              if t.count(velho) != 1:
+                  raise SystemExit('expectativa de origem de classe não encontrada de forma única')
+              t = t.replace(velho, novo, 1)
+          p.write_text(t, encoding='utf-8')
+          PY
           node tools/gerar-42-classes.mjs
           node tools/gerar-47-contadores.mjs
           node tools/gerar-48-criacao.mjs
