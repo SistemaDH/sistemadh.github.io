@@ -579,7 +579,7 @@ const ARMADURAS = avaliar('ARMADURAS');
 const ITENS = avaliar('ITENS');
 
 teste('contagem bate com o SRD oficial', () => {
-  igual(ARMAS.filter((a) => a.cat === 'primaria').length, 155, 'armas primárias');
+  igual(ARMAS.filter((a) => a.cat === 'primaria').length, 167, 'armas primárias — 155 tabeladas + 12 cadeiras de combate');
   igual(ARMAS.filter((a) => a.cat === 'secundaria').length, 37, 'armas secundárias');
   igual(ARMADURAS.length, 34, 'armaduras');
   igual(ITENS.filter((i) => i.tipo === 'saque').length, 60, 'itens de saque');
@@ -601,7 +601,7 @@ teste('nenhum nome de arma se repete dentro do mesmo nível', () => {
 });
 
 teste('todo atributo e alcance está em português', () => {
-  const tracos = ['Agilidade', 'Força', 'Finesse', 'Instinto', 'Presença', 'Conhecimento'];
+  const tracos = ['Agilidade', 'Força', 'Finesse', 'Instinto', 'Presença', 'Conhecimento', 'Conjuração'];
   const alcances = ['Corpo a Corpo', 'Muito Próximo', 'Próximo', 'Distante', 'Muito Distante'];
   ARMAS.forEach((a) => {
     verdade(tracos.indexOf(a.atributo) >= 0, `atributo estranho em ${a.nome}: ${a.atributo}`);

@@ -3483,10 +3483,11 @@
       "caracteristica": {
         "nomeIngles": "Startling",
         "textoIngles": "Startling: Mark a Stress to crack the whip and force all adversaries within Melee range back to Close range",
-        "nome": "Surpreendente",
-        "texto": "Surpreendente: Marque um Estresse para estalar o chicote e forçar todos os adversários dentro do alcance Corpo a Corpo a voltarem para o alcance Corpo a Corpo.",
+        "nome": "Alarmante",
+        "texto": "Alarmante: marque 1 Estresse para estalar o chicote e forçar todos os adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "fonteCorrecao": "DH-DigitalRegras.pdf, p.125"
       },
       "danoSRD": "d6 phy"
     },
@@ -3647,10 +3648,11 @@
       "caracteristica": {
         "nomeIngles": "Startling",
         "textoIngles": "Startling: Mark a Stress to crack the whip and force all adversaries within Melee range back to Close range",
-        "nome": "Surpreendente",
-        "texto": "Surpreendente: Marque um Estresse para estalar o chicote e forçar todos os adversários dentro do alcance Corpo a Corpo a voltarem para o alcance Corpo a Corpo.",
+        "nome": "Alarmante",
+        "texto": "Alarmante: marque 1 Estresse para estalar o chicote e forçar todos os adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "fonteCorrecao": "DH-DigitalRegras.pdf, p.125"
       },
       "danoSRD": "d6+2 phy"
     },
@@ -3880,10 +3882,11 @@
       "caracteristica": {
         "nomeIngles": "Startling",
         "textoIngles": "Startling: Mark a Stress to crack the whip and force all adversaries within Melee range back to Close range",
-        "nome": "Surpreendente",
-        "texto": "Surpreendente: Marque um Estresse para estalar o chicote e forçar todos os adversários dentro do alcance Corpo a Corpo a voltarem para o alcance Corpo a Corpo.",
+        "nome": "Alarmante",
+        "texto": "Alarmante: marque 1 Estresse para estalar o chicote e forçar todos os adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "fonteCorrecao": "DH-DigitalRegras.pdf, p.125"
       },
       "danoSRD": "d6+4 phy"
     },
@@ -3946,9 +3949,10 @@
         "nomeIngles": "Deflecting",
         "textoIngles": "Deflecting: When you are attacked, you can mark an Armor Slot to gain a bonus to your Evasion equal to your available Armor Slots against the attack",
         "nome": "Desafetação",
-        "texto": "Desafetação: Quando for atacado, você pode marcar um espaço de armadura de uma mão para ganhar um bônus de Evasão igual ao seu Pontuação de armadura contra o ataque.",
+        "texto": "Desafetação: Quando for atacado, você pode marcar 1 Ponto de Armadura para receber um bônus de Evasão igual aos seus Pontos de Armadura disponíveis contra esse ataque.",
         "fonteTraducao": "livro",
-        "confianca": "media"
+        "confianca": "media",
+        "fonteCorrecao": "Daggerheart-Erratas.pdf, p.125"
       },
       "aliases": [
         "Fivela"
@@ -4119,10 +4123,11 @@
       "caracteristica": {
         "nomeIngles": "Startling",
         "textoIngles": "Startling: Mark a Stress to crack the whip and force all adversaries within Melee range back to Close range",
-        "nome": "Surpreendente",
-        "texto": "Surpreendente: Marque um Estresse para estalar o chicote e forçar todos os adversários dentro do alcance Corpo a Corpo a voltarem para o alcance Corpo a Corpo.",
+        "nome": "Alarmante",
+        "texto": "Alarmante: marque 1 Estresse para estalar o chicote e forçar todos os adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "fonteCorrecao": "DH-DigitalRegras.pdf, p.125"
       },
       "danoSRD": "d6+6 phy"
     },
@@ -4240,6 +4245,306 @@
         "confianca": "alta"
       },
       "danoSRD": "d4 phy"
+    },
+    {
+      "id": "primaria-t1-cadeira-de-rodas-leve",
+      "categoria": "primaria",
+      "tier": 1,
+      "tabela": "Cadeira de Rodas de Combate",
+      "nome": "Cadeira de rodas leve",
+      "origemNome": "livro",
+      "nomeIngles": "Light-Frame Wheelchair",
+      "nomeLivro": "Cadeira de rodas leve",
+      "fonteNumeros": "DH-DigitalRegras.pdf p.123; errata 09/09/2025 sem alteração",
+      "atributo": "Agilidade",
+      "alcance": "Corpo a Corpo",
+      "dano": "d8 fís",
+      "maos": "Uma mão",
+      "caracteristica": {
+        "nomeIngles": "Quick",
+        "textoIngles": "Quick: When you make an attack, you can mark a Stress to target another creature within range.",
+        "nome": "Veloz",
+        "texto": "Veloz: ao fazer um ataque, marque 1 Ponto de Fadiga para atingir outra criatura no alcance.",
+        "fonteTraducao": "livro",
+        "confianca": "alta"
+      },
+      "danoSRD": "d8 phy",
+      "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
+    },
+    {
+      "id": "primaria-t2-cadeira-de-rodas-leve-aprimorada",
+      "categoria": "primaria",
+      "tier": 2,
+      "tabela": "Cadeira de Rodas de Combate",
+      "nome": "Cadeira de rodas leve aprimorada",
+      "origemNome": "livro",
+      "nomeIngles": "Improved Light-Frame Wheelchair",
+      "nomeLivro": "Cadeira de rodas leve aprimorada",
+      "fonteNumeros": "DH-DigitalRegras.pdf p.123; errata 09/09/2025 sem alteração",
+      "atributo": "Agilidade",
+      "alcance": "Corpo a Corpo",
+      "dano": "d8+3 fís",
+      "maos": "Uma mão",
+      "caracteristica": {
+        "nomeIngles": "Quick",
+        "textoIngles": "Quick: When you make an attack, you can mark a Stress to target another creature within range.",
+        "nome": "Veloz",
+        "texto": "Veloz: ao fazer um ataque, marque 1 Ponto de Fadiga para atingir outra criatura no alcance.",
+        "fonteTraducao": "livro",
+        "confianca": "alta"
+      },
+      "danoSRD": "d8+3 phy",
+      "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
+    },
+    {
+      "id": "primaria-t3-cadeira-de-rodas-leve-avancada",
+      "categoria": "primaria",
+      "tier": 3,
+      "tabela": "Cadeira de Rodas de Combate",
+      "nome": "Cadeira de rodas leve avançada",
+      "origemNome": "livro",
+      "nomeIngles": "Advanced Light-Frame Wheelchair",
+      "nomeLivro": "Cadeira de rodas leve avançada",
+      "fonteNumeros": "DH-DigitalRegras.pdf p.123; errata 09/09/2025 sem alteração",
+      "atributo": "Agilidade",
+      "alcance": "Corpo a Corpo",
+      "dano": "d8+6 fís",
+      "maos": "Uma mão",
+      "caracteristica": {
+        "nomeIngles": "Quick",
+        "textoIngles": "Quick: When you make an attack, you can mark a Stress to target another creature within range.",
+        "nome": "Veloz",
+        "texto": "Veloz: ao fazer um ataque, marque 1 Ponto de Fadiga para atingir outra criatura no alcance.",
+        "fonteTraducao": "livro",
+        "confianca": "alta"
+      },
+      "danoSRD": "d8+6 phy",
+      "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
+    },
+    {
+      "id": "primaria-t4-cadeira-de-rodas-leve-lendaria",
+      "categoria": "primaria",
+      "tier": 4,
+      "tabela": "Cadeira de Rodas de Combate",
+      "nome": "Cadeira de rodas leve lendária",
+      "origemNome": "livro",
+      "nomeIngles": "Legendary Light-Frame Wheelchair",
+      "nomeLivro": "Cadeira de rodas leve lendária",
+      "fonteNumeros": "DH-DigitalRegras.pdf p.123; errata 09/09/2025 sem alteração",
+      "atributo": "Agilidade",
+      "alcance": "Corpo a Corpo",
+      "dano": "d8+9 fís",
+      "maos": "Uma mão",
+      "caracteristica": {
+        "nomeIngles": "Quick",
+        "textoIngles": "Quick: When you make an attack, you can mark a Stress to target another creature within range.",
+        "nome": "Veloz",
+        "texto": "Veloz: ao fazer um ataque, marque 1 Ponto de Fadiga para atingir outra criatura no alcance.",
+        "fonteTraducao": "livro",
+        "confianca": "alta"
+      },
+      "danoSRD": "d8+9 phy",
+      "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
+    },
+    {
+      "id": "primaria-t1-cadeira-de-rodas-pesada",
+      "categoria": "primaria",
+      "tier": 1,
+      "tabela": "Cadeira de Rodas de Combate",
+      "nome": "Cadeira de rodas pesada",
+      "origemNome": "livro",
+      "nomeIngles": "Heavy-Frame Wheelchair",
+      "nomeLivro": "Cadeira de rodas pesada",
+      "fonteNumeros": "DH-DigitalRegras.pdf p.123; errata 09/09/2025 sem alteração",
+      "atributo": "Força",
+      "alcance": "Corpo a Corpo",
+      "dano": "d12+3 fís",
+      "maos": "Duas mãos",
+      "caracteristica": {
+        "nomeIngles": "Heavy",
+        "textoIngles": "Heavy: -1 to Evasion",
+        "nome": "Pesada",
+        "texto": "Pesada: -1 em Evasão.",
+        "fonteTraducao": "livro",
+        "confianca": "alta"
+      },
+      "danoSRD": "d12+3 phy",
+      "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
+    },
+    {
+      "id": "primaria-t2-cadeira-de-rodas-pesada-aprimorada",
+      "categoria": "primaria",
+      "tier": 2,
+      "tabela": "Cadeira de Rodas de Combate",
+      "nome": "Cadeira de rodas pesada aprimorada",
+      "origemNome": "livro",
+      "nomeIngles": "Improved Heavy-Frame Wheelchair",
+      "nomeLivro": "Cadeira de rodas pesada aprimorada",
+      "fonteNumeros": "DH-DigitalRegras.pdf p.123; errata 09/09/2025 sem alteração",
+      "atributo": "Força",
+      "alcance": "Corpo a Corpo",
+      "dano": "d12+6 fís",
+      "maos": "Duas mãos",
+      "caracteristica": {
+        "nomeIngles": "Heavy",
+        "textoIngles": "Heavy: -1 to Evasion",
+        "nome": "Pesada",
+        "texto": "Pesada: -1 em Evasão.",
+        "fonteTraducao": "livro",
+        "confianca": "alta"
+      },
+      "danoSRD": "d12+6 phy",
+      "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
+    },
+    {
+      "id": "primaria-t3-cadeira-de-rodas-pesada-avancada",
+      "categoria": "primaria",
+      "tier": 3,
+      "tabela": "Cadeira de Rodas de Combate",
+      "nome": "Cadeira de rodas pesada avançada",
+      "origemNome": "livro",
+      "nomeIngles": "Advanced Heavy-Frame Wheelchair",
+      "nomeLivro": "Cadeira de rodas pesada avançada",
+      "fonteNumeros": "DH-DigitalRegras.pdf p.123; errata 09/09/2025 sem alteração",
+      "atributo": "Força",
+      "alcance": "Corpo a Corpo",
+      "dano": "d12+9 fís",
+      "maos": "Duas mãos",
+      "caracteristica": {
+        "nomeIngles": "Heavy",
+        "textoIngles": "Heavy: -1 to Evasion",
+        "nome": "Pesada",
+        "texto": "Pesada: -1 em Evasão.",
+        "fonteTraducao": "livro",
+        "confianca": "alta"
+      },
+      "danoSRD": "d12+9 phy",
+      "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
+    },
+    {
+      "id": "primaria-t4-cadeira-de-rodas-pesada-lendaria",
+      "categoria": "primaria",
+      "tier": 4,
+      "tabela": "Cadeira de Rodas de Combate",
+      "nome": "Cadeira de rodas pesada lendária",
+      "origemNome": "livro",
+      "nomeIngles": "Legendary Heavy-Frame Wheelchair",
+      "nomeLivro": "Cadeira de rodas pesada lendária",
+      "fonteNumeros": "DH-DigitalRegras.pdf p.123; errata 09/09/2025 sem alteração",
+      "atributo": "Força",
+      "alcance": "Corpo a Corpo",
+      "dano": "d12+12 fís",
+      "maos": "Duas mãos",
+      "caracteristica": {
+        "nomeIngles": "Heavy",
+        "textoIngles": "Heavy: -1 to Evasion",
+        "nome": "Pesada",
+        "texto": "Pesada: -1 em Evasão.",
+        "fonteTraducao": "livro",
+        "confianca": "alta"
+      },
+      "danoSRD": "d12+12 phy",
+      "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
+    },
+    {
+      "id": "primaria-t1-cadeira-de-rodas-arcana",
+      "categoria": "primaria",
+      "tier": 1,
+      "tabela": "Cadeira de Rodas de Combate",
+      "nome": "Cadeira de rodas arcana",
+      "origemNome": "livro",
+      "nomeIngles": "Arcane Wheelchair",
+      "nomeLivro": "Cadeira de rodas arcana",
+      "fonteNumeros": "DH-DigitalRegras.pdf p.123; errata 09/09/2025 sem alteração",
+      "atributo": "Conjuração",
+      "alcance": "Distante",
+      "dano": "d6 fís",
+      "maos": "Uma mão",
+      "caracteristica": {
+        "nomeIngles": "Reliable",
+        "textoIngles": "Reliable: +1 to attack rolls",
+        "nome": "Confiável",
+        "texto": "Confiável: +1 em jogadas de ataque.",
+        "fonteTraducao": "livro",
+        "confianca": "alta"
+      },
+      "danoSRD": "d6 phy",
+      "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
+    },
+    {
+      "id": "primaria-t2-cadeira-de-rodas-arcana-aprimorada",
+      "categoria": "primaria",
+      "tier": 2,
+      "tabela": "Cadeira de Rodas de Combate",
+      "nome": "Cadeira de rodas arcana aprimorada",
+      "origemNome": "livro",
+      "nomeIngles": "Improved Arcane Wheelchair",
+      "nomeLivro": "Cadeira de rodas arcana aprimorada",
+      "fonteNumeros": "DH-DigitalRegras.pdf p.123; errata 09/09/2025 sem alteração",
+      "atributo": "Conjuração",
+      "alcance": "Distante",
+      "dano": "d6+3 fís",
+      "maos": "Uma mão",
+      "caracteristica": {
+        "nomeIngles": "Reliable",
+        "textoIngles": "Reliable: +1 to attack rolls",
+        "nome": "Confiável",
+        "texto": "Confiável: +1 em jogadas de ataque.",
+        "fonteTraducao": "livro",
+        "confianca": "alta"
+      },
+      "danoSRD": "d6+3 phy",
+      "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
+    },
+    {
+      "id": "primaria-t3-cadeira-de-rodas-arcana-avancada",
+      "categoria": "primaria",
+      "tier": 3,
+      "tabela": "Cadeira de Rodas de Combate",
+      "nome": "Cadeira de rodas arcana avançada",
+      "origemNome": "livro",
+      "nomeIngles": "Advanced Arcane Wheelchair",
+      "nomeLivro": "Cadeira de rodas arcana avançada",
+      "fonteNumeros": "DH-DigitalRegras.pdf p.123; errata 09/09/2025 sem alteração",
+      "atributo": "Conjuração",
+      "alcance": "Distante",
+      "dano": "d6+6 fís",
+      "maos": "Uma mão",
+      "caracteristica": {
+        "nomeIngles": "Reliable",
+        "textoIngles": "Reliable: +1 to attack rolls",
+        "nome": "Confiável",
+        "texto": "Confiável: +1 em jogadas de ataque.",
+        "fonteTraducao": "livro",
+        "confianca": "alta"
+      },
+      "danoSRD": "d6+6 phy",
+      "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
+    },
+    {
+      "id": "primaria-t4-cadeira-de-rodas-arcana-lendaria",
+      "categoria": "primaria",
+      "tier": 4,
+      "tabela": "Cadeira de Rodas de Combate",
+      "nome": "Cadeira de rodas arcana lendária",
+      "origemNome": "livro",
+      "nomeIngles": "Legendary Arcane Wheelchair",
+      "nomeLivro": "Cadeira de rodas arcana lendária",
+      "fonteNumeros": "DH-DigitalRegras.pdf p.123; errata 09/09/2025 sem alteração",
+      "atributo": "Conjuração",
+      "alcance": "Distante",
+      "dano": "d6+9 fís",
+      "maos": "Uma mão",
+      "caracteristica": {
+        "nomeIngles": "Reliable",
+        "textoIngles": "Reliable: +1 to attack rolls",
+        "nome": "Confiável",
+        "texto": "Confiável: +1 em jogadas de ataque.",
+        "fonteTraducao": "livro",
+        "confianca": "alta"
+      },
+      "danoSRD": "d6+9 phy",
+      "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
     }
   ],
   "armaduras": [

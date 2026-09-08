@@ -1,6 +1,6 @@
 {
  "versao": 1,
- "total": 143,
+ "total": 148,
  "correcoes": [
   {
    "item": "Ricochet Axes / Aantari Bow",
@@ -1002,6 +1002,71 @@
    "de": "Adaga Pequena, Adaga pequena",
    "para": "Punhal pequeno",
    "motivo": "a folha \"Guia de Caráter\" da classe (apêndice) usa outro nome para a mesma arma da tabela do capítulo 2"
+  },
+  {
+   "item": "Whip / Startling (arma)",
+   "tipo": "mecanica-lote8",
+   "de": {
+    "nome": "Surpreendente",
+    "texto": "Surpreendente: Marque um Estresse para estalar o chicote e forçar todos os adversários dentro do alcance Corpo a Corpo a voltarem para o alcance Corpo a Corpo."
+   },
+   "para": {
+    "nome": "Alarmante",
+    "texto": "Alarmante: marque 1 Estresse para estalar o chicote e forçar todos os adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo."
+   },
+   "motivo": "Livro PT-BR p.125: Startling/Alarmante empurra adversários de Corpo a Corpo para Próximo; a tradução armazenada terminava novamente em Corpo a Corpo."
+  },
+  {
+   "item": "Improved Whip / Startling (arma)",
+   "tipo": "mecanica-lote8",
+   "de": {
+    "nome": "Surpreendente",
+    "texto": "Surpreendente: Marque um Estresse para estalar o chicote e forçar todos os adversários dentro do alcance Corpo a Corpo a voltarem para o alcance Corpo a Corpo."
+   },
+   "para": {
+    "nome": "Alarmante",
+    "texto": "Alarmante: marque 1 Estresse para estalar o chicote e forçar todos os adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo."
+   },
+   "motivo": "Livro PT-BR p.125: Startling/Alarmante empurra adversários de Corpo a Corpo para Próximo; a tradução armazenada terminava novamente em Corpo a Corpo."
+  },
+  {
+   "item": "Advanced Whip / Startling (arma)",
+   "tipo": "mecanica-lote8",
+   "de": {
+    "nome": "Surpreendente",
+    "texto": "Surpreendente: Marque um Estresse para estalar o chicote e forçar todos os adversários dentro do alcance Corpo a Corpo a voltarem para o alcance Corpo a Corpo."
+   },
+   "para": {
+    "nome": "Alarmante",
+    "texto": "Alarmante: marque 1 Estresse para estalar o chicote e forçar todos os adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo."
+   },
+   "motivo": "Livro PT-BR p.125: Startling/Alarmante empurra adversários de Corpo a Corpo para Próximo; a tradução armazenada terminava novamente em Corpo a Corpo."
+  },
+  {
+   "item": "Buckler / Deflecting (arma)",
+   "tipo": "mecanica-lote8",
+   "de": {
+    "nome": "Desafetação",
+    "texto": "Desafetação: Quando for atacado, você pode marcar um espaço de armadura de uma mão para ganhar um bônus de Evasão igual ao seu Pontuação de armadura contra o ataque."
+   },
+   "para": {
+    "nome": "Desafetação",
+    "texto": "Desafetação: Quando for atacado, você pode marcar 1 Ponto de Armadura para receber um bônus de Evasão igual aos seus Pontos de Armadura disponíveis contra esse ataque."
+   },
+   "motivo": "ERRATA p.125: Deflecting usa a quantidade de Armor Slots disponíveis; o texto PT armazenado usava Pontuação de Armadura."
+  },
+  {
+   "item": "Legendary Whip / Startling (arma)",
+   "tipo": "mecanica-lote8",
+   "de": {
+    "nome": "Surpreendente",
+    "texto": "Surpreendente: Marque um Estresse para estalar o chicote e forçar todos os adversários dentro do alcance Corpo a Corpo a voltarem para o alcance Corpo a Corpo."
+   },
+   "para": {
+    "nome": "Alarmante",
+    "texto": "Alarmante: marque 1 Estresse para estalar o chicote e forçar todos os adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo."
+   },
+   "motivo": "Livro PT-BR p.125: Startling/Alarmante empurra adversários de Corpo a Corpo para Próximo; a tradução armazenada terminava novamente em Corpo a Corpo."
   }
  ]
 }
