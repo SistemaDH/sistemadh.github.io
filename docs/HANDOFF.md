@@ -86,9 +86,37 @@ Automatizar quando a consequência for determinística a partir do estado conhec
 
 Não automatizar a geração aleatória da rolagem. Quando uma regra exigir dado, a interface deve pedir o resultado ao jogador/Mestre e o motor deve validar faixa e aplicar o efeito correspondente.
 
+### Diário — Equipamentos, parte 1
+
+Em 08/09/2026 foi iniciada a implementação das inconsistências inequívocas encontradas no catálogo.
+
+Fontes:
+
+- Broquel / `Buckler`: errata oficial p.125 — `Deflecting` usa a quantidade de **Pontos de Armadura disponíveis** para o bônus de Evasão;
+- Chicote / `Whip`: livro PT-BR p.125 — `Startling`, traduzido no livro como **Alarmante**, empurra adversários de Corpo a Corpo para **Próximo**.
+
+Estado anterior:
+
+- o Broquel tinha o inglês correto, mas o texto PT usava Pontuação de Armadura;
+- os quatro Chicotes tinham o texto inglês correto, mas o PT dizia Corpo a Corpo → Corpo a Corpo, anulando o deslocamento;
+- `tools/auditoria-equipamento.py` dependia do caminho absoluto `/home/claude/dh`.
+
+Alteração persistida no commit `185a28c00e0a71edcee6f56436482d258543b7be`:
+
+- `tools/auditoria-equipamento.py` agora resolve a raiz do repositório dinamicamente;
+- correções mecânicas de `Deflecting` e `Startling` foram centralizadas por nome inglês estável;
+- a aplicação é idempotente e registra fonte/motivo em `data/equipamentos-correcoes.json` somente quando há mudança real.
+
+Pendências deste bloco:
+
+- ainda não materializar as correções em `data/equipamentos.json`;
+- ainda não regenerar `backend/44_Equipamento.gs`;
+- ainda não executar `conferir-gerados`/suítes;
+- Cadeira de Rodas de Combate ainda não foi adicionada. O livro PT-BR p.123 imprime os modelos arcanos com dano físico, enquanto o SRD 2.0 usa dano mágico; como a errata 09/09/2025 não corrige essa linha, a divergência fica registrada e não será resolvida silenciosamente por SRD 2.0.
+
 ### Estado atual do Lote 8
 
-Auditoria em andamento. Nenhum deploy/merge do Lote 8 foi feito ainda. Não alterar o pin da `engine-api` até o lote estar revisado e testado.
+Auditoria e implementação em andamento. Nenhum deploy/merge do Lote 8 foi feito ainda. Não alterar o pin da `engine-api` até o lote estar revisado e testado.
 
 ## Produção atual — Lotes 6 e 7 concluídos
 
