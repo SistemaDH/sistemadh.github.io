@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 """
-Segunda passada de conferência no equipamento, feita depois que a Vanessa
-perguntou se as linhas sobrepostas do PDF tinham atrapalhado.
+Auditoria e correções reproduzíveis do catálogo de equipamento.
 
-O que esta auditoria pegou que a primeira passada NÃO pegou: nomes que são
-palavras portuguesas legítimas (então nenhum detector automático reclamou),
-mas que traduzem a coisa ERRADA. Ex.: "Cassetete" para Blunderbuss,
-"Veneno de dente-de-leão" para Grindletooth Venom.
+Além das correções históricas de nomes e descrições, este script também guarda
+correções mecânicas encontradas no fechamento integral do Core 1.0 (Lote 8).
+Ele é idempotente: só registra uma correção quando o valor realmente muda.
 
 Uso: python3 tools/auditoria-equipamento.py
 """
 import json
+from pathlib import Path
 
-RAIZ = '/home/claude/dh'
-eq = json.load(open(f'{RAIZ}/data/equipamentos.json'))
-corr = json.load(open(f'{RAIZ}/data/equipamentos-correcoes.json'))
+RAIZ = Path(__file__).resolve().parents[1]
+eq = json.load(open(RAIZ / 'data/equipamentos.json', encoding='utf-8'))
+corr = json.load(open(RAIZ / 'data/equipamentos-correcoes.json', encoding='utf-8'))
 
 # ---------------------------------------------------------------------------
 # Correções por nome em INGLÊS (chave estável). (novo_nome_pt, motivo)
@@ -91,6 +90,50 @@ DESCRICOES = {
    'cruzando os números da descrição em português com a oficial.'),
 }
 
+# ---------------------------------------------------------------------------
+# Lote 8 — correções de CARACTERÍSTICAS que mudam regra, não apenas redação.
+#
+# A chave é o nome inglês da característica porque ele é estável em todos os
+# patamares. Isso também faz o Chicote T1/T2/T3/T4 receber a mesma correção sem
+# quatro remendos independentes.
+# ---------------------------------------------------------------------------
+CARACTERISTICAS = {
+ 'Deflecting': {
+   # Errata oficial 09/09/2025, p.125: o bônus usa os Armor Slots ainda
+   # disponíveis, não a pontuação/base da armadura.
+   'texto': ('Desafetação: Quando for atacado, você pode marcar 1 Ponto de Armadura '
+             'para receber um bônus de Evasão igual aos seus Pontos de Armadura '
+             'disponíveis contra esse ataque.'),
+   'motivo': ('ERRATA p.125: Deflecting usa a quantidade de Armor Slots disponíveis; '
+              'o texto PT armazenado usava Pontuação de Armadura.'),
+   'fonte': 'Daggerheart-Erratas.pdf, p.125',
+ },
+ 'Startling': {
+   # Livro PT-BR, p.125. O texto antigo terminava em Corpo a Corpo, fazendo a
+   # habilidade pagar Estresse/Fadiga sem deslocar ninguém de fato.
+   'nome': 'Alarmante',
+   'texto': ('Alarmante: marque 1 Estresse para estalar o chicote e forçar todos os '
+             'adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo.'),
+   'motivo': ('Livro PT-BR p.125: Startling/Alarmante empurra adversários de Corpo a Corpo '
+              'para Próximo; a tradução armazenada terminava novamente em Corpo a Corpo.'),
+   'fonte': 'DH-DigitalRegras.pdf, p.125',
+ },
+}
+
+
+def registrar(item, tipo, antes, depois, motivo):
+    if antes == depois:
+        return 0
+    corr['correcoes'].append({
+        'item': item,
+        'tipo': tipo,
+        'de': antes,
+        'para': depois,
+        'motivo': motivo,
+    })
+    return 1
+
+
 def aplicar(lista, tabela, rotulo):
     n = 0
     for x in lista:
@@ -98,26 +141,38 @@ def aplicar(lista, tabela, rotulo):
         if chave in tabela:
             novo, motivo = tabela[chave]
             antes = x['nome']
-            if antes == novo:
-                continue
-            x['nome'] = novo
-            x['origemNome'] = 'corrigido-auditoria'
-            aliases = set(x.get('aliases') or [])
-            aliases.add(antes)
-            x['aliases'] = sorted(aliases)
-            corr['correcoes'].append({'item': f'{chave} ({rotulo})', 'tipo': 'nome-auditoria',
-                                      'de': antes, 'para': novo, 'motivo': motivo})
-            n += 1
+            if antes != novo:
+                x['nome'] = novo
+                x['origemNome'] = 'corrigido-auditoria'
+                aliases = set(x.get('aliases') or [])
+                aliases.add(antes)
+                x['aliases'] = sorted(aliases)
+                n += registrar(f'{chave} ({rotulo})', 'nome-auditoria', antes, novo, motivo)
+
         if chave in DESCRICOES:
             novo, motivo = DESCRICOES[chave]
             antes = x.get('descricao')
             if antes != novo:
                 x['descricao'] = novo
                 x['traducaoDescricao'] = 'minha (errata aplicada)'
-                corr['correcoes'].append({'item': f'{chave} ({rotulo})', 'tipo': 'errata-auditoria',
-                                          'de': antes, 'para': novo, 'motivo': motivo})
-                n += 1
+                n += registrar(f'{chave} ({rotulo})', 'errata-auditoria', antes, novo, motivo)
+
+        carac = x.get('caracteristica') or {}
+        chave_carac = carac.get('nomeIngles')
+        regra = CARACTERISTICAS.get(chave_carac)
+        if regra:
+            antes = {'nome': carac.get('nome'), 'texto': carac.get('texto')}
+            if regra.get('nome'):
+                carac['nome'] = regra['nome']
+            carac['texto'] = regra['texto']
+            carac['fonteCorrecao'] = regra['fonte']
+            depois = {'nome': carac.get('nome'), 'texto': carac.get('texto')}
+            n += registrar(
+                f'{chave or x.get("nome")} / {chave_carac} ({rotulo})',
+                'mecanica-lote8', antes, depois, regra['motivo'])
+
     return n
+
 
 total = 0
 total += aplicar(eq['armas'], ARMAS, 'arma')
@@ -126,7 +181,10 @@ total += aplicar(eq['loot'], ITENS, 'saque')
 total += aplicar(eq['consumiveis'], CONSUMIVEIS, 'consumível')
 
 corr['total'] = len(corr['correcoes'])
-json.dump(eq, open(f'{RAIZ}/data/equipamentos.json', 'w'), ensure_ascii=False, indent=1)
-json.dump(corr, open(f'{RAIZ}/data/equipamentos-correcoes.json', 'w'), ensure_ascii=False, indent=1)
+with open(RAIZ / 'data/equipamentos.json', 'w', encoding='utf-8') as f:
+    json.dump(eq, f, ensure_ascii=False, indent=1)
+with open(RAIZ / 'data/equipamentos-correcoes.json', 'w', encoding='utf-8') as f:
+    json.dump(corr, f, ensure_ascii=False, indent=1)
+
 print('correções da auditoria aplicadas:', total)
 print('correções totais no relatório:', corr['total'])
