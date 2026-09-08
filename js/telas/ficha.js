@@ -1357,6 +1357,156 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
   }
 
   /**
+   * A RESERVA DE ARMAS fica visível sem poluir a tabela principal.
+   *
+   * A tabela continua com exatamente três linhas porque é a leitura de combate.
+   * A reserva é inventário: arma guardada não concede benefício. O botão abre
+   * todas as operações que mudam equipamento e o servidor decide se são válidas.
+   */
+  function controleDeArmas(ficha) {
+    const eq = ficha.equipamento || {};
+    const reserva = Array.isArray(eq.reserva) ? eq.reserva : [];
+    const nomes = reserva.map(catalogo.acharArma).filter(Boolean).map((a) => a.nome);
+    return el('div', { class: 'pilha' }, [
+      el('p', { class: 'texto-xs texto-fraco', texto:
+        `Reserva de armas ${reserva.length}/2` + (nomes.length ? ` · ${nomes.join(' · ')}` : ' · vazia') }),
+      el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--pequeno',
+        onClick: () => abrirGerenciadorDeArmas(ficha)
+      }, 'Gerenciar armas')
+    ]);
+  }
+
+  /** Patamar de equipamento alcançado pelo nível, só para filtrar a lista da tela. */
+  function tierDeEquipamentoNaTela(nivel) {
+    const n = Number(nivel) || 1;
+    if (n <= 1) return 1;
+    if (n <= 4) return 2;
+    if (n <= 7) return 3;
+    return 4;
+  }
+
+  /**
+   * Modal único para possuir, guardar e trocar armas.
+   *
+   * Não calcula regra: os selects só evitam escolhas absurdas na interface.
+   * O servidor valida propriedade, categoria, mãos, patamar, limite de reserva
+   * e cobra 1 Fadiga quando `cobrarCusto` vier verdadeiro.
+   */
+  function abrirGerenciadorDeArmas(ficha) {
+    const eq = ficha.equipamento || {};
+    const reserva = Array.isArray(eq.reserva) ? eq.reserva : [];
+    const idsPossuidos = [eq.primaria, eq.secundaria].concat(reserva).filter(Boolean);
+    const possuidas = idsPossuidos.map(catalogo.acharArma).filter(Boolean);
+    const primarias = possuidas.filter((a) => a.categoria === 'primaria');
+    const secundarias = possuidas.filter((a) => a.categoria === 'secundaria');
+
+    const opcao = (a) => el('option', { value: a.id }, a.nome);
+    const seletorPrim = el('select', {
+      class: 'campo__entrada', 'aria-label': 'Arma primária equipada'
+    }, [
+      el('option', { value: '' }, 'Nenhuma arma primária'),
+      ...primarias.map(opcao)
+    ]);
+    seletorPrim.value = eq.primaria || '';
+
+    const seletorSec = el('select', {
+      class: 'campo__entrada', 'aria-label': 'Arma secundária equipada'
+    }, [
+      el('option', { value: '' }, 'Nenhuma arma secundária'),
+      ...secundarias.map(opcao)
+    ]);
+    seletorSec.value = eq.secundaria || '';
+
+    const nivel = Number((ficha.identidade || {}).nivel) || 1;
+    const tier = tierDeEquipamentoNaTela(nivel);
+    const disponiveis = (catalogo.todasAsArmas ? catalogo.todasAsArmas() : [])
+      .filter((a) => Number(a.tier) <= tier)
+      .slice()
+      .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+    const seletorNova = el('select', {
+      class: 'campo__entrada', 'aria-label': 'Arma obtida'
+    }, disponiveis.map(opcao));
+
+    const listaReserva = el('div', { class: 'pilha' }, reserva.length
+      ? reserva.map((id, indice) => {
+          const a = catalogo.acharArma(id);
+          return el('div', { class: 'linha' }, [
+            el('span', { class: 'texto-sm crescer', texto: a ? a.nome : id }),
+            el('button', {
+              type: 'button', class: 'btn btn--fantasma btn--pequeno',
+              'aria-label': `Remover ${a ? a.nome : id} da reserva`,
+              onClick: async () => {
+                const r = await enviar([{ tipo: 'arma', acao: 'remover', indice }]);
+                if (r) modal.fechar();
+              }
+            }, 'Remover')
+          ]);
+        })
+      : [el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma arma guardada.' })]);
+
+    const conteudo = el('div', { class: 'pilha' }, [
+      el('div', { class: 'pilha' }, [
+        el('strong', { texto: 'Equipadas' }),
+        el('label', { class: 'campo' }, [
+          el('span', { class: 'campo__rotulo', texto: 'Primária' }), seletorPrim
+        ]),
+        el('label', { class: 'campo' }, [
+          el('span', { class: 'campo__rotulo', texto: 'Secundária' }), seletorSec
+        ]),
+        el('p', { class: 'texto-xs texto-fraco', texto:
+          'Em situação perigosa, trocar armas custa 1 Fadiga. Em situação calma ou durante preparação num descanso, a troca é livre.' })
+      ]),
+      el('div', { class: 'pilha' }, [
+        el('strong', { texto: `Reserva ${reserva.length}/2` }),
+        listaReserva
+      ]),
+      el('div', { class: 'pilha' }, [
+        el('strong', { texto: 'Registrar arma obtida' }),
+        seletorNova,
+        el('p', { class: 'texto-xs texto-fraco', texto:
+          'O app não decide compra ou saque: registre aqui uma arma que a mesa já determinou que o personagem obteve.' })
+      ])
+    ]);
+
+    const trocar = async (cobrarCusto) => {
+      const r = await enviar([{
+        tipo: 'arma', acao: 'trocar',
+        primaria: seletorPrim.value || null,
+        secundaria: seletorSec.value || null,
+        cobrarCusto
+      }]);
+      if (r) modal.fechar();
+    };
+
+    const registrar = async () => {
+      if (!seletorNova.value) return;
+      const r = await enviar([{ tipo: 'arma', acao: 'adicionar', arma: seletorNova.value }]);
+      if (r) modal.fechar();
+    };
+
+    const modal = abrirModal({
+      conteudo,
+      acoes: [
+        el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar() }, 'Fechar'),
+        el('button', {
+          type: 'button', class: 'btn btn--fantasma',
+          onClick: () => registrar()
+        }, 'Registrar na reserva'),
+        el('button', {
+          type: 'button', class: 'btn btn--fantasma',
+          onClick: () => trocar(false)
+        }, 'Trocar sem custo'),
+        el('button', {
+          type: 'button', class: 'btn btn--principal',
+          onClick: () => trocar(true)
+        }, 'Trocar agora · 1 Fadiga')
+      ]
+    });
+    return modal;
+  }
+
+  /**
    * A Proficiência mora AQUI, e não numa seção só dela.
    *
    * Sozinha numa caixa própria ela ficava perdida e ocupava uma tela inteira
@@ -1636,6 +1786,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     pai.append(linhaDeProficiencia(ficha.recursos || {}));
 
     pai.append(tabelaDeEquipamento(ficha));
+    pai.append(controleDeArmas(ficha));
 
     /* --- condições -------------------------------------------------------
      *
@@ -3728,6 +3879,7 @@ export async function carregarCatalogo() {
 
     acharCarta: achar(porIdCarta, porNomeCarta),
     acharArma: achar(porIdArma, porNomeArma),
+    todasAsArmas: () => eq.armas,
     acharArmadura: achar(porIdArmadura, porNomeArmadura),
     acharItem: (id) => porIdItem.get(dados.chave(id)) || null,
     todosOsItens: () => itensDoLivro,

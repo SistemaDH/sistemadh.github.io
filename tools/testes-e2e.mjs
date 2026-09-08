@@ -456,6 +456,32 @@ try {
     await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 5000 });
   });
 
+  await passo('a reserva registra e troca uma arma pela ficha', async () => {
+    const estresseAntes = await pagina.locator('.papel__trilha--estresse .papel__caixa.esta-cheio').count();
+
+    await pagina.getByRole('button', { name: 'Gerenciar armas' }).click();
+    let caixa = pagina.locator('.modal__caixa').last();
+    await caixa.waitFor({ timeout: 5000 });
+    const nova = caixa.getByRole('combobox', { name: 'Arma obtida' });
+    await nova.selectOption({ label: 'Besta' });
+    await caixa.getByRole('button', { name: 'Registrar na reserva' }).click();
+    await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 10000 });
+    await pagina.getByText(/Reserva de armas 1\/2/).waitFor({ timeout: 10000 });
+
+    await pagina.getByRole('button', { name: 'Gerenciar armas' }).click();
+    caixa = pagina.locator('.modal__caixa').last();
+    await caixa.waitFor({ timeout: 5000 });
+    await caixa.getByRole('combobox', { name: 'Arma primária equipada' }).selectOption({ label: 'Besta' });
+    await caixa.getByRole('button', { name: 'Trocar sem custo' }).click();
+    await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 10000 });
+
+    const primaria = (await pagina.locator('.equip__linha').first().textContent()).replace(/\s+/g, ' ');
+    if (!primaria.includes('Besta')) throw new Error('a Besta não virou a arma primária: ' + primaria);
+    await pagina.getByText(/Reserva de armas 1\/2.*Florete/).waitFor({ timeout: 10000 });
+    const estresseDepois = await pagina.locator('.papel__trilha--estresse .papel__caixa.esta-cheio').count();
+    igual(estresseDepois, estresseAntes, 'troca calma não pode marcar Fadiga');
+  });
+
   await passo('a foto sobe recortada e vira miniatura do Drive', async () => {
     await pagina.locator('.retrato__moldura').click();
     await pagina.waitForSelector('.foto__tela');
