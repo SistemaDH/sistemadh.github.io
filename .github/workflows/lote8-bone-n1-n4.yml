@@ -55,8 +55,7 @@ jobs:
       - name: Instalar Playwright
         run: |
           npm install --no-save --package-lock=false playwright@1.62.1
-          sudo rm -f /etc/apt/sources.list.d/google-chrome*.list || true
-          npx playwright install --with-deps chromium
+          npx playwright install chromium
 
       - name: Testes E2E
         run: node tools/testes-e2e.mjs
