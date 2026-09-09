@@ -10084,3 +10084,66 @@ teste('Enervação Eterna do Livro do Ronin é 1/descanso longo',()=>{
   r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-do-ronin',opcao:'enervacao'}]);
   igual(r.erros,[]);
 });
+
+
+console.log('\nLote 8 — equipamento defensivo A');
+
+function fichaEquipamentoDefensivo_(nivel, primaria, armadura) {
+  let f=contexto.fichaRapida_({
+    nome:'Equip Defensivo',classe:'Mago',subclasse:'Escola do Conhecimento',
+    ancestralidade:'Humano',comunidade:'Highborne',
+    cartas:['codex-livro-de-ava','codex-livro-de-illiat'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  f.identidade.nivel=nivel;
+  f.equipamento=f.equipamento||{};
+  if (primaria!==undefined) f.equipamento.primaria=primaria;
+  f.equipamento.secundaria=null;
+  if (armadura!==undefined) f.equipamento.armadura=armadura;
+  return contexto.validarFicha_(f);
+}
+
+teste('gerador 44 publica automação e efeitoEquipamento de características estruturadas',()=>{
+  const punhal=contexto.acharArma_('primaria-t3-punhal-abencoado');
+  const egide=contexto.acharArmadura_('armadura-t2-armadura-de-corrente-elundriana');
+  verdade(punhal.automacao && punhal.efeitoEquipamento);
+  igual(punhal.efeitoEquipamento.descanso.recuperaPv,1);
+  verdade(egide.automacao && egide.efeitoEquipamento);
+  igual(egide.efeitoEquipamento.danoRecebido.reduzDanoMagicoPelaPontuacaoArmadura,true);
+});
+
+teste('Vitalizante recupera automaticamente 1 PV em descanso curto e longo, só quando equipado',()=>{
+  let f=fichaEquipamentoDefensivo_(5,'primaria-t3-punhal-abencoado');
+  f.recursos.pontosDeVidaMarcados=3;
+  f.recursos.esperanca=0;
+  let r=contexto.simularDescanso_(f,'curto',[{movimento:'preparar-se'},{movimento:'preparar-se'}]);
+  igual(r.ficha.recursos.pontosDeVidaMarcados,2);
+  verdade(r.previa.avisos.some(x=>/Vitalizante/.test(x)),JSON.stringify(r.previa.avisos));
+
+  f=r.ficha;
+  f.recursos.pontosDeVidaMarcados=3;
+  r=contexto.simularDescanso_(f,'longo',[{movimento:'preparar-se'},{movimento:'preparar-se'}]);
+  igual(r.ficha.recursos.pontosDeVidaMarcados,2);
+
+  f=fichaEquipamentoDefensivo_(5,null);
+  f.recursos.pontosDeVidaMarcados=3;
+  r=contexto.simularDescanso_(f,'curto',[{movimento:'preparar-se'},{movimento:'preparar-se'}]);
+  igual(r.ficha.recursos.pontosDeVidaMarcados,3,'sem Punhal Abençoado não há cura automática');
+});
+
+teste('Égide reduz só dano mágico pela Pontuação de Armadura antes dos limiares',()=>{
+  let f=fichaEquipamentoDefensivo_(2,undefined,'armadura-t2-armadura-de-corrente-elundriana');
+  const pa=f.defesas.pontuacaoArmadura;
+  verdade(pa>0,'Armadura Elundriana deveria ter Pontuação de Armadura');
+  let r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:20,tipoDeDano:'magico',reacoes:[]}]);
+  igual(r.erros,[]);
+  igual(r.mudancas[0].dano.final,Math.max(0,20-pa));
+  igual(r.mudancas[0].equipamentoDefensivo.caracteristica,'Égide');
+  igual(r.mudancas[0].custos.armadura,0,'Égide não marca Ponto de Armadura');
+
+  f=fichaEquipamentoDefensivo_(2,undefined,'armadura-t2-armadura-de-corrente-elundriana');
+  r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:20,tipoDeDano:'fisico',reacoes:[]}]);
+  igual(r.erros,[]);
+  igual(r.mudancas[0].dano.final,20,'Égide não reduz dano físico');
+  igual(r.mudancas[0].equipamentoDefensivo,null);
+});

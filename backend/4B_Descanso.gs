@@ -332,6 +332,37 @@ function maximoDoRecurso_(ficha, chave) {
  * @param {string} tipo 'curto' | 'longo'
  * @param {Array} escolhas [{ movimento, rolagem, comGrupo, alvo, projeto }]
  */
+/**
+ * Efeitos de equipamento que acontecem automaticamente em QUALQUER descanso.
+ *
+ * Não há RNG aqui. A regra vem do item equipado no catálogo gerado e a função
+ * trabalha na mesma CÓPIA usada pela prévia; portanto o que a tela anuncia é
+ * exatamente o que será gravado.
+ */
+function aplicarEquipamentoAutomaticoNoDescanso_(ficha, avisos) {
+  const ativos = (typeof equipamentoAtivoDaFicha_ === 'function')
+    ? equipamentoAtivoDaFicha_(ficha) : [];
+  let recuperados = 0;
+  for (let i = 0; i < ativos.length; i++) {
+    const item = ativos[i].item || {};
+    const regra = (((item.efeitoEquipamento || {}).descanso) || {});
+    const cura = Math.max(0, Math.trunc(Number(regra.recuperaPv)) || 0);
+    if (!cura) continue;
+    ficha.recursos = ficha.recursos || {};
+    const antes = Math.max(0, Number(ficha.recursos.pontosDeVidaMarcados) || 0);
+    const depois = Math.max(0, antes - cura);
+    const efetivo = antes - depois;
+    ficha.recursos.pontosDeVidaMarcados = depois;
+    recuperados += efetivo;
+    if (efetivo > 0) {
+      avisos.push((item.nome || item.carac || 'Equipamento') + ' · ' +
+        (item.carac || 'efeito de descanso') + ': recuperou automaticamente ' +
+        efetivo + ' Ponto' + (efetivo === 1 ? '' : 's') + ' de Vida.');
+    }
+  }
+  return recuperados;
+}
+
 function simularDescanso_(ficha, tipo, escolhas) {
   const t = tipoDeDescanso_(tipo);
   const erros = [];
@@ -562,6 +593,10 @@ function simularDescanso_(ficha, tipo, escolhas) {
 
     erros.push('Movimento "' + def.nome + '" sem efeito conhecido.');
   }
+
+  // Equipamento passivo de descanso (ex.: Vitalizante) entra antes dos gatilhos
+  // de contador, mas depois dos dois movimentos escolhidos.
+  aplicarEquipamentoAutomaticoNoDescanso_(copia, avisos);
 
   // Contadores das cartas: o gatilho do descanso zera ou recarrega o que a
   // carta mandar. Quem sabe quais é o 47_Contadores.gs.

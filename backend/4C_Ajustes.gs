@@ -1830,6 +1830,24 @@ function imunidadeDeDanoDeCartaAtiva_(ficha, tipo) {
   return null;
 }
 
+/** Regra passiva de equipamento que reduz dano mágico antes dos limiares. */
+function reducaoMagicaDeEquipamento_(ficha) {
+  const ativos = (typeof equipamentoAtivoDaFicha_ === 'function')
+    ? equipamentoAtivoDaFicha_(ficha) : [];
+  for (let i = 0; i < ativos.length; i++) {
+    const item = ativos[i].item || {};
+    const regra = (((item.efeitoEquipamento || {}).danoRecebido) || {});
+    if (regra.reduzDanoMagicoPelaPontuacaoArmadura === true) {
+      return {
+        fonte: item.nome || item.carac || 'Equipamento',
+        caracteristica: item.carac || '',
+        valor: Math.max(0, Math.trunc(Number(((ficha || {}).defesas || {}).pontuacaoArmadura)) || 0)
+      };
+    }
+  }
+  return null;
+}
+
 function aplicarDanoNaFicha_(ficha, a) {
   if (typeof pvDoDano_ !== 'function') {
     return { erro: 'Este servidor não sabe converter dano em Pontos de Vida.' };
@@ -1897,6 +1915,14 @@ function aplicarDanoNaFicha_(ficha, a) {
     final = Number(pelaResistencia.reduzidoPara) || Math.ceil(bruto / 2);
   }
 
+
+  // Égide/Warded: redução fixa da própria armadura. Resistência continua vindo
+  // primeiro, como manda a ordem canônica já usada acima.
+  const reducaoEquipamento = tipo === 'magico' ? reducaoMagicaDeEquipamento_(ficha) : null;
+  if (reducaoEquipamento && reducaoEquipamento.valor > 0) {
+    final = Math.max(0, final - reducaoEquipamento.valor);
+  }
+
   // 2) Outras reduções que também acontecem antes dos limiares (ex.: Fortitude).
   for (let i = 0; i < defs.length; i++) {
     const def = defs[i];
@@ -1909,7 +1935,9 @@ function aplicarDanoNaFicha_(ficha, a) {
 
   // 3) Só agora compara o dano FINAL aos limiares. A resistência já foi
   // aplicada uma vez acima; passar `false` evita qualquer empilhamento acidental.
-  const conta = pvDoDano_(final, { maior: maior, severo: severo }, comMassivo, false);
+  const conta = final <= 0
+    ? { pv: 0, faixa: 'nenhum', rotulo: 'Dano anulado' }
+    : pvDoDano_(final, { maior: maior, severo: severo }, comMassivo, false);
   let pv = conta.pv;
   const limiteNaBeira = (typeof limiteDePvParaIgnorarDanoMenorDeCartas_ === 'function')
     ? limiteDePvParaIgnorarDanoMenorDeCartas_(ficha) : null;
@@ -2006,6 +2034,8 @@ function aplicarDanoNaFicha_(ficha, a) {
     bruto + ' de dano ' + (tipo === 'fisico' ? 'físico' : 'mágico')
   ];
   if (final !== bruto) partes.push('reduzido para ' + final + ' antes dos limiares');
+  if (reducaoEquipamento) partes.push(reducaoEquipamento.fonte + ' · ' + reducaoEquipamento.caracteristica +
+    ' reduziu até ' + reducaoEquipamento.valor + ' do dano mágico');
   partes.push(conta.rotulo + ': ' + conta.pv + ' PV pela faixa');
   if (naBeiraAtiva) partes.push('Na Beira ignora o dano Menor');
   else if (pv !== conta.pv) partes.push('reações deixam ' + pv + ' PV');
@@ -2018,6 +2048,7 @@ function aplicarDanoNaFicha_(ficha, a) {
     naBeira: naBeiraAtiva,
     reacoes: usadas,
     resistencia: retraido ? 'Retrair' : null,
+    equipamentoDefensivo: reducaoEquipamento,
     dominioElementalTerra: dominioTerra,
     custos: { estresse: custoEstresse, esperanca: custoEsperanca, armadura: custoArmadura },
     detalhes: mudancasInternas,

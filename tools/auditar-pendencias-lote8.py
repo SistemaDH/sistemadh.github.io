@@ -127,11 +127,11 @@ def add_equipment(item, grupo, contexto=''):
     if not isinstance(ch, dict): return
     nome = str(ch.get('nome') or '')
     text = str(ch.get('texto') or ch.get('textoIngles') or '')
-    structured = bool(ch.get('efeitoDerivado'))
+    structured = bool(ch.get('efeitoDerivado') or ch.get('efeitoEquipamento') or ch.get('automacao'))
     runtime_ref = bool(nome and nome in runtime)
     mech = bool(MECH.search(text))
     if structured:
-        st = 'efeito derivado estruturado'
+        st = 'efeito de equipamento estruturado'
     elif runtime_ref:
         st = 'referência específica no motor'
     elif mech:

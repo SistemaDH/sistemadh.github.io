@@ -76,7 +76,9 @@ const arma = (a) => j({
   id: a.id, nome: a.nome, cat: a.categoria, tier: a.tier, tabela: a.tabela,
   atributo: a.atributo, alcance: a.alcance, dano: emPortugues(a.dano), maos: a.maos,
   carac: a.caracteristica ? a.caracteristica.nome : null,
-  efeitoDerivado: (a.caracteristica && a.caracteristica.efeitoDerivado) || null
+  automacao: (a.caracteristica && a.caracteristica.automacao) || null,
+  efeitoDerivado: (a.caracteristica && a.caracteristica.efeitoDerivado) || null,
+  efeitoEquipamento: (a.caracteristica && a.caracteristica.efeitoEquipamento) || null
 });
 
 /*
@@ -97,7 +99,9 @@ for (const a of d.armaduras) {
   L.push(`  ${j({ id: a.id, nome: a.nome, tier: a.tier || 1, limiares: a.limiares,
                   pontuacao: a.pontuacaoArmadura,
                   carac: a.caracteristica ? a.caracteristica.nome : null,
-                  efeitoDerivado: (a.caracteristica && a.caracteristica.efeitoDerivado) || null })},`);
+                  automacao: (a.caracteristica && a.caracteristica.automacao) || null,
+                  efeitoDerivado: (a.caracteristica && a.caracteristica.efeitoDerivado) || null,
+                  efeitoEquipamento: (a.caracteristica && a.caracteristica.efeitoEquipamento) || null })},`);
 }
 L.push('];\n');
 
@@ -149,7 +153,9 @@ for (const m of (d.campanhas || [])) {
                     dano: i.dano ? emPortugues(i.dano) : null, maos: i.maos || null,
                     limiares: i.limiares || null, pontuacao: i.pontuacaoArmadura || null,
                     carac: (i.caracteristica && i.caracteristica.nome) || null,
+                    automacao: (i.caracteristica && i.caracteristica.automacao) || null,
                     efeitoDerivado: (i.caracteristica && i.caracteristica.efeitoDerivado) || null,
+                    efeitoEquipamento: (i.caracteristica && i.caracteristica.efeitoEquipamento) || null,
                     nomes: [...new Set([i.nome, i.nomeAntigo].filter(Boolean))] })},`);
   }
 }

@@ -2849,7 +2849,16 @@
     "fonteTraducao": "livro",
     "confianca": "alta",
     "nomeAntigo": "Curativo",
-    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras"
+    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
+    "automacao": {
+     "classificacao": "passiva-automatizada",
+     "motivo": "Enquanto o equipamento estiver ativo, cada descanso recupera automaticamente 1 PV. A prévia e a aplicação usam o mesmo simulador de descanso."
+    },
+    "efeitoEquipamento": {
+     "descanso": {
+      "recuperaPv": 1
+     }
+    }
    },
    "danoSRD": "d10+6 mag"
   },
@@ -4899,7 +4908,16 @@
     "fonteTraducao": "livro",
     "confianca": "alta",
     "nomeAntigo": "Resguardo",
-    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras"
+    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
+    "automacao": {
+     "classificacao": "passiva-automatizada",
+     "motivo": "Dano mágico recebido é reduzido pela Pontuação de Armadura antes da comparação com os limiares; nenhum Ponto de Armadura é marcado."
+    },
+    "efeitoEquipamento": {
+     "danoRecebido": {
+      "reduzDanoMagicoPelaPontuacaoArmadura": true
+     }
+    }
    }
   },
   {
