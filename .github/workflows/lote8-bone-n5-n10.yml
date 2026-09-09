@@ -18,6 +18,7 @@ jobs:
       - name: Materializar Osso N5-N10
         run: |
           python3 tools/lote8-bone-n5-n10.py
+          python3 tools/lote8-bone-n5-n10-hotfix.py
           node tools/gerar-41-dominios.mjs
           node tools/gerar-47-contadores.mjs
           node tools/gerar-48-criacao.mjs
@@ -82,6 +83,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm -f --ignore-unmatch tools/lote8-bone-n5-n10.py
+          git rm -f --ignore-unmatch tools/lote8-bone-n5-n10-hotfix.py
           git rm -f --ignore-unmatch .github/workflows/lote8-bone-n5-n10.yml
           find . -type d -name __pycache__ -prune -exec rm -rf {} +
           find . -type f -name '*.pyc' -delete
