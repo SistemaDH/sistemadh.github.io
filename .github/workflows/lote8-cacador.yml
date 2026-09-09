@@ -6,6 +6,7 @@ on:
       - tmp-lote8-cacador
     paths:
       - 'tools/lote8-cacador.py'
+      - 'tools/lote8-cacador-v2.py'
       - '.github/workflows/lote8-cacador.yml'
 
 permissions:
@@ -22,7 +23,7 @@ jobs:
 
       - name: Materializar Cacador
         run: |
-          python3 tools/lote8-cacador.py
+          python3 tools/lote8-cacador-v2.py
           node tools/gerar-42-classes.mjs
 
       - name: Checker e diff
@@ -61,6 +62,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm -f tools/lote8-cacador.py
+          git rm -f tools/lote8-cacador-v2.py
           git rm -f .github/workflows/lote8-cacador.yml
           git add -A
           git diff --cached --check
