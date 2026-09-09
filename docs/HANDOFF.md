@@ -689,3 +689,9 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - Inventário de contadores: **146** no total, sendo 1 de equipamento.
 
 **Próximo bloco natural:** Esperançoso + Deslocamento + Temporal + Desafetação.
+
+### Lote 8 — correção do gate backend e estados de opções
+
+- `tools/testes-backend.mjs`: o resumo e o `process.exit(1)` agora ficam no fim real do arquivo; testes anexados depois do antigo resumo deixam de produzir falso-verde.
+- `backend/4C_Ajustes.gs`: `encerrarEstadosDeCartaPorEvento_` considera também estados dentro de `uso.opcoes[]`; isso corrige `Livro do Ronin > Transformação`, que agora encerra ao sofrer dano como o catálogo já determinava.
+- O gate de CI deste lote usa falha explícita ao encontrar `✗`, em vez de depender de `! grep` com `errexit`.

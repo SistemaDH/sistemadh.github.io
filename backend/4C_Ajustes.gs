@@ -2634,17 +2634,35 @@ function encerrarEstadosDeCartaPorEvento_(ficha, evento, cartaAtual) {
   for (let i = 0; i < ids.length; i++) {
     const id = ids[i];
     const def = USOS_CARTAS_DOMINIO[id] || {};
-    const estado = def.estado || null;
-    if (!estado || !estado.chave) continue;
-    const ativo = Math.trunc(Number(((ficha.contadores[estado.chave] || {}).valor))) || 0;
-    if (ativo <= 0) continue;
-    let encerra = false;
-    if (evento === 'sofrer-dano' && estado.encerraAoSofrerDano === true) encerra = true;
-    if (evento === 'conjurar-outro-feitico' && id !== cartaAtual && estado.encerraAoConjurarOutroFeitico === true) encerra = true;
-    if (!encerra) continue;
-    delete ficha.contadores[estado.chave];
-    const carta = (typeof acharCarta_ === 'function') ? acharCarta_(id) : null;
-    encerrados.push(carta ? carta.nome : id);
+
+    // O estado pode morar no uso principal OU em uma opção do uso. O Livro do
+    // Ronin, por exemplo, guarda Transformação dentro de `opcoes[]`; olhar só
+    // `def.estado` deixava esse estado ativo depois de sofrer dano.
+    const estados = [];
+    const chavesVistas = {};
+    const registrarEstado = function (estado) {
+      if (!estado || !estado.chave || chavesVistas[estado.chave]) return;
+      chavesVistas[estado.chave] = true;
+      estados.push(estado);
+    };
+    registrarEstado(def.estado || null);
+    (def.opcoes || []).forEach(function (opcao) {
+      registrarEstado((opcao || {}).estado || null);
+    });
+
+    for (let e = 0; e < estados.length; e++) {
+      const estado = estados[e];
+      const ativo = Math.trunc(Number(((ficha.contadores[estado.chave] || {}).valor))) || 0;
+      if (ativo <= 0) continue;
+      let encerra = false;
+      if (evento === 'sofrer-dano' && estado.encerraAoSofrerDano === true) encerra = true;
+      if (evento === 'conjurar-outro-feitico' && id !== cartaAtual && estado.encerraAoConjurarOutroFeitico === true) encerra = true;
+      if (!encerra) continue;
+      delete ficha.contadores[estado.chave];
+      const carta = (typeof acharCarta_ === 'function') ? acharCarta_(id) : null;
+      const nome = carta ? carta.nome : id;
+      if (encerrados.indexOf(nome) === -1) encerrados.push(nome);
+    }
   }
   return encerrados;
 }

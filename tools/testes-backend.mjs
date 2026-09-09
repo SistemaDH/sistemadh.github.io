@@ -10141,11 +10141,6 @@ teste('duas fontes Doloroso pedem dois Inabalável sem mudar a regra de +2 Estre
   igual(r.mudancas[0].doloroso.estresseMarcado,1);
 });
 
-console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
-if (falhou) {
-  falhas.forEach((f) => console.error(f.nome, f.erro));
-  process.exit(1);
-}
 
 
 console.log('\nLote 8 — fechamento das quatro cartas legadas');
@@ -10341,3 +10336,9 @@ teste('Fortificado também amplia o PA adicional de Vontade de Ferro',()=>{
   igual(r.mudancas[0].pvPelaFaixa,3); igual(r.mudancas[0].pvDepoisArmadura,1);
   igual(r.mudancas[0].pvMarcados,0,'o segundo PA Fortificado reduz mais dois degraus');
 });
+
+console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
+if (falhou) {
+  falhas.forEach((f) => console.error(f.nome, f.erro));
+  process.exit(1);
+}
