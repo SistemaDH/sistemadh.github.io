@@ -621,6 +621,29 @@ function fichaTemCaracteristicaDeClasse_(ficha, nome) {
   return false;
 }
 
+/** Alterações de alcance concedidas por características de classe/subclasse. */
+const MODIFICADORES_DE_ALCANCE_DE_CLASSE = {
+  "Alcance Regenerativo": {
+    "habilidade": "Regeneração",
+    "de": "Corpo a Corpo",
+    "para": "Muito Próximo"
+  }
+};
+
+/** Modificadores de alcance que ESTA ficha realmente possui. */
+function modificadoresDeAlcanceDaClasse_(ficha) {
+  const saida = [];
+  const nomes = Object.keys(MODIFICADORES_DE_ALCANCE_DE_CLASSE);
+  for (let i = 0; i < nomes.length; i++) {
+    const nome = nomes[i];
+    if (typeof fichaTemCaracteristicaDeClasse_ === 'function' &&
+        fichaTemCaracteristicaDeClasse_(ficha, nome)) {
+      saida.push(Object.assign({ nome: nome }, MODIFICADORES_DE_ALCANCE_DE_CLASSE[nome]));
+    }
+  }
+  return saida;
+}
+
 /** Características de classe que mexem numa regra aplicada pelo servidor. */
 const CARACTERISTICAS_COM_EFEITO = {
   "ignora-empunhadura": [

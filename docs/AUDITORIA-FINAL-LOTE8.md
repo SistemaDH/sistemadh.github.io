@@ -5,7 +5,7 @@
 
 ## Resumo numérico
 
-- Classes/subclasses: **99 características**; **34** candidatas sem sinal de automação.
+- Classes/subclasses: **99 características**; **33** candidatas sem sinal de automação.
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **161** candidatas sem sinal de automação específica; **17** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **88** ocorrências candidatas ativas/condicionais.
@@ -14,8 +14,8 @@
 
 ### Distribuição — classes/subclasses
 
-- candidato sem sinal de automação: **34**
-- estruturada/contador: **45**
+- candidato sem sinal de automação: **33**
+- estruturada/contador: **46**
 - predominantemente narrativo/sem gatilho detectado: **7**
 - referência específica no motor: **13**
 
@@ -40,7 +40,6 @@
 
 | Classe | Subclasse | Estágio | Característica | Trecho |
 |---|---|---|---|---|
-| Druida | Guardião da Renovação | especializacao | Alcance Regenerativo | Você pode atingir criaturas em alcance Muito Próximo com sua habilidade Regeneração. |
 | Feiticeiro |  | Classe | Ilusão Menor | Faça uma Jogada de Conjuração (10). Em um sucesso, você cria uma ilusão visual em alcance Próximo. Ela não pode ultrapassar seu tamanho. Essa ilusão parece convincente a… |
 | Feiticeiro | Origem Elemental | fundacao | Elementalista | Escolha um dos seguintes elementos na criação do personagem: Ar · Terra · Fogo · Raio · Água Você pode moldar esse elemento em efeitos inofensivos. Além disso, gaste 1 E… |
 | Feiticeiro | Origem Elemental | especializacao | Evasão Natural | Você pode invocar seu elemento para se proteger do perigo. Quando uma jogada de ataque contra você for bem-sucedida, pode marcar 1 Estresse e descrever como usa seu elem… |

@@ -462,7 +462,8 @@
         },
         {
          "nome": "Regeneração",
-         "texto": "Toque uma criatura e gaste 3 Esperanças. Essa criatura recupera 1d4 Pontos de Vida."
+         "texto": "Toque uma criatura e gaste 3 Esperanças. Essa criatura recupera 1d4 Pontos de Vida.",
+         "alcanceBase": "Corpo a Corpo"
         }
        ],
        "texto": "Clareza da Natureza: Uma vez por descanso longo, você pode criar um espaço de serenidade natural em alcance Próximo. Quando passar alguns minutos descansando dentro desse espaço, remova Estresses igual ao seu Instinto, distribuídos como desejar entre você e seus aliados.\n\nRegeneração: Toque uma criatura e gaste 3 Esperanças. Essa criatura recupera 1d4 Pontos de Vida.",
@@ -484,7 +485,12 @@
        "caracteristicas": [
         {
          "nome": "Alcance Regenerativo",
-         "texto": "Você pode atingir criaturas em alcance Muito Próximo com sua habilidade Regeneração."
+         "texto": "Você pode atingir criaturas em alcance Muito Próximo com sua habilidade Regeneração.",
+         "modificadorAlcance": {
+          "habilidade": "Regeneração",
+          "de": "Corpo a Corpo",
+          "para": "Muito Próximo"
+         }
         },
         {
          "nome": "Proteção do Guardião",

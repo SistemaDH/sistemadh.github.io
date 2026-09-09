@@ -5495,6 +5495,42 @@ teste('Domínio Elemental em Água cobra 1 Estresse somente enquanto Água está
   igual(contexto.aplicarAjustes_(ar, [{ tipo: 'habilidade', nome: 'Domínio Elemental', reagir: true }]).erros.length, 1);
 });
 
+
+console.log('\nLote 8 — Druida: Alcance Regenerativo');
+
+function fichaDruidaRenovacao_(cartasSub = ['fundacao']) {
+  const catalogo = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/cartas-dominio.json'), 'utf8'));
+  const cartas = catalogo.cartas.filter((c) => c.nivel === 1 && (c.dominio === 'SAGE' || c.dominio === 'ARCANA'))
+    .slice(0, 2).map((c) => c.id);
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Druida Renovação', classe: 'Druida', subclasse: 'Guardião da Renovação',
+    ancestralidade: 'Humano', comunidade: 'Highborne', cartas,
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  f.subclasseCartas = cartasSub.slice();
+  contexto.aplicarDerivados_(f);
+  return f;
+}
+
+teste('Alcance Regenerativo muda somente Regeneração de Corpo a Corpo para Muito Próximo', () => {
+  const fundacao = fichaDruidaRenovacao_(['fundacao']);
+  igual(contexto.alcanceEfetivoDaHabilidade_(fundacao, 'Regeneração', 'Corpo a Corpo'), 'Corpo a Corpo');
+
+  const especializada = fichaDruidaRenovacao_(['fundacao', 'especializacao']);
+  igual(contexto.alcanceEfetivoDaHabilidade_(especializada, 'Regeneração', 'Corpo a Corpo'), 'Muito Próximo');
+  igual(contexto.alcanceEfetivoDaHabilidade_(especializada, 'Clareza da Natureza', 'Corpo a Corpo'), 'Corpo a Corpo');
+});
+
+teste('Alcance Regenerativo não vaza para Guardião dos Elementos e respeita modificador geral de origem', () => {
+  const outra = fichaDruidaElemental_(['fundacao', 'especializacao']);
+  igual(contexto.alcanceEfetivoDaHabilidade_(outra, 'Regeneração', 'Corpo a Corpo'), 'Corpo a Corpo');
+
+  const gigante = fichaDruidaRenovacao_(['fundacao', 'especializacao']);
+  gigante.identidade.ancestralidade = 'Gigante';
+  contexto.validarFicha_(gigante);
+  igual(contexto.alcanceEfetivoDaHabilidade_(gigante, 'Regeneração', 'Corpo a Corpo'), 'Muito Próximo');
+});
+
 console.log('\nLote 8 — comunidades do Core');
 
 function fichaComunidade_(comunidade, nivel) {

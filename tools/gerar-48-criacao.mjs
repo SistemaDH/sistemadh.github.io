@@ -289,6 +289,23 @@ function alcanceEfetivoDaFicha_(ficha, alcance) {
 }
 
 /**
+ * Alcance efetivo de UMA habilidade. Primeiro aplica modificadores gerais da
+ * ficha (como Gigante); depois, somente os modificadores de classe/subclasse
+ * que citam a habilidade pelo nome. Assim Alcance Regenerativo não aumenta
+ * magia, arma ou outra característica por acidente.
+ */
+function alcanceEfetivoDaHabilidade_(ficha, nomeHabilidade, alcanceBase) {
+  let atual = alcanceEfetivoDaFicha_(ficha, alcanceBase);
+  const mods = (typeof modificadoresDeAlcanceDaClasse_ === 'function')
+    ? modificadoresDeAlcanceDaClasse_(ficha) : [];
+  for (let i = 0; i < mods.length; i++) {
+    if (chaveTexto_(mods[i].habilidade) !== chaveTexto_(nomeHabilidade)) continue;
+    if (chaveTexto_(atual) === chaveTexto_(mods[i].de)) atual = mods[i].para;
+  }
+  return atual;
+}
+
+/**
  * Perfis naturais/ofensivos já prontos para a ficha. Nada é rolado: o servidor
  * só resolve Proficiência e alcance, e publica a consequência do sucesso.
  */

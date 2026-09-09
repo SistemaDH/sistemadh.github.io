@@ -37,4 +37,12 @@ assert dom['efeitoDerivado']['canalizacaoElemental']['elementos']['ar']['evasao'
 assert dom['rolagemManual']['aplicacao'] == 'entrada-obrigatoria-no-dano'
 assert next(x for x in cont['contadores'] if x['chave'] == 'estado:druida:canalizacao-elemental')
 
-print('Lote 8 — classes: Bardo fechado; Druida/Canalização e Domínio Elemental protegidos.')
+ren = next(s for s in druida['subclasses'] if s['id'] == 'druida-guardiao-da-renovacao')
+reg = next(f for f in ren['cartas']['fundacao']['caracteristicas'] if f['nome'] == 'Regeneração')
+alc = next(f for f in ren['cartas']['especializacao']['caracteristicas'] if f['nome'] == 'Alcance Regenerativo')
+assert reg['alcanceBase'] == 'Corpo a Corpo'
+assert alc['modificadorAlcance'] == {
+    'habilidade': 'Regeneração', 'de': 'Corpo a Corpo', 'para': 'Muito Próximo'
+}
+
+print('Lote 8 — classes: Bardo fechado; Druida fechado, incluindo Alcance Regenerativo.')

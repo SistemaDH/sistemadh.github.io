@@ -154,10 +154,24 @@ L.push('};\n');
  * função que lista as características.
  */
 const porEfeito = {};
+const modificadoresDeAlcanceDeClasse = {};
 for (const c of dados.classes) {
+  const anotaAlcance = (f) => {
+    if (!f || !f.modificadorAlcance) return;
+    if (modificadoresDeAlcanceDeClasse[f.nome] &&
+        JSON.stringify(modificadoresDeAlcanceDeClasse[f.nome]) !== JSON.stringify(f.modificadorAlcance)) {
+      throw new Error(`modificador de alcance ambíguo para ${f.nome}`);
+    }
+    modificadoresDeAlcanceDeClasse[f.nome] = f.modificadorAlcance;
+  };
   for (const f of c.caracteristicasDeClasse) {
-    if (!f.efeito) continue;
-    (porEfeito[f.efeito] = porEfeito[f.efeito] || []).push(f.nome);
+    if (f.efeito) (porEfeito[f.efeito] = porEfeito[f.efeito] || []).push(f.nome);
+    anotaAlcance(f);
+  }
+  for (const s of c.subclasses || []) {
+    for (const qual of ['fundacao', 'especializacao', 'maestria']) {
+      for (const f of (((s.cartas || {})[qual] || {}).caracteristicas || [])) anotaAlcance(f);
+    }
   }
 }
 /*
@@ -349,6 +363,24 @@ function fichaTemCaracteristicaDeClasse_(ficha, nome) {
     if (chaveTexto_((tem[i] || {}).nome) === alvo) return true;
   }
   return false;
+}
+`);
+
+L.push('/** Alterações de alcance concedidas por características de classe/subclasse. */');
+L.push(`const MODIFICADORES_DE_ALCANCE_DE_CLASSE = ${JSON.stringify(modificadoresDeAlcanceDeClasse, null, 2)};`);
+L.push(`
+/** Modificadores de alcance que ESTA ficha realmente possui. */
+function modificadoresDeAlcanceDaClasse_(ficha) {
+  const saida = [];
+  const nomes = Object.keys(MODIFICADORES_DE_ALCANCE_DE_CLASSE);
+  for (let i = 0; i < nomes.length; i++) {
+    const nome = nomes[i];
+    if (typeof fichaTemCaracteristicaDeClasse_ === 'function' &&
+        fichaTemCaracteristicaDeClasse_(ficha, nome)) {
+      saida.push(Object.assign({ nome: nome }, MODIFICADORES_DE_ALCANCE_DE_CLASSE[nome]));
+    }
+  }
+  return saida;
 }
 `);
 
