@@ -1,0 +1,92 @@
+name: Lote 8 - Armadura Mitigacao
+
+on:
+  push:
+    branches: [tmp-lote8-armadura-mitigacao-sol]
+
+permissions:
+  contents: write
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materializar mitigacao por Armadura
+        run: |
+          python3 tools/lote8-armadura-mitigacao.py
+          python3 tools/lote8-armadura-mitigacao-reacoes.py
+          node tools/gerar-44-equipamento.mjs
+          node tools/gerar-41-dominios.mjs
+          node tools/gerar-47-contadores.mjs
+          node tools/gerar-4B-descanso.mjs
+          cp backend/4C_Ajustes.gs /tmp/4C_Ajustes.js
+          node --check /tmp/4C_Ajustes.js
+          node --check js/telas/ficha.js
+          git diff --check
+
+      - name: Auditar estrutura
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/equipamentos.json',encoding='utf-8'))
+          ach={}
+          for x in d.get('armaduras',[]):
+              c=x.get('caracteristica') or {}
+              if c.get('nome') in {'Fortificado','Físico'}: ach[c['nome']]=(x,c)
+          assert set(ach)=={'Fortificado','Físico'},ach.keys()
+          fort=ach['Fortificado'][1]
+          fis=ach['Físico'][1]
+          assert fort['efeitoEquipamento']['danoRecebido']['mitigacaoArmadura']['passos']==2
+          assert fis['efeitoEquipamento']['danoRecebido']['mitigacaoArmadura']['tiposPermitidos']==['fisico']
+          assert fort.get('automacao') and fis.get('automacao')
+          PY
+          python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria.md
+          ! grep -Eq '^\| (Fortificado|Físico) \|' /tmp/auditoria.md
+          grep -q 'function regraDeMitigacaoPorArmadura_' backend/4C_Ajustes.gs
+          grep -q 'usarArmadura' js/telas/ficha.js
+
+      - name: Testes backend
+        shell: bash
+        run: |
+          set -o pipefail
+          node tools/testes-backend.mjs | tee /tmp/backend.log
+          ! grep -q '✗' /tmp/backend.log
+          tail -n 55 /tmp/backend.log
+
+      - name: Instalar Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install chromium
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados e CSS
+        run: |
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+          git diff --check
+
+      - name: Proteger contra concorrencia
+        run: |
+          git fetch origin 'ediçãoclaude'
+          test "$(git rev-parse 'origin/ediçãoclaude')" = '13c1f61e75a8643af21867c7697239c6def92946'
+
+      - name: Commitar funcional e limpar temporarios
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f --ignore-unmatch tools/lote8-armadura-mitigacao.py
+          git rm -f --ignore-unmatch tools/lote8-armadura-mitigacao-reacoes.py
+          git rm -f --ignore-unmatch .github/workflows/lote8-armadura-mitigacao.yml
+          git rm -f --ignore-unmatch .github/workflows/lote8-diagnostico-armadura-mitigacao.yml
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          find . -type f -name '*.pyc' -delete
+          git add -A
+          git diff --cached --check
+          git commit -m 'feat: integrar mitigação normal de Armadura, Fortificado e Físico [lote8-generated]'
+          git push origin HEAD:tmp-lote8-armadura-mitigacao-sol
