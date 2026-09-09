@@ -165,6 +165,26 @@ ca = next(x for x in cont['contadores'] if x['chave'] == 'estado:ladino:caminhan
 assert ca['maximo'] == {'tipo': 'fixo', 'valor': 1}
 assert set(ca['zeraEm']) == {'descanso', 'descanso-longo'}
 
+cacador = next(c for c in classes['classes'] if c['nome'] == 'Caçador')
+laco = next(s for s in cacador['subclasses'] if s['nome'] == 'Laço Bestial')
+vinculo = next(f for f in laco['cartas']['especializacao']['caracteristicas'] if f['nome'] == 'Vínculo de Batalha')
+assert vinculo['resolucaoManual']['rolaNoApp'] is False
+assert '+2' in vinculo['resolucaoManual']['opcoes'][0]
+
+expl = next(s for s in cacador['subclasses'] if s['nome'] == 'Explorador')
+implacavel = next(f for f in expl['cartas']['fundacao']['caracteristicas'] if f['nome'] == 'Predador Implacável')
+assert implacavel['uso']['custo']['estresse'] == 1
+assert implacavel['uso']['bonusProficienciaDano'] == 1
+assert 'dano Severo' in implacavel['resolucaoManual']['gatilho']
+elusivo = next(f for f in expl['cartas']['especializacao']['caracteristicas'] if f['nome'] == 'Predador Elusivo')
+assert elusivo['resolucaoManual']['rolaNoApp'] is False
+assert '+2' in elusivo['resolucaoManual']['opcoes'][0]
+topo = next(f for f in expl['cartas']['maestria']['caracteristicas'] if f['nome'] == 'Predador de Topo')
+assert topo['uso']['custo']['esperanca'] == 1
+assert topo['uso']['requerAlvoDeHabilidade'] == 'Marca da Presa'
+assert '1 Medo' in topo['resolucaoManual']['opcoes'][0]
+
+
 mago = next(c for c in classes['classes'] if c['id'] == 'mago')
 conhecimento = next(s for s in mago['subclasses'] if s['id'] == 'mago-escola-do-conhecimento')
 for etapa, nome in [('fundacao', 'Preparado'), ('especializacao', 'Realizado'), ('maestria', 'Brilhante')]:
@@ -186,4 +206,4 @@ assert "Preparado — carta de domínio adicional" in ui_avanco
 assert 'cartasExtrasDeSubclasse: escolha.cartasExtrasDeSubclasse.slice()' in ui_avanco
 assert 'limitesOverride: limitesComDominioDaMulticlasse()' in ui_avanco
 
-print('Lote 8 — classes: Bardo, Druida, Feiticeiro, Guardião, Guerreiro e Mago fechados; Caminhante Noturno também fechado (Passo Sombrio, Nuvem Sombria e Ato de Desaparecimento).')
+print('Lote 8 — classes: Bardo, Druida, Feiticeiro, Guardião, Guerreiro e Mago fechados; Caminhante Noturno e Caçador também fechados; Caçador inclui Vínculo de Batalha e a linha Predador do Explorador.')

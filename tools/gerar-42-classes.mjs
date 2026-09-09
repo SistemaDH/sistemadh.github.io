@@ -255,6 +255,8 @@ for (const c of dados.classes) {
       efeitoRecurso: f.uso.efeitoRecurso || null,
       efeitoCondicao: f.uso.efeitoCondicao || null,
       alcanceBase: f.uso.alcanceBase || '',
+      requerAlvoDeHabilidade: f.uso.requerAlvoDeHabilidade || '',
+      bonusProficienciaDano: Number(f.uso.bonusProficienciaDano) || 0,
       custoCondicionalEntradaManual: f.uso.custoCondicionalEntradaManual || null,
       confirmacao: f.uso.confirmacao || null,
       // Algumas habilidades ligam um estado persistente depois de pagar.

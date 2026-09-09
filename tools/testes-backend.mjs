@@ -8051,6 +8051,49 @@ teste('Ato de Desaparecimento pode ser encerrado manualmente quando a mesa rola 
 });
 
 
+
+console.log('\nLote 8 — Caçador: fechamento');
+
+function fichaCacadorLote8_(subclasse, subclasseCartas = ['fundacao']) {
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Caçador de Teste', classe: 'Caçador', subclasse, nivel: 10,
+    ancestralidade: 'Halfling', comunidade: 'Wildborne',
+    cartas: ['bone-intocavel', 'sage-emaranhado-cruel'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  f.subclasseCartas = subclasseCartas.slice();
+  contexto.aplicarDerivados_(f);
+  return f;
+}
+
+teste('Predador Implacável cobra 1 Estresse e publica +1 Proficiência só para a jogada de dano', () => {
+  const f = fichaCacadorLote8_('Explorador', ['fundacao']);
+  f.recursos.estresseMarcado = 0;
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Predador Implacável' }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, 1);
+  igual(r.mudancas[0].bonusProficienciaDano, 1);
+  verdade(/Proficiência nesta jogada de dano/.test(r.mudancas[0].aviso || ''), JSON.stringify(r.mudancas[0]));
+});
+
+teste('Predador de Topo não cobra Esperança sem Foco e usa exatamente o Foco da Marca da Presa', () => {
+  const f = fichaCacadorLote8_('Explorador', ['fundacao', 'especializacao', 'maestria']);
+  f.recursos.esperanca = 4;
+  let r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Predador de Topo' }]);
+  igual(r.erros.length, 1);
+  igual(f.recursos.esperanca, 4, 'sem Foco não pode cobrar Esperança');
+
+  r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Marca da Presa', alvo: 'Mantícora' }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 3);
+  r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Predador de Topo' }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 2);
+  igual(r.mudancas[0].alvoRequerido, 'Mantícora');
+  verdade(/remova 1 Medo/i.test(r.mudancas[0].aviso || ''), JSON.stringify(r.mudancas[0]));
+});
+
+
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));

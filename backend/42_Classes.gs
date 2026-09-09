@@ -360,6 +360,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -384,6 +386,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -429,6 +433,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": {
@@ -469,6 +475,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -493,6 +501,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -528,6 +538,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -563,6 +575,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -595,6 +609,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -640,6 +656,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -682,6 +700,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": {
@@ -711,6 +731,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -738,6 +760,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -762,6 +786,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -788,6 +814,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     },
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": "falha-com-medo",
     "estado": null
@@ -810,6 +838,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -834,6 +864,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": {
@@ -867,6 +899,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
       ]
     },
     "alcanceBase": "Longo",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -895,6 +929,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
       ]
     },
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": {
@@ -925,6 +961,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -954,6 +992,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": {
       "recurso": "esperanca",
       "quantidade": 1,
@@ -982,6 +1022,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -1006,6 +1048,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -1033,6 +1077,60 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
+    "custoCondicionalEntradaManual": null,
+    "confirmacao": null,
+    "estado": null
+  },
+  "Predador Implacável": {
+    "classe": "patrulheiro",
+    "origem": "subclasse",
+    "custo": {
+      "estresse": 1
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "Forçar jogada de dano · 1 Estresse",
+    "lembrete": "Some +1 à Proficiência somente nesta jogada de dano.",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
+    "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 1,
+    "custoCondicionalEntradaManual": null,
+    "confirmacao": null,
+    "estado": null
+  },
+  "Predador de Topo": {
+    "classe": "patrulheiro",
+    "origem": "subclasse",
+    "custo": {
+      "esperanca": 1
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "Preparar ataque ao Foco · 1 Esperança",
+    "lembrete": "Faça a jogada de ataque contra seu Foco fora do app. Se ela for bem-sucedida, remova 1 Medo da reserva de Medo do Mestre.",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
+    "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
+    "requerAlvoDeHabilidade": "Marca da Presa",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -1057,6 +1155,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null

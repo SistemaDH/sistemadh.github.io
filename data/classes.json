@@ -2089,7 +2089,15 @@
         },
         {
          "nome": "Vínculo de Batalha",
-         "texto": "Quando um adversário atacar você enquanto estiver dentro do alcance Corpo a Corpo do seu companheiro, você ganha +2 de bônus em sua Evasão contra esse ataque."
+         "texto": "Quando um adversário atacar você enquanto estiver dentro do alcance Corpo a Corpo do seu companheiro, você ganha +2 de bônus em sua Evasão contra esse ataque.",
+         "resolucaoManual": {
+          "gatilho": "Quando um adversário atacar você enquanto estiver em alcance Corpo a Corpo do seu companheiro.",
+          "jogada": "Evasão contra este ataque",
+          "rolaNoApp": false,
+          "opcoes": [
+           "Use sua Evasão atual +2 contra este ataque. O bônus não altera a Evasão base da ficha."
+          ]
+         }
         }
        ],
        "texto": "LAÇO BESTIAL\nSpecialization\nSPELLCAST TRAIT: AGILITY\nTreinamento Especializado: Escolha uma opção de evolução adicional para seu companheiro.\nVínculo de Batalha: Quando um adversário atacar você enquanto estiver dentro do alcance Corpo a Corpo do seu companheiro, você ganha +2 de bônus em sua Evasão contra esse ataque.",
@@ -2148,7 +2156,22 @@
        "caracteristicas": [
         {
          "nome": "Predador Implacável",
-         "texto": "Quando fizer uma jogada de dano, você pode marcar 1 Estresse para ganhar +1 de bônus na sua Proficiência. Além disso, quando causar dano Severo a um adversário, ele deve marcar 1 Estresse."
+         "texto": "Quando fizer uma jogada de dano, você pode marcar 1 Estresse para ganhar +1 de bônus na sua Proficiência. Além disso, quando causar dano Severo a um adversário, ele deve marcar 1 Estresse.",
+         "uso": {
+          "custo": {
+           "estresse": 1
+          },
+          "rotuloAtivar": "Forçar jogada de dano · 1 Estresse",
+          "bonusProficienciaDano": 1,
+          "lembrete": "Some +1 à Proficiência somente nesta jogada de dano."
+         },
+         "resolucaoManual": {
+          "gatilho": "Depois de causar dano Severo a um adversário.",
+          "rolaNoApp": false,
+          "opcoes": [
+           "Esse adversário marca 1 Estresse."
+          ]
+         }
         },
         {
          "nome": "Caminho à Frente",
@@ -2174,7 +2197,15 @@
        "caracteristicas": [
         {
          "nome": "Predador Elusivo",
-         "texto": "Quando seu Foco fizer um ataque contra você, você ganha +2 de bônus na sua Evasão contra esse ataque."
+         "texto": "Quando seu Foco fizer um ataque contra você, você ganha +2 de bônus na sua Evasão contra esse ataque.",
+         "resolucaoManual": {
+          "gatilho": "Quando seu Foco fizer um ataque contra você.",
+          "jogada": "Evasão contra este ataque",
+          "rolaNoApp": false,
+          "opcoes": [
+           "Use sua Evasão atual +2 contra este ataque. O bônus não altera a Evasão base da ficha."
+          ]
+         }
         }
        ],
        "texto": "EXPLORADOR\nSpecialization\nSPELLCAST TRAIT: AGILITY\nPredador Elusivo: Quando seu Foco fizer um ataque contra você, você ganha +2 de bônus na sua Evasão contra esse ataque.",
@@ -2192,7 +2223,22 @@
        "caracteristicas": [
         {
          "nome": "Predador de Topo",
-         "texto": "Antes de fazer uma jogada de ataque contra seu Foco, você pode gastar 1 Esperança. Em um ataque bem-sucedido, você remove 1 Medo da reserva de Medo do Mestre."
+         "texto": "Antes de fazer uma jogada de ataque contra seu Foco, você pode gastar 1 Esperança. Em um ataque bem-sucedido, você remove 1 Medo da reserva de Medo do Mestre.",
+         "uso": {
+          "custo": {
+           "esperanca": 1
+          },
+          "rotuloAtivar": "Preparar ataque ao Foco · 1 Esperança",
+          "requerAlvoDeHabilidade": "Marca da Presa",
+          "lembrete": "Faça a jogada de ataque contra seu Foco fora do app. Se ela for bem-sucedida, remova 1 Medo da reserva de Medo do Mestre."
+         },
+         "resolucaoManual": {
+          "gatilho": "Depois que o ataque preparado por esta habilidade acertar seu Foco.",
+          "rolaNoApp": false,
+          "opcoes": [
+           "Remova 1 Medo da reserva de Medo do Mestre."
+          ]
+         }
         }
        ],
        "texto": "EXPLORADOR\nMastery\nSPELLCAST TRAIT: AGILITY\nPredador de Topo: Antes de fazer uma jogada de ataque contra seu Foco, você pode gastar 1 Esperança. Em um ataque bem-sucedido, você remove 1 Medo da reserva de Medo do Mestre.",

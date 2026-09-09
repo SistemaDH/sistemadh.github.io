@@ -769,6 +769,16 @@ function usarHabilidadeDeClasse_(ficha, a) {
   ficha.alvosDeHabilidade = (ficha.alvosDeHabilidade && typeof ficha.alvosDeHabilidade === 'object' &&
     !Array.isArray(ficha.alvosDeHabilidade)) ? ficha.alvosDeHabilidade : {};
 
+  // Algumas habilidades só existem enquanto outra marca/alvo está ativo.
+  // Predador de Topo, por exemplo, só pode ser pago antes de atacar o Foco
+  // criado por Marca da Presa. A validação vem ANTES de qualquer custo.
+  const alvoRequerido = def.requerAlvoDeHabilidade
+    ? String(ficha.alvosDeHabilidade[def.requerAlvoDeHabilidade] || '') : '';
+  if (def.requerAlvoDeHabilidade && !alvoRequerido) {
+    return { erro: '"' + def.nome + '": primeiro defina um alvo em "' +
+      def.requerAlvoDeHabilidade + '".' };
+  }
+
   // Algumas habilidades pedem um dado que o JOGADOR rola fora do app. O
   // servidor só valida o número e transforma a parte determinística em dado
   // de resposta — nunca gera resultado aleatório.
@@ -1059,6 +1069,10 @@ function usarHabilidadeDeClasse_(ficha, a) {
     if (deltaEfeito < 0) ganho.push(deltaEfeito + ' ' + rotuloEfeito);
   }
   if (opcaoEscolhida && opcaoEscolhida.lembrete) ganho.push(opcaoEscolhida.lembrete);
+  const bonusProficienciaDano = Math.trunc(Number(def.bonusProficienciaDano)) || 0;
+  if (bonusProficienciaDano) {
+    ganho.push('+' + bonusProficienciaDano + ' de Proficiência nesta jogada de dano');
+  }
 
   const alcanceFinal = def.alcanceBase
     ? alcanceFinalDaHabilidade_(ficha, def.nome, def.alcanceBase) : '';
@@ -1074,6 +1088,8 @@ function usarHabilidadeDeClasse_(ficha, a) {
     efeitoRecurso: efeitoRecursoResultado,
     efeitoCondicao: efeitoCondicaoResultado.mudancas,
     alcance: alcanceFinal || null,
+    alvoRequerido: alvoRequerido || null,
+    bonusProficienciaDano: bonusProficienciaDano,
     estado: (def.estado && def.estado.chave) ? def.estado.chave : null,
     estadoAtivo: !!(def.estado && def.estado.chave),
     resultadoManual: entradaManualValor,
