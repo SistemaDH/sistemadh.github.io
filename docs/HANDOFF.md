@@ -612,3 +612,14 @@ Automação segura: Retirada Fantasma cobra separadamente as duas Esperanças se
 Carga Mágica e Tributo do Crepúsculo preservam seus contadores persistentes já existentes. Caçador das Sombras permanece contextual para não gravar +1 Evasão fora de penumbra/escuridão. Terror Noturno registra 1/descanso longo sem mover o Medo do Mestre pela ficha do jogador. Eclipse registra uso/estado após sucesso e é encerrado manualmente pelos gatilhos de Medo/dano Grave. Espectro da Escuridão usa estado persistente e a infraestrutura já existente de imunidade de dano para anular dano físico enquanto a forma está ativa.
 
 Próximo domínio canônico pendente do Lote 8: **Sábio níveis 1–4**.
+
+
+### Lote 8 — Sábio níveis 1–4
+
+As nove cartas de níveis 1–4 foram classificadas explicitamente. Custos, limites e estados próprios são automatizados; jogadas, dados, alvos e condições de adversários permanecem fora do app.
+
+Emaranhado Cruel automatiza somente a Esperança do segundo alvo opcional. Língua da Natureza cobra Esperança para o +2 contextual em ambiente natural. Rastreador Habilidoso cobra uma Esperança por pergunta sem gravar +1 Evasão global. Conjurar Enxame separa Besouros (Estresse + estado) e Vagalumes (Esperança), mantendo a decisão de sustentar os Besouros após dano na mesa. Familiar Natural distingue invocação terrestre/voadora e mantém um único estado; visão pelos olhos continua manual porque depende de familiar ativo e de uma decisão de cena.
+
+Caule Imponente registra 1/descanso e cobra Estresse somente na modalidade de ataque. Projétil Corrosivo cobra a quantidade escolhida de Estresse depois do sucesso, enquanto a Corrosão permanente fica no adversário/encontro. Aperto da Morte permanece manual. Campo de Cura registra 1/descanso longo e automatiza somente a recuperação da própria ficha; aliados recuperam na própria ficha/mesa.
+
+Próximo bloco canônico pendente do Lote 8: **Sábio níveis 5–10**.

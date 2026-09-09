@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 121 cartas e características mandam
+ *  O problema que este arquivo resolve: 125 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -161,6 +161,10 @@ const CONTADORES = {
   "uso:carta:midnight:eclipse": { origem: "carta-dominio", refId: "midnight-eclipse", nome: "Eclipse", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
   "estado:carta:midnight:eclipse": { origem: "carta-dominio", refId: "midnight-eclipse", nome: "Eclipse", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
   "estado:carta:midnight:espectro-da-escuridao": { origem: "carta-dominio", refId: "midnight-espectro-da-escuridao", nome: "Espectro da Escuridão", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "estado:carta:sage:conjurar-enxame:besouros": { origem: "carta-dominio", refId: "sage-conjurar-enxame", nome: "Conjurar Enxame · Besouros", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "estado:carta:sage:familiar-natural": { origem: "carta-dominio", refId: "sage-familiar-natural", nome: "Familiar Natural", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:sage:caule-imponente": { origem: "carta-dominio", refId: "sage-caule-imponente", nome: "Caule Imponente", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:sage:campo-de-cura": { origem: "carta-dominio", refId: "sage-campo-de-cura", nome: "Campo de Cura", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -286,6 +290,10 @@ const CONTADOR_ALIASES = {
   "uso:carta:midnight:eclipse": ["Eclipse"],
   "estado:carta:midnight:eclipse": ["Eclipse"],
   "estado:carta:midnight:espectro-da-escuridao": ["Espectro da Escuridão"],
+  "estado:carta:sage:conjurar-enxame:besouros": ["Conjurar Enxame · Besouros"],
+  "estado:carta:sage:familiar-natural": ["Familiar Natural"],
+  "uso:carta:sage:caule-imponente": ["Caule Imponente"],
+  "uso:carta:sage:campo-de-cura": ["Campo de Cura"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

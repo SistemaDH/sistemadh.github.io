@@ -2274,6 +2274,74 @@
     "manual"
    ],
    "observacao": "Encerra após uma jogada de ação que tenha outra criatura como alvo."
+  },
+  {
+   "chave": "estado:carta:sage:conjurar-enxame:besouros",
+   "origem": "carta-dominio",
+   "refId": "sage-conjurar-enxame",
+   "nome": "Conjurar Enxame · Besouros",
+   "rotulo": "ativo",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Após sofrer dano, encerra a menos que o jogador gaste 1 Esperança para manter os besouros."
+  },
+  {
+   "chave": "estado:carta:sage:familiar-natural",
+   "origem": "carta-dominio",
+   "refId": "sage-familiar-natural",
+   "nome": "Familiar Natural",
+   "rotulo": "ativo",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Encerra no próximo descanso, ao reconjurar ou quando o familiar for alvo de um ataque."
+  },
+  {
+   "chave": "uso:carta:sage:caule-imponente",
+   "origem": "carta-dominio",
+   "refId": "sage-caule-imponente",
+   "nome": "Caule Imponente",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso, tanto como utilidade quanto como ataque."
+  },
+  {
+   "chave": "uso:carta:sage:campo-de-cura",
+   "origem": "carta-dominio",
+   "refId": "sage-campo-de-cura",
+   "nome": "Campo de Cura",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
   }
  ]
 }

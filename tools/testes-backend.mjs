@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 121 contadores: 89 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 125 contadores: 93 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 121 contadores: 89 de carta, 25 de classe/subclasse, 4 de
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 121);
+  igual(Object.keys(CONTADORES).length, 125);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 89);
+  igual(porOrigem['carta-dominio'], 93);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -9671,6 +9671,99 @@ teste('Espectro da Escuridão custa 1 Estresse e anula dano físico enquanto ati
   igual(r.erros,[]); igual(r.mudancas[0].dano.final,0); igual(r.mudancas[0].imunidade,'Espectro da Escuridão');
   r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-espectro-da-escuridao',encerrar:true}]);
   igual(r.erros,[]); verdade(!f.contadores['estado:carta:midnight:espectro-da-escuridao']);
+});
+
+
+
+console.log('\nLote 8 — Sábio níveis 1–4');
+function fichaSageBaixa_(nivel, ativas) {
+  const f=fichaMidnightBaixa_(nivel,ativas);
+  f.identidade.nome='Sábio Baixo';
+  f.identidade.nivel=nivel;
+  f.cartas={ativas:ativas.slice(),cofre:[]};
+  f.contadores={};
+  f.recursos.esperanca=6; f.recursos.esperancaMaxima=6;
+  f.recursos.estresseMarcado=0; f.recursos.estresseMaximo=Math.max(8,Number(f.recursos.estresseMaximo)||0);
+  f.recursos.pontosDeVidaMarcados=0; f.recursos.pontosDeVidaMaximos=Math.max(6,Number(f.recursos.pontosDeVidaMaximos)||0);
+  return f;
+}
+
+teste('Sábio N1-N4 fica todo classificado e sem RNG no app',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const ids=['sage-emaranhado-cruel','sage-lingua-da-natureza','sage-rastreador-habilidoso','sage-conjurar-enxame','sage-familiar-natural','sage-caule-imponente','sage-projetil-corrosivo','sage-aperto-da-morte','sage-campo-de-cura'];
+  const xs=ids.map((id)=>d.cartas.find((c)=>c.id===id));
+  verdade(xs.every(Boolean)); verdade(xs.every((c)=>!!c.automacao));
+  verdade(xs.every((c)=>c.resolucaoManual && c.resolucaoManual.rolaNoApp===false));
+});
+
+teste('Emaranhado Cruel cobra 1 Esperança apenas pelo segundo alvo opcional',()=>{
+  const f=fichaSageBaixa_(1,['sage-emaranhado-cruel','sage-lingua-da-natureza']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-emaranhado-cruel'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5);
+});
+
+teste('Língua da Natureza cobra 1 Esperança pelo +2 contextual',()=>{
+  const f=fichaSageBaixa_(1,['sage-lingua-da-natureza','sage-rastreador-habilidoso']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-lingua-da-natureza'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5);
+});
+
+teste('Rastreador Habilidoso cobra uma Esperança por pergunta',()=>{
+  const f=fichaSageBaixa_(1,['sage-rastreador-habilidoso','sage-emaranhado-cruel']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-rastreador-habilidoso',quantidadePerguntas:3}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,3); igual(r.mudancas[0].quantidade,3);
+});
+
+teste('Conjurar Enxame separa Besouros e Vagalumes sem rolar dados',()=>{
+  const f=fichaSageBaixa_(2,['sage-conjurar-enxame','sage-familiar-natural']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-conjurar-enxame',opcao:'besouros'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1); igual(f.contadores['estado:carta:sage:conjurar-enxame:besouros'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-conjurar-enxame',opcao:'vagalumes'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5);
+});
+
+teste('Familiar Natural cobra 1 terrestre ou 2 voador e mantém só um estado',()=>{
+  const f=fichaSageBaixa_(2,['sage-familiar-natural','sage-conjurar-enxame']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-familiar-natural',opcao:'terrestre'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5); igual(f.contadores['estado:carta:sage:familiar-natural'].valor,1);
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-familiar-natural',opcao:'voador'}]).erros.length===1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-familiar-natural',opcao:'terrestre',encerrar:true}]);
+  igual(r.erros,[]); verdade(!f.contadores['estado:carta:sage:familiar-natural']);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-familiar-natural',opcao:'voador'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,3);
+});
+
+teste('Caule Imponente é 1/descanso e ataque cobra 1 Estresse',()=>{
+  const f=fichaSageBaixa_(3,['sage-caule-imponente','sage-projetil-corrosivo']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-caule-imponente',opcao:'ataque'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1); igual(f.contadores['uso:carta:sage:caule-imponente'].valor,1);
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-caule-imponente',opcao:'utilidade'}]).erros.length===1);
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  verdade(!f.contadores['uso:carta:sage:caule-imponente']);
+});
+
+teste('Projétil Corrosivo cobra quantidade variável de Estresse após sucesso',()=>{
+  const f=fichaSageBaixa_(3,['sage-projetil-corrosivo','sage-caule-imponente']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-projetil-corrosivo',estressesCorrosao:4}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,4); igual(r.mudancas[0].quantidade,4);
+});
+
+teste('Aperto da Morte continua manual e não cria botão sem efeito próprio',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const c=d.cartas.find((x)=>x.id==='sage-aperto-da-morte');
+  verdade(!c.uso); verdade(c.automacao.classificacao.includes('manual'));
+});
+
+teste('Campo de Cura registra 1/descanso longo e cura a própria ficha 1 ou 2 PV',()=>{
+  const f=fichaSageBaixa_(4,['sage-campo-de-cura','sage-aperto-da-morte']);
+  f.recursos.pontosDeVidaMarcados=3;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-campo-de-cura',opcao:'normal'}]);
+  igual(r.erros,[]); igual(f.recursos.pontosDeVidaMarcados,2); igual(f.contadores['uso:carta:sage:campo-de-cura'].valor,1);
+  contexto.aplicarGatilhoContadores_(f,'descanso-longo');
+  verdade(!f.contadores['uso:carta:sage:campo-de-cura']);
+  f.recursos.pontosDeVidaMarcados=3; f.recursos.esperanca=6;
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-campo-de-cura',opcao:'ampliado'}]);
+  igual(r.erros,[]); igual(f.recursos.pontosDeVidaMarcados,1); igual(f.recursos.esperanca,4);
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

@@ -5268,7 +5268,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português."
+   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português.",
+   "automacao": {
+    "classificacao": "automatizada-opcao-de-custo-pos-sucesso",
+    "resumo": "O efeito principal permanece manual; o app cobra 1 Esperança somente quando você escolhe o segundo alvo opcional."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Faça a Jogada de Conjuração, dano 1d8+1 e Imobilizado do alvo principal fora do app. Em sucesso, use o botão se quiser pagar 1 Esperança para Imobilizar um segundo adversário Muito Próximo do alvo."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "rotuloAtivar": "Sucesso: atingir segundo alvo · 1 Esperança",
+    "lembrete": "Use somente após sucesso no alvo principal. Escolha outro adversário Muito Próximo dele e deixe-o temporariamente Imobilizado."
+   }
   },
   {
    "id": "sage-lingua-da-natureza",
@@ -5290,7 +5305,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo está impresso em inglês (\"ABILITY\") na carta, não em português."
+   "observacao": "O rótulo de tipo está impresso em inglês (\"ABILITY\") na carta, não em português.",
+   "automacao": {
+    "classificacao": "automatizada-bonus-contextual-com-custo",
+    "resumo": "O app cobra 1 Esperança para o bônus de +2 antes de uma Jogada de Conjuração em ambiente natural."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Conversar com plantas/animais, a Jogada de Instinto 12 e as informações dadas continuam na mesa. O +2 só vale em ambiente natural e na próxima Jogada de Conjuração indicada."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "rotuloAtivar": "Ambiente natural: +2 Conjuração · 1 Esperança",
+    "lembrete": "Use antes de uma Jogada de Conjuração em ambiente natural; aplique +2 apenas nessa jogada."
+   }
   },
   {
    "id": "sage-rastreador-habilidoso",
@@ -5311,7 +5341,30 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo está impresso em inglês (\"ABILITY\") na carta, não em português."
+   "observacao": "O rótulo de tipo está impresso em inglês (\"ABILITY\") na carta, não em português.",
+   "automacao": {
+    "classificacao": "automatizada-custo-por-pergunta",
+    "resumo": "Informe quantas perguntas deseja fazer; o app cobra a mesma quantidade de Esperança."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O rastreamento, as respostas do Mestre e o +1 de Evasão somente contra criaturas encontradas por esse rastreamento são contextuais e não alteram a Evasão base."
+   },
+   "uso": {
+    "custo": {},
+    "entradaQuantidade": {
+     "campo": "quantidadePerguntas",
+     "rotulo": "quantidade de perguntas",
+     "minimo": 1,
+     "maximo": 6,
+     "custoPorUnidade": {
+      "esperanca": 1
+     },
+     "ajuda": "Gaste 1 Esperança para cada pergunta feita ao Mestre."
+    },
+    "rotuloAtivar": "Fazer perguntas de rastreamento",
+    "lembrete": "Faça ao Mestre exatamente a quantidade de perguntas paga. Ao encontrar as criaturas rastreadas, +1 Evasão vale somente contra elas."
+   }
   },
   {
    "id": "sage-conjurar-enxame",
@@ -5334,7 +5387,45 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português."
+   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português.",
+   "automacao": {
+    "classificacao": "automatizada-opcoes-com-estado-parcial",
+    "resumo": "O app distingue as duas modalidades: Besouros marcam 1 Estresse e criam estado; Vagalumes custam 1 Esperança."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Besouros: ao sofrer dano, reduza a severidade em um nível na mesa; depois encerre o estado, a menos que gaste 1 Esperança manualmente para mantê-los. Vagalumes: Jogada de Conjuração e 2d8+3 permanecem fora do app."
+   },
+   "uso": {
+    "custo": {},
+    "opcoes": [
+     {
+      "id": "besouros",
+      "rotulo": "Besouros Blindados Tekaira",
+      "custo": {
+       "estresse": 1
+      },
+      "estado": {
+       "chave": "estado:carta:sage:conjurar-enxame:besouros",
+       "valor": 1,
+       "permiteEncerrarManual": true,
+       "rotuloAtivo": "Besouros Blindados ativos",
+       "rotuloEncerrar": "Dispensar Besouros",
+       "avisoEncerrar": "Besouros Blindados dispensados."
+      },
+      "lembrete": "Ao sofrer dano, reduza a severidade em um nível. Depois, encerre os Besouros ou gaste 1 Esperança manualmente para mantê-los."
+     },
+     {
+      "id": "vagalumes",
+      "rotulo": "Vagalumes",
+      "custo": {
+       "esperanca": 1
+      },
+      "lembrete": "Faça a Jogada de Conjuração contra adversários Próximos; alvos atingidos sofrem 2d8+3 de dano mágico rolado fora do app."
+     }
+    ],
+    "rotuloAtivar": "Conjurar Enxame"
+   }
   },
   {
    "id": "sage-familiar-natural",
@@ -5356,7 +5447,53 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português. O nome do arquivo começa com letra minúscula (\"familiar Natural.png\"), mas o nome impresso na carta é \"FAMILIAR NATURAL\"."
+   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português. O nome do arquivo começa com letra minúscula (\"familiar Natural.png\"), mas o nome impresso na carta é \"FAMILIAR NATURAL\".",
+   "automacao": {
+    "classificacao": "automatizada-invocacao-com-opcoes-e-estado",
+    "resumo": "O app cobra 1 Esperança para familiar terrestre ou 2 para um familiar voador e mantém um único estado persistente."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Forma, tarefas, comunicação e d6 de dano adicional são da cena. Para enxergar pelos olhos do familiar, marque 1 Estresse manualmente; se ele for alvo de um ataque, encerre o estado. Para reconjurar, encerre o atual antes."
+   },
+   "uso": {
+    "custo": {},
+    "opcoes": [
+     {
+      "id": "terrestre",
+      "rotulo": "Familiar terrestre",
+      "custo": {
+       "esperanca": 1
+      },
+      "estado": {
+       "chave": "estado:carta:sage:familiar-natural",
+       "valor": 1,
+       "permiteEncerrarManual": true,
+       "rotuloAtivo": "Familiar Natural ativo",
+       "rotuloEncerrar": "Dispensar Familiar",
+       "avisoEncerrar": "Familiar Natural dispensado."
+      },
+      "lembrete": "Invoque um pequeno espírito/animal. Ele dura até o próximo descanso, nova conjuração ou ser alvo de um ataque."
+     },
+     {
+      "id": "voador",
+      "rotulo": "Familiar voador",
+      "custo": {
+       "esperanca": 2
+      },
+      "estado": {
+       "chave": "estado:carta:sage:familiar-natural",
+       "valor": 1,
+       "permiteEncerrarManual": true,
+       "rotuloAtivo": "Familiar Natural voador ativo",
+       "rotuloEncerrar": "Dispensar Familiar",
+       "avisoEncerrar": "Familiar Natural dispensado."
+      },
+      "lembrete": "Familiar com voo: custo total 2 Esperanças. Dura até o próximo descanso, nova conjuração ou ser alvo de um ataque."
+     }
+    ],
+    "rotuloAtivar": "Invocar Familiar Natural"
+   }
   },
   {
    "id": "sage-caule-imponente",
@@ -5379,7 +5516,39 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português."
+   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português.",
+   "automacao": {
+    "classificacao": "automatizada-limite-com-opcao-de-ataque",
+    "resumo": "O app registra uma conjuração por descanso e cobra 1 Estresse apenas se a modalidade escolhida for ataque."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Altura/posição do caule, Jogada de Conjuração e d8 físico usando Proficiência são resolvidos fora do app."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:sage:caule-imponente",
+     "maximo": 1
+    },
+    "opcoes": [
+     {
+      "id": "utilidade",
+      "rotulo": "Criar caule escalável",
+      "custo": {},
+      "lembrete": "Crie o caule Próximo, com altura até Distante; nenhuma rolagem automática."
+     },
+     {
+      "id": "ataque",
+      "rotulo": "Usar como ataque",
+      "custo": {
+       "estresse": 1
+      },
+      "lembrete": "Faça a Jogada de Conjuração contra os alvos Próximos e cause d8 físico usando Proficiência aos atingidos."
+     }
+    ],
+    "rotuloAtivar": "Conjurar Caule Imponente · 1/descanso"
+   }
   },
   {
    "id": "sage-projetil-corrosivo",
@@ -5407,6 +5576,29 @@
    "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português.",
    "efeitoPermanente": {
     "noAlvo": "Corroído fica no ADVERSÁRIO, não na sua ficha: −1 na Dificuldade dele para cada 2 Estresses gastos. Anote na observação do cartão dele, no encontro."
+   },
+   "automacao": {
+    "classificacao": "automatizada-custo-variavel-pos-sucesso",
+    "resumo": "Após sucesso confirmado, informe quantos Estresses (mínimo 2) quer marcar; o app cobra exatamente essa quantidade."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Conjuração e dano d6+4 usando Proficiência ficam fora do app. O alvo fica permanentemente Corroído e perde 1 de Dificuldade para cada 2 Estresses pagos; essa condição acumulável é anotada no adversário/encontro."
+   },
+   "uso": {
+    "custo": {},
+    "entradaQuantidade": {
+     "campo": "estressesCorrosao",
+     "rotulo": "Estresses gastos na corrosão",
+     "minimo": 2,
+     "maximo": 12,
+     "custoPorUnidade": {
+      "estresse": 1
+     },
+     "ajuda": "O alvo recebe −1 Dificuldade para cada 2 Estresses pagos."
+    },
+    "rotuloAtivar": "Sucesso: aplicar Corrosão permanente",
+    "lembrete": "Registre no adversário −1 Dificuldade para cada 2 Estresses pagos. Corroído é permanente e acumulável."
    }
   },
   {
@@ -5428,7 +5620,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português."
+   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português.",
+   "automacao": {
+    "classificacao": "manual-de-encontro-com-tres-opcoes",
+    "resumo": "A carta não altera recurso ou estado próprio de forma determinística; criar botão de ficha não acrescentaria segurança."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Faça a Jogada de Conjuração e escolha na mesa: puxar alvo/você, forçar 2 Estresses no alvo, ou resolver Reações 13 e 3d6+2 nos adversários entre vocês. Em sucesso, o alvo também fica temporariamente Imobilizado."
+   }
   },
   {
    "id": "sage-campo-de-cura",
@@ -5451,7 +5651,47 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português."
+   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português.",
+   "automacao": {
+    "classificacao": "automatizada-uso-cura-propria-e-opcao-ampliada",
+    "resumo": "O app registra uma vez por descanso longo e cura automaticamente a própria ficha em 1 PV, ou 2 PV ao pagar 2 Esperanças."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Todos os aliados Próximos recuperam a mesma quantidade na ficha deles/mesa. O app não altera várias fichas a partir de um botão do conjurador."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:sage:campo-de-cura",
+     "maximo": 1
+    },
+    "opcoes": [
+     {
+      "id": "normal",
+      "rotulo": "Campo normal · curar 1 PV",
+      "custo": {},
+      "efeitoRecurso": {
+       "chave": "pontosDeVidaMarcados",
+       "delta": -1
+      },
+      "lembrete": "Você recupera 1 PV; cada aliado Próximo também recupera 1 PV na própria ficha."
+     },
+     {
+      "id": "ampliado",
+      "rotulo": "Campo ampliado · 2 Esperanças · curar 2 PV",
+      "custo": {
+       "esperanca": 2
+      },
+      "efeitoRecurso": {
+       "chave": "pontosDeVidaMarcados",
+       "delta": -2
+      },
+      "lembrete": "Você recupera 2 PV; cada aliado Próximo também recupera 2 PV na própria ficha."
+     }
+    ],
+    "rotuloAtivar": "Conjurar Campo de Cura · 1/descanso longo"
+   }
   },
   {
    "id": "sage-fortaleza-selvagem",
