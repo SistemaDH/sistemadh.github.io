@@ -10147,3 +10147,85 @@ teste('Égide reduz só dano mágico pela Pontuação de Armadura antes dos limi
   igual(r.mudancas[0].dano.final,20,'Égide não reduz dano físico');
   igual(r.mudancas[0].equipamentoDefensivo,null);
 });
+
+
+console.log('\nLote 8 — mitigação por Armadura');
+
+teste('uso normal de 1 PA reduz um degrau de gravidade e é atômico com o dano',()=>{
+  const f=fichaEquipamentoDefensivo_(3,null,'armadura-t2-armadura-de-couro-aprimorada');
+  f.recursos.armaduraMarcada=0;
+  const grave=Number(f.defesas.limiarGrave);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:grave,tipoDeDano:'fisico',usarArmadura:true}]);
+  igual(r.erros,[]); igual(f.recursos.armaduraMarcada,1); igual(f.recursos.pontosDeVidaMarcados,2);
+  igual(r.mudancas[0].pvPelaFaixa,3); igual(r.mudancas[0].pvDepoisArmadura,2);
+  igual(r.mudancas[0].mitigacaoArmadura.passos,1);
+});
+
+teste('uso normal de Armadura reduz dano massivo para Severo',()=>{
+  const f=fichaEquipamentoDefensivo_(3,null,'armadura-t2-armadura-de-couro-aprimorada');
+  const massivo=Number(f.defesas.limiarGrave)*2;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:massivo,tipoDeDano:'magico',usarArmadura:true}]);
+  igual(r.erros,[]); igual(r.mudancas[0].pvPelaFaixa,4); igual(r.mudancas[0].pvDepoisArmadura,3);
+  igual(f.recursos.armaduraMarcada,1); igual(f.recursos.pontosDeVidaMarcados,3);
+});
+
+teste('não dá para usar Armadura sem PA livre e a recusa não toca nos PV',()=>{
+  const f=fichaEquipamentoDefensivo_(3,null,'armadura-t2-armadura-de-couro-aprimorada');
+  f.recursos.armaduraMarcada=f.defesas.pontuacaoArmadura;
+  const antes=f.recursos.pontosDeVidaMarcados;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:Number(f.defesas.limiarGrave),tipoDeDano:'fisico',usarArmadura:true}]);
+  igual(r.erros.length,1); igual(f.recursos.pontosDeVidaMarcados,antes);
+  igual(f.recursos.armaduraMarcada,f.defesas.pontuacaoArmadura);
+});
+
+teste('Fortificado faz 1 PA reduzir dois degraus, inclusive Massivo para Maior',()=>{
+  let f=fichaEquipamentoDefensivo_(8,null,'armadura-t4-armadura-fortificada-completa');
+  let r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:Number(f.defesas.limiarGrave),tipoDeDano:'fisico',usarArmadura:true}]);
+  igual(r.erros,[]); igual(r.mudancas[0].pvPelaFaixa,3); igual(r.mudancas[0].pvDepoisArmadura,1);
+  igual(r.mudancas[0].mitigacaoArmadura.passos,2); igual(f.recursos.armaduraMarcada,1);
+
+  f=fichaEquipamentoDefensivo_(8,null,'armadura-t4-armadura-fortificada-completa');
+  r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:Number(f.defesas.limiarGrave)*2,tipoDeDano:'magico',usarArmadura:true}]);
+  igual(r.erros,[]); igual(r.mudancas[0].pvPelaFaixa,4); igual(r.mudancas[0].pvDepoisArmadura,2);
+});
+
+teste('Físico impede gastar PA contra dano mágico e permite contra físico',()=>{
+  let f=fichaEquipamentoDefensivo_(5,null,'armadura-t3-armadura-bladefare');
+  const antes=JSON.stringify(f.recursos);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:Number(f.defesas.limiarMaior),tipoDeDano:'magico',usarArmadura:true}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f.recursos),antes);
+
+  f=fichaEquipamentoDefensivo_(5,null,'armadura-t3-armadura-bladefare');
+  r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:Number(f.defesas.limiarMaior),tipoDeDano:'fisico',usarArmadura:true}]);
+  igual(r.erros,[]); igual(f.recursos.armaduraMarcada,1); igual(r.mudancas[0].pvDepoisArmadura,1);
+});
+
+teste('Armadura muda a faixa usada pelas reações condicionais',()=>{
+  const f=fichaDeAncestralidadeParaDano_('Drakona');
+  // Garante PA para o teste sem depender da armadura de criação do fixture.
+  f.defesas.pontuacaoArmadura=Math.max(1,Number(f.defesas.pontuacaoArmadura)||0);
+  f.recursos.armaduraMarcada=0;
+  const r=contexto.aplicarAjustes_(f,[{
+    tipo:'dano',dano:Number(f.defesas.limiarGrave),tipoDeDano:'fisico',usarArmadura:true,reacoes:['Escamas']
+  }]);
+  igual(r.erros.length,1,'Severo reduzido a Maior não pode disparar Escamas');
+  igual(f.recursos.armaduraMarcada,0,'a recusa continua atômica');
+});
+
+
+teste('Fortificado também amplia o PA adicional de Vontade de Ferro',()=>{
+  let f=guardiaoRobustoParaProtecao_(['fundacao'],'Humano');
+  f.identidade.nivel=8;
+  f.equipamento=f.equipamento||{};
+  f.equipamento.armadura='armadura-t4-armadura-fortificada-completa';
+  f=contexto.validarFicha_(f);
+  f.recursos.armaduraMarcada=0;
+  f.recursos.pontosDeVidaMarcados=0;
+  const r=contexto.aplicarAjustes_(f,[{
+    tipo:'dano',dano:Number(f.defesas.limiarGrave),tipoDeDano:'fisico',
+    usarArmadura:true,reacoes:['Vontade de Ferro']
+  }]);
+  igual(r.erros,[]); igual(f.recursos.armaduraMarcada,2);
+  igual(r.mudancas[0].pvPelaFaixa,3); igual(r.mudancas[0].pvDepoisArmadura,1);
+  igual(r.mudancas[0].pvMarcados,0,'o segundo PA Fortificado reduz mais dois degraus');
+});

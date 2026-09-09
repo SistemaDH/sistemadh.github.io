@@ -5209,7 +5209,20 @@
     "nome": "Físico",
     "texto": "Físico: Não é possível marcar um slot de armadura para reduzir o dano mágico.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "restricao-automatizada-de-armadura",
+     "motivo": "O servidor impede marcar Ponto de Armadura desta armadura para reduzir dano mágico; dano físico continua usando a mitigação normal."
+    },
+    "efeitoEquipamento": {
+     "danoRecebido": {
+      "mitigacaoArmadura": {
+       "tiposPermitidos": [
+        "fisico"
+       ]
+      }
+     }
+    }
    }
   },
   {
@@ -5424,7 +5437,18 @@
     "nome": "Fortificado",
     "texto": "Fortificado: Ao marcar um slot de armadura, você reduz a gravidade de um ataque em dois limiares em vez de um.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "modificador-automatizado-de-armadura",
+     "motivo": "Ao escolher marcar 1 Ponto de Armadura no fluxo de dano, esta armadura reduz a gravidade em dois limiares em vez de um."
+    },
+    "efeitoEquipamento": {
+     "danoRecebido": {
+      "mitigacaoArmadura": {
+       "passos": 2
+      }
+     }
+    }
    }
   },
   {

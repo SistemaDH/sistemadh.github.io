@@ -667,3 +667,14 @@ Próximo bloco: deduplicar e revisar características ativas/condicionais de equ
 Primeiro subbloco da revisão final de equipamento. O catálogo de armas/armaduras agora publica `automacao` e `efeitoEquipamento` além de `efeitoDerivado`. **Vitalizante** (Punhal Abençoado) recupera automaticamente 1 PV em qualquer descanso dentro do mesmo simulador usado por prévia e aplicação. **Égide** (Armadura de Corrente Elundriana) reduz dano mágico recebido pela Pontuação de Armadura antes dos limiares, sem marcar Ponto de Armadura. O auditor passa a reconhecer metadado explícito de equipamento em vez de depender apenas de substring no runtime.
 
 Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação que marcam Armadura (Desafetação, Deslocamento, Temporal, Fortificado, Físico, Impenetrável e Esperançoso), usando o fluxo atômico de dano/custo em vez de handlers isolados por nome de item.
+
+### Lote 8 — mitigação normal por Armadura + Fortificado/Físico
+
+- O ajuste `tipo: dano` aceita `usarArmadura: true`: marca 1 PA e reduz a gravidade em um limiar, no mesmo commit do dano.
+- A gravidade usa a escala já canônica do backend: Massivo 4 → Severo 3 → Maior 2 → Menor 1 → nenhum 0.
+- Fortificado altera genericamente a mitigação do PA para dois limiares; não existe branch por id da armadura.
+- Físico restringe a mitigação por PA a dano físico; tentativa contra dano mágico é recusada sem tocar na ficha.
+- Reações condicionadas à gravidade são verificadas depois da mitigação normal por Armadura.
+- O app continua sem rolar dados: a mesa informa o dano e escolhe explicitamente se quer marcar Armadura.
+
+**Próximo bloco natural:** demais características defensivas de armadura/equipamento (Impenetrável, Doloroso, Esperançoso, Deslocamento, Temporal e Desafetação), reaproveitando o mesmo pipeline.

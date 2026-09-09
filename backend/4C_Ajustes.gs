@@ -1848,6 +1848,41 @@ function reducaoMagicaDeEquipamento_(ficha) {
   return null;
 }
 
+/**
+ * Como a armadura equipada altera o uso NORMAL de 1 Ponto de Armadura.
+ * Sem habilidade especial: 1 PA reduz um degrau e vale para físico/mágico.
+ */
+function regraDeMitigacaoPorArmadura_(ficha) {
+  const base = { passos: 1, tiposPermitidos: ['fisico','magico'], fonte: null, caracteristica: null };
+  const ativos = (typeof equipamentoAtivoDaFicha_ === 'function')
+    ? equipamentoAtivoDaFicha_(ficha) : [];
+  for (let i = 0; i < ativos.length; i++) {
+    if (ativos[i].papel !== 'armadura') continue;
+    const item = ativos[i].item || {};
+    const especial = (((((item.efeitoEquipamento || {}).danoRecebido) || {}).mitigacaoArmadura) || {});
+    const passos = Math.max(1, Math.trunc(Number(especial.passos)) || 1);
+    const tipos = Array.isArray(especial.tiposPermitidos) && especial.tiposPermitidos.length
+      ? especial.tiposPermitidos.map(chaveTexto_).filter(Boolean) : base.tiposPermitidos.slice();
+    return {
+      passos: passos,
+      tiposPermitidos: tipos,
+      fonte: item.nome || null,
+      caracteristica: item.carac || null
+    };
+  }
+  return base;
+}
+
+/** Converte a gravidade representada por PV novamente em faixa/rotulo. */
+function gravidadeDoPv_(pv) {
+  const n = Math.max(0, Math.trunc(Number(pv)) || 0);
+  if (n >= 4) return { pv: n, faixa: 'massivo', rotulo: 'dano massivo' };
+  if (n === 3) return { pv: 3, faixa: 'severo', rotulo: 'dano Severo' };
+  if (n === 2) return { pv: 2, faixa: 'maior', rotulo: 'dano Maior' };
+  if (n === 1) return { pv: 1, faixa: 'menor', rotulo: 'dano Menor' };
+  return { pv: 0, faixa: 'nenhum', rotulo: 'Dano anulado' };
+}
+
 function aplicarDanoNaFicha_(ficha, a) {
   if (typeof pvDoDano_ !== 'function') {
     return { erro: 'Este servidor não sabe converter dano em Pontos de Vida.' };
@@ -1938,34 +1973,70 @@ function aplicarDanoNaFicha_(ficha, a) {
   const conta = final <= 0
     ? { pv: 0, faixa: 'nenhum', rotulo: 'Dano anulado' }
     : pvDoDano_(final, { maior: maior, severo: severo }, comMassivo, false);
-  let pv = conta.pv;
+
+  // 4) USO NORMAL DE ARMADURA. A escolha é explícita porque o livro diz "pode".
+  // A gravidade é uma escada 4/3/2/1/0; Fortificado troca 1 degrau por 2.
+  const querUsarArmadura = a.usarArmadura === true;
+  const regraArmadura = regraDeMitigacaoPorArmadura_(ficha);
+  const recursosAntesArmadura = (ficha || {}).recursos || {};
+  const armaduraAtual = Math.max(0, Number(recursosAntesArmadura.armaduraMarcada) || 0);
+  const armaduraMax = Math.max(0, Number((ficha.defesas || {}).pontuacaoArmadura) || 0);
+  if (querUsarArmadura) {
+    if (!armaduraMax || armaduraAtual + 1 > armaduraMax) {
+      return { erro: 'Não sobra Ponto de Armadura para reduzir este dano.' };
+    }
+    if (regraArmadura.tiposPermitidos.indexOf(tipo) === -1) {
+      return { erro: (regraArmadura.fonte || 'A armadura equipada') +
+        (regraArmadura.caracteristica ? ' · ' + regraArmadura.caracteristica : '') +
+        ': não pode marcar Ponto de Armadura para reduzir dano ' +
+        (tipo === 'fisico' ? 'físico' : 'mágico') + '.' };
+    }
+  }
+  const passosArmadura = querUsarArmadura ? Math.max(1, regraArmadura.passos || 1) : 0;
+  const contaAposArmadura = gravidadeDoPv_(Math.max(0, conta.pv - passosArmadura));
+  let pv = contaAposArmadura.pv;
   const limiteNaBeira = (typeof limiteDePvParaIgnorarDanoMenorDeCartas_ === 'function')
     ? limiteDePvParaIgnorarDanoMenorDeCartas_(ficha) : null;
   const recursosNaBeira = (ficha || {}).recursos || {};
   const pvLivresNaBeira = Math.max(0, (Number(recursosNaBeira.pontosDeVidaMaximos) || 0) -
     (Number(recursosNaBeira.pontosDeVidaMarcados) || 0));
-  const naBeiraAtiva = limiteNaBeira !== null && conta.pv === 1 && pvLivresNaBeira <= limiteNaBeira;
+  const naBeiraAtiva = limiteNaBeira !== null && contaAposArmadura.pv === 1 && pvLivresNaBeira <= limiteNaBeira;
 
-  // 2) Reações disparadas pela faixa final de dano.
+  // 5) Reações disparadas pela gravidade DEPOIS do uso normal de Armadura.
   for (let i = 0; i < defs.length; i++) {
     const def = defs[i];
     if (def.momento !== 'depois-dos-limiares') continue;
     if ((def.tipos || []).length && def.tipos.indexOf(tipo) === -1) {
       return { erro: '"' + def.nome + '" não se aplica a dano ' + (tipo === 'fisico' ? 'físico' : 'mágico') + '.' };
     }
-    if ((def.faixas || []).indexOf(conta.faixa) === -1) {
-      return { erro: '"' + def.nome + '" não se aplica a ' + conta.rotulo + '.' };
+    if ((def.faixas || []).indexOf(contaAposArmadura.faixa) === -1) {
+      return { erro: '"' + def.nome + '" não se aplica a ' + contaAposArmadura.rotulo + '.' };
     }
     const efeito = def.efeito || {};
     if (efeito.pvEmVezDe !== undefined) pv = Math.max(0, Math.trunc(Number(efeito.pvEmVezDe)) || 0);
-    if (efeito.reduzPv) pv = Math.max(0, pv - Math.max(0, Math.trunc(Number(efeito.reduzPv)) || 0));
+    if (efeito.reduzPv) {
+      let reduz = Math.max(0, Math.trunc(Number(efeito.reduzPv)) || 0);
+      const custoReacaoArmadura = Math.max(0, Math.trunc(Number(((def.custo || {}).armadura))) || 0);
+      if (custoReacaoArmadura) {
+        if (regraArmadura.tiposPermitidos.indexOf(tipo) === -1) {
+          return { erro: (regraArmadura.fonte || 'A armadura equipada') +
+            (regraArmadura.caracteristica ? ' · ' + regraArmadura.caracteristica : '') +
+            ': não permite usar Ponto de Armadura para reduzir este tipo de dano.' };
+        }
+        // Vontade de Ferro e futuras reações equivalentes MARCAM PA para reduzir
+        // gravidade; Fortificado modifica cada PA marcado, não apenas o checkbox normal.
+        reduz *= Math.max(1, Math.trunc(Number(regraArmadura.passos)) || 1);
+      }
+      pv = Math.max(0, pv - reduz);
+    }
   }
 
   // Na Beira é passivo: depois de saber que a faixa é Menor, nenhum PV é marcado.
   if (naBeiraAtiva) pv = 0;
 
-  // 3) Soma e valida TODOS os custos antes de tocar na ficha: tudo ou nada.
-  let custoEstresse = 0, custoEsperanca = 0, custoArmadura = 0;
+  // 6) Soma e valida TODOS os custos antes de tocar na ficha: tudo ou nada.
+  // O uso normal consome 1 PA; reações como Vontade de Ferro podem consumir outro.
+  let custoEstresse = 0, custoEsperanca = 0, custoArmadura = querUsarArmadura ? 1 : 0;
   for (let i = 0; i < defs.length; i++) {
     const c = defs[i].custo || {};
     custoEstresse += Math.max(0, Math.trunc(Number(c.estresse)) || 0);
@@ -1976,8 +2047,6 @@ function aplicarDanoNaFicha_(ficha, a) {
   const estresseAtual = Math.max(0, Number(r.estresseMarcado) || 0);
   const estresseMax = Math.max(0, Number(r.estresseMaximo) || 0);
   const esperancaAtual = Math.max(0, Number(r.esperanca) || 0);
-  const armaduraAtual = Math.max(0, Number(r.armaduraMarcada) || 0);
-  const armaduraMax = Math.max(0, Number((ficha.defesas || {}).pontuacaoArmadura) || 0);
   if (custoEstresse && estresseAtual + custoEstresse > estresseMax) {
     return { erro: 'Não sobra Estresse para as reações escolhidas (custa ' + custoEstresse + ').' };
   }
@@ -2037,15 +2106,23 @@ function aplicarDanoNaFicha_(ficha, a) {
   if (reducaoEquipamento) partes.push(reducaoEquipamento.fonte + ' · ' + reducaoEquipamento.caracteristica +
     ' reduziu até ' + reducaoEquipamento.valor + ' do dano mágico');
   partes.push(conta.rotulo + ': ' + conta.pv + ' PV pela faixa');
+  if (querUsarArmadura) partes.push('1 PA reduz a gravidade em ' + passosArmadura +
+    ' limiar' + (passosArmadura === 1 ? '' : 'es') + ' → ' + contaAposArmadura.rotulo);
   if (naBeiraAtiva) partes.push('Na Beira ignora o dano Menor');
-  else if (pv !== conta.pv) partes.push('reações deixam ' + pv + ' PV');
+  else if (pv !== contaAposArmadura.pv) partes.push('reações deixam ' + pv + ' PV');
 
   const saida = {
     tipo: 'dano',
     dano: { bruto: bruto, final: final, tipo: tipo, faixa: conta.faixa, rotulo: conta.rotulo },
     pvPelaFaixa: conta.pv,
+    pvDepoisArmadura: contaAposArmadura.pv,
     pvMarcados: pv,
     naBeira: naBeiraAtiva,
+    mitigacaoArmadura: querUsarArmadura ? {
+      usada: true, passos: passosArmadura,
+      faixaAntes: conta.faixa, faixaDepois: contaAposArmadura.faixa,
+      fonte: regraArmadura.fonte, caracteristica: regraArmadura.caracteristica
+    } : null,
     reacoes: usadas,
     resistencia: retraido ? 'Retrair' : null,
     equipamentoDefensivo: reducaoEquipamento,
@@ -2063,7 +2140,7 @@ function aplicarDanoNaFicha_(ficha, a) {
       saida.aviso += ' ' + carregadas.join(', ') + ': você ficou Carregado por sofrer dano mágico.';
     }
   }
-  if (conta.pv >= 3) {
+  if (contaAposArmadura.pv >= 3) {
     const chaveCanal = 'estado:druida:canalizacao-elemental';
     const ativoCanal = Math.trunc(Number(((((ficha.contadores || {})[chaveCanal]) || {}).valor))) || 0;
     if (ativoCanal > 0) {

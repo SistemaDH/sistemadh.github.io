@@ -1132,6 +1132,12 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       el('option', { value: 'magico', texto: 'Mágico' })
     ]);
 
+    const recursosDano = ficha.recursos || {};
+    const defesasDano = ficha.defesas || {};
+    const paMax = Math.max(0, Number(defesasDano.pontuacaoArmadura) || 0);
+    const paMarcados = Math.max(0, Number(recursosDano.armaduraMarcada) || 0);
+    const usarArmadura = el('input', { type: 'checkbox', disabled: !paMax || paMarcados >= paMax });
+
     const defs = reacoesDeDanoDaFicha_(ficha);
     const escolhas = defs.map(([nome, texto]) => {
       const caixa = el('input', { type: 'checkbox' });
@@ -1148,6 +1154,12 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       ]),
       el('label', { class: 'campo' }, [
         el('span', { class: 'campo__rotulo', texto: 'Tipo de dano' }), tipo
+      ]),
+      el('label', { class: 'criacao__alternador' }, [
+        usarArmadura,
+        el('span', { texto: paMax
+          ? `Marcar 1 Ponto de Armadura para reduzir a gravidade (${Math.max(0, paMax - paMarcados)} disponível${Math.max(0, paMax - paMarcados) === 1 ? '' : 'is'})`
+          : 'Sem Pontos de Armadura disponíveis para mitigação' })
       ]),
       escolhas.length ? el('div', { class: 'pilha' }, [
         el('strong', { texto: 'Reações ao dano' }),
@@ -1166,7 +1178,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           const n = Math.trunc(Number(dano.value));
           if (!n || n < 1) { avisarErro('Informe um dano maior que zero.'); return; }
           const reacoes = escolhas.filter((x) => x.caixa.checked).map((x) => x.nome);
-          const r = await enviar([{ tipo: 'dano', dano: n, tipoDeDano: tipo.value, reacoes }]);
+          const r = await enviar([{
+            tipo: 'dano', dano: n, tipoDeDano: tipo.value,
+            usarArmadura: usarArmadura.checked, reacoes
+          }]);
           if (r) modal.fechar();
         } }, 'Aplicar dano')
       ]
