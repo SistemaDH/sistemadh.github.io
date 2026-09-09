@@ -577,3 +577,16 @@ Não Conte Mentiras permanece resolução de alvo/cena, sem botão que finja alt
 Atenção de vocabulário: o livro da Jambô usa termos diferentes de algumas PNGs; o catálogo continua usando o nome canônico das cartas e o glossário faz a ponte. **Falange = Osso**, portanto esse domínio não deve voltar à fila.
 
 Próximo bloco natural do Lote 8: **Graça níveis 5–10**.
+
+
+### Lote 8 — Graça níveis 5–10
+
+Graça está revisada integralmente (níveis 1–10). As doze cartas restantes foram classificadas explicitamente e continuam obedecendo à regra global: dados são rolados fora do app.
+
+Automação segura: Mergulhador de Pensamentos e Carisma Infinito cobram Esperança; Nunca Ofuscado cobra o Estresse e reaproveita o contador persistente já existente; Partilhar o Fardo registra 1/descanso sem fingir uma transferência não atômica entre fichas; Projeção Astral e Imitador possuem uso/estado separados, com o custo de Imitador calculado como metade do nível copiado arredondada para cima; Reprise vai ao cofre somente após o jogador confirmar sucesso com Medo. Mestre do Ofício preserva a implementação permanente já existente.
+
+Tocado pela Graça publica as duas substituições contextuais somente com 4+ cartas do domínio ativas, mas não as dispara fora de uma resolução real. Enfeitiçar em Massa automatiza apenas o Estresse do conjurador ao escolher encerrar o efeito; alvos/condições continuam na cena.
+
+**Notório recebeu suporte estrutural completo**: não conta para o limite máximo de cinco cartas, não pode ser colocado no cofre (inclusive como custo de outra habilidade) e compras pagas recebem desconto de uma bolsa, com preço mínimo de um punhado. Comida e bebida são gratuitas pela regra da carta e entram pela ação de acrescentar à mochila, não por compra paga. Essas exceções vêm de `regraEspecial` no catálogo e são publicadas pelo gerador 41, evitando hard-code do id nas validações.
+
+Próximo domínio canônico pendente do Lote 8: **Meia-Noite níveis 1–4**.

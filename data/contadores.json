@@ -2070,6 +2070,91 @@
     "descanso"
    ],
    "observacao": "Encerra no próximo descanso ou quando outro feitiço for conjurado; pode ser encerrado manualmente."
+  },
+  {
+   "chave": "uso:carta:grace:partilhar-o-fardo",
+   "origem": "carta-dominio",
+   "refId": "grace-share-the-burden",
+   "nome": "Partilhar o Fardo",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso; a transferência entre fichas é resolvida manualmente."
+  },
+  {
+   "chave": "uso:carta:grace:projecao-astral",
+   "origem": "carta-dominio",
+   "refId": "grace-projecao-astral",
+   "nome": "Projeção Astral",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
+  },
+  {
+   "chave": "estado:carta:grace:projecao-astral",
+   "origem": "carta-dominio",
+   "refId": "grace-projecao-astral",
+   "nome": "Projeção Astral",
+   "rotulo": "ativa",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Encerra no próximo descanso ou manualmente se a projeção sofrer dano."
+  },
+  {
+   "chave": "uso:carta:grace:imitador",
+   "origem": "carta-dominio",
+   "refId": "grace-imitador",
+   "nome": "Imitador",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
+  },
+  {
+   "chave": "estado:carta:grace:imitador",
+   "origem": "carta-dominio",
+   "refId": "grace-imitador",
+   "nome": "Imitador",
+   "rotulo": "ativo",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Encerra no próximo descanso ou quando a carta copiada for ao cofre."
   }
  ]
 }

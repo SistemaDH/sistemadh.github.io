@@ -1039,6 +1039,9 @@ function usarHabilidadeDeClasse_(ficha, a) {
       return { erro: def.nome + ': escolha o que a carta vira (' +
         opcoes.map(function (o) { return o.id; }).join(' ou ') + ').' };
     }
+    if (typeof cartaPodeIrAoCofre_ === 'function' && !cartaPodeIrAoCofre_(carta.id)) {
+      return { erro: '"' + carta.nome + '" não pode ser usada como custo porque não pode ir ao cofre.' };
+    }
 
     naMao.splice(onde, 1);
     ficha.cartas.cofre = ficha.cartas.cofre || [];
@@ -1524,6 +1527,22 @@ function comprarItem_(ficha, a) {
     return { erro: 'Diga quanto custou. Se foi de graça, use "acrescentar à mochila".' };
   }
 
+  const custoOriginal = custo;
+  let descontoNotorio = 0;
+  const regraCompra = (typeof regraCompraDasCartasAtivas_ === 'function')
+    ? regraCompraDasCartasAtivas_(ficha) : null;
+  if (regraCompra) {
+    const bolsas = Math.max(0, Math.trunc(Number(regraCompra.descontoBolsas)) || 0);
+    const minimoPunhados = Math.max(0, Math.trunc(Number(regraCompra.minimoPunhados)) || 0);
+    if (bolsas > 0) {
+      const desconto = bolsas * escada.bolsas;
+      const minimo = minimoPunhados * escada.punhados;
+      const reduzido = Math.max(minimo, custo - desconto);
+      descontoNotorio = Math.max(0, custo - reduzido);
+      custo = reduzido;
+    }
+  }
+
   ficha.ouro = ficha.ouro || { punhados: 0, bolsas: 0, cofres: 0 };
   const antes = {
     moedas: ficha.ouro.moedas || 0,
@@ -1551,9 +1570,11 @@ function comprarItem_(ficha, a) {
   else lista.push(comprado);
 
   return {
-    tipo: 'compra', item: texto, custo: custo, unidade: unidade,
+    tipo: 'compra', item: texto, custo: custo, custoOriginal: custoOriginal,
+    descontoNotorio: descontoNotorio, unidade: unidade,
     antes: antes, depois: ficha.ouro, total: lista.length,
-    aviso: 'Preço é decisão da mesa: o livro (p.104) não define preços.'
+    aviso: (descontoNotorio > 0 ? 'Notório reduziu o preço em ' + descontoNotorio + ' ' + unidade + '. ' : '') +
+      'Preço é decisão da mesa: o livro (p.104) não define preços.'
   };
 }
 
@@ -2415,6 +2436,9 @@ function usarCartaDeDominio_(ficha, a) {
     custoEsperanca += quantidade * (Math.max(0, Math.trunc(Number(entrada.custoPorUnidade.esperanca)) || 0));
     custoEstresse += quantidade * (Math.max(0, Math.trunc(Number(entrada.custoPorUnidade.estresse)) || 0));
   }
+  if (entrada && entrada.custoEsperancaFormula === 'metade-arredonda-cima') {
+    custoEsperanca += Math.ceil(quantidade / 2);
+  }
 
   const marcaUso = def.marcaUso || null;
   if (marcaUso && marcaUso.chave) {
@@ -2585,6 +2609,9 @@ function ajustarCarta_(ficha, a) {
 
   const para = chaveTexto_(a.para) === 'cofre' ? 'cofre' : 'ativas';
   const de = para === 'cofre' ? 'ativas' : 'cofre';
+  if (para === 'cofre' && typeof cartaPodeIrAoCofre_ === 'function' && !cartaPodeIrAoCofre_(carta.id)) {
+    return { erro: '"' + carta.nome + '" não pode ser colocada no cofre.' };
+  }
 
   ficha.cartas = ficha.cartas || { ativas: [], cofre: [] };
   ficha.cartas.ativas = Array.isArray(ficha.cartas.ativas) ? ficha.cartas.ativas : [];
@@ -2608,8 +2635,11 @@ function ajustarCarta_(ficha, a) {
   }
 
   const estavaLaAtras = ficha.cartas[de].some(function (item) { return idDe(item) === carta.id; });
-  if (para === 'ativas' && ficha.cartas.ativas.length >= MAX_CARTAS_ATIVAS) {
-    return { erro: 'A mão já tem ' + MAX_CARTAS_ATIVAS + ' cartas. Mande uma para o cofre antes.' };
+  const contaNoLimite = (typeof cartaContaNoLimite_ === 'function') ? cartaContaNoLimite_(carta.id) : true;
+  const ativasQueContam = (typeof quantidadeCartasQueContamNoLimite_ === 'function')
+    ? quantidadeCartasQueContamNoLimite_(ficha.cartas.ativas) : ficha.cartas.ativas.length;
+  if (para === 'ativas' && contaNoLimite && ativasQueContam >= MAX_CARTAS_ATIVAS) {
+    return { erro: 'A mão já tem ' + MAX_CARTAS_ATIVAS + ' cartas que contam no limite. Mande uma para o cofre antes.' };
   }
 
   /*

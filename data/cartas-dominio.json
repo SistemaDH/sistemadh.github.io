@@ -3911,7 +3911,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A imagem desta carta específica está com a arte substituída por um placeholder \"Upload Custom Image\" no arquivo fornecido; o texto e os demais campos estão legíveis normalmente."
+   "observacao": "A imagem desta carta específica está com a arte substituída por um placeholder \"Upload Custom Image\" no arquivo fornecido; o texto e os demais campos estão legíveis normalmente.",
+   "automacao": {
+    "classificacao": "automatizada-custo-opcao-superficial",
+    "resumo": "O app cobra 1 Esperança quando você escolhe ler pensamentos superficiais."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O alvo Longo, os pensamentos revelados e a Jogada de Conjuração para pensamentos profundos continuam na mesa; em resultado com Medo, o Mestre decide se o alvo percebe."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "rotuloAtivar": "Ler pensamentos superficiais · 1 Esperança",
+    "lembrete": "Escolha um alvo Longo. Para pensamentos profundos, faça a Jogada de Conjuração fora do app; este botão representa apenas a leitura superficial."
+   }
   },
   {
    "id": "grace-words-of-discord",
@@ -3935,6 +3950,14 @@
    "observacao": "O nome impresso na carta está em inglês (\"Words of Discord\"), assim como o nome do arquivo; o texto da carta refere-se à magia como \"Palavras de Discórdia\" em português.",
    "origem": {
     "nome": "livro-jambo"
+   },
+   "automacao": {
+    "classificacao": "manual-de-encontro-com-memoria-de-alvo",
+    "resumo": "Não há recurso próprio, contador ou derivado seguro para alterar na ficha de quem conjura."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Faça a Jogada de Conjuração 13 contra o adversário Corpo a Corpo. Em sucesso, ele marca 1 Estresse e ataca outro adversário. Registre na mesa que a próxima conjuração sobre o mesmo alvo sofre −5."
    }
   },
   {
@@ -3958,7 +3981,29 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo-com-contador-existente",
+    "resumo": "Ao confirmar que perdeu PV por um ataque, o app marca 1 Estresse e registra quantos PV dispararam o efeito. O contador persistente da carta já existe."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Some manualmente ao contador Nunca Ofuscado a quantidade de PV informada. No próximo ataque bem-sucedido, aplique +5 de dano por marcador e zere o contador."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "entradaQuantidade": {
+     "campo": "pontosDeVidaPerdidos",
+     "rotulo": "PV perdidos neste ataque",
+     "minimo": 1,
+     "maximo": 12,
+     "ajuda": "Informe quantos PV você marcou pelo ataque; a mesma quantidade deve ser adicionada ao contador Nunca Ofuscado."
+    },
+    "rotuloAtivar": "Registrar Nunca Ofuscado · 1 Estresse",
+    "lembrete": "Adicione ao contador Nunca Ofuscado marcadores iguais aos PV informados. No próximo ataque bem-sucedido, +5 de dano por marcador e depois zere o contador."
+   }
   },
   {
    "id": "grace-share-the-burden",
@@ -3984,6 +4029,23 @@
    "observacao": "O nome impresso na carta está em inglês (\"Share the Burden\"), assim como o nome do arquivo; não foi traduzido nesta versão do baralho.",
    "origem": {
     "nome": "livro-jambo"
+   },
+   "automacao": {
+    "classificacao": "automatizada-limite-com-transferencia-manual",
+    "resumo": "O app registra Partilhar o Fardo uma vez por descanso, impedindo repetição antes da recarga."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A transferência é entre duas fichas e permanece manual/atômica na mesa: retire N Estresses do aliado, marque N em você e receba N Esperanças, respeitando os limites das duas fichas."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:grace:partilhar-o-fardo",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Registrar Partilhar o Fardo · 1/descanso",
+    "lembrete": "Transfira na mesa qualquer quantidade de Estresse do aliado voluntário Corpo a Corpo para você e ganhe 1 Esperança por Estresse transferido."
    }
   },
   {
@@ -4006,7 +4068,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo-apos-jogada",
+    "resumo": "Depois de uma jogada válida, o app cobra 1 Esperança."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Rerrole fora do app somente o Dado de Esperança ou o Dado de Medo da jogada para obter favor, mentir ou persuadir."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "rotuloAtivar": "Rerrolar Dado de Dualidade · 1 Esperança",
+    "lembrete": "Use somente após uma jogada para obter favor, mentir ou persuadir; rerrole o Dado de Esperança OU o Dado de Medo fora do app."
+   }
   },
   {
    "id": "grace-tocado-pela-graca",
@@ -4030,7 +4107,23 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "estruturada-passiva-contextual",
+    "resumo": "Com 4+ cartas de Graça ativas, o motor publica as duas substituições contextuais como efeito derivado disponível."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Quando aplicável, você pode marcar 1 Armadura em vez de 1 Estresse; e pode fazer um alvo marcar Estresse em vez da mesma quantidade de PV. As substituições dependem da resolução em curso e não são aplicadas por um botão solto."
+   },
+   "efeitoDerivado": {
+    "exigeCartasAtivasDominio": {
+     "dominio": "GRACE",
+     "quantidade": 4
+    },
+    "podeMarcarArmaduraEmVezDeEstresse": true,
+    "podeTrocarPvDoAlvoPorEstresse": true
+   }
   },
   {
    "id": "grace-enfeiticar-em-massa",
@@ -4054,7 +4147,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo-de-encerramento",
+    "resumo": "Quando o jogador decide encerrar o feitiço pela opção da carta, o app marca 1 Estresse."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Conjuração, os alvos Encantados e o 1 Estresse que cada um marca ao encerrar continuam na cena/Mestre."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "rotuloAtivar": "Encerrar Enfeitiçar em Massa · 1 Estresse",
+    "lembrete": "Use apenas enquanto o feitiço estiver ativo: todos os alvos Encantados marcam 1 Estresse e o feitiço termina."
+   }
   },
   {
    "id": "grace-projecao-astral",
@@ -4076,7 +4184,34 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo-uso-e-estado",
+    "resumo": "O app marca 1 Estresse, registra o limite de uma vez por descanso longo e mantém a projeção como estado até qualquer descanso."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Escolha na mesa um lugar já visitado. A projeção, investigação e dano recebido por ela são ficcionais; se a projeção sofrer dano, encerre o estado manualmente."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "marcaUso": {
+     "chave": "uso:carta:grace:projecao-astral",
+     "maximo": 1
+    },
+    "estado": {
+     "chave": "estado:carta:grace:projecao-astral",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Projeção Astral ativa",
+     "rotuloEncerrar": "Encerrar Projeção Astral",
+     "avisoEncerrar": "Projeção Astral encerrada."
+    },
+    "rotuloAtivar": "Criar Projeção Astral · 1 Estresse · 1/descanso longo",
+    "lembrete": "A projeção pode aparecer em qualquer lugar já visitado. Encerre manualmente se ela sofrer dano; qualquer descanso também encerra."
+   }
   },
   {
    "id": "grace-imitador",
@@ -4099,7 +4234,40 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo-formula-uso-e-estado",
+    "resumo": "Informe o nível da carta copiada (1–8): o app cobra Esperança igual à metade do nível, arredondada para cima, registra 1/descanso longo e mantém o estado da imitação."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Escolha uma carta ativa de domínio de outro jogador, nível 8 ou menor. A característica copiada é usada conforme a carta original; encerre manualmente se o dono a colocar no cofre."
+   },
+   "uso": {
+    "custo": {},
+    "entradaQuantidade": {
+     "campo": "nivelCartaCopiada",
+     "rotulo": "Nível da carta copiada",
+     "minimo": 1,
+     "maximo": 8,
+     "custoEsperancaFormula": "metade-arredonda-cima",
+     "ajuda": "O custo é metade do nível da carta, arredondado para cima."
+    },
+    "marcaUso": {
+     "chave": "uso:carta:grace:imitador",
+     "maximo": 1
+    },
+    "estado": {
+     "chave": "estado:carta:grace:imitador",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Imitador ativo",
+     "rotuloEncerrar": "Encerrar Imitador",
+     "avisoEncerrar": "Imitador encerrado."
+    },
+    "rotuloAtivar": "Imitar carta · 1/descanso longo",
+    "lembrete": "Use a característica da carta escolhida até seu próximo descanso ou até o dono colocá-la no cofre."
+   }
   },
   {
    "id": "grace-mestre-do-oficio",
@@ -4139,6 +4307,14 @@
      }
     ],
     "nota": "Escolha um dos dois arranjos; a carta vai para o cofre para sempre."
+   },
+   "automacao": {
+    "classificacao": "automatizada-permanente-existente",
+    "resumo": "A implementação permanente já existente aplica +2 em duas Experiências ou +3 em uma e tranca a carta no cofre."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A escolha das Experiências é feita pelo jogador; não há rolagem."
    }
   },
   {
@@ -4161,7 +4337,33 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo-e-regras-especiais-de-loadout-compra",
+    "resumo": "O app marca 1 Estresse para o bônus +10. Notório não conta no limite de 5 cartas, não pode ir ao cofre e reduz compras em 1 bolsa de ouro, com mínimo de 1 punhado."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O +10 vale somente na jogada em que você usa a notoriedade. Comida e bebida são gratuitas: adicione-as à mochila sem usar o fluxo de compra paga."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "rotuloAtivar": "Usar notoriedade · +10 · 1 Estresse",
+    "lembrete": "Receba +10 na jogada que usa sua notoriedade. Comida e bebida são gratuitas; para elas, acrescente o item à mochila sem compra paga."
+   },
+   "regraEspecial": {
+    "loadout": {
+     "naoContaNoLimite": true,
+     "naoPodeIrAoCofre": true
+    },
+    "compra": {
+     "descontoBolsas": 1,
+     "minimoPunhados": 1,
+     "comidaBebidaGratis": true
+    }
+   }
   },
   {
    "id": "grace-reprise",
@@ -4183,7 +4385,21 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-apos-sucesso-com-medo",
+    "resumo": "Depois de um sucesso com Medo confirmado pela mesa, o app move Reprise para o cofre."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Conjuração e o dano igual ao dano causado pelo aliado continuam fora do app. Em sucesso sem Medo, não há alteração determinística na própria ficha."
+   },
+   "uso": {
+    "custo": {},
+    "moveParaCofre": true,
+    "rotuloAtivar": "Sucesso com Medo: mover Reprise ao cofre",
+    "lembrete": "Use este botão somente após um sucesso com Medo. O dano repetido é igual ao dano que o aliado acabou de causar."
+   }
   },
   {
    "id": "midnight-abrir-e-puxar",

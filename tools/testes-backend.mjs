@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 109 contadores: 77 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 114 contadores: 82 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 109 contadores: 77 de carta, 25 de classe/subclasse, 4 de
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 109);
+  igual(Object.keys(CONTADORES).length, 114);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 77);
+  igual(porOrigem['carta-dominio'], 82);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -9328,6 +9328,139 @@ teste('Pelos Seus Olhos mantém estado e qualquer descanso o encerra',()=>{
   igual(r.erros,[]); igual(f.contadores['estado:carta:grace:pelos-seus-olhos'].valor,1);
   contexto.aplicarGatilhoContadores_(f,'descanso');
   verdade(!f.contadores['estado:carta:grace:pelos-seus-olhos']);
+});
+
+
+
+console.log('\nLote 8 — Graça níveis 5–10');
+function fichaGraceAlta_(nivel, ativas) {
+  const f=fichaGraceBaixa_(nivel,ativas);
+  f.identidade.nivel=nivel;
+  f.recursos.esperanca=6; f.recursos.esperancaMaxima=6;
+  f.recursos.estresseMarcado=0; f.recursos.estresseMaximo=Math.max(8,Number(f.recursos.estresseMaximo)||0);
+  f.recursos.pontosDeVidaMarcados=0;
+  return f;
+}
+
+teste('Graça N5-N10 fica toda classificada e sem RNG no app',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const ids=['grace-mergulhador-de-pensamentos','grace-words-of-discord','grace-nunca-ofuscado','grace-share-the-burden','grace-carisma-infinito','grace-tocado-pela-graca','grace-enfeiticar-em-massa','grace-projecao-astral','grace-imitador','grace-mestre-do-oficio','grace-notorio','grace-reprise'];
+  const xs=ids.map((id)=>d.cartas.find((c)=>c.id===id));
+  verdade(xs.every(Boolean)); verdade(xs.every((c)=>!!c.automacao));
+  verdade(xs.every((c)=>c.resolucaoManual && c.resolucaoManual.rolaNoApp===false));
+});
+
+teste('Mergulhador de Pensamentos cobra 1 Esperança só na leitura superficial',()=>{
+  const f=fichaGraceAlta_(5,['grace-mergulhador-de-pensamentos','grace-words-of-discord']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-mergulhador-de-pensamentos'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5);
+});
+
+teste('Palavras de Discórdia permanece manual e não inventa memória de adversário na ficha',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const c=d.cartas.find((x)=>x.id==='grace-words-of-discord');
+  verdade(!c.uso); igual(c.resolucaoManual.rolaNoApp,false);
+});
+
+teste('Nunca Ofuscado cobra 1 Estresse e preserva o contador existente',()=>{
+  const f=fichaGraceAlta_(6,['grace-nunca-ofuscado','grace-share-the-burden']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-nunca-ofuscado',pontosDeVidaPerdidos:2}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+  igual(r.mudancas[0].quantidade,2);
+  const defs=avaliar('CONTADORES'); verdade(!!defs['carta:grace-nunca-ofuscado']);
+});
+
+teste('Partilhar o Fardo registra 1/descanso sem alterar sozinho a ficha do aliado',()=>{
+  const f=fichaGraceAlta_(6,['grace-share-the-burden','grace-nunca-ofuscado']);
+  f.recursos.estresseMarcado=1; const hope=f.recursos.esperanca;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-share-the-burden'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1); igual(f.recursos.esperanca,hope);
+  igual(f.contadores['uso:carta:grace:partilhar-o-fardo'].valor,1);
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-share-the-burden'}]).erros.length===1);
+});
+
+teste('Carisma Infinito cobra 1 Esperança e deixa a rerrolagem física',()=>{
+  const f=fichaGraceAlta_(7,['grace-carisma-infinito','grace-tocado-pela-graca']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-carisma-infinito'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5);
+});
+
+teste('Tocado pela Graça só publica substituições com quatro cartas Graça ativas',()=>{
+  const f4=fichaGraceAlta_(7,['grace-tocado-pela-graca','grace-carisma-infinito','grace-share-the-burden','grace-nunca-ofuscado']);
+  const f3=fichaGraceAlta_(7,['grace-tocado-pela-graca','grace-carisma-infinito','grace-share-the-burden']);
+  const a=contexto.efeitosDerivadosAtivosDeCartas_(f4).find((x)=>x.id==='grace-tocado-pela-graca');
+  const b=contexto.efeitosDerivadosAtivosDeCartas_(f3).find((x)=>x.id==='grace-tocado-pela-graca');
+  verdade(a && a.efeito.podeMarcarArmaduraEmVezDeEstresse===true); verdade(!b);
+});
+
+teste('Enfeitiçar em Massa cobra 1 Estresse somente no encerramento escolhido',()=>{
+  const f=fichaGraceAlta_(8,['grace-enfeiticar-em-massa','grace-projecao-astral']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-enfeiticar-em-massa'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+});
+
+teste('Projeção Astral custa 1 Estresse, é 1/descanso longo e estado acaba em qualquer descanso',()=>{
+  const f=fichaGraceAlta_(8,['grace-projecao-astral','grace-enfeiticar-em-massa']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-projecao-astral'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+  igual(f.contadores['uso:carta:grace:projecao-astral'].valor,1);
+  igual(f.contadores['estado:carta:grace:projecao-astral'].valor,1);
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  verdade(!f.contadores['estado:carta:grace:projecao-astral']);
+  verdade(!!f.contadores['uso:carta:grace:projecao-astral'],'descanso curto não recarrega o uso');
+});
+
+teste('Imitador cobra metade do nível arredondada para cima e é 1/descanso longo',()=>{
+  const f=fichaGraceAlta_(9,['grace-imitador','grace-mestre-do-oficio']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-imitador',nivelCartaCopiada:7}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,2);
+  igual(f.contadores['uso:carta:grace:imitador'].valor,1);
+  igual(f.contadores['estado:carta:grace:imitador'].valor,1);
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  verdade(!f.contadores['estado:carta:grace:imitador']);
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-imitador',nivelCartaCopiada:2}]).erros.length===1);
+});
+
+teste('Mestre do Ofício preserva a implementação permanente existente',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const c=d.cartas.find((x)=>x.id==='grace-mestre-do-oficio');
+  verdade(c.efeitoPermanente && c.efeitoPermanente.trancaNoCofre===true);
+  igual(c.efeitoPermanente.experiencias.length,2);
+});
+
+teste('Notório é sexta carta válida, não pode ir ao cofre e não conta no limite de cinco',()=>{
+  const normais=['grace-carisma-infinito','grace-nunca-ofuscado','grace-share-the-burden','grace-enfeiticar-em-massa','grace-projecao-astral'];
+  let v=contexto.validarCartasDoPersonagem_(normais.concat(['grace-notorio']),[],['GRACE'],10);
+  verdade(v.ok,JSON.stringify(v));
+  v=contexto.validarCartasDoPersonagem_(normais,['grace-notorio'],['GRACE'],10);
+  verdade(!v.ok && v.erros.some((e)=>e.includes('não pode ser colocada no cofre')));
+  const f=fichaGraceAlta_(10,normais.concat(['grace-notorio']));
+  const r=contexto.aplicarAjustes_(f,[{tipo:'carta',carta:'grace-notorio',para:'cofre'}]);
+  verdade(r.erros.length===1); verdade(f.cartas.ativas.includes('grace-notorio'));
+});
+
+teste('Notório cobra 1 Estresse para +10 e reduz compra em uma bolsa, mínimo um punhado',()=>{
+  const f=fichaGraceAlta_(10,['grace-notorio','grace-reprise']);
+  f.ouro={punhados:0,bolsas:3,cofres:0};
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-notorio'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'compra',item:'Capa de gala',preco:{bolsas:2}}]);
+  igual(r.erros,[]); igual(r.mudancas[0].custoOriginal,20); igual(r.mudancas[0].custo,10); igual(r.mudancas[0].descontoNotorio,10);
+  r=contexto.aplicarAjustes_(f,[{tipo:'compra',item:'Broche',preco:{bolsas:1}}]);
+  igual(r.erros,[]); igual(r.mudancas[0].custo,1);
+});
+
+teste('Notório não pode ser usado como carta-custo para ir ao cofre',()=>{
+  const f=fichaGraceAlta_(10,['grace-notorio','grace-reprise']);
+  const antes=f.cartas.ativas.slice();
+  const r=contexto.aplicarAjustes_(f,[{tipo:'habilidade',nome:'Canalizar Poder Bruto',carta:'grace-notorio',opcao:'esperanca'}]);
+  verdade(r.erros.length===1); igual(f.cartas.ativas,antes);
+});
+
+teste('Reprise só move ao cofre quando o jogador confirma sucesso com Medo',()=>{
+  const f=fichaGraceAlta_(10,['grace-reprise','grace-notorio']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-reprise'}]);
+  igual(r.erros,[]); verdade(!f.cartas.ativas.includes('grace-reprise')); verdade(f.cartas.cofre.includes('grace-reprise'));
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

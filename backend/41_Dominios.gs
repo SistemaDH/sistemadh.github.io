@@ -330,6 +330,15 @@ const USOS_CARTAS_DOMINIO = {
   "grace-invisibilidade": {"custo":{"estresse":1},"rotuloAtivar":"Sucesso: iniciar Invisibilidade · 1 Estresse","lembrete":"Coloque no contador de Invisibilidade marcadores iguais ao atributo de Conjuração. Gaste 1 por ação; ao gastar o último, encerre a condição no alvo."},
   "grace-discurso-acalmante": {"custo":{},"efeitoRecurso":{"chave":"pontosDeVidaMarcados","delta":-2},"rotuloAtivar":"Após cuidar de aliado: recuperar 2 PV","lembrete":"Use somente após Cuidar de Ferimentos em outro personagem durante descanso curto. Esse personagem também recupera 1 PV adicional."},
   "grace-pelos-seus-olhos": {"custo":{},"estado":{"chave":"estado:carta:grace:pelos-seus-olhos","valor":1,"permiteEncerrarManual":true,"encerraAoConjurarOutroFeitico":true,"rotuloAtivo":"Pelos Seus Olhos ativo","rotuloEncerrar":"Encerrar Pelos Seus Olhos","avisoEncerrar":"Pelos Seus Olhos encerrado."},"rotuloAtivar":"Ativar Pelos Seus Olhos","lembrete":"Escolha um alvo Muito Longo e registre-o na mesa. Encerra no próximo descanso ou ao conjurar outro feitiço."},
+  "grace-mergulhador-de-pensamentos": {"custo":{"esperanca":1},"rotuloAtivar":"Ler pensamentos superficiais · 1 Esperança","lembrete":"Escolha um alvo Longo. Para pensamentos profundos, faça a Jogada de Conjuração fora do app; este botão representa apenas a leitura superficial."},
+  "grace-nunca-ofuscado": {"custo":{"estresse":1},"entradaQuantidade":{"campo":"pontosDeVidaPerdidos","rotulo":"PV perdidos neste ataque","minimo":1,"maximo":12,"ajuda":"Informe quantos PV você marcou pelo ataque; a mesma quantidade deve ser adicionada ao contador Nunca Ofuscado."},"rotuloAtivar":"Registrar Nunca Ofuscado · 1 Estresse","lembrete":"Adicione ao contador Nunca Ofuscado marcadores iguais aos PV informados. No próximo ataque bem-sucedido, +5 de dano por marcador e depois zere o contador."},
+  "grace-share-the-burden": {"custo":{},"marcaUso":{"chave":"uso:carta:grace:partilhar-o-fardo","maximo":1},"rotuloAtivar":"Registrar Partilhar o Fardo · 1/descanso","lembrete":"Transfira na mesa qualquer quantidade de Estresse do aliado voluntário Corpo a Corpo para você e ganhe 1 Esperança por Estresse transferido."},
+  "grace-carisma-infinito": {"custo":{"esperanca":1},"rotuloAtivar":"Rerrolar Dado de Dualidade · 1 Esperança","lembrete":"Use somente após uma jogada para obter favor, mentir ou persuadir; rerrole o Dado de Esperança OU o Dado de Medo fora do app."},
+  "grace-enfeiticar-em-massa": {"custo":{"estresse":1},"rotuloAtivar":"Encerrar Enfeitiçar em Massa · 1 Estresse","lembrete":"Use apenas enquanto o feitiço estiver ativo: todos os alvos Encantados marcam 1 Estresse e o feitiço termina."},
+  "grace-projecao-astral": {"custo":{"estresse":1},"marcaUso":{"chave":"uso:carta:grace:projecao-astral","maximo":1},"estado":{"chave":"estado:carta:grace:projecao-astral","valor":1,"permiteEncerrarManual":true,"rotuloAtivo":"Projeção Astral ativa","rotuloEncerrar":"Encerrar Projeção Astral","avisoEncerrar":"Projeção Astral encerrada."},"rotuloAtivar":"Criar Projeção Astral · 1 Estresse · 1/descanso longo","lembrete":"A projeção pode aparecer em qualquer lugar já visitado. Encerre manualmente se ela sofrer dano; qualquer descanso também encerra."},
+  "grace-imitador": {"custo":{},"entradaQuantidade":{"campo":"nivelCartaCopiada","rotulo":"Nível da carta copiada","minimo":1,"maximo":8,"custoEsperancaFormula":"metade-arredonda-cima","ajuda":"O custo é metade do nível da carta, arredondado para cima."},"marcaUso":{"chave":"uso:carta:grace:imitador","maximo":1},"estado":{"chave":"estado:carta:grace:imitador","valor":1,"permiteEncerrarManual":true,"rotuloAtivo":"Imitador ativo","rotuloEncerrar":"Encerrar Imitador","avisoEncerrar":"Imitador encerrado."},"rotuloAtivar":"Imitar carta · 1/descanso longo","lembrete":"Use a característica da carta escolhida até seu próximo descanso ou até o dono colocá-la no cofre."},
+  "grace-notorio": {"custo":{"estresse":1},"rotuloAtivar":"Usar notoriedade · +10 · 1 Estresse","lembrete":"Receba +10 na jogada que usa sua notoriedade. Comida e bebida são gratuitas; para elas, acrescente o item à mochila sem compra paga."},
+  "grace-reprise": {"custo":{},"moveParaCofre":true,"rotuloAtivar":"Sucesso com Medo: mover Reprise ao cofre","lembrete":"Use este botão somente após um sucesso com Medo. O dano repetido é igual ao dano que o aliado acabou de causar."},
   "splendor-farol-brilhante": {"custo":{"esperanca":1},"rotuloAtivar":"Sucesso: Farol Brilhante · 1 Esperança","lembrete":"Depois do sucesso, role o dano fora do app e deixe o alvo temporariamente Vulnerável e brilhando. O efeito no alvo é resolvido na mesa."},
   "splendor-reforco": {"custo":{},"marcaUso":{"chave":"uso:carta:splendor:reforco","maximo":1},"rotuloAtivar":"Usar Reforço · 1/descanso","lembrete":"O aliado refaz a jogada na mesa antes de as consequências serem aplicadas."},
   "splendor-toque-curativo": {"custo":{},"opcoes":[{"id":"normal","rotulo":"Toque Curativo · 2 Esperanças","custo":{"esperanca":2},"lembrete":"Passe alguns minutos tratando a criatura tocada; ela recupera 1 PV ou limpa 1 Estresse na mesa."},{"id":"vinculo","rotulo":"Vínculo profundo · 2 Esperanças · 1/descanso longo","custo":{"esperanca":2},"marcaUso":{"chave":"uso:carta:splendor:toque-curativo-vinculo","maximo":1},"lembrete":"Depois de revelar algo sobre si ou descobrir algo sobre o alvo, ele recupera 2 PV ou limpa 2 Estresses na mesa."}],"rotuloAtivar":"Usar Toque Curativo"},
@@ -349,6 +358,11 @@ const USOS_CARTAS_DOMINIO = {
   "splendor-revigoramento": {"custo":{},"entradaQuantidade":{"campo":"esperancasGastas","rotulo":"Esperanças / d6 a rolar","minimo":1,"maximo":6,"custoPorUnidade":{"esperanca":1},"ajuda":"Gaste qualquer quantidade de Esperança e role o mesmo número de d6 fora do app."},"rotuloAtivar":"Usar Revigoramento","lembrete":"Role 1d6 por Esperança gasta. Se qualquer dado resultar em 6, a habilidade limitada escolhida pode ser usada novamente."},
 };
 
+/** Regras estruturais especiais de cartas de domínio. */
+const REGRAS_ESPECIAIS_CARTAS_DOMINIO = {
+  "grace-notorio": {"loadout":{"naoContaNoLimite":true,"naoPodeIrAoCofre":true},"compra":{"descontoBolsas":1,"minimoPunhados":1,"comidaBebidaGratis":true}},
+};
+
 /** Efeitos derivados de cartas de domínio ativas. */
 const EFEITOS_DERIVADOS_CARTAS_DOMINIO = {
   "arcana-tocado-pela-arcana": {"bonusConjuracao":1,"exigeCartasAtivasDominio":{"dominio":"ARCANA","quantidade":4}},
@@ -361,6 +375,7 @@ const EFEITOS_DERIVADOS_CARTAS_DOMINIO = {
   "bone-precisao-cruel": {"danoArmaEscolhaTracos":["Finesse","Agilidade"]},
   "bone-tocado-pelo-osso": {"tracos":{"agilidade":1},"exigeCartasAtivasDominio":{"dominio":"BONE","quantidade":4}},
   "bone-na-beira": {"ignoraDanoMenorSePontosDeVidaNaoMarcadosMaximo":2},
+  "grace-tocado-pela-graca": {"exigeCartasAtivasDominio":{"dominio":"GRACE","quantidade":4},"podeMarcarArmaduraEmVezDeEstresse":true,"podeTrocarPvDoAlvoPorEstresse":true},
   "splendor-tocado-do-esplendor": {"bonusLimiarGrave":3,"exigeCartasAtivasDominio":{"dominio":"SPLENDOR","quantidade":4}},
 };
 
@@ -433,6 +448,42 @@ function acharCarta_(idOuNome) {
   return null;
 }
 
+/** Regras estruturais especiais publicadas pelo catálogo. */
+function regraEspecialDaCarta_(idOuNome) {
+  if (typeof REGRAS_ESPECIAIS_CARTAS_DOMINIO === 'undefined') return {};
+  const c = acharCarta_(idOuNome);
+  return c ? (REGRAS_ESPECIAIS_CARTAS_DOMINIO[c.id] || {}) : {};
+}
+
+function cartaContaNoLimite_(idOuNome) {
+  const e = regraEspecialDaCarta_(idOuNome);
+  return !((e.loadout || {}).naoContaNoLimite === true);
+}
+
+function cartaPodeIrAoCofre_(idOuNome) {
+  const e = regraEspecialDaCarta_(idOuNome);
+  return !((e.loadout || {}).naoPodeIrAoCofre === true);
+}
+
+function quantidadeCartasQueContamNoLimite_(lista) {
+  let n = 0;
+  (lista || []).forEach(function (x) {
+    const bruto = (x && typeof x === 'object') ? (x.id || x.nome) : x;
+    if (cartaContaNoLimite_(bruto)) n++;
+  });
+  return n;
+}
+
+function regraCompraDasCartasAtivas_(ficha) {
+  const ativas = (((ficha || {}).cartas || {}).ativas || []);
+  for (let i = 0; i < ativas.length; i++) {
+    const bruto = (ativas[i] && typeof ativas[i] === 'object') ? (ativas[i].id || ativas[i].nome) : ativas[i];
+    const e = regraEspecialDaCarta_(bruto);
+    if (e.compra) return e.compra;
+  }
+  return null;
+}
+
 /**
  * Valida uma escolha de carta.
  * @param {string} idOuNome
@@ -475,13 +526,18 @@ function validarCartasDoPersonagem_(ativas, cofre, dominiosPermitidos, nivelPers
         erros.push('"' + r.carta.nome + '" aparece duas vezes.');
         return;
       }
+      if (ondeEsta === 'cofre' && !cartaPodeIrAoCofre_(r.carta.id)) {
+        erros.push('"' + r.carta.nome + '" não pode ser colocada no cofre.');
+        return;
+      }
       vistas[r.carta.id] = ondeEsta;
     });
   };
   conferir(ativas, 'ativa');
   conferir(cofre, 'cofre');
-  if ((ativas || []).length > MAX_CARTAS_ATIVAS) {
-    erros.push('São no máximo ' + MAX_CARTAS_ATIVAS + ' cartas ativas; o resto vai para o cofre.');
+  const ativasQueContam = quantidadeCartasQueContamNoLimite_(ativas || []);
+  if (ativasQueContam > MAX_CARTAS_ATIVAS) {
+    erros.push('São no máximo ' + MAX_CARTAS_ATIVAS + ' cartas ativas que contam no limite; o resto vai para o cofre.');
   }
   return { ok: erros.length === 0, erros: erros };
 }

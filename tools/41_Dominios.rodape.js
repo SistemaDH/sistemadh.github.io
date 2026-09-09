@@ -52,6 +52,42 @@ function acharCarta_(idOuNome) {
   return null;
 }
 
+/** Regras estruturais especiais publicadas pelo catálogo. */
+function regraEspecialDaCarta_(idOuNome) {
+  if (typeof REGRAS_ESPECIAIS_CARTAS_DOMINIO === 'undefined') return {};
+  const c = acharCarta_(idOuNome);
+  return c ? (REGRAS_ESPECIAIS_CARTAS_DOMINIO[c.id] || {}) : {};
+}
+
+function cartaContaNoLimite_(idOuNome) {
+  const e = regraEspecialDaCarta_(idOuNome);
+  return !((e.loadout || {}).naoContaNoLimite === true);
+}
+
+function cartaPodeIrAoCofre_(idOuNome) {
+  const e = regraEspecialDaCarta_(idOuNome);
+  return !((e.loadout || {}).naoPodeIrAoCofre === true);
+}
+
+function quantidadeCartasQueContamNoLimite_(lista) {
+  let n = 0;
+  (lista || []).forEach(function (x) {
+    const bruto = (x && typeof x === 'object') ? (x.id || x.nome) : x;
+    if (cartaContaNoLimite_(bruto)) n++;
+  });
+  return n;
+}
+
+function regraCompraDasCartasAtivas_(ficha) {
+  const ativas = (((ficha || {}).cartas || {}).ativas || []);
+  for (let i = 0; i < ativas.length; i++) {
+    const bruto = (ativas[i] && typeof ativas[i] === 'object') ? (ativas[i].id || ativas[i].nome) : ativas[i];
+    const e = regraEspecialDaCarta_(bruto);
+    if (e.compra) return e.compra;
+  }
+  return null;
+}
+
 /**
  * Valida uma escolha de carta.
  * @param {string} idOuNome
@@ -94,13 +130,18 @@ function validarCartasDoPersonagem_(ativas, cofre, dominiosPermitidos, nivelPers
         erros.push('"' + r.carta.nome + '" aparece duas vezes.');
         return;
       }
+      if (ondeEsta === 'cofre' && !cartaPodeIrAoCofre_(r.carta.id)) {
+        erros.push('"' + r.carta.nome + '" não pode ser colocada no cofre.');
+        return;
+      }
       vistas[r.carta.id] = ondeEsta;
     });
   };
   conferir(ativas, 'ativa');
   conferir(cofre, 'cofre');
-  if ((ativas || []).length > MAX_CARTAS_ATIVAS) {
-    erros.push('São no máximo ' + MAX_CARTAS_ATIVAS + ' cartas ativas; o resto vai para o cofre.');
+  const ativasQueContam = quantidadeCartasQueContamNoLimite_(ativas || []);
+  if (ativasQueContam > MAX_CARTAS_ATIVAS) {
+    erros.push('São no máximo ' + MAX_CARTAS_ATIVAS + ' cartas ativas que contam no limite; o resto vai para o cofre.');
   }
   return { ok: erros.length === 0, erros: erros };
 }

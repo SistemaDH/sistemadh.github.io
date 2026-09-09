@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 109 cartas e características mandam
+ *  O problema que este arquivo resolve: 114 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -149,6 +149,11 @@ const CONTADORES = {
   "uso:carta:grace:encrenqueiro": { origem: "carta-dominio", refId: "grace-encrenqueiro", nome: "Encrenqueiro", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
   "uso:carta:grace:brilho-hipnotico": { origem: "carta-dominio", refId: "grace-brilho-hipnotico", nome: "Brilho Hipnótico", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
   "estado:carta:grace:pelos-seus-olhos": { origem: "carta-dominio", refId: "grace-pelos-seus-olhos", nome: "Pelos Seus Olhos", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:grace:partilhar-o-fardo": { origem: "carta-dominio", refId: "grace-share-the-burden", nome: "Partilhar o Fardo", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:grace:projecao-astral": { origem: "carta-dominio", refId: "grace-projecao-astral", nome: "Projeção Astral", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "estado:carta:grace:projecao-astral": { origem: "carta-dominio", refId: "grace-projecao-astral", nome: "Projeção Astral", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:grace:imitador": { origem: "carta-dominio", refId: "grace-imitador", nome: "Imitador", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "estado:carta:grace:imitador": { origem: "carta-dominio", refId: "grace-imitador", nome: "Imitador", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -262,6 +267,11 @@ const CONTADOR_ALIASES = {
   "uso:carta:grace:encrenqueiro": ["Encrenqueiro"],
   "uso:carta:grace:brilho-hipnotico": ["Brilho Hipnótico"],
   "estado:carta:grace:pelos-seus-olhos": ["Pelos Seus Olhos"],
+  "uso:carta:grace:partilhar-o-fardo": ["Partilhar o Fardo"],
+  "uso:carta:grace:projecao-astral": ["Projeção Astral"],
+  "estado:carta:grace:projecao-astral": ["Projeção Astral"],
+  "uso:carta:grace:imitador": ["Imitador"],
+  "estado:carta:grace:imitador": ["Imitador"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

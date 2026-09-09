@@ -83,6 +83,15 @@ for (const c of usos) {
 }
 L.push('};\n');
 
+// Regras especiais que alteram o comportamento estrutural da carta (loadout/compra).
+const regrasEspeciais = cartas.filter((c) => c.regraEspecial);
+L.push('/** Regras estruturais especiais de cartas de domínio. */');
+L.push('const REGRAS_ESPECIAIS_CARTAS_DOMINIO = {');
+for (const c of regrasEspeciais) {
+  L.push(`  ${j(c.id)}: ${JSON.stringify(c.regraEspecial)},`);
+}
+L.push('};\n');
+
 // Passivos determinísticos que só existem enquanto a carta está no loadout ativo.
 const derivadosCartas = cartas.filter((c) => c.efeitoDerivado);
 L.push('/** Efeitos derivados de cartas de domínio ativas. */');
