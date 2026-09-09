@@ -5,7 +5,7 @@
 
 ## Resumo numérico
 
-- Classes/subclasses: **99 características**; **33** candidatas sem sinal de automação.
+- Classes/subclasses: **99 características**; **30** candidatas sem sinal de automação.
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **161** candidatas sem sinal de automação específica; **17** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **88** ocorrências candidatas ativas/condicionais.
@@ -14,8 +14,8 @@
 
 ### Distribuição — classes/subclasses
 
-- candidato sem sinal de automação: **33**
-- estruturada/contador: **46**
+- candidato sem sinal de automação: **30**
+- estruturada/contador: **49**
 - predominantemente narrativo/sem gatilho detectado: **7**
 - referência específica no motor: **13**
 
@@ -40,10 +40,7 @@
 
 | Classe | Subclasse | Estágio | Característica | Trecho |
 |---|---|---|---|---|
-| Feiticeiro |  | Classe | Ilusão Menor | Faça uma Jogada de Conjuração (10). Em um sucesso, você cria uma ilusão visual em alcance Próximo. Ela não pode ultrapassar seu tamanho. Essa ilusão parece convincente a… |
-| Feiticeiro | Origem Elemental | fundacao | Elementalista | Escolha um dos seguintes elementos na criação do personagem: Ar · Terra · Fogo · Raio · Água Você pode moldar esse elemento em efeitos inofensivos. Além disso, gaste 1 E… |
 | Feiticeiro | Origem Elemental | especializacao | Evasão Natural | Você pode invocar seu elemento para se proteger do perigo. Quando uma jogada de ataque contra você for bem-sucedida, pode marcar 1 Estresse e descrever como usa seu elem… |
-| Feiticeiro | Origem Primal | fundacao | Manipular Magia | Sua origem primal permite modificar a essência da própria magia. Após lançar uma magia ou fazer um ataque com uma arma que cause dano mágico, você pode marcar 1 Estresse… |
 | Feiticeiro | Origem Primal | maestria | Carga Arcana | Você pode acumular energia mágica para aprimorar suas habilidades. Quando você sofrer dano mágico, você fica Carregado. Alternativamente, pode gastar 2 Esperanças para f… |
 | Guardião | Robusto | fundacao | Vontade de Ferro | Quando sofrer dano físico, você pode marcar um espaço adicional de Armadura para reduzir a severidade. |
 | Guardião | Robusto | especializacao | Parceiros de Armas | Quando um aliado em alcance Muito Próximo sofrer dano, você pode marcar um Espaço de Armadura para reduzir a severidade em um limiar. |

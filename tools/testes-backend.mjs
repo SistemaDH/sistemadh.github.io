@@ -5531,6 +5531,77 @@ teste('Alcance Regenerativo não vaza para Guardião dos Elementos e respeita mo
   igual(contexto.alcanceEfetivoDaHabilidade_(gigante, 'Regeneração', 'Corpo a Corpo'), 'Muito Próximo');
 });
 
+
+console.log('\nLote 8 — Feiticeiro: base e fundações');
+
+function fichaFeiticeiro_(subclasse, escolhasDeClasse = {}) {
+  const catalogo = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/cartas-dominio.json'), 'utf8'));
+  const cartas = catalogo.cartas.filter((c) => c.nivel === 1 && (c.dominio === 'ARCANA' || c.dominio === 'MIDNIGHT'))
+    .slice(0, 2).map((c) => c.id);
+  return contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Feiticeiro de Teste', classe: 'Feiticeiro', subclasse,
+    ancestralidade: 'Humano', comunidade: 'Highborne', cartas,
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }],
+    escolhasDeClasse
+  }));
+}
+
+teste('Ilusão Menor declara Jogada de Conjuração 10 manual e nunca pede RNG ao app', () => {
+  const dc = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/classes.json'), 'utf8'));
+  const f = dc.classes.find((c) => c.id === 'feiticeiro').caracteristicasDeClasse
+    .find((x) => x.nome === 'Ilusão Menor');
+  igual(f.resolucaoManual.tipo, 'jogada');
+  igual(f.resolucaoManual.jogada, 'Conjuração');
+  igual(f.resolucaoManual.dificuldade, 10);
+  igual(f.resolucaoManual.rolaNoApp, false);
+});
+
+teste('Elementalista exige o elemento na criação e a escolha sobrevive na ficha', () => {
+  const sem = contexto.fichaRapida_({
+    nome: 'Sem elemento', classe: 'Feiticeiro', subclasse: 'Origem Elemental',
+    ancestralidade: 'Humano', comunidade: 'Highborne',
+    cartas: ['arcana-andar-na-parede', 'midnight-arremesso-arcano'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  verdade(contexto.validarCriacao_(sem).some((e) => /Elementalista/.test(e) && /Seu elemento/.test(e)),
+    'a criação deveria cobrar o elemento');
+
+  const f = fichaFeiticeiro_('Origem Elemental', { elementalistaElemento: 'Fogo' });
+  igual(f.escolhasDeClasse.elementalistaElemento, 'Fogo');
+});
+
+teste('Elementalista cobra 1 Esperança e devolve a opção +2 ou +3 sem rolar dados', () => {
+  const jogada = fichaFeiticeiro_('Origem Elemental', { elementalistaElemento: 'Ar' });
+  jogada.recursos.esperanca = 2;
+  let r = contexto.aplicarAjustes_(jogada, [{ tipo: 'habilidade', nome: 'Elementalista', opcao: 'jogada' }]);
+  igual(r.erros, []);
+  igual(jogada.recursos.esperanca, 1);
+  igual(r.mudancas[0].opcao, 'jogada');
+  verdade(/\+2/.test(r.mudancas[0].aviso || ''), JSON.stringify(r.mudancas[0]));
+
+  const dano = fichaFeiticeiro_('Origem Elemental', { elementalistaElemento: 'Água' });
+  dano.recursos.esperanca = 2;
+  r = contexto.aplicarAjustes_(dano, [{ tipo: 'habilidade', nome: 'Elementalista', opcao: 'dano' }]);
+  igual(r.erros, []);
+  igual(dano.recursos.esperanca, 1);
+  verdade(/\+3/.test(r.mudancas[0].aviso || ''), JSON.stringify(r.mudancas[0]));
+});
+
+teste('Manipular Magia cobra 1 Estresse e só então publica a modificação escolhida', () => {
+  const f = fichaFeiticeiro_('Origem Primal');
+  f.recursos.estresseMarcado = 0;
+  let r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Manipular Magia', opcao: 'alcance' }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, 1);
+  igual(r.mudancas[0].opcao, 'alcance');
+  verdade(/alcance/.test((r.mudancas[0].aviso || '').toLowerCase()), JSON.stringify(r.mudancas[0]));
+
+  const antes = f.recursos.estresseMarcado;
+  r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Manipular Magia', opcao: 'inventada' }]);
+  igual(r.erros.length, 1);
+  igual(f.recursos.estresseMarcado, antes, 'opção inválida não pode cobrar Estresse');
+});
+
 console.log('\nLote 8 — comunidades do Core');
 
 function fichaComunidade_(comunidade, nivel) {

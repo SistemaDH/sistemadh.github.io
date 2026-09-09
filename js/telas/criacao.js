@@ -272,6 +272,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
                   rascunho.classe = c.id;
                   rascunho.subclasse = null;
                   rascunho.cartas = [];
+                  rascunho.escolhasDeClasse = {};
                   aplicarSugestoesDaClasse();
                 }
                 ir(passoAtual + 1);
@@ -306,6 +307,41 @@ export async function abrirCriacao({ aoCriar } = {}) {
    *  Etapa 1b — subclasse
    * ======================================================================= */
 
+  function escolhaObrigatoriaDaSubclasse(s) {
+    const fundacao = (((s || {}).cartas || {}).fundacao || {});
+    const f = (fundacao.caracteristicas || []).find((x) =>
+      x && x.escolha && x.escolha.obrigatoriaNaCriacao === true);
+    return f ? Object.assign({ caracteristica: f.nome }, f.escolha) : null;
+  }
+
+  function campoDaEscolhaObrigatoria(def) {
+    if (!def) return null;
+    if (def.tipo !== 'enum') {
+      return el('p', { class: 'texto-sm texto-fraco', texto:
+        `${def.caracteristica}: esta escolha precisa ser feita na criação.` });
+    }
+    const atual = String((rascunho.escolhasDeClasse || {})[def.chave] || '');
+    const seletor = el('select', {
+      class: 'campo__entrada',
+      'aria-label': def.rotulo || def.caracteristica,
+      onChange: (ev) => {
+        rascunho.escolhasDeClasse = rascunho.escolhasDeClasse || {};
+        if (ev.target.value) rascunho.escolhasDeClasse[def.chave] = ev.target.value;
+        else delete rascunho.escolhasDeClasse[def.chave];
+        desenhar();
+      }
+    }, [
+      el('option', { value: '', texto: 'Escolha…' }),
+      ...(def.valores || []).map((v) => el('option', { value: v, texto: v }))
+    ]);
+    seletor.value = atual;
+    return el('label', { class: 'campo' }, [
+      el('span', { class: 'campo__rotulo', texto: def.rotulo || def.caracteristica }),
+      seletor,
+      def.ajuda ? el('span', { class: 'campo__ajuda', texto: def.ajuda }) : null
+    ].filter(Boolean));
+  }
+
   function passoSubclasse() {
     return {
       etiqueta: 'Etapa 1',
@@ -319,6 +355,9 @@ export async function abrirCriacao({ aoCriar } = {}) {
         classe.subclasses.forEach((s) => {
           const escolhida = rascunho.subclasse === s.id;
           const fundacao = (s.cartas || {}).fundacao || {};
+          const escolhaCriacao = escolhaObrigatoriaDaSubclasse(s);
+          const valorEscolha = escolhaCriacao
+            ? String((rascunho.escolhasDeClasse || {})[escolhaCriacao.chave] || '') : '';
           lista.append(el('div', { class: `cartao lista-escolha__item ${escolhida ? 'esta-escolhido' : ''}` }, [
             el('div', { class: 'lista-escolha__cabecalho' }, [
               nomeQueAbreCarta(s.nome, () => ({
@@ -337,16 +376,38 @@ export async function abrirCriacao({ aoCriar } = {}) {
                 el('strong', { texto: `${f.nome}: ` }),
                 textoAnotado(f.texto)
               ])),
+            escolhida && escolhaCriacao ? campoDaEscolhaObrigatoria(escolhaCriacao) : null,
             el('button', {
               type: 'button',
               class: `btn ${escolhida ? 'btn--principal' : 'btn--fantasma'} lista-escolha__botao`,
-              onClick: () => { rascunho.subclasse = s.id; ir(passoAtual + 1); }
-            }, escolhida ? 'Escolhida' : 'Escolher')
+              disabled: Boolean(escolhida && escolhaCriacao && !valorEscolha),
+              onClick: () => {
+                const trocou = rascunho.subclasse !== s.id;
+                if (trocou) {
+                  rascunho.subclasse = s.id;
+                  rascunho.escolhasDeClasse = {};
+                }
+                if (escolhaCriacao && !String((rascunho.escolhasDeClasse || {})[escolhaCriacao.chave] || '')) {
+                  desenhar();
+                  return;
+                }
+                ir(passoAtual + 1);
+              }
+            }, escolhida && escolhaCriacao ? 'Continuar' : (escolhida ? 'Escolhida' : 'Escolher'))
           ]));
         });
         pai.append(lista);
       },
-      problema() { return rascunho.subclasse ? null : 'Escolha uma subclasse.'; }
+      problema() {
+        if (!rascunho.subclasse) return 'Escolha uma subclasse.';
+        const classe = catalogo.classes.find((c) => c.id === rascunho.classe);
+        const sub = classe && classe.subclasses.find((s) => s.id === rascunho.subclasse);
+        const def = escolhaObrigatoriaDaSubclasse(sub);
+        if (def && !String((rascunho.escolhasDeClasse || {})[def.chave] || '')) {
+          return `${def.caracteristica}: escolha ${def.rotulo || 'a opção'} antes de continuar.`;
+        }
+        return null;
+      }
     };
   }
 
@@ -1111,6 +1172,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
         ancestralidadeMista: rascunho.usarMista ? rascunho.ancestralidadeMista.slice() : [],
         caracteristicasEscolhidas: rascunho.usarMista ? rascunho.caracteristicasEscolhidas.slice() : []
       },
+      escolhasDeClasse: { ...(rascunho.escolhasDeClasse || {}) },
       tracos: { ...rascunho.tracos },
       caracteristicas,
       equipamento: { ...rascunho.equipamento },
@@ -1156,6 +1218,7 @@ function rascunhoVazio() {
     ancestralidadeMista: [],
     caracteristicasEscolhidas: [],
     comunidade: null,
+    escolhasDeClasse: {},
     tracos: { agilidade: null, forca: null, finesse: null, instinto: null, presenca: null, conhecimento: null },
     equipamento: { primaria: null, secundaria: null, armadura: null },
     pocao: null,

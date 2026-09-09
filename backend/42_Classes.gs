@@ -329,6 +329,72 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerEstado": null,
     "estado": null
   },
+  "Elementalista": {
+    "classe": "feiticeiro",
+    "origem": "subclasse",
+    "custo": {
+      "esperanca": 1
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": [
+      {
+        "id": "jogada",
+        "rotulo": "+2 na jogada de ação",
+        "lembrete": "Some +2 ao resultado da jogada de ação que seu elemento está ajudando."
+      },
+      {
+        "id": "dano",
+        "rotulo": "+3 no dano da jogada",
+        "lembrete": "Some +3 ao dano da jogada que seu elemento está ajudando."
+      }
+    ],
+    "marcaUso": "",
+    "rotuloAtivar": "Usar Elementalista",
+    "lembrete": "Descreva como seu elemento ajuda. O app cobra a Esperança, mas não rola nem resolve a jogada.",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "estado": null
+  },
+  "Manipular Magia": {
+    "classe": "feiticeiro",
+    "origem": "subclasse",
+    "custo": {
+      "estresse": 1
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": [
+      {
+        "id": "alcance",
+        "rotulo": "Estender o alcance em uma faixa",
+        "lembrete": "Estenda o alcance da magia ou do ataque em uma faixa nesta resolução."
+      },
+      {
+        "id": "jogada",
+        "rotulo": "+2 na jogada de ação",
+        "lembrete": "Some +2 ao resultado da jogada de ação desta magia ou ataque."
+      },
+      {
+        "id": "dado-dano",
+        "rotulo": "Dobrar um dado de dano",
+        "lembrete": "Depois de rolar o dano fora do app, escolha um dos dados e dobre o resultado dele."
+      },
+      {
+        "id": "alvo-adicional",
+        "rotulo": "Acertar um alvo adicional",
+        "lembrete": "Aplique a magia ou ataque a um alvo adicional que esteja dentro do alcance."
+      }
+    ],
+    "marcaUso": "",
+    "rotuloAtivar": "Manipular magia",
+    "lembrete": "Use após lançar uma magia ou fazer um ataque com arma que cause dano mágico. O app cobra o Estresse; a resolução continua na mesa.",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "estado": null
+  },
   "Linha de Frente": {
     "classe": "guardiao",
     "origem": "esperança",
@@ -561,7 +627,24 @@ const ESCOLHAS_DE_CLASSE = {
     ],
     "rotulo": "Elemento canalizado",
     "ajuda": "Fica gravado enquanto a Canalização Elemental estiver ativa.",
-    "trocaEm": ""
+    "trocaEm": "",
+    "obrigatoriaNaCriacao": false
+  },
+  "elementalistaElemento": {
+    "caracteristica": "Elementalista",
+    "classe": "feiticeiro",
+    "tipo": "enum",
+    "valores": [
+      "Ar",
+      "Terra",
+      "Fogo",
+      "Raio",
+      "Água"
+    ],
+    "rotulo": "Seu elemento",
+    "ajuda": "Escolha o elemento da sua Origem Elemental na criação do personagem.",
+    "trocaEm": "",
+    "obrigatoriaNaCriacao": true
   },
   "padroesEstranhos": {
     "caracteristica": "Padrões Estranhos",
@@ -572,7 +655,8 @@ const ESCOLHAS_DE_CLASSE = {
     "valores": null,
     "rotulo": "Seu número",
     "ajuda": "Ao tirar esse número num Dado de Dualidade: 1 de Esperança ou 1 Estresse limpo.",
-    "trocaEm": "descanso-longo"
+    "trocaEm": "descanso-longo",
+    "obrigatoriaNaCriacao": false
   }
 };
 

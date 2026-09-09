@@ -841,6 +841,25 @@ function validarCriacao_(ficha) {
   const origem = validarOrigem_(origemDaFicha_(ficha));
   if (!origem.ok) problemas.push.apply(problemas, origem.erros);
 
+  // Escolhas de classe/subclasse que a própria característica manda fazer na
+  // criação. O índice é genérico: hoje Elementalista; amanhã qualquer outra.
+  if (typeof validarEscolhasDeClasse_ === 'function') validarEscolhasDeClasse_(ficha);
+  if (typeof ESCOLHAS_DE_CLASSE !== 'undefined') {
+    const escolhas = ficha.escolhasDeClasse || {};
+    const chaves = Object.keys(ESCOLHAS_DE_CLASSE);
+    for (let i = 0; i < chaves.length; i++) {
+      const chave = chaves[i];
+      const def = ESCOLHAS_DE_CLASSE[chave] || {};
+      if (!def.obrigatoriaNaCriacao) continue;
+      if (!(typeof fichaTemCaracteristicaDeClasse_ === 'function' &&
+            fichaTemCaracteristicaDeClasse_(ficha, def.caracteristica))) continue;
+      const valor = escolhas[chave];
+      if (valor === undefined || valor === null || String(valor).trim() === '') {
+        problemas.push(def.caracteristica + ': escolha ' + (def.rotulo || chave) + ' na criação.');
+      }
+    }
+  }
+
   // Etapa 3 — traços
   const faltando = ORDEM_TRACOS.filter(function (t) {
     return !ficha.tracos || ficha.tracos[t] === null || ficha.tracos[t] === undefined;
@@ -935,6 +954,8 @@ function fichaRapida_(escolhas) {
   ficha.identidade.subclasse = escolhas.subclasse;
   ficha.identidade.ancestralidade = escolhas.ancestralidade;
   ficha.identidade.comunidade = escolhas.comunidade;
+  ficha.escolhasDeClasse = (escolhas.escolhasDeClasse && typeof escolhas.escolhasDeClasse === 'object' &&
+    !Array.isArray(escolhas.escolhasDeClasse)) ? Object.assign({}, escolhas.escolhasDeClasse) : {};
 
   ficha.tracos = {};
   for (let i = 0; i < ORDEM_TRACOS.length; i++) {

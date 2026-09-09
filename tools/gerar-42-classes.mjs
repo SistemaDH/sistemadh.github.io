@@ -191,7 +191,8 @@ for (const c of dados.classes) {
       minimo: f.escolha.minimo, maximo: f.escolha.maximo,
       valores: f.escolha.valores || null,
       rotulo: f.escolha.rotulo, ajuda: f.escolha.ajuda || '',
-      trocaEm: f.escolha.trocaEm || ''
+      trocaEm: f.escolha.trocaEm || '',
+      obrigatoriaNaCriacao: f.escolha.obrigatoriaNaCriacao === true
     };
   };
   for (const f of c.caracteristicasDeClasse) anotaEscolha(f);

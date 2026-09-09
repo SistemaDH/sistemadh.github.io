@@ -45,4 +45,23 @@ assert alc['modificadorAlcance'] == {
     'habilidade': 'Regeneração', 'de': 'Corpo a Corpo', 'para': 'Muito Próximo'
 }
 
-print('Lote 8 — classes: Bardo fechado; Druida fechado, incluindo Alcance Regenerativo.')
+feit = next(c for c in classes['classes'] if c['id'] == 'feiticeiro')
+ilusao = next(f for f in feit['caracteristicasDeClasse'] if f['nome'] == 'Ilusão Menor')
+assert ilusao['resolucaoManual']['dificuldade'] == 10
+assert ilusao['resolucaoManual']['jogada'] == 'Conjuração'
+assert ilusao['resolucaoManual']['rolaNoApp'] is False
+
+oe = next(s for s in feit['subclasses'] if s['id'] == 'feiticeiro-origem-elemental')
+elem = next(f for f in oe['cartas']['fundacao']['caracteristicas'] if f['nome'] == 'Elementalista')
+assert elem['escolha']['tipo'] == 'enum'
+assert elem['escolha']['obrigatoriaNaCriacao'] is True
+assert elem['escolha']['valores'] == ['Ar', 'Terra', 'Fogo', 'Raio', 'Água']
+assert elem['uso']['custo']['esperanca'] == 1
+assert {o['id'] for o in elem['uso']['opcoes']} == {'jogada', 'dano'}
+
+op = next(s for s in feit['subclasses'] if s['id'] == 'feiticeiro-origem-primal')
+manip = next(f for f in op['cartas']['fundacao']['caracteristicas'] if f['nome'] == 'Manipular Magia')
+assert manip['uso']['custo']['estresse'] == 1
+assert {o['id'] for o in manip['uso']['opcoes']} == {'alcance', 'jogada', 'dado-dano', 'alvo-adicional'}
+
+print('Lote 8 — classes: Bardo e Druida fechados; Feiticeiro base estruturado (Ilusão Menor, Elementalista, Manipular Magia).')

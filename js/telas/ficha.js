@@ -2514,7 +2514,17 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    */
   function escolhaDaCaracteristica(nome, ficha) {
     const def = catalogo.escolhaDaCaracteristica(nome);
-    if (!def || def.tipo !== 'numero') return null;
+    if (!def) return null;
+
+    if (def.tipo === 'enum') {
+      const atualEnum = String((ficha.escolhasDeClasse || {})[def.chave] || '');
+      if (!atualEnum) return null;
+      return el('div', { class: 'pilha ficha__escolha' }, [
+        el('p', { class: 'texto-xs texto-fraco', texto:
+          `${def.rotulo || 'Escolha'}: ${atualEnum}. ${def.ajuda || ''}`.trim() })
+      ]);
+    }
+    if (def.tipo !== 'numero') return null;
 
     const atual = Number((ficha.escolhasDeClasse || {})[def.chave]);
     const numeros = [];

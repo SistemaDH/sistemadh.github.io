@@ -570,7 +570,15 @@
     },
     {
      "nome": "Ilusão Menor",
-     "texto": "Faça uma Jogada de Conjuração (10). Em um sucesso, você cria uma ilusão visual em alcance Próximo. Ela não pode ultrapassar seu tamanho. Essa ilusão parece convincente a qualquer um que esteja Próximo ou mais distante."
+     "texto": "Faça uma Jogada de Conjuração (10). Em um sucesso, você cria uma ilusão visual em alcance Próximo. Ela não pode ultrapassar seu tamanho. Essa ilusão parece convincente a qualquer um que esteja Próximo ou mais distante.",
+     "resolucaoManual": {
+      "tipo": "jogada",
+      "jogada": "Conjuração",
+      "dificuldade": 10,
+      "alcance": "Próximo",
+      "rolaNoApp": false,
+      "lembrete": "Role a Jogada de Conjuração fora do app. Em um sucesso, aplique a ilusão descrita pela característica."
+     }
     },
     {
      "nome": "Canalizar Poder Bruto",
@@ -623,7 +631,40 @@
        "caracteristicas": [
         {
          "nome": "Elementalista",
-         "texto": "Escolha um dos seguintes elementos na criação do personagem:\nAr · Terra · Fogo · Raio · Água\nVocê pode moldar esse elemento em efeitos inofensivos. Além disso, gaste 1 Esperança e descreva como seu controle sobre esse elemento ajuda uma jogada de ação que você está prestes a fazer, então ganhe +2 de bônus na jogada ou +3 de bônus no dano da jogada."
+         "texto": "Escolha um dos seguintes elementos na criação do personagem:\nAr · Terra · Fogo · Raio · Água\nVocê pode moldar esse elemento em efeitos inofensivos. Além disso, gaste 1 Esperança e descreva como seu controle sobre esse elemento ajuda uma jogada de ação que você está prestes a fazer, então ganhe +2 de bônus na jogada ou +3 de bônus no dano da jogada.",
+         "escolha": {
+          "chave": "elementalistaElemento",
+          "tipo": "enum",
+          "valores": [
+           "Ar",
+           "Terra",
+           "Fogo",
+           "Raio",
+           "Água"
+          ],
+          "rotulo": "Seu elemento",
+          "ajuda": "Escolha o elemento da sua Origem Elemental na criação do personagem.",
+          "obrigatoriaNaCriacao": true
+         },
+         "uso": {
+          "custo": {
+           "esperanca": 1
+          },
+          "opcoes": [
+           {
+            "id": "jogada",
+            "rotulo": "+2 na jogada de ação",
+            "lembrete": "Some +2 ao resultado da jogada de ação que seu elemento está ajudando."
+           },
+           {
+            "id": "dano",
+            "rotulo": "+3 no dano da jogada",
+            "lembrete": "Some +3 ao dano da jogada que seu elemento está ajudando."
+           }
+          ],
+          "rotuloAtivar": "Usar Elementalista",
+          "lembrete": "Descreva como seu elemento ajuda. O app cobra a Esperança, mas não rola nem resolve a jogada."
+         }
         }
        ],
        "texto": "Elementalista: Escolha um dos seguintes elementos na criação do personagem:\nAr · Terra · Fogo · Raio · Água\nVocê pode moldar esse elemento em efeitos inofensivos. Além disso, gaste 1 Esperança e descreva como seu controle sobre esse elemento ajuda uma jogada de ação que você está prestes a fazer, então ganhe +2 de bônus na jogada ou +3 de bônus no dano da jogada.",
@@ -688,7 +729,36 @@
        "caracteristicas": [
         {
          "nome": "Manipular Magia",
-         "texto": "Sua origem primal permite modificar a essência da própria magia. Após lançar uma magia ou fazer um ataque com uma arma que cause dano mágico, você pode marcar 1 Estresse para escolher uma das opções a seguir:\n• Estender o alcance da magia ou ataque em uma faixa\n• Ganhar +2 de bônus no resultado da jogada de ação\n• Dobrar o resultado de um dado de dano à sua escolha\n• Acertar um alvo adicional dentro do alcance"
+         "texto": "Sua origem primal permite modificar a essência da própria magia. Após lançar uma magia ou fazer um ataque com uma arma que cause dano mágico, você pode marcar 1 Estresse para escolher uma das opções a seguir:\n• Estender o alcance da magia ou ataque em uma faixa\n• Ganhar +2 de bônus no resultado da jogada de ação\n• Dobrar o resultado de um dado de dano à sua escolha\n• Acertar um alvo adicional dentro do alcance",
+         "uso": {
+          "custo": {
+           "estresse": 1
+          },
+          "opcoes": [
+           {
+            "id": "alcance",
+            "rotulo": "Estender o alcance em uma faixa",
+            "lembrete": "Estenda o alcance da magia ou do ataque em uma faixa nesta resolução."
+           },
+           {
+            "id": "jogada",
+            "rotulo": "+2 na jogada de ação",
+            "lembrete": "Some +2 ao resultado da jogada de ação desta magia ou ataque."
+           },
+           {
+            "id": "dado-dano",
+            "rotulo": "Dobrar um dado de dano",
+            "lembrete": "Depois de rolar o dano fora do app, escolha um dos dados e dobre o resultado dele."
+           },
+           {
+            "id": "alvo-adicional",
+            "rotulo": "Acertar um alvo adicional",
+            "lembrete": "Aplique a magia ou ataque a um alvo adicional que esteja dentro do alcance."
+           }
+          ],
+          "rotuloAtivar": "Manipular magia",
+          "lembrete": "Use após lançar uma magia ou fazer um ataque com arma que cause dano mágico. O app cobra o Estresse; a resolução continua na mesa."
+         }
         }
        ],
        "texto": "Manipular Magia: Sua origem primal permite modificar a essência da própria magia. Após lançar uma magia ou fazer um ataque com uma arma que cause dano mágico, você pode marcar 1 Estresse para escolher uma das opções a seguir:\n• Estender o alcance da magia ou ataque em uma faixa\n• Ganhar +2 de bônus no resultado da jogada de ação\n• Dobrar o resultado de um dado de dano à sua escolha\n• Acertar um alvo adicional dentro do alcance",
