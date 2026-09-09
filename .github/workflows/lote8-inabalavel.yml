@@ -1,0 +1,60 @@
+name: Lote 8 - Inabalável
+
+on:
+  push:
+    branches: ['ediçãoclaude']
+
+permissions:
+  contents: write
+
+jobs:
+  validar-materializar:
+    if: ${{ contains(github.event.head_commit.message, '[run-lote8-inabalavel]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 'ediçãoclaude'
+          fetch-depth: 0
+
+      - name: Materializar Inabalável
+        run: |
+          python3 tools/lote8-inabalavel.py
+          node tools/gerar-43-origens.mjs
+          python3 tools/conferir-ancestralidades-lote8.py
+          grep -q 'Inabalável — resultado do d6' js/telas/ficha.js
+          grep -q 'pendenciaRolagem' backend/99_Api.gs
+          git diff --check
+
+      - name: Testes backend
+        run: node tools/testes-backend.mjs
+
+      - name: Instalar Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install --with-deps chromium
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados
+        run: node tools/conferir-gerados.mjs
+
+      - name: Conferir CSS
+        run: node tools/conferir-css.mjs
+
+      - name: Proteger contra concorrência
+        run: |
+          git fetch origin 'ediçãoclaude'
+          test "$(git rev-parse 'origin/ediçãoclaude')" = "$GITHUB_SHA"
+
+      - name: Commitar funcional e limpar temporários
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f tools/lote8-inabalavel.py
+          git rm -f .github/workflows/lote8-inabalavel.yml
+          git add -A
+          git diff --cached --check
+          git commit -m 'feat: automatizar Inabalável do Firbolg [lote8-generated]'
+          git push origin HEAD:'ediçãoclaude'
