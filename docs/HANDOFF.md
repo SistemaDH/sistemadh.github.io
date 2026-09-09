@@ -310,6 +310,25 @@ Validação real: GitHub Actions run `34305363724` — **496/496 backend**, **10
 O primeiro run (`34305062404`) já tinha 496/496 backend, 102/102 E2E e 14 geradores, mas foi corretamente bloqueado pelo conferidor de CSS por uma classe sem regra. A classe desnecessária foi removida; não foi criado CSS vazio apenas para satisfazer o teste.
 
 Próximo subbloco: **Retração (Galapa)** integrada a este mesmo fluxo de dano; depois Asas, criação/sessão/descanso e perfis de ataque das ancestralidades restantes.
+
+
+### Diário — Ancestralidades, parte 2: dano recebido e Retração
+
+Fonte: `DH-DigitalRegras.pdf` pp. 53, 55 e 61, com conferência da errata oficial de 09/09/2025. Este bloco continua estritamente no Core 1.0; SRD 2.0 não foi adotado.
+
+Fechado em dois checkpoints funcionais:
+
+- dano recebido + Anão/Drakona: commit `186be3916fd51a9f74d94e2537aa0304fcfdf93b`, run `34305363724` — **496/496 backend**, **102/102 E2E**, **14 geradores**, CSS limpo e proteção de concorrência aprovada;
+- Retração/Galapa: commit `42e643724c10d146229a9e3198c2428a09e342c9`, run `34308045697` — **500/500 backend**, **102/102 E2E**, **14 geradores**, CSS limpo e proteção de concorrência aprovada.
+
+O fluxo de dano da ficha agora recebe o valor já rolado pela mesa e resolve deterministicamente limiares e reações sem rolar dados. Pele Grossa, Fortitude Aumentada e Escamas validam posse, faixa, tipo de dano e recursos no servidor. O último PV continua disparando o mesmo movimento de morte do Lote 5.
+
+Retração é estado persistente real: custa 1 Fadiga para entrar; enquanto ativa, aplica resistência a dano físico antes das demais reduções/limiares, lembra a desvantagem em jogadas e a impossibilidade de movimento, e sair da carapaça é explícito e gratuito. Um contador injetado sem a característica não concede resistência.
+
+Auditoria adicional deste checkpoint: no Core PT-BR, Pequenino tem **Talismã da Sorte** (todo o grupo recebe 1 Esperança no início de cada sessão) e **Senso de Direção** (ao rolar 1 no Dado de Esperança, pode rerrolá-lo). Não existe `Portador da Sorte` nesta edição; não criar essa habilidade no Lote 8.
+
+Próximo bloco: perfis/efeitos determinísticos de ancestralidade (Sopro Elemental, Alcance, Linguarudo e Garras Retráteis), seguido por integrações de criação/descanso/sessão (Projeto Intencional, Transe Celestial e Talismã da Sorte) e pela interceptação de Fadiga de Inabalável.
+
 ### Estado atual do Lote 8
 
 Auditoria e implementação em andamento. Nenhum deploy/merge do Lote 8 foi feito. Não alterar o pin da `engine-api` até o lote estar revisado e testado.
