@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# rev2: fixture isolada; este comentário força a validação após o hotfix.
+# rev3: fixture isolada + botão reaproveita somente classes CSS existentes.
 from pathlib import Path
 
 R = Path(__file__).resolve().parents[1]
@@ -8,7 +8,8 @@ orig = R / 'tools/lote8-arcana-n1-n3.py'
 ns = {'__file__': str(orig), '__name__': '__main__'}
 exec(compile(orig.read_text(encoding='utf-8'), str(orig), 'exec'), ns, ns)
 
-# Corrige a expressão booleana gerada para o estado da carta.
+# Corrige a expressão booleana gerada para o estado da carta e mantém o botão
+# nas classes de botão já existentes; não há estilo específico a justificar.
 p = R / 'js/telas/ficha.js'
 s = p.read_text(encoding='utf-8')
 s = s.replace(
@@ -16,6 +17,7 @@ s = s.replace(
     "const ativo = !!(estado && estado.chave && (((p.ficha || {}).contadores || {})[estado.chave]));",
     1
 )
+s = s.replace("class: 'btn btn--pequeno ficha__usarCartaDominio'", "class: 'btn btn--pequeno'", 1)
 p.write_text(s, encoding='utf-8')
 
 # Corrige SOMENTE a fixture adicionada por este lote. Não toca nas fixtures
@@ -61,4 +63,4 @@ head, tail = s[:pos], s[pos:]
 tail = tail.replace("'codex-livro-de-ava'", "'arcana-liberar-o-caos'")
 s = head + tail
 p.write_text(s, encoding='utf-8')
-print('Fixture Arcana isolada, nível 3 explícito e expressão de estado ajustada.')
+print('Fixture Arcana isolada, nível 3 explícito e UI alinhada ao CSS existente.')
