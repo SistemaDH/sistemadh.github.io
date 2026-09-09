@@ -1,0 +1,84 @@
+name: Lote 8 - Guerreiro
+
+on:
+  push:
+    branches: ["ediçãoclaude"]
+
+permissions:
+  contents: write
+
+jobs:
+  validar-materializar:
+    if: contains(github.event.head_commit.message, '[run-lote8-guerreiro]')
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: "ediçãoclaude"
+          fetch-depth: 0
+
+      - name: Materializar Guerreiro
+        run: |
+          python3 tools/lote8-guerreiro.py
+          node tools/gerar-42-classes.mjs
+          node tools/gerar-47-contadores.mjs
+          node tools/gerar-4B-descanso.mjs
+          node tools/gerar-48-criacao.mjs
+          python3 tools/conferir-classes-lote8.py
+          grep -q "efeitoRecurso" backend/42_Classes.gs
+          grep -q "compartilhavel: true" backend/47_Contadores.gs
+          grep -q "preparacao-marcial" backend/4B_Descanso.gs
+          grep -q "opcoesDeDadoEsperanca" backend/48_Criacao.gs
+          grep -q "botaoDeResolucaoManual" js/telas/ficha.js
+          grep -q "resumoDeEfeitoDerivado" js/telas/ficha.js
+          git diff --check
+
+      - name: Testes backend
+        run: node tools/testes-backend.mjs
+
+      - name: Instalar Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install --with-deps chromium
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados e CSS
+        run: |
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+
+      - name: Regenerar auditoria transversal
+        run: |
+          python3 tools/auditar-pendencias-lote8.py > docs/AUDITORIA-FINAL-LOTE8.md
+          python3 -c "from pathlib import Path; p=Path('docs/AUDITORIA-FINAL-LOTE8.md'); p.write_text(p.read_text(encoding='utf-8').rstrip() + '\n', encoding='utf-8')"
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          t=Path('docs/AUDITORIA-FINAL-LOTE8.md').read_text(encoding='utf-8')
+          m=re.search(r'Classes/subclasses: \*\*99 características\*\*; \*\*(\d+)\*\* candidatas', t)
+          assert m and int(m.group(1)) == 19, m.group(0) if m else 'linha ausente'
+          sec=t.split('## Candidatos — comunidades')[0].split('## Candidatos — classes e subclasses')[-1]
+          assert '| Guerreiro |' not in sec, 'Guerreiro ainda tem candidato'
+          for nome in ['Ataque de Oportunidade','Coragem','Superação do Desafio','Camaradagem','Preparação Marcial']:
+              assert nome not in sec, nome + ' ainda aparece como candidato'
+          print('candidatos de classes:', m.group(1), '— Guerreiro fechado')
+          PY
+          git diff --check
+
+      - name: Proteger contra concorrencia
+        run: |
+          git fetch origin 'ediçãoclaude'
+          test "$(git rev-parse 'origin/ediçãoclaude')" = "$GITHUB_SHA"
+
+      - name: Commitar funcional e limpar temporarios
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f tools/lote8-guerreiro.py
+          git rm -f .github/workflows/lote8-guerreiro.yml
+          git add -A
+          git diff --cached --check
+          git commit -m 'feat: fechar mecânicas do Guerreiro [lote8-generated]'
+          git push origin HEAD:'ediçãoclaude'
