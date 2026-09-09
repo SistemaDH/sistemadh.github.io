@@ -104,3 +104,28 @@ function validarCartasDoPersonagem_(ativas, cofre, dominiosPermitidos, nivelPers
   }
   return { ok: erros.length === 0, erros: erros };
 }
+
+
+/** Bônus de Conjuração vindos de cartas que estão realmente ATIVAS. */
+function bonusConjuracaoDeCartas_(ficha) {
+  if (typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO === 'undefined') return 0;
+  const ativas = (((ficha || {}).cartas || {}).ativas || []);
+  const ids = Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO);
+  let total = 0;
+  for (let i = 0; i < ids.length; i++) {
+    const id = ids[i];
+    if (!ativas.some(function (x) { return chaveTexto_(x) === chaveTexto_(id); })) continue;
+    const e = EFEITOS_DERIVADOS_CARTAS_DOMINIO[id] || {};
+    const req = e.exigeCartasAtivasDominio || null;
+    if (req) {
+      let n = 0;
+      for (let k = 0; k < ativas.length; k++) {
+        const c = acharCarta_(ativas[k]);
+        if (c && chaveTexto_(c.dominio) === chaveTexto_(req.dominio)) n++;
+      }
+      if (n < Math.max(1, Math.trunc(Number(req.quantidade)) || 1)) continue;
+    }
+    total += Math.trunc(Number(e.bonusConjuracao)) || 0;
+  }
+  return total;
+}

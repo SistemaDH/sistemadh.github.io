@@ -643,8 +643,12 @@ function derivadosDoPersonagem_(ficha) {
   }
   if (evasao !== null) evasao += (b.evasao || 0) + bonusDaForma + bonusEsquivaLadino + md.evasao;
 
+  const bonusConjuracao = (typeof bonusConjuracaoDeCartas_ === 'function')
+    ? bonusConjuracaoDeCartas_(ficha) : 0;
+
   return {
     evasao: evasao,
+    bonusConjuracao: bonusConjuracao,
     pontosDeVidaMaximos: pontosDeVidaMaximos,
     estresseMaximo: CRIACAO.estresse + (b.estresseMaximo || 0) + bc.estresseMaximo + md.estresseMaximo,
     esperancaMaxima: CRIACAO.esperancaMaxima,
@@ -808,6 +812,7 @@ function aplicarDerivados_(ficha) {
    * duas coisas: qual vale agora e quais existem.
    */
   ficha.tracoDeConjuracao = d.tracoDeConjuracao;
+  ficha.bonusConjuracao = d.bonusConjuracao || 0;
   ficha.formaDeFera = d.formaDeFera;
   ficha.conjuracoesDisponiveis = d.conjuracoesDisponiveis;
 

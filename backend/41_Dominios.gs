@@ -263,6 +263,16 @@ const USOS_CARTAS_DOMINIO = {
   "arcana-andar-na-parede": {"custo":{"esperanca":1},"rotuloAtivar":"Conjurar · 1 Esperança","lembrete":"Escolha uma criatura que você possa tocar. Ela escala paredes e tetos até o fim da cena ou até você conjurar Andar na Parede novamente."},
   "arcana-olho-flutuante": {"custo":{"esperanca":1},"rotuloAtivar":"Criar Olho Flutuante · 1 Esperança","estado":{"chave":"estado:carta:arcana:olho-flutuante","valor":1,"rotuloAtivo":"Olho Flutuante ativo","rotuloEncerrar":"Encerrar Olho Flutuante","avisoEncerrar":"Olho Flutuante encerrado."},"lembrete":"Mova a orbe dentro do alcance Muito Distante e alterne livremente entre seus sentidos e a visão dela. Encerre se ela sofrer dano ou sair do alcance."},
   "arcana-contra-feitico": {"custo":{},"rotuloAtivar":"Sucesso: interromper e guardar no cofre","moveParaCofre":true,"lembrete":"Use este botão somente depois de uma jogada de reação de Conjuração bem-sucedida. O efeito mágico é interrompido e suas consequências são evitadas."},
+  "arcana-desaparecer": {"custo":{"esperanca":1},"entradaQuantidade":{"campo":"criaturasExtras","rotulo":"Criaturas adicionais","minimo":0,"maximo":5,"custoPorUnidade":{"esperanca":1},"ajuda":"Além de você, cada criatura disposta adicional custa 1 Esperança."},"rotuloAtivar":"Sucesso: teleportar","lembrete":"A Jogada de Conjuração (12), a linha de visão e os alcances são confirmados na mesa."},
+  "arcana-premonicao": {"custo":{},"marcaUso":{"chave":"uso:carta:arcana:premonicao","maximo":1},"rotuloAtivar":"Registrar Premonição","lembrete":"Cancele o movimento e as consequências na mesa e faça outro movimento no lugar."},
+  "arcana-relampago-em-cadeia": {"custo":{"estresse":2},"rotuloAtivar":"Marcar 2 Estresses e conjurar","lembrete":"O app não rola a Jogada de Conjuração, as Reações nem 2d8+4 de dano."},
+  "arcana-explosao-de-camuflagem": {"custo":{"esperanca":1},"condicao":{"chave":"Camuflado","ligar":true},"rotuloAtivar":"Após outro feitiço: Camuflar","lembrete":"Camuflado termina conforme movimento, linha de visão ou ataque descritos na carta."},
+  "arcana-tocado-pela-arcana": {"custo":{},"exigeCartasAtivasDominio":{"dominio":"ARCANA","quantidade":4},"marcaUso":{"chave":"uso:carta:arcana:tocado-pela-arcana","maximo":1},"rotuloAtivar":"Trocar Dados de Esperança e Medo","lembrete":"Troque os dois resultados que já foram rolados na mesa; o app não rola dados."},
+};
+
+/** Efeitos derivados de cartas de domínio ativas. */
+const EFEITOS_DERIVADOS_CARTAS_DOMINIO = {
+  "arcana-tocado-pela-arcana": {"bonusConjuracao":1,"exigeCartasAtivasDominio":{"dominio":"ARCANA","quantidade":4}},
 };
 
 /**
@@ -385,4 +395,29 @@ function validarCartasDoPersonagem_(ativas, cofre, dominiosPermitidos, nivelPers
     erros.push('São no máximo ' + MAX_CARTAS_ATIVAS + ' cartas ativas; o resto vai para o cofre.');
   }
   return { ok: erros.length === 0, erros: erros };
+}
+
+
+/** Bônus de Conjuração vindos de cartas que estão realmente ATIVAS. */
+function bonusConjuracaoDeCartas_(ficha) {
+  if (typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO === 'undefined') return 0;
+  const ativas = (((ficha || {}).cartas || {}).ativas || []);
+  const ids = Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO);
+  let total = 0;
+  for (let i = 0; i < ids.length; i++) {
+    const id = ids[i];
+    if (!ativas.some(function (x) { return chaveTexto_(x) === chaveTexto_(id); })) continue;
+    const e = EFEITOS_DERIVADOS_CARTAS_DOMINIO[id] || {};
+    const req = e.exigeCartasAtivasDominio || null;
+    if (req) {
+      let n = 0;
+      for (let k = 0; k < ativas.length; k++) {
+        const c = acharCarta_(ativas[k]);
+        if (c && chaveTexto_(c.dominio) === chaveTexto_(req.dominio)) n++;
+      }
+      if (n < Math.max(1, Math.trunc(Number(req.quantidade)) || 1)) continue;
+    }
+    total += Math.trunc(Number(e.bonusConjuracao)) || 0;
+  }
+  return total;
 }

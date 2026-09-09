@@ -3470,13 +3470,61 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     if (destino === 'cofre' && usoCarta) {
       const estado = usoCarta.estado || null;
       const ativo = !!(estado && estado.chave && (((p.ficha || {}).contadores || {})[estado.chave]));
+      const marcaUso = usoCarta.marcaUso || null;
+      const usos = marcaUso && marcaUso.chave
+        ? Number(((((p.ficha || {}).contadores || {})[marcaUso.chave] || {}).valor)) || 0 : 0;
+      const esgotada = !!(marcaUso && usos >= (Number(marcaUso.maximo) || 1));
       saida.push(el('button', {
-        type: 'button', class: 'btn btn--pequeno',
+        type: 'button', class: 'btn btn--pequeno', disabled: esgotada,
         onClick: () => {
+          if (ativo) {
+            if (modal) modal.fechar();
+            enviar([{ tipo: 'usarCarta', carta: c.id, encerrar: true }]);
+            return;
+          }
+          const entrada = usoCarta.entradaQuantidade || null;
+          if (!entrada) {
+            if (modal) modal.fechar();
+            enviar([{ tipo: 'usarCarta', carta: c.id }]);
+            return;
+          }
           if (modal) modal.fechar();
-          enviar([{ tipo: 'usarCarta', carta: c.id, encerrar: ativo }]);
+          const quantidade = el('input', semCorretor({
+            type: 'number', class: 'campo__entrada', inputmode: 'numeric', step: 1,
+            min: Number(entrada.minimo) || 0, max: Number(entrada.maximo) || 0,
+            value: Number(entrada.minimo) || 0
+          }));
+          let escolha = null;
+          const aplicar = el('button', {
+            type: 'button', class: 'btn btn--principal', onClick: async () => {
+              const n = Number(quantidade.value);
+              const minimo = Number(entrada.minimo) || 0;
+              const maximo = Number(entrada.maximo) || minimo;
+              if (!Number.isInteger(n) || n < minimo || n > maximo) {
+                avisarErro(`Informe um número inteiro de ${minimo} a ${maximo}.`); return;
+              }
+              const ajuste = { tipo: 'usarCarta', carta: c.id };
+              ajuste[entrada.campo || 'quantidade'] = n;
+              const r = await enviar([ajuste]);
+              if (r && escolha) escolha.fechar();
+            }
+          }, usoCarta.rotuloAtivar || 'Usar carta');
+          escolha = abrirModal({
+            titulo: c.nome,
+            conteudo: el('div', { class: 'pilha' }, [
+              el('p', { class: 'texto-sm', texto: entrada.ajuda || entrada.rotulo || 'Informe a quantidade.' }),
+              el('label', { class: 'campo' }, [
+                el('span', { class: 'campo__rotulo', texto: entrada.rotulo || 'Quantidade' }), quantidade
+              ]),
+              aplicar
+            ])
+          });
         }
-      }, ativo ? (estado.rotuloEncerrar || 'Encerrar efeito') : (usoCarta.rotuloAtivar || 'Usar carta')));
+      }, esgotada ? 'Usada — volta no descanso' :
+        (ativo ? (estado.rotuloEncerrar || 'Encerrar efeito') : (usoCarta.rotuloAtivar || 'Usar carta'))));
+      if (c.efeitoDerivado && Number((p.ficha || {}).bonusConjuracao) > 0) {
+        saida.push(el('span', { class: 'selo selo--ouro', texto: `+${p.ficha.bonusConjuracao} Conjuração ativo` }));
+      }
     }
     if (permanente && !permanente.noAlvo) {
       saida.push(el('button', {

@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 50 cartas e características mandam
+ *  O problema que este arquivo resolve: 52 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -90,6 +90,8 @@ const CONTADORES = {
   "estado:ladino:caminhante-noturno:ato-desaparecimento": { origem: "caracteristica-subclasse", refId: "ladino-caminhante-noturno", nome: "Ato de Desaparecimento", rotulo: "Camuflado", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso","descanso-longo"], recarregaEm: [], exigeCaracteristica: "Ato de Desaparecimento" },
   "estado:seraph:asas-de-luz:voando": { origem: "caracteristica-subclasse", refId: "seraph-sentinela-alado", nome: "Asas de Luz", rotulo: "voando", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], exigeCaracteristica: "Asas de Luz" },
   "estado:carta:arcana:olho-flutuante": { origem: "carta-dominio", refId: "arcana-olho-flutuante", nome: "Olho Flutuante", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-da-cena","manual"], recarregaEm: [] },
+  "uso:carta:arcana:premonicao": { origem: "carta-dominio", refId: "arcana-premonicao", nome: "Premonição", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:carta:arcana:tocado-pela-arcana": { origem: "carta-dominio", refId: "arcana-tocado-pela-arcana", nome: "Tocado pela Arcana", rotulo: "troca dos dados", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -144,6 +146,8 @@ const CONTADOR_ALIASES = {
   "estado:ladino:caminhante-noturno:ato-desaparecimento": ["Ato de Desaparecimento"],
   "estado:seraph:asas-de-luz:voando": ["Asas de Luz"],
   "estado:carta:arcana:olho-flutuante": ["Olho Flutuante"],
+  "uso:carta:arcana:premonicao": ["Premonição"],
+  "uso:carta:arcana:tocado-pela-arcana": ["Tocado pela Arcana"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

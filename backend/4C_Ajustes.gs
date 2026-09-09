@@ -2206,56 +2206,112 @@ function usarCartaDeDominio_(ficha, a) {
 
   const estado = def.estado || null;
   ficha.contadores = ficha.contadores || {};
-  if (a.encerrar === true) {
-    if (!estado || !estado.chave) return { erro: '"' + carta.nome + '" não possui estado para encerrar.' };
-    if (!ficha.contadores[estado.chave]) return { erro: '"' + carta.nome + '" não está ativa.' };
-    delete ficha.contadores[estado.chave];
-    return { tipo: 'usarCarta', carta: carta.id, nome: carta.nome, estado: estado.chave,
-      estadoAtivo: false, aviso: estado.avisoEncerrar || (carta.nome + ' encerrado.') };
+  if (estado && estado.chave && a.encerrar !== true) {
+    const jaAtivo = Math.trunc(Number(((ficha.contadores[estado.chave] || {}).valor))) || 0;
+    if (jaAtivo > 0) return { erro: '"' + carta.nome + '" já está ativo.' };
   }
-  if (estado && estado.chave && ficha.contadores[estado.chave]) {
-    return { erro: '"' + carta.nome + '" já está ativa.' };
+  if (a.encerrar === true) {
+    if (!estado || !estado.chave) return { erro: '"' + carta.nome + '" não tem um estado para encerrar.' };
+    ficha.contadores = ficha.contadores || {};
+    delete ficha.contadores[estado.chave];
+    return { tipo:'usarCarta', carta:carta.id, nome:carta.nome, encerrou:true,
+      aviso: estado.avisoEncerrar || (carta.nome + ': efeito encerrado.') };
+  }
+
+  // Requisitos que dependem só do loadout atual são conferidos no servidor.
+  const req = def.exigeCartasAtivasDominio || null;
+  if (req) {
+    let n = 0;
+    for (let i = 0; i < ficha.cartas.ativas.length; i++) {
+      const x = acharCarta_(ficha.cartas.ativas[i]);
+      if (x && chaveTexto_(x.dominio) === chaveTexto_(req.dominio)) n++;
+    }
+    const minimo = Math.max(1, Math.trunc(Number(req.quantidade)) || 1);
+    if (n < minimo) return { erro: '"' + carta.nome + '" exige pelo menos ' + minimo +
+      ' cartas de ' + String(req.dominio) + ' ativas; há ' + n + '.' };
+  }
+
+  // Escolha numérica NÃO é dado: é quantidade decidida pela pessoa (ex.: aliados).
+  let quantidade = 0;
+  const entrada = def.entradaQuantidade || null;
+  if (entrada) {
+    const campo = String(entrada.campo || 'quantidade');
+    const bruto = a[campo];
+    quantidade = Math.trunc(Number(bruto));
+    const minimo = Math.trunc(Number(entrada.minimo)) || 0;
+    const maximo = Math.max(minimo, Math.trunc(Number(entrada.maximo)) || minimo);
+    if (!isFinite(quantidade) || Number(bruto) !== quantidade || quantidade < minimo || quantidade > maximo) {
+      return { erro: carta.nome + ': informe ' + String(entrada.rotulo || 'a quantidade') +
+        ' como número inteiro de ' + minimo + ' a ' + maximo + '.' };
+    }
   }
 
   const custo = def.custo || {};
-  const ce = Math.max(0, Math.trunc(Number(custo.esperanca)) || 0);
-  const cs = Math.max(0, Math.trunc(Number(custo.estresse)) || 0);
-  const r = ficha.recursos || {};
-  if (ce && (Number(r.esperanca) || 0) < ce) {
-    return { erro: 'Não sobra Esperança para usar "' + carta.nome + '".' };
+  let custoEsperanca = Math.max(0, Math.trunc(Number(custo.esperanca)) || 0);
+  let custoEstresse = Math.max(0, Math.trunc(Number(custo.estresse)) || 0);
+  if (entrada && entrada.custoPorUnidade) {
+    custoEsperanca += quantidade * (Math.max(0, Math.trunc(Number(entrada.custoPorUnidade.esperanca)) || 0));
+    custoEstresse += quantidade * (Math.max(0, Math.trunc(Number(entrada.custoPorUnidade.estresse)) || 0));
   }
-  if (cs) {
+
+  const marcaUso = def.marcaUso || null;
+  ficha.contadores = ficha.contadores || {};
+  if (marcaUso && marcaUso.chave) {
+    const usado = Math.max(0, Math.trunc(Number(((ficha.contadores[marcaUso.chave] || {}).valor))) || 0);
+    const maxUso = Math.max(1, Math.trunc(Number(marcaUso.maximo)) || 1);
+    if (usado >= maxUso) return { erro: '"' + carta.nome + '" já foi usada; ela volta no descanso indicado pela carta.' };
+  }
+
+  const r = ficha.recursos || {};
+  if (custoEsperanca > 0 && (Number(r.esperanca) || 0) < custoEsperanca) {
+    return { erro: '"' + carta.nome + '" custa ' + custoEsperanca + ' de Esperança, e você tem ' +
+      (Number(r.esperanca) || 0) + '.' };
+  }
+  if (custoEstresse > 0) {
     const teto = Number(r.estresseMaximo) || 0;
     const marcado = Math.max(0, Number(r.estresseMarcado) || 0);
-    if (marcado + cs > teto) return { erro: 'Não sobra Estresse para usar "' + carta.nome + '".' };
+    if (marcado + custoEstresse > teto) {
+      return { erro: 'Não sobra Estresse para usar "' + carta.nome + '" (custa ' + custoEstresse + ').' };
+    }
   }
 
   ficha.recursos = r;
-  if (ce) r.esperanca = (Number(r.esperanca) || 0) - ce;
-  if (cs) r.estresseMarcado = (Number(r.estresseMarcado) || 0) + cs;
+  if (custoEsperanca) r.esperanca = (Number(r.esperanca) || 0) - custoEsperanca;
+  if (custoEstresse) r.estresseMarcado = (Number(r.estresseMarcado) || 0) + custoEstresse;
+
+  let condicao = null;
+  if (def.condicao && def.condicao.chave) {
+    const cr = ajustarCondicao_(ficha, { chave:def.condicao.chave, ligar:def.condicao.ligar !== false });
+    if (cr && cr.erro) return cr;
+    condicao = cr;
+  }
 
   if (estado && estado.chave) {
     ficha.contadores[estado.chave] = { valor: Math.max(1, Math.trunc(Number(estado.valor)) || 1) };
   }
+  if (marcaUso && marcaUso.chave) {
+    const usado = Math.max(0, Math.trunc(Number(((ficha.contadores[marcaUso.chave] || {}).valor))) || 0);
+    ficha.contadores[marcaUso.chave] = { valor: usado + 1 };
+  }
 
   if (def.moveParaCofre === true) {
     ficha.cartas.ativas = ficha.cartas.ativas.filter(function (x) { return chaveTexto_(x) !== chaveTexto_(carta.id); });
-    if (!ficha.cartas.cofre.some(function (x) { return chaveTexto_(x) === chaveTexto_(carta.id); })) {
-      ficha.cartas.cofre.push(carta.id);
-    }
+    if (!ficha.cartas.cofre.some(function (x) { return chaveTexto_(x) === chaveTexto_(carta.id); })) ficha.cartas.cofre.push(carta.id);
   }
 
   const pago = [];
-  if (ce) pago.push(ce + ' de Esperança');
-  if (cs) pago.push(cs + ' de Estresse');
+  if (custoEsperanca) pago.push(custoEsperanca + ' de Esperança');
+  if (custoEstresse) pago.push(custoEstresse + ' de Estresse');
   return {
-    tipo: 'usarCarta', carta: carta.id, nome: carta.nome,
-    custoEsperanca: ce, custoEstresse: cs,
-    esperanca: Number(r.esperanca) || 0, estresseMarcado: Number(r.estresseMarcado) || 0,
-    estado: estado && estado.chave ? estado.chave : null,
-    estadoAtivo: !!(estado && estado.chave),
-    moveuParaCofre: def.moveParaCofre === true,
-    aviso: carta.nome + (pago.length ? ' custou ' + pago.join(' e ') : '') + '. ' + String(def.lembrete || '')
+    tipo:'usarCarta', carta:carta.id, nome:carta.nome,
+    custoEsperanca:custoEsperanca, custoEstresse:custoEstresse,
+    esperanca:r.esperanca, estresseMarcado:r.estresseMarcado,
+    quantidade:entrada ? quantidade : null,
+    estado:estado && estado.chave ? estado.chave : null,
+    marcaUso:marcaUso && marcaUso.chave ? marcaUso.chave : null,
+    condicao:condicao ? (condicao.chave || (def.condicao || {}).chave) : null,
+    moveuParaCofre:def.moveParaCofre === true,
+    aviso:carta.nome + (pago.length ? ' custou ' + pago.join(' e ') : '') + '. ' + String(def.lembrete || '')
   };
 }
 

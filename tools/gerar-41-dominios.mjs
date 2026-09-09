@@ -83,6 +83,15 @@ for (const c of usos) {
 }
 L.push('};\n');
 
+// Passivos determinísticos que só existem enquanto a carta está no loadout ativo.
+const derivadosCartas = cartas.filter((c) => c.efeitoDerivado);
+L.push('/** Efeitos derivados de cartas de domínio ativas. */');
+L.push('const EFEITOS_DERIVADOS_CARTAS_DOMINIO = {');
+for (const c of derivadosCartas) {
+  L.push(`  ${j(c.id)}: ${JSON.stringify(c.efeitoDerivado)},`);
+}
+L.push('};\n');
+
 // As cinco cartas que mudam a ficha PARA SEMPRE. Só elas precisam do
 // servidor: é ele quem soma o benefício e tranca a carta no cofre.
 const permanentes = cartas.filter((c) => c.efeitoPermanente);

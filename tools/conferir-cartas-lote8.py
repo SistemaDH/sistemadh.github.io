@@ -31,3 +31,21 @@ assert contra['resolucaoManual']['rolaNoApp'] is False
 assert por['arcana-liberar-o-caos']['automacao']['classificacao'].startswith('contador-existente')
 assert por['arcana-voar']['automacao']['classificacao'].startswith('contador-existente')
 print('Lote 8 — Arcana níveis 1–3 classificados e usos determinísticos conferidos.')
+
+
+# Arcana níveis 4–7
+sumir = por['arcana-desaparecer']
+assert sumir['uso']['custo'] == {'esperanca': 1}
+assert sumir['uso']['entradaQuantidade']['custoPorUnidade'] == {'esperanca': 1}
+assert por['arcana-explosao-de-preservacao']['automacao']['classificacao'] == 'manual-de-encontro'
+assert por['arcana-premonicao']['uso']['marcaUso']['chave'] == 'uso:carta:arcana:premonicao'
+assert por['arcana-relampago-em-cadeia']['uso']['custo'] == {'estresse': 2}
+assert por['arcana-andarilho-do-abismo']['automacao']['classificacao'] == 'manual-posicional'
+assert por['arcana-telecinese']['resolucaoManual']['rolaNoApp'] is False
+assert por['arcana-explosao-de-camuflagem']['uso']['condicao']['chave'] == 'Camuflado'
+tocado = por['arcana-tocado-pela-arcana']
+assert tocado['efeitoDerivado']['bonusConjuracao'] == 1
+assert tocado['efeitoDerivado']['exigeCartasAtivasDominio'] == {'dominio':'ARCANA','quantidade':4}
+assert any(x['chave'] == 'uso:carta:arcana:premonicao' for x in cont['contadores'])
+assert any(x['chave'] == 'uso:carta:arcana:tocado-pela-arcana' for x in cont['contadores'])
+print('Lote 8 — Arcana níveis 4–7 classificados e partes determinísticas conferidas.')

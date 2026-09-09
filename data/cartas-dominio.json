@@ -250,7 +250,33 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "O app cobra a Esperança do teleporte; a Jogada de Conjuração e o posicionamento ficam na mesa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "jogada": "Conjuração (12)",
+    "resumo": "Confirme o sucesso na mesa e informe quantas criaturas dispostas adicionais vão junto."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "entradaQuantidade": {
+     "campo": "criaturasExtras",
+     "rotulo": "Criaturas adicionais",
+     "minimo": 0,
+     "maximo": 5,
+     "custoPorUnidade": {
+      "esperanca": 1
+     },
+     "ajuda": "Além de você, cada criatura disposta adicional custa 1 Esperança."
+    },
+    "rotuloAtivar": "Sucesso: teleportar",
+    "lembrete": "A Jogada de Conjuração (12), a linha de visão e os alcances são confirmados na mesa."
+   }
   },
   {
    "id": "arcana-explosao-de-preservacao",
@@ -269,7 +295,15 @@
    "dependencias": [],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\"). O nome do arquivo tem capitalização irregular (\"dE\"); o nome impresso na carta é \"EXPLOSÃO DE PRESERVAÇÃO\"."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\"). O nome do arquivo tem capitalização irregular (\"dE\"); o nome impresso na carta é \"EXPLOSÃO DE PRESERVAÇÃO\".",
+   "automacao": {
+    "classificacao": "manual-de-encontro",
+    "resumo": "Alvos, sucessos, deslocamento e dano são resolvidos na mesa; o app não rola nem escolhe alvos."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Alvos, sucessos, deslocamento e dano são resolvidos na mesa; o app não rola nem escolhe alvos."
+   }
   },
   {
    "id": "arcana-premonicao",
@@ -290,7 +324,24 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "O app registra o uso 1/descanso longo; desfazer a ficção e escolher outro movimento continua na mesa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Use depois de o Mestre narrar as consequências; o app só registra que a carga foi gasta."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:arcana:premonicao",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Registrar Premonição",
+    "lembrete": "Cancele o movimento e as consequências na mesa e faça outro movimento no lugar."
+   }
   },
   {
    "id": "arcana-relampago-em-cadeia",
@@ -311,7 +362,24 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "O app marca os 2 Estresses exigidos; Jogadas de Conjuração/Reação, cadeia e dano ficam na mesa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "jogada": "Conjuração e Reações",
+    "dado": "2d8+4",
+    "resumo": "Depois de pagar, resolva a Conjuração, as Reações e a cadeia na mesa."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 2
+    },
+    "rotuloAtivar": "Marcar 2 Estresses e conjurar",
+    "lembrete": "O app não rola a Jogada de Conjuração, as Reações nem 2d8+4 de dano."
+   }
   },
   {
    "id": "arcana-andarilho-do-abismo",
@@ -330,7 +398,15 @@
    "dependencias": [],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "manual-posicional",
+    "resumo": "As duas conjurações, a posição da marca e a abertura/fechamento da fenda dependem da ficção da mesa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "As duas conjurações, a posição da marca e a abertura/fechamento da fenda dependem da ficção da mesa."
+   }
   },
   {
    "id": "arcana-telecinese",
@@ -351,7 +427,16 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "manual-de-encontro",
+    "resumo": "Alvo, deslocamento, segunda Jogada de Conjuração e d12+4 de dano são resolvidos na mesa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Alvo, deslocamento, segunda Jogada de Conjuração e d12+4 de dano são resolvidos na mesa.",
+    "dado": "d12+4"
+   }
   },
   {
    "id": "arcana-explosao-de-camuflagem",
@@ -376,7 +461,26 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "Após a mesa confirmar outro feitiço bem-sucedido, o app cobra 1 Esperança e liga Camuflado."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A mesa confirma o feitiço anterior e remove Camuflado quando movimento/linha de visão/ataque cumprir o texto."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "condicao": {
+     "chave": "Camuflado",
+     "ligar": true
+    },
+    "rotuloAtivar": "Após outro feitiço: Camuflar",
+    "lembrete": "Camuflado termina conforme movimento, linha de visão ou ataque descritos na carta."
+   }
   },
   {
    "id": "arcana-tocado-pela-arcana",
@@ -400,7 +504,35 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"ABILITY\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"ABILITY\").",
+   "automacao": {
+    "classificacao": "automatizada-passiva-e-uso",
+    "resumo": "Com 4+ cartas Arcana ativas, o app publica +1 nas Jogadas de Conjuração e registra a troca dos Dados 1/descanso."
+   },
+   "efeitoDerivado": {
+    "bonusConjuracao": 1,
+    "exigeCartasAtivasDominio": {
+     "dominio": "ARCANA",
+     "quantidade": 4
+    }
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A troca usa os resultados dos Dados de Esperança e Medo rolados na mesa."
+   },
+   "uso": {
+    "custo": {},
+    "exigeCartasAtivasDominio": {
+     "dominio": "ARCANA",
+     "quantidade": 4
+    },
+    "marcaUso": {
+     "chave": "uso:carta:arcana:tocado-pela-arcana",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Trocar Dados de Esperança e Medo",
+    "lembrete": "Troque os dois resultados que já foram rolados na mesa; o app não rola dados."
+   }
   },
   {
    "id": "arcana-aura-confusa",

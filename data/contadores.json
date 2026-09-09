@@ -1058,6 +1058,40 @@
     "manual"
    ],
    "observacao": "Ligado ao conjurar por 1 Esperança. A mesa também encerra se a orbe sofrer dano ou sair do alcance."
+  },
+  {
+   "chave": "uso:carta:arcana:premonicao",
+   "origem": "carta-dominio",
+   "refId": "arcana-premonicao",
+   "nome": "Premonição",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo. O marcador significa que o uso já foi gasto."
+  },
+  {
+   "chave": "uso:carta:arcana:tocado-pela-arcana",
+   "origem": "carta-dominio",
+   "refId": "arcana-tocado-pela-arcana",
+   "nome": "Tocado pela Arcana",
+   "rotulo": "troca dos dados",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso, desde que 4 ou mais cartas Arcana estejam ativas."
   }
  ]
 }

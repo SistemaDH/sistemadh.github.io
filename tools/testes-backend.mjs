@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 50 contadores: 18 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 52 contadores: 20 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 50 contadores: 18 de carta, 25 de classe/subclasse, 4 de 
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 50);
+  igual(Object.keys(CONTADORES).length, 52);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 18);
+  igual(porOrigem['carta-dominio'], 20);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -8239,3 +8239,79 @@ if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));
   process.exit(1);
 }
+
+
+console.log('\nLote 8 — Arcana níveis 4–7');
+function fichaArcanaN7_(cartas) {
+  const base = contexto.fichaRapida_({
+    nome: 'Arcana N7', classe: 'Feiticeiro', subclasse: 'Origem Primal',
+    ancestralidade: 'Humano', comunidade: 'Loreborne',
+    cartas, experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  base.identidade.nivel = 7;
+  base.cartas = { ativas: cartas.slice(), cofre: [] };
+  const f = contexto.validarFicha_(base);
+  f.recursos.esperanca = 6;
+  f.recursos.estresseMarcado = 0;
+  return f;
+}
+
+teste('Desaparecer cobra 1 Esperança + 1 por criatura adicional, sem rolar Conjuração', () => {
+  const f = fichaArcanaN7_(['arcana-desaparecer','arcana-andar-na-parede']);
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-desaparecer', criaturasExtras:2 }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 3);
+  igual(r.mudancas[0].quantidade, 2);
+  const sem = fichaArcanaN7_(['arcana-desaparecer','arcana-andar-na-parede']);
+  verdade(contexto.aplicarAjustes_(sem, [{ tipo:'usarCarta', carta:'arcana-desaparecer' }]).erros.length > 0);
+  igual(sem.recursos.esperanca, 6, 'sem quantidade válida nada é cobrado');
+});
+
+teste('Premonição registra 1 uso por descanso longo e volta no gatilho correto', () => {
+  const f = fichaArcanaN7_(['arcana-premonicao','arcana-andar-na-parede']);
+  igual(contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-premonicao' }]).erros, []);
+  igual(f.contadores['uso:carta:arcana:premonicao'].valor, 1);
+  verdade(contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-premonicao' }]).erros.length > 0);
+  contexto.ajustarGatilho_(f, { gatilho:'descanso-longo' });
+  verdade(!f.contadores['uso:carta:arcana:premonicao']);
+});
+
+teste('Relâmpago em Cadeia marca exatamente 2 Estresses e não dispara Inabalável', () => {
+  const f = fichaArcanaN7_(['arcana-relampago-em-cadeia','arcana-andar-na-parede']);
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-relampago-em-cadeia' }]);
+  igual(r.erros, []);
+  verdade(!r.pendenciaRolagem, 'custo +2 não é Inabalável');
+  igual(f.recursos.estresseMarcado, 2);
+});
+
+teste('Explosão de Camuflagem cobra 1 Esperança e liga Camuflado na mesma mutação', () => {
+  const f = fichaArcanaN7_(['arcana-explosao-de-camuflagem','arcana-andar-na-parede']);
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-explosao-de-camuflagem' }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 5);
+  verdade((f.condicoes || []).some((x) => x.id === 'camuflado'));
+});
+
+teste('Tocado pela Arcana publica +1 Conjuração só com 4 cartas Arcana ativas', () => {
+  const quatro = fichaArcanaN7_([
+    'arcana-tocado-pela-arcana','arcana-desaparecer','arcana-olho-flutuante','arcana-andar-na-parede'
+  ]);
+  igual(contexto.derivadosDoPersonagem_(quatro).bonusConjuracao, 1);
+  contexto.aplicarDerivados_(quatro);
+  igual(quatro.bonusConjuracao, 1);
+  const tres = fichaArcanaN7_(['arcana-tocado-pela-arcana','arcana-desaparecer','arcana-andar-na-parede']);
+  igual(contexto.derivadosDoPersonagem_(tres).bonusConjuracao, 0);
+});
+
+teste('Tocado pela Arcana registra a troca dos dados 1/descanso e exige o loadout', () => {
+  const f = fichaArcanaN7_([
+    'arcana-tocado-pela-arcana','arcana-desaparecer','arcana-olho-flutuante','arcana-andar-na-parede'
+  ]);
+  igual(contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-tocado-pela-arcana' }]).erros, []);
+  igual(f.contadores['uso:carta:arcana:tocado-pela-arcana'].valor, 1);
+  verdade(contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-tocado-pela-arcana' }]).erros.length > 0);
+  contexto.ajustarGatilho_(f, { gatilho:'descanso' });
+  verdade(!f.contadores['uso:carta:arcana:tocado-pela-arcana']);
+  const tres = fichaArcanaN7_(['arcana-tocado-pela-arcana','arcana-desaparecer','arcana-andar-na-parede']);
+  verdade(contexto.aplicarAjustes_(tres, [{ tipo:'usarCarta', carta:'arcana-tocado-pela-arcana' }]).erros.length > 0);
+});
