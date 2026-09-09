@@ -3519,13 +3519,71 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
             Number(co.esperanca) ? `${Number(co.esperanca)} Esperança` : '',
             Number(co.estresse) ? `${Number(co.estresse)} Estresse` : ''
           ].filter(Boolean).join(' e ');
-          saida.push(el('button', {
-            type: 'button', class: 'btn btn--pequeno', disabled: esgotada,
-            onClick: () => {
+          const estadoOpcao = o.estado || null;
+          const itemEstadoOpcao = estadoOpcao && estadoOpcao.chave
+            ? ((((p.ficha || {}).contadores || {})[estadoOpcao.chave]) || {}) : {};
+          const ativoOpcao = !!(estadoOpcao && estadoOpcao.chave && Number(itemEstadoOpcao.valor));
+          const marcaOpcao = o.marcaUso || usoCarta.marcaUso || null;
+          const usadosOpcao = marcaOpcao && marcaOpcao.chave
+            ? Number(((((p.ficha || {}).contadores || {})[marcaOpcao.chave] || {}).valor)) || 0 : 0;
+          const esgotadaOpcao = !!(marcaOpcao && usadosOpcao >= (Number(marcaOpcao.maximo) || 1));
+          const entradaOpcao = o.entradaQuantidade || null;
+
+          const executarOpcao = () => {
+            if (ativoOpcao) {
+              if (estadoOpcao && estadoOpcao.permiteEncerrarManual === false) return;
               if (modal) modal.fechar();
-              enviar([{ tipo: 'usarCarta', carta: c.id, opcao: o.id }]);
+              enviar([{ tipo:'usarCarta', carta:c.id, opcao:o.id, encerrar:true }]);
+              return;
             }
-          }, esgotada ? 'Usada — volta no descanso' : `${o.rotulo || o.id}${precoOpcao && !(o.rotulo || '').includes('·') ? ` · ${precoOpcao}` : ''}`));
+            if (!entradaOpcao) {
+              if (modal) modal.fechar();
+              enviar([{ tipo:'usarCarta', carta:c.id, opcao:o.id }]);
+              return;
+            }
+            if (modal) modal.fechar();
+            const quantidade = el('input', semCorretor({
+              type:'number', class:'campo__entrada', inputmode:'numeric', step:1,
+              min:Number(entradaOpcao.minimo) || 0, max:Number(entradaOpcao.maximo) || 0,
+              value:Number(entradaOpcao.minimo) || 0
+            }));
+            let escolhaOpcao = null;
+            const aplicarOpcao = el('button', { type:'button', class:'btn btn--principal', onClick: async () => {
+              const n = Number(quantidade.value);
+              const minimo = Number(entradaOpcao.minimo) || 0;
+              const maximo = Number(entradaOpcao.maximo) || minimo;
+              if (!Number.isInteger(n) || n < minimo || n > maximo) {
+                avisarErro(`Informe um número inteiro de ${minimo} a ${maximo}.`); return;
+              }
+              const ajuste = { tipo:'usarCarta', carta:c.id, opcao:o.id };
+              ajuste[entradaOpcao.campo || 'quantidade'] = n;
+              const r = await enviar([ajuste]);
+              if (r && escolhaOpcao) escolhaOpcao.fechar();
+            } }, o.rotulo || usoCarta.rotuloAtivar || 'Usar carta');
+            escolhaOpcao = abrirModal({
+              titulo:c.nome,
+              conteudo:el('div',{class:'pilha'},[
+                el('p',{class:'texto-sm',texto:entradaOpcao.ajuda || entradaOpcao.rotulo || 'Informe a quantidade.'}),
+                el('label',{class:'campo'},[
+                  el('span',{class:'campo__rotulo',texto:entradaOpcao.rotulo || 'Quantidade'}), quantidade
+                ])
+              ]),
+              acoes:[
+                el('button',{type:'button',class:'btn btn--fantasma',onClick:()=>escolhaOpcao.fechar()},'Cancelar'),
+                aplicarOpcao
+              ]
+            });
+          };
+
+          const textoOpcao = ativoOpcao
+            ? (estadoOpcao.rotuloEncerrar || 'Encerrar efeito')
+            : (esgotadaOpcao ? 'Usada — volta no descanso'
+              : `${o.rotulo || o.id}${precoOpcao && !(o.rotulo || '').includes('·') ? ` · ${precoOpcao}` : ''}`);
+          saida.push(el('button', {
+            type:'button', class:'btn btn--pequeno',
+            disabled:(!ativoOpcao && esgotadaOpcao) || (ativoOpcao && estadoOpcao && estadoOpcao.permiteEncerrarManual === false),
+            onClick:executarOpcao
+          }, textoOpcao));
         });
       } else {
       saida.push(el('button', {

@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 73 contadores: 41 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 82 contadores: 50 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 73 contadores: 41 de carta, 25 de classe/subclasse, 4 de 
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 73);
+  igual(Object.keys(CONTADORES).length, 82);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 41);
+  igual(porOrigem['carta-dominio'], 50);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -8784,6 +8784,102 @@ teste('Passo Ágil limpa Estresse e, sem Estresse, ganha Esperança', () => {
   f.recursos.estresseMarcado = 0;
   r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-passo-agil' }]);
   igual(r.erros, []); igual(f.recursos.estresseMarcado, 0); igual(f.recursos.esperanca, 5);
+});
+
+
+
+console.log('\nLote 8 — Códice níveis 1–4');
+function fichaCodexN4_(nivel, cartas, ancestralidade = 'Humano') {
+  const base = contexto.fichaRapida_({
+    nome:'Códice N4', classe:'Mago', subclasse:'Escola da Guerra',
+    ancestralidade, comunidade:'Highborne',
+    cartas:['codex-livro-de-ava','codex-livro-de-illiat'],
+    experiencias:[{nome:'Erudito',bonus:2},{nome:'Arcano',bonus:2}]
+  });
+  base.identidade.nivel = nivel;
+  base.cartas = { ativas:cartas.slice(), cofre:[] };
+  const f = contexto.validarFicha_(base);
+  f.recursos.esperanca = 6;
+  f.recursos.estresseMarcado = 0;
+  return f;
+}
+
+teste('Códice N1-N4: os nove grimórios ficaram explicitamente classificados e sem RNG', () => {
+  const dados = JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const alvo = dados.cartas.filter((c)=>c.dominio==='CODEX' && c.nivel<=4);
+  igual(alvo.length,9);
+  igual(alvo.filter((c)=>!!c.automacao).length,9);
+  verdade(alvo.every((c)=>c.resolucaoManual && c.resolucaoManual.rolaNoApp===false));
+});
+
+teste('Livro de Illiat: Barragem cobra N Esperanças, é 1/descanso e não rola os d6', () => {
+  const f=fichaCodexN4_(1,['codex-livro-de-illiat','codex-livro-de-ava']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-illiat',opcao:'barragem-arcana',esperancasGastas:3}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,3);
+  igual(f.contadores['uso:carta:codex:barragem-arcana'].valor,1);
+  igual(r.mudancas[0].quantidade,3); igual(r.mudancas[0].dadosManuais,null);
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-illiat',opcao:'barragem-arcana',esperancasGastas:1}]).erros.length>0);
+  contexto.ajustarGatilho_(f,{gatilho:'descanso'});
+  verdade(!f.contadores['uso:carta:codex:barragem-arcana']);
+});
+
+teste('Livro de Illiat: Telepatia cobra 1 Esperança e o estado pode encerrar', () => {
+  const f=fichaCodexN4_(1,['codex-livro-de-illiat','codex-livro-de-ava']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-illiat',opcao:'telepatia'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5); igual(f.contadores['estado:carta:codex:telepatia'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-illiat',opcao:'telepatia',encerrar:true}]);
+  igual(r.erros,[]); verdade(!f.contadores['estado:carta:codex:telepatia']); igual(f.recursos.esperanca,5);
+});
+
+teste('Livro de Sitil: Paralelo custa 2 Esperanças e mantém um único estado', () => {
+  const f=fichaCodexN4_(2,['codex-livro-de-sitil','codex-livro-de-vagras']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-sitil',opcao:'paralelo'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,4); igual(f.contadores['estado:carta:codex:paralelo'].valor,1);
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-sitil',opcao:'paralelo'}]).erros.length>0);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-sitil',opcao:'paralelo',encerrar:true}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,4);
+});
+
+teste('Livro de Vagras: Tranca Rúnica é 1/descanso e Porta Arcana custa 1 Esperança', () => {
+  const f=fichaCodexN4_(2,['codex-livro-de-vagras','codex-livro-de-sitil']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-vagras',opcao:'tranca-runica'}]);
+  igual(r.erros,[]); igual(f.contadores['uso:carta:codex:tranca-runica'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-vagras',opcao:'porta-arcana'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5);
+});
+
+teste('Livro de Korvax: Círculo Rúnico passa pelo Inabalável sem perder o estado', () => {
+  const f=fichaCodexN4_(3,['codex-livro-de-korvax','codex-livro-de-norai'],'Firbolg');
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-korvax',opcao:'circulo-runico'}]);
+  verdade(!!r.pendenciaRolagem); verdade(!f.contadores['estado:carta:codex:circulo-runico']);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-korvax',opcao:'circulo-runico',dadoInabalavel:6}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,0); igual(f.contadores['estado:carta:codex:circulo-runico'].valor,1);
+});
+
+teste('Livro de Exota: Repudiar é 1/descanso e Construto custa 1 Esperança', () => {
+  const f=fichaCodexN4_(4,['codex-livro-de-exota','codex-livro-de-grynn']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-exota',opcao:'repudiar'}]);
+  igual(r.erros,[]); igual(f.contadores['uso:carta:codex:repudiar'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-exota',opcao:'criar-construto'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5); igual(f.contadores['estado:carta:codex:construto'].valor,1);
+});
+
+teste('Livro de Grynn: Deflexão Arcana custa 1 Esperança e volta só no descanso longo', () => {
+  const f=fichaCodexN4_(4,['codex-livro-de-grynn','codex-livro-de-exota']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-grynn',opcao:'deflexao-arcana'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5); igual(f.contadores['uso:carta:codex:deflexao-arcana'].valor,1);
+  contexto.ajustarGatilho_(f,{gatilho:'descanso'});
+  igual(f.contadores['uso:carta:codex:deflexao-arcana'].valor,1);
+  contexto.ajustarGatilho_(f,{gatilho:'descanso-longo'});
+  verdade(!f.contadores['uso:carta:codex:deflexao-arcana']);
+});
+
+teste('Livro de Ava: Armadura de Tava cobra 1 Esperança e mantém o estado de sustentação', () => {
+  const f=fichaCodexN4_(1,['codex-livro-de-ava','codex-livro-de-illiat']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-ava',opcao:'armadura-de-tava'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5); igual(f.contadores['estado:carta:codex:armadura-de-tava'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-ava',opcao:'armadura-de-tava',encerrar:true}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5); verdade(!f.contadores['estado:carta:codex:armadura-de-tava']);
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

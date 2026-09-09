@@ -2295,7 +2295,7 @@ function usarCartaDeDominio_(ficha, a) {
   // parte do catálogo; o cliente só envia o id e nunca escolhe custo/delta.
   let def = defBase;
   let opcaoUso = null;
-  if (a.encerrar !== true && a.reagir !== true && Array.isArray(defBase.opcoes) && defBase.opcoes.length) {
+  if (a.reagir !== true && Array.isArray(defBase.opcoes) && defBase.opcoes.length) {
     for (let i = 0; i < defBase.opcoes.length; i++) {
       if (chaveTexto_(defBase.opcoes[i].id) === chaveTexto_(a.opcao)) { opcaoUso = defBase.opcoes[i]; break; }
     }

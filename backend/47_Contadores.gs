@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 73 cartas e características mandam
+ *  O problema que este arquivo resolve: 82 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -113,6 +113,15 @@ const CONTADORES = {
   "uso:carta:bone:tocado-pelo-osso": { origem: "carta-dominio", refId: "bone-tocado-pelo-osso", nome: "Tocado pelo Osso", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
   "estado:carta:bone:golpe-arrasador": { origem: "carta-dominio", refId: "bone-golpe-arrasador", nome: "Golpe Arrasador", rotulo: "pendente", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
   "uso:carta:bone:golpe-estilhacante": { origem: "carta-dominio", refId: "bone-golpe-estilhacante", nome: "Golpe Estilhaçante", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "estado:carta:codex:armadura-de-tava": { origem: "carta-dominio", refId: "codex-livro-de-ava", nome: "Armadura de Tava", rotulo: "sustentada", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "uso:carta:codex:barragem-arcana": { origem: "carta-dominio", refId: "codex-livro-de-illiat", nome: "Barragem Arcana", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "estado:carta:codex:telepatia": { origem: "carta-dominio", refId: "codex-livro-de-illiat", nome: "Telepatia", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "estado:carta:codex:paralelo": { origem: "carta-dominio", refId: "codex-livro-de-sitil", nome: "Paralelo", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "uso:carta:codex:tranca-runica": { origem: "carta-dominio", refId: "codex-livro-de-vagras", nome: "Tranca Rúnica", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "estado:carta:codex:circulo-runico": { origem: "carta-dominio", refId: "codex-livro-de-korvax", nome: "Círculo Rúnico", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "uso:carta:codex:repudiar": { origem: "carta-dominio", refId: "codex-livro-de-exota", nome: "Repudiar", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "estado:carta:codex:construto": { origem: "carta-dominio", refId: "codex-livro-de-exota", nome: "Criar Construto", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "uso:carta:codex:deflexao-arcana": { origem: "carta-dominio", refId: "codex-livro-de-grynn", nome: "Deflexão Arcana", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -190,6 +199,15 @@ const CONTADOR_ALIASES = {
   "uso:carta:bone:tocado-pelo-osso": ["Tocado pelo Osso"],
   "estado:carta:bone:golpe-arrasador": ["Golpe Arrasador"],
   "uso:carta:bone:golpe-estilhacante": ["Golpe Estilhaçante"],
+  "estado:carta:codex:armadura-de-tava": ["Armadura de Tava"],
+  "uso:carta:codex:barragem-arcana": ["Barragem Arcana"],
+  "estado:carta:codex:telepatia": ["Telepatia"],
+  "estado:carta:codex:paralelo": ["Paralelo"],
+  "uso:carta:codex:tranca-runica": ["Tranca Rúnica"],
+  "estado:carta:codex:circulo-runico": ["Círculo Rúnico"],
+  "uso:carta:codex:repudiar": ["Repudiar"],
+  "estado:carta:codex:construto": ["Criar Construto"],
+  "uso:carta:codex:deflexao-arcana": ["Deflexão Arcana"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

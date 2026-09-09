@@ -1452,6 +1452,159 @@
     "descanso-longo"
    ],
    "observacao": "Uma vez por descanso longo."
+  },
+  {
+   "chave": "estado:carta:codex:armadura-de-tava",
+   "origem": "carta-dominio",
+   "refId": "codex-livro-de-ava",
+   "nome": "Armadura de Tava",
+   "rotulo": "sustentada",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Indica que há uma Armadura de Tava sustentada em um alvo; encerre ao descanso do alvo ou antes de trocar o alvo."
+  },
+  {
+   "chave": "uso:carta:codex:barragem-arcana",
+   "origem": "carta-dominio",
+   "refId": "codex-livro-de-illiat",
+   "nome": "Barragem Arcana",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso."
+  },
+  {
+   "chave": "estado:carta:codex:telepatia",
+   "origem": "carta-dominio",
+   "refId": "codex-livro-de-illiat",
+   "nome": "Telepatia",
+   "rotulo": "ativa",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "A conexão termina no próximo descanso ou ao lançar Telepatia novamente."
+  },
+  {
+   "chave": "estado:carta:codex:paralelo",
+   "origem": "carta-dominio",
+   "refId": "codex-livro-de-sitil",
+   "nome": "Paralelo",
+   "rotulo": "ativo",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Só uma criatura pode manter Paralelo; encerre depois do próximo ataque dela ou ao trocar o alvo."
+  },
+  {
+   "chave": "uso:carta:codex:tranca-runica",
+   "origem": "carta-dominio",
+   "refId": "codex-livro-de-vagras",
+   "nome": "Tranca Rúnica",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso, depois de uma Jogada de Conjuração bem-sucedida."
+  },
+  {
+   "chave": "estado:carta:codex:circulo-runico",
+   "origem": "carta-dominio",
+   "refId": "codex-livro-de-korvax",
+   "nome": "Círculo Rúnico",
+   "rotulo": "ativo",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Círculo mágico temporário criado no chão; duração é controlada pela mesa."
+  },
+  {
+   "chave": "uso:carta:codex:repudiar",
+   "origem": "carta-dominio",
+   "refId": "codex-livro-de-exota",
+   "nome": "Repudiar",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso, em uma Reação de Conjuração bem-sucedida."
+  },
+  {
+   "chave": "estado:carta:codex:construto",
+   "origem": "carta-dominio",
+   "refId": "codex-livro-de-exota",
+   "nome": "Criar Construto",
+   "rotulo": "ativo",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Só um construto por vez; encerra ao sofrer qualquer dano ou quando outro for criado."
+  },
+  {
+   "chave": "uso:carta:codex:deflexao-arcana",
+   "origem": "carta-dominio",
+   "refId": "codex-livro-de-grynn",
+   "nome": "Deflexão Arcana",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
   }
  ]
 }

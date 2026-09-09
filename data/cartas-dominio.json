@@ -2572,7 +2572,37 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'.",
+   "automacao": {
+    "classificacao": "automatizada-opcoes-parcial",
+    "resumo": "Armadura de Tava cobra 1 Esperança e o app mantém o estado de que há uma Armadura de Tava sustentada; os outros dois feitiços não têm custo próprio."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Impulso Poderoso e Espigão de Gelo usam Jogadas de Conjuração/dano físicos. Em Armadura de Tava, aplique +1 de Armadura ao alvo tocado; encerre o estado ao descanso desse alvo ou antes de trocar o alvo."
+   },
+   "uso": {
+    "custo": {},
+    "opcoes": [
+     {
+      "id": "armadura-de-tava",
+      "rotulo": "Armadura de Tava · 1 Esperança",
+      "custo": {
+       "esperanca": 1
+      },
+      "estado": {
+       "chave": "estado:carta:codex:armadura-de-tava",
+       "valor": 1,
+       "permiteEncerrarManual": true,
+       "rotuloAtivo": "Armadura de Tava sustentada",
+       "rotuloEncerrar": "Encerrar Armadura de Tava",
+       "avisoEncerrar": "Armadura de Tava deixou de estar sustentada."
+      },
+      "lembrete": "O alvo tocado recebe +1 na Pontuação de Armadura até o próximo descanso dele ou até você lançar Armadura de Tava novamente."
+     }
+    ],
+    "rotuloAtivar": "Usar Livro de Ava"
+   }
   },
   {
    "id": "codex-livro-de-illiat",
@@ -2598,7 +2628,56 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'.",
+   "automacao": {
+    "classificacao": "automatizada-opcoes-estado",
+    "resumo": "Barragem Arcana cobra a quantidade de Esperança informada e registra 1/descanso; Telepatia cobra 1 Esperança e mantém seu estado até ser encerrado."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Sono, ataques e dano continuam na mesa. Na Barragem, role fisicamente 1d6 por Esperança gasta. Telepatia termina no próximo descanso ou quando for lançada novamente."
+   },
+   "uso": {
+    "custo": {},
+    "opcoes": [
+     {
+      "id": "barragem-arcana",
+      "rotulo": "Barragem Arcana",
+      "entradaQuantidade": {
+       "campo": "esperancasGastas",
+       "rotulo": "Esperanças gastas",
+       "minimo": 1,
+       "maximo": 6,
+       "custoPorUnidade": {
+        "esperanca": 1
+       },
+       "ajuda": "Escolha quantas Esperanças gastar. Depois role essa mesma quantidade de d6 fora do app."
+      },
+      "marcaUso": {
+       "chave": "uso:carta:codex:barragem-arcana",
+       "maximo": 1
+      },
+      "lembrete": "Role 1d6 por Esperança gasta e cause o total como dano mágico ao alvo em alcance Próximo."
+     },
+     {
+      "id": "telepatia",
+      "rotulo": "Telepatia · 1 Esperança",
+      "custo": {
+       "esperanca": 1
+      },
+      "estado": {
+       "chave": "estado:carta:codex:telepatia",
+       "valor": 1,
+       "permiteEncerrarManual": true,
+       "rotuloAtivo": "Telepatia ativa",
+       "rotuloEncerrar": "Encerrar Telepatia",
+       "avisoEncerrar": "A conexão telepática foi encerrada."
+      },
+      "lembrete": "A comunicação mental com o alvo visível fica aberta até seu próximo descanso ou até você lançar Telepatia novamente."
+     }
+    ],
+    "rotuloAtivar": "Usar Livro de Illiat"
+   }
   },
   {
    "id": "codex-livro-de-tyfar",
@@ -2619,7 +2698,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'.",
+   "automacao": {
+    "classificacao": "classificada-manual-sem-custo-proprio",
+    "resumo": "Os três efeitos não cobram recurso do conjurador nem possuem limite de uso; por isso não há mutação automática necessária na própria ficha."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Resolva Chama Selvagem, Mão Mágica e Névoa Misteriosa na mesa. Chama Selvagem causa 2d6 mágico e faz os alvos acertados marcarem 1 Estresse; o app não rola nem altera adversários automaticamente."
+   }
   },
   {
    "id": "codex-livro-de-sitil",
@@ -2640,7 +2727,37 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'.",
+   "automacao": {
+    "classificacao": "automatizada-opcoes-estado",
+    "resumo": "Paralelo cobra 2 Esperanças e mantém um único estado sustentado; Ajustar Aparência e Ilusão não têm custo determinístico na ficha."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A mesa identifica o alvo de Paralelo e encerra o estado depois do próximo ataque dele; Ajustar Aparência e Ilusão são resolvidos pela ficção/Jogada de Conjuração."
+   },
+   "uso": {
+    "custo": {},
+    "opcoes": [
+     {
+      "id": "paralelo",
+      "rotulo": "Paralelo · 2 Esperanças",
+      "custo": {
+       "esperanca": 2
+      },
+      "estado": {
+       "chave": "estado:carta:codex:paralelo",
+       "valor": 1,
+       "permiteEncerrarManual": true,
+       "rotuloAtivo": "Paralelo sustentado",
+       "rotuloEncerrar": "Consumir/encerrar Paralelo",
+       "avisoEncerrar": "Paralelo foi consumido ou encerrado."
+      },
+      "lembrete": "No próximo ataque do alvo, ele pode atingir um alvo adicional que a jogada também acertaria. Só mantenha Paralelo em uma criatura por vez."
+     }
+    ],
+    "rotuloAtivar": "Usar Livro de Sitil"
+   }
   },
   {
    "id": "codex-livro-de-vagras",
@@ -2665,7 +2782,38 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'.",
+   "automacao": {
+    "classificacao": "automatizada-opcoes-uso",
+    "resumo": "Tranca Rúnica registra 1/descanso depois do sucesso; Porta Arcana cobra 1 Esperança depois do sucesso."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "As Jogadas de Conjuração, quem pode abrir a Tranca e a posição do portal/Revelar continuam na mesa."
+   },
+   "uso": {
+    "custo": {},
+    "opcoes": [
+     {
+      "id": "tranca-runica",
+      "rotulo": "Sucesso: Tranca Rúnica",
+      "marcaUso": {
+       "chave": "uso:carta:codex:tranca-runica",
+       "maximo": 1
+      },
+      "lembrete": "O objeto tocado fica trancado para todas as criaturas exceto as escolhidas."
+     },
+     {
+      "id": "porta-arcana",
+      "rotulo": "Sucesso: Porta Arcana · 1 Esperança",
+      "custo": {
+       "esperanca": 1
+      },
+      "lembrete": "Crie o portal até um ponto visível em alcance Distante; ele se fecha depois de uma criatura atravessar."
+     }
+    ],
+    "rotuloAtivar": "Usar Livro de Vagras"
+   }
   },
   {
    "id": "codex-livro-de-korvax",
@@ -2687,7 +2835,45 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'.",
+   "automacao": {
+    "classificacao": "automatizada-opcoes-parcial",
+    "resumo": "Retratar cobra 1 Esperança; Círculo Rúnico marca 1 Estresse e mantém um estado visível enquanto o círculo existir."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Levitação, Reação 15, dano 2d12+4 e posicionamento são resolvidos na mesa. Inabalável continua interceptando o Estresse do Círculo Rúnico."
+   },
+   "uso": {
+    "custo": {},
+    "opcoes": [
+     {
+      "id": "retratar",
+      "rotulo": "Retratar · 1 Esperança",
+      "custo": {
+       "esperanca": 1
+      },
+      "lembrete": "O alvo Corpo a Corpo faz Reação (15); em falha, esquece o último minuto da conversa."
+     },
+     {
+      "id": "circulo-runico",
+      "rotulo": "Círculo Rúnico · 1 Estresse",
+      "custo": {
+       "estresse": 1
+      },
+      "estado": {
+       "chave": "estado:carta:codex:circulo-runico",
+       "valor": 1,
+       "permiteEncerrarManual": true,
+       "rotuloAtivo": "Círculo Rúnico ativo",
+       "rotuloEncerrar": "Encerrar Círculo Rúnico",
+       "avisoEncerrar": "Círculo Rúnico encerrado."
+      },
+      "lembrete": "Adversários Corpo a Corpo ou que entrarem no alcance sofrem 2d12+4 mágico e são empurrados para Muito Próximo."
+     }
+    ],
+    "rotuloAtivar": "Usar Livro de Korvax"
+   }
   },
   {
    "id": "codex-livro-de-norai",
@@ -2712,7 +2898,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'.",
+   "automacao": {
+    "classificacao": "classificada-manual-sem-custo-proprio",
+    "resumo": "Vínculo Místico e Bola de Fogo não cobram recurso nem uso limitado do conjurador; não há mutação automática necessária na ficha dele."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A mesa resolve Jogadas de Conjuração/Reação, Restrito, Estresse dos alvos e todo dano. Nenhum dado é rolado pelo app."
+   }
   },
   {
    "id": "codex-livro-de-exota",
@@ -2735,7 +2929,46 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'.",
+   "automacao": {
+    "classificacao": "automatizada-opcoes-estado",
+    "resumo": "Repudiar registra 1/descanso após a Reação bem-sucedida; Criar Construto cobra 1 Esperança e mantém o estado de um único construto."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Reação de Repudiar, comandos e ataques do construto são rolados na mesa. Encerre o construto quando sofrer qualquer dano ou antes de conjurar outro."
+   },
+   "uso": {
+    "custo": {},
+    "opcoes": [
+     {
+      "id": "repudiar",
+      "rotulo": "Sucesso: Repudiar",
+      "marcaUso": {
+       "chave": "uso:carta:codex:repudiar",
+       "maximo": 1
+      },
+      "lembrete": "A Reação com Conjuração teve sucesso: cancele o efeito mágico e suas consequências."
+     },
+     {
+      "id": "criar-construto",
+      "rotulo": "Criar Construto · 1 Esperança",
+      "custo": {
+       "esperanca": 1
+      },
+      "estado": {
+       "chave": "estado:carta:codex:construto",
+       "valor": 1,
+       "permiteEncerrarManual": true,
+       "rotuloAtivo": "Construto ativo",
+       "rotuloEncerrar": "Desfazer Construto",
+       "avisoEncerrar": "O construto foi desfeito."
+      },
+      "lembrete": "Mantenha apenas um construto. Ele usa sua Evasão e atributos; ataques causam 2d10+3 físico e ele se desfaz ao sofrer dano."
+     }
+    ],
+    "rotuloAtivar": "Usar Livro de Exota"
+   }
   },
   {
    "id": "codex-livro-de-grynn",
@@ -2757,7 +2990,33 @@
    ],
    "pendenteTraducao": false,
    "errata": "Errata oficial 09/09/2025, p.333: Muralha de Chamas cria uma muralha temporária de chamas mágicas. Aplicada no texto exibido.",
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'.",
+   "automacao": {
+    "classificacao": "automatizada-opcoes-uso",
+    "resumo": "Deflexão Arcana cobra 1 Esperança e registra 1/descanso longo. Tranca Temporal e Muralha de Chamas não têm custo próprio do conjurador."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Use Deflexão após confirmar o ataque elegível. Tranca Temporal e Muralha de Chamas continuam com Jogadas, alvo, duração ficcional e dano resolvidos na mesa."
+   },
+   "uso": {
+    "custo": {},
+    "opcoes": [
+     {
+      "id": "deflexao-arcana",
+      "rotulo": "Deflexão Arcana · 1 Esperança",
+      "custo": {
+       "esperanca": 1
+      },
+      "marcaUso": {
+       "chave": "uso:carta:codex:deflexao-arcana",
+       "maximo": 1
+      },
+      "lembrete": "Anule o dano do ataque que mira você ou um aliado em alcance Muito Próximo."
+     }
+    ],
+    "rotuloAtivar": "Usar Livro de Grynn"
+   }
   },
   {
    "id": "codex-manifestar-muralha",
