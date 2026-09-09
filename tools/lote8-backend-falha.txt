@@ -1,0 +1,250 @@
+  ✓ não dá para aplicar a mesma carta duas vezes
+  ✓ não dá para aplicar carta que o personagem não tem
+  ✓ a carta trancada NÃO volta para a mão
+  ✓ a carta que muda o ALVO não passa por aqui
+
+Lote 8 — ancestralidades ativas, custos e limites
+  ✓ Dobradora da Sorte cobra 3 Esperanças, respeita 1/sessão e volta na próxima
+  ✓ Sentido de Perigo cobra 1 Estresse, respeita 1/descanso e não vaza para outras fichas
+  ✓ custos simples de ancestralidade são cobrados pelo servidor e devolvem o lembrete
+  ✓ nome de habilidade não permite usar característica de ancestralidade que a ficha não possui
+  ✓ ancestralidade mista só usa a característica realmente escolhida
+
+Lote 8 — dano recebido e reações de ancestralidade
+  ✓ dano informado na ficha usa os mesmos limiares do encontro
+  ✓ Pele Grossa troca o PV de dano Menor por exatamente 2 Estresses
+  ✓ Fortitude Aumentada reduz dano físico à metade ANTES dos limiares e cobra 3 Esperanças
+  ✓ Fortitude Aumentada não pode ser paga em dano mágico e a recusa não toca na ficha
+  ✓ Pele Grossa pode entrar depois de Fortitude quando a metade cai em dano Menor
+  ✓ Escamas reduz em 1 PV o dano Severo e cobra 1 Estresse
+  ✓ Escamas também reduz o 4º PV da regra opcional de dano massivo
+  ✓ reação sem recurso suficiente é recusada inteira
+  ✓ nome de reação não deixa outra ancestralidade roubar Pele Grossa ou Escamas
+  ✓ ancestralidade mista só pode usar a reação de dano que realmente escolheu
+  ✓ dano que marca o último PV preserva o mesmo gatilho de movimento de morte
+  ✓ Galapa ativa Retrair por 1 Estresse e não consegue pagar duas vezes
+  ✓ Retração reduz dano físico à metade antes dos limiares e não afeta dano mágico
+  ✓ sair da Retração é gratuito e remove a resistência
+  ✓ Retrair exige espaço de Estresse e posse real da característica
+
+Lote 8 — perfis ofensivos e alcance de ancestralidade
+  ✓ Sopro Elemental vira perfil Instinto/Muito Próximo/d8 mágico por Proficiência
+  ✓ Língua Comprida tem perfil d12 físico e cobra 1 Estresse no uso
+  ✓ Garras Retráteis publicam a consequência do sucesso sem rolar dado
+  ✓ Alcance/Gigante transforma Corpo a Corpo, mas não mexe nos outros alcances
+  ✓ ancestralidade mista só publica o perfil realmente escolhido
+
+Lote 8 — criação, descanso e início de sessão por ancestralidade
+  ✓ Projeto Intencional exige exatamente uma Experiência inicial em +3
+  ✓ Projeto Intencional respeita a característica realmente escolhida na ancestralidade mista
+  ✗ Transe Celestial dá exatamente um movimento adicional em qualquer descanso
+      contexto.movimentosPorDescansoDaFicha_ is not a function
+  ✗ Transe Celestial em ancestralidade mista depende de ter escolhido a segunda característica do Elfo
+      contexto.movimentosPorDescansoDaFicha_ is not a function
+  ✗ Talismã da Sorte conta portadores reais no grupo, inclusive ancestralidade mista
+      contexto.esperancaDoGrupoNoInicioDaSessao_ is not a function
+  ✗ abrir sessão congela o bônus de Talismã para quem sincronizar depois
+      valores diferentes: recebi undefined, esperava 2
+  ✓ Talismã da Sorte entra uma vez por sessão e respeita o máximo de Esperança
+  ✓ Bússola Interna/Senso de Direção continua sendo rerrolagem manual, não RNG do app
+
+Vocabulário
+  ✗ nenhum texto CANÔNICO diz "teste" — o das cartas é "jogada"
+      valores diferentes: recebi ["ancestralidades.json [texto]"], esperava []
+
+Encontro em jogo
+  ✓ dano vira PV pelos limiares da ficha (livro p.91)
+  ✓ dano massivo marca 4 PV — e só quando a mesa liga
+  ✓ os limiares saem do texto "7/15" da ficha
+  ✓ lacaio: o alvo cai com qualquer dano, e mais um a cada N
+  ✓ acrescentar dois ursos dá duas trilhas independentes
+  ✓ o dano digitado vira PV na trilha do adversário certo
+  ✓ marcar o último PV derrota, e o aviso do livro aparece
+  ✓ lacaio cai inteiro com qualquer dano, e o app diz quantos vão junto
+  ✓ a horda avisa quando passa da metade dos PV
+  ✓ condição de adversário passa pelo mesmo validador da ficha
+  ✓ pôr em foco: o primeiro é de graça, o segundo custa 1 Medo
+  ✓ sem Medo sobrando, pôr em foco é recusado inteiro
+  ✓ adversário derrotado não entra em foco
+  ✓ derrotar tira do foco sozinho
+  ✓ o encontro sobrevive à gravação, com trilha e tudo
+  ✓ adversário inventado é recusado ao entrar na cena
+  ✓ a conta de Pontos de Batalha lê a cena montada
+  ✓ adversário derrotado continua contando Pontos de Batalha
+  ✓ a habilidade cobra o Medo da MESA e o Estresse do PRÓPRIO adversário
+  ✓ sem Medo na mesa, a habilidade é recusada inteira
+  ✓ sem Estresse sobrando no adversário, a habilidade é recusada
+  ✓ um adversário não gasta o Estresse do outro
+  ✓ habilidade sem custo não é "usada" — não há o que cobrar
+  ✓ adversário derrotado não usa habilidade
+  ✓ habilidade com contagem de valor fixo cria a contagem junto
+  ✓ contagem em DADO espera o número que a Mestra rolou
+  ✓ toda habilidade que custa Estresse cabe no Estresse da ficha
+  ✓ resistência corta o dano pela metade antes dos limiares (livro p.98)
+  ✓ o adversário resistente só resiste ao tipo de dano dele
+  ✓ sem dizer o tipo, o dano passa inteiro — o app não adivinha
+  ✓ a Forma Fantasmagórica dá resistência a quem está em cena
+  ✓ o efeito é da INSTÂNCIA, não da ficha
+  ✓ efeito inventado é ignorado
+  ✓ limpar o encontro zera a cena sem tocar no Medo
+
+Adversários da mesa
+  ✓ a ficha nasce com a sugestão do livro para o patamar (p.208)
+  ✓ salvar uma ficha da mesa e achá-la pelo nome
+  ✓ a ficha da mesa entra na cena com trilha própria
+  ✓ o custo sai do TEXTO que a Mestra escreveu
+  ✓ a habilidade da ficha da mesa cobra igual às do livro
+  ✓ lacaio da mesa não ganha limiares, e cai com qualquer dano
+  ✓ não dá para apagar ficha que está em cena
+  ✓ ficha sem nome ou com tipo inventado é recusada
+  ✓ a ficha da mesa entra na conta de Pontos de Batalha
+  ✓ salvar de novo com o mesmo id reescreve, não duplica
+  ✓ a terceira categoria de ouro se chama BAÚ, e "cofre" continua achando
+  ✓ a mensagem de estouro do ouro fala em baú, não em cofre
+  ✓ nenhum campo de texto fica exposto ao corretor do celular
+
+Verbetes
+  ✓ todo verbete tem página dentro do livro e resumo que cabe no celular
+  ✓ nenhuma palavra aciona DOIS verbetes
+  ✓ todo "veja também" aponta para um verbete que existe
+  ✓ o termo da Jambô vem do GLOSSÁRIO, não de uma segunda lista
+  ✓ as faixas de dano caem TODAS no mesmo verbete
+
+A regra opcional das moedas (SRD)
+  ✓ a regra é da MESA, e o padrão é desligada
+  ✓ com a regra ligada, 10 moedas viram 1 punhado
+  ✓ a escada inteira sobe e desce em moedas
+  ✓ desligar a regra GUARDA as moedas em vez de apagar
+  ✓ comprar cobra na escada que a mesa está usando
+
+Marcadores criados à mão
+  ✓ cria um marcador com nome e teto
+  ✓ o marcador à mão conta, respeita o teto e NÃO some no zero
+  ✓ o nome do marcador não pode colidir com um do livro
+  ✓ não dá para criar dois marcadores com o mesmo nome
+  ✓ a validação saneia nome e teto vindos de fora
+  ✓ excluir tira o marcador da ficha
+
+A mochila com quantidade, uso e catálogo
+  ✓ a ficha antiga (item como texto solto) se conserta sozinha
+  ✓ guardar o mesmo item de novo SOMA em vez de repetir a linha
+  ✓ o item do livro entra com o NOME do livro, e o id é conferido
+  ✓ texto livre e item do livro com o mesmo nome NÃO se juntam
+  ✓ a quantidade sobe, desce e o zero TIRA o item
+  ✓ a NOTA só entra em item escrito à mão, e apagar tira o campo
+  ✓ a quantidade tem teto
+  ✓ marcar em uso é do item, não da mochila
+  ✓ comprar o que já se tem soma a quantidade e cobra uma vez
+
+A foto do personagem
+  ✓ guardar a foto grava só o ID na ficha, nunca uma URL
+  ✓ o arquivo nasce visível para a mesa
+  ✓ trocar a foto manda a ANTERIOR para a lixeira, e só ela
+  ✓ uma foto recusada não mexe na que já está lá
+  ✓ recusa imagem maior que o teto
+  ✓ salvarPersonagem não deixa passar URL no lugar do id
+  ✓ a foto de outra pessoa é recusada
+  ✓ remover a foto limpa a ficha e manda o arquivo para o lixo
+
+Faxina das fotos órfãs
+  ✓ a faxina em seco NÃO apaga nada
+  ✓ a foto de uma ficha ARQUIVADA não é órfã
+  ✓ a faxina manda a órfã para a lixeira e deixa o resto em paz
+  ✓ ficha que não abre PARA a faxina inteira
+
+Zerar planilha
+  ✓ arquivarEResetar preserva o antigo e recria vazio
+
+501 passaram, 12 falharam.
+
+normaliza ancestralidade pelo nome da carta e pelo do livro Error: valores diferentes: recebi null, esperava "clank"
+    at igual (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:33:22)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:502:3
+    at teste (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:20:5)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:497:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+a regra do descanso interrompido viaja com os movimentos (fecha B5) TypeError: Cannot read properties of undefined (reading 'seInterrompido')
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:1404:41
+    at teste (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:20:5)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:1392:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+movimentosDeDescanso monta a lista da tela Error: {"ok":false,"erro":{"codigo":"INTERNO","mensagem":"movimentosPorDescansoDaFicha_ is not defined","extra":null}}
+    at verdade (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:37:21)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:3772:3
+    at teste (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:20:5)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:3770:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+a sessão 1 põe o Medo em 1 por personagem — é regra de CAMPANHA Error: {"ok":false,"erro":{"codigo":"INTERNO","mensagem":"esperancaDoGrupoNoInicioDaSessao_ is not defined","extra":null}}
+    at verdade (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:37:21)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:4535:3
+    at teste (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:20:5)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:4520:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+abrir sessão NÃO zera o Medo — ele transfere entre sessões Error: {"ok":false,"erro":{"codigo":"INTERNO","mensagem":"esperancaDoGrupoNoInicioDaSessao_ is not defined","extra":null}}
+    at verdade (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:37:21)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:4551:3
+    at teste (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:20:5)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:4545:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+não dá para abrir duas sessões, nem encerrar duas vezes Error: esperava verdadeiro
+    at verdade (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:37:21)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:4568:3
+    at teste (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:20:5)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:4558:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+voltar para antes da primeira sessão devolve a campanha ao começo TypeError: Cannot read properties of undefined (reading 'sessao')
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:4589:26
+    at teste (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:20:5)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:4573:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+Transe Celestial dá exatamente um movimento adicional em qualquer descanso TypeError: contexto.movimentosPorDescansoDaFicha_ is not a function
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:5693:18
+    at teste (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:20:5)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:5691:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+Transe Celestial em ancestralidade mista depende de ter escolhido a segunda característica do Elfo TypeError: contexto.movimentosPorDescansoDaFicha_ is not a function
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:5715:18
+    at teste (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:20:5)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:5710:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+Talismã da Sorte conta portadores reais no grupo, inclusive ancestralidade mista TypeError: contexto.esperancaDoGrupoNoInicioDaSessao_ is not a function
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:5738:18
+    at teste (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:20:5)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:5724:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+abrir sessão congela o bônus de Talismã para quem sincronizar depois Error: valores diferentes: recebi undefined, esperava 2
+    at igual (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:33:22)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:5744:3
+    at teste (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:20:5)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:5741:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+nenhum texto CANÔNICO diz "teste" — o das cartas é "jogada" Error: valores diferentes: recebi ["ancestralidades.json [texto]"], esperava []
+    at igual (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:33:22)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:5818:3
+    at teste (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:20:5)
+    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:5794:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
