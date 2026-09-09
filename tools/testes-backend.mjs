@@ -7966,6 +7966,28 @@ teste('Prosperar no Caos cobra 1 Estresse e deixa o +1 PV do alvo explícito', (
   const antes=f.recursos.estresseMarcado; const r=contexto.aplicarAjustes_(f,[{tipo:'habilidade',nome:'Prosperar no Caos'}]); igual(r.erros,[]); igual(f.recursos.estresseMarcado,antes+1); verdade(/1 Ponto de Vida adicional/.test(r.mudancas[0].aviso||''));
 });
 
+
+teste('Preparado via multiclasse exige a carta adicional e aceita o domínio recém-adquirido', () => {
+  const f = bardoNivel5();
+  const base = {
+    opcao: 'multiclasse', classe: 'mago', dominio: 'SPLENDOR',
+    subclasse: 'mago-escola-do-conhecimento'
+  };
+  const sem = contexto.simularAvanco_(f, { avancos: [base] });
+  verdade(sem.previa.erros.some((e) => /Fundação da multiclasse.*carta\(s\) de domínio adicional/i.test(e)),
+    JSON.stringify(sem.previa));
+
+  const comCarta = contexto.simularAvanco_(f, { avancos: [Object.assign({}, base, {
+    cartasExtrasDeSubclasse: ['splendor-segundo-folego']
+  })] });
+  igual(comCarta.previa.erros, [], JSON.stringify(comCarta.previa));
+  verdade(contexto.temCartaNaFicha_(comCarta.ficha, 'splendor-segundo-folego'),
+    'Preparado precisa aceitar uma carta do domínio SPLENDOR recém-adquirido');
+  const limite = contexto.limitesDeDominio_(comCarta.ficha).find((l) => l.dominio === 'SPLENDOR');
+  igual(limite.nivelMaximo, 3, 'no nível 6 o domínio da multiclasse continua limitado a 3');
+});
+
+
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));

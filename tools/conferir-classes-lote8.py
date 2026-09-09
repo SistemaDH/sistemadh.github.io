@@ -161,4 +161,10 @@ for etapa, nome, qtd in [('fundacao', 'Enfrente Seu Medo', 1), ('especializacao'
 prosperar = next(x for x in guerra['cartas']['maestria']['caracteristicas'] if x['nome'] == 'Prosperar no Caos')
 assert prosperar['uso']['custo']['estresse'] == 1
 
+ui_avanco = (R / 'js/telas/avanco.js').read_text(encoding='utf-8')
+assert 'function limitesComDominioDaMulticlasse()' in ui_avanco
+assert "Preparado — carta de domínio adicional" in ui_avanco
+assert 'cartasExtrasDeSubclasse: escolha.cartasExtrasDeSubclasse.slice()' in ui_avanco
+assert 'limitesOverride: limitesComDominioDaMulticlasse()' in ui_avanco
+
 print('Lote 8 — classes: Bardo, Druida, Feiticeiro, Guardião, Guerreiro e Mago fechados; Mago inclui cartas extras, Especialização Apurada, dano com Medo e Prosperar no Caos.')

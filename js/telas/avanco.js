@@ -204,9 +204,9 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
         pedido.cartasExtrasDeSubclasse = xs;
       }
       if (extras.multiclasse) {
-        const m = extras.multiclasse.valor();
-        if (!m) { avisarErro('Escolha a classe, o domínio e a subclasse.'); return; }
-        Object.assign(pedido, m);
+        const problema = extras.multiclasse.problema();
+        if (problema) { avisarErro(problema); return; }
+        Object.assign(pedido, extras.multiclasse.valor());
       }
       escolhidos.push(pedido);
       passoEscolhas();
@@ -324,7 +324,10 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
   function escolherMulticlasse(cartao) {
     const mc = info.multiclasse || {};
     const classes = mc.opcoes || [];
-    let escolha = { classe: null, dominio: null, subclasse: null };
+    let escolha = {
+      classe: null, dominio: null, subclasse: null,
+      cartasExtrasDeSubclasse: []
+    };
 
     const selClasse = el('select', { class: 'campo__entrada' });
     selClasse.append(el('option', { value: '' }, '— escolha a classe —'));
@@ -332,20 +335,96 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
 
     const selDominio = el('select', { class: 'campo__entrada', disabled: true });
     const selSubclasse = el('select', { class: 'campo__entrada', disabled: true });
+    const caixaCartaExtra = el('div', { class: 'pilha' });
+
+    /** A regra da Fundação vem do catálogo completo, não de texto digitado no front. */
+    function regrasExtrasDaFundacao() {
+      const c = (catalogo.classes || []).find((x) => x.id === escolha.classe);
+      const s = c && (c.subclasses || []).find((x) => x.id === escolha.subclasse);
+      const caracs = (((s || {}).cartas || {}).fundacao || {}).caracteristicas || [];
+      return caracs.filter((f) => f && f.cartaDominioExtra)
+        .map((f) => Object.assign({ caracteristica: f.nome }, f.cartaDominioExtra));
+    }
+
+    function quantidadeCartasExtras() {
+      return regrasExtrasDaFundacao().reduce((n, r) =>
+        n + Math.max(0, Math.trunc(Number(r.quantidade)) || 0), 0);
+    }
+
+    /**
+     * Ao escolher a multiclasse, o domínio novo já é um domínio acessível para
+     * Preparado. O teto dele continua sendo o da multiclasse: metade do nível,
+     * arredondando para cima. Os domínios originais continuam no nível cheio.
+     */
+    function limitesComDominioDaMulticlasse() {
+      const limites = (info.limitesDeDominio || []).map((l) => Object.assign({}, l));
+      const dominio = escolha.dominio;
+      if (dominio && !limites.some((l) => l.dominio === dominio)) {
+        limites.push({
+          dominio,
+          nivelMaximo: Math.max(1, Math.ceil((Number(info.nivelNovo) || 1) / 2)),
+          origem: 'multiclasse'
+        });
+      }
+      return limites;
+    }
+
+    function redesenharCartaExtra() {
+      escolha.cartasExtrasDeSubclasse = [];
+      limpar(caixaCartaExtra);
+      const esperado = quantidadeCartasExtras();
+      if (!esperado) return;
+
+      const rotulo = el('span', { class: 'texto-sm texto-fraco', texto: 'Nenhuma escolhida ainda.' });
+      const botao = el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--pequeno',
+        disabled: !(escolha.dominio && escolha.subclasse),
+        onClick: () => abrirEscolhaDeCarta({
+          nivelMaximo: info.nivelNovo,
+          limitesOverride: limitesComDominioDaMulticlasse(),
+          aoEscolher: (c) => {
+            escolha.cartasExtrasDeSubclasse = [c.id];
+            rotulo.textContent = c.nome;
+          }
+        })
+      }, esperado === 1 ? 'Escolher a carta de Preparado' : 'Escolher cartas adicionais');
+
+      caixaCartaExtra.append(el('div', { class: 'campo' }, [
+        el('span', { class: 'campo__rotulo', texto:
+          esperado === 1
+            ? 'Preparado — carta de domínio adicional'
+            : `Cartas de domínio adicionais (${esperado})` }),
+        el('p', { class: 'campo__ajuda', texto:
+          'A Fundação escolhida concede esta carta agora. O domínio novo já conta como acessível, respeitando o teto da multiclasse.' }),
+        el('div', { class: 'linha' }, [rotulo, el('span', { class: 'crescer' }), botao])
+      ]));
+    }
 
     selClasse.addEventListener('change', () => {
-      escolha = { classe: selClasse.value || null, dominio: null, subclasse: null };
+      escolha = { classe: selClasse.value || null, dominio: null, subclasse: null, cartasExtrasDeSubclasse: [] };
       const c = classes.find((x) => x.id === selClasse.value);
       limpar(selDominio).append(el('option', { value: '' }, '— escolha o domínio —'));
       limpar(selSubclasse).append(el('option', { value: '' }, '— escolha a subclasse —'));
-      if (!c) { selDominio.disabled = true; selSubclasse.disabled = true; return; }
+      if (!c) {
+        selDominio.disabled = true;
+        selSubclasse.disabled = true;
+        redesenharCartaExtra();
+        return;
+      }
       c.dominios.forEach((d) => selDominio.append(el('option', { value: d.codigo }, d.nome)));
       c.subclasses.forEach((s) => selSubclasse.append(el('option', { value: s.id }, s.nome)));
       selDominio.disabled = false;
       selSubclasse.disabled = false;
+      redesenharCartaExtra();
     });
-    selDominio.addEventListener('change', () => { escolha.dominio = selDominio.value || null; });
-    selSubclasse.addEventListener('change', () => { escolha.subclasse = selSubclasse.value || null; });
+    selDominio.addEventListener('change', () => {
+      escolha.dominio = selDominio.value || null;
+      redesenharCartaExtra();
+    });
+    selSubclasse.addEventListener('change', () => {
+      escolha.subclasse = selSubclasse.value || null;
+      redesenharCartaExtra();
+    });
 
     const metade = Math.max(1, Math.ceil(info.nivelNovo / 2));
     cartao.append(
@@ -361,11 +440,31 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
       ]),
       el('label', { class: 'campo' }, [
         el('span', { class: 'campo__rotulo', texto: 'Subclasse (você pega a carta fundamental)' }), selSubclasse
-      ])
+      ]),
+      caixaCartaExtra
     );
 
     return {
-      valor: () => (escolha.classe && escolha.dominio && escolha.subclasse) ? escolha : null
+      problema() {
+        if (!escolha.classe || !escolha.dominio || !escolha.subclasse) {
+          return 'Escolha a classe, o domínio e a subclasse.';
+        }
+        const esperado = quantidadeCartasExtras();
+        if (escolha.cartasExtrasDeSubclasse.length !== esperado) {
+          return esperado === 1
+            ? 'Esta Fundação tem Preparado: escolha a carta de domínio adicional.'
+            : `Esta Fundação concede ${esperado} cartas de domínio adicionais.`;
+        }
+        return null;
+      },
+      valor() {
+        return {
+          classe: escolha.classe,
+          dominio: escolha.dominio,
+          subclasse: escolha.subclasse,
+          cartasExtrasDeSubclasse: escolha.cartasExtrasDeSubclasse.slice()
+        };
+      }
     };
   }
 
@@ -475,8 +574,8 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
   }
 
   /** Lista as cartas que cabem no teto, respeitando o limite de cada domínio. */
-  function abrirEscolhaDeCarta({ nivelMaximo, aoEscolher }) {
-    const limites = info.limitesDeDominio || [];
+  function abrirEscolhaDeCarta({ nivelMaximo, aoEscolher, limitesOverride = null }) {
+    const limites = limitesOverride || info.limitesDeDominio || [];
     const ficha = personagem.ficha || {};
     const jaTem = new Set([].concat(ficha.cartas?.ativas || [], ficha.cartas?.cofre || [])
       .map((c) => (c && typeof c === 'object') ? c.id : c));
