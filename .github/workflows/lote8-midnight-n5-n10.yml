@@ -1,0 +1,96 @@
+name: Lote 8 - Meia-Noite N5-N10
+
+on:
+  push:
+    branches: [tmp-lote8-midnight-n5-n10-sol]
+
+permissions:
+  contents: write
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materializar Meia-Noite N5-N10
+        run: |
+          python3 tools/lote8-midnight-n5-n10.py
+          node tools/gerar-41-dominios.mjs
+          node tools/gerar-47-contadores.mjs
+          node tools/gerar-4B-descanso.mjs
+          git diff --check
+
+      - name: Conferir classificacao e auditoria
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/cartas-dominio.json',encoding='utf-8'))
+          ids={
+            'midnight-retirada-fantasma','midnight-silencio','midnight-disfarce-em-massa','midnight-sussurros-sombrios',
+            'midnight-esquiva-desaparecente','midnight-tocado-pela-meia-noite','midnight-carga-magica','midnight-cacador-das-sombras',
+            'midnight-terror-noturno','midnight-tributo-do-crepusculo','midnight-eclipse','midnight-espectro-da-escuridao'
+          }
+          xs=[c for c in d['cartas'] if c['id'] in ids]
+          assert len(xs)==12, len(xs)
+          assert all(c.get('automacao') for c in xs), [c['id'] for c in xs if not c.get('automacao')]
+          assert all((c.get('resolucaoManual') or {}).get('rolaNoApp') is False for c in xs)
+          cont=json.load(open('data/contadores.json',encoding='utf-8'))['contadores']
+          assert len(cont)==121, len(cont)
+          keys={x['chave'] for x in cont}
+          for k in [
+            'carta:midnight-disfarce-em-massa','carta:midnight-carga-magica','carta:midnight-tributo-do-crepusculo',
+            'estado:carta:midnight:esquiva-desaparecente','uso:carta:midnight:terror-noturno',
+            'uso:carta:midnight:eclipse','estado:carta:midnight:eclipse','estado:carta:midnight:espectro-da-escuridao'
+          ]: assert k in keys, k
+          PY
+          python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria-lote8.md
+          if grep -Eq '^\| Meia-Noite \| (5|6|7|8|9|10) \|' /tmp/auditoria-lote8.md; then
+            echo 'Ainda ha Meia-Noite N5-N10 candidata sem sinal especifico:'
+            grep -E '^\| Meia-Noite \| (5|6|7|8|9|10) \|' /tmp/auditoria-lote8.md
+            exit 1
+          fi
+          grep -q 'midnight-retirada-fantasma' backend/41_Dominios.gs
+          grep -q 'estado:carta:midnight:espectro-da-escuridao' backend/47_Contadores.gs
+
+      - name: Testes backend
+        shell: bash
+        run: |
+          set -o pipefail
+          node tools/testes-backend.mjs | tee /tmp/backend.log
+          ! grep -q '✗' /tmp/backend.log
+          tail -n 30 /tmp/backend.log
+
+      - name: Instalar Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install chromium
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados e CSS
+        run: |
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+          git diff --check
+
+      - name: Proteger contra concorrencia
+        run: |
+          git fetch origin 'ediçãoclaude'
+          test "$(git rev-parse 'origin/ediçãoclaude')" = 'ef207b8fa5565ffb20ceb7ef1ed542808b9fcd3c'
+
+      - name: Commitar funcional e limpar temporarios
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f --ignore-unmatch tools/lote8-midnight-n5-n10.py
+          git rm -f --ignore-unmatch .github/workflows/lote8-midnight-n5-n10.yml
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          find . -type f -name '*.pyc' -delete
+          git add -A
+          git diff --cached --check
+          git commit -m 'feat: revisar Meia-Noite níveis 5 a 10 [lote8-generated]'
+          git push origin HEAD:tmp-lote8-midnight-n5-n10-sol
