@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 40 cartas e características mandam
+ *  O problema que este arquivo resolve: 41 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -80,6 +80,7 @@ const CONTADORES = {
   "uso:ancestralidade:fada:dobradora-da-sorte": { origem: "caracteristica-ancestralidade", refId: "fada", nome: "Dobradora da Sorte", rotulo: "já usou", tipo: "usos", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-de-sessao"], recarregaEm: [], exigeCaracteristica: "Dobradora da Sorte" },
   "uso:ancestralidade:goblin:sentido-de-perigo": { origem: "caracteristica-ancestralidade", refId: "goblin", nome: "Sentido de Perigo", rotulo: "já usou", tipo: "usos", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], exigeCaracteristica: "Sentido de Perigo" },
   "estado:ancestralidade:galapa:retracao": { origem: "caracteristica-ancestralidade", refId: "galapa", nome: "Retrair", rotulo: "ativa", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], exigeCaracteristica: "Retrair" },
+  "estado:ancestralidade:fada:voando": { origem: "caracteristica-ancestralidade", refId: "fada", nome: "Asas", rotulo: "voando", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], exigeCaracteristica: "Asas" },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -124,6 +125,7 @@ const CONTADOR_ALIASES = {
   "uso:ancestralidade:fada:dobradora-da-sorte": ["Dobradora da Sorte"],
   "uso:ancestralidade:goblin:sentido-de-perigo": ["Sentido de Perigo"],
   "estado:ancestralidade:galapa:retracao": ["Retrair"],
+  "estado:ancestralidade:fada:voando": ["Asas"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

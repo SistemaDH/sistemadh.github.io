@@ -63,7 +63,7 @@ assert feat('halfling', 'Portador da Sorte').get('efeitoSessao', {}).get('grupo'
 assert feat('halfling', 'Bússola Interna').get('rolagemManual', {}).get('acao') == 'rerrolar-dado-esperanca'
 
 # Ainda adiados: dependem de estado/fluxo próprio nos próximos subblocos.
-for aid, nome in [('fada', 'Asas'), ('firbolg', 'Inabalável')]:
+for aid, nome in [('firbolg', 'Inabalável')]:
     assert not feat(aid, nome).get('uso'), f'{aid}/{nome}: foi marcado pronto antes do fluxo correto'
 
 por_chave = {c['chave']: c for c in cont['contadores']}
@@ -75,6 +75,19 @@ assert gob['refId'] == 'goblin' and gob['exigeCaracteristica'] == 'Sentido de Pe
 assert gob['maximo'] == {'tipo': 'fixo', 'valor': 1} and gob['zeraEm'] == ['descanso']
 
 
+
+# Asas/Fada — voo é estado real; a reação não altera a Evasão persistida.
+asas = feat('fada', 'Asas').get('uso') or {}
+assert asas.get('custo') == {}
+estado_asas = asas.get('estado') or {}
+assert estado_asas.get('chave') == 'estado:ancestralidade:fada:voando'
+assert estado_asas.get('rotuloEncerrar') == 'Pousar'
+reacao_asas = asas.get('reacaoEnquantoAtivo') or {}
+assert reacao_asas.get('custo') == {'estresse': 1}
+assert reacao_asas.get('bonusEvasao') == 2
+asas_cont = por_chave['estado:ancestralidade:fada:voando']
+assert asas_cont['refId'] == 'fada' and asas_cont['exigeCaracteristica'] == 'Asas'
+assert asas_cont['maximo'] == {'tipo': 'fixo', 'valor': 1} and asas_cont['zeraEm'] == ['manual']
 
 # Retração/Galapa — estado real + custo + integração de resistência.
 retrair = feat('galapa', 'Retrair').get('uso') or {}
@@ -106,4 +119,4 @@ assert garras.get('consequenciaSucesso') == {'condicao': 'Vulnerável', 'tempora
 gigante = feat('gigante', 'Alcance').get('modificadorAlcance') or {}
 assert gigante.get('de') == 'Corpo a Corpo' and gigante.get('para') == 'Muito Próximo'
 
-print('Lote 8 — ancestralidades: 18 entradas; usos, dano, Retração, perfis, Alcance, Projeto Intencional, Transe e Talismã protegidos.')
+print('Lote 8 — ancestralidades: 18 entradas; usos, dano, Retração, Asas, perfis, Alcance, Projeto Intencional, Transe e Talismã protegidos.')

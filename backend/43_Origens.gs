@@ -266,6 +266,8 @@ const HABILIDADES_DE_ORIGEM_COM_USO = {
     "alvo": null,
     "marcaUso": "",
     "estado": null,
+    "rotuloAtivar": "",
+    "reacaoEnquantoAtivo": null,
     "lembrete": "Ganhe vantagem na jogada de reação. Faça a rolagem manualmente."
   },
   "Dobradora da Sorte": {
@@ -277,7 +279,33 @@ const HABILIDADES_DE_ORIGEM_COM_USO = {
     "alvo": null,
     "marcaUso": "uso:ancestralidade:fada:dobradora-da-sorte",
     "estado": null,
+    "rotuloAtivar": "",
+    "reacaoEnquantoAtivo": null,
     "lembrete": "Rerrole os Dados da Dualidade manualmente; o novo resultado substitui o anterior."
+  },
+  "Asas": {
+    "origem": "ancestralidade",
+    "refId": "fada",
+    "custo": {},
+    "alvo": null,
+    "marcaUso": "",
+    "estado": {
+      "chave": "estado:ancestralidade:fada:voando",
+      "valor": 1,
+      "rotuloAtivo": "Voando",
+      "rotuloEncerrar": "Pousar",
+      "avisoEncerrar": "Asas: você pousou."
+    },
+    "rotuloAtivar": "Começar a voar",
+    "reacaoEnquantoAtivo": {
+      "custo": {
+        "estresse": 1
+      },
+      "bonusEvasao": 2,
+      "rotulo": "Reagir ao ataque",
+      "lembrete": "+2 de Evasão contra este ataque. A Evasão base da ficha não muda."
+    },
+    "lembrete": "Você está voando. Enquanto voar, pode reagir depois de um ataque contra você."
   },
   "Chute": {
     "origem": "ancestralidade",
@@ -288,6 +316,8 @@ const HABILIDADES_DE_ORIGEM_COM_USO = {
     "alvo": null,
     "marcaUso": "",
     "estado": null,
+    "rotuloAtivar": "",
+    "reacaoEnquantoAtivo": null,
     "lembrete": "Após o ataque Corpo a Corpo bem-sucedido, role 2d6 de dano extra e mova você ou o alvo para alcance Muito Próximo."
   },
   "Investida": {
@@ -299,6 +329,8 @@ const HABILIDADES_DE_ORIGEM_COM_USO = {
     "alvo": null,
     "marcaUso": "",
     "estado": null,
+    "rotuloAtivar": "",
+    "reacaoEnquantoAtivo": null,
     "lembrete": "Após o movimento qualificado bem-sucedido, role 1d12 de dano físico e aplique o total a cada alvo em alcance Corpo a Corpo."
   },
   "Conexão com a Morte": {
@@ -310,6 +342,8 @@ const HABILIDADES_DE_ORIGEM_COM_USO = {
     "alvo": null,
     "marcaUso": "",
     "estado": null,
+    "rotuloAtivar": "",
+    "reacaoEnquantoAtivo": null,
     "lembrete": "Escolha uma emoção ou sensação e extraia do cadáver recente uma memória relacionada a ela."
   },
   "Retrair": {
@@ -327,6 +361,8 @@ const HABILIDADES_DE_ORIGEM_COM_USO = {
       "rotuloEncerrar": "Sair da carapaça",
       "avisoEncerrar": "Retração terminou: você saiu da carapaça."
     },
+    "rotuloAtivar": "",
+    "reacaoEnquantoAtivo": null,
     "lembrete": "Enquanto estiver na carapaça, você tem resistência a dano físico, desvantagem em jogadas e não pode se mover."
   },
   "Sentido de Perigo": {
@@ -338,6 +374,8 @@ const HABILIDADES_DE_ORIGEM_COM_USO = {
     "alvo": null,
     "marcaUso": "uso:ancestralidade:goblin:sentido-de-perigo",
     "estado": null,
+    "rotuloAtivar": "",
+    "reacaoEnquantoAtivo": null,
     "lembrete": "O adversário deve rerrolar o ataque manualmente e usar o novo resultado."
   },
   "Adaptabilidade": {
@@ -349,6 +387,8 @@ const HABILIDADES_DE_ORIGEM_COM_USO = {
     "alvo": null,
     "marcaUso": "",
     "estado": null,
+    "rotuloAtivar": "",
+    "reacaoEnquantoAtivo": null,
     "lembrete": "Rerrole manualmente a jogada que falhou e que utilizou uma de suas Experiências."
   },
   "Destemido": {
@@ -360,6 +400,8 @@ const HABILIDADES_DE_ORIGEM_COM_USO = {
     "alvo": null,
     "marcaUso": "",
     "estado": null,
+    "rotuloAtivar": "",
+    "reacaoEnquantoAtivo": null,
     "lembrete": "A jogada que acabou de sair com Medo passa a contar como uma jogada com Esperança."
   },
   "Instintos Felinos": {
@@ -371,6 +413,8 @@ const HABILIDADES_DE_ORIGEM_COM_USO = {
     "alvo": null,
     "marcaUso": "",
     "estado": null,
+    "rotuloAtivar": "",
+    "reacaoEnquantoAtivo": null,
     "lembrete": "Rerrole manualmente apenas o seu Dado de Esperança da jogada de Agilidade."
   },
   "Presas": {
@@ -382,6 +426,8 @@ const HABILIDADES_DE_ORIGEM_COM_USO = {
     "alvo": null,
     "marcaUso": "",
     "estado": null,
+    "rotuloAtivar": "",
+    "reacaoEnquantoAtivo": null,
     "lembrete": "Após o ataque Corpo a Corpo bem-sucedido, role 1d6 e some ao dano desse mesmo ataque."
   },
   "Língua Comprida": {
@@ -393,6 +439,8 @@ const HABILIDADES_DE_ORIGEM_COM_USO = {
     "alvo": null,
     "marcaUso": "",
     "estado": null,
+    "rotuloAtivar": "",
+    "reacaoEnquantoAtivo": null,
     "lembrete": "Use Língua Comprida como arma de Finesse em alcance Próximo; role o ataque e o dano manualmente."
   }
 };

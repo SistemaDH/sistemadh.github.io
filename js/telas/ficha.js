@@ -1192,13 +1192,28 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       const item = ((ficha.contadores || {})[uso.estado.chave]) || {};
       const ativo = (Number(item.valor) || 0) > 0;
       if (ativo) {
+        const reacao = uso.reacaoEnquantoAtivo || null;
+        const custoR = (reacao && reacao.custo) || {};
+        const reacaoEsperanca = Number(custoR.esperanca) || 0;
+        const reacaoEstresse = Number(custoR.estresse) || 0;
+        const podeReagir = (!reacaoEsperanca || (Number(r.esperanca) || 0) >= reacaoEsperanca) &&
+          (!reacaoEstresse || ((Number(r.estresseMarcado) || 0) + reacaoEstresse) <= (Number(r.estresseMaximo) || 0));
+        const precoR = [
+          reacaoEsperanca ? `${reacaoEsperanca} Esperança` : '',
+          reacaoEstresse ? `${reacaoEstresse} Estresse` : ''
+        ].filter(Boolean).join(' e ');
         return el('div', { class: 'pilha' }, [
           el('span', { class: 'texto-xs texto-fraco', texto: uso.estado.rotuloAtivo || `${nome} ativa` }),
+          reacao ? el('button', {
+            type: 'button', class: 'btn btn--fantasma btn--pequeno ficha__usarHabilidade',
+            disabled: !podeReagir,
+            onClick: () => enviar([{ tipo: 'habilidade', nome, reagir: true }])
+          }, `${reacao.rotulo || 'Reagir'}${precoR ? ` · ${precoR}` : ''}`) : null,
           el('button', {
             type: 'button', class: 'btn btn--fantasma btn--pequeno ficha__usarHabilidade',
             onClick: () => enviar([{ tipo: 'habilidade', nome, encerrar: true }])
           }, uso.estado.rotuloEncerrar || 'Encerrar efeito')
-        ]);
+        ].filter(Boolean));
       }
     }
 
@@ -1207,7 +1222,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         type: 'button', class: 'btn btn--fantasma btn--pequeno ficha__usarHabilidade',
         disabled: !temEsperanca || !cabeEstresse,
         onClick: () => enviar([{ tipo: 'habilidade', nome }])
-      }, `Usar — ${preco}`);
+      }, uso.rotuloAtivar || (preco ? `Usar — ${preco}` : 'Usar'));
     }
 
     /*
@@ -2009,6 +2024,27 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           type: 'button', class: 'btn btn--pequeno',
           onClick: () => enviar([{ tipo: 'habilidade', nome: 'Retrair', encerrar: true }])
         }, 'Sair da carapaça')
+      ]));
+    }
+
+    const voo = ((ficha.contadores || {})['estado:ancestralidade:fada:voando'] || {}).valor || 0;
+    if (Number(voo) > 0) {
+      const rr = ficha.recursos || {};
+      const cabeReacao = (Number(rr.estresseMarcado) || 0) + 1 <= (Number(rr.estresseMaximo) || 0);
+      pai.append(el('div', { class: 'ficha__faixaEstado esta-emForma' }, [
+        el('strong', { class: 'ficha__faixaTitulo', texto: 'Voando' }),
+        el('p', { class: 'texto-sm' }, textoAnotado(
+          'Asas: depois que um adversário atacar você, pode marcar 1 Estresse para +2 de Evasão somente contra esse ataque.')),
+        el('div', { class: 'linha' }, [
+          el('button', {
+            type: 'button', class: 'btn btn--pequeno', disabled: !cabeReacao,
+            onClick: () => enviar([{ tipo: 'habilidade', nome: 'Asas', reagir: true }])
+          }, 'Reagir ao ataque · 1 Estresse'),
+          el('button', {
+            type: 'button', class: 'btn btn--fantasma btn--pequeno',
+            onClick: () => enviar([{ tipo: 'habilidade', nome: 'Asas', encerrar: true }])
+          }, 'Pousar')
+        ])
       ]));
     }
 

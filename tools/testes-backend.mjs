@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 40 contadores: 17 de carta, 20 de classe/subclasse e 3 de ancestralidade', () => {
+teste('o catálogo tem 41 contadores: 17 de carta, 20 de classe/subclasse e 4 de ancestralidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,13 +1561,13 @@ teste('o catálogo tem 40 contadores: 17 de carta, 20 de classe/subclasse e 3 de
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 40);
+  igual(Object.keys(CONTADORES).length, 41);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 17);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 15);
-  igual(porOrigem['caracteristica-ancestralidade'], 3);
+  igual(porOrigem['caracteristica-ancestralidade'], 4);
 });
 
 teste('"uma vez por" conta o uso GASTO, e o gatilho certo o apaga', () => {
@@ -5310,6 +5310,34 @@ teste('Dobradora da Sorte cobra 3 Esperanças, respeita 1/sessão e volta na pr�
   igual(contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Dobradora da Sorte' }]).erros, []);
 });
 
+teste('Asas mantém voo como estado e +2 de Evasão existe só na reação daquele ataque', () => {
+  const f = fichaAncestral_('Fada');
+  const evasaoBase = f.defesas.evasao;
+  const entrar = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Asas' }]);
+  igual(entrar.erros, []);
+  igual(f.recursos.estresseMarcado, 0, 'começar a voar não custa Estresse');
+  igual(f.contadores['estado:ancestralidade:fada:voando'].valor, 1);
+  igual(f.defesas.evasao, evasaoBase, 'voar sozinho não altera a Evasão base');
+
+  const reagir = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Asas', reagir: true }]);
+  igual(reagir.erros, []);
+  igual(f.recursos.estresseMarcado, 1);
+  igual(reagir.mudancas[0].bonusEvasao, 2);
+  igual(reagir.mudancas[0].evasaoBase, evasaoBase);
+  igual(f.defesas.evasao, evasaoBase, 'o +2 não pode ficar gravado na ficha');
+  verdade(/este ataque/.test(reagir.mudancas[0].aviso || ''), JSON.stringify(reagir.mudancas[0]));
+
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Asas', reagir: true }]).erros, []);
+  igual(f.recursos.estresseMarcado, 2, 'a reação é por ataque, não 1/sessão');
+
+  const pousar = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Asas', encerrar: true }]);
+  igual(pousar.erros, []);
+  verdade(!f.contadores['estado:ancestralidade:fada:voando']);
+  const foraDoAr = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Asas', reagir: true }]);
+  igual(foraDoAr.erros.length, 1);
+  igual(f.recursos.estresseMarcado, 2, 'reação recusada fora do ar não cobra nada');
+});
+
 teste('Sentido de Perigo cobra 1 Estresse, respeita 1/descanso e não vaza para outras fichas', () => {
   const f = fichaAncestral_('Goblin');
   const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Sentido de Perigo' }]);
@@ -5370,6 +5398,8 @@ teste('ancestralidade mista só usa a característica realmente escolhida', () =
   f.recursos.esperanca = 6;
   igual(contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Dobradora da Sorte' }]).erros, []);
   igual(contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Sentido de Perigo' }]).erros, []);
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Asas' }]).erros.length, 1,
+    'ter Fada na linhagem não basta: Asas não foi a característica escolhida');
 
   // Agora uma linhagem que CONTÉM Fada e Orc, mas escolheu as outras duas características.
   // Dobradora e Presas estão registradas no catálogo de uso, porém não pertencem a esta ficha.
@@ -5384,6 +5414,9 @@ teste('ancestralidade mista só usa a característica realmente escolhida', () =
   semEssas.recursos.esperanca = 6;
   igual(contexto.aplicarAjustes_(semEssas, [{ tipo: 'habilidade', nome: 'Dobradora da Sorte' }]).erros.length, 1);
   igual(contexto.aplicarAjustes_(semEssas, [{ tipo: 'habilidade', nome: 'Presas' }]).erros.length, 1);
+  igual(contexto.aplicarAjustes_(semEssas, [{ tipo: 'habilidade', nome: 'Asas' }]).erros, [],
+    'Asas foi escolhida como a segunda característica da Fada');
+  igual(semEssas.contadores['estado:ancestralidade:fada:voando'].valor, 1);
 });
 
 

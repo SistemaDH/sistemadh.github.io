@@ -27,6 +27,8 @@ const anotaUsoDeOrigem = (f, origem, refId) => {
     alvo: f.uso.alvo || null,
     marcaUso: f.uso.marcaUso || '',
     estado: f.uso.estado || null,
+    rotuloAtivar: f.uso.rotuloAtivar || '',
+    reacaoEnquantoAtivo: f.uso.reacaoEnquantoAtivo || null,
     lembrete: f.uso.lembrete || ''
   };
 };

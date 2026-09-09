@@ -253,7 +253,27 @@
     {
      "ordem": 2,
      "nome": "Asas",
-     "texto": "Você pode voar. Enquanto estiver voando, pode marcar 1 Estresse depois que um adversário fizer um ataque contra você para ganhar +2 de bônus em sua Evasão contra esse ataque."
+     "texto": "Você pode voar. Enquanto estiver voando, pode marcar 1 Estresse depois que um adversário fizer um ataque contra você para ganhar +2 de bônus em sua Evasão contra esse ataque.",
+     "uso": {
+      "custo": {},
+      "rotuloAtivar": "Começar a voar",
+      "estado": {
+       "chave": "estado:ancestralidade:fada:voando",
+       "valor": 1,
+       "rotuloAtivo": "Voando",
+       "rotuloEncerrar": "Pousar",
+       "avisoEncerrar": "Asas: você pousou."
+      },
+      "reacaoEnquantoAtivo": {
+       "custo": {
+        "estresse": 1
+       },
+       "bonusEvasao": 2,
+       "rotulo": "Reagir ao ataque",
+       "lembrete": "+2 de Evasão contra este ataque. A Evasão base da ficha não muda."
+      },
+      "lembrete": "Você está voando. Enquanto voar, pode reagir depois de um ataque contra você."
+     }
     }
    ],
    "caracteristicasNoLivro": [

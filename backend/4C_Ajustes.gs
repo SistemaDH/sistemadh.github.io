@@ -398,6 +398,55 @@ function usarHabilidadeDeClasse_(ficha, a) {
   }
 
   /*
+   * REAÇÃO ENQUANTO UM ESTADO ESTÁ ATIVO — hoje, Asas (Fada).
+   *
+   * O +2 de Evasão vale para UM ataque, então nunca é gravado em `defesas`.
+   * O servidor só cobra o recurso e devolve o modificador para a mesa aplicar
+   * naquela resolução. Isso impede um bônus temporário de ficar preso na ficha.
+   */
+  if (a.reagir === true) {
+    const reacao = def.reacaoEnquantoAtivo;
+    if (!reacao || !def.estado || !def.estado.chave) {
+      return { erro: '"' + def.nome + '" não possui reação de estado ativo.' };
+    }
+    const ativo = Math.trunc(Number((((ficha.contadores || {})[def.estado.chave]) || {}).valor)) || 0;
+    if (ativo <= 0) return { erro: '"' + def.nome + '": é preciso estar com o estado ativo antes de reagir.' };
+
+    const rReacao = ficha.recursos || {};
+    const custoReacaoEsperanca = Math.max(0, Math.trunc(Number((reacao.custo || {}).esperanca)) || 0);
+    const custoReacaoEstresse = Math.max(0, Math.trunc(Number((reacao.custo || {}).estresse)) || 0);
+    if (custoReacaoEsperanca > 0 && (Number(rReacao.esperanca) || 0) < custoReacaoEsperanca) {
+      return { erro: 'Não sobra Esperança para reagir com "' + def.nome + '".' };
+    }
+    if (custoReacaoEstresse > 0) {
+      const teto = Number(rReacao.estresseMaximo) || 0;
+      const marcado = Math.max(0, Number(rReacao.estresseMarcado) || 0);
+      if (marcado + custoReacaoEstresse > teto) {
+        return { erro: 'Não sobra Estresse para reagir com "' + def.nome + '".' };
+      }
+    }
+
+    ficha.recursos = rReacao;
+    if (custoReacaoEsperanca > 0) rReacao.esperanca = (Number(rReacao.esperanca) || 0) - custoReacaoEsperanca;
+    if (custoReacaoEstresse > 0) rReacao.estresseMarcado = (Number(rReacao.estresseMarcado) || 0) + custoReacaoEstresse;
+
+    const bonusEvasao = Math.trunc(Number(reacao.bonusEvasao)) || 0;
+    const pago = [];
+    if (custoReacaoEsperanca) pago.push(custoReacaoEsperanca + ' de Esperança');
+    if (custoReacaoEstresse) pago.push(custoReacaoEstresse + ' de Estresse');
+    return {
+      tipo: 'habilidade', nome: def.nome, reacao: true,
+      custoEsperanca: custoReacaoEsperanca, custoEstresse: custoReacaoEstresse,
+      esperanca: rReacao.esperanca, estresseMarcado: rReacao.estresseMarcado,
+      bonusEvasao: bonusEvasao,
+      evasaoBase: Number((ficha.defesas || {}).evasao) || 0,
+      estado: def.estado.chave, estadoAtivo: true,
+      aviso: def.nome + (pago.length ? ' custou ' + pago.join(' e ') : '') + '. ' +
+        (reacao.lembrete || (bonusEvasao ? '+' + bonusEvasao + ' de Evasão contra este ataque.' : ''))
+    };
+  }
+
+  /*
    * ⚠ "UMA VEZ POR" É CONFERIDO AQUI. O marcador de uso existe desde o lote dos
    * contadores; sem esta conferência ele seria enfeite — o app deixaria usar de
    * novo e o marcador continuaria mostrando "1 de 1".

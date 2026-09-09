@@ -864,6 +864,25 @@
    "exigeCaracteristica": "Retrair",
    "observacao": "Estado persistente: custa 1 Fadiga para entrar; sair é explícito e gratuito. Enquanto ativo: resistência a dano físico, desvantagem em jogadas e não pode se mover.",
    "fonte": "DH-DigitalRegras.pdf p.61 — Galapa, Retração."
+  },
+  {
+   "chave": "estado:ancestralidade:fada:voando",
+   "origem": "caracteristica-ancestralidade",
+   "refId": "fada",
+   "nome": "Asas",
+   "rotulo": "voando",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "exigeCaracteristica": "Asas",
+   "observacao": "Estado persistente e gratuito: começa a voar e termina ao pousar. Enquanto ativo, cada reação após um ataque pode marcar 1 Estresse para +2 Evasão somente contra aquele ataque.",
+   "fonte": "DH-DigitalRegras.pdf p.57 — Fada, Asas."
   }
  ]
 }
