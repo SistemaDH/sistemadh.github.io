@@ -20,6 +20,7 @@ jobs:
       - name: Materializar protecoes do Guardiao
         run: |
           python3 tools/lote8-guardiao-aliados.py
+          python3 tools/lote8-guardiao-aliados-auditoria.py
           node tools/gerar-42-classes.mjs
           python3 tools/conferir-classes-lote8.py
           python3 tools/conferir-comunidades-lote8.py
@@ -31,6 +32,7 @@ jobs:
           grep -q "usarProtecaoEmAliado" supabase/functions/engine-api/index.ts
           grep -q "botaoDeProtecaoEmAliado" js/telas/ficha.js
           grep -q "protecaoEmAliadoDaCaracteristica" js/telas/ficha.js
+          grep -q "protecaoAliado" tools/auditar-pendencias-lote8.py
           git diff --check
 
       - name: Testes backend
@@ -77,6 +79,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm -f tools/lote8-guardiao-aliados.py
+          git rm -f tools/lote8-guardiao-aliados-auditoria.py
           git rm -f .github/workflows/lote8-guardiao-aliados.yml
           git add -A
           git diff --cached --check
