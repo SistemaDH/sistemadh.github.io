@@ -1003,6 +1003,25 @@
    ],
    "exigeCaracteristica": "Carga Arcana",
    "observacao": "Fica Carregado ao sofrer dano mágico ou ao gastar 2 Esperanças. A Carga é consumida ao usar um dos benefícios após um ataque mágico bem-sucedido e desaparece no próximo descanso longo."
+  },
+  {
+   "chave": "estado:ladino:caminhante-noturno:ato-desaparecimento",
+   "origem": "caracteristica-subclasse",
+   "refId": "ladino-caminhante-noturno",
+   "nome": "Ato de Desaparecimento",
+   "rotulo": "Camuflado",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso",
+    "descanso-longo"
+   ],
+   "exigeCaracteristica": "Ato de Desaparecimento",
+   "observacao": "Estado específico da Maestria. O jogador encerra ao rolar com Medo; qualquer descanso encerra automaticamente. Não usa a condição global Camuflado para não apagar outra fonte dela."
   }
  ]
 }

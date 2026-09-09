@@ -1493,7 +1493,20 @@
        "caracteristicas": [
         {
          "nome": "Passo Sombrio",
-         "texto": "Você pode se mover de sombra em sombra. Quando se mover para uma área de escuridão ou uma sombra projetada por outra criatura ou objeto, pode marcar 1 Estresse para desaparecer de onde está e reaparecer dentro de outra sombra em alcance Longo. Quando reaparecer, você estará Encoberto."
+         "texto": "Você pode se mover de sombra em sombra. Quando se mover para uma área de escuridão ou uma sombra projetada por outra criatura ou objeto, pode marcar 1 Estresse para desaparecer de onde está e reaparecer dentro de outra sombra em alcance Longo. Quando reaparecer, você estará Encoberto.",
+         "uso": {
+          "custo": {
+           "estresse": 1
+          },
+          "alcanceBase": "Longo",
+          "efeitoCondicao": {
+           "ligar": [
+            "Camuflado"
+           ]
+          },
+          "rotuloAtivar": "Usar Passo Sombrio · 1 Estresse",
+          "lembrete": "Confirme na ficção que você saiu de uma sombra e reapareceu em outra. Ao reaparecer, você fica Camuflado."
+         }
         }
        ],
        "texto": "ROGUE\nCAMINHANTE NOTURNO\nFoundation\nSPELLCAST TRAIT: FINESSE\nPasso Sombrio: Você pode se mover de sombra em sombra. Quando se mover para uma área de escuridão ou uma sombra projetada por outra criatura ou objeto, pode marcar 1 Estresse para desaparecer de onde está e reaparecer dentro de outra sombra em alcance Longo. Quando reaparecer, você estará Encoberto.\nDaggerheart™ Compatible. Terms at Daggerheart.com.",
@@ -1511,7 +1524,14 @@
        "caracteristicas": [
         {
          "nome": "Nuvem Sombria",
-         "texto": "Faça uma Jogada de Magia (15). Em caso de sucesso, crie uma nuvem sombria temporária que cobre qualquer área em alcance Próximo. Quem estiver dentro dessa nuvem não pode ver por fora, e quem estiver fora não pode ver por dentro. Você é considerado Encoberto para qualquer adversário cuja linha de visão seja bloqueada pela nuvem."
+         "texto": "Faça uma Jogada de Magia (15). Em caso de sucesso, crie uma nuvem sombria temporária que cobre qualquer área em alcance Próximo. Quem estiver dentro dessa nuvem não pode ver por fora, e quem estiver fora não pode ver por dentro. Você é considerado Encoberto para qualquer adversário cuja linha de visão seja bloqueada pela nuvem.",
+         "resolucaoManual": {
+          "jogada": "Jogada de Magia",
+          "dificuldade": 15,
+          "rolaNoApp": false,
+          "sucesso": "Crie a nuvem em uma área em alcance Próximo. A linha de visão através dela fica bloqueada; você é considerado Camuflado contra adversários cuja visão ela bloquear.",
+          "lembrete": "A área e a linha de visão são resolvidas na mesa; o app não transforma a nuvem em uma condição global."
+         }
         },
         {
          "nome": "Adrenalina",
@@ -1543,11 +1563,35 @@
          "texto": "Ganhe um bônus permanente de +1 em sua Evasão. Você pode usar sua habilidade Passo Sombrio para se mover em alcance Muito Longo.",
          "efeitoDerivado": {
           "evasao": 1
+         },
+         "modificadorAlcance": {
+          "habilidade": "Passo Sombrio",
+          "de": "Longo",
+          "para": "Muito Longo"
          }
         },
         {
          "nome": "Ato de Desaparecimento",
-         "texto": "Marque 1 Estresse para ficar Encoberto a qualquer momento. Enquanto estiver Encoberto por essa habilidade, você automaticamente remove a condição Imobilizado, se estiver com ela. Você permanece Encoberto dessa forma até rolar com Medo ou até seu próximo descanso."
+         "texto": "Marque 1 Estresse para ficar Encoberto a qualquer momento. Enquanto estiver Encoberto por essa habilidade, você automaticamente remove a condição Imobilizado, se estiver com ela. Você permanece Encoberto dessa forma até rolar com Medo ou até seu próximo descanso.",
+         "uso": {
+          "custo": {
+           "estresse": 1
+          },
+          "efeitoCondicao": {
+           "remover": [
+            "Restrito"
+           ]
+          },
+          "estado": {
+           "chave": "estado:ladino:caminhante-noturno:ato-desaparecimento",
+           "valor": 1,
+           "rotuloAtivo": "Camuflado por Ato de Desaparecimento",
+           "rotuloEncerrar": "Rolei com Medo · encerrar",
+           "avisoEncerrar": "Ato de Desaparecimento terminou após você rolar com Medo."
+          },
+          "rotuloAtivar": "Usar Ato de Desaparecimento · 1 Estresse",
+          "lembrete": "Você fica Camuflado por esta habilidade até rolar com Medo ou até seu próximo descanso. O estado fica separado da condição global para não apagar Camuflado vindo de outra fonte."
+         }
         }
        ],
        "texto": "ROGUE\nCAMINHANTE NOTURNO\nMastery\nSPELLCAST TRAIT: FINESSE\nSombra Fugaz: Ganhe um bônus permanente de +1 em sua Evasão. Você pode usar sua habilidade Passo Sombrio para se mover em alcance Muito Longo.\nAto de Desaparecimento: Marque 1 Estresse para ficar Encoberto a qualquer momento. Enquanto estiver Encoberto por essa habilidade, você automaticamente remove a condição Imobilizado, se estiver com ela. Você permanece Encoberto dessa forma até rolar com Medo ou até seu próximo descanso.\nDaggerheart™ Compatible. Terms at Daggerheart.com.",

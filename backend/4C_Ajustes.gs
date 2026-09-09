@@ -699,6 +699,43 @@ function aplicarProtecaoEmAliado_(fichaOrigem, fichaAliado, nome, pedido) {
   return falhar('Tipo de proteção em aliado desconhecido: "' + String(def.tipo) + '".');
 }
 
+/** Alcance final de uma habilidade, incluindo modificadores de classe/subclasse. */
+function alcanceFinalDaHabilidade_(ficha, nome, base) {
+  let atual = String(base || '');
+  if (!atual || typeof modificadoresDeAlcanceDaClasse_ !== 'function') return atual;
+  const mods = modificadoresDeAlcanceDaClasse_(ficha) || [];
+  for (let i = 0; i < mods.length; i++) {
+    const m = mods[i] || {};
+    if (chaveTexto_(m.habilidade) !== chaveTexto_(nome)) continue;
+    if (m.de && chaveTexto_(m.de) !== chaveTexto_(atual)) continue;
+    if (m.para) atual = String(m.para);
+  }
+  return atual;
+}
+
+/**
+ * Condições que uma habilidade altera de forma determinística.
+ * O catálogo escolhe os nomes; o payload do cliente nunca escolhe uma condição.
+ */
+function aplicarEfeitoCondicaoDeHabilidade_(ficha, def) {
+  const ec = (def || {}).efeitoCondicao;
+  if (!ec) return { mudancas: [], erro: null };
+  const mudancas = [];
+  const remover = Array.isArray(ec.remover) ? ec.remover : [];
+  const ligar = Array.isArray(ec.ligar) ? ec.ligar : [];
+  for (let i = 0; i < remover.length; i++) {
+    const r = ajustarCondicao_(ficha, { chave: remover[i], ligar: false, origem: def.nome });
+    if (r && r.erro) return { mudancas: mudancas, erro: r.erro };
+    if (r) mudancas.push(r);
+  }
+  for (let i = 0; i < ligar.length; i++) {
+    const r = ajustarCondicao_(ficha, { chave: ligar[i], ligar: true, origem: def.nome });
+    if (r && r.erro) return { mudancas: mudancas, erro: r.erro };
+    if (r) mudancas.push(r);
+  }
+  return { mudancas: mudancas, erro: null };
+}
+
 /**
  * USAR UMA HABILIDADE QUE CUSTA ALGUMA COISA.
  *
@@ -984,6 +1021,12 @@ function usarHabilidadeDeClasse_(ficha, a) {
   const alvoAntes = def.alvo ? (ficha.alvosDeHabilidade[def.nome] || '') : '';
   if (def.alvo) ficha.alvosDeHabilidade[def.nome] = alvo;
 
+  // Condição entra no MESMO ajuste do custo. Passo Sombrio liga Camuflado;
+  // Ato de Desaparecimento remove Restrito sem transformar o estado especial
+  // dele numa condição global que poderia apagar outra fonte de Camuflado.
+  const efeitoCondicaoResultado = aplicarEfeitoCondicaoDeHabilidade_(ficha, def);
+  if (efeitoCondicaoResultado.erro) return { erro: efeitoCondicaoResultado.erro };
+
   // Estado entra DEPOIS de custos/alvo darem certo: pagamento e efeito são
   // uma única mutação, como Forma de Fera e custo de recordar.
   if (def.estado && def.estado.chave) {
@@ -1017,6 +1060,9 @@ function usarHabilidadeDeClasse_(ficha, a) {
   }
   if (opcaoEscolhida && opcaoEscolhida.lembrete) ganho.push(opcaoEscolhida.lembrete);
 
+  const alcanceFinal = def.alcanceBase
+    ? alcanceFinalDaHabilidade_(ficha, def.nome, def.alcanceBase) : '';
+
   return {
     tipo: 'habilidade', nome: def.nome,
     custoEsperanca: custoEsperanca, custoEstresse: custoEstresse,
@@ -1026,6 +1072,8 @@ function usarHabilidadeDeClasse_(ficha, a) {
     opcao: opcaoEscolhida ? opcaoEscolhida.id : null,
     esperancaGanha: esperancaGanha,
     efeitoRecurso: efeitoRecursoResultado,
+    efeitoCondicao: efeitoCondicaoResultado.mudancas,
+    alcance: alcanceFinal || null,
     estado: (def.estado && def.estado.chave) ? def.estado.chave : null,
     estadoAtivo: !!(def.estado && def.estado.chave),
     resultadoManual: entradaManualValor,
@@ -1035,6 +1083,7 @@ function usarHabilidadeDeClasse_(ficha, a) {
     aviso: def.nome + (pago.length ? ' custou ' + pago.join(' e ') : '') +
       (alvo ? ' — ' + def.alvo.verbo.toLowerCase() + ' ' + alvo : '') +
       (ganho.length ? '. Você recebeu ' + ganho.join('; ') : '') + '.' +
+      (alcanceFinal ? ' Alcance desta habilidade: ' + alcanceFinal + '.' : '') +
       (def.lembrete ? ' ' + def.lembrete : '')
   };
 }

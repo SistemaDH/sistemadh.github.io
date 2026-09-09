@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 47 contadores: 17 de carta, 23 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 48 contadores: 17 de carta, 24 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,12 +1561,12 @@ teste('o catálogo tem 47 contadores: 17 de carta, 23 de classe/subclasse, 4 de 
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 47);
+  igual(Object.keys(CONTADORES).length, 48);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 17);
   igual(porOrigem['caracteristica-classe'], 5);
-  igual(porOrigem['caracteristica-subclasse'], 18);
+  igual(porOrigem['caracteristica-subclasse'], 19);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
 });
@@ -7985,6 +7985,69 @@ teste('Preparado via multiclasse exige a carta adicional e aceita o domínio rec
     'Preparado precisa aceitar uma carta do domínio SPLENDOR recém-adquirido');
   const limite = contexto.limitesDeDominio_(comCarta.ficha).find((l) => l.dominio === 'SPLENDOR');
   igual(limite.nivelMaximo, 3, 'no nível 6 o domínio da multiclasse continua limitado a 3');
+});
+
+
+
+console.log('\nLote 8 — Ladino Caminhante Noturno');
+
+function ladinoNoturnoLote8_(cartasSub, ancestralidade = 'Humano') {
+  const f = fichaAncestral_(ancestralidade);
+  f.identidade.classe = 'Ladino';
+  f.identidade.subclasse = 'Caminhante Noturno';
+  f.subclasseCartas = cartasSub || ['fundacao'];
+  f.cartas = { ativas: ['grace-encantar', 'midnight-abrir-e-puxar'], cofre: [] };
+  return contexto.validarFicha_(f);
+}
+
+teste('Passo Sombrio cobra 1 Estresse, liga Camuflado e publica alcance Longo', () => {
+  const f = ladinoNoturnoLote8_(['fundacao']);
+  f.recursos.estresseMarcado = 0;
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Passo Sombrio' }]);
+  igual(r.erros.length, 0, JSON.stringify(r));
+  igual(f.recursos.estresseMarcado, 1);
+  verdade((f.condicoes || []).some((c) => c.id === 'camuflado'), JSON.stringify(f.condicoes));
+  igual(r.mudancas[0].alcance, 'Longo');
+});
+
+teste('Sombra Fugaz aumenta somente o alcance de Passo Sombrio para Muito Longo', () => {
+  const f = ladinoNoturnoLote8_(['fundacao', 'especializacao', 'maestria']);
+  const evasao = f.defesas.evasao;
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Passo Sombrio' }]);
+  igual(r.erros.length, 0, JSON.stringify(r));
+  igual(r.mudancas[0].alcance, 'Muito Longo');
+  verdade(f.defesas.evasao >= evasao, 'Sombra Fugaz não pode reduzir a Evasão derivada');
+});
+
+teste('Passo Sombrio respeita Inabalável sem perder o Camuflado do teleporte', () => {
+  const f = ladinoNoturnoLote8_(['fundacao'], 'Firbolg');
+  f.recursos.estresseMarcado = 0;
+  let r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Passo Sombrio' }]);
+  verdade(r.pendenciaRolagem && r.pendenciaRolagem.tipo === 'inabalavel', JSON.stringify(r));
+  r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Passo Sombrio', dadoInabalavel: 6 }]);
+  igual(r.erros.length, 0, JSON.stringify(r));
+  igual(f.recursos.estresseMarcado, 0);
+  verdade((f.condicoes || []).some((c) => c.id === 'camuflado'));
+});
+
+teste('Ato de Desaparecimento remove Restrito, guarda estado próprio e descanso encerra', () => {
+  const f = ladinoNoturnoLote8_(['fundacao', 'especializacao', 'maestria']);
+  contexto.ajustarCondicao_(f, { chave: 'Restrito', ligar: true });
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Ato de Desaparecimento' }]);
+  igual(r.erros.length, 0, JSON.stringify(r));
+  verdade(!(f.condicoes || []).some((c) => c.id === 'restrito'), JSON.stringify(f.condicoes));
+  verdade(!!f.contadores['estado:ladino:caminhante-noturno:ato-desaparecimento']);
+  contexto.aplicarGatilhoContadores_(f, 'descanso');
+  verdade(!f.contadores['estado:ladino:caminhante-noturno:ato-desaparecimento']);
+});
+
+teste('Ato de Desaparecimento pode ser encerrado manualmente quando a mesa rola com Medo', () => {
+  const f = ladinoNoturnoLote8_(['fundacao', 'especializacao', 'maestria']);
+  let r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Ato de Desaparecimento' }]);
+  igual(r.erros.length, 0, JSON.stringify(r));
+  r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Ato de Desaparecimento', encerrar: true }]);
+  igual(r.erros.length, 0, JSON.stringify(r));
+  verdade(!f.contadores['estado:ladino:caminhante-noturno:ato-desaparecimento']);
 });
 
 

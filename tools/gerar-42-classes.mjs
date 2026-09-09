@@ -253,6 +253,8 @@ for (const c of dados.classes) {
       entradaManual: f.uso.entradaManual || null,
       carregaComDano: f.uso.carregaComDano || null,
       efeitoRecurso: f.uso.efeitoRecurso || null,
+      efeitoCondicao: f.uso.efeitoCondicao || null,
+      alcanceBase: f.uso.alcanceBase || '',
       custoCondicionalEntradaManual: f.uso.custoCondicionalEntradaManual || null,
       confirmacao: f.uso.confirmacao || null,
       // Algumas habilidades ligam um estado persistente depois de pagar.

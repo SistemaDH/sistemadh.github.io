@@ -358,6 +358,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -380,6 +382,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -423,6 +427,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": {
@@ -461,6 +467,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -483,6 +491,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -516,6 +526,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -549,6 +561,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -579,6 +593,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     },
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -622,6 +638,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -662,6 +680,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
       "tipo": "magico"
     },
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": {
@@ -689,6 +709,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -714,6 +736,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -736,6 +760,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -760,6 +786,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
       "delta": 1,
       "rotulo": "Esperança"
     },
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": "falha-com-medo",
     "estado": null
@@ -780,6 +808,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -802,6 +832,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": {
@@ -809,6 +841,68 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
       "valor": 1,
       "rotuloAtivo": "Esquiva ativa · +2 Evasão",
       "rotuloEncerrar": "Ataque acertou — encerrar Esquiva"
+    }
+  },
+  "Passo Sombrio": {
+    "classe": "ladino",
+    "origem": "subclasse",
+    "custo": {
+      "estresse": 1
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "Usar Passo Sombrio · 1 Estresse",
+    "lembrete": "Confirme na ficção que você saiu de uma sombra e reapareceu em outra. Ao reaparecer, você fica Camuflado.",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
+    "efeitoRecurso": null,
+    "efeitoCondicao": {
+      "ligar": [
+        "Camuflado"
+      ]
+    },
+    "alcanceBase": "Longo",
+    "custoCondicionalEntradaManual": null,
+    "confirmacao": null,
+    "estado": null
+  },
+  "Ato de Desaparecimento": {
+    "classe": "ladino",
+    "origem": "subclasse",
+    "custo": {
+      "estresse": 1
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "Usar Ato de Desaparecimento · 1 Estresse",
+    "lembrete": "Você fica Camuflado por esta habilidade até rolar com Medo ou até seu próximo descanso. O estado fica separado da condição global para não apagar Camuflado vindo de outra fonte.",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
+    "efeitoRecurso": null,
+    "efeitoCondicao": {
+      "remover": [
+        "Restrito"
+      ]
+    },
+    "alcanceBase": "",
+    "custoCondicionalEntradaManual": null,
+    "confirmacao": null,
+    "estado": {
+      "chave": "estado:ladino:caminhante-noturno:ato-desaparecimento",
+      "valor": 1,
+      "rotuloAtivo": "Camuflado por Ato de Desaparecimento",
+      "rotuloEncerrar": "Rolei com Medo · encerrar",
+      "avisoEncerrar": "Ato de Desaparecimento terminou após você rolar com Medo."
     }
   },
   "Não Dessa Vez": {
@@ -829,6 +923,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -856,6 +952,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     },
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": {
       "recurso": "esperanca",
       "quantidade": 1,
@@ -882,6 +980,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -904,6 +1004,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -929,6 +1031,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -951,6 +1055,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -1203,6 +1309,11 @@ const MODIFICADORES_DE_ALCANCE_DE_CLASSE = {
     "habilidade": "Regeneração",
     "de": "Corpo a Corpo",
     "para": "Muito Próximo"
+  },
+  "Sombra Fugaz": {
+    "habilidade": "Passo Sombrio",
+    "de": "Longo",
+    "para": "Muito Longo"
   }
 };
 

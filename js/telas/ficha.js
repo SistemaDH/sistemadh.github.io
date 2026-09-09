@@ -1323,7 +1323,12 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         if (regra.gatilho) linhas.push(el('p', { class: 'texto-sm' }, textoAnotado(regra.gatilho)));
         const jogada = [regra.jogada, regra.traco, regra.contra ? 'contra ' + regra.contra : ''].filter(Boolean).join(' · ');
         if (jogada) linhas.push(el('p', { class: 'texto-sm', texto: jogada }));
+        if (regra.dificuldade !== undefined && regra.dificuldade !== null) {
+          linhas.push(el('p', { class: 'texto-sm', texto: `Dificuldade ${regra.dificuldade}` }));
+        }
         if (regra.rolaNoApp === false) linhas.push(el('p', { class: 'texto-xs texto-fraco', texto: 'Role na mesa; o app não gera resultados.' }));
+        if (regra.sucesso) linhas.push(el('p', { class: 'texto-sm' }, textoAnotado('Sucesso: ' + regra.sucesso)));
+        if (regra.lembrete) linhas.push(el('p', { class: 'texto-xs texto-fraco' }, textoAnotado(regra.lembrete)));
         const opcoes = Array.isArray(regra.opcoes) ? regra.opcoes : [];
         if (opcoes.length) {
           linhas.push(el('div', { class: 'pilha' }, opcoes.map((o, i) =>

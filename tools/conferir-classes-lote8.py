@@ -146,6 +146,25 @@ slayer = next(x for x in cont['contadores'] if x['chave'] == 'classe:guerreiro:m
 assert slayer.get('compartilhavel') is True
 
 
+ladino = next(c for c in classes['classes'] if c['id'] == 'ladino')
+noturno = next(s for s in ladino['subclasses'] if s['id'] == 'ladino-caminhante-noturno')
+passo = next(f for f in noturno['cartas']['fundacao']['caracteristicas'] if f['nome'] == 'Passo Sombrio')
+assert passo['uso']['custo']['estresse'] == 1
+assert passo['uso']['efeitoCondicao']['ligar'] == ['Camuflado']
+assert passo['uso']['alcanceBase'] == 'Longo'
+nuvem = next(f for f in noturno['cartas']['especializacao']['caracteristicas'] if f['nome'] == 'Nuvem Sombria')
+assert nuvem['resolucaoManual']['dificuldade'] == 15
+assert nuvem['resolucaoManual']['rolaNoApp'] is False
+sombra = next(f for f in noturno['cartas']['maestria']['caracteristicas'] if f['nome'] == 'Sombra Fugaz')
+assert sombra['modificadorAlcance'] == {'habilidade': 'Passo Sombrio', 'de': 'Longo', 'para': 'Muito Longo'}
+ato = next(f for f in noturno['cartas']['maestria']['caracteristicas'] if f['nome'] == 'Ato de Desaparecimento')
+assert ato['uso']['custo']['estresse'] == 1
+assert ato['uso']['efeitoCondicao']['remover'] == ['Restrito']
+assert ato['uso']['estado']['chave'] == 'estado:ladino:caminhante-noturno:ato-desaparecimento'
+ca = next(x for x in cont['contadores'] if x['chave'] == 'estado:ladino:caminhante-noturno:ato-desaparecimento')
+assert ca['maximo'] == {'tipo': 'fixo', 'valor': 1}
+assert set(ca['zeraEm']) == {'descanso', 'descanso-longo'}
+
 mago = next(c for c in classes['classes'] if c['id'] == 'mago')
 conhecimento = next(s for s in mago['subclasses'] if s['id'] == 'mago-escola-do-conhecimento')
 for etapa, nome in [('fundacao', 'Preparado'), ('especializacao', 'Realizado'), ('maestria', 'Brilhante')]:
@@ -167,4 +186,4 @@ assert "Preparado — carta de domínio adicional" in ui_avanco
 assert 'cartasExtrasDeSubclasse: escolha.cartasExtrasDeSubclasse.slice()' in ui_avanco
 assert 'limitesOverride: limitesComDominioDaMulticlasse()' in ui_avanco
 
-print('Lote 8 — classes: Bardo, Druida, Feiticeiro, Guardião, Guerreiro e Mago fechados; Mago inclui cartas extras, Especialização Apurada, dano com Medo e Prosperar no Caos.')
+print('Lote 8 — classes: Bardo, Druida, Feiticeiro, Guardião, Guerreiro e Mago fechados; Caminhante Noturno também fechado (Passo Sombrio, Nuvem Sombria e Ato de Desaparecimento).')
