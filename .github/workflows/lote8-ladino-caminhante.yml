@@ -6,6 +6,7 @@ on:
       - tmp-lote8-ladino-caminhante
     paths:
       - 'tools/lote8-ladino-caminhante.py'
+      - 'tools/lote8-ladino-hotfix.py'
       - '.github/workflows/lote8-ladino-caminhante.yml'
 
 permissions:
@@ -23,6 +24,7 @@ jobs:
       - name: Materializar Caminhante Noturno
         run: |
           python3 tools/lote8-ladino-caminhante.py
+          python3 tools/lote8-ladino-hotfix.py
           node tools/gerar-42-classes.mjs
           node tools/gerar-47-contadores.mjs
 
@@ -62,6 +64,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm -f tools/lote8-ladino-caminhante.py
+          git rm -f tools/lote8-ladino-hotfix.py
           git rm -f .github/workflows/lote8-ladino-caminhante.yml
           git add -A
           git diff --cached --check
