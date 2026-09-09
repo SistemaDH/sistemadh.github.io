@@ -1,0 +1,95 @@
+name: Lote 8 - Graca N1-N4
+
+on:
+  push:
+    branches: [tmp-lote8-grace-n1-n4-sol]
+
+permissions:
+  contents: write
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materializar Graca N1-N4
+        run: |
+          python3 tools/lote8-grace-n1-n4.py
+          node tools/gerar-41-dominios.mjs
+          node tools/gerar-47-contadores.mjs
+          node tools/gerar-4B-descanso.mjs
+          git diff --check
+
+      - name: Conferir classificacao, contadores e auditoria
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/cartas-dominio.json',encoding='utf-8'))
+          ids={
+            'grace-encantar','grace-enganador-habil','grace-palavras-inspiradoras',
+            'grace-encrenqueiro','grace-nao-conte-mentiras','grace-brilho-hipnotico',
+            'grace-invisibilidade','grace-discurso-acalmante','grace-pelos-seus-olhos'
+          }
+          xs=[c for c in d['cartas'] if c['id'] in ids]
+          assert len(xs)==9, len(xs)
+          assert all(c.get('automacao') for c in xs), [c['id'] for c in xs if not c.get('automacao')]
+          assert all((c.get('resolucaoManual') or {}).get('rolaNoApp') is False for c in xs)
+          cont=json.load(open('data/contadores.json',encoding='utf-8'))['contadores']
+          assert len(cont)==109, len(cont)
+          keys={x['chave'] for x in cont}
+          for k in [
+            'uso:carta:grace:encantar','uso:carta:grace:encrenqueiro',
+            'uso:carta:grace:brilho-hipnotico','estado:carta:grace:pelos-seus-olhos'
+          ]: assert k in keys, k
+          PY
+          python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria-lote8.md
+          if grep -Eq '^\| Graça \| (1|2|3|4) \|' /tmp/auditoria-lote8.md; then
+            echo 'Ainda ha Graca N1-N4 candidata sem sinal especifico:'
+            grep -E '^\| Graça \| (1|2|3|4) \|' /tmp/auditoria-lote8.md
+            exit 1
+          fi
+          grep -q 'grace-pelos-seus-olhos' backend/41_Dominios.gs
+          grep -q 'uso:carta:grace:brilho-hipnotico' backend/47_Contadores.gs
+
+      - name: Testes backend
+        shell: bash
+        run: |
+          set -o pipefail
+          node tools/testes-backend.mjs | tee /tmp/backend.log
+          ! grep -q '✗' /tmp/backend.log
+          tail -n 20 /tmp/backend.log
+
+      - name: Instalar Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install chromium
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados e CSS
+        run: |
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+          git diff --check
+
+      - name: Proteger contra concorrencia
+        run: |
+          git fetch origin 'ediçãoclaude'
+          test "$(git rev-parse 'origin/ediçãoclaude')" = '71816e04ffffa477a92b91d5ff62067f5a6cc7c8'
+
+      - name: Commitar funcional e limpar temporarios
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f --ignore-unmatch tools/lote8-grace-n1-n4.py
+          git rm -f --ignore-unmatch .github/workflows/lote8-grace-n1-n4.yml
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          find . -type f -name '*.pyc' -delete
+          git add -A
+          git diff --cached --check
+          git commit -m 'feat: revisar Graça níveis 1 a 4 [lote8-generated]'
+          git push origin HEAD:tmp-lote8-grace-n1-n4-sol
