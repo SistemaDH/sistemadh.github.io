@@ -20,6 +20,7 @@ jobs:
       - name: Materializar Maestro
         run: |
           python3 tools/lote8-bardo-maestro-hotfix.py
+          python3 tools/lote8-bardo-maestro-hotfix2.py
           python3 tools/lote8-bardo-maestro.py
           node tools/gerar-42-classes.mjs
           node tools/gerar-48-criacao.mjs
@@ -63,6 +64,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm -f tools/lote8-bardo-maestro.py
           git rm -f tools/lote8-bardo-maestro-hotfix.py
+          git rm -f tools/lote8-bardo-maestro-hotfix2.py
           git rm -f .github/workflows/lote8-bardo-maestro.yml
           git add -A
           git diff --cached --check
