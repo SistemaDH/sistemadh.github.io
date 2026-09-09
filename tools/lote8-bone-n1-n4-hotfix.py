@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+import json
+from pathlib import Path
+
+R = Path(__file__).resolve().parents[1]
+p = R / 'data/contadores.json'
+d = json.loads(p.read_text(encoding='utf-8'))
+lista = d['contadores']
+chaves = {x.get('chave') for x in lista}
+
+novos = [
+  {
+    'chave': 'uso:carta:bone:manobras-ageis',
+    'origem': 'carta-dominio',
+    'refId': 'bone-manobras-ageis',
+    'nome': 'Manobras Ágeis',
+    'rotulo': 'uso',
+    'tipo': 'marcadores',
+    'maximo': {'tipo': 'fixo', 'valor': 1},
+    'recarregaEm': [],
+    'zeraEm': ['descanso'],
+    'observacao': 'Uma vez por descanso. O marcador significa que o uso já foi gasto.'
+  },
+  {
+    'chave': 'estado:carta:bone:ferocidade:evasao',
+    'origem': 'carta-dominio',
+    'refId': 'bone-ferocidade',
+    'nome': 'Ferocidade',
+    'rotulo': 'bônus de Evasão',
+    'tipo': 'estado',
+    'maximo': {'tipo': 'fixo', 'valor': 12},
+    'recarregaEm': [],
+    'zeraEm': ['manual'],
+    'observacao': 'Guarda quantos PV o adversário marcou. O valor é bônus de Evasão até depois do próximo ataque feito contra você.'
+  }
+]
+for x in novos:
+    if x['chave'] not in chaves:
+        lista.append(x)
+
+p.write_text(json.dumps(d, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
+print('Contadores de Manobras Ágeis e Ferocidade catalogados.')
