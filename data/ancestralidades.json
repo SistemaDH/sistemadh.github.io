@@ -136,7 +136,13 @@
     {
      "ordem": 1,
      "nome": "Reações Rápidas",
-     "texto": "Marque 1 Estresse para ganhar vantagem em uma jogada de reação."
+     "texto": "Marque 1 Estresse para ganhar vantagem em uma jogada de reação.",
+     "uso": {
+      "custo": {
+       "estresse": 1
+      },
+      "lembrete": "Ganhe vantagem na jogada de reação. Faça a rolagem manualmente."
+     }
     },
     {
      "ordem": 2,
@@ -174,7 +180,14 @@
     {
      "ordem": 1,
      "nome": "Dobradora da Sorte",
-     "texto": "Uma vez por sessão, após você ou um aliado voluntário em alcance Próximo fazer uma jogada de ação, você pode gastar 3 Esperança para rerrolar os Dados da Dualidade."
+     "texto": "Uma vez por sessão, após você ou um aliado voluntário em alcance Próximo fazer uma jogada de ação, você pode gastar 3 Esperança para rerrolar os Dados da Dualidade.",
+     "uso": {
+      "custo": {
+       "esperanca": 3
+      },
+      "marcaUso": "uso:ancestralidade:fada:dobradora-da-sorte",
+      "lembrete": "Rerrole os Dados da Dualidade manualmente; o novo resultado substitui o anterior."
+     }
     },
     {
      "ordem": 2,
@@ -218,7 +231,13 @@
     {
      "ordem": 2,
      "nome": "Chute",
-     "texto": "Quando você tiver sucesso em um ataque contra um alvo em alcance Corpo a Corpo, pode marcar 1 Estresse para se impulsionar nele com um chute, causando 2d6 de dano extra e empurrando você ou o alvo para alcance Muito Próximo."
+     "texto": "Quando você tiver sucesso em um ataque contra um alvo em alcance Corpo a Corpo, pode marcar 1 Estresse para se impulsionar nele com um chute, causando 2d6 de dano extra e empurrando você ou o alvo para alcance Muito Próximo.",
+     "uso": {
+      "custo": {
+       "estresse": 1
+      },
+      "lembrete": "Após o ataque Corpo a Corpo bem-sucedido, role 2d6 de dano extra e mova você ou o alvo para alcance Muito Próximo."
+     }
     }
    ],
    "caracteristicasNoLivro": [
@@ -250,7 +269,13 @@
     {
      "ordem": 1,
      "nome": "Investida",
-     "texto": "Quando você obtiver sucesso em uma jogada de Agilidade para se mover de Alcance Longo ou Muito Longo para Alcance Corpo a Corpo com um ou mais alvos, pode marcar 1 Estresse para causar 1d12 de dano físico a todos os alvos em Alcance Corpo a Corpo."
+     "texto": "Quando você obtiver sucesso em uma jogada de Agilidade para se mover de Alcance Longo ou Muito Longo para Alcance Corpo a Corpo com um ou mais alvos, pode marcar 1 Estresse para causar 1d12 de dano físico a todos os alvos em Alcance Corpo a Corpo.",
+     "uso": {
+      "custo": {
+       "estresse": 1
+      },
+      "lembrete": "Após o movimento qualificado bem-sucedido, role 1d12 de dano físico e aplique o total a cada alvo em alcance Corpo a Corpo."
+     }
     },
     {
      "ordem": 2,
@@ -291,7 +316,13 @@
     {
      "ordem": 2,
      "nome": "Conexão com a Morte",
-     "texto": "Enquanto estiver tocando um cadáver que tenha morrido recentemente, você pode marcar 1 Estresse para extrair uma memória do cadáver relacionada a uma emoção ou sensação específica à sua escolha."
+     "texto": "Enquanto estiver tocando um cadáver que tenha morrido recentemente, você pode marcar 1 Estresse para extrair uma memória do cadáver relacionada a uma emoção ou sensação específica à sua escolha.",
+     "uso": {
+      "custo": {
+       "estresse": 1
+      },
+      "lembrete": "Escolha uma emoção ou sensação e extraia do cadáver recente uma memória relacionada a ela."
+     }
     }
    ],
    "caracteristicasNoLivro": [
@@ -409,7 +440,14 @@
     {
      "ordem": 2,
      "nome": "Sentido de Perigo",
-     "texto": "Uma vez por descanso, marque 1 Estresse para forçar um adversário a rerrolar um ataque contra você ou um aliado em alcance Muito Próximo."
+     "texto": "Uma vez por descanso, marque 1 Estresse para forçar um adversário a rerrolar um ataque contra você ou um aliado em alcance Muito Próximo.",
+     "uso": {
+      "custo": {
+       "estresse": 1
+      },
+      "marcaUso": "uso:ancestralidade:goblin:sentido-de-perigo",
+      "lembrete": "O adversário deve rerrolar o ataque manualmente e usar o novo resultado."
+     }
     }
    ],
    "caracteristicasNoLivro": [
@@ -488,7 +526,13 @@
     {
      "ordem": 2,
      "nome": "Adaptabilidade",
-     "texto": "Quando falhar em uma jogada que utilize uma de suas Experiências, você pode marcar 1 Estresse para rerrolar."
+     "texto": "Quando falhar em uma jogada que utilize uma de suas Experiências, você pode marcar 1 Estresse para rerrolar.",
+     "uso": {
+      "custo": {
+       "estresse": 1
+      },
+      "lembrete": "Rerrole manualmente a jogada que falhou e que utilizou uma de suas Experiências."
+     }
     }
    ],
    "caracteristicasNoLivro": [
@@ -521,7 +565,13 @@
     {
      "ordem": 1,
      "nome": "Destemido",
-     "texto": "Quando você rolar com Medo, pode marcar 2 Estresses para transformar a jogada em uma com Esperança."
+     "texto": "Quando você rolar com Medo, pode marcar 2 Estresses para transformar a jogada em uma com Esperança.",
+     "uso": {
+      "custo": {
+       "estresse": 2
+      },
+      "lembrete": "A jogada que acabou de sair com Medo passa a contar como uma jogada com Esperança."
+     }
     },
     {
      "ordem": 2,
@@ -558,7 +608,13 @@
     {
      "ordem": 1,
      "nome": "Instintos Felinos",
-     "texto": "Quando fizer uma jogada de Agilidade, pode gastar 2 Esperança para rerrolar seu Dado de Esperança."
+     "texto": "Quando fizer uma jogada de Agilidade, pode gastar 2 Esperança para rerrolar seu Dado de Esperança.",
+     "uso": {
+      "custo": {
+       "esperanca": 2
+      },
+      "lembrete": "Rerrole manualmente apenas o seu Dado de Esperança da jogada de Agilidade."
+     }
     },
     {
      "ordem": 2,
@@ -600,7 +656,13 @@
     {
      "ordem": 2,
      "nome": "Presas",
-     "texto": "Quando você acertar um ataque contra um alvo em alcance Corpo a Corpo, pode gastar 1 Esperança para investir o alvo com suas presas, causando 1d6 de dano extra."
+     "texto": "Quando você acertar um ataque contra um alvo em alcance Corpo a Corpo, pode gastar 1 Esperança para investir o alvo com suas presas, causando 1d6 de dano extra.",
+     "uso": {
+      "custo": {
+       "esperanca": 1
+      },
+      "lembrete": "Após o ataque Corpo a Corpo bem-sucedido, role 1d6 e some ao dano desse mesmo ataque."
+     }
     }
    ],
    "caracteristicasNoLivro": [

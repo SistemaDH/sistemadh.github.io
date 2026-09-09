@@ -497,6 +497,21 @@ function refsDeContadorDaFicha_(ficha) {
     if (typeof normalizarSubclasse_ === 'function') por(normalizarSubclasse_(nome));
   });
 
+  // Origem também pode ser dona de contador (ex.: 1/sessão da Fada).
+  if (ident.ancestralidade) {
+    por(ident.ancestralidade);
+    if (typeof normalizarAncestralidade_ === 'function') por(normalizarAncestralidade_(ident.ancestralidade));
+  }
+  if (ident.comunidade) {
+    por(ident.comunidade);
+    if (typeof normalizarComunidade_ === 'function') por(normalizarComunidade_(ident.comunidade));
+  }
+  const origem = ficha.origem || {};
+  (origem.ancestralidadeMista || []).forEach(function (nome) {
+    por(nome);
+    if (typeof normalizarAncestralidade_ === 'function') por(normalizarAncestralidade_(nome));
+  });
+
   return refs;
 }
 

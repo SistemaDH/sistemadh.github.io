@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem os 37 contadores: 17 de carta e 20 de classe/subclasse', () => {
+teste('o catálogo tem 39 contadores: 17 de carta, 20 de classe/subclasse e 2 de ancestralidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,12 +1561,13 @@ teste('o catálogo tem os 37 contadores: 17 de carta e 20 de classe/subclasse', 
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 37);
+  igual(Object.keys(CONTADORES).length, 39);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 17);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 15);
+  igual(porOrigem['caracteristica-ancestralidade'], 2);
 });
 
 teste('"uma vez por" conta o uso GASTO, e o gatilho certo o apaga', () => {
@@ -5277,6 +5278,112 @@ teste('a carta que muda o ALVO não passa por aqui', () => {
   try { contexto.aplicarCartaPermanente_(f, 'Livro do Ronin', {}); }
   catch (e) { mensagem = e.message; }
   verdade(/ALVO/.test(mensagem), 'o erro explica onde a regra mora: ' + mensagem);
+});
+
+
+console.log('\nLote 8 — ancestralidades ativas, custos e limites');
+
+function fichaAncestral_(ancestralidade) {
+  return contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Ancestral', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade, comunidade: 'Highborne',
+    cartas: ['blade-levantar-se', 'blade-nao-foi-suficiente'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+}
+
+teste('Dobradora da Sorte cobra 3 Esperanças, respeita 1/sessão e volta na próxima', () => {
+  const f = fichaAncestral_('Fada');
+  f.recursos.esperanca = 6;
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Dobradora da Sorte' }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 3);
+  igual(f.contadores['uso:ancestralidade:fada:dobradora-da-sorte'].valor, 1);
+  verdade(/Dados da Dualidade/.test(r.mudancas[0].aviso || ''), JSON.stringify(r.mudancas[0]));
+
+  const deNovo = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Dobradora da Sorte' }]);
+  igual(deNovo.erros.length, 1);
+  igual(f.recursos.esperanca, 3, 'recusa não cobra outra vez');
+
+  contexto.aplicarGatilhoContadores_(f, 'fim-de-sessao');
+  verdade(!f.contadores['uso:ancestralidade:fada:dobradora-da-sorte']);
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Dobradora da Sorte' }]).erros, []);
+});
+
+teste('Sentido de Perigo cobra 1 Estresse, respeita 1/descanso e não vaza para outras fichas', () => {
+  const f = fichaAncestral_('Goblin');
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Sentido de Perigo' }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, 1);
+  igual(f.contadores['uso:ancestralidade:goblin:sentido-de-perigo'].valor, 1);
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Sentido de Perigo' }]).erros.length, 1);
+  contexto.aplicarGatilhoContadores_(f, 'descanso');
+  verdade(!f.contadores['uso:ancestralidade:goblin:sentido-de-perigo']);
+
+  const humano = fichaAncestral_('Humano');
+  humano.contadores['uso:ancestralidade:goblin:sentido-de-perigo'] = { valor: 1 };
+  contexto.validarContadores_(humano);
+  verdade(!humano.contadores['uso:ancestralidade:goblin:sentido-de-perigo'],
+    'contador de ancestralidade alheia deve ser limpo');
+});
+
+teste('custos simples de ancestralidade são cobrados pelo servidor e devolvem o lembrete', () => {
+  const casos = [
+    ['Elfo', 'Reações Rápidas', 'estresseMarcado', 1, /vantagem/],
+    ['Fauno', 'Chute', 'estresseMarcado', 1, /2d6/],
+    ['Firbolg', 'Investida', 'estresseMarcado', 1, /1d12/],
+    ['Fungril', 'Conexão com a Morte', 'estresseMarcado', 1, /memória/],
+    ['Humano', 'Adaptabilidade', 'estresseMarcado', 1, /Rerrole/],
+    ['Infernis', 'Destemido', 'estresseMarcado', 2, /Esperança/],
+    ['Katari', 'Instintos Felinos', 'esperanca', -2, /Dado de Esperança/],
+    ['Orc', 'Presas', 'esperanca', -1, /1d6/]
+  ];
+  for (const [ancestralidade, nome, campo, delta, rx] of casos) {
+    const f = fichaAncestral_(ancestralidade);
+    f.recursos.esperanca = 6;
+    const antes = Number(f.recursos[campo]) || 0;
+    const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome }]);
+    igual(r.erros, [], ancestralidade + '/' + nome + ': ' + JSON.stringify(r.erros));
+    igual(f.recursos[campo], antes + delta, ancestralidade + '/' + nome);
+    verdade(rx.test(r.mudancas[0].aviso || ''), ancestralidade + '/' + nome + ': ' + r.mudancas[0].aviso);
+  }
+});
+
+teste('nome de habilidade não permite usar característica de ancestralidade que a ficha não possui', () => {
+  const orc = fichaAncestral_('Orc');
+  orc.recursos.esperanca = 6;
+  const r = contexto.aplicarAjustes_(orc, [{ tipo: 'habilidade', nome: 'Adaptabilidade' }]);
+  igual(r.erros.length, 1);
+  igual(orc.recursos.estresseMarcado, 0);
+});
+
+teste('ancestralidade mista só usa a característica realmente escolhida', () => {
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Mista', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade: 'Fada', comunidade: 'Highborne',
+    ancestralidadeMista: ['Fada', 'Goblin'],
+    // Primeira da Fada + segunda do Goblin: as duas são características reais da ficha.
+    caracteristicasEscolhidas: ['Dobradora da Sorte', 'Sentido de Perigo'],
+    cartas: ['blade-levantar-se', 'blade-nao-foi-suficiente'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  f.recursos.esperanca = 6;
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Dobradora da Sorte' }]).erros, []);
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Sentido de Perigo' }]).erros, []);
+
+  // Agora uma linhagem que CONTÉM Fada e Orc, mas escolheu as outras duas características.
+  // Dobradora e Presas estão registradas no catálogo de uso, porém não pertencem a esta ficha.
+  const semEssas = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Mista 2', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade: 'Fada', comunidade: 'Highborne',
+    ancestralidadeMista: ['Fada', 'Orc'],
+    caracteristicasEscolhidas: ['Robusto', 'Asas'],
+    cartas: ['blade-levantar-se', 'blade-nao-foi-suficiente'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  semEssas.recursos.esperanca = 6;
+  igual(contexto.aplicarAjustes_(semEssas, [{ tipo: 'habilidade', nome: 'Dobradora da Sorte' }]).erros.length, 1);
+  igual(contexto.aplicarAjustes_(semEssas, [{ tipo: 'habilidade', nome: 'Presas' }]).erros.length, 1);
 });
 
 console.log('\nVocabulário');

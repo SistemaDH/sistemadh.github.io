@@ -16,6 +16,25 @@ const com = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/comunidades.json'),
 const j = (v) => JSON.stringify(v);
 const L = [];
 
+/* Habilidades ativas de ancestralidade/comunidade com custo, limite ou estado. */
+const usosDeOrigem = {};
+const anotaUsoDeOrigem = (f, origem, refId) => {
+  if (!f || !f.uso) return;
+  if (usosDeOrigem[f.nome]) throw new Error(`uso de origem ambíguo para ${f.nome}`);
+  usosDeOrigem[f.nome] = {
+    origem, refId,
+    custo: f.uso.custo || {},
+    alvo: f.uso.alvo || null,
+    marcaUso: f.uso.marcaUso || '',
+    estado: f.uso.estado || null,
+    lembrete: f.uso.lembrete || ''
+  };
+};
+for (const a of anc.ancestralidades) {
+  for (const f of a.caracteristicas || []) anotaUsoDeOrigem(f, 'ancestralidade', a.id);
+}
+for (const c of com.comunidades || []) anotaUsoDeOrigem(c.caracteristica, 'comunidade', c.id);
+
 /* Efeitos numéricos que a ficha consegue aplicar sem escolha/rolagem. */
 const efeitosDerivadosDeOrigem = {};
 for (const a of anc.ancestralidades) {
@@ -63,6 +82,22 @@ L.push('};\n');
 
 L.push('/** Modificadores derivados das características de ancestralidade. */');
 L.push(`const EFEITOS_DERIVADOS_DE_ORIGEM = ${JSON.stringify(efeitosDerivadosDeOrigem, null, 2)};\n`);
+
+L.push('/** Habilidades ativas de ancestralidade/comunidade que a ficha pode executar. */');
+L.push(`const HABILIDADES_DE_ORIGEM_COM_USO = ${JSON.stringify(usosDeOrigem, null, 2)};\n`);
+L.push(`
+/** Acha uma habilidade ativa de origem pelo nome, aceitando qualquer grafia. */
+function habilidadeDeOrigemComUso_(nome) {
+  const alvo = chaveTexto_(nome);
+  const nomes = Object.keys(HABILIDADES_DE_ORIGEM_COM_USO);
+  for (let i = 0; i < nomes.length; i++) {
+    if (chaveTexto_(nomes[i]) === alvo) {
+      return Object.assign({ nome: nomes[i] }, HABILIDADES_DE_ORIGEM_COM_USO[nomes[i]]);
+    }
+  }
+  return null;
+}
+`);
 
 L.push('/** Nomes alternativos de ancestralidade (carta x livro). */');
 L.push('const ANCESTRALIDADE_ALIASES = {');

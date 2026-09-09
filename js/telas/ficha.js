@@ -1105,6 +1105,19 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       ]);
     }
 
+    if (uso.marcaUso) {
+      const gasto = Number(((ficha.contadores || {})[uso.marcaUso] || {}).valor) || 0;
+      const tetoUso = catalogo.maximoDoContador(uso.marcaUso, ficha) || 1;
+      if (gasto >= tetoUso) {
+        const meta = catalogo.contadorPorChave(uso.marcaUso) || {};
+        const zera = meta.zeraEm || [];
+        const volta = zera.includes('fim-de-sessao') ? 'na próxima sessão'
+          : zera.includes('descanso-longo') ? 'no próximo descanso longo'
+          : zera.includes('descanso') ? 'no próximo descanso' : 'quando a regra resetar o uso';
+        return el('p', { class: 'texto-xs texto-fraco', texto: `Limite de uso atingido — volta ${volta}.` });
+      }
+    }
+
     if (uso.estado && uso.estado.chave) {
       const item = ((ficha.contadores || {})[uso.estado.chave]) || {};
       const ativo = (Number(item.valor) || 0) > 0;
@@ -3790,13 +3803,15 @@ export async function carregarCatalogo() {
    * Nêmesis é uma maestria.
    */
   const usosComCusto = new Map();
+  const anotaUso = (f) => { if (f && f.uso) usosComCusto.set(dados.chave(f.nome), f.uso); };
+  (anc.ancestralidades || []).forEach((a) => (a.caracteristicas || []).forEach(anotaUso));
+  (com.comunidades || []).forEach((c) => anotaUso(c.caracteristica));
   (classes.classes || []).forEach((c) => {
-    const anota = (f) => { if (f && f.uso) usosComCusto.set(dados.chave(f.nome), f.uso); };
-    anota(c.caracteristicaEsperanca);
-    (c.caracteristicasDeClasse || []).forEach(anota);
+    anotaUso(c.caracteristicaEsperanca);
+    (c.caracteristicasDeClasse || []).forEach(anotaUso);
     (c.subclasses || []).forEach((sub) =>
       Object.keys(sub.cartas || {}).forEach((qual) =>
-        ((sub.cartas[qual] || {}).caracteristicas || []).forEach(anota)));
+        ((sub.cartas[qual] || {}).caracteristicas || []).forEach(anotaUso)));
   });
 
   const indexar = (lista, campo) => {
@@ -3810,6 +3825,7 @@ export async function carregarCatalogo() {
   const porNomeArma = indexar(eq.armas, 'nome');
   const porIdArmadura = indexar(eq.armaduras);
   const porNomeArmadura = indexar(eq.armaduras, 'nome');
+  const porChaveContador = indexar(cont.contadores || [], 'chave');
   /*
    * Os 120 itens do livro — 60 saques e 60 consumíveis — numa lista só.
    *
@@ -3942,7 +3958,23 @@ export async function carregarCatalogo() {
     return achada ? dados.chave(achada.id) : '';
   }
 
-  /** Todo id que ESTA ficha carrega: cartas na mão, classe, subclasse, multiclasse. */
+  function idDeAncestralidade_(nome) {
+    if (!nome) return '';
+    const a = (anc.ancestralidades || []).find((x) =>
+      dados.chave(x.nome) === dados.chave(nome) || dados.chave(x.id) === dados.chave(nome) ||
+      dados.chave(x.nomeCarta) === dados.chave(nome) || dados.chave(x.nomeLivro) === dados.chave(nome));
+    return a ? dados.chave(a.id) : '';
+  }
+
+  function idDeComunidade_(nome) {
+    if (!nome) return '';
+    const c = (com.comunidades || []).find((x) =>
+      dados.chave(x.nome) === dados.chave(nome) || dados.chave(x.id) === dados.chave(nome) ||
+      dados.chave(x.nomeCarta) === dados.chave(nome));
+    return c ? dados.chave(c.id) : '';
+  }
+
+  /** Todo id que ESTA ficha carrega: cartas, classe/subclasse e origem. */
   function refsDaFicha_(ficha) {
     const refs = new Set();
     const por = (v) => { const k = dados.chave(v); if (k) refs.add(k); };
@@ -3960,6 +3992,10 @@ export async function carregarCatalogo() {
       if (cl) { por(cl); por(idDeClasse_(cl)); }
       if (sub) { por(sub); por(idDeSubclasse_(cl, sub)); }
     });
+    if (ident.ancestralidade) { por(ident.ancestralidade); por(idDeAncestralidade_(ident.ancestralidade)); }
+    if (ident.comunidade) { por(ident.comunidade); por(idDeComunidade_(ident.comunidade)); }
+    const origem = (ficha || {}).origem || {};
+    (origem.ancestralidadeMista || []).forEach((a) => { por(a); por(idDeAncestralidade_(a)); });
     return refs;
   }
 
@@ -3974,6 +4010,8 @@ export async function carregarCatalogo() {
     const mc = (ficha || {}).multiclasse || {};
     por(valor);
     por(idDeClasse_(valor));
+    por(idDeAncestralidade_(valor));
+    por(idDeComunidade_(valor));
     if (ident.classe) por(idDeSubclasse_(ident.classe, valor));
     if (mc.classe) por(idDeSubclasse_(mc.classe, valor));
     return s;
@@ -3998,6 +4036,11 @@ export async function carregarCatalogo() {
     escolhaDaCaracteristica: (nome) => escolhasDeCaracteristica.get(dados.chave(nome)) || null,
     /** O custo (e o alvo) que esta habilidade cobra ao ser usada, ou null. */
     usoDaCaracteristica: (nome) => usosComCusto.get(dados.chave(nome)) || null,
+    contadorPorChave: (chave) => porChaveContador.get(dados.chave(chave)) || null,
+    maximoDoContador: (chave, ficha) => {
+      const def = porChaveContador.get(dados.chave(chave));
+      return def ? maximoLocal(def, ficha) : 0;
+    },
     corDoDominio: (codigo) => (porCodigoDominio.get(codigo) || {}).cor || 'var(--cor-ouro)',
     nomeDoDominio: (codigo) => (porCodigoDominio.get(codigo) || {}).nome || codigo,
     /** Usado pela tela de avanço para listar as cartas que cabem no teto. */

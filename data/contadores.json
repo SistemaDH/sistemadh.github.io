@@ -807,6 +807,44 @@
    "exigeCaracteristica": "Esquiva de Ladino",
    "observacao": "Estado da habilidade de Esperança do Ladino. +2 Evasão até o próximo ataque que acertar; se isso não acontecer, até o próximo descanso. O ataque que acertou é informado pela mesa; o app não adivinha a origem de todo dano.",
    "fonte": "DH-DigitalRegras.pdf p.46; errata oficial 09/09/2025 p.42."
+  },
+  {
+   "chave": "uso:ancestralidade:fada:dobradora-da-sorte",
+   "origem": "caracteristica-ancestralidade",
+   "refId": "fada",
+   "nome": "Dobradora da Sorte",
+   "rotulo": "já usou",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "fim-de-sessao"
+   ],
+   "exigeCaracteristica": "Dobradora da Sorte",
+   "observacao": "Uma vez por sessão. O contador registra usos já gastos e some no fim da sessão.",
+   "fonte": "DH-DigitalRegras.pdf, ancestralidade Fada, Dobradora da Sorte."
+  },
+  {
+   "chave": "uso:ancestralidade:goblin:sentido-de-perigo",
+   "origem": "caracteristica-ancestralidade",
+   "refId": "goblin",
+   "nome": "Sentido de Perigo",
+   "rotulo": "já usou",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "exigeCaracteristica": "Sentido de Perigo",
+   "observacao": "Uma vez por descanso. O contador registra usos já gastos e some em qualquer descanso.",
+   "fonte": "DH-DigitalRegras.pdf, ancestralidade Goblin, Sentido de Perigo."
   }
  ]
 }

@@ -59,6 +59,133 @@ const EFEITOS_DERIVADOS_DE_ORIGEM = {
   }
 };
 
+/** Habilidades ativas de ancestralidade/comunidade que a ficha pode executar. */
+const HABILIDADES_DE_ORIGEM_COM_USO = {
+  "Reações Rápidas": {
+    "origem": "ancestralidade",
+    "refId": "elfo",
+    "custo": {
+      "estresse": 1
+    },
+    "alvo": null,
+    "marcaUso": "",
+    "estado": null,
+    "lembrete": "Ganhe vantagem na jogada de reação. Faça a rolagem manualmente."
+  },
+  "Dobradora da Sorte": {
+    "origem": "ancestralidade",
+    "refId": "fada",
+    "custo": {
+      "esperanca": 3
+    },
+    "alvo": null,
+    "marcaUso": "uso:ancestralidade:fada:dobradora-da-sorte",
+    "estado": null,
+    "lembrete": "Rerrole os Dados da Dualidade manualmente; o novo resultado substitui o anterior."
+  },
+  "Chute": {
+    "origem": "ancestralidade",
+    "refId": "fauno",
+    "custo": {
+      "estresse": 1
+    },
+    "alvo": null,
+    "marcaUso": "",
+    "estado": null,
+    "lembrete": "Após o ataque Corpo a Corpo bem-sucedido, role 2d6 de dano extra e mova você ou o alvo para alcance Muito Próximo."
+  },
+  "Investida": {
+    "origem": "ancestralidade",
+    "refId": "firbolg",
+    "custo": {
+      "estresse": 1
+    },
+    "alvo": null,
+    "marcaUso": "",
+    "estado": null,
+    "lembrete": "Após o movimento qualificado bem-sucedido, role 1d12 de dano físico e aplique o total a cada alvo em alcance Corpo a Corpo."
+  },
+  "Conexão com a Morte": {
+    "origem": "ancestralidade",
+    "refId": "fungril",
+    "custo": {
+      "estresse": 1
+    },
+    "alvo": null,
+    "marcaUso": "",
+    "estado": null,
+    "lembrete": "Escolha uma emoção ou sensação e extraia do cadáver recente uma memória relacionada a ela."
+  },
+  "Sentido de Perigo": {
+    "origem": "ancestralidade",
+    "refId": "goblin",
+    "custo": {
+      "estresse": 1
+    },
+    "alvo": null,
+    "marcaUso": "uso:ancestralidade:goblin:sentido-de-perigo",
+    "estado": null,
+    "lembrete": "O adversário deve rerrolar o ataque manualmente e usar o novo resultado."
+  },
+  "Adaptabilidade": {
+    "origem": "ancestralidade",
+    "refId": "humanos",
+    "custo": {
+      "estresse": 1
+    },
+    "alvo": null,
+    "marcaUso": "",
+    "estado": null,
+    "lembrete": "Rerrole manualmente a jogada que falhou e que utilizou uma de suas Experiências."
+  },
+  "Destemido": {
+    "origem": "ancestralidade",
+    "refId": "infernis",
+    "custo": {
+      "estresse": 2
+    },
+    "alvo": null,
+    "marcaUso": "",
+    "estado": null,
+    "lembrete": "A jogada que acabou de sair com Medo passa a contar como uma jogada com Esperança."
+  },
+  "Instintos Felinos": {
+    "origem": "ancestralidade",
+    "refId": "katari",
+    "custo": {
+      "esperanca": 2
+    },
+    "alvo": null,
+    "marcaUso": "",
+    "estado": null,
+    "lembrete": "Rerrole manualmente apenas o seu Dado de Esperança da jogada de Agilidade."
+  },
+  "Presas": {
+    "origem": "ancestralidade",
+    "refId": "orc",
+    "custo": {
+      "esperanca": 1
+    },
+    "alvo": null,
+    "marcaUso": "",
+    "estado": null,
+    "lembrete": "Após o ataque Corpo a Corpo bem-sucedido, role 1d6 e some ao dano desse mesmo ataque."
+  }
+};
+
+
+/** Acha uma habilidade ativa de origem pelo nome, aceitando qualquer grafia. */
+function habilidadeDeOrigemComUso_(nome) {
+  const alvo = chaveTexto_(nome);
+  const nomes = Object.keys(HABILIDADES_DE_ORIGEM_COM_USO);
+  for (let i = 0; i < nomes.length; i++) {
+    if (chaveTexto_(nomes[i]) === alvo) {
+      return Object.assign({ nome: nomes[i] }, HABILIDADES_DE_ORIGEM_COM_USO[nomes[i]]);
+    }
+  }
+  return null;
+}
+
 /** Nomes alternativos de ancestralidade (carta x livro). */
 const ANCESTRALIDADE_ALIASES = {
   "anao": ["Anão","DWARF"],

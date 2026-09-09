@@ -217,6 +217,22 @@ function caracteristicasDaClasse_(ficha) {
   return saida;
 }
 
+/** Esta ficha realmente possui esta característica, seja de origem ou classe. */
+function fichaTemCaracteristica_(ficha, nome) {
+  const alvo = chaveTexto_(nome);
+  if (!alvo || !ficha) return false;
+  const listas = [
+    (typeof caracteristicasDaOrigem_ === 'function') ? caracteristicasDaOrigem_(ficha) : [],
+    (typeof caracteristicasDaClasse_ === 'function') ? caracteristicasDaClasse_(ficha) : []
+  ];
+  for (let b = 0; b < listas.length; b++) {
+    for (let i = 0; i < listas[b].length; i++) {
+      if (chaveTexto_((listas[b][i] || {}).nome) === alvo) return true;
+    }
+  }
+  return false;
+}
+
 /**
  * Os domínios a que o personagem tem acesso — inclusive o da multiclasse.
  *

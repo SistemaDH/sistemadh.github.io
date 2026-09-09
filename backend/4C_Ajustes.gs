@@ -355,11 +355,16 @@ function ajustarFichaFilha_(ficha, a) {
  * que ficou marcado.
  */
 function usarHabilidadeDeClasse_(ficha, a) {
-  const def = (typeof habilidadeComCusto_ === 'function') ? habilidadeComCusto_(a.nome) : null;
+  let def = (typeof habilidadeComCusto_ === 'function') ? habilidadeComCusto_(a.nome) : null;
+  if (!def && typeof habilidadeDeOrigemComUso_ === 'function') {
+    def = habilidadeDeOrigemComUso_(a.nome);
+  }
   if (!def) return { erro: 'Habilidade desconhecida: "' + String(a.nome) + '".' };
 
-  if (typeof fichaTemCaracteristicaDeClasse_ === 'function' &&
-      !fichaTemCaracteristicaDeClasse_(ficha, def.nome)) {
+  const temCaracteristica = (typeof fichaTemCaracteristica_ === 'function')
+    ? fichaTemCaracteristica_(ficha, def.nome)
+    : ((typeof fichaTemCaracteristicaDeClasse_ === 'function') && fichaTemCaracteristicaDeClasse_(ficha, def.nome));
+  if (!temCaracteristica) {
     return { erro: 'Este personagem não tem "' + def.nome + '".' };
   }
 
@@ -529,7 +534,8 @@ function usarHabilidadeDeClasse_(ficha, a) {
     estadoAtivo: !!(def.estado && def.estado.chave),
     aviso: def.nome + (pago.length ? ' custou ' + pago.join(' e ') : '') +
       (alvo ? ' — ' + def.alvo.verbo.toLowerCase() + ' ' + alvo : '') +
-      (ganho.length ? '. Você recebeu ' + ganho.join('; ') : '') + '.'
+      (ganho.length ? '. Você recebeu ' + ganho.join('; ') : '') + '.' +
+      (def.lembrete ? ' ' + def.lembrete : '')
   };
 }
 
