@@ -255,6 +255,7 @@ for (const c of dados.classes) {
       efeitoRecurso: f.uso.efeitoRecurso || null,
       efeitoCondicao: f.uso.efeitoCondicao || null,
       alcanceBase: f.uso.alcanceBase || '',
+      requerArmaAlcance: f.uso.requerArmaAlcance || null,
       requerAlvoDeHabilidade: f.uso.requerAlvoDeHabilidade || '',
       bonusProficienciaDano: Number(f.uso.bonusProficienciaDano) || 0,
       custoCondicionalEntradaManual: f.uso.custoCondicionalEntradaManual || null,

@@ -2321,7 +2321,27 @@
        "caracteristicas": [
         {
          "nome": "Arma Espiritual",
-         "texto": "Quando você estiver com uma arma equipada com alcance Corpo a Corpo ou Muito Próximo, ela pode voar de sua mão para atacar um adversário em alcance Próximo e depois retornar para você. Você pode marcar 1 Estresse para mirar um adversário adicional dentro do alcance com a mesma jogada de ataque."
+         "texto": "Quando você estiver com uma arma equipada com alcance Corpo a Corpo ou Muito Próximo, ela pode voar de sua mão para atacar um adversário em alcance Próximo e depois retornar para você. Você pode marcar 1 Estresse para mirar um adversário adicional dentro do alcance com a mesma jogada de ataque.",
+         "uso": {
+          "custo": {
+           "estresse": 1
+          },
+          "rotuloAtivar": "Mirar adversário adicional · 1 Estresse",
+          "requerArmaAlcance": [
+           "Corpo a Corpo",
+           "Muito Próximo"
+          ],
+          "alcanceBase": "Próximo",
+          "lembrete": "Use a mesma jogada de ataque contra um adversário adicional em alcance Próximo. A arma retorna para sua mão depois do ataque."
+         },
+         "resolucaoManual": {
+          "gatilho": "Enquanto uma arma equipada tiver alcance Corpo a Corpo ou Muito Próximo.",
+          "jogada": "Ataque com a arma em alcance Próximo",
+          "rolaNoApp": false,
+          "opcoes": [
+           "A Arma Espiritual pode atacar em alcance Próximo e retorna para sua mão. O botão de uso cobre apenas o adversário adicional por 1 Estresse."
+          ]
+         }
         },
         {
          "nome": "Toque Moderado",
@@ -2365,7 +2385,16 @@
        "caracteristicas": [
         {
          "nome": "Ressonância Sagrada",
-         "texto": "Quando você rolar dano para a habilidade Arma Espiritual, se algum dos resultados dos dados for igual, dobre o valor de cada dado correspondente. Por exemplo, se você rolar dois 5, eles contarão como dois 10."
+         "texto": "Quando você rolar dano para a habilidade Arma Espiritual, se algum dos resultados dos dados for igual, dobre o valor de cada dado correspondente. Por exemplo, se você rolar dois 5, eles contarão como dois 10.",
+         "resolucaoManual": {
+          "gatilho": "Ao rolar o dano de Arma Espiritual.",
+          "rolaNoApp": false,
+          "tipo": "transformacao-de-dados-manuais",
+          "transformacao": "dobrar-cada-dado-com-resultado-repetido",
+          "opcoes": [
+           "Depois de rolar os dados fora do app, cada dado cujo resultado se repita conta com o dobro do valor. Ex.: dois 5 contam como dois 10."
+          ]
+         }
         }
        ],
        "texto": "SERAPH\nPORTADOR DIVINO\nMastery\nSPELLCAST TRAIT: STRENGTH\nRessonância Sagrada: Quando você rolar dano para a habilidade Arma Espiritual, se algum dos resultados dos dados for igual, dobre o valor de cada dado correspondente. Por exemplo, se você rolar dois 5, eles contarão como dois 10.",
@@ -2394,7 +2423,47 @@
        "caracteristicas": [
         {
          "nome": "Asas de Luz",
-         "texto": "Você pode voar. Enquanto estiver voando, pode fazer o seguinte:\n• Marque 1 Estresse para pegar e carregar outra criatura disposta de tamanho aproximado ao seu ou menor.\n• Gaste 1 Esperança para causar 1d8 de dano extra em um ataque bem-sucedido."
+         "texto": "Você pode voar. Enquanto estiver voando, pode fazer o seguinte:\n• Marque 1 Estresse para pegar e carregar outra criatura disposta de tamanho aproximado ao seu ou menor.\n• Gaste 1 Esperança para causar 1d8 de dano extra em um ataque bem-sucedido.",
+         "uso": {
+          "custo": {},
+          "rotuloAtivar": "Começar a voar",
+          "estado": {
+           "chave": "estado:seraph:asas-de-luz:voando",
+           "valor": 1,
+           "rotuloAtivo": "Voando com Asas de Luz",
+           "rotuloEncerrar": "Pousar",
+           "avisoEncerrar": "Asas de Luz: você pousou."
+          },
+          "reacaoEnquantoAtivo": {
+           "custo": {},
+           "opcoes": [
+            {
+             "id": "carregar",
+             "rotulo": "Carregar criatura · 1 Estresse",
+             "custo": {
+              "estresse": 1
+             },
+             "lembrete": "Pegue e carregue uma criatura disposta de tamanho aproximado ao seu ou menor enquanto continuar voando."
+            },
+            {
+             "id": "dano",
+             "rotulo": "Dano extra · 1 Esperança",
+             "custo": {
+              "esperanca": 1
+             },
+             "dadoExtra": "d8",
+             "progressaoDado": [
+              {
+               "caracteristica": "Poder dos Deuses",
+               "dado": "d12"
+              }
+             ],
+             "lembrete": "Em um ataque bem-sucedido, role o dado extra fora do app e some ao dano."
+            }
+           ]
+          },
+          "lembrete": "Você está voando."
+         }
         }
        ],
        "texto": "SERAPH\nSENTINELA ALADO\nFoundation\nSPELLCAST TRAIT: STRENGTH\nAsas de Luz: Você pode voar. Enquanto estiver voando, pode fazer o seguinte:\n• Marque 1 Estresse para pegar e carregar outra criatura disposta de tamanho aproximado ao seu ou menor.\n• Gaste 1 Esperança para causar 1d8 de dano extra em um ataque bem-sucedido.",
@@ -2412,7 +2481,30 @@
        "caracteristicas": [
         {
          "nome": "Vulto Etéreo",
-         "texto": "Seu vulto sobrenatural inspira admiração e medo. Enquanto estiver voando, você tem vantagem em Jogadas de Presença. Quando tiver sucesso com Esperança em uma Jogada de Presença, pode remover 1 Medo da reserva de Medo do Mestre em vez de ganhar Esperança."
+         "texto": "Seu vulto sobrenatural inspira admiração e medo. Enquanto estiver voando, você tem vantagem em Jogadas de Presença. Quando tiver sucesso com Esperança em uma Jogada de Presença, pode remover 1 Medo da reserva de Medo do Mestre em vez de ganhar Esperança.",
+         "resolucaoManual": {
+          "gatilho": "Enquanto estiver voando com Asas de Luz.",
+          "jogada": "Jogada de Presença com vantagem",
+          "rolaNoApp": false,
+          "opcoes": [
+           "Em uma Jogada de Presença, aplique vantagem. Se obtiver sucesso com Esperança, você pode trocar o ganho dessa Esperança por remover 1 Medo."
+          ]
+         },
+         "uso": {
+          "custo": {},
+          "somenteReacao": true,
+          "requerEstado": {
+           "chave": "estado:seraph:asas-de-luz:voando"
+          },
+          "reacaoEnquantoAtivo": {
+           "custo": {},
+           "rotulo": "Trocar Esperança por −1 Medo",
+           "efeitoMesa": {
+            "medoDelta": -1
+           },
+           "lembrete": "Use somente depois de um sucesso com Esperança em uma Jogada de Presença. Você não ganha a Esperança dessa jogada."
+          }
+         }
         }
        ],
        "texto": "SERAPH\nSENTINELA ALADO\nSpecialization\nSPELLCAST TRAIT: STRENGTH\nVulto Etéreo: Seu vulto sobrenatural inspira admiração e medo. Enquanto estiver voando, você tem vantagem em Jogadas de Presença. Quando tiver sucesso com Esperança em uma Jogada de Presença, pode remover 1 Medo da reserva de Medo do Mestre em vez de ganhar Esperança.",
@@ -2437,7 +2529,15 @@
         },
         {
          "nome": "Poder dos Deuses",
-         "texto": "Enquanto estiver voando, você causa 1d12 de dano extra em vez de 1d8 com sua habilidade Asas de Luz."
+         "texto": "Enquanto estiver voando, você causa 1d12 de dano extra em vez de 1d8 com sua habilidade Asas de Luz.",
+         "efeitoDerivado": {
+          "modificaDadoExtraHabilidade": {
+           "habilidade": "Asas de Luz",
+           "de": "d8",
+           "para": "d12",
+           "enquantoEstado": "estado:seraph:asas-de-luz:voando"
+          }
+         }
         }
        ],
        "texto": "SERAPH\nSENTINELA ALADO\nMastery\nSPELLCAST TRAIT: STRENGTH\nAscendente: Ganhe um bônus permanente de +4 no seu limiar de dano Severo.\nPoder dos Deuses: Enquanto estiver voando, você causa 1d12 de dano extra em vez de 1d8 com sua habilidade Asas de Luz.",

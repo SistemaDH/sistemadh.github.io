@@ -200,10 +200,40 @@ for etapa, nome, qtd in [('fundacao', 'Enfrente Seu Medo', 1), ('especializacao'
 prosperar = next(x for x in guerra['cartas']['maestria']['caracteristicas'] if x['nome'] == 'Prosperar no Caos')
 assert prosperar['uso']['custo']['estresse'] == 1
 
+
+serafim = next(c for c in classes['classes'] if c['id'] == 'seraph')
+portador = next(s for s in serafim['subclasses'] if s['id'] == 'seraph-portador-divino')
+arma = next(f for f in portador['cartas']['fundacao']['caracteristicas'] if f['nome'] == 'Arma Espiritual')
+assert arma['uso']['custo']['estresse'] == 1
+assert arma['uso']['requerArmaAlcance'] == ['Corpo a Corpo', 'Muito Próximo']
+assert arma['uso']['alcanceBase'] == 'Próximo'
+ress = next(f for f in portador['cartas']['maestria']['caracteristicas'] if f['nome'] == 'Ressonância Sagrada')
+assert ress['resolucaoManual']['rolaNoApp'] is False
+assert ress['resolucaoManual']['transformacao'] == 'dobrar-cada-dado-com-resultado-repetido'
+
+sentinela = next(s for s in serafim['subclasses'] if s['id'] == 'seraph-sentinela-alado')
+asas = next(f for f in sentinela['cartas']['fundacao']['caracteristicas'] if f['nome'] == 'Asas de Luz')
+assert asas['uso']['estado']['chave'] == 'estado:seraph:asas-de-luz:voando'
+op = {x['id']: x for x in asas['uso']['reacaoEnquantoAtivo']['opcoes']}
+assert op['carregar']['custo'] == {'estresse': 1}
+assert op['dano']['custo'] == {'esperanca': 1}
+assert op['dano']['dadoExtra'] == 'd8'
+assert op['dano']['progressaoDado'][0] == {'caracteristica': 'Poder dos Deuses', 'dado': 'd12'}
+vulto = next(f for f in sentinela['cartas']['especializacao']['caracteristicas'] if f['nome'] == 'Vulto Etéreo')
+assert vulto['uso']['somenteReacao'] is True
+assert vulto['uso']['requerEstado']['chave'] == 'estado:seraph:asas-de-luz:voando'
+assert vulto['uso']['reacaoEnquantoAtivo']['efeitoMesa'] == {'medoDelta': -1}
+poder = next(f for f in sentinela['cartas']['maestria']['caracteristicas'] if f['nome'] == 'Poder dos Deuses')
+assert poder['efeitoDerivado']['modificaDadoExtraHabilidade']['para'] == 'd12'
+cv = next(x for x in cont['contadores'] if x['chave'] == 'estado:seraph:asas-de-luz:voando')
+assert cv['maximo'] == {'tipo': 'fixo', 'valor': 1}
+assert cv['zeraEm'] == ['manual']
+assert cv['exigeCaracteristica'] == 'Asas de Luz'
+
 ui_avanco = (R / 'js/telas/avanco.js').read_text(encoding='utf-8')
 assert 'function limitesComDominioDaMulticlasse()' in ui_avanco
 assert "Preparado — carta de domínio adicional" in ui_avanco
 assert 'cartasExtrasDeSubclasse: escolha.cartasExtrasDeSubclasse.slice()' in ui_avanco
 assert 'limitesOverride: limitesComDominioDaMulticlasse()' in ui_avanco
 
-print('Lote 8 — classes: Bardo, Druida, Feiticeiro, Guardião, Guerreiro e Mago fechados; Caminhante Noturno e Caçador também fechados; Caçador inclui Vínculo de Batalha e a linha Predador do Explorador.')
+print('Lote 8 — classes/subclasses fechadas: Bardo, Caçador, Druida, Feiticeiro, Guardião, Guerreiro, Ladino/Caminhante Noturno, Mago e Serafim.')

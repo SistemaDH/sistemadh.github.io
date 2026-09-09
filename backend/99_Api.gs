@@ -165,6 +165,24 @@ function doPost(e) {
  * @param {{acao:string, token?:string}} p
  * @return {{ok:boolean}}
  */
+/**
+ * Aplica efeitos compartilhados que uma habilidade validada devolveu.
+ * Eles NÃO rodam dentro de aplicarAjustes_: aquela função faz uma prévia em clone.
+ * Assim Vulto Etéreo não remove Medo duas vezes durante a validação.
+ */
+function aplicarEfeitosDeMesaDosAjustes_(mudancas) {
+  let deltaMedo = 0;
+  (mudancas || []).forEach(function (m) {
+    const e = (m || {}).efeitoMesa || null;
+    if (e && e.medoDelta !== undefined) deltaMedo += Math.trunc(Number(e.medoDelta)) || 0;
+  });
+  if (!deltaMedo) return null;
+  const mesa = mesaLer_();
+  ajustarMedo_(mesa, { delta: deltaMedo });
+  mesaGravar_(mesa);
+  return Number(mesa.medo) || 0;
+}
+
 function executar_(p) {
   try {
     _cacheAbas = {};
@@ -291,11 +309,13 @@ function executar_(p) {
           }
           return { ficha: ficha, extra: relatorio, evento: 'ficha-ajustada' };
         });
+        const medoDepois = aplicarEfeitosDeMesaDosAjustes_(r.extra.mudancas);
         return ok_({
           personagem: r.personagem,
           mudancas: r.extra.mudancas,
           avisos: r.extra.erros,
-          pendenciaRolagem: r.extra.pendenciaRolagem || null
+          pendenciaRolagem: r.extra.pendenciaRolagem || null,
+          medo: medoDepois
         });
       }
 

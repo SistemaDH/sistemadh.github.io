@@ -239,6 +239,7 @@ export const acoes = {
     return enfileirar(id, async () => {
       try {
         const dados = await api.ajustarFicha(estado.token, id, lista);
+        if (dados.medo !== undefined && dados.medo !== null) definir({ medo: dados.medo });
         if (estado.personagemAberto && estado.personagemAberto.id === id) {
           definir({ personagemAberto: dados.personagem });
         }

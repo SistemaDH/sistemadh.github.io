@@ -213,6 +213,14 @@ const EFEITOS_DERIVADOS_DE_CLASSE = {
   },
   "Ascendente": {
     "limiarGrave": 4
+  },
+  "Poder dos Deuses": {
+    "modificaDadoExtraHabilidade": {
+      "habilidade": "Asas de Luz",
+      "de": "d8",
+      "para": "d12",
+      "enquantoEstado": "estado:seraph:asas-de-luz:voando"
+    }
   }
 };
 /** Reações de dano concedidas por classe/subclasse. */
@@ -360,6 +368,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -386,6 +395,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -433,6 +443,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -475,6 +486,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -501,6 +513,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -538,6 +551,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -575,6 +589,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -609,6 +624,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -656,6 +672,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -700,6 +717,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -731,6 +749,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -760,6 +779,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -786,6 +806,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -814,6 +835,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     },
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -838,6 +860,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -864,6 +887,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -899,6 +923,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
       ]
     },
     "alcanceBase": "Longo",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -929,6 +954,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
       ]
     },
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -961,6 +987,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -992,6 +1019,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": {
@@ -1022,6 +1050,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -1048,6 +1077,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -1077,6 +1107,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -1103,6 +1134,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 1,
     "custoCondicionalEntradaManual": null,
@@ -1129,6 +1161,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "Marca da Presa",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,
@@ -1155,6 +1188,129 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "efeitoRecurso": null,
     "efeitoCondicao": null,
     "alcanceBase": "",
+    "requerArmaAlcance": null,
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
+    "custoCondicionalEntradaManual": null,
+    "confirmacao": null,
+    "estado": null
+  },
+  "Arma Espiritual": {
+    "classe": "seraph",
+    "origem": "subclasse",
+    "custo": {
+      "estresse": 1
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "Mirar adversário adicional · 1 Estresse",
+    "lembrete": "Use a mesma jogada de ataque contra um adversário adicional em alcance Próximo. A arma retorna para sua mão depois do ataque.",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
+    "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "Próximo",
+    "requerArmaAlcance": [
+      "Corpo a Corpo",
+      "Muito Próximo"
+    ],
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
+    "custoCondicionalEntradaManual": null,
+    "confirmacao": null,
+    "estado": null
+  },
+  "Asas de Luz": {
+    "classe": "seraph",
+    "origem": "subclasse",
+    "custo": {},
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "Começar a voar",
+    "lembrete": "Você está voando.",
+    "reacaoEnquantoAtivo": {
+      "custo": {},
+      "opcoes": [
+        {
+          "id": "carregar",
+          "rotulo": "Carregar criatura · 1 Estresse",
+          "custo": {
+            "estresse": 1
+          },
+          "lembrete": "Pegue e carregue uma criatura disposta de tamanho aproximado ao seu ou menor enquanto continuar voando."
+        },
+        {
+          "id": "dano",
+          "rotulo": "Dano extra · 1 Esperança",
+          "custo": {
+            "esperanca": 1
+          },
+          "dadoExtra": "d8",
+          "progressaoDado": [
+            {
+              "caracteristica": "Poder dos Deuses",
+              "dado": "d12"
+            }
+          ],
+          "lembrete": "Em um ataque bem-sucedido, role o dado extra fora do app e some ao dano."
+        }
+      ]
+    },
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
+    "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
+    "requerArmaAlcance": null,
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
+    "custoCondicionalEntradaManual": null,
+    "confirmacao": null,
+    "estado": {
+      "chave": "estado:seraph:asas-de-luz:voando",
+      "valor": 1,
+      "rotuloAtivo": "Voando com Asas de Luz",
+      "rotuloEncerrar": "Pousar",
+      "avisoEncerrar": "Asas de Luz: você pousou."
+    }
+  },
+  "Vulto Etéreo": {
+    "classe": "seraph",
+    "origem": "subclasse",
+    "custo": {},
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "",
+    "lembrete": "",
+    "reacaoEnquantoAtivo": {
+      "custo": {},
+      "rotulo": "Trocar Esperança por −1 Medo",
+      "efeitoMesa": {
+        "medoDelta": -1
+      },
+      "lembrete": "Use somente depois de um sucesso com Esperança em uma Jogada de Presença. Você não ganha a Esperança dessa jogada."
+    },
+    "somenteReacao": true,
+    "requerEstado": {
+      "chave": "estado:seraph:asas-de-luz:voando"
+    },
+    "entradaManual": null,
+    "carregaComDano": null,
+    "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
+    "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
     "custoCondicionalEntradaManual": null,

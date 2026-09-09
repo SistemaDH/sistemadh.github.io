@@ -1022,6 +1022,24 @@
    ],
    "exigeCaracteristica": "Ato de Desaparecimento",
    "observacao": "Estado específico da Maestria. O jogador encerra ao rolar com Medo; qualquer descanso encerra automaticamente. Não usa a condição global Camuflado para não apagar outra fonte dela."
+  },
+  {
+   "chave": "estado:seraph:asas-de-luz:voando",
+   "origem": "caracteristica-subclasse",
+   "refId": "seraph-sentinela-alado",
+   "nome": "Asas de Luz",
+   "rotulo": "voando",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Estado ligado gratuitamente ao começar a voar e encerrado ao pousar. Os custos das ações durante o voo são cobrados separadamente.",
+   "exigeCaracteristica": "Asas de Luz"
   }
  ]
 }

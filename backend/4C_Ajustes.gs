@@ -779,6 +779,24 @@ function usarHabilidadeDeClasse_(ficha, a) {
       def.requerAlvoDeHabilidade + '".' };
   }
 
+  // Arma Espiritual e futuras regras equivalentes podem exigir que ao menos
+  // UMA arma equipada tenha um dos alcances declarados. A checagem acontece
+  // antes do custo: uma arma incompatível nunca consome recurso.
+  if (Array.isArray(def.requerArmaAlcance) && def.requerArmaAlcance.length) {
+    const eq = ficha.equipamento || {};
+    const armasEquipadas = [eq.primaria, eq.secundaria].map(function (id) {
+      return (id && typeof acharArma_ === 'function') ? acharArma_(id) : null;
+    }).filter(function (x) { return !!x; });
+    const permitidos = def.requerArmaAlcance.map(function (x) { return chaveTexto_(x); });
+    const compativel = armasEquipadas.some(function (arma) {
+      return permitidos.indexOf(chaveTexto_(arma.alcance)) !== -1;
+    });
+    if (!compativel) {
+      return { erro: '"' + def.nome + '": equipe uma arma com alcance ' +
+        def.requerArmaAlcance.join(' ou ') + ' antes de usar esta opção.' };
+    }
+  }
+
   // Algumas habilidades pedem um dado que o JOGADOR rola fora do app. O
   // servidor só valida o número e transforma a parte determinística em dado
   // de resposta — nunca gera resultado aleatório.
@@ -853,9 +871,22 @@ function usarHabilidadeDeClasse_(ficha, a) {
       }
     }
 
+    let opcaoReacao = null;
+    const opcoesReacao = Array.isArray(reacao.opcoes) ? reacao.opcoes : [];
+    if (opcoesReacao.length) {
+      for (let i = 0; i < opcoesReacao.length; i++) {
+        if (String(opcoesReacao[i].id) === String(a.opcao || '')) opcaoReacao = opcoesReacao[i];
+      }
+      if (!opcaoReacao) return { erro: def.nome + ': escolha como usar o efeito ativo.' };
+    }
+
+    const custoBaseReacao = reacao.custo || {};
+    const custoOpcaoReacao = (opcaoReacao && opcaoReacao.custo) || {};
     const rReacao = ficha.recursos || {};
-    const custoReacaoEsperanca = Math.max(0, Math.trunc(Number((reacao.custo || {}).esperanca)) || 0);
-    const custoReacaoEstresse = Math.max(0, Math.trunc(Number((reacao.custo || {}).estresse)) || 0);
+    const custoReacaoEsperanca = Math.max(0, Math.trunc(Number(
+      custoOpcaoReacao.esperanca !== undefined ? custoOpcaoReacao.esperanca : custoBaseReacao.esperanca)) || 0);
+    const custoReacaoEstresse = Math.max(0, Math.trunc(Number(
+      custoOpcaoReacao.estresse !== undefined ? custoOpcaoReacao.estresse : custoBaseReacao.estresse)) || 0);
     if (custoReacaoEsperanca > 0 && (Number(rReacao.esperanca) || 0) < custoReacaoEsperanca) {
       return { erro: 'Não sobra Esperança para reagir com "' + def.nome + '".' };
     }
@@ -871,28 +902,32 @@ function usarHabilidadeDeClasse_(ficha, a) {
     if (custoReacaoEsperanca > 0) rReacao.esperanca = (Number(rReacao.esperanca) || 0) - custoReacaoEsperanca;
     if (custoReacaoEstresse > 0) rReacao.estresseMarcado = (Number(rReacao.estresseMarcado) || 0) + custoReacaoEstresse;
 
-    let opcaoReacao = null;
-    const opcoesReacao = Array.isArray(reacao.opcoes) ? reacao.opcoes : [];
-    if (opcoesReacao.length) {
-      for (let i = 0; i < opcoesReacao.length; i++) {
-        if (String(opcoesReacao[i].id) === String(a.opcao || '')) opcaoReacao = opcoesReacao[i];
-      }
-      if (!opcaoReacao) return { erro: def.nome + ': escolha como usar o efeito ativo.' };
-    }
-
     const bonusEvasao = Math.trunc(Number(reacao.bonusEvasao)) || 0;
+    let dadoExtra = String((opcaoReacao && opcaoReacao.dadoExtra) || reacao.dadoExtra || '');
+    const progressaoDado = (opcaoReacao && opcaoReacao.progressaoDado) || reacao.progressaoDado || [];
+    for (let pd = 0; pd < progressaoDado.length; pd++) {
+      const passo = progressaoDado[pd] || {};
+      if (passo.caracteristica && typeof fichaTemCaracteristica_ === 'function' &&
+          fichaTemCaracteristica_(ficha, passo.caracteristica)) {
+        dadoExtra = String(passo.dado || dadoExtra);
+      }
+    }
     const pago = [];
     if (custoReacaoEsperanca) pago.push(custoReacaoEsperanca + ' de Esperança');
     if (custoReacaoEstresse) pago.push(custoReacaoEstresse + ' de Estresse');
     if (reacao.consomeEstado === true) delete ficha.contadores[estadoRequerido.chave];
-    const lembreteReacao = (opcaoReacao && opcaoReacao.lembrete) || reacao.lembrete ||
+    let lembreteReacao = (opcaoReacao && opcaoReacao.lembrete) || reacao.lembrete ||
       (bonusEvasao ? '+' + bonusEvasao + ' de Evasão contra este ataque.' : '');
+    if (dadoExtra) lembreteReacao += (lembreteReacao ? ' ' : '') + 'Dado extra desta resolução: ' + dadoExtra + '.';
+    const efeitoMesaReacao = (opcaoReacao && opcaoReacao.efeitoMesa) || reacao.efeitoMesa || null;
     return {
       tipo: 'habilidade', nome: def.nome, reacao: true,
       custoEsperanca: custoReacaoEsperanca, custoEstresse: custoReacaoEstresse,
       esperanca: rReacao.esperanca, estresseMarcado: rReacao.estresseMarcado,
       bonusEvasao: bonusEvasao,
       evasaoBase: Number((ficha.defesas || {}).evasao) || 0,
+      dadoExtra: dadoExtra || null,
+      efeitoMesa: efeitoMesaReacao,
       opcao: opcaoReacao ? opcaoReacao.id : null,
       estado: estadoRequerido.chave, estadoAtivo: reacao.consomeEstado !== true,
       estadoConsumido: reacao.consomeEstado === true,

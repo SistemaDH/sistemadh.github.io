@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 48 contadores: 17 de carta, 24 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 49 contadores: 17 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,12 +1561,12 @@ teste('o catálogo tem 48 contadores: 17 de carta, 24 de classe/subclasse, 4 de 
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 48);
+  igual(Object.keys(CONTADORES).length, 49);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 17);
   igual(porOrigem['caracteristica-classe'], 5);
-  igual(porOrigem['caracteristica-subclasse'], 19);
+  igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
 });
@@ -8093,6 +8093,95 @@ teste('Predador de Topo não cobra Esperança sem Foco e usa exatamente o Foco d
   verdade(/remova 1 Medo/i.test(r.mudancas[0].aviso || ''), JSON.stringify(r.mudancas[0]));
 });
 
+
+
+console.log('\nLote 8 — Serafim: fechamento');
+
+function fichaSerafimLote8_(subclasse, etapas = ['fundacao']) {
+  const f = fichaAncestral_('Humano');
+  f.identidade.classe = 'Serafim';
+  f.identidade.subclasse = subclasse;
+  f.identidade.nivel = 10;
+  f.subclasseCartas = etapas.slice();
+  f.recursos.esperanca = 6;
+  f.recursos.estresseMarcado = 0;
+  contexto.aplicarDerivados_(f);
+  return f;
+}
+
+teste('Arma Espiritual valida a arma antes de cobrar 1 Estresse e publica alcance Próximo', () => {
+  const f = fichaSerafimLote8_('Portador Divino', ['fundacao']);
+  f.equipamento.primaria = 'primaria-t1-maca';
+  f.equipamento.secundaria = null;
+  let r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Arma Espiritual' }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, 1);
+  igual(r.mudancas[0].alcance, 'Próximo');
+
+  const longe = fichaSerafimLote8_('Portador Divino', ['fundacao']);
+  longe.equipamento.primaria = 'primaria-t1-arco-curto';
+  longe.equipamento.secundaria = null;
+  r = contexto.aplicarAjustes_(longe, [{ tipo: 'habilidade', nome: 'Arma Espiritual' }]);
+  igual(r.erros.length, 1);
+  igual(longe.recursos.estresseMarcado, 0, 'arma incompatível não cobra Estresse');
+});
+
+teste('Ressonância Sagrada permanece cálculo dos dados rolados fora do app', () => {
+  const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/classes.json'), 'utf8'));
+  const s = d.classes.find((x) => x.id === 'seraph').subclasses.find((x) => x.id === 'seraph-portador-divino');
+  const r = s.cartas.maestria.caracteristicas.find((x) => x.nome === 'Ressonância Sagrada').resolucaoManual;
+  igual(r.rolaNoApp, false);
+  igual(r.transformacao, 'dobrar-cada-dado-com-resultado-repetido');
+});
+
+teste('Asas de Luz liga voo e cobra o recurso específico de cada opção', () => {
+  const f = fichaSerafimLote8_('Sentinela Alado', ['fundacao']);
+  let r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Asas de Luz' }]);
+  igual(r.erros, []);
+  verdade(!!f.contadores['estado:seraph:asas-de-luz:voando']);
+
+  r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Asas de Luz', reagir: true, opcao: 'carregar' }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, 1);
+  igual(f.recursos.esperanca, 6, 'carregar não gasta Esperança');
+
+  r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Asas de Luz', reagir: true, opcao: 'dano' }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 5);
+  igual(f.recursos.estresseMarcado, 1, 'dano extra não marca Estresse');
+  igual(r.mudancas[0].dadoExtra, 'd8');
+
+  r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Asas de Luz', encerrar: true }]);
+  igual(r.erros, []);
+  verdade(!f.contadores['estado:seraph:asas-de-luz:voando']);
+});
+
+teste('Poder dos Deuses promove somente o dano extra de Asas de Luz de d8 para d12', () => {
+  const f = fichaSerafimLote8_('Sentinela Alado', ['fundacao', 'especializacao', 'maestria']);
+  contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Asas de Luz' }]);
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Asas de Luz', reagir: true, opcao: 'dano' }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].dadoExtra, 'd12');
+  verdade(/d12/.test(r.mudancas[0].aviso || ''), JSON.stringify(r.mudancas[0]));
+});
+
+teste('Vulto Etéreo só remove Medo enquanto voa e não cria Esperança', () => {
+  const f = fichaSerafimLote8_('Sentinela Alado', ['fundacao', 'especializacao']);
+  let r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Vulto Etéreo', reagir: true }]);
+  igual(r.erros.length, 1, 'sem voo não pode converter o sucesso');
+
+  contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Asas de Luz' }]);
+  const mesa = contexto.mesaLer_();
+  mesa.medo = 3;
+  contexto.mesaGravar_(mesa);
+  const esperancaAntes = f.recursos.esperanca;
+  r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Vulto Etéreo', reagir: true }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].efeitoMesa, { medoDelta: -1 });
+  igual(f.recursos.esperanca, esperancaAntes, 'Vulto não concede a Esperança trocada');
+  igual(contexto.aplicarEfeitosDeMesaDosAjustes_(r.mudancas), 2);
+  igual(contexto.mesaLer_().medo, 2);
+});
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {
