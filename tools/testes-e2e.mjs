@@ -424,6 +424,55 @@ try {
       await pagina.getByRole('tab', { name: 'Jogo' }).click();
     }
   });
+  await passo('Inabalável pede o d6 manual na tela e só o 6 evita o Estresse', async () => {
+    await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+    await pagina.waitForSelector('.ficha-cartao__abrir');
+    const def = noBackend('ABAS.PERSONAGENS');
+    const linhas = ambiente.contexto.lerTudo_(def)
+      .filter((l) => String(l.excluido).toUpperCase() !== 'TRUE');
+    const linha = linhas[0];
+    const original = linha.dados || '{}';
+    try {
+      const ficha = JSON.parse(original);
+      ficha.identidade = Object.assign({}, ficha.identidade, { ancestralidade: 'Firbolg' });
+      ficha.origem = Object.assign({}, ficha.origem, { ancestralidadeMista: [], caracteristicasEscolhidas: [] });
+      ficha.recursos = Object.assign({}, ficha.recursos, { estresseMarcado: 0 });
+      const validada = ambiente.contexto.validarFicha_(ficha);
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: JSON.stringify(validada) });
+
+      await pagina.reload({ waitUntil: 'networkidle' });
+      await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+      await abrirFichaEmJogo();
+      const v0 = await versaoNaTela();
+
+      await pagina.locator('.papel__trilha--estresse .papel__caixa').first().click();
+      const modal6 = pagina.locator('.modal__caixa').last();
+      await modal6.getByText('Inabalável — resultado do d6', { exact: true }).waitFor({ timeout: 10000 });
+      igual(await versaoNaTela(), v0, 'abrir o pedido do d6 não pode gravar');
+      await modal6.getByRole('button', { name: '6', exact: true }).click();
+      await esperarGravar(v0);
+      igual(await marcados('estresse'), 0, 'resultado 6 devia evitar a marca');
+
+      const v1 = await versaoNaTela();
+      await pagina.locator('.papel__trilha--estresse .papel__caixa').first().click();
+      const modal5 = pagina.locator('.modal__caixa').last();
+      await modal5.getByText('Inabalável — resultado do d6', { exact: true }).waitFor({ timeout: 10000 });
+      await modal5.getByRole('button', { name: '5', exact: true }).click();
+      await esperarGravar(v1);
+      igual(await marcados('estresse'), 1, 'resultado 5 devia marcar normalmente');
+
+      const v2 = await versaoNaTela();
+      await pagina.locator('.papel__trilha--estresse .papel__caixa.esta-cheio').first().click();
+      await esperarGravar(v2);
+      igual(await marcados('estresse'), 0, 'limpar Estresse não pede Inabalável');
+    } finally {
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: original });
+      await pagina.reload({ waitUntil: 'networkidle' });
+      await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+      await abrirFichaEmJogo();
+    }
+  });
+
   await passo('Transe Celestial chega à tela como terceiro movimento de descanso', async () => {
     await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
     await pagina.waitForSelector('.ficha-cartao__abrir');

@@ -62,9 +62,11 @@ assert [x['nome'] for x in por_id['halfling']['caracteristicasNoLivro']] == ['Ta
 assert feat('halfling', 'Portador da Sorte').get('efeitoSessao', {}).get('grupo') == {'esperanca': 1}
 assert feat('halfling', 'Bússola Interna').get('rolagemManual', {}).get('acao') == 'rerrolar-dado-esperanca'
 
-# Ainda adiados: dependem de estado/fluxo próprio nos próximos subblocos.
-for aid, nome in [('firbolg', 'Inabalável')]:
-    assert not feat(aid, nome).get('uso'), f'{aid}/{nome}: foi marcado pronto antes do fluxo correto'
+# Inabalável/Firbolg — todo +1 Estresse pede d6 manual; somente 6 evita.
+inab = feat('firbolg', 'Inabalável').get('interceptaEstresse') or {}
+assert inab.get('quantidade') == 1 and inab.get('dado') == 'd6'
+assert inab.get('evitaResultados') == [6] and inab.get('rolagemManual') is True
+assert inab.get('fonte') == 'DH-DigitalRegras.pdf p.60'
 
 por_chave = {c['chave']: c for c in cont['contadores']}
 fada = por_chave['uso:ancestralidade:fada:dobradora-da-sorte']
@@ -119,4 +121,4 @@ assert garras.get('consequenciaSucesso') == {'condicao': 'Vulnerável', 'tempora
 gigante = feat('gigante', 'Alcance').get('modificadorAlcance') or {}
 assert gigante.get('de') == 'Corpo a Corpo' and gigante.get('para') == 'Muito Próximo'
 
-print('Lote 8 — ancestralidades: 18 entradas; usos, dano, Retração, Asas, perfis, Alcance, Projeto Intencional, Transe e Talismã protegidos.')
+print('Lote 8 — ancestralidades: 18 entradas; usos, dano, Retração, Asas, Inabalável, perfis, Alcance, Projeto Intencional, Transe e Talismã protegidos.')

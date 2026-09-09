@@ -255,6 +255,12 @@ function mutarPersonagem_(jogador, id, versaoEsperada, fn) {
 
     const atual = personagemDaLinha_(linha, true);
     const r = fn(atual.ficha, atual) || {};
+    if (r.naoGravar === true) {
+      return {
+        personagem: atual,
+        extra: r.extra === undefined ? null : r.extra
+      };
+    }
     const validada = validarFicha_(r.ficha || atual.ficha);
     const json = JSON.stringify(validada);
     if (json.length > LIMITE_DADOS_CHARS) {

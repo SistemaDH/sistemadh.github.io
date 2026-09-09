@@ -253,6 +253,9 @@ function executar_(p) {
         let relatorio = null;
         const r = mutarPersonagem_(jogador, p.id, p.versao, function (ficha) {
           relatorio = aplicarAjustes_(ficha, p.ajustes);
+          if (relatorio.pendenciaRolagem) {
+            return { ficha: ficha, extra: relatorio, evento: 'ficha-ajustada', naoGravar: true };
+          }
           if (relatorio.erros.length && !relatorio.mudancas.length) {
             throw erroApi_(ERRO.DADOS_INVALIDOS, relatorio.erros[0], { problemas: relatorio.erros });
           }
@@ -261,7 +264,8 @@ function executar_(p) {
         return ok_({
           personagem: r.personagem,
           mudancas: r.extra.mudancas,
-          avisos: r.extra.erros
+          avisos: r.extra.erros,
+          pendenciaRolagem: r.extra.pendenciaRolagem || null
         });
       }
 

@@ -361,7 +361,16 @@
     {
      "ordem": 2,
      "nome": "Inabalável",
-     "texto": "Quando você for marcar 1 Estresse, role um d6. Com resultado 6, não marque o Estresse."
+     "texto": "Quando você for marcar 1 Estresse, role um d6. Com resultado 6, não marque o Estresse.",
+     "interceptaEstresse": {
+      "quantidade": 1,
+      "dado": "d6",
+      "evitaResultados": [
+       6
+      ],
+      "rolagemManual": true,
+      "fonte": "DH-DigitalRegras.pdf p.60"
+     }
     }
    ],
    "caracteristicasNoLivro": [

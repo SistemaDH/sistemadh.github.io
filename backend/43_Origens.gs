@@ -70,6 +70,18 @@ const EFEITOS_DE_SESSAO_DE_ORIGEM = {
   }
 };
 
+const INTERCEPTADORES_DE_ESTRESSE_DE_ORIGEM = {
+  "Inabalável": {
+    "quantidade": 1,
+    "dado": "d6",
+    "evitaResultados": [
+      6
+    ],
+    "rolagemManual": true,
+    "fonte": "DH-DigitalRegras.pdf p.60"
+  }
+};
+
 
 /** Filtra um índice de efeitos pelas características que ESTA ficha realmente possui. */
 function efeitosDeOrigemDaFicha_(ficha, mapa) {
@@ -85,6 +97,10 @@ function efeitosDeOrigemDaFicha_(ficha, mapa) {
 function efeitosDeCriacaoDeOrigem_(ficha) { return efeitosDeOrigemDaFicha_(ficha, EFEITOS_DE_CRIACAO_DE_ORIGEM); }
 function efeitosDeDescansoDeOrigem_(ficha) { return efeitosDeOrigemDaFicha_(ficha, EFEITOS_DE_DESCANSO_DE_ORIGEM); }
 function efeitosDeSessaoDeOrigem_(ficha) { return efeitosDeOrigemDaFicha_(ficha, EFEITOS_DE_SESSAO_DE_ORIGEM); }
+function interceptadorDeEstresseDaFicha_(ficha) {
+  const xs = efeitosDeOrigemDaFicha_(ficha, INTERCEPTADORES_DE_ESTRESSE_DE_ORIGEM);
+  return xs.length ? xs[0] : null;
+}
 
 /** Modificadores derivados das características de ancestralidade. */
 const EFEITOS_DERIVADOS_DE_ORIGEM = {

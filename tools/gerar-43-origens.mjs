@@ -72,11 +72,13 @@ for (const a of anc.ancestralidades) {
 const efeitosDeCriacaoDeOrigem = {};
 const efeitosDeDescansoDeOrigem = {};
 const efeitosDeSessaoDeOrigem = {};
+const interceptadoresDeEstresseDeOrigem = {};
 for (const a of anc.ancestralidades) {
   for (const f of a.caracteristicas || []) {
     if (f.efeitoCriacao) efeitosDeCriacaoDeOrigem[f.nome] = f.efeitoCriacao;
     if (f.efeitoDescanso) efeitosDeDescansoDeOrigem[f.nome] = f.efeitoDescanso;
     if (f.efeitoSessao) efeitosDeSessaoDeOrigem[f.nome] = f.efeitoSessao;
+    if (f.interceptaEstresse) interceptadoresDeEstresseDeOrigem[f.nome] = f.interceptaEstresse;
   }
 }
 
@@ -129,6 +131,7 @@ L.push('/** Efeitos de ancestralidade ligados à criação, descanso e sessão. 
 L.push(`const EFEITOS_DE_CRIACAO_DE_ORIGEM = ${JSON.stringify(efeitosDeCriacaoDeOrigem, null, 2)};\n`);
 L.push(`const EFEITOS_DE_DESCANSO_DE_ORIGEM = ${JSON.stringify(efeitosDeDescansoDeOrigem, null, 2)};\n`);
 L.push(`const EFEITOS_DE_SESSAO_DE_ORIGEM = ${JSON.stringify(efeitosDeSessaoDeOrigem, null, 2)};\n`);
+L.push(`const INTERCEPTADORES_DE_ESTRESSE_DE_ORIGEM = ${JSON.stringify(interceptadoresDeEstresseDeOrigem, null, 2)};\n`);
 L.push(`
 /** Filtra um índice de efeitos pelas características que ESTA ficha realmente possui. */
 function efeitosDeOrigemDaFicha_(ficha, mapa) {
@@ -144,6 +147,10 @@ function efeitosDeOrigemDaFicha_(ficha, mapa) {
 function efeitosDeCriacaoDeOrigem_(ficha) { return efeitosDeOrigemDaFicha_(ficha, EFEITOS_DE_CRIACAO_DE_ORIGEM); }
 function efeitosDeDescansoDeOrigem_(ficha) { return efeitosDeOrigemDaFicha_(ficha, EFEITOS_DE_DESCANSO_DE_ORIGEM); }
 function efeitosDeSessaoDeOrigem_(ficha) { return efeitosDeOrigemDaFicha_(ficha, EFEITOS_DE_SESSAO_DE_ORIGEM); }
+function interceptadorDeEstresseDaFicha_(ficha) {
+  const xs = efeitosDeOrigemDaFicha_(ficha, INTERCEPTADORES_DE_ESTRESSE_DE_ORIGEM);
+  return xs.length ? xs[0] : null;
+}
 `);
 
 L.push('/** Modificadores derivados das características de ancestralidade. */');

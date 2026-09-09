@@ -329,10 +329,54 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     });
   }
 
+  function pedirResultadoInabalavel(pendencia) {
+    return new Promise((resolve) => {
+      let respondeu = false;
+      const responder = (valor) => {
+        if (respondeu) return;
+        respondeu = true;
+        modal.fechar();
+        resolve(valor);
+      };
+      const botoes = [];
+      for (let n = 1; n <= 6; n++) {
+        botoes.push(el('button', {
+          type: 'button', class: 'btn btn--fantasma btn--pequeno',
+          onClick: () => responder(n)
+        }, String(n)));
+      }
+      const corpo = el('div', { class: 'pilha' }, [
+        el('p', { class: 'texto-sm', texto: (pendencia && pendencia.mensagem) ||
+          'Role 1d6 fora do app e toque no resultado.' }),
+        el('div', { class: 'linha', role: 'group', 'aria-label': 'Resultado do d6' }, botoes)
+      ]);
+      const modal = abrirModal({
+        titulo: 'Inabalável — resultado do d6',
+        conteudo: corpo,
+        acoes: [el('button', {
+          type: 'button', class: 'btn btn--fantasma', onClick: () => responder(null)
+        }, 'Cancelar')],
+        aoFechar: () => { if (!respondeu) { respondeu = true; resolve(null); } }
+      });
+    });
+  }
+
   async function enviar(ajustes, { soSeMudou = false } = {}) {
     const esperado = soSeMudou ? assinatura(p.ficha) : null;
     try {
       const r = await acoes.ajustarFicha(id, ajustes);
+      if (r && r.pendenciaRolagem && r.pendenciaRolagem.tipo === 'inabalavel') {
+        const dado = await pedirResultadoInabalavel(r.pendenciaRolagem);
+        if (dado === null) {
+          p = r.personagem;
+          desenhar();
+          return r;
+        }
+        const indice = Number(r.pendenciaRolagem.indice) || 0;
+        const repetidos = (Array.isArray(ajustes) ? ajustes : [ajustes]).map((a, i) =>
+          i === indice ? Object.assign({}, a, { dadoInabalavel: dado }) : Object.assign({}, a));
+        return enviar(repetidos, { soSeMudou });
+      }
       p = r.personagem;
       let chamaAMorte = false;
       (r.mudancas || []).forEach((m) => {

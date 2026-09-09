@@ -86,6 +86,105 @@ function tetoDoRecursoAjustavel_(ficha, chave) {
  *
  * @return {{mudancas: Array, erros: Array}}
  */
+function substituirFichaEmLugar_(destino, origem) {
+  Object.keys(destino || {}).forEach(function (k) { delete destino[k]; });
+  Object.keys(origem || {}).forEach(function (k) { destino[k] = origem[k]; });
+}
+
+/** Executa UM ajuste sem a camada de Inabalável. */
+function aplicarAjusteDireto_(ficha, a) {
+  const tipo = chaveTexto_((a || {}).tipo);
+  if (tipo === 'recurso') return ajustarRecurso_(ficha, a);
+  if (tipo === 'dano') return aplicarDanoNaFicha_(ficha, a);
+  if (tipo === 'condicao') return ajustarCondicao_(ficha, a);
+  if (tipo === 'contador') return ajustarContador_(ficha, a);
+  if (tipo === 'marcador') return ajustarMarcador_(ficha, a);
+  if (tipo === 'carta') return ajustarCarta_(ficha, a);
+  if (tipo === 'gatilho') return ajustarGatilho_(ficha, a);
+  if (tipo === 'sessao') return ajustarSessaoDaFicha_(ficha, a);
+  if (tipo === 'morte') return ajustarMovimentoDeMorte_(ficha, a);
+  if (tipo === 'conjuracao') return ajustarConjuracao_(ficha, a);
+  if (tipo === 'ouro') return ajustarOuroDaFicha_(ficha, a);
+  if (tipo === 'inventario') return ajustarInventario_(ficha, a);
+  if (tipo === 'arma') return ajustarArmasDaFicha_(ficha, a);
+  if (tipo === 'compra') return comprarItem_(ficha, a);
+  if (tipo === 'fichafilha') return ajustarFichaFilha_(ficha, a);
+  if (tipo === 'escolhadeclasse') return ajustarEscolhaDeClasse_(ficha, a);
+  if (tipo === 'habilidade') return usarHabilidadeDeClasse_(ficha, a);
+  return { erro: 'Tipo de ajuste desconhecido: "' + String((a || {}).tipo) + '".' };
+}
+
+/**
+ * Intercepta qualquer ajuste que REALMENTE acrescentaria exatamente 1 Estresse.
+ * A rolagem continua fora do app: sem `dadoInabalavel`, devolve uma pendência e
+ * a lista inteira será descartada pela prévia de `aplicarAjustes_`.
+ */
+function aplicarAjusteComInabalavel_(ficha, a) {
+  const regra = (typeof interceptadorDeEstresseDaFicha_ === 'function')
+    ? interceptadorDeEstresseDaFicha_(ficha) : null;
+  const antesFicha = JSON.parse(JSON.stringify(ficha || {}));
+  const antes = Math.max(0, Number(((ficha || {}).recursos || {}).estresseMarcado) || 0);
+  const r = aplicarAjusteDireto_(ficha, a || {});
+  if (r && r.erro) {
+    substituirFichaEmLugar_(ficha, antesFicha);
+    return { resultado: r };
+  }
+  if (!regra) return { resultado: r };
+
+  const depois = Math.max(0, Number(((ficha || {}).recursos || {}).estresseMarcado) || 0);
+  const quantidade = Math.max(1, Math.trunc(Number(regra.quantidade)) || 1);
+  if (depois - antes !== quantidade) return { resultado: r };
+
+  const bruto = (a || {}).dadoInabalavel;
+  if (bruto === undefined || bruto === null || bruto === '') {
+    return {
+      pendencia: {
+        tipo: 'inabalavel', caracteristica: regra.nome || 'Inabalável',
+        dado: regra.dado || 'd6', minimo: 1, maximo: 6,
+        mensagem: 'Role 1d6 fora do app. Com 6, o Estresse não é marcado.'
+      }
+    };
+  }
+
+  const dado = Math.trunc(Number(bruto));
+  if (!isFinite(dado) || dado < 1 || dado > 6 || Number(bruto) !== dado) {
+    substituirFichaEmLugar_(ficha, antesFicha);
+    return { resultado: { erro: 'Inabalável: informe o resultado inteiro do d6, de 1 a 6.' } };
+  }
+
+  const evita = Array.isArray(regra.evitaResultados) && regra.evitaResultados.indexOf(dado) !== -1;
+  if (evita) {
+    ficha.recursos = ficha.recursos || {};
+    ficha.recursos.estresseMarcado = Math.max(0,
+      (Number(ficha.recursos.estresseMarcado) || 0) - quantidade);
+    if (typeof sincronizarVulneravelPorEstresse_ === 'function') sincronizarVulneravelPorEstresse_(ficha);
+
+    if (r && r.tipo === 'recurso' && r.chave === 'estresseMarcado') {
+      r.depois = ficha.recursos.estresseMarcado;
+      delete r.alerta;
+    }
+    if (r && Array.isArray(r.detalhes)) {
+      r.detalhes.forEach(function (m) {
+        if (m && m.tipo === 'recurso' && m.chave === 'estresseMarcado') {
+          m.depois = ficha.recursos.estresseMarcado;
+          delete m.alerta;
+        }
+      });
+    }
+    if (r) r.estresseMarcado = ficha.recursos.estresseMarcado;
+  }
+
+  if (r) {
+    r.inabalavel = { dado: dado, evitou: evita, quantidade: quantidade };
+    r.estresseEvitado = evita ? quantidade : 0;
+    const nota = 'Inabalável: d6 = ' + dado + (evita
+      ? '; ' + quantidade + ' Estresse evitado.'
+      : '; o Estresse foi marcado normalmente.');
+    r.aviso = nota + (r.aviso ? ' ' + r.aviso : '');
+  }
+  return { resultado: r };
+}
+
 function aplicarAjustes_(ficha, ajustes) {
   const mudancas = [];
   const erros = [];
@@ -96,35 +195,29 @@ function aplicarAjustes_(ficha, ajustes) {
     return { mudancas: mudancas, erros: ['São no máximo ' + LIMITE_AJUSTES_POR_PEDIDO + ' ajustes por vez.'] };
   }
 
+  /*
+   * A lista inteira roda primeiro numa CÓPIA. Isso mantém a semântica antiga
+   * de aplicar os ajustes válidos mesmo quando outro da lista dá erro, mas
+   * permite uma exceção importante: se Inabalável pedir o d6, NADA da lista
+   * chega à ficha real antes de o jogador informar o resultado.
+   */
+  const previa = JSON.parse(JSON.stringify(ficha || {}));
   for (let i = 0; i < lista.length; i++) {
     const a = lista[i] || {};
-    const tipo = chaveTexto_(a.tipo);
-    let r = null;
-
-    if (tipo === 'recurso') r = ajustarRecurso_(ficha, a);
-    else if (tipo === 'dano') r = aplicarDanoNaFicha_(ficha, a);
-    else if (tipo === 'condicao') r = ajustarCondicao_(ficha, a);
-    else if (tipo === 'contador') r = ajustarContador_(ficha, a);
-    else if (tipo === 'marcador') r = ajustarMarcador_(ficha, a);
-    else if (tipo === 'carta') r = ajustarCarta_(ficha, a);
-    else if (tipo === 'gatilho') r = ajustarGatilho_(ficha, a);
-    else if (tipo === 'sessao') r = ajustarSessaoDaFicha_(ficha, a);
-    else if (tipo === 'morte') r = ajustarMovimentoDeMorte_(ficha, a);
-    else if (tipo === 'conjuracao') r = ajustarConjuracao_(ficha, a);
-    else if (tipo === 'ouro') r = ajustarOuroDaFicha_(ficha, a);
-    else if (tipo === 'inventario') r = ajustarInventario_(ficha, a);
-    else if (tipo === 'arma') r = ajustarArmasDaFicha_(ficha, a);
-    else if (tipo === 'compra') r = comprarItem_(ficha, a);
-    else if (tipo === 'fichafilha') r = ajustarFichaFilha_(ficha, a);
-    else if (tipo === 'escolhadeclasse') r = ajustarEscolhaDeClasse_(ficha, a);
-    else if (tipo === 'habilidade') r = usarHabilidadeDeClasse_(ficha, a);
-    else r = { erro: 'Tipo de ajuste desconhecido: "' + String(a.tipo) + '".' };
-
+    const tentativa = aplicarAjusteComInabalavel_(previa, a);
+    if (tentativa && tentativa.pendencia) {
+      return {
+        mudancas: [], erros: [],
+        pendenciaRolagem: Object.assign({ indice: i }, tentativa.pendencia)
+      };
+    }
+    const r = tentativa ? tentativa.resultado : null;
     if (r && r.erro) erros.push(r.erro);
     else if (r) mudancas.push(r);
   }
 
-  return { mudancas: mudancas, erros: erros };
+  substituirFichaEmLugar_(ficha, previa);
+  return { mudancas: mudancas, erros: erros, pendenciaRolagem: null };
 }
 
 /* ------------------------------------------------------------------------ *

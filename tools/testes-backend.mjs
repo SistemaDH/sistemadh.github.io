@@ -3704,6 +3704,7 @@ teste('rajada de toques tem teto', () => {
 console.log('\nFicha em jogo — pela API');
 
 let idEmJogo = null;
+let idFirbolgJogo = null;
 let tokenJogo = null;
 
 teste('cria a ficha de jogo pela API', () => {
@@ -3717,6 +3718,45 @@ teste('cria a ficha de jogo pela API', () => {
   const r = api('criarPersonagem', { token: tokenJogo, ficha });
   verdade(r.ok, JSON.stringify(r));
   idEmJogo = r.dados.personagem.id;
+});
+
+teste('Inabalável pela API não grava nem sobe versão antes do d6', () => {
+  const ficha = contexto.fichaRapida_({
+    nome: 'Firbolg em Jogo', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade: 'Firbolg', comunidade: 'Highborne',
+    cartas: ['blade-levantar-se', 'blade-nao-foi-suficiente'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  const criado = api('criarPersonagem', { token: tokenJogo, ficha });
+  verdade(criado.ok, JSON.stringify(criado));
+  idFirbolgJogo = criado.dados.personagem.id;
+  const antes = api('obterPersonagem', { token: tokenJogo, id: idFirbolgJogo }).dados.personagem;
+
+  const pede = api('ajustarFicha', {
+    token: tokenJogo, id: idFirbolgJogo,
+    ajustes: [{ tipo: 'recurso', chave: 'estresse', delta: 1 }]
+  });
+  verdade(pede.ok && pede.dados.pendenciaRolagem, JSON.stringify(pede));
+  igual(pede.dados.personagem.versao, antes.versao);
+  igual(pede.dados.personagem.ficha.recursos.estresseMarcado, 0);
+  const relido = api('obterPersonagem', { token: tokenJogo, id: idFirbolgJogo }).dados.personagem;
+  igual(relido.versao, antes.versao, 'pedido de d6 não pode gravar a ficha');
+  igual(relido.ficha.recursos.estresseMarcado, 0);
+
+  const evita = api('ajustarFicha', {
+    token: tokenJogo, id: idFirbolgJogo,
+    ajustes: [{ tipo: 'recurso', chave: 'estresse', delta: 1, dadoInabalavel: 6 }]
+  });
+  verdade(evita.ok, JSON.stringify(evita));
+  igual(evita.dados.personagem.versao, antes.versao + 1);
+  igual(evita.dados.personagem.ficha.recursos.estresseMarcado, 0);
+
+  const marca = api('ajustarFicha', {
+    token: tokenJogo, id: idFirbolgJogo,
+    ajustes: [{ tipo: 'recurso', chave: 'estresse', delta: 1, dadoInabalavel: 5 }]
+  });
+  verdade(marca.ok, JSON.stringify(marca));
+  igual(marca.dados.personagem.ficha.recursos.estresseMarcado, 1);
 });
 
 teste('ajustarFicha grava e devolve a versão nova', () => {
@@ -5338,6 +5378,86 @@ teste('Asas mantém voo como estado e +2 de Evasão existe só na reação daque
   igual(f.recursos.estresseMarcado, 2, 'reação recusada fora do ar não cobra nada');
 });
 
+teste('Inabalável pede d6 manual antes de qualquer +1 Estresse e 6 evita a marca', () => {
+  const f = fichaAncestral_('Firbolg');
+  const semDado = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Investida' }]);
+  igual(semDado.erros, []);
+  verdade(semDado.pendenciaRolagem && semDado.pendenciaRolagem.tipo === 'inabalavel', JSON.stringify(semDado));
+  igual(f.recursos.estresseMarcado, 0, 'pedir o d6 não pode aplicar a ação pela metade');
+
+  const seis = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Investida', dadoInabalavel: 6 }]);
+  igual(seis.erros, []);
+  igual(f.recursos.estresseMarcado, 0, '6 evita exatamente o Estresse');
+  verdade(seis.mudancas[0].inabalavel.evitou, JSON.stringify(seis.mudancas[0]));
+  verdade(/1d12/.test(seis.mudancas[0].aviso || ''), 'a habilidade ainda precisa acontecer: ' + seis.mudancas[0].aviso);
+
+  const cinco = contexto.aplicarAjustes_(f, [{ tipo: 'recurso', chave: 'estresse', delta: 1, dadoInabalavel: 5 }]);
+  igual(cinco.erros, []);
+  igual(f.recursos.estresseMarcado, 1);
+  verdade(!cinco.mudancas[0].inabalavel.evitou);
+});
+
+teste('Inabalável só intercepta exatamente +1 Estresse e valida o d6', () => {
+  const f = fichaAncestral_('Firbolg');
+  const dois = contexto.aplicarAjustes_(f, [{ tipo: 'recurso', chave: 'estresse', delta: 2 }]);
+  igual(dois.erros, []);
+  verdade(!dois.pendenciaRolagem, JSON.stringify(dois));
+  igual(f.recursos.estresseMarcado, 2, '+2 não é a condição da característica');
+
+  const limpa = contexto.aplicarAjustes_(f, [{ tipo: 'recurso', chave: 'estresse', delta: -1 }]);
+  igual(limpa.erros, []);
+  verdade(!limpa.pendenciaRolagem);
+  igual(f.recursos.estresseMarcado, 1);
+
+  const ruim = contexto.aplicarAjustes_(f, [{ tipo: 'recurso', chave: 'estresse', delta: 1, dadoInabalavel: 7 }]);
+  igual(ruim.erros.length, 1);
+  igual(f.recursos.estresseMarcado, 1, 'd6 inválido não pode marcar Estresse');
+});
+
+teste('Inabalável torna a lista inteira atômica enquanto espera o d6', () => {
+  const f = fichaAncestral_('Firbolg');
+  f.recursos.esperanca = 5;
+  const lista = [
+    { tipo: 'recurso', chave: 'esperanca', delta: -1 },
+    { tipo: 'habilidade', nome: 'Investida' }
+  ];
+  const pendente = contexto.aplicarAjustes_(f, lista);
+  verdade(pendente.pendenciaRolagem && pendente.pendenciaRolagem.indice === 1, JSON.stringify(pendente));
+  igual(f.recursos.esperanca, 5, 'o ajuste anterior também precisa esperar');
+  igual(f.recursos.estresseMarcado, 0);
+
+  lista[1] = Object.assign({}, lista[1], { dadoInabalavel: 6 });
+  const fecha = contexto.aplicarAjustes_(f, lista);
+  igual(fecha.erros, []);
+  igual(f.recursos.esperanca, 4);
+  igual(f.recursos.estresseMarcado, 0);
+});
+
+teste('Inabalável respeita ancestralidade mista: só vale quando a segunda característica foi escolhida', () => {
+  const com = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Mista Firbolg', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade: 'Fada', comunidade: 'Highborne',
+    ancestralidadeMista: ['Fada', 'Firbolg'],
+    caracteristicasEscolhidas: ['Dobradora da Sorte', 'Inabalável'],
+    cartas: ['blade-levantar-se', 'blade-nao-foi-suficiente'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  verdade(contexto.aplicarAjustes_(com, [{ tipo: 'recurso', chave: 'estresse', delta: 1 }]).pendenciaRolagem);
+  igual(com.recursos.estresseMarcado, 0);
+
+  const sem = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Mista sem Inab', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade: 'Firbolg', comunidade: 'Highborne',
+    ancestralidadeMista: ['Firbolg', 'Orc'],
+    caracteristicasEscolhidas: ['Investida', 'Presas'],
+    cartas: ['blade-levantar-se', 'blade-nao-foi-suficiente'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  const normal = contexto.aplicarAjustes_(sem, [{ tipo: 'recurso', chave: 'estresse', delta: 1 }]);
+  verdade(!normal.pendenciaRolagem);
+  igual(sem.recursos.estresseMarcado, 1);
+});
+
 teste('Sentido de Perigo cobra 1 Estresse, respeita 1/descanso e não vaza para outras fichas', () => {
   const f = fichaAncestral_('Goblin');
   const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Sentido de Perigo' }]);
@@ -5370,7 +5490,11 @@ teste('custos simples de ancestralidade são cobrados pelo servidor e devolvem o
     const f = fichaAncestral_(ancestralidade);
     f.recursos.esperanca = 6;
     const antes = Number(f.recursos[campo]) || 0;
-    const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome }]);
+    const ajuste = { tipo: 'habilidade', nome };
+    // Firbolg tem Inabalável: 5 mantém o custo e deixa este teste histórico
+    // continuar conferindo Investida, sem transformar a fixture em RNG.
+    if (nome === 'Investida') ajuste.dadoInabalavel = 5;
+    const r = contexto.aplicarAjustes_(f, [ajuste]);
     igual(r.erros, [], ancestralidade + '/' + nome + ': ' + JSON.stringify(r.erros));
     igual(f.recursos[campo], antes + delta, ancestralidade + '/' + nome);
     verdade(rx.test(r.mudancas[0].aviso || ''), ancestralidade + '/' + nome + ': ' + r.mudancas[0].aviso);
