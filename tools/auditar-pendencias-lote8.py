@@ -109,6 +109,8 @@ for c in cartas.get('cartas', []):
     mech = bool(deps or c.get('condicoes') or MECH.search(text))
     if has_counter:
         st = 'contador/estado estruturado (efeito completo ainda deve ser conferido)'
+    elif c.get('automacao'):
+        st = 'classificada explicitamente'
     elif runtime_ref:
         st = 'referência específica no motor'
     elif mech:

@@ -1040,6 +1040,24 @@
    ],
    "observacao": "Estado ligado gratuitamente ao começar a voar e encerrado ao pousar. Os custos das ações durante o voo são cobrados separadamente.",
    "exigeCaracteristica": "Asas de Luz"
+  },
+  {
+   "chave": "estado:carta:arcana:olho-flutuante",
+   "origem": "carta-dominio",
+   "refId": "arcana-olho-flutuante",
+   "nome": "Olho Flutuante",
+   "rotulo": "ativo",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "fim-da-cena",
+    "manual"
+   ],
+   "observacao": "Ligado ao conjurar por 1 Esperança. A mesa também encerra se a orbe sofrer dano ou sair do alcance."
   }
  ]
 }

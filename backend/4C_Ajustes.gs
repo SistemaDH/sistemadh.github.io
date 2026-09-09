@@ -100,6 +100,7 @@ function aplicarAjusteDireto_(ficha, a) {
   if (tipo === 'contador') return ajustarContador_(ficha, a);
   if (tipo === 'marcador') return ajustarMarcador_(ficha, a);
   if (tipo === 'carta') return ajustarCarta_(ficha, a);
+  if (tipo === 'usarcarta') return usarCartaDeDominio_(ficha, a);
   if (tipo === 'gatilho') return ajustarGatilho_(ficha, a);
   if (tipo === 'sessao') return ajustarSessaoDaFicha_(ficha, a);
   if (tipo === 'morte') return ajustarMovimentoDeMorte_(ficha, a);
@@ -2179,6 +2180,83 @@ function ajustarMarcador_(ficha, a) {
 
   ficha.contadores[chave] = { valor: 0, nome: nome, maximo: teto };
   return { tipo: 'marcador', acao: 'criar', chave: chave, nome: nome, maximo: teto };
+}
+
+/**
+ * Usa uma carta de domínio que está NA MÃO.
+ *
+ * Dados e decisões narrativas continuam fora do app. Este caminho existe para
+ * as partes determinísticas que não podem depender de memória da mesa: pagar
+ * recurso, ligar/desligar um estado e mover a carta para o cofre.
+ */
+function usarCartaDeDominio_(ficha, a) {
+  if (typeof acharCarta_ !== 'function' || typeof USOS_CARTAS_DOMINIO === 'undefined') {
+    return { erro: 'Índice de usos de cartas indisponível.' };
+  }
+  const carta = acharCarta_(a.carta);
+  if (!carta) return { erro: 'Carta de domínio desconhecida: "' + String(a.carta) + '".' };
+  const def = USOS_CARTAS_DOMINIO[carta.id];
+  if (!def) return { erro: '"' + carta.nome + '" não possui uso automático registrado.' };
+
+  ficha.cartas = ficha.cartas || { ativas: [], cofre: [] };
+  ficha.cartas.ativas = Array.isArray(ficha.cartas.ativas) ? ficha.cartas.ativas : [];
+  ficha.cartas.cofre = Array.isArray(ficha.cartas.cofre) ? ficha.cartas.cofre : [];
+  const naMao = ficha.cartas.ativas.some(function (x) { return chaveTexto_(x) === chaveTexto_(carta.id); });
+  if (!naMao) return { erro: '"' + carta.nome + '" precisa estar na mão para ser usada.' };
+
+  const estado = def.estado || null;
+  ficha.contadores = ficha.contadores || {};
+  if (a.encerrar === true) {
+    if (!estado || !estado.chave) return { erro: '"' + carta.nome + '" não possui estado para encerrar.' };
+    if (!ficha.contadores[estado.chave]) return { erro: '"' + carta.nome + '" não está ativa.' };
+    delete ficha.contadores[estado.chave];
+    return { tipo: 'usarCarta', carta: carta.id, nome: carta.nome, estado: estado.chave,
+      estadoAtivo: false, aviso: estado.avisoEncerrar || (carta.nome + ' encerrado.') };
+  }
+  if (estado && estado.chave && ficha.contadores[estado.chave]) {
+    return { erro: '"' + carta.nome + '" já está ativa.' };
+  }
+
+  const custo = def.custo || {};
+  const ce = Math.max(0, Math.trunc(Number(custo.esperanca)) || 0);
+  const cs = Math.max(0, Math.trunc(Number(custo.estresse)) || 0);
+  const r = ficha.recursos || {};
+  if (ce && (Number(r.esperanca) || 0) < ce) {
+    return { erro: 'Não sobra Esperança para usar "' + carta.nome + '".' };
+  }
+  if (cs) {
+    const teto = Number(r.estresseMaximo) || 0;
+    const marcado = Math.max(0, Number(r.estresseMarcado) || 0);
+    if (marcado + cs > teto) return { erro: 'Não sobra Estresse para usar "' + carta.nome + '".' };
+  }
+
+  ficha.recursos = r;
+  if (ce) r.esperanca = (Number(r.esperanca) || 0) - ce;
+  if (cs) r.estresseMarcado = (Number(r.estresseMarcado) || 0) + cs;
+
+  if (estado && estado.chave) {
+    ficha.contadores[estado.chave] = { valor: Math.max(1, Math.trunc(Number(estado.valor)) || 1) };
+  }
+
+  if (def.moveParaCofre === true) {
+    ficha.cartas.ativas = ficha.cartas.ativas.filter(function (x) { return chaveTexto_(x) !== chaveTexto_(carta.id); });
+    if (!ficha.cartas.cofre.some(function (x) { return chaveTexto_(x) === chaveTexto_(carta.id); })) {
+      ficha.cartas.cofre.push(carta.id);
+    }
+  }
+
+  const pago = [];
+  if (ce) pago.push(ce + ' de Esperança');
+  if (cs) pago.push(cs + ' de Estresse');
+  return {
+    tipo: 'usarCarta', carta: carta.id, nome: carta.nome,
+    custoEsperanca: ce, custoEstresse: cs,
+    esperanca: Number(r.esperanca) || 0, estresseMarcado: Number(r.estresseMarcado) || 0,
+    estado: estado && estado.chave ? estado.chave : null,
+    estadoAtivo: !!(estado && estado.chave),
+    moveuParaCofre: def.moveParaCofre === true,
+    aviso: carta.nome + (pago.length ? ' custou ' + pago.join(' e ') : '') + '. ' + String(def.lembrete || '')
+  };
 }
 
 function ajustarCarta_(ficha, a) {

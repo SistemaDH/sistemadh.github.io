@@ -3466,6 +3466,18 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     }
 
     const saida = [];
+    const usoCarta = c.uso || null;
+    if (destino === 'cofre' && usoCarta) {
+      const estado = usoCarta.estado || null;
+      const ativo = !!(estado && estado.chave && (((p.ficha || {}).contadores || {})[estado.chave]));
+      saida.push(el('button', {
+        type: 'button', class: 'btn btn--pequeno',
+        onClick: () => {
+          if (modal) modal.fechar();
+          enviar([{ tipo: 'usarCarta', carta: c.id, encerrar: ativo }]);
+        }
+      }, ativo ? (estado.rotuloEncerrar || 'Encerrar efeito') : (usoCarta.rotuloAtivar || 'Usar carta')));
+    }
     if (permanente && !permanente.noAlvo) {
       saida.push(el('button', {
         type: 'button', class: 'btn btn--pequeno',

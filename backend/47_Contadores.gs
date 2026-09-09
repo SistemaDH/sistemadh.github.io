@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 49 cartas e características mandam
+ *  O problema que este arquivo resolve: 50 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -89,6 +89,7 @@ const CONTADORES = {
   "estado:feiticeiro:carga-arcana": { origem: "caracteristica-subclasse", refId: "feiticeiro-origem-primal", nome: "Carga Arcana", rotulo: "estado", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [], exigeCaracteristica: "Carga Arcana" },
   "estado:ladino:caminhante-noturno:ato-desaparecimento": { origem: "caracteristica-subclasse", refId: "ladino-caminhante-noturno", nome: "Ato de Desaparecimento", rotulo: "Camuflado", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso","descanso-longo"], recarregaEm: [], exigeCaracteristica: "Ato de Desaparecimento" },
   "estado:seraph:asas-de-luz:voando": { origem: "caracteristica-subclasse", refId: "seraph-sentinela-alado", nome: "Asas de Luz", rotulo: "voando", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], exigeCaracteristica: "Asas de Luz" },
+  "estado:carta:arcana:olho-flutuante": { origem: "carta-dominio", refId: "arcana-olho-flutuante", nome: "Olho Flutuante", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-da-cena","manual"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -142,6 +143,7 @@ const CONTADOR_ALIASES = {
   "estado:feiticeiro:carga-arcana": ["Carga Arcana"],
   "estado:ladino:caminhante-noturno:ato-desaparecimento": ["Ato de Desaparecimento"],
   "estado:seraph:asas-de-luz:voando": ["Asas de Luz"],
+  "estado:carta:arcana:olho-flutuante": ["Olho Flutuante"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

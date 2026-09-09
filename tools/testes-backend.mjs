@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 49 contadores: 17 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 50 contadores: 18 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 49 contadores: 17 de carta, 25 de classe/subclasse, 4 de 
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 49);
+  igual(Object.keys(CONTADORES).length, 50);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 17);
+  igual(porOrigem['carta-dominio'], 18);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -8181,6 +8181,57 @@ teste('Vulto Etéreo só remove Medo enquanto voa e não cria Esperança', () =>
   igual(f.recursos.esperanca, esperancaAntes, 'Vulto não concede a Esperança trocada');
   igual(contexto.aplicarEfeitosDeMesaDosAjustes_(r.mudancas), 2);
   igual(contexto.mesaLer_().medo, 2);
+});
+
+
+console.log('\nLote 8 — Arcana níveis 1–3');
+
+function fichaArcanaLote8_(cartas) {
+  const base = contexto.fichaRapida_({
+    nome: 'Arcana de Teste', classe: 'Feiticeiro', subclasse: 'Origem Primal',
+    subclasseCartas: ['fundacao'], ancestralidade: 'Humano', comunidade: 'Loreborne',
+    cartas, experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  base.identidade.nivel = 3;
+  base.cartas = { ativas: cartas.slice(), cofre: [] };
+  const f = contexto.validarFicha_(base);
+  f.recursos.esperanca = 6;
+  f.recursos.estresseMarcado = 0;
+  return f;
+}
+
+teste('Andar na Parede cobra 1 Esperança somente quando a carta está na mão', () => {
+  const f = fichaArcanaLote8_(['arcana-andar-na-parede', 'arcana-liberar-o-caos']);
+  let r = contexto.aplicarAjustes_(f, [{ tipo: 'usarCarta', carta: 'arcana-andar-na-parede' }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 5);
+  contexto.aplicarAjustes_(f, [{ tipo: 'carta', carta: 'arcana-andar-na-parede', para: 'cofre' }]);
+  r = contexto.aplicarAjustes_(f, [{ tipo: 'usarCarta', carta: 'arcana-andar-na-parede' }]);
+  igual(r.erros.length, 1);
+  igual(f.recursos.esperanca, 5, 'carta no cofre não pode cobrar Esperança');
+});
+
+teste('Olho Flutuante cobra 1 Esperança, guarda estado e pode ser encerrado sem novo custo', () => {
+  const f = fichaArcanaLote8_(['arcana-olho-flutuante', 'arcana-liberar-o-caos']);
+  let r = contexto.aplicarAjustes_(f, [{ tipo: 'usarCarta', carta: 'arcana-olho-flutuante' }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 5);
+  verdade(!!f.contadores['estado:carta:arcana:olho-flutuante']);
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'usarCarta', carta: 'arcana-olho-flutuante' }]).erros.length, 1,
+    'não empilha nem cobra de novo');
+  r = contexto.aplicarAjustes_(f, [{ tipo: 'usarCarta', carta: 'arcana-olho-flutuante', encerrar: true }]);
+  igual(r.erros, []);
+  verdade(!f.contadores['estado:carta:arcana:olho-flutuante']);
+  igual(f.recursos.esperanca, 5);
+});
+
+teste('Contra-Feitiço só sai da mão depois da confirmação manual de sucesso', () => {
+  const f = fichaArcanaLote8_(['arcana-contra-feitico', 'arcana-liberar-o-caos']);
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'usarCarta', carta: 'arcana-contra-feitico' }]);
+  igual(r.erros, []);
+  verdade(!f.cartas.ativas.includes('arcana-contra-feitico'));
+  verdade(f.cartas.cofre.includes('arcana-contra-feitico'));
+  igual(r.mudancas[0].moveuParaCofre, true);
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

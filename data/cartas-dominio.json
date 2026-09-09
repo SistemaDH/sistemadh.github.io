@@ -22,7 +22,18 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "motivo": "O custo de Esperança é automático. O alvo pode ser qualquer criatura e o deslocamento em paredes/tetos é posicional, então a mesa acompanha alvo e duração."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "rotuloAtivar": "Conjurar · 1 Esperança",
+    "lembrete": "Escolha uma criatura que você possa tocar. Ela escala paredes e tetos até o fim da cena ou até você conjurar Andar na Parede novamente."
+   }
   },
   {
    "id": "arcana-liberar-o-caos",
@@ -44,7 +55,11 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "contador-existente-com-dados-manuais",
+    "motivo": "As fichas da carta já são estado persistente. Jogada de Conjuração e d10s de dano permanecem manuais."
+   }
   },
   {
    "id": "arcana-talisma-runico",
@@ -65,7 +80,19 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "manual-com-entrada-de-dado",
+    "motivo": "O portador do talismã pode ser o conjurador ou um aliado e é o portador quem gasta Esperança; a redução depende de 1d8 rolado fora do app. A mesa informa o resultado e encerra o poder se sair 8."
+   },
+   "resolucaoManual": {
+    "gatilho": "Quando o portador do talismã receber dano.",
+    "rolaNoApp": false,
+    "dado": "d8",
+    "opcoes": [
+     "O portador gasta 1 Esperança, rola 1d8 fora do app e reduz o dano pelo resultado. Se o d8 resultar em 8, o poder do talismã termina após essa redução."
+    ]
+   }
   },
   {
    "id": "arcana-aperto-de-cinzas",
@@ -88,7 +115,18 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "manual-de-encontro",
+    "motivo": "A Jogada de Conjuração e os dados de dano são manuais; o alvo é um adversário da cena e a condição Em Chamas depende das ações desse adversário, portanto permanece no fluxo do Mestre/encontro."
+   },
+   "resolucaoManual": {
+    "gatilho": "Em uma Jogada de Conjuração bem-sucedida contra um alvo Corpo a Corpo.",
+    "rolaNoApp": false,
+    "opcoes": [
+     "Role 1d20+3 de dano mágico fora do app e marque o alvo como Em Chamas. Ao fim de cada ação dele, se ainda estiver Em Chamas, role 2d6 de dano mágico fora do app."
+    ]
+   }
   },
   {
    "id": "arcana-olho-flutuante",
@@ -109,7 +147,25 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "motivo": "O custo e o estado ativo são automáticos. Posição da orbe, visão, dano recebido e saída do alcance dependem da ficção da cena."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "rotuloAtivar": "Criar Olho Flutuante · 1 Esperança",
+    "estado": {
+     "chave": "estado:carta:arcana:olho-flutuante",
+     "valor": 1,
+     "rotuloAtivo": "Olho Flutuante ativo",
+     "rotuloEncerrar": "Encerrar Olho Flutuante",
+     "avisoEncerrar": "Olho Flutuante encerrado."
+    },
+    "lembrete": "Mova a orbe dentro do alcance Muito Distante e alterne livremente entre seus sentidos e a visão dela. Encerre se ela sofrer dano ou sair do alcance."
+   }
   },
   {
    "id": "arcana-contra-feitico",
@@ -130,7 +186,25 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "automatizada-apos-resultado-manual",
+    "motivo": "A jogada de reação é rolada fora do app. Após o jogador confirmar o sucesso, o app move a carta para o cofre automaticamente."
+   },
+   "uso": {
+    "custo": {},
+    "rotuloAtivar": "Sucesso: interromper e guardar no cofre",
+    "moveParaCofre": true,
+    "lembrete": "Use este botão somente depois de uma jogada de reação de Conjuração bem-sucedida. O efeito mágico é interrompido e suas consequências são evitadas."
+   },
+   "resolucaoManual": {
+    "gatilho": "Quando quiser interromper um efeito mágico em andamento.",
+    "jogada": "Jogada de Reação usando Conjuração",
+    "rolaNoApp": false,
+    "opcoes": [
+     "Em sucesso, use o botão da carta para colocá-la no cofre."
+    ]
+   }
   },
   {
    "id": "arcana-voar",
@@ -151,7 +225,11 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "contador-existente-com-resultado-manual",
+    "motivo": "As fichas de voo já são estado persistente. A Jogada de Conjuração 15 permanece manual."
+   }
   },
   {
    "id": "arcana-desaparecer",

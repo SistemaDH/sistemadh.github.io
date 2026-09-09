@@ -258,6 +258,13 @@ const CARTAS_DOMINIO = {
   ],
 };
 
+/** Usos determinísticos de cartas de domínio. */
+const USOS_CARTAS_DOMINIO = {
+  "arcana-andar-na-parede": {"custo":{"esperanca":1},"rotuloAtivar":"Conjurar · 1 Esperança","lembrete":"Escolha uma criatura que você possa tocar. Ela escala paredes e tetos até o fim da cena ou até você conjurar Andar na Parede novamente."},
+  "arcana-olho-flutuante": {"custo":{"esperanca":1},"rotuloAtivar":"Criar Olho Flutuante · 1 Esperança","estado":{"chave":"estado:carta:arcana:olho-flutuante","valor":1,"rotuloAtivo":"Olho Flutuante ativo","rotuloEncerrar":"Encerrar Olho Flutuante","avisoEncerrar":"Olho Flutuante encerrado."},"lembrete":"Mova a orbe dentro do alcance Muito Distante e alterne livremente entre seus sentidos e a visão dela. Encerre se ela sofrer dano ou sair do alcance."},
+  "arcana-contra-feitico": {"custo":{},"rotuloAtivar":"Sucesso: interromper e guardar no cofre","moveParaCofre":true,"lembrete":"Use este botão somente depois de uma jogada de reação de Conjuração bem-sucedida. O efeito mágico é interrompido e suas consequências são evitadas."},
+};
+
 /**
  * As 5 cartas que mudam alguma coisa PARA SEMPRE.
  *

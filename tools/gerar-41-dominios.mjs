@@ -73,6 +73,16 @@ for (const d of doms.dominios) {
 }
 L.push('};\n');
 
+// Cartas com um botão/efeito determinístico na ficha.
+// O texto completo continua no JSON; aqui viaja só o contrato que o servidor valida.
+const usos = cartas.filter((c) => c.uso);
+L.push('/** Usos determinísticos de cartas de domínio. */');
+L.push('const USOS_CARTAS_DOMINIO = {');
+for (const c of usos) {
+  L.push(`  ${j(c.id)}: ${JSON.stringify(c.uso)},`);
+}
+L.push('};\n');
+
 // As cinco cartas que mudam a ficha PARA SEMPRE. Só elas precisam do
 // servidor: é ele quem soma o benefício e tranca a carta no cofre.
 const permanentes = cartas.filter((c) => c.efeitoPermanente);
