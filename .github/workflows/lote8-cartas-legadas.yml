@@ -1,0 +1,90 @@
+name: Lote 8 - Cartas Legadas
+
+on:
+  push:
+    branches: [tmp-lote8-cartas-legadas-sol-fix]
+
+permissions:
+  contents: write
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materializar cartas legadas
+        run: |
+          python3 tools/lote8-cartas-legadas.py
+          node tools/gerar-41-dominios.mjs
+          node tools/gerar-47-contadores.mjs
+          node tools/gerar-4B-descanso.mjs
+          git diff --check
+
+      - name: Auditar classificação e contadores
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/cartas-dominio.json',encoding='utf-8'))['cartas']
+          ids=['blade-vitalidade','codex-teleporte','codex-simbolo-da-retaliacao','codex-livro-do-ronin']
+          xs=[next(c for c in d if c['id']==i) for i in ids]
+          assert all(c.get('automacao') for c in xs)
+          assert all((c.get('resolucaoManual') or {}).get('rolaNoApp') is False for c in xs)
+          tele=next(c for c in xs if c['id']=='codex-teleporte')
+          assert ((tele.get('uso') or {}).get('marcaUso') or {}).get('chave')=='uso:carta:codex:teleporte'
+          ron=next(c for c in xs if c['id']=='codex-livro-do-ronin')
+          ops={x['id']:x for x in ron['uso']['opcoes']}
+          assert ops['transformacao']['estado']['encerraAoSofrerDano'] is True
+          assert ops['enervacao']['marcaUso']['chave']=='uso:carta:codex:livro-do-ronin-enervacao'
+          cs=json.load(open('data/contadores.json',encoding='utf-8'))['contadores']
+          assert len(cs)==145,len(cs)
+          keys={x['chave'] for x in cs}
+          for k in ['uso:carta:codex:teleporte','estado:carta:codex:livro-do-ronin-transformacao','uso:carta:codex:livro-do-ronin-enervacao']:
+              assert k in keys,k
+          sem=[c['id'] for c in d if not c.get('automacao')]
+          assert not sem,sem
+          PY
+          python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria.md
+          ! grep -Eq '^\| .* \| [0-9]+ \| .* \|' <(sed -n '/## Candidatos — cartas de domínio sem sinal de automação específica/,/## Candidatos — características de equipamento/p' /tmp/auditoria.md)
+
+      - name: Testes backend
+        shell: bash
+        run: |
+          set -o pipefail
+          node tools/testes-backend.mjs | tee /tmp/backend.log
+          ! grep -q '✗' /tmp/backend.log
+          tail -n 40 /tmp/backend.log
+
+      - name: Instalar Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install chromium
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados e CSS
+        run: |
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+          git diff --check
+
+      - name: Proteger contra concorrência
+        run: |
+          git fetch origin 'ediçãoclaude'
+          test "$(git rev-parse 'origin/ediçãoclaude')" = '6d446310d77a3f8a72d38e8bc70fe3f0705d8d86'
+
+      - name: Commitar funcional e limpar temporários
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f --ignore-unmatch tools/lote8-cartas-legadas.py
+          git rm -f --ignore-unmatch .github/workflows/lote8-cartas-legadas.yml
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          find . -type f -name '*.pyc' -delete
+          git add -A
+          git diff --cached --check
+          git commit -m 'feat: fechar quatro cartas legadas do Lote 8 [lote8-generated]'
+          git push origin HEAD:tmp-lote8-cartas-legadas-sol-fix
