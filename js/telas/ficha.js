@@ -1313,6 +1313,81 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     }, uso.rotuloAtivar || `Aplicar ${nome} no aliado`);
   }
 
+  function blocoDeRetaliacao(nome, ficha) {
+    const regra = catalogo.retaliacaoDaCaracteristica(nome);
+    if (!regra) return null;
+    const pendentes = ((ficha || {}).retaliacoesPendentes || []).filter((x) =>
+      dados.chave((x || {}).caracteristica) === dados.chave(nome));
+    const por = Math.max(1, Number(regra.bonusProficienciaPorGatilho) || 1);
+    const base = Math.max(0, Number((((ficha || {}).recursos || {}).proficiencia)) || 0);
+
+    const registrar = () => {
+      const alvo = el('input', semCorretor({
+        type: 'text', class: 'campo__entrada', maxlength: 60,
+        placeholder: 'Adversário que causou o dano'
+      }));
+      const alcance = el('input', { type: 'checkbox' });
+      const corpo = el('div', { class: 'pilha' }, [
+        el('p', { class: 'texto-sm', texto:
+          'Registre o gatilho depois que um adversário causar dano a um aliado. O app não observa a cena nem rola dados.' }),
+        alvo,
+        el('label', { class: 'linha texto-sm' }, [
+          alcance,
+          `O aliado estava em alcance ${regra.alcance || 'Corpo a Corpo'} desse adversário.`
+        ]),
+        el('p', { class: 'texto-xs texto-fraco', texto:
+          'Efeitos acumulam: novos gatilhos contra o mesmo adversário somam +1 para o próximo ataque bem-sucedido contra ele.' })
+      ]);
+      let modal = null;
+      const aplicar = el('button', {
+        type: 'button', class: 'btn', onClick: async () => {
+          const nomeAlvo = alvo.value.trim();
+          if (!nomeAlvo) { avisarErro('Diga qual adversário causou o dano.'); return; }
+          if (!alcance.checked) { avisarErro(`Confirme o alcance ${regra.alcance || 'Corpo a Corpo'}.`); return; }
+          const r = await enviar([{
+            tipo: 'retaliacao', nome, acao: 'registrar', alvo: nomeAlvo, alcanceConfirmado: true
+          }]);
+          if (r && modal) modal.fechar();
+        }
+      }, 'Registrar retaliação');
+      modal = abrirModal({
+        titulo: nome, conteudo: corpo,
+        acoes: [
+          el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar() }, 'Cancelar'),
+          aplicar
+        ]
+      });
+    };
+
+    const linhas = pendentes.map((x) => {
+      const cargas = Math.max(1, Number(x.cargas) || 1);
+      const bonus = cargas * por;
+      return el('div', { class: 'pilha' }, [
+        el('span', { class: 'selo', texto:
+          `${x.alvo}: +${bonus} Proficiência pendente · dano com ${base + bonus} dados-base de Proficiência` }),
+        el('div', { class: 'linha' }, [
+          el('button', {
+            type: 'button', class: 'btn btn--fantasma btn--pequeno',
+            onClick: () => enviar([{
+              tipo: 'retaliacao', nome, acao: 'consumir', alvo: x.alvo, ataqueBemSucedido: true
+            }])
+          }, `Ataque acertou — usar +${bonus}`),
+          el('button', {
+            type: 'button', class: 'btn btn--fantasma btn--pequeno',
+            onClick: () => enviar([{ tipo: 'retaliacao', nome, acao: 'desfazer', alvo: x.alvo }])
+          }, 'Remover 1 marca')
+        ])
+      ]);
+    });
+
+    return el('div', { class: 'pilha' }, [
+      ...linhas,
+      el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--pequeno', onClick: registrar
+      }, pendentes.length ? 'Registrar outro gatilho' : 'Registrar retaliação')
+    ]);
+  }
+
   function botaoDeProtecaoEmAliado(nome, ficha) {
     const regra = catalogo.protecaoEmAliadoDaCaracteristica(nome);
     if (!regra) return null;
@@ -2503,6 +2578,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
             botaoDeHabilidade(c.nome, ficha),
             botaoDeHabilidadeEmAliado(c.nome),
             botaoDeProtecaoEmAliado(c.nome, ficha),
+            blocoDeRetaliacao(c.nome, ficha),
             c.origem ? el('span', { class: 'selo', texto: c.origem }) : null
           ]);
         }))));
@@ -4302,6 +4378,7 @@ export async function carregarCatalogo() {
   const usosComCusto = new Map();
   const usosEmAliado = new Map();
   const protecoesEmAliado = new Map();
+  const retaliacoes = new Map();
   const anotaUso = (f) => { if (f && f.uso) usosComCusto.set(dados.chave(f.nome), f.uso); };
   const anotaUsoEmAliado = (f) => {
     if (f && f.usoEmAliado) usosEmAliado.set(dados.chave(f.nome), f.usoEmAliado);
@@ -4309,15 +4386,18 @@ export async function carregarCatalogo() {
   const anotaProtecaoEmAliado = (f) => {
     if (f && f.protecaoAliado) protecoesEmAliado.set(dados.chave(f.nome), f.protecaoAliado);
   };
+  const anotaRetaliacao = (f) => {
+    if (f && f.retaliacao) retaliacoes.set(dados.chave(f.nome), f.retaliacao);
+  };
   (anc.ancestralidades || []).forEach((a) => (a.caracteristicas || []).forEach(anotaUso));
   (com.comunidades || []).forEach((c) => anotaUso(c.caracteristica));
   (classes.classes || []).forEach((c) => {
-    anotaUso(c.caracteristicaEsperanca); anotaUsoEmAliado(c.caracteristicaEsperanca); anotaProtecaoEmAliado(c.caracteristicaEsperanca);
-    (c.caracteristicasDeClasse || []).forEach((f) => { anotaUso(f); anotaUsoEmAliado(f); anotaProtecaoEmAliado(f); });
+    anotaUso(c.caracteristicaEsperanca); anotaUsoEmAliado(c.caracteristicaEsperanca); anotaProtecaoEmAliado(c.caracteristicaEsperanca); anotaRetaliacao(c.caracteristicaEsperanca);
+    (c.caracteristicasDeClasse || []).forEach((f) => { anotaUso(f); anotaUsoEmAliado(f); anotaProtecaoEmAliado(f); anotaRetaliacao(f); });
     (c.subclasses || []).forEach((sub) =>
       Object.keys(sub.cartas || {}).forEach((qual) =>
         ((sub.cartas[qual] || {}).caracteristicas || []).forEach((f) => {
-          anotaUso(f); anotaUsoEmAliado(f); anotaProtecaoEmAliado(f);
+          anotaUso(f); anotaUsoEmAliado(f); anotaProtecaoEmAliado(f); anotaRetaliacao(f);
         })));
   });
 
@@ -4556,6 +4636,8 @@ export async function carregarCatalogo() {
     usoEmAliadoDaCaracteristica: (nome) => usosEmAliado.get(dados.chave(nome)) || null,
     /** Proteção fechada que altera a ficha desta personagem e a de um aliado. */
     protecaoEmAliadoDaCaracteristica: (nome) => protecoesEmAliado.get(dados.chave(nome)) || null,
+    /** Bônus de retaliação que fica pendente por adversário. */
+    retaliacaoDaCaracteristica: (nome) => retaliacoes.get(dados.chave(nome)) || null,
     contadorPorChave: (chave) => porChaveContador.get(dados.chave(chave)) || null,
     maximoDoContador: (chave, ficha) => {
       const def = porChaveContador.get(dados.chave(chave));

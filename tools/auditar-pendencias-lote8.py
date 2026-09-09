@@ -55,7 +55,7 @@ MECH = re.compile(
 STRUCT_KEYS = {
     'uso', 'efeito', 'efeitoDerivado', 'escolha', 'perfilAtaque', 'modificadorAlcance',
     'reacaoDano', 'efeitoCriacao', 'efeitoDescanso', 'efeitoSessao', 'interceptaEstresse',
-    'rolagemManual', 'resolucaoManual', 'usoEmAliado', 'protecaoAliado',
+    'rolagemManual', 'resolucaoManual', 'usoEmAliado', 'protecaoAliado', 'retaliacao',
 }
 
 

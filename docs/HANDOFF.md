@@ -498,3 +498,20 @@ Os três novos contadores usam o mesmo subsistema de ownership já protegido par
 
 A auditoria transversal `docs/AUDITORIA-FINAL-LOTE8.md` foi regenerada depois deste bloco; a seção de comunidades deve permanecer com **0 candidatas sem classificação**.
 
+### Diário — Classes: Guardião / Ato de Retaliação
+
+Fonte: Guardião Vingança, Especialização — livro básico PT-BR e SRD 1.0/errata oficial de 09/09/2025. A regra geral dessa revisão explicita que efeitos acumulam salvo indicação contrária.
+
+Implementação do Lote 8:
+
+- `Ato de Retaliação` recebe metadado estruturado `retaliacao`;
+- a ficha guarda bônus pendentes separadamente por adversário;
+- novos gatilhos do mesmo adversário acumulam +1 de Proficiência cada;
+- o bônus só é consumido quando a mesa confirma o próximo ataque bem-sucedido contra aquele adversário;
+- todas as cargas daquele adversário entram nesse mesmo próximo sucesso, conforme a regra geral de empilhamento;
+- a Proficiência base/permanente nunca é alterada: o backend devolve a Proficiência efetiva apenas para aquele dano;
+- nenhum dado é rolado pelo app;
+- estado injetado em ficha sem a Especialização é removido pela normalização.
+
+Aceitação: `tools/conferir-classes-lote8.py`, testes backend focados, regressão E2E, conferência dos gerados/CSS e auditoria transversal. A meta deste bloco é reduzir candidatos de classes/subclasses de 25 para 24 e deixar o Guardião sem candidatos.
+

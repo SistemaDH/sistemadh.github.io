@@ -110,6 +110,7 @@ function aplicarAjusteDireto_(ficha, a) {
   if (tipo === 'compra') return comprarItem_(ficha, a);
   if (tipo === 'fichafilha') return ajustarFichaFilha_(ficha, a);
   if (tipo === 'escolhadeclasse') return ajustarEscolhaDeClasse_(ficha, a);
+  if (tipo === 'retaliacao') return ajustarRetaliacao_(ficha, a);
   if (tipo === 'habilidade') return usarHabilidadeDeClasse_(ficha, a);
   return { erro: 'Tipo de ajuste desconhecido: "' + String((a || {}).tipo) + '".' };
 }
@@ -481,6 +482,94 @@ function aplicarHabilidadeEmAliado_(fichaOrigem, fichaAliado, nome, opcaoId) {
     antes: antes, depois: depois,
     aviso: def.nome + ': ' + (opcao.rotulo || opcao.id) + '.'
   };
+}
+
+/**
+ * ATO DE RETALIAÇÃO — bônus temporário de Proficiência por adversário.
+ *
+ * O app não observa a cena nem rola ataque. A mesa confirma dois fatos:
+ *  1) ao registrar, que o adversário feriu um aliado em alcance Corpo a Corpo;
+ *  2) ao consumir, que o próximo ataque contra aquele adversário teve sucesso.
+ *
+ * O bônus NÃO altera `recursos.proficiencia`: ele só é devolvido na resolução
+ * que o consome, para a pessoa rolar a quantidade correta de dados de dano.
+ */
+function ajustarRetaliacao_(ficha, a) {
+  const def = (typeof retaliacaoDeClasse_ === 'function') ? retaliacaoDeClasse_(a.nome) : null;
+  if (!def) return { erro: 'Retaliação desconhecida: "' + String(a.nome) + '".' };
+  if (!(typeof fichaTemCaracteristicaDeClasse_ === 'function' &&
+        fichaTemCaracteristicaDeClasse_(ficha, def.nome))) {
+    return { erro: 'Este personagem não tem "' + def.nome + '".' };
+  }
+  if (typeof validarRetaliacoesPendentes_ === 'function') validarRetaliacoesPendentes_(ficha);
+  ficha.retaliacoesPendentes = Array.isArray(ficha.retaliacoesPendentes) ? ficha.retaliacoesPendentes : [];
+
+  const alvo = String(a.alvo || '').trim().replace(/\s+/g, ' ').slice(0, 60);
+  if (!alvo) return { erro: def.nome + ': diga qual adversário disparou a retaliação.' };
+  const chaveAlvo = chaveTexto_(alvo);
+  let indice = -1;
+  for (let i = 0; i < ficha.retaliacoesPendentes.length; i++) {
+    const x = ficha.retaliacoesPendentes[i] || {};
+    if (chaveTexto_(x.caracteristica) === chaveTexto_(def.nome) &&
+        chaveTexto_(x.alvo) === chaveAlvo) { indice = i; break; }
+  }
+
+  const acao = chaveTexto_(a.acao) || 'registrar';
+  if (acao === 'registrar') {
+    if (def.exigeConfirmacaoDeAlcance && a.alcanceConfirmado !== true) {
+      return { erro: def.nome + ': confirme que o aliado estava em alcance ' + def.alcance + '.' };
+    }
+    if (indice < 0) {
+      ficha.retaliacoesPendentes.push({ caracteristica: def.nome, alvo: alvo, cargas: 1 });
+      indice = ficha.retaliacoesPendentes.length - 1;
+    } else {
+      const atual = Math.max(1, Math.trunc(Number(ficha.retaliacoesPendentes[indice].cargas)) || 1);
+      ficha.retaliacoesPendentes[indice].cargas = Math.min(Number.MAX_SAFE_INTEGER, atual + 1);
+      // Mantém a grafia mais recente digitada pela mesa sem criar duplicata.
+      ficha.retaliacoesPendentes[indice].alvo = alvo;
+    }
+    const cargas = ficha.retaliacoesPendentes[indice].cargas;
+    const por = Math.max(1, Math.trunc(Number(def.bonusProficienciaPorGatilho)) || 1);
+    return {
+      tipo: 'retaliacao', acao: 'registrar', nome: def.nome, alvo: alvo,
+      cargas: cargas, bonusProficienciaPendente: cargas * por,
+      aviso: def.nome + ': ' + alvo + ' agora tem +' + (cargas * por) +
+        ' de Proficiência pendente para seu próximo ataque bem-sucedido contra ele.'
+    };
+  }
+
+  if (indice < 0) return { erro: def.nome + ': não há retaliação pendente contra "' + alvo + '".' };
+
+  if (acao === 'desfazer') {
+    const antes = Math.max(1, Math.trunc(Number(ficha.retaliacoesPendentes[indice].cargas)) || 1);
+    if (antes <= 1) ficha.retaliacoesPendentes.splice(indice, 1);
+    else ficha.retaliacoesPendentes[indice].cargas = antes - 1;
+    return {
+      tipo: 'retaliacao', acao: 'desfazer', nome: def.nome, alvo: alvo,
+      cargas: Math.max(0, antes - 1),
+      aviso: def.nome + ': uma marca de retaliação contra ' + alvo + ' foi removida.'
+    };
+  }
+
+  if (acao === 'consumir') {
+    if (a.ataqueBemSucedido !== true) {
+      return { erro: def.nome + ': o bônus só é consumido depois de um ataque bem-sucedido contra esse adversário.' };
+    }
+    const cargas = Math.max(1, Math.trunc(Number(ficha.retaliacoesPendentes[indice].cargas)) || 1);
+    const por = Math.max(1, Math.trunc(Number(def.bonusProficienciaPorGatilho)) || 1);
+    const bonus = cargas * por;
+    const base = Math.max(0, Number(((ficha || {}).recursos || {}).proficiencia) || 0);
+    ficha.retaliacoesPendentes.splice(indice, 1);
+    return {
+      tipo: 'retaliacao', acao: 'consumir', nome: def.nome, alvo: alvo,
+      cargas: cargas, bonusProficiencia: bonus,
+      proficienciaBase: base, proficienciaEfetiva: base + bonus,
+      aviso: def.nome + ': ataque bem-sucedido contra ' + alvo + '. Use Proficiência ' +
+        (base + bonus) + ' neste dano (' + base + ' base +' + bonus + ' de retaliação).'
+    };
+  }
+
+  return { erro: 'Ação de retaliação desconhecida: "' + String(a.acao) + '".' };
 }
 
 /**

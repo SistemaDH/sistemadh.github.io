@@ -59,6 +59,7 @@ function fichaVazia_() {
     caracteristicas: [], // ancestralidade, comunidade, classe, subclasse
     escolhasDeClasse: {},// o número de 1 a 12 do Mago — ver 42_Classes.gs
     alvosDeHabilidade: {},// quem está Marcado/Priorizado — um por habilidade
+    retaliacoesPendentes: [], // bônus temporário por adversário — ver 42_Classes.gs
     experiencias: [],    // duas no nível 1, +2 cada — ver 48_Criacao.gs
     equipamento: {       // ids das tabelas do capítulo 2
       primaria: null, secundaria: null, armadura: null, reserva: []
@@ -398,6 +399,9 @@ function validarFicha_(fichaBruta) {
   }
   if (typeof validarAlvosDeHabilidade_ === 'function') {
     problemas = problemas.concat(validarAlvosDeHabilidade_(ficha));
+  }
+  if (typeof validarRetaliacoesPendentes_ === 'function') {
+    problemas = problemas.concat(validarRetaliacoesPendentes_(ficha));
   }
   // A multiclasse precisa estar resolvida ANTES das cartas: é ela que define
   // o teto de nível das cartas do domínio novo.

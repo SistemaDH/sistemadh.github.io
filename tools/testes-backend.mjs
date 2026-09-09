@@ -5896,6 +5896,96 @@ teste('Protetor Leal pode combinar Vontade de Ferro no dano que o Guardião inte
   igual(danoMudanca.pvMarcados, Math.max(0, danoMudanca.pvPelaFaixa - 1));
 });
 
+
+console.log('\nLote 8 — Guardião: Ato de Retaliação');
+
+function guardiaoVingancaParaRetaliacao_(comEspecializacao = true) {
+  const f = fichaAncestral_('Humano');
+  f.identidade.classe = 'Guardião';
+  f.identidade.subclasse = 'Vingança';
+  f.subclasseCartas = comEspecializacao ? ['fundacao', 'especializacao'] : ['fundacao'];
+  contexto.aplicarDerivados_(f);
+  f.retaliacoesPendentes = [];
+  return f;
+}
+
+teste('Ato de Retaliação só registra com a especialização e confirmação do alcance', () => {
+  let f = guardiaoVingancaParaRetaliacao_(true);
+  const antes = JSON.stringify(f);
+  let r = contexto.aplicarAjustes_(f, [{
+    tipo: 'retaliacao', nome: 'Ato de Retaliação', acao: 'registrar', alvo: 'Ogro'
+  }]);
+  igual(r.erros.length, 1);
+  igual(JSON.stringify(f), antes, 'sem alcance nada muda');
+
+  f = guardiaoVingancaParaRetaliacao_(false);
+  r = contexto.aplicarAjustes_(f, [{
+    tipo: 'retaliacao', nome: 'Ato de Retaliação', acao: 'registrar', alvo: 'Ogro', alcanceConfirmado: true
+  }]);
+  igual(r.erros.length, 1);
+  igual(f.retaliacoesPendentes, []);
+});
+
+teste('Ato de Retaliação acumula gatilhos do mesmo adversário e separa adversários diferentes', () => {
+  const f = guardiaoVingancaParaRetaliacao_(true);
+  const registrar = (alvo) => contexto.aplicarAjustes_(f, [{
+    tipo: 'retaliacao', nome: 'Ato de Retaliação', acao: 'registrar', alvo, alcanceConfirmado: true
+  }]);
+  igual(registrar('Ogro').erros, []);
+  igual(registrar('ogro').erros, []);
+  igual(registrar('Harpia').erros, []);
+  igual(f.retaliacoesPendentes.length, 2);
+  const ogro = f.retaliacoesPendentes.find((x) => /ogro/i.test(x.alvo));
+  const harpia = f.retaliacoesPendentes.find((x) => /harpia/i.test(x.alvo));
+  igual(ogro.cargas, 2, 'dois gatilhos do mesmo alvo acumulam');
+  igual(harpia.cargas, 1);
+});
+
+teste('Ato de Retaliação consome todas as cargas daquele alvo no próximo sucesso sem alterar a Proficiência base', () => {
+  const f = guardiaoVingancaParaRetaliacao_(true);
+  const base = f.recursos.proficiencia;
+  for (let i = 0; i < 2; i++) contexto.aplicarAjustes_(f, [{
+    tipo: 'retaliacao', nome: 'Ato de Retaliação', acao: 'registrar', alvo: 'Ogro', alcanceConfirmado: true
+  }]);
+  contexto.aplicarAjustes_(f, [{
+    tipo: 'retaliacao', nome: 'Ato de Retaliação', acao: 'registrar', alvo: 'Harpia', alcanceConfirmado: true
+  }]);
+
+  const antesFalha = JSON.stringify(f.retaliacoesPendentes);
+  let r = contexto.aplicarAjustes_(f, [{
+    tipo: 'retaliacao', nome: 'Ato de Retaliação', acao: 'consumir', alvo: 'Ogro'
+  }]);
+  igual(r.erros.length, 1);
+  igual(JSON.stringify(f.retaliacoesPendentes), antesFalha, 'ataque não confirmado não consome');
+
+  r = contexto.aplicarAjustes_(f, [{
+    tipo: 'retaliacao', nome: 'Ato de Retaliação', acao: 'consumir', alvo: 'OGRO', ataqueBemSucedido: true
+  }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].bonusProficiencia, 2);
+  igual(r.mudancas[0].proficienciaBase, base);
+  igual(r.mudancas[0].proficienciaEfetiva, base + 2);
+  igual(f.recursos.proficiencia, base, 'a Proficiência permanente nunca é sobrescrita');
+  verdade(!f.retaliacoesPendentes.some((x) => /ogro/i.test(x.alvo)), 'as cargas do Ogro foram consumidas');
+  verdade(f.retaliacoesPendentes.some((x) => /harpia/i.test(x.alvo)), 'a Harpia continua pendente');
+});
+
+teste('normalização soma duplicatas e apaga Ato de Retaliação de ficha que não possui a característica', () => {
+  const f = guardiaoVingancaParaRetaliacao_(true);
+  f.retaliacoesPendentes = [
+    { caracteristica: 'Ato de Retaliação', alvo: 'Ogro', cargas: 2 },
+    { caracteristica: 'Ato de Retaliação', alvo: 'ogro', cargas: 3 }
+  ];
+  contexto.validarRetaliacoesPendentes_(f);
+  igual(f.retaliacoesPendentes.length, 1);
+  igual(f.retaliacoesPendentes[0].cargas, 5);
+
+  const sem = guardiaoVingancaParaRetaliacao_(false);
+  sem.retaliacoesPendentes = [{ caracteristica: 'Ato de Retaliação', alvo: 'Ogro', cargas: 99 }];
+  contexto.validarRetaliacoesPendentes_(sem);
+  igual(sem.retaliacoesPendentes, []);
+});
+
 console.log('\nLote 8 — comunidades do Core');
 
 function fichaComunidade_(comunidade, nivel) {

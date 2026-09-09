@@ -108,4 +108,15 @@ assert pl.get('condicaoAlvo', {}).get('pontosDeVidaNaoMarcadosMaximo') == 2
 assert pl.get('efeito', {}).get('origemSofreDanoNoLugar') is True
 assert pl.get('exigeConfirmacaoDeAlcance') is True
 
-print('Lote 8 — classes: Bardo, Druida e Feiticeiro fechados; Guardião Robusto com Vontade de Ferro e proteções em aliado protegidas.')
+vinganca = next(s for s in guardiao['subclasses'] if s['id'] == 'guardiao-vinganca')
+ato = next(f for f in vinganca['cartas']['especializacao']['caracteristicas'] if f['nome'] == 'Ato de Retaliação')
+ret = ato.get('retaliacao') or {}
+assert ret.get('gatilho') == 'adversario-danifica-aliado'
+assert ret.get('alcance') == 'Corpo a Corpo'
+assert ret.get('bonusProficienciaPorGatilho') == 1
+assert ret.get('acumula') is True
+assert ret.get('consomeEm') == 'proximo-ataque-bem-sucedido-contra-o-mesmo-adversario'
+assert ret.get('exigeConfirmacaoDeAlcance') is True
+assert ret.get('rolagemNoApp') is False
+
+print('Lote 8 — classes: Bardo, Druida e Feiticeiro fechados; Guardião fechado, incluindo Vontade de Ferro, proteções em aliado e Ato de Retaliação.')

@@ -268,6 +268,33 @@ for (const c of dados.classes) {
   }
 }
 /*
+ * RETALIAÇÕES PENDENTES POR ADVERSÁRIO.
+ *
+ * Ato de Retaliação não muda a Proficiência base: cada gatilho cria um bônus
+ * temporário contra QUEM causou o dano. Como efeitos acumulam salvo indicação
+ * contrária (errata/SRD 09/09/2025), dois gatilhos do mesmo adversário viram
+ * duas cargas para o próximo ataque bem-sucedido contra ele.
+ */
+const retaliacoesDeClasse = {};
+for (const c of dados.classes) {
+  const anotaRetaliacao = (f, origem, subclasse) => {
+    if (!f || !f.retaliacao) return;
+    retaliacoesDeClasse[f.nome] = Object.assign({
+      classe: c.id, origem, subclasse: subclasse || ''
+    }, f.retaliacao);
+  };
+  anotaRetaliacao(c.caracteristicaEsperanca, 'esperança', '');
+  for (const f of c.caracteristicasDeClasse || []) anotaRetaliacao(f, 'classe', '');
+  for (const s of c.subclasses || []) {
+    for (const qual of ['fundacao', 'especializacao', 'maestria']) {
+      for (const f of (((s.cartas || {})[qual] || {}).caracteristicas || [])) {
+        anotaRetaliacao(f, qual, s.id);
+      }
+    }
+  }
+}
+
+/*
  * PROTEÇÕES EM ALIADO que alteram DUAS fichas na mesma regra.
  *
  * São diferentes de Maestro: não são um editor de recurso da ficha alheia.
@@ -385,6 +412,58 @@ function habilidadeComCusto_(nome) {
     }
   }
   return null;
+}
+`);
+
+L.push('/** Efeitos de retaliação que guardam bônus temporário por adversário. */');
+L.push(`const RETALIACOES_DE_CLASSE = ${JSON.stringify(retaliacoesDeClasse, null, 2)};`);
+L.push(`
+/** Resolve uma retaliação de classe/subclasse pelo nome. */
+function retaliacaoDeClasse_(nome) {
+  const alvo = chaveTexto_(nome);
+  const nomes = Object.keys(RETALIACOES_DE_CLASSE);
+  for (let i = 0; i < nomes.length; i++) {
+    if (chaveTexto_(nomes[i]) === alvo) {
+      return Object.assign({ nome: nomes[i] }, RETALIACOES_DE_CLASSE[nomes[i]]);
+    }
+  }
+  return null;
+}
+
+/**
+ * Normaliza bônus de retaliação pendentes.
+ *
+ * Estado inválido ou de uma característica que a ficha não possui é descartado
+ * silenciosamente, como alvos de habilidade/contadores órfãos. Duplicatas do
+ * mesmo adversário são SOMADAS, preservando a regra de empilhamento.
+ */
+function validarRetaliacoesPendentes_(ficha) {
+  const bruto = Array.isArray((ficha || {}).retaliacoesPendentes)
+    ? ficha.retaliacoesPendentes : [];
+  const saida = [];
+  const porChave = {};
+  for (let i = 0; i < bruto.length; i++) {
+    const item = bruto[i] || {};
+    const def = retaliacaoDeClasse_(item.caracteristica);
+    if (!def) continue;
+    if (!(typeof fichaTemCaracteristicaDeClasse_ === 'function' &&
+          fichaTemCaracteristicaDeClasse_(ficha, def.nome))) continue;
+    const alvo = String(item.alvo || '').trim().replace(/\\s+/g, ' ').slice(0, 60);
+    if (!alvo) continue;
+    let cargas = Math.trunc(Number(item.cargas));
+    if (!isFinite(cargas) || cargas < 1) cargas = 1;
+    cargas = Math.min(Number.MAX_SAFE_INTEGER, cargas);
+    const chave = chaveTexto_(def.nome) + '|' + chaveTexto_(alvo);
+    if (porChave[chave] !== undefined) {
+      const pos = porChave[chave];
+      saida[pos].cargas = Math.min(Number.MAX_SAFE_INTEGER, saida[pos].cargas + cargas);
+    } else {
+      porChave[chave] = saida.length;
+      saida.push({ caracteristica: def.nome, alvo: alvo, cargas: cargas });
+    }
+  }
+  ficha.retaliacoesPendentes = saida;
+  return [];
 }
 `);
 

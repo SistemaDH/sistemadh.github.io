@@ -5,17 +5,17 @@
 
 ## Resumo numérico
 
-- Classes/subclasses: **99 características**; **25** candidatas sem sinal de automação.
+- Classes/subclasses: **99 características**; **24** candidatas sem sinal de automação.
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **161** candidatas sem sinal de automação específica; **17** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **87** ocorrências candidatas ativas/condicionais.
 - Loot/consumíveis com texto mecânico detectado: **81**.
-- Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **12** linhas, incluindo histórico já resolvido.
+- Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **14** linhas, incluindo histórico já resolvido.
 
 ### Distribuição — classes/subclasses
 
-- candidato sem sinal de automação: **25**
-- estruturada/contador: **54**
+- candidato sem sinal de automação: **24**
+- estruturada/contador: **55**
 - predominantemente narrativo/sem gatilho detectado: **7**
 - referência específica no motor: **13**
 
@@ -40,7 +40,6 @@
 
 | Classe | Subclasse | Estágio | Característica | Trecho |
 |---|---|---|---|---|
-| Guardião | Vingança | especializacao | Ato de Retaliação | Quando um adversário causar dano a um aliado em alcance Corpo a Corpo, você ganha +1 de bônus na sua Proficiência para o próximo ataque bem-sucedido contra esse adversár… |
 | Guerreiro |  | Classe | Ataque de Oportunidade | Se um adversário Corpo a Corpo tentar sair desse alcance, faça uma jogada de reação usando um traço à sua escolha contra a Dificuldade dele. Em um sucesso, escolha um ef… |
 | Guerreiro | Chamada dos Bravos | fundacao | Coragem | Quando você falhar em uma jogada com Medo, ganha 1 Esperança. |
 | Guerreiro | Chamada dos Bravos | especializacao | Superação do Desafio | Você é vigilante diante do perigo crescente. Enquanto tiver 2 ou menos Pontos de Vida não marcados, pode rolar um d20 como seu Dado de Esperança. |
@@ -387,6 +386,8 @@ Estas linhas misturam histórico resolvido e trabalho ainda aberto; servem para 
 - L435: Lote 8 em andamento: fechar integralmente livro básico + errata e automatizar todas as mecânicas determinísticas possíveis, preservando apenas rolagens de dados como entrada manual.
 - L466: Com este checkpoint, Broquel/Deflecting, Chicote/Alarmante e as 12 Cadeiras de Rodas de Combate estão materializados e validados na branch. O próximo bloco é armas de reserva/troca de armas. Ainda não houve deploy, PR ou mudança de `ENGINE_COMMIT` do Lote 8.
 - L472: O bloco de ancestralidades do Lote 8 está fechado. O último efeito pendente, **Inabalável (Firbolg, p.60)**, foi materializado no commit funcional `8213957` e validado no GitHub Actions run `34316593882`:
+- L510: - o bônus só é consumido quando a mesa confirma o próximo ataque bem-sucedido contra aquele adversário;
+- L511: - todas as cargas daquele adversário entram nesse mesmo próximo sucesso, conforme a regra geral de empilhamento;
 
 ## Regra para a próxima etapa
 

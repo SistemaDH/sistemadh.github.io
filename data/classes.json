@@ -1099,7 +1099,17 @@
        "caracteristicas": [
         {
          "nome": "Ato de Retaliação",
-         "texto": "Quando um adversário causar dano a um aliado em alcance Corpo a Corpo, você ganha +1 de bônus na sua Proficiência para o próximo ataque bem-sucedido contra esse adversário."
+         "texto": "Quando um adversário causar dano a um aliado em alcance Corpo a Corpo, você ganha +1 de bônus na sua Proficiência para o próximo ataque bem-sucedido contra esse adversário.",
+         "retaliacao": {
+          "gatilho": "adversario-danifica-aliado",
+          "alcance": "Corpo a Corpo",
+          "bonusProficienciaPorGatilho": 1,
+          "acumula": true,
+          "consomeEm": "proximo-ataque-bem-sucedido-contra-o-mesmo-adversario",
+          "exigeConfirmacaoDeAlcance": true,
+          "rolagemNoApp": false,
+          "fonteAcumulo": "SRD/errata 09/09/2025: efeitos acumulam salvo indicação contrária."
+         }
         }
        ],
        "texto": "Ato de Retaliação: Quando um adversário causar dano a um aliado em alcance Corpo a Corpo, você ganha +1 de bônus na sua Proficiência para o próximo ataque bem-sucedido contra esse adversário.",

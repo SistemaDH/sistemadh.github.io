@@ -802,6 +802,71 @@ function habilidadeComCusto_(nome) {
   return null;
 }
 
+/** Efeitos de retaliação que guardam bônus temporário por adversário. */
+const RETALIACOES_DE_CLASSE = {
+  "Ato de Retaliação": {
+    "classe": "guardiao",
+    "origem": "especializacao",
+    "subclasse": "guardiao-vinganca",
+    "gatilho": "adversario-danifica-aliado",
+    "alcance": "Corpo a Corpo",
+    "bonusProficienciaPorGatilho": 1,
+    "acumula": true,
+    "consomeEm": "proximo-ataque-bem-sucedido-contra-o-mesmo-adversario",
+    "exigeConfirmacaoDeAlcance": true,
+    "rolagemNoApp": false,
+    "fonteAcumulo": "SRD/errata 09/09/2025: efeitos acumulam salvo indicação contrária."
+  }
+};
+
+/** Resolve uma retaliação de classe/subclasse pelo nome. */
+function retaliacaoDeClasse_(nome) {
+  const alvo = chaveTexto_(nome);
+  const nomes = Object.keys(RETALIACOES_DE_CLASSE);
+  for (let i = 0; i < nomes.length; i++) {
+    if (chaveTexto_(nomes[i]) === alvo) {
+      return Object.assign({ nome: nomes[i] }, RETALIACOES_DE_CLASSE[nomes[i]]);
+    }
+  }
+  return null;
+}
+
+/**
+ * Normaliza bônus de retaliação pendentes.
+ *
+ * Estado inválido ou de uma característica que a ficha não possui é descartado
+ * silenciosamente, como alvos de habilidade/contadores órfãos. Duplicatas do
+ * mesmo adversário são SOMADAS, preservando a regra de empilhamento.
+ */
+function validarRetaliacoesPendentes_(ficha) {
+  const bruto = Array.isArray((ficha || {}).retaliacoesPendentes)
+    ? ficha.retaliacoesPendentes : [];
+  const saida = [];
+  const porChave = {};
+  for (let i = 0; i < bruto.length; i++) {
+    const item = bruto[i] || {};
+    const def = retaliacaoDeClasse_(item.caracteristica);
+    if (!def) continue;
+    if (!(typeof fichaTemCaracteristicaDeClasse_ === 'function' &&
+          fichaTemCaracteristicaDeClasse_(ficha, def.nome))) continue;
+    const alvo = String(item.alvo || '').trim().replace(/\s+/g, ' ').slice(0, 60);
+    if (!alvo) continue;
+    let cargas = Math.trunc(Number(item.cargas));
+    if (!isFinite(cargas) || cargas < 1) cargas = 1;
+    cargas = Math.min(Number.MAX_SAFE_INTEGER, cargas);
+    const chave = chaveTexto_(def.nome) + '|' + chaveTexto_(alvo);
+    if (porChave[chave] !== undefined) {
+      const pos = porChave[chave];
+      saida[pos].cargas = Math.min(Number.MAX_SAFE_INTEGER, saida[pos].cargas + cargas);
+    } else {
+      porChave[chave] = saida.length;
+      saida.push({ caracteristica: def.nome, alvo: alvo, cargas: cargas });
+    }
+  }
+  ficha.retaliacoesPendentes = saida;
+  return [];
+}
+
 /** Escolhas de classe que ficam gravadas na ficha (o número do Mago). */
 const ESCOLHAS_DE_CLASSE = {
   "canalizacaoElemental": {
