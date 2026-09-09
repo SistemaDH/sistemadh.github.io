@@ -39,9 +39,9 @@ jobs:
           node tools/conferir-css.mjs
       - name: Auditoria reduz cartas para 148
         run: |
-          python3 tools/auditar-pendencias-lote8.py
-          grep -F 'Cartas de domínio: **189 cartas**; **148** candidatas sem sinal de automação específica' docs/auditoria-lote8.md
-          grep -F 'Classes/subclasses: **99 características**; **0** candidatas sem sinal de automação.' docs/auditoria-lote8.md
+          python3 tools/auditar-pendencias-lote8.py | tee /tmp/auditoria-lote8.txt
+          grep -F 'Cartas de domínio: **189 cartas**; **148** candidatas sem sinal de automação específica' /tmp/auditoria-lote8.txt
+          grep -F 'Classes/subclasses: **99 características**; **0** candidatas sem sinal de automação.' /tmp/auditoria-lote8.txt
       - name: Proteger contra concorrencia
         run: |
           git fetch origin 'ediçãoclaude' 'tmp-lote8-arcana-n4-n10'
