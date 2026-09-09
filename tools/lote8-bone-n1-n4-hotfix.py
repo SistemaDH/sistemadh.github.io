@@ -39,4 +39,18 @@ for x in novos:
         lista.append(x)
 
 p.write_text(json.dumps(d, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
-print('Contadores de Manobras Ágeis e Ferocidade catalogados.')
+
+# O catálogo cresceu em dois estados reais de carta neste sublote. O teste
+# estrutural antigo tinha números literais; atualize-os junto com o catálogo.
+tp = R / 'tools/testes-backend.mjs'
+t = tp.read_text(encoding='utf-8')
+t = t.replace(
+    "teste('o catálogo tem 67 contadores: 35 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {",
+    "teste('o catálogo tem 69 contadores: 37 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {",
+    1
+)
+t = t.replace('igual(Object.keys(CONTADORES).length, 67);', 'igual(Object.keys(CONTADORES).length, 69);', 1)
+t = t.replace("igual(porOrigem['carta-dominio'], 35);", "igual(porOrigem['carta-dominio'], 37);", 1)
+tp.write_text(t, encoding='utf-8')
+
+print('Contadores de Manobras Ágeis/Ferocidade catalogados e expectativa estrutural atualizada para 69.')
