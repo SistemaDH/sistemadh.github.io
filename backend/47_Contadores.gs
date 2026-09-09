@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 67 cartas e características mandam
+ *  O problema que este arquivo resolve: 69 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -107,6 +107,8 @@ const CONTADORES = {
   "uso:carta:blade:grito-de-batalha": { origem: "carta-dominio", refId: "blade-grito-de-batalha", nome: "Grito de Batalha", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
   "estado:carta:blade:grito-de-batalha": { origem: "carta-dominio", refId: "blade-grito-de-batalha", nome: "Grito de Batalha", rotulo: "vantagem ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual","descanso-longo"], recarregaEm: [] },
   "uso:carta:blade:golpe-do-ceifador": { origem: "carta-dominio", refId: "blade-golpe-do-ceifador", nome: "Golpe do Ceifador", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:carta:bone:manobras-ageis": { origem: "carta-dominio", refId: "bone-manobras-ageis", nome: "Manobras Ágeis", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "estado:carta:bone:ferocidade:evasao": { origem: "carta-dominio", refId: "bone-ferocidade", nome: "Ferocidade", rotulo: "bônus de Evasão", tipo: "estado", maximo: {"tipo":"fixo","valor":12}, zeraEm: ["manual"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -178,6 +180,8 @@ const CONTADOR_ALIASES = {
   "uso:carta:blade:grito-de-batalha": ["Grito de Batalha"],
   "estado:carta:blade:grito-de-batalha": ["Grito de Batalha"],
   "uso:carta:blade:golpe-do-ceifador": ["Golpe do Ceifador"],
+  "uso:carta:bone:manobras-ageis": ["Manobras Ágeis"],
+  "estado:carta:bone:ferocidade:evasao": ["Ferocidade"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

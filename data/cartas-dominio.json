@@ -1698,7 +1698,29 @@
    ],
    "pendenteTraducao": false,
    "errata": "Errata p.331 (I See It Coming, Osso 1): texto revisado. A carta já está na versão corrigida.",
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "automatizada-custo-rolagem-manual",
+    "resumo": "O app marca 1 Estresse e registra o resultado do d4 informado pelo jogador; o bônus vale só contra aquele ataque."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Role 1d4 na mesa e informe o resultado. Esse valor é o bônus de Evasão somente contra o ataque que disparou a reação."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "entradaQuantidade": {
+     "campo": "resultadoD4",
+     "rotulo": "Resultado do d4",
+     "minimo": 1,
+     "maximo": 4,
+     "ajuda": "Role 1d4 fora do app; o número informado será o bônus de Evasão contra este ataque."
+    },
+    "rotuloAtivar": "Reagir ao ataque à distância",
+    "lembrete": "Use o resultado do d4 informado como bônus de Evasão apenas contra este ataque. A Evasão base não muda."
+   }
   },
   {
    "id": "bone-intocavel",
@@ -1717,7 +1739,19 @@
    "dependencias": [],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo. O texto do corpo da carta está impresso em letras minúsculas (início de frase incluído), transcrito exatamente como impresso."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo. O texto do corpo da carta está impresso em letras minúsculas (início de frase incluído), transcrito exatamente como impresso.",
+   "automacao": {
+    "classificacao": "automatizada-passiva",
+    "resumo": "Enquanto a carta estiver ativa, o servidor soma à Evasão metade da Agilidade atual, arredondando para cima."
+   },
+   "efeitoDerivado": {
+    "bonusEvasaoMetadeTraco": "Agilidade",
+    "arredondar": "cima"
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Nenhuma ação manual é necessária para o bônus de Evasão."
+   }
   },
   {
    "id": "bone-manobras-ageis",
@@ -1739,7 +1773,26 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "automatizada-custo-uso",
+    "resumo": "O app marca 1 Estresse e registra o uso 1/descanso; deslocamento e o +1 do ataque imediato são confirmados na mesa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A mesa confirma o movimento até alcance Longo e, se terminar Corpo a Corpo e atacar imediatamente, aplica +1 à jogada."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "marcaUso": {
+     "chave": "uso:carta:bone:manobras-ageis",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Usar Manobras Ágeis",
+    "lembrete": "Mova-se até alcance Longo sem Jogada de Agilidade. Se terminar Corpo a Corpo e atacar imediatamente, use +1 no ataque."
+   }
   },
   {
    "id": "bone-abordagem-estrategica",
@@ -1763,7 +1816,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "automatizada-contador-parcial",
+    "resumo": "Após descanso longo, o contador recebe fichas iguais a Conhecimento (mínimo 1); o jogador gasta uma ficha quando o gatilho ocorrer."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Ao gastar a ficha, escolha na mesa: vantagem no ataque, limpar 1 Estresse de aliado elegível ou +1d8 no dano."
+   }
   },
   {
    "id": "bone-ferocidade",
@@ -1785,7 +1846,41 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo. O texto do corpo da carta está impresso todo em letras minúsculas (inclusive início de frases), diferente das demais cartas do lote; transcrito exatamente como impresso."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo. O texto do corpo da carta está impresso todo em letras minúsculas (inclusive início de frases), diferente das demais cartas do lote; transcrito exatamente como impresso.",
+   "automacao": {
+    "classificacao": "automatizada-estado-parcial",
+    "resumo": "O app cobra 2 Esperanças, recebe quantos PV o adversário marcou e mantém esse valor como bônus temporário de Evasão."
+   },
+   "efeitoDerivado": {
+    "bonusEvasaoEstado": "estado:carta:bone:ferocidade:evasao",
+    "exigeEstado": "estado:carta:bone:ferocidade:evasao"
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Informe quantos PV o adversário marcou. Encerre o estado depois do próximo ataque feito contra você."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 2
+    },
+    "entradaQuantidade": {
+     "campo": "pontosDeVidaMarcados",
+     "rotulo": "PV marcados pelo adversário",
+     "minimo": 1,
+     "maximo": 12,
+     "ajuda": "Informe quantos Pontos de Vida o adversário marcou com o dano que disparou Ferocidade."
+    },
+    "estado": {
+     "chave": "estado:carta:bone:ferocidade:evasao",
+     "valorBase": 0,
+     "somarQuantidade": true,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Ferocidade ativa",
+     "avisoEncerrar": "Ferocidade encerrada depois do próximo ataque feito contra você."
+    },
+    "rotuloAtivar": "Ativar Ferocidade · 2 Esperanças",
+    "lembrete": "O bônus de Evasão é igual aos PV informados e dura até depois do próximo ataque feito contra você."
+   }
   },
   {
    "id": "bone-preparar",
@@ -1807,7 +1902,26 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "automatizada-custo-recurso",
+    "resumo": "Depois que a mesa confirma o uso de Armadura para reduzir dano, o app marca 1 Estresse e um Espaço de Armadura adicional."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Use somente quando já estiver marcando Armadura para reduzir o dano recebido; o app aplica a marca adicional."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "efeitoRecurso": {
+     "chave": "armaduraMarcada",
+     "delta": 1
+    },
+    "rotuloAtivar": "Preparar: marcar Armadura adicional",
+    "lembrete": "Use junto da redução de dano que já marcou um Espaço de Armadura; este botão marca o espaço adicional."
+   }
   },
   {
    "id": "bone-tatico",
@@ -1831,7 +1945,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "manual-assistida",
+    "resumo": "Não há recurso próprio para cobrar: a carta muda a resolução de ajuda e permite d20 como Dado de Esperança em Jogada em Equipe."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Ao ajudar, o aliado pode gastar 1 Esperança para somar uma de suas Experiências. Em Jogada em Equipe, você pode usar d20 como Dado de Esperança."
+   }
   },
   {
    "id": "bone-impulso",
@@ -1853,7 +1975,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "automatizada-custo-parcial",
+    "resumo": "O app marca 1 Estresse; aliado disposto, vantagem, +1d10 e posicionamento do ataque continuam resolvidos na mesa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Confirme um aliado disposto em alcance Próximo; faça o ataque aéreo com vantagem e +1d10 de dano."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "rotuloAtivar": "Usar Impulso",
+    "lembrete": "Ataque um alvo em alcance Distante com vantagem, some 1d10 ao dano e termine Corpo a Corpo com ele."
+   }
   },
   {
    "id": "bone-redirecionar",
@@ -1875,7 +2012,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "automatizada-custo-rolagem-manual",
+    "resumo": "A rolagem de Proficiência em d6 continua física; quando houver ao menos um 6, o botão marca 1 Estresse e registra a reação."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Após o ataque à distância falhar, role uma quantidade de d6 igual à Proficiência. Só use o botão se ao menos um resultado for 6."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "rotuloAtivar": "6 rolado: redirecionar ataque",
+    "lembrete": "Depois de obter ao menos um 6 nos d6 de Proficiência, redirecione o ataque para um adversário em alcance Muito Próximo."
+   }
   },
   {
    "id": "bone-conheca-teu-inimigo",

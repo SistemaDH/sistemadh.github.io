@@ -159,3 +159,25 @@ function bonusAtaqueDeCartas_(ficha){let t=0;if(typeof EFEITOS_DERIVADOS_CARTAS_
 function bonusLimiarGraveDeCartas_(ficha){let t=0;if(typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO==='undefined')return 0;Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO).forEach(function(id){const e=EFEITOS_DERIVADOS_CARTAS_DOMINIO[id]||{};if(e.bonusLimiarGrave&&requisitoDeEfeitoDerivadoDeCartaVale_(ficha,id,e))t+=Math.trunc(Number(e.bonusLimiarGrave))||0;});return t;}
 function bonusDanoDeCartas_(ficha){let t=0;if(typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO==='undefined')return 0;Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO).forEach(function(id){const e=EFEITOS_DERIVADOS_CARTAS_DOMINIO[id]||{};if(e.bonusDano&&requisitoDeEfeitoDerivadoDeCartaVale_(ficha,id,e))t+=Math.trunc(Number(e.bonusDano))||0;});return t;}
 function danoMinimoPvDeCartas_(ficha){let t=0;if(typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO==='undefined')return 0;Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO).forEach(function(id){const e=EFEITOS_DERIVADOS_CARTAS_DOMINIO[id]||{};if(e.danoMinimoPvEmSucesso&&requisitoDeEfeitoDerivadoDeCartaVale_(ficha,id,e))t=Math.max(t,Math.trunc(Number(e.danoMinimoPvEmSucesso))||0);});return t;}
+
+
+/** Bônus de Evasão vindos de cartas ativas, fixos ou mantidos em estado. */
+function bonusEvasaoDeCartas_(ficha) {
+  if (typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO === 'undefined') return 0;
+  let total = 0;
+  Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO).forEach(function (id) {
+    const e = EFEITOS_DERIVADOS_CARTAS_DOMINIO[id] || {};
+    if (!requisitoDeEfeitoDerivadoDeCartaVale_(ficha, id, e)) return;
+    if (e.bonusEvasao) total += Math.trunc(Number(e.bonusEvasao)) || 0;
+    if (e.bonusEvasaoMetadeTraco) {
+      const valor = (typeof valorDoTraco_ === 'function') ? valorDoTraco_(ficha, e.bonusEvasaoMetadeTraco) : 0;
+      // Regra geral do Core: números inteiros e arredondamento para cima.
+      total += Math.ceil((Number(valor) || 0) / 2);
+    }
+    if (e.bonusEvasaoEstado) {
+      const item = (((ficha || {}).contadores || {})[e.bonusEvasaoEstado]) || {};
+      total += Math.max(0, Math.trunc(Number(item.valor)) || 0);
+    }
+  });
+  return total;
+}

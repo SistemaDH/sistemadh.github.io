@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 67 contadores: 35 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 69 contadores: 37 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 67 contadores: 35 de carta, 25 de classe/subclasse, 4 de 
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 67);
+  igual(Object.keys(CONTADORES).length, 69);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 35);
+  igual(porOrigem['carta-dominio'], 37);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -8441,11 +8441,6 @@ teste('Queda do Céu usa somente o Estresse efetivamente marcado e respeita Inab
   igual(r.mudancas[0].quantidadeEfetiva, 2);
 });
 
-console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
-if (falhou) {
-  falhas.forEach((f) => console.error(f.nome, f.erro));
-  process.exit(1);
-}
 
 
 console.log('\nLote 8 — Lâmina níveis 1–4');
@@ -8537,3 +8532,114 @@ teste('Tocado pela Lâmina exige quatro cartas Lâmina ativas para +2 ataque e +
 teste('Frenesi guarda estado e publica +10 dano e +8 Severo enquanto ativo',()=>{const f=fichaBladeAlta_(8,['blade-frenesi','blade-grito-de-batalha']);const antes=contexto.derivadosDoPersonagem_(f);igual(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'blade-frenesi'}]).erros,[]);const depois=contexto.derivadosDoPersonagem_(f);igual(depois.bonusDanoCarta,10);igual(depois.limiarGrave,antes.limiarGrave+8);});
 teste('Golpe do Ceifador cobra 1 Esperança e marca uso sem rolar ataque',()=>{const f=fichaBladeAlta_(9,['blade-golpe-do-ceifador','blade-sangue-e-gloria']);const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'blade-golpe-do-ceifador'}]);igual(r.erros,[]);igual(f.recursos.esperanca,5);igual(f.contadores['uso:carta:blade:golpe-do-ceifador'].valor,1);});
 teste('Massacre publica mínimo de 2 PV e Monstro de Batalha cobra exatamente 4 Estresses',()=>{const f=fichaBladeAlta_(10,['blade-massacre','blade-monstro-de-batalha']);igual(contexto.derivadosDoPersonagem_(f).danoMinimoPvEmSucesso,2);const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'blade-monstro-de-batalha'}]);igual(r.erros,[]);igual(f.recursos.estresseMarcado,4);});
+
+
+console.log('\nLote 8 — Osso níveis 1–4');
+function fichaBoneN4_(cartas, ancestralidade = 'Humano') {
+  const base = contexto.fichaRapida_({
+    nome: 'Osso N4', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade, comunidade: 'Loreborne',
+    cartas, experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  base.identidade.nivel = 4;
+  base.cartas = { ativas: cartas.slice(), cofre: [] };
+  const f = contexto.validarFicha_(base);
+  f.recursos.esperanca = 6;
+  f.recursos.estresseMarcado = 0;
+  return f;
+}
+
+teste('Osso N1-N4: as nove cartas ficaram explicitamente classificadas', () => {
+  const dados = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/cartas-dominio.json'), 'utf8'));
+  const alvo = dados.cartas.filter((c) => c.dominio === 'BONE' && c.nivel <= 4);
+  igual(alvo.length, 9);
+  igual(alvo.filter((c) => !!c.automacao).length, 9);
+  verdade(alvo.every((c) => c.resolucaoManual && c.resolucaoManual.rolaNoApp === false));
+});
+
+teste('Intocável soma metade da Agilidade à Evasão e arredonda para cima', () => {
+  const com = fichaBoneN4_(['bone-intocavel', 'bone-manobras-ageis']);
+  const sem = fichaBoneN4_(['bone-manobras-ageis', 'bone-eu-vi-chegando']);
+  com.tracos.agilidade = 1;
+  sem.tracos.agilidade = 1;
+  const a = contexto.derivadosDoPersonagem_(com);
+  const b = contexto.derivadosDoPersonagem_(sem);
+  igual(a.bonusEvasaoCarta, 1);
+  igual(a.evasao, b.evasao + 1);
+  com.tracos.agilidade = 3;
+  igual(contexto.derivadosDoPersonagem_(com).bonusEvasaoCarta, 2);
+});
+
+teste('Eu Vi Chegando cobra 1 Estresse só depois de receber o d4 manual', () => {
+  const f = fichaBoneN4_(['bone-eu-vi-chegando', 'bone-intocavel']);
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-eu-vi-chegando' }]);
+  verdade(r.erros.length > 0);
+  igual(f.recursos.estresseMarcado, 0);
+  r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-eu-vi-chegando', resultadoD4:4 }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, 1);
+  igual(r.mudancas[0].quantidade, 4);
+});
+
+teste('Manobras Ágeis registra 1/descanso e volta depois do descanso', () => {
+  const f = fichaBoneN4_(['bone-manobras-ageis', 'bone-intocavel']);
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-manobras-ageis' }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, 1);
+  igual(f.contadores['uso:carta:bone:manobras-ageis'].valor, 1);
+  verdade(contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-manobras-ageis' }]).erros.length > 0);
+  contexto.ajustarGatilho_(f, { gatilho:'descanso' });
+  verdade(!f.contadores['uso:carta:bone:manobras-ageis']);
+});
+
+teste('Abordagem Estratégica recarrega Conhecimento (mínimo 1) no descanso longo', () => {
+  const f = fichaBoneN4_(['bone-abordagem-estrategica', 'bone-ferocidade']);
+  f.tracos.conhecimento = 2;
+  contexto.aplicarGatilhoContadores_(f, 'descanso-longo');
+  const chave = 'carta:bone-abordagem-estrategica';
+  igual(f.contadores[chave].valor, 2);
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'contador', chave, delta:-1 }]);
+  igual(r.erros, []);
+  igual(f.contadores[chave].valor, 1);
+});
+
+teste('Ferocidade cobra 2 Esperanças e mantém na Evasão os PV informados', () => {
+  const f = fichaBoneN4_(['bone-ferocidade', 'bone-abordagem-estrategica']);
+  const antes = contexto.derivadosDoPersonagem_(f).evasao;
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-ferocidade', pontosDeVidaMarcados:3 }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 4);
+  igual(f.contadores['estado:carta:bone:ferocidade:evasao'].valor, 3);
+  igual(contexto.derivadosDoPersonagem_(f).evasao, antes + 3);
+  igual(contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-ferocidade', encerrar:true }]).erros, []);
+  verdade(!f.contadores['estado:carta:bone:ferocidade:evasao']);
+});
+
+teste('Preparar marca Armadura adicional e continua passando pelo Inabalável central', () => {
+  const f = fichaBoneN4_(['bone-preparar', 'bone-impulso'], 'Firbolg');
+  f.recursos.armaduraMarcada = 0;
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-preparar' }]);
+  verdade(r.pendenciaRolagem && r.pendenciaRolagem.tipo === 'inabalavel', JSON.stringify(r));
+  igual(f.recursos.armaduraMarcada, 0, 'prévia não pode marcar Armadura antes do d6');
+  r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-preparar', dadoInabalavel:6 }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, 0);
+  igual(f.recursos.armaduraMarcada, 1, 'Inabalável evita só o Estresse, não o outro efeito');
+});
+
+teste('Impulso e Redirecionar cobram só o custo determinístico e nunca rolam dados', () => {
+  const f = fichaBoneN4_(['bone-impulso', 'bone-redirecionar']);
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-impulso' }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, 1);
+  r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-redirecionar' }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, 2);
+  verdade(/6/.test(r.mudancas[0].aviso || ''));
+});
+
+console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
+if (falhou) {
+  falhas.forEach((f) => console.error(f.nome, f.erro));
+  process.exit(1);
+}

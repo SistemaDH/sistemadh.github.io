@@ -291,6 +291,12 @@ const USOS_CARTAS_DOMINIO = {
   "blade-sangue-e-gloria": {"custo":{},"rotuloAtivar":"Registrar Sangue e Glória","lembrete":"Após o gatilho, ganhe 1 Esperança OU limpe 1 Estresse usando a própria trilha."},
   "blade-massacre": {"custo":{"estresse":1},"rotuloAtivar":"Reagir ao ataque em aliado","lembrete":"Force a criatura a fazer Reação (15); em falha, ela marca 1 PV."},
   "blade-monstro-de-batalha": {"custo":{"estresse":4},"rotuloAtivar":"Sucesso: usar Monstro de Batalha","lembrete":"Em vez de rolar dano, o alvo marca PV igual aos PV que você tem marcados."},
+  "bone-eu-vi-chegando": {"custo":{"estresse":1},"entradaQuantidade":{"campo":"resultadoD4","rotulo":"Resultado do d4","minimo":1,"maximo":4,"ajuda":"Role 1d4 fora do app; o número informado será o bônus de Evasão contra este ataque."},"rotuloAtivar":"Reagir ao ataque à distância","lembrete":"Use o resultado do d4 informado como bônus de Evasão apenas contra este ataque. A Evasão base não muda."},
+  "bone-manobras-ageis": {"custo":{"estresse":1},"marcaUso":{"chave":"uso:carta:bone:manobras-ageis","maximo":1},"rotuloAtivar":"Usar Manobras Ágeis","lembrete":"Mova-se até alcance Longo sem Jogada de Agilidade. Se terminar Corpo a Corpo e atacar imediatamente, use +1 no ataque."},
+  "bone-ferocidade": {"custo":{"esperanca":2},"entradaQuantidade":{"campo":"pontosDeVidaMarcados","rotulo":"PV marcados pelo adversário","minimo":1,"maximo":12,"ajuda":"Informe quantos Pontos de Vida o adversário marcou com o dano que disparou Ferocidade."},"estado":{"chave":"estado:carta:bone:ferocidade:evasao","valorBase":0,"somarQuantidade":true,"permiteEncerrarManual":true,"rotuloAtivo":"Ferocidade ativa","avisoEncerrar":"Ferocidade encerrada depois do próximo ataque feito contra você."},"rotuloAtivar":"Ativar Ferocidade · 2 Esperanças","lembrete":"O bônus de Evasão é igual aos PV informados e dura até depois do próximo ataque feito contra você."},
+  "bone-preparar": {"custo":{"estresse":1},"efeitoRecurso":{"chave":"armaduraMarcada","delta":1},"rotuloAtivar":"Preparar: marcar Armadura adicional","lembrete":"Use junto da redução de dano que já marcou um Espaço de Armadura; este botão marca o espaço adicional."},
+  "bone-impulso": {"custo":{"estresse":1},"rotuloAtivar":"Usar Impulso","lembrete":"Ataque um alvo em alcance Distante com vantagem, some 1d10 ao dano e termine Corpo a Corpo com ele."},
+  "bone-redirecionar": {"custo":{"estresse":1},"rotuloAtivar":"6 rolado: redirecionar ataque","lembrete":"Depois de obter ao menos um 6 nos d6 de Proficiência, redirecione o ataque para um adversário em alcance Muito Próximo."},
 };
 
 /** Efeitos derivados de cartas de domínio ativas. */
@@ -300,6 +306,8 @@ const EFEITOS_DERIVADOS_CARTAS_DOMINIO = {
   "blade-tocado-pela-lamina": {"bonusAtaque":2,"bonusLimiarGrave":4,"exigeCartasAtivasDominio":{"dominio":"BLADE","quantidade":4}},
   "blade-frenesi": {"bonusDano":10,"bonusLimiarGrave":8,"exigeEstado":"estado:carta:blade:frenesi"},
   "blade-massacre": {"danoMinimoPvEmSucesso":2},
+  "bone-intocavel": {"bonusEvasaoMetadeTraco":"Agilidade","arredondar":"cima"},
+  "bone-ferocidade": {"bonusEvasaoEstado":"estado:carta:bone:ferocidade:evasao","exigeEstado":"estado:carta:bone:ferocidade:evasao"},
 };
 
 /**
@@ -478,3 +486,25 @@ function bonusAtaqueDeCartas_(ficha){let t=0;if(typeof EFEITOS_DERIVADOS_CARTAS_
 function bonusLimiarGraveDeCartas_(ficha){let t=0;if(typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO==='undefined')return 0;Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO).forEach(function(id){const e=EFEITOS_DERIVADOS_CARTAS_DOMINIO[id]||{};if(e.bonusLimiarGrave&&requisitoDeEfeitoDerivadoDeCartaVale_(ficha,id,e))t+=Math.trunc(Number(e.bonusLimiarGrave))||0;});return t;}
 function bonusDanoDeCartas_(ficha){let t=0;if(typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO==='undefined')return 0;Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO).forEach(function(id){const e=EFEITOS_DERIVADOS_CARTAS_DOMINIO[id]||{};if(e.bonusDano&&requisitoDeEfeitoDerivadoDeCartaVale_(ficha,id,e))t+=Math.trunc(Number(e.bonusDano))||0;});return t;}
 function danoMinimoPvDeCartas_(ficha){let t=0;if(typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO==='undefined')return 0;Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO).forEach(function(id){const e=EFEITOS_DERIVADOS_CARTAS_DOMINIO[id]||{};if(e.danoMinimoPvEmSucesso&&requisitoDeEfeitoDerivadoDeCartaVale_(ficha,id,e))t=Math.max(t,Math.trunc(Number(e.danoMinimoPvEmSucesso))||0);});return t;}
+
+
+/** Bônus de Evasão vindos de cartas ativas, fixos ou mantidos em estado. */
+function bonusEvasaoDeCartas_(ficha) {
+  if (typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO === 'undefined') return 0;
+  let total = 0;
+  Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO).forEach(function (id) {
+    const e = EFEITOS_DERIVADOS_CARTAS_DOMINIO[id] || {};
+    if (!requisitoDeEfeitoDerivadoDeCartaVale_(ficha, id, e)) return;
+    if (e.bonusEvasao) total += Math.trunc(Number(e.bonusEvasao)) || 0;
+    if (e.bonusEvasaoMetadeTraco) {
+      const valor = (typeof valorDoTraco_ === 'function') ? valorDoTraco_(ficha, e.bonusEvasaoMetadeTraco) : 0;
+      // Regra geral do Core: números inteiros e arredondamento para cima.
+      total += Math.ceil((Number(valor) || 0) / 2);
+    }
+    if (e.bonusEvasaoEstado) {
+      const item = (((ficha || {}).contadores || {})[e.bonusEvasaoEstado]) || {};
+      total += Math.max(0, Math.trunc(Number(item.valor)) || 0);
+    }
+  });
+  return total;
+}

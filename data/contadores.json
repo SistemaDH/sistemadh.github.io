@@ -1350,6 +1350,40 @@
     "descanso-longo"
    ],
    "observacao": "Uma vez por descanso longo."
+  },
+  {
+   "chave": "uso:carta:bone:manobras-ageis",
+   "origem": "carta-dominio",
+   "refId": "bone-manobras-ageis",
+   "nome": "Manobras Ágeis",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso. O marcador significa que o uso já foi gasto."
+  },
+  {
+   "chave": "estado:carta:bone:ferocidade:evasao",
+   "origem": "carta-dominio",
+   "refId": "bone-ferocidade",
+   "nome": "Ferocidade",
+   "rotulo": "bônus de Evasão",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 12
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Guarda quantos PV o adversário marcou. O valor é bônus de Evasão até depois do próximo ataque feito contra você."
   }
  ]
 }

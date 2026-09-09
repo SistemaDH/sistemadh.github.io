@@ -656,7 +656,8 @@ function derivadosDoPersonagem_(ficha) {
       limiarGrave += md.limiaresSeUltimaArmaduraMarcada;
     }
   }
-  if (evasao !== null) evasao += (b.evasao || 0) + bonusDaForma + bonusEsquivaLadino + md.evasao;
+  const bonusEvasaoCarta = (typeof bonusEvasaoDeCartas_ === 'function') ? bonusEvasaoDeCartas_(ficha) : 0;
+  if (evasao !== null) evasao += (b.evasao || 0) + bonusDaForma + bonusEsquivaLadino + md.evasao + bonusEvasaoCarta;
 
   const bonusConjuracao = (typeof bonusConjuracaoDeCartas_ === 'function') ? bonusConjuracaoDeCartas_(ficha) : 0;
   const bonusAtaque = (typeof bonusAtaqueDeCartas_ === 'function') ? bonusAtaqueDeCartas_(ficha) : 0;
@@ -667,6 +668,7 @@ function derivadosDoPersonagem_(ficha) {
 
   return {
     evasao: evasao,
+    bonusEvasaoCarta: bonusEvasaoCarta,
     bonusConjuracao: bonusConjuracao,
     bonusAtaque: bonusAtaque,
     bonusDanoCarta: bonusDanoCarta,
