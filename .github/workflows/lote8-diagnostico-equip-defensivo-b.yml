@@ -12,23 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Mapear catalogo e runtime
+      - name: Mapear runtime final
         run: |
-          python3 - <<'PY'
-          import json
-          d=json.load(open('data/equipamentos.json',encoding='utf-8'))
-          ingles={'Hopeful','Resilient','Shifting','Impenetrable','Magical','Painful','Timeslowing','Deflecting'}
-          nomes={'Esperançoso','Resiliente','Deslocamento','Impenetrável','Mágica','Doloroso','Temporal','Desafetação'}
-          for grupo in ('armas','armaduras'):
-            for x in d.get(grupo,[]):
-              c=x.get('caracteristica') or {}
-              if c.get('nomeIngles') in ingles or c.get('nome') in nomes:
-                print(json.dumps({'grupo':grupo,'id':x.get('id'),'nome':x.get('nome'),'tier':x.get('tier'),'pontuacao':x.get('pontuacaoArmadura'),'caracteristica':c},ensure_ascii=False))
-          PY
+          echo '=== Inabalavel / pendencias no cliente ==='
+          grep -Rni -B15 -A90 -E 'dadoInabalavel|pendenciaRolagem|inabalavel' js | head -n 700 || true
+          echo '=== Stress / PA no backend ==='
+          grep -Rni -B10 -A70 -E 'interceptadorDeEstresseDaFicha_|function aplicarAjusteComInabalavel_|function ajustarRecurso_' backend/4C_Ajustes.gs backend/42_Classes.gs backend/43_Origens.gs 2>/dev/null | head -n 650 || true
           echo '=== refs de contador ==='
-          grep -Rni -B10 -A120 'function refsDeContadorDaFicha_' tools/gerar-47-contadores.mjs backend/47_Contadores.gs || true
-          echo '=== dono do contador ==='
-          grep -Rni -B10 -A80 'function contadorEDaFicha_' tools/gerar-47-contadores.mjs backend/47_Contadores.gs || true
-          echo '=== ajuste de recurso / estresse cheio ==='
-          grep -n -B12 -A125 'function ajustarRecurso_' backend/4C_Ajustes.gs || true
-          grep -Rni -B8 -A45 -E 'Estresse cheio|não pode marcar.*Estresse|pode marcar.*PV|sincronizarVulneravelPorEstresse_' backend/4C_Ajustes.gs backend/40_Regras.gs backend/48_Criacao.gs || true
+          sed -n '470,530p' tools/gerar-47-contadores.mjs
