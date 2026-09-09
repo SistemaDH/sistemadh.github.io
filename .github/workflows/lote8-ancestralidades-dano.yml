@@ -27,6 +27,7 @@ jobs:
         run: |
           python3 tools/lote8-ancestralidades-dano.py
           python3 tools/lote8-ancestralidades-dano-e2e.py
+          python3 tools/lote8-ancestralidades-dano-css.py
           node tools/gerar-43-origens.mjs
           python3 tools/conferir-ancestralidades-lote8.py
           git diff --check
@@ -58,6 +59,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm tools/lote8-ancestralidades-dano.py
           git rm tools/lote8-ancestralidades-dano-e2e.py
+          git rm tools/lote8-ancestralidades-dano-css.py
           git rm .github/workflows/lote8-ancestralidades-dano.yml
           git add -A
           git diff --cached --check
