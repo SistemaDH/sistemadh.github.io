@@ -22,12 +22,10 @@ jobs:
           python3 tools/lote8-bardo-maestro-hotfix.py
           python3 tools/lote8-bardo-maestro-hotfix2.py
           python3 tools/lote8-bardo-maestro.py
+          python3 tools/lote8-bardo-maestro-hotfix3.py
           node tools/gerar-42-classes.mjs
           node tools/gerar-48-criacao.mjs
-          echo '=== índice em aliado gerado ==='
-          grep -A30 -B2 'HABILIDADES_DE_CLASSE_EM_ALIADO' backend/42_Classes.gs || true
-          echo '=== helper em aliado gerado ==='
-          grep -A20 -B3 'function habilidadeEmAliado_' backend/42_Classes.gs || true
+          grep -q 'function habilidadeEmAliado_' backend/42_Classes.gs
           python3 tools/conferir-classes-lote8.py
           python3 tools/conferir-comunidades-lote8.py
           python3 tools/conferir-ancestralidades-lote8.py
@@ -69,6 +67,7 @@ jobs:
           git rm -f tools/lote8-bardo-maestro.py
           git rm -f tools/lote8-bardo-maestro-hotfix.py
           git rm -f tools/lote8-bardo-maestro-hotfix2.py
+          git rm -f tools/lote8-bardo-maestro-hotfix3.py
           git rm -f .github/workflows/lote8-bardo-maestro.yml
           git add -A
           git diff --cached --check
