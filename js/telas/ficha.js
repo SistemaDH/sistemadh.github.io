@@ -1957,6 +1957,21 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const r = ficha.recursos || {};
     const d = ficha.defesas || {};
 
+    // Retração é estado de combate: não pode ficar escondida dentro da dobra
+    // de Características. A regra continua vindo do catálogo/servidor.
+    const retracao = ((ficha.contadores || {})['estado:ancestralidade:galapa:retracao'] || {}).valor || 0;
+    if (Number(retracao) > 0) {
+      pai.append(el('div', { class: 'ficha__faixaEstado esta-emForma' }, [
+        el('strong', { class: 'ficha__faixaTitulo', texto: 'Retraído na carapaça' }),
+        el('p', { class: 'texto-sm' }, textoAnotado(
+          'Resistência a dano físico, desvantagem em jogadas e não pode se mover enquanto permanecer retraído.')),
+        el('button', {
+          type: 'button', class: 'btn btn--pequeno',
+          onClick: () => enviar([{ tipo: 'habilidade', nome: 'Retrair', encerrar: true }])
+        }, 'Sair da carapaça')
+      ]));
+    }
+
     // --- retrato e traços (o topo) ---------------------------------------
     pai.append(blocoDeRetrato(ficha));
 

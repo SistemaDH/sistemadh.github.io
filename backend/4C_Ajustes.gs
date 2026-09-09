@@ -387,7 +387,7 @@ function usarHabilidadeDeClasse_(ficha, a) {
       delete ficha.contadores[def.estado.chave];
       return { tipo: 'habilidade', nome: def.nome, encerrada: true,
                estado: def.estado.chave, estadoAntes: antes,
-               aviso: def.nome + ' terminou: o ataque acertou.' };
+               aviso: def.estado.avisoEncerrar || (def.nome + ' terminou: o ataque acertou.') };
     }
     if (!def.alvo) return { erro: '"' + def.nome + '" não marca alvo nenhum.' };
     const antes = ficha.alvosDeHabilidade[def.nome] || '';
@@ -1177,8 +1177,27 @@ function aplicarDanoNaFicha_(ficha, a) {
     defs.push(def);
   }
 
-  // 1) Reduções do dano bruto, antes de comparar com limiares.
+  // 1) RESISTÊNCIA vem primeiro (livro p.99). Retração/Galapa é um estado
+  // persistente; a posse real da característica também é conferida para um
+  // contador injetado pelo cliente nunca virar resistência.
+  let comMassivo = (typeof DANO_MASSIVO_PADRAO === 'undefined') ? true : DANO_MASSIVO_PADRAO;
+  try {
+    if (typeof mesaLer_ === 'function') comMassivo = mesaLer_().danoMassivo !== false;
+  } catch (e) { /* teste isolado/ambiente sem mesa: fica no padrão */ }
+
+  const retraido = tipo === 'fisico' &&
+    typeof fichaTemCaracteristica_ === 'function' && fichaTemCaracteristica_(ficha, 'Retrair') &&
+    (Math.trunc(Number(((((ficha.contadores || {})['estado:ancestralidade:galapa:retracao']) || {}).valor))) || 0) > 0;
+
   let final = bruto;
+  if (retraido) {
+    // Reutiliza a implementação canônica da resistência. O resultado intermediário
+    // é usado antes das demais reduções; a segunda conversão não aplica resistência.
+    const pelaResistencia = pvDoDano_(bruto, { maior: maior, severo: severo }, comMassivo, true);
+    final = Number(pelaResistencia.reduzidoPara) || Math.ceil(bruto / 2);
+  }
+
+  // 2) Outras reduções que também acontecem antes dos limiares (ex.: Fortitude).
   for (let i = 0; i < defs.length; i++) {
     const def = defs[i];
     if (def.momento !== 'antes-dos-limiares') continue;
@@ -1188,11 +1207,8 @@ function aplicarDanoNaFicha_(ficha, a) {
     if (def.efeito && def.efeito.dano === 'metade') final = Math.ceil(final / 2);
   }
 
-  let comMassivo = (typeof DANO_MASSIVO_PADRAO === 'undefined') ? true : DANO_MASSIVO_PADRAO;
-  try {
-    if (typeof mesaLer_ === 'function') comMassivo = mesaLer_().danoMassivo !== false;
-  } catch (e) { /* teste isolado/ambiente sem mesa: fica no padrão */ }
-
+  // 3) Só agora compara o dano FINAL aos limiares. A resistência já foi
+  // aplicada uma vez acima; passar `false` evita qualquer empilhamento acidental.
   const conta = pvDoDano_(final, { maior: maior, severo: severo }, comMassivo, false);
   let pv = conta.pv;
 
@@ -1249,6 +1265,7 @@ function aplicarDanoNaFicha_(ficha, a) {
     pvPelaFaixa: conta.pv,
     pvMarcados: pv,
     reacoes: usadas,
+    resistencia: retraido ? 'Retrair' : null,
     custos: { estresse: custoEstresse, esperanca: custoEsperanca },
     detalhes: mudancasInternas,
     aviso: partes.join(' · ') + '.'

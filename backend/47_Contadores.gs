@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 39 cartas e características mandam
+ *  O problema que este arquivo resolve: 40 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -79,6 +79,7 @@ const CONTADORES = {
   "estado:ladino:esquiva": { origem: "caracteristica-classe", refId: "ladino", nome: "Esquiva de Ladino", rotulo: "ativa", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso","descanso-longo"], recarregaEm: [], exigeCaracteristica: "Esquiva de Ladino" },
   "uso:ancestralidade:fada:dobradora-da-sorte": { origem: "caracteristica-ancestralidade", refId: "fada", nome: "Dobradora da Sorte", rotulo: "já usou", tipo: "usos", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-de-sessao"], recarregaEm: [], exigeCaracteristica: "Dobradora da Sorte" },
   "uso:ancestralidade:goblin:sentido-de-perigo": { origem: "caracteristica-ancestralidade", refId: "goblin", nome: "Sentido de Perigo", rotulo: "já usou", tipo: "usos", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], exigeCaracteristica: "Sentido de Perigo" },
+  "estado:ancestralidade:galapa:retracao": { origem: "caracteristica-ancestralidade", refId: "galapa", nome: "Retrair", rotulo: "ativa", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], exigeCaracteristica: "Retrair" },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -122,6 +123,7 @@ const CONTADOR_ALIASES = {
   "estado:ladino:esquiva": ["Esquiva de Ladino"],
   "uso:ancestralidade:fada:dobradora-da-sorte": ["Dobradora da Sorte"],
   "uso:ancestralidade:goblin:sentido-de-perigo": ["Sentido de Perigo"],
+  "estado:ancestralidade:galapa:retracao": ["Retrair"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

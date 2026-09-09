@@ -179,6 +179,23 @@ const HABILIDADES_DE_ORIGEM_COM_USO = {
     "estado": null,
     "lembrete": "Escolha uma emoção ou sensação e extraia do cadáver recente uma memória relacionada a ela."
   },
+  "Retrair": {
+    "origem": "ancestralidade",
+    "refId": "galapa",
+    "custo": {
+      "estresse": 1
+    },
+    "alvo": null,
+    "marcaUso": "",
+    "estado": {
+      "chave": "estado:ancestralidade:galapa:retracao",
+      "valor": 1,
+      "rotuloAtivo": "Retração ativa — resistência a dano físico, desvantagem em jogadas e sem movimento.",
+      "rotuloEncerrar": "Sair da carapaça",
+      "avisoEncerrar": "Retração terminou: você saiu da carapaça."
+    },
+    "lembrete": "Enquanto estiver na carapaça, você tem resistência a dano físico, desvantagem em jogadas e não pode se mover."
+  },
   "Sentido de Perigo": {
     "origem": "ancestralidade",
     "refId": "goblin",

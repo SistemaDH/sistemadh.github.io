@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 39 contadores: 17 de carta, 20 de classe/subclasse e 2 de ancestralidade', () => {
+teste('o catálogo tem 40 contadores: 17 de carta, 20 de classe/subclasse e 3 de ancestralidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,13 +1561,13 @@ teste('o catálogo tem 39 contadores: 17 de carta, 20 de classe/subclasse e 2 de
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 39);
+  igual(Object.keys(CONTADORES).length, 40);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 17);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 15);
-  igual(porOrigem['caracteristica-ancestralidade'], 2);
+  igual(porOrigem['caracteristica-ancestralidade'], 3);
 });
 
 teste('"uma vez por" conta o uso GASTO, e o gatilho certo o apaga', () => {
@@ -5530,6 +5530,59 @@ teste('dano que marca o último PV preserva o mesmo gatilho de movimento de mort
   igual(r.erros, []);
   verdade(r.mudancas[0].movimentoDeMorte === true, JSON.stringify(r.mudancas[0]));
 });
+
+teste('Galapa ativa Retrair por 1 Estresse e não consegue pagar duas vezes', () => {
+  const f = fichaDeAncestralidadeParaDano_('Galapa');
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Retrair' }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, 1);
+  igual(f.contadores['estado:ancestralidade:galapa:retracao'].valor, 1);
+  const deNovo = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Retrair' }]);
+  igual(deNovo.erros.length, 1);
+  igual(f.recursos.estresseMarcado, 1);
+});
+
+teste('Retração reduz dano físico à metade antes dos limiares e não afeta dano mágico', () => {
+  const f = fichaDeAncestralidadeParaDano_('Galapa');
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Retrair' }]).erros, []);
+  const bruto = Number(f.defesas.limiarGrave);
+  const esperado = contexto.pvDoDano_(bruto, { maior: f.defesas.limiarMaior, severo: f.defesas.limiarGrave }, true, true);
+  let r = contexto.aplicarAjustes_(f, [{ tipo: 'dano', dano: bruto, tipoDeDano: 'fisico' }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].resistencia, 'Retrair');
+  igual(r.mudancas[0].pvMarcados, esperado.pv);
+
+  const antes = f.recursos.pontosDeVidaMarcados;
+  r = contexto.aplicarAjustes_(f, [{ tipo: 'dano', dano: bruto, tipoDeDano: 'magico' }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].resistencia, null);
+  igual(f.recursos.pontosDeVidaMarcados - antes, contexto.pvDoDano_(bruto,
+    { maior: f.defesas.limiarMaior, severo: f.defesas.limiarGrave }, true, false).pv);
+});
+
+teste('sair da Retração é gratuito e remove a resistência', () => {
+  const f = fichaDeAncestralidadeParaDano_('Galapa');
+  contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Retrair' }]);
+  const estresse = f.recursos.estresseMarcado;
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Retrair', encerrar: true }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, estresse);
+  verdade(!f.contadores['estado:ancestralidade:galapa:retracao']);
+  verdade(/saiu da carapaça/i.test(r.mudancas[0].aviso), JSON.stringify(r.mudancas[0]));
+});
+
+teste('Retrair exige espaço de Estresse e posse real da característica', () => {
+  const cheia = fichaDeAncestralidadeParaDano_('Galapa');
+  cheia.recursos.estresseMarcado = cheia.recursos.estresseMaximo;
+  let r = contexto.aplicarAjustes_(cheia, [{ tipo: 'habilidade', nome: 'Retrair' }]);
+  igual(r.erros.length, 1);
+  verdade(!cheia.contadores['estado:ancestralidade:galapa:retracao']);
+
+  const humano = fichaDeAncestralidadeParaDano_('Humano');
+  r = contexto.aplicarAjustes_(humano, [{ tipo: 'habilidade', nome: 'Retrair' }]);
+  igual(r.erros.length, 1);
+});
+
 
 console.log('\nVocabulário');
 teste('nenhum texto CANÔNICO diz "teste" — o das cartas é "jogada"', () => {

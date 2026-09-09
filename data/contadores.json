@@ -845,6 +845,25 @@
    "exigeCaracteristica": "Sentido de Perigo",
    "observacao": "Uma vez por descanso. O contador registra usos já gastos e some em qualquer descanso.",
    "fonte": "DH-DigitalRegras.pdf, ancestralidade Goblin, Sentido de Perigo."
+  },
+  {
+   "chave": "estado:ancestralidade:galapa:retracao",
+   "origem": "caracteristica-ancestralidade",
+   "refId": "galapa",
+   "nome": "Retrair",
+   "rotulo": "ativa",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "exigeCaracteristica": "Retrair",
+   "observacao": "Estado persistente: custa 1 Fadiga para entrar; sair é explícito e gratuito. Enquanto ativo: resistência a dano físico, desvantagem em jogadas e não pode se mover.",
+   "fonte": "DH-DigitalRegras.pdf p.61 — Galapa, Retração."
   }
  ]
 }

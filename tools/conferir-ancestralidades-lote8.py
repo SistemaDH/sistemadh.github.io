@@ -49,7 +49,7 @@ for (aid, nome), (momento, custo) in reacoes_dano.items():
 
 adiados = [
     ('drakona', 'Sopro Elemental'), ('elfo', 'Transe Celestial'), ('fada', 'Asas'),
-    ('firbolg', 'Inabalável'), ('galapa', 'Retrair'), ('halfling', 'Portador da Sorte'),
+    ('firbolg', 'Inabalável'), ('halfling', 'Portador da Sorte'),
     ('katari', 'Garras Retráteis'), ('ribbet', 'Língua Comprida')
 ]
 for aid, nome in adiados:
@@ -63,4 +63,18 @@ assert fada['maximo'] == {'tipo': 'fixo', 'valor': 1} and fada['zeraEm'] == ['fi
 assert gob['refId'] == 'goblin' and gob['exigeCaracteristica'] == 'Sentido de Perigo'
 assert gob['maximo'] == {'tipo': 'fixo', 'valor': 1} and gob['zeraEm'] == ['descanso']
 
-print('Lote 8 — ancestralidades: 18 entradas; 10 usos simples, 2 limites e 3 reações de dano protegidos.')
+
+
+# Retração/Galapa — estado real + custo + integração de resistência.
+retrair = feat('galapa', 'Retrair').get('uso') or {}
+assert retrair.get('custo') == {'estresse': 1}
+estado_ret = retrair.get('estado') or {}
+assert estado_ret.get('chave') == 'estado:ancestralidade:galapa:retracao'
+assert estado_ret.get('valor') == 1
+assert estado_ret.get('rotuloEncerrar') == 'Sair da carapaça'
+ret_cont = por_chave['estado:ancestralidade:galapa:retracao']
+assert ret_cont['refId'] == 'galapa' and ret_cont['exigeCaracteristica'] == 'Retrair'
+assert ret_cont['maximo'] == {'tipo': 'fixo', 'valor': 1}
+assert ret_cont['zeraEm'] == ['manual']
+
+print('Lote 8 — ancestralidades: 18 entradas; 11 usos/estados, 2 limites e 3 reações de dano protegidos.')
