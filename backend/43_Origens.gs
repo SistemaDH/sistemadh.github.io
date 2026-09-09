@@ -59,6 +59,96 @@ const EFEITOS_DERIVADOS_DE_ORIGEM = {
   }
 };
 
+/** Perfis de ataque/ações ofensivas de ancestralidade. */
+const PERFIS_DE_ATAQUE_DE_ORIGEM = {
+  "Sopro Elemental": {
+    "origem": "ancestralidade",
+    "refId": "drakona",
+    "custo": {},
+    "tipo": "arma-natural",
+    "traco": "instinto",
+    "alcance": "Muito Próximo",
+    "alvos": "alvo-ou-grupo",
+    "dano": {
+      "dado": "d8",
+      "tipo": "magico",
+      "usaProficiencia": true
+    },
+    "resultadoManual": true,
+    "lembrete": "Faça a jogada de ataque e role o dano manualmente; o perfil usa o elemento escolhido para o sopro."
+  },
+  "Garras Retráteis": {
+    "origem": "ancestralidade",
+    "refId": "katari",
+    "custo": {},
+    "tipo": "acao-ofensiva",
+    "traco": "agilidade",
+    "alcance": "Corpo a Corpo",
+    "dano": null,
+    "resultadoManual": true,
+    "consequenciaSucesso": {
+      "condicao": "Vulnerável",
+      "temporaria": true,
+      "alvo": "adversario"
+    },
+    "lembrete": "Faça a jogada de Agilidade manualmente. Em um sucesso, o alvo fica temporariamente Vulnerável."
+  },
+  "Língua Comprida": {
+    "origem": "ancestralidade",
+    "refId": "ribbet",
+    "custo": {
+      "estresse": 1
+    },
+    "tipo": "arma-natural",
+    "traco": "finesse",
+    "alcance": "Próximo",
+    "dano": {
+      "dado": "d12",
+      "tipo": "fisico",
+      "usaProficiencia": true
+    },
+    "resultadoManual": true,
+    "lembrete": "Depois de pagar o custo, faça a jogada de ataque e role o dano manualmente."
+  }
+};
+
+/** Alterações de alcance concedidas por ancestralidade. */
+const MODIFICADORES_DE_ALCANCE_DE_ORIGEM = {
+  "Alcance": {
+    "origem": "ancestralidade",
+    "refId": "gigante",
+    "de": "Corpo a Corpo",
+    "para": "Muito Próximo",
+    "escopo": "arma-habilidade-magia-caracteristica",
+    "fonte": "DH-DigitalRegras.pdf p.62"
+  }
+};
+
+
+/** Perfis que ESTA ficha realmente possui, respeitando ancestralidade mista. */
+function perfisDeAtaqueDeOrigem_(ficha) {
+  const cs = (typeof caracteristicasDaOrigem_ === 'function') ? caracteristicasDaOrigem_(ficha) : [];
+  const saida = [];
+  for (let i = 0; i < cs.length; i++) {
+    const nome = (cs[i] || {}).nome;
+    const perfil = PERFIS_DE_ATAQUE_DE_ORIGEM[nome];
+    if (perfil) saida.push(Object.assign({ nome: nome }, perfil));
+  }
+  return saida;
+}
+
+/** Modificadores de alcance que ESTA ficha realmente possui. */
+function modificadoresDeAlcanceDeOrigem_(ficha) {
+  const cs = (typeof caracteristicasDaOrigem_ === 'function') ? caracteristicasDaOrigem_(ficha) : [];
+  const saida = [];
+  for (let i = 0; i < cs.length; i++) {
+    const nome = (cs[i] || {}).nome;
+    const mod = MODIFICADORES_DE_ALCANCE_DE_ORIGEM[nome];
+    if (mod) saida.push(Object.assign({ nome: nome }, mod));
+  }
+  return saida;
+}
+
 /** Reações de ancestralidade que alteram o dano recebido. */
 const REACOES_DE_DANO_DE_ORIGEM = {
   "Pele Grossa": {
@@ -250,6 +340,17 @@ const HABILIDADES_DE_ORIGEM_COM_USO = {
     "marcaUso": "",
     "estado": null,
     "lembrete": "Após o ataque Corpo a Corpo bem-sucedido, role 1d6 e some ao dano desse mesmo ataque."
+  },
+  "Língua Comprida": {
+    "origem": "ancestralidade",
+    "refId": "ribbet",
+    "custo": {
+      "estresse": 1
+    },
+    "alvo": null,
+    "marcaUso": "",
+    "estado": null,
+    "lembrete": "Use Língua Comprida como arma de Finesse em alcance Próximo; role o ataque e o dano manualmente."
   }
 };
 

@@ -374,6 +374,56 @@ try {
     igual(await marcados('pv'), antesPv, 'o E2E precisa devolver a ficha ao estado anterior');
   });
 
+
+  await passo('perfis ofensivos e Alcance derivados chegam à ficha sem rolar dados', async () => {
+    await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+    await pagina.waitForSelector('.ficha-cartao__abrir');
+    const def = noBackend('ABAS.PERSONAGENS');
+    const linhas = ambiente.contexto.lerTudo_(def)
+      .filter((l) => String(l.excluido).toUpperCase() !== 'TRUE');
+    const linha = linhas[0];
+    const original = linha.dados || '{}';
+
+    const abrirComo = async (ancestralidade) => {
+      const ficha = JSON.parse(original);
+      ficha.identidade = Object.assign({}, ficha.identidade, { ancestralidade });
+      ficha.origem = Object.assign({}, ficha.origem, {
+        ancestralidadeMista: null, caracteristicasEscolhidas: null
+      });
+      const validada = ambiente.contexto.validarFicha_(ficha);
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: JSON.stringify(validada) });
+      await pagina.reload({ waitUntil: 'networkidle' });
+      await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+      await abrirFichaEmJogo();
+      await pagina.getByRole('tab', { name: 'Jogo' }).click();
+      await pagina.waitForSelector('.papel');
+    };
+
+    try {
+      await abrirComo('Drakona');
+      const danoDrakona = await pagina.locator('.ficha__corpo').textContent();
+      if (!/Sopro Elemental:\s*Instinto\s*·\s*Muito Próximo\s*·\s*1d8 mágico/.test(danoDrakona)) {
+        throw new Error('Sopro Elemental não apareceu como perfil derivado: ' + danoDrakona.slice(0, 700));
+      }
+
+      await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+      await pagina.waitForSelector('.ficha-cartao__abrir');
+      await abrirComo('Gigante');
+      const danoGigante = await pagina.locator('.ficha__corpo').textContent();
+      if (!/Alcance: todo alcance Corpo a Corpo/.test(danoGigante)) {
+        throw new Error('a nota de Alcance do Gigante não chegou à ficha');
+      }
+      if (!/Florete:\s*Muito Próximo/.test(danoGigante)) {
+        throw new Error('arma Corpo a Corpo não recebeu Muito Próximo: ' + danoGigante.slice(0, 700));
+      }
+    } finally {
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: original });
+      await pagina.reload({ waitUntil: 'networkidle' });
+      await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+      await abrirFichaEmJogo();
+      await pagina.getByRole('tab', { name: 'Jogo' }).click();
+    }
+  });
   await passo('classe e subclasse abrem o que está atrás delas (ponto 4)', async () => {
     /*
      * PONTO 4 DOS PRINTS. Classe e subclasse eram duas linhas de texto morto
@@ -487,7 +537,7 @@ try {
     const corpo = pagina.locator('.ficha__corpo');
     await corpo.getByText('Dano da ficha', { exact: true }).waitFor({ timeout: 5000 });
     const texto = (await corpo.textContent()).replace(/\s+/g, ' ');
-    if (!/Florete:\s*1d\d+/i.test(texto)) {
+    if (!/Florete:\s*(?:(?:Corpo a Corpo|Muito Próximo|Próximo|Distante|Muito Distante)\s*·\s*)?1d\d+/i.test(texto)) {
       throw new Error('a arma não mostrou o dado multiplicado pela Proficiência: ' + texto);
     }
     if (/rolar agora|rolou|resultado aleat/i.test(texto)) {

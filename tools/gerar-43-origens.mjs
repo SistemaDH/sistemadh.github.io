@@ -45,6 +45,27 @@ for (const a of anc.ancestralidades) {
   }
 }
 
+/* Perfis de ataque/ações ofensivas concedidos pela ancestralidade. */
+const perfisDeAtaqueDeOrigem = {};
+const modificadoresDeAlcanceDeOrigem = {};
+for (const a of anc.ancestralidades) {
+  for (const f of a.caracteristicas || []) {
+    if (f.perfilAtaque) {
+      if (perfisDeAtaqueDeOrigem[f.nome]) throw new Error(`perfil de ataque ambíguo para ${f.nome}`);
+      perfisDeAtaqueDeOrigem[f.nome] = Object.assign({
+        origem: 'ancestralidade', refId: a.id,
+        custo: (f.uso && f.uso.custo) ? f.uso.custo : {}
+      }, f.perfilAtaque);
+    }
+    if (f.modificadorAlcance) {
+      if (modificadoresDeAlcanceDeOrigem[f.nome]) throw new Error(`modificador de alcance ambíguo para ${f.nome}`);
+      modificadoresDeAlcanceDeOrigem[f.nome] = Object.assign({
+        origem: 'ancestralidade', refId: a.id
+      }, f.modificadorAlcance);
+    }
+  }
+}
+
 /* Efeitos numéricos que a ficha consegue aplicar sem escolha/rolagem. */
 const efeitosDerivadosDeOrigem = {};
 for (const a of anc.ancestralidades) {
@@ -92,6 +113,36 @@ L.push('};\n');
 
 L.push('/** Modificadores derivados das características de ancestralidade. */');
 L.push(`const EFEITOS_DERIVADOS_DE_ORIGEM = ${JSON.stringify(efeitosDerivadosDeOrigem, null, 2)};\n`);
+
+L.push('/** Perfis de ataque/ações ofensivas de ancestralidade. */');
+L.push(`const PERFIS_DE_ATAQUE_DE_ORIGEM = ${JSON.stringify(perfisDeAtaqueDeOrigem, null, 2)};\n`);
+L.push('/** Alterações de alcance concedidas por ancestralidade. */');
+L.push(`const MODIFICADORES_DE_ALCANCE_DE_ORIGEM = ${JSON.stringify(modificadoresDeAlcanceDeOrigem, null, 2)};\n`);
+L.push(`
+/** Perfis que ESTA ficha realmente possui, respeitando ancestralidade mista. */
+function perfisDeAtaqueDeOrigem_(ficha) {
+  const cs = (typeof caracteristicasDaOrigem_ === 'function') ? caracteristicasDaOrigem_(ficha) : [];
+  const saida = [];
+  for (let i = 0; i < cs.length; i++) {
+    const nome = (cs[i] || {}).nome;
+    const perfil = PERFIS_DE_ATAQUE_DE_ORIGEM[nome];
+    if (perfil) saida.push(Object.assign({ nome: nome }, perfil));
+  }
+  return saida;
+}
+
+/** Modificadores de alcance que ESTA ficha realmente possui. */
+function modificadoresDeAlcanceDeOrigem_(ficha) {
+  const cs = (typeof caracteristicasDaOrigem_ === 'function') ? caracteristicasDaOrigem_(ficha) : [];
+  const saida = [];
+  for (let i = 0; i < cs.length; i++) {
+    const nome = (cs[i] || {}).nome;
+    const mod = MODIFICADORES_DE_ALCANCE_DE_ORIGEM[nome];
+    if (mod) saida.push(Object.assign({ nome: nome }, mod));
+  }
+  return saida;
+}
+`);
 
 L.push('/** Reações de ancestralidade que alteram o dano recebido. */');
 L.push(`const REACOES_DE_DANO_DE_ORIGEM = ${JSON.stringify(reacoesDeDanoDeOrigem, null, 2)};\n`);

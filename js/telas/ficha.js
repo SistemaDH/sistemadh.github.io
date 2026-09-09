@@ -1440,6 +1440,15 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     return `${prof}d${m[1]}${m[2] || ''}${resto}`;
   }
 
+  /** Aplica somente os modificadores de alcance já derivados pelo servidor. */
+  function alcanceEfetivoNaFicha(ficha, alcance) {
+    let atual = String(alcance || '');
+    for (const m of ((ficha || {}).modificadoresDeAlcance || [])) {
+      if (dados.chave(atual) === dados.chave(m.de)) atual = m.para;
+    }
+    return atual;
+  }
+
   /** Bônus fixos que já se aplicam à jogada desta arma. */
   function bonusFixosDaArma(ficha, arma) {
     const b = (ficha || {}).bonusDeDano || {};
@@ -1476,8 +1485,34 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const linhas = armas.map((arma) => {
       const extras = bonusFixosDaArma(ficha, arma);
       const sufixo = extras.length ? ` · ${extras.join(' · ')}` : '';
-      return el('p', { class: 'texto-sm', texto: `${arma.nome}: ${danoDaArmaComProficiencia(ficha, arma)}${sufixo}` });
+      const alcance = alcanceEfetivoNaFicha(ficha, arma.alcance || '');
+      return el('p', { class: 'texto-sm', texto:
+        `${arma.nome}: ${alcance ? alcance + ' · ' : ''}${danoDaArmaComProficiencia(ficha, arma)}${sufixo}` });
     });
+
+    // Ataques/ações de ancestralidade vêm prontos do servidor: Proficiência e
+    // Alcance já foram resolvidos; a tela só escreve e nunca rola.
+    for (const perfil of ((ficha || {}).perfisDeAtaque || [])) {
+      const traco = catalogo.nomeDoTraco ? catalogo.nomeDoTraco(perfil.traco) : perfil.traco;
+      const partes = [traco, perfil.alcance].filter(Boolean);
+      if (perfil.dano) {
+        const tipo = perfil.dano.tipo === 'magico' ? 'mágico' : 'físico';
+        partes.push(`${perfil.dano.quantidade || 1}${perfil.dano.dado} ${tipo}`);
+      }
+      const custo = perfil.custo || {};
+      if (Number(custo.estresse) || Number(custo.esperanca)) {
+        const c = [];
+        if (Number(custo.estresse)) c.push(`${custo.estresse} Estresse`);
+        if (Number(custo.esperanca)) c.push(`${custo.esperanca} Esperança`);
+        partes.push(`custa ${c.join(' e ')} por uso`);
+      }
+      linhas.push(el('p', { class: 'texto-sm', texto: `${perfil.nome}: ${partes.join(' · ')}` }));
+      if (perfil.consequenciaSucesso) {
+        const c = perfil.consequenciaSucesso;
+        linhas.push(el('p', { class: 'texto-xs texto-fraco', texto:
+          `${perfil.nome}: em sucesso, o alvo fica ${c.condicao}${c.temporaria ? ' temporariamente' : ''}.` }));
+      }
+    }
 
     if (!linhas.length) {
       linhas.push(el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma arma equipada.' }));
@@ -1496,6 +1531,11 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     if (b.determinacao) {
       linhas.push(el('p', { class: 'texto-xs texto-fraco', texto:
         `Determinação: +${b.determinacao.valor} em toda jogada de dano enquanto o dado estiver ativo.` }));
+    }
+
+    if (((ficha || {}).modificadoresDeAlcance || []).length) {
+      linhas.push(el('p', { class: 'texto-xs texto-fraco', texto:
+        'Alcance: todo alcance Corpo a Corpo deste personagem vale Muito Próximo — inclusive armas, habilidades, magias e outras características.' }));
     }
 
     for (const x of (b.condicionais || [])) {

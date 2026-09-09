@@ -48,9 +48,8 @@ for (aid, nome), (momento, custo) in reacoes_dano.items():
     assert rd.get('efeito'), f'{aid}/{nome}: faltou efeito de dano estruturado'
 
 adiados = [
-    ('drakona', 'Sopro Elemental'), ('elfo', 'Transe Celestial'), ('fada', 'Asas'),
-    ('firbolg', 'Inabalável'), ('halfling', 'Portador da Sorte'),
-    ('katari', 'Garras Retráteis'), ('ribbet', 'Língua Comprida')
+    ('elfo', 'Transe Celestial'), ('fada', 'Asas'),
+    ('firbolg', 'Inabalável'), ('halfling', 'Portador da Sorte')
 ]
 for aid, nome in adiados:
     assert not feat(aid, nome).get('uso'), f'{aid}/{nome}: foi marcado pronto antes do fluxo correto'
@@ -77,4 +76,22 @@ assert ret_cont['refId'] == 'galapa' and ret_cont['exigeCaracteristica'] == 'Ret
 assert ret_cont['maximo'] == {'tipo': 'fixo', 'valor': 1}
 assert ret_cont['zeraEm'] == ['manual']
 
-print('Lote 8 — ancestralidades: 18 entradas; 11 usos/estados, 2 limites e 3 reações de dano protegidos.')
+# Perfis naturais/ofensivos e alcance.
+sopro = feat('drakona', 'Sopro Elemental').get('perfilAtaque') or {}
+assert sopro.get('traco') == 'instinto' and sopro.get('alcance') == 'Muito Próximo'
+assert sopro.get('dano') == {'dado': 'd8', 'tipo': 'magico', 'usaProficiencia': True}
+
+lingua = feat('ribbet', 'Língua Comprida')
+assert lingua.get('uso', {}).get('custo') == {'estresse': 1}
+lp = lingua.get('perfilAtaque') or {}
+assert lp.get('traco') == 'finesse' and lp.get('alcance') == 'Próximo'
+assert lp.get('dano') == {'dado': 'd12', 'tipo': 'fisico', 'usaProficiencia': True}
+
+garras = feat('katari', 'Garras Retráteis').get('perfilAtaque') or {}
+assert garras.get('traco') == 'agilidade' and garras.get('alcance') == 'Corpo a Corpo'
+assert garras.get('consequenciaSucesso') == {'condicao': 'Vulnerável', 'temporaria': True, 'alvo': 'adversario'}
+
+gigante = feat('gigante', 'Alcance').get('modificadorAlcance') or {}
+assert gigante.get('de') == 'Corpo a Corpo' and gigante.get('para') == 'Muito Próximo'
+
+print('Lote 8 — ancestralidades: 18 entradas; 12 usos/estados, 2 limites, 3 reações de dano, 3 perfis ofensivos e Alcance protegidos.')

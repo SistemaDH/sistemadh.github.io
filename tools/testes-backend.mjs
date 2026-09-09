@@ -5584,6 +5584,64 @@ teste('Retrair exige espaço de Estresse e posse real da característica', () =>
 });
 
 
+console.log('\nLote 8 — perfis ofensivos e alcance de ancestralidade');
+
+teste('Sopro Elemental vira perfil Instinto/Muito Próximo/d8 mágico por Proficiência', () => {
+  const f = fichaDeAncestralidadeParaDano_('Drakona');
+  const perfis = contexto.perfisDeAtaqueDaFicha_(f);
+  const sopro = perfis.find((x) => x.nome === 'Sopro Elemental');
+  verdade(sopro, JSON.stringify(perfis));
+  igual(sopro.traco, 'instinto');
+  igual(sopro.alcance, 'Muito Próximo');
+  igual(sopro.dano.dado, 'd8');
+  igual(sopro.dano.tipo, 'magico');
+  igual(sopro.dano.quantidade, f.recursos.proficiencia);
+});
+
+teste('Língua Comprida tem perfil d12 físico e cobra 1 Estresse no uso', () => {
+  const f = fichaDeAncestralidadeParaDano_('Ribbet');
+  const lingua = contexto.perfisDeAtaqueDaFicha_(f).find((x) => x.nome === 'Língua Comprida');
+  verdade(lingua, 'perfil da língua não chegou à ficha');
+  igual([lingua.traco, lingua.alcance, lingua.dano.dado, lingua.dano.tipo],
+    ['finesse', 'Próximo', 'd12', 'fisico']);
+  igual(lingua.custo, { estresse: 1 });
+  const antes = f.recursos.estresseMarcado;
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Língua Comprida' }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, antes + 1);
+});
+
+teste('Garras Retráteis publicam a consequência do sucesso sem rolar dado', () => {
+  const f = fichaDeAncestralidadeParaDano_('Katari');
+  const g = contexto.perfisDeAtaqueDaFicha_(f).find((x) => x.nome === 'Garras Retráteis');
+  verdade(g, 'perfil das garras não chegou à ficha');
+  igual([g.traco, g.alcance], ['agilidade', 'Corpo a Corpo']);
+  igual(g.dano, null);
+  igual(g.consequenciaSucesso, { condicao: 'Vulnerável', temporaria: true, alvo: 'adversario' });
+});
+
+teste('Alcance/Gigante transforma Corpo a Corpo, mas não mexe nos outros alcances', () => {
+  const f = fichaDeAncestralidadeParaDano_('Gigante');
+  igual(contexto.alcanceEfetivoDaFicha_(f, 'Corpo a Corpo'), 'Muito Próximo');
+  igual(contexto.alcanceEfetivoDaFicha_(f, 'Próximo'), 'Próximo');
+  igual(contexto.modificadoresDeAlcanceDeOrigem_(f).length, 1);
+});
+
+teste('ancestralidade mista só publica o perfil realmente escolhido', () => {
+  const comSopro = fichaDeAncestralidadeParaDano_('Anão', {
+    ancestralidadeMista: ['Anão', 'Drakona'],
+    caracteristicasEscolhidas: ['Pele Grossa', 'Sopro Elemental']
+  });
+  verdade(contexto.perfisDeAtaqueDaFicha_(comSopro).some((x) => x.nome === 'Sopro Elemental'));
+
+  const semSopro = fichaDeAncestralidadeParaDano_('Anão', {
+    ancestralidadeMista: ['Anão', 'Drakona'],
+    caracteristicasEscolhidas: ['Pele Grossa', 'Escamas']
+  });
+  verdade(!contexto.perfisDeAtaqueDaFicha_(semSopro).some((x) => x.nome === 'Sopro Elemental'));
+});
+
+
 console.log('\nVocabulário');
 teste('nenhum texto CANÔNICO diz "teste" — o das cartas é "jogada"', () => {
   // 'ancora' é texto LITERAL do livro — é o que prova que a página está certa.

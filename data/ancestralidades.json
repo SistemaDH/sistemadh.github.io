@@ -144,7 +144,20 @@
     {
      "ordem": 2,
      "nome": "Sopro Elemental",
-     "texto": "Escolha um elemento para seu sopro (como eletricidade, fogo ou gelo). Você pode usar esse sopro contra um alvo ou grupo de alvos em alcance Muito Próximo, tratando-o como uma arma Instinto que causa d8 de dano mágico usando sua Proficiência."
+     "texto": "Escolha um elemento para seu sopro (como eletricidade, fogo ou gelo). Você pode usar esse sopro contra um alvo ou grupo de alvos em alcance Muito Próximo, tratando-o como uma arma Instinto que causa d8 de dano mágico usando sua Proficiência.",
+     "perfilAtaque": {
+      "tipo": "arma-natural",
+      "traco": "instinto",
+      "alcance": "Muito Próximo",
+      "alvos": "alvo-ou-grupo",
+      "dano": {
+       "dado": "d8",
+       "tipo": "magico",
+       "usaProficiencia": true
+      },
+      "resultadoManual": true,
+      "lembrete": "Faça a jogada de ataque e role o dano manualmente; o perfil usa o elemento escolhido para o sopro."
+     }
     }
    ],
    "caracteristicasNoLivro": [
@@ -456,7 +469,13 @@
     {
      "ordem": 2,
      "nome": "Alcance",
-     "texto": "Trate qualquer arma, habilidade, magia ou outra característica com alcance Corpo a Corpo como se tivesse alcance Muito Próximo."
+     "texto": "Trate qualquer arma, habilidade, magia ou outra característica com alcance Corpo a Corpo como se tivesse alcance Muito Próximo.",
+     "modificadorAlcance": {
+      "de": "Corpo a Corpo",
+      "para": "Muito Próximo",
+      "escopo": "arma-habilidade-magia-caracteristica",
+      "fonte": "DH-DigitalRegras.pdf p.62"
+     }
     }
    ],
    "caracteristicasNoLivro": [
@@ -672,7 +691,20 @@
     {
      "ordem": 2,
      "nome": "Garras Retráteis",
-     "texto": "Faça uma jogada de Agilidade para arranhar um alvo em alcance Corpo a Corpo. Em caso de sucesso, ele fica temporariamente Vulnerável."
+     "texto": "Faça uma jogada de Agilidade para arranhar um alvo em alcance Corpo a Corpo. Em caso de sucesso, ele fica temporariamente Vulnerável.",
+     "perfilAtaque": {
+      "tipo": "acao-ofensiva",
+      "traco": "agilidade",
+      "alcance": "Corpo a Corpo",
+      "dano": null,
+      "resultadoManual": true,
+      "consequenciaSucesso": {
+       "condicao": "Vulnerável",
+       "temporaria": true,
+       "alvo": "adversario"
+      },
+      "lembrete": "Faça a jogada de Agilidade manualmente. Em um sucesso, o alvo fica temporariamente Vulnerável."
+     }
     }
    ],
    "caracteristicasNoLivro": [
@@ -752,7 +784,25 @@
     {
      "ordem": 2,
      "nome": "Língua Comprida",
-     "texto": "Você pode usar sua língua longa para agarrar objetos em alcance Próximo. Marque 1 Estresse para usar sua língua como uma arma Finesse de alcance Próximo que causa d12 de dano físico usando sua Proficiência."
+     "texto": "Você pode usar sua língua longa para agarrar objetos em alcance Próximo. Marque 1 Estresse para usar sua língua como uma arma Finesse de alcance Próximo que causa d12 de dano físico usando sua Proficiência.",
+     "perfilAtaque": {
+      "tipo": "arma-natural",
+      "traco": "finesse",
+      "alcance": "Próximo",
+      "dano": {
+       "dado": "d12",
+       "tipo": "fisico",
+       "usaProficiencia": true
+      },
+      "resultadoManual": true,
+      "lembrete": "Depois de pagar o custo, faça a jogada de ataque e role o dano manualmente."
+     },
+     "uso": {
+      "custo": {
+       "estresse": 1
+      },
+      "lembrete": "Use Língua Comprida como arma de Finesse em alcance Próximo; role o ataque e o dano manualmente."
+     }
     }
    ],
    "caracteristicasNoLivro": [

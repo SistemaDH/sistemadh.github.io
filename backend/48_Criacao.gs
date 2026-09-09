@@ -286,6 +286,43 @@ function equipamentoAtivoDaFicha_(ficha) {
   return saida;
 }
 
+/**
+ * Alcance efetivo é derivado do que a ficha realmente possui.
+ * Gigante/Alcance transforma Corpo a Corpo em Muito Próximo para arma,
+ * habilidade, magia ou outra característica; qualquer outro alcance fica igual.
+ */
+function alcanceEfetivoDaFicha_(ficha, alcance) {
+  let atual = String(alcance || '');
+  const mods = (typeof modificadoresDeAlcanceDeOrigem_ === 'function')
+    ? modificadoresDeAlcanceDeOrigem_(ficha) : [];
+  for (let i = 0; i < mods.length; i++) {
+    if (chaveTexto_(atual) === chaveTexto_(mods[i].de)) atual = mods[i].para;
+  }
+  return atual;
+}
+
+/**
+ * Perfis naturais/ofensivos já prontos para a ficha. Nada é rolado: o servidor
+ * só resolve Proficiência e alcance, e publica a consequência do sucesso.
+ */
+function perfisDeAtaqueDaFicha_(ficha) {
+  const crus = (typeof perfisDeAtaqueDeOrigem_ === 'function')
+    ? perfisDeAtaqueDeOrigem_(ficha) : [];
+  const prof = (typeof proficienciaDaFicha_ === 'function') ? proficienciaDaFicha_(ficha) : 1;
+  return crus.map(function (p) {
+    const q = Object.assign({}, p);
+    q.alcanceBase = p.alcance || '';
+    q.alcance = alcanceEfetivoDaFicha_(ficha, p.alcance || '');
+    if (p.dano) {
+      q.dano = Object.assign({}, p.dano);
+      q.dano.quantidade = p.dano.usaProficiencia
+        ? Math.max(1, Math.trunc(Number(prof)) || 1)
+        : Math.max(1, Math.trunc(Number(p.dano.quantidade)) || 1);
+    }
+    return q;
+  });
+}
+
 function modificadoresDerivadosDaFicha_(ficha) {
   const saida = {
     evasao: 0, limiares: 0, limiarMaior: 0, limiarGrave: 0,
@@ -539,6 +576,9 @@ function derivadosDoPersonagem_(ficha) {
     dominios: dominiosDoPersonagem_(ficha),
     caracteristicas: caracteristicasDaOrigem_(ficha).concat(caracteristicasDaClasse_(ficha)),
     bonusDeDano: bonusDeDanoDaFicha_(ficha),
+    perfisDeAtaque: perfisDeAtaqueDaFicha_(ficha),
+    modificadoresDeAlcance: (typeof modificadoresDeAlcanceDeOrigem_ === 'function')
+      ? modificadoresDeAlcanceDeOrigem_(ficha) : [],
     modificadoresDeTraco: md.tracos,
     fontesDeModificadores: md.fontes,
     esquivaDeLadinoAtiva: esquivaDeLadinoAtiva,
@@ -674,6 +714,8 @@ function aplicarDerivados_(ficha) {
   // O cliente recebe o perfil de dano já calculado pelo servidor. Qualquer
   // valor que tenha vindo no payload é sobrescrito aqui, como os outros derivados.
   ficha.bonusDeDano = d.bonusDeDano;
+  ficha.perfisDeAtaque = d.perfisDeAtaque;
+  ficha.modificadoresDeAlcance = d.modificadoresDeAlcance;
   ficha.modificadoresDeTraco = d.modificadoresDeTraco;
   ficha.fontesDeModificadores = d.fontesDeModificadores;
   ficha.esquivaDeLadinoAtiva = d.esquivaDeLadinoAtiva;

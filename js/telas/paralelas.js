@@ -51,6 +51,15 @@ export function acharParalela(ficha, filha) {
   return (ficha.fichasFilhas || []).find((f) => f.tipo === filha) || null;
 }
 
+/** Aplica somente a transformação de alcance já enviada pelo servidor. */
+function alcanceEfetivoDaParalela(ficha, alcance) {
+  let atual = String(alcance || '');
+  for (const m of ((ficha || {}).modificadoresDeAlcance || [])) {
+    if (dados.chave(atual) === dados.chave(m.de)) atual = m.para;
+  }
+  return atual;
+}
+
 /**
  * @param {{personagem:Object, filha:string, catalogo:Object, enviar:Function}} opcoes
  * `enviar` é a mesma função de ajuste da ficha em jogo: assim o toque aqui
@@ -233,7 +242,7 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
              * ladrilho do traço mostra o total — a nota diz onde procurar.
              */
             numero('Traço', ativa.modificadores.atributo, 'já somado nos traços'),
-            numero('Ataque', ativa.ataque.dano, ativa.ataque.alcance)
+            numero('Ataque', ativa.ataque.dano, alcanceEfetivoDaParalela(ficha, ativa.ataque.alcance))
           ])
           : el('p', { class: 'texto-sm paralela__aprimoramento', texto:
             'Aprimoramento: os números vêm da forma de patamar menor que ele turbina.' }),
