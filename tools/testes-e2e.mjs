@@ -564,6 +564,45 @@ try {
     }
   });
 
+  await passo('Virtuoso mostra máx 2 para Intérprete Talentoso na ficha', async () => {
+    await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+    await pagina.waitForSelector('.ficha-cartao__abrir');
+    const def = noBackend('ABAS.PERSONAGENS');
+    const linha = ambiente.contexto.lerTudo_(def)
+      .filter((l) => String(l.excluido).toUpperCase() !== 'TRUE')[0];
+    const original = linha.dados || '{}';
+    try {
+      const f = JSON.parse(original);
+      f.identidade.classe = 'Bardo';
+      f.identidade.subclasse = 'Músico Errante';
+      f.subclasseCartas = ['fundacao', 'especializacao', 'maestria'];
+      f.caracteristicas = (f.caracteristicas || []).filter((x) => (x || {}).origem !== 'subclasse');
+      f.caracteristicas.push({ nome: 'Virtuoso', origem: 'subclasse' });
+      const validada = ambiente.contexto.validarFicha_(f);
+      if (!(validada.caracteristicas || []).some((x) => x.nome === 'Virtuoso')) {
+        validada.caracteristicas.push({ nome: 'Virtuoso', origem: 'subclasse' });
+      }
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: JSON.stringify(validada) });
+      await pagina.reload({ waitUntil: 'networkidle' });
+      await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+      await abrirFichaEmJogo();
+      const dobra = pagina.locator('details.dobra').filter({ hasText: 'Marcadores' }).last();
+      if (!(await dobra.evaluate((n) => n.open))) await dobra.locator('summary').click();
+      const linhaInt = dobra.locator('.ficha__contador').filter({ hasText: 'Intérprete Talentoso' });
+      await linhaInt.waitFor({ timeout: 5000 });
+      const texto = (await linhaInt.textContent()).replace(/\s+/g, ' ');
+      if (!texto.includes('máx 2')) throw new Error('Virtuoso não subiu o teto na UI: ' + texto);
+    } finally {
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: original });
+      if (await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').count()) {
+        await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+      }
+      await pagina.reload({ waitUntil: 'networkidle' });
+      await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+      await abrirFichaEmJogo();
+    }
+  });
+
   await passo('classe e subclasse abrem o que está atrás delas (ponto 4)', async () => {
     /*
      * PONTO 4 DOS PRINTS. Classe e subclasse eram duas linhas de texto morto

@@ -38,6 +38,10 @@ counter_refs = set()
 for c in contadores.get('contadores', []):
     for k in ('nome', 'exigeCaracteristica'):
         if c.get(k): counter_names.add(str(c[k]))
+    for bloco in ('maximo', 'dado'):
+        for passo in ((c.get(bloco) or {}).get('progressao') or []):
+            if passo.get('caracteristica'):
+                counter_names.add(str(passo['caracteristica']))
     if c.get('refId'): counter_refs.add(str(c['refId']))
 
 MECH = re.compile(

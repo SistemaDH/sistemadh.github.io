@@ -131,7 +131,14 @@
         },
         {
          "nome": "Coração de Poeta",
-         "texto": "Após fazer uma jogada de ação para impressionar, persuadir ou ofender alguém, você pode gastar 1 Esperança para adicionar um d4 à jogada."
+         "texto": "Após fazer uma jogada de ação para impressionar, persuadir ou ofender alguém, você pode gastar 1 Esperança para adicionar um d4 à jogada.",
+         "uso": {
+          "custo": {
+           "esperanca": 1
+          },
+          "rotuloAtivar": "Usar Coração de Poeta · 1 Esperança",
+          "lembrete": "Role 1d4 fora do app e some o resultado à jogada de ação que acabou de fazer."
+         }
         }
        ],
        "texto": "BARD\nARTÍFICE DAS PALAVRAS\nFoundation\nSPELLCAST TRAIT: PRESENCE\nDiscurso Empolgante: Uma vez por descanso longo, você pode fazer um discurso inspirador e sincero. Todos os aliados em alcance Longínquo removem 2 Estresses.\nCoração de Poeta: Após fazer uma jogada de ação para impressionar, persuadir ou ofender alguém, você pode gastar 1 Esperança para adicionar um d4 à jogada.\nDaggerheart Compatible. Terms at Daggerheart.com",

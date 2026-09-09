@@ -203,6 +203,9 @@ for (const c of dados.classes) {
       cartaDaMao: f.uso.cartaDaMao || null,
       opcoes: f.uso.opcoes || null,
       marcaUso: f.uso.marcaUso || '',
+      rotuloAtivar: f.uso.rotuloAtivar || '',
+      lembrete: f.uso.lembrete || '',
+      reacaoEnquantoAtivo: f.uso.reacaoEnquantoAtivo || null,
       // Algumas habilidades ligam um estado persistente depois de pagar.
       estado: f.uso.estado || null
     };

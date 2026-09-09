@@ -5322,6 +5322,47 @@ teste('a carta que muda o ALVO não passa por aqui', () => {
 });
 
 
+console.log('\nLote 8 — Bardo: Coração de Poeta e Virtuoso');
+
+function fichaBardo_(subclasse) {
+  const catalogo = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/cartas-dominio.json'), 'utf8'));
+  const cartas = catalogo.cartas
+    .filter((c) => c.nivel === 1 && (c.dominio === 'GRACE' || c.dominio === 'CODEX'))
+    .slice(0, 2).map((c) => c.id);
+  return contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Bardo de Teste', classe: 'Bardo', subclasse,
+    ancestralidade: 'Humano', comunidade: 'Highborne',
+    cartas,
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+}
+
+teste('Coração de Poeta cobra 1 Esperança e deixa o d4 manual', () => {
+  const f = fichaBardo_('Artífice das Palavras');
+  f.recursos.esperanca = 2;
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Coração de Poeta' }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 1, 'deve cobrar exatamente 1 Esperança');
+  verdade(/1d4 fora do app/.test(r.mudancas[0].aviso || ''), JSON.stringify(r.mudancas[0]));
+  f.recursos.esperanca = 0;
+  const sem = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Coração de Poeta' }]);
+  igual(sem.erros.length, 1);
+  igual(f.recursos.esperanca, 0, 'recusa não pode inventar Esperança negativa');
+});
+
+teste('Virtuoso sobe para 2 o teto de Intérprete Talentoso, sem afetar a fundação sozinha', () => {
+  const chave = 'uso:bardo-musico-errante:interprete-talentoso';
+  const base = fichaBardo_('Músico Errante');
+  igual(contexto.maximoDoContador_(chave, base), 1, 'fundação: uma vez por descanso longo');
+  base.caracteristicas = (base.caracteristicas || []).concat([{ nome: 'Virtuoso', origem: 'subclasse' }]);
+  igual(contexto.maximoDoContador_(chave, base), 2, 'maestria Virtuoso: duas vezes');
+  const um = contexto.aplicarAjustes_(base, [{ tipo: 'contador', chave, valor: 1 }]);
+  igual(um.erros, []);
+  const dois = contexto.aplicarAjustes_(base, [{ tipo: 'contador', chave, valor: 2 }]);
+  igual(dois.erros, []);
+  igual(base.contadores[chave].valor, 2);
+});
+
 console.log('\nLote 8 — comunidades do Core');
 
 function fichaComunidade_(comunidade, nivel) {

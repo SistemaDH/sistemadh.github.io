@@ -4060,7 +4060,16 @@ export async function carregarCatalogo() {
     const max = c.maximo || { tipo: 'aberto' };
     const nivel = Number((ficha.identidade || {}).nivel) || 1;
 
-    if (max.tipo === 'fixo') return Number(max.valor) || 0;
+    if (max.tipo === 'fixo') {
+      let valor = Number(max.valor) || 0;
+      const temCaracteristica = (nome) => ((ficha || {}).caracteristicas || []).some((f) =>
+        dados.chave((f && typeof f === 'object') ? (f.nome || f.id) : f) === dados.chave(nome));
+      for (const passo of (max.progressao || [])) {
+        if (passo.nivelMinimo && nivel >= passo.nivelMinimo) valor = Number(passo.valor) || 0;
+        if (passo.caracteristica && temCaracteristica(passo.caracteristica)) valor = Number(passo.valor) || 0;
+      }
+      return valor;
+    }
     if (max.tipo === 'nivel') return nivel;
     if (max.tipo === 'proficiencia') return Number((ficha.recursos || {}).proficiencia) || 1;
 

@@ -481,7 +481,14 @@
    "tipo": "usos",
    "maximo": {
     "tipo": "fixo",
-    "valor": 1
+    "valor": 1,
+    "progressao": [
+     {
+      "caracteristica": "Virtuoso",
+      "valor": 2,
+      "motivo": "Maestria do Músico Errante: cada música pode ser executada duas vezes por descanso longo."
+     }
+    ]
    },
    "recarregaEm": [],
    "zeraEm": [

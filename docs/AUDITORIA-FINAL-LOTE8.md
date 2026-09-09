@@ -5,7 +5,7 @@
 
 ## Resumo numérico
 
-- Classes/subclasses: **99 características**; **41** candidatas sem sinal de automação.
+- Classes/subclasses: **99 características**; **37** candidatas sem sinal de automação.
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **161** candidatas sem sinal de automação específica; **17** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **88** ocorrências candidatas ativas/condicionais.
@@ -14,10 +14,10 @@
 
 ### Distribuição — classes/subclasses
 
-- candidato sem sinal de automação: **41**
-- estruturada/contador: **37**
+- candidato sem sinal de automação: **37**
+- estruturada/contador: **42**
 - predominantemente narrativo/sem gatilho detectado: **7**
-- referência específica no motor: **14**
+- referência específica no motor: **13**
 
 ### Distribuição — comunidades
 
@@ -41,8 +41,6 @@
 | Classe | Subclasse | Estágio | Característica | Trecho |
 |---|---|---|---|---|
 | Bardo | Músico Errante | especializacao | Maestro | Suas canções de motivação fortalecem a coragem de quem as ouve. Quando você dá um Dado de Reunião a um aliado, ele pode imediatamente ganhar 1 Esperança ou remover 1 Est… |
-| Bardo | Músico Errante | maestria | Virtuoso | Você está entre os maiores na sua arte e sua habilidade é ilimitada. Você pode executar cada uma das músicas da sua habilidade Intérprete Talentoso duas vezes ao invés d… |
-| Bardo | Artífice das Palavras | fundacao | Coração de Poeta | Após fazer uma jogada de ação para impressionar, persuadir ou ofender alguém, você pode gastar 1 Esperança para adicionar um d4 à jogada. |
 | Druida | Guardião dos Elementos | fundacao | Encarnar Elemental | Marque 1 Estresse para Canalizar um dos seguintes elementos até sofrer dano Severo ou até seu próximo descanso: • Fogo: Quando um adversário em alcance Corpo a Corpo cau… |
 | Druida | Guardião dos Elementos | maestria | Domínio Elemental | Você incorpora ainda mais seu elemento. Enquanto estiver Canalizando, você ganha o seguinte benefício: • Fogo: Você ganha +1 de bônus na sua Proficiência para ataques e … |
 | Druida | Guardião da Renovação | especializacao | Alcance Regenerativo | Você pode atingir criaturas em alcance Muito Próximo com sua habilidade Regeneração. |
@@ -63,7 +61,6 @@
 | Ladino | Caminhante Noturno | fundacao | Passo Sombrio | Você pode se mover de sombra em sombra. Quando se mover para uma área de escuridão ou uma sombra projetada por outra criatura ou objeto, pode marcar 1 Estresse para desa… |
 | Ladino | Caminhante Noturno | especializacao | Nuvem Sombria | Faça uma Jogada de Magia (15). Em caso de sucesso, crie uma nuvem sombria temporária que cobre qualquer área em alcance Próximo. Quem estiver dentro dessa nuvem não pode… |
 | Ladino | Caminhante Noturno | maestria | Ato de Desaparecimento | Marque 1 Estresse para ficar Encoberto a qualquer momento. Enquanto estiver Encoberto por essa habilidade, você automaticamente remove a condição Imobilizado, se estiver… |
-| Ladino | Sindicato | maestria | Apoio Confiável | Você pode usar sua habilidade Contatos em Todo Lugar três vezes por sessão. As opções a seguir são adicionadas à lista de benefícios que você pode escolher ao usar essa … |
 | Mago | Escola do Conhecimento | fundacao | Preparado | Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso. |
 | Mago | Escola do Conhecimento | especializacao | Realizado | Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso. |
 | Mago | Escola do Conhecimento | maestria | Brilhante | Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso. |
@@ -76,7 +73,6 @@
 | Caçador | Explorador | especializacao | Predador Elusivo | Quando seu Foco fizer um ataque contra você, você ganha +2 de bônus na sua Evasão contra esse ataque. |
 | Caçador | Explorador | maestria | Predador de Topo | Antes de fazer uma jogada de ataque contra seu Foco, você pode gastar 1 Esperança. Em um ataque bem-sucedido, você remove 1 Medo da reserva de Medo do Mestre. |
 | Serafim | Portador Divino | fundacao | Arma Espiritual | Quando você estiver com uma arma equipada com alcance Corpo a Corpo ou Muito Próximo, ela pode voar de sua mão para atacar um adversário em alcance Próximo e depois reto… |
-| Serafim | Portador Divino | especializacao | Devoto | Quando você rolar seus Dados de Oração, pode rolar um dado adicional e descartar o resultado mais baixo. Além disso, pode usar a habilidade Toque Moderado duas vezes em … |
 | Serafim | Portador Divino | maestria | Ressonância Sagrada | Quando você rolar dano para a habilidade Arma Espiritual, se algum dos resultados dos dados for igual, dobre o valor de cada dado correspondente. Por exemplo, se você ro… |
 | Serafim | Sentinela Alado | fundacao | Asas de Luz | Você pode voar. Enquanto estiver voando, pode fazer o seguinte: • Marque 1 Estresse para pegar e carregar outra criatura disposta de tamanho aproximado ao seu ou menor. … |
 | Serafim | Sentinela Alado | especializacao | Vulto Etéreo | Seu vulto sobrenatural inspira admiração e medo. Enquanto estiver voando, você tem vantagem em Jogadas de Presença. Quando tiver sucesso com Esperança em uma Jogada de P… |

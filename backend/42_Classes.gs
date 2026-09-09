@@ -147,6 +147,24 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "cartaDaMao": null,
     "opcoes": null,
     "marcaUso": "",
+    "rotuloAtivar": "",
+    "lembrete": "",
+    "reacaoEnquantoAtivo": null,
+    "estado": null
+  },
+  "Coração de Poeta": {
+    "classe": "bardo",
+    "origem": "subclasse",
+    "custo": {
+      "esperanca": 1
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "Usar Coração de Poeta · 1 Esperança",
+    "lembrete": "Role 1d4 fora do app e some o resultado à jogada de ação que acabou de fazer.",
+    "reacaoEnquantoAtivo": null,
     "estado": null
   },
   "Magia Volátil": {
@@ -159,6 +177,9 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "cartaDaMao": null,
     "opcoes": null,
     "marcaUso": "",
+    "rotuloAtivar": "",
+    "lembrete": "",
+    "reacaoEnquantoAtivo": null,
     "estado": null
   },
   "Canalizar Poder Bruto": {
@@ -182,6 +203,9 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
       }
     ],
     "marcaUso": "uso:feiticeiro:canalizar-poder-bruto",
+    "rotuloAtivar": "",
+    "lembrete": "",
+    "reacaoEnquantoAtivo": null,
     "estado": null
   },
   "Linha de Frente": {
@@ -194,6 +218,9 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "cartaDaMao": null,
     "opcoes": null,
     "marcaUso": "",
+    "rotuloAtivar": "",
+    "lembrete": "",
+    "reacaoEnquantoAtivo": null,
     "estado": null
   },
   "Nêmesis": {
@@ -209,6 +236,9 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "cartaDaMao": null,
     "opcoes": null,
     "marcaUso": "",
+    "rotuloAtivar": "",
+    "lembrete": "",
+    "reacaoEnquantoAtivo": null,
     "estado": null
   },
   "Sem Piedade": {
@@ -221,6 +251,9 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "cartaDaMao": null,
     "opcoes": null,
     "marcaUso": "",
+    "rotuloAtivar": "",
+    "lembrete": "",
+    "reacaoEnquantoAtivo": null,
     "estado": null
   },
   "Esquiva de Ladino": {
@@ -233,6 +266,9 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "cartaDaMao": null,
     "opcoes": null,
     "marcaUso": "",
+    "rotuloAtivar": "",
+    "lembrete": "",
+    "reacaoEnquantoAtivo": null,
     "estado": {
       "chave": "estado:ladino:esquiva",
       "valor": 1,
@@ -250,6 +286,9 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "cartaDaMao": null,
     "opcoes": null,
     "marcaUso": "",
+    "rotuloAtivar": "",
+    "lembrete": "",
+    "reacaoEnquantoAtivo": null,
     "estado": null
   },
   "Segurem Eles": {
@@ -262,6 +301,9 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "cartaDaMao": null,
     "opcoes": null,
     "marcaUso": "",
+    "rotuloAtivar": "",
+    "lembrete": "",
+    "reacaoEnquantoAtivo": null,
     "estado": null
   },
   "Marca da Presa": {
@@ -277,6 +319,9 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "cartaDaMao": null,
     "opcoes": null,
     "marcaUso": "",
+    "rotuloAtivar": "",
+    "lembrete": "",
+    "reacaoEnquantoAtivo": null,
     "estado": null
   },
   "Alicerce da Vida": {
@@ -289,6 +334,9 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "cartaDaMao": null,
     "opcoes": null,
     "marcaUso": "",
+    "rotuloAtivar": "",
+    "lembrete": "",
+    "reacaoEnquantoAtivo": null,
     "estado": null
   }
 };
