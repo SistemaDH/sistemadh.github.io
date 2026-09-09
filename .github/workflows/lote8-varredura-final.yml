@@ -20,6 +20,7 @@ jobs:
       - name: Gerar inventário de pendências
         run: |
           python3 tools/auditar-pendencias-lote8.py > docs/AUDITORIA-FINAL-LOTE8.md
+          python3 -c "from pathlib import Path; p=Path('docs/AUDITORIA-FINAL-LOTE8.md'); p.write_text(p.read_text(encoding='utf-8').rstrip() + '\n', encoding='utf-8')"
           test -s docs/AUDITORIA-FINAL-LOTE8.md
           sed -n '1,45p' docs/AUDITORIA-FINAL-LOTE8.md
 
