@@ -53,4 +53,24 @@ t = t.replace('igual(Object.keys(CONTADORES).length, 67);', 'igual(Object.keys(C
 t = t.replace("igual(porOrigem['carta-dominio'], 35);", "igual(porOrigem['carta-dominio'], 37);", 1)
 tp.write_text(t, encoding='utf-8')
 
-print('Contadores de Manobras Ágeis/Ferocidade catalogados e expectativa estrutural atualizada para 69.')
+# backend/48_Criacao.gs é gerado. A primeira versão do sublote aplicava o
+# bônus de Evasão diretamente nele; mova a regra para a fonte canônica para
+# que conferir-gerados valide o mesmo comportamento que os testes exercitam.
+gp = R / 'tools/gerar-48-criacao.mjs'
+g = gp.read_text(encoding='utf-8')
+antiga = "  if (evasao !== null) evasao += (b.evasao || 0) + bonusDaForma + bonusEsquivaLadino + md.evasao;\n\n  const bonusConjuracao"
+nova = "  const bonusEvasaoCarta = (typeof bonusEvasaoDeCartas_ === 'function') ? bonusEvasaoDeCartas_(ficha) : 0;\n  if (evasao !== null) evasao += (b.evasao || 0) + bonusDaForma + bonusEsquivaLadino + md.evasao + bonusEvasaoCarta;\n\n  const bonusConjuracao"
+if 'const bonusEvasaoCarta' not in g:
+    if antiga not in g:
+        raise SystemExit('âncora de Evasão não encontrada em gerar-48-criacao.mjs')
+    g = g.replace(antiga, nova, 1)
+
+ret_antiga = "    evasao: evasao,\n    bonusConjuracao: bonusConjuracao,"
+ret_nova = "    evasao: evasao,\n    bonusEvasaoCarta: bonusEvasaoCarta,\n    bonusConjuracao: bonusConjuracao,"
+if 'bonusEvasaoCarta: bonusEvasaoCarta' not in g:
+    if ret_antiga not in g:
+        raise SystemExit('âncora de retorno de Evasão não encontrada em gerar-48-criacao.mjs')
+    g = g.replace(ret_antiga, ret_nova, 1)
+gp.write_text(g, encoding='utf-8')
+
+print('Osso N1-N4: contadores, expectativa estrutural e gerador 48 atualizados.')
