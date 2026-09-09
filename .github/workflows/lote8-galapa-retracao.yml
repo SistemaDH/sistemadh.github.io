@@ -53,9 +53,9 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git rm tools/lote8-galapa-retracao.py
-          git rm tools/lote8-fix-galapa-transform.py
-          git rm .github/workflows/lote8-galapa-retracao.yml
+          git rm -f tools/lote8-galapa-retracao.py
+          git rm -f tools/lote8-fix-galapa-transform.py
+          git rm -f .github/workflows/lote8-galapa-retracao.yml
           git add -A
           git diff --cached --check
           git commit -m 'feat: automatizar Retração de Galapa [lote8-generated]'
