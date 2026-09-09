@@ -30,7 +30,20 @@ jobs:
           git diff --check
 
       - name: Testes backend
-        run: node tools/testes-backend.mjs
+        id: backend
+        continue-on-error: true
+        run: node tools/testes-backend.mjs > /tmp/lote8-backend.log 2>&1
+
+      - name: Capturar falha backend
+        if: steps.backend.outcome == 'failure'
+        run: |
+          tail -n 250 /tmp/lote8-backend.log > tools/lote8-backend-falha.txt
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tools/lote8-backend-falha.txt
+          git commit -m 'ci: registrar falha backend do ciclo lote 8'
+          git push origin HEAD:'ediçãoclaude'
+          exit 1
 
       - name: Instalar Playwright
         run: |
