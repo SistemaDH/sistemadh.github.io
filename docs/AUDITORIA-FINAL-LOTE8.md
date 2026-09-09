@@ -6,11 +6,11 @@
 ## Resumo numérico
 
 - Classes/subclasses: **99 características**; **41** candidatas sem sinal de automação.
-- Comunidades: **9 características**; **9** candidatas sem sinal de automação.
+- Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **161** candidatas sem sinal de automação específica; **17** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **88** ocorrências candidatas ativas/condicionais.
 - Loot/consumíveis com texto mecânico detectado: **81**.
-- Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **11** linhas, incluindo histórico já resolvido.
+- Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **12** linhas, incluindo histórico já resolvido.
 
 ### Distribuição — classes/subclasses
 
@@ -21,7 +21,7 @@
 
 ### Distribuição — comunidades
 
-- candidato sem sinal de automação: **9**
+- estruturada/contador: **9**
 
 ### Distribuição — cartas
 
@@ -86,15 +86,6 @@
 
 | Comunidade | Característica | Trecho |
 |---|---|---|
-| Highborne | Privilégio | Você tem vantagem em jogadas para socializar com nobres, negociar preços ou usar sua reputação para conseguir o que deseja. |
-| Loreborne | Bem-Instruído | Você tem vantagem em jogadas que envolvam a história, cultura ou política de uma pessoa ou lugar proeminente. |
-| Orderborne | Dedicado | Registre três provérbios ou valores que sua criação lhe ensinou. Uma vez por descanso, ao descrever como você está incorporando um desses princípios por meio de sua ação… |
-| Ridgeborne | Firme | Você tem vantagem em jogadas para atravessar penhascos e bordas perigosas, navegar por ambientes hostis e usar seus conhecimentos de sobrevivência. |
-| Seaborne | Conhece a Maré | Você consegue sentir o fluxo e refluxo da vida. Quando rolar com Medo, coloque uma ficha nesta carta. Você pode manter um número de fichas igual ao seu nível. Antes de f… |
-| Slyborne | Canalha | Você tem vantagem em jogadas para negociar com criminosos, detectar mentiras ou encontrar um lugar seguro para se esconder. |
-| Underborne | Vida na Penumbra | Quando estiver em uma área com pouca luz ou sombras densas, você tem vantagem em jogadas para se esconder, investigar ou perceber detalhes dentro dessa área. |
-| Wanderborne | Mochila Nômade | Adicione uma Mochila Nômade ao seu inventário. Uma vez por sessão, você pode gastar 1 Esperança para vasculhar essa mochila e puxar um item mundano que seja útil para a … |
-| Wildborne | Pé-Leve | Seu movimento é naturalmente silencioso. Você tem vantagem em jogadas para se mover sem ser ouvido. |
 
 ## Candidatos — cartas de domínio sem sinal de automação específica
 
@@ -412,6 +403,7 @@ Estas linhas misturam histórico resolvido e trabalho ainda aberto; servem para 
 - L382: Ponto ainda aberto de regra: com Evolução, o Estresse adicional das híbridas continua sendo cobrado. A decisão está centralizada em `custoDeEntrarNaForma_`.
 - L435: Lote 8 em andamento: fechar integralmente livro básico + errata e automatizar todas as mecânicas determinísticas possíveis, preservando apenas rolagens de dados como entrada manual.
 - L466: Com este checkpoint, Broquel/Deflecting, Chicote/Alarmante e as 12 Cadeiras de Rodas de Combate estão materializados e validados na branch. O próximo bloco é armas de reserva/troca de armas. Ainda não houve deploy, PR ou mudança de `ENGINE_COMMIT` do Lote 8.
+- L472: O bloco de ancestralidades do Lote 8 está fechado. O último efeito pendente, **Inabalável (Firbolg, p.60)**, foi materializado no commit funcional `8213957` e validado no GitHub Actions run `34316593882`:
 
 ## Regra para a próxima etapa
 

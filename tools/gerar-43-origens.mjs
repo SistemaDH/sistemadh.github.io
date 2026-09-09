@@ -81,6 +81,12 @@ for (const a of anc.ancestralidades) {
     if (f.interceptaEstresse) interceptadoresDeEstresseDeOrigem[f.nome] = f.interceptaEstresse;
   }
 }
+for (const c of com.comunidades || []) {
+  const f = c.caracteristica || {};
+  if (f.efeitoCriacao) efeitosDeCriacaoDeOrigem[f.nome] = f.efeitoCriacao;
+  if (f.efeitoDescanso) efeitosDeDescansoDeOrigem[f.nome] = f.efeitoDescanso;
+  if (f.efeitoSessao) efeitosDeSessaoDeOrigem[f.nome] = f.efeitoSessao;
+}
 
 /* Efeitos numéricos que a ficha consegue aplicar sem escolha/rolagem. */
 const efeitosDerivadosDeOrigem = {};

@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 41 contadores: 17 de carta, 20 de classe/subclasse e 4 de ancestralidade', () => {
+teste('o catálogo tem 44 contadores: 17 de carta, 20 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,13 +1561,14 @@ teste('o catálogo tem 41 contadores: 17 de carta, 20 de classe/subclasse e 4 de
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 41);
+  igual(Object.keys(CONTADORES).length, 44);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 17);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 15);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
+  igual(porOrigem['caracteristica-comunidade'], 3);
 });
 
 teste('"uma vez por" conta o uso GASTO, e o gatilho certo o apaga', () => {
@@ -5320,6 +5321,92 @@ teste('a carta que muda o ALVO não passa por aqui', () => {
   verdade(/ALVO/.test(mensagem), 'o erro explica onde a regra mora: ' + mensagem);
 });
 
+
+console.log('\nLote 8 — comunidades do Core');
+
+function fichaComunidade_(comunidade, nivel) {
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Comunidade', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade: 'Humano', comunidade,
+    cartas: ['blade-levantar-se', 'blade-nao-foi-suficiente'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  if (nivel && nivel > 1) f.identidade.nivel = nivel;
+  contexto.aplicarDerivados_(f);
+  f.recursos.esperanca = f.recursos.esperancaMaxima;
+  return f;
+}
+
+teste('as seis vantagens situacionais de comunidade ficam explicitamente manuais', () => {
+  const ids = ['highborne', 'loreborne', 'ridgeborne', 'slyborne', 'underborne', 'wildborne'];
+  for (const id of ids) {
+    const dadosComunidades = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/comunidades.json'), 'utf8'));
+    const fonte = dadosComunidades.comunidades.find((x) => x.id === id).caracteristica;
+    igual(fonte.rolagemManual.tipo, 'vantagem-situacional', id);
+    igual(fonte.rolagemManual.aplicacao, 'manual', id);
+    verdade(/contexto ficcional|situaç/.test(fonte.rolagemManual.motivoManual + fonte.rolagemManual.lembrete), id);
+  }
+});
+
+teste('Dedicado registra 1 uso por descanso sem rolar o d20 no app', () => {
+  const f = fichaComunidade_('Orderborne');
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Dedicado' }]);
+  igual(r.erros, []);
+  igual(f.contadores['uso:comunidade:orderborne:dedicado'].valor, 1);
+  igual(f.recursos.estresseMarcado, 0);
+  verdade(/d20 fora do app/.test(r.mudancas[0].aviso || ''), JSON.stringify(r.mudancas[0]));
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Dedicado' }]).erros.length, 1);
+  contexto.aplicarGatilhoContadores_(f, 'descanso');
+  verdade(!f.contadores['uso:comunidade:orderborne:dedicado']);
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Dedicado' }]).erros, []);
+});
+
+teste('Conhece a Maré tem teto igual ao nível, gasto manual e zera no fim da sessão', () => {
+  const f = fichaComunidade_('Seaborne', 5);
+  const chave = 'comunidade:seaborne:conhece-a-mare';
+  igual(contexto.maximoDoContador_(chave, f), 5);
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'contador', chave, valor: 5 }]).erros, []);
+  igual(f.contadores[chave].valor, 5);
+  const gasto = contexto.aplicarAjustes_(f, [{ tipo: 'contador', chave, valor: 2 }]);
+  igual(gasto.erros, []);
+  igual(f.contadores[chave].valor, 2);
+  const acima = contexto.aplicarAjustes_(f, [{ tipo: 'contador', chave, valor: 6 }]);
+  igual(acima.erros, []);
+  igual(f.contadores[chave].valor, 5, 'o contador deve ser cortado no teto do nível');
+  verdade(acima.mudancas.length === 1, JSON.stringify(acima));
+  contexto.aplicarGatilhoContadores_(f, 'fim-de-sessao');
+  verdade(!f.contadores[chave]);
+
+  const outro = fichaComunidade_('Highborne', 5);
+  outro.contadores[chave] = { valor: 3 };
+  contexto.validarContadores_(outro);
+  verdade(!outro.contadores[chave], 'contador Seaborne não pode vazar para outra comunidade');
+});
+
+teste('Mochila Nômade entra na criação e o uso custa 1 Esperança uma vez por sessão', () => {
+  const f = fichaComunidade_('Wanderborne');
+  verdade((f.inventario || []).some((x) => {
+    const nome = (x && typeof x === 'object') ? x.nome : x;
+    return contexto.chaveTexto_(nome) === contexto.chaveTexto_('Mochila Nômade');
+  }), JSON.stringify(f.inventario));
+  f.recursos.esperanca = 3;
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Mochila Nômade' }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 2);
+  igual(f.contadores['uso:comunidade:wanderborne:mochila-nomade'].valor, 1);
+  verdade(/Mestre/.test(r.mudancas[0].aviso || ''), JSON.stringify(r.mudancas[0]));
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Mochila Nômade' }]).erros.length, 1);
+  contexto.aplicarGatilhoContadores_(f, 'fim-de-sessao');
+  verdade(!f.contadores['uso:comunidade:wanderborne:mochila-nomade']);
+});
+
+teste('habilidades de comunidade não podem ser roubadas por outra comunidade', () => {
+  const f = fichaComunidade_('Highborne');
+  f.recursos.esperanca = 6;
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Dedicado' }]).erros.length, 1);
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Mochila Nômade' }]).erros.length, 1);
+  igual(f.recursos.esperanca, 6);
+});
 
 console.log('\nLote 8 — ancestralidades ativas, custos e limites');
 

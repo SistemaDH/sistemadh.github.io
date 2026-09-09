@@ -50,6 +50,12 @@ const EFEITOS_DE_CRIACAO_DE_ORIGEM = {
     "quantidade": 1,
     "bonus": 1,
     "fonte": "DH-DigitalRegras.pdf p.54"
+  },
+  "Mochila Nômade": {
+    "tipo": "inventario",
+    "item": "Mochila Nômade",
+    "quantidade": 1,
+    "fonte": "DH-DigitalRegras.pdf p.81"
   }
 };
 
@@ -458,6 +464,30 @@ const HABILIDADES_DE_ORIGEM_COM_USO = {
     "rotuloAtivar": "",
     "reacaoEnquantoAtivo": null,
     "lembrete": "Use Língua Comprida como arma de Finesse em alcance Próximo; role o ataque e o dano manualmente."
+  },
+  "Dedicado": {
+    "origem": "comunidade",
+    "refId": "orderborne",
+    "custo": {},
+    "alvo": null,
+    "marcaUso": "uso:comunidade:orderborne:dedicado",
+    "estado": null,
+    "rotuloAtivar": "Usar Dedicado",
+    "reacaoEnquantoAtivo": null,
+    "lembrete": "Depois de descrever como incorpora um de seus três princípios, role um d20 fora do app como seu Dado de Esperança nesta jogada."
+  },
+  "Mochila Nômade": {
+    "origem": "comunidade",
+    "refId": "wanderborne",
+    "custo": {
+      "esperanca": 1
+    },
+    "alvo": null,
+    "marcaUso": "uso:comunidade:wanderborne:mochila-nomade",
+    "estado": null,
+    "rotuloAtivar": "Vasculhar Mochila Nômade · 1 Esperança",
+    "reacaoEnquantoAtivo": null,
+    "lembrete": "Defina com o Mestre um item mundano útil e registre o item encontrado no inventário. O app não escolhe o item por você."
   }
 };
 

@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 41 cartas e características mandam
+ *  O problema que este arquivo resolve: 44 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -81,6 +81,9 @@ const CONTADORES = {
   "uso:ancestralidade:goblin:sentido-de-perigo": { origem: "caracteristica-ancestralidade", refId: "goblin", nome: "Sentido de Perigo", rotulo: "já usou", tipo: "usos", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], exigeCaracteristica: "Sentido de Perigo" },
   "estado:ancestralidade:galapa:retracao": { origem: "caracteristica-ancestralidade", refId: "galapa", nome: "Retrair", rotulo: "ativa", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], exigeCaracteristica: "Retrair" },
   "estado:ancestralidade:fada:voando": { origem: "caracteristica-ancestralidade", refId: "fada", nome: "Asas", rotulo: "voando", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], exigeCaracteristica: "Asas" },
+  "uso:comunidade:orderborne:dedicado": { origem: "caracteristica-comunidade", refId: "orderborne", nome: "Dedicado", rotulo: "uso neste descanso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], exigeCaracteristica: "Dedicado" },
+  "comunidade:seaborne:conhece-a-mare": { origem: "caracteristica-comunidade", refId: "seaborne", nome: "Conhece a Maré", rotulo: "fichas da maré", tipo: "marcadores", maximo: {"tipo":"nivel"}, zeraEm: ["fim-de-sessao"], recarregaEm: [], exigeCaracteristica: "Conhece a Maré" },
+  "uso:comunidade:wanderborne:mochila-nomade": { origem: "caracteristica-comunidade", refId: "wanderborne", nome: "Mochila Nômade", rotulo: "uso nesta sessão", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-de-sessao"], recarregaEm: [], exigeCaracteristica: "Mochila Nômade" },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -126,6 +129,9 @@ const CONTADOR_ALIASES = {
   "uso:ancestralidade:goblin:sentido-de-perigo": ["Sentido de Perigo"],
   "estado:ancestralidade:galapa:retracao": ["Retrair"],
   "estado:ancestralidade:fada:voando": ["Asas"],
+  "uso:comunidade:orderborne:dedicado": ["Dedicado"],
+  "comunidade:seaborne:conhece-a-mare": ["Conhece a Maré"],
+  "uso:comunidade:wanderborne:mochila-nomade": ["Mochila Nômade"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

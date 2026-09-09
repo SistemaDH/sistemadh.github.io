@@ -883,6 +883,62 @@
    "exigeCaracteristica": "Asas",
    "observacao": "Estado persistente e gratuito: começa a voar e termina ao pousar. Enquanto ativo, cada reação após um ataque pode marcar 1 Estresse para +2 Evasão somente contra aquele ataque.",
    "fonte": "DH-DigitalRegras.pdf p.57 — Fada, Asas."
+  },
+  {
+   "chave": "uso:comunidade:orderborne:dedicado",
+   "origem": "caracteristica-comunidade",
+   "refId": "orderborne",
+   "nome": "Dedicado",
+   "rotulo": "uso neste descanso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "exigeCaracteristica": "Dedicado",
+   "observacao": "Registra o uso; o d20 continua manual.",
+   "fonte": "DH-DigitalRegras.pdf p.76"
+  },
+  {
+   "chave": "comunidade:seaborne:conhece-a-mare",
+   "origem": "caracteristica-comunidade",
+   "refId": "seaborne",
+   "nome": "Conhece a Maré",
+   "rotulo": "fichas da maré",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "nivel"
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "fim-de-sessao"
+   ],
+   "exigeCaracteristica": "Conhece a Maré",
+   "observacao": "Some +1 manualmente quando rolar com Medo; antes de uma jogada de ação, gaste qualquer quantidade para +1 por ficha.",
+   "fonte": "DH-DigitalRegras.pdf p.78"
+  },
+  {
+   "chave": "uso:comunidade:wanderborne:mochila-nomade",
+   "origem": "caracteristica-comunidade",
+   "refId": "wanderborne",
+   "nome": "Mochila Nômade",
+   "rotulo": "uso nesta sessão",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "fim-de-sessao"
+   ],
+   "exigeCaracteristica": "Mochila Nômade",
+   "observacao": "Registra o uso; o Mestre define o item mundano encontrado.",
+   "fonte": "DH-DigitalRegras.pdf p.81"
   }
  ]
 }

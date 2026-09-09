@@ -19,7 +19,13 @@
    ],
    "caracteristica": {
     "nome": "Privilégio",
-    "texto": "Você tem vantagem em jogadas para socializar com nobres, negociar preços ou usar sua reputação para conseguir o que deseja."
+    "texto": "Você tem vantagem em jogadas para socializar com nobres, negociar preços ou usar sua reputação para conseguir o que deseja.",
+    "rolagemManual": {
+     "tipo": "vantagem-situacional",
+     "aplicacao": "manual",
+     "lembrete": "Vantagem em jogadas para socializar com nobres, negociar preços ou usar sua reputação, quando a situação descrita na regra se aplicar.",
+     "motivoManual": "O app não conhece o contexto ficcional da jogada e não rola dados."
+    }
    },
    "caracteristicaNoLivro": {
     "nome": "Privilégio",
@@ -43,7 +49,13 @@
    "adjetivos": [],
    "caracteristica": {
     "nome": "Bem-Instruído",
-    "texto": "Você tem vantagem em jogadas que envolvam a história, cultura ou política de uma pessoa ou lugar proeminente."
+    "texto": "Você tem vantagem em jogadas que envolvam a história, cultura ou política de uma pessoa ou lugar proeminente.",
+    "rolagemManual": {
+     "tipo": "vantagem-situacional",
+     "aplicacao": "manual",
+     "lembrete": "Vantagem em jogadas que envolvam história, cultura ou política de pessoa ou lugar proeminente, quando a situação se aplicar.",
+     "motivoManual": "O app não conhece o contexto ficcional da jogada e não rola dados."
+    }
    },
    "caracteristicaNoLivro": null,
    "imagem": "assets/cartas/comunidades/Loreborne.png",
@@ -71,7 +83,19 @@
    ],
    "caracteristica": {
     "nome": "Dedicado",
-    "texto": "Registre três provérbios ou valores que sua criação lhe ensinou. Uma vez por descanso, ao descrever como você está incorporando um desses princípios por meio de sua ação atual, você pode rolar um d20 como seu Dado de Esperança."
+    "texto": "Registre três provérbios ou valores que sua criação lhe ensinou. Uma vez por descanso, ao descrever como você está incorporando um desses princípios por meio de sua ação atual, você pode rolar um d20 como seu Dado de Esperança.",
+    "uso": {
+     "custo": {},
+     "marcaUso": "uso:comunidade:orderborne:dedicado",
+     "rotuloAtivar": "Usar Dedicado",
+     "lembrete": "Depois de descrever como incorpora um de seus três princípios, role um d20 fora do app como seu Dado de Esperança nesta jogada."
+    },
+    "rolagemManual": {
+     "tipo": "substituir-dado-esperanca",
+     "dado": "d20",
+     "aplicacao": "manual",
+     "lembrete": "A mesa rola o d20; o app apenas registra o uso uma vez por descanso."
+    }
    },
    "caracteristicaNoLivro": {
     "nome": "Dedicado",
@@ -103,7 +127,13 @@
    ],
    "caracteristica": {
     "nome": "Firme",
-    "texto": "Você tem vantagem em jogadas para atravessar penhascos e bordas perigosas, navegar por ambientes hostis e usar seus conhecimentos de sobrevivência."
+    "texto": "Você tem vantagem em jogadas para atravessar penhascos e bordas perigosas, navegar por ambientes hostis e usar seus conhecimentos de sobrevivência.",
+    "rolagemManual": {
+     "tipo": "vantagem-situacional",
+     "aplicacao": "manual",
+     "lembrete": "Vantagem em jogadas para atravessar terreno perigoso, navegar ambiente hostil ou usar conhecimentos de sobrevivência, quando a situação se aplicar.",
+     "motivoManual": "O app não conhece o contexto ficcional da jogada e não rola dados."
+    }
    },
    "caracteristicaNoLivro": {
     "nome": "Firmeza",
@@ -134,7 +164,13 @@
    ],
    "caracteristica": {
     "nome": "Conhece a Maré",
-    "texto": "Você consegue sentir o fluxo e refluxo da vida. Quando rolar com Medo, coloque uma ficha nesta carta. Você pode manter um número de fichas igual ao seu nível. Antes de fazer uma jogada de ação, pode gastar qualquer número dessas fichas para ganhar +1 de bônus na jogada para cada ficha gasta. Ao final de cada sessão, descarte todas as fichas não utilizadas."
+    "texto": "Você consegue sentir o fluxo e refluxo da vida. Quando rolar com Medo, coloque uma ficha nesta carta. Você pode manter um número de fichas igual ao seu nível. Antes de fazer uma jogada de ação, pode gastar qualquer número dessas fichas para ganhar +1 de bônus na jogada para cada ficha gasta. Ao final de cada sessão, descarte todas as fichas não utilizadas.",
+    "contadorManual": {
+     "chave": "comunidade:seaborne:conhece-a-mare",
+     "gatilhoGanhar": "Depois de uma jogada com Medo, acrescente 1 ficha manualmente.",
+     "gasto": "Antes de uma jogada de ação, remova qualquer número de fichas e some +1 por ficha.",
+     "motivoManual": "O app não rola os Dados de Dualidade nem conhece o resultado da jogada sem entrada da mesa."
+    }
    },
    "caracteristicaNoLivro": {
     "nome": "Know the Tide",
@@ -166,7 +202,13 @@
    ],
    "caracteristica": {
     "nome": "Canalha",
-    "texto": "Você tem vantagem em jogadas para negociar com criminosos, detectar mentiras ou encontrar um lugar seguro para se esconder."
+    "texto": "Você tem vantagem em jogadas para negociar com criminosos, detectar mentiras ou encontrar um lugar seguro para se esconder.",
+    "rolagemManual": {
+     "tipo": "vantagem-situacional",
+     "aplicacao": "manual",
+     "lembrete": "Vantagem em jogadas para negociar com criminosos, detectar mentiras ou encontrar lugar seguro para se esconder, quando a situação se aplicar.",
+     "motivoManual": "O app não conhece o contexto ficcional da jogada e não rola dados."
+    }
    },
    "caracteristicaNoLivro": {
     "nome": "Vigarista",
@@ -198,7 +240,13 @@
    ],
    "caracteristica": {
     "nome": "Vida na Penumbra",
-    "texto": "Quando estiver em uma área com pouca luz ou sombras densas, você tem vantagem em jogadas para se esconder, investigar ou perceber detalhes dentro dessa área."
+    "texto": "Quando estiver em uma área com pouca luz ou sombras densas, você tem vantagem em jogadas para se esconder, investigar ou perceber detalhes dentro dessa área.",
+    "rolagemManual": {
+     "tipo": "vantagem-situacional",
+     "aplicacao": "manual",
+     "lembrete": "Vantagem em jogadas para se esconder, investigar ou perceber detalhes em pouca luz ou sombras densas, quando a situação se aplicar.",
+     "motivoManual": "O app não conhece o contexto ficcional da jogada e não rola dados."
+    }
    },
    "caracteristicaNoLivro": {
     "nome": "Vida com pouca luz",
@@ -230,7 +278,21 @@
    ],
    "caracteristica": {
     "nome": "Mochila Nômade",
-    "texto": "Adicione uma Mochila Nômade ao seu inventário. Uma vez por sessão, você pode gastar 1 Esperança para vasculhar essa mochila e puxar um item mundano que seja útil para a situação. Trabalhe com o GM para definir qual item você encontrou."
+    "texto": "Adicione uma Mochila Nômade ao seu inventário. Uma vez por sessão, você pode gastar 1 Esperança para vasculhar essa mochila e puxar um item mundano que seja útil para a situação. Trabalhe com o GM para definir qual item você encontrou.",
+    "uso": {
+     "custo": {
+      "esperanca": 1
+     },
+     "marcaUso": "uso:comunidade:wanderborne:mochila-nomade",
+     "rotuloAtivar": "Vasculhar Mochila Nômade · 1 Esperança",
+     "lembrete": "Defina com o Mestre um item mundano útil e registre o item encontrado no inventário. O app não escolhe o item por você."
+    },
+    "efeitoCriacao": {
+     "tipo": "inventario",
+     "item": "Mochila Nômade",
+     "quantidade": 1,
+     "fonte": "DH-DigitalRegras.pdf p.81"
+    }
    },
    "caracteristicaNoLivro": {
     "nome": "Pacote Nômade",
@@ -261,7 +323,13 @@
    ],
    "caracteristica": {
     "nome": "Pé-Leve",
-    "texto": "Seu movimento é naturalmente silencioso. Você tem vantagem em jogadas para se mover sem ser ouvido."
+    "texto": "Seu movimento é naturalmente silencioso. Você tem vantagem em jogadas para se mover sem ser ouvido.",
+    "rolagemManual": {
+     "tipo": "vantagem-situacional",
+     "aplicacao": "manual",
+     "lembrete": "Vantagem em jogadas para se mover sem ser ouvido, quando a situação se aplicar.",
+     "motivoManual": "O app não conhece o contexto ficcional da jogada e não rola dados."
+    }
    },
    "caracteristicaNoLivro": {
     "nome": "Lightfoot",

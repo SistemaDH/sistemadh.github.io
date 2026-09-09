@@ -924,6 +924,18 @@ function fichaRapida_(escolhas) {
   };
   ficha.caracteristicas = caracteristicasDaOrigem_(ficha);
 
+  // Efeitos de criação da origem que entregam um item (ex.: Mochila Nômade).
+  // É criação, não derivado permanente: remover/perder o item depois continua
+  // sendo uma decisão da mesa e validar a ficha não o recria silenciosamente.
+  const efeitosOrigemCriacao = (typeof efeitosDeCriacaoDeOrigem_ === 'function')
+    ? efeitosDeCriacaoDeOrigem_(ficha) : [];
+  for (let i = 0; i < efeitosOrigemCriacao.length; i++) {
+    const e = efeitosOrigemCriacao[i] || {};
+    if (e.tipo !== 'inventario' || !e.item) continue;
+    const item = String(e.item);
+    if (ficha.inventario.indexOf(item) === -1) ficha.inventario.push(item);
+  }
+
   ficha.experiencias = Array.isArray(escolhas.experiencias) ? escolhas.experiencias : [];
   ficha.cartas = { ativas: Array.isArray(escolhas.cartas) ? escolhas.cartas : [], cofre: [] };
   ficha.historia = { fundo: [], conexoes: [], descricaoFisica: {} };
