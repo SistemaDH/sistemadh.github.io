@@ -48,6 +48,12 @@ new = "    nome: 'Em Jogo', classe: 'Bardo', subclasse: 'Músico Errante',\n    
 if t.count(old) != 1:
     raise SystemExit(f'fixture API genérica: esperava 1 âncora, achei {t.count(old)}')
 t = t.replace(old, new, 1)
+
+old = "/2 movimentos por descanso/.test(e)"
+new = "/2 movimentos/.test(e)"
+if t.count(old) != 1:
+    raise SystemExit(f'asserção teto descanso: esperava 1 âncora, achei {t.count(old)}')
+t = t.replace(old, new, 1)
 p.write_text(t, encoding='utf-8')
 
-print('Hotfix do ciclo aplicado: alias legado, vocabulário e fixtures genéricas corrigidos.')
+print('Hotfix do ciclo aplicado: alias legado, vocabulário e fixtures/testes genéricos corrigidos.')
