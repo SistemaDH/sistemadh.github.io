@@ -5040,7 +5040,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"SPELL\")."
+   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"SPELL\").",
+   "automacao": {
+    "classificacao": "automatizada-custo-apos-sucesso",
+    "resumo": "Depois do sucesso confirmado pela mesa, o app cobra 1 Esperança. O dano e a condição temporária do alvo não são gravados na ficha de quem conjurou."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Conjuração contra o alvo Longínquo, o dano mágico e o período em que o alvo fica Vulnerável e brilhando continuam na mesa."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "rotuloAtivar": "Sucesso: Farol Brilhante · 1 Esperança",
+    "lembrete": "Depois do sucesso, role o dano fora do app e deixe o alvo temporariamente Vulnerável e brilhando. O efeito no alvo é resolvido na mesa."
+   }
   },
   {
    "id": "splendor-reforco",
@@ -5061,7 +5076,24 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"ABILITY\"). O ícone de Custo de Recordar mostra 0."
+   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"ABILITY\"). O ícone de Custo de Recordar mostra 0.",
+   "automacao": {
+    "classificacao": "automatizada-limite-de-uso",
+    "resumo": "O app registra Reforço uma vez por descanso e impede um segundo uso antes da recarga."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A jogada do aliado e a nova rolagem dos dados continuam físicas; use o botão depois da jogada e antes de aplicar as consequências."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:splendor:reforco",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Usar Reforço · 1/descanso",
+    "lembrete": "O aliado refaz a jogada na mesa antes de as consequências serem aplicadas."
+   }
   },
   {
    "id": "splendor-toque-curativo",
@@ -5085,7 +5117,41 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"SPELL\")."
+   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"SPELL\").",
+   "automacao": {
+    "classificacao": "automatizada-custo-opcoes",
+    "resumo": "O app cobra 2 Esperanças. A versão aprofundada também registra o limite de uma vez por descanso longo."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Escolha na mesa a criatura tocada e se ela recupera PV ou Estresse. O benefício de 2 exige a cena de vínculo descrita na carta e a cura do alvo continua manual."
+   },
+   "uso": {
+    "custo": {},
+    "opcoes": [
+     {
+      "id": "normal",
+      "rotulo": "Toque Curativo · 2 Esperanças",
+      "custo": {
+       "esperanca": 2
+      },
+      "lembrete": "Passe alguns minutos tratando a criatura tocada; ela recupera 1 PV ou limpa 1 Estresse na mesa."
+     },
+     {
+      "id": "vinculo",
+      "rotulo": "Vínculo profundo · 2 Esperanças · 1/descanso longo",
+      "custo": {
+       "esperanca": 2
+      },
+      "marcaUso": {
+       "chave": "uso:carta:splendor:toque-curativo-vinculo",
+       "maximo": 1
+      },
+      "lembrete": "Depois de revelar algo sobre si ou descobrir algo sobre o alvo, ele recupera 2 PV ou limpa 2 Estresses na mesa."
+     }
+    ],
+    "rotuloAtivar": "Usar Toque Curativo"
+   }
   },
   {
    "id": "splendor-maos-curativas",
@@ -5108,7 +5174,37 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"SPELL\")."
+   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"SPELL\").",
+   "automacao": {
+    "classificacao": "automatizada-custo-apos-resultado-manual",
+    "resumo": "Depois que a mesa informa sucesso ou falha, o app marca 1 Estresse em ambos os casos e mantém a quantidade correta de cura como lembrete."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Conjuração 13, a criatura em Corpo a Corpo, a escolha entre PV/Estresse e a trava por alvo até o próximo descanso longo continuam na mesa."
+   },
+   "uso": {
+    "custo": {},
+    "opcoes": [
+     {
+      "id": "sucesso",
+      "rotulo": "Sucesso · marcar 1 Estresse",
+      "custo": {
+       "estresse": 1
+      },
+      "lembrete": "A criatura em Corpo a Corpo recupera 2 PV ou limpa 2 Estresses. Ela não pode receber Mãos Curativas de você outra vez até o próximo descanso longo."
+     },
+     {
+      "id": "falha",
+      "rotulo": "Falha · marcar 1 Estresse",
+      "custo": {
+       "estresse": 1
+      },
+      "lembrete": "Mesmo na falha, a criatura recupera 1 PV ou limpa 1 Estresse. Ela não pode receber Mãos Curativas de você outra vez até o próximo descanso longo."
+     }
+    ],
+    "rotuloAtivar": "Resolver Mãos Curativas"
+   }
   },
   {
    "id": "splendor-palavras-finais",
@@ -5130,7 +5226,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"SPELL\")."
+   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"SPELL\").",
+   "automacao": {
+    "classificacao": "manual-ficcional",
+    "resumo": "Não há recurso, contador ou derivado seguro para alterar na ficha de quem conjura; a carta fica explicitamente classificada como resolução de mesa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Faça a Jogada de Conjuração 13 contra o cadáver e resolva na mesa quantas perguntas podem ser feitas, as respostas e a transformação do corpo em pó."
+   }
   },
   {
    "id": "splendor-segundo-folego",
@@ -5154,7 +5258,43 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"ABILITY\")."
+   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"ABILITY\").",
+   "automacao": {
+    "classificacao": "automatizada-autocura-uso",
+    "resumo": "Depois de um ataque bem-sucedido confirmado pela mesa, o app registra o uso uma vez por descanso e aplica na própria ficha a recuperação escolhida: 1 PV ou 3 Estresses."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O ataque continua físico. Em sucesso com Esperança, a recuperação adicional de um aliado em alcance Próximo continua na ficha dele/na mesa."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:splendor:segundo-folego",
+     "maximo": 1
+    },
+    "opcoes": [
+     {
+      "id": "pv",
+      "rotulo": "Recuperar 1 PV",
+      "efeitoRecurso": {
+       "chave": "pontosDeVidaMarcados",
+       "delta": -1
+      },
+      "lembrete": "Depois do ataque bem-sucedido, recupere 1 PV. Se foi sucesso com Esperança, um aliado Próximo também pode recuperar 1 PV ou limpar 3 Estresses na mesa."
+     },
+     {
+      "id": "estresse",
+      "rotulo": "Limpar 3 Estresses",
+      "efeitoRecurso": {
+       "chave": "estresseMarcado",
+       "delta": -3
+      },
+      "lembrete": "Depois do ataque bem-sucedido, limpe 3 Estresses. Se foi sucesso com Esperança, um aliado Próximo também pode recuperar 1 PV ou limpar 3 Estresses na mesa."
+     }
+    ],
+    "rotuloAtivar": "Usar Segundo Fôlego · 1/descanso"
+   }
   },
   {
    "id": "splendor-voz-da-razao",
@@ -5177,7 +5317,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"ABILITY\")."
+   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"ABILITY\").",
+   "automacao": {
+    "classificacao": "manual-passivo-contextual",
+    "resumo": "A carta foi classificada de forma explícita, mas não altera números permanentes da ficha: os dois bônus dependem do contexto de uma jogada específica."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Aplique vantagem em jogadas para acalmar uma situação hostil/convencer alguém e, enquanto todos os seus espaços de Estresse estiverem marcados, some +1 de Proficiência somente às jogadas de dano."
+   }
   },
   {
    "id": "splendor-adivinhacao",
@@ -5199,7 +5347,26 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"SPELL\")."
+   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"SPELL\").",
+   "automacao": {
+    "classificacao": "automatizada-custo-uso",
+    "resumo": "O app cobra 3 Esperanças e registra Adivinhação uma vez por descanso longo."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O ritual, a pergunta de sim/não e a resposta verdadeira do Mestre são resolvidos na mesa."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 3
+    },
+    "marcaUso": {
+     "chave": "uso:carta:splendor:adivinhacao",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Usar Adivinhação · 3 Esperanças",
+    "lembrete": "Faça uma pergunta de sim ou não sobre um evento no futuro próximo; o Mestre responde de forma verdadeira."
+   }
   },
   {
    "id": "splendor-guardiao-da-vida",
@@ -5223,7 +5390,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"SPELL\")."
+   "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"SPELL\").",
+   "automacao": {
+    "classificacao": "automatizada-custo-com-resolucao-em-aliado",
+    "resumo": "O app cobra 3 Esperanças ao conjurar. O alvo não é gravado nesta ficha para não fingir uma automação entre personagens que o backend ainda não executa de forma transacional."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Escolha um aliado em alcance Próximo e mantenha o sigilo na mesa. No próximo movimento de morte dele, o sigilo é gasto e ele recupera 1 PV; também termina ao escolher outro alvo ou após um descanso longo."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 3
+    },
+    "rotuloAtivar": "Conjurar Guardião da Vida · 3 Esperanças",
+    "lembrete": "Escolha um aliado Próximo e registre o sigilo na mesa. No próximo movimento de morte dele, ele recupera 1 PV em vez de fazer o movimento; o sigilo então termina."
+   }
   },
   {
    "id": "splendor-golpe-divino",

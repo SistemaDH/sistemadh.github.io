@@ -1831,6 +1831,74 @@
     "manual"
    ],
    "observacao": "A união dura até o próximo descanso."
+  },
+  {
+   "chave": "uso:carta:splendor:reforco",
+   "origem": "carta-dominio",
+   "refId": "splendor-reforco",
+   "nome": "Reforço",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso, depois da jogada de um aliado e antes das consequências."
+  },
+  {
+   "chave": "uso:carta:splendor:toque-curativo-vinculo",
+   "origem": "carta-dominio",
+   "refId": "splendor-toque-curativo",
+   "nome": "Toque Curativo",
+   "rotulo": "vínculo usado",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "A recuperação aumentada para 2 é uma vez por descanso longo."
+  },
+  {
+   "chave": "uso:carta:splendor:segundo-folego",
+   "origem": "carta-dominio",
+   "refId": "splendor-segundo-folego",
+   "nome": "Segundo Fôlego",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso, após um ataque bem-sucedido."
+  },
+  {
+   "chave": "uso:carta:splendor:adivinhacao",
+   "origem": "carta-dominio",
+   "refId": "splendor-adivinhacao",
+   "nome": "Adivinhação",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
   }
  ]
 }

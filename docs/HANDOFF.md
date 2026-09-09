@@ -540,3 +540,14 @@ A auditoria transversal deve cair de 24 para 19 candidatos de classes/subclasses
 - **Prosperar no Caos** cobra 1 Estresse e deixa explícito o +1 PV do alvo depois do dano.
 
 A auditoria deve cair de 19 para 12 candidatos de classes/subclasses.
+
+
+### Lote 8 — Esplendor níveis 1–4
+
+Revisão materializada contra o Core PT-BR e a errata oficial de 09/09/2025. As nove cartas de nível 1 a 4 de Esplendor agora possuem classificação explícita de automação e `resolucaoManual.rolaNoApp = false`.
+
+Automatizado onde a ficha consegue ser fonte de verdade: custos de Esperança/Estresse, limites de uso de Reforço, Toque Curativo (vínculo), Segundo Fôlego e Adivinhação, além da autocura de Segundo Fôlego. Efeitos sobre OUTRA ficha (cura, Vulnerável, sigilos e benefícios de aliado) continuam declarados como resolução de mesa; não foi criado estado fictício no personagem conjurador só para parecer automatizado.
+
+A divergência editorial de nomes entre o catálogo/cartas e o apêndice do livro foi preservada: não renomear ids nem cartas somente por diferença de tradução. A errata oficial não altera a mecânica das cartas de Esplendor deste bloco.
+
+Próximo bloco natural do Lote 8: **Esplendor níveis 5–10**, repetindo a triagem carta a carta e só depois avançando para o próximo domínio.

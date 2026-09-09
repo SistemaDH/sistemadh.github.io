@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 95 cartas e características mandam
+ *  O problema que este arquivo resolve: 99 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -135,6 +135,10 @@ const CONTADORES = {
   "estado:carta:codex:imunidade-magica": { origem: "carta-dominio", refId: "codex-livro-de-yarrow", nome: "Imunidade Mágica", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso","manual"], recarregaEm: [] },
   "uso:carta:codex:uniao-transcendente": { origem: "carta-dominio", refId: "codex-uniao-transcendente", nome: "União Transcendente", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
   "estado:carta:codex:uniao-transcendente": { origem: "carta-dominio", refId: "codex-uniao-transcendente", nome: "União Transcendente", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso","manual"], recarregaEm: [] },
+  "uso:carta:splendor:reforco": { origem: "carta-dominio", refId: "splendor-reforco", nome: "Reforço", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:splendor:toque-curativo-vinculo": { origem: "carta-dominio", refId: "splendor-toque-curativo", nome: "Toque Curativo", rotulo: "vínculo usado", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:carta:splendor:segundo-folego": { origem: "carta-dominio", refId: "splendor-segundo-folego", nome: "Segundo Fôlego", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:splendor:adivinhacao": { origem: "carta-dominio", refId: "splendor-adivinhacao", nome: "Adivinhação", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -234,6 +238,10 @@ const CONTADOR_ALIASES = {
   "estado:carta:codex:imunidade-magica": ["Imunidade Mágica"],
   "uso:carta:codex:uniao-transcendente": ["União Transcendente"],
   "estado:carta:codex:uniao-transcendente": ["União Transcendente"],
+  "uso:carta:splendor:reforco": ["Reforço"],
+  "uso:carta:splendor:toque-curativo-vinculo": ["Toque Curativo"],
+  "uso:carta:splendor:segundo-folego": ["Segundo Fôlego"],
+  "uso:carta:splendor:adivinhacao": ["Adivinhação"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

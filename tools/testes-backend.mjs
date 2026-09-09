@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 95 contadores: 63 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 99 contadores: 67 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 95 contadores: 63 de carta, 25 de classe/subclasse, 4 de 
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 95);
+  igual(Object.keys(CONTADORES).length, 99);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 63);
+  igual(porOrigem['carta-dominio'], 67);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -9021,6 +9021,107 @@ teste('União Transcendente exige duas criaturas, cobra 5 Esperanças e registra
   contexto.ajustarGatilho_(f,{gatilho:'descanso'}); verdade(!f.contadores['estado:carta:codex:uniao-transcendente']);
   igual(f.contadores['uso:carta:codex:uniao-transcendente'].valor,1);
   contexto.ajustarGatilho_(f,{gatilho:'descanso-longo'}); verdade(!f.contadores['uso:carta:codex:uniao-transcendente']);
+});
+
+
+
+console.log('\nLote 8 — Esplendor níveis 1–4');
+function fichaSplendorBaixa_(nivel, ativas) {
+  const f = contexto.fichaRapida_({
+    nome:'Esplendor Baixo', classe:'Mago', subclasse:'Escola da Guerra',
+    ancestralidade:'Humano', comunidade:'Highborne',
+    cartas:['codex-livro-de-ava','codex-livro-de-illiat'],
+    experiencias:[{nome:'Devoto',bonus:2},{nome:'Curandeiro',bonus:2}]
+  });
+  f.identidade.nivel = nivel;
+  f.cartas = { ativas: ativas.slice(), cofre: [] };
+  f.contadores = {};
+  f.recursos.esperanca = 6;
+  f.recursos.esperancaMaxima = 6;
+  f.recursos.estresseMarcado = 0;
+  f.recursos.estresseMaximo = 6;
+  f.recursos.pontosDeVidaMarcados = 0;
+  f.recursos.pontosDeVidaMaximos = Math.max(6, Number(f.recursos.pontosDeVidaMaximos) || 0);
+  return f;
+}
+
+teste('Esplendor N1-N4 fica todo classificado e sem dado no app', () => {
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const ids=[
+    'splendor-farol-brilhante','splendor-reforco','splendor-toque-curativo',
+    'splendor-maos-curativas','splendor-palavras-finais','splendor-segundo-folego',
+    'splendor-voz-da-razao','splendor-adivinhacao','splendor-guardiao-da-vida'
+  ];
+  const xs=ids.map((id)=>d.cartas.find((c)=>c.id===id));
+  verdade(xs.every(Boolean));
+  verdade(xs.every((c)=>!!c.automacao));
+  verdade(xs.every((c)=>c.resolucaoManual && c.resolucaoManual.rolaNoApp===false));
+});
+
+teste('Farol Brilhante cobra 1 Esperança só depois do sucesso confirmado', () => {
+  const f=fichaSplendorBaixa_(1,['splendor-farol-brilhante']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-farol-brilhante'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5);
+});
+
+teste('Reforço é 1/descanso e volta quando o descanso zera o contador', () => {
+  const f=fichaSplendorBaixa_(1,['splendor-reforco']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-reforco'}]);
+  igual(r.erros,[]); igual(f.contadores['uso:carta:splendor:reforco'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-reforco'}]);
+  verdade(r.erros.length===1,'segundo uso deveria falhar');
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-reforco'}]);
+  igual(r.erros,[]);
+});
+
+teste('Toque Curativo cobra 2 Esperanças e limita só a versão de vínculo', () => {
+  const f=fichaSplendorBaixa_(1,['splendor-toque-curativo']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-toque-curativo',opcao:'normal'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,4);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-toque-curativo',opcao:'vinculo'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,2);
+  igual(f.contadores['uso:carta:splendor:toque-curativo-vinculo'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-toque-curativo',opcao:'vinculo'}]);
+  verdade(r.erros.length===1,'vínculo não pode repetir antes do descanso longo');
+});
+
+teste('Mãos Curativas cobra 1 Estresse tanto no sucesso quanto na falha', () => {
+  const f=fichaSplendorBaixa_(2,['splendor-maos-curativas']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-maos-curativas',opcao:'sucesso'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-maos-curativas',opcao:'falha'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,2);
+});
+
+teste('Segundo Fôlego recupera a própria trilha e é 1/descanso', () => {
+  const f=fichaSplendorBaixa_(3,['splendor-segundo-folego']);
+  f.recursos.pontosDeVidaMarcados=3;
+  f.recursos.estresseMarcado=4;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-segundo-folego',opcao:'pv'}]);
+  igual(r.erros,[]); igual(f.recursos.pontosDeVidaMarcados,2);
+  igual(f.contadores['uso:carta:splendor:segundo-folego'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-segundo-folego',opcao:'estresse'}]);
+  verdade(r.erros.length===1,'não pode usar duas vezes no mesmo descanso');
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-segundo-folego',opcao:'estresse'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+});
+
+teste('Adivinhação cobra 3 Esperanças e é 1/descanso longo', () => {
+  const f=fichaSplendorBaixa_(4,['splendor-adivinhacao']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-adivinhacao'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,3);
+  igual(f.contadores['uso:carta:splendor:adivinhacao'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-adivinhacao'}]);
+  verdade(r.erros.length===1,'segundo uso deveria falhar');
+});
+
+teste('Guardião da Vida cobra 3 Esperanças sem inventar mutação na ficha do aliado', () => {
+  const f=fichaSplendorBaixa_(4,['splendor-guardiao-da-vida']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-guardiao-da-vida'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,3);
+  verdade(!f.contadores['estado:carta:splendor:guardiao-da-vida'],'não deve criar alvo fictício na própria ficha');
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
