@@ -1,0 +1,70 @@
+name: Lote 8 - Serafim
+
+on:
+  push:
+    branches:
+      - tmp-lote8-serafim
+    paths:
+      - 'tools/lote8-serafim.py'
+      - '.github/workflows/lote8-serafim.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validar:
+    if: contains(github.event.head_commit.message, '[run-lote8-serafim]')
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materializar Serafim
+        run: |
+          python3 tools/lote8-serafim.py
+          node tools/gerar-42-classes.mjs
+          node tools/gerar-47-contadores.mjs
+
+      - name: Checker e diff
+        run: |
+          python3 tools/conferir-classes-lote8.py
+          git diff --check
+
+      - name: Testes backend
+        run: node tools/testes-backend.mjs
+
+      - name: Instalar Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install --with-deps chromium
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados e CSS
+        run: |
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+
+      - name: Auditoria de classes zera candidatos
+        run: |
+          python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria.md
+          cat /tmp/auditoria.md
+          grep -F 'Classes/subclasses: **99 características**; **0** candidatas sem sinal de automação.' /tmp/auditoria.md
+
+      - name: Proteger contra concorrencia
+        run: |
+          git fetch origin 'tmp-lote8-serafim'
+          test "$(git rev-parse 'origin/tmp-lote8-serafim')" = "$GITHUB_SHA"
+
+      - name: Commitar funcional e limpar temporarios
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f tools/lote8-serafim.py
+          git rm -f .github/workflows/lote8-serafim.yml
+          git add -A
+          git diff --cached --check
+          git commit -m 'feat: fechar Serafim no Lote 8 [lote8-generated]'
+          git push origin HEAD:'tmp-lote8-serafim'
