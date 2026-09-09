@@ -252,6 +252,8 @@ for (const c of dados.classes) {
       requerEstado: f.uso.requerEstado || null,
       entradaManual: f.uso.entradaManual || null,
       carregaComDano: f.uso.carregaComDano || null,
+      efeitoRecurso: f.uso.efeitoRecurso || null,
+      confirmacao: f.uso.confirmacao || null,
       // Algumas habilidades ligam um estado persistente depois de pagar.
       estado: f.uso.estado || null
     };

@@ -355,6 +355,34 @@ function efeitoAtivoDaCanalizacaoElemental_(ficha, regra) {
   return null;
 }
 
+/**
+ * Opções especiais para o Dado de Esperança. O dado padrão continua d12;
+ * Superação do Desafio apenas oferece d20 enquanto restarem 2 PV ou menos.
+ */
+function opcoesDeDadoEsperancaDaFicha_(ficha) {
+  const saida = [];
+  const r = (ficha && ficha.recursos) || {};
+  const max = Math.max(0, Number(r.pontosDeVidaMaximos) || 0);
+  const marcados = Math.max(0, Number(r.pontosDeVidaMarcados) || 0);
+  const livres = Math.max(0, max - marcados);
+  const feats = efeitosDeCaracteristicasDaFicha_(ficha);
+  for (let i = 0; i < feats.length; i++) {
+    const regra = ((feats[i].efeito || {}).dadoEsperancaCondicional) || null;
+    if (!regra) continue;
+    const limite = Math.max(0, Math.trunc(Number(regra.pontosDeVidaNaoMarcadosMaximo)) || 0);
+    saida.push({
+      fonte: feats[i].nome,
+      dado: regra.dado || 'd20',
+      opcional: regra.opcional !== false,
+      ativo: livres <= limite,
+      pontosDeVidaNaoMarcados: livres,
+      limite: limite,
+      rotulo: regra.rotulo || ''
+    });
+  }
+  return saida;
+}
+
 function modificadoresDerivadosDaFicha_(ficha) {
   const saida = {
     evasao: 0, limiares: 0, limiarMaior: 0, limiarGrave: 0,
@@ -626,6 +654,7 @@ function derivadosDoPersonagem_(ficha) {
     dominios: dominiosDoPersonagem_(ficha),
     caracteristicas: caracteristicasDaOrigem_(ficha).concat(caracteristicasDaClasse_(ficha)),
     bonusDeDano: bonusDeDanoDaFicha_(ficha),
+    opcoesDeDadoEsperanca: opcoesDeDadoEsperancaDaFicha_(ficha),
     perfisDeAtaque: perfisDeAtaqueDaFicha_(ficha),
     modificadoresDeAlcance: (typeof modificadoresDeAlcanceDeOrigem_ === 'function')
       ? modificadoresDeAlcanceDeOrigem_(ficha) : [],
@@ -764,6 +793,7 @@ function aplicarDerivados_(ficha) {
   // O cliente recebe o perfil de dano já calculado pelo servidor. Qualquer
   // valor que tenha vindo no payload é sobrescrito aqui, como os outros derivados.
   ficha.bonusDeDano = d.bonusDeDano;
+  ficha.opcoesDeDadoEsperanca = d.opcoesDeDadoEsperanca;
   ficha.perfisDeAtaque = d.perfisDeAtaque;
   ficha.modificadoresDeAlcance = d.modificadoresDeAlcance;
   ficha.modificadoresDeTraco = d.modificadoresDeTraco;

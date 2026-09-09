@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 46 cartas e características mandam
+ *  O problema que este arquivo resolve: 47 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -59,7 +59,8 @@ const CONTADORES = {
   "carta:splendor-zona-de-protecao": { origem: "carta-dominio", refId: "splendor-zona-de-protecao", nome: "Zona de Proteção", rotulo: "valor do dado", tipo: "dado-valor", maximo: {"tipo":"dado"}, zeraEm: ["fim-da-cena","descanso-longo"], recarregaEm: [], dado: {"padrao":"d6"}, inicial: 1 },
   "classe:bardo:rally": { origem: "caracteristica-classe", refId: "bardo", nome: "Dado de Inspiração", rotulo: "dado guardado", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-de-sessao"], recarregaEm: ["inicio-de-sessao"], dado: {"padrao":"d6","progressao":[{"nivelMinimo":5,"dado":"d8","motivo":"Nível 5 (característica de classe Inspiração)"},{"caracteristica":"Poesia Épica","dado":"d10","motivo":"Maestria do Artífice das Palavras"}]} },
   "classe:guardiao:imparavel": { origem: "caracteristica-classe", refId: "guardiao", nome: "Dado de Determinação", rotulo: "valor do dado", tipo: "dado-valor", maximo: {"tipo":"dado"}, zeraEm: ["fim-da-cena","descanso-longo"], recarregaEm: [], dado: {"padrao":"d4","progressao":[{"nivelMinimo":5,"dado":"d6","motivo":"Nível 5 (característica de classe Determinação)"}]}, inicial: 1, impedeCondicoes: ["vulneravel","restrito"] },
-  "classe:guerreiro:matador": { origem: "caracteristica-subclasse", refId: "guerreiro-chamada-do-matador", nome: "Dados de Matador", rotulo: "dados", tipo: "dados", maximo: {"tipo":"proficiencia"}, zeraEm: ["fim-de-sessao"], recarregaEm: [], dado: {"padrao":"d6"} },
+  "uso:guerreiro-chamada-dos-bravos:camaradagem": { origem: "caracteristica-subclasse", refId: "guerreiro-chamada-dos-bravos", nome: "Camaradagem", rotulo: "iniciação extra usada", tipo: "usos", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-de-sessao"], recarregaEm: [], exigeCaracteristica: "Camaradagem" },
+  "classe:guerreiro:matador": { origem: "caracteristica-subclasse", refId: "guerreiro-chamada-do-matador", nome: "Dados de Matador", rotulo: "dados", tipo: "dados", maximo: {"tipo":"proficiencia"}, zeraEm: ["fim-de-sessao"], recarregaEm: [], dado: {"padrao":"d6"}, compartilhavel: true },
   "classe:seraph:oracao": { origem: "caracteristica-classe", refId: "seraph", nome: "Dados de Oração", rotulo: "dados", tipo: "dados", maximo: {"tipo":"traco","traco":"Conjuração"}, zeraEm: ["fim-de-sessao"], recarregaEm: ["inicio-de-sessao"], dado: {"padrao":"d4"} },
   "uso:bardo-musico-errante:interprete-talentoso": { origem: "caracteristica-subclasse", refId: "bardo-musico-errante", nome: "Intérprete Talentoso", rotulo: "já usou", tipo: "usos", maximo: {"tipo":"fixo","valor":1,"progressao":[{"caracteristica":"Virtuoso","valor":2,"motivo":"Maestria do Músico Errante: cada música pode ser executada duas vezes por descanso longo."}]}, zeraEm: ["descanso-longo"], recarregaEm: [], exigeCaracteristica: "Intérprete Talentoso" },
   "uso:bardo-artifice-das-palavras:discurso-empolgante": { origem: "caracteristica-subclasse", refId: "bardo-artifice-das-palavras", nome: "Discurso Empolgante", rotulo: "já usou", tipo: "usos", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [], exigeCaracteristica: "Discurso Empolgante" },
@@ -109,6 +110,7 @@ const CONTADOR_ALIASES = {
   "carta:splendor-zona-de-protecao": ["Zona de Proteção"],
   "classe:bardo:rally": ["Dado de Inspiração","Dado de Reunião","Dado de Motivação","Rally Die","Rally Dice"],
   "classe:guardiao:imparavel": ["Dado de Determinação","Dado Imparável","Unstoppable Die"],
+  "uso:guerreiro-chamada-dos-bravos:camaradagem": ["Camaradagem"],
   "classe:guerreiro:matador": ["Dados de Matador","Dado de Matador","Dado de Matança","Dados de Matança","Slayer Dice","Slayer Die"],
   "classe:seraph:oracao": ["Dados de Oração","Dado de Oração","Prayer Dice","Prayer Die"],
   "uso:bardo-musico-errante:interprete-talentoso": ["Intérprete Talentoso"],
@@ -437,7 +439,7 @@ function validarContadores_(ficha) {
      * É a mesma escolha de normalizarInventario_, que sobe as fichas antigas
      * para a forma nova sem avisar ninguém.
      */
-    if (!contadorEDaFicha_(def, ficha, refsDaFicha)) continue;
+    if (!contadorEDaFicha_(def, ficha, refsDaFicha, chave)) continue;
 
     let valor = Math.trunc(Number(typeof item === 'object' ? item.valor : item));
     if (!isFinite(valor)) valor = 0;
@@ -479,8 +481,15 @@ function validarContadores_(ficha) {
  * O parâmetro refs é o resultado de refsDeContadorDaFicha_, passado de fora para não
  * recalcular a cada contador do catálogo.
  */
-function contadorEDaFicha_(def, ficha, refs) {
+function contadorEDaFicha_(def, ficha, refs, chave) {
   if (!def) return false;
+  // Alguns dados podem ser concedidos por OUTRA ficha. Preparação Marcial é o
+  // caso do Core: o aliado não tem a subclasse, mas pode guardar um Dado de Matador.
+  if (def.compartilhavel === true && chave) {
+    const guardado = (((ficha || {}).contadores || {})[chave]) || {};
+    const valor = Math.trunc(Number(typeof guardado === 'object' ? guardado.valor : guardado)) || 0;
+    if (valor > 0) return true;
+  }
   if (refs[chaveTexto_(def.refId)] !== true) return false;
   if (def.exigeCaracteristica && !temCaracteristicaNaFicha_(ficha, def.exigeCaracteristica)) return false;
   return true;

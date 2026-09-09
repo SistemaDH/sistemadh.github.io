@@ -5,7 +5,7 @@
 
 ## Resumo numérico
 
-- Classes/subclasses: **99 características**; **24** candidatas sem sinal de automação.
+- Classes/subclasses: **99 características**; **19** candidatas sem sinal de automação.
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **161** candidatas sem sinal de automação específica; **17** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **87** ocorrências candidatas ativas/condicionais.
@@ -14,8 +14,8 @@
 
 ### Distribuição — classes/subclasses
 
-- candidato sem sinal de automação: **24**
-- estruturada/contador: **55**
+- candidato sem sinal de automação: **19**
+- estruturada/contador: **60**
 - predominantemente narrativo/sem gatilho detectado: **7**
 - referência específica no motor: **13**
 
@@ -40,11 +40,6 @@
 
 | Classe | Subclasse | Estágio | Característica | Trecho |
 |---|---|---|---|---|
-| Guerreiro |  | Classe | Ataque de Oportunidade | Se um adversário Corpo a Corpo tentar sair desse alcance, faça uma jogada de reação usando um traço à sua escolha contra a Dificuldade dele. Em um sucesso, escolha um ef… |
-| Guerreiro | Chamada dos Bravos | fundacao | Coragem | Quando você falhar em uma jogada com Medo, ganha 1 Esperança. |
-| Guerreiro | Chamada dos Bravos | especializacao | Superação do Desafio | Você é vigilante diante do perigo crescente. Enquanto tiver 2 ou menos Pontos de Vida não marcados, pode rolar um d20 como seu Dado de Esperança. |
-| Guerreiro | Chamada dos Bravos | maestria | Camaradagem | Sua coragem inabalável é um ponto de união para seus aliados. Você pode iniciar uma Jogada em Equipe mais 1 vez por sessão. Além disso, quando um aliado iniciar uma Joga… |
-| Guerreiro | Chamada do Matador | maestria | Preparação Marcial | Você é um guerreiro inspirador para todos que viajam com você. Seu grupo ganha acesso ao movimento de tempo livre Preparação Marcial. Para usar esse movimento durante um… |
 | Ladino | Caminhante Noturno | fundacao | Passo Sombrio | Você pode se mover de sombra em sombra. Quando se mover para uma área de escuridão ou uma sombra projetada por outra criatura ou objeto, pode marcar 1 Estresse para desa… |
 | Ladino | Caminhante Noturno | especializacao | Nuvem Sombria | Faça uma Jogada de Magia (15). Em caso de sucesso, crie uma nuvem sombria temporária que cobre qualquer área em alcance Próximo. Quem estiver dentro dessa nuvem não pode… |
 | Ladino | Caminhante Noturno | maestria | Ato de Desaparecimento | Marque 1 Estresse para ficar Encoberto a qualquer momento. Enquanto estiver Encoberto por essa habilidade, você automaticamente remove a condição Imobilizado, se estiver… |

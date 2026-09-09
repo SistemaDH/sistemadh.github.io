@@ -57,6 +57,20 @@ function movimentosPorDescansoDaFicha_(ficha) {
   return total;
 }
 
+/** Características presentes em alguma ficha ativa da mesa neste descanso. */
+let CARACTERISTICAS_DO_GRUPO_NO_DESCANSO = {};
+function definirCaracteristicasDoGrupoNoDescanso_(nomes) {
+  CARACTERISTICAS_DO_GRUPO_NO_DESCANSO = {};
+  (Array.isArray(nomes) ? nomes : []).forEach(function (nome) {
+    CARACTERISTICAS_DO_GRUPO_NO_DESCANSO[chaveTexto_(nome)] = true;
+  });
+}
+function grupoTemCaracteristicaNoDescanso_(ficha, nome) {
+  if (!nome) return true;
+  if (typeof temCaracteristicaNaFicha_ === 'function' && temCaracteristicaNaFicha_(ficha, nome)) return true;
+  return CARACTERISTICAS_DO_GRUPO_NO_DESCANSO[chaveTexto_(nome)] === true;
+}
+
 /**
  * Os movimentos que esta ficha pode escolher neste tipo de descanso.
  * Cada item ganha `deOutroDescanso` quando entrou por uma exceção de regra.
@@ -69,6 +83,7 @@ function movimentosDoDescanso_(tipo, ficha) {
   const ids = Object.keys(MOVIMENTOS_DESCANSO);
   for (let i = 0; i < ids.length; i++) {
     const m = MOVIMENTOS_DESCANSO[ids[i]];
+    if (m.exigeGrupoCaracteristica && !grupoTemCaracteristicaNoDescanso_(ficha, m.exigeGrupoCaracteristica)) continue;
     const proprio = m.tipos.indexOf(t.id) !== -1;
     const emprestado = !proprio && extra && m.tipos.indexOf(extra) !== -1;
     if (!proprio && !emprestado) continue;
@@ -250,6 +265,31 @@ function simularDescanso_(ficha, tipo, escolhas) {
     }
 
     const ef = def.efeito || {};
+
+    if (ef.modo === 'conceder-contador') {
+      const chaveContador = String(ef.contador || '');
+      const defContador = (typeof CONTADORES !== 'undefined') ? CONTADORES[chaveContador] : null;
+      if (!defContador) {
+        erros.push('"' + def.nome + '": contador de destino desconhecido.');
+        continue;
+      }
+      copia.contadores = copia.contadores || {};
+      const guardado = copia.contadores[chaveContador] || {};
+      const atual = Math.max(0, Math.trunc(Number(typeof guardado === 'object' ? guardado.valor : guardado)) || 0);
+      const delta = Math.max(1, Math.trunc(Number(ef.delta)) || 1);
+      const max = (typeof maximoDoContador_ === 'function') ? maximoDoContador_(chaveContador, copia) : 99;
+      const novo = Math.min(max || 99, atual + delta);
+      const dado = (typeof dadoDoContador_ === 'function') ? dadoDoContador_(chaveContador, copia) : '';
+      copia.contadores[chaveContador] = { valor: novo };
+      if (dado) copia.contadores[chaveContador].dado = dado;
+      feito.quantidade = novo - atual;
+      feito.contaDaFormula = '+' + feito.quantidade + ' ' + (defContador.nome || 'contador');
+      feito.observacao = feito.quantidade
+        ? 'O dado foi guardado na ficha; a rolagem só acontece quando você decidir gastá-lo.'
+        : 'O contador já está no máximo.';
+      feitos.push(feito);
+      continue;
+    }
 
     if (ef.modo === 'narrativo') {
       feito.observacao = escolha.projeto

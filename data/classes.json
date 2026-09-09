@@ -1187,7 +1187,25 @@
    "caracteristicasDeClasse": [
     {
      "nome": "Ataque de Oportunidade",
-     "texto": "Se um adversário Corpo a Corpo tentar sair desse alcance, faça uma jogada de reação usando um traço à sua escolha contra a Dificuldade dele. Em um sucesso, escolha um efeito; em um sucesso crítico, escolha dois:\n• Ele não pode sair de onde está.\n• Você causa dano a ele igual ao dano de sua arma principal.\n• Você se movimenta com ele."
+     "texto": "Se um adversário Corpo a Corpo tentar sair desse alcance, faça uma jogada de reação usando um traço à sua escolha contra a Dificuldade dele. Em um sucesso, escolha um efeito; em um sucesso crítico, escolha dois:\n• Ele não pode sair de onde está.\n• Você causa dano a ele igual ao dano de sua arma principal.\n• Você se movimenta com ele.",
+     "resolucaoManual": {
+      "gatilho": "Quando um adversário em alcance Corpo a Corpo tentar sair desse alcance.",
+      "jogada": "Jogada de Reação",
+      "traco": "à escolha do Guerreiro",
+      "contra": "Dificuldade do adversário",
+      "rolaNoApp": false,
+      "rotuloAtivar": "Resolver Ataque de Oportunidade",
+      "resultados": {
+       "sucesso": 1,
+       "critico": 2
+      },
+      "opcoes": [
+       "O adversário não pode sair de onde está.",
+       "Cause dano igual ao dano da sua arma principal.",
+       "Mova-se junto com o adversário."
+      ],
+      "observacao": "O app não rola a reação nem o dano; ele só guia as escolhas que a mesa confirmou."
+     }
     },
     {
      "nome": "Treinamento de Combate",
@@ -1222,7 +1240,18 @@
        "caracteristicas": [
         {
          "nome": "Coragem",
-         "texto": "Quando você falhar em uma jogada com Medo, ganha 1 Esperança."
+         "texto": "Quando você falhar em uma jogada com Medo, ganha 1 Esperança.",
+         "uso": {
+          "custo": {},
+          "rotuloAtivar": "Falhei com Medo · ganhar 1 Esperança",
+          "efeitoRecurso": {
+           "chave": "esperanca",
+           "delta": 1,
+           "rotulo": "Esperança"
+          },
+          "confirmacao": "falha-com-medo",
+          "lembrete": "Use somente depois de falhar em uma jogada com Medo."
+         }
         },
         {
          "nome": "Ritual de Batalha",
@@ -1248,7 +1277,15 @@
        "caracteristicas": [
         {
          "nome": "Superação do Desafio",
-         "texto": "Você é vigilante diante do perigo crescente. Enquanto tiver 2 ou menos Pontos de Vida não marcados, pode rolar um d20 como seu Dado de Esperança."
+         "texto": "Você é vigilante diante do perigo crescente. Enquanto tiver 2 ou menos Pontos de Vida não marcados, pode rolar um d20 como seu Dado de Esperança.",
+         "efeitoDerivado": {
+          "dadoEsperancaCondicional": {
+           "dado": "d20",
+           "pontosDeVidaNaoMarcadosMaximo": 2,
+           "opcional": true,
+           "rotulo": "Pode usar d20 como Dado de Esperança"
+          }
+         }
         }
        ],
        "texto": "CHAMADA DOS BRAVOS\nSpecialization\n\nSuperação do Desafio: Você é vigilante diante do perigo crescente. Enquanto tiver 2 ou menos Pontos de Vida não marcados, pode rolar um d20 como seu Dado de Esperança.",
@@ -1266,7 +1303,31 @@
        "caracteristicas": [
         {
          "nome": "Camaradagem",
-         "texto": "Sua coragem inabalável é um ponto de união para seus aliados. Você pode iniciar uma Jogada em Equipe mais 1 vez por sessão. Além disso, quando um aliado iniciar uma Jogada em Equipe com você, ele precisa gastar apenas 2 Esperanças para isso."
+         "texto": "Sua coragem inabalável é um ponto de união para seus aliados. Você pode iniciar uma Jogada em Equipe mais 1 vez por sessão. Além disso, quando um aliado iniciar uma Jogada em Equipe com você, ele precisa gastar apenas 2 Esperanças para isso.",
+         "uso": {
+          "custo": {},
+          "marcaUso": "uso:guerreiro-chamada-dos-bravos:camaradagem",
+          "rotuloAtivar": "Usar iniciação extra da Jogada em Equipe",
+          "lembrete": "Esta marca representa somente a iniciação adicional concedida por Camaradagem; a iniciação normal da sessão continua sendo resolvida pela mesa."
+         },
+         "usoEmAliado": {
+          "gatilho": "Quando um aliado iniciar uma Jogada em Equipe com você.",
+          "rotuloAtivar": "Aliado iniciou Jogada em Equipe comigo",
+          "opcoes": [
+           {
+            "id": "custo-jogada-em-equipe",
+            "rotulo": "Aliado gasta 2 Esperanças",
+            "recurso": "esperanca",
+            "delta": -2
+           }
+          ]
+         },
+         "efeitoDerivado": {
+          "jogadaEmEquipe": {
+           "iniciacoesExtrasPorSessao": 1,
+           "custoAliadoAoIniciarComVoce": 2
+          }
+         }
         }
        ],
        "texto": "CHAMADA DOS BRAVOS\nMastery\n\nCamaradagem: Sua coragem inabalável é um ponto de união para seus aliados. Você pode iniciar uma Jogada em Equipe mais 1 vez por sessão. Além disso, quando um aliado iniciar uma Jogada em Equipe com você, ele precisa gastar apenas 2 Esperanças para isso.",
@@ -1331,7 +1392,18 @@
        "caracteristicas": [
         {
          "nome": "Preparação Marcial",
-         "texto": "Você é um guerreiro inspirador para todos que viajam com você. Seu grupo ganha acesso ao movimento de tempo livre Preparação Marcial. Para usar esse movimento durante um descanso, descreva como você instrui e treina seu grupo. Você e cada aliado que escolher esse movimento ganham um d6 de Dados de Matador. Um personagem com um Dado de Matador pode gastá-lo para rolar o dado e adicionar o resultado a uma jogada de ataque ou dano à sua escolha."
+         "texto": "Você é um guerreiro inspirador para todos que viajam com você. Seu grupo ganha acesso ao movimento de tempo livre Preparação Marcial. Para usar esse movimento durante um descanso, descreva como você instrui e treina seu grupo. Você e cada aliado que escolher esse movimento ganham um d6 de Dados de Matador. Um personagem com um Dado de Matador pode gastá-lo para rolar o dado e adicionar o resultado a uma jogada de ataque ou dano à sua escolha.",
+         "efeitoDescanso": {
+          "movimentoGrupo": "preparacao-marcial",
+          "tipos": [
+           "curto",
+           "longo"
+          ],
+          "contador": "classe:guerreiro:matador",
+          "dado": "d6",
+          "quantidade": 1,
+          "rolaNoApp": false
+         }
         }
        ],
        "texto": "CHAMADA DO MATADOR\nMastery\n\nPreparação Marcial: Você é um guerreiro inspirador para todos que viajam com você. Seu grupo ganha acesso ao movimento de tempo livre Preparação Marcial. Para usar esse movimento durante um descanso, descreva como você instrui e treina seu grupo. Você e cada aliado que escolher esse movimento ganham um d6 de Dados de Matador. Um personagem com um Dado de Matador pode gastá-lo para rolar o dado e adicionar o resultado a uma jogada de ataque ou dano à sua escolha.",

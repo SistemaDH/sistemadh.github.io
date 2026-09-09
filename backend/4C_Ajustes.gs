@@ -956,6 +956,18 @@ function usarHabilidadeDeClasse_(ficha, a) {
   if (custoEsperanca > 0) r.esperanca = (Number(r.esperanca) || 0) - custoEsperanca;
   if (custoEstresse > 0) r.estresseMarcado = (Number(r.estresseMarcado) || 0) + custoEstresse;
 
+  // Efeito determinístico que altera a própria trilha no mesmo ajuste. Coragem
+  // é o primeiro caso: confirmou a falha com Medo, ganha 1 Esperança sem um
+  // segundo toque do cliente. ajustarRecurso_ aplica teto/chão do servidor.
+  let efeitoRecursoResultado = null;
+  if (def.efeitoRecurso && def.efeitoRecurso.chave) {
+    efeitoRecursoResultado = ajustarRecurso_(ficha, {
+      chave: def.efeitoRecurso.chave,
+      delta: Number(def.efeitoRecurso.delta) || 0
+    });
+    if (efeitoRecursoResultado && efeitoRecursoResultado.erro) return efeitoRecursoResultado;
+  }
+
   /*
    * UM ALVO POR VEZ, e o de antes vai embora sozinho: "até você Marcar OUTRA
    * criatura" (Marca da Presa) e "você só pode Priorizar um adversário por
@@ -989,6 +1001,12 @@ function usarHabilidadeDeClasse_(ficha, a) {
 
   const ganho = [];
   if (esperancaGanha > 0) ganho.push(esperancaGanha + ' de Esperança');
+  if (efeitoRecursoResultado && def.efeitoRecurso) {
+    const deltaEfeito = Number(def.efeitoRecurso.delta) || 0;
+    const rotuloEfeito = def.efeitoRecurso.rotulo || def.efeitoRecurso.chave;
+    if (deltaEfeito > 0) ganho.push('+' + deltaEfeito + ' ' + rotuloEfeito);
+    if (deltaEfeito < 0) ganho.push(deltaEfeito + ' ' + rotuloEfeito);
+  }
   if (opcaoEscolhida && opcaoEscolhida.lembrete) ganho.push(opcaoEscolhida.lembrete);
 
   return {
@@ -999,6 +1017,7 @@ function usarHabilidadeDeClasse_(ficha, a) {
     carta: cartaMovida ? cartaMovida.id : null,
     opcao: opcaoEscolhida ? opcaoEscolhida.id : null,
     esperancaGanha: esperancaGanha,
+    efeitoRecurso: efeitoRecursoResultado,
     estado: (def.estado && def.estado.chave) ? def.estado.chave : null,
     estadoAtivo: !!(def.estado && def.estado.chave),
     resultadoManual: entradaManualValor,

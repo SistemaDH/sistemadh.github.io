@@ -515,3 +515,18 @@ Implementação do Lote 8:
 
 Aceitação: `tools/conferir-classes-lote8.py`, testes backend focados, regressão E2E, conferência dos gerados/CSS e auditoria transversal. A meta deste bloco é reduzir candidatos de classes/subclasses de 25 para 24 e deixar o Guardião sem candidatos.
 
+
+
+### Diário — Classes, Guerreiro fechado
+
+Fontes: livro básico PT-BR / cartas oficiais do Guerreiro; errata oficial de 09/09/2025 não altera estas cinco características.
+
+Fechamento da varredura de Guerreiro no Lote 8:
+
+- **Ataque de Oportunidade** ganhou resolução manual guiada: o app nunca rola a Jogada de Reação nem o dano, mas apresenta gatilho, traço livre, Dificuldade e as três opções; sucesso escolhe 1 e crítico escolhe 2.
+- **Coragem** agora ganha 1 Esperança no servidor após o jogador confirmar pela ação que falhou com Medo, respeitando o teto da ficha.
+- **Superação do Desafio** é derivada do estado atual: com 2 ou menos PV não marcados, o servidor publica a opção de usar d20 como Dado de Esperança; fora disso ela aparece inativa.
+- **Camaradagem** rastreia somente a iniciação adicional de Jogada em Equipe (1/sessão) e reutiliza a mutação segura em aliado para cobrar as 2 Esperanças quando um aliado iniciar a jogada com o Guerreiro.
+- **Preparação Marcial** entrou nos descansos curto e longo como movimento especial do grupo; quem o escolhe guarda 1 d6 no contador existente de Dados de Matador. Esse contador foi explicitamente tornado compartilhável para sobreviver também na ficha de aliados.
+
+A auditoria transversal deve cair de 24 para 19 candidatos de classes/subclasses e não deve mais listar Guerreiro.

@@ -51,14 +51,14 @@ L.push(`/**
 
 /* --- conferência estrutural, antes de escrever qualquer coisa ------------ */
 const RECURSOS_VALIDOS = ['pontosDeVidaMarcados', 'estresseMarcado', 'armaduraMarcada', 'esperanca', null];
-const MODOS_VALIDOS = ['ganhar', 'limpar', 'limpar-tudo', 'narrativo'];
+const MODOS_VALIDOS = ['ganhar', 'limpar', 'limpar-tudo', 'narrativo', 'conceder-contador'];
 
 const porTipo = { curto: [], longo: [] };
 for (const m of d.movimentos) {
   if (!Array.isArray(m.tipos) || !m.tipos.length) throw new Error(`${m.id}: sem tipos`);
   for (const t of m.tipos) {
     if (!porTipo[t]) throw new Error(`${m.id}: tipo desconhecido "${t}"`);
-    porTipo[t].push(m.id);
+    if (!m.especialDeCaracteristica) porTipo[t].push(m.id);
   }
   const ef = m.efeito || {};
   if (MODOS_VALIDOS.indexOf(ef.modo) < 0) throw new Error(`${m.id}: modo inválido "${ef.modo}"`);
@@ -78,7 +78,7 @@ for (const m of d.movimentos) {
 if (porTipo.curto.length !== 4) throw new Error(`descanso curto com ${porTipo.curto.length} movimentos, esperava 4`);
 if (porTipo.longo.length !== 5) throw new Error(`descanso longo com ${porTipo.longo.length} movimentos, esperava 5`);
 // Preparar-se é o único que existe nos dois.
-const nosDois = d.movimentos.filter((m) => m.tipos.length === 2).map((m) => m.id);
+const nosDois = d.movimentos.filter((m) => !m.especialDeCaracteristica && m.tipos.length === 2).map((m) => m.id);
 if (nosDois.length !== 1 || nosDois[0] !== 'preparar-se') {
   throw new Error(`esperava só "preparar-se" nos dois descansos, achei: ${nosDois.join(', ')}`);
 }
@@ -122,6 +122,8 @@ for (const m of d.movimentos) {
   if (ef.baseEmGrupo !== undefined) partes.push(`baseEmGrupo: ${ef.baseEmGrupo}`);
   if (ef.dado !== undefined) partes.push(`dado: ${j(ef.dado)}`);
   if (ef.somaPatamar) partes.push('somaPatamar: true');
+  if (ef.contador) partes.push(`contador: ${j(ef.contador)}`);
+  if (ef.delta !== undefined) partes.push(`delta: ${Number(ef.delta) || 0}`);
 
   L.push(`  ${j(m.id)}: {`);
   L.push(`    id: ${j(m.id)}, nome: ${j(m.nome)}, nomeJambo: ${j(m.nomeJambo || '')}, ingles: ${j(m.ingles)},`);
@@ -129,6 +131,7 @@ for (const m of d.movimentos) {
   L.push(`    texto: ${j(m.texto)},`);
   L.push(`    formula: ${m.formula === null ? 'null' : j(m.formula)},`);
   L.push(`    podeMirarAliado: ${m.podeMirarAliado ? 'true' : 'false'},`);
+  L.push(`    exigeGrupoCaracteristica: ${m.exigeGrupoCaracteristica ? j(m.exigeGrupoCaracteristica) : 'null'},`);
   L.push(`    perguntas: ${j(m.perguntas || [])},`);
   L.push(`    efeito: { ${partes.join(', ')} }`);
   L.push('  },');

@@ -119,4 +119,30 @@ assert ret.get('consomeEm') == 'proximo-ataque-bem-sucedido-contra-o-mesmo-adver
 assert ret.get('exigeConfirmacaoDeAlcance') is True
 assert ret.get('rolagemNoApp') is False
 
-print('Lote 8 — classes: Bardo, Druida e Feiticeiro fechados; Guardião fechado, incluindo Vontade de Ferro, proteções em aliado e Ato de Retaliação.')
+
+guerreiro = next(c for c in classes['classes'] if c['id'] == 'guerreiro')
+aoo = next(f for f in guerreiro['caracteristicasDeClasse'] if f['nome'] == 'Ataque de Oportunidade')
+rm = aoo.get('resolucaoManual') or {}
+assert rm.get('jogada') == 'Jogada de Reação' and rm.get('rolaNoApp') is False
+assert rm.get('resultados') == {'sucesso': 1, 'critico': 2}
+assert len(rm.get('opcoes') or []) == 3
+
+bravos = next(s for s in guerreiro['subclasses'] if s['id'] == 'guerreiro-chamada-dos-bravos')
+coragem = next(f for f in bravos['cartas']['fundacao']['caracteristicas'] if f['nome'] == 'Coragem')
+assert coragem['uso']['efeitoRecurso'] == {'chave': 'esperanca', 'delta': 1, 'rotulo': 'Esperança'}
+superacao = next(f for f in bravos['cartas']['especializacao']['caracteristicas'] if f['nome'] == 'Superação do Desafio')
+assert superacao['efeitoDerivado']['dadoEsperancaCondicional']['dado'] == 'd20'
+assert superacao['efeitoDerivado']['dadoEsperancaCondicional']['pontosDeVidaNaoMarcadosMaximo'] == 2
+camaradagem = next(f for f in bravos['cartas']['maestria']['caracteristicas'] if f['nome'] == 'Camaradagem')
+assert camaradagem['uso']['marcaUso'] == 'uso:guerreiro-chamada-dos-bravos:camaradagem'
+assert camaradagem['usoEmAliado']['opcoes'][0]['delta'] == -2
+ccam = next(x for x in cont['contadores'] if x['chave'] == 'uso:guerreiro-chamada-dos-bravos:camaradagem')
+assert ccam['maximo'] == {'tipo': 'fixo', 'valor': 1} and ccam['zeraEm'] == ['fim-de-sessao']
+
+matador = next(s for s in guerreiro['subclasses'] if s['id'] == 'guerreiro-chamada-do-matador')
+prep = next(f for f in matador['cartas']['maestria']['caracteristicas'] if f['nome'] == 'Preparação Marcial')
+assert prep['efeitoDescanso']['movimentoGrupo'] == 'preparacao-marcial'
+slayer = next(x for x in cont['contadores'] if x['chave'] == 'classe:guerreiro:matador')
+assert slayer.get('compartilhavel') is True
+
+print('Lote 8 — classes: Bardo, Druida, Feiticeiro, Guardião e Guerreiro fechados; Guerreiro inclui AoO guiado, Coragem, Superação, Camaradagem e Preparação Marcial.')

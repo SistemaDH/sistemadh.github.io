@@ -67,6 +67,7 @@ for (const c of d.contadores) {
   // Ter a subclasse não é ter a carta: este contador só é da ficha que tem a
   // característica nomeada aqui.
   if (c.exigeCaracteristica) campos.push(`exigeCaracteristica: ${j(c.exigeCaracteristica)}`);
+  if (c.compartilhavel) campos.push('compartilhavel: true');
   L.push(`  ${j(c.chave)}: { ${campos.join(', ')} },`);
 }
 L.push('};\n');
@@ -378,7 +379,7 @@ function validarContadores_(ficha) {
      * É a mesma escolha de normalizarInventario_, que sobe as fichas antigas
      * para a forma nova sem avisar ninguém.
      */
-    if (!contadorEDaFicha_(def, ficha, refsDaFicha)) continue;
+    if (!contadorEDaFicha_(def, ficha, refsDaFicha, chave)) continue;
 
     let valor = Math.trunc(Number(typeof item === 'object' ? item.valor : item));
     if (!isFinite(valor)) valor = 0;
@@ -420,8 +421,15 @@ function validarContadores_(ficha) {
  * O parâmetro refs é o resultado de refsDeContadorDaFicha_, passado de fora para não
  * recalcular a cada contador do catálogo.
  */
-function contadorEDaFicha_(def, ficha, refs) {
+function contadorEDaFicha_(def, ficha, refs, chave) {
   if (!def) return false;
+  // Alguns dados podem ser concedidos por OUTRA ficha. Preparação Marcial é o
+  // caso do Core: o aliado não tem a subclasse, mas pode guardar um Dado de Matador.
+  if (def.compartilhavel === true && chave) {
+    const guardado = (((ficha || {}).contadores || {})[chave]) || {};
+    const valor = Math.trunc(Number(typeof guardado === 'object' ? guardado.valor : guardado)) || 0;
+    if (valor > 0) return true;
+  }
   if (refs[chaveTexto_(def.refId)] !== true) return false;
   if (def.exigeCaracteristica && !temCaracteristicaNaFicha_(ficha, def.exigeCaracteristica)) return false;
   return true;

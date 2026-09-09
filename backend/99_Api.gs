@@ -96,6 +96,36 @@ function falha_(e) {
   };
 }
 
+/**
+ * Características que liberam movimentos de descanso para o GRUPO inteiro.
+ * A mesa do app é um único grupo; fichas excluídas ou encerradas não contam.
+ */
+function caracteristicasDoGrupoParaDescanso_() {
+  const procuradas = ['Preparação Marcial'];
+  const achadas = {};
+  const linhas = (typeof lerTudo_ === 'function') ? (lerTudo_(ABAS.PERSONAGENS) || []) : [];
+  for (let i = 0; i < linhas.length; i++) {
+    const linha = linhas[i] || {};
+    const excluido = chaveTexto_(linha.excluido);
+    if (excluido === 'true' || excluido === 'sim' || excluido === '1') continue;
+    let ficha = {};
+    try { ficha = JSON.parse(linha.dados || '{}'); } catch (e) { ficha = {}; }
+    if (ficha.encerrada) continue;
+    for (let k = 0; k < procuradas.length; k++) {
+      const nome = procuradas[k];
+      if (typeof fichaTemCaracteristicaDeClasse_ === 'function' && fichaTemCaracteristicaDeClasse_(ficha, nome)) {
+        achadas[chaveTexto_(nome)] = nome;
+      }
+    }
+  }
+  return Object.keys(achadas).map(function (k) { return achadas[k]; });
+}
+function prepararContextoDoGrupoParaDescanso_() {
+  if (typeof definirCaracteristicasDoGrupoNoDescanso_ === 'function') {
+    definirCaracteristicasDoGrupoNoDescanso_(caracteristicasDoGrupoParaDescanso_());
+  }
+}
+
 /* ------------------------------------------------------------------------ *
  *  Entradas HTTP
  * ------------------------------------------------------------------------ */
@@ -326,6 +356,7 @@ function executar_(p) {
       /** O que o descanso VAI fazer. Não grava nada. */
       case 'previaDescanso': {
         const jogador = exigirSessao_(p.token);
+        prepararContextoDoGrupoParaDescanso_();
         const atual = obterPersonagem_(jogador, p.id);
         return ok_({
           previa: previaDoDescanso_(atual.ficha, p.tipo, p.escolhas),
@@ -336,6 +367,7 @@ function executar_(p) {
       /** Os movimentos possíveis neste tipo de descanso, para montar a tela. */
       case 'movimentosDeDescanso': {
         const jogador = exigirSessao_(p.token);
+        prepararContextoDoGrupoParaDescanso_();
         const atual = obterPersonagem_(jogador, p.id);
         // O "se for interrompido" viaja junto: é a regra que a mesa mais
         // esquece, e a hora de ler é ANTES de escolher os movimentos.
@@ -359,6 +391,7 @@ function executar_(p) {
        */
       case 'aplicarDescanso': {
         const jogador = exigirSessao_(p.token);
+        prepararContextoDoGrupoParaDescanso_();
         const curados = [];
         const r = mutarPersonagem_(jogador, p.id, p.versao, function (ficha) {
           const feito = aplicarDescanso_(ficha, p.tipo, p.escolhas);

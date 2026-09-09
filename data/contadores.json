@@ -412,6 +412,24 @@
    "fonteDoImpedimento": "DH-DigitalRegras.pdf (Jambô, Prévia 5) p.44, GUARDIÃO — 'Determinação': \"Enquanto estiver Determinado, você recebe os seguintes benefícios: (…) Você não pode ser Restrito ou ficar Vulnerável.\" SRD 1.0 (09/09/2025), Guardian 'Unstoppable': 'You can't be Restrained or Vulnerable.' A errata de 09/09/2025 não toca nesta habilidade. Vale enquanto o Dado de Determinação estiver na ficha — por isso o impedimento pendura no CONTADOR, e não na característica: ter a habilidade não é estar Determinado."
   },
   {
+   "chave": "uso:guerreiro-chamada-dos-bravos:camaradagem",
+   "origem": "caracteristica-subclasse",
+   "refId": "guerreiro-chamada-dos-bravos",
+   "nome": "Camaradagem",
+   "rotulo": "iniciação extra usada",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "fim-de-sessao"
+   ],
+   "exigeCaracteristica": "Camaradagem",
+   "observacao": "Rastreia apenas a iniciação adicional de Jogada em Equipe concedida pela maestria."
+  },
+  {
    "chave": "classe:guerreiro:matador",
    "origem": "caracteristica-subclasse",
    "refId": "guerreiro-chamada-do-matador",
@@ -438,7 +456,9 @@
      "Slayer Dice",
      "Slayer Die"
     ]
-   }
+   },
+   "compartilhavel": true,
+   "fonteCompartilhavel": "Preparação Marcial permite que aliados guardem um d6 de Matador na própria ficha."
   },
   {
    "chave": "classe:seraph:oracao",

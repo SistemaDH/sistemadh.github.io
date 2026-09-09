@@ -194,6 +194,28 @@
    ],
    "podeMirarAliado": false,
    "criterioOpcionalDeAvanco": "p. 181: Sucesso Crítico diminui 4; Sucesso com Esperança diminui 3; Sucesso com Medo diminui 2; qualquer falha diminui 1."
+  },
+  {
+   "id": "preparacao-marcial",
+   "nome": "Preparação Marcial",
+   "nomeJambo": "Preparação marcial",
+   "ingles": "Martial Preparation",
+   "tipos": [
+    "curto",
+    "longo"
+   ],
+   "texto": "Descreva como o Guerreiro com Preparação Marcial instrui e treina o grupo. Quem escolher este movimento ganha um d6 de Matador para gastar depois em uma jogada de ataque ou dano.",
+   "formula": "ganhe 1 Dado de Matador (d6), sem rolagem agora",
+   "efeito": {
+    "recurso": null,
+    "modo": "conceder-contador",
+    "contador": "classe:guerreiro:matador",
+    "delta": 1
+   },
+   "perguntas": [],
+   "podeMirarAliado": false,
+   "especialDeCaracteristica": true,
+   "exigeGrupoCaracteristica": "Preparação Marcial"
   }
  ],
  "aliases": {
@@ -232,6 +254,10 @@
    "Projeto",
    "Trabalhar em Projeto",
    "Work on a Project"
+  ],
+  "preparacao-marcial": [
+   "Preparação marcial",
+   "Martial Preparation"
   ]
  },
  "tambemAcontece": [

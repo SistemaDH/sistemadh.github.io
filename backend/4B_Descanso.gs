@@ -78,6 +78,7 @@ const MOVIMENTOS_DESCANSO = {
     texto: "Descreva como você se prepara para seguir se aventurando e ganhe 1 Ponto de Esperança. Caso se prepare com um ou mais membros do grupo, cada um de vocês recebe 2 Pontos de Esperança.",
     formula: "1 Esperança — ou 2, se preparar junto com alguém do grupo",
     podeMirarAliado: false,
+    exigeGrupoCaracteristica: null,
     perguntas: [{"chave":"comGrupo","tipo":"sim-nao","texto":"Você se preparou junto com alguém do grupo?","padrao":false}],
     efeito: { modo: "ganhar", recurso: "esperanca", base: 1, baseEmGrupo: 2 }
   },
@@ -87,6 +88,7 @@ const MOVIMENTOS_DESCANSO = {
     texto: "Descreva como você conserta sua armadura rapidamente, então recupere um número de Pontos de Armadura igual a 1d4 + seu patamar. Você também pode fazer este movimento para recuperar a Armadura de um aliado.",
     formula: "1d4 + patamar",
     podeMirarAliado: true,
+    exigeGrupoCaracteristica: null,
     perguntas: [],
     efeito: { modo: "limpar", recurso: "armaduraMarcada", dado: "d4", somaPatamar: true }
   },
@@ -96,6 +98,7 @@ const MOVIMENTOS_DESCANSO = {
     texto: "Descreva como você descarrega suas frustrações ou se concentra, então recupere uma quantidade de Estresse igual a 1d4 + seu patamar.",
     formula: "1d4 + patamar",
     podeMirarAliado: false,
+    exigeGrupoCaracteristica: null,
     perguntas: [],
     efeito: { modo: "limpar", recurso: "estresseMarcado", dado: "d4", somaPatamar: true }
   },
@@ -105,6 +108,7 @@ const MOVIMENTOS_DESCANSO = {
     texto: "Descreva como cuida de seus ferimentos às pressas. Em seguida, recupere uma quantidade de Pontos de Vida igual a 1d4 + seu patamar. Você também pode fazer este movimento para tratar as feridas de um aliado.",
     formula: "1d4 + patamar",
     podeMirarAliado: true,
+    exigeGrupoCaracteristica: null,
     perguntas: [],
     efeito: { modo: "limpar", recurso: "pontosDeVidaMarcados", dado: "d4", somaPatamar: true }
   },
@@ -114,6 +118,7 @@ const MOVIMENTOS_DESCANSO = {
     texto: "Descreva como você passa um bom tempo consertando sua armadura, então recupere todos os seus Pontos de Armadura. Você pode fazer este movimento para recuperar a Armadura de um aliado.",
     formula: "todos os Pontos de Armadura, sem rolagem",
     podeMirarAliado: true,
+    exigeGrupoCaracteristica: null,
     perguntas: [],
     efeito: { modo: "limpar-tudo", recurso: "armaduraMarcada" }
   },
@@ -123,6 +128,7 @@ const MOVIMENTOS_DESCANSO = {
     texto: "Descreva como você cuida de suas feridas, então recupere todos os seus Pontos de Vida. Você também pode fazer este movimento para tratar as feridas de um aliado.",
     formula: "todos os Pontos de Vida, sem rolagem",
     podeMirarAliado: true,
+    exigeGrupoCaracteristica: null,
     perguntas: [],
     efeito: { modo: "limpar-tudo", recurso: "pontosDeVidaMarcados" }
   },
@@ -132,6 +138,7 @@ const MOVIMENTOS_DESCANSO = {
     texto: "Descreva como você descarrega suas frustrações ou se concentra, então recupere o seu Estresse por completo.",
     formula: "todo o Estresse, sem rolagem",
     podeMirarAliado: false,
+    exigeGrupoCaracteristica: null,
     perguntas: [],
     efeito: { modo: "limpar-tudo", recurso: "estresseMarcado" }
   },
@@ -141,8 +148,19 @@ const MOVIMENTOS_DESCANSO = {
     texto: "Inicie ou continue o trabalho em um projeto. O Mestre define uma contagem regressiva; o movimento faz a contagem andar, ou o Mestre pede uma jogada.",
     formula: null,
     podeMirarAliado: false,
+    exigeGrupoCaracteristica: null,
     perguntas: [{"chave":"projeto","tipo":"texto","texto":"Em que projeto você trabalhou?","padrao":""}],
     efeito: { modo: "narrativo", recurso: null }
+  },
+  "preparacao-marcial": {
+    id: "preparacao-marcial", nome: "Preparação Marcial", nomeJambo: "Preparação marcial", ingles: "Martial Preparation",
+    tipos: ["curto","longo"],
+    texto: "Descreva como o Guerreiro com Preparação Marcial instrui e treina o grupo. Quem escolher este movimento ganha um d6 de Matador para gastar depois em uma jogada de ataque ou dano.",
+    formula: "ganhe 1 Dado de Matador (d6), sem rolagem agora",
+    podeMirarAliado: false,
+    exigeGrupoCaracteristica: "Preparação Marcial",
+    perguntas: [],
+    efeito: { modo: "conceder-contador", recurso: null, contador: "classe:guerreiro:matador", delta: 1 }
   },
 };
 
@@ -156,6 +174,7 @@ const MOVIMENTO_ALIASES = {
   "tratar-todas-as-feridas": ["Curar Todas as Feridas","Tend to All Wounds"],
   "zerar-estresse": ["Clear All Stress","Limpar todo o Estresse","Zerar Fadiga"],
   "trabalhar-em-um-projeto": ["Projeto","Trabalhar em Projeto","Work on a Project"],
+  "preparacao-marcial": ["Martial Preparation","Preparação marcial"],
 };
 
 /* ------------------------------------------------------------------------ *
@@ -217,6 +236,20 @@ function movimentosPorDescansoDaFicha_(ficha) {
   return total;
 }
 
+/** Características presentes em alguma ficha ativa da mesa neste descanso. */
+let CARACTERISTICAS_DO_GRUPO_NO_DESCANSO = {};
+function definirCaracteristicasDoGrupoNoDescanso_(nomes) {
+  CARACTERISTICAS_DO_GRUPO_NO_DESCANSO = {};
+  (Array.isArray(nomes) ? nomes : []).forEach(function (nome) {
+    CARACTERISTICAS_DO_GRUPO_NO_DESCANSO[chaveTexto_(nome)] = true;
+  });
+}
+function grupoTemCaracteristicaNoDescanso_(ficha, nome) {
+  if (!nome) return true;
+  if (typeof temCaracteristicaNaFicha_ === 'function' && temCaracteristicaNaFicha_(ficha, nome)) return true;
+  return CARACTERISTICAS_DO_GRUPO_NO_DESCANSO[chaveTexto_(nome)] === true;
+}
+
 /**
  * Os movimentos que esta ficha pode escolher neste tipo de descanso.
  * Cada item ganha `deOutroDescanso` quando entrou por uma exceção de regra.
@@ -229,6 +262,7 @@ function movimentosDoDescanso_(tipo, ficha) {
   const ids = Object.keys(MOVIMENTOS_DESCANSO);
   for (let i = 0; i < ids.length; i++) {
     const m = MOVIMENTOS_DESCANSO[ids[i]];
+    if (m.exigeGrupoCaracteristica && !grupoTemCaracteristicaNoDescanso_(ficha, m.exigeGrupoCaracteristica)) continue;
     const proprio = m.tipos.indexOf(t.id) !== -1;
     const emprestado = !proprio && extra && m.tipos.indexOf(extra) !== -1;
     if (!proprio && !emprestado) continue;
@@ -410,6 +444,31 @@ function simularDescanso_(ficha, tipo, escolhas) {
     }
 
     const ef = def.efeito || {};
+
+    if (ef.modo === 'conceder-contador') {
+      const chaveContador = String(ef.contador || '');
+      const defContador = (typeof CONTADORES !== 'undefined') ? CONTADORES[chaveContador] : null;
+      if (!defContador) {
+        erros.push('"' + def.nome + '": contador de destino desconhecido.');
+        continue;
+      }
+      copia.contadores = copia.contadores || {};
+      const guardado = copia.contadores[chaveContador] || {};
+      const atual = Math.max(0, Math.trunc(Number(typeof guardado === 'object' ? guardado.valor : guardado)) || 0);
+      const delta = Math.max(1, Math.trunc(Number(ef.delta)) || 1);
+      const max = (typeof maximoDoContador_ === 'function') ? maximoDoContador_(chaveContador, copia) : 99;
+      const novo = Math.min(max || 99, atual + delta);
+      const dado = (typeof dadoDoContador_ === 'function') ? dadoDoContador_(chaveContador, copia) : '';
+      copia.contadores[chaveContador] = { valor: novo };
+      if (dado) copia.contadores[chaveContador].dado = dado;
+      feito.quantidade = novo - atual;
+      feito.contaDaFormula = '+' + feito.quantidade + ' ' + (defContador.nome || 'contador');
+      feito.observacao = feito.quantidade
+        ? 'O dado foi guardado na ficha; a rolagem só acontece quando você decidir gastá-lo.'
+        : 'O contador já está no máximo.';
+      feitos.push(feito);
+      continue;
+    }
 
     if (ef.modo === 'narrativo') {
       feito.observacao = escolha.projeto

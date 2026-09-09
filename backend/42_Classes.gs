@@ -158,6 +158,20 @@ const EFEITOS_DERIVADOS_DE_CLASSE = {
   "À Vontade": {
     "estresseMaximo": 1
   },
+  "Superação do Desafio": {
+    "dadoEsperancaCondicional": {
+      "dado": "d20",
+      "pontosDeVidaNaoMarcadosMaximo": 2,
+      "opcional": true,
+      "rotulo": "Pode usar d20 como Dado de Esperança"
+    }
+  },
+  "Camaradagem": {
+    "jogadaEmEquipe": {
+      "iniciacoesExtrasPorSessao": 1,
+      "custoAliadoAoIniciarComVoce": 2
+    }
+  },
   "Adrenalina": {
     "danoPorNivelSeCondicao": "vulneravel"
   },
@@ -284,6 +298,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerEstado": null,
     "entradaManual": null,
     "carregaComDano": null,
+    "efeitoRecurso": null,
+    "confirmacao": null,
     "estado": null
   },
   "Coração de Poeta": {
@@ -303,6 +319,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerEstado": null,
     "entradaManual": null,
     "carregaComDano": null,
+    "efeitoRecurso": null,
+    "confirmacao": null,
     "estado": null
   },
   "Encarnar Elemental": {
@@ -343,6 +361,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerEstado": null,
     "entradaManual": null,
     "carregaComDano": null,
+    "efeitoRecurso": null,
+    "confirmacao": null,
     "estado": {
       "chave": "estado:druida:canalizacao-elemental",
       "valor": 1,
@@ -378,6 +398,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     },
     "entradaManual": null,
     "carregaComDano": null,
+    "efeitoRecurso": null,
+    "confirmacao": null,
     "estado": null
   },
   "Magia Volátil": {
@@ -397,6 +419,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerEstado": null,
     "entradaManual": null,
     "carregaComDano": null,
+    "efeitoRecurso": null,
+    "confirmacao": null,
     "estado": null
   },
   "Canalizar Poder Bruto": {
@@ -427,6 +451,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerEstado": null,
     "entradaManual": null,
     "carregaComDano": null,
+    "efeitoRecurso": null,
+    "confirmacao": null,
     "estado": null
   },
   "Elementalista": {
@@ -457,6 +483,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerEstado": null,
     "entradaManual": null,
     "carregaComDano": null,
+    "efeitoRecurso": null,
+    "confirmacao": null,
     "estado": null
   },
   "Evasão Natural": {
@@ -484,6 +512,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
       "mensagem": "Role 1d6 fora do app e informe o resultado. Ele é somado à sua Evasão somente contra este ataque."
     },
     "carregaComDano": null,
+    "efeitoRecurso": null,
+    "confirmacao": null,
     "estado": null
   },
   "Manipular Magia": {
@@ -524,6 +554,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerEstado": null,
     "entradaManual": null,
     "carregaComDano": null,
+    "efeitoRecurso": null,
+    "confirmacao": null,
     "estado": null
   },
   "Carga Arcana": {
@@ -561,6 +593,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "carregaComDano": {
       "tipo": "magico"
     },
+    "efeitoRecurso": null,
+    "confirmacao": null,
     "estado": {
       "chave": "estado:feiticeiro:carga-arcana",
       "valor": 1,
@@ -585,6 +619,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerEstado": null,
     "entradaManual": null,
     "carregaComDano": null,
+    "efeitoRecurso": null,
+    "confirmacao": null,
     "estado": null
   },
   "Nêmesis": {
@@ -607,6 +643,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerEstado": null,
     "entradaManual": null,
     "carregaComDano": null,
+    "efeitoRecurso": null,
+    "confirmacao": null,
     "estado": null
   },
   "Sem Piedade": {
@@ -626,6 +664,50 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerEstado": null,
     "entradaManual": null,
     "carregaComDano": null,
+    "efeitoRecurso": null,
+    "confirmacao": null,
+    "estado": null
+  },
+  "Coragem": {
+    "classe": "guerreiro",
+    "origem": "subclasse",
+    "custo": {},
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "Falhei com Medo · ganhar 1 Esperança",
+    "lembrete": "Use somente depois de falhar em uma jogada com Medo.",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
+    "efeitoRecurso": {
+      "chave": "esperanca",
+      "delta": 1,
+      "rotulo": "Esperança"
+    },
+    "confirmacao": "falha-com-medo",
+    "estado": null
+  },
+  "Camaradagem": {
+    "classe": "guerreiro",
+    "origem": "subclasse",
+    "custo": {},
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "uso:guerreiro-chamada-dos-bravos:camaradagem",
+    "rotuloAtivar": "Usar iniciação extra da Jogada em Equipe",
+    "lembrete": "Esta marca representa somente a iniciação adicional concedida por Camaradagem; a iniciação normal da sessão continua sendo resolvida pela mesa.",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
+    "efeitoRecurso": null,
+    "confirmacao": null,
     "estado": null
   },
   "Esquiva de Ladino": {
@@ -645,6 +727,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerEstado": null,
     "entradaManual": null,
     "carregaComDano": null,
+    "efeitoRecurso": null,
+    "confirmacao": null,
     "estado": {
       "chave": "estado:ladino:esquiva",
       "valor": 1,
@@ -669,6 +753,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerEstado": null,
     "entradaManual": null,
     "carregaComDano": null,
+    "efeitoRecurso": null,
+    "confirmacao": null,
     "estado": null
   },
   "Segurem Eles": {
@@ -688,6 +774,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerEstado": null,
     "entradaManual": null,
     "carregaComDano": null,
+    "efeitoRecurso": null,
+    "confirmacao": null,
     "estado": null
   },
   "Marca da Presa": {
@@ -710,6 +798,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerEstado": null,
     "entradaManual": null,
     "carregaComDano": null,
+    "efeitoRecurso": null,
+    "confirmacao": null,
     "estado": null
   },
   "Alicerce da Vida": {
@@ -729,6 +819,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerEstado": null,
     "entradaManual": null,
     "carregaComDano": null,
+    "efeitoRecurso": null,
+    "confirmacao": null,
     "estado": null
   }
 };
@@ -751,6 +843,20 @@ const HABILIDADES_DE_CLASSE_EM_ALIADO = {
         "rotulo": "Aliado remove 1 Estresse",
         "recurso": "estresseMarcado",
         "delta": -1
+      }
+    ]
+  },
+  "Camaradagem": {
+    "classe": "guerreiro",
+    "origem": "subclasse",
+    "gatilho": "Quando um aliado iniciar uma Jogada em Equipe com você.",
+    "rotuloAtivar": "Aliado iniciou Jogada em Equipe comigo",
+    "opcoes": [
+      {
+        "id": "custo-jogada-em-equipe",
+        "rotulo": "Aliado gasta 2 Esperanças",
+        "recurso": "esperanca",
+        "delta": -2
       }
     ]
   }

@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 46 contadores: 17 de carta, 22 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 47 contadores: 17 de carta, 23 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,12 +1561,12 @@ teste('o catálogo tem 46 contadores: 17 de carta, 22 de classe/subclasse, 4 de 
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 46);
+  igual(Object.keys(CONTADORES).length, 47);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 17);
   igual(porOrigem['caracteristica-classe'], 5);
-  igual(porOrigem['caracteristica-subclasse'], 17);
+  igual(porOrigem['caracteristica-subclasse'], 18);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
 });
@@ -2999,8 +2999,9 @@ teste('o livro dá 2 movimentos, 4 opções no curto e 5 no longo', () => {
   igual(DESCANSO.movimentosPorDescanso, 2);
   igual(DESCANSO.podeRepetirMovimento, true);
   igual(DESCANSO.maxDescansosCurtosSeguidos, 3);
-  const curto = Object.values(MOVIMENTOS_DESCANSO).filter((m) => m.tipos.includes('curto'));
-  const longo = Object.values(MOVIMENTOS_DESCANSO).filter((m) => m.tipos.includes('longo'));
+  const base = Object.values(MOVIMENTOS_DESCANSO).filter((m) => !m.exigeGrupoCaracteristica);
+  const curto = base.filter((m) => m.tipos.includes('curto'));
+  const longo = base.filter((m) => m.tipos.includes('longo'));
   igual(curto.length, 4);
   igual(longo.length, 5);
 });
@@ -7853,6 +7854,75 @@ teste('arquivarEResetar preserva o antigo e recria vazio', () => {
 });
 
 /* -------------------------------------------------------------------------- */
+
+console.log('\nLote 8 — Guerreiro: fechamento');
+
+function guerreiroLote8_(subclasse, cartasSub) {
+  const f = fichaAncestral_('Humano');
+  f.identidade.classe = 'Guerreiro';
+  f.identidade.subclasse = subclasse;
+  f.subclasseCartas = cartasSub || ['fundacao'];
+  return contexto.validarFicha_(f);
+}
+
+teste('Coragem ganha 1 Esperança após a confirmação da falha com Medo e respeita o teto', () => {
+  const f = guerreiroLote8_('Chamada dos Bravos', ['fundacao']);
+  f.recursos.esperanca = 2;
+  let r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Coragem' }]);
+  igual(r.erros.length, 0, JSON.stringify(r));
+  igual(f.recursos.esperanca, 3);
+  f.recursos.esperanca = f.recursos.esperancaMaxima;
+  r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Coragem' }]);
+  igual(r.erros.length, 0, JSON.stringify(r));
+  igual(f.recursos.esperanca, f.recursos.esperancaMaxima);
+});
+
+teste('Superação do Desafio publica d20 somente com 2 PV não marcados ou menos', () => {
+  const f = guerreiroLote8_('Chamada dos Bravos', ['fundacao', 'especializacao']);
+  contexto.aplicarDerivados_(f);
+  const max = f.recursos.pontosDeVidaMaximos;
+  f.recursos.pontosDeVidaMarcados = Math.max(0, max - 3);
+  contexto.aplicarDerivados_(f);
+  let op = (f.opcoesDeDadoEsperanca || []).find((x) => x.fonte === 'Superação do Desafio');
+  verdade(op && !op.ativo, JSON.stringify(f.opcoesDeDadoEsperanca));
+  f.recursos.pontosDeVidaMarcados = Math.max(0, max - 2);
+  contexto.aplicarDerivados_(f);
+  op = (f.opcoesDeDadoEsperanca || []).find((x) => x.fonte === 'Superação do Desafio');
+  verdade(op && op.ativo && op.dado === 'd20', JSON.stringify(op));
+});
+
+teste('Camaradagem rastreia só a iniciação EXTRA e cobra 2 Esperanças do aliado', () => {
+  const f = guerreiroLote8_('Chamada dos Bravos', ['fundacao', 'especializacao', 'maestria']);
+  let r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Camaradagem' }]);
+  igual(r.erros.length, 0, JSON.stringify(r));
+  igual(f.contadores['uso:guerreiro-chamada-dos-bravos:camaradagem'].valor, 1);
+  r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Camaradagem' }]);
+  verdade(r.erros.length > 0, 'segundo uso extra na sessão deveria ser recusado');
+
+  const aliado = fichaAncestral_('Humano');
+  aliado.recursos.esperanca = 4;
+  const rel = contexto.aplicarHabilidadeEmAliado_(f, aliado, 'Camaradagem', 'custo-jogada-em-equipe');
+  verdade(!rel.erro, JSON.stringify(rel));
+  igual(aliado.recursos.esperanca, 2);
+});
+
+teste('Preparação Marcial aparece para o grupo e guarda Dado de Matador também em aliado', () => {
+  const aliado = fichaAncestral_('Humano');
+  contexto.definirCaracteristicasDoGrupoNoDescanso_([]);
+  verdade(!contexto.movimentosDoDescanso_('curto', aliado).some((m) => m.id === 'preparacao-marcial'));
+  contexto.definirCaracteristicasDoGrupoNoDescanso_(['Preparação Marcial']);
+  verdade(contexto.movimentosDoDescanso_('curto', aliado).some((m) => m.id === 'preparacao-marcial'));
+  const sim = contexto.simularDescanso_(aliado, 'curto', [
+    { movimento: 'preparacao-marcial' },
+    { movimento: 'preparar-se', comGrupo: false }
+  ]);
+  verdade(sim.previa.ok, JSON.stringify(sim.previa));
+  igual(sim.ficha.contadores['classe:guerreiro:matador'].valor, 1);
+  contexto.validarContadores_(sim.ficha);
+  igual(sim.ficha.contadores['classe:guerreiro:matador'].valor, 1, 'contador compartilhado não pode sumir no aliado');
+  contexto.definirCaracteristicasDoGrupoNoDescanso_([]);
+});
+
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {

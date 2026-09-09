@@ -1313,6 +1313,46 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     }, uso.rotuloAtivar || `Aplicar ${nome} no aliado`);
   }
 
+  function botaoDeResolucaoManual(nome) {
+    const regra = catalogo.resolucaoManualDaCaracteristica(nome);
+    if (!regra) return null;
+    return el('button', {
+      type: 'button', class: 'btn btn--fantasma btn--pequeno',
+      onClick: () => {
+        const linhas = [];
+        if (regra.gatilho) linhas.push(el('p', { class: 'texto-sm' }, textoAnotado(regra.gatilho)));
+        const jogada = [regra.jogada, regra.traco, regra.contra ? 'contra ' + regra.contra : ''].filter(Boolean).join(' · ');
+        if (jogada) linhas.push(el('p', { class: 'texto-sm', texto: jogada }));
+        if (regra.rolaNoApp === false) linhas.push(el('p', { class: 'texto-xs texto-fraco', texto: 'Role na mesa; o app não gera resultados.' }));
+        const opcoes = Array.isArray(regra.opcoes) ? regra.opcoes : [];
+        if (opcoes.length) {
+          linhas.push(el('div', { class: 'pilha' }, opcoes.map((o, i) =>
+            el('p', { class: 'texto-sm', texto: (i + 1) + '. ' + o }))));
+        }
+        if (regra.resultados) {
+          linhas.push(el('p', { class: 'texto-xs texto-fraco', texto:
+            'Sucesso: escolha ' + (regra.resultados.sucesso || 1) + ' · Crítico: escolha ' + (regra.resultados.critico || 2) + '.' }));
+        }
+        const modal = abrirModal({
+          titulo: nome,
+          conteudo: el('div', { class: 'pilha' }, linhas),
+          acoes: [el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar() }, 'Fechar')]
+        });
+      }
+    }, regra.rotuloAtivar || 'Resolver na mesa');
+  }
+
+  function resumoDeEfeitoDerivado(nome, ficha) {
+    const regra = catalogo.efeitoDerivadoDaCaracteristica(nome);
+    if (!regra || !regra.dadoEsperancaCondicional) return null;
+    const op = ((ficha || {}).opcoesDeDadoEsperanca || []).find((x) => dados.chave(x.fonte) === dados.chave(nome));
+    if (!op) return null;
+    const texto = op.ativo
+      ? `${op.fonte}: ${op.rotulo || ('pode usar ' + op.dado + ' como Dado de Esperança')} agora (${op.pontosDeVidaNaoMarcados} PV não marcados).`
+      : `${op.fonte}: d20 fica disponível com ${op.limite} ou menos PV não marcados; agora há ${op.pontosDeVidaNaoMarcados}.`;
+    return el('p', { class: 'texto-xs texto-fraco', texto });
+  }
+
   function blocoDeRetaliacao(nome, ficha) {
     const regra = catalogo.retaliacaoDaCaracteristica(nome);
     if (!regra) return null;
@@ -2578,6 +2618,8 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
             botaoDeHabilidade(c.nome, ficha),
             botaoDeHabilidadeEmAliado(c.nome),
             botaoDeProtecaoEmAliado(c.nome, ficha),
+            botaoDeResolucaoManual(c.nome),
+            resumoDeEfeitoDerivado(c.nome, ficha),
             blocoDeRetaliacao(c.nome, ficha),
             c.origem ? el('span', { class: 'selo', texto: c.origem }) : null
           ]);
@@ -4379,6 +4421,8 @@ export async function carregarCatalogo() {
   const usosEmAliado = new Map();
   const protecoesEmAliado = new Map();
   const retaliacoes = new Map();
+  const resolucoesManuais = new Map();
+  const efeitosDerivados = new Map();
   const anotaUso = (f) => { if (f && f.uso) usosComCusto.set(dados.chave(f.nome), f.uso); };
   const anotaUsoEmAliado = (f) => {
     if (f && f.usoEmAliado) usosEmAliado.set(dados.chave(f.nome), f.usoEmAliado);
@@ -4389,15 +4433,21 @@ export async function carregarCatalogo() {
   const anotaRetaliacao = (f) => {
     if (f && f.retaliacao) retaliacoes.set(dados.chave(f.nome), f.retaliacao);
   };
+  const anotaResolucaoManual = (f) => {
+    if (f && f.resolucaoManual) resolucoesManuais.set(dados.chave(f.nome), f.resolucaoManual);
+  };
+  const anotaEfeitoDerivado = (f) => {
+    if (f && f.efeitoDerivado) efeitosDerivados.set(dados.chave(f.nome), f.efeitoDerivado);
+  };
   (anc.ancestralidades || []).forEach((a) => (a.caracteristicas || []).forEach(anotaUso));
   (com.comunidades || []).forEach((c) => anotaUso(c.caracteristica));
   (classes.classes || []).forEach((c) => {
-    anotaUso(c.caracteristicaEsperanca); anotaUsoEmAliado(c.caracteristicaEsperanca); anotaProtecaoEmAliado(c.caracteristicaEsperanca); anotaRetaliacao(c.caracteristicaEsperanca);
-    (c.caracteristicasDeClasse || []).forEach((f) => { anotaUso(f); anotaUsoEmAliado(f); anotaProtecaoEmAliado(f); anotaRetaliacao(f); });
+    anotaUso(c.caracteristicaEsperanca); anotaUsoEmAliado(c.caracteristicaEsperanca); anotaProtecaoEmAliado(c.caracteristicaEsperanca); anotaRetaliacao(c.caracteristicaEsperanca); anotaResolucaoManual(c.caracteristicaEsperanca); anotaEfeitoDerivado(c.caracteristicaEsperanca);
+    (c.caracteristicasDeClasse || []).forEach((f) => { anotaUso(f); anotaUsoEmAliado(f); anotaProtecaoEmAliado(f); anotaRetaliacao(f); anotaResolucaoManual(f); anotaEfeitoDerivado(f); });
     (c.subclasses || []).forEach((sub) =>
       Object.keys(sub.cartas || {}).forEach((qual) =>
         ((sub.cartas[qual] || {}).caracteristicas || []).forEach((f) => {
-          anotaUso(f); anotaUsoEmAliado(f); anotaProtecaoEmAliado(f); anotaRetaliacao(f);
+          anotaUso(f); anotaUsoEmAliado(f); anotaProtecaoEmAliado(f); anotaRetaliacao(f); anotaResolucaoManual(f); anotaEfeitoDerivado(f);
         })));
   });
 
@@ -4638,6 +4688,10 @@ export async function carregarCatalogo() {
     protecaoEmAliadoDaCaracteristica: (nome) => protecoesEmAliado.get(dados.chave(nome)) || null,
     /** Bônus de retaliação que fica pendente por adversário. */
     retaliacaoDaCaracteristica: (nome) => retaliacoes.get(dados.chave(nome)) || null,
+    /** Resolução que permanece na mesa, mas ganha um guia sem RNG. */
+    resolucaoManualDaCaracteristica: (nome) => resolucoesManuais.get(dados.chave(nome)) || null,
+    /** Efeito derivado já calculado pelo servidor. */
+    efeitoDerivadoDaCaracteristica: (nome) => efeitosDerivados.get(dados.chave(nome)) || null,
     contadorPorChave: (chave) => porChaveContador.get(dados.chave(chave)) || null,
     maximoDoContador: (chave, ficha) => {
       const def = porChaveContador.get(dados.chave(chave));
