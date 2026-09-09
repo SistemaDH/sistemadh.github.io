@@ -22,6 +22,7 @@ jobs:
           python3 tools/lote8-comunidades.py
           python3 tools/lote8-comunidades-hotfix.py
           python3 tools/lote8-comunidades-fix2.py
+          python3 tools/lote8-comunidades-fix3.py
           node tools/gerar-43-origens.mjs
           node tools/gerar-47-contadores.mjs
           node tools/gerar-48-criacao.mjs
@@ -65,6 +66,7 @@ jobs:
           git rm -f tools/lote8-comunidades.py
           git rm -f tools/lote8-comunidades-hotfix.py
           git rm -f tools/lote8-comunidades-fix2.py
+          git rm -f tools/lote8-comunidades-fix3.py
           git rm -f tools/lote8-comunidades-checkpoint.py
           git rm -f .github/workflows/lote8-comunidades.yml
           git add -A
