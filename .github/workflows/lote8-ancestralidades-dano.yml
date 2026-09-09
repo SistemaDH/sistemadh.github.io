@@ -1,0 +1,65 @@
+name: Lote 8 - ancestralidades dano
+
+on:
+  push:
+    branches:
+      - 'ediçãoclaude'
+
+permissions:
+  contents: write
+
+jobs:
+  validar-materializar:
+    if: ${{ contains(github.event.head_commit.message, '[run-lote8-dano]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 'ediçãoclaude'
+          fetch-depth: 0
+
+      - name: Instalar Playwright do runner
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install --with-deps chromium
+
+      - name: Materializar dano de ancestralidades
+        run: |
+          python3 tools/lote8-ancestralidades-dano.py
+          python3 tools/lote8-ancestralidades-dano-e2e.py
+          node tools/gerar-43-origens.mjs
+          python3 tools/conferir-ancestralidades-lote8.py
+          git diff --check
+
+      - name: Testes backend
+        run: node tools/testes-backend.mjs
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir arquivos gerados
+        run: node tools/conferir-gerados.mjs
+
+      - name: Conferir CSS
+        run: node tools/conferir-css.mjs
+
+      - name: Proteger contra concorrência
+        run: |
+          git fetch origin 'ediçãoclaude'
+          REMOTO="$(git rev-parse 'origin/ediçãoclaude')"
+          if [ "$REMOTO" != "$GITHUB_SHA" ]; then
+            echo "Branch avançou durante o run: $GITHUB_SHA -> $REMOTO"
+            exit 1
+          fi
+
+      - name: Commitar funcional e limpar temporários
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm tools/lote8-ancestralidades-dano.py
+          git rm tools/lote8-ancestralidades-dano-e2e.py
+          git rm .github/workflows/lote8-ancestralidades-dano.yml
+          git add -A
+          git diff --cached --check
+          git commit -m 'feat: automatizar dano de ancestralidades [lote8-generated]'
+          git push origin HEAD:'ediçãoclaude'
