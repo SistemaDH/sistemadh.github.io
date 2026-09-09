@@ -21,6 +21,7 @@ jobs:
           python3 tools/lote8-bone-n1-n4-hotfix.py
           node tools/gerar-41-dominios.mjs
           node tools/gerar-47-contadores.mjs
+          node tools/gerar-48-criacao.mjs
           git diff --check
 
       - name: Conferir classificação e auditoria
