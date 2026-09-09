@@ -1,0 +1,122 @@
+name: Lote 8 - Valor N5-N10
+
+on:
+  push:
+    branches: [tmp-lote8-valor-n5-n10-sol-fix2]
+
+permissions:
+  contents: write
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materializar Valor N5-N10
+        run: |
+          python3 tools/lote8-valor-n5-n10.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tools/41_Dominios.rodape.js')
+          s=p.read_text(encoding='utf-8')
+          velho="if(e.exigeArmaduraEquipada===true && !((((ficha||{}).equipamento||{}).armadura)) return false;"
+          novo="if(e.exigeArmaduraEquipada===true && !((ficha||{}).equipamento||{}).armadura) return false;"
+          assert velho in s
+          p.write_text(s.replace(velho,novo,1),encoding='utf-8')
+          PY
+          node tools/gerar-41-dominios.mjs
+          node tools/gerar-47-contadores.mjs
+          node tools/gerar-48-criacao.mjs
+          node tools/gerar-4B-descanso.mjs
+          cp backend/41_Dominios.gs /tmp/41_Dominios.js
+          node --check /tmp/41_Dominios.js
+          git diff --check
+
+      - name: Conferir classificacao e auditoria
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/cartas-dominio.json',encoding='utf-8'))
+          ids={
+            'valor-armadureiro','valor-golpe-estimulante','valor-erga-se','valor-inevitavel',
+            'valor-deixe-passar','valor-tocado-pelo-valor','valor-golpe-no-chao','valor-surto-total',
+            'valor-liderar-pelo-exemplo','valor-mantenha-a-posicao','valor-armadura-inabalavel','valor-inquebravel'
+          }
+          xs=[c for c in d['cartas'] if c['id'] in ids]
+          assert len(xs)==12, len(xs)
+          assert all(c.get('automacao') for c in xs), [c['id'] for c in xs if not c.get('automacao')]
+          assert all((c.get('resolucaoManual') or {}).get('rolaNoApp') is False for c in xs)
+          arm=next(c for c in xs if c['id']=='valor-armadureiro')
+          assert (arm.get('efeitoDerivado') or {}).get('pontuacaoArmadura')==1
+          assert (arm.get('efeitoDerivado') or {}).get('exigeArmaduraEquipada') is True
+          erga=next(c for c in xs if c['id']=='valor-erga-se')
+          assert (erga.get('efeitoDerivado') or {}).get('limiarGravePorProficiencia')==1
+          toc=next(c for c in xs if c['id']=='valor-tocado-pelo-valor')
+          req=(toc.get('efeitoDerivado') or {}).get('exigeCartasAtivasDominio') or {}
+          assert req.get('dominio')=='VALOR' and req.get('quantidade')==4
+          surto=next(c for c in xs if c['id']=='valor-surto-total')
+          ed=surto.get('efeitoDerivado') or {}
+          assert ed.get('tracosTodos')==2 and ed.get('exigeEstado')=='estado:carta:valor:surto-total'
+          cont=json.load(open('data/contadores.json',encoding='utf-8'))['contadores']
+          assert len(cont)==142, len(cont)
+          keys={x['chave'] for x in cont}
+          for k in [
+            'uso:carta:valor:golpe-estimulante','estado:carta:valor:inevitavel',
+            'uso:carta:valor:surto-total','estado:carta:valor:surto-total',
+            'estado:carta:valor:mantenha-a-posicao'
+          ]:
+            assert k in keys, k
+          PY
+          python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria-lote8.md
+          if grep -Eq '^\| Valor \| (5|6|7|8|9|10) \|' /tmp/auditoria-lote8.md; then
+            echo 'Ainda ha Valor N5-N10 candidato sem sinal especifico:'
+            grep -E '^\| Valor \| (5|6|7|8|9|10) \|' /tmp/auditoria-lote8.md
+            exit 1
+          fi
+          grep -q 'valor-surto-total' backend/41_Dominios.gs
+          grep -q 'estado:carta:valor:surto-total' backend/47_Contadores.gs
+          grep -q 'exigeArmaduraEquipada===true' backend/41_Dominios.gs
+          grep -q 'limiarGravePorProficiencia' backend/48_Criacao.gs
+
+      - name: Testes backend
+        shell: bash
+        run: |
+          set -o pipefail
+          node tools/testes-backend.mjs | tee /tmp/backend.log
+          ! grep -q '✗' /tmp/backend.log
+          tail -n 40 /tmp/backend.log
+
+      - name: Instalar Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install chromium
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados e CSS
+        run: |
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+          git diff --check
+
+      - name: Proteger contra concorrencia
+        run: |
+          git fetch origin 'ediçãoclaude'
+          test "$(git rev-parse 'origin/ediçãoclaude')" = '8f77681b1328548a2108a0056bb01617f47a44bf'
+
+      - name: Commitar funcional e limpar temporarios
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f --ignore-unmatch tools/lote8-valor-n5-n10.py
+          git rm -f --ignore-unmatch .github/workflows/lote8-valor-n5-n10.yml
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          find . -type f -name '*.pyc' -delete
+          git add -A
+          git diff --cached --check
+          git commit -m 'feat: revisar Valor níveis 5 a 10 [lote8-generated]'
+          git push origin HEAD:tmp-lote8-valor-n5-n10-sol-fix2
