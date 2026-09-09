@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 116 contadores: 84 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 121 contadores: 89 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 116 contadores: 84 de carta, 25 de classe/subclasse, 4 de
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 116);
+  igual(Object.keys(CONTADORES).length, 121);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 84);
+  igual(porOrigem['carta-dominio'], 89);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -9553,6 +9553,124 @@ teste('Glifo do Crepúsculo cobra 1 Esperança somente após sucesso confirmado'
   const f=fichaMidnightBaixa_(4,['midnight-glifo-do-crepusculo','midnight-expert-em-furtividade']);
   const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-glifo-do-crepusculo'}]);
   igual(r.erros,[]); igual(f.recursos.esperanca,5);
+});
+
+
+
+console.log('\nLote 8 — Meia-Noite níveis 5–10');
+function fichaMidnightAlta_(nivel, ativas) {
+  const f=fichaMidnightBaixa_(nivel,ativas);
+  f.identidade.nivel=nivel;
+  f.recursos.esperanca=6; f.recursos.esperancaMaxima=6;
+  f.recursos.estresseMarcado=0; f.recursos.estresseMaximo=Math.max(8,Number(f.recursos.estresseMaximo)||0);
+  f.recursos.pontosDeVidaMarcados=0;
+  return f;
+}
+
+teste('Meia-Noite N5-N10 fica toda classificada e sem RNG no app',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const ids=['midnight-retirada-fantasma','midnight-silencio','midnight-disfarce-em-massa','midnight-sussurros-sombrios','midnight-esquiva-desaparecente','midnight-tocado-pela-meia-noite','midnight-carga-magica','midnight-cacador-das-sombras','midnight-terror-noturno','midnight-tributo-do-crepusculo','midnight-eclipse','midnight-espectro-da-escuridao'];
+  const xs=ids.map((id)=>d.cartas.find((c)=>c.id===id));
+  verdade(xs.every(Boolean)); verdade(xs.every((c)=>!!c.automacao));
+  verdade(xs.every((c)=>c.resolucaoManual && c.resolucaoManual.rolaNoApp===false));
+});
+
+teste('Retirada Fantasma oferece as duas etapas e cobra 1 Esperança em cada',()=>{
+  const f=fichaMidnightAlta_(5,['midnight-retirada-fantasma','midnight-silencio']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-retirada-fantasma',opcao:'ativar'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5); igual(r.mudancas[0].opcao,'ativar');
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-retirada-fantasma',opcao:'retornar'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,4); igual(r.mudancas[0].opcao,'retornar');
+});
+
+teste('Silêncio cobra 1 Esperança após sucesso e não cria condição global no conjurador',()=>{
+  const f=fichaMidnightAlta_(5,['midnight-silencio','midnight-retirada-fantasma']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-silencio'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5);
+  verdade(!(f.condicoes||[]).some((x)=>String(x.id||x).includes('silenc')));
+});
+
+teste('Disfarce em Massa marca 1 Estresse e inicia a Contagem Regressiva em 8',()=>{
+  const f=fichaMidnightAlta_(6,['midnight-disfarce-em-massa','midnight-sussurros-sombrios']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-disfarce-em-massa'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+  igual(f.contadores['carta:midnight-disfarce-em-massa'].valor,8);
+  const c=contexto.aplicarAjustes_(f,[{tipo:'contador',chave:'carta:midnight-disfarce-em-massa',delta:-1}]);
+  igual(c.erros,[]); igual(f.contadores['carta:midnight-disfarce-em-massa'].valor,7);
+});
+
+teste('Sussurros Sombrios cobra 1 Estresse apenas na sondagem',()=>{
+  const f=fichaMidnightAlta_(6,['midnight-sussurros-sombrios','midnight-disfarce-em-massa']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-sussurros-sombrios'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+});
+
+teste('Esquiva Desaparecente custa 1 Esperança e mantém estado até encerramento manual',()=>{
+  const f=fichaMidnightAlta_(7,['midnight-esquiva-desaparecente','midnight-tocado-pela-meia-noite']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-esquiva-desaparecente'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5);
+  igual(f.contadores['estado:carta:midnight:esquiva-desaparecente'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-esquiva-desaparecente',encerrar:true}]);
+  igual(r.erros,[]); verdade(!f.contadores['estado:carta:midnight:esquiva-desaparecente']);
+});
+
+teste('Tocado pela Meia-Noite exige quatro cartas e cobra 1 Estresse no bônus de dano',()=>{
+  const quatro=['midnight-tocado-pela-meia-noite','midnight-esquiva-desaparecente','midnight-sussurros-sombrios','midnight-silencio'];
+  const f=fichaMidnightAlta_(7,quatro);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-tocado-pela-meia-noite'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+  const f3=fichaMidnightAlta_(7,quatro.slice(0,3));
+  r=contexto.aplicarAjustes_(f3,[{tipo:'usarCarta',carta:'midnight-tocado-pela-meia-noite'}]);
+  verdade(r.erros.length===1);
+  const der=contexto.efeitosDerivadosAtivosDeCartas_(f).find((x)=>x.id==='midnight-tocado-pela-meia-noite');
+  verdade(der && der.efeito.podeConverterMedoMestreEmEsperancaComEsperancaZero===true);
+});
+
+teste('Carga Mágica preserva contador existente limitado por Conjuração',()=>{
+  const defs=avaliar('CONTADORES');
+  const c=defs['carta:midnight-carga-magica'];
+  verdade(!!c); igual(c.maximo.tipo,'traco'); igual(c.maximo.traco,'Conjuração');
+});
+
+teste('Caçador das Sombras não altera Evasão base fora do contexto de iluminação',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const c=d.cartas.find((x)=>x.id==='midnight-cacador-das-sombras');
+  verdade(!c.uso); verdade(!c.efeitoDerivado);
+});
+
+teste('Terror Noturno registra uma vez por descanso longo',()=>{
+  const f=fichaMidnightAlta_(9,['midnight-terror-noturno','midnight-tributo-do-crepusculo']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-terror-noturno'}]);
+  igual(r.erros,[]); igual(f.contadores['uso:carta:midnight:terror-noturno'].valor,1);
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-terror-noturno'}]).erros.length===1);
+  contexto.aplicarGatilhoContadores_(f,'descanso-longo');
+  verdade(!f.contadores['uso:carta:midnight:terror-noturno']);
+});
+
+teste('Tributo do Crepúsculo preserva contador aberto e zera em descanso/troca de alvo',()=>{
+  const defs=avaliar('CONTADORES');
+  const c=defs['carta:midnight-tributo-do-crepusculo'];
+  verdade(!!c); igual(c.maximo.tipo,'aberto'); verdade(c.zeraEm.includes('descanso')); verdade(c.zeraEm.includes('troca-de-alvo'));
+});
+
+teste('Eclipse registra 1/descanso longo e mantém estado até gatilho manual',()=>{
+  const f=fichaMidnightAlta_(10,['midnight-eclipse','midnight-espectro-da-escuridao']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-eclipse'}]);
+  igual(r.erros,[]); igual(f.contadores['uso:carta:midnight:eclipse'].valor,1); igual(f.contadores['estado:carta:midnight:eclipse'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-eclipse',encerrar:true}]);
+  igual(r.erros,[]); verdade(!f.contadores['estado:carta:midnight:eclipse']);
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-eclipse'}]).erros.length===1);
+});
+
+teste('Espectro da Escuridão custa 1 Estresse e anula dano físico enquanto ativo',()=>{
+  const f=fichaMidnightAlta_(10,['midnight-espectro-da-escuridao','midnight-eclipse']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-espectro-da-escuridao'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+  igual(f.contadores['estado:carta:midnight:espectro-da-escuridao'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:20,tipoDeDano:'fisico'}]);
+  igual(r.erros,[]); igual(r.mudancas[0].dano.final,0); igual(r.mudancas[0].imunidade,'Espectro da Escuridão');
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-espectro-da-escuridao',encerrar:true}]);
+  igual(r.erros,[]); verdade(!f.contadores['estado:carta:midnight:espectro-da-escuridao']);
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

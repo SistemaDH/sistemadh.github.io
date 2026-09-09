@@ -4761,7 +4761,38 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custos-com-estado-ficcional-manual",
+    "resumo": "O app oferece as duas etapas com custo fixo de 1 Esperança cada, sem inventar uma posição persistente que o servidor não consegue validar."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Na opção Ativar, registre na mesa o ponto onde a Retirada foi ancorada. Na opção Retornar, só use se ela estiver ativa antes do próximo descanso; teleporte ao ponto e encerre a magia."
+   },
+   "uso": {
+    "custo": {},
+    "opcoes": [
+     {
+      "id": "ativar",
+      "rotulo": "Ativar ponto de retorno",
+      "custo": {
+       "esperanca": 1
+      },
+      "lembrete": "Registre na mesa o local atual como ponto da Retirada Fantasma."
+     },
+     {
+      "id": "retornar",
+      "rotulo": "Retornar ao ponto",
+      "custo": {
+       "esperanca": 1
+      },
+      "lembrete": "Use somente com Retirada Fantasma já ativa e antes do próximo descanso; reapareça no ponto registrado e encerre a magia."
+     }
+    ],
+    "rotuloAtivar": "Usar Retirada Fantasma",
+    "lembrete": "A posição do ponto de retorno permanece na mesa; cada uma das duas etapas custa 1 Esperança."
+   }
   },
   {
    "id": "midnight-silencio",
@@ -4790,6 +4821,21 @@
    "observacao": null,
    "origem": {
     "texto": "livro-jambo"
+   },
+   "automacao": {
+    "classificacao": "automatizada-custo-apos-sucesso",
+    "resumo": "Depois de um sucesso confirmado, o app cobra 1 Esperança."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Conjuração, o alvo, a área Silenciada e os três gatilhos de término (Medo do Mestre, nova conjuração de Silêncio ou dano Maior) continuam no encontro."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "rotuloAtivar": "Sucesso: conjurar Silêncio · 1 Esperança",
+    "lembrete": "Use após sucesso contra um alvo Próximo. A área Muito Próxima ao alvo fica Silenciada até um dos gatilhos descritos na carta."
    }
   },
   {
@@ -4813,7 +4859,30 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo-e-contagem-existente",
+    "resumo": "O app marca 1 Estresse e inicia automaticamente em 8 a Contagem Regressiva já existente para a carta."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Escolha as aparências e criaturas voluntárias na mesa. O Mestre decide quando a consequência reduz a Contagem Regressiva; ao chegar a 0, o disfarce termina."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "estado": {
+     "chave": "carta:midnight-disfarce-em-massa",
+     "valor": 8,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Disfarce em Massa ativo",
+     "rotuloEncerrar": "Encerrar Disfarce em Massa",
+     "avisoEncerrar": "Disfarce em Massa encerrado."
+    },
+    "rotuloAtivar": "Criar Disfarce em Massa · 1 Estresse",
+    "lembrete": "A Contagem Regressiva começa em 8. Reduza-a quando a consequência definida pelo Mestre ocorrer; em 0, o disfarce termina."
+   }
   },
   {
    "id": "midnight-sussurros-sombrios",
@@ -4835,7 +4904,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo-da-sondagem",
+    "resumo": "O canal telepático básico é ficcional e gratuito; quando você decide sondar a mente, o app marca 1 Estresse."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O contato físico prévio, o alvo, a Jogada de Conjuração e a resposta do Mestre a uma das quatro perguntas permanecem na mesa."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "rotuloAtivar": "Sondar pelos Sussurros · 1 Estresse",
+    "lembrete": "Use para a parte de sondagem após existir contato físico com o alvo. Faça a Jogada de Conjuração fora do app e, em sucesso, faça uma das quatro perguntas ao Mestre."
+   }
   },
   {
    "id": "midnight-esquiva-desaparecente",
@@ -4859,7 +4943,30 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo-e-estado-contextual",
+    "resumo": "Após um ataque físico falhar, o app cobra 1 Esperança e mantém um estado de Esquiva Desaparecente ativo para lembrar o Oculto contextual."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Teleporte para um ponto Próximo do atacante e considere-se Oculto conforme a carta. Encerre o estado após sua próxima jogada de ação; o app não observa jogadas externas."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "estado": {
+     "chave": "estado:carta:midnight:esquiva-desaparecente",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Esquiva Desaparecente ativa",
+     "rotuloEncerrar": "Encerrar após a próxima ação",
+     "avisoEncerrar": "Esquiva Desaparecente encerrada."
+    },
+    "rotuloAtivar": "Ataque físico falhou: desaparecer · 1 Esperança",
+    "lembrete": "Teleporte para Próximo do atacante e fique Oculto até sua próxima jogada de ação; depois encerre este estado."
+   }
   },
   {
    "id": "midnight-tocado-pela-meia-noite",
@@ -4884,7 +4991,34 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-parcial-com-requisito-de-loadout",
+    "resumo": "Com 4+ cartas de Meia-Noite ativas, o app permite pagar 1 Estresse para o benefício de dano e publica os dois benefícios como efeitos contextuais."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O benefício de 0 Esperança/Medo do Mestre é uma decisão que envolve a reserva de Medo da mesa e permanece manual, inclusive o limite de uma vez por descanso. No ataque, role/some o Dado de Medo fora do app."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "exigeCartasAtivasDominio": {
+     "dominio": "MIDNIGHT",
+     "quantidade": 4
+    },
+    "rotuloAtivar": "Somar Dado de Medo ao dano · 1 Estresse",
+    "lembrete": "Use após um ataque bem-sucedido com 4+ cartas de Meia-Noite ativas; some ao dano o resultado do seu Dado de Medo rolado fora do app."
+   },
+   "efeitoDerivado": {
+    "exigeCartasAtivasDominio": {
+     "dominio": "MIDNIGHT",
+     "quantidade": 4
+    },
+    "podeConverterMedoMestreEmEsperancaComEsperancaZero": true,
+    "podeSomarDadoMedoAoDanoPorEstresse": true
+   }
   },
   {
    "id": "midnight-carga-magica",
@@ -4906,7 +5040,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "contador-existente-com-gatilhos-manuais",
+    "resumo": "O contador persistente de Carga Mágica já existe e tem teto igual ao traço de Conjuração."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Quando sofrer dano mágico, adicione ao contador marcadores iguais aos PV perdidos, respeitando o teto. Após um ataque bem-sucedido, gaste quantos quiser e adicione 1d6 de dano por marcador."
+   }
   },
   {
    "id": "midnight-cacador-das-sombras",
@@ -4927,7 +5069,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "passiva-contextual-manual",
+    "resumo": "O app não altera a Evasão base, evitando manter +1 fora de penumbra/escuridão."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Enquanto estiver em pouca luz ou escuridão, aplique +1 de Evasão e vantagem nas jogadas de ataque durante a resolução da cena."
+   }
   },
   {
    "id": "midnight-terror-noturno",
@@ -4952,7 +5102,24 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-limite-com-resolucao-do-mestre",
+    "resumo": "O app registra o limite de uma vez por descanso longo."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Escolha os alvos, resolva as Reações 16, condições, transferência temporária de Medo do Mestre e d6 de dano fora do app; depois devolva/descarte o Medo conforme a carta."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:midnight:terror-noturno",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Registrar Terror Noturno · 1/descanso longo",
+    "lembrete": "Resolva Reações 16 e Medo do Mestre na mesa. Alvos que falham ficam Aterrorizados/Vulneráveis e recebem o dano dos d6 rolados fora do app."
+   }
   },
   {
    "id": "midnight-tributo-do-crepusculo",
@@ -4973,7 +5140,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "contador-existente-com-alvo-manual",
+    "resumo": "O contador persistente já existe, sem teto artificial, e zera em descanso ou troca de alvo."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Registre na mesa o único alvo Distante. Em sucesso sem dano contra ele, some 1 ficha; ao causar dano, gaste fichas e role +1d12 por ficha fora do app."
+   }
   },
   {
    "id": "midnight-eclipse",
@@ -4999,7 +5174,32 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-uso-e-estado-apos-sucesso",
+    "resumo": "Depois de sucesso na Jogada de Magia 16, o app registra uma vez por descanso longo e mantém Eclipse como estado ativo."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A escuridão, desvantagem, Estresse dos inimigos, gasto de Medo do Mestre e o gatilho de dano Grave pertencem à cena. Encerre o estado manualmente quando o Mestre gastar Medo ou você sofrer dano Grave."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:midnight:eclipse",
+     "maximo": 1
+    },
+    "estado": {
+     "chave": "estado:carta:midnight:eclipse",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Eclipse ativo",
+     "rotuloEncerrar": "Encerrar Eclipse",
+     "avisoEncerrar": "Eclipse encerrado."
+    },
+    "rotuloAtivar": "Sucesso: ativar Eclipse · 1/descanso longo",
+    "lembrete": "Use após sucesso na Jogada de Magia 16. Encerre quando o Mestre gastar 1 Medo em seu turno ou quando você sofrer dano Grave."
+   }
   },
   {
    "id": "midnight-espectro-da-escuridao",
@@ -5023,7 +5223,31 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo-estado-e-imunidade",
+    "resumo": "O app marca 1 Estresse, mantém o estado Espectral e aplica imunidade física enquanto ele estiver ativo."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Flutuar e atravessar objetos são ficcionais. Encerre o estado após fazer uma jogada de ação que tenha outra criatura como alvo; o app não observa essa jogada externa."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "estado": {
+     "chave": "estado:carta:midnight:espectro-da-escuridao",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "imunidadeDano": "fisico",
+     "rotuloAtivo": "Espectro da Escuridão ativo",
+     "rotuloEncerrar": "Encerrar forma Espectral",
+     "avisoEncerrar": "Forma Espectral encerrada."
+    },
+    "rotuloAtivar": "Tornar-se Espectral · 1 Estresse",
+    "lembrete": "Enquanto ativo, dano físico é anulado pelo app. Encerre após uma jogada de ação que tenha outra criatura como alvo."
+   }
   },
   {
    "id": "sage-emaranhado-cruel",

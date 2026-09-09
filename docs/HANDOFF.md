@@ -601,3 +601,14 @@ Automação segura: Chuva de Lâminas cobra 1 Esperança; Disfarce Incrível cob
 Abrir e Puxar e Vincular Sombras permanecem explicitamente manuais/contextuais: criar botão ou condição global para elas representaria incorretamente vantagens e condições que dependem do alvo e da cena. O mesmo cuidado vale para Oculto de Véu da Noite e Vulnerável de Estrangulamento, que não são marcados globalmente na ficha do conjurador.
 
 Próximo bloco canônico pendente do Lote 8: **Meia-Noite níveis 5–10**.
+
+
+### Lote 8 — Meia-Noite níveis 5–10
+
+Meia-Noite está revisada integralmente (níveis 1–10). As doze cartas restantes foram classificadas explicitamente, mantendo dados, alvos e decisões do Mestre fora do app quando não são determinísticos.
+
+Automação segura: Retirada Fantasma cobra separadamente as duas Esperanças sem fingir que conhece a posição do ponto de retorno; Silêncio cobra Esperança após sucesso; Disfarce em Massa cobra Estresse e inicia a Contagem Regressiva existente em 8; Sussurros Sombrios cobra Estresse apenas para a sondagem; Esquiva Desaparecente mantém um estado contextual até a próxima ação. Tocado pela Meia-Noite exige 4+ cartas ativas para o botão de dano e publica os dois benefícios contextuais, sem manipular o Medo do Mestre automaticamente.
+
+Carga Mágica e Tributo do Crepúsculo preservam seus contadores persistentes já existentes. Caçador das Sombras permanece contextual para não gravar +1 Evasão fora de penumbra/escuridão. Terror Noturno registra 1/descanso longo sem mover o Medo do Mestre pela ficha do jogador. Eclipse registra uso/estado após sucesso e é encerrado manualmente pelos gatilhos de Medo/dano Grave. Espectro da Escuridão usa estado persistente e a infraestrutura já existente de imunidade de dano para anular dano físico enquanto a forma está ativa.
+
+Próximo domínio canônico pendente do Lote 8: **Sábio níveis 1–4**.

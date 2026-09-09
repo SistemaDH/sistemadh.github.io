@@ -2189,6 +2189,91 @@
     "manual"
    ],
    "observacao": "Dura até conjurar outra magia; o motor encerra automaticamente quando outro feitiço é usado pelo fluxo de cartas. Manual cobre conjuração feita fora desse fluxo."
+  },
+  {
+   "chave": "estado:carta:midnight:esquiva-desaparecente",
+   "origem": "carta-dominio",
+   "refId": "midnight-esquiva-desaparecente",
+   "nome": "Esquiva Desaparecente",
+   "rotulo": "ativa",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Encerra após a próxima jogada de ação; como as jogadas são externas ao app, o encerramento é manual."
+  },
+  {
+   "chave": "uso:carta:midnight:terror-noturno",
+   "origem": "carta-dominio",
+   "refId": "midnight-terror-noturno",
+   "nome": "Terror Noturno",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
+  },
+  {
+   "chave": "uso:carta:midnight:eclipse",
+   "origem": "carta-dominio",
+   "refId": "midnight-eclipse",
+   "nome": "Eclipse",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo, após sucesso na Jogada de Magia 16."
+  },
+  {
+   "chave": "estado:carta:midnight:eclipse",
+   "origem": "carta-dominio",
+   "refId": "midnight-eclipse",
+   "nome": "Eclipse",
+   "rotulo": "ativo",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Encerra quando o Mestre gasta 1 Medo no turno dele ou quando o conjurador sofre dano Grave."
+  },
+  {
+   "chave": "estado:carta:midnight:espectro-da-escuridao",
+   "origem": "carta-dominio",
+   "refId": "midnight-espectro-da-escuridao",
+   "nome": "Espectro da Escuridão",
+   "rotulo": "ativo",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Encerra após uma jogada de ação que tenha outra criatura como alvo."
   }
  ]
 }

@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 116 cartas e características mandam
+ *  O problema que este arquivo resolve: 121 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -156,6 +156,11 @@ const CONTADORES = {
   "estado:carta:grace:imitador": { origem: "carta-dominio", refId: "grace-imitador", nome: "Imitador", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
   "estado:carta:midnight:espirito-da-meia-noite": { origem: "carta-dominio", refId: "midnight-espirito-da-meia-noite", nome: "Espírito da Meia-Noite", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
   "estado:carta:midnight:veu-da-noite": { origem: "carta-dominio", refId: "midnight-veu-da-noite", nome: "Véu da Noite", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "estado:carta:midnight:esquiva-desaparecente": { origem: "carta-dominio", refId: "midnight-esquiva-desaparecente", nome: "Esquiva Desaparecente", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "uso:carta:midnight:terror-noturno": { origem: "carta-dominio", refId: "midnight-terror-noturno", nome: "Terror Noturno", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:carta:midnight:eclipse": { origem: "carta-dominio", refId: "midnight-eclipse", nome: "Eclipse", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "estado:carta:midnight:eclipse": { origem: "carta-dominio", refId: "midnight-eclipse", nome: "Eclipse", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "estado:carta:midnight:espectro-da-escuridao": { origem: "carta-dominio", refId: "midnight-espectro-da-escuridao", nome: "Espectro da Escuridão", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -276,6 +281,11 @@ const CONTADOR_ALIASES = {
   "estado:carta:grace:imitador": ["Imitador"],
   "estado:carta:midnight:espirito-da-meia-noite": ["Espírito da Meia-Noite"],
   "estado:carta:midnight:veu-da-noite": ["Véu da Noite"],
+  "estado:carta:midnight:esquiva-desaparecente": ["Esquiva Desaparecente"],
+  "uso:carta:midnight:terror-noturno": ["Terror Noturno"],
+  "uso:carta:midnight:eclipse": ["Eclipse"],
+  "estado:carta:midnight:eclipse": ["Eclipse"],
+  "estado:carta:midnight:espectro-da-escuridao": ["Espectro da Escuridão"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */
