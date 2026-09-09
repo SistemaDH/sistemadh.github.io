@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 142 contadores: 110 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 145 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 142 contadores: 110 de carta, 25 de classe/subclasse, 4 d
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 142);
+  igual(Object.keys(CONTADORES).length, 145);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 110);
+  igual(porOrigem['carta-dominio'], 113);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -10034,3 +10034,53 @@ if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));
   process.exit(1);
 }
+
+
+console.log('\nLote 8 — fechamento das quatro cartas legadas');
+
+teste('as quatro cartas legadas têm classificação explícita sem perder suas estruturas antigas',()=>{
+  const ids=['blade-vitalidade','codex-teleporte','codex-simbolo-da-retaliacao','codex-livro-do-ronin'];
+  const dados=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8')).cartas;
+  ids.forEach(id=>{
+    const c=dados.find(x=>x.id===id);
+    verdade(c && c.automacao,id+' sem automação explícita');
+    verdade(c.resolucaoManual && c.resolucaoManual.rolaNoApp===false,id+' deveria manter dados fora do app');
+  });
+  const vit=dados.find(x=>x.id==='blade-vitalidade');
+  verdade(vit.efeitoPermanente && vit.efeitoPermanente.trancaNoCofre===true);
+  const sim=dados.find(x=>x.id==='codex-simbolo-da-retaliacao');
+  verdade(avaliar('CONTADORES')['carta:codex-simbolo-da-retaliacao']);
+  const ron=dados.find(x=>x.id==='codex-livro-do-ronin');
+  verdade(ron.efeitoPermanente && ron.efeitoPermanente.noAlvo);
+});
+
+teste('Teleporte é realmente 1/descanso longo e não o falso positivo Teleporte de Batalha',()=>{
+  const f=fichaCodexAlta_(5,['codex-teleporte','codex-manifestar-muralha']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-teleporte'}]);
+  igual(r.erros,[]); igual(f.contadores['uso:carta:codex:teleporte'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-teleporte'}]);
+  verdade(r.erros.length>0,'segundo Teleporte antes do descanso deveria falhar');
+  contexto.aplicarGatilhoContadores_(f,'descanso-longo');
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-teleporte'}]);
+  igual(r.erros,[],'Teleporte deveria voltar no descanso longo');
+});
+
+teste('Livro do Ronin controla Transformação e encerra o estado ao sofrer dano',()=>{
+  const f=fichaCodexAlta_(9,['codex-livro-do-ronin','codex-onda-de-desintegracao']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-do-ronin',opcao:'transformacao'}]);
+  igual(r.erros,[]); igual(f.contadores['estado:carta:codex:livro-do-ronin-transformacao'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:1,tipoDeDano:'fisico',reacoes:[]}]);
+  igual(r.erros,[]);
+  verdade(!f.contadores['estado:carta:codex:livro-do-ronin-transformacao'],'dano deveria encerrar Transformação');
+});
+
+teste('Enervação Eterna do Livro do Ronin é 1/descanso longo',()=>{
+  const f=fichaCodexAlta_(9,['codex-livro-do-ronin','codex-onda-de-desintegracao']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-do-ronin',opcao:'enervacao'}]);
+  igual(r.erros,[]); igual(f.contadores['uso:carta:codex:livro-do-ronin-enervacao'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-do-ronin',opcao:'enervacao'}]);
+  verdade(r.erros.length>0);
+  contexto.aplicarGatilhoContadores_(f,'descanso-longo');
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-do-ronin',opcao:'enervacao'}]);
+  igual(r.erros,[]);
+});

@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 142 cartas e características mandam
+ *  O problema que este arquivo resolve: 145 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -182,6 +182,9 @@ const CONTADORES = {
   "uso:carta:valor:surto-total": { origem: "carta-dominio", refId: "valor-surto-total", nome: "Surto Total · uso", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
   "estado:carta:valor:surto-total": { origem: "carta-dominio", refId: "valor-surto-total", nome: "Surto Total", rotulo: "estado", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
   "estado:carta:valor:mantenha-a-posicao": { origem: "carta-dominio", refId: "valor-mantenha-a-posicao", nome: "Mantenha a Posição", rotulo: "postura", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "uso:carta:codex:teleporte": { origem: "carta-dominio", refId: "codex-teleporte", nome: "Teleporte", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "estado:carta:codex:livro-do-ronin-transformacao": { origem: "carta-dominio", refId: "codex-livro-do-ronin", nome: "Transformação", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "uso:carta:codex:livro-do-ronin-enervacao": { origem: "carta-dominio", refId: "codex-livro-do-ronin", nome: "Enervação Eterna", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -328,6 +331,9 @@ const CONTADOR_ALIASES = {
   "uso:carta:valor:surto-total": ["Surto Total · uso"],
   "estado:carta:valor:surto-total": ["Surto Total"],
   "estado:carta:valor:mantenha-a-posicao": ["Mantenha a Posição"],
+  "uso:carta:codex:teleporte": ["Teleporte"],
+  "estado:carta:codex:livro-do-ronin-transformacao": ["Transformação"],
+  "uso:carta:codex:livro-do-ronin-enervacao": ["Enervação Eterna"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

@@ -1254,6 +1254,14 @@
      }
     ],
     "nota": "O livro manda escolher DOIS dos três, e depois pôr a carta no cofre para sempre."
+   },
+   "automacao": {
+    "classificacao": "permanente-automatizada",
+    "motivo": "Os dois benefícios escolhidos e o trancamento permanente no cofre já são aplicados pelo fluxo de cartas permanentes; não há rolagem no app."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Escolha exatamente dois dos três benefícios impressos. O app aplica os dois permanentemente e tranca a carta no cofre; não há dado a rolar."
    }
   },
   {
@@ -3086,7 +3094,25 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('SPELL'), não 'Feitiço'."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('SPELL'), não 'Feitiço'.",
+   "automacao": {
+    "classificacao": "limite-automatizado-resolucao-manual",
+    "motivo": "O app registra o único uso por descanso longo. Familiaridade, Jogada de Conjuração 16, destino e margem de falha permanecem manuais."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:codex:teleporte",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Registrar Teleporte · 1/descanso longo",
+    "lembrete": "Escolha um local já visitado e faça a Jogada de Conjuração 16 fora do app, aplicando +3/+1/0/−2 conforme a familiaridade. Em falha, a mesa define o desvio pela margem."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "jogada": "Jogada de Conjuração (16), com modificador de familiaridade",
+    "resumo": "O app só controla o uso por descanso longo; não escolhe destino, não rola a jogada e não calcula o desvio em falha."
+   }
   },
   {
    "id": "codex-banir",
@@ -3147,7 +3173,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('SPELL'), não 'Feitiço'."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('SPELL'), não 'Feitiço'.",
+   "automacao": {
+    "classificacao": "contador-existente-resolucao-de-encontro",
+    "motivo": "O contador de d8 já persiste na ficha e respeita o máximo igual ao nível. Alvo marcado, ganho de Medo, gatilhos de dano do adversário e soma à jogada de dano são fatos da cena."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Marque o adversário e dê 1 Medo ao GM na mesa. Acrescente um d8 ao contador quando o alvo causar dano; no próximo ataque bem-sucedido contra ele, role os d8 fora do app, some ao dano e limpe o contador."
+   }
   },
   {
    "id": "codex-livro-de-homet",
@@ -3387,6 +3421,44 @@
    "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'.",
    "efeitoPermanente": {
     "noAlvo": "Enervação Eterna deixa o alvo permanentemente Vulnerável. Isso é uma condição no ADVERSÁRIO: aplique pelo encontro, no cartão dele."
+   },
+   "automacao": {
+    "classificacao": "automatizada-parcial-com-opcoes",
+    "motivo": "Transformação mantém estado na ficha e termina ao sofrer dano; Enervação Eterna registra 1 uso por descanso longo. As Jogadas de Conjuração e o alvo Vulnerável permanente são resolvidos na mesa."
+   },
+   "uso": {
+    "custo": {},
+    "opcoes": [
+     {
+      "id": "transformacao",
+      "estado": {
+       "chave": "estado:carta:codex:livro-do-ronin-transformacao",
+       "valor": 1,
+       "encerraAoSofrerDano": true,
+       "rotuloAtivo": "Transformação do Ronin ativa",
+       "rotuloEncerrar": "Encerrar Transformação",
+       "avisoEncerrar": "Transformação do Ronin encerrada."
+      },
+      "rotuloAtivar": "Sucesso: assumir Transformação",
+      "lembrete": "Use após uma Jogada de Conjuração 15 bem-sucedida. Você permanece como objeto inanimado até sofrer dano."
+     },
+     {
+      "id": "enervacao",
+      "marcaUso": {
+       "chave": "uso:carta:codex:livro-do-ronin-enervacao",
+       "maximo": 1
+      },
+      "rotuloAtivar": "Sucesso: registrar Enervação Eterna · 1/descanso longo",
+      "lembrete": "Use após a Jogada de Conjuração contra o alvo Próximo ser bem-sucedida. No encontro, deixe o alvo permanentemente Vulnerável."
+     }
+    ]
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "opcoes": [
+     "Transformação: faça a Jogada de Conjuração 15 fora do app; em sucesso ative o estado. O backend o encerra quando dano for aplicado à ficha.",
+     "Enervação Eterna: uma vez por descanso longo, faça a Jogada de Conjuração contra um alvo Próximo; em sucesso use a opção e aplique Vulnerável permanente no encontro."
+    ]
    }
   },
   {

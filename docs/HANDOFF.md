@@ -653,3 +653,10 @@ Próximo domínio canônico pendente do Lote 8: **Valor níveis 1–4**.
 - `Inevitável` e `Mantenha a Posição` têm estado explícito, sem fingir que o app observa jogadas/movimento/Medo do Mestre.
 - `Golpe Estimulante` registra o limite por descanso; `Deixe Passar`, `Armadura Inabalável` e `Inquebrável` mantêm todos os d6 físicos, sem RNG no servidor.
 - O catálogo de estado sobe de 137 para 142 contadores (110 de carta + 25 classe/subclasse + 4 ancestralidade + 3 comunidade).
+
+
+### Lote 8 — fechamento das quatro cartas legadas
+
+A auditoria global encontrou quatro cartas sem `automacao` explícita. Vitalidade e Símbolo da Retaliação já tinham implementação estrutural; receberam apenas classificação explícita. Teleporte ganhou o limite real de 1/descanso longo (o auditor anterior o confundia com “Teleporte de Batalha” do bestiário). Livro do Ronin ganhou estado de Transformação, encerrado ao sofrer dano, e 1/descanso longo para Enervação Eterna. Dados e efeitos sobre adversários continuam na mesa. Catálogo de contadores: 142 → 145.
+
+Próximo bloco: deduplicar e revisar características ativas/condicionais de equipamento, eliminando falsos positivos por item já tratado antes de implementar lacunas reais.

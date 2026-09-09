@@ -2632,6 +2632,57 @@
     "manual"
    ],
    "observacao": "Encerra ao se mover, falhar uma jogada com Medo ou quando o Mestre gastar 2 Medos no turno dele."
+  },
+  {
+   "chave": "uso:carta:codex:teleporte",
+   "origem": "carta-dominio",
+   "refId": "codex-teleporte",
+   "nome": "Teleporte",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
+  },
+  {
+   "chave": "estado:carta:codex:livro-do-ronin-transformacao",
+   "origem": "carta-dominio",
+   "refId": "codex-livro-do-ronin",
+   "nome": "Transformação",
+   "rotulo": "ativa",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Permanece até o personagem sofrer dano; o backend encerra o estado quando esse evento é registrado."
+  },
+  {
+   "chave": "uso:carta:codex:livro-do-ronin-enervacao",
+   "origem": "carta-dominio",
+   "refId": "codex-livro-do-ronin",
+   "nome": "Enervação Eterna",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
   }
  ]
 }
