@@ -395,6 +395,15 @@ const USOS_CARTAS_DOMINIO = {
   "valor-apoie-se-em-mim": {"custo":{},"marcaUso":{"chave":"uso:carta:valor:apoie-se-em-mim","maximo":1},"efeitoRecurso":{"chave":"estresseMarcado","delta":-2},"rotuloAtivar":"Consolar aliado · limpar 2 Estresses · 1/descanso longo","lembrete":"Use depois de consolar ou inspirar um aliado que falhou uma jogada de ação. Ele também limpa 2 Estresses na própria ficha."},
   "valor-inspiracao-critica": {"custo":{},"marcaUso":{"chave":"uso:carta:valor:inspiracao-critica","maximo":1},"rotuloAtivar":"Crítico: inspirar aliados · 1/descanso","lembrete":"Cada aliado Muito Próximo escolhe: limpar 1 Estresse ou ganhar 1 Esperança."},
   "valor-tanque-de-suporte": {"custo":{"esperanca":2},"rotuloAtivar":"Permitir rerrolagem do aliado · 2 Esperanças","lembrete":"Depois da falha de um aliado Próximo, ele escolhe rerrolar o dado de Esperança ou o dado de Medo fora do app."},
+  "valor-golpe-estimulante": {"custo":{},"marcaUso":{"chave":"uso:carta:valor:golpe-estimulante","maximo":1},"opcoes":[{"id":"pv","rotulo":"Crítico: curar 1 PV","custo":{},"efeitoRecurso":{"chave":"pontosDeVidaMarcados","delta":-1},"lembrete":"Você cura 1 PV. Cada aliado que puder ver ou ouvir você escolhe 1 PV ou d4 Estresses na própria ficha."},{"id":"estresse","rotulo":"Crítico: limpar d4 Estresses","custo":{},"lembrete":"Role d4 fora do app e limpe esse total de Estresses na sua trilha. Cada aliado elegível faz a própria escolha."}],"rotuloAtivar":"Resolver Golpe Estimulante · 1/descanso"},
+  "valor-erga-se": {"custo":{},"efeitoRecurso":{"chave":"estresseMarcado","delta":-1},"rotuloAtivar":"Ataque marcou PV: limpar 1 Estresse","lembrete":"Use somente quando um ataque acabou de fazer você marcar um ou mais PV."},
+  "valor-inevitavel": {"custo":{},"estado":{"chave":"estado:carta:valor:inevitavel","valor":1,"permiteEncerrarManual":true,"rotuloAtivo":"Inevitável · próxima ação com vantagem","rotuloEncerrar":"Consumir vantagem de Inevitável","avisoEncerrar":"Vantagem de Inevitável consumida."},"rotuloAtivar":"Falha: preparar vantagem na próxima ação","lembrete":"Sua próxima jogada de ação tem vantagem. Encerre este estado assim que essa jogada for feita."},
+  "valor-deixe-passar": {"custo":{"estresse":1},"rotuloAtivar":"Reduzir severidade em 1 limiar · 1 Estresse","lembrete":"Role d6 fora do app depois de reduzir a severidade. Com 3 ou menos, coloque esta carta no cofre."},
+  "valor-tocado-pelo-valor": {"custo":{},"exigeCartasAtivasDominio":{"dominio":"VALOR","quantidade":4},"efeitoRecurso":{"chave":"armaduraMarcada","delta":-1},"rotuloAtivar":"PV sem Armadura: curar 1 Espaço de Armadura","lembrete":"Use somente após marcar PV sem marcar Espaço de Armadura no mesmo dano."},
+  "valor-golpe-no-chao": {"custo":{"esperanca":2},"rotuloAtivar":"Golpear o chão · 2 Esperanças","lembrete":"Faça Força contra todos em Muito Próximo; atingidos vão para Longe e fazem Reação 17. Falha: 4d10+8; sucesso: metade."},
+  "valor-surto-total": {"custo":{"estresse":3},"marcaUso":{"chave":"uso:carta:valor:surto-total","maximo":1},"estado":{"chave":"estado:carta:valor:surto-total","valor":1,"rotuloAtivo":"Surto Total ativo · +2 em todos os traços","rotuloEncerrar":"Encerrar Surto Total","avisoEncerrar":"Surto Total encerrado."},"rotuloAtivar":"Ativar Surto Total · 3 Estresses · 1/descanso longo","lembrete":"Até o próximo descanso, todos os seis traços recebem +2."},
+  "valor-liderar-pelo-exemplo": {"custo":{"estresse":1},"rotuloAtivar":"Após causar dano: Liderar pelo Exemplo · 1 Estresse","lembrete":"O próximo personagem jogador que atacar esse mesmo adversário escolhe limpar 1 Estresse ou ganhar 1 Esperança."},
+  "valor-mantenha-a-posicao": {"custo":{"esperanca":1},"estado":{"chave":"estado:carta:valor:mantenha-a-posicao","valor":1,"permiteEncerrarManual":true,"rotuloAtivo":"Mantenha a Posição ativo","rotuloEncerrar":"Encerrar Mantenha a Posição","avisoEncerrar":"Mantenha a Posição encerrado."},"rotuloAtivar":"Assumir postura · 1 Esperança","lembrete":"Adversário que entrar em Muito Próximo é puxado para Corpo a Corpo e fica Restrito. Encerre no primeiro gatilho da carta."},
 };
 
 /** Regras estruturais especiais de cartas de domínio. */
@@ -421,6 +430,10 @@ const EFEITOS_DERIVADOS_CARTAS_DOMINIO = {
   "splendor-tocado-do-esplendor": {"bonusLimiarGrave":3,"exigeCartasAtivasDominio":{"dominio":"SPLENDOR","quantidade":4}},
   "valor-pele-dura": {"defesaSemArmadura":{"pontuacaoArmaduraBase":{"base":3,"traco":"Força"},"limiaresBasePorPatamar":{"1":[9,19],"2":[11,24],"3":[13,31],"4":[15,38]}}},
   "valor-quebrador-corporal": {"danoArmaCorpoACorpoPorTraco":"Força"},
+  "valor-armadureiro": {"pontuacaoArmadura":1,"exigeArmaduraEquipada":true},
+  "valor-erga-se": {"limiarGravePorProficiencia":1},
+  "valor-tocado-pelo-valor": {"pontuacaoArmadura":1,"exigeCartasAtivasDominio":{"dominio":"VALOR","quantidade":4}},
+  "valor-surto-total": {"tracosTodos":2,"exigeEstado":"estado:carta:valor:surto-total"},
 };
 
 /**
@@ -634,6 +647,7 @@ function requisitoDeEfeitoDerivadoDeCartaVale_(ficha, id, e) {
   const req=e.exigeCartasAtivasDominio||null;
   if(req){let n=0;for(let i=0;i<ativas.length;i++){const c=acharCarta_(ativas[i]);if(c&&chaveTexto_(c.dominio)===chaveTexto_(req.dominio))n++;}if(n<Math.max(1,Math.trunc(Number(req.quantidade))||1))return false;}
   if(e.exigeEstado){const v=Math.trunc(Number((((ficha||{}).contadores||{})[e.exigeEstado]||{}).valor))||0;if(v<=0)return false;}
+  if(e.exigeArmaduraEquipada===true && !((ficha||{}).equipamento||{}).armadura) return false;
   return true;
 }
 function bonusAtaqueDeCartas_(ficha){let t=0;if(typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO==='undefined')return 0;Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO).forEach(function(id){const e=EFEITOS_DERIVADOS_CARTAS_DOMINIO[id]||{};if(e.bonusAtaque&&requisitoDeEfeitoDerivadoDeCartaVale_(ficha,id,e))t+=Math.trunc(Number(e.bonusAtaque))||0;});return t;}

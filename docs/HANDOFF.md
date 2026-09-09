@@ -643,3 +643,13 @@ Próximo domínio canônico pendente do Lote 8: **Valor níveis 1–4**.
 - `Quebrador Corporal` publica o bônus de dano igual à Força como efeito contextual para ataque bem-sucedido com arma Corpo a Corpo.
 - `Presença Audaz`, `Apoie-Se em Mim` e `Inspiração Crítica` ganharam contadores de uso separados, levando o catálogo de 134 para 137 contadores.
 - Efeitos em adversários/aliados (`Provocação`, escolhas dos aliados em `Inspiração Crítica`, rerrolagem de `Tanque de Suporte`) permanecem na mesa; o app cobra apenas custos e registra limites próprios verificáveis.
+
+
+### Lote 8 — Valor níveis 5–10
+
+- As 12 cartas restantes de Valor (níveis 5 a 10) foram classificadas e fecham a varredura dos nove domínios canônicos do Lote 8.
+- `Armadureiro` aplica +1 na Pontuação de Armadura somente com armadura equipada; `Erga-Se` soma a Proficiência atual apenas ao limiar Grave; `Tocado pelo Valor` soma +1 Armadura somente com 4+ cartas Valor ativas.
+- `Surto Total` registra 1/descanso longo, mantém estado até o próximo descanso e deriva +2 nos seis traços enquanto ativo.
+- `Inevitável` e `Mantenha a Posição` têm estado explícito, sem fingir que o app observa jogadas/movimento/Medo do Mestre.
+- `Golpe Estimulante` registra o limite por descanso; `Deixe Passar`, `Armadura Inabalável` e `Inquebrável` mantêm todos os d6 físicos, sem RNG no servidor.
+- O catálogo de estado sobe de 137 para 142 contadores (110 de carta + 25 classe/subclasse + 4 ancestralidade + 3 comunidade).

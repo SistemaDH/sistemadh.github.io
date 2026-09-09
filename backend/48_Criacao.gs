@@ -417,6 +417,7 @@ function modificadoresDerivadosDaFicha_(ficha) {
     saida.pontuacaoArmadura += numero('pontuacaoArmadura');
     saida.limiaresSeUltimaArmaduraMarcada += numero('limiaresSeUltimaArmaduraMarcada');
     if (e.limiaresPorProficiencia) saida.limiares += prof * Number(e.limiaresPorProficiencia);
+    if (e.limiarGravePorProficiencia) saida.limiarGrave += prof * Number(e.limiarGravePorProficiencia);
     if (e.tracosTodos) {
       Object.keys(saida.tracos).forEach(function (k) { saida.tracos[k] += Number(e.tracosTodos) || 0; });
     }

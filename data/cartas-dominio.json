@@ -7523,7 +7523,19 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "automatizada-passiva-condicionada-a-armadura",
+    "resumo": "Enquanto a carta estiver ativa e houver armadura equipada, o servidor soma +1 à Pontuação de Armadura."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "No descanso, o benefício de reparar também 1 Espaço de Armadura dos aliados depende de eles participarem da cena e continua nas fichas deles/mesa."
+   },
+   "efeitoDerivado": {
+    "pontuacaoArmadura": 1,
+    "exigeArmaduraEquipada": true
+   }
   },
   {
    "id": "valor-golpe-estimulante",
@@ -7547,7 +7559,41 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "automatizada-limite-apos-critico-com-opcoes",
+    "resumo": "Depois de um sucesso crítico em ataque confirmado pela mesa, o app registra o uso uma vez por descanso; se você escolher PV, também cura 1 PV da própria ficha."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Aliados que veem/ouvem escolhem na própria ficha entre 1 PV ou d4 Estresses. Para a opção de Estresse, role d4 fora do app e ajuste sua trilha pelo resultado."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:valor:golpe-estimulante",
+     "maximo": 1
+    },
+    "opcoes": [
+     {
+      "id": "pv",
+      "rotulo": "Crítico: curar 1 PV",
+      "custo": {},
+      "efeitoRecurso": {
+       "chave": "pontosDeVidaMarcados",
+       "delta": -1
+      },
+      "lembrete": "Você cura 1 PV. Cada aliado que puder ver ou ouvir você escolhe 1 PV ou d4 Estresses na própria ficha."
+     },
+     {
+      "id": "estresse",
+      "rotulo": "Crítico: limpar d4 Estresses",
+      "custo": {},
+      "lembrete": "Role d4 fora do app e limpe esse total de Estresses na sua trilha. Cada aliado elegível faz a própria escolha."
+     }
+    ],
+    "rotuloAtivar": "Resolver Golpe Estimulante · 1/descanso"
+   }
   },
   {
    "id": "valor-erga-se",
@@ -7571,7 +7617,27 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "automatizada-passiva-e-reacao-de-recurso",
+    "resumo": "O servidor soma sua Proficiência atual apenas ao limiar de dano Severo/Grave. Depois de um ataque marcar PV em você, o botão pode limpar 1 Estresse."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O app não deduz sozinho se o dano veio de um ataque; use a reação somente depois que um ataque tiver feito você marcar um ou mais PV."
+   },
+   "uso": {
+    "custo": {},
+    "efeitoRecurso": {
+     "chave": "estresseMarcado",
+     "delta": -1
+    },
+    "rotuloAtivar": "Ataque marcou PV: limpar 1 Estresse",
+    "lembrete": "Use somente quando um ataque acabou de fazer você marcar um ou mais PV."
+   },
+   "efeitoDerivado": {
+    "limiarGravePorProficiencia": 1
+   }
   },
   {
    "id": "valor-inevitavel",
@@ -7592,7 +7658,28 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "automatizada-estado-apos-falha",
+    "resumo": "Depois de uma jogada de ação falhar, o app pode registrar que a próxima jogada de ação tem vantagem."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A falha e a próxima jogada acontecem fora do app. Encerre o estado depois de fazer essa próxima jogada de ação."
+   },
+   "uso": {
+    "custo": {},
+    "estado": {
+     "chave": "estado:carta:valor:inevitavel",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Inevitável · próxima ação com vantagem",
+     "rotuloEncerrar": "Consumir vantagem de Inevitável",
+     "avisoEncerrar": "Vantagem de Inevitável consumida."
+    },
+    "rotuloAtivar": "Falha: preparar vantagem na próxima ação",
+    "lembrete": "Sua próxima jogada de ação tem vantagem. Encerre este estado assim que essa jogada for feita."
+   }
   },
   {
    "id": "valor-deixe-passar",
@@ -7615,7 +7702,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "automatizada-custo-com-d6-manual",
+    "resumo": "Quando você escolher reduzir a severidade em um limiar, o app marca 1 Estresse."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Depois da redução, role d6 fora do app. Com 3 ou menos, mova Deixe Passar para o cofre; a rolagem e a severidade do dano continuam na mesa."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "rotuloAtivar": "Reduzir severidade em 1 limiar · 1 Estresse",
+    "lembrete": "Role d6 fora do app depois de reduzir a severidade. Com 3 ou menos, coloque esta carta no cofre."
+   }
   },
   {
    "id": "valor-tocado-pelo-valor",
@@ -7638,7 +7740,35 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "automatizada-passiva-e-reacao-com-loadout",
+    "resumo": "Com 4 ou mais cartas de Valor ativas, o servidor soma +1 à Pontuação de Armadura e habilita a reação que cura 1 Espaço de Armadura."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Use a reação somente quando você tiver marcado um ou mais PV sem marcar Espaço de Armadura naquele dano. O gatilho vem da resolução da mesa."
+   },
+   "uso": {
+    "custo": {},
+    "exigeCartasAtivasDominio": {
+     "dominio": "VALOR",
+     "quantidade": 4
+    },
+    "efeitoRecurso": {
+     "chave": "armaduraMarcada",
+     "delta": -1
+    },
+    "rotuloAtivar": "PV sem Armadura: curar 1 Espaço de Armadura",
+    "lembrete": "Use somente após marcar PV sem marcar Espaço de Armadura no mesmo dano."
+   },
+   "efeitoDerivado": {
+    "pontuacaoArmadura": 1,
+    "exigeCartasAtivasDominio": {
+     "dominio": "VALOR",
+     "quantidade": 4
+    }
+   }
   },
   {
    "id": "valor-golpe-no-chao",
@@ -7659,7 +7789,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "automatizada-custo-com-resolucao-de-alvos",
+    "resumo": "O app cobra exatamente 2 Esperanças ao iniciar Golpe no Chão."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Força contra todos os alvos, lançamento para Longe, Reações 17 e dano/mitade são resolvidos na mesa."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 2
+    },
+    "rotuloAtivar": "Golpear o chão · 2 Esperanças",
+    "lembrete": "Faça Força contra todos em Muito Próximo; atingidos vão para Longe e fazem Reação 17. Falha: 4d10+8; sucesso: metade."
+   }
   },
   {
    "id": "valor-surto-total",
@@ -7681,7 +7826,37 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "automatizada-custo-uso-estado-e-tracos",
+    "resumo": "Uma vez por descanso longo, o app marca 3 Estresses, mantém Surto Total ativo e soma +2 aos seis traços enquanto o estado durar."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O estado termina no próximo descanso. O servidor não escolhe quando ativar e não transforma o bônus em uma rolagem."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 3
+    },
+    "marcaUso": {
+     "chave": "uso:carta:valor:surto-total",
+     "maximo": 1
+    },
+    "estado": {
+     "chave": "estado:carta:valor:surto-total",
+     "valor": 1,
+     "rotuloAtivo": "Surto Total ativo · +2 em todos os traços",
+     "rotuloEncerrar": "Encerrar Surto Total",
+     "avisoEncerrar": "Surto Total encerrado."
+    },
+    "rotuloAtivar": "Ativar Surto Total · 3 Estresses · 1/descanso longo",
+    "lembrete": "Até o próximo descanso, todos os seis traços recebem +2."
+   },
+   "efeitoDerivado": {
+    "tracosTodos": 2,
+    "exigeEstado": "estado:carta:valor:surto-total"
+   }
   },
   {
    "id": "valor-liderar-pelo-exemplo",
@@ -7703,7 +7878,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O nome do arquivo está em minúsculas (\"liderar pelo exemplo.png\"), mas o texto impresso na carta usa o mesmo estilo visual (caixa alta estilizada) das demais cartas; nome normalizado em título. O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O nome do arquivo está em minúsculas (\"liderar pelo exemplo.png\"), mas o texto impresso na carta usa o mesmo estilo visual (caixa alta estilizada) das demais cartas; nome normalizado em título. O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "automatizada-custo-apos-dano",
+    "resumo": "Depois de causar dano e confirmar o gatilho, o app marca 1 Estresse na sua ficha."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O benefício pertence ao próximo personagem jogador que atacar aquele adversário: ele escolhe limpar 1 Estresse ou ganhar 1 Esperança na própria ficha. Alvo e benefício continuam no encontro."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "rotuloAtivar": "Após causar dano: Liderar pelo Exemplo · 1 Estresse",
+    "lembrete": "O próximo personagem jogador que atacar esse mesmo adversário escolhe limpar 1 Estresse ou ganhar 1 Esperança."
+   }
   },
   {
    "id": "valor-mantenha-a-posicao",
@@ -7728,7 +7918,30 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "automatizada-custo-e-estado-de-postura",
+    "resumo": "O app cobra 1 Esperança e registra que a postura defensiva está ativa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Puxar/Restringir adversários acontece no encontro. Encerre o estado quando você se mover, falhar uma jogada com Medo ou o Mestre gastar 2 Medos no turno dele."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "estado": {
+     "chave": "estado:carta:valor:mantenha-a-posicao",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Mantenha a Posição ativo",
+     "rotuloEncerrar": "Encerrar Mantenha a Posição",
+     "avisoEncerrar": "Mantenha a Posição encerrado."
+    },
+    "rotuloAtivar": "Assumir postura · 1 Esperança",
+    "lembrete": "Adversário que entrar em Muito Próximo é puxado para Corpo a Corpo e fica Restrito. Encerre no primeiro gatilho da carta."
+   }
   },
   {
    "id": "valor-armadura-inabalavel",
@@ -7751,7 +7964,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "manual-com-dados-de-proficiencia",
+    "resumo": "A carta não tem custo nem estado persistente próprio; ela reage no instante em que um Espaço de Armadura seria marcado."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Role fora do app um número de d6 igual à sua Proficiência. Se qualquer dado mostrar 6, reduza a severidade em um limiar e não marque aquele Espaço de Armadura."
+   }
   },
   {
    "id": "valor-inquebravel",
@@ -7774,7 +7995,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "manual-substitui-movimento-de-morte",
+    "resumo": "A carta não rola dados no servidor e não deve disparar um Movimento de Morte antes de o jogador resolver seu d6."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Quando o último PV seria marcado, em vez do Movimento de Morte role d6, cure esse total de PV e depois coloque Inquebrável no cofre. Faça a cura e a ida ao cofre pela ficha após a rolagem."
+   }
   }
  ],
  "conferenciaComOLivro": {

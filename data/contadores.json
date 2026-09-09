@@ -2547,6 +2547,91 @@
     "descanso"
    ],
    "observacao": "Uma vez por descanso, após sucesso crítico em um ataque."
+  },
+  {
+   "chave": "uso:carta:valor:golpe-estimulante",
+   "origem": "carta-dominio",
+   "refId": "valor-golpe-estimulante",
+   "nome": "Golpe Estimulante",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso, depois de sucesso crítico em um ataque."
+  },
+  {
+   "chave": "estado:carta:valor:inevitavel",
+   "origem": "carta-dominio",
+   "refId": "valor-inevitavel",
+   "nome": "Inevitável",
+   "rotulo": "vantagem pendente",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Depois de falhar uma jogada de ação, a próxima jogada de ação tem vantagem; encerre após essa jogada."
+  },
+  {
+   "chave": "uso:carta:valor:surto-total",
+   "origem": "carta-dominio",
+   "refId": "valor-surto-total",
+   "nome": "Surto Total · uso",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Só pode ser ativado uma vez por descanso longo."
+  },
+  {
+   "chave": "estado:carta:valor:surto-total",
+   "origem": "carta-dominio",
+   "refId": "valor-surto-total",
+   "nome": "Surto Total",
+   "rotulo": "estado",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Enquanto ativo, +2 nos seis traços; termina no próximo descanso."
+  },
+  {
+   "chave": "estado:carta:valor:mantenha-a-posicao",
+   "origem": "carta-dominio",
+   "refId": "valor-mantenha-a-posicao",
+   "nome": "Mantenha a Posição",
+   "rotulo": "postura",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Encerra ao se mover, falhar uma jogada com Medo ou quando o Mestre gastar 2 Medos no turno dele."
   }
  ]
 }

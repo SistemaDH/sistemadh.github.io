@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 137 cartas e características mandam
+ *  O problema que este arquivo resolve: 142 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -177,6 +177,11 @@ const CONTADORES = {
   "uso:carta:valor:presenca-audaz-condicao": { origem: "carta-dominio", refId: "valor-presenca-audaz", nome: "Presença Audaz · Evitar condição", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
   "uso:carta:valor:apoie-se-em-mim": { origem: "carta-dominio", refId: "valor-apoie-se-em-mim", nome: "Apoie-Se em Mim", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
   "uso:carta:valor:inspiracao-critica": { origem: "carta-dominio", refId: "valor-inspiracao-critica", nome: "Inspiração Crítica", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:valor:golpe-estimulante": { origem: "carta-dominio", refId: "valor-golpe-estimulante", nome: "Golpe Estimulante", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "estado:carta:valor:inevitavel": { origem: "carta-dominio", refId: "valor-inevitavel", nome: "Inevitável", rotulo: "vantagem pendente", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "uso:carta:valor:surto-total": { origem: "carta-dominio", refId: "valor-surto-total", nome: "Surto Total · uso", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "estado:carta:valor:surto-total": { origem: "carta-dominio", refId: "valor-surto-total", nome: "Surto Total", rotulo: "estado", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "estado:carta:valor:mantenha-a-posicao": { origem: "carta-dominio", refId: "valor-mantenha-a-posicao", nome: "Mantenha a Posição", rotulo: "postura", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -318,6 +323,11 @@ const CONTADOR_ALIASES = {
   "uso:carta:valor:presenca-audaz-condicao": ["Presença Audaz · Evitar condição"],
   "uso:carta:valor:apoie-se-em-mim": ["Apoie-Se em Mim"],
   "uso:carta:valor:inspiracao-critica": ["Inspiração Crítica"],
+  "uso:carta:valor:golpe-estimulante": ["Golpe Estimulante"],
+  "estado:carta:valor:inevitavel": ["Inevitável"],
+  "uso:carta:valor:surto-total": ["Surto Total · uso"],
+  "estado:carta:valor:surto-total": ["Surto Total"],
+  "estado:carta:valor:mantenha-a-posicao": ["Mantenha a Posição"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

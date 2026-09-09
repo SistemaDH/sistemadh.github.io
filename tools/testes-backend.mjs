@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 137 contadores: 105 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 142 contadores: 110 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 137 contadores: 105 de carta, 25 de classe/subclasse, 4 d
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 137);
+  igual(Object.keys(CONTADORES).length, 142);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 105);
+  igual(porOrigem['carta-dominio'], 110);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -9912,6 +9912,121 @@ teste('Tanque de Suporte cobra 2 Esperanças e deixa a rerrolagem física',()=>{
   const f=fichaValorBaixa_(4,['valor-tanque-de-suporte','valor-provocacao']);
   const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-tanque-de-suporte'}]);
   igual(r.erros,[]); igual(f.recursos.esperanca,4); igual(r.mudancas[0].dadosManuais,null);
+});
+
+
+
+console.log('\nLote 8 — Valor níveis 5–10');
+teste('Valor N5-N10 fica todo classificado e sem RNG no app',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const ids=['valor-armadureiro','valor-golpe-estimulante','valor-erga-se','valor-inevitavel','valor-deixe-passar','valor-tocado-pelo-valor','valor-golpe-no-chao','valor-surto-total','valor-liderar-pelo-exemplo','valor-mantenha-a-posicao','valor-armadura-inabalavel','valor-inquebravel'];
+  const xs=ids.map(id=>d.cartas.find(c=>c.id===id));
+  verdade(xs.every(Boolean)); verdade(xs.every(c=>!!c.automacao));
+  verdade(xs.every(c=>c.resolucaoManual&&c.resolucaoManual.rolaNoApp===false));
+});
+
+teste('Armadureiro soma +1 Armadura somente quando existe armadura equipada',()=>{
+  const f=fichaValorBaixa_(5,['valor-armadureiro','valor-golpe-estimulante']);
+  const d1=contexto.derivadosDoPersonagem_(f);
+  const f2=JSON.parse(JSON.stringify(f)); f2.cartas.ativas=['valor-golpe-estimulante'];
+  const d2=contexto.derivadosDoPersonagem_(f2);
+  igual(d1.pontuacaoArmadura,d2.pontuacaoArmadura+1);
+  f.equipamento.armadura=null;
+  const sem=contexto.derivadosDoPersonagem_(f);
+  const sem2=JSON.parse(JSON.stringify(f)); sem2.cartas.ativas=['valor-golpe-estimulante'];
+  igual(sem.pontuacaoArmadura,contexto.derivadosDoPersonagem_(sem2).pontuacaoArmadura);
+});
+
+teste('Golpe Estimulante limita 1/descanso e opção PV cura só a própria ficha',()=>{
+  const f=fichaValorBaixa_(5,['valor-golpe-estimulante','valor-armadureiro']);
+  f.recursos.pontosDeVidaMarcados=3;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-golpe-estimulante',opcao:'pv'}]);
+  igual(r.erros,[]); igual(f.recursos.pontosDeVidaMarcados,2); igual(f.contadores['uso:carta:valor:golpe-estimulante'].valor,1);
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-golpe-estimulante',opcao:'pv'}]).erros.length===1);
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  verdade(!f.contadores['uso:carta:valor:golpe-estimulante']);
+});
+
+teste('Erga-Se soma Proficiência somente ao limiar Grave',()=>{
+  const f=fichaValorBaixa_(6,['valor-erga-se','valor-inevitavel']);
+  const com=contexto.derivadosDoPersonagem_(f);
+  const f2=JSON.parse(JSON.stringify(f)); f2.cartas.ativas=['valor-inevitavel'];
+  const sem=contexto.derivadosDoPersonagem_(f2);
+  igual(com.limiarMaior,sem.limiarMaior);
+  igual(com.limiarGrave-sem.limiarGrave,contexto.proficienciaDaFicha_(f));
+});
+
+teste('Erga-Se limpa 1 Estresse depois do gatilho confirmado',()=>{
+  const f=fichaValorBaixa_(6,['valor-erga-se','valor-inevitavel']); f.recursos.estresseMarcado=3;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-erga-se'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,2);
+});
+
+teste('Inevitável guarda a vantagem da próxima ação sem rolar nada',()=>{
+  const f=fichaValorBaixa_(6,['valor-inevitavel','valor-erga-se']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-inevitavel'}]);
+  igual(r.erros,[]); igual(f.contadores['estado:carta:valor:inevitavel'].valor,1);
+});
+
+teste('Deixe Passar marca 1 Estresse e deixa d6/cofre para a mesa',()=>{
+  const f=fichaValorBaixa_(7,['valor-deixe-passar','valor-tocado-pelo-valor']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-deixe-passar'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1); verdade(r.mudancas[0].dadosManuais===null);
+});
+
+teste('Tocado pelo Valor dá +1 Armadura só com quatro cartas Valor ativas',()=>{
+  const ids4=['valor-tocado-pelo-valor','valor-deixe-passar','valor-erga-se','valor-inevitavel'];
+  const f=fichaValorBaixa_(7,ids4); const com=contexto.derivadosDoPersonagem_(f);
+  const f3=JSON.parse(JSON.stringify(f)); f3.cartas.ativas=ids4.slice(0,3); const sem=contexto.derivadosDoPersonagem_(f3);
+  igual(com.pontuacaoArmadura,sem.pontuacaoArmadura+1);
+});
+
+teste('Tocado pelo Valor cura 1 Armadura no gatilho confirmado e exige quatro cartas',()=>{
+  const ids4=['valor-tocado-pelo-valor','valor-deixe-passar','valor-erga-se','valor-inevitavel'];
+  const f=fichaValorBaixa_(7,ids4); f.recursos.armaduraMarcada=2;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-tocado-pelo-valor'}]);
+  igual(r.erros,[]); igual(f.recursos.armaduraMarcada,1);
+  const f3=fichaValorBaixa_(7,ids4.slice(0,3)); f3.recursos.armaduraMarcada=2;
+  verdade(contexto.aplicarAjustes_(f3,[{tipo:'usarCarta',carta:'valor-tocado-pelo-valor'}]).erros.length===1);
+});
+
+teste('Golpe no Chão cobra exatamente 2 Esperanças',()=>{
+  const f=fichaValorBaixa_(8,['valor-golpe-no-chao','valor-surto-total']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-golpe-no-chao'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,4);
+});
+
+teste('Surto Total marca 3 Estresses, soma +2 aos seis traços e respeita recargas',()=>{
+  const f=fichaValorBaixa_(8,['valor-surto-total','valor-golpe-no-chao']);
+  const antes=['Agilidade','Força','Finesse','Instinto','Presença','Conhecimento'].map(x=>contexto.valorDoTraco_(f,x));
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-surto-total'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,3);
+  igual(f.contadores['uso:carta:valor:surto-total'].valor,1); igual(f.contadores['estado:carta:valor:surto-total'].valor,1);
+  const depois=['Agilidade','Força','Finesse','Instinto','Presença','Conhecimento'].map(x=>contexto.valorDoTraco_(f,x));
+  igual(depois,antes.map(x=>x+2));
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  verdade(!f.contadores['estado:carta:valor:surto-total']); igual(f.contadores['uso:carta:valor:surto-total'].valor,1);
+  contexto.aplicarGatilhoContadores_(f,'descanso-longo');
+  verdade(!f.contadores['uso:carta:valor:surto-total']);
+});
+
+teste('Liderar pelo Exemplo cobra somente 1 Estresse próprio',()=>{
+  const f=fichaValorBaixa_(9,['valor-liderar-pelo-exemplo','valor-mantenha-a-posicao']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-liderar-pelo-exemplo'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+});
+
+teste('Mantenha a Posição cobra 1 Esperança e mantém estado explícito',()=>{
+  const f=fichaValorBaixa_(9,['valor-mantenha-a-posicao','valor-liderar-pelo-exemplo']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-mantenha-a-posicao'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5); igual(f.contadores['estado:carta:valor:mantenha-a-posicao'].valor,1);
+});
+
+teste('Armadura Inabalável e Inquebrável não inventam RNG no servidor',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  for(const id of ['valor-armadura-inabalavel','valor-inquebravel']){
+    const c=d.cartas.find(x=>x.id===id); verdade(!c.uso); verdade(c.automacao.classificacao.includes('manual'));
+  }
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
