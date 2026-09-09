@@ -20,6 +20,7 @@ jobs:
       - name: Materializar Ato de Retaliacao
         run: |
           python3 tools/lote8-guardiao-retaliacao.py
+          python3 tools/lote8-retaliacao-css-hotfix.py
           node tools/gerar-42-classes.mjs
           python3 tools/conferir-classes-lote8.py
           python3 tools/conferir-comunidades-lote8.py
@@ -29,6 +30,7 @@ jobs:
           grep -q "ajustarRetaliacao_" backend/4C_Ajustes.gs
           grep -q "blocoDeRetaliacao" js/telas/ficha.js
           grep -q "retaliacaoDaCaracteristica" js/telas/ficha.js
+          ! grep -q "ficha__retaliacao" js/telas/ficha.js
           git diff --check
 
       - name: Testes backend
@@ -74,6 +76,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm -f tools/lote8-guardiao-retaliacao.py
+          git rm -f tools/lote8-retaliacao-css-hotfix.py
           git rm -f .github/workflows/lote8-guardiao-retaliacao.yml
           git add -A
           git diff --cached --check
