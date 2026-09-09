@@ -1,3 +1,11 @@
+  ✓ metade do nível arredonda PARA CIMA (exemplo do livro)
+  ✓ a carta do domínio novo é barrada acima da metade do nível
+  ✓ só uma multiclasse por personagem
+  ✓ quem faz multiclasse não pega mais subclasse aprimorada
+  ✓ pegar a subclasse aprimorada corta a multiclasse do patamar
+  ✓ a multiclasse precisa ser outra classe e um domínio novo
+  ✓ a ficha não consegue inventar bônus de avanço
+
 Subir de nível — pela API
   ✓ a API sobe o nível e devolve o relatório
 
@@ -230,21 +238,13 @@ Faxina das fotos órfãs
 Zerar planilha
   ✓ arquivarEResetar preserva o antigo e recria vazio
 
-511 passaram, 2 falharam.
+512 passaram, 1 falharam.
 
-mais de dois movimentos é recusado Error: []
+mais de dois movimentos é recusado Error: ["São 2 movimentos neste descanso; vieram 3."]
     at verdade (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:37:21)
     at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:3205:3
     at teste (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:20:5)
     at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:3200:1
-    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
-    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
-    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
-movimentosDeDescanso monta a lista da tela Error: valores diferentes: recebi 3, esperava 2
-    at igual (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:33:22)
-    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:3775:3
-    at teste (file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:20:5)
-    at file:///home/runner/work/sistemadh.github.io/sistemadh.github.io/tools/testes-backend.mjs:3770:1
     at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
