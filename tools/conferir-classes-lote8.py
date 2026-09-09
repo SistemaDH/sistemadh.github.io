@@ -64,4 +64,21 @@ manip = next(f for f in op['cartas']['fundacao']['caracteristicas'] if f['nome']
 assert manip['uso']['custo']['estresse'] == 1
 assert {o['id'] for o in manip['uso']['opcoes']} == {'alcance', 'jogada', 'dado-dano', 'alvo-adicional'}
 
-print('Lote 8 — classes: Bardo e Druida fechados; Feiticeiro base estruturado (Ilusão Menor, Elementalista, Manipular Magia).')
+evasao = next(f for f in oe['cartas']['especializacao']['caracteristicas'] if f['nome'] == 'Evasão Natural')
+assert evasao['uso']['custo']['estresse'] == 1
+assert evasao['uso']['entradaManual']['dado'] == 'd6'
+assert evasao['uso']['entradaManual']['aplicaComo'] == 'bonusEvasao'
+
+carga = next(f for f in op['cartas']['maestria']['caracteristicas'] if f['nome'] == 'Carga Arcana')
+assert carga['uso']['custo']['esperanca'] == 2
+assert carga['uso']['carregaComDano']['tipo'] == 'magico'
+assert carga['uso']['estado']['chave'] == 'estado:feiticeiro:carga-arcana'
+assert carga['uso']['estado']['permiteEncerrarManual'] is False
+assert carga['uso']['reacaoEnquantoAtivo']['consomeEstado'] is True
+assert {o['id'] for o in carga['uso']['reacaoEnquantoAtivo']['opcoes']} == {'dano', 'dificuldade'}
+cc = next(x for x in cont['contadores'] if x['chave'] == 'estado:feiticeiro:carga-arcana')
+assert cc['maximo'] == {'tipo': 'fixo', 'valor': 1}
+assert cc['zeraEm'] == ['descanso-longo']
+assert cc['exigeCaracteristica'] == 'Carga Arcana'
+
+print('Lote 8 — classes: Bardo, Druida e Feiticeiro fechados.')

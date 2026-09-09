@@ -194,6 +194,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "reacaoEnquantoAtivo": null,
     "somenteReacao": false,
     "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
     "estado": null
   },
   "Coração de Poeta": {
@@ -211,6 +213,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "reacaoEnquantoAtivo": null,
     "somenteReacao": false,
     "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
     "estado": null
   },
   "Encarnar Elemental": {
@@ -249,6 +253,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "reacaoEnquantoAtivo": null,
     "somenteReacao": false,
     "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
     "estado": {
       "chave": "estado:druida:canalizacao-elemental",
       "valor": 1,
@@ -282,6 +288,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
       "escolhaChave": "canalizacaoElemental",
       "valor": "agua"
     },
+    "entradaManual": null,
+    "carregaComDano": null,
     "estado": null
   },
   "Magia Volátil": {
@@ -299,6 +307,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "reacaoEnquantoAtivo": null,
     "somenteReacao": false,
     "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
     "estado": null
   },
   "Canalizar Poder Bruto": {
@@ -327,6 +337,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "reacaoEnquantoAtivo": null,
     "somenteReacao": false,
     "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
     "estado": null
   },
   "Elementalista": {
@@ -355,6 +367,35 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "reacaoEnquantoAtivo": null,
     "somenteReacao": false,
     "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
+    "estado": null
+  },
+  "Evasão Natural": {
+    "classe": "feiticeiro",
+    "origem": "subclasse",
+    "custo": {
+      "estresse": 1
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "Reagir com Evasão Natural",
+    "lembrete": "O bônus vale somente contra o ataque que acabou de acertar; a Evasão base da ficha não muda.",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": {
+      "campo": "dadoEvasaoNatural",
+      "dado": "d6",
+      "minimo": 1,
+      "maximo": 6,
+      "aplicaComo": "bonusEvasao",
+      "rotulo": "Resultado do d6",
+      "mensagem": "Role 1d6 fora do app e informe o resultado. Ele é somado à sua Evasão somente contra este ataque."
+    },
+    "carregaComDano": null,
     "estado": null
   },
   "Manipular Magia": {
@@ -393,7 +434,51 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "reacaoEnquantoAtivo": null,
     "somenteReacao": false,
     "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
     "estado": null
+  },
+  "Carga Arcana": {
+    "classe": "feiticeiro",
+    "origem": "subclasse",
+    "custo": {
+      "esperanca": 2
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "Ficar Carregado",
+    "lembrete": "Você também fica Carregado automaticamente quando sofre dano mágico. A Carga termina no próximo descanso longo.",
+    "reacaoEnquantoAtivo": {
+      "custo": {},
+      "rotulo": "Descarregar após ataque mágico bem-sucedido",
+      "consomeEstado": true,
+      "opcoes": [
+        {
+          "id": "dano",
+          "rotulo": "+10 no dano",
+          "lembrete": "Some +10 à jogada de dano deste ataque mágico bem-sucedido."
+        },
+        {
+          "id": "dificuldade",
+          "rotulo": "+3 na Dificuldade da reação",
+          "lembrete": "Some +3 à Dificuldade de uma jogada de reação que esta magia fizer o alvo realizar."
+        }
+      ]
+    },
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": {
+      "tipo": "magico"
+    },
+    "estado": {
+      "chave": "estado:feiticeiro:carga-arcana",
+      "valor": 1,
+      "rotuloAtivo": "Carregado",
+      "permiteEncerrarManual": false
+    }
   },
   "Linha de Frente": {
     "classe": "guardiao",
@@ -410,6 +495,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "reacaoEnquantoAtivo": null,
     "somenteReacao": false,
     "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
     "estado": null
   },
   "Nêmesis": {
@@ -430,6 +517,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "reacaoEnquantoAtivo": null,
     "somenteReacao": false,
     "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
     "estado": null
   },
   "Sem Piedade": {
@@ -447,6 +536,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "reacaoEnquantoAtivo": null,
     "somenteReacao": false,
     "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
     "estado": null
   },
   "Esquiva de Ladino": {
@@ -464,6 +555,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "reacaoEnquantoAtivo": null,
     "somenteReacao": false,
     "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
     "estado": {
       "chave": "estado:ladino:esquiva",
       "valor": 1,
@@ -486,6 +579,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "reacaoEnquantoAtivo": null,
     "somenteReacao": false,
     "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
     "estado": null
   },
   "Segurem Eles": {
@@ -503,6 +598,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "reacaoEnquantoAtivo": null,
     "somenteReacao": false,
     "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
     "estado": null
   },
   "Marca da Presa": {
@@ -523,6 +620,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "reacaoEnquantoAtivo": null,
     "somenteReacao": false,
     "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
     "estado": null
   },
   "Alicerce da Vida": {
@@ -540,6 +639,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "reacaoEnquantoAtivo": null,
     "somenteReacao": false,
     "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
     "estado": null
   }
 };

@@ -516,6 +516,30 @@ function usarHabilidadeDeClasse_(ficha, a) {
   ficha.alvosDeHabilidade = (ficha.alvosDeHabilidade && typeof ficha.alvosDeHabilidade === 'object' &&
     !Array.isArray(ficha.alvosDeHabilidade)) ? ficha.alvosDeHabilidade : {};
 
+  // Algumas habilidades pedem um dado que o JOGADOR rola fora do app. O
+  // servidor só valida o número e transforma a parte determinística em dado
+  // de resposta — nunca gera resultado aleatório.
+  let entradaManualValor = null;
+  if (def.entradaManual) {
+    const em = def.entradaManual;
+    const campo = String(em.campo || 'resultadoManual');
+    const brutoManual = a[campo];
+    if (brutoManual === undefined || brutoManual === null || brutoManual === '') {
+      return { pendenciaRolagem: {
+        tipo: 'habilidade-manual', caracteristica: def.nome, campo: campo,
+        dado: em.dado || '', minimo: Number(em.minimo) || 1, maximo: Number(em.maximo) || 20,
+        mensagem: em.mensagem || ('Role ' + (em.dado || 'o dado') + ' fora do app e informe o resultado.')
+      } };
+    }
+    entradaManualValor = Math.trunc(Number(brutoManual));
+    const minimoManual = Number(em.minimo) || 1;
+    const maximoManual = Number(em.maximo) || 20;
+    if (!isFinite(entradaManualValor) || Number(brutoManual) !== entradaManualValor ||
+        entradaManualValor < minimoManual || entradaManualValor > maximoManual) {
+      return { erro: def.nome + ': informe um resultado inteiro de ' + minimoManual + ' a ' + maximoManual + '.' };
+    }
+  }
+
   /*
    * ENCERRAR não devolve nada: "até você Marcar outra criatura" acaba a Marca,
    * e a Esperança gasta já foi. É o mesmo que largar a marca na mesa.
@@ -584,19 +608,32 @@ function usarHabilidadeDeClasse_(ficha, a) {
     if (custoReacaoEsperanca > 0) rReacao.esperanca = (Number(rReacao.esperanca) || 0) - custoReacaoEsperanca;
     if (custoReacaoEstresse > 0) rReacao.estresseMarcado = (Number(rReacao.estresseMarcado) || 0) + custoReacaoEstresse;
 
+    let opcaoReacao = null;
+    const opcoesReacao = Array.isArray(reacao.opcoes) ? reacao.opcoes : [];
+    if (opcoesReacao.length) {
+      for (let i = 0; i < opcoesReacao.length; i++) {
+        if (String(opcoesReacao[i].id) === String(a.opcao || '')) opcaoReacao = opcoesReacao[i];
+      }
+      if (!opcaoReacao) return { erro: def.nome + ': escolha como usar o efeito ativo.' };
+    }
+
     const bonusEvasao = Math.trunc(Number(reacao.bonusEvasao)) || 0;
     const pago = [];
     if (custoReacaoEsperanca) pago.push(custoReacaoEsperanca + ' de Esperança');
     if (custoReacaoEstresse) pago.push(custoReacaoEstresse + ' de Estresse');
+    if (reacao.consomeEstado === true) delete ficha.contadores[estadoRequerido.chave];
+    const lembreteReacao = (opcaoReacao && opcaoReacao.lembrete) || reacao.lembrete ||
+      (bonusEvasao ? '+' + bonusEvasao + ' de Evasão contra este ataque.' : '');
     return {
       tipo: 'habilidade', nome: def.nome, reacao: true,
       custoEsperanca: custoReacaoEsperanca, custoEstresse: custoReacaoEstresse,
       esperanca: rReacao.esperanca, estresseMarcado: rReacao.estresseMarcado,
       bonusEvasao: bonusEvasao,
       evasaoBase: Number((ficha.defesas || {}).evasao) || 0,
-      estado: estadoRequerido.chave, estadoAtivo: true,
-      aviso: def.nome + (pago.length ? ' custou ' + pago.join(' e ') : '') + '. ' +
-        (reacao.lembrete || (bonusEvasao ? '+' + bonusEvasao + ' de Evasão contra este ataque.' : ''))
+      opcao: opcaoReacao ? opcaoReacao.id : null,
+      estado: estadoRequerido.chave, estadoAtivo: reacao.consomeEstado !== true,
+      estadoConsumido: reacao.consomeEstado === true,
+      aviso: def.nome + (pago.length ? ' custou ' + pago.join(' e ') : '') + '. ' + lembreteReacao
     };
   }
 
@@ -748,6 +785,10 @@ function usarHabilidadeDeClasse_(ficha, a) {
     esperancaGanha: esperancaGanha,
     estado: (def.estado && def.estado.chave) ? def.estado.chave : null,
     estadoAtivo: !!(def.estado && def.estado.chave),
+    resultadoManual: entradaManualValor,
+    bonusEvasao: (def.entradaManual && def.entradaManual.aplicaComo === 'bonusEvasao') ? entradaManualValor : 0,
+    evasaoBase: (def.entradaManual && def.entradaManual.aplicaComo === 'bonusEvasao')
+      ? (Number((ficha.defesas || {}).evasao) || 0) : null,
     aviso: def.nome + (pago.length ? ' custou ' + pago.join(' e ') : '') +
       (alvo ? ' — ' + def.alvo.verbo.toLowerCase() + ' ' + alvo : '') +
       (ganho.length ? '. Você recebeu ' + ganho.join('; ') : '') + '.' +
@@ -1357,6 +1398,27 @@ function ajustarInventario_(ficha, a) {
  * `reacoes` é uma lista explícita porque Pele Grossa/Fortitude/Escamas dizem
  * "pode": o servidor valida a escolha, mas não escolhe por quem está jogando.
  */
+function carregarEstadosDeClassePorDano_(ficha, tipo) {
+  if (typeof HABILIDADES_DE_CLASSE_COM_CUSTO === 'undefined') return [];
+  const nomes = Object.keys(HABILIDADES_DE_CLASSE_COM_CUSTO);
+  const ligadas = [];
+  for (let i = 0; i < nomes.length; i++) {
+    const def = HABILIDADES_DE_CLASSE_COM_CUSTO[nomes[i]] || {};
+    const regra = def.carregaComDano;
+    if (!regra || !def.estado || !def.estado.chave) continue;
+    if (chaveTexto_(regra.tipo) !== chaveTexto_(tipo)) continue;
+    if (!(typeof fichaTemCaracteristicaDeClasse_ === 'function' &&
+          fichaTemCaracteristicaDeClasse_(ficha, nomes[i]))) continue;
+    ficha.contadores = ficha.contadores || {};
+    const antes = Math.trunc(Number(((ficha.contadores[def.estado.chave] || {}).valor))) || 0;
+    if (antes <= 0) {
+      ficha.contadores[def.estado.chave] = { valor: Math.max(1, Math.trunc(Number(def.estado.valor)) || 1) };
+      ligadas.push(nomes[i]);
+    }
+  }
+  return ligadas;
+}
+
 function aplicarDanoNaFicha_(ficha, a) {
   if (typeof pvDoDano_ !== 'function') {
     return { erro: 'Este servidor não sabe converter dano em Pontos de Vida.' };
@@ -1519,6 +1581,13 @@ function aplicarDanoNaFicha_(ficha, a) {
   };
   if (toquePv && toquePv.alerta) saida.alerta = toquePv.alerta;
   if (toquePv && toquePv.movimentoDeMorte) saida.movimentoDeMorte = true;
+  if (tipo === 'magico' && pv > 0) {
+    const carregadas = carregarEstadosDeClassePorDano_(ficha, tipo);
+    if (carregadas.length) {
+      saida.estadosAtivadosPorDano = carregadas;
+      saida.aviso += ' ' + carregadas.join(', ') + ': você ficou Carregado por sofrer dano mágico.';
+    }
+  }
   if (conta.pv >= 3) {
     const chaveCanal = 'estado:druida:canalizacao-elemental';
     const ativoCanal = Math.trunc(Number(((((ficha.contadores || {})[chaveCanal]) || {}).valor))) || 0;

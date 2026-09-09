@@ -682,7 +682,23 @@
        "caracteristicas": [
         {
          "nome": "Evasão Natural",
-         "texto": "Você pode invocar seu elemento para se proteger do perigo. Quando uma jogada de ataque contra você for bem-sucedida, pode marcar 1 Estresse e descrever como usa seu elemento para se defender. Ao fazer isso, role um d6 e some o resultado à sua Evasão contra o ataque."
+         "texto": "Você pode invocar seu elemento para se proteger do perigo. Quando uma jogada de ataque contra você for bem-sucedida, pode marcar 1 Estresse e descrever como usa seu elemento para se defender. Ao fazer isso, role um d6 e some o resultado à sua Evasão contra o ataque.",
+         "uso": {
+          "custo": {
+           "estresse": 1
+          },
+          "entradaManual": {
+           "campo": "dadoEvasaoNatural",
+           "dado": "d6",
+           "minimo": 1,
+           "maximo": 6,
+           "aplicaComo": "bonusEvasao",
+           "rotulo": "Resultado do d6",
+           "mensagem": "Role 1d6 fora do app e informe o resultado. Ele é somado à sua Evasão somente contra este ataque."
+          },
+          "rotuloAtivar": "Reagir com Evasão Natural",
+          "lembrete": "O bônus vale somente contra o ataque que acabou de acertar; a Evasão base da ficha não muda."
+         }
         }
        ],
        "texto": "Evasão Natural: Você pode invocar seu elemento para se proteger do perigo. Quando uma jogada de ataque contra você for bem-sucedida, pode marcar 1 Estresse e descrever como usa seu elemento para se defender. Ao fazer isso, role um d6 e some o resultado à sua Evasão contra o ataque.",
@@ -794,7 +810,40 @@
        "caracteristicas": [
         {
          "nome": "Carga Arcana",
-         "texto": "Você pode acumular energia mágica para aprimorar suas habilidades. Quando você sofrer dano mágico, você fica Carregado. Alternativamente, pode gastar 2 Esperanças para ficar Carregado. Quando fizer um ataque bem-sucedido que cause dano mágico enquanto estiver Carregado, pode limpar sua Carga para ganhar +10 de bônus na jogada de dano ou +3 de bônus na Dificuldade de uma jogada de reação que a magia fizer o alvo realizar.\nVocê deixa de estar Carregado no seu próximo descanso longo."
+         "texto": "Você pode acumular energia mágica para aprimorar suas habilidades. Quando você sofrer dano mágico, você fica Carregado. Alternativamente, pode gastar 2 Esperanças para ficar Carregado. Quando fizer um ataque bem-sucedido que cause dano mágico enquanto estiver Carregado, pode limpar sua Carga para ganhar +10 de bônus na jogada de dano ou +3 de bônus na Dificuldade de uma jogada de reação que a magia fizer o alvo realizar.\nVocê deixa de estar Carregado no seu próximo descanso longo.",
+         "uso": {
+          "custo": {
+           "esperanca": 2
+          },
+          "rotuloAtivar": "Ficar Carregado",
+          "estado": {
+           "chave": "estado:feiticeiro:carga-arcana",
+           "valor": 1,
+           "rotuloAtivo": "Carregado",
+           "permiteEncerrarManual": false
+          },
+          "carregaComDano": {
+           "tipo": "magico"
+          },
+          "reacaoEnquantoAtivo": {
+           "custo": {},
+           "rotulo": "Descarregar após ataque mágico bem-sucedido",
+           "consomeEstado": true,
+           "opcoes": [
+            {
+             "id": "dano",
+             "rotulo": "+10 no dano",
+             "lembrete": "Some +10 à jogada de dano deste ataque mágico bem-sucedido."
+            },
+            {
+             "id": "dificuldade",
+             "rotulo": "+3 na Dificuldade da reação",
+             "lembrete": "Some +3 à Dificuldade de uma jogada de reação que esta magia fizer o alvo realizar."
+            }
+           ]
+          },
+          "lembrete": "Você também fica Carregado automaticamente quando sofre dano mágico. A Carga termina no próximo descanso longo."
+         }
         }
        ],
        "texto": "Carga Arcana: Você pode acumular energia mágica para aprimorar suas habilidades. Quando você sofrer dano mágico, você fica Carregado. Alternativamente, pode gastar 2 Esperanças para ficar Carregado. Quando fizer um ataque bem-sucedido que cause dano mágico enquanto estiver Carregado, pode limpar sua Carga para ganhar +10 de bônus na jogada de dano ou +3 de bônus na Dificuldade de uma jogada de reação que a magia fizer o alvo realizar.\nVocê deixa de estar Carregado no seu próximo descanso longo.",

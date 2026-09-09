@@ -965,6 +965,24 @@
    ],
    "exigeCaracteristica": "Encarnar Elemental",
    "observacao": "Guarda a Canalização ativa. O elemento fica em escolhasDeClasse; dano Severo encerra no handler de dano."
+  },
+  {
+   "chave": "estado:feiticeiro:carga-arcana",
+   "origem": "caracteristica-subclasse",
+   "refId": "feiticeiro-origem-primal",
+   "nome": "Carga Arcana",
+   "rotulo": "estado",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "exigeCaracteristica": "Carga Arcana",
+   "observacao": "Fica Carregado ao sofrer dano mágico ou ao gastar 2 Esperanças. A Carga é consumida ao usar um dos benefícios após um ataque mágico bem-sucedido e desaparece no próximo descanso longo."
   }
  ]
 }

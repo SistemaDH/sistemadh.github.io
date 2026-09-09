@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 45 contadores: 17 de carta, 21 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 46 contadores: 17 de carta, 22 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,12 +1561,12 @@ teste('o catálogo tem 45 contadores: 17 de carta, 21 de classe/subclasse, 4 de 
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 45);
+  igual(Object.keys(CONTADORES).length, 46);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 17);
   igual(porOrigem['caracteristica-classe'], 5);
-  igual(porOrigem['caracteristica-subclasse'], 16);
+  igual(porOrigem['caracteristica-subclasse'], 17);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
 });
@@ -5538,12 +5538,16 @@ function fichaFeiticeiro_(subclasse, escolhasDeClasse = {}) {
   const catalogo = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/cartas-dominio.json'), 'utf8'));
   const cartas = catalogo.cartas.filter((c) => c.nivel === 1 && (c.dominio === 'ARCANA' || c.dominio === 'MIDNIGHT'))
     .slice(0, 2).map((c) => c.id);
-  return contexto.validarFicha_(contexto.fichaRapida_({
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
     nome: 'Feiticeiro de Teste', classe: 'Feiticeiro', subclasse,
     ancestralidade: 'Humano', comunidade: 'Highborne', cartas,
     experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }],
     escolhasDeClasse
   }));
+  const cartasSub = arguments.length >= 3 && Array.isArray(arguments[2]) ? arguments[2] : ['fundacao'];
+  f.subclasseCartas = cartasSub.slice();
+  contexto.aplicarDerivados_(f);
+  return f;
 }
 
 teste('Ilusão Menor declara Jogada de Conjuração 10 manual e nunca pede RNG ao app', () => {
@@ -5600,6 +5604,89 @@ teste('Manipular Magia cobra 1 Estresse e só então publica a modificação esc
   r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Manipular Magia', opcao: 'inventada' }]);
   igual(r.erros.length, 1);
   igual(f.recursos.estresseMarcado, antes, 'opção inválida não pode cobrar Estresse');
+});
+
+
+teste('Evasão Natural pede o d6 manual antes de cobrar Estresse', () => {
+  const f = fichaFeiticeiro_('Origem Elemental', { elementalistaElemento: 'Ar' }, ['fundacao', 'especializacao']);
+  const antesEstresse = f.recursos.estresseMarcado;
+  const antesEvasao = f.defesas.evasao;
+  const pend = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Evasão Natural' }]);
+  verdade(pend.pendenciaRolagem && pend.pendenciaRolagem.tipo === 'habilidade-manual', JSON.stringify(pend));
+  igual(f.recursos.estresseMarcado, antesEstresse, 'sem o d6 nada é cobrado');
+
+  const ok = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Evasão Natural', dadoEvasaoNatural: 4 }]);
+  igual(ok.erros, []);
+  igual(f.recursos.estresseMarcado, antesEstresse + 1);
+  igual(ok.mudancas[0].bonusEvasao, 4);
+  igual(ok.mudancas[0].evasaoBase, antesEvasao);
+  igual(f.defesas.evasao, antesEvasao, 'o bônus é só contra este ataque');
+});
+
+teste('Evasão Natural recusa resultado fora do d6 sem tocar na ficha', () => {
+  const f = fichaFeiticeiro_('Origem Elemental', { elementalistaElemento: 'Terra' }, ['fundacao', 'especializacao']);
+  const antes = JSON.stringify(f);
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Evasão Natural', dadoEvasaoNatural: 7 }]);
+  igual(r.erros.length, 1);
+  igual(JSON.stringify(f), antes);
+});
+
+teste('Carga Arcana pode ser ligada por 2 Esperanças e não cobra duas vezes', () => {
+  const f = fichaFeiticeiro_('Origem Primal', {}, ['fundacao', 'especializacao', 'maestria']);
+  f.recursos.esperanca = 4;
+  let r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Carga Arcana' }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 2);
+  verdade(!!f.contadores['estado:feiticeiro:carga-arcana']);
+  r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Carga Arcana' }]);
+  igual(r.erros.length, 1);
+  igual(f.recursos.esperanca, 2, 'estado já ativo não cobra novamente');
+});
+
+teste('sofrer dano mágico liga Carga Arcana automaticamente; dano físico não', () => {
+  const magico = fichaFeiticeiro_('Origem Primal', {}, ['fundacao', 'especializacao', 'maestria']);
+  const dano = Math.max(1, Number(magico.defesas.limiarMaior));
+  const r = contexto.aplicarAjustes_(magico, [{ tipo: 'dano', dano, tipoDeDano: 'magico' }]);
+  igual(r.erros, []);
+  verdade(!!magico.contadores['estado:feiticeiro:carga-arcana']);
+  verdade((r.mudancas[0].estadosAtivadosPorDano || []).includes('Carga Arcana'), JSON.stringify(r.mudancas[0]));
+
+  const fisico = fichaFeiticeiro_('Origem Primal', {}, ['fundacao', 'especializacao', 'maestria']);
+  contexto.aplicarAjustes_(fisico, [{ tipo: 'dano', dano, tipoDeDano: 'fisico' }]);
+  verdade(!fisico.contadores['estado:feiticeiro:carga-arcana']);
+
+  const semMaestria = fichaFeiticeiro_('Origem Primal', {}, ['fundacao']);
+  contexto.aplicarAjustes_(semMaestria, [{ tipo: 'dano', dano, tipoDeDano: 'magico' }]);
+  verdade(!semMaestria.contadores['estado:feiticeiro:carga-arcana']);
+});
+
+teste('descarga da Carga Arcana escolhe +10 ou +3 e consome o estado', () => {
+  const f = fichaFeiticeiro_('Origem Primal', {}, ['fundacao', 'especializacao', 'maestria']);
+  f.recursos.esperanca = 4;
+  contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Carga Arcana' }]);
+  let r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Carga Arcana', reagir: true, opcao: 'dano' }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].opcao, 'dano');
+  verdade(r.mudancas[0].estadoConsumido === true);
+  verdade(/\+10/.test(r.mudancas[0].aviso || ''), JSON.stringify(r.mudancas[0]));
+  verdade(!f.contadores['estado:feiticeiro:carga-arcana']);
+
+  // Liga por dano e testa a segunda opção.
+  const dano = Math.max(1, Number(f.defesas.limiarMaior));
+  contexto.aplicarAjustes_(f, [{ tipo: 'dano', dano, tipoDeDano: 'magico' }]);
+  r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Carga Arcana', reagir: true, opcao: 'dificuldade' }]);
+  igual(r.erros, []);
+  verdade(/\+3/.test(r.mudancas[0].aviso || ''), JSON.stringify(r.mudancas[0]));
+  verdade(!f.contadores['estado:feiticeiro:carga-arcana']);
+});
+
+teste('descanso longo limpa Carga Arcana', () => {
+  const f = fichaFeiticeiro_('Origem Primal', {}, ['fundacao', 'especializacao', 'maestria']);
+  f.recursos.esperanca = 4;
+  contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Carga Arcana' }]);
+  verdade(!!f.contadores['estado:feiticeiro:carga-arcana']);
+  contexto.aplicarGatilhoContadores_(f, 'descanso-longo');
+  verdade(!f.contadores['estado:feiticeiro:carga-arcana']);
 });
 
 console.log('\nLote 8 — comunidades do Core');

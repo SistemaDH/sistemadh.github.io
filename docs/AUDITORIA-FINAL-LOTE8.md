@@ -5,17 +5,17 @@
 
 ## Resumo numérico
 
-- Classes/subclasses: **99 características**; **30** candidatas sem sinal de automação.
+- Classes/subclasses: **99 características**; **28** candidatas sem sinal de automação.
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **161** candidatas sem sinal de automação específica; **17** já têm contador/estado parcial.
-- Características de armas/armaduras/molduras: **203 ocorrências**; **88** ocorrências candidatas ativas/condicionais.
+- Características de armas/armaduras/molduras: **203 ocorrências**; **87** ocorrências candidatas ativas/condicionais.
 - Loot/consumíveis com texto mecânico detectado: **81**.
 - Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **12** linhas, incluindo histórico já resolvido.
 
 ### Distribuição — classes/subclasses
 
-- candidato sem sinal de automação: **30**
-- estruturada/contador: **49**
+- candidato sem sinal de automação: **28**
+- estruturada/contador: **51**
 - predominantemente narrativo/sem gatilho detectado: **7**
 - referência específica no motor: **13**
 
@@ -31,17 +31,15 @@
 
 ### Distribuição — equipamento
 
-- candidato ativo/condicional sem estrutura: **88**
+- candidato ativo/condicional sem estrutura: **87**
 - efeito derivado estruturado: **69**
-- referência específica no motor: **27**
+- referência específica no motor: **28**
 - sem gatilho mecânico detectado: **19**
 
 ## Candidatos — classes e subclasses
 
 | Classe | Subclasse | Estágio | Característica | Trecho |
 |---|---|---|---|---|
-| Feiticeiro | Origem Elemental | especializacao | Evasão Natural | Você pode invocar seu elemento para se proteger do perigo. Quando uma jogada de ataque contra você for bem-sucedida, pode marcar 1 Estresse e descrever como usa seu elem… |
-| Feiticeiro | Origem Primal | maestria | Carga Arcana | Você pode acumular energia mágica para aprimorar suas habilidades. Quando você sofrer dano mágico, você fica Carregado. Alternativamente, pode gastar 2 Esperanças para f… |
 | Guardião | Robusto | fundacao | Vontade de Ferro | Quando sofrer dano físico, você pode marcar um espaço adicional de Armadura para reduzir a severidade. |
 | Guardião | Robusto | especializacao | Parceiros de Armas | Quando um aliado em alcance Muito Próximo sofrer dano, você pode marcar um Espaço de Armadura para reduzir a severidade em um limiar. |
 | Guardião | Robusto | maestria | Protetor Leal | Quando um aliado em alcance Próximo tiver 2 ou menos Pontos de Vida e for receber dano, você pode marcar 1 Estresse para correr até o lado dele e sofrer o dano no lugar. |
@@ -252,7 +250,6 @@
 | Assustador | 2 | Alabarda forjada em aço, Adaga Devoradora | Assustador: Em um ataque bem-sucedido, o alvo deve marcar um Estresse. |
 | Brutal | 3 | Lâminas de Punho, Lâminas de Garra, Arco de Sangue Yutari | Brutal: Quando rolar o valor máximo em um dado de dano, role um dado de dano adicional. |
 | Busca da verdade | 1 | Armadura de Opala Veritas | Busca da verdade: Essa armadura brilha quando outra criatura dentro dela se aproxima. O intervalo conta [...] |
-| Carregado | 1 | Manopla Energizada | Carregado: Marque um Estresse para ganhar um bônus de +1 na sua Proficiência em um ataque com arma primária. |
 | Comprimento | 1 | Arma de Haste Estendida | Comprimento: o ataque desta arma atinge todos os adversários em uma linha reta dentro do alcance |
 | De outro mundo | 1 | Lâmina Fantasma | De outro mundo: ao acertar um ataque, você pode causar dano físico ou mágico |
 | Desafetação | 1 | Broquel | Desafetação: Quando for atacado, você pode marcar 1 Ponto de Armadura para receber um bônus de Evasão igual aos seus Pontos de Armadura disponíveis contra esse ataque. |

@@ -361,6 +361,45 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     });
   }
 
+  function pedirResultadoHabilidadeManual(pendencia) {
+    return new Promise((resolve) => {
+      let respondeu = false;
+      const minimo = Number((pendencia || {}).minimo) || 1;
+      const maximo = Number((pendencia || {}).maximo) || 20;
+      const campo = el('input', {
+        type: 'number', min: minimo, max: maximo, step: 1, inputMode: 'numeric',
+        class: 'campo__entrada', 'aria-label': 'Resultado do dado'
+      });
+      const responder = (valor) => {
+        if (respondeu) return;
+        respondeu = true;
+        modal.fechar();
+        resolve(valor);
+      };
+      const corpo = el('div', { class: 'pilha' }, [
+        el('p', { class: 'texto-sm', texto: (pendencia && pendencia.mensagem) ||
+          'Role o dado fora do app e informe o resultado.' }),
+        campo
+      ]);
+      const modal = abrirModal({
+        titulo: `${(pendencia && pendencia.caracteristica) || 'Habilidade'} — ${(pendencia && pendencia.dado) || 'dado manual'}`,
+        conteudo: corpo,
+        acoes: [
+          el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => responder(null) }, 'Cancelar'),
+          el('button', { type: 'button', class: 'btn', onClick: () => {
+            const n = Number(campo.value);
+            if (!Number.isInteger(n) || n < minimo || n > maximo) {
+              avisarErro(`Informe um resultado inteiro de ${minimo} a ${maximo}.`); return;
+            }
+            responder(n);
+          } }, 'Aplicar resultado')
+        ],
+        aoFechar: () => { if (!respondeu) { respondeu = true; resolve(null); } }
+      });
+      setTimeout(() => campo.focus(), 0);
+    });
+  }
+
   function pedirResultadosDominioTerra(pendencia) {
     return new Promise((resolve) => {
       let respondeu = false;
@@ -410,6 +449,17 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         const indice = Number(r.pendenciaRolagem.indice) || 0;
         const repetidos = (Array.isArray(ajustes) ? ajustes : [ajustes]).map((a, i) =>
           i === indice ? Object.assign({}, a, { dadosDominioElementalTerra: dados }) : Object.assign({}, a));
+        return enviar(repetidos, { soSeMudou });
+      }
+      if (r && r.pendenciaRolagem && r.pendenciaRolagem.tipo === 'habilidade-manual') {
+        const valor = await pedirResultadoHabilidadeManual(r.pendenciaRolagem);
+        if (valor === null) {
+          p = r.personagem; desenhar(); return r;
+        }
+        const indice = Number(r.pendenciaRolagem.indice) || 0;
+        const campo = String(r.pendenciaRolagem.campo || 'resultadoManual');
+        const repetidos = (Array.isArray(ajustes) ? ajustes : [ajustes]).map((a, i) =>
+          i === indice ? Object.assign({}, a, { [campo]: valor }) : Object.assign({}, a));
         return enviar(repetidos, { soSeMudou });
       }
       if (r && r.pendenciaRolagem && r.pendenciaRolagem.tipo === 'inabalavel') {
@@ -1354,11 +1404,17 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         return el('div', { class: 'pilha' }, [
           el('span', { class: 'texto-xs texto-fraco', texto:
             (uso.estado.rotuloAtivo || `${nome} ativa`) + (escolhaEstado ? ` · ${escolhaEstado}` : '') }),
-          reacao ? el('button', {
-            type: 'button', class: 'btn btn--fantasma btn--pequeno ficha__usarHabilidade',
-            disabled: !podeReagir,
-            onClick: () => enviar([{ tipo: 'habilidade', nome, reagir: true }])
-          }, `${reacao.rotulo || 'Reagir'}${precoR ? ` · ${precoR}` : ''}`) : null,
+          reacao && Array.isArray(reacao.opcoes) && reacao.opcoes.length
+            ? el('div', { class: 'linha' }, reacao.opcoes.map((o) => el('button', {
+              type: 'button', class: 'btn btn--fantasma btn--pequeno ficha__usarHabilidade',
+              disabled: !podeReagir,
+              onClick: () => enviar([{ tipo: 'habilidade', nome, reagir: true, opcao: o.id }])
+            }, `${o.rotulo}${precoR ? ` · ${precoR}` : ''}`)))
+            : reacao ? el('button', {
+              type: 'button', class: 'btn btn--fantasma btn--pequeno ficha__usarHabilidade',
+              disabled: !podeReagir,
+              onClick: () => enviar([{ tipo: 'habilidade', nome, reagir: true }])
+            }, `${reacao.rotulo || 'Reagir'}${precoR ? ` · ${precoR}` : ''}`) : null,
           uso.estado.permiteEncerrarManual === false ? null : el('button', {
             type: 'button', class: 'btn btn--fantasma btn--pequeno ficha__usarHabilidade',
             onClick: () => enviar([{ tipo: 'habilidade', nome, encerrar: true }])

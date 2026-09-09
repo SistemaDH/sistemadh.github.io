@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 45 cartas e características mandam
+ *  O problema que este arquivo resolve: 46 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -85,6 +85,7 @@ const CONTADORES = {
   "comunidade:seaborne:conhece-a-mare": { origem: "caracteristica-comunidade", refId: "seaborne", nome: "Conhece a Maré", rotulo: "fichas da maré", tipo: "marcadores", maximo: {"tipo":"nivel"}, zeraEm: ["fim-de-sessao"], recarregaEm: [], exigeCaracteristica: "Conhece a Maré" },
   "uso:comunidade:wanderborne:mochila-nomade": { origem: "caracteristica-comunidade", refId: "wanderborne", nome: "Mochila Nômade", rotulo: "uso nesta sessão", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-de-sessao"], recarregaEm: [], exigeCaracteristica: "Mochila Nômade" },
   "estado:druida:canalizacao-elemental": { origem: "caracteristica-subclasse", refId: "druida-guardiao-dos-elementos", nome: "Canalização Elemental", rotulo: "ativa", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso","descanso-longo"], recarregaEm: [], exigeCaracteristica: "Encarnar Elemental" },
+  "estado:feiticeiro:carga-arcana": { origem: "caracteristica-subclasse", refId: "feiticeiro-origem-primal", nome: "Carga Arcana", rotulo: "estado", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [], exigeCaracteristica: "Carga Arcana" },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -134,6 +135,7 @@ const CONTADOR_ALIASES = {
   "comunidade:seaborne:conhece-a-mare": ["Conhece a Maré"],
   "uso:comunidade:wanderborne:mochila-nomade": ["Mochila Nômade"],
   "estado:druida:canalizacao-elemental": ["Canalização Elemental"],
+  "estado:feiticeiro:carga-arcana": ["Carga Arcana"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */
