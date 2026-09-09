@@ -18,11 +18,16 @@ def patch(rel, antiga, nova, count=1):
 # trava de UM movimento, mas sem fingir que está na p.54 do Clank.
 patch(
     'tools/4B_Descanso.rodape.js',
-    "        erros.push('\\\"' + (fonteEmprestimo || 'Esta regra') + '\\\" troca UM movimento: \\\"' + def.nome +\n          '\\\" seria o segundo movimento de descanso longo neste descanso curto.');",
-    "        const rotuloEmprestimo = fonteEmprestimo === 'Eficiente'\n          ? '\\\"Eficiente\\\" troca UM movimento (livro p.54)'\n          : ('\\\"' + (fonteEmprestimo || 'Esta regra') + '\\\" troca UM movimento');\n        erros.push(rotuloEmprestimo + ': \\\"' + def.nome +\n          '\\\" seria o segundo movimento de descanso longo neste descanso curto.');"
+    '''        erros.push('"' + (fonteEmprestimo || 'Esta regra') + '" troca UM movimento: "' + def.nome +
+          '" seria o segundo movimento de descanso longo neste descanso curto.');''',
+    '''        const rotuloEmprestimo = fonteEmprestimo === 'Eficiente'
+          ? '"Eficiente" troca UM movimento (livro p.54)'
+          : ('"' + (fonteEmprestimo || 'Esta regra') + '" troca UM movimento');
+        erros.push(rotuloEmprestimo + ': "' + def.nome +
+          '" seria o segundo movimento de descanso longo neste descanso curto.');'''
 )
 
-# As três fixtures abaixo estavam testando a mecânica certa com cartas acima do
+# As fixtures abaixo estavam testando a mecânica certa com cartas acima do
 # nível declarado da própria ficha. Troca só os acompanhantes, sem alterar o
 # comportamento que cada teste quer observar.
 patch(
