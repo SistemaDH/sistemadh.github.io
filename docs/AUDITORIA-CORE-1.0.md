@@ -72,7 +72,8 @@ Arquivos `backend/*.gs` gerados só podem ser alterados junto do gerador corresp
 - ⏳ 18 ancestralidades;
 - ⏳ 9 comunidades;
 - ✅ bônus permanentes/derivados puros de ancestralidades automatizados no checkpoint de modificadores;
-- ⏳ características ativas, custos, usos por descanso/sessão e estados que exigem escolha/resultado informado.
+- ✅ primeiro subbloco de características ativas de ancestralidade: 10 usos com custo/consequência manual + 2 limites de uso, commit `3dd221b35cb4c6ae0062bcf29c0de4baaaab2c0f`, run `34297905984` (485/485 backend, 101/101 E2E);
+- ⏳ reações de dano, estados persistentes e características que alteram criação/perfil de ataque/alcance ainda precisam de integração no subsistema correspondente.
 
 ---
 
@@ -239,5 +240,6 @@ Em 08/09/2026, o bloco Broquel + Chicote + 12 Cadeiras de Rodas de Combate foi m
 - ✅ Bônus de dano de Guerreiro/Ladino/Guardião automatizados no commit `bf534a17ad81c6f96d3af6ea09778dc782f60847`; run `34279545273`: 466/466 backend, 100/100 E2E, 14 geradores, CSS limpo.
 - ✅ Esquiva de Ladino automatizada no commit `6f720f5`; run `34280954705`: 471/471 backend, 100/100 E2E, 14 geradores, CSS limpo.
 - ✅ Modificadores derivados/passivos do Core: commit `e4618015b6494de1f3e72ca5617538cec4ccefc0`; run `34286551186`: **480/480 backend**, **101/101 E2E**, **14 geradores**, CSS limpo e proteção de concorrência aprovada. Foram estruturados 4 efeitos de ancestralidade, 9 de subclasse e 69 de equipamento; reserva não concede benefício, traços-base são preservados e condicionais de cena não são aplicados cegamente.
-- ⏳ Próximo bloco: características ativas determinísticas de ancestralidade, subclasse e equipamento — custo, estado, reset e entrada manual de resultado de dado quando aplicável.
+- ✅ Ancestralidades ativas — subbloco 1: 10 usos simples + Dobradora da Sorte 1/sessão + Sentido de Perigo 1/descanso; commit `3dd221b35cb4c6ae0062bcf29c0de4baaaab2c0f`, run `34297905984`: **485/485 backend**, **101/101 E2E**, **14 geradores**, CSS limpo;
+- ⏳ Próximo bloco: ancestralidades que exigem integração com dano/estado/criação/perfil de ataque; depois continuar subclasses e equipamento ativos.
 

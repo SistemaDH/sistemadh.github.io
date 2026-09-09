@@ -257,6 +257,39 @@ Os artefatos temporários de auditoria/materialização foram removidos no commi
 
 Próximo bloco de auditoria/implementação: **características ativas determinísticas** de ancestralidades, subclasses e equipamentos — custos, estados, duração/reset e consequências de resultado de dado informado pelo usuário. Efeitos puramente narrativos/posicionais serão classificados explicitamente em vez de automatizados à força.
 
+
+### Diário — Ancestralidades, parte 1: usos ativos simples
+
+Fonte: habilidades das 18 ancestralidades do livro básico PT-BR. A errata oficial de 09/09/2025 foi conferida para este subbloco e não altera mecanicamente estas dez habilidades.
+
+Implementado e validado no commit funcional `3dd221b35cb4c6ae0062bcf29c0de4baaaab2c0f`:
+
+- **Reações Rápidas (Elfo):** marca 1 Fadiga e lembra a vantagem na jogada de reação;
+- **Dobradora da Sorte (Fada):** gasta 3 Esperanças, limitada a 1/sessão e resetada no fim da sessão;
+- **Chute (Fauno):** marca 1 Fadiga e orienta a rolagem manual de 2d6/demais consequência;
+- **Investida (Firbolg):** marca 1 Fadiga e orienta a rolagem manual de 1d12/demais consequência;
+- **Conexão com a Morte (Fungril):** marca 1 Fadiga e registra a consequência narrativa que depende da escolha do jogador;
+- **Sentido de Perigo (Goblin):** marca 1 Fadiga, limitado a 1/descanso e resetado em qualquer descanso;
+- **Adaptabilidade (Humano):** marca 1 Fadiga e orienta a rerrolagem manual da jogada qualificada;
+- **Destemido (Infernis):** marca 2 Fadigas e registra que a jogada passa a contar como Esperança;
+- **Instintos Felinos (Katari):** gasta 2 Esperanças e orienta a rerrolagem manual apenas do Dado de Esperança;
+- **Presas (Orc):** gasta 1 Esperança e orienta a rolagem manual de 1d6 adicional no mesmo ataque.
+
+Arquitetura fechada neste subbloco:
+
+- habilidades ativas de origem passam a ter `uso` estruturado em `data/ancestralidades.json`;
+- `tools/gerar-43-origens.mjs` gera o índice de usos de origem no servidor;
+- o resolvedor de posse passou a ser genérico (`fichaTemCaracteristica_`), cobrindo origem + classe/subclasse/multiclasse sem confiar no nome enviado pelo navegador;
+- contadores de ancestralidade entram no mesmo subsistema de ownership/reset já usado por cartas/classes;
+- ancestralidade mista só autoriza a característica realmente escolhida, não qualquer característica das duas linhagens;
+- a ficha lê os usos do catálogo e bloqueia visualmente o uso quando o contador atingiu o teto;
+- rolagens continuam manuais; o servidor cobra custos, valida limite/posse e devolve o lembrete da consequência.
+
+Validação real: GitHub Actions run `34297905984` — **485/485 backend**, **101/101 E2E**, **14 geradores consistentes**, **CSS limpo** e proteção de concorrência aprovada. O conferidor permanente `tools/conferir-ancestralidades-lote8.py` protege as 18 entradas, os 10 usos estruturados e os 2 limites.
+
+Os transformadores, wrappers, gatilho e workflow temporários usados para materializar este bloco foram removidos após o run verde.
+
+Pendente no próximo subbloco de ancestralidades: reações integradas ao fluxo de dano (**Pele Grossa/Fortitude Aumentada/Escamas**), estados persistentes como **Retrair** e usos que alterem criação/perfil de ataque/alcance. Esses pontos só podem ser marcados como automatizados quando o efeito real estiver ligado ao subsistema correspondente, não apenas quando existir um botão de custo.
 ### Estado atual do Lote 8
 
 Auditoria e implementação em andamento. Nenhum deploy/merge do Lote 8 foi feito. Não alterar o pin da `engine-api` até o lote estar revisado e testado.
