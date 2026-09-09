@@ -17,20 +17,18 @@ jobs:
           python3 - <<'PY'
           import json
           d=json.load(open('data/equipamentos.json',encoding='utf-8'))
-          ingles={'Hopeful','Resilient','Shifting','Impenetrable','Magical','Painful','Time-Warped','Timeworn','Temporal','Displacement'}
-          nomes={'Esperançoso','Esperança','Resiliente','Deslocamento','Inconstante','Impenetrável','Mágica','Doloroso','Excruciante','Temporal','Lentidão Temporal','Desafetação'}
+          ingles={'Hopeful','Resilient','Shifting','Impenetrable','Magical','Painful','Timeslowing','Deflecting'}
+          nomes={'Esperançoso','Resiliente','Deslocamento','Impenetrável','Mágica','Doloroso','Temporal','Desafetação'}
           for grupo in ('armas','armaduras'):
             for x in d.get(grupo,[]):
               c=x.get('caracteristica') or {}
               if c.get('nomeIngles') in ingles or c.get('nome') in nomes:
                 print(json.dumps({'grupo':grupo,'id':x.get('id'),'nome':x.get('nome'),'tier':x.get('tier'),'pontuacao':x.get('pontuacaoArmadura'),'caracteristica':c},ensure_ascii=False))
-          for m in d.get('campanhas',[]):
-            for x in m.get('itens',[]):
-              c=x.get('caracteristica') or {}
-              if c.get('nomeIngles') in ingles or c.get('nome') in nomes:
-                print(json.dumps({'grupo':'campanha','moldura':m.get('nome'),'id':x.get('id'),'nome':x.get('nome'),'tier':x.get('tier'),'caracteristica':c},ensure_ascii=False))
           PY
-          echo '=== runtime refs ==='
-          grep -RniE 'Impenetr|Magical|Mágica|Painful|Doloroso|Excruc|Esperanç|Hopeful|Resilient|Resiliente|Inconstante|Shifting|Lentidão Temporal|Time-Warped|Temporal|Desafeta' backend tools js data | head -n 400 || true
-          echo '=== contadores/descanso/morte ==='
-          grep -RniE 'descanso-curto|descanso curto|movimentoDeMorte|pontosDeVidaMarcados|estresseMarcado|armaduraMarcada' backend/4B_Descanso.gs backend/4C_Ajustes.gs backend/47_Contadores.gs tools/4B_Descanso.rodape.js tools/47_Contadores.rodape.js 2>/dev/null | head -n 420 || true
+          echo '=== refs de contador ==='
+          grep -Rni -B10 -A120 'function refsDeContadorDaFicha_' tools/gerar-47-contadores.mjs backend/47_Contadores.gs || true
+          echo '=== dono do contador ==='
+          grep -Rni -B10 -A80 'function contadorEDaFicha_' tools/gerar-47-contadores.mjs backend/47_Contadores.gs || true
+          echo '=== ajuste de recurso / estresse cheio ==='
+          grep -n -B12 -A125 'function ajustarRecurso_' backend/4C_Ajustes.gs || true
+          grep -Rni -B8 -A45 -E 'Estresse cheio|não pode marcar.*Estresse|pode marcar.*PV|sincronizarVulneravelPorEstresse_' backend/4C_Ajustes.gs backend/40_Regras.gs backend/48_Criacao.gs || true
