@@ -1,0 +1,53 @@
+name: Lote 8 - Armadura Fortificada fix
+on:
+  push:
+    branches: ["tmp-lote8-blade-n1-n4-fix"]
+permissions:
+  contents: write
+jobs:
+  validar:
+    if: contains(github.event.head_commit.message, '[run-lote8-blade-limiares-fix]')
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Materializar correção
+        run: |
+          python3 tools/lote8-blade-limiares-fix.py
+          node tools/gerar-48-criacao.mjs
+      - name: Checkers
+        run: |
+          python3 tools/conferir-cartas-lote8.py
+          node --check js/telas/ficha.js
+          git diff --check
+      - name: Testes backend
+        run: |
+          node tools/testes-backend.mjs | tee /tmp/backend.txt
+          grep -F 'Armadura Fortificada soma +2 nos dois limiares somente com armadura equipada' /tmp/backend.txt
+          ! grep -F '✗ Armadura Fortificada soma +2 nos dois limiares somente com armadura equipada' /tmp/backend.txt
+      - name: Instalar Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install --with-deps chromium
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+      - name: Conferir gerados e CSS
+        run: |
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+      - name: Proteger contra concorrencia
+        run: |
+          git fetch origin 'ediçãoclaude' 'tmp-lote8-blade-n1-n4-fix'
+          test "$(git rev-parse 'origin/ediçãoclaude')" = '4749d377c5fa98098256736d49038626caf91da0'
+          test "$(git rev-parse 'origin/tmp-lote8-blade-n1-n4-fix')" = "$GITHUB_SHA"
+      - name: Commitar funcional e limpar temporarios
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f tools/lote8-blade-limiares-fix.py
+          git rm -f .github/workflows/lote8-blade-limiares-fix.yml
+          git add -A
+          git diff --cached --check
+          git commit -m 'fix: aplicar Armadura Fortificada aos dois limiares [lote8-generated]'
+          git push origin HEAD:'tmp-lote8-blade-n1-n4-fix'
