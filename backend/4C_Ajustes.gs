@@ -102,6 +102,7 @@ function aplicarAjustes_(ficha, ajustes) {
     let r = null;
 
     if (tipo === 'recurso') r = ajustarRecurso_(ficha, a);
+    else if (tipo === 'dano') r = aplicarDanoNaFicha_(ficha, a);
     else if (tipo === 'condicao') r = ajustarCondicao_(ficha, a);
     else if (tipo === 'contador') r = ajustarContador_(ficha, a);
     else if (tipo === 'marcador') r = ajustarMarcador_(ficha, a);
@@ -1127,6 +1128,134 @@ function ajustarInventario_(ficha, a) {
   }
 
   return { erro: 'Ação de mochila desconhecida: "' + String(a.acao) + '".' };
+}
+
+
+/**
+ * Recebe o VALOR de dano que a mesa já rolou e converte em PV na própria ficha.
+ *
+ * Não rola dado, não decide se ataque acertou e ainda não marca Armadura por
+ * conta própria. Este handler fecha a parte determinística que já existe para
+ * adversários (`pvDoDano_`) e, no mesmo ajuste, resolve as reações de
+ * ancestralidade que realmente alteram o dano/PV.
+ *
+ * `reacoes` é uma lista explícita porque Pele Grossa/Fortitude/Escamas dizem
+ * "pode": o servidor valida a escolha, mas não escolhe por quem está jogando.
+ */
+function aplicarDanoNaFicha_(ficha, a) {
+  if (typeof pvDoDano_ !== 'function') {
+    return { erro: 'Este servidor não sabe converter dano em Pontos de Vida.' };
+  }
+
+  const bruto = Math.max(0, Math.trunc(Number(a.dano)) || 0);
+  if (bruto <= 0) return { erro: 'Informe um dano maior que zero.' };
+
+  const tipoChave = chaveTexto_(a.tipoDeDano);
+  const tipo = (tipoChave === 'fisico' || tipoChave === 'physical') ? 'fisico'
+    : (tipoChave === 'magico' || tipoChave === 'magic') ? 'magico' : '';
+  if (!tipo) return { erro: 'Informe se o dano é físico ou mágico.' };
+
+  const d = ficha.defesas || {};
+  const maior = Number(d.limiarMaior);
+  const severo = Number(d.limiarGrave);
+  if (!isFinite(maior) || !isFinite(severo) || maior <= 0 || severo <= maior) {
+    return { erro: 'A ficha não tem limiares de dano válidos.' };
+  }
+
+  const nomes = Array.isArray(a.reacoes) ? a.reacoes : [];
+  const defs = [];
+  const vistos = {};
+  for (let i = 0; i < nomes.length; i++) {
+    const def = (typeof reacaoDeDanoDeOrigem_ === 'function') ? reacaoDeDanoDeOrigem_(nomes[i]) : null;
+    if (!def) return { erro: 'Reação de dano desconhecida: "' + String(nomes[i]) + '".' };
+    const k = chaveTexto_(def.nome);
+    if (vistos[k]) return { erro: 'A reação "' + def.nome + '" veio repetida.' };
+    vistos[k] = true;
+    if (typeof fichaTemCaracteristica_ !== 'function' || !fichaTemCaracteristica_(ficha, def.nome)) {
+      return { erro: 'Este personagem não tem "' + def.nome + '".' };
+    }
+    defs.push(def);
+  }
+
+  // 1) Reduções do dano bruto, antes de comparar com limiares.
+  let final = bruto;
+  for (let i = 0; i < defs.length; i++) {
+    const def = defs[i];
+    if (def.momento !== 'antes-dos-limiares') continue;
+    if ((def.tipos || []).length && def.tipos.indexOf(tipo) === -1) {
+      return { erro: '"' + def.nome + '" não se aplica a dano ' + (tipo === 'fisico' ? 'físico' : 'mágico') + '.' };
+    }
+    if (def.efeito && def.efeito.dano === 'metade') final = Math.ceil(final / 2);
+  }
+
+  let comMassivo = (typeof DANO_MASSIVO_PADRAO === 'undefined') ? true : DANO_MASSIVO_PADRAO;
+  try {
+    if (typeof mesaLer_ === 'function') comMassivo = mesaLer_().danoMassivo !== false;
+  } catch (e) { /* teste isolado/ambiente sem mesa: fica no padrão */ }
+
+  const conta = pvDoDano_(final, { maior: maior, severo: severo }, comMassivo, false);
+  let pv = conta.pv;
+
+  // 2) Reações disparadas pela faixa final de dano.
+  for (let i = 0; i < defs.length; i++) {
+    const def = defs[i];
+    if (def.momento !== 'depois-dos-limiares') continue;
+    if ((def.faixas || []).indexOf(conta.faixa) === -1) {
+      return { erro: '"' + def.nome + '" não se aplica a ' + conta.rotulo + '.' };
+    }
+    const efeito = def.efeito || {};
+    if (efeito.pvEmVezDe !== undefined) pv = Math.max(0, Math.trunc(Number(efeito.pvEmVezDe)) || 0);
+    if (efeito.reduzPv) pv = Math.max(0, pv - Math.max(0, Math.trunc(Number(efeito.reduzPv)) || 0));
+  }
+
+  // 3) Soma e valida TODOS os custos antes de tocar na ficha: tudo ou nada.
+  let custoEstresse = 0, custoEsperanca = 0;
+  for (let i = 0; i < defs.length; i++) {
+    const c = defs[i].custo || {};
+    custoEstresse += Math.max(0, Math.trunc(Number(c.estresse)) || 0);
+    custoEsperanca += Math.max(0, Math.trunc(Number(c.esperanca)) || 0);
+  }
+  const r = ficha.recursos || {};
+  const estresseAtual = Math.max(0, Number(r.estresseMarcado) || 0);
+  const estresseMax = Math.max(0, Number(r.estresseMaximo) || 0);
+  const esperancaAtual = Math.max(0, Number(r.esperanca) || 0);
+  if (custoEstresse && estresseAtual + custoEstresse > estresseMax) {
+    return { erro: 'Não sobra Estresse para as reações escolhidas (custa ' + custoEstresse + ').' };
+  }
+  if (custoEsperanca && esperancaAtual < custoEsperanca) {
+    return { erro: 'As reações escolhidas custam ' + custoEsperanca + ' de Esperança, e você tem ' + esperancaAtual + '.' };
+  }
+
+  const mudancasInternas = [];
+  if (custoEsperanca) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'esperanca', delta: -custoEsperanca }));
+  if (custoEstresse) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'estresseMarcado', delta: custoEstresse }));
+  let toquePv = null;
+  if (pv > 0) {
+    toquePv = ajustarRecurso_(ficha, { chave: 'pontosDeVidaMarcados', delta: pv });
+    mudancasInternas.push(toquePv);
+  }
+
+  const usadas = defs.map(function (x) { return x.nome; });
+  const partes = [
+    bruto + ' de dano ' + (tipo === 'fisico' ? 'físico' : 'mágico')
+  ];
+  if (final !== bruto) partes.push('reduzido para ' + final + ' antes dos limiares');
+  partes.push(conta.rotulo + ': ' + conta.pv + ' PV pela faixa');
+  if (pv !== conta.pv) partes.push('reações deixam ' + pv + ' PV');
+
+  const saida = {
+    tipo: 'dano',
+    dano: { bruto: bruto, final: final, tipo: tipo, faixa: conta.faixa, rotulo: conta.rotulo },
+    pvPelaFaixa: conta.pv,
+    pvMarcados: pv,
+    reacoes: usadas,
+    custos: { estresse: custoEstresse, esperanca: custoEsperanca },
+    detalhes: mudancasInternas,
+    aviso: partes.join(' · ') + '.'
+  };
+  if (toquePv && toquePv.alerta) saida.alerta = toquePv.alerta;
+  if (toquePv && toquePv.movimentoDeMorte) saida.movimentoDeMorte = true;
+  return saida;
 }
 
 function ajustarRecurso_(ficha, a) {

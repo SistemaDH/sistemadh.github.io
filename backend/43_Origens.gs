@@ -59,6 +59,69 @@ const EFEITOS_DERIVADOS_DE_ORIGEM = {
   }
 };
 
+/** Reações de ancestralidade que alteram o dano recebido. */
+const REACOES_DE_DANO_DE_ORIGEM = {
+  "Pele Grossa": {
+    "origem": "ancestralidade",
+    "refId": "anao",
+    "momento": "depois-dos-limiares",
+    "faixas": [
+      "menor"
+    ],
+    "custo": {
+      "estresse": 2
+    },
+    "efeito": {
+      "pvEmVezDe": 0
+    },
+    "fonte": "DH-DigitalRegras.pdf p.53: dano leve/Menor; marque 2 Fadiga em vez de 1 PV."
+  },
+  "Fortitude Aumentada": {
+    "origem": "ancestralidade",
+    "refId": "anao",
+    "momento": "antes-dos-limiares",
+    "tipos": [
+      "fisico"
+    ],
+    "custo": {
+      "esperanca": 3
+    },
+    "efeito": {
+      "dano": "metade"
+    },
+    "fonte": "DH-DigitalRegras.pdf p.53: gaste 3 Esperança para reduzir à metade o dano físico sofrido."
+  },
+  "Escamas": {
+    "origem": "ancestralidade",
+    "refId": "drakona",
+    "momento": "depois-dos-limiares",
+    "faixas": [
+      "severo",
+      "massivo"
+    ],
+    "custo": {
+      "estresse": 1
+    },
+    "efeito": {
+      "reduzPv": 1
+    },
+    "fonte": "DH-DigitalRegras.pdf p.55: ao sofrer dano grave/Severo, marque 1 Fadiga para marcar 1 PV a menos."
+  }
+};
+
+
+/** Acha uma reação de dano de origem pelo nome. */
+function reacaoDeDanoDeOrigem_(nome) {
+  const alvo = chaveTexto_(nome);
+  const nomes = Object.keys(REACOES_DE_DANO_DE_ORIGEM);
+  for (let i = 0; i < nomes.length; i++) {
+    if (chaveTexto_(nomes[i]) === alvo) {
+      return Object.assign({ nome: nomes[i] }, REACOES_DE_DANO_DE_ORIGEM[nomes[i]]);
+    }
+  }
+  return null;
+}
+
 /** Habilidades ativas de ancestralidade/comunidade que a ficha pode executar. */
 const HABILIDADES_DE_ORIGEM_COM_USO = {
   "Reações Rápidas": {

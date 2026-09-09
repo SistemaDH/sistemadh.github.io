@@ -962,6 +962,72 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    *  — lá eles moram numa grade 4×3, onde cabem sem encolher.
    * ======================================================================== */
 
+
+  function temCaracteristica_(ficha, nome) {
+    const alvo = dados.chave(nome);
+    return ((ficha || {}).caracteristicas || []).some((c) => dados.chave((c || {}).nome) === alvo);
+  }
+
+  /**
+   * Dano recebido: a mesa informa o número que rolou; o servidor faz a conta.
+   * As reações são caixas de escolha porque todas dizem "pode".
+   */
+  function abrirDanoRecebido(ficha) {
+    const dano = el('input', semCorretor({
+      type: 'number', class: 'campo__entrada', min: 1, step: 1,
+      inputmode: 'numeric', placeholder: 'ex.: 17'
+    }));
+    const tipo = el('select', { class: 'campo__entrada' }, [
+      el('option', { value: 'fisico', texto: 'Físico' }),
+      el('option', { value: 'magico', texto: 'Mágico' })
+    ]);
+
+    const defs = [
+      ['Pele Grossa', 'Dano Menor: marque 2 Fadigas em vez de 1 PV.'],
+      ['Fortitude Aumentada', 'Dano físico: gaste 3 Esperanças para reduzi-lo à metade antes dos limiares.'],
+      ['Escamas', 'Dano Severo: marque 1 Fadiga para marcar 1 PV a menos.']
+    ].filter(([nome]) => temCaracteristica_(ficha, nome));
+    const escolhas = defs.map(([nome, texto]) => {
+      const caixa = el('input', { type: 'checkbox' });
+      return { nome, caixa, linha: el('label', { class: 'criacao__alternador' }, [
+        caixa, el('span', { texto: `${nome} — ${texto}` })
+      ]) };
+    });
+
+    const conteudo = el('div', { class: 'pilha' }, [
+      el('p', { class: 'texto-sm' }, textoAnotado(
+        'Informe o dano recebido. O app compara com os limiares e marca PV; nenhuma rolagem é feita aqui.')),
+      el('label', { class: 'campo' }, [
+        el('span', { class: 'campo__rotulo', texto: 'Dano recebido' }), dano
+      ]),
+      el('label', { class: 'campo' }, [
+        el('span', { class: 'campo__rotulo', texto: 'Tipo de dano' }), tipo
+      ]),
+      escolhas.length ? el('div', { class: 'pilha' }, [
+        el('strong', { texto: 'Reações de ancestralidade' }),
+        ...escolhas.map((x) => x.linha)
+      ]) : null,
+      el('p', { class: 'texto-xs texto-fraco', texto:
+        'Pontos de Armadura e outras reduções opcionais continuam sendo escolhas separadas; este passo não rola dados nem decide usar recursos por você.' })
+    ].filter(Boolean));
+
+    const modal = abrirModal({
+      titulo: 'Receber dano',
+      conteudo,
+      acoes: [
+        el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar() }, 'Cancelar'),
+        el('button', { type: 'button', class: 'btn', onClick: async () => {
+          const n = Math.trunc(Number(dano.value));
+          if (!n || n < 1) { avisarErro('Informe um dano maior que zero.'); return; }
+          const reacoes = escolhas.filter((x) => x.caixa.checked).map((x) => x.nome);
+          const r = await enviar([{ tipo: 'dano', dano: n, tipoDeDano: tipo.value, reacoes }]);
+          if (r) modal.fechar();
+        } }, 'Aplicar dano')
+      ]
+    });
+    setTimeout(() => dano.focus(), 0);
+  }
+
   function blocoDePapel(ficha) {
     const r = ficha.recursos || {};
     const d = ficha.defesas || {};
@@ -981,6 +1047,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         'Compare o dano recebido com estes números — a faixa em que ele cai diz ' +
         'quantos PV marcar.')),
       faixaDeLimiares(d),
+      el('button', {
+        type: 'button', class: 'btn btn--fantasma',
+        onClick: () => abrirDanoRecebido(ficha)
+      }, 'Aplicar dano recebido'),
       trilhaDePapel({
         chave: 'pontosDeVidaMarcados', rotulo: 'PV', nomeCompleto: 'Pontos de Vida',
         classe: 'pv', marcados: r.pontosDeVidaMarcados || 0, total: r.pontosDeVidaMaximos || 0

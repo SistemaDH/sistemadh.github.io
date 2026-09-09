@@ -36,8 +36,18 @@ for (aid, nome), (custo, marca) in esperados.items():
 
 # Não declarar como automatizados, neste checkpoint, os casos que dependem dos
 # próximos subblocos (dano, estado, criação, descanso ou perfil de ataque).
+reacoes_dano = {
+    ('anao', 'Pele Grossa'): ('depois-dos-limiares', {'estresse': 2}),
+    ('anao', 'Fortitude Aumentada'): ('antes-dos-limiares', {'esperanca': 3}),
+    ('drakona', 'Escamas'): ('depois-dos-limiares', {'estresse': 1}),
+}
+for (aid, nome), (momento, custo) in reacoes_dano.items():
+    rd = feat(aid, nome).get('reacaoDano') or {}
+    assert rd.get('momento') == momento, f'{aid}/{nome}: momento de dano incorreto'
+    assert rd.get('custo') == custo, f'{aid}/{nome}: custo de reação incorreto'
+    assert rd.get('efeito'), f'{aid}/{nome}: faltou efeito de dano estruturado'
+
 adiados = [
-    ('anao', 'Pele Grossa'), ('anao', 'Fortitude Aumentada'), ('drakona', 'Escamas'),
     ('drakona', 'Sopro Elemental'), ('elfo', 'Transe Celestial'), ('fada', 'Asas'),
     ('firbolg', 'Inabalável'), ('galapa', 'Retrair'), ('halfling', 'Portador da Sorte'),
     ('katari', 'Garras Retráteis'), ('ribbet', 'Língua Comprida')
@@ -53,4 +63,4 @@ assert fada['maximo'] == {'tipo': 'fixo', 'valor': 1} and fada['zeraEm'] == ['fi
 assert gob['refId'] == 'goblin' and gob['exigeCaracteristica'] == 'Sentido de Perigo'
 assert gob['maximo'] == {'tipo': 'fixo', 'valor': 1} and gob['zeraEm'] == ['descanso']
 
-print('Lote 8 — ancestralidades: 18 entradas; 10 usos simples e 2 limites protegidos.')
+print('Lote 8 — ancestralidades: 18 entradas; 10 usos simples, 2 limites e 3 reações de dano protegidos.')

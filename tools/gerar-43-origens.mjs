@@ -35,6 +35,16 @@ for (const a of anc.ancestralidades) {
 }
 for (const c of com.comunidades || []) anotaUsoDeOrigem(c.caracteristica, 'comunidade', c.id);
 
+/* Reações de ancestralidade que alteram o dano recebido. */
+const reacoesDeDanoDeOrigem = {};
+for (const a of anc.ancestralidades) {
+  for (const f of a.caracteristicas || []) {
+    if (!f.reacaoDano) continue;
+    if (reacoesDeDanoDeOrigem[f.nome]) throw new Error(`reação de dano ambígua para ${f.nome}`);
+    reacoesDeDanoDeOrigem[f.nome] = Object.assign({ origem: 'ancestralidade', refId: a.id }, f.reacaoDano);
+  }
+}
+
 /* Efeitos numéricos que a ficha consegue aplicar sem escolha/rolagem. */
 const efeitosDerivadosDeOrigem = {};
 for (const a of anc.ancestralidades) {
@@ -82,6 +92,22 @@ L.push('};\n');
 
 L.push('/** Modificadores derivados das características de ancestralidade. */');
 L.push(`const EFEITOS_DERIVADOS_DE_ORIGEM = ${JSON.stringify(efeitosDerivadosDeOrigem, null, 2)};\n`);
+
+L.push('/** Reações de ancestralidade que alteram o dano recebido. */');
+L.push(`const REACOES_DE_DANO_DE_ORIGEM = ${JSON.stringify(reacoesDeDanoDeOrigem, null, 2)};\n`);
+L.push(`
+/** Acha uma reação de dano de origem pelo nome. */
+function reacaoDeDanoDeOrigem_(nome) {
+  const alvo = chaveTexto_(nome);
+  const nomes = Object.keys(REACOES_DE_DANO_DE_ORIGEM);
+  for (let i = 0; i < nomes.length; i++) {
+    if (chaveTexto_(nomes[i]) === alvo) {
+      return Object.assign({ nome: nomes[i] }, REACOES_DE_DANO_DE_ORIGEM[nomes[i]]);
+    }
+  }
+  return null;
+}
+`);
 
 L.push('/** Habilidades ativas de ancestralidade/comunidade que a ficha pode executar. */');
 L.push(`const HABILIDADES_DE_ORIGEM_COM_USO = ${JSON.stringify(usosDeOrigem, null, 2)};\n`);

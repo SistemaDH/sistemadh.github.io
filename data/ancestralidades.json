@@ -25,12 +25,38 @@
     {
      "ordem": 1,
      "nome": "Pele Grossa",
-     "texto": "Quando você sofrer dano Menor, pode marcar 2 Estresse em vez de marcar um Ponto de Vida."
+     "texto": "Quando você sofrer dano Menor, pode marcar 2 Estresse em vez de marcar um Ponto de Vida.",
+     "reacaoDano": {
+      "momento": "depois-dos-limiares",
+      "faixas": [
+       "menor"
+      ],
+      "custo": {
+       "estresse": 2
+      },
+      "efeito": {
+       "pvEmVezDe": 0
+      },
+      "fonte": "DH-DigitalRegras.pdf p.53: dano leve/Menor; marque 2 Fadiga em vez de 1 PV."
+     }
     },
     {
      "ordem": 2,
      "nome": "Fortitude Aumentada",
-     "texto": "Gaste 3 Esperança para reduzir pela metade o dano físico recebido."
+     "texto": "Gaste 3 Esperança para reduzir pela metade o dano físico recebido.",
+     "reacaoDano": {
+      "momento": "antes-dos-limiares",
+      "tipos": [
+       "fisico"
+      ],
+      "custo": {
+       "esperanca": 3
+      },
+      "efeito": {
+       "dano": "metade"
+      },
+      "fonte": "DH-DigitalRegras.pdf p.53: gaste 3 Esperança para reduzir à metade o dano físico sofrido."
+     }
     }
    ],
    "caracteristicasNoLivro": [
@@ -99,7 +125,21 @@
     {
      "ordem": 1,
      "nome": "Escamas",
-     "texto": "Suas escamas funcionam como proteção natural. Quando você for sofrer dano Severo, pode marcar um Stress para reduzir em 1 o número de Pontos de Vida perdidos."
+     "texto": "Suas escamas funcionam como proteção natural. Quando você for sofrer dano Severo, pode marcar um Stress para reduzir em 1 o número de Pontos de Vida perdidos.",
+     "reacaoDano": {
+      "momento": "depois-dos-limiares",
+      "faixas": [
+       "severo",
+       "massivo"
+      ],
+      "custo": {
+       "estresse": 1
+      },
+      "efeito": {
+       "reduzPv": 1
+      },
+      "fonte": "DH-DigitalRegras.pdf p.55: ao sofrer dano grave/Severo, marque 1 Fadiga para marcar 1 PV a menos."
+     }
     },
     {
      "ordem": 2,

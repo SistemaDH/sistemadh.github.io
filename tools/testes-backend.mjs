@@ -5386,6 +5386,151 @@ teste('ancestralidade mista só usa a característica realmente escolhida', () =
   igual(contexto.aplicarAjustes_(semEssas, [{ tipo: 'habilidade', nome: 'Presas' }]).erros.length, 1);
 });
 
+
+console.log('\nLote 8 — dano recebido e reações de ancestralidade');
+
+function fichaDeAncestralidadeParaDano_(ancestralidade, extras) {
+  const escolhas = Object.assign({
+    nome: 'Dano', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade: ancestralidade, comunidade: 'Highborne',
+    cartas: ['blade-levantar-se', 'blade-nao-foi-suficiente'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }, extras || {});
+  const f = contexto.validarFicha_(contexto.fichaRapida_(escolhas));
+  f.recursos.esperanca = f.recursos.esperancaMaxima;
+  return f;
+}
+
+teste('dano informado na ficha usa os mesmos limiares do encontro', () => {
+  const f = fichaDeAncestralidadeParaDano_('Humano');
+  const antes = f.recursos.pontosDeVidaMarcados;
+  const danoMenor = Math.max(1, Number(f.defesas.limiarMaior) - 1);
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'dano', dano: danoMenor, tipoDeDano: 'físico' }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].dano.faixa, 'menor');
+  igual(f.recursos.pontosDeVidaMarcados, antes + 1);
+});
+
+teste('Pele Grossa troca o PV de dano Menor por exatamente 2 Estresses', () => {
+  const f = fichaDeAncestralidadeParaDano_('Anão');
+  const danoMenor = Math.max(1, Number(f.defesas.limiarMaior) - 1);
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano: danoMenor, tipoDeDano: 'fisico', reacoes: ['Pele Grossa']
+  }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].pvPelaFaixa, 1);
+  igual(r.mudancas[0].pvMarcados, 0);
+  igual(f.recursos.pontosDeVidaMarcados, 0);
+  igual(f.recursos.estresseMarcado, 2);
+});
+
+teste('Fortitude Aumentada reduz dano físico à metade ANTES dos limiares e cobra 3 Esperanças', () => {
+  const f = fichaDeAncestralidadeParaDano_('Anão');
+  const bruto = Math.max(2, (Number(f.defesas.limiarMaior) - 1) * 2);
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano: bruto, tipoDeDano: 'fisico', reacoes: ['Fortitude Aumentada']
+  }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].dano.final, Math.ceil(bruto / 2));
+  igual(f.recursos.esperanca, f.recursos.esperancaMaxima - 3);
+});
+
+teste('Fortitude Aumentada não pode ser paga em dano mágico e a recusa não toca na ficha', () => {
+  const f = fichaDeAncestralidadeParaDano_('Anão');
+  const antes = JSON.stringify(f.recursos);
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano: Number(f.defesas.limiarGrave), tipoDeDano: 'magico', reacoes: ['Fortitude Aumentada']
+  }]);
+  igual(r.erros.length, 1);
+  igual(JSON.stringify(f.recursos), antes);
+});
+
+teste('Pele Grossa pode entrar depois de Fortitude quando a metade cai em dano Menor', () => {
+  const f = fichaDeAncestralidadeParaDano_('Anão');
+  const bruto = Math.max(2, (Number(f.defesas.limiarMaior) - 1) * 2);
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano: bruto, tipoDeDano: 'fisico',
+    reacoes: ['Fortitude Aumentada', 'Pele Grossa']
+  }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].dano.faixa, 'menor');
+  igual(r.mudancas[0].pvMarcados, 0);
+  igual(f.recursos.estresseMarcado, 2);
+  igual(f.recursos.esperanca, f.recursos.esperancaMaxima - 3);
+});
+
+teste('Escamas reduz em 1 PV o dano Severo e cobra 1 Estresse', () => {
+  const f = fichaDeAncestralidadeParaDano_('Drakona');
+  const grave = Number(f.defesas.limiarGrave);
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano: grave, tipoDeDano: 'magico', reacoes: ['Escamas']
+  }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].dano.faixa, 'severo');
+  igual(r.mudancas[0].pvPelaFaixa, 3);
+  igual(r.mudancas[0].pvMarcados, 2);
+  igual(f.recursos.pontosDeVidaMarcados, 2);
+  igual(f.recursos.estresseMarcado, 1);
+});
+
+teste('Escamas também reduz o 4º PV da regra opcional de dano massivo', () => {
+  const f = fichaDeAncestralidadeParaDano_('Drakona');
+  const massivo = Number(f.defesas.limiarGrave) * 2;
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano: massivo, tipoDeDano: 'fisico', reacoes: ['Escamas']
+  }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].dano.faixa, 'massivo');
+  igual(r.mudancas[0].pvPelaFaixa, 4);
+  igual(r.mudancas[0].pvMarcados, 3);
+});
+
+teste('reação sem recurso suficiente é recusada inteira', () => {
+  const f = fichaDeAncestralidadeParaDano_('Drakona');
+  f.recursos.estresseMarcado = f.recursos.estresseMaximo;
+  const antesPv = f.recursos.pontosDeVidaMarcados;
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano: Number(f.defesas.limiarGrave), tipoDeDano: 'fisico', reacoes: ['Escamas']
+  }]);
+  igual(r.erros.length, 1);
+  igual(f.recursos.pontosDeVidaMarcados, antesPv);
+  igual(f.recursos.estresseMarcado, f.recursos.estresseMaximo);
+});
+
+teste('nome de reação não deixa outra ancestralidade roubar Pele Grossa ou Escamas', () => {
+  const f = fichaDeAncestralidadeParaDano_('Humano');
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano: 1, tipoDeDano: 'fisico', reacoes: ['Pele Grossa']
+  }]);
+  igual(r.erros.length, 1);
+  igual(f.recursos.pontosDeVidaMarcados, 0);
+});
+
+teste('ancestralidade mista só pode usar a reação de dano que realmente escolheu', () => {
+  const f = fichaDeAncestralidadeParaDano_('Anão', {
+    ancestralidadeMista: ['Anão', 'Drakona'],
+    caracteristicasEscolhidas: ['Pele Grossa', 'Sopro Elemental']
+  });
+  const menor = Math.max(1, Number(f.defesas.limiarMaior) - 1);
+  igual(contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano: menor, tipoDeDano: 'fisico', reacoes: ['Pele Grossa']
+  }]).erros, []);
+  const antes = f.recursos.pontosDeVidaMarcados;
+  const roubo = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano: Number(f.defesas.limiarGrave), tipoDeDano: 'fisico', reacoes: ['Escamas']
+  }]);
+  igual(roubo.erros.length, 1);
+  igual(f.recursos.pontosDeVidaMarcados, antes);
+});
+
+teste('dano que marca o último PV preserva o mesmo gatilho de movimento de morte', () => {
+  const f = fichaDeAncestralidadeParaDano_('Humano');
+  f.recursos.pontosDeVidaMarcados = f.recursos.pontosDeVidaMaximos - 1;
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'dano', dano: 1, tipoDeDano: 'fisico' }]);
+  igual(r.erros, []);
+  verdade(r.mudancas[0].movimentoDeMorte === true, JSON.stringify(r.mudancas[0]));
+});
+
 console.log('\nVocabulário');
 teste('nenhum texto CANÔNICO diz "teste" — o das cartas é "jogada"', () => {
   // 'ancora' é texto LITERAL do livro — é o que prova que a página está certa.
