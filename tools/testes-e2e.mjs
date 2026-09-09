@@ -424,6 +424,37 @@ try {
       await pagina.getByRole('tab', { name: 'Jogo' }).click();
     }
   });
+  await passo('Transe Celestial chega à tela como terceiro movimento de descanso', async () => {
+    await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+    await pagina.waitForSelector('.ficha-cartao__abrir');
+    const def = noBackend('ABAS.PERSONAGENS');
+    const linhas = ambiente.contexto.lerTudo_(def)
+      .filter((l) => String(l.excluido).toUpperCase() !== 'TRUE');
+    const linha = linhas[0];
+    const original = linha.dados || '{}';
+    try {
+      const ficha = JSON.parse(original);
+      ficha.identidade = Object.assign({}, ficha.identidade, { ancestralidade: 'Elfo' });
+      ficha.origem = Object.assign({}, ficha.origem, { ancestralidadeMista: [], caracteristicasEscolhidas: [] });
+      const validada = ambiente.contexto.validarFicha_(ficha);
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: JSON.stringify(validada) });
+
+      await pagina.reload({ waitUntil: 'networkidle' });
+      await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+      await abrirFichaEmJogo();
+      await pagina.getByRole('button', { name: 'Descansar' }).click();
+      await pagina.getByRole('button', { name: 'Descanso Curto' }).click();
+      await pagina.getByText('Escolha 3 movimentos', { exact: true }).waitFor({ timeout: 10000 });
+      const texto = (await pagina.locator('.modal__caixa').last().textContent()).replace(/\s+/g, ' ');
+      if (!/Escolha 3 movimentos/.test(texto)) throw new Error('Transe não alterou o teto na UI: ' + texto.slice(0, 500));
+    } finally {
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: original });
+      await pagina.reload({ waitUntil: 'networkidle' });
+      await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+      await abrirFichaEmJogo();
+    }
+  });
+
   await passo('classe e subclasse abrem o que está atrás delas (ponto 4)', async () => {
     /*
      * PONTO 4 DOS PRINTS. Classe e subclasse eram duas linhas de texto morto

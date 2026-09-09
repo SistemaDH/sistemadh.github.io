@@ -60,8 +60,8 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
     escolhas = [];
     limpar(corpo).append(
       el('p', { class: 'texto-sm texto-suave', texto:
-        'Cada personagem faz dois movimentos de repouso — e pode repetir o mesmo duas vezes. ' +
-        'Em qualquer descanso dá para trocar as cartas da mão pelas do cofre.' }),
+        'Normalmente cada personagem faz dois movimentos de repouso — Transe Celestial concede um movimento adicional. ' +
+        'O mesmo movimento pode ser repetido, e em qualquer descanso dá para trocar as cartas da mão pelas do cofre.' }),
       el('div', { class: 'descanso__tipos' }, [
         cartaoDeTipo('curto', 'Descanso Curto', 'Cerca de uma hora. As curas rolam 1d4 + patamar.'),
         cartaoDeTipo('longo', 'Descanso Longo', 'Algumas horas de acampamento. As curas são por completo.')

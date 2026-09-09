@@ -807,20 +807,37 @@ export async function abrirCriacao({ aoCriar } = {}) {
    *  Etapa 7 — Experiências
    * ======================================================================= */
 
+  function rascunhoTemCaracteristica(nome) {
+    if (rascunho.usarMista) return rascunho.caracteristicasEscolhidas.includes(nome);
+    const a = catalogo.ancestralidades.find((x) => x.id === rascunho.ancestralidade);
+    return Boolean(a && a.caracteristicas.some((f) => f.nome === nome));
+  }
+
   function passoExperiencias() {
     return {
       etiqueta: 'Etapa 7',
       titulo: 'Crie suas Experiências',
-      ajuda: 'Duas Experiências, +2 cada. Uma Experiência é uma palavra ou frase que resume algo que seu personagem viveu — específica, mas sem virar uma habilidade de jogo.',
+      ajuda: 'Duas Experiências começam em +2. Algumas ancestralidades podem alterar uma delas durante a criação.',
       desenhar(pai) {
+        const projeto = rascunhoTemCaracteristica('Projeto Intencional');
+        if (!projeto) rascunho.projetoIntencional = null;
+        if (projeto) {
+          pai.append(el('p', { class: 'cartao cartao--alerta texto-sm', texto:
+            'Projeto Intencional: escolha UMA das duas Experiências que combina com o propósito para o qual você foi criado. Ela recebe +1 permanente e começa em +3.' }));
+        }
         [0, 1].forEach((i) => {
-          pai.append(el('div', { class: 'cartao' }, [
+          const aprimorada = projeto && rascunho.projetoIntencional === i;
+          pai.append(el('div', { class: `cartao ${aprimorada ? 'esta-escolhido' : ''}` }, [
             campoTexto(`Experiência ${i + 1}`, rascunho.experiencias[i] || '', (v) => {
               rascunho.experiencias[i] = v;
               atualizarRodape();
             }, { maxlength: 60, placeholder: 'Ex.: Assassino do Sindicato Safira' }),
-            el('span', { class: 'selo selo--nivel', texto: '+2' })
-          ]));
+            el('span', { class: 'selo selo--nivel', texto: aprimorada ? '+3' : '+2' }),
+            projeto ? el('button', {
+              type: 'button', class: `chip ${aprimorada ? 'chip--ativo' : ''}`,
+              onClick: () => { rascunho.projetoIntencional = i; desenhar(); }
+            }, aprimorada ? '✓ Projeto Intencional' : 'Aplicar Projeto Intencional aqui') : null
+          ].filter(Boolean)));
         });
 
         pai.append(el('h3', { class: 'criacao__subsecao', texto: 'Como escrever uma boa Experiência' }));
@@ -849,6 +866,9 @@ export async function abrirCriacao({ aoCriar } = {}) {
         if (preenchidas < 2) return 'Escreva as duas Experiências.';
         const [a, b] = rascunho.experiencias.map((e) => dados.chave(e));
         if (a === b) return 'As duas Experiências precisam ser diferentes.';
+        if (rascunhoTemCaracteristica('Projeto Intencional') && ![0, 1].includes(rascunho.projetoIntencional)) {
+          return 'Escolha qual Experiência recebe Projeto Intencional.';
+        }
         return null;
       }
     };
@@ -971,7 +991,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
 
         pai.append(el('div', { class: 'cartao' }, [
           el('h3', { class: 'criacao__subsecao', texto: 'Experiências' }),
-          ...rascunho.experiencias.map((e) => e ? linha(e, '+2') : null)
+          ...rascunho.experiencias.map((e, i) => e ? linha(e, rascunhoTemCaracteristica('Projeto Intencional') && rascunho.projetoIntencional === i ? '+3 · Projeto Intencional' : '+2') : null)
         ]));
 
         const pendencias = conferir();
@@ -1050,6 +1070,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
     if (!rascunho.pocao) p.push('Falta escolher a poção inicial.');
     if (rascunho.cartas.length !== 2) p.push('Faltam cartas de domínio (precisa de duas).');
     if (rascunho.experiencias.filter((e) => e && e.trim()).length !== 2) p.push('Faltam as duas Experiências.');
+    if (rascunhoTemCaracteristica('Projeto Intencional') && ![0, 1].includes(rascunho.projetoIntencional)) p.push('Falta escolher a Experiência de Projeto Intencional.');
     return p;
   }
 
@@ -1097,7 +1118,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
         .concat([rascunho.pocao], rascunho.itensEscolhidos.filter(Boolean)),
       ouro: { punhados: 1, bolsas: 0, cofres: 0 },
       cartas: { ativas: rascunho.cartas.slice(), cofre: [] },
-      experiencias: rascunho.experiencias.filter((e) => e && e.trim()).map((e) => ({ nome: e.trim(), bonus: 2 })),
+      experiencias: rascunho.experiencias.map((e, i) => ({ nome: (e || '').trim(), bonus: rascunhoTemCaracteristica('Projeto Intencional') && rascunho.projetoIntencional === i ? 3 : 2 })).filter((e) => e.nome),
       condicoes: [],
       contadores: {},
       fichasFilhas: [],
@@ -1141,6 +1162,7 @@ function rascunhoVazio() {
     itensEscolhidos: [],
     cartas: [],
     experiencias: ['', ''],
+    projetoIntencional: null,
     descricaoFisica: {},
     fundo: [],
     conexoes: []

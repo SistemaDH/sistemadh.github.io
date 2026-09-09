@@ -46,6 +46,17 @@ function temMovimentoLongoNoCurto_(ficha) {
   return !!temCaracteristicaNaFicha_(ficha, 'Eficiente');
 }
 
+/** Quantos movimentos ESTA ficha recebe neste descanso. */
+function movimentosPorDescansoDaFicha_(ficha) {
+  let total = Number(DESCANSO.movimentosPorDescanso) || 2;
+  const efeitos = (typeof efeitosDeDescansoDeOrigem_ === 'function')
+    ? efeitosDeDescansoDeOrigem_(ficha) : [];
+  for (let i = 0; i < efeitos.length; i++) {
+    total += Math.max(0, Math.trunc(Number(efeitos[i].movimentosAdicionais)) || 0);
+  }
+  return total;
+}
+
 /**
  * Os movimentos que esta ficha pode escolher neste tipo de descanso.
  * Cada item ganha `deOutroDescanso` quando entrou por uma exceção de regra.
@@ -132,11 +143,12 @@ function simularDescanso_(ficha, tipo, escolhas) {
   };
 
   const lista = Array.isArray(escolhas) ? escolhas : [];
-  if (lista.length > DESCANSO.movimentosPorDescanso) {
-    erros.push('São ' + DESCANSO.movimentosPorDescanso + ' movimentos por descanso; vieram ' + lista.length + '.');
+  const movimentosPermitidos = movimentosPorDescansoDaFicha_(copia);
+  if (lista.length > movimentosPermitidos) {
+    erros.push('São ' + movimentosPermitidos + ' movimentos neste descanso; vieram ' + lista.length + '.');
   }
-  if (lista.length < DESCANSO.movimentosPorDescanso) {
-    avisos.push('Faltam movimentos: o descanso dá ' + DESCANSO.movimentosPorDescanso +
+  if (lista.length < movimentosPermitidos) {
+    avisos.push('Faltam movimentos: este descanso dá ' + movimentosPermitidos +
       ' e você escolheu ' + lista.length + '.');
   }
 
@@ -149,7 +161,7 @@ function simularDescanso_(ficha, tipo, escolhas) {
   /* Quantos movimentos vieram do OUTRO tipo de descanso — ver o teto abaixo. */
   let emprestadosUsados = 0;
 
-  for (let i = 0; i < lista.length && i < DESCANSO.movimentosPorDescanso; i++) {
+  for (let i = 0; i < lista.length && i < movimentosPermitidos; i++) {
     const escolha = lista[i] || {};
     const id = normalizarMovimento_(escolha.movimento);
     const def = id ? MOVIMENTOS_DESCANSO[id] : null;

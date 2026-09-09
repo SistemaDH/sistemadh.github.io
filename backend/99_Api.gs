@@ -285,7 +285,7 @@ function executar_(p) {
         return ok_({
           tipo: p.tipo,
           patamar: patamarDaFicha_(atual.ficha),
-          movimentosPorDescanso: DESCANSO.movimentosPorDescanso,
+          movimentosPorDescanso: movimentosPorDescansoDaFicha_(atual.ficha),
           podeRepetirMovimento: DESCANSO.podeRepetirMovimento,
           seInterrompido: tipoEscolhido ? tipoEscolhido.seInterrompido : '',
           movimentos: movimentosDoDescanso_(p.tipo, atual.ficha)
@@ -971,7 +971,7 @@ function executar_(p) {
         const jogador = exigirMestre_(p.token);
         return comTrava_(function () {
           const m = mesaLer_();
-          const r = abrirSessaoDaMesa_(m, quantosPersonagens_());
+          const r = abrirSessaoDaMesa_(m, quantosPersonagens_(), esperancaDoGrupoNoInicioDaSessao_());
           mesaGravar_(m);
           registrarLog_(jogador, 'sessao-aberta', 'Sessão ' + r.numero +
             (r.primeira ? ' (campanha começou com Medo ' + r.medo + ')' : ''));

@@ -2981,7 +2981,7 @@ const TIPOS_DE_DESCANSO = avaliar('TIPOS_DE_DESCANSO');
 function fichaCansada(extras = {}) {
   const f = contexto.fichaRapida_({
     nome: 'Cansada', classe: 'Bardo', subclasse: 'Músico Errante',
-    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    ancestralidade: 'Humano', comunidade: 'Highborne',
     cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
     experiencias: [{ nome: 'Contador de Histórias', bonus: 2 }, { nome: 'Língua de Prata', bonus: 2 }]
   });
@@ -3202,7 +3202,7 @@ teste('mais de dois movimentos é recusado', () => {
   const p = contexto.previaDoDescanso_(f, 'longo', [
     { movimento: 'zerar-estresse' }, { movimento: 'zerar-estresse' }, { movimento: 'zerar-estresse' }
   ]);
-  verdade(p.erros.some((e) => /2 movimentos por descanso/.test(e)), JSON.stringify(p.erros));
+  verdade(p.erros.some((e) => /2 movimentos/.test(e)), JSON.stringify(p.erros));
 });
 
 teste('movimento em aliado não muda ESTA ficha — a cura vai para a do aliado', () => {
@@ -3710,7 +3710,7 @@ teste('cria a ficha de jogo pela API', () => {
   tokenJogo = api('registrar', { nome: 'Jogadora', codigo: 'senha-de-jogo' }).dados.token;
   const ficha = contexto.fichaRapida_({
     nome: 'Em Jogo', classe: 'Bardo', subclasse: 'Músico Errante',
-    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    ancestralidade: 'Humano', comunidade: 'Highborne',
     cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
     experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
   });
@@ -5639,6 +5639,154 @@ teste('ancestralidade mista só publica o perfil realmente escolhido', () => {
     caracteristicasEscolhidas: ['Pele Grossa', 'Escamas']
   });
   verdade(!contexto.perfisDeAtaqueDaFicha_(semSopro).some((x) => x.nome === 'Sopro Elemental'));
+});
+
+
+console.log('\nLote 8 — criação, descanso e início de sessão por ancestralidade');
+
+function fichaDeCriacaoDeOrigem_(ancestralidade, experiencias, extras) {
+  return contexto.fichaRapida_(Object.assign({
+    nome: 'Origem em criação', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade, comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias
+  }, extras || {}));
+}
+
+teste('Projeto Intencional exige exatamente uma Experiência inicial em +3', () => {
+  const boa = fichaDeCriacaoDeOrigem_('Clank', [
+    { nome: 'Feito para proteger', bonus: 3 }, { nome: 'Viajante', bonus: 2 }
+  ]);
+  igual(contexto.validarCriacao_(boa), []);
+
+  const semEscolher = fichaDeCriacaoDeOrigem_('Clank', [
+    { nome: 'Feito para proteger', bonus: 2 }, { nome: 'Viajante', bonus: 2 }
+  ]);
+  verdade(contexto.validarCriacao_(semEscolher).some((e) => /Projeto Intencional/.test(e)));
+
+  const humano = fichaDeCriacaoDeOrigem_('Humano', [
+    { nome: 'Experiente', bonus: 3 }, { nome: 'Viajante', bonus: 2 }
+  ]);
+  verdade(contexto.validarCriacao_(humano).some((e) => /Projeto Intencional/.test(e)));
+});
+
+teste('Projeto Intencional respeita a característica realmente escolhida na ancestralidade mista', () => {
+  const comProjeto = fichaDeCriacaoDeOrigem_('Clank', [
+    { nome: 'Construído para isso', bonus: 3 }, { nome: 'Sobrevivente', bonus: 2 }
+  ], {
+    ancestralidadeMista: ['Clank', 'Goblin'],
+    caracteristicasEscolhidas: ['Projeto Intencional', 'Sentido de Perigo']
+  });
+  igual(contexto.validarCriacao_(comProjeto), []);
+
+  const semProjeto = fichaDeCriacaoDeOrigem_('Elfo', [
+    { nome: 'Não deveria subir', bonus: 3 }, { nome: 'Sobrevivente', bonus: 2 }
+  ], {
+    ancestralidadeMista: ['Elfo', 'Clank'],
+    caracteristicasEscolhidas: ['Reações Rápidas', 'Eficiente']
+  });
+  verdade(contexto.validarCriacao_(semProjeto).some((e) => /Projeto Intencional/.test(e)));
+});
+
+teste('Transe Celestial dá exatamente um movimento adicional em qualquer descanso', () => {
+  const elfo = fichaDeAncestralidadeParaDano_('Elfo');
+  igual(contexto.movimentosPorDescansoDaFicha_(elfo), 3);
+  const curto = contexto.previaDoDescanso_(elfo, 'curto', [
+    { movimento: 'tratar-feridas', rolagem: 2 },
+    { movimento: 'reduzir-estresse', rolagem: 2 },
+    { movimento: 'reparar-armadura', rolagem: 2 }
+  ]);
+  igual(curto.erros, [], JSON.stringify(curto.erros));
+
+  const humano = fichaDeAncestralidadeParaDano_('Humano');
+  igual(contexto.movimentosPorDescansoDaFicha_(humano), 2);
+  verdade(contexto.previaDoDescanso_(humano, 'curto', [
+    { movimento: 'tratar-feridas', rolagem: 2 },
+    { movimento: 'reduzir-estresse', rolagem: 2 },
+    { movimento: 'reparar-armadura', rolagem: 2 }
+  ]).erros.length > 0);
+});
+
+teste('Transe Celestial em ancestralidade mista depende de ter escolhido a segunda característica do Elfo', () => {
+  const com = fichaDeAncestralidadeParaDano_('Clank', {
+    ancestralidadeMista: ['Clank', 'Elfo'],
+    caracteristicasEscolhidas: ['Projeto Intencional', 'Transe Celestial']
+  });
+  igual(contexto.movimentosPorDescansoDaFicha_(com), 3);
+
+  const sem = fichaDeAncestralidadeParaDano_('Elfo', {
+    ancestralidadeMista: ['Elfo', 'Clank'],
+    caracteristicasEscolhidas: ['Reações Rápidas', 'Eficiente']
+  });
+  igual(contexto.movimentosPorDescansoDaFicha_(sem), 2);
+});
+
+teste('Talismã da Sorte conta portadores reais no grupo, inclusive ancestralidade mista', () => {
+  const simples = fichaDeAncestralidadeParaDano_('Halfling');
+  const misto = fichaDeAncestralidadeParaDano_('Halfling', {
+    ancestralidadeMista: ['Halfling', 'Goblin'],
+    caracteristicasEscolhidas: ['Portador da Sorte', 'Sentido de Perigo']
+  });
+  const sem = fichaDeAncestralidadeParaDano_('Elfo', {
+    ancestralidadeMista: ['Elfo', 'Halfling'],
+    caracteristicasEscolhidas: ['Reações Rápidas', 'Bússola Interna']
+  });
+  const encerrada = JSON.parse(JSON.stringify(simples));
+  encerrada.encerrada = { motivo: 'veu' };
+  const linhas = [simples, misto, sem, encerrada].map((f) => ({ excluido: 'FALSE', dados: JSON.stringify(f) }));
+  linhas.push({ excluido: 'TRUE', dados: JSON.stringify(simples) });
+  igual(contexto.esperancaDoGrupoNoInicioDaSessao_(linhas), 2);
+});
+
+teste('abrir sessão congela o bônus de Talismã para quem sincronizar depois', () => {
+  const m = contexto.normalizarMesa_({ medo: 0, sessao: { numero: 0, aberta: false } });
+  const r = contexto.abrirSessaoDaMesa_(m, 4, 2);
+  igual(r.esperancaDoGrupo, 2);
+  igual(m.sessao.esperancaDoGrupo, 2);
+  contexto.encerrarSessaoDaMesa_(m);
+  igual(m.sessao.esperancaDoGrupo, 2, 'encerrar não apaga o começo da sessão para quem ainda vai sincronizar');
+});
+
+teste('Talismã da Sorte entra uma vez por sessão e respeita o máximo de Esperança', () => {
+  const lerMesaOriginal = contexto.mesaLer_;
+  try {
+    contexto.mesaLer_ = () => ({ sessao: { numero: 8, esperancaDoGrupo: 2 } });
+    const f = fichaDeAncestralidadeParaDano_('Humano');
+    f.sessaoVista = 7;
+    f.recursos.esperanca = 2;
+    let r = contexto.ajustarSessaoDaFicha_(f, {});
+    igual(r.esperancaGanha, 2);
+    igual(f.recursos.esperanca, 4);
+    r = contexto.ajustarSessaoDaFicha_(f, {});
+    verdade(r.jaEstava);
+    igual(f.recursos.esperanca, 4, 'reabrir a mesma sessão não duplica o Talismã');
+
+    const quase = fichaDeAncestralidadeParaDano_('Humano');
+    quase.sessaoVista = 7;
+    quase.recursos.esperanca = quase.recursos.esperancaMaxima - 1;
+    r = contexto.ajustarSessaoDaFicha_(quase, {});
+    igual(r.esperancaGanha, 1);
+    igual(quase.recursos.esperanca, quase.recursos.esperancaMaxima);
+
+    const fim = fichaDeAncestralidadeParaDano_('Humano');
+    fim.sessaoVista = 7;
+    fim.recursos.esperanca = 1;
+    fim.encerrada = { motivo: 'veu' };
+    r = contexto.ajustarSessaoDaFicha_(fim, {});
+    igual(r.esperancaGanha, 0);
+    igual(fim.recursos.esperanca, 1);
+  } finally {
+    contexto.mesaLer_ = lerMesaOriginal;
+  }
+});
+
+teste('Bússola Interna/Senso de Direção continua sendo rerrolagem manual, não RNG do app', () => {
+  const dadosAnc = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/ancestralidades.json'), 'utf8'));
+  const peq = dadosAnc.ancestralidades.find((a) => a.id === 'halfling');
+  const bussola = peq.caracteristicas.find((f) => f.nome === 'Bússola Interna');
+  igual(peq.nomeLivro, 'PEQUENINO');
+  igual(bussola.rolagemManual.acao, 'rerrolar-dado-esperanca');
+  verdade(!bussola.uso, 'rerrolagem manual não é botão que gera dado');
 });
 
 

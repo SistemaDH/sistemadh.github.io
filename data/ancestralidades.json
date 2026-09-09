@@ -82,13 +82,19 @@
    "id": "clank",
    "nome": "Clank",
    "nomeCarta": "CLANK",
-   "nomeLivro": "CLANQUEAR",
+   "nomeLivro": "CLANK",
    "descricao": "Os Clanks são seres mecânicos sencientes construídos com uma variedade de materiais, incluindo metal, madeira e pedra. Eles podem\nse assemelham a humanoides, animais ou até mesmo objetos inanimados. Como os seres orgânicos, seus corpos têm uma grande variedade de tamanhos.\nDevido à sua construção sob medida, muitos clanks têm configurações físicas altamente especializadas. Os exemplos incluem mãos com garras para agarrar, rodas para movimentação ou armamento embutido.\n\nMuitos clãs adotam modificações corporais tanto para estilo quanto para função, e os membros de outras ancestralidades frequentemente recorrem a artesãos clãs para construir auxílios de mobilidade e adornos físicos personalizados. Outros ancestrais podem criar clãs, até mesmo usando suas próprias características físicas como inspiração, mas também é comum que os clãs construam uns aos outros. A vida útil de um clank se estende enquanto ele for capaz de adquirir ou criar novas peças, tornando sua forma física efetivamente imortal. Dito isso, suas mentes estão sujeitas aos efeitos do tempo e se deterioram à medida que a magia que as fortalece perde a potência.",
    "caracteristicas": [
     {
      "ordem": 1,
      "nome": "Projeto Intencional",
-     "texto": "Decida quem te criou e para qual propósito. Na criação do personagem, escolha uma das suas Experiências que melhor se alinhe a esse propósito e ganhe um bônus permanente de +1 nela."
+     "texto": "Decida quem te criou e para qual propósito. Na criação do personagem, escolha uma das suas Experiências que melhor se alinhe a esse propósito e ganhe um bônus permanente de +1 nela.",
+     "efeitoCriacao": {
+      "tipo": "bonus-experiencia",
+      "quantidade": 1,
+      "bonus": 1,
+      "fonte": "DH-DigitalRegras.pdf p.54"
+     }
     },
     {
      "ordem": 2,
@@ -98,12 +104,12 @@
    ],
    "caracteristicasNoLivro": [
     {
-     "nome": "Design com propósito",
-     "texto": "Decida quem o criou e com que propósito. Na criação do personagem, escolha uma de suas Experiências que melhor se alinhe com esse propósito e ganhe um bônus permanente de +1 para ela."
+     "nome": "Projeto Intencional",
+     "texto": "Decida quem construiu você e para que propósito. Durante a criação de personagem, escolha uma de suas Experiências que seja mais alinhada a esse propósito e receba um bônus permanente de +1 nela."
     },
     {
      "nome": "Eficiente",
-     "texto": "Quando você tira um descanso curto, pode escolher um movimento de descanso longo em vez de um movimento de descanso curto."
+     "texto": "Ao fazer um descanso curto, você pode escolher um movimento de descanso longo em vez de uma de descanso curto."
     }
    ],
    "imagem": "assets/cartas/ancestralidades/Clank.png",
@@ -111,8 +117,10 @@
    "paginaLivro": 54,
    "observacao": null,
    "problemasDeTraducao": [
-    "O título impresso é 'CLANQUEAR', mas todo o corpo do texto usa 'Clanks'/'clãs'/'clank' (o termo original em inglês é 'Clank') — nome do título inconsistente com o termo usado na descrição.",
     "Frase quebrada: 'Eles podem\\nse assemelham a humanoides...' — falta concordância/conectivo, resultando em frase mal formada (provavelmente deveria ser 'Eles podem se assemelhar a...')."
+   ],
+   "aliasesLegado": [
+    "CLANQUEAR"
    ]
   },
   {
@@ -183,8 +191,8 @@
    "id": "elfo",
    "nome": "Elfo",
    "nomeCarta": "ELFO",
-   "nomeLivro": "ELF",
-   "descricao": "Os elfos são normalmente humanóides altos com orelhas pontudas e sentidos aguçados. Suas orelhas variam em tamanho e formato pontiagudo e, à medida que envelhecem, as pontas começam a se inclinar. Embora os elfos tenham uma grande variedade de tipos de corpos, todos são bastante altos, com alturas que variam de 6 a 6 ½ pés. Todos os elfos têm a capacidade de entrar em um transe celestial, em vez de dormir. Isso permite que eles descansem efetivamente em um curto período de tempo.\n\nAlguns elfos possuem o que é conhecido como \"forma mística\", que ocorre quando um elfo se dedica ao estudo ou à proteção do mundo natural tão profundamente que sua forma física muda. Essas características podem incluir sardas celestiais, a presença de folhas, vinhas ou flores em seus cabelos, olhos que tremeluzem como fogo e muito mais. Às vezes, essas características são herdadas dos pais, mas se um elfo mudar de ambiente ou de foco mágico, sua aparência mudará com o tempo. Como os elfos vivem cerca de 350 anos, essas características podem mudar mais de uma vez ao longo de sua vida.",
+   "nomeLivro": "ELFO",
+   "descricao": "Elfos são humanoides altos, com orelhas pontudas e sentidos apurados. Suas orelhas variam em tamanho e formato e, conforme envelhecem, as pontas inclinam para baixo. Embora haja uma variedade de corpos élficos, membros desta ancestralidade são bastante altos, medindo entre 1,8m e 1,95m. Elfos têm a habilidade de entrar em um transe celestial, em vez de dormir. Isso lhes permite descansar plenamente num curto período de tempo.\n\nAlguns elfos possuem algo conhecido como “forma mística”, que ocorre quando um elfo se dedica tão profundamente ao estudo ou proteção do mundo natural que sua forma física é alterada. A forma mística pode incluir folhas, vinhas ou flores nos cabelos, sardas celestiais, olhos que brilham como fogo, entre outras. Às vezes, esses traços são herdados dos pais, mas, se um elfo mudar o ambiente ou foco mágico, sua aparência muda com o tempo. Por viverem cerca de 350 anos, esses traços podem mudar mais de uma vez ao longo da vida.",
    "caracteristicas": [
     {
      "ordem": 1,
@@ -200,28 +208,28 @@
     {
      "ordem": 2,
      "nome": "Transe Celestial",
-     "texto": "Durante um descanso, você pode entrar em transe para escolher um movimento de tempo livre adicional."
+     "texto": "Durante um descanso, você pode entrar em transe para escolher um movimento de tempo livre adicional.",
+     "efeitoDescanso": {
+      "movimentosAdicionais": 1,
+      "fonte": "DH-DigitalRegras.pdf p.56"
+     }
     }
    ],
    "caracteristicasNoLivro": [
     {
-     "nome": "Reações rápidas",
-     "texto": "Marque um Estresse para ganhar vantagem em uma rolagem de reação."
+     "nome": "Reação Rápida",
+     "texto": "Marque 1 Ponto de Fadiga para receber vantagem em uma jogada de reação."
     },
     {
-     "nome": "Celestial Trance (Transe Celestial)",
-     "texto": "Durante um descanso, você pode entrar em transe para escolher um movimento adicional de tempo de inatividade."
+     "nome": "Transe Celestial",
+     "texto": "Durante um descanso, você pode entrar em um transe celestial para escolher um movimento de repouso adicional."
     }
    ],
    "imagem": "assets/cartas/ancestralidades/Elfo.png",
    "arquivo": "Elfo.png",
-   "paginaLivro": 57,
+   "paginaLivro": 56,
    "observacao": null,
-   "problemasDeTraducao": [
-    "O título 'ELF' não foi traduzido para 'Elfo'.",
-    "Nome da característica ficou em inglês com tradução entre parênteses: 'Celestial Trance (Transe Celestial)'.",
-    "Medida de altura mantida em pés ('6 a 6 ½ pés'), sem conversão ou adaptação para o sistema métrico usado nas demais páginas."
-   ]
+   "problemasDeTraducao": []
   },
   {
    "id": "fada",
@@ -545,40 +553,47 @@
    "id": "halfling",
    "nome": "Halfling",
    "nomeCarta": "HALFLING",
-   "nomeLivro": "HALFLING",
-   "descricao": "Os halflings são pequenos humanoides com pés grandes e peludos e orelhas arredondadas proeminentes. Em média, os halflings têm de 3 a 4 pés de altura, e suas orelhas, nariz e pés são maiores em proporção ao resto do corpo. Os membros dessa linhagem vivem cerca de 150 anos, e a aparência de um halfling provavelmente permanecerá jovem, mesmo quando ele passar da idade adulta para a velhice. Os halflings são naturalmente sintonizados com os campos magnéticos do Reino Mortal, o que lhes confere uma forte bússola interna. Eles também possuem sentidos agudos de audição e olfato e, muitas vezes, conseguem detectar aqueles que lhes são familiares pelo som de seus movimentos.",
+   "nomeLivro": "PEQUENINO",
+   "descricao": "Halflings são pequenos humanoides com grandes pés peludos e proeminentes orelhas arredondadas. Em média, medem entre 90cm e 1,2m, e têm nariz, orelhas e pés proporcionalmente maiores em relação ao resto do corpo. Membros desta ancestralidade vivem aproximadamente 150 anos e mantêm uma aparência jovial mesmo em idade adulta e avançada. Halflings são naturalmente ligados aos campos magnéticos do reino mortal, o que lhes fornece um poderoso senso de direção. Eles também possuem audição e olfato aguçados, podendo detectar frequentemente as pessoas que conhecem pelo som de seus movimentos.",
    "caracteristicas": [
     {
      "ordem": 1,
      "nome": "Portador da Sorte",
-     "texto": "No início de cada sessão, todos no seu grupo ganham 1 Esperança."
+     "texto": "No início de cada sessão, todos no seu grupo ganham 1 Esperança.",
+     "efeitoSessao": {
+      "gatilho": "inicio-de-sessao",
+      "grupo": {
+       "esperanca": 1
+      },
+      "fonte": "DH-DigitalRegras.pdf p.68 — Talismã da Sorte"
+     }
     },
     {
      "ordem": 2,
      "nome": "Bússola Interna",
-     "texto": "Quando você rolar 1 no seu Dado de Esperança, pode rerrolar esse dado."
+     "texto": "Quando você rolar 1 no seu Dado de Esperança, pode rerrolar esse dado.",
+     "rolagemManual": {
+      "gatilho": "dado-esperanca-igual-a-1",
+      "acao": "rerrolar-dado-esperanca",
+      "fonte": "DH-DigitalRegras.pdf p.68 — Senso de Direção"
+     }
     }
    ],
    "caracteristicasNoLivro": [
     {
-     "nome": "Luckbringer",
-     "texto": "No início de cada sessão, todos em seu grupo ganham uma Esperança."
+     "nome": "Talismã da Sorte",
+     "texto": "No início de cada sessão, todos os membros de seu grupo recebem 1 Ponto de Esperança."
     },
     {
-     "nome": "Bússola interna",
-     "texto": "Ao rolar um 1 no Hope Die, você pode rolar novamente."
+     "nome": "Senso de Direção",
+     "texto": "Ao rolar 1 no Dado de Esperança, você pode rolá-lo novamente."
     }
    ],
    "imagem": "assets/cartas/ancestralidades/Halfling.png",
    "arquivo": "Halfling.png",
-   "paginaLivro": 65,
-   "observacao": null,
-   "problemasDeTraducao": [
-    "Nome da característica \"Luckbringer\" não foi traduzido para o português.",
-    "\"Hope Die\" não foi traduzido (deveria ser \"Dado de Esperança\").",
-    "Medida de altura dada em \"pés\" (3 a 4 pés) em vez de metros, inconsistente com as demais ancestralidades do livro.",
-    "Legendas dos esboços de arte mantidas em inglês: \"HUMAN\", \"HALFLING\", \"THE AVERAGE HALFLING IS ROUGHLY HALF THE HEIGHT OF THE AVERAGE HUMAN.\", \"SOME HALFLING EARS MAY REACH UPWARD MORE PROMINENTLY.\", \"HALFLING EARS TEND TO HAVE A ROUNDED SHAPE.\", \"ELDER HALFLING\", \"ADULT HALFLING\", \"YOUNG HALFLING\", \"HALFLINGS ARE OFTEN PERCEIVED TO BE YOUTHFUL IN APPEARANCE, EVEN AFTER REACHING ADULTHOOD. ONLY WHEN A HALFLING REACHES THE LAST DECADE OF THEIR LIFE DO THEY SHOW THE OBVIOUS SIGNS OF AGING.\""
-   ]
+   "paginaLivro": 68,
+   "observacao": "No livro básico PT-BR, a ancestralidade é Pequenino e as habilidades são Talismã da Sorte e Senso de Direção. A carta/catalogo do projeto usa Halfling, Portador da Sorte e Bússola Interna; são equivalentes, não habilidades adicionais.",
+   "problemasDeTraducao": []
   },
   {
    "id": "humanos",

@@ -1619,7 +1619,8 @@ function ajustarSessaoDaFicha_(ficha, a) {
   if (typeof mesaLer_ !== 'function') {
     return { erro: 'Este servidor não sabe ler a mesa.' };
   }
-  const daMesa = Math.max(0, Math.trunc(Number(mesaLer_().sessao.numero)) || 0);
+  const mesa = mesaLer_();
+  const daMesa = Math.max(0, Math.trunc(Number((mesa.sessao || {}).numero)) || 0);
   const vista = Math.max(0, Math.trunc(Number(ficha.sessaoVista)) || 0);
 
   if (daMesa <= vista) {
@@ -1641,6 +1642,19 @@ function ajustarSessaoDaFicha_(ficha, a) {
     });
   });
 
+  // Talismã da Sorte (Pequenino, Core p.68): o bônus foi congelado na
+  // abertura da sessão. Esta ficha o recebe quando sincroniza, uma vez só.
+  const bonusEsperanca = Math.max(0, Math.trunc(Number((mesa.sessao || {}).esperancaDoGrupo)) || 0);
+  const recursos = ficha.recursos || (ficha.recursos = {});
+  const esperancaAntes = Math.max(0, Number(recursos.esperanca) || 0);
+  let esperancaGanha = 0;
+  if (bonusEsperanca > 0 && !ficha.encerrada) {
+    const tetoEsperanca = Math.max(0, Number(recursos.esperancaMaxima) || 6);
+    const depois = Math.min(tetoEsperanca, esperancaAntes + bonusEsperanca);
+    recursos.esperanca = depois;
+    esperancaGanha = depois - esperancaAntes;
+  }
+
   ficha.sessaoVista = daMesa;
 
   const chaves = Object.keys(mexidos);
@@ -1649,6 +1663,9 @@ function ajustarSessaoDaFicha_(ficha, a) {
     sessao: daMesa,
     antes: vista,
     pulou: daMesa - vista,
+    bonusEsperancaDoGrupo: bonusEsperanca,
+    esperancaAntes: esperancaAntes,
+    esperancaGanha: esperancaGanha,
     contadores: chaves.map(function (chave) {
       const def = (typeof CONTADORES !== 'undefined' && CONTADORES[chave]) || {};
       const agora = (ficha.contadores || {})[chave];
@@ -1658,9 +1675,14 @@ function ajustarSessaoDaFicha_(ficha, a) {
         valor: agora ? (agora.valor || 0) : 0
       };
     }),
-    aviso: chaves.length
-      ? 'Sessão ' + daMesa + ' na mesa: os marcadores de "uma vez por sessão" voltaram (livro p.105).'
-      : ''
+    aviso: [
+      chaves.length
+        ? 'Sessão ' + daMesa + ' na mesa: os marcadores de "uma vez por sessão" voltaram (livro p.105).'
+        : '',
+      bonusEsperanca > 0
+        ? ('Talismã da Sorte: +' + bonusEsperanca + ' Esperança para o grupo; esta ficha ganhou ' + esperancaGanha + ' respeitando o próprio máximo (Core p.68).')
+        : ''
+    ].filter(Boolean).join(' ')
   };
 }
 

@@ -43,6 +43,49 @@ const ANCESTRALIDADES = {
   "simiah": { nome: "Simiah", caracteristicas: [{"ordem":1,"nome":"Escalador Nato"}, {"ordem":2,"nome":"Ágil"}] },
 };
 
+/** Efeitos de ancestralidade ligados à criação, descanso e sessão. */
+const EFEITOS_DE_CRIACAO_DE_ORIGEM = {
+  "Projeto Intencional": {
+    "tipo": "bonus-experiencia",
+    "quantidade": 1,
+    "bonus": 1,
+    "fonte": "DH-DigitalRegras.pdf p.54"
+  }
+};
+
+const EFEITOS_DE_DESCANSO_DE_ORIGEM = {
+  "Transe Celestial": {
+    "movimentosAdicionais": 1,
+    "fonte": "DH-DigitalRegras.pdf p.56"
+  }
+};
+
+const EFEITOS_DE_SESSAO_DE_ORIGEM = {
+  "Portador da Sorte": {
+    "gatilho": "inicio-de-sessao",
+    "grupo": {
+      "esperanca": 1
+    },
+    "fonte": "DH-DigitalRegras.pdf p.68 — Talismã da Sorte"
+  }
+};
+
+
+/** Filtra um índice de efeitos pelas características que ESTA ficha realmente possui. */
+function efeitosDeOrigemDaFicha_(ficha, mapa) {
+  const cs = (typeof caracteristicasDaOrigem_ === 'function') ? caracteristicasDaOrigem_(ficha) : [];
+  const saida = [];
+  for (let i = 0; i < cs.length; i++) {
+    const nome = (cs[i] || {}).nome;
+    const efeito = (mapa || {})[nome];
+    if (efeito) saida.push(Object.assign({ nome: nome }, efeito));
+  }
+  return saida;
+}
+function efeitosDeCriacaoDeOrigem_(ficha) { return efeitosDeOrigemDaFicha_(ficha, EFEITOS_DE_CRIACAO_DE_ORIGEM); }
+function efeitosDeDescansoDeOrigem_(ficha) { return efeitosDeOrigemDaFicha_(ficha, EFEITOS_DE_DESCANSO_DE_ORIGEM); }
+function efeitosDeSessaoDeOrigem_(ficha) { return efeitosDeOrigemDaFicha_(ficha, EFEITOS_DE_SESSAO_DE_ORIGEM); }
+
 /** Modificadores derivados das características de ancestralidade. */
 const EFEITOS_DERIVADOS_DE_ORIGEM = {
   "Carapaça": {
@@ -372,7 +415,7 @@ const ANCESTRALIDADE_ALIASES = {
   "anao": ["Anão","DWARF"],
   "clank": ["Clank","CLANQUEAR"],
   "drakona": ["Drakona"],
-  "elfo": ["ELF","Elfo"],
+  "elfo": ["Elfo"],
   "fada": ["Fada","FAERIE"],
   "fauno": ["FAUN","Fauno"],
   "firbolg": ["Firbolg"],
@@ -380,7 +423,7 @@ const ANCESTRALIDADE_ALIASES = {
   "galapa": ["Galapa"],
   "gigante": ["Gigante"],
   "goblin": ["Goblin"],
-  "halfling": ["Halfling","Pequenino"],
+  "halfling": ["Halfling","PEQUENINO"],
   "humanos": ["HUMANO","Humanos"],
   "infernis": ["Infernis"],
   "katari": ["Katari"],

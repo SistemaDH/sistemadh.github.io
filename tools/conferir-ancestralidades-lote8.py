@@ -47,11 +47,23 @@ for (aid, nome), (momento, custo) in reacoes_dano.items():
     assert rd.get('custo') == custo, f'{aid}/{nome}: custo de reação incorreto'
     assert rd.get('efeito'), f'{aid}/{nome}: faltou efeito de dano estruturado'
 
-adiados = [
-    ('elfo', 'Transe Celestial'), ('fada', 'Asas'),
-    ('firbolg', 'Inabalável'), ('halfling', 'Portador da Sorte')
-]
-for aid, nome in adiados:
+# Fonte Core real e efeitos de ciclo fechados neste checkpoint.
+assert por_id['clank']['nomeLivro'] == 'CLANK' and por_id['clank']['paginaLivro'] == 54
+assert por_id['clank']['caracteristicasNoLivro'][0]['nome'] == 'Projeto Intencional'
+assert feat('clank', 'Projeto Intencional').get('efeitoCriacao') == {
+    'tipo': 'bonus-experiencia', 'quantidade': 1, 'bonus': 1,
+    'fonte': 'DH-DigitalRegras.pdf p.54'
+}
+assert por_id['elfo']['nomeLivro'] == 'ELFO' and por_id['elfo']['paginaLivro'] == 56
+assert por_id['elfo']['caracteristicasNoLivro'][1]['nome'] == 'Transe Celestial'
+assert feat('elfo', 'Transe Celestial').get('efeitoDescanso', {}).get('movimentosAdicionais') == 1
+assert por_id['halfling']['nomeLivro'] == 'PEQUENINO' and por_id['halfling']['paginaLivro'] == 68
+assert [x['nome'] for x in por_id['halfling']['caracteristicasNoLivro']] == ['Talismã da Sorte', 'Senso de Direção']
+assert feat('halfling', 'Portador da Sorte').get('efeitoSessao', {}).get('grupo') == {'esperanca': 1}
+assert feat('halfling', 'Bússola Interna').get('rolagemManual', {}).get('acao') == 'rerrolar-dado-esperanca'
+
+# Ainda adiados: dependem de estado/fluxo próprio nos próximos subblocos.
+for aid, nome in [('fada', 'Asas'), ('firbolg', 'Inabalável')]:
     assert not feat(aid, nome).get('uso'), f'{aid}/{nome}: foi marcado pronto antes do fluxo correto'
 
 por_chave = {c['chave']: c for c in cont['contadores']}
@@ -94,4 +106,4 @@ assert garras.get('consequenciaSucesso') == {'condicao': 'Vulnerável', 'tempora
 gigante = feat('gigante', 'Alcance').get('modificadorAlcance') or {}
 assert gigante.get('de') == 'Corpo a Corpo' and gigante.get('para') == 'Muito Próximo'
 
-print('Lote 8 — ancestralidades: 18 entradas; 12 usos/estados, 2 limites, 3 reações de dano, 3 perfis ofensivos e Alcance protegidos.')
+print('Lote 8 — ancestralidades: 18 entradas; usos, dano, Retração, perfis, Alcance, Projeto Intencional, Transe e Talismã protegidos.')

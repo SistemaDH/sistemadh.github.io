@@ -66,6 +66,18 @@ for (const a of anc.ancestralidades) {
   }
 }
 
+/* Efeitos de origem ligados a momentos do ciclo da ficha. */
+const efeitosDeCriacaoDeOrigem = {};
+const efeitosDeDescansoDeOrigem = {};
+const efeitosDeSessaoDeOrigem = {};
+for (const a of anc.ancestralidades) {
+  for (const f of a.caracteristicas || []) {
+    if (f.efeitoCriacao) efeitosDeCriacaoDeOrigem[f.nome] = f.efeitoCriacao;
+    if (f.efeitoDescanso) efeitosDeDescansoDeOrigem[f.nome] = f.efeitoDescanso;
+    if (f.efeitoSessao) efeitosDeSessaoDeOrigem[f.nome] = f.efeitoSessao;
+  }
+}
+
 /* Efeitos numéricos que a ficha consegue aplicar sem escolha/rolagem. */
 const efeitosDerivadosDeOrigem = {};
 for (const a of anc.ancestralidades) {
@@ -110,6 +122,27 @@ for (const a of anc.ancestralidades) {
   L.push(`  ${j(a.id)}: { nome: ${j(a.nome)}, caracteristicas: [${feats}] },`);
 }
 L.push('};\n');
+
+L.push('/** Efeitos de ancestralidade ligados à criação, descanso e sessão. */');
+L.push(`const EFEITOS_DE_CRIACAO_DE_ORIGEM = ${JSON.stringify(efeitosDeCriacaoDeOrigem, null, 2)};\n`);
+L.push(`const EFEITOS_DE_DESCANSO_DE_ORIGEM = ${JSON.stringify(efeitosDeDescansoDeOrigem, null, 2)};\n`);
+L.push(`const EFEITOS_DE_SESSAO_DE_ORIGEM = ${JSON.stringify(efeitosDeSessaoDeOrigem, null, 2)};\n`);
+L.push(`
+/** Filtra um índice de efeitos pelas características que ESTA ficha realmente possui. */
+function efeitosDeOrigemDaFicha_(ficha, mapa) {
+  const cs = (typeof caracteristicasDaOrigem_ === 'function') ? caracteristicasDaOrigem_(ficha) : [];
+  const saida = [];
+  for (let i = 0; i < cs.length; i++) {
+    const nome = (cs[i] || {}).nome;
+    const efeito = (mapa || {})[nome];
+    if (efeito) saida.push(Object.assign({ nome: nome }, efeito));
+  }
+  return saida;
+}
+function efeitosDeCriacaoDeOrigem_(ficha) { return efeitosDeOrigemDaFicha_(ficha, EFEITOS_DE_CRIACAO_DE_ORIGEM); }
+function efeitosDeDescansoDeOrigem_(ficha) { return efeitosDeOrigemDaFicha_(ficha, EFEITOS_DE_DESCANSO_DE_ORIGEM); }
+function efeitosDeSessaoDeOrigem_(ficha) { return efeitosDeOrigemDaFicha_(ficha, EFEITOS_DE_SESSAO_DE_ORIGEM); }
+`);
 
 L.push('/** Modificadores derivados das características de ancestralidade. */');
 L.push(`const EFEITOS_DERIVADOS_DE_ORIGEM = ${JSON.stringify(efeitosDerivadosDeOrigem, null, 2)};\n`);
@@ -179,7 +212,7 @@ function habilidadeDeOrigemComUso_(nome) {
 L.push('/** Nomes alternativos de ancestralidade (carta x livro). */');
 L.push('const ANCESTRALIDADE_ALIASES = {');
 for (const a of anc.ancestralidades) {
-  const als = comJambo(a.nome, [a.nome, a.nomeCarta, a.nomeLivro]);
+  const als = comJambo(a.nome, [a.nome, a.nomeCarta, a.nomeLivro, ...(a.aliasesLegado || [])]);
   L.push(`  ${j(a.id)}: ${j(als)},`);
 }
 L.push('};\n');

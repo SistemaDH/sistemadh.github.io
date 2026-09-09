@@ -816,11 +816,26 @@ function validarCriacao_(ficha) {
     problemas.push('No nível 1 são exatamente ' + CRIACAO.experiencias.quantidade +
       ' Experiências (tem ' + exp.length + ').');
   }
+  const baseExp = CRIACAO.experiencias.bonus;
+  const efeitosCriacao = (typeof efeitosDeCriacaoDeOrigem_ === 'function')
+    ? efeitosDeCriacaoDeOrigem_(ficha) : [];
+  const bonusDeProjeto = efeitosCriacao.filter(function (e) {
+    return e.tipo === 'bonus-experiencia';
+  });
+  let experienciasAprimoradas = 0;
   for (let i = 0; i < exp.length; i++) {
-    if (exp[i].bonus !== CRIACAO.experiencias.bonus) {
-      problemas.push('A Experiência "' + exp[i].nome + '" começa com +' +
-        CRIACAO.experiencias.bonus + ' no nível 1.');
+    if (exp[i].bonus === baseExp + 1) experienciasAprimoradas++;
+    else if (exp[i].bonus !== baseExp) {
+      problemas.push('A Experiência "' + exp[i].nome + '" começa com +' + baseExp +
+        ' no nível 1, salvo um bônus explícito de ancestralidade.');
     }
+  }
+  if (bonusDeProjeto.length) {
+    if (experienciasAprimoradas !== 1) {
+      problemas.push('Projeto Intencional: escolha exatamente uma Experiência para receber o bônus permanente de +1 (ela começa em +3).');
+    }
+  } else if (experienciasAprimoradas) {
+    problemas.push('Uma Experiência só pode começar em +3 se a ficha possuir Projeto Intencional.');
   }
 
   // Etapa 8 — cartas de domínio

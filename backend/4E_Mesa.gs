@@ -172,6 +172,7 @@ function normalizarMesa_(m) {
   m.sessao.numero = Math.max(0, Math.trunc(Number(m.sessao.numero)) || 0);
   m.sessao.comecouEm = String(m.sessao.comecouEm || '');
   m.sessao.terminouEm = String(m.sessao.terminouEm || '');
+  m.sessao.esperancaDoGrupo = Math.max(0, Math.min(50, Math.trunc(Number(m.sessao.esperancaDoGrupo)) || 0));
 
   /*
    * ⚠ `aberta` é DEDUZIDA quando não está gravada, e não posta como `false`.
@@ -683,7 +684,31 @@ function aplicarDescansoDaMesa_(m, tipo, escolhas) {
  * justamente o que as fichas usam para saber que precisam recarregar os
  * contadores. Um pulo silencioso viraria uma recarga a mais na ficha de todos.
  */
-function abrirSessaoDaMesa_(m, quantosPersonagens) {
+/**
+ * Soma os gatilhos de Esperança do grupo presentes quando a sessão começa.
+ * Recebe linhas opcionalmente para teste; em produção lê as fichas ativas.
+ */
+function esperancaDoGrupoNoInicioDaSessao_(linhasFornecidas) {
+  const linhas = Array.isArray(linhasFornecidas) ? linhasFornecidas : lerTudo_(ABAS.PERSONAGENS);
+  let total = 0;
+  for (let i = 0; i < linhas.length; i++) {
+    const linha = linhas[i] || {};
+    if (String(linha.excluido).toUpperCase() === 'TRUE') continue;
+    let ficha = {};
+    try { ficha = JSON.parse(linha.dados || '{}'); } catch (e) { continue; }
+    if (ficha.encerrada) continue;
+    const efeitos = (typeof efeitosDeSessaoDeOrigem_ === 'function')
+      ? efeitosDeSessaoDeOrigem_(ficha) : [];
+    for (let k = 0; k < efeitos.length; k++) {
+      const e = efeitos[k] || {};
+      if (chaveTexto_(e.gatilho) !== 'inicio-de-sessao') continue;
+      total += Math.max(0, Math.trunc(Number(((e.grupo || {}).esperanca))) || 0);
+    }
+  }
+  return total;
+}
+
+function abrirSessaoDaMesa_(m, quantosPersonagens, esperancaDoGrupo) {
   if (m.sessao.aberta) {
     throw erroApi_(ERRO.DADOS_INVALIDOS,
       'A sessão ' + m.sessao.numero + ' ainda está aberta. Encerre antes de abrir a próxima.',
@@ -694,6 +719,9 @@ function abrirSessaoDaMesa_(m, quantosPersonagens) {
   m.sessao.comecouEm = agoraIso_();
   m.sessao.terminouEm = '';
   m.sessao.aberta = true;
+  // Congela o gatilho desta sessão. Quem abrir a ficha depois recebe o mesmo
+  // valor uma única vez; a composição do grupo no meio da sessão não reescreve o começo.
+  m.sessao.esperancaDoGrupo = Math.max(0, Math.min(50, Math.trunc(Number(esperancaDoGrupo)) || 0));
 
   const primeira = m.sessao.numero === 1;
   const medoAntes = m.medo;
@@ -704,6 +732,7 @@ function abrirSessaoDaMesa_(m, quantosPersonagens) {
     primeira: primeira,
     medo: m.medo,
     medoAntes: medoAntes,
+    esperancaDoGrupo: m.sessao.esperancaDoGrupo,
     nota: primeira
       ? 'Começo de campanha: o Medo entra com 1 por personagem (' + m.medo + '), como manda o livro (p.154).'
       : 'O Medo continua de onde parou — o livro (p.154) manda transferir entre sessões.'
@@ -752,6 +781,7 @@ function voltarParaAPrimeiraSessaoDaMesa_(m) {
   m.sessao.comecouEm = '';
   m.sessao.terminouEm = '';
   m.sessao.aberta = false;
+  m.sessao.esperancaDoGrupo = 0;
   return {
     numero: 0,
     antes: antes,
