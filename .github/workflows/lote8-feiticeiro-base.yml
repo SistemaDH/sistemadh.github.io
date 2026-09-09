@@ -26,7 +26,7 @@ jobs:
           python3 tools/conferir-comunidades-lote8.py
           python3 tools/conferir-ancestralidades-lote8.py
           grep -q "obrigatoriaNaCriacao" backend/42_Classes.gs
-          grep -q "Elementalista: escolha" backend/48_Criacao.gs
+          grep -q "obrigatoriaNaCriacao" backend/48_Criacao.gs
           grep -q "escolhaObrigatoriaDaSubclasse" js/telas/criacao.js
           grep -q "resolucaoManual" tools/auditar-pendencias-lote8.py
           git diff --check
