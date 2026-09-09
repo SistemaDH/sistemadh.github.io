@@ -18,14 +18,19 @@ jobs:
           ref: 'ediçãoclaude'
           fetch-depth: 0
 
-      - name: Validar transformador
-        run: python3 -m py_compile tools/lote8-ciclo-origem.py
+      - name: Validar transformadores
+        run: |
+          python3 -m py_compile tools/lote8-ciclo-origem.py
+          python3 -m py_compile tools/lote8-ciclo-hotfix.py
 
       - name: Materializar ciclo de ancestralidades
         run: |
           python3 tools/lote8-ciclo-origem.py
+          python3 tools/lote8-ciclo-hotfix.py
           node tools/gerar-43-origens.mjs
           node tools/gerar-48-criacao.mjs
+          node tools/gerar-4B-descanso.mjs
+          node tools/gerar-4E-mesa.mjs
           python3 tools/conferir-ancestralidades-lote8.py
           git diff --check
 
@@ -41,8 +46,10 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add tools/lote8-backend-falha.txt
-          git commit -m 'ci: registrar falha backend do ciclo lote 8'
-          git push origin HEAD:'ediçãoclaude'
+          if ! git diff --cached --quiet; then
+            git commit -m 'ci: registrar falha backend do ciclo lote 8'
+            git push origin HEAD:'ediçãoclaude'
+          fi
           exit 1
 
       - name: Instalar Playwright
@@ -69,6 +76,8 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm -f tools/lote8-ciclo-origem.py
+          git rm -f tools/lote8-ciclo-hotfix.py
+          git rm -f tools/lote8-backend-falha.txt || true
           git rm -f .github/workflows/lote8-ciclo-origem.yml
           git add -A
           git diff --cached --check
