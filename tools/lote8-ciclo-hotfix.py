@@ -32,4 +32,22 @@ if t.count(antigo) != 1:
 t = t.replace(antigo, novo, 1)
 p.write_text(t, encoding='utf-8')
 
-print('Hotfix do ciclo aplicado: alias CLANQUEAR preservado e vocabulário canônico corrigido.')
+# 4) Duas fixtures antigas usavam Elfo como personagem genérico. Depois de
+# Transe Celestial isso deixou de ser neutro: Elfo tem 3 movimentos. Troca-se
+# só a ancestralidade das fixtures para Humano, mantendo o teste da regra-base.
+p = R / 'tools/testes-backend.mjs'
+t = p.read_text(encoding='utf-8')
+old = "    nome: 'Cansada', classe: 'Bardo', subclasse: 'Músico Errante',\n    ancestralidade: 'Elfo', comunidade: 'Highborne',"
+new = "    nome: 'Cansada', classe: 'Bardo', subclasse: 'Músico Errante',\n    ancestralidade: 'Humano', comunidade: 'Highborne',"
+if t.count(old) != 1:
+    raise SystemExit(f'fixture descanso genérica: esperava 1 âncora, achei {t.count(old)}')
+t = t.replace(old, new, 1)
+
+old = "    nome: 'Em Jogo', classe: 'Bardo', subclasse: 'Músico Errante',\n    ancestralidade: 'Elfo', comunidade: 'Highborne',"
+new = "    nome: 'Em Jogo', classe: 'Bardo', subclasse: 'Músico Errante',\n    ancestralidade: 'Humano', comunidade: 'Highborne',"
+if t.count(old) != 1:
+    raise SystemExit(f'fixture API genérica: esperava 1 âncora, achei {t.count(old)}')
+t = t.replace(old, new, 1)
+p.write_text(t, encoding='utf-8')
+
+print('Hotfix do ciclo aplicado: alias legado, vocabulário e fixtures genéricas corrigidos.')
