@@ -695,3 +695,12 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - `tools/testes-backend.mjs`: o resumo e o `process.exit(1)` agora ficam no fim real do arquivo; testes anexados depois do antigo resumo deixam de produzir falso-verde.
 - `backend/4C_Ajustes.gs`: `encerrarEstadosDeCartaPorEvento_` considera também estados dentro de `uso.opcoes[]`; isso corrige `Livro do Ronin > Transformação`, que agora encerra ao sofrer dano como o catálogo já determinava.
 - O gate de CI deste lote usa falha explícita ao encontrar `✗`, em vez de depender de `! grep` com `errexit`.
+
+### Lote 8 — equipamento defensivo B2
+
+- **Esperançoso / Hopeful** (`armadura-t2-armadura-rosewild`): qualquer gasto real de Esperança passa por uma escolha atômica; cada ponto escolhido é substituído por 1 PA. Funciona inclusive quando a ficha não teria Esperança suficiente sem a substituição.
+- **Deslocamento / Shifting** (`armadura-t2-armadura-flutuante-de-runetan`): reação pré-ataque, 1 PA, publica desvantagem sem rolar o ataque.
+- **Temporal / Timeslowing** (`armadura-t4-corrente-de-seda-dunamis`): reação pré-ataque, 1 PA e d4 informado manualmente; o bônus de Evasão é transitório para aquele ataque.
+- **Desafetação / Deflecting** (`secundaria-t3-fivela`): reação pré-ataque, 1 PA; o bônus usa os PA que continuam disponíveis depois do custo, conforme a redação corrigida da errata p.125.
+- Todas as marcas de PA reutilizam `ajustarRecurso_`, portanto disparam **Doloroso** e continuam passando por **Inabalável** quando geram marcas unitárias de Estresse. Nenhum dado é rolado pelo app.
+- Contadores permanecem em **146**; este bloco não cria estado persistente.

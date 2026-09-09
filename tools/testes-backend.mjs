@@ -10337,6 +10337,117 @@ teste('Fortificado também amplia o PA adicional de Vontade de Ferro',()=>{
   igual(r.mudancas[0].pvMarcados,0,'o segundo PA Fortificado reduz mais dois degraus');
 });
 
+
+
+console.log('\nLote 8 — equipamento defensivo B2');
+
+teste('B2 publica Esperançoso e as três reações pré-ataque sem RNG do app',()=>{
+  const rose=contexto.acharArmadura_('armadura-t2-armadura-rosewild');
+  const runetan=contexto.acharArmadura_('armadura-t2-armadura-flutuante-de-runetan');
+  const dunamis=contexto.acharArmadura_('armadura-t4-corrente-de-seda-dunamis');
+  const broquel=contexto.acharArma_('secundaria-t3-fivela');
+  verdade(rose.automacao && rose.efeitoEquipamento.aoGastarEsperanca);
+  igual(runetan.efeitoEquipamento.reacaoAtaqueRecebido.desvantagemAtaque,true);
+  igual(dunamis.efeitoEquipamento.reacaoAtaqueRecebido.dadoManual.dado,'d4');
+  igual(broquel.efeitoEquipamento.reacaoAtaqueRecebido.bonusEvasao.tipo,'armadura-disponivel-apos-custo');
+});
+
+teste('Deslocamento marca 1 PA e publica desvantagem somente para o ataque',()=>{
+  const f=fichaEquipamentoDefensivo_(2,null,'armadura-t2-armadura-flutuante-de-runetan');
+  f.recursos.armaduraMarcada=0;
+  const evasao=f.defesas.evasao;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'reacaoEquipamento',nome:'Deslocamento'}]);
+  igual(r.erros,[]); igual(f.recursos.armaduraMarcada,1);
+  igual(r.mudancas[0].desvantagemAtaque,true); igual(r.mudancas[0].bonusEvasao,0);
+  igual(f.defesas.evasao,evasao,'a reação não altera Evasão base');
+});
+
+teste('Temporal pede d4 manual antes de marcar PA e usa exatamente o resultado',()=>{
+  const f=fichaEquipamentoDefensivo_(8,null,'armadura-t4-corrente-de-seda-dunamis');
+  f.recursos.armaduraMarcada=0;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'reacaoEquipamento',nome:'Temporal'}]);
+  igual(r.erros,[]); verdade(r.pendenciaRolagem && r.pendenciaRolagem.tipo==='habilidade-manual',JSON.stringify(r));
+  igual(r.pendenciaRolagem.dado,'d4'); igual(f.recursos.armaduraMarcada,0,'antes do d4 nada é marcado');
+  r=contexto.aplicarAjustes_(f,[{tipo:'reacaoEquipamento',nome:'Temporal',dadoTemporal:3}]);
+  igual(r.erros,[]); igual(f.recursos.armaduraMarcada,1); igual(r.mudancas[0].bonusEvasao,3);
+  igual(r.mudancas[0].dadoManual,3);
+});
+
+teste('Desafetação calcula PA disponíveis DEPOIS de pagar o slot da reação',()=>{
+  let f=fichaEquipamentoDefensivo_(5,'primaria-t3-punhal-abencoado','armadura-t2-armadura-de-couro-aprimorada');
+  f.equipamento.secundaria='secundaria-t3-fivela';
+  f=contexto.validarFicha_(f);
+  f.recursos.armaduraMarcada=1;
+  const max=f.defesas.pontuacaoArmadura;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'reacaoEquipamento',nome:'Desafetação'}]);
+  igual(r.erros,[]); igual(f.recursos.armaduraMarcada,2);
+  igual(r.mudancas[0].bonusEvasao,Math.max(0,max-2));
+});
+
+teste('Esperançoso oferece escolha e substitui ponto a ponto um custo de 3 Esperanças',()=>{
+  let f=contexto.fichaRapida_({
+    nome:'Bardo Esperançoso',classe:'Bardo',subclasse:'Artífice das Palavras',
+    ancestralidade:'Humano',comunidade:'Highborne',
+    cartas:['grace-palavras-inspiradoras','codex-livro-de-ava'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  f.identidade.nivel=2; f.equipamento.armadura='armadura-t2-armadura-rosewild'; f=contexto.validarFicha_(f);
+  f.recursos.esperanca=3; f.recursos.armaduraMarcada=0;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'habilidade',nome:'Fazer uma Cena'}]);
+  igual(r.erros,[]); verdade(r.pendenciaRolagem && r.pendenciaRolagem.tipo==='esperancoso',JSON.stringify(r));
+  igual(r.pendenciaRolagem.gasto,3); igual(r.pendenciaRolagem.maximo,3);
+  igual(f.recursos.esperanca,3); igual(f.recursos.armaduraMarcada,0,'a escolha precisa ser atômica');
+  r=contexto.aplicarAjustes_(f,[{tipo:'habilidade',nome:'Fazer uma Cena',esperancosoArmadura:2}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,2); igual(f.recursos.armaduraMarcada,2);
+  igual(r.mudancas[0].esperancoso.substituida,2); igual(r.mudancas[0].esperancoso.esperancaEfetiva,1);
+});
+
+teste('Esperançoso permite pagar tudo com PA mesmo sem Esperança disponível',()=>{
+  let f=contexto.fichaRapida_({
+    nome:'Bardo Sem Esperança',classe:'Bardo',subclasse:'Artífice das Palavras',
+    ancestralidade:'Humano',comunidade:'Highborne',
+    cartas:['grace-palavras-inspiradoras','codex-livro-de-ava'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  f.identidade.nivel=2; f.equipamento.armadura='armadura-t2-armadura-rosewild'; f=contexto.validarFicha_(f);
+  f.recursos.esperanca=0; f.recursos.armaduraMarcada=0;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'habilidade',nome:'Fazer uma Cena'}]);
+  igual(r.erros,[]); verdade(r.pendenciaRolagem && r.pendenciaRolagem.tipo==='esperancoso',JSON.stringify(r));
+  r=contexto.aplicarAjustes_(f,[{tipo:'habilidade',nome:'Fazer uma Cena',esperancosoArmadura:3}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,0); igual(f.recursos.armaduraMarcada,3);
+});
+
+teste('Esperançoso não pergunta quando não há PA livre e o gasto normal continua',()=>{
+  let f=contexto.fichaRapida_({
+    nome:'Bardo Armadura Cheia',classe:'Bardo',subclasse:'Artífice das Palavras',
+    ancestralidade:'Humano',comunidade:'Highborne',
+    cartas:['grace-palavras-inspiradoras','codex-livro-de-ava'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  f.identidade.nivel=2; f.equipamento.armadura='armadura-t2-armadura-rosewild'; f=contexto.validarFicha_(f);
+  f.recursos.esperanca=3; f.recursos.armaduraMarcada=f.defesas.pontuacaoArmadura;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'habilidade',nome:'Fazer uma Cena'}]);
+  igual(r.erros,[]); verdade(!r.pendenciaRolagem); igual(f.recursos.esperanca,0);
+});
+
+teste('PA de Esperançoso passa por Doloroso e Inabalável sem RNG automático',()=>{
+  let f=contexto.fichaRapida_({
+    nome:'Firbolg Esperançoso',classe:'Mago',subclasse:'Escola do Conhecimento',
+    ancestralidade:'Firbolg',comunidade:'Highborne',
+    cartas:['codex-livro-de-ava','codex-livro-de-illiat'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  f.identidade.nivel=5; f.equipamento.primaria='primaria-t3-runas-da-ruina';
+  f.equipamento.secundaria=null; f.equipamento.armadura='armadura-t2-armadura-rosewild'; f=contexto.validarFicha_(f);
+  f.recursos.esperanca=1; f.recursos.armaduraMarcada=0; f.recursos.estresseMarcado=0;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-ava',opcao:'armadura-de-tava',esperancosoArmadura:1}]);
+  igual(r.erros,[]); verdade(r.pendenciaRolagem && r.pendenciaRolagem.tipo==='inabalavel',JSON.stringify(r));
+  igual(f.recursos.esperanca,1); igual(f.recursos.armaduraMarcada,0); igual(f.recursos.estresseMarcado,0);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-ava',opcao:'armadura-de-tava',esperancosoArmadura:1,dadoInabalavel:6}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,1); igual(f.recursos.armaduraMarcada,1); igual(f.recursos.estresseMarcado,0);
+  verdade(r.mudancas[0].inabalavel && r.mudancas[0].inabalavel.evitou);
+});
+
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));

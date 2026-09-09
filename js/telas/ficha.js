@@ -393,6 +393,37 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     });
   }
 
+  function pedirEscolhaEsperancoso(pendencia) {
+    return new Promise((resolve) => {
+      let respondeu = false;
+      const maximo = Math.max(0, Number((pendencia || {}).maximo) || 0);
+      const responder = (valor) => {
+        if (respondeu) return;
+        respondeu = true;
+        modal.fechar();
+        resolve(valor);
+      };
+      const botoes = [el('button', {
+        type:'button', class:'btn btn--fantasma btn--pequeno', onClick:()=>responder(0)
+      }, 'Gastar Esperança')];
+      for (let n=1; n<=maximo; n++) botoes.push(el('button', {
+        type:'button', class:'btn btn--pequeno', onClick:()=>responder(n)
+      }, `Marcar ${n} PA`));
+      const modal = abrirModal({
+        titulo:'Esperançoso — substituir Esperança',
+        conteudo:el('div',{class:'pilha'},[
+          el('p',{class:'texto-sm',texto:(pendencia && pendencia.mensagem) ||
+            'Escolha quantos pontos de Esperança serão substituídos por Pontos de Armadura.'}),
+          el('p',{class:'texto-xs texto-fraco',texto:
+            'Esta é uma escolha sua. O app não marca Armadura automaticamente.'}),
+          el('div',{class:'linha'},botoes)
+        ]),
+        acoes:[el('button',{type:'button',class:'btn btn--fantasma',onClick:()=>responder(null)},'Cancelar')],
+        aoFechar:()=>{ if(!respondeu){respondeu=true;resolve(null);} }
+      });
+    });
+  }
+
   function pedirResultadoHabilidadeManual(pendencia) {
     return new Promise((resolve) => {
       let respondeu = false;
@@ -473,6 +504,14 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const esperado = soSeMudou ? assinatura(p.ficha) : null;
     try {
       const r = await acoes.ajustarFicha(id, ajustes);
+      if (r && r.pendenciaRolagem && r.pendenciaRolagem.tipo === 'esperancoso') {
+        const quantidade = await pedirEscolhaEsperancoso(r.pendenciaRolagem);
+        if (quantidade === null) { p = r.personagem; desenhar(); return r; }
+        const indice = Number(r.pendenciaRolagem.indice) || 0;
+        const repetidos = (Array.isArray(ajustes) ? ajustes : [ajustes]).map((a, i) =>
+          i === indice ? Object.assign({}, a, { esperancosoArmadura: quantidade }) : Object.assign({}, a));
+        return enviar(repetidos, { soSeMudou });
+      }
       if (r && r.pendenciaRolagem && r.pendenciaRolagem.tipo === 'dominio-elemental-terra') {
         const dados = await pedirResultadosDominioTerra(r.pendenciaRolagem);
         if (dados === null) {
@@ -1162,6 +1201,27 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     ].filter(([nome]) => temCaracteristica_(ficha, nome));
   }
 
+  function blocoDeReacoesDeEquipamento_(ficha) {
+    const defs = [
+      ['Deslocamento', 'Marque 1 PA para impor desvantagem ao ataque contra você.'],
+      ['Temporal', 'Marque 1 PA, role 1d4 na mesa e some o resultado à Evasão contra este ataque.'],
+      ['Desafetação', 'Marque 1 PA e some à Evasão os PA que continuarem disponíveis contra este ataque.']
+    ].filter(([nome]) => temCaracteristica_(ficha, nome));
+    if (!defs.length) return null;
+    const r=(ficha || {}).recursos || {};
+    const d=(ficha || {}).defesas || {};
+    const livres=Math.max(0,(Number(d.pontuacaoArmadura)||0)-(Number(r.armaduraMarcada)||0));
+    return el('div',{class:'pilha'},[
+      el('strong',{texto:'Reações ao ataque'}),
+      el('p',{class:'texto-xs texto-fraco',texto:
+        'Use antes de resolver o ataque recebido. O app registra o PA; qualquer dado continua sendo rolado na mesa.'}),
+      el('div',{class:'linha'},defs.map(([nome,texto])=>el('button',{
+        type:'button',class:'btn btn--fantasma btn--pequeno',disabled:livres<1,
+        title:texto,onClick:()=>enviar([{tipo:'reacaoEquipamento',nome}])
+      },nome)))
+    ]);
+  }
+
   function abrirDanoRecebido(ficha) {
     const dano = el('input', semCorretor({
       type: 'number', class: 'campo__entrada', min: 1, step: 1,
@@ -1242,6 +1302,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
 
     return el('section', { class: 'papel' }, [
       linhaDeDefesas(r, d),
+      blocoDeReacoesDeEquipamento_(ficha),
       faixa('Dano e Vida'),
       /*
        * A nota antiga mandava "some seu nível atual aos limiares" — e o app JÁ

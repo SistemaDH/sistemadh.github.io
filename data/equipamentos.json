@@ -4104,7 +4104,19 @@
     "texto": "Desafetação: Quando for atacado, você pode marcar 1 Ponto de Armadura para receber um bônus de Evasão igual aos seus Pontos de Armadura disponíveis contra esse ataque.",
     "fonteTraducao": "livro",
     "confianca": "media",
-    "fonteCorrecao": "Daggerheart-Erratas.pdf, p.125"
+    "fonteCorrecao": "Daggerheart-Erratas.pdf, p.125",
+    "automacao": {
+     "classificacao": "reacao-ataque-assistida",
+     "motivo": "Marca 1 Ponto de Armadura e publica, para aquele ataque, bônus de Evasão igual aos Pontos de Armadura que continuam disponíveis depois do custo."
+    },
+    "efeitoEquipamento": {
+     "reacaoAtaqueRecebido": {
+      "custoArmadura": 1,
+      "bonusEvasao": {
+       "tipo": "armadura-disponivel-apos-custo"
+      }
+     }
+    }
    },
    "aliases": [
     "Fivela"
@@ -5015,7 +5027,17 @@
     "nome": "Deslocamento",
     "texto": "Deslocamento: Quando for alvo de um ataque, você pode marcar um slot de armadura para dar desvantagem à rolagem de ataque contra você.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "reacao-ataque-assistida",
+     "motivo": "Antes da rolagem do ataque recebido, o jogador pode marcar 1 Ponto de Armadura; o app registra o custo e publica a desvantagem, sem rolar o ataque."
+    },
+    "efeitoEquipamento": {
+     "reacaoAtaqueRecebido": {
+      "custoArmadura": 1,
+      "desvantagemAtaque": true
+     }
+    }
    }
   },
   {
@@ -5057,7 +5079,17 @@
     "nome": "Esperançoso",
     "texto": "Esperançoso: Quando você gastaria uma Esperança, pode marcar um slot de armadura.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "substituicao-opcional-central",
+     "motivo": "Quando um ajuste realmente gastaria Esperança, o app oferece substituir cada ponto escolhido por 1 Ponto de Armadura, sem decidir pelo jogador."
+    },
+    "efeitoEquipamento": {
+     "aoGastarEsperanca": {
+      "podeMarcarArmaduraEmVez": true,
+      "armaduraPorEsperanca": 1
+     }
+    }
    }
   },
   {
@@ -5440,7 +5472,25 @@
     "nome": "Temporal",
     "texto": "Temporal: Marque um slot de armadura para rolar um d4 e adicione o resultado como um bônus à sua Evasão contra um ataque recebido.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "reacao-ataque-com-dado-manual",
+     "motivo": "Marca 1 Ponto de Armadura e pede o resultado de 1d4 rolado fora do app; o valor informado vira bônus de Evasão somente contra aquele ataque."
+    },
+    "efeitoEquipamento": {
+     "reacaoAtaqueRecebido": {
+      "custoArmadura": 1,
+      "dadoManual": {
+       "dado": "d4",
+       "campo": "dadoTemporal",
+       "minimo": 1,
+       "maximo": 4
+      },
+      "bonusEvasao": {
+       "tipo": "resultado-dado-manual"
+      }
+     }
+    }
    }
   },
   {

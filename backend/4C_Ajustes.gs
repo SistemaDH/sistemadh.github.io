@@ -122,8 +122,106 @@ function aplicarAjusteDireto_(ficha, a) {
   if (tipo === 'fichafilha') return ajustarFichaFilha_(ficha, a);
   if (tipo === 'escolhadeclasse') return ajustarEscolhaDeClasse_(ficha, a);
   if (tipo === 'retaliacao') return ajustarRetaliacao_(ficha, a);
+  if (tipo === 'reacaoequipamento') return usarReacaoDeEquipamento_(ficha, a);
   if (tipo === 'habilidade') return usarHabilidadeDeClasse_(ficha, a);
   return { erro: 'Tipo de ajuste desconhecido: "' + String((a || {}).tipo) + '".' };
+}
+
+/** Esperançoso ativo: substitui gasto de Esperança por PA, sempre por escolha. */
+function regraEsperancosoDaFicha_(ficha) {
+  const ativos = (typeof equipamentoAtivoDaFicha_ === 'function') ? equipamentoAtivoDaFicha_(ficha) : [];
+  for (let i = 0; i < ativos.length; i++) {
+    const item = (ativos[i] || {}).item || {};
+    const regra = ((item.efeitoEquipamento || {}).aoGastarEsperanca) || null;
+    if (regra && regra.podeMarcarArmaduraEmVez === true) {
+      return { fonte:item.nome || item.id || 'Equipamento', caracteristica:item.carac || 'Esperançoso', regra:regra };
+    }
+  }
+  return null;
+}
+
+/** Quanto de Esperança este resultado declarou gastar; cai no delta só como fallback. */
+function gastoEsperancaDoResultado_(resultado, antesFicha, depoisFicha, ajuste, virtual) {
+  const r = resultado || {};
+  if (r.custoEsperanca !== undefined && r.custoEsperanca !== null) {
+    return Math.max(0, Math.trunc(Number(r.custoEsperanca)) || 0);
+  }
+  if (r.custos && r.custos.esperanca !== undefined && r.custos.esperanca !== null) {
+    return Math.max(0, Math.trunc(Number(r.custos.esperanca)) || 0);
+  }
+  if (r.esperancaGasta !== undefined && r.esperancaGasta !== null) {
+    return Math.max(0, Math.trunc(Number(r.esperancaGasta)) || 0);
+  }
+
+  const tipo = chaveTexto_((ajuste || {}).tipo);
+  if (tipo === 'recurso' && normalizarRecursoAjustavel_((ajuste || {}).chave) === 'esperanca') {
+    const antes = Math.max(0, Number(((antesFicha || {}).recursos || {}).esperanca) || 0);
+    if ((ajuste || {}).valor !== undefined && (ajuste || {}).valor !== null) {
+      const alvo = Math.max(0, Math.trunc(Number(ajuste.valor)) || 0);
+      return Math.max(0, antes - alvo);
+    }
+    const delta = Math.trunc(Number((ajuste || {}).delta)) || 0;
+    return delta < 0 ? -delta : 0;
+  }
+
+  const antes = Math.max(0, Number(((antesFicha || {}).recursos || {}).esperanca) || 0) +
+    Math.max(0, Math.trunc(Number(virtual)) || 0);
+  const depois = Math.max(0, Number(((depoisFicha || {}).recursos || {}).esperanca) || 0);
+  return Math.max(0, Math.trunc(antes - depois));
+}
+
+/** Prepara uma cópia do ajuste quando Esperançoso já teve uma quantidade escolhida. */
+function prepararAjusteComEsperancoso_(ficha, ajuste, quantidade) {
+  const a = Object.assign({}, ajuste || {});
+  const q = Math.max(0, Math.trunc(Number(quantidade)) || 0);
+  if (!q) return { ajuste:a, virtual:0 };
+
+  const tipo = chaveTexto_(a.tipo);
+  if (tipo === 'recurso' && normalizarRecursoAjustavel_(a.chave) === 'esperanca' &&
+      a.valor !== undefined && a.valor !== null) {
+    // `valor` é absoluto: somar virtualmente ao recurso não mudaria o alvo.
+    a.valor = (Math.trunc(Number(a.valor)) || 0) + q;
+    return { ajuste:a, virtual:0 };
+  }
+
+  ficha.recursos = ficha.recursos || {};
+  ficha.recursos.esperanca = Math.max(0, Number(ficha.recursos.esperanca) || 0) + q;
+  return { ajuste:a, virtual:q };
+}
+
+/** Anexa ao resultado a troca de Esperançoso e os hooks disparados pelo PA. */
+function aplicarEscolhaEsperancoso_(ficha, antesFicha, ajusteOriginal, resultado, quantidade, virtual) {
+  const q = Math.max(0, Math.trunc(Number(quantidade)) || 0);
+  if (!q) return { resultado:resultado };
+  const regra = regraEsperancosoDaFicha_(ficha) || regraEsperancosoDaFicha_(antesFicha);
+  if (!regra) return { erro:'Esperançoso não está ativo para substituir este gasto.' };
+
+  const gasto = gastoEsperancaDoResultado_(resultado, antesFicha, ficha, ajusteOriginal, virtual);
+  if (q > gasto) return { erro:'Esperançoso só pode substituir Esperança que este ajuste realmente gastaria.' };
+
+  const armaduraMax = Math.max(0, Number(((ficha || {}).defesas || {}).pontuacaoArmadura) || 0);
+  const armaduraAtual = Math.max(0, Number(((ficha || {}).recursos || {}).armaduraMarcada) || 0);
+  const livres = Math.max(0, armaduraMax - armaduraAtual);
+  if (q > livres) return { erro:'Esperançoso: não há Pontos de Armadura livres suficientes para substituir ' + q + ' de Esperança.' };
+
+  const marca = ajustarRecurso_(ficha, { chave:'armaduraMarcada', delta:q });
+  const r = resultado || {};
+  r.esperancoso = {
+    fonte:regra.fonte, caracteristica:regra.caracteristica,
+    esperancaOriginal:gasto, substituida:q, esperancaEfetiva:Math.max(0, gasto - q),
+    armaduraMarcada:q
+  };
+  if (r.custoEsperanca !== undefined) r.custoEsperanca = Math.max(0, (Math.trunc(Number(r.custoEsperanca)) || 0) - q);
+  if (r.custos && r.custos.esperanca !== undefined) r.custos.esperanca = Math.max(0, (Math.trunc(Number(r.custos.esperanca)) || 0) - q);
+  if (r.esperanca !== undefined) r.esperanca = Number(((ficha || {}).recursos || {}).esperanca) || 0;
+  r.detalhes = (Array.isArray(r.detalhes) ? r.detalhes : []).concat([marca]);
+  if (marca && marca.doloroso) r.doloroso = marca.doloroso;
+  if (marca && marca.movimentoDeMorte) r.movimentoDeMorte = true;
+  if (marca && marca.alerta) r.alerta = marca.alerta;
+  const nota = 'Esperançoso: ' + q + ' Esperança' + (q === 1 ? '' : 's') +
+    ' substituída' + (q === 1 ? '' : 's') + ' por ' + q + ' PA.';
+  r.aviso = (r.aviso ? r.aviso + ' ' : '') + nota;
+  return { resultado:r };
 }
 
 /**
@@ -136,15 +234,85 @@ function aplicarAjusteComInabalavel_(ficha, a) {
     ? interceptadorDeEstresseDaFicha_(ficha) : null;
   const antesFicha = JSON.parse(JSON.stringify(ficha || {}));
   const antes = Math.max(0, Number(((ficha || {}).recursos || {}).estresseMarcado) || 0);
-  const r = aplicarAjusteDireto_(ficha, a || {});
+  const regraEsperancoso = regraEsperancosoDaFicha_(antesFicha);
+  const brutoEscolha = (a || {}).esperancosoArmadura;
+  const escolhaInformada = brutoEscolha !== undefined && brutoEscolha !== null && brutoEscolha !== '';
+  let escolha = 0;
+  if (escolhaInformada) {
+    escolha = Math.trunc(Number(brutoEscolha));
+    if (!isFinite(escolha) || escolha < 0 || Number(brutoEscolha) !== escolha) {
+      return { resultado:{ erro:'Esperançoso: a quantidade de PA precisa ser um inteiro não negativo.' } };
+    }
+    if (escolha > 0 && !regraEsperancoso) {
+      return { resultado:{ erro:'Esperançoso não está ativo nesta ficha.' } };
+    }
+  }
+
+  const preparado = prepararAjusteComEsperancoso_(ficha, a || {}, escolha);
+  let r = aplicarAjusteDireto_(ficha, preparado.ajuste);
   if (r && r.pendenciaRolagem) {
     substituirFichaEmLugar_(ficha, antesFicha);
     return { pendencia: r.pendenciaRolagem };
+  }
+
+  // Se a única barreira era não ter Esperança, fazemos uma execução de
+  // descoberta numa cópia com Esperança virtual igual aos PA livres. Nada é
+  // gravado: ela serve apenas para descobrir o custo que Esperançoso pode trocar.
+  if (r && r.erro && !escolhaInformada && regraEsperancoso) {
+    const armMax = Math.max(0, Number(((antesFicha || {}).defesas || {}).pontuacaoArmadura) || 0);
+    const armMarc = Math.max(0, Number(((antesFicha || {}).recursos || {}).armaduraMarcada) || 0);
+    const livres = Math.max(0, armMax - armMarc);
+    if (livres > 0) {
+      substituirFichaEmLugar_(ficha, antesFicha);
+      const tentativa = prepararAjusteComEsperancoso_(ficha, a || {}, livres);
+      const prova = aplicarAjusteDireto_(ficha, tentativa.ajuste);
+      if (prova && !prova.erro && !prova.pendenciaRolagem) {
+        const gastoProva = gastoEsperancaDoResultado_(prova, antesFicha, ficha, a || {}, tentativa.virtual);
+        const maximo = Math.min(livres, gastoProva);
+        substituirFichaEmLugar_(ficha, antesFicha);
+        if (maximo > 0) {
+          return { pendencia:{
+            tipo:'esperancoso', caracteristica:regraEsperancoso.caracteristica,
+            fonte:regraEsperancoso.fonte, gasto:gastoProva, maximo:maximo,
+            mensagem:regraEsperancoso.fonte + ' · ' + regraEsperancoso.caracteristica +
+              ': este uso gastaria ' + gastoProva + ' de Esperança. Quantos pontos você quer substituir por PA?'
+          } };
+        }
+      } else {
+        substituirFichaEmLugar_(ficha, antesFicha);
+      }
+    }
   }
   if (r && r.erro) {
     substituirFichaEmLugar_(ficha, antesFicha);
     return { resultado: r };
   }
+
+  const gastoEsperanca = gastoEsperancaDoResultado_(r, antesFicha, ficha, a || {}, preparado.virtual);
+  if (regraEsperancoso && gastoEsperanca > 0 && !escolhaInformada) {
+    const armMax = Math.max(0, Number(((ficha || {}).defesas || {}).pontuacaoArmadura) || 0);
+    const armMarc = Math.max(0, Number(((ficha || {}).recursos || {}).armaduraMarcada) || 0);
+    const maximo = Math.min(gastoEsperanca, Math.max(0, armMax - armMarc));
+    if (maximo > 0) {
+      substituirFichaEmLugar_(ficha, antesFicha);
+      return { pendencia:{
+        tipo:'esperancoso', caracteristica:regraEsperancoso.caracteristica,
+        fonte:regraEsperancoso.fonte, gasto:gastoEsperanca, maximo:maximo,
+        mensagem:regraEsperancoso.fonte + ' · ' + regraEsperancoso.caracteristica +
+          ': este uso gastaria ' + gastoEsperanca + ' de Esperança. Quantos pontos você quer substituir por PA?'
+      } };
+    }
+  }
+
+  if (escolhaInformada && escolha > 0) {
+    const aplicado = aplicarEscolhaEsperancoso_(ficha, antesFicha, a || {}, r, escolha, preparado.virtual);
+    if (aplicado.erro) {
+      substituirFichaEmLugar_(ficha, antesFicha);
+      return { resultado:{ erro:aplicado.erro } };
+    }
+    r = aplicado.resultado;
+  }
+
   if (!regra) return { resultado: r };
 
   const depois = Math.max(0, Number(((ficha || {}).recursos || {}).estresseMarcado) || 0);
@@ -1868,6 +2036,90 @@ function ajustarInventario_(ficha, a) {
  * `reacoes` é uma lista explícita porque Pele Grossa/Fortitude/Escamas dizem
  * "pode": o servidor valida a escolha, mas não escolhe por quem está jogando.
  */
+/** Encontra uma reação pré-ataque declarada por equipamento ativo. */
+function regraDeReacaoDeEquipamento_(ficha, nome) {
+  const alvo = chaveTexto_(nome);
+  const ativos = (typeof equipamentoAtivoDaFicha_ === 'function') ? equipamentoAtivoDaFicha_(ficha) : [];
+  for (let i = 0; i < ativos.length; i++) {
+    const item = (ativos[i] || {}).item || {};
+    const regra = ((item.efeitoEquipamento || {}).reacaoAtaqueRecebido) || null;
+    if (!regra) continue;
+    if (chaveTexto_(item.carac) !== alvo) continue;
+    return { fonte:item.nome || item.id || 'Equipamento', caracteristica:item.carac || String(nome || ''), regra:regra };
+  }
+  return null;
+}
+
+/**
+ * Reações que acontecem ANTES de o ataque recebido ser resolvido. O app só
+ * registra PA e publica modificadores; ataque e dados continuam na mesa.
+ */
+function usarReacaoDeEquipamento_(ficha, a) {
+  const encontrada = regraDeReacaoDeEquipamento_(ficha, (a || {}).nome);
+  if (!encontrada) return { erro:'Reação de equipamento indisponível: "' + String((a || {}).nome) + '".' };
+  const regra = encontrada.regra || {};
+  const custoArmadura = Math.max(0, Math.trunc(Number(regra.custoArmadura)) || 0);
+  const maxArmadura = Math.max(0, Number(((ficha || {}).defesas || {}).pontuacaoArmadura) || 0);
+  const marcada = Math.max(0, Number(((ficha || {}).recursos || {}).armaduraMarcada) || 0);
+  if (custoArmadura && (!maxArmadura || marcada + custoArmadura > maxArmadura)) {
+    return { erro:encontrada.caracteristica + ': não há Ponto de Armadura livre para esta reação.' };
+  }
+
+  const manual = regra.dadoManual || null;
+  let dadoManual = null;
+  if (manual) {
+    const campo = String(manual.campo || 'resultadoManual');
+    const bruto = (a || {})[campo];
+    const minimo = Math.max(1, Math.trunc(Number(manual.minimo)) || 1);
+    const maximo = Math.max(minimo, Math.trunc(Number(manual.maximo)) || 20);
+    if (bruto === undefined || bruto === null || bruto === '') {
+      return { pendenciaRolagem:{
+        tipo:'habilidade-manual', campo:campo, caracteristica:encontrada.caracteristica,
+        dado:String(manual.dado || 'dado'), minimo:minimo, maximo:maximo,
+        mensagem:encontrada.fonte + ' · ' + encontrada.caracteristica +
+          ': role ' + String(manual.dado || 'o dado') + ' fora do app e informe o resultado.'
+      } };
+    }
+    dadoManual = Math.trunc(Number(bruto));
+    if (!isFinite(dadoManual) || dadoManual < minimo || dadoManual > maximo || Number(bruto) !== dadoManual) {
+      return { erro:encontrada.caracteristica + ': informe um resultado inteiro de ' + minimo + ' a ' + maximo + '.' };
+    }
+  }
+
+  const detalhes=[];
+  let marca=null;
+  if (custoArmadura) {
+    marca=ajustarRecurso_(ficha,{chave:'armaduraMarcada',delta:custoArmadura});
+    detalhes.push(marca);
+  }
+
+  let bonusEvasao=0;
+  const bonus=regra.bonusEvasao || null;
+  if (bonus && bonus.tipo === 'resultado-dado-manual') bonusEvasao=dadoManual || 0;
+  if (bonus && bonus.tipo === 'armadura-disponivel-apos-custo') {
+    const agora=Math.max(0,Number(((ficha || {}).recursos || {}).armaduraMarcada)||0);
+    bonusEvasao=Math.max(0,maxArmadura-agora);
+  }
+
+  const saida={
+    tipo:'reacaoEquipamento', nome:encontrada.caracteristica, fonte:encontrada.fonte,
+    custoArmadura:custoArmadura,
+    armaduraMarcada:Number(((ficha || {}).recursos || {}).armaduraMarcada)||0,
+    desvantagemAtaque:regra.desvantagemAtaque===true,
+    bonusEvasao:bonusEvasao,
+    evasaoBase:Number(((ficha || {}).defesas || {}).evasao)||0,
+    dadoManual:dadoManual,
+    detalhes:detalhes,
+    aviso:encontrada.fonte + ' · ' + encontrada.caracteristica + ': ' +
+      (regra.desvantagemAtaque===true ? 'o ataque contra você tem desvantagem.' :
+       (bonusEvasao ? '+' + bonusEvasao + ' de Evasão somente contra este ataque.' : 'reação registrada.'))
+  };
+  if (marca && marca.doloroso) saida.doloroso=marca.doloroso;
+  if (marca && marca.movimentoDeMorte) saida.movimentoDeMorte=true;
+  if (marca && marca.alerta) saida.alerta=marca.alerta;
+  return saida;
+}
+
 function carregarEstadosDeClassePorDano_(ficha, tipo) {
   if (typeof HABILIDADES_DE_CLASSE_COM_CUSTO === 'undefined') return [];
   const nomes = Object.keys(HABILIDADES_DE_CLASSE_COM_CUSTO);
