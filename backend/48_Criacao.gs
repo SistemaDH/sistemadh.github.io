@@ -648,7 +648,7 @@ function derivadosDoPersonagem_(ficha) {
     ? bonusLimiaresDeCartas_(ficha) : 0;
   if (limiarMaior !== null) {
     limiarMaior += bc.limiares + md.limiares + md.limiarMaior + bonusLimiaresCartas;
-    limiarGrave += bc.limiares + md.limiares + md.limiarGrave;
+    limiarGrave += bc.limiares + md.limiares + md.limiarGrave + bonusLimiaresCartas;
     // Pau-Ferro: vale enquanto o ÚLTIMO espaço da Armadura FINAL estiver marcado.
     const marcado = Math.max(0, Number(((ficha || {}).recursos || {}).armaduraMarcada) || 0);
     if (md.limiaresSeUltimaArmaduraMarcada && pontuacaoArmadura > 0 && marcado >= pontuacaoArmadura) {
