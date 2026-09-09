@@ -104,6 +104,48 @@ const CLASSES = {
 
 /** Modificadores derivados das características de classe/subclasse. */
 const EFEITOS_DERIVADOS_DE_CLASSE = {
+  "Encarnar Elemental": {
+    "canalizacaoElemental": {
+      "estado": "estado:druida:canalizacao-elemental",
+      "escolhaChave": "canalizacaoElemental",
+      "elementos": {
+        "terra": {
+          "limiaresPorProficiencia": 1
+        }
+      }
+    }
+  },
+  "Domínio Elemental": {
+    "canalizacaoElemental": {
+      "estado": "estado:druida:canalizacao-elemental",
+      "escolhaChave": "canalizacaoElemental",
+      "elementos": {
+        "fogo": {
+          "proficienciaDano": 1
+        },
+        "terra": {
+          "interceptaPvD6": {
+            "dado": "d6",
+            "evitaResultados": [
+              6
+            ]
+          }
+        },
+        "agua": {
+          "reacaoVulneravel": {
+            "custo": {
+              "estresse": 1
+            },
+            "condicao": "Vulnerável"
+          }
+        },
+        "ar": {
+          "evasao": 1,
+          "voo": true
+        }
+      }
+    }
+  },
   "Inabalável": {
     "limiares": 1
   },
@@ -150,6 +192,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "rotuloAtivar": "",
     "lembrete": "",
     "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
     "estado": null
   },
   "Coração de Poeta": {
@@ -165,6 +209,79 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "rotuloAtivar": "Usar Coração de Poeta · 1 Esperança",
     "lembrete": "Role 1d4 fora do app e some o resultado à jogada de ação que acabou de fazer.",
     "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "estado": null
+  },
+  "Encarnar Elemental": {
+    "classe": "druida",
+    "origem": "subclasse",
+    "custo": {
+      "estresse": 1
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": [
+      {
+        "id": "fogo",
+        "rotulo": "Fogo",
+        "lembrete": "Quando um adversário Corpo a Corpo causar dano a você, ele sofre 1d10 de dano mágico. Role o d10 fora do app."
+      },
+      {
+        "id": "terra",
+        "rotulo": "Terra",
+        "lembrete": "Seus dois limiares de dano recebem +Proficiência enquanto a Canalização durar."
+      },
+      {
+        "id": "agua",
+        "rotulo": "Água",
+        "lembrete": "Ao causar dano a um adversário Corpo a Corpo, os outros adversários Muito Próximos devem marcar 1 Estresse."
+      },
+      {
+        "id": "ar",
+        "rotulo": "Ar",
+        "lembrete": "Você pode pairar e tem vantagem em Jogadas de Agilidade."
+      }
+    ],
+    "marcaUso": "",
+    "rotuloAtivar": "Canalizar elemento · 1 Estresse",
+    "lembrete": "A Canalização termina ao sofrer dano Severo ou no próximo descanso.",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "estado": {
+      "chave": "estado:druida:canalizacao-elemental",
+      "valor": 1,
+      "escolhaChave": "canalizacaoElemental",
+      "rotuloAtivo": "Canalização Elemental ativa",
+      "permiteEncerrarManual": false,
+      "avisoEncerrar": "A Canalização Elemental terminou."
+    }
+  },
+  "Domínio Elemental": {
+    "classe": "druida",
+    "origem": "subclasse",
+    "custo": {},
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "",
+    "lembrete": "",
+    "reacaoEnquantoAtivo": {
+      "custo": {
+        "estresse": 1
+      },
+      "rotulo": "Ataque acertou — usar Água",
+      "condicaoAlvo": "Vulnerável",
+      "lembrete": "O atacante fica temporariamente Vulnerável. A condição pertence ao atacante da cena; o app não escolhe o alvo por você."
+    },
+    "somenteReacao": true,
+    "requerEstado": {
+      "chave": "estado:druida:canalizacao-elemental",
+      "escolhaChave": "canalizacaoElemental",
+      "valor": "agua"
+    },
     "estado": null
   },
   "Magia Volátil": {
@@ -180,6 +297,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "rotuloAtivar": "",
     "lembrete": "",
     "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
     "estado": null
   },
   "Canalizar Poder Bruto": {
@@ -206,6 +325,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "rotuloAtivar": "",
     "lembrete": "",
     "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
     "estado": null
   },
   "Linha de Frente": {
@@ -221,6 +342,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "rotuloAtivar": "",
     "lembrete": "",
     "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
     "estado": null
   },
   "Nêmesis": {
@@ -239,6 +362,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "rotuloAtivar": "",
     "lembrete": "",
     "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
     "estado": null
   },
   "Sem Piedade": {
@@ -254,6 +379,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "rotuloAtivar": "",
     "lembrete": "",
     "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
     "estado": null
   },
   "Esquiva de Ladino": {
@@ -269,6 +396,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "rotuloAtivar": "",
     "lembrete": "",
     "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
     "estado": {
       "chave": "estado:ladino:esquiva",
       "valor": 1,
@@ -289,6 +418,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "rotuloAtivar": "",
     "lembrete": "",
     "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
     "estado": null
   },
   "Segurem Eles": {
@@ -304,6 +435,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "rotuloAtivar": "",
     "lembrete": "",
     "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
     "estado": null
   },
   "Marca da Presa": {
@@ -322,6 +455,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "rotuloAtivar": "",
     "lembrete": "",
     "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
     "estado": null
   },
   "Alicerce da Vida": {
@@ -337,6 +472,8 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "rotuloAtivar": "",
     "lembrete": "",
     "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
     "estado": null
   }
 };
@@ -412,12 +549,27 @@ function habilidadeComCusto_(nome) {
 
 /** Escolhas de classe que ficam gravadas na ficha (o número do Mago). */
 const ESCOLHAS_DE_CLASSE = {
+  "canalizacaoElemental": {
+    "caracteristica": "Encarnar Elemental",
+    "classe": "druida",
+    "tipo": "enum",
+    "valores": [
+      "fogo",
+      "terra",
+      "agua",
+      "ar"
+    ],
+    "rotulo": "Elemento canalizado",
+    "ajuda": "Fica gravado enquanto a Canalização Elemental estiver ativa.",
+    "trocaEm": ""
+  },
   "padroesEstranhos": {
     "caracteristica": "Padrões Estranhos",
     "classe": "mago",
     "tipo": "numero",
     "minimo": 1,
     "maximo": 12,
+    "valores": null,
     "rotulo": "Seu número",
     "ajuda": "Ao tirar esse número num Dado de Dualidade: 1 de Esperança ou 1 Estresse limpo.",
     "trocaEm": "descanso-longo"
@@ -440,6 +592,16 @@ function validarEscolhasDeClasse_(ficha) {
     const chave = chaves[i];
     const def = ESCOLHAS_DE_CLASSE[chave];
     if (!fichaTemCaracteristicaDeClasse_(ficha, def.caracteristica)) continue;
+    if (def.tipo === 'enum') {
+      const alvo = chaveTexto_(bruto[chave]);
+      const valores = def.valores || [];
+      let achou = '';
+      for (let k = 0; k < valores.length; k++) {
+        if (chaveTexto_(valores[k]) === alvo) achou = valores[k];
+      }
+      if (achou) saida[chave] = achou;
+      continue;
+    }
     const valor = Math.trunc(Number(bruto[chave]));
     if (!isFinite(valor)) continue;
     saida[chave] = Math.max(def.minimo, Math.min(def.maximo, valor));

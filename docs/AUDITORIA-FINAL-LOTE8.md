@@ -5,7 +5,7 @@
 
 ## Resumo numérico
 
-- Classes/subclasses: **99 características**; **36** candidatas sem sinal de automação.
+- Classes/subclasses: **99 características**; **34** candidatas sem sinal de automação.
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **161** candidatas sem sinal de automação específica; **17** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **88** ocorrências candidatas ativas/condicionais.
@@ -14,8 +14,8 @@
 
 ### Distribuição — classes/subclasses
 
-- candidato sem sinal de automação: **36**
-- estruturada/contador: **43**
+- candidato sem sinal de automação: **34**
+- estruturada/contador: **45**
 - predominantemente narrativo/sem gatilho detectado: **7**
 - referência específica no motor: **13**
 
@@ -33,15 +33,13 @@
 
 - candidato ativo/condicional sem estrutura: **88**
 - efeito derivado estruturado: **69**
-- referência específica no motor: **26**
-- sem gatilho mecânico detectado: **20**
+- referência específica no motor: **27**
+- sem gatilho mecânico detectado: **19**
 
 ## Candidatos — classes e subclasses
 
 | Classe | Subclasse | Estágio | Característica | Trecho |
 |---|---|---|---|---|
-| Druida | Guardião dos Elementos | fundacao | Encarnar Elemental | Marque 1 Estresse para Canalizar um dos seguintes elementos até sofrer dano Severo ou até seu próximo descanso: • Fogo: Quando um adversário em alcance Corpo a Corpo cau… |
-| Druida | Guardião dos Elementos | maestria | Domínio Elemental | Você incorpora ainda mais seu elemento. Enquanto estiver Canalizando, você ganha o seguinte benefício: • Fogo: Você ganha +1 de bônus na sua Proficiência para ataques e … |
 | Druida | Guardião da Renovação | especializacao | Alcance Regenerativo | Você pode atingir criaturas em alcance Muito Próximo com sua habilidade Regeneração. |
 | Feiticeiro |  | Classe | Ilusão Menor | Faça uma Jogada de Conjuração (10). Em um sucesso, você cria uma ilusão visual em alcance Próximo. Ela não pode ultrapassar seu tamanho. Essa ilusão parece convincente a… |
 | Feiticeiro | Origem Elemental | fundacao | Elementalista | Escolha um dos seguintes elementos na criação do personagem: Ar · Terra · Fogo · Raio · Água Você pode moldar esse elemento em efeitos inofensivos. Além disso, gaste 1 E… |

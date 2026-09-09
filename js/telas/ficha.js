@@ -361,10 +361,57 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     });
   }
 
+  function pedirResultadosDominioTerra(pendencia) {
+    return new Promise((resolve) => {
+      let respondeu = false;
+      const quantidade = Math.max(1, Number((pendencia || {}).quantidade) || 1);
+      const campos = [];
+      for (let i = 0; i < quantidade; i++) {
+        campos.push(el('input', { type: 'number', min: 1, max: 6, step: 1,
+          inputMode: 'numeric', class: 'campo__entrada', 'aria-label': `d6 ${i + 1}` }));
+      }
+      const corpo = el('div', { class: 'pilha' }, [
+        el('p', { class: 'texto-sm', texto: (pendencia && pendencia.mensagem) ||
+          'Role os d6 fora do app e informe os resultados.' }),
+        el('div', { class: 'linha' }, campos)
+      ]);
+      const responder = (valor) => {
+        if (respondeu) return;
+        respondeu = true;
+        modal.fechar();
+        resolve(valor);
+      };
+      const modal = abrirModal({
+        titulo: 'Domínio Elemental · Terra', conteudo: corpo,
+        acoes: [
+          el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => responder(null) }, 'Cancelar'),
+          el('button', { type: 'button', class: 'btn', onClick: () => {
+            const valores = campos.map((c) => Number(c.value));
+            if (valores.some((n) => !Number.isInteger(n) || n < 1 || n > 6)) {
+              avisarErro('Informe cada resultado do d6, de 1 a 6.'); return;
+            }
+            responder(valores);
+          } }, 'Aplicar resultados')
+        ],
+        aoFechar: () => { if (!respondeu) { respondeu = true; resolve(null); } }
+      });
+    });
+  }
+
   async function enviar(ajustes, { soSeMudou = false } = {}) {
     const esperado = soSeMudou ? assinatura(p.ficha) : null;
     try {
       const r = await acoes.ajustarFicha(id, ajustes);
+      if (r && r.pendenciaRolagem && r.pendenciaRolagem.tipo === 'dominio-elemental-terra') {
+        const dados = await pedirResultadosDominioTerra(r.pendenciaRolagem);
+        if (dados === null) {
+          p = r.personagem; desenhar(); return r;
+        }
+        const indice = Number(r.pendenciaRolagem.indice) || 0;
+        const repetidos = (Array.isArray(ajustes) ? ajustes : [ajustes]).map((a, i) =>
+          i === indice ? Object.assign({}, a, { dadosDominioElementalTerra: dados }) : Object.assign({}, a));
+        return enviar(repetidos, { soSeMudou });
+      }
       if (r && r.pendenciaRolagem && r.pendenciaRolagem.tipo === 'inabalavel') {
         const dado = await pedirResultadoInabalavel(r.pendenciaRolagem);
         if (dado === null) {
@@ -1271,6 +1318,23 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       }
     }
 
+    if (uso.somenteReacao && uso.requerEstado && uso.requerEstado.chave) {
+      const item = ((ficha.contadores || {})[uso.requerEstado.chave]) || {};
+      const ativo = (Number(item.valor) || 0) > 0;
+      const escolha = String(((ficha.escolhasDeClasse || {})[uso.requerEstado.escolhaChave] || ''));
+      if (!ativo || (uso.requerEstado.valor && dados.chave(escolha) !== dados.chave(uso.requerEstado.valor))) return null;
+      const reacao = uso.reacaoEnquantoAtivo || {};
+      const custoR = reacao.custo || {};
+      const ce = Number(custoR.esperanca) || 0, cs = Number(custoR.estresse) || 0;
+      const pode = (!ce || (Number(r.esperanca) || 0) >= ce) &&
+        (!cs || ((Number(r.estresseMarcado) || 0) + cs) <= (Number(r.estresseMaximo) || 0));
+      const precoR = [ce ? `${ce} Esperança` : '', cs ? `${cs} Estresse` : ''].filter(Boolean).join(' e ');
+      return el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--pequeno ficha__usarHabilidade', disabled: !pode,
+        onClick: () => enviar([{ tipo: 'habilidade', nome, reagir: true }])
+      }, `${reacao.rotulo || 'Reagir'}${precoR ? ` · ${precoR}` : ''}`);
+    }
+
     if (uso.estado && uso.estado.chave) {
       const item = ((ficha.contadores || {})[uso.estado.chave]) || {};
       const ativo = (Number(item.valor) || 0) > 0;
@@ -1285,19 +1349,30 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           reacaoEsperanca ? `${reacaoEsperanca} Esperança` : '',
           reacaoEstresse ? `${reacaoEstresse} Estresse` : ''
         ].filter(Boolean).join(' e ');
+        const escolhaEstado = uso.estado.escolhaChave
+          ? String(((ficha.escolhasDeClasse || {})[uso.estado.escolhaChave] || '')).trim() : '';
         return el('div', { class: 'pilha' }, [
-          el('span', { class: 'texto-xs texto-fraco', texto: uso.estado.rotuloAtivo || `${nome} ativa` }),
+          el('span', { class: 'texto-xs texto-fraco', texto:
+            (uso.estado.rotuloAtivo || `${nome} ativa`) + (escolhaEstado ? ` · ${escolhaEstado}` : '') }),
           reacao ? el('button', {
             type: 'button', class: 'btn btn--fantasma btn--pequeno ficha__usarHabilidade',
             disabled: !podeReagir,
             onClick: () => enviar([{ tipo: 'habilidade', nome, reagir: true }])
           }, `${reacao.rotulo || 'Reagir'}${precoR ? ` · ${precoR}` : ''}`) : null,
-          el('button', {
+          uso.estado.permiteEncerrarManual === false ? null : el('button', {
             type: 'button', class: 'btn btn--fantasma btn--pequeno ficha__usarHabilidade',
             onClick: () => enviar([{ tipo: 'habilidade', nome, encerrar: true }])
           }, uso.estado.rotuloEncerrar || 'Encerrar efeito')
         ].filter(Boolean));
       }
+    }
+
+    if (!uso.alvo && Array.isArray(uso.opcoes) && uso.opcoes.length) {
+      return el('div', { class: 'linha' }, uso.opcoes.map((o) => el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--pequeno ficha__usarHabilidade',
+        disabled: !temEsperanca || !cabeEstresse,
+        onClick: () => enviar([{ tipo: 'habilidade', nome, opcao: o.id }])
+      }, `${o.rotulo}${preco ? ` · ${preco}` : ''}`)));
     }
 
     if (!uso.alvo) {

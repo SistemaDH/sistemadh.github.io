@@ -170,14 +170,21 @@ for (const c of dados.classes) {
  */
 const escolhas = {};
 for (const c of dados.classes) {
-  for (const f of c.caracteristicasDeClasse) {
-    if (!f.escolha) continue;
+  const anotaEscolha = (f) => {
+    if (!f || !f.escolha) return;
     escolhas[f.escolha.chave] = {
       caracteristica: f.nome, classe: c.id, tipo: f.escolha.tipo,
       minimo: f.escolha.minimo, maximo: f.escolha.maximo,
+      valores: f.escolha.valores || null,
       rotulo: f.escolha.rotulo, ajuda: f.escolha.ajuda || '',
       trocaEm: f.escolha.trocaEm || ''
     };
+  };
+  for (const f of c.caracteristicasDeClasse) anotaEscolha(f);
+  for (const s of c.subclasses || []) {
+    for (const qual of ['fundacao', 'especializacao', 'maestria']) {
+      for (const f of (((s.cartas || {})[qual] || {}).caracteristicas || [])) anotaEscolha(f);
+    }
   }
 }
 /*
@@ -216,6 +223,8 @@ for (const c of dados.classes) {
       rotuloAtivar: f.uso.rotuloAtivar || '',
       lembrete: f.uso.lembrete || '',
       reacaoEnquantoAtivo: f.uso.reacaoEnquantoAtivo || null,
+      somenteReacao: f.uso.somenteReacao === true,
+      requerEstado: f.uso.requerEstado || null,
       // Algumas habilidades ligam um estado persistente depois de pagar.
       estado: f.uso.estado || null
     };
@@ -313,6 +322,16 @@ function validarEscolhasDeClasse_(ficha) {
     const chave = chaves[i];
     const def = ESCOLHAS_DE_CLASSE[chave];
     if (!fichaTemCaracteristicaDeClasse_(ficha, def.caracteristica)) continue;
+    if (def.tipo === 'enum') {
+      const alvo = chaveTexto_(bruto[chave]);
+      const valores = def.valores || [];
+      let achou = '';
+      for (let k = 0; k < valores.length; k++) {
+        if (chaveTexto_(valores[k]) === alvo) achou = valores[k];
+      }
+      if (achou) saida[chave] = achou;
+      continue;
+    }
     const valor = Math.trunc(Number(bruto[chave]));
     if (!isFinite(valor)) continue;
     saida[chave] = Math.max(def.minimo, Math.min(def.maximo, valor));

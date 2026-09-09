@@ -310,6 +310,21 @@ function perfisDeAtaqueDaFicha_(ficha) {
   });
 }
 
+function efeitoAtivoDaCanalizacaoElemental_(ficha, regra) {
+  if (!regra || !regra.estado || !regra.escolhaChave) return null;
+  const item = ((ficha && ficha.contadores) || {})[regra.estado] || {};
+  if ((Math.trunc(Number(item.valor)) || 0) <= 0) return null;
+  const elemento = String((((ficha || {}).escolhasDeClasse || {})[regra.escolhaChave]) || '');
+  const mapa = regra.elementos || {};
+  const chaves = Object.keys(mapa);
+  for (let i = 0; i < chaves.length; i++) {
+    if (chaveTexto_(chaves[i]) === chaveTexto_(elemento)) {
+      return { elemento: chaves[i], efeito: mapa[chaves[i]] };
+    }
+  }
+  return null;
+}
+
 function modificadoresDerivadosDaFicha_(ficha) {
   const saida = {
     evasao: 0, limiares: 0, limiarMaior: 0, limiarGrave: 0,
@@ -326,6 +341,14 @@ function modificadoresDerivadosDaFicha_(ficha) {
 
   const aplicar = function (e, fonte) {
     if (!e) return;
+    if (e.canalizacaoElemental) {
+      const ativo = efeitoAtivoDaCanalizacaoElemental_(ficha, e.canalizacaoElemental);
+      if (ativo) aplicar(ativo.efeito, fonte + ' · ' + ativo.elemento);
+      const resto = Object.assign({}, e);
+      delete resto.canalizacaoElemental;
+      if (!Object.keys(resto).length) return;
+      e = resto;
+    }
     const numero = function (k) { return Number(e[k]) || 0; };
     saida.evasao += numero('evasao');
     saida.limiares += numero('limiares');
@@ -399,6 +422,16 @@ function bonusDeDanoDaFicha_(ficha) {
         fonte: featsDerivados[i].nome, tipo: 'fixo', valor: nivel,
         aplicaEm: 'jogada-de-dano'
       });
+    }
+    if (e.canalizacaoElemental) {
+      const ativo = efeitoAtivoDaCanalizacaoElemental_(ficha, e.canalizacaoElemental);
+      if (ativo && ativo.efeito && ativo.efeito.proficienciaDano) {
+        saida.condicionais.push({
+          fonte: featsDerivados[i].nome + ' · ' + ativo.elemento,
+          tipo: 'proficiencia-adicional', valor: Number(ativo.efeito.proficienciaDano) || 0,
+          aplicaEm: 'jogada-de-dano', condicao: 'ataque ou magia que cause dano'
+        });
+      }
     }
   }
 

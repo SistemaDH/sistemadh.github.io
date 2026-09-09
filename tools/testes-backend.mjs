@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 44 contadores: 17 de carta, 20 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 45 contadores: 17 de carta, 21 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,12 +1561,12 @@ teste('o catálogo tem 44 contadores: 17 de carta, 20 de classe/subclasse, 4 de 
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 44);
+  igual(Object.keys(CONTADORES).length, 45);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 17);
   igual(porOrigem['caracteristica-classe'], 5);
-  igual(porOrigem['caracteristica-subclasse'], 15);
+  igual(porOrigem['caracteristica-subclasse'], 16);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
 });
@@ -5400,6 +5400,99 @@ teste('Maestro não ultrapassa Esperança máxima nem inventa Estresse negativo'
   verdade(!!contexto.aplicarHabilidadeEmAliado_(origem, alvo, 'Maestro', 'esperanca').erro);
   verdade(!!contexto.aplicarHabilidadeEmAliado_(origem, alvo, 'Maestro', 'estresse').erro);
   igual(alvo.recursos.estresseMarcado, 0);
+});
+
+
+console.log('\nLote 8 — Druida: Canalização Elemental');
+
+function fichaDruidaElemental_(cartasSub = ['fundacao']) {
+  const catalogo = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/cartas-dominio.json'), 'utf8'));
+  const cartas = catalogo.cartas.filter((c) => c.nivel === 1 && (c.dominio === 'SAGE' || c.dominio === 'ARCANA'))
+    .slice(0, 2).map((c) => c.id);
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Druida Elemental', classe: 'Druida', subclasse: 'Guardião dos Elementos',
+    ancestralidade: 'Humano', comunidade: 'Highborne', cartas,
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  f.subclasseCartas = cartasSub.slice();
+  contexto.aplicarDerivados_(f);
+  return f;
+}
+
+teste('Encarnar Elemental cobra 1 Estresse, guarda o elemento e Terra sobe os dois limiares', () => {
+  const f = fichaDruidaElemental_(['fundacao']);
+  const antes = { maior: f.defesas.limiarMaior, grave: f.defesas.limiarGrave, prof: contexto.proficienciaDaFicha_(f) };
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Encarnar Elemental', opcao: 'terra' }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, 1);
+  igual(f.escolhasDeClasse.canalizacaoElemental, 'terra');
+  verdade(!!f.contadores['estado:druida:canalizacao-elemental']);
+  contexto.aplicarDerivados_(f);
+  igual(f.defesas.limiarMaior, antes.maior + antes.prof);
+  igual(f.defesas.limiarGrave, antes.grave + antes.prof);
+});
+
+teste('Canalização não pode ser encerrada manualmente e o descanso a encerra', () => {
+  const f = fichaDruidaElemental_(['fundacao']);
+  contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Encarnar Elemental', opcao: 'ar' }]);
+  igual(contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Encarnar Elemental', encerrar: true }]).erros.length, 1);
+  contexto.aplicarGatilhoContadores_(f, 'descanso');
+  verdade(!f.contadores['estado:druida:canalizacao-elemental']);
+});
+
+teste('Domínio Elemental em Ar soma +1 Evasão e em Fogo publica +1 Proficiência de dano', () => {
+  const ar = fichaDruidaElemental_(['fundacao', 'especializacao', 'maestria']);
+  const eva = ar.defesas.evasao;
+  contexto.aplicarAjustes_(ar, [{ tipo: 'habilidade', nome: 'Encarnar Elemental', opcao: 'ar' }]);
+  contexto.aplicarDerivados_(ar);
+  igual(ar.defesas.evasao, eva + 1);
+
+  const fogo = fichaDruidaElemental_(['fundacao', 'especializacao', 'maestria']);
+  contexto.aplicarAjustes_(fogo, [{ tipo: 'habilidade', nome: 'Encarnar Elemental', opcao: 'fogo' }]);
+  contexto.aplicarDerivados_(fogo);
+  const bonus = (fogo.bonusDeDano.condicionais || []).find((x) => /Domínio Elemental/.test(x.fonte));
+  verdade(bonus && bonus.valor === 1 && bonus.tipo === 'proficiencia-adicional', JSON.stringify(fogo.bonusDeDano));
+});
+
+teste('Domínio Elemental em Terra pede d6 manual por PV e cada 6 evita um PV', () => {
+  const f = fichaDruidaElemental_(['fundacao', 'especializacao', 'maestria']);
+  contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Encarnar Elemental', opcao: 'terra' }]);
+  contexto.aplicarDerivados_(f);
+  const dano = Math.max(1, Number(f.defesas.limiarMaior));
+  const pend = contexto.aplicarAjustes_(f, [{ tipo: 'dano', dano, tipoDeDano: 'fisico' }]);
+  verdade(pend.pendenciaRolagem && pend.pendenciaRolagem.tipo === 'dominio-elemental-terra', JSON.stringify(pend));
+  igual(f.recursos.pontosDeVidaMarcados, 0, 'sem os d6 nada pode ser gravado');
+  const q = pend.pendenciaRolagem.quantidade;
+  const dados = Array.from({ length: q }, (_, i) => i === 0 ? 6 : 3);
+  const ok = contexto.aplicarAjustes_(f, [{ tipo: 'dano', dano, tipoDeDano: 'fisico', dadosDominioElementalTerra: dados }]);
+  igual(ok.erros, []);
+  igual(f.recursos.pontosDeVidaMarcados, Math.max(0, q - 1));
+  igual(ok.mudancas[0].dominioElementalTerra.evitados, 1);
+});
+
+teste('dano Severo encerra Canalização Elemental automaticamente', () => {
+  const f = fichaDruidaElemental_(['fundacao']);
+  contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Encarnar Elemental', opcao: 'fogo' }]);
+  contexto.aplicarDerivados_(f);
+  const danoSevero = Number(f.defesas.limiarGrave);
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'dano', dano: danoSevero, tipoDeDano: 'fisico' }]);
+  igual(r.erros, []);
+  verdade(!f.contadores['estado:druida:canalizacao-elemental']);
+  verdade(r.mudancas[0].canalizacaoElementalEncerrada === true, JSON.stringify(r.mudancas[0]));
+});
+
+teste('Domínio Elemental em Água cobra 1 Estresse somente enquanto Água está Canalizada', () => {
+  const f = fichaDruidaElemental_(['fundacao', 'especializacao', 'maestria']);
+  contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Encarnar Elemental', opcao: 'agua' }]);
+  const antes = f.recursos.estresseMarcado;
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Domínio Elemental', reagir: true }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, antes + 1);
+  verdade(/Vulnerável/.test(r.mudancas[0].aviso || ''), JSON.stringify(r.mudancas[0]));
+
+  const ar = fichaDruidaElemental_(['fundacao', 'especializacao', 'maestria']);
+  contexto.aplicarAjustes_(ar, [{ tipo: 'habilidade', nome: 'Encarnar Elemental', opcao: 'ar' }]);
+  igual(contexto.aplicarAjustes_(ar, [{ tipo: 'habilidade', nome: 'Domínio Elemental', reagir: true }]).erros.length, 1);
 });
 
 console.log('\nLote 8 — comunidades do Core');

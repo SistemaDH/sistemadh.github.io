@@ -275,7 +275,67 @@
        "caracteristicas": [
         {
          "nome": "Encarnar Elemental",
-         "texto": "Marque 1 Estresse para Canalizar um dos seguintes elementos até sofrer dano Severo ou até seu próximo descanso:\n• Fogo: Quando um adversário em alcance Corpo a Corpo causar dano a você, ele sofre 1d10 de dano mágico.\n• Terra: Ganhe um bônus nos seus limiares de dano igual à sua Proficiência.\n• Água: Quando você causar dano a um adversário em alcance Corpo a Corpo, todos os outros adversários em alcance Muito Próximo devem marcar 1 Estresse.\n• Ar: Você pode pairar, ganhando vantagem em Jogadas de Agilidade."
+         "texto": "Marque 1 Estresse para Canalizar um dos seguintes elementos até sofrer dano Severo ou até seu próximo descanso:\n• Fogo: Quando um adversário em alcance Corpo a Corpo causar dano a você, ele sofre 1d10 de dano mágico.\n• Terra: Ganhe um bônus nos seus limiares de dano igual à sua Proficiência.\n• Água: Quando você causar dano a um adversário em alcance Corpo a Corpo, todos os outros adversários em alcance Muito Próximo devem marcar 1 Estresse.\n• Ar: Você pode pairar, ganhando vantagem em Jogadas de Agilidade.",
+         "escolha": {
+          "chave": "canalizacaoElemental",
+          "tipo": "enum",
+          "valores": [
+           "fogo",
+           "terra",
+           "agua",
+           "ar"
+          ],
+          "rotulo": "Elemento canalizado",
+          "ajuda": "Fica gravado enquanto a Canalização Elemental estiver ativa."
+         },
+         "uso": {
+          "custo": {
+           "estresse": 1
+          },
+          "rotuloAtivar": "Canalizar elemento · 1 Estresse",
+          "opcoes": [
+           {
+            "id": "fogo",
+            "rotulo": "Fogo",
+            "lembrete": "Quando um adversário Corpo a Corpo causar dano a você, ele sofre 1d10 de dano mágico. Role o d10 fora do app."
+           },
+           {
+            "id": "terra",
+            "rotulo": "Terra",
+            "lembrete": "Seus dois limiares de dano recebem +Proficiência enquanto a Canalização durar."
+           },
+           {
+            "id": "agua",
+            "rotulo": "Água",
+            "lembrete": "Ao causar dano a um adversário Corpo a Corpo, os outros adversários Muito Próximos devem marcar 1 Estresse."
+           },
+           {
+            "id": "ar",
+            "rotulo": "Ar",
+            "lembrete": "Você pode pairar e tem vantagem em Jogadas de Agilidade."
+           }
+          ],
+          "estado": {
+           "chave": "estado:druida:canalizacao-elemental",
+           "valor": 1,
+           "escolhaChave": "canalizacaoElemental",
+           "rotuloAtivo": "Canalização Elemental ativa",
+           "permiteEncerrarManual": false,
+           "avisoEncerrar": "A Canalização Elemental terminou."
+          },
+          "lembrete": "A Canalização termina ao sofrer dano Severo ou no próximo descanso."
+         },
+         "efeitoDerivado": {
+          "canalizacaoElemental": {
+           "estado": "estado:druida:canalizacao-elemental",
+           "escolhaChave": "canalizacaoElemental",
+           "elementos": {
+            "terra": {
+             "limiaresPorProficiencia": 1
+            }
+           }
+          }
+         }
         }
        ],
        "texto": "Encarnar Elemental: Marque 1 Estresse para Canalizar um dos seguintes elementos até sofrer dano Severo ou até seu próximo descanso:\n• Fogo: Quando um adversário em alcance Corpo a Corpo causar dano a você, ele sofre 1d10 de dano mágico.\n• Terra: Ganhe um bônus nos seus limiares de dano igual à sua Proficiência.\n• Água: Quando você causar dano a um adversário em alcance Corpo a Corpo, todos os outros adversários em alcance Muito Próximo devem marcar 1 Estresse.\n• Ar: Você pode pairar, ganhando vantagem em Jogadas de Agilidade.",
@@ -311,7 +371,65 @@
        "caracteristicas": [
         {
          "nome": "Domínio Elemental",
-         "texto": "Você incorpora ainda mais seu elemento. Enquanto estiver Canalizando, você ganha o seguinte benefício:\n• Fogo: Você ganha +1 de bônus na sua Proficiência para ataques e magias que causem dano.\n• Terra: Quando for marcar Pontos de Vida, role um d6 para cada Ponto de Vida marcado. Para cada resultado 6, reduza em 1 o número de Pontos de Vida que você marca.\n• Água: Quando um ataque contra você for bem-sucedido, pode marcar 1 Estresse para tornar o atacante temporariamente Vulnerável.\n• Ar: Você ganha +1 de bônus em sua Evasão e pode voar."
+         "texto": "Você incorpora ainda mais seu elemento. Enquanto estiver Canalizando, você ganha o seguinte benefício:\n• Fogo: Você ganha +1 de bônus na sua Proficiência para ataques e magias que causem dano.\n• Terra: Quando for marcar Pontos de Vida, role um d6 para cada Ponto de Vida marcado. Para cada resultado 6, reduza em 1 o número de Pontos de Vida que você marca.\n• Água: Quando um ataque contra você for bem-sucedido, pode marcar 1 Estresse para tornar o atacante temporariamente Vulnerável.\n• Ar: Você ganha +1 de bônus em sua Evasão e pode voar.",
+         "efeitoDerivado": {
+          "canalizacaoElemental": {
+           "estado": "estado:druida:canalizacao-elemental",
+           "escolhaChave": "canalizacaoElemental",
+           "elementos": {
+            "fogo": {
+             "proficienciaDano": 1
+            },
+            "terra": {
+             "interceptaPvD6": {
+              "dado": "d6",
+              "evitaResultados": [
+               6
+              ]
+             }
+            },
+            "agua": {
+             "reacaoVulneravel": {
+              "custo": {
+               "estresse": 1
+              },
+              "condicao": "Vulnerável"
+             }
+            },
+            "ar": {
+             "evasao": 1,
+             "voo": true
+            }
+           }
+          }
+         },
+         "uso": {
+          "custo": {},
+          "somenteReacao": true,
+          "requerEstado": {
+           "chave": "estado:druida:canalizacao-elemental",
+           "escolhaChave": "canalizacaoElemental",
+           "valor": "agua"
+          },
+          "reacaoEnquantoAtivo": {
+           "custo": {
+            "estresse": 1
+           },
+           "rotulo": "Ataque acertou — usar Água",
+           "condicaoAlvo": "Vulnerável",
+           "lembrete": "O atacante fica temporariamente Vulnerável. A condição pertence ao atacante da cena; o app não escolhe o alvo por você."
+          }
+         },
+         "rolagemManual": {
+          "tipo": "interceptador-pv",
+          "dado": "d6",
+          "porPontoDeVida": true,
+          "resultadoEvita": [
+           6
+          ],
+          "aplicacao": "entrada-obrigatoria-no-dano",
+          "lembrete": "Em Terra, role um d6 fora do app para cada Ponto de Vida que seria marcado."
+         }
         }
        ],
        "texto": "Domínio Elemental: Você incorpora ainda mais seu elemento. Enquanto estiver Canalizando, você ganha o seguinte benefício:\n• Fogo: Você ganha +1 de bônus na sua Proficiência para ataques e magias que causem dano.\n• Terra: Quando for marcar Pontos de Vida, role um d6 para cada Ponto de Vida marcado. Para cada resultado 6, reduza em 1 o número de Pontos de Vida que você marca.\n• Água: Quando um ataque contra você for bem-sucedido, pode marcar 1 Estresse para tornar o atacante temporariamente Vulnerável.\n• Ar: Você ganha +1 de bônus em sua Evasão e pode voar.",

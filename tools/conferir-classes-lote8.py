@@ -24,4 +24,17 @@ ua = maestro.get('usoEmAliado') or {}
 assert {o.get('recurso') for o in ua.get('opcoes', [])} == {'esperanca', 'estresseMarcado'}
 assert {o.get('delta') for o in ua.get('opcoes', [])} == {1, -1}
 
-print('Lote 8 — classes: Bardo/Coração de Poeta, Virtuoso e Maestro protegidos.')
+
+druida = next(c for c in classes['classes'] if c['id'] == 'druida')
+ge = next(s for s in druida['subclasses'] if s['id'] == 'druida-guardiao-dos-elementos')
+enc = next(f for f in ge['cartas']['fundacao']['caracteristicas'] if f['nome'] == 'Encarnar Elemental')
+dom = next(f for f in ge['cartas']['maestria']['caracteristicas'] if f['nome'] == 'Domínio Elemental')
+assert enc['uso']['custo']['estresse'] == 1
+assert {o['id'] for o in enc['uso']['opcoes']} == {'fogo', 'terra', 'agua', 'ar'}
+assert enc['uso']['estado']['permiteEncerrarManual'] is False
+assert enc['escolha']['tipo'] == 'enum'
+assert dom['efeitoDerivado']['canalizacaoElemental']['elementos']['ar']['evasao'] == 1
+assert dom['rolagemManual']['aplicacao'] == 'entrada-obrigatoria-no-dano'
+assert next(x for x in cont['contadores'] if x['chave'] == 'estado:druida:canalizacao-elemental')
+
+print('Lote 8 — classes: Bardo fechado; Druida/Canalização e Domínio Elemental protegidos.')

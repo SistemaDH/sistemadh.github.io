@@ -125,6 +125,10 @@ function aplicarAjusteComInabalavel_(ficha, a) {
   const antesFicha = JSON.parse(JSON.stringify(ficha || {}));
   const antes = Math.max(0, Number(((ficha || {}).recursos || {}).estresseMarcado) || 0);
   const r = aplicarAjusteDireto_(ficha, a || {});
+  if (r && r.pendenciaRolagem) {
+    substituirFichaEmLugar_(ficha, antesFicha);
+    return { pendencia: r.pendenciaRolagem };
+  }
   if (r && r.erro) {
     substituirFichaEmLugar_(ficha, antesFicha);
     return { resultado: r };
@@ -520,6 +524,9 @@ function usarHabilidadeDeClasse_(ficha, a) {
     // Estado sem alvo: a mesa informa o gatilho que encerra. Esquiva de Ladino
     // termina no próximo ATAQUE que acertar, não em qualquer perda de PV.
     if (def.estado && def.estado.chave) {
+      if (def.estado.permiteEncerrarManual === false) {
+        return { erro: '"' + def.nome + '" termina apenas quando a própria regra mandar.' };
+      }
       ficha.contadores = ficha.contadores || {};
       const item = ficha.contadores[def.estado.chave] || {};
       const antes = Math.max(0, Math.trunc(Number(item.valor)) || 0);
@@ -546,11 +553,18 @@ function usarHabilidadeDeClasse_(ficha, a) {
    */
   if (a.reagir === true) {
     const reacao = def.reacaoEnquantoAtivo;
-    if (!reacao || !def.estado || !def.estado.chave) {
+    const estadoRequerido = def.estado || def.requerEstado;
+    if (!reacao || !estadoRequerido || !estadoRequerido.chave) {
       return { erro: '"' + def.nome + '" não possui reação de estado ativo.' };
     }
-    const ativo = Math.trunc(Number((((ficha.contadores || {})[def.estado.chave]) || {}).valor)) || 0;
+    const ativo = Math.trunc(Number((((ficha.contadores || {})[estadoRequerido.chave]) || {}).valor)) || 0;
     if (ativo <= 0) return { erro: '"' + def.nome + '": é preciso estar com o estado ativo antes de reagir.' };
+    if (estadoRequerido.escolhaChave && estadoRequerido.valor) {
+      const escolhaAtual = String(((ficha.escolhasDeClasse || {})[estadoRequerido.escolhaChave]) || '');
+      if (chaveTexto_(escolhaAtual) !== chaveTexto_(estadoRequerido.valor)) {
+        return { erro: '"' + def.nome + '": esta reação não vale para o elemento canalizado agora.' };
+      }
+    }
 
     const rReacao = ficha.recursos || {};
     const custoReacaoEsperanca = Math.max(0, Math.trunc(Number((reacao.custo || {}).esperanca)) || 0);
@@ -580,7 +594,7 @@ function usarHabilidadeDeClasse_(ficha, a) {
       esperanca: rReacao.esperanca, estresseMarcado: rReacao.estresseMarcado,
       bonusEvasao: bonusEvasao,
       evasaoBase: Number((ficha.defesas || {}).evasao) || 0,
-      estado: def.estado.chave, estadoAtivo: true,
+      estado: estadoRequerido.chave, estadoAtivo: true,
       aviso: def.nome + (pago.length ? ' custou ' + pago.join(' e ') : '') + '. ' +
         (reacao.lembrete || (bonusEvasao ? '+' + bonusEvasao + ' de Evasão contra este ataque.' : ''))
     };
@@ -624,6 +638,14 @@ function usarHabilidadeDeClasse_(ficha, a) {
   let cartaMovida = null;
   let opcaoEscolhida = null;
   let esperancaGanha = 0;
+  if (!def.cartaDaMao && Array.isArray(def.opcoes) && def.opcoes.length) {
+    for (let i = 0; i < def.opcoes.length; i++) {
+      if (String(def.opcoes[i].id) === String(a.opcao || '')) opcaoEscolhida = def.opcoes[i];
+    }
+    if (!opcaoEscolhida) {
+      return { erro: def.nome + ': escolha uma opção (' + def.opcoes.map(function (o) { return o.id; }).join(', ') + ').' };
+    }
+  }
   if (def.cartaDaMao) {
     const carta = (typeof acharCarta_ === 'function') ? acharCarta_(a.carta) : null;
     if (!carta) return { erro: 'Carta de domínio desconhecida: "' + String(a.carta) + '".' };
@@ -694,6 +716,10 @@ function usarHabilidadeDeClasse_(ficha, a) {
   if (def.estado && def.estado.chave) {
     ficha.contadores = ficha.contadores || {};
     ficha.contadores[def.estado.chave] = { valor: Math.max(1, Math.trunc(Number(def.estado.valor)) || 1) };
+    if (def.estado.escolhaChave && opcaoEscolhida) {
+      ficha.escolhasDeClasse = ficha.escolhasDeClasse || {};
+      ficha.escolhasDeClasse[def.estado.escolhaChave] = opcaoEscolhida.id;
+    }
   }
 
   // O uso gasto entra depois de tudo dar certo: recusa não gasta uso.
@@ -1431,6 +1457,37 @@ function aplicarDanoNaFicha_(ficha, a) {
     return { erro: 'As reações escolhidas custam ' + custoEsperanca + ' de Esperança, e você tem ' + esperancaAtual + '.' };
   }
 
+  let dominioTerra = null;
+  const estadoCanalizacao = Math.trunc(Number(((((ficha.contadores || {})['estado:druida:canalizacao-elemental']) || {}).valor))) || 0;
+  const elementoCanalizado = String(((ficha.escolhasDeClasse || {}).canalizacaoElemental) || '');
+  const temDominioElemental = typeof fichaTemCaracteristicaDeClasse_ === 'function' &&
+    fichaTemCaracteristicaDeClasse_(ficha, 'Domínio Elemental');
+  if (pv > 0 && estadoCanalizacao > 0 && chaveTexto_(elementoCanalizado) === 'terra' && temDominioElemental) {
+    const dados = a.dadosDominioElementalTerra;
+    if (!Array.isArray(dados)) {
+      return { pendenciaRolagem: {
+        tipo: 'dominio-elemental-terra', caracteristica: 'Domínio Elemental',
+        dado: 'd6', quantidade: pv, minimo: 1, maximo: 6,
+        mensagem: 'Domínio Elemental · Terra: role 1d6 fora do app para cada um dos ' + pv + ' Pontos de Vida que seriam marcados.'
+      } };
+    }
+    if (dados.length !== pv) {
+      return { erro: 'Domínio Elemental · Terra: informe exatamente ' + pv + ' resultado(s) de d6.' };
+    }
+    const limpos = [];
+    let evitados = 0;
+    for (let i = 0; i < dados.length; i++) {
+      const n = Math.trunc(Number(dados[i]));
+      if (!isFinite(n) || n < 1 || n > 6 || Number(dados[i]) !== n) {
+        return { erro: 'Domínio Elemental · Terra: cada resultado precisa ser um inteiro de 1 a 6.' };
+      }
+      limpos.push(n);
+      if (n === 6) evitados++;
+    }
+    pv = Math.max(0, pv - evitados);
+    dominioTerra = { dados: limpos, evitados: evitados, pvDepois: pv };
+  }
+
   const mudancasInternas = [];
   if (custoEsperanca) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'esperanca', delta: -custoEsperanca }));
   if (custoEstresse) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'estresseMarcado', delta: custoEstresse }));
@@ -1455,12 +1512,22 @@ function aplicarDanoNaFicha_(ficha, a) {
     pvMarcados: pv,
     reacoes: usadas,
     resistencia: retraido ? 'Retrair' : null,
+    dominioElementalTerra: dominioTerra,
     custos: { estresse: custoEstresse, esperanca: custoEsperanca },
     detalhes: mudancasInternas,
     aviso: partes.join(' · ') + '.'
   };
   if (toquePv && toquePv.alerta) saida.alerta = toquePv.alerta;
   if (toquePv && toquePv.movimentoDeMorte) saida.movimentoDeMorte = true;
+  if (conta.pv >= 3) {
+    const chaveCanal = 'estado:druida:canalizacao-elemental';
+    const ativoCanal = Math.trunc(Number(((((ficha.contadores || {})[chaveCanal]) || {}).valor))) || 0;
+    if (ativoCanal > 0) {
+      delete ficha.contadores[chaveCanal];
+      saida.canalizacaoElementalEncerrada = true;
+      saida.aviso += ' Canalização Elemental terminou por dano Severo.';
+    }
+  }
   return saida;
 }
 

@@ -946,6 +946,25 @@
    "exigeCaracteristica": "Mochila Nômade",
    "observacao": "Registra o uso; o Mestre define o item mundano encontrado.",
    "fonte": "DH-DigitalRegras.pdf p.81"
+  },
+  {
+   "chave": "estado:druida:canalizacao-elemental",
+   "origem": "caracteristica-subclasse",
+   "refId": "druida-guardiao-dos-elementos",
+   "nome": "Canalização Elemental",
+   "rotulo": "ativa",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso",
+    "descanso-longo"
+   ],
+   "exigeCaracteristica": "Encarnar Elemental",
+   "observacao": "Guarda a Canalização ativa. O elemento fica em escolhasDeClasse; dano Severo encerra no handler de dano."
   }
  ]
 }
