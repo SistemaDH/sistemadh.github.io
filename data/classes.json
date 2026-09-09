@@ -929,7 +929,26 @@
         },
         {
          "nome": "Vontade de Ferro",
-         "texto": "Quando sofrer dano físico, você pode marcar um espaço adicional de Armadura para reduzir a severidade."
+         "texto": "Quando sofrer dano físico, você pode marcar um espaço adicional de Armadura para reduzir a severidade.",
+         "reacaoDano": {
+          "momento": "depois-dos-limiares",
+          "tipos": [
+           "fisico"
+          ],
+          "faixas": [
+           "menor",
+           "maior",
+           "severo",
+           "massivo"
+          ],
+          "custo": {
+           "armadura": 1
+          },
+          "efeito": {
+           "reduzPv": 1
+          },
+          "fonte": "Carta oficial de Fundação do Guardião Robusto: ao sofrer dano físico, marque um Espaço de Armadura adicional para reduzir a severidade em um limiar."
+         }
         }
        ],
        "texto": "Inabalável: Ganhe um bônus permanente de +1 nos seus limiares de dano.\nVontade de Ferro: Quando sofrer dano físico, você pode marcar um espaço adicional de Armadura para reduzir a severidade.",

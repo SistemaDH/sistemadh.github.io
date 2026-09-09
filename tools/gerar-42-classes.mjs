@@ -16,13 +16,23 @@ const L = [];
 
 /* Efeitos derivados de classe/subclasse que não exigem um estado novo. */
 const efeitosDerivadosDeClasse = {};
+const reacoesDeDanoDeClasse = {};
 const registrarEfeitoDerivado = (f) => {
-  if (!f || !f.efeitoDerivado) return;
-  if (efeitosDerivadosDeClasse[f.nome] &&
-      JSON.stringify(efeitosDerivadosDeClasse[f.nome]) !== JSON.stringify(f.efeitoDerivado)) {
-    throw new Error(`efeito derivado ambíguo para ${f.nome}`);
+  if (!f) return;
+  if (f.efeitoDerivado) {
+    if (efeitosDerivadosDeClasse[f.nome] &&
+        JSON.stringify(efeitosDerivadosDeClasse[f.nome]) !== JSON.stringify(f.efeitoDerivado)) {
+      throw new Error(`efeito derivado ambíguo para ${f.nome}`);
+    }
+    efeitosDerivadosDeClasse[f.nome] = f.efeitoDerivado;
   }
-  efeitosDerivadosDeClasse[f.nome] = f.efeitoDerivado;
+  if (f.reacaoDano) {
+    if (reacoesDeDanoDeClasse[f.nome] &&
+        JSON.stringify(reacoesDeDanoDeClasse[f.nome]) !== JSON.stringify(f.reacaoDano)) {
+      throw new Error(`reação de dano ambígua para ${f.nome}`);
+    }
+    reacoesDeDanoDeClasse[f.nome] = f.reacaoDano;
+  }
 };
 for (const c of dados.classes) {
   registrarEfeitoDerivado(c.caracteristicaEsperanca);
@@ -267,6 +277,21 @@ for (const c of dados.classes) {
  */
 L.push('/** Modificadores derivados das características de classe/subclasse. */');
 L.push(`const EFEITOS_DERIVADOS_DE_CLASSE = ${JSON.stringify(efeitosDerivadosDeClasse, null, 2)};`);
+L.push('/** Reações de dano concedidas por classe/subclasse. */');
+L.push(`const REACOES_DE_DANO_DE_CLASSE = ${JSON.stringify(reacoesDeDanoDeClasse, null, 2)};`);
+L.push(`
+/** Acha uma reação de dano de classe/subclasse pelo nome. */
+function reacaoDeDanoDeClasse_(nome) {
+  const alvo = chaveTexto_(nome);
+  const nomes = Object.keys(REACOES_DE_DANO_DE_CLASSE);
+  for (let i = 0; i < nomes.length; i++) {
+    if (chaveTexto_(nomes[i]) === alvo) {
+      return Object.assign({ nome: nomes[i] }, REACOES_DE_DANO_DE_CLASSE[nomes[i]]);
+    }
+  }
+  return null;
+}
+`);
 
 L.push('/** Habilidades de CLASSE que cobram Esperança (ou Estresse) para serem usadas. */');
 L.push(`const HABILIDADES_DE_CLASSE_COM_CUSTO = ${JSON.stringify(comCusto, null, 2)};`);

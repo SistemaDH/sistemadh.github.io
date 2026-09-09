@@ -1443,7 +1443,8 @@ function aplicarDanoNaFicha_(ficha, a) {
   const defs = [];
   const vistos = {};
   for (let i = 0; i < nomes.length; i++) {
-    const def = (typeof reacaoDeDanoDeOrigem_ === 'function') ? reacaoDeDanoDeOrigem_(nomes[i]) : null;
+    let def = (typeof reacaoDeDanoDeOrigem_ === 'function') ? reacaoDeDanoDeOrigem_(nomes[i]) : null;
+    if (!def && typeof reacaoDeDanoDeClasse_ === 'function') def = reacaoDeDanoDeClasse_(nomes[i]);
     if (!def) return { erro: 'Reação de dano desconhecida: "' + String(nomes[i]) + '".' };
     const k = chaveTexto_(def.nome);
     if (vistos[k]) return { erro: 'A reação "' + def.nome + '" veio repetida.' };
@@ -1493,6 +1494,9 @@ function aplicarDanoNaFicha_(ficha, a) {
   for (let i = 0; i < defs.length; i++) {
     const def = defs[i];
     if (def.momento !== 'depois-dos-limiares') continue;
+    if ((def.tipos || []).length && def.tipos.indexOf(tipo) === -1) {
+      return { erro: '"' + def.nome + '" não se aplica a dano ' + (tipo === 'fisico' ? 'físico' : 'mágico') + '.' };
+    }
     if ((def.faixas || []).indexOf(conta.faixa) === -1) {
       return { erro: '"' + def.nome + '" não se aplica a ' + conta.rotulo + '.' };
     }
@@ -1502,21 +1506,27 @@ function aplicarDanoNaFicha_(ficha, a) {
   }
 
   // 3) Soma e valida TODOS os custos antes de tocar na ficha: tudo ou nada.
-  let custoEstresse = 0, custoEsperanca = 0;
+  let custoEstresse = 0, custoEsperanca = 0, custoArmadura = 0;
   for (let i = 0; i < defs.length; i++) {
     const c = defs[i].custo || {};
     custoEstresse += Math.max(0, Math.trunc(Number(c.estresse)) || 0);
     custoEsperanca += Math.max(0, Math.trunc(Number(c.esperanca)) || 0);
+    custoArmadura += Math.max(0, Math.trunc(Number(c.armadura)) || 0);
   }
   const r = ficha.recursos || {};
   const estresseAtual = Math.max(0, Number(r.estresseMarcado) || 0);
   const estresseMax = Math.max(0, Number(r.estresseMaximo) || 0);
   const esperancaAtual = Math.max(0, Number(r.esperanca) || 0);
+  const armaduraAtual = Math.max(0, Number(r.armaduraMarcada) || 0);
+  const armaduraMax = Math.max(0, Number((ficha.defesas || {}).pontuacaoArmadura) || 0);
   if (custoEstresse && estresseAtual + custoEstresse > estresseMax) {
     return { erro: 'Não sobra Estresse para as reações escolhidas (custa ' + custoEstresse + ').' };
   }
   if (custoEsperanca && esperancaAtual < custoEsperanca) {
     return { erro: 'As reações escolhidas custam ' + custoEsperanca + ' de Esperança, e você tem ' + esperancaAtual + '.' };
+  }
+  if (custoArmadura && (!armaduraMax || armaduraAtual + custoArmadura > armaduraMax)) {
+    return { erro: 'Não sobra Ponto de Armadura para as reações escolhidas (custa ' + custoArmadura + ').' };
   }
 
   let dominioTerra = null;
@@ -1553,6 +1563,7 @@ function aplicarDanoNaFicha_(ficha, a) {
   const mudancasInternas = [];
   if (custoEsperanca) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'esperanca', delta: -custoEsperanca }));
   if (custoEstresse) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'estresseMarcado', delta: custoEstresse }));
+  if (custoArmadura) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'armaduraMarcada', delta: custoArmadura }));
   let toquePv = null;
   if (pv > 0) {
     toquePv = ajustarRecurso_(ficha, { chave: 'pontosDeVidaMarcados', delta: pv });
@@ -1575,7 +1586,7 @@ function aplicarDanoNaFicha_(ficha, a) {
     reacoes: usadas,
     resistencia: retraido ? 'Retrair' : null,
     dominioElementalTerra: dominioTerra,
-    custos: { estresse: custoEstresse, esperanca: custoEsperanca },
+    custos: { estresse: custoEstresse, esperanca: custoEsperanca, armadura: custoArmadura },
     detalhes: mudancasInternas,
     aviso: partes.join(' · ') + '.'
   };

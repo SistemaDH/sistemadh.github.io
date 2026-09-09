@@ -5,7 +5,7 @@
 
 ## Resumo numérico
 
-- Classes/subclasses: **99 características**; **28** candidatas sem sinal de automação.
+- Classes/subclasses: **99 características**; **27** candidatas sem sinal de automação.
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **161** candidatas sem sinal de automação específica; **17** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **87** ocorrências candidatas ativas/condicionais.
@@ -14,8 +14,8 @@
 
 ### Distribuição — classes/subclasses
 
-- candidato sem sinal de automação: **28**
-- estruturada/contador: **51**
+- candidato sem sinal de automação: **27**
+- estruturada/contador: **52**
 - predominantemente narrativo/sem gatilho detectado: **7**
 - referência específica no motor: **13**
 
@@ -40,7 +40,6 @@
 
 | Classe | Subclasse | Estágio | Característica | Trecho |
 |---|---|---|---|---|
-| Guardião | Robusto | fundacao | Vontade de Ferro | Quando sofrer dano físico, você pode marcar um espaço adicional de Armadura para reduzir a severidade. |
 | Guardião | Robusto | especializacao | Parceiros de Armas | Quando um aliado em alcance Muito Próximo sofrer dano, você pode marcar um Espaço de Armadura para reduzir a severidade em um limiar. |
 | Guardião | Robusto | maestria | Protetor Leal | Quando um aliado em alcance Próximo tiver 2 ou menos Pontos de Vida e for receber dano, você pode marcar 1 Estresse para correr até o lado dele e sofrer o dano no lugar. |
 | Guardião | Vingança | especializacao | Ato de Retaliação | Quando um adversário causar dano a um aliado em alcance Corpo a Corpo, você ganha +1 de bônus na sua Proficiência para o próximo ataque bem-sucedido contra esse adversár… |

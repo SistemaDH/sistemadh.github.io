@@ -177,6 +177,41 @@ const EFEITOS_DERIVADOS_DE_CLASSE = {
     "limiarGrave": 4
   }
 };
+/** Reações de dano concedidas por classe/subclasse. */
+const REACOES_DE_DANO_DE_CLASSE = {
+  "Vontade de Ferro": {
+    "momento": "depois-dos-limiares",
+    "tipos": [
+      "fisico"
+    ],
+    "faixas": [
+      "menor",
+      "maior",
+      "severo",
+      "massivo"
+    ],
+    "custo": {
+      "armadura": 1
+    },
+    "efeito": {
+      "reduzPv": 1
+    },
+    "fonte": "Carta oficial de Fundação do Guardião Robusto: ao sofrer dano físico, marque um Espaço de Armadura adicional para reduzir a severidade em um limiar."
+  }
+};
+
+/** Acha uma reação de dano de classe/subclasse pelo nome. */
+function reacaoDeDanoDeClasse_(nome) {
+  const alvo = chaveTexto_(nome);
+  const nomes = Object.keys(REACOES_DE_DANO_DE_CLASSE);
+  for (let i = 0; i < nomes.length; i++) {
+    if (chaveTexto_(nomes[i]) === alvo) {
+      return Object.assign({ nome: nomes[i] }, REACOES_DE_DANO_DE_CLASSE[nomes[i]]);
+    }
+  }
+  return null;
+}
+
 /** Habilidades de CLASSE que cobram Esperança (ou Estresse) para serem usadas. */
 const HABILIDADES_DE_CLASSE_COM_CUSTO = {
   "Fazer uma Cena": {

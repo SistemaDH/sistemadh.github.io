@@ -1126,7 +1126,8 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const defs = [
       ['Pele Grossa', 'Dano Menor: marque 2 Fadigas em vez de 1 PV.'],
       ['Fortitude Aumentada', 'Dano físico: gaste 3 Esperanças para reduzi-lo à metade antes dos limiares.'],
-      ['Escamas', 'Dano Severo: marque 1 Fadiga para marcar 1 PV a menos.']
+      ['Escamas', 'Dano Severo: marque 1 Fadiga para marcar 1 PV a menos.'],
+      ['Vontade de Ferro', 'Dano físico: marque 1 Ponto de Armadura adicional para reduzir a severidade em um limiar.']
     ].filter(([nome]) => temCaracteristica_(ficha, nome));
     const escolhas = defs.map(([nome, texto]) => {
       const caixa = el('input', { type: 'checkbox' });
@@ -1145,11 +1146,11 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         el('span', { class: 'campo__rotulo', texto: 'Tipo de dano' }), tipo
       ]),
       escolhas.length ? el('div', { class: 'pilha' }, [
-        el('strong', { texto: 'Reações de ancestralidade' }),
+        el('strong', { texto: 'Reações ao dano' }),
         ...escolhas.map((x) => x.linha)
       ]) : null,
       el('p', { class: 'texto-xs texto-fraco', texto:
-        'Pontos de Armadura e outras reduções opcionais continuam sendo escolhas separadas; este passo não rola dados nem decide usar recursos por você.' })
+        'O app só aplica as reações que você marcar. Ele não rola dados nem decide gastar Estresse, Esperança ou Armadura por você.' })
     ].filter(Boolean));
 
     const modal = abrirModal({

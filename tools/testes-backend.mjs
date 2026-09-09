@@ -5689,6 +5689,92 @@ teste('descanso longo limpa Carga Arcana', () => {
   verdade(!f.contadores['estado:feiticeiro:carga-arcana']);
 });
 
+
+console.log('\nLote 8 — Guardião: Vontade de Ferro');
+
+function fichaGuardiaoRobusto_() {
+  return contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Guardião de Teste', classe: 'Guardião', subclasse: 'Robusto',
+    ancestralidade: 'Humano', comunidade: 'Highborne',
+    cartas: ['blade-levantar-se', 'blade-nao-foi-suficiente'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+}
+
+teste('Vontade de Ferro marca 1 Armadura e reduz em 1 PV o dano físico', () => {
+  const f = fichaGuardiaoRobusto_();
+  f.recursos.armaduraMarcada = 0;
+  const dano = Math.max(Number(f.defesas.limiarMaior), 1);
+  const antesPv = f.recursos.pontosDeVidaMarcados;
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano, tipoDeDano: 'fisico', reacoes: ['Vontade de Ferro']
+  }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].pvPelaFaixa, 2);
+  igual(r.mudancas[0].pvMarcados, 1);
+  igual(f.recursos.pontosDeVidaMarcados, antesPv + 1);
+  igual(f.recursos.armaduraMarcada, 1);
+  igual(r.mudancas[0].custos.armadura, 1);
+});
+
+teste('Vontade de Ferro pode reduzir dano Menor físico para zero PV', () => {
+  const f = fichaGuardiaoRobusto_();
+  f.recursos.armaduraMarcada = 0;
+  const dano = Math.max(1, Number(f.defesas.limiarMaior) - 1);
+  const antesPv = f.recursos.pontosDeVidaMarcados;
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano, tipoDeDano: 'fisico', reacoes: ['Vontade de Ferro']
+  }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].pvPelaFaixa, 1);
+  igual(r.mudancas[0].pvMarcados, 0);
+  igual(f.recursos.pontosDeVidaMarcados, antesPv);
+  igual(f.recursos.armaduraMarcada, 1);
+});
+
+teste('Vontade de Ferro não se aplica a dano mágico e a recusa é atômica', () => {
+  const f = fichaGuardiaoRobusto_();
+  f.recursos.armaduraMarcada = 0;
+  const dano = Math.max(Number(f.defesas.limiarMaior), 1);
+  const antes = JSON.stringify(f);
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano, tipoDeDano: 'magico', reacoes: ['Vontade de Ferro']
+  }]);
+  igual(r.erros.length, 1);
+  verdade(/não se aplica a dano mágico/.test(r.erros[0]), r.erros[0]);
+  igual(JSON.stringify(f), antes);
+});
+
+teste('sem espaço de Armadura, Vontade de Ferro não deixa o dano passar pela metade', () => {
+  const f = fichaGuardiaoRobusto_();
+  f.recursos.armaduraMarcada = Number(f.defesas.pontuacaoArmadura) || 0;
+  const dano = Math.max(Number(f.defesas.limiarMaior), 1);
+  const antes = JSON.stringify(f);
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano, tipoDeDano: 'fisico', reacoes: ['Vontade de Ferro']
+  }]);
+  igual(r.erros.length, 1);
+  verdade(/Não sobra Ponto de Armadura/.test(r.erros[0]), r.erros[0]);
+  igual(JSON.stringify(f), antes);
+});
+
+teste('outra subclasse de Guardião não pode usar Vontade de Ferro', () => {
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Vingador', classe: 'Guardião', subclasse: 'Vingança',
+    ancestralidade: 'Humano', comunidade: 'Highborne',
+    cartas: ['blade-levantar-se', 'blade-nao-foi-suficiente'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  const dano = Math.max(Number(f.defesas.limiarMaior), 1);
+  const antes = JSON.stringify(f);
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano, tipoDeDano: 'fisico', reacoes: ['Vontade de Ferro']
+  }]);
+  igual(r.erros.length, 1);
+  verdade(/não tem "Vontade de Ferro"/.test(r.erros[0]), r.erros[0]);
+  igual(JSON.stringify(f), antes);
+});
+
 console.log('\nLote 8 — comunidades do Core');
 
 function fichaComunidade_(comunidade, nivel) {

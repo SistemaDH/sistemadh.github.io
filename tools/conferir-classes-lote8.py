@@ -81,4 +81,14 @@ assert cc['maximo'] == {'tipo': 'fixo', 'valor': 1}
 assert cc['zeraEm'] == ['descanso-longo']
 assert cc['exigeCaracteristica'] == 'Carga Arcana'
 
-print('Lote 8 — classes: Bardo, Druida e Feiticeiro fechados.')
+guardiao = next(c for c in classes['classes'] if c['id'] == 'guardiao')
+robusto = next(s for s in guardiao['subclasses'] if s['id'] == 'guardiao-robusto')
+vontade = next(f for f in robusto['cartas']['fundacao']['caracteristicas'] if f['nome'] == 'Vontade de Ferro')
+rd = vontade.get('reacaoDano') or {}
+assert rd.get('momento') == 'depois-dos-limiares'
+assert rd.get('tipos') == ['fisico']
+assert rd.get('custo', {}).get('armadura') == 1
+assert rd.get('efeito', {}).get('reduzPv') == 1
+assert set(rd.get('faixas') or []) == {'menor', 'maior', 'severo', 'massivo'}
+
+print('Lote 8 — classes: Bardo, Druida e Feiticeiro fechados; Guardião/Vontade de Ferro protegida.')
