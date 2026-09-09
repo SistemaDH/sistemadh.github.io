@@ -1,0 +1,85 @@
+name: Lote 8 - Equipamento Defensivo A
+
+on:
+  push:
+    branches: [tmp-lote8-equip-defensivo-a-sol]
+
+permissions:
+  contents: write
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materializar equipamento defensivo A
+        run: |
+          python3 tools/lote8-equip-defensivo-a.py
+          node tools/gerar-44-equipamento.mjs
+          node tools/gerar-4B-descanso.mjs
+          cp backend/4C_Ajustes.gs /tmp/4C_Ajustes.js
+          node --check /tmp/4C_Ajustes.js
+          git diff --check
+
+      - name: Auditar estrutura
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/equipamentos.json',encoding='utf-8'))
+          ach=[]
+          for x in d.get('armas',[])+d.get('armaduras',[]):
+              c=x.get('caracteristica') or {}
+              if c.get('nome') in {'Vitalizante','Égide'}: ach.append((x,c))
+          assert len(ach)==2,len(ach)
+          for x,c in ach:
+              assert c.get('automacao'),x['nome']
+              assert c.get('efeitoEquipamento'),x['nome']
+          PY
+          python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria.md
+          ! grep -Eq '^\| (Vitalizante|Égide) \|' /tmp/auditoria.md
+          grep -q 'efeitoEquipamento' backend/44_Equipamento.gs
+          grep -q 'function aplicarEquipamentoAutomaticoNoDescanso_' backend/4B_Descanso.gs
+          grep -q 'function reducaoMagicaDeEquipamento_' backend/4C_Ajustes.gs
+
+      - name: Testes backend
+        shell: bash
+        run: |
+          set -o pipefail
+          node tools/testes-backend.mjs | tee /tmp/backend.log
+          ! grep -q '✗' /tmp/backend.log
+          tail -n 45 /tmp/backend.log
+
+      - name: Instalar Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install chromium
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados e CSS
+        run: |
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+          git diff --check
+
+      - name: Proteger contra concorrência
+        run: |
+          git fetch origin 'ediçãoclaude'
+          test "$(git rev-parse 'origin/ediçãoclaude')" = 'e7bbb2bc05be4226f3fcc4b2a1d8e1f165d3e897'
+
+      - name: Commitar funcional e limpar temporários
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f --ignore-unmatch tools/lote8-equip-defensivo-a.py
+          git rm -f --ignore-unmatch .github/workflows/lote8-equip-defensivo-a.yml
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          find . -type f -name '*.pyc' -delete
+          git add -A
+          git diff --cached --check
+          git commit -m 'feat: automatizar Vitalizante e Égide [lote8-generated]'
+          git push origin HEAD:tmp-lote8-equip-defensivo-a-sol
