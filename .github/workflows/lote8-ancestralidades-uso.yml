@@ -21,6 +21,7 @@ jobs:
       - name: Materializar habilidades de ancestralidade
         run: |
           python3 tools/lote8-ancestralidades-uso-v2.py
+          python3 tools/lote8-ancestralidades-testes-v3.py
           node tools/gerar-43-origens.mjs
           node tools/gerar-47-contadores.mjs
           node tools/gerar-48-criacao.mjs
