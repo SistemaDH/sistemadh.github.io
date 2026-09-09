@@ -1182,7 +1182,30 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "O app cobra de 1 a 3 Esperanças após o crítico; as opções que afetam o alvo/recursos são confirmadas na mesa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Confirme o sucesso crítico e escolha opções diferentes, uma por Esperança gasta."
+   },
+   "uso": {
+    "custo": {},
+    "entradaQuantidade": {
+     "campo": "esperancasGastas",
+     "rotulo": "Esperanças gastas",
+     "minimo": 1,
+     "maximo": 3,
+     "custoPorUnidade": {
+      "esperanca": 1
+     },
+     "ajuda": "Escolha 1 a 3; cada Esperança corresponde a uma opção diferente."
+    },
+    "rotuloAtivar": "Crítico: gastar Esperanças",
+    "lembrete": "Para cada Esperança, escolha uma opção diferente: limpar 1 PV, limpar 1 Armadura ou fazer o alvo marcar +1 PV."
+   }
   },
   {
    "id": "blade-vitalidade",
@@ -1255,7 +1278,30 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "automatizada",
+    "resumo": "No lugar do Movimento de Morte, o app cobra 1 Esperança, limpa 1 PV e registra 1/descanso longo."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Use somente quando a ficha estiver prestes a fazer um Movimento de Morte."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "efeitoRecurso": {
+     "chave": "pontosDeVidaMarcados",
+     "delta": -1
+    },
+    "marcaUso": {
+     "chave": "uso:carta:blade:endurecido-pela-batalha",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Evitar Movimento de Morte",
+    "lembrete": "1 PV foi limpo no lugar de fazer o Movimento de Morte."
+   }
   },
   {
    "id": "blade-furia-crescente",
@@ -1276,7 +1322,30 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "O app marca 1 ou 2 Estresses; o bônus de dano é +2×Força por uso e a rolagem permanece na mesa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Escolha 1 ou 2 usos antes do ataque; aplique +2×Força por uso à rolagem de dano."
+   },
+   "uso": {
+    "custo": {},
+    "entradaQuantidade": {
+     "campo": "usosNesteAtaque",
+     "rotulo": "Usos neste ataque",
+     "minimo": 1,
+     "maximo": 2,
+     "custoPorUnidade": {
+      "estresse": 1
+     },
+     "ajuda": "Máximo de 2 usos no mesmo ataque."
+    },
+    "rotuloAtivar": "Ativar Fúria Crescente",
+    "lembrete": "Some +2×Força ao dano por uso registrado neste ataque."
+   }
   },
   {
    "id": "blade-golpe-raso",
@@ -1298,7 +1367,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "Após a mesa confirmar a falha do ataque, o app marca 1 Estresse; dano de arma com metade da Proficiência fica na mesa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Use após falhar no ataque e role/aplique dano de arma usando metade da Proficiência."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "rotuloAtivar": "Falha: usar Golpe Raso",
+    "lembrete": "Cause dano de arma usando metade da sua Proficiência; o app não rola dano."
+   }
   },
   {
    "id": "blade-tocado-pela-lamina",
@@ -1320,7 +1404,23 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "automatizada-passiva",
+    "resumo": "Com 4+ cartas Lâmina ativas, publica +2 em ataques e +4 no limiar Severo."
+   },
+   "efeitoDerivado": {
+    "bonusAtaque": 2,
+    "bonusLimiarGrave": 4,
+    "exigeCartasAtivasDominio": {
+     "dominio": "BLADE",
+     "quantidade": 4
+    }
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Os bônus são derivados automaticamente do loadout ativo."
+   }
   },
   {
    "id": "blade-frenesi",
@@ -1343,7 +1443,36 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "automatizada-estado-parcial",
+    "resumo": "O app registra 1/descanso longo e mantém Frenesi; +10 dano e +8 Severo são derivados enquanto ativo."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A mesa encerra quando não houver mais adversários à vista; durante o estado não use Espaços de Armadura."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:blade:frenesi",
+     "maximo": 1
+    },
+    "estado": {
+     "chave": "estado:carta:blade:frenesi",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Em Frenesi",
+     "avisoEncerrar": "Frenesi encerrado."
+    },
+    "rotuloAtivar": "Entrar em Frenesi",
+    "lembrete": "Enquanto ativo: +10 dano, +8 Severo e não use Espaços de Armadura."
+   },
+   "efeitoDerivado": {
+    "bonusDano": 10,
+    "bonusLimiarGrave": 8,
+    "exigeEstado": "estado:carta:blade:frenesi"
+   }
   },
   {
    "id": "blade-grito-de-batalha",
@@ -1368,7 +1497,31 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "automatizada-estado-parcial",
+    "resumo": "O app registra 1/descanso longo e o estado de vantagem; recursos dos aliados são aplicados nas fichas deles."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Aliados que ouvirem limpam 1 Estresse e ganham 1 Esperança. Encerre a vantagem quando alguém falhar com Medo."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:blade:grito-de-batalha",
+     "maximo": 1
+    },
+    "estado": {
+     "chave": "estado:carta:blade:grito-de-batalha",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Grito de Batalha ativo",
+     "avisoEncerrar": "Vantagem de Grito de Batalha encerrada."
+    },
+    "rotuloAtivar": "Emitir Grito de Batalha",
+    "lembrete": "Aliados que ouvirem: limpam 1 Estresse, ganham 1 Esperança e têm vantagem em ataques até uma falha com Medo."
+   }
   },
   {
    "id": "blade-golpe-do-ceifador",
@@ -1391,7 +1544,26 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "O app cobra 1 Esperança e registra 1/descanso longo; a mesa confirma alvos atingíveis e aplica 5 PV ao escolhido."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Faça a jogada de ataque na mesa; o Mestre informa alvos que seriam acertados e você escolhe um para marcar 5 PV."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "marcaUso": {
+     "chave": "uso:carta:blade:golpe-do-ceifador",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Usar Golpe do Ceifador",
+    "lembrete": "Após a jogada, escolha entre os alvos indicados pelo Mestre; o escolhido marca 5 PV."
+   }
   },
   {
    "id": "blade-sangue-e-gloria",
@@ -1414,7 +1586,20 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "Após crítico ou derrota confirmados pela mesa, o app permite registrar o benefício; escolha Esperança ou limpar Estresse."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O gatilho (crítico/derrota) é confirmado na mesa; aplique +1 Esperança ou −1 Estresse na própria trilha."
+   },
+   "uso": {
+    "custo": {},
+    "rotuloAtivar": "Registrar Sangue e Glória",
+    "lembrete": "Após o gatilho, ganhe 1 Esperança OU limpe 1 Estresse usando a própria trilha."
+   }
   },
   {
    "id": "blade-massacre",
@@ -1437,7 +1622,25 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O nome do arquivo está em minúsculas (\"massacre.png\"), diferente do nome impresso na carta (\"MASSACRE\"). O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O nome do arquivo está em minúsculas (\"massacre.png\"), diferente do nome impresso na carta (\"MASSACRE\"). O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "O mínimo de 2 PV em ataque bem-sucedido é publicado como regra passiva; a reação cobra 1 Estresse e deixa a Reação 15 na mesa."
+   },
+   "efeitoDerivado": {
+    "danoMinimoPvEmSucesso": 2
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Em sucesso com arma, o alvo marca no mínimo 2 PV. Na reação opcional, a mesa resolve Reação 15."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "rotuloAtivar": "Reagir ao ataque em aliado",
+    "lembrete": "Force a criatura a fazer Reação (15); em falha, ela marca 1 PV."
+   }
   },
   {
    "id": "blade-monstro-de-batalha",
@@ -1459,7 +1662,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "Após sucesso confirmado, o app marca 4 Estresses; o alvo marca PV igual aos PV atualmente marcados no personagem."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Não role dano; aplique no alvo um número de PV igual aos PV marcados na sua ficha."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 4
+    },
+    "rotuloAtivar": "Sucesso: usar Monstro de Batalha",
+    "lembrete": "Em vez de rolar dano, o alvo marca PV igual aos PV que você tem marcados."
+   }
   },
   {
    "id": "bone-eu-vi-chegando",

@@ -281,12 +281,25 @@ const USOS_CARTAS_DOMINIO = {
   "blade-confusao": {"custo":{},"marcaUso":{"chave":"uso:carta:blade:confusao","maximo":1},"rotuloAtivar":"Evitar ataque com Confusão","lembrete":"Este ataque é evitado; mova-se com segurança para fora do Corpo a Corpo conforme a ficção."},
   "blade-lutador-versatil": {"custo":{"estresse":1},"rotuloAtivar":"Maximizar um dado de dano","lembrete":"Escolha um dos seus dados de dano e use o resultado máximo dele em vez de rolá-lo."},
   "blade-foco-mortal": {"custo":{},"marcaUso":{"chave":"uso:carta:blade:foco-mortal","maximo":1},"estado":{"chave":"estado:carta:blade:foco-mortal","valor":1,"permiteEncerrarManual":true,"rotuloAtivo":"Foco Mortal ativo","avisoEncerrar":"Foco Mortal encerrado."},"rotuloAtivar":"Escolher alvo do Foco Mortal","lembrete":"Contra o alvo escolhido, use +1 Proficiência. Encerre ao atacar outra criatura, derrotar o alvo ou terminar a batalha."},
+  "blade-vantagem-do-campeao": {"custo":{},"entradaQuantidade":{"campo":"esperancasGastas","rotulo":"Esperanças gastas","minimo":1,"maximo":3,"custoPorUnidade":{"esperanca":1},"ajuda":"Escolha 1 a 3; cada Esperança corresponde a uma opção diferente."},"rotuloAtivar":"Crítico: gastar Esperanças","lembrete":"Para cada Esperança, escolha uma opção diferente: limpar 1 PV, limpar 1 Armadura ou fazer o alvo marcar +1 PV."},
+  "blade-endurecido-pela-batalha": {"custo":{"esperanca":1},"efeitoRecurso":{"chave":"pontosDeVidaMarcados","delta":-1},"marcaUso":{"chave":"uso:carta:blade:endurecido-pela-batalha","maximo":1},"rotuloAtivar":"Evitar Movimento de Morte","lembrete":"1 PV foi limpo no lugar de fazer o Movimento de Morte."},
+  "blade-furia-crescente": {"custo":{},"entradaQuantidade":{"campo":"usosNesteAtaque","rotulo":"Usos neste ataque","minimo":1,"maximo":2,"custoPorUnidade":{"estresse":1},"ajuda":"Máximo de 2 usos no mesmo ataque."},"rotuloAtivar":"Ativar Fúria Crescente","lembrete":"Some +2×Força ao dano por uso registrado neste ataque."},
+  "blade-golpe-raso": {"custo":{"estresse":1},"rotuloAtivar":"Falha: usar Golpe Raso","lembrete":"Cause dano de arma usando metade da sua Proficiência; o app não rola dano."},
+  "blade-frenesi": {"custo":{},"marcaUso":{"chave":"uso:carta:blade:frenesi","maximo":1},"estado":{"chave":"estado:carta:blade:frenesi","valor":1,"permiteEncerrarManual":true,"rotuloAtivo":"Em Frenesi","avisoEncerrar":"Frenesi encerrado."},"rotuloAtivar":"Entrar em Frenesi","lembrete":"Enquanto ativo: +10 dano, +8 Severo e não use Espaços de Armadura."},
+  "blade-grito-de-batalha": {"custo":{},"marcaUso":{"chave":"uso:carta:blade:grito-de-batalha","maximo":1},"estado":{"chave":"estado:carta:blade:grito-de-batalha","valor":1,"permiteEncerrarManual":true,"rotuloAtivo":"Grito de Batalha ativo","avisoEncerrar":"Vantagem de Grito de Batalha encerrada."},"rotuloAtivar":"Emitir Grito de Batalha","lembrete":"Aliados que ouvirem: limpam 1 Estresse, ganham 1 Esperança e têm vantagem em ataques até uma falha com Medo."},
+  "blade-golpe-do-ceifador": {"custo":{"esperanca":1},"marcaUso":{"chave":"uso:carta:blade:golpe-do-ceifador","maximo":1},"rotuloAtivar":"Usar Golpe do Ceifador","lembrete":"Após a jogada, escolha entre os alvos indicados pelo Mestre; o escolhido marca 5 PV."},
+  "blade-sangue-e-gloria": {"custo":{},"rotuloAtivar":"Registrar Sangue e Glória","lembrete":"Após o gatilho, ganhe 1 Esperança OU limpe 1 Estresse usando a própria trilha."},
+  "blade-massacre": {"custo":{"estresse":1},"rotuloAtivar":"Reagir ao ataque em aliado","lembrete":"Force a criatura a fazer Reação (15); em falha, ela marca 1 PV."},
+  "blade-monstro-de-batalha": {"custo":{"estresse":4},"rotuloAtivar":"Sucesso: usar Monstro de Batalha","lembrete":"Em vez de rolar dano, o alvo marca PV igual aos PV que você tem marcados."},
 };
 
 /** Efeitos derivados de cartas de domínio ativas. */
 const EFEITOS_DERIVADOS_CARTAS_DOMINIO = {
   "arcana-tocado-pela-arcana": {"bonusConjuracao":1,"exigeCartasAtivasDominio":{"dominio":"ARCANA","quantidade":4}},
   "blade-armadura-fortificada": {"bonusLimiares":2,"exigeArmaduraEquipada":true},
+  "blade-tocado-pela-lamina": {"bonusAtaque":2,"bonusLimiarGrave":4,"exigeCartasAtivasDominio":{"dominio":"BLADE","quantidade":4}},
+  "blade-frenesi": {"bonusDano":10,"bonusLimiarGrave":8,"exigeEstado":"estado:carta:blade:frenesi"},
+  "blade-massacre": {"danoMinimoPvEmSucesso":2},
 };
 
 /**
@@ -451,3 +464,17 @@ function bonusLimiaresDeCartas_(ficha) {
   });
   return total;
 }
+
+
+function requisitoDeEfeitoDerivadoDeCartaVale_(ficha, id, e) {
+  const ativas=(((ficha||{}).cartas||{}).ativas||[]);
+  if (!ativas.some(function(x){return chaveTexto_(x)===chaveTexto_(id);})) return false;
+  const req=e.exigeCartasAtivasDominio||null;
+  if(req){let n=0;for(let i=0;i<ativas.length;i++){const c=acharCarta_(ativas[i]);if(c&&chaveTexto_(c.dominio)===chaveTexto_(req.dominio))n++;}if(n<Math.max(1,Math.trunc(Number(req.quantidade))||1))return false;}
+  if(e.exigeEstado){const v=Math.trunc(Number((((ficha||{}).contadores||{})[e.exigeEstado]||{}).valor))||0;if(v<=0)return false;}
+  return true;
+}
+function bonusAtaqueDeCartas_(ficha){let t=0;if(typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO==='undefined')return 0;Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO).forEach(function(id){const e=EFEITOS_DERIVADOS_CARTAS_DOMINIO[id]||{};if(e.bonusAtaque&&requisitoDeEfeitoDerivadoDeCartaVale_(ficha,id,e))t+=Math.trunc(Number(e.bonusAtaque))||0;});return t;}
+function bonusLimiarGraveDeCartas_(ficha){let t=0;if(typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO==='undefined')return 0;Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO).forEach(function(id){const e=EFEITOS_DERIVADOS_CARTAS_DOMINIO[id]||{};if(e.bonusLimiarGrave&&requisitoDeEfeitoDerivadoDeCartaVale_(ficha,id,e))t+=Math.trunc(Number(e.bonusLimiarGrave))||0;});return t;}
+function bonusDanoDeCartas_(ficha){let t=0;if(typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO==='undefined')return 0;Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO).forEach(function(id){const e=EFEITOS_DERIVADOS_CARTAS_DOMINIO[id]||{};if(e.bonusDano&&requisitoDeEfeitoDerivadoDeCartaVale_(ficha,id,e))t+=Math.trunc(Number(e.bonusDano))||0;});return t;}
+function danoMinimoPvDeCartas_(ficha){let t=0;if(typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO==='undefined')return 0;Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO).forEach(function(id){const e=EFEITOS_DERIVADOS_CARTAS_DOMINIO[id]||{};if(e.danoMinimoPvEmSucesso&&requisitoDeEfeitoDerivadoDeCartaVale_(ficha,id,e))t=Math.max(t,Math.trunc(Number(e.danoMinimoPvEmSucesso))||0);});return t;}

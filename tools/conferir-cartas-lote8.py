@@ -88,3 +88,11 @@ assert por['blade-foco-mortal']['uso']['estado']['chave'] == 'estado:carta:blade
 for chave in ['uso:carta:blade:laco-de-soldado','uso:carta:blade:confusao','uso:carta:blade:foco-mortal','estado:carta:blade:foco-mortal']:
     assert any(x['chave'] == chave for x in cont['contadores']), chave
 print('Lote 8 — Lâmina níveis 1–4 classificados e partes determinísticas conferidas.')
+
+# Lâmina níveis 5–10
+for cid in ['blade-vantagem-do-campeao','blade-endurecido-pela-batalha','blade-furia-crescente','blade-golpe-raso','blade-tocado-pela-lamina','blade-frenesi','blade-grito-de-batalha','blade-golpe-do-ceifador','blade-sangue-e-gloria','blade-massacre','blade-monstro-de-batalha']:
+    assert por[cid].get('automacao'), cid
+assert por['blade-tocado-pela-lamina']['efeitoDerivado']['bonusLimiarGrave']==4
+assert por['blade-frenesi']['efeitoDerivado']['bonusDano']==10
+assert por['blade-monstro-de-batalha']['uso']['custo']=={'estresse':4}
+print('Lote 8 — Lâmina níveis 5–10 classificados e partes determinísticas conferidas; domínio Lâmina fechado.')

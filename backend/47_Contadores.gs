@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 61 cartas e características mandam
+ *  O problema que este arquivo resolve: 67 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -101,6 +101,12 @@ const CONTADORES = {
   "uso:carta:blade:confusao": { origem: "carta-dominio", refId: "blade-confusao", nome: "Confusão", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
   "uso:carta:blade:foco-mortal": { origem: "carta-dominio", refId: "blade-foco-mortal", nome: "Foco Mortal", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
   "estado:carta:blade:foco-mortal": { origem: "carta-dominio", refId: "blade-foco-mortal", nome: "Foco Mortal", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual","fim-da-cena"], recarregaEm: [] },
+  "uso:carta:blade:endurecido-pela-batalha": { origem: "carta-dominio", refId: "blade-endurecido-pela-batalha", nome: "Endurecido pela Batalha", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:carta:blade:frenesi": { origem: "carta-dominio", refId: "blade-frenesi", nome: "Frenesi", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "estado:carta:blade:frenesi": { origem: "carta-dominio", refId: "blade-frenesi", nome: "Frenesi", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual","descanso-longo"], recarregaEm: [] },
+  "uso:carta:blade:grito-de-batalha": { origem: "carta-dominio", refId: "blade-grito-de-batalha", nome: "Grito de Batalha", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "estado:carta:blade:grito-de-batalha": { origem: "carta-dominio", refId: "blade-grito-de-batalha", nome: "Grito de Batalha", rotulo: "vantagem ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual","descanso-longo"], recarregaEm: [] },
+  "uso:carta:blade:golpe-do-ceifador": { origem: "carta-dominio", refId: "blade-golpe-do-ceifador", nome: "Golpe do Ceifador", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -166,6 +172,12 @@ const CONTADOR_ALIASES = {
   "uso:carta:blade:confusao": ["Confusão"],
   "uso:carta:blade:foco-mortal": ["Foco Mortal"],
   "estado:carta:blade:foco-mortal": ["Foco Mortal"],
+  "uso:carta:blade:endurecido-pela-batalha": ["Endurecido pela Batalha"],
+  "uso:carta:blade:frenesi": ["Frenesi"],
+  "estado:carta:blade:frenesi": ["Frenesi"],
+  "uso:carta:blade:grito-de-batalha": ["Grito de Batalha"],
+  "estado:carta:blade:grito-de-batalha": ["Grito de Batalha"],
+  "uso:carta:blade:golpe-do-ceifador": ["Golpe do Ceifador"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

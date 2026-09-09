@@ -1246,6 +1246,110 @@
     "fim-da-cena"
    ],
    "observacao": "Estado condicional; a mesa encerra também ao trocar de alvo ou derrotá-lo."
+  },
+  {
+   "chave": "uso:carta:blade:endurecido-pela-batalha",
+   "origem": "carta-dominio",
+   "refId": "blade-endurecido-pela-batalha",
+   "nome": "Endurecido pela Batalha",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
+  },
+  {
+   "chave": "uso:carta:blade:frenesi",
+   "origem": "carta-dominio",
+   "refId": "blade-frenesi",
+   "nome": "Frenesi",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
+  },
+  {
+   "chave": "estado:carta:blade:frenesi",
+   "origem": "carta-dominio",
+   "refId": "blade-frenesi",
+   "nome": "Frenesi",
+   "rotulo": "ativo",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual",
+    "descanso-longo"
+   ],
+   "observacao": "Ativo até não haver adversários à vista."
+  },
+  {
+   "chave": "uso:carta:blade:grito-de-batalha",
+   "origem": "carta-dominio",
+   "refId": "blade-grito-de-batalha",
+   "nome": "Grito de Batalha",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
+  },
+  {
+   "chave": "estado:carta:blade:grito-de-batalha",
+   "origem": "carta-dominio",
+   "refId": "blade-grito-de-batalha",
+   "nome": "Grito de Batalha",
+   "rotulo": "vantagem ativa",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual",
+    "descanso-longo"
+   ],
+   "observacao": "Encerra quando o usuário ou aliado falhar com Medo."
+  },
+  {
+   "chave": "uso:carta:blade:golpe-do-ceifador",
+   "origem": "carta-dominio",
+   "refId": "blade-golpe-do-ceifador",
+   "nome": "Golpe do Ceifador",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
   }
  ]
 }

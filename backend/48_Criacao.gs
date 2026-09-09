@@ -658,12 +658,19 @@ function derivadosDoPersonagem_(ficha) {
   }
   if (evasao !== null) evasao += (b.evasao || 0) + bonusDaForma + bonusEsquivaLadino + md.evasao;
 
-  const bonusConjuracao = (typeof bonusConjuracaoDeCartas_ === 'function')
-    ? bonusConjuracaoDeCartas_(ficha) : 0;
+  const bonusConjuracao = (typeof bonusConjuracaoDeCartas_ === 'function') ? bonusConjuracaoDeCartas_(ficha) : 0;
+  const bonusAtaque = (typeof bonusAtaqueDeCartas_ === 'function') ? bonusAtaqueDeCartas_(ficha) : 0;
+  const bonusLimiarGraveCarta = (typeof bonusLimiarGraveDeCartas_ === 'function') ? bonusLimiarGraveDeCartas_(ficha) : 0;
+  const bonusDanoCarta = (typeof bonusDanoDeCartas_ === 'function') ? bonusDanoDeCartas_(ficha) : 0;
+  const danoMinimoPvEmSucesso = (typeof danoMinimoPvDeCartas_ === 'function') ? danoMinimoPvDeCartas_(ficha) : 0;
+  if (limiarGrave !== null) limiarGrave += bonusLimiarGraveCarta;
 
   return {
     evasao: evasao,
     bonusConjuracao: bonusConjuracao,
+    bonusAtaque: bonusAtaque,
+    bonusDanoCarta: bonusDanoCarta,
+    danoMinimoPvEmSucesso: danoMinimoPvEmSucesso,
     pontosDeVidaMaximos: pontosDeVidaMaximos,
     estresseMaximo: CRIACAO.estresse + (b.estresseMaximo || 0) + bc.estresseMaximo + md.estresseMaximo,
     esperancaMaxima: CRIACAO.esperancaMaxima,
@@ -827,6 +834,9 @@ function aplicarDerivados_(ficha) {
    * duas coisas: qual vale agora e quais existem.
    */
   ficha.tracoDeConjuracao = d.tracoDeConjuracao;
+  ficha.bonusAtaque = d.bonusAtaque || 0;
+  ficha.bonusDanoCarta = d.bonusDanoCarta || 0;
+  ficha.danoMinimoPvEmSucesso = d.danoMinimoPvEmSucesso || 0;
   ficha.bonusConjuracao = d.bonusConjuracao || 0;
   ficha.formaDeFera = d.formaDeFera;
   ficha.conjuracoesDisponiveis = d.conjuracoesDisponiveis;

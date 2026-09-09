@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 61 contadores: 29 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 67 contadores: 35 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 61 contadores: 29 de carta, 25 de classe/subclasse, 4 de 
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 61);
+  igual(Object.keys(CONTADORES).length, 67);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 29);
+  igual(porOrigem['carta-dominio'], 35);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -8524,3 +8524,16 @@ teste('Não Foi Suficiente permanece rerrolagem manual e Lutador Versátil só c
   igual(r.erros, []); igual(f.recursos.estresseMarcado, 1);
   verdade(String(r.mudancas[0].aviso).includes('resultado máximo'));
 });
+
+
+console.log('\nLote 8 — Lâmina níveis 5–10');
+function fichaBladeAlta_(nivel, cartas, ancestralidade='Humano') {
+ const b=contexto.fichaRapida_({nome:'Blade alta',classe:'Guerreiro',subclasse:'Chamada dos Bravos',ancestralidade,comunidade:'Loreborne',cartas:['blade-levantar-se','blade-nao-foi-suficiente'],experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]});
+ b.identidade.nivel=nivel;b.cartas={ativas:cartas.slice(),cofre:[]};const f=contexto.validarFicha_(b);f.recursos.esperanca=6;f.recursos.estresseMarcado=0;return f;
+}
+teste('Endurecido pela Batalha cobra Esperança, limpa PV e respeita 1/descanso longo',()=>{const f=fichaBladeAlta_(6,['blade-endurecido-pela-batalha','blade-furia-crescente']);f.recursos.pontosDeVidaMarcados=2;let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'blade-endurecido-pela-batalha'}]);igual(r.erros,[]);igual(f.recursos.esperanca,5);igual(f.recursos.pontosDeVidaMarcados,1);verdade(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'blade-endurecido-pela-batalha'}]).erros.length>0);});
+teste('Fúria Crescente permite 1 ou 2 custos e Inabalável intercepta somente cada +1',()=>{const f=fichaBladeAlta_(6,['blade-furia-crescente','blade-endurecido-pela-batalha']);let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'blade-furia-crescente',usosNesteAtaque:2}]);igual(r.erros,[]);igual(f.recursos.estresseMarcado,2);});
+teste('Tocado pela Lâmina exige quatro cartas Lâmina ativas para +2 ataque e +4 Severo',()=>{const f=fichaBladeAlta_(7,['blade-tocado-pela-lamina','blade-golpe-raso','blade-furia-crescente','blade-endurecido-pela-batalha']);const d=contexto.derivadosDoPersonagem_(f);igual(d.bonusAtaque,2);const g=fichaBladeAlta_(7,['blade-tocado-pela-lamina','blade-golpe-raso','blade-furia-crescente']);igual(contexto.derivadosDoPersonagem_(g).bonusAtaque,0);});
+teste('Frenesi guarda estado e publica +10 dano e +8 Severo enquanto ativo',()=>{const f=fichaBladeAlta_(8,['blade-frenesi','blade-grito-de-batalha']);const antes=contexto.derivadosDoPersonagem_(f);igual(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'blade-frenesi'}]).erros,[]);const depois=contexto.derivadosDoPersonagem_(f);igual(depois.bonusDanoCarta,10);igual(depois.limiarGrave,antes.limiarGrave+8);});
+teste('Golpe do Ceifador cobra 1 Esperança e marca uso sem rolar ataque',()=>{const f=fichaBladeAlta_(9,['blade-golpe-do-ceifador','blade-sangue-e-gloria']);const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'blade-golpe-do-ceifador'}]);igual(r.erros,[]);igual(f.recursos.esperanca,5);igual(f.contadores['uso:carta:blade:golpe-do-ceifador'].valor,1);});
+teste('Massacre publica mínimo de 2 PV e Monstro de Batalha cobra exatamente 4 Estresses',()=>{const f=fichaBladeAlta_(10,['blade-massacre','blade-monstro-de-batalha']);igual(contexto.derivadosDoPersonagem_(f).danoMinimoPvEmSucesso,2);const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'blade-monstro-de-batalha'}]);igual(r.erros,[]);igual(f.recursos.estresseMarcado,4);});
