@@ -289,7 +289,27 @@ Validação real: GitHub Actions run `34297905984` — **485/485 backend**, **10
 
 Os transformadores, wrappers, gatilho e workflow temporários usados para materializar este bloco foram removidos após o run verde.
 
-Pendente no próximo subbloco de ancestralidades: reações integradas ao fluxo de dano (**Pele Grossa/Fortitude Aumentada/Escamas**), estados persistentes como **Retrair** e usos que alterem criação/perfil de ataque/alcance. Esses pontos só podem ser marcados como automatizados quando o efeito real estiver ligado ao subsistema correspondente, não apenas quando existir um botão de custo.
+### Diário — Ancestralidades, parte 2: dano recebido, Anão e Drakona
+
+Fontes: livro básico PT-BR, Anão p.53 e Drakona p.55; regra geral de resistência/dano p.99. A errata oficial de 09/09/2025 não altera estas três habilidades.
+
+Implementado e validado no commit funcional `186be3916fd51a9f74d94e2537aa0304fcfdf93b`:
+
+- a ficha ganhou **Aplicar dano recebido**: o jogador informa valor e tipo físico/mágico; o sistema não rola dados;
+- o personagem reutiliza o mesmo resolvedor `pvDoDano_` já usado no encontro, evitando duas interpretações de limiares;
+- **Pele Grossa:** em dano Menor, pode marcar 2 Fadigas em vez de 1 PV;
+- **Fortitude Aumentada:** gasta 3 Esperanças e reduz pela metade somente dano físico, antes dos limiares;
+- **Escamas:** em dano Severo — inclusive quando a regra opcional de dano massivo marcou 4 PV — pode marcar 1 Fadiga para perder 1 PV a menos;
+- custos e dano são uma única mutação: recurso insuficiente ou reação incompatível recusa tudo sem tocar na ficha;
+- o servidor confere posse real da característica, inclusive em ancestralidade mista, e não aceita spoof pelo nome enviado pelo navegador;
+- dano que marca o último PV preserva o mesmo gatilho automático de movimento de morte;
+- o modal mostra apenas reações que a ficha realmente possui e deixa a escolha opcional com a mesa.
+
+Validação real: GitHub Actions run `34305363724` — **496/496 backend**, **102/102 E2E**, **14 geradores consistentes**, **CSS limpo** e proteção de concorrência aprovada. O E2E abre o modal na ficha Anã, confirma as duas reações, aplica dano real pelo servidor e devolve a ficha ao estado anterior.
+
+O primeiro run (`34305062404`) já tinha 496/496 backend, 102/102 E2E e 14 geradores, mas foi corretamente bloqueado pelo conferidor de CSS por uma classe sem regra. A classe desnecessária foi removida; não foi criado CSS vazio apenas para satisfazer o teste.
+
+Próximo subbloco: **Retração (Galapa)** integrada a este mesmo fluxo de dano; depois Asas, criação/sessão/descanso e perfis de ataque das ancestralidades restantes.
 ### Estado atual do Lote 8
 
 Auditoria e implementação em andamento. Nenhum deploy/merge do Lote 8 foi feito. Não alterar o pin da `engine-api` até o lote estar revisado e testado.
