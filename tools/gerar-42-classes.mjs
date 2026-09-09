@@ -268,6 +268,33 @@ for (const c of dados.classes) {
   }
 }
 /*
+ * PROTEÇÕES EM ALIADO que alteram DUAS fichas na mesma regra.
+ *
+ * São diferentes de Maestro: não são um editor de recurso da ficha alheia.
+ * O payload só escolhe a característica e o aliado; custo, condição e efeito
+ * vêm deste mapa gerado do livro e são validados pelo servidor.
+ */
+const protecoesDeAliado = {};
+for (const c of dados.classes) {
+  const anotaProtecao = (f, origem, subclasse) => {
+    if (!f || !f.protecaoAliado) return;
+    if (protecoesDeAliado[f.nome]) throw new Error(`proteção em aliado ambígua para ${f.nome}`);
+    protecoesDeAliado[f.nome] = Object.assign({
+      classe: c.id, origem, subclasse: subclasse || null
+    }, f.protecaoAliado);
+  };
+  anotaProtecao(c.caracteristicaEsperanca, 'esperança', null);
+  for (const f of c.caracteristicasDeClasse || []) anotaProtecao(f, 'classe', null);
+  for (const s of c.subclasses || []) {
+    for (const qual of ['fundacao', 'especializacao', 'maestria']) {
+      for (const f of (((s.cartas || {})[qual] || {}).caracteristicas || [])) {
+        anotaProtecao(f, 'subclasse', s.id);
+      }
+    }
+  }
+}
+
+/*
  * ⚠ O NOME É LONGO POR NECESSIDADE. HABILIDADES_COM_CUSTO já existe em
  * 4F_Bestiario.gs e quer dizer outra coisa: as habilidades de ADVERSÁRIO que
  * custam Medo. Em Apps Script tudo mora no mesmo escopo global — uma segunda
@@ -287,6 +314,22 @@ function reacaoDeDanoDeClasse_(nome) {
   for (let i = 0; i < nomes.length; i++) {
     if (chaveTexto_(nomes[i]) === alvo) {
       return Object.assign({ nome: nomes[i] }, REACOES_DE_DANO_DE_CLASSE[nomes[i]]);
+    }
+  }
+  return null;
+}
+`);
+
+L.push('/** Proteções de classe/subclasse que alteram a ficha do Guardião e a de um aliado juntas. */');
+L.push(`const PROTECOES_DE_ALIADO = ${JSON.stringify(protecoesDeAliado, null, 2)};`);
+L.push(`
+/** Acha uma proteção em aliado pelo nome canônico/normalizado. */
+function protecaoEmAliado_(nome) {
+  const alvo = chaveTexto_(nome);
+  const nomes = Object.keys(PROTECOES_DE_ALIADO);
+  for (let i = 0; i < nomes.length; i++) {
+    if (chaveTexto_(nomes[i]) === alvo) {
+      return Object.assign({ nome: nomes[i] }, PROTECOES_DE_ALIADO[nomes[i]]);
     }
   }
   return null;

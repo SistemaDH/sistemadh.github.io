@@ -307,6 +307,22 @@ export const acoes = {
     return api.usarHabilidadeEmAliado(estado.token, id, nome, aliadoId, opcao);
   },
 
+  /** Proteção determinística que altera a ficha aberta e a de um aliado. */
+  usarProtecaoEmAliado(id, nome, aliadoId, pedido = {}) {
+    marcarPendente(id, 1);
+    return enfileirar(id, async () => {
+      try {
+        const dados = await api.usarProtecaoEmAliado(estado.token, id, nome, aliadoId, pedido);
+        if (dados.origem && estado.personagemAberto && estado.personagemAberto.id === id) {
+          definir({ personagemAberto: dados.origem });
+        }
+        return dados;
+      } finally {
+        marcarPendente(id, -1);
+      }
+    });
+  },
+
   /** As outras fichas da mesa — quem pode receber a cura de um movimento. */
   aliadosDaMesa(id) {
     return api.aliadosDaMesa(estado.token, id);

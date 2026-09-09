@@ -1113,6 +1113,15 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * Dano recebido: a mesa informa o número que rolou; o servidor faz a conta.
    * As reações são caixas de escolha porque todas dizem "pode".
    */
+  function reacoesDeDanoDaFicha_(ficha) {
+    return [
+      ['Pele Grossa', 'Dano Menor: marque 2 Estresses em vez de 1 PV.'],
+      ['Fortitude Aumentada', 'Dano físico: gaste 3 Esperanças para reduzi-lo à metade antes dos limiares.'],
+      ['Escamas', 'Dano Severo: marque 1 Estresse para marcar 1 PV a menos.'],
+      ['Vontade de Ferro', 'Dano físico: marque 1 Ponto de Armadura adicional para reduzir a severidade em um limiar.']
+    ].filter(([nome]) => temCaracteristica_(ficha, nome));
+  }
+
   function abrirDanoRecebido(ficha) {
     const dano = el('input', semCorretor({
       type: 'number', class: 'campo__entrada', min: 1, step: 1,
@@ -1123,12 +1132,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       el('option', { value: 'magico', texto: 'Mágico' })
     ]);
 
-    const defs = [
-      ['Pele Grossa', 'Dano Menor: marque 2 Fadigas em vez de 1 PV.'],
-      ['Fortitude Aumentada', 'Dano físico: gaste 3 Esperanças para reduzi-lo à metade antes dos limiares.'],
-      ['Escamas', 'Dano Severo: marque 1 Fadiga para marcar 1 PV a menos.'],
-      ['Vontade de Ferro', 'Dano físico: marque 1 Ponto de Armadura adicional para reduzir a severidade em um limiar.']
-    ].filter(([nome]) => temCaracteristica_(ficha, nome));
+    const defs = reacoesDeDanoDaFicha_(ficha);
     const escolhas = defs.map(([nome, texto]) => {
       const caixa = el('input', { type: 'checkbox' });
       return { nome, caixa, linha: el('label', { class: 'criacao__alternador' }, [
@@ -1307,6 +1311,111 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         });
       }
     }, uso.rotuloAtivar || `Aplicar ${nome} no aliado`);
+  }
+
+  function botaoDeProtecaoEmAliado(nome, ficha) {
+    const regra = catalogo.protecaoEmAliadoDaCaracteristica(nome);
+    if (!regra) return null;
+    return el('button', {
+      type: 'button', class: 'btn btn--fantasma btn--pequeno',
+      onClick: async () => {
+        let lista;
+        try { lista = (await acoes.aliadosDaMesa(p.id)).aliados || []; }
+        catch (e) { avisarErro(mensagemDoErro(e)); return; }
+        if (!lista.length) { avisarErro('Não há outra ficha na mesa para proteger.'); return; }
+
+        const aliado = el('select', { class: 'campo__entrada', 'aria-label': 'Aliado protegido' },
+          lista.map((a) => el('option', { value: a.id }, `${a.nome}${a.donoNome ? ' · ' + a.donoNome : ''}`)));
+        const alcance = el('input', { type: 'checkbox' });
+        const campos = [
+          regra.lembrete ? el('p', { class: 'texto-sm texto-fraco', texto: regra.lembrete }) : null,
+          el('label', { class: 'campo' }, [el('span', { class: 'campo__rotulo', texto: 'Aliado' }), aliado]),
+          el('label', { class: 'criacao__alternador' }, [
+            alcance,
+            el('span', { texto: `Confirmo que o aliado está em alcance ${regra.alcance}.` })
+          ])
+        ].filter(Boolean);
+
+        let dano = null, tipo = null, reacoes = [];
+        if (regra.tipo === 'interceptar-dano') {
+          dano = el('input', semCorretor({
+            type: 'number', class: 'campo__entrada', min: 1, step: 1,
+            inputmode: 'numeric', placeholder: 'ex.: 17'
+          }));
+          tipo = el('select', { class: 'campo__entrada' }, [
+            el('option', { value: 'fisico', texto: 'Físico' }),
+            el('option', { value: 'magico', texto: 'Mágico' })
+          ]);
+          campos.push(
+            el('label', { class: 'campo' }, [el('span', { class: 'campo__rotulo', texto: 'Dano que o aliado receberia' }), dano]),
+            el('label', { class: 'campo' }, [el('span', { class: 'campo__rotulo', texto: 'Tipo de dano' }), tipo])
+          );
+          reacoes = reacoesDeDanoDaFicha_(ficha).map(([nomeReacao, texto]) => {
+            const caixa = el('input', { type: 'checkbox' });
+            return { nome: nomeReacao, caixa, linha: el('label', { class: 'criacao__alternador' }, [
+              caixa, el('span', { texto: `${nomeReacao} — ${texto}` })
+            ]) };
+          });
+          if (reacoes.length) campos.push(el('div', { class: 'pilha' }, [
+            el('strong', { texto: 'Reações do Guardião ao dano interceptado' }),
+            ...reacoes.map((x) => x.linha)
+          ]));
+        }
+
+        const corpo = el('div', { class: 'pilha' }, campos);
+        const aplicar = el('button', {
+          type: 'button', class: 'btn',
+          onClick: async () => {
+            if (!alcance.checked) {
+              avisarErro(`Confirme o alcance ${regra.alcance} antes de aplicar.`); return;
+            }
+            const pedido = {
+              alcanceConfirmado: true,
+              versao: p.versao,
+              reacoes: reacoes.filter((x) => x.caixa.checked).map((x) => x.nome)
+            };
+            if (regra.tipo === 'interceptar-dano') {
+              const n = Math.trunc(Number(dano.value));
+              if (!n || n < 1) { avisarErro('Informe o dano que o aliado receberia.'); return; }
+              pedido.dano = n;
+              pedido.tipoDeDano = tipo.value;
+            }
+
+            const executar = async () => {
+              const r = await acoes.usarProtecaoEmAliado(p.id, nome, aliado.value, pedido);
+              const pend = r.pendenciaRolagem || (r.resultado && r.resultado.pendenciaRolagem);
+              if (pend) {
+                if (pend.tipo !== 'inabalavel') {
+                  throw new Error(pend.mensagem || 'Há uma rolagem manual pendente nesta proteção.');
+                }
+                const valor = await pedirResultadoInabalavel(pend);
+                if (valor === null) return null;
+                pedido[pend.campoProtecao || 'dadoInabalavel'] = valor;
+                return executar();
+              }
+              if (r.origem) p = r.origem;
+              modal.fechar();
+              desenhar();
+              avisarSucesso((r.resultado && r.resultado.aviso) || `${nome} aplicado.`);
+              return r;
+            };
+
+            try { await travarBotao(aplicar, executar()); }
+            catch (e) { avisarErro(mensagemDoErro(e) || String(e.message || e)); }
+          }
+        }, regra.tipo === 'interceptar-dano' ? 'Sofrer o dano no lugar' : 'Reduzir 1 PV do dano');
+
+        const modal = abrirModal({
+          titulo: nome,
+          conteudo: corpo,
+          acoes: [
+            el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar() }, 'Cancelar'),
+            aplicar
+          ]
+        });
+        if (dano) setTimeout(() => dano.focus(), 0);
+      }
+    }, regra.rotuloAtivar || `Proteger aliado com ${nome}`);
   }
 
   function botaoDeHabilidade(nome, ficha) {
@@ -2393,6 +2502,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
             // Marca da Presa/Nêmesis usam a própria ficha; Maestro altera um aliado.
             botaoDeHabilidade(c.nome, ficha),
             botaoDeHabilidadeEmAliado(c.nome),
+            botaoDeProtecaoEmAliado(c.nome, ficha),
             c.origem ? el('span', { class: 'selo', texto: c.origem }) : null
           ]);
         }))));
@@ -4191,19 +4301,23 @@ export async function carregarCatalogo() {
    */
   const usosComCusto = new Map();
   const usosEmAliado = new Map();
+  const protecoesEmAliado = new Map();
   const anotaUso = (f) => { if (f && f.uso) usosComCusto.set(dados.chave(f.nome), f.uso); };
   const anotaUsoEmAliado = (f) => {
     if (f && f.usoEmAliado) usosEmAliado.set(dados.chave(f.nome), f.usoEmAliado);
   };
+  const anotaProtecaoEmAliado = (f) => {
+    if (f && f.protecaoAliado) protecoesEmAliado.set(dados.chave(f.nome), f.protecaoAliado);
+  };
   (anc.ancestralidades || []).forEach((a) => (a.caracteristicas || []).forEach(anotaUso));
   (com.comunidades || []).forEach((c) => anotaUso(c.caracteristica));
   (classes.classes || []).forEach((c) => {
-    anotaUso(c.caracteristicaEsperanca); anotaUsoEmAliado(c.caracteristicaEsperanca);
-    (c.caracteristicasDeClasse || []).forEach((f) => { anotaUso(f); anotaUsoEmAliado(f); });
+    anotaUso(c.caracteristicaEsperanca); anotaUsoEmAliado(c.caracteristicaEsperanca); anotaProtecaoEmAliado(c.caracteristicaEsperanca);
+    (c.caracteristicasDeClasse || []).forEach((f) => { anotaUso(f); anotaUsoEmAliado(f); anotaProtecaoEmAliado(f); });
     (c.subclasses || []).forEach((sub) =>
       Object.keys(sub.cartas || {}).forEach((qual) =>
         ((sub.cartas[qual] || {}).caracteristicas || []).forEach((f) => {
-          anotaUso(f); anotaUsoEmAliado(f);
+          anotaUso(f); anotaUsoEmAliado(f); anotaProtecaoEmAliado(f);
         })));
   });
 
@@ -4440,6 +4554,8 @@ export async function carregarCatalogo() {
     usoDaCaracteristica: (nome) => usosComCusto.get(dados.chave(nome)) || null,
     /** Efeito que esta característica pode aplicar em outra ficha. */
     usoEmAliadoDaCaracteristica: (nome) => usosEmAliado.get(dados.chave(nome)) || null,
+    /** Proteção fechada que altera a ficha desta personagem e a de um aliado. */
+    protecaoEmAliadoDaCaracteristica: (nome) => protecoesEmAliado.get(dados.chave(nome)) || null,
     contadorPorChave: (chave) => porChaveContador.get(dados.chave(chave)) || null,
     maximoDoContador: (chave, ficha) => {
       const def = porChaveContador.get(dados.chave(chave));

@@ -91,4 +91,21 @@ assert rd.get('custo', {}).get('armadura') == 1
 assert rd.get('efeito', {}).get('reduzPv') == 1
 assert set(rd.get('faixas') or []) == {'menor', 'maior', 'severo', 'massivo'}
 
-print('Lote 8 — classes: Bardo, Druida e Feiticeiro fechados; Guardião/Vontade de Ferro protegida.')
+parceiros = next(f for f in robusto['cartas']['especializacao']['caracteristicas'] if f['nome'] == 'Parceiros de Armas')
+pa = parceiros.get('protecaoAliado') or {}
+assert pa.get('tipo') == 'reduzir-pv-recebido'
+assert pa.get('alcance') == 'Muito Próximo'
+assert pa.get('custo', {}).get('armadura') == 1
+assert pa.get('efeito', {}).get('reduzPvMarcado') == 1
+assert pa.get('exigeConfirmacaoDeAlcance') is True
+
+protetor = next(f for f in robusto['cartas']['maestria']['caracteristicas'] if f['nome'] == 'Protetor Leal')
+pl = protetor.get('protecaoAliado') or {}
+assert pl.get('tipo') == 'interceptar-dano'
+assert pl.get('alcance') == 'Próximo'
+assert pl.get('custo', {}).get('estresse') == 1
+assert pl.get('condicaoAlvo', {}).get('pontosDeVidaNaoMarcadosMaximo') == 2
+assert pl.get('efeito', {}).get('origemSofreDanoNoLugar') is True
+assert pl.get('exigeConfirmacaoDeAlcance') is True
+
+print('Lote 8 — classes: Bardo, Druida e Feiticeiro fechados; Guardião Robusto com Vontade de Ferro e proteções em aliado protegidas.')

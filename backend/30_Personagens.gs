@@ -290,6 +290,97 @@ function mutarPersonagem_(jogador, id, versaoEsperada, fn) {
 }
 
 /**
+ * Muta a ficha do jogador e UMA outra ficha dentro da mesma trava.
+ *
+ * Este é o caminho para regras que pertencem a um personagem mas têm efeito
+ * determinístico em outro (ex.: as proteções do Guardião). As duas fichas são
+ * clonadas, a regra roda e AS DUAS passam por validarFicha_ antes de qualquer
+ * atualizarLinha_. Assim um erro no segundo lado não deixa metade aplicada.
+ *
+ * ⚠ A ficha alheia NÃO recebe payload de edição. O callback é código interno
+ * do motor; a API só expõe ações fechadas por catálogo.
+ */
+function mutarPersonagemEOutro_(jogador, origemId, aliadoId, versaoEsperada, fn) {
+  return comTrava_(function () {
+    if (String(origemId || '') === String(aliadoId || '')) {
+      throw erroApi_(ERRO.DADOS_INVALIDOS, 'Escolha outra ficha como aliado.');
+    }
+    const linhaOrigem = acharPersonagem_(origemId);
+    const linhaAliado = acharPersonagem_(aliadoId);
+    if (!linhaOrigem || String(linhaOrigem.excluido).toUpperCase() === 'TRUE') {
+      throw erroApi_(ERRO.NAO_ENCONTRADO, 'Personagem de origem não encontrado.');
+    }
+    if (!linhaAliado || String(linhaAliado.excluido).toUpperCase() === 'TRUE') {
+      throw erroApi_(ERRO.NAO_ENCONTRADO, 'Ficha do aliado não encontrada.');
+    }
+    if (!podeAcessar_(jogador, linhaOrigem)) {
+      throw erroApi_(ERRO.SEM_PERMISSAO, 'Essa ficha de origem não é sua.');
+    }
+
+    const versaoOrigem = Number(linhaOrigem.versao) || 1;
+    if (versaoEsperada !== undefined && versaoEsperada !== null &&
+        Number(versaoEsperada) !== versaoOrigem) {
+      throw erroApi_(ERRO.CONFLITO,
+        'Essa ficha foi alterada em outro lugar. Recarregue antes de proteger o aliado.',
+        { versaoAtual: versaoOrigem });
+    }
+
+    const origemAtual = personagemDaLinha_(linhaOrigem, true);
+    const aliadoAtual = personagemDaLinha_(linhaAliado, true);
+    const fichaOrigem = JSON.parse(JSON.stringify(origemAtual.ficha || {}));
+    const fichaAliado = JSON.parse(JSON.stringify(aliadoAtual.ficha || {}));
+    const r = fn(fichaOrigem, fichaAliado, origemAtual, aliadoAtual) || {};
+
+    if (r.naoGravar === true) {
+      return {
+        origem: origemAtual, aliado: aliadoAtual,
+        extra: r.extra === undefined ? null : r.extra
+      };
+    }
+
+    const validadaOrigem = validarFicha_(r.fichaOrigem || fichaOrigem);
+    const validadaAliado = validarFicha_(r.fichaAliado || fichaAliado);
+    const jsonOrigem = JSON.stringify(validadaOrigem);
+    const jsonAliado = JSON.stringify(validadaAliado);
+    if (jsonOrigem.length > LIMITE_DADOS_CHARS || jsonAliado.length > LIMITE_DADOS_CHARS) {
+      throw erroApi_(ERRO.DADOS_INVALIDOS, 'Uma das fichas ficou grande demais para uma célula da planilha.');
+    }
+
+    const preparar = function (linha, ficha, versao) {
+      const espelho = espelhoDaFicha_(ficha);
+      return {
+        nome: espelho.nome,
+        classe: espelho.classe,
+        subclasse: espelho.subclasse,
+        ancestralidade: espelho.ancestralidade,
+        comunidade: espelho.comunidade,
+        nivel: espelho.nivel,
+        versao: versao + 1,
+        schema: SCHEMA_FICHA,
+        atualizadoEm: agoraIso_(),
+        dados: JSON.stringify(ficha)
+      };
+    };
+
+    const upOrigem = preparar(linhaOrigem, validadaOrigem, versaoOrigem);
+    const upAliado = preparar(linhaAliado, validadaAliado, Number(linhaAliado.versao) || 1);
+    // No motor Supabase, estas duas alterações viram uma única chamada
+    // apply_engine_mutations. No Apps Script de compatibilidade permanecem sob
+    // a mesma trava e só chegam aqui depois das duas validações.
+    atualizarLinha_(ABAS.PERSONAGENS, linhaOrigem._linha, upOrigem);
+    atualizarLinha_(ABAS.PERSONAGENS, linhaAliado._linha, upAliado);
+    registrarLog_(jogador, r.evento || 'personagem-e-aliado-ajustados',
+      (origemAtual.nome || origemId) + ' → ' + (aliadoAtual.nome || aliadoId));
+
+    return {
+      origem: personagemDaLinha_(Object.assign({}, linhaOrigem, upOrigem), true),
+      aliado: personagemDaLinha_(Object.assign({}, linhaAliado, upAliado), true),
+      extra: r.extra === undefined ? null : r.extra
+    };
+  });
+}
+
+/**
  * Altera a ficha de OUTRO personagem, SEM tomar a trava.
  *
  * ⚠ Só pode ser chamada de DENTRO de um comTrava_ que já está aberto. É o caso

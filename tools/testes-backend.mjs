@@ -5775,6 +5775,127 @@ teste('outra subclasse de Guardião não pode usar Vontade de Ferro', () => {
   igual(JSON.stringify(f), antes);
 });
 
+
+console.log('\nLote 8 — Guardião: proteções em aliado');
+
+function guardiaoRobustoParaProtecao_(cartasSub, ancestralidade = 'Humano') {
+  const f = fichaAncestral_(ancestralidade);
+  f.identidade.classe = 'Guardião';
+  f.identidade.subclasse = 'Robusto';
+  f.subclasseCartas = cartasSub.slice();
+  contexto.aplicarDerivados_(f);
+  // A fixture original pode estar sem armadura; estas regras precisam de uma trilha real.
+  f.defesas.pontuacaoArmadura = Math.max(3, Number(f.defesas.pontuacaoArmadura) || 0);
+  f.recursos.armaduraMarcada = Math.max(0, Number(f.recursos.armaduraMarcada) || 0);
+  return f;
+}
+
+function aliadoParaProtecao_() {
+  const f = fichaAncestral_('Humano');
+  f.recursos.pontosDeVidaMarcados = Math.min(2, Math.max(1, Number(f.recursos.pontosDeVidaMaximos) - 1));
+  return f;
+}
+
+teste('Parceiros de Armas marca 1 Armadura e devolve exatamente 1 PV recém-marcado ao aliado', () => {
+  const origem = guardiaoRobustoParaProtecao_(['fundacao', 'especializacao']);
+  const aliado = aliadoParaProtecao_();
+  const armAntes = origem.recursos.armaduraMarcada;
+  const pvAntes = aliado.recursos.pontosDeVidaMarcados;
+  const r = contexto.aplicarProtecaoEmAliado_(origem, aliado, 'Parceiros de Armas', { alcanceConfirmado: true });
+  igual(r.erro, undefined, JSON.stringify(r));
+  igual(origem.recursos.armaduraMarcada, armAntes + 1);
+  igual(aliado.recursos.pontosDeVidaMarcados, pvAntes - 1);
+  verdade(/1 Ponto de Armadura/.test(r.aviso || ''), JSON.stringify(r));
+});
+
+teste('Parceiros de Armas exige alcance, Armadura livre, PV marcado e a especialização real', () => {
+  const aliado = aliadoParaProtecao_();
+  let origem = guardiaoRobustoParaProtecao_(['fundacao', 'especializacao']);
+  const antes = JSON.stringify([origem, aliado]);
+  verdade(contexto.aplicarProtecaoEmAliado_(origem, aliado, 'Parceiros de Armas', {}).erro);
+  igual(JSON.stringify([origem, aliado]), antes, 'sem confirmação nada muda');
+
+  origem = guardiaoRobustoParaProtecao_(['fundacao', 'especializacao']);
+  origem.recursos.armaduraMarcada = origem.defesas.pontuacaoArmadura;
+  const pv = aliado.recursos.pontosDeVidaMarcados;
+  verdade(/Armadura/.test(contexto.aplicarProtecaoEmAliado_(origem, aliado, 'Parceiros de Armas', { alcanceConfirmado: true }).erro));
+  igual(aliado.recursos.pontosDeVidaMarcados, pv);
+
+  origem = guardiaoRobustoParaProtecao_(['fundacao']);
+  verdade(/não tem/.test(contexto.aplicarProtecaoEmAliado_(origem, aliado, 'Parceiros de Armas', { alcanceConfirmado: true }).erro));
+
+  origem = guardiaoRobustoParaProtecao_(['fundacao', 'especializacao']);
+  aliado.recursos.pontosDeVidaMarcados = 0;
+  verdade(/não tem Ponto de Vida/.test(contexto.aplicarProtecaoEmAliado_(origem, aliado, 'Parceiros de Armas', { alcanceConfirmado: true }).erro));
+});
+
+teste('Protetor Leal pede o d6 de Inabalável antes de alterar qualquer uma das duas fichas', () => {
+  const origem = guardiaoRobustoParaProtecao_(['fundacao', 'especializacao', 'maestria'], 'Firbolg');
+  const aliado = aliadoParaProtecao_();
+  aliado.recursos.pontosDeVidaMarcados = Math.max(0, aliado.recursos.pontosDeVidaMaximos - 2);
+  const antesOrigem = JSON.stringify(origem);
+  const antesAliado = JSON.stringify(aliado);
+  const dano = Math.max(1, Number(origem.defesas.limiarMaior));
+  const r = contexto.aplicarProtecaoEmAliado_(origem, aliado, 'Protetor Leal', {
+    alcanceConfirmado: true, dano, tipoDeDano: 'fisico'
+  });
+  verdade(r.pendenciaRolagem && r.pendenciaRolagem.tipo === 'inabalavel', JSON.stringify(r));
+  igual(r.pendenciaRolagem.campoProtecao, 'dadoInabalavel');
+  igual(JSON.stringify(origem), antesOrigem);
+  igual(JSON.stringify(aliado), antesAliado);
+});
+
+teste('Protetor Leal com 6 no Inabalável evita o Estresse, preserva o aliado e põe o dano no Guardião', () => {
+  const origem = guardiaoRobustoParaProtecao_(['fundacao', 'especializacao', 'maestria'], 'Firbolg');
+  const aliado = aliadoParaProtecao_();
+  aliado.recursos.pontosDeVidaMarcados = Math.max(0, aliado.recursos.pontosDeVidaMaximos - 2);
+  const pvAliado = aliado.recursos.pontosDeVidaMarcados;
+  const dano = Math.max(1, Number(origem.defesas.limiarMaior));
+  const r = contexto.aplicarProtecaoEmAliado_(origem, aliado, 'Protetor Leal', {
+    alcanceConfirmado: true, dano, tipoDeDano: 'fisico', dadoInabalavel: 6
+  });
+  igual(r.erro, undefined, JSON.stringify(r));
+  igual(origem.recursos.estresseMarcado, 0, 'Inabalável evitou o custo de 1 Estresse');
+  verdade(origem.recursos.pontosDeVidaMarcados > 0, 'o Guardião deveria receber o dano');
+  igual(aliado.recursos.pontosDeVidaMarcados, pvAliado, 'o aliado não sofre o dano interceptado');
+});
+
+teste('Protetor Leal só aceita aliado com 2 PV livres ou menos e recusa sem Estresse disponível', () => {
+  let origem = guardiaoRobustoParaProtecao_(['fundacao', 'especializacao', 'maestria']);
+  const aliado = aliadoParaProtecao_();
+  aliado.recursos.pontosDeVidaMarcados = Math.max(0, aliado.recursos.pontosDeVidaMaximos - 3);
+  const antes = JSON.stringify(origem);
+  let r = contexto.aplicarProtecaoEmAliado_(origem, aliado, 'Protetor Leal', {
+    alcanceConfirmado: true, dano: 5, tipoDeDano: 'fisico'
+  });
+  verdade(/2 ou menos/.test(r.erro || ''), JSON.stringify(r));
+  igual(JSON.stringify(origem), antes);
+
+  aliado.recursos.pontosDeVidaMarcados = Math.max(0, aliado.recursos.pontosDeVidaMaximos - 2);
+  origem = guardiaoRobustoParaProtecao_(['fundacao', 'especializacao', 'maestria']);
+  origem.recursos.estresseMarcado = origem.recursos.estresseMaximo;
+  r = contexto.aplicarProtecaoEmAliado_(origem, aliado, 'Protetor Leal', {
+    alcanceConfirmado: true, dano: 5, tipoDeDano: 'fisico'
+  });
+  verdade(/Não sobra Estresse/.test(r.erro || ''), JSON.stringify(r));
+});
+
+teste('Protetor Leal pode combinar Vontade de Ferro no dano que o Guardião interceptou', () => {
+  const origem = guardiaoRobustoParaProtecao_(['fundacao', 'especializacao', 'maestria'], 'Firbolg');
+  const aliado = aliadoParaProtecao_();
+  aliado.recursos.pontosDeVidaMarcados = Math.max(0, aliado.recursos.pontosDeVidaMaximos - 2);
+  const dano = Math.max(1, Number(origem.defesas.limiarGrave));
+  const r = contexto.aplicarProtecaoEmAliado_(origem, aliado, 'Protetor Leal', {
+    alcanceConfirmado: true, dano, tipoDeDano: 'fisico', dadoInabalavel: 5,
+    reacoes: ['Vontade de Ferro']
+  });
+  igual(r.erro, undefined, JSON.stringify(r));
+  igual(origem.recursos.estresseMarcado, 1);
+  igual(origem.recursos.armaduraMarcada, 1);
+  const danoMudanca = r.origem.mudancas.find((m) => m.tipo === 'dano');
+  igual(danoMudanca.pvMarcados, Math.max(0, danoMudanca.pvPelaFaixa - 1));
+});
+
 console.log('\nLote 8 — comunidades do Core');
 
 function fichaComunidade_(comunidade, nivel) {

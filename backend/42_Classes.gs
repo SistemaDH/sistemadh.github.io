@@ -212,6 +212,59 @@ function reacaoDeDanoDeClasse_(nome) {
   return null;
 }
 
+/** Proteções de classe/subclasse que alteram a ficha do Guardião e a de um aliado juntas. */
+const PROTECOES_DE_ALIADO = {
+  "Parceiros de Armas": {
+    "classe": "guardiao",
+    "origem": "subclasse",
+    "subclasse": "guardiao-robusto",
+    "tipo": "reduzir-pv-recebido",
+    "alcance": "Muito Próximo",
+    "momento": "imediatamente-apos-dano",
+    "custo": {
+      "armadura": 1
+    },
+    "efeito": {
+      "reduzPvMarcado": 1
+    },
+    "exigeConfirmacaoDeAlcance": true,
+    "rotuloAtivar": "Proteger aliado com Parceiros de Armas",
+    "lembrete": "Use imediatamente após o aliado sofrer dano e antes de resolver um movimento de morte. O app não decide posição: confirme na mesa que ele está em alcance Muito Próximo."
+  },
+  "Protetor Leal": {
+    "classe": "guardiao",
+    "origem": "subclasse",
+    "subclasse": "guardiao-robusto",
+    "tipo": "interceptar-dano",
+    "alcance": "Próximo",
+    "momento": "antes-do-aliado-sofrer-dano",
+    "custo": {
+      "estresse": 1
+    },
+    "condicaoAlvo": {
+      "pontosDeVidaNaoMarcadosMaximo": 2
+    },
+    "efeito": {
+      "origemSofreDanoNoLugar": true
+    },
+    "exigeConfirmacaoDeAlcance": true,
+    "rotuloAtivar": "Interpor-se com Protetor Leal",
+    "lembrete": "Informe o dano que o aliado receberia. O Guardião marca 1 Estresse, corre até ele e sofre esse dano no lugar. A posição é confirmada pela mesa; nenhum dado é rolado pelo app."
+  }
+};
+
+/** Acha uma proteção em aliado pelo nome canônico/normalizado. */
+function protecaoEmAliado_(nome) {
+  const alvo = chaveTexto_(nome);
+  const nomes = Object.keys(PROTECOES_DE_ALIADO);
+  for (let i = 0; i < nomes.length; i++) {
+    if (chaveTexto_(nomes[i]) === alvo) {
+      return Object.assign({ nome: nomes[i] }, PROTECOES_DE_ALIADO[nomes[i]]);
+    }
+  }
+  return null;
+}
+
 /** Habilidades de CLASSE que cobram Esperança (ou Estresse) para serem usadas. */
 const HABILIDADES_DE_CLASSE_COM_CUSTO = {
   "Fazer uma Cena": {

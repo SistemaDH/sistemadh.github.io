@@ -484,6 +484,133 @@ function aplicarHabilidadeEmAliado_(fichaOrigem, fichaAliado, nome, opcaoId) {
 }
 
 /**
+ * PROTEÇÃO DE UM ALIADO pelo Guardião.
+ *
+ * Recebe DUAS fichas já clonadas pela camada de persistência. A regra vem do
+ * catálogo gerado, portanto o cliente não escolhe qual recurso alterar nem o
+ * valor do delta. Alcance é fato de ficção/mesa e precisa ser confirmado.
+ */
+function aplicarProtecaoEmAliado_(fichaOrigem, fichaAliado, nome, pedido) {
+  const def = (typeof protecaoEmAliado_ === 'function') ? protecaoEmAliado_(nome) : null;
+  if (!def) return { erro: 'Proteção em aliado desconhecida: "' + String(nome) + '".' };
+  if (!(typeof fichaTemCaracteristicaDeClasse_ === 'function' &&
+        fichaTemCaracteristicaDeClasse_(fichaOrigem, def.nome))) {
+    return { erro: 'Este personagem não tem "' + def.nome + '".' };
+  }
+  const p = pedido || {};
+  if (def.exigeConfirmacaoDeAlcance && p.alcanceConfirmado !== true) {
+    return { erro: def.nome + ': confirme na mesa que o aliado está em alcance ' + def.alcance + '.' };
+  }
+  if (fichaAliado.encerrada) {
+    return { erro: def.nome + ': a jornada deste aliado já foi encerrada.' };
+  }
+
+  const antesOrigem = JSON.parse(JSON.stringify(fichaOrigem || {}));
+  const antesAliado = JSON.parse(JSON.stringify(fichaAliado || {}));
+  const falhar = function (mensagem) {
+    substituirFichaEmLugar_(fichaOrigem, antesOrigem);
+    substituirFichaEmLugar_(fichaAliado, antesAliado);
+    return { erro: mensagem };
+  };
+
+  if (def.tipo === 'reduzir-pv-recebido') {
+    const armaduraAtual = Math.max(0, Number(((fichaOrigem || {}).recursos || {}).armaduraMarcada) || 0);
+    const armaduraMax = Math.max(0, Number(((fichaOrigem || {}).defesas || {}).pontuacaoArmadura) || 0);
+    const custoArmadura = Math.max(0, Math.trunc(Number((def.custo || {}).armadura)) || 0);
+    if (!armaduraMax || armaduraAtual + custoArmadura > armaduraMax) {
+      return falhar('Não sobra Ponto de Armadura para usar "' + def.nome + '".');
+    }
+    const pvAntes = Math.max(0, Number(((fichaAliado || {}).recursos || {}).pontosDeVidaMarcados) || 0);
+    const reduz = Math.max(1, Math.trunc(Number((def.efeito || {}).reduzPvMarcado)) || 1);
+    if (pvAntes < reduz) {
+      return falhar(def.nome + ': o aliado não tem Ponto de Vida recém-marcado para reduzir.');
+    }
+
+    const ro = aplicarAjustes_(fichaOrigem, [{
+      tipo: 'recurso', chave: 'armaduraMarcada', delta: custoArmadura
+    }]);
+    if (ro.pendenciaRolagem) {
+      substituirFichaEmLugar_(fichaOrigem, antesOrigem);
+      substituirFichaEmLugar_(fichaAliado, antesAliado);
+      return { pendenciaRolagem: ro.pendenciaRolagem };
+    }
+    if (ro.erros.length) return falhar(ro.erros[0]);
+
+    const ra = aplicarAjustes_(fichaAliado, [{
+      tipo: 'recurso', chave: 'pontosDeVidaMarcados', delta: -reduz
+    }]);
+    if (ra.pendenciaRolagem) {
+      substituirFichaEmLugar_(fichaOrigem, antesOrigem);
+      substituirFichaEmLugar_(fichaAliado, antesAliado);
+      return { pendenciaRolagem: ra.pendenciaRolagem };
+    }
+    if (ra.erros.length) return falhar(ra.erros[0]);
+
+    return {
+      tipo: 'protecao-em-aliado', nome: def.nome, protecao: def.tipo,
+      origem: ro, aliado: ra,
+      aviso: def.nome + ': 1 Ponto de Armadura marcado; o aliado marca 1 PV a menos pelo dano que acabou de sofrer.'
+    };
+  }
+
+  if (def.tipo === 'interceptar-dano') {
+    const rAliado = (fichaAliado || {}).recursos || {};
+    const maxPv = Math.max(0, Number(rAliado.pontosDeVidaMaximos) || 0);
+    const pvMarcados = Math.max(0, Number(rAliado.pontosDeVidaMarcados) || 0);
+    const livres = Math.max(0, maxPv - pvMarcados);
+    const tetoLivres = Math.max(0,
+      Math.trunc(Number(((def.condicaoAlvo || {}).pontosDeVidaNaoMarcadosMaximo))) || 0);
+    if (!maxPv || livres > tetoLivres) {
+      return falhar(def.nome + ': o aliado precisa ter ' + tetoLivres + ' ou menos Pontos de Vida não marcados.');
+    }
+
+    const dano = Math.trunc(Number(p.dano));
+    if (!isFinite(dano) || dano <= 0) return falhar(def.nome + ': informe o dano que o aliado receberia.');
+    const tipoChave = chaveTexto_(p.tipoDeDano);
+    const tipo = (tipoChave === 'fisico' || tipoChave === 'physical') ? 'fisico'
+      : (tipoChave === 'magico' || tipoChave === 'magic') ? 'magico' : '';
+    if (!tipo) return falhar(def.nome + ': informe se o dano é físico ou mágico.');
+
+    const custoEstresse = Math.max(0, Math.trunc(Number((def.custo || {}).estresse)) || 0);
+    const rOrigem = (fichaOrigem || {}).recursos || {};
+    const estresseAtual = Math.max(0, Number(rOrigem.estresseMarcado) || 0);
+    const estresseMax = Math.max(0, Number(rOrigem.estresseMaximo) || 0);
+    if (custoEstresse && estresseAtual + custoEstresse > estresseMax) {
+      return falhar('Não sobra Estresse para usar "' + def.nome + '".');
+    }
+
+    const custo = { tipo: 'recurso', chave: 'estresseMarcado', delta: custoEstresse };
+    if (p.dadoInabalavel !== undefined) custo.dadoInabalavel = p.dadoInabalavel;
+    const danoNaOrigem = {
+      tipo: 'dano', dano: dano, tipoDeDano: tipo,
+      reacoes: Array.isArray(p.reacoes) ? p.reacoes : []
+    };
+    if (p.dadoInabalavelDano !== undefined) danoNaOrigem.dadoInabalavel = p.dadoInabalavelDano;
+
+    const rel = aplicarAjustes_(fichaOrigem, [custo, danoNaOrigem]);
+    if (rel.pendenciaRolagem) {
+      substituirFichaEmLugar_(fichaOrigem, antesOrigem);
+      substituirFichaEmLugar_(fichaAliado, antesAliado);
+      const pend = Object.assign({}, rel.pendenciaRolagem);
+      // Pode haver dois +1 Estresse na mesma resolução: o custo de Protetor
+      // Leal e uma reação ao dano (ex.: Escamas em ancestralidade mista).
+      pend.campoProtecao = Number(pend.indice) === 0 ? 'dadoInabalavel' : 'dadoInabalavelDano';
+      return { pendenciaRolagem: pend };
+    }
+    if (rel.erros.length) return falhar(rel.erros[0]);
+
+    return {
+      tipo: 'protecao-em-aliado', nome: def.nome, protecao: def.tipo,
+      origem: rel, aliado: { semMudanca: true },
+      aviso: def.nome + ': o aliado não sofreu o dano; o Guardião sofreu ' + dano +
+        ' de dano ' + (tipo === 'fisico' ? 'físico' : 'mágico') + ' no lugar.'
+    };
+  }
+
+  return falhar('Tipo de proteção em aliado desconhecido: "' + String(def.tipo) + '".');
+}
+
+/**
  * USAR UMA HABILIDADE QUE CUSTA ALGUMA COISA.
  *
  * Nove habilidades de Esperança ("gaste 3 de Esperança para…"), a Marca da

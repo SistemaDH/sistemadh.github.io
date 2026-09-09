@@ -296,6 +296,33 @@ function executar_(p) {
         });
       }
 
+      /**
+       * Proteções do Guardião que atravessam de uma ficha para outra.
+       * O motor recebe a escolha da regra e fatos da mesa; deltas/custos vêm
+       * exclusivamente do catálogo. Se Inabalável pedir d6, nenhuma ficha é gravada.
+       */
+      case 'usarProtecaoEmAliado': {
+        const jogador = exigirSessao_(p.token);
+        const r = mutarPersonagemEOutro_(jogador, p.id, p.aliadoId, p.versao,
+          function (fichaOrigem, fichaAliado) {
+            const rel = aplicarProtecaoEmAliado_(fichaOrigem, fichaAliado, p.nome, p);
+            if (rel.pendenciaRolagem) {
+              return { naoGravar: true, extra: rel };
+            }
+            if (rel.erro) throw erroApi_(ERRO.DADOS_INVALIDOS, rel.erro);
+            return {
+              fichaOrigem: fichaOrigem, fichaAliado: fichaAliado,
+              extra: rel, evento: 'protecao-em-aliado'
+            };
+          });
+        return ok_({
+          origem: r.origem,
+          aliado: r.aliado,
+          resultado: r.extra,
+          pendenciaRolagem: (r.extra && r.extra.pendenciaRolagem) || null
+        });
+      }
+
       /** O que o descanso VAI fazer. Não grava nada. */
       case 'previaDescanso': {
         const jogador = exigirSessao_(p.token);
