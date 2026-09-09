@@ -18,6 +18,7 @@ jobs:
       - name: Materializar Esplendor N1-N4
         run: |
           python3 tools/lote8-splendor-n1-n4.py
+          python3 tools/lote8-splendor-fix-test-count.py
           node tools/gerar-41-dominios.mjs
           node tools/gerar-47-contadores.mjs
           node tools/gerar-4B-descanso.mjs
@@ -84,6 +85,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm -f --ignore-unmatch tools/lote8-splendor-n1-n4.py
+          git rm -f --ignore-unmatch tools/lote8-splendor-fix-test-count.py
           git rm -f --ignore-unmatch .github/workflows/lote8-splendor-n1-n4.yml
           find . -type d -name __pycache__ -prune -exec rm -rf {} +
           find . -type f -name '*.pyc' -delete
