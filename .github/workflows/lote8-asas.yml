@@ -20,6 +20,7 @@ jobs:
       - name: Materializar Asas
         run: |
           python3 tools/lote8-asas.py
+          python3 tools/lote8-asas-hotfix.py
           node tools/gerar-43-origens.mjs
           node tools/gerar-47-contadores.mjs
           python3 tools/conferir-ancestralidades-lote8.py
@@ -53,6 +54,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm -f tools/lote8-asas.py
+          git rm -f tools/lote8-asas-hotfix.py
           git rm -f .github/workflows/lote8-asas.yml
           git add -A
           git diff --cached --check
