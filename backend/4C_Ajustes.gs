@@ -149,8 +149,84 @@ function aplicarAjusteComInabalavel_(ficha, a) {
 
   const depois = Math.max(0, Number(((ficha || {}).recursos || {}).estresseMarcado) || 0);
   const quantidade = Math.max(1, Math.trunc(Number(regra.quantidade)) || 1);
-  if (depois - antes !== quantidade) return { resultado: r };
+  const deltaEstresse = depois - antes;
 
+  /*
+   * Duas fontes DOLOROSO ativas não são um custo "+2 Estresses": são dois
+   * gatilhos independentes de +1 disparados pelo mesmo PA. Só este caso pede
+   * vários d6. Cartas e habilidades que dizem literalmente "+2 Estresses"
+   * continuam fora de Inabalável, como já era garantido pelos testes antigos.
+   */
+  const dolorosoMarcado = Math.max(0,
+    Math.trunc(Number((r && r.doloroso && r.doloroso.estresseMarcado))) || 0);
+  const eventosDoloroso = dolorosoMarcado > 0
+    ? Math.trunc(dolorosoMarcado / quantidade) : 0;
+  if (deltaEstresse !== quantidade) {
+    if (!(eventosDoloroso > 1 && deltaEstresse === eventosDoloroso * quantidade)) {
+      return { resultado: r };
+    }
+
+    const brutos = (a || {}).dadosInabalavel;
+    if (!Array.isArray(brutos)) {
+      return { pendencia: {
+        tipo:'inabalavel-multiplo', caracteristica:regra.nome || 'Inabalável',
+        dado:regra.dado || 'd6', minimo:1, maximo:6, quantidade:eventosDoloroso,
+        mensagem:'Doloroso disparou ' + eventosDoloroso + ' marcas separadas de Estresse. Role ' +
+          eventosDoloroso + 'd6 fora do app; cada 6 evita uma dessas marcas.'
+      } };
+    }
+    if (brutos.length !== eventosDoloroso) {
+      substituirFichaEmLugar_(ficha, antesFicha);
+      return { resultado:{ erro:'Inabalável: informe exatamente ' + eventosDoloroso + ' resultados de d6.' } };
+    }
+
+    const dados = [];
+    let evitados = 0;
+    for (let i = 0; i < brutos.length; i++) {
+      const dado = Math.trunc(Number(brutos[i]));
+      if (!isFinite(dado) || dado < 1 || dado > 6 || Number(brutos[i]) !== dado) {
+        substituirFichaEmLugar_(ficha, antesFicha);
+        return { resultado:{ erro:'Inabalável: cada resultado precisa ser um inteiro de 1 a 6.' } };
+      }
+      dados.push(dado);
+      if (Array.isArray(regra.evitaResultados) && regra.evitaResultados.indexOf(dado) !== -1) evitados++;
+    }
+
+    const evitadoTotal = evitados * quantidade;
+    if (evitadoTotal > 0) {
+      ficha.recursos = ficha.recursos || {};
+      ficha.recursos.estresseMarcado = Math.max(0,
+        (Number(ficha.recursos.estresseMarcado) || 0) - evitadoTotal);
+      if (typeof sincronizarVulneravelPorEstresse_ === 'function') sincronizarVulneravelPorEstresse_(ficha);
+      if (r && r.doloroso) {
+        r.doloroso.estresseMarcado = Math.max(0,
+          (Math.trunc(Number(r.doloroso.estresseMarcado)) || 0) - evitadoTotal);
+        r.doloroso.estresseEvitadoInabalavel = evitadoTotal;
+      }
+      if (r && Array.isArray(r.detalhes)) {
+        r.detalhes.forEach(function (m) {
+          if (m && m.tipo === 'recurso' && m.chave === 'estresseMarcado') {
+            m.depois = ficha.recursos.estresseMarcado;
+            delete m.alerta;
+          }
+        });
+      }
+    }
+    if (r) {
+      r.inabalavel = {
+        dados:dados, dado:null, evitou:evitados > 0,
+        eventos:eventosDoloroso, quantidade:quantidade
+      };
+      r.estresseEvitado = evitadoTotal;
+      const nota = 'Inabalável: d6 = ' + dados.join(', ') + (evitados
+        ? '; ' + evitadoTotal + ' Estresse evitado.'
+        : '; os Estresses foram marcados normalmente.');
+      r.aviso = nota + (r.aviso ? ' ' + r.aviso : '');
+    }
+    return { resultado:r };
+  }
+
+  // Caminho canônico antigo: exatamente UMA marca de Estresse.
   const bruto = (a || {}).dadoInabalavel;
   if (bruto === undefined || bruto === null || bruto === '') {
     return {
@@ -1883,6 +1959,45 @@ function gravidadeDoPv_(pv) {
   return { pv: 0, faixa: 'nenhum', rotulo: 'Dano anulado' };
 }
 
+/** Todos os equipamentos ativos que disparam ao marcar PA. */
+function efeitosAoMarcarArmaduraDeEquipamento_(ficha) {
+  const saida = [];
+  const ativos = (typeof equipamentoAtivoDaFicha_ === 'function') ? equipamentoAtivoDaFicha_(ficha) : [];
+  for (let i = 0; i < ativos.length; i++) {
+    const item = (ativos[i] || {}).item || {};
+    const regra = ((item.efeitoEquipamento || {}).aoMarcarArmadura) || null;
+    if (!regra) continue;
+    const estresse = Math.max(0, Math.trunc(Number(regra.estressePorSlot)) || 0);
+    if (!estresse) continue;
+    saida.push({ fonte:item.nome || item.id || 'Equipamento', caracteristica:item.carac || '', estressePorSlot:estresse });
+  }
+  return saida;
+}
+
+/** Regra da armadura ativa que rola antes de marcar o último PA. */
+function regraResilienteDaArmadura_(ficha) {
+  const ativos = (typeof equipamentoAtivoDaFicha_ === 'function') ? equipamentoAtivoDaFicha_(ficha) : [];
+  for (let i = 0; i < ativos.length; i++) {
+    if ((ativos[i] || {}).papel !== 'armadura') continue;
+    const item = (ativos[i] || {}).item || {};
+    const regra = (((item.efeitoEquipamento || {}).danoRecebido || {}).resiliente) || null;
+    if (regra) return { fonte:item.nome || item.id, caracteristica:item.carac || 'Resiliente', regra:regra };
+  }
+  return null;
+}
+
+/** Regra 1/descanso que pode trocar o último PV por Estresse. */
+function regraImpenetravelDaArmadura_(ficha) {
+  const ativos = (typeof equipamentoAtivoDaFicha_ === 'function') ? equipamentoAtivoDaFicha_(ficha) : [];
+  for (let i = 0; i < ativos.length; i++) {
+    if ((ativos[i] || {}).papel !== 'armadura') continue;
+    const item = (ativos[i] || {}).item || {};
+    const regra = (((item.efeitoEquipamento || {}).danoRecebido || {}).impenetravel) || null;
+    if (regra) return { fonte:item.nome || item.id, caracteristica:item.carac || 'Impenetrável', regra:regra };
+  }
+  return null;
+}
+
 function aplicarDanoNaFicha_(ficha, a) {
   if (typeof pvDoDano_ !== 'function') {
     return { erro: 'Este servidor não sabe converter dano em Pontos de Vida.' };
@@ -2047,6 +2162,34 @@ function aplicarDanoNaFicha_(ficha, a) {
   const estresseAtual = Math.max(0, Number(r.estresseMarcado) || 0);
   const estresseMax = Math.max(0, Number(r.estresseMaximo) || 0);
   const esperancaAtual = Math.max(0, Number(r.esperanca) || 0);
+
+  // RESILIENTE acontece antes de marcar o ÚLTIMO PA. A rolagem continua na mesa.
+  // Se o pedido usa mais de um PA, só a unidade que ocuparia o último slot é
+  // evitada; as anteriores continuam sendo marcadas normalmente.
+  let resiliente = null;
+  const regraResiliente = regraResilienteDaArmadura_(ficha);
+  const livresArmaduraAntes = Math.max(0, armaduraMax - armaduraAtual);
+  const alcancaUltimoArmadura = !!regraResiliente && custoArmadura > 0 && livresArmaduraAntes > 0 &&
+    custoArmadura >= livresArmaduraAntes && (custoArmadura - 1) <= livresArmaduraAntes;
+  if (alcancaUltimoArmadura) {
+    const brutoResiliente = a.dadoResiliente;
+    if (brutoResiliente === undefined || brutoResiliente === null || brutoResiliente === '') {
+      return { pendenciaRolagem: {
+        tipo:'habilidade-manual', campo:'dadoResiliente', caracteristica:regraResiliente.caracteristica,
+        dado:'d6', minimo:1, maximo:6,
+        mensagem:regraResiliente.fonte + ' · ' + regraResiliente.caracteristica +
+          ': você está prestes a marcar seu último Ponto de Armadura. Role 1d6 fora do app e informe o resultado.'
+      } };
+    }
+    const dadoResiliente = Math.trunc(Number(brutoResiliente));
+    if (!isFinite(dadoResiliente) || dadoResiliente < 1 || dadoResiliente > 6 || Number(brutoResiliente) !== dadoResiliente) {
+      return { erro: regraResiliente.caracteristica + ': informe o resultado inteiro do d6, de 1 a 6.' };
+    }
+    const evita = (regraResiliente.regra.evitaMarcarUltimoArmaduraEm || [6]).indexOf(dadoResiliente) !== -1;
+    if (evita) custoArmadura = Math.max(0, custoArmadura - 1);
+    resiliente = { fonte:regraResiliente.fonte, dado:dadoResiliente, evitouUltimoArmadura:evita };
+  }
+
   if (custoEstresse && estresseAtual + custoEstresse > estresseMax) {
     return { erro: 'Não sobra Estresse para as reações escolhidas (custa ' + custoEstresse + ').' };
   }
@@ -2088,6 +2231,30 @@ function aplicarDanoNaFicha_(ficha, a) {
     dominioTerra = { dados: limpos, evitados: evitados, pvDepois: pv };
   }
 
+  // IMPENETRÁVEL olha o PV que REALMENTE sobraria depois das reduções/rolagens.
+  // Ele troca somente o último espaço de PV por 1 Estresse e marca o uso.
+  let impenetravel = null;
+  const regraImpenetravel = regraImpenetravelDaArmadura_(ficha);
+  const pvMaxAntes = Math.max(0, Number(r.pontosDeVidaMaximos) || 0);
+  const pvMarcadosAntes = Math.max(0, Number(r.pontosDeVidaMarcados) || 0);
+  const pvLivresAntes = Math.max(0, pvMaxAntes - pvMarcadosAntes);
+  const atingiriaUltimoPv = pv > 0 && pvLivresAntes > 0 && pv >= pvLivresAntes;
+  if (a.usarImpenetravel === true) {
+    if (!regraImpenetravel) return { erro:'Este personagem não tem Impenetrável ativo.' };
+    if (!atingiriaUltimoPv) return { erro:'Impenetrável só pode ser usado quando este dano marcaria seu último Ponto de Vida.' };
+    const chaveUso = String(regraImpenetravel.regra.marcaUso || '');
+    const usado = Math.trunc(Number(((((ficha.contadores || {})[chaveUso]) || {}).valor))) || 0;
+    if (!chaveUso || usado > 0) return { erro:'Impenetrável já foi usado desde o último descanso.' };
+    if (estresseAtual >= estresseMax) {
+      return { erro:'Impenetrável precisa marcar 1 Estresse; com a trilha cheia ele viraria PV e não evitaria o último PV.' };
+    }
+    pv = Math.max(0, pvLivresAntes - 1);
+    custoEstresse += Math.max(1, Math.trunc(Number(regraImpenetravel.regra.estresse)) || 1);
+    ficha.contadores = ficha.contadores || {};
+    ficha.contadores[chaveUso] = { valor:1 };
+    impenetravel = { fonte:regraImpenetravel.fonte, uso:chaveUso, pvEvitado:1, estresse:1 };
+  }
+
   const mudancasInternas = [];
   if (custoEsperanca) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'esperanca', delta: -custoEsperanca }));
   if (custoEstresse) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'estresseMarcado', delta: custoEstresse }));
@@ -2127,12 +2294,28 @@ function aplicarDanoNaFicha_(ficha, a) {
     resistencia: retraido ? 'Retrair' : null,
     equipamentoDefensivo: reducaoEquipamento,
     dominioElementalTerra: dominioTerra,
+    resiliente: resiliente,
+    impenetravel: impenetravel,
     custos: { estresse: custoEstresse, esperanca: custoEsperanca, armadura: custoArmadura },
     detalhes: mudancasInternas,
     aviso: partes.join(' · ') + '.'
   };
+  if (resiliente) saida.aviso += ' Resiliente: d6 = ' + resiliente.dado +
+    (resiliente.evitouUltimoArmadura ? '; o último PA não foi marcado.' : '; o último PA foi marcado normalmente.');
+  if (impenetravel) saida.aviso += ' Impenetrável: o último PV foi trocado por 1 Estresse.';
   if (toquePv && toquePv.alerta) saida.alerta = toquePv.alerta;
   if (toquePv && toquePv.movimentoDeMorte) saida.movimentoDeMorte = true;
+  // Doloroso pode converter Estresse sem espaço em PV durante a marcação de PA.
+  for (let di = 0; di < mudancasInternas.length; di++) {
+    const dm = mudancasInternas[di] || {};
+    if (dm.movimentoDeMorte) saida.movimentoDeMorte = true;
+    if (!saida.alerta && dm.alerta) saida.alerta = dm.alerta;
+    const ds = dm.detalhes || [];
+    for (let dj = 0; dj < ds.length; dj++) {
+      if (ds[dj] && ds[dj].movimentoDeMorte) saida.movimentoDeMorte = true;
+      if (!saida.alerta && ds[dj] && ds[dj].alerta) saida.alerta = ds[dj].alerta;
+    }
+  }
   if (tipo === 'magico' && pv > 0) {
     const carregadas = carregarEstadosDeClassePorDano_(ficha, tipo);
     if (carregadas.length) {
@@ -2185,6 +2368,39 @@ function ajustarRecurso_(ficha, a) {
   if (chave === 'pontosDeVidaMarcados' && teto && depois >= teto && antes < teto) {
     m.alerta = 'Pontos de Vida no limite: escolha um movimento de morte (livro p.106).';
     m.movimentoDeMorte = true;
+  }
+
+  // DOLOROSO não é uma regra de uma armadura específica: há armas com a mesma
+  // característica. Cada fonte ATIVA dispara para cada PA realmente marcado.
+  if (chave === 'armaduraMarcada' && depois > antes) {
+    const fontes = efeitosAoMarcarArmaduraDeEquipamento_(ficha);
+    if (fontes.length) {
+      const slots = depois - antes;
+      const porSlot = fontes.reduce(function (n,x) { return n + (Number(x.estressePorSlot) || 0); }, 0);
+      const total = slots * porSlot;
+      const detalhes = [];
+      let marcados = 0, convertidosEmPv = 0;
+      for (let i = 0; i < total; i++) {
+        const rr = ficha.recursos || {};
+        const atualEstresse = Math.max(0, Number(rr.estresseMarcado) || 0);
+        const maxEstresse = Math.max(0, Number(rr.estresseMaximo) || 0);
+        if (atualEstresse < maxEstresse) {
+          detalhes.push(ajustarRecurso_(ficha, { chave:'estresseMarcado', delta:1 }));
+          marcados++;
+        } else {
+          // Regra geral do Core: se precisar marcar Estresse sem espaço, marca 1 PV.
+          const pvSub = ajustarRecurso_(ficha, { chave:'pontosDeVidaMarcados', delta:1 });
+          detalhes.push(pvSub);
+          convertidosEmPv++;
+          if (pvSub && pvSub.movimentoDeMorte) { m.movimentoDeMorte = true; m.alerta = pvSub.alerta; }
+        }
+      }
+      m.doloroso = { fontes:fontes.map(function(x){return x.fonte;}), slots:slots,
+        estresseSolicitado:total, estresseMarcado:marcados, pvSubstitutos:convertidosEmPv };
+      m.detalhes = (m.detalhes || []).concat(detalhes);
+      m.aviso = 'Doloroso: ' + total + ' Estresse exigido' +
+        (convertidosEmPv ? '; ' + convertidosEmPv + ' virou PV por falta de espaço.' : '.');
+    }
   }
 
   /*

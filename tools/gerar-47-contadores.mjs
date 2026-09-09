@@ -520,6 +520,20 @@ function refsDeContadorDaFicha_(ficha) {
     if (typeof normalizarAncestralidade_ === 'function') por(normalizarAncestralidade_(nome));
   });
 
+  // Equipamento também pode ter uso/estado. O item ativo entra sempre; o que
+  // foi guardado no inventário continua dono do contador para não "recarregar"
+  // uma habilidade só por desequipar e equipar de novo antes do descanso.
+  if (typeof equipamentoAtivoDaFicha_ === 'function') {
+    (equipamentoAtivoDaFicha_(ficha) || []).forEach(function (e) {
+      const item = (e || {}).item || {};
+      por(item.id); por(item.nome);
+    });
+  }
+  (ficha.inventario || []).forEach(function (item) {
+    if (!item || typeof item !== 'object') return;
+    por(item.id); por(item.nome);
+  });
+
   return refs;
 }
 

@@ -1,6 +1,6 @@
 {
  "versao": 1,
- "fonte": "Textos das cartas de domínio e características de classe/subclasse que guardam estado (data/cartas-dominio.json e data/classes.json).",
+ "fonte": "Textos das cartas de domínio, características de classe/subclasse/origem e equipamentos que guardam estado.",
  "explicacao": "Várias cartas e características mandam 'colocar fichas/marcadores/um dado nesta carta'. Esse valor é ESTADO DO PERSONAGEM, não da carta: precisa ser gravado na ficha e zerado na hora certa. Este catálogo diz, para cada um: qual é o máximo, que dado usa e quando zera.",
  "gatilhos": {
   "inicio-de-sessao": "Na abertura da sessão.",
@@ -2683,6 +2683,23 @@
     "descanso-longo"
    ],
    "observacao": "Uma vez por descanso longo."
+  },
+  {
+   "chave": "uso:equipamento:armadura-t3-armadura-de-escamas-de-dragao:impenetravel",
+   "origem": "equipamento",
+   "refId": "armadura-t3-armadura-de-escamas-de-dragao",
+   "nome": "Impenetrável",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uso de Impenetrável da Armadura de Escamas de Dragão. Ausência/0 = disponível; 1 = já usado desde o último descanso."
   }
  ]
 }

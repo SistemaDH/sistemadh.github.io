@@ -678,3 +678,14 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - O app continua sem rolar dados: a mesa informa o dano e escolhe explicitamente se quer marcar Armadura.
 
 **Próximo bloco natural:** demais características defensivas de armadura/equipamento (Impenetrável, Doloroso, Esperançoso, Deslocamento, Temporal e Desafetação), reaproveitando o mesmo pipeline.
+
+### Lote 8 — equipamento defensivo B1
+
+- **Magia (Manto de Monett):** a mitigação por PA só aceita dano mágico; é a contraparte de Físico.
+- **Doloroso:** implementado como gatilho genérico de qualquer equipamento ativo. Cada PA realmente marcado exige 1 Estresse por fonte Doloroso ativa; sem espaço de Estresse, cada marca excedente vira 1 PV.
+- **Inabalável + Doloroso:** a camada de rolagem manual agora aceita múltiplos d6 quando uma resolução marca vários Estresses; o app continua sem rolar.
+- **Resiliente:** quando a resolução alcançaria o último PA, o servidor pede o d6 manual. Em 6, a redução de gravidade permanece, mas o último PA não é marcado.
+- **Impenetrável:** reação explícita no dano que troca o último PV por 1 Estresse, 1x por descanso. O uso fica no catálogo normal de contadores e o gerador 47 agora reconhece equipamento ativo/carregado como dono de contador.
+- Inventário de contadores: **146** no total, sendo 1 de equipamento.
+
+**Próximo bloco natural:** Esperançoso + Deslocamento + Temporal + Desafetação.

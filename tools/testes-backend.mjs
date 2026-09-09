@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 145 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 146 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade e 1 de equipamento', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,7 +1561,7 @@ teste('o catálogo tem 145 contadores: 113 de carta, 25 de classe/subclasse, 4 d
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 145);
+  igual(Object.keys(CONTADORES).length, 146);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 113);
@@ -1569,6 +1569,7 @@ teste('o catálogo tem 145 contadores: 113 de carta, 25 de classe/subclasse, 4 d
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
+  igual(porOrigem['equipamento'], 1);
 });
 
 teste('"uma vez por" conta o uso GASTO, e o gatilho certo o apaga', () => {
@@ -10027,6 +10028,117 @@ teste('Armadura Inabalável e Inquebrável não inventam RNG no servidor',()=>{
   for(const id of ['valor-armadura-inabalavel','valor-inquebravel']){
     const c=d.cartas.find(x=>x.id===id); verdade(!c.uso); verdade(c.automacao.classificacao.includes('manual'));
   }
+});
+
+console.log('\nLote 8 — equipamento defensivo B1');
+
+teste('Magia é a restrição espelhada de Físico na mitigação por PA',()=>{
+  let f=fichaEquipamentoDefensivo_(5,null,'armadura-t3-manto-de-monett');
+  const antes=JSON.stringify(f.recursos);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:Number(f.defesas.limiarMaior),tipoDeDano:'fisico',usarArmadura:true}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f.recursos),antes);
+  f=fichaEquipamentoDefensivo_(5,null,'armadura-t3-manto-de-monett');
+  r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:Number(f.defesas.limiarMaior),tipoDeDano:'magico',usarArmadura:true}]);
+  igual(r.erros,[]); igual(f.recursos.armaduraMarcada,1); igual(r.mudancas[0].pvDepoisArmadura,1);
+});
+
+teste('Doloroso dispara por PA realmente marcado e vale em arma ativa',()=>{
+  const f=fichaEquipamentoDefensivo_(5,'primaria-t3-runas-da-ruina','armadura-t2-armadura-de-couro-aprimorada');
+  f.recursos.estresseMarcado=0; f.recursos.armaduraMarcada=0;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'recurso',chave:'armaduraMarcada',delta:1}]);
+  igual(r.erros,[]); igual(f.recursos.armaduraMarcada,1); igual(f.recursos.estresseMarcado,1);
+  igual(r.mudancas[0].doloroso.estresseSolicitado,1);
+});
+
+teste('duas fontes Doloroso ativas disparam separadamente para o mesmo PA',()=>{
+  const f=fichaEquipamentoDefensivo_(5,'primaria-t3-runas-da-ruina','armadura-t3-runas-de-fortificacao');
+  f.recursos.estresseMarcado=0; f.recursos.armaduraMarcada=0;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'recurso',chave:'armaduraMarcada',delta:1}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,2); igual(r.mudancas[0].doloroso.fontes.length,2);
+});
+
+teste('Doloroso converte Estresse sem espaço em PV pela regra geral',()=>{
+  const f=fichaEquipamentoDefensivo_(5,null,'armadura-t3-runas-de-fortificacao');
+  f.recursos.estresseMarcado=f.recursos.estresseMaximo;
+  const pv0=f.recursos.pontosDeVidaMarcados;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'recurso',chave:'armaduraMarcada',delta:1}]);
+  igual(r.erros,[]); igual(f.recursos.pontosDeVidaMarcados,pv0+1);
+  igual(r.mudancas[0].doloroso.pvSubstitutos,1);
+});
+
+teste('Resiliente pede d6 manual antes do último PA e 6 preserva o slot',()=>{
+  let f=fichaEquipamentoDefensivo_(3,null,'armadura-t2-armadura-harrowbone');
+  f.recursos.armaduraMarcada=f.defesas.pontuacaoArmadura-1;
+  const dano=Number(f.defesas.limiarMaior);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano,tipoDeDano:'fisico',usarArmadura:true}]);
+  verdade(r.pendenciaRolagem && r.pendenciaRolagem.tipo==='habilidade-manual');
+  igual(f.recursos.armaduraMarcada,f.defesas.pontuacaoArmadura-1,'prévia não toca no último PA');
+  r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano,tipoDeDano:'fisico',usarArmadura:true,dadoResiliente:6}]);
+  igual(r.erros,[]); igual(f.recursos.armaduraMarcada,f.defesas.pontuacaoArmadura-1);
+  verdade(r.mudancas[0].resiliente.evitouUltimoArmadura); igual(r.mudancas[0].pvDepoisArmadura,1);
+});
+
+teste('Resiliente com resultado diferente de 6 marca o último PA normalmente',()=>{
+  const f=fichaEquipamentoDefensivo_(3,null,'armadura-t2-armadura-harrowbone');
+  f.recursos.armaduraMarcada=f.defesas.pontuacaoArmadura-1;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:Number(f.defesas.limiarMaior),tipoDeDano:'fisico',usarArmadura:true,dadoResiliente:5}]);
+  igual(r.erros,[]); igual(f.recursos.armaduraMarcada,f.defesas.pontuacaoArmadura);
+  igual(r.mudancas[0].resiliente.evitouUltimoArmadura,false);
+});
+
+teste('Impenetrável troca o último PV por Estresse uma vez até o descanso',()=>{
+  const f=fichaEquipamentoDefensivo_(5,null,'armadura-t3-armadura-de-escamas-de-dragao');
+  const chave='uso:equipamento:armadura-t3-armadura-de-escamas-de-dragao:impenetravel';
+  f.recursos.pontosDeVidaMarcados=f.recursos.pontosDeVidaMaximos-1;
+  f.recursos.estresseMarcado=0;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:1,tipoDeDano:'fisico',usarImpenetravel:true}]);
+  igual(r.erros,[]); igual(f.recursos.pontosDeVidaMarcados,f.recursos.pontosDeVidaMaximos-1);
+  igual(f.recursos.estresseMarcado,1); igual(f.contadores[chave].valor,1);
+  verdade(r.mudancas[0].impenetravel);
+  const snap=JSON.stringify(f.recursos);
+  r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:1,tipoDeDano:'fisico',usarImpenetravel:true}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f.recursos),snap);
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  igual(f.contadores[chave],undefined,'qualquer descanso recarrega o uso');
+});
+
+teste('contador de Impenetrável pertence ao equipamento e sobrevive no inventário',()=>{
+  const chave='uso:equipamento:armadura-t3-armadura-de-escamas-de-dragao:impenetravel';
+  const f=fichaEquipamentoDefensivo_(5,null,'armadura-t3-armadura-de-escamas-de-dragao');
+  f.contadores=f.contadores||{}; f.contadores[chave]={valor:1};
+  let problemas=[]; contexto.validarContadores_(f).forEach((x)=>problemas.push(x));
+  igual(problemas,[]); igual(f.contadores[chave].valor,1);
+});
+
+
+
+teste('duas fontes Doloroso pedem dois Inabalável sem mudar a regra de +2 Estresses',()=>{
+  let f=contexto.fichaRapida_({
+    nome:'Firbolg Doloroso',classe:'Mago',subclasse:'Escola do Conhecimento',
+    ancestralidade:'Firbolg',comunidade:'Highborne',
+    cartas:['codex-livro-de-ava','codex-livro-de-illiat'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  f.identidade.nivel=5;
+  f.equipamento=f.equipamento||{};
+  f.equipamento.primaria='primaria-t3-runas-da-ruina';
+  f.equipamento.secundaria=null;
+  f.equipamento.armadura='armadura-t3-runas-de-fortificacao';
+  f=contexto.validarFicha_(f);
+  f.recursos.armaduraMarcada=0; f.recursos.estresseMarcado=0;
+
+  let r=contexto.aplicarAjustes_(f,[{tipo:'recurso',chave:'armaduraMarcada',delta:1}]);
+  verdade(r.pendenciaRolagem && r.pendenciaRolagem.tipo==='inabalavel-multiplo',JSON.stringify(r));
+  igual(r.pendenciaRolagem.quantidade,2);
+  igual(f.recursos.armaduraMarcada,0,'a espera dos dois d6 é atômica');
+  igual(f.recursos.estresseMarcado,0);
+
+  r=contexto.aplicarAjustes_(f,[{
+    tipo:'recurso',chave:'armaduraMarcada',delta:1,dadosInabalavel:[6,5]
+  }]);
+  igual(r.erros,[]); igual(f.recursos.armaduraMarcada,1); igual(f.recursos.estresseMarcado,1);
+  igual(r.mudancas[0].estresseEvitado,1);
+  igual(r.mudancas[0].doloroso.estresseMarcado,1);
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

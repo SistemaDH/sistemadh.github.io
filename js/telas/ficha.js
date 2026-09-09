@@ -361,6 +361,38 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     });
   }
 
+  function pedirResultadosInabalavel(pendencia) {
+    return new Promise((resolve) => {
+      let respondeu = false;
+      const quantidade = Math.max(2, Number((pendencia || {}).quantidade) || 2);
+      const campos = [];
+      for (let i = 0; i < quantidade; i++) campos.push(el('input', {
+        type:'number', min:1, max:6, step:1, inputMode:'numeric', class:'campo__entrada',
+        'aria-label':`Inabalável d6 ${i + 1}`
+      }));
+      const responder = (valor) => {
+        if (respondeu) return; respondeu = true; modal.fechar(); resolve(valor);
+      };
+      const modal = abrirModal({
+        titulo:'Inabalável — resultados dos d6',
+        conteudo:el('div',{class:'pilha'},[
+          el('p',{class:'texto-sm',texto:(pendencia && pendencia.mensagem) || 'Role os d6 fora do app e informe os resultados.'}),
+          el('div',{class:'linha'},campos)
+        ]),
+        acoes:[
+          el('button',{type:'button',class:'btn btn--fantasma',onClick:()=>responder(null)},'Cancelar'),
+          el('button',{type:'button',class:'btn',onClick:()=>{
+            const valores=campos.map((c)=>Number(c.value));
+            if (valores.some((n)=>!Number.isInteger(n)||n<1||n>6)) { avisarErro('Informe cada resultado do d6, de 1 a 6.'); return; }
+            responder(valores);
+          }},'Aplicar resultados')
+        ],
+        aoFechar:()=>{ if(!respondeu){respondeu=true;resolve(null);} }
+      });
+      setTimeout(()=>{ if(campos[0]) campos[0].focus(); },0);
+    });
+  }
+
   function pedirResultadoHabilidadeManual(pendencia) {
     return new Promise((resolve) => {
       let respondeu = false;
@@ -460,6 +492,14 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         const campo = String(r.pendenciaRolagem.campo || 'resultadoManual');
         const repetidos = (Array.isArray(ajustes) ? ajustes : [ajustes]).map((a, i) =>
           i === indice ? Object.assign({}, a, { [campo]: valor }) : Object.assign({}, a));
+        return enviar(repetidos, { soSeMudou });
+      }
+      if (r && r.pendenciaRolagem && r.pendenciaRolagem.tipo === 'inabalavel-multiplo') {
+        const dados = await pedirResultadosInabalavel(r.pendenciaRolagem);
+        if (dados === null) { p = r.personagem; desenhar(); return r; }
+        const indice = Number(r.pendenciaRolagem.indice) || 0;
+        const repetidos = (Array.isArray(ajustes) ? ajustes : [ajustes]).map((a, i) =>
+          i === indice ? Object.assign({}, a, { dadosInabalavel: dados }) : Object.assign({}, a));
         return enviar(repetidos, { soSeMudou });
       }
       if (r && r.pendenciaRolagem && r.pendenciaRolagem.tipo === 'inabalavel') {
@@ -1137,6 +1177,8 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const paMax = Math.max(0, Number(defesasDano.pontuacaoArmadura) || 0);
     const paMarcados = Math.max(0, Number(recursosDano.armaduraMarcada) || 0);
     const usarArmadura = el('input', { type: 'checkbox', disabled: !paMax || paMarcados >= paMax });
+    const temImpenetravel = temCaracteristica_(ficha, 'Impenetrável');
+    const usarImpenetravel = temImpenetravel ? el('input', { type:'checkbox' }) : null;
 
     const defs = reacoesDeDanoDaFicha_(ficha);
     const escolhas = defs.map(([nome, texto]) => {
@@ -1161,6 +1203,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           ? `Marcar 1 Ponto de Armadura para reduzir a gravidade (${Math.max(0, paMax - paMarcados)} disponível${Math.max(0, paMax - paMarcados) === 1 ? '' : 'is'})`
           : 'Sem Pontos de Armadura disponíveis para mitigação' })
       ]),
+      usarImpenetravel ? el('label', { class:'criacao__alternador' }, [
+        usarImpenetravel,
+        el('span', { texto:'Impenetrável — se este dano marcaria seu último PV, marque 1 Estresse em vez dele (1× por descanso)' })
+      ]) : null,
       escolhas.length ? el('div', { class: 'pilha' }, [
         el('strong', { texto: 'Reações ao dano' }),
         ...escolhas.map((x) => x.linha)
@@ -1180,7 +1226,8 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           const reacoes = escolhas.filter((x) => x.caixa.checked).map((x) => x.nome);
           const r = await enviar([{
             tipo: 'dano', dano: n, tipoDeDano: tipo.value,
-            usarArmadura: usarArmadura.checked, reacoes
+            usarArmadura: usarArmadura.checked,
+            usarImpenetravel: !!(usarImpenetravel && usarImpenetravel.checked), reacoes
           }]);
           if (r) modal.fechar();
         } }, 'Aplicar dano')

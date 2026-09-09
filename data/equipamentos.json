@@ -2908,7 +2908,16 @@
     "nome": "Doloroso",
     "texto": "Doloroso: Toda vez que marcar um slot de armadura, você deve marcar um estresse.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "gatilho-automatizado-de-armadura",
+     "motivo": "Toda vez que um Ponto de Armadura é realmente marcado, este equipamento ativo também exige marcar 1 Estresse."
+    },
+    "efeitoEquipamento": {
+     "aoMarcarArmadura": {
+      "estressePorSlot": 1
+     }
+    }
    },
    "danoSRD": "d20+4 mag"
   },
@@ -3350,7 +3359,16 @@
     "nome": "Doloroso",
     "texto": "Doloroso: Toda vez que marcar um slot de armadura, você deve marcar um estresse.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "gatilho-automatizado-de-armadura",
+     "motivo": "Toda vez que um Ponto de Armadura é realmente marcado, este equipamento ativo também exige marcar 1 Estresse."
+    },
+    "efeitoEquipamento": {
+     "aoMarcarArmadura": {
+      "estressePorSlot": 1
+     }
+    }
    },
    "danoSRD": "d20+7 mag"
   },
@@ -4938,7 +4956,21 @@
     "nome": "Resiliente",
     "texto": "Resiliente: Antes de marcar seu último slot de armadura, role um d6. Com um resultado de 6, reduza a gravidade em um limiar sem marcar um slot de armadura.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "reacao-manual-assistida",
+     "motivo": "Antes de marcar o último PA para mitigar dano, o servidor pede o resultado manual do d6; com 6 mantém a redução sem marcar esse último PA."
+    },
+    "efeitoEquipamento": {
+     "danoRecebido": {
+      "resiliente": {
+       "dado": "d6",
+       "evitaMarcarUltimoArmaduraEm": [
+        6
+       ]
+      }
+     }
+    }
    }
   },
   {
@@ -5161,7 +5193,19 @@
     "nome": "Impenetrável",
     "texto": "Impenetrável: Uma vez por descanso curto, quando você marcaria seu último golpe Ponto, em vez disso, você pode marcar um Estresse.",
     "fonteTraducao": "livro",
-    "confianca": "media"
+    "confianca": "media",
+    "automacao": {
+     "classificacao": "reacao-automatizada-com-limite",
+     "motivo": "Quando o dano marcaria o último PV, a pessoa pode trocar esse último PV por 1 Estresse; o uso é guardado até o próximo descanso."
+    },
+    "efeitoEquipamento": {
+     "danoRecebido": {
+      "impenetravel": {
+       "marcaUso": "uso:equipamento:armadura-t3-armadura-de-escamas-de-dragao:impenetravel",
+       "estresse": 1
+      }
+     }
+    }
    }
   },
   {
@@ -5243,7 +5287,20 @@
     "nome": "Magia",
     "texto": "Magia: Você não pode marcar um slot de armadura para reduzir o dano físico.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "restricao-automatizada-de-armadura",
+     "motivo": "A mitigação normal por Ponto de Armadura é recusada para dano físico; dano mágico continua permitido."
+    },
+    "efeitoEquipamento": {
+     "danoRecebido": {
+      "mitigacaoArmadura": {
+       "tiposPermitidos": [
+        "magico"
+       ]
+      }
+     }
+    }
    }
   },
   {
@@ -5264,7 +5321,16 @@
     "nome": "Doloroso",
     "texto": "Doloroso: Toda vez que marcar um slot de armadura, você deve marcar um estresse.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "gatilho-automatizado-de-armadura",
+     "motivo": "Toda vez que um Ponto de Armadura é realmente marcado, este equipamento ativo também exige marcar 1 Estresse."
+    },
+    "efeitoEquipamento": {
+     "aoMarcarArmadura": {
+      "estressePorSlot": 1
+     }
+    }
    }
   },
   {
