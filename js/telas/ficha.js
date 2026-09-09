@@ -3529,11 +3529,36 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           const esgotadaOpcao = !!(marcaOpcao && usadosOpcao >= (Number(marcaOpcao.maximo) || 1));
           const entradaOpcao = o.entradaQuantidade || null;
 
-          const executarOpcao = () => {
+          const executarOpcao = async () => {
             if (ativoOpcao) {
               if (estadoOpcao && estadoOpcao.permiteEncerrarManual === false) return;
               if (modal) modal.fechar();
               enviar([{ tipo:'usarCarta', carta:c.id, opcao:o.id, encerrar:true }]);
+              return;
+            }
+            if (o.trocaComCofreSemCusto === true) {
+              if (modal) modal.fechar();
+              const idsCofre = (((p.ficha || {}).cartas || {}).cofre || []).map((x) =>
+                (x && typeof x === 'object') ? (x.id || x.nome) : x).filter(Boolean);
+              const catalogo = ((await dados.carregar('cartas-dominio')).cartas || []);
+              const elegiveis = idsCofre.map((id) => catalogo.find((x) => dados.chave(x.id) === dados.chave(id)))
+                .filter(Boolean);
+              if (!elegiveis.length) { avisarErro('Não há carta disponível no cofre para esta troca.'); return; }
+              const seletor = el('select', { class:'campo__entrada' }, elegiveis.map((x) =>
+                el('option', { value:x.id, texto:`${x.nome} · nível ${x.nivel}` })));
+              let trocaModal = null;
+              const confirmar = el('button', { type:'button', class:'btn btn--principal', onClick: async () => {
+                const r = await enviar([{ tipo:'usarCarta', carta:c.id, opcao:o.id, cartaDoCofre:seletor.value }]);
+                if (r && trocaModal) trocaModal.fechar();
+              } }, 'Trocar sem custo');
+              trocaModal = abrirModal({
+                titulo:c.nome,
+                conteudo:el('div',{class:'pilha'},[
+                  el('p',{class:'texto-sm',texto:'Escolha qual carta do cofre entra na mão. Tocado pelo Códice irá para o cofre sem cobrar Custo de Retorno.'}),
+                  el('label',{class:'campo'},[el('span',{class:'campo__rotulo',texto:'Carta do cofre'}),seletor])
+                ]),
+                acoes:[el('button',{type:'button',class:'btn btn--fantasma',onClick:()=>trocaModal.fechar()},'Cancelar'),confirmar]
+              });
               return;
             }
             if (!entradaOpcao) {

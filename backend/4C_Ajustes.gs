@@ -1792,6 +1792,23 @@ function carregarEstadosDeClassePorDano_(ficha, tipo) {
   return ligadas;
 }
 
+function imunidadeDeDanoDeCartaAtiva_(ficha, tipo) {
+  if (typeof USOS_CARTAS_DOMINIO === 'undefined') return null;
+  const contadores = (ficha || {}).contadores || {};
+  const ids = Object.keys(USOS_CARTAS_DOMINIO);
+  for (let i = 0; i < ids.length; i++) {
+    const uso = USOS_CARTAS_DOMINIO[ids[i]] || {};
+    const estado = uso.estado || null;
+    if (!estado || !estado.chave || !estado.imunidadeDano) continue;
+    if (chaveTexto_(estado.imunidadeDano) !== chaveTexto_(tipo)) continue;
+    const ativo = Math.trunc(Number(((contadores[estado.chave] || {}).valor))) || 0;
+    if (ativo <= 0) continue;
+    const carta = (typeof acharCarta_ === 'function') ? acharCarta_(ids[i]) : null;
+    return { carta: ids[i], nome: carta ? carta.nome : ids[i], estado: estado.chave };
+  }
+  return null;
+}
+
 function aplicarDanoNaFicha_(ficha, a) {
   if (typeof pvDoDano_ !== 'function') {
     return { erro: 'Este servidor não sabe converter dano em Pontos de Vida.' };
@@ -1804,6 +1821,17 @@ function aplicarDanoNaFicha_(ficha, a) {
   const tipo = (tipoChave === 'fisico' || tipoChave === 'physical') ? 'fisico'
     : (tipoChave === 'magico' || tipoChave === 'magic') ? 'magico' : '';
   if (!tipo) return { erro: 'Informe se o dano é físico ou mágico.' };
+
+  const imunidadeCarta = imunidadeDeDanoDeCartaAtiva_(ficha, tipo);
+  if (imunidadeCarta) {
+    return {
+      tipo:'dano',
+      dano:{ bruto:bruto, final:0, tipo:tipo, faixa:'imune', rotulo:'Dano anulado' },
+      pvPelaFaixa:0, pvMarcados:0, naBeira:false, reacoes:[], resistencia:null,
+      imunidade:imunidadeCarta.nome, custos:{ estresse:0, esperanca:0, armadura:0 }, detalhes:[],
+      aviso:imunidadeCarta.nome + ': dano ' + (tipo === 'magico' ? 'mágico' : 'físico') + ' anulado pela imunidade ativa.'
+    };
+  }
 
   const d = ficha.defesas || {};
   const maior = Number(d.limiarMaior);
@@ -2395,6 +2423,22 @@ function usarCartaDeDominio_(ficha, a) {
     if (usado >= maxUso) return { erro: '"' + carta.nome + '" já foi usada; ela volta no descanso indicado pela carta.' };
   }
 
+  let cartaTrocaSemCusto = null;
+  if (def.trocaComCofreSemCusto === true) {
+    const pedidoTroca = String(a.cartaDoCofre || '');
+    cartaTrocaSemCusto = (typeof acharCarta_ === 'function') ? acharCarta_(pedidoTroca) : null;
+    if (!cartaTrocaSemCusto) return { erro: carta.nome + ': escolha uma carta válida do cofre.' };
+    const noCofre = ficha.cartas.cofre.some(function (x) {
+      const bruto = (x && typeof x === 'object') ? (x.id || x.nome) : x;
+      const cx = (typeof acharCarta_ === 'function') ? acharCarta_(bruto) : null;
+      return cx && cx.id === cartaTrocaSemCusto.id;
+    });
+    if (!noCofre) return { erro: '"' + cartaTrocaSemCusto.nome + '" não está no seu cofre.' };
+    if (typeof cartaTrancada_ === 'function' && cartaTrancada_(ficha, cartaTrocaSemCusto.id)) {
+      return { erro: '"' + cartaTrocaSemCusto.nome + '" está trancada permanentemente no cofre.' };
+    }
+  }
+
   const r = ficha.recursos || {};
   if (custoEsperanca > 0 && (Number(r.esperanca) || 0) < custoEsperanca) {
     return { erro: '"' + carta.nome + '" custa ' + custoEsperanca + ' de Esperança, e você tem ' +
@@ -2442,6 +2486,24 @@ function usarCartaDeDominio_(ficha, a) {
     condicao = cr;
   }
 
+  let trocaSemCustoResultado = null;
+  if (cartaTrocaSemCusto) {
+    const tirarId = function (lista, id) {
+      for (let i = lista.length - 1; i >= 0; i--) {
+        const bruto = (lista[i] && typeof lista[i] === 'object') ? (lista[i].id || lista[i].nome) : lista[i];
+        const cx = (typeof acharCarta_ === 'function') ? acharCarta_(bruto) : null;
+        if (cx && cx.id === id) lista.splice(i, 1);
+      }
+    };
+    tirarId(ficha.cartas.ativas, carta.id);
+    tirarId(ficha.cartas.cofre, cartaTrocaSemCusto.id);
+    if (!ficha.cartas.cofre.some(function (x) { return chaveTexto_(x) === chaveTexto_(carta.id); })) {
+      ficha.cartas.cofre.push(carta.id);
+    }
+    ficha.cartas.ativas.push(cartaTrocaSemCusto.id);
+    trocaSemCustoResultado = { saiu: carta.id, entrou: cartaTrocaSemCusto.id, custoRecordarCobrado: 0 };
+  }
+
   let estadoValor = null;
   let estadoValorBase = null;
   if (estado && estado.chave) {
@@ -2475,6 +2537,14 @@ function usarCartaDeDominio_(ficha, a) {
   }
   if (estadosEncerrados.length) complemento += (complemento ? ' ' : '') + estadosEncerrados.join(', ') + ' terminou ao conjurar outro feitiço.';
   const lembrete = String(def.lembrete || '');
+  const bonusProficienciaConjuracao = def.bonusProficienciaConjuracaoAtual === true
+    ? Math.max(0, Math.trunc(Number((ficha.recursos || {}).proficiencia)) || 0) : 0;
+  if (bonusProficienciaConjuracao) {
+    complemento += (complemento ? ' ' : '') + 'Some +' + bonusProficienciaConjuracao + ' de Proficiência à Jogada de Conjuração.';
+  }
+  if (trocaSemCustoResultado) {
+    complemento += (complemento ? ' ' : '') + 'Troca com o cofre feita sem Custo de Retorno.';
+  }
   return {
     tipo:'usarCarta', carta:carta.id, nome:carta.nome,
     opcao:opcaoUso ? opcaoUso.id : null,
@@ -2491,6 +2561,8 @@ function usarCartaDeDominio_(ficha, a) {
     condicao:condicao ? (condicao.chave || (def.condicao || {}).chave) : null,
     efeitoRecurso:efeitoRecursoResultado,
     efeitoRecursoCondicional:efeitoRecursoCondicionalResultado,
+    bonusProficienciaConjuracao:bonusProficienciaConjuracao,
+    trocaSemCusto:trocaSemCustoResultado,
     moveuParaCofre:def.moveParaCofre === true,
     estadosDeCartaEncerrados:estadosEncerrados,
     lembrete:lembrete,

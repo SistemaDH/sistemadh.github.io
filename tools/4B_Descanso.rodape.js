@@ -61,6 +61,17 @@ function movimentosPorDescansoDaFicha_(ficha) {
   for (let i = 0; i < efeitos.length; i++) {
     total += Math.max(0, Math.trunc(Number(efeitos[i].movimentosAdicionais)) || 0);
   }
+  // Cartas podem conceder movimento extra somente enquanto um estado real
+  // está ativo (ex.: descansar dentro do próprio Refúgio Seguro).
+  if (typeof USOS_CARTAS_DOMINIO !== 'undefined') {
+    const ids = Object.keys(USOS_CARTAS_DOMINIO);
+    for (let i = 0; i < ids.length; i++) {
+      const estado = (USOS_CARTAS_DOMINIO[ids[i]] || {}).estado || null;
+      if (!estado || !estado.chave || !estado.movimentosAdicionaisNoDescanso) continue;
+      const ativo = Math.trunc(Number(((((ficha || {}).contadores || {})[estado.chave] || {}).valor))) || 0;
+      if (ativo > 0) total += Math.max(0, Math.trunc(Number(estado.movimentosAdicionaisNoDescanso)) || 0);
+    }
+  }
   return total;
 }
 

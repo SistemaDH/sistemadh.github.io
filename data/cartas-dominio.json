@@ -3038,7 +3038,34 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('SPELL'), não 'Feitiço'."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('SPELL'), não 'Feitiço'.",
+   "automacao": {
+    "classificacao": "automatizada-custo-uso-estado",
+    "resumo": "Depois do sucesso informado pela mesa, o app cobra 1 Esperança, registra 1/descanso e mantém a muralha como estado até o descanso ou encerramento."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Conjuração 15, os pontos da muralha, o lado para o qual criaturas/objetos são empurrados e toda posição são resolvidos na mesa."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "marcaUso": {
+     "chave": "uso:carta:codex:manifestar-muralha",
+     "maximo": 1
+    },
+    "estado": {
+     "chave": "estado:carta:codex:manifestar-muralha",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Manifestar Muralha ativa",
+     "rotuloEncerrar": "Encerrar Manifestar Muralha",
+     "avisoEncerrar": "Manifestar Muralha foi encerrada."
+    },
+    "rotuloAtivar": "Sucesso: Manifestar Muralha · 1 Esperança",
+    "lembrete": "Crie a muralha entre dois pontos em alcance Longo. Ela dura até seu próximo descanso ou até ser encerrada/reconjurada."
+   }
   },
   {
    "id": "codex-teleporte",
@@ -3081,6 +3108,23 @@
    "observacao": "Diferente de todas as outras cartas do maço (que estão em português), o corpo do texto desta carta está impresso inteiramente em inglês, apesar do título 'BANIR' estar em português. Transcrito exatamente como impresso, sem tradução.",
    "origem": {
     "texto": "livro-jambo"
+   },
+   "automacao": {
+    "classificacao": "automatizada-uso-apos-resultado-manual",
+    "resumo": "Quando a mesa confirma que a reação do alvo falhou, o app registra o uso de Banir uma vez por descanso."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Conjuração, os d20, a Dificuldade, a reação do alvo, o banimento e as novas reações quando houver Medo continuam na mesa."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:codex:banir",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Falha do alvo: Banir",
+    "lembrete": "Use depois da falha na reação do alvo. Ele é banido; em jogadas com Medo a Dificuldade cai em 1 e ele tenta retornar."
    }
   },
   {
@@ -3124,7 +3168,39 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'. Esta carta usa 'Jogada de Conjuração' em vez de 'jogada de Spellcast', diferente das demais cartas de Grimório do maço."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'. Esta carta usa 'Jogada de Conjuração' em vez de 'jogada de Spellcast', diferente das demais cartas de Grimório do maço.",
+   "automacao": {
+    "classificacao": "automatizada-opcoes-uso",
+    "resumo": "Passar Através e Portão Dimensional possuem limites independentes e são registrados separadamente pelo servidor."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "As duas Jogadas de Conjuração e a travessia/posição do portal são resolvidas na mesa; o app não rola dados."
+   },
+   "uso": {
+    "custo": {},
+    "opcoes": [
+     {
+      "id": "passar-atraves",
+      "rotulo": "Sucesso: Passar Através",
+      "marcaUso": {
+       "chave": "uso:carta:codex:passar-atraves",
+       "maximo": 1
+      },
+      "lembrete": "Você e as criaturas tocando em você podem atravessar a parede ou porta em alcance Próximo."
+     },
+     {
+      "id": "portao-dimensional",
+      "rotulo": "Sucesso: Portão Dimensional",
+      "marcaUso": {
+       "chave": "uso:carta:codex:portao-dimensional",
+       "maximo": 1
+      },
+      "lembrete": "Abra o portal para uma dimensão/plano já visitado; ele dura até seu próximo descanso."
+     }
+    ],
+    "rotuloAtivar": "Usar Livro de Homet"
+   }
   },
   {
    "id": "codex-tocado-pelo-codice",
@@ -3148,7 +3224,44 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('ABILITY'), não 'Habilidade'."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('ABILITY'), não 'Habilidade'.",
+   "automacao": {
+    "classificacao": "automatizada-loadout-custo-troca",
+    "resumo": "Com quatro cartas Códice ativas, o app cobra 1 Estresse e publica a Proficiência atual para a Jogada de Conjuração; ou, 1/descanso, troca esta carta por uma carta do cofre sem cobrar recordar."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Conjuração continua física. Na troca, o jogador escolhe qual carta do cofre entra; nenhuma rolagem é feita pelo app."
+   },
+   "uso": {
+    "custo": {},
+    "exigeCartasAtivasDominio": {
+     "dominio": "CODEX",
+     "quantidade": 4
+    },
+    "opcoes": [
+     {
+      "id": "proficiencia-conjuracao",
+      "rotulo": "Somar Proficiência · 1 Estresse",
+      "custo": {
+       "estresse": 1
+      },
+      "bonusProficienciaConjuracaoAtual": true,
+      "lembrete": "Some sua Proficiência atual à Jogada de Conjuração que você está fazendo."
+     },
+     {
+      "id": "troca-sem-custo",
+      "rotulo": "Trocar com o cofre · sem Custo de Retorno",
+      "marcaUso": {
+       "chave": "uso:carta:codex:tocado-pelo-codice:troca",
+       "maximo": 1
+      },
+      "trocaComCofreSemCusto": true,
+      "lembrete": "Tocado pelo Códice vai para o cofre e a carta escolhida entra na mão sem pagar Custo de Retorno."
+     }
+    ],
+    "rotuloAtivar": "Usar Tocado pelo Códice"
+   }
   },
   {
    "id": "codex-livro-de-vyola",
@@ -3171,7 +3284,34 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'.",
+   "automacao": {
+    "classificacao": "automatizada-custo-uso-estado",
+    "resumo": "Clareza Compartilhada cobra 1 Esperança, registra 1/descanso longo e mantém um lembrete ativo até o próximo descanso."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Mergulho na Memória e a escolha de qual das duas criaturas conectadas marca cada Estresse são resolvidos na mesa."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "marcaUso": {
+     "chave": "uso:carta:codex:clareza-compartilhada",
+     "maximo": 1
+    },
+    "estado": {
+     "chave": "estado:carta:codex:clareza-compartilhada",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Clareza Compartilhada ativa",
+     "rotuloEncerrar": "Encerrar Clareza Compartilhada",
+     "avisoEncerrar": "Clareza Compartilhada foi encerrada."
+    },
+    "rotuloAtivar": "Clareza Compartilhada · 1 Esperança",
+    "lembrete": "Escolha duas criaturas voluntárias. Até o próximo descanso delas, quando uma marcar Estresse, elas escolhem qual das duas marca."
+   }
   },
   {
    "id": "codex-refugio-seguro",
@@ -3196,7 +3336,31 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('SPELL'), não 'Feitiço'."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('SPELL'), não 'Feitiço'.",
+   "automacao": {
+    "classificacao": "automatizada-custo-estado-descanso",
+    "resumo": "O app cobra 2 Esperanças e mantém Refúgio Seguro ativo. Enquanto o estado estiver ativo, esta ficha recebe exatamente um movimento de descanso adicional."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Local da porta, criaturas autorizadas e invisibilidade da entrada são decisões da mesa. O app não cria mapa nem rola dados."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 2
+    },
+    "estado": {
+     "chave": "estado:carta:codex:refugio-seguro",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "movimentosAdicionaisNoDescanso": 1,
+     "rotuloAtivo": "Dentro do Refúgio Seguro",
+     "rotuloEncerrar": "Sair/encerrar Refúgio Seguro",
+     "avisoEncerrar": "Refúgio Seguro deixou de conceder o movimento adicional."
+    },
+    "rotuloAtivar": "Invocar Refúgio Seguro · 2 Esperanças",
+    "lembrete": "Enquanto descansar no seu próprio Refúgio Seguro, você recebe um movimento de inatividade adicional."
+   }
   },
   {
    "id": "codex-livro-do-ronin",
@@ -3245,7 +3409,35 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('SPELL'), não 'Feitiço'."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('SPELL'), não 'Feitiço'.",
+   "automacao": {
+    "classificacao": "automatizada-custo-variavel-uso",
+    "resumo": "Depois do sucesso e da lista de alvos elegíveis dada pelo Mestre, o app marca 1 Estresse por alvo escolhido e registra 1/descanso longo."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Conjuração 18, quais adversários têm Dificuldade 18 ou menor e a remoção dos alvos da cena são confirmadas pelo Mestre."
+   },
+   "uso": {
+    "custo": {},
+    "entradaQuantidade": {
+     "campo": "alvosEscolhidos",
+     "rotulo": "Alvos escolhidos",
+     "minimo": 1,
+     "maximo": 12,
+     "custoPorUnidade": {
+      "estresse": 1
+     },
+     "ajuda": "Informe quantos adversários elegíveis você escolheu. O app marca 1 Estresse por alvo."
+    },
+    "quantidadeLigadaAoEstresse": true,
+    "marcaUso": {
+     "chave": "uso:carta:codex:onda-de-desintegracao",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Sucesso: desintegrar alvos",
+    "lembrete": "Os alvos escolhidos entre os elegíveis são mortos e não podem voltar à vida; remova-os/derrote-os na cena pelo fluxo do Mestre."
+   }
   },
   {
    "id": "codex-livro-de-yarrow",
@@ -3266,7 +3458,31 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'.",
+   "automacao": {
+    "classificacao": "automatizada-custo-imunidade",
+    "resumo": "Imunidade Mágica cobra 5 Esperanças e cria um estado que faz o resolvedor de dano da ficha anular dano mágico até o próximo descanso."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Manipulador do Tempo e suas escolhas de alvo continuam na mesa. Imunidade Mágica não rola dados."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 5
+    },
+    "estado": {
+     "chave": "estado:carta:codex:imunidade-magica",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "imunidadeDano": "magico",
+     "rotuloAtivo": "Imunidade Mágica ativa",
+     "rotuloEncerrar": "Encerrar Imunidade Mágica",
+     "avisoEncerrar": "Imunidade Mágica foi encerrada."
+    },
+    "rotuloAtivar": "Imunidade Mágica · 5 Esperanças",
+    "lembrete": "Até seu próximo descanso, dano mágico contra você é anulado pelo resolvedor da ficha."
+   }
   },
   {
    "id": "codex-uniao-transcendente",
@@ -3290,7 +3506,41 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('SPELL'), não 'Feitiço'. O crédito de arte no rodapé exibe o texto de espaço reservado 'Artist Name' em vez de um nome real."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('SPELL'), não 'Feitiço'. O crédito de arte no rodapé exibe o texto de espaço reservado 'Artist Name' em vez de um nome real.",
+   "automacao": {
+    "classificacao": "automatizada-custo-uso-estado",
+    "resumo": "O app exige ao menos duas criaturas, cobra 5 Esperanças, registra 1/descanso longo e mantém a União ativa até o próximo descanso."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Quais criaturas estão conectadas e quem escolhe marcar cada Estresse/PV são decisões dos jogadores na mesa; o app não redistribui dano sem essa escolha."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 5
+    },
+    "entradaQuantidade": {
+     "campo": "criaturasConectadas",
+     "rotulo": "Criaturas conectadas",
+     "minimo": 2,
+     "maximo": 12,
+     "ajuda": "Informe quantas criaturas voluntárias foram conectadas (mínimo 2)."
+    },
+    "marcaUso": {
+     "chave": "uso:carta:codex:uniao-transcendente",
+     "maximo": 1
+    },
+    "estado": {
+     "chave": "estado:carta:codex:uniao-transcendente",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "União Transcendente ativa",
+     "rotuloEncerrar": "Encerrar União Transcendente",
+     "avisoEncerrar": "União Transcendente foi encerrada."
+    },
+    "rotuloAtivar": "Conectar criaturas · 5 Esperanças",
+    "lembrete": "Até o próximo descanso, quando uma criatura conectada for marcar Estresse ou PV, o grupo conectado escolhe quem marca."
+   }
   },
   {
    "id": "grace-encantar",

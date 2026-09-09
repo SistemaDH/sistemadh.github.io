@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 82 contadores: 50 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 95 contadores: 63 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 82 contadores: 50 de carta, 25 de classe/subclasse, 4 de 
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 82);
+  igual(Object.keys(CONTADORES).length, 95);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 50);
+  igual(porOrigem['carta-dominio'], 63);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -8880,6 +8880,147 @@ teste('Livro de Ava: Armadura de Tava cobra 1 Esperança e mantém o estado de s
   igual(r.erros,[]); igual(f.recursos.esperanca,5); igual(f.contadores['estado:carta:codex:armadura-de-tava'].valor,1);
   r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-ava',opcao:'armadura-de-tava',encerrar:true}]);
   igual(r.erros,[]); igual(f.recursos.esperanca,5); verdade(!f.contadores['estado:carta:codex:armadura-de-tava']);
+});
+
+
+
+console.log('\nLote 8 — Códice níveis 5–10');
+function fichaCodexAlta_(nivel, ativas, cofre = [], ancestralidade = 'Humano') {
+  const base = contexto.fichaRapida_({
+    nome:'Códice Alto', classe:'Mago', subclasse:'Escola da Guerra',
+    ancestralidade, comunidade:'Highborne',
+    cartas:['codex-livro-de-ava','codex-livro-de-illiat'],
+    experiencias:[{nome:'Erudito',bonus:2},{nome:'Arcano',bonus:2}]
+  });
+  base.identidade.nivel = nivel;
+  base.cartas = { ativas:ativas.slice(), cofre:cofre.slice() };
+  const f = contexto.validarFicha_(base);
+  f.recursos.esperanca = 6;
+  f.recursos.estresseMarcado = 0;
+  return f;
+}
+
+teste('Códice N5-N10: os nove candidatos restantes ficaram classificados e sem RNG', () => {
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const ids=['codex-manifestar-muralha','codex-banir','codex-livro-de-homet','codex-tocado-pelo-codice','codex-livro-de-vyola','codex-refugio-seguro','codex-onda-de-desintegracao','codex-livro-de-yarrow','codex-uniao-transcendente'];
+  const xs=ids.map((id)=>d.cartas.find((c)=>c.id===id));
+  verdade(xs.every(Boolean)); verdade(xs.every((c)=>!!c.automacao));
+  verdade(xs.every((c)=>c.resolucaoManual && c.resolucaoManual.rolaNoApp===false));
+});
+
+teste('Manifestar Muralha cobra Esperança, guarda estado e é 1/descanso', () => {
+  const f=fichaCodexAlta_(5,['codex-manifestar-muralha','codex-teleporte']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-manifestar-muralha'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5);
+  igual(f.contadores['uso:carta:codex:manifestar-muralha'].valor,1);
+  igual(f.contadores['estado:carta:codex:manifestar-muralha'].valor,1);
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-manifestar-muralha'}]).erros.length>0);
+  contexto.ajustarGatilho_(f,{gatilho:'descanso'});
+  verdade(!f.contadores['uso:carta:codex:manifestar-muralha']);
+  verdade(!f.contadores['estado:carta:codex:manifestar-muralha']);
+});
+
+teste('Banir e Livro de Homet registram limites independentes sem rolar dados', () => {
+  const f=fichaCodexAlta_(7,['codex-banir','codex-livro-de-homet']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-banir'}]);
+  igual(r.erros,[]); igual(f.contadores['uso:carta:codex:banir'].valor,1); igual(r.mudancas[0].dadosManuais,null);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-homet',opcao:'passar-atraves'}]);
+  igual(r.erros,[]); igual(f.contadores['uso:carta:codex:passar-atraves'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-homet',opcao:'portao-dimensional'}]);
+  igual(r.erros,[]); igual(f.contadores['uso:carta:codex:portao-dimensional'].valor,1);
+  contexto.ajustarGatilho_(f,{gatilho:'descanso'});
+  verdade(!f.contadores['uso:carta:codex:banir']); verdade(!f.contadores['uso:carta:codex:passar-atraves']);
+  igual(f.contadores['uso:carta:codex:portao-dimensional'].valor,1);
+  contexto.ajustarGatilho_(f,{gatilho:'descanso-longo'});
+  verdade(!f.contadores['uso:carta:codex:portao-dimensional']);
+});
+
+teste('Tocado pelo Códice exige quatro Códice e publica a Proficiência atual', () => {
+  const quatro=['codex-tocado-pelo-codice','codex-manifestar-muralha','codex-banir','codex-livro-de-homet'];
+  const f=fichaCodexAlta_(7,quatro,[],'Firbolg');
+  const prof=f.recursos.proficiencia;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-tocado-pelo-codice',opcao:'proficiencia-conjuracao'}]);
+  verdade(!!r.pendenciaRolagem); igual(f.recursos.estresseMarcado,0);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-tocado-pelo-codice',opcao:'proficiencia-conjuracao',dadoInabalavel:6}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,0); igual(r.mudancas[0].bonusProficienciaConjuracao,prof);
+  const tres=fichaCodexAlta_(7,quatro.slice(0,3));
+  verdade(contexto.aplicarAjustes_(tres,[{tipo:'usarCarta',carta:'codex-tocado-pelo-codice',opcao:'proficiencia-conjuracao'}]).erros.length>0);
+});
+
+teste('Tocado pelo Códice troca com o cofre sem Custo de Retorno e de forma atômica', () => {
+  const ativas=['codex-tocado-pelo-codice','codex-manifestar-muralha','codex-banir','codex-livro-de-homet'];
+  const f=fichaCodexAlta_(7,ativas,['codex-livro-de-grynn']);
+  const estresse=f.recursos.estresseMarcado;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-tocado-pelo-codice',opcao:'troca-sem-custo',cartaDoCofre:'codex-livro-de-grynn'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,estresse);
+  verdade(f.cartas.ativas.includes('codex-livro-de-grynn')); verdade(!f.cartas.ativas.includes('codex-tocado-pelo-codice'));
+  verdade(f.cartas.cofre.includes('codex-tocado-pelo-codice')); igual(r.mudancas[0].trocaSemCusto.custoRecordarCobrado,0);
+  igual(f.contadores['uso:carta:codex:tocado-pelo-codice:troca'].valor,1);
+  const invalida=fichaCodexAlta_(7,ativas,['codex-livro-de-grynn']); const antes=JSON.stringify(invalida);
+  r=contexto.aplicarAjustes_(invalida,[{tipo:'usarCarta',carta:'codex-tocado-pelo-codice',opcao:'troca-sem-custo',cartaDoCofre:'codex-livro-de-ava'}]);
+  verdade(r.erros.length>0); igual(JSON.stringify(invalida),antes,'troca inválida não pode tocar na ficha');
+});
+
+teste('Clareza Compartilhada cobra 1 Esperança, usa 1/descanso longo e encerra no descanso', () => {
+  const f=fichaCodexAlta_(8,['codex-livro-de-vyola','codex-refugio-seguro']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-vyola'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5); igual(f.contadores['estado:carta:codex:clareza-compartilhada'].valor,1);
+  contexto.ajustarGatilho_(f,{gatilho:'descanso'});
+  verdade(!f.contadores['estado:carta:codex:clareza-compartilhada']);
+  igual(f.contadores['uso:carta:codex:clareza-compartilhada'].valor,1);
+  contexto.ajustarGatilho_(f,{gatilho:'descanso-longo'});
+  verdade(!f.contadores['uso:carta:codex:clareza-compartilhada']);
+});
+
+teste('Refúgio Seguro concede exatamente um movimento adicional enquanto ativo', () => {
+  const f=fichaCodexAlta_(8,['codex-refugio-seguro','codex-livro-de-vyola']);
+  igual(contexto.movimentosPorDescansoDaFicha_(f),2);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-refugio-seguro'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,4); igual(contexto.movimentosPorDescansoDaFicha_(f),3);
+  const sim=contexto.simularDescanso_(f,'curto',[
+    {movimento:'preparar-se'},{movimento:'reduzir-estresse',rolagem:2},{movimento:'reparar-armadura',rolagem:2}
+  ]);
+  verdade(sim.previa.ok,JSON.stringify(sim.previa));
+  verdade(!sim.ficha.contadores['estado:carta:codex:refugio-seguro']);
+  igual(contexto.movimentosPorDescansoDaFicha_(sim.ficha),2);
+});
+
+teste('Onda de Desintegração cobra 1 Estresse por alvo e é 1/descanso longo', () => {
+  const f=fichaCodexAlta_(9,['codex-onda-de-desintegracao','codex-livro-do-ronin']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-onda-de-desintegracao',alvosEscolhidos:3}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,3); igual(r.mudancas[0].quantidade,3);
+  igual(f.contadores['uso:carta:codex:onda-de-desintegracao'].valor,1);
+  contexto.ajustarGatilho_(f,{gatilho:'descanso'}); igual(f.contadores['uso:carta:codex:onda-de-desintegracao'].valor,1);
+  contexto.ajustarGatilho_(f,{gatilho:'descanso-longo'}); verdade(!f.contadores['uso:carta:codex:onda-de-desintegracao']);
+  const sem=fichaCodexAlta_(9,['codex-onda-de-desintegracao','codex-livro-do-ronin']); sem.recursos.estresseMarcado=sem.recursos.estresseMaximo-1;
+  const antes=JSON.stringify(sem); r=contexto.aplicarAjustes_(sem,[{tipo:'usarCarta',carta:'codex-onda-de-desintegracao',alvosEscolhidos:2}]);
+  verdade(r.erros.length>0); igual(JSON.stringify(sem),antes);
+});
+
+teste('Livro de Yarrow torna dano mágico imune até o próximo descanso, sem afetar físico', () => {
+  const f=fichaCodexAlta_(10,['codex-livro-de-yarrow','codex-uniao-transcendente']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-livro-de-yarrow'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,1); igual(f.contadores['estado:carta:codex:imunidade-magica'].valor,1);
+  const dano=Math.max(1,Number(f.defesas.limiarMaior)||1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano,tipoDeDano:'magico',reacoes:[]}]);
+  igual(r.erros,[]); igual(r.mudancas[0].pvMarcados,0); igual(r.mudancas[0].dano.final,0); igual(r.mudancas[0].imunidade,'Livro de Yarrow');
+  r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano,tipoDeDano:'fisico',reacoes:[]}]);
+  igual(r.erros,[]); verdade(r.mudancas[0].pvMarcados>0);
+  contexto.ajustarGatilho_(f,{gatilho:'descanso'}); verdade(!f.contadores['estado:carta:codex:imunidade-magica']);
+  r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano,tipoDeDano:'magico',reacoes:[]}]);
+  igual(r.erros,[]); verdade(r.mudancas[0].pvMarcados>0);
+});
+
+teste('União Transcendente exige duas criaturas, cobra 5 Esperanças e registra 1/descanso longo', () => {
+  let f=fichaCodexAlta_(10,['codex-uniao-transcendente','codex-livro-de-yarrow']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-uniao-transcendente',criaturasConectadas:1}]);
+  verdade(r.erros.length>0); igual(f.recursos.esperanca,6);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'codex-uniao-transcendente',criaturasConectadas:3}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,1); igual(r.mudancas[0].quantidade,3);
+  igual(f.contadores['uso:carta:codex:uniao-transcendente'].valor,1); igual(f.contadores['estado:carta:codex:uniao-transcendente'].valor,1);
+  contexto.ajustarGatilho_(f,{gatilho:'descanso'}); verdade(!f.contadores['estado:carta:codex:uniao-transcendente']);
+  igual(f.contadores['uso:carta:codex:uniao-transcendente'].valor,1);
+  contexto.ajustarGatilho_(f,{gatilho:'descanso-longo'}); verdade(!f.contadores['uso:carta:codex:uniao-transcendente']);
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

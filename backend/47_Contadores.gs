@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 82 cartas e características mandam
+ *  O problema que este arquivo resolve: 95 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -122,6 +122,19 @@ const CONTADORES = {
   "uso:carta:codex:repudiar": { origem: "carta-dominio", refId: "codex-livro-de-exota", nome: "Repudiar", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
   "estado:carta:codex:construto": { origem: "carta-dominio", refId: "codex-livro-de-exota", nome: "Criar Construto", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
   "uso:carta:codex:deflexao-arcana": { origem: "carta-dominio", refId: "codex-livro-de-grynn", nome: "Deflexão Arcana", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:carta:codex:manifestar-muralha": { origem: "carta-dominio", refId: "codex-manifestar-muralha", nome: "Manifestar Muralha", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "estado:carta:codex:manifestar-muralha": { origem: "carta-dominio", refId: "codex-manifestar-muralha", nome: "Manifestar Muralha", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso","manual"], recarregaEm: [] },
+  "uso:carta:codex:banir": { origem: "carta-dominio", refId: "codex-banir", nome: "Banir", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:codex:passar-atraves": { origem: "carta-dominio", refId: "codex-livro-de-homet", nome: "Passar Através", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:codex:portao-dimensional": { origem: "carta-dominio", refId: "codex-livro-de-homet", nome: "Portão Dimensional", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:carta:codex:tocado-pelo-codice:troca": { origem: "carta-dominio", refId: "codex-tocado-pelo-codice", nome: "Tocado pelo Códice", rotulo: "troca usada", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:codex:clareza-compartilhada": { origem: "carta-dominio", refId: "codex-livro-de-vyola", nome: "Clareza Compartilhada", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "estado:carta:codex:clareza-compartilhada": { origem: "carta-dominio", refId: "codex-livro-de-vyola", nome: "Clareza Compartilhada", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso","manual"], recarregaEm: [] },
+  "estado:carta:codex:refugio-seguro": { origem: "carta-dominio", refId: "codex-refugio-seguro", nome: "Refúgio Seguro", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso","manual"], recarregaEm: [] },
+  "uso:carta:codex:onda-de-desintegracao": { origem: "carta-dominio", refId: "codex-onda-de-desintegracao", nome: "Onda de Desintegração", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "estado:carta:codex:imunidade-magica": { origem: "carta-dominio", refId: "codex-livro-de-yarrow", nome: "Imunidade Mágica", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso","manual"], recarregaEm: [] },
+  "uso:carta:codex:uniao-transcendente": { origem: "carta-dominio", refId: "codex-uniao-transcendente", nome: "União Transcendente", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "estado:carta:codex:uniao-transcendente": { origem: "carta-dominio", refId: "codex-uniao-transcendente", nome: "União Transcendente", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso","manual"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -208,6 +221,19 @@ const CONTADOR_ALIASES = {
   "uso:carta:codex:repudiar": ["Repudiar"],
   "estado:carta:codex:construto": ["Criar Construto"],
   "uso:carta:codex:deflexao-arcana": ["Deflexão Arcana"],
+  "uso:carta:codex:manifestar-muralha": ["Manifestar Muralha"],
+  "estado:carta:codex:manifestar-muralha": ["Manifestar Muralha"],
+  "uso:carta:codex:banir": ["Banir"],
+  "uso:carta:codex:passar-atraves": ["Passar Através"],
+  "uso:carta:codex:portao-dimensional": ["Portão Dimensional"],
+  "uso:carta:codex:tocado-pelo-codice:troca": ["Tocado pelo Códice"],
+  "uso:carta:codex:clareza-compartilhada": ["Clareza Compartilhada"],
+  "estado:carta:codex:clareza-compartilhada": ["Clareza Compartilhada"],
+  "estado:carta:codex:refugio-seguro": ["Refúgio Seguro"],
+  "uso:carta:codex:onda-de-desintegracao": ["Onda de Desintegração"],
+  "estado:carta:codex:imunidade-magica": ["Imunidade Mágica"],
+  "uso:carta:codex:uniao-transcendente": ["União Transcendente"],
+  "estado:carta:codex:uniao-transcendente": ["União Transcendente"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */
