@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# rev2: fixture isolada; este comentário força a validação após o hotfix.
 from pathlib import Path
 
 R = Path(__file__).resolve().parents[1]
