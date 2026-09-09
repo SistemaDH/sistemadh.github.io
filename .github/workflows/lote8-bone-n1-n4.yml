@@ -18,7 +18,9 @@ jobs:
       - name: Materializar Osso N1-N4
         run: |
           python3 tools/lote8-bone-n1-n4.py
+          python3 tools/lote8-bone-n1-n4-hotfix.py
           node tools/gerar-41-dominios.mjs
+          node tools/gerar-47-contadores.mjs
           git diff --check
 
       - name: Conferir classificação e auditoria
@@ -30,6 +32,10 @@ jobs:
           assert len(xs)==9, len(xs)
           assert all(c.get('automacao') for c in xs), [c['id'] for c in xs if not c.get('automacao')]
           assert all((c.get('resolucaoManual') or {}).get('rolaNoApp') is False for c in xs)
+          cont=json.load(open('data/contadores.json',encoding='utf-8'))['contadores']
+          ch={x['chave'] for x in cont}
+          assert 'uso:carta:bone:manobras-ageis' in ch
+          assert 'estado:carta:bone:ferocidade:evasao' in ch
           PY
           python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria-lote8.md
           if grep -Eq '^\| Osso \| [1-4] \|' /tmp/auditoria-lote8.md; then
@@ -39,7 +45,9 @@ jobs:
           fi
 
       - name: Testes backend
+        shell: bash
         run: |
+          set -o pipefail
           node tools/testes-backend.mjs | tee /tmp/backend.log
           ! grep -q '✗' /tmp/backend.log
           tail -n 5 /tmp/backend.log
@@ -47,6 +55,7 @@ jobs:
       - name: Instalar Playwright
         run: |
           npm install --no-save --package-lock=false playwright@1.62.1
+          sudo rm -f /etc/apt/sources.list.d/google-chrome*.list || true
           npx playwright install --with-deps chromium
 
       - name: Testes E2E
@@ -68,6 +77,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm -f --ignore-unmatch tools/lote8-bone-n1-n4.py
+          git rm -f --ignore-unmatch tools/lote8-bone-n1-n4-hotfix.py
           git rm -f --ignore-unmatch .github/workflows/lote8-bone-n1-n4.yml
           git rm -f --ignore-unmatch tools/__pycache__/conferir-citacoes.cpython-311.pyc
           find . -type d -name __pycache__ -prune -exec rm -rf {} +
