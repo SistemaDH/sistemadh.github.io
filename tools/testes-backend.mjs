@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 52 contadores: 20 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 57 contadores: 25 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 52 contadores: 20 de carta, 25 de classe/subclasse, 4 de 
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 52);
+  igual(Object.keys(CONTADORES).length, 57);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 20);
+  igual(porOrigem['carta-dominio'], 25);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -8234,11 +8234,6 @@ teste('Contra-Feitiço só sai da mão depois da confirmação manual de sucesso
   igual(r.mudancas[0].moveuParaCofre, true);
 });
 
-console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
-if (falhou) {
-  falhas.forEach((f) => console.error(f.nome, f.erro));
-  process.exit(1);
-}
 
 
 console.log('\nLote 8 — Arcana níveis 4–7');
@@ -8315,3 +8310,139 @@ teste('Tocado pela Arcana registra a troca dos dados 1/descanso e exige o loadou
   const tres = fichaArcanaN7_(['arcana-tocado-pela-arcana','arcana-desaparecer','arcana-andar-na-parede']);
   verdade(contexto.aplicarAjustes_(tres, [{ tipo:'usarCarta', carta:'arcana-tocado-pela-arcana' }]).erros.length > 0);
 });
+
+
+console.log('\nLote 8 — Arcana níveis 8–10');
+function fichaArcanaN10_(cartas, ancestralidade = 'Humano') {
+  const base = contexto.fichaRapida_({
+    nome: 'Arcana N10', classe: 'Feiticeiro', subclasse: 'Origem Primal',
+    ancestralidade, comunidade: 'Loreborne',
+    cartas, experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  base.identidade.nivel = 10;
+  base.cartas = { ativas: cartas.slice(), cofre: [] };
+  const f = contexto.validarFicha_(base);
+  f.recursos.esperanca = 6;
+  f.recursos.estresseMarcado = 0;
+  return f;
+}
+
+teste('Aura Confusa cria 1 camada base + extras e respeita 1 uso por descanso longo', () => {
+  const f = fichaArcanaN10_(['arcana-aura-confusa','arcana-andar-na-parede']);
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-aura-confusa', camadasExtras:2 }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, 2);
+  igual(f.contadores['estado:carta:arcana:aura-confusa:camadas'].valor, 3);
+  igual(f.contadores['uso:carta:arcana:aura-confusa'].valor, 1);
+  verdade(contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-aura-confusa', camadasExtras:0 }]).erros.length > 0);
+  contexto.ajustarGatilho_(f, { gatilho:'descanso' });
+  igual(f.contadores['uso:carta:arcana:aura-confusa'].valor, 1, 'descanso curto não devolve Aura');
+  contexto.ajustarGatilho_(f, { gatilho:'descanso-longo' });
+  verdade(!f.contadores['uso:carta:arcana:aura-confusa']);
+});
+
+teste('Aura Confusa respeita Inabalável: Estresse evitado não cria camada extra', () => {
+  const f = fichaArcanaN10_(['arcana-aura-confusa','arcana-andar-na-parede'], 'Firbolg');
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-aura-confusa', camadasExtras:1 }]);
+  verdade(!!r.pendenciaRolagem, 'um Estresse pede o d6 manual');
+  igual(f.recursos.estresseMarcado, 0);
+  verdade(!f.contadores['estado:carta:arcana:aura-confusa:camadas']);
+  r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-aura-confusa', camadasExtras:1, dadoInabalavel:6 }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, 0);
+  igual(f.contadores['estado:carta:arcana:aura-confusa:camadas'].valor, 1);
+  igual(r.mudancas[0].quantidadeEfetiva, 0);
+  igual(r.mudancas[0].custoEstresse, 0);
+});
+
+teste('Aura Confusa usa somente d6 digitados: 5+ consome camada; falha encerra a aura', () => {
+  const f = fichaArcanaN10_(['arcana-aura-confusa','arcana-andar-na-parede']);
+  contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-aura-confusa', camadasExtras:2 }]);
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-aura-confusa', reagir:true, dadosAuraConfusa:[2,5,1] }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].ataqueFalha, true);
+  igual(f.contadores['estado:carta:arcana:aura-confusa:camadas'].valor, 2);
+  r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-aura-confusa', reagir:true, dadosAuraConfusa:[1,4] }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].ataqueFalha, false);
+  verdade(!f.contadores['estado:carta:arcana:aura-confusa:camadas']);
+
+  const invalida = fichaArcanaN10_(['arcana-aura-confusa','arcana-andar-na-parede']);
+  contexto.aplicarAjustes_(invalida, [{ tipo:'usarCarta', carta:'arcana-aura-confusa', camadasExtras:1 }]);
+  r = contexto.aplicarAjustes_(invalida, [{ tipo:'usarCarta', carta:'arcana-aura-confusa', reagir:true, dadosAuraConfusa:[6] }]);
+  verdade(r.erros.length > 0, 'duas camadas exigem dois d6');
+  igual(invalida.contadores['estado:carta:arcana:aura-confusa:camadas'].valor, 2);
+});
+
+teste('Reflexo Arcano cobra a Esperança escolhida e qualquer 6 reflete, sem RNG do app', () => {
+  const f = fichaArcanaN10_(['arcana-reflexo-arcano','arcana-andar-na-parede']);
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-reflexo-arcano', esperancasGastas:2, dadosReflexoArcano:[2,6] }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 4);
+  igual(r.mudancas[0].dadosManuais.sucesso, true);
+  const invalida = fichaArcanaN10_(['arcana-reflexo-arcano','arcana-andar-na-parede']);
+  r = contexto.aplicarAjustes_(invalida, [{ tipo:'usarCarta', carta:'arcana-reflexo-arcano', esperancasGastas:2, dadosReflexoArcano:[6] }]);
+  verdade(r.erros.length > 0);
+  igual(invalida.recursos.esperanca, 6, 'dado faltando não cobra recurso');
+});
+
+teste('Projeção Sensorial é 1/descanso e encerra ao sofrer dano ou conjurar outro feitiço', () => {
+  const porFeitico = fichaArcanaN10_(['arcana-projecao-sensorial','arcana-andar-na-parede']);
+  igual(contexto.aplicarAjustes_(porFeitico, [{ tipo:'usarCarta', carta:'arcana-projecao-sensorial' }]).erros, []);
+  verdade(!!porFeitico.contadores['estado:carta:arcana:projecao-sensorial']);
+  contexto.aplicarAjustes_(porFeitico, [{ tipo:'usarCarta', carta:'arcana-andar-na-parede' }]);
+  verdade(!porFeitico.contadores['estado:carta:arcana:projecao-sensorial']);
+  contexto.ajustarGatilho_(porFeitico, { gatilho:'descanso' });
+  verdade(!porFeitico.contadores['uso:carta:arcana:projecao-sensorial']);
+
+  const porDano = fichaArcanaN10_(['arcana-projecao-sensorial','arcana-andar-na-parede']);
+  contexto.aplicarAjustes_(porDano, [{ tipo:'usarCarta', carta:'arcana-projecao-sensorial' }]);
+  const dano = contexto.aplicarAjustes_(porDano, [{ tipo:'dano', dano:1, tipoDeDano:'fisico', reacoes:[] }]);
+  igual(dano.erros, []);
+  verdade(!porDano.contadores['estado:carta:arcana:projecao-sensorial']);
+});
+
+teste('Terremoto registra 1 uso por descanso e deixa as rolagens na mesa', () => {
+  const f = fichaArcanaN10_(['arcana-terremoto','arcana-andar-na-parede']);
+  igual(contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-terremoto' }]).erros, []);
+  igual(f.contadores['uso:carta:arcana:terremoto'].valor, 1);
+  verdade(contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-terremoto' }]).erros.length > 0);
+  contexto.ajustarGatilho_(f, { gatilho:'descanso' });
+  verdade(!f.contadores['uso:carta:arcana:terremoto']);
+});
+
+teste('Ajustar a Realidade cobra exatamente 5 Esperanças e não inventa o novo resultado', () => {
+  const f = fichaArcanaN10_(['arcana-ajustar-a-realidade','arcana-andar-na-parede']);
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-ajustar-a-realidade' }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 1);
+  igual(r.mudancas[0].dadosManuais, null);
+  const sem = fichaArcanaN10_(['arcana-ajustar-a-realidade','arcana-andar-na-parede']);
+  sem.recursos.esperanca = 4;
+  verdade(contexto.aplicarAjustes_(sem, [{ tipo:'usarCarta', carta:'arcana-ajustar-a-realidade' }]).erros.length > 0);
+  igual(sem.recursos.esperanca, 4);
+});
+
+teste('Queda do Céu usa somente o Estresse efetivamente marcado e respeita Inabalável', () => {
+  const f = fichaArcanaN10_(['arcana-queda-do-ceu','arcana-andar-na-parede'], 'Firbolg');
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-queda-do-ceu', estressesMarcados:1 }]);
+  verdade(!!r.pendenciaRolagem);
+  igual(f.recursos.estresseMarcado, 0);
+  r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-queda-do-ceu', estressesMarcados:1, dadoInabalavel:6 }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].quantidadeEfetiva, 0);
+  igual(f.recursos.estresseMarcado, 0);
+
+  const dois = fichaArcanaN10_(['arcana-queda-do-ceu','arcana-andar-na-parede'], 'Firbolg');
+  r = contexto.aplicarAjustes_(dois, [{ tipo:'usarCarta', carta:'arcana-queda-do-ceu', estressesMarcados:2 }]);
+  igual(r.erros, []);
+  verdade(!r.pendenciaRolagem, '+2 Estresse não dispara Inabalável');
+  igual(dois.recursos.estresseMarcado, 2);
+  igual(r.mudancas[0].quantidadeEfetiva, 2);
+});
+
+console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
+if (falhou) {
+  falhas.forEach((f) => console.error(f.nome, f.erro));
+  process.exit(1);
+}

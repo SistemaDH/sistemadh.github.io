@@ -554,7 +554,51 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "automatizada-com-dados-manuais",
+    "resumo": "O app registra o uso, cobra o Estresse das camadas extras e mantém as camadas; os d6 são rolados na mesa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "jogada": "Conjuração (14)",
+    "dado": "1d6 por camada ativa",
+    "resumo": "Confirme o sucesso da Conjuração na mesa. Em cada ataque, role fora do app um d6 por camada e informe os resultados."
+   },
+   "uso": {
+    "custo": {},
+    "entradaQuantidade": {
+     "campo": "camadasExtras",
+     "rotulo": "Camadas extras",
+     "minimo": 0,
+     "maximo": 12,
+     "custoPorUnidade": {
+      "estresse": 1
+     },
+     "ajuda": "A primeira camada é gratuita. Marque 1 Estresse por camada adicional."
+    },
+    "quantidadeLigadaAoEstresse": true,
+    "marcaUso": {
+     "chave": "uso:carta:arcana:aura-confusa",
+     "maximo": 1
+    },
+    "estado": {
+     "chave": "estado:carta:arcana:aura-confusa:camadas",
+     "valorBase": 1,
+     "somarQuantidade": true,
+     "permiteEncerrarManual": false,
+     "rotuloAtivo": "Aura Confusa ativa"
+    },
+    "reacaoEstado": {
+     "campo": "dadosAuraConfusa",
+     "dado": "d6",
+     "lados": 6,
+     "sucessoMinimo": 5,
+     "rotulo": "Resolver ataque contra você"
+    },
+    "rotuloAtivar": "Sucesso: criar Aura Confusa",
+    "lembrete": "Em cada ataque, role 1d6 por camada fora do app. Um 5+ destrói uma camada e faz o ataque falhar; se todos derem 4 ou menos, a aura termina."
+   }
   },
   {
    "id": "arcana-reflexo-arcano",
@@ -575,7 +619,40 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "automatizada-com-dados-manuais",
+    "resumo": "O app cobra a Esperança escolhida e confere os d6 digitados; qualquer 6 indica que o dano foi refletido."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "dado": "1d6 por Esperança gasta",
+    "resumo": "Use somente ao receber dano mágico. Role fora do app um d6 por Esperança gasta e informe os resultados."
+   },
+   "uso": {
+    "custo": {},
+    "entradaQuantidade": {
+     "campo": "esperancasGastas",
+     "rotulo": "Esperanças gastas",
+     "minimo": 1,
+     "maximo": 6,
+     "custoPorUnidade": {
+      "esperanca": 1
+     },
+     "ajuda": "Escolha quantas Esperanças gastar; role esse mesmo número de d6 na mesa.",
+     "dados": {
+      "campo": "dadosReflexoArcano",
+      "lados": 6,
+      "quantidadePorUnidade": 1,
+      "sucessoMinimo": 6,
+      "rotulo": "d6 do Reflexo Arcano",
+      "mensagemSucesso": "Há um 6: o ataque é refletido no conjurador. Não aplique este dano à sua ficha.",
+      "mensagemFalha": "Nenhum 6: o dano mágico segue normalmente."
+     }
+    },
+    "rotuloAtivar": "Reagir a dano mágico",
+    "lembrete": "O app não aplica dano ao conjurador: se houver um 6, a mesa aplica nele o mesmo dano que seria recebido."
+   }
   },
   {
    "id": "arcana-projecao-sensorial",
@@ -596,7 +673,33 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "O app registra o uso e mantém o estado da visão, encerrando-o ao sofrer dano ou usar outro feitiço."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "jogada": "Conjuração (15)",
+    "resumo": "Confirme o sucesso da Conjuração na mesa; local, percepção e movimento dentro da visão são ficcionais."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:arcana:projecao-sensorial",
+     "maximo": 1
+    },
+    "estado": {
+     "chave": "estado:carta:arcana:projecao-sensorial",
+     "valor": 1,
+     "permiteEncerrarManual": false,
+     "rotuloAtivo": "Em Projeção Sensorial",
+     "encerraAoSofrerDano": true,
+     "encerraAoConjurarOutroFeitico": true
+    },
+    "rotuloAtivar": "Sucesso: entrar na visão",
+    "lembrete": "A visão termina automaticamente ao sofrer dano ou ao conjurar outro feitiço."
+   }
   },
   {
    "id": "arcana-terremoto",
@@ -617,7 +720,26 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "O app registra o uso 1/descanso; Conjuração, Reações, dano, Vulnerável e terreno continuam na mesa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "jogada": "Conjuração (16) e Reações (18)",
+    "dado": "3d10+8",
+    "resumo": "Depois do sucesso, resolva alvos, Reações, dano e terreno na mesa."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:arcana:terremoto",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Registrar Terremoto bem-sucedido",
+    "lembrete": "Resolva Reações (18), 3d10+8, Vulnerável temporário e terreno na mesa; o app não rola nem escolhe alvos."
+   }
   },
   {
    "id": "arcana-ajustar-a-realidade",
@@ -638,7 +760,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "O app cobra 5 Esperanças; a pessoa escolhe na mesa um resultado plausível para os dados que já foram rolados."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Use depois de uma jogada sua ou de aliado disposto. A mesa informa o novo resultado dentro da faixa possível dos dados."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 5
+    },
+    "rotuloAtivar": "Ajustar resultado · 5 Esperanças",
+    "lembrete": "Escolha na mesa um resultado plausível dentro da faixa dos dados da jogada original."
+   }
   },
   {
    "id": "arcana-queda-do-ceu",
@@ -659,7 +796,33 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\")."
+   "observacao": "O selo abaixo do nome está impresso em inglês (\"SPELL\").",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "O app marca a quantidade escolhida de Estresse e informa quantos dados de dano correspondem; ataques e d20 ficam na mesa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "jogada": "Conjuração contra cada adversário em alcance Distante",
+    "dado": "1d20+2 por Estresse marcado",
+    "resumo": "Escolha o Estresse a marcar. Para cada alvo acertado, role fora do app 1d20+2 por Estresse efetivamente marcado."
+   },
+   "uso": {
+    "custo": {},
+    "entradaQuantidade": {
+     "campo": "estressesMarcados",
+     "rotulo": "Estresses a marcar",
+     "minimo": 1,
+     "maximo": 12,
+     "custoPorUnidade": {
+      "estresse": 1
+     },
+     "ajuda": "Cada Estresse efetivamente marcado acrescenta 1d20+2 de dano aos alvos acertados."
+    },
+    "quantidadeLigadaAoEstresse": true,
+    "rotuloAtivar": "Conjurar Queda do Céu",
+    "lembrete": "O app não rola os ataques nem os d20. Use 1d20+2 por Estresse efetivamente marcado."
+   }
   },
   {
    "id": "blade-levantar-se",

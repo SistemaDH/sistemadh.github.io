@@ -1092,6 +1092,91 @@
     "descanso"
    ],
    "observacao": "Uma vez por descanso, desde que 4 ou mais cartas Arcana estejam ativas."
+  },
+  {
+   "chave": "uso:carta:arcana:aura-confusa",
+   "origem": "carta-dominio",
+   "refId": "arcana-aura-confusa",
+   "nome": "Aura Confusa",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo. O marcador significa que a criação da aura já foi usada."
+  },
+  {
+   "chave": "estado:carta:arcana:aura-confusa:camadas",
+   "origem": "carta-dominio",
+   "refId": "arcana-aura-confusa",
+   "nome": "Aura Confusa",
+   "rotulo": "camadas",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 13
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "1 camada base + uma por Estresse efetivamente marcado. Ataques consomem/encerram pelas rolagens manuais."
+  },
+  {
+   "chave": "uso:carta:arcana:projecao-sensorial",
+   "origem": "carta-dominio",
+   "refId": "arcana-projecao-sensorial",
+   "nome": "Projeção Sensorial",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso. O marcador significa que o uso já foi gasto."
+  },
+  {
+   "chave": "estado:carta:arcana:projecao-sensorial",
+   "origem": "carta-dominio",
+   "refId": "arcana-projecao-sensorial",
+   "nome": "Projeção Sensorial",
+   "rotulo": "visão ativa",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Encerra automaticamente quando o personagem sofre dano ou conjura outro feitiço."
+  },
+  {
+   "chave": "uso:carta:arcana:terremoto",
+   "origem": "carta-dominio",
+   "refId": "arcana-terremoto",
+   "nome": "Terremoto",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso. O marcador significa que o uso já foi gasto."
   }
  ]
 }

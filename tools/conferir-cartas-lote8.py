@@ -49,3 +49,27 @@ assert tocado['efeitoDerivado']['exigeCartasAtivasDominio'] == {'dominio':'ARCAN
 assert any(x['chave'] == 'uso:carta:arcana:premonicao' for x in cont['contadores'])
 assert any(x['chave'] == 'uso:carta:arcana:tocado-pela-arcana' for x in cont['contadores'])
 print('Lote 8 — Arcana níveis 4–7 classificados e partes determinísticas conferidas.')
+
+
+# Arcana níveis 8–10
+aura = por['arcana-aura-confusa']
+assert aura['uso']['marcaUso']['chave'] == 'uso:carta:arcana:aura-confusa'
+assert aura['uso']['estado']['valorBase'] == 1 and aura['uso']['estado']['somarQuantidade'] is True
+assert aura['uso']['reacaoEstado']['sucessoMinimo'] == 5
+reflexo = por['arcana-reflexo-arcano']
+assert reflexo['uso']['entradaQuantidade']['dados']['sucessoMinimo'] == 6
+proj = por['arcana-projecao-sensorial']
+assert proj['uso']['estado']['encerraAoSofrerDano'] is True
+assert proj['uso']['estado']['encerraAoConjurarOutroFeitico'] is True
+assert por['arcana-terremoto']['uso']['marcaUso']['chave'] == 'uso:carta:arcana:terremoto'
+assert por['arcana-ajustar-a-realidade']['uso']['custo'] == {'esperanca': 5}
+queda = por['arcana-queda-do-ceu']
+assert queda['uso']['quantidadeLigadaAoEstresse'] is True
+assert queda['resolucaoManual']['rolaNoApp'] is False
+for chave in [
+  'uso:carta:arcana:aura-confusa','estado:carta:arcana:aura-confusa:camadas',
+  'uso:carta:arcana:projecao-sensorial','estado:carta:arcana:projecao-sensorial',
+  'uso:carta:arcana:terremoto'
+]:
+  assert any(x['chave'] == chave for x in cont['contadores']), chave
+print('Lote 8 — Arcana níveis 8–10 classificados e partes determinísticas conferidas; domínio Arcana fechado.')

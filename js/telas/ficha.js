@@ -3469,15 +3469,56 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const usoCarta = c.uso || null;
     if (destino === 'cofre' && usoCarta) {
       const estado = usoCarta.estado || null;
-      const ativo = !!(estado && estado.chave && (((p.ficha || {}).contadores || {})[estado.chave]));
+      const itemEstado = estado && estado.chave ? ((((p.ficha || {}).contadores || {})[estado.chave]) || {}) : {};
+      const ativo = !!(estado && estado.chave && Number(itemEstado.valor));
       const marcaUso = usoCarta.marcaUso || null;
       const usos = marcaUso && marcaUso.chave
         ? Number(((((p.ficha || {}).contadores || {})[marcaUso.chave] || {}).valor)) || 0 : 0;
       const esgotada = !!(marcaUso && usos >= (Number(marcaUso.maximo) || 1));
+      const reacaoEstado = usoCarta.reacaoEstado || null;
+      const ativoSemBotao = ativo && estado && estado.permiteEncerrarManual === false && !reacaoEstado;
+
+      const abrirReacaoEstado = () => {
+        const quantidadeDados = Math.max(1, Number(itemEstado.valor) || 1);
+        const lados = Math.max(2, Number((reacaoEstado || {}).lados) || 6);
+        const campos = [];
+        for (let i = 0; i < quantidadeDados; i++) {
+          campos.push(el('input', semCorretor({
+            type:'number', class:'campo__entrada ficha__precoCampo', inputmode:'numeric',
+            min:1, max:lados, step:1, 'aria-label':`d${lados} ${i + 1}`
+          })));
+        }
+        let m = null;
+        const aplicar = el('button', { type:'button', class:'btn btn--principal', onClick: async () => {
+          const valores = campos.map((x) => Number(x.value));
+          if (valores.some((n) => !Number.isInteger(n) || n < 1 || n > lados)) {
+            avisarErro(`Informe cada resultado do d${lados}, de 1 a ${lados}.`); return;
+          }
+          const ajuste = { tipo:'usarCarta', carta:c.id, reagir:true };
+          ajuste[(reacaoEstado && reacaoEstado.campo) || 'dados'] = valores;
+          const r = await enviar([ajuste]);
+          if (r && m) m.fechar();
+        } }, reacaoEstado.rotulo || 'Aplicar resultados');
+        m = abrirModal({
+          titulo:c.nome,
+          conteudo:el('div', { class:'pilha' }, [
+            el('p', { class:'texto-sm', texto:`Role ${quantidadeDados}d${lados} na mesa — um por camada ativa — e informe todos os resultados.` }),
+            el('div', { class:'linha' }, campos)
+          ]),
+          acoes:[
+            el('button', { type:'button', class:'btn btn--fantasma', onClick:() => m.fechar() }, 'Cancelar'),
+            aplicar
+          ]
+        });
+      };
+
       saida.push(el('button', {
-        type: 'button', class: 'btn btn--pequeno', disabled: esgotada,
+        type: 'button', class: 'btn btn--pequeno',
+        disabled: (!ativo && esgotada) || ativoSemBotao,
         onClick: () => {
           if (ativo) {
+            if (reacaoEstado) { if (modal) modal.fechar(); abrirReacaoEstado(); return; }
+            if (estado && estado.permiteEncerrarManual === false) return;
             if (modal) modal.fechar();
             enviar([{ tipo: 'usarCarta', carta: c.id, encerrar: true }]);
             return;
@@ -3494,6 +3535,29 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
             min: Number(entrada.minimo) || 0, max: Number(entrada.maximo) || 0,
             value: Number(entrada.minimo) || 0
           }));
+          const dadosDef = entrada.dados || null;
+          const caixaDados = el('div', { class:'pilha' });
+          let camposDados = [];
+          const redesenharDados = () => {
+            limpar(caixaDados);
+            camposDados = [];
+            if (!dadosDef) return;
+            const n = Math.max(0, Number(quantidade.value) || 0) * Math.max(1, Number(dadosDef.quantidadePorUnidade) || 1);
+            const lados = Math.max(2, Number(dadosDef.lados) || 6);
+            caixaDados.append(el('p', { class:'texto-xs texto-fraco', texto:`Role ${n}d${lados} fora do app e informe os resultados.` }));
+            const linha = el('div', { class:'linha' });
+            for (let i = 0; i < n; i++) {
+              const campo = el('input', semCorretor({
+                type:'number', class:'campo__entrada ficha__precoCampo', inputmode:'numeric',
+                min:1, max:lados, step:1, 'aria-label':`${dadosDef.rotulo || 'dado'} ${i + 1}`
+              }));
+              camposDados.push(campo); linha.append(campo);
+            }
+            caixaDados.append(linha);
+          };
+          quantidade.addEventListener('input', redesenharDados);
+          redesenharDados();
+
           let escolha = null;
           const aplicar = el('button', {
             type: 'button', class: 'btn btn--principal', onClick: async () => {
@@ -3505,6 +3569,14 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
               }
               const ajuste = { tipo: 'usarCarta', carta: c.id };
               ajuste[entrada.campo || 'quantidade'] = n;
+              if (dadosDef) {
+                const lados = Math.max(2, Number(dadosDef.lados) || 6);
+                const valores = camposDados.map((x) => Number(x.value));
+                if (valores.some((v) => !Number.isInteger(v) || v < 1 || v > lados)) {
+                  avisarErro(`Informe cada resultado do d${lados}, de 1 a ${lados}.`); return;
+                }
+                ajuste[dadosDef.campo || 'dados'] = valores;
+              }
               const r = await enviar([ajuste]);
               if (r && escolha) escolha.fechar();
             }
@@ -3516,12 +3588,18 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
               el('label', { class: 'campo' }, [
                 el('span', { class: 'campo__rotulo', texto: entrada.rotulo || 'Quantidade' }), quantidade
               ]),
+              caixaDados
+            ]),
+            acoes:[
+              el('button', { type:'button', class:'btn btn--fantasma', onClick:() => escolha.fechar() }, 'Cancelar'),
               aplicar
-            ])
+            ]
           });
         }
-      }, esgotada ? 'Usada — volta no descanso' :
-        (ativo ? (estado.rotuloEncerrar || 'Encerrar efeito') : (usoCarta.rotuloAtivar || 'Usar carta'))));
+      }, ativo
+        ? (reacaoEstado ? (reacaoEstado.rotulo || 'Resolver reação')
+          : (ativoSemBotao ? (estado.rotuloAtivo || 'Efeito ativo') : (estado.rotuloEncerrar || 'Encerrar efeito')))
+        : (esgotada ? 'Usada — volta no descanso' : (usoCarta.rotuloAtivar || 'Usar carta'))));
       if (c.efeitoDerivado && Number((p.ficha || {}).bonusConjuracao) > 0) {
         saida.push(el('span', { class: 'selo selo--ouro', texto: `+${p.ficha.bonusConjuracao} Conjuração ativo` }));
       }
@@ -3537,8 +3615,6 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     }
     saida.push(el('button', {
       type: 'button', class: 'btn btn--fantasma btn--pequeno',
-      // Fecha ANTES de agir: quem acabou de guardar a carta no cofre não quer
-      // continuar olhando para ela em tela cheia.
       onClick: () => {
         if (modal) modal.fechar();
         if (destino === 'ativas' && c.custoRecordar) perguntarCustoDeRecordar(c);

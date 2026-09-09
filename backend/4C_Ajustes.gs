@@ -95,7 +95,17 @@ function substituirFichaEmLugar_(destino, origem) {
 function aplicarAjusteDireto_(ficha, a) {
   const tipo = chaveTexto_((a || {}).tipo);
   if (tipo === 'recurso') return ajustarRecurso_(ficha, a);
-  if (tipo === 'dano') return aplicarDanoNaFicha_(ficha, a);
+  if (tipo === 'dano') {
+    const r = aplicarDanoNaFicha_(ficha, a);
+    if (r && !r.erro && !r.pendenciaRolagem && r.dano && Number(r.dano.final) > 0) {
+      const encerrados = encerrarEstadosDeCartaPorEvento_(ficha, 'sofrer-dano', '');
+      if (encerrados.length) {
+        r.estadosDeCartaEncerrados = encerrados;
+        r.aviso = (r.aviso || '') + ' ' + encerrados.join(', ') + ' terminou por você sofrer dano.';
+      }
+    }
+    return r;
+  }
   if (tipo === 'condicao') return ajustarCondicao_(ficha, a);
   if (tipo === 'contador') return ajustarContador_(ficha, a);
   if (tipo === 'marcador') return ajustarMarcador_(ficha, a);
@@ -178,6 +188,25 @@ function aplicarAjusteComInabalavel_(ficha, a) {
       });
     }
     if (r) r.estresseMarcado = ficha.recursos.estresseMarcado;
+
+    if (r && r.quantidadeLigadaAoEstresse) {
+      const antesEfetivo = Math.max(0, Math.trunc(Number(r.quantidadeEfetiva)) || 0);
+      r.quantidadeEfetiva = Math.max(0, antesEfetivo - quantidade);
+      r.custoEstresse = Math.max(0, (Math.trunc(Number(r.custoEstresse)) || 0) - quantidade);
+      if (r.estado && r.estadoValorBase !== null && r.estadoValorBase !== undefined) {
+        const base = Math.max(0, Math.trunc(Number(r.estadoValorBase)) || 0);
+        const valorEstado = base + r.quantidadeEfetiva;
+        if (valorEstado > 0) ficha.contadores[r.estado] = { valor: valorEstado };
+        else delete ficha.contadores[r.estado];
+        r.estadoValor = valorEstado;
+      }
+      if (r.lembrete !== undefined) {
+        const pagoEfetivo = [];
+        if (Number(r.custoEsperanca)) pagoEfetivo.push(r.custoEsperanca + ' de Esperança');
+        if (Number(r.custoEstresse)) pagoEfetivo.push(r.custoEstresse + ' de Estresse');
+        r.aviso = r.nome + (pagoEfetivo.length ? ' custou ' + pagoEfetivo.join(' e ') : '') + '. ' + String(r.lembrete || '');
+      }
+    }
   }
 
   if (r) {
@@ -2189,6 +2218,53 @@ function ajustarMarcador_(ficha, a) {
  * as partes determinísticas que não podem depender de memória da mesa: pagar
  * recurso, ligar/desligar um estado e mover a carta para o cofre.
  */
+function validarDadosManuaisDeCarta_(carta, regra, bruto, unidades) {
+  if (!regra) return null;
+  const lados = Math.max(2, Math.trunc(Number(regra.lados)) || 6);
+  const porUnidade = Math.max(1, Math.trunc(Number(regra.quantidadePorUnidade)) || 1);
+  const quantidade = Math.max(0, Math.trunc(Number(unidades)) || 0) * porUnidade;
+  if (!Array.isArray(bruto)) {
+    return { erro: carta.nome + ': informe exatamente ' + quantidade + ' resultado(s) de d' + lados + ' rolados fora do app.' };
+  }
+  if (bruto.length !== quantidade) {
+    return { erro: carta.nome + ': informe exatamente ' + quantidade + ' resultado(s) de d' + lados + '.' };
+  }
+  const resultados = [];
+  for (let i = 0; i < bruto.length; i++) {
+    const n = Math.trunc(Number(bruto[i]));
+    if (!isFinite(n) || Number(bruto[i]) !== n || n < 1 || n > lados) {
+      return { erro: carta.nome + ': cada resultado precisa ser um inteiro de 1 a ' + lados + '.' };
+    }
+    resultados.push(n);
+  }
+  const minimo = Math.max(1, Math.trunc(Number(regra.sucessoMinimo)) || lados);
+  return { resultados: resultados, sucesso: resultados.some(function (n) { return n >= minimo; }), dado: 'd' + lados };
+}
+
+/** Encerra estados de cartas por um evento que o servidor consegue observar. */
+function encerrarEstadosDeCartaPorEvento_(ficha, evento, cartaAtual) {
+  if (typeof USOS_CARTAS_DOMINIO === 'undefined') return [];
+  ficha.contadores = ficha.contadores || {};
+  const ids = Object.keys(USOS_CARTAS_DOMINIO);
+  const encerrados = [];
+  for (let i = 0; i < ids.length; i++) {
+    const id = ids[i];
+    const def = USOS_CARTAS_DOMINIO[id] || {};
+    const estado = def.estado || null;
+    if (!estado || !estado.chave) continue;
+    const ativo = Math.trunc(Number(((ficha.contadores[estado.chave] || {}).valor))) || 0;
+    if (ativo <= 0) continue;
+    let encerra = false;
+    if (evento === 'sofrer-dano' && estado.encerraAoSofrerDano === true) encerra = true;
+    if (evento === 'conjurar-outro-feitico' && id !== cartaAtual && estado.encerraAoConjurarOutroFeitico === true) encerra = true;
+    if (!encerra) continue;
+    delete ficha.contadores[estado.chave];
+    const carta = (typeof acharCarta_ === 'function') ? acharCarta_(id) : null;
+    encerrados.push(carta ? carta.nome : id);
+  }
+  return encerrados;
+}
+
 function usarCartaDeDominio_(ficha, a) {
   if (typeof acharCarta_ !== 'function' || typeof USOS_CARTAS_DOMINIO === 'undefined') {
     return { erro: 'Índice de usos de cartas indisponível.' };
@@ -2206,17 +2282,46 @@ function usarCartaDeDominio_(ficha, a) {
 
   const estado = def.estado || null;
   ficha.contadores = ficha.contadores || {};
-  if (estado && estado.chave && a.encerrar !== true) {
-    const jaAtivo = Math.trunc(Number(((ficha.contadores[estado.chave] || {}).valor))) || 0;
-    if (jaAtivo > 0) return { erro: '"' + carta.nome + '" já está ativo.' };
+  const estadoAtual = estado && estado.chave
+    ? (Math.trunc(Number(((ficha.contadores[estado.chave] || {}).valor))) || 0) : 0;
+
+  // Reação de um estado já ativo (Aura Confusa): os dados são sempre da mesa.
+  if (a.reagir === true) {
+    const reacao = def.reacaoEstado || null;
+    if (!estado || !estado.chave || !reacao) return { erro: '"' + carta.nome + '" não possui reação de estado.' };
+    if (estadoAtual <= 0) return { erro: '"' + carta.nome + '" não está ativa.' };
+    const campo = String(reacao.campo || 'dados');
+    const dados = validarDadosManuaisDeCarta_(carta, {
+      lados: reacao.lados || 6, quantidadePorUnidade: 1, sucessoMinimo: reacao.sucessoMinimo || 6
+    }, a[campo], estadoAtual);
+    if (dados && dados.erro) return { erro: dados.erro };
+    if (dados.sucesso) {
+      const depois = Math.max(0, estadoAtual - 1);
+      if (depois > 0) ficha.contadores[estado.chave] = { valor: depois };
+      else delete ficha.contadores[estado.chave];
+      return {
+        tipo:'usarCarta', carta:carta.id, nome:carta.nome, reacao:true,
+        dadosManuais:dados, ataqueFalha:true, camadasAntes:estadoAtual, camadasDepois:depois,
+        aviso:carta.nome + ': houve resultado ' + (reacao.sucessoMinimo || 5) + '+; uma camada foi destruída e o ataque falha.'
+      };
+    }
+    delete ficha.contadores[estado.chave];
+    return {
+      tipo:'usarCarta', carta:carta.id, nome:carta.nome, reacao:true,
+      dadosManuais:dados, ataqueFalha:false, camadasAntes:estadoAtual, camadasDepois:0,
+      aviso:carta.nome + ': todos os resultados ficaram abaixo de ' + (reacao.sucessoMinimo || 5) + '; a aura termina e o dano segue normalmente.'
+    };
   }
+
   if (a.encerrar === true) {
     if (!estado || !estado.chave) return { erro: '"' + carta.nome + '" não tem um estado para encerrar.' };
-    ficha.contadores = ficha.contadores || {};
+    if (estado.permiteEncerrarManual === false) return { erro: '"' + carta.nome + '" termina apenas pelos gatilhos descritos na carta.' };
+    if (estadoAtual <= 0) return { erro: '"' + carta.nome + '" não está ativa.' };
     delete ficha.contadores[estado.chave];
     return { tipo:'usarCarta', carta:carta.id, nome:carta.nome, encerrou:true,
       aviso: estado.avisoEncerrar || (carta.nome + ': efeito encerrado.') };
   }
+  if (estadoAtual > 0) return { erro: '"' + carta.nome + '" já está ativo.' };
 
   // Requisitos que dependem só do loadout atual são conferidos no servidor.
   const req = def.exigeCartasAtivasDominio || null;
@@ -2231,7 +2336,6 @@ function usarCartaDeDominio_(ficha, a) {
       ' cartas de ' + String(req.dominio) + ' ativas; há ' + n + '.' };
   }
 
-  // Escolha numérica NÃO é dado: é quantidade decidida pela pessoa (ex.: aliados).
   let quantidade = 0;
   const entrada = def.entradaQuantidade || null;
   if (entrada) {
@@ -2246,6 +2350,13 @@ function usarCartaDeDominio_(ficha, a) {
     }
   }
 
+  let dadosManuais = null;
+  if (entrada && entrada.dados) {
+    const campoDados = String(entrada.dados.campo || 'dados');
+    dadosManuais = validarDadosManuaisDeCarta_(carta, entrada.dados, a[campoDados], quantidade);
+    if (dadosManuais && dadosManuais.erro) return { erro: dadosManuais.erro };
+  }
+
   const custo = def.custo || {};
   let custoEsperanca = Math.max(0, Math.trunc(Number(custo.esperanca)) || 0);
   let custoEstresse = Math.max(0, Math.trunc(Number(custo.estresse)) || 0);
@@ -2255,7 +2366,6 @@ function usarCartaDeDominio_(ficha, a) {
   }
 
   const marcaUso = def.marcaUso || null;
-  ficha.contadores = ficha.contadores || {};
   if (marcaUso && marcaUso.chave) {
     const usado = Math.max(0, Math.trunc(Number(((ficha.contadores[marcaUso.chave] || {}).valor))) || 0);
     const maxUso = Math.max(1, Math.trunc(Number(marcaUso.maximo)) || 1);
@@ -2286,8 +2396,14 @@ function usarCartaDeDominio_(ficha, a) {
     condicao = cr;
   }
 
+  let estadoValor = null;
+  let estadoValorBase = null;
   if (estado && estado.chave) {
-    ficha.contadores[estado.chave] = { valor: Math.max(1, Math.trunc(Number(estado.valor)) || 1) };
+    estadoValorBase = estado.valorBase !== undefined
+      ? Math.max(0, Math.trunc(Number(estado.valorBase)) || 0)
+      : Math.max(1, Math.trunc(Number(estado.valor)) || 1);
+    estadoValor = estado.somarQuantidade === true ? estadoValorBase + quantidade : estadoValorBase;
+    if (estadoValor > 0) ficha.contadores[estado.chave] = { valor: estadoValor };
   }
   if (marcaUso && marcaUso.chave) {
     const usado = Math.max(0, Math.trunc(Number(((ficha.contadores[marcaUso.chave] || {}).valor))) || 0);
@@ -2299,19 +2415,37 @@ function usarCartaDeDominio_(ficha, a) {
     if (!ficha.cartas.cofre.some(function (x) { return chaveTexto_(x) === chaveTexto_(carta.id); })) ficha.cartas.cofre.push(carta.id);
   }
 
+  const estadosEncerrados = chaveTexto_(carta.tipo) === 'feitico'
+    ? encerrarEstadosDeCartaPorEvento_(ficha, 'conjurar-outro-feitico', carta.id) : [];
+
   const pago = [];
   if (custoEsperanca) pago.push(custoEsperanca + ' de Esperança');
   if (custoEstresse) pago.push(custoEstresse + ' de Estresse');
+  let complemento = '';
+  if (dadosManuais && entrada && entrada.dados) {
+    complemento = dadosManuais.sucesso
+      ? String(entrada.dados.mensagemSucesso || '')
+      : String(entrada.dados.mensagemFalha || '');
+  }
+  if (estadosEncerrados.length) complemento += (complemento ? ' ' : '') + estadosEncerrados.join(', ') + ' terminou ao conjurar outro feitiço.';
+  const lembrete = String(def.lembrete || '');
   return {
     tipo:'usarCarta', carta:carta.id, nome:carta.nome,
     custoEsperanca:custoEsperanca, custoEstresse:custoEstresse,
     esperanca:r.esperanca, estresseMarcado:r.estresseMarcado,
     quantidade:entrada ? quantidade : null,
+    quantidadeSolicitada:entrada ? quantidade : null,
+    quantidadeEfetiva:entrada ? quantidade : null,
+    quantidadeLigadaAoEstresse:def.quantidadeLigadaAoEstresse === true,
+    dadosManuais:dadosManuais,
     estado:estado && estado.chave ? estado.chave : null,
+    estadoValor:estadoValor, estadoValorBase:estadoValorBase,
     marcaUso:marcaUso && marcaUso.chave ? marcaUso.chave : null,
     condicao:condicao ? (condicao.chave || (def.condicao || {}).chave) : null,
     moveuParaCofre:def.moveParaCofre === true,
-    aviso:carta.nome + (pago.length ? ' custou ' + pago.join(' e ') : '') + '. ' + String(def.lembrete || '')
+    estadosDeCartaEncerrados:estadosEncerrados,
+    lembrete:lembrete,
+    aviso:carta.nome + (pago.length ? ' custou ' + pago.join(' e ') : '') + '. ' + lembrete + (complemento ? ' ' + complemento : '')
   };
 }
 

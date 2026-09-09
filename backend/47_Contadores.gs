@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 52 cartas e características mandam
+ *  O problema que este arquivo resolve: 57 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -92,6 +92,11 @@ const CONTADORES = {
   "estado:carta:arcana:olho-flutuante": { origem: "carta-dominio", refId: "arcana-olho-flutuante", nome: "Olho Flutuante", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-da-cena","manual"], recarregaEm: [] },
   "uso:carta:arcana:premonicao": { origem: "carta-dominio", refId: "arcana-premonicao", nome: "Premonição", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
   "uso:carta:arcana:tocado-pela-arcana": { origem: "carta-dominio", refId: "arcana-tocado-pela-arcana", nome: "Tocado pela Arcana", rotulo: "troca dos dados", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:arcana:aura-confusa": { origem: "carta-dominio", refId: "arcana-aura-confusa", nome: "Aura Confusa", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "estado:carta:arcana:aura-confusa:camadas": { origem: "carta-dominio", refId: "arcana-aura-confusa", nome: "Aura Confusa", rotulo: "camadas", tipo: "marcadores", maximo: {"tipo":"fixo","valor":13}, zeraEm: ["manual"], recarregaEm: [] },
+  "uso:carta:arcana:projecao-sensorial": { origem: "carta-dominio", refId: "arcana-projecao-sensorial", nome: "Projeção Sensorial", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "estado:carta:arcana:projecao-sensorial": { origem: "carta-dominio", refId: "arcana-projecao-sensorial", nome: "Projeção Sensorial", rotulo: "visão ativa", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "uso:carta:arcana:terremoto": { origem: "carta-dominio", refId: "arcana-terremoto", nome: "Terremoto", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -148,6 +153,11 @@ const CONTADOR_ALIASES = {
   "estado:carta:arcana:olho-flutuante": ["Olho Flutuante"],
   "uso:carta:arcana:premonicao": ["Premonição"],
   "uso:carta:arcana:tocado-pela-arcana": ["Tocado pela Arcana"],
+  "uso:carta:arcana:aura-confusa": ["Aura Confusa"],
+  "estado:carta:arcana:aura-confusa:camadas": ["Aura Confusa"],
+  "uso:carta:arcana:projecao-sensorial": ["Projeção Sensorial"],
+  "estado:carta:arcana:projecao-sensorial": ["Projeção Sensorial"],
+  "uso:carta:arcana:terremoto": ["Terremoto"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */
