@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 125 contadores: 93 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 134 contadores: 102 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 125 contadores: 93 de carta, 25 de classe/subclasse, 4 de
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 125);
+  igual(Object.keys(CONTADORES).length, 134);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 93);
+  igual(porOrigem['carta-dominio'], 102);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -9765,6 +9765,37 @@ teste('Campo de Cura registra 1/descanso longo e cura a própria ficha 1 ou 2 PV
   r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-campo-de-cura',opcao:'ampliado'}]);
   igual(r.erros,[]); igual(f.recursos.pontosDeVidaMarcados,1); igual(f.recursos.esperanca,4);
 });
+
+
+
+console.log('\nLote 8 — Sábio níveis 5–10');
+function fichaSageAlta_(nivel,ativas){const f=fichaSageBaixa_(nivel,ativas);f.identidade.nivel=nivel;f.recursos.esperanca=6;f.recursos.esperancaMaxima=6;f.recursos.estresseMarcado=0;f.recursos.estresseMaximo=Math.max(10,Number(f.recursos.estresseMaximo)||0);return f;}
+
+teste('Sábio N5-N10 fica todo classificado e sem RNG no app',()=>{const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));const ids=['sage-fortaleza-selvagem','sage-pele-espinhosa','sage-coletor','sage-montarias-conjuradas','sage-surto-selvagem','sage-tocado-pelo-saber','sage-barreira-rejuvenescedora','sage-forest-sprites','sage-dominio-das-plantas','sage-templo-das-selvas','sage-forca-da-natureza','sage-tempestade'];const xs=ids.map(id=>d.cartas.find(c=>c.id===id));verdade(xs.every(Boolean));verdade(xs.every(c=>!!c.automacao));verdade(xs.every(c=>c.resolucaoManual&&c.resolucaoManual.rolaNoApp===false));});
+
+teste('Fortaleza Selvagem cobra 2 Esperanças e preserva contador de 3 PV',()=>{const f=fichaSageAlta_(5,['sage-fortaleza-selvagem','sage-pele-espinhosa']);const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-fortaleza-selvagem'}]);igual(r.erros,[]);igual(f.recursos.esperanca,4);const c=avaliar('CONTADORES')['carta:sage-fortaleza-selvagem'];igual(c.maximo.valor,3);});
+
+teste('Pele Espinhosa é 1/descanso e usa contador de Conjuração',()=>{const f=fichaSageAlta_(5,['sage-pele-espinhosa','sage-fortaleza-selvagem']);let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-pele-espinhosa'}]);igual(r.erros,[]);igual(f.recursos.esperanca,5);igual(f.contadores['uso:carta:sage:pele-espinhosa'].valor,1);verdade(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-pele-espinhosa'}]).erros.length===1);});
+
+teste('Coletor permanece manual e não gera consumível aleatório',()=>{const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));const c=d.cartas.find(x=>x.id==='sage-coletor');verdade(!c.uso);});
+
+teste('Montarias Conjuradas cobra uma Esperança por montaria e guarda quantidade',()=>{const f=fichaSageAlta_(6,['sage-montarias-conjuradas','sage-coletor']);const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-montarias-conjuradas',quantidadeMontarias:3}]);igual(r.erros,[]);igual(f.recursos.esperanca,3);igual(f.contadores['estado:carta:sage:montarias-conjuradas'].valor,3);});
+
+teste('Surto Selvagem marca Estresse, inicia dado em 1 e limita a 1/descanso longo',()=>{const f=fichaSageAlta_(7,['sage-surto-selvagem','sage-tocado-pelo-saber']);let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-surto-selvagem'}]);igual(r.erros,[]);igual(f.recursos.estresseMarcado,1);igual(f.contadores['carta:sage-surto-selvagem'].valor,1);igual(f.contadores['uso:carta:sage:surto-selvagem'].valor,1);});
+
+teste('Tocado pelo Saber exige quatro cartas Sábio e registra 1/descanso',()=>{const xs=['sage-tocado-pelo-saber','sage-surto-selvagem','sage-montarias-conjuradas','sage-pele-espinhosa'];const f=fichaSageAlta_(7,xs);let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-tocado-pelo-saber',opcao:'instinto'}]);igual(r.erros,[]);igual(f.contadores['uso:carta:sage:tocado-pelo-saber'].valor,1);const f3=fichaSageAlta_(7,xs.slice(0,3));r=contexto.aplicarAjustes_(f3,[{tipo:'usarCarta',carta:'sage-tocado-pelo-saber',opcao:'agilidade'}]);verdade(r.erros.length===1);});
+
+teste('Barreira Rejuvenescedora registra 1/descanso e estado sem inventar d4',()=>{const f=fichaSageAlta_(8,['sage-barreira-rejuvenescedora','sage-forest-sprites']);const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-barreira-rejuvenescedora'}]);igual(r.erros,[]);igual(f.contadores['uso:carta:sage:barreira-rejuvenescedora'].valor,1);igual(f.contadores['estado:carta:sage:barreira-rejuvenescedora'].valor,1);});
+
+teste('Espíritos da Floresta cobra Esperança por fada e guarda quantidade',()=>{const f=fichaSageAlta_(8,['sage-forest-sprites','sage-barreira-rejuvenescedora']);const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-forest-sprites',quantidadeFadas:4}]);igual(r.erros,[]);igual(f.recursos.esperanca,2);igual(f.contadores['estado:carta:sage:espiritos-da-floresta'].valor,4);});
+
+teste('Domínio das Plantas registra 1/descanso longo',()=>{const f=fichaSageAlta_(9,['sage-dominio-das-plantas','sage-templo-das-selvas']);let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-dominio-das-plantas'}]);igual(r.erros,[]);igual(f.contadores['uso:carta:sage:dominio-das-plantas'].valor,1);verdade(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-dominio-das-plantas'}]).erros.length===1);});
+
+teste('Templo das Selvas preserva contador por cartas Sábio em mão e cofre',()=>{const c=avaliar('CONTADORES')['carta:sage-templo-das-selvas'];verdade(!!c);igual(c.maximo.tipo,'cartas-do-dominio');igual(c.maximo.dominio,'SAGE');verdade(c.recarregaEm.includes('descanso-longo'));});
+
+teste('Força da Natureza custa 1 Estresse, mantém estado e publica +10 de dano',()=>{const f=fichaSageAlta_(10,['sage-forca-da-natureza','sage-tempestade']);let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-forca-da-natureza'}]);igual(r.erros,[]);igual(f.recursos.estresseMarcado,1);igual(f.contadores['estado:carta:sage:forca-da-natureza'].valor,1);igual(contexto.bonusDanoDeCartas_(f),10);r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-forca-da-natureza',encerrar:true}]);igual(r.erros,[]);igual(contexto.bonusDanoDeCartas_(f),0);});
+
+teste('Tempestade permanece manual e não cria estado do Mestre na ficha',()=>{const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));const c=d.cartas.find(x=>x.id==='sage-tempestade');verdade(!c.uso);});
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {

@@ -2342,6 +2342,160 @@
     "descanso-longo"
    ],
    "observacao": "Uma vez por descanso longo."
+  },
+  {
+   "chave": "uso:carta:sage:pele-espinhosa",
+   "origem": "carta-dominio",
+   "refId": "sage-pele-espinhosa",
+   "nome": "Pele Espinhosa",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso."
+  },
+  {
+   "chave": "estado:carta:sage:montarias-conjuradas",
+   "origem": "carta-dominio",
+   "refId": "sage-montarias-conjuradas",
+   "nome": "Montarias Conjuradas",
+   "rotulo": "montarias",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 6
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo",
+    "manual"
+   ],
+   "observacao": "Quantidade de montarias ativas; encerra no próximo descanso longo ou pela condição de dano da carta."
+  },
+  {
+   "chave": "uso:carta:sage:surto-selvagem",
+   "origem": "carta-dominio",
+   "refId": "sage-surto-selvagem",
+   "nome": "Surto Selvagem",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
+  },
+  {
+   "chave": "uso:carta:sage:tocado-pelo-saber",
+   "origem": "carta-dominio",
+   "refId": "sage-tocado-pelo-saber",
+   "nome": "Tocado pelo Saber",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Dobrar Agilidade ou Instinto uma vez por descanso com 4+ cartas Sábio ativas."
+  },
+  {
+   "chave": "uso:carta:sage:barreira-rejuvenescedora",
+   "origem": "carta-dominio",
+   "refId": "sage-barreira-rejuvenescedora",
+   "nome": "Barreira Rejuvenescedora",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso, após sucesso."
+  },
+  {
+   "chave": "estado:carta:sage:barreira-rejuvenescedora",
+   "origem": "carta-dominio",
+   "refId": "sage-barreira-rejuvenescedora",
+   "nome": "Barreira Rejuvenescedora",
+   "rotulo": "ativa",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "A duração é temporária/contextual; posição determina quando a resistência vale."
+  },
+  {
+   "chave": "estado:carta:sage:espiritos-da-floresta",
+   "origem": "carta-dominio",
+   "refId": "sage-forest-sprites",
+   "nome": "Espíritos da Floresta",
+   "rotulo": "fadas",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 6
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Cada fada desaparece ao conceder um benefício ou sofrer dano."
+  },
+  {
+   "chave": "uso:carta:sage:dominio-das-plantas",
+   "origem": "carta-dominio",
+   "refId": "sage-dominio-das-plantas",
+   "nome": "Domínio das Plantas",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
+  },
+  {
+   "chave": "estado:carta:sage:forca-da-natureza",
+   "origem": "carta-dominio",
+   "refId": "sage-forca-da-natureza",
+   "nome": "Força da Natureza",
+   "rotulo": "ativa",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Antes de cada ação custa 1 Esperança; se não puder pagar, encerra."
   }
  ]
 }

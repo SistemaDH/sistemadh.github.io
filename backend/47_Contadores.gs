@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 125 cartas e características mandam
+ *  O problema que este arquivo resolve: 134 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -165,6 +165,15 @@ const CONTADORES = {
   "estado:carta:sage:familiar-natural": { origem: "carta-dominio", refId: "sage-familiar-natural", nome: "Familiar Natural", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
   "uso:carta:sage:caule-imponente": { origem: "carta-dominio", refId: "sage-caule-imponente", nome: "Caule Imponente", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
   "uso:carta:sage:campo-de-cura": { origem: "carta-dominio", refId: "sage-campo-de-cura", nome: "Campo de Cura", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:carta:sage:pele-espinhosa": { origem: "carta-dominio", refId: "sage-pele-espinhosa", nome: "Pele Espinhosa", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "estado:carta:sage:montarias-conjuradas": { origem: "carta-dominio", refId: "sage-montarias-conjuradas", nome: "Montarias Conjuradas", rotulo: "montarias", tipo: "marcadores", maximo: {"tipo":"fixo","valor":6}, zeraEm: ["descanso-longo","manual"], recarregaEm: [] },
+  "uso:carta:sage:surto-selvagem": { origem: "carta-dominio", refId: "sage-surto-selvagem", nome: "Surto Selvagem", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:carta:sage:tocado-pelo-saber": { origem: "carta-dominio", refId: "sage-tocado-pelo-saber", nome: "Tocado pelo Saber", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:sage:barreira-rejuvenescedora": { origem: "carta-dominio", refId: "sage-barreira-rejuvenescedora", nome: "Barreira Rejuvenescedora", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "estado:carta:sage:barreira-rejuvenescedora": { origem: "carta-dominio", refId: "sage-barreira-rejuvenescedora", nome: "Barreira Rejuvenescedora", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "estado:carta:sage:espiritos-da-floresta": { origem: "carta-dominio", refId: "sage-forest-sprites", nome: "Espíritos da Floresta", rotulo: "fadas", tipo: "marcadores", maximo: {"tipo":"fixo","valor":6}, zeraEm: ["manual"], recarregaEm: [] },
+  "uso:carta:sage:dominio-das-plantas": { origem: "carta-dominio", refId: "sage-dominio-das-plantas", nome: "Domínio das Plantas", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "estado:carta:sage:forca-da-natureza": { origem: "carta-dominio", refId: "sage-forca-da-natureza", nome: "Força da Natureza", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -294,6 +303,15 @@ const CONTADOR_ALIASES = {
   "estado:carta:sage:familiar-natural": ["Familiar Natural"],
   "uso:carta:sage:caule-imponente": ["Caule Imponente"],
   "uso:carta:sage:campo-de-cura": ["Campo de Cura"],
+  "uso:carta:sage:pele-espinhosa": ["Pele Espinhosa"],
+  "estado:carta:sage:montarias-conjuradas": ["Montarias Conjuradas"],
+  "uso:carta:sage:surto-selvagem": ["Surto Selvagem"],
+  "uso:carta:sage:tocado-pelo-saber": ["Tocado pelo Saber"],
+  "uso:carta:sage:barreira-rejuvenescedora": ["Barreira Rejuvenescedora"],
+  "estado:carta:sage:barreira-rejuvenescedora": ["Barreira Rejuvenescedora"],
+  "estado:carta:sage:espiritos-da-floresta": ["Espíritos da Floresta"],
+  "uso:carta:sage:dominio-das-plantas": ["Domínio das Plantas"],
+  "estado:carta:sage:forca-da-natureza": ["Força da Natureza"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

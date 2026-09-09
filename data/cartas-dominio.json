@@ -5715,7 +5715,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo (\"SPELL\") e os limiares de dano (\"MINOR DAMAGE\", \"MAJOR DAMAGE\", \"SEVERE DAMAGE\", \"Mark X HP\") estão impressos em inglês na carta. Abaixo dos limiares há o texto de rodapé \"Artist Name\", que parece ser um placeholder de template não preenchido no arquivo oficial; foi omitido do campo texto por não ser conteúdo da carta em si."
+   "observacao": "O rótulo de tipo (\"SPELL\") e os limiares de dano (\"MINOR DAMAGE\", \"MAJOR DAMAGE\", \"SEVERE DAMAGE\", \"Mark X HP\") estão impressos em inglês na carta. Abaixo dos limiares há o texto de rodapé \"Artist Name\", que parece ser um placeholder de template não preenchido no arquivo oficial; foi omitido do campo texto por não ser conteúdo da carta em si.",
+   "automacao": {
+    "classificacao": "automatizada-custo-com-contador-existente",
+    "resumo": "Após sucesso confirmado, o app cobra 2 Esperanças; o contador de PV da cúpula já existe."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Faça a Jogada de Conjuração 13 fora do app. Ao criar a cúpula, zere manualmente o contador; ataques contra ela são resolvidos na mesa pelos limiares 15/30/Severo e o contador marca até 3 PV."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 2
+    },
+    "rotuloAtivar": "Sucesso: criar Fortaleza Selvagem · 2 Esperanças",
+    "lembrete": "Zere o contador de PV da cúpula ao criá-la. Marque 1/2/3 PV conforme os limiares 15/30/Severo; no 3º PV a cúpula cai."
+   }
   },
   {
    "id": "sage-pele-espinhosa",
@@ -5738,7 +5753,26 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português."
+   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português.",
+   "automacao": {
+    "classificacao": "automatizada-custo-limite-com-contador-existente",
+    "resumo": "O app cobra 1 Esperança e registra uma vez por descanso; o contador de marcadores por Conjuração já existe."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Após ativar, ajuste o contador para o traço de Conjuração. Ao sofrer dano, escolha quantos marcadores gastar e role os d6 fora do app; redução e dano refletido Corpo a Corpo ficam na mesa."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "marcaUso": {
+     "chave": "uso:carta:sage:pele-espinhosa",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Ativar Pele Espinhosa · 1 Esperança · 1/descanso",
+    "lembrete": "Coloque marcadores iguais à Conjuração. Ao sofrer dano, gaste quantos quiser e role essa quantidade de d6 fora do app."
+   }
   },
   {
    "id": "sage-coletor",
@@ -5762,7 +5796,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo está impresso em inglês (\"ABILITY\") na carta, não em português."
+   "observacao": "O rótulo de tipo está impresso em inglês (\"ABILITY\") na carta, não em português.",
+   "automacao": {
+    "classificacao": "manual-de-descanso-e-inventario-narrativo",
+    "resumo": "A carta fica classificada, mas o app não escolhe resultado de d6 nem inventa automaticamente um consumível narrativo."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Escolha Coletor como movimento de inatividade adicional, role d6 fora do app (ou escolha quando a regra permitir), descreva o consumível com o Mestre e adicione-o ao inventário. O grupo mantém no máximo cinco consumíveis coletados."
+   }
   },
   {
    "id": "sage-montarias-conjuradas",
@@ -5784,7 +5826,38 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rólulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português."
+   "observacao": "O rólulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português.",
+   "automacao": {
+    "classificacao": "automatizada-custo-por-quantidade-e-estado",
+    "resumo": "Informe quantas montarias quer conjurar; o app cobra a mesma quantidade de Esperança e mantém a quantidade ativa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Escolha a aparência e usuários na mesa. Modificadores de viagem/ataque/dano são contextuais. Se a condição de dano encerrar as montarias, zere o estado manualmente."
+   },
+   "uso": {
+    "custo": {},
+    "entradaQuantidade": {
+     "campo": "quantidadeMontarias",
+     "rotulo": "quantidade de montarias",
+     "minimo": 1,
+     "maximo": 6,
+     "custoPorUnidade": {
+      "esperanca": 1
+     }
+    },
+    "estado": {
+     "chave": "estado:carta:sage:montarias-conjuradas",
+     "valorBase": 0,
+     "somarQuantidade": true,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Montarias Conjuradas ativas",
+     "rotuloEncerrar": "Dispensar montarias",
+     "avisoEncerrar": "Montarias Conjuradas dispensadas."
+    },
+    "rotuloAtivar": "Conjurar montarias",
+    "lembrete": "Cada Esperança cria uma montaria. Duram até o próximo descanso longo ou até a condição de dano da carta encerrá-las."
+   }
   },
   {
    "id": "sage-surto-selvagem",
@@ -5807,7 +5880,34 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português."
+   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português.",
+   "automacao": {
+    "classificacao": "automatizada-inicio-limite-com-dado-existente",
+    "resumo": "O app marca 1 Estresse, registra uma vez por descanso longo e inicia o dado existente em 1."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Some o valor do dado a cada jogada de ação e depois aumente-o manualmente. Quando passar de 6 ou você descansar, a forma termina e você deve marcar 1 Estresse adicional; esse custo final permanece explícito porque a jogada/descanso pode ocorrer fora do fluxo da carta."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "marcaUso": {
+     "chave": "uso:carta:sage:surto-selvagem",
+     "maximo": 1
+    },
+    "estado": {
+     "chave": "carta:sage-surto-selvagem",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Surto Selvagem ativo",
+     "rotuloEncerrar": "Encerrar Surto Selvagem",
+     "avisoEncerrar": "Surto Selvagem encerrado; marque o Estresse final exigido pela carta."
+    },
+    "rotuloAtivar": "Ativar Surto Selvagem · 1 Estresse · 1/descanso longo",
+    "lembrete": "Dado começa em 1. Após cada jogada de ação em que usar o bônus, aumente-o; ao terminar, marque o Estresse adicional."
+   }
   },
   {
    "id": "sage-tocado-pelo-saber",
@@ -5829,7 +5929,47 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo está impresso em inglês (\"ABILITY\") na carta, não em português."
+   "observacao": "O rótulo de tipo está impresso em inglês (\"ABILITY\") na carta, não em português.",
+   "automacao": {
+    "classificacao": "automatizada-limite-contextual-com-requisito",
+    "resumo": "Com 4+ cartas Sábio ativas, o app registra uma vez por descanso a escolha de dobrar Agilidade ou Instinto."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O +2 de Conjuração só existe em ambiente natural e continua contextual. Escolha dobrar Agilidade ou Instinto antes da jogada e aplique o valor na mesa."
+   },
+   "uso": {
+    "custo": {},
+    "exigeCartasAtivasDominio": {
+     "dominio": "SAGE",
+     "quantidade": 4
+    },
+    "marcaUso": {
+     "chave": "uso:carta:sage:tocado-pelo-saber",
+     "maximo": 1
+    },
+    "opcoes": [
+     {
+      "id": "agilidade",
+      "rotulo": "Dobrar Agilidade",
+      "lembrete": "Nesta jogada, use o dobro da Agilidade; escolha antes de rolar."
+     },
+     {
+      "id": "instinto",
+      "rotulo": "Dobrar Instinto",
+      "lembrete": "Nesta jogada, use o dobro do Instinto; escolha antes de rolar."
+     }
+    ],
+    "rotuloAtivar": "Tocado pelo Saber · 1/descanso"
+   },
+   "efeitoDerivado": {
+    "exigeCartasAtivasDominio": {
+     "dominio": "SAGE",
+     "quantidade": 4
+    },
+    "bonusConjuracaoEmAmbienteNatural": 2,
+    "podeDobrarAgilidadeOuInstintoUmaVezPorDescanso": true
+   }
   },
   {
    "id": "sage-barreira-rejuvenescedora",
@@ -5851,7 +5991,32 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português."
+   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português.",
+   "automacao": {
+    "classificacao": "automatizada-limite-e-estado-pos-sucesso",
+    "resumo": "Após sucesso confirmado, o app registra uma vez por descanso e mantém a barreira como estado."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Role d4 fora do app e recupere esse número de PV em você e nos aliados abrangidos. Resistência física só vale contra dano vindo de fora da barreira, por isso não é aplicada automaticamente sem contexto espacial."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:sage:barreira-rejuvenescedora",
+     "maximo": 1
+    },
+    "estado": {
+     "chave": "estado:carta:sage:barreira-rejuvenescedora",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Barreira Rejuvenescedora ativa",
+     "rotuloEncerrar": "Encerrar Barreira",
+     "avisoEncerrar": "Barreira Rejuvenescedora encerrada."
+    },
+    "rotuloAtivar": "Sucesso: ativar Barreira · 1/descanso",
+    "lembrete": "Role d4 fora do app para a cura. Enquanto ativa, dano físico vindo de fora da barreira encontra resistência; posição e aliados permanecem na cena."
+   }
   },
   {
    "id": "sage-forest-sprites",
@@ -5876,6 +6041,37 @@
    "observacao": "O arquivo \"Forest Sprites.png\" tem nome em inglês; o nome impresso na própria carta também está em inglês (\"FOREST SPRITES\"), não foi traduzido para português como as demais cartas do domínio. O rótulo de tipo também está impresso em inglês (\"SPELL\").",
    "origem": {
     "nome": "livro-jambo"
+   },
+   "automacao": {
+    "classificacao": "automatizada-custo-por-quantidade-e-contador",
+    "resumo": "Após sucesso confirmado, informe quantas fadas criar; o app cobra a mesma quantidade de Esperança e mantém a quantidade restante."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Posicione as fadas e aplique +3 em ataques/efeito de Armadura na mesa. Quando uma fada conceder um benefício ou sofrer dano, diminua o contador em 1."
+   },
+   "uso": {
+    "custo": {},
+    "entradaQuantidade": {
+     "campo": "quantidadeFadas",
+     "rotulo": "quantidade de fadas",
+     "minimo": 1,
+     "maximo": 6,
+     "custoPorUnidade": {
+      "esperanca": 1
+     }
+    },
+    "estado": {
+     "chave": "estado:carta:sage:espiritos-da-floresta",
+     "valorBase": 0,
+     "somarQuantidade": true,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Espíritos da Floresta ativos",
+     "rotuloEncerrar": "Dispensar fadas",
+     "avisoEncerrar": "Espíritos da Floresta dispensados."
+    },
+    "rotuloAtivar": "Sucesso: criar Espíritos da Floresta",
+    "lembrete": "Cada Esperança cria uma fada. Diminua 1 quando ela conceder um benefício ou sofrer dano."
    }
   },
   {
@@ -5897,7 +6093,24 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português."
+   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português.",
+   "automacao": {
+    "classificacao": "automatizada-limite-apos-sucesso",
+    "resumo": "Depois do sucesso confirmado, o app registra a carta uma vez por descanso longo."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Conjuração 18 e a remodelagem da vegetação são totalmente ficcionais e permanecem na cena/Mestre."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:sage:dominio-das-plantas",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Sucesso: usar Domínio das Plantas · 1/descanso longo",
+    "lembrete": "Remodele a vegetação em qualquer ponto Distante conforme a ficção acordada com o Mestre."
+   }
   },
   {
    "id": "sage-templo-das-selvas",
@@ -5921,7 +6134,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo está impresso em inglês (\"ABILITY\") na carta, não em português."
+   "observacao": "O rótulo de tipo está impresso em inglês (\"ABILITY\") na carta, não em português.",
+   "automacao": {
+    "classificacao": "contador-existente-com-recarga-e-critico",
+    "resumo": "O contador existente já calcula o teto pela quantidade de cartas Sábio na mão + cofre e recarrega no descanso longo."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Após a rolagem de Conjuração, gaste manualmente quantos marcadores quiser para +1 cada. Em crítico de uma magia Sábio, acrescente 1 marcador respeitando o teto."
+   }
   },
   {
    "id": "sage-forca-da-natureza",
@@ -5947,7 +6168,35 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português."
+   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português.",
+   "automacao": {
+    "classificacao": "automatizada-custo-e-estado-com-bonus-derivado",
+    "resumo": "O app marca 1 Estresse, mantém a forma ativa e publica +10 de dano enquanto o estado estiver ligado."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Antes de cada jogada de ação, gaste 1 Esperança manualmente; se não puder, encerre a forma. Cura de Armadura ao derrotar criatura Próxima e imunidade a Imobilizado dependem do evento/alvo e ficam na mesa."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "estado": {
+     "chave": "estado:carta:sage:forca-da-natureza",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Força da Natureza ativa",
+     "rotuloEncerrar": "Encerrar Força da Natureza",
+     "avisoEncerrar": "Força da Natureza encerrada."
+    },
+    "rotuloAtivar": "Transformar-se · 1 Estresse",
+    "lembrete": "Antes de cada jogada de ação, gaste 1 Esperança; se não puder, encerre. Em sucesso de ataque/Conjuração, +10 no dano."
+   },
+   "efeitoDerivado": {
+    "exigeEstado": "estado:carta:sage:forca-da-natureza",
+    "bonusDano": 10,
+    "imuneImobilizado": true
+   }
   },
   {
    "id": "sage-tempestade",
@@ -5969,7 +6218,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português."
+   "observacao": "O rótulo de tipo está impresso em inglês (\"SPELL\") na carta, não em português.",
+   "automacao": {
+    "classificacao": "manual-de-encontro-com-tres-modalidades",
+    "resumo": "A carta não altera recurso próprio e seus efeitos pertencem inteiramente a múltiplos alvos e ao Medo do Mestre."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Escolha Nevasca, Furacão ou Tempestade de Areia, faça a Jogada de Conjuração contra os alvos Distantes e aplique dano/condições na cena até o Mestre gastar 1 Medo para encerrar."
+   }
   },
   {
    "id": "splendor-farol-brilhante",

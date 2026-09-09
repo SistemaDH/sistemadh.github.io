@@ -623,3 +623,14 @@ Emaranhado Cruel automatiza somente a Esperança do segundo alvo opcional. Líng
 Caule Imponente registra 1/descanso e cobra Estresse somente na modalidade de ataque. Projétil Corrosivo cobra a quantidade escolhida de Estresse depois do sucesso, enquanto a Corrosão permanente fica no adversário/encontro. Aperto da Morte permanece manual. Campo de Cura registra 1/descanso longo e automatiza somente a recuperação da própria ficha; aliados recuperam na própria ficha/mesa.
 
 Próximo bloco canônico pendente do Lote 8: **Sábio níveis 5–10**.
+
+
+### Lote 8 — Sábio níveis 5–10
+
+Sábio está revisado integralmente (níveis 1–10). Os contadores já existentes de Fortaleza Selvagem, Pele Espinhosa, Surto Selvagem e Templo das Selvas foram preservados; o bloco adiciona somente limites/estados ausentes.
+
+Fortaleza cobra 2 Esperanças após sucesso. Pele registra 1/descanso e reaproveita marcadores por Conjuração. Coletor permanece manual por depender de d6 e item narrativo. Montarias cobra Esperança por quantidade e guarda quantas estão ativas. Surto marca o Estresse inicial e inicia o dado em 1, mantendo explícito o Estresse final ao encerrar. Tocado pelo Saber exige 4+ cartas Sábio e registra o uso de dobrar Agilidade/Instinto, sem gravar +2 de ambiente natural permanentemente.
+
+Barreira Rejuvenescedora registra uso/estado, mas cura d4 e resistência espacial continuam na mesa. Espíritos da Floresta cobra Esperança por fada e mantém a quantidade restante. Domínio das Plantas registra 1/descanso longo. Templo reaproveita o contador por cartas Sábio. Força da Natureza mantém estado e +10 de dano derivado; o custo de 1 Esperança antes de cada ação, a cura de Armadura e imunidade a Imobilizado continuam contextuais. Tempestade permanece integralmente no encontro/Mestre.
+
+Próximo domínio canônico pendente do Lote 8: **Valor níveis 1–4**.
