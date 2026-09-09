@@ -1,0 +1,100 @@
+name: Lote 8 - Esplendor N5-N10
+
+on:
+  push:
+    branches: [tmp-lote8-splendor-n5-n10-sol]
+
+permissions:
+  contents: write
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materializar Esplendor N5-N10
+        run: |
+          python3 tools/lote8-splendor-n5-n10.py
+          python3 tools/lote8-splendor-n5-n10-fix.py
+          node tools/gerar-41-dominios.mjs
+          node tools/gerar-47-contadores.mjs
+          node tools/gerar-4B-descanso.mjs
+          git diff --check
+
+      - name: Conferir classificação, contadores e auditoria
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/cartas-dominio.json',encoding='utf-8'))
+          ids={
+            'splendor-golpe-divino','splendor-moldar-material','splendor-restauracao','splendor-zona-de-protecao',
+            'splendor-golpe-curativo','splendor-tocado-do-esplendor','splendor-aura-de-escudo','splendor-luz-ofuscante',
+            'splendor-aura-avassaladora','splendor-raio-da-salvacao','splendor-ressurreicao','splendor-revigoramento'
+          }
+          xs=[c for c in d['cartas'] if c['id'] in ids]
+          assert len(xs)==12, len(xs)
+          assert all(c.get('automacao') for c in xs), [c['id'] for c in xs if not c.get('automacao')]
+          assert all((c.get('resolucaoManual') or {}).get('rolaNoApp') is False for c in xs)
+          touched=next(c for c in xs if c['id']=='splendor-tocado-do-esplendor')
+          assert touched['efeitoDerivado']['bonusLimiarGrave']==3
+          cont=json.load(open('data/contadores.json',encoding='utf-8'))['contadores']
+          assert len(cont)==105, len(cont)
+          keys={x['chave'] for x in cont}
+          for k in [
+            'uso:carta:splendor:golpe-divino','estado:carta:splendor:golpe-divino',
+            'uso:carta:splendor:zona-de-protecao','uso:carta:splendor:tocado-do-esplendor',
+            'estado:carta:splendor:aura-de-escudo','estado:carta:splendor:aura-avassaladora'
+          ]: assert k in keys, k
+          PY
+          python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria-lote8.md
+          if grep -Eq '^\| Esplendor \| (5|6|7|8|9|10) \|' /tmp/auditoria-lote8.md; then
+            echo 'Ainda há Esplendor N5-N10 candidato sem sinal específico:'
+            grep -E '^\| Esplendor \| (5|6|7|8|9|10) \|' /tmp/auditoria-lote8.md
+            exit 1
+          fi
+          grep -q 'splendor-tocado-do-esplendor' backend/41_Dominios.gs
+          grep -q 'estado:carta:splendor:aura-avassaladora' backend/47_Contadores.gs
+
+      - name: Testes backend
+        shell: bash
+        run: |
+          set -o pipefail
+          node tools/testes-backend.mjs | tee /tmp/backend.log
+          ! grep -q '✗' /tmp/backend.log
+          tail -n 20 /tmp/backend.log
+
+      - name: Instalar Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install chromium
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados e CSS
+        run: |
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+          git diff --check
+
+      - name: Proteger contra concorrência
+        run: |
+          git fetch origin 'ediçãoclaude'
+          test "$(git rev-parse 'origin/ediçãoclaude')" = '628f471d80be74e9967b7d0410e83f8a72831b57'
+
+      - name: Commitar funcional e limpar temporários
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f --ignore-unmatch tools/lote8-splendor-n5-n10.py
+          git rm -f --ignore-unmatch tools/lote8-splendor-n5-n10-fix.py
+          git rm -f --ignore-unmatch .github/workflows/lote8-splendor-n5-n10.yml
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          find . -type f -name '*.pyc' -delete
+          git add -A
+          git diff --cached --check
+          git commit -m 'feat: revisar Esplendor níveis 5 a 10 [lote8-generated]'
+          git push origin HEAD:tmp-lote8-splendor-n5-n10-sol
