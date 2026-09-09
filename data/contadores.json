@@ -2496,6 +2496,57 @@
     "manual"
    ],
    "observacao": "Antes de cada ação custa 1 Esperança; se não puder pagar, encerra."
+  },
+  {
+   "chave": "uso:carta:valor:presenca-audaz-condicao",
+   "origem": "carta-dominio",
+   "refId": "valor-presenca-audaz",
+   "nome": "Presença Audaz · Evitar condição",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Evitar uma condição uma vez por descanso; o gasto de Esperança da outra metade da carta não consome este uso."
+  },
+  {
+   "chave": "uso:carta:valor:apoie-se-em-mim",
+   "origem": "carta-dominio",
+   "refId": "valor-apoie-se-em-mim",
+   "nome": "Apoie-Se em Mim",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo, após um aliado falhar uma jogada de ação."
+  },
+  {
+   "chave": "uso:carta:valor:inspiracao-critica",
+   "origem": "carta-dominio",
+   "refId": "valor-inspiracao-critica",
+   "nome": "Inspiração Crítica",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso, após sucesso crítico em um ataque."
   }
  ]
 }

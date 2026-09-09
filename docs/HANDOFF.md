@@ -634,3 +634,12 @@ Fortaleza cobra 2 Esperanças após sucesso. Pele registra 1/descanso e reaprove
 Barreira Rejuvenescedora registra uso/estado, mas cura d4 e resistência espacial continuam na mesa. Espíritos da Floresta cobra Esperança por fada e mantém a quantidade restante. Domínio das Plantas registra 1/descanso longo. Templo reaproveita o contador por cartas Sábio. Força da Natureza mantém estado e +10 de dano derivado; o custo de 1 Esperança antes de cada ação, a cura de Armadura e imunidade a Imobilizado continuam contextuais. Tempestade permanece integralmente no encontro/Mestre.
 
 Próximo domínio canônico pendente do Lote 8: **Valor níveis 1–4**.
+
+
+### Lote 8 — Valor níveis 1–4
+
+- As 9 cartas de Valor dos níveis 1 a 4 foram classificadas entre automação segura e resolução de mesa, sem RNG no servidor.
+- `Pele Dura` passou a integrar o cálculo canônico de defesas: sem armadura equipada e com a carta ativa, usa Pontuação de Armadura base `3 + Força` e os limiares-base por patamar da própria carta; equipar armadura desliga essa substituição automaticamente.
+- `Quebrador Corporal` publica o bônus de dano igual à Força como efeito contextual para ataque bem-sucedido com arma Corpo a Corpo.
+- `Presença Audaz`, `Apoie-Se em Mim` e `Inspiração Crítica` ganharam contadores de uso separados, levando o catálogo de 134 para 137 contadores.
+- Efeitos em adversários/aliados (`Provocação`, escolhas dos aliados em `Inspiração Crítica`, rerrolagem de `Tanque de Suporte`) permanecem na mesa; o app cobra apenas custos e registra limites próprios verificáveis.

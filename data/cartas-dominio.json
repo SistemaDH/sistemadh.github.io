@@ -7159,7 +7159,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "automatizada-custo-opcional-apos-sucesso",
+    "resumo": "Depois do ataque bem-sucedido, o app pode cobrar 1 Esperança quando você escolher deixar o alvo temporariamente Vulnerável."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O ataque, o dano, o empurrão para Próximo, o d6 extra em sucesso com Esperança e a condição no adversário continuam na mesa."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "rotuloAtivar": "Sucesso: deixar Vulnerável · 1 Esperança",
+    "lembrete": "Use somente após um ataque bem-sucedido com a arma principal. O alvo fica temporariamente Vulnerável; dano e empurrão são resolvidos na mesa."
+   }
   },
   {
    "id": "valor-eu-sou-seu-escudo",
@@ -7181,7 +7196,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "automatizada-custo-de-reacao",
+    "resumo": "Quando a mesa confirmar que você tomou o lugar do aliado, o app marca 1 Estresse."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A troca de alvo do ataque e quantos Espaços de Armadura serão marcados ao receber o dano dependem da resolução da cena e continuam manuais."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "rotuloAtivar": "Tomar o ataque do aliado · 1 Estresse",
+    "lembrete": "Você se torna o alvo do ataque que atingiria um aliado Muito Próximo. Ao receber o dano, resolva normalmente e escolha quantos Espaços de Armadura marcar."
+   }
   },
   {
    "id": "valor-pele-dura",
@@ -7202,7 +7232,41 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "automatizada-passiva-derivada-sem-armadura",
+    "resumo": "Enquanto a carta estiver ativa e nenhuma armadura estiver equipada, o servidor calcula Pontuação de Armadura base 3 + Força e os limiares-base da carta pelo patamar."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Não há botão: equipar uma armadura desliga automaticamente esta base substituta. Bônus de escudo, equipamento e demais modificadores continuam entrando no cálculo normal."
+   },
+   "efeitoDerivado": {
+    "defesaSemArmadura": {
+     "pontuacaoArmaduraBase": {
+      "base": 3,
+      "traco": "Força"
+     },
+     "limiaresBasePorPatamar": {
+      "1": [
+       9,
+       19
+      ],
+      "2": [
+       11,
+       24
+      ],
+      "3": [
+       13,
+       31
+      ],
+      "4": [
+       15,
+       38
+      ]
+     }
+    }
+   }
   },
   {
    "id": "valor-presenca-audaz",
@@ -7224,7 +7288,39 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "automatizada-custo-e-limite-de-reacao",
+    "resumo": "O app oferece separadamente o bônus de Presença por 1 Esperança e a prevenção de uma condição uma vez por descanso."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Presença e o valor de Força são aplicados na rolagem da mesa. Evitar a condição exige o gatilho narrativo descrito na carta; o app apenas registra que o uso do descanso foi gasto."
+   },
+   "uso": {
+    "custo": {},
+    "opcoes": [
+     {
+      "id": "forca-na-presenca",
+      "rotulo": "Somar Força à Presença · 1 Esperança",
+      "custo": {
+       "esperanca": 1
+      },
+      "lembrete": "Use ao fazer uma Jogada de Presença e some seu valor atual de Força à rolagem."
+     },
+     {
+      "id": "evitar-condicao",
+      "rotulo": "Evitar condição · 1/descanso",
+      "custo": {},
+      "marcaUso": {
+       "chave": "uso:carta:valor:presenca-audaz-condicao",
+       "maximo": 1
+      },
+      "lembrete": "Descreva como sua presença audaz evita a condição que você receberia. Este benefício volta no próximo descanso."
+     }
+    ],
+    "rotuloAtivar": "Usar Presença Audaz"
+   }
   },
   {
    "id": "valor-quebrador-corporal",
@@ -7243,7 +7339,18 @@
    "dependencias": [],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "automatizada-passiva-de-dano-contextual",
+    "resumo": "O servidor publica um bônus de dano igual à Força atual para ataques bem-sucedidos com arma em alcance Corpo a Corpo."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O app não decide se o ataque acertou nem se a arma/alvo estão em Corpo a Corpo; a mesa aplica o bônus contextual na jogada de dano correta."
+   },
+   "efeitoDerivado": {
+    "danoArmaCorpoACorpoPorTraco": "Força"
+   }
   },
   {
    "id": "valor-apoie-se-em-mim",
@@ -7265,7 +7372,28 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "automatizada-limite-e-recurso-proprio",
+    "resumo": "Após o gatilho confirmado, o app registra uma vez por descanso longo e limpa 2 Estresses da própria ficha."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O aliado que falhou na jogada também limpa 2 Estresses na ficha dele/mesa; um botão do seu personagem não altera automaticamente outra ficha."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:valor:apoie-se-em-mim",
+     "maximo": 1
+    },
+    "efeitoRecurso": {
+     "chave": "estresseMarcado",
+     "delta": -2
+    },
+    "rotuloAtivar": "Consolar aliado · limpar 2 Estresses · 1/descanso longo",
+    "lembrete": "Use depois de consolar ou inspirar um aliado que falhou uma jogada de ação. Ele também limpa 2 Estresses na própria ficha."
+   }
   },
   {
    "id": "valor-inspiracao-critica",
@@ -7289,7 +7417,24 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "automatizada-limite-apos-critico",
+    "resumo": "Depois de um sucesso crítico em ataque confirmado pela mesa, o app registra o uso uma vez por descanso."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Cada aliado Muito Próximo escolhe limpar 1 Estresse ou ganhar 1 Esperança na própria ficha. O app não escolhe nem altera recursos de vários alvos."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:valor:inspiracao-critica",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Crítico: inspirar aliados · 1/descanso",
+    "lembrete": "Cada aliado Muito Próximo escolhe: limpar 1 Estresse ou ganhar 1 Esperança."
+   }
   },
   {
    "id": "valor-provocacao",
@@ -7311,7 +7456,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "manual-de-encontro-apos-sucesso",
+    "resumo": "A carta não altera recurso nem estado próprio; seu efeito pertence ao adversário e à próxima decisão do Mestre."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Faça a Jogada de Presença contra o alvo. Em sucesso, ele marca 1 Estresse e, na próxima vez em que o Mestre focá-lo, deve atacar você com desvantagem. Registre isso no encontro."
+   }
   },
   {
    "id": "valor-tanque-de-suporte",
@@ -7333,7 +7486,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\")."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
+   "automacao": {
+    "classificacao": "automatizada-custo-de-reacao-em-aliado",
+    "resumo": "Quando um aliado Próximo falhar, o app cobra 2 Esperanças para habilitar a reação."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O aliado escolhe e rerrola fisicamente o dado de Esperança ou o dado de Medo; nenhum dado é gerado pelo servidor."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 2
+    },
+    "rotuloAtivar": "Permitir rerrolagem do aliado · 2 Esperanças",
+    "lembrete": "Depois da falha de um aliado Próximo, ele escolhe rerrolar o dado de Esperança ou o dado de Medo fora do app."
+   }
   },
   {
    "id": "valor-armadureiro",

@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 134 cartas e características mandam
+ *  O problema que este arquivo resolve: 137 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -174,6 +174,9 @@ const CONTADORES = {
   "estado:carta:sage:espiritos-da-floresta": { origem: "carta-dominio", refId: "sage-forest-sprites", nome: "Espíritos da Floresta", rotulo: "fadas", tipo: "marcadores", maximo: {"tipo":"fixo","valor":6}, zeraEm: ["manual"], recarregaEm: [] },
   "uso:carta:sage:dominio-das-plantas": { origem: "carta-dominio", refId: "sage-dominio-das-plantas", nome: "Domínio das Plantas", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
   "estado:carta:sage:forca-da-natureza": { origem: "carta-dominio", refId: "sage-forca-da-natureza", nome: "Força da Natureza", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "uso:carta:valor:presenca-audaz-condicao": { origem: "carta-dominio", refId: "valor-presenca-audaz", nome: "Presença Audaz · Evitar condição", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:valor:apoie-se-em-mim": { origem: "carta-dominio", refId: "valor-apoie-se-em-mim", nome: "Apoie-Se em Mim", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:carta:valor:inspiracao-critica": { origem: "carta-dominio", refId: "valor-inspiracao-critica", nome: "Inspiração Crítica", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -312,6 +315,9 @@ const CONTADOR_ALIASES = {
   "estado:carta:sage:espiritos-da-floresta": ["Espíritos da Floresta"],
   "uso:carta:sage:dominio-das-plantas": ["Domínio das Plantas"],
   "estado:carta:sage:forca-da-natureza": ["Força da Natureza"],
+  "uso:carta:valor:presenca-audaz-condicao": ["Presença Audaz · Evitar condição"],
+  "uso:carta:valor:apoie-se-em-mim": ["Apoie-Se em Mim"],
+  "uso:carta:valor:inspiracao-critica": ["Inspiração Crítica"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

@@ -389,6 +389,12 @@ const USOS_CARTAS_DOMINIO = {
   "splendor-aura-avassaladora": {"custo":{"esperanca":2},"estado":{"chave":"estado:carta:splendor:aura-avassaladora","valor":1,"rotuloAtivo":"Aura Avassaladora ativa","rotuloEncerrar":"Encerrar Aura Avassaladora","avisoEncerrar":"Aura Avassaladora encerrada."},"rotuloAtivar":"Sucesso: ativar Aura Avassaladora · 2 Esperanças","lembrete":"Até o próximo descanso longo, sua Presença é igual ao atributo de Conjuração; adversários marcam 1 Fadiga ao escolher você como alvo de ataque."},
   "splendor-raio-da-salvacao": {"custo":{},"entradaQuantidade":{"campo":"estressesMarcados","rotulo":"Estresses a marcar / PV totais","minimo":1,"maximo":12,"custoPorUnidade":{"estresse":1},"ajuda":"Cada Estresse efetivamente marcado gera 1 PV de cura para distribuir entre os aliados elegíveis."},"quantidadeLigadaAoEstresse":true,"rotuloAtivar":"Sucesso: canalizar Raio da Salvação","lembrete":"Distribua entre os aliados em linha e alcance Distante PV totais iguais ao Estresse efetivamente marcado."},
   "splendor-revigoramento": {"custo":{},"entradaQuantidade":{"campo":"esperancasGastas","rotulo":"Esperanças / d6 a rolar","minimo":1,"maximo":6,"custoPorUnidade":{"esperanca":1},"ajuda":"Gaste qualquer quantidade de Esperança e role o mesmo número de d6 fora do app."},"rotuloAtivar":"Usar Revigoramento","lembrete":"Role 1d6 por Esperança gasta. Se qualquer dado resultar em 6, a habilidade limitada escolhida pode ser usada novamente."},
+  "valor-empurrao-forte": {"custo":{"esperanca":1},"rotuloAtivar":"Sucesso: deixar Vulnerável · 1 Esperança","lembrete":"Use somente após um ataque bem-sucedido com a arma principal. O alvo fica temporariamente Vulnerável; dano e empurrão são resolvidos na mesa."},
+  "valor-eu-sou-seu-escudo": {"custo":{"estresse":1},"rotuloAtivar":"Tomar o ataque do aliado · 1 Estresse","lembrete":"Você se torna o alvo do ataque que atingiria um aliado Muito Próximo. Ao receber o dano, resolva normalmente e escolha quantos Espaços de Armadura marcar."},
+  "valor-presenca-audaz": {"custo":{},"opcoes":[{"id":"forca-na-presenca","rotulo":"Somar Força à Presença · 1 Esperança","custo":{"esperanca":1},"lembrete":"Use ao fazer uma Jogada de Presença e some seu valor atual de Força à rolagem."},{"id":"evitar-condicao","rotulo":"Evitar condição · 1/descanso","custo":{},"marcaUso":{"chave":"uso:carta:valor:presenca-audaz-condicao","maximo":1},"lembrete":"Descreva como sua presença audaz evita a condição que você receberia. Este benefício volta no próximo descanso."}],"rotuloAtivar":"Usar Presença Audaz"},
+  "valor-apoie-se-em-mim": {"custo":{},"marcaUso":{"chave":"uso:carta:valor:apoie-se-em-mim","maximo":1},"efeitoRecurso":{"chave":"estresseMarcado","delta":-2},"rotuloAtivar":"Consolar aliado · limpar 2 Estresses · 1/descanso longo","lembrete":"Use depois de consolar ou inspirar um aliado que falhou uma jogada de ação. Ele também limpa 2 Estresses na própria ficha."},
+  "valor-inspiracao-critica": {"custo":{},"marcaUso":{"chave":"uso:carta:valor:inspiracao-critica","maximo":1},"rotuloAtivar":"Crítico: inspirar aliados · 1/descanso","lembrete":"Cada aliado Muito Próximo escolhe: limpar 1 Estresse ou ganhar 1 Esperança."},
+  "valor-tanque-de-suporte": {"custo":{"esperanca":2},"rotuloAtivar":"Permitir rerrolagem do aliado · 2 Esperanças","lembrete":"Depois da falha de um aliado Próximo, ele escolhe rerrolar o dado de Esperança ou o dado de Medo fora do app."},
 };
 
 /** Regras estruturais especiais de cartas de domínio. */
@@ -413,6 +419,8 @@ const EFEITOS_DERIVADOS_CARTAS_DOMINIO = {
   "sage-tocado-pelo-saber": {"exigeCartasAtivasDominio":{"dominio":"SAGE","quantidade":4},"bonusConjuracaoEmAmbienteNatural":2,"podeDobrarAgilidadeOuInstintoUmaVezPorDescanso":true},
   "sage-forca-da-natureza": {"exigeEstado":"estado:carta:sage:forca-da-natureza","bonusDano":10,"imuneImobilizado":true},
   "splendor-tocado-do-esplendor": {"bonusLimiarGrave":3,"exigeCartasAtivasDominio":{"dominio":"SPLENDOR","quantidade":4}},
+  "valor-pele-dura": {"defesaSemArmadura":{"pontuacaoArmaduraBase":{"base":3,"traco":"Força"},"limiaresBasePorPatamar":{"1":[9,19],"2":[11,24],"3":[13,31],"4":[15,38]}}},
+  "valor-quebrador-corporal": {"danoArmaCorpoACorpoPorTraco":"Força"},
 };
 
 /**

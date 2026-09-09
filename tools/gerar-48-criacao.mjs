@@ -441,6 +441,40 @@ function modificadoresDeTracoDaFicha_(ficha) {
 }
 
 /**
+ * Base defensiva dada por uma carta quando o personagem NÃO equipa armadura.
+ *
+ * Pele Dura é a primeira regra deste tipo, mas o formato é genérico: a carta
+ * declara a Pontuação de Armadura base (que pode somar um traço) e os limiares
+ * base por patamar. O nível do personagem continua sendo somado aos limiares
+ * no mesmo ponto em que é somado aos limiares impressos das armaduras.
+ */
+function defesaSemArmaduraDeCartas_(ficha, nivelPersonagem) {
+  const efeitos = (typeof efeitosDerivadosAtivosDeCartas_ === 'function')
+    ? efeitosDerivadosAtivosDeCartas_(ficha) : [];
+  const nivel = Math.max(1, Math.min(10, Math.trunc(Number(nivelPersonagem)) || 1));
+  const patamar = (typeof tierDoNivel_ === 'function') ? tierDoNivel_(nivel)
+    : (nivel <= 1 ? 1 : nivel <= 4 ? 2 : nivel <= 7 ? 3 : 4);
+  for (let i = 0; i < efeitos.length; i++) {
+    const regra = (efeitos[i].efeito || {}).defesaSemArmadura;
+    if (!regra) continue;
+    const pa = regra.pontuacaoArmaduraBase || {};
+    let pontuacao = Number(pa.base) || 0;
+    if (pa.traco && typeof valorDoTraco_ === 'function') pontuacao += Number(valorDoTraco_(ficha, pa.traco)) || 0;
+    const tabela = regra.limiaresBasePorPatamar || {};
+    const lim = tabela[String(patamar)] || tabela[patamar];
+    if (!Array.isArray(lim) || lim.length < 2) continue;
+    return {
+      fonte: efeitos[i].nome,
+      pontuacaoArmaduraBase: Math.max(0, Math.trunc(pontuacao)),
+      limiarMaiorBase: Math.max(0, Math.trunc(Number(lim[0])) || 0),
+      limiarGraveBase: Math.max(0, Math.trunc(Number(lim[1])) || 0),
+      patamar: patamar
+    };
+  }
+  return null;
+}
+
+/**
  * BÔNUS DE DANO DERIVADOS DAS CARACTERÍSTICAS DE CLASSE.
  *
  * O sistema não rola os dados. Ele publica apenas o que a ficha determina:
@@ -515,6 +549,22 @@ function bonusDeDanoDaFicha_(ficha) {
       opcoes: opcoes,
       valorMaximo: Math.max.apply(null, opcoes.map(function (x) { return Number(x.valor) || 0; })),
       condicao: 'ataque bem-sucedido com uma arma; escolha Finesse/Destreza ou Agilidade'
+    });
+  }
+
+
+  // Quebrador Corporal: o valor é derivado da Força atual, mas só entra em
+  // ataque bem-sucedido com arma cujo alcance seja Corpo a Corpo.
+  for (let i = 0; i < cartasDerivadasDano.length; i++) {
+    const traco = (cartasDerivadasDano[i].efeito || {}).danoArmaCorpoACorpoPorTraco;
+    if (!traco) continue;
+    saida.condicionais.push({
+      fonte: cartasDerivadasDano[i].nome,
+      tipo: 'fixo',
+      valor: (typeof valorDoTraco_ === 'function') ? valorDoTraco_(ficha, traco) : 0,
+      traco: traco,
+      aplicaEm: 'ataque-bem-sucedido-com-arma',
+      condicao: 'ataque bem-sucedido com arma de alcance Corpo a Corpo'
     });
   }
 
@@ -627,18 +677,26 @@ function derivadosDoPersonagem_(ficha) {
 
   let evasao = bases ? bases.evasaoInicial : null;
   let limiarMaior = null, limiarGrave = null;
+  const defesaSemArmadura = !armadura && typeof defesaSemArmaduraDeCartas_ === 'function'
+    ? defesaSemArmaduraDeCartas_(ficha, nivel) : null;
 
   if (armadura) {
     const lim = partirLimiares_(armadura.limiares);
     if (lim) { limiarMaior = lim.menor + nivel; limiarGrave = lim.maior + nivel; }
+  } else if (defesaSemArmadura) {
+    limiarMaior = defesaSemArmadura.limiarMaiorBase + nivel;
+    limiarGrave = defesaSemArmadura.limiarGraveBase + nivel;
   }
 
   const proficiencia = (typeof proficienciaDaFicha_ === 'function')
     ? proficienciaDaFicha_(ficha) : CRIACAO.proficienciaInicial;
   const md = modificadoresDerivadosDaFicha_(ficha);
-  // Armadura final inclui escudos/armas e nunca passa de 12 (livro p.112).
+  // Armadura final inclui base alternativa de carta, escudos/armas e nunca passa de 12.
+  const basePontuacaoArmadura = armadura
+    ? (Number(armadura.pontuacao) || 0)
+    : (defesaSemArmadura ? defesaSemArmadura.pontuacaoArmaduraBase : 0);
   const pontuacaoArmadura = Math.max(0, Math.min(12,
-    (armadura ? (Number(armadura.pontuacao) || 0) : 0) + (Number(md.pontuacaoArmadura) || 0)));
+    basePontuacaoArmadura + (Number(md.pontuacaoArmadura) || 0)));
 
   // Os bônus PERMANENTES que a subida de nível deixou na ficha. Ficam num
   // balde separado (ficha.avancos.bonus) de propósito: assim a base continua
@@ -975,7 +1033,9 @@ function validarCriacao_(ficha) {
   // Etapa 5 — equipamento
   const eq = (ficha && ficha.equipamento) || {};
   if (!eq.primaria) problemas.push('Escolha uma arma primária.');
-  if (!eq.armadura) problemas.push('Escolha uma armadura.');
+  const defesaSemArmadura = !eq.armadura && typeof defesaSemArmaduraDeCartas_ === 'function'
+    ? defesaSemArmaduraDeCartas_(ficha, nivel) : null;
+  if (!eq.armadura && !defesaSemArmadura) problemas.push('Escolha uma armadura.');
   // A ficha inteira vai junto: a conta de mãos precisa saber se esta classe
   // ignora empunhadura (Treinamento de Combate, do Guerreiro).
   const vEq = validarEquipamento_(eq, nivel, ficha);
@@ -1028,10 +1088,11 @@ function validarCriacao_(ficha) {
     }
   }
 
-  // Etapa 4 — sem armadura não há como calcular limiar
+  // Etapa 4 — limiares precisam vir de armadura equipada OU de uma regra
+  // explícita de carta como Pele Dura. Sem nenhuma das duas fontes, continua erro.
   const d = derivadosDoPersonagem_(ficha);
   if (d.limiarMaior === null) {
-    problemas.push('Sem armadura equipada não dá para calcular os limiares de dano.');
+    problemas.push('Sem armadura ou outra base defensiva válida não dá para calcular os limiares de dano.');
   }
 
   return problemas;

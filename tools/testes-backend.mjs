@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 134 contadores: 102 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 137 contadores: 105 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 134 contadores: 102 de carta, 25 de classe/subclasse, 4 d
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 134);
+  igual(Object.keys(CONTADORES).length, 137);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 102);
+  igual(porOrigem['carta-dominio'], 105);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -9796,6 +9796,123 @@ teste('Templo das Selvas preserva contador por cartas Sábio em mão e cofre',()
 teste('Força da Natureza custa 1 Estresse, mantém estado e publica +10 de dano',()=>{const f=fichaSageAlta_(10,['sage-forca-da-natureza','sage-tempestade']);let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-forca-da-natureza'}]);igual(r.erros,[]);igual(f.recursos.estresseMarcado,1);igual(f.contadores['estado:carta:sage:forca-da-natureza'].valor,1);igual(contexto.bonusDanoDeCartas_(f),10);r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-forca-da-natureza',encerrar:true}]);igual(r.erros,[]);igual(contexto.bonusDanoDeCartas_(f),0);});
 
 teste('Tempestade permanece manual e não cria estado do Mestre na ficha',()=>{const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));const c=d.cartas.find(x=>x.id==='sage-tempestade');verdade(!c.uso);});
+
+
+
+console.log('\nLote 8 — Valor níveis 1–4');
+function fichaValorBaixa_(nivel, ativas) {
+  const f=fichaSageBaixa_(nivel,ativas);
+  f.identidade.nome='Valor Baixo';
+  f.identidade.nivel=nivel;
+  f.cartas={ativas:ativas.slice(),cofre:[]};
+  f.contadores={};
+  f.recursos.esperanca=6; f.recursos.esperancaMaxima=6;
+  f.recursos.estresseMarcado=0; f.recursos.estresseMaximo=Math.max(8,Number(f.recursos.estresseMaximo)||0);
+  return f;
+}
+
+teste('Valor N1-N4 fica todo classificado e sem RNG no app',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const ids=['valor-empurrao-forte','valor-eu-sou-seu-escudo','valor-pele-dura','valor-presenca-audaz','valor-quebrador-corporal','valor-apoie-se-em-mim','valor-inspiracao-critica','valor-provocacao','valor-tanque-de-suporte'];
+  const xs=ids.map(id=>d.cartas.find(c=>c.id===id));
+  verdade(xs.every(Boolean)); verdade(xs.every(c=>!!c.automacao));
+  verdade(xs.every(c=>c.resolucaoManual&&c.resolucaoManual.rolaNoApp===false));
+});
+
+teste('Empurrão Forte cobra 1 Esperança só pela Vulnerabilidade opcional',()=>{
+  const f=fichaValorBaixa_(1,['valor-empurrao-forte','valor-eu-sou-seu-escudo']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-empurrao-forte'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5);
+});
+
+teste('Eu Sou Seu Escudo marca 1 Estresse sem escolher Armadura pelo jogador',()=>{
+  const f=fichaValorBaixa_(1,['valor-eu-sou-seu-escudo','valor-empurrao-forte']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-eu-sou-seu-escudo',dadoInabalavel:1}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+  igual(r.mudancas[0].efeitoRecurso,null);
+});
+
+teste('Pele Dura torna ficha sem armadura válida e deriva 3+Força e limiares-base',()=>{
+  const f=contexto.fichaRapida_({
+    nome:'Torr sem armadura',classe:'Guardião',subclasse:'Vingança',
+    ancestralidade:'Humano',comunidade:'Highborne',
+    cartas:['valor-pele-dura','blade-redemoinho'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  f.equipamento.armadura=null;
+  const problemas=contexto.validarCriacao_(f);
+  igual(problemas,[]);
+  const d=contexto.derivadosDoPersonagem_(f);
+  igual(contexto.valorDoTraco_(f,'Força'),2);
+  igual(d.pontuacaoArmadura,5);
+  igual(d.limiarMaior,10);
+  igual(d.limiarGrave,20);
+});
+
+teste('Pele Dura não substitui uma armadura que esteja equipada',()=>{
+  const f=contexto.fichaRapida_({
+    nome:'Torr de armadura',classe:'Guardião',subclasse:'Vingança',
+    ancestralidade:'Humano',comunidade:'Highborne',
+    cartas:['valor-pele-dura','blade-redemoinho'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  const arm=contexto.acharArmadura_(f.equipamento.armadura);
+  const d=contexto.derivadosDoPersonagem_(f);
+  igual(d.pontuacaoArmadura,Math.min(12,Number(arm.pontuacao)||0));
+  const lim=String(arm.limiares).split('/').map(Number);
+  igual(d.limiarMaior,lim[0]+1); igual(d.limiarGrave,lim[1]+1);
+});
+
+teste('Presença Audaz separa o custo de Esperança do limite para evitar condição',()=>{
+  const f=fichaValorBaixa_(2,['valor-presenca-audaz','valor-quebrador-corporal']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-presenca-audaz',opcao:'forca-na-presenca'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5); verdade(!f.contadores['uso:carta:valor:presenca-audaz-condicao']);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-presenca-audaz',opcao:'evitar-condicao'}]);
+  igual(r.erros,[]); igual(f.contadores['uso:carta:valor:presenca-audaz-condicao'].valor,1);
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-presenca-audaz',opcao:'evitar-condicao'}]).erros.length===1);
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  verdade(!f.contadores['uso:carta:valor:presenca-audaz-condicao']);
+});
+
+teste('Quebrador Corporal publica Força como dano contextual Corpo a Corpo',()=>{
+  const f=fichaValorBaixa_(2,['valor-quebrador-corporal','valor-presenca-audaz']);
+  const b=contexto.bonusDeDanoDaFicha_(f);
+  const q=b.condicionais.find(x=>x.fonte==='Quebrador Corporal');
+  verdade(!!q); igual(q.valor,contexto.valorDoTraco_(f,'Força'));
+  verdade(/Corpo a Corpo/.test(q.condicao));
+});
+
+teste('Apoie-Se em Mim limpa 2 Estresses próprios e é 1/descanso longo',()=>{
+  const f=fichaValorBaixa_(3,['valor-apoie-se-em-mim','valor-inspiracao-critica']);
+  f.recursos.estresseMarcado=4;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-apoie-se-em-mim'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,2); igual(f.contadores['uso:carta:valor:apoie-se-em-mim'].valor,1);
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-apoie-se-em-mim'}]).erros.length===1);
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  igual(f.contadores['uso:carta:valor:apoie-se-em-mim'].valor,1);
+  contexto.aplicarGatilhoContadores_(f,'descanso-longo');
+  verdade(!f.contadores['uso:carta:valor:apoie-se-em-mim']);
+});
+
+teste('Inspiração Crítica registra o crítico 1/descanso sem alterar aliados',()=>{
+  const f=fichaValorBaixa_(3,['valor-inspiracao-critica','valor-apoie-se-em-mim']);
+  const e=f.recursos.esperanca, s=f.recursos.estresseMarcado;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-inspiracao-critica'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,e); igual(f.recursos.estresseMarcado,s);
+  igual(f.contadores['uso:carta:valor:inspiracao-critica'].valor,1);
+});
+
+teste('Provocação permanece efeito de encontro e não cria estado global',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const c=d.cartas.find(x=>x.id==='valor-provocacao');
+  verdade(!c.uso); verdade(c.automacao.classificacao.includes('manual'));
+});
+
+teste('Tanque de Suporte cobra 2 Esperanças e deixa a rerrolagem física',()=>{
+  const f=fichaValorBaixa_(4,['valor-tanque-de-suporte','valor-provocacao']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-tanque-de-suporte'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,4); igual(r.mudancas[0].dadosManuais,null);
+});
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {
