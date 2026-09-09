@@ -1,0 +1,111 @@
+name: Lote 8 - Equipamento Defensivo B2
+
+on:
+  push:
+    branches: [tmp-lote8-equip-defensivo-b2-sol]
+
+permissions:
+  contents: write
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materializar equipamento defensivo B2
+        run: |
+          python3 tools/lote8-equip-defensivo-b2.py
+          node tools/gerar-44-equipamento.mjs
+          node tools/gerar-41-dominios.mjs
+          node tools/gerar-47-contadores.mjs
+          node tools/gerar-4B-descanso.mjs
+          cp backend/4C_Ajustes.gs /tmp/4C_Ajustes.js
+          node --check /tmp/4C_Ajustes.js
+          node --check js/telas/ficha.js
+          git diff --check
+
+      - name: Auditar estrutura B2
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          e=json.load(open('data/equipamentos.json',encoding='utf-8'))
+          c=json.load(open('data/contadores.json',encoding='utf-8'))
+          itens=[*e.get('armas',[]),*e.get('armaduras',[])]
+          por={}
+          for x in itens:
+            car=x.get('caracteristica') or {}
+            por.setdefault(car.get('nomeIngles'),[]).append((x,car))
+          for nome in ('Hopeful','Shifting','Timeslowing','Deflecting'):
+            assert len(por.get(nome,[]))==1,(nome,len(por.get(nome,[])))
+            car=por[nome][0][1]
+            assert car.get('automacao'),nome
+            assert car.get('efeitoEquipamento'),nome
+          assert len(c['contadores'])==146,len(c['contadores'])
+          PY
+          python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria.md
+          if grep -Eq '^\| (Esperançoso|Deslocamento|Temporal|Desafetação) \|' /tmp/auditoria.md; then
+            echo 'B2 ainda aparece na auditoria.' >&2
+            grep -E '^\| (Esperançoso|Deslocamento|Temporal|Desafetação) \|' /tmp/auditoria.md >&2 || true
+            exit 1
+          fi
+          grep -q 'function regraEsperancosoDaFicha_' backend/4C_Ajustes.gs
+          grep -q 'function usarReacaoDeEquipamento_' backend/4C_Ajustes.gs
+          grep -q 'function pedirEscolhaEsperancoso' js/telas/ficha.js
+          grep -q "tipo:'reacaoEquipamento'" js/telas/ficha.js
+
+      - name: Testes backend completos
+        shell: bash
+        run: |
+          set -o pipefail
+          node tools/testes-backend.mjs | tee /tmp/backend.log
+          if grep -q '✗' /tmp/backend.log; then
+            echo 'Há falha impressa na suíte backend.' >&2
+            grep '✗' /tmp/backend.log >&2 || true
+            exit 1
+          fi
+          grep -q 'Lote 8 — equipamento defensivo B2' /tmp/backend.log
+          grep -q '✓ B2 publica Esperançoso e as três reações pré-ataque sem RNG do app' /tmp/backend.log
+          grep -q '✓ Deslocamento marca 1 PA e publica desvantagem somente para o ataque' /tmp/backend.log
+          grep -q '✓ Temporal pede d4 manual antes de marcar PA e usa exatamente o resultado' /tmp/backend.log
+          grep -q '✓ Desafetação calcula PA disponíveis DEPOIS de pagar o slot da reação' /tmp/backend.log
+          grep -q '✓ Esperançoso oferece escolha e substitui ponto a ponto um custo de 3 Esperanças' /tmp/backend.log
+          grep -q '✓ Esperançoso permite pagar tudo com PA mesmo sem Esperança disponível' /tmp/backend.log
+          grep -q '✓ Esperançoso não pergunta quando não há PA livre e o gasto normal continua' /tmp/backend.log
+          grep -q '✓ PA de Esperançoso passa por Doloroso e Inabalável sem RNG automático' /tmp/backend.log
+          tail -n 120 /tmp/backend.log
+
+      - name: Instalar Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install chromium
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados e CSS
+        run: |
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+          git diff --check
+
+      - name: Proteger contra concorrência
+        run: |
+          git fetch origin 'ediçãoclaude'
+          test "$(git rev-parse 'origin/ediçãoclaude')" = 'd740d7d26ea90b0bf72854719ca81d4f402fd1af'
+
+      - name: Commitar funcional e limpar temporários
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f --ignore-unmatch tools/lote8-equip-defensivo-b2.py
+          git rm -f --ignore-unmatch .github/workflows/lote8-equip-defensivo-b2.yml
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          find . -type f -name '*.pyc' -delete
+          git add -A
+          git diff --cached --check
+          git commit -m 'feat: automatizar Esperançoso e reações defensivas B2 [lote8-generated]'
+          git push origin HEAD:tmp-lote8-equip-defensivo-b2-sol
