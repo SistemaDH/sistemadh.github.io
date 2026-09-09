@@ -21,6 +21,7 @@ jobs:
         run: |
           python3 tools/lote8-guerreiro-fix.py
           python3 tools/lote8-guerreiro-fix2.py
+          python3 tools/lote8-guerreiro-fix3.py
           python3 tools/lote8-guerreiro.py
           node tools/gerar-42-classes.mjs
           node tools/gerar-47-contadores.mjs
@@ -81,6 +82,7 @@ jobs:
           git rm -f tools/lote8-guerreiro.py
           git rm -f tools/lote8-guerreiro-fix.py
           git rm -f tools/lote8-guerreiro-fix2.py
+          git rm -f tools/lote8-guerreiro-fix3.py
           git rm -f .github/workflows/lote8-guerreiro.yml
           git add -A
           git diff --cached --check
