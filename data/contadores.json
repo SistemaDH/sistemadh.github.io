@@ -2155,6 +2155,40 @@
     "descanso"
    ],
    "observacao": "Encerra no próximo descanso ou quando a carta copiada for ao cofre."
+  },
+  {
+   "chave": "estado:carta:midnight:espirito-da-meia-noite",
+   "origem": "carta-dominio",
+   "refId": "midnight-espirito-da-meia-noite",
+   "nome": "Espírito da Meia-Noite",
+   "rotulo": "ativo",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Só um espírito por vez; dissipa após atacar ou no próximo descanso."
+  },
+  {
+   "chave": "estado:carta:midnight:veu-da-noite",
+   "origem": "carta-dominio",
+   "refId": "midnight-veu-da-noite",
+   "nome": "Véu da Noite",
+   "rotulo": "ativo",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Dura até conjurar outra magia; o motor encerra automaticamente quando outro feitiço é usado pelo fluxo de cartas. Manual cobre conjuração feita fora desse fluxo."
   }
  ]
 }

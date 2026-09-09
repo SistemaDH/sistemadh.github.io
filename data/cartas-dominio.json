@@ -4420,7 +4420,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "passiva-contextual-manual",
+    "resumo": "A carta fica classificada explicitamente sem criar botão ou estado artificial na ficha."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A vantagem vale nas jogadas para arrombar fechaduras não mágicas, desarmar armadilhas não mágicas ou roubar itens; as jogadas continuam fora do app."
+   }
   },
   {
    "id": "midnight-chuva-de-laminas",
@@ -4445,7 +4453,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo-com-resolucao-de-encontro",
+    "resumo": "O app cobra 1 Esperança antes da Jogada de Conjuração."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Faça a Jogada de Conjuração contra os alvos Muito Próximos fora do app. Alvos atingidos sofrem d8+2 de dano mágico usando Proficiência e Vulneráveis sofrem +1d8."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "rotuloAtivar": "Conjurar Chuva de Lâminas · 1 Esperança",
+    "lembrete": "Após pagar, faça a Jogada de Conjuração fora do app. Dano: d8+2 mágico usando Proficiência; +1d8 contra cada alvo Vulnerável atingido."
+   }
   },
   {
    "id": "midnight-disfarce-incrivel",
@@ -4468,7 +4491,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo-com-contador-existente",
+    "resumo": "O app marca 1 Estresse; o contador persistente de Disfarce Incrível já existe e tem teto igual ao traço de Conjuração."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Escolha a aparência na mesa e ajuste o contador para o valor do seu traço de Conjuração. Gaste 1 marcador por ação; após a ação que gastar o último, o disfarce termina."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "rotuloAtivar": "Iniciar Disfarce Incrível · 1 Estresse",
+    "lembrete": "Depois de pagar, coloque no contador Disfarce Incrível marcadores iguais ao traço de Conjuração. Gaste 1 por ação; o disfarce termina após a ação que gastar o último."
+   }
   },
   {
    "id": "midnight-espirito-da-meia-noite",
@@ -4489,7 +4527,30 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo-e-estado",
+    "resumo": "O app cobra 1 Esperança e mantém um estado persistente para impedir que a presença do espírito seja esquecida."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O espírito pode mover/carregar coisas até o próximo descanso. Para atacar, faça a Jogada de Conjuração e role os d6 fora do app; depois do ataque, encerre o estado manualmente."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "estado": {
+     "chave": "estado:carta:midnight:espirito-da-meia-noite",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Espírito da Meia-Noite ativo",
+     "rotuloEncerrar": "Dissipar Espírito da Meia-Noite",
+     "avisoEncerrar": "Espírito da Meia-Noite dissipado."
+    },
+    "rotuloAtivar": "Invocar Espírito da Meia-Noite · 1 Esperança",
+    "lembrete": "Só um espírito por vez. Se atacar, faça a Jogada de Conjuração e o dano fora do app e depois dissipe o espírito; qualquer descanso também encerra."
+   }
   },
   {
    "id": "midnight-vincular-sombras",
@@ -4512,7 +4573,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "manual-de-encontro",
+    "resumo": "Não há recurso próprio do conjurador nem estado seguro para gravar na ficha dele."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Faça a Jogada de Conjuração contra os adversários Muito Próximos e marque na cena os alvos atingidos como temporariamente Imobilizados."
+   }
   },
   {
    "id": "midnight-estrangulamento",
@@ -4536,7 +4605,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo-com-alvo-manual",
+    "resumo": "O app marca 1 Estresse quando o jogador confirma que está usando Estrangulamento."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A posição atrás do alvo, a condição Vulnerável e os 2d6 extras contra esse alvo pertencem à cena e permanecem sob controle da mesa."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "rotuloAtivar": "Aplicar Estrangulamento · 1 Estresse",
+    "lembrete": "Use apenas estando atrás de uma criatura do seu tamanho. O alvo fica temporariamente Vulnerável e ataques contra ele causam +2d6 de dano enquanto essa condição vier do Estrangulamento."
+   }
   },
   {
    "id": "midnight-veu-da-noite",
@@ -4560,7 +4644,29 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-estado-apos-sucesso",
+    "resumo": "Depois do sucesso confirmado, o app mantém Véu da Noite como estado e o encerra automaticamente quando outra magia é usada pelo fluxo de cartas."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Faça a Jogada de Conjuração 13 fora do app e posicione os dois pontos da cortina na cena. Oculto e vantagem são contextuais aos adversários do outro lado, não condições globais da ficha."
+   },
+   "uso": {
+    "custo": {},
+    "estado": {
+     "chave": "estado:carta:midnight:veu-da-noite",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "encerraAoConjurarOutroFeitico": true,
+     "rotuloAtivo": "Véu da Noite ativo",
+     "rotuloEncerrar": "Encerrar Véu da Noite",
+     "avisoEncerrar": "Véu da Noite encerrado."
+    },
+    "rotuloAtivar": "Sucesso: criar Véu da Noite",
+    "lembrete": "Use após sucesso na Jogada de Conjuração 13. Posicione a cortina na mesa; ela dura até você conjurar outra magia."
+   }
   },
   {
    "id": "midnight-expert-em-furtividade",
@@ -4583,7 +4689,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo-apos-medo",
+    "resumo": "Após uma jogada válida com Medo, o app marca 1 Estresse."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A mesa confirma que a jogada era para mover-se despercebido em área perigosa, sua ou de aliado Próximo, e trata o resultado como rolado com Esperança."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "rotuloAtivar": "Trocar Medo por Esperança · 1 Estresse",
+    "lembrete": "Use somente após você ou um aliado Próximo rolar com Medo ao tentar mover-se despercebido em uma área perigosa; trate o resultado como rolado com Esperança."
+   }
   },
   {
    "id": "midnight-glifo-do-crepusculo",
@@ -4604,7 +4725,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo-apos-sucesso",
+    "resumo": "Depois de um sucesso confirmado, o app cobra 1 Esperança."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Conjuração, o alvo Muito Próximo e a redução temporária da Dificuldade igual ao Conhecimento (mínimo 1) continuam na cena/Mestre."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "rotuloAtivar": "Sucesso: conjurar Glifo do Crepúsculo · 1 Esperança",
+    "lembrete": "Use após acertar a Jogada de Conjuração. Reduza temporariamente a Dificuldade do alvo em seu Conhecimento, com mínimo de 1."
+   }
   },
   {
    "id": "midnight-retirada-fantasma",

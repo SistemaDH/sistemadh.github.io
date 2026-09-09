@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 114 contadores: 82 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 116 contadores: 84 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 114 contadores: 82 de carta, 25 de classe/subclasse, 4 de
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 114);
+  igual(Object.keys(CONTADORES).length, 116);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 82);
+  igual(porOrigem['carta-dominio'], 84);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -9461,6 +9461,98 @@ teste('Reprise só move ao cofre quando o jogador confirma sucesso com Medo',()=
   const f=fichaGraceAlta_(10,['grace-reprise','grace-notorio']);
   const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-reprise'}]);
   igual(r.erros,[]); verdade(!f.cartas.ativas.includes('grace-reprise')); verdade(f.cartas.cofre.includes('grace-reprise'));
+});
+
+
+
+console.log('\nLote 8 — Meia-Noite níveis 1–4');
+function fichaMidnightBaixa_(nivel, ativas) {
+  const f=contexto.fichaRapida_({
+    nome:'Meia-Noite Baixa', classe:'Feiticeiro', subclasse:'Elementalista',
+    ancestralidade:'Elfo', comunidade:'Highborne',
+    cartas:['arcana-andar-na-parede','midnight-chuva-de-laminas'],
+    experiencias:[{nome:'Furtivo',bonus:2},{nome:'Arcano',bonus:2}]
+  });
+  f.identidade.nivel=nivel;
+  f.cartas={ativas:ativas.slice(),cofre:[]};
+  f.contadores={};
+  f.recursos.esperanca=6; f.recursos.esperancaMaxima=6;
+  f.recursos.estresseMarcado=0; f.recursos.estresseMaximo=Math.max(6,Number(f.recursos.estresseMaximo)||0);
+  f.recursos.pontosDeVidaMarcados=0; f.recursos.pontosDeVidaMaximos=Math.max(6,Number(f.recursos.pontosDeVidaMaximos)||0);
+  return f;
+}
+
+teste('Meia-Noite N1-N4 fica toda classificada e sem RNG no app',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const ids=['midnight-abrir-e-puxar','midnight-chuva-de-laminas','midnight-disfarce-incrivel','midnight-espirito-da-meia-noite','midnight-vincular-sombras','midnight-estrangulamento','midnight-veu-da-noite','midnight-expert-em-furtividade','midnight-glifo-do-crepusculo'];
+  const xs=ids.map((id)=>d.cartas.find((c)=>c.id===id));
+  verdade(xs.every(Boolean)); verdade(xs.every((c)=>!!c.automacao));
+  verdade(xs.every((c)=>c.resolucaoManual && c.resolucaoManual.rolaNoApp===false));
+});
+
+teste('Abrir e Puxar permanece passiva contextual sem botão inventado',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const c=d.cartas.find((x)=>x.id==='midnight-abrir-e-puxar');
+  verdade(!c.uso); igual(c.resolucaoManual.rolaNoApp,false);
+});
+
+teste('Chuva de Lâminas cobra 1 Esperança e deixa jogada/dano na mesa',()=>{
+  const f=fichaMidnightBaixa_(1,['midnight-chuva-de-laminas','midnight-abrir-e-puxar']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-chuva-de-laminas'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5);
+});
+
+teste('Disfarce Incrível cobra 1 Estresse e preserva contador por Conjuração',()=>{
+  const f=fichaMidnightBaixa_(1,['midnight-disfarce-incrivel','midnight-chuva-de-laminas']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-disfarce-incrivel'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+  const defs=avaliar('CONTADORES');
+  verdade(!!defs['carta:midnight-disfarce-incrivel']);
+  igual(defs['carta:midnight-disfarce-incrivel'].maximo.tipo,'traco');
+});
+
+teste('Espírito da Meia-Noite custa 1 Esperança, não duplica e acaba no descanso',()=>{
+  const f=fichaMidnightBaixa_(2,['midnight-espirito-da-meia-noite','midnight-vincular-sombras']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-espirito-da-meia-noite'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5);
+  igual(f.contadores['estado:carta:midnight:espirito-da-meia-noite'].valor,1);
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-espirito-da-meia-noite'}]).erros.length===1);
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  verdade(!f.contadores['estado:carta:midnight:espirito-da-meia-noite']);
+});
+
+teste('Vincular Sombras permanece no encontro e não cria condição global na ficha',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const c=d.cartas.find((x)=>x.id==='midnight-vincular-sombras');
+  verdade(!c.uso); verdade(c.automacao.classificacao.includes('manual'));
+});
+
+teste('Estrangulamento cobra 1 Estresse sem marcar Vulnerável globalmente',()=>{
+  const f=fichaMidnightBaixa_(3,['midnight-estrangulamento','midnight-veu-da-noite']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-estrangulamento'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+  verdade(!(f.condicoes||[]).some((x)=>(x.id||x)==='vulneravel'));
+});
+
+teste('Véu da Noite cria estado e outro feitiço encerra automaticamente',()=>{
+  const f=fichaMidnightBaixa_(3,['midnight-veu-da-noite','midnight-chuva-de-laminas']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-veu-da-noite'}]);
+  igual(r.erros,[]); igual(f.contadores['estado:carta:midnight:veu-da-noite'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-chuva-de-laminas'}]);
+  igual(r.erros,[]); verdade(!f.contadores['estado:carta:midnight:veu-da-noite']);
+  verdade((r.mudancas[0].estadosDeCartaEncerrados||[]).includes('Véu da Noite'));
+});
+
+teste('Expert em Furtividade cobra 1 Estresse após a mesa confirmar o gatilho',()=>{
+  const f=fichaMidnightBaixa_(4,['midnight-expert-em-furtividade','midnight-glifo-do-crepusculo']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-expert-em-furtividade'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+});
+
+teste('Glifo do Crepúsculo cobra 1 Esperança somente após sucesso confirmado',()=>{
+  const f=fichaMidnightBaixa_(4,['midnight-glifo-do-crepusculo','midnight-expert-em-furtividade']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-glifo-do-crepusculo'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5);
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

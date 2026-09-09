@@ -590,3 +590,14 @@ Tocado pela Graça publica as duas substituições contextuais somente com 4+ ca
 **Notório recebeu suporte estrutural completo**: não conta para o limite máximo de cinco cartas, não pode ser colocado no cofre (inclusive como custo de outra habilidade) e compras pagas recebem desconto de uma bolsa, com preço mínimo de um punhado. Comida e bebida são gratuitas pela regra da carta e entram pela ação de acrescentar à mochila, não por compra paga. Essas exceções vêm de `regraEspecial` no catálogo e são publicadas pelo gerador 41, evitando hard-code do id nas validações.
 
 Próximo domínio canônico pendente do Lote 8: **Meia-Noite níveis 1–4**.
+
+
+### Lote 8 — Meia-Noite níveis 1–4
+
+As nove cartas de níveis 1–4 foram classificadas explicitamente, mantendo a regra global de que dados e decisões de cena ficam fora do app.
+
+Automação segura: Chuva de Lâminas cobra 1 Esperança; Disfarce Incrível cobra 1 Estresse e reaproveita o contador persistente já existente; Espírito da Meia-Noite cobra 1 Esperança e mantém um estado único até dissipar/descansar; Estrangulamento e Expert em Furtividade automatizam apenas o Estresse do usuário; Glifo do Crepúsculo cobra 1 Esperança após sucesso confirmado. Véu da Noite mantém estado persistente e encerra automaticamente quando outro feitiço é conjurado pelo fluxo de cartas.
+
+Abrir e Puxar e Vincular Sombras permanecem explicitamente manuais/contextuais: criar botão ou condição global para elas representaria incorretamente vantagens e condições que dependem do alvo e da cena. O mesmo cuidado vale para Oculto de Véu da Noite e Vulnerável de Estrangulamento, que não são marcados globalmente na ficha do conjurador.
+
+Próximo bloco canônico pendente do Lote 8: **Meia-Noite níveis 5–10**.
