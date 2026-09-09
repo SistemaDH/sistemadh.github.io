@@ -1384,6 +1384,74 @@
     "manual"
    ],
    "observacao": "Guarda quantos PV o adversário marcou. O valor é bônus de Evasão até depois do próximo ataque feito contra você."
+  },
+  {
+   "chave": "uso:carta:bone:golpe-assinatura",
+   "origem": "carta-dominio",
+   "refId": "bone-golpe-assinatura",
+   "nome": "Golpe Assinatura",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso; o uso é gasto ao trocar o Dado de Esperança por d20, independentemente do sucesso."
+  },
+  {
+   "chave": "uso:carta:bone:tocado-pelo-osso",
+   "origem": "carta-dominio",
+   "refId": "bone-tocado-pelo-osso",
+   "nome": "Tocado pelo Osso",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "A reação de 3 Esperanças pode ser usada uma vez por descanso."
+  },
+  {
+   "chave": "estado:carta:bone:golpe-arrasador",
+   "origem": "carta-dominio",
+   "refId": "bone-golpe-arrasador",
+   "nome": "Golpe Arrasador",
+   "rotulo": "pendente",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Fica ativo até o próximo ataque bem-sucedido contra o mesmo alvo; então some 2d12 e encerre."
+  },
+  {
+   "chave": "uso:carta:bone:golpe-estilhacante",
+   "origem": "carta-dominio",
+   "refId": "bone-golpe-estilhacante",
+   "nome": "Golpe Estilhaçante",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
   }
  ]
 }

@@ -2054,7 +2054,46 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "automatizada-opcoes-parcial",
+    "resumo": "Após a mesa confirmar o sucesso, o app cobra exatamente a opção escolhida: 1 Esperança pela informação, 1 Estresse para remover Medo, ou ambos."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Instinto e a informação revelada ficam na mesa; ao remover Medo, o Mestre reduz a própria Reserva de Medo."
+   },
+   "uso": {
+    "custo": {},
+    "opcoes": [
+     {
+      "id": "informacao",
+      "rotulo": "Informação · 1 Esperança",
+      "custo": {
+       "esperanca": 1
+      },
+      "lembrete": "Escolha um dos quatro conjuntos de informações e pergunte ao GM."
+     },
+     {
+      "id": "medo",
+      "rotulo": "Remover 1 Medo · 1 Estresse",
+      "custo": {
+       "estresse": 1
+      },
+      "lembrete": "A Jogada de Instinto teve sucesso; o Mestre remove 1 Medo da Reserva de Medo."
+     },
+     {
+      "id": "ambos",
+      "rotulo": "Informação + Medo · 1 Esperança + 1 Estresse",
+      "custo": {
+       "esperanca": 1,
+       "estresse": 1
+      },
+      "lembrete": "Escolha um conjunto de informações e o Mestre remove 1 Medo da Reserva de Medo."
+     }
+    ],
+    "rotuloAtivar": "Registrar sucesso de Conheça Teu Inimigo"
+   }
   },
   {
    "id": "bone-golpe-assinatura",
@@ -2077,7 +2116,39 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "automatizada-opcoes-uso",
+    "resumo": "O app registra o uso 1/descanso em sucesso ou falha; em sucesso também limpa 1 Estresse."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Use um d20 físico como Dado de Esperança na ação. Depois informe apenas se a ação teve sucesso ou falha."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:bone:golpe-assinatura",
+     "maximo": 1
+    },
+    "opcoes": [
+     {
+      "id": "sucesso",
+      "rotulo": "Ação teve sucesso",
+      "efeitoRecurso": {
+       "chave": "estresseMarcado",
+       "delta": -1
+      },
+      "lembrete": "Sucesso com o Golpe Assinatura: 1 Estresse foi limpo."
+     },
+     {
+      "id": "falha",
+      "rotulo": "Ação falhou",
+      "lembrete": "O uso foi gasto; nenhuma rolagem adicional é feita pelo app."
+     }
+    ],
+    "rotuloAtivar": "Resolver Golpe Assinatura"
+   }
   },
   {
    "id": "bone-recuperacao",
@@ -2099,7 +2170,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "automatizada-descanso-parcial",
+    "resumo": "Enquanto ativa, Recuperação libera um movimento de descanso longo em um descanso curto. O botão opcional cobra 1 Esperança para conceder a mesma permissão a um aliado."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O aliado e a mesa confirmam qual movimento de descanso longo ele fará; o app não altera a ficha alheia por conta própria."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "rotuloAtivar": "Permitir Recuperação a um aliado",
+    "lembrete": "Durante este descanso curto, um aliado pode trocar um de seus movimentos por um movimento de descanso longo."
+   }
   },
   {
    "id": "bone-resposta-rapida",
@@ -2120,7 +2206,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "automatizada-custo-parcial",
+    "resumo": "Após a mesa confirmar que um ataque Corpo a Corpo falhou contra você, o app marca 1 Estresse."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Cause o dano da arma ativa escolhida ao atacante usando a rolagem física da mesa."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "rotuloAtivar": "Falha Corpo a Corpo: Resposta Rápida",
+    "lembrete": "Cause ao atacante o dano de uma de suas armas ativas; o app não rola o dano."
+   }
   },
   {
    "id": "bone-precisao-cruel",
@@ -2139,7 +2240,21 @@
    "dependencias": [],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "automatizada-passiva",
+    "resumo": "Em ataque bem-sucedido com arma, o servidor publica o bônus de dano baseado em Finesse/Destreza ou Agilidade atuais."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A mesa confirma que o ataque com arma teve sucesso e escolhe qual dos dois traços usar."
+   },
+   "efeitoDerivado": {
+    "danoArmaEscolhaTracos": [
+     "Finesse",
+     "Agilidade"
+    ]
+   }
   },
   {
    "id": "bone-tocado-pelo-osso",
@@ -2162,7 +2277,39 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "automatizada-passiva-e-uso",
+    "resumo": "Com 4+ cartas Osso ativas, +1 Agilidade é derivado automaticamente; a reação custa 3 Esperanças e fica limitada a 1/descanso."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Use a reação somente depois de a mesa confirmar que um ataque teve sucesso contra você."
+   },
+   "efeitoDerivado": {
+    "tracos": {
+     "agilidade": 1
+    },
+    "exigeCartasAtivasDominio": {
+     "dominio": "BONE",
+     "quantidade": 4
+    }
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 3
+    },
+    "exigeCartasAtivasDominio": {
+     "dominio": "BONE",
+     "quantidade": 4
+    },
+    "marcaUso": {
+     "chave": "uso:carta:bone:tocado-pelo-osso",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Fazer o ataque bem-sucedido falhar",
+    "lembrete": "O ataque que teve sucesso contra você falha em vez disso."
+   }
   },
   {
    "id": "bone-dominar",
@@ -2183,7 +2330,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "automatizada-custo-parcial",
+    "resumo": "Depois da Jogada de Agilidade, o app cobra 1 Esperança quando você decide mover os alvos bem-sucedidos e aliados dispostos."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Agilidade, quais alvos tiveram sucesso e os pontos de destino são resolvidos na mesa."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "rotuloAtivar": "Mover alvos de Dominar",
+    "lembrete": "Mova os alvos em que teve sucesso e aliados dispostos para outro ponto dentro do alcance Próximo."
+   }
   },
   {
    "id": "bone-golpe-arrasador",
@@ -2204,7 +2366,30 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "automatizada-estado-parcial",
+    "resumo": "Após um ataque bem-sucedido, o app marca 1 Estresse e mantém um estado pendente até o próximo ataque bem-sucedido contra o mesmo alvo."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A mesa identifica o mesmo alvo e rola os 2d12 adicionais; encerre o estado depois de aplicar esse dano."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "estado": {
+     "chave": "estado:carta:bone:golpe-arrasador",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Golpe Arrasador pendente · próximo sucesso no mesmo alvo +2d12",
+     "rotuloEncerrar": "Consumir +2d12",
+     "avisoEncerrar": "Golpe Arrasador consumido no próximo ataque bem-sucedido contra o mesmo alvo."
+    },
+    "rotuloAtivar": "Sucesso: preparar Golpe Arrasador",
+    "lembrete": "No próximo ataque bem-sucedido contra o mesmo alvo, some 2d12 ao dano."
+   }
   },
   {
    "id": "bone-golpe-estilhacante",
@@ -2226,7 +2411,26 @@
    ],
    "pendenteTraducao": false,
    "errata": "Errata p.332 (Splintering Strike, Osso 9): texto revisado. A carta já está na versão corrigida.",
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "automatizada-custo-uso-parcial",
+    "resumo": "O app cobra 1 Esperança e registra 1/descanso longo antes da sequência de ataques."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Ataques e dano ficam físicos: role o dano da arma uma vez, distribua-o e role um dado de dano adicional para cada alvo acertado."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "marcaUso": {
+     "chave": "uso:carta:bone:golpe-estilhacante",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Usar Golpe Estilhaçante",
+    "lembrete": "Ataque todos no alcance da arma. Em qualquer sucesso, role o dano da arma uma vez, distribua-o e acrescente um dado de dano a cada alvo."
+   }
   },
   {
    "id": "bone-na-beira",
@@ -2248,7 +2452,18 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "automatizada-passiva",
+    "resumo": "Com 2 ou menos Pontos de Vida desmarcados, o resolvedor de dano ignora automaticamente dano Menor."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A mesa continua informando o dano já rolado; o app apenas resolve a consequência determinística."
+   },
+   "efeitoDerivado": {
+    "ignoraDanoMenorSePontosDeVidaNaoMarcadosMaximo": 2
+   }
   },
   {
    "id": "bone-corrida-da-morte",
@@ -2270,7 +2485,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "automatizada-custo-parcial",
+    "resumo": "O app cobra exatamente 3 Esperanças ao iniciar Corrida da Morte."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A mesa resolve a linha de movimento, os ataques, a ordem dos alvos e remove um dado de dano a cada alvo subsequente."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 3
+    },
+    "rotuloAtivar": "Iniciar Corrida da Morte",
+    "lembrete": "Primeiro alvo usa +1 Proficiência no dano; remova um dado da rolagem de dano para cada alvo subsequente e não ataque o mesmo adversário duas vezes."
+   }
   },
   {
    "id": "bone-passo-agil",
@@ -2292,7 +2522,34 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo."
+   "observacao": "A carta traz a palavra 'ABILITY' em inglês (não 'Habilidade' em português) no marcador de tipo.",
+   "automacao": {
+    "classificacao": "automatizada-recurso-condicional",
+    "resumo": "Após a mesa confirmar que um ataque contra você falhou, o app limpa 1 Estresse; se não houver Estresse, ganha 1 Esperança."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A única confirmação manual é que o ataque realmente falhou."
+   },
+   "uso": {
+    "custo": {},
+    "efeitoRecursoCondicional": {
+     "quando": {
+      "chave": "estresseMarcado",
+      "maiorQue": 0
+     },
+     "entao": {
+      "chave": "estresseMarcado",
+      "delta": -1
+     },
+     "senao": {
+      "chave": "esperanca",
+      "delta": 1
+     }
+    },
+    "rotuloAtivar": "Ataque falhou: Passo Ágil",
+    "lembrete": "Limpe 1 Estresse; se não havia Estresse para limpar, ganhe 1 Esperança."
+   }
   },
   {
    "id": "codex-livro-de-ava",

@@ -297,6 +297,16 @@ const USOS_CARTAS_DOMINIO = {
   "bone-preparar": {"custo":{"estresse":1},"efeitoRecurso":{"chave":"armaduraMarcada","delta":1},"rotuloAtivar":"Preparar: marcar Armadura adicional","lembrete":"Use junto da redução de dano que já marcou um Espaço de Armadura; este botão marca o espaço adicional."},
   "bone-impulso": {"custo":{"estresse":1},"rotuloAtivar":"Usar Impulso","lembrete":"Ataque um alvo em alcance Distante com vantagem, some 1d10 ao dano e termine Corpo a Corpo com ele."},
   "bone-redirecionar": {"custo":{"estresse":1},"rotuloAtivar":"6 rolado: redirecionar ataque","lembrete":"Depois de obter ao menos um 6 nos d6 de Proficiência, redirecione o ataque para um adversário em alcance Muito Próximo."},
+  "bone-conheca-teu-inimigo": {"custo":{},"opcoes":[{"id":"informacao","rotulo":"Informação · 1 Esperança","custo":{"esperanca":1},"lembrete":"Escolha um dos quatro conjuntos de informações e pergunte ao GM."},{"id":"medo","rotulo":"Remover 1 Medo · 1 Estresse","custo":{"estresse":1},"lembrete":"A Jogada de Instinto teve sucesso; o Mestre remove 1 Medo da Reserva de Medo."},{"id":"ambos","rotulo":"Informação + Medo · 1 Esperança + 1 Estresse","custo":{"esperanca":1,"estresse":1},"lembrete":"Escolha um conjunto de informações e o Mestre remove 1 Medo da Reserva de Medo."}],"rotuloAtivar":"Registrar sucesso de Conheça Teu Inimigo"},
+  "bone-golpe-assinatura": {"custo":{},"marcaUso":{"chave":"uso:carta:bone:golpe-assinatura","maximo":1},"opcoes":[{"id":"sucesso","rotulo":"Ação teve sucesso","efeitoRecurso":{"chave":"estresseMarcado","delta":-1},"lembrete":"Sucesso com o Golpe Assinatura: 1 Estresse foi limpo."},{"id":"falha","rotulo":"Ação falhou","lembrete":"O uso foi gasto; nenhuma rolagem adicional é feita pelo app."}],"rotuloAtivar":"Resolver Golpe Assinatura"},
+  "bone-recuperacao": {"custo":{"esperanca":1},"rotuloAtivar":"Permitir Recuperação a um aliado","lembrete":"Durante este descanso curto, um aliado pode trocar um de seus movimentos por um movimento de descanso longo."},
+  "bone-resposta-rapida": {"custo":{"estresse":1},"rotuloAtivar":"Falha Corpo a Corpo: Resposta Rápida","lembrete":"Cause ao atacante o dano de uma de suas armas ativas; o app não rola o dano."},
+  "bone-tocado-pelo-osso": {"custo":{"esperanca":3},"exigeCartasAtivasDominio":{"dominio":"BONE","quantidade":4},"marcaUso":{"chave":"uso:carta:bone:tocado-pelo-osso","maximo":1},"rotuloAtivar":"Fazer o ataque bem-sucedido falhar","lembrete":"O ataque que teve sucesso contra você falha em vez disso."},
+  "bone-dominar": {"custo":{"esperanca":1},"rotuloAtivar":"Mover alvos de Dominar","lembrete":"Mova os alvos em que teve sucesso e aliados dispostos para outro ponto dentro do alcance Próximo."},
+  "bone-golpe-arrasador": {"custo":{"estresse":1},"estado":{"chave":"estado:carta:bone:golpe-arrasador","valor":1,"permiteEncerrarManual":true,"rotuloAtivo":"Golpe Arrasador pendente · próximo sucesso no mesmo alvo +2d12","rotuloEncerrar":"Consumir +2d12","avisoEncerrar":"Golpe Arrasador consumido no próximo ataque bem-sucedido contra o mesmo alvo."},"rotuloAtivar":"Sucesso: preparar Golpe Arrasador","lembrete":"No próximo ataque bem-sucedido contra o mesmo alvo, some 2d12 ao dano."},
+  "bone-golpe-estilhacante": {"custo":{"esperanca":1},"marcaUso":{"chave":"uso:carta:bone:golpe-estilhacante","maximo":1},"rotuloAtivar":"Usar Golpe Estilhaçante","lembrete":"Ataque todos no alcance da arma. Em qualquer sucesso, role o dano da arma uma vez, distribua-o e acrescente um dado de dano a cada alvo."},
+  "bone-corrida-da-morte": {"custo":{"esperanca":3},"rotuloAtivar":"Iniciar Corrida da Morte","lembrete":"Primeiro alvo usa +1 Proficiência no dano; remova um dado da rolagem de dano para cada alvo subsequente e não ataque o mesmo adversário duas vezes."},
+  "bone-passo-agil": {"custo":{},"efeitoRecursoCondicional":{"quando":{"chave":"estresseMarcado","maiorQue":0},"entao":{"chave":"estresseMarcado","delta":-1},"senao":{"chave":"esperanca","delta":1}},"rotuloAtivar":"Ataque falhou: Passo Ágil","lembrete":"Limpe 1 Estresse; se não havia Estresse para limpar, ganhe 1 Esperança."},
 };
 
 /** Efeitos derivados de cartas de domínio ativas. */
@@ -308,6 +318,9 @@ const EFEITOS_DERIVADOS_CARTAS_DOMINIO = {
   "blade-massacre": {"danoMinimoPvEmSucesso":2},
   "bone-intocavel": {"bonusEvasaoMetadeTraco":"Agilidade","arredondar":"cima"},
   "bone-ferocidade": {"bonusEvasaoEstado":"estado:carta:bone:ferocidade:evasao","exigeEstado":"estado:carta:bone:ferocidade:evasao"},
+  "bone-precisao-cruel": {"danoArmaEscolhaTracos":["Finesse","Agilidade"]},
+  "bone-tocado-pelo-osso": {"tracos":{"agilidade":1},"exigeCartasAtivasDominio":{"dominio":"BONE","quantidade":4}},
+  "bone-na-beira": {"ignoraDanoMenorSePontosDeVidaNaoMarcadosMaximo":2},
 };
 
 /**
@@ -507,4 +520,31 @@ function bonusEvasaoDeCartas_(ficha) {
     }
   });
   return total;
+}
+
+
+/** Efeitos derivados das cartas que estão realmente ativas e cumprem requisitos. */
+function efeitosDerivadosAtivosDeCartas_(ficha) {
+  if (typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO === 'undefined') return [];
+  const saida = [];
+  Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO).forEach(function (id) {
+    const e = EFEITOS_DERIVADOS_CARTAS_DOMINIO[id] || {};
+    if (!requisitoDeEfeitoDerivadoDeCartaVale_(ficha, id, e)) return;
+    const c = (typeof acharCarta_ === 'function') ? acharCarta_(id) : null;
+    saida.push({ id: id, nome: c ? c.nome : id, efeito: e });
+  });
+  return saida;
+}
+
+/** Limite de PV desmarcados para ignorar dano Menor, ou null quando não há regra. */
+function limiteDePvParaIgnorarDanoMenorDeCartas_(ficha) {
+  const lista = efeitosDerivadosAtivosDeCartas_(ficha);
+  let limite = null;
+  for (let i = 0; i < lista.length; i++) {
+    const v = lista[i].efeito && lista[i].efeito.ignoraDanoMenorSePontosDeVidaNaoMarcadosMaximo;
+    if (v === undefined || v === null) continue;
+    const n = Math.max(0, Math.trunc(Number(v)) || 0);
+    limite = limite === null ? n : Math.max(limite, n);
+  }
+  return limite;
 }

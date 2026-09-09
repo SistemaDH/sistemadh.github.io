@@ -3512,6 +3512,22 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         });
       };
 
+      if (!ativo && Array.isArray(usoCarta.opcoes) && usoCarta.opcoes.length) {
+        usoCarta.opcoes.forEach((o) => {
+          const co = o.custo || {};
+          const precoOpcao = [
+            Number(co.esperanca) ? `${Number(co.esperanca)} Esperança` : '',
+            Number(co.estresse) ? `${Number(co.estresse)} Estresse` : ''
+          ].filter(Boolean).join(' e ');
+          saida.push(el('button', {
+            type: 'button', class: 'btn btn--pequeno', disabled: esgotada,
+            onClick: () => {
+              if (modal) modal.fechar();
+              enviar([{ tipo: 'usarCarta', carta: c.id, opcao: o.id }]);
+            }
+          }, esgotada ? 'Usada — volta no descanso' : `${o.rotulo || o.id}${precoOpcao && !(o.rotulo || '').includes('·') ? ` · ${precoOpcao}` : ''}`));
+        });
+      } else {
       saida.push(el('button', {
         type: 'button', class: 'btn btn--pequeno',
         disabled: (!ativo && esgotada) || ativoSemBotao,
@@ -3600,6 +3616,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         ? (reacaoEstado ? (reacaoEstado.rotulo || 'Resolver reação')
           : (ativoSemBotao ? (estado.rotuloAtivo || 'Efeito ativo') : (estado.rotuloEncerrar || 'Encerrar efeito')))
         : (esgotada ? 'Usada — volta no descanso' : (usoCarta.rotuloAtivar || 'Usar carta'))));
+      }
       if (c.efeitoDerivado && Number((p.ficha || {}).bonusConjuracao) > 0) {
         saida.push(el('span', { class: 'selo selo--ouro', texto: `+${p.ficha.bonusConjuracao} Conjuração ativo` }));
       }

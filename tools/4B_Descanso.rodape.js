@@ -37,13 +37,20 @@ function normalizarMovimento_(nome) {
   return null;
 }
 
-/**
- * O Clank com a característica "Eficiente" pode, num descanso CURTO, escolher
- * um movimento de descanso longo no lugar de um de curto (livro p. 54).
- */
+/** Qual regra permite trocar UM movimento curto por um longo. */
+function fonteMovimentoLongoNoCurto_(ficha) {
+  if (typeof temCaracteristicaNaFicha_ === 'function' && temCaracteristicaNaFicha_(ficha, 'Eficiente')) {
+    return 'Eficiente';
+  }
+  const ativas = (((ficha || {}).cartas || {}).ativas || []);
+  for (let i = 0; i < ativas.length; i++) {
+    const c = (typeof acharCarta_ === 'function') ? acharCarta_(ativas[i]) : null;
+    if (c && c.id === 'bone-recuperacao') return 'Recuperação';
+  }
+  return '';
+}
 function temMovimentoLongoNoCurto_(ficha) {
-  if (typeof temCaracteristicaNaFicha_ !== 'function') return false;
-  return !!temCaracteristicaNaFicha_(ficha, 'Eficiente');
+  return !!fonteMovimentoLongoNoCurto_(ficha);
 }
 
 /** Quantos movimentos ESTA ficha recebe neste descanso. */
@@ -78,7 +85,8 @@ function grupoTemCaracteristicaNoDescanso_(ficha, nome) {
 function movimentosDoDescanso_(tipo, ficha) {
   const t = tipoDeDescanso_(tipo);
   if (!t) return [];
-  const extra = (t.id === 'curto' && temMovimentoLongoNoCurto_(ficha)) ? 'longo' : null;
+  const fonteExtra = t.id === 'curto' ? fonteMovimentoLongoNoCurto_(ficha) : '';
+  const extra = fonteExtra ? 'longo' : null;
   const saida = [];
   const ids = Object.keys(MOVIMENTOS_DESCANSO);
   for (let i = 0; i < ids.length; i++) {
@@ -88,7 +96,7 @@ function movimentosDoDescanso_(tipo, ficha) {
     const emprestado = !proprio && extra && m.tipos.indexOf(extra) !== -1;
     if (!proprio && !emprestado) continue;
     const copia = clonarSimples_(m);
-    copia.deOutroDescanso = emprestado ? 'Entrou por "Eficiente" (Clank, p. 54).' : '';
+    copia.deOutroDescanso = emprestado ? ('Entrou por "' + fonteExtra + '".') : '';
     saida.push(copia);
   }
   return saida;
@@ -175,6 +183,7 @@ function simularDescanso_(ficha, tipo, escolhas) {
 
   /* Quantos movimentos vieram do OUTRO tipo de descanso — ver o teto abaixo. */
   let emprestadosUsados = 0;
+  const fonteEmprestimo = fonteMovimentoLongoNoCurto_(copia);
 
   for (let i = 0; i < lista.length && i < movimentosPermitidos; i++) {
     const escolha = lista[i] || {};
@@ -215,7 +224,10 @@ function simularDescanso_(ficha, tipo, escolhas) {
     if (emprestado) {
       emprestadosUsados++;
       if (emprestadosUsados > 1) {
-        erros.push('"Eficiente" troca UM movimento (livro p.54): "' + def.nome +
+        const rotuloEmprestimo = fonteEmprestimo === 'Eficiente'
+          ? '"Eficiente" troca UM movimento (livro p.54)'
+          : ('"' + (fonteEmprestimo || 'Esta regra') + '" troca UM movimento');
+        erros.push(rotuloEmprestimo + ': "' + def.nome +
           '" seria o segundo movimento de descanso longo neste descanso curto.');
         continue;
       }

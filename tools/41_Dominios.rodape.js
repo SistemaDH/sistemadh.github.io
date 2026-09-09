@@ -181,3 +181,30 @@ function bonusEvasaoDeCartas_(ficha) {
   });
   return total;
 }
+
+
+/** Efeitos derivados das cartas que estão realmente ativas e cumprem requisitos. */
+function efeitosDerivadosAtivosDeCartas_(ficha) {
+  if (typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO === 'undefined') return [];
+  const saida = [];
+  Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO).forEach(function (id) {
+    const e = EFEITOS_DERIVADOS_CARTAS_DOMINIO[id] || {};
+    if (!requisitoDeEfeitoDerivadoDeCartaVale_(ficha, id, e)) return;
+    const c = (typeof acharCarta_ === 'function') ? acharCarta_(id) : null;
+    saida.push({ id: id, nome: c ? c.nome : id, efeito: e });
+  });
+  return saida;
+}
+
+/** Limite de PV desmarcados para ignorar dano Menor, ou null quando não há regra. */
+function limiteDePvParaIgnorarDanoMenorDeCartas_(ficha) {
+  const lista = efeitosDerivadosAtivosDeCartas_(ficha);
+  let limite = null;
+  for (let i = 0; i < lista.length; i++) {
+    const v = lista[i].efeito && lista[i].efeito.ignoraDanoMenorSePontosDeVidaNaoMarcadosMaximo;
+    if (v === undefined || v === null) continue;
+    const n = Math.max(0, Math.trunc(Number(v)) || 0);
+    limite = limite === null ? n : Math.max(limite, n);
+  }
+  return limite;
+}

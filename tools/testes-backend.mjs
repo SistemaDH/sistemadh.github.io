@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 69 contadores: 37 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 73 contadores: 41 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 69 contadores: 37 de carta, 25 de classe/subclasse, 4 de 
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 69);
+  igual(Object.keys(CONTADORES).length, 73);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 37);
+  igual(porOrigem['carta-dominio'], 41);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -8636,6 +8636,154 @@ teste('Impulso e Redirecionar cobram só o custo determinístico e nunca rolam d
   igual(r.erros, []);
   igual(f.recursos.estresseMarcado, 2);
   verdade(/6/.test(r.mudancas[0].aviso || ''));
+});
+
+
+
+console.log('\nLote 8 — Osso níveis 5–10');
+function fichaBoneAlta_(nivel, cartas, ancestralidade = 'Humano') {
+  const base = contexto.fichaRapida_({
+    nome: 'Osso alta', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade, comunidade: 'Loreborne',
+    cartas: ['bone-intocavel','bone-manobras-ageis'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  base.identidade.nivel = nivel;
+  base.cartas = { ativas: cartas.slice(), cofre: [] };
+  const f = contexto.validarFicha_(base);
+  f.recursos.esperanca = 6;
+  f.recursos.estresseMarcado = 0;
+  return f;
+}
+
+teste('Osso N5-N10: as doze cartas restantes ficaram explicitamente classificadas', () => {
+  const dados = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/cartas-dominio.json'), 'utf8'));
+  const alvo = dados.cartas.filter((c) => c.dominio === 'BONE' && c.nivel >= 5);
+  igual(alvo.length, 12);
+  igual(alvo.filter((c) => !!c.automacao).length, 12);
+  verdade(alvo.every((c) => c.resolucaoManual && c.resolucaoManual.rolaNoApp === false));
+});
+
+teste('Conheça Teu Inimigo cobra somente a opção escolhida', () => {
+  const f = fichaBoneAlta_(5, ['bone-conheca-teu-inimigo','bone-golpe-assinatura']);
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-conheca-teu-inimigo', opcao:'informacao' }]);
+  igual(r.erros, []); igual(f.recursos.esperanca, 5); igual(f.recursos.estresseMarcado, 0);
+  r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-conheca-teu-inimigo', opcao:'medo' }]);
+  igual(r.erros, []); igual(f.recursos.esperanca, 5); igual(f.recursos.estresseMarcado, 1);
+  igual(r.mudancas[0].opcao, 'medo');
+});
+
+teste('Golpe Assinatura gasta o uso mesmo na falha e limpa 1 Estresse no sucesso', () => {
+  const f = fichaBoneAlta_(5, ['bone-golpe-assinatura','bone-conheca-teu-inimigo']);
+  f.recursos.estresseMarcado = 2;
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-golpe-assinatura', opcao:'falha' }]);
+  igual(r.erros, []); igual(f.recursos.estresseMarcado, 2);
+  igual(f.contadores['uso:carta:bone:golpe-assinatura'].valor, 1);
+  contexto.ajustarGatilho_(f, { gatilho:'descanso' });
+  r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-golpe-assinatura', opcao:'sucesso' }]);
+  igual(r.erros, []); igual(f.recursos.estresseMarcado, 1);
+});
+
+teste('Recuperação libera exatamente um movimento longo em descanso curto', () => {
+  const f = fichaBoneAlta_(6, ['bone-recuperacao','bone-resposta-rapida']);
+  const disp = contexto.movimentosDoDescanso_('curto', f);
+  const total = disp.filter((m) => m.deOutroDescanso).length;
+  verdade(total >= 1);
+  verdade(disp.some((m) => m.id === 'zerar-estresse' && /Recuperação/.test(m.deOutroDescanso || '')));
+  const sim = contexto.simularDescanso_(f, 'curto', [
+    { movimento:'zerar-estresse' }, { movimento:'tratar-todas-as-feridas' }
+  ]);
+  verdade(sim.previa.erros.some((e) => /Recuperação/.test(e)), JSON.stringify(sim.previa));
+  const sem = fichaBoneAlta_(6, ['bone-resposta-rapida','bone-golpe-assinatura']);
+  verdade(!contexto.movimentosDoDescanso_('curto', sem).some((m) => m.id === 'zerar-estresse'));
+});
+
+teste('Recuperação para aliado cobra 1 Esperança; Resposta Rápida cobra 1 Estresse', () => {
+  const f = fichaBoneAlta_(6, ['bone-recuperacao','bone-resposta-rapida']);
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-recuperacao' }]);
+  igual(r.erros, []); igual(f.recursos.esperanca, 5);
+  r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-resposta-rapida' }]);
+  igual(r.erros, []); igual(f.recursos.estresseMarcado, 1);
+});
+
+teste('Precisão Cruel publica Finesse/Agilidade atuais como opções de dano', () => {
+  const f = fichaBoneAlta_(7, ['bone-precisao-cruel','bone-resposta-rapida']);
+  f.tracos.finesse = 2; f.tracos.agilidade = 1;
+  const b = contexto.bonusDeDanoDaFicha_(f);
+  const pc = b.condicionais.find((x) => x.fonte === 'Precisão Cruel');
+  verdade(!!pc, JSON.stringify(b));
+  igual(pc.opcoes.length, 2);
+  igual(pc.valorMaximo, 2);
+});
+
+teste('Tocado pelo Osso exige quatro cartas Osso para +1 Agilidade e reação 1/descanso', () => {
+  const f = fichaBoneAlta_(7, ['bone-tocado-pelo-osso','bone-precisao-cruel','bone-resposta-rapida','bone-recuperacao']);
+  const base = Number(f.tracos.agilidade) || 0;
+  igual(contexto.valorDoTraco_(f, 'Agilidade'), base + 1);
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-tocado-pelo-osso' }]);
+  igual(r.erros, []); igual(f.recursos.esperanca, 3);
+  igual(f.contadores['uso:carta:bone:tocado-pelo-osso'].valor, 1);
+  verdade(contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-tocado-pelo-osso' }]).erros.length > 0);
+  const tres = fichaBoneAlta_(7, ['bone-tocado-pelo-osso','bone-precisao-cruel','bone-resposta-rapida']);
+  igual(contexto.valorDoTraco_(tres, 'Agilidade'), Number(tres.tracos.agilidade) || 0);
+  verdade(contexto.aplicarAjustes_(tres, [{ tipo:'usarCarta', carta:'bone-tocado-pelo-osso' }]).erros.length > 0);
+});
+
+teste('Dominar cobra 1 Esperança sem rolar Agilidade no app', () => {
+  const f = fichaBoneAlta_(8, ['bone-dominar','bone-golpe-arrasador']);
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-dominar' }]);
+  igual(r.erros, []); igual(f.recursos.esperanca, 5); igual(r.mudancas[0].dadosManuais, null);
+});
+
+teste('Golpe Arrasador mantém estado e Inabalável evita só o Estresse', () => {
+  const f = fichaBoneAlta_(8, ['bone-golpe-arrasador','bone-dominar'], 'Firbolg');
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-golpe-arrasador' }]);
+  verdade(!!r.pendenciaRolagem); verdade(!f.contadores['estado:carta:bone:golpe-arrasador']);
+  r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-golpe-arrasador', dadoInabalavel:6 }]);
+  igual(r.erros, []); igual(f.recursos.estresseMarcado, 0);
+  igual(f.contadores['estado:carta:bone:golpe-arrasador'].valor, 1);
+  igual(contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-golpe-arrasador', encerrar:true }]).erros, []);
+  verdade(!f.contadores['estado:carta:bone:golpe-arrasador']);
+});
+
+teste('Golpe Estilhaçante cobra 1 Esperança e volta somente no descanso longo', () => {
+  const f = fichaBoneAlta_(9, ['bone-golpe-estilhacante','bone-na-beira']);
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-golpe-estilhacante' }]);
+  igual(r.erros, []); igual(f.recursos.esperanca, 5);
+  igual(f.contadores['uso:carta:bone:golpe-estilhacante'].valor, 1);
+  contexto.ajustarGatilho_(f, { gatilho:'descanso' });
+  igual(f.contadores['uso:carta:bone:golpe-estilhacante'].valor, 1);
+  contexto.ajustarGatilho_(f, { gatilho:'descanso-longo' });
+  verdade(!f.contadores['uso:carta:bone:golpe-estilhacante']);
+});
+
+teste('Na Beira ignora dano Menor somente com 2 ou menos PV desmarcados', () => {
+  const f = fichaBoneAlta_(9, ['bone-na-beira','bone-golpe-estilhacante']);
+  f.recursos.pontosDeVidaMarcados = Math.max(0, Number(f.recursos.pontosDeVidaMaximos) - 2);
+  const menor = Math.max(1, Number(f.defesas.limiarMaior) - 1);
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'dano', dano:menor, tipoDeDano:'fisico', reacoes:[] }]);
+  igual(r.erros, []); igual(r.mudancas[0].pvPelaFaixa, 1); igual(r.mudancas[0].pvMarcados, 0);
+  verdade(r.mudancas[0].naBeira === true);
+  const sem = fichaBoneAlta_(9, ['bone-golpe-estilhacante','bone-golpe-arrasador']);
+  sem.recursos.pontosDeVidaMarcados = Math.max(0, Number(sem.recursos.pontosDeVidaMaximos) - 2);
+  r = contexto.aplicarAjustes_(sem, [{ tipo:'dano', dano:menor, tipoDeDano:'fisico', reacoes:[] }]);
+  igual(r.erros, []); igual(r.mudancas[0].pvMarcados, 1);
+});
+
+teste('Corrida da Morte cobra 3 Esperanças e não rola ataques/dano', () => {
+  const f = fichaBoneAlta_(10, ['bone-corrida-da-morte','bone-passo-agil']);
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-corrida-da-morte' }]);
+  igual(r.erros, []); igual(f.recursos.esperanca, 3); igual(r.mudancas[0].dadosManuais, null);
+});
+
+teste('Passo Ágil limpa Estresse e, sem Estresse, ganha Esperança', () => {
+  const f = fichaBoneAlta_(10, ['bone-passo-agil','bone-corrida-da-morte']);
+  f.recursos.estresseMarcado = 2; f.recursos.esperanca = 4;
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-passo-agil' }]);
+  igual(r.erros, []); igual(f.recursos.estresseMarcado, 1); igual(f.recursos.esperanca, 4);
+  f.recursos.estresseMarcado = 0;
+  r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'bone-passo-agil' }]);
+  igual(r.erros, []); igual(f.recursos.estresseMarcado, 0); igual(f.recursos.esperanca, 5);
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

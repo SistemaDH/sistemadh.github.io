@@ -1862,6 +1862,12 @@ function aplicarDanoNaFicha_(ficha, a) {
   // aplicada uma vez acima; passar `false` evita qualquer empilhamento acidental.
   const conta = pvDoDano_(final, { maior: maior, severo: severo }, comMassivo, false);
   let pv = conta.pv;
+  const limiteNaBeira = (typeof limiteDePvParaIgnorarDanoMenorDeCartas_ === 'function')
+    ? limiteDePvParaIgnorarDanoMenorDeCartas_(ficha) : null;
+  const recursosNaBeira = (ficha || {}).recursos || {};
+  const pvLivresNaBeira = Math.max(0, (Number(recursosNaBeira.pontosDeVidaMaximos) || 0) -
+    (Number(recursosNaBeira.pontosDeVidaMarcados) || 0));
+  const naBeiraAtiva = limiteNaBeira !== null && conta.pv === 1 && pvLivresNaBeira <= limiteNaBeira;
 
   // 2) Reações disparadas pela faixa final de dano.
   for (let i = 0; i < defs.length; i++) {
@@ -1877,6 +1883,9 @@ function aplicarDanoNaFicha_(ficha, a) {
     if (efeito.pvEmVezDe !== undefined) pv = Math.max(0, Math.trunc(Number(efeito.pvEmVezDe)) || 0);
     if (efeito.reduzPv) pv = Math.max(0, pv - Math.max(0, Math.trunc(Number(efeito.reduzPv)) || 0));
   }
+
+  // Na Beira é passivo: depois de saber que a faixa é Menor, nenhum PV é marcado.
+  if (naBeiraAtiva) pv = 0;
 
   // 3) Soma e valida TODOS os custos antes de tocar na ficha: tudo ou nada.
   let custoEstresse = 0, custoEsperanca = 0, custoArmadura = 0;
@@ -1949,13 +1958,15 @@ function aplicarDanoNaFicha_(ficha, a) {
   ];
   if (final !== bruto) partes.push('reduzido para ' + final + ' antes dos limiares');
   partes.push(conta.rotulo + ': ' + conta.pv + ' PV pela faixa');
-  if (pv !== conta.pv) partes.push('reações deixam ' + pv + ' PV');
+  if (naBeiraAtiva) partes.push('Na Beira ignora o dano Menor');
+  else if (pv !== conta.pv) partes.push('reações deixam ' + pv + ' PV');
 
   const saida = {
     tipo: 'dano',
     dano: { bruto: bruto, final: final, tipo: tipo, faixa: conta.faixa, rotulo: conta.rotulo },
     pvPelaFaixa: conta.pv,
     pvMarcados: pv,
+    naBeira: naBeiraAtiva,
     reacoes: usadas,
     resistencia: retraido ? 'Retrair' : null,
     dominioElementalTerra: dominioTerra,
@@ -2271,14 +2282,26 @@ function usarCartaDeDominio_(ficha, a) {
   }
   const carta = acharCarta_(a.carta);
   if (!carta) return { erro: 'Carta de domínio desconhecida: "' + String(a.carta) + '".' };
-  const def = USOS_CARTAS_DOMINIO[carta.id];
-  if (!def) return { erro: '"' + carta.nome + '" não possui uso automático registrado.' };
+  const defBase = USOS_CARTAS_DOMINIO[carta.id];
+  if (!defBase) return { erro: '"' + carta.nome + '" não possui uso automático registrado.' };
 
   ficha.cartas = ficha.cartas || { ativas: [], cofre: [] };
   ficha.cartas.ativas = Array.isArray(ficha.cartas.ativas) ? ficha.cartas.ativas : [];
   ficha.cartas.cofre = Array.isArray(ficha.cartas.cofre) ? ficha.cartas.cofre : [];
   const naMao = ficha.cartas.ativas.some(function (x) { return chaveTexto_(x) === chaveTexto_(carta.id); });
   if (!naMao) return { erro: '"' + carta.nome + '" precisa estar na mão para ser usada.' };
+
+  // Algumas cartas têm consequências determinísticas alternativas. A opção é
+  // parte do catálogo; o cliente só envia o id e nunca escolhe custo/delta.
+  let def = defBase;
+  let opcaoUso = null;
+  if (a.encerrar !== true && a.reagir !== true && Array.isArray(defBase.opcoes) && defBase.opcoes.length) {
+    for (let i = 0; i < defBase.opcoes.length; i++) {
+      if (chaveTexto_(defBase.opcoes[i].id) === chaveTexto_(a.opcao)) { opcaoUso = defBase.opcoes[i]; break; }
+    }
+    if (!opcaoUso) return { erro: '"' + carta.nome + '": escolha uma opção válida.' };
+    def = Object.assign({}, defBase, opcaoUso);
+  }
 
   const estado = def.estado || null;
   ficha.contadores = ficha.contadores || {};
@@ -2398,6 +2421,20 @@ function usarCartaDeDominio_(ficha, a) {
     if (efeitoRecursoResultado && efeitoRecursoResultado.erro) return efeitoRecursoResultado;
   }
 
+  let efeitoRecursoCondicionalResultado = null;
+  if (def.efeitoRecursoCondicional) {
+    const regra = def.efeitoRecursoCondicional || {};
+    const quando = regra.quando || {};
+    const atual = Math.max(0, Number(((ficha || {}).recursos || {})[quando.chave]) || 0);
+    const maiorQue = Number(quando.maiorQue) || 0;
+    const escolhido = atual > maiorQue ? regra.entao : regra.senao;
+    if (!escolhido || !escolhido.chave) return { erro: carta.nome + ': efeito condicional inválido no catálogo.' };
+    efeitoRecursoCondicionalResultado = ajustarRecurso_(ficha, {
+      chave: escolhido.chave, delta: Number(escolhido.delta) || 0
+    });
+    if (efeitoRecursoCondicionalResultado && efeitoRecursoCondicionalResultado.erro) return efeitoRecursoCondicionalResultado;
+  }
+
   let condicao = null;
   if (def.condicao && def.condicao.chave) {
     const cr = ajustarCondicao_(ficha, { chave:def.condicao.chave, ligar:def.condicao.ligar !== false });
@@ -2440,6 +2477,7 @@ function usarCartaDeDominio_(ficha, a) {
   const lembrete = String(def.lembrete || '');
   return {
     tipo:'usarCarta', carta:carta.id, nome:carta.nome,
+    opcao:opcaoUso ? opcaoUso.id : null,
     custoEsperanca:custoEsperanca, custoEstresse:custoEstresse,
     esperanca:r.esperanca, estresseMarcado:r.estresseMarcado,
     quantidade:entrada ? quantidade : null,
@@ -2452,6 +2490,7 @@ function usarCartaDeDominio_(ficha, a) {
     marcaUso:marcaUso && marcaUso.chave ? marcaUso.chave : null,
     condicao:condicao ? (condicao.chave || (def.condicao || {}).chave) : null,
     efeitoRecurso:efeitoRecursoResultado,
+    efeitoRecursoCondicional:efeitoRecursoCondicionalResultado,
     moveuParaCofre:def.moveParaCofre === true,
     estadosDeCartaEncerrados:estadosEncerrados,
     lembrete:lembrete,

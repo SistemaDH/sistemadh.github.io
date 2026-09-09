@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 69 cartas e características mandam
+ *  O problema que este arquivo resolve: 73 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -109,6 +109,10 @@ const CONTADORES = {
   "uso:carta:blade:golpe-do-ceifador": { origem: "carta-dominio", refId: "blade-golpe-do-ceifador", nome: "Golpe do Ceifador", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
   "uso:carta:bone:manobras-ageis": { origem: "carta-dominio", refId: "bone-manobras-ageis", nome: "Manobras Ágeis", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
   "estado:carta:bone:ferocidade:evasao": { origem: "carta-dominio", refId: "bone-ferocidade", nome: "Ferocidade", rotulo: "bônus de Evasão", tipo: "estado", maximo: {"tipo":"fixo","valor":12}, zeraEm: ["manual"], recarregaEm: [] },
+  "uso:carta:bone:golpe-assinatura": { origem: "carta-dominio", refId: "bone-golpe-assinatura", nome: "Golpe Assinatura", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:bone:tocado-pelo-osso": { origem: "carta-dominio", refId: "bone-tocado-pelo-osso", nome: "Tocado pelo Osso", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "estado:carta:bone:golpe-arrasador": { origem: "carta-dominio", refId: "bone-golpe-arrasador", nome: "Golpe Arrasador", rotulo: "pendente", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "uso:carta:bone:golpe-estilhacante": { origem: "carta-dominio", refId: "bone-golpe-estilhacante", nome: "Golpe Estilhaçante", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -182,6 +186,10 @@ const CONTADOR_ALIASES = {
   "uso:carta:blade:golpe-do-ceifador": ["Golpe do Ceifador"],
   "uso:carta:bone:manobras-ageis": ["Manobras Ágeis"],
   "estado:carta:bone:ferocidade:evasao": ["Ferocidade"],
+  "uso:carta:bone:golpe-assinatura": ["Golpe Assinatura"],
+  "uso:carta:bone:tocado-pelo-osso": ["Tocado pelo Osso"],
+  "estado:carta:bone:golpe-arrasador": ["Golpe Arrasador"],
+  "uso:carta:bone:golpe-estilhacante": ["Golpe Estilhaçante"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

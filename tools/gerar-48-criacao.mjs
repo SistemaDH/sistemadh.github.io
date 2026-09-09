@@ -421,6 +421,12 @@ function modificadoresDerivadosDaFicha_(ficha) {
   const feats = efeitosDeCaracteristicasDaFicha_(ficha);
   for (let i = 0; i < feats.length; i++) aplicar(feats[i].efeito, feats[i].nome);
 
+  // Cartas como Tocado pelo Osso também alteram números derivados. A regra de
+  // loadout é validada no 41 antes de o efeito chegar aqui.
+  const efeitosCartas = (typeof efeitosDerivadosAtivosDeCartas_ === 'function')
+    ? efeitosDerivadosAtivosDeCartas_(ficha) : [];
+  for (let i = 0; i < efeitosCartas.length; i++) aplicar(efeitosCartas[i].efeito, efeitosCartas[i].nome);
+
   const equipados = equipamentoAtivoDaFicha_(ficha);
   for (let i = 0; i < equipados.length; i++) {
     const item = equipados[i].item;
@@ -486,6 +492,30 @@ function bonusDeDanoDaFicha_(ficha) {
         });
       }
     }
+  }
+
+  // Precisão Cruel: não há um número único permanente — em cada ataque com
+  // arma bem-sucedido o jogador escolhe Finesse/Destreza OU Agilidade.
+  const cartasDerivadasDano = (typeof efeitosDerivadosAtivosDeCartas_ === 'function')
+    ? efeitosDerivadosAtivosDeCartas_(ficha) : [];
+  for (let i = 0; i < cartasDerivadasDano.length; i++) {
+    const regra = (cartasDerivadasDano[i].efeito || {}).danoArmaEscolhaTracos;
+    if (!Array.isArray(regra) || !regra.length) continue;
+    const opcoes = regra.map(function (nome) {
+      return {
+        traco: (typeof normalizarTraco_ === 'function' ? normalizarTraco_(nome) : '') || chaveTexto_(nome),
+        nome: nome,
+        valor: (typeof valorDoTraco_ === 'function') ? valorDoTraco_(ficha, nome) : 0
+      };
+    });
+    saida.condicionais.push({
+      fonte: cartasDerivadasDano[i].nome,
+      tipo: 'fixo-escolha-traco',
+      aplicaEm: 'ataque-bem-sucedido-com-arma',
+      opcoes: opcoes,
+      valorMaximo: Math.max.apply(null, opcoes.map(function (x) { return Number(x.valor) || 0; })),
+      condicao: 'ataque bem-sucedido com uma arma; escolha Finesse/Destreza ou Agilidade'
+    });
   }
 
   if (danoExtraComMedo) {
