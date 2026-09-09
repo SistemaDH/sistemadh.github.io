@@ -7,6 +7,7 @@ on:
     paths:
       - 'tools/lote8-serafim.py'
       - 'tools/lote8-serafim-v2.py'
+      - 'tools/lote8-serafim-v3.py'
       - '.github/workflows/lote8-serafim.yml'
 
 permissions:
@@ -23,7 +24,7 @@ jobs:
 
       - name: Materializar Serafim
         run: |
-          python3 tools/lote8-serafim-v2.py
+          python3 tools/lote8-serafim-v3.py
           node tools/gerar-42-classes.mjs
           node tools/gerar-47-contadores.mjs
 
@@ -65,6 +66,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm -f tools/lote8-serafim.py
           git rm -f tools/lote8-serafim-v2.py
+          git rm -f tools/lote8-serafim-v3.py
           git rm -f .github/workflows/lote8-serafim.yml
           git add -A
           git diff --cached --check
