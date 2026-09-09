@@ -274,11 +274,19 @@ const USOS_CARTAS_DOMINIO = {
   "arcana-terremoto": {"custo":{},"marcaUso":{"chave":"uso:carta:arcana:terremoto","maximo":1},"rotuloAtivar":"Registrar Terremoto bem-sucedido","lembrete":"Resolva Reações (18), 3d10+8, Vulnerável temporário e terreno na mesa; o app não rola nem escolhe alvos."},
   "arcana-ajustar-a-realidade": {"custo":{"esperanca":5},"rotuloAtivar":"Ajustar resultado · 5 Esperanças","lembrete":"Escolha na mesa um resultado plausível dentro da faixa dos dados da jogada original."},
   "arcana-queda-do-ceu": {"custo":{},"entradaQuantidade":{"campo":"estressesMarcados","rotulo":"Estresses a marcar","minimo":1,"maximo":12,"custoPorUnidade":{"estresse":1},"ajuda":"Cada Estresse efetivamente marcado acrescenta 1d20+2 de dano aos alvos acertados."},"quantidadeLigadaAoEstresse":true,"rotuloAtivar":"Conjurar Queda do Céu","lembrete":"O app não rola os ataques nem os d20. Use 1d20+2 por Estresse efetivamente marcado."},
+  "blade-levantar-se": {"custo":{"estresse":1},"rotuloAtivar":"Dano Severo: reduzir um nível","lembrete":"Reduza o dano Severo para Maior nesta resolução. O app não inventa o gatilho do ataque."},
+  "blade-redemoinho": {"custo":{"esperanca":1},"rotuloAtivar":"Sucesso: usar Redemoinho","lembrete":"Use o mesmo ataque contra os outros alvos em Muito Próximo; cada alvo adicional acertado sofre metade do dano."},
+  "blade-imprudente": {"custo":{"estresse":1},"rotuloAtivar":"Ganhar vantagem neste ataque","lembrete":"Role este ataque com vantagem fora do app."},
+  "blade-laco-de-soldado": {"custo":{},"efeitoRecurso":{"chave":"esperanca","delta":3},"marcaUso":{"chave":"uso:carta:blade:laco-de-soldado","maximo":1},"rotuloAtivar":"Ativar Laço de Soldado","lembrete":"Você ganha até 3 Esperanças pelo teto. O outro personagem também ganha 3 Esperanças; aplique na ficha dele."},
+  "blade-confusao": {"custo":{},"marcaUso":{"chave":"uso:carta:blade:confusao","maximo":1},"rotuloAtivar":"Evitar ataque com Confusão","lembrete":"Este ataque é evitado; mova-se com segurança para fora do Corpo a Corpo conforme a ficção."},
+  "blade-lutador-versatil": {"custo":{"estresse":1},"rotuloAtivar":"Maximizar um dado de dano","lembrete":"Escolha um dos seus dados de dano e use o resultado máximo dele em vez de rolá-lo."},
+  "blade-foco-mortal": {"custo":{},"marcaUso":{"chave":"uso:carta:blade:foco-mortal","maximo":1},"estado":{"chave":"estado:carta:blade:foco-mortal","valor":1,"permiteEncerrarManual":true,"rotuloAtivo":"Foco Mortal ativo","avisoEncerrar":"Foco Mortal encerrado."},"rotuloAtivar":"Escolher alvo do Foco Mortal","lembrete":"Contra o alvo escolhido, use +1 Proficiência. Encerre ao atacar outra criatura, derrotar o alvo ou terminar a batalha."},
 };
 
 /** Efeitos derivados de cartas de domínio ativas. */
 const EFEITOS_DERIVADOS_CARTAS_DOMINIO = {
   "arcana-tocado-pela-arcana": {"bonusConjuracao":1,"exigeCartasAtivasDominio":{"dominio":"ARCANA","quantidade":4}},
+  "blade-armadura-fortificada": {"bonusLimiares":2,"exigeArmaduraEquipada":true},
 };
 
 /**
@@ -425,5 +433,21 @@ function bonusConjuracaoDeCartas_(ficha) {
     }
     total += Math.trunc(Number(e.bonusConjuracao)) || 0;
   }
+  return total;
+}
+
+
+/** Bônus nos dois limiares vindos de cartas ativas. */
+function bonusLimiaresDeCartas_(ficha) {
+  if (typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO === 'undefined') return 0;
+  const ativas = (((ficha || {}).cartas || {}).ativas || []);
+  let total = 0;
+  Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO).forEach(function (id) {
+    const e = EFEITOS_DERIVADOS_CARTAS_DOMINIO[id] || {};
+    if (!e.bonusLimiares) return;
+    if (!ativas.some(function (x) { return chaveTexto_(x) === chaveTexto_(id); })) return;
+    if (e.exigeArmaduraEquipada === true && !((((ficha || {}).equipamento || {}).armadura))) return;
+    total += Math.trunc(Number(e.bonusLimiares)) || 0;
+  });
   return total;
 }

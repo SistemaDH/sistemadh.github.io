@@ -631,8 +631,10 @@ function derivadosDoPersonagem_(ficha) {
   if (pontosDeVidaMaximos !== null) {
     pontosDeVidaMaximos += (b.pontosDeVidaMaximos || 0) + bc.pontosDeVidaMaximos + md.pontosDeVidaMaximos;
   }
+  const bonusLimiaresCartas = (typeof bonusLimiaresDeCartas_ === 'function')
+    ? bonusLimiaresDeCartas_(ficha) : 0;
   if (limiarMaior !== null) {
-    limiarMaior += bc.limiares + md.limiares + md.limiarMaior;
+    limiarMaior += bc.limiares + md.limiares + md.limiarMaior + bonusLimiaresCartas;
     limiarGrave += bc.limiares + md.limiares + md.limiarGrave;
     // Pau-Ferro: vale enquanto o ÚLTIMO espaço da Armadura FINAL estiver marcado.
     const marcado = Math.max(0, Number(((ficha || {}).recursos || {}).armaduraMarcada) || 0);

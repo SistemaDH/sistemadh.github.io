@@ -129,3 +129,19 @@ function bonusConjuracaoDeCartas_(ficha) {
   }
   return total;
 }
+
+
+/** Bônus nos dois limiares vindos de cartas ativas. */
+function bonusLimiaresDeCartas_(ficha) {
+  if (typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO === 'undefined') return 0;
+  const ativas = (((ficha || {}).cartas || {}).ativas || []);
+  let total = 0;
+  Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO).forEach(function (id) {
+    const e = EFEITOS_DERIVADOS_CARTAS_DOMINIO[id] || {};
+    if (!e.bonusLimiares) return;
+    if (!ativas.some(function (x) { return chaveTexto_(x) === chaveTexto_(id); })) return;
+    if (e.exigeArmaduraEquipada === true && !((((ficha || {}).equipamento || {}).armadura))) return;
+    total += Math.trunc(Number(e.bonusLimiares)) || 0;
+  });
+  return total;
+}

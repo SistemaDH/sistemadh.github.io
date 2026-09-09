@@ -1177,6 +1177,75 @@
     "descanso"
    ],
    "observacao": "Uma vez por descanso. O marcador significa que o uso já foi gasto."
+  },
+  {
+   "chave": "uso:carta:blade:laco-de-soldado",
+   "origem": "carta-dominio",
+   "refId": "blade-laco-de-soldado",
+   "nome": "Laço de Soldado",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
+  },
+  {
+   "chave": "uso:carta:blade:confusao",
+   "origem": "carta-dominio",
+   "refId": "blade-confusao",
+   "nome": "Confusão",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso."
+  },
+  {
+   "chave": "uso:carta:blade:foco-mortal",
+   "origem": "carta-dominio",
+   "refId": "blade-foco-mortal",
+   "nome": "Foco Mortal",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso."
+  },
+  {
+   "chave": "estado:carta:blade:foco-mortal",
+   "origem": "carta-dominio",
+   "refId": "blade-foco-mortal",
+   "nome": "Foco Mortal",
+   "rotulo": "ativo",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual",
+    "fim-da-cena"
+   ],
+   "observacao": "Estado condicional; a mesa encerra também ao trocar de alvo ou derrotá-lo."
   }
  ]
 }

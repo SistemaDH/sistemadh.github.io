@@ -2389,6 +2389,15 @@ function usarCartaDeDominio_(ficha, a) {
   if (custoEsperanca) r.esperanca = (Number(r.esperanca) || 0) - custoEsperanca;
   if (custoEstresse) r.estresseMarcado = (Number(r.estresseMarcado) || 0) + custoEstresse;
 
+  let efeitoRecursoResultado = null;
+  if (def.efeitoRecurso && def.efeitoRecurso.chave) {
+    efeitoRecursoResultado = ajustarRecurso_(ficha, {
+      chave: def.efeitoRecurso.chave,
+      delta: Number(def.efeitoRecurso.delta) || 0
+    });
+    if (efeitoRecursoResultado && efeitoRecursoResultado.erro) return efeitoRecursoResultado;
+  }
+
   let condicao = null;
   if (def.condicao && def.condicao.chave) {
     const cr = ajustarCondicao_(ficha, { chave:def.condicao.chave, ligar:def.condicao.ligar !== false });
@@ -2442,6 +2451,7 @@ function usarCartaDeDominio_(ficha, a) {
     estadoValor:estadoValor, estadoValorBase:estadoValorBase,
     marcaUso:marcaUso && marcaUso.chave ? marcaUso.chave : null,
     condicao:condicao ? (condicao.chave || (def.condicao || {}).chave) : null,
+    efeitoRecurso:efeitoRecursoResultado,
     moveuParaCofre:def.moveParaCofre === true,
     estadosDeCartaEncerrados:estadosEncerrados,
     lembrete:lembrete,

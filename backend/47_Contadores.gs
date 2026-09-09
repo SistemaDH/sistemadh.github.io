@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 57 cartas e características mandam
+ *  O problema que este arquivo resolve: 61 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -97,6 +97,10 @@ const CONTADORES = {
   "uso:carta:arcana:projecao-sensorial": { origem: "carta-dominio", refId: "arcana-projecao-sensorial", nome: "Projeção Sensorial", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
   "estado:carta:arcana:projecao-sensorial": { origem: "carta-dominio", refId: "arcana-projecao-sensorial", nome: "Projeção Sensorial", rotulo: "visão ativa", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
   "uso:carta:arcana:terremoto": { origem: "carta-dominio", refId: "arcana-terremoto", nome: "Terremoto", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:blade:laco-de-soldado": { origem: "carta-dominio", refId: "blade-laco-de-soldado", nome: "Laço de Soldado", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:carta:blade:confusao": { origem: "carta-dominio", refId: "blade-confusao", nome: "Confusão", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:blade:foco-mortal": { origem: "carta-dominio", refId: "blade-foco-mortal", nome: "Foco Mortal", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "estado:carta:blade:foco-mortal": { origem: "carta-dominio", refId: "blade-foco-mortal", nome: "Foco Mortal", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual","fim-da-cena"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -158,6 +162,10 @@ const CONTADOR_ALIASES = {
   "uso:carta:arcana:projecao-sensorial": ["Projeção Sensorial"],
   "estado:carta:arcana:projecao-sensorial": ["Projeção Sensorial"],
   "uso:carta:arcana:terremoto": ["Terremoto"],
+  "uso:carta:blade:laco-de-soldado": ["Laço de Soldado"],
+  "uso:carta:blade:confusao": ["Confusão"],
+  "uso:carta:blade:foco-mortal": ["Foco Mortal"],
+  "estado:carta:blade:foco-mortal": ["Foco Mortal"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

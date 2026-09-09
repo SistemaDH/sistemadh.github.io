@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 57 contadores: 25 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 61 contadores: 29 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 57 contadores: 25 de carta, 25 de classe/subclasse, 4 de 
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 57);
+  igual(Object.keys(CONTADORES).length, 61);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 25);
+  igual(porOrigem['carta-dominio'], 29);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -8446,3 +8446,81 @@ if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));
   process.exit(1);
 }
+
+
+console.log('\nLote 8 — Lâmina níveis 1–4');
+function fichaBladeN4_(cartas, ancestralidade = 'Humano') {
+  const base = contexto.fichaRapida_({
+    nome: 'Lâmina N4', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade, comunidade: 'Loreborne',
+    cartas, experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  base.identidade.nivel = 4;
+  base.cartas = { ativas: cartas.slice(), cofre: [] };
+  const f = contexto.validarFicha_(base);
+  f.recursos.esperanca = 6;
+  f.recursos.estresseMarcado = 0;
+  return f;
+}
+
+teste('Lâmina N1-N2 cobra custos determinísticos sem rolar ataque ou dano', () => {
+  const f = fichaBladeN4_(['blade-levantar-se','blade-redemoinho','blade-imprudente']);
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'blade-levantar-se' }]);
+  igual(r.erros, []); igual(f.recursos.estresseMarcado, 1);
+  r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'blade-redemoinho' }]);
+  igual(r.erros, []); igual(f.recursos.esperanca, 5);
+  r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'blade-imprudente' }]);
+  igual(r.erros, []); igual(f.recursos.estresseMarcado, 2);
+});
+
+teste('Levantar-Se e Imprudente continuam passando pelo Inabalável central', () => {
+  const f = fichaBladeN4_(['blade-levantar-se','blade-imprudente'], 'Firbolg');
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'blade-levantar-se' }]);
+  verdade(!!r.pendenciaRolagem); igual(f.recursos.estresseMarcado, 0);
+  r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'blade-levantar-se', dadoInabalavel:6 }]);
+  igual(r.erros, []); igual(f.recursos.estresseMarcado, 0);
+});
+
+teste('Laço de Soldado concede até 3 Esperanças e respeita 1/descanso longo', () => {
+  const f = fichaBladeN4_(['blade-laco-de-soldado','blade-confusao']);
+  f.recursos.esperanca = 1;
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'blade-laco-de-soldado' }]);
+  igual(r.erros, []); igual(f.recursos.esperanca, 4);
+  igual(f.contadores['uso:carta:blade:laco-de-soldado'].valor, 1);
+  verdade(contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'blade-laco-de-soldado' }]).erros.length > 0);
+  contexto.ajustarGatilho_(f, { gatilho:'descanso' });
+  igual(f.contadores['uso:carta:blade:laco-de-soldado'].valor, 1);
+  contexto.ajustarGatilho_(f, { gatilho:'descanso-longo' });
+  verdade(!f.contadores['uso:carta:blade:laco-de-soldado']);
+});
+
+teste('Confusão guarda 1 uso por descanso e Foco Mortal mantém estado separadamente', () => {
+  const f = fichaBladeN4_(['blade-confusao','blade-foco-mortal']);
+  igual(contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'blade-confusao' }]).erros, []);
+  igual(f.contadores['uso:carta:blade:confusao'].valor, 1);
+  igual(contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'blade-foco-mortal' }]).erros, []);
+  igual(f.contadores['uso:carta:blade:foco-mortal'].valor, 1);
+  igual(f.contadores['estado:carta:blade:foco-mortal'].valor, 1);
+  igual(contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'blade-foco-mortal', encerrar:true }]).erros, []);
+  verdade(!f.contadores['estado:carta:blade:foco-mortal']);
+  igual(f.contadores['uso:carta:blade:foco-mortal'].valor, 1, 'encerrar estado não devolve o uso');
+});
+
+teste('Armadura Fortificada soma +2 nos dois limiares somente com armadura equipada', () => {
+  const f = fichaBladeN4_(['blade-armadura-fortificada','blade-nao-foi-suficiente']);
+  const com = contexto.derivadosDoPersonagem_(f);
+  const semCarta = fichaBladeN4_(['blade-nao-foi-suficiente','blade-redemoinho']);
+  const base = contexto.derivadosDoPersonagem_(semCarta);
+  igual(com.limiarMaior, base.limiarMaior + 2);
+  igual(com.limiarGrave, base.limiarGrave + 2);
+  f.equipamento.armadura = '';
+  const semArmadura = contexto.derivadosDoPersonagem_(f);
+  verdade(semArmadura.limiarMaior === null || semArmadura.limiarMaior < com.limiarMaior);
+});
+
+teste('Não Foi Suficiente permanece rerrolagem manual e Lutador Versátil só cobra o custo', () => {
+  const f = fichaBladeN4_(['blade-nao-foi-suficiente','blade-lutador-versatil']);
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'blade-lutador-versatil' }]);
+  igual(r.erros, []); igual(f.recursos.estresseMarcado, 1);
+  verdade(String(r.mudancas[0].aviso).includes('resultado máximo'));
+});

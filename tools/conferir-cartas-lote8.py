@@ -73,3 +73,18 @@ for chave in [
 ]:
   assert any(x['chave'] == chave for x in cont['contadores']), chave
 print('Lote 8 — Arcana níveis 8–10 classificados e partes determinísticas conferidas; domínio Arcana fechado.')
+
+
+# Lâmina níveis 1–4
+assert por['blade-levantar-se']['uso']['custo'] == {'estresse': 1}
+assert por['blade-nao-foi-suficiente']['resolucaoManual']['rolaNoApp'] is False
+assert por['blade-redemoinho']['uso']['custo'] == {'esperanca': 1}
+assert por['blade-imprudente']['uso']['custo'] == {'estresse': 1}
+assert por['blade-laco-de-soldado']['uso']['efeitoRecurso'] == {'chave':'esperanca','delta':3}
+assert por['blade-confusao']['uso']['marcaUso']['chave'] == 'uso:carta:blade:confusao'
+assert por['blade-lutador-versatil']['uso']['custo'] == {'estresse': 1}
+assert por['blade-armadura-fortificada']['efeitoDerivado'] == {'bonusLimiares':2,'exigeArmaduraEquipada':True}
+assert por['blade-foco-mortal']['uso']['estado']['chave'] == 'estado:carta:blade:foco-mortal'
+for chave in ['uso:carta:blade:laco-de-soldado','uso:carta:blade:confusao','uso:carta:blade:foco-mortal','estado:carta:blade:foco-mortal']:
+    assert any(x['chave'] == chave for x in cont['contadores']), chave
+print('Lote 8 — Lâmina níveis 1–4 classificados e partes determinísticas conferidas.')

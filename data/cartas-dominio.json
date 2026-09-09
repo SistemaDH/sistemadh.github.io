@@ -844,7 +844,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "O app cobra 1 Estresse; a mesa aplica a redução de Severo para Maior ao dano em resolução."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Use somente ao sofrer dano Severo; a redução de severidade é confirmada na mesa antes de aplicar o dano."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "rotuloAtivar": "Dano Severo: reduzir um nível",
+    "lembrete": "Reduza o dano Severo para Maior nesta resolução. O app não inventa o gatilho do ataque."
+   }
   },
   {
    "id": "blade-nao-foi-suficiente",
@@ -863,7 +878,15 @@
    "dependencias": [],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "manual-com-rerrolagem",
+    "resumo": "Rerrole na mesa quaisquer dados de dano que tenham mostrado 1 ou 2; o app não rola dados."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Rerrole na mesa quaisquer dados de dano que tenham mostrado 1 ou 2; o app não rola dados."
+   }
   },
   {
    "id": "blade-redemoinho",
@@ -887,6 +910,21 @@
    "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
    "origem": {
     "texto": "livro-jambo"
+   },
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "Após um ataque bem-sucedido, o app cobra 1 Esperança; alvos adicionais e metade do dano ficam na mesa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A mesa confirma o ataque original, quais outros alvos em Muito Próximo foram acertados e aplica metade do dano."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "rotuloAtivar": "Sucesso: usar Redemoinho",
+    "lembrete": "Use o mesmo ataque contra os outros alvos em Muito Próximo; cada alvo adicional acertado sofre metade do dano."
    }
   },
   {
@@ -909,7 +947,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "O app marca 1 Estresse; a vantagem vale para o ataque que a mesa está prestes a resolver."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Role o ataque com vantagem fora do app."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "rotuloAtivar": "Ganhar vantagem neste ataque",
+    "lembrete": "Role este ataque com vantagem fora do app."
+   }
   },
   {
    "id": "blade-laco-de-soldado",
@@ -931,7 +984,28 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "O app registra 1/descanso longo e concede até 3 Esperanças ao usuário; o aliado escolhido recebe 3 na própria ficha pela mesa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Depois do elogio/pergunta da ficção, escolha o outro personagem na mesa e conceda a ele 3 Esperanças também."
+   },
+   "uso": {
+    "custo": {},
+    "efeitoRecurso": {
+     "chave": "esperanca",
+     "delta": 3
+    },
+    "marcaUso": {
+     "chave": "uso:carta:blade:laco-de-soldado",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Ativar Laço de Soldado",
+    "lembrete": "Você ganha até 3 Esperanças pelo teto. O outro personagem também ganha 3 Esperanças; aplique na ficha dele."
+   }
   },
   {
    "id": "blade-confusao",
@@ -952,7 +1026,24 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "O app registra 1 uso por descanso; evitar o ataque e o deslocamento seguro são resolvidos na mesa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Use quando uma criatura Corpo a Corpo for causar dano; o ataque é evitado e o movimento seguro é ficcional."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:blade:confusao",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Evitar ataque com Confusão",
+    "lembrete": "Este ataque é evitado; mova-se com segurança para fora do Corpo a Corpo conforme a ficção."
+   }
   },
   {
    "id": "blade-lutador-versatil",
@@ -973,7 +1064,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "automatizada-parcial",
+    "resumo": "A troca de atributo é escolha da mesa; quando usar o máximo de um dado, o app cobra 1 Estresse."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Escolha o atributo da arma na mesa. Ao pagar, substitua um dado de dano pelo resultado máximo em vez de rolá-lo."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "rotuloAtivar": "Maximizar um dado de dano",
+    "lembrete": "Escolha um dos seus dados de dano e use o resultado máximo dele em vez de rolá-lo."
+   }
   },
   {
    "id": "blade-armadura-fortificada",
@@ -994,7 +1100,19 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "automatizada-passiva",
+    "resumo": "Enquanto houver armadura equipada, o servidor soma +2 aos dois limiares de dano."
+   },
+   "efeitoDerivado": {
+    "bonusLimiares": 2,
+    "exigeArmaduraEquipada": true
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Nenhuma rolagem ou ação manual é necessária para o bônus de limiar."
+   }
   },
   {
    "id": "blade-foco-mortal",
@@ -1016,7 +1134,31 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português."
+   "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português.",
+   "automacao": {
+    "classificacao": "automatizada-estado-parcial",
+    "resumo": "O app registra o uso 1/descanso e mantém o estado ativo; alvo e término por troca/derrota/batalha são confirmados pela mesa."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Escolha e acompanhe o alvo na mesa. Enquanto o estado estiver ativo contra ele, use +1 Proficiência."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:blade:foco-mortal",
+     "maximo": 1
+    },
+    "estado": {
+     "chave": "estado:carta:blade:foco-mortal",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "rotuloAtivo": "Foco Mortal ativo",
+     "avisoEncerrar": "Foco Mortal encerrado."
+    },
+    "rotuloAtivar": "Escolher alvo do Foco Mortal",
+    "lembrete": "Contra o alvo escolhido, use +1 Proficiência. Encerre ao atacar outra criatura, derrotar o alvo ou terminar a batalha."
+   }
   },
   {
    "id": "blade-vantagem-do-campeao",
