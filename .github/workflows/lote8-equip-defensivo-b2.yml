@@ -17,6 +17,7 @@ jobs:
 
       - name: Materializar equipamento defensivo B2
         run: |
+          python3 tools/patch-b2-materializer.py
           python3 tools/lote8-equip-defensivo-b2.py
           node tools/gerar-44-equipamento.mjs
           node tools/gerar-41-dominios.mjs
@@ -101,6 +102,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f --ignore-unmatch tools/patch-b2-materializer.py
           git rm -f --ignore-unmatch tools/lote8-equip-defensivo-b2.py
           git rm -f --ignore-unmatch .github/workflows/lote8-equip-defensivo-b2.yml
           find . -type d -name __pycache__ -prune -exec rm -rf {} +
