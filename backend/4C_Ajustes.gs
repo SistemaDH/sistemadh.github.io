@@ -433,6 +433,53 @@ function ajustarFichaFilha_(ficha, a) {
 }
 
 /**
+ * EFEITO DETERMINÍSTICO EM OUTRA FICHA.
+ *
+ * O cliente manda só característica + opção + id do aliado. Recurso e delta
+ * vêm do catálogo gerado, para um payload adulterado nunca virar um editor da
+ * ficha alheia. O alvo é alterado dentro da mesma trava da ação da API.
+ */
+function aplicarHabilidadeEmAliado_(fichaOrigem, fichaAliado, nome, opcaoId) {
+  const def = (typeof habilidadeEmAliado_ === 'function') ? habilidadeEmAliado_(nome) : null;
+  if (!def) return { erro: 'Habilidade em aliado desconhecida: "' + String(nome) + '".' };
+  if (!(typeof fichaTemCaracteristicaDeClasse_ === 'function' &&
+        fichaTemCaracteristicaDeClasse_(fichaOrigem, def.nome))) {
+    return { erro: 'Este personagem não tem "' + def.nome + '".' };
+  }
+  const opcoes = def.opcoes || [];
+  let opcao = null;
+  for (let i = 0; i < opcoes.length; i++) {
+    if (String(opcoes[i].id) === String(opcaoId || '')) opcao = opcoes[i];
+  }
+  if (!opcao) return { erro: def.nome + ': escolha um benefício válido.' };
+  if (opcao.recurso !== 'esperanca' && opcao.recurso !== 'estresseMarcado') {
+    return { erro: def.nome + ': o catálogo tentou alterar um recurso não permitido.' };
+  }
+  if (opcao.recurso === 'estresseMarcado' && Number(opcao.delta) > 0) {
+    return { erro: def.nome + ': marcar Estresse em outra ficha não é permitido por este motor.' };
+  }
+
+  const antes = Number(((fichaAliado || {}).recursos || {})[opcao.recurso]) || 0;
+  const mudanca = ajustarRecurso_(fichaAliado, {
+    chave: opcao.recurso,
+    delta: Math.trunc(Number(opcao.delta)) || 0
+  });
+  if (mudanca.erro) return mudanca;
+  const depois = Number(((fichaAliado || {}).recursos || {})[opcao.recurso]) || 0;
+  if (depois === antes) {
+    return { erro: opcao.recurso === 'esperanca'
+      ? 'O aliado já está no máximo de Esperança.'
+      : 'O aliado não tem Estresse para remover.' };
+  }
+  return {
+    tipo: 'habilidade-em-aliado', nome: def.nome, opcao: opcao.id,
+    rotulo: opcao.rotulo || opcao.id, recurso: opcao.recurso,
+    antes: antes, depois: depois,
+    aviso: def.nome + ': ' + (opcao.rotulo || opcao.id) + '.'
+  };
+}
+
+/**
  * USAR UMA HABILIDADE QUE CUSTA ALGUMA COISA.
  *
  * Nove habilidades de Esperança ("gaste 3 de Esperança para…"), a Marca da

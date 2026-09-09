@@ -340,6 +340,42 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "estado": null
   }
 };
+/** Efeitos de classe/subclasse que alteram um recurso de OUTRA ficha. */
+const HABILIDADES_DE_CLASSE_EM_ALIADO = {
+  "Maestro": {
+    "classe": "bardo",
+    "origem": "subclasse",
+    "gatilho": "Depois de dar um Dado de Reunião a este aliado.",
+    "rotuloAtivar": "Aplicar Maestro no aliado",
+    "opcoes": [
+      {
+        "id": "esperanca",
+        "rotulo": "Aliado ganha 1 Esperança",
+        "recurso": "esperanca",
+        "delta": 1
+      },
+      {
+        "id": "estresse",
+        "rotulo": "Aliado remove 1 Estresse",
+        "recurso": "estresseMarcado",
+        "delta": -1
+      }
+    ]
+  }
+};
+
+/** Acha um efeito em aliado declarado pela característica. */
+function habilidadeEmAliado_(nome) {
+  const alvo = chaveTexto_(nome);
+  const nomes = Object.keys(HABILIDADES_DE_CLASSE_EM_ALIADO);
+  for (let i = 0; i < nomes.length; i++) {
+    if (chaveTexto_(nomes[i]) === alvo) {
+      return Object.assign({ nome: nomes[i] }, HABILIDADES_DE_CLASSE_EM_ALIADO[nomes[i]]);
+    }
+  }
+  return null;
+}
+
 
 /**
  * Valida e normaliza ficha.alvosDeHabilidade — quem está Marcado/Priorizado.

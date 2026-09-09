@@ -603,6 +603,65 @@ try {
     }
   });
 
+  await passo('Maestro escolhe um aliado e grava o benefício na outra ficha', async () => {
+    await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+    await pagina.waitForSelector('.ficha-cartao__abrir');
+    const def = noBackend('ABAS.PERSONAGENS');
+    const linha = ambiente.contexto.lerTudo_(def)
+      .filter((l) => String(l.excluido).toUpperCase() !== 'TRUE')[0];
+    const original = linha.dados || '{}';
+    let linhaAliado = null;
+    try {
+      const fonte = JSON.parse(original);
+      fonte.identidade.classe = 'Bardo';
+      fonte.identidade.subclasse = 'Músico Errante';
+      fonte.subclasseCartas = ['fundacao', 'especializacao'];
+      const validaFonte = ambiente.contexto.validarFicha_(fonte);
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: JSON.stringify(validaFonte) });
+
+      const alvoFicha = ambiente.contexto.validarFicha_(JSON.parse(original));
+      alvoFicha.identidade.nome = 'Aliado do Maestro';
+      alvoFicha.recursos.esperanca = 1;
+      alvoFicha.recursos.estresseMarcado = 1;
+      const copia = { ...linha };
+      delete copia._linha;
+      copia.id = 'e2e-aliado-maestro';
+      copia.nome = 'Aliado do Maestro';
+      copia.versao = 1;
+      copia.dados = JSON.stringify(alvoFicha);
+      ambiente.contexto.inserir_(def, copia);
+      linhaAliado = ambiente.contexto.lerTudo_(def).find((x) => x.id === copia.id);
+
+      await pagina.reload({ waitUntil: 'networkidle' });
+      await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+      await abrirFichaEmJogo();
+      const dobra = pagina.locator('details.dobra').filter({ hasText: 'Características' }).last();
+      if (!(await dobra.evaluate((n) => n.open))) await dobra.locator('summary').click();
+      const card = dobra.locator('.ficha__carac').filter({ hasText: 'Maestro' });
+      const botao = card.getByRole('button', { name: 'Aplicar Maestro no aliado' });
+      await botao.waitFor({ timeout: 5000 });
+      await botao.click();
+      const modal = pagina.locator('.modal__caixa').last();
+      await modal.getByRole('combobox', { name: 'Aliado' }).selectOption('e2e-aliado-maestro');
+      await modal.getByRole('button', { name: 'Aliado ganha 1 Esperança' }).click();
+      await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 10000 });
+
+      const salvo = ambiente.contexto.lerTudo_(def).find((x) => x.id === 'e2e-aliado-maestro');
+      const fichaSalva = JSON.parse(salvo.dados || '{}');
+      igual(fichaSalva.recursos.esperanca, 2, 'Maestro devia subir a Esperança do aliado');
+      igual(fichaSalva.recursos.estresseMarcado, 1, 'a outra opção não pode ser aplicada junto');
+    } finally {
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: original });
+      if (linhaAliado) ambiente.contexto.excluirLinha_(def, linhaAliado._linha);
+      if (await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').count()) {
+        await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+      }
+      await pagina.reload({ waitUntil: 'networkidle' });
+      await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+      await abrirFichaEmJogo();
+    }
+  });
+
   await passo('classe e subclasse abrem o que está atrás delas (ponto 4)', async () => {
     /*
      * PONTO 4 DOS PRINTS. Classe e subclasse eram duas linhas de texto morto

@@ -37,7 +37,7 @@ const ACOES_APP = new Set([
 ]);
 const ACOES_FOTO = new Set(['guardarFoto','removerFoto']);
 const ACOES_ENGINE = new Set([
-  'criarPersonagem','salvarPersonagem','ajustarFicha',
+  'criarPersonagem','salvarPersonagem','ajustarFicha','usarHabilidadeEmAliado',
   'previaDescanso','movimentosDeDescanso','aplicarDescanso',
   'opcoesDeAvanco','previaDeAvanco','aplicarAvanco','desfazerAvanco','aplicarCartaPermanente',
   'painelDoMestre','definirMoldura','molduraDaMesa',
@@ -144,6 +144,8 @@ export const api = {
   restaurarPersonagem: (token,id) => chamar('restaurarPersonagem',{token,id}),
 
   ajustarFicha: (token,id,ajustes,versao) => chamar('ajustarFicha',{token,id,ajustes,versao}),
+  usarHabilidadeEmAliado: (token,id,nome,aliadoId,opcao) =>
+    chamar('usarHabilidadeEmAliado',{token,id,nome,aliadoId,opcao}),
   aliadosDaMesa: (token,id) => chamar('aliadosDaMesa',{token,id}),
   meusProjetos: (token,id) => chamar('meusProjetos',{token,id}),
   previaDescanso: (token,id,tipo,escolhas) => chamar('previaDescanso',{token,id,tipo,escolhas}),

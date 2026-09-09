@@ -192,7 +192,17 @@ for (const c of dados.classes) {
  * Varre CLASSE e SUBCLASSE: o Nêmesis é uma carta de maestria.
  */
 const comCusto = {};
+const emAliado = {};
 for (const c of dados.classes) {
+  const anotaAliado = (f, origem) => {
+    if (!f || !f.usoEmAliado) return;
+    emAliado[f.nome] = {
+      classe: c.id, origem,
+      gatilho: f.usoEmAliado.gatilho || '',
+      rotuloAtivar: f.usoEmAliado.rotuloAtivar || '',
+      opcoes: f.usoEmAliado.opcoes || []
+    };
+  };
   const anota = (f, origem) => {
     if (!f || !f.uso) return;
     comCusto[f.nome] = {
@@ -211,10 +221,13 @@ for (const c of dados.classes) {
     };
   };
   anota(c.caracteristicaEsperanca, 'esperança');
-  for (const f of c.caracteristicasDeClasse) anota(f, 'classe');
+  anotaAliado(c.caracteristicaEsperanca, 'esperança');
+  for (const f of c.caracteristicasDeClasse) { anota(f, 'classe'); anotaAliado(f, 'classe'); }
   for (const s of c.subclasses) {
     for (const qual of ['fundacao', 'especializacao', 'maestria']) {
-      for (const f of (s.cartas[qual].caracteristicas || [])) anota(f, 'subclasse');
+      for (const f of (s.cartas[qual].caracteristicas || [])) {
+        anota(f, 'subclasse'); anotaAliado(f, 'subclasse');
+      }
     }
   }
 }
@@ -231,6 +244,21 @@ L.push(`const EFEITOS_DERIVADOS_DE_CLASSE = ${JSON.stringify(efeitosDerivadosDeC
 
 L.push('/** Habilidades de CLASSE que cobram Esperança (ou Estresse) para serem usadas. */');
 L.push(`const HABILIDADES_DE_CLASSE_COM_CUSTO = ${JSON.stringify(comCusto, null, 2)};`);
+L.push('/** Efeitos de classe/subclasse que alteram um recurso de OUTRA ficha. */');
+L.push(`const HABILIDADES_DE_CLASSE_EM_ALIADO = ${JSON.stringify(emAliado, null, 2)};`);
+L.push(`
+/** Acha um efeito em aliado declarado pela característica. */
+function habilidadeEmAliado_(nome) {
+  const alvo = chaveTexto_(nome);
+  const nomes = Object.keys(HABILIDADES_DE_CLASSE_EM_ALIADO);
+  for (let i = 0; i < nomes.length; i++) {
+    if (chaveTexto_(nomes[i]) === alvo) {
+      return Object.assign({ nome: nomes[i] }, HABILIDADES_DE_CLASSE_EM_ALIADO[nomes[i]]);
+    }
+  }
+  return null;
+}
+`);
 L.push(`
 /**
  * Valida e normaliza ficha.alvosDeHabilidade — quem está Marcado/Priorizado.

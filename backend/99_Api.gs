@@ -269,6 +269,33 @@ function executar_(p) {
         });
       }
 
+      /**
+       * Uma característica da ficha de origem altera um recurso de um aliado.
+       * Maestro é o primeiro caso. A origem não muda e não sobe versão.
+       */
+      case 'usarHabilidadeEmAliado': {
+        const jogador = exigirSessao_(p.token);
+        return comTrava_(function () {
+          const origem = obterPersonagem_(jogador, p.id);
+          if (String(p.aliadoId || '') === String(p.id || '')) {
+            throw erroApi_(ERRO.DADOS_INVALIDOS, 'Escolha outra ficha como aliado.');
+          }
+          const alvo = alterarFichaDeOutroSemTrava_(p.aliadoId, function (fichaAliado) {
+            const rel = aplicarHabilidadeEmAliado_(origem.ficha, fichaAliado, p.nome, p.opcao);
+            if (rel.erro) throw erroApi_(ERRO.DADOS_INVALIDOS, rel.erro);
+            return rel;
+          });
+          if (!alvo) throw erroApi_(ERRO.NAO_ENCONTRADO, 'Ficha do aliado não encontrada.');
+          registrarLog_(jogador, 'habilidade-em-aliado',
+            origem.nome + ' / ' + String(p.nome || '') + ' → ' + alvo.personagem.nome + ': ' + alvo.extra.rotulo);
+          return ok_({
+            origem: { id: origem.id, nome: origem.nome, versao: origem.versao },
+            aliado: alvo.personagem,
+            resultado: alvo.extra
+          });
+        });
+      }
+
       /** O que o descanso VAI fazer. Não grava nada. */
       case 'previaDescanso': {
         const jogador = exigirSessao_(p.token);

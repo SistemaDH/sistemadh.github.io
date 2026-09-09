@@ -5,7 +5,7 @@
 
 ## Resumo numérico
 
-- Classes/subclasses: **99 características**; **37** candidatas sem sinal de automação.
+- Classes/subclasses: **99 características**; **36** candidatas sem sinal de automação.
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **161** candidatas sem sinal de automação específica; **17** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **88** ocorrências candidatas ativas/condicionais.
@@ -14,8 +14,8 @@
 
 ### Distribuição — classes/subclasses
 
-- candidato sem sinal de automação: **37**
-- estruturada/contador: **42**
+- candidato sem sinal de automação: **36**
+- estruturada/contador: **43**
 - predominantemente narrativo/sem gatilho detectado: **7**
 - referência específica no motor: **13**
 
@@ -40,7 +40,6 @@
 
 | Classe | Subclasse | Estágio | Característica | Trecho |
 |---|---|---|---|---|
-| Bardo | Músico Errante | especializacao | Maestro | Suas canções de motivação fortalecem a coragem de quem as ouve. Quando você dá um Dado de Reunião a um aliado, ele pode imediatamente ganhar 1 Esperança ou remover 1 Est… |
 | Druida | Guardião dos Elementos | fundacao | Encarnar Elemental | Marque 1 Estresse para Canalizar um dos seguintes elementos até sofrer dano Severo ou até seu próximo descanso: • Fogo: Quando um adversário em alcance Corpo a Corpo cau… |
 | Druida | Guardião dos Elementos | maestria | Domínio Elemental | Você incorpora ainda mais seu elemento. Enquanto estiver Canalizando, você ganha o seguinte benefício: • Fogo: Você ganha +1 de bônus na sua Proficiência para ataques e … |
 | Druida | Guardião da Renovação | especializacao | Alcance Regenerativo | Você pode atingir criaturas em alcance Muito Próximo com sua habilidade Regeneração. |

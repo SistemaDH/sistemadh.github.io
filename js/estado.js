@@ -302,6 +302,11 @@ export const acoes = {
     return api.movimentosDeDescanso(estado.token, id, tipo);
   },
 
+  /** Efeito determinístico de uma característica em outra ficha (ex.: Maestro). */
+  usarHabilidadeEmAliado(id, nome, aliadoId, opcao) {
+    return api.usarHabilidadeEmAliado(estado.token, id, nome, aliadoId, opcao);
+  },
+
   /** As outras fichas da mesa — quem pode receber a cura de um movimento. */
   aliadosDaMesa(id) {
     return api.aliadosDaMesa(estado.token, id);

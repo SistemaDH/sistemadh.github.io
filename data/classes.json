@@ -80,7 +80,25 @@
        "caracteristicas": [
         {
          "nome": "Maestro",
-         "texto": "Suas canções de motivação fortalecem a coragem de quem as ouve. Quando você dá um Dado de Reunião a um aliado, ele pode imediatamente ganhar 1 Esperança ou remover 1 Estresse."
+         "texto": "Suas canções de motivação fortalecem a coragem de quem as ouve. Quando você dá um Dado de Reunião a um aliado, ele pode imediatamente ganhar 1 Esperança ou remover 1 Estresse.",
+         "usoEmAliado": {
+          "gatilho": "Depois de dar um Dado de Reunião a este aliado.",
+          "rotuloAtivar": "Aplicar Maestro no aliado",
+          "opcoes": [
+           {
+            "id": "esperanca",
+            "rotulo": "Aliado ganha 1 Esperança",
+            "recurso": "esperanca",
+            "delta": 1
+           },
+           {
+            "id": "estresse",
+            "rotulo": "Aliado remove 1 Estresse",
+            "recurso": "estresseMarcado",
+            "delta": -1
+           }
+          ]
+         }
         }
        ],
        "texto": "BARD\nMÚSICO ERRANTE\nSpecialization\nSPELLCAST TRAIT: PRESENCE\nMaestro: Suas canções de motivação fortalecem a coragem de quem as ouve. Quando você dá um Dado de Reunião a um aliado, ele pode imediatamente ganhar 1 Esperança ou remover 1 Estresse.\nDaggerheart Compatible. Terms at Daggerheart.com",

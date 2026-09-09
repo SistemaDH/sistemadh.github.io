@@ -5363,6 +5363,45 @@ teste('Virtuoso sobe para 2 o teto de Intérprete Talentoso, sem afetar a funda�
   igual(base.contadores[chave].valor, 2);
 });
 
+console.log('\nLote 8 — Bardo: Maestro em aliado');
+
+teste('Maestro altera somente o recurso escolhido do aliado e exige a especialização', () => {
+  const origem = fichaBardo_('Músico Errante');
+  origem.subclasseCartas = ['fundacao', 'especializacao'];
+  contexto.aplicarDerivados_(origem);
+  verdade(contexto.fichaTemCaracteristicaDeClasse_(origem, 'Maestro'), 'a especialização deve conceder Maestro');
+  const alvo = fichaBardo_('Artífice das Palavras');
+  alvo.recursos.esperanca = 1;
+  alvo.recursos.estresseMarcado = 2;
+  const origemAntes = JSON.stringify(origem);
+
+  let r = contexto.aplicarHabilidadeEmAliado_(origem, alvo, 'Maestro', 'esperanca');
+  verdade(!r.erro, JSON.stringify(r));
+  igual(alvo.recursos.esperanca, 2);
+  igual(alvo.recursos.estresseMarcado, 2);
+  igual(JSON.stringify(origem), origemAntes, 'Maestro não altera a ficha que concedeu o Dado de Reunião');
+
+  r = contexto.aplicarHabilidadeEmAliado_(origem, alvo, 'Maestro', 'estresse');
+  verdade(!r.erro, JSON.stringify(r));
+  igual(alvo.recursos.estresseMarcado, 1);
+
+  const semMaestro = fichaBardo_('Músico Errante');
+  const negado = contexto.aplicarHabilidadeEmAliado_(semMaestro, alvo, 'Maestro', 'esperanca');
+  verdade(!!negado.erro, 'fundação sem especialização não pode usar Maestro');
+});
+
+teste('Maestro não ultrapassa Esperança máxima nem inventa Estresse negativo', () => {
+  const origem = fichaBardo_('Músico Errante');
+  origem.subclasseCartas = ['fundacao', 'especializacao'];
+  contexto.aplicarDerivados_(origem);
+  const alvo = fichaBardo_('Artífice das Palavras');
+  alvo.recursos.esperanca = alvo.recursos.esperancaMaxima;
+  alvo.recursos.estresseMarcado = 0;
+  verdade(!!contexto.aplicarHabilidadeEmAliado_(origem, alvo, 'Maestro', 'esperanca').erro);
+  verdade(!!contexto.aplicarHabilidadeEmAliado_(origem, alvo, 'Maestro', 'estresse').erro);
+  igual(alvo.recursos.estresseMarcado, 0);
+});
+
 console.log('\nLote 8 — comunidades do Core');
 
 function fichaComunidade_(comunidade, nivel) {

@@ -1172,6 +1172,45 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * os dados de dano": isso é da mesa. O que a ficha faz é tirar o custo e
    * lembrar quem ficou marcado.
    */
+  function botaoDeHabilidadeEmAliado(nome) {
+    const uso = catalogo.usoEmAliadoDaCaracteristica(nome);
+    if (!uso) return null;
+    return el('button', {
+      type: 'button', class: 'btn btn--fantasma btn--pequeno',
+      onClick: async () => {
+        let lista;
+        try { lista = (await acoes.aliadosDaMesa(p.id)).aliados || []; }
+        catch (e) { avisarErro(mensagemDoErro(e)); return; }
+        if (!lista.length) { avisarErro('Não há outra ficha na mesa para receber este efeito.'); return; }
+        const aliado = el('select', { class: 'campo__entrada', 'aria-label': 'Aliado' },
+          lista.map((a) => el('option', { value: a.id }, `${a.nome}${a.donoNome ? ' · ' + a.donoNome : ''}`)));
+        const corpo = el('div', { class: 'pilha' }, [
+          uso.gatilho ? el('p', { class: 'texto-sm texto-fraco', texto: uso.gatilho }) : null,
+          el('label', { class: 'campo' }, [el('span', { class: 'campo__rotulo', texto: 'Aliado' }), aliado])
+        ].filter(Boolean));
+        const botoes = (uso.opcoes || []).map((o) => el('button', {
+          type: 'button', class: 'btn btn--pequeno',
+          onClick: async (ev) => {
+            try {
+              const r = await travarBotao(ev.currentTarget,
+                acoes.usarHabilidadeEmAliado(p.id, nome, aliado.value, o.id));
+              modal.fechar();
+              avisarSucesso((r.resultado && r.resultado.aviso) || `${nome} aplicado.`);
+            } catch (e) { avisarErro(mensagemDoErro(e)); }
+          }
+        }, o.rotulo));
+        const modal = abrirModal({
+          titulo: nome,
+          conteudo: corpo,
+          acoes: [
+            el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar() }, 'Cancelar'),
+            ...botoes
+          ]
+        });
+      }
+    }, uso.rotuloAtivar || `Aplicar ${nome} no aliado`);
+  }
+
   function botaoDeHabilidade(nome, ficha) {
     const uso = catalogo.usoDaCaracteristica(nome);
     if (!uso) return null;
@@ -2219,8 +2258,9 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
              * Fica aqui, colado na regra que o explica, e não numa seção nova.
              */
             escolhaDaCaracteristica(c.nome, ficha),
-            // Marca da Presa e Nêmesis custam Esperança e guardam um alvo.
+            // Marca da Presa/Nêmesis usam a própria ficha; Maestro altera um aliado.
             botaoDeHabilidade(c.nome, ficha),
+            botaoDeHabilidadeEmAliado(c.nome),
             c.origem ? el('span', { class: 'selo', texto: c.origem }) : null
           ]);
         }))));
@@ -4008,15 +4048,21 @@ export async function carregarCatalogo() {
    * Nêmesis é uma maestria.
    */
   const usosComCusto = new Map();
+  const usosEmAliado = new Map();
   const anotaUso = (f) => { if (f && f.uso) usosComCusto.set(dados.chave(f.nome), f.uso); };
+  const anotaUsoEmAliado = (f) => {
+    if (f && f.usoEmAliado) usosEmAliado.set(dados.chave(f.nome), f.usoEmAliado);
+  };
   (anc.ancestralidades || []).forEach((a) => (a.caracteristicas || []).forEach(anotaUso));
   (com.comunidades || []).forEach((c) => anotaUso(c.caracteristica));
   (classes.classes || []).forEach((c) => {
-    anotaUso(c.caracteristicaEsperanca);
-    (c.caracteristicasDeClasse || []).forEach(anotaUso);
+    anotaUso(c.caracteristicaEsperanca); anotaUsoEmAliado(c.caracteristicaEsperanca);
+    (c.caracteristicasDeClasse || []).forEach((f) => { anotaUso(f); anotaUsoEmAliado(f); });
     (c.subclasses || []).forEach((sub) =>
       Object.keys(sub.cartas || {}).forEach((qual) =>
-        ((sub.cartas[qual] || {}).caracteristicas || []).forEach(anotaUso)));
+        ((sub.cartas[qual] || {}).caracteristicas || []).forEach((f) => {
+          anotaUso(f); anotaUsoEmAliado(f);
+        })));
   });
 
   const indexar = (lista, campo) => {
@@ -4250,6 +4296,8 @@ export async function carregarCatalogo() {
     escolhaDaCaracteristica: (nome) => escolhasDeCaracteristica.get(dados.chave(nome)) || null,
     /** O custo (e o alvo) que esta habilidade cobra ao ser usada, ou null. */
     usoDaCaracteristica: (nome) => usosComCusto.get(dados.chave(nome)) || null,
+    /** Efeito que esta característica pode aplicar em outra ficha. */
+    usoEmAliadoDaCaracteristica: (nome) => usosEmAliado.get(dados.chave(nome)) || null,
     contadorPorChave: (chave) => porChaveContador.get(dados.chave(chave)) || null,
     maximoDoContador: (chave, ficha) => {
       const def = porChaveContador.get(dados.chave(chave));

@@ -18,4 +18,10 @@ assert ci['maximo']['tipo'] == 'fixo' and ci['maximo']['valor'] == 1
 assert any(p.get('caracteristica') == 'Virtuoso' and p.get('valor') == 2
            for p in ci['maximo'].get('progressao', []))
 
-print('Lote 8 — classes: Bardo/Coração de Poeta e Virtuoso protegidos.')
+mus = next(s for s in bardo['subclasses'] if s['id'] == 'bardo-musico-errante')
+maestro = next(f for f in mus['cartas']['especializacao']['caracteristicas'] if f['nome'] == 'Maestro')
+ua = maestro.get('usoEmAliado') or {}
+assert {o.get('recurso') for o in ua.get('opcoes', [])} == {'esperanca', 'estresseMarcado'}
+assert {o.get('delta') for o in ua.get('opcoes', [])} == {1, -1}
+
+print('Lote 8 — classes: Bardo/Coração de Poeta, Virtuoso e Maestro protegidos.')
