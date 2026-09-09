@@ -18,6 +18,7 @@ jobs:
       - name: Materializar equipamento defensivo B1
         run: |
           python3 tools/lote8-equip-defensivo-b1.py
+          python3 tools/lote8-equip-defensivo-b1-fix.py
           node tools/gerar-44-equipamento.mjs
           node tools/gerar-41-dominios.mjs
           node tools/gerar-47-contadores.mjs
@@ -69,7 +70,9 @@ jobs:
           set -o pipefail
           node tools/testes-backend.mjs | tee /tmp/backend.log
           ! grep -q '✗' /tmp/backend.log
-          tail -n 70 /tmp/backend.log
+          grep -q 'Lote 8 — equipamento defensivo B1' /tmp/backend.log
+          grep -q 'duas fontes Doloroso pedem dois Inabalável' /tmp/backend.log
+          tail -n 85 /tmp/backend.log
 
       - name: Instalar Playwright
         run: |
@@ -95,6 +98,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm -f --ignore-unmatch tools/lote8-equip-defensivo-b1.py
+          git rm -f --ignore-unmatch tools/lote8-equip-defensivo-b1-fix.py
           git rm -f --ignore-unmatch .github/workflows/lote8-equip-defensivo-b1.yml
           git rm -f --ignore-unmatch .github/workflows/lote8-diagnostico-equip-defensivo-b.yml
           find . -type d -name __pycache__ -prune -exec rm -rf {} +
