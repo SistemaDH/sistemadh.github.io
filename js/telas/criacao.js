@@ -805,18 +805,28 @@ export async function abrirCriacao({ aoCriar } = {}) {
    *  Etapa 8 — cartas de domínio
    * ======================================================================= */
 
+  function quantidadeCartasDaCriacao() {
+    let total = 2;
+    const classe = catalogo.classes.find((c) => c.id === rascunho.classe);
+    const sub = classe && classe.subclasses.find((s) => s.id === rascunho.subclasse);
+    const feats = ((((sub || {}).cartas || {}).fundacao || {}).caracteristicas || []);
+    feats.forEach((f) => { if (f && f.cartaDominioExtra) total += Math.max(0, Number(f.cartaDominioExtra.quantidade) || 0); });
+    return total;
+  }
+
   function passoCartas() {
     return {
       etiqueta: 'Etapa 8',
-      titulo: 'Escolha duas cartas de domínio',
-      ajuda: 'Duas cartas de nível 1, dos dois domínios da sua classe. Pode ser uma de cada ou as duas do mesmo. Toque no nome para ver a carta.',
+      titulo: 'Escolha suas cartas de domínio',
+      ajuda: 'Escolha as cartas de nível 1 dos domínios da sua classe. Algumas subclasses concedem uma carta adicional já na fundação.',
       desenhar(pai) {
         const classe = catalogo.classes.find((c) => c.id === rascunho.classe);
         if (!classe) return;
         const doClasse = catalogo.cartas.filter((c) => classe.dominios.includes(c.dominio) && c.nivel === 1);
 
+        const quantidade = quantidadeCartasDaCriacao();
         pai.append(el('p', { class: 'texto-sm texto-suave', texto:
-          `Escolhidas: ${rascunho.cartas.length} de 2.` }));
+          `Escolhidas: ${rascunho.cartas.length} de ${quantidade}.` }));
 
         classe.dominios.forEach((codigo) => {
           const doDominio = doClasse.filter((c) => c.dominio === codigo);
@@ -826,7 +836,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
           const lista = el('div', { class: 'lista-escolha lista-escolha--compacta' });
           doDominio.forEach((c, i) => {
             const escolhida = rascunho.cartas.includes(c.id);
-            const cheio = rascunho.cartas.length >= 2 && !escolhida;
+            const cheio = rascunho.cartas.length >= quantidade && !escolhida;
             lista.append(el('div', { class: `cartao lista-escolha__item ${escolhida ? 'esta-escolhido' : ''}` }, [
               el('div', { class: 'lista-escolha__cabecalho' }, [
                 nomeQueAbreCarta(c.nome, () => ({
@@ -844,14 +854,15 @@ export async function abrirCriacao({ aoCriar } = {}) {
                 class: `btn ${escolhida ? 'btn--principal' : 'btn--fantasma'} btn--pequeno`,
                 disabled: cheio,
                 onClick: () => alternarCarta(c)
-              }, escolhida ? '✓ Escolhida' : (cheio ? 'Já tem duas' : 'Escolher'))
+              }, escolhida ? '✓ Escolhida' : (cheio ? 'Limite preenchido' : 'Escolher'))
             ]));
           });
           pai.append(lista);
         });
       },
       problema() {
-        return rascunho.cartas.length === 2 ? null : 'Escolha exatamente duas cartas.';
+        const quantidade = quantidadeCartasDaCriacao();
+        return rascunho.cartas.length === quantidade ? null : `Escolha exatamente ${quantidade} cartas.`;
       }
     };
 
@@ -859,7 +870,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
       if (!c) return;
       const i = rascunho.cartas.indexOf(c.id);
       if (i >= 0) rascunho.cartas.splice(i, 1);
-      else if (rascunho.cartas.length < 2) rascunho.cartas.push(c.id);
+      else if (rascunho.cartas.length < quantidadeCartasDaCriacao()) rascunho.cartas.push(c.id);
       desenhar();
     }
   }
@@ -1129,7 +1140,8 @@ export async function abrirCriacao({ aoCriar } = {}) {
     if (!rascunho.equipamento.primaria) p.push('Falta a arma primária.');
     if (!rascunho.equipamento.armadura) p.push('Falta a armadura.');
     if (!rascunho.pocao) p.push('Falta escolher a poção inicial.');
-    if (rascunho.cartas.length !== 2) p.push('Faltam cartas de domínio (precisa de duas).');
+    const quantidadeCartas = quantidadeCartasDaCriacao();
+    if (rascunho.cartas.length !== quantidadeCartas) p.push(`Faltam cartas de domínio (precisa de ${quantidadeCartas}).`);
     if (rascunho.experiencias.filter((e) => e && e.trim()).length !== 2) p.push('Faltam as duas Experiências.');
     if (rascunhoTemCaracteristica('Projeto Intencional') && ![0, 1].includes(rascunho.projetoIntencional)) p.push('Falta escolher a Experiência de Projeto Intencional.');
     return p;

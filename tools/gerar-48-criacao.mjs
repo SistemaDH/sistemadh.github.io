@@ -459,8 +459,16 @@ function bonusDeDanoDaFicha_(ficha) {
 
   // Efeitos de subclasse cuja condição já está escrita na própria ficha.
   const featsDerivados = efeitosDeCaracteristicasDaFicha_(ficha);
+  let danoExtraComMedo = null;
   for (let i = 0; i < featsDerivados.length; i++) {
     const e = featsDerivados[i].efeito || {};
+    if (e.danoExtraAtaqueComMedo) {
+      const regraMedo = e.danoExtraAtaqueComMedo || {};
+      const qtdMedo = Math.max(0, Math.trunc(Number(regraMedo.quantidade)) || 0);
+      if (qtdMedo > 0 && (!danoExtraComMedo || qtdMedo > danoExtraComMedo.quantidade)) {
+        danoExtraComMedo = Object.assign({ fonte: featsDerivados[i].nome, quantidade: qtdMedo }, regraMedo);
+      }
+    }
     if (e.danoPorNivelSeCondicao && typeof temCondicao_ === 'function' &&
         temCondicao_(ficha, e.danoPorNivelSeCondicao)) {
       saida.caracteristicasFixas.push({
@@ -478,6 +486,12 @@ function bonusDeDanoDaFicha_(ficha) {
         });
       }
     }
+  }
+
+  if (danoExtraComMedo) {
+    saida.condicionais.push({ fonte: danoExtraComMedo.fonte, tipo: 'dados', quantidade: danoExtraComMedo.quantidade,
+      dado: danoExtraComMedo.dado || 'd10', tipoDano: danoExtraComMedo.tipo || 'magico',
+      aplicaEm: 'ataque-bem-sucedido-com-medo', condicao: 'ataque bem-sucedido com Medo', rolaNoApp: false });
   }
 
   // Passivos do equipamento: os que são incondicionais entram na arma; os que
@@ -856,6 +870,16 @@ function validarExperiencias_(ficha) {
   return problemas;
 }
 
+/** Quantas cartas de domínio esta ficha precisa escolher na criação. */
+function quantidadeCartasIniciaisDaFicha_(ficha) {
+  let total = Number((CRIACAO.cartasDeDominio || {}).quantidade) || 2;
+  const id = (ficha && ficha.identidade) || {};
+  if (typeof cartasExtrasDeDominioDaSubclasse_ !== 'function') return total;
+  const regras = cartasExtrasDeDominioDaSubclasse_(id.classe, id.subclasse, 'fundacao');
+  for (let i = 0; i < regras.length; i++) total += Math.max(0, Math.trunc(Number(regras[i].quantidade)) || 0);
+  return total;
+}
+
 /**
  * Valida uma ficha de NÍVEL 1 COMPLETA — a checagem final da criação.
  * Devolve a lista de problemas (vazia = ficha pronta).
@@ -939,8 +963,9 @@ function validarCriacao_(ficha) {
 
   // Etapa 8 — cartas de domínio
   const ativas = ((ficha.cartas || {}).ativas) || [];
-  if (ativas.length !== CRIACAO.cartasDeDominio.quantidade) {
-    problemas.push('No nível 1 são exatamente ' + CRIACAO.cartasDeDominio.quantidade +
+  const quantidadeCartasIniciais = quantidadeCartasIniciaisDaFicha_(ficha);
+  if (ativas.length !== quantidadeCartasIniciais) {
+    problemas.push('No nível 1 esta ficha escolhe exatamente ' + quantidadeCartasIniciais +
       ' cartas de domínio (tem ' + ativas.length + ').');
   }
   const dominios = dominiosDaClasse_(id.classe);

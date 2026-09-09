@@ -5,7 +5,7 @@
 
 ## Resumo numérico
 
-- Classes/subclasses: **99 características**; **19** candidatas sem sinal de automação.
+- Classes/subclasses: **99 características**; **12** candidatas sem sinal de automação.
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **161** candidatas sem sinal de automação específica; **17** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **87** ocorrências candidatas ativas/condicionais.
@@ -14,10 +14,10 @@
 
 ### Distribuição — classes/subclasses
 
-- candidato sem sinal de automação: **19**
-- estruturada/contador: **60**
+- candidato sem sinal de automação: **12**
+- estruturada/contador: **68**
 - predominantemente narrativo/sem gatilho detectado: **7**
-- referência específica no motor: **13**
+- referência específica no motor: **12**
 
 ### Distribuição — comunidades
 
@@ -43,13 +43,6 @@
 | Ladino | Caminhante Noturno | fundacao | Passo Sombrio | Você pode se mover de sombra em sombra. Quando se mover para uma área de escuridão ou uma sombra projetada por outra criatura ou objeto, pode marcar 1 Estresse para desa… |
 | Ladino | Caminhante Noturno | especializacao | Nuvem Sombria | Faça uma Jogada de Magia (15). Em caso de sucesso, crie uma nuvem sombria temporária que cobre qualquer área em alcance Próximo. Quem estiver dentro dessa nuvem não pode… |
 | Ladino | Caminhante Noturno | maestria | Ato de Desaparecimento | Marque 1 Estresse para ficar Encoberto a qualquer momento. Enquanto estiver Encoberto por essa habilidade, você automaticamente remove a condição Imobilizado, se estiver… |
-| Mago | Escola do Conhecimento | fundacao | Preparado | Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso. |
-| Mago | Escola do Conhecimento | especializacao | Realizado | Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso. |
-| Mago | Escola do Conhecimento | maestria | Brilhante | Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso. |
-| Mago | Escola do Conhecimento | maestria | Especialização Apurada | Quando usar uma Experiência, role um d6. Com um resultado de 5 ou mais, você pode usá-la sem gastar Esperança. |
-| Mago | Escola da Guerra | fundacao | Enfrente Seu Medo | Quando você acertar uma jogada de ataque com Medo, cause 1d10 de dano mágico extra. |
-| Mago | Escola da Guerra | especializacao | Movido pelo Medo | O dano mágico extra da sua habilidade Enfrente Seu Medo aumenta para 2d10. |
-| Mago | Escola da Guerra | maestria | Prosperar no Caos | Quando você acertar um ataque, pode marcar 1 Estresse após rolar o dano para forçar o alvo a marcar um Ponto de Vida adicional. |
 | Caçador | Laço Bestial | especializacao | Vínculo de Batalha | Quando um adversário atacar você enquanto estiver dentro do alcance Corpo a Corpo do seu companheiro, você ganha +2 de bônus em sua Evasão contra esse ataque. |
 | Caçador | Explorador | fundacao | Predador Implacável | Quando fizer uma jogada de dano, você pode marcar 1 Estresse para ganhar +1 de bônus na sua Proficiência. Além disso, quando causar dano Severo a um adversário, ele deve… |
 | Caçador | Explorador | especializacao | Predador Elusivo | Quando seu Foco fizer um ataque contra você, você ganha +2 de bônus na sua Evasão contra esse ataque. |

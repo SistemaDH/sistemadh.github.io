@@ -181,10 +181,34 @@ const EFEITOS_DERIVADOS_DE_CLASSE = {
   "Mago de Batalha": {
     "pontosDeVidaMaximos": 1
   },
+  "Enfrente Seu Medo": {
+    "danoExtraAtaqueComMedo": {
+      "quantidade": 1,
+      "dado": "d10",
+      "tipo": "magico",
+      "rolaNoApp": false
+    }
+  },
   "Escudo Conjurado": {
     "evasaoPorProficienciaSeEsperancaMinima": {
       "esperanca": 2,
       "multiplicador": 1
+    }
+  },
+  "Movido pelo Medo": {
+    "danoExtraAtaqueComMedo": {
+      "quantidade": 2,
+      "dado": "d10",
+      "tipo": "magico",
+      "rolaNoApp": false
+    }
+  },
+  "Sem Medo": {
+    "danoExtraAtaqueComMedo": {
+      "quantidade": 3,
+      "dado": "d10",
+      "tipo": "magico",
+      "rolaNoApp": false
     }
   },
   "Ascendente": {
@@ -279,6 +303,41 @@ function protecaoEmAliado_(nome) {
   return null;
 }
 
+/** Cartas de domínio extras concedidas por estágio de subclasse. */
+const CARTAS_EXTRAS_DE_DOMINIO_DE_SUBCLASSE = {
+  "mago|mago-escola-do-conhecimento|fundacao": [
+    {
+      "caracteristica": "Preparado",
+      "quantidade": 1,
+      "nivelMaximo": "nivel-personagem",
+      "dominios": "acessiveis"
+    }
+  ],
+  "mago|mago-escola-do-conhecimento|especializacao": [
+    {
+      "caracteristica": "Realizado",
+      "quantidade": 1,
+      "nivelMaximo": "nivel-personagem",
+      "dominios": "acessiveis"
+    }
+  ],
+  "mago|mago-escola-do-conhecimento|maestria": [
+    {
+      "caracteristica": "Brilhante",
+      "quantidade": 1,
+      "nivelMaximo": "nivel-personagem",
+      "dominios": "acessiveis"
+    }
+  ]
+};
+
+function cartasExtrasDeDominioDaSubclasse_(classe, subclasse, etapa) {
+  const cid = (typeof normalizarClasse_ === 'function') ? normalizarClasse_(classe) : String(classe || '');
+  const sid = (typeof normalizarSubclasse_ === 'function') ? normalizarSubclasse_(subclasse) : String(subclasse || '');
+  const chave = String(cid || '') + '|' + String(sid || '') + '|' + String(etapa || '');
+  return (CARTAS_EXTRAS_DE_DOMINIO_DE_SUBCLASSE[chave] || []).map(function (r) { return Object.assign({}, r); });
+}
+
 /** Habilidades de CLASSE que cobram Esperança (ou Estresse) para serem usadas. */
 const HABILIDADES_DE_CLASSE_COM_CUSTO = {
   "Fazer uma Cena": {
@@ -299,6 +358,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
   },
@@ -320,6 +380,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
   },
@@ -362,6 +423,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": {
       "chave": "estado:druida:canalizacao-elemental",
@@ -399,6 +461,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
   },
@@ -420,6 +483,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
   },
@@ -452,6 +516,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
   },
@@ -484,6 +549,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
   },
@@ -513,6 +579,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     },
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
   },
@@ -555,6 +622,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
   },
@@ -594,6 +662,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
       "tipo": "magico"
     },
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": {
       "chave": "estado:feiticeiro:carga-arcana",
@@ -620,6 +689,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
   },
@@ -644,6 +714,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
   },
@@ -665,6 +736,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
   },
@@ -688,6 +760,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
       "delta": 1,
       "rotulo": "Esperança"
     },
+    "custoCondicionalEntradaManual": null,
     "confirmacao": "falha-com-medo",
     "estado": null
   },
@@ -707,6 +780,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
   },
@@ -728,6 +802,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": {
       "chave": "estado:ladino:esquiva",
@@ -754,6 +829,60 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
+    "confirmacao": null,
+    "estado": null
+  },
+  "Especialização Apurada": {
+    "classe": "mago",
+    "origem": "subclasse",
+    "custo": {},
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "Usar Experiência",
+    "lembrete": "Com 5 ou 6, use a Experiência sem gastar Esperança. Com 1–4, gaste 1 Esperança normalmente. O app não rola o d6 nem a jogada.",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": {
+      "campo": "dadoEspecializacaoApurada",
+      "dado": "d6",
+      "minimo": 1,
+      "maximo": 6,
+      "rotulo": "Resultado do d6",
+      "mensagem": "Role 1d6 fora do app ao usar a Experiência e informe o resultado."
+    },
+    "carregaComDano": null,
+    "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": {
+      "recurso": "esperanca",
+      "quantidade": 1,
+      "cobraSeMaximo": 4
+    },
+    "confirmacao": null,
+    "estado": null
+  },
+  "Prosperar no Caos": {
+    "classe": "mago",
+    "origem": "subclasse",
+    "custo": {
+      "estresse": 1
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "Forçar +1 PV no alvo",
+    "lembrete": "Use depois de acertar e rolar o dano. O alvo marca 1 Ponto de Vida adicional; o app cobra somente o seu Estresse e não rola dano.",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
+    "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
   },
@@ -775,6 +904,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
   },
@@ -799,6 +929,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
   },
@@ -820,6 +951,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "entradaManual": null,
     "carregaComDano": null,
     "efeitoRecurso": null,
+    "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
   }

@@ -173,6 +173,7 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
     if (o.id === 'tracos') extras.tracos = escolherTracos(o, cartao);
     if (o.id === 'experiencias') extras.experiencias = escolherExperiencias(o, cartao);
     if (o.id === 'carta-de-dominio') extras.carta = escolherCarta(o, cartao);
+    if (o.id === 'subclasse' && (o.cartasExtrasDeSubclasse || []).length) extras.cartasExtrasDeSubclasse = escolherCartasExtrasDeSubclasse(o.cartasExtrasDeSubclasse, cartao);
     if (o.id === 'multiclasse') extras.multiclasse = escolherMulticlasse(cartao);
 
     const adicionar = el('button', {
@@ -195,6 +196,12 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
         const c = extras.carta.valor();
         if (!c) { avisarErro('Escolha a carta de domínio.'); return; }
         pedido.carta = c;
+      }
+      if (extras.cartasExtrasDeSubclasse) {
+        const xs = extras.cartasExtrasDeSubclasse.valor();
+        const esperado = (o.cartasExtrasDeSubclasse || []).reduce((n, r) => n + (Number(r.quantidade) || 0), 0);
+        if (xs.length !== esperado) { avisarErro('Escolha a carta de domínio adicional da subclasse.'); return; }
+        pedido.cartasExtrasDeSubclasse = xs;
       }
       if (extras.multiclasse) {
         const m = extras.multiclasse.valor();
@@ -300,6 +307,18 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
       el('div', { class: 'linha' }, [rotulo, el('span', { class: 'crescer' }), botao])
     ]));
     return { valor: () => escolhida };
+  }
+
+  function escolherCartasExtrasDeSubclasse(regras, cartao) {
+    const esperado = (regras || []).reduce((n, r) => n + (Number(r.quantidade) || 0), 0);
+    const escolhidas = [];
+    const rotulo = el('span', { class: 'texto-sm texto-fraco', texto: 'Nenhuma escolhida ainda.' });
+    const botao = el('button', { type: 'button', class: 'btn btn--fantasma btn--pequeno', onClick: () => abrirEscolhaDeCarta({
+      nivelMaximo: info.nivelNovo, aoEscolher: (c) => { escolhidas.length = 0; escolhidas.push(c.id); rotulo.textContent = c.nome; }
+    }) }, esperado === 1 ? 'Escolher carta adicional' : 'Escolher cartas adicionais');
+    cartao.append(el('div', { class: 'campo' }, [el('span', { class: 'campo__rotulo', texto: 'Carta de domínio adicional da subclasse' }),
+      el('div', { class: 'linha' }, [rotulo, el('span', { class: 'crescer' }), botao]) ]));
+    return { valor: () => escolhidas.slice() };
   }
 
   function escolherMulticlasse(cartao) {
@@ -499,7 +518,7 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
       experienciaNova: experienciaNova.trim(),
       avancos: escolhidos.map((e) => {
         const limpo = { opcao: e.opcao, patamar: e.patamar };
-        ['tracos', 'experiencias', 'carta', 'classe', 'dominio', 'subclasse'].forEach((k) => {
+        ['tracos', 'experiencias', 'carta', 'classe', 'dominio', 'subclasse', 'cartasExtrasDeSubclasse'].forEach((k) => {
           if (e[k] !== undefined) limpo[k] = e[k];
         });
         return limpo;

@@ -546,6 +546,12 @@ function opcoesDisponiveis_(ficha, nivelDestino) {
         item.disponivel = false;
         item.motivo = 'Quem faz multiclasse não recebe mais cartas de subclasse aprimorada.';
       }
+      if (def.id === 'subclasse') {
+        const etapa = proximaCartaDeSubclasse_(ficha);
+        item.etapaSubclasse = etapa;
+        item.cartasExtrasDeSubclasse = (etapa && typeof cartasExtrasDeDominioDaSubclasse_ === 'function')
+          ? cartasExtrasDeDominioDaSubclasse_((ficha.identidade || {}).classe, (ficha.identidade || {}).subclasse, etapa) : [];
+      }
       if (def.id === 'tracos') {
         item.tracosLivres = tracosLivres_(ficha);
         if (item.disponivel && item.tracosLivres.length < 2) {
@@ -798,6 +804,21 @@ function marcarEspaco_(ficha, patamar, opcaoId) {
   a.espacos[k][opcaoId] = (Number(a.espacos[k][opcaoId]) || 0) + 1;
 }
 
+function aplicarCartasExtrasDeSubclasse_(copia, regras, pedido, nivelNovo, erros, rotulo) {
+  const rs = Array.isArray(regras) ? regras : [];
+  const esperado = rs.reduce(function (n, r) { return n + Math.max(0, Math.trunc(Number((r || {}).quantidade)) || 0); }, 0);
+  if (!esperado) return [];
+  const escolhidas = Array.isArray((pedido || {}).cartasExtrasDeSubclasse) ? pedido.cartasExtrasDeSubclasse : [];
+  if (escolhidas.length !== esperado) { erros.push(rotulo + ': escolha exatamente ' + esperado + ' carta(s) de domínio adicional(is).'); return null; }
+  const adicionadas = [];
+  for (let i = 0; i < escolhidas.length; i++) {
+    const carta = adicionarCarta_(copia, escolhidas[i], nivelNovo, erros, rotulo);
+    if (!carta) return null;
+    adicionadas.push({ id: carta.id, nome: carta.nome, nivel: carta.nivel });
+  }
+  return adicionadas;
+}
+
 /**
  * Aplica UMA opção de avanço na cópia. Devolve o registro do que fez, ou null
  * quando não deu (o motivo já foi para `erros`).
@@ -902,8 +923,13 @@ function aplicarOpcaoDeAvanco_(copia, def, pedido, doPatamar, nivelNovo, erros, 
     }
     copia.subclasseCartas = Array.isArray(copia.subclasseCartas) ? copia.subclasseCartas : ['fundacao'];
     copia.subclasseCartas.push(proxima);
+    const regrasExtras = (typeof cartasExtrasDeDominioDaSubclasse_ === 'function')
+      ? cartasExtrasDeDominioDaSubclasse_((copia.identidade || {}).classe, (copia.identidade || {}).subclasse, proxima) : [];
+    const extras = aplicarCartasExtrasDeSubclasse_(copia, regrasExtras, pedido, nivelNovo, erros, 'Carta de ' + NOME_DA_CARTA_DE_SUBCLASSE[proxima]);
+    if (extras === null) return null;
     registro.cartaDeSubclasse = proxima;
-    registro.detalhe = 'Carta de ' + NOME_DA_CARTA_DE_SUBCLASSE[proxima];
+    registro.cartasExtrasDeSubclasse = extras;
+    registro.detalhe = 'Carta de ' + NOME_DA_CARTA_DE_SUBCLASSE[proxima] + (extras.length ? ' + ' + extras.map(function (x) { return x.nome; }).join(', ') : '');
     return registro;
   }
 
@@ -921,7 +947,11 @@ function aplicarOpcaoDeAvanco_(copia, def, pedido, doPatamar, nivelNovo, erros, 
       return null;
     }
     const mc = copia.multiclasse;
+    const regrasExtras = (typeof cartasExtrasDeDominioDaSubclasse_ === 'function') ? cartasExtrasDeDominioDaSubclasse_(mc.classe, mc.subclasse, 'fundacao') : [];
+    const extras = aplicarCartasExtrasDeSubclasse_(copia, regrasExtras, pedido, nivelNovo, erros, 'Fundação da multiclasse');
+    if (extras === null) return null;
     registro.multiclasse = { classe: mc.classe, dominio: mc.dominio, subclasse: mc.subclasse };
+    registro.cartasExtrasDeSubclasse = extras;
     registro.detalhe = CLASSES[mc.classe].nome + ' · domínio ' +
       ((typeof DOMINIOS !== 'undefined' && DOMINIOS[mc.dominio]) ? DOMINIOS[mc.dominio].nome : mc.dominio) +
       ' (cartas até nível ' + metadeDoNivel_(nivelNovo) + ')';

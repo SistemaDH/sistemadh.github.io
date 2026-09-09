@@ -145,4 +145,20 @@ assert prep['efeitoDescanso']['movimentoGrupo'] == 'preparacao-marcial'
 slayer = next(x for x in cont['contadores'] if x['chave'] == 'classe:guerreiro:matador')
 assert slayer.get('compartilhavel') is True
 
-print('Lote 8 — classes: Bardo, Druida, Feiticeiro, Guardião e Guerreiro fechados; Guerreiro inclui AoO guiado, Coragem, Superação, Camaradagem e Preparação Marcial.')
+
+mago = next(c for c in classes['classes'] if c['id'] == 'mago')
+conhecimento = next(s for s in mago['subclasses'] if s['id'] == 'mago-escola-do-conhecimento')
+for etapa, nome in [('fundacao', 'Preparado'), ('especializacao', 'Realizado'), ('maestria', 'Brilhante')]:
+    f = next(x for x in conhecimento['cartas'][etapa]['caracteristicas'] if x['nome'] == nome)
+    assert f['cartaDominioExtra']['quantidade'] == 1
+ap = next(x for x in conhecimento['cartas']['maestria']['caracteristicas'] if x['nome'] == 'Especialização Apurada')
+assert ap['uso']['entradaManual']['dado'] == 'd6'
+assert ap['uso']['custoCondicionalEntradaManual']['cobraSeMaximo'] == 4
+guerra = next(s for s in mago['subclasses'] if s['id'] == 'mago-escola-da-guerra')
+for etapa, nome, qtd in [('fundacao', 'Enfrente Seu Medo', 1), ('especializacao', 'Movido pelo Medo', 2), ('maestria', 'Sem Medo', 3)]:
+    f = next(x for x in guerra['cartas'][etapa]['caracteristicas'] if x['nome'] == nome)
+    assert f['efeitoDerivado']['danoExtraAtaqueComMedo']['quantidade'] == qtd
+prosperar = next(x for x in guerra['cartas']['maestria']['caracteristicas'] if x['nome'] == 'Prosperar no Caos')
+assert prosperar['uso']['custo']['estresse'] == 1
+
+print('Lote 8 — classes: Bardo, Druida, Feiticeiro, Guardião, Guerreiro e Mago fechados; Mago inclui cartas extras, Especialização Apurada, dano com Medo e Prosperar no Caos.')

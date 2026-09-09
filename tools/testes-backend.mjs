@@ -7924,6 +7924,48 @@ teste('Preparação Marcial aparece para o grupo e guarda Dado de Matador també
 });
 
 
+
+console.log('\nLote 8 — Mago: fechamento');
+function magoLote8_(subclasse, cartasSub, cartas) {
+  const f = contexto.fichaRapida_({ nome: 'Mago Lote 8', classe: 'Mago', subclasse,
+    ancestralidade: 'Humano', comunidade: 'Highborne', cartas: cartas || ['codex-livro-de-ava', 'codex-livro-de-illiat'],
+    experiencias: [{ nome: 'Erudito', bonus: 2 }, { nome: 'Sobrevivente', bonus: 2 }] });
+  f.subclasseCartas = cartasSub || ['fundacao']; return f;
+}
+teste('Preparado exige e aceita a terceira carta de domínio já na criação', () => {
+  const boa = magoLote8_('Escola do Conhecimento', ['fundacao'], ['codex-livro-de-ava','codex-livro-de-illiat','splendor-reforco']);
+  igual(contexto.quantidadeCartasIniciaisDaFicha_(boa), 3); igual(contexto.validarCriacao_(boa), []);
+  const curta = magoLote8_('Escola do Conhecimento', ['fundacao'], ['codex-livro-de-ava','codex-livro-de-illiat']);
+  verdade(contexto.validarCriacao_(curta).some((e) => /exatamente 3 cartas/.test(e)));
+  igual(contexto.quantidadeCartasIniciaisDaFicha_(magoLote8_('Escola da Guerra')), 2);
+});
+teste('Realizado concede a carta extra no mesmo avanço que entrega a especialização', () => {
+  const f = magoLote8_('Escola do Conhecimento', ['fundacao'], ['codex-livro-de-ava','codex-livro-de-illiat','splendor-reforco']);
+  f.identidade.nivel = 4; contexto.aplicarDerivados_(f);
+  const sim = contexto.simularAvanco_(f, { experienciaNova:'Veterano arcano', avancos:[
+    {opcao:'subclasse',patamar:3,cartasExtrasDeSubclasse:['splendor-adivinhacao']},{opcao:'evasao',patamar:3}], carta:'codex-livro-de-grynn' });
+  igual(sim.previa.erros, [], JSON.stringify(sim.previa)); verdade(sim.ficha.subclasseCartas.includes('especializacao'));
+  verdade(contexto.temCartaNaFicha_(sim.ficha,'splendor-adivinhacao')); verdade(contexto.temCartaNaFicha_(sim.ficha,'codex-livro-de-grynn'));
+});
+teste('Especialização Apurada usa d6 manual: 1–4 paga Esperança e 5–6 não paga', () => {
+  let f = magoLote8_('Escola do Conhecimento',['fundacao','especializacao','maestria'],['codex-livro-de-ava','codex-livro-de-illiat','splendor-reforco']);
+  contexto.aplicarDerivados_(f); f.recursos.esperanca=3;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'habilidade',nome:'Especialização Apurada'}]); verdade(r.pendenciaRolagem && r.pendenciaRolagem.tipo==='habilidade-manual');
+  r=contexto.aplicarAjustes_(f,[{tipo:'habilidade',nome:'Especialização Apurada',dadoEspecializacaoApurada:4}]); igual(r.erros,[]); igual(f.recursos.esperanca,2);
+  f=magoLote8_('Escola do Conhecimento',['fundacao','especializacao','maestria'],['codex-livro-de-ava','codex-livro-de-illiat','splendor-reforco']); contexto.aplicarDerivados_(f); f.recursos.esperanca=3;
+  r=contexto.aplicarAjustes_(f,[{tipo:'habilidade',nome:'Especialização Apurada',dadoEspecializacaoApurada:5}]); igual(r.erros,[]); igual(f.recursos.esperanca,3);
+});
+teste('Enfrente Seu Medo sobe 1d10 → 2d10 → 3d10 sem empilhar as etapas', () => {
+  [[['fundacao'],1],[['fundacao','especializacao'],2],[['fundacao','especializacao','maestria'],3]].forEach(([cs,qtd])=>{
+    const f=magoLote8_('Escola da Guerra',cs,['codex-livro-de-ava','splendor-reforco']); contexto.aplicarDerivados_(f);
+    const medo=((f.bonusDeDano||{}).condicionais||[]).filter((x)=>x.aplicaEm==='ataque-bem-sucedido-com-medo'); igual(medo.length,1,JSON.stringify(f.bonusDeDano)); igual([medo[0].quantidade,medo[0].dado,medo[0].tipoDano],[qtd,'d10','magico']);
+  });
+});
+teste('Prosperar no Caos cobra 1 Estresse e deixa o +1 PV do alvo explícito', () => {
+  const f=magoLote8_('Escola da Guerra',['fundacao','especializacao','maestria'],['codex-livro-de-ava','splendor-reforco']); contexto.aplicarDerivados_(f);
+  const antes=f.recursos.estresseMarcado; const r=contexto.aplicarAjustes_(f,[{tipo:'habilidade',nome:'Prosperar no Caos'}]); igual(r.erros,[]); igual(f.recursos.estresseMarcado,antes+1); verdade(/1 Ponto de Vida adicional/.test(r.mudancas[0].aviso||''));
+});
+
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));

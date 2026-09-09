@@ -253,6 +253,7 @@ for (const c of dados.classes) {
       entradaManual: f.uso.entradaManual || null,
       carregaComDano: f.uso.carregaComDano || null,
       efeitoRecurso: f.uso.efeitoRecurso || null,
+      custoCondicionalEntradaManual: f.uso.custoCondicionalEntradaManual || null,
       confirmacao: f.uso.confirmacao || null,
       // Algumas habilidades ligam um estado persistente depois de pagar.
       estado: f.uso.estado || null
@@ -323,6 +324,21 @@ for (const c of dados.classes) {
   }
 }
 
+/* Cartas extras de domínio concedidas por estágio de subclasse. */
+const cartasExtrasDeDominioDeSubclasse = {};
+for (const c of dados.classes) {
+  for (const s of c.subclasses || []) {
+    for (const qual of ['fundacao', 'especializacao', 'maestria']) {
+      const regras = [];
+      for (const f of (((s.cartas || {})[qual] || {}).caracteristicas || [])) {
+        if (!f.cartaDominioExtra) continue;
+        regras.push(Object.assign({ caracteristica: f.nome }, f.cartaDominioExtra));
+      }
+      if (regras.length) cartasExtrasDeDominioDeSubclasse[`${c.id}|${s.id}|${qual}`] = regras;
+    }
+  }
+}
+
 /*
  * ⚠ O NOME É LONGO POR NECESSIDADE. HABILIDADES_COM_CUSTO já existe em
  * 4F_Bestiario.gs e quer dizer outra coisa: as habilidades de ADVERSÁRIO que
@@ -362,6 +378,17 @@ function protecaoEmAliado_(nome) {
     }
   }
   return null;
+}
+`);
+
+L.push('/** Cartas de domínio extras concedidas por estágio de subclasse. */');
+L.push(`const CARTAS_EXTRAS_DE_DOMINIO_DE_SUBCLASSE = ${JSON.stringify(cartasExtrasDeDominioDeSubclasse, null, 2)};`);
+L.push(`
+function cartasExtrasDeDominioDaSubclasse_(classe, subclasse, etapa) {
+  const cid = (typeof normalizarClasse_ === 'function') ? normalizarClasse_(classe) : String(classe || '');
+  const sid = (typeof normalizarSubclasse_ === 'function') ? normalizarSubclasse_(subclasse) : String(subclasse || '');
+  const chave = String(cid || '') + '|' + String(sid || '') + '|' + String(etapa || '');
+  return (CARTAS_EXTRAS_DE_DOMINIO_DE_SUBCLASSE[chave] || []).map(function (r) { return Object.assign({}, r); });
 }
 `);
 

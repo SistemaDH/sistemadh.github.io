@@ -530,3 +530,13 @@ Fechamento da varredura de Guerreiro no Lote 8:
 - **Preparação Marcial** entrou nos descansos curto e longo como movimento especial do grupo; quem o escolhe guarda 1 d6 no contador existente de Dados de Matador. Esse contador foi explicitamente tornado compartilhável para sobreviver também na ficha de aliados.
 
 A auditoria transversal deve cair de 24 para 19 candidatos de classes/subclasses e não deve mais listar Guerreiro.
+
+
+### Diário — Classes, Mago fechado
+
+- **Preparado / Realizado / Brilhante** concedem a carta adicional de domínio na criação/avanço.
+- **Especialização Apurada** usa d6 manual: 1–4 cobra 1 Esperança; 5–6 não cobra.
+- **Enfrente Seu Medo / Movido pelo Medo / Sem Medo** publicam um único 1d10/2d10/3d10 mágico condicional, sem rolagem do app.
+- **Prosperar no Caos** cobra 1 Estresse e deixa explícito o +1 PV do alvo depois do dano.
+
+A auditoria deve cair de 19 para 12 candidatos de classes/subclasses.

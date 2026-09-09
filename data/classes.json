@@ -1709,7 +1709,12 @@
        "caracteristicas": [
         {
          "nome": "Preparado",
-         "texto": "Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso."
+         "texto": "Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso.",
+         "cartaDominioExtra": {
+          "quantidade": 1,
+          "nivelMaximo": "nivel-personagem",
+          "dominios": "acessiveis"
+         }
         },
         {
          "nome": "Adepto",
@@ -1735,7 +1740,12 @@
        "caracteristicas": [
         {
          "nome": "Realizado",
-         "texto": "Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso."
+         "texto": "Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso.",
+         "cartaDominioExtra": {
+          "quantidade": 1,
+          "nivelMaximo": "nivel-personagem",
+          "dominios": "acessiveis"
+         }
         },
         {
          "nome": "Memória Perfeita",
@@ -1761,11 +1771,34 @@
        "caracteristicas": [
         {
          "nome": "Brilhante",
-         "texto": "Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso."
+         "texto": "Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso.",
+         "cartaDominioExtra": {
+          "quantidade": 1,
+          "nivelMaximo": "nivel-personagem",
+          "dominios": "acessiveis"
+         }
         },
         {
          "nome": "Especialização Apurada",
-         "texto": "Quando usar uma Experiência, role um d6. Com um resultado de 5 ou mais, você pode usá-la sem gastar Esperança."
+         "texto": "Quando usar uma Experiência, role um d6. Com um resultado de 5 ou mais, você pode usá-la sem gastar Esperança.",
+         "uso": {
+          "custo": {},
+          "entradaManual": {
+           "campo": "dadoEspecializacaoApurada",
+           "dado": "d6",
+           "minimo": 1,
+           "maximo": 6,
+           "rotulo": "Resultado do d6",
+           "mensagem": "Role 1d6 fora do app ao usar a Experiência e informe o resultado."
+          },
+          "custoCondicionalEntradaManual": {
+           "recurso": "esperanca",
+           "quantidade": 1,
+           "cobraSeMaximo": 4
+          },
+          "rotuloAtivar": "Usar Experiência",
+          "lembrete": "Com 5 ou 6, use a Experiência sem gastar Esperança. Com 1–4, gaste 1 Esperança normalmente. O app não rola o d6 nem a jogada."
+         }
         }
        ],
        "texto": "WIZARD\nESCOLA DO CONHECIMENTO\nMastery\nBrilhante: Pegue uma carta de domínio adicional de seu nível ou inferior de um domínio ao qual você tenha acesso.\nEspecialização Apurada: Quando usar uma Experiência, role um d6. Com um resultado de 5 ou mais, você pode usá-la sem gastar Esperança.",
@@ -1805,7 +1838,15 @@
         },
         {
          "nome": "Enfrente Seu Medo",
-         "texto": "Quando você acertar uma jogada de ataque com Medo, cause 1d10 de dano mágico extra."
+         "texto": "Quando você acertar uma jogada de ataque com Medo, cause 1d10 de dano mágico extra.",
+         "efeitoDerivado": {
+          "danoExtraAtaqueComMedo": {
+           "quantidade": 1,
+           "dado": "d10",
+           "tipo": "magico",
+           "rolaNoApp": false
+          }
+         }
         }
        ],
        "texto": "WIZARD\nESCOLA DA GUERRA\nFoundation\nSPELLCAST TRAIT: KNOWLEDGE\nMago de Batalha: Você focou seus estudos para se tornar uma força invencível no campo de batalha. Ganhe um espaço adicional de Pontos de Vida.\nEnfrente Seu Medo: Quando você acertar uma jogada de ataque com Medo, cause 1d10 de dano mágico extra.",
@@ -1837,7 +1878,15 @@
         },
         {
          "nome": "Movido pelo Medo",
-         "texto": "O dano mágico extra da sua habilidade Enfrente Seu Medo aumenta para 2d10."
+         "texto": "O dano mágico extra da sua habilidade Enfrente Seu Medo aumenta para 2d10.",
+         "efeitoDerivado": {
+          "danoExtraAtaqueComMedo": {
+           "quantidade": 2,
+           "dado": "d10",
+           "tipo": "magico",
+           "rolaNoApp": false
+          }
+         }
         }
        ],
        "texto": "WIZARD\nESCOLA DA GUERRA\nSpecialization\nSPELLCAST TRAIT: KNOWLEDGE\nEscudo Conjurado: Você pode manter uma barreira protetora de magia. Enquanto tiver pelo menos 2 Esperanças, você adiciona sua Proficiência à sua Evasão.\nMovido pelo Medo: O dano mágico extra da sua habilidade Enfrente Seu Medo aumenta para 2d10.",
@@ -1859,11 +1908,26 @@
        "caracteristicas": [
         {
          "nome": "Prosperar no Caos",
-         "texto": "Quando você acertar um ataque, pode marcar 1 Estresse após rolar o dano para forçar o alvo a marcar um Ponto de Vida adicional."
+         "texto": "Quando você acertar um ataque, pode marcar 1 Estresse após rolar o dano para forçar o alvo a marcar um Ponto de Vida adicional.",
+         "uso": {
+          "custo": {
+           "estresse": 1
+          },
+          "rotuloAtivar": "Forçar +1 PV no alvo",
+          "lembrete": "Use depois de acertar e rolar o dano. O alvo marca 1 Ponto de Vida adicional; o app cobra somente o seu Estresse e não rola dano."
+         }
         },
         {
          "nome": "Sem Medo",
-         "texto": "O dano mágico extra da sua habilidade Enfrente Seu Medo aumenta para 3d10."
+         "texto": "O dano mágico extra da sua habilidade Enfrente Seu Medo aumenta para 3d10.",
+         "efeitoDerivado": {
+          "danoExtraAtaqueComMedo": {
+           "quantidade": 3,
+           "dado": "d10",
+           "tipo": "magico",
+           "rolaNoApp": false
+          }
+         }
         }
        ],
        "texto": "WIZARD\nESCOLA DA GUERRA\nMastery\nSPELLCAST TRAIT: KNOWLEDGE\nProsperar no Caos: Quando você acertar um ataque, pode marcar 1 Estresse após rolar o dano para forçar o alvo a marcar um Ponto de Vida adicional.\nSem Medo: O dano mágico extra da sua habilidade Enfrente Seu Medo aumenta para 3d10.",

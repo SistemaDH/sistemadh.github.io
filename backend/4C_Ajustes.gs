@@ -874,8 +874,16 @@ function usarHabilidadeDeClasse_(ficha, a) {
   }
 
   const r = ficha.recursos || {};
-  const custoEsperanca = Math.max(0, Math.trunc(Number((def.custo || {}).esperanca)) || 0);
+  let custoEsperanca = Math.max(0, Math.trunc(Number((def.custo || {}).esperanca)) || 0);
   const custoEstresse = Math.max(0, Math.trunc(Number((def.custo || {}).estresse)) || 0);
+  const custoManual = def.custoCondicionalEntradaManual || null;
+  if (custoManual && entradaManualValor !== null) {
+    const minimo = (custoManual.cobraSeMinimo === undefined || custoManual.cobraSeMinimo === null) ? -Infinity : Number(custoManual.cobraSeMinimo);
+    const maximo = (custoManual.cobraSeMaximo === undefined || custoManual.cobraSeMaximo === null) ? Infinity : Number(custoManual.cobraSeMaximo);
+    if (entradaManualValor >= minimo && entradaManualValor <= maximo && custoManual.recurso === 'esperanca') {
+      custoEsperanca += Math.max(0, Math.trunc(Number(custoManual.quantidade)) || 0);
+    }
+  }
 
   /*
    * A HABILIDADE QUE PAGA COM UMA CARTA — Canalizar Poder Bruto (p.42).
