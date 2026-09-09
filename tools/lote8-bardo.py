@@ -115,10 +115,14 @@ anchor = "console.log('\\nLote 8 — comunidades do Core');"
 block = r'''console.log('\nLote 8 — Bardo: Coração de Poeta e Virtuoso');
 
 function fichaBardo_(subclasse) {
+  const catalogo = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/cartas-dominio.json'), 'utf8'));
+  const cartas = catalogo.cartas
+    .filter((c) => c.nivel === 1 && (c.dominio === 'GRACE' || c.dominio === 'CODEX'))
+    .slice(0, 2).map((c) => c.id);
   return contexto.validarFicha_(contexto.fichaRapida_({
     nome: 'Bardo de Teste', classe: 'Bardo', subclasse,
     ancestralidade: 'Humano', comunidade: 'Highborne',
-    cartas: ['grace-decepcao', 'codex-livro-de-ava'],
+    cartas,
     experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
   }));
 }
@@ -156,8 +160,7 @@ t = t.replace(anchor, block + anchor, 1)
 p.write_text(t, encoding='utf-8')
 
 # ---------------------------------------------------------------------------
-# E2E: prova o espelho do teto no navegador. A ficha-base do E2E é Bardo;
-# habilitamos as três cartas e deixamos validarFicha_ reconstruir derivados.
+# E2E: prova o espelho do teto no navegador.
 # ---------------------------------------------------------------------------
 p = R / 'tools/testes-e2e.mjs'
 t = p.read_text(encoding='utf-8')
@@ -177,7 +180,6 @@ block = r'''  await passo('Virtuoso mostra máx 2 para Intérprete Talentoso na 
       f.caracteristicas = (f.caracteristicas || []).filter((x) => (x || {}).origem !== 'subclasse');
       f.caracteristicas.push({ nome: 'Virtuoso', origem: 'subclasse' });
       const validada = ambiente.contexto.validarFicha_(f);
-      // A validação pode reconstruir a lista; garante a carta de maestria como faria o avanço.
       if (!(validada.caracteristicas || []).some((x) => x.nome === 'Virtuoso')) {
         validada.caracteristicas.push({ nome: 'Virtuoso', origem: 'subclasse' });
       }
@@ -206,5 +208,32 @@ block = r'''  await passo('Virtuoso mostra máx 2 para Intérprete Talentoso na 
 if t.count(anchor) != 1:
     raise SystemExit(f'E2E Bardo: esperava 1 âncora, achei {t.count(anchor)}')
 p.write_text(t.replace(anchor, block + anchor, 1), encoding='utf-8')
+
+# ---------------------------------------------------------------------------
+# Conferidor permanente, a ser ampliado nos próximos subblocos de classes.
+# ---------------------------------------------------------------------------
+checker = r'''#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+import json
+from pathlib import Path
+
+R = Path(__file__).resolve().parents[1]
+classes = json.loads((R / 'data/classes.json').read_text(encoding='utf-8'))
+cont = json.loads((R / 'data/contadores.json').read_text(encoding='utf-8'))
+
+bardo = next(c for c in classes['classes'] if c['id'] == 'bardo')
+art = next(s for s in bardo['subclasses'] if s['id'] == 'bardo-artifice-das-palavras')
+cor = next(f for f in art['cartas']['fundacao']['caracteristicas'] if f['nome'] == 'Coração de Poeta')
+assert cor['uso']['custo']['esperanca'] == 1
+assert '1d4 fora do app' in cor['uso']['lembrete']
+
+ci = next(x for x in cont['contadores'] if x['chave'] == 'uso:bardo-musico-errante:interprete-talentoso')
+assert ci['maximo']['tipo'] == 'fixo' and ci['maximo']['valor'] == 1
+assert any(p.get('caracteristica') == 'Virtuoso' and p.get('valor') == 2
+           for p in ci['maximo'].get('progressao', []))
+
+print('Lote 8 — classes: Bardo/Coração de Poeta e Virtuoso protegidos.')
+'''
+(R / 'tools/conferir-classes-lote8.py').write_text(checker, encoding='utf-8')
 
 print('Bardo preparado: Coração de Poeta + Virtuoso + auditoria de progressões.')
