@@ -551,3 +551,16 @@ Automatizado onde a ficha consegue ser fonte de verdade: custos de Esperança/Es
 A divergência editorial de nomes entre o catálogo/cartas e o apêndice do livro foi preservada: não renomear ids nem cartas somente por diferença de tradução. A errata oficial não altera a mecânica das cartas de Esplendor deste bloco.
 
 Próximo bloco natural do Lote 8: **Esplendor níveis 5–10**, repetindo a triagem carta a carta e só depois avançando para o próximo domínio.
+
+
+### Lote 8 — Esplendor níveis 5–10
+
+Esplendor está revisado por completo (níveis 1–10) contra o Core PT-BR. O bloco 5–10 classifica explicitamente as 12 cartas e mantém a regra global de não rolar dados no app.
+
+Automação adicionada onde a própria ficha é fonte de verdade: custos variáveis/fixos; carga e limite de Golpe Divino; contador e limite de Zona de Proteção; +3 no limiar Grave e limite de reação de Tocado do Esplendor quando há 4+ cartas do domínio ativas; estado/custo de Aura de Escudo e Aura Avassaladora; Estresse variável de Raio da Salvação; Esperança variável de Luz Ofuscante e Revigoramento. Restauração continua usando o contador que já existia, recarregado pelo atributo de Conjuração no descanso longo.
+
+Efeitos em outra ficha e efeitos de encontro permanecem explícitos como resolução de mesa: cura de aliados, dano/condições de adversários, alvo das auras e distribuição de Feixe/Raio da Salvação. Ressurreição preserva `efeitoPermanente.trancaNoCofre` e continua pedindo confirmação manual do d6; a falha por uma semana é anotação de mesa, não um relógio inventado pelo backend.
+
+As diferenças editoriais entre nomes das PNGs/catálogo e o apêndice do livro continuam preservadas; ids não foram renomeados apenas por tradução (ex.: Golpe Divino/Punição, Aura de Escudo/Aura Defensora, Luz Ofuscante/Fulgor Atordoante, Raio da Salvação/Feixe de Remissão).
+
+Próximo bloco natural do Lote 8: **Falange níveis 1–4**.

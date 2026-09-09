@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 99 contadores: 67 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 105 contadores: 73 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 99 contadores: 67 de carta, 25 de classe/subclasse, 4 de 
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 99);
+  igual(Object.keys(CONTADORES).length, 105);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 67);
+  igual(porOrigem['carta-dominio'], 73);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -1631,12 +1631,12 @@ teste('o Apoio Confiável SOBE O TETO do Contatos em Todo Lugar', () => {
   igual(contexto.maximoDoContador_(chave, ladino), 3, 'com a maestria, três');
 });
 
-teste('toda carta marcada como "guarda estado" tem contador', async () => {
+teste('toda carta marcada como "guarda estado" tem ao menos um contador', async () => {
   const fs = await import('node:fs');
   const cartas = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/cartas-dominio.json'), 'utf8')).cartas;
   const comEstado = cartas.filter((c) => (c.dependencias || []).some((d) => d === 'marcadores_na_carta' || d === 'contadores'));
   comEstado.forEach((c) => {
-    verdade(contexto.contadoresDoRef_(c.id).length === 1, `carta ${c.id} sem contador no catálogo`);
+    verdade(contexto.contadoresDoRef_(c.id).length >= 1, `carta ${c.id} sem contador no catálogo`);
   });
 });
 
@@ -9122,6 +9122,118 @@ teste('Guardião da Vida cobra 3 Esperanças sem inventar mutação na ficha do 
   const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-guardiao-da-vida'}]);
   igual(r.erros,[]); igual(f.recursos.esperanca,3);
   verdade(!f.contadores['estado:carta:splendor:guardiao-da-vida'],'não deve criar alvo fictício na própria ficha');
+});
+
+
+
+console.log('\nLote 8 — Esplendor níveis 5–10');
+function fichaSplendorAlta_(nivel, ativas) {
+  const f=fichaSplendorBaixa_(nivel, ativas);
+  f.identidade.nivel=nivel;
+  f.recursos.esperanca=6;
+  f.recursos.estresseMarcado=0;
+  f.recursos.pontosDeVidaMarcados=0;
+  return f;
+}
+
+teste('Esplendor N5-N10 fica todo classificado e sem RNG no app',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const ids=[
+    'splendor-golpe-divino','splendor-moldar-material','splendor-restauracao','splendor-zona-de-protecao',
+    'splendor-golpe-curativo','splendor-tocado-do-esplendor','splendor-aura-de-escudo','splendor-luz-ofuscante',
+    'splendor-aura-avassaladora','splendor-raio-da-salvacao','splendor-ressurreicao','splendor-revigoramento'
+  ];
+  const xs=ids.map((id)=>d.cartas.find((c)=>c.id===id));
+  verdade(xs.every(Boolean));
+  verdade(xs.every((c)=>!!c.automacao));
+  verdade(xs.every((c)=>c.resolucaoManual && c.resolucaoManual.rolaNoApp===false));
+});
+
+teste('Golpe Divino cobra 3 Esperanças, guarda carga e limita 1/descanso',()=>{
+  const f=fichaSplendorAlta_(5,['splendor-golpe-divino','splendor-moldar-material']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-golpe-divino'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,3);
+  igual(f.contadores['uso:carta:splendor:golpe-divino'].valor,1);
+  igual(f.contadores['estado:carta:splendor:golpe-divino'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-golpe-divino'}]);
+  verdade(r.erros.length===1,'segunda carga no mesmo descanso deveria falhar');
+});
+
+teste('Moldar Material cobra exatamente 1 Esperança',()=>{
+  const f=fichaSplendorAlta_(5,['splendor-moldar-material','splendor-golpe-divino']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-moldar-material'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5);
+});
+
+teste('Restauração recarrega marcadores de Conjuração no descanso longo',()=>{
+  const f=fichaSplendorAlta_(6,['splendor-restauracao','splendor-zona-de-protecao']);
+  f.contadores['carta:splendor-restauracao']={valor:0};
+  contexto.aplicarGatilhoContadores_(f,'descanso-longo');
+  verdade(f.contadores['carta:splendor-restauracao'].valor>0,'o descanso longo deveria recarregar Restauração');
+});
+
+teste('Zona de Proteção inicia d6 em 1 e não reativa antes do descanso longo',()=>{
+  const f=fichaSplendorAlta_(6,['splendor-zona-de-protecao','splendor-restauracao']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-zona-de-protecao'}]);
+  igual(r.erros,[]); igual(f.contadores['carta:splendor-zona-de-protecao'].valor,1);
+  igual(f.contadores['uso:carta:splendor:zona-de-protecao'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-zona-de-protecao'}]);
+  verdade(r.erros.length===1,'Zona deveria ser 1/descanso longo');
+});
+
+teste('Tocado do Esplendor exige 4 cartas para +3 no limiar Grave',()=>{
+  const quatro=fichaSplendorAlta_(7,['splendor-tocado-do-esplendor','splendor-golpe-curativo','splendor-zona-de-protecao','splendor-restauracao']);
+  const base=fichaSplendorAlta_(7,['splendor-tocado-do-esplendor','splendor-golpe-curativo','splendor-zona-de-protecao']);
+  const d4=contexto.derivadosDoPersonagem_(quatro), d3=contexto.derivadosDoPersonagem_(base);
+  igual(d4.limiarGrave,d3.limiarGrave+3);
+  let r=contexto.aplicarAjustes_(quatro,[{tipo:'usarCarta',carta:'splendor-tocado-do-esplendor'}]);
+  igual(r.erros,[]); igual(quatro.contadores['uso:carta:splendor:tocado-do-esplendor'].valor,1);
+  verdade(contexto.aplicarAjustes_(quatro,[{tipo:'usarCarta',carta:'splendor-tocado-do-esplendor'}]).erros.length===1);
+});
+
+teste('Golpe Curativo e Aura de Escudo cobram apenas custos da própria ficha',()=>{
+  const f=fichaSplendorAlta_(8,['splendor-golpe-curativo','splendor-aura-de-escudo']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-golpe-curativo'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,4);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-aura-de-escudo'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+  igual(f.contadores['estado:carta:splendor:aura-de-escudo'].valor,1);
+});
+
+teste('Luz Ofuscante cobra 1 Esperança por alvo escolhido',()=>{
+  const f=fichaSplendorAlta_(8,['splendor-luz-ofuscante','splendor-aura-de-escudo']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-luz-ofuscante',esperancasGastas:3}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,3);
+});
+
+teste('Aura Avassaladora cobra 2 Esperanças e expira no descanso longo',()=>{
+  const f=fichaSplendorAlta_(9,['splendor-aura-avassaladora','splendor-raio-da-salvacao']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-aura-avassaladora'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,4);
+  igual(f.contadores['estado:carta:splendor:aura-avassaladora'].valor,1);
+  contexto.aplicarGatilhoContadores_(f,'descanso-longo');
+  verdade(!f.contadores['estado:carta:splendor:aura-avassaladora']);
+});
+
+teste('Raio da Salvação marca quantidade variável de Estresse sem curar a ficha errada',()=>{
+  const f=fichaSplendorAlta_(9,['splendor-raio-da-salvacao','splendor-aura-avassaladora']);
+  f.recursos.pontosDeVidaMarcados=2;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-raio-da-salvacao',estressesMarcados:3}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,3); igual(f.recursos.pontosDeVidaMarcados,2);
+});
+
+teste('Ressurreição preserva o bloqueio permanente existente e não rola d6',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const c=d.cartas.find((x)=>x.id==='splendor-ressurreicao');
+  verdade(c.efeitoPermanente && c.efeitoPermanente.trancaNoCofre===true);
+  verdade(c.efeitoPermanente.manual===true);
+  verdade(!c.uso,'Ressurreição não deve fingir resultado da Conjuração/d6');
+});
+
+teste('Revigoramento cobra uma Esperança por d6 informado pela quantidade',()=>{
+  const f=fichaSplendorAlta_(10,['splendor-revigoramento','splendor-ressurreicao']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-revigoramento',esperancasGastas:4}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,2);
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

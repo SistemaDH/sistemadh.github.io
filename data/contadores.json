@@ -1899,6 +1899,109 @@
     "descanso-longo"
    ],
    "observacao": "Uma vez por descanso longo."
+  },
+  {
+   "chave": "uso:carta:splendor:golpe-divino",
+   "origem": "carta-dominio",
+   "refId": "splendor-golpe-divino",
+   "nome": "Golpe Divino",
+   "rotulo": "carga usada",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Pode ser carregado uma vez por descanso."
+  },
+  {
+   "chave": "estado:carta:splendor:golpe-divino",
+   "origem": "carta-dominio",
+   "refId": "splendor-golpe-divino",
+   "nome": "Golpe Divino",
+   "rotulo": "carregado",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Encerra quando o próximo ataque de arma bem-sucedido consome a carga."
+  },
+  {
+   "chave": "uso:carta:splendor:zona-de-protecao",
+   "origem": "carta-dominio",
+   "refId": "splendor-zona-de-protecao",
+   "nome": "Zona de Proteção",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo, apenas após uma Conjuração 16 bem-sucedida."
+  },
+  {
+   "chave": "uso:carta:splendor:tocado-do-esplendor",
+   "origem": "carta-dominio",
+   "refId": "splendor-tocado-do-esplendor",
+   "nome": "Tocado do Esplendor",
+   "rotulo": "substituição usada",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "A substituição de PV por Fadiga ou Esperança pode ocorrer uma vez por descanso longo."
+  },
+  {
+   "chave": "estado:carta:splendor:aura-de-escudo",
+   "origem": "carta-dominio",
+   "refId": "splendor-aura-de-escudo",
+   "nome": "Aura de Escudo",
+   "rotulo": "ativa",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual",
+    "troca-de-alvo"
+   ],
+   "observacao": "Só uma criatura pode ser alvo; encerra quando impedir todo PV daquele dano ou ao trocar de alvo."
+  },
+  {
+   "chave": "estado:carta:splendor:aura-avassaladora",
+   "origem": "carta-dominio",
+   "refId": "splendor-aura-avassaladora",
+   "nome": "Aura Avassaladora",
+   "rotulo": "ativa",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Em sucesso, permanece ativa até o próximo descanso longo."
   }
  ]
 }

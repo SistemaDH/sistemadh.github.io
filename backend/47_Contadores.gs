@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 99 cartas e características mandam
+ *  O problema que este arquivo resolve: 105 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -139,6 +139,12 @@ const CONTADORES = {
   "uso:carta:splendor:toque-curativo-vinculo": { origem: "carta-dominio", refId: "splendor-toque-curativo", nome: "Toque Curativo", rotulo: "vínculo usado", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
   "uso:carta:splendor:segundo-folego": { origem: "carta-dominio", refId: "splendor-segundo-folego", nome: "Segundo Fôlego", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
   "uso:carta:splendor:adivinhacao": { origem: "carta-dominio", refId: "splendor-adivinhacao", nome: "Adivinhação", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:carta:splendor:golpe-divino": { origem: "carta-dominio", refId: "splendor-golpe-divino", nome: "Golpe Divino", rotulo: "carga usada", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "estado:carta:splendor:golpe-divino": { origem: "carta-dominio", refId: "splendor-golpe-divino", nome: "Golpe Divino", rotulo: "carregado", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "uso:carta:splendor:zona-de-protecao": { origem: "carta-dominio", refId: "splendor-zona-de-protecao", nome: "Zona de Proteção", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:carta:splendor:tocado-do-esplendor": { origem: "carta-dominio", refId: "splendor-tocado-do-esplendor", nome: "Tocado do Esplendor", rotulo: "substituição usada", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "estado:carta:splendor:aura-de-escudo": { origem: "carta-dominio", refId: "splendor-aura-de-escudo", nome: "Aura de Escudo", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual","troca-de-alvo"], recarregaEm: [] },
+  "estado:carta:splendor:aura-avassaladora": { origem: "carta-dominio", refId: "splendor-aura-avassaladora", nome: "Aura Avassaladora", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -242,6 +248,12 @@ const CONTADOR_ALIASES = {
   "uso:carta:splendor:toque-curativo-vinculo": ["Toque Curativo"],
   "uso:carta:splendor:segundo-folego": ["Segundo Fôlego"],
   "uso:carta:splendor:adivinhacao": ["Adivinhação"],
+  "uso:carta:splendor:golpe-divino": ["Golpe Divino"],
+  "estado:carta:splendor:golpe-divino": ["Golpe Divino"],
+  "uso:carta:splendor:zona-de-protecao": ["Zona de Proteção"],
+  "uso:carta:splendor:tocado-do-esplendor": ["Tocado do Esplendor"],
+  "estado:carta:splendor:aura-de-escudo": ["Aura de Escudo"],
+  "estado:carta:splendor:aura-avassaladora": ["Aura Avassaladora"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */
