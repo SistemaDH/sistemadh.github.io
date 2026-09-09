@@ -2002,6 +2002,74 @@
     "descanso-longo"
    ],
    "observacao": "Em sucesso, permanece ativa até o próximo descanso longo."
+  },
+  {
+   "chave": "uso:carta:grace:encantar",
+   "origem": "carta-dominio",
+   "refId": "grace-encantar",
+   "nome": "Encantar",
+   "rotulo": "opção usada",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "A opção de marcar 1 Estresse para o alvo Encantado marcar 1 também é uma vez por descanso."
+  },
+  {
+   "chave": "uso:carta:grace:encrenqueiro",
+   "origem": "carta-dominio",
+   "refId": "grace-encrenqueiro",
+   "nome": "Encrenqueiro",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso, apenas após a Jogada de Presença bem-sucedida."
+  },
+  {
+   "chave": "uso:carta:grace:brilho-hipnotico",
+   "origem": "carta-dominio",
+   "refId": "grace-brilho-hipnotico",
+   "nome": "Brilho Hipnótico",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso, apenas após a Jogada de Conjuração bem-sucedida."
+  },
+  {
+   "chave": "estado:carta:grace:pelos-seus-olhos",
+   "origem": "carta-dominio",
+   "refId": "grace-pelos-seus-olhos",
+   "nome": "Pelos Seus Olhos",
+   "rotulo": "ativo",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Encerra no próximo descanso ou quando outro feitiço for conjurado; pode ser encerrado manualmente."
   }
  ]
 }

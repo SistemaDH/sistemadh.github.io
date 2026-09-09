@@ -3565,7 +3565,26 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo-limite-da-opcao",
+    "resumo": "A condição Encantado continua sendo aplicada ao alvo na mesa. Quando o jogador usar a opção adicional após um sucesso, o app marca 1 Estresse e registra esse uso uma vez por descanso."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Conjuração, o alvo Próximo e a condição Encantado são resolvidos na cena. Use o botão apenas depois de um sucesso quando decidir forçar o alvo Encantado a marcar 1 Estresse."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "marcaUso": {
+     "chave": "uso:carta:grace:encantar",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Sucesso: forçar Estresse · 1 Estresse · 1/descanso",
+    "lembrete": "O alvo Encantado também marca 1 Estresse na mesa. A condição e o recurso do alvo não são gravados nesta ficha."
+   }
   },
   {
    "id": "grace-enganador-habil",
@@ -3587,7 +3606,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo",
+    "resumo": "O app cobra 1 Esperança quando o jogador decide usar Enganador Hábil."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A vantagem vale apenas para a jogada de enganar/ludibriar descrita pela carta; a jogada continua física."
+   },
+   "uso": {
+    "custo": {
+     "esperanca": 1
+    },
+    "rotuloAtivar": "Usar Enganador Hábil · 1 Esperança",
+    "lembrete": "Faça com vantagem a jogada usada para enganar ou fazer alguém acreditar na mentira."
+   }
   },
   {
    "id": "grace-palavras-inspiradoras",
@@ -3612,7 +3646,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "contador-existente-alvo-manual",
+    "resumo": "O contador já existente recarrega após descanso longo até a Presença e descarta marcadores não usados no mesmo gatilho."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Ao falar com um aliado, gaste 1 marcador da carta e aplique na ficha dele uma das três opções: limpar 1 Estresse, recuperar 1 PV ou ganhar 1 Esperança."
+   }
   },
   {
    "id": "grace-encrenqueiro",
@@ -3635,7 +3677,24 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-limite-apos-sucesso",
+    "resumo": "Depois de um sucesso confirmado pela mesa, o app registra Encrenqueiro uma vez por descanso."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Presença e os d4 iguais à Proficiência são rolados fora do app; o alvo marca Estresse igual ao maior resultado."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:grace:encrenqueiro",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Sucesso: usar Encrenqueiro · 1/descanso",
+    "lembrete": "Role fora do app uma quantidade de d4 igual à Proficiência. O alvo marca Estresse igual ao maior resultado."
+   }
   },
   {
    "id": "grace-nao-conte-mentiras",
@@ -3656,7 +3715,15 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "manual-de-alvo-e-ficcao",
+    "resumo": "A carta fica explicitamente classificada, mas não existe recurso próprio ou contador seguro para alterar na ficha de quem conjura."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Faça a Jogada de Conjuração contra o alvo Muito Próximo e acompanhe na mesa a restrição de mentira, alcance e o eventual 1 Estresse do alvo quando ele se recusar a responder."
+   }
   },
   {
    "id": "grace-brilho-hipnotico",
@@ -3681,7 +3748,24 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-limite-apos-sucesso",
+    "resumo": "Depois de um sucesso confirmado, o app registra Brilho Hipnótico uma vez por descanso."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "A Jogada de Conjuração, os alvos acertados, o 1 Estresse deles e a condição Atordoado permanecem na cena/Mestre."
+   },
+   "uso": {
+    "custo": {},
+    "marcaUso": {
+     "chave": "uso:carta:grace:brilho-hipnotico",
+     "maximo": 1
+    },
+    "rotuloAtivar": "Sucesso: usar Brilho Hipnótico · 1/descanso",
+    "lembrete": "Cada alvo acertado marca 1 Estresse e fica temporariamente Atordoado na mesa."
+   }
   },
   {
    "id": "grace-invisibilidade",
@@ -3707,7 +3791,22 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-custo-com-contador-existente",
+    "resumo": "Depois do sucesso confirmado, o app marca 1 Estresse. O contador persistente de Invisibilidade já existe na ficha e tem teto igual ao atributo de Conjuração."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Escolha você ou um aliado Corpo a Corpo. Após pagar o custo, ajuste os marcadores da carta para o atributo de Conjuração; gaste 1 por ação do alvo. A condição Invisível e o alvo continuam na mesa."
+   },
+   "uso": {
+    "custo": {
+     "estresse": 1
+    },
+    "rotuloAtivar": "Sucesso: iniciar Invisibilidade · 1 Estresse",
+    "lembrete": "Coloque no contador de Invisibilidade marcadores iguais ao atributo de Conjuração. Gaste 1 por ação; ao gastar o último, encerre a condição no alvo."
+   }
   },
   {
    "id": "grace-discurso-acalmante",
@@ -3729,7 +3828,24 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-autocura-pos-descanso",
+    "resumo": "Quando o gatilho da carta já ocorreu durante um descanso curto, o app pode aplicar na própria ficha a recuperação de 2 PV."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "O movimento Cuidar de Ferimentos deve ter sido usado em outro personagem durante descanso curto; esse personagem recupera 1 PV adicional na ficha dele/na resolução do descanso."
+   },
+   "uso": {
+    "custo": {},
+    "efeitoRecurso": {
+     "chave": "pontosDeVidaMarcados",
+     "delta": -2
+    },
+    "rotuloAtivar": "Após cuidar de aliado: recuperar 2 PV",
+    "lembrete": "Use somente após Cuidar de Ferimentos em outro personagem durante descanso curto. Esse personagem também recupera 1 PV adicional."
+   }
   },
   {
    "id": "grace-pelos-seus-olhos",
@@ -3748,7 +3864,29 @@
    "dependencias": [],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": null
+   "observacao": null,
+   "automacao": {
+    "classificacao": "automatizada-estado-com-alvo-manual",
+    "resumo": "O app mantém um estado de Pelos Seus Olhos e o encerra em qualquer descanso; quando outro feitiço é usado pelo fluxo de cartas do app, o estado também é encerrado."
+   },
+   "resolucaoManual": {
+    "rolaNoApp": false,
+    "resumo": "Escolha e registre na mesa o alvo Muito Longo. A alternância de sentidos é ficcional; se outro feitiço for conjurado fora do fluxo de botões do app, encerre o estado manualmente."
+   },
+   "uso": {
+    "custo": {},
+    "estado": {
+     "chave": "estado:carta:grace:pelos-seus-olhos",
+     "valor": 1,
+     "permiteEncerrarManual": true,
+     "encerraAoConjurarOutroFeitico": true,
+     "rotuloAtivo": "Pelos Seus Olhos ativo",
+     "rotuloEncerrar": "Encerrar Pelos Seus Olhos",
+     "avisoEncerrar": "Pelos Seus Olhos encerrado."
+    },
+    "rotuloAtivar": "Ativar Pelos Seus Olhos",
+    "lembrete": "Escolha um alvo Muito Longo e registre-o na mesa. Encerra no próximo descanso ou ao conjurar outro feitiço."
+   }
   },
   {
    "id": "grace-mergulhador-de-pensamentos",

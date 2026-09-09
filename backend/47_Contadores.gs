@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 105 cartas e características mandam
+ *  O problema que este arquivo resolve: 109 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -145,6 +145,10 @@ const CONTADORES = {
   "uso:carta:splendor:tocado-do-esplendor": { origem: "carta-dominio", refId: "splendor-tocado-do-esplendor", nome: "Tocado do Esplendor", rotulo: "substituição usada", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
   "estado:carta:splendor:aura-de-escudo": { origem: "carta-dominio", refId: "splendor-aura-de-escudo", nome: "Aura de Escudo", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual","troca-de-alvo"], recarregaEm: [] },
   "estado:carta:splendor:aura-avassaladora": { origem: "carta-dominio", refId: "splendor-aura-avassaladora", nome: "Aura Avassaladora", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:carta:grace:encantar": { origem: "carta-dominio", refId: "grace-encantar", nome: "Encantar", rotulo: "opção usada", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:grace:encrenqueiro": { origem: "carta-dominio", refId: "grace-encrenqueiro", nome: "Encrenqueiro", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:carta:grace:brilho-hipnotico": { origem: "carta-dominio", refId: "grace-brilho-hipnotico", nome: "Brilho Hipnótico", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "estado:carta:grace:pelos-seus-olhos": { origem: "carta-dominio", refId: "grace-pelos-seus-olhos", nome: "Pelos Seus Olhos", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -254,6 +258,10 @@ const CONTADOR_ALIASES = {
   "uso:carta:splendor:tocado-do-esplendor": ["Tocado do Esplendor"],
   "estado:carta:splendor:aura-de-escudo": ["Aura de Escudo"],
   "estado:carta:splendor:aura-avassaladora": ["Aura Avassaladora"],
+  "uso:carta:grace:encantar": ["Encantar"],
+  "uso:carta:grace:encrenqueiro": ["Encrenqueiro"],
+  "uso:carta:grace:brilho-hipnotico": ["Brilho Hipnótico"],
+  "estado:carta:grace:pelos-seus-olhos": ["Pelos Seus Olhos"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

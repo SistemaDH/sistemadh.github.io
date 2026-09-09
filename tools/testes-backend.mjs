@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 105 contadores: 73 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
+teste('o catálogo tem 109 contadores: 77 de carta, 25 de classe/subclasse, 4 de ancestralidade e 3 de comunidade', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,10 +1561,10 @@ teste('o catálogo tem 105 contadores: 73 de carta, 25 de classe/subclasse, 4 de
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 105);
+  igual(Object.keys(CONTADORES).length, 109);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
-  igual(porOrigem['carta-dominio'], 73);
+  igual(porOrigem['carta-dominio'], 77);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
@@ -9234,6 +9234,100 @@ teste('Revigoramento cobra uma Esperança por d6 informado pela quantidade',()=>
   const f=fichaSplendorAlta_(10,['splendor-revigoramento','splendor-ressurreicao']);
   const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-revigoramento',esperancasGastas:4}]);
   igual(r.erros,[]); igual(f.recursos.esperanca,2);
+});
+
+
+
+console.log('\nLote 8 — Graça níveis 1–4');
+function fichaGraceBaixa_(nivel, ativas) {
+  const f=contexto.fichaRapida_({
+    nome:'Graça Baixa', classe:'Bardo', subclasse:'Músico Errante',
+    ancestralidade:'Elfo', comunidade:'Highborne',
+    cartas:['grace-palavras-inspiradoras','codex-livro-de-ava'],
+    experiencias:[{nome:'Diplomata',bonus:2},{nome:'Artista',bonus:2}]
+  });
+  f.identidade.nivel=nivel;
+  f.cartas={ativas:ativas.slice(),cofre:[]};
+  f.contadores={};
+  f.recursos.esperanca=6; f.recursos.esperancaMaxima=6;
+  f.recursos.estresseMarcado=0; f.recursos.estresseMaximo=Math.max(6,Number(f.recursos.estresseMaximo)||0);
+  f.recursos.pontosDeVidaMarcados=0; f.recursos.pontosDeVidaMaximos=Math.max(6,Number(f.recursos.pontosDeVidaMaximos)||0);
+  return f;
+}
+
+teste('Graça N1-N4 fica toda classificada e sem RNG no app',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const ids=['grace-encantar','grace-enganador-habil','grace-palavras-inspiradoras','grace-encrenqueiro','grace-nao-conte-mentiras','grace-brilho-hipnotico','grace-invisibilidade','grace-discurso-acalmante','grace-pelos-seus-olhos'];
+  const xs=ids.map((id)=>d.cartas.find((c)=>c.id===id));
+  verdade(xs.every(Boolean)); verdade(xs.every((c)=>!!c.automacao));
+  verdade(xs.every((c)=>c.resolucaoManual && c.resolucaoManual.rolaNoApp===false));
+});
+
+teste('Enganador Hábil cobra exatamente 1 Esperança',()=>{
+  const f=fichaGraceBaixa_(1,['grace-enganador-habil','grace-palavras-inspiradoras']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-enganador-habil'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5);
+});
+
+teste('Encantar cobra 1 Estresse só na opção adicional e limita 1/descanso',()=>{
+  const f=fichaGraceBaixa_(1,['grace-encantar','grace-palavras-inspiradoras']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-encantar'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1); igual(f.contadores['uso:carta:grace:encantar'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-encantar'}]);
+  verdade(r.erros.length===1,'Encantar adicional deveria ser 1/descanso');
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-encantar'}]);
+  igual(r.erros,[]);
+});
+
+teste('Palavras Inspiradoras recarrega pelo atributo Presença no descanso longo',()=>{
+  const f=fichaGraceBaixa_(1,['grace-palavras-inspiradoras','grace-enganador-habil']);
+  f.tracos=f.tracos||{}; f.tracos.presenca=2;
+  f.contadores['carta:grace-palavras-inspiradoras']={valor:0};
+  contexto.aplicarGatilhoContadores_(f,'descanso-longo');
+  igual(f.contadores['carta:grace-palavras-inspiradoras'].valor,2);
+});
+
+teste('Encrenqueiro registra 1/descanso e deixa os d4 fora do app',()=>{
+  const f=fichaGraceBaixa_(2,['grace-encrenqueiro','grace-nao-conte-mentiras']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-encrenqueiro'}]);
+  igual(r.erros,[]); igual(f.contadores['uso:carta:grace:encrenqueiro'].valor,1);
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-encrenqueiro'}]).erros.length===1);
+});
+
+teste('Não Conte Mentiras permanece alvo/função narrativa sem botão falso',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const c=d.cartas.find((x)=>x.id==='grace-nao-conte-mentiras');
+  verdade(!c.uso); igual(c.resolucaoManual.rolaNoApp,false);
+});
+
+teste('Brilho Hipnótico registra o sucesso uma vez por descanso sem tocar em alvo',()=>{
+  const f=fichaGraceBaixa_(3,['grace-brilho-hipnotico','grace-invisibilidade']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-brilho-hipnotico'}]);
+  igual(r.erros,[]); igual(f.contadores['uso:carta:grace:brilho-hipnotico'].valor,1);
+  igual(f.recursos.estresseMarcado,0);
+});
+
+teste('Invisibilidade cobra 1 Estresse e preserva o contador de marcadores da carta',()=>{
+  const f=fichaGraceBaixa_(3,['grace-invisibilidade','grace-brilho-hipnotico']);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-invisibilidade'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+  const defs=avaliar('CONTADORES'); verdade(!!defs['carta:grace-invisibilidade']);
+});
+
+teste('Discurso Acalmante recupera 2 PV somente da própria ficha',()=>{
+  const f=fichaGraceBaixa_(4,['grace-discurso-acalmante','grace-pelos-seus-olhos']);
+  f.recursos.pontosDeVidaMarcados=3;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-discurso-acalmante'}]);
+  igual(r.erros,[]); igual(f.recursos.pontosDeVidaMarcados,1);
+});
+
+teste('Pelos Seus Olhos mantém estado e qualquer descanso o encerra',()=>{
+  const f=fichaGraceBaixa_(4,['grace-pelos-seus-olhos','grace-discurso-acalmante']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-pelos-seus-olhos'}]);
+  igual(r.erros,[]); igual(f.contadores['estado:carta:grace:pelos-seus-olhos'].valor,1);
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  verdade(!f.contadores['estado:carta:grace:pelos-seus-olhos']);
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

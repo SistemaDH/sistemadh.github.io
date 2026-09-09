@@ -563,4 +563,17 @@ Efeitos em outra ficha e efeitos de encontro permanecem explícitos como resolu�
 
 As diferenças editoriais entre nomes das PNGs/catálogo e o apêndice do livro continuam preservadas; ids não foram renomeados apenas por tradução (ex.: Golpe Divino/Punição, Aura de Escudo/Aura Defensora, Luz Ofuscante/Fulgor Atordoante, Raio da Salvação/Feixe de Remissão).
 
-Próximo bloco natural do Lote 8: **Falange níveis 1–4**.
+Correção de continuidade: **Falange** é o nome da Jambô para o domínio canônico **Osso** (`BONE`), que já foi revisado integralmente nos blocos Osso 1–4 e 5–10. Portanto, não repetir Falange. O próximo domínio canônico pendente é **Graça**.
+
+
+### Lote 8 — Graça níveis 1–4
+
+Revisão das nove cartas de Graça dos níveis 1 a 4 contra o Core PT-BR, mantendo a regra global de que o app não rola dados. Todas agora têm classificação explícita e `resolucaoManual.rolaNoApp = false`.
+
+Automação segura adicionada para custos e limites da própria ficha: Enganador Hábil, a opção adicional de Encantar, Encrenqueiro e Brilho Hipnótico. Palavras Inspiradoras e Invisibilidade preservam os contadores já existentes; Invisibilidade passa a cobrar o Estresse após o sucesso, mas o alvo e o preenchimento dos marcadores continuam explícitos. Discurso Acalmante pode aplicar a autocura de 2 PV após o gatilho de descanso, sem fingir a cura do aliado. Pelos Seus Olhos ganhou estado persistente que encerra em descanso e pode ser encerrado manualmente/ao usar outro feitiço pelo fluxo do app.
+
+Não Conte Mentiras permanece resolução de alvo/cena, sem botão que finja alterar a ficha do adversário. A mesma política vale para Encantado, Atordoado e recursos de alvos: mutações externas continuam na ficha correta ou na mesa.
+
+Atenção de vocabulário: o livro da Jambô usa termos diferentes de algumas PNGs; o catálogo continua usando o nome canônico das cartas e o glossário faz a ponte. **Falange = Osso**, portanto esse domínio não deve voltar à fila.
+
+Próximo bloco natural do Lote 8: **Graça níveis 5–10**.
