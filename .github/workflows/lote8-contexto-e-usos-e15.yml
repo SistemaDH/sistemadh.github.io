@@ -27,6 +27,7 @@ jobs:
       - name: Materializar E15 e regenerar
         run: |
           set -euo pipefail
+          python3 tools/lote8-e15-prepatch.py
           python3 tools/lote8-contexto-e-usos-e15.py
           node tools/gerar-44-equipamento.mjs
           node tools/gerar-47-contadores.mjs
@@ -106,6 +107,7 @@ jobs:
       - name: Criar commit funcional e limpar temporários
         run: |
           set -euo pipefail
+          rm tools/lote8-e15-prepatch.py
           rm tools/lote8-contexto-e-usos-e15.py
           rm .github/workflows/lote8-contexto-e-usos-e15.yml
           git config user.name 'github-actions[bot]'
