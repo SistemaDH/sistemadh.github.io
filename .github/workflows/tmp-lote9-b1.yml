@@ -23,6 +23,44 @@ jobs:
       - name: Materializar L9-B1
         run: python3 tools/tmp-lote9-b1.py
 
+      - name: Ajustar guarda de toast quando há modal
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('tools/testes-layout-mobile.mjs')
+          s = p.read_text(encoding='utf-8')
+          inicio = "    const zonasFixas = [...document.querySelectorAll(\n"
+          fim = "    /* O HUD mobile começa pelos recursos que mudam durante a cena. */\n"
+          a = s.find(inicio)
+          b = s.find(fim, a)
+          if a < 0 or b < 0:
+              raise SystemExit('não achei o bloco de zonas fixas do L9-B1')
+          novo = r'''    /*
+           * Com modal aberto, o fundo está inerte e escurecido. O toast pode ficar
+           * sobre o cabeçalho que está ATRÁS dele; o que não pode cobrir é a caixa
+           * ativa do próprio modal. Sem modal, topo e navegação voltam a ser as
+           * zonas protegidas normalmente.
+           */
+          const modalAtivo = [...document.querySelectorAll('.modal')].filter(visivel).at(-1) || null;
+          const zonasFixas = modalAtivo
+            ? [modalAtivo.querySelector('.modal__caixa')].filter((x) => x && visivel(x))
+            : [...document.querySelectorAll(
+                '.ficha__topo, .ficha__abas, .mestre__topo, .mestre__abas, .criacao__topo, .criacao__rodape'
+              )].filter(visivel);
+          const sobrepoe = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+          for (const aviso of [...document.querySelectorAll('.aviso')].filter(visivel)) {
+            const ar = aviso.getBoundingClientRect();
+            const zona = zonasFixas.find((z) => sobrepoe(ar, z.getBoundingClientRect()));
+            if (zona) {
+              erros.push(`aviso cobre área ativa: ${zona.className}`);
+              break;
+            }
+          }
+
+          '''
+          p.write_text(s[:a] + novo + s[b:], encoding='utf-8')
+          PY
+
       - name: Diff limpo
         run: git diff --check
 
