@@ -1,5 +1,5 @@
 /* ==========================================================================
-   L9-B7/B8/B9 · REFINOS MOBILE
+   L9-B7/B8/B9/B10 · REFINOS MOBILE
    ========================================================================== */
 
 /* ==========================================================================
@@ -147,5 +147,28 @@
   /* É o texto explicativo logo depois da linha saldo + ações da seção Ouro. */
   .ficha__ouroLinha + .texto-xs.texto-fraco {
     display: none;
+  }
+}
+
+/* ==========================================================================
+   B10 · SUBCLASSE MAIS DENSA EM 360/390
+
+   Em largura estreita, o selo com o nome da classe cai sozinho para uma linha
+   nova logo abaixo de "Subclasse — 1". Para a subclasse normal ele repete a
+   classe que já está no cabeçalho; quando for multiclasse, o selo continua
+   porque aí ele traz estado que não é redundante.
+
+   A prévia cai de cinco para três linhas só em 360/390. Tocar no nome continua
+   abrindo a carta oficial completa, e marcador/ações permanecem visíveis.
+   ========================================================================== */
+
+@media (max-width: 390px) {
+  .ficha__carta--subclasse .ficha__cartaTopo > .selo:not(.selo--mestre) {
+    display: none;
+  }
+
+  .ficha__carta--subclasse .ficha__cartaTexto {
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
   }
 }
