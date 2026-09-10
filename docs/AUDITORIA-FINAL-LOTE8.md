@@ -9,7 +9,7 @@
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **0** candidatas sem sinal de automação específica; **92** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **0** ocorrências candidatas ativas/condicionais.
-- Loot/consumíveis com texto mecânico detectado: **81**; **17** candidatos ainda sem estrutura/classificação.
+- Loot/consumíveis com texto mecânico detectado: **81**; **13** candidatos ainda sem estrutura/classificação.
 - Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **53** linhas, incluindo histórico já resolvido.
 
 ### Distribuição — classes/subclasses
@@ -35,8 +35,8 @@
 
 ### Distribuição — loot/consumíveis
 
-- candidato mecânico: **17**
-- estruturado/classificado: **63**
+- candidato mecânico: **13**
+- estruturado/classificado: **67**
 - referência específica no motor: **1**
 
 ## Candidatos — classes e subclasses
@@ -70,11 +70,11 @@
 | loot | Pedra da Resiliência | candidato mecânico | Incruste esta pedra em uma armadura que ainda não tenha uma característica; ela recebe a característica abaixo. Resiliente: antes de marcar seu último Ponto de Armadura,… |
 | loot | Chave-Mestra | estruturado/classificado | Ao usar essa chave para abrir uma porta trancada, você ganha vantagem na rolagem de finesse. |
 | loot | Prisma Arcano | estruturado/classificado | Posicione esse prisma em um local de sua escolha e ative-o. Todos os aliados dentro do alcance próximo dele ganham um bônus de +1 em seus lançamentos de feitiço. Enquant… |
-| loot | Receita de Poção de Estamina Menor | candidato mecânico | Como um movimento de inatividade, você pode usar o osso de uma criatura para criar uma Poção de resistência menor. |
-| loot | Receita de Poção de Saúde Menor | candidato mecânico | Como movimento de inatividade, você pode usar um frasco de sangue para criar uma Poção de Saúde Menor. |
+| loot | Receita de Poção de Estamina Menor | estruturado/classificado | Como um movimento de inatividade, você pode usar o osso de uma criatura para criar uma Poção de resistência menor. |
+| loot | Receita de Poção de Saúde Menor | estruturado/classificado | Como movimento de inatividade, você pode usar um frasco de sangue para criar uma Poção de Saúde Menor. |
 | loot | Espírito Corretor | estruturado/classificado | Esse pequeno duende fica na curva de seu canal auditivo e sussurra conselhos úteis durante o combate. Uma vez por descanso curto, você pode ganhar vantagem em uma rolage… |
 | loot | Guardião do Saber | candidato mecânico | Você pode armazenar o nome e os detalhes de até três criaturas hostis dentro desse livro. Você ganha um bônus de +1 nas rolagens de ação contra essas criaturas. |
-| loot | Frasco de Darksmoke Receita | candidato mecânico | Como movimento de inatividade, você pode marcar um Stress para criar um Vial of Darksmoke. |
+| loot | Frasco de Darksmoke Receita | estruturado/classificado | Como movimento de inatividade, você pode marcar um Stress para criar um Vial of Darksmoke. |
 | loot | Pedra de sangue | candidato mecânico | Você pode anexar essa pedra a uma arma que ainda não tenha uma característica. A arma ganha a seguinte característica. Brutal: Quando rolar o valor máximo em um dado de … |
 | loot | Pedra Maior | candidato mecânico | Você pode anexar essa pedra a uma arma que ainda não tenha uma característica. A arma ganha a seguinte característica. Poderoso: Em um ataque bem-sucedido, role um dado … |
 | loot | Planador | estruturado/classificado | Enquanto estiver caindo, você pode marcar um Stress para acionar esse pequeno paraquedas e deslizar com segurança até o chão. |
@@ -92,7 +92,7 @@
 | loot | Relíquia da Iluminação | estruturado/classificado | Você ganha um bônus de +1 no seu Conhecimento. Você só pode carregar uma relíquia. |
 | loot | Relíquia de afiação | candidato mecânico | Você ganha um bônus de +1 em uma Experiência de sua escolha. Você só pode carregar uma relíquia. |
 | loot | Pingente Flickerfly | candidato mecânico | Enquanto você estiver portando esse pingente, suas armas com alcance corpo a corpo que causam dano físico terão um brilho de véu e poderão atacar alvos a uma distância m… |
-| loot | Receita de Mythic Dust | candidato mecânico | Como movimento de inatividade, você pode usar um punhado de pó de ouro fino para criar Pó Mítico. |
+| loot | Receita de Mythic Dust | estruturado/classificado | Como movimento de inatividade, você pode usar um punhado de pó de ouro fino para criar Pó Mítico. |
 | loot | Fragmento de memória | candidato mecânico | Uma vez por descanso longo, você pode gastar 2 de Esperança para chamar um card de domínio do seu cofre em vez de pagar seu Custo de Chamada. |
 | loot | Anel de determinação inquebrável | candidato mecânico | Uma vez por sessão, quando o GM gasta um Medo, você pode gastar 4 de Esperança para cancelar os efeitos desse Medo gasto. |
 | loot | Cinturão da unidade | estruturado/classificado | Uma vez por sessão, você pode gastar 5 de Esperança para liderar um Tag Team Roll com três PCs em vez de dois. |

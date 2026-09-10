@@ -6444,7 +6444,27 @@
    "descricao": "Como um movimento de inatividade, você pode usar o osso de uma criatura para criar uma Poção de resistência menor.",
    "nomeIngles": "Minor Stamina Potion Recipe",
    "descricaoIngles": "As a downtime move, you can use the bone of a creature to craft a Minor Stamina Potion.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-receita-movimento-repouso-e16",
+    "rolaNoApp": false,
+    "motivo": "A receita entra como movimento de repouso quando está na mochila; o ingrediente é confirmado pela mesa e o app só aplica custo/recompensa determinísticos."
+   },
+   "efeitoSaquePassivo": {
+    "movimentoRepouso": {
+     "id": "receita:loot-18",
+     "nome": "Criar Poção de resistência menor",
+     "tipos": [
+      "curto",
+      "longo"
+     ],
+     "criaItemId": "consumivel-08",
+     "criaItemNome": "Poção de resistência menor",
+     "custoEstresse": 0,
+     "rolaNoApp": false,
+     "ingredienteManual": "osso de uma criatura"
+    }
+   }
   },
   {
    "id": "loot-19",
@@ -6453,7 +6473,27 @@
    "descricao": "Como movimento de inatividade, você pode usar um frasco de sangue para criar uma Poção de Saúde Menor.",
    "nomeIngles": "Minor Health Potion Recipe",
    "descricaoIngles": "As a downtime move, you can use a vial of blood to craft a Minor Health Potion.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-receita-movimento-repouso-e16",
+    "rolaNoApp": false,
+    "motivo": "A receita entra como movimento de repouso quando está na mochila; o ingrediente é confirmado pela mesa e o app só aplica custo/recompensa determinísticos."
+   },
+   "efeitoSaquePassivo": {
+    "movimentoRepouso": {
+     "id": "receita:loot-19",
+     "nome": "Criar Poção de saúde menor",
+     "tipos": [
+      "curto",
+      "longo"
+     ],
+     "criaItemId": "consumivel-07",
+     "criaItemNome": "Poção de saúde menor",
+     "custoEstresse": 0,
+     "rolaNoApp": false,
+     "ingredienteManual": "frasco de sangue"
+    }
+   }
   },
   {
    "id": "loot-20",
@@ -6516,7 +6556,26 @@
    "descricao": "Como movimento de inatividade, você pode marcar um Stress para criar um Vial of Darksmoke.",
    "nomeIngles": "Vial of Darksmoke Recipe",
    "descricaoIngles": "As a downtime move, you can mark a Stress to craft a Vial of Darksmoke.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-receita-movimento-repouso-e16",
+    "rolaNoApp": false,
+    "motivo": "A receita entra como movimento de repouso quando está na mochila; o ingrediente é confirmado pela mesa e o app só aplica custo/recompensa determinísticos."
+   },
+   "efeitoSaquePassivo": {
+    "movimentoRepouso": {
+     "id": "receita:loot-24",
+     "nome": "Criar Frasco de Darksmoke",
+     "tipos": [
+      "curto",
+      "longo"
+     ],
+     "criaItemId": "consumivel-16",
+     "criaItemNome": "Frasco de Darksmoke",
+     "custoEstresse": 1,
+     "rolaNoApp": false
+    }
+   }
   },
   {
    "id": "loot-25",
@@ -6935,7 +6994,27 @@
    "descricao": "Como movimento de inatividade, você pode usar um punhado de pó de ouro fino para criar Pó Mítico.",
    "nomeIngles": "Mythic Dust Recipe",
    "descricaoIngles": "As a downtime move, you can use a handful of fine gold dust to craft Mythic Dust.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-receita-movimento-repouso-e16",
+    "rolaNoApp": false,
+    "motivo": "A receita entra como movimento de repouso quando está na mochila; o ingrediente é confirmado pela mesa e o app só aplica custo/recompensa determinísticos."
+   },
+   "efeitoSaquePassivo": {
+    "movimentoRepouso": {
+     "id": "receita:loot-51",
+     "nome": "Criar Poeira Mítica",
+     "tipos": [
+      "curto",
+      "longo"
+     ],
+     "criaItemId": "consumivel-35",
+     "criaItemNome": "Poeira Mítica",
+     "custoEstresse": 0,
+     "rolaNoApp": false,
+     "ingredienteManual": "punhado de ouro em pó"
+    }
+   }
   },
   {
    "id": "loot-52",

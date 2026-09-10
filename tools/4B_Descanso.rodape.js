@@ -124,6 +124,42 @@ function movimentosDoDescanso_(tipo, ficha) {
     copia.deOutroDescanso = emprestado ? ('Entrou por "' + fonteExtra + '".') : '';
     saida.push(copia);
   }
+
+  // Receitas de loot são movimentos de repouso enquanto a receita estiver
+  // realmente na mochila. Ingredientes são ficção/estado do mundo e, portanto,
+  // a seleção do movimento é a confirmação da mesa; nenhum dado é rolado aqui.
+  const inventario = Array.isArray((ficha || {}).inventario) ? ficha.inventario : [];
+  const receitasVistas = {};
+  for (let i = 0; i < inventario.length; i++) {
+    const reg = inventario[i] || {};
+    if (!reg.id || receitasVistas[reg.id] || typeof acharItem_ !== 'function') continue;
+    receitasVistas[reg.id] = true;
+    const item = acharItem_(reg.id);
+    const receita = item && item.tipo === 'saque'
+      ? (((item.efeitoSaquePassivo || {}).movimentoRepouso) || null) : null;
+    if (!receita) continue;
+    const tipos = Array.isArray(receita.tipos) && receita.tipos.length ? receita.tipos : ['curto', 'longo'];
+    if (tipos.indexOf(t.id) < 0) continue;
+    const custo = Math.max(0, Math.trunc(Number(receita.custoEstresse)) || 0);
+    const ingrediente = String(receita.ingredienteManual || '');
+    const partesFormula = [];
+    if (custo) partesFormula.push(custo + ' Estresse');
+    if (ingrediente) partesFormula.push('ingrediente: ' + ingrediente);
+    saida.push({
+      id: String(receita.id || ('receita:' + item.id)),
+      nome: String(receita.nome || ('Usar ' + item.nome)),
+      nomeJambo: '', tipos: tipos,
+      texto: ingrediente
+        ? ('Use ' + ingrediente + ' com ' + item.nome + ' para criar ' + String(receita.criaItemNome || 'o consumível') + '.')
+        : (item.nome + ': marque ' + custo + ' Estresse para criar ' + String(receita.criaItemNome || 'o consumível') + '.'),
+      formula: partesFormula.join(' · ') || 'sem rolagem',
+      podeMirarAliado: false, perguntas: [], deOutroDescanso: '',
+      efeito: {
+        modo: 'criar-consumivel', criaItemId: String(receita.criaItemId || ''),
+        custoEstresse: custo, ingredienteManual: ingrediente
+      }
+    });
+  }
   return saida;
 }
 
@@ -268,8 +304,18 @@ function simularDescanso_(ficha, tipo, escolhas) {
 
   for (let i = 0; i < lista.length && i < movimentosPermitidos; i++) {
     const escolha = lista[i] || {};
-    const id = normalizarMovimento_(escolha.movimento);
-    const def = id ? MOVIMENTOS_DESCANSO[id] : null;
+    const alvoMovimento = chaveTexto_(escolha.movimento);
+    const idCanonico = normalizarMovimento_(escolha.movimento);
+    let def = idCanonico ? MOVIMENTOS_DESCANSO[idCanonico] : null;
+    if (!def && alvoMovimento) {
+      for (let k = 0; k < disponiveis.length; k++) {
+        if (chaveTexto_(disponiveis[k].id) === alvoMovimento ||
+            chaveTexto_(disponiveis[k].nome) === alvoMovimento) {
+          def = disponiveis[k];
+          break;
+        }
+      }
+    }
 
     if (!def) {
       erros.push('Movimento de descanso desconhecido: "' + String(escolha.movimento) + '".');
@@ -358,6 +404,45 @@ function simularDescanso_(ficha, tipo, escolhas) {
     }
 
     const ef = def.efeito || {};
+
+    if (ef.modo === 'criar-consumivel') {
+      const itemCriado = (typeof acharItem_ === 'function') ? acharItem_(ef.criaItemId) : null;
+      if (!itemCriado || itemCriado.tipo !== 'consumivel') {
+        erros.push('"' + def.nome + '": consumível de destino desconhecido.');
+        continue;
+      }
+      const custoEstresse = Math.max(0, Math.trunc(Number(ef.custoEstresse)) || 0);
+      if (custoEstresse) {
+        const atualEstresse = Math.max(0, Number(copia.recursos.estresseMarcado) || 0);
+        const maxEstresse = maximoDoRecurso_(copia, 'estresseMarcado');
+        if (atualEstresse + custoEstresse > maxEstresse) {
+          erros.push('"' + def.nome + '": não há espaço de Estresse para pagar o custo da receita.');
+          continue;
+        }
+      }
+      if (typeof ajustarInventario_ !== 'function') {
+        erros.push('"' + def.nome + '": o inventário não está disponível para receber o consumível.');
+        continue;
+      }
+      const inv = ajustarInventario_(copia, {
+        acao:'adicionar', itemId:itemCriado.id, item:itemCriado.nome, qtd:1, emUso:false
+      });
+      if (inv && inv.erro) {
+        erros.push('"' + def.nome + '": ' + inv.erro);
+        continue;
+      }
+      if (custoEstresse) copia.recursos.estresseMarcado =
+        (Math.max(0, Number(copia.recursos.estresseMarcado) || 0) + custoEstresse);
+      feito.quantidade = 1;
+      feito.itemCriado = itemCriado.id;
+      feito.custoEstresse = custoEstresse;
+      feito.contaDaFormula = custoEstresse ? (custoEstresse + ' Estresse → 1 ' + itemCriado.nome) : ('1 ' + itemCriado.nome);
+      feito.observacao = String(ef.ingredienteManual || '')
+        ? ('Ingrediente confirmado pela mesa: ' + String(ef.ingredienteManual) + '.')
+        : ('Custo pago: ' + custoEstresse + ' Estresse.');
+      feitos.push(feito);
+      continue;
+    }
 
     if (ef.modo === 'conceder-contador') {
       const chaveContador = String(ef.contador || '');

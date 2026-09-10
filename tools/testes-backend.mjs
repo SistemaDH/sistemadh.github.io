@@ -11982,6 +11982,60 @@ teste('E15 Cinturão da Unidade cobra 5 Esperança atomicamente e só uma vez po
   r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]); igual(r.erros.length,1); igual(JSON.stringify(f),antes2);
 });
 
+
+console.log('\nLote 8 — receitas de loot E16');
+teste('E16 receitas aparecem como movimentos de repouso somente quando estão na mochila', () => {
+  const f=contexto.fichaVazia_();
+  let mov=contexto.movimentosDoDescanso_('curto',f);
+  igual(mov.filter((x)=>String(x.id).indexOf('receita:')===0).length,0);
+  const rec=contexto.acharItem_('loot-18');
+  f.inventario=[{id:rec.id,nome:rec.nome,qtd:1,emUso:false}];
+  mov=contexto.movimentosDoDescanso_('curto',f);
+  verdade(mov.some((x)=>x.id==='receita:loot-18'),'receita não apareceu no curto');
+  mov=contexto.movimentosDoDescanso_('longo',f);
+  verdade(mov.some((x)=>x.id==='receita:loot-18'),'receita não apareceu no longo');
+});
+teste('E16 receita de Vigor Menor cria o consumível canônico sem rolar dados', () => {
+  const rec=contexto.acharItem_('loot-18'); const f=contexto.fichaVazia_();
+  f.inventario=[{id:rec.id,nome:rec.nome,qtd:1,emUso:false}];
+  const r=contexto.simularDescanso_(f,'curto',[{movimento:'receita:loot-18'}]);
+  igual(r.previa.erros,[],JSON.stringify(r.previa));
+  const criado=r.ficha.inventario.find((x)=>x.id==='consumivel-08');
+  verdade(criado,'Poção de Vigor Menor não foi criada'); igual(criado.qtd,1);
+  igual(f.inventario.length,1,'prévia não pode alterar a ficha original');
+});
+teste('E16 receita de Vida Menor cria consumivel-07', () => {
+  const rec=contexto.acharItem_('loot-19'); const f=contexto.fichaVazia_();
+  f.inventario=[{id:rec.id,nome:rec.nome,qtd:1,emUso:false}];
+  const r=contexto.simularDescanso_(f,'longo',[{movimento:'receita:loot-19'}]);
+  igual(r.previa.erros,[],JSON.stringify(r.previa));
+  verdade(r.ficha.inventario.some((x)=>x.id==='consumivel-07'));
+});
+teste('E16 Darksmoke marca 1 Estresse e cria consumivel-16 atomicamente', () => {
+  const rec=contexto.acharItem_('loot-24'); const f=contexto.fichaVazia_();
+  f.recursos.estresseMarcado=1; f.recursos.estresseMaximo=6;
+  f.inventario=[{id:rec.id,nome:rec.nome,qtd:1,emUso:false}];
+  let r=contexto.simularDescanso_(f,'curto',[{movimento:'receita:loot-24'}]);
+  igual(r.previa.erros,[],JSON.stringify(r.previa)); igual(r.ficha.recursos.estresseMarcado,2);
+  verdade(r.ficha.inventario.some((x)=>x.id==='consumivel-16'));
+  f.recursos.estresseMarcado=6; const antes=JSON.stringify(f);
+  r=contexto.simularDescanso_(f,'curto',[{movimento:'receita:loot-24'}]);
+  igual(r.previa.erros.length,1); igual(JSON.stringify(f),antes);
+  verdade(!r.ficha.inventario.some((x)=>x.id==='consumivel-16'));
+});
+teste('E16 receita de Pó Mítico cria consumivel-35', () => {
+  const rec=contexto.acharItem_('loot-51'); const f=contexto.fichaVazia_();
+  f.inventario=[{id:rec.id,nome:rec.nome,qtd:1,emUso:false}];
+  const r=contexto.simularDescanso_(f,'curto',[{movimento:'receita:loot-51'}]);
+  igual(r.previa.erros,[],JSON.stringify(r.previa));
+  verdade(r.ficha.inventario.some((x)=>x.id==='consumivel-35'));
+});
+teste('E16 não aceita forjar movimento de receita sem possuir a receita', () => {
+  const f=contexto.fichaVazia_();
+  const r=contexto.simularDescanso_(f,'curto',[{movimento:'receita:loot-18'}]);
+  igual(r.previa.erros.length,1); verdade(!r.ficha.inventario.some((x)=>x.id==='consumivel-08'));
+});
+
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));

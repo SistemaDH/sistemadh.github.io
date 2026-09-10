@@ -933,3 +933,15 @@ Bloco conferido contra o Core pt-BR, Tesouro pp.129–131:
 - `loot-60` Cinturão da Unidade: 1 vez por sessão, cobra 5 Esperança atomicamente; o Jogada em Dupla de três personagens continua na mesa.
 
 Nenhum destes efeitos rola dados no app.
+
+
+### Diário — Lote 8 E16: receitas como movimentos de repouso
+
+As quatro receitas de loot passaram a participar do fluxo canônico de descanso, sem RNG:
+
+- `loot-18`: usando o osso de uma criatura, cria `consumivel-08` (Poção de Vigor/Estamina Menor);
+- `loot-19`: usando um frasco de sangue, cria `consumivel-07` (Poção de Vida/Saúde Menor);
+- `loot-24`: marca 1 Estresse e cria `consumivel-16` (Frasco de Darksmoke);
+- `loot-51`: usando um punhado de ouro em pó, cria `consumivel-35` (Poeira/Pó Mítico).
+
+A receita só aparece entre os movimentos se estiver na mochila. Ingredientes não são inventário mecânico do Core nesta ficha: ao escolher o movimento, a mesa confirma narrativamente que possui o ingrediente; o servidor aplica apenas custo e criação determinísticos. A prévia continua sem tocar a ficha original e a aplicação usa o mesmo simulador.
