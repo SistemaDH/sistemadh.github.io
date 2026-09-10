@@ -1,0 +1,30 @@
+name: TEMP Lote 9 B4 diagnostico toque real
+
+on:
+  push:
+    branches: [tmp-lote9-b4-toque-real-sol]
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Detalhar controles desenhados abaixo de 44px
+        run: python3 tools/tmp-lote9-b4-diagnostico.py
+      - run: npx playwright install --with-deps chromium
+      - run: npm run teste:layout-mobile
+      - name: Guardar diagnostico B4
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lote9-b4-diagnostico-toque
+          path: artifacts/layout-mobile
+          if-no-files-found: error
