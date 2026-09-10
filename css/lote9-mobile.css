@@ -221,8 +221,8 @@
    depois da abertura). O contador injetado por lote9-mobile.js mostra o passo
    real do assistente e permanece coerente com a barra de progresso.
 
-   A regra-base fica fora do @media porque o conferidor de CSS cruza classes
-   declaradas no topo da folha. O JS só injeta este elemento abaixo de 640px,
+   As regras ficam fora do @media porque o conferidor de CSS cruza classes
+   declaradas no topo da folha. O JS só injeta estes elementos abaixo de 640px,
    então tablet/desktop continuam sem contador.
    ========================================================================== */
 
@@ -231,12 +231,10 @@
   white-space: nowrap;
 }
 
-@media (max-width: 639px) {
-  .criacao__contador--sozinho {
-    display: block;
-    font-size: var(--txt-xs);
-    line-height: 1.2;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-  }
+.criacao__contador--sozinho {
+  display: block;
+  font-size: var(--txt-xs);
+  line-height: 1.2;
+  letter-spacing: .14em;
+  text-transform: uppercase;
 }
