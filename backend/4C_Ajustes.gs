@@ -2098,6 +2098,7 @@ function itemDeMochila_(bruto) {
   let emUso = false;
   let nota = '';
   let vinculo = '';
+  let registros = [];
 
   if (typeof bruto === 'object') {
     nome = String(bruto.nome === undefined ? '' : bruto.nome);
@@ -2106,6 +2107,7 @@ function itemDeMochila_(bruto) {
     emUso = Boolean(bruto.emUso);
     nota = String(bruto.nota === undefined ? '' : bruto.nota);
     vinculo = String(bruto.vinculo === undefined ? '' : bruto.vinculo);
+    registros = Array.isArray(bruto.registros) ? bruto.registros : [];
   } else {
     nome = String(bruto);
   }
@@ -2135,6 +2137,10 @@ function itemDeMochila_(bruto) {
   if (nota) item.nota = nota.slice(0, LIMITE_ITEM_INVENTARIO);
   vinculo = vinculo.trim().replace(/\s+/g, ' ').slice(0, LIMITE_ITEM_INVENTARIO);
   if (vinculo) item.vinculo = vinculo;
+  const regs = registros.map(function (x) {
+    return String(x === undefined || x === null ? '' : x).trim().replace(/\s+/g, ' ').slice(0, 200);
+  }).filter(function (x) { return !!x; }).slice(0, 3);
+  if (regs.length) item.registros = regs;
   return item;
 }
 
@@ -2596,7 +2602,134 @@ function usarSaqueDaMochila_(ficha, lista, indice, a) {
     return { erro:item.nome + ': este efeito já está ativo.' };
   }
 
+  // Entrada manual de dado: nunca gera RNG. A pendência reutiliza o fluxo
+  // genérico que pede ao jogador o resultado rolado fisicamente.
+  let resultadoManual = null;
+  let resultadoEfeito = null;
+  if (efeito.entradaManual) {
+    const em = efeito.entradaManual || {};
+    const campo = String(em.campo || 'resultadoManual');
+    const bruto = (a || {})[campo];
+    const minimo = Math.trunc(Number(em.minimo)) || 1;
+    const maximo = Math.trunc(Number(em.maximo)) || 20;
+    if (bruto === undefined || bruto === null || bruto === '') {
+      return { pendenciaRolagem:{
+        tipo:'habilidade-manual', campo:campo, caracteristica:item.nome,
+        dado:String(em.dado || ''), minimo:minimo, maximo:maximo,
+        mensagem:String(em.mensagem || (item.nome + ': role o dado fora do app e informe o resultado.'))
+      } };
+    }
+    resultadoManual = Math.trunc(Number(bruto));
+    if (!isFinite(resultadoManual) || Number(bruto) !== resultadoManual ||
+        resultadoManual < minimo || resultadoManual > maximo) {
+      return { erro:item.nome + ': informe um resultado inteiro de ' + minimo + ' a ' + maximo + '.' };
+    }
+    if (Array.isArray(efeito.resultadoFaixas)) {
+      let faixa = null;
+      for (let fi = 0; fi < efeito.resultadoFaixas.length; fi++) {
+        const f = efeito.resultadoFaixas[fi] || {};
+        if (resultadoManual >= Number(f.minimo) && resultadoManual <= Number(f.maximo)) { faixa = f; break; }
+      }
+      if (!faixa) return { erro:item.nome + ': não há consequência definida para o resultado ' + resultadoManual + '.' };
+      resultadoEfeito = {
+        resultado:resultadoManual,
+        quantidadeConsumiveis:Math.max(0, Math.trunc(Number(faixa.quantidadeConsumiveis)) || 0)
+      };
+    }
+  }
+
+  // Fragmento de Memória: valida a troca INTEIRA antes de cobrar qualquer coisa.
+  let trocaCartas = null;
+  if (efeito.trocaCartasSemCusto) {
+    const regraTroca = efeito.trocaCartasSemCusto || {};
+    const campoMao = String(regraTroca.campoMao || 'cartaDaMao');
+    const campoReserva = String(regraTroca.campoReserva || 'cartaDaReserva');
+    const mao = (((ficha || {}).cartas || {}).ativas || []);
+    const reserva = (((ficha || {}).cartas || {}).cofre || []);
+    const acharIndice = function (listaCartas, alvo) {
+      const chave = chaveTexto_(alvo);
+      for (let ci = 0; ci < listaCartas.length; ci++) {
+        const id = (listaCartas[ci] && typeof listaCartas[ci] === 'object')
+          ? (listaCartas[ci].id || listaCartas[ci].nome) : listaCartas[ci];
+        if (chaveTexto_(id) === chave) return ci;
+      }
+      return -1;
+    };
+    const im = acharIndice(mao, (a || {})[campoMao]);
+    const ir = acharIndice(reserva, (a || {})[campoReserva]);
+    if (im < 0) return { erro:item.nome + ': escolha uma carta de domínio que esteja na sua mão.' };
+    if (ir < 0) return { erro:item.nome + ': escolha uma carta de domínio que esteja na sua reserva.' };
+    const idMao = (mao[im] && typeof mao[im] === 'object') ? (mao[im].id || mao[im].nome) : mao[im];
+    const idReserva = (reserva[ir] && typeof reserva[ir] === 'object') ? (reserva[ir].id || reserva[ir].nome) : reserva[ir];
+    const cartaMao = (typeof acharCarta_ === 'function') ? acharCarta_(idMao) : null;
+    const cartaReserva = (typeof acharCarta_ === 'function') ? acharCarta_(idReserva) : null;
+    if (!cartaMao || !cartaReserva || !cartaMao.dominio || !cartaReserva.dominio) {
+      return { erro:item.nome + ': a troca aceita somente cartas de domínio.' };
+    }
+    trocaCartas = { mao:mao, reserva:reserva, im:im, ir:ir, sai:cartaMao, entra:cartaReserva };
+  }
+
+  if (efeito.requerVinculo === true && !String(registro.vinculo || '').trim()) {
+    return { erro:item.nome + ': primeiro use o movimento de repouso deste item para registrar seu princípio.' };
+  }
+
   const recursos = (ficha || {}).recursos || {};
+
+  // Hopekeeper: duas resoluções no mesmo item. A carga persiste até o uso.
+  const carregar = efeito.carregarEstado || null;
+  const usarEstado = efeito.usarEstado || null;
+  if (carregar && chaveTexto_((a || {}).modo) === 'carregar') {
+    const chave = String(carregar.contador || '');
+    if (!chave || typeof CONTADORES !== 'object' || !CONTADORES[chave]) {
+      return { erro:item.nome + ': contador de carga inválido.' };
+    }
+    if (valorContador(chave) > 0) return { erro:item.nome + ': o medalhão já está carregado.' };
+    const exata = Math.max(0, Math.trunc(Number(carregar.esperancaExata)) || 0);
+    const atualEsp = Math.max(0, Math.trunc(Number(recursos.esperanca)) || 0);
+    if (atualEsp !== exata) return { erro:item.nome + ': para carregar, sua Esperança precisa estar exatamente em ' + exata + '.' };
+    const custo = Math.max(0, Math.trunc(Number(carregar.custoEsperanca)) || 0);
+    if (custo > atualEsp) return { erro:item.nome + ': não há Esperança suficiente para carregar.' };
+    const detalhesCarga = [];
+    if (custo) {
+      const r = ajustarRecurso_(ficha, { chave:'esperanca', delta:-custo });
+      if (r && r.erro) return r;
+      detalhesCarga.push(r);
+    }
+    const m = ajustarContador_(ficha, { chave:chave, valor:1 });
+    if (m && m.erro) return m;
+    detalhesCarga.push(m);
+    return {
+      tipo:'inventario', acao:'usar', modo:'carregar', item:item.nome, itemId:item.id,
+      custoEsperanca:custo, contadorEstado:chave, estadoAtivo:true,
+      detalhes:detalhesCarga,
+      aviso:item.nome + ': carga registrada. Use-a quando sua Esperança chegar a 0.'
+    };
+  }
+  if (usarEstado && chaveTexto_((a || {}).modo) !== 'carregar') {
+    const chave = String(usarEstado.contador || '');
+    if (!chave || valorContador(chave) <= 0) return { erro:item.nome + ': o medalhão não está carregado.' };
+    const exata = Math.max(0, Math.trunc(Number(usarEstado.esperancaExata)) || 0);
+    const atualEsp = Math.max(0, Math.trunc(Number(recursos.esperanca)) || 0);
+    if (atualEsp !== exata) return { erro:item.nome + ': a carga só pode ser usada quando sua Esperança estiver em ' + exata + '.' };
+    const ganho = Math.max(0, Math.trunc(Number(usarEstado.ganhaEsperanca)) || 0);
+    const detalhesUso = [];
+    if (ganho) {
+      const r = ajustarRecurso_(ficha, { chave:'esperanca', delta:ganho });
+      if (r && r.erro) return r;
+      detalhesUso.push(r);
+    }
+    if (usarEstado.limpaEstado === true) {
+      const m = ajustarContador_(ficha, { chave:chave, valor:0 });
+      if (m && m.erro) return m;
+      detalhesUso.push(m);
+    }
+    return {
+      tipo:'inventario', acao:'usar', modo:'consumir-carga', item:item.nome, itemId:item.id,
+      custoEsperanca:0, esperancaGanha:ganho, contadorEstado:chave, estadoAtivo:false,
+      detalhes:detalhesUso,
+      aviso:item.nome + ': carga usada; +' + ganho + ' Esperança.'
+    };
+  }
   const custoEsperanca = Math.max(0, Math.trunc(Number(efeito.custoEsperanca)) || 0);
   const custoEstresse = Math.max(0, Math.trunc(Number(efeito.custoEstresse)) || 0);
   if (custoEsperanca > Math.max(0, Number(recursos.esperanca) || 0)) {
@@ -2619,6 +2752,14 @@ function usarSaqueDaMochila_(ficha, lista, indice, a) {
     if (r && r.erro) return r;
     detalhes.push(r);
   }
+  if (trocaCartas) {
+    trocaCartas.mao[trocaCartas.im] = trocaCartas.entra.id;
+    trocaCartas.reserva[trocaCartas.ir] = trocaCartas.sai.id;
+    detalhes.push({
+      tipo:'troca-cartas-sem-custo', saiuDaMao:trocaCartas.sai.id,
+      entrouNaMao:trocaCartas.entra.id, custoChamada:0
+    });
+  }
   if (contadorUso) {
     const r = ajustarContador_(ficha, { chave:contadorUso, valor:usosAntes + 1 });
     if (r && r.erro) return r;
@@ -2640,6 +2781,9 @@ function usarSaqueDaMochila_(ficha, lista, indice, a) {
     bonusRolagem:efeito.bonusRolagem || null,
     bonusProficienciaDano:efeito.bonusProficienciaDano === true && typeof proficienciaEfetivaDaFicha_ === 'function'
       ? proficienciaEfetivaDaFicha_(ficha) : null,
+    resultadoManual:resultadoManual,
+    resultadoEfeito:resultadoEfeito,
+    trocaCartas:trocaCartas ? { saiuDaMao:trocaCartas.sai.id, entrouNaMao:trocaCartas.entra.id, custoChamada:0 } : null,
     efeitoManual:efeitoManual || null,
     detalhes:detalhes,
     aviso:item.nome + ': uso registrado.' + (efeitoManual ? ' ' + efeitoManual : '')
@@ -2789,6 +2933,24 @@ function ajustarInventario_(ficha, a) {
       vinculo:validado.vinculo || '', rotulo:validado.rotulo || '',
       emUso:lista[i].emUso
     };
+  }
+
+  if (acao === 'registros') {
+    if (!achou) return { erro:'Item da mochila não encontrado.' };
+    const itemLivro = lista[i].id && typeof acharItem_ === 'function' ? acharItem_(lista[i].id) : null;
+    const regra = itemLivro && itemLivro.tipo === 'saque'
+      ? (((itemLivro.efeitoSaquePassivo || {}).registros) || null) : null;
+    if (!regra) return { erro:'Este item não possui registros configuráveis.' };
+    const limite = Math.max(1, Math.min(3, Math.trunc(Number(regra.limite)) || 3));
+    const brutos = Array.isArray(a.registros) ? a.registros : [];
+    if (brutos.length > limite) return { erro:itemLivro.nome + ': registre no máximo ' + limite + ' criaturas.' };
+    const regs = brutos.map(function (x) {
+      return String(x === undefined || x === null ? '' : x).trim().replace(/\s+/g, ' ').slice(0, 200);
+    }).filter(function (x) { return !!x; });
+    if (regs.length > limite) return { erro:itemLivro.nome + ': registre no máximo ' + limite + ' criaturas.' };
+    if (regs.length) lista[i].registros = regs;
+    else delete lista[i].registros;
+    return { tipo:'inventario', acao:'registros', item:itemLivro.nome, registros:regs, limite:limite };
   }
 
   if (acao === 'nota') {

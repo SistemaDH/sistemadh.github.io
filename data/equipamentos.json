@@ -6566,7 +6566,22 @@
    "origemNome": "corrigido-auditoria",
    "aliases": [
     "Lorekeeper"
-   ]
+   ],
+   "automacao": {
+    "classificacao": "loot-registro-criaturas-e19",
+    "rolaNoApp": false,
+    "motivo": "A ficha guarda até três criaturas hostis conhecidas; o +1 é contextual e a jogada continua física/externa ao app."
+   },
+   "efeitoSaquePassivo": {
+    "registros": {
+     "tipo": "criaturas-hostis",
+     "campo": "registros",
+     "limite": 3,
+     "rotulo": "Criaturas registradas",
+     "bonusRolagem": 1,
+     "efeitoManual": "Receba +1 em jogadas contra uma criatura registrada neste item."
+    }
+   }
   },
   {
    "id": "loot-24",
@@ -6795,7 +6810,42 @@
    "descricao": "Uma vez por descanso longo, você pode abrir essa pequena caixa e rolar um d12. Se o resultado for de 1 a 6, ela estará vazia. Em um resultado de 7 a 10, ela contém um consumível comum aleatório. Com um resultado de 11-12, ela contém dois consumíveis comuns aleatórios.",
    "nomeIngles": "Box of Many Goods",
    "descricaoIngles": "Once per long rest, you can open this small box and roll a d12. On a result of 1–6, it's empty. On a result of 7–10, it contains one random common consumable. On a result of 11–12, it contains two random common consumables.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-d12-manual-consumiveis-e19",
+    "rolaNoApp": false,
+    "motivo": "O jogador rola o d12 fisicamente. O app só converte o resultado em 0, 1 ou 2 consumíveis comuns; qual consumível aparece continua sendo sorteado/decidido na mesa."
+   },
+   "efeitoSaque": {
+    "tipo": "uso-assistido",
+    "contadorUso": "uso:loot:loot-34",
+    "rolaNoApp": false,
+    "entradaManual": {
+     "campo": "resultadoCaixa",
+     "dado": "d12",
+     "minimo": 1,
+     "maximo": 12,
+     "mensagem": "Role 1d12 na mesa e informe o resultado da Caixa."
+    },
+    "resultadoFaixas": [
+     {
+      "minimo": 1,
+      "maximo": 6,
+      "quantidadeConsumiveis": 0
+     },
+     {
+      "minimo": 7,
+      "maximo": 10,
+      "quantidadeConsumiveis": 1
+     },
+     {
+      "minimo": 11,
+      "maximo": 12,
+      "quantidadeConsumiveis": 2
+     }
+    ],
+    "efeitoManual": "Se houver consumíveis, sorteie os consumíveis comuns na mesa e então registre os itens obtidos na mochila."
+   }
   },
   {
    "id": "loot-35",
@@ -6853,7 +6903,34 @@
    "descricao": "Como movimento de tempo de inatividade, você pode meditar em um ideal ou princípio que lhe seja caro e concentrar sua vontade nessa corrente. Uma vez por descanso longo, você pode gastar uma Esperança para rolar um d20 como seu Hope Die (dado de esperança) para rolagens que se alinhem diretamente com esse princípio.",
    "nomeIngles": "Paragon's Chain",
    "descricaoIngles": "As a downtime move, you can meditate on an ideal or principle you hold dear and focus your will into this chain. Once per long rest, you can spend a Hope to roll a d20 as your Hope Die for rolls that directly align with that principle.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-principio-dado-esperanca-e19",
+    "rolaNoApp": false,
+    "motivo": "O princípio é registrado como movimento de repouso. Uma vez por descanso longo, o app cobra 1 Esperança e lembra que o d20 substitui o Dado de Esperança; o dado é rolado fora do app."
+   },
+   "efeitoSaquePassivo": {
+    "movimentoRepouso": {
+     "id": "principio:loot-37",
+     "nome": "Meditar na Corrente do Paragon",
+     "tipos": [
+      "curto",
+      "longo"
+     ],
+     "modo": "configurar-vinculo-saque",
+     "campo": "principio",
+     "rotulo": "Ideal ou princípio",
+     "pergunta": "Em qual ideal ou princípio você focou sua força de vontade?"
+    }
+   },
+   "efeitoSaque": {
+    "tipo": "uso-assistido",
+    "contadorUso": "uso:loot:loot-37",
+    "custoEsperanca": 1,
+    "requerVinculo": true,
+    "rolaNoApp": false,
+    "efeitoManual": "Em uma jogada diretamente relacionada ao princípio registrado, role 1d20 como seu Dado de Esperança."
+   }
   },
   {
    "id": "loot-38",
@@ -6883,7 +6960,29 @@
    "descricao": "Durante um descanso longo, se você tiver 6 de Esperança, poderá gastar uma Esperança para imbuir esse medalhão com sua determinação abundante. Quando tiver 0 de Esperança, você pode usar o medalhão para ganhar imediatamente uma Esperança. O medalhão deve ser imbuído novamente antes de poder ser usado dessa forma.",
    "nomeIngles": "Hopekeeper Locket",
    "descricaoIngles": "During a long rest, if you have 6 Hope, you can spend a Hope to imbue this locket with your bountiful resolve. When you have 0 Hope, you can use the locket to immediately gain a Hope. The locket must be re-imbued before it can be used this way again.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-carga-esperanca-e19",
+    "rolaNoApp": false,
+    "motivo": "A ficha guarda se o medalhão está carregado. Carregar exige Esperança 6 e custa 1; usar exige Esperança 0, concede 1 e consome a carga."
+   },
+   "efeitoSaque": {
+    "tipo": "uso-assistido",
+    "rolaNoApp": false,
+    "carregarEstado": {
+     "contador": "estado:loot:loot-39",
+     "esperancaExata": 6,
+     "custoEsperanca": 1,
+     "momento": "descanso-longo"
+    },
+    "usarEstado": {
+     "contador": "estado:loot:loot-39",
+     "esperancaExata": 0,
+     "ganhaEsperanca": 1,
+     "limpaEstado": true
+    },
+    "efeitoManual": "Carregue durante um descanso longo quando estiver com 6 de Esperança. Depois, ao chegar a 0, use a carga para receber 1 de Esperança."
+   }
   },
   {
    "id": "loot-40",
@@ -7131,10 +7230,26 @@
    "id": "loot-52",
    "rolagem": "52",
    "nome": "Fragmento de memória",
-   "descricao": "Uma vez por descanso longo, você pode gastar 2 de Esperança para chamar um card de domínio do seu cofre em vez de pagar seu Custo de Chamada.",
+   "descricao": "Uma vez por descanso longo, você pode gastar 2 de Esperança para trocar uma carta de domínio da sua mão por uma da sua reserva sem pagar seu Custo de Chamada.",
    "nomeIngles": "Shard of Memory",
    "descricaoIngles": "Once per long rest, you can spend 2 Hope to recall a domain card from your vault instead of paying its Recall Cost.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-troca-carta-sem-custo-e19",
+    "rolaNoApp": false,
+    "motivo": "O jogador escolhe uma carta da mão e uma da reserva. O servidor cobra 2 Esperança e faz a troca inteira na mesma gravação, sem cobrar Custo de Chamada."
+   },
+   "efeitoSaque": {
+    "tipo": "uso-assistido",
+    "contadorUso": "uso:loot:loot-52",
+    "custoEsperanca": 2,
+    "rolaNoApp": false,
+    "trocaCartasSemCusto": {
+     "campoMao": "cartaDaMao",
+     "campoReserva": "cartaDaReserva"
+    },
+    "efeitoManual": "Troca concluída sem pagar Custo de Chamada."
+   }
   },
   {
    "id": "loot-53",
@@ -7197,7 +7312,19 @@
    "descricao": "Uma vez por sessão, quando o GM gasta um Medo, você pode gastar 4 de Esperança para cancelar os efeitos desse Medo gasto.",
    "nomeIngles": "Ring of Unbreakable Resolve",
    "descricaoIngles": "Once per session, when the GM spends a Fear, you can spend 4 Hope to cancel the effects of that spent Fear.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-custo-por-sessao-e19",
+    "rolaNoApp": false,
+    "motivo": "A ficha controla o uso uma vez por sessão e cobra 4 Esperança; o evento de gasto de Medo e seus efeitos pertencem à mesa."
+   },
+   "efeitoSaque": {
+    "tipo": "uso-assistido",
+    "contadorUso": "uso:loot:loot-59",
+    "custoEsperanca": 4,
+    "rolaNoApp": false,
+    "efeitoManual": "Quando o Mestre gastar Pontos de Medo, cancele os efeitos gerados por esse gasto."
+   }
   },
   {
    "id": "loot-60",

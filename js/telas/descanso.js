@@ -215,6 +215,12 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
     const comGrupo = (m.perguntas || []).some((q) => q.chave === 'comGrupo')
       ? el('input', { type: 'checkbox', class: 'criacao__caixa' }) : null;
 
+    const pedePrincipio = (m.perguntas || []).some((q) => q.chave === 'principio');
+    const principio = pedePrincipio
+      ? el('input', semCorretor({ type:'text', class:'campo__entrada', maxlength:120,
+          placeholder:'ex.: proteger quem não pode se defender' }))
+      : null;
+
     const pedeProjeto = (m.perguntas || []).some((q) => q.chave === 'projeto');
     const projeto = pedeProjeto
       ? el('input', semCorretor({ type: 'text', class: 'campo__entrada', maxlength: 200,
@@ -256,6 +262,12 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
     if (comGrupo) {
       cartao.append(el('label', { class: 'criacao__alternador' }, [
         comGrupo, el('span', { texto: 'Preparei junto com alguém do grupo (2 de Esperança)' })
+      ]));
+    }
+    if (principio) {
+      cartao.append(el('label', { class:'campo' }, [
+        el('span', { class:'campo__rotulo', texto:'Ideal ou princípio' }), principio,
+        el('span', { class:'campo__ajuda', texto:'Esta escolha ocupa este movimento de repouso; nenhum dado é rolado pelo app.' })
       ]));
     }
     if (projeto) {
@@ -314,6 +326,11 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
         escolha.rolagem = n;
       }
       if (comGrupo && comGrupo.checked) escolha.comGrupo = true;
+      if (principio) {
+        const valorPrincipio = principio.value.trim();
+        if (!valorPrincipio) { avisarErro('Informe o ideal ou princípio deste movimento.'); principio.focus(); return; }
+        escolha.principio = valorPrincipio;
+      }
       if (projeto && projeto.value.trim()) escolha.projeto = projeto.value.trim();
       if (selProjeto && selProjeto.value) {
         escolha.projetoId = selProjeto.value;

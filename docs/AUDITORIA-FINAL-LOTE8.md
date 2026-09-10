@@ -9,7 +9,7 @@
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **0** candidatas sem sinal de automação específica; **92** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **0** ocorrências candidatas ativas/condicionais.
-- Loot/consumíveis com texto mecânico detectado: **81**; **6** candidatos ainda sem estrutura/classificação.
+- Loot/consumíveis com texto mecânico detectado: **81**; **0** candidatos ainda sem estrutura/classificação.
 - Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **56** linhas, incluindo histórico já resolvido.
 
 ### Distribuição — classes/subclasses
@@ -35,8 +35,7 @@
 
 ### Distribuição — loot/consumíveis
 
-- candidato mecânico: **6**
-- estruturado/classificado: **74**
+- estruturado/classificado: **80**
 - referência específica no motor: **1**
 
 ## Candidatos — classes e subclasses
@@ -73,7 +72,7 @@
 | loot | Receita de Poção de Estamina Menor | estruturado/classificado | Como um movimento de inatividade, você pode usar o osso de uma criatura para criar uma Poção de resistência menor. |
 | loot | Receita de Poção de Saúde Menor | estruturado/classificado | Como movimento de inatividade, você pode usar um frasco de sangue para criar uma Poção de Saúde Menor. |
 | loot | Espírito Corretor | estruturado/classificado | Esse pequeno duende fica na curva de seu canal auditivo e sussurra conselhos úteis durante o combate. Uma vez por descanso curto, você pode ganhar vantagem em uma rolage… |
-| loot | Guardião do Saber | candidato mecânico | Você pode armazenar o nome e os detalhes de até três criaturas hostis dentro desse livro. Você ganha um bônus de +1 nas rolagens de ação contra essas criaturas. |
+| loot | Guardião do Saber | estruturado/classificado | Você pode armazenar o nome e os detalhes de até três criaturas hostis dentro desse livro. Você ganha um bônus de +1 nas rolagens de ação contra essas criaturas. |
 | loot | Frasco de Darksmoke Receita | estruturado/classificado | Como movimento de inatividade, você pode marcar um Stress para criar um Vial of Darksmoke. |
 | loot | Pedra de sangue | estruturado/classificado | Você pode anexar essa pedra a uma arma que ainda não tenha uma característica. A arma ganha a seguinte característica. Brutal: Quando rolar o valor máximo em um dado de … |
 | loot | Pedra Maior | estruturado/classificado | Você pode anexar essa pedra a uma arma que ainda não tenha uma característica. A arma ganha a seguinte característica. Poderoso: Em um ataque bem-sucedido, role um dado … |
@@ -82,19 +81,19 @@
 | loot | Pingente Calmante | estruturado/classificado | Quando for marcar seu último estresse, role um d6. Se o resultado for 5 ou mais, não o marque. |
 | loot | Saco de Ficklesand | estruturado/classificado | Você pode convencer esse pequeno saco de areia a ficar muito mais pesado ou mais leve com um Rolamento de Presença bem-sucedido (10). Além disso, com uma rolagem bem-suc… |
 | loot | Anel de Resistência | estruturado/classificado | Uma vez por descanso longo, você pode ativar esse anel após um ataque bem-sucedido contra você para reduzir o dano pela metade. |
-| loot | Caixa de muitos produtos | candidato mecânico | Uma vez por descanso longo, você pode abrir essa pequena caixa e rolar um d12. Se o resultado for de 1 a 6, ela estará vazia. Em um resultado de 7 a 10, ela contém um co… |
+| loot | Caixa de muitos produtos | estruturado/classificado | Uma vez por descanso longo, você pode abrir essa pequena caixa e rolar um d12. Se o resultado for de 1 a 6, ela estará vazia. Em um resultado de 7 a 10, ela contém um co… |
 | loot | Amuleto do Alcance | estruturado/classificado | Você pode anexar este amuleto a uma arma de alcance Corpo a Corpo. 3 vezes por descanso, você pode ativar este amuleto para atacar um alvo Próximo. |
 | loot | Semente de Portal | estruturado/classificado | Plante esta semente no chão para que um portal surja no local em 24h. Você pode usá-lo para viajar até qualquer outro lugar onde tenha plantado uma Semente de Portal. Um… |
-| loot | Corrente do Paragon | candidato mecânico | Como movimento de tempo de inatividade, você pode meditar em um ideal ou princípio que lhe seja caro e concentrar sua vontade nessa corrente. Uma vez por descanso longo,… |
+| loot | Corrente do Paragon | estruturado/classificado | Como movimento de tempo de inatividade, você pode meditar em um ideal ou princípio que lhe seja caro e concentrar sua vontade nessa corrente. Uma vez por descanso longo,… |
 | loot | Amuleto Elusivo | estruturado/classificado | Uma vez por descanso longo, você pode ativar esse amuleto para ficar oculto até se mover. Enquanto estiver oculto dessa forma, você permanecerá invisível mesmo que um ad… |
-| loot | Medalhão Hopekeeper | candidato mecânico | Durante um descanso longo, se você tiver 6 de Esperança, poderá gastar uma Esperança para imbuir esse medalhão com sua determinação abundante. Quando tiver 0 de Esperanç… |
+| loot | Medalhão Hopekeeper | estruturado/classificado | Durante um descanso longo, se você tiver 6 de Esperança, poderá gastar uma Esperança para imbuir esse medalhão com sua determinação abundante. Quando tiver 0 de Esperanç… |
 | loot | Relíquia de Encantamento | estruturado/classificado | Você ganha um bônus de +1 na sua Presença. Você só pode carregar uma relíquia. |
 | loot | Relíquia da Iluminação | estruturado/classificado | Você ganha um bônus de +1 no seu Conhecimento. Você só pode carregar uma relíquia. |
 | loot | Relíquia de afiação | estruturado/classificado | Você ganha um bônus de +1 em uma Experiência de sua escolha. Você só pode carregar uma relíquia. |
 | loot | Pingente Flickerfly | estruturado/classificado | Enquanto você estiver portando esse pingente, suas armas com alcance corpo a corpo que causam dano físico terão um brilho de véu e poderão atacar alvos a uma distância m… |
 | loot | Receita de Mythic Dust | estruturado/classificado | Como movimento de inatividade, você pode usar um punhado de pó de ouro fino para criar Pó Mítico. |
-| loot | Fragmento de memória | candidato mecânico | Uma vez por descanso longo, você pode gastar 2 de Esperança para chamar um card de domínio do seu cofre em vez de pagar seu Custo de Chamada. |
-| loot | Anel de determinação inquebrável | candidato mecânico | Uma vez por sessão, quando o GM gasta um Medo, você pode gastar 4 de Esperança para cancelar os efeitos desse Medo gasto. |
+| loot | Fragmento de memória | estruturado/classificado | Uma vez por descanso longo, você pode gastar 2 de Esperança para trocar uma carta de domínio da sua mão por uma da sua reserva sem pagar seu Custo de Chamada. |
+| loot | Anel de determinação inquebrável | estruturado/classificado | Uma vez por sessão, quando o GM gasta um Medo, você pode gastar 4 de Esperança para cancelar os efeitos desse Medo gasto. |
 | loot | Cinturão da unidade | estruturado/classificado | Uma vez por sessão, você pode gastar 5 de Esperança para liderar um Tag Team Roll com três PCs em vez de dois. |
 | consumiveis | Poção da passada | estruturado/classificado | Você ganha um bônus de +1 na sua próxima rolagem de agilidade. |
 | consumiveis | Poção de reforço | estruturado/classificado | Você ganha um bônus de +1 na sua próxima rolagem de força. |

@@ -4372,6 +4372,36 @@ function ouroEmPunhados(ouro) {
       if (seletorVinculo && naMochila && naMochila.vinculo) {
         seletorVinculo.value = naMochila.vinculo;
       }
+      const regraRegistros = passivoSaque && passivoSaque.registros;
+      const camposRegistros = regraRegistros ? Array.from({ length:Math.max(1, Number(regraRegistros.limite) || 3) }, (_, i) => {
+        const campo = el('input', semCorretor({
+          type:'text', class:'campo__entrada', maxlength:200,
+          placeholder:i === 0 ? 'ex.: Ogro do Pântano — cicatriz no olho esquerdo' : 'outra criatura hostil'
+        }));
+        campo.value = ((naMochila || {}).registros || [])[i] || '';
+        return campo;
+      }) : [];
+
+      const trocaCartas = efeitoSaque && efeitoSaque.trocaCartasSemCusto;
+      const idsMao = ((((p.ficha || {}).cartas || {}).ativas) || []);
+      const idsReserva = ((((p.ficha || {}).cartas || {}).cofre) || []);
+      const seletorCarta = (ids, aria) => el('select', { class:'campo__entrada', 'aria-label':aria }, [
+        el('option', { value:'' }, '— escolha —'),
+        ...ids.map((idBruto) => {
+          const id = (idBruto && typeof idBruto === 'object') ? (idBruto.id || idBruto.nome) : idBruto;
+          const carta = catalogo.acharCarta(id);
+          return el('option', { value:id }, carta ? carta.nome : id);
+        })
+      ]);
+      const cartaDaMao = trocaCartas ? seletorCarta(idsMao, 'Carta que sai da mão') : null;
+      const cartaDaReserva = trocaCartas ? seletorCarta(idsReserva, 'Carta que entra da reserva') : null;
+
+      const carregarEstado = efeitoSaque && efeitoSaque.carregarEstado;
+      const usarEstado = efeitoSaque && efeitoSaque.usarEstado;
+      const chaveEstadoSaque = carregarEstado ? carregarEstado.contador : (usarEstado ? usarEstado.contador : '');
+      const estadoSaqueAtivo = chaveEstadoSaque
+        ? Number((((p.ficha || {}).contadores || {})[chaveEstadoSaque] || {}).valor) > 0 : false;
+
       const pedeQuantidade = podeUsar && efeitoConsumivel.tipo === 'recuperar-armadura-por-esperanca';
       const recursosAtuais = (p.ficha || {}).recursos || {};
       const limiteQuantidade = Math.max(0, Math.min(
@@ -4396,11 +4426,36 @@ function ouroEmPunhados(ouro) {
       const usarSaque = podeUsarSaque ? el('button', {
         type:'button', class:'btn btn--principal',
         onClick: async (ev) => {
-          const r = await travarBotao(ev.currentTarget,
-            enviar([{ tipo:'inventario', acao:'usar', indice }]));
+          const pedido = { tipo:'inventario', acao:'usar', indice };
+          if (trocaCartas) {
+            pedido.cartaDaMao = cartaDaMao ? cartaDaMao.value : '';
+            pedido.cartaDaReserva = cartaDaReserva ? cartaDaReserva.value : '';
+            if (!pedido.cartaDaMao || !pedido.cartaDaReserva) {
+              avisarErro('Escolha uma carta da mão e uma da reserva.'); return;
+            }
+          }
+          const r = await travarBotao(ev.currentTarget, enviar([pedido]));
           if (r && modal) modal.fechar();
         }
-      }, 'Usar') : null;
+      }, usarEstado ? 'Usar carga' : 'Usar') : null;
+      const carregarSaque = carregarEstado ? el('button', {
+        type:'button', class:'btn btn--fantasma', disabled:estadoSaqueAtivo,
+        onClick: async (ev) => {
+          const r = await travarBotao(ev.currentTarget,
+            enviar([{ tipo:'inventario', acao:'usar', indice, modo:'carregar' }]));
+          if (r && modal) modal.fechar();
+        }
+      }, estadoSaqueAtivo ? 'Já carregado' : 'Imbuir no descanso longo · 1 Esperança') : null;
+      const salvarRegistros = regraRegistros ? el('button', {
+        type:'button', class:'btn btn--fantasma',
+        onClick: async (ev) => {
+          const r = await travarBotao(ev.currentTarget, enviar([{
+            tipo:'inventario', acao:'registros', indice,
+            registros:camposRegistros.map((x) => x.value.trim()).filter(Boolean)
+          }]));
+          if (r && modal) modal.fechar();
+        }
+      }, 'Salvar criaturas') : null;
       modal = abrirModal({
         titulo: doLivro.nome,
         conteudo: el('div', { class: 'pilha' }, [
@@ -4419,6 +4474,19 @@ function ouroEmPunhados(ouro) {
             el('span', { class:'texto-xs texto-fraco', texto:
               'Escolha registrada pela ficha; marcar o item como em uso ativa o efeito.' })
           ]) : null,
+          regraRegistros ? el('div', { class:'pilha' }, [
+            el('span', { class:'texto-xs texto-fraco', texto:
+              `${regraRegistros.rotulo || 'Registros'} · máximo ${regraRegistros.limite || 3} · +${regraRegistros.bonusRolagem || 1} em testes contra elas` }),
+            ...camposRegistros
+          ]) : null,
+          trocaCartas ? el('div', { class:'pilha' }, [
+            el('label', { class:'campo' }, [el('span', { class:'campo__rotulo', texto:'Sai da mão' }), cartaDaMao]),
+            el('label', { class:'campo' }, [el('span', { class:'campo__rotulo', texto:'Entra da reserva' }), cartaDaReserva]),
+            el('span', { class:'texto-xs texto-fraco', texto:'A troca é uma só gravação e não paga Custo de Chamada.' })
+          ]) : null,
+          carregarEstado ? el('p', { class:'texto-xs texto-fraco', texto:
+            estadoSaqueAtivo ? 'Medalhão carregado — a carga fica guardada até sua Esperança chegar a 0.' :
+              'Durante um descanso longo, com Esperança exatamente 6, você pode gastar 1 para carregar o medalhão.' }) : null,
           (podeUsar || podeUsarSaque) ? el('p', { class:'texto-xs texto-fraco', texto:
             podeUsar ? 'Se a regra pedir dado, role fisicamente; o item só sai da mochila depois que o efeito for aceito.' :
               'Este saque é reutilizável: usar registra custos/estado, mas não remove o item da mochila.' }) : null
@@ -4435,6 +4503,8 @@ function ouroEmPunhados(ouro) {
               if (r && modal) modal.fechar();
             }
           }, 'Salvar vínculo') : null,
+          salvarRegistros,
+          carregarSaque,
           usar,
           usarSaque
         ].filter(Boolean)
@@ -4726,6 +4796,8 @@ function ouroEmPunhados(ouro) {
           rotulo,
           item.vinculo ? el('span', { class:'ficha__itemNota',
             texto:`Vínculo: ${rotuloVinculo}` }) : null,
+          Array.isArray(item.registros) && item.registros.length ? el('span', { class:'ficha__itemNota',
+            texto:`Registros: ${item.registros.length}/3` }) : null,
           item.nota ? el('span', { class: 'ficha__itemNota', texto: item.nota }) : null
         ]),
         /*

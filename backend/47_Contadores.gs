@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 185 cartas e características mandam
+ *  O problema que este arquivo resolve: 190 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -225,6 +225,11 @@ const CONTADORES = {
   "uso:loot:loot-35": { origem: "loot", refId: "loot-35", nome: "Amuleto do Alcance", rotulo: "usos", tipo: "usos", maximo: {"tipo":"fixo","valor":3}, zeraEm: ["descanso"], recarregaEm: [] },
   "uso:loot:loot-60": { origem: "loot", refId: "loot-60", nome: "Cinturão da Unidade", rotulo: "uso da sessão", tipo: "usos", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-de-sessao"], recarregaEm: [] },
   "uso:loot:loot-32": { origem: "loot", refId: "loot-32", nome: "Anel de Resistência", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:loot:loot-34": { origem: "loot", refId: "loot-34", nome: "Caixa de muitos produtos", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:loot:loot-37": { origem: "loot", refId: "loot-37", nome: "Corrente do Paragon", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "estado:loot:loot-39": { origem: "loot", refId: "loot-39", nome: "Medalhão Hopekeeper", rotulo: "carregado", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "uso:loot:loot-52": { origem: "loot", refId: "loot-52", nome: "Fragmento de memória", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:loot:loot-59": { origem: "loot", refId: "loot-59", nome: "Anel de determinação inquebrável", rotulo: "uso da sessão", tipo: "usos", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-de-sessao"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -414,6 +419,11 @@ const CONTADOR_ALIASES = {
   "uso:loot:loot-35": ["Amuleto do Alcance"],
   "uso:loot:loot-60": ["Cinturão da Unidade"],
   "uso:loot:loot-32": ["Anel de Resistência"],
+  "uso:loot:loot-34": ["Caixa de muitos produtos"],
+  "uso:loot:loot-37": ["Corrente do Paragon"],
+  "estado:loot:loot-39": ["Medalhão Hopekeeper"],
+  "uso:loot:loot-52": ["Fragmento de memória"],
+  "uso:loot:loot-59": ["Anel de determinação inquebrável"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 185 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento, 24 de consumível e 11 de loot', () => {
+teste('o catálogo tem 190 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento, 24 de consumível e 16 de loot', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,7 +1561,7 @@ teste('o catálogo tem 185 contadores: 113 de carta, 25 de classe/subclasse, 4 d
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 185);
+  igual(Object.keys(CONTADORES).length, 190);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 113);
@@ -1571,7 +1571,7 @@ teste('o catálogo tem 185 contadores: 113 de carta, 25 de classe/subclasse, 4 d
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
   igual(porOrigem['equipamento'], 5);
-  igual(porOrigem['loot'], 11);
+  igual(porOrigem['loot'], 16);
 });
 
 teste('"uma vez por" conta o uso GASTO, e o gatilho certo o apaga', () => {
@@ -12219,6 +12219,159 @@ teste('E18 — vínculo sobrevive à normalização e limpar vínculo também gu
   igual(f.inventario[0].emUso, false);
 });
 
+
+
+console.log('\nLote 8 — fechamento dos seis últimos saques E19');
+
+function fichaLootE19() {
+  const f = contexto.fichaRapida_({
+    nome:'Tesoureira', classe:'Bardo', subclasse:'Músico Errante',
+    ancestralidade:'Elfo', comunidade:'Highborne',
+    cartas:['grace-palavras-inspiradoras','codex-livro-de-ava'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  f.inventario = [];
+  f.recursos.esperanca = 6;
+  return f;
+}
+function porIdInv(f, id) { return (f.inventario || []).findIndex((x) => x && x.id === id); }
+function addLootE19(f, id) {
+  const item = contexto.acharItem_(id);
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'inventario', acao:'adicionar', itemId:id, item:item.nome, qtd:1 }]);
+  igual(r.erros, []);
+  return porIdInv(f, id);
+}
+
+teste('E19: Guardião do Saber guarda até três criaturas, sem mexer em rolagem', () => {
+  const f = fichaLootE19();
+  const i = addLootE19(f, 'loot-23');
+  let r = contexto.aplicarAjustes_(f, [{
+    tipo:'inventario', acao:'registros', indice:i,
+    registros:['Ogro do Pântano — cicatriz no olho','Vampiro de Ébano']
+  }]);
+  igual(r.erros, []);
+  igual(f.inventario[i].registros.length, 2);
+  igual(contexto.acharItem_('loot-23').efeitoSaquePassivo.registros.bonusRolagem, 1);
+  r = contexto.aplicarAjustes_(f, [{
+    tipo:'inventario', acao:'registros', indice:i, registros:['A','B','C','D']
+  }]);
+  igual(r.erros.length, 1);
+  igual(f.inventario[i].registros.length, 2, 'recusa não altera os registros antigos');
+});
+
+teste('E19: Caixa pede d12 físico e só então gasta o uso', () => {
+  const f = fichaLootE19();
+  const i = addLootE19(f, 'loot-34');
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'inventario', acao:'usar', indice:i }]);
+  verdade(r.pendenciaRolagem && r.pendenciaRolagem.dado === 'd12', 'deve pedir d12 manual');
+  igual((((f.contadores || {})['uso:loot:loot-34'] || {}).valor) || 0, 0, 'pendência não gasta uso');
+  r = contexto.aplicarAjustes_(f, [{ tipo:'inventario', acao:'usar', indice:i, resultadoCaixa:11 }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].resultadoManual, 11);
+  igual(r.mudancas[0].resultadoEfeito.quantidadeConsumiveis, 2);
+  igual(f.contadores['uso:loot:loot-34'].valor, 1);
+  r = contexto.aplicarAjustes_(f, [{ tipo:'inventario', acao:'usar', indice:i, resultadoCaixa:7 }]);
+  igual(r.erros.length, 1, 'segundo uso antes do descanso longo deve falhar');
+});
+
+teste('E19: Corrente registra princípio como movimento e cobra 1 Esperança no uso', () => {
+  const f = fichaLootE19();
+  addLootE19(f, 'loot-37');
+  const rr = contexto.aplicarDescanso_(f, 'curto', [{ movimento:'principio:loot-37', principio:'Proteger os indefesos' }]);
+  const apos = rr.ficha;
+  const i = porIdInv(apos, 'loot-37');
+  igual(apos.inventario[i].vinculo, 'Proteger os indefesos');
+  apos.recursos.esperanca = 3;
+  const r = contexto.aplicarAjustes_(apos, [{ tipo:'inventario', acao:'usar', indice:i }]);
+  igual(r.erros, []);
+  igual(apos.recursos.esperanca, 2);
+  igual(apos.contadores['uso:loot:loot-37'].valor, 1);
+  verdade(/1d20/.test(r.mudancas[0].efeitoManual), r.mudancas[0].efeitoManual);
+});
+
+teste('E19: Corrente sem princípio recusa antes de cobrar', () => {
+  const f = fichaLootE19();
+  const i = addLootE19(f, 'loot-37');
+  f.recursos.esperanca = 3;
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'inventario', acao:'usar', indice:i }]);
+  igual(r.erros.length, 1);
+  igual(f.recursos.esperanca, 3);
+});
+
+teste('E19: Hopekeeper carrega em 6, persiste e vira +1 quando Esperança é 0', () => {
+  const f = fichaLootE19();
+  const i = addLootE19(f, 'loot-39');
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'inventario', acao:'usar', indice:i, modo:'carregar' }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 5);
+  igual(f.contadores['estado:loot:loot-39'].valor, 1);
+  contexto.aplicarGatilhoContadores_(f, 'descanso-longo');
+  igual(f.contadores['estado:loot:loot-39'].valor, 1, 'carga não expira no descanso');
+  f.recursos.esperanca = 0;
+  r = contexto.aplicarAjustes_(f, [{ tipo:'inventario', acao:'usar', indice:i }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 1);
+  igual((((f.contadores || {})['estado:loot:loot-39'] || {}).valor) || 0, 0);
+});
+
+teste('E19: Hopekeeper recusa carga fora de Esperança 6 e uso fora de 0', () => {
+  const f = fichaLootE19();
+  const i = addLootE19(f, 'loot-39');
+  f.recursos.esperanca = 5;
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'inventario', acao:'usar', indice:i, modo:'carregar' }]);
+  igual(r.erros.length, 1);
+  igual(f.recursos.esperanca, 5);
+  f.recursos.esperanca = 6;
+  contexto.aplicarAjustes_(f, [{ tipo:'inventario', acao:'usar', indice:i, modo:'carregar' }]);
+  r = contexto.aplicarAjustes_(f, [{ tipo:'inventario', acao:'usar', indice:i }]);
+  igual(r.erros.length, 1, 'com Esperança 5 a carga não pode ser usada');
+});
+
+teste('E19: Fragmento troca mão e reserva sem pagar Custo de Chamada', () => {
+  const f = fichaLootE19();
+  f.cartas = { ativas:['grace-palavras-inspiradoras'], cofre:['codex-livro-de-ava'] };
+  const i = addLootE19(f, 'loot-52');
+  f.recursos.esperanca = 4;
+  f.recursos.estresseMarcado = 0;
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'inventario', acao:'usar', indice:i,
+    cartaDaMao:'grace-palavras-inspiradoras', cartaDaReserva:'codex-livro-de-ava'
+  }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 2);
+  igual(f.recursos.estresseMarcado, 0, 'não paga custo de chamada em Estresse');
+  igual(f.cartas.ativas[0], 'codex-livro-de-ava');
+  igual(f.cartas.cofre[0], 'grace-palavras-inspiradoras');
+  igual(r.mudancas[0].trocaCartas.custoChamada, 0);
+  igual(f.contadores['uso:loot:loot-52'].valor, 1);
+});
+
+teste('E19: Fragmento inválido é atômico e não cobra Esperança', () => {
+  const f = fichaLootE19();
+  f.cartas = { ativas:['grace-palavras-inspiradoras'], cofre:['codex-livro-de-ava'] };
+  const i = addLootE19(f, 'loot-52');
+  f.recursos.esperanca = 4;
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'inventario', acao:'usar', indice:i,
+    cartaDaMao:'nao-existe', cartaDaReserva:'codex-livro-de-ava'
+  }]);
+  igual(r.erros.length, 1);
+  igual(f.recursos.esperanca, 4);
+  igual(f.cartas.ativas[0], 'grace-palavras-inspiradoras');
+});
+
+teste('E19: Anel da determinação custa 4 Esperança e é uma vez por sessão', () => {
+  const f = fichaLootE19();
+  const i = addLootE19(f, 'loot-59');
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'inventario', acao:'usar', indice:i }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 2);
+  igual(f.contadores['uso:loot:loot-59'].valor, 1);
+  r = contexto.aplicarAjustes_(f, [{ tipo:'inventario', acao:'usar', indice:i }]);
+  igual(r.erros.length, 1);
+  contexto.aplicarGatilhoContadores_(f, 'fim-de-sessao');
+  igual((((f.contadores || {})['uso:loot:loot-59'] || {}).valor) || 0, 0);
+});
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));

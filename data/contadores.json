@@ -3461,6 +3461,91 @@
     "descanso-longo"
    ],
    "observacao": "Uma vez por descanso longo. Ausência/0 = disponível; 1 = já usado."
+  },
+  {
+   "chave": "uso:loot:loot-34",
+   "origem": "loot",
+   "refId": "loot-34",
+   "nome": "Caixa de muitos produtos",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
+  },
+  {
+   "chave": "uso:loot:loot-37",
+   "origem": "loot",
+   "refId": "loot-37",
+   "nome": "Corrente do Paragon",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
+  },
+  {
+   "chave": "estado:loot:loot-39",
+   "origem": "loot",
+   "refId": "loot-39",
+   "nome": "Medalhão Hopekeeper",
+   "rotulo": "carregado",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Persiste até ser usado quando a Esperança chegar a 0."
+  },
+  {
+   "chave": "uso:loot:loot-52",
+   "origem": "loot",
+   "refId": "loot-52",
+   "nome": "Fragmento de memória",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo."
+  },
+  {
+   "chave": "uso:loot:loot-59",
+   "origem": "loot",
+   "refId": "loot-59",
+   "nome": "Anel de determinação inquebrável",
+   "rotulo": "uso da sessão",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "fim-de-sessao"
+   ],
+   "observacao": "Uma vez por sessão."
   }
  ]
 }

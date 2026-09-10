@@ -978,3 +978,15 @@ Fonte conferida no livro básico PT-BR, Capítulo 2: Tesouro: itens 25–26 (Ped
 Meta da auditoria desta rodada: **10 → 6 candidatos de loot/consumíveis**, sem reabrir classes, comunidades, cartas ou equipamentos.
 
 Próximo bloco natural: revisar os 6 candidatos restantes da auditoria e separar o que é estado/recurso determinístico do que pertence exclusivamente à mesa.
+
+
+### Lote 8 E19 — fechamento dos seis últimos saques da auditoria
+
+- `loot-23` passou a guardar até três criaturas hostis na ficha; o bônus +1 continua contextual e nenhuma jogada é feita pelo app.
+- `loot-34` pede o resultado do d12 físico e traduz apenas para 0/1/2 consumíveis comuns; o sorteio dos itens continua na mesa.
+- `loot-37` ganhou movimento real de repouso para registrar o princípio e uso 1/descanso longo por 1 Esperança; o d20 é físico.
+- `loot-39` guarda carga persistente: com Esperança 6, durante descanso longo, gasta 1 para carregar; em Esperança 0, a carga concede +1 e é consumida.
+- `loot-52` foi alinhado ao Core PT-BR: troca uma carta da mão por uma da reserva, gasta 2 Esperança e não cobra Custo de Chamada, tudo atomicamente, 1/descanso longo.
+- `loot-59` reutiliza o padrão de uso por sessão: gasta 4 Esperança e registra 1 uso; cancelar o efeito do gasto de Medo continua sendo resolução da mesa.
+- Nenhum destes efeitos introduz RNG no app.
+- Meta da auditoria deste bloco: **6 → 0 candidatos mecânicos brutos**.

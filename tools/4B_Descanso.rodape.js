@@ -135,11 +135,29 @@ function movimentosDoDescanso_(tipo, ficha) {
     if (!reg.id || receitasVistas[reg.id] || typeof acharItem_ !== 'function') continue;
     receitasVistas[reg.id] = true;
     const item = acharItem_(reg.id);
-    const receita = item && item.tipo === 'saque'
+    const movimento = item && item.tipo === 'saque'
       ? (((item.efeitoSaquePassivo || {}).movimentoRepouso) || null) : null;
-    if (!receita) continue;
-    const tipos = Array.isArray(receita.tipos) && receita.tipos.length ? receita.tipos : ['curto', 'longo'];
+    if (!movimento) continue;
+    const tipos = Array.isArray(movimento.tipos) && movimento.tipos.length ? movimento.tipos : ['curto', 'longo'];
     if (tipos.indexOf(t.id) < 0) continue;
+
+    if (movimento.modo === 'configurar-vinculo-saque') {
+      const campo = String(movimento.campo || 'principio');
+      saida.push({
+        id:String(movimento.id || ('configurar:' + item.id)),
+        nome:String(movimento.nome || ('Usar ' + item.nome)),
+        nomeJambo:'', tipos:tipos,
+        texto:item.nome + ': ' + String(movimento.pergunta || 'Registre a escolha deste movimento.'),
+        formula:'sem rolagem', podeMirarAliado:false,
+        perguntas:[{ chave:campo, tipo:'texto', texto:String(movimento.pergunta || movimento.rotulo || 'Escolha'), padrao:'' }],
+        deOutroDescanso:'',
+        efeito:{ modo:'configurar-vinculo-saque', itemId:item.id, campo:campo,
+          rotulo:String(movimento.rotulo || 'Escolha') }
+      });
+      continue;
+    }
+
+    const receita = movimento;
     const custo = Math.max(0, Math.trunc(Number(receita.custoEstresse)) || 0);
     const ingrediente = String(receita.ingredienteManual || '');
     const partesFormula = [];
@@ -404,6 +422,30 @@ function simularDescanso_(ficha, tipo, escolhas) {
     }
 
     const ef = def.efeito || {};
+
+    if (ef.modo === 'configurar-vinculo-saque') {
+      const campo = String(ef.campo || 'principio');
+      const valor = String(escolha[campo] === undefined || escolha[campo] === null ? '' : escolha[campo])
+        .trim().replace(/\s+/g, ' ').slice(0, LIMITE_ITEM_INVENTARIO);
+      if (!valor) {
+        erros.push('"' + def.nome + '": informe ' + String(ef.rotulo || 'a escolha').toLowerCase() + '.');
+        continue;
+      }
+      const inventarioAtual = Array.isArray(copia.inventario) ? copia.inventario : [];
+      let registro = null;
+      for (let ii = 0; ii < inventarioAtual.length; ii++) {
+        if ((inventarioAtual[ii] || {}).id === ef.itemId) { registro = inventarioAtual[ii]; break; }
+      }
+      if (!registro) {
+        erros.push('"' + def.nome + '": o item não está mais na mochila.');
+        continue;
+      }
+      registro.vinculo = valor;
+      feito.contaDaFormula = String(ef.rotulo || 'Escolha') + ': ' + valor;
+      feito.observacao = 'A escolha ficou registrada no item e será exigida quando a habilidade for usada.';
+      feitos.push(feito);
+      continue;
+    }
 
     if (ef.modo === 'criar-consumivel') {
       const itemCriado = (typeof acharItem_ === 'function') ? acharItem_(ef.criaItemId) : null;
