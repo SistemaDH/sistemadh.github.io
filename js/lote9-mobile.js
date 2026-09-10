@@ -114,19 +114,24 @@ function prepararProgressoCriacao(raiz = document) {
 
     let contador = topo.querySelector('.criacao__contador');
     const etiqueta = bloco.querySelector('.criacao__etiqueta');
-    const texto = `Passo ${atual} de ${total}`;
+    const textoAcessivel = `Passo ${atual} de ${total}`;
+    const textoVisivel = etiqueta ? ` · ${textoAcessivel}` : textoAcessivel;
 
     if (!contador) {
       contador = el('span', {
         class: `criacao__contador ${etiqueta ? '' : 'criacao__contador--sozinho'}`.trim(),
-        'aria-label': texto
+        'aria-label': textoAcessivel
       });
       if (etiqueta) etiqueta.append(contador);
       else bloco.prepend(contador);
     }
 
-    contador.textContent = etiqueta ? ` · ${texto}` : texto;
-    contador.setAttribute('aria-label', texto);
+    /* O próprio contador está sob o MutationObserver. Só escrevemos quando o
+       valor muda para não criar uma cadeia infinita de mutações de texto. */
+    if (contador.textContent !== textoVisivel) contador.textContent = textoVisivel;
+    if (contador.getAttribute('aria-label') !== textoAcessivel) {
+      contador.setAttribute('aria-label', textoAcessivel);
+    }
   });
 }
 
