@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 172 cartas e características mandam
+ *  O problema que este arquivo resolve: 174 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -210,8 +210,10 @@ const CONTADORES = {
   "estado:consumivel:consumivel-32": { origem: "consumivel", refId: "consumivel-32", nome: "Poção secreta da Homet", rotulo: "próximo ataque bem-sucedido é um sucesso crítico", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], persisteSemRef: true, bonusProximaJogada: {"tipo":"ataque","proximoSucessoCritico":true} },
   "estado:consumivel:consumivel-33": { origem: "consumivel", refId: "consumivel-33", nome: "Saliva de Redthorn", rotulo: "+1d12 no próximo dano com a arma física tratada", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], persisteSemRef: true, bonusProximaJogada: {"tipo":"dano","dado":"d12","tipoDano":"fisico","mesmaArma":true} },
   "estado:consumivel:consumivel-35": { origem: "consumivel", refId: "consumivel-35", nome: "Poeira Mítica", rotulo: "+1d12 no próximo dano com a arma mágica tratada", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], persisteSemRef: true, bonusProximaJogada: {"tipo":"dano","dado":"d12","tipoDano":"magico","mesmaArma":true} },
-  "estado:consumivel:consumivel-54": { origem: "consumivel", refId: "consumivel-54", nome: "Poção de crescimento", rotulo: "Metade do tamanho · +2 Agilidade · -1 Proficiência", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso","manual"], recarregaEm: [], persisteSemRef: true, modificadorTraco: {"traco":"agilidade","bonus":2}, modificadorProficiencia: -1 },
-  "estado:consumivel:consumivel-55": { origem: "consumivel", refId: "consumivel-55", nome: "Pedra do Conhecimento", rotulo: "Dobro do tamanho · +2 Força · +1 Proficiência", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso","manual"], recarregaEm: [], persisteSemRef: true, modificadorTraco: {"traco":"forca","bonus":2}, modificadorProficiencia: 1 },
+  "estado:consumivel:consumivel-54": { origem: "consumivel", refId: "consumivel-54", nome: "Poção de crescimento", rotulo: "Dobro do tamanho · +2 Força · +1 Proficiência", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso","manual"], recarregaEm: [], persisteSemRef: true, modificadorTraco: {"traco":"forca","bonus":2}, modificadorProficiencia: 1 },
+  "estado:consumivel:consumivel-53": { origem: "consumivel", refId: "consumivel-53", nome: "Poção de encolhimento", rotulo: "Metade do tamanho · +2 Agilidade · -1 Proficiência", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso","manual"], recarregaEm: [], persisteSemRef: true, modificadorTraco: {"traco":"agilidade","bonus":2}, modificadorProficiencia: -1 },
+  "estado:consumivel:consumivel-13": { origem: "consumivel", refId: "consumivel-13", nome: "Poção da Estabilidade", rotulo: "+1 movimento no próximo descanso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], persisteSemRef: true, movimentosAdicionaisNoDescanso: 1 },
+  "estado:consumivel:consumivel-46": { origem: "consumivel", refId: "consumivel-46", nome: "Broto de Asas", rotulo: "Voo mágico ativo", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], persisteSemRef: true },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -387,7 +389,9 @@ const CONTADOR_ALIASES = {
   "estado:consumivel:consumivel-33": ["Saliva de Redthorn"],
   "estado:consumivel:consumivel-35": ["Poeira Mítica"],
   "estado:consumivel:consumivel-54": ["Poção de crescimento"],
-  "estado:consumivel:consumivel-55": ["Pedra do Conhecimento"],
+  "estado:consumivel:consumivel-53": ["Poção de encolhimento"],
+  "estado:consumivel:consumivel-13": ["Poção da Estabilidade"],
+  "estado:consumivel:consumivel-46": ["Broto de Asas"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

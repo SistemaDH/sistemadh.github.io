@@ -841,3 +841,14 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - O fluxo reutiliza a atomicidade de `aplicarAjustes_`: face inválida ou catálogo inconsistente não consome a unidade nem deixa recuperação parcial.
 
 **Próximo bloco natural:** estados e usos especiais restantes de consumíveis, priorizando **Poção da Estabilidade**, **Broto de Asas** e **Seiva do Sono**; depois reações como **Frasco de Darksmoke** e **Espelho de Marigold**.
+
+## Lote 8 — consumíveis especiais E9 + correção de regressão E7
+
+- Corrigido o deslocamento de IDs do E7: **Poção de Encolhimento = `consumivel-53`** e **Poção de Crescimento = `consumivel-54`**. A **Pedra do Conhecimento (`consumivel-55`)** não recebe mais, por engano, o estado de tamanho.
+- **Poção da Estabilidade (`consumivel-13`)** agora ativa um estado de uso único que concede **exatamente +1 movimento no próximo descanso**. O cálculo lê o estado antes do gatilho de descanso e o próprio gatilho o encerra, portanto ele não vaza para o descanso seguinte.
+- **Broto de Asas (`consumivel-46`)** agora registra voo ativo sem RNG. A duração oficial é **um número de minutos igual ao nível**; como o relógio pertence à mesa, o estado persiste até encerramento manual.
+- **Seiva do Sono (`consumivel-50`)** agora limpa todo o Estresse ao resolver o despertar. Ela **não** dispara um descanso longo completo nem cura PV/Esperança por inferência.
+- O gerador de contadores passou a publicar `movimentosAdicionaisNoDescanso`, permitindo reutilizar a mesma fonte de verdade do descanso para estados futuros.
+- Cobertura backend adicionada para os três consumíveis e para a regressão E7; RNG continua fora do app.
+
+**Próximo bloco natural:** reações de consumíveis, priorizando **Frasco de Darksmoke (`consumivel-16`)** e **Espelho de Marigold (`consumivel-59`)**; depois revisar os candidatos mecânicos restantes da auditoria.

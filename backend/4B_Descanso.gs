@@ -251,6 +251,20 @@ function movimentosPorDescansoDaFicha_(ficha) {
       if (ativo > 0) total += Math.max(0, Math.trunc(Number(estado.movimentosAdicionaisNoDescanso)) || 0);
     }
   }
+  // Estados persistentes também podem alterar o número de movimentos.
+  // O valor é lido antes de simular/aplicar o gatilho do descanso; por isso
+  // uma Poção da Estabilidade vale neste descanso e é zerada logo depois.
+  if (typeof CONTADORES === 'object') {
+    const ativos = ((ficha || {}).contadores || {});
+    Object.keys(ativos).forEach(function (chave) {
+      const def = CONTADORES[chave] || {};
+      const extra = Math.max(0, Math.trunc(Number(def.movimentosAdicionaisNoDescanso)) || 0);
+      if (!extra) return;
+      const reg = ativos[chave] || {};
+      const valor = Math.max(0, Math.trunc(Number(typeof reg === 'object' ? reg.valor : reg)) || 0);
+      if (valor > 0) total += extra;
+    });
+  }
   return total;
 }
 

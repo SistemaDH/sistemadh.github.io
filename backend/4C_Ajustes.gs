@@ -2240,6 +2240,17 @@ function usarConsumivelDaMochila_(ficha, lista, indice, a) {
     if (recupera && recupera.erro) return falhar(recupera.erro);
     quantidade=q;
     detalhes.push(paga,recupera);
+  } else if (tipo === 'recuperar-tudo') {
+    const recurso=String(efeito.recurso || '');
+    if (recurso !== 'pontosDeVidaMarcados' && recurso !== 'estresseMarcado') {
+      return { erro:item.nome + ': recurso de recuperação total inválido no catálogo.' };
+    }
+    const antes=atual(recurso);
+    const m=ajustarRecurso_(ficha,{chave:recurso,valor:0});
+    if (m && m.erro) return falhar(m.erro);
+    quantidade=Math.max(0,antes-atual(recurso));
+    detalhes.push(m);
+    resultadoEfeito={recurso:recurso,quantidadeRecuperada:quantidade,momento:String(efeito.momento || '') || null};
   } else if (tipo === 'resultado-dado-faixas') {
     const entrada=lerResultadoManual();
     if (entrada.pendenciaRolagem) return entrada;

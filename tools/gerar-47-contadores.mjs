@@ -71,6 +71,7 @@ for (const c of d.contadores) {
   if (c.bonusProximaJogada) campos.push(`bonusProximaJogada: ${j(c.bonusProximaJogada)}`);
   if (c.modificadorTraco) campos.push(`modificadorTraco: ${j(c.modificadorTraco)}`);
   if (c.modificadorProficiencia !== undefined) campos.push(`modificadorProficiencia: ${j(c.modificadorProficiencia)}`);
+  if (c.movimentosAdicionaisNoDescanso !== undefined) campos.push(`movimentosAdicionaisNoDescanso: ${j(c.movimentosAdicionaisNoDescanso)}`);
   if (c.compartilhavel) campos.push('compartilhavel: true');
   L.push(`  ${j(c.chave)}: { ${campos.join(', ')} },`);
 }

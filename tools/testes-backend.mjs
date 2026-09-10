@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 172 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento e 22 de consumível', () => {
+teste('o catálogo tem 174 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento e 24 de consumível', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,13 +1561,13 @@ teste('o catálogo tem 172 contadores: 113 de carta, 25 de classe/subclasse, 4 d
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 172);
+  igual(Object.keys(CONTADORES).length, 174);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 113);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
-  igual(porOrigem['consumivel'], 22);
+  igual(porOrigem['consumivel'], 24);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
   igual(porOrigem['equipamento'], 5);
@@ -11272,8 +11272,8 @@ teste('E6 não expira em descanso e some quando a mesa zera o gatilho manualment
 
 console.log('\nLote 8 — consumíveis de tamanho E7');
 const REGRAS_CONSUMIVEIS_E7 = {
-  'consumivel-54':{traco:'Agilidade',bonusTraco:2,bonusProf:-1},
-  'consumivel-55':{traco:'Força',bonusTraco:2,bonusProf:1}
+  'consumivel-53':{traco:'Agilidade',bonusTraco:2,bonusProf:-1},
+  'consumivel-54':{traco:'Força',bonusTraco:2,bonusProf:1}
 };
 function fichaConsumivelE7_(id,qtd=1) {
   const item=contexto.acharItem_(id);
@@ -11350,7 +11350,7 @@ teste('E7 pode voltar ao normal manualmente e não desperdiça segunda unidade i
   });
 });
 teste('E7 permite Proficiência efetiva zero sem adulterar a Proficiência permanente', () => {
-  const {f}=fichaConsumivelE7_('consumivel-54',1);
+  const {f}=fichaConsumivelE7_('consumivel-53',1);
   f.identidade.nivel=1;
   f.avancos={historico:[],espacos:{},tracosMarcados:[],bonus:{proficiencia:0}};
   contexto.aplicarDerivados_(f);
@@ -11478,3 +11478,104 @@ if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));
   process.exit(1);
 }
+
+
+console.log('\nLote 8 — consumíveis especiais E9 + regressão E7');
+function fichaConsumivelE9_(id,qtd=1,nivel=5) {
+  const item=contexto.acharItem_(id);
+  const f=contexto.fichaVazia_();
+  f.identidade={nome:'E9',nivel:nivel,classe:'Bardo',subclasse:'Artífice das Palavras'};
+  f.recursos=f.recursos || {};
+  f.recursos.pontosDeVidaMaximos=6;
+  f.recursos.pontosDeVidaMarcados=3;
+  f.recursos.estresseMaximo=6;
+  f.recursos.estresseMarcado=5;
+  f.recursos.esperancaMaxima=6;
+  f.recursos.esperanca=0;
+  f.inventario=[{id:item.id,nome:item.nome,qtd:qtd,emUso:false}];
+  return {f,item};
+}
+teste('E9 corrige o deslocamento do E7: Encolhimento=53, Crescimento=54 e Pedra do Conhecimento não é tamanho', () => {
+  const CONTADORES=avaliar('CONTADORES');
+  const encolher=contexto.acharItem_('consumivel-53');
+  const crescer=contexto.acharItem_('consumivel-54');
+  const pedra=contexto.acharItem_('consumivel-55');
+  igual(encolher.nome,'Poção de encolhimento');
+  igual(crescer.nome,'Poção de crescimento');
+  igual(encolher.automacao.classificacao,'consumivel-estado-tamanho-e7');
+  igual(crescer.automacao.classificacao,'consumivel-estado-tamanho-e7');
+  igual(CONTADORES['estado:consumivel:consumivel-53'].modificadorTraco,{traco:'agilidade',bonus:2});
+  igual(CONTADORES['estado:consumivel:consumivel-54'].modificadorTraco,{traco:'forca',bonus:2});
+  verdade(!CONTADORES['estado:consumivel:consumivel-55'],'Pedra do Conhecimento não pode carregar estado de tamanho');
+  verdade(!pedra.automacao && !pedra.efeitoConsumivel,'Pedra do Conhecimento volta a ficar pendente para implementação própria');
+});
+teste('E9 Poção da Estabilidade concede exatamente o terceiro movimento e expira nesse descanso', () => {
+  const {f,item}=fichaConsumivelE9_('consumivel-13',1,5);
+  igual(item.automacao.classificacao,'consumivel-descanso-extra-e9');
+  igual(contexto.movimentosPorDescansoDaFicha_(f),2);
+  const uso=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(uso.erros,[],JSON.stringify(uso));
+  igual(f.inventario.length,0);
+  igual(f.contadores['estado:consumivel:consumivel-13'].valor,1);
+  igual(contexto.movimentosPorDescansoDaFicha_(f),3);
+  const sim=contexto.simularDescanso_(f,'curto',[
+    {movimento:'preparar-se',comGrupo:false},
+    {movimento:'preparar-se',comGrupo:false},
+    {movimento:'preparar-se',comGrupo:false}
+  ]);
+  verdade(sim.previa.ok,JSON.stringify(sim.previa));
+  verdade(!sim.ficha.contadores['estado:consumivel:consumivel-13']);
+  igual(contexto.movimentosPorDescansoDaFicha_(sim.ficha),2);
+});
+teste('E9 Poção da Estabilidade não deixa gastar uma segunda unidade enquanto o bônus já está ativo', () => {
+  const {f}=fichaConsumivelE9_('consumivel-13',2,5);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros,[]); igual(f.inventario[0].qtd,1);
+  const antes=JSON.stringify(f);
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros.length,1);
+  igual(JSON.stringify(f),antes,'segunda unidade precisa permanecer intacta');
+});
+teste('E9 Broto de Asas ativa um estado persistente sem RNG e só encerra manualmente', () => {
+  const CONTADORES=avaliar('CONTADORES');
+  const {f,item}=fichaConsumivelE9_('consumivel-46',1,7);
+  igual(item.automacao.classificacao,'consumivel-estado-temporizado-e9');
+  igual(item.efeitoConsumivel.duracaoMinutosPorNivel,1);
+  const def=CONTADORES['estado:consumivel:consumivel-46'];
+  igual(def.zeraEm,['manual']); igual(def.persisteSemRef,true);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r));
+  igual(f.contadores['estado:consumivel:consumivel-46'].valor,1);
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  igual(f.contadores['estado:consumivel:consumivel-46'].valor,1,'descanso não representa o fim dos minutos do voo');
+  contexto.aplicarAjustes_(f,[{tipo:'contador',chave:'estado:consumivel:consumivel-46',valor:0}]);
+  contexto.validarContadores_(f);
+  verdade(!f.contadores['estado:consumivel:consumivel-46']);
+});
+teste('E9 Seiva do Sono limpa todo o Estresse sem executar os demais benefícios de descanso longo', () => {
+  const {f,item}=fichaConsumivelE9_('consumivel-50',1,5);
+  f.recursos.pontosDeVidaMarcados=4;
+  f.recursos.esperanca=2;
+  f.descanso={curtosSeguidos:2,ultimo:'curto'};
+  const antesPv=f.recursos.pontosDeVidaMarcados;
+  const antesHope=f.recursos.esperanca;
+  const antesDescanso=JSON.stringify(f.descanso);
+  igual(item.automacao.classificacao,'consumivel-recuperacao-total-e9');
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r));
+  igual(f.recursos.estresseMarcado,0);
+  igual(r.mudancas[0].quantidade,5);
+  igual(r.mudancas[0].resultadoEfeito,{recurso:'estresseMarcado',quantidadeRecuperada:5,momento:'ao-acordar'});
+  igual(f.recursos.pontosDeVidaMarcados,antesPv,'não cura PV');
+  igual(f.recursos.esperanca,antesHope,'não ganha Esperança');
+  igual(JSON.stringify(f.descanso),antesDescanso,'não executa um descanso longo completo');
+  igual(f.inventario.length,0);
+});
+teste('E9 Seiva do Sono também é consumida quando não há Estresse, recuperando zero de forma válida', () => {
+  const {f}=fichaConsumivelE9_('consumivel-50',1,5);
+  f.recursos.estresseMarcado=0;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r));
+  igual(r.mudancas[0].quantidade,0);
+  igual(f.inventario.length,0);
+});
