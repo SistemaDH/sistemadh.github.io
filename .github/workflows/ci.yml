@@ -35,10 +35,19 @@ jobs:
       - run: npm run teste:e2e
       - name: Layout mobile 360 / 390 / 430
         run: npm run teste:layout-mobile
+      - name: Layout responsivo 768 / 1024 / 1440
+        run: npm run teste:layout-responsivo
       - name: Guardar diagnóstico visual mobile
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: layout-mobile-${{ github.run_id }}
           path: artifacts/layout-mobile
+          if-no-files-found: warn
+      - name: Guardar diagnóstico visual responsivo
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: layout-responsivo-${{ github.run_id }}
+          path: artifacts/layout-responsivo
           if-no-files-found: warn
