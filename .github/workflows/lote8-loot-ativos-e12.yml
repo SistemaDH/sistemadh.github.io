@@ -28,6 +28,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 tools/lote8-loot-ativos-e12.py
+          python3 tools/lote8-e12-corrigir-auditoria.py
           node tools/gerar-44-equipamento.mjs
           node tools/gerar-47-contadores.mjs
           python3 tools/auditar-pendencias-lote8.py > docs/AUDITORIA-FINAL-LOTE8.md
@@ -117,6 +118,7 @@ jobs:
         run: |
           set -euo pipefail
           rm tools/lote8-loot-ativos-e12.py
+          rm tools/lote8-e12-corrigir-auditoria.py
           rm .github/workflows/lote8-loot-ativos-e12.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
