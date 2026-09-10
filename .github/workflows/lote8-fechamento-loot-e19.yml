@@ -24,6 +24,39 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Corrigir ancora temporaria E19
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tools/lote8-fechamento-loot-e19.py')
+          s=p.read_text(encoding='utf-8')
+          old=r'''aj = replace_once(aj,
+          """  const recursos = (ficha || {}).recursos || {};
+          const custoEsperanca = Math.max(0, Math.trunc(Number(efeito.custoEsperanca)) || 0);""",
+          """  if (efeito.requerVinculo === true && !String(registro.vinculo || '').trim()) {
+            return { erro:item.nome + ': primeiro use o movimento de repouso deste item para registrar seu princípio.' };
+          }
+
+          const recursos = (ficha || {}).recursos || {};
+          const custoEsperanca = Math.max(0, Math.trunc(Number(efeito.custoEsperanca)) || 0);""", 'requer principio')'''
+          new=r'''aj = replace_once(aj,
+          """  const recursos = (ficha || {}).recursos || {};
+
+          // Hopekeeper: duas resoluções no mesmo item. A carga persiste até o uso.""",
+          """  if (efeito.requerVinculo === true && !String(registro.vinculo || '').trim()) {
+            return { erro:item.nome + ': primeiro use o movimento de repouso deste item para registrar seu princípio.' };
+          }
+
+          const recursos = (ficha || {}).recursos || {};
+
+          // Hopekeeper: duas resoluções no mesmo item. A carga persiste até o uso.""", 'requer principio')'''
+          if s.count(old) != 1:
+              raise SystemExit('Trecho de correção da âncora E19 não encontrado de forma única')
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          print('Âncora E19 corrigida para o estado pós-transformação.')
+          PY
+
       - name: Materializar E19 e regenerar
         run: |
           set -euo pipefail
