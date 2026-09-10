@@ -1,0 +1,43 @@
+name: Lote 8 - Auditoria Equipamento Ofensivo D2
+
+on:
+  push:
+    branches: [tmp-lote8-equip-ofensivo-d2-sol]
+
+permissions:
+  contents: read
+
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Auditoria global Lote 8
+        run: python3 tools/auditar-pendencias-lote8.py
+      - name: Agrupar características de equipamento ainda sem automação
+        run: |
+          python3 - <<'PY'
+          import json, collections
+          d=json.load(open('data/equipamentos.json',encoding='utf-8'))
+          achados=[]
+          def walk(x):
+            if isinstance(x,dict):
+              c=x.get('caracteristica')
+              if isinstance(c,dict) and not c.get('automacao'):
+                achados.append((x,c))
+              for v in x.values(): walk(v)
+            elif isinstance(x,list):
+              for v in x: walk(v)
+          walk(d)
+          grupos=collections.defaultdict(list)
+          for item,c in achados:
+            nome=c.get('nome') or c.get('nomeIngles') or '(sem nome)'
+            grupos[nome].append((item.get('id'),item.get('nome'),c.get('nomeIngles'),c.get('texto')))
+          print('TOTAL_OCORRENCIAS_SEM_AUTOMACAO',len(achados))
+          print('TOTAL_CARACTERISTICAS_SEM_AUTOMACAO',len(grupos))
+          for nome in sorted(grupos,key=lambda s:s.casefold()):
+            xs=grupos[nome]
+            print(f'PENDENTE | {nome} | {len(xs)} | ingles={xs[0][2]!r}')
+            print('  texto=',xs[0][3])
+            for iid,inome,ien,_ in xs[:6]: print('  -',iid,'|',inome,'|',ien)
+          PY
