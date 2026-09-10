@@ -1,5 +1,5 @@
 /* ==========================================================================
-   L9-B7/B8/B9/B10/B11/B12/B13/B15 · REFINOS MOBILE
+   L9-B7/B8/B9/B10/B11/B12/B13/B15/B16 · REFINOS MOBILE
    ========================================================================== */
 
 /* ==========================================================================
@@ -237,4 +237,54 @@
   line-height: 1.2;
   letter-spacing: .14em;
   text-transform: uppercase;
+}
+
+/* ==========================================================================
+   B16 · MOSTRAR / OCULTAR CÓDIGO NA ABERTURA
+
+   Código continua mascarado por padrão e mantém autocomplete/password do
+   navegador. A ação mora dentro da largura do campo, tem alvo de 44px e texto
+   explícito — não depende de um ícone cujo significado possa variar.
+   ========================================================================== */
+
+.abertura__codigoCampo {
+  position: relative;
+  width: 100%;
+}
+
+.abertura__codigoCampo .campo__entrada {
+  padding-right: 84px;
+}
+
+.abertura__codigoCampo .campo__entrada[type='text'] {
+  letter-spacing: .08em;
+}
+
+.abertura__codigoAcao {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  bottom: 2px;
+  min-width: 76px;
+  min-height: 44px;
+  padding: 0 var(--e2);
+  border: 0;
+  border-left: 1px solid var(--cor-borda);
+  border-radius: 0 var(--raio-sm) var(--raio-sm) 0;
+  background: var(--cor-superficie-alta);
+  color: var(--cor-ouro-claro);
+  font-family: var(--fonte-corpo);
+  font-size: var(--txt-xs);
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.abertura__codigoAcao:hover {
+  background: var(--cor-superficie-hover);
+}
+
+.abertura__codigoAcao:focus-visible {
+  outline: 2px solid var(--cor-ouro);
+  outline-offset: -2px;
 }
