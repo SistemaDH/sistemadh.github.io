@@ -1,5 +1,5 @@
 /* ==========================================================================
-   L9-B7/B8/B9/B10 · REFINOS MOBILE
+   L9-B7/B8/B9/B10/B11 · REFINOS MOBILE
    ========================================================================== */
 
 /* ==========================================================================
@@ -170,5 +170,61 @@
   .ficha__carta--subclasse .ficha__cartaTexto {
     -webkit-line-clamp: 3;
     line-clamp: 3;
+  }
+}
+
+/* ==========================================================================
+   B11 · PAINEL DO MESTRE — ALVOS DE TOQUE NO MOBILE
+
+   O novo baseline do Mestre encontrou duas famílias abaixo de 44px: as doze
+   caveiras do Medo, espremidas numa fileira, e os filtros de 32px do Bestiário.
+
+   No Medo, 2×6 preserva o gesto direto (tocar no valor desejado) e entrega um
+   alvo de verdade para cada ponto. A explicação entre sessões sai deste cartão
+   no celular porque a própria página já oferece a dobra "Como o Medo funciona".
+
+   No Bestiário, a pílula continua desenhada com 36px para não transformar os
+   filtros em uma parede de botões. Uma hitbox vertical invisível completa 44px;
+   o espaçamento entre fileiras sobe para 8px para essas áreas não se sobreporem.
+   ========================================================================== */
+
+@media (max-width: 639px) {
+  .trilha--medoMesa .medo__trilha {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(44px, 1fr));
+    gap: var(--e1);
+  }
+
+  .trilha--medoMesa .medo__chama {
+    width: 100%;
+    min-width: 44px;
+    height: 44px;
+    flex: none;
+  }
+
+  /* A mesma regra está disponível na dobra específica logo abaixo na Mesa. */
+  .trilha--medoMesa > .trilha__ajuda {
+    display: none;
+  }
+
+  .bestiario__pilulas {
+    column-gap: var(--e1);
+    row-gap: var(--e2);
+  }
+
+  .bestiario__pilulas .pilula {
+    position: relative;
+    min-width: 44px;
+    min-height: 36px;
+  }
+
+  .bestiario__pilulas .pilula::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 44px;
+    transform: translateY(-50%);
   }
 }
