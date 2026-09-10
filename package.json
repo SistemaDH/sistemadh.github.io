@@ -12,6 +12,7 @@
     "teste:layout-mestre-mobile": "node tools/testes-layout-mestre-mobile.mjs",
     "teste:layout-criacao-mobile": "node tools/testes-layout-criacao-mobile.mjs",
     "teste:layout-regras-mobile": "node tools/testes-layout-regras-mobile.mjs",
+    "teste:layout-abertura-mobile": "node tools/testes-abertura-mobile.mjs",
     "teste:layout-responsivo": "node tools/testes-layout-responsivo.mjs",
     "teste:css": "node tools/conferir-css.mjs",
     "teste:tudo": "npm run teste:sintaxe && npm run teste:css && npm run teste && npm run teste:gerados && npm run teste:e2e",
