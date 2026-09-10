@@ -35,6 +35,12 @@ jobs:
           node tools/gerar-41-dominios.mjs
           node tools/gerar-4B-descanso.mjs
           python3 tools/auditar-pendencias-lote8.py > docs/AUDITORIA-FINAL-LOTE8.md
+          python3 - <<'PY'
+          from pathlib import Path
+          for nome in ('docs/AUDITORIA-FINAL-LOTE8.md', 'docs/HANDOFF.md'):
+              p = Path(nome)
+              p.write_text(p.read_text(encoding='utf-8').rstrip() + '\n', encoding='utf-8')
+          PY
           git diff --check
           node --check js/telas/ficha.js
 
