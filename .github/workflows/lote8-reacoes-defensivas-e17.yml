@@ -1,0 +1,113 @@
+name: Lote 8 - Reacoes Defensivas E17
+
+on:
+  push:
+    branches:
+      - tmp-lote8-reacoes-defensivas-e17-sol
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lote8-reacoes-defensivas-e17-sol
+  cancel-in-progress: false
+
+env:
+  BASE_SHA: c81b9d9129b42362f28838b4e9fc5a2ceb9b0a15
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materializar E17 e regenerar
+        run: |
+          set -euo pipefail
+          python3 tools/lote8-reacoes-defensivas-e17.py
+          node tools/gerar-44-equipamento.mjs
+          node tools/gerar-47-contadores.mjs
+          python3 tools/auditar-pendencias-lote8.py > docs/AUDITORIA-FINAL-LOTE8.md
+          git diff --check
+          node --check js/telas/ficha.js
+
+      - name: Validar contratos e auditoria E17
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          eq=json.load(open('data/equipamentos.json',encoding='utf-8'))
+          loot={x['id']:x for x in eq.get('loot',[])}
+          assert loot['loot-15']['automacao']['classificacao']=='loot-anexo-armadura-reacao-e17'
+          assert loot['loot-15']['efeitoSaquePassivo']['danoRecebido']['resiliente']['evitaMarcarUltimoArmaduraEm']==[6]
+          assert loot['loot-29']['automacao']['classificacao']=='loot-reacao-ultimo-estresse-e17'
+          assert loot['loot-29']['efeitoSaquePassivo']['aoMarcarUltimoEstresse']['evitaEm']==[5,6]
+          assert loot['loot-32']['automacao']['classificacao']=='loot-reacao-dano-antes-limiares-e17'
+          assert loot['loot-32']['efeitoSaquePassivo']['danoRecebido']['anelResistencia']['dano']=='metade'
+          co=json.load(open('data/contadores.json',encoding='utf-8'))
+          c={x['chave']:x for x in co['contadores']}['uso:loot:loot-32']
+          assert c['maximo']=={'tipo':'fixo','valor':1}
+          assert c['zeraEm']==['descanso-longo']
+          b44=Path('backend/44_Equipamento.gs').read_text(encoding='utf-8')
+          b47=Path('backend/47_Contadores.gs').read_text(encoding='utf-8')
+          b4c=Path('backend/4C_Ajustes.gs').read_text(encoding='utf-8')
+          front=Path('js/telas/ficha.js').read_text(encoding='utf-8')
+          for s in ['loot-anexo-armadura-reacao-e17','loot-reacao-ultimo-estresse-e17','loot-reacao-dano-antes-limiares-e17']:
+              assert s in b44,s
+          assert 'uso:loot:loot-32' in b47
+          for s in ['regraPingenteCalmanteDaFicha_','regraAnelResistenciaDaFicha_','aplicarAjusteComDefesasDeEstresse_']:
+              assert s in b4c,s
+          assert 'usarAnelResistencia' in front
+          audit=Path('docs/AUDITORIA-FINAL-LOTE8.md').read_text(encoding='utf-8')
+          for rid in ('loot-15','loot-29','loot-32'):
+              nome=loot[rid]['nome']
+              assert f'| loot | {nome} | candidato mecânico |' not in audit,nome
+          m=re.search(r'Loot/consumíveis com texto mecânico detectado: \*\*(\d+)\*\*; \*\*(\d+)\*\* candidatos',audit)
+          assert m and int(m.group(2))==10,(m.group(0) if m else 'sem resumo')
+          print('E17 contratos OK; candidatos restantes:',m.group(2))
+          PY
+
+      - name: Testes backend completos
+        run: node tools/testes-backend.mjs
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Testes E2E completos
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados e CSS
+        run: |
+          set -euo pipefail
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+          git diff --check
+
+      - name: Trava de concorrencia
+        run: |
+          set -euo pipefail
+          git fetch origin 'refs/heads/ediçãoclaude:refs/remotes/origin/ediçãoclaude'
+          ATUAL="$(git rev-parse 'origin/ediçãoclaude')"
+          echo "ediçãoclaude atual: $ATUAL"
+          echo "base esperada:      $BASE_SHA"
+          test "$ATUAL" = "$BASE_SHA"
+
+      - name: Criar commit funcional e limpar temporarios
+        run: |
+          set -euo pipefail
+          rm tools/lote8-reacoes-defensivas-e17.py
+          rm .github/workflows/lote8-reacoes-defensivas-e17.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git diff --cached --quiet && { echo 'Nenhuma alteração funcional para commitar.'; exit 1; }
+          git commit -m 'feat: integrar reacoes defensivas de loot E17'
+          git push origin HEAD
