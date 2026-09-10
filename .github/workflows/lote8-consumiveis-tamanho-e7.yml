@@ -62,11 +62,20 @@ jobs:
           for x in xs.values():
               linha='| consumiveis | '+x['nome']+' | candidato mecânico |'
               assert linha not in out,linha
+          checks={
+            'backend/48_Criacao.gs':[
+              'function modificadorProficienciaDeContadores_',
+              'function proficienciaEfetivaDaFicha_',
+            ],
+            'backend/47_Contadores.gs':['modificadorProficiencia'],
+          }
+          for path,agulhas in checks.items():
+              texto=open(path,encoding='utf-8').read()
+              for agulha in agulhas:
+                  assert agulha in texto, f'{path}: não gerou {agulha}'
+                  print(f'gerado OK: {path} contém {agulha}')
           print('E7 OK: tamanho e Proficiência temporários estruturados e fora dos candidatos.')
           PY
-          grep -q "function modificadorProficienciaDeContadores_" backend/48_Criacao.gs
-          grep -q "function proficienciaEfetivaDaFicha_" backend/48_Criacao.gs
-          grep -q "modificadorProficiencia" backend/47_Contadores.gs
 
       - name: Testes backend
         run: node tools/testes-backend.mjs
