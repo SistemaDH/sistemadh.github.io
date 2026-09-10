@@ -1,0 +1,33 @@
+name: TEMP Lote 9 B19 editor adversário mobile
+
+on:
+  push:
+    branches: [tmp-lote9-b19-editor-adversario-mobile-sol]
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - run: npm run teste:sintaxe
+      - run: npm run teste:css
+      - run: npx playwright install --with-deps chromium
+      - name: Layout Mestre mobile + editor de adversário
+        run: npm run teste:layout-mestre-mobile
+      - name: Guardar diagnóstico do editor
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lote9-b19-editor-adversario
+          path: |
+            artifacts/layout-mestre-mobile
+            artifacts/layout-editor-adversario-mobile
+          if-no-files-found: warn
