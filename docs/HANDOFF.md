@@ -1017,3 +1017,16 @@ A auditoria final permanece em `docs/AUDITORIA-FINAL-LOTE8.md`. Linhas históric
 - `main` permanece sem o Lote 8 até promoção explícita;
 - backup imutável de referência criado antes da promoção: `backup-main-2026-09-10-pre-newedit`;
 - limpeza pré-main é limitada a higiene, CI e simplificações sem alterar regras; mudanças de motor continuam exigindo gate completo.
+
+### Diário — publicação do Lote 8 / Core 1.0 em produção
+
+Em 10/09/2026, após backup do `main` e snapshot lógico do Supabase, o Lote 8 foi promovido em ordem segura: motor primeiro, frontend depois.
+
+- fonte imutável do motor: `2572ee1270ee4f98c5c54158507df0783bd2696b`;
+- pin versionado: `8689713a3846977b2e4f13e095c8417c761cec8f`;
+- `engine-api` v7 ACTIVE, `verify_jwt=false`;
+- pacote Supabase: `eb08d5ba112537dae1e9fe90e9b1022b7a7a6feaad0ab9a727d86b40574a76db`;
+- gate pré-deploy: sintaxe, backend, gerados, CSS, auditoria Core 1.0 zerada e E2E verdes;
+- `main` avançada por fast-forward, sem force;
+- GitHub Pages: build e deploy concluídos com sucesso;
+- `newedit` permanece como branch de desenvolvimento.

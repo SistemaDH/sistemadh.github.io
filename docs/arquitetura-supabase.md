@@ -24,13 +24,13 @@ As tabelas expostas têm RLS habilitado e não possuem policies públicas para `
 
 `engine-api` executa o código mantido em `backend/*.gs` através de uma camada de compatibilidade que substitui as antigas APIs de planilha por estado carregado do PostgreSQL.
 
-Produção atual, após os Lotes 6 e 7:
+Produção atual, após o Lote 8 / Core 1.0:
 
 ```text
-engine-api: v6 ACTIVE
+engine-api: v7 ACTIVE
 verify_jwt: false
-ENGINE_COMMIT: c52b87cd1657ff7904554f2cc3035f552df7f8c8
-ezbr_sha256: 2a24c40978e5a885c524832c35394a1a5b347ead1c595648f01276afe9a34f28
+ENGINE_COMMIT: 2572ee1270ee4f98c5c54158507df0783bd2696b
+ezbr_sha256: eb08d5ba112537dae1e9fe90e9b1022b7a7a6feaad0ab9a727d86b40574a76db
 ```
 
 O pin é intencional. Alterações em `main` não passam a executar automaticamente com privilégios de backend.
@@ -118,3 +118,13 @@ Históricas/aposentadas — não criar dependência nova:
 - `engine-api` v6 ACTIVE;
 - `verify_jwt=false` preservado;
 - sem migração de banco necessária.
+
+## Estado da implantação do Lote 8
+
+- Core 1.0 publicado em 10/09/2026;
+- commit fonte imutável do motor: `2572ee1270ee4f98c5c54158507df0783bd2696b`;
+- commit de pin/frontend: `8689713a3846977b2e4f13e095c8417c761cec8f`;
+- `engine-api` v7 ACTIVE, `verify_jwt=false`;
+- pacote implantado: `eb08d5ba112537dae1e9fe90e9b1022b7a7a6feaad0ab9a727d86b40574a76db`;
+- GitHub Pages: build e deploy aprovados para o Lote 8;
+- nenhuma migração de banco foi necessária para a promoção.

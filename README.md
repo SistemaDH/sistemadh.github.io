@@ -8,9 +8,9 @@ O frontend é publicado pelo GitHub Pages e o backend oficial é Supabase: Edge 
 
 ## Estado atual
 
-> **Pré-main:** a branch de desenvolvimento passa a ser `newedit`. Ela contém o Lote 8 / Core 1.0 auditado integralmente, mas ainda **não foi publicado em `main` nem implantado em produção**.
+> **Produção:** o Lote 8 / Core 1.0 foi publicado em `main` em 10/09/2026. A branch de desenvolvimento continua sendo `newedit`.
 
-Produção integra os Lotes 1–7, incluindo:
+Produção integra os Lotes 1–8 / Core 1.0, incluindo:
 
 - criação e ficha completa de personagem;
 - classes, subclasses, domínios, ancestralidades e comunidades;
@@ -53,9 +53,9 @@ O navegador não acessa diretamente as tabelas PostgreSQL. `js/api.js` distribui
 Produção atual:
 
 ```text
-engine-api: v6 ACTIVE
+engine-api: v7 ACTIVE
 verify_jwt: false
-ENGINE_COMMIT: c52b87cd1657ff7904554f2cc3035f552df7f8c8
+ENGINE_COMMIT: 2572ee1270ee4f98c5c54158507df0783bd2696b
 ```
 
 `verify_jwt=false` é intencional nesta função porque o handler valida o token customizado de sessão antes de operar com privilégios de serviço.
@@ -128,7 +128,15 @@ Esses resultados foram registrados pelo agente que produziu os lotes. Na implant
 
 ## Publicação atual
 
-Lotes 6 e 7 foram integrados pelo PR #6 em 08/09/2026.
+Lote 8 / Core 1.0 publicado em produção em 10/09/2026.
+
+- commit fonte imutável do motor: `2572ee1270ee4f98c5c54158507df0783bd2696b`;
+- commit que fixa o pin do motor: `8689713a3846977b2e4f13e095c8417c761cec8f`;
+- `engine-api` v7 ACTIVE, `verify_jwt=false`;
+- SHA do pacote implantado: `eb08d5ba112537dae1e9fe90e9b1022b7a7a6feaad0ab9a727d86b40574a76db`;
+- GitHub Pages publicou o frontend do mesmo commit funcional com sucesso.
+
+Histórico: Lotes 6 e 7 foram integrados pelo PR #6 em 08/09/2026.
 
 - commit fonte do motor: `c52b87cd1657ff7904554f2cc3035f552df7f8c8`;
 - commit que fixa o pin na branch: `bc8849b2493bc435ea9d74bb4c3b19993ecde204`;
