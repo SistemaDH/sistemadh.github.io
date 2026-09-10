@@ -68,6 +68,6 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
           git diff --cached --check
-          test "$(git diff --cached --name-only)" = 'docs/HANDOFF.md'
+          test "$(git diff --cached --name-only | sort)" = "$(printf '%s\n%s' '.github/workflows/lote8-encerramento-core1.yml' 'docs/HANDOFF.md' | sort)"
           git commit -m 'docs: encerrar formalmente Core 1.0 do Lote 8'
           git push origin HEAD
