@@ -27,6 +27,7 @@ jobs:
       - name: Materializar E17 e regenerar
         run: |
           set -euo pipefail
+          python3 tools/lote8-e17-prepatch.py
           python3 tools/lote8-reacoes-defensivas-e17.py
           node tools/gerar-44-equipamento.mjs
           node tools/gerar-47-contadores.mjs
@@ -102,6 +103,7 @@ jobs:
       - name: Criar commit funcional e limpar temporarios
         run: |
           set -euo pipefail
+          rm tools/lote8-e17-prepatch.py
           rm tools/lote8-reacoes-defensivas-e17.py
           rm .github/workflows/lote8-reacoes-defensivas-e17.yml
           git config user.name 'github-actions[bot]'
