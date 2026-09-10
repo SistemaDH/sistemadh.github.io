@@ -1,66 +1,76 @@
 /* ==========================================================================
    L9-B7 · REFINO MOBILE — MOCHILA EM CELULAR ESTREITO
 
-   O inventário precisa ser escaneável pelo NOME. Em 360/390px a fileira de
-   cinco controles (uso, −, quantidade, +, excluir) consumia mais de 220px e
-   deixava 70–100px para o texto — nomes comuns quebravam em três ou quatro
-   linhas e cada item virava um cartão alto.
+   Em 360/390px, cinco controles de 44px na mesma linha deixavam pouco espaço
+   para o nome do item. A primeira tentativa empilhou todos os controles e
+   resolveu o texto, mas deixou cada linha alta demais. O refinamento final
+   mantém a lista compacta: quantidade continua inline e as ações ocasionais
+   (em uso / remover) ficam no botão de mais ações.
 
-   Até 390px a informação fica em duas faixas:
-   1. nome + estado/notas com a largura inteira;
-   2. controles numa barra de 44px logo abaixo.
-
-   Não muda ação, ordem de teclado, aria-label nem regra. Em 430px para cima a
-   linha horizontal existente continua valendo porque já há largura suficiente.
+   Em 430px para cima a composição original continua valendo.
    ========================================================================== */
 
+/* O módulo injeta o botão para todos os tamanhos; só o celular estreito usa. */
+.ficha__itemMais { display: none; }
+
 @media (max-width: 390px) {
-  .ficha__inventario {
-    gap: var(--e1);
-  }
+  .ficha__inventario { gap: 2px; }
 
   .ficha__item {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    align-items: stretch;
-    gap: 0;
-    padding: var(--e1) var(--e2) var(--e2);
+    display: flex;
+    align-items: center;
+    gap: var(--e1);
+    padding: 2px var(--e2);
   }
 
   .ficha__itemTexto {
-    width: 100%;
     min-width: 0;
+    flex: 1 1 auto;
   }
 
   /*
-   * Duas linhas no máximo. O nome completo continua no aria-label e abre a
-   * descrição/nota ao toque; visualmente a lista precisa continuar varrível.
+   * O nome pode usar duas linhas, mas não transformar uma entrada num cartão
+   * de quatro linhas. O nome completo continua no próprio botão e no menu.
    */
   .ficha__itemNome {
+    display: -webkit-box;
     width: 100%;
-    min-width: 0;
+    min-width: 44px;
     min-height: 44px;
-    max-height: 3.15em;
+    max-height: 3.2em;
     line-height: 1.35;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     overflow: hidden;
   }
 
+  /*
+   * Quantidade é a ação de repetição da sessão: − / valor / + permanecem a um
+   * toque. Em uso e excluir saem da fileira e entram no botão de mais ações.
+   */
   .ficha__itemAcoes {
-    display: grid;
-    grid-template-columns: 44px 44px minmax(3.5ch, 1fr) 44px 44px;
+    display: flex;
     align-items: center;
-    width: 100%;
-    min-width: 0;
     gap: 0;
-    margin-top: 2px;
-    padding-top: 2px;
-    border-top: 1px solid var(--cor-borda);
+    flex: 0 0 auto;
+  }
+
+  .ficha__itemUso,
+  .ficha__itemTirar {
+    display: none;
+  }
+
+  .ficha__itemMais {
+    display: grid;
+    place-items: center;
+    font-size: var(--txt-lg);
   }
 
   .ficha__itemQtd {
     display: grid;
     place-items: center;
-    min-width: 0;
+    min-width: 3.2ch;
     min-height: 44px;
   }
 
@@ -70,12 +80,16 @@
     height: 44px;
   }
 
-  /*
-   * Notas/vínculos ficam colados ao nome, nunca misturados com a barra de
-   * quantidade. O texto livre continua podendo quebrar normalmente.
-   */
-  .ficha__itemNota {
+  /* Estado importante continua visível sem gastar outro botão na linha. */
+  .ficha__item.esta-em-uso .ficha__itemTexto::after {
+    content: 'em uso';
     display: block;
-    padding-bottom: var(--e1);
+    margin-top: -3px;
+    padding-bottom: 3px;
+    font-size: var(--txt-xs);
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--cor-titulo);
   }
 }
