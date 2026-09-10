@@ -3071,6 +3071,124 @@
    ],
    "recarregaEm": [],
    "persisteSemRef": true
+  },
+  {
+   "chave": "estado:consumivel:consumivel-09",
+   "origem": "consumivel",
+   "refId": "consumivel-09",
+   "nome": "Veneno de Grindletooth",
+   "rotulo": "+1d6 no próximo dano com a arma física envenenada",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "manual"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "bonusProximaJogada": {
+    "tipo": "dano",
+    "dado": "d6",
+    "tipoDano": "fisico",
+    "mesmaArma": true
+   },
+   "observacao": "A unidade já foi consumida. Zere este estado manualmente depois que a mesa resolver o próximo gatilho aplicável."
+  },
+  {
+   "chave": "estado:consumivel:consumivel-14",
+   "origem": "consumivel",
+   "refId": "consumivel-14",
+   "nome": "Veneno de Grindletooth Aprimorado",
+   "rotulo": "+1d8 no próximo dano com a arma física envenenada",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "manual"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "bonusProximaJogada": {
+    "tipo": "dano",
+    "dado": "d8",
+    "tipoDano": "fisico",
+    "mesmaArma": true
+   },
+   "observacao": "A unidade já foi consumida. Zere este estado manualmente depois que a mesa resolver o próximo gatilho aplicável."
+  },
+  {
+   "chave": "estado:consumivel:consumivel-32",
+   "origem": "consumivel",
+   "refId": "consumivel-32",
+   "nome": "Poção secreta da Homet",
+   "rotulo": "próximo ataque bem-sucedido é um sucesso crítico",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "manual"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "bonusProximaJogada": {
+    "tipo": "ataque",
+    "proximoSucessoCritico": true
+   },
+   "observacao": "A unidade já foi consumida. Zere este estado manualmente depois que a mesa resolver o próximo gatilho aplicável."
+  },
+  {
+   "chave": "estado:consumivel:consumivel-33",
+   "origem": "consumivel",
+   "refId": "consumivel-33",
+   "nome": "Saliva de Redthorn",
+   "rotulo": "+1d12 no próximo dano com a arma física tratada",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "manual"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "bonusProximaJogada": {
+    "tipo": "dano",
+    "dado": "d12",
+    "tipoDano": "fisico",
+    "mesmaArma": true
+   },
+   "observacao": "A unidade já foi consumida. Zere este estado manualmente depois que a mesa resolver o próximo gatilho aplicável."
+  },
+  {
+   "chave": "estado:consumivel:consumivel-35",
+   "origem": "consumivel",
+   "refId": "consumivel-35",
+   "nome": "Poeira Mítica",
+   "rotulo": "+1d12 no próximo dano com a arma mágica tratada",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "manual"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "bonusProximaJogada": {
+    "tipo": "dano",
+    "dado": "d12",
+    "tipoDano": "magico",
+    "mesmaArma": true
+   },
+   "observacao": "A unidade já foi consumida. Zere este estado manualmente depois que a mesa resolver o próximo gatilho aplicável."
   }
  ]
 }

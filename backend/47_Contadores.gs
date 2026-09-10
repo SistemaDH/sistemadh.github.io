@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 165 cartas e características mandam
+ *  O problema que este arquivo resolve: 170 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -205,6 +205,11 @@ const CONTADORES = {
   "estado:consumivel:consumivel-11": { origem: "consumivel", refId: "consumivel-11", nome: "Frasco de Moondrip", rotulo: "Visão no escuro até o próximo descanso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], persisteSemRef: true },
   "estado:consumivel:consumivel-15": { origem: "consumivel", refId: "consumivel-15", nome: "Argila transformadora", rotulo: "Disfarce irreconhecível até o próximo descanso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], persisteSemRef: true },
   "estado:consumivel:consumivel-45": { origem: "consumivel", refId: "consumivel-45", nome: "Almíscar do Ogro", rotulo: "Não pode ser rastreado até o próximo descanso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], persisteSemRef: true },
+  "estado:consumivel:consumivel-09": { origem: "consumivel", refId: "consumivel-09", nome: "Veneno de Grindletooth", rotulo: "+1d6 no próximo dano com a arma física envenenada", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], persisteSemRef: true, bonusProximaJogada: {"tipo":"dano","dado":"d6","tipoDano":"fisico","mesmaArma":true} },
+  "estado:consumivel:consumivel-14": { origem: "consumivel", refId: "consumivel-14", nome: "Veneno de Grindletooth Aprimorado", rotulo: "+1d8 no próximo dano com a arma física envenenada", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], persisteSemRef: true, bonusProximaJogada: {"tipo":"dano","dado":"d8","tipoDano":"fisico","mesmaArma":true} },
+  "estado:consumivel:consumivel-32": { origem: "consumivel", refId: "consumivel-32", nome: "Poção secreta da Homet", rotulo: "próximo ataque bem-sucedido é um sucesso crítico", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], persisteSemRef: true, bonusProximaJogada: {"tipo":"ataque","proximoSucessoCritico":true} },
+  "estado:consumivel:consumivel-33": { origem: "consumivel", refId: "consumivel-33", nome: "Saliva de Redthorn", rotulo: "+1d12 no próximo dano com a arma física tratada", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], persisteSemRef: true, bonusProximaJogada: {"tipo":"dano","dado":"d12","tipoDano":"fisico","mesmaArma":true} },
+  "estado:consumivel:consumivel-35": { origem: "consumivel", refId: "consumivel-35", nome: "Poeira Mítica", rotulo: "+1d12 no próximo dano com a arma mágica tratada", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], persisteSemRef: true, bonusProximaJogada: {"tipo":"dano","dado":"d12","tipoDano":"magico","mesmaArma":true} },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -374,6 +379,11 @@ const CONTADOR_ALIASES = {
   "estado:consumivel:consumivel-11": ["Frasco de Moondrip"],
   "estado:consumivel:consumivel-15": ["Argila transformadora"],
   "estado:consumivel:consumivel-45": ["Almíscar do Ogro"],
+  "estado:consumivel:consumivel-09": ["Veneno de Grindletooth"],
+  "estado:consumivel:consumivel-14": ["Veneno de Grindletooth Aprimorado"],
+  "estado:consumivel:consumivel-32": ["Poção secreta da Homet"],
+  "estado:consumivel:consumivel-33": ["Saliva de Redthorn"],
+  "estado:consumivel:consumivel-35": ["Poeira Mítica"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

@@ -6945,7 +6945,18 @@
    "origemNome": "corrigido-auditoria",
    "aliases": [
     "Veneno de dente-de-leão"
-   ]
+   ],
+   "automacao": {
+    "classificacao": "consumivel-proximo-ataque-e6",
+    "rolaNoApp": false,
+    "motivo": "O item ativa um bônus para a próxima rolagem/ataque aplicável. A mesa faz a jogada e limpa o estado depois de resolver o gatilho."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-09",
+    "duracao": "proximo-gatilho-manual",
+    "rolaNoApp": false
+   }
   },
   {
    "id": "consumivel-10",
@@ -7029,7 +7040,18 @@
    "origemNome": "corrigido-auditoria",
    "aliases": [
     "Aprimorado Veneno de dente-de-leão"
-   ]
+   ],
+   "automacao": {
+    "classificacao": "consumivel-proximo-ataque-e6",
+    "rolaNoApp": false,
+    "motivo": "O item ativa um bônus para a próxima rolagem/ataque aplicável. A mesa faz a jogada e limpa o estado depois de resolver o gatilho."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-14",
+    "duracao": "proximo-gatilho-manual",
+    "rolaNoApp": false
+   }
   },
   {
    "id": "consumivel-15",
@@ -7383,7 +7405,18 @@
    "descricao": "Depois de beber essa poção, o próximo ataque bem-sucedido que você fizer será criticamente bem-sucedido.",
    "nomeIngles": "Homet's Secret Potion",
    "descricaoIngles": "After drinking this potion, the next successful attack you make critically succeeds.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-proximo-ataque-e6",
+    "rolaNoApp": false,
+    "motivo": "O item ativa um bônus para a próxima rolagem/ataque aplicável. A mesa faz a jogada e limpa o estado depois de resolver o gatilho."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-32",
+    "duracao": "proximo-gatilho-manual",
+    "rolaNoApp": false
+   }
   },
   {
    "id": "consumivel-33",
@@ -7392,7 +7425,18 @@
    "descricao": "Você pode aplicar essa saliva em uma arma que causa dano físico para adicionar um d12 para sua próxima rolagem de dano com essa arma.",
    "nomeIngles": "Redthorn Saliva",
    "descricaoIngles": "You can apply this saliva to a weapon that deals physical damage to add a d12 to your next damage roll with that weapon.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-proximo-ataque-e6",
+    "rolaNoApp": false,
+    "motivo": "O item ativa um bônus para a próxima rolagem/ataque aplicável. A mesa faz a jogada e limpa o estado depois de resolver o gatilho."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-33",
+    "duracao": "proximo-gatilho-manual",
+    "rolaNoApp": false
+   }
   },
   {
    "id": "consumivel-34",
@@ -7413,7 +7457,18 @@
    "descricao": "Você pode aplicar esse pó a uma arma que causa dano mágico para adicionar um d12 à sua próxima rolagem de dano com essa arma.",
    "nomeIngles": "Mythic Dust",
    "descricaoIngles": "You can apply this dust to a weapon that deals magic damage to add a d12 to your next damage roll with that weapon.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-proximo-ataque-e6",
+    "rolaNoApp": false,
+    "motivo": "O item ativa um bônus para a próxima rolagem/ataque aplicável. A mesa faz a jogada e limpa o estado depois de resolver o gatilho."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-35",
+    "duracao": "proximo-gatilho-manual",
+    "rolaNoApp": false
+   }
   },
   {
    "id": "consumivel-36",

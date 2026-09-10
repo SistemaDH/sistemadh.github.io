@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 165 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento e 15 de consumível', () => {
+teste('o catálogo tem 170 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento e 20 de consumível', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,13 +1561,13 @@ teste('o catálogo tem 165 contadores: 113 de carta, 25 de classe/subclasse, 4 d
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 165);
+  igual(Object.keys(CONTADORES).length, 170);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 113);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
-  igual(porOrigem['consumivel'], 15);
+  igual(porOrigem['consumivel'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
   igual(porOrigem['equipamento'], 5);
@@ -11199,6 +11199,72 @@ teste('E5 consome exatamente uma unidade e preserva recursos/defesas/contadores 
     igual(JSON.stringify(f.contadores),antes.contadores,id);
     igual(r.mudancas[0].efeito,'consumir-e-resolver-na-mesa',id);
     verdade(!!r.mudancas[0].efeitoManual,id);
+  });
+});
+
+
+
+console.log('\nLote 8 — consumíveis de próximo ataque/dano E6');
+const REGRAS_CONSUMIVEIS_E6 = {
+  'consumivel-09':{tipo:'dano',dado:'d6',tipoDano:'fisico',mesmaArma:true},
+  'consumivel-14':{tipo:'dano',dado:'d8',tipoDano:'fisico',mesmaArma:true},
+  'consumivel-32':{tipo:'ataque',proximoSucessoCritico:true},
+  'consumivel-33':{tipo:'dano',dado:'d12',tipoDano:'fisico',mesmaArma:true},
+  'consumivel-35':{tipo:'dano',dado:'d12',tipoDano:'magico',mesmaArma:true}
+};
+function fichaConsumivelE6_(id,qtd=1) {
+  const item=contexto.acharItem_(id);
+  const f=contexto.fichaVazia_();
+  f.identidade={nome:'E6',nivel:10,classe:'Guerreiro',subclasse:'Chamada do Matador'};
+  f.inventario=[{id:item.id,nome:item.nome,qtd:qtd,emUso:false}];
+  return {f,item,chave:'estado:consumivel:'+id};
+}
+teste('E6 publica os cinco estados de próxima jogada sem RNG', () => {
+  const CONTADORES=avaliar('CONTADORES');
+  Object.entries(REGRAS_CONSUMIVEIS_E6).forEach(([id,esperado]) => {
+    const item=contexto.acharItem_(id), chave='estado:consumivel:'+id, def=CONTADORES[chave];
+    verdade(!!item,id); verdade(!!def,chave);
+    igual(item.automacao.classificacao,'consumivel-proximo-ataque-e6',id);
+    igual(item.automacao.rolaNoApp,false,id);
+    igual(item.efeitoConsumivel.tipo,'ativar-estado',id);
+    igual(item.efeitoConsumivel.contador,chave,id);
+    igual(def.persisteSemRef,true,chave);
+    igual(def.zeraEm,['manual'],chave);
+    igual(def.bonusProximaJogada,esperado,chave);
+  });
+});
+teste('E6 consome uma unidade e mantém o efeito ativo sem referência de inventário', () => {
+  Object.keys(REGRAS_CONSUMIVEIS_E6).forEach((id) => {
+    const {f,chave}=fichaConsumivelE6_(id,1);
+    const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+    igual(r.erros,[],id+': '+JSON.stringify(r));
+    igual(f.inventario.length,0,id);
+    igual(f.contadores[chave].valor,1,id);
+    igual(contexto.validarContadores_(f),[],id);
+    igual(f.contadores[chave].valor,1,id+' deve sobreviver à normalização');
+  });
+});
+teste('E6 não desperdiça segunda unidade enquanto o mesmo próximo-gatilho está ativo', () => {
+  Object.keys(REGRAS_CONSUMIVEIS_E6).forEach((id) => {
+    const {f,chave}=fichaConsumivelE6_(id,2);
+    let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+    igual(r.erros,[],id); igual(f.inventario[0].qtd,1,id); igual(f.contadores[chave].valor,1,id);
+    const antes=JSON.stringify(f);
+    r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+    igual(r.erros.length,1,id); igual(JSON.stringify(f),antes,id+' segunda unidade deve ficar intacta');
+  });
+});
+teste('E6 não expira em descanso e some quando a mesa zera o gatilho manualmente', () => {
+  Object.keys(REGRAS_CONSUMIVEIS_E6).forEach((id) => {
+    const {f,chave}=fichaConsumivelE6_(id,1);
+    contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+    contexto.aplicarGatilhoContadores_(f,'descanso');
+    igual(f.contadores[chave].valor,1,id+' não deve expirar por descanso');
+    contexto.aplicarGatilhoContadores_(f,'descanso-longo');
+    igual(f.contadores[chave].valor,1,id+' não deve expirar por descanso longo');
+    contexto.aplicarAjustes_(f,[{tipo:'contador',chave:chave,valor:0}]);
+    contexto.validarContadores_(f);
+    verdade(!f.contadores[chave],id+' deve desaparecer depois do uso confirmado');
   });
 });
 

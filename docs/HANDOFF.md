@@ -810,3 +810,13 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - Esse tipo genérico (`consumir-e-resolver-na-mesa`) deve ser reutilizado apenas quando o único estado que pertence ao app é a própria unidade gasta; efeitos que alteram recursos/traços/estado do personagem continuam exigindo estrutura específica.
 
 **Próximo bloco natural:** consumíveis de bônus para a próxima jogada/dano e efeitos com estado próprio (venenos de arma, Saliva de Redthorn, Poeira Mítica, Poção Secreta de Homet e similares).
+
+### Lote 8 — consumíveis de próximo ataque/dano E6
+
+- **Veneno de Grindletooth**, **Veneno de Grindletooth Aprimorado**, **Saliva de Redthorn** e **Poeira Mítica** agora consomem a unidade e deixam um estado visível para o bônus de dano da próxima rolagem aplicável (`d6`, `d8` ou `d12`, com o tipo de dano e a exigência da mesma arma registrados no catálogo).
+- **Poção Secreta da Homet** deixa um estado visível indicando que o próximo ataque bem-sucedido será um sucesso crítico.
+- Os cinco estados usam `persisteSemRef=true`: continuam na ficha mesmo depois que a unidade consumida some da mochila.
+- Como o app não observa nem executa a jogada de ataque/dano, esses estados **não são apagados automaticamente**. A mesa resolve a jogada física e zera o marcador depois do gatilho correto. Descansos não apagam esses efeitos.
+- Uma segunda unidade igual não pode ser consumida enquanto o mesmo efeito ainda estiver ativo, evitando desperdício acidental.
+
+**Próximo bloco natural:** revisar os consumíveis restantes de estado/duração e recursos especiais (Poção da Estabilidade, Círculo do Vazio, Broto de Asas, poções de crescimento/encolhimento e efeitos semelhantes), mantendo rolagens sempre fora do app.
