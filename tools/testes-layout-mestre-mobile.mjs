@@ -91,12 +91,6 @@ async function auditar(page, viewport, tela) {
       .filter((el) => !el.matches(':disabled, [aria-disabled="true"], .verbete__gatilho'))
       .filter((el) => !el.matches('input[type="checkbox"], input[type="radio"], input[type="range"]'));
 
-    /*
-     * Conteúdo fora da viewport só é legítimo quando mora num scroller
-     * horizontal explícito. O Bestiário usa isso nas pílulas em celular para
-     * manter cada filtro com 44px sem voltar a quatro fileiras. O documento
-     * continua obrigado a NÃO ter overflow horizontal — conferido acima.
-     */
     const dentroDeScrollerHorizontal = (el) => {
       const scroller = el.closest('.bestiario__pilulas');
       if (!scroller) return false;
@@ -153,6 +147,54 @@ async function auditar(page, viewport, tela) {
   registrar(viewport, tela, dados);
 }
 
+/**
+ * B12: prova o estado que o screenshot inicial nunca via — depois de rolar
+ * fundo na lista. Só o campo de busca deve permanecer no topo do scrollport;
+ * listas, filtros e ferramentas precisam ter saído para não roubar altura.
+ */
+async function auditarBuscaRolada(page, viewport) {
+  const corpo = page.locator('.mestre__corpo');
+  await corpo.evaluate((el) => { el.scrollTop = Math.min(1100, el.scrollHeight - el.clientHeight); });
+  await page.waitForTimeout(150);
+
+  const dados = await page.evaluate(() => {
+    const erros = [];
+    const avisos = [];
+    const corpo = document.querySelector('.mestre__corpo');
+    const busca = document.querySelector('.bestiario__filtros > input[type="search"]');
+    if (!corpo || !busca) {
+      erros.push('faltou scrollport ou busca do Bestiário');
+      return { erros, avisos, larguraDocumento: document.documentElement.scrollWidth, larguraViewport: document.documentElement.clientWidth };
+    }
+
+    const c = corpo.getBoundingClientRect();
+    const b = busca.getBoundingClientRect();
+    const posicao = getComputedStyle(busca).position;
+    if (posicao !== 'sticky') erros.push(`busca não está sticky: ${posicao}`);
+    if (corpo.scrollTop < 300) erros.push(`lista não rolou o bastante: ${corpo.scrollTop}px`);
+    if (b.bottom <= c.top || b.top >= c.bottom) erros.push('busca sumiu depois da rolagem');
+    if (b.top < c.top - 1 || b.top > c.top + 20) {
+      erros.push(`busca não ficou no topo do scrollport: busca ${b.top.toFixed(1)} / corpo ${c.top.toFixed(1)}`);
+    }
+
+    const listas = document.querySelector('.bestiario__listas')?.getBoundingClientRect();
+    const filtros = [...document.querySelectorAll('.bestiario__pilulas')].map((el) => el.getBoundingClientRect());
+    if (listas && listas.bottom > c.top + 1) erros.push('alternador Adversários/Ambientes ficou preso junto da busca');
+    if (filtros.some((r) => r.bottom > c.top + 1)) erros.push('pílulas de filtro ficaram presas junto da busca');
+
+    return {
+      erros,
+      avisos,
+      larguraDocumento: document.documentElement.scrollWidth,
+      larguraViewport: document.documentElement.clientWidth
+    };
+  });
+
+  const arquivo = `${PASTA}/${viewport.nome}-mestre-bestiario-rolado.png`;
+  await page.screenshot({ path: arquivo, fullPage: true });
+  registrar(viewport, 'mestre-bestiario-rolado', dados);
+}
+
 async function entrarComoMestre(page) {
   await page.goto(base, { waitUntil: 'networkidle' });
   await page.waitForSelector('.abertura__titulo', { timeout: 10000 });
@@ -192,6 +234,7 @@ async function executar(viewport) {
         await page.waitForSelector('.bestiario__resultado', { timeout: 15000 });
       }
       await auditar(page, viewport, nome);
+      if (rotulo === 'Bestiário') await auditarBuscaRolada(page, viewport);
     }
   } finally {
     await contexto.close();
