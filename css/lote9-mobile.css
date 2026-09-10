@@ -281,7 +281,7 @@
 }
 
 .abertura__codigoAcao:hover {
-  background: var(--cor-superficie-hover);
+  background: rgba(255, 255, 255, .08);
 }
 
 .abertura__codigoAcao:focus-visible {
