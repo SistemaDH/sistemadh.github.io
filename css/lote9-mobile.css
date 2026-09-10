@@ -1,5 +1,5 @@
 /* ==========================================================================
-   L9-B7/B8 · REFINOS MOBILE
+   L9-B7/B8/B9 · REFINOS MOBILE
    ========================================================================== */
 
 /* ==========================================================================
@@ -115,5 +115,37 @@
     -webkit-line-clamp: 5;
     line-clamp: 5;
     overflow: hidden;
+  }
+}
+
+/* ==========================================================================
+   B9 · DENSIDADE DO CABEÇALHO E DO OURO
+
+   O subtítulo da subclasse era cortado em 360px porque as duas linhas do topo
+   herdavam white-space: nowrap. Só a SEGUNDA linha pode crescer: classe é curta
+   e o nome do personagem continua em uma linha. Em 390px+ não há custo extra.
+
+   A conversão do ouro não precisa ocupar espaço permanente no celular: os
+   diálogos Guardar/Gastar já explicam a troca automática no momento em que a
+   informação importa. Saldo e ações continuam sempre visíveis.
+   ========================================================================== */
+
+@media (max-width: 374px) {
+  .ficha__identidade > .ficha__subtitulo:last-child {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    line-height: 1.25;
+  }
+
+  .ficha__identidade > .ficha__subtitulo:last-child .ficha__subtituloBotao {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 639px) {
+  /* É o texto explicativo logo depois da linha saldo + ações da seção Ouro. */
+  .ficha__ouroLinha + .texto-xs.texto-fraco {
+    display: none;
   }
 }
