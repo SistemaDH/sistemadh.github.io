@@ -4256,12 +4256,24 @@ function ouroEmPunhados(ouro) {
      */
     function verItemDoLivro(doLivro, naMochila, indice) {
       const podeUsar = !!(doLivro && doLivro.efeitoConsumivel);
+      const pedeQuantidade = podeUsar && doLivro.efeitoConsumivel.tipo === 'recuperar-armadura-por-esperanca';
+      const recursosAtuais = (p.ficha || {}).recursos || {};
+      const limiteQuantidade = Math.max(0, Math.min(
+        Number(recursosAtuais.esperanca) || 0,
+        Number(recursosAtuais.armaduraMarcada) || 0
+      ));
+      const quantidadeConsumivel = pedeQuantidade ? el('input', semCorretor({
+        type:'number', class:'campo__entrada', min:'1',
+        max:String(Math.max(1, limiteQuantidade)), step:'1', inputmode:'numeric', value:'1',
+        'aria-label':'Esperança para gastar e Pontos de Armadura para recuperar'
+      })) : null;
       let modal = null;
       const usar = podeUsar ? el('button', {
         type: 'button', class: 'btn btn--principal',
         onClick: async (ev) => {
-          const r = await travarBotao(ev.currentTarget,
-            enviar([{ tipo:'inventario', acao:'consumir', indice }]));
+          const pedido = { tipo:'inventario', acao:'consumir', indice };
+          if (quantidadeConsumivel) pedido.quantidade = Number(quantidadeConsumivel.value);
+          const r = await travarBotao(ev.currentTarget, enviar([pedido]));
           if (r && modal) modal.fechar();
         }
       }, 'Usar e consumir 1') : null;
@@ -4271,6 +4283,11 @@ function ouroEmPunhados(ouro) {
           el('p', { class: 'texto-xs texto-fraco', texto:
             `${doLivro.tipo} · ${naMochila && naMochila.qtd > 1 ? `você tem ${naMochila.qtd}` : 'você tem 1'}` }),
           el('p', { class: 'texto-sm' }, textoAnotado(doLivro.descricao || '')),
+          pedeQuantidade ? el('label', { class:'pilha' }, [
+            el('span', { class:'texto-xs texto-fraco', texto:
+              `Esperança para gastar = PA para recuperar · máximo agora: ${limiteQuantidade}` }),
+            quantidadeConsumivel
+          ]) : null,
           podeUsar ? el('p', { class:'texto-xs texto-fraco', texto:
             'Se a regra pedir dado, role fisicamente; o item só sai da mochila depois que o efeito for aceito.' }) : null
         ].filter(Boolean)),

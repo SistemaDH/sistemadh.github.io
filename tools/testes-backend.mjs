@@ -11105,6 +11105,62 @@ teste('Almíscar do Ogro ativa sem custo e uma segunda unidade não é desperdi�
   igual(r.erros.length,1); igual(JSON.stringify(f),antes);
 });
 
+
+
+console.log('\nLote 8 — Costurador de Armadura E4');
+function fichaCosturadorE4_(qtd=1) {
+  const item=contexto.acharItem_('Armor Stitcher');
+  const f=contexto.fichaVazia_();
+  f.identidade={nome:'E4',nivel:10,classe:'Guerreiro',subclasse:'Chamada do Matador'};
+  f.recursos.esperancaMaxima=6; f.recursos.esperanca=4;
+  f.defesas.pontuacaoArmadura=6; f.recursos.armaduraMarcada=4;
+  f.inventario=[{id:item.id,nome:item.nome,qtd:qtd,emUso:false}];
+  return {f,item};
+}
+teste('Costurador de Armadura está estruturado com quantidade variável e sem RNG', () => {
+  const item=contexto.acharItem_('Armor Stitcher');
+  verdade(!!item);
+  igual(item.id,'consumivel-21');
+  igual(item.automacao.rolaNoApp,false);
+  igual(item.efeitoConsumivel.tipo,'recuperar-armadura-por-esperanca');
+  igual(item.efeitoConsumivel.entradaQuantidade.campo,'quantidade');
+  igual(item.efeitoConsumivel.entradaQuantidade.minimo,1);
+});
+teste('Costurador gasta N Esperança, recupera N PA e consome exatamente uma unidade', () => {
+  const {f}=fichaCosturadorE4_(2);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0,quantidade:3}]);
+  igual(r.erros,[],JSON.stringify(r));
+  igual(r.pendenciaRolagem,null,JSON.stringify(r));
+  igual(f.recursos.esperanca,1,JSON.stringify(r));
+  igual(f.recursos.armaduraMarcada,1,JSON.stringify(r));
+  igual(f.inventario[0].qtd,1,JSON.stringify(r));
+  igual(r.mudancas[0].custoEsperanca,3);
+  igual(r.mudancas[0].quantidade,3);
+});
+teste('Costurador rejeita zero, fração, Esperança insuficiente e PA insuficiente sem mutação', () => {
+  const casos=[
+    {quantidade:0,prepara:()=>{}},
+    {quantidade:1.5,prepara:()=>{}},
+    {quantidade:5,prepara:()=>{}},
+    {quantidade:3,prepara:(f)=>{f.recursos.armaduraMarcada=2;}}
+  ];
+  casos.forEach((caso) => {
+    const {f}=fichaCosturadorE4_(1); caso.prepara(f);
+    const antes=JSON.stringify(f);
+    const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0,quantidade:caso.quantidade}]);
+    igual(r.erros.length,1,JSON.stringify(caso));
+    igual(JSON.stringify(f),antes,'falha deve ser atômica: '+JSON.stringify(caso));
+  });
+});
+teste('Costurador não aceita uso sem quantidade e não desperdiça item com armadura intacta', () => {
+  let x=fichaCosturadorE4_(1), antes=JSON.stringify(x.f);
+  let r=contexto.aplicarAjustes_(x.f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros.length,1); igual(JSON.stringify(x.f),antes);
+  x=fichaCosturadorE4_(1); x.f.recursos.armaduraMarcada=0; antes=JSON.stringify(x.f);
+  r=contexto.aplicarAjustes_(x.f,[{tipo:'inventario',acao:'consumir',indice:0,quantidade:1}]);
+  igual(r.erros.length,1); igual(JSON.stringify(x.f),antes);
+});
+
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));

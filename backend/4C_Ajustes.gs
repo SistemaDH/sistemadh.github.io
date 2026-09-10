@@ -2195,6 +2195,27 @@ function usarConsumivelDaMochila_(ficha, lista, indice, a) {
     const cura=ajustarRecurso_(ficha,{chave:'pontosDeVidaMarcados',delta:-quantidade});
     if (cura && cura.erro) return falhar(cura.erro);
     detalhes.push(paga,cura);
+  } else if (tipo === 'recuperar-armadura-por-esperanca') {
+    const bruto=(a || {}).quantidade;
+    const q=Math.trunc(Number(bruto));
+    if (!isFinite(q) || Number(bruto)!==q || q < 1) {
+      return { erro:item.nome + ': escolha uma quantidade inteira de pelo menos 1.' };
+    }
+    const recursos=(ficha || {}).recursos || {};
+    const esperanca=Math.max(0,Number(recursos.esperanca) || 0);
+    const armaduraMarcada=Math.max(0,Number(recursos.armaduraMarcada) || 0);
+    if (esperanca < q) {
+      return { erro:item.nome + ': você tem apenas ' + esperanca + ' de Esperança para gastar.' };
+    }
+    if (armaduraMarcada < q) {
+      return { erro:item.nome + ': há apenas ' + armaduraMarcada + ' Ponto(s) de Armadura marcado(s) para recuperar.' };
+    }
+    const paga=ajustarRecurso_(ficha,{chave:'esperanca',delta:-q});
+    if (paga && paga.erro) return falhar(paga.erro);
+    const recupera=ajustarRecurso_(ficha,{chave:'armaduraMarcada',delta:-q});
+    if (recupera && recupera.erro) return falhar(recupera.erro);
+    quantidade=q;
+    detalhes.push(paga,recupera);
   } else if (tipo === 'ativar-estado') {
     const chave=String(efeito.contador || '');
     const def=(typeof CONTADORES === 'object' && CONTADORES[chave]) ? CONTADORES[chave] : null;
@@ -2230,6 +2251,7 @@ function usarConsumivelDaMochila_(ficha, lista, indice, a) {
     tipo:'inventario', acao:'consumir', item:item.nome, itemId:item.id,
     qtdAntes:gasto.antes, qtdDepois:gasto.depois, consumiu:1,
     efeito:tipo, quantidade:quantidade, resultadoManual:resultadoManual,
+    custoEsperanca:(tipo === 'recuperar-armadura-por-esperanca' ? quantidade : undefined),
     detalhes:detalhes,
     aviso:item.nome + ': efeito aplicado e 1 unidade consumida.'
   };

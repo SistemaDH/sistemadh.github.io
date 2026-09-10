@@ -791,3 +791,13 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - `ativar-estado` passou a aceitar custo determinístico opcional de Esperança, validado antes de qualquer mutação. Nenhum RNG foi introduzido.
 
 **Próximo bloco natural:** **Remendo/Costurador de Armadura**, com escolha de quantidade Esperança → PA, seguido pelos consumíveis de uso único puramente posicional/narrativo.
+
+### Lote 8 — Costurador de Armadura E4
+
+- **Costurador de Armadura / Armor Stitcher** agora tem resolução completa na Mochila: o jogador escolhe uma quantidade inteira N, gasta N Esperança e recupera exatamente N Pontos de Armadura.
+- O modal limita visualmente N ao menor valor entre a Esperança disponível e os PA atualmente marcados; o servidor continua sendo a autoridade e rejeita zero, fração, valor acima da Esperança ou recuperação acima dos PA marcados.
+- Custo, recuperação e consumo de uma unidade são atômicos: qualquer erro deixa Esperança, Armadura e inventário inalterados.
+- A resolução declara `custoEsperanca`, portanto continua passando pelo mecanismo genérico de **Esperançoso** em vez de criar uma exceção para o item.
+- Nenhum dado é rolado pelo app (`automacao.rolaNoApp=false`).
+
+**Próximo bloco natural:** consumíveis de uso único sem estado próprio (teleporte/movimento/respiração/cópia e outros efeitos posicionais), classificando explicitamente o que deve permanecer manual na mesa.
