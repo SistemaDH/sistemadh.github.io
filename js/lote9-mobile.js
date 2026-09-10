@@ -79,10 +79,66 @@ function prepararItem(item) {
   acoes.append(mais);
 }
 
+/* ========================================================================== *
+ * L9-B15 · ETAPA DO LIVRO ≠ POSIÇÃO NO ASSISTENTE
+ *
+ * Os rótulos existentes ("Etapa 8", "Etapas 6 e 9"...) são as etapas do
+ * livro. A barra, porém, mede as nove telas do assistente depois da abertura.
+ * O antigo B13 acrescentava "de 9" ao rótulo do livro e fazia Cartas dizer
+ * "Etapa 8 de 9" enquanto a barra estava em 6/9. No mobile, preservamos o
+ * rótulo editorial e mostramos ao lado o progresso real do fluxo.
+ * ========================================================================== */
+
+const consultaMobile = window.matchMedia('(max-width: 639px)');
+
+function prepararProgressoCriacao(raiz = document) {
+  if (!consultaMobile.matches) return;
+
+  const topos = new Set();
+  if (raiz === document) {
+    document.querySelectorAll('.criacao__topo').forEach((topo) => topos.add(topo));
+  } else if (raiz instanceof Element) {
+    const proprio = raiz.matches('.criacao__topo') ? raiz : raiz.closest('.criacao__topo');
+    if (proprio) topos.add(proprio);
+    raiz.querySelectorAll?.('.criacao__topo').forEach((topo) => topos.add(topo));
+  }
+
+  topos.forEach((topo) => {
+    const progresso = topo.querySelector('.criacao__progresso[role="progressbar"]');
+    const bloco = topo.querySelector('.criacao__tituloBloco');
+    if (!progresso || !bloco) return;
+
+    const atual = Number(progresso.getAttribute('aria-valuenow'));
+    const total = Number(progresso.getAttribute('aria-valuemax'));
+    if (!Number.isFinite(atual) || !Number.isFinite(total) || atual <= 0 || total <= 0) return;
+
+    let contador = topo.querySelector('.criacao__contador');
+    const etiqueta = bloco.querySelector('.criacao__etiqueta');
+    const texto = `Passo ${atual} de ${total}`;
+
+    if (!contador) {
+      contador = el('span', {
+        class: `criacao__contador ${etiqueta ? '' : 'criacao__contador--sozinho'}`.trim(),
+        'aria-label': texto
+      });
+      if (etiqueta) etiqueta.append(contador);
+      else bloco.prepend(contador);
+    }
+
+    contador.textContent = etiqueta ? ` · ${texto}` : texto;
+    contador.setAttribute('aria-label', texto);
+  });
+}
+
+function limparProgressoCriacao() {
+  document.querySelectorAll('.criacao__contador').forEach((contador) => contador.remove());
+}
+
 function prepararRaiz(raiz) {
   if (!(raiz instanceof Element) && raiz !== document) return;
   if (raiz instanceof Element && raiz.matches('.ficha__item')) prepararItem(raiz);
   raiz.querySelectorAll?.('.ficha__item').forEach(prepararItem);
+  prepararProgressoCriacao(raiz);
 }
 
 prepararRaiz(document);
@@ -95,3 +151,8 @@ const observador = new MutationObserver((mudancas) => {
   });
 });
 observador.observe(document.documentElement, { childList: true, subtree: true });
+
+consultaMobile.addEventListener?.('change', (evento) => {
+  if (evento.matches) prepararProgressoCriacao(document);
+  else limparProgressoCriacao();
+});
