@@ -23,8 +23,31 @@ jobs:
           python3 tools/lote8-equip-ofensivo-d2.py
           python3 - <<'PY'
           from pathlib import Path
+
+          # Normaliza EOF do HANDOFF temporário.
           p=Path('docs/HANDOFF.md')
           p.write_text(p.read_text(encoding='utf-8').rstrip()+'\n',encoding='utf-8')
+
+          # Corrige a trava idempotente ampla demais do materializador: o
+          # pré-teste de saldo continha a mesma substring do débito real.
+          p=Path('backend/4C_Ajustes.gs')
+          s=p.read_text(encoding='utf-8')
+          real="  if (custoOuroPunhados) detalhes.push(ajustarOuroDaFicha_(ficha, { chave:'punhados', delta:-custoOuroPunhados }));"
+          if real not in s:
+            needle="  if (custoEsperanca) detalhes.push(ajustarRecurso_(ficha, { chave:'esperanca', delta:-custoEsperanca }));\n\n  let recuperacao = null;"
+            repl="  if (custoEsperanca) detalhes.push(ajustarRecurso_(ficha, { chave:'esperanca', delta:-custoEsperanca }));\n"+real+"\n\n  let recuperacao = null;"
+            if needle not in s: raise SystemExit('ponto de débito real de ouro não encontrado')
+            s=s.replace(needle,repl,1)
+          p.write_text(s,encoding='utf-8')
+
+          # ARMAS não publica nomeIngles; a compatibilidade do runtime é pelo
+          # EQUIPAMENTO_ALIASES. Testa o contrato real, não campo inexistente.
+          p=Path('tools/testes-backend.mjs')
+          s=p.read_text(encoding='utf-8')
+          old="  igual(a.nomeIngles,'Advanced Scepter');\n  const antigo=contexto.acharArma_('Avançado (nome cortado/incompleto)');"
+          new="  const peloIngles=contexto.acharArma_('Advanced Scepter'); verdade(!!peloIngles); igual(peloIngles.id,a.id);\n  const antigo=contexto.acharArma_('Avançado (nome cortado/incompleto)');"
+          if old in s: s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
           PY
           node tools/gerar-44-equipamento.mjs
           node tools/gerar-41-dominios.mjs
@@ -58,6 +81,7 @@ jobs:
           assert 'Avançado (nome cortado/incompleto)' in (adv.get('aliases') or [])
           print('D2 invariantes OK:', {k:len(v) for k,v in por.items()})
           PY
+          grep -q "detalhes.push(ajustarOuroDaFicha_(ficha, { chave:'punhados', delta:-custoOuroPunhados }))" backend/4C_Ajustes.gs
           python3 tools/auditar-pendencias-lote8.py
           node --check js/telas/ficha.js
 
