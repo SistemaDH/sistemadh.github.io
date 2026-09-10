@@ -1,30 +1,76 @@
-name: TEMP Lote 9 B3 diagnostico tipografia
+name: TEMP Lote 9 B3 tipografia mobile
 
 on:
   push:
     branches: [tmp-lote9-b3-tipografia-sol]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  diagnostico:
+  gate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: npm
       - run: npm ci
-      - name: Detalhar textos abaixo de 12px
-        run: python3 tools/tmp-lote9-b3-diagnostico.py
+
+      - name: Materializar L9-B3
+        run: python3 tools/tmp-lote9-b3.py
+
+      - name: Contrato tipografico L9-B3
+        run: |
+          grep -F 'font-size: var(--txt-xs);' css/criacao.css
+          grep -A3 -F '.ficha__abaConta {' css/ficha.css | grep -F 'font-size: var(--txt-xs);'
+          grep -F 'erros.push(`textos visíveis abaixo de 12px:' tools/testes-layout-mobile.mjs
+          git diff --check
+
+      - run: npm run teste:sintaxe
+      - run: npm run teste
+      - run: npm run teste:gerados
+      - run: npm run teste:css
+
+      - name: Auditoria Core 1.0 zerada
+        run: |
+          python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria.md
+          grep -F 'Classes/subclasses: **99 características**; **0** candidatas' /tmp/auditoria.md
+          grep -F 'Comunidades: **9 características**; **0** candidatas' /tmp/auditoria.md
+          grep -F 'Cartas de domínio: **189 cartas**; **0** candidatas' /tmp/auditoria.md
+          grep -F 'Características de armas/armaduras/molduras: **203 ocorrências**; **0** ocorrências candidatas' /tmp/auditoria.md
+          grep -F 'Loot/consumíveis com texto mecânico detectado: **81**; **0** candidatos' /tmp/auditoria.md
+
       - run: npx playwright install --with-deps chromium
-      - run: npm run teste:layout-mobile
-      - name: Guardar diagnostico B3
+      - run: npm run teste:e2e
+      - name: Layout mobile 360 / 390 / 430 sem texto abaixo de 12px
+        run: npm run teste:layout-mobile
+
+      - name: Guardar diagnóstico visual B3
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lote9-b3-diagnostico
+          name: lote9-b3-layout-mobile
           path: artifacts/layout-mobile
-          if-no-files-found: error
+          if-no-files-found: warn
+
+      - name: Bloquear concorrência em newedit
+        run: |
+          atual=$(git ls-remote origin refs/heads/newedit | cut -f1)
+          test "$atual" = 'b940b9362988abe8b1daa4d26a80afce815f262d' || {
+            echo "newedit mudou: esperado b940b9362988abe8b1daa4d26a80afce815f262d, atual $atual"
+            exit 1
+          }
+
+      - name: Criar commit funcional limpo
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm tools/tmp-lote9-b3.py tools/tmp-lote9-b3-diagnostico.py .github/workflows/tmp-lote9-b3.yml
+          git add css/criacao.css css/ficha.css tools/testes-layout-mobile.mjs
+          git diff --cached --check
+          git commit -m 'fix: garantir piso tipografico mobile L9-B3'
+          git push origin HEAD:tmp-lote9-b3-tipografia-sol
