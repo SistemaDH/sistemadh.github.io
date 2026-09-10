@@ -208,12 +208,106 @@ function limparAjudaCriacao() {
   });
 }
 
+/* ========================================================================== *
+ * L9-B19 · EDITOR DE ADVERSÁRIO PRÓPRIO NO MOBILE
+ *
+ * O editor original continua dono dos campos, sugestões e do salvar. Aqui a
+ * camada mobile só muda APRESENTAÇÃO: cria um scroll próprio para o formulário
+ * (deixando o botão Salvar sempre disponível), recolhe a receita do tipo e
+ * sinaliza quando a cópia de trabalho foi alterada.
+ * ========================================================================== */
+
+function prepararReceitasDoEditor(editor) {
+  editor.querySelectorAll('.editor-adversario__dica').forEach((dica) => {
+    if (dica.closest('.editor-adversario__receita')) return;
+
+    const detalhes = el('details', { class: 'editor-adversario__receita' });
+    const topo = el('summary', { class: 'editor-adversario__receitaTopo', texto: 'Receita do tipo' });
+    detalhes.open = editor.dataset.l9ReceitaAberta !== 'nao';
+    detalhes.addEventListener('toggle', () => {
+      editor.dataset.l9ReceitaAberta = detalhes.open ? 'sim' : 'nao';
+    });
+
+    dica.before(detalhes);
+    detalhes.append(topo, dica);
+  });
+}
+
+function prepararEditorAdversario(raiz = document) {
+  if (!consultaMobile.matches) return;
+
+  const editores = new Set();
+  if (raiz === document) {
+    document.querySelectorAll('.editor-adversario').forEach((editor) => editores.add(editor));
+  } else if (raiz instanceof Element) {
+    const proprio = raiz.matches('.editor-adversario') ? raiz : raiz.closest('.editor-adversario');
+    if (proprio) editores.add(proprio);
+    raiz.querySelectorAll?.('.editor-adversario').forEach((editor) => editores.add(editor));
+  }
+
+  editores.forEach((editor) => {
+    const caixa = editor.closest('.modal__caixa');
+    if (!caixa) return;
+    caixa.classList.add('modal__caixa--editorAdversario');
+
+    const acoes = caixa.querySelector(':scope > .modal__acoes');
+    if (acoes) {
+      let estado = acoes.querySelector('.editor-adversario__estadoEdicao');
+      if (!estado) {
+        estado = el('span', {
+          class: 'editor-adversario__estadoEdicao',
+          'aria-live': 'polite',
+          hidden: 'hidden',
+          texto: 'Alterações não salvas'
+        });
+        acoes.prepend(estado);
+      }
+
+      estado.hidden = editor.dataset.l9Alterado !== 'sim';
+
+      if (editor.dataset.l9EventosMobile !== 'sim') {
+        const marcarAlterado = () => {
+          if (!consultaMobile.matches) return;
+          editor.dataset.l9Alterado = 'sim';
+          const atual = caixa.querySelector('.editor-adversario__estadoEdicao');
+          if (atual) atual.hidden = false;
+        };
+
+        editor.addEventListener('input', marcarAlterado);
+        editor.addEventListener('change', marcarAlterado);
+        editor.addEventListener('click', (evento) => {
+          const botao = evento.target.closest('button');
+          if (botao && editor.contains(botao)) marcarAlterado();
+        });
+        editor.dataset.l9EventosMobile = 'sim';
+      }
+    }
+
+    prepararReceitasDoEditor(editor);
+  });
+}
+
+function limparEditorAdversario() {
+  document.querySelectorAll('.editor-adversario__receita').forEach((detalhes) => {
+    const dica = detalhes.querySelector('.editor-adversario__dica');
+    if (dica) detalhes.before(dica);
+    detalhes.remove();
+  });
+
+  document.querySelectorAll('.modal__caixa--editorAdversario').forEach((caixa) => {
+    caixa.classList.remove('modal__caixa--editorAdversario');
+    const estado = caixa.querySelector('.editor-adversario__estadoEdicao');
+    if (estado) estado.hidden = true;
+  });
+}
+
 function prepararRaiz(raiz) {
   if (!(raiz instanceof Element) && raiz !== document) return;
   if (raiz instanceof Element && raiz.matches('.ficha__item')) prepararItem(raiz);
   raiz.querySelectorAll?.('.ficha__item').forEach(prepararItem);
   prepararProgressoCriacao(raiz);
   prepararAjudaCriacao(raiz);
+  prepararEditorAdversario(raiz);
 }
 
 prepararRaiz(document);
@@ -231,8 +325,10 @@ consultaMobile.addEventListener?.('change', (evento) => {
   if (evento.matches) {
     prepararProgressoCriacao(document);
     prepararAjudaCriacao(document);
+    prepararEditorAdversario(document);
   } else {
     limparProgressoCriacao();
     limparAjudaCriacao();
+    limparEditorAdversario();
   }
 });
