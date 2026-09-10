@@ -30,10 +30,6 @@
     flex: 1 1 auto;
   }
 
-  /*
-   * O nome pode usar duas linhas, mas não transformar uma entrada num cartão
-   * de quatro linhas. O nome completo continua no próprio botão e no menu.
-   */
   .ficha__itemNome {
     display: -webkit-box;
     width: 100%;
@@ -47,10 +43,6 @@
     overflow: hidden;
   }
 
-  /*
-   * Quantidade é a ação de repetição da sessão: − / valor / + permanecem a um
-   * toque. Em uso e excluir saem da fileira e entram no botão de mais ações.
-   */
   .ficha__itemAcoes {
     display: flex;
     align-items: center;
@@ -82,7 +74,6 @@
     height: 44px;
   }
 
-  /* Estado importante continua visível sem gastar outro botão na linha. */
   .ficha__item.esta-em-uso .ficha__itemTexto::after {
     content: 'em uso';
     display: block;
@@ -98,14 +89,6 @@
 
 /* ==========================================================================
    B8 · CARTA DE SUBCLASSE COMO PRÉVIA NO MOBILE
-
-   A subclasse não precisa reproduzir a carta inteira dentro da lista: o nome
-   já abre a arte oficial com o texto completo. No celular, mostrar toda a
-   regra empurrava a seção Mão para depois de uma tela inteira.
-
-   Cinco linhas mantêm contexto suficiente para reconhecer a habilidade, sem
-   esconder o marcador que pertence à carta. Tablet/desktop continuam com o
-   texto integral na lista.
    ========================================================================== */
 
 @media (max-width: 639px) {
@@ -120,14 +103,6 @@
 
 /* ==========================================================================
    B9 · DENSIDADE DO CABEÇALHO E DO OURO
-
-   O subtítulo da subclasse era cortado em 360px porque as duas linhas do topo
-   herdavam white-space: nowrap. Só a SEGUNDA linha pode crescer: classe é curta
-   e o nome do personagem continua em uma linha. Em 390px+ não há custo extra.
-
-   A conversão do ouro não precisa ocupar espaço permanente no celular: os
-   diálogos Guardar/Gastar já explicam a troca automática no momento em que a
-   informação importa. Saldo e ações continuam sempre visíveis.
    ========================================================================== */
 
 @media (max-width: 374px) {
@@ -144,7 +119,6 @@
 }
 
 @media (max-width: 639px) {
-  /* É o texto explicativo logo depois da linha saldo + ações da seção Ouro. */
   .ficha__ouroLinha + .texto-xs.texto-fraco {
     display: none;
   }
@@ -152,14 +126,6 @@
 
 /* ==========================================================================
    B10 · SUBCLASSE MAIS DENSA EM 360/390
-
-   Em largura estreita, o selo com o nome da classe cai sozinho para uma linha
-   nova logo abaixo de "Subclasse — 1". Para a subclasse normal ele repete a
-   classe que já está no cabeçalho; quando for multiclasse, o selo continua
-   porque aí ele traz estado que não é redundante.
-
-   A prévia cai de cinco para três linhas só em 360/390. Tocar no nome continua
-   abrindo a carta oficial completa, e marcador/ações permanecem visíveis.
    ========================================================================== */
 
 @media (max-width: 390px) {
@@ -176,16 +142,17 @@
 /* ==========================================================================
    B11 · PAINEL DO MESTRE — ALVOS DE TOQUE NO MOBILE
 
-   O novo baseline do Mestre encontrou duas famílias abaixo de 44px: as doze
-   caveiras do Medo, espremidas numa fileira, e os filtros de 32px do Bestiário.
+   O baseline do Mestre encontrou duas famílias abaixo de 44px: as doze
+   caveiras do Medo numa fileira e os controles densos do Bestiário.
 
-   No Medo, 2×6 preserva o gesto direto (tocar no valor desejado) e entrega um
-   alvo de verdade para cada ponto. A explicação entre sessões sai deste cartão
-   no celular porque a própria página já oferece a dobra "Como o Medo funciona".
+   Medo vira uma grade 2×6: cada valor continua sendo um toque direto, agora
+   com 44px reais. A explicação entre sessões sai deste cartão no celular
+   porque a mesma página já tem a dobra "Como o Medo funciona".
 
-   No Bestiário, a pílula continua desenhada com 36px para não transformar os
-   filtros em uma parede de botões. Uma hitbox vertical invisível completa 44px;
-   o espaçamento entre fileiras sobe para 8px para essas áreas não se sobreporem.
+   No Bestiário os filtros passam a ter 44px reais. Para que a correção não
+   transforme dez tipos em quatro fileiras altas, cada grupo de pílulas vira
+   uma faixa horizontal rolável — uma linha para patamares e uma para tipos.
+   O botão "+ cena", usado durante combate, também ganha 44px reais.
    ========================================================================== */
 
 @media (max-width: 639px) {
@@ -202,29 +169,29 @@
     flex: none;
   }
 
-  /* A mesma regra está disponível na dobra específica logo abaixo na Mesa. */
   .trilha--medoMesa > .trilha__ajuda {
     display: none;
   }
 
   .bestiario__pilulas {
-    column-gap: var(--e1);
-    row-gap: var(--e2);
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--e1);
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    padding-block: 2px;
   }
 
   .bestiario__pilulas .pilula {
-    position: relative;
+    flex: 0 0 auto;
     min-width: 44px;
-    min-height: 36px;
+    min-height: 44px;
   }
 
-  .bestiario__pilulas .pilula::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 100%;
-    height: 44px;
-    transform: translateY(-50%);
+  .bestiario__porEmCena {
+    min-height: 44px;
   }
 }
