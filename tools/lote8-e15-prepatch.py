@@ -43,6 +43,7 @@ t = t.replace("loot-contextual-testes-e15", "loot-contextual-jogadas-e15")
 t = t.replace("testes de Conjuração", "jogadas de Conjuração")
 t = t.replace("Os dois efeitos dependem de testes feitos na mesa", "Os dois efeitos dependem de jogadas feitas na mesa")
 t = t.replace("dois testes contextuais", "duas jogadas contextuais")
+t = t.replace("Teste em Dupla", "Jogada em Dupla")
 
 p.write_text(t, encoding='utf-8')
 print('E15 prepatch: helper atual + vocabulário canônico aplicados ao transformador')
