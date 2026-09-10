@@ -162,7 +162,7 @@
 }
 
 .alternador__opcao {
-  min-height: 42px;
+  min-height: var(--alvo-toque);
   border: 0;
   border-radius: var(--raio-sm);
   background: transparent;

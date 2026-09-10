@@ -4952,7 +4952,7 @@ function ouroEmPunhados(ouro) {
     area.value = original;
 
     const salvar = el('button', {
-      type: 'button', class: 'btn btn--principal btn--pequeno', disabled: true
+      type: 'button', class: 'btn btn--principal', disabled: true
     }, 'Salvar anotações');
 
     area.addEventListener('input', () => { salvar.disabled = area.value === original; });

@@ -63,9 +63,9 @@ async function auditar(page, viewport, tela) {
     }
 
     /*
-     * L9-A registra a dívida, mas não exige que o frontend antigo já seja 10/10.
-     * No L9-B este grupo vira erro de gate: primeiro congelamos o estado atual,
-     * depois usamos o próprio relatório para eliminar cada ocorrência.
+     * L9-B2: ação essencial abaixo de 44px é regressão, não aviso.
+     * O baseline já corrigiu as ocorrências reais conhecidas (alternador da
+     * abertura e Salvar anotações); daqui em diante o CI protege esse piso.
      */
     const essenciais = interativos.filter((el) =>
       el.matches('.btn--principal, .ficha__aba, .mestre__aba, .alternador__opcao, .acao-flutuante')
@@ -75,7 +75,7 @@ async function auditar(page, viewport, tela) {
       return r.width < 43.5 || r.height < 43.5;
     });
     if (pequenosEssenciais.length) {
-      avisos.push(`DÉBITO L9-B · ações essenciais abaixo de 44px: ${pequenosEssenciais.map((e) => (e.getAttribute('aria-label') || e.textContent || e.className).trim().slice(0, 32)).join(' | ')}`);
+      erros.push(`ações essenciais abaixo de 44px: ${pequenosEssenciais.map((e) => (e.getAttribute('aria-label') || e.textContent || e.className).trim().slice(0, 32)).join(' | ')}`);
     }
 
     const pequenos = interativos.filter((el) => {
