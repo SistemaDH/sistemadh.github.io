@@ -704,3 +704,13 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - **Desafetação / Deflecting** (`secundaria-t3-fivela`): reação pré-ataque, 1 PA; o bônus usa os PA que continuam disponíveis depois do custo, conforme a redação corrigida da errata p.125.
 - Todas as marcas de PA reutilizam `ajustarRecurso_`, portanto disparam **Doloroso** e continuam passando por **Inabalável** quando geram marcas unitárias de Estresse. Nenhum dado é rolado pelo app.
 - Contadores permanecem em **146**; este bloco não cria estado persistente.
+
+### Lote 8 — equipamento ofensivo C1
+
+- Classificadas e assistidas as características **Alarmante, Persuasão, Repelente, Revigorante, Sorvedouras e Rápido/Veloz** em armas padrão e de moldura.
+- O app só cobra recursos e aplica recuperações determinísticas. Ataques, alvos e reposicionamento continuam na mesa.
+- **Revigorante** e **Sorvedouras** usam resultado de d4/d6 informado pelo jogador; nenhum dado é rolado pelo app.
+- Usos só funcionam com o item realmente equipado; arma guardada na reserva não concede a característica.
+- Custos continuam atravessando os interceptadores centrais de **Inabalável** e **Esperançoso**.
+
+**Próximo bloco natural:** **Recarga + Seis Balas**, que exigem estado persistente de munição/recarga; depois, demais características ofensivas condicionais.

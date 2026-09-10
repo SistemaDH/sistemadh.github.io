@@ -10448,6 +10448,123 @@ teste('PA de Esperançoso passa por Doloroso e Inabalável sem RNG automático',
   verdade(r.mudancas[0].inabalavel && r.mudancas[0].inabalavel.evitou);
 });
 
+
+
+console.log('\nLote 8 — equipamento ofensivo C1');
+
+function armaComCaracC1_(nome) {
+  const xs = avaliar('ARMAS');
+  return xs.find((a) => String(a.carac || '') === nome && a.efeitoEquipamento && a.efeitoEquipamento.usoAtivo);
+}
+
+function fichaEquipC1_(arma) {
+  const f = contexto.fichaVazia_();
+  f.identidade = { nome:'C1', nivel:10, classe:'Guerreiro', subclasse:'Chamada do Matador' };
+  f.equipamento = { primaria:null, secundaria:null, armadura:null, reserva:[] };
+  if (arma.cat === 'secundaria') f.equipamento.secundaria = arma.id;
+  else f.equipamento.primaria = arma.id;
+  f.recursos = Object.assign({}, f.recursos || {}, {
+    estresseMarcado:0, estresseMaximo:8,
+    esperanca:6, esperancaMaxima:6,
+    pontosDeVidaMarcados:2, pontosDeVidaMaximos:8
+  });
+  f.defesas = Object.assign({}, f.defesas || {}, { evasao:10, pontuacaoArmadura:0, limiarMaior:8, limiarGrave:16 });
+  return f;
+}
+
+teste('C1 publica todas as ocorrências alvo com uso ativo e sem RNG do app',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/equipamentos.json'),'utf8'));
+  const itens=[...(d.armas||[]),...(d.armaduras||[]),...Object.values(d.molduras||{}).flatMap(x=>Array.isArray(x)?x:[])];
+  const walk=(x,out=[])=>{ if(Array.isArray(x)) x.forEach(v=>walk(v,out)); else if(x&&typeof x==='object'){ if(x.caracteristica) out.push(x); Object.values(x).forEach(v=>walk(v,out)); } return out; };
+  const xs=walk(d,[]);
+  const alvos=xs.filter(x=>{
+    const c=x.caracteristica||{};
+    return ['Startling','Persuasive','Concussive','Invigorating','Lifestealing','Quick'].includes(c.nomeIngles) || ['Alarmante','Rápido','Veloz'].includes(c.nome);
+  });
+  igual(alvos.length,20,'5 Alarmante + Persuasão + Repelente + Revigorante + Sorvedouras + 10 Quick + 1 Veloz sem nome inglês');
+  verdade(alvos.every(x=>x.caracteristica.automacao && x.caracteristica.efeitoEquipamento && x.caracteristica.efeitoEquipamento.usoAtivo));
+});
+
+teste('Alarmante marca 1 Estresse e deixa o recuo dos alvos manual',()=>{
+  const a=armaComCaracC1_('Alarmante'); verdade(!!a);
+  const f=fichaEquipC1_(a);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Alarmante'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+  verdade(/recuar/.test(r.mudancas[0].efeitoManual||''));
+});
+
+teste('Rápido marca 1 Estresse e não inventa segundo alvo na ficha',()=>{
+  const a=armaComCaracC1_('Rápido'); verdade(!!a);
+  const f=fichaEquipC1_(a); const antes=JSON.stringify(f.equipamento);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Rápido'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+  verdade(/outra criatura/.test(r.mudancas[0].efeitoManual||'')); igual(JSON.stringify(f.equipamento),antes);
+});
+
+teste('Persuasão custa 1 Estresse, publica +2 Presença e não altera o traço base',()=>{
+  const a=armaComCaracC1_('Persuasão'); verdade(!!a);
+  const f=fichaEquipC1_(a); f.tracos={presenca:1}; const antes=f.tracos.presenca;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Persuasão'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+  igual(r.mudancas[0].bonusRolagem,{traco:'presenca',valor:2}); igual(f.tracos.presenca,antes);
+});
+
+teste('Repelente só cobra 1 Esperança depois de sucesso confirmado',()=>{
+  const a=armaComCaracC1_('Repelente'); verdade(!!a);
+  let f=fichaEquipC1_(a); let r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Repelente'}]);
+  igual(r.erros.length,1); igual(f.recursos.esperanca,6);
+  f=fichaEquipC1_(a); r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Repelente',ataqueBemSucedido:true}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5); igual(r.mudancas[0].custoEsperanca,1); verdade(/Distante/.test(r.mudancas[0].efeitoManual||''));
+});
+
+teste('Revigorante pede d4 manual antes de tocar na ficha e só o 4 limpa Estresse',()=>{
+  const a=armaComCaracC1_('Revigorante'); verdade(!!a);
+  let f=fichaEquipC1_(a); f.recursos.estresseMarcado=3;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Revigorante',ataqueBemSucedido:true}]);
+  igual(r.erros,[]); verdade(r.pendenciaRolagem && r.pendenciaRolagem.tipo==='habilidade-manual'); igual(r.pendenciaRolagem.dado,'d4'); igual(f.recursos.estresseMarcado,3);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Revigorante',ataqueBemSucedido:true,dadoRevigorante:3}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,3); igual(r.mudancas[0].acionouResultado,false);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Revigorante',ataqueBemSucedido:true,dadoRevigorante:4}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,2); igual(r.mudancas[0].acionouResultado,true);
+});
+
+teste('Sorvedouras usa d6 manual e no 6 recupera somente a opção escolhida',()=>{
+  const a=armaComCaracC1_('Sorvedouras'); verdade(!!a);
+  let f=fichaEquipC1_(a); f.recursos.estresseMarcado=3;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Sorvedouras',ataqueBemSucedido:true,recuperar:'estresse'}]);
+  igual(r.erros,[]); verdade(r.pendenciaRolagem && r.pendenciaRolagem.dado==='d6'); igual(f.recursos.estresseMarcado,3);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Sorvedouras',ataqueBemSucedido:true,recuperar:'estresse',dadoSorvedouras:5}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,3);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Sorvedouras',ataqueBemSucedido:true,recuperar:'estresse',dadoSorvedouras:6}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,2); igual(f.recursos.pontosDeVidaMarcados,2);
+  f=fichaEquipC1_(a);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Sorvedouras',ataqueBemSucedido:true,recuperar:'pv',dadoSorvedouras:6}]);
+  igual(r.erros,[]); igual(f.recursos.pontosDeVidaMarcados,1); igual(f.recursos.estresseMarcado,0);
+});
+
+teste('uso ofensivo exige o item ativo e não aceita a mesma arma só na reserva',()=>{
+  const a=armaComCaracC1_('Rápido'); const f=fichaEquipC1_(a);
+  f.equipamento.primaria=null; f.equipamento.secundaria=null; f.equipamento.reserva=[a.id];
+  const antes=JSON.stringify(f.recursos);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Rápido'}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f.recursos),antes);
+});
+
+teste('custo de Estresse do C1 continua passando pelo Inabalável central',()=>{
+  const a=armaComCaracC1_('Rápido');
+  let f=contexto.fichaRapida_({
+    nome:'Firbolg C1',classe:'Guerreiro',subclasse:'Chamada do Matador',
+    ancestralidade:'Firbolg',comunidade:'Highborne',cartas:['blade-redemoinho','bone-intocavel'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  f.equipamento.primaria=a.id; f.equipamento.secundaria=null; f=contexto.validarFicha_(f); f.recursos.estresseMarcado=0;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Rápido'}]);
+  igual(r.erros,[]); verdade(r.pendenciaRolagem && r.pendenciaRolagem.tipo==='inabalavel'); igual(f.recursos.estresseMarcado,0);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Rápido',dadoInabalavel:6}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,0); verdade(r.mudancas[0].inabalavel && r.mudancas[0].inabalavel.evitou);
+});
+
+
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));

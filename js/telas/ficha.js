@@ -1464,7 +1464,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         const modal = abrirModal({
           titulo: nome,
           conteudo: el('div', { class: 'pilha' }, linhas),
-          acoes: [el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar() }, 'Fechar')]
+          acoes: [
+        el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar() }, 'Fechar'),
+        ...botoesDeUsoEquipamento_(item, modal)
+      ]
         });
       }
     }, regra.rotuloAtivar || 'Resolver na mesa');
@@ -3299,6 +3302,34 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       el('span', { class: 'ficha__atributoRotulo' }, nomeAnotado(rotulo, { comGlossa: false })),
       el('span', { class: 'ficha__atributoValor', texto: String(valor) })
     ]);
+  }
+
+  function usoAtivoDoEquipamento_(item) {
+    return ((((item || {}).caracteristica || {}).efeitoEquipamento || {}).usoAtivo) || null;
+  }
+
+  function botoesDeUsoEquipamento_(item, modal) {
+    const carac = (item || {}).caracteristica || {};
+    const uso = usoAtivoDoEquipamento_(item);
+    if (!uso) return [];
+    const base = { tipo:'usoEquipamento', itemId:item.id, nome:carac.nome };
+    const enviarUso = (extra) => {
+      modal.fechar();
+      return enviar([Object.assign({}, base, extra || {})]);
+    };
+
+    if (carac.nome === 'Sorvedouras') {
+      return [
+        el('button', { type:'button', class:'btn btn--fantasma', onClick:()=>enviarUso({ataqueBemSucedido:true,recuperar:'pv'}) },
+          'Resolver · recuperar PV'),
+        el('button', { type:'button', class:'btn btn--fantasma', onClick:()=>enviarUso({ataqueBemSucedido:true,recuperar:'estresse'}) },
+          'Resolver · limpar Estresse')
+      ];
+    }
+    const extra = uso.exigeAtaqueBemSucedido ? {ataqueBemSucedido:true} : {};
+    return [el('button', {
+      type:'button', class:'btn btn--principal', onClick:()=>enviarUso(extra)
+    }, uso.rotulo || `Usar ${carac.nome}`)];
   }
 
   function verEquipamento(rotulo, item) {

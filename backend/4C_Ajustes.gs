@@ -123,8 +123,124 @@ function aplicarAjusteDireto_(ficha, a) {
   if (tipo === 'escolhadeclasse') return ajustarEscolhaDeClasse_(ficha, a);
   if (tipo === 'retaliacao') return ajustarRetaliacao_(ficha, a);
   if (tipo === 'reacaoequipamento') return usarReacaoDeEquipamento_(ficha, a);
+  if (tipo === 'usoequipamento') return usarCaracteristicaDeEquipamento_(ficha, a);
   if (tipo === 'habilidade') return usarHabilidadeDeClasse_(ficha, a);
   return { erro: 'Tipo de ajuste desconhecido: "' + String((a || {}).tipo) + '".' };
+}
+
+
+/** Encontra uma característica de uso ativo em equipamento REALMENTE equipado. */
+function regraDeUsoAtivoEquipamento_(ficha, itemId, nome) {
+  const alvoId = String(itemId || '').trim();
+  const alvoNome = chaveTexto_(nome || '');
+  const ativos = (typeof equipamentoAtivoDaFicha_ === 'function') ? equipamentoAtivoDaFicha_(ficha) : [];
+  for (let i = 0; i < ativos.length; i++) {
+    const item = (ativos[i] || {}).item || {};
+    if (alvoId && String(item.id || '') !== alvoId) continue;
+    if (alvoNome && chaveTexto_(item.carac || '') !== alvoNome) continue;
+    const regra = ((item.efeitoEquipamento || {}).usoAtivo) || null;
+    if (!regra) continue;
+    return {
+      item:item, fonte:item.nome || item.id || 'Equipamento',
+      caracteristica:item.carac || nome || 'Característica', regra:regra
+    };
+  }
+  return null;
+}
+
+/**
+ * Características ofensivas/ativas de equipamento.
+ * O app cobra só o que é determinístico. Ataques, alvos, empurrões e todos os
+ * dados continuam na mesa; quando há dado, recebemos apenas o resultado.
+ */
+function usarCaracteristicaDeEquipamento_(ficha, a) {
+  const encontrada = regraDeUsoAtivoEquipamento_(ficha, (a || {}).itemId, (a || {}).nome);
+  if (!encontrada) {
+    return { erro:'Característica de equipamento indisponível ou não equipada: "' +
+      String((a || {}).nome || (a || {}).itemId || '') + '".' };
+  }
+  const regra = encontrada.regra || {};
+  if (regra.exigeAtaqueBemSucedido === true && (a || {}).ataqueBemSucedido !== true) {
+    return { erro:encontrada.caracteristica + ': confirme primeiro que o ataque foi bem-sucedido.' };
+  }
+
+  let dadoManual = null;
+  const entrada = regra.entradaManual || null;
+  if (entrada) {
+    const campo = String(entrada.campo || 'resultadoManual');
+    const bruto = (a || {})[campo];
+    const minimo = Math.max(1, Math.trunc(Number(entrada.minimo)) || 1);
+    const maximo = Math.max(minimo, Math.trunc(Number(entrada.maximo)) || 20);
+    if (bruto === undefined || bruto === null || bruto === '') {
+      return { pendenciaRolagem:{
+        tipo:'habilidade-manual', campo:campo, caracteristica:encontrada.caracteristica,
+        dado:String(entrada.dado || 'dado'), minimo:minimo, maximo:maximo,
+        mensagem:entrada.mensagem || (encontrada.fonte + ' · ' + encontrada.caracteristica +
+          ': role ' + String(entrada.dado || 'o dado') + ' fora do app e informe o resultado.')
+      } };
+    }
+    dadoManual = Math.trunc(Number(bruto));
+    if (!isFinite(dadoManual) || dadoManual < minimo || dadoManual > maximo || Number(bruto) !== dadoManual) {
+      return { erro:encontrada.caracteristica + ': informe um resultado inteiro entre ' + minimo + ' e ' + maximo + '.' };
+    }
+  }
+
+  const resultadoRegra = regra.resultado || null;
+  const acionaResultado = !!(resultadoRegra && dadoManual !== null &&
+    dadoManual === Math.trunc(Number(resultadoRegra.igual)));
+  let recuperar = '';
+  if (acionaResultado && Array.isArray(resultadoRegra.escolhaRecuperacao)) {
+    recuperar = chaveTexto_((a || {}).recuperar || '');
+    const permitidas = resultadoRegra.escolhaRecuperacao.map(chaveTexto_);
+    if (permitidas.indexOf(recuperar) === -1) {
+      return { erro:encontrada.caracteristica + ': escolha recuperar PV ou Estresse antes de aplicar o resultado.' };
+    }
+  }
+
+  const custoEstresse = Math.max(0, Math.trunc(Number(regra.custoEstresse)) || 0);
+  const custoEsperanca = Math.max(0, Math.trunc(Number(regra.custoEsperanca)) || 0);
+  const recursos = (ficha || {}).recursos || {};
+  if (custoEstresse) {
+    const atual = Math.max(0, Number(recursos.estresseMarcado) || 0);
+    const maximo = Math.max(0, Number(recursos.estresseMaximo) || 0);
+    if (atual + custoEstresse > maximo) return { erro:'Não sobra Estresse para usar ' + encontrada.caracteristica + '.' };
+  }
+  if (custoEsperanca && (Math.max(0, Number(recursos.esperanca) || 0) < custoEsperanca)) {
+    return { erro:'Não há Esperança suficiente para usar ' + encontrada.caracteristica + '.' };
+  }
+
+  const detalhes = [];
+  if (custoEstresse) detalhes.push(ajustarRecurso_(ficha, { chave:'estresseMarcado', delta:custoEstresse }));
+  if (custoEsperanca) detalhes.push(ajustarRecurso_(ficha, { chave:'esperanca', delta:-custoEsperanca }));
+
+  let recuperacao = null;
+  if (acionaResultado && Number(resultadoRegra.limpaEstresse)) {
+    recuperacao = ajustarRecurso_(ficha, { chave:'estresseMarcado', delta:-Math.max(1, Math.trunc(Number(resultadoRegra.limpaEstresse))) });
+    detalhes.push(recuperacao);
+  }
+  if (acionaResultado && Array.isArray(resultadoRegra.escolhaRecuperacao)) {
+    if (recuperar === 'pv') recuperacao = ajustarRecurso_(ficha, { chave:'pontosDeVidaMarcados', delta:-1 });
+    else recuperacao = ajustarRecurso_(ficha, { chave:'estresseMarcado', delta:-1 });
+    detalhes.push(recuperacao);
+  }
+
+  const r = {
+    fonte:encontrada.fonte, caracteristica:encontrada.caracteristica,
+    custoEstresse:custoEstresse, custoEsperanca:custoEsperanca,
+    dadoManual:dadoManual, acionouResultado:acionaResultado,
+    efeitoManual:regra.efeitoManual || null,
+    bonusRolagem:regra.bonusRolagem || null,
+    recuperacao:recuperacao, detalhes:detalhes
+  };
+  const partes = [];
+  if (regra.efeitoManual) partes.push(regra.efeitoManual);
+  if (regra.bonusRolagem) partes.push('Bônus de +' + Number(regra.bonusRolagem.valor || 0) +
+    ' na jogada de ' + String(regra.bonusRolagem.traco || '') + '.');
+  if (entrada) partes.push('Resultado informado: ' + dadoManual + '.');
+  if (entrada && resultadoRegra && !acionaResultado) partes.push('O gatilho especial não foi acionado.');
+  if (acionaResultado && recuperacao) partes.push('Recuperação aplicada.');
+  r.aviso = encontrada.fonte + ' · ' + encontrada.caracteristica + ': ' + partes.join(' ');
+  return r;
 }
 
 /** Esperançoso ativo: substitui gasto de Esperança por PA, sempre por escolha. */

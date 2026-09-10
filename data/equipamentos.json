@@ -223,7 +223,18 @@
     "nome": "Rápido",
     "texto": "Rápido: ao fazer um ataque, você pode marcar um Estresse para atingir outra criatura dentro do alcance.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "uso-ativo-assistido",
+     "motivo": "Ao fazer um ataque, marca 1 Estresse; o segundo alvo e a resolução do ataque continuam na mesa."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "custoEstresse": 1,
+      "rotulo": "Usar Rápido · 1 Estresse",
+      "efeitoManual": "Atingir outra criatura dentro do alcance com o mesmo ataque."
+     }
+    }
    },
    "danoSRD": "d8 phy"
   },
@@ -539,7 +550,18 @@
     "nome": "Rápido",
     "texto": "Rápido: ao fazer um ataque, você pode marcar um Estresse para atingir outra criatura dentro do alcance.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "uso-ativo-assistido",
+     "motivo": "Ao fazer um ataque, marca 1 Estresse; o segundo alvo e a resolução do ataque continuam na mesa."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "custoEstresse": 1,
+      "rotulo": "Usar Rápido · 1 Estresse",
+      "efeitoManual": "Atingir outra criatura dentro do alcance com o mesmo ataque."
+     }
+    }
    },
    "danoSRD": "d8+3 phy"
   },
@@ -744,7 +766,18 @@
     "nome": "Rápido",
     "texto": "Rápido: ao fazer um ataque, você pode marcar um Estresse para atingir outra criatura dentro do alcance.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "uso-ativo-assistido",
+     "motivo": "Ao fazer um ataque, marca 1 Estresse; o segundo alvo e a resolução do ataque continuam na mesa."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "custoEstresse": 1,
+      "rotulo": "Usar Rápido · 1 Estresse",
+      "efeitoManual": "Atingir outra criatura dentro do alcance com o mesmo ataque."
+     }
+    }
    },
    "danoSRD": "d8+3 phy"
   },
@@ -1071,7 +1104,18 @@
     "nome": "Rápido",
     "texto": "Rápido: ao fazer um ataque, você pode marcar um Estresse para atingir outra criatura dentro do alcance.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "uso-ativo-assistido",
+     "motivo": "Ao fazer um ataque, marca 1 Estresse; o segundo alvo e a resolução do ataque continuam na mesa."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "custoEstresse": 1,
+      "rotulo": "Usar Rápido · 1 Estresse",
+      "efeitoManual": "Atingir outra criatura dentro do alcance com o mesmo ataque."
+     }
+    }
    },
    "danoSRD": "d8+6 phy"
   },
@@ -1647,7 +1691,18 @@
     "nome": "Rápido",
     "texto": "Rápido: ao fazer um ataque, você pode marcar um Estresse para atingir outra criatura dentro do alcance.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "uso-ativo-assistido",
+     "motivo": "Ao fazer um ataque, marca 1 Estresse; o segundo alvo e a resolução do ataque continuam na mesa."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "custoEstresse": 1,
+      "rotulo": "Usar Rápido · 1 Estresse",
+      "efeitoManual": "Atingir outra criatura dentro do alcance com o mesmo ataque."
+     }
+    }
    },
    "danoSRD": "d8+9 phy"
   },
@@ -1780,7 +1835,18 @@
     "nome": "Rápido",
     "texto": "Rápido: ao fazer um ataque, você pode marcar um Estresse para atingir outra criatura dentro do alcance.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "uso-ativo-assistido",
+     "motivo": "Ao fazer um ataque, marca 1 Estresse; o segundo alvo e a resolução do ataque continuam na mesa."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "custoEstresse": 1,
+      "rotulo": "Usar Rápido · 1 Estresse",
+      "efeitoManual": "Atingir outra criatura dentro do alcance com o mesmo ataque."
+     }
+    }
    },
    "danoSRD": "d10+9 phy"
   },
@@ -1806,7 +1872,19 @@
     "fonteTraducao": "livro",
     "confianca": "alta",
     "nomeAntigo": "Concussivo",
-    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras"
+    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
+    "automacao": {
+     "classificacao": "sucesso-confirmado-assistido",
+     "motivo": "Após um ataque bem-sucedido confirmado pela mesa, gasta 1 Esperança; o empurrão do alvo continua na ficção/posicionamento."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "custoEsperanca": 1,
+      "exigeAtaqueBemSucedido": true,
+      "rotulo": "Repelente após sucesso · 1 Esperança",
+      "efeitoManual": "Empurre o alvo para um ponto em alcance Distante."
+     }
+    }
    },
    "danoSRD": "d10+11 phy"
   },
@@ -2555,7 +2633,28 @@
     "nome": "Revigorante",
     "texto": "Revigorante: Em um ataque bem-sucedido, role um d4. Se o resultado for 4, elimine um Estresse.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "dado-manual-assistido",
+     "motivo": "Após o ataque bem-sucedido, o d4 é rolado fisicamente; o app recebe o resultado e limpa 1 Estresse somente no 4."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "exigeAtaqueBemSucedido": true,
+      "rotulo": "Resolver Revigorante após sucesso",
+      "entradaManual": {
+       "campo": "dadoRevigorante",
+       "dado": "d4",
+       "minimo": 1,
+       "maximo": 4,
+       "mensagem": "Role 1d4 fora do app e informe o resultado de Revigorante."
+      },
+      "resultado": {
+       "igual": 4,
+       "limpaEstresse": 1
+      }
+     }
+    }
    },
    "danoSRD": "d6+3 mag"
   },
@@ -2579,7 +2678,22 @@
     "nome": "Persuasão",
     "texto": "Persuasão: Antes de fazer uma rolagem de presença, você pode marcar um estresse para ganhar um bônus de +2 no resultado.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "uso-ativo-assistido",
+     "motivo": "Antes de uma jogada de Presença, marca 1 Estresse e publica +2 para aquela jogada; o app não rola dados."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "custoEstresse": 1,
+      "rotulo": "Usar Persuasão · 1 Estresse",
+      "bonusRolagem": {
+       "traco": "presenca",
+       "valor": 2
+      },
+      "momento": "antes-rolagem-presenca"
+     }
+    }
    },
    "aliases": [
     "Varinha de Entusiasmo"
@@ -3284,7 +3398,31 @@
     "fonteTraducao": "livro",
     "confianca": "alta",
     "nomeAntigo": "Roubo de Vida",
-    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras"
+    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
+    "automacao": {
+     "classificacao": "dado-manual-assistido",
+     "motivo": "Após o ataque bem-sucedido, o d6 é rolado fisicamente; no 6 o jogador escolhe recuperar 1 PV ou limpar 1 Estresse."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "exigeAtaqueBemSucedido": true,
+      "rotulo": "Resolver Sorvedouras após sucesso",
+      "entradaManual": {
+       "campo": "dadoSorvedouras",
+       "dado": "d6",
+       "minimo": 1,
+       "maximo": 6,
+       "mensagem": "Role 1d6 fora do app e informe o resultado de Sorvedouras."
+      },
+      "resultado": {
+       "igual": 6,
+       "escolhaRecuperacao": [
+        "pv",
+        "estresse"
+       ]
+      }
+     }
+    }
    },
    "danoSRD": "d10+9 mag"
   },
@@ -3609,7 +3747,18 @@
     "texto": "Alarmante: marque 1 Estresse para estalar o chicote e forçar todos os adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo.",
     "fonteTraducao": "livro",
     "confianca": "alta",
-    "fonteCorrecao": "DH-DigitalRegras.pdf, p.125"
+    "fonteCorrecao": "DH-DigitalRegras.pdf, p.125",
+    "automacao": {
+     "classificacao": "uso-ativo-assistido",
+     "motivo": "Marca 1 Estresse; o reposicionamento dos adversários continua sendo resolvido na mesa."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "custoEstresse": 1,
+      "rotulo": "Usar Alarmante · 1 Estresse",
+      "efeitoManual": "Force os adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo."
+     }
+    }
    },
    "danoSRD": "d6 phy"
   },
@@ -3787,7 +3936,18 @@
     "texto": "Alarmante: marque 1 Estresse para estalar o chicote e forçar todos os adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo.",
     "fonteTraducao": "livro",
     "confianca": "alta",
-    "fonteCorrecao": "DH-DigitalRegras.pdf, p.125"
+    "fonteCorrecao": "DH-DigitalRegras.pdf, p.125",
+    "automacao": {
+     "classificacao": "uso-ativo-assistido",
+     "motivo": "Marca 1 Estresse; o reposicionamento dos adversários continua sendo resolvido na mesa."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "custoEstresse": 1,
+      "rotulo": "Usar Alarmante · 1 Estresse",
+      "efeitoManual": "Force os adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo."
+     }
+    }
    },
    "danoSRD": "d6+2 phy"
   },
@@ -4038,7 +4198,18 @@
     "texto": "Alarmante: marque 1 Estresse para estalar o chicote e forçar todos os adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo.",
     "fonteTraducao": "livro",
     "confianca": "alta",
-    "fonteCorrecao": "DH-DigitalRegras.pdf, p.125"
+    "fonteCorrecao": "DH-DigitalRegras.pdf, p.125",
+    "automacao": {
+     "classificacao": "uso-ativo-assistido",
+     "motivo": "Marca 1 Estresse; o reposicionamento dos adversários continua sendo resolvido na mesa."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "custoEstresse": 1,
+      "rotulo": "Usar Alarmante · 1 Estresse",
+      "efeitoManual": "Force os adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo."
+     }
+    }
    },
    "danoSRD": "d6+4 phy"
   },
@@ -4304,7 +4475,18 @@
     "texto": "Alarmante: marque 1 Estresse para estalar o chicote e forçar todos os adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo.",
     "fonteTraducao": "livro",
     "confianca": "alta",
-    "fonteCorrecao": "DH-DigitalRegras.pdf, p.125"
+    "fonteCorrecao": "DH-DigitalRegras.pdf, p.125",
+    "automacao": {
+     "classificacao": "uso-ativo-assistido",
+     "motivo": "Marca 1 Estresse; o reposicionamento dos adversários continua sendo resolvido na mesa."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "custoEstresse": 1,
+      "rotulo": "Usar Alarmante · 1 Estresse",
+      "efeitoManual": "Force os adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo."
+     }
+    }
    },
    "danoSRD": "d6+6 phy"
   },
@@ -4446,7 +4628,18 @@
     "nome": "Veloz",
     "texto": "Veloz: ao fazer um ataque, marque 1 Ponto de Fadiga para atingir outra criatura no alcance.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "uso-ativo-assistido",
+     "motivo": "Ao fazer um ataque, marca 1 Estresse; o segundo alvo e a resolução do ataque continuam na mesa."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "custoEstresse": 1,
+      "rotulo": "Usar Rápido · 1 Estresse",
+      "efeitoManual": "Atingir outra criatura dentro do alcance com o mesmo ataque."
+     }
+    }
    },
    "danoSRD": "d8 phy",
    "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
@@ -4471,7 +4664,18 @@
     "nome": "Veloz",
     "texto": "Veloz: ao fazer um ataque, marque 1 Ponto de Fadiga para atingir outra criatura no alcance.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "uso-ativo-assistido",
+     "motivo": "Ao fazer um ataque, marca 1 Estresse; o segundo alvo e a resolução do ataque continuam na mesa."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "custoEstresse": 1,
+      "rotulo": "Usar Rápido · 1 Estresse",
+      "efeitoManual": "Atingir outra criatura dentro do alcance com o mesmo ataque."
+     }
+    }
    },
    "danoSRD": "d8+3 phy",
    "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
@@ -4496,7 +4700,18 @@
     "nome": "Veloz",
     "texto": "Veloz: ao fazer um ataque, marque 1 Ponto de Fadiga para atingir outra criatura no alcance.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "uso-ativo-assistido",
+     "motivo": "Ao fazer um ataque, marca 1 Estresse; o segundo alvo e a resolução do ataque continuam na mesa."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "custoEstresse": 1,
+      "rotulo": "Usar Rápido · 1 Estresse",
+      "efeitoManual": "Atingir outra criatura dentro do alcance com o mesmo ataque."
+     }
+    }
    },
    "danoSRD": "d8+6 phy",
    "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
@@ -4521,7 +4736,18 @@
     "nome": "Veloz",
     "texto": "Veloz: ao fazer um ataque, marque 1 Ponto de Fadiga para atingir outra criatura no alcance.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "uso-ativo-assistido",
+     "motivo": "Ao fazer um ataque, marca 1 Estresse; o segundo alvo e a resolução do ataque continuam na mesa."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "custoEstresse": 1,
+      "rotulo": "Usar Rápido · 1 Estresse",
+      "efeitoManual": "Atingir outra criatura dentro do alcance com o mesmo ataque."
+     }
+    }
    },
    "danoSRD": "d8+9 phy",
    "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
@@ -6934,7 +7160,18 @@
      "maos": "Uma mão",
      "caracteristica": {
       "nome": "Veloz",
-      "texto": "Veloz: ao fazer um ataque, marque 1 Estresse para atingir outra criatura no alcance"
+      "texto": "Veloz: ao fazer um ataque, marque 1 Estresse para atingir outra criatura no alcance",
+      "automacao": {
+       "classificacao": "uso-ativo-assistido",
+       "motivo": "Ao fazer um ataque, marca 1 Estresse; o segundo alvo e a resolução do ataque continuam na mesa."
+      },
+      "efeitoEquipamento": {
+       "usoAtivo": {
+        "custoEstresse": 1,
+        "rotulo": "Usar Veloz · 1 Estresse",
+        "efeitoManual": "Atingir outra criatura dentro do alcance com o mesmo ataque."
+       }
+      }
      },
      "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 5"
     },
@@ -7239,7 +7476,18 @@
      "maos": "Uma mão",
      "caracteristica": {
       "nome": "Alarmante",
-      "texto": "Alarmante: marque 1 Estresse para forçar os adversários Corpo a Corpo a recuar para um ponto em alcance Próximo"
+      "texto": "Alarmante: marque 1 Estresse para forçar os adversários Corpo a Corpo a recuar para um ponto em alcance Próximo",
+      "automacao": {
+       "classificacao": "uso-ativo-assistido",
+       "motivo": "Marca 1 Estresse; o reposicionamento dos adversários continua sendo resolvido na mesa."
+      },
+      "efeitoEquipamento": {
+       "usoAtivo": {
+        "custoEstresse": 1,
+        "rotulo": "Usar Alarmante · 1 Estresse",
+        "efeitoManual": "Force os adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo."
+       }
+      }
      },
      "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 5",
      "nomeAntigo": "Chicote de Festival"
