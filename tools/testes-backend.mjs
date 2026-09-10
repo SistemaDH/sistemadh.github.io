@@ -10680,6 +10680,89 @@ teste('recarregar Seis Balas também respeita Inabalável sem perder o estado',(
 });
 
 
+
+
+console.log('\nLote 8 — equipamento ofensivo D2: Versátil, Egoísta e Tiro rápido');
+
+function equipamentoD2_(nome) {
+  const todos=[...avaliar('ARMAS'),...avaliar('EQUIPAMENTO_CAMPANHA')];
+  return todos.filter(a=>String(a.carac||'')===nome);
+}
+
+teste('D2 publica 8 Versátil, 1 Egoísta e 4 Tiro rápido sem RNG do app',()=>{
+  const vers=equipamentoD2_('Versátil'), ego=equipamentoD2_('Egoísta'), tiro=equipamentoD2_('Tiro rápido');
+  igual(vers.length,8); igual(ego.length,1); igual(tiro.length,4);
+  verdade(vers.every(a=>a.automacao && a.efeitoEquipamento && a.efeitoEquipamento.perfilAlternativo));
+  verdade(ego.concat(tiro).every(a=>a.automacao && a.efeitoEquipamento && a.efeitoEquipamento.usoAtivo));
+  const back=fs.readFileSync(path.join(RAIZ,'backend/4C_Ajustes.gs'),'utf8');
+  const front=fs.readFileSync(path.join(RAIZ,'js/telas/ficha.js'),'utf8');
+  verdade(!/Math\.random/.test(back.slice(back.indexOf('function usarCaracteristicaDeEquipamento_'),back.indexOf('/** Esperanç'))));
+  verdade(!/Math\.random/.test(front.slice(front.indexOf('function painelDeDano'),front.indexOf('function tabelaDeEquipamento'))));
+});
+
+teste('Versátil guarda os oito perfis alternativos conferidos no Core',()=>{
+  const todos=[...avaliar('ARMAS'),...avaliar('EQUIPAMENTO_CAMPANHA')];
+  const por=Object.fromEntries(todos.map(a=>[a.id,a]));
+  const esperado={
+    'primaria-t1-cetro':['Presença','Corpo a Corpo','d8 mág'],
+    'primaria-t2-cetro-aprimorado':['Presença','Corpo a Corpo','d8 mág'],
+    'primaria-t2-espada-de-fundicao':['Conhecimento','Distante','d6+3 mág'],
+    'primaria-t3-avancado-nome-cortado-incompleto':['Presença','Corpo a Corpo','d8+4 mág'],
+    'primaria-t3-arco-com-espigoes':['Agilidade','Corpo a Corpo','d10+5 fís'],
+    'secundaria-t3-funda-de-mao':['Finesse','Próximo','d8+4 fís'],
+    'primaria-t4-cetro-lendario':['Presença','Corpo a Corpo','d8+6 mág'],
+    'campanha-festim-das-feras-pipa-encantada':['Presença','Corpo a Corpo','d10 mág']
+  };
+  for(const [id,e] of Object.entries(esperado)){
+    const p=((por[id]||{}).efeitoEquipamento||{}).perfilAlternativo;
+    verdade(!!p,id+' sem perfil alternativo');
+    igual([p.traco,p.alcance,p.dano],e,id);
+    igual(p.usaProficiencia,true,id+' precisa usar Proficiência');
+  }
+});
+
+teste('Advanced Scepter deixa o placeholder e vira Cetro avançado sem quebrar a busca antiga',()=>{
+  const a=contexto.acharArma_('Cetro avançado'); verdade(!!a); igual(a.nome,'Cetro avançado');
+  const peloIngles=contexto.acharArma_('Advanced Scepter'); verdade(!!peloIngles); igual(peloIngles.id,a.id);
+  const antigo=contexto.acharArma_('Avançado (nome cortado/incompleto)'); verdade(!!antigo); igual(antigo.id,a.id);
+});
+
+teste('painel de dano publica Versátil com a Proficiência atual sem trocar o perfil principal',()=>{
+  const front=fs.readFileSync(path.join(RAIZ,'js/telas/ficha.js'),'utf8');
+  verdade(front.includes("const perfil = (((arma || {}).efeitoEquipamento || {}).perfilAlternativo) || null"));
+  verdade(front.includes("danoDaArmaComProficiencia(ficha, { dano:perfil.dano })"));
+  const a=contexto.acharArma_('Cetro avançado');
+  igual(a.atributo,'Presença'); igual(a.alcance,'Distante'); igual(a.dano,'d6+6 mág');
+  igual(a.efeitoEquipamento.perfilAlternativo.alcance,'Corpo a Corpo');
+});
+
+teste('Tiro rápido gasta 2 Esperanças e devolve +4 só para o dano da arma principal',()=>{
+  const a=equipamentoD2_('Tiro rápido')[0]; verdade(!!a);
+  const f=fichaEquipC1_(a); f.recursos.esperanca=3;
+  const prof=f.recursos.proficiencia;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Tiro rápido'}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,1); igual(f.recursos.proficiencia,prof);
+  igual(r.mudancas[0].custoEsperanca,2); igual(r.mudancas[0].bonusDano,{valor:4,alvo:'arma-principal',duracao:'esta-jogada-de-dano'});
+  const antes=JSON.stringify(f);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Tiro rápido'}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f),antes,'sem Esperança o uso precisa ser atômico');
+});
+
+teste('Egoísta gasta um punhado real e publica +1 Proficiência só para a jogada de dano',()=>{
+  const a=equipamentoD2_('Egoísta')[0]; verdade(!!a);
+  const f=fichaEquipC1_(a); f.ouro={punhados:0,bolsas:1,cofres:0};
+  const prof=f.recursos.proficiencia;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Egoísta'}]);
+  igual(r.erros,[]); igual(f.ouro.punhados,9); igual(f.ouro.bolsas,0); igual(f.ouro.cofres,0);
+  igual(f.recursos.proficiencia,prof,'o bônus não pode ficar gravado na Proficiência base');
+  igual(r.mudancas[0].custoOuroPunhados,1);
+  igual(r.mudancas[0].bonusProficienciaDano,{valor:1,duracao:'esta-jogada-de-dano'});
+  f.ouro={punhados:0,bolsas:0,cofres:0}; const antes=JSON.stringify(f);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Egoísta'}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f),antes,'sem ouro nada pode mudar');
+});
+
+
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));

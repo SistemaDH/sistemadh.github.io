@@ -1,6 +1,6 @@
 {
  "versao": 1,
- "total": 148,
+ "total": 149,
  "correcoes": [
   {
    "item": "Ricochet Axes / Aantari Bow",
@@ -1067,6 +1067,13 @@
     "texto": "Alarmante: marque 1 Estresse para estalar o chicote e forçar todos os adversários em alcance Corpo a Corpo a recuar para um ponto em alcance Próximo."
    },
    "motivo": "Livro PT-BR p.125: Startling/Alarmante empurra adversários de Corpo a Corpo para Próximo; a tradução armazenada terminava novamente em Corpo a Corpo."
+  },
+  {
+   "item": "Advanced Scepter",
+   "tipo": "nome",
+   "de": "Avançado (nome cortado/incompleto)",
+   "para": "Cetro avançado",
+   "motivo": "a linha do Core identifica o Cetro avançado por Presença/Distante/d6+6 e pela característica Versátil; o placeholder veio do OCR/import anterior"
   }
  ]
 }

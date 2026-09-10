@@ -2067,13 +2067,23 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       .map(catalogo.acharArma)
       .filter(Boolean);
 
-    const linhas = armas.map((arma) => {
+    const linhas = [];
+    for (const arma of armas) {
       const extras = bonusFixosDaArma(ficha, arma);
       const sufixo = extras.length ? ` · ${extras.join(' · ')}` : '';
       const alcance = alcanceEfetivoNaFicha(ficha, arma.alcance || '');
-      return el('p', { class: 'texto-sm', texto:
-        `${arma.nome}: ${alcance ? alcance + ' · ' : ''}${danoDaArmaComProficiencia(ficha, arma)}${sufixo}` });
-    });
+      linhas.push(el('p', { class: 'texto-sm', texto:
+        `${arma.nome}: ${alcance ? alcance + ' · ' : ''}${danoDaArmaComProficiencia(ficha, arma)}${sufixo}` }));
+
+      const perfil = (((arma || {}).efeitoEquipamento || {}).perfilAlternativo) || null;
+      if (perfil) {
+        const traco = catalogo.nomeDoTraco ? catalogo.nomeDoTraco(perfil.traco) : perfil.traco;
+        const alcanceAlt = alcanceEfetivoNaFicha(ficha, perfil.alcance || '');
+        const danoAlt = danoDaArmaComProficiencia(ficha, { dano:perfil.dano });
+        linhas.push(el('p', { class: 'texto-xs texto-fraco', texto:
+          `${perfil.rotulo || 'Versátil'} — ${arma.nome}: ${[traco, alcanceAlt, danoAlt].filter(Boolean).join(' · ')}${sufixo}` }));
+      }
+    }
 
     // Ataques/ações de ancestralidade vêm prontos do servidor: Proficiência e
     // Alcance já foram resolvidos; a tela só escreve e nunca rola.

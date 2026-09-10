@@ -725,3 +725,14 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - Nenhum dado é rolado pelo app: Recarga recebe o `d6` manual e Seis Balas só registra gasto/recarga determinísticos.
 
 **Próximo bloco natural:** continuar as características ofensivas de equipamento restantes, priorizando gatilhos pós-ataque/pós-dano e estados que ainda aparecem na auditoria do Lote 8.
+
+### Lote 8 — equipamento ofensivo D2: Versátil, Egoísta e Tiro rápido
+
+- **Versátil (8 ocorrências):** os perfis alternativos foram conferidos individualmente no Core e estruturados em `efeitoEquipamento.perfilAlternativo`; a ficha mostra o perfil alternativo com a Proficiência atual sem alterar o perfil principal nem rolar dados.
+- A auditoria detectou que o `textoIngles` importado de Versátil havia sido repetido entre armas diferentes; a mecânica agora usa os valores conferidos no Core, não esse campo contaminado.
+- O placeholder **“Avançado (nome cortado/incompleto)”** foi identificado como `Advanced Scepter` e corrigido para **Cetro avançado**, mantendo o nome antigo como alias.
+- **Egoísta / Foice de Midas:** gasta exatamente `1 punhado` pela escada central de ouro e publica `+1 Proficiência` somente para aquela jogada de dano; não altera a Proficiência base.
+- **Tiro rápido (4 Revólveres pequenos):** gasta `2 Esperanças` e publica `+4 dano` para a arma principal somente naquela jogada.
+- Todos os efeitos transitórios continuam fora do estado permanente da ficha; nenhuma jogada ou dado é gerado pelo app.
+
+**Próximo bloco natural:** classificar/assistir as características ofensivas restantes que dependem apenas de alvo, geometria ou resultados rolados fora do app; deixar **Aparar** para um bloco defensivo dedicado.

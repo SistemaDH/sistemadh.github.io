@@ -1529,9 +1529,22 @@
     "nomeIngles": "Versatile",
     "textoIngles": "Versatile: Can also be used with Knowledge, Far, d6+3",
     "nome": "Versátil",
-    "texto": "Versátil: essa arma também pode ser usada com estas estatísticas - Conhecimento, Distante, d6+3.",
+    "texto": "Versátil: também pode ser usada com estas estatísticas — Agilidade, Corpo a Corpo, d10+5.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "perfil-alternativo-estruturado",
+     "motivo": "Perfil alternativo determinístico conferido no Core; o app o exibe com a Proficiência atual sem rolar dados."
+    },
+    "efeitoEquipamento": {
+     "perfilAlternativo": {
+      "traco": "Agilidade",
+      "alcance": "Corpo a Corpo",
+      "dano": "d10+5 fís",
+      "usaProficiencia": true,
+      "rotulo": "Versátil"
+     }
+    }
    },
    "danoSRD": "d6+7 phy"
   },
@@ -2290,9 +2303,22 @@
     "nomeIngles": "Versatile",
     "textoIngles": "Versatile: Can also be used with Knowledge, Far, d6+3",
     "nome": "Versátil",
-    "texto": "Versátil: essa arma também pode ser usada com estas estatísticas - Conhecimento, Distante, d6+3.",
+    "texto": "Versátil: também pode ser usada com estas estatísticas — Presença, Corpo a Corpo, d8.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "perfil-alternativo-estruturado",
+     "motivo": "Perfil alternativo determinístico conferido no Core; o app o exibe com a Proficiência atual sem rolar dados."
+    },
+    "efeitoEquipamento": {
+     "perfilAlternativo": {
+      "traco": "Presença",
+      "alcance": "Corpo a Corpo",
+      "dano": "d8 mág",
+      "usaProficiencia": true,
+      "rotulo": "Versátil"
+     }
+    }
    },
    "danoSRD": "d6 mag"
   },
@@ -2485,9 +2511,22 @@
     "nomeIngles": "Versatile",
     "textoIngles": "Versatile: Can also be used with Knowledge, Far, d6+3",
     "nome": "Versátil",
-    "texto": "Versátil: essa arma também pode ser usada com estas estatísticas - Conhecimento, Distante, d6+3.",
+    "texto": "Versátil: também pode ser usada com estas estatísticas — Presença, Corpo a Corpo, d8.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "perfil-alternativo-estruturado",
+     "motivo": "Perfil alternativo determinístico conferido no Core; o app o exibe com a Proficiência atual sem rolar dados."
+    },
+    "efeitoEquipamento": {
+     "perfilAlternativo": {
+      "traco": "Presença",
+      "alcance": "Corpo a Corpo",
+      "dano": "d8 mág",
+      "usaProficiencia": true,
+      "rotulo": "Versátil"
+     }
+    }
    },
    "danoSRD": "d6+3 mag"
   },
@@ -2574,9 +2613,22 @@
     "nomeIngles": "Versatile",
     "textoIngles": "Versatile: Can also be used with Knowledge, Far, d6+3",
     "nome": "Versátil",
-    "texto": "Versátil: essa arma também pode ser usada com estas estatísticas - Conhecimento, Distante, d6+3.",
+    "texto": "Versátil: também pode ser usada com estas estatísticas — Conhecimento, Distante, d6+3.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "perfil-alternativo-estruturado",
+     "motivo": "Perfil alternativo determinístico conferido no Core; o app o exibe com a Proficiência atual sem rolar dados."
+    },
+    "efeitoEquipamento": {
+     "perfilAlternativo": {
+      "traco": "Conhecimento",
+      "alcance": "Distante",
+      "dano": "d6+3 mág",
+      "usaProficiencia": true,
+      "rotulo": "Versátil"
+     }
+    }
    },
    "aliases": [
     "Espada de fundição"
@@ -2921,8 +2973,8 @@
    "categoria": "primaria",
    "tier": 3,
    "tabela": "Mágica",
-   "nome": "Avançado (nome cortado/incompleto)",
-   "origemNome": "livro",
+   "nome": "Cetro avançado",
+   "origemNome": "corrigido",
    "nomeIngles": "Advanced Scepter",
    "nomeLivro": "Avançado (nome cortado/incompleto)",
    "fonteNumeros": "SRD oficial (já com as erratas aplicadas)",
@@ -2934,11 +2986,27 @@
     "nomeIngles": "Versatile",
     "textoIngles": "Versatile: Can also be used with Knowledge, Far, d6+3",
     "nome": "Versátil",
-    "texto": "Versátil: essa arma também pode ser usada com estas estatísticas - Conhecimento, Distante, d6+3.",
+    "texto": "Versátil: também pode ser usada com estas estatísticas — Presença, Corpo a Corpo, d8+4.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "perfil-alternativo-estruturado",
+     "motivo": "Perfil alternativo determinístico conferido no Core; o app o exibe com a Proficiência atual sem rolar dados."
+    },
+    "efeitoEquipamento": {
+     "perfilAlternativo": {
+      "traco": "Presença",
+      "alcance": "Corpo a Corpo",
+      "dano": "d8+4 mág",
+      "usaProficiencia": true,
+      "rotulo": "Versátil"
+     }
+    }
    },
-   "danoSRD": "d6+6 mag"
+   "danoSRD": "d6+6 mag",
+   "aliases": [
+    "Avançado (nome cortado/incompleto)"
+   ]
   },
   {
    "id": "primaria-t3-avancado-cetro",
@@ -3391,9 +3459,22 @@
     "nomeIngles": "Versatile",
     "textoIngles": "Versatile: Can also be used with Knowledge, Far, d6+3",
     "nome": "Versátil",
-    "texto": "Versátil: essa arma também pode ser usada com estas estatísticas - Conhecimento, Distante, d6+3.",
+    "texto": "Versátil: também pode ser usada com estas estatísticas — Presença, Corpo a Corpo, d8+6.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "perfil-alternativo-estruturado",
+     "motivo": "Perfil alternativo determinístico conferido no Core; o app o exibe com a Proficiência atual sem rolar dados."
+    },
+    "efeitoEquipamento": {
+     "perfilAlternativo": {
+      "traco": "Presença",
+      "alcance": "Corpo a Corpo",
+      "dano": "d8+6 mág",
+      "usaProficiencia": true,
+      "rotulo": "Versátil"
+     }
+    }
    },
    "danoSRD": "d6+9 mag"
   },
@@ -3537,7 +3618,22 @@
     "confianca": "alta",
     "nomeAntigo": "Ganancioso",
     "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
-    "observacaoDoOriginal": "O livro repete a preposição: \"na sua Proficiência em em uma rolagem de dano\"."
+    "observacaoDoOriginal": "O livro repete a preposição: \"na sua Proficiência em em uma rolagem de dano\".",
+    "automacao": {
+     "classificacao": "uso-ativo-assistido",
+     "motivo": "Gasta 1 punhado de ouro e publica +1 de Proficiência somente para a jogada de dano; nenhum dado é rolado pelo app."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "rotulo": "Usar Egoísta · 1 punhado",
+      "custoOuroPunhados": 1,
+      "bonusProficienciaDano": {
+       "valor": 1,
+       "duracao": "esta-jogada-de-dano"
+      },
+      "efeitoManual": "Some +1 à Proficiência somente nesta jogada de dano."
+     }
+    }
    },
    "danoSRD": "d10+9 mag"
   },
@@ -4449,9 +4545,22 @@
     "nomeIngles": "Versatile",
     "textoIngles": "Versatile: Can also be used with Knowledge, Far, d6+3",
     "nome": "Versátil",
-    "texto": "Versátil: essa arma também pode ser usada com estas estatísticas - Conhecimento, Distante, d6+3.",
+    "texto": "Versátil: também pode ser usada com estas estatísticas — Acuidade, Próximo, d8+4.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "perfil-alternativo-estruturado",
+     "motivo": "Perfil alternativo determinístico conferido no Core; o app o exibe com a Proficiência atual sem rolar dados."
+    },
+    "efeitoEquipamento": {
+     "perfilAlternativo": {
+      "traco": "Finesse",
+      "alcance": "Próximo",
+      "dano": "d8+4 fís",
+      "usaProficiencia": true,
+      "rotulo": "Versátil"
+     }
+    }
    },
    "danoSRD": "d6+4 phy"
   },
@@ -7493,7 +7602,20 @@
      "maos": "Duas mãos",
      "caracteristica": {
       "nome": "Versátil",
-      "texto": "Versátil: também pode ser usada com estas estatísticas — Presença, Corpo a Corpo e d10."
+      "texto": "Versátil: também pode ser usada com estas estatísticas — Presença, Corpo a Corpo e d10.",
+      "automacao": {
+       "classificacao": "perfil-alternativo-estruturado",
+       "motivo": "Perfil alternativo determinístico conferido no Core; o app o exibe com a Proficiência atual sem rolar dados."
+      },
+      "efeitoEquipamento": {
+       "perfilAlternativo": {
+        "traco": "Presença",
+        "alcance": "Corpo a Corpo",
+        "dano": "d10 mág",
+        "usaProficiencia": true,
+        "rotulo": "Versátil"
+       }
+      }
      },
      "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 5",
      "nomeAntigo": "Enchanted Kite"
@@ -8144,7 +8266,23 @@
      "maos": "Uma mão",
      "caracteristica": {
       "nome": "Tiro rápido",
-      "texto": "Tiro rápido: gaste 2 Esperança para receber um bônus de +4 no dano da arma principal."
+      "texto": "Tiro rápido: gaste 2 Esperança para receber um bônus de +4 no dano da arma principal.",
+      "automacao": {
+       "classificacao": "uso-ativo-assistido",
+       "motivo": "Gasta 2 Esperanças e publica +4 de dano para a arma principal somente nesta jogada; a rolagem continua na mesa."
+      },
+      "efeitoEquipamento": {
+       "usoAtivo": {
+        "rotulo": "Tiro rápido · 2 Esperanças",
+        "custoEsperanca": 2,
+        "bonusDano": {
+         "valor": 4,
+         "alvo": "arma-principal",
+         "duracao": "esta-jogada-de-dano"
+        },
+        "efeitoManual": "Some +4 ao dano da arma principal nesta jogada."
+       }
+      }
      },
      "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 5"
     },
@@ -8161,7 +8299,23 @@
      "maos": "Uma mão",
      "caracteristica": {
       "nome": "Tiro rápido",
-      "texto": "Tiro rápido: gaste 2 Esperança para receber um bônus de +4 no dano da arma principal."
+      "texto": "Tiro rápido: gaste 2 Esperança para receber um bônus de +4 no dano da arma principal.",
+      "automacao": {
+       "classificacao": "uso-ativo-assistido",
+       "motivo": "Gasta 2 Esperanças e publica +4 de dano para a arma principal somente nesta jogada; a rolagem continua na mesa."
+      },
+      "efeitoEquipamento": {
+       "usoAtivo": {
+        "rotulo": "Tiro rápido · 2 Esperanças",
+        "custoEsperanca": 2,
+        "bonusDano": {
+         "valor": 4,
+         "alvo": "arma-principal",
+         "duracao": "esta-jogada-de-dano"
+        },
+        "efeitoManual": "Some +4 ao dano da arma principal nesta jogada."
+       }
+      }
      },
      "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 5"
     },
@@ -8178,7 +8332,23 @@
      "maos": "Uma mão",
      "caracteristica": {
       "nome": "Tiro rápido",
-      "texto": "Tiro rápido: gaste 2 Esperança para receber um bônus de +4 no dano da arma principal."
+      "texto": "Tiro rápido: gaste 2 Esperança para receber um bônus de +4 no dano da arma principal.",
+      "automacao": {
+       "classificacao": "uso-ativo-assistido",
+       "motivo": "Gasta 2 Esperanças e publica +4 de dano para a arma principal somente nesta jogada; a rolagem continua na mesa."
+      },
+      "efeitoEquipamento": {
+       "usoAtivo": {
+        "rotulo": "Tiro rápido · 2 Esperanças",
+        "custoEsperanca": 2,
+        "bonusDano": {
+         "valor": 4,
+         "alvo": "arma-principal",
+         "duracao": "esta-jogada-de-dano"
+        },
+        "efeitoManual": "Some +4 ao dano da arma principal nesta jogada."
+       }
+      }
      },
      "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 5"
     },
@@ -8195,7 +8365,23 @@
      "maos": "Uma mão",
      "caracteristica": {
       "nome": "Tiro rápido",
-      "texto": "Tiro rápido: gaste 2 Esperança para receber um bônus de +4 no dano da arma principal."
+      "texto": "Tiro rápido: gaste 2 Esperança para receber um bônus de +4 no dano da arma principal.",
+      "automacao": {
+       "classificacao": "uso-ativo-assistido",
+       "motivo": "Gasta 2 Esperanças e publica +4 de dano para a arma principal somente nesta jogada; a rolagem continua na mesa."
+      },
+      "efeitoEquipamento": {
+       "usoAtivo": {
+        "rotulo": "Tiro rápido · 2 Esperanças",
+        "custoEsperanca": 2,
+        "bonusDano": {
+         "valor": 4,
+         "alvo": "arma-principal",
+         "duracao": "esta-jogada-de-dano"
+        },
+        "efeitoManual": "Some +4 ao dano da arma principal nesta jogada."
+       }
+      }
      },
      "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 5"
     },

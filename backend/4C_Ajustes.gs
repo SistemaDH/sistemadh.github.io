@@ -262,6 +262,8 @@ function usarCaracteristicaDeEquipamento_(ficha, a) {
     (acionaResultado ? Math.max(0, Math.trunc(Number((resultadoRegra || {}).custoEstresse)) || 0) : 0);
   const custoEsperanca = Math.max(0, Math.trunc(Number(regra.custoEsperanca)) || 0) +
     (acionaResultado ? Math.max(0, Math.trunc(Number((resultadoRegra || {}).custoEsperanca)) || 0) : 0);
+  const custoOuroPunhados = Math.max(0, Math.trunc(Number(regra.custoOuroPunhados)) || 0) +
+    (acionaResultado ? Math.max(0, Math.trunc(Number((resultadoRegra || {}).custoOuroPunhados)) || 0) : 0);
   const recursos = (ficha || {}).recursos || {};
   if (custoEstresse) {
     const atual = Math.max(0, Number(recursos.estresseMarcado) || 0);
@@ -271,10 +273,17 @@ function usarCaracteristicaDeEquipamento_(ficha, a) {
   if (custoEsperanca && (Math.max(0, Number(recursos.esperanca) || 0) < custoEsperanca)) {
     return { erro:'Não há Esperança suficiente para usar ' + encontrada.caracteristica + '.' };
   }
+  if (custoOuroPunhados) {
+    if (typeof ajustarOuroDaFicha_ !== 'function') return { erro:'Este servidor não sabe gastar ouro.' };
+    const provaOuro = JSON.parse(JSON.stringify(ficha || {}));
+    const testeOuro = ajustarOuroDaFicha_(provaOuro, { chave:'punhados', delta:-custoOuroPunhados });
+    if (testeOuro && testeOuro.erro) return { erro:'Não há ouro suficiente para usar ' + encontrada.caracteristica + '.' };
+  }
 
   const detalhes = [];
   if (custoEstresse) detalhes.push(ajustarRecurso_(ficha, { chave:'estresseMarcado', delta:custoEstresse }));
   if (custoEsperanca) detalhes.push(ajustarRecurso_(ficha, { chave:'esperanca', delta:-custoEsperanca }));
+  if (custoOuroPunhados) detalhes.push(ajustarOuroDaFicha_(ficha, { chave:'punhados', delta:-custoOuroPunhados }));
 
   let recuperacao = null;
   if (acionaResultado && Number(resultadoRegra.limpaEstresse)) {
@@ -289,16 +298,23 @@ function usarCaracteristicaDeEquipamento_(ficha, a) {
 
   const r = {
     fonte:encontrada.fonte, caracteristica:encontrada.caracteristica,
-    custoEstresse:custoEstresse, custoEsperanca:custoEsperanca,
+    custoEstresse:custoEstresse, custoEsperanca:custoEsperanca, custoOuroPunhados:custoOuroPunhados,
     dadoManual:dadoManual, acionouResultado:acionaResultado,
     efeitoManual:(acionaResultado && (resultadoRegra || {}).efeitoManual) || regra.efeitoManual || null,
     bonusRolagem:regra.bonusRolagem || null,
+    bonusDano:regra.bonusDano || null,
+    bonusProficienciaDano:regra.bonusProficienciaDano || null,
     recuperacao:recuperacao, detalhes:detalhes
   };
   const partes = [];
-  if (regra.efeitoManual) partes.push(regra.efeitoManual);
+  if (r.efeitoManual) partes.push(r.efeitoManual);
   if (regra.bonusRolagem) partes.push('Bônus de +' + Number(regra.bonusRolagem.valor || 0) +
     ' na jogada de ' + String(regra.bonusRolagem.traco || '') + '.');
+  if (regra.bonusDano) partes.push('Bônus de +' + Number(regra.bonusDano.valor || 0) +
+    ' no dano da arma principal nesta jogada.');
+  if (regra.bonusProficienciaDano) partes.push('Bônus de +' + Number(regra.bonusProficienciaDano.valor || 0) +
+    ' de Proficiência nesta jogada de dano.');
+  if (custoOuroPunhados) partes.push(custoOuroPunhados + ' punhado' + (custoOuroPunhados === 1 ? '' : 's') + ' de ouro gasto' + (custoOuroPunhados === 1 ? '' : 's') + '.');
   if (entrada) partes.push('Resultado informado: ' + dadoManual + '.');
   if (entrada && resultadoRegra && !acionaResultado) partes.push('O gatilho especial não foi acionado.');
   if (acionaResultado && recuperacao) partes.push('Recuperação aplicada.');
