@@ -1,11 +1,13 @@
 /* ==========================================================================
-   L9-B7 · REFINO MOBILE — MOCHILA EM CELULAR ESTREITO
+   L9-B7/B8 · REFINOS MOBILE
+   ========================================================================== */
+
+/* ==========================================================================
+   B7 · MOCHILA EM CELULAR ESTREITO
 
    Em 360/390px, cinco controles de 44px na mesma linha deixavam pouco espaço
-   para o nome do item. A primeira tentativa empilhou todos os controles e
-   resolveu o texto, mas deixou cada linha alta demais. O refinamento final
-   mantém a lista compacta: quantidade continua inline e as ações ocasionais
-   (em uso / remover) ficam no botão de mais ações.
+   para o nome do item. Quantidade é a operação repetida durante a sessão;
+   ações ocasionais (em uso / remover) ficam no botão de mais ações.
 
    Em 430px para cima a composição original continua valendo.
    ========================================================================== */
@@ -91,5 +93,27 @@
     text-transform: uppercase;
     letter-spacing: .05em;
     color: var(--cor-titulo);
+  }
+}
+
+/* ==========================================================================
+   B8 · CARTA DE SUBCLASSE COMO PRÉVIA NO MOBILE
+
+   A subclasse não precisa reproduzir a carta inteira dentro da lista: o nome
+   já abre a arte oficial com o texto completo. No celular, mostrar toda a
+   regra empurrava a seção Mão para depois de uma tela inteira.
+
+   Cinco linhas mantêm contexto suficiente para reconhecer a habilidade, sem
+   esconder o marcador que pertence à carta. Tablet/desktop continuam com o
+   texto integral na lista.
+   ========================================================================== */
+
+@media (max-width: 639px) {
+  .ficha__carta--subclasse .ficha__cartaTexto {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    overflow: hidden;
   }
 }
