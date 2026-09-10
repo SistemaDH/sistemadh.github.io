@@ -35,6 +35,8 @@ jobs:
       - run: npm run teste:e2e
       - name: Layout mobile 360 / 390 / 430
         run: npm run teste:layout-mobile
+      - name: Layout Mestre mobile 360 / 390 / 430
+        run: npm run teste:layout-mestre-mobile
       - name: Layout responsivo 768 / 1024 / 1440
         run: npm run teste:layout-responsivo
       - name: Guardar diagnóstico visual mobile
@@ -43,6 +45,13 @@ jobs:
         with:
           name: layout-mobile-${{ github.run_id }}
           path: artifacts/layout-mobile
+          if-no-files-found: warn
+      - name: Guardar diagnóstico visual Mestre mobile
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: layout-mestre-mobile-${{ github.run_id }}
+          path: artifacts/layout-mestre-mobile
           if-no-files-found: warn
       - name: Guardar diagnóstico visual responsivo
         if: always()
