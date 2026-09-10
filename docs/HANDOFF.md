@@ -1010,3 +1010,10 @@ Gate final após o E19:
 A auditoria final permanece em `docs/AUDITORIA-FINAL-LOTE8.md`. Linhas históricas deste HANDOFF que contêm “próximo”, “pendente” ou “aberto” são diário de etapas anteriores e **não reabrem** o Lote 8; a fonte de verdade para pendências mecânicas do Core é a auditoria final zerada.
 
 **SRD 2.0 não faz parte deste fechamento.** Qualquer adoção, comparação ou migração para SRD 2.0 deve começar como uma nova fase, com inventário explícito das divergências em relação ao Core 1.0 congelado neste ponto.
+
+### Manutenção pré-main após o fechamento do Core 1.0
+
+- branch de continuidade: `newedit` (substitui `ediçãoclaude`);
+- `main` permanece sem o Lote 8 até promoção explícita;
+- backup imutável de referência criado antes da promoção: `backup-main-2026-09-10-pre-newedit`;
+- limpeza pré-main é limitada a higiene, CI e simplificações sem alterar regras; mudanças de motor continuam exigindo gate completo.

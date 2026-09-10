@@ -3,3 +3,10 @@ node_modules/
 Thumbs.db
 __pycache__/
 *.pyc
+.env
+.env.*
+!.env.example
+*.log
+playwright-report/
+test-results/
+supabase/.temp/

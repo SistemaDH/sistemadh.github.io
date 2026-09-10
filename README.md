@@ -8,6 +8,8 @@ O frontend é publicado pelo GitHub Pages e o backend oficial é Supabase: Edge 
 
 ## Estado atual
 
+> **Pré-main:** a branch de desenvolvimento passa a ser `newedit`. Ela contém o Lote 8 / Core 1.0 auditado integralmente, mas ainda **não foi publicado em `main` nem implantado em produção**.
+
 Produção integra os Lotes 1–7, incluindo:
 
 - criação e ficha completa de personagem;
@@ -101,6 +103,8 @@ Catálogos estáticos permanecem em `data/*.json`. Mudanças de regra de Daggerh
 Os Lotes 6 e 7 mantiveram a linha SRD 1.0 adotada pelo projeto; o SRD 2.0 de 25/08/2026 não foi adotado automaticamente.
 
 ## Testes
+
+Gate mais recente do Core 1.0 em `newedit`: **941/941 testes de backend**, E2E completo, arquivos gerados e CSS aprovados, com auditoria do Lote 8 em **0 candidatos mecânicos**.
 
 Comandos de validação atuais:
 
