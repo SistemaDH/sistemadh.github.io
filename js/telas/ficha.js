@@ -1406,19 +1406,37 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const r = ficha.recursos || {};
     const d = ficha.defesas || {};
 
+    /*
+     * L9-B1 — A ORDEM É A ORDEM DA PERGUNTA EM COMBATE.
+     *
+     * Antes o bloco começava por Evasão/Armadura e entrava em toda a explicação
+     * de dano antes de mostrar PV, Estresse e Esperança. Em 390px isso empurrava
+     * os três recursos que mudam a cada cena para baixo da primeira dobra.
+     *
+     * Agora a primeira passada do olho responde: "como eu estou?" (PV,
+     * Estresse, Esperança), depois "como me acertam?" (Evasão/Armadura), e só
+     * então "quanto este dano marca?". Nenhuma regra, valor ou ação mudou — só
+     * a ordem das mesmas peças no DOM, para a ordem visual e a de acessibilidade
+     * continuarem iguais.
+     */
     return el('section', { class: 'papel' }, [
+      trilhaDePapel({
+        chave: 'pontosDeVidaMarcados', rotulo: 'PV', nomeCompleto: 'Pontos de Vida',
+        classe: 'pv', marcados: r.pontosDeVidaMarcados || 0, total: r.pontosDeVidaMaximos || 0
+      }),
+      trilhaDePapel({
+        chave: 'estresseMarcado', rotulo: 'Estr.', nomeCompleto: 'Estresse',
+        verbete: 'estresse',
+        classe: 'estresse', marcados: r.estresseMarcado || 0, total: r.estresseMaximo || 0
+      }),
+      faixa('Esperança'),
+      el('p', { class: 'papel__nota' }, textoAnotado(
+        'Gaste 1 Esperança para usar uma Experiência ou ajudar um aliado.')),
+      trilhaDeEsperanca(r),
       linhaDeDefesas(r, d),
       blocoDeReacoesDeEquipamento_(ficha),
       blocoDeReacoesDeConsumivel_(ficha),
       faixa('Dano e Vida'),
-      /*
-       * A nota antiga mandava "some seu nível atual aos limiares" — e o app JÁ
-       * soma (`lim.menor + nivel`, em 48_Criacao). Quem seguisse a instrução
-       * somava o nível duas vezes e levava menos dano do que devia.
-       *
-       * No lugar dela, o que a ficha de papel não diz: o que os dois números
-       * SÃO. O dano recebido cai numa das três faixas, e a faixa é o custo.
-       */
       el('p', { class: 'papel__nota' }, textoAnotado(
         'Compare o dano recebido com estes números — a faixa em que ele cai diz ' +
         'quantos PV marcar.')),
@@ -1427,29 +1445,11 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         type: 'button', class: 'btn btn--fantasma',
         onClick: () => abrirDanoRecebido(ficha)
       }, 'Aplicar dano recebido'),
-      trilhaDePapel({
-        chave: 'pontosDeVidaMarcados', rotulo: 'PV', nomeCompleto: 'Pontos de Vida',
-        classe: 'pv', marcados: r.pontosDeVidaMarcados || 0, total: r.pontosDeVidaMaximos || 0
-      }),
-      trilhaDePapel({
-        /*
-         * "ESTR." e não "ESTRESSE": em versalete a palavra inteira não cabe na
-         * coluna de rótulo e encostava no primeiro quadradinho. PV já é
-         * abreviação, e a linha fica com as duas do mesmo tamanho.
-         */
-        chave: 'estresseMarcado', rotulo: 'Estr.', nomeCompleto: 'Estresse',
-        verbete: 'estresse',
-        classe: 'estresse', marcados: r.estresseMarcado || 0, total: r.estresseMaximo || 0
-      }),
-      faixa('Esperança'),
       /*
-       * Anotado, e não texto puro: "Experiência" só tem gatilho AQUI na aba
-       * Jogo — a seção de Experiências mora na aba História, e quem lê esta
-       * frase é justamente quem ainda não foi lá.
+       * A característica de Esperança continua inteira e junto do mesmo bloco,
+       * mas vem depois do HUD de combate: é referência de regra, não marcador
+       * que a pessoa precisa localizar a cada golpe.
        */
-      el('p', { class: 'papel__nota' }, textoAnotado(
-        'Gaste 1 Esperança para usar uma Experiência ou ajudar um aliado.')),
-      trilhaDeEsperanca(r),
       cartaDeEsperanca(ficha)
     ]);
   }

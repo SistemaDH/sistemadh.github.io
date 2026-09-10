@@ -412,3 +412,31 @@
 }
 
 .icone--grande { width: 1.4em; height: 1.4em; }
+
+/* ==========================================================================
+   L9-B1 · TOAST MOBILE
+
+   Em celular, feedback temporário fica acima da navegação inferior, não sobre
+   o nome/nível da ficha. Modal aberto é a exceção: as ações do modal ocupam o
+   rodapé, então o aviso volta para o topo.
+   ========================================================================== */
+@media (max-width: 639px) {
+  .avisos {
+    top: auto;
+    bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+    width: calc(100vw - 24px);
+    gap: 6px;
+  }
+
+  body:has(.modal) .avisos {
+    top: calc(12px + env(safe-area-inset-top, 0px));
+    bottom: auto;
+  }
+
+  .aviso {
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: var(--txt-sm);
+    line-height: 1.35;
+  }
+}

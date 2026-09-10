@@ -84,6 +84,44 @@ async function auditar(page, viewport, tela) {
     });
     if (pequenos.length) avisos.push(`${pequenos.length} controles visíveis têm dimensão desenhada abaixo de 44px`);
 
+    /* L9-B1: feedback transitório não pode virar pilha nem cobrir navegação fixa. */
+    const transitórios = [...document.querySelectorAll('.aviso--sucesso, .aviso--info')].filter(visivel);
+    if (transitórios.length > 1) erros.push(`${transitórios.length} avisos transitórios visíveis ao mesmo tempo`);
+
+    /*
+ * Com modal aberto, o fundo está inerte e escurecido. O toast pode ficar
+ * sobre o cabeçalho que está ATRÁS dele; o que não pode cobrir é a caixa
+ * ativa do próprio modal. Sem modal, topo e navegação voltam a ser as
+ * zonas protegidas normalmente.
+ */
+const modalAtivo = [...document.querySelectorAll('.modal')].filter(visivel).at(-1) || null;
+const zonasFixas = modalAtivo
+  ? [modalAtivo.querySelector('.modal__caixa')].filter((x) => x && visivel(x))
+  : [...document.querySelectorAll(
+      '.ficha__topo, .ficha__abas, .mestre__topo, .mestre__abas, .criacao__topo, .criacao__rodape'
+    )].filter(visivel);
+const sobrepoe = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+for (const aviso of [...document.querySelectorAll('.aviso')].filter(visivel)) {
+  const ar = aviso.getBoundingClientRect();
+  const zona = zonasFixas.find((z) => sobrepoe(ar, z.getBoundingClientRect()));
+  if (zona) {
+    erros.push(`aviso cobre área ativa: ${zona.className}`);
+    break;
+  }
+}
+
+    /* O HUD mobile começa pelos recursos que mudam durante a cena. */
+    const papel = document.querySelector('.papel');
+    if (papel) {
+      const filhos = [...papel.children];
+      const pv = filhos.findIndex((x) => x.matches('.papel__trilha--pv'));
+      const defesa = filhos.findIndex((x) => x.matches('.papel__defesas'));
+      const esperança = filhos.findIndex((x) => x.matches('.papel__esperanca'));
+      const limiares = filhos.findIndex((x) => x.matches('.papel__limiares'));
+      if (pv >= 0 && defesa >= 0 && pv > defesa) erros.push('PV aparece depois das defesas no HUD mobile');
+      if (esperança >= 0 && limiares >= 0 && esperança > limiares) erros.push('Esperança aparece depois dos limiares no HUD mobile');
+    }
+
     const modal = document.querySelector('.modal');
     if (modal && visivel(modal)) {
       const caixa = modal.querySelector('.modal__caixa');

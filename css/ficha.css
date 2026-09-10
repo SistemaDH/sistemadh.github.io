@@ -1924,3 +1924,16 @@
   min-height: 1.4em;
   color: var(--cor-texto);
 }
+
+/* ==========================================================================
+   L9-B1 · DENSIDADE MOBILE DA FICHA
+   ========================================================================== */
+@media (max-width: 639px) {
+  .ficha__corpo {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  /* A contagem é leitura normal: não pode ficar abaixo do piso de 12px. */
+  .ficha__abaConta { font-size: var(--txt-xs); }
+}

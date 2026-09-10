@@ -25,20 +25,34 @@ function areaAvisos() {
  */
 export function avisar(texto, tipo = 'info', duracao) {
   const area = areaAvisos();
+
+  /*
+   * L9-B1 — feedback TRANSITÓRIO não vira parede.
+   *
+   * Criar acesso e, logo depois, criar a ficha gerava dois cartões grandes que
+   * ficavam três segundos empilhados por cima do cabeçalho da ficha. Sucesso e
+   * informação são confirmações transitórias: a mais nova substitui a anterior.
+   * Erro e alerta NÃO entram nesta fila — podem coexistir porque perder uma
+   * mensagem crítica seria pior do que ocupar espaço por alguns segundos.
+   */
+  if (tipo === 'sucesso' || tipo === 'info') {
+    area.querySelectorAll('.aviso--sucesso, .aviso--info').forEach((anterior) => anterior.remove());
+  }
+
   const node = el('div', { class: `aviso aviso--${tipo}` }, [
     el('span', { class: 'crescer', texto })
   ]);
   area.append(node);
   const tempo = duracao ?? (tipo === 'erro' ? 6000 : 3200);
   setTimeout(() => {
+    if (!node.isConnected) return;
     node.style.transition = 'opacity 200ms, transform 200ms';
     node.style.opacity = '0';
-    node.style.transform = 'translateY(-8px)';
+    node.style.transform = 'translateY(8px)';
     setTimeout(() => node.remove(), 220);
   }, tempo);
   return node;
 }
-
 export const avisarErro = (texto) => avisar(texto, 'erro');
 export const avisarSucesso = (texto, duracao) => avisar(texto, 'sucesso', duracao);
 
