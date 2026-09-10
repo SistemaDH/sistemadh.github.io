@@ -41,6 +41,8 @@ jobs:
         run: npm run teste:layout-criacao-mobile
       - name: Layout Regras mobile 360 / 390 / 430 + rolagem
         run: npm run teste:layout-regras-mobile
+      - name: Abertura mobile 360 / 390 / 430 + mostrar código
+        run: npm run teste:layout-abertura-mobile
       - name: Layout responsivo 768 / 1024 / 1440
         run: npm run teste:layout-responsivo
       - name: Guardar diagnóstico visual mobile
@@ -70,6 +72,13 @@ jobs:
         with:
           name: layout-regras-mobile-${{ github.run_id }}
           path: artifacts/layout-regras-mobile
+          if-no-files-found: warn
+      - name: Guardar diagnóstico visual abertura mobile
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: layout-abertura-mobile-${{ github.run_id }}
+          path: artifacts/layout-abertura-mobile
           if-no-files-found: warn
       - name: Guardar diagnóstico visual responsivo
         if: always()
