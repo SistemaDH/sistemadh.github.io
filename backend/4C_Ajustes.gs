@@ -123,6 +123,7 @@ function aplicarAjusteDireto_(ficha, a) {
   if (tipo === 'escolhadeclasse') return ajustarEscolhaDeClasse_(ficha, a);
   if (tipo === 'retaliacao') return ajustarRetaliacao_(ficha, a);
   if (tipo === 'reacaoequipamento') return usarReacaoDeEquipamento_(ficha, a);
+  if (tipo === 'reacaoconsumivel') return usarReacaoDeConsumivel_(ficha, a);
   if (tipo === 'usoequipamento') return usarCaracteristicaDeEquipamento_(ficha, a);
   if (tipo === 'habilidade') return usarHabilidadeDeClasse_(ficha, a);
   return { erro: 'Tipo de ajuste desconhecido: "' + String((a || {}).tipo) + '".' };
@@ -2600,6 +2601,74 @@ function usarReacaoDeEquipamento_(ficha, a) {
   return saida;
 }
 
+/** Encontra uma unidade de consumível de reação realmente presente na mochila. */
+function consumivelDeReacaoNaMochila_(ficha, id) {
+  const alvo = String(id || '');
+  if (!alvo) return null;
+  const lista = normalizarInventario_(ficha);
+  for (let i = 0; i < lista.length; i++) {
+    const reg = lista[i] || {};
+    if (String(reg.id || '') !== alvo || Math.max(0, Number(reg.qtd) || 0) <= 0) continue;
+    const item = (typeof acharItem_ === 'function') ? acharItem_(alvo) : null;
+    const regra = item && item.tipo === 'consumivel' ? (item.reacaoConsumivel || null) : null;
+    if (!regra) return null;
+    return { lista:lista, indice:i, registro:reg, item:item, regra:regra };
+  }
+  return null;
+}
+
+/**
+ * Reação de consumível usada antes de resolver o ataque recebido.
+ *
+ * Darksmoke não cria um bônus persistente na ficha: a Evasão extra só existe
+ * naquela resolução. O app também não rola os d6 — recebe o maior resultado
+ * que a pessoa rolou fisicamente na mesa.
+ */
+function usarReacaoDeConsumivel_(ficha, a) {
+  const encontrada = consumivelDeReacaoNaMochila_(ficha, (a || {}).itemId);
+  if (!encontrada) {
+    return { erro:'Consumível de reação indisponível na mochila: "' + String((a || {}).itemId || '') + '".' };
+  }
+  const item = encontrada.item;
+  const regra = encontrada.regra || {};
+  if (regra.tipo !== 'evasao-d6-maior-por-traco') {
+    return { erro:item.nome + ': esta reação não acontece antes do ataque.' };
+  }
+
+  const traco = String(regra.traco || 'agilidade');
+  const quantidade = (typeof fichasPorTraco_ === 'function') ? fichasPorTraco_(ficha, traco) : 0;
+  if (quantidade <= 0) {
+    return { erro:item.nome + ': sua Agilidade efetiva é +0 ou menor, então esta regra concede 0d6 e o frasco não é consumido.' };
+  }
+
+  const campo = String(regra.campo || 'maiorD6');
+  const bruto = (a || {})[campo];
+  if (bruto === undefined || bruto === null || bruto === '') {
+    return { pendenciaRolagem:{
+      tipo:'habilidade-manual', campo:campo, caracteristica:item.nome,
+      dado:quantidade + 'd6 · maior resultado', quantidadeDados:quantidade,
+      minimo:1, maximo:6,
+      mensagem:item.nome + ': role ' + quantidade + 'd6 fora do app e informe somente o maior resultado.'
+    } };
+  }
+  const maior = Math.trunc(Number(bruto));
+  if (!isFinite(maior) || Number(bruto) !== maior || maior < 1 || maior > 6) {
+    return { erro:item.nome + ': o maior d6 precisa ser um inteiro de 1 a 6.' };
+  }
+
+  const gasto = gastarUmaUnidadeDeItem_(encontrada.lista, encontrada.indice);
+  const base = Math.max(0, Number(((ficha || {}).defesas || {}).evasao) || 0);
+  return {
+    tipo:'reacaoConsumivel', itemId:item.id, item:item.nome,
+    quantidadeDados:quantidade, dado:'d6', resultadoManual:maior,
+    bonusEvasao:maior, evasaoBase:base, evasaoContraAtaque:base + maior,
+    consumo:{ qtdAntes:gasto.antes, qtdDepois:gasto.depois, consumiu:1 },
+    custoEsperanca:0,
+    aviso:item.nome + ': maior resultado informado ' + maior + '; +' + maior +
+      ' de Evasão somente contra este ataque. 1 unidade consumida.'
+  };
+}
+
 function carregarEstadosDeClassePorDano_(ficha, tipo) {
   if (typeof HABILIDADES_DE_CLASSE_COM_CUSTO === 'undefined') return [];
   const nomes = Object.keys(HABILIDADES_DE_CLASSE_COM_CUSTO);
@@ -2820,6 +2889,44 @@ function aplicarDanoNaFicha_(ficha, a) {
       pvPelaFaixa:0, pvMarcados:0, naBeira:false, reacoes:[], resistencia:null,
       imunidade:imunidadeCarta.nome, custos:{ estresse:0, esperanca:0, armadura:0 }, detalhes:[],
       aviso:imunidadeCarta.nome + ': dano ' + (tipo === 'magico' ? 'mágico' : 'físico') + ' anulado pela imunidade ativa.'
+    };
+  }
+
+  // Espelho de Marigold é uma reação ao EVENTO de sofrer dano. Ele vem
+  // antes dos limiares e de qualquer mitigação escolhida: paga 1 Esperança,
+  // nega este dano inteiro e quebra uma unidade. Não empilha gastos inúteis.
+  if ((a || {}).usarEspelhoMarigold === true) {
+    const outras = (Array.isArray(a.reacoes) && a.reacoes.length) ||
+      a.usarArmadura === true || a.usarImpenetravel === true || a.usarAparar === true;
+    if (outras) {
+      return { erro:'Espelho de Marigold nega o dano inteiro; não combine esta reação com Armadura, Aparar, Impenetrável ou outras reações de dano.' };
+    }
+    const encontrada = consumivelDeReacaoNaMochila_(ficha, 'consumivel-59');
+    if (!encontrada || (encontrada.regra || {}).tipo !== 'negar-dano') {
+      return { erro:'Espelho de Marigold não está disponível na mochila.' };
+    }
+    const custo = Math.max(1, Math.trunc(Number((((encontrada.regra || {}).custo || {}).esperanca))) || 1);
+    const disponivel = Math.max(0, Number((((ficha || {}).recursos || {}).esperanca)) || 0);
+    if (disponivel < custo) {
+      return { erro:'Espelho de Marigold precisa de ' + custo + ' Esperança, e você tem ' + disponivel + '.' };
+    }
+    const paga = ajustarRecurso_(ficha, { chave:'esperanca', delta:-custo });
+    if (paga && paga.erro) return paga;
+    const gasto = gastarUmaUnidadeDeItem_(encontrada.lista, encontrada.indice);
+    return {
+      tipo:'dano',
+      dano:{ bruto:bruto, final:0, tipo:tipo, faixa:'negado', rotulo:'Dano negado' },
+      pvPelaFaixa:0, pvDepoisArmadura:0, pvMarcados:0,
+      naBeira:false, mitigacaoArmadura:null, reacoes:[], resistencia:null,
+      equipamentoDefensivo:null, aparar:null, dominioElementalTerra:null,
+      resiliente:null, impenetravel:null,
+      espelhoMarigold:{ itemId:encontrada.item.id, item:encontrada.item.nome,
+        qtdAntes:gasto.antes, qtdDepois:gasto.depois, consumiu:1 },
+      custos:{ estresse:0, esperanca:custo, armadura:0 },
+      custoEsperanca:custo,
+      detalhes:[paga, { tipo:'inventario', acao:'consumir', item:encontrada.item.nome,
+        itemId:encontrada.item.id, qtdAntes:gasto.antes, qtdDepois:gasto.depois, consumiu:1 }],
+      aviso:encontrada.item.nome + ': ' + custo + ' Esperança gasta; o dano foi negado e 1 espelho se despedaçou.'
     };
   }
 

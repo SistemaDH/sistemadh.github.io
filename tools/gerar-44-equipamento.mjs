@@ -122,7 +122,8 @@ for (const i of [...d.loot, ...d.consumiveis]) {
   L.push(`  ${j({
     id: i.id, nome: i.nome, tipo: i.id.startsWith('loot') ? 'saque' : 'consumivel', nomes,
     automacao: i.automacao || null,
-    efeitoConsumivel: i.efeitoConsumivel || null
+    efeitoConsumivel: i.efeitoConsumivel || null,
+    reacaoConsumivel: i.reacaoConsumivel || null
   })},`);
 }
 L.push('];\n');

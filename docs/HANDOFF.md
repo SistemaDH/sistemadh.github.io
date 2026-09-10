@@ -852,3 +852,14 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - Cobertura backend adicionada para os três consumíveis e para a regressão E7; RNG continua fora do app.
 
 **Próximo bloco natural:** reações de consumíveis, priorizando **Frasco de Darksmoke (`consumivel-16`)** e **Espelho de Marigold (`consumivel-59`)**; depois revisar os candidatos mecânicos restantes da auditoria.
+
+## Lote 8 — reações de consumíveis E10
+
+- **Frasco de Darksmoke (`consumivel-16`)** agora é uma reação pré-ataque: o servidor calcula a **Agilidade efetiva** e pede que o jogador role essa quantidade de `d6` fora do app, informando apenas o maior resultado. Esse resultado é devolvido como bônus de Evasão **somente contra aquele ataque**; a defesa permanente nunca é alterada.
+- Darksmoke com Agilidade efetiva `+0` ou menor concede `0d6`; o uso é recusado **sem consumir o frasco**, seguindo a regra geral de quantidades baseadas em traço quando não há mínimo explícito.
+- **Espelho de Marigold (`consumivel-59`)** agora aparece dentro do fluxo de dano recebido: ao escolher a reação, o app cobra **1 Esperança**, nega o evento inteiro de dano e consome uma unidade do espelho na mesma gravação.
+- Marigold é mutuamente exclusivo com Armadura, Aparar, Impenetrável e as demais reações daquele dano. Isso evita custos redundantes para um dano que será integralmente negado.
+- Os dois itens mantêm `efeitoConsumivel: null`: são deliberadamente **reaction-only**, portanto não aparecem como um botão genérico de “usar agora” fora do gatilho correto.
+- Nenhum dado é gerado pelo app e nenhum bônus temporário de Evasão fica persistido na ficha.
+
+**Próximo bloco natural:** atualizar a auditoria do Lote 8 e escolher o próximo grupo mecânico ainda pendente a partir do relatório, mantendo consumíveis puramente narrativos/manualizados fora de automação indevida.

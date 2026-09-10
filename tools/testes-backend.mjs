@@ -11579,3 +11579,102 @@ teste('E9 Seiva do Sono também é consumida quando não há Estresse, recuperan
   igual(r.mudancas[0].quantidade,0);
   igual(f.inventario.length,0);
 });
+
+
+console.log('\nLote 8 — reações de consumíveis E10');
+function fichaConsumivelE10_(id,qtd=1,agilidade=2) {
+  const item=contexto.acharItem_(id);
+  const f=contexto.fichaVazia_();
+  f.identidade={nome:'E10',nivel:5,classe:'Bardo',subclasse:'Artífice das Palavras'};
+  f.tracos={agilidade:agilidade,forca:1,finesse:1,instinto:0,presenca:0,conhecimento:-1};
+  f.defesas=f.defesas || {};
+  f.defesas.evasao=12; f.defesas.limiarMaior=5; f.defesas.limiarGrave=10; f.defesas.pontuacaoArmadura=3;
+  f.recursos=f.recursos || {};
+  f.recursos.pontosDeVidaMaximos=6; f.recursos.pontosDeVidaMarcados=2;
+  f.recursos.estresseMaximo=6; f.recursos.estresseMarcado=1;
+  f.recursos.esperancaMaxima=6; f.recursos.esperanca=3;
+  f.recursos.armaduraMarcada=0; f.recursos.proficiencia=2;
+  f.inventario=[{id:item.id,nome:item.nome,qtd:qtd,emUso:false}];
+  return {f,item};
+}
+teste('E10 catálogo separa reações de consumível do botão genérico de consumo', () => {
+  const fuma=contexto.acharItem_('consumivel-16');
+  const espelho=contexto.acharItem_('consumivel-59');
+  igual(fuma.automacao.classificacao,'consumivel-reacao-ataque-e10');
+  igual(fuma.efeitoConsumivel,null);
+  igual(fuma.reacaoConsumivel.tipo,'evasao-d6-maior-por-traco');
+  igual(fuma.reacaoConsumivel.gatilho,'quando-alvo-de-ataque');
+  igual(espelho.automacao.classificacao,'consumivel-reacao-dano-e10');
+  igual(espelho.efeitoConsumivel,null);
+  igual(espelho.reacaoConsumivel.tipo,'negar-dano');
+  igual(espelho.reacaoConsumivel.custo.esperanca,1);
+});
+teste('E10 Darksmoke pede o maior dos d6 fora do app e não consome antes do resultado', () => {
+  const {f}=fichaConsumivelE10_('consumivel-16',2,2);
+  const antes=JSON.stringify(f);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'reacaoConsumivel',itemId:'consumivel-16'}]);
+  verdade(r.pendenciaRolagem,JSON.stringify(r));
+  igual(r.pendenciaRolagem.tipo,'habilidade-manual');
+  igual(r.pendenciaRolagem.campo,'maiorD6');
+  igual(r.pendenciaRolagem.quantidadeDados,2);
+  igual(JSON.stringify(f),antes,'pendência manual não pode consumir o frasco nem alterar a Evasão');
+});
+teste('E10 Darksmoke usa o maior d6 informado apenas contra aquele ataque', () => {
+  const {f}=fichaConsumivelE10_('consumivel-16',2,2);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'reacaoConsumivel',itemId:'consumivel-16',maiorD6:5}]);
+  igual(r.erros,[],JSON.stringify(r));
+  const m=r.mudancas[0];
+  igual(m.quantidadeDados,2); igual(m.resultadoManual,5); igual(m.bonusEvasao,5);
+  igual(m.evasaoBase,12); igual(m.evasaoContraAtaque,17);
+  igual(f.defesas.evasao,12,'o bônus não pode ficar gravado na defesa');
+  igual(f.inventario[0].qtd,1);
+});
+teste('E10 Darksmoke conta a Agilidade efetiva, inclusive modificador ativo de tamanho', () => {
+  const {f}=fichaConsumivelE10_('consumivel-16',1,1);
+  f.contadores=f.contadores || {};
+  f.contadores['estado:consumivel:consumivel-53']={valor:1};
+  const r=contexto.aplicarAjustes_(f,[{tipo:'reacaoConsumivel',itemId:'consumivel-16'}]);
+  verdade(r.pendenciaRolagem,JSON.stringify(r));
+  igual(r.pendenciaRolagem.quantidadeDados,3,'Agilidade 1 +2 do Encolhimento deve pedir 3d6');
+});
+teste('E10 Darksmoke com Agilidade +0 ou menor concede 0d6 e não gasta o item', () => {
+  for (const agi of [0,-1]) {
+    const {f}=fichaConsumivelE10_('consumivel-16',1,agi);
+    const antes=JSON.stringify(f);
+    const r=contexto.aplicarAjustes_(f,[{tipo:'reacaoConsumivel',itemId:'consumivel-16',maiorD6:6}]);
+    igual(r.erros.length,1,JSON.stringify(r));
+    verdade(/0d6/.test(r.erros[0] || ''),r.erros[0]);
+    igual(JSON.stringify(f),antes,'falha não pode consumir Darksmoke');
+  }
+});
+teste('E10 Espelho de Marigold gasta 1 Esperança, quebra uma unidade e nega todo o dano', () => {
+  const {f}=fichaConsumivelE10_('consumivel-59',2,2);
+  const pvAntes=f.recursos.pontosDeVidaMarcados;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:99,tipoDeDano:'magico',usarEspelhoMarigold:true,reacoes:[]}]);
+  igual(r.erros,[],JSON.stringify(r));
+  const m=r.mudancas[0];
+  igual(m.dano.bruto,99); igual(m.dano.final,0); igual(m.pvMarcados,0);
+  igual(m.custos.esperanca,1); igual(m.custoEsperanca,1);
+  igual(f.recursos.esperanca,2); igual(f.recursos.pontosDeVidaMarcados,pvAntes);
+  igual(f.inventario[0].qtd,1);
+  igual(m.espelhoMarigold.consumiu,1);
+});
+teste('E10 Espelho de Marigold sem Esperança falha sem quebrar o item', () => {
+  const {f}=fichaConsumivelE10_('consumivel-59',1,2);
+  f.recursos.esperanca=0;
+  const antes=JSON.stringify(f);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:20,tipoDeDano:'fisico',usarEspelhoMarigold:true,reacoes:[]}]);
+  igual(r.erros.length,1,JSON.stringify(r));
+  igual(JSON.stringify(f),antes);
+});
+teste('E10 Espelho de Marigold precisa existir na mochila e não empilha mitigação', () => {
+  let {f}=fichaConsumivelE10_('consumivel-16',1,2);
+  let antes=JSON.stringify(f);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:20,tipoDeDano:'fisico',usarEspelhoMarigold:true,reacoes:[]}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f),antes);
+
+  ({f}=fichaConsumivelE10_('consumivel-59',1,2));
+  antes=JSON.stringify(f);
+  r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:20,tipoDeDano:'fisico',usarEspelhoMarigold:true,usarArmadura:true,reacoes:[]}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f),antes,'combinação inválida não pode gastar recurso nem item');
+});

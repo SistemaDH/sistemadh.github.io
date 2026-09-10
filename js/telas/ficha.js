@@ -1222,6 +1222,28 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     ]);
   }
 
+  function blocoDeReacoesDeConsumivel_(ficha) {
+    const inventario = Array.isArray((ficha || {}).inventario) ? ficha.inventario : [];
+    const linhas = inventario.map((reg) => {
+      if (!reg || !reg.id || Math.max(0, Number(reg.qtd) || 0) <= 0) return null;
+      const item = catalogo.acharItem(reg.id);
+      const regra = item && item.reacaoConsumivel;
+      if (!regra || regra.gatilho !== 'quando-alvo-de-ataque') return null;
+      return { reg, item, regra };
+    }).filter(Boolean);
+    if (!linhas.length) return null;
+
+    return el('div', { class:'pilha' }, [
+      el('strong', { texto:'Consumíveis de reação ao ataque' }),
+      el('p', { class:'texto-xs texto-fraco', texto:
+        'Use quando você virar alvo de um ataque. O app não rola dados: ele pede o resultado que saiu na mesa e não grava bônus temporário na Evasão.' }),
+      el('div', { class:'linha' }, linhas.map(({reg, item}) => el('button', {
+        type:'button', class:'btn btn--fantasma btn--pequeno',
+        onClick:()=>enviar([{ tipo:'reacaoConsumivel', itemId:item.id }])
+      }, `${item.nome} ×${Math.max(1, Number(reg.qtd) || 1)}`)))
+    ]);
+  }
+
   function abrirDanoRecebido(ficha) {
     const dano = el('input', semCorretor({
       type: 'number', class: 'campo__entrada', min: 1, step: 1,
@@ -1239,6 +1261,11 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const usarArmadura = el('input', { type: 'checkbox', disabled: !paMax || paMarcados >= paMax });
     const temImpenetravel = temCaracteristica_(ficha, 'Impenetrável');
     const usarImpenetravel = temImpenetravel ? el('input', { type:'checkbox' }) : null;
+    const linhaMarigold = (Array.isArray(ficha.inventario) ? ficha.inventario : [])
+      .find((x) => x && x.id === 'consumivel-59' && Math.max(0, Number(x.qtd) || 0) > 0);
+    const itemMarigold = linhaMarigold ? catalogo.acharItem('consumivel-59') : null;
+    const usarMarigold = itemMarigold && itemMarigold.reacaoConsumivel
+      ? el('input', { type:'checkbox' }) : null;
 
     const eqAparar = ficha.equipamento || {};
     const armaAparar = [eqAparar.primaria, eqAparar.secundaria].filter(Boolean)
@@ -1272,6 +1299,18 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       ]) };
     });
 
+    const sincronizarMarigold = () => {
+      if (!usarMarigold) return;
+      const ativo = usarMarigold.checked;
+      usarArmadura.disabled = ativo || !paMax || paMarcados >= paMax;
+      if (ativo) usarArmadura.checked = false;
+      if (usarImpenetravel) { usarImpenetravel.disabled = ativo; if (ativo) usarImpenetravel.checked = false; }
+      if (usarAparar) { usarAparar.disabled = ativo; if (ativo) usarAparar.checked = false; }
+      escolhas.forEach((x) => { x.caixa.disabled = ativo; if (ativo) x.caixa.checked = false; });
+      if (blocoAparar) blocoAparar.hidden = ativo || !(usarAparar && usarAparar.checked);
+    };
+    if (usarMarigold) usarMarigold.addEventListener('change', sincronizarMarigold);
+
     const conteudo = el('div', { class: 'pilha' }, [
       el('p', { class: 'texto-sm' }, textoAnotado(
         'Informe o dano recebido. O app compara com os limiares e marca PV; nenhuma rolagem é feita aqui.')),
@@ -1281,6 +1320,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       el('label', { class: 'campo' }, [
         el('span', { class: 'campo__rotulo', texto: 'Tipo de dano' }), tipo
       ]),
+      usarMarigold ? el('label', { class:'criacao__alternador' }, [
+        usarMarigold,
+        el('span', { texto:`${itemMarigold.nome} ×${Math.max(1, Number(linhaMarigold.qtd) || 1)} — gastar 1 Esperança, negar todo este dano e quebrar 1 espelho` })
+      ]) : null,
       usarAparar ? el('label', { class:'criacao__alternador' }, [
         usarAparar,
         el('span', { texto:`Aparar com ${armaAparar.nome} — informar os dados rolados na mesa` })
@@ -1312,13 +1355,16 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         el('button', { type: 'button', class: 'btn', onClick: async () => {
           const n = Math.trunc(Number(dano.value));
           if (!n || n < 1) { avisarErro('Informe um dano maior que zero.'); return; }
-          const reacoes = escolhas.filter((x) => x.caixa.checked).map((x) => x.nome);
+          const usarEspelho = !!(usarMarigold && usarMarigold.checked);
+          const reacoes = usarEspelho ? [] : escolhas.filter((x) => x.caixa.checked).map((x) => x.nome);
           const pedidoDano = {
             tipo: 'dano', dano: n, tipoDeDano: tipo.value,
-            usarArmadura: usarArmadura.checked,
-            usarImpenetravel: !!(usarImpenetravel && usarImpenetravel.checked), reacoes
+            usarArmadura: !usarEspelho && usarArmadura.checked,
+            usarImpenetravel: !usarEspelho && !!(usarImpenetravel && usarImpenetravel.checked),
+            usarEspelhoMarigold: usarEspelho,
+            reacoes
           };
-          if (usarAparar && usarAparar.checked) {
+          if (!usarEspelho && usarAparar && usarAparar.checked) {
             const lerDados = (campo) => String(campo.value || '').trim().split(/[\s,;]+/).filter(Boolean).map(Number);
             const ataque = lerDados(dadosDanoAtacante);
             const seus = lerDados(dadosAparar);
@@ -1345,6 +1391,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     return el('section', { class: 'papel' }, [
       linhaDeDefesas(r, d),
       blocoDeReacoesDeEquipamento_(ficha),
+      blocoDeReacoesDeConsumivel_(ficha),
       faixa('Dano e Vida'),
       /*
        * A nota antiga mandava "some seu nível atual aos limiares" — e o app JÁ
