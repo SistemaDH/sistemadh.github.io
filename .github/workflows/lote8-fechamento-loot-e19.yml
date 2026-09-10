@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Corrigir ancora temporaria E19
+      - name: Corrigir preparacao temporaria E19
         run: |
           set -euo pipefail
           python3 - <<'PY'
@@ -52,8 +52,33 @@ jobs:
               "\n"
               "  // Hopekeeper: duas resoluções no mesmo item. A carga persiste até o uso.\"\"\", 'requer principio')"
           )
-          p.write_text(s[:inicio]+novo+s[fim:],encoding='utf-8')
-          print('Âncora E19 corrigida com espaços explícitos.')
+          s=s[:inicio]+novo+s[fim:]
+          trocas=[
+              ('Receba +1 em testes contra uma criatura registrada neste item.',
+               'Receba +1 em jogadas contra uma criatura registrada neste item.'),
+              ('Em um teste diretamente relacionado ao princípio registrado, role 1d20 como seu Dado de Esperança.',
+               'Em uma jogada diretamente relacionada ao princípio registrado, role 1d20 como seu Dado de Esperança.'),
+          ]
+          for old,newtxt in trocas:
+              if s.count(old) != 1:
+                  raise SystemExit('Vocabulário E19 não encontrado de forma única: '+old)
+              s=s.replace(old,newtxt,1)
+          p.write_text(s,encoding='utf-8')
+
+          tb=Path('tools/testes-backend.mjs')
+          t=tb.read_text(encoding='utf-8')
+          ajustes=[
+              ('o catálogo tem 185 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento, 24 de consumível e 11 de loot',
+               'o catálogo tem 190 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento, 24 de consumível e 16 de loot'),
+              ('igual(Object.keys(CONTADORES).length, 185);', 'igual(Object.keys(CONTADORES).length, 190);'),
+              ("igual(porOrigem['loot'], 11);", "igual(porOrigem['loot'], 16);")
+          ]
+          for old,newtxt in ajustes:
+              if t.count(old) != 1:
+                  raise SystemExit('Expectativa de contadores não encontrada de forma única: '+old)
+              t=t.replace(old,newtxt,1)
+          tb.write_text(t,encoding='utf-8')
+          print('Preparação E19 corrigida: âncora, vocabulário e totais de contadores.')
           PY
 
       - name: Materializar E19 e regenerar
