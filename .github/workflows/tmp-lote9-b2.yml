@@ -1,0 +1,77 @@
+name: TEMP Lote 9 B2 alvos essenciais
+
+on:
+  push:
+    branches: [tmp-lote9-b2-alvos-essenciais-sol]
+
+permissions:
+  contents: write
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+
+      - name: Materializar L9-B2
+        run: python3 tools/tmp-lote9-b2.py
+
+      - name: Contrato L9-B2
+        run: |
+          grep -F 'min-height: var(--alvo-toque);' css/telas.css
+          grep -F "class: 'btn btn--principal', disabled: true" js/telas/ficha.js
+          grep -F 'erros.push(`ações essenciais abaixo de 44px:' tools/testes-layout-mobile.mjs
+          git diff --check
+
+      - run: npm run teste:sintaxe
+      - run: npm run teste
+      - run: npm run teste:gerados
+      - run: npm run teste:css
+
+      - name: Auditoria Core 1.0 zerada
+        run: |
+          python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria.md
+          grep -F 'Classes/subclasses: **99 características**; **0** candidatas' /tmp/auditoria.md
+          grep -F 'Comunidades: **9 características**; **0** candidatas' /tmp/auditoria.md
+          grep -F 'Cartas de domínio: **189 cartas**; **0** candidatas' /tmp/auditoria.md
+          grep -F 'Características de armas/armaduras/molduras: **203 ocorrências**; **0** ocorrências candidatas' /tmp/auditoria.md
+          grep -F 'Loot/consumíveis com texto mecânico detectado: **81**; **0** candidatos' /tmp/auditoria.md
+
+      - run: npx playwright install --with-deps chromium
+      - run: npm run teste:e2e
+
+      - name: Layout mobile 360 / 390 / 430
+        run: npm run teste:layout-mobile
+
+      - name: Guardar diagnóstico visual B2
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lote9-b2-layout-mobile
+          path: artifacts/layout-mobile
+          if-no-files-found: warn
+
+      - name: Bloquear concorrência em newedit
+        run: |
+          atual=$(git ls-remote origin refs/heads/newedit | cut -f1)
+          test "$atual" = '5648044445fe99ceb6b35352480298a0918adee8' || {
+            echo "newedit mudou: esperado 5648044445fe99ceb6b35352480298a0918adee8, atual $atual"
+            exit 1
+          }
+
+      - name: Criar commit funcional limpo
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm tools/tmp-lote9-b2.py .github/workflows/tmp-lote9-b2.yml
+          git add css/telas.css js/telas/ficha.js tools/testes-layout-mobile.mjs
+          git diff --cached --check
+          git commit -m 'fix: garantir alvos essenciais no mobile L9-B2'
+          git push origin HEAD:tmp-lote9-b2-alvos-essenciais-sol
