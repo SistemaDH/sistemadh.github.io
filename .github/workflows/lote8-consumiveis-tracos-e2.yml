@@ -21,6 +21,16 @@ jobs:
       - name: Materializar consumiveis E2
         run: |
           python3 tools/lote8-consumiveis-tracos-e2.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tools/testes-backend.mjs')
+          s=p.read_text(encoding='utf-8')
+          antigo="const item=itens[id];"
+          novo="const item=itens.find((x)=>x.id===id);"
+          if antigo not in s:
+              raise SystemExit('lookup E2 esperado não encontrado')
+          p.write_text(s.replace(antigo,novo,1),encoding='utf-8')
+          PY
           node tools/gerar-44-equipamento.mjs
           node tools/gerar-47-contadores.mjs
           node tools/gerar-48-criacao.mjs
