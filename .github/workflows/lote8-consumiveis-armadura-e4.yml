@@ -1,0 +1,92 @@
+name: Lote 8 - Consumivel Armadura E4
+
+on:
+  push:
+    branches: [tmp-lote8-consumiveis-armadura-e4-sol]
+
+permissions:
+  contents: write
+
+env:
+  BASE_SHA: 7498e4780431e357282171d96180738fc9b433d9
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materializar Costurador E4
+        run: |
+          python3 tools/lote8-consumiveis-armadura-e4.py
+          node tools/gerar-44-equipamento.mjs
+          node tools/gerar-47-contadores.mjs
+          node tools/gerar-48-criacao.mjs
+          node tools/gerar-41-dominios.mjs
+          node tools/gerar-4B-descanso.mjs
+          python3 -c "from pathlib import Path; p=Path('docs/HANDOFF.md'); p.write_text(p.read_text(encoding='utf-8').rstrip()+'\n',encoding='utf-8')"
+          git diff --check
+          node --check js/telas/ficha.js
+
+      - name: Conferir catalogo, UI e auditoria E4
+        run: |
+          python3 - <<'PY'
+          import json, subprocess
+          eq=json.load(open('data/equipamentos.json',encoding='utf-8'))
+          xs=[x for x in eq.get('consumiveis',[]) if x.get('nomeIngles')=='Armor Stitcher']
+          assert len(xs)==1,[(x.get('id'),x.get('nomeIngles')) for x in xs]
+          x=xs[0]
+          assert x.get('id')=='consumivel-21'
+          assert x.get('automacao',{}).get('rolaNoApp') is False
+          ef=x.get('efeitoConsumivel') or {}
+          assert ef.get('tipo')=='recuperar-armadura-por-esperanca'
+          ent=ef.get('entradaQuantidade') or {}
+          assert ent.get('campo')=='quantidade' and ent.get('minimo')==1
+          out=subprocess.check_output(['python3','tools/auditar-pendencias-lote8.py'],text=True)
+          print(out)
+          assert 'Loot/consumíveis com texto mecânico detectado: **81**; **61** candidatos ainda sem estrutura/classificação.' in out
+          assert 'estruturado/classificado: **19**' in out
+          print('E4 OK: Costurador estruturado; 61 candidatos mecânicos seguem abertos.')
+          PY
+          grep -q "recuperar-armadura-por-esperanca" backend/4C_Ajustes.gs
+          grep -q "Esperança para gastar = PA para recuperar" js/telas/ficha.js
+          grep -q "custoEsperanca:(tipo === 'recuperar-armadura-por-esperanca'" backend/4C_Ajustes.gs
+
+      - name: Testes backend
+        run: node tools/testes-backend.mjs
+
+      - name: Instalar Playwright
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados e CSS
+        run: |
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+          git diff --check
+
+      - name: Proteger contra concorrencia
+        run: |
+          git fetch origin 'refs/heads/ediçãoclaude:refs/remotes/origin/ediçãoclaude'
+          ATUAL="$(git rev-parse 'origin/ediçãoclaude')"
+          echo "ediçãoclaude atual: $ATUAL"
+          echo "base esperada:       $BASE_SHA"
+          test "$ATUAL" = "$BASE_SHA"
+
+      - name: Commitar funcional e limpar temporarios
+        run: |
+          rm tools/lote8-consumiveis-armadura-e4.py
+          rm .github/workflows/lote8-consumiveis-armadura-e4.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git diff --cached --quiet && { echo 'Nenhuma mudança funcional para commit.'; exit 1; } || true
+          git commit -m 'feat: integrar Costurador de Armadura'
+          git push origin HEAD:tmp-lote8-consumiveis-armadura-e4-sol
