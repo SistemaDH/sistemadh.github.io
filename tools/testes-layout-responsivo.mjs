@@ -116,6 +116,45 @@ async function auditar(page, viewport, tela) {
     };
   });
 
+  /*
+   * Contrato L9-C1: em desktop o retrato/traços e o bloco de papel precisam
+   * ocupar duas colunas reais. Em 768px a ficha continua no fluxo vertical.
+   * Isso impede uma regressão silenciosa para "celular esticado" sem amarrar
+   * o teste a tamanhos exatos de cada cartão.
+   */
+  if (tela.startsWith('ficha-jogo')) {
+    const hud = await page.evaluate(() => {
+      const retrato = document.querySelector('.ficha__corpo > .retrato');
+      const papel = document.querySelector('.ficha__corpo > .papel');
+      const corpo = document.querySelector('.ficha__corpo');
+      if (!retrato || !papel || !corpo) return null;
+      const rr = retrato.getBoundingClientRect();
+      const rp = papel.getBoundingClientRect();
+      return {
+        displayCorpo: getComputedStyle(corpo).display,
+        retrato: { left: rr.left, right: rr.right, top: rr.top, bottom: rr.bottom, width: rr.width },
+        papel: { left: rp.left, right: rp.right, top: rp.top, bottom: rp.bottom, width: rp.width }
+      };
+    });
+    dados.hud = hud;
+    if (!hud) {
+      dados.erros.push('HUD da aba Jogo não encontrado');
+    } else if (viewport.width >= 1024) {
+      if (hud.displayCorpo !== 'grid') dados.erros.push('aba Jogo desktop não usa grade');
+      if (Math.abs(hud.retrato.top - hud.papel.top) > 2) {
+        dados.erros.push('retrato e papel não começam na mesma linha no desktop');
+      }
+      if (hud.retrato.right >= hud.papel.left) {
+        dados.erros.push('retrato e papel não formam duas colunas separadas no desktop');
+      }
+      if (hud.retrato.width < 280 || hud.papel.width < 480) {
+        dados.erros.push(`colunas desktop estreitas demais (${Math.round(hud.retrato.width)}px / ${Math.round(hud.papel.width)}px)`);
+      }
+    } else if (hud.papel.top < hud.retrato.bottom - 2) {
+      dados.erros.push('tablet deveria manter retrato e papel empilhados');
+    }
+  }
+
   const arquivo = `${PASTA}/${viewport.nome}-${tela.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}.png`;
   await page.screenshot({ path: arquivo, fullPage: true });
   registrar(viewport, tela, dados);
