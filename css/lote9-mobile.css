@@ -1,5 +1,5 @@
 /* ==========================================================================
-   L9-B7/B8/B9/B10/B11/B12/B13/B15/B16/B17/B18 · REFINOS MOBILE
+   L9-B7/B8/B9/B10/B11/B12/B13/B15/B16/B17/B18/B19 · REFINOS MOBILE
    ========================================================================== */
 
 /* ==========================================================================
@@ -385,4 +385,104 @@
 
 .criacao__ajudaBloco.esta-recolhida .criacao__ajudaFechada {
   display: block;
+}
+
+/* ==========================================================================
+   B19 · EDITOR DE ADVERSÁRIO PRÓPRIO MAIS USÁVEL NO MOBILE
+
+   O modal genérico rola como uma peça única. Neste formulário isso colocava o
+   único "Salvar ficha" depois de dezenas de campos. A variante mobile trava o
+   título e as ações e dá a rolagem só ao formulário. A receita do tipo vira
+   ajuda progressiva e o rodapé acusa alterações ainda não salvas.
+   ========================================================================== */
+
+.editor-adversario__receita {
+  margin: 0;
+  border-left: 3px solid var(--cor-ouro-escuro);
+  border-radius: 0 var(--raio-sm) var(--raio-sm) 0;
+  background: rgba(217, 171, 91, .08);
+}
+
+.editor-adversario__receitaTopo {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: var(--e2) var(--e3);
+  list-style: none;
+  color: var(--cor-titulo);
+  font-size: var(--txt-xs);
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.editor-adversario__receitaTopo::-webkit-details-marker { display: none; }
+
+.editor-adversario__receitaTopo::after {
+  content: '+';
+  margin-left: auto;
+  padding-left: var(--e2);
+  color: var(--cor-texto-suave);
+  font-size: var(--txt-lg);
+  line-height: 1;
+}
+
+.editor-adversario__receita[open] > .editor-adversario__receitaTopo::after {
+  content: '−';
+}
+
+.editor-adversario__receita .editor-adversario__dica {
+  padding: 0 var(--e3) var(--e3);
+  border-left: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.editor-adversario__estadoEdicao {
+  min-width: 0;
+  color: var(--cor-alerta);
+  font-size: var(--txt-xs);
+  line-height: 1.25;
+}
+
+@media (max-width: 639px) {
+  .modal__caixa--editorAdversario {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding-bottom: 0;
+  }
+
+  .modal__caixa--editorAdversario > .cartao__titulo {
+    flex: 0 0 auto;
+    padding-bottom: var(--e3);
+  }
+
+  .modal__caixa--editorAdversario > .editor-adversario {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    margin-inline: calc(-1 * var(--e5));
+    padding: 0 var(--e5) var(--e4);
+  }
+
+  .modal__caixa--editorAdversario > .modal__acoes {
+    flex: 0 0 auto;
+    align-items: center;
+    margin: 0 calc(-1 * var(--e5));
+    padding: var(--e3) var(--e5) calc(var(--e3) + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--cor-borda);
+    background: var(--cor-superficie);
+    box-shadow: 0 -8px 18px rgba(0, 0, 0, .28);
+  }
+
+  .modal__caixa--editorAdversario > .modal__acoes .btn {
+    min-width: 0;
+  }
+
+  .modal__caixa--editorAdversario .editor-adversario__estadoEdicao {
+    flex: 0 1 9rem;
+  }
 }
