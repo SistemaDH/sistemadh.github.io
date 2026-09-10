@@ -87,7 +87,7 @@ jobs:
               '- `newedit` permanece como branch de desenvolvimento.\n'
           )
           if '### Diário — publicação do Lote 8 / Core 1.0 em produção' not in s:
-              s = s.rstrip() + release3 + '\n'
+              s = s.rstrip() + release3
           handoff.write_text(s, encoding='utf-8')
           PY
           grep -F 'engine-api: v7 ACTIVE' README.md docs/arquitetura-supabase.md
