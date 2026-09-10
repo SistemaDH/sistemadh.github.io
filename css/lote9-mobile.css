@@ -220,14 +220,18 @@
    mesma ordem das telas do assistente (Cartas é "Etapa 8", mas é a sexta tela
    depois da abertura). O contador injetado por lote9-mobile.js mostra o passo
    real do assistente e permanece coerente com a barra de progresso.
+
+   A regra-base fica fora do @media porque o conferidor de CSS cruza classes
+   declaradas no topo da folha. O JS só injeta este elemento abaixo de 640px,
+   então tablet/desktop continuam sem contador.
    ========================================================================== */
 
-@media (max-width: 639px) {
-  .criacao__contador {
-    color: var(--cor-texto-suave);
-    white-space: nowrap;
-  }
+.criacao__contador {
+  color: var(--cor-texto-suave);
+  white-space: nowrap;
+}
 
+@media (max-width: 639px) {
   .criacao__contador--sozinho {
     display: block;
     font-size: var(--txt-xs);
