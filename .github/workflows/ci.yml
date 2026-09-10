@@ -33,3 +33,12 @@ jobs:
           grep -F 'Loot/consumíveis com texto mecânico detectado: **81**; **0** candidatos' /tmp/auditoria.md
       - run: npx playwright install --with-deps chromium
       - run: npm run teste:e2e
+      - name: Layout mobile 360 / 390 / 430
+        run: npm run teste:layout-mobile
+      - name: Guardar diagnóstico visual mobile
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: layout-mobile-${{ github.run_id }}
+          path: artifacts/layout-mobile
+          if-no-files-found: warn
