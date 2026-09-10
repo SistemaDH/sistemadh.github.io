@@ -35,14 +35,16 @@ jobs:
           marker='write(path_test, tests)'
           end=s.index(marker,start)+len(marker)
           replacement="""needle = '${passou} passaram, ${falhou} falharam.'
-pos_needle = tests.rfind(needle)
-if pos_needle < 0:
-    raise SystemExit('Resumo dos testes não encontrado')
-pos = tests.rfind('console.log(`', 0, pos_needle)
-if pos < 0:
-    raise SystemExit('Início do resumo dos testes não encontrado')
-tests = tests[:pos] + bloco + tests[pos:]
-write(path_test, tests)"""
+          pos_needle = tests.rfind(needle)
+          if pos_needle < 0:
+              raise SystemExit('Resumo dos testes não encontrado')
+          pos = tests.rfind('console.log(`', 0, pos_needle)
+          if pos < 0:
+              raise SystemExit('Início do resumo dos testes não encontrado')
+          tests = tests[:pos] + bloco + tests[pos:]
+          write(path_test, tests)"""
+          # Retira a indentação de transporte do literal acima para gerar Python válido.
+          replacement='\n'.join(line[10:] if line.startswith('          ') else line for line in replacement.splitlines())
           s=s[:start]+replacement+s[end:]
           p.write_text(s,encoding='utf-8')
           PY
