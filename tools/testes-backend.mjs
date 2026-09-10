@@ -11161,6 +11161,47 @@ teste('Costurador não aceita uso sem quantidade e não desperdiça item com arm
   igual(r.erros.length,1); igual(JSON.stringify(x.f),antes);
 });
 
+
+
+console.log('\nLote 8 — consumíveis de resolução manual E5');
+const IDS_CONSUMIVEIS_E5 = [
+  'consumivel-12','consumivel-17','consumivel-23','consumivel-24','consumivel-31',
+  'consumivel-42','consumivel-47','consumivel-48','consumivel-49','consumivel-57','consumivel-60'
+];
+teste('E5 classifica os onze consumíveis externos sem RNG nem estado falso', () => {
+  IDS_CONSUMIVEIS_E5.forEach((id) => {
+    const item=contexto.acharItem_(id);
+    verdade(!!item,id);
+    igual(item.automacao.classificacao,'consumivel-resolucao-manual-e5',id);
+    igual(item.automacao.rolaNoApp,false,id);
+    igual(item.efeitoConsumivel.tipo,'consumir-e-resolver-na-mesa',id);
+    verdade(!!item.efeitoConsumivel.efeitoManual,id);
+  });
+});
+teste('E5 consome exatamente uma unidade e preserva recursos/defesas/contadores do portador', () => {
+  IDS_CONSUMIVEIS_E5.forEach((id) => {
+    const item=contexto.acharItem_(id);
+    const f=contexto.fichaVazia_();
+    f.identidade={nome:'E5',nivel:10,classe:'Guerreiro',subclasse:'Chamada do Matador'};
+    f.recursos.esperancaMaxima=6; f.recursos.esperanca=3;
+    f.recursos.estresseMaximo=6; f.recursos.estresseMarcado=2;
+    f.recursos.pontosDeVidaMaximos=6; f.recursos.pontosDeVidaMarcados=2;
+    f.defesas.pontuacaoArmadura=6; f.recursos.armaduraMarcada=2;
+    f.contadores={};
+    f.inventario=[{id:item.id,nome:item.nome,qtd:2,emUso:false}];
+    const antes={recursos:JSON.stringify(f.recursos),defesas:JSON.stringify(f.defesas),contadores:JSON.stringify(f.contadores)};
+    const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+    igual(r.erros,[],id+': '+JSON.stringify(r));
+    igual(r.pendenciaRolagem,null,id+': '+JSON.stringify(r));
+    igual(f.inventario.length,1,id); igual(f.inventario[0].qtd,1,id);
+    igual(JSON.stringify(f.recursos),antes.recursos,id);
+    igual(JSON.stringify(f.defesas),antes.defesas,id);
+    igual(JSON.stringify(f.contadores),antes.contadores,id);
+    igual(r.mudancas[0].efeito,'consumir-e-resolver-na-mesa',id);
+    verdade(!!r.mudancas[0].efeitoManual,id);
+  });
+});
+
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));

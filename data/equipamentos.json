@@ -6994,7 +6994,17 @@
    "descricao": "Você pode fazer uma rolagem de Finesse para arremessar esse fragmento em um grupo de adversários dentro do alcance de Longe. Os alvos contra os quais você for bem-sucedido receberão 1d20 de dano mágico.",
    "nomeIngles": "Unstable Arcane Shard",
    "descricaoIngles": "You can make a Finesse Roll to throw this shard at a group of adversaries within Far range. Targets you succeed against take 1d20 magic damage.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-resolucao-manual-e5",
+    "rolaNoApp": false,
+    "motivo": "O uso consome o item, mas movimento, alvo, duração ficcional e/ou dados pertencem à mesa e não a um estado numérico da ficha."
+   },
+   "efeitoConsumivel": {
+    "tipo": "consumir-e-resolver-na-mesa",
+    "efeitoManual": "Você pode fazer uma rolagem de Finesse para arremessar esse fragmento em um grupo de adversários dentro do alcance de Longe. Os alvos contra os quais você for bem-sucedido receberão 1d20 de dano mágico.",
+    "rolaNoApp": false
+   }
   },
   {
    "id": "consumivel-13",
@@ -7058,7 +7068,17 @@
    "descricao": "Coma essa raiz para saltar até o alcance distante uma vez sem precisar rolar.",
    "nomeIngles": "Jumping Root",
    "descricaoIngles": "Eat this root to leap up to Far range once without needing to roll.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-resolucao-manual-e5",
+    "rolaNoApp": false,
+    "motivo": "O uso consome o item, mas movimento, alvo, duração ficcional e/ou dados pertencem à mesa e não a um estado numérico da ficha."
+   },
+   "efeitoConsumivel": {
+    "tipo": "consumir-e-resolver-na-mesa",
+    "efeitoManual": "Coma essa raiz para saltar até o alcance distante uma vez sem precisar rolar.",
+    "rolaNoApp": false
+   }
   },
   {
    "id": "consumivel-18",
@@ -7174,7 +7194,17 @@
    "descricao": "Ao tocar esse pedaço de pergaminho em outro, você pode copiar perfeitamente o conteúdo do segundo pergaminho. Depois de usado, esse pergaminho se transforma em papel comum.",
    "nomeIngles": "Replication Parchment",
    "descricaoIngles": "By touching this piece of parchment to another, you can perfectly copy the second parchment's contents. Once used, this parchment becomes mundane paper.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-resolucao-manual-e5",
+    "rolaNoApp": false,
+    "motivo": "O uso consome o item, mas movimento, alvo, duração ficcional e/ou dados pertencem à mesa e não a um estado numérico da ficha."
+   },
+   "efeitoConsumivel": {
+    "tipo": "consumir-e-resolver-na-mesa",
+    "efeitoManual": "Ao tocar esse pedaço de pergaminho em outro, você pode copiar perfeitamente o conteúdo do segundo pergaminho. Depois de usado, esse pergaminho se transforma em papel comum.",
+    "rolaNoApp": false
+   }
   },
   {
    "id": "consumivel-24",
@@ -7183,7 +7213,17 @@
    "descricao": "Você pode fazer uma rolagem de Finesse para arremessar esse fragmento em um grupo de adversários dentro do alcance de Longe. Os alvos contra os quais você for bem-sucedido receberão 2d20 de dano mágico.",
    "nomeIngles": "Improved Arcane Shard",
    "descricaoIngles": "You can make a Finesse Roll to throw this shard at a group of adversaries within Far range. Targets you succeed against take 2d20 magic damage.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-resolucao-manual-e5",
+    "rolaNoApp": false,
+    "motivo": "O uso consome o item, mas movimento, alvo, duração ficcional e/ou dados pertencem à mesa e não a um estado numérico da ficha."
+   },
+   "efeitoConsumivel": {
+    "tipo": "consumir-e-resolver-na-mesa",
+    "efeitoManual": "Você pode fazer uma rolagem de Finesse para arremessar esse fragmento em um grupo de adversários dentro do alcance de Longe. Os alvos contra os quais você for bem-sucedido receberão 2d20 de dano mágico.",
+    "rolaNoApp": false
+   }
   },
   {
    "id": "consumivel-25",
@@ -7324,7 +7364,17 @@
    "descricao": "Você pode beber esse sangue para desaparecer de onde você está e imediatamente reaparece em um ponto que você pode ver dentro do alcance de Very Far.",
    "nomeIngles": "Blood of the Yorgi",
    "descricaoIngles": "You can drink this blood to disappear from where you are and immediately reappear at a point you can see within very Far range.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-resolucao-manual-e5",
+    "rolaNoApp": false,
+    "motivo": "O uso consome o item, mas movimento, alvo, duração ficcional e/ou dados pertencem à mesa e não a um estado numérico da ficha."
+   },
+   "efeitoConsumivel": {
+    "tipo": "consumir-e-resolver-na-mesa",
+    "efeitoManual": "Você pode beber esse sangue para desaparecer de onde você está e imediatamente reaparece em um ponto que você pode ver dentro do alcance de Very Far.",
+    "rolaNoApp": false
+   }
   },
   {
    "id": "consumivel-32",
@@ -7432,7 +7482,17 @@
    "descricao": "Uma criatura que consome esse veneno sofre 8d10 de dano mágico direto.",
    "nomeIngles": "Dripfang Poison",
    "descricaoIngles": "A creature who consumes this poison takes 8d10 direct magic damage.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-resolucao-manual-e5",
+    "rolaNoApp": false,
+    "motivo": "O uso consome o item, mas movimento, alvo, duração ficcional e/ou dados pertencem à mesa e não a um estado numérico da ficha."
+   },
+   "efeitoConsumivel": {
+    "tipo": "consumir-e-resolver-na-mesa",
+    "efeitoManual": "Uma criatura que consome esse veneno sofre 8d10 de dano mágico direto.",
+    "rolaNoApp": false
+   }
   },
   {
    "id": "consumivel-43",
@@ -7517,7 +7577,17 @@
    "descricao": "Você pode abrir esse frasco para liberar um eco ensurdecedor de vozes por um número de minutos igual ao seu Instinto. As criaturas dentro do alcance distante que não estiverem preparadas para o som recebem 6d8 de dano mágico.",
    "nomeIngles": "Jar of Lost Voices",
    "descricaoIngles": "You can open this jar to release a deafening echo of voices for a number of minutes equal to your Instinct. Creatures within Far range unprepared for the sound take 6d8 magic damage.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-resolucao-manual-e5",
+    "rolaNoApp": false,
+    "motivo": "O uso consome o item, mas movimento, alvo, duração ficcional e/ou dados pertencem à mesa e não a um estado numérico da ficha."
+   },
+   "efeitoConsumivel": {
+    "tipo": "consumir-e-resolver-na-mesa",
+    "efeitoManual": "Você pode abrir esse frasco para liberar um eco ensurdecedor de vozes por um número de minutos igual ao seu Instinto. As criaturas dentro do alcance distante que não estiverem preparadas para o som recebem 6d8 de dano mágico.",
+    "rolaNoApp": false
+   }
   },
   {
    "id": "consumivel-48",
@@ -7529,7 +7599,17 @@
    "origemNome": "corrigido-auditoria",
    "aliases": [
     "Flor do Dragão Chá"
-   ]
+   ],
+   "automacao": {
+    "classificacao": "consumivel-resolucao-manual-e5",
+    "rolaNoApp": false,
+    "motivo": "O uso consome o item, mas movimento, alvo, duração ficcional e/ou dados pertencem à mesa e não a um estado numérico da ficha."
+   },
+   "efeitoConsumivel": {
+    "tipo": "consumir-e-resolver-na-mesa",
+    "efeitoManual": "Você pode beber esse chá para liberar um ataque de fôlego ardente. Crie um instinto Jogue contra todos os adversários na frente você a curta distância. Os alvos contra os quais você for bem-sucedido recebem d20 de dano físico usando sua proficiência.",
+    "rolaNoApp": false
+   }
   },
   {
    "id": "consumivel-49",
@@ -7538,7 +7618,17 @@
    "descricao": "Vinhas grossas crescem a partir de sua localização até um ponto de sua escolha dentro do alcance de Far, permitindo que você suba ou atravesse por elas. As vinhas se dissipam em seu próximo descanso curto.",
    "nomeIngles": "Bridge Seed",
    "descricaoIngles": "Thick vines grow from your location to a point of your choice within Far range, allowing you to climb up or across them. The vines dissipate on your next short rest.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-resolucao-manual-e5",
+    "rolaNoApp": false,
+    "motivo": "O uso consome o item, mas movimento, alvo, duração ficcional e/ou dados pertencem à mesa e não a um estado numérico da ficha."
+   },
+   "efeitoConsumivel": {
+    "tipo": "consumir-e-resolver-na-mesa",
+    "efeitoManual": "Vinhas grossas crescem a partir de sua localização até um ponto de sua escolha dentro do alcance de Far, permitindo que você suba ou atravesse por elas. As vinhas se dissipam em seu próximo descanso curto.",
+    "rolaNoApp": false
+   }
   },
   {
    "id": "consumivel-50",
@@ -7624,7 +7714,17 @@
    "origemNome": "corrigido-auditoria",
    "aliases": [
     "Ofuscante Orbe"
-   ]
+   ],
+   "automacao": {
+    "classificacao": "consumivel-resolucao-manual-e5",
+    "rolaNoApp": false,
+    "motivo": "O uso consome o item, mas movimento, alvo, duração ficcional e/ou dados pertencem à mesa e não a um estado numérico da ficha."
+   },
+   "efeitoConsumivel": {
+    "tipo": "consumir-e-resolver-na-mesa",
+    "efeitoManual": "Você pode ativar esse orbe para criar um flash de luz brilhante. Todos os alvos dentro da área de alcance tornam-se vulneráveis até marcarem HP.",
+    "rolaNoApp": false
+   }
   },
   {
    "id": "consumivel-58",
@@ -7658,7 +7758,17 @@
     "Stardrop"
    ],
    "nomeAntigo": "Gota de Estrela",
-   "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Tesouro"
+   "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Tesouro",
+   "automacao": {
+    "classificacao": "consumivel-resolucao-manual-e5",
+    "rolaNoApp": false,
+    "motivo": "O uso consome o item, mas movimento, alvo, duração ficcional e/ou dados pertencem à mesa e não a um estado numérico da ficha."
+   },
+   "efeitoConsumivel": {
+    "tipo": "consumir-e-resolver-na-mesa",
+    "efeitoManual": "Você pode usar esta gota estelar para invocar uma tempestade de cometas, que causam 8d20 de dano físico a todos os alvos em alcance Muito Distante.",
+    "rolaNoApp": false
+   }
   }
  ],
  "campanhas": [

@@ -801,3 +801,12 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - Nenhum dado é rolado pelo app (`automacao.rolaNoApp=false`).
 
 **Próximo bloco natural:** consumíveis de uso único sem estado próprio (teleporte/movimento/respiração/cópia e outros efeitos posicionais), classificando explicitamente o que deve permanecer manual na mesa.
+
+### Lote 8 — consumíveis de resolução manual E5
+
+- Onze consumíveis cujo efeito acontece fora da ficha agora têm uso explícito na Mochila: Fragmentos Arcanos Instável/Aprimorado, Raiz de Salto, Pergaminho de Replicação, Sangue do Yorgi, Veneno de Dripfang, Frasco de Vozes Perdidas, Chá de Flor-de-Dragão, Semente de Ponte, Orbe Ofuscante e Gota Estelar.
+- O app **consome exatamente uma unidade** e devolve a regra como lembrete de resolução, mas não cria alvo, posição, condição global, duração artificial nem dano na ficha do portador.
+- Jogadas e dados desses efeitos continuam físicos/manuais. Todos ficam com `automacao.rolaNoApp=false` e classificação `consumivel-resolucao-manual-e5`.
+- Esse tipo genérico (`consumir-e-resolver-na-mesa`) deve ser reutilizado apenas quando o único estado que pertence ao app é a própria unidade gasta; efeitos que alteram recursos/traços/estado do personagem continuam exigindo estrutura específica.
+
+**Próximo bloco natural:** consumíveis de bônus para a próxima jogada/dano e efeitos com estado próprio (venenos de arma, Saliva de Redthorn, Poeira Mítica, Poção Secreta de Homet e similares).

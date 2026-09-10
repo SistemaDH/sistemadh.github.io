@@ -2216,6 +2216,12 @@ function usarConsumivelDaMochila_(ficha, lista, indice, a) {
     if (recupera && recupera.erro) return falhar(recupera.erro);
     quantidade=q;
     detalhes.push(paga,recupera);
+  } else if (tipo === 'consumir-e-resolver-na-mesa') {
+    quantidade=1;
+    detalhes.push({
+      tipo:'efeito-manual',
+      efeitoManual:String(efeito.efeitoManual || item.descricao || '')
+    });
   } else if (tipo === 'ativar-estado') {
     const chave=String(efeito.contador || '');
     const def=(typeof CONTADORES === 'object' && CONTADORES[chave]) ? CONTADORES[chave] : null;
@@ -2252,8 +2258,9 @@ function usarConsumivelDaMochila_(ficha, lista, indice, a) {
     qtdAntes:gasto.antes, qtdDepois:gasto.depois, consumiu:1,
     efeito:tipo, quantidade:quantidade, resultadoManual:resultadoManual,
     custoEsperanca:(tipo === 'recuperar-armadura-por-esperanca' ? quantidade : undefined),
+    efeitoManual:efeito.efeitoManual || null,
     detalhes:detalhes,
-    aviso:item.nome + ': efeito aplicado e 1 unidade consumida.'
+    aviso:item.nome + ': 1 unidade consumida.' + (efeito.efeitoManual ? ' Resolva na mesa: ' + efeito.efeitoManual : '')
   };
 }
 
