@@ -1,0 +1,113 @@
+name: Lote 8 - Reliquias E13
+
+on:
+  push:
+    branches:
+      - tmp-lote8-reliquias-e13-sol
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lote8-reliquias-e13-sol
+  cancel-in-progress: false
+
+env:
+  BASE_SHA: 5f16f0350671d5f545735075d5f00f713a5f4318
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materializar E13 e regenerar
+        run: |
+          set -euo pipefail
+          python3 tools/lote8-reliquias-e13.py
+          node tools/gerar-44-equipamento.mjs
+          node tools/gerar-48-criacao.mjs
+          python3 tools/auditar-pendencias-lote8.py > docs/AUDITORIA-FINAL-LOTE8.md
+          git diff --check
+          node --check js/telas/ficha.js
+
+      - name: Validar contratos e auditoria E13
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          eq=json.load(open('data/equipamentos.json',encoding='utf-8'))
+          xs={x['id']:x for x in eq.get('loot',[])}
+          mapa={
+            'loot-41':'agilidade','loot-42':'forca','loot-43':'finesse',
+            'loot-44':'instinto','loot-45':'presenca','loot-46':'conhecimento'
+          }
+          for ident,traco in mapa.items():
+              x=xs[ident]
+              assert x['automacao']['classificacao']=='loot-passivo-em-uso-e13',ident
+              assert x['automacao']['rolaNoApp'] is False,ident
+              p=x['efeitoSaquePassivo']
+              assert p['grupoExclusivo']=='reliquia',ident
+              assert p['efeitoDerivado']['tracos'][traco]==1,ident
+          b44=Path('backend/44_Equipamento.gs').read_text(encoding='utf-8')
+          assert '"efeitoSaquePassivo"' in b44
+          b48=Path('backend/48_Criacao.gs').read_text(encoding='utf-8')
+          assert 'function saquesAtivosDaFicha_' in b48
+          assert 'efeitoSaquePassivo' in b48
+          b4c=Path('backend/4C_Ajustes.gs').read_text(encoding='utf-8')
+          assert 'function grupoExclusivoDeSaque_' in b4c
+          assert 'Só uma relíquia pode ficar em uso por vez' in b4c
+          co=json.load(open('data/contadores.json',encoding='utf-8'))
+          assert len(co.get('contadores',[]))==179
+          audit=Path('docs/AUDITORIA-FINAL-LOTE8.md').read_text(encoding='utf-8')
+          for ident in ['loot-45','loot-46']:
+              assert f"| loot | {xs[ident]['nome']} | candidato mecânico |" not in audit
+          m=re.search(r'Loot/consumíveis com texto mecânico detectado: \*\*(\d+)\*\*; \*\*(\d+)\*\* candidatos',audit)
+          assert m and int(m.group(2))==26,(m.group(0) if m else 'sem resumo')
+          print('E13 contratos OK; candidatos restantes:',m.group(2))
+          PY
+
+      - name: Testes backend completos
+        run: node tools/testes-backend.mjs
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Testes E2E completos
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados e CSS
+        run: |
+          set -euo pipefail
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+          git diff --check
+
+      - name: Trava de concorrência
+        run: |
+          set -euo pipefail
+          git fetch origin 'refs/heads/ediçãoclaude:refs/remotes/origin/ediçãoclaude'
+          ATUAL="$(git rev-parse 'origin/ediçãoclaude')"
+          echo "ediçãoclaude atual: $ATUAL"
+          echo "base esperada:      $BASE_SHA"
+          test "$ATUAL" = "$BASE_SHA"
+
+      - name: Criar commit funcional e limpar temporários
+        run: |
+          set -euo pipefail
+          rm tools/lote8-reliquias-e13.py
+          rm .github/workflows/lote8-reliquias-e13.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git diff --cached --quiet && { echo 'Nenhuma alteração funcional para commitar.'; exit 1; }
+          git commit -m 'feat: integrar reliquias de traco E13'
+          git push origin HEAD
