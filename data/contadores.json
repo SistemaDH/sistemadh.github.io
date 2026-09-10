@@ -3274,6 +3274,91 @@
    "recarregaEm": [],
    "persisteSemRef": true,
    "observacao": "Voa por um número de minutos igual ao nível que o personagem tinha ao usar o Broto de Asas. Zere manualmente quando o tempo acabar."
+  },
+  {
+   "chave": "uso:loot:loot-09",
+   "origem": "loot",
+   "refId": "loot-09",
+   "nome": "Jarra de fogo",
+   "rotulo": "conteúdo gasto",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Ausência/0 = cheia; 1 = conteúdo usado. Recarrega no descanso longo."
+  },
+  {
+   "chave": "uso:loot:loot-21",
+   "origem": "loot",
+   "refId": "loot-21",
+   "nome": "Espírito Corretor",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uma vez por descanso. Ausência/0 = disponível; 1 = já usado."
+  },
+  {
+   "chave": "estado:loot:loot-28",
+   "origem": "loot",
+   "refId": "loot-28",
+   "nome": "Anel do Silêncio",
+   "rotulo": "passos silenciosos",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Ativo até o próximo descanso."
+  },
+  {
+   "chave": "uso:loot:loot-38",
+   "origem": "loot",
+   "refId": "loot-38",
+   "nome": "Amuleto Elusivo",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo. Ausência/0 = disponível; 1 = já usado."
+  },
+  {
+   "chave": "estado:loot:loot-38",
+   "origem": "loot",
+   "refId": "loot-38",
+   "nome": "Amuleto Elusivo",
+   "rotulo": "Oculto até se mover",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Movimento pertence à cena; o jogador encerra este estado quando se mover."
   }
  ]
 }

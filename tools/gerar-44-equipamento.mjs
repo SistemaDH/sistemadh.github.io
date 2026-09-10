@@ -123,7 +123,8 @@ for (const i of [...d.loot, ...d.consumiveis]) {
     id: i.id, nome: i.nome, tipo: i.id.startsWith('loot') ? 'saque' : 'consumivel', nomes,
     automacao: i.automacao || null,
     efeitoConsumivel: i.efeitoConsumivel || null,
-    reacaoConsumivel: i.reacaoConsumivel || null
+    reacaoConsumivel: i.reacaoConsumivel || null,
+    efeitoSaque: i.efeitoSaque || null
   })},`);
 }
 L.push('];\n');

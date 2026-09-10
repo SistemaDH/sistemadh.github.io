@@ -6270,7 +6270,18 @@
    "descricao": "Você pode derramar o estranho conteúdo líquido desse frasco para produzir fogo instantaneamente. O conteúdo se regenera quando você descansa por muito tempo.",
    "nomeIngles": "Fire Jar",
    "descricaoIngles": "You can pour out the strange liquid contents of this jar to instantly produce fire. The contents regenerate when you take a long rest.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-uso-por-descanso-e12",
+    "rolaNoApp": false,
+    "motivo": "A jarra é reutilizável; o app registra que o conteúdo foi gasto e o libera novamente no descanso longo."
+   },
+   "efeitoSaque": {
+    "tipo": "uso-assistido",
+    "contadorUso": "uso:loot:loot-09",
+    "rolaNoApp": false,
+    "efeitoManual": "Derrame o conteúdo para produzir fogo instantaneamente. A jarra volta a ficar cheia no próximo descanso longo."
+   }
   },
   {
    "id": "loot-10",
@@ -6288,7 +6299,18 @@
    "descricao": "Ative essa pedra do tamanho de um seixo para memorizar a aparência de alguém que você pode ver. Gaste uma Hope para recriar magicamente essa aparência em você como uma ilusão.",
    "nomeIngles": "Glamour Stone",
    "descricaoIngles": "Activate this pebble-sized stone to memorize the appearance of someone you can see. Spend a Hope to magically recreate this guise on yourself as an illusion.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-custo-assistido-e12",
+    "rolaNoApp": false,
+    "motivo": "O alvo cuja aparência foi memorizada é ficcional; o app cobra apenas 1 Esperança ao recriar a aparência."
+   },
+   "efeitoSaque": {
+    "tipo": "uso-assistido",
+    "custoEsperanca": 1,
+    "rolaNoApp": false,
+    "efeitoManual": "Recrie como ilusão a aparência previamente memorizada pela Pedra do Glamour. A escolha da aparência permanece na mesa."
+   }
   },
   {
    "id": "loot-12",
@@ -6393,7 +6415,19 @@
    "origemNome": "corrigido-auditoria",
    "aliases": [
     "Corrector Sprite"
-   ]
+   ],
+   "automacao": {
+    "classificacao": "loot-uso-por-descanso-e12",
+    "rolaNoApp": false,
+    "motivo": "Uma vez por descanso, o app registra o uso e informa a vantagem; a jogada de ataque continua física."
+   },
+   "efeitoSaque": {
+    "tipo": "uso-assistido",
+    "contadorUso": "uso:loot:loot-21",
+    "bonusRolagem": "vantagem",
+    "rolaNoApp": false,
+    "efeitoManual": "Faça esta jogada de ataque com vantagem. O app não rola os dados."
+   }
   },
   {
    "id": "loot-22",
@@ -6453,7 +6487,18 @@
    "descricao": "Enquanto estiver caindo, você pode marcar um Stress para acionar esse pequeno paraquedas e deslizar com segurança até o chão.",
    "nomeIngles": "Glider",
    "descricaoIngles": "While falling, you can mark a Stress to deploy this small parachute and glide safely to the ground.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-custo-assistido-e12",
+    "rolaNoApp": false,
+    "motivo": "Usar o planador durante uma queda custa exatamente 1 Estresse; queda, posição e deslocamento permanecem na mesa."
+   },
+   "efeitoSaque": {
+    "tipo": "uso-assistido",
+    "custoEstresse": 1,
+    "rolaNoApp": false,
+    "efeitoManual": "Acione o planador durante uma queda e deslize em segurança até o chão."
+   }
   },
   {
    "id": "loot-28",
@@ -6462,7 +6507,20 @@
    "descricao": "Gaste uma Esperança para ativar esse anel. Seus passos são silenciosos até o próximo descanso.",
    "nomeIngles": "Ring of Silence",
    "descricaoIngles": "Spend a Hope to activate this ring. Your footsteps are silent until your next rest.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-estado-e12",
+    "rolaNoApp": false,
+    "motivo": "A ativação custa 1 Esperança e cria um estado até o próximo descanso; nenhum dado é rolado."
+   },
+   "efeitoSaque": {
+    "tipo": "uso-assistido",
+    "custoEsperanca": 1,
+    "contadorEstado": "estado:loot:loot-28",
+    "recusaSeEstadoAtivo": true,
+    "rolaNoApp": false,
+    "efeitoManual": "Seus passos ficam silenciosos até o próximo descanso."
+   }
   },
   {
    "id": "loot-29",
@@ -6561,7 +6619,19 @@
    "descricao": "Uma vez por descanso longo, você pode ativar esse amuleto para ficar oculto até se mover. Enquanto estiver oculto dessa forma, você permanecerá invisível mesmo que um adversário se mova para onde normalmente o veria.",
    "nomeIngles": "Elusive Amulet",
    "descricaoIngles": "Once per long rest, you can activate this amulet to become Hidden until you move. While Hidden in this way, you remain unseen even if an adversary moves to where they would normally see you.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-uso-por-descanso-e12",
+    "rolaNoApp": false,
+    "motivo": "O app registra o uso 1/descanso longo e o estado Oculto; movimento é um evento de cena e o encerramento permanece manual."
+   },
+   "efeitoSaque": {
+    "tipo": "uso-assistido",
+    "contadorUso": "uso:loot:loot-38",
+    "contadorEstado": "estado:loot:loot-38",
+    "rolaNoApp": false,
+    "efeitoManual": "Você fica Oculto até se mover e permanece invisível mesmo se um adversário alcançar um ponto de onde normalmente o veria. Ao se mover, encerre o estado manualmente."
+   }
   },
   {
    "id": "loot-39",

@@ -9,8 +9,8 @@
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **0** candidatas sem sinal de automação específica; **92** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **0** ocorrências candidatas ativas/condicionais.
-- Loot/consumíveis com texto mecânico detectado: **81**; **33** candidatos ainda sem estrutura/classificação.
-- Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **50** linhas, incluindo histórico já resolvido.
+- Loot/consumíveis com texto mecânico detectado: **81**; **28** candidatos ainda sem estrutura/classificação.
+- Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **52** linhas, incluindo histórico já resolvido.
 
 ### Distribuição — classes/subclasses
 
@@ -35,8 +35,8 @@
 
 ### Distribuição — loot/consumíveis
 
-- candidato mecânico: **33**
-- estruturado/classificado: **47**
+- candidato mecânico: **28**
+- estruturado/classificado: **52**
 - referência específica no motor: **1**
 
 ## Candidatos — classes e subclasses
@@ -65,20 +65,20 @@
 |---|---|---|---|
 | loot | Saco de Dormir Premium | candidato mecânico | Durante o tempo de inatividade, você limpa automaticamente um estresse. |
 | loot | Aljava de carga | candidato mecânico | Quando for bem-sucedido em um ataque com uma flecha armazenada nessa aljava, ganhe um bônus na rolagem de dano igual ao seu nível atual. |
-| loot | Pedra Glamour | candidato mecânico | Ative essa pedra do tamanho de um seixo para memorizar a aparência de alguém que você pode ver. Gaste uma Hope para recriar magicamente essa aparência em você como uma i… |
+| loot | Pedra Glamour | estruturado/classificado | Ative essa pedra do tamanho de um seixo para memorizar a aparência de alguém que você pode ver. Gaste uma Hope para recriar magicamente essa aparência em você como uma i… |
 | loot | Flechas Perfurantes | candidato mecânico | Três vezes por descanso, quando for bem-sucedido em um ataque com uma dessas flechas, você pode adicionar sua Proficiência a Você a rolagem de dano. |
 | loot | Pedra da Resiliência | candidato mecânico | Incruste esta pedra em uma armadura que ainda não tenha uma característica; ela recebe a característica abaixo. Resiliente: antes de marcar seu último Ponto de Armadura,… |
 | loot | Chave-Mestra | candidato mecânico | Ao usar essa chave para abrir uma porta trancada, você ganha vantagem na rolagem de finesse. |
 | loot | Prisma Arcano | candidato mecânico | Posicione esse prisma em um local de sua escolha e ative-o. Todos os aliados dentro do alcance próximo dele ganham um bônus de +1 em seus lançamentos de feitiço. Enquant… |
 | loot | Receita de Poção de Estamina Menor | candidato mecânico | Como um movimento de inatividade, você pode usar o osso de uma criatura para criar uma Poção de resistência menor. |
 | loot | Receita de Poção de Saúde Menor | candidato mecânico | Como movimento de inatividade, você pode usar um frasco de sangue para criar uma Poção de Saúde Menor. |
-| loot | Espírito Corretor | candidato mecânico | Esse pequeno duende fica na curva de seu canal auditivo e sussurra conselhos úteis durante o combate. Uma vez por descanso curto, você pode ganhar vantagem em uma rolage… |
+| loot | Espírito Corretor | estruturado/classificado | Esse pequeno duende fica na curva de seu canal auditivo e sussurra conselhos úteis durante o combate. Uma vez por descanso curto, você pode ganhar vantagem em uma rolage… |
 | loot | Guardião do Saber | candidato mecânico | Você pode armazenar o nome e os detalhes de até três criaturas hostis dentro desse livro. Você ganha um bônus de +1 nas rolagens de ação contra essas criaturas. |
 | loot | Frasco de Darksmoke Receita | candidato mecânico | Como movimento de inatividade, você pode marcar um Stress para criar um Vial of Darksmoke. |
 | loot | Pedra de sangue | candidato mecânico | Você pode anexar essa pedra a uma arma que ainda não tenha uma característica. A arma ganha a seguinte característica. Brutal: Quando rolar o valor máximo em um dado de … |
 | loot | Pedra Maior | candidato mecânico | Você pode anexar essa pedra a uma arma que ainda não tenha uma característica. A arma ganha a seguinte característica. Poderoso: Em um ataque bem-sucedido, role um dado … |
-| loot | Planador | candidato mecânico | Enquanto estiver caindo, você pode marcar um Stress para acionar esse pequeno paraquedas e deslizar com segurança até o chão. |
-| loot | Anel do Silêncio | candidato mecânico | Gaste uma Esperança para ativar esse anel. Seus passos são silenciosos até o próximo descanso. |
+| loot | Planador | estruturado/classificado | Enquanto estiver caindo, você pode marcar um Stress para acionar esse pequeno paraquedas e deslizar com segurança até o chão. |
+| loot | Anel do Silêncio | estruturado/classificado | Gaste uma Esperança para ativar esse anel. Seus passos são silenciosos até o próximo descanso. |
 | loot | Pingente Calmante | candidato mecânico | Quando for marcar seu último estresse, role um d6. Se o resultado for 5 ou mais, não o marque. |
 | loot | Saco de Ficklesand | candidato mecânico | Você pode convencer esse pequeno saco de areia a ficar muito mais pesado ou mais leve com um Rolamento de Presença bem-sucedido (10). Além disso, com uma rolagem bem-suc… |
 | loot | Anel de Resistência | candidato mecânico | Uma vez por descanso longo, você pode ativar esse anel após um ataque bem-sucedido contra você para reduzir o dano pela metade. |
@@ -86,7 +86,7 @@
 | loot | Amuleto do Alcance | candidato mecânico | Você pode anexar este amuleto a uma arma de alcance Corpo a Corpo. 3 vezes por descanso, você pode ativar este amuleto para atacar um alvo Próximo. |
 | loot | Semente de Portal | candidato mecânico | Plante esta semente no chão para que um portal surja no local em 24h. Você pode usá-lo para viajar até qualquer outro lugar onde tenha plantado uma Semente de Portal. Um… |
 | loot | Corrente do Paragon | candidato mecânico | Como movimento de tempo de inatividade, você pode meditar em um ideal ou princípio que lhe seja caro e concentrar sua vontade nessa corrente. Uma vez por descanso longo,… |
-| loot | Amuleto Elusivo | candidato mecânico | Uma vez por descanso longo, você pode ativar esse amuleto para ficar oculto até se mover. Enquanto estiver oculto dessa forma, você permanecerá invisível mesmo que um ad… |
+| loot | Amuleto Elusivo | estruturado/classificado | Uma vez por descanso longo, você pode ativar esse amuleto para ficar oculto até se mover. Enquanto estiver oculto dessa forma, você permanecerá invisível mesmo que um ad… |
 | loot | Medalhão Hopekeeper | candidato mecânico | Durante um descanso longo, se você tiver 6 de Esperança, poderá gastar uma Esperança para imbuir esse medalhão com sua determinação abundante. Quando tiver 0 de Esperanç… |
 | loot | Relíquia de Encantamento | candidato mecânico | Você ganha um bônus de +1 na sua Presença. Você só pode carregar uma relíquia. |
 | loot | Relíquia da Iluminação | candidato mecânico | Você ganha um bônus de +1 no seu Conhecimento. Você só pode carregar uma relíquia. |
@@ -199,6 +199,8 @@ Estas linhas misturam histórico resolvido e trabalho ainda aberto; servem para 
 - L854: **Próximo bloco natural:** reações de consumíveis, priorizando **Frasco de Darksmoke (`consumivel-16`)** e **Espelho de Marigold (`consumivel-59`)**; depois revisar os candidatos mecânicos restantes da auditoria.
 - L865: **Próximo bloco natural:** atualizar a auditoria do Lote 8 e escolher o próximo grupo mecânico ainda pendente a partir do relatório, mantendo consumíveis puramente narrativos/manualizados fora de automação indevida.
 - L878: **Próximo bloco natural:** com consumíveis zerados na auditoria, revisar os candidatos de **loot permanente**, agrupando-os por família mecânica e automatizando somente consequências determinísticas da própria ficha.
+- L891: - `loot-28` Anel do Silêncio: cobra 1 Esperança e mantém o estado de passos silenciosos até o próximo descanso;
+- L896: O E12 adiciona 5 contadores canônicos de loot. Próximo bloco deve continuar pelos loots restantes da auditoria, priorizando passivos simples/relics e só depois anexos de arma/reação de dano.
 
 ## Regra para a próxima etapa
 

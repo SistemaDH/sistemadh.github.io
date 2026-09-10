@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 174 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento e 24 de consumível', () => {
+teste('o catálogo tem 179 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento, 24 de consumível e 5 de loot', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,7 +1561,7 @@ teste('o catálogo tem 174 contadores: 113 de carta, 25 de classe/subclasse, 4 d
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 174);
+  igual(Object.keys(CONTADORES).length, 179);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 113);
@@ -1571,6 +1571,7 @@ teste('o catálogo tem 174 contadores: 113 de carta, 25 de classe/subclasse, 4 d
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
   igual(porOrigem['equipamento'], 5);
+  igual(porOrigem['loot'], 5);
 });
 
 teste('"uma vez por" conta o uso GASTO, e o gatilho certo o apaga', () => {
@@ -11750,6 +11751,83 @@ teste('E11 Pedra do Conhecimento após morte consome a pedra sem editar ficha de
   igual(r.erros,[],JSON.stringify(r)); igual(f.inventario.length,0);
   igual(JSON.stringify(f.cartas),cartasAntes);
   verdade(/aliado/i.test(r.mudancas[0].efeitoManual || ''));
+});
+
+
+console.log('\nLote 8 — loot ativo E12');
+function fichaSaqueE12_(id) {
+  const item=contexto.acharItem_(id);
+  const f=contexto.fichaVazia_();
+  f.identidade={nome:'E12',nivel:5,classe:'Bardo',subclasse:'Artífice das Palavras'};
+  f.recursos=f.recursos || {};
+  f.recursos.pontosDeVidaMaximos=6; f.recursos.pontosDeVidaMarcados=0;
+  f.recursos.estresseMaximo=6; f.recursos.estresseMarcado=1;
+  f.recursos.esperancaMaxima=6; f.recursos.esperanca=4;
+  f.inventario=[{id:item.id,nome:item.nome,qtd:1,emUso:false}];
+  return {f,item};
+}
+teste('E12 seis loots ativos ficam estruturados sem RNG', () => {
+  for (const id of ['loot-09','loot-11','loot-21','loot-27','loot-28','loot-38']) {
+    const item=contexto.acharItem_(id);
+    verdade(item.automacao,id+' sem classificação');
+    verdade(item.efeitoSaque,id+' sem efeitoSaque');
+    igual(item.automacao.rolaNoApp,false,id+' não pode rolar no app');
+  }
+});
+teste('E12 Jarra de fogo não é consumida e só volta no descanso longo', () => {
+  const {f}=fichaSaqueE12_('loot-09');
+  let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r)); igual(f.inventario[0].qtd,1);
+  igual(f.contadores['uso:loot:loot-09'].valor,1);
+  const antes=JSON.stringify(f);
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f),antes,'segundo uso não pode alterar a ficha');
+  contexto.aplicarGatilhoContadores_(f,'descanso-longo');
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r));
+});
+teste('E12 Pedra do Glamour cobra 1 Esperança e permanece na mochila', () => {
+  const {f}=fichaSaqueE12_('loot-11');
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r)); igual(f.recursos.esperanca,3); igual(f.inventario[0].qtd,1);
+  igual(r.mudancas[0].custoEsperanca,1);
+});
+teste('E12 Espírito Corretor registra vantagem uma vez por descanso', () => {
+  const {f}=fichaSaqueE12_('loot-21');
+  let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r)); igual(r.mudancas[0].bonusRolagem,'vantagem');
+  igual(f.contadores['uso:loot:loot-21'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]); igual(r.erros.length,1);
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]); igual(r.erros,[],JSON.stringify(r));
+});
+teste('E12 Planador marca exatamente 1 Estresse sem consumir o item', () => {
+  const {f}=fichaSaqueE12_('loot-27');
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r)); igual(f.recursos.estresseMarcado,2); igual(f.inventario[0].qtd,1);
+  igual(r.mudancas[0].custoEstresse,1);
+});
+teste('E12 Planador sem espaço de Estresse falha atomicamente', () => {
+  const {f}=fichaSaqueE12_('loot-27'); f.recursos.estresseMarcado=f.recursos.estresseMaximo;
+  const antes=JSON.stringify(f); const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f),antes);
+});
+teste('E12 Anel do Silêncio cobra Esperança, ativa estado e reseta no descanso', () => {
+  const {f}=fichaSaqueE12_('loot-28');
+  let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r)); igual(f.recursos.esperanca,3); igual(f.contadores['estado:loot:loot-28'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]); igual(r.erros.length,1);
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  verdade(!f.contadores['estado:loot:loot-28'],'estado deveria terminar no descanso');
+});
+teste('E12 Amuleto Elusivo registra uso e estado sem fingir observar movimento', () => {
+  const {f}=fichaSaqueE12_('loot-38');
+  let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r)); igual(f.contadores['uso:loot:loot-38'].valor,1);
+  igual(f.contadores['estado:loot:loot-38'].valor,1); verdade(/manualmente/i.test(r.mudancas[0].efeitoManual || ''));
+  contexto.aplicarGatilhoContadores_(f,'descanso-longo');
+  verdade(!f.contadores['uso:loot:loot-38'],'uso deveria voltar no descanso longo');
+  igual(f.contadores['estado:loot:loot-38'].valor,1,'estado só termina quando a mesa registra o movimento');
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

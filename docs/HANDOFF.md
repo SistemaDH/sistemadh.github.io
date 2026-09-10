@@ -876,3 +876,21 @@ Fonte: livro básico PT-BR, Capítulo 2, seção **Consumíveis**. A regra geral
 - Nenhum desses efeitos gera RNG no aplicativo.
 
 **Próximo bloco natural:** com consumíveis zerados na auditoria, revisar os candidatos de **loot permanente**, agrupando-os por família mecânica e automatizando somente consequências determinísticas da própria ficha.
+
+
+### Diário — Lote 8 E12: loot ativo reutilizável
+
+Fonte: `DH-DigitalRegras.pdf`, Capítulo 2: Tesouro, pp.129–130. O app continua sob a regra **“só ficha, sem dados”**.
+
+Primeiro bloco de loot permanente estruturado:
+
+- `loot-09` Jarra de fogo: registra o conteúdo gasto e libera novamente no descanso longo;
+- `loot-11` Pedra do Glamour: cobra 1 Esperança para recriar a aparência memorizada; qual aparência foi memorizada continua ficcional;
+- `loot-21` Espírito Corretor: registra 1 uso por descanso e devolve a instrução de vantagem na jogada de ataque;
+- `loot-27` Planador: marca exatamente 1 Estresse e deixa queda/deslocamento na mesa;
+- `loot-28` Anel do Silêncio: cobra 1 Esperança e mantém o estado de passos silenciosos até o próximo descanso;
+- `loot-38` Amuleto Elusivo: registra 1 uso por descanso longo e um estado que a mesa encerra manualmente ao personagem se mover.
+
+Arquitetura: loot reutilizável recebe `efeitoSaque` no catálogo. A ação `inventario/usar` aplica apenas custos, usos e estados determinísticos e **não remove o item da mochila**. O gerador 44 publica esse contrato no backend e a aba Mochila oferece o botão `Usar` somente quando esse campo existe.
+
+O E12 adiciona 5 contadores canônicos de loot. Próximo bloco deve continuar pelos loots restantes da auditoria, priorizando passivos simples/relics e só depois anexos de arma/reação de dano.

@@ -2398,6 +2398,89 @@ function usarConsumivelDaMochila_(ficha, lista, indice, a) {
   };
 }
 
+
+/**
+ * Usa um item de saque reutilizável da mochila.
+ *
+ * Loot não some da mochila ao ser usado. O catálogo declara somente custos,
+ * uso por descanso e estados determinísticos; alvo, deslocamento, aparência e
+ * qualquer rolagem continuam na mesa.
+ */
+function usarSaqueDaMochila_(ficha, lista, indice, a) {
+  if (!isFinite(indice) || indice < 0 || indice >= lista.length) {
+    return { erro:'Item de saque da mochila não encontrado.' };
+  }
+  const registro = lista[indice] || {};
+  if (!registro.id) return { erro:'Somente um item de saque do livro pode ser usado por este botão.' };
+  const item = (typeof acharItem_ === 'function') ? acharItem_(registro.id) : null;
+  if (!item || item.tipo !== 'saque' || !item.efeitoSaque) {
+    return { erro:'Este item não possui uso de saque automatizado.' };
+  }
+  const efeito = item.efeitoSaque || {};
+  if (efeito.tipo !== 'uso-assistido') return { erro:item.nome + ': tipo de uso de saque desconhecido.' };
+
+  ficha.contadores = ficha.contadores || {};
+  const valorContador = function (chave) {
+    if (!chave) return 0;
+    const reg = ficha.contadores[chave] || {};
+    return Math.max(0, Math.trunc(Number(typeof reg === 'object' ? reg.valor : reg)) || 0);
+  };
+
+  const contadorUso = String(efeito.contadorUso || '');
+  const contadorEstado = String(efeito.contadorEstado || '');
+  if (contadorUso && valorContador(contadorUso) > 0) {
+    return { erro:item.nome + ': este uso ainda não foi recuperado pelo descanso exigido.' };
+  }
+  if (contadorEstado && efeito.recusaSeEstadoAtivo === true && valorContador(contadorEstado) > 0) {
+    return { erro:item.nome + ': este efeito já está ativo.' };
+  }
+
+  const recursos = (ficha || {}).recursos || {};
+  const custoEsperanca = Math.max(0, Math.trunc(Number(efeito.custoEsperanca)) || 0);
+  const custoEstresse = Math.max(0, Math.trunc(Number(efeito.custoEstresse)) || 0);
+  if (custoEsperanca > Math.max(0, Number(recursos.esperanca) || 0)) {
+    return { erro:item.nome + ': não há Esperança suficiente.' };
+  }
+  if (custoEstresse) {
+    const atual = Math.max(0, Number(recursos.estresseMarcado) || 0);
+    const teto = Math.max(0, Number(recursos.estresseMaximo) || 0);
+    if (atual + custoEstresse > teto) return { erro:item.nome + ': não sobra Estresse para este uso.' };
+  }
+
+  const detalhes = [];
+  if (custoEsperanca) {
+    const r = ajustarRecurso_(ficha, { chave:'esperanca', delta:-custoEsperanca });
+    if (r && r.erro) return r;
+    detalhes.push(r);
+  }
+  if (custoEstresse) {
+    const r = ajustarRecurso_(ficha, { chave:'estresseMarcado', delta:custoEstresse });
+    if (r && r.erro) return r;
+    detalhes.push(r);
+  }
+  if (contadorUso) {
+    const r = ajustarContador_(ficha, { chave:contadorUso, valor:1 });
+    if (r && r.erro) return r;
+    detalhes.push(r);
+  }
+  if (contadorEstado) {
+    const r = ajustarContador_(ficha, { chave:contadorEstado, valor:1 });
+    if (r && r.erro) return r;
+    detalhes.push(r);
+  }
+
+  const efeitoManual = String(efeito.efeitoManual || '');
+  return {
+    tipo:'inventario', acao:'usar', item:item.nome, itemId:item.id,
+    custoEsperanca:custoEsperanca, custoEstresse:custoEstresse,
+    contadorUso:contadorUso || null, contadorEstado:contadorEstado || null,
+    bonusRolagem:efeito.bonusRolagem || null,
+    efeitoManual:efeitoManual || null,
+    detalhes:detalhes,
+    aviso:item.nome + ': uso registrado.' + (efeitoManual ? ' ' + efeitoManual : '')
+  };
+}
+
 function ajustarInventario_(ficha, a) {
   const acao = chaveTexto_(a.acao);
   const lista = normalizarInventario_(ficha);
@@ -2445,6 +2528,7 @@ function ajustarInventario_(ficha, a) {
   const achou = isFinite(i) && i >= 0 && i < lista.length;
 
   if (acao === 'consumir') return usarConsumivelDaMochila_(ficha, lista, i, a);
+  if (acao === 'usar') return usarSaqueDaMochila_(ficha, lista, i, a);
 
   if (acao === 'remover') {
     if (!achou) return { erro: 'Item da mochila não encontrado.' };

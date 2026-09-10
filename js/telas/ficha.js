@@ -4303,8 +4303,10 @@ function ouroEmPunhados(ouro) {
      */
     function verItemDoLivro(doLivro, naMochila, indice) {
       const efeitoConsumivel = doLivro && doLivro.efeitoConsumivel;
+      const efeitoSaque = doLivro && doLivro.efeitoSaque;
       const podeUsar = !!efeitoConsumivel &&
         !(efeitoConsumivel.exigeFichaEncerrada === true && !(p.ficha || {}).encerrada);
+      const podeUsarSaque = !!efeitoSaque;
       const pedeQuantidade = podeUsar && efeitoConsumivel.tipo === 'recuperar-armadura-por-esperanca';
       const recursosAtuais = (p.ficha || {}).recursos || {};
       const limiteQuantidade = Math.max(0, Math.min(
@@ -4326,6 +4328,14 @@ function ouroEmPunhados(ouro) {
           if (r && modal) modal.fechar();
         }
       }, 'Usar e consumir 1') : null;
+      const usarSaque = podeUsarSaque ? el('button', {
+        type:'button', class:'btn btn--principal',
+        onClick: async (ev) => {
+          const r = await travarBotao(ev.currentTarget,
+            enviar([{ tipo:'inventario', acao:'usar', indice }]));
+          if (r && modal) modal.fechar();
+        }
+      }, 'Usar') : null;
       modal = abrirModal({
         titulo: doLivro.nome,
         conteudo: el('div', { class: 'pilha' }, [
@@ -4337,12 +4347,14 @@ function ouroEmPunhados(ouro) {
               `Esperança para gastar = PA para recuperar · máximo agora: ${limiteQuantidade}` }),
             quantidadeConsumivel
           ]) : null,
-          podeUsar ? el('p', { class:'texto-xs texto-fraco', texto:
-            'Se a regra pedir dado, role fisicamente; o item só sai da mochila depois que o efeito for aceito.' }) : null
+          (podeUsar || podeUsarSaque) ? el('p', { class:'texto-xs texto-fraco', texto:
+            podeUsar ? 'Se a regra pedir dado, role fisicamente; o item só sai da mochila depois que o efeito for aceito.' :
+              'Este saque é reutilizável: usar registra custos/estado, mas não remove o item da mochila.' }) : null
         ].filter(Boolean)),
         acoes: [
           el('button', { type:'button', class:'btn btn--fantasma', onClick:() => modal.fechar() }, 'Fechar'),
-          usar
+          usar,
+          usarSaque
         ].filter(Boolean)
       });
     }

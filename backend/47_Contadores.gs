@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 174 cartas e características mandam
+ *  O problema que este arquivo resolve: 179 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -214,6 +214,11 @@ const CONTADORES = {
   "estado:consumivel:consumivel-53": { origem: "consumivel", refId: "consumivel-53", nome: "Poção de encolhimento", rotulo: "Metade do tamanho · +2 Agilidade · -1 Proficiência", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso","manual"], recarregaEm: [], persisteSemRef: true, modificadorTraco: {"traco":"agilidade","bonus":2}, modificadorProficiencia: -1 },
   "estado:consumivel:consumivel-13": { origem: "consumivel", refId: "consumivel-13", nome: "Poção da Estabilidade", rotulo: "+1 movimento no próximo descanso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], persisteSemRef: true, movimentosAdicionaisNoDescanso: 1 },
   "estado:consumivel:consumivel-46": { origem: "consumivel", refId: "consumivel-46", nome: "Broto de Asas", rotulo: "Voo mágico ativo", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], persisteSemRef: true },
+  "uso:loot:loot-09": { origem: "loot", refId: "loot-09", nome: "Jarra de fogo", rotulo: "conteúdo gasto", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:loot:loot-21": { origem: "loot", refId: "loot-21", nome: "Espírito Corretor", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "estado:loot:loot-28": { origem: "loot", refId: "loot-28", nome: "Anel do Silêncio", rotulo: "passos silenciosos", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:loot:loot-38": { origem: "loot", refId: "loot-38", nome: "Amuleto Elusivo", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "estado:loot:loot-38": { origem: "loot", refId: "loot-38", nome: "Amuleto Elusivo", rotulo: "Oculto até se mover", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -392,6 +397,11 @@ const CONTADOR_ALIASES = {
   "estado:consumivel:consumivel-53": ["Poção de encolhimento"],
   "estado:consumivel:consumivel-13": ["Poção da Estabilidade"],
   "estado:consumivel:consumivel-46": ["Broto de Asas"],
+  "uso:loot:loot-09": ["Jarra de fogo"],
+  "uso:loot:loot-21": ["Espírito Corretor"],
+  "estado:loot:loot-28": ["Anel do Silêncio"],
+  "uso:loot:loot-38": ["Amuleto Elusivo"],
+  "estado:loot:loot-38": ["Amuleto Elusivo"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

@@ -260,4 +260,4 @@ out += ['## Regra para a próxima etapa', '',
         '3. Revisar características ativas/condicionais de equipamento e efeitos de consumíveis.',
         '4. Só chamar o Core de fechado quando os candidatos tiverem classificação explícita e os determinísticos tiverem teste.', '']
 
-print('\n'.join(out))
+print('\n'.join(out).rstrip() + '\n', end='')
