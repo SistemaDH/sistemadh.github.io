@@ -24,7 +24,7 @@ Produção integra os Lotes 1–8 / Core 1.0, incluindo:
 - geração auditável dos arquivos `backend/*.gs` com `tools/conferir-gerados.mjs`;
 - fotos de personagem no Supabase Storage.
 
-Desenvolvimento atual: **Lote 9 — refino UX/UI responsivo**. O CI de `newedit` protege o contrato mobile em 360×800, 390×844 e 430×932 e o baseline responsivo em 768×1024, 1024×768 e 1440×900, sem alterar regras do Core 1.0.
+Desenvolvimento atual: **Lote 9 — refino UX/UI responsivo**. O CI de `newedit` protege o contrato mobile em 360×800, 390×844 e 430×932 e o baseline responsivo em 768×1024, 1024×768 e 1440×900, sem alterar regras do Core 1.0. O bloco L9-C1 iniciou a adaptação real para desktop: na aba Jogo, retrato/traços e o bloco de papel ficam lado a lado a partir de 1024px, enquanto 768px e mobile preservam o fluxo empilhado.
 
 ## Arquitetura
 
