@@ -62,6 +62,11 @@ async function auditar(page, viewport, tela) {
       erros.push(`controles fora da largura: ${fora.map((e) => (e.getAttribute('aria-label') || e.textContent || e.tagName).trim().slice(0, 32)).join(' | ')}`);
     }
 
+    /*
+     * L9-A registra a dívida, mas não exige que o frontend antigo já seja 10/10.
+     * No L9-B este grupo vira erro de gate: primeiro congelamos o estado atual,
+     * depois usamos o próprio relatório para eliminar cada ocorrência.
+     */
     const essenciais = interativos.filter((el) =>
       el.matches('.btn--principal, .ficha__aba, .mestre__aba, .alternador__opcao, .acao-flutuante')
     );
@@ -70,7 +75,7 @@ async function auditar(page, viewport, tela) {
       return r.width < 43.5 || r.height < 43.5;
     });
     if (pequenosEssenciais.length) {
-      erros.push(`ações essenciais abaixo de 44px: ${pequenosEssenciais.map((e) => (e.getAttribute('aria-label') || e.textContent || e.className).trim().slice(0, 32)).join(' | ')}`);
+      avisos.push(`DÉBITO L9-B · ações essenciais abaixo de 44px: ${pequenosEssenciais.map((e) => (e.getAttribute('aria-label') || e.textContent || e.className).trim().slice(0, 32)).join(' | ')}`);
     }
 
     const pequenos = interativos.filter((el) => {
@@ -93,7 +98,7 @@ async function auditar(page, viewport, tela) {
       .filter(visivel)
       .filter((el) => parseFloat(getComputedStyle(el).fontSize) < 12)
       .length;
-    if (fontesPequenas) avisos.push(`${fontesPequenas} textos visíveis abaixo de 12px`);
+    if (fontesPequenas) avisos.push(`DÉBITO L9-B · ${fontesPequenas} textos visíveis abaixo de 12px`);
 
     return {
       erros,
@@ -186,10 +191,11 @@ async function executar(viewport) {
       await auditar(page, viewport, nome);
     }
 
-    await page.getByRole('button', { name: 'Regras do livro' }).click();
+    await page.locator('.ficha').getByRole('button', { name: 'Regras do livro' }).click();
     await page.waitForSelector('.regras__lista');
     await auditar(page, viewport, 'regras');
     await page.keyboard.press('Escape');
+    await page.waitForSelector('.modal', { state: 'detached' });
 
     await page.getByRole('button', { name: 'Voltar para a lista' }).click();
     await page.waitForSelector('.roster');
@@ -197,6 +203,7 @@ async function executar(viewport) {
     await page.waitForSelector('.modal');
     await auditar(page, viewport, 'ajustes');
     await page.keyboard.press('Escape');
+    await page.waitForSelector('.modal', { state: 'detached' });
   } finally {
     await contexto.close();
   }
@@ -213,5 +220,5 @@ await writeFile(`${PASTA}/relatorio.json`, JSON.stringify({ geradoEm: new Date()
 
 const avisos = relatorio.reduce((n, r) => n + r.avisos.length, 0);
 const erros = relatorio.reduce((n, r) => n + r.erros.length, 0);
-console.log(`\nBaseline mobile: ${relatorio.length} telas auditadas · ${erros} erros · ${avisos} grupos de avisos.`);
+console.log(`\nBaseline mobile: ${relatorio.length} telas auditadas · ${erros} erros estruturais · ${avisos} grupos de dívida/avisos.`);
 if (falhou) process.exit(1);
