@@ -1,0 +1,98 @@
+name: Lote 8 - Consumiveis Tracos E2
+
+on:
+  push:
+    branches: [tmp-lote8-consumiveis-tracos-e2-sol]
+
+permissions:
+  contents: write
+
+env:
+  BASE_SHA: 9cb507cd11f9b3fa243d82ad912035728bcfe93f
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materializar consumiveis E2
+        run: |
+          python3 tools/lote8-consumiveis-tracos-e2.py
+          node tools/gerar-44-equipamento.mjs
+          node tools/gerar-47-contadores.mjs
+          node tools/gerar-48-criacao.mjs
+          node tools/gerar-41-dominios.mjs
+          node tools/gerar-4B-descanso.mjs
+          python3 -c "from pathlib import Path; p=Path('docs/HANDOFF.md'); p.write_text(p.read_text(encoding='utf-8').rstrip()+'\n',encoding='utf-8')"
+          git diff --check
+          node --check js/telas/ficha.js
+
+      - name: Conferir catalogo, estados e auditoria E2
+        run: |
+          python3 - <<'PY'
+          import json, subprocess
+          ids={*(f'consumivel-{i:02d}' for i in range(1,7)),*(f'consumivel-{i:02d}' for i in range(25,31))}
+          eq=json.load(open('data/equipamentos.json',encoding='utf-8'))
+          xs={x['id']:x for x in eq.get('consumiveis',[]) if x.get('id') in ids}
+          assert set(xs)==ids,(set(xs),ids)
+          for ident,x in xs.items():
+              assert x.get('automacao',{}).get('rolaNoApp') is False,ident
+              ef=x.get('efeitoConsumivel') or {}
+              assert ef.get('tipo')=='ativar-estado',ident
+              assert ef.get('contador')=='estado:consumivel:'+ident,ident
+          co=json.load(open('data/contadores.json',encoding='utf-8'))
+          cs={x['chave']:x for x in co.get('contadores',[]) if x.get('refId') in ids}
+          assert len(cs)==12,len(cs)
+          assert all(x.get('persisteSemRef') is True for x in cs.values())
+          assert sum(1 for x in cs.values() if x.get('bonusProximaJogada'))==6
+          assert sum(1 for x in cs.values() if x.get('modificadorTraco'))==6
+          out=subprocess.check_output(['python3','tools/auditar-pendencias-lote8.py'],text=True)
+          print(out)
+          assert 'Loot/consumíveis com texto mecânico detectado: **81**; **63** candidatos ainda sem estrutura/classificação.' in out
+          assert 'estruturado/classificado: **17**' in out
+          print('E2 OK: 12 poções de traço estruturadas; 63 candidatos mecânicos seguem abertos.')
+          PY
+          grep -q 'persisteSemRef: true' backend/47_Contadores.gs
+          grep -q 'modificadorTraco' backend/47_Contadores.gs
+          grep -q 'def.modificadorTraco' backend/48_Criacao.gs
+          grep -q 'persistenteAtivo' js/telas/ficha.js
+
+      - name: Testes backend
+        run: node tools/testes-backend.mjs
+
+      - name: Instalar Playwright
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados e CSS
+        run: |
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+          git diff --check
+
+      - name: Proteger contra concorrencia
+        run: |
+          git fetch origin 'refs/heads/ediçãoclaude:refs/remotes/origin/ediçãoclaude'
+          ATUAL="$(git rev-parse 'origin/ediçãoclaude')"
+          echo "ediçãoclaude atual: $ATUAL"
+          echo "base esperada:       $BASE_SHA"
+          test "$ATUAL" = "$BASE_SHA"
+
+      - name: Commitar funcional e limpar temporarios
+        run: |
+          rm tools/lote8-consumiveis-tracos-e2.py
+          rm .github/workflows/lote8-consumiveis-tracos-e2.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git diff --cached --quiet && { echo 'Nenhuma mudança funcional para commit.'; exit 1; } || true
+          git commit -m 'feat: integrar consumiveis de traco'
+          git push origin HEAD:tmp-lote8-consumiveis-tracos-e2-sol
