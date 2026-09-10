@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 162 cartas e características mandam
+ *  O problema que este arquivo resolve: 165 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -202,6 +202,9 @@ const CONTADORES = {
   "estado:consumivel:consumivel-28": { origem: "consumivel", refId: "consumivel-28", nome: "Poção de sintonização maior", rotulo: "+1 em Instinto até o próximo descanso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], persisteSemRef: true, modificadorTraco: {"traco":"instinto","bonus":1} },
   "estado:consumivel:consumivel-29": { origem: "consumivel", refId: "consumivel-29", nome: "Poção de Encantamento Maior", rotulo: "+1 em Presença até o próximo descanso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], persisteSemRef: true, modificadorTraco: {"traco":"presenca","bonus":1} },
   "estado:consumivel:consumivel-30": { origem: "consumivel", refId: "consumivel-30", nome: "Poção de Iluminação Maior", rotulo: "+1 em Conhecimento até o próximo descanso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], persisteSemRef: true, modificadorTraco: {"traco":"conhecimento","bonus":1} },
+  "estado:consumivel:consumivel-11": { origem: "consumivel", refId: "consumivel-11", nome: "Frasco de Moondrip", rotulo: "Visão no escuro até o próximo descanso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], persisteSemRef: true },
+  "estado:consumivel:consumivel-15": { origem: "consumivel", refId: "consumivel-15", nome: "Argila transformadora", rotulo: "Disfarce irreconhecível até o próximo descanso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], persisteSemRef: true },
+  "estado:consumivel:consumivel-45": { origem: "consumivel", refId: "consumivel-45", nome: "Almíscar do Ogro", rotulo: "Não pode ser rastreado até o próximo descanso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], persisteSemRef: true },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -368,6 +371,9 @@ const CONTADOR_ALIASES = {
   "estado:consumivel:consumivel-28": ["Poção de sintonização maior"],
   "estado:consumivel:consumivel-29": ["Poção de Encantamento Maior"],
   "estado:consumivel:consumivel-30": ["Poção de Iluminação Maior"],
+  "estado:consumivel:consumivel-11": ["Frasco de Moondrip"],
+  "estado:consumivel:consumivel-15": ["Argila transformadora"],
+  "estado:consumivel:consumivel-45": ["Almíscar do Ogro"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

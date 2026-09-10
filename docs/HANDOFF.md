@@ -781,3 +781,13 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - Nenhum RNG foi introduzido (`automacao.rolaNoApp=false`).
 
 **Próximo bloco natural:** consumíveis de custo/recuperação variável e estados determinísticos, começando por **Costurador/Remendo de Armadura**, Molde/Argila transformadora e efeitos que duram até descanso.
+
+### Lote 8 — consumíveis com estado até descanso E3
+
+- **Frasco de Gota Lunar / Moon Drip** agora consome uma unidade e mantém estado de visão no escuro até o próximo descanso.
+- **Molde/Argila Transformadora / Shifting Mould** cobra exatamente 1 Esperança, consome a unidade e mantém o disfarce como estado até o próximo descanso.
+- **Almíscar do Ogro / Ogre Musk** consome uma unidade e mantém o estado de não poder ser rastreado, mundana ou magicamente, até o próximo descanso.
+- Os três reutilizam `persisteSemRef`: o item pode sair da mochila e o efeito continua visível, mas somente enquanto o contador estiver realmente ativo.
+- `ativar-estado` passou a aceitar custo determinístico opcional de Esperança, validado antes de qualquer mutação. Nenhum RNG foi introduzido.
+
+**Próximo bloco natural:** **Remendo/Costurador de Armadura**, com escolha de quantidade Esperança → PA, seguido pelos consumíveis de uso único puramente posicional/narrativo.

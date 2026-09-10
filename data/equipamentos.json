@@ -6973,7 +6973,19 @@
    "descricao": "Quando você bebe o conteúdo desse frasco, pode enxergar na escuridão total até o próximo descanso.",
    "nomeIngles": "Vial of Moondrip",
    "descricaoIngles": "When you drink the contents of this vial, you can see in total darkness until your next rest.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-estado-e3",
+    "rolaNoApp": false,
+    "motivo": "O app registra apenas custo e duração do efeito; não faz jogadas nem interpreta a ficção."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-11",
+    "duracao": "descanso",
+    "custoEsperanca": 0,
+    "efeitoManual": "Visão no escuro até o próximo descanso"
+   }
   },
   {
    "id": "consumivel-12",
@@ -7016,7 +7028,19 @@
    "descricao": "Você pode gastar uma Esperança para usar essa argila, alterando seu rosto o suficiente para torná-lo irreconhecível até o próximo descanso.",
    "nomeIngles": "Morphing Clay",
    "descricaoIngles": "You can spend a Hope to use this clay, altering your face enough to make you unrecognizable until your next rest.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-estado-e3",
+    "rolaNoApp": false,
+    "motivo": "O app registra apenas custo e duração do efeito; não faz jogadas nem interpreta a ficção."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-15",
+    "duracao": "descanso",
+    "custoEsperanca": 1,
+    "efeitoManual": "Disfarce irreconhecível até o próximo descanso"
+   }
   },
   {
    "id": "consumivel-16",
@@ -7448,7 +7472,19 @@
    "origemNome": "revisado-pela-vanessa",
    "traducaoDescricao": "minha",
    "nomeAntigo": "Almíscar de ogro",
-   "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Tesouro"
+   "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Tesouro",
+   "automacao": {
+    "classificacao": "consumivel-estado-e3",
+    "rolaNoApp": false,
+    "motivo": "O app registra apenas custo e duração do efeito; não faz jogadas nem interpreta a ficção."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-45",
+    "duracao": "descanso",
+    "custoEsperanca": 0,
+    "efeitoManual": "Não pode ser rastreado até o próximo descanso"
+   }
   },
   {
    "id": "consumivel-46",

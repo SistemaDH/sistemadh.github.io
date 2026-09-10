@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 162 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento e 12 de consumível', () => {
+teste('o catálogo tem 165 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento e 15 de consumível', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,13 +1561,13 @@ teste('o catálogo tem 162 contadores: 113 de carta, 25 de classe/subclasse, 4 d
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 162);
+  igual(Object.keys(CONTADORES).length, 165);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 113);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
-  igual(porOrigem['consumivel'], 12);
+  igual(porOrigem['consumivel'], 15);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
   igual(porOrigem['equipamento'], 5);
@@ -11037,6 +11037,72 @@ teste('persistência sem referência não se espalha para contadores normais', (
   f.contadores={'uso:carta:valor:surto-total':{valor:1}};
   contexto.validarContadores_(f);
   verdade(!f.contadores['uso:carta:valor:surto-total'],'contador de carta órfão continua sendo limpo');
+});
+
+
+
+console.log('\nLote 8 — consumíveis com estado até descanso E3');
+function itemE3PorIngles_(nome) {
+  return avaliar('ITENS').find((x)=>String(x.nomeIngles || '').toLowerCase()===String(nome).toLowerCase()) ||
+    Object.values(avaliar('ITENS')).find((x)=>String(x.nomeIngles || '').toLowerCase()===String(nome).toLowerCase());
+}
+function fichaConsumivelE3_(item,qtd=1) {
+  const f=contexto.fichaVazia_();
+  f.identidade={nome:'E3',nivel:10,classe:'Guerreiro',subclasse:'Chamada do Matador'};
+  f.recursos.esperancaMaxima=6; f.recursos.esperanca=3;
+  f.inventario=[{id:item.id,nome:item.nome,qtd:qtd,emUso:false}];
+  return f;
+}
+teste('E3 estrutura Gota Lunar, Argila Transformadora e Almíscar do Ogro sem RNG', () => {
+  const itens=avaliar('ITENS');
+  const nomes=['Vial of Moondrip','Morphing Clay','Ogre Musk'];
+  nomes.forEach((nome) => {
+    const item=contexto.acharItem_(nome);
+    verdade(!!item,nome);
+    igual(item.automacao.rolaNoApp,false,nome);
+    igual(item.efeitoConsumivel.tipo,'ativar-estado',nome);
+    igual(item.efeitoConsumivel.duracao,'descanso',nome);
+    const def=avaliar('CONTADORES')[item.efeitoConsumivel.contador];
+    verdade(!!def,nome+' sem contador');
+    igual(def.persisteSemRef,true,nome);
+  });
+});
+teste('Gota Lunar consome a unidade, mantém o estado sem item e termina no descanso', () => {
+  const item=contexto.acharItem_('Vial of Moondrip');
+  const f=fichaConsumivelE3_(item,1);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r));
+  igual(f.inventario.length,0);
+  const ch=item.efeitoConsumivel.contador;
+  igual(f.contadores[ch].valor,1);
+  contexto.validarContadores_(f);
+  igual(f.contadores[ch].valor,1,'estado pós-consumo deve sobreviver');
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  verdade(!f.contadores[ch] || !f.contadores[ch].valor,'descanso encerra o efeito');
+});
+teste('Argila Transformadora cobra exatamente 1 Esperança antes de consumir', () => {
+  const item=contexto.acharItem_('Morphing Clay');
+  let f=fichaConsumivelE3_(item,2);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r));
+  igual(f.recursos.esperanca,2);
+  igual(f.inventario[0].qtd,1);
+  igual(f.contadores[item.efeitoConsumivel.contador].valor,1);
+
+  f=fichaConsumivelE3_(item,1); f.recursos.esperanca=0;
+  const antes=JSON.stringify(f);
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f),antes,'sem Esperança nada muda');
+});
+teste('Almíscar do Ogro ativa sem custo e uma segunda unidade não é desperdiçada', () => {
+  const item=contexto.acharItem_('Ogre Musk');
+  const f=fichaConsumivelE3_(item,2);
+  const hope=f.recursos.esperanca;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,hope); igual(f.inventario[0].qtd,1);
+  const antes=JSON.stringify(f);
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f),antes);
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

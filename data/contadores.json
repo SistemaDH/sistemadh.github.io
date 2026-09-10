@@ -3020,6 +3020,57 @@
     "traco": "conhecimento",
     "bonus": 1
    }
+  },
+  {
+   "chave": "estado:consumivel:consumivel-11",
+   "origem": "consumivel",
+   "refId": "consumivel-11",
+   "nome": "Frasco de Moondrip",
+   "rotulo": "Visão no escuro até o próximo descanso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "descanso"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true
+  },
+  {
+   "chave": "estado:consumivel:consumivel-15",
+   "origem": "consumivel",
+   "refId": "consumivel-15",
+   "nome": "Argila transformadora",
+   "rotulo": "Disfarce irreconhecível até o próximo descanso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "descanso"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true
+  },
+  {
+   "chave": "estado:consumivel:consumivel-45",
+   "origem": "consumivel",
+   "refId": "consumivel-45",
+   "nome": "Almíscar do Ogro",
+   "rotulo": "Não pode ser rastreado até o próximo descanso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "descanso"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true
   }
  ]
 }

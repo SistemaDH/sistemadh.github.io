@@ -2205,7 +2205,17 @@ function usarConsumivelDaMochila_(ficha, lista, indice, a) {
     const reg=ficha.contadores[chave] || {};
     const ativo=Math.max(0,Math.trunc(Number(typeof reg === 'object' ? reg.valor : reg)) || 0);
     if (ativo > 0) {
-      return { erro:item.nome + ': este bônus ainda está ativo; resolva-o antes de consumir outra unidade.' };
+      return { erro:item.nome + ': este efeito ainda está ativo; resolva-o antes de consumir outra unidade.' };
+    }
+    const custoEsperanca=Math.max(0,Math.trunc(Number(efeito.custoEsperanca)) || 0);
+    if (custoEsperanca > 0) {
+      const disponivel=Math.max(0,Number((((ficha || {}).recursos || {}).esperanca)) || 0);
+      if (disponivel < custoEsperanca) {
+        return { erro:item.nome + ': faltam Pontos de Esperança para usar este consumível.' };
+      }
+      const paga=ajustarRecurso_(ficha,{chave:'esperanca',delta:-custoEsperanca});
+      if (paga && paga.erro) return falhar(paga.erro);
+      detalhes.push(paga);
     }
     const m=ajustarContador_(ficha,{chave:chave,valor:1});
     if (m && m.erro) return falhar(m.erro);
