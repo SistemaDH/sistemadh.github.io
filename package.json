@@ -9,7 +9,7 @@
     "teste": "node tools/testes-backend.mjs",
     "teste:e2e": "node tools/testes-e2e.mjs",
     "teste:layout-mobile": "node tools/testes-layout-mobile.mjs",
-    "teste:layout-mestre-mobile": "node tools/testes-layout-mestre-mobile.mjs",
+    "teste:layout-mestre-mobile": "node tools/testes-layout-mestre-mobile.mjs && node tools/testes-editor-adversario-mobile.mjs",
     "teste:layout-criacao-mobile": "node tools/testes-layout-criacao-mobile.mjs && node tools/testes-ajuda-criacao-mobile.mjs",
     "teste:layout-regras-mobile": "node tools/testes-layout-regras-mobile.mjs",
     "teste:layout-abertura-mobile": "node tools/testes-abertura-mobile.mjs",
