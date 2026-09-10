@@ -39,19 +39,21 @@ jobs:
           fim=s.find('\n',pos)
           if inicio < 0 or fim < 0:
               raise SystemExit('Não foi possível delimitar a chamada da âncora E19')
-          novo=r'''aj = replace_once(aj,
-          """  const recursos = (ficha || {}).recursos || {};
-
-          // Hopekeeper: duas resoluções no mesmo item. A carga persiste até o uso.""",
-          """  if (efeito.requerVinculo === true && !String(registro.vinculo || '').trim()) {
-            return { erro:item.nome + ': primeiro use o movimento de repouso deste item para registrar seu princípio.' };
-          }
-
-          const recursos = (ficha || {}).recursos || {};
-
-          // Hopekeeper: duas resoluções no mesmo item. A carga persiste até o uso.""", 'requer principio')'''
+          novo=(
+              "aj = replace_once(aj,\n"
+              "\"\"\"  const recursos = (ficha || {}).recursos || {};\n"
+              "\n"
+              "  // Hopekeeper: duas resoluções no mesmo item. A carga persiste até o uso.\"\"\",\n"
+              "\"\"\"  if (efeito.requerVinculo === true && !String(registro.vinculo || '').trim()) {\n"
+              "    return { erro:item.nome + ': primeiro use o movimento de repouso deste item para registrar seu princípio.' };\n"
+              "  }\n"
+              "\n"
+              "  const recursos = (ficha || {}).recursos || {};\n"
+              "\n"
+              "  // Hopekeeper: duas resoluções no mesmo item. A carga persiste até o uso.\"\"\", 'requer principio')"
+          )
           p.write_text(s[:inicio]+novo+s[fim:],encoding='utf-8')
-          print('Âncora E19 corrigida estruturalmente.')
+          print('Âncora E19 corrigida com espaços explícitos.')
           PY
 
       - name: Materializar E19 e regenerar
