@@ -1,0 +1,118 @@
+name: Lote 8 - Equipamento Ofensivo C1
+
+on:
+  push:
+    branches: [tmp-lote8-equip-ofensivo-c1-sol]
+
+permissions:
+  contents: write
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materializar equipamento ofensivo C1
+        run: |
+          python3 tools/patch-c1-materializer.py
+          python3 tools/lote8-equip-ofensivo-c1.py
+          node tools/gerar-44-equipamento.mjs
+          node tools/gerar-41-dominios.mjs
+          node tools/gerar-47-contadores.mjs
+          node tools/gerar-4B-descanso.mjs
+          cp backend/4C_Ajustes.gs /tmp/4C_Ajustes.js
+          node --check /tmp/4C_Ajustes.js
+          node --check js/telas/ficha.js
+          git diff --check
+
+      - name: Auditar estrutura C1
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/equipamentos.json',encoding='utf-8'))
+          alvos=[]
+          def walk(x):
+            if isinstance(x,dict):
+              c=x.get('caracteristica')
+              if isinstance(c,dict):
+                en=c.get('nomeIngles'); pt=c.get('nome')
+                if en in {'Startling','Persuasive','Repelling','Invigorating','Lifestealing','Quick'} or pt in {'Alarmante','Rápido','Veloz'}:
+                  alvos.append((x,c))
+              for v in x.values(): walk(v)
+            elif isinstance(x,list):
+              for v in x: walk(v)
+          walk(d)
+          assert len(alvos)==20,len(alvos)
+          assert all(c.get('automacao') for _,c in alvos)
+          assert all((c.get('efeitoEquipamento') or {}).get('usoAtivo') for _,c in alvos)
+          c=json.load(open('data/contadores.json',encoding='utf-8'))
+          assert len(c['contadores'])==146,len(c['contadores'])
+          PY
+          python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria.md
+          if grep -Eq '^\| (Alarmante|Persuasão|Repelente|Revigorante|Sorvedouras|Rápido|Veloz) \|' /tmp/auditoria.md; then
+            echo 'C1 ainda aparece na auditoria.' >&2
+            grep -E '^\| (Alarmante|Persuasão|Repelente|Revigorante|Sorvedouras|Rápido|Veloz) \|' /tmp/auditoria.md >&2 || true
+            exit 1
+          fi
+          grep -q 'function usarCaracteristicaDeEquipamento_' backend/4C_Ajustes.gs
+          grep -q 'function usoAtivoDoEquipamento_' js/telas/ficha.js
+          grep -q "tipo:'usoEquipamento'" js/telas/ficha.js
+
+      - name: Testes backend completos
+        shell: bash
+        run: |
+          set -o pipefail
+          node tools/testes-backend.mjs | tee /tmp/backend.log
+          if grep -q '✗' /tmp/backend.log; then
+            echo 'Há falha impressa na suíte backend.' >&2
+            grep '✗' /tmp/backend.log >&2 || true
+            exit 1
+          fi
+          grep -q 'Lote 8 — equipamento ofensivo C1' /tmp/backend.log
+          grep -q '✓ C1 publica todas as ocorrências alvo com uso ativo e sem RNG do app' /tmp/backend.log
+          grep -q '✓ Alarmante marca 1 Estresse e deixa o recuo dos alvos manual' /tmp/backend.log
+          grep -q '✓ Rápido marca 1 Estresse e não inventa segundo alvo na ficha' /tmp/backend.log
+          grep -q '✓ Persuasão custa 1 Estresse, publica +2 Presença e não altera o traço base' /tmp/backend.log
+          grep -q '✓ Repelente só cobra 1 Esperança depois de sucesso confirmado' /tmp/backend.log
+          grep -q '✓ Revigorante pede d4 manual antes de tocar na ficha e só o 4 limpa Estresse' /tmp/backend.log
+          grep -q '✓ Sorvedouras usa d6 manual e no 6 recupera somente a opção escolhida' /tmp/backend.log
+          grep -q '✓ uso ofensivo exige o item ativo e não aceita a mesma arma só na reserva' /tmp/backend.log
+          grep -q '✓ custo de Estresse do C1 continua passando pelo Inabalável central' /tmp/backend.log
+          grep -q '808 passaram, 0 falharam.' /tmp/backend.log
+
+      - name: Instalar Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install chromium
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados e CSS
+        run: |
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+          git diff --check
+
+      - name: Proteger contra concorrência
+        run: |
+          git fetch origin 'ediçãoclaude'
+          test "$(git rev-parse 'origin/ediçãoclaude')" = '911a2e17444438375c90988c94483297b3f980b8'
+
+      - name: Commitar funcional e limpar temporários
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f --ignore-unmatch tools/patch-c1-materializer.py
+          git rm -f --ignore-unmatch tools/lote8-equip-ofensivo-c1.py
+          git rm -f --ignore-unmatch .github/workflows/lote8-equip-ofensivo-c1.yml
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          find . -type f -name '*.pyc' -delete
+          git add -A
+          git diff --cached --check
+          git commit -m 'feat: automatizar equipamento ofensivo C1 [lote8-generated]'
+          git push origin HEAD:tmp-lote8-equip-ofensivo-c1-sol
