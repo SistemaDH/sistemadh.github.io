@@ -1,0 +1,29 @@
+name: TEMP Lote 9 B14 Regras mobile
+
+on:
+  push:
+    branches: [tmp-lote9-b14-regras-mobile-sol]
+
+permissions:
+  contents: read
+
+jobs:
+  medir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Regras mobile 360 / 390 / 430 + rolagem
+        run: npm run teste:layout-regras-mobile
+      - name: Guardar diagnóstico de Regras mobile
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lote9-b14-regras-mobile
+          path: artifacts/layout-regras-mobile
+          if-no-files-found: warn
