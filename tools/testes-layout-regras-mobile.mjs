@@ -32,7 +32,9 @@ function registrar(viewport, tela, dados) {
 }
 
 async function auditar(page, viewport, tela, { exigirSticky = false } = {}) {
-  await page.waitForTimeout(100);
+  // .modal__caixa entra com animação de 240ms; medir antes do fim enxerga o
+  // translateY temporário como se o bottom sheet estivesse fora da viewport.
+  await page.waitForTimeout(300);
   const dados = await page.evaluate(({ exigirSticky }) => {
     const html = document.documentElement;
     const body = document.body;
