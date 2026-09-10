@@ -24,11 +24,12 @@ jobs:
         with:
           node-version: 20
 
-      - name: Materializar E11
+      - name: Materializar E11 e corrigir gate
         shell: bash
         run: |
           set -euo pipefail
           python3 tools/lote8-consumiveis-fechamento-e11.py
+          python3 tools/lote8-e11-corrigir-gate.py
           node tools/gerar-44-equipamento.mjs
           node tools/gerar-47-contadores.mjs
           node tools/gerar-48-criacao.mjs
@@ -49,7 +50,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import json, re, subprocess
+          import json, subprocess
           from pathlib import Path
 
           eq=json.load(open('data/equipamentos.json',encoding='utf-8'))
@@ -61,6 +62,7 @@ jobs:
               assert xs[ident]['automacao'].get('rolaNoApp') is False, ident
           assert xs['consumivel-40']['efeitoConsumivel']['custoEstresse'] == 1
           assert xs['consumivel-55']['efeitoConsumivel']['exigeFichaEncerrada'] is True
+          assert 'teste' not in xs['consumivel-38']['efeitoConsumivel']['efeitoManual'].lower()
 
           backend=Path('backend/4C_Ajustes.gs').read_text(encoding='utf-8')
           assert 'custoEstresseManual' in backend
@@ -68,21 +70,28 @@ jobs:
           frontend=Path('js/telas/ficha.js').read_text(encoding='utf-8')
           assert 'efeitoConsumivel.exigeFichaEncerrada' in frontend
 
+          testes=Path('tools/testes-backend.mjs').read_text(encoding='utf-8')
+          resumo="console.log(`\\n${passou} passaram, ${falhou} falharam.\\n`);"
+          assert testes.count(resumo)==1
+          assert testes.rfind(resumo) > testes.find("Lote 8 — fechamento de consumíveis E11")
+          assert testes.find("Lote 8 — consumíveis especiais E9") < testes.rfind(resumo)
+          assert testes.find("Lote 8 — reações de consumíveis E10") < testes.rfind(resumo)
+
           out=subprocess.check_output(['python3','tools/auditar-pendencias-lote8.py'],text=True)
           assert '- Loot/consumíveis com texto mecânico detectado: **81**; **33** candidatos ainda sem estrutura/classificação.' in out
-          candidatos=[]
-          for linha in out.splitlines():
-              if linha.startswith('| consumiveis |') and '| candidato mecânico |' in linha:
-                  candidatos.append(linha)
+          candidatos=[linha for linha in out.splitlines() if linha.startswith('| consumiveis |') and '| candidato mecânico |' in linha]
           assert not candidatos, '\n'.join(candidatos)
-          print('Contratos E11 e auditoria de consumíveis: OK')
+          print('Contratos E11, auditoria e posição do gate: OK')
           PY
 
-      - name: Testes backend
+      - name: Testes backend completos E9 E10 E11
         shell: bash
         run: |
           set -euo pipefail
           node tools/testes-backend.mjs | tee /tmp/testes-backend.log
+          grep -q 'Lote 8 — consumíveis especiais E9' /tmp/testes-backend.log
+          grep -q 'Lote 8 — reações de consumíveis E10' /tmp/testes-backend.log
+          grep -q 'Lote 8 — fechamento de consumíveis E11' /tmp/testes-backend.log
           if grep -q '✗' /tmp/testes-backend.log; then
             echo 'Falha textual detectada nos testes backend.' >&2
             exit 1
@@ -127,6 +136,7 @@ jobs:
         run: |
           set -euo pipefail
           rm -f tools/lote8-consumiveis-fechamento-e11.py
+          rm -f tools/lote8-e11-corrigir-gate.py
           rm -f .github/workflows/lote8-consumiveis-fechamento-e11.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
