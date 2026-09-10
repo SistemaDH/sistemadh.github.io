@@ -1,5 +1,5 @@
 /* ==========================================================================
-   L9-B7/B8/B9/B10/B11/B12 · REFINOS MOBILE
+   L9-B7/B8/B9/B10/B11/B12/B13 · REFINOS MOBILE
    ========================================================================== */
 
 /* ==========================================================================
@@ -210,5 +210,20 @@
     min-height: 48px;
     background: var(--cor-fundo-2);
     box-shadow: 0 8px 12px rgba(0, 0, 0, .32);
+  }
+}
+
+/* ==========================================================================
+   B13 · PROGRESSO TEXTUAL NA CRIAÇÃO MOBILE
+
+   A barra mostra a posição visualmente, mas quem está criando no celular não
+   precisa estimar quanto falta. As etapas já carregam "Etapa X" no DOM; o
+   complemento visual informa o total sem mudar regra, ordem ou estado.
+   ========================================================================== */
+
+@media (max-width: 639px) {
+  .criacao__etiqueta::after {
+    content: ' de 9';
+    color: var(--cor-texto-suave);
   }
 }
