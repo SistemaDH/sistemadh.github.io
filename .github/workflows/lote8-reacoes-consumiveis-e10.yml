@@ -1,0 +1,146 @@
+name: Lote 8 - Reacoes de Consumiveis E10
+
+on:
+  push:
+    branches:
+      - tmp-lote8-reacoes-consumiveis-e10-sol
+
+permissions:
+  contents: write
+
+jobs:
+  validar-e-materializar:
+    runs-on: ubuntu-latest
+    env:
+      BASE_SHA: de19a69fdf8f0582cb1acd094f2051cc7c5fafe8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Materializar E10
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/lote8-reacoes-consumiveis-e10.py
+          node tools/gerar-44-equipamento.mjs
+          node tools/gerar-47-contadores.mjs
+          node tools/gerar-48-criacao.mjs
+          node tools/gerar-41-dominios.mjs
+          node tools/gerar-4B-descanso.mjs
+          python3 tools/auditar-pendencias-lote8.py > docs/AUDITORIA-FINAL-LOTE8.md
+          git diff --check
+          node --check js/telas/ficha.js
+
+      - name: Validar contratos E10
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+
+          eq = json.load(open('data/equipamentos.json', encoding='utf-8'))
+          xs = {x['id']: x for x in eq.get('consumiveis', [])}
+
+          assert xs['consumivel-16']['efeitoConsumivel'] is None
+          assert xs['consumivel-16']['reacaoConsumivel']['tipo'] == 'evasao-d6-maior-por-traco'
+          assert xs['consumivel-16']['reacaoConsumivel']['gatilho'] == 'quando-alvo-de-ataque'
+          assert xs['consumivel-16']['reacaoConsumivel']['traco'] == 'agilidade'
+          assert xs['consumivel-16']['reacaoConsumivel']['dado'] == 'd6'
+
+          assert xs['consumivel-59']['efeitoConsumivel'] is None
+          assert xs['consumivel-59']['reacaoConsumivel']['tipo'] == 'negar-dano'
+          assert xs['consumivel-59']['reacaoConsumivel']['gatilho'] == 'quando-sofre-dano'
+          assert xs['consumivel-59']['reacaoConsumivel']['custo']['esperanca'] == 1
+
+          backend44 = Path('backend/44_Equipamento.gs').read_text(encoding='utf-8')
+          assert '"reacaoConsumivel"' in backend44
+          assert '"evasao-d6-maior-por-traco"' in backend44
+          assert '"negar-dano"' in backend44
+
+          backend4c = Path('backend/4C_Ajustes.gs').read_text(encoding='utf-8')
+          assert 'function usarReacaoDeConsumivel_' in backend4c
+          assert "usarEspelhoMarigold === true" in backend4c
+
+          frontend = Path('js/telas/ficha.js').read_text(encoding='utf-8')
+          assert 'function blocoDeReacoesDeConsumivel_' in frontend
+          assert 'usarEspelhoMarigold' in frontend
+
+          auditoria = subprocess.check_output(
+              ['python3', 'tools/auditar-pendencias-lote8.py'], text=True
+          )
+          for ident in ('consumivel-16', 'consumivel-59'):
+              nome = xs[ident]['nome']
+              linha = f'| consumiveis | {nome} | candidato mecânico |'
+              assert linha not in auditoria, linha
+
+          print('Contratos E10: OK')
+          PY
+
+      - name: Testes backend
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/testes-backend.mjs | tee /tmp/testes-backend.log
+          if grep -q '✗' /tmp/testes-backend.log; then
+            echo 'Falha textual detectada nos testes backend.' >&2
+            exit 1
+          fi
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Testes E2E
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/testes-e2e.mjs | tee /tmp/testes-e2e.log
+          if grep -q '✗' /tmp/testes-e2e.log; then
+            echo 'Falha textual detectada nos testes E2E.' >&2
+            exit 1
+          fi
+
+      - name: Conferir gerados e CSS
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+          git diff --check
+
+      - name: Bloqueio de concorrencia
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin 'refs/heads/ediçãoclaude:refs/remotes/origin/ediçãoclaude'
+          ATUAL="$(git rev-parse 'origin/ediçãoclaude')"
+          echo "ediçãoclaude atual: $ATUAL"
+          echo "base fixada:        $BASE_SHA"
+          test "$ATUAL" = "$BASE_SHA"
+
+      - name: Commit funcional E10
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f tools/lote8-reacoes-consumiveis-e10.py
+          rm -f .github/workflows/lote8-reacoes-consumiveis-e10.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'Nenhuma mudança funcional para gravar.' >&2
+            exit 1
+          fi
+          git commit -m 'feat: integrar reacoes de consumiveis E10'
+          git push origin HEAD:tmp-lote8-reacoes-consumiveis-e10-sol
