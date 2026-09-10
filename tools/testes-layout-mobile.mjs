@@ -121,7 +121,28 @@ async function auditar(page, viewport, tela) {
       && temAlvo(el, 24)
       && !temAlvo(el, 44)
     );
-    if (compactosValidos.length) avisos.push(`${compactosValidos.length} controles compactos válidos entre 24px e 43px`);
+
+    /*
+     * L9-B5 — WHITELIST, NÃO SILÊNCIO.
+     *
+     * O B4 mediu cada compacto restante nas três viewports. Só quatro famílias
+     * precisam ficar menores que 44px para preservar a densidade da ficha:
+     * subtítulos do cabeçalho (hitbox por ::after), caixas de PV/Estresse,
+     * estrelas de Esperança e lâminas de Armadura. Se qualquer OUTRO controle
+     * cair nessa faixa, é regressão nova e o CI falha com nome/tamanho.
+     */
+    const compactoIntencional = (el) => el.matches(
+      '.ficha__subtituloBotao, .papel__caixa, .papel__esperancaPonto, .papel__slot'
+    );
+    const compactosInesperados = compactosValidos.filter((el) => !compactoIntencional(el));
+    if (compactosInesperados.length) {
+      const detalhes = compactosInesperados.slice(0, 12).map((el) => {
+        const r = el.getBoundingClientRect();
+        const nome = (el.getAttribute('aria-label') || el.textContent || el.className || el.tagName).trim().replace(/\s+/g, ' ').slice(0, 40);
+        return `${r.width.toFixed(1)}x${r.height.toFixed(1)}:${nome}`;
+      });
+      erros.push(`controles compactos não autorizados: ${detalhes.join(' | ')}`);
+    }
 
     /* L9-B1: feedback transitório não pode virar pilha nem cobrir navegação fixa. */
     const transitórios = [...document.querySelectorAll('.aviso--sucesso, .aviso--info')].filter(visivel);
