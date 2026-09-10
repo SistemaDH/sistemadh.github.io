@@ -21,6 +21,7 @@ jobs:
       - name: Materializar consumiveis E1
         run: |
           python3 tools/lote8-consumiveis-recuperacao-e1.py
+          python3 -c "from pathlib import Path; p=Path('docs/HANDOFF.md'); p.write_text(p.read_text(encoding='utf-8').rstrip()+'\n',encoding='utf-8')"
           node tools/gerar-44-equipamento.mjs
           node tools/gerar-41-dominios.mjs
           node tools/gerar-47-contadores.mjs
