@@ -283,6 +283,28 @@ try {
   };
 
   /**
+   * L9-B7: em 390px, uso e remoção ficam no menu de mais ações da linha.
+   * O E2E percorre o mesmo caminho do dedo em vez de alcançar os botões
+   * originais que o CSS mantém ocultos apenas como donos dos handlers.
+   */
+  const abrirAcoesMobileDoItem = async (linha) => {
+    await linha.getByRole('button', { name: /Mais ações para/ }).click();
+    const modal = pagina.locator('.modal__caixa').last();
+    await modal.waitFor({ timeout: 5000 });
+    return modal;
+  };
+
+  const marcarItemEmUsoMobile = async (linha) => {
+    const modal = await abrirAcoesMobileDoItem(linha);
+    await modal.getByRole('button', { name: 'Marcar como em uso' }).click();
+  };
+
+  const removerItemMobile = async (linha) => {
+    const modal = await abrirAcoesMobileDoItem(linha);
+    await modal.getByRole('button', { name: 'Remover da mochila' }).click();
+  };
+
+  /**
    * O OURO É UMA FRASE, e é assim que se lê.
    *
    * A aba Mochila mostra "1 baú, 2 bolsas e 3 punhados" em vez de quatro
@@ -1186,8 +1208,9 @@ try {
 
     // E o item sai de novo.
     const v2 = await versaoNaTela();
-    await pagina.locator('.ficha__item', { hasText: 'Um mapa rasgado do porto' })
-      .getByRole('button', { name: /Tirar/ }).click();
+    await removerItemMobile(
+      pagina.locator('.ficha__item', { hasText: 'Um mapa rasgado do porto' })
+    );
     await esperarGravar(v2);
     igual(await pagina.locator('.ficha__item', { hasText: 'Um mapa rasgado do porto' }).count(), 0);
   });
@@ -1208,7 +1231,7 @@ try {
 
     // Marcar em uso é do item, não da mochila.
     const v1 = await versaoNaTela();
-    await linha.getByRole('button', { name: /Marcar .* como em uso/ }).click();
+    await marcarItemEmUsoMobile(linha);
     await esperarGravar(v1);
     igual(await pagina.locator('.ficha__item.esta-em-uso').count(), 1);
 
@@ -1311,10 +1334,10 @@ try {
 
     // Limpa o que este passo criou.
     const v5 = await versaoNaTela();
-    await depois.getByRole('button', { name: /Tirar/ }).click();
+    await removerItemMobile(depois);
     await esperarGravar(v5);
     const v6 = await versaoNaTela();
-    await doLivro.getByRole('button', { name: /Tirar/ }).click();
+    await removerItemMobile(doLivro);
     await esperarGravar(v6);
   });
 
