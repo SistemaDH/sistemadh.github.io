@@ -8,6 +8,7 @@
     "servir": "node tools/servidor-teste.mjs 8099",
     "teste": "node tools/testes-backend.mjs",
     "teste:e2e": "node tools/testes-e2e.mjs",
+    "teste:layout-mobile": "node tools/testes-layout-mobile.mjs",
     "teste:css": "node tools/conferir-css.mjs",
     "teste:tudo": "npm run teste:sintaxe && npm run teste:css && npm run teste && npm run teste:gerados && npm run teste:e2e",
     "teste:sintaxe": "node tools/conferir-sintaxe.mjs",
