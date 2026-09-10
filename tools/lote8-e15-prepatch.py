@@ -23,7 +23,8 @@ gravar(p,t)
 '''
 novo = '''# Uso genérico: itens que representam algo anexado/equipado podem exigir emUso.
 p='backend/4C_Ajustes.gs'; t=ler(p)
-needle="  const efeito = item.efeitoSaque || {};\n"
+needle="""  const efeito = item.efeitoSaque || {};
+"""
 repl="""  const efeito = item.efeitoSaque || {};
   if (efeito.exigeEmUso === true && registro.emUso !== true) {
     return { erro:item.nome + ': marque este item como em uso para representar que ele está anexado/equipado antes de ativá-lo.' };
