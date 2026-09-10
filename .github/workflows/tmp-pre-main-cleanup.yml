@@ -71,7 +71,7 @@ jobs:
           hs=h.read_text(encoding='utf-8')
           bloco='''\n\n### Manutenção pré-main após o fechamento do Core 1.0\n\n- branch de continuidade: `newedit` (substitui `ediçãoclaude`);\n- `main` permanece sem o Lote 8 até promoção explícita;\n- backup imutável de referência criado antes da promoção: `backup-main-2026-09-10-pre-newedit`;\n- limpeza pré-main é limitada a higiene, CI e simplificações sem alterar regras; mudanças de motor continuam exigindo gate completo.\n'''
           if '### Manutenção pré-main após o fechamento do Core 1.0' not in hs:
-              h.write_text(hs.rstrip()+bloco+'\n',encoding='utf-8')
+              h.write_text(hs.rstrip()+bloco.rstrip()+'\n',encoding='utf-8')
           PY
 
           cat > .editorconfig <<'EOF'
