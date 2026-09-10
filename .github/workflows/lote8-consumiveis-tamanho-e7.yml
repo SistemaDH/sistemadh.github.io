@@ -1,0 +1,106 @@
+name: Lote 8 - Consumiveis Tamanho E7
+
+on:
+  push:
+    branches: [tmp-lote8-consumiveis-tamanho-e7-sol]
+
+permissions:
+  contents: write
+
+env:
+  BASE_SHA: a4a4b4a3693b160d6af5d369c4c2059f6790efd7
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materializar consumiveis E7
+        run: |
+          python3 tools/lote8-consumiveis-tamanho-e7.py
+          node tools/gerar-44-equipamento.mjs
+          node tools/gerar-47-contadores.mjs
+          node tools/gerar-48-criacao.mjs
+          node tools/gerar-41-dominios.mjs
+          node tools/gerar-4B-descanso.mjs
+          python3 -c "from pathlib import Path; p=Path('docs/HANDOFF.md'); p.write_text(p.read_text(encoding='utf-8').rstrip()+'\n',encoding='utf-8')"
+          git diff --check
+          node --check js/telas/ficha.js
+
+      - name: Conferir catalogo, derivados e auditoria E7
+        run: |
+          python3 - <<'PY'
+          import json, subprocess
+          ids={'consumivel-54','consumivel-55'}
+          eq=json.load(open('data/equipamentos.json',encoding='utf-8'))
+          xs={x['id']:x for x in eq.get('consumiveis',[]) if x.get('id') in ids}
+          assert set(xs)==ids,(set(xs),ids)
+          co=json.load(open('data/contadores.json',encoding='utf-8'))
+          cs={x['refId']:x for x in co.get('contadores',[]) if x.get('refId') in ids and x.get('origem')=='consumivel'}
+          assert set(cs)==ids,(set(cs),ids)
+          esperado={
+            'consumivel-54':('agilidade',2,-1),
+            'consumivel-55':('forca',2,1),
+          }
+          for ident,x in xs.items():
+              assert x.get('automacao',{}).get('classificacao')=='consumivel-estado-tamanho-e7',ident
+              assert x.get('automacao',{}).get('rolaNoApp') is False,ident
+              ef=x.get('efeitoConsumivel') or {}
+              assert ef.get('tipo')=='ativar-estado',ident
+              assert ef.get('contador')=='estado:consumivel:'+ident,ident
+              c=cs[ident]
+              traco,bonus,prof=esperado[ident]
+              assert c.get('persisteSemRef') is True,ident
+              assert c.get('zeraEm')==['descanso','manual'],ident
+              assert c.get('modificadorTraco')=={'traco':traco,'bonus':bonus},ident
+              assert c.get('modificadorProficiencia')==prof,ident
+          out=subprocess.check_output(['python3','tools/auditar-pendencias-lote8.py'],text=True)
+          print(out)
+          for x in xs.values():
+              linha='| consumiveis | '+x['nome']+' | candidato mecânico |'
+              assert linha not in out,linha
+          print('E7 OK: tamanho e Proficiência temporários estruturados e fora dos candidatos.')
+          PY
+          grep -q "function modificadorProficienciaDeContadores_" backend/48_Criacao.gs
+          grep -q "function proficienciaEfetivaDaFicha_" backend/48_Criacao.gs
+          grep -q "modificadorProficiencia" backend/47_Contadores.gs
+
+      - name: Testes backend
+        run: node tools/testes-backend.mjs
+
+      - name: Instalar Playwright
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados e CSS
+        run: |
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+          git diff --check
+
+      - name: Proteger contra concorrencia
+        run: |
+          git fetch origin 'refs/heads/ediçãoclaude:refs/remotes/origin/ediçãoclaude'
+          ATUAL="$(git rev-parse 'origin/ediçãoclaude')"
+          echo "ediçãoclaude atual: $ATUAL"
+          echo "base esperada:       $BASE_SHA"
+          test "$ATUAL" = "$BASE_SHA"
+
+      - name: Commitar funcional e limpar temporarios
+        run: |
+          rm tools/lote8-consumiveis-tamanho-e7.py
+          rm .github/workflows/lote8-consumiveis-tamanho-e7.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git diff --cached --quiet && { echo 'Nenhuma mudança funcional para commit.'; exit 1; } || true
+          git commit -m 'feat: integrar consumiveis de tamanho'
+          git push origin HEAD:tmp-lote8-consumiveis-tamanho-e7-sol
