@@ -21,6 +21,7 @@ jobs:
       - name: Materializar consumiveis E1
         run: |
           python3 tools/lote8-consumiveis-recuperacao-e1.py
+          python3 tools/lote8-consumiveis-recuperacao-e1-fix.py
           python3 -c "from pathlib import Path; p=Path('docs/HANDOFF.md'); p.write_text(p.read_text(encoding='utf-8').rstrip()+'\n',encoding='utf-8')"
           node tools/gerar-44-equipamento.mjs
           node tools/gerar-41-dominios.mjs
@@ -34,7 +35,7 @@ jobs:
           python3 - <<'PY'
           import json, subprocess
           ids={
-            'consumivel-07','consumivel-08','consumivel-10','consumivel-15',
+            'consumivel-07','consumivel-08','consumivel-10','consumivel-18',
             'consumivel-19','consumivel-20','consumivel-43','consumivel-44'
           }
           d=json.load(open('data/equipamentos.json',encoding='utf-8'))
@@ -43,11 +44,14 @@ jobs:
           for ident,x in xs.items():
             assert x.get('automacao',{}).get('rolaNoApp') is False, ident
             assert x.get('efeitoConsumivel'), ident
+          errado=next(x for x in d.get('consumiveis',[]) if x.get('id')=='consumivel-15')
+          assert (errado.get('automacao') or {}).get('classificacao')!='consumivel-recuperacao-e1'
           out=subprocess.check_output(['python3','tools/auditar-pendencias-lote8.py'],text=True)
           print(out)
           assert 'Loot/consumíveis com texto mecânico detectado: **81**;' in out
-          assert 'estruturado/classificado: **8**' in out
-          print('E1 OK: 8 consumíveis estruturados; auditoria continua com 81 mecânicos inventariados.')
+          assert 'estruturado/classificado: **5**' in out
+          assert '| consumiveis | Pó do Estalo | estruturado/classificado |' in out
+          print('E1 OK: 8 consumíveis estruturados no catálogo; 5 deles pertencem aos 81 detectados pela heurística mecânica.')
           PY
           grep -q 'usarConsumivelDaMochila_' backend/4C_Ajustes.gs
           grep -q 'efeitoConsumivel' backend/44_Equipamento.gs
@@ -81,6 +85,7 @@ jobs:
       - name: Commitar funcional e limpar temporarios
         run: |
           rm tools/lote8-consumiveis-recuperacao-e1.py
+          rm tools/lote8-consumiveis-recuperacao-e1-fix.py
           rm .github/workflows/lote8-consumiveis-recuperacao-e1.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
