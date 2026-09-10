@@ -21,6 +21,7 @@ jobs:
       - name: Materializar consumiveis E7
         run: |
           python3 tools/lote8-consumiveis-tamanho-e7.py
+          python3 tools/lote8-e7-gerador47.py
           node tools/gerar-44-equipamento.mjs
           node tools/gerar-47-contadores.mjs
           node tools/gerar-48-criacao.mjs
@@ -105,6 +106,7 @@ jobs:
       - name: Commitar funcional e limpar temporarios
         run: |
           rm tools/lote8-consumiveis-tamanho-e7.py
+          rm tools/lote8-e7-gerador47.py
           rm .github/workflows/lote8-consumiveis-tamanho-e7.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
