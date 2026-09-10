@@ -1,0 +1,208 @@
+name: Pre-main cleanup gate
+
+on:
+  push:
+    branches:
+      - tmp-pre-main-cleanup-20260910
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pre-main-cleanup-20260910
+  cancel-in-progress: false
+
+env:
+  BASE_SHA: fcbb6b9f1e0424892ab66c7f00b100dc32977215
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Aplicar limpeza segura
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+
+          p=Path('package.json')
+          pkg=json.loads(p.read_text(encoding='utf-8'))
+          pkg['engines']={'node': '>=20'}
+          pkg['scripts']['teste:sintaxe']='node tools/conferir-sintaxe.mjs'
+          pkg['scripts']['teste:gerados']='node tools/conferir-gerados.mjs'
+          pkg['scripts']['teste:auditoria']='python3 tools/auditar-pendencias-lote8.py'
+          pkg['scripts']['teste:tudo']='npm run teste:sintaxe && npm run teste:css && npm run teste && npm run teste:gerados && npm run teste:e2e'
+          pkg['devDependencies']['playwright']='1.62.1'
+          p.write_text(json.dumps(pkg, ensure_ascii=False, indent=2)+'\n',encoding='utf-8')
+
+          gi=Path('.gitignore')
+          linhas=gi.read_text(encoding='utf-8').splitlines()
+          extras=['.env','.env.*','!.env.example','*.log','playwright-report/','test-results/','supabase/.temp/']
+          for x in extras:
+              if x not in linhas: linhas.append(x)
+          gi.write_text('\n'.join(linhas)+'\n',encoding='utf-8')
+
+          r=Path('README.md')
+          s=r.read_text(encoding='utf-8')
+          anchor='## Estado atual\n\n'
+          nota=('> **Pré-main:** a branch de desenvolvimento passa a ser `newedit`. Ela contém o Lote 8 / Core 1.0 auditado integralmente, mas ainda **não foi publicado em `main` nem implantado em produção**.\n\n')
+          if nota not in s:
+              assert anchor in s
+              s=s.replace(anchor,anchor+nota,1)
+          test_anchor='## Testes\n\n'
+          atual=('Gate mais recente do Core 1.0 em `newedit`: **941/941 testes de backend**, E2E completo, arquivos gerados e CSS aprovados, com auditoria do Lote 8 em **0 candidatos mecânicos**.\n\n')
+          if atual not in s:
+              assert test_anchor in s
+              s=s.replace(test_anchor,test_anchor+atual,1)
+          r.write_text(s,encoding='utf-8')
+
+          h=Path('docs/HANDOFF.md')
+          hs=h.read_text(encoding='utf-8')
+          bloco='''\n\n### Manutenção pré-main após o fechamento do Core 1.0\n\n- branch de continuidade: `newedit` (substitui `ediçãoclaude`);\n- `main` permanece sem o Lote 8 até promoção explícita;\n- backup imutável de referência criado antes da promoção: `backup-main-2026-09-10-pre-newedit`;\n- limpeza pré-main é limitada a higiene, CI e simplificações sem alterar regras; mudanças de motor continuam exigindo gate completo.\n'''
+          if '### Manutenção pré-main após o fechamento do Core 1.0' not in hs:
+              h.write_text(hs.rstrip()+bloco+'\n',encoding='utf-8')
+          PY
+
+          cat > .editorconfig <<'EOF'
+          root = true
+
+          [*]
+          charset = utf-8
+          end_of_line = lf
+          insert_final_newline = true
+          trim_trailing_whitespace = true
+
+          [*.md]
+          trim_trailing_whitespace = false
+          EOF
+
+          cat > tools/conferir-sintaxe.mjs <<'EOF'
+          import { readdirSync } from 'node:fs';
+          import { join } from 'node:path';
+          import { spawnSync } from 'node:child_process';
+
+          const roots = ['js', 'tools'];
+          const ignorar = new Set(['node_modules']);
+          const arquivos = [];
+
+          function visitar(dir) {
+            for (const ent of readdirSync(dir, { withFileTypes: true })) {
+              if (ignorar.has(ent.name)) continue;
+              const p = join(dir, ent.name);
+              if (ent.isDirectory()) visitar(p);
+              else if (/\.(?:js|mjs)$/.test(ent.name)) arquivos.push(p);
+            }
+          }
+
+          for (const root of roots) visitar(root);
+          arquivos.sort();
+          for (const arquivo of arquivos) {
+            const r = spawnSync(process.execPath, ['--check', arquivo], { stdio: 'inherit' });
+            if (r.status !== 0) process.exit(r.status ?? 1);
+          }
+          console.log(`Sintaxe OK: ${arquivos.length} arquivos JS/MJS.`);
+          EOF
+
+          mkdir -p .github/workflows
+          cat > .github/workflows/ci.yml <<'EOF'
+          name: CI
+
+          on:
+            pull_request:
+              branches: [main]
+            push:
+              branches: [newedit]
+
+          permissions:
+            contents: read
+
+          jobs:
+            validate:
+              runs-on: ubuntu-latest
+              steps:
+                - uses: actions/checkout@v4
+                - uses: actions/setup-node@v4
+                  with:
+                    node-version: '20'
+                    cache: npm
+                - run: npm ci
+                - run: npm run teste:sintaxe
+                - run: npm run teste
+                - run: npm run teste:gerados
+                - run: npm run teste:css
+                - name: Auditoria Core 1.0 zerada
+                  run: |
+                    python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria.md
+                    grep -F 'Classes/subclasses: **99 características**; **0** candidatas' /tmp/auditoria.md
+                    grep -F 'Comunidades: **9 características**; **0** candidatas' /tmp/auditoria.md
+                    grep -F 'Cartas de domínio: **189 cartas**; **0** candidatas' /tmp/auditoria.md
+                    grep -F 'Características de armas/armaduras/molduras: **203 ocorrências**; **0** ocorrências candidatas' /tmp/auditoria.md
+                    grep -F 'Loot/consumíveis com texto mecânico detectado: **81**; **0** candidatos' /tmp/auditoria.md
+                - run: npx playwright install --with-deps chromium
+                - run: npm run teste:e2e
+          EOF
+
+          npm install --package-lock-only --ignore-scripts
+          git diff --check
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Sintaxe
+        run: npm run teste:sintaxe
+
+      - name: Backend
+        run: npm run teste
+
+      - name: Gerados
+        run: npm run teste:gerados
+
+      - name: CSS
+        run: npm run teste:css
+
+      - name: Auditoria Core 1.0
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria.md
+          grep -F 'Classes/subclasses: **99 características**; **0** candidatas' /tmp/auditoria.md
+          grep -F 'Comunidades: **9 características**; **0** candidatas' /tmp/auditoria.md
+          grep -F 'Cartas de domínio: **189 cartas**; **0** candidatas' /tmp/auditoria.md
+          grep -F 'Características de armas/armaduras/molduras: **203 ocorrências**; **0** ocorrências candidatas' /tmp/auditoria.md
+          grep -F 'Loot/consumíveis com texto mecânico detectado: **81**; **0** candidatos' /tmp/auditoria.md
+
+      - name: Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E
+        run: npm run teste:e2e
+
+      - name: Trava de concorrencia
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin 'refs/heads/newedit:refs/remotes/origin/newedit'
+          test "$(git rev-parse origin/newedit)" = "$BASE_SHA"
+
+      - name: Commit funcional limpo
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/tmp-pre-main-cleanup.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'chore: limpar e endurecer base pre-main'
+          git push origin HEAD
