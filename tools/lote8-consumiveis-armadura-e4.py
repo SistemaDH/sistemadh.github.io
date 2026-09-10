@@ -49,9 +49,8 @@ bloco = """  } else if (tipo === 'recuperar-armadura-por-esperanca') {
       return { erro:item.nome + ': escolha uma quantidade inteira de pelo menos 1.' };
     }
     const recursos=(ficha || {}).recursos || {};
-    const defesas=(ficha || {}).defesas || {};
     const esperanca=Math.max(0,Number(recursos.esperanca) || 0);
-    const armaduraMarcada=Math.max(0,Number(defesas.armaduraMarcada) || 0);
+    const armaduraMarcada=Math.max(0,Number(recursos.armaduraMarcada) || 0);
     if (esperanca < q) {
       return { erro:item.nome + ': você tem apenas ' + esperanca + ' de Esperança para gastar.' };
     }
@@ -103,10 +102,9 @@ new = """    function verItemDoLivro(doLivro, naMochila, indice) {
       const podeUsar = !!(doLivro && doLivro.efeitoConsumivel);
       const pedeQuantidade = podeUsar && doLivro.efeitoConsumivel.tipo === 'recuperar-armadura-por-esperanca';
       const recursosAtuais = (p.ficha || {}).recursos || {};
-      const defesasAtuais = (p.ficha || {}).defesas || {};
       const limiteQuantidade = Math.max(0, Math.min(
         Number(recursosAtuais.esperanca) || 0,
-        Number(defesasAtuais.armaduraMarcada) || 0
+        Number(recursosAtuais.armaduraMarcada) || 0
       ));
       const quantidadeConsumivel = pedeQuantidade ? el('input', semCorretor({
         type:'number', class:'campo__entrada', min:'1',
@@ -160,7 +158,7 @@ function fichaCosturadorE4_(qtd=1) {
   const f=contexto.fichaVazia_();
   f.identidade={nome:'E4',nivel:10,classe:'Guerreiro',subclasse:'Chamada do Matador'};
   f.recursos.esperancaMaxima=6; f.recursos.esperanca=4;
-  f.defesas.pontuacaoArmadura=6; f.defesas.armaduraMarcada=4;
+  f.defesas.pontuacaoArmadura=6; f.recursos.armaduraMarcada=4;
   f.inventario=[{id:item.id,nome:item.nome,qtd:qtd,emUso:false}];
   return {f,item};
 }
@@ -179,7 +177,7 @@ teste('Costurador gasta N Esperança, recupera N PA e consome exatamente uma uni
   igual(r.erros,[],JSON.stringify(r));
   igual(r.pendenciaRolagem,null,JSON.stringify(r));
   igual(f.recursos.esperanca,1,JSON.stringify(r));
-  igual(f.defesas.armaduraMarcada,1,JSON.stringify(r));
+  igual(f.recursos.armaduraMarcada,1,JSON.stringify(r));
   igual(f.inventario[0].qtd,1,JSON.stringify(r));
   igual(r.mudancas[0].custoEsperanca,3);
   igual(r.mudancas[0].quantidade,3);
@@ -189,7 +187,7 @@ teste('Costurador rejeita zero, fração, Esperança insuficiente e PA insuficie
     {quantidade:0,prepara:()=>{}},
     {quantidade:1.5,prepara:()=>{}},
     {quantidade:5,prepara:()=>{}},
-    {quantidade:3,prepara:(f)=>{f.defesas.armaduraMarcada=2;}}
+    {quantidade:3,prepara:(f)=>{f.recursos.armaduraMarcada=2;}}
   ];
   casos.forEach((caso) => {
     const {f}=fichaCosturadorE4_(1); caso.prepara(f);
@@ -203,7 +201,7 @@ teste('Costurador não aceita uso sem quantidade e não desperdiça item com arm
   let x=fichaCosturadorE4_(1), antes=JSON.stringify(x.f);
   let r=contexto.aplicarAjustes_(x.f,[{tipo:'inventario',acao:'consumir',indice:0}]);
   igual(r.erros.length,1); igual(JSON.stringify(x.f),antes);
-  x=fichaCosturadorE4_(1); x.f.defesas.armaduraMarcada=0; antes=JSON.stringify(x.f);
+  x=fichaCosturadorE4_(1); x.f.recursos.armaduraMarcada=0; antes=JSON.stringify(x.f);
   r=contexto.aplicarAjustes_(x.f,[{tipo:'inventario',acao:'consumir',indice:0,quantidade:1}]);
   igual(r.erros.length,1); igual(JSON.stringify(x.f),antes);
 });
