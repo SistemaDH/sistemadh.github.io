@@ -40,7 +40,7 @@ jobs:
               c=x.get('caracteristica')
               if isinstance(c,dict):
                 en=c.get('nomeIngles'); pt=c.get('nome')
-                if en in {'Startling','Persuasive','Repelling','Invigorating','Lifestealing','Quick'} or pt in {'Alarmante','Rápido','Veloz'}:
+                if en in {'Startling','Persuasive','Concussive','Invigorating','Lifestealing','Quick'} or pt in {'Alarmante','Rápido','Veloz'}:
                   alvos.append((x,c))
               for v in x.values(): walk(v)
             elif isinstance(x,list):
