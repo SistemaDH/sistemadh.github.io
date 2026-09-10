@@ -1,5 +1,5 @@
 /* ==========================================================================
-   L9-B7/B8/B9/B10/B11/B12/B13/B15/B16/B17 · REFINOS MOBILE
+   L9-B7/B8/B9/B10/B11/B12/B13/B15/B16/B17/B18 · REFINOS MOBILE
    ========================================================================== */
 
 /* ==========================================================================
@@ -320,4 +320,69 @@
   font-size: var(--txt-xl);
   line-height: 1;
   touch-action: manipulation;
+}
+
+/* ==========================================================================
+   B18 · AJUDA DA CRIAÇÃO RECOLHÍVEL
+
+   Aberta, a explicação divide a linha apenas com um alvo de 44px para recolher;
+   não ganha outro cartão nem outro cabeçalho. Recolhida, vira uma linha curta
+   "Ajuda desta etapa" + botão de mostrar. Assim o ganho de densidade acontece
+   quando a pessoa decide que já conhece aquela orientação.
+   ========================================================================== */
+
+.criacao__ajudaBloco {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 44px;
+  align-items: start;
+  gap: var(--e2);
+  padding-bottom: var(--e2);
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.criacao__ajudaBloco .criacao__ajuda,
+.criacao__ajudaFechada {
+  min-width: 0;
+  align-self: center;
+}
+
+.criacao__ajudaFechada {
+  display: none;
+  color: var(--cor-texto-suave);
+  font-size: var(--txt-sm);
+  line-height: 1.4;
+}
+
+.criacao__ajudaAlternar {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--cor-texto-suave);
+  font-size: var(--txt-lg);
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.criacao__ajudaAlternar:hover,
+.criacao__ajudaAlternar:focus-visible {
+  color: var(--cor-ouro-claro);
+}
+
+.criacao__ajudaBloco.esta-recolhida {
+  padding-bottom: 0;
+}
+
+.criacao__ajudaBloco.esta-recolhida .criacao__ajuda {
+  display: none;
+}
+
+.criacao__ajudaBloco.esta-recolhida .criacao__ajudaFechada {
+  display: block;
 }
