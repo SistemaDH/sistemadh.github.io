@@ -920,3 +920,16 @@ Bloco baseado no Core pt-BR, Tesouro pp.129–130:
 - `loot-16` Chave-Mestra: classificada como passivo contextual; vantagem em Finesse/Acuidade ao abrir porta trancada, sem rolagem no app.
 
 O motor genérico de `efeitoSaque` agora suporta contador de uso com máximo maior que 1. O descanso ganhou leitura genérica de `efeitoSaquePassivo.descanso`.
+
+
+### Diário — Lote 8 E15: contexto, estados e usos de loot
+
+Bloco conferido contra o Core pt-BR, Tesouro pp.129–131:
+
+- `loot-17` Prisma Arcano: ativação cria estado persistente manual e gasta a ativação até o próximo descanso longo; posição e bônus de +1 em Conjuração para aliados Próximos continuam na mesa;
+- `loot-31` Saco de Ficklesand: duas jogadas contextuais (Presença 10 e Finesse 10) estruturados sem RNG; Vulnerável em alvo externo continua manual;
+- `loot-35` Amuleto do Alcance: exige estar marcado em uso (proxy de anexado a arma Corpo a Corpo) e registra até 3 ativações por descanso;
+- `loot-36` Semente de Portal: classificada como estado persistente do mundo — 24h para ficar pronta, viagem entre sementes plantadas e destruição por dano mágico permanecem na mesa;
+- `loot-60` Cinturão da Unidade: 1 vez por sessão, cobra 5 Esperança atomicamente; o Jogada em Dupla de três personagens continua na mesa.
+
+Nenhum destes efeitos rola dados no app.

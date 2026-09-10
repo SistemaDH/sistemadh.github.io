@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 180 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento, 24 de consumível e 6 de loot', () => {
+teste('o catálogo tem 184 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento, 24 de consumível e 10 de loot', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,7 +1561,7 @@ teste('o catálogo tem 180 contadores: 113 de carta, 25 de classe/subclasse, 4 d
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 180);
+  igual(Object.keys(CONTADORES).length, 184);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 113);
@@ -1571,7 +1571,7 @@ teste('o catálogo tem 180 contadores: 113 de carta, 25 de classe/subclasse, 4 d
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
   igual(porOrigem['equipamento'], 5);
-  igual(porOrigem['loot'], 6);
+  igual(porOrigem['loot'], 10);
 });
 
 teste('"uma vez por" conta o uso GASTO, e o gatilho certo o apaga', () => {
@@ -11937,6 +11937,49 @@ teste('E14 Chave-Mestra fica contextual: nenhuma rolagem é feita pelo app', () 
   const x=contexto.acharItem_('loot-16');
   igual(x.automacao.rolaNoApp,false); igual(x.efeitoSaquePassivo.contextual.traco,'finesse');
   verdade(!x.efeitoSaque,'Chave-Mestra não deve ganhar botão de uso que finja rolar a ação');
+});
+
+
+console.log('\nLote 8 — contexto e usos de loot E15');
+teste('E15 estrutura Prisma, Ficklesand, Amuleto, Portal e Cinturão sem RNG', () => {
+  const ids=['loot-17','loot-31','loot-35','loot-36','loot-60'];
+  for (const id of ids) {
+    const x=contexto.acharItem_(id); verdade(x && x.automacao,id+' sem automação'); igual(x.automacao.rolaNoApp,false,id);
+  }
+  igual(contexto.acharItem_('loot-31').efeitoSaquePassivo.contextuais.length,2);
+  igual(contexto.acharItem_('loot-36').efeitoSaquePassivo.contextual.tempoParaFicarProntoHoras,24);
+});
+teste('E15 Prisma ativa estado, bloqueia segunda ativação e recarrega uso no descanso longo', () => {
+  const item=contexto.acharItem_('loot-17'); const f=contexto.fichaVazia_();
+  f.inventario=[{id:item.id,nome:item.nome,qtd:1,emUso:true}];
+  let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r));
+  igual(f.contadores['uso:loot:loot-17'].valor,1); igual(f.contadores['estado:loot:loot-17'].valor,1);
+  const antes=JSON.stringify(f); r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f),antes);
+  contexto.ajustarContador_(f,{chave:'estado:loot:loot-17',valor:0});
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]); igual(r.erros.length,1);
+  contexto.aplicarGatilhoContadores_(f,'descanso-longo');
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]); igual(r.erros,[],JSON.stringify(r));
+});
+teste('E15 Amuleto do Alcance exige emUso e permite três ativações por descanso', () => {
+  const item=contexto.acharItem_('loot-35'); const f=contexto.fichaVazia_();
+  f.inventario=[{id:item.id,nome:item.nome,qtd:1,emUso:false}];
+  let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]); igual(r.erros.length,1);
+  f.inventario[0].emUso=true;
+  for(let i=1;i<=3;i++) { r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]); igual(r.erros,[],JSON.stringify(r)); igual(r.mudancas[0].usosDepois,i); }
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]); igual(r.erros.length,1);
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]); igual(r.erros,[],JSON.stringify(r));
+});
+teste('E15 Cinturão da Unidade cobra 5 Esperança atomicamente e só uma vez por sessão', () => {
+  const item=contexto.acharItem_('loot-60'); const f=contexto.fichaVazia_();
+  f.recursos.esperanca=5; f.recursos.esperancaMaxima=6; f.inventario=[{id:item.id,nome:item.nome,qtd:1,emUso:true}];
+  let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r)); igual(f.recursos.esperanca,0); igual(f.contadores['uso:loot:loot-60'].valor,1);
+  const antes=JSON.stringify(f); r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]); igual(r.erros.length,1); igual(JSON.stringify(f),antes);
+  contexto.aplicarGatilhoContadores_(f,'fim-de-sessao'); f.recursos.esperanca=4; const antes2=JSON.stringify(f);
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]); igual(r.erros.length,1); igual(JSON.stringify(f),antes2);
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

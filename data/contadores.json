@@ -3376,6 +3376,74 @@
     "descanso"
    ],
    "observacao": "Até 3 usos por descanso. O valor guarda quantos usos já foram gastos."
+  },
+  {
+   "chave": "uso:loot:loot-17",
+   "origem": "loot",
+   "refId": "loot-17",
+   "nome": "Prisma Arcano",
+   "rotulo": "ativação gasta",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Depois de ativado, a recarga só volta no próximo descanso longo."
+  },
+  {
+   "chave": "estado:loot:loot-17",
+   "origem": "loot",
+   "refId": "loot-17",
+   "nome": "Prisma Arcano ativo",
+   "rotulo": "ativo",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Zere manualmente quando o Prisma for desativado; o estado não expira sozinho."
+  },
+  {
+   "chave": "uso:loot:loot-35",
+   "origem": "loot",
+   "refId": "loot-35",
+   "nome": "Amuleto do Alcance",
+   "rotulo": "usos",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 3
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Até 3 ativações por descanso."
+  },
+  {
+   "chave": "uso:loot:loot-60",
+   "origem": "loot",
+   "refId": "loot-60",
+   "nome": "Cinturão da Unidade",
+   "rotulo": "uso da sessão",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "fim-de-sessao"
+   ],
+   "observacao": "Uma vez por sessão."
   }
  ]
 }

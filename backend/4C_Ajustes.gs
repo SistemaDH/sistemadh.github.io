@@ -2432,6 +2432,9 @@ function usarSaqueDaMochila_(ficha, lista, indice, a) {
     return { erro:'Este item não possui uso de saque automatizado.' };
   }
   const efeito = item.efeitoSaque || {};
+  if (efeito.exigeEmUso === true && registro.emUso !== true) {
+    return { erro:item.nome + ': marque este item como em uso para representar que ele está anexado/equipado antes de ativá-lo.' };
+  }
   if (efeito.tipo !== 'uso-assistido') return { erro:item.nome + ': tipo de uso de saque desconhecido.' };
 
   ficha.contadores = ficha.contadores || {};

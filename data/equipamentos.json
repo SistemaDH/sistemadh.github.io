@@ -6422,7 +6422,20 @@
    "descricao": "Posicione esse prisma em um local de sua escolha e ative-o. Todos os aliados dentro do alcance próximo dele ganham um bônus de +1 em seus lançamentos de feitiço. Enquanto estiver ativado, o prisma não pode ser movido. Uma vez desativado, o prisma não poderá ser ativado novamente até seu próximo descanso longo.",
    "nomeIngles": "Arcane Prism",
    "descricaoIngles": "Position this prism in a location of your choosing and activate it. All allies within Close range of it gain a +1 bonus to their Spellcast Rolls. While activated, the prism can't be moved. Once the prism is deactivated, it can't be activated again until your next long rest.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-estado-e-cooldown-e15",
+    "rolaNoApp": false,
+    "motivo": "Ativar é determinístico; posição, aliados Próximos e jogadas de Conjuração continuam na mesa. O estado ativo é manual e a recarga só volta no descanso longo."
+   },
+   "efeitoSaque": {
+    "tipo": "uso-assistido",
+    "contadorUso": "uso:loot:loot-17",
+    "contadorEstado": "estado:loot:loot-17",
+    "recusaSeEstadoAtivo": true,
+    "rolaNoApp": false,
+    "efeitoManual": "Prisma ativo e imóvel: aliados Próximos dele recebem +1 em jogadas de Conjuração. Ao desativá-lo, zere manualmente o estado; ele não pode ser reativado até o próximo descanso longo."
+   }
   },
   {
    "id": "loot-18",
@@ -6596,7 +6609,26 @@
    "descricao": "Você pode convencer esse pequeno saco de areia a ficar muito mais pesado ou mais leve com um Rolamento de Presença bem-sucedido (10). Além disso, com uma rolagem bem-sucedida de Finesse (10), você pode soprar um pouco de areia no rosto do alvo para torná-lo temporariamente vulnerável.",
    "nomeIngles": "Bag of Ficklesand",
    "descricaoIngles": "You can convince this small bag of sand to be much heavier or lighter with a successful Presence Roll (10). Additionally, on a successful Finesse Roll (10), you can blow a bit of sand into a target's face to make them temporarily Vulnerable.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-contextual-jogadas-e15",
+    "rolaNoApp": false,
+    "motivo": "Os dois efeitos dependem de jogadas feitas na mesa; o app preserva CD, traço e consequência sem rolar nem aplicar Vulnerável a um alvo externo."
+   },
+   "efeitoSaquePassivo": {
+    "contextuais": [
+     {
+      "traco": "presenca",
+      "dificuldade": 10,
+      "efeito": "tornar a bolsa muito mais pesada ou mais leve"
+     },
+     {
+      "traco": "finesse",
+      "dificuldade": 10,
+      "efeito": "deixar temporariamente Vulnerável o alvo atingido pela areia"
+     }
+    ]
+   }
   },
   {
    "id": "loot-32",
@@ -6635,7 +6667,19 @@
    "origemNome": "revisado-pela-vanessa",
    "traducaoDescricao": "minha",
    "nomeAntigo": "Charme da lâmina de ar",
-   "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Tesouro"
+   "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Tesouro",
+   "automacao": {
+    "classificacao": "loot-uso-por-descanso-e15",
+    "rolaNoApp": false,
+    "motivo": "O app registra até 3 ativações por descanso; a arma Corpo a Corpo anexada, o alvo e o ataque continuam sendo contexto da mesa."
+   },
+   "efeitoSaque": {
+    "tipo": "uso-assistido",
+    "contadorUso": "uso:loot:loot-35",
+    "exigeEmUso": true,
+    "rolaNoApp": false,
+    "efeitoManual": "Use apenas quando este amuleto estiver anexado a uma arma de alcance Corpo a Corpo. Esta ativação permite atacar um alvo Próximo."
+   }
   },
   {
    "id": "loot-36",
@@ -6647,7 +6691,20 @@
    "origemNome": "revisado-pela-vanessa",
    "traducaoDescricao": "minha",
    "nomeAntigo": "Portal Seed",
-   "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Tesouro"
+   "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Tesouro",
+   "automacao": {
+    "classificacao": "loot-mundo-persistente-manual-e15",
+    "rolaNoApp": false,
+    "motivo": "Plantio, passagem de 24 horas, local dos portais e dano mágico ao portal são estado do mundo/cena, não da ficha; ficam registrados como regra manual."
+   },
+   "efeitoSaquePassivo": {
+    "contextual": {
+     "tipo": "portal-persistente",
+     "tempoParaFicarProntoHoras": 24,
+     "viajaEntreOutrasSementesPlantadas": true,
+     "destruidoPorDanoMagico": true
+    }
+   }
   },
   {
    "id": "loot-37",
@@ -6959,7 +7016,19 @@
    "descricao": "Uma vez por sessão, você pode gastar 5 de Esperança para liderar um Tag Team Roll com três PCs em vez de dois.",
    "nomeIngles": "Belt of Unity",
    "descricaoIngles": "Once per session, you can spend 5 Hope to lead a Tag Team Roll with three PCs instead of two.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-custo-por-sessao-e15",
+    "rolaNoApp": false,
+    "motivo": "A ficha cobra 5 Esperança e registra o uso da sessão; participantes e resolução do Jogada em Dupla permanecem na mesa."
+   },
+   "efeitoSaque": {
+    "tipo": "uso-assistido",
+    "contadorUso": "uso:loot:loot-60",
+    "custoEsperanca": 5,
+    "rolaNoApp": false,
+    "efeitoManual": "Lidere um Jogada em Dupla com três personagens em vez de dois."
+   }
   }
  ],
  "consumiveis": [

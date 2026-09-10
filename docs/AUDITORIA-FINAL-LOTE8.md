@@ -9,8 +9,8 @@
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **0** candidatas sem sinal de automação específica; **92** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **0** ocorrências candidatas ativas/condicionais.
-- Loot/consumíveis com texto mecânico detectado: **81**; **22** candidatos ainda sem estrutura/classificação.
-- Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **52** linhas, incluindo histórico já resolvido.
+- Loot/consumíveis com texto mecânico detectado: **81**; **17** candidatos ainda sem estrutura/classificação.
+- Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **53** linhas, incluindo histórico já resolvido.
 
 ### Distribuição — classes/subclasses
 
@@ -35,8 +35,8 @@
 
 ### Distribuição — loot/consumíveis
 
-- candidato mecânico: **22**
-- estruturado/classificado: **58**
+- candidato mecânico: **17**
+- estruturado/classificado: **63**
 - referência específica no motor: **1**
 
 ## Candidatos — classes e subclasses
@@ -69,7 +69,7 @@
 | loot | Flechas Perfurantes | estruturado/classificado | Três vezes por descanso, quando for bem-sucedido em um ataque com uma dessas flechas, você pode adicionar sua Proficiência a Você a rolagem de dano. |
 | loot | Pedra da Resiliência | candidato mecânico | Incruste esta pedra em uma armadura que ainda não tenha uma característica; ela recebe a característica abaixo. Resiliente: antes de marcar seu último Ponto de Armadura,… |
 | loot | Chave-Mestra | estruturado/classificado | Ao usar essa chave para abrir uma porta trancada, você ganha vantagem na rolagem de finesse. |
-| loot | Prisma Arcano | candidato mecânico | Posicione esse prisma em um local de sua escolha e ative-o. Todos os aliados dentro do alcance próximo dele ganham um bônus de +1 em seus lançamentos de feitiço. Enquant… |
+| loot | Prisma Arcano | estruturado/classificado | Posicione esse prisma em um local de sua escolha e ative-o. Todos os aliados dentro do alcance próximo dele ganham um bônus de +1 em seus lançamentos de feitiço. Enquant… |
 | loot | Receita de Poção de Estamina Menor | candidato mecânico | Como um movimento de inatividade, você pode usar o osso de uma criatura para criar uma Poção de resistência menor. |
 | loot | Receita de Poção de Saúde Menor | candidato mecânico | Como movimento de inatividade, você pode usar um frasco de sangue para criar uma Poção de Saúde Menor. |
 | loot | Espírito Corretor | estruturado/classificado | Esse pequeno duende fica na curva de seu canal auditivo e sussurra conselhos úteis durante o combate. Uma vez por descanso curto, você pode ganhar vantagem em uma rolage… |
@@ -80,11 +80,11 @@
 | loot | Planador | estruturado/classificado | Enquanto estiver caindo, você pode marcar um Stress para acionar esse pequeno paraquedas e deslizar com segurança até o chão. |
 | loot | Anel do Silêncio | estruturado/classificado | Gaste uma Esperança para ativar esse anel. Seus passos são silenciosos até o próximo descanso. |
 | loot | Pingente Calmante | candidato mecânico | Quando for marcar seu último estresse, role um d6. Se o resultado for 5 ou mais, não o marque. |
-| loot | Saco de Ficklesand | candidato mecânico | Você pode convencer esse pequeno saco de areia a ficar muito mais pesado ou mais leve com um Rolamento de Presença bem-sucedido (10). Além disso, com uma rolagem bem-suc… |
+| loot | Saco de Ficklesand | estruturado/classificado | Você pode convencer esse pequeno saco de areia a ficar muito mais pesado ou mais leve com um Rolamento de Presença bem-sucedido (10). Além disso, com uma rolagem bem-suc… |
 | loot | Anel de Resistência | candidato mecânico | Uma vez por descanso longo, você pode ativar esse anel após um ataque bem-sucedido contra você para reduzir o dano pela metade. |
 | loot | Caixa de muitos produtos | candidato mecânico | Uma vez por descanso longo, você pode abrir essa pequena caixa e rolar um d12. Se o resultado for de 1 a 6, ela estará vazia. Em um resultado de 7 a 10, ela contém um co… |
-| loot | Amuleto do Alcance | candidato mecânico | Você pode anexar este amuleto a uma arma de alcance Corpo a Corpo. 3 vezes por descanso, você pode ativar este amuleto para atacar um alvo Próximo. |
-| loot | Semente de Portal | candidato mecânico | Plante esta semente no chão para que um portal surja no local em 24h. Você pode usá-lo para viajar até qualquer outro lugar onde tenha plantado uma Semente de Portal. Um… |
+| loot | Amuleto do Alcance | estruturado/classificado | Você pode anexar este amuleto a uma arma de alcance Corpo a Corpo. 3 vezes por descanso, você pode ativar este amuleto para atacar um alvo Próximo. |
+| loot | Semente de Portal | estruturado/classificado | Plante esta semente no chão para que um portal surja no local em 24h. Você pode usá-lo para viajar até qualquer outro lugar onde tenha plantado uma Semente de Portal. Um… |
 | loot | Corrente do Paragon | candidato mecânico | Como movimento de tempo de inatividade, você pode meditar em um ideal ou princípio que lhe seja caro e concentrar sua vontade nessa corrente. Uma vez por descanso longo,… |
 | loot | Amuleto Elusivo | estruturado/classificado | Uma vez por descanso longo, você pode ativar esse amuleto para ficar oculto até se mover. Enquanto estiver oculto dessa forma, você permanecerá invisível mesmo que um ad… |
 | loot | Medalhão Hopekeeper | candidato mecânico | Durante um descanso longo, se você tiver 6 de Esperança, poderá gastar uma Esperança para imbuir esse medalhão com sua determinação abundante. Quando tiver 0 de Esperanç… |
@@ -95,7 +95,7 @@
 | loot | Receita de Mythic Dust | candidato mecânico | Como movimento de inatividade, você pode usar um punhado de pó de ouro fino para criar Pó Mítico. |
 | loot | Fragmento de memória | candidato mecânico | Uma vez por descanso longo, você pode gastar 2 de Esperança para chamar um card de domínio do seu cofre em vez de pagar seu Custo de Chamada. |
 | loot | Anel de determinação inquebrável | candidato mecânico | Uma vez por sessão, quando o GM gasta um Medo, você pode gastar 4 de Esperança para cancelar os efeitos desse Medo gasto. |
-| loot | Cinturão da unidade | candidato mecânico | Uma vez por sessão, você pode gastar 5 de Esperança para liderar um Tag Team Roll com três PCs em vez de dois. |
+| loot | Cinturão da unidade | estruturado/classificado | Uma vez por sessão, você pode gastar 5 de Esperança para liderar um Tag Team Roll com três PCs em vez de dois. |
 | consumiveis | Poção da passada | estruturado/classificado | Você ganha um bônus de +1 na sua próxima rolagem de agilidade. |
 | consumiveis | Poção de reforço | estruturado/classificado | Você ganha um bônus de +1 na sua próxima rolagem de força. |
 | consumiveis | Poção de controle | estruturado/classificado | Você ganha um bônus de +1 na sua próxima rolagem de finesse. |
@@ -201,6 +201,7 @@ Estas linhas misturam histórico resolvido e trabalho ainda aberto; servem para 
 - L878: **Próximo bloco natural:** com consumíveis zerados na auditoria, revisar os candidatos de **loot permanente**, agrupando-os por família mecânica e automatizando somente consequências determinísticas da própria ficha.
 - L891: - `loot-28` Anel do Silêncio: cobra 1 Esperança e mantém o estado de passos silenciosos até o próximo descanso;
 - L896: O E12 adiciona 5 contadores canônicos de loot. Próximo bloco deve continuar pelos loots restantes da auditoria, priorizando passivos simples/relics e só depois anexos de arma/reação de dano.
+- L929: - `loot-17` Prisma Arcano: ativação cria estado persistente manual e gasta a ativação até o próximo descanso longo; posição e bônus de +1 em Conjuração para aliados Próximos continuam na mesa;
 
 ## Regra para a próxima etapa
 

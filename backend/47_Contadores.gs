@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 180 cartas e características mandam
+ *  O problema que este arquivo resolve: 184 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -220,6 +220,10 @@ const CONTADORES = {
   "uso:loot:loot-38": { origem: "loot", refId: "loot-38", nome: "Amuleto Elusivo", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
   "estado:loot:loot-38": { origem: "loot", refId: "loot-38", nome: "Amuleto Elusivo", rotulo: "Oculto até se mover", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
   "uso:loot:loot-14": { origem: "loot", refId: "loot-14", nome: "Flechas Perfurantes", rotulo: "usos", tipo: "marcadores", maximo: {"tipo":"fixo","valor":3}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:loot:loot-17": { origem: "loot", refId: "loot-17", nome: "Prisma Arcano", rotulo: "ativação gasta", tipo: "usos", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "estado:loot:loot-17": { origem: "loot", refId: "loot-17", nome: "Prisma Arcano ativo", rotulo: "ativo", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "uso:loot:loot-35": { origem: "loot", refId: "loot-35", nome: "Amuleto do Alcance", rotulo: "usos", tipo: "usos", maximo: {"tipo":"fixo","valor":3}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:loot:loot-60": { origem: "loot", refId: "loot-60", nome: "Cinturão da Unidade", rotulo: "uso da sessão", tipo: "usos", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-de-sessao"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -404,6 +408,10 @@ const CONTADOR_ALIASES = {
   "uso:loot:loot-38": ["Amuleto Elusivo"],
   "estado:loot:loot-38": ["Amuleto Elusivo"],
   "uso:loot:loot-14": ["Flechas Perfurantes"],
+  "uso:loot:loot-17": ["Prisma Arcano"],
+  "estado:loot:loot-17": ["Prisma Arcano ativo"],
+  "uso:loot:loot-35": ["Amuleto do Alcance"],
+  "uso:loot:loot-60": ["Cinturão da Unidade"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */
