@@ -9,8 +9,8 @@
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **0** candidatas sem sinal de automação específica; **92** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **0** ocorrências candidatas ativas/condicionais.
-- Loot/consumíveis com texto mecânico detectado: **81**; **13** candidatos ainda sem estrutura/classificação.
-- Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **53** linhas, incluindo histórico já resolvido.
+- Loot/consumíveis com texto mecânico detectado: **81**; **10** candidatos ainda sem estrutura/classificação.
+- Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **54** linhas, incluindo histórico já resolvido.
 
 ### Distribuição — classes/subclasses
 
@@ -35,8 +35,8 @@
 
 ### Distribuição — loot/consumíveis
 
-- candidato mecânico: **13**
-- estruturado/classificado: **67**
+- candidato mecânico: **10**
+- estruturado/classificado: **70**
 - referência específica no motor: **1**
 
 ## Candidatos — classes e subclasses
@@ -67,7 +67,7 @@
 | loot | Aljava de carga | estruturado/classificado | Quando for bem-sucedido em um ataque com uma flecha armazenada nessa aljava, ganhe um bônus na rolagem de dano igual ao seu patamar atual. |
 | loot | Pedra Glamour | estruturado/classificado | Ative essa pedra do tamanho de um seixo para memorizar a aparência de alguém que você pode ver. Gaste uma Hope para recriar magicamente essa aparência em você como uma i… |
 | loot | Flechas Perfurantes | estruturado/classificado | Três vezes por descanso, quando for bem-sucedido em um ataque com uma dessas flechas, você pode adicionar sua Proficiência a Você a rolagem de dano. |
-| loot | Pedra da Resiliência | candidato mecânico | Incruste esta pedra em uma armadura que ainda não tenha uma característica; ela recebe a característica abaixo. Resiliente: antes de marcar seu último Ponto de Armadura,… |
+| loot | Pedra da Resiliência | estruturado/classificado | Incruste esta pedra em uma armadura que ainda não tenha uma característica; ela recebe a característica abaixo. Resiliente: antes de marcar seu último Ponto de Armadura,… |
 | loot | Chave-Mestra | estruturado/classificado | Ao usar essa chave para abrir uma porta trancada, você ganha vantagem na rolagem de finesse. |
 | loot | Prisma Arcano | estruturado/classificado | Posicione esse prisma em um local de sua escolha e ative-o. Todos os aliados dentro do alcance próximo dele ganham um bônus de +1 em seus lançamentos de feitiço. Enquant… |
 | loot | Receita de Poção de Estamina Menor | estruturado/classificado | Como um movimento de inatividade, você pode usar o osso de uma criatura para criar uma Poção de resistência menor. |
@@ -79,9 +79,9 @@
 | loot | Pedra Maior | candidato mecânico | Você pode anexar essa pedra a uma arma que ainda não tenha uma característica. A arma ganha a seguinte característica. Poderoso: Em um ataque bem-sucedido, role um dado … |
 | loot | Planador | estruturado/classificado | Enquanto estiver caindo, você pode marcar um Stress para acionar esse pequeno paraquedas e deslizar com segurança até o chão. |
 | loot | Anel do Silêncio | estruturado/classificado | Gaste uma Esperança para ativar esse anel. Seus passos são silenciosos até o próximo descanso. |
-| loot | Pingente Calmante | candidato mecânico | Quando for marcar seu último estresse, role um d6. Se o resultado for 5 ou mais, não o marque. |
+| loot | Pingente Calmante | estruturado/classificado | Quando for marcar seu último estresse, role um d6. Se o resultado for 5 ou mais, não o marque. |
 | loot | Saco de Ficklesand | estruturado/classificado | Você pode convencer esse pequeno saco de areia a ficar muito mais pesado ou mais leve com um Rolamento de Presença bem-sucedido (10). Além disso, com uma rolagem bem-suc… |
-| loot | Anel de Resistência | candidato mecânico | Uma vez por descanso longo, você pode ativar esse anel após um ataque bem-sucedido contra você para reduzir o dano pela metade. |
+| loot | Anel de Resistência | estruturado/classificado | Uma vez por descanso longo, você pode ativar esse anel após um ataque bem-sucedido contra você para reduzir o dano pela metade. |
 | loot | Caixa de muitos produtos | candidato mecânico | Uma vez por descanso longo, você pode abrir essa pequena caixa e rolar um d12. Se o resultado for de 1 a 6, ela estará vazia. Em um resultado de 7 a 10, ela contém um co… |
 | loot | Amuleto do Alcance | estruturado/classificado | Você pode anexar este amuleto a uma arma de alcance Corpo a Corpo. 3 vezes por descanso, você pode ativar este amuleto para atacar um alvo Próximo. |
 | loot | Semente de Portal | estruturado/classificado | Plante esta semente no chão para que um portal surja no local em 24h. Você pode usá-lo para viajar até qualquer outro lugar onde tenha plantado uma Semente de Portal. Um… |
@@ -202,6 +202,7 @@ Estas linhas misturam histórico resolvido e trabalho ainda aberto; servem para 
 - L891: - `loot-28` Anel do Silêncio: cobra 1 Esperança e mantém o estado de passos silenciosos até o próximo descanso;
 - L896: O E12 adiciona 5 contadores canônicos de loot. Próximo bloco deve continuar pelos loots restantes da auditoria, priorizando passivos simples/relics e só depois anexos de arma/reação de dano.
 - L929: - `loot-17` Prisma Arcano: ativação cria estado persistente manual e gasta a ativação até o próximo descanso longo; posição e bônus de +1 em Conjuração para aliados Próximos continuam na mesa;
+- L957: - `loot-29` intercepta a marca que encheria a trilha de Estresse, depois de Inabalável; o d6 permanece físico e a pendência é atômica;
 
 ## Regra para a próxima etapa
 

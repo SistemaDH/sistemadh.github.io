@@ -660,6 +660,61 @@ function aplicarAjusteComInabalavel_(ficha, a) {
   return { resultado: r };
 }
 
+/**
+ * Depois de Inabalável, confere o Pingente Calmante. Assim um 6 de Inabalável
+ * já evita a marca e o pingente nem é solicitado; se a marca ainda preencher
+ * o último espaço, o jogador informa o d6 físico do pingente.
+ */
+function aplicarAjusteComDefesasDeEstresse_(ficha, a) {
+  const antesFicha = JSON.parse(JSON.stringify(ficha || {}));
+  const antes = Math.max(0, Number(((antesFicha || {}).recursos || {}).estresseMarcado) || 0);
+  const tentativa = aplicarAjusteComInabalavel_(ficha, a);
+  if (tentativa && tentativa.pendencia) return tentativa;
+  const r = tentativa ? tentativa.resultado : null;
+  if (!r || r.erro) return { resultado:r };
+
+  const regra = regraPingenteCalmanteDaFicha_(antesFicha);
+  const maximo = Math.max(0, Number(((ficha || {}).recursos || {}).estresseMaximo) || 0);
+  const depois = Math.max(0, Number(((ficha || {}).recursos || {}).estresseMarcado) || 0);
+  if (!regra || !maximo || antes >= maximo || depois < maximo) return { resultado:r };
+
+  const bruto = (a || {}).dadoPingenteCalmante;
+  if (bruto === undefined || bruto === null || bruto === '') {
+    substituirFichaEmLugar_(ficha, antesFicha);
+    return { pendencia:{
+      tipo:'habilidade-manual', campo:'dadoPingenteCalmante', caracteristica:regra.fonte,
+      dado:String((regra.regra || {}).dado || 'd6'), minimo:1, maximo:6,
+      mensagem:regra.fonte + ': você marcaria seu último Estresse. Role 1d6 fora do app; com 5 ou 6, não marque esse Estresse.'
+    } };
+  }
+  const dado = Math.trunc(Number(bruto));
+  if (!isFinite(dado) || Number(bruto) !== dado || dado < 1 || dado > 6) {
+    substituirFichaEmLugar_(ficha, antesFicha);
+    return { resultado:{ erro:regra.fonte + ': informe o resultado inteiro do d6, de 1 a 6.' } };
+  }
+
+  const evita = Array.isArray((regra.regra || {}).evitaEm) && (regra.regra || {}).evitaEm.indexOf(dado) !== -1;
+  if (evita) {
+    ficha.recursos = ficha.recursos || {};
+    ficha.recursos.estresseMarcado = Math.max(0, depois - 1);
+    if (typeof sincronizarVulneravelPorEstresse_ === 'function') sincronizarVulneravelPorEstresse_(ficha);
+    if (r.tipo === 'recurso' && r.chave === 'estresseMarcado') { r.depois = ficha.recursos.estresseMarcado; delete r.alerta; }
+    if (Array.isArray(r.detalhes)) r.detalhes.forEach(function(m) {
+      if (m && m.tipo === 'recurso' && m.chave === 'estresseMarcado' && Number(m.depois) >= maximo) {
+        m.depois = ficha.recursos.estresseMarcado; delete m.alerta;
+      }
+    });
+    if (r.estresseMarcado !== undefined) r.estresseMarcado = ficha.recursos.estresseMarcado;
+    if (r.custoEstresse !== undefined) r.custoEstresse = Math.max(0, (Math.trunc(Number(r.custoEstresse)) || 0) - 1);
+    if (r.custos && r.custos.estresse !== undefined) r.custos.estresse = Math.max(0, (Math.trunc(Number(r.custos.estresse)) || 0) - 1);
+  }
+  r.pingenteCalmante = { fonte:regra.fonte, dado:dado, evitouUltimoEstresse:evita };
+  const nota = regra.fonte + ': d6 = ' + dado + (evita
+    ? '; o último Estresse não foi marcado.' : '; o último Estresse foi marcado normalmente.');
+  r.aviso = nota + (r.aviso ? ' ' + r.aviso : '');
+  return { resultado:r };
+}
+
 function aplicarAjustes_(ficha, ajustes) {
   const mudancas = [];
   const erros = [];
@@ -679,7 +734,7 @@ function aplicarAjustes_(ficha, ajustes) {
   const previa = JSON.parse(JSON.stringify(ficha || {}));
   for (let i = 0; i < lista.length; i++) {
     const a = lista[i] || {};
-    const tentativa = aplicarAjusteComInabalavel_(previa, a);
+    const tentativa = aplicarAjusteComDefesasDeEstresse_(previa, a);
     if (tentativa && tentativa.pendencia) {
       return {
         mudancas: [], erros: [],
@@ -2912,6 +2967,20 @@ function efeitosAoMarcarArmaduraDeEquipamento_(ficha) {
   return saida;
 }
 
+/** Loot defensivo realmente carregado; `exigeEmUso` representa anexo/equipado. */
+function lootDefensivoNaMochila_(ficha, itemId, exigeEmUso) {
+  const lista = Array.isArray((ficha || {}).inventario) ? ficha.inventario : [];
+  for (let i = 0; i < lista.length; i++) {
+    const reg = lista[i] || {};
+    if (String(reg.id || '') !== String(itemId || '') || Math.max(0, Number(reg.qtd) || 0) <= 0) continue;
+    if (exigeEmUso === true && reg.emUso !== true) continue;
+    const item = (typeof acharItem_ === 'function') ? acharItem_(reg.id) : null;
+    if (!item || item.tipo !== 'saque') continue;
+    return { registro:reg, item:item, indice:i };
+  }
+  return null;
+}
+
 /** Regra da armadura ativa que rola antes de marcar o último PA. */
 function regraResilienteDaArmadura_(ficha) {
   const ativos = (typeof equipamentoAtivoDaFicha_ === 'function') ? equipamentoAtivoDaFicha_(ficha) : [];
@@ -2921,7 +2990,33 @@ function regraResilienteDaArmadura_(ficha) {
     const regra = (((item.efeitoEquipamento || {}).danoRecebido || {}).resiliente) || null;
     if (regra) return { fonte:item.nome || item.id, caracteristica:item.carac || 'Resiliente', regra:regra };
   }
+
+  // Pedra da Resiliência: só funciona anexada (`emUso`) e somente se a
+  // armadura equipada NÃO tiver característica própria, exatamente como o livro.
+  const armaduraId = String((((ficha || {}).equipamento || {}).armadura) || '');
+  const armadura = armaduraId && typeof acharArmadura_ === 'function' ? acharArmadura_(armaduraId) : null;
+  if (armadura && !armadura.carac) {
+    const achado = lootDefensivoNaMochila_(ficha, 'loot-15', true);
+    const regraPedra = achado ? (((((achado.item || {}).efeitoSaquePassivo || {}).danoRecebido || {}).resiliente) || null) : null;
+    if (regraPedra) return { fonte:(achado.item || {}).nome || 'Pedra da Resiliência', caracteristica:'Resiliente', regra:regraPedra };
+  }
   return null;
+}
+
+/** Pingente que pode impedir a marca do último Estresse. */
+function regraPingenteCalmanteDaFicha_(ficha) {
+  const achado = lootDefensivoNaMochila_(ficha, 'loot-29', false);
+  if (!achado) return null;
+  const regra = ((((achado.item || {}).efeitoSaquePassivo || {}).aoMarcarUltimoEstresse) || null);
+  return regra ? { fonte:(achado.item || {}).nome || 'Pingente Calmante', regra:regra } : null;
+}
+
+/** Anel de Resistência disponível na mochila. */
+function regraAnelResistenciaDaFicha_(ficha) {
+  const achado = lootDefensivoNaMochila_(ficha, 'loot-32', false);
+  if (!achado) return null;
+  const regra = (((((achado.item || {}).efeitoSaquePassivo || {}).danoRecebido || {}).anelResistencia) || null);
+  return regra ? { fonte:(achado.item || {}).nome || 'Anel de Resistência', regra:regra } : null;
 }
 
 /** Regra 1/descanso que pode trocar o último PV por Estresse. */
@@ -3034,7 +3129,8 @@ function aplicarDanoNaFicha_(ficha, a) {
   // nega este dano inteiro e quebra uma unidade. Não empilha gastos inúteis.
   if ((a || {}).usarEspelhoMarigold === true) {
     const outras = (Array.isArray(a.reacoes) && a.reacoes.length) ||
-      a.usarArmadura === true || a.usarImpenetravel === true || a.usarAparar === true;
+      a.usarArmadura === true || a.usarImpenetravel === true || a.usarAparar === true ||
+      a.usarAnelResistencia === true;
     if (outras) {
       return { erro:'Espelho de Marigold nega o dano inteiro; não combine esta reação com Armadura, Aparar, Impenetrável ou outras reações de dano.' };
     }
@@ -3111,6 +3207,25 @@ function aplicarDanoNaFicha_(ficha, a) {
     final = Number(pelaResistencia.reduzidoPara) || Math.ceil(final / 2);
   }
 
+  let anelResistencia = null;
+  if ((a || {}).usarAnelResistencia === true) {
+    const encontrada = regraAnelResistenciaDaFicha_(ficha);
+    if (!encontrada || (encontrada.regra || {}).dano !== 'metade') {
+      return { erro:'Anel de Resistência não está disponível na mochila.' };
+    }
+    if ((encontrada.regra || {}).exigeAtaqueBemSucedido === true && (a || {}).ataqueBemSucedido !== true) {
+      return { erro:'Anel de Resistência só pode ser ativado depois de um ataque bem-sucedido contra você.' };
+    }
+    const contador = String((encontrada.regra || {}).contadorUso || '');
+    const gasto = contador ? Math.max(0, Math.trunc(Number(((((ficha || {}).contadores || {})[contador] || {}).valor))) || 0) : 0;
+    const tetoUso = contador && typeof maximoDoContador_ === 'function' ? Math.max(1, maximoDoContador_(contador, ficha) || 1) : 1;
+    if (!contador || gasto >= tetoUso) {
+      return { erro:'Anel de Resistência já foi usado desde o último descanso longo.' };
+    }
+    const antesAnel = final;
+    final = Math.ceil(final / 2);
+    anelResistencia = { fonte:encontrada.fonte, contador:contador, danoAntes:antesAnel, danoDepois:final };
+  }
 
   // Égide/Warded: redução fixa da própria armadura. Resistência continua vindo
   // primeiro, como manda a ordem canônica já usada acima.
@@ -3302,6 +3417,11 @@ function aplicarDanoNaFicha_(ficha, a) {
   }
 
   const mudancasInternas = [];
+  if (anelResistencia) {
+    const marcaAnel = ajustarContador_(ficha, { chave:anelResistencia.contador, valor:1 });
+    if (marcaAnel && marcaAnel.erro) return marcaAnel;
+    mudancasInternas.push(marcaAnel);
+  }
   if (custoEsperanca) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'esperanca', delta: -custoEsperanca }));
   if (custoEstresse) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'estresseMarcado', delta: custoEstresse }));
   if (custoArmadura) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'armaduraMarcada', delta: custoArmadura }));
@@ -3345,6 +3465,7 @@ function aplicarDanoNaFicha_(ficha, a) {
     aparar: (aparar && aparar.usado) ? aparar : null,
     dominioElementalTerra: dominioTerra,
     resiliente: resiliente,
+    anelResistencia: anelResistencia,
     impenetravel: impenetravel,
     custos: { estresse: custoEstresse, esperanca: custoEsperanca, armadura: custoArmadura },
     detalhes: mudancasInternas,
@@ -3352,6 +3473,8 @@ function aplicarDanoNaFicha_(ficha, a) {
   };
   if (resiliente) saida.aviso += ' Resiliente: d6 = ' + resiliente.dado +
     (resiliente.evitouUltimoArmadura ? '; o último PA não foi marcado.' : '; o último PA foi marcado normalmente.');
+  if (anelResistencia) saida.aviso += ' Anel de Resistência: dano reduzido de ' +
+    anelResistencia.danoAntes + ' para ' + anelResistencia.danoDepois + '; uso gasto até o próximo descanso longo.';
   if (impenetravel) saida.aviso += ' Impenetrável: o último PV foi trocado por 1 Estresse.';
   if (toquePv && toquePv.alerta) saida.alerta = toquePv.alerta;
   if (toquePv && toquePv.movimentoDeMorte) saida.movimentoDeMorte = true;

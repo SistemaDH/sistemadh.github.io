@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 184 cartas e características mandam
+ *  O problema que este arquivo resolve: 185 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -224,6 +224,7 @@ const CONTADORES = {
   "estado:loot:loot-17": { origem: "loot", refId: "loot-17", nome: "Prisma Arcano ativo", rotulo: "ativo", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
   "uso:loot:loot-35": { origem: "loot", refId: "loot-35", nome: "Amuleto do Alcance", rotulo: "usos", tipo: "usos", maximo: {"tipo":"fixo","valor":3}, zeraEm: ["descanso"], recarregaEm: [] },
   "uso:loot:loot-60": { origem: "loot", refId: "loot-60", nome: "Cinturão da Unidade", rotulo: "uso da sessão", tipo: "usos", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-de-sessao"], recarregaEm: [] },
+  "uso:loot:loot-32": { origem: "loot", refId: "loot-32", nome: "Anel de Resistência", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -412,6 +413,7 @@ const CONTADOR_ALIASES = {
   "estado:loot:loot-17": ["Prisma Arcano ativo"],
   "uso:loot:loot-35": ["Amuleto do Alcance"],
   "uso:loot:loot-60": ["Cinturão da Unidade"],
+  "uso:loot:loot-32": ["Anel de Resistência"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

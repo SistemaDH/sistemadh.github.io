@@ -1266,6 +1266,11 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const itemMarigold = linhaMarigold ? catalogo.acharItem('consumivel-59') : null;
     const usarMarigold = itemMarigold && itemMarigold.reacaoConsumivel
       ? el('input', { type:'checkbox' }) : null;
+    const linhaAnelResistencia = (Array.isArray(ficha.inventario) ? ficha.inventario : [])
+      .find((x) => x && x.id === 'loot-32' && Math.max(0, Number(x.qtd) || 0) > 0);
+    const itemAnelResistencia = linhaAnelResistencia ? catalogo.acharItem('loot-32') : null;
+    const usarAnelResistencia = itemAnelResistencia && itemAnelResistencia.efeitoSaquePassivo
+      ? el('input', { type:'checkbox' }) : null;
 
     const eqAparar = ficha.equipamento || {};
     const armaAparar = [eqAparar.primaria, eqAparar.secundaria].filter(Boolean)
@@ -1306,10 +1311,16 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       if (ativo) usarArmadura.checked = false;
       if (usarImpenetravel) { usarImpenetravel.disabled = ativo; if (ativo) usarImpenetravel.checked = false; }
       if (usarAparar) { usarAparar.disabled = ativo; if (ativo) usarAparar.checked = false; }
+      if (usarAnelResistencia) { usarAnelResistencia.disabled = ativo; if (ativo) usarAnelResistencia.checked = false; }
       escolhas.forEach((x) => { x.caixa.disabled = ativo; if (ativo) x.caixa.checked = false; });
       if (blocoAparar) blocoAparar.hidden = ativo || !(usarAparar && usarAparar.checked);
     };
     if (usarMarigold) usarMarigold.addEventListener('change', sincronizarMarigold);
+    if (usarAnelResistencia) usarAnelResistencia.addEventListener('change', () => {
+      if (!usarMarigold) return;
+      usarMarigold.disabled = usarAnelResistencia.checked;
+      if (usarAnelResistencia.checked) usarMarigold.checked = false;
+    });
 
     const conteudo = el('div', { class: 'pilha' }, [
       el('p', { class: 'texto-sm' }, textoAnotado(
@@ -1323,6 +1334,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       usarMarigold ? el('label', { class:'criacao__alternador' }, [
         usarMarigold,
         el('span', { texto:`${itemMarigold.nome} ×${Math.max(1, Number(linhaMarigold.qtd) || 1)} — gastar 1 Esperança, negar todo este dano e quebrar 1 espelho` })
+      ]) : null,
+      usarAnelResistencia ? el('label', { class:'criacao__alternador' }, [
+        usarAnelResistencia,
+        el('span', { texto:`${itemAnelResistencia.nome} — 1/descanso longo, reduzir pela metade o dano deste ataque` })
       ]) : null,
       usarAparar ? el('label', { class:'criacao__alternador' }, [
         usarAparar,
@@ -1356,12 +1371,15 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           const n = Math.trunc(Number(dano.value));
           if (!n || n < 1) { avisarErro('Informe um dano maior que zero.'); return; }
           const usarEspelho = !!(usarMarigold && usarMarigold.checked);
+          const usarAnel = !usarEspelho && !!(usarAnelResistencia && usarAnelResistencia.checked);
           const reacoes = usarEspelho ? [] : escolhas.filter((x) => x.caixa.checked).map((x) => x.nome);
           const pedidoDano = {
             tipo: 'dano', dano: n, tipoDeDano: tipo.value,
             usarArmadura: !usarEspelho && usarArmadura.checked,
             usarImpenetravel: !usarEspelho && !!(usarImpenetravel && usarImpenetravel.checked),
             usarEspelhoMarigold: usarEspelho,
+            usarAnelResistencia: usarAnel,
+            ataqueBemSucedido: usarAnel,
             reacoes
           };
           if (!usarEspelho && usarAparar && usarAparar.checked) {

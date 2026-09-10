@@ -3444,6 +3444,23 @@
     "fim-de-sessao"
    ],
    "observacao": "Uma vez por sessão."
+  },
+  {
+   "chave": "uso:loot:loot-32",
+   "origem": "loot",
+   "refId": "loot-32",
+   "nome": "Anel de Resistência",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uma vez por descanso longo. Ausência/0 = disponível; 1 = já usado."
   }
  ]
 }

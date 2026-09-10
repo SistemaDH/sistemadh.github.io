@@ -945,3 +945,18 @@ As quatro receitas de loot passaram a participar do fluxo canônico de descanso,
 - `loot-51`: usando um punhado de ouro em pó, cria `consumivel-35` (Poeira/Pó Mítico).
 
 A receita só aparece entre os movimentos se estiver na mochila. Ingredientes não são inventário mecânico do Core nesta ficha: ao escolher o movimento, a mesa confirma narrativamente que possui o ingrediente; o servidor aplica apenas custo e criação determinísticos. A prévia continua sem tocar a ficha original e a aplicação usa o mesmo simulador.
+
+
+### Diário — Lote 8 E17: reações defensivas de loot
+
+Fonte: livro básico PT-BR, Tesouros. Pedra da Resiliência: Resiliente pede 1d6 antes do último PA e, em 6, reduz um limiar sem marcar esse PA. Pingente Calmante/Tranquilizante: ao marcar o último Estresse, 1d6; 5–6 evita a marca. Anel de Resistência: uma vez por descanso longo, após um ataque acertar, reduz o dano à metade.
+
+Implementação:
+
+- `loot-15` marcado `emUso` funciona como anexo somente se a armadura equipada não possui característica; reutiliza integralmente o motor canônico de Resiliente já existente;
+- `loot-29` intercepta a marca que encheria a trilha de Estresse, depois de Inabalável; o d6 permanece físico e a pendência é atômica;
+- `loot-32` entra no modal de dano, exige acerto confirmado, reduz o dano pela metade antes dos limiares e gasta `uso:loot:loot-32`, zerado apenas em descanso longo;
+- Espelho de Marigold e Anel de Resistência são mutuamente exclusivos na mesma resolução, evitando gasto sem efeito;
+- nenhuma das três regras gera dados no app.
+
+Arquivos: `data/equipamentos.json`, `data/contadores.json`, `backend/44_Equipamento.gs`, `backend/47_Contadores.gs`, `backend/4C_Ajustes.gs`, `js/telas/ficha.js`, `tools/testes-backend.mjs`, auditoria e este HANDOFF.

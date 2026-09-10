@@ -6389,7 +6389,26 @@
    "origemNome": "revisado-pela-vanessa",
    "traducaoDescricao": "minha",
    "nomeAntigo": "Valorstone",
-   "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Tesouro"
+   "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Tesouro",
+   "automacao": {
+    "classificacao": "loot-anexo-armadura-reacao-e17",
+    "rolaNoApp": false,
+    "motivo": "Quando a pedra está marcada como em uso numa armadura sem característica, reutiliza a resolução canônica de Resiliente; o d6 continua na mesa."
+   },
+   "efeitoSaquePassivo": {
+    "exigeEmUso": true,
+    "anexo": {
+     "alvo": "armadura-sem-caracteristica"
+    },
+    "danoRecebido": {
+     "resiliente": {
+      "dado": "d6",
+      "evitaMarcarUltimoArmaduraEm": [
+       6
+      ]
+     }
+    }
+   }
   },
   {
    "id": "loot-16",
@@ -6650,7 +6669,21 @@
    "origemNome": "corrigido-auditoria",
    "aliases": [
     "Calmante Pingente"
-   ]
+   ],
+   "automacao": {
+    "classificacao": "loot-reacao-ultimo-estresse-e17",
+    "rolaNoApp": false,
+    "motivo": "Ao preencher o último espaço de Estresse, o app pede o d6 rolado na mesa; 5–6 evitam somente essa marca."
+   },
+   "efeitoSaquePassivo": {
+    "aoMarcarUltimoEstresse": {
+     "dado": "d6",
+     "evitaEm": [
+      5,
+      6
+     ]
+    }
+   }
   },
   {
    "id": "loot-30",
@@ -6696,7 +6729,21 @@
    "descricao": "Uma vez por descanso longo, você pode ativar esse anel após um ataque bem-sucedido contra você para reduzir o dano pela metade.",
    "nomeIngles": "Ring of Resistance",
    "descricaoIngles": "Once per long rest, you can activate this ring after a successful attack against you to halve the damage.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-reacao-dano-antes-limiares-e17",
+    "rolaNoApp": false,
+    "motivo": "Após ser atingido, reduz o dano informado à metade antes dos limiares e controla o limite de uma vez por descanso longo."
+   },
+   "efeitoSaquePassivo": {
+    "danoRecebido": {
+     "anelResistencia": {
+      "dano": "metade",
+      "exigeAtaqueBemSucedido": true,
+      "contadorUso": "uso:loot:loot-32"
+     }
+    }
+   }
   },
   {
    "id": "loot-33",

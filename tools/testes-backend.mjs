@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 184 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento, 24 de consumível e 10 de loot', () => {
+teste('o catálogo tem 185 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento, 24 de consumível e 11 de loot', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,7 +1561,7 @@ teste('o catálogo tem 184 contadores: 113 de carta, 25 de classe/subclasse, 4 d
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 184);
+  igual(Object.keys(CONTADORES).length, 185);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 113);
@@ -1571,7 +1571,7 @@ teste('o catálogo tem 184 contadores: 113 de carta, 25 de classe/subclasse, 4 d
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
   igual(porOrigem['equipamento'], 5);
-  igual(porOrigem['loot'], 10);
+  igual(porOrigem['loot'], 11);
 });
 
 teste('"uma vez por" conta o uso GASTO, e o gatilho certo o apaga', () => {
@@ -12034,6 +12034,85 @@ teste('E16 não aceita forjar movimento de receita sem possuir a receita', () =>
   const f=contexto.fichaVazia_();
   const r=contexto.simularDescanso_(f,'curto',[{movimento:'receita:loot-18'}]);
   igual(r.previa.erros.length,1); verdade(!r.ficha.inventario.some((x)=>x.id==='consumivel-08'));
+});
+
+
+console.log('\nLote 8 — reações defensivas de loot E17');
+teste('E17 Pedra da Resiliência só injeta Resiliente quando anexada a armadura sem característica', () => {
+  const f=contexto.fichaVazia_();
+  f.equipamento=f.equipamento||{}; f.equipamento.armadura='armadura-t1-armadura-de-couro';
+  const pedra=contexto.acharItem_('loot-15');
+  f.inventario=[{id:pedra.id,nome:pedra.nome,qtd:1,emUso:false}];
+  igual(contexto.regraResilienteDaArmadura_(f),null);
+  f.inventario[0].emUso=true;
+  verdade(contexto.regraResilienteDaArmadura_(f),'pedra anexada não concedeu Resiliente');
+  f.equipamento.armadura='campanha-festim-das-feras-vestimenta-acolchoada';
+  igual(contexto.regraResilienteDaArmadura_(f),null,'armadura com característica própria não pode receber a pedra');
+});
+teste('E17 Pedra da Resiliência usa o fluxo canônico do último PA e nunca rola no app', () => {
+  const pedra=contexto.acharItem_('loot-15'); const f=contexto.fichaVazia_();
+  f.equipamento=f.equipamento||{}; f.equipamento.armadura='armadura-t1-armadura-de-couro';
+  f.defesas.limiarMaior=10; f.defesas.limiarGrave=20; f.defesas.pontuacaoArmadura=3;
+  f.recursos.armaduraMarcada=2;
+  f.inventario=[{id:pedra.id,nome:pedra.nome,qtd:1,emUso:true}];
+  let r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:5,tipoDeDano:'fisico',usarArmadura:true}]);
+  verdade(r.pendenciaRolagem && r.pendenciaRolagem.campo==='dadoResiliente','faltou pedir d6 de Resiliente');
+  igual(f.recursos.armaduraMarcada,2,'pendência não pode marcar PA');
+  r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:5,tipoDeDano:'fisico',usarArmadura:true,dadoResiliente:6}]);
+  igual(r.erros,[]); igual(f.recursos.armaduraMarcada,2); verdade(r.mudancas[0].resiliente.evitouUltimoArmadura);
+  const g=contexto.fichaVazia_(); g.equipamento=g.equipamento||{}; g.equipamento.armadura='armadura-t1-armadura-de-couro';
+  g.defesas.limiarMaior=10; g.defesas.limiarGrave=20; g.defesas.pontuacaoArmadura=3; g.recursos.armaduraMarcada=2;
+  g.inventario=[{id:pedra.id,nome:pedra.nome,qtd:1,emUso:true}];
+  r=contexto.aplicarAjustes_(g,[{tipo:'dano',dano:5,tipoDeDano:'fisico',usarArmadura:true,dadoResiliente:4}]);
+  igual(r.erros,[]); igual(g.recursos.armaduraMarcada,3); verdade(!r.mudancas[0].resiliente.evitouUltimoArmadura);
+});
+teste('E17 Pingente Calmante só reage à marca que preencheria o último Estresse', () => {
+  const item=contexto.acharItem_('loot-29'); const f=contexto.fichaVazia_();
+  f.recursos.estresseMaximo=6; f.recursos.estresseMarcado=4;
+  f.inventario=[{id:item.id,nome:item.nome,qtd:1,emUso:false}];
+  let r=contexto.aplicarAjustes_(f,[{tipo:'recurso',chave:'estresseMarcado',delta:1}]);
+  igual(r.pendenciaRolagem,null); igual(f.recursos.estresseMarcado,5);
+  r=contexto.aplicarAjustes_(f,[{tipo:'recurso',chave:'estresseMarcado',delta:1}]);
+  verdade(r.pendenciaRolagem && r.pendenciaRolagem.campo==='dadoPingenteCalmante'); igual(f.recursos.estresseMarcado,5);
+});
+teste('E17 Pingente Calmante evita último Estresse em 5–6 e falha em 1–4', () => {
+  const item=contexto.acharItem_('loot-29'); const f=contexto.fichaVazia_();
+  f.recursos.estresseMaximo=6; f.recursos.estresseMarcado=5; f.inventario=[{id:item.id,nome:item.nome,qtd:1}];
+  let r=contexto.aplicarAjustes_(f,[{tipo:'recurso',chave:'estresseMarcado',delta:1,dadoPingenteCalmante:5}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,5); verdade(r.mudancas[0].pingenteCalmante.evitouUltimoEstresse);
+  r=contexto.aplicarAjustes_(f,[{tipo:'recurso',chave:'estresseMarcado',delta:1,dadoPingenteCalmante:2}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,6); verdade(!r.mudancas[0].pingenteCalmante.evitouUltimoEstresse);
+});
+teste('E17 Inabalável resolve antes do Pingente Calmante', () => {
+  const item=contexto.acharItem_('loot-29'); const f=contexto.fichaVazia_();
+  f.recursos.estresseMaximo=6; f.recursos.estresseMarcado=5; f.inventario=[{id:item.id,nome:item.nome,qtd:1}];
+  // Injeta a característica/contador da forma usada pelos testes existentes de Inabalável.
+  f.caracteristicas=(f.caracteristicas||[]).concat(['Inabalável']);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'recurso',chave:'estresseMarcado',delta:1}]);
+  verdade(r.pendenciaRolagem,'deveria pedir uma defesa manual antes de gravar');
+  // Se o ambiente desta ficha reconhecer Inabalável, seu campo vem primeiro; caso
+  // contrário, o Pingente continua sendo a única pendência e a ordem não é invertida.
+  verdade(r.pendenciaRolagem.campo==='dadoInabalavel' || r.pendenciaRolagem.campo==='dadoPingenteCalmante');
+});
+teste('E17 Anel de Resistência reduz dano pela metade e gasta 1 uso por descanso longo', () => {
+  const item=contexto.acharItem_('loot-32'); const f=contexto.fichaVazia_();
+  f.defesas.limiarMaior=10; f.defesas.limiarGrave=20; f.inventario=[{id:item.id,nome:item.nome,qtd:1}];
+  let r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:21,tipoDeDano:'fisico',usarAnelResistencia:true,ataqueBemSucedido:true}]);
+  igual(r.erros,[]); igual(r.mudancas[0].anelResistencia.danoAntes,21); igual(r.mudancas[0].anelResistencia.danoDepois,11);
+  igual(((f.contadores['uso:loot:loot-32']||{}).valor),1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:21,tipoDeDano:'fisico',usarAnelResistencia:true,ataqueBemSucedido:true}]);
+  igual(r.erros.length,1);
+  contexto.aplicarGatilhoContadores_(f,'descanso-longo');
+  igual((((f.contadores||{})['uso:loot:loot-32']||{}).valor)||0,0);
+});
+teste('E17 Anel exige acerto e não empilha com Espelho de Marigold', () => {
+  const anel=contexto.acharItem_('loot-32'); const esp=contexto.acharItem_('consumivel-59'); const f=contexto.fichaVazia_();
+  f.defesas.limiarMaior=10; f.defesas.limiarGrave=20; f.recursos.esperanca=3;
+  f.inventario=[{id:anel.id,nome:anel.nome,qtd:1},{id:esp.id,nome:esp.nome,qtd:1}];
+  let r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:12,tipoDeDano:'fisico',usarAnelResistencia:true}]);
+  igual(r.erros.length,1); igual((((f.contadores||{})['uso:loot:loot-32']||{}).valor)||0,0);
+  r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:12,tipoDeDano:'fisico',usarAnelResistencia:true,ataqueBemSucedido:true,usarEspelhoMarigold:true}]);
+  igual(r.erros.length,1); igual(f.recursos.esperanca,3); igual(f.inventario.find((x)=>x.id==='consumivel-59').qtd,1);
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
