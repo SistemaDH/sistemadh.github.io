@@ -67,8 +67,17 @@ export function abrirEditorDeFoto(personagem, aoTrocar) {
     type: 'range', class: 'foto__zoom', min: '100', max: '400', value: '100', step: '1',
     'aria-label': 'Zoom da foto', disabled: true
   });
+  const zoomMenos = el('button', {
+    type: 'button', class: 'btn btn--fantasma foto__zoomPasso',
+    'aria-label': 'Diminuir zoom', disabled: true
+  }, '−');
+  const zoomMais = el('button', {
+    type: 'button', class: 'btn btn--fantasma foto__zoomPasso',
+    'aria-label': 'Aumentar zoom', disabled: true
+  }, '+');
+  const zoomControles = el('div', { class: 'foto__zoomControles' }, [zoomMenos, zoom, zoomMais]);
   const ajuda = el('p', { class: 'texto-xs texto-fraco foto__ajuda', texto:
-    'Escolha uma imagem, arraste para enquadrar e use a barra para dar zoom.' });
+    'Escolha uma imagem, arraste para enquadrar e use −, + ou a barra para dar zoom.' });
 
   let imagem = null;
   let base = 1;
@@ -98,15 +107,37 @@ export function abrirEditorDeFoto(personagem, aoTrocar) {
       largura, altura);
   }
 
+  function atualizarControlesZoom() {
+    const valor = Number(zoom.value);
+    const indisponivel = !imagem;
+    zoom.disabled = indisponivel;
+    zoomMenos.disabled = indisponivel || valor <= Number(zoom.min);
+    zoomMais.disabled = indisponivel || valor >= Number(zoom.max);
+  }
+
+  function mudarZoom(delta) {
+    if (!imagem) return;
+    const minimo = Number(zoom.min);
+    const maximo = Number(zoom.max);
+    const proximo = Math.min(maximo, Math.max(minimo, Number(zoom.value) + delta));
+    if (proximo === Number(zoom.value)) return;
+    zoom.value = String(proximo);
+    zoom.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  zoomMenos.addEventListener('click', () => mudarZoom(-25));
+  zoomMais.addEventListener('click', () => mudarZoom(25));
+
   async function usarArquivo(arquivo) {
     if (!arquivo) return;
     try { imagem = await carregarImagem(arquivo); }
     catch (e) { avisarErro(e.message); return; }
     base = Math.max(FOTO_LARGURA / imagem.width, FOTO_ALTURA / imagem.height);
     escala = base; x = 0; y = 0;
-    zoom.value = '100'; zoom.disabled = false; salvar.disabled = false;
+    zoom.value = '100'; salvar.disabled = false;
+    atualizarControlesZoom();
     botaoEscolher.textContent = 'Escolher outra imagem';
-    ajuda.textContent = 'Arraste para enquadrar. A barra dá zoom.';
+    ajuda.textContent = 'Arraste para enquadrar. Use −, + ou a barra para dar zoom.';
     pintar();
   }
 
@@ -117,6 +148,7 @@ export function abrirEditorDeFoto(personagem, aoTrocar) {
     escala = base * (Number(zoom.value) / 100);
     const razao = escala / antes;
     x *= razao; y *= razao; pintar();
+    atualizarControlesZoom();
   });
 
   let arrastando = null;
@@ -169,7 +201,7 @@ export function abrirEditorDeFoto(personagem, aoTrocar) {
     titulo: 'Foto do personagem',
     conteudo: el('div', { class: 'pilha foto__editor' }, [
       el('div', { class: 'foto__moldura' }, [tela]),
-      botaoEscolher, escolher, zoom, ajuda,
+      botaoEscolher, escolher, zoomControles, ajuda,
       el('p', { class: 'texto-xs texto-fraco', texto:
         'A imagem é guardada no armazenamento da mesa. A ficha guarda apenas o identificador interno do arquivo.' })
     ]),
@@ -179,6 +211,7 @@ export function abrirEditorDeFoto(personagem, aoTrocar) {
     ].filter(Boolean)
   });
 
+  atualizarControlesZoom();
   pintar();
   return modal;
 }
