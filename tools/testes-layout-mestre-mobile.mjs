@@ -91,7 +91,21 @@ async function auditar(page, viewport, tela) {
       .filter((el) => !el.matches(':disabled, [aria-disabled="true"], .verbete__gatilho'))
       .filter((el) => !el.matches('input[type="checkbox"], input[type="radio"], input[type="range"]'));
 
+    /*
+     * Conteúdo fora da viewport só é legítimo quando mora num scroller
+     * horizontal explícito. O Bestiário usa isso nas pílulas em celular para
+     * manter cada filtro com 44px sem voltar a quatro fileiras. O documento
+     * continua obrigado a NÃO ter overflow horizontal — conferido acima.
+     */
+    const dentroDeScrollerHorizontal = (el) => {
+      const scroller = el.closest('.bestiario__pilulas');
+      if (!scroller) return false;
+      const s = getComputedStyle(scroller);
+      return /auto|scroll/.test(s.overflowX) && scroller.scrollWidth > scroller.clientWidth + 1;
+    };
+
     const fora = interativos.filter((el) => {
+      if (dentroDeScrollerHorizontal(el)) return false;
       const r = el.getBoundingClientRect();
       return r.left < -1 || r.right > largura + 1;
     }).slice(0, 10);
