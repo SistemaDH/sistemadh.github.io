@@ -21,7 +21,7 @@ Leia nesta ordem:
 - mudança de regra de Daggerheart deve registrar a fonte;
 - nunca sobrescrever mudança recente de outro agente sem entender o estado atual.
 
-## Lote 8 — em andamento: fechamento integral do Core 1.0
+## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 
 Iniciado em 08/09/2026 na branch `ediçãoclaude`.
 
@@ -990,3 +990,23 @@ Próximo bloco natural: revisar os 6 candidatos restantes da auditoria e separar
 - `loot-59` reutiliza o padrão de uso por sessão: gasta 4 Esperança e registra 1 uso; cancelar o efeito do gasto de Medo continua sendo resolução da mesa.
 - Nenhum destes efeitos introduz RNG no app.
 - Meta da auditoria deste bloco: **6 → 0 candidatos mecânicos brutos**.
+
+### Encerramento formal do Lote 8 — Core 1.0
+
+**Status: CONCLUÍDO em 10/09/2026.**
+
+Critério adotado: livro básico PT-BR + errata oficial de 09/09/2025, mantendo o princípio “só ficha, sem dados”. Toda consequência determinística identificada pela auditoria foi estruturada/automatizada; resultados aleatórios continuam sendo rolados fisicamente e informados ao app.
+
+Gate final após o E19:
+
+- auditoria global: **0 candidatas** em classes/subclasses, comunidades, cartas de domínio, equipamento e loot/consumíveis;
+- testes backend: **941 passaram, 0 falhas**;
+- testes E2E: **passaram integralmente**;
+- conferência de arquivos gerados: **OK**;
+- conferência CSS: **OK**;
+- trava de concorrência: `ediçãoclaude` permaneceu no SHA-base esperado durante o gate;
+- commit funcional de fechamento mecânico: `6abcc25127e49c7bdb5c1ad7bacf8bd04d97658b` (`feat: fechar candidatos mecanicos de loot E19`).
+
+A auditoria final permanece em `docs/AUDITORIA-FINAL-LOTE8.md`. Linhas históricas deste HANDOFF que contêm “próximo”, “pendente” ou “aberto” são diário de etapas anteriores e **não reabrem** o Lote 8; a fonte de verdade para pendências mecânicas do Core é a auditoria final zerada.
+
+**SRD 2.0 não faz parte deste fechamento.** Qualquer adoção, comparação ou migração para SRD 2.0 deve começar como uma nova fase, com inventário explícito das divergências em relação ao Core 1.0 congelado neste ponto.
