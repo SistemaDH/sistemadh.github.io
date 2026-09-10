@@ -1,0 +1,66 @@
+name: TEMP Lote 9 B7 patch E2E mobile
+
+on:
+  push:
+    branches: [newedit]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: newedit
+      - name: Adaptar E2E ao menu de ações mobile
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path('tools/testes-e2e.mjs')
+          s = p.read_text()
+
+          marker = """  /**\n   * O OURO É UMA FRASE, e é assim que se lê.\n"""
+          helper = """  /**\n   * L9-B7: em 390px, uso e remoção ficam no menu de mais ações da linha.\n   * O E2E percorre o mesmo caminho do dedo em vez de alcançar os botões\n   * originais que o CSS mantém ocultos apenas como donos dos handlers.\n   */\n  const abrirAcoesMobileDoItem = async (linha) => {\n    await linha.getByRole('button', { name: /Mais ações para/ }).click();\n    const modal = pagina.locator('.modal__caixa').last();\n    await modal.waitFor({ timeout: 5000 });\n    return modal;\n  };\n\n  const marcarItemEmUsoMobile = async (linha) => {\n    const modal = await abrirAcoesMobileDoItem(linha);\n    await modal.getByRole('button', { name: 'Marcar como em uso' }).click();\n  };\n\n  const removerItemMobile = async (linha) => {\n    const modal = await abrirAcoesMobileDoItem(linha);\n    await modal.getByRole('button', { name: 'Remover da mochila' }).click();\n  };\n\n"""
+
+          if 'const abrirAcoesMobileDoItem' not in s:
+              if marker not in s:
+                  raise SystemExit('marcador para helper não encontrado')
+              s = s.replace(marker, helper + marker, 1)
+
+          substituicoes = [
+              ("""    await pagina.locator('.ficha__item', { hasText: 'Um mapa rasgado do porto' })\n      .getByRole('button', { name: /Tirar/ }).click();\n""",
+               """    await removerItemMobile(\n      pagina.locator('.ficha__item', { hasText: 'Um mapa rasgado do porto' })\n    );\n"""),
+              ("""    await linha.getByRole('button', { name: /Marcar .* como em uso/ }).click();\n""",
+               """    await marcarItemEmUsoMobile(linha);\n"""),
+              ("""    await depois.getByRole('button', { name: /Tirar/ }).click();\n""",
+               """    await removerItemMobile(depois);\n"""),
+              ("""    await doLivro.getByRole('button', { name: /Tirar/ }).click();\n""",
+               """    await removerItemMobile(doLivro);\n""")
+          ]
+          for antigo, novo in substituicoes:
+              if antigo in s:
+                  s = s.replace(antigo, novo, 1)
+
+          for sobra in [
+              "getByRole('button', { name: /Tirar/ })",
+              "getByRole('button', { name: /Marcar .* como em uso/ })"
+          ]:
+              if sobra in s:
+                  raise SystemExit(f'interação antiga ainda presente: {sobra}')
+
+          p.write_text(s)
+          PY
+      - name: Commitar ajuste
+        run: |
+          if git diff --quiet -- tools/testes-e2e.mjs; then
+            echo "Nenhuma alteração necessária."
+            exit 0
+          fi
+          git config user.name "SistemaDH CI"
+          git config user.email "actions@users.noreply.github.com"
+          git add tools/testes-e2e.mjs
+          git commit -m "test: adaptar E2E da mochila ao menu mobile L9-B7"
+          git push origin HEAD:newedit
