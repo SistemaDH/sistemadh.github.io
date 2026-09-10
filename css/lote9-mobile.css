@@ -1,5 +1,5 @@
 /* ==========================================================================
-   L9-B7/B8/B9/B10/B11/B12/B13/B15/B16 · REFINOS MOBILE
+   L9-B7/B8/B9/B10/B11/B12/B13/B15/B16/B17 · REFINOS MOBILE
    ========================================================================== */
 
 /* ==========================================================================
@@ -287,4 +287,37 @@
 .abertura__codigoAcao:focus-visible {
   outline: 2px solid var(--cor-ouro);
   outline-offset: -2px;
+}
+
+/* ==========================================================================
+   B17 · ZOOM DA FOTO COM PASSOS TÁTEIS
+
+   O range continua sendo a fonte única do valor e da matemática de recorte.
+   Os botões só movem esse mesmo range em passos de 25% e disparam o mesmo
+   evento `input`, oferecendo uma alternativa de 44px ao gesto fino da barra.
+   ========================================================================== */
+
+.foto__zoomControles {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: var(--e2);
+  width: 100%;
+}
+
+.foto__zoomControles > input {
+  width: 100%;
+  min-width: 0;
+}
+
+.foto__zoomPasso {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border-radius: var(--raio-cheio);
+  font-size: var(--txt-xl);
+  line-height: 1;
+  touch-action: manipulation;
 }
