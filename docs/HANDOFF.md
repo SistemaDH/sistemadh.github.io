@@ -746,3 +746,15 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - A auditoria de equipamento deve cair de 28 para **1 ocorrência candidata**.
 
 **Próximo bloco natural:** **Aparar / Parry**, único candidato de equipamento restante, em um bloco defensivo dedicado que recebe os resultados dos dados rolados fora do app e descarta apenas os valores correspondentes antes da totalização do dano.
+
+### Lote 8 — equipamento defensivo D4: Aparar
+
+- **Aparar / Parry** da Adaga de proteção foi integrado ao fluxo central de dano recebido.
+- O jogador continua rolando tudo fisicamente. A tela pede o **dano total original**, os resultados dos dados de dano do atacante e exatamente a quantidade de **d6 da Adaga igual à Proficiência**.
+- Para cada dado do atacante cujo valor também apareça em qualquer d6 de Aparar, o resultado correspondente do atacante é descartado; duplicatas correspondentes também são descartadas. Modificadores fixos do dano não entram nessa comparação e permanecem no total.
+- O dano após Aparar segue pelo pipeline normal: resistência, reduções pré-limiar, limiares, Armadura e demais reações.
+- O servidor rejeita quantidade de d6 errada, resultado fora de 1–6, soma de dados do atacante maior que o total e tentativa sem a Adaga realmente equipada.
+- Nenhum RNG foi introduzido (`automacao.rolaNoApp=false`).
+- Com este bloco, a auditoria de características de equipamento deve chegar a **0 candidatas ativas/condicionais**.
+
+**Próximo bloco natural:** iniciar a revisão dos **81 loot/consumíveis mecânicos** ainda apontados pela auditoria final do Lote 8, começando pelos efeitos determinísticos e consumíveis já parcialmente suportados.

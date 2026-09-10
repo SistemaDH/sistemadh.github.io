@@ -10792,11 +10792,74 @@ teste('D3 mantém as quantidades por característica exatamente como no catálog
     'Eruptivo':1,'Espalha-chumbo':4,'Gancho':1,'Perfeccionista':1,'Queimadura':2,'Serra':1,'Silencioso':1};
   Object.keys(esperado).forEach((nome) => igual(xs.filter((x)=>x.carac===nome).length, esperado[nome], nome));
 });
-teste('Aparar permanece fora do D3 para o bloco defensivo dedicado', () => {
+teste('Aparar sai da pendência do D3 pelo bloco defensivo dedicado, sem RNG', () => {
   const xs = avaliar('ARMAS').concat(avaliar('ARMADURAS'), avaliar('EQUIPAMENTO_CAMPANHA'))
     .filter((x) => String(x.carac || '') === 'Aparar');
   igual(xs.length, 1);
-  verdade(!xs[0].automacao, 'Aparar deve continuar pendente até receber entrada manual dos dados defensivos');
+  verdade(!!xs[0].automacao, 'Aparar deve estar fechado pelo bloco defensivo D4');
+  igual(xs[0].automacao.rolaNoApp, false);
+  verdade(!!(((xs[0].efeitoEquipamento || {}).danoRecebido || {}).aparar));
+});
+
+
+
+console.log('\nLote 8 — equipamento defensivo D4: Aparar');
+function fichaApararD4_() {
+  const arma = avaliar('ARMAS').find((a) => a.carac === 'Aparar');
+  const f = contexto.fichaVazia_();
+  f.identidade = { nome:'D4', nivel:10, classe:'Guerreiro', subclasse:'Chamada do Matador' };
+  f.equipamento = { primaria:null, secundaria:arma.id, armadura:null, reserva:[] };
+  f.recursos.proficiencia = 2;
+  f.defesas.limiarMaior = 10;
+  f.defesas.limiarGrave = 20;
+  return { f, arma };
+}
+teste('Aparar está estruturado como reação manual e não rola no app', () => {
+  const arma = avaliar('ARMAS').find((a) => a.carac === 'Aparar');
+  verdade(!!arma);
+  igual(arma.dano, 'd6+2 fís');
+  verdade(!!arma.automacao);
+  igual(arma.automacao.rolaNoApp, false);
+  verdade(!!(((arma.efeitoEquipamento || {}).danoRecebido || {}).aparar));
+});
+teste('Aparar descarta todos os dados do atacante com valor presente nos dados da Adaga', () => {
+  const { f } = fichaApararD4_();
+  const r = contexto.aplicarDanoNaFicha_(f, {
+    dano:20, tipoDeDano:'fisico', usarAparar:true,
+    dadosDanoAtacante:[4,4,2,6], dadosAparar:[4,1]
+  });
+  verdade(!r.erro, JSON.stringify(r));
+  igual(r.aparar.descartados, [4,4]);
+  igual(r.aparar.desconto, 8);
+  igual(r.aparar.danoDepois, 12);
+  igual(r.dano.bruto, 20);
+  igual(r.dano.final, 12);
+});
+teste('Aparar preserva modificadores fixos e não reduz nada sem correspondência', () => {
+  const { f } = fichaApararD4_();
+  const r = contexto.aplicarDanoNaFicha_(f, {
+    dano:20, tipoDeDano:'magico', usarAparar:true,
+    dadosDanoAtacante:[3,5,6], dadosAparar:[1,2]
+  });
+  verdade(!r.erro, JSON.stringify(r));
+  igual(r.aparar.desconto, 0);
+  igual(r.dano.final, 20);
+});
+teste('Aparar exige exatamente os dados da Proficiência e valida d6', () => {
+  let x=fichaApararD4_();
+  let r=contexto.aplicarDanoNaFicha_(x.f,{dano:20,tipoDeDano:'fisico',usarAparar:true,dadosDanoAtacante:[4,5],dadosAparar:[4]});
+  verdade(!!r.erro && r.erro.includes('exatamente 2'));
+  x=fichaApararD4_();
+  r=contexto.aplicarDanoNaFicha_(x.f,{dano:20,tipoDeDano:'fisico',usarAparar:true,dadosDanoAtacante:[4,5],dadosAparar:[7,1]});
+  verdade(!!r.erro && r.erro.includes('1 a 6'));
+});
+teste('Aparar rejeita dados inconsistentes e não funciona sem a arma equipada', () => {
+  let x=fichaApararD4_();
+  let r=contexto.aplicarDanoNaFicha_(x.f,{dano:5,tipoDeDano:'fisico',usarAparar:true,dadosDanoAtacante:[4,4],dadosAparar:[4,1]});
+  verdade(!!r.erro && r.erro.includes('soma dos dados'));
+  x=fichaApararD4_(); x.f.equipamento.secundaria=null;
+  r=contexto.aplicarDanoNaFicha_(x.f,{dano:20,tipoDeDano:'fisico',usarAparar:true,dadosDanoAtacante:[4,4],dadosAparar:[4,1]});
+  verdade(!!r.erro && r.erro.includes('realmente equipada'));
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

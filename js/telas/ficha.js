@@ -1240,6 +1240,30 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const temImpenetravel = temCaracteristica_(ficha, 'Impenetrável');
     const usarImpenetravel = temImpenetravel ? el('input', { type:'checkbox' }) : null;
 
+    const eqAparar = ficha.equipamento || {};
+    const armaAparar = [eqAparar.primaria, eqAparar.secundaria].filter(Boolean)
+      .map(catalogo.acharArma).find((a) => a && a.caracteristica && a.caracteristica.nome === 'Aparar');
+    const usarAparar = armaAparar ? el('input', { type:'checkbox' }) : null;
+    const dadosDanoAtacante = armaAparar ? el('input', semCorretor({
+      type:'text', class:'campo__entrada', inputmode:'numeric', placeholder:'ex.: 4, 7, 4, 2'
+    })) : null;
+    const dadosAparar = armaAparar ? el('input', semCorretor({
+      type:'text', class:'campo__entrada', inputmode:'numeric', placeholder:'ex.: 4, 1'
+    })) : null;
+    const profAparar = Math.max(1, Math.trunc(Number(recursosDano.proficiencia) || 1));
+    const dadoAparar = armaAparar ? ((/^d(\d+)/i.exec(String(armaAparar.dano || '')) || [,'6'])[1]) : '6';
+    const blocoAparar = armaAparar ? el('div', { class:'pilha', hidden:true }, [
+      el('p', { class:'texto-xs texto-fraco', texto:
+        `Role ${profAparar}d${dadoAparar} da ${armaAparar.nome} na mesa. O dano acima continua sendo o total original; liste abaixo só os resultados dos dados, sem bônus fixos.` }),
+      el('label', { class:'campo' }, [
+        el('span', { class:'campo__rotulo', texto:'Dados de dano do atacante' }), dadosDanoAtacante
+      ]),
+      el('label', { class:'campo' }, [
+        el('span', { class:'campo__rotulo', texto:`Seus ${profAparar}d${dadoAparar} de Aparar` }), dadosAparar
+      ])
+    ]) : null;
+    if (usarAparar && blocoAparar) usarAparar.addEventListener('change', () => { blocoAparar.hidden = !usarAparar.checked; });
+
     const defs = reacoesDeDanoDaFicha_(ficha);
     const escolhas = defs.map(([nome, texto]) => {
       const caixa = el('input', { type: 'checkbox' });
@@ -1257,6 +1281,11 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       el('label', { class: 'campo' }, [
         el('span', { class: 'campo__rotulo', texto: 'Tipo de dano' }), tipo
       ]),
+      usarAparar ? el('label', { class:'criacao__alternador' }, [
+        usarAparar,
+        el('span', { texto:`Aparar com ${armaAparar.nome} — informar os dados rolados na mesa` })
+      ]) : null,
+      blocoAparar,
       el('label', { class: 'criacao__alternador' }, [
         usarArmadura,
         el('span', { texto: paMax
@@ -1284,11 +1313,24 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           const n = Math.trunc(Number(dano.value));
           if (!n || n < 1) { avisarErro('Informe um dano maior que zero.'); return; }
           const reacoes = escolhas.filter((x) => x.caixa.checked).map((x) => x.nome);
-          const r = await enviar([{
+          const pedidoDano = {
             tipo: 'dano', dano: n, tipoDeDano: tipo.value,
             usarArmadura: usarArmadura.checked,
             usarImpenetravel: !!(usarImpenetravel && usarImpenetravel.checked), reacoes
-          }]);
+          };
+          if (usarAparar && usarAparar.checked) {
+            const lerDados = (campo) => String(campo.value || '').trim().split(/[\s,;]+/).filter(Boolean).map(Number);
+            const ataque = lerDados(dadosDanoAtacante);
+            const seus = lerDados(dadosAparar);
+            if (!ataque.length) { avisarErro('Informe os resultados dos dados de dano do atacante.'); return; }
+            if (seus.length !== profAparar) {
+              avisarErro(`Aparar pede exatamente ${profAparar} resultado(s) de d${dadoAparar}.`); return;
+            }
+            pedidoDano.usarAparar = true;
+            pedidoDano.dadosDanoAtacante = ataque;
+            pedidoDano.dadosAparar = seus;
+          }
+          const r = await enviar([pedidoDano]);
           if (r) modal.fechar();
         } }, 'Aplicar dano')
       ]

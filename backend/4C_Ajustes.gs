@@ -2445,6 +2445,75 @@ function regraImpenetravelDaArmadura_(ficha) {
   return null;
 }
 
+
+/** Aparar ativo: a única arma do Core com esta reação é a Adaga de proteção. */
+function regraApararDaFicha_(ficha) {
+  const ativos = (typeof equipamentoAtivoDaFicha_ === 'function') ? equipamentoAtivoDaFicha_(ficha) : [];
+  for (let i = 0; i < ativos.length; i++) {
+    const item = (ativos[i] || {}).item || {};
+    const regra = ((((item.efeitoEquipamento || {}).danoRecebido || {}).aparar) || null);
+    if (regra) return { fonte:item.nome || item.id || 'Equipamento', caracteristica:item.carac || 'Aparar', item:item, regra:regra };
+  }
+  return null;
+}
+
+/**
+ * Resolve Aparar sem rolar nada.
+ * `dano` continua sendo o TOTAL original (dados + modificadores). O jogador
+ * informa separadamente os resultados dos dados do atacante e os d6 da Adaga;
+ * só os dados do atacante cujo valor apareceu nos d6 de Aparar são retirados.
+ */
+function resolverApararNoDano_(ficha, a, dano) {
+  if ((a || {}).usarAparar !== true) return { usado:false, danoDepois:dano };
+  const encontrada = regraApararDaFicha_(ficha);
+  if (!encontrada) return { erro:'Aparar só pode ser usado com a Adaga de proteção realmente equipada.' };
+
+  const m = /^d(\d+)/i.exec(String((encontrada.item || {}).dano || ''));
+  const lados = m ? Math.max(2, Math.trunc(Number(m[1])) || 6) : 6;
+  const quantidade = Math.max(1, Math.trunc(Number(((ficha || {}).recursos || {}).proficiencia)) || 1);
+  const dadosAparar = (a || {}).dadosAparar;
+  const dadosAtacante = (a || {}).dadosDanoAtacante;
+
+  if (!Array.isArray(dadosAparar) || dadosAparar.length !== quantidade) {
+    return { erro:'Aparar: informe exatamente ' + quantidade + ' resultado(s) de d' + lados + ' rolados fora do app.' };
+  }
+  if (!Array.isArray(dadosAtacante) || !dadosAtacante.length || dadosAtacante.length > 50) {
+    return { erro:'Aparar: informe os resultados dos dados de dano do atacante rolados fora do app.' };
+  }
+
+  const seus=[];
+  for (let i=0;i<dadosAparar.length;i++) {
+    const n=Math.trunc(Number(dadosAparar[i]));
+    if (!isFinite(n) || Number(dadosAparar[i])!==n || n<1 || n>lados) {
+      return { erro:'Aparar: cada resultado da Adaga precisa ser um inteiro de 1 a ' + lados + '.' };
+    }
+    seus.push(n);
+  }
+  const ataque=[];
+  let somaDadosAtacante=0;
+  for (let i=0;i<dadosAtacante.length;i++) {
+    const n=Math.trunc(Number(dadosAtacante[i]));
+    if (!isFinite(n) || Number(dadosAtacante[i])!==n || n<1 || n>100) {
+      return { erro:'Aparar: cada dado de dano do atacante precisa ser um inteiro positivo de até 100.' };
+    }
+    ataque.push(n); somaDadosAtacante+=n;
+  }
+  if (somaDadosAtacante > dano) {
+    return { erro:'Aparar: a soma dos dados do atacante não pode ser maior que o dano total informado.' };
+  }
+
+  const valores={};
+  for (let i=0;i<seus.length;i++) valores[String(seus[i])]=true;
+  const descartados=ataque.filter(function(n){ return valores[String(n)]===true; });
+  const desconto=descartados.reduce(function(total,n){ return total+n; },0);
+  return {
+    usado:true, fonte:encontrada.fonte, caracteristica:encontrada.caracteristica,
+    dado:'d'+lados, quantidadeDados:quantidade,
+    dadosAparar:seus, dadosAtacante:ataque, descartados:descartados,
+    desconto:desconto, danoAntes:dano, danoDepois:Math.max(0,dano-desconto)
+  };
+}
+
 function aplicarDanoNaFicha_(ficha, a) {
   if (typeof pvDoDano_ !== 'function') {
     return { erro: 'Este servidor não sabe converter dano em Pontos de Vida.' };
@@ -2504,12 +2573,13 @@ function aplicarDanoNaFicha_(ficha, a) {
     typeof fichaTemCaracteristica_ === 'function' && fichaTemCaracteristica_(ficha, 'Retrair') &&
     (Math.trunc(Number(((((ficha.contadores || {})['estado:ancestralidade:galapa:retracao']) || {}).valor))) || 0) > 0;
 
-  let final = bruto;
+  const aparar = resolverApararNoDano_(ficha, a, bruto);
+  if (aparar && aparar.erro) return aparar;
+  let final = (aparar && aparar.usado) ? aparar.danoDepois : bruto;
   if (retraido) {
-    // Reutiliza a implementação canônica da resistência. O resultado intermediário
-    // é usado antes das demais reduções; a segunda conversão não aplica resistência.
-    const pelaResistencia = pvDoDano_(bruto, { maior: maior, severo: severo }, comMassivo, true);
-    final = Number(pelaResistencia.reduzidoPara) || Math.ceil(bruto / 2);
+    // Reutiliza a implementação canônica da resistência DEPOIS de Aparar.
+    const pelaResistencia = pvDoDano_(final, { maior: maior, severo: severo }, comMassivo, true);
+    final = Number(pelaResistencia.reduzidoPara) || Math.ceil(final / 2);
   }
 
 
@@ -2716,6 +2786,9 @@ function aplicarDanoNaFicha_(ficha, a) {
   const partes = [
     bruto + ' de dano ' + (tipo === 'fisico' ? 'físico' : 'mágico')
   ];
+  if (aparar && aparar.usado) partes.push(aparar.descartados.length
+    ? 'Aparar descartou ' + aparar.descartados.join(', ') + ' dos dados do atacante (−' + aparar.desconto + ')'
+    : 'Aparar não encontrou resultados correspondentes');
   if (final !== bruto) partes.push('reduzido para ' + final + ' antes dos limiares');
   if (reducaoEquipamento) partes.push(reducaoEquipamento.fonte + ' · ' + reducaoEquipamento.caracteristica +
     ' reduziu até ' + reducaoEquipamento.valor + ' do dano mágico');
@@ -2740,6 +2813,7 @@ function aplicarDanoNaFicha_(ficha, a) {
     reacoes: usadas,
     resistencia: retraido ? 'Retrair' : null,
     equipamentoDefensivo: reducaoEquipamento,
+    aparar: (aparar && aparar.usado) ? aparar : null,
     dominioElementalTerra: dominioTerra,
     resiliente: resiliente,
     impenetravel: impenetravel,

@@ -4326,7 +4326,22 @@
     "nome": "Aparar",
     "texto": "Aparar: Quando você for atacado, role os dados de dano dessa arma. Se algum dos dados de dano do atacante tiver rolado o mesmo valor que os seus dados, os resultados correspondentes são descartados dos dados de dano do atacante antes que o dano que você recebe seja totalizado.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "reacao-dano-com-dados-manuais",
+     "rolaNoApp": false,
+     "motivo": "O jogador rola os dados da Adaga de proteção e informa os resultados; o app apenas descarta do dano do atacante os dados com valores correspondentes antes dos limiares."
+    },
+    "efeitoEquipamento": {
+     "danoRecebido": {
+      "aparar": {
+       "quantidadeDados": "proficiencia",
+       "dado": "d6",
+       "descartaResultadosCorrespondentes": true,
+       "rolaNoApp": false
+      }
+     }
+    }
    },
    "danoSRD": "d6+2 phy"
   },
