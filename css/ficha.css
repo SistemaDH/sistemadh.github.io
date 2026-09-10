@@ -363,7 +363,7 @@
  */
 .ficha__abaConta {
   font-family: var(--fonte-mono);
-  font-size: 11px;
+  font-size: var(--txt-xs);
   font-weight: 700;
   color: var(--cor-titulo);
 }
@@ -1933,7 +1933,4 @@
     padding: 12px;
     gap: 12px;
   }
-
-  /* A contagem é leitura normal: não pode ficar abaixo do piso de 12px. */
-  .ficha__abaConta { font-size: var(--txt-xs); }
 }

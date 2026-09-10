@@ -541,7 +541,7 @@
 .glosa {
   margin-left: 5px;
   font-family: var(--fonte-mono);
-  font-size: 0.82em;
+  font-size: var(--txt-xs);
   font-weight: 400;
   font-style: normal;
   color: var(--cor-texto-fraco);

@@ -134,9 +134,15 @@ for (const aviso of [...document.querySelectorAll('.aviso')].filter(visivel)) {
 
     const fontesPequenas = [...document.querySelectorAll('button, label, p, span, strong, h1, h2, h3, h4')]
       .filter(visivel)
-      .filter((el) => parseFloat(getComputedStyle(el).fontSize) < 12)
-      .length;
-    if (fontesPequenas) avisos.push(`DÉBITO L9-B · ${fontesPequenas} textos visíveis abaixo de 12px`);
+      .filter((el) => parseFloat(getComputedStyle(el).fontSize) < 12);
+    if (fontesPequenas.length) {
+      const detalhes = fontesPequenas.slice(0, 12).map((el) => {
+        const px = parseFloat(getComputedStyle(el).fontSize).toFixed(2);
+        const nome = (el.getAttribute('aria-label') || el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 36);
+        return `${el.tagName.toLowerCase()}.${String(el.className || '').trim().replace(/\s+/g, '.')}=${px}px:${nome}`;
+      });
+      erros.push(`textos visíveis abaixo de 12px: ${detalhes.join(' | ')}`);
+    }
 
     return {
       erros,
