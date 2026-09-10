@@ -7475,7 +7475,16 @@
    "origemNome": "corrigido-auditoria",
    "aliases": [
     "Pedra de canal"
-   ]
+   ],
+   "automacao": {
+    "classificacao": "consumivel-resolucao-manual-e11",
+    "rolaNoApp": false,
+    "motivo": "O consumível é uso único; o app consome a unidade, mas a resolução restante depende de carta, aliado, alvo, cena e/ou rolagem física."
+   },
+   "efeitoConsumivel": {
+    "tipo": "consumir-e-resolver-na-mesa",
+    "efeitoManual": "Escolha uma magia ou grimório do seu cofre, use-o uma vez conforme a regra da carta e devolva-o ao cofre. O app não move a carta para o equipamento nem resolve sua jogada."
+   }
   },
   {
    "id": "consumivel-35",
@@ -7516,7 +7525,16 @@
    "origemNome": "corrigido-auditoria",
    "aliases": [
     "Hopehold Flare"
-   ]
+   ],
+   "automacao": {
+    "classificacao": "consumivel-resolucao-manual-e11",
+    "rolaNoApp": false,
+    "motivo": "O consumível é uso único; o app consome a unidade, mas a resolução restante depende de carta, aliado, alvo, cena e/ou rolagem física."
+   },
+   "efeitoConsumivel": {
+    "tipo": "consumir-e-resolver-na-mesa",
+    "efeitoManual": "Até o fim da cena, aliados em alcance Próximo que gastarem Esperança rolam 1d6 fisicamente; em 6, obtêm o efeito sem gastar aquela Esperança. A ficha não altera recursos de aliados."
+   }
   },
   {
    "id": "consumivel-38",
@@ -7525,7 +7543,16 @@
    "descricao": "Você pode fazer uma rolagem de finesse para arremessar este fragmento em um grupo de adversários dentro do alcance distante. Os alvos contra os quais você for bem-sucedido receberão 4d20 de dano mágico.",
    "nomeIngles": "Major Arcane Shard",
    "descricaoIngles": "You can make a Finesse Roll to throw this shard at a group of adversaries within Far range. Targets you succeed against take 4d20 magic damage.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-resolucao-manual-e11",
+    "rolaNoApp": false,
+    "motivo": "O consumível é uso único; o app consome a unidade, mas a resolução restante depende de carta, aliado, alvo, cena e/ou rolagem física."
+   },
+   "efeitoConsumivel": {
+    "tipo": "consumir-e-resolver-na-mesa",
+    "efeitoManual": "Faça a jogada de Acuidade/Finesse na mesa contra os alvos Distantes; cada alvo atingido sofre 4d20 de dano mágico rolado fisicamente."
+   }
   },
   {
    "id": "consumivel-39",
@@ -7546,7 +7573,17 @@
    "descricao": "Marque uma Stress para criar um vazio que se estende até o alcance distante. Nenhuma magia pode ser lançada dentro do vazio, e as criaturas dentro do vazio são imunes a dano mágico.",
    "nomeIngles": "Circle of the Void",
    "descricaoIngles": "Mark a Stress to create a void that extends up to Far range. No magic can be cast inside the void, and creatures within the void are immune to magic damage.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-custo-e-resolucao-manual-e11",
+    "rolaNoApp": false,
+    "motivo": "Marca 1 Estresse e consome a unidade atomicamente; geometria, proibição de magia e imunidade das criaturas pertencem à cena."
+   },
+   "efeitoConsumivel": {
+    "tipo": "consumir-e-resolver-na-mesa",
+    "custoEstresse": 1,
+    "efeitoManual": "Crie o vazio até alcance Distante: nenhuma magia pode ser conjurada dentro dele e criaturas dentro do vazio são imunes a dano mágico. Controle posição/duração na mesa."
+   }
   },
   {
    "id": "consumivel-41",
@@ -7875,8 +7912,16 @@
    "nomeAntigo": "Pedra do Conhecimento",
    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Tesouro",
    "observacao": "Na tabela da Jambô este item é o número 56, não 55 — a numeração dos consumíveis não bate com a do SRD em inglês a partir do 53.",
-   "automacao": null,
-   "efeitoConsumivel": null
+   "automacao": {
+    "classificacao": "consumivel-pos-morte-e11",
+    "rolaNoApp": false,
+    "motivo": "Após a morte, um aliado escolhe e transfere uma carta do equipamento/cofre; a ficha morta apenas confirma a resolução e consome a pedra. Não há mutação silenciosa da ficha de outro jogador."
+   },
+   "efeitoConsumivel": {
+    "tipo": "consumir-e-resolver-na-mesa",
+    "exigeFichaEncerrada": true,
+    "efeitoManual": "Depois que um aliado escolher uma carta do seu equipamento e colocá-la no próprio equipamento ou cofre, esta confirmação esfarela a Pedra do Conhecimento. A transferência da carta deve ser feita na ficha do aliado."
+   }
   },
   {
    "id": "consumivel-56",

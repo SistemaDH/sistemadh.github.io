@@ -863,3 +863,16 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - Nenhum dado é gerado pelo app e nenhum bônus temporário de Evasão fica persistido na ficha.
 
 **Próximo bloco natural:** atualizar a auditoria do Lote 8 e escolher o próximo grupo mecânico ainda pendente a partir do relatório, mantendo consumíveis puramente narrativos/manualizados fora de automação indevida.
+
+## Lote 8 — fechamento dos consumíveis E11
+
+Fonte: livro básico PT-BR, Capítulo 2, seção **Consumíveis**. A regra geral confirma que consumíveis são tesouros de **uso único**; por isso a unidade é removida somente quando o uso é efetivamente resolvido.
+
+- **Pedra Canalizadora (`consumivel-34`)**: consome uma unidade e lembra a resolução da magia/grimório escolhido no cofre, sem mover a carta para o equipamento nem tentar resolver sua jogada.
+- **Sinalizador de Hopehold (`consumivel-37`)**: consome uma unidade e publica a aura até o fim da cena; os d6 e os gastos de Esperança pertencem a cada aliado, portanto não são alterados pela ficha do portador.
+- **Fragmento Arcano Maior (`consumivel-38`)**: passa a usar o mesmo padrão dos fragmentos menor/aprimorado: consome a unidade, enquanto teste, alvos e `4d20` permanecem físicos/manuais.
+- **Círculo do Vazio (`consumivel-40`)**: marca **1 Estresse** e consome a unidade atomicamente. Área, proibição de magia e imunidade a dano mágico são efeitos de cena e ficam como lembrete. O custo percorre `ajustarRecurso_`, preservando interceptadores como Inabalável.
+- **Pedra do Conhecimento (`consumivel-55`)**: o botão de resolução só fica disponível depois que a ficha está encerrada por morte. Após a mesa/aliado escolher e transferir a carta, a confirmação consome a pedra; o app não edita silenciosamente a ficha de outro jogador.
+- Nenhum desses efeitos gera RNG no aplicativo.
+
+**Próximo bloco natural:** com consumíveis zerados na auditoria, revisar os candidatos de **loot permanente**, agrupando-os por família mecânica e automatizando somente consequências determinísticas da própria ficha.

@@ -2333,6 +2333,21 @@ function usarConsumivelDaMochila_(ficha, lista, indice, a) {
       esperancaGanha:esperancaGanha
     };
   } else if (tipo === 'consumir-e-resolver-na-mesa') {
+    if (efeito.exigeFichaEncerrada === true && !(ficha || {}).encerrada) {
+      return falhar(item.nome + ': este consumível só pode ser resolvido depois que o personagem morrer.');
+    }
+    const custoEstresseManual=Math.max(0,Math.trunc(Number(efeito.custoEstresse)) || 0);
+    if (custoEstresseManual > 0) {
+      const recursos=(ficha || {}).recursos || {};
+      const atual=Math.max(0,Number(recursos.estresseMarcado) || 0);
+      const teto=Math.max(0,Number(recursos.estresseMaximo) || 0);
+      if (atual + custoEstresseManual > teto) {
+        return falhar(item.nome + ': não sobra Estresse para pagar o custo deste consumível.');
+      }
+      const marca=ajustarRecurso_(ficha,{chave:'estresseMarcado',delta:custoEstresseManual});
+      if (marca && marca.erro) return falhar(marca.erro);
+      detalhes.push(marca);
+    }
     quantidade=1;
     detalhes.push({
       tipo:'efeito-manual',
@@ -2376,6 +2391,7 @@ function usarConsumivelDaMochila_(ficha, lista, indice, a) {
     efeito:tipo, quantidade:quantidade, resultadoManual:resultadoManual,
     resultadoEfeito:resultadoEfeito,
     custoEsperanca:(tipo === 'recuperar-armadura-por-esperanca' ? quantidade : undefined),
+    custoEstresse:(tipo === 'consumir-e-resolver-na-mesa' ? Math.max(0,Math.trunc(Number(efeito.custoEstresse)) || 0) : undefined),
     efeitoManual:efeitoManualFinal || null,
     detalhes:detalhes,
     aviso:item.nome + ': 1 unidade consumida.' + (efeitoManualFinal ? ' Resolva na mesa: ' + efeitoManualFinal : '')

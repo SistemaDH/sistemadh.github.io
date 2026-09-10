@@ -11473,11 +11473,6 @@ teste('E8 Ceia respeita o teto de Esperança e registra somente o ganho efetivo'
   igual(r.mudancas[0].resultadoEfeito.esperancaGanha,1);
 });
 
-console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
-if (falhou) {
-  falhas.forEach((f) => console.error(f.nome, f.erro));
-  process.exit(1);
-}
 
 
 console.log('\nLote 8 — consumíveis especiais E9 + regressão E7');
@@ -11507,7 +11502,6 @@ teste('E9 corrige o deslocamento do E7: Encolhimento=53, Crescimento=54 e Pedra 
   igual(CONTADORES['estado:consumivel:consumivel-53'].modificadorTraco,{traco:'agilidade',bonus:2});
   igual(CONTADORES['estado:consumivel:consumivel-54'].modificadorTraco,{traco:'forca',bonus:2});
   verdade(!CONTADORES['estado:consumivel:consumivel-55'],'Pedra do Conhecimento não pode carregar estado de tamanho');
-  verdade(!pedra.automacao && !pedra.efeitoConsumivel,'Pedra do Conhecimento volta a ficar pendente para implementação própria');
 });
 teste('E9 Poção da Estabilidade concede exatamente o terceiro movimento e expira nesse descanso', () => {
   const {f,item}=fichaConsumivelE9_('consumivel-13',1,5);
@@ -11678,3 +11672,88 @@ teste('E10 Espelho de Marigold precisa existir na mochila e não empilha mitiga�
   r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:20,tipoDeDano:'fisico',usarEspelhoMarigold:true,usarArmadura:true,reacoes:[]}]);
   igual(r.erros.length,1); igual(JSON.stringify(f),antes,'combinação inválida não pode gastar recurso nem item');
 });
+
+
+console.log('\nLote 8 — fechamento de consumíveis E11');
+function fichaConsumivelE11_(id,qtd=1) {
+  const item=contexto.acharItem_(id);
+  const f=contexto.fichaVazia_();
+  f.identidade={nome:'E11',nivel:5,classe:'Bardo',subclasse:'Artífice das Palavras'};
+  f.recursos=f.recursos || {};
+  f.recursos.pontosDeVidaMaximos=6; f.recursos.pontosDeVidaMarcados=0;
+  f.recursos.estresseMaximo=6; f.recursos.estresseMarcado=1;
+  f.recursos.esperancaMaxima=6; f.recursos.esperanca=3;
+  f.inventario=[{id:item.id,nome:item.nome,qtd:qtd,emUso:false}];
+  return {f,item};
+}
+teste('E11 os cinco consumíveis restantes ficam explicitamente classificados', () => {
+  for (const id of ['consumivel-34','consumivel-37','consumivel-38','consumivel-40','consumivel-55']) {
+    const item=contexto.acharItem_(id);
+    verdade(item.automacao, id + ' sem automação/classificação');
+    verdade(item.efeitoConsumivel, id + ' sem resolução de consumo');
+    igual(item.automacao.rolaNoApp,false,id + ' não pode rolar no app');
+  }
+  igual(contexto.acharItem_('consumivel-40').efeitoConsumivel.custoEstresse,1);
+  igual(contexto.acharItem_('consumivel-55').efeitoConsumivel.exigeFichaEncerrada,true);
+});
+teste('E11 Pedra Canalizadora consome uma unidade sem mover cartas da ficha', () => {
+  const {f}=fichaConsumivelE11_('consumivel-34',2);
+  f.cartas={equipadas:['teste-carta'],cofre:['outra-carta']};
+  const cartasAntes=JSON.stringify(f.cartas);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r));
+  igual(f.inventario[0].qtd,1);
+  igual(JSON.stringify(f.cartas),cartasAntes,'Channelstone não deve mover carta automaticamente');
+  verdade(/cofre/i.test(r.mudancas[0].efeitoManual || ''),JSON.stringify(r.mudancas[0]));
+});
+teste('E11 Hopehold Flare consome uma unidade sem alterar Esperança de aliados ou rolar d6', () => {
+  const {f}=fichaConsumivelE11_('consumivel-37',1);
+  const hope=f.recursos.esperanca;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r));
+  igual(f.inventario.length,0); igual(f.recursos.esperanca,hope);
+  verdade(/d6/i.test(r.mudancas[0].efeitoManual || ''));
+  verdade(/fim da cena/i.test(r.mudancas[0].efeitoManual || ''));
+});
+teste('E11 Fragmento Arcano Maior segue a família manual e consome uma unidade', () => {
+  const {f}=fichaConsumivelE11_('consumivel-38',1);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r)); igual(f.inventario.length,0);
+  verdade(/4d20/i.test(r.mudancas[0].efeitoManual || ''));
+});
+teste('E11 Círculo do Vazio marca exatamente 1 Estresse e consome a unidade', () => {
+  const {f}=fichaConsumivelE11_('consumivel-40',2);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r));
+  igual(f.recursos.estresseMarcado,2); igual(f.inventario[0].qtd,1);
+  igual(r.mudancas[0].custoEstresse,1);
+});
+teste('E11 Círculo do Vazio sem espaço de Estresse falha atomicamente', () => {
+  const {f}=fichaConsumivelE11_('consumivel-40',1);
+  f.recursos.estresseMarcado=f.recursos.estresseMaximo;
+  const antes=JSON.stringify(f);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros.length,1,JSON.stringify(r)); igual(JSON.stringify(f),antes);
+});
+teste('E11 Pedra do Conhecimento não pode ser consumida antes da morte', () => {
+  const {f}=fichaConsumivelE11_('consumivel-55',1);
+  const antes=JSON.stringify(f);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros.length,1,JSON.stringify(r)); igual(JSON.stringify(f),antes);
+});
+teste('E11 Pedra do Conhecimento após morte consome a pedra sem editar ficha de aliado', () => {
+  const {f}=fichaConsumivelE11_('consumivel-55',1);
+  f.encerrada={motivo:'veu',em:'2026-09-10T00:00:00Z'};
+  f.cartas={equipadas:['legado'],cofre:['arquivo']};
+  const cartasAntes=JSON.stringify(f.cartas);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r)); igual(f.inventario.length,0);
+  igual(JSON.stringify(f.cartas),cartasAntes);
+  verdade(/aliado/i.test(r.mudancas[0].efeitoManual || ''));
+});
+
+console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
+if (falhou) {
+  falhas.forEach((f) => console.error(f.nome, f.erro));
+  process.exit(1);
+}

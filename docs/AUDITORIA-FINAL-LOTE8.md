@@ -9,8 +9,8 @@
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **0** candidatas sem sinal de automação específica; **92** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **0** ocorrências candidatas ativas/condicionais.
-- Loot/consumíveis com texto mecânico detectado: **81**; **38** candidatos ainda sem estrutura/classificação.
-- Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **49** linhas, incluindo histórico já resolvido.
+- Loot/consumíveis com texto mecânico detectado: **81**; **33** candidatos ainda sem estrutura/classificação.
+- Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **50** linhas, incluindo histórico já resolvido.
 
 ### Distribuição — classes/subclasses
 
@@ -35,8 +35,8 @@
 
 ### Distribuição — loot/consumíveis
 
-- candidato mecânico: **38**
-- estruturado/classificado: **42**
+- candidato mecânico: **33**
+- estruturado/classificado: **47**
 - referência específica no motor: **1**
 
 ## Candidatos — classes e subclasses
@@ -123,11 +123,11 @@
 | consumiveis | Poção de Iluminação Maior | estruturado/classificado | Você ganha um bônus de +1 em Conhecimento até o seu próximo descanso. |
 | consumiveis | Sangue do Yorgi | estruturado/classificado | Você pode beber esse sangue para desaparecer de onde você está e imediatamente reaparece em um ponto que você pode ver dentro do alcance de Very Far. |
 | consumiveis | Saliva de Redthorn | estruturado/classificado | Você pode aplicar essa saliva em uma arma que causa dano físico para adicionar um d12 para sua próxima rolagem de dano com essa arma. |
-| consumiveis | Pedra de Canalização | candidato mecânico | Você pode usar essa pedra para fazer um feitiço ou grimório de seu cofre, use-o uma vez e devolva-o ao seu cofre. |
+| consumiveis | Pedra de Canalização | estruturado/classificado | Você pode usar essa pedra para fazer um feitiço ou grimório de seu cofre, use-o uma vez e devolva-o ao seu cofre. |
 | consumiveis | Poeira Mítica | estruturado/classificado | Você pode aplicar esse pó a uma arma que causa dano mágico para adicionar um d12 à sua próxima rolagem de dano com essa arma. |
-| consumiveis | Sinalizador de Hopehold | candidato mecânico | Quando você usa esse sinalizador, os aliados dentro do alcance próximo rolam um d6 quando gastam uma Esperança. Com um resultado 6, eles ganham o efeito dessa Esperança … |
-| consumiveis | Fragmento Arcano Maior | candidato mecânico | Você pode fazer uma rolagem de finesse para arremessar este fragmento em um grupo de adversários dentro do alcance distante. Os alvos contra os quais você for bem-sucedi… |
-| consumiveis | Círculo do Vazio | candidato mecânico | Marque uma Stress para criar um vazio que se estende até o alcance distante. Nenhuma magia pode ser lançada dentro do vazio, e as criaturas dentro do vazio são imunes a … |
+| consumiveis | Sinalizador de Hopehold | estruturado/classificado | Quando você usa esse sinalizador, os aliados dentro do alcance próximo rolam um d6 quando gastam uma Esperança. Com um resultado 6, eles ganham o efeito dessa Esperança … |
+| consumiveis | Fragmento Arcano Maior | estruturado/classificado | Você pode fazer uma rolagem de finesse para arremessar este fragmento em um grupo de adversários dentro do alcance distante. Os alvos contra os quais você for bem-sucedi… |
+| consumiveis | Círculo do Vazio | estruturado/classificado | Marque uma Stress para criar um vazio que se estende até o alcance distante. Nenhuma magia pode ser lançada dentro do vazio, e as criaturas dentro do vazio são imunes a … |
 | consumiveis | Seiva da árvore do sol | estruturado/classificado | Consuma essa seiva para rolar um d6. Com um resultado de 5-6, elimine 2 HP. Com um resultado de 2-4, elimine 3 de estresse. Em um resultado de 1, veja através do véu da … |
 | consumiveis | Veneno de Dripfang | estruturado/classificado | Uma criatura que consome esse veneno sofre 8d10 de dano mágico direto. |
 | consumiveis | Poção de Resistência Maior | estruturado/classificado | Limpar 1d4+2 de estresse. |
@@ -139,7 +139,7 @@
 | consumiveis | Ceia de Xúria | estruturado/classificado | Você pode comer esta refeição para recuperar todos os seus Pontos de Vida e seu Estresse, além de receber 1d4 de Esperança. |
 | consumiveis | Poção de encolhimento | estruturado/classificado | Você pode beber essa poção para reduzir seu tamanho pela metade até escolher abandonar essa forma ou até seu próximo descanso. Enquanto estiver nessa forma, você tem um … |
 | consumiveis | Poção de crescimento | estruturado/classificado | Você pode beber essa poção para dobrar seu tamanho até escolher abandonar essa forma ou até seu próximo descanso. Enquanto estiver nessa forma, você tem um bônus de +2 p… |
-| consumiveis | Pedra do Conhecimento | candidato mecânico | Se você morrer com esta pedra nas mãos, um aliado pode escolher uma das cartas em sua mão e colocá-la na própria mão ou cofre. Após isso, a pedra se esfarela. |
+| consumiveis | Pedra do Conhecimento | estruturado/classificado | Se você morrer com esta pedra nas mãos, um aliado pode escolher uma das cartas em sua mão e colocá-la na própria mão ou cofre. Após isso, a pedra se esfarela. |
 | consumiveis | Musgo Doce | referência específica no motor | Você pode consumir esse musgo durante um descanso para limpar 1d10 PV ou 1d10 de Estresse. |
 | consumiveis | Orbe Ofuscante | estruturado/classificado | Você pode ativar esse orbe para criar um flash de luz brilhante. Todos os alvos dentro da área de alcance tornam-se vulneráveis até marcarem HP. |
 | consumiveis | Espelho de Marigold | estruturado/classificado | Quando você sofre dano, pode gastar uma Esperança para anular esse dano, após o que o espelho se estilhaça. |
@@ -198,6 +198,7 @@ Estas linhas misturam histórico resolvido e trabalho ainda aberto; servem para 
 - L848: - **Poção da Estabilidade (`consumivel-13`)** agora ativa um estado de uso único que concede **exatamente +1 movimento no próximo descanso**. O cálculo lê o estado antes do gatilho de descanso e o próprio gatilho o encerra, portanto ele não vaza para o descanso seguinte.
 - L854: **Próximo bloco natural:** reações de consumíveis, priorizando **Frasco de Darksmoke (`consumivel-16`)** e **Espelho de Marigold (`consumivel-59`)**; depois revisar os candidatos mecânicos restantes da auditoria.
 - L865: **Próximo bloco natural:** atualizar a auditoria do Lote 8 e escolher o próximo grupo mecânico ainda pendente a partir do relatório, mantendo consumíveis puramente narrativos/manualizados fora de automação indevida.
+- L878: **Próximo bloco natural:** com consumíveis zerados na auditoria, revisar os candidatos de **loot permanente**, agrupando-os por família mecânica e automatizando somente consequências determinísticas da própria ficha.
 
 ## Regra para a próxima etapa
 

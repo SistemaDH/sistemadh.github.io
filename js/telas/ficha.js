@@ -4302,8 +4302,10 @@ function ouroEmPunhados(ouro) {
      * o que a "Aljava de carga" faz no meio de uma cena.
      */
     function verItemDoLivro(doLivro, naMochila, indice) {
-      const podeUsar = !!(doLivro && doLivro.efeitoConsumivel);
-      const pedeQuantidade = podeUsar && doLivro.efeitoConsumivel.tipo === 'recuperar-armadura-por-esperanca';
+      const efeitoConsumivel = doLivro && doLivro.efeitoConsumivel;
+      const podeUsar = !!efeitoConsumivel &&
+        !(efeitoConsumivel.exigeFichaEncerrada === true && !(p.ficha || {}).encerrada);
+      const pedeQuantidade = podeUsar && efeitoConsumivel.tipo === 'recuperar-armadura-por-esperanca';
       const recursosAtuais = (p.ficha || {}).recursos || {};
       const limiteQuantidade = Math.max(0, Math.min(
         Number(recursosAtuais.esperanca) || 0,
