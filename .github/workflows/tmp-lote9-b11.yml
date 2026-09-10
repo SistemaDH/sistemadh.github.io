@@ -1,0 +1,29 @@
+name: TEMP Lote 9 B11 Mestre mobile
+
+on:
+  push:
+    branches: [tmp-lote9-b11-mestre-mobile-baseline-sol]
+
+permissions:
+  contents: read
+
+jobs:
+  medir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Baseline Mestre mobile 360 / 390 / 430
+        run: npm run teste:layout-mestre-mobile
+      - name: Guardar diagnóstico Mestre mobile
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lote9-b11-mestre-mobile-medicao
+          path: artifacts/layout-mestre-mobile
+          if-no-files-found: warn
