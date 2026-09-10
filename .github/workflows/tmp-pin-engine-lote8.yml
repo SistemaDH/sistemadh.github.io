@@ -9,7 +9,6 @@ permissions:
 
 jobs:
   pin:
-    if: github.event.head_commit.message == 'chore: preparar pin do motor Lote 8'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,9 +19,8 @@ jobs:
         run: |
           set -euo pipefail
           BASE_SHA='2572ee1270ee4f98c5c54158507df0783bd2696b'
-          OLD_SHA='c52b87cd1657ff7904554f2cc3035f552df7f8c8'
-          test "$(git rev-parse HEAD^)" = "$BASE_SHA"
-          test "$(git diff --name-only HEAD^ HEAD)" = '.github/workflows/tmp-pin-engine-lote8.yml'
+          test "$(git merge-base HEAD "$BASE_SHA")" = "$BASE_SHA"
+          test "$(git diff --name-only "$BASE_SHA"..HEAD)" = '.github/workflows/tmp-pin-engine-lote8.yml'
           python3 - <<'PY'
           from pathlib import Path
           p = Path('supabase/functions/engine-api/index.ts')
