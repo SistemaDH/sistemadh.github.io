@@ -3359,6 +3359,23 @@
     "manual"
    ],
    "observacao": "Movimento pertence à cena; o jogador encerra este estado quando se mover."
+  },
+  {
+   "chave": "uso:loot:loot-14",
+   "origem": "loot",
+   "refId": "loot-14",
+   "nome": "Flechas Perfurantes",
+   "rotulo": "usos",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 3
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Até 3 usos por descanso. O valor guarda quantos usos já foram gastos."
   }
  ]
 }

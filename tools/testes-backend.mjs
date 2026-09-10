@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 179 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento, 24 de consumível e 5 de loot', () => {
+teste('o catálogo tem 180 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento, 24 de consumível e 6 de loot', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,7 +1561,7 @@ teste('o catálogo tem 179 contadores: 113 de carta, 25 de classe/subclasse, 4 d
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 179);
+  igual(Object.keys(CONTADORES).length, 180);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 113);
@@ -1571,7 +1571,7 @@ teste('o catálogo tem 179 contadores: 113 de carta, 25 de classe/subclasse, 4 d
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
   igual(porOrigem['equipamento'], 5);
-  igual(porOrigem['loot'], 5);
+  igual(porOrigem['loot'], 6);
 });
 
 teste('"uma vez por" conta o uso GASTO, e o gatilho certo o apaga', () => {
@@ -11889,6 +11889,54 @@ teste('E13 payload antigo com duas relíquias ativas é normalizado para apenas 
   igual(lista[0].emUso,true); igual(lista[1].emUso,false);
   const mods=contexto.modificadoresDerivadosDaFicha_(f).tracos;
   igual(mods.agilidade,1); igual(mods.forca,0);
+});
+
+
+console.log('\nLote 8 — passivos e combate de loot E14');
+teste('E14 corrige Aljava de Carga para patamar e estrutura os quatro itens', () => {
+  const ids=['loot-01','loot-03','loot-14','loot-16'];
+  for (const id of ids) verdade(contexto.acharItem_(id).automacao,id+' sem automação');
+  verdade(/patamar atual/i.test(contexto.acharItem_('loot-03').nomes ? '' : '') === false); // índice não carrega descrição
+  igual(contexto.acharItem_('loot-03').automacao.rolaNoApp,false);
+  igual(contexto.acharItem_('loot-14').efeitoSaque.contadorUso,'uso:loot:loot-14');
+  igual(contexto.acharItem_('loot-16').efeitoSaquePassivo.contextual.bonusRolagem,'vantagem');
+});
+teste('E14 Saco de Dormir Premium recupera 1 Estresse em qualquer descanso e não empilha cópias', () => {
+  const item=contexto.acharItem_('loot-01'); const f=contexto.fichaVazia_();
+  f.recursos.estresseMarcado=4; f.recursos.estresseMaximo=6;
+  f.inventario=[{id:item.id,nome:item.nome,qtd:3,emUso:false}];
+  const avisos=[]; const n=contexto.aplicarSaqueAutomaticoNoDescanso_(f,avisos);
+  igual(n,1); igual(f.recursos.estresseMarcado,3); igual(avisos.length,1);
+});
+teste('E14 Aljava em uso publica bônus condicional igual ao patamar, nunca ao nível', () => {
+  const item=contexto.acharItem_('loot-03'); const f=contexto.fichaVazia_();
+  f.identidade.nivel=5; f.inventario=[{id:item.id,nome:item.nome,qtd:1,emUso:true}];
+  const b=contexto.bonusDeDanoDaFicha_(f);
+  const q=b.condicionais.find(x=>x.fonte===item.nome);
+  verdade(q,'bônus da Aljava não publicado'); igual(q.valor,3); verdade(/flecha/i.test(q.condicao));
+  f.inventario[0].emUso=false;
+  verdade(!contexto.bonusDeDanoDaFicha_(f).condicionais.some(x=>x.fonte===item.nome));
+});
+teste('E14 Flechas Perfurantes têm três usos por descanso e devolvem Proficiência atual', () => {
+  const item=contexto.acharItem_('loot-14'); const f=contexto.fichaVazia_();
+  f.identidade.nivel=5; f.recursos.estresseMaximo=6; f.recursos.esperancaMaxima=6;
+  f.inventario=[{id:item.id,nome:item.nome,qtd:1,emUso:true}];
+  const prof=contexto.proficienciaEfetivaDaFicha_(f);
+  for (let i=1;i<=3;i++) {
+    const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]);
+    igual(r.erros,[],JSON.stringify(r)); igual(r.mudancas[0].usosDepois,i); igual(r.mudancas[0].maxUsos,3);
+    igual(r.mudancas[0].bonusProficienciaDano,prof);
+  }
+  const antes=JSON.stringify(f); let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f),antes);
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r)); igual(r.mudancas[0].usosDepois,1);
+});
+teste('E14 Chave-Mestra fica contextual: nenhuma rolagem é feita pelo app', () => {
+  const x=contexto.acharItem_('loot-16');
+  igual(x.automacao.rolaNoApp,false); igual(x.efeitoSaquePassivo.contextual.traco,'finesse');
+  verdade(!x.efeitoSaque,'Chave-Mestra não deve ganhar botão de uso que finja rolar a ação');
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

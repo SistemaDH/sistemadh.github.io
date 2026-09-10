@@ -9,7 +9,7 @@
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **0** candidatas sem sinal de automação específica; **92** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **0** ocorrências candidatas ativas/condicionais.
-- Loot/consumíveis com texto mecânico detectado: **81**; **26** candidatos ainda sem estrutura/classificação.
+- Loot/consumíveis com texto mecânico detectado: **81**; **22** candidatos ainda sem estrutura/classificação.
 - Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **52** linhas, incluindo histórico já resolvido.
 
 ### Distribuição — classes/subclasses
@@ -35,8 +35,8 @@
 
 ### Distribuição — loot/consumíveis
 
-- candidato mecânico: **26**
-- estruturado/classificado: **54**
+- candidato mecânico: **22**
+- estruturado/classificado: **58**
 - referência específica no motor: **1**
 
 ## Candidatos — classes e subclasses
@@ -63,12 +63,12 @@
 
 | Tipo | Item | Estado | Trecho |
 |---|---|---|---|
-| loot | Saco de Dormir Premium | candidato mecânico | Durante o tempo de inatividade, você limpa automaticamente um estresse. |
-| loot | Aljava de carga | candidato mecânico | Quando for bem-sucedido em um ataque com uma flecha armazenada nessa aljava, ganhe um bônus na rolagem de dano igual ao seu nível atual. |
+| loot | Saco de Dormir Premium | estruturado/classificado | Durante o tempo de inatividade, você limpa automaticamente um estresse. |
+| loot | Aljava de carga | estruturado/classificado | Quando for bem-sucedido em um ataque com uma flecha armazenada nessa aljava, ganhe um bônus na rolagem de dano igual ao seu patamar atual. |
 | loot | Pedra Glamour | estruturado/classificado | Ative essa pedra do tamanho de um seixo para memorizar a aparência de alguém que você pode ver. Gaste uma Hope para recriar magicamente essa aparência em você como uma i… |
-| loot | Flechas Perfurantes | candidato mecânico | Três vezes por descanso, quando for bem-sucedido em um ataque com uma dessas flechas, você pode adicionar sua Proficiência a Você a rolagem de dano. |
+| loot | Flechas Perfurantes | estruturado/classificado | Três vezes por descanso, quando for bem-sucedido em um ataque com uma dessas flechas, você pode adicionar sua Proficiência a Você a rolagem de dano. |
 | loot | Pedra da Resiliência | candidato mecânico | Incruste esta pedra em uma armadura que ainda não tenha uma característica; ela recebe a característica abaixo. Resiliente: antes de marcar seu último Ponto de Armadura,… |
-| loot | Chave-Mestra | candidato mecânico | Ao usar essa chave para abrir uma porta trancada, você ganha vantagem na rolagem de finesse. |
+| loot | Chave-Mestra | estruturado/classificado | Ao usar essa chave para abrir uma porta trancada, você ganha vantagem na rolagem de finesse. |
 | loot | Prisma Arcano | candidato mecânico | Posicione esse prisma em um local de sua escolha e ative-o. Todos os aliados dentro do alcance próximo dele ganham um bônus de +1 em seus lançamentos de feitiço. Enquant… |
 | loot | Receita de Poção de Estamina Menor | candidato mecânico | Como um movimento de inatividade, você pode usar o osso de uma criatura para criar uma Poção de resistência menor. |
 | loot | Receita de Poção de Saúde Menor | candidato mecânico | Como movimento de inatividade, você pode usar um frasco de sangue para criar uma Poção de Saúde Menor. |

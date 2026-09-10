@@ -6195,7 +6195,17 @@
    "origemNome": "corrigido-auditoria",
    "aliases": [
     "Pano de cama premium"
-   ]
+   ],
+   "automacao": {
+    "classificacao": "loot-descanso-automatico-e14",
+    "rolaNoApp": false,
+    "motivo": "Durante qualquer descanso, a ficha recupera automaticamente 1 Estresse se houver Estresse marcado."
+   },
+   "efeitoSaquePassivo": {
+    "descanso": {
+     "recuperaEstresse": 1
+    }
+   }
   },
   {
    "id": "loot-02",
@@ -6210,10 +6220,22 @@
    "id": "loot-03",
    "rolagem": "03",
    "nome": "Aljava de carga",
-   "descricao": "Quando for bem-sucedido em um ataque com uma flecha armazenada nessa aljava, ganhe um bônus na rolagem de dano igual ao seu nível atual.",
+   "descricao": "Quando for bem-sucedido em um ataque com uma flecha armazenada nessa aljava, ganhe um bônus na rolagem de dano igual ao seu patamar atual.",
    "nomeIngles": "Charging Quiver",
    "descricaoIngles": "When you succeed on an attack with an arrow stored in this quiver, gain a bonus to the damage roll equal to your current tier.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-dano-condicional-e14",
+    "rolaNoApp": false,
+    "motivo": "O app publica o bônus igual ao patamar atual, mas não presume que a flecha do ataque estava armazenada na aljava."
+   },
+   "efeitoSaquePassivo": {
+    "bonusDanoCondicional": {
+     "tipo": "patamar",
+     "aplicaEm": "ataque-bem-sucedido-com-flecha-da-aljava",
+     "condicao": "ataque bem-sucedido com uma flecha armazenada nesta aljava"
+    }
+   }
   },
   {
    "id": "loot-04",
@@ -6343,7 +6365,19 @@
    "origemNome": "corrigido-auditoria",
    "aliases": [
     "(Perfurante) (Flechas)"
-   ]
+   ],
+   "automacao": {
+    "classificacao": "loot-uso-por-descanso-e14",
+    "rolaNoApp": false,
+    "motivo": "Registra até 3 usos por descanso e devolve a Proficiência atual para somar ao dano; ataque e dados continuam na mesa."
+   },
+   "efeitoSaque": {
+    "tipo": "uso-assistido",
+    "contadorUso": "uso:loot:loot-14",
+    "bonusProficienciaDano": true,
+    "rolaNoApp": false,
+    "efeitoManual": "Depois de acertar um ataque com uma Flecha Perfurante, some sua Proficiência à rolagem de dano deste ataque."
+   }
   },
   {
    "id": "loot-15",
@@ -6367,7 +6401,19 @@
    "origemNome": "corrigido-auditoria",
    "aliases": [
     "Skeleton Key (chave de esqueleto)"
-   ]
+   ],
+   "automacao": {
+    "classificacao": "loot-passivo-contextual-e14",
+    "rolaNoApp": false,
+    "motivo": "Abrir uma porta trancada é contexto de cena; o app não rola o teste, apenas registra a regra de vantagem em Finesse/Acuidade."
+   },
+   "efeitoSaquePassivo": {
+    "contextual": {
+     "bonusRolagem": "vantagem",
+     "traco": "finesse",
+     "condicao": "usar a Chave-Mestra para abrir uma porta trancada"
+    }
+   }
   },
   {
    "id": "loot-17",

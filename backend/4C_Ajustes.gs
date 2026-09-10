@@ -2443,8 +2443,12 @@ function usarSaqueDaMochila_(ficha, lista, indice, a) {
 
   const contadorUso = String(efeito.contadorUso || '');
   const contadorEstado = String(efeito.contadorEstado || '');
-  if (contadorUso && valorContador(contadorUso) > 0) {
-    return { erro:item.nome + ': este uso ainda não foi recuperado pelo descanso exigido.' };
+  const usosAntes = contadorUso ? valorContador(contadorUso) : 0;
+  const maxUsos = contadorUso && typeof maximoDoContador_ === 'function'
+    ? Math.max(1, Math.trunc(Number(maximoDoContador_(contadorUso, ficha))) || 1) : 1;
+  if (contadorUso && usosAntes >= maxUsos) {
+    return { erro:item.nome + ': os ' + maxUsos + ' uso' + (maxUsos === 1 ? '' : 's') +
+      ' deste período já foram gastos.' };
   }
   if (contadorEstado && efeito.recusaSeEstadoAtivo === true && valorContador(contadorEstado) > 0) {
     return { erro:item.nome + ': este efeito já está ativo.' };
@@ -2474,7 +2478,7 @@ function usarSaqueDaMochila_(ficha, lista, indice, a) {
     detalhes.push(r);
   }
   if (contadorUso) {
-    const r = ajustarContador_(ficha, { chave:contadorUso, valor:1 });
+    const r = ajustarContador_(ficha, { chave:contadorUso, valor:usosAntes + 1 });
     if (r && r.erro) return r;
     detalhes.push(r);
   }
@@ -2489,7 +2493,11 @@ function usarSaqueDaMochila_(ficha, lista, indice, a) {
     tipo:'inventario', acao:'usar', item:item.nome, itemId:item.id,
     custoEsperanca:custoEsperanca, custoEstresse:custoEstresse,
     contadorUso:contadorUso || null, contadorEstado:contadorEstado || null,
+    usosAntes:contadorUso ? usosAntes : null, usosDepois:contadorUso ? usosAntes + 1 : null,
+    maxUsos:contadorUso ? maxUsos : null,
     bonusRolagem:efeito.bonusRolagem || null,
+    bonusProficienciaDano:efeito.bonusProficienciaDano === true && typeof proficienciaEfetivaDaFicha_ === 'function'
+      ? proficienciaEfetivaDaFicha_(ficha) : null,
     efeitoManual:efeitoManual || null,
     detalhes:detalhes,
     aviso:item.nome + ': uso registrado.' + (efeitoManual ? ' ' + efeitoManual : '')

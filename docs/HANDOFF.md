@@ -908,3 +908,15 @@ As seis relíquias de traço (`loot-41` a `loot-46`) foram tratadas como loot pe
 - nenhum dado é rolado pelo app.
 
 A implementação introduz `efeitoSaquePassivo`, separado de `efeitoSaque`: passivo não ganha botão de “Usar”, pois depende do estado `emUso` já existente na mochila.
+
+
+### Diário — Lote 8 E14: descanso, dano e contexto de loot
+
+Bloco baseado no Core pt-BR, Tesouro pp.129–130:
+
+- `loot-01` Saco de Dormir Premium: durante qualquer descanso recupera automaticamente 1 Estresse; cópias não empilham;
+- `loot-03` Aljava de Carga: correção de dado — o bônus é igual ao **patamar**, não ao nível. A ficha publica o bônus condicional quando a aljava está em uso, sem presumir que a flecha do ataque veio dela;
+- `loot-14` Flechas Perfurantes: até 3 usos por descanso, cada uso devolve a Proficiência efetiva atual para somar ao dano rolado na mesa;
+- `loot-16` Chave-Mestra: classificada como passivo contextual; vantagem em Finesse/Acuidade ao abrir porta trancada, sem rolagem no app.
+
+O motor genérico de `efeitoSaque` agora suporta contador de uso com máximo maior que 1. O descanso ganhou leitura genérica de `efeitoSaquePassivo.descanso`.

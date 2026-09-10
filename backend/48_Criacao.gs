@@ -691,6 +691,24 @@ function bonusDeDanoDaFicha_(ficha) {
     }
   }
 
+  // Loot em uso pode publicar bônus de dano CONTEXTUAL sem aplicá-lo cegamente.
+  // A condição viaja junto (ex.: a flecha precisa ter vindo da Aljava de Carga).
+  const saquesDano = saquesAtivosDaFicha_(ficha);
+  for (let i = 0; i < saquesDano.length; i++) {
+    const item = saquesDano[i].item || {};
+    const regra = ((item.efeitoSaquePassivo || {}).bonusDanoCondicional) || null;
+    if (!regra) continue;
+    let valor = 0;
+    if (regra.tipo === 'patamar') valor = patamar;
+    else if (regra.tipo === 'fixo') valor = Number(regra.valor) || 0;
+    if (!valor) continue;
+    saida.condicionais.push({
+      fonte:item.nome, tipo:'fixo', valor:valor,
+      aplicaEm:regra.aplicaEm || 'jogada-de-dano',
+      condicao:regra.condicao || 'condição declarada pelo item'
+    });
+  }
+
   if (tem('Treinamento de Combate')) {
     saida.guerreiroFisico = {
       fonte: 'Treinamento de Combate',

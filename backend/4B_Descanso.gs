@@ -377,6 +377,31 @@ function aplicarEquipamentoAutomaticoNoDescanso_(ficha, avisos) {
   return recuperados;
 }
 
+/** Efeitos automáticos de loot carregado durante qualquer descanso. */
+function aplicarSaqueAutomaticoNoDescanso_(ficha, avisos) {
+  const lista = Array.isArray((ficha || {}).inventario) ? ficha.inventario : [];
+  const vistos = {};
+  let recuperados = 0;
+  for (let i = 0; i < lista.length; i++) {
+    const reg = lista[i] || {};
+    if (!reg.id || vistos[reg.id] || typeof acharItem_ !== 'function') continue;
+    vistos[reg.id] = true;
+    const item = acharItem_(reg.id);
+    const regra = item && item.tipo === 'saque' ? (((item.efeitoSaquePassivo || {}).descanso) || {}) : {};
+    const limpa = Math.max(0, Math.trunc(Number(regra.recuperaEstresse)) || 0);
+    if (!limpa) continue;
+    ficha.recursos = ficha.recursos || {};
+    const antes = Math.max(0, Number(ficha.recursos.estresseMarcado) || 0);
+    const depois = Math.max(0, antes - limpa);
+    const efetivo = antes - depois;
+    ficha.recursos.estresseMarcado = depois;
+    recuperados += efetivo;
+    if (efetivo > 0) avisos.push((item.nome || 'Loot') + ': recuperou automaticamente ' +
+      efetivo + ' Ponto' + (efetivo === 1 ? '' : 's') + ' de Estresse durante o descanso.');
+  }
+  return recuperados;
+}
+
 function simularDescanso_(ficha, tipo, escolhas) {
   const t = tipoDeDescanso_(tipo);
   const erros = [];
@@ -611,6 +636,7 @@ function simularDescanso_(ficha, tipo, escolhas) {
   // Equipamento passivo de descanso (ex.: Vitalizante) entra antes dos gatilhos
   // de contador, mas depois dos dois movimentos escolhidos.
   aplicarEquipamentoAutomaticoNoDescanso_(copia, avisos);
+  aplicarSaqueAutomaticoNoDescanso_(copia, avisos);
 
   // Contadores das cartas: o gatilho do descanso zera ou recarrega o que a
   // carta mandar. Quem sabe quais é o 47_Contadores.gs.
