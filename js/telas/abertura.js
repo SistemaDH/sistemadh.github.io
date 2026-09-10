@@ -81,9 +81,30 @@ export function telaAbertura({ aoEntrar }) {
       maxlength: props.maxlength || null,
       placeholder: props.placeholder || ''
     });
+
+    let controle = entrada;
+    if (props.codigo) {
+      const nomeCampo = rotulo.toLowerCase();
+      const acao = el('button', {
+        type: 'button',
+        class: 'abertura__codigoAcao',
+        'aria-label': `Mostrar ${nomeCampo}`,
+        'aria-pressed': 'false',
+        onClick: () => {
+          const mostrar = entrada.type === 'password';
+          entrada.type = mostrar ? 'text' : 'password';
+          acao.textContent = mostrar ? 'Ocultar' : 'Mostrar';
+          acao.setAttribute('aria-label', `${mostrar ? 'Ocultar' : 'Mostrar'} ${nomeCampo}`);
+          acao.setAttribute('aria-pressed', String(mostrar));
+          entrada.focus({ preventScroll: true });
+        }
+      }, 'Mostrar');
+      controle = el('div', { class: 'abertura__codigoCampo' }, [entrada, acao]);
+    }
+
     const bloco = el('div', { class: 'campo' }, [
       el('label', { class: 'campo__rotulo', for: id, texto: rotulo }),
-      entrada,
+      controle,
       ajuda ? el('span', { class: 'campo__ajuda', texto: ajuda }) : null
     ]);
     return { bloco, entrada };
