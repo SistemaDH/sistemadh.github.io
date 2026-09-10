@@ -21,6 +21,22 @@ jobs:
       - name: Materializar Aparar
         run: |
           python3 tools/lote8-equip-aparar-d4.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tools/testes-backend.mjs')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace(
+            "teste('Aparar permanece fora do D3 para o bloco defensivo dedicado', () => {",
+            "teste('Aparar sai da pendência do D3 pelo bloco defensivo dedicado, sem RNG', () => {",
+            1
+          )
+          antigo="  verdade(!xs[0].automacao, 'Aparar deve continuar pendente até receber entrada manual dos dados defensivos');"
+          novo="  verdade(!!xs[0].automacao, 'Aparar deve estar fechado pelo bloco defensivo D4');\n  igual(xs[0].automacao.rolaNoApp, false);\n  verdade(!!(((xs[0].efeitoEquipamento || {}).danoRecebido || {}).aparar));"
+          if antigo not in s:
+            raise SystemExit('expectativa histórica D3 de Aparar não encontrada')
+          s=s.replace(antigo,novo,1)
+          p.write_text(s,encoding='utf-8')
+          PY
           node tools/gerar-44-equipamento.mjs
           node tools/gerar-41-dominios.mjs
           node tools/gerar-47-contadores.mjs
