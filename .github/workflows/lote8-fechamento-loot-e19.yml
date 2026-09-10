@@ -31,16 +31,15 @@ jobs:
           from pathlib import Path
           p=Path('tools/lote8-fechamento-loot-e19.py')
           s=p.read_text(encoding='utf-8')
-          old=r'''aj = replace_once(aj,
-          """  const recursos = (ficha || {}).recursos || {};
-          const custoEsperanca = Math.max(0, Math.trunc(Number(efeito.custoEsperanca)) || 0);""",
-          """  if (efeito.requerVinculo === true && !String(registro.vinculo || '').trim()) {
-            return { erro:item.nome + ': primeiro use o movimento de repouso deste item para registrar seu princípio.' };
-          }
-
-          const recursos = (ficha || {}).recursos || {};
-          const custoEsperanca = Math.max(0, Math.trunc(Number(efeito.custoEsperanca)) || 0);""", 'requer principio')'''
-          new=r'''aj = replace_once(aj,
+          rotulo="'requer principio'"
+          pos=s.find(rotulo)
+          if pos < 0:
+              raise SystemExit('Rótulo da âncora E19 não encontrado')
+          inicio=s.rfind('aj = replace_once(aj,',0,pos)
+          fim=s.find('\n',pos)
+          if inicio < 0 or fim < 0:
+              raise SystemExit('Não foi possível delimitar a chamada da âncora E19')
+          novo=r'''aj = replace_once(aj,
           """  const recursos = (ficha || {}).recursos || {};
 
           // Hopekeeper: duas resoluções no mesmo item. A carga persiste até o uso.""",
@@ -51,10 +50,8 @@ jobs:
           const recursos = (ficha || {}).recursos || {};
 
           // Hopekeeper: duas resoluções no mesmo item. A carga persiste até o uso.""", 'requer principio')'''
-          if s.count(old) != 1:
-              raise SystemExit('Trecho de correção da âncora E19 não encontrado de forma única')
-          p.write_text(s.replace(old,new,1),encoding='utf-8')
-          print('Âncora E19 corrigida para o estado pós-transformação.')
+          p.write_text(s[:inicio]+novo+s[fim:],encoding='utf-8')
+          print('Âncora E19 corrigida estruturalmente.')
           PY
 
       - name: Materializar E19 e regenerar
