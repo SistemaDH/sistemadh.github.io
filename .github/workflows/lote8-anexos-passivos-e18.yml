@@ -27,6 +27,25 @@ jobs:
       - name: Materializar E18 e regenerar
         run: |
           set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tools/lote8-anexos-passivos-e18.py')
+          s=p.read_text(encoding='utf-8')
+          start=s.index('anchor = "console.log(`')
+          marker='write(path_test, tests)'
+          end=s.index(marker,start)+len(marker)
+          replacement="""needle = '${passou} passaram, ${falhou} falharam.'
+pos_needle = tests.rfind(needle)
+if pos_needle < 0:
+    raise SystemExit('Resumo dos testes não encontrado')
+pos = tests.rfind('console.log(`', 0, pos_needle)
+if pos < 0:
+    raise SystemExit('Início do resumo dos testes não encontrado')
+tests = tests[:pos] + bloco + tests[pos:]
+write(path_test, tests)"""
+          s=s[:start]+replacement+s[end:]
+          p.write_text(s,encoding='utf-8')
+          PY
           python3 tools/lote8-anexos-passivos-e18.py
           node tools/gerar-44-equipamento.mjs
           python3 tools/auditar-pendencias-lote8.py > docs/AUDITORIA-FINAL-LOTE8.md
