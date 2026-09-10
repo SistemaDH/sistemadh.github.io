@@ -80,9 +80,9 @@ jobs:
           assert all(x.get('persisteSemRef') is True and x.get('zeraEm')==['descanso'] for x in cs)
           out=subprocess.check_output(['python3','tools/auditar-pendencias-lote8.py'],text=True)
           print(out)
-          assert 'Loot/consumíveis com texto mecânico detectado: **81**; **60** candidatos ainda sem estrutura/classificação.' in out
-          assert 'estruturado/classificado: **20**' in out
-          print('E3 OK: 3 estados até descanso estruturados; 60 candidatos seguem abertos.')
+          assert 'Loot/consumíveis com texto mecânico detectado: **81**; **62** candidatos ainda sem estrutura/classificação.' in out
+          assert 'estruturado/classificado: **18**' in out
+          print('E3 OK: 3 estados até descanso estruturados; a heurística antiga enxerga 18 estruturados e 62 candidatos.')
           PY
 
       - name: Testes backend
