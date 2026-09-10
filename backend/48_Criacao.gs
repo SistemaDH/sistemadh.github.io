@@ -286,6 +286,20 @@ function equipamentoAtivoDaFicha_(ficha) {
   return saida;
 }
 
+/** Loot permanente que o jogador marcou como realmente em uso. */
+function saquesAtivosDaFicha_(ficha) {
+  const lista = Array.isArray((ficha || {}).inventario) ? ficha.inventario : [];
+  const saida = [];
+  for (let i = 0; i < lista.length; i++) {
+    const reg = lista[i] || {};
+    if (!reg.emUso || !reg.id || typeof acharItem_ !== 'function') continue;
+    const item = acharItem_(reg.id);
+    if (!item || item.tipo !== 'saque' || !item.efeitoSaquePassivo) continue;
+    saida.push({ registro:reg, item:item });
+  }
+  return saida;
+}
+
 /**
  * Alcance efetivo é derivado do que a ficha realmente possui.
  * Gigante/Alcance transforma Corpo a Corpo em Muito Próximo para arma,
@@ -474,6 +488,14 @@ function modificadoresDerivadosDaFicha_(ficha) {
   for (let i = 0; i < equipados.length; i++) {
     const item = equipados[i].item;
     aplicar(item.efeitoDerivado, item.nome);
+  }
+
+  // Loot permanente só concede passivo quando a própria linha da mochila está
+  // marcada como em uso. Isso permite guardar várias relíquias sem somá-las.
+  const saquesAtivos = saquesAtivosDaFicha_(ficha);
+  for (let i = 0; i < saquesAtivos.length; i++) {
+    const item = saquesAtivos[i].item;
+    aplicar((item.efeitoSaquePassivo || {}).efeitoDerivado, item.nome);
   }
 
   // Estados deixados por consumíveis já gastos também podem modificar um traço.

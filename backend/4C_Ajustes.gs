@@ -2079,13 +2079,28 @@ function itemDeMochila_(bruto) {
   return item;
 }
 
+/** Grupo exclusivo declarado por um loot permanente (ex.: relíquias). */
+function grupoExclusivoDeSaque_(registro) {
+  if (!registro || !registro.id || typeof acharItem_ !== 'function') return '';
+  const item = acharItem_(registro.id);
+  const passivo = item && item.tipo === 'saque' ? item.efeitoSaquePassivo : null;
+  return passivo ? String(passivo.grupoExclusivo || '') : '';
+}
+
 /** A mochila inteira na forma nova, sem buracos. */
 function normalizarInventario_(ficha) {
   const lista = Array.isArray(ficha.inventario) ? ficha.inventario : [];
   const saida = [];
+  const gruposEmUso = {};
   for (let i = 0; i < lista.length && saida.length < LIMITE_ITENS_INVENTARIO; i++) {
     const item = itemDeMochila_(lista[i]);
-    if (item) saida.push(item);
+    if (!item) continue;
+    const grupo = item.emUso ? grupoExclusivoDeSaque_(item) : '';
+    if (grupo) {
+      if (gruposEmUso[grupo]) item.emUso = false;
+      else gruposEmUso[grupo] = true;
+    }
+    saida.push(item);
   }
   ficha.inventario = saida;
   return saida;
@@ -2565,9 +2580,20 @@ function ajustarInventario_(ficha, a) {
 
   if (acao === 'uso') {
     if (!achou) return { erro: 'Item da mochila não encontrado.' };
-    lista[i].emUso = Boolean(a.ligar);
+    const ligar = Boolean(a.ligar);
+    const grupo = ligar ? grupoExclusivoDeSaque_(lista[i]) : '';
+    if (grupo) {
+      for (let k = 0; k < lista.length; k++) {
+        if (k === i || !lista[k].emUso) continue;
+        if (grupoExclusivoDeSaque_(lista[k]) === grupo) {
+          return { erro:'Só uma relíquia pode ficar em uso por vez. Guarde ' + lista[k].nome + ' antes de ativar outra.' };
+        }
+      }
+    }
+    lista[i].emUso = ligar;
     return {
-      tipo: 'inventario', acao: 'uso', item: lista[i].nome, emUso: lista[i].emUso
+      tipo: 'inventario', acao: 'uso', item: lista[i].nome, emUso: lista[i].emUso,
+      grupoExclusivo: grupo || null
     };
   }
 

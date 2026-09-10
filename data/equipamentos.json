@@ -6661,7 +6661,20 @@
    "origemNome": "corrigido-auditoria",
    "aliases": [
     "Stride Relic (Relíquia da passada)"
-   ]
+   ],
+   "automacao": {
+    "classificacao": "loot-passivo-em-uso-e13",
+    "rolaNoApp": false,
+    "motivo": "A relíquia altera um traço enquanto estiver marcada como em uso. O backend permite somente uma relíquia desse grupo ativa por vez."
+   },
+   "efeitoSaquePassivo": {
+    "grupoExclusivo": "reliquia",
+    "efeitoDerivado": {
+     "tracos": {
+      "agilidade": 1
+     }
+    }
+   }
   },
   {
    "id": "loot-42",
@@ -6670,7 +6683,20 @@
    "descricao": "Você recebe um bônus de +1 na sua força. Você só pode carregar uma relíquia.",
    "nomeIngles": "Bolster Relic",
    "descricaoIngles": "You gain a +1 bonus to your Strength. You can only carry one relic.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-passivo-em-uso-e13",
+    "rolaNoApp": false,
+    "motivo": "A relíquia altera um traço enquanto estiver marcada como em uso. O backend permite somente uma relíquia desse grupo ativa por vez."
+   },
+   "efeitoSaquePassivo": {
+    "grupoExclusivo": "reliquia",
+    "efeitoDerivado": {
+     "tracos": {
+      "forca": 1
+     }
+    }
+   }
   },
   {
    "id": "loot-43",
@@ -6679,7 +6705,20 @@
    "descricao": "Você recebe um bônus de +1 na sua Finesse. Você só pode carregar uma relíquia.",
    "nomeIngles": "Control Relic",
    "descricaoIngles": "You gain a +1 bonus to your Finesse. You can only carry one relic.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-passivo-em-uso-e13",
+    "rolaNoApp": false,
+    "motivo": "A relíquia altera um traço enquanto estiver marcada como em uso. O backend permite somente uma relíquia desse grupo ativa por vez."
+   },
+   "efeitoSaquePassivo": {
+    "grupoExclusivo": "reliquia",
+    "efeitoDerivado": {
+     "tracos": {
+      "finesse": 1
+     }
+    }
+   }
   },
   {
    "id": "loot-44",
@@ -6688,7 +6727,20 @@
    "descricao": "Você recebe um bônus de +1 no seu Instinto. Você só pode carregar uma relíquia.",
    "nomeIngles": "Attune Relic",
    "descricaoIngles": "You gain a +1 bonus to your Instinct. You can only carry one relic.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-passivo-em-uso-e13",
+    "rolaNoApp": false,
+    "motivo": "A relíquia altera um traço enquanto estiver marcada como em uso. O backend permite somente uma relíquia desse grupo ativa por vez."
+   },
+   "efeitoSaquePassivo": {
+    "grupoExclusivo": "reliquia",
+    "efeitoDerivado": {
+     "tracos": {
+      "instinto": 1
+     }
+    }
+   }
   },
   {
    "id": "loot-45",
@@ -6697,7 +6749,20 @@
    "descricao": "Você ganha um bônus de +1 na sua Presença. Você só pode carregar uma relíquia.",
    "nomeIngles": "Charm Relic",
    "descricaoIngles": "You gain a +1 bonus to your Presence. You can only carry one relic.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-passivo-em-uso-e13",
+    "rolaNoApp": false,
+    "motivo": "A relíquia altera um traço enquanto estiver marcada como em uso. O backend permite somente uma relíquia desse grupo ativa por vez."
+   },
+   "efeitoSaquePassivo": {
+    "grupoExclusivo": "reliquia",
+    "efeitoDerivado": {
+     "tracos": {
+      "presenca": 1
+     }
+    }
+   }
   },
   {
    "id": "loot-46",
@@ -6709,7 +6774,20 @@
    "origemNome": "corrigido-auditoria",
    "aliases": [
     "Iluminar Relíquia"
-   ]
+   ],
+   "automacao": {
+    "classificacao": "loot-passivo-em-uso-e13",
+    "rolaNoApp": false,
+    "motivo": "A relíquia altera um traço enquanto estiver marcada como em uso. O backend permite somente uma relíquia desse grupo ativa por vez."
+   },
+   "efeitoSaquePassivo": {
+    "grupoExclusivo": "reliquia",
+    "efeitoDerivado": {
+     "tracos": {
+      "conhecimento": 1
+     }
+    }
+   }
   },
   {
    "id": "loot-47",

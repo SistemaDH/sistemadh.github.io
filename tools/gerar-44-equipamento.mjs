@@ -124,7 +124,8 @@ for (const i of [...d.loot, ...d.consumiveis]) {
     automacao: i.automacao || null,
     efeitoConsumivel: i.efeitoConsumivel || null,
     reacaoConsumivel: i.reacaoConsumivel || null,
-    efeitoSaque: i.efeitoSaque || null
+    efeitoSaque: i.efeitoSaque || null,
+    efeitoSaquePassivo: i.efeitoSaquePassivo || null
   })},`);
 }
 L.push('];\n');

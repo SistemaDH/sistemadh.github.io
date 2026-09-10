@@ -9,7 +9,7 @@
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **0** candidatas sem sinal de automação específica; **92** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **0** ocorrências candidatas ativas/condicionais.
-- Loot/consumíveis com texto mecânico detectado: **81**; **28** candidatos ainda sem estrutura/classificação.
+- Loot/consumíveis com texto mecânico detectado: **81**; **26** candidatos ainda sem estrutura/classificação.
 - Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **52** linhas, incluindo histórico já resolvido.
 
 ### Distribuição — classes/subclasses
@@ -35,8 +35,8 @@
 
 ### Distribuição — loot/consumíveis
 
-- candidato mecânico: **28**
-- estruturado/classificado: **52**
+- candidato mecânico: **26**
+- estruturado/classificado: **54**
 - referência específica no motor: **1**
 
 ## Candidatos — classes e subclasses
@@ -88,8 +88,8 @@
 | loot | Corrente do Paragon | candidato mecânico | Como movimento de tempo de inatividade, você pode meditar em um ideal ou princípio que lhe seja caro e concentrar sua vontade nessa corrente. Uma vez por descanso longo,… |
 | loot | Amuleto Elusivo | estruturado/classificado | Uma vez por descanso longo, você pode ativar esse amuleto para ficar oculto até se mover. Enquanto estiver oculto dessa forma, você permanecerá invisível mesmo que um ad… |
 | loot | Medalhão Hopekeeper | candidato mecânico | Durante um descanso longo, se você tiver 6 de Esperança, poderá gastar uma Esperança para imbuir esse medalhão com sua determinação abundante. Quando tiver 0 de Esperanç… |
-| loot | Relíquia de Encantamento | candidato mecânico | Você ganha um bônus de +1 na sua Presença. Você só pode carregar uma relíquia. |
-| loot | Relíquia da Iluminação | candidato mecânico | Você ganha um bônus de +1 no seu Conhecimento. Você só pode carregar uma relíquia. |
+| loot | Relíquia de Encantamento | estruturado/classificado | Você ganha um bônus de +1 na sua Presença. Você só pode carregar uma relíquia. |
+| loot | Relíquia da Iluminação | estruturado/classificado | Você ganha um bônus de +1 no seu Conhecimento. Você só pode carregar uma relíquia. |
 | loot | Relíquia de afiação | candidato mecânico | Você ganha um bônus de +1 em uma Experiência de sua escolha. Você só pode carregar uma relíquia. |
 | loot | Pingente Flickerfly | candidato mecânico | Enquanto você estiver portando esse pingente, suas armas com alcance corpo a corpo que causam dano físico terão um brilho de véu e poderão atacar alvos a uma distância m… |
 | loot | Receita de Mythic Dust | candidato mecânico | Como movimento de inatividade, você pode usar um punhado de pó de ouro fino para criar Pó Mítico. |

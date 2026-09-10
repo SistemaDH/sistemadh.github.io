@@ -894,3 +894,17 @@ Primeiro bloco de loot permanente estruturado:
 Arquitetura: loot reutilizável recebe `efeitoSaque` no catálogo. A ação `inventario/usar` aplica apenas custos, usos e estados determinísticos e **não remove o item da mochila**. O gerador 44 publica esse contrato no backend e a aba Mochila oferece o botão `Usar` somente quando esse campo existe.
 
 O E12 adiciona 5 contadores canônicos de loot. Próximo bloco deve continuar pelos loots restantes da auditoria, priorizando passivos simples/relics e só depois anexos de arma/reação de dano.
+
+
+### Diário — Lote 8 E13: relíquias de traço
+
+As seis relíquias de traço (`loot-41` a `loot-46`) foram tratadas como loot permanente **em uso**, não como consumíveis. Cada uma concede +1 ao traço correspondente e todas pertencem ao grupo exclusivo `reliquia`.
+
+- a mochila pode guardar mais de uma relíquia;
+- apenas uma pode ficar marcada como `emUso` por vez;
+- o backend rejeita a tentativa explícita de ativar a segunda antes de guardar a primeira;
+- payloads antigos inconsistentes com duas ativas são saneados mantendo somente a primeira;
+- só a relíquia ativa entra em `modificadoresDerivadosDaFicha_`;
+- nenhum dado é rolado pelo app.
+
+A implementação introduz `efeitoSaquePassivo`, separado de `efeitoSaque`: passivo não ganha botão de “Usar”, pois depende do estado `emUso` já existente na mochila.

@@ -11830,6 +11830,67 @@ teste('E12 Amuleto Elusivo registra uso e estado sem fingir observar movimento',
   igual(f.contadores['estado:loot:loot-38'].valor,1,'estado só termina quando a mesa registra o movimento');
 });
 
+
+console.log('\nLote 8 — relíquias de traço E13');
+teste('E13 as seis relíquias de traço estão estruturadas no mesmo grupo exclusivo', () => {
+  const mapa={
+    'loot-41':'agilidade','loot-42':'forca','loot-43':'finesse',
+    'loot-44':'instinto','loot-45':'presenca','loot-46':'conhecimento'
+  };
+  for (const [id,traco] of Object.entries(mapa)) {
+    const item=contexto.acharItem_(id);
+    verdade(item && item.efeitoSaquePassivo,id+' sem passivo');
+    igual(item.efeitoSaquePassivo.grupoExclusivo,'reliquia',id);
+    igual(item.efeitoSaquePassivo.efeitoDerivado.tracos[traco],1,id);
+    igual(item.automacao.rolaNoApp,false,id);
+  }
+});
+teste('E13 relíquia guardada não altera traço e relíquia em uso soma exatamente +1', () => {
+  const item=contexto.acharItem_('loot-45');
+  const f=contexto.fichaVazia_();
+  f.inventario=[{id:item.id,nome:item.nome,qtd:1,emUso:false}];
+  igual(contexto.modificadoresDerivadosDaFicha_(f).tracos.presenca,0);
+  f.inventario[0].emUso=true;
+  igual(contexto.modificadoresDerivadosDaFicha_(f).tracos.presenca,1);
+  igual(contexto.modificadoresDerivadosDaFicha_(f).tracos.conhecimento,0);
+});
+teste('E13 cada uma das seis relíquias modifica somente seu próprio traço', () => {
+  const mapa={
+    'loot-41':'agilidade','loot-42':'forca','loot-43':'finesse',
+    'loot-44':'instinto','loot-45':'presenca','loot-46':'conhecimento'
+  };
+  const todos=Object.values(mapa);
+  for (const [id,traco] of Object.entries(mapa)) {
+    const item=contexto.acharItem_(id); const f=contexto.fichaVazia_();
+    f.inventario=[{id:item.id,nome:item.nome,qtd:1,emUso:true}];
+    const mods=contexto.modificadoresDerivadosDaFicha_(f).tracos;
+    for (const x of todos) igual(mods[x],x===traco?1:0,id+' / '+x);
+  }
+});
+teste('E13 não permite ativar uma segunda relíquia sem guardar a primeira', () => {
+  const a=contexto.acharItem_('loot-41'), b=contexto.acharItem_('loot-42');
+  const f=contexto.fichaVazia_();
+  f.inventario=[{id:a.id,nome:a.nome,qtd:1,emUso:false},{id:b.id,nome:b.nome,qtd:1,emUso:false}];
+  let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'uso',indice:0,ligar:true}]);
+  igual(r.erros,[],JSON.stringify(r)); igual(f.inventario[0].emUso,true);
+  const antes=JSON.stringify(f);
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'uso',indice:1,ligar:true}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f),antes,'falha deve ser atômica');
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'uso',indice:0,ligar:false}]);
+  igual(r.erros,[],JSON.stringify(r));
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'uso',indice:1,ligar:true}]);
+  igual(r.erros,[],JSON.stringify(r)); igual(f.inventario[1].emUso,true);
+});
+teste('E13 payload antigo com duas relíquias ativas é normalizado para apenas uma', () => {
+  const a=contexto.acharItem_('loot-41'), b=contexto.acharItem_('loot-42');
+  const f=contexto.fichaVazia_();
+  f.inventario=[{id:a.id,nome:a.nome,qtd:1,emUso:true},{id:b.id,nome:b.nome,qtd:1,emUso:true}];
+  const lista=contexto.normalizarInventario_(f);
+  igual(lista[0].emUso,true); igual(lista[1].emUso,false);
+  const mods=contexto.modificadoresDerivadosDaFicha_(f).tracos;
+  igual(mods.agilidade,1); igual(mods.forca,0);
+});
+
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));
