@@ -31,9 +31,13 @@ function registrar(viewport, tela, dados) {
   if (dados.erros.length) falhou = true;
 }
 
-async function auditar(page, viewport, tela, { etapaEsperada = null, tituloEsperado = null } = {}) {
-  await page.waitForTimeout(100);
-  const dados = await page.evaluate(({ etapaEsperada, tituloEsperado }) => {
+async function auditar(page, viewport, tela, {
+  etapaLivroEsperada = null,
+  passoEsperado = null,
+  tituloEsperado = null
+} = {}) {
+  await page.waitForTimeout(120);
+  const dados = await page.evaluate(({ etapaLivroEsperada, passoEsperado, tituloEsperado }) => {
     const html = document.documentElement;
     const body = document.body;
     const largura = html.clientWidth;
@@ -84,7 +88,11 @@ async function auditar(page, viewport, tela, { etapaEsperada = null, tituloEsper
         (e.getAttribute('aria-label') || e.textContent || e.tagName).trim().replace(/\s+/g, ' ').slice(0, 32)).join(' | ')}`);
     }
 
+    /* Termos de glossário são links inline dentro de frases. O baseline mobile
+       geral também os exclui do piso geométrico de 44px: inflar cada palavra
+       quebraria a leitura do texto que a contém. */
     const pequenos = interativos.filter((el) => {
+      if (el.matches('.verbete__gatilho')) return false;
       const r = el.getBoundingClientRect();
       return r.width < 43.5 || r.height < 43.5;
     }).slice(0, 12);
@@ -116,22 +124,37 @@ async function auditar(page, viewport, tela, { etapaEsperada = null, tituloEsper
       }
     }
 
-    if (etapaEsperada !== null) {
+    if (etapaLivroEsperada !== null) {
       const etiqueta = document.querySelector('.criacao__etiqueta');
       if (!visivel(etiqueta)) {
-        erros.push('etiqueta da etapa não está visível');
+        erros.push('etiqueta da etapa do livro não está visível');
       } else {
-        const base = etiqueta.textContent.trim();
-        const depois = getComputedStyle(etiqueta, '::after').content.replace(/^['"]|['"]$/g, '');
-        if (base.toLowerCase() !== `etapa ${etapaEsperada}`.toLowerCase()) {
-          erros.push(`etiqueta inesperada: ${base || '(vazia)'}`);
+        const copia = etiqueta.cloneNode(true);
+        copia.querySelector('.criacao__contador')?.remove();
+        const base = copia.textContent.trim();
+        if (base.toLowerCase() !== `etapa ${etapaLivroEsperada}`.toLowerCase()) {
+          erros.push(`etiqueta do livro inesperada: ${base || '(vazia)'}`);
         }
-        if (!/de\s+9/i.test(depois)) erros.push('progresso textual não mostra "de 9"');
+      }
+    }
+
+    if (passoEsperado !== null) {
+      const contador = document.querySelector('.criacao__contador');
+      if (!visivel(contador)) {
+        erros.push('contador do assistente não está visível');
+      } else if (!new RegExp(`passo\\s+${passoEsperado}\\s+de\\s+9`, 'i').test(contador.textContent)) {
+        erros.push(`contador inesperado: ${contador.textContent.trim()}`);
       }
 
       const progresso = document.querySelector('.criacao__progresso[role="progressbar"]');
-      if (!progresso) erros.push('barra de progresso sem role progressbar');
-      else if (progresso.getAttribute('aria-valuemax') !== '9') erros.push('barra de progresso não informa máximo 9');
+      if (!progresso) {
+        erros.push('barra de progresso sem role progressbar');
+      } else {
+        if (progresso.getAttribute('aria-valuemax') !== '9') erros.push('barra de progresso não informa máximo 9');
+        if (progresso.getAttribute('aria-valuenow') !== String(passoEsperado)) {
+          erros.push(`barra informa passo ${progresso.getAttribute('aria-valuenow')} em vez de ${passoEsperado}`);
+        }
+      }
     }
 
     return {
@@ -139,7 +162,7 @@ async function auditar(page, viewport, tela, { etapaEsperada = null, tituloEsper
       larguraDocumento: Math.max(html.scrollWidth, body ? body.scrollWidth : 0),
       larguraViewport: largura
     };
-  }, { etapaEsperada, tituloEsperado });
+  }, { etapaLivroEsperada, passoEsperado, tituloEsperado });
 
   const arquivo = `${PASTA}/${viewport.nome}-${tela}.png`;
   await page.screenshot({ path: arquivo, fullPage: true });
@@ -182,7 +205,8 @@ async function irDaEtapa1ARevisaoRapida(page, viewport) {
 
   await page.waitForSelector('.lista-escolha--compacta .btn--pequeno');
   await auditar(page, viewport, 'criacao-cartas', {
-    etapaEsperada: 8,
+    etapaLivroEsperada: 8,
+    passoEsperado: 6,
     tituloEsperado: 'Escolha suas cartas de domínio'
   });
 
@@ -195,7 +219,10 @@ async function irDaEtapa1ARevisaoRapida(page, viewport) {
   await page.locator('.criacao__rodape .btn--principal').click();
 
   await page.waitForSelector('.painel-derivados');
-  await auditar(page, viewport, 'criacao-revisao', { tituloEsperado: 'Revisão' });
+  await auditar(page, viewport, 'criacao-revisao', {
+    passoEsperado: 9,
+    tituloEsperado: 'Revisão'
+  });
 }
 
 async function executar(viewport) {
@@ -221,7 +248,8 @@ async function executar(viewport) {
     await page.waitForSelector('.criacao__etiqueta');
     await page.waitForSelector('.lista-escolha__item');
     await auditar(page, viewport, 'criacao-etapa-1', {
-      etapaEsperada: 1,
+      etapaLivroEsperada: 1,
+      passoEsperado: 1,
       tituloEsperado: 'Escolha sua classe'
     });
 
