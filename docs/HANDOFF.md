@@ -820,3 +820,14 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - Uma segunda unidade igual não pode ser consumida enquanto o mesmo efeito ainda estiver ativo, evitando desperdício acidental.
 
 **Próximo bloco natural:** revisar os consumíveis restantes de estado/duração e recursos especiais (Poção da Estabilidade, Círculo do Vazio, Broto de Asas, poções de crescimento/encolhimento e efeitos semelhantes), mantendo rolagens sempre fora do app.
+
+### Lote 8 — consumíveis de tamanho E7
+
+- **Poção do Encolhimento** agora consome a unidade e deixa um estado até o personagem decidir voltar ao normal ou fazer qualquer descanso: **+2 Agilidade e -1 Proficiência**.
+- **Poção do Crescimento** faz o mesmo com **+2 Força e +1 Proficiência**.
+- A Proficiência temporária é derivada diretamente do contador ativo e nunca é gravada no bônus permanente de avanço; encerrar o estado restaura o valor permanente sem recomposição manual.
+- Os dois estados usam `persisteSemRef=true`, podem ser zerados manualmente e também encerram no gatilho `descanso`.
+- O app continua sem rolar dados. A alteração de tamanho fica representada pelo estado e pelos números derivados que realmente afetam a ficha.
+- No caso extremo de um personagem com Proficiência 1 sob Encolhimento, a Proficiência efetiva pode chegar a 0: o texto do consumível aplica -1 e não declara piso mínimo.
+
+**Próximo bloco natural:** consumíveis cujo resultado de um dado físico precisa ser informado ao app, começando por **Seiva da Árvore do Sol** e **Ceia de Xúria**, sem mover a rolagem para o aplicativo.

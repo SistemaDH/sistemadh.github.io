@@ -7734,7 +7734,18 @@
    "descricao": "Você pode beber essa poção para dobrar seu tamanho até escolher abandonar essa forma ou até seu próximo descanso. Enquanto estiver nessa forma, você tem um bônus de +2 para Força e um bônus de +1 para sua proficiência.",
    "nomeIngles": "Growing Potion",
    "descricaoIngles": "You can drink this potion to double your size until you choose to drop this form or your next rest. While in this form, you have a +2 bonus to Strength and a +1 bonus to your Proficiency.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-estado-tamanho-e7",
+    "rolaNoApp": false,
+    "motivo": "O consumível altera tamanho, traço e Proficiência do próprio personagem até ele voltar ao normal ou descansar. O app só mantém esse estado; não há rolagem."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-54",
+    "duracao": "ate-manual-ou-descanso",
+    "rolaNoApp": false
+   }
   },
   {
    "id": "consumivel-55",
@@ -7747,7 +7758,18 @@
    "traducaoDescricao": "minha",
    "nomeAntigo": "Pedra do Conhecimento",
    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Tesouro",
-   "observacao": "Na tabela da Jambô este item é o número 56, não 55 — a numeração dos consumíveis não bate com a do SRD em inglês a partir do 53."
+   "observacao": "Na tabela da Jambô este item é o número 56, não 55 — a numeração dos consumíveis não bate com a do SRD em inglês a partir do 53.",
+   "automacao": {
+    "classificacao": "consumivel-estado-tamanho-e7",
+    "rolaNoApp": false,
+    "motivo": "O consumível altera tamanho, traço e Proficiência do próprio personagem até ele voltar ao normal ou descansar. O app só mantém esse estado; não há rolagem."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-55",
+    "duracao": "ate-manual-ou-descanso",
+    "rolaNoApp": false
+   }
   },
   {
    "id": "consumivel-56",

@@ -305,6 +305,35 @@ function alcanceEfetivoDaHabilidade_(ficha, nomeHabilidade, alcanceBase) {
   return atual;
 }
 
+/** Soma somente modificadores TEMPORÁRIOS de Proficiência vindos de contadores ativos. */
+function modificadorProficienciaDeContadores_(ficha) {
+  let total = 0;
+  if (typeof CONTADORES !== 'object') return total;
+  const ativos = (ficha && ficha.contadores) || {};
+  Object.keys(ativos).forEach(function (chave) {
+    const def = CONTADORES[chave];
+    if (!def || def.modificadorProficiencia === undefined || def.modificadorProficiencia === null) return;
+    const reg = ativos[chave] || {};
+    const valor = Math.trunc(Number(typeof reg === 'object' ? reg.valor : reg)) || 0;
+    if (valor <= 0) return;
+    total += Number(def.modificadorProficiencia) || 0;
+  });
+  return total;
+}
+
+/**
+ * Proficiência efetiva = permanente (nível + avanços) + estados temporários.
+ * Nunca grava o bônus temporário no balde de avanços. O mínimo 0 é deliberado:
+ * a Poção do Encolhimento pode reduzir Proficiência 1 em -1 e o texto da regra
+ * não declara um piso diferente.
+ */
+function proficienciaEfetivaDaFicha_(ficha) {
+  const base = (typeof proficienciaDaFicha_ === 'function')
+    ? proficienciaDaFicha_(ficha)
+    : ((typeof CRIACAO !== 'undefined' && CRIACAO.proficienciaInicial) || 1);
+  return Math.max(0, Math.trunc((Number(base) || 0) + modificadorProficienciaDeContadores_(ficha)));
+}
+
 /**
  * Perfis naturais/ofensivos já prontos para a ficha. Nada é rolado: o servidor
  * só resolve Proficiência e alcance, e publica a consequência do sucesso.
@@ -312,7 +341,7 @@ function alcanceEfetivoDaHabilidade_(ficha, nomeHabilidade, alcanceBase) {
 function perfisDeAtaqueDaFicha_(ficha) {
   const crus = (typeof perfisDeAtaqueDeOrigem_ === 'function')
     ? perfisDeAtaqueDeOrigem_(ficha) : [];
-  const prof = (typeof proficienciaDaFicha_ === 'function') ? proficienciaDaFicha_(ficha) : 1;
+  const prof = proficienciaEfetivaDaFicha_(ficha);
   return crus.map(function (p) {
     const q = Object.assign({}, p);
     q.alcanceBase = p.alcance || '';
@@ -378,7 +407,7 @@ function modificadoresDerivadosDaFicha_(ficha) {
     tracos: { agilidade: 0, forca: 0, finesse: 0, instinto: 0, presenca: 0, conhecimento: 0 },
     fontes: []
   };
-  const prof = (typeof proficienciaDaFicha_ === 'function') ? proficienciaDaFicha_(ficha) : 1;
+  const prof = proficienciaEfetivaDaFicha_(ficha);
   const r = (ficha && ficha.recursos) || {};
   const esperanca = (r.esperanca === undefined || r.esperanca === null)
     ? ((typeof CRIACAO !== 'undefined' && CRIACAO.esperancaInicial) || 2)
@@ -709,8 +738,7 @@ function derivadosDoPersonagem_(ficha) {
     limiarGrave = defesaSemArmadura.limiarGraveBase + nivel;
   }
 
-  const proficiencia = (typeof proficienciaDaFicha_ === 'function')
-    ? proficienciaDaFicha_(ficha) : CRIACAO.proficienciaInicial;
+  const proficiencia = proficienciaEfetivaDaFicha_(ficha);
   const md = modificadoresDerivadosDaFicha_(ficha);
   // Armadura final inclui base alternativa de carta, escudos/armas e nunca passa de 12.
   const basePontuacaoArmadura = armadura

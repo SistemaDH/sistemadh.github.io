@@ -3189,6 +3189,54 @@
     "mesmaArma": true
    },
    "observacao": "A unidade já foi consumida. Zere este estado manualmente depois que a mesa resolver o próximo gatilho aplicável."
+  },
+  {
+   "chave": "estado:consumivel:consumivel-54",
+   "origem": "consumivel",
+   "refId": "consumivel-54",
+   "nome": "Poção de crescimento",
+   "rotulo": "Metade do tamanho · +2 Agilidade · -1 Proficiência",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "descanso",
+    "manual"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "modificadorTraco": {
+    "traco": "agilidade",
+    "bonus": 2
+   },
+   "modificadorProficiencia": -1,
+   "observacao": "Enquanto estiver menor: +2 em Agilidade e -1 em Proficiência. Zere manualmente ao voltar ao tamanho normal; qualquer descanso também encerra o efeito."
+  },
+  {
+   "chave": "estado:consumivel:consumivel-55",
+   "origem": "consumivel",
+   "refId": "consumivel-55",
+   "nome": "Pedra do Conhecimento",
+   "rotulo": "Dobro do tamanho · +2 Força · +1 Proficiência",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "descanso",
+    "manual"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "modificadorTraco": {
+    "traco": "forca",
+    "bonus": 2
+   },
+   "modificadorProficiencia": 1,
+   "observacao": "Enquanto estiver maior: +2 em Força e +1 em Proficiência. Zere manualmente ao voltar ao tamanho normal; qualquer descanso também encerra o efeito."
   }
  ]
 }

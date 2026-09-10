@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 170 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento e 20 de consumível', () => {
+teste('o catálogo tem 172 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento e 22 de consumível', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,13 +1561,13 @@ teste('o catálogo tem 170 contadores: 113 de carta, 25 de classe/subclasse, 4 d
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 170);
+  igual(Object.keys(CONTADORES).length, 172);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 113);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
-  igual(porOrigem['consumivel'], 20);
+  igual(porOrigem['consumivel'], 22);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
   igual(porOrigem['equipamento'], 5);
@@ -11266,6 +11266,99 @@ teste('E6 não expira em descanso e some quando a mesa zera o gatilho manualment
     contexto.validarContadores_(f);
     verdade(!f.contadores[chave],id+' deve desaparecer depois do uso confirmado');
   });
+});
+
+
+
+console.log('\nLote 8 — consumíveis de tamanho E7');
+const REGRAS_CONSUMIVEIS_E7 = {
+  'consumivel-54':{traco:'Agilidade',bonusTraco:2,bonusProf:-1},
+  'consumivel-55':{traco:'Força',bonusTraco:2,bonusProf:1}
+};
+function fichaConsumivelE7_(id,qtd=1) {
+  const item=contexto.acharItem_(id);
+  const f=contexto.fichaVazia_();
+  f.identidade={nome:'E7',nivel:10,classe:'Guerreiro',subclasse:'Chamada do Matador'};
+  f.tracos={agilidade:1,forca:2,finesse:0,instinto:0,presenca:-1,conhecimento:1};
+  f.inventario=[{id:item.id,nome:item.nome,qtd:qtd,emUso:false}];
+  contexto.aplicarDerivados_(f);
+  return {f,item,chave:'estado:consumivel:'+id};
+}
+teste('E7 publica os dois estados de tamanho sem RNG e com modificadores derivados', () => {
+  const CONTADORES=avaliar('CONTADORES');
+  Object.entries(REGRAS_CONSUMIVEIS_E7).forEach(([id,regra]) => {
+    const item=contexto.acharItem_(id), chave='estado:consumivel:'+id, def=CONTADORES[chave];
+    verdade(!!item,id); verdade(!!def,chave);
+    igual(item.automacao.classificacao,'consumivel-estado-tamanho-e7',id);
+    igual(item.automacao.rolaNoApp,false,id);
+    igual(item.efeitoConsumivel,{tipo:'ativar-estado',contador:chave,duracao:'ate-manual-ou-descanso',rolaNoApp:false},id);
+    igual(def.persisteSemRef,true,chave);
+    igual(def.zeraEm,['descanso','manual'],chave);
+    igual(def.modificadorTraco.traco,regra.traco==='Agilidade'?'agilidade':'forca',chave);
+    igual(def.modificadorTraco.bonus,regra.bonusTraco,chave);
+    igual(def.modificadorProficiencia,regra.bonusProf,chave);
+  });
+});
+teste('E7 aplica traço e Proficiência temporários sem alterar bônus permanente de avanço', () => {
+  Object.entries(REGRAS_CONSUMIVEIS_E7).forEach(([id,regra]) => {
+    const {f,chave}=fichaConsumivelE7_(id,1);
+    const tracoAntes=contexto.valorDoTraco_(f,regra.traco);
+    const profAntes=contexto.derivadosDoPersonagem_(f).proficiencia;
+    const avancoAntes=JSON.stringify(((f.avancos||{}).bonus)||{});
+    const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+    igual(r.erros,[],id+': '+JSON.stringify(r));
+    contexto.aplicarDerivados_(f);
+    igual(f.inventario.length,0,id);
+    igual(f.contadores[chave].valor,1,id);
+    igual(contexto.valorDoTraco_(f,regra.traco),tracoAntes+regra.bonusTraco,id+' traço');
+    igual(contexto.derivadosDoPersonagem_(f).proficiencia,profAntes+regra.bonusProf,id+' prof derivada');
+    igual(f.recursos.proficiencia,profAntes+regra.bonusProf,id+' prof publicada');
+    igual(JSON.stringify(((f.avancos||{}).bonus)||{}),avancoAntes,id+' não pode tocar avanço permanente');
+  });
+});
+teste('E7 encerra no descanso e restaura traço/Proficiência', () => {
+  Object.entries(REGRAS_CONSUMIVEIS_E7).forEach(([id,regra]) => {
+    const {f,chave}=fichaConsumivelE7_(id,1);
+    const tracoAntes=contexto.valorDoTraco_(f,regra.traco);
+    const profAntes=contexto.derivadosDoPersonagem_(f).proficiencia;
+    contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+    contexto.aplicarDerivados_(f);
+    contexto.aplicarGatilhoContadores_(f,'descanso');
+    contexto.aplicarDerivados_(f);
+    verdade(!f.contadores[chave] || !f.contadores[chave].valor,id+' estado deve acabar no descanso');
+    igual(contexto.valorDoTraco_(f,regra.traco),tracoAntes,id+' traço restaurado');
+    igual(f.recursos.proficiencia,profAntes,id+' prof restaurada');
+  });
+});
+teste('E7 pode voltar ao normal manualmente e não desperdiça segunda unidade igual enquanto ativo', () => {
+  Object.entries(REGRAS_CONSUMIVEIS_E7).forEach(([id,regra]) => {
+    const {f,chave}=fichaConsumivelE7_(id,2);
+    const tracoAntes=contexto.valorDoTraco_(f,regra.traco);
+    const profAntes=contexto.derivadosDoPersonagem_(f).proficiencia;
+    let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+    igual(r.erros,[],id); igual(f.inventario[0].qtd,1,id);
+    const snapshot=JSON.stringify(f);
+    r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+    igual(r.erros.length,1,id+' segunda unidade deve ser recusada');
+    igual(JSON.stringify(f),snapshot,id+' segunda unidade deve ficar intacta');
+    contexto.aplicarAjustes_(f,[{tipo:'contador',chave:chave,valor:0}]);
+    contexto.validarContadores_(f);
+    contexto.aplicarDerivados_(f);
+    verdade(!f.contadores[chave],id+' zero manual deve remover estado órfão');
+    igual(contexto.valorDoTraco_(f,regra.traco),tracoAntes,id+' traço manual restaurado');
+    igual(f.recursos.proficiencia,profAntes,id+' prof manual restaurada');
+  });
+});
+teste('E7 permite Proficiência efetiva zero sem adulterar a Proficiência permanente', () => {
+  const {f}=fichaConsumivelE7_('consumivel-54',1);
+  f.identidade.nivel=1;
+  f.avancos={historico:[],espacos:{},tracosMarcados:[],bonus:{proficiencia:0}};
+  contexto.aplicarDerivados_(f);
+  igual(f.recursos.proficiencia,1,'nível 1 começa com Proficiência 1');
+  contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  contexto.aplicarDerivados_(f);
+  igual(f.recursos.proficiencia,0,'Encolhimento reduz 1 para 0 porque a regra não declara piso');
+  igual(f.avancos.bonus.proficiencia,0,'o permanente continua intocado');
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

@@ -70,6 +70,7 @@ for (const c of d.contadores) {
   if (c.persisteSemRef) campos.push('persisteSemRef: true');
   if (c.bonusProximaJogada) campos.push(`bonusProximaJogada: ${j(c.bonusProximaJogada)}`);
   if (c.modificadorTraco) campos.push(`modificadorTraco: ${j(c.modificadorTraco)}`);
+  if (c.modificadorProficiencia !== undefined) campos.push(`modificadorProficiencia: ${j(c.modificadorProficiencia)}`);
   if (c.compartilhavel) campos.push('compartilhavel: true');
   L.push(`  ${j(c.chave)}: { ${campos.join(', ')} },`);
 }
