@@ -177,9 +177,10 @@ teste('Costurador gasta N Esperança, recupera N PA e consome exatamente uma uni
   const {f}=fichaCosturadorE4_(2);
   const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0,quantidade:3}]);
   igual(r.erros,[],JSON.stringify(r));
-  igual(f.recursos.esperanca,1);
-  igual(f.defesas.armaduraMarcada,1);
-  igual(f.inventario[0].qtd,1);
+  igual(r.pendenciaRolagem,null,JSON.stringify(r));
+  igual(f.recursos.esperanca,1,JSON.stringify(r));
+  igual(f.defesas.armaduraMarcada,1,JSON.stringify(r));
+  igual(f.inventario[0].qtd,1,JSON.stringify(r));
   igual(r.mudancas[0].custoEsperanca,3);
   igual(r.mudancas[0].quantidade,3);
 });
