@@ -1,0 +1,29 @@
+name: TEMP Lote 9 B15 criação densa mobile
+
+on:
+  push:
+    branches: [tmp-lote9-b15-criacao-densa-mobile-sol]
+
+permissions:
+  contents: read
+
+jobs:
+  medir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Criação mobile 360 / 390 / 430 — início, classe, cartas e revisão
+        run: npm run teste:layout-criacao-mobile
+      - name: Guardar diagnóstico da criação mobile
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lote9-b15-criacao-mobile
+          path: artifacts/layout-criacao-mobile
+          if-no-files-found: warn
