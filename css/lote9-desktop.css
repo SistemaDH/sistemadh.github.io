@@ -1,0 +1,62 @@
+/* ==========================================================================
+   L9-C1 · FICHA DO JOGADOR EM DESKTOP
+
+   O Core continua mobile-first. Este arquivo só entra a partir de 1024px e
+   não muda regra, conteúdo ou ordem do DOM: ele usa a largura extra para pôr
+   lado a lado as duas peças mais consultadas da aba Jogo.
+
+   A divisão é deliberada:
+   - retrato + traços = quem age;
+   - papel = recursos, defesas e limiares usados para resolver a cena.
+
+   O restante da aba continua abaixo, em largura confortável. Assim o primeiro
+   ganho de desktop é pequeno, verificável e não transforma a ficha inteira de
+   uma vez antes de a mesa validar a nova hierarquia.
+   ========================================================================== */
+
+@media (min-width: 1024px) {
+  /*
+   * `:has()` identifica a aba Jogo pelas duas peças que só coexistem nela.
+   * Não precisamos acrescentar estado visual no JavaScript, portanto trocar de
+   * aba continua sendo apenas trocar conteúdo.
+   */
+  .ficha__corpo:has(> .retrato):has(> .papel) {
+    display: grid;
+    grid-template-columns: minmax(300px, .72fr) minmax(500px, 1.28fr);
+    align-content: start;
+    align-items: start;
+    column-gap: clamp(16px, 2vw, 28px);
+    row-gap: var(--e4);
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+  }
+
+  /* Estados são avisos da ficha inteira; nunca pertencem a uma coluna só. */
+  .ficha__corpo:has(> .retrato):has(> .papel) > .ficha__faixaEstado {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+  }
+
+  /* O navegador coloca os dois no mesmo primeiro espaço livre da grade. */
+  .ficha__corpo:has(> .retrato):has(> .papel) > .retrato {
+    grid-column: 1;
+    min-width: 0;
+  }
+
+  .ficha__corpo:has(> .retrato):has(> .papel) > .papel {
+    grid-column: 2;
+    min-width: 0;
+  }
+
+  /*
+   * Depois do HUD, o fluxo volta a ocupar a largura toda. É intencional neste
+   * primeiro bloco: equipamento, condições e dobras ganham sua própria revisão
+   * no próximo passo, sem serem espremidos numa coluna por acidente.
+   */
+  .ficha__corpo:has(> .retrato):has(> .papel)
+    > :not(.retrato):not(.papel):not(.ficha__faixaEstado) {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+}
