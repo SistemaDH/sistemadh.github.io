@@ -24,6 +24,8 @@ Produção integra os Lotes 1–8 / Core 1.0, incluindo:
 - geração auditável dos arquivos `backend/*.gs` com `tools/conferir-gerados.mjs`;
 - fotos de personagem no Supabase Storage.
 
+Desenvolvimento atual: **Lote 9 — refino UX/UI responsivo**. O CI de `newedit` protege o contrato mobile em 360×800, 390×844 e 430×932 e o baseline responsivo em 768×1024, 1024×768 e 1440×900, sem alterar regras do Core 1.0.
+
 ## Arquitetura
 
 ```text
@@ -113,6 +115,8 @@ node tools/testes-backend.mjs
 node tools/testes-e2e.mjs
 node tools/conferir-gerados.mjs
 node tools/conferir-css.mjs
+npm run teste:layout-mobile
+npm run teste:layout-responsivo
 ```
 
 Validação registrada para os Lotes 6 e 7:
