@@ -1,0 +1,31 @@
+name: TEMP Lote 9 B17 foto mobile
+
+on:
+  push:
+    branches: [tmp-lote9-b17-zoom-foto-mobile-sol]
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - run: npm run teste:sintaxe
+      - run: npm run teste:css
+      - run: npx playwright install --with-deps chromium
+      - name: Foto mobile 360 / 390 / 430 + zoom
+        run: npm run teste:layout-foto-mobile
+      - name: Guardar diagnóstico da foto
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lote9-b17-foto
+          path: artifacts/layout-foto-mobile
+          if-no-files-found: warn
