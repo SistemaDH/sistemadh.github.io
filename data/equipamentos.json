@@ -7528,7 +7528,41 @@
    "descricao": "Consuma essa seiva para rolar um d6. Com um resultado de 5-6, elimine 2 HP. Com um resultado de 2-4, elimine 3 de estresse. Em um resultado de 1, veja através do véu da morte e retorne mudado, ganhando uma cicatriz.",
    "nomeIngles": "Sun Tree Sap",
    "descricaoIngles": "Consume this sap to roll a d6. On a result of 5–6, clear 2 HP. On a result of 2–4, clear 3 Stress. On a result of 1, see through the veil of death and return unscathed, gaining one scar.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-resultado-manual-e8",
+    "rolaNoApp": false,
+    "motivo": "A mesa rola o dado fisicamente e informa apenas o resultado. O app valida a face e aplica a consequência determinística."
+   },
+   "efeitoConsumivel": {
+    "tipo": "resultado-dado-faixas",
+    "dado": "d6",
+    "campo": "resultadoManual",
+    "rolaNoApp": false,
+    "faixas": [
+     {
+      "minimo": 1,
+      "maximo": 1,
+      "efeitoManual": "Veja através do véu da morte e volte com uma cicatriz; esta consequência é narrativa e fica com a mesa."
+     },
+     {
+      "minimo": 2,
+      "maximo": 4,
+      "recupera": {
+       "recurso": "estresseMarcado",
+       "quantidade": 3
+      }
+     },
+     {
+      "minimo": 5,
+      "maximo": 6,
+      "recupera": {
+       "recurso": "pontosDeVidaMarcados",
+       "quantidade": 2
+      }
+     }
+    ]
+   }
   },
   {
    "id": "consumivel-42",
@@ -7704,7 +7738,26 @@
    "origemNome": "revisado-pela-vanessa",
    "traducaoDescricao": "minha",
    "nomeAntigo": "Festa de Xuria",
-   "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Tesouro"
+   "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Tesouro",
+   "automacao": {
+    "classificacao": "consumivel-resultado-manual-e8",
+    "rolaNoApp": false,
+    "motivo": "A mesa rola o dado fisicamente e informa apenas o resultado. O app valida a face e aplica a consequência determinística."
+   },
+   "efeitoConsumivel": {
+    "tipo": "recuperar-tudo-e-ganhar-com-dado",
+    "dado": "d4",
+    "campo": "resultadoManual",
+    "rolaNoApp": false,
+    "limpa": [
+     "pontosDeVidaMarcados",
+     "estresseMarcado"
+    ],
+    "ganha": {
+     "recurso": "esperanca",
+     "quantidade": "resultadoManual"
+    }
+   }
   },
   {
    "id": "consumivel-52",

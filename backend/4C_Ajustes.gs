@@ -2142,7 +2142,31 @@ function usarConsumivelDaMochila_(ficha, lista, indice, a) {
     return 0;
   };
 
-  let detalhes=[], quantidade=0, resultadoManual=null;
+  /**
+   * Lê uma face que JÁ FOI rolada na mesa. Nunca chama RNG.
+   * Mantém a mesma forma de pendência usada pelas poções de recuperação E1.
+   */
+  const lerResultadoManual = function() {
+    const dado = String(efeito.dado || 'd6');
+    const m = /^d(\d+)$/i.exec(dado);
+    const lados = Math.max(2, Math.trunc(Number(m ? m[1] : 6)) || 6);
+    const campo = String(efeito.campo || 'resultadoManual');
+    const bruto = (a || {})[campo];
+    if (bruto === undefined || bruto === null || bruto === '') {
+      return { pendenciaRolagem:{
+        tipo:'habilidade-manual', campo:campo, caracteristica:item.nome,
+        dado:'d'+lados, minimo:1, maximo:lados,
+        mensagem:item.nome + ': role 1d' + lados + ' fora do app e informe o resultado.'
+      } };
+    }
+    const valor = Math.trunc(Number(bruto));
+    if (!isFinite(valor) || Number(bruto) !== valor || valor < 1 || valor > lados) {
+      return { erro:item.nome + ': informe um resultado inteiro de 1 a ' + lados + '.' };
+    }
+    return { valor:valor, lados:lados, campo:campo };
+  };
+
+  let detalhes=[], quantidade=0, resultadoManual=null, resultadoEfeito=null;
 
   if (tipo === 'recuperar-com-dado') {
     const lados = Math.max(2, Math.trunc(Number((/^d(\d+)$/i.exec(String(efeito.dado || 'd4')) || [,'4'])[1])) || 4);
@@ -2216,6 +2240,86 @@ function usarConsumivelDaMochila_(ficha, lista, indice, a) {
     if (recupera && recupera.erro) return falhar(recupera.erro);
     quantidade=q;
     detalhes.push(paga,recupera);
+  } else if (tipo === 'resultado-dado-faixas') {
+    const entrada=lerResultadoManual();
+    if (entrada.pendenciaRolagem) return entrada;
+    if (entrada.erro) return entrada;
+    resultadoManual=entrada.valor;
+    const faixas=Array.isArray(efeito.faixas) ? efeito.faixas : [];
+    let faixa=null;
+    for (let fi=0; fi<faixas.length; fi++) {
+      const f=faixas[fi] || {};
+      const minimo=Math.trunc(Number(f.minimo));
+      const maximo=Math.trunc(Number(f.maximo));
+      if (isFinite(minimo) && isFinite(maximo) && resultadoManual>=minimo && resultadoManual<=maximo) {
+        faixa=f; break;
+      }
+    }
+    if (!faixa) return { erro:item.nome + ': o catálogo não define consequência para o resultado ' + resultadoManual + '.' };
+
+    let recurso=null, pedido=0, aplicado=0;
+    if (faixa.recupera) {
+      recurso=String(faixa.recupera.recurso || '');
+      pedido=Math.max(0,Math.trunc(Number(faixa.recupera.quantidade)) || 0);
+      if ((recurso !== 'pontosDeVidaMarcados' && recurso !== 'estresseMarcado') || pedido<=0) {
+        return { erro:item.nome + ': faixa de recuperação inválida no catálogo.' };
+      }
+      const antes=atual(recurso);
+      const m=ajustarRecurso_(ficha,{chave:recurso,delta:-pedido});
+      if (m && m.erro) return falhar(m.erro);
+      aplicado=Math.max(0,antes-atual(recurso));
+      quantidade=aplicado;
+      detalhes.push(m);
+    }
+    const manual=String(faixa.efeitoManual || '');
+    if (manual) detalhes.push({tipo:'efeito-manual',efeitoManual:manual});
+    resultadoEfeito={
+      resultado:resultadoManual,
+      recurso:recurso,
+      quantidadePedida:pedido,
+      quantidadeAplicada:aplicado,
+      efeitoManual:manual || null
+    };
+  } else if (tipo === 'recuperar-tudo-e-ganhar-com-dado') {
+    const entrada=lerResultadoManual();
+    if (entrada.pendenciaRolagem) return entrada;
+    if (entrada.erro) return entrada;
+    resultadoManual=entrada.valor;
+
+    const limpa=Array.isArray(efeito.limpa) ? efeito.limpa : [];
+    const recuperado={pontosDeVida:0,estresse:0};
+    for (let li=0; li<limpa.length; li++) {
+      const recurso=String(limpa[li] || '');
+      if (recurso !== 'pontosDeVidaMarcados' && recurso !== 'estresseMarcado') {
+        return { erro:item.nome + ': recurso de limpeza inválido no catálogo.' };
+      }
+      const antes=atual(recurso);
+      const m=ajustarRecurso_(ficha,{chave:recurso,valor:0});
+      if (m && m.erro) return falhar(m.erro);
+      const aplicado=Math.max(0,antes-atual(recurso));
+      if (recurso === 'pontosDeVidaMarcados') recuperado.pontosDeVida=aplicado;
+      else recuperado.estresse=aplicado;
+      detalhes.push(m);
+    }
+
+    const ganha=efeito.ganha || {};
+    const recursoGanho=String(ganha.recurso || '');
+    if (recursoGanho !== 'esperanca' || String(ganha.quantidade || '') !== 'resultadoManual') {
+      return { erro:item.nome + ': ganho por resultado manual inválido no catálogo.' };
+    }
+    const esperancaAntes=atual('esperanca');
+    const m=ajustarRecurso_(ficha,{chave:'esperanca',delta:resultadoManual});
+    if (m && m.erro) return falhar(m.erro);
+    const esperancaGanha=Math.max(0,atual('esperanca')-esperancaAntes);
+    detalhes.push(m);
+    quantidade=esperancaGanha;
+    resultadoEfeito={
+      resultado:resultadoManual,
+      pontosDeVidaRecuperados:recuperado.pontosDeVida,
+      estresseRecuperado:recuperado.estresse,
+      esperancaRolada:resultadoManual,
+      esperancaGanha:esperancaGanha
+    };
   } else if (tipo === 'consumir-e-resolver-na-mesa') {
     quantidade=1;
     detalhes.push({
@@ -2253,14 +2357,16 @@ function usarConsumivelDaMochila_(ficha, lista, indice, a) {
   }
 
   const gasto=gastarUmaUnidadeDeItem_(lista,indice);
+  const efeitoManualFinal=String(efeito.efeitoManual || ((resultadoEfeito || {}).efeitoManual) || '');
   return {
     tipo:'inventario', acao:'consumir', item:item.nome, itemId:item.id,
     qtdAntes:gasto.antes, qtdDepois:gasto.depois, consumiu:1,
     efeito:tipo, quantidade:quantidade, resultadoManual:resultadoManual,
+    resultadoEfeito:resultadoEfeito,
     custoEsperanca:(tipo === 'recuperar-armadura-por-esperanca' ? quantidade : undefined),
-    efeitoManual:efeito.efeitoManual || null,
+    efeitoManual:efeitoManualFinal || null,
     detalhes:detalhes,
-    aviso:item.nome + ': 1 unidade consumida.' + (efeito.efeitoManual ? ' Resolva na mesa: ' + efeito.efeitoManual : '')
+    aviso:item.nome + ': 1 unidade consumida.' + (efeitoManualFinal ? ' Resolva na mesa: ' + efeitoManualFinal : '')
   };
 }
 

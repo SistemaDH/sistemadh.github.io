@@ -831,3 +831,13 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - No caso extremo de um personagem com Proficiência 1 sob Encolhimento, a Proficiência efetiva pode chegar a 0: o texto do consumível aplica -1 e não declara piso mínimo.
 
 **Próximo bloco natural:** consumíveis cujo resultado de um dado físico precisa ser informado ao app, começando por **Seiva da Árvore do Sol** e **Ceia de Xúria**, sem mover a rolagem para o aplicativo.
+
+### Lote 8 — consumíveis com resultado manual E8
+
+- **Seiva da Árvore do Sol**: o app pede o resultado do **d6 rolado fisicamente** e então aplica a faixa correta: 5–6 recupera 2 PV; 2–4 recupera 3 Estresse; 1 consome a Seiva e deixa a consequência do véu da morte/cicatriz explicitamente para a mesa.
+- **Ceia de Xúria**: o app pede o **d4 físico**, limpa todos os PV e Estresse marcados e soma o resultado à Esperança, respeitando o teto da trilha.
+- Nenhum dado é gerado pelo aplicativo. Sem resultado informado, o ajuste devolve `pendenciaRolagem` e a unidade permanece intacta.
+- Depois de uma face válida, o consumível é gasto mesmo se parte da recuperação for desperdiçada por já estar no máximo/zero: a rolagem física já resolveu o uso do item.
+- O fluxo reutiliza a atomicidade de `aplicarAjustes_`: face inválida ou catálogo inconsistente não consome a unidade nem deixa recuperação parcial.
+
+**Próximo bloco natural:** estados e usos especiais restantes de consumíveis, priorizando **Poção da Estabilidade**, **Broto de Asas** e **Seiva do Sono**; depois reações como **Frasco de Darksmoke** e **Espelho de Marigold**.

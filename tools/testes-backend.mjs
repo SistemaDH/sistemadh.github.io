@@ -11361,6 +11361,118 @@ teste('E7 permite Proficiência efetiva zero sem adulterar a Proficiência perma
   igual(f.avancos.bonus.proficiencia,0,'o permanente continua intocado');
 });
 
+
+
+console.log('\nLote 8 — consumíveis com resultado manual E8');
+function fichaConsumivelE8_(id,qtd=1) {
+  const item=contexto.acharItem_(id);
+  const f=contexto.fichaVazia_();
+  f.identidade={nome:'E8',nivel:5,classe:'Bardo',subclasse:'Artífice das Palavras'};
+  f.recursos=f.recursos || {};
+  f.recursos.pontosDeVidaMaximos=6;
+  f.recursos.pontosDeVidaMarcados=4;
+  f.recursos.estresseMaximo=6;
+  f.recursos.estresseMarcado=5;
+  f.recursos.esperancaMaxima=6;
+  f.recursos.esperanca=1;
+  f.inventario=[{id:item.id,nome:item.nome,qtd:qtd,emUso:false}];
+  return {f,item};
+}
+teste('E8 classifica Seiva da Árvore do Sol e Ceia de Xúria sem RNG', () => {
+  const seiva=contexto.acharItem_('consumivel-41');
+  const ceia=contexto.acharItem_('consumivel-51');
+  [seiva,ceia].forEach((item)=>{
+    verdade(!!item,item && item.id);
+    igual(item.automacao.classificacao,'consumivel-resultado-manual-e8',item.id);
+    igual(item.automacao.rolaNoApp,false,item.id);
+    igual(item.efeitoConsumivel.rolaNoApp,false,item.id);
+  });
+  igual(seiva.efeitoConsumivel.tipo,'resultado-dado-faixas');
+  igual(seiva.efeitoConsumivel.dado,'d6');
+  igual(ceia.efeitoConsumivel.tipo,'recuperar-tudo-e-ganhar-com-dado');
+  igual(ceia.efeitoConsumivel.dado,'d4');
+});
+teste('E8 pede o d6 físico da Seiva antes de consumir qualquer unidade', () => {
+  const {f}=fichaConsumivelE8_('consumivel-41',1);
+  const antes=JSON.stringify(f);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  verdade(!!r.pendenciaRolagem,JSON.stringify(r));
+  igual(r.pendenciaRolagem.dado,'d6');
+  igual(r.pendenciaRolagem.minimo,1);
+  igual(r.pendenciaRolagem.maximo,6);
+  igual(JSON.stringify(f),antes,'sem resultado físico a Seiva não pode ser consumida');
+});
+teste('E8 Seiva: 5-6 recupera 2 PV, 2-4 recupera 3 Estresse e 1 fica narrativo', () => {
+  const casos=[
+    {dado:6,recurso:'pontosDeVidaMarcados',antes:4,depois:2,aplicado:2},
+    {dado:3,recurso:'estresseMarcado',antes:5,depois:2,aplicado:3},
+    {dado:1,recurso:null,aplicado:0}
+  ];
+  casos.forEach((caso)=>{
+    const {f}=fichaConsumivelE8_('consumivel-41',1);
+    const hp=f.recursos.pontosDeVidaMarcados, stress=f.recursos.estresseMarcado;
+    const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0,resultadoManual:caso.dado}]);
+    igual(r.erros,[],caso.dado+': '+JSON.stringify(r));
+    igual(f.inventario.length,0,'Seiva deve ser consumida após informar o resultado');
+    const m=r.mudancas[0];
+    igual(m.resultadoManual,caso.dado);
+    igual(m.resultadoEfeito.quantidadeAplicada,caso.aplicado);
+    if (caso.recurso) igual(f.recursos[caso.recurso],caso.depois,caso.recurso);
+    if (caso.dado===1) {
+      igual(f.recursos.pontosDeVidaMarcados,hp,'resultado 1 não altera PV');
+      igual(f.recursos.estresseMarcado,stress,'resultado 1 não altera Estresse');
+      verdade(String(m.efeitoManual||'').includes('véu da morte'),'resultado 1 deve lembrar a consequência narrativa');
+    }
+  });
+});
+teste('E8 Seiva consome após resultado válido mesmo se a recuperação ficar sem alvo', () => {
+  const {f}=fichaConsumivelE8_('consumivel-41',1);
+  f.recursos.pontosDeVidaMarcados=0;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0,resultadoManual:5}]);
+  igual(r.erros,[],JSON.stringify(r));
+  igual(f.inventario.length,0,'a rolagem já aconteceu; resultado desperdiçado ainda consome a Seiva');
+  igual(r.mudancas[0].resultadoEfeito.quantidadeAplicada,0);
+});
+teste('E8 rejeita face impossível da Seiva sem consumir', () => {
+  const {f}=fichaConsumivelE8_('consumivel-41',1);
+  const antes=JSON.stringify(f);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0,resultadoManual:7}]);
+  igual(r.erros.length,1,JSON.stringify(r));
+  igual(JSON.stringify(f),antes,'face impossível não pode gastar o item');
+});
+teste('E8 Ceia pede o d4 físico antes de recuperar/ganhar qualquer recurso', () => {
+  const {f}=fichaConsumivelE8_('consumivel-51',1);
+  const antes=JSON.stringify(f);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  verdade(!!r.pendenciaRolagem,JSON.stringify(r));
+  igual(r.pendenciaRolagem.dado,'d4');
+  igual(r.pendenciaRolagem.maximo,4);
+  igual(JSON.stringify(f),antes,'sem d4 informado a Ceia não pode ser aplicada nem consumida');
+});
+teste('E8 Ceia limpa todos os PV/Estresse marcados e soma o d4 físico à Esperança', () => {
+  const {f}=fichaConsumivelE8_('consumivel-51',1);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0,resultadoManual:3}]);
+  igual(r.erros,[],JSON.stringify(r));
+  igual(f.inventario.length,0);
+  igual(f.recursos.pontosDeVidaMarcados,0);
+  igual(f.recursos.estresseMarcado,0);
+  igual(f.recursos.esperanca,4);
+  const e=r.mudancas[0].resultadoEfeito;
+  igual(e.pontosDeVidaRecuperados,4);
+  igual(e.estresseRecuperado,5);
+  igual(e.esperancaRolada,3);
+  igual(e.esperancaGanha,3);
+});
+teste('E8 Ceia respeita o teto de Esperança e registra somente o ganho efetivo', () => {
+  const {f}=fichaConsumivelE8_('consumivel-51',1);
+  f.recursos.esperanca=5;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0,resultadoManual:4}]);
+  igual(r.erros,[],JSON.stringify(r));
+  igual(f.recursos.esperanca,6);
+  igual(r.mudancas[0].resultadoEfeito.esperancaRolada,4);
+  igual(r.mudancas[0].resultadoEfeito.esperancaGanha,1);
+});
+
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));
