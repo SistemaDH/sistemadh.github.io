@@ -10763,6 +10763,42 @@ teste('Egoísta gasta um punhado real e publica +1 Proficiência só para a joga
 });
 
 
+
+
+console.log('\nLote 8 — equipamento ofensivo D3: classificação manual restante');
+const NOMES_D3_EQUIP = new Set([
+  'Assustador','Brutal','Busca da verdade','Comprimento','De outro mundo','Direcionado',
+  'Distorção Temporal','Dobrado','Enganchado','Eruptivo','Espalha-chumbo','Gancho',
+  'Perfeccionista','Queimadura','Serra','Silencioso'
+]);
+function ocorrenciasEquipD3_() {
+  return avaliar('ARMAS').concat(avaliar('ARMADURAS'), avaliar('EQUIPAMENTO_CAMPANHA'))
+    .filter((x) => NOMES_D3_EQUIP.has(String(x.carac || '')));
+}
+teste('D3 classifica explicitamente as 27 ocorrências restantes sem RNG nem uso ativo falso', () => {
+  const xs = ocorrenciasEquipD3_();
+  igual(xs.length, 27);
+  xs.forEach((x) => {
+    verdade(x.automacao, `${x.nome} deveria ter classificação explícita`);
+    igual(x.automacao.rolaNoApp, false, `${x.nome} não pode rolar no app`);
+    verdade(!x.efeitoEquipamento || !x.efeitoEquipamento.usoAtivo,
+      `${x.nome} não deve ganhar botão de uso ativo sem custo/estado próprio`);
+  });
+});
+teste('D3 mantém as quantidades por característica exatamente como no catálogo', () => {
+  const xs = ocorrenciasEquipD3_();
+  const esperado = {'Assustador':2,'Brutal':3,'Busca da verdade':1,'Comprimento':1,
+    'De outro mundo':1,'Direcionado':1,'Distorção Temporal':2,'Dobrado':1,'Enganchado':4,
+    'Eruptivo':1,'Espalha-chumbo':4,'Gancho':1,'Perfeccionista':1,'Queimadura':2,'Serra':1,'Silencioso':1};
+  Object.keys(esperado).forEach((nome) => igual(xs.filter((x)=>x.carac===nome).length, esperado[nome], nome));
+});
+teste('Aparar permanece fora do D3 para o bloco defensivo dedicado', () => {
+  const xs = avaliar('ARMAS').concat(avaliar('ARMADURAS'), avaliar('EQUIPAMENTO_CAMPANHA'))
+    .filter((x) => String(x.carac || '') === 'Aparar');
+  igual(xs.length, 1);
+  verdade(!xs[0].automacao, 'Aparar deve continuar pendente até receber entrada manual dos dados defensivos');
+});
+
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));

@@ -718,7 +718,12 @@
     "nome": "Brutal",
     "texto": "Brutal: Quando rolar o valor máximo em um dado de dano, role um dado de dano adicional.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "resultado-manual-da-mesa",
+     "rolaNoApp": false,
+     "motivo": "Depende do valor máximo nos dados de dano físicos rolados na mesa; o app não rola nem reprocessa esses dados."
+    }
    },
    "danoSRD": "d10+6 phy"
   },
@@ -801,7 +806,12 @@
     "nome": "Assustador",
     "texto": "Assustador: Em um ataque bem-sucedido, o alvo deve marcar um Estresse.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "resultado-manual-da-mesa",
+     "rolaNoApp": false,
+     "motivo": "O ataque e o alvo são resolvidos na mesa; em sucesso, o alvo marca Estresse fora da ficha do atacante."
+    }
    },
    "danoSRD": "d8+4 phy"
   },
@@ -1385,7 +1395,12 @@
     "fonteTraducao": "livro",
     "confianca": "alta",
     "nomeAntigo": "Duelista",
-    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras"
+    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
+    "automacao": {
+     "classificacao": "geometria-manual",
+     "rolaNoApp": false,
+     "motivo": "A vantagem depende de não haver criatura Próxima do alvo; a geometria é conferida na mesa."
+    }
    },
    "aliases": [
     "Meridiano Cutelo"
@@ -1461,7 +1476,12 @@
     "nome": "Brutal",
     "texto": "Brutal: Quando rolar o valor máximo em um dado de dano, role um dado de dano adicional.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "resultado-manual-da-mesa",
+     "rolaNoApp": false,
+     "motivo": "Depende do valor máximo nos dados de dano físicos rolados na mesa; o app não rola nem reprocessa esses dados."
+    }
    },
    "danoSRD": "d10+7 phy"
   },
@@ -1998,7 +2018,12 @@
     "fonteTraducao": "livro",
     "confianca": "alta",
     "nomeAntigo": "Serrilhada",
-    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras"
+    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
+    "automacao": {
+     "classificacao": "resultado-manual-da-mesa",
+     "rolaNoApp": false,
+     "motivo": "Substitui o valor de um dado de dano que rolou 1; os dados continuam físicos/manuais."
+    }
    },
    "danoSRD": "d8+9 phy"
   },
@@ -2024,7 +2049,12 @@
     "fonteTraducao": "livro",
     "confianca": "alta",
     "nomeAntigo": "Longo",
-    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras"
+    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
+    "automacao": {
+     "classificacao": "geometria-manual",
+     "rolaNoApp": false,
+     "motivo": "A linha de adversários atingidos depende do posicionamento do encontro e é resolvida na mesa."
+    }
    },
    "aliases": [
     "Arma de mão estendida"
@@ -2655,7 +2685,12 @@
     "nome": "Assustador",
     "texto": "Assustador: Em um ataque bem-sucedido, o alvo deve marcar um Estresse.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "resultado-manual-da-mesa",
+     "rolaNoApp": false,
+     "motivo": "O ataque e o alvo são resolvidos na mesa; em sucesso, o alvo marca Estresse fora da ficha do atacante."
+    }
    },
    "danoSRD": "d8+4 mag"
   },
@@ -2679,7 +2714,12 @@
     "nome": "Eruptivo",
     "texto": "Eruptivo: Em um ataque bem-sucedido contra um alvo dentro do alcance Corpo a Corpo, todos os outros adversários dentro do alcance Muito Próximo devem ser bem-sucedidos em uma rolagem de reação (14) ou receberão metade do dano.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "resultado-manual-da-mesa",
+     "rolaNoApp": false,
+     "motivo": "Após o acerto, outros adversários fazem reação e podem sofrer metade do dano; alvos e resultados ficam na mesa."
+    }
    },
    "danoSRD": "d8+6 mag"
   },
@@ -2703,7 +2743,12 @@
     "nome": "Brutal",
     "texto": "Brutal: Quando rolar o valor máximo em um dado de dano, role um dado de dano adicional.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "resultado-manual-da-mesa",
+     "rolaNoApp": false,
+     "motivo": "Depende do valor máximo nos dados de dano físicos rolados na mesa; o app não rola nem reprocessa esses dados."
+    }
    },
    "danoSRD": "d6+4 mag"
   },
@@ -3132,7 +3177,12 @@
     "fonteTraducao": "livro",
     "confianca": "alta",
     "nomeAntigo": "Extraterreno",
-    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras"
+    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
+    "automacao": {
+     "classificacao": "escolha-manual-da-mesa",
+     "rolaNoApp": false,
+     "motivo": "Em um acerto, o jogador escolhe dano físico ou mágico na resolução do ataque; não há recurso nem estado persistente."
+    }
    },
    "danoSRD": "d10+7 phy or mag"
   },
@@ -3191,7 +3241,12 @@
     "fonteTraducao": "livro",
     "confianca": "alta",
     "nomeAntigo": "Dobra do Tempo",
-    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras"
+    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
+    "automacao": {
+     "classificacao": "alvo-manual",
+     "rolaNoApp": false,
+     "motivo": "O alvo é escolhido depois da jogada; a seleção pertence à resolução do encontro, não à ficha."
+    }
    },
    "danoSRD": "d10+5 mag"
   },
@@ -3217,7 +3272,12 @@
     "fonteTraducao": "livro",
     "confianca": "alta",
     "nomeAntigo": "Autocorretiva",
-    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras"
+    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
+    "automacao": {
+     "classificacao": "resultado-manual-da-mesa",
+     "rolaNoApp": false,
+     "motivo": "Substitui o valor de um dado de dano que rolou 1; os dados continuam físicos/manuais."
+    }
    },
    "danoSRD": "d6+7 mag"
   },
@@ -3241,7 +3301,12 @@
     "nome": "Queimadura",
     "texto": "Queimadura: Quando um adversário o ataca dentro do alcance Corpo a Corpo, ele marca um Estresse.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "reacao-manual-do-alvo",
+     "rolaNoApp": false,
+     "motivo": "Quando um adversário ataca Corpo a Corpo, quem marca Estresse é o adversário; a ficha do personagem não deve ser alterada."
+    }
    },
    "danoSRD": "d6+7 mag"
   },
@@ -3740,7 +3805,12 @@
     "fonteTraducao": "livro",
     "confianca": "alta",
     "nomeAntigo": "Dobra do Tempo",
-    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras"
+    "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
+    "automacao": {
+     "classificacao": "alvo-manual",
+     "rolaNoApp": false,
+     "motivo": "O alvo é escolhido depois da jogada; a seleção pertence à resolução do encontro, não à ficha."
+    }
    },
    "danoSRD": "d8+13 mag"
   },
@@ -3988,7 +4058,12 @@
     "nome": "Enganchado",
     "texto": "Enganchado: Em um ataque bem-sucedido, você pode puxar o alvo para o alcance corpo a corpo.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "posicionamento-manual",
+     "rolaNoApp": false,
+     "motivo": "Depois do acerto, puxar o alvo até Corpo a Corpo altera apenas o posicionamento do encontro."
+    }
    },
    "danoSRD": "d6 phy"
   },
@@ -4177,7 +4252,12 @@
     "nome": "Enganchado",
     "texto": "Enganchado: Em um ataque bem-sucedido, você pode puxar o alvo para o alcance corpo a corpo.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "posicionamento-manual",
+     "rolaNoApp": false,
+     "motivo": "Depois do acerto, puxar o alvo até Corpo a Corpo altera apenas o posicionamento do encontro."
+    }
    },
    "danoSRD": "d6+2 phy"
   },
@@ -4439,7 +4519,12 @@
     "nome": "Enganchado",
     "texto": "Enganchado: Em um ataque bem-sucedido, você pode puxar o alvo para o alcance corpo a corpo.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "posicionamento-manual",
+     "rolaNoApp": false,
+     "motivo": "Depois do acerto, puxar o alvo até Corpo a Corpo altera apenas o posicionamento do encontro."
+    }
    },
    "danoSRD": "d6+4 phy"
   },
@@ -4729,7 +4814,12 @@
     "nome": "Enganchado",
     "texto": "Enganchado: Em um ataque bem-sucedido, você pode puxar o alvo para o alcance corpo a corpo.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "posicionamento-manual",
+     "rolaNoApp": false,
+     "motivo": "Depois do acerto, puxar o alvo até Corpo a Corpo altera apenas o posicionamento do encontro."
+    }
    },
    "danoSRD": "d6+6 phy"
   },
@@ -4799,7 +4889,12 @@
     "nome": "Dobrado",
     "texto": "Dobrado: ao fazer um ataque com sua arma principal, você pode causar dano a outro alvo dentro do alcance corpo a corpo.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "alvo-manual",
+     "rolaNoApp": false,
+     "motivo": "O segundo alvo Corpo a Corpo é escolhido e recebe dano na mesa; não há custo próprio a registrar."
+    }
    },
    "danoSRD": "d6+8 phy"
   },
@@ -5503,7 +5598,12 @@
     "nome": "Silencioso",
     "texto": "Silencioso: você ganha um bônus de +2 nas rolagens que fizer para se mover silenciosamente.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "passivo-contextual",
+     "rolaNoApp": false,
+     "motivo": "O +2 só vale em jogadas para mover-se silenciosamente; a mesa aplica o bônus quando o contexto existir."
+    }
    }
   },
   {
@@ -5977,7 +6077,12 @@
     "nome": "Queimadura",
     "texto": "Queimadura: Quando um adversário o ataca dentro do alcance Corpo a Corpo, ele marca um Estresse.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "reacao-manual-do-alvo",
+     "rolaNoApp": false,
+     "motivo": "Quando um adversário ataca Corpo a Corpo, quem marca Estresse é o adversário; a ficha do personagem não deve ser alterada."
+    }
    }
   },
   {
@@ -6030,7 +6135,12 @@
     "nome": "Busca da verdade",
     "texto": "Busca da verdade: Essa armadura brilha quando outra criatura dentro dela se aproxima. O intervalo conta [...]",
     "fonteTraducao": "livro",
-    "confianca": "media"
+    "confianca": "media",
+    "automacao": {
+     "classificacao": "passivo-contextual",
+     "rolaNoApp": false,
+     "motivo": "O brilho depende da presença/proximidade ficcional de outra criatura e não cria estado numérico na ficha."
+    }
    }
   },
   {
@@ -7690,7 +7800,12 @@
      "maos": "Uma mão",
      "caracteristica": {
       "nome": "Gancho",
-      "texto": "Gancho: ao acertar um ataque, você pode puxar o alvo para seu alcance Corpo a Corpo."
+      "texto": "Gancho: ao acertar um ataque, você pode puxar o alvo para seu alcance Corpo a Corpo.",
+      "automacao": {
+       "classificacao": "posicionamento-manual",
+       "rolaNoApp": false,
+       "motivo": "Depois do acerto, puxar o alvo até Corpo a Corpo altera apenas o posicionamento do encontro."
+      }
      },
      "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 5",
      "nomeAntigo": "Gancho de reboque"
@@ -8130,7 +8245,12 @@
      "maos": "Duas mãos",
      "caracteristica": {
       "nome": "Espalha-chumbo",
-      "texto": "Espalha-chumbo: um ataque com esta arma tem como alvo todas as criaturas na sua frente no alcance"
+      "texto": "Espalha-chumbo: um ataque com esta arma tem como alvo todas as criaturas na sua frente no alcance",
+      "automacao": {
+       "classificacao": "geometria-manual",
+       "rolaNoApp": false,
+       "motivo": "O ataque atinge as criaturas à frente dentro do alcance; a seleção geométrica é feita na mesa."
+      }
      },
      "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 5"
     },
@@ -8147,7 +8267,12 @@
      "maos": "Duas mãos",
      "caracteristica": {
       "nome": "Espalha-chumbo",
-      "texto": "Espalha-chumbo: um ataque com esta arma tem como alvo todas as criaturas na sua frente no alcance"
+      "texto": "Espalha-chumbo: um ataque com esta arma tem como alvo todas as criaturas na sua frente no alcance",
+      "automacao": {
+       "classificacao": "geometria-manual",
+       "rolaNoApp": false,
+       "motivo": "O ataque atinge as criaturas à frente dentro do alcance; a seleção geométrica é feita na mesa."
+      }
      },
      "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 5"
     },
@@ -8164,7 +8289,12 @@
      "maos": "Duas mãos",
      "caracteristica": {
       "nome": "Espalha-chumbo",
-      "texto": "Espalha-chumbo: um ataque com esta arma tem como alvo todas as criaturas na sua frente no alcance"
+      "texto": "Espalha-chumbo: um ataque com esta arma tem como alvo todas as criaturas na sua frente no alcance",
+      "automacao": {
+       "classificacao": "geometria-manual",
+       "rolaNoApp": false,
+       "motivo": "O ataque atinge as criaturas à frente dentro do alcance; a seleção geométrica é feita na mesa."
+      }
      },
      "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 5"
     },
@@ -8181,7 +8311,12 @@
      "maos": "Duas mãos",
      "caracteristica": {
       "nome": "Espalha-chumbo",
-      "texto": "Espalha-chumbo: um ataque com esta arma tem como alvo todas as criaturas na sua frente no alcance"
+      "texto": "Espalha-chumbo: um ataque com esta arma tem como alvo todas as criaturas na sua frente no alcance",
+      "automacao": {
+       "classificacao": "geometria-manual",
+       "rolaNoApp": false,
+       "motivo": "O ataque atinge as criaturas à frente dentro do alcance; a seleção geométrica é feita na mesa."
+      }
      },
      "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 5"
     },

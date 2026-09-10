@@ -736,3 +736,13 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - Todos os efeitos transitórios continuam fora do estado permanente da ficha; nenhuma jogada ou dado é gerado pelo app.
 
 **Próximo bloco natural:** classificar/assistir as características ofensivas restantes que dependem apenas de alvo, geometria ou resultados rolados fora do app; deixar **Aparar** para um bloco defensivo dedicado.
+
+### Lote 8 — equipamento ofensivo D3: classificação manual restante
+
+- As **27 ocorrências** restantes de equipamento que não têm custo/estado próprio foram classificadas explicitamente: Assustador, Brutal, Busca da verdade, Comprimento, De outro mundo, Direcionado, Distorção Temporal, Dobrado, Enganchado, Eruptivo, Espalha-chumbo, Gancho, Perfeccionista, Queimadura, Serra e Silencioso.
+- Elas não recebem botão de uso ativo: dependem de alvo, geometria, condição contextual ou resultados de dados rolados fisicamente na mesa.
+- `automacao.rolaNoApp=false` deixa explícita a regra global de que o sistema não gera jogadas nem dados.
+- Efeitos sobre adversários (Estresse, reposicionamento, reação, tipo de dano etc.) não são gravados na ficha do atacante.
+- A auditoria de equipamento deve cair de 28 para **1 ocorrência candidata**.
+
+**Próximo bloco natural:** **Aparar / Parry**, único candidato de equipamento restante, em um bloco defensivo dedicado que recebe os resultados dos dados rolados fora do app e descarta apenas os valores correspondentes antes da totalização do dano.
