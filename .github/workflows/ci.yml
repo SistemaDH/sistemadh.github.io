@@ -66,7 +66,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: layout-criacao-mobile-${{ github.run_id }}
-          path: artifacts/layout-criacao-mobile
+          path: |
+            artifacts/layout-criacao-mobile
+            artifacts/layout-criacao-ajuda-mobile
           if-no-files-found: warn
       - name: Guardar diagnóstico visual Regras mobile
         if: always()
