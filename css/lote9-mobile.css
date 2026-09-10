@@ -1,5 +1,5 @@
 /* ==========================================================================
-   L9-B7/B8/B9/B10/B11/B12/B13 · REFINOS MOBILE
+   L9-B7/B8/B9/B10/B11/B12/B13/B15 · REFINOS MOBILE
    ========================================================================== */
 
 /* ==========================================================================
@@ -214,16 +214,25 @@
 }
 
 /* ==========================================================================
-   B13 · PROGRESSO TEXTUAL NA CRIAÇÃO MOBILE
+   B13/B15 · PROGRESSO TEXTUAL NA CRIAÇÃO MOBILE
 
-   A barra mostra a posição visualmente, mas quem está criando no celular não
-   precisa estimar quanto falta. As etapas já carregam "Etapa X" no DOM; o
-   complemento visual informa o total sem mudar regra, ordem ou estado.
+   O rótulo da criação segue a numeração editorial do livro, que não tem a
+   mesma ordem das telas do assistente (Cartas é "Etapa 8", mas é a sexta tela
+   depois da abertura). O contador injetado por lote9-mobile.js mostra o passo
+   real do assistente e permanece coerente com a barra de progresso.
    ========================================================================== */
 
 @media (max-width: 639px) {
-  .criacao__etiqueta::after {
-    content: ' de 9';
+  .criacao__contador {
     color: var(--cor-texto-suave);
+    white-space: nowrap;
+  }
+
+  .criacao__contador--sozinho {
+    display: block;
+    font-size: var(--txt-xs);
+    line-height: 1.2;
+    letter-spacing: .14em;
+    text-transform: uppercase;
   }
 }
