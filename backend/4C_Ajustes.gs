@@ -2098,6 +2098,117 @@ function normalizarInventario_(ficha) {
  * valendo — a maior parte do que entra numa mochila em jogo é coisa que o
  * Mestre inventou na hora.
  */
+
+/** Consome exatamente uma unidade de uma linha já validada da mochila. */
+function gastarUmaUnidadeDeItem_(lista, indice) {
+  const item = lista[indice];
+  const antes = Math.max(1, Math.trunc(Number((item || {}).qtd)) || 1);
+  if (antes <= 1) lista.splice(indice, 1);
+  else item.qtd = antes - 1;
+  return { antes:antes, depois:Math.max(0, antes - 1), removeu:antes <= 1 };
+}
+
+/**
+ * Usa um consumível oficial da mochila sem gerar qualquer dado.
+ * Se houver d4, devolve uma pendência para o fluxo genérico pedir o resultado
+ * rolado fisicamente. A unidade só sai depois de o efeito ser validado.
+ */
+function usarConsumivelDaMochila_(ficha, lista, indice, a) {
+  if (!isFinite(indice) || indice < 0 || indice >= lista.length) {
+    return { erro:'Consumível da mochila não encontrado.' };
+  }
+  const registro = lista[indice] || {};
+  if (!registro.id) return { erro:'Somente um consumível do livro pode ser usado por este botão.' };
+  const item = (typeof acharItem_ === 'function') ? acharItem_(registro.id) : null;
+  if (!item || item.tipo !== 'consumivel' || !item.efeitoConsumivel) {
+    return { erro:'Este item ainda não tem resolução automática de consumo.' };
+  }
+
+  const efeito = item.efeitoConsumivel || {};
+  const tipo = String(efeito.tipo || '');
+  const antesFicha = JSON.parse(JSON.stringify(ficha || {}));
+  const falhar = function(msg) {
+    substituirFichaEmLugar_(ficha, antesFicha);
+    return { erro:msg };
+  };
+  const atual = function(chave) {
+    return Math.max(0, Number(((ficha || {}).recursos || {})[chave]) || 0);
+  };
+  const teto = function(chave) {
+    const r=(ficha || {}).recursos || {};
+    if (chave === 'pontosDeVidaMarcados') return Math.max(0, Number(r.pontosDeVidaMaximos) || 0);
+    if (chave === 'estresseMarcado') return Math.max(0, Number(r.estresseMaximo) || 0);
+    if (chave === 'esperanca') return Math.max(0, Number(r.esperancaMaxima) || 0);
+    return 0;
+  };
+
+  let detalhes=[], quantidade=0, resultadoManual=null;
+
+  if (tipo === 'recuperar-com-dado') {
+    const lados = Math.max(2, Math.trunc(Number((/^d(\d+)$/i.exec(String(efeito.dado || 'd4')) || [,'4'])[1])) || 4);
+    const bruto=(a || {}).resultadoManual;
+    if (bruto === undefined || bruto === null || bruto === '') {
+      return { pendenciaRolagem:{
+        tipo:'habilidade-manual', campo:'resultadoManual', caracteristica:item.nome,
+        dado:'d'+lados, minimo:1, maximo:lados,
+        mensagem:item.nome + ': role 1d' + lados + ' fora do app e informe o resultado.'
+      } };
+    }
+    resultadoManual=Math.trunc(Number(bruto));
+    if (!isFinite(resultadoManual) || Number(bruto)!==resultadoManual || resultadoManual<1 || resultadoManual>lados) {
+      return { erro:item.nome + ': informe um resultado inteiro de 1 a ' + lados + '.' };
+    }
+    const recurso=String(efeito.recurso || '');
+    if (recurso !== 'pontosDeVidaMarcados' && recurso !== 'estresseMarcado') {
+      return { erro:item.nome + ': recurso de recuperação inválido no catálogo.' };
+    }
+    if (atual(recurso) <= 0) {
+      return { erro:item.nome + ': não há ' + (recurso === 'pontosDeVidaMarcados' ? 'Ponto de Vida' : 'Estresse') + ' marcado para recuperar.' };
+    }
+    quantidade=resultadoManual + Math.max(0,Math.trunc(Number(efeito.bonus)) || 0);
+    const m=ajustarRecurso_(ficha,{chave:recurso,delta:-quantidade});
+    if (m && m.erro) return falhar(m.erro);
+    detalhes.push(m);
+  } else if (tipo === 'ganhar-recurso') {
+    const recurso=String(efeito.recurso || '');
+    quantidade=Math.max(0,Math.trunc(Number(efeito.quantidade)) || 0);
+    if (recurso !== 'esperanca' || quantidade <= 0) return { erro:item.nome + ': ganho de recurso inválido no catálogo.' };
+    if (teto(recurso) > 0 && atual(recurso) >= teto(recurso)) return { erro:item.nome + ': Esperança já está no máximo.' };
+    const antes=atual(recurso);
+    const m=ajustarRecurso_(ficha,{chave:recurso,delta:quantidade});
+    if (m && m.erro) return falhar(m.erro);
+    if (atual(recurso) === antes) return falhar(item.nome + ': o efeito não alterou a ficha.');
+    detalhes.push(m);
+  } else if (tipo === 'trocar-recursos') {
+    const custo=efeito.custo || {}, rec=efeito.recupera || {};
+    const cq=Math.max(0,Math.trunc(Number(custo.quantidade)) || 0);
+    quantidade=Math.max(0,Math.trunc(Number(rec.quantidade)) || 0);
+    if (String(custo.recurso)!=='estresseMarcado' || String(rec.recurso)!=='pontosDeVidaMarcados' || cq<=0 || quantidade<=0) {
+      return { erro:item.nome + ': troca de recursos inválida no catálogo.' };
+    }
+    if (atual('pontosDeVidaMarcados') <= 0) return { erro:item.nome + ': não há Ponto de Vida marcado para recuperar.' };
+    if (!teto('estresseMarcado') || atual('estresseMarcado') + cq > teto('estresseMarcado')) {
+      return { erro:item.nome + ': não sobra Estresse para pagar o efeito.' };
+    }
+    const paga=ajustarRecurso_(ficha,{chave:'estresseMarcado',delta:cq});
+    if (paga && paga.erro) return falhar(paga.erro);
+    const cura=ajustarRecurso_(ficha,{chave:'pontosDeVidaMarcados',delta:-quantidade});
+    if (cura && cura.erro) return falhar(cura.erro);
+    detalhes.push(paga,cura);
+  } else {
+    return { erro:item.nome + ': tipo de efeito consumível ainda não suportado.' };
+  }
+
+  const gasto=gastarUmaUnidadeDeItem_(lista,indice);
+  return {
+    tipo:'inventario', acao:'consumir', item:item.nome, itemId:item.id,
+    qtdAntes:gasto.antes, qtdDepois:gasto.depois, consumiu:1,
+    efeito:tipo, quantidade:quantidade, resultadoManual:resultadoManual,
+    detalhes:detalhes,
+    aviso:item.nome + ': efeito aplicado e 1 unidade consumida.'
+  };
+}
+
 function ajustarInventario_(ficha, a) {
   const acao = chaveTexto_(a.acao);
   const lista = normalizarInventario_(ficha);
@@ -2143,6 +2254,8 @@ function ajustarInventario_(ficha, a) {
 
   const i = Math.trunc(Number(a.indice));
   const achou = isFinite(i) && i >= 0 && i < lista.length;
+
+  if (acao === 'consumir') return usarConsumivelDaMochila_(ficha, lista, i, a);
 
   if (acao === 'remover') {
     if (!achou) return { erro: 'Item da mochila não encontrado.' };

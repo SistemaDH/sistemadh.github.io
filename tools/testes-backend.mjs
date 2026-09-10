@@ -10862,6 +10862,92 @@ teste('Aparar rejeita dados inconsistentes e não funciona sem a arma equipada',
   verdade(!!r.erro && r.erro.includes('realmente equipada'));
 });
 
+
+
+console.log('\nLote 8 — consumíveis de recuperação E1');
+const IDS_CONSUMIVEIS_E1 = [
+  'consumivel-07','consumivel-08','consumivel-10','consumivel-18',
+  'consumivel-19','consumivel-20','consumivel-43','consumivel-44'
+];
+function fichaConsumivelE1_(id, qtd=1) {
+  const item = contexto.acharItem_(id);
+  const f = contexto.fichaVazia_();
+  f.identidade = { nome:'E1', nivel:10, classe:'Guerreiro', subclasse:'Chamada do Matador' };
+  f.recursos.pontosDeVidaMaximos = 8;
+  f.recursos.pontosDeVidaMarcados = 6;
+  f.recursos.estresseMaximo = 8;
+  f.recursos.estresseMarcado = 6;
+  f.recursos.esperancaMaxima = 6;
+  f.recursos.esperanca = 2;
+  f.defesas.pontuacaoArmadura = 4;
+  f.inventario = [{ id:id, nome:item.nome, qtd:qtd, emUso:false }];
+  return f;
+}
+teste('E1 publica os oito consumíveis com regra estruturada e sem RNG', () => {
+  const itens = avaliar('ITENS');
+  IDS_CONSUMIVEIS_E1.forEach((id) => {
+    const item = itens.find((x) => x.id === id);
+    verdade(!!item, id);
+    verdade(!!item.automacao, `${id} sem automação`);
+    igual(item.automacao.rolaNoApp, false);
+    verdade(!!item.efeitoConsumivel, `${id} sem efeitoConsumivel`);
+  });
+});
+teste('poção com d4 pede resultado manual antes de mudar ficha ou mochila', () => {
+  const f=fichaConsumivelE1_('consumivel-07',2), antes=JSON.stringify(f);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  verdade(!!r.pendenciaRolagem,JSON.stringify(r));
+  igual(r.pendenciaRolagem.tipo,'habilidade-manual');
+  igual(r.pendenciaRolagem.dado,'d4');
+  igual(JSON.stringify(f),antes);
+});
+teste('as três poções de saúde limpam d4, d4+1 e d4+2 e consomem uma unidade', () => {
+  [['consumivel-07',0],['consumivel-19',1],['consumivel-43',2]].forEach(([id,bonus]) => {
+    const f=fichaConsumivelE1_(id,2), antes=f.recursos.pontosDeVidaMarcados;
+    const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0,resultadoManual:3}]);
+    igual(r.erros,[],JSON.stringify(r));
+    igual(f.recursos.pontosDeVidaMarcados,Math.max(0,antes-(3+bonus)),id);
+    igual(f.inventario[0].qtd,1);
+  });
+});
+teste('as três poções de resistência limpam d4, d4+1 e d4+2 e consomem uma unidade', () => {
+  [['consumivel-08',0],['consumivel-20',1],['consumivel-44',2]].forEach(([id,bonus]) => {
+    const f=fichaConsumivelE1_(id,2), antes=f.recursos.estresseMarcado;
+    const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0,resultadoManual:2}]);
+    igual(r.erros,[],JSON.stringify(r));
+    igual(f.recursos.estresseMarcado,Math.max(0,antes-(2+bonus)),id);
+    igual(f.inventario[0].qtd,1);
+  });
+});
+teste('resultado fora do d4 é recusado inteiro', () => {
+  const f=fichaConsumivelE1_('consumivel-19',1), antes=JSON.stringify(f);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0,resultadoManual:5}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f),antes);
+});
+teste('Folhas de Varik ganha 2 Esperanças, respeita teto e só consome no sucesso', () => {
+  let f=fichaConsumivelE1_('consumivel-10',2);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,4); igual(f.inventario[0].qtd,1);
+  f=fichaConsumivelE1_('consumivel-10',1); f.recursos.esperanca=6;
+  const antes=JSON.stringify(f);
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f),antes);
+});
+teste('Pó do Estalo troca 1 Estresse por 1 PV de forma atômica', () => {
+  let f=fichaConsumivelE1_('consumivel-18',2);
+  const pv=f.recursos.pontosDeVidaMarcados, es=f.recursos.estresseMarcado;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros,[]); igual(f.recursos.pontosDeVidaMarcados,pv-1); igual(f.recursos.estresseMarcado,es+1); igual(f.inventario[0].qtd,1);
+  f=fichaConsumivelE1_('consumivel-18',1); f.recursos.estresseMarcado=f.recursos.estresseMaximo;
+  let antes=JSON.stringify(f);
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f),antes);
+  f=fichaConsumivelE1_('consumivel-18',1); f.recursos.pontosDeVidaMarcados=0;
+  antes=JSON.stringify(f);
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f),antes);
+});
+
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));

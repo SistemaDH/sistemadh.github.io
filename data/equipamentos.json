@@ -6830,7 +6830,18 @@
    "descricao": "Limpar 1d4 HP.",
    "nomeIngles": "Minor Health Potion",
    "descricaoIngles": "Clear 1d4 HP.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-recuperacao-e1",
+    "rolaNoApp": false,
+    "motivo": "O app aplica apenas a parte determinística; qualquer dado é rolado fisicamente e informado pelo jogador."
+   },
+   "efeitoConsumivel": {
+    "tipo": "recuperar-com-dado",
+    "recurso": "pontosDeVidaMarcados",
+    "dado": "d4",
+    "bonus": 0
+   }
   },
   {
    "id": "consumivel-08",
@@ -6839,7 +6850,18 @@
    "descricao": "Limpar 1d4 de estresse.",
    "nomeIngles": "Minor Stamina Potion",
    "descricaoIngles": "Clear 1d4 Stress.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-recuperacao-e1",
+    "rolaNoApp": false,
+    "motivo": "O app aplica apenas a parte determinística; qualquer dado é rolado fisicamente e informado pelo jogador."
+   },
+   "efeitoConsumivel": {
+    "tipo": "recuperar-com-dado",
+    "recurso": "estresseMarcado",
+    "dado": "d4",
+    "bonus": 0
+   }
   },
   {
    "id": "consumivel-09",
@@ -6860,7 +6882,17 @@
    "descricao": "Você pode comer essas folhas emparelhadas para ganhar imediatamente 2 de Esperança.",
    "nomeIngles": "Varik Leaves",
    "descricaoIngles": "You can eat these paired leaves to immediately gain 2 Hope.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-recuperacao-e1",
+    "rolaNoApp": false,
+    "motivo": "O app aplica apenas a parte determinística; qualquer dado é rolado fisicamente e informado pelo jogador."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ganhar-recurso",
+    "recurso": "esperanca",
+    "quantidade": 2
+   }
   },
   {
    "id": "consumivel-11",
@@ -6942,7 +6974,23 @@
    "origemNome": "revisado-pela-vanessa",
    "traducaoDescricao": "minha",
    "nomeAntigo": "Pó de estalo",
-   "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Tesouro"
+   "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Tesouro",
+   "automacao": {
+    "classificacao": "consumivel-recuperacao-e1",
+    "rolaNoApp": false,
+    "motivo": "O app aplica apenas a parte determinística; marca 1 Estresse e recupera 1 PV, sem rolar dados."
+   },
+   "efeitoConsumivel": {
+    "tipo": "trocar-recursos",
+    "custo": {
+     "recurso": "estresseMarcado",
+     "quantidade": 1
+    },
+    "recupera": {
+     "recurso": "pontosDeVidaMarcados",
+     "quantidade": 1
+    }
+   }
   },
   {
    "id": "consumivel-19",
@@ -6951,7 +6999,18 @@
    "descricao": "Limpa 1d4+1 HP.",
    "nomeIngles": "Health Potion",
    "descricaoIngles": "Clear 1d4+1 HP.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-recuperacao-e1",
+    "rolaNoApp": false,
+    "motivo": "O app aplica apenas a parte determinística; qualquer dado é rolado fisicamente e informado pelo jogador."
+   },
+   "efeitoConsumivel": {
+    "tipo": "recuperar-com-dado",
+    "recurso": "pontosDeVidaMarcados",
+    "dado": "d4",
+    "bonus": 1
+   }
   },
   {
    "id": "consumivel-20",
@@ -6960,7 +7019,18 @@
    "descricao": "Elimina 1d4+1 de estresse.",
    "nomeIngles": "Stamina Potion",
    "descricaoIngles": "Clear 1d4+1 Stress.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-recuperacao-e1",
+    "rolaNoApp": false,
+    "motivo": "O app aplica apenas a parte determinística; qualquer dado é rolado fisicamente e informado pelo jogador."
+   },
+   "efeitoConsumivel": {
+    "tipo": "recuperar-com-dado",
+    "recurso": "estresseMarcado",
+    "dado": "d4",
+    "bonus": 1
+   }
   },
   {
    "id": "consumivel-21",
@@ -7188,7 +7258,18 @@
    "descricao": "Clear 1d4+2 HP.",
    "nomeIngles": "Major Health Potion",
    "descricaoIngles": "Clear 1d4+2 HP.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-recuperacao-e1",
+    "rolaNoApp": false,
+    "motivo": "O app aplica apenas a parte determinística; qualquer dado é rolado fisicamente e informado pelo jogador."
+   },
+   "efeitoConsumivel": {
+    "tipo": "recuperar-com-dado",
+    "recurso": "pontosDeVidaMarcados",
+    "dado": "d4",
+    "bonus": 2
+   }
   },
   {
    "id": "consumivel-44",
@@ -7200,7 +7281,18 @@
    "origemNome": "corrigido-auditoria",
    "aliases": [
     "Maior Poção de resistência"
-   ]
+   ],
+   "automacao": {
+    "classificacao": "consumivel-recuperacao-e1",
+    "rolaNoApp": false,
+    "motivo": "O app aplica apenas a parte determinística; qualquer dado é rolado fisicamente e informado pelo jogador."
+   },
+   "efeitoConsumivel": {
+    "tipo": "recuperar-com-dado",
+    "recurso": "estresseMarcado",
+    "dado": "d4",
+    "bonus": 2
+   }
   },
   {
    "id": "consumivel-45",

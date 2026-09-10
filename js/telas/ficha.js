@@ -4254,17 +4254,30 @@ function ouroEmPunhados(ouro) {
      * mochila era uma lista de nomes que não explicavam nada — ninguém lembra
      * o que a "Aljava de carga" faz no meio de uma cena.
      */
-    function verItemDoLivro(doLivro, naMochila) {
-      const modal = abrirModal({
+    function verItemDoLivro(doLivro, naMochila, indice) {
+      const podeUsar = !!(doLivro && doLivro.efeitoConsumivel);
+      let modal = null;
+      const usar = podeUsar ? el('button', {
+        type: 'button', class: 'btn btn--principal',
+        onClick: async (ev) => {
+          const r = await travarBotao(ev.currentTarget,
+            enviar([{ tipo:'inventario', acao:'consumir', indice }]));
+          if (r && modal) modal.fechar();
+        }
+      }, 'Usar e consumir 1') : null;
+      modal = abrirModal({
         titulo: doLivro.nome,
         conteudo: el('div', { class: 'pilha' }, [
           el('p', { class: 'texto-xs texto-fraco', texto:
             `${doLivro.tipo} · ${naMochila && naMochila.qtd > 1 ? `você tem ${naMochila.qtd}` : 'você tem 1'}` }),
-          el('p', { class: 'texto-sm' }, textoAnotado(doLivro.descricao || ''))
-        ]),
-        acoes: [el('button', {
-          type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar()
-        }, 'Fechar')]
+          el('p', { class: 'texto-sm' }, textoAnotado(doLivro.descricao || '')),
+          podeUsar ? el('p', { class:'texto-xs texto-fraco', texto:
+            'Se a regra pedir dado, role fisicamente; o item só sai da mochila depois que o efeito for aceito.' }) : null
+        ].filter(Boolean)),
+        acoes: [
+          el('button', { type:'button', class:'btn btn--fantasma', onClick:() => modal.fechar() }, 'Fechar'),
+          usar
+        ].filter(Boolean)
       });
     }
 
@@ -4530,7 +4543,7 @@ function ouroEmPunhados(ouro) {
         ? el('button', {
           type: 'button', class: 'ficha__itemNome ficha__itemNome--doLivro',
           'aria-label': `${nome} — ver o que faz`,
-          onClick: () => verItemDoLivro(doLivro, item)
+          onClick: () => verItemDoLivro(doLivro, item, indice)
         }, nomeComGlossa(nome))
         : el('button', {
           type: 'button',

@@ -758,3 +758,16 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - Com este bloco, a auditoria de características de equipamento deve chegar a **0 candidatas ativas/condicionais**.
 
 **Próximo bloco natural:** iniciar a revisão dos **81 loot/consumíveis mecânicos** ainda apontados pela auditoria final do Lote 8, começando pelos efeitos determinísticos e consumíveis já parcialmente suportados.
+
+### Lote 8 — consumíveis de recuperação E1
+
+- Fechados **8 consumíveis de recuperação imediata**: Poção de saúde menor, Poção de resistência menor, Folhas de Varik, Pó do Estalo, Poção de saúde, Poção de resistência, Poção de Saúde Maior e Poção de Resistência Maior.
+- As poções pedem apenas o resultado do **d4 rolado fisicamente**; o servidor aplica `d4`, `d4+1` ou `d4+2` e consome uma unidade.
+- Folhas de Varik ganham **2 Esperanças**, respeitando o teto.
+- Pó do Estalo marca **1 Estresse** e recupera **1 PV** na mesma mutação; como passa pelo pipeline central, Inabalável continua podendo interceptar a marca sem RNG do app.
+- Resultado ausente/inválido ou efeito impossível não consome o item.
+- O gerador 44 agora publica `automacao` e `efeitoConsumivel` em `ITENS`.
+- A Mochila mostra `Usar e consumir 1` apenas para itens estruturados.
+- A auditoria agora separa loot/consumíveis estruturados, referências específicas no motor e candidatos mecânicos.
+
+**Próximo bloco natural:** as seis poções de +1 na próxima jogada e as seis versões Maiores de +1 no traço até o próximo descanso. Remendo/Costurador de Armadura fica para o bloco de custos variáveis.

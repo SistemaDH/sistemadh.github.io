@@ -119,7 +119,11 @@ for (const i of [...d.loot, ...d.consumiveis]) {
   // `nomeAntigo` guarda a tradução que o sistema usava antes de conferir o
   // nome no livro. Continua achando na busca — foi o que a mesa leu por meses.
   const nomes = [...new Set([i.nome, i.nomeIngles, i.nomeAntigo, ...(i.aliases || [])].filter(Boolean))];
-  L.push(`  ${j({ id: i.id, nome: i.nome, tipo: i.id.startsWith('loot') ? 'saque' : 'consumivel', nomes })},`);
+  L.push(`  ${j({
+    id: i.id, nome: i.nome, tipo: i.id.startsWith('loot') ? 'saque' : 'consumivel', nomes,
+    automacao: i.automacao || null,
+    efeitoConsumivel: i.efeitoConsumivel || null
+  })},`);
 }
 L.push('];\n');
 

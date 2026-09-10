@@ -152,8 +152,10 @@ for grupo in ('loot', 'consumiveis'):
     for x in equip.get(grupo, []):
         text = ' '.join(str(x.get(k) or '') for k in ('texto', 'efeito', 'descricao'))
         if text.strip() and MECH.search(text):
+            structured = bool(x.get('automacao') or x.get('efeitoConsumivel'))
             runtime_ref = x.get('id', '') in runtime or x.get('nome', '') in runtime
-            item_rows.append((grupo, x.get('nome', ''), 'referência específica no motor' if runtime_ref else 'candidato mecânico', text))
+            estado = 'estruturado/classificado' if structured else ('referência específica no motor' if runtime_ref else 'candidato mecânico')
+            item_rows.append((grupo, x.get('nome', ''), estado, text))
 
 handoff = (R / 'docs/HANDOFF.md').read_text(encoding='utf-8')
 markers = []
@@ -184,12 +186,13 @@ cs = count_status(class_rows, 4)
 coms = count_status(community_rows, 2)
 cards = count_status(card_rows, 3)
 eqs = count_status(equip_rows, 3)
+items = count_status(item_rows, 2)
 out += [
     f'- Classes/subclasses: **{len(class_rows)} características**; **{cs["candidato sem sinal de automação"]}** candidatas sem sinal de automação.',
     f'- Comunidades: **{len(community_rows)} características**; **{coms["candidato sem sinal de automação"]}** candidatas sem sinal de automação.',
     f'- Cartas de domínio: **{len(card_rows)} cartas**; **{cards["candidato sem sinal de automação específica"]}** candidatas sem sinal de automação específica; **{cards["contador/estado estruturado (efeito completo ainda deve ser conferido)"]}** já têm contador/estado parcial.',
     f'- Características de armas/armaduras/molduras: **{len(equip_rows)} ocorrências**; **{eqs["candidato ativo/condicional sem estrutura"]}** ocorrências candidatas ativas/condicionais.',
-    f'- Loot/consumíveis com texto mecânico detectado: **{len(item_rows)}**.',
+    f'- Loot/consumíveis com texto mecânico detectado: **{len(item_rows)}**; **{items["candidato mecânico"]}** candidatos ainda sem estrutura/classificação.',
     f'- Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **{len(markers)}** linhas, incluindo histórico já resolvido.',
     '',
 ]
@@ -205,6 +208,9 @@ for k, v in sorted(cards.items()): out.append(f'- {k}: **{v}**')
 out.append('')
 out += ['### Distribuição — equipamento', '']
 for k, v in sorted(eqs.items()): out.append(f'- {k}: **{v}**')
+out.append('')
+out += ['### Distribuição — loot/consumíveis', '']
+for k, v in sorted(items.items()): out.append(f'- {k}: **{v}**')
 out.append('')
 
 out += ['## Candidatos — classes e subclasses', '', '| Classe | Subclasse | Estágio | Característica | Trecho |', '|---|---|---|---|---|']
