@@ -12115,6 +12115,110 @@ teste('E17 Anel exige acerto e não empilha com Espelho de Marigold', () => {
   igual(r.erros.length,1); igual(f.recursos.esperanca,3); igual(f.inventario.find((x)=>x.id==='consumivel-59').qtd,1);
 });
 
+
+console.log('\
+Lote 8 — anexos e passivos de loot E18');
+
+function fichaLootE18(inventario, primaria = 'primaria-t1-espada-longa', reserva = []) {
+  const f = contexto.fichaRapida_({
+    nome: 'E18', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+    experiencias: [{ nome: 'História Antiga', bonus: 2 }, { nome: 'Diplomacia', bonus: 2 }]
+  });
+  f.equipamento = Object.assign({}, f.equipamento || {}, {
+    primaria, secundaria: null, reserva: reserva.slice()
+  });
+  f.inventario = inventario;
+  return contexto.validarFicha_(f);
+}
+
+teste('E18 — os quatro loots têm contrato explícito e sem RNG do app', () => {
+  const ids = ['loot-25', 'loot-26', 'loot-47', 'loot-48'];
+  ids.forEach((id) => verdade(!!contexto.acharItem_(id).automacao, id + ' sem automação'));
+  igual(contexto.acharItem_('loot-25').efeitoSaquePassivo.anexoArma.caracteristica, 'Brutal');
+  igual(contexto.acharItem_('loot-26').efeitoSaquePassivo.anexoArma.caracteristica, 'Poderoso');
+  igual(contexto.acharItem_('loot-47').efeitoSaquePassivo.grupoExclusivo, 'reliquia');
+  igual(contexto.acharItem_('loot-47').efeitoSaquePassivo.experiencia.bonus, 1);
+  igual(contexto.acharItem_('loot-48').efeitoSaquePassivo.alcanceArmas.para, 'Muito Próximo');
+  ids.forEach((id) => igual(contexto.acharItem_(id).automacao.rolaNoApp, false));
+});
+
+teste('E18 — Pedra de Sangue exige vínculo e só aceita arma possuída sem característica', () => {
+  const f = fichaLootE18([{ id:'loot-25', nome:'Pedra de sangue', qtd:1, emUso:false }]);
+  let r = contexto.aplicarAjustes_(f, [{ tipo:'inventario', acao:'uso', indice:0, ligar:true }]);
+  igual(r.erros.length, 1);
+  verdade(/vínculo/i.test(r.erros[0]), r.erros[0]);
+
+  r = contexto.aplicarAjustes_(f, [{
+    tipo:'inventario', acao:'vinculo', indice:0, vinculo:'primaria-t1-espada-larga'
+  }]);
+  igual(r.erros.length, 1, 'arma com Confiável não pode receber a pedra');
+
+  r = contexto.aplicarAjustes_(f, [{
+    tipo:'inventario', acao:'vinculo', indice:0, vinculo:'primaria-t1-espada-longa'
+  }]);
+  igual(r.erros, []);
+  igual(f.inventario[0].vinculo, 'primaria-t1-espada-longa');
+
+  r = contexto.aplicarAjustes_(f, [{ tipo:'inventario', acao:'uso', indice:0, ligar:true }]);
+  igual(r.erros, []);
+  igual(f.inventario[0].emUso, true);
+});
+
+teste('E18 — duas pedras não podem conceder duas características à mesma arma', () => {
+  const f = fichaLootE18([
+    { id:'loot-25', nome:'Pedra de sangue', qtd:1, emUso:false, vinculo:'primaria-t1-espada-longa' },
+    { id:'loot-26', nome:'Pedra Maior', qtd:1, emUso:false, vinculo:'primaria-t1-espada-longa' }
+  ]);
+  igual(contexto.aplicarAjustes_(f, [
+    { tipo:'inventario', acao:'uso', indice:0, ligar:true }
+  ]).erros, []);
+  const r = contexto.aplicarAjustes_(f, [
+    { tipo:'inventario', acao:'uso', indice:1, ligar:true }
+  ]);
+  igual(r.erros.length, 1);
+  verdade(/já recebeu uma característica/i.test(r.erros[0]), r.erros[0]);
+  igual(f.inventario[1].emUso, false);
+});
+
+teste('E18 — Relíquia de Afiação vincula somente Experiência real e respeita uma relíquia', () => {
+  const f = fichaLootE18([
+    { id:'loot-47', nome:'Relíquia de afiação', qtd:1, emUso:false },
+    { id:'loot-45', nome:'Relíquia de Encantamento', qtd:1, emUso:true }
+  ]);
+  let r = contexto.aplicarAjustes_(f, [{
+    tipo:'inventario', acao:'vinculo', indice:0, vinculo:'Experiência inventada'
+  }]);
+  igual(r.erros.length, 1);
+
+  r = contexto.aplicarAjustes_(f, [{
+    tipo:'inventario', acao:'vinculo', indice:0, vinculo:'História Antiga'
+  }]);
+  igual(r.erros, []);
+  igual(f.inventario[0].vinculo, 'História Antiga');
+
+  r = contexto.aplicarAjustes_(f, [{ tipo:'inventario', acao:'uso', indice:0, ligar:true }]);
+  igual(r.erros.length, 1, 'uma segunda relíquia não pode ficar em uso');
+  igual(f.inventario[0].emUso, false);
+});
+
+teste('E18 — vínculo sobrevive à normalização e limpar vínculo também guarda o item', () => {
+  const f = fichaLootE18([{
+    id:'loot-47', nome:'Relíquia de afiação', qtd:1, emUso:false, vinculo:'Diplomacia'
+  }]);
+  igual(f.inventario[0].vinculo, 'Diplomacia');
+  igual(contexto.aplicarAjustes_(f, [
+    { tipo:'inventario', acao:'uso', indice:0, ligar:true }
+  ]).erros, []);
+  igual(f.inventario[0].emUso, true);
+  igual(contexto.aplicarAjustes_(f, [
+    { tipo:'inventario', acao:'vinculo', indice:0, vinculo:'' }
+  ]).erros, []);
+  igual(f.inventario[0].vinculo, undefined);
+  igual(f.inventario[0].emUso, false);
+});
+
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));

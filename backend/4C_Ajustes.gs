@@ -2097,6 +2097,7 @@ function itemDeMochila_(bruto) {
   let qtd = 1;
   let emUso = false;
   let nota = '';
+  let vinculo = '';
 
   if (typeof bruto === 'object') {
     nome = String(bruto.nome === undefined ? '' : bruto.nome);
@@ -2104,6 +2105,7 @@ function itemDeMochila_(bruto) {
     qtd = Math.trunc(Number(bruto.qtd));
     emUso = Boolean(bruto.emUso);
     nota = String(bruto.nota === undefined ? '' : bruto.nota);
+    vinculo = String(bruto.vinculo === undefined ? '' : bruto.vinculo);
   } else {
     nome = String(bruto);
   }
@@ -2131,7 +2133,89 @@ function itemDeMochila_(bruto) {
 
   const item = { id: id, nome: nome, qtd: qtd, emUso: emUso };
   if (nota) item.nota = nota.slice(0, LIMITE_ITEM_INVENTARIO);
+  vinculo = vinculo.trim().replace(/\s+/g, ' ').slice(0, LIMITE_ITEM_INVENTARIO);
+  if (vinculo) item.vinculo = vinculo;
   return item;
+}
+
+/**
+ * Configuração de vínculo de um saque permanente.
+ *
+ * E18 usa isto só para escolhas que a ficha não pode adivinhar:
+ * em qual arma uma pedra foi incrustada ou qual Experiência uma relíquia
+ * aprimorou. O dado continua na mesa; aqui só guardamos a escolha canônica.
+ */
+function configuracaoDeVinculoDeSaque_(registro) {
+  if (!registro || !registro.id || typeof acharItem_ !== 'function') return null;
+  const item = acharItem_(registro.id);
+  const passivo = item && item.tipo === 'saque' ? item.efeitoSaquePassivo : null;
+  return passivo && passivo.configuracao ? passivo.configuracao : null;
+}
+
+function validarVinculoDeSaque_(ficha, lista, indice, valor, verificarConflito) {
+  if (!Array.isArray(lista) || indice < 0 || indice >= lista.length) {
+    return { erro:'Item de saque da mochila não encontrado.' };
+  }
+  const registro = lista[indice] || {};
+  const item = (typeof acharItem_ === 'function') ? acharItem_(registro.id) : null;
+  const passivo = item && item.tipo === 'saque' ? item.efeitoSaquePassivo : null;
+  const cfg = passivo && passivo.configuracao ? passivo.configuracao : null;
+  if (!cfg) return { erro:'Este item não possui vínculo configurável.' };
+
+  const bruto = String(valor === undefined || valor === null ? '' : valor)
+    .trim().replace(/\s+/g, ' ').slice(0, LIMITE_ITEM_INVENTARIO);
+  if (!bruto) return { vinculo:'', rotulo:'' };
+
+  if (cfg.tipo === 'arma-sem-caracteristica') {
+    if (typeof acharArma_ !== 'function') return { erro:'Catálogo de armas indisponível.' };
+    const arma = acharArma_(bruto);
+    if (!arma) return { erro:item.nome + ': escolha uma arma da ficha.' };
+
+    const eq = (ficha || {}).equipamento || {};
+    const ids = [eq.primaria, eq.secundaria]
+      .concat(Array.isArray(eq.reserva) ? eq.reserva : [])
+      .filter(Boolean);
+    let possuida = false;
+    for (let i = 0; i < ids.length; i++) {
+      const a = acharArma_(ids[i]);
+      if (a && a.id === arma.id) { possuida = true; break; }
+    }
+    if (!possuida) return { erro:item.nome + ': a arma escolhida não está equipada nem na reserva.' };
+    if (arma.carac || arma.caracteristica) {
+      return { erro:item.nome + ': a pedra só pode ser incrustada em uma arma que ainda não tenha característica.' };
+    }
+
+    if (verificarConflito) {
+      for (let k = 0; k < lista.length; k++) {
+        if (k === indice) continue;
+        const outro = lista[k] || {};
+        if (!outro.emUso || !outro.id || !outro.vinculo) continue;
+        const outroItem = (typeof acharItem_ === 'function') ? acharItem_(outro.id) : null;
+        const outroPassivo = outroItem && outroItem.tipo === 'saque'
+          ? outroItem.efeitoSaquePassivo : null;
+        if (!outroPassivo || !outroPassivo.anexoArma) continue;
+        const outraArma = acharArma_(outro.vinculo);
+        if (outraArma && outraArma.id === arma.id) {
+          return { erro:item.nome + ': ' + arma.nome + ' já recebeu uma característica de ' + outroItem.nome + '.' };
+        }
+      }
+    }
+    return { vinculo:arma.id, rotulo:arma.nome };
+  }
+
+  if (cfg.tipo === 'experiencia') {
+    const experiencias = Array.isArray((ficha || {}).experiencias) ? ficha.experiencias : [];
+    const alvo = chaveTexto_(bruto);
+    for (let i = 0; i < experiencias.length; i++) {
+      const exp = experiencias[i] || {};
+      if (chaveTexto_(exp.nome) === alvo) {
+        return { vinculo:String(exp.nome || '').trim(), rotulo:String(exp.nome || '').trim() };
+      }
+    }
+    return { erro:item.nome + ': escolha uma Experiência que exista nesta ficha.' };
+  }
+
+  return { erro:item.nome + ': tipo de vínculo desconhecido no catálogo.' };
 }
 
 /** Grupo exclusivo declarado por um loot permanente (ex.: relíquias). */
@@ -2647,6 +2731,17 @@ function ajustarInventario_(ficha, a) {
   if (acao === 'uso') {
     if (!achou) return { erro: 'Item da mochila não encontrado.' };
     const ligar = Boolean(a.ligar);
+    if (ligar) {
+      const cfg = configuracaoDeVinculoDeSaque_(lista[i]);
+      if (cfg && cfg.obrigatoria === true) {
+        if (!lista[i].vinculo) {
+          return { erro:lista[i].nome + ': escolha o vínculo deste item antes de colocá-lo em uso.' };
+        }
+        const validado = validarVinculoDeSaque_(ficha, lista, i, lista[i].vinculo, true);
+        if (validado.erro) return validado;
+        lista[i].vinculo = validado.vinculo;
+      }
+    }
     const grupo = ligar ? grupoExclusivoDeSaque_(lista[i]) : '';
     if (grupo) {
       for (let k = 0; k < lista.length; k++) {
@@ -2680,6 +2775,22 @@ function ajustarInventario_(ficha, a) {
    * item com nota em branco são a mesma coisa para quem lê a ficha, e um
    * `nota: ''` gravado faria a tela mostrar um espaço vazio embaixo do nome.
    */
+  if (acao === 'vinculo') {
+    if (!achou) return { erro:'Item da mochila não encontrado.' };
+    const validado = validarVinculoDeSaque_(ficha, lista, i, a.vinculo, false);
+    if (validado.erro) return validado;
+    if (validado.vinculo) lista[i].vinculo = validado.vinculo;
+    else {
+      delete lista[i].vinculo;
+      lista[i].emUso = false;
+    }
+    return {
+      tipo:'inventario', acao:'vinculo', item:lista[i].nome,
+      vinculo:validado.vinculo || '', rotulo:validado.rotulo || '',
+      emUso:lista[i].emUso
+    };
+  }
+
   if (acao === 'nota') {
     if (!achou) return { erro: 'Item da mochila não encontrado.' };
     if (lista[i].id) {

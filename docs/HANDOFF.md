@@ -960,3 +960,21 @@ Implementação:
 - nenhuma das três regras gera dados no app.
 
 Arquivos: `data/equipamentos.json`, `data/contadores.json`, `backend/44_Equipamento.gs`, `backend/47_Contadores.gs`, `backend/4C_Ajustes.gs`, `js/telas/ficha.js`, `tools/testes-backend.mjs`, auditoria e este HANDOFF.
+
+
+### E18 — anexos de arma + relíquia de Experiência + alcance Flickerfly
+
+Fechado nesta rodada:
+
+- `loot-25` Pedra de Sangue: vínculo explícito com uma arma da ficha sem característica; quando marcada em uso, o painel da arma mostra **Brutal**. Os dados de dano continuam físicos.
+- `loot-26` Pedra Maior: mesmo contrato de vínculo, mostrando **Poderoso** no painel; o backend impede duas pedras de concederem duas características à mesma arma.
+- `loot-47` Relíquia de Afiação: exige escolher uma Experiência real da ficha e reaproveita `grupoExclusivo: reliquia`; enquanto em uso, a tela publica `+1` naquela Experiência sem alterar seu valor-base.
+- `loot-48` Pingente Flickerfly: enquanto em uso, armas originalmente Corpo a Corpo que causam dano físico são exibidas com alcance **Muito Próximo**.
+- O inventário ganhou `vinculo` somente para escolhas canônicas de saques configuráveis; o servidor valida a escolha na gravação e novamente antes de ativar o item.
+- Nenhuma dessas regras rola dados no app. Brutal/Poderoso permanecem lembretes assistidos porque modificam a rolagem física de dano.
+
+Fonte conferida no livro básico PT-BR, Capítulo 2: Tesouro: itens 25–26 (Pedra da Brutalidade/Pedra do Poder) e itens 47–48 (Relíquia do Aperfeiçoamento/Pingente do Oscilume). Os IDs e nomes internos existentes foram preservados para compatibilidade.
+
+Meta da auditoria desta rodada: **10 → 6 candidatos de loot/consumíveis**, sem reabrir classes, comunidades, cartas ou equipamentos.
+
+Próximo bloco natural: revisar os 6 candidatos restantes da auditoria e separar o que é estado/recurso determinístico do que pertence exclusivamente à mesa.

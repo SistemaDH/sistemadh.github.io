@@ -6603,7 +6603,24 @@
    "descricao": "Você pode anexar essa pedra a uma arma que ainda não tenha uma característica. A arma ganha a seguinte característica. Brutal: Quando rolar o valor máximo em um dado de dano, role um dado de dano adicional.",
    "nomeIngles": "Bloodstone",
    "descricaoIngles": "You can attach this stone to a weapon that doesn't already have a feature. The weapon gains the following feature. Brutal: When you roll the maximum value on a damage die, roll an additional damage die.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-anexo-arma-dado-manual-e18",
+    "rolaNoApp": false,
+    "motivo": "A ficha registra em qual arma sem característica a pedra foi incrustada. Brutal altera somente a rolagem física de dano, então o app exibe o lembrete e não rola dados."
+   },
+   "efeitoSaquePassivo": {
+    "configuracao": {
+     "tipo": "arma-sem-caracteristica",
+     "campo": "vinculo",
+     "rotulo": "Arma que recebeu a Pedra de Sangue",
+     "obrigatoria": true
+    },
+    "anexoArma": {
+     "caracteristica": "Brutal",
+     "efeitoManual": "Quando um dado de dano mostrar seu valor máximo, role um dado de dano adicional."
+    }
+   }
   },
   {
    "id": "loot-26",
@@ -6615,7 +6632,24 @@
    "origemNome": "corrigido-auditoria",
    "aliases": [
     "Greatstone"
-   ]
+   ],
+   "automacao": {
+    "classificacao": "loot-anexo-arma-dado-manual-e18",
+    "rolaNoApp": false,
+    "motivo": "A ficha registra em qual arma sem característica a pedra foi incrustada. Poderoso altera somente a rolagem física de dano, então o app exibe o lembrete e não rola dados."
+   },
+   "efeitoSaquePassivo": {
+    "configuracao": {
+     "tipo": "arma-sem-caracteristica",
+     "campo": "vinculo",
+     "rotulo": "Arma que recebeu a Pedra Maior",
+     "obrigatoria": true
+    },
+    "anexoArma": {
+     "caracteristica": "Poderoso",
+     "efeitoManual": "Em um ataque bem-sucedido, role um dado de dano adicional e descarte o resultado mais baixo."
+    }
+   }
   },
   {
    "id": "loot-27",
@@ -7005,7 +7039,25 @@
    "descricao": "Você ganha um bônus de +1 em uma Experiência de sua escolha. Você só pode carregar uma relíquia.",
    "nomeIngles": "Honing Relic",
    "descricaoIngles": "You gain a +1 bonus to an Experience of your choice. You can only carry one relic.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-reliquia-experiencia-e18",
+    "rolaNoApp": false,
+    "motivo": "A Experiência escolhida fica vinculada à relíquia na ficha; enquanto ela estiver em uso, a tela publica +1 no bônus dessa Experiência. A regra de apenas uma relíquia ativa é reaproveitada."
+   },
+   "efeitoSaquePassivo": {
+    "grupoExclusivo": "reliquia",
+    "configuracao": {
+     "tipo": "experiencia",
+     "campo": "vinculo",
+     "rotulo": "Experiência aprimorada",
+     "obrigatoria": true
+    },
+    "experiencia": {
+     "bonus": 1,
+     "alvoCampo": "vinculo"
+    }
+   }
   },
   {
    "id": "loot-48",
@@ -7014,7 +7066,19 @@
    "descricao": "Enquanto você estiver portando esse pingente, suas armas com alcance corpo a corpo que causam dano físico terão um brilho de véu e poderão atacar alvos a uma distância muito próxima.",
    "nomeIngles": "Flickerfly Pendant",
    "descricaoIngles": "While you carry this pendant, your weapons with a Melee range that deal physical damage have a gossamer sheen and can attack targets within Very Close range.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "loot-passivo-alcance-arma-e18",
+    "rolaNoApp": false,
+    "motivo": "Enquanto o pingente estiver em uso, a tela deriva Muito Próximo para armas originalmente Corpo a Corpo que causem dano físico; nenhum dado ou alvo é resolvido pelo app."
+   },
+   "efeitoSaquePassivo": {
+    "alcanceArmas": {
+     "de": "Corpo a Corpo",
+     "para": "Muito Próximo",
+     "tipoDano": "fisico"
+    }
+   }
   },
   {
    "id": "loot-49",

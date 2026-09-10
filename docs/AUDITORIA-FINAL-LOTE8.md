@@ -9,8 +9,8 @@
 - Comunidades: **9 características**; **0** candidatas sem sinal de automação.
 - Cartas de domínio: **189 cartas**; **0** candidatas sem sinal de automação específica; **92** já têm contador/estado parcial.
 - Características de armas/armaduras/molduras: **203 ocorrências**; **0** ocorrências candidatas ativas/condicionais.
-- Loot/consumíveis com texto mecânico detectado: **81**; **10** candidatos ainda sem estrutura/classificação.
-- Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **54** linhas, incluindo histórico já resolvido.
+- Loot/consumíveis com texto mecânico detectado: **81**; **6** candidatos ainda sem estrutura/classificação.
+- Marcadores documentais no HANDOFF (“próximo”, “pendente”, “aberto” etc.): **56** linhas, incluindo histórico já resolvido.
 
 ### Distribuição — classes/subclasses
 
@@ -35,8 +35,8 @@
 
 ### Distribuição — loot/consumíveis
 
-- candidato mecânico: **10**
-- estruturado/classificado: **70**
+- candidato mecânico: **6**
+- estruturado/classificado: **74**
 - referência específica no motor: **1**
 
 ## Candidatos — classes e subclasses
@@ -75,8 +75,8 @@
 | loot | Espírito Corretor | estruturado/classificado | Esse pequeno duende fica na curva de seu canal auditivo e sussurra conselhos úteis durante o combate. Uma vez por descanso curto, você pode ganhar vantagem em uma rolage… |
 | loot | Guardião do Saber | candidato mecânico | Você pode armazenar o nome e os detalhes de até três criaturas hostis dentro desse livro. Você ganha um bônus de +1 nas rolagens de ação contra essas criaturas. |
 | loot | Frasco de Darksmoke Receita | estruturado/classificado | Como movimento de inatividade, você pode marcar um Stress para criar um Vial of Darksmoke. |
-| loot | Pedra de sangue | candidato mecânico | Você pode anexar essa pedra a uma arma que ainda não tenha uma característica. A arma ganha a seguinte característica. Brutal: Quando rolar o valor máximo em um dado de … |
-| loot | Pedra Maior | candidato mecânico | Você pode anexar essa pedra a uma arma que ainda não tenha uma característica. A arma ganha a seguinte característica. Poderoso: Em um ataque bem-sucedido, role um dado … |
+| loot | Pedra de sangue | estruturado/classificado | Você pode anexar essa pedra a uma arma que ainda não tenha uma característica. A arma ganha a seguinte característica. Brutal: Quando rolar o valor máximo em um dado de … |
+| loot | Pedra Maior | estruturado/classificado | Você pode anexar essa pedra a uma arma que ainda não tenha uma característica. A arma ganha a seguinte característica. Poderoso: Em um ataque bem-sucedido, role um dado … |
 | loot | Planador | estruturado/classificado | Enquanto estiver caindo, você pode marcar um Stress para acionar esse pequeno paraquedas e deslizar com segurança até o chão. |
 | loot | Anel do Silêncio | estruturado/classificado | Gaste uma Esperança para ativar esse anel. Seus passos são silenciosos até o próximo descanso. |
 | loot | Pingente Calmante | estruturado/classificado | Quando for marcar seu último estresse, role um d6. Se o resultado for 5 ou mais, não o marque. |
@@ -90,8 +90,8 @@
 | loot | Medalhão Hopekeeper | candidato mecânico | Durante um descanso longo, se você tiver 6 de Esperança, poderá gastar uma Esperança para imbuir esse medalhão com sua determinação abundante. Quando tiver 0 de Esperanç… |
 | loot | Relíquia de Encantamento | estruturado/classificado | Você ganha um bônus de +1 na sua Presença. Você só pode carregar uma relíquia. |
 | loot | Relíquia da Iluminação | estruturado/classificado | Você ganha um bônus de +1 no seu Conhecimento. Você só pode carregar uma relíquia. |
-| loot | Relíquia de afiação | candidato mecânico | Você ganha um bônus de +1 em uma Experiência de sua escolha. Você só pode carregar uma relíquia. |
-| loot | Pingente Flickerfly | candidato mecânico | Enquanto você estiver portando esse pingente, suas armas com alcance corpo a corpo que causam dano físico terão um brilho de véu e poderão atacar alvos a uma distância m… |
+| loot | Relíquia de afiação | estruturado/classificado | Você ganha um bônus de +1 em uma Experiência de sua escolha. Você só pode carregar uma relíquia. |
+| loot | Pingente Flickerfly | estruturado/classificado | Enquanto você estiver portando esse pingente, suas armas com alcance corpo a corpo que causam dano físico terão um brilho de véu e poderão atacar alvos a uma distância m… |
 | loot | Receita de Mythic Dust | estruturado/classificado | Como movimento de inatividade, você pode usar um punhado de pó de ouro fino para criar Pó Mítico. |
 | loot | Fragmento de memória | candidato mecânico | Uma vez por descanso longo, você pode gastar 2 de Esperança para chamar um card de domínio do seu cofre em vez de pagar seu Custo de Chamada. |
 | loot | Anel de determinação inquebrável | candidato mecânico | Uma vez por sessão, quando o GM gasta um Medo, você pode gastar 4 de Esperança para cancelar os efeitos desse Medo gasto. |
@@ -203,6 +203,8 @@ Estas linhas misturam histórico resolvido e trabalho ainda aberto; servem para 
 - L896: O E12 adiciona 5 contadores canônicos de loot. Próximo bloco deve continuar pelos loots restantes da auditoria, priorizando passivos simples/relics e só depois anexos de arma/reação de dano.
 - L929: - `loot-17` Prisma Arcano: ativação cria estado persistente manual e gasta a ativação até o próximo descanso longo; posição e bônus de +1 em Conjuração para aliados Próximos continuam na mesa;
 - L957: - `loot-29` intercepta a marca que encheria a trilha de Estresse, depois de Inabalável; o d6 permanece físico e a pendência é atômica;
+- L972: - `loot-48` Pingente Flickerfly: enquanto em uso, armas originalmente Corpo a Corpo que causam dano físico são exibidas com alcance **Muito Próximo**.
+- L980: Próximo bloco natural: revisar os 6 candidatos restantes da auditoria e separar o que é estado/recurso determinístico do que pertence exclusivamente à mesa.
 
 ## Regra para a próxima etapa
 

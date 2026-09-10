@@ -2174,11 +2174,30 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       .map(catalogo.acharArma)
       .filter(Boolean);
 
+    const saquesAtivos = ((ficha || {}).inventario || [])
+      .filter((item) => item && item.emUso && item.id)
+      .map((registro) => ({ registro, item:catalogo.acharItem(registro.id) }))
+      .filter((x) => x.item && x.item.efeitoSaquePassivo);
+    const flickerfly = saquesAtivos.find((x) => x.registro.id === 'loot-48');
+    const regraFlickerfly = flickerfly
+      ? ((flickerfly.item.efeitoSaquePassivo || {}).alcanceArmas || null) : null;
+
     const linhas = [];
     for (const arma of armas) {
       const extras = bonusFixosDaArma(ficha, arma);
+      saquesAtivos.forEach((x) => {
+        const anexo = (x.item.efeitoSaquePassivo || {}).anexoArma;
+        if (!anexo || !x.registro.vinculo ||
+            dados.chave(x.registro.vinculo) !== dados.chave(arma.id)) return;
+        extras.push(`${anexo.caracteristica}: ${anexo.efeitoManual}`);
+      });
       const sufixo = extras.length ? ` · ${extras.join(' · ')}` : '';
-      const alcance = alcanceEfetivoNaFicha(ficha, arma.alcance || '');
+      const alcanceOriginal = arma.alcance || '';
+      const danoFisico = /fis/.test(dados.chave(arma.dano || ''));
+      const alcance = regraFlickerfly && danoFisico &&
+        dados.chave(alcanceOriginal) === dados.chave(regraFlickerfly.de)
+          ? regraFlickerfly.para
+          : alcanceEfetivoNaFicha(ficha, alcanceOriginal);
       linhas.push(el('p', { class: 'texto-sm', texto:
         `${arma.nome}: ${alcance ? alcance + ' · ' : ''}${danoDaArmaComProficiencia(ficha, arma)}${sufixo}` }));
 
@@ -4325,6 +4344,34 @@ function ouroEmPunhados(ouro) {
       const podeUsar = !!efeitoConsumivel &&
         !(efeitoConsumivel.exigeFichaEncerrada === true && !(p.ficha || {}).encerrada);
       const podeUsarSaque = !!efeitoSaque;
+      const passivoSaque = doLivro && doLivro.efeitoSaquePassivo;
+      const configuracaoVinculo = passivoSaque && passivoSaque.configuracao;
+      const opcoesVinculo = [];
+      if (configuracaoVinculo && configuracaoVinculo.tipo === 'arma-sem-caracteristica') {
+        const eqAtual = (p.ficha || {}).equipamento || {};
+        const ids = [eqAtual.primaria, eqAtual.secundaria]
+          .concat(Array.isArray(eqAtual.reserva) ? eqAtual.reserva : [])
+          .filter(Boolean);
+        const vistos = new Set();
+        ids.map(catalogo.acharArma).filter(Boolean).forEach((arma) => {
+          if (vistos.has(arma.id) || arma.caracteristica) return;
+          vistos.add(arma.id);
+          opcoesVinculo.push({ valor:arma.id, rotulo:arma.nome });
+        });
+      } else if (configuracaoVinculo && configuracaoVinculo.tipo === 'experiencia') {
+        ((p.ficha || {}).experiencias || []).forEach((exp) => {
+          if (exp && exp.nome) opcoesVinculo.push({ valor:exp.nome, rotulo:exp.nome });
+        });
+      }
+      const seletorVinculo = configuracaoVinculo ? el('select', {
+        class:'campo__entrada', 'aria-label':configuracaoVinculo.rotulo || 'Vínculo do item'
+      }, [
+        el('option', { value:'' }, '— escolha —'),
+        ...opcoesVinculo.map((o) => el('option', { value:o.valor }, o.rotulo))
+      ]) : null;
+      if (seletorVinculo && naMochila && naMochila.vinculo) {
+        seletorVinculo.value = naMochila.vinculo;
+      }
       const pedeQuantidade = podeUsar && efeitoConsumivel.tipo === 'recuperar-armadura-por-esperanca';
       const recursosAtuais = (p.ficha || {}).recursos || {};
       const limiteQuantidade = Math.max(0, Math.min(
@@ -4365,12 +4412,29 @@ function ouroEmPunhados(ouro) {
               `Esperança para gastar = PA para recuperar · máximo agora: ${limiteQuantidade}` }),
             quantidadeConsumivel
           ]) : null,
+          configuracaoVinculo ? el('label', { class:'pilha' }, [
+            el('span', { class:'texto-xs texto-fraco', texto:
+              configuracaoVinculo.rotulo || 'Vínculo do item' }),
+            seletorVinculo,
+            el('span', { class:'texto-xs texto-fraco', texto:
+              'Escolha registrada pela ficha; marcar o item como em uso ativa o efeito.' })
+          ]) : null,
           (podeUsar || podeUsarSaque) ? el('p', { class:'texto-xs texto-fraco', texto:
             podeUsar ? 'Se a regra pedir dado, role fisicamente; o item só sai da mochila depois que o efeito for aceito.' :
               'Este saque é reutilizável: usar registra custos/estado, mas não remove o item da mochila.' }) : null
         ].filter(Boolean)),
         acoes: [
           el('button', { type:'button', class:'btn btn--fantasma', onClick:() => modal.fechar() }, 'Fechar'),
+          configuracaoVinculo ? el('button', {
+            type:'button', class:'btn btn--fantasma',
+            onClick: async (ev) => {
+              const r = await travarBotao(ev.currentTarget, enviar([{
+                tipo:'inventario', acao:'vinculo', indice,
+                vinculo:seletorVinculo ? seletorVinculo.value : ''
+              }]));
+              if (r && modal) modal.fechar();
+            }
+          }, 'Salvar vínculo') : null,
           usar,
           usarSaque
         ].filter(Boolean)
@@ -4634,6 +4698,11 @@ function ouroEmPunhados(ouro) {
     const linhaDeItem = (item, indice) => {
       const doLivro = item.id ? catalogo.acharItem(item.id) : null;
       const nome = item.nome || '';
+      let rotuloVinculo = '';
+      if (item.vinculo) {
+        const armaVinculada = catalogo.acharArma(item.vinculo);
+        rotuloVinculo = armaVinculada ? armaVinculada.nome : item.vinculo;
+      }
 
       const rotulo = doLivro
         ? el('button', {
@@ -4655,6 +4724,8 @@ function ouroEmPunhados(ouro) {
       return el('li', { class: `ficha__item ${item.emUso ? 'esta-em-uso' : ''}` }, [
         el('div', { class: 'ficha__itemTexto' }, [
           rotulo,
+          item.vinculo ? el('span', { class:'ficha__itemNota',
+            texto:`Vínculo: ${rotuloVinculo}` }) : null,
           item.nota ? el('span', { class: 'ficha__itemNota', texto: item.nota }) : null
         ]),
         /*
@@ -4745,11 +4816,19 @@ function ouroEmPunhados(ouro) {
 
   function abaHistoria(pai, ficha) {
     const exp = ficha.experiencias || [];
+    const reliquiaExp = ((ficha || {}).inventario || []).find((item) =>
+      item && item.emUso && item.id === 'loot-47' && item.vinculo);
+    const bonusReliquiaNaExp = (e) =>
+      reliquiaExp && dados.chave(reliquiaExp.vinculo) === dados.chave((e || {}).nome) ? 1 : 0;
     pai.append(secao('Experiências',
       exp.length
         ? el('div', { class: 'pilha' }, exp.map((e) => el('div', { class: 'ficha__exp' }, [
           el('strong', { texto: e.nome || '' }),
-          el('span', { class: 'selo selo--nivel', texto: `+${e.bonus === undefined ? 2 : e.bonus}` })
+          el('span', {
+            class: 'selo selo--nivel',
+            texto: `+${(e.bonus === undefined ? 2 : e.bonus) + bonusReliquiaNaExp(e)}`,
+            title: bonusReliquiaNaExp(e) ? 'Inclui +1 da Relíquia de Afiação' : ''
+          })
         ])))
         : el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma Experiência anotada.' })));
 
