@@ -31,9 +31,9 @@ function registrar(viewport, tela, dados) {
   if (dados.erros.length) falhou = true;
 }
 
-async function auditar(page, viewport, tela, { exigirEtapa = false } = {}) {
+async function auditar(page, viewport, tela, { etapaEsperada = null, tituloEsperado = null } = {}) {
   await page.waitForTimeout(100);
-  const dados = await page.evaluate(({ exigirEtapa }) => {
+  const dados = await page.evaluate(({ etapaEsperada, tituloEsperado }) => {
     const html = document.documentElement;
     const body = document.body;
     const largura = html.clientWidth;
@@ -109,14 +109,23 @@ async function auditar(page, viewport, tela, { exigirEtapa = false } = {}) {
       }).join(' | ')}`);
     }
 
-    if (exigirEtapa) {
+    if (tituloEsperado) {
+      const titulo = document.querySelector('.criacao__titulo');
+      if (!visivel(titulo) || titulo.textContent.trim() !== tituloEsperado) {
+        erros.push(`título inesperado: ${(titulo?.textContent || '(ausente)').trim()}`);
+      }
+    }
+
+    if (etapaEsperada !== null) {
       const etiqueta = document.querySelector('.criacao__etiqueta');
       if (!visivel(etiqueta)) {
         erros.push('etiqueta da etapa não está visível');
       } else {
         const base = etiqueta.textContent.trim();
         const depois = getComputedStyle(etiqueta, '::after').content.replace(/^['"]|['"]$/g, '');
-        if (!/^Etapa\s+1$/i.test(base)) erros.push(`etiqueta inesperada: ${base || '(vazia)'}`);
+        if (base.toLowerCase() !== `etapa ${etapaEsperada}`.toLowerCase()) {
+          erros.push(`etiqueta inesperada: ${base || '(vazia)'}`);
+        }
         if (!/de\s+9/i.test(depois)) erros.push('progresso textual não mostra "de 9"');
       }
 
@@ -130,7 +139,7 @@ async function auditar(page, viewport, tela, { exigirEtapa = false } = {}) {
       larguraDocumento: Math.max(html.scrollWidth, body ? body.scrollWidth : 0),
       larguraViewport: largura
     };
-  }, { exigirEtapa });
+  }, { etapaEsperada, tituloEsperado });
 
   const arquivo = `${PASTA}/${viewport.nome}-${tela}.png`;
   await page.screenshot({ path: arquivo, fullPage: true });
@@ -153,6 +162,42 @@ async function abrirCriacao(page, viewport) {
   await page.waitForSelector('.criacao__corpo .campo__entrada', { timeout: 15000 });
 }
 
+async function irDaEtapa1ARevisaoRapida(page, viewport) {
+  // Volta ao início mantendo o nome, troca para o caminho rápido e percorre
+  // as mesmas escolhas que o E2E usa. Nenhum estado interno é forjado.
+  await page.locator('.criacao__rodape').getByRole('button', { name: 'Voltar' }).click();
+  await page.getByRole('button', { name: /Criação rápida/ }).click();
+  await page.locator('.criacao__rodape .btn--principal').click();
+
+  await page.waitForSelector('.lista-escolha__botao');
+  await page.locator('.lista-escolha__botao').first().click();
+  await page.waitForSelector('.lista-escolha__botao');
+  await page.locator('.lista-escolha__botao').first().click();
+
+  await page.waitForSelector('.grade-opcoes__item');
+  await page.locator('.grade-opcoes__item .btn').first().click();
+  await page.locator('.criacao__secao', { hasText: 'Comunidade' }).waitFor();
+  await page.locator('.grade-opcoes').last().locator('.btn').first().click();
+  await page.locator('.criacao__rodape .btn--principal').click();
+
+  await page.waitForSelector('.lista-escolha--compacta .btn--pequeno');
+  await auditar(page, viewport, 'criacao-cartas', {
+    etapaEsperada: 8,
+    tituloEsperado: 'Escolha suas cartas de domínio'
+  });
+
+  await page.locator('.lista-escolha--compacta .btn--pequeno').nth(0).click();
+  await page.locator('.lista-escolha--compacta .btn--pequeno:not([disabled])').nth(1).click();
+  await page.locator('.criacao__rodape .btn--principal').click();
+
+  await page.fill('.criacao__corpo .campo__entrada >> nth=0', 'Contadora de histórias');
+  await page.fill('.criacao__corpo .campo__entrada >> nth=1', 'Ouvido para segredos');
+  await page.locator('.criacao__rodape .btn--principal').click();
+
+  await page.waitForSelector('.painel-derivados');
+  await auditar(page, viewport, 'criacao-revisao', { tituloEsperado: 'Revisão' });
+}
+
 async function executar(viewport) {
   const contexto = await navegador.newContext({
     viewport: { width: viewport.width, height: viewport.height },
@@ -168,14 +213,19 @@ async function executar(viewport) {
 
   try {
     await abrirCriacao(page, viewport);
-    await auditar(page, viewport, 'criacao-inicio');
+    await auditar(page, viewport, 'criacao-inicio', { tituloEsperado: 'Novo personagem' });
 
     await page.fill('.criacao__corpo .campo__entrada >> nth=0', 'Lyra Teste');
     await page.getByRole('button', { name: /Criação guiada/ }).click();
     await page.locator('.criacao__rodape .btn--principal').click();
     await page.waitForSelector('.criacao__etiqueta');
     await page.waitForSelector('.lista-escolha__item');
-    await auditar(page, viewport, 'criacao-etapa-1', { exigirEtapa: true });
+    await auditar(page, viewport, 'criacao-etapa-1', {
+      etapaEsperada: 1,
+      tituloEsperado: 'Escolha sua classe'
+    });
+
+    await irDaEtapa1ARevisaoRapida(page, viewport);
   } finally {
     await contexto.close();
   }
