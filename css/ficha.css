@@ -1094,6 +1094,10 @@
 }
 
 .ficha__itemNome {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0;
   border: 0;
   background: none;
@@ -1172,8 +1176,8 @@
 .ficha__itemBotao {
   display: grid;
   place-items: center;
-  width: 32px;
-  min-width: 32px;
+  width: 44px;
+  min-width: 44px;
   height: 44px;
   padding: 0;
   border: 0;

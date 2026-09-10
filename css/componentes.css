@@ -69,7 +69,7 @@
  * ordem de carga — ou seja, era ELA que valia no app inteiro. Trazer os
  * números para cá não mudou um pixel; só acabou com as duas versões.
  */
-.btn--pequeno { min-height: 40px; padding: 8px 14px; font-size: 14px; }
+.btn--pequeno { min-height: 44px; padding: 8px 14px; font-size: 14px; }
 
 .btn--contador {
   min-height: 44px;

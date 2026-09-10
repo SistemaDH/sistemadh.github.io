@@ -369,8 +369,9 @@
   /* Texto corrido, não flex: assim o nome, a glosa e o ícone quebram de linha
      como uma frase quebra. Com flex, cada pedaço ia parar numa linha só dele
      em coluna estreita ("Highborne" / "(Aristocrática)" / "🂠"). */
-  display: inline;
+  display: inline-block;
   max-width: 100%;
+  min-height: 44px;
   padding: 4px 2px;
   border: 0;
   background: none;

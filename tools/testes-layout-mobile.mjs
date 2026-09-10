@@ -52,7 +52,8 @@ async function auditar(page, viewport, tela) {
     };
 
     const interativos = [...document.querySelectorAll('button, a[href], input, select, textarea, [role="button"], [role="tab"]')]
-      .filter(visivel);
+      .filter(visivel)
+      .filter((el) => !el.matches(':disabled, [aria-disabled="true"]'));
 
     const fora = interativos.filter((el) => {
       const r = el.getBoundingClientRect();
@@ -68,7 +69,7 @@ async function auditar(page, viewport, tela) {
      * abertura e Salvar anotações); daqui em diante o CI protege esse piso.
      */
     const essenciais = interativos.filter((el) =>
-      el.matches('.btn--principal, .ficha__aba, .mestre__aba, .alternador__opcao, .acao-flutuante')
+      el.matches('.btn--principal, .btn--pequeno, .ficha__aba, .mestre__aba, .alternador__opcao, .acao-flutuante, .link-botao, .nome-carta, .ficha__itemNome, .ficha__itemBotao')
     );
     const pequenosEssenciais = essenciais.filter((el) => {
       const r = el.getBoundingClientRect();
@@ -78,11 +79,49 @@ async function auditar(page, viewport, tela) {
       erros.push(`ações essenciais abaixo de 44px: ${pequenosEssenciais.map((e) => (e.getAttribute('aria-label') || e.textContent || e.className).trim().slice(0, 32)).join(' | ')}`);
     }
 
-    const pequenos = interativos.filter((el) => {
+    const ehTextoInline = (el) => el.matches('.verbete__gatilho');
+    const tamanhoPseudoDepois = (el) => {
+      const ps = getComputedStyle(el, '::after');
+      if (!ps || !ps.content || ps.content === 'none' || ps.display === 'none') return null;
+      const width = parseFloat(ps.width);
+      const height = parseFloat(ps.height);
+      return Number.isFinite(width) && Number.isFinite(height) ? { width, height } : null;
+    };
+    const temAlvo = (el, minimo) => {
       const r = el.getBoundingClientRect();
-      return (r.width < 43.5 || r.height < 43.5) && !el.matches('input[type="checkbox"], input[type="radio"], input[type="range"]');
-    });
-    if (pequenos.length) avisos.push(`${pequenos.length} controles visíveis têm dimensão desenhada abaixo de 44px`);
+      if (r.width >= minimo - .5 && r.height >= minimo - .5) return true;
+      const ps = tamanhoPseudoDepois(el);
+      return !!ps && ps.width >= minimo - .5 && ps.height >= minimo - .5;
+    };
+
+    /*
+     * L9-B4: 44px continua obrigatório nas ações independentes acima. Para
+     * controles densos/repetidos, 24px é o piso duro. Termos de glossário são
+     * texto inline dentro de frases; inflá-los quebraria a leitura e eles ficam
+     * fora da regra geométrica. Um ::after real pode fornecer a hitbox sem
+     * obrigar o desenho a crescer (subtítulos e selo de nível usam isso).
+     */
+    const alvosAbaixoDoMinimo = interativos.filter((el) =>
+      !ehTextoInline(el)
+      && !el.matches('input[type="checkbox"], input[type="radio"], input[type="range"]')
+      && !temAlvo(el, 24)
+    );
+    if (alvosAbaixoDoMinimo.length) {
+      const detalhes = alvosAbaixoDoMinimo.slice(0, 12).map((el) => {
+        const r = el.getBoundingClientRect();
+        const nome = (el.getAttribute('aria-label') || el.textContent || el.className || el.tagName).trim().replace(/\s+/g, ' ').slice(0, 40);
+        return `${r.width.toFixed(1)}x${r.height.toFixed(1)}:${nome}`;
+      });
+      erros.push(`alvos ativos abaixo de 24px: ${detalhes.join(' | ')}`);
+    }
+
+    const compactosValidos = interativos.filter((el) =>
+      !ehTextoInline(el)
+      && !el.matches('input[type="checkbox"], input[type="radio"], input[type="range"]')
+      && temAlvo(el, 24)
+      && !temAlvo(el, 44)
+    );
+    if (compactosValidos.length) avisos.push(`${compactosValidos.length} controles compactos válidos entre 24px e 43px`);
 
     /* L9-B1: feedback transitório não pode virar pilha nem cobrir navegação fixa. */
     const transitórios = [...document.querySelectorAll('.aviso--sucesso, .aviso--info')].filter(visivel);

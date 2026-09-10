@@ -658,8 +658,8 @@
   .papel__escudo { width: 54px; height: 58px; }
   .papel__trilha { grid-template-columns: 3.2em 1fr; }
   .papel__escudo { width: 52px; height: 58px; }
-  .papel__armaduraSlots { grid-template-columns: repeat(4, 22px); }
-  .papel__slot { width: 22px; height: 22px; }
+  .papel__armaduraSlots { grid-template-columns: repeat(4, 24px); }
+  .papel__slot { width: 24px; height: 24px; }
 }
 
 /* ==========================================================================
