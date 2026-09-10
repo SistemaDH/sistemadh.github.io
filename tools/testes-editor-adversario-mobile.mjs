@@ -52,7 +52,9 @@ async function abrirEditor(page) {
 }
 
 async function auditar(page, viewport, estado, { receitaAberta, alterado, rolado = false }) {
-  await page.waitForTimeout(100);
+  /* O bottom sheet entra com animação de 240ms. Medir antes do fim gera um
+     falso positivo de viewport porque a caixa ainda está em translateY. */
+  await page.waitForTimeout(320);
   const erros = await page.evaluate(({ receitaAberta, alterado, rolado }) => {
     const erros = [];
     const largura = document.documentElement.clientWidth;
