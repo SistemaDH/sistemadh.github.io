@@ -13,6 +13,7 @@ if needle not in s and "elif pt in PT_ALARMANTE:" not in s:
 s=s.replace(needle,repl,1)
 # Quatro cadeiras de rodas também já possuem nomeIngles=Quick; só a Foice de mão cai no fallback PT.
 s=s.replace("'Invigorating': 1, 'Lifestealing': 1, 'Quick': 6, 'QuickCampaign': 5\n", "'Invigorating': 1, 'Lifestealing': 1, 'Quick': 10, 'QuickCampaign': 1, 'StartlingCampaign': 1\n")
+s=s.replace("['Rápido','Veloz'].includes(c.nome)", "['Alarmante','Rápido','Veloz'].includes(c.nome)")
 s=s.replace("igual(alvos.length,19,'4 Alarmante + Persuasão + Repelente + Revigorante + Sorvedouras + 6 Quick + 5 molduras');", "igual(alvos.length,20,'5 Alarmante + Persuasão + Repelente + Revigorante + Sorvedouras + 10 Quick + 1 Veloz sem nome inglês');")
 s=s.replace("'blade-redemoinho','bone-deft-deceiver'", "'blade-redemoinho','bone-intocavel'")
 p.write_text(s,encoding='utf-8')
