@@ -1,95 +1,66 @@
-name: Lote 8 - Encerramento formal Core 1.0
+name: Core1 closure
 
 on:
   push:
     branches:
       - tmp-lote8-encerramento-core1-sol
 
-permissions:
-  contents: write
-
-concurrency:
-  group: lote8-encerramento-core1-sol
-  cancel-in-progress: false
-
-env:
-  BASE_SHA: 6abcc25127e49c7bdb5c1ad7bacf8bd04d97658b
-
 jobs:
-  close:
+  close-core:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Registrar encerramento
+      - name: Update HANDOFF
+        shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('docs/HANDOFF.md')
-          s=p.read_text(encoding='utf-8')
-          old='## Lote 8 — em andamento: fechamento integral do Core 1.0'
-          new='## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente'
-          if s.count(old) != 1:
-              raise SystemExit(f'Título de Lote 8 inesperado: {s.count(old)} ocorrências')
-          s=s.replace(old,new,1)
-          fechamento='''
+          python3 -c "from pathlib import Path; p=Path('docs/HANDOFF.md'); s=p.read_text(encoding='utf-8'); old='## Lote 8 — em andamento: fechamento integral do Core 1.0'; assert s.count(old)==1; p.write_text(s.replace(old,'## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente',1),encoding='utf-8')"
+          cat >> docs/HANDOFF.md <<'EOF'
 
-### Encerramento formal do Lote 8 — Core 1.0
+          ### Encerramento formal do Lote 8 — Core 1.0
 
-**Status: CONCLUÍDO em 10/09/2026.**
+          **Status: CONCLUÍDO em 10/09/2026.**
 
-Critério adotado: livro básico PT-BR + errata oficial de 09/09/2025, mantendo o princípio “só ficha, sem dados”. Toda consequência determinística identificada pela auditoria foi estruturada/automatizada; resultados aleatórios continuam sendo rolados fisicamente e informados ao app.
+          Critério adotado: livro básico PT-BR + errata oficial de 09/09/2025, mantendo o princípio “só ficha, sem dados”. Toda consequência determinística identificada pela auditoria foi estruturada/automatizada; resultados aleatórios continuam sendo rolados fisicamente e informados ao app.
 
-Gate final após o E19:
+          Gate final após o E19:
 
-- auditoria global: **0 candidatas** em classes/subclasses, comunidades, cartas de domínio, equipamento e loot/consumíveis;
-- testes backend: **941 passaram, 0 falhas**;
-- testes E2E: **passaram integralmente**;
-- conferência de arquivos gerados: **OK**;
-- conferência CSS: **OK**;
-- trava de concorrência: `ediçãoclaude` permaneceu no SHA-base esperado durante o gate;
-- commit funcional de fechamento mecânico: `6abcc25127e49c7bdb5c1ad7bacf8bd04d97658b` (`feat: fechar candidatos mecanicos de loot E19`).
+          - auditoria global: **0 candidatas** em classes/subclasses, comunidades, cartas de domínio, equipamento e loot/consumíveis;
+          - testes backend: **941 passaram, 0 falhas**;
+          - testes E2E: **passaram integralmente**;
+          - conferência de arquivos gerados: **OK**;
+          - conferência CSS: **OK**;
+          - trava de concorrência: `ediçãoclaude` permaneceu no SHA-base esperado durante o gate;
+          - commit funcional de fechamento mecânico: `6abcc25127e49c7bdb5c1ad7bacf8bd04d97658b` (`feat: fechar candidatos mecanicos de loot E19`).
 
-A auditoria final permanece em `docs/AUDITORIA-FINAL-LOTE8.md`. Linhas históricas deste HANDOFF que contêm “próximo”, “pendente” ou “aberto” são diário de etapas anteriores e **não reabrem** o Lote 8; a fonte de verdade para pendências mecânicas do Core é a auditoria final zerada.
+          A auditoria final permanece em `docs/AUDITORIA-FINAL-LOTE8.md`. Linhas históricas deste HANDOFF que contêm “próximo”, “pendente” ou “aberto” são diário de etapas anteriores e **não reabrem** o Lote 8; a fonte de verdade para pendências mecânicas do Core é a auditoria final zerada.
 
-**SRD 2.0 não faz parte deste fechamento.** Qualquer adoção, comparação ou migração para SRD 2.0 deve começar como uma nova fase, com inventário explícito das divergências em relação ao Core 1.0 congelado neste ponto.
-'''
-          if '### Encerramento formal do Lote 8 — Core 1.0' in s:
-              raise SystemExit('Fechamento formal já registrado')
-          p.write_text(s.rstrip()+fechamento+'\n',encoding='utf-8')
-          PY
-          python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria.md
-          python3 - <<'PY'
-          import re
-          from pathlib import Path
-          t=Path('/tmp/auditoria.md').read_text(encoding='utf-8')
-          checks=[
-            r'Classes/subclasses: \*\*99 características\*\*; \*\*0\*\* candidatas',
-            r'Comunidades: \*\*9 características\*\*; \*\*0\*\* candidatas',
-            r'Cartas de domínio: \*\*189 cartas\*\*; \*\*0\*\* candidatas',
-            r'Características de armas/armaduras/molduras: \*\*203 ocorrências\*\*; \*\*0\*\* ocorrências candidatas',
-            r'Loot/consumíveis com texto mecânico detectado: \*\*81\*\*; \*\*0\*\* candidatos',
-          ]
-          for c in checks:
-              assert re.search(c,t),c
-          h=Path('docs/HANDOFF.md').read_text(encoding='utf-8')
-          assert '## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente' in h
-          assert '941 passaram, 0 falhas' in h
-          assert 'SRD 2.0 não faz parte deste fechamento' in h
-          print('Encerramento documental validado; auditoria segue zerada.')
-          PY
+          **SRD 2.0 não faz parte deste fechamento.** Qualquer adoção, comparação ou migração para SRD 2.0 deve começar como uma nova fase, com inventário explícito das divergências em relação ao Core 1.0 congelado neste ponto.
+          EOF
+          python3 tools/auditar-pendencias-lote8.py > /tmp/audit.md
+          grep -F 'Classes/subclasses: **99 características**; **0** candidatas' /tmp/audit.md
+          grep -F 'Comunidades: **9 características**; **0** candidatas' /tmp/audit.md
+          grep -F 'Cartas de domínio: **189 cartas**; **0** candidatas' /tmp/audit.md
+          grep -F 'Características de armas/armaduras/molduras: **203 ocorrências**; **0** ocorrências candidatas' /tmp/audit.md
+          grep -F 'Loot/consumíveis com texto mecânico detectado: **81**; **0** candidatos' /tmp/audit.md
+          grep -F '## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente' docs/HANDOFF.md
+          grep -F '941 passaram, 0 falhas' docs/HANDOFF.md
           git diff --check
 
-      - name: Trava de concorrencia
+      - name: Guard base
+        shell: bash
         run: |
           set -euo pipefail
           git fetch origin 'refs/heads/ediçãoclaude:refs/remotes/origin/ediçãoclaude'
-          test "$(git rev-parse origin/ediçãoclaude)" = "$BASE_SHA"
+          test "$(git rev-parse origin/ediçãoclaude)" = '6abcc25127e49c7bdb5c1ad7bacf8bd04d97658b'
 
-      - name: Commit documental limpo
+      - name: Commit docs only
+        shell: bash
         run: |
           set -euo pipefail
           rm .github/workflows/lote8-encerramento-core1.yml
