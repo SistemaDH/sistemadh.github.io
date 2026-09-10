@@ -1,0 +1,117 @@
+name: Lote 8 - Contexto e Usos E15
+
+on:
+  push:
+    branches:
+      - tmp-lote8-contexto-e-usos-e15-sol
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lote8-contexto-e-usos-e15-sol
+  cancel-in-progress: false
+
+env:
+  BASE_SHA: 2670c268f5cd7a763e1f10f2414336cb35f03981
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materializar E15 e regenerar
+        run: |
+          set -euo pipefail
+          python3 tools/lote8-contexto-e-usos-e15.py
+          node tools/gerar-44-equipamento.mjs
+          node tools/gerar-47-contadores.mjs
+          python3 tools/auditar-pendencias-lote8.py > docs/AUDITORIA-FINAL-LOTE8.md
+          git diff --check
+          node --check js/telas/ficha.js
+
+      - name: Validar contratos e auditoria E15
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          eq=json.load(open('data/equipamentos.json',encoding='utf-8'))
+          xs={x['id']:x for x in eq.get('loot',[])}
+          for ident in ['loot-17','loot-31','loot-35','loot-36','loot-60']:
+              assert xs[ident]['automacao']['rolaNoApp'] is False,ident
+          assert xs['loot-17']['efeitoSaque']['contadorUso']=='uso:loot:loot-17'
+          assert xs['loot-17']['efeitoSaque']['contadorEstado']=='estado:loot:loot-17'
+          assert len(xs['loot-31']['efeitoSaquePassivo']['contextuais'])==2
+          assert xs['loot-35']['efeitoSaque']['exigeEmUso'] is True
+          assert xs['loot-35']['efeitoSaque']['contadorUso']=='uso:loot:loot-35'
+          assert xs['loot-36']['efeitoSaquePassivo']['contextual']['tempoParaFicarProntoHoras']==24
+          assert xs['loot-60']['efeitoSaque']['custoEsperanca']==5
+          co=json.load(open('data/contadores.json',encoding='utf-8'))
+          cs={x['chave']:x for x in co.get('contadores',[])}
+          assert len(cs)==184,len(cs)
+          assert cs['uso:loot:loot-17']['maximo']['valor']==1
+          assert cs['estado:loot:loot-17']['zeraEm']==['manual']
+          assert cs['uso:loot:loot-35']['maximo']['valor']==3
+          assert 'descanso' in cs['uso:loot:loot-35']['zeraEm']
+          assert cs['uso:loot:loot-60']['maximo']['valor']==1
+          assert 'fim-de-sessao' in cs['uso:loot:loot-60']['zeraEm']
+          b44=Path('backend/44_Equipamento.gs').read_text(encoding='utf-8')
+          assert 'tempoParaFicarProntoHoras' in b44 and 'exigeEmUso' in b44
+          b47=Path('backend/47_Contadores.gs').read_text(encoding='utf-8')
+          for chave in ['uso:loot:loot-17','estado:loot:loot-17','uso:loot:loot-35','uso:loot:loot-60']:
+              assert chave in b47,chave
+          b4c=Path('backend/4C_Ajustes.gs').read_text(encoding='utf-8')
+          assert 'efeito.exigeEmUso === true' in b4c
+          audit=Path('docs/AUDITORIA-FINAL-LOTE8.md').read_text(encoding='utf-8')
+          for ident in ['loot-17','loot-31','loot-35','loot-36','loot-60']:
+              assert f"| loot | {xs[ident]['nome']} | candidato mecânico |" not in audit,ident
+          m=re.search(r'Loot/consumíveis com texto mecânico detectado: \*\*(\d+)\*\*; \*\*(\d+)\*\* candidatos',audit)
+          assert m and int(m.group(2))==17,(m.group(0) if m else 'sem resumo')
+          print('E15 contratos OK; candidatos restantes:',m.group(2))
+          PY
+
+      - name: Testes backend completos
+        run: node tools/testes-backend.mjs
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Testes E2E completos
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados e CSS
+        run: |
+          set -euo pipefail
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+          git diff --check
+
+      - name: Trava de concorrência
+        run: |
+          set -euo pipefail
+          git fetch origin 'refs/heads/ediçãoclaude:refs/remotes/origin/ediçãoclaude'
+          ATUAL="$(git rev-parse 'origin/ediçãoclaude')"
+          echo "ediçãoclaude atual: $ATUAL"
+          echo "base esperada:      $BASE_SHA"
+          test "$ATUAL" = "$BASE_SHA"
+
+      - name: Criar commit funcional e limpar temporários
+        run: |
+          set -euo pipefail
+          rm tools/lote8-contexto-e-usos-e15.py
+          rm .github/workflows/lote8-contexto-e-usos-e15.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git diff --cached --quiet && { echo 'Nenhuma alteração funcional para commitar.'; exit 1; }
+          git commit -m 'feat: integrar contexto e usos de loot E15'
+          git push origin HEAD
