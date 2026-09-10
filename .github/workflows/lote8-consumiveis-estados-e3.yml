@@ -1,0 +1,111 @@
+name: Lote 8 - Consumiveis Estados E3
+
+on:
+  push:
+    branches: [tmp-lote8-consumiveis-estados-e3-sol]
+
+permissions:
+  contents: write
+
+env:
+  BASE_SHA: 90a6e43ae01bd33ad144a0191d468bf0bbb9767f
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materializar consumiveis E3
+        run: |
+          python3 tools/lote8-consumiveis-estados-e3.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tools/testes-backend.mjs')
+          s=p.read_text(encoding='utf-8')
+          trocas={
+            "const item=itens.find((x)=>String(x.nomeIngles||'').toLowerCase()===nome.toLowerCase());":"const item=contexto.acharItem_(nome);",
+            "const item=avaliar('ITENS').find((x)=>x.nomeIngles==='Moon Drip');":"const item=contexto.acharItem_('Moon Drip');",
+            "const item=avaliar('ITENS').find((x)=>['Shifting Mould','Shifting Mold'].includes(x.nomeIngles));":"const item=contexto.acharItem_('Shifting Mould');",
+            "const item=avaliar('ITENS').find((x)=>x.nomeIngles==='Ogre Musk');":"const item=contexto.acharItem_('Ogre Musk');",
+          }
+          for a,b in trocas.items():
+              if a not in s: raise SystemExit('lookup E3 ausente: '+a)
+              s=s.replace(a,b,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+          node tools/gerar-44-equipamento.mjs
+          node tools/gerar-47-contadores.mjs
+          node tools/gerar-48-criacao.mjs
+          node tools/gerar-41-dominios.mjs
+          node tools/gerar-4B-descanso.mjs
+          python3 -c "from pathlib import Path; p=Path('docs/HANDOFF.md'); p.write_text(p.read_text(encoding='utf-8').rstrip()+'\n',encoding='utf-8')"
+          git diff --check
+          node --check js/telas/ficha.js
+
+      - name: Conferir catalogo e auditoria E3
+        run: |
+          python3 - <<'PY'
+          import json, subprocess
+          eq=json.load(open('data/equipamentos.json',encoding='utf-8'))
+          nomes={'moon drip','shifting mould','shifting mold','ogre musk'}
+          xs=[]
+          for x in eq.get('consumiveis',[]):
+              n=str(x.get('nomeIngles','')).lower()
+              if n in nomes: xs.append(x)
+          assert len(xs)==3,[(x.get('id'),x.get('nomeIngles')) for x in xs]
+          for x in xs:
+              assert x.get('automacao',{}).get('rolaNoApp') is False,x['id']
+              ef=x.get('efeitoConsumivel') or {}
+              assert ef.get('tipo')=='ativar-estado',x['id']
+              assert ef.get('duracao')=='descanso',x['id']
+          co=json.load(open('data/contadores.json',encoding='utf-8'))
+          ids={x['id'] for x in xs}
+          cs=[x for x in co.get('contadores',[]) if x.get('refId') in ids and x.get('origem')=='consumivel']
+          assert len(cs)==3,len(cs)
+          assert all(x.get('persisteSemRef') is True and x.get('zeraEm')==['descanso'] for x in cs)
+          out=subprocess.check_output(['python3','tools/auditar-pendencias-lote8.py'],text=True)
+          print(out)
+          assert 'Loot/consumíveis com texto mecânico detectado: **81**; **60** candidatos ainda sem estrutura/classificação.' in out
+          assert 'estruturado/classificado: **20**' in out
+          print('E3 OK: 3 estados até descanso estruturados; 60 candidatos seguem abertos.')
+          PY
+
+      - name: Testes backend
+        run: node tools/testes-backend.mjs
+
+      - name: Instalar Playwright
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Testes E2E
+        run: node tools/testes-e2e.mjs
+
+      - name: Conferir gerados e CSS
+        run: |
+          node tools/conferir-gerados.mjs
+          node tools/conferir-css.mjs
+          git diff --check
+
+      - name: Proteger contra concorrencia
+        run: |
+          git fetch origin 'refs/heads/ediçãoclaude:refs/remotes/origin/ediçãoclaude'
+          ATUAL="$(git rev-parse 'origin/ediçãoclaude')"
+          echo "ediçãoclaude atual: $ATUAL"
+          echo "base esperada:       $BASE_SHA"
+          test "$ATUAL" = "$BASE_SHA"
+
+      - name: Commitar funcional e limpar temporarios
+        run: |
+          rm tools/lote8-consumiveis-estados-e3.py
+          rm .github/workflows/lote8-consumiveis-estados-e3.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git diff --cached --quiet && { echo 'Nenhuma mudança funcional para commit.'; exit 1; } || true
+          git commit -m 'feat: integrar estados de consumiveis'
+          git push origin HEAD:tmp-lote8-consumiveis-estados-e3-sol
