@@ -849,7 +849,29 @@
     "nome": "Recarga",
     "texto": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar um estresse para recarregar antes de atirar novamente.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "dado-manual-assistido",
+     "motivo": "Depois de qualquer ataque, o d6 é rolado fisicamente. Apenas no resultado 1 o app cobra 1 Estresse para recarregar antes do próximo disparo."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "rotulo": "Resolver Recarga após ataque",
+      "momento": "apos-ataque",
+      "entradaManual": {
+       "campo": "dadoRecarga",
+       "dado": "d6",
+       "minimo": 1,
+       "maximo": 6,
+       "mensagem": "Depois do ataque, role 1d6 fora do app e informe o resultado de Recarga."
+      },
+      "resultado": {
+       "igual": 1,
+       "custoEstresse": 1,
+       "efeitoManual": "No resultado 1, a arma precisa ser recarregada antes de poder atirar novamente."
+      }
+     }
+    }
    },
    "aliases": [
     "Cassetete"
@@ -1463,7 +1485,29 @@
     "nome": "Recarga",
     "texto": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar um estresse para recarregar antes de atirar novamente.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "dado-manual-assistido",
+     "motivo": "Depois de qualquer ataque, o d6 é rolado fisicamente. Apenas no resultado 1 o app cobra 1 Estresse para recarregar antes do próximo disparo."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "rotulo": "Resolver Recarga após ataque",
+      "momento": "apos-ataque",
+      "entradaManual": {
+       "campo": "dadoRecarga",
+       "dado": "d6",
+       "minimo": 1,
+       "maximo": 6,
+       "mensagem": "Depois do ataque, role 1d6 fora do app e informe o resultado de Recarga."
+      },
+      "resultado": {
+       "igual": 1,
+       "custoEstresse": 1,
+       "efeitoManual": "No resultado 1, a arma precisa ser recarregada antes de poder atirar novamente."
+      }
+     }
+    }
    },
    "danoSRD": "d6+8 phy"
   },
@@ -2070,7 +2114,29 @@
     "nome": "Recarga",
     "texto": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar um estresse para recarregar antes de atirar novamente.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "dado-manual-assistido",
+     "motivo": "Depois de qualquer ataque, o d6 é rolado fisicamente. Apenas no resultado 1 o app cobra 1 Estresse para recarregar antes do próximo disparo."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "rotulo": "Resolver Recarga após ataque",
+      "momento": "apos-ataque",
+      "entradaManual": {
+       "campo": "dadoRecarga",
+       "dado": "d6",
+       "minimo": 1,
+       "maximo": 6,
+       "mensagem": "Depois do ataque, role 1d6 fora do app e informe o resultado de Recarga."
+      },
+      "resultado": {
+       "igual": 1,
+       "custoEstresse": 1,
+       "efeitoManual": "No resultado 1, a arma precisa ser recarregada antes de poder atirar novamente."
+      }
+     }
+    }
    },
    "danoSRD": "d6+12 phy"
   },
@@ -3155,7 +3221,29 @@
     "nome": "Recarga",
     "texto": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar um estresse para recarregar antes de atirar novamente.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "dado-manual-assistido",
+     "motivo": "Depois de qualquer ataque, o d6 é rolado fisicamente. Apenas no resultado 1 o app cobra 1 Estresse para recarregar antes do próximo disparo."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "rotulo": "Resolver Recarga após ataque",
+      "momento": "apos-ataque",
+      "entradaManual": {
+       "campo": "dadoRecarga",
+       "dado": "d6",
+       "minimo": 1,
+       "maximo": 6,
+       "mensagem": "Depois do ataque, role 1d6 fora do app e informe o resultado de Recarga."
+      },
+      "resultado": {
+       "igual": 1,
+       "custoEstresse": 1,
+       "efeitoManual": "No resultado 1, a arma precisa ser recarregada antes de poder atirar novamente."
+      }
+     }
+    }
    },
    "danoSRD": "d6+6 mag"
   },
@@ -3580,7 +3668,29 @@
     "nome": "Recarga",
     "texto": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar um estresse para recarregar antes de atirar novamente.",
     "fonteTraducao": "livro",
-    "confianca": "alta"
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "dado-manual-assistido",
+     "motivo": "Depois de qualquer ataque, o d6 é rolado fisicamente. Apenas no resultado 1 o app cobra 1 Estresse para recarregar antes do próximo disparo."
+    },
+    "efeitoEquipamento": {
+     "usoAtivo": {
+      "rotulo": "Resolver Recarga após ataque",
+      "momento": "apos-ataque",
+      "entradaManual": {
+       "campo": "dadoRecarga",
+       "dado": "d6",
+       "minimo": 1,
+       "maximo": 6,
+       "mensagem": "Depois do ataque, role 1d6 fora do app e informe o resultado de Recarga."
+      },
+      "resultado": {
+       "igual": 1,
+       "custoEstresse": 1,
+       "efeitoManual": "No resultado 1, a arma precisa ser recarregada antes de poder atirar novamente."
+      }
+     }
+    }
    },
    "danoSRD": "d6+13 mag"
   },
@@ -7694,7 +7804,22 @@
      "maos": "Uma mão",
      "caracteristica": {
       "nome": "Seis balas",
-      "texto": "Seis balas: coloque 6 Marcadores de Bala na sua ficha. Gaste 1 Marcador de Bala para fazer um ataque. Você pode marcar 1 Estresse para recuperar Marcadores gastos."
+      "texto": "Seis balas: coloque 6 Marcadores de Bala na sua ficha. Gaste 1 Marcador de Bala para fazer um ataque. Você pode marcar 1 Estresse para recuperar Marcadores gastos.",
+      "automacao": {
+       "classificacao": "estado-assistido",
+       "motivo": "O app guarda quantas das 6 balas foram gastas. Cada ataque consome 1; marcar 1 Estresse recupera todos os Marcadores de Bala gastos."
+      },
+      "efeitoEquipamento": {
+       "usoAtivo": {
+        "tipo": "municao",
+        "contador": "estado:equipamento:campanha-colosso-das-terras-aridas-revolver:balas-gastas",
+        "maximo": 6,
+        "rotulo": "Atacar · gastar 1 bala",
+        "rotuloRecarregar": "Recarregar · 1 Estresse",
+        "custoRecarregarEstresse": 1,
+        "efeitoManual": "A jogada de ataque e a rolagem de dano continuam sendo feitas na mesa."
+       }
+      }
      },
      "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 5",
      "danoLivro": "d6+1 fís",
@@ -7713,7 +7838,22 @@
      "maos": "Uma mão",
      "caracteristica": {
       "nome": "Seis balas",
-      "texto": "Seis balas: coloque 6 Marcadores de Bala na sua ficha. Gaste 1 Marcador de Bala para fazer um ataque. Você pode marcar 1 Estresse para recuperar Marcadores gastos."
+      "texto": "Seis balas: coloque 6 Marcadores de Bala na sua ficha. Gaste 1 Marcador de Bala para fazer um ataque. Você pode marcar 1 Estresse para recuperar Marcadores gastos.",
+      "automacao": {
+       "classificacao": "estado-assistido",
+       "motivo": "O app guarda quantas das 6 balas foram gastas. Cada ataque consome 1; marcar 1 Estresse recupera todos os Marcadores de Bala gastos."
+      },
+      "efeitoEquipamento": {
+       "usoAtivo": {
+        "tipo": "municao",
+        "contador": "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t2:balas-gastas",
+        "maximo": 6,
+        "rotulo": "Atacar · gastar 1 bala",
+        "rotuloRecarregar": "Recarregar · 1 Estresse",
+        "custoRecarregarEstresse": 1,
+        "efeitoManual": "A jogada de ataque e a rolagem de dano continuam sendo feitas na mesa."
+       }
+      }
      },
      "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 5",
      "danoLivro": "d6+4 fís",
@@ -7732,7 +7872,22 @@
      "maos": "Uma mão",
      "caracteristica": {
       "nome": "Seis balas",
-      "texto": "Seis balas: coloque 6 Marcadores de Bala na sua ficha. Gaste 1 Marcador de Bala para fazer um ataque. Você pode marcar 1 Estresse para recuperar Marcadores gastos."
+      "texto": "Seis balas: coloque 6 Marcadores de Bala na sua ficha. Gaste 1 Marcador de Bala para fazer um ataque. Você pode marcar 1 Estresse para recuperar Marcadores gastos.",
+      "automacao": {
+       "classificacao": "estado-assistido",
+       "motivo": "O app guarda quantas das 6 balas foram gastas. Cada ataque consome 1; marcar 1 Estresse recupera todos os Marcadores de Bala gastos."
+      },
+      "efeitoEquipamento": {
+       "usoAtivo": {
+        "tipo": "municao",
+        "contador": "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t3:balas-gastas",
+        "maximo": 6,
+        "rotulo": "Atacar · gastar 1 bala",
+        "rotuloRecarregar": "Recarregar · 1 Estresse",
+        "custoRecarregarEstresse": 1,
+        "efeitoManual": "A jogada de ataque e a rolagem de dano continuam sendo feitas na mesa."
+       }
+      }
      },
      "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 5",
      "danoLivro": "d6+7 fís",
@@ -7751,7 +7906,22 @@
      "maos": "Uma mão",
      "caracteristica": {
       "nome": "Seis balas",
-      "texto": "Seis balas: coloque 6 Marcadores de Bala na sua ficha. Gaste 1 Marcador de Bala para fazer um ataque. Você pode marcar 1 Estresse para recuperar Marcadores gastos."
+      "texto": "Seis balas: coloque 6 Marcadores de Bala na sua ficha. Gaste 1 Marcador de Bala para fazer um ataque. Você pode marcar 1 Estresse para recuperar Marcadores gastos.",
+      "automacao": {
+       "classificacao": "estado-assistido",
+       "motivo": "O app guarda quantas das 6 balas foram gastas. Cada ataque consome 1; marcar 1 Estresse recupera todos os Marcadores de Bala gastos."
+      },
+      "efeitoEquipamento": {
+       "usoAtivo": {
+        "tipo": "municao",
+        "contador": "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t4:balas-gastas",
+        "maximo": 6,
+        "rotulo": "Atacar · gastar 1 bala",
+        "rotuloRecarregar": "Recarregar · 1 Estresse",
+        "custoRecarregarEstresse": 1,
+        "efeitoManual": "A jogada de ataque e a rolagem de dano continuam sendo feitas na mesa."
+       }
+      }
      },
      "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 5",
      "danoLivro": "d6+10 fís",

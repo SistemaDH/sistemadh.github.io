@@ -3308,15 +3308,32 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     return ((((item || {}).caracteristica || {}).efeitoEquipamento || {}).usoAtivo) || null;
   }
 
-  function botoesDeUsoEquipamento_(item, modal) {
+  function botoesDeUsoEquipamento_(item, fecharModal, ficha) {
     const carac = (item || {}).caracteristica || {};
     const uso = usoAtivoDoEquipamento_(item);
     if (!uso) return [];
     const base = { tipo:'usoEquipamento', itemId:item.id, nome:carac.nome };
     const enviarUso = (extra) => {
-      modal.fechar();
+      if (typeof fecharModal === 'function') fecharModal();
       return enviar([Object.assign({}, base, extra || {})]);
     };
+
+    if (uso.tipo === 'municao') {
+      const maximo = Math.max(1, Number(uso.maximo) || 6);
+      const guardado = (((ficha || {}).contadores || {})[uso.contador] || {});
+      const gastos = Math.max(0, Math.min(maximo, Number(guardado.valor) || 0));
+      const disponiveis = Math.max(0, maximo - gastos);
+      return [
+        el('button', {
+          type:'button', class:'btn btn--principal', disabled:disponiveis <= 0,
+          onClick:()=>enviarUso({acao:'atacar'})
+        }, `${uso.rotulo || 'Atacar · gastar 1 bala'} · ${disponiveis}/${maximo}`),
+        el('button', {
+          type:'button', class:'btn btn--fantasma', disabled:gastos <= 0,
+          onClick:()=>enviarUso({acao:'recarregar'})
+        }, uso.rotuloRecarregar || 'Recarregar · 1 Estresse')
+      ];
+    }
 
     if (carac.nome === 'Sorvedouras') {
       return [
@@ -3340,7 +3357,9 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       : [linhaDeAtributo('Limiares', item.limiares),
          linhaDeAtributo('Armadura', item.pontuacaoArmadura)];
 
-    const modal = abrirModal({
+    let modal = null;
+    const fecharModal = () => { if (modal) modal.fechar(); };
+    modal = abrirModal({
       titulo: item.nome,
       conteudo: el('div', { class: 'pilha' }, [
         el('p', { class: 'texto-sm texto-fraco', texto: `${rotulo} · patamar ${item.tier}` }),
@@ -3350,7 +3369,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           el('p', { class: 'texto-sm' }, textoAnotado(carac.texto || ''))
         ]) : null
       ]),
-      acoes: [el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar() }, 'Fechar')]
+      acoes: [
+        el('button', { type: 'button', class: 'btn btn--fantasma', onClick: fecharModal }, 'Fechar'),
+        ...botoesDeUsoEquipamento_(item, fecharModal, p.ficha)
+      ]
     });
   }
 

@@ -714,3 +714,14 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - Custos continuam atravessando os interceptadores centrais de **Inabalável** e **Esperançoso**.
 
 **Próximo bloco natural:** **Recarga + Seis Balas**, que exigem estado persistente de munição/recarga; depois, demais características ofensivas condicionais.
+
+### Lote 8 — equipamento ofensivo D1: Recarga e Seis Balas
+
+- **Recarga / Reloading (5 ocorrências):** o ataque continua na mesa; depois dele o app pede o resultado do `d6` físico. Só no resultado `1` marca `1 Estresse`, passando normalmente por **Inabalável**.
+- **Seis balas (4 Revólveres de Colosso das Terras Áridas):** cada ataque gasta um dos 6 Marcadores de Bala. O estado salvo é `balas gastas` (`0/ausente = 6 disponíveis`, `6 = vazio`); `1 Estresse` recupera todos os marcadores gastos de uma vez.
+- Os quatro Revólveres receberam contadores próprios de equipamento. O catálogo passa de **146 para 150 contadores**, sendo **5 de equipamento**.
+- Armas na **reserva** continuam donas dos seus contadores, impedindo desequipar/equipar de apagar munição gasta.
+- O modal de equipamento voltou a ligar os botões de uso ativo do C1; o fechamento usa callback seguro e não referencia o próprio modal durante sua construção.
+- Nenhum dado é rolado pelo app: Recarga recebe o `d6` manual e Seis Balas só registra gasto/recarga determinísticos.
+
+**Próximo bloco natural:** continuar as características ofensivas de equipamento restantes, priorizando gatilhos pós-ataque/pós-dano e estados que ainda aparecem na auditoria do Lote 8.

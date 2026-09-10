@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 146 cartas e características mandam
+ *  O problema que este arquivo resolve: 150 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -186,6 +186,10 @@ const CONTADORES = {
   "estado:carta:codex:livro-do-ronin-transformacao": { origem: "carta-dominio", refId: "codex-livro-do-ronin", nome: "Transformação", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
   "uso:carta:codex:livro-do-ronin-enervacao": { origem: "carta-dominio", refId: "codex-livro-do-ronin", nome: "Enervação Eterna", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
   "uso:equipamento:armadura-t3-armadura-de-escamas-de-dragao:impenetravel": { origem: "equipamento", refId: "armadura-t3-armadura-de-escamas-de-dragao", nome: "Impenetrável", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "estado:equipamento:campanha-colosso-das-terras-aridas-revolver:balas-gastas": { origem: "equipamento", refId: "campanha-colosso-das-terras-aridas-revolver", nome: "Seis balas", rotulo: "balas gastas", tipo: "marcadores", maximo: {"tipo":"fixo","valor":6}, zeraEm: ["manual"], recarregaEm: [] },
+  "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t2:balas-gastas": { origem: "equipamento", refId: "campanha-colosso-das-terras-aridas-revolver-t2", nome: "Seis balas", rotulo: "balas gastas", tipo: "marcadores", maximo: {"tipo":"fixo","valor":6}, zeraEm: ["manual"], recarregaEm: [] },
+  "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t3:balas-gastas": { origem: "equipamento", refId: "campanha-colosso-das-terras-aridas-revolver-t3", nome: "Seis balas", rotulo: "balas gastas", tipo: "marcadores", maximo: {"tipo":"fixo","valor":6}, zeraEm: ["manual"], recarregaEm: [] },
+  "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t4:balas-gastas": { origem: "equipamento", refId: "campanha-colosso-das-terras-aridas-revolver-t4", nome: "Seis balas", rotulo: "balas gastas", tipo: "marcadores", maximo: {"tipo":"fixo","valor":6}, zeraEm: ["manual"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -336,6 +340,10 @@ const CONTADOR_ALIASES = {
   "estado:carta:codex:livro-do-ronin-transformacao": ["Transformação"],
   "uso:carta:codex:livro-do-ronin-enervacao": ["Enervação Eterna"],
   "uso:equipamento:armadura-t3-armadura-de-escamas-de-dragao:impenetravel": ["Impenetrável"],
+  "estado:equipamento:campanha-colosso-das-terras-aridas-revolver:balas-gastas": ["Seis balas"],
+  "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t2:balas-gastas": ["Seis balas"],
+  "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t3:balas-gastas": ["Seis balas"],
+  "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t4:balas-gastas": ["Seis balas"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */
@@ -787,6 +795,11 @@ function refsDeContadorDaFicha_(ficha) {
       por(item.id); por(item.nome);
     });
   }
+  // Armas na RESERVA continuam pertencendo ao personagem. Isso é essencial
+  // para estados como Seis Balas: desequipar o Revólver não pode apagar as
+  // balas gastas e, ao equipá-lo de novo, criar uma recarga gratuita.
+  const equipamentoGuardado = ficha.equipamento || {};
+  (equipamentoGuardado.reserva || []).forEach(function (id) { por(id); });
   (ficha.inventario || []).forEach(function (item) {
     if (!item || typeof item !== 'object') return;
     por(item.id); por(item.nome);

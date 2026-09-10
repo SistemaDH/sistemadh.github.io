@@ -148,6 +148,66 @@ function regraDeUsoAtivoEquipamento_(ficha, itemId, nome) {
   return null;
 }
 
+/** Estado de munição de uma arma equipada (ex.: Seis Balas). */
+function usarMunicaoDeEquipamento_(ficha, encontrada, a) {
+  const regra = (encontrada || {}).regra || {};
+  const chave = String(regra.contador || '');
+  const maximo = Math.max(1, Math.trunc(Number(regra.maximo)) || 6);
+  if (!chave || !(typeof CONTADORES === 'object' && CONTADORES[chave])) {
+    return { erro:(encontrada || {}).caracteristica + ': contador de munição não configurado.' };
+  }
+
+  ficha.contadores = ficha.contadores || {};
+  const registro = ficha.contadores[chave] || {};
+  const gastos = Math.max(0, Math.min(maximo,
+    Math.trunc(Number(typeof registro === 'object' ? registro.valor : registro)) || 0));
+  const acao = chaveTexto_((a || {}).acao || '');
+
+  if (acao === 'atacar' || acao === 'disparar') {
+    if (gastos >= maximo) {
+      return { erro:(encontrada || {}).fonte + ' está sem balas. Recarregue antes de atacar.' };
+    }
+    const contador = ajustarContador_(ficha, { chave:chave, valor:gastos + 1 });
+    if (contador && contador.erro) return contador;
+    return {
+      fonte:(encontrada || {}).fonte, caracteristica:(encontrada || {}).caracteristica,
+      tipo:'municao', acao:'atacar', contador:chave,
+      balasAntes:maximo - gastos, balasDepois:maximo - gastos - 1,
+      detalhes:[contador], efeitoManual:regra.efeitoManual || null,
+      aviso:(encontrada || {}).fonte + ' · ' + (encontrada || {}).caracteristica +
+        ': 1 bala gasta; restam ' + (maximo - gastos - 1) + ' de ' + maximo + '. '
+        + String(regra.efeitoManual || '')
+    };
+  }
+
+  if (acao === 'recarregar') {
+    if (gastos <= 0) {
+      return { erro:(encontrada || {}).fonte + ' já está com todas as ' + maximo + ' balas.' };
+    }
+    const custo = Math.max(1, Math.trunc(Number(regra.custoRecarregarEstresse)) || 1);
+    const recursos = (ficha || {}).recursos || {};
+    const atual = Math.max(0, Number(recursos.estresseMarcado) || 0);
+    const teto = Math.max(0, Number(recursos.estresseMaximo) || 0);
+    if (atual + custo > teto) {
+      return { erro:'Não sobra Estresse para recarregar ' + (encontrada || {}).fonte + '.' };
+    }
+    const marca = ajustarRecurso_(ficha, { chave:'estresseMarcado', delta:custo });
+    if (marca && marca.erro) return marca;
+    const contador = ajustarContador_(ficha, { chave:chave, valor:0 });
+    if (contador && contador.erro) return contador;
+    return {
+      fonte:(encontrada || {}).fonte, caracteristica:(encontrada || {}).caracteristica,
+      tipo:'municao', acao:'recarregar', contador:chave,
+      custoEstresse:custo, balasAntes:maximo - gastos, balasDepois:maximo,
+      detalhes:[marca, contador],
+      aviso:(encontrada || {}).fonte + ' · ' + (encontrada || {}).caracteristica +
+        ': ' + custo + ' Estresse marcado; os ' + gastos + ' Marcadores de Bala gastos foram recuperados.'
+    };
+  }
+
+  return { erro:(encontrada || {}).caracteristica + ': escolha atacar ou recarregar.' };
+}
+
 /**
  * Características ofensivas/ativas de equipamento.
  * O app cobra só o que é determinístico. Ataques, alvos, empurrões e todos os
@@ -160,6 +220,7 @@ function usarCaracteristicaDeEquipamento_(ficha, a) {
       String((a || {}).nome || (a || {}).itemId || '') + '".' };
   }
   const regra = encontrada.regra || {};
+  if (regra.tipo === 'municao') return usarMunicaoDeEquipamento_(ficha, encontrada, a);
   if (regra.exigeAtaqueBemSucedido === true && (a || {}).ataqueBemSucedido !== true) {
     return { erro:encontrada.caracteristica + ': confirme primeiro que o ataque foi bem-sucedido.' };
   }
@@ -197,8 +258,10 @@ function usarCaracteristicaDeEquipamento_(ficha, a) {
     }
   }
 
-  const custoEstresse = Math.max(0, Math.trunc(Number(regra.custoEstresse)) || 0);
-  const custoEsperanca = Math.max(0, Math.trunc(Number(regra.custoEsperanca)) || 0);
+  const custoEstresse = Math.max(0, Math.trunc(Number(regra.custoEstresse)) || 0) +
+    (acionaResultado ? Math.max(0, Math.trunc(Number((resultadoRegra || {}).custoEstresse)) || 0) : 0);
+  const custoEsperanca = Math.max(0, Math.trunc(Number(regra.custoEsperanca)) || 0) +
+    (acionaResultado ? Math.max(0, Math.trunc(Number((resultadoRegra || {}).custoEsperanca)) || 0) : 0);
   const recursos = (ficha || {}).recursos || {};
   if (custoEstresse) {
     const atual = Math.max(0, Number(recursos.estresseMarcado) || 0);
@@ -228,7 +291,7 @@ function usarCaracteristicaDeEquipamento_(ficha, a) {
     fonte:encontrada.fonte, caracteristica:encontrada.caracteristica,
     custoEstresse:custoEstresse, custoEsperanca:custoEsperanca,
     dadoManual:dadoManual, acionouResultado:acionaResultado,
-    efeitoManual:regra.efeitoManual || null,
+    efeitoManual:(acionaResultado && (resultadoRegra || {}).efeitoManual) || regra.efeitoManual || null,
     bonusRolagem:regra.bonusRolagem || null,
     recuperacao:recuperacao, detalhes:detalhes
   };

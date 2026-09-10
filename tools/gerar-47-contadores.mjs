@@ -529,6 +529,11 @@ function refsDeContadorDaFicha_(ficha) {
       por(item.id); por(item.nome);
     });
   }
+  // Armas na RESERVA continuam pertencendo ao personagem. Isso é essencial
+  // para estados como Seis Balas: desequipar o Revólver não pode apagar as
+  // balas gastas e, ao equipá-lo de novo, criar uma recarga gratuita.
+  const equipamentoGuardado = ficha.equipamento || {};
+  (equipamentoGuardado.reserva || []).forEach(function (id) { por(id); });
   (ficha.inventario || []).forEach(function (item) {
     if (!item || typeof item !== 'object') return;
     por(item.id); por(item.nome);

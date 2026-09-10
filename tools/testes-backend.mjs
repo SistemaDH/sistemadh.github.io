@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 146 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade e 1 de equipamento', () => {
+teste('o catálogo tem 150 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade e 5 de equipamento', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,7 +1561,7 @@ teste('o catálogo tem 146 contadores: 113 de carta, 25 de classe/subclasse, 4 d
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 146);
+  igual(Object.keys(CONTADORES).length, 150);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 113);
@@ -1569,7 +1569,7 @@ teste('o catálogo tem 146 contadores: 113 de carta, 25 de classe/subclasse, 4 d
   igual(porOrigem['caracteristica-subclasse'], 20);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
-  igual(porOrigem['equipamento'], 1);
+  igual(porOrigem['equipamento'], 5);
 });
 
 teste('"uma vez por" conta o uso GASTO, e o gatilho certo o apaga', () => {
@@ -10562,6 +10562,121 @@ teste('custo de Estresse do C1 continua passando pelo Inabalável central',()=>{
   igual(r.erros,[]); verdade(r.pendenciaRolagem && r.pendenciaRolagem.tipo==='inabalavel'); igual(f.recursos.estresseMarcado,0);
   r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Rápido',dadoInabalavel:6}]);
   igual(r.erros,[]); igual(f.recursos.estresseMarcado,0); verdade(r.mudancas[0].inabalavel && r.mudancas[0].inabalavel.evitou);
+});
+
+
+
+
+console.log('\nLote 8 — equipamento ofensivo D1: Recarga e Seis Balas');
+
+function armaRecargaD1_() {
+  return avaliar('ARMAS').find((a) => String(a.carac || '') === 'Recarga' &&
+    a.efeitoEquipamento && a.efeitoEquipamento.usoAtivo && a.cat === 'primaria');
+}
+
+function revolverD1_() {
+  return avaliar('EQUIPAMENTO_CAMPANHA').find((a) => String(a.carac || '') === 'Seis balas' &&
+    a.efeitoEquipamento && a.efeitoEquipamento.usoAtivo);
+}
+
+teste('D1 publica 5 Recarga, 4 Seis Balas e liga os botões no modal sem RNG',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/equipamentos.json'),'utf8'));
+  const walk=(x,out=[])=>{ if(Array.isArray(x)) x.forEach(v=>walk(v,out)); else if(x&&typeof x==='object'){ if(x.caracteristica) out.push(x); Object.values(x).forEach(v=>walk(v,out)); } return out; };
+  const xs=walk(d,[]);
+  const rec=xs.filter(x=>((x.caracteristica||{}).nomeIngles==='Reloading') || ['Recarga','Recarregável'].includes((x.caracteristica||{}).nome));
+  const seis=xs.filter(x=>(x.caracteristica||{}).nome==='Seis balas');
+  igual(rec.length,5); igual(seis.length,4);
+  verdade([...rec,...seis].every(x=>x.caracteristica.automacao && x.caracteristica.efeitoEquipamento && x.caracteristica.efeitoEquipamento.usoAtivo));
+  verdade(rec.every(x=>x.caracteristica.efeitoEquipamento.usoAtivo.entradaManual.dado==='d6'));
+  verdade(seis.every(x=>x.caracteristica.efeitoEquipamento.usoAtivo.tipo==='municao'));
+  const front=fs.readFileSync(path.join(RAIZ,'js/telas/ficha.js'),'utf8');
+  verdade(front.includes('...botoesDeUsoEquipamento_(item, fecharModal, p.ficha)'), 'os botões de equipamento precisam estar realmente ligados ao modal');
+  verdade(!/Math\.random/.test(front.slice(front.indexOf('function botoesDeUsoEquipamento_'), front.indexOf('function verEquipamento'))));
+});
+
+teste('Recarga pede d6 manual e só o resultado 1 cobra 1 Estresse',()=>{
+  const a=armaRecargaD1_(); verdade(!!a);
+  let f=fichaEquipC1_(a);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Recarga'}]);
+  igual(r.erros,[]); verdade(r.pendenciaRolagem && r.pendenciaRolagem.tipo==='habilidade-manual');
+  igual(r.pendenciaRolagem.dado,'d6'); igual(f.recursos.estresseMarcado,0);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Recarga',dadoRecarga:2}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,0); igual(r.mudancas[0].acionouResultado,false);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Recarga',dadoRecarga:1}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1); igual(r.mudancas[0].custoEstresse,1); igual(r.mudancas[0].acionouResultado,true);
+});
+
+teste('o Estresse condicional da Recarga continua passando pelo Inabalável',()=>{
+  const a=armaRecargaD1_(); verdade(!!a);
+  let f=contexto.fichaRapida_({
+    nome:'Firbolg Recarga',classe:'Guerreiro',subclasse:'Chamada do Matador',
+    ancestralidade:'Firbolg',comunidade:'Highborne',cartas:['blade-redemoinho','bone-intocavel'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  f.identidade.nivel=10; f.equipamento.primaria=a.id; f.equipamento.secundaria=null; f=contexto.validarFicha_(f); f.recursos.estresseMarcado=0;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Recarga',dadoRecarga:1}]);
+  igual(r.erros,[]); verdade(r.pendenciaRolagem && r.pendenciaRolagem.tipo==='inabalavel'); igual(f.recursos.estresseMarcado,0);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Recarga',dadoRecarga:1,dadoInabalavel:6}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,0); verdade(r.mudancas[0].inabalavel && r.mudancas[0].inabalavel.evitou);
+});
+
+teste('Seis Balas gasta uma bala por ataque e bloqueia o sétimo disparo',()=>{
+  const a=revolverD1_(); verdade(!!a);
+  const uso=a.efeitoEquipamento.usoAtivo; const chave=uso.contador;
+  const f=fichaEquipC1_(a);
+  for(let i=1;i<=6;i++){
+    const r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Seis balas',acao:'atacar'}]);
+    igual(r.erros,[]); igual(f.contadores[chave].valor,i); igual(r.mudancas[0].balasDepois,6-i);
+  }
+  const antes=JSON.stringify(f.contadores);
+  const bloqueado=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Seis balas',acao:'atacar'}]);
+  igual(bloqueado.erros.length,1); igual(JSON.stringify(f.contadores),antes);
+});
+
+teste('Seis Balas recupera todos os Marcadores gastos por exatamente 1 Estresse',()=>{
+  const a=revolverD1_(); const chave=a.efeitoEquipamento.usoAtivo.contador;
+  const f=fichaEquipC1_(a);
+  for(let i=0;i<4;i++) contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Seis balas',acao:'atacar'}]);
+  igual(f.contadores[chave].valor,4); igual(f.recursos.estresseMarcado,0);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Seis balas',acao:'recarregar'}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1); verdade(!f.contadores[chave]);
+  igual(r.mudancas[0].balasAntes,2); igual(r.mudancas[0].balasDepois,6); igual(r.mudancas[0].custoEstresse,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Seis balas',acao:'recarregar'}]);
+  igual(r.erros.length,1); igual(f.recursos.estresseMarcado,1,'recarregar arma cheia não pode cobrar de novo');
+});
+
+teste('balas gastas sobrevivem na reserva e arma guardada não pode disparar',()=>{
+  const a=revolverD1_(); const chave=a.efeitoEquipamento.usoAtivo.contador;
+  const f=fichaEquipC1_(a);
+  contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Seis balas',acao:'atacar'}]);
+  contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Seis balas',acao:'atacar'}]);
+  igual(f.contadores[chave].valor,2);
+  f.equipamento.primaria=null; f.equipamento.secundaria=null; f.equipamento.reserva=[a.id];
+  contexto.validarContadores_(f);
+  igual(f.contadores[chave].valor,2,'guardar na reserva não pode recarregar de graça');
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Seis balas',acao:'atacar'}]);
+  igual(r.erros.length,1); igual(f.contadores[chave].valor,2);
+  f.equipamento.primaria=a.id; f.equipamento.reserva=[]; contexto.validarContadores_(f);
+  const volta=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Seis balas',acao:'atacar'}]);
+  igual(volta.erros,[]); igual(f.contadores[chave].valor,3);
+});
+
+teste('recarregar Seis Balas também respeita Inabalável sem perder o estado',()=>{
+  const a=revolverD1_(); const chave=a.efeitoEquipamento.usoAtivo.contador;
+  let f=contexto.fichaRapida_({
+    nome:'Firbolg Revólver',classe:'Guerreiro',subclasse:'Chamada do Matador',
+    ancestralidade:'Firbolg',comunidade:'Highborne',cartas:['blade-redemoinho','bone-intocavel'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  f.identidade.nivel=10; f.equipamento.primaria=a.id; f.equipamento.secundaria=null; f=contexto.validarFicha_(f); f.recursos.estresseMarcado=0;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Seis balas',acao:'atacar'}]);
+  igual(r.erros,[]); igual(f.contadores[chave].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Seis balas',acao:'recarregar'}]);
+  igual(r.erros,[]); verdade(r.pendenciaRolagem && r.pendenciaRolagem.tipo==='inabalavel');
+  igual(f.recursos.estresseMarcado,0); igual(f.contadores[chave].valor,1,'antes do d6 a recarga inteira precisa ser atômica');
+  r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Seis balas',acao:'recarregar',dadoInabalavel:6}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,0); verdade(!f.contadores[chave]);
+  verdade(r.mudancas[0].inabalavel && r.mudancas[0].inabalavel.evitou);
 });
 
 

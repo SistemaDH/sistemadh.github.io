@@ -2700,6 +2700,74 @@
     "descanso"
    ],
    "observacao": "Uso de Impenetrável da Armadura de Escamas de Dragão. Ausência/0 = disponível; 1 = já usado desde o último descanso."
+  },
+  {
+   "chave": "estado:equipamento:campanha-colosso-das-terras-aridas-revolver:balas-gastas",
+   "origem": "equipamento",
+   "refId": "campanha-colosso-das-terras-aridas-revolver",
+   "nome": "Seis balas",
+   "rotulo": "balas gastas",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 6
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Guarda balas GASTAS: 0/ausente = 6 disponíveis; 6 = carregador vazio. Recarregar marca 1 Estresse e zera este contador."
+  },
+  {
+   "chave": "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t2:balas-gastas",
+   "origem": "equipamento",
+   "refId": "campanha-colosso-das-terras-aridas-revolver-t2",
+   "nome": "Seis balas",
+   "rotulo": "balas gastas",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 6
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Guarda balas GASTAS: 0/ausente = 6 disponíveis; 6 = carregador vazio. Recarregar marca 1 Estresse e zera este contador."
+  },
+  {
+   "chave": "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t3:balas-gastas",
+   "origem": "equipamento",
+   "refId": "campanha-colosso-das-terras-aridas-revolver-t3",
+   "nome": "Seis balas",
+   "rotulo": "balas gastas",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 6
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Guarda balas GASTAS: 0/ausente = 6 disponíveis; 6 = carregador vazio. Recarregar marca 1 Estresse e zera este contador."
+  },
+  {
+   "chave": "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t4:balas-gastas",
+   "origem": "equipamento",
+   "refId": "campanha-colosso-das-terras-aridas-revolver-t4",
+   "nome": "Seis balas",
+   "rotulo": "balas gastas",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 6
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Guarda balas GASTAS: 0/ausente = 6 disponíveis; 6 = carregador vazio. Recarregar marca 1 Estresse e zera este contador."
   }
  ]
 }
