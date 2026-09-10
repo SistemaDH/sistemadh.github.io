@@ -20,6 +20,17 @@ jobs:
 
       - name: Materializar consumiveis E3
         run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tools/lote8-consumiveis-estados-e3.py')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace("    'moon drip': {'custoEsperanca': 0,", "    'vial of moondrip': {'custoEsperanca': 0,", 1)
+          s=s.replace("    'shifting mold': {'aliasDe': 'shifting mould'},\n", "", 1)
+          s=s.replace("    'shifting mould': {'custoEsperanca': 1,", "    'morphing clay': {'custoEsperanca': 1,", 1)
+          s=s.replace("CANONICOS = ['moon drip', 'shifting mould', 'ogre musk']", "CANONICOS = ['vial of moondrip', 'morphing clay', 'ogre musk']", 1)
+          s=s.replace("    if ingles == 'shifting mold': ingles = 'shifting mould'\n", "", 1)
+          p.write_text(s,encoding='utf-8')
+          PY
           python3 tools/lote8-consumiveis-estados-e3.py
           python3 - <<'PY'
           from pathlib import Path
@@ -27,9 +38,10 @@ jobs:
           s=p.read_text(encoding='utf-8')
           trocas={
             "const item=itens.find((x)=>String(x.nomeIngles||'').toLowerCase()===nome.toLowerCase());":"const item=contexto.acharItem_(nome);",
-            "const item=avaliar('ITENS').find((x)=>x.nomeIngles==='Moon Drip');":"const item=contexto.acharItem_('Moon Drip');",
-            "const item=avaliar('ITENS').find((x)=>['Shifting Mould','Shifting Mold'].includes(x.nomeIngles));":"const item=contexto.acharItem_('Shifting Mould');",
+            "const item=avaliar('ITENS').find((x)=>x.nomeIngles==='Moon Drip');":"const item=contexto.acharItem_('Vial of Moondrip');",
+            "const item=avaliar('ITENS').find((x)=>['Shifting Mould','Shifting Mold'].includes(x.nomeIngles));":"const item=contexto.acharItem_('Morphing Clay');",
             "const item=avaliar('ITENS').find((x)=>x.nomeIngles==='Ogre Musk');":"const item=contexto.acharItem_('Ogre Musk');",
+            "const nomes=['Moon Drip','Shifting Mould','Ogre Musk'];":"const nomes=['Vial of Moondrip','Morphing Clay','Ogre Musk'];",
           }
           for a,b in trocas.items():
               if a not in s: raise SystemExit('lookup E3 ausente: '+a)
@@ -50,7 +62,7 @@ jobs:
           python3 - <<'PY'
           import json, subprocess
           eq=json.load(open('data/equipamentos.json',encoding='utf-8'))
-          nomes={'moon drip','shifting mould','shifting mold','ogre musk'}
+          nomes={'vial of moondrip','morphing clay','ogre musk'}
           xs=[]
           for x in eq.get('consumiveis',[]):
               n=str(x.get('nomeIngles','')).lower()
