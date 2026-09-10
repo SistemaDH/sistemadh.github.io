@@ -18,6 +18,11 @@ jobs:
       - name: Materializar Recarga e Seis Balas
         run: |
           python3 tools/lote8-equip-recarga-municao-d1.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('docs/HANDOFF.md')
+          p.write_text(p.read_text(encoding='utf-8').rstrip()+'\n',encoding='utf-8')
+          PY
           node tools/gerar-44-equipamento.mjs
           node tools/gerar-41-dominios.mjs
           node tools/gerar-47-contadores.mjs
