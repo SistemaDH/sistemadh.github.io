@@ -1547,7 +1547,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 150 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade e 5 de equipamento', () => {
+teste('o catálogo tem 162 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento e 12 de consumível', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1561,12 +1561,13 @@ teste('o catálogo tem 150 contadores: 113 de carta, 25 de classe/subclasse, 4 d
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 150);
+  igual(Object.keys(CONTADORES).length, 162);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 113);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
+  igual(porOrigem['consumivel'], 12);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
   igual(porOrigem['equipamento'], 5);
@@ -10946,6 +10947,96 @@ teste('Pó do Estalo troca 1 Estresse por 1 PV de forma atômica', () => {
   antes=JSON.stringify(f);
   r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
   igual(r.erros.length,1); igual(JSON.stringify(f),antes);
+});
+
+
+
+console.log('\nLote 8 — consumíveis de traço E2');
+const IDS_CONSUMIVEIS_E2 = [
+  'consumivel-01','consumivel-02','consumivel-03','consumivel-04','consumivel-05','consumivel-06',
+  'consumivel-25','consumivel-26','consumivel-27','consumivel-28','consumivel-29','consumivel-30'
+];
+const TRACO_E2 = {
+  'consumivel-01':'agilidade','consumivel-02':'forca','consumivel-03':'finesse',
+  'consumivel-04':'instinto','consumivel-05':'presenca','consumivel-06':'conhecimento',
+  'consumivel-25':'agilidade','consumivel-26':'forca','consumivel-27':'finesse',
+  'consumivel-28':'instinto','consumivel-29':'presenca','consumivel-30':'conhecimento'
+};
+function fichaConsumivelE2_(id, qtd=1) {
+  const item=contexto.acharItem_(id);
+  const f=contexto.fichaVazia_();
+  f.identidade={nome:'E2',nivel:10,classe:'Guerreiro',subclasse:'Chamada do Matador'};
+  f.tracos={agilidade:1,forca:2,finesse:0,instinto:-1,presenca:3,conhecimento:1};
+  f.inventario=[{id:id,nome:item.nome,qtd:qtd,emUso:false}];
+  return f;
+}
+teste('E2 publica as doze poções de traço com estado explícito e sem RNG', () => {
+  const itens=avaliar('ITENS'), cont=avaliar('CONTADORES');
+  IDS_CONSUMIVEIS_E2.forEach((id) => {
+    const item=itens.find((x)=>x.id===id);
+    verdade(!!item,id);
+    igual(item.automacao.rolaNoApp,false,id);
+    igual(item.efeitoConsumivel.tipo,'ativar-estado',id);
+    const chave='estado:consumivel:'+id;
+    igual(item.efeitoConsumivel.contador,chave,id);
+    verdade(!!cont[chave],chave);
+    igual(cont[chave].persisteSemRef,true,chave);
+  });
+});
+teste('poção normal ativa +1 para a próxima jogada, mas não altera o valor permanente do traço', () => {
+  const f=fichaConsumivelE2_('consumivel-01',1);
+  const antes=contexto.valorDoTraco_(f,'Agilidade');
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r));
+  igual(f.inventario.length,0);
+  igual(f.contadores['estado:consumivel:consumivel-01'].valor,1);
+  igual(contexto.valorDoTraco_(f,'Agilidade'),antes,'bônus de próxima jogada não é traço permanente');
+  const def=avaliar('CONTADORES')['estado:consumivel:consumivel-01'];
+  igual(def.bonusProximaJogada,{traco:'agilidade',bonus:1});
+});
+teste('estado da poção normal sobrevive sem o item, zera manualmente e zero órfão é descartado', () => {
+  const f=fichaConsumivelE2_('consumivel-02',1);
+  contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  let problemas=contexto.validarContadores_(f);
+  igual(problemas,[]);
+  igual(f.contadores['estado:consumivel:consumivel-02'].valor,1);
+  contexto.aplicarAjustes_(f,[{tipo:'contador',chave:'estado:consumivel:consumivel-02',valor:0}]);
+  contexto.validarContadores_(f);
+  verdade(!f.contadores['estado:consumivel:consumivel-02'],'zero sem a poção deve sumir');
+});
+teste('não consome uma segunda unidade enquanto o mesmo bônus E2 ainda está ativo', () => {
+  const f=fichaConsumivelE2_('consumivel-03',2);
+  let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros,[]); igual(f.inventario[0].qtd,1);
+  const antes=JSON.stringify(f);
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros.length,1); igual(JSON.stringify(f),antes);
+});
+teste('as seis poções Maiores somam +1 exatamente ao traço correspondente', () => {
+  ['consumivel-25','consumivel-26','consumivel-27','consumivel-28','consumivel-29','consumivel-30'].forEach((id) => {
+    const f=fichaConsumivelE2_(id,1), traco=TRACO_E2[id];
+    const antes=contexto.valorDoTraco_(f,traco);
+    const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+    igual(r.erros,[],id);
+    igual(contexto.valorDoTraco_(f,traco),antes+1,id);
+    const d=contexto.derivadosDoPersonagem_(f);
+    igual(d.modificadoresDeTraco[traco],1,id+' derivado');
+  });
+});
+teste('poção Maior termina no próximo descanso e o bônus derivado desaparece', () => {
+  const f=fichaConsumivelE2_('consumivel-29',1);
+  const base=contexto.valorDoTraco_(f,'Presença');
+  contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(contexto.valorDoTraco_(f,'Presença'),base+1);
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  igual(contexto.valorDoTraco_(f,'Presença'),base);
+  verdade(!f.contadores['estado:consumivel:consumivel-29'] || !f.contadores['estado:consumivel:consumivel-29'].valor);
+});
+teste('persistência sem referência não se espalha para contadores normais', () => {
+  const f=contexto.fichaVazia_();
+  f.contadores={'uso:carta:valor:surto-total':{valor:1}};
+  contexto.validarContadores_(f);
+  verdade(!f.contadores['uso:carta:valor:surto-total'],'contador de carta órfão continua sendo limpo');
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

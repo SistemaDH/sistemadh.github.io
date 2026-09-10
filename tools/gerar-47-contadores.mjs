@@ -67,6 +67,9 @@ for (const c of d.contadores) {
   // Ter a subclasse não é ter a carta: este contador só é da ficha que tem a
   // característica nomeada aqui.
   if (c.exigeCaracteristica) campos.push(`exigeCaracteristica: ${j(c.exigeCaracteristica)}`);
+  if (c.persisteSemRef) campos.push('persisteSemRef: true');
+  if (c.bonusProximaJogada) campos.push(`bonusProximaJogada: ${j(c.bonusProximaJogada)}`);
+  if (c.modificadorTraco) campos.push(`modificadorTraco: ${j(c.modificadorTraco)}`);
   if (c.compartilhavel) campos.push('compartilhavel: true');
   L.push(`  ${j(c.chave)}: { ${campos.join(', ')} },`);
 }
@@ -426,6 +429,13 @@ function contadorEDaFicha_(def, ficha, refs, chave) {
   // Alguns dados podem ser concedidos por OUTRA ficha. Preparação Marcial é o
   // caso do Core: o aliado não tem a subclasse, mas pode guardar um Dado de Matador.
   if (def.compartilhavel === true && chave) {
+    const guardado = (((ficha || {}).contadores || {})[chave]) || {};
+    const valor = Math.trunc(Number(typeof guardado === 'object' ? guardado.valor : guardado)) || 0;
+    if (valor > 0) return true;
+  }
+  // Consumível já gasto pode deixar um efeito ativo. Zero sem a referência
+  // continua órfão e é descartado, portanto só o estado realmente corrente persiste.
+  if (def.persisteSemRef === true && chave) {
     const guardado = (((ficha || {}).contadores || {})[chave]) || {};
     const valor = Math.trunc(Number(typeof guardado === 'object' ? guardado.valor : guardado)) || 0;
     if (valor > 0) return true;

@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 150 cartas e características mandam
+ *  O problema que este arquivo resolve: 162 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -190,6 +190,18 @@ const CONTADORES = {
   "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t2:balas-gastas": { origem: "equipamento", refId: "campanha-colosso-das-terras-aridas-revolver-t2", nome: "Seis balas", rotulo: "balas gastas", tipo: "marcadores", maximo: {"tipo":"fixo","valor":6}, zeraEm: ["manual"], recarregaEm: [] },
   "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t3:balas-gastas": { origem: "equipamento", refId: "campanha-colosso-das-terras-aridas-revolver-t3", nome: "Seis balas", rotulo: "balas gastas", tipo: "marcadores", maximo: {"tipo":"fixo","valor":6}, zeraEm: ["manual"], recarregaEm: [] },
   "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t4:balas-gastas": { origem: "equipamento", refId: "campanha-colosso-das-terras-aridas-revolver-t4", nome: "Seis balas", rotulo: "balas gastas", tipo: "marcadores", maximo: {"tipo":"fixo","valor":6}, zeraEm: ["manual"], recarregaEm: [] },
+  "estado:consumivel:consumivel-01": { origem: "consumivel", refId: "consumivel-01", nome: "Poção da passada", rotulo: "+1 na próxima jogada de Agilidade", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], persisteSemRef: true, bonusProximaJogada: {"traco":"agilidade","bonus":1} },
+  "estado:consumivel:consumivel-02": { origem: "consumivel", refId: "consumivel-02", nome: "Poção de reforço", rotulo: "+1 na próxima jogada de Força", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], persisteSemRef: true, bonusProximaJogada: {"traco":"forca","bonus":1} },
+  "estado:consumivel:consumivel-03": { origem: "consumivel", refId: "consumivel-03", nome: "Poção de controle", rotulo: "+1 na próxima jogada de Finesse", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], persisteSemRef: true, bonusProximaJogada: {"traco":"finesse","bonus":1} },
+  "estado:consumivel:consumivel-04": { origem: "consumivel", refId: "consumivel-04", nome: "Poção de sintonização", rotulo: "+1 na próxima jogada de Instinto", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], persisteSemRef: true, bonusProximaJogada: {"traco":"instinto","bonus":1} },
+  "estado:consumivel:consumivel-05": { origem: "consumivel", refId: "consumivel-05", nome: "Poção de Encantamento", rotulo: "+1 na próxima jogada de Presença", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], persisteSemRef: true, bonusProximaJogada: {"traco":"presenca","bonus":1} },
+  "estado:consumivel:consumivel-06": { origem: "consumivel", refId: "consumivel-06", nome: "Poção de Iluminação", rotulo: "+1 na próxima jogada de Conhecimento", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [], persisteSemRef: true, bonusProximaJogada: {"traco":"conhecimento","bonus":1} },
+  "estado:consumivel:consumivel-25": { origem: "consumivel", refId: "consumivel-25", nome: "Poção da Passada Maior", rotulo: "+1 em Agilidade até o próximo descanso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], persisteSemRef: true, modificadorTraco: {"traco":"agilidade","bonus":1} },
+  "estado:consumivel:consumivel-26": { origem: "consumivel", refId: "consumivel-26", nome: "Poção de reforço maior", rotulo: "+1 em Força até o próximo descanso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], persisteSemRef: true, modificadorTraco: {"traco":"forca","bonus":1} },
+  "estado:consumivel:consumivel-27": { origem: "consumivel", refId: "consumivel-27", nome: "Poção de Controle Maior", rotulo: "+1 em Finesse até o próximo descanso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], persisteSemRef: true, modificadorTraco: {"traco":"finesse","bonus":1} },
+  "estado:consumivel:consumivel-28": { origem: "consumivel", refId: "consumivel-28", nome: "Poção de sintonização maior", rotulo: "+1 em Instinto até o próximo descanso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], persisteSemRef: true, modificadorTraco: {"traco":"instinto","bonus":1} },
+  "estado:consumivel:consumivel-29": { origem: "consumivel", refId: "consumivel-29", nome: "Poção de Encantamento Maior", rotulo: "+1 em Presença até o próximo descanso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], persisteSemRef: true, modificadorTraco: {"traco":"presenca","bonus":1} },
+  "estado:consumivel:consumivel-30": { origem: "consumivel", refId: "consumivel-30", nome: "Poção de Iluminação Maior", rotulo: "+1 em Conhecimento até o próximo descanso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [], persisteSemRef: true, modificadorTraco: {"traco":"conhecimento","bonus":1} },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -344,6 +356,18 @@ const CONTADOR_ALIASES = {
   "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t2:balas-gastas": ["Seis balas"],
   "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t3:balas-gastas": ["Seis balas"],
   "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t4:balas-gastas": ["Seis balas"],
+  "estado:consumivel:consumivel-01": ["Poção da passada"],
+  "estado:consumivel:consumivel-02": ["Poção de reforço"],
+  "estado:consumivel:consumivel-03": ["Poção de controle"],
+  "estado:consumivel:consumivel-04": ["Poção de sintonização"],
+  "estado:consumivel:consumivel-05": ["Poção de Encantamento"],
+  "estado:consumivel:consumivel-06": ["Poção de Iluminação"],
+  "estado:consumivel:consumivel-25": ["Poção da Passada Maior"],
+  "estado:consumivel:consumivel-26": ["Poção de reforço maior"],
+  "estado:consumivel:consumivel-27": ["Poção de Controle Maior"],
+  "estado:consumivel:consumivel-28": ["Poção de sintonização maior"],
+  "estado:consumivel:consumivel-29": ["Poção de Encantamento Maior"],
+  "estado:consumivel:consumivel-30": ["Poção de Iluminação Maior"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */
@@ -692,6 +716,13 @@ function contadorEDaFicha_(def, ficha, refs, chave) {
   // Alguns dados podem ser concedidos por OUTRA ficha. Preparação Marcial é o
   // caso do Core: o aliado não tem a subclasse, mas pode guardar um Dado de Matador.
   if (def.compartilhavel === true && chave) {
+    const guardado = (((ficha || {}).contadores || {})[chave]) || {};
+    const valor = Math.trunc(Number(typeof guardado === 'object' ? guardado.valor : guardado)) || 0;
+    if (valor > 0) return true;
+  }
+  // Consumível já gasto pode deixar um efeito ativo. Zero sem a referência
+  // continua órfão e é descartado, portanto só o estado realmente corrente persiste.
+  if (def.persisteSemRef === true && chave) {
     const guardado = (((ficha || {}).contadores || {})[chave]) || {};
     const valor = Math.trunc(Number(typeof guardado === 'object' ? guardado.valor : guardado)) || 0;
     if (valor > 0) return true;

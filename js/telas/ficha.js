@@ -5343,8 +5343,13 @@ export async function carregarCatalogo() {
       const temCaracteristica = (nome) => (ficha.caracteristicas || [])
         .some((f) => dados.chave((f && typeof f === 'object') ? f.nome : f) === dados.chave(nome));
 
+      const persistenteAtivo = (c) => {
+        if (!c || c.persisteSemRef !== true) return false;
+        const reg = ((ficha || {}).contadores || {})[c.chave] || {};
+        return (Number(typeof reg === 'object' ? reg.valor : reg) || 0) > 0;
+      };
       return (cont.contadores || []).filter((c) =>
-        refs.has(dados.chave(c.refId)) &&
+        (refs.has(dados.chave(c.refId)) || persistenteAtivo(c)) &&
         (!c.exigeCaracteristica || temCaracteristica(c.exigeCaracteristica))
       ).map((c) => Object.assign({}, c, {
         maximo: maximoLocal(c, ficha),

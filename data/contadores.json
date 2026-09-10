@@ -2768,6 +2768,258 @@
     "manual"
    ],
    "observacao": "Guarda balas GASTAS: 0/ausente = 6 disponíveis; 6 = carregador vazio. Recarregar marca 1 Estresse e zera este contador."
+  },
+  {
+   "chave": "estado:consumivel:consumivel-01",
+   "origem": "consumivel",
+   "refId": "consumivel-01",
+   "nome": "Poção da passada",
+   "rotulo": "+1 na próxima jogada de Agilidade",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "manual"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "bonusProximaJogada": {
+    "traco": "agilidade",
+    "bonus": 1
+   }
+  },
+  {
+   "chave": "estado:consumivel:consumivel-02",
+   "origem": "consumivel",
+   "refId": "consumivel-02",
+   "nome": "Poção de reforço",
+   "rotulo": "+1 na próxima jogada de Força",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "manual"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "bonusProximaJogada": {
+    "traco": "forca",
+    "bonus": 1
+   }
+  },
+  {
+   "chave": "estado:consumivel:consumivel-03",
+   "origem": "consumivel",
+   "refId": "consumivel-03",
+   "nome": "Poção de controle",
+   "rotulo": "+1 na próxima jogada de Finesse",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "manual"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "bonusProximaJogada": {
+    "traco": "finesse",
+    "bonus": 1
+   }
+  },
+  {
+   "chave": "estado:consumivel:consumivel-04",
+   "origem": "consumivel",
+   "refId": "consumivel-04",
+   "nome": "Poção de sintonização",
+   "rotulo": "+1 na próxima jogada de Instinto",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "manual"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "bonusProximaJogada": {
+    "traco": "instinto",
+    "bonus": 1
+   }
+  },
+  {
+   "chave": "estado:consumivel:consumivel-05",
+   "origem": "consumivel",
+   "refId": "consumivel-05",
+   "nome": "Poção de Encantamento",
+   "rotulo": "+1 na próxima jogada de Presença",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "manual"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "bonusProximaJogada": {
+    "traco": "presenca",
+    "bonus": 1
+   }
+  },
+  {
+   "chave": "estado:consumivel:consumivel-06",
+   "origem": "consumivel",
+   "refId": "consumivel-06",
+   "nome": "Poção de Iluminação",
+   "rotulo": "+1 na próxima jogada de Conhecimento",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "manual"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "bonusProximaJogada": {
+    "traco": "conhecimento",
+    "bonus": 1
+   }
+  },
+  {
+   "chave": "estado:consumivel:consumivel-25",
+   "origem": "consumivel",
+   "refId": "consumivel-25",
+   "nome": "Poção da Passada Maior",
+   "rotulo": "+1 em Agilidade até o próximo descanso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "descanso"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "modificadorTraco": {
+    "traco": "agilidade",
+    "bonus": 1
+   }
+  },
+  {
+   "chave": "estado:consumivel:consumivel-26",
+   "origem": "consumivel",
+   "refId": "consumivel-26",
+   "nome": "Poção de reforço maior",
+   "rotulo": "+1 em Força até o próximo descanso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "descanso"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "modificadorTraco": {
+    "traco": "forca",
+    "bonus": 1
+   }
+  },
+  {
+   "chave": "estado:consumivel:consumivel-27",
+   "origem": "consumivel",
+   "refId": "consumivel-27",
+   "nome": "Poção de Controle Maior",
+   "rotulo": "+1 em Finesse até o próximo descanso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "descanso"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "modificadorTraco": {
+    "traco": "finesse",
+    "bonus": 1
+   }
+  },
+  {
+   "chave": "estado:consumivel:consumivel-28",
+   "origem": "consumivel",
+   "refId": "consumivel-28",
+   "nome": "Poção de sintonização maior",
+   "rotulo": "+1 em Instinto até o próximo descanso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "descanso"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "modificadorTraco": {
+    "traco": "instinto",
+    "bonus": 1
+   }
+  },
+  {
+   "chave": "estado:consumivel:consumivel-29",
+   "origem": "consumivel",
+   "refId": "consumivel-29",
+   "nome": "Poção de Encantamento Maior",
+   "rotulo": "+1 em Presença até o próximo descanso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "descanso"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "modificadorTraco": {
+    "traco": "presenca",
+    "bonus": 1
+   }
+  },
+  {
+   "chave": "estado:consumivel:consumivel-30",
+   "origem": "consumivel",
+   "refId": "consumivel-30",
+   "nome": "Poção de Iluminação Maior",
+   "rotulo": "+1 em Conhecimento até o próximo descanso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "zeraEm": [
+    "descanso"
+   ],
+   "recarregaEm": [],
+   "persisteSemRef": true,
+   "modificadorTraco": {
+    "traco": "conhecimento",
+    "bonus": 1
+   }
   }
  ]
 }

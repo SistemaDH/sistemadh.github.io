@@ -6776,7 +6776,19 @@
    "descricao": "Você ganha um bônus de +1 na sua próxima rolagem de agilidade.",
    "nomeIngles": "Stride Potion",
    "descricaoIngles": "You gain a +1 bonus to your next Agility Roll.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-traco-e2",
+    "rolaNoApp": false,
+    "motivo": "A poção só ativa um bônus persistente. O app não rola a jogada que usa esse bônus."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-01",
+    "traco": "agilidade",
+    "bonus": 1,
+    "duracao": "proxima-jogada"
+   }
   },
   {
    "id": "consumivel-02",
@@ -6785,7 +6797,19 @@
    "descricao": "Você ganha um bônus de +1 na sua próxima rolagem de força.",
    "nomeIngles": "Bolster Potion",
    "descricaoIngles": "You gain a +1 bonus to your next Strength Roll.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-traco-e2",
+    "rolaNoApp": false,
+    "motivo": "A poção só ativa um bônus persistente. O app não rola a jogada que usa esse bônus."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-02",
+    "traco": "forca",
+    "bonus": 1,
+    "duracao": "proxima-jogada"
+   }
   },
   {
    "id": "consumivel-03",
@@ -6794,7 +6818,19 @@
    "descricao": "Você ganha um bônus de +1 na sua próxima rolagem de finesse.",
    "nomeIngles": "Control Potion",
    "descricaoIngles": "You gain a +1 bonus to your next Finesse Roll.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-traco-e2",
+    "rolaNoApp": false,
+    "motivo": "A poção só ativa um bônus persistente. O app não rola a jogada que usa esse bônus."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-03",
+    "traco": "finesse",
+    "bonus": 1,
+    "duracao": "proxima-jogada"
+   }
   },
   {
    "id": "consumivel-04",
@@ -6803,7 +6839,19 @@
    "descricao": "Você ganha um bônus de +1 na sua próxima rolagem de instinto.",
    "nomeIngles": "Attune Potion",
    "descricaoIngles": "You gain a +1 bonus to your next Instinct Roll.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-traco-e2",
+    "rolaNoApp": false,
+    "motivo": "A poção só ativa um bônus persistente. O app não rola a jogada que usa esse bônus."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-04",
+    "traco": "instinto",
+    "bonus": 1,
+    "duracao": "proxima-jogada"
+   }
   },
   {
    "id": "consumivel-05",
@@ -6812,7 +6860,19 @@
    "descricao": "Você ganha um bônus de +1 na sua próxima rolagem de presença.",
    "nomeIngles": "Charm Potion",
    "descricaoIngles": "You gain a +1 bonus to your next Presence Roll.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-traco-e2",
+    "rolaNoApp": false,
+    "motivo": "A poção só ativa um bônus persistente. O app não rola a jogada que usa esse bônus."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-05",
+    "traco": "presenca",
+    "bonus": 1,
+    "duracao": "proxima-jogada"
+   }
   },
   {
    "id": "consumivel-06",
@@ -6821,7 +6881,19 @@
    "descricao": "Você ganha um bônus de +1 na sua próxima rolagem de conhecimento.",
    "nomeIngles": "Enlighten Potion",
    "descricaoIngles": "You gain a +1 bonus to your next Knowledge Roll.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-traco-e2",
+    "rolaNoApp": false,
+    "motivo": "A poção só ativa um bônus persistente. O app não rola a jogada que usa esse bônus."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-06",
+    "traco": "conhecimento",
+    "bonus": 1,
+    "duracao": "proxima-jogada"
+   }
   },
   {
    "id": "consumivel-07",
@@ -7084,7 +7156,19 @@
    "origemNome": "corrigido-auditoria",
    "aliases": [
     "Poção de impulso maior"
-   ]
+   ],
+   "automacao": {
+    "classificacao": "consumivel-traco-e2",
+    "rolaNoApp": false,
+    "motivo": "A poção só ativa um bônus persistente. O app não rola a jogada que usa esse bônus."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-25",
+    "traco": "agilidade",
+    "bonus": 1,
+    "duracao": "descanso"
+   }
   },
   {
    "id": "consumivel-26",
@@ -7093,7 +7177,19 @@
    "descricao": "Você ganha um bônus de +1 na sua Força até o próximo descanso.",
    "nomeIngles": "Major Bolster Potion",
    "descricaoIngles": "You gain a +1 bonus to your Strength until your next rest.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-traco-e2",
+    "rolaNoApp": false,
+    "motivo": "A poção só ativa um bônus persistente. O app não rola a jogada que usa esse bônus."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-26",
+    "traco": "forca",
+    "bonus": 1,
+    "duracao": "descanso"
+   }
   },
   {
    "id": "consumivel-27",
@@ -7102,7 +7198,19 @@
    "descricao": "Você ganha um bônus de +1 na sua Finesse até o próximo descanso.",
    "nomeIngles": "Major Control Potion",
    "descricaoIngles": "You gain a +1 bonus to your Finesse until your next rest.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-traco-e2",
+    "rolaNoApp": false,
+    "motivo": "A poção só ativa um bônus persistente. O app não rola a jogada que usa esse bônus."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-27",
+    "traco": "finesse",
+    "bonus": 1,
+    "duracao": "descanso"
+   }
   },
   {
    "id": "consumivel-28",
@@ -7111,7 +7219,19 @@
    "descricao": "Você ganha um bônus de +1 no seu Instinto até o próximo descanso.",
    "nomeIngles": "Major Attune Potion",
    "descricaoIngles": "You gain a +1 bonus to your Instinct until your next rest.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-traco-e2",
+    "rolaNoApp": false,
+    "motivo": "A poção só ativa um bônus persistente. O app não rola a jogada que usa esse bônus."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-28",
+    "traco": "instinto",
+    "bonus": 1,
+    "duracao": "descanso"
+   }
   },
   {
    "id": "consumivel-29",
@@ -7120,7 +7240,19 @@
    "descricao": "Você ganha um bônus de +1 na sua Presença até o próximo descanso.",
    "nomeIngles": "Major Charm Potion",
    "descricaoIngles": "You gain a +1 bonus to your Presence until your next rest.",
-   "origemNome": "livro"
+   "origemNome": "livro",
+   "automacao": {
+    "classificacao": "consumivel-traco-e2",
+    "rolaNoApp": false,
+    "motivo": "A poção só ativa um bônus persistente. O app não rola a jogada que usa esse bônus."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-29",
+    "traco": "presenca",
+    "bonus": 1,
+    "duracao": "descanso"
+   }
   },
   {
    "id": "consumivel-30",
@@ -7132,7 +7264,19 @@
    "origemNome": "corrigido-auditoria",
    "aliases": [
     "Maior Poção de iluminação"
-   ]
+   ],
+   "automacao": {
+    "classificacao": "consumivel-traco-e2",
+    "rolaNoApp": false,
+    "motivo": "A poção só ativa um bônus persistente. O app não rola a jogada que usa esse bônus."
+   },
+   "efeitoConsumivel": {
+    "tipo": "ativar-estado",
+    "contador": "estado:consumivel:consumivel-30",
+    "traco": "conhecimento",
+    "bonus": 1,
+    "duracao": "descanso"
+   }
   },
   {
    "id": "consumivel-31",

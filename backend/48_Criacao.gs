@@ -446,6 +446,26 @@ function modificadoresDerivadosDaFicha_(ficha) {
     const item = equipados[i].item;
     aplicar(item.efeitoDerivado, item.nome);
   }
+
+  // Estados deixados por consumíveis já gastos também podem modificar um traço.
+  // Só metadado explícito do catálogo entra aqui; bônus de 'próxima jogada'
+  // fica fora de propósito, porque o app não observa nem rola essa jogada.
+  if (typeof CONTADORES === 'object') {
+    const ativos = (ficha && ficha.contadores) || {};
+    Object.keys(ativos).forEach(function (chave) {
+      const def = CONTADORES[chave];
+      if (!def || !def.modificadorTraco) return;
+      const reg = ativos[chave] || {};
+      const valor = Math.trunc(Number(typeof reg === 'object' ? reg.valor : reg)) || 0;
+      if (valor <= 0) return;
+      const mt = def.modificadorTraco || {};
+      const traco = String(mt.traco || '');
+      const bonus = Number(mt.bonus) || 0;
+      if (saida.tracos[traco] === undefined || !bonus) return;
+      saida.tracos[traco] += bonus;
+      if (def.nome) saida.fontes.push(def.nome);
+    });
+  }
   return saida;
 }
 

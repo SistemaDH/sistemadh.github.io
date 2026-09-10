@@ -771,3 +771,13 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 - A auditoria agora separa loot/consumíveis estruturados, referências específicas no motor e candidatos mecânicos.
 
 **Próximo bloco natural:** as seis poções de +1 na próxima jogada e as seis versões Maiores de +1 no traço até o próximo descanso. Remendo/Costurador de Armadura fica para o bloco de custos variáveis.
+
+### Lote 8 — consumíveis de traço E2
+
+- As seis poções básicas de traço agora ativam um estado de **+1 na próxima jogada** do traço correspondente. Como o sistema não rola nem observa as jogadas da mesa, esse bônus não altera o valor permanente do traço e é baixado manualmente depois da jogada.
+- As seis poções Maiores ativam **+1 no traço correspondente até o próximo descanso**. Esse bônus entra no mesmo pipeline de modificadores derivados usado por equipamento e características, portanto aparece no valor efetivo da ficha e vale para consultas do backend.
+- Estados de consumível podem persistir depois que a última unidade sai da mochila somente quando o contador do catálogo marca `persisteSemRef=true` e está acima de zero. Valor zero sem a referência continua sendo descartado.
+- Uma segunda unidade do mesmo efeito não é consumida enquanto a primeira ainda estiver ativa, evitando perda silenciosa do item e empilhamento acidental.
+- Nenhum RNG foi introduzido (`automacao.rolaNoApp=false`).
+
+**Próximo bloco natural:** consumíveis de custo/recuperação variável e estados determinísticos, começando por **Costurador/Remendo de Armadura**, Molde/Argila transformadora e efeitos que duram até descanso.

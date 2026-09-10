@@ -2195,6 +2195,22 @@ function usarConsumivelDaMochila_(ficha, lista, indice, a) {
     const cura=ajustarRecurso_(ficha,{chave:'pontosDeVidaMarcados',delta:-quantidade});
     if (cura && cura.erro) return falhar(cura.erro);
     detalhes.push(paga,cura);
+  } else if (tipo === 'ativar-estado') {
+    const chave=String(efeito.contador || '');
+    const def=(typeof CONTADORES === 'object' && CONTADORES[chave]) ? CONTADORES[chave] : null;
+    if (!def || def.origem !== 'consumivel') {
+      return { erro:item.nome + ': estado de consumível inválido no catálogo.' };
+    }
+    ficha.contadores = ficha.contadores || {};
+    const reg=ficha.contadores[chave] || {};
+    const ativo=Math.max(0,Math.trunc(Number(typeof reg === 'object' ? reg.valor : reg)) || 0);
+    if (ativo > 0) {
+      return { erro:item.nome + ': este bônus ainda está ativo; resolva-o antes de consumir outra unidade.' };
+    }
+    const m=ajustarContador_(ficha,{chave:chave,valor:1});
+    if (m && m.erro) return falhar(m.erro);
+    quantidade=1;
+    detalhes.push(m);
   } else {
     return { erro:item.nome + ': tipo de efeito consumível ainda não suportado.' };
   }
