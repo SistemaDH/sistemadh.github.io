@@ -38,6 +38,24 @@ jobs:
           p.write_text(s, encoding='utf-8')
           PY
       - run: python3 tools/patch-inventario-posse.py
+      - name: Evitar colisão de variável no cenário do catálogo
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('tools/testes-e2e.mjs')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace(
+            "    const v5 = await versaoNaTela();\n    const estadoArmadura = noBackend(`(function(){",
+            "    const vCatalogoArmadura = await versaoNaTela();\n    const estadoArmadura = noBackend(`(function(){",
+            1
+          )
+          alvo = "    await esperarGravar(v5);\n    const doLivro = pagina.locator('.ficha__item', { hasText: 'Saco de Dormir Premium' });"
+          troca = "    await esperarGravar(vCatalogoArmadura);\n    const doLivro = pagina.locator('.ficha__item', { hasText: 'Saco de Dormir Premium' });"
+          if alvo not in s:
+            raise SystemExit('não encontrei a espera do catálogo para renomear')
+          s = s.replace(alvo, troca, 1)
+          p.write_text(s, encoding='utf-8')
+          PY
       - run: npm ci
       - run: npm run teste:sintaxe
       - run: npm run teste
