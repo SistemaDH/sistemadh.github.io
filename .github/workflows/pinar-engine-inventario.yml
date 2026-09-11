@@ -1,0 +1,40 @@
+name: Fixar engine do inventário
+
+on:
+  push:
+    branches: [inventario-integracao]
+
+permissions:
+  contents: write
+
+jobs:
+  pin:
+    if: contains(github.event.head_commit.message, 'preparar pin do engine integrado')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: inventario-integracao
+          fetch-depth: 0
+      - name: Fixar commit imutável do motor
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('supabase/functions/engine-api/index.ts')
+          s=p.read_text(encoding='utf-8')
+          velho='const ENGINE_COMMIT = "752c7abc0349222bd795254f8f023c047125a1fe";'
+          novo='const ENGINE_COMMIT = "2761bb828287fe0c17009cf4d0e255ed21762e07";'
+          if velho not in s:
+              raise SystemExit('pin antigo esperado não encontrado')
+          p.write_text(s.replace(velho, novo, 1), encoding='utf-8')
+          PY
+          grep -F 'const ENGINE_COMMIT = "2761bb828287fe0c17009cf4d0e255ed21762e07";' supabase/functions/engine-api/index.ts
+          git cat-file -e 2761bb828287fe0c17009cf4d0e255ed21762e07^{commit}
+      - name: Gravar pin e remover andaime
+        run: |
+          rm .github/workflows/pinar-engine-inventario.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add supabase/functions/engine-api/index.ts .github/workflows/pinar-engine-inventario.yml
+          git commit -m "chore: fixar engine-api no inventário integrado"
+          git push origin HEAD:inventario-integracao
