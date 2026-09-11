@@ -1,0 +1,70 @@
+name: Registrar fechamento do inventário
+
+on:
+  push:
+    branches: [inventario-integracao]
+
+permissions:
+  contents: write
+
+jobs:
+  registrar:
+    if: contains(github.event.head_commit.message, 'registrar fechamento do inventário')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: inventario-integracao
+          fetch-depth: 0
+      - name: Atualizar HANDOFF
+        run: |
+          cat >> docs/HANDOFF.md <<'EOF'
+
+## Produção — inventário, posse e catálogo (11/09/2026)
+
+Integração do inventário concluída sobre o Lote 9, preservando as mudanças já publicadas em produção.
+
+### Funcional
+
+- commit imutável do motor: `2761bb828287fe0c17009cf4d0e255ed21762e07`;
+- itens oficiais da criação são gravados por ID de catálogo; itens narrativos recebem contexto de origem;
+- `equipado` é estado de uso, não o único registro de posse;
+- armaduras possuídas e não equipadas ficam em `equipamento.reservaArmaduras` e não concedem benefícios enquanto guardadas;
+- trocar a armadura equipada preserva a anterior na reserva;
+- a Mochila mostra os equipamentos possuídos junto dos itens;
+- o catálogo abre uma pré-visualização com detalhes antes de qualquer inclusão; `Selecionar` confirma e `Fechar` cancela;
+- o fluxo de compra também exige a pré-visualização antes de preencher/confirmar a compra;
+- a migração de fichas antigas reconhece itens oficiais somente quando há assinatura do inventário inicial da criação, sem converter por nome um item livre digitado pelo jogador.
+
+### Validação da árvore integrada
+
+GitHub Actions run `34612183183`:
+
+- sintaxe: 84 arquivos JS/MJS OK;
+- backend: **947 passaram, 0 falharam**;
+- E2E: **109 passos OK, 0 falharam**;
+- 14 geradores conferidos e consistentes;
+- CSS limpo;
+- auditoria Core 1.0: 0 pendências candidatas em classes/subclasses, comunidades, cartas, equipamentos e loot/consumíveis;
+- todas as baterias mobile e responsivas verdes, incluindo criação, mochila, dano, descanso, avanço, Mestre, regras, foto e baseline responsivo.
+
+### Supabase / `engine-api`
+
+O motor foi implantado antes da promoção do frontend:
+
+- Edge Function `engine-api`: **versão 10**;
+- status: `ACTIVE`;
+- `verify_jwt=false`, mantido porque a função usa autenticação própria de sessão;
+- `ENGINE_COMMIT=2761bb828287fe0c17009cf4d0e255ed21762e07`;
+- bundle SHA-256: `deabf224e975300370e6063a8520f5233509c97453b832d87d9f331fe5d22add`.
+
+A ordem segura para futuras promoções do motor permanece: escolher commit imutável → fixar `ENGINE_COMMIT` → implantar e reler a Edge Function → CI verde → promover `main`.
+EOF
+      - name: Gravar documentação e remover andaime
+        run: |
+          rm .github/workflows/registrar-inventario-producao.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/HANDOFF.md .github/workflows/registrar-inventario-producao.yml
+          git commit -m "docs: registrar inventário e engine-api v10"
+          git push origin HEAD:inventario-integracao
