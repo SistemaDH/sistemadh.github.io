@@ -21,6 +21,22 @@ jobs:
         with:
           node-version: '20'
           cache: npm
+      - name: Corrigir marcador final do aplicador
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('tools/patch-inventario-posse.py')
+          s = p.read_text(encoding='utf-8')
+          inicio = s.index('marcador_resultado = ')
+          fim = s.index("novos_testes = r'''", inicio)
+          correcao = '''indice_resultado = testes.rfind("console.log(`")\nif indice_resultado < 0:\n    raise SystemExit('não encontrei resumo dos testes backend')\n'''
+          s = s[:inicio] + correcao + s[fim:]
+          s = s.replace(
+              'testes = testes.replace(marcador_resultado, novos_testes + marcador_resultado, 1)',
+              'testes = testes[:indice_resultado] + novos_testes + testes[indice_resultado:]'
+          )
+          p.write_text(s, encoding='utf-8')
+          PY
       - run: python3 tools/patch-inventario-posse.py
       - run: npm ci
       - run: npm run teste:sintaxe
@@ -35,7 +51,7 @@ jobs:
         run: |
           rm tools/patch-inventario-posse.py
           rm .github/workflows/patch-inventario-posse.yml
-          git config user.name "github-actions[bot]]"
+          git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add backend/40_Regras.gs backend/4C_Ajustes.gs js/telas/criacao.js js/telas/ficha.js tools/testes-backend.mjs tools/testes-e2e.mjs tools/patch-inventario-posse.py .github/workflows/patch-inventario-posse.yml
           git commit -m "feat: unificar posse de equipamentos e mochila"
