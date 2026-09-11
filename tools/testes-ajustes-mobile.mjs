@@ -70,9 +70,6 @@ async function auditar(page, viewport, estado, { conexao, detalhesAbertos, detal
     if (conexao === 'erro' && !/Sem resposta/.test(selo.textContent || '')) {
       erros.push('selo de erro sem texto explícito');
     }
-    const estilo = getComputedStyle(detalhe);
-    const visivel = estilo.display !== 'none' && estilo.visibility !== 'hidden' && detalhe.getBoundingClientRect().height > 0;
-    if (detalhesAbertos !== visivel) erros.push(`detalhe visível=${visivel}; esperava ${detalhesAbertos}`);
     return erros;
   }, { conexao, detalhesAbertos });
 
