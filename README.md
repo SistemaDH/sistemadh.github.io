@@ -10,6 +10,8 @@ O frontend é publicado pelo GitHub Pages e o backend oficial é Supabase: Edge 
 
 > **Produção:** Core 1.0 + Lote 9 publicados em `main` em 11/09/2026.
 
+> **Em desenvolvimento:** migração integral para o SRD 2.0 na branch `srd2-conformidade`. Fonte, erratas, tradução e cobertura estão documentadas em `docs/srd2-conformidade.md`; nada desse lote foi implantado em produção.
+
 O estado atual inclui:
 
 - criação e ficha completa de personagem;
@@ -59,10 +61,10 @@ O navegador não acessa diretamente as tabelas PostgreSQL. `js/api.js` distribui
 Produção atual:
 
 ```text
-engine-api: v9 ACTIVE
+engine-api: v10 ACTIVE
 verify_jwt: false
-ENGINE_COMMIT: 752c7abc0349222bd795254f8f023c047125a1fe
-ezbr_sha256: bb5b32f84dc598058c1b172eee05cd1d601476636dcf3fcc4de36df91b56ac23
+ENGINE_COMMIT: 2761bb828287fe0c17009cf4d0e255ed21762e07
+ezbr_sha256: deabf224e975300370e6063a8520f5233509c97453b832d87d9f331fe5d22add
 ```
 
 O arquivo versionado `supabase/functions/engine-api/index.ts` usa o mesmo `ENGINE_COMMIT` do deploy ativo. Esse alinhamento é deliberado para impedir regressão em futuros redeploys.
@@ -111,16 +113,16 @@ Históricas/aposentadas: `apps-script-db`, `character-api`, `game-api`, `rules-e
 
 Catálogos estáticos permanecem em `data/*.json`. Mudanças de regra de Daggerheart devem registrar a fonte e respeitar a hierarquia adotada pelo projeto. O material pt-BR usado na conferência é pré-errata; divergências já decididas estão documentadas em `docs/`.
 
-Os Lotes 6–9 mantêm a linha Core/SRD 1.0 adotada pelo projeto. O SRD 2.0 de 25/08/2026 não foi adotado automaticamente.
+Os Lotes 6–9 mantêm a linha Core/SRD 1.0 adotada em produção. A migração para o SRD 2.0 de 25/08/2026 é explícita, auditável e permanece isolada na branch `srd2-conformidade` até completar seus gates.
 
 ## Testes
 
-Gate completo mais recente antes do fechamento documental: **CI #63** em 11/09/2026.
+Gate completo da integração de inventário em produção: GitHub Actions run `34612183183`, em 11/09/2026.
 
 ```text
 sintaxe                 → 84 arquivos JS/MJS OK
-backend                 → 945 passaram, 0 falharam
-E2E                     → 108 passos OK, 0 falharam
+backend                 → 947 passaram, 0 falharam
+E2E                     → 109 passos OK, 0 falharam
 gerados                 → 14 geradores conferidos
 CSS                     → nada a limpar nem a escrever
 auditoria Core 1.0      → 0 candidatos mecânicos pendentes
@@ -140,21 +142,24 @@ npm run teste:e2e
 npm run teste:layout-mobile
 npm run teste:layout-dano-mobile
 npm run teste:layout-responsivo
+npm run teste:srd2
 ```
 
 O workflow `.github/workflows/ci.yml` executa a suíte funcional e os contratos visuais do projeto.
 
 ## Publicação atual
 
-Fechamento funcional do Lote 9 em produção em 11/09/2026:
+Fechamento funcional mais recente em produção em 11/09/2026:
 
-- commit funcional do motor/frontend: `752c7abc0349222bd795254f8f023c047125a1fe`;
-- `engine-api` v9 ACTIVE, `verify_jwt=false`;
-- `ENGINE_COMMIT`: `752c7abc0349222bd795254f8f023c047125a1fe`;
-- SHA do pacote Supabase: `bb5b32f84dc598058c1b172eee05cd1d601476636dcf3fcc4de36df91b56ac23`;
+- commit funcional do motor: `2761bb828287fe0c17009cf4d0e255ed21762e07`;
+- `engine-api` v10 ACTIVE, `verify_jwt=false`;
+- `ENGINE_COMMIT`: `2761bb828287fe0c17009cf4d0e255ed21762e07`;
+- SHA do pacote Supabase: `deabf224e975300370e6063a8520f5233509c97453b832d87d9f331fe5d22add`;
 - PR #9 integrou o fechamento funcional do HUD de dano;
 - PR #10 alinhou o source versionado do `engine-api` ao pin de produção;
-- GitHub Pages #81 publicou com sucesso a `main` após esse alinhamento;
+- PR #13 integrou posse/inventário e PR #14 unificou o gerenciamento de equipamentos;
+- `main`: `64d32d793182b8d81f65f0933e2dc8ccfe55c479`;
+- GitHub Pages publicou com sucesso a `main` após essas integrações;
 - nenhuma migração de banco foi necessária nessa promoção.
 
 O HEAD da `main` pode avançar por commits exclusivamente documentais sem exigir novo deploy do motor. O que define o backend privilegiado é sempre o `ENGINE_COMMIT` explícito da função.

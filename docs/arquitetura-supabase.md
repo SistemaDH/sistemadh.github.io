@@ -24,13 +24,13 @@ As tabelas expostas têm RLS habilitado e não possuem policies públicas para `
 
 `engine-api` executa o código mantido em `backend/*.gs` através de uma camada de compatibilidade que substitui as antigas APIs de planilha por estado carregado do PostgreSQL.
 
-Produção atual, após o fechamento funcional do Lote 9:
+Produção atual, após a integração do inventário sobre o Lote 9:
 
 ```text
-engine-api: v9 ACTIVE
+engine-api: v10 ACTIVE
 verify_jwt: false
-ENGINE_COMMIT: 752c7abc0349222bd795254f8f023c047125a1fe
-ezbr_sha256: bb5b32f84dc598058c1b172eee05cd1d601476636dcf3fcc4de36df91b56ac23
+ENGINE_COMMIT: 2761bb828287fe0c17009cf4d0e255ed21762e07
+ezbr_sha256: deabf224e975300370e6063a8520f5233509c97453b832d87d9f331fe5d22add
 ```
 
 O source versionado em `supabase/functions/engine-api/index.ts` usa o mesmo `ENGINE_COMMIT` da função implantada. Esse alinhamento evita que um redeploy futuro feito a partir do repositório volte silenciosamente para um commit antigo.
@@ -144,3 +144,17 @@ Históricas/aposentadas — não criar dependência nova:
 - PR #10 alinhou `supabase/functions/engine-api/index.ts` ao mesmo pin já implantado;
 - GitHub Pages #81 publicou com sucesso a `main` após o alinhamento;
 - nenhuma migração de banco foi necessária.
+
+### Inventário integrado sobre o Lote 9
+
+- commit imutável do motor: `2761bb828287fe0c17009cf4d0e255ed21762e07`;
+- `engine-api` v10 ACTIVE;
+- pacote implantado: `deabf224e975300370e6063a8520f5233509c97453b832d87d9f331fe5d22add`;
+- `verify_jwt=false` e autenticação customizada preservados;
+- PR #13 integrou posse/inventário e PR #14 unificou o gerenciador de equipamentos;
+- `main` publicada: `64d32d793182b8d81f65f0933e2dc8ccfe55c479`;
+- nenhuma migração de banco necessária.
+
+### Migração SRD 2.0
+
+Permanece isolada na branch `srd2-conformidade`. Enquanto o lote não estiver integralmente auditado e verde, não alterar o pin de produção. Fonte, hashes, erratas, glossário e cobertura ficam em `data/srd2-*.json` e `docs/srd2-conformidade.md`.

@@ -5,6 +5,22 @@
   "paginaOficial": "https://www.daggerheart.com/srd/",
   "pdfOficial": "https://www.daggerheart.com/wp-content/uploads/2026/08/DH_SRD_2_2026_08_25.pdf",
   "pdfSha256": "55d8b92b7e58aa1da99a4a59aa77352483ef4fbda71baddb9af9bfc1f333bd2a",
+  "erratas": {
+    "declaracaoOficial": "A página oficial registra que o SRD 2.0 já incorpora as erratas publicadas até 2026-08-25.",
+    "core": {
+      "data": "2025-09-09",
+      "url": "https://www.daggerheart.com/wp-content/uploads/2025/09/Daggerheart-Errata-September9th2025.pdf",
+      "sha256": "91bfce0cf9ba8dcd362dd5b907891636080902309decfee7d3cba137277f5263"
+    },
+    "hopeAndFear": {
+      "data": "2026-08-25",
+      "url": "https://www.daggerheart.com/wp-content/uploads/2026/08/Daggerheart-Hope-and-Fear-08-25-2026.pdf",
+      "sha256": "0c7cb94343e6450668fa24641007494a841af31a17b0f39dfa67cf2e7153e311",
+      "entradas": 10,
+      "conferidaContraSrd2": true,
+      "divergenciasPendentes": 0
+    }
+  },
   "corpusAuxiliar": {
     "repositorio": "klrkdekira/daggerheart-system-json",
     "commit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64",

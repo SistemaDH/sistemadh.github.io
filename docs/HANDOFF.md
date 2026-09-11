@@ -21,6 +21,46 @@ Leia nesta ordem:
 - mudança de regra de Daggerheart deve registrar a fonte;
 - nunca sobrescrever mudança recente de outro agente sem entender o estado atual.
 
+## Migração SRD 2.0 — EM ANDAMENTO
+
+Checkpoint de **11/09/2026**. Este é o trabalho ativo; os lotes Core abaixo permanecem como histórico e como regressão obrigatória.
+
+- branch: `srd2-conformidade`;
+- base funcional da Fase 1: `cafb688c4b7d37e9091227a207224bd7537498db`;
+- produção permanece na `main`; **não** houve merge, pin novo ou deploy do motor SRD 2.0;
+- Supabase conferido: projeto `ACTIVE_HEALTHY`, `engine-api` **v10 ACTIVE**, `verify_jwt=false`, `ENGINE_COMMIT=2761bb828287fe0c17009cf4d0e255ed21762e07`, bundle `deabf224e975300370e6063a8520f5233509c97453b832d87d9f331fe5d22add`;
+- autoridade mecânica: SRD 2.0 oficial de 25/08/2026, PDF SHA-256 `55d8b92b7e58aa1da99a4a59aa77352483ef4fbda71baddb9af9bfc1f333bd2a`;
+- corpus auxiliar auditável: `klrkdekira/daggerheart-system-json@7677b0c28f2efb12bba4a29f23d8068d47f37d64`, 1.539 registros em 16 coleções;
+- errata Core de 09/09/2025: SHA-256 `91bfce0cf9ba8dcd362dd5b907891636080902309decfee7d3cba137277f5263`;
+- errata *Hope & Fear* de 25/08/2026: SHA-256 `0c7cb94343e6450668fa24641007494a841af31a17b0f39dfa67cf2e7153e311`; dez entradas conferidas, todas já incorporadas ao SRD 2.0, zero divergências pendentes.
+
+### Fase 1 concluída na branch — avanço 1–10
+
+- exatamente dois avanços e uma carta de domínio por nível;
+- espaços livres do patamar atual ou de qualquer patamar inferior;
+- Proficiência e Multiclasse consomem/marcam os dois espaços da caixa preta;
+- bloqueio Subclasse × Multiclasse aplicado no patamar correto;
+- bônus permanentes reconstruídos pelo servidor;
+- fichas antigas com uma marca em caixa preta são normalizadas sem perder o benefício;
+- API impede ultrapassar o nível anunciado pelo Mestre;
+- escolha da carta obrigatória atualiza corretamente a prévia; o E2E restaura o nível da mesa para não contaminar cenários posteriores.
+
+Validação da Fase 1:
+
+- GitHub Actions `SRD2 fase 1` run **#13** (`34632488061`): `success`;
+- sintaxe: 84 arquivos antes do auditor de tradução; backend: **951/951**; gerados: **14/14**; CSS, E2E e baterias responsivas verdes;
+- após os auditores novos: sintaxe local **86 arquivos**, `npm run teste:srd2` verde, backend **951/951**, gerados **14/14**, CSS limpo.
+
+### Tradução e cobertura
+
+- `data/srd2-traducao.json`: vocabulário obrigatório pt-BR; termos do Core são preservados e nomes novos de *Hope & Fear* ficam provisórios até existir tradução oficial;
+- `data/srd2-fonte.json`: fonte, hashes, erratas e pin do corpus;
+- `data/srd2-cobertura.json`: estado das 16 coleções; não considerar conteúdo antigo como conferido por semelhança;
+- `docs/srd2-conformidade.md`: critério formal para declarar 100%;
+- CI: `npm run teste:srd2` valida tradução e matriz de cobertura.
+
+Próximo bloco exato: classificar registro a registro o núcleo de personagem do SRD 2.0 — domínios, 13 classes, 26 subclasses, 24 ancestralidades + ancestralidade mista, 15 comunidades e 6 transformações — mantendo nome inglês e `sourceLocator`, traduzindo o texto para pt-BR e acrescentando testes mecânicos antes de expor na criação.
+
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 
 Iniciado em 08/09/2026 na branch `ediçãoclaude`.

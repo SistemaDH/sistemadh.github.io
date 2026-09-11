@@ -1,0 +1,24 @@
+{
+  "versao": 1,
+  "estado": "em-construcao",
+  "totalEsperado": 1539,
+  "estadosPermitidos": ["nao-iniciado", "em-auditoria", "conferido"],
+  "colecoes": [
+    { "id": "sources", "esperados": 1, "estado": "conferido", "observacao": "PDF oficial, hashes e corpus auxiliar fixados." },
+    { "id": "domains", "esperados": 10, "estado": "nao-iniciado" },
+    { "id": "classes", "esperados": 13, "estado": "nao-iniciado" },
+    { "id": "subclasses", "esperados": 26, "estado": "nao-iniciado" },
+    { "id": "ancestries", "esperados": 25, "estado": "nao-iniciado", "observacao": "24 ancestralidades nomeadas e a regra de ancestralidade mista." },
+    { "id": "communities", "esperados": 15, "estado": "nao-iniciado" },
+    { "id": "transformations", "esperados": 6, "estado": "nao-iniciado" },
+    { "id": "beastforms", "esperados": 24, "estado": "nao-iniciado" },
+    { "id": "weapons", "esperados": 358, "estado": "nao-iniciado" },
+    { "id": "armor", "esperados": 76, "estado": "nao-iniciado" },
+    { "id": "items", "esperados": 120, "estado": "nao-iniciado" },
+    { "id": "consumables", "esperados": 120, "estado": "nao-iniciado" },
+    { "id": "adversaries", "esperados": 264, "estado": "nao-iniciado" },
+    { "id": "environments", "esperados": 47, "estado": "nao-iniciado" },
+    { "id": "domain-cards", "esperados": 210, "estado": "nao-iniciado" },
+    { "id": "rules", "esperados": 224, "estado": "em-auditoria", "observacao": "Avanço dos níveis 1–10 corrigido; os demais registros de regras ainda precisam de classificação individual." }
+  ]
+}
