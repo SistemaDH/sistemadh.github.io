@@ -1203,7 +1203,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const ativas = ((ficha.cartas || {}).ativas || [])
       .map((ref) => catalogo.acharCarta(ref))
       .filter(Boolean);
-    if (ativas.some((carta) => normalizarNome_(carta.nome) === normalizarNome_('Levantar-Se'))) {
+    if (ativas.some((carta) => dados.chave(carta.nome) === dados.chave('Levantar-Se'))) {
       saida.push(['Levantar-Se', 'Dano Severo: marque 1 Estresse para reduzir a severidade em um nível.']);
     }
     return saida;
