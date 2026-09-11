@@ -15,12 +15,9 @@ jobs:
         with:
           ref: inventario-integracao
           fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: npm
-      - name: Aplicar somente o commit funcional do inventário
+      - name: Aplicar patch com rejects para diagnosticar conflitos
         run: |
+          set +e
           git diff d440676f447fb3b5452cdf81b3df848e5b843aee^ d440676f447fb3b5452cdf81b3df848e5b843aee -- \
             backend/40_Regras.gs \
             backend/4C_Ajustes.gs \
@@ -29,42 +26,14 @@ jobs:
             tools/testes-backend.mjs \
             tools/testes-e2e.mjs \
             docs/alteracao-catalogo-mochila.md \
-          | git apply --3way --index
+          | git apply --reject --whitespace=nowarn
+          codigo=$?
+          echo '=== STATUS ==='
           git status --short
-      - run: npm ci
-      - run: npm run teste:sintaxe
-      - run: npm run teste
-      - run: npm run teste:gerados
-      - run: npm run teste:css
-      - name: Auditoria Core 1.0 zerada
-        run: |
-          python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria.md
-          grep -F 'Classes/subclasses: **99 características**; **0** candidatas' /tmp/auditoria.md
-          grep -F 'Comunidades: **9 características**; **0** candidatas' /tmp/auditoria.md
-          grep -F 'Cartas de domínio: **189 cartas**; **0** candidatas' /tmp/auditoria.md
-          grep -F 'Características de armas/armaduras/molduras: **203 ocorrências**; **0** ocorrências candidatas' /tmp/auditoria.md
-          grep -F 'Loot/consumíveis com texto mecânico detectado: **81**; **0** candidatos' /tmp/auditoria.md
-      - run: npx playwright install --with-deps chromium
-      - run: npm run teste:e2e
-      - run: npm run teste:layout-mobile
-      - run: npm run teste:layout-conjuracao-mobile
-      - run: npm run teste:layout-toast-contexto-mobile
-      - run: npm run teste:layout-mestre-mobile
-      - run: npm run teste:layout-criacao-mobile
-      - run: npm run teste:layout-regras-mobile
-      - run: npm run teste:layout-abertura-mobile
-      - run: npm run teste:layout-ajustes-mobile
-      - run: npm run teste:layout-avanco-mobile
-      - run: npm run teste:layout-descanso-mobile
-      - run: npm run teste:layout-dano-mobile
-      - run: npm run teste:layout-mochila-em-uso-mobile
-      - run: npm run teste:layout-foto-mobile
-      - run: npm run teste:layout-responsivo
-      - name: Gravar integração limpa
-        run: |
-          rm .github/workflows/integrar-inventario.yml
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "feat: integrar posse de equipamentos e mochila sobre Lote 9"
-          git push origin HEAD:inventario-integracao
+          echo '=== REJECT ficha.js ==='
+          cat js/telas/ficha.js.rej 2>/dev/null || true
+          echo '=== REJECT testes-e2e.mjs ==='
+          cat tools/testes-e2e.mjs.rej 2>/dev/null || true
+          echo '=== REJECTS restantes ==='
+          find . -name '*.rej' -not -path './.git/*' -print
+          exit $codigo
