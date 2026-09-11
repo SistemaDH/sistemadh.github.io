@@ -12,7 +12,9 @@
 @media (max-width: 639px) {
   .avanco__resumoSticky {
     position: sticky;
-    top: 0;
+    /* O scrollport é a caixa do modal, que tem var(--e5) de padding. Sem a
+       compensação sobra uma faixa de conteúdo rolado acima do resumo. */
+    top: calc(-1 * var(--e5));
     z-index: 7;
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
