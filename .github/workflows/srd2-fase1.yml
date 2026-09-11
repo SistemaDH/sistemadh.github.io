@@ -39,6 +39,8 @@ jobs:
           python3 -m py_compile tools/aplicar-srd2-fase1.py
       - name: Aplicar correções SRD 2.0 — fase 1
         run: python3 tools/aplicar-srd2-fase1.py
+      - name: Adaptar testes legados ao contrato obrigatório
+        run: python3 tools/ajustar-testes-srd2-fase1.py
       - name: Regenerar avanço
         run: node tools/gerar-4D-avanco.mjs
       - name: Sintaxe
