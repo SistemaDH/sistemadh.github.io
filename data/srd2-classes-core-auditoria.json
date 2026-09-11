@@ -1,0 +1,68 @@
+{
+  "versao": 1,
+  "estado": "conferido",
+  "fonte": {
+    "srd": "2.0",
+    "data": "2026-08-25",
+    "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64"
+  },
+  "conclusao": "As 9 classes e 18 subclasses do Core preservam no SRD 2.0 os mesmos números e efeitos mecânicos já implementados. O lote corrigiu vocabulário mecânico legado sem alterar os efeitos.",
+  "classes": [
+    "classes/bard",
+    "classes/druid",
+    "classes/guardian",
+    "classes/ranger",
+    "classes/rogue",
+    "classes/seraph",
+    "classes/sorcerer",
+    "classes/warrior",
+    "classes/wizard"
+  ],
+  "subclasses": [
+    "subclasses/beastbound",
+    "subclasses/call-of-the-brave",
+    "subclasses/call-of-the-slayer",
+    "subclasses/divine-wielder",
+    "subclasses/elemental-origin",
+    "subclasses/nightwalker",
+    "subclasses/primal-origin",
+    "subclasses/school-of-knowledge",
+    "subclasses/school-of-war",
+    "subclasses/stalwart",
+    "subclasses/syndicate",
+    "subclasses/troubadour",
+    "subclasses/vengeance",
+    "subclasses/warden-of-renewal",
+    "subclasses/warden-of-the-elements",
+    "subclasses/wayfinder",
+    "subclasses/winged-sentinel",
+    "subclasses/wordsmith"
+  ],
+  "excecoesDoCorpus": [
+    {
+      "id": "subclasses/troubadour",
+      "problema": "O JSON-LD lista apenas a característica de Fundação; Especialização e Maestria constam no SRD.md e no PDF oficial.",
+      "quantidadeCorretaDeCaracteristicas": 3
+    },
+    {
+      "id": "subclasses/wordsmith",
+      "problema": "O JSON-LD lista apenas as duas características de Fundação; Especialização e Maestria constam no SRD.md e no PDF oficial.",
+      "quantidadeCorretaDeCaracteristicas": 4
+    }
+  ],
+  "correcoesDeVocabulario": [
+    { "id": "classes/bard", "termos": ["jogada de ação", "limpar Dados de Inspiração"] },
+    { "id": "classes/guardian", "termos": ["limpar Pontos de Armadura"] },
+    { "id": "classes/seraph", "termos": ["limpar Ponto de Vida"] },
+    { "id": "subclasses/beastbound", "termos": ["Mestre", "opção de avanço", "Companheiro do Caçador"] },
+    { "id": "subclasses/call-of-the-brave", "termos": ["limpar Estresse"] },
+    { "id": "subclasses/call-of-the-slayer", "termos": ["jogada de dano", "movimento de descanso"] },
+    { "id": "subclasses/divine-wielder", "termos": ["limpar Pontos de Vida ou Estresses"] },
+    { "id": "subclasses/elemental-origin", "termos": ["jogada de Conjuração", "Dados de Dualidade", "traço"] },
+    { "id": "subclasses/nightwalker", "termos": ["Distante", "Longínquo", "Camuflado", "Restrito", "jogada de Conjuração"] },
+    { "id": "subclasses/school-of-knowledge", "termos": ["recordar", "custo de recordar"] },
+    { "id": "subclasses/stalwart", "termos": ["Ponto de Armadura", "gravidade do dano"] },
+    { "id": "subclasses/warden-of-renewal", "termos": ["limpar", "Forma de Fera"] },
+    { "id": "subclasses/warden-of-the-elements", "termos": ["reduzir o dano em 1d8"] }
+  ]
+}

@@ -65,7 +65,7 @@ A correção inicial implementa diretamente as pp. 53–54 do SRD 2.0:
 
 O recorte inicial contém 95 registros nas coleções de domínios, classes, subclasses, ancestralidades, comunidades e transformações. A comparação estrutural encontrou:
 
-- 64 registros já representados no Core, mas ainda obrigatoriamente sujeitos a comparação individual com o SRD 2.0;
+- 64 registros já representados no Core, todos sujeitos a comparação individual com o SRD 2.0; 27 deles (9 classes + 18 subclasses) já foram conferidos e permanecem implementados;
 - 31 registros novos: Pavor, 4 classes, 8 subclasses, 6 ancestralidades, 6 comunidades e 6 transformações.
 
 Os 31 registros novos estão traduzidos e estruturados em catálogos de preparação, todos marcados como `traducao-provisoria-nao-exposta`:
@@ -83,3 +83,9 @@ Os 31 registros novos estão traduzidos e estruturados em catálogos de prepara�
 - comunidades usam a chave singular `feature`; tratar apenas `features` produz um falso negativo;
 - o PDF oficial continua prevalecendo sobre o corpus auxiliar;
 - a Forma de Lobo do Lobisomem usa a errata de *Hope & Fear*: durante a forma, uma **jogada com Esperança** exige marcar 1 Estresse.
+
+### Classes e subclasses do Core
+
+As 9 classes e 18 subclasses que já existiam foram conferidas contra as pp. 10–31 do SRD 2.0. Evasão inicial, Pontos de Vida iniciais, domínios, traços de Conjuração, quantidades de características, custos, alcances, frequências e efeitos permanecem mecanicamente compatíveis. A fonte exibida foi normalizada para o vocabulário SRD2 em `data/classes.json`, e `backend/42_Classes.gs` foi regenerado.
+
+O auditor específico é `data/srd2-classes-core-auditoria.json` + `tools/conferir-srd2-classes-core.mjs`. Ele também protege duas falhas do extrator auxiliar: os JSON-LD de Músico Errante e Artífice das Palavras omitem Especialização/Maestria, embora essas características estejam presentes no `SRD.md` e no PDF oficial.

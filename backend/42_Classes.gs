@@ -922,7 +922,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
         "Camuflado"
       ]
     },
-    "alcanceBase": "Longo",
+    "alcanceBase": "Distante",
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
@@ -1568,8 +1568,8 @@ const MODIFICADORES_DE_ALCANCE_DE_CLASSE = {
   },
   "Sombra Fugaz": {
     "habilidade": "Passo Sombrio",
-    "de": "Longo",
-    "para": "Muito Longo"
+    "de": "Distante",
+    "para": "Longínquo"
   }
 };
 

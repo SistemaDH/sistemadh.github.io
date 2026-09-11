@@ -4,7 +4,9 @@
   "escopo": "núcleo de personagem do SRD 2.0",
   "total": 95,
   "resumo": {
-    "existentesQueRequeremComparacao": 64,
+    "existentes": 64,
+    "existentesConferidosImplementados": 27,
+    "existentesQueRequeremComparacao": 37,
     "novosQueRequeremTraducaoEImplementacao": 31
   },
   "colecoes": [
@@ -220,7 +222,7 @@
           },
           "corpusSha256": "b65a4bce296fa5c5a5f1b47dde4b19ad41bdc63cf00c9ea7cdc0d5d835a5cbf2",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "classes/brawler",
@@ -254,7 +256,7 @@
           },
           "corpusSha256": "95dbed6059ba6aa3c64d2a7e5502cf026a106e49f7e37557d6c7f28c37078108",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "classes/guardian",
@@ -271,7 +273,7 @@
           },
           "corpusSha256": "5737d0eb6f093b2c41b1a2585603716417b4407a8da1d2b243e42af2e71ac3f4",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "classes/ranger",
@@ -288,7 +290,7 @@
           },
           "corpusSha256": "5cfafe641b2c7b7caa8dedeb57ab70e7bbafa5eb507d156815509c8f8b2a1b0a",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "classes/rogue",
@@ -305,7 +307,7 @@
           },
           "corpusSha256": "de05b8f9b08d011cff4a17c55d4015eaf111ed823eb1d6b01a60e8d2ef7795de",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "classes/seraph",
@@ -322,7 +324,7 @@
           },
           "corpusSha256": "795463bcb135597f7c404c196b4fc5e143be6586fbc726de6e70e1ddab6c2feb",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "classes/sorcerer",
@@ -339,7 +341,7 @@
           },
           "corpusSha256": "11e1c200227e65775d735f5fb5bbf7a9a16880541de566baae71e01cfda4df1d",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "classes/warlock",
@@ -373,7 +375,7 @@
           },
           "corpusSha256": "b1eecf55ab00ee327e10900fd8c664871f974937e0d020263df5793acbb368a9",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "classes/witch",
@@ -407,7 +409,7 @@
           },
           "corpusSha256": "5f07927283a8e2390a0f7cfccd4b45c44a6fce0c205f0a0c70a3c1ddd463daeb",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         }
       ]
     },
@@ -430,7 +432,7 @@
           },
           "corpusSha256": "7f2fa0655c7a5ab4aa81ddee191a4cf00e036273717ace1d2b9eed1e6fc62de8",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "subclasses/call-of-the-brave",
@@ -447,7 +449,7 @@
           },
           "corpusSha256": "da450acc8015faa1fb8232ee45c2089928b36729de439aeb993d7c472a7b6705",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "subclasses/call-of-the-slayer",
@@ -464,7 +466,7 @@
           },
           "corpusSha256": "a5c687e19c8480e589d15034b0cc243f294e749505e48478c3e811ad9a15ee0e",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "subclasses/divine-wielder",
@@ -481,7 +483,7 @@
           },
           "corpusSha256": "a6356dbd48b3c3ed757a72f2e78be090393f049bb9068fd293e821ec5cb6e0bd",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "subclasses/elemental-origin",
@@ -498,7 +500,7 @@
           },
           "corpusSha256": "e09e8325d4c20380f00de1d3a93d3c8e1cce43046aa755288679e19dd6fea36f",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "subclasses/executioners-guild",
@@ -600,7 +602,7 @@
           },
           "corpusSha256": "d230633c5ff1f34a7886ac0908c049057ead04065294c6be4efd42003a3eb599",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "subclasses/pact-of-the-endless",
@@ -668,7 +670,7 @@
           },
           "corpusSha256": "deb625dfe0411e2e5b8bf8ff907b1e013a6d339f18e4ff67eefa44a7a9fb4819",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "subclasses/school-of-knowledge",
@@ -685,7 +687,7 @@
           },
           "corpusSha256": "84c6983845f29f5d39f33582d77d578f15e9c8b79cb3f80ddca7056bc0f41f97",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "subclasses/school-of-war",
@@ -702,7 +704,7 @@
           },
           "corpusSha256": "e9d2f7cbebc0e10804852c04d69a04b9fb14fb9f3d9ee5ea1d324fc04f5cf977",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "subclasses/stalwart",
@@ -719,7 +721,7 @@
           },
           "corpusSha256": "a6822132ed27b86d6a70f19269a9cf477a40849edf04e4832390527f347e19ad",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "subclasses/syndicate",
@@ -736,7 +738,7 @@
           },
           "corpusSha256": "e31fc8ef9c325b2191a1a3a67594d7dfa66787deaa55f14bb7efdd76cdff7d62",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "subclasses/troubadour",
@@ -753,7 +755,7 @@
           },
           "corpusSha256": "7acaddaba5d080344a3ba1145b650c4aee800484cc55ef0f372a2144371942db",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "subclasses/vengeance",
@@ -770,7 +772,7 @@
           },
           "corpusSha256": "365f1a213a7b9bf131f5634d081618b4b99792326d77f68dbbdd8a3a5aef69a1",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "subclasses/warden-of-renewal",
@@ -787,7 +789,7 @@
           },
           "corpusSha256": "34a9a90aa4397bc96e78663442741713f0bb91e0bf4da5bdc8f754a34f2c1da0",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "subclasses/warden-of-the-elements",
@@ -804,7 +806,7 @@
           },
           "corpusSha256": "8bacd3f1faefb1b3bf9d0b78d8d4d8724694eef44fec1e1364a9d39d6cf8dfc3",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "subclasses/wayfinder",
@@ -821,7 +823,7 @@
           },
           "corpusSha256": "1397fde51bf209fd4442d04eb44b1bc4f29f4e0561345cce3d29c441242e297a",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "subclasses/winged-sentinel",
@@ -838,7 +840,7 @@
           },
           "corpusSha256": "e886a91dfdb28a7306f059a7511a2e149e3655596bdaf95ec2d16627c5df97de",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         },
         {
           "id": "subclasses/wordsmith",
@@ -855,7 +857,7 @@
           },
           "corpusSha256": "dd27443d1f5fdf36e67d94d5b342c11042fa21ed23aad4ed1d563488f446014e",
           "presencaNoCore": "existente",
-          "estado": "existente-requer-comparacao"
+          "estado": "existente-conferido-implementado"
         }
       ]
     },

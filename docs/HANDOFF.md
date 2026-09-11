@@ -56,13 +56,13 @@ Validação da Fase 1:
 - `data/srd2-traducao.json`: vocabulário obrigatório pt-BR; termos do Core são preservados e nomes novos de *Hope & Fear* ficam provisórios até existir tradução oficial;
 - `data/srd2-fonte.json`: fonte, hashes, erratas e pin do corpus;
 - `data/srd2-cobertura.json`: estado das 16 coleções; não considerar conteúdo antigo como conferido por semelhança;
-- `data/srd2-inventario.json`: 1.539 IDs individuais com nome inglês, tipo, `sourceLocator` quando aplicável, hash do corpus e estado; somente a fonte e as regras `leveling-up`/`multiclassing` saem do estado pendente neste checkpoint (1 fonte conferida, 2 mecânicas implementadas, 1.536 pendentes);
+- `data/srd2-inventario.json`: 1.539 IDs individuais com nome inglês, tipo, `sourceLocator` quando aplicável, hash do corpus e estado; neste checkpoint são 1 fonte conferida, 29 mecânicas implementadas e 1.509 pendentes;
 - `docs/srd2-conformidade.md`: critério formal para declarar 100%;
 - CI: `npm run teste:srd2` valida tradução e matriz de cobertura.
 
 ### Núcleo do jogador — checkpoint de preparação
 
-- `data/srd2-nucleo-auditoria.json` classifica 95 registros: 64 existentes que ainda exigem comparação e 31 novos;
+- `data/srd2-nucleo-auditoria.json` classifica 95 registros: 64 existentes, dos quais 27 já foram conferidos/implementados e 37 ainda exigem comparação, além de 31 novos em preparação;
 - `data/srd2-classes-novas.json`: domínio Pavor e 4 classes novas traduzidos/estruturados;
 - `data/srd2-subclasses-novas.json`: 8 subclasses e 43 características traduzidas/estruturadas;
 - `data/srd2-origens-novas.json`: 6 ancestralidades e 6 comunidades traduzidas/estruturadas;
@@ -72,9 +72,18 @@ Validação da Fase 1:
 - cuidado de extração: comunidades usam `feature` (singular) no JSON-LD, enquanto ancestralidades/transformações usam `features`; o PDF prevalece sempre;
 - errata de *Hope & Fear* aplicada à Forma de Lobo: o gatilho é uma jogada **com Esperança**.
 
-Validação deste checkpoint: `npm run teste:srd2` verde com 61 termos mecânicos, 31 nomes novos, 1.539 registros inventariados, 95 registros no recorte do núcleo e validadores específicos para classes, subclasses, origens e transformações; sintaxe local **94 arquivos**.
+### Classes/subclasses do Core conferidas
 
-Próximo bloco exato: comparar os **64 registros existentes** do núcleo com o SRD 2.0, começando pelas 9 classes e 18 subclasses do Core; registrar cada diferença textual/mecânica antes de alterar os dados exibidos. Em paralelo conceitual, projetar a persistência de Transformações, mas não expor as seis opções antes do ciclo completo de aquisição/remoção e efeitos permanentes estar protegido no servidor.
+- as 9 classes e 18 subclasses existentes foram comparadas às pp. 10–31 do SRD 2.0;
+- números, domínios, traços de Conjuração, custos, frequências, alcances e efeitos permaneceram mecanicamente compatíveis;
+- `data/classes.json` teve o vocabulário ativo normalizado: **jogada de Conjuração**, **Dados de Dualidade**, **Distante**, **Longínquo**, **Camuflado**, **Restrito**, **Ponto de Armadura**, **movimento de descanso**, **limpar** e **custo de recordar**;
+- `backend/42_Classes.gs` foi regenerado; compatibilidade com nomes antigos continua no glossário/normalizadores;
+- `data/srd2-classes-core-auditoria.json` registra os 27 IDs e as correções;
+- falha conhecida do corpus: os JSON-LD de `subclasses/troubadour` e `subclasses/wordsmith` omitem Especialização/Maestria; o conteúdo correto existe no `SRD.md`/PDF e foi preservado.
+
+Validação deste checkpoint: `npm run teste:srd2` verde com 61 termos mecânicos, 31 nomes novos, 1.539 registros inventariados (**29 implementados**, 1.509 pendentes), 95 registros no recorte do núcleo e validadores específicos; backend **951/951**, gerados **14/14**, sintaxe local **95 arquivos**.
+
+Próximo bloco exato: comparar os **28 registros de origem existentes** (18 ancestralidades + ancestralidade mista + 9 comunidades) com o SRD 2.0; depois conferir os 9 domínios Core restantes. Registrar cada diferença textual/mecânica antes de alterar dados exibidos. Em paralelo conceitual, projetar a persistência de Transformações, mas não expor as seis opções antes do ciclo completo de aquisição/remoção e efeitos permanentes estar protegido no servidor.
 
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 

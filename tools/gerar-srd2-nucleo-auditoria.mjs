@@ -44,7 +44,9 @@ for (const idColecao of colecoesAlvo) {
       sourceLocator: registro.sourceLocator,
       corpusSha256: registro.corpusSha256,
       presencaNoCore: existente ? 'existente' : 'novo',
-      estado: existente ? 'existente-requer-comparacao' : 'novo-requer-traducao-implementacao'
+      estado: existente
+        ? (registro.estado === 'mecanica-implementada' ? 'existente-conferido-implementado' : 'existente-requer-comparacao')
+        : 'novo-requer-traducao-implementacao'
     };
   });
   colecoes.push({ id: idColecao, quantidade: registros.length, registros });
@@ -57,11 +59,13 @@ const saida = {
   escopo: 'núcleo de personagem do SRD 2.0',
   total: todos.length,
   resumo: {
-    existentesQueRequeremComparacao: todos.filter((item) => item.presencaNoCore === 'existente').length,
+    existentes: todos.filter((item) => item.presencaNoCore === 'existente').length,
+    existentesConferidosImplementados: todos.filter((item) => item.estado === 'existente-conferido-implementado').length,
+    existentesQueRequeremComparacao: todos.filter((item) => item.estado === 'existente-requer-comparacao').length,
     novosQueRequeremTraducaoEImplementacao: todos.filter((item) => item.presencaNoCore === 'novo').length
   },
   colecoes
 };
 
 fs.writeFileSync(path.join(raiz, 'data/srd2-nucleo-auditoria.json'), `${JSON.stringify(saida, null, 2)}\n`);
-console.log(`Núcleo SRD2: ${saida.total} registros · ${saida.resumo.existentesQueRequeremComparacao} existentes · ${saida.resumo.novosQueRequeremTraducaoEImplementacao} novos.`);
+console.log(`Núcleo SRD2: ${saida.total} registros · ${saida.resumo.existentesConferidosImplementados} existentes conferidos · ${saida.resumo.existentesQueRequeremComparacao} existentes pendentes · ${saida.resumo.novosQueRequeremTraducaoEImplementacao} novos.`);

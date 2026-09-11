@@ -26,15 +26,15 @@ for (const [id, quantidade] of Object.entries(esperados)) {
   for (const registro of colecao.registros) {
     if (ids.has(registro.id)) erros.push(`ID duplicado: ${registro.id}`);
     ids.add(registro.id);
-    const estadoEsperado = registro.presencaNoCore === 'novo'
-      ? 'novo-requer-traducao-implementacao'
-      : 'existente-requer-comparacao';
-    if (registro.estado !== estadoEsperado) erros.push(`${registro.id}: estado incoerente`);
+    if (registro.presencaNoCore === 'novo' && registro.estado !== 'novo-requer-traducao-implementacao') erros.push(`${registro.id}: estado novo incoerente`);
+    if (registro.presencaNoCore === 'existente' && !['existente-requer-comparacao', 'existente-conferido-implementado'].includes(registro.estado)) erros.push(`${registro.id}: estado existente incoerente`);
     if (!registro.sourceLocator || !registro.corpusSha256) erros.push(`${registro.id}: fonte incompleta`);
   }
 }
 
-if (auditoria.resumo.existentesQueRequeremComparacao !== 64) erros.push('o núcleo deveria ter 64 registros existentes');
+if (auditoria.resumo.existentes !== 64) erros.push('o núcleo deveria ter 64 registros existentes');
+if (auditoria.resumo.existentesConferidosImplementados !== 27) erros.push('o núcleo deveria ter 27 registros existentes conferidos/implementados');
+if (auditoria.resumo.existentesQueRequeremComparacao !== 37) erros.push('o núcleo deveria ter 37 registros existentes ainda pendentes');
 if (auditoria.resumo.novosQueRequeremTraducaoEImplementacao !== 31) erros.push('o núcleo deveria ter 31 registros novos');
 
 if (erros.length) {
@@ -42,4 +42,4 @@ if (erros.length) {
   process.exit(1);
 }
 
-console.log('Auditoria do núcleo SRD2: 95 registros · 64 para comparar · 31 novos para traduzir/implementar.');
+console.log('Auditoria do núcleo SRD2: 95 registros · 27 existentes conferidos · 37 existentes pendentes · 31 novos em preparação.');

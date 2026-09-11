@@ -19,7 +19,37 @@ if (commit !== fonte.corpusAuxiliar.commit) {
 }
 
 const manifesto = JSON.parse(fs.readFileSync(path.join(corpus, 'objects/daggerheart-system-data.jsonld'), 'utf8'));
-const implementados = new Set(['rules/leveling-up', 'rules/multiclassing']);
+const implementados = new Set([
+  'rules/leveling-up',
+  'rules/multiclassing',
+  'classes/bard',
+  'classes/druid',
+  'classes/guardian',
+  'classes/ranger',
+  'classes/rogue',
+  'classes/seraph',
+  'classes/sorcerer',
+  'classes/warrior',
+  'classes/wizard',
+  'subclasses/beastbound',
+  'subclasses/call-of-the-brave',
+  'subclasses/call-of-the-slayer',
+  'subclasses/divine-wielder',
+  'subclasses/elemental-origin',
+  'subclasses/nightwalker',
+  'subclasses/primal-origin',
+  'subclasses/school-of-knowledge',
+  'subclasses/school-of-war',
+  'subclasses/stalwart',
+  'subclasses/syndicate',
+  'subclasses/troubadour',
+  'subclasses/vengeance',
+  'subclasses/warden-of-renewal',
+  'subclasses/warden-of-the-elements',
+  'subclasses/wayfinder',
+  'subclasses/winged-sentinel',
+  'subclasses/wordsmith'
+]);
 const colecoes = [];
 
 for (const colecao of manifesto.collections || []) {
