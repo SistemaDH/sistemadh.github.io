@@ -21,10 +21,36 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run teste:sintaxe
+      - run: npm run teste
+      - run: npm run teste:gerados
+      - run: npm run teste:css
+      - name: Auditoria Core 1.0 zerada
+        shell: bash
+        run: |
+          python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria.md
+          grep -F 'Classes/subclasses: **99 características**; **0** candidatas' /tmp/auditoria.md
+          grep -F 'Comunidades: **9 características**; **0** candidatas' /tmp/auditoria.md
+          grep -F 'Cartas de domínio: **189 cartas**; **0** candidatas' /tmp/auditoria.md
+          grep -F 'Características de armas/armaduras/molduras: **203 ocorrências**; **0** ocorrências candidatas' /tmp/auditoria.md
+          grep -F 'Loot/consumíveis com texto mecânico detectado: **81**; **0** candidatos' /tmp/auditoria.md
       - run: npx playwright install --with-deps chromium
+      - run: npm run teste:e2e
+      - run: npm run teste:layout-mobile
+      - run: npm run teste:layout-conjuracao-mobile
+      - run: npm run teste:layout-toast-contexto-mobile
+      - run: npm run teste:layout-mestre-mobile
+      - run: npm run teste:layout-criacao-mobile
+      - run: npm run teste:layout-regras-mobile
+      - run: npm run teste:layout-abertura-mobile
+      - run: npm run teste:layout-ajustes-mobile
+      - run: npm run teste:layout-avanco-mobile
+      - run: npm run teste:layout-descanso-mobile
       - name: Dano HUD 360 / 768 com diagnóstico visual
         run: npm run teste:layout-dano-mobile
-      - name: Conferir arquivos do diagnóstico
+      - run: npm run teste:layout-mochila-em-uso-mobile
+      - run: npm run teste:layout-foto-mobile
+      - run: npm run teste:layout-responsivo
+      - name: Conferir arquivos do diagnóstico de dano
         shell: bash
         run: |
           test -f artifacts/layout-dano-mobile/360x800-dano-hud.png
@@ -38,6 +64,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: layout-dano-mobile-b30-${{ github.run_id }}
+          name: layout-dano-mobile-b30-gate-${{ github.run_id }}
           path: artifacts/layout-dano-mobile
-          if-no-files-found: error
+          if-no-files-found: warn
