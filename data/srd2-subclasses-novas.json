@@ -1,0 +1,176 @@
+{
+  "versao": 1,
+  "estado": "traducao-provisoria-nao-exposta",
+  "fonte": {
+    "srd": "2.0",
+    "data": "2026-08-25",
+    "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64"
+  },
+  "subclasses": [
+    {
+      "idFonte": "subclasses/executioners-guild",
+      "id": "assassino-guilda-dos-executores",
+      "classe": "assassino",
+      "nomeIngles": "Executioners Guild",
+      "nome": "Guilda dos Executores",
+      "nomeEstado": "provisorio",
+      "tracoConjuracao": "Agilidade",
+      "descricao": "Escolha a Guilda dos Executores se quiser eliminar seus alvos com precisão letal.",
+      "caracteristicas": [
+        { "estagio": "fundacao", "nomeIngles": "First Strike", "nome": "Primeiro Golpe", "texto": "Na primeira vez em uma cena que tiver sucesso em um ataque, você causa o dobro do dano.", "automacao": "dano-contextual-uma-vez-por-cena" },
+        { "estagio": "fundacao", "nomeIngles": "Ambush", "nome": "Emboscada", "texto": "Sua característica Marcado para Morrer usa d6 em vez de d4.", "automacao": "altera-dado-de-classe" },
+        { "estagio": "especializacao", "nomeIngles": "Death Strike", "nome": "Golpe Mortal", "texto": "Quando causar dano Severo a uma criatura, você pode marcar 1 Estresse para forçá-la a marcar 1 Ponto de Vida adicional.", "automacao": "custo-proprio-e-efeito-no-alvo" },
+        { "estagio": "especializacao", "nomeIngles": "Scorpion’s Poise", "nome": "Postura do Escorpião", "texto": "Você recebe +2 de Evasão contra ataques feitos por uma criatura que tenha deixado Marcada para Morrer.", "automacao": "evasao-contextual-por-atacante" },
+        { "estagio": "maestria", "nomeIngles": "True Strike", "nome": "Golpe Certeiro", "texto": "Uma vez por descanso longo, quando falhar em um ataque, você pode gastar 1 Esperança para transformá-lo em sucesso.", "automacao": "custo-e-uso-por-descanso" },
+        { "estagio": "maestria", "nomeIngles": "Backstab", "nome": "Ataque pelas Costas", "texto": "Sua característica Marcado para Morrer usa d8 em vez de d6.", "automacao": "altera-dado-de-classe" }
+      ],
+      "sourceLocator": { "pdfPageStart": 9, "pdfPageEnd": 9, "lineStart": 402, "lineEnd": 426 }
+    },
+    {
+      "idFonte": "subclasses/poisoners-guild",
+      "id": "assassino-guilda-dos-envenenadores",
+      "classe": "assassino",
+      "nomeIngles": "Poisoners Guild",
+      "nome": "Guilda dos Envenenadores",
+      "nomeEstado": "provisorio",
+      "tracoConjuracao": "Conhecimento",
+      "descricao": "Escolha a Guilda dos Envenenadores se quiser debilitar seus alvos com aflições cruéis.",
+      "caracteristicas": [
+        {
+          "estagio": "fundacao",
+          "nomeIngles": "Toxic Concoctions",
+          "nome": "Preparos Tóxicos",
+          "texto": "Marque 1 Estresse e role 1d4 fora do app para colocar uma quantidade de marcadores nesta carta igual ao resultado +1. Quando fizer um ataque bem-sucedido com arma, você pode gastar 1 marcador para afligir o alvo com um veneno. Pétala Fantasma deixa o alvo temporariamente Vulnerável; Esporo Tumular força o alvo a marcar também 1 Estresse; Erva-Sanguessuga acrescenta 1d6 de dano ao ataque. Limpe todos os marcadores não gastos ao fazer um descanso longo.",
+          "automacao": "resultado-manual-contador-e-veneno-escolhido"
+        },
+        {
+          "estagio": "especializacao",
+          "nomeIngles": "Poison Compendium",
+          "nome": "Compêndio de Venenos",
+          "texto": "Você também conhece estes venenos: Trepadeira da Meia-Noite faz o alvo sofrer desvantagem nas jogadas de ataque até marcar 1 Estresse para limpar a condição; Raiz de Górgona deixa o alvo temporariamente Restrito.",
+          "automacao": "efeitos-contextuais-no-alvo"
+        },
+        { "estagio": "especializacao", "nomeIngles": "Twin Fang", "nome": "Presas Gêmeas", "texto": "Ao afligir com um veneno conhecido um alvo Marcado para Morrer, você pode gastar 1 marcador adicional para aplicar também o efeito de um segundo veneno conhecido.", "automacao": "gasto-adicional-de-contador" },
+        {
+          "estagio": "maestria",
+          "nomeIngles": "Venomancer",
+          "nome": "Venomante",
+          "texto": "Você também conhece estes venenos: Semente da Ruína aplica −3 aos limiares de dano do alvo até o fim da cena, sem acumular; Folha do Medo acrescenta ao ataque dano igual ao resultado do seu Dado de Medo; Espinho Cadavérico impõe desvantagem nas jogadas de reação do alvo até o fim da cena.",
+          "automacao": "efeitos-contextuais-com-dado-ja-rolado"
+        },
+        { "estagio": "maestria", "nomeIngles": "Adder’s Blessing", "nome": "Bênção da Víbora", "texto": "Você é imune a venenos e outras toxinas.", "automacao": "imunidade-passiva" }
+      ],
+      "sourceLocator": { "pdfPageStart": 10, "pdfPageEnd": 10, "lineStart": 430, "lineEnd": 481 }
+    },
+    {
+      "idFonte": "subclasses/juggernaut",
+      "id": "brigao-colosso",
+      "classe": "brigao",
+      "nomeIngles": "Juggernaut",
+      "nome": "Colosso",
+      "nomeEstado": "provisorio",
+      "tracoConjuracao": null,
+      "descricao": "Escolha o Colosso se quiser pulverizar seus oponentes com golpes esmagadores.",
+      "caracteristicas": [
+        { "estagio": "fundacao", "nomeIngles": "Rugged", "nome": "Robusto", "texto": "Receba permanentemente +3 no seu limiar de dano Severo.", "automacao": "limiar-permanente" },
+        { "estagio": "fundacao", "nomeIngles": "Overwhelm", "nome": "Avassalar", "texto": "Quando tiver sucesso em um ataque contra um alvo, você pode gastar 1 Esperança para arremessá-lo para qualquer ponto em alcance Próximo ou forçá-lo a marcar 1 Estresse.", "automacao": "custo-proprio-e-escolha-no-alvo" },
+        { "estagio": "especializacao", "nomeIngles": "Surrounded", "nome": "Cercado", "texto": "Ao fazer um ataque com arma Corpo a Corpo, você pode gastar qualquer quantidade de Esperança para escolher a mesma quantidade de criaturas adicionais em alcance Corpo a Corpo como alvos.", "automacao": "custo-variavel-e-alvos-contextuais" },
+        { "estagio": "especializacao", "nomeIngles": "Eye for an Eye", "nome": "Olho por Olho", "texto": "Uma vez por descanso, quando um adversário em alcance Corpo a Corpo fizer você marcar qualquer quantidade de Pontos de Vida, você pode marcar 1 Estresse para fazê-lo marcar a mesma quantidade de Pontos de Vida.", "automacao": "reacao-uma-vez-por-descanso" },
+        { "estagio": "maestria", "nomeIngles": "Pummeljoy", "nome": "Gosto pela Pancadaria", "texto": "Ao obter um sucesso crítico num ataque com arma Corpo a Corpo, ganhe 1 Esperança adicional, limpe 1 Estresse adicional e receba +1 de Proficiência nesse ataque.", "automacao": "bonus-contextual-em-critico" },
+        { "estagio": "maestria", "nomeIngles": "Not Done Yet", "nome": "Ainda Não Acabei", "texto": "Quando sofrer dano Severo, você pode ganhar 1 Esperança ou limpar 1 Estresse.", "automacao": "reacao-ao-dano" }
+      ],
+      "sourceLocator": { "pdfPageStart": 12, "pdfPageEnd": 12, "lineStart": 605, "lineEnd": 625 }
+    },
+    {
+      "idFonte": "subclasses/martial-artist",
+      "id": "brigao-artista-marcial",
+      "classe": "brigao",
+      "nomeIngles": "Martial Artist",
+      "nome": "Artista Marcial",
+      "nomeEstado": "provisorio",
+      "tracoConjuracao": null,
+      "descricao": "Escolha o Artista Marcial se quiser usar diferentes estilos de luta para eliminar seus inimigos.",
+      "caracteristicas": [
+        { "estagio": "fundacao", "nomeIngles": "Stance Fighter", "nome": "Lutador de Posturas", "texto": "Você canaliza sua determinação interior para assumir posturas marciais que concedem benefícios especiais em combate. Pegue a folha de Posturas Marciais e escolha duas posturas de Patamar 1. Sempre que subir de nível, escolha outra postura do seu patamar ou inferior.", "automacao": "subsistema-de-posturas-e-progressao" },
+        { "estagio": "especializacao", "nomeIngles": "Keen Defenses", "nome": "Defesas Aguçadas", "texto": "Quando for alvo de um ataque, você pode gastar 1 Foco para receber contra esse ataque um bônus de Evasão igual ao seu patamar.", "automacao": "reacao-pre-ataque-com-recurso" },
+        { "estagio": "especializacao", "nomeIngles": "Focus Cannon", "nome": "Canhão de Foco", "texto": "Gaste 1 Foco para fazer uma jogada de Instinto contra um adversário em alcance Distante. Em caso de sucesso, cause d20+3 de dano mágico usando sua Proficiência.", "automacao": "custo-e-dano-apos-resultado-informado" },
+        { "estagio": "maestria", "nomeIngles": "Limit Breaker", "nome": "Romper Limites", "texto": "Uma vez por descanso, você pode realizar um feito atlético inacreditável sem precisar fazer uma jogada, como correr sobre a água, saltar entre telhados distantes ou escalar um prédio. Quando fizer isso, ganhe 1 Esperança e limpe 1 Estresse.", "automacao": "uso-por-descanso-e-recursos" },
+        { "estagio": "maestria", "nomeIngles": "Flow State", "nome": "Estado de Fluxo", "texto": "Você pode marcar 1 Estresse em vez de gastar 1 Foco para mudar de postura. Além disso, pode gastar 1 Foco em vez de marcar 1 Estresse para iniciar um Golpe em Combo.", "automacao": "substituicao-de-custos" }
+      ],
+      "sourceLocator": { "pdfPageStart": 12, "pdfPageEnd": 12, "lineStart": 627, "lineEnd": 663 }
+    },
+    {
+      "idFonte": "subclasses/pact-of-the-endless",
+      "id": "bruxo-pacto-do-eterno",
+      "classe": "bruxo",
+      "nomeIngles": "Pact of the Endless",
+      "nome": "Pacto do Eterno",
+      "nomeEstado": "provisorio",
+      "tracoConjuracao": "Presença",
+      "descricao": "Escolha o Pacto do Eterno se quiser resistir aos inimigos e evitar a morte.",
+      "caracteristicas": [
+        { "estagio": "fundacao", "nomeIngles": "Patron’s Mantle", "nome": "Manto do Patrono", "texto": "Gaste 1 Favor para revestir-se com um aspecto aterrorizante de seu patrono. O efeito dura até você sofrer dano Severo ou a cena terminar. Enquanto estiver ativo, receba nos limiares de dano um bônus igual ao seu patamar e tenha vantagem nas jogadas de ação para intimidar um alvo.", "automacao": "estado-ate-dano-severo-ou-fim-da-cena" },
+        { "estagio": "fundacao", "nomeIngles": "Deathless Embrace", "nome": "Abraço Imortal", "texto": "Uma vez por descanso, gaste qualquer quantidade de Favores e role fora do app a mesma quantidade de Dados do Patrono. Para cada resultado 4 ou maior, limpe 1 Ponto de Vida.", "automacao": "custo-variavel-e-resultados-manuais" },
+        { "estagio": "especializacao", "nomeIngles": "Harrowing Invocation", "nome": "Invocação Atormentadora", "texto": "Quando um adversário atacar você ou um aliado em alcance Muito Próximo, você pode gastar 1 Favor para impor desvantagem à jogada. Se o adversário falhar, ele também deve marcar 1 Estresse.", "automacao": "reacao-pre-ataque-e-consequencia-informada" },
+        { "estagio": "especializacao", "nomeIngles": "Damage Sink", "nome": "Absorção de Dano", "texto": "Uma vez por descanso, você pode gastar 1 Favor para reduzir pela metade o dano recebido.", "automacao": "mitigacao-uma-vez-por-descanso" },
+        { "estagio": "maestria", "nomeIngles": "Dark Aegis", "nome": "Égide Sombria", "texto": "Uma vez por descanso longo, quando fosse sofrer dano, você pode gastar 1 Favor em vez de marcar Pontos de Vida.", "automacao": "substituicao-de-pv-uma-vez-por-descanso-longo" },
+        { "estagio": "maestria", "nomeIngles": "Draining Bane", "nome": "Flagelo Drenante", "texto": "Quando um adversário atacar você ou um aliado em alcance Muito Próximo, você pode gastar 1 Favor para Drená-lo. Ele deve marcar 1 Estresse e você pode limpar 1 Estresse. Enquanto estiver Drenado, o alvo usa d12 em vez de d20 nas jogadas de ataque, inclusive para vantagem ou desvantagem, até falhar em uma jogada.", "automacao": "reacao-e-condicao-no-alvo" }
+      ],
+      "sourceLocator": { "pdfPageStart": 27, "pdfPageEnd": 27, "lineStart": 1775, "lineEnd": 1799 }
+    },
+    {
+      "idFonte": "subclasses/pact-of-the-wrathful",
+      "id": "bruxo-pacto-do-colerico",
+      "classe": "bruxo",
+      "nomeIngles": "Pact of the Wrathful",
+      "nome": "Pacto do Colérico",
+      "nomeEstado": "provisorio",
+      "tracoConjuracao": "Presença",
+      "descricao": "Escolha o Pacto do Colérico se quiser destruir aqueles que agem contra você.",
+      "caracteristicas": [
+        { "estagio": "fundacao", "nomeIngles": "Patron’s Fury", "nome": "Fúria do Patrono", "texto": "Gaste 1 Favor para imbuir seus ataques com o poder do patrono até você causar dano Severo ou a cena terminar. Ao rolar dano enquanto o efeito estiver ativo, role também uma quantidade de Dados do Patrono igual ao seu patamar e some os resultados ao dano causado.", "automacao": "estado-e-dados-manuais-de-dano" },
+        { "estagio": "fundacao", "nomeIngles": "Deadly Vengeance", "nome": "Vingança Mortal", "texto": "Quando marcar qualquer quantidade de Pontos de Vida por causa de um ataque, você pode gastar 1 Favor para rolar a mesma quantidade de Dados do Patrono. Para cada resultado 4 ou maior, o atacante marca 1 Ponto de Vida.", "automacao": "reacao-com-resultados-manuais" },
+        { "estagio": "especializacao", "nomeIngles": "Menacing Reach", "nome": "Alcance Ameaçador", "texto": "Gaste 1 Favor para aumentar o alcance da sua arma primária em um passo, como de Corpo a Corpo para Muito Próximo ou de Muito Próximo para Próximo, até o máximo de Longínquo. O efeito termina quando você fizer um ataque bem-sucedido com a arma.", "automacao": "estado-da-arma-ate-acerto" },
+        { "estagio": "especializacao", "nomeIngles": "Diminish My Foes", "nome": "Debilitar Meus Inimigos", "texto": "Ao obter sucesso com Esperança numa jogada de ação contra um alvo, você pode gastar qualquer quantidade de Favores para forçá-lo a marcar a mesma quantidade de Estresses.", "automacao": "custo-variavel-e-alvo" },
+        { "estagio": "maestria", "nomeIngles": "Fearsome Attack", "nome": "Ataque Aterrorizante", "texto": "Gaste 1 Favor para rerrolar qualquer quantidade dos seus dados de dano. Você pode continuar gastando Favores para usar esta característica na mesma jogada de dano.", "automacao": "custo-por-rerrolagem-manual" },
+        { "estagio": "maestria", "nomeIngles": "Otherworldly Ire", "nome": "Ira Sobrenatural", "texto": "Uma vez por descanso, quando sofrer dano, você pode gastar qualquer quantidade de Favores para rolar a mesma quantidade de Dados do Patrono e escolher em alcance Próximo uma quantidade de criaturas igual ao maior resultado. Cada alvo deve marcar 1 Ponto de Vida.", "automacao": "uso-por-descanso-com-resultados-manuais" }
+      ],
+      "sourceLocator": { "pdfPageStart": 27, "pdfPageEnd": 27, "lineStart": 1801, "lineEnd": 1841 }
+    },
+    {
+      "idFonte": "subclasses/hedge",
+      "id": "bruxa-erveira",
+      "classe": "bruxa",
+      "nomeIngles": "Hedge",
+      "nome": "Erveira",
+      "nomeEstado": "provisorio",
+      "tracoConjuracao": "Conhecimento",
+      "descricao": "Escolha a Erveira se quiser usar seu ofício para fortalecer a si mesma e ao grupo.",
+      "caracteristicas": [
+        { "estagio": "fundacao", "nomeIngles": "Herbal Remedies", "nome": "Remédios Herbais", "texto": "Quando você ou um aliado na cena limpar 1 ou mais Pontos de Vida ou Estresses usando um consumível, aumente em 1 a quantidade limpa.", "automacao": "bonus-passivo-em-consumivel" },
+        { "estagio": "fundacao", "nomeIngles": "Enchanted Talisman", "nome": "Talismã Encantado", "texto": "Uma vez por descanso, você pode imbuir um objeto pequeno com sua essência protetora. Gaste qualquer quantidade de Esperança para colocar a mesma quantidade de marcadores nesta carta. Quando a pessoa que carrega o talismã sofrer dano, gaste 1 marcador para reduzir em 1 a quantidade de Pontos de Vida que ela marca. Limpe todos os marcadores ao fazer um descanso.", "automacao": "contador-e-protecao-em-aliado" },
+        { "estagio": "especializacao", "nomeIngles": "Walk Between Worlds", "nome": "Caminhar Entre Mundos", "texto": "Durante um momento de calma, faça uma jogada de Conjuração com Dificuldade 13. Uma vez por descanso, em caso de sucesso, você pode marcar 1 Estresse para atravessar o véu da morte e conversar com espíritos próximos. Coloque nesta carta uma quantidade de marcadores igual ao seu traço de Conjuração e remova um sempre que um espírito responder a uma pergunta. Quando remover o último marcador ou a cena terminar, você retorna ao Reino Mortal no mesmo lugar de onde partiu.", "automacao": "apos-resultado-informado-contador-e-estado" },
+        { "estagio": "especializacao", "nomeIngles": "Vexing Malison", "nome": "Maldição Atormentadora", "texto": "Você tem vantagem nos ataques contra criaturas Amaldiçoadas.", "automacao": "vantagem-contextual" },
+        { "estagio": "maestria", "nomeIngles": "Circle of Power", "nome": "Círculo de Poder", "texto": "Uma vez por descanso, trace no chão um círculo que delimite uma área em alcance Muito Próximo ao seu redor e coloque nesta carta uma quantidade de marcadores igual ao seu traço de Conjuração. Dentro do círculo, você e seus aliados recebem +2 nos limiares de dano, nas jogadas de ataque e na Evasão. Remova 1 marcador sempre que você ou um aliado no círculo fizer uma jogada de ação ou evitar um ataque. O feitiço dura até o último marcador ser removido ou você sair do círculo.", "automacao": "area-contextual-com-contador" }
+      ],
+      "sourceLocator": { "pdfPageStart": 29, "pdfPageEnd": 29, "lineStart": 1962, "lineEnd": 1984 }
+    },
+    {
+      "idFonte": "subclasses/moon",
+      "id": "bruxa-lua",
+      "classe": "bruxa",
+      "nomeIngles": "Moon",
+      "nome": "Lua",
+      "nomeEstado": "provisorio",
+      "tracoConjuracao": "Instinto",
+      "descricao": "Escolha a Lua se quiser encarnar o poder celeste para ampliar sua magia.",
+      "caracteristicas": [
+        { "estagio": "fundacao", "nomeIngles": "Night’s Glamour", "nome": "Encanto da Noite", "texto": "Faça uma jogada de Conjuração com Dificuldade 13 para envolver-se numa aparência ilusória fascinante. Enquanto estiver sob o Encanto, você tem vantagem nas jogadas que aproveitem essa aparência e adversários em alcance Próximo precisam marcar 1 Estresse para atacar você. A menos que marque 1 Estresse para manter o Encanto, ele termina quando você marcar 1 Ponto de Vida ou causar dano.", "automacao": "estado-apos-resultado-e-custo-de-manutencao" },
+        { "estagio": "especializacao", "nomeIngles": "Moonbeam", "nome": "Raio Lunar", "texto": "Uma vez por sessão, você pode conjurar uma coluna de luar que ilumina a área em alcance Próximo até o fim da cena. Sob esse luar, você e seus aliados recebem +1 nas jogadas de Conjuração e enxergam através de ilusões.", "automacao": "area-contextual-uma-vez-por-sessao" },
+        { "estagio": "especializacao", "nomeIngles": "Ire of Pale Light", "nome": "Ira da Luz Pálida", "texto": "Quando uma criatura Amaldiçoada em alcance Longínquo falhar em um ataque, ela deve marcar 1 Estresse.", "automacao": "reacao-contextual-no-alvo" },
+        { "estagio": "maestria", "nomeIngles": "Lunar Phases", "nome": "Fases Lunares", "texto": "No início de cada sessão, role 1d6 fora do app e coloque-o nesta carta. Até o fim da sessão, 1 (Nova) permite gastar 1 Esperança para negar dano Menor; 2–3 (Crescente) concede +2 nas jogadas de dano; 4 (Cheia) concede +3 nos limiares de dano; 5–6 (Minguante) concede +1 de Evasão. Uma vez por descanso, você pode gastar 1 Esperança para aumentar o valor do dado em 1; ao aumentar um 6, ele se torna 1.", "automacao": "resultado-manual-estado-de-sessao-e-ajuste-por-descanso" }
+      ],
+      "sourceLocator": { "pdfPageStart": 30, "pdfPageEnd": 30, "lineStart": 1988, "lineEnd": 2035 }
+    }
+  ]
+}

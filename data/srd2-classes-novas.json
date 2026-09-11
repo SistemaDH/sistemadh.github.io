@@ -1,0 +1,196 @@
+{
+  "versao": 1,
+  "estado": "traducao-provisoria-nao-exposta",
+  "aviso": "Este catálogo é uma etapa de revisão. Não deve ser carregado pela criação até subclasses, cartas de domínio, automações e testes estarem completos.",
+  "fonte": {
+    "srd": "2.0",
+    "data": "2026-08-25",
+    "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64"
+  },
+  "dominioNovo": {
+    "idFonte": "domains/dread",
+    "nomeIngles": "Dread",
+    "nome": "Pavor",
+    "nomeEstado": "provisorio",
+    "descricao": "Pavor é o domínio do medo e dos pesadelos. Este domínio concede poder sobre forças que a maioria teme utilizar. Seus adeptos podem aterrorizar inimigos, debilitá-los e recorrer a poderes sombrios para destruí-los. As classes Bruxo e Bruxa têm acesso ao domínio Pavor.",
+    "sourceLocator": { "pdfPageStart": 7, "pdfPageEnd": 7, "lineStart": 263, "lineEnd": 265 }
+  },
+  "classes": [
+    {
+      "idFonte": "classes/assassin",
+      "id": "assassino",
+      "nomeIngles": "Assassin",
+      "nome": "Assassino",
+      "nomeEstado": "provisorio",
+      "dominios": ["Lâmina", "Meia-Noite"],
+      "evasaoInicial": 12,
+      "pontosDeVidaIniciais": 5,
+      "descricao": "Assassinos são mestres em infligir ferimentos mortais com ataques precisos. Para eles, a morte é uma profissão. Muitos consideram seu ofício digno ou até sagrado e ingressam em guildas para aperfeiçoar sua técnica, definir suas crenças e ganhar dinheiro. Governantes, líderes comerciais e pessoas comuns recorrem a assassinos quando precisam eliminar alguém que parecia impossível de matar. Alguns destroem qualquer um em seu caminho pelo motivo ou preço certo; outros seguem códigos morais e regras pessoais rígidas sobre quem pode ser alvo.",
+      "caracteristicaEsperanca": {
+        "nomeIngles": "Deadly Determination",
+        "nome": "Determinação Mortal",
+        "texto": "Gaste 3 Esperança para limpar 2 Estresses.",
+        "uso": { "custo": { "esperanca": 3 }, "efeito": { "limparEstresse": 2 } }
+      },
+      "caracteristicasDeClasse": [
+        {
+          "nomeIngles": "Marked for Death",
+          "nome": "Marcado para Morrer",
+          "texto": "Após um ataque bem-sucedido com arma, você pode marcar 1 Estresse para deixar o alvo Marcado para Morrer. Quando causar dano ao alvo Marcado para Morrer, adicione à jogada de dano uma quantidade de d4 igual ao seu patamar. Você só pode manter um adversário Marcado para Morrer por vez. A marca dura até você fazer um descanso, o adversário ser derrotado ou o Mestre gastar uma quantidade de Medo igual ao seu patamar para limpá-la.",
+          "automacao": "deterministica-com-alvo-e-dano-contextual"
+        },
+        {
+          "nomeIngles": "Get In & Get Out",
+          "nome": "Entrar e Sair",
+          "texto": "Gaste 1 Esperança para perguntar ao Mestre por uma maneira rápida ou discreta de entrar ou sair de um lugar que você possa ver. A próxima jogada que você fizer usando essa informação tem vantagem.",
+          "automacao": "custo-e-estado-da-proxima-jogada"
+        }
+      ],
+      "itensDeClasse": ["Uma lista de nomes com vários deles riscados", "Uma lâmina enferrujada com uma insígnia gravada"],
+      "perguntasDeFundo": [
+        "Você matou alguém próximo. O que aconteceu e como isso mudou você?",
+        "Qual organização treinou você na arte de matar e como você entrou nela?",
+        "Ao longo de sua carreira, um alvo sempre escapou. Quem é essa pessoa e como ela conseguiu fugir de você?"
+      ],
+      "conexoes": [
+        "Eu matei alguém por você. Quem era essa pessoa?",
+        "Como você me salvou quando eu estava à beira da morte? O que prometi como pagamento?",
+        "Que segredo sobre mim eu contei a você e como ele mudou sua visão a meu respeito?"
+      ],
+      "subclassesFonte": ["executioners-guild", "poisoners-guild"],
+      "sourceLocator": { "pdfPageStart": 9, "pdfPageEnd": 9, "lineStart": 374, "lineEnd": 396 }
+    },
+    {
+      "idFonte": "classes/brawler",
+      "id": "brigao",
+      "nomeIngles": "Brawler",
+      "nome": "Brigão",
+      "nomeEstado": "provisorio",
+      "dominios": ["Valor", "Osso"],
+      "evasaoInicial": 10,
+      "pontosDeVidaIniciais": 6,
+      "descricao": "Especialistas em combate desarmado, brigões transformam o próprio corpo numa arma letal. Seja por treinamento formal, estudo com um mentor ou experiência adquirida luta após luta, eles desenvolvem corpo e mente para agir como um só. Valorizados por sua força e versatilidade, brigões buscam desafios e parceiros de treino para manter suas habilidades e acrescentar novas técnicas ao repertório. Mesmo parecendo desarmados, frequentemente realizam com os punhos o que um soldado comum não conseguiria com uma espada.",
+      "caracteristicaEsperanca": {
+        "nomeIngles": "Square Up",
+        "nome": "Frente a Frente",
+        "texto": "Gaste 3 Esperança para intimidar um alvo em alcance Próximo, deixando-o temporariamente Vulnerável.",
+        "uso": { "custo": { "esperanca": 3 }, "efeito": { "condicaoAlvo": "Vulnerável", "temporaria": true } }
+      },
+      "caracteristicasDeClasse": [
+        {
+          "nomeIngles": "I Am the Weapon",
+          "nome": "Eu Sou a Arma",
+          "texto": "Seus ataques desarmados são tão fortes quanto qualquer lâmina. Enquanto você não tiver outra arma ativa, considera-se que está empunhando uma arma primária chamada Golpe do Brigão. Ela usa um traço à sua escolha, tem alcance Corpo a Corpo e causa d8+d6 de dano físico usando sua Proficiência; tanto o d8 quanto o d6 se multiplicam pela Proficiência. Enquanto essa arma estiver ativa, você recebe +1 de Evasão.",
+          "automacao": "arma-virtual-e-derivados"
+        },
+        {
+          "nomeIngles": "Combo Strike",
+          "nome": "Golpe em Combo",
+          "texto": "Depois de rolar o dano de um ataque bem-sucedido com uma arma Corpo a Corpo, você pode marcar 1 Estresse para iniciar um Golpe em Combo. Role seu Dado de Combo fora do app e anote o resultado; continue rolando até o resultado mais recente ser menor que o anterior. Cause dano adicional igual à soma de todos os resultados. Esses resultados não podem ser modificados. Seu Dado de Combo começa como d4. Uma vez por patamar, você pode aumentá-lo em um passo como opção de avanço de nível.",
+          "automacao": "custo-e-progressao;rolagens-manuais"
+        }
+      ],
+      "itensDeClasse": ["Faixas de mão recebidas de um mentor", "Um livro sobre seu passatempo secreto"],
+      "perguntasDeFundo": [
+        "Onde você passou seus anos de formação e aprendeu, direta ou indiretamente, o estilo de luta que utiliza?",
+        "Qual organização jurou matar você assim que o encontrasse e o que você fez para provocar essa ira?",
+        "Para quem você perdeu uma luta recentemente e por que deseja tanto uma revanche?"
+      ],
+      "conexoes": [
+        "Qual é uma coisa que nós dois tememos?",
+        "Para que eu dependo de você durante nossas viagens e como você se sente a respeito?",
+        "Ainda não perdoei algo que você me disse. O que foi e por que você disse aquilo?"
+      ],
+      "subclassesFonte": ["juggernaut", "martial-artist"],
+      "sourceLocator": { "pdfPageStart": 11, "pdfPageEnd": 12, "lineStart": 575, "lineEnd": 599 }
+    },
+    {
+      "idFonte": "classes/warlock",
+      "id": "bruxo",
+      "nomeIngles": "Warlock",
+      "nome": "Bruxo",
+      "nomeEstado": "provisorio",
+      "dominios": ["Pavor", "Graça"],
+      "evasaoInicial": 11,
+      "pontosDeVidaIniciais": 5,
+      "descricao": "Bruxos entregaram a vida — talvez até a alma — a um patrono sobrenatural em troca de poder. Muitas vezes esse sacrifício nasce do desespero: proteger alguém, ajudar a comunidade, buscar vingança ou alcançar uma ambição. Deuses, espíritos, demônios e entidades desconhecidas podem ocupar esse papel, cada qual com sua própria esfera de influência. O poder de um bruxo é definido pela relação mantida com seu patrono e pode vir acompanhado da dúvida sobre quem realmente controla quem.",
+      "caracteristicaEsperanca": {
+        "nomeIngles": "Patron’s Boon",
+        "nome": "Dádiva do Patrono",
+        "texto": "Quando falhar em uma jogada, você pode gastar 3 Esperança para rerrolar com vantagem.",
+        "uso": { "custo": { "esperanca": 3 }, "efeito": "rerrolagem-manual-com-vantagem" }
+      },
+      "caracteristicasDeClasse": [
+        {
+          "nomeIngles": "Patron’s Pact",
+          "nome": "Pacto do Patrono",
+          "texto": "Você se comprometeu com uma entidade sobrenatural — como um deus, fada ou demônio — em troca de poder. Escreva o nome dela na ficha e defina com o Mestre sua esfera de influência, como Natureza, Caos, Sabedoria, Travessura, Amor, Guerra, Justiça ou Morte. Antes de uma jogada de ação relacionada a essa esfera, você pode gastar 1 Favor para recorrer à ajuda do patrono: role o Dado do Patrono fora do app e some o resultado ao total. O Dado do Patrono começa como d6 e aumenta para d8 no 5º nível.",
+          "automacao": "custo-e-dado-por-nivel;rolagem-manual"
+        },
+        {
+          "nomeIngles": "Favor",
+          "nome": "Favor",
+          "texto": "Você começa com 3 Favores e pode manter no máximo 6. Durante um movimento de descanso, descreva como presta tributo ao patrono para ganhar uma quantidade de Favores igual ao seu traço de Conjuração. Além disso, quando tiver sucesso em uma jogada de ação com Esperança, pode ganhar 1 Favor em vez de ganhar 1 Esperança.",
+          "automacao": "recurso-de-classe-com-teto-6"
+        }
+      ],
+      "itensDeClasse": ["Uma escultura que representa seu patrono", "Um anel que você não consegue remover"],
+      "perguntasDeFundo": [
+        "Quem de sua comunidade passou a rejeitar você depois do pacto com seu patrono?",
+        "Que situação desesperadora levou você a jurar sua vida ao patrono?",
+        "Seu patrono lhe deu uma tarefa que deve ser cumprida acima de todas as outras. Qual é ela e por que preocupa você?"
+      ],
+      "conexoes": [
+        "Por que você acha que eu confio a você o que meu patrono diz e faz?",
+        "Nossa relação mudou depois que você me viu prestar tributo ao patrono. O que você viu e como isso afetou você?",
+        "Certa vez fiz algo muito tolo e você nunca me deixou esquecer. O que foi?"
+      ],
+      "subclassesFonte": ["pact-of-the-endless", "pact-of-the-wrathful"],
+      "sourceLocator": { "pdfPageStart": 26, "pdfPageEnd": 26, "lineStart": 1730, "lineEnd": 1752 }
+    },
+    {
+      "idFonte": "classes/witch",
+      "id": "bruxa",
+      "nomeIngles": "Witch",
+      "nome": "Bruxa",
+      "nomeEstado": "provisorio",
+      "dominios": ["Pavor", "Sábio"],
+      "evasaoInicial": 10,
+      "pontosDeVidaIniciais": 6,
+      "descricao": "Bruxas praticam magia em comunhão com forças da natureza e entidades de outros reinos. Elas evocam poder por meio de seu ofício, combinando o tangível e o efêmero com feitiços, encantamentos, talismãs, ilusões e rituais pessoais. Seu conhecimento pode ser transmitido por ancestrais, divindades, aspectos da natureza ou gerações de praticantes reunidas em pequenos grupos. Seus métodos misteriosos e às vezes macabros fazem com que sejam temidas ou incompreendidas.",
+      "caracteristicaEsperanca": {
+        "nomeIngles": "Witch’s Charm",
+        "nome": "Encanto da Bruxa",
+        "texto": "Quando você ou um aliado em alcance Distante falhar numa jogada de ação, você pode gastar 3 Esperança para transformar o resultado em um sucesso com Medo.",
+        "uso": { "custo": { "esperanca": 3 }, "efeito": "converter-falha-em-sucesso-com-medo" }
+      },
+      "caracteristicasDeClasse": [
+        {
+          "nomeIngles": "Hex",
+          "nome": "Maldição",
+          "texto": "Marque 1 Estresse para Amaldiçoar temporariamente um alvo em alcance Distante. Enquanto estiver Amaldiçoado, o alvo sofre uma penalidade nas jogadas de dano e na Dificuldade igual ao seu patamar. O número máximo de criaturas que você pode manter Amaldiçoadas ao mesmo tempo é igual ao seu traço de Conjuração.",
+          "automacao": "custo-alvos-e-modificadores-contextuais"
+        },
+        {
+          "nomeIngles": "Commune",
+          "nome": "Comunhão",
+          "texto": "Uma vez por descanso longo, durante um momento de calma, você pode comungar com um ancestral, divindade, espírito ou ser de outro mundo. Faça uma pergunta e role fora do app uma quantidade de d6 igual ao seu traço de Conjuração. Escolha um resultado: 1–3, você sente um sabor, cheiro ou sensação relevante; 4–5, ouve sons ou vê uma visão relevante; 6, vivencia mentalmente uma cena relevante como se estivesse presente.",
+          "automacao": "uso-por-descanso;rolagens-e-resolucao-narrativas-manuais"
+        }
+      ],
+      "itensDeClasse": ["Um animal de estimação pequeno e inofensivo", "Uma pedra de vidência"],
+      "perguntasDeFundo": [
+        "Quem de sua comunidade temia seu ofício mágico? Que rumor essa pessoa espalhou e que verdade havia nele?",
+        "Você usou seu poder para ajudar alguém numa situação desesperadora. Quem era e por que procurou você?",
+        "Sua magia abriu uma porta que deveria ter permanecido fechada. Quem ou o que estava do outro lado?"
+      ],
+      "conexoes": [
+        "Que ritual ou prática singular ensinei a você e que agora realizamos juntos?",
+        "Certa vez apareci em um sonho e compartilhei uma visão do futuro. O que contei a você?",
+        "Sobre o que você costuma me pedir conselhos?"
+      ],
+      "subclassesFonte": ["hedge", "moon"],
+      "sourceLocator": { "pdfPageStart": 29, "pdfPageEnd": 29, "lineStart": 1928, "lineEnd": 1956 }
+    }
+  ]
+}

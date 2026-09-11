@@ -31,7 +31,13 @@
     "teste:srd2-cobertura": "node tools/conferir-srd2-cobertura.mjs",
     "gerar:srd2-inventario": "node tools/gerar-srd2-inventario.mjs",
     "teste:srd2-inventario": "node tools/conferir-srd2-inventario.mjs",
-    "teste:srd2": "npm run teste:srd2-traducao && npm run teste:srd2-cobertura && npm run teste:srd2-inventario"
+    "gerar:srd2-nucleo": "node tools/gerar-srd2-nucleo-auditoria.mjs",
+    "teste:srd2-nucleo": "node tools/conferir-srd2-nucleo-auditoria.mjs",
+    "teste:srd2-classes-novas": "node tools/conferir-srd2-classes-novas.mjs",
+    "teste:srd2-subclasses-novas": "node tools/conferir-srd2-subclasses-novas.mjs",
+    "teste:srd2-origens-novas": "node tools/conferir-srd2-origens-novas.mjs",
+    "teste:srd2-transformacoes": "node tools/conferir-srd2-transformacoes.mjs",
+    "teste:srd2": "npm run teste:srd2-traducao && npm run teste:srd2-cobertura && npm run teste:srd2-inventario && npm run teste:srd2-nucleo && npm run teste:srd2-classes-novas && npm run teste:srd2-subclasses-novas && npm run teste:srd2-origens-novas && npm run teste:srd2-transformacoes"
   },
   "devDependencies": {
     "playwright": "1.62.1"

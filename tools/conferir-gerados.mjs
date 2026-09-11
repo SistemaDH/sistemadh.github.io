@@ -29,8 +29,13 @@ const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const RAIZ = path.resolve(AQUI, '..');
 const BACKEND = path.join(RAIZ, 'backend');
 
+/*
+ * Só os geradores 4x escrevem módulos .gs do backend. Geradores de auditoria
+ * (por exemplo gerar-srd2-*.mjs) materializam arquivos em data/ e possuem um
+ * conferidor próprio; executá-los aqui misturaria dois contratos diferentes.
+ */
 const geradores = fs.readdirSync(AQUI)
-  .filter((f) => /^gerar-.*\.mjs$/.test(f))
+  .filter((f) => /^gerar-4[0-9A-F]-.*\.mjs$/.test(f))
   .sort();
 
 if (!geradores.length) {

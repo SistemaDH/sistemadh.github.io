@@ -1,0 +1,1663 @@
+{
+  "versao": 1,
+  "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64",
+  "escopo": "núcleo de personagem do SRD 2.0",
+  "total": 95,
+  "resumo": {
+    "existentesQueRequeremComparacao": 64,
+    "novosQueRequeremTraducaoEImplementacao": 31
+  },
+  "colecoes": [
+    {
+      "id": "domains",
+      "quantidade": 10,
+      "registros": [
+        {
+          "id": "domains/arcana",
+          "slug": "arcana",
+          "nomeIngles": "Arcana",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "ARCANA",
+            "lineStart": 247,
+            "lineEnd": 249,
+            "pdfPageStart": 7,
+            "pdfPageEnd": 7
+          },
+          "corpusSha256": "3894602e6ffae6aeb25ea391cbd9cdfd9324a10c53d78b2649f43e68455c8c7c",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "domains/blade",
+          "slug": "blade",
+          "nomeIngles": "Blade",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "BLADE",
+            "lineStart": 251,
+            "lineEnd": 253,
+            "pdfPageStart": 7,
+            "pdfPageEnd": 7
+          },
+          "corpusSha256": "f9fd299245e33db8f2d04ff0164718e96726a0e4cb67caa3efcf09d36c72006b",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "domains/bone",
+          "slug": "bone",
+          "nomeIngles": "Bone",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "BONE",
+            "lineStart": 255,
+            "lineEnd": 257,
+            "pdfPageStart": 7,
+            "pdfPageEnd": 7
+          },
+          "corpusSha256": "a8e79b560469c004e75b9803ff8e759bbfd491533399c56d9a22e9d5dc5b9f63",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "domains/codex",
+          "slug": "codex",
+          "nomeIngles": "Codex",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "CODEX",
+            "lineStart": 259,
+            "lineEnd": 261,
+            "pdfPageStart": 7,
+            "pdfPageEnd": 7
+          },
+          "corpusSha256": "e845b04c9a6eb4121b92461f5ff443c8c52c70e1e4e154b7c7624a0245a126d1",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "domains/dread",
+          "slug": "dread",
+          "nomeIngles": "Dread",
+          "nomePortuguesProvisorio": "Pavor",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "DREAD",
+            "lineStart": 263,
+            "lineEnd": 265,
+            "pdfPageStart": 7,
+            "pdfPageEnd": 7
+          },
+          "corpusSha256": "656de4b5c4667d94f0debbcca0da6a54da09b80401b8c393a7aee1f9405df6c9",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "domains/grace",
+          "slug": "grace",
+          "nomeIngles": "Grace",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "GRACE",
+            "lineStart": 267,
+            "lineEnd": 269,
+            "pdfPageStart": 7,
+            "pdfPageEnd": 7
+          },
+          "corpusSha256": "a1b2bc5e9baafaea7adbaf594a69cf32ca7e0ab23b4d1ed175ee464e384f6668",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "domains/midnight",
+          "slug": "midnight",
+          "nomeIngles": "Midnight",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "MIDNIGHT",
+            "lineStart": 271,
+            "lineEnd": 273,
+            "pdfPageStart": 7,
+            "pdfPageEnd": 7
+          },
+          "corpusSha256": "ba970a61d40d5a653e4e60becf63d9f59fdd9266e6957ea2a60b8752603302d4",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "domains/sage",
+          "slug": "sage",
+          "nomeIngles": "Sage",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "SAGE",
+            "lineStart": 275,
+            "lineEnd": 277,
+            "pdfPageStart": 7,
+            "pdfPageEnd": 7
+          },
+          "corpusSha256": "c91ea7f6a1785765bcf6dbc43a21117add081c8eafeb534107fcccadc4569c2d",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "domains/splendor",
+          "slug": "splendor",
+          "nomeIngles": "Splendor",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "SPLENDOR",
+            "lineStart": 279,
+            "lineEnd": 281,
+            "pdfPageStart": 7,
+            "pdfPageEnd": 7
+          },
+          "corpusSha256": "a45c45d6c6608fac207a8f73bfd669347a48fe3919d531f0731da570ef930e41",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "domains/valor",
+          "slug": "valor",
+          "nomeIngles": "Valor",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "VALOR",
+            "lineStart": 283,
+            "lineEnd": 285,
+            "pdfPageStart": 7,
+            "pdfPageEnd": 7
+          },
+          "corpusSha256": "49675719cfc75983a3758f37bf2a65ea0f9562aeeaa8b8fb0f954c1ad7a8b3b4",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        }
+      ]
+    },
+    {
+      "id": "classes",
+      "quantidade": 13,
+      "registros": [
+        {
+          "id": "classes/assassin",
+          "slug": "assassin",
+          "nomeIngles": "Assassin",
+          "nomePortuguesProvisorio": "Assassino",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "ASSASSIN",
+            "lineStart": 374,
+            "lineEnd": 396,
+            "pdfPageStart": 9,
+            "pdfPageEnd": 9
+          },
+          "corpusSha256": "35a0faf4bcace310a79e579f5b2e3402c9d1672ef9b3d5a5f78a8d0c31cd81e0",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "classes/bard",
+          "slug": "bard",
+          "nomeIngles": "Bard",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "BARD",
+            "lineStart": 483,
+            "lineEnd": 501,
+            "pdfPageStart": 10,
+            "pdfPageEnd": 10
+          },
+          "corpusSha256": "b65a4bce296fa5c5a5f1b47dde4b19ad41bdc63cf00c9ea7cdc0d5d835a5cbf2",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "classes/brawler",
+          "slug": "brawler",
+          "nomeIngles": "Brawler",
+          "nomePortuguesProvisorio": "Brigão",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "BRAWLER",
+            "lineStart": 575,
+            "lineEnd": 599,
+            "pdfPageStart": 11,
+            "pdfPageEnd": 12
+          },
+          "corpusSha256": "2dc810a9fd8d56ba9129e991e4ab213399be27ea31810cc1baae8753fe80c804",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "classes/druid",
+          "slug": "druid",
+          "nomeIngles": "Druid",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "DRUID",
+            "lineStart": 737,
+            "lineEnd": 757,
+            "pdfPageStart": 14,
+            "pdfPageEnd": 14
+          },
+          "corpusSha256": "95dbed6059ba6aa3c64d2a7e5502cf026a106e49f7e37557d6c7f28c37078108",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "classes/guardian",
+          "slug": "guardian",
+          "nomeIngles": "Guardian",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "GUARDIAN",
+            "lineStart": 1190,
+            "lineEnd": 1216,
+            "pdfPageStart": 19,
+            "pdfPageEnd": 19
+          },
+          "corpusSha256": "5737d0eb6f093b2c41b1a2585603716417b4407a8da1d2b243e42af2e71ac3f4",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "classes/ranger",
+          "slug": "ranger",
+          "nomeIngles": "Ranger",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "RANGER",
+            "lineStart": 1280,
+            "lineEnd": 1302,
+            "pdfPageStart": 20,
+            "pdfPageEnd": 20
+          },
+          "corpusSha256": "5cfafe641b2c7b7caa8dedeb57ab70e7bbafa5eb507d156815509c8f8b2a1b0a",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "classes/rogue",
+          "slug": "rogue",
+          "nomeIngles": "Rogue",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "ROGUE",
+            "lineStart": 1432,
+            "lineEnd": 1457,
+            "pdfPageStart": 22,
+            "pdfPageEnd": 22
+          },
+          "corpusSha256": "de05b8f9b08d011cff4a17c55d4015eaf111ed823eb1d6b01a60e8d2ef7795de",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "classes/seraph",
+          "slug": "seraph",
+          "nomeIngles": "Seraph",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "SERAPH",
+            "lineStart": 1540,
+            "lineEnd": 1558,
+            "pdfPageStart": 24,
+            "pdfPageEnd": 24
+          },
+          "corpusSha256": "795463bcb135597f7c404c196b4fc5e143be6586fbc726de6e70e1ddab6c2feb",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "classes/sorcerer",
+          "slug": "sorcerer",
+          "nomeIngles": "Sorcerer",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "SORCERER",
+            "lineStart": 1629,
+            "lineEnd": 1654,
+            "pdfPageStart": 25,
+            "pdfPageEnd": 25
+          },
+          "corpusSha256": "11e1c200227e65775d735f5fb5bbf7a9a16880541de566baae71e01cfda4df1d",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "classes/warlock",
+          "slug": "warlock",
+          "nomeIngles": "Warlock",
+          "nomePortuguesProvisorio": "Bruxo",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "WARLOCK",
+            "lineStart": 1730,
+            "lineEnd": 1752,
+            "pdfPageStart": 26,
+            "pdfPageEnd": 26
+          },
+          "corpusSha256": "195a9aca69f795113c88f763600058f3c98c9adae1a1ace18d3a9ec07e584bf5",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "classes/warrior",
+          "slug": "warrior",
+          "nomeIngles": "Warrior",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "WARRIOR",
+            "lineStart": 1845,
+            "lineEnd": 1869,
+            "pdfPageStart": 28,
+            "pdfPageEnd": 28
+          },
+          "corpusSha256": "b1eecf55ab00ee327e10900fd8c664871f974937e0d020263df5793acbb368a9",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "classes/witch",
+          "slug": "witch",
+          "nomeIngles": "Witch",
+          "nomePortuguesProvisorio": "Bruxa",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "WITCH",
+            "lineStart": 1928,
+            "lineEnd": 1956,
+            "pdfPageStart": 29,
+            "pdfPageEnd": 29
+          },
+          "corpusSha256": "64d533a03c5ff7b34d595a19b4582b67657d604ed2aa771d650620da3fda2733",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "classes/wizard",
+          "slug": "wizard",
+          "nomeIngles": "Wizard",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "WIZARD",
+            "lineStart": 2037,
+            "lineEnd": 2059,
+            "pdfPageStart": 30,
+            "pdfPageEnd": 30
+          },
+          "corpusSha256": "5f07927283a8e2390a0f7cfccd4b45c44a6fce0c205f0a0c70a3c1ddd463daeb",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        }
+      ]
+    },
+    {
+      "id": "subclasses",
+      "quantidade": 26,
+      "registros": [
+        {
+          "id": "subclasses/beastbound",
+          "slug": "beastbound",
+          "nomeIngles": "Beastbound",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "BEASTBOUND",
+            "lineStart": 1308,
+            "lineEnd": 1332,
+            "pdfPageStart": 20,
+            "pdfPageEnd": 20
+          },
+          "corpusSha256": "7f2fa0655c7a5ab4aa81ddee191a4cf00e036273717ace1d2b9eed1e6fc62de8",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "subclasses/call-of-the-brave",
+          "slug": "call-of-the-brave",
+          "nomeIngles": "Call of the Brave",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "CALL OF THE BRAVE",
+            "lineStart": 1875,
+            "lineEnd": 1891,
+            "pdfPageStart": 28,
+            "pdfPageEnd": 28
+          },
+          "corpusSha256": "da450acc8015faa1fb8232ee45c2089928b36729de439aeb993d7c472a7b6705",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "subclasses/call-of-the-slayer",
+          "slug": "call-of-the-slayer",
+          "nomeIngles": "Call of the Slayer",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "CALL OF THE SLAYER",
+            "lineStart": 1893,
+            "lineEnd": 1926,
+            "pdfPageStart": 28,
+            "pdfPageEnd": 29
+          },
+          "corpusSha256": "a5c687e19c8480e589d15034b0cc243f294e749505e48478c3e811ad9a15ee0e",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "subclasses/divine-wielder",
+          "slug": "divine-wielder",
+          "nomeIngles": "Divine Wielder",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "DIVINE WIELDER",
+            "lineStart": 1564,
+            "lineEnd": 1584,
+            "pdfPageStart": 24,
+            "pdfPageEnd": 24
+          },
+          "corpusSha256": "a6356dbd48b3c3ed757a72f2e78be090393f049bb9068fd293e821ec5cb6e0bd",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "subclasses/elemental-origin",
+          "slug": "elemental-origin",
+          "nomeIngles": "Elemental Origin",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "ELEMENTAL ORIGIN",
+            "lineStart": 1660,
+            "lineEnd": 1685,
+            "pdfPageStart": 25,
+            "pdfPageEnd": 25
+          },
+          "corpusSha256": "e09e8325d4c20380f00de1d3a93d3c8e1cce43046aa755288679e19dd6fea36f",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "subclasses/executioners-guild",
+          "slug": "executioners-guild",
+          "nomeIngles": "Executioners Guild",
+          "nomePortuguesProvisorio": "Guilda dos Executores",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "EXECUTIONERS GUILD",
+            "lineStart": 402,
+            "lineEnd": 426,
+            "pdfPageStart": 9,
+            "pdfPageEnd": 9
+          },
+          "corpusSha256": "1db24e548a5caa7d00677ee878c31a5dc98e96cf06b980842dcab0dacf224b7e",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "subclasses/hedge",
+          "slug": "hedge",
+          "nomeIngles": "Hedge",
+          "nomePortuguesProvisorio": "Erveira",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "HEDGE",
+            "lineStart": 1962,
+            "lineEnd": 1984,
+            "pdfPageStart": 29,
+            "pdfPageEnd": 29
+          },
+          "corpusSha256": "b27a7c4f32c803d7e74bde02e5b7b3f9bab11c4661156bc1103776049e1347a9",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "subclasses/juggernaut",
+          "slug": "juggernaut",
+          "nomeIngles": "Juggernaut",
+          "nomePortuguesProvisorio": "Colosso",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "JUGGERNAUT",
+            "lineStart": 605,
+            "lineEnd": 625,
+            "pdfPageStart": 12,
+            "pdfPageEnd": 12
+          },
+          "corpusSha256": "fa7b46993b42dcd40a00f415a8c6827e6103fd10b4b6c30e41cb0ac0fc634cdb",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "subclasses/martial-artist",
+          "slug": "martial-artist",
+          "nomeIngles": "Martial Artist",
+          "nomePortuguesProvisorio": "Artista Marcial",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "MARTIAL ARTIST",
+            "lineStart": 627,
+            "lineEnd": 663,
+            "pdfPageStart": 12,
+            "pdfPageEnd": 12
+          },
+          "corpusSha256": "9e65b0cda6c258186b4f775f158a42a8b3b7589efb24c0a10b8eabf2f9392930",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "subclasses/moon",
+          "slug": "moon",
+          "nomeIngles": "Moon",
+          "nomePortuguesProvisorio": "Lua",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "MOON",
+            "lineStart": 1988,
+            "lineEnd": 2035,
+            "pdfPageStart": 30,
+            "pdfPageEnd": 30
+          },
+          "corpusSha256": "1fdf77e08aa286e6f8943c07d660bc17949e750eabef1a304fb49d171b45c726",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "subclasses/nightwalker",
+          "slug": "nightwalker",
+          "nomeIngles": "Nightwalker",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "NIGHTWALKER",
+            "lineStart": 1465,
+            "lineEnd": 1487,
+            "pdfPageStart": 23,
+            "pdfPageEnd": 23
+          },
+          "corpusSha256": "d230633c5ff1f34a7886ac0908c049057ead04065294c6be4efd42003a3eb599",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "subclasses/pact-of-the-endless",
+          "slug": "pact-of-the-endless",
+          "nomeIngles": "Pact of the Endless",
+          "nomePortuguesProvisorio": "Pacto do Eterno",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "PACT OF THE ENDLESS",
+            "lineStart": 1775,
+            "lineEnd": 1799,
+            "pdfPageStart": 27,
+            "pdfPageEnd": 27
+          },
+          "corpusSha256": "8c38cd504a277ace0c5ae1461eacd3fe4a17f8f6da07535f2fd27becba5ba9e5",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "subclasses/pact-of-the-wrathful",
+          "slug": "pact-of-the-wrathful",
+          "nomeIngles": "Pact of the Wrathful",
+          "nomePortuguesProvisorio": "Pacto do Colérico",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "PACT OF THE WRATHFUL",
+            "lineStart": 1801,
+            "lineEnd": 1841,
+            "pdfPageStart": 27,
+            "pdfPageEnd": 27
+          },
+          "corpusSha256": "04f464cc463c0b09989b80cc0d79b02e77fcdac43232aa6a18831f1d233daff4",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "subclasses/poisoners-guild",
+          "slug": "poisoners-guild",
+          "nomeIngles": "Poisoners Guild",
+          "nomePortuguesProvisorio": "Guilda dos Envenenadores",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "POISONERS GUILD",
+            "lineStart": 430,
+            "lineEnd": 481,
+            "pdfPageStart": 10,
+            "pdfPageEnd": 10
+          },
+          "corpusSha256": "959180121800c3459527c83a67006af78abce15f8be17ea8d83bce20bf049be4",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "subclasses/primal-origin",
+          "slug": "primal-origin",
+          "nomeIngles": "Primal Origin",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "PRIMAL ORIGIN",
+            "lineStart": 1687,
+            "lineEnd": 1728,
+            "pdfPageStart": 25,
+            "pdfPageEnd": 26
+          },
+          "corpusSha256": "deb625dfe0411e2e5b8bf8ff907b1e013a6d339f18e4ff67eefa44a7a9fb4819",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "subclasses/school-of-knowledge",
+          "slug": "school-of-knowledge",
+          "nomeIngles": "School of Knowledge",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "SCHOOL OF KNOWLEDGE",
+            "lineStart": 2067,
+            "lineEnd": 2091,
+            "pdfPageStart": 31,
+            "pdfPageEnd": 31
+          },
+          "corpusSha256": "84c6983845f29f5d39f33582d77d578f15e9c8b79cb3f80ddca7056bc0f41f97",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "subclasses/school-of-war",
+          "slug": "school-of-war",
+          "nomeIngles": "School of War",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "SCHOOL OF WAR",
+            "lineStart": 2093,
+            "lineEnd": 2133,
+            "pdfPageStart": 31,
+            "pdfPageEnd": 31
+          },
+          "corpusSha256": "e9d2f7cbebc0e10804852c04d69a04b9fb14fb9f3d9ee5ea1d324fc04f5cf977",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "subclasses/stalwart",
+          "slug": "stalwart",
+          "nomeIngles": "Stalwart",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "STALWART",
+            "lineStart": 1222,
+            "lineEnd": 1242,
+            "pdfPageStart": 19,
+            "pdfPageEnd": 19
+          },
+          "corpusSha256": "a6822132ed27b86d6a70f19269a9cf477a40849edf04e4832390527f347e19ad",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "subclasses/syndicate",
+          "slug": "syndicate",
+          "nomeIngles": "Syndicate",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "SYNDICATE",
+            "lineStart": 1489,
+            "lineEnd": 1536,
+            "pdfPageStart": 23,
+            "pdfPageEnd": 23
+          },
+          "corpusSha256": "e31fc8ef9c325b2191a1a3a67594d7dfa66787deaa55f14bb7efdd76cdff7d62",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "subclasses/troubadour",
+          "slug": "troubadour",
+          "nomeIngles": "Troubadour",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "TROUBADOUR",
+            "lineStart": 509,
+            "lineEnd": 531,
+            "pdfPageStart": 11,
+            "pdfPageEnd": 11
+          },
+          "corpusSha256": "7acaddaba5d080344a3ba1145b650c4aee800484cc55ef0f372a2144371942db",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "subclasses/vengeance",
+          "slug": "vengeance",
+          "nomeIngles": "Vengeance",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "VENGEANCE",
+            "lineStart": 1244,
+            "lineEnd": 1278,
+            "pdfPageStart": 19,
+            "pdfPageEnd": 20
+          },
+          "corpusSha256": "365f1a213a7b9bf131f5634d081618b4b99792326d77f68dbbdd8a3a5aef69a1",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "subclasses/warden-of-renewal",
+          "slug": "warden-of-renewal",
+          "nomeIngles": "Warden of Renewal",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "WARDEN OF RENEWAL",
+            "lineStart": 800,
+            "lineEnd": 838,
+            "pdfPageStart": 15,
+            "pdfPageEnd": 15
+          },
+          "corpusSha256": "34a9a90aa4397bc96e78663442741713f0bb91e0bf4da5bdc8f754a34f2c1da0",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "subclasses/warden-of-the-elements",
+          "slug": "warden-of-the-elements",
+          "nomeIngles": "Warden of the Elements",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "WARDEN OF THE ELEMENTS",
+            "lineStart": 763,
+            "lineEnd": 796,
+            "pdfPageStart": 14,
+            "pdfPageEnd": 14
+          },
+          "corpusSha256": "8bacd3f1faefb1b3bf9d0b78d8d4d8724694eef44fec1e1364a9d39d6cf8dfc3",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "subclasses/wayfinder",
+          "slug": "wayfinder",
+          "nomeIngles": "Wayfinder",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "WAYFINDER",
+            "lineStart": 1336,
+            "lineEnd": 1372,
+            "pdfPageStart": 21,
+            "pdfPageEnd": 21
+          },
+          "corpusSha256": "1397fde51bf209fd4442d04eb44b1bc4f29f4e0561345cce3d29c441242e297a",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "subclasses/winged-sentinel",
+          "slug": "winged-sentinel",
+          "nomeIngles": "Winged Sentinel",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "WINGED SENTINEL",
+            "lineStart": 1586,
+            "lineEnd": 1627,
+            "pdfPageStart": 24,
+            "pdfPageEnd": 25
+          },
+          "corpusSha256": "e886a91dfdb28a7306f059a7511a2e149e3655596bdaf95ec2d16627c5df97de",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "subclasses/wordsmith",
+          "slug": "wordsmith",
+          "nomeIngles": "Wordsmith",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "WORDSMITH",
+            "lineStart": 533,
+            "lineEnd": 573,
+            "pdfPageStart": 11,
+            "pdfPageEnd": 11
+          },
+          "corpusSha256": "dd27443d1f5fdf36e67d94d5b342c11042fa21ed23aad4ed1d563488f446014e",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        }
+      ]
+    },
+    {
+      "id": "ancestries",
+      "quantidade": 25,
+      "registros": [
+        {
+          "id": "ancestries/aetheris",
+          "slug": "aetheris",
+          "nomeIngles": "Aetheris",
+          "nomePortuguesProvisorio": "Aetheris",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "AETHERIS",
+            "lineStart": 2153,
+            "lineEnd": 2163,
+            "pdfPageStart": 32,
+            "pdfPageEnd": 32
+          },
+          "corpusSha256": "ac822dbd74cdc7ac995eba7bf29930bf3dc3a7efdf5b6b53e32eb6797a968d6d",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "ancestries/clank",
+          "slug": "clank",
+          "nomeIngles": "Clank",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "CLANK",
+            "lineStart": 2165,
+            "lineEnd": 2175,
+            "pdfPageStart": 32,
+            "pdfPageEnd": 32
+          },
+          "corpusSha256": "07d1ddbbd02a0561a8bb63e50a1a8d2c3224755623cb95b25c1c57cf8a5b68c1",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/drakona",
+          "slug": "drakona",
+          "nomeIngles": "Drakona",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "DRAKONA",
+            "lineStart": 2177,
+            "lineEnd": 2187,
+            "pdfPageStart": 32,
+            "pdfPageEnd": 33
+          },
+          "corpusSha256": "56652a08c42312e697fbcf2622f46b802d9effdc887a1790108c0ea53df18abf",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/dwarf",
+          "slug": "dwarf",
+          "nomeIngles": "Dwarf",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "DWARF",
+            "lineStart": 2189,
+            "lineEnd": 2197,
+            "pdfPageStart": 33,
+            "pdfPageEnd": 33
+          },
+          "corpusSha256": "e3bd7d34b72176070eac7d59398c464d75952cfb77c27d4eeffc0321029b4f8a",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/earthkin",
+          "slug": "earthkin",
+          "nomeIngles": "Earthkin",
+          "nomePortuguesProvisorio": "Povo da Terra",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "EARTHKIN",
+            "lineStart": 2209,
+            "lineEnd": 2219,
+            "pdfPageStart": 33,
+            "pdfPageEnd": 33
+          },
+          "corpusSha256": "d4c2af6194ee9e18455837604fe208a74ad938566f133ec1389a4b5695551a82",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "ancestries/elf",
+          "slug": "elf",
+          "nomeIngles": "Elf",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "ELF",
+            "lineStart": 2261,
+            "lineEnd": 2271,
+            "pdfPageStart": 34,
+            "pdfPageEnd": 34
+          },
+          "corpusSha256": "ec16b8d8db97ed11eb6df3b78e649ee974ee4cdc933792af40ba147e96739c2e",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/emberkin",
+          "slug": "emberkin",
+          "nomeIngles": "Emberkin",
+          "nomePortuguesProvisorio": "Povo das Brasas",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "EMBERKIN",
+            "lineStart": 2221,
+            "lineEnd": 2235,
+            "pdfPageStart": 33,
+            "pdfPageEnd": 34
+          },
+          "corpusSha256": "a70d437dd2c7e2f4babb918c552f29abf82da6bc5856aeb2943946bb3b20c0df",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "ancestries/faerie",
+          "slug": "faerie",
+          "nomeIngles": "Faerie",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "FAERIE",
+            "lineStart": 2273,
+            "lineEnd": 2279,
+            "pdfPageStart": 34,
+            "pdfPageEnd": 35
+          },
+          "corpusSha256": "872bd817fb6aa016ac141e248a1d921c5a65915bfdf0a92cb6da2d69740c7d4c",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/faun",
+          "slug": "faun",
+          "nomeIngles": "Faun",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "FAUN",
+            "lineStart": 2287,
+            "lineEnd": 2295,
+            "pdfPageStart": 35,
+            "pdfPageEnd": 35
+          },
+          "corpusSha256": "60ad304d620f34823f9681f59a81b67ff488b8b16d2e95b7afe4e4def5471ada",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/firbolg",
+          "slug": "firbolg",
+          "nomeIngles": "Firbolg",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "FIRBOLG",
+            "lineStart": 2297,
+            "lineEnd": 2307,
+            "pdfPageStart": 35,
+            "pdfPageEnd": 35
+          },
+          "corpusSha256": "afeaa17f7187b6cbf27beb3859d78625cdb59aa4936a9d78704bff02f715725b",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/fungril",
+          "slug": "fungril",
+          "nomeIngles": "Fungril",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "FUNGRIL",
+            "lineStart": 2309,
+            "lineEnd": 2317,
+            "pdfPageStart": 35,
+            "pdfPageEnd": 35
+          },
+          "corpusSha256": "85893c375767020412e48afd978856b46213d9dde9947e12c162d1ec928875f2",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/galapa",
+          "slug": "galapa",
+          "nomeIngles": "Galapa",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "GALAPA",
+            "lineStart": 2319,
+            "lineEnd": 2327,
+            "pdfPageStart": 35,
+            "pdfPageEnd": 35
+          },
+          "corpusSha256": "6cd208f4885a841a96a41d7c306c982da617b4c00c43a848ba536dcb220aef9d",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/giant",
+          "slug": "giant",
+          "nomeIngles": "Giant",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "GIANT",
+            "lineStart": 2331,
+            "lineEnd": 2339,
+            "pdfPageStart": 36,
+            "pdfPageEnd": 36
+          },
+          "corpusSha256": "bd8d461d0ef8053a691bba413db034f43c476fc5c874c6519c0382c958f06099",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/gnome",
+          "slug": "gnome",
+          "nomeIngles": "Gnome",
+          "nomePortuguesProvisorio": "Gnomo",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "GNOME",
+            "lineStart": 2341,
+            "lineEnd": 2349,
+            "pdfPageStart": 36,
+            "pdfPageEnd": 36
+          },
+          "corpusSha256": "3aba377b592b8f589f039a2eec37dea6cb7b01b323daa7e5c43f992911c49067",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "ancestries/goblin",
+          "slug": "goblin",
+          "nomeIngles": "Goblin",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "GOBLIN",
+            "lineStart": 2351,
+            "lineEnd": 2359,
+            "pdfPageStart": 36,
+            "pdfPageEnd": 36
+          },
+          "corpusSha256": "98242cb67fab9e07cc864d438c58715eefb0d5302a6f1dadaf5c2412131c4be5",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/halfling",
+          "slug": "halfling",
+          "nomeIngles": "Halfling",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "HALFLING",
+            "lineStart": 2361,
+            "lineEnd": 2369,
+            "pdfPageStart": 36,
+            "pdfPageEnd": 36
+          },
+          "corpusSha256": "9fbbd6c3cb92fc91b1abf1fe871e65d814eebf85aedfee3558715a56e89b0a5c",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/human",
+          "slug": "human",
+          "nomeIngles": "Human",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "HUMAN",
+            "lineStart": 2371,
+            "lineEnd": 2379,
+            "pdfPageStart": 36,
+            "pdfPageEnd": 36
+          },
+          "corpusSha256": "e8d6735901a0e1fdecd5804cab7be513c630db767918bfc75baea8371a381326",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/infernis",
+          "slug": "infernis",
+          "nomeIngles": "Infernis",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "INFERNIS",
+            "lineStart": 2383,
+            "lineEnd": 2393,
+            "pdfPageStart": 37,
+            "pdfPageEnd": 37
+          },
+          "corpusSha256": "b66081591a0bf18f341b88c2ce44c0cd8f3f017f84904f23b959e615a9dc4383",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/katari",
+          "slug": "katari",
+          "nomeIngles": "Katari",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "KATARI",
+            "lineStart": 2395,
+            "lineEnd": 2403,
+            "pdfPageStart": 37,
+            "pdfPageEnd": 37
+          },
+          "corpusSha256": "f41a76142fbda38e3588f5aee677c4264d9cd8d30011ba065ae408492d7aadea",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/mixed-ancestry",
+          "slug": "mixed-ancestry",
+          "nomeIngles": "Mixed Ancestry",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "MIXED ANCESTRY",
+            "lineStart": 2437,
+            "lineEnd": 2448,
+            "pdfPageStart": 38,
+            "pdfPageEnd": 38
+          },
+          "corpusSha256": "f2e4af3f53e87649513e0e3f94a8b58b3e2b718deb742c2754a535e31b54c6d1",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/orc",
+          "slug": "orc",
+          "nomeIngles": "Orc",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "ORC",
+            "lineStart": 2405,
+            "lineEnd": 2413,
+            "pdfPageStart": 37,
+            "pdfPageEnd": 37
+          },
+          "corpusSha256": "45c162e2c1a5ad5477cdba8b6cb817ce88ef0d932ea09420fdce11b8bbbc4b55",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/ribbet",
+          "slug": "ribbet",
+          "nomeIngles": "Ribbet",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "RIBBET",
+            "lineStart": 2415,
+            "lineEnd": 2423,
+            "pdfPageStart": 37,
+            "pdfPageEnd": 37
+          },
+          "corpusSha256": "f6f4cb70428c0dded9295397078e8b11d554298aeb8dc5f228443a201aaca718",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/simiah",
+          "slug": "simiah",
+          "nomeIngles": "Simiah",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "SIMIAH",
+            "lineStart": 2427,
+            "lineEnd": 2435,
+            "pdfPageStart": 38,
+            "pdfPageEnd": 38
+          },
+          "corpusSha256": "ce6c84a458cd40d618223fd91512f95e6f657f388260e7576ee5669d7064c1ca",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "ancestries/skykin",
+          "slug": "skykin",
+          "nomeIngles": "Skykin",
+          "nomePortuguesProvisorio": "Povo do Céu",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "SKYKIN",
+            "lineStart": 2237,
+            "lineEnd": 2247,
+            "pdfPageStart": 34,
+            "pdfPageEnd": 34
+          },
+          "corpusSha256": "cb55513853c7bfbb7ba4ba9b186300f5e042d8b25249b2f7eacd768b8d108444",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "ancestries/tidekin",
+          "slug": "tidekin",
+          "nomeIngles": "Tidekin",
+          "nomePortuguesProvisorio": "Povo das Marés",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "TIDEKIN",
+            "lineStart": 2249,
+            "lineEnd": 2259,
+            "pdfPageStart": 34,
+            "pdfPageEnd": 34
+          },
+          "corpusSha256": "cca0027ad493e0016dd6887d1aeb4ffa8b5edd28b5ff62ad13ea675931c7a4c2",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        }
+      ]
+    },
+    {
+      "id": "communities",
+      "quantidade": 15,
+      "registros": [
+        {
+          "id": "communities/duneborne",
+          "slug": "duneborne",
+          "nomeIngles": "Duneborne",
+          "nomePortuguesProvisorio": "Nascido nas Dunas",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "DUNEBORNE",
+            "lineStart": 2456,
+            "lineEnd": 2464,
+            "pdfPageStart": 38,
+            "pdfPageEnd": 38
+          },
+          "corpusSha256": "394215bbd5988a9a6a7a008b3c4042b0120199e49fb3fba56a5a5be9b63aed20",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "communities/freeborne",
+          "slug": "freeborne",
+          "nomeIngles": "Freeborne",
+          "nomePortuguesProvisorio": "Nascido Livre",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "FREEBORNE",
+            "lineStart": 2466,
+            "lineEnd": 2478,
+            "pdfPageStart": 38,
+            "pdfPageEnd": 39
+          },
+          "corpusSha256": "a524cab4156415dcdc23f6e03e9d2a8957002f4d3710f16a621cd1da223e2c5d",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "communities/frostborne",
+          "slug": "frostborne",
+          "nomeIngles": "Frostborne",
+          "nomePortuguesProvisorio": "Nascido no Gelo",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "FROSTBORNE",
+            "lineStart": 2480,
+            "lineEnd": 2488,
+            "pdfPageStart": 39,
+            "pdfPageEnd": 39
+          },
+          "corpusSha256": "d330f69b38fcbd817776dd9ee0d73f833e7efeaef0d79ee5de0aef13c1d00e40",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "communities/hearthborne",
+          "slug": "hearthborne",
+          "nomeIngles": "Hearthborne",
+          "nomePortuguesProvisorio": "Nascido no Lar",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "HEARTHBORNE",
+            "lineStart": 2490,
+            "lineEnd": 2498,
+            "pdfPageStart": 39,
+            "pdfPageEnd": 39
+          },
+          "corpusSha256": "ca841c134f6ea2a9eb81c9acd7fa43d4983cbc1996a4a820ff31c96e3e03cd61",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "communities/highborne",
+          "slug": "highborne",
+          "nomeIngles": "Highborne",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "HIGHBORNE",
+            "lineStart": 2500,
+            "lineEnd": 2508,
+            "pdfPageStart": 39,
+            "pdfPageEnd": 39
+          },
+          "corpusSha256": "5c616260a7aa7b51fdf70c0da272ffd06ef9338f704c3b6c113a298a46c3c28a",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "communities/loreborne",
+          "slug": "loreborne",
+          "nomeIngles": "Loreborne",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "LOREBORNE",
+            "lineStart": 2510,
+            "lineEnd": 2518,
+            "pdfPageStart": 39,
+            "pdfPageEnd": 39
+          },
+          "corpusSha256": "48835813dfe2d7a3e5e175ba680db9c3e298756a0339077e09d27eb1583cd9e8",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "communities/orderborne",
+          "slug": "orderborne",
+          "nomeIngles": "Orderborne",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "ORDERBORNE",
+            "lineStart": 2522,
+            "lineEnd": 2530,
+            "pdfPageStart": 40,
+            "pdfPageEnd": 40
+          },
+          "corpusSha256": "c3db7aed3a8e7fb1f5af41d399ea5a694c0aa3872341bdbdede63f0a7f347a66",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "communities/reborne",
+          "slug": "reborne",
+          "nomeIngles": "Reborne",
+          "nomePortuguesProvisorio": "Renascido",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "REBORNE",
+            "lineStart": 2532,
+            "lineEnd": 2546,
+            "pdfPageStart": 40,
+            "pdfPageEnd": 40
+          },
+          "corpusSha256": "1118813725967e073bebbb7dae71f0a64baae7024ed3f94f67be498351b41c35",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "communities/ridgeborne",
+          "slug": "ridgeborne",
+          "nomeIngles": "Ridgeborne",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "RIDGEBORNE",
+            "lineStart": 2548,
+            "lineEnd": 2556,
+            "pdfPageStart": 40,
+            "pdfPageEnd": 40
+          },
+          "corpusSha256": "329f03e0051f3cc5e762596d09c267d073a8ed4c21b42e0c7a39011a5313c2b8",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "communities/seaborne",
+          "slug": "seaborne",
+          "nomeIngles": "Seaborne",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "SEABORNE",
+            "lineStart": 2558,
+            "lineEnd": 2568,
+            "pdfPageStart": 40,
+            "pdfPageEnd": 41
+          },
+          "corpusSha256": "5d282b858e607eb2670e7bafa4383251603b0f96185777698ed10569a5334991",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "communities/slyborne",
+          "slug": "slyborne",
+          "nomeIngles": "Slyborne",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "SLYBORNE",
+            "lineStart": 2570,
+            "lineEnd": 2578,
+            "pdfPageStart": 41,
+            "pdfPageEnd": 41
+          },
+          "corpusSha256": "94ea7852d28174d5836bfc873b69f04a7b69b1ca11e242b90758b686a4632f91",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "communities/underborne",
+          "slug": "underborne",
+          "nomeIngles": "Underborne",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "UNDERBORNE",
+            "lineStart": 2580,
+            "lineEnd": 2588,
+            "pdfPageStart": 41,
+            "pdfPageEnd": 41
+          },
+          "corpusSha256": "43a432435a4ae8aa30b387a4b9b21333bf21eb56c22d6511a16cb2a4a70190f7",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "communities/wanderborne",
+          "slug": "wanderborne",
+          "nomeIngles": "Wanderborne",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "WANDERBORNE",
+            "lineStart": 2590,
+            "lineEnd": 2598,
+            "pdfPageStart": 41,
+            "pdfPageEnd": 41
+          },
+          "corpusSha256": "087c0c719bcaed9bd087dec8bf69e818e904424149ebc2ed0f0ecf2f2a09291a",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        },
+        {
+          "id": "communities/warborne",
+          "slug": "warborne",
+          "nomeIngles": "Warborne",
+          "nomePortuguesProvisorio": "Nascido na Guerra",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "WARBORNE",
+            "lineStart": 2600,
+            "lineEnd": 2610,
+            "pdfPageStart": 41,
+            "pdfPageEnd": 41
+          },
+          "corpusSha256": "136d205367cbd19883856305920cbdb24a634e05d3a92c16ca7d6eddbfad89e4",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "communities/wildborne",
+          "slug": "wildborne",
+          "nomeIngles": "Wildborne",
+          "nomePortuguesProvisorio": null,
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "WILDBORNE",
+            "lineStart": 2614,
+            "lineEnd": 2622,
+            "pdfPageStart": 42,
+            "pdfPageEnd": 42
+          },
+          "corpusSha256": "cca61a6f0d427a75cecaeaa64c502694ad354ab11724b9efef7071d6363f9e5c",
+          "presencaNoCore": "existente",
+          "estado": "existente-requer-comparacao"
+        }
+      ]
+    },
+    {
+      "id": "transformations",
+      "quantidade": 6,
+      "registros": [
+        {
+          "id": "transformations/demigod",
+          "slug": "demigod",
+          "nomeIngles": "Demigod",
+          "nomePortuguesProvisorio": "Semideus",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "DEMIGOD",
+            "lineStart": 2646,
+            "lineEnd": 2665,
+            "pdfPageStart": 43,
+            "pdfPageEnd": 43
+          },
+          "corpusSha256": "df5a009ea60eee3754d96d766b013023b1a65e43373fbe3d49bfd7a61aefe967",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "transformations/ghost",
+          "slug": "ghost",
+          "nomeIngles": "Ghost",
+          "nomePortuguesProvisorio": "Fantasma",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "GHOST",
+            "lineStart": 2667,
+            "lineEnd": 2688,
+            "pdfPageStart": 43,
+            "pdfPageEnd": 43
+          },
+          "corpusSha256": "917d197ba009b3858c274a56c0b2c26f4dfc269f8dfc971e9c0113ac397a01ba",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "transformations/reanimated",
+          "slug": "reanimated",
+          "nomeIngles": "Reanimated",
+          "nomePortuguesProvisorio": "Reanimado",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "REANIMATED",
+            "lineStart": 2692,
+            "lineEnd": 2711,
+            "pdfPageStart": 44,
+            "pdfPageEnd": 44
+          },
+          "corpusSha256": "fa6bb81206e91dfc0ba0780d36ab481ea6aeef8b375811263a2843c4f051615a",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "transformations/shapeshifter",
+          "slug": "shapeshifter",
+          "nomeIngles": "Shapeshifter",
+          "nomePortuguesProvisorio": "Metamorfo",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "SHAPESHIFTER",
+            "lineStart": 2713,
+            "lineEnd": 2734,
+            "pdfPageStart": 44,
+            "pdfPageEnd": 44
+          },
+          "corpusSha256": "403e4578ffe591b83ce3ec0a1d6a627eb9d5c89ed961313f08a5f1b13921ce19",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "transformations/vampire",
+          "slug": "vampire",
+          "nomeIngles": "Vampire",
+          "nomePortuguesProvisorio": "Vampiro",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "VAMPIRE",
+            "lineStart": 2738,
+            "lineEnd": 2757,
+            "pdfPageStart": 45,
+            "pdfPageEnd": 45
+          },
+          "corpusSha256": "242460e76570f6c28f6749d376fc9cbb66e03140de4e5b05190bf70e5d02ceb4",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        },
+        {
+          "id": "transformations/werewolf",
+          "slug": "werewolf",
+          "nomeIngles": "Werewolf",
+          "nomePortuguesProvisorio": "Lobisomem",
+          "sourceLocator": {
+            "chapter": "CORE MATERIALS",
+            "heading": "WEREWOLF",
+            "lineStart": 2759,
+            "lineEnd": 2778,
+            "pdfPageStart": 45,
+            "pdfPageEnd": 45
+          },
+          "corpusSha256": "b3846d7b12c329aab6a73644b618ff3487bb3d45b3d8754deb5127d2dba9101e",
+          "presencaNoCore": "novo",
+          "estado": "novo-requer-traducao-implementacao"
+        }
+      ]
+    }
+  ]
+}

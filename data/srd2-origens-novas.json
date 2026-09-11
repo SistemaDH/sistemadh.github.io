@@ -1,0 +1,249 @@
+{
+  "versao": 1,
+  "estado": "traducao-provisoria-nao-exposta",
+  "aviso": "Este catálogo é uma etapa de revisão. Não deve ser carregado pela criação até as automações e os testes de integração estarem completos.",
+  "fonte": {
+    "srd": "2.0",
+    "data": "2026-08-25",
+    "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64",
+    "observacaoComunidades": "No JSON-LD do corpus, a característica de comunidade usa a chave singular feature. O PDF oficial e o SRD.md conferido continuam sendo a autoridade do texto."
+  },
+  "ancestralidades": [
+    {
+      "idFonte": "ancestries/aetheris",
+      "id": "aetheris",
+      "nomeIngles": "Aetheris",
+      "nome": "Aetheris",
+      "nomeEstado": "provisorio",
+      "descricao": "Aetheris são humanoides reconhecidos por suas asas e marcas sagradas, descendentes de anjos dos Santuários Celestes. Suas marcas mudam conforme envelhecem e sua aura consagrada pode se manifestar como brilho, símbolos mais intensos ou um halo singular.",
+      "caracteristicas": [
+        {
+          "nomeIngles": "Hallowed Aura",
+          "nome": "Aura Consagrada",
+          "texto": "Uma vez por descanso longo, quando um aliado em alcance Próximo fizer uma jogada com Medo, você pode transformá-la em uma jogada com Esperança.",
+          "automacao": "uso-por-descanso-e-conversao-de-resultado"
+        },
+        {
+          "nomeIngles": "Celestial Wings",
+          "nome": "Asas Celestiais",
+          "texto": "Você tem asas que permitem voar. Uma vez por cena enquanto estiver voando, pode gastar 1 Esperança em vez de marcar 1 Ponto de Armadura.",
+          "automacao": "substituicao-de-custo-uma-vez-por-cena"
+        }
+      ],
+      "sourceLocator": { "pdfPageStart": 32, "pdfPageEnd": 32, "lineStart": 2153, "lineEnd": 2163 }
+    },
+    {
+      "idFonte": "ancestries/earthkin",
+      "id": "povo-da-terra",
+      "nomeIngles": "Earthkin",
+      "nome": "Povo da Terra",
+      "nomeEstado": "provisorio",
+      "descricao": "O Povo da Terra descende de elementais da terra e tem corpos formados por carne e rocha, cristal, argila, solo, areia ou uma combinação desses materiais. Seus integrantes amadurecem lentamente e, ao morrer, acabam se desfazendo em terra.",
+      "caracteristicas": [
+        {
+          "nomeIngles": "Stoneskin",
+          "nome": "Pele de Pedra",
+          "texto": "Durante a criação de personagem, receba permanentemente +1 na sua Pontuação de Armadura e nos seus limiares de dano.",
+          "automacao": "bonus-permanentes-na-criacao"
+        },
+        {
+          "nomeIngles": "Immovable",
+          "nome": "Imovível",
+          "texto": "Enquanto estiver tocando o chão, você não pode ser erguido nem movido contra a sua vontade.",
+          "automacao": "regra-contextual-manual"
+        }
+      ],
+      "sourceLocator": { "pdfPageStart": 33, "pdfPageEnd": 33, "lineStart": 2209, "lineEnd": 2219 }
+    },
+    {
+      "idFonte": "ancestries/emberkin",
+      "id": "povo-das-brasas",
+      "nomeIngles": "Emberkin",
+      "nome": "Povo das Brasas",
+      "nomeEstado": "provisorio",
+      "descricao": "O Povo das Brasas descende de elementais do fogo e tem corpos feitos de carne e chama. Sua herança pode aparecer em cabelos flamejantes, olhos como brasas, pele luminosa ou fumaça, e essas manifestações costumam variar com suas emoções.",
+      "caracteristicas": [
+        {
+          "nomeIngles": "Fireproof",
+          "nome": "À Prova de Fogo",
+          "texto": "Você é imune a dano causado por chamas mágicas ou mundanas.",
+          "automacao": "imunidade-passiva"
+        },
+        {
+          "nomeIngles": "Ignition",
+          "nome": "Ignição",
+          "texto": "Marque 1 Estresse para envolver sua arma primária em chamas até o fim da cena. Enquanto estiver em chamas, a arma emite luz intensa e concede um bônus de 1d6 às suas jogadas de dano feitas com ela.",
+          "automacao": "custo-e-bonus-de-dano-por-cena"
+        }
+      ],
+      "sourceLocator": { "pdfPageStart": 33, "pdfPageEnd": 34, "lineStart": 2221, "lineEnd": 2235 }
+    },
+    {
+      "idFonte": "ancestries/gnome",
+      "id": "gnomo",
+      "nomeIngles": "Gnome",
+      "nome": "Gnomo",
+      "nomeEstado": "provisorio",
+      "descricao": "Gnomos são humanoides pequenos, de cabeça cônica, braços proporcionalmente longos e mãos grandes e hábeis. Herdam de suas famílias a capacidade de se teleportar por distâncias curtas, acompanhada por manifestações particulares como fumaça ou pontos de luz.",
+      "caracteristicas": [
+        {
+          "nomeIngles": "Nimble Fingers",
+          "nome": "Dedos Ágeis",
+          "texto": "Quando fizer uma jogada de Finesse, você pode gastar 2 Esperança para rerrolar seu Dado de Esperança.",
+          "automacao": "custo-e-rerrolagem-manual"
+        },
+        {
+          "nomeIngles": "Flicker Step",
+          "nome": "Passo Cintilante",
+          "texto": "Uma vez por cena, você pode se teleportar para outro ponto que consiga ver em alcance Distante.",
+          "automacao": "uso-por-cena-e-movimento-manual"
+        }
+      ],
+      "sourceLocator": { "pdfPageStart": 36, "pdfPageEnd": 36, "lineStart": 2341, "lineEnd": 2349 }
+    },
+    {
+      "idFonte": "ancestries/skykin",
+      "id": "povo-do-ceu",
+      "nomeIngles": "Skykin",
+      "nome": "Povo do Céu",
+      "nomeEstado": "provisorio",
+      "descricao": "O Povo do Céu descende de elementais do ar e tem corpos feitos de carne e ar. Pele semitranslúcida, cabelos como nuvens e brisas constantes podem expressar essa herança, cuja intensidade varia com as emoções.",
+      "caracteristicas": [
+        {
+          "nomeIngles": "Gale Force",
+          "nome": "Força do Vendaval",
+          "texto": "Marque 1 Estresse para conjurar uma rajada de vento que carregue você ou um aliado em alcance Muito Próximo por até um alcance Longínquo. Além disso, você sempre pode controlar a velocidade da sua queda.",
+          "automacao": "custo-e-movimento-manual"
+        },
+        {
+          "nomeIngles": "Eye of the Storm",
+          "nome": "Olho da Tempestade",
+          "texto": "Gaste 2 Esperança para conceder a você ou a um aliado em alcance Corpo a Corpo +1 de Evasão até você sofrer dano Severo ou usar esta característica novamente.",
+          "automacao": "custo-e-bonus-persistente-com-termino"
+        }
+      ],
+      "sourceLocator": { "pdfPageStart": 34, "pdfPageEnd": 34, "lineStart": 2237, "lineEnd": 2247 }
+    },
+    {
+      "idFonte": "ancestries/tidekin",
+      "id": "povo-das-mares",
+      "nomeIngles": "Tidekin",
+      "nome": "Povo das Marés",
+      "nomeEstado": "provisorio",
+      "descricao": "O Povo das Marés descende de elementais da água e tem corpos feitos de carne e água, com orelhas semelhantes a nadadeiras e membranas entre os dedos. Cores e formações de água em seus corpos podem mudar com suas emoções.",
+      "caracteristicas": [
+        {
+          "nomeIngles": "Amphibious",
+          "nome": "Anfíbio",
+          "texto": "Você pode respirar e se mover naturalmente debaixo d'água.",
+          "automacao": "regra-passiva"
+        },
+        {
+          "nomeIngles": "Lifespring",
+          "nome": "Fonte de Vida",
+          "texto": "Uma vez por descanso, quando tiver acesso a uma pequena quantidade de água, você pode marcar 1 Estresse para limpar 1 Ponto de Vida seu ou de um aliado em alcance Muito Próximo.",
+          "automacao": "custo-uso-por-descanso-e-cura-com-alvo"
+        }
+      ],
+      "sourceLocator": { "pdfPageStart": 34, "pdfPageEnd": 34, "lineStart": 2249, "lineEnd": 2259 }
+    }
+  ],
+  "comunidades": [
+    {
+      "idFonte": "communities/duneborne",
+      "id": "nascido-nas-dunas",
+      "nomeIngles": "Duneborne",
+      "nome": "Nascido nas Dunas",
+      "nomeEstado": "provisorio",
+      "descricao": "Fazer parte de uma comunidade Nascida nas Dunas significa ter construído um lar entre areias móveis e o clima árido do deserto, aprendendo a atravessar as dunas e preservar recursos preciosos.",
+      "adjetivos": ["adaptável", "centrado", "colaborativo", "dedicado", "alegre", "observador"],
+      "caracteristica": {
+        "nomeIngles": "Oasis",
+        "nome": "Oásis",
+        "texto": "Durante um descanso curto, você ou um aliado pode rerrolar um dado usado em um movimento de descanso e ficar com o resultado maior.",
+        "automacao": "rerrolagem-manual-durante-descanso-curto"
+      },
+      "sourceLocator": { "pdfPageStart": 38, "pdfPageEnd": 38, "lineStart": 2456, "lineEnd": 2464 }
+    },
+    {
+      "idFonte": "communities/freeborne",
+      "id": "nascido-livre",
+      "nomeIngles": "Freeborne",
+      "nome": "Nascido Livre",
+      "nomeEstado": "provisorio",
+      "descricao": "Fazer parte de uma comunidade Nascida Livre significa vir de um povo que já viveu sob domínio tirânico e agora é livre, unido pela luta para preservar e celebrar sua cultura.",
+      "adjetivos": ["otimista", "reservado", "corajoso", "alegre", "subversivo", "traumatizado"],
+      "caracteristica": {
+        "nomeIngles": "Unbound",
+        "nome": "Liberto",
+        "texto": "Uma vez por sessão, quando fizer uma jogada com Medo, você pode transformá-la em uma jogada com Esperança.",
+        "automacao": "uso-por-sessao-e-conversao-de-resultado"
+      },
+      "sourceLocator": { "pdfPageStart": 38, "pdfPageEnd": 39, "lineStart": 2466, "lineEnd": 2478 }
+    },
+    {
+      "idFonte": "communities/frostborne",
+      "id": "nascido-no-gelo",
+      "nomeIngles": "Frostborne",
+      "nome": "Nascido no Gelo",
+      "nomeEstado": "provisorio",
+      "descricao": "Fazer parte de uma comunidade Nascida no Gelo significa vir de um lugar de neve e gelo, preparado para sobreviver em condições implacáveis e compartilhar os recursos essenciais.",
+      "adjetivos": ["astuto", "gregário", "intrépido", "determinado", "quieto", "acolhedor"],
+      "caracteristica": {
+        "nomeIngles": "Hardy",
+        "nome": "Resistente",
+        "texto": "Quando fizer um descanso, limpe 1 Ponto de Vida.",
+        "automacao": "cura-automatica-em-descanso"
+      },
+      "sourceLocator": { "pdfPageStart": 39, "pdfPageEnd": 39, "lineStart": 2480, "lineEnd": 2488 }
+    },
+    {
+      "idFonte": "communities/hearthborne",
+      "id": "nascido-no-lar",
+      "nomeIngles": "Hearthborne",
+      "nome": "Nascido no Lar",
+      "nomeEstado": "provisorio",
+      "descricao": "Fazer parte de uma comunidade Nascida no Lar significa ter origens humildes numa aldeia modesta ou região campestre, onde relações próximas, agricultura, criação e ofícios sustentam a vida coletiva.",
+      "adjetivos": ["cuidadoso", "generoso", "insular", "falante", "sorridente", "tradicional"],
+      "caracteristica": {
+        "nomeIngles": "Close-Knit",
+        "nome": "Laços Estreitos",
+        "texto": "Uma vez por descanso longo, você pode gastar qualquer quantidade de Esperança para conceder a um aliado em alcance Distante a mesma quantidade de Esperança.",
+        "automacao": "transferencia-de-recurso-uma-vez-por-descanso-longo"
+      },
+      "sourceLocator": { "pdfPageStart": 39, "pdfPageEnd": 39, "lineStart": 2490, "lineEnd": 2498 }
+    },
+    {
+      "idFonte": "communities/reborne",
+      "id": "renascido",
+      "nomeIngles": "Reborne",
+      "nome": "Renascido",
+      "nomeEstado": "provisorio",
+      "descricao": "Você já pertenceu a outra comunidade, mas deixou de fazer parte dela. Renascidos são unidos pela experiência de isolamento, embora possam se voltar ao futuro, redefinir a si mesmos e construir novos vínculos.",
+      "adjetivos": ["curioso", "esperançoso", "inocente", "isolado", "melancólico", "insólito"],
+      "caracteristica": {
+        "nomeIngles": "Found Family",
+        "nome": "Família Escolhida",
+        "texto": "Uma vez por descanso, você pode gastar 1 Esperança para usar a Experiência de um aliado como se fosse sua. Ao fazer isso, descreva como o tempo ao lado desse aliado preparou você para este momento. Quando ingressar em uma nova comunidade ou redescobrir sua antiga comunidade, você pode trocar esta carta permanentemente pela carta daquela comunidade.",
+        "automacao": "uso-contextual-de-experiencia-e-troca-permanente-manual"
+      },
+      "sourceLocator": { "pdfPageStart": 40, "pdfPageEnd": 40, "lineStart": 2532, "lineEnd": 2546 }
+    },
+    {
+      "idFonte": "communities/warborne",
+      "id": "nascido-na-guerra",
+      "nomeIngles": "Warborne",
+      "nome": "Nascido na Guerra",
+      "nomeEstado": "provisorio",
+      "descricao": "Fazer parte de uma comunidade Nascida na Guerra significa vir de um lugar devastado por conflitos. Civis ou militares, seus integrantes aprendem autodefesa e desenvolvem engenhosidade para sobreviver e reconstruir.",
+      "adjetivos": ["estratégico", "devastado", "determinado", "calculista", "inabalável", "dedicado"],
+      "caracteristica": {
+        "nomeIngles": "Brave Face",
+        "nome": "Cara de Coragem",
+        "texto": "Uma vez por sessão, quando você seria forçado a marcar 1 Estresse, pode gastar 1 Esperança em vez disso.",
+        "automacao": "substituicao-de-custo-uma-vez-por-sessao"
+      },
+      "sourceLocator": { "pdfPageStart": 41, "pdfPageEnd": 41, "lineStart": 2600, "lineEnd": 2610 }
+    }
+  ]
+}

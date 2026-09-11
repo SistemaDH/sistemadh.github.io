@@ -60,3 +60,26 @@ A correção inicial implementa diretamente as pp. 53–54 do SRD 2.0:
 - bônus de PV, Estresse, Evasão e Proficiência são reconstruídos dos espaços válidos, em vez de confiar no payload do cliente;
 - fichas antigas com apenas 1 marca em uma caixa preta são normalizadas para 2, preservando o benefício adquirido;
 - a API impede a ficha de ultrapassar o nível anunciado pelo Mestre.
+
+## Núcleo do jogador — auditoria e preparação
+
+O recorte inicial contém 95 registros nas coleções de domínios, classes, subclasses, ancestralidades, comunidades e transformações. A comparação estrutural encontrou:
+
+- 64 registros já representados no Core, mas ainda obrigatoriamente sujeitos a comparação individual com o SRD 2.0;
+- 31 registros novos: Pavor, 4 classes, 8 subclasses, 6 ancestralidades, 6 comunidades e 6 transformações.
+
+Os 31 registros novos estão traduzidos e estruturados em catálogos de preparação, todos marcados como `traducao-provisoria-nao-exposta`:
+
+- `data/srd2-classes-novas.json`: Pavor e 4 classes;
+- `data/srd2-subclasses-novas.json`: 8 subclasses e 43 características;
+- `data/srd2-origens-novas.json`: 6 ancestralidades e 6 comunidades;
+- `data/srd2-transformacoes.json`: 6 transformações, 12 características e 36 perguntas.
+
+“Estruturado” ainda não significa “implementado”: os registros permanecem pendentes no inventário oficial até existir persistência, validação de servidor, interface e regressão mecânica. Por isso esses catálogos não são carregados pela criação atual.
+
+### Cuidados de extração confirmados
+
+- ancestralidades e transformações usam `features` no JSON-LD auxiliar;
+- comunidades usam a chave singular `feature`; tratar apenas `features` produz um falso negativo;
+- o PDF oficial continua prevalecendo sobre o corpus auxiliar;
+- a Forma de Lobo do Lobisomem usa a errata de *Hope & Fear*: durante a forma, uma **jogada com Esperança** exige marcar 1 Estresse.

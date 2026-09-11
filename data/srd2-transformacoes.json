@@ -1,0 +1,201 @@
+{
+  "versao": 1,
+  "estado": "traducao-provisoria-nao-exposta",
+  "aviso": "Transformações alteram regras centrais da ficha e não devem ser expostas antes de existir um fluxo explícito de aquisição, remoção e efeitos permanentes.",
+  "fonte": {
+    "srd": "2.0",
+    "data": "2026-08-25",
+    "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64",
+    "errataHopeFearAplicada": true,
+    "observacaoErrata": "Forma de Lobo usa a redação corrigida: ao fazer uma jogada com Esperança enquanto estiver nessa forma, marque 1 Estresse."
+  },
+  "transformacoes": [
+    {
+      "idFonte": "transformations/demigod",
+      "id": "semideus",
+      "nomeIngles": "Demigod",
+      "nome": "Semideus",
+      "nomeEstado": "provisorio",
+      "descricao": "Semideuses são criaturas mortais cujo sangue carrega poder divino. Podem herdar esse poder de uma divindade, recebê-lo como dádiva ou conquistá-lo ao realizar um feito extraordinário. Essa centelha traz capacidades excepcionais, mas também expectativas e obrigações difíceis de sustentar.",
+      "caracteristicas": [
+        {
+          "nomeIngles": "Gifted",
+          "nome": "Dotado",
+          "texto": "Você recebe +1 em jogadas de ação, reação e dano.",
+          "automacao": "bonus-global-em-jogadas"
+        },
+        {
+          "nomeIngles": "Weight of Divinity",
+          "nome": "Peso da Divindade",
+          "texto": "Quando falhar em uma jogada, você deve marcar 1 Estresse ou o Mestre ganha 1 Medo.",
+          "automacao": "escolha-obrigatoria-apos-falha"
+        }
+      ],
+      "perguntas": [
+        "Sua divindade afetou um aspecto da sua aparência. De que maneira você parece diferente das outras pessoas?",
+        "Quem concedeu a você a condição de semideus e que provação você completou para receber essa dádiva?",
+        "Quando criança, zombaram de você por sua ascendência divina. Por quê?",
+        "Por que o conhecimento de que você é um semideus foi escondido por tantos anos? Quem guardou esse segredo?",
+        "Você tem uma obrigação a cumprir por causa do sangue imortal que corre em suas veias. Qual é esse dever?",
+        "Como sua divindade se manifestou pela primeira vez? Por que isso surpreendeu você?"
+      ],
+      "sourceLocator": { "pdfPageStart": 43, "pdfPageEnd": 43, "lineStart": 2646, "lineEnd": 2665 }
+    },
+    {
+      "idFonte": "transformations/ghost",
+      "id": "fantasma",
+      "nomeIngles": "Ghost",
+      "nome": "Fantasma",
+      "nomeEstado": "provisorio",
+      "descricao": "Fantasmas são espíritos de quem já viveu e permanece preso ao Reino Mortal. Podem ter sido chamados de volta ou nunca ter atravessado o véu da morte. Sua existência entre a vida e a morte permite alternar entre o físico e o espectral, mas depende de um propósito ainda não cumprido.",
+      "caracteristicas": [
+        {
+          "nomeIngles": "Unfinished Business",
+          "nome": "Assunto Inacabado",
+          "texto": "Defina com o Mestre qual propósito ou desejo mantém você preso ao Reino Mortal. Quando cumpri-lo, você atravessa o véu da morte.",
+          "automacao": "objetivo-narrativo-e-encerramento-manual"
+        },
+        {
+          "nomeIngles": "Ephemeral",
+          "nome": "Efêmero",
+          "texto": "Seu corpo oscila entre o corpóreo e o incorpóreo. Você tem resistência a dano físico, sofre o dobro de dano mágico e pode marcar 2 Estresses para atravessar momentaneamente um objeto sólido.",
+          "automacao": "resistencia-vulnerabilidade-e-custo-contextual"
+        }
+      ],
+      "perguntas": [
+        "Como você morreu e que medo sua morte incutiu em você?",
+        "O que trouxe você de volta de além do véu da morte?",
+        "Em vida, você amou alguém profundamente. Por que precisa encontrar essa pessoa novamente?",
+        "O que você precisa realizar agora que retornou ao Reino Mortal? Como pretende alcançar esse objetivo?",
+        "Quem fez mal a você em sua primeira vida? Como pretende lidar com essa pessoa agora que voltou?",
+        "Você precisou sacrificar algo querido para retornar ao Reino Mortal. O que entregou e a quem?"
+      ],
+      "sourceLocator": { "pdfPageStart": 43, "pdfPageEnd": 43, "lineStart": 2667, "lineEnd": 2688 }
+    },
+    {
+      "idFonte": "transformations/reanimated",
+      "id": "reanimado",
+      "nomeIngles": "Reanimated",
+      "nome": "Reanimado",
+      "nomeEstado": "provisorio",
+      "descricao": "Reanimados são cadáveres trazidos de volta à vida por magia, ritual, experimento ou outro método antinatural. Presos a corpos em decomposição, precisam repará-los com ossos, carne e materiais obtidos dos mortos recentes.",
+      "caracteristicas": [
+        {
+          "nomeIngles": "Corpse",
+          "nome": "Cadáver",
+          "texto": "Durante um descanso, você só pode limpar Pontos de Vida se tiver acesso aos restos mortais de uma criatura falecida recentemente. Descreva como usa esses materiais para conservar seu cadáver.",
+          "automacao": "restricao-de-cura-contextual"
+        },
+        {
+          "nomeIngles": "Won’t Stay Dead",
+          "nome": "Não Fica Morto",
+          "texto": "Quando escolher o movimento de morte Arriscar Tudo e falhar, você pode marcar permanentemente 1 Ponto de Vida para ter sucesso em vez disso. Quando fizer isso, ainda use o valor do Dado de Esperança para limpar Pontos de Vida e Estresses. Ao marcar permanentemente seu último Ponto de Vida, você atravessa o véu da morte.",
+          "automacao": "efeito-permanente-apos-falha-no-movimento-de-morte"
+        }
+      ],
+      "perguntas": [
+        "Como você morreu pela primeira vez e como essa morte afetou sua visão sobre a vida?",
+        "Um fragmento de memória da sua primeira vida assombra você. Qual é essa lembrança e por que você acredita que ela é importante?",
+        "Você tinha um sonho para sua vida que agora acredita não poder alcançar. Qual era e por que ser reanimado torna impossível realizá-lo?",
+        "Como você foi trazido de volta dos mortos e como o processo mudou seu corpo?",
+        "Alguém trouxe você de volta da morte. Quem foi e o que você sente por essa pessoa e pelo que ela fez?",
+        "No breve período em que atravessou o véu da morte, você viu algo que mudou você para sempre. O que foi?"
+      ],
+      "sourceLocator": { "pdfPageStart": 44, "pdfPageEnd": 44, "lineStart": 2692, "lineEnd": 2711 }
+    },
+    {
+      "idFonte": "transformations/shapeshifter",
+      "id": "metamorfo",
+      "nomeIngles": "Shapeshifter",
+      "nome": "Metamorfo",
+      "nomeEstado": "provisorio",
+      "descricao": "Metamorfos conseguem alterar sua forma física e assumir qualquer ancestralidade, embora não possam copiar uma pessoa específica. Uma característica permanece igual em todas as formas, e encarnar uma nova ancestralidade não concede imediatamente todos os benefícios dela.",
+      "caracteristicas": [
+        {
+          "nomeIngles": "Change Shape",
+          "nome": "Mudar de Forma",
+          "texto": "Durante um descanso, você pode usar um movimento de descanso para trocar sua ancestralidade atual por outra. Ao fazer isso, descreva como sua aparência muda.",
+          "automacao": "troca-de-ancestralidade-durante-descanso"
+        },
+        {
+          "nomeIngles": "Only Skin Deep",
+          "nome": "Só na Aparência",
+          "texto": "Você recebe o benefício de apenas uma característica da ancestralidade escolhida, selecionada quando escolhe essa ancestralidade. Pode usar um movimento de descanso para selecionar outra característica dessa ancestralidade.",
+          "automacao": "selecao-de-uma-caracteristica-ancestral"
+        }
+      ],
+      "perguntas": [
+        "Você acredita que possui uma forma verdadeira, mas nunca a viu. Como imagina que ela seja e como sabe que existe?",
+        "Que truque você desenvolveu para identificar outros metamorfos?",
+        "Alguém que você amava abandonou você ao descobrir sua capacidade de mudar de forma. Quem era e o que aconteceu?",
+        "Que forma você jurou nunca assumir e por quê?",
+        "Em qual ancestralidade você vive por mais tempo? Por que passa tanto tempo nessa forma?",
+        "Alguém consegue reconhecer você instantaneamente, qualquer que seja sua forma. Como essa pessoa diz identificar você e o que essa familiaridade significa?"
+      ],
+      "sourceLocator": { "pdfPageStart": 44, "pdfPageEnd": 44, "lineStart": 2713, "lineEnd": 2734 }
+    },
+    {
+      "idFonte": "transformations/vampire",
+      "id": "vampiro",
+      "nomeIngles": "Vampire",
+      "nome": "Vampiro",
+      "nomeEstado": "provisorio",
+      "descricao": "Vampiros são criaturas mortas-vivas de presas afiadas que se alimentam do sangue dos vivos. Não nascem vampiros: são criados por mordida e troca de sangue, ritual oculto ou outro método misterioso, e precisam consumir a essência vital de outras criaturas.",
+      "caracteristicas": [
+        {
+          "nomeIngles": "Fangs",
+          "nome": "Presas",
+          "texto": "Faça um ataque usando um traço à sua escolha para morder um alvo em alcance Corpo a Corpo. Em caso de sucesso, cause d6 de dano físico usando sua Proficiência.",
+          "automacao": "arma-natural-com-traco-escolhido"
+        },
+        {
+          "nomeIngles": "Feed",
+          "nome": "Alimentar-se",
+          "texto": "Após um ataque bem-sucedido com Presas contra uma criatura que possa sangrar, você pode marcar 1 Estresse para se alimentar. Coloque nesta carta uma quantidade de marcadores igual aos Pontos de Vida que o alvo marcar. Você pode manter no máximo 6 marcadores. Antes de fazer uma jogada de ação, pode gastar 1 marcador para transformar seu Dado de Medo em um d20. Ao fazer um descanso longo, remova 1 marcador. Enquanto não houver marcadores nesta carta, você faz jogadas de ação e reação com desvantagem.",
+          "automacao": "contador-com-teto-custo-e-modificador-de-dado"
+        }
+      ],
+      "perguntas": [
+        "Quem você precisou deixar para trás ao se tornar vampiro e por que foi tão difícil abandonar essa pessoa?",
+        "Certa vez você matou uma pessoa inocente por seu sangue. Que característica dela você mais percebe nas outras pessoas?",
+        "A que seu vampirismo torna você especialmente vulnerável?",
+        "Quem você conseguiu salvar usando seu poder vampírico? O que aconteceu e o que essa pessoa sente por você agora?",
+        "Como sua fome por sangue muda você?",
+        "O vampiro que criou você ainda exerce poder sobre você. Qual é o nome dessa criatura e o que ela exige que você faça?"
+      ],
+      "sourceLocator": { "pdfPageStart": 45, "pdfPageEnd": 45, "lineStart": 2738, "lineEnd": 2757 }
+    },
+    {
+      "idFonte": "transformations/werewolf",
+      "id": "lobisomem",
+      "nomeIngles": "Werewolf",
+      "nome": "Lobisomem",
+      "nomeEstado": "provisorio",
+      "descricao": "Lobisomens se transformam em grandes lobos sobrenaturais. Alguns nascem assim; outros mudam por maldição, mordida ou outra causa antinatural. A forma lupina concede enorme poder, mas exige disciplina para conter seus instintos de caça e violência.",
+      "caracteristicas": [
+        {
+          "nomeIngles": "Wolf Form",
+          "nome": "Forma de Lobo",
+          "texto": "Quando marcar 1 ou mais Pontos de Vida, você pode marcar 1 Estresse para entrar na Forma de Lobo. Nessa forma, recebe um bônus de 1d10 nas jogadas de ataque e dano. Quando fizer uma jogada com Esperança enquanto estiver na Forma de Lobo, deve marcar 1 Estresse. A forma dura até você entrar em Frenesi Uivante ou fazer um descanso.",
+          "automacao": "estado-com-bonus-e-custo-apos-jogada-com-esperanca",
+          "errata": "hope-and-fear-aplicada"
+        },
+        {
+          "nomeIngles": "Howling Rampage",
+          "nome": "Frenesi Uivante",
+          "texto": "Quando marcar seu último Estresse enquanto estiver na Forma de Lobo, você entra em frenesi. Role fora do app uma quantidade de d20 igual ao seu patamar e cause dano físico igual à soma dos resultados a todas as criaturas em alcance Muito Próximo; depois, saia da Forma de Lobo.",
+          "automacao": "gatilho-no-ultimo-estresse-e-rolagem-manual"
+        }
+      ],
+      "perguntas": [
+        "Alguém está caçando você. Quem é e por que quer sua morte?",
+        "Do que você tinha medo antes de se tornar lobisomem e como seu novo poder mudou esse medo?",
+        "Você ouve sua forma de lobo em sua mente como se fosse outra entidade. Que mentira ela conta sobre você e por que você está começando a acreditar?",
+        "O que levou você a matar alguém que ama durante um frenesi?",
+        "Quem amaldiçoou você a se tornar lobisomem?",
+        "Certa vez convidaram você a integrar uma alcateia de lobisomens. Como você respondeu?"
+      ],
+      "sourceLocator": { "pdfPageStart": 45, "pdfPageEnd": 45, "lineStart": 2759, "lineEnd": 2778 }
+    }
+  ]
+}
