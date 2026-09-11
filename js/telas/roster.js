@@ -12,7 +12,7 @@ import { obterEstado, acoes, ehMestre, assinar } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
 import { confirmar, avisarErro, avisarSucesso, blocoVazio } from '../ui.js';
 import { abrirCriacao } from './criacao.js';
-import { abrirFichaEmJogo } from './ficha.js';
+import { abrirFichaEmJogo } from './ficha.js?v=20260911c';
 import { abrirPainelDoMestre } from './mestre.js';
 import { icone } from '../componentes/icone.js';
 import { nomeAnotado, prepararVerbetes } from '../verbete.js';

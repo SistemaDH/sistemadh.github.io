@@ -84,15 +84,19 @@
 .ficha__topoLinha .selo--nivel {
   position: relative;
   display: inline-flex;
+  flex: 0 0 auto;
   align-items: center;
   gap: 6px;
   min-height: 0;
-  padding: 5px 16px;
+  max-width: none;
+  overflow: visible;
+  padding: 6px 16px;
   border: 1px solid var(--cor-ouro-escuro);
   background: rgba(0, 0, 0, .25);
   color: var(--cor-titulo);
   font-size: var(--txt-xs);
   font-weight: 600;
+  line-height: 1.3;
   letter-spacing: 0;
   white-space: nowrap;
   cursor: pointer;

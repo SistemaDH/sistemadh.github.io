@@ -22,7 +22,6 @@ const ROTULO_NOVO = 'Dano';
  * sair do modal de dano.
  */
 const CARTAS_DE_DANO = new Set([
-  'levantar-se',
   'preparar',
   'na beira',
   'conjurar enxame',

@@ -1193,12 +1193,20 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * As reações são caixas de escolha porque todas dizem "pode".
    */
   function reacoesDeDanoDaFicha_(ficha) {
-    return [
+    const saida = [
       ['Pele Grossa', 'Dano Menor: marque 2 Estresses em vez de 1 PV.'],
       ['Fortitude Aumentada', 'Dano físico: gaste 3 Esperanças para reduzi-lo à metade antes dos limiares.'],
       ['Escamas', 'Dano Severo: marque 1 Estresse para marcar 1 PV a menos.'],
       ['Vontade de Ferro', 'Dano físico: marque 1 Ponto de Armadura adicional para reduzir a severidade em um limiar.']
     ].filter(([nome]) => temCaracteristica_(ficha, nome));
+
+    const ativas = ((ficha.cartas || {}).ativas || [])
+      .map((ref) => catalogo.acharCarta(ref))
+      .filter(Boolean);
+    if (ativas.some((carta) => dados.chave(carta.nome) === dados.chave('Levantar-Se'))) {
+      saida.push(['Levantar-Se', 'Dano Severo: marque 1 Estresse para reduzir a severidade em um nível.']);
+    }
+    return saida;
   }
 
   function blocoDeReacoesDeEquipamento_(ficha) {

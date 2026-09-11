@@ -3449,11 +3449,30 @@ function aplicarDanoNaFicha_(ficha, a) {
   for (let i = 0; i < nomes.length; i++) {
     let def = (typeof reacaoDeDanoDeOrigem_ === 'function') ? reacaoDeDanoDeOrigem_(nomes[i]) : null;
     if (!def && typeof reacaoDeDanoDeClasse_ === 'function') def = reacaoDeDanoDeClasse_(nomes[i]);
+
+    const pediuLevantarSe = chaveTexto_(nomes[i]) === chaveTexto_('Levantar-Se');
+    if (!def && pediuLevantarSe) {
+      const ativas = Array.isArray((((ficha || {}).cartas || {}).ativas)) ? ficha.cartas.ativas : [];
+      let ativa = false;
+      for (let c = 0; c < ativas.length; c++) {
+        const ref = (ativas[c] && typeof ativas[c] === 'object') ? (ativas[c].id || ativas[c].nome) : ativas[c];
+        const carta = (typeof acharCarta_ === 'function') ? acharCarta_(ref) : null;
+        if (carta && carta.id === 'blade-levantar-se') { ativa = true; break; }
+      }
+      if (!ativa) return { erro:'Levantar-Se precisa estar entre as cartas ativas.' };
+      def = {
+        nome:'Levantar-Se', origem:'carta-dominio', momento:'depois-dos-limiares',
+        tipos:['fisico','magico'], faixas:['severo'], custo:{ estresse:1 },
+        efeito:{ reduzPv:1 }, fonte:'Carta de domínio ativa Levantar-Se.'
+      };
+    }
+
     if (!def) return { erro: 'Reação de dano desconhecida: "' + String(nomes[i]) + '".' };
     const k = chaveTexto_(def.nome);
     if (vistos[k]) return { erro: 'A reação "' + def.nome + '" veio repetida.' };
     vistos[k] = true;
-    if (typeof fichaTemCaracteristica_ !== 'function' || !fichaTemCaracteristica_(ficha, def.nome)) {
+    if (def.origem !== 'carta-dominio' &&
+        (typeof fichaTemCaracteristica_ !== 'function' || !fichaTemCaracteristica_(ficha, def.nome))) {
       return { erro: 'Este personagem não tem "' + def.nome + '".' };
     }
     defs.push(def);
