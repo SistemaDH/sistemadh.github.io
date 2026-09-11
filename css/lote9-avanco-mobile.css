@@ -1,0 +1,53 @@
+/* ==========================================================================
+   L9-B22 · RESUMO STICKY DO AVANÇO DE NÍVEL NO MOBILE
+
+   O rodapé já informa quantas escolhas foram gastas, mas desaparece do campo
+   visual enquanto a pessoa compara uma lista longa de avanços. Este resumo
+   repete apenas estado já visível na tela e fica preso ao topo durante a
+   rolagem. Em tablet/desktop ele não existe.
+   ========================================================================== */
+
+.avanco__resumoSticky { display: none; }
+
+@media (max-width: 639px) {
+  .avanco__resumoSticky {
+    position: sticky;
+    top: 0;
+    z-index: 7;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2px var(--e2);
+    margin-inline: calc(-1 * var(--e5));
+    padding: var(--e2) var(--e5);
+    border-block: 1px solid var(--cor-borda);
+    background: var(--cor-superficie);
+    box-shadow: 0 8px 14px rgba(0, 0, 0, .26);
+  }
+
+  .avanco__resumoRotulo {
+    min-width: 0;
+    color: var(--cor-texto-suave);
+    font-size: var(--txt-xs);
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+
+  .avanco__resumoContagem {
+    font-family: var(--fonte-mono);
+    font-size: var(--txt-xs);
+    font-weight: 700;
+    color: var(--cor-titulo);
+    white-space: nowrap;
+  }
+
+  .avanco__resumoNomes {
+    grid-column: 1 / -1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--cor-texto);
+    font-size: var(--txt-sm);
+  }
+}
