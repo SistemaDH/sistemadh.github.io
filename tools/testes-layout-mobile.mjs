@@ -170,16 +170,24 @@ for (const aviso of [...document.querySelectorAll('.aviso')].filter(visivel)) {
   }
 }
 
-    /* O HUD mobile começa pelos recursos que mudam durante a cena. */
+    /*
+     * O HUD começa pelos recursos de sobrevivência e pela defesa. Esperança
+     * agora fica DEPOIS da ação "Aplicar dano recebido": isso mantém o fluxo
+     * do golpe junto e deixa Esperança/Características de Esperança agrupadas.
+     */
     const papel = document.querySelector('.papel');
     if (papel) {
       const filhos = [...papel.children];
       const pv = filhos.findIndex((x) => x.matches('.papel__trilha--pv'));
       const defesa = filhos.findIndex((x) => x.matches('.papel__defesas'));
       const esperança = filhos.findIndex((x) => x.matches('.papel__esperanca'));
-      const limiares = filhos.findIndex((x) => x.matches('.papel__limiares'));
+      const botaoDano = filhos.findIndex((x) =>
+        x.matches('button') && (x.textContent || '').trim() === 'Aplicar dano recebido'
+      );
       if (pv >= 0 && defesa >= 0 && pv > defesa) erros.push('PV aparece depois das defesas no HUD mobile');
-      if (esperança >= 0 && limiares >= 0 && esperança > limiares) erros.push('Esperança aparece depois dos limiares no HUD mobile');
+      if (esperança >= 0 && botaoDano >= 0 && esperança < botaoDano) {
+        erros.push('Esperança aparece antes de Aplicar dano recebido no HUD mobile');
+      }
     }
 
     const modal = document.querySelector('.modal');
