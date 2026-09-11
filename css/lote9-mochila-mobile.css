@@ -47,3 +47,16 @@
     text-transform: uppercase;
   }
 }
+
+/*
+ * B7 já escreve "em uso" por ::after em 360/390, porque nessas larguras o
+ * botão de uso sai da linha e vai para ⋯. Dentro do bloco B25 essa informação
+ * já está na pílula explícita, então o resumo antigo precisa calar para não
+ * aparecer duas vezes. Fora do bloco novo, o comportamento B7 continua igual.
+ */
+@media (max-width: 390px) {
+  .ficha__bloco--emUso .ficha__item.esta-em-uso .ficha__itemTexto::after {
+    content: none;
+    display: none;
+  }
+}
