@@ -325,7 +325,6 @@ s = replace_once(s,
 """,
 """      el('button', {
         type: 'button', class: 'btn btn--principal',
-        disabled: !cartaDoNivel,
         onClick: (ev) => {
           if (!cartaDoNivel) { avisarErro('Escolha a carta de domínio obrigatória deste nível.'); return; }
           verPrevia(ev.currentTarget);
