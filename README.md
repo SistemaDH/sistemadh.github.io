@@ -8,9 +8,9 @@ O frontend é publicado pelo GitHub Pages e o backend oficial é Supabase: Edge 
 
 ## Estado atual
 
-> **Produção:** o Lote 8 / Core 1.0 foi publicado em `main` em 10/09/2026. A branch de desenvolvimento continua sendo `newedit`.
+> **Produção:** Core 1.0 + Lote 9 publicados em `main` em 11/09/2026.
 
-Produção integra os Lotes 1–8 / Core 1.0, incluindo:
+O estado atual inclui:
 
 - criação e ficha completa de personagem;
 - classes, subclasses, domínios, ancestralidades e comunidades;
@@ -20,11 +20,15 @@ Produção integra os Lotes 1–8 / Core 1.0, incluindo:
 - movimentos de morte, cicatrizes, inconsciência e encerramento de jornada;
 - Forma de Fera completa do Druida, com custo, Evolução, aprimoramentos e híbridos;
 - recursos e custos das demais classes, incluindo Dados de Oração do Serafim, escolha de 1 a 12 do Mago e marcadores de uso;
-- correção do vazamento de contadores entre classes (bug do Aeon);
+- correção do vazamento de contadores entre classes;
 - geração auditável dos arquivos `backend/*.gs` com `tools/conferir-gerados.mjs`;
-- fotos de personagem no Supabase Storage.
+- fotos de personagem no Supabase Storage;
+- refino UX/UI mobile e responsivo com baseline dedicado em 360×800, 390×844, 430×932, 768×1024, 1024×768 e 1440×900;
+- fluxo de dano recebido integrado às cartas ativas suportadas pelo contexto atual, incluindo `Tocado do Esplendor` e `Levantar-Se`;
+- cache-busting dos assets críticos do HUD para evitar frontend antigo após deploy;
+- correção da pílula de nível e reposicionamento da seção completa de Esperança após `Aplicar dano recebido`.
 
-Desenvolvimento atual: **Lote 9 — refino UX/UI responsivo**. O CI de `newedit` protege o contrato mobile em 360×800, 390×844 e 430×932 e o baseline responsivo em 768×1024, 1024×768 e 1440×900, sem alterar regras do Core 1.0. O bloco L9-C1 iniciou a adaptação real para desktop: na aba Jogo, retrato/traços e o bloco de papel ficam lado a lado a partir de 1024px, enquanto 768px e mobile preservam o fluxo empilhado.
+O Lote 9 está fechado. Novas mudanças devem partir de uma branch criada a partir da `main` atual e seguir por PR com CI verde; não existe uma branch de desenvolvimento persistente obrigatória.
 
 ## Arquitetura
 
@@ -55,26 +59,31 @@ O navegador não acessa diretamente as tabelas PostgreSQL. `js/api.js` distribui
 Produção atual:
 
 ```text
-engine-api: v7 ACTIVE
+engine-api: v9 ACTIVE
 verify_jwt: false
-ENGINE_COMMIT: 2572ee1270ee4f98c5c54158507df0783bd2696b
+ENGINE_COMMIT: 752c7abc0349222bd795254f8f023c047125a1fe
+ezbr_sha256: bb5b32f84dc598058c1b172eee05cd1d601476636dcf3fcc4de36df91b56ac23
 ```
+
+O arquivo versionado `supabase/functions/engine-api/index.ts` usa o mesmo `ENGINE_COMMIT` do deploy ativo. Esse alinhamento é deliberado para impedir regressão em futuros redeploys.
 
 `verify_jwt=false` é intencional nesta função porque o handler valida o token customizado de sessão antes de operar com privilégios de serviço.
 
 Ao alterar regras em `backend/*.gs`:
 
-1. trabalhar em branch;
+1. trabalhar em branch criada da `main` atual;
 2. revisar o diff;
-3. executar `node tools/testes-backend.mjs`;
-4. executar `node tools/testes-e2e.mjs`;
-5. executar `node tools/conferir-gerados.mjs`;
-6. executar `node tools/conferir-css.mjs`;
-7. fixar `ENGINE_COMMIT` num commit imutável revisado;
-8. implantar `engine-api` antes do merge quando o frontend novo depender do motor novo;
-9. só então fazer merge na `main`.
+3. executar `npm run teste:sintaxe`;
+4. executar `npm run teste`;
+5. executar `npm run teste:gerados`;
+6. executar `npm run teste:css`;
+7. executar `npm run teste:e2e` e os baselines visuais relevantes;
+8. fixar `ENGINE_COMMIT` num commit imutável revisado;
+9. implantar `engine-api` quando o frontend novo depender do motor novo;
+10. conferir versão/status/pin efetivamente implantados;
+11. só então promover para `main`.
 
-Nunca apontar o motor privilegiado diretamente para `main`.
+Nunca apontar o motor privilegiado diretamente para uma branch móvel como `main`.
 
 ## Persistência e concorrência
 
@@ -102,50 +111,52 @@ Históricas/aposentadas: `apps-script-db`, `character-api`, `game-api`, `rules-e
 
 Catálogos estáticos permanecem em `data/*.json`. Mudanças de regra de Daggerheart devem registrar a fonte e respeitar a hierarquia adotada pelo projeto. O material pt-BR usado na conferência é pré-errata; divergências já decididas estão documentadas em `docs/`.
 
-Os Lotes 6 e 7 mantiveram a linha SRD 1.0 adotada pelo projeto; o SRD 2.0 de 25/08/2026 não foi adotado automaticamente.
+Os Lotes 6–9 mantêm a linha Core/SRD 1.0 adotada pelo projeto. O SRD 2.0 de 25/08/2026 não foi adotado automaticamente.
 
 ## Testes
 
-Gate mais recente do Core 1.0 em `newedit`: **941/941 testes de backend**, E2E completo, arquivos gerados e CSS aprovados, com auditoria do Lote 8 em **0 candidatos mecânicos**.
+Gate completo mais recente antes do fechamento documental: **CI #63** em 11/09/2026.
 
-Comandos de validação atuais:
+```text
+sintaxe                 → 84 arquivos JS/MJS OK
+backend                 → 945 passaram, 0 falharam
+E2E                     → 108 passos OK, 0 falharam
+gerados                 → 14 geradores conferidos
+CSS                     → nada a limpar nem a escrever
+auditoria Core 1.0      → 0 candidatos mecânicos pendentes
+baseline mobile         → 27 telas, 0 erros, 0 avisos
+baseline responsivo     → 30 telas, 0 erros estruturais
+Dano HUD                → 360×800 e 768×1024 aprovados
+```
+
+Comandos principais:
 
 ```bash
-node tools/testes-backend.mjs
-node tools/testes-e2e.mjs
-node tools/conferir-gerados.mjs
-node tools/conferir-css.mjs
+npm run teste:sintaxe
+npm run teste
+npm run teste:gerados
+npm run teste:css
+npm run teste:e2e
 npm run teste:layout-mobile
+npm run teste:layout-dano-mobile
 npm run teste:layout-responsivo
 ```
 
-Validação registrada para os Lotes 6 e 7:
-
-```text
-testes-backend.mjs   → 454 passaram, 0 falharam
-testes-e2e.mjs       → 98 passos ok, 0 falharam
-conferir-gerados.mjs → todo arquivo gerado bate com seu gerador
-conferir-css.mjs     → nada a limpar nem a escrever
-```
-
-Esses resultados foram registrados pelo agente que produziu os lotes. Na implantação final, o agente ChatGPT não conseguiu rerodar localmente porque o runtime isolado não resolvia `github.com`; por isso eles não são apresentados como reexecução independente.
+O workflow `.github/workflows/ci.yml` executa a suíte funcional e os contratos visuais do projeto.
 
 ## Publicação atual
 
-Lote 8 / Core 1.0 publicado em produção em 10/09/2026.
+Fechamento funcional do Lote 9 em produção em 11/09/2026:
 
-- commit fonte imutável do motor: `2572ee1270ee4f98c5c54158507df0783bd2696b`;
-- commit que fixa o pin do motor: `8689713a3846977b2e4f13e095c8417c761cec8f`;
-- `engine-api` v7 ACTIVE, `verify_jwt=false`;
-- SHA do pacote implantado: `eb08d5ba112537dae1e9fe90e9b1022b7a7a6feaad0ab9a727d86b40574a76db`;
-- GitHub Pages publicou o frontend do mesmo commit funcional com sucesso.
+- commit funcional do motor/frontend: `752c7abc0349222bd795254f8f023c047125a1fe`;
+- `engine-api` v9 ACTIVE, `verify_jwt=false`;
+- `ENGINE_COMMIT`: `752c7abc0349222bd795254f8f023c047125a1fe`;
+- SHA do pacote Supabase: `bb5b32f84dc598058c1b172eee05cd1d601476636dcf3fcc4de36df91b56ac23`;
+- PR #9 integrou o fechamento funcional do HUD de dano;
+- PR #10 alinhou o source versionado do `engine-api` ao pin de produção;
+- GitHub Pages #81 publicou com sucesso a `main` após esse alinhamento;
+- nenhuma migração de banco foi necessária nessa promoção.
 
-Histórico: Lotes 6 e 7 foram integrados pelo PR #6 em 08/09/2026.
+O HEAD da `main` pode avançar por commits exclusivamente documentais sem exigir novo deploy do motor. O que define o backend privilegiado é sempre o `ENGINE_COMMIT` explícito da função.
 
-- commit fonte do motor: `c52b87cd1657ff7904554f2cc3035f552df7f8c8`;
-- commit que fixa o pin na branch: `bc8849b2493bc435ea9d74bb4c3b19993ecde204`;
-- merge commit do PR #6: `8de4eec2b7fcc10658bf10443cff4b97a80a7a3c`;
-- `engine-api` v6 ACTIVE, `verify_jwt=false`;
-- SHA do pacote implantado: `2a24c40978e5a885c524832c35394a1a5b347ead1c595648f01276afe9a34f28`.
-
-Para continuidade, `docs/HANDOFF.md` é o resumo operacional; documentos detalhados continuam em `docs/`, incluindo `docs/ENTREGA-LOTES-6-7.md`, `docs/pontos-de-interesse-descanso.md` e `docs/pontos-de-interesse-classes.md`.
+Para continuidade, `docs/HANDOFF.md` é o resumo operacional. Detalhes do fluxo de dano do Lote 9 estão em `docs/lote9-dano-recebido.md`, e a arquitetura Supabase atual está em `docs/arquitetura-supabase.md`.
