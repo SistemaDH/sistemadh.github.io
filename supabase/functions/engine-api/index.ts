@@ -7,7 +7,7 @@ const cors = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const ENGINE_COMMIT = "752c7abc0349222bd795254f8f023c047125a1fe";
+const ENGINE_COMMIT = "2761bb828287fe0c17009cf4d0e255ed21762e07";
 const SOURCE_FILES = [
   "00_Config.gs","30_Personagens.gs","40_Regras.gs","41_Dominios.gs","42_Classes.gs",
   "43_Origens.gs","44_Equipamento.gs","45_Tracos.gs","46_Condicoes.gs","47_Contadores.gs",

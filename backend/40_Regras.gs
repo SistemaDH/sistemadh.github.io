@@ -62,7 +62,7 @@ function fichaVazia_() {
     retaliacoesPendentes: [], // bônus temporário por adversário — ver 42_Classes.gs
     experiencias: [],    // duas no nível 1, +2 cada — ver 48_Criacao.gs
     equipamento: {       // ids das tabelas do capítulo 2
-      primaria: null, secundaria: null, armadura: null, reserva: []
+      primaria: null, secundaria: null, armadura: null, reserva: [], reservaArmaduras: []
     },
     inventario: [],
     ouro: { punhados: 0, bolsas: 0, cofres: 0 },
@@ -425,6 +425,9 @@ function validarFicha_(fichaBruta) {
   // Elas não concedem benefício porque os derivados leem somente primaria/secundaria.
   if (typeof validarArmasReserva_ === 'function') {
     problemas = problemas.concat(validarArmasReserva_(ficha));
+  }
+  if (typeof validarArmadurasReserva_ === 'function') {
+    problemas = problemas.concat(validarArmadurasReserva_(ficha));
   }
 
   if (typeof validarOuro_ === 'function') {
