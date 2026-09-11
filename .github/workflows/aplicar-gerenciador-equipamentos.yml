@@ -21,7 +21,9 @@ jobs:
           node-version: 22
           cache: npm
       - name: Aplicar patch
-        run: python3 tools/patch-gerenciador-equipamentos.py
+        run: |
+          python3 tools/patch-gerenciador-equipamentos.py
+          python3 tools/patch-e2e-gerenciador.py
       - name: Instalar dependências
         run: npm ci
       - name: Sintaxe
@@ -39,9 +41,10 @@ jobs:
       - name: Gravar alteração limpa
         run: |
           rm tools/patch-gerenciador-equipamentos.py
+          rm tools/patch-e2e-gerenciador.py
           rm .github/workflows/aplicar-gerenciador-equipamentos.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add js/telas/ficha.js tools/testes-e2e.mjs docs/HANDOFF.md tools/patch-gerenciador-equipamentos.py .github/workflows/aplicar-gerenciador-equipamentos.yml
+          git add js/telas/ficha.js tools/testes-e2e.mjs docs/HANDOFF.md tools/patch-gerenciador-equipamentos.py tools/patch-e2e-gerenciador.py .github/workflows/aplicar-gerenciador-equipamentos.yml
           git commit -m "feat: unificar gerenciamento de equipamentos"
           git push origin HEAD:equipamento-gerenciar
