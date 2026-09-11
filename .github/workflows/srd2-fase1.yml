@@ -21,6 +21,22 @@ jobs:
           node-version: '20'
           cache: npm
       - run: npm ci
+      - name: Corrigir bootstrap do helper temporário
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('tools/aplicar-srd2-fase1.py')
+          linhas = p.read_text(encoding='utf-8').splitlines()
+          n = 0
+          for i, linha in enumerate(linhas):
+              if linha.strip() == '""':
+                  linhas[i] = linha.replace('""', '"""')
+                  n += 1
+          if n != 2:
+              raise SystemExit(f'esperava corrigir 2 delimitadores, corrigi {n}')
+          p.write_text('\n'.join(linhas) + '\n', encoding='utf-8')
+          PY
+          python3 -m py_compile tools/aplicar-srd2-fase1.py
       - name: Aplicar correções SRD 2.0 — fase 1
         run: python3 tools/aplicar-srd2-fase1.py
       - name: Regenerar avanço
