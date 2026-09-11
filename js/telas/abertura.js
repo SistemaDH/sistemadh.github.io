@@ -147,12 +147,19 @@ export function telaAbertura({ aoEntrar }) {
     form.append(botao);
 
     if (papel === 'jogador') {
+      /*
+       * L9-B20 — duas ações, duas hierarquias.
+       *
+       * O CTA que executa o modo atual continua dourado. Trocar de Entrar para
+       * Criar acesso (ou voltar) é uma ação secundária inteira, sem uma frase
+       * explicativa em volta. A tela fica mais curta e a diferença de peso
+       * visual não depende de ler "Primeira vez aqui?".
+       */
       form.append(
-        el('p', { class: 'abertura__troca' }, [
-          modo === 'entrar' ? 'Primeira vez aqui? ' : 'Já tem acesso? ',
+        el('div', { class: 'abertura__troca' }, [
           el('button', {
             type: 'button',
-            class: 'link-botao',
+            class: 'btn btn--fantasma btn--bloco',
             onClick: () => {
               modo = modo === 'entrar' ? 'criar' : 'entrar';
               desenhar();
