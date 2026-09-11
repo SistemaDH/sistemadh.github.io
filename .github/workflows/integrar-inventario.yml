@@ -15,25 +15,17 @@ jobs:
         with:
           ref: inventario-integracao
           fetch-depth: 0
-      - name: Aplicar patch com rejects para diagnosticar conflitos
+      - name: Diagnosticar merge do estado final da newedit
         run: |
           set +e
-          git diff d440676f447fb3b5452cdf81b3df848e5b843aee^ d440676f447fb3b5452cdf81b3df848e5b843aee -- \
-            backend/40_Regras.gs \
-            backend/4C_Ajustes.gs \
-            js/telas/criacao.js \
-            js/telas/ficha.js \
-            tools/testes-backend.mjs \
-            tools/testes-e2e.mjs \
-            docs/alteracao-catalogo-mochila.md \
-          | git apply --reject --whitespace=nowarn
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git merge --no-commit --no-ff d440676f447fb3b5452cdf81b3df848e5b843aee
           codigo=$?
-          echo '=== STATUS ==='
-          git status --short
-          echo '=== REJECT ficha.js ==='
-          cat js/telas/ficha.js.rej 2>/dev/null || true
-          echo '=== REJECT testes-e2e.mjs ==='
-          cat tools/testes-e2e.mjs.rej 2>/dev/null || true
-          echo '=== REJECTS restantes ==='
-          find . -name '*.rej' -not -path './.git/*' -print
+          echo '=== CONFLITOS ==='
+          git diff --name-only --diff-filter=U
+          for f in $(git diff --name-only --diff-filter=U); do
+            echo "=== $f ==="
+            grep -n -B 12 -A 35 -E '^(<<<<<<<|=======|>>>>>>>)' "$f" || true
+          done
           exit $codigo
