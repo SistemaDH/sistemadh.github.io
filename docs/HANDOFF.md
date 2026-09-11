@@ -1231,3 +1231,43 @@ O Lote 9 está **fechado**. Não tratar `newedit` como branch permanente de dese
 
 No fechamento, `.github/workflows` da `main` contém somente `ci.yml`; os workflows e scripts temporários usados durante os patches do Lote 9 não fazem parte da árvore final. A branch histórica de backup pré-`newedit` deve ser tratada como backup deliberado, não como temporário de execução.
 
+
+## Produção — inventário, posse e catálogo (11/09/2026)
+
+Integração do inventário concluída sobre o Lote 9, preservando as mudanças já publicadas em produção.
+
+### Funcional
+
+- commit imutável do motor: `2761bb828287fe0c17009cf4d0e255ed21762e07`;
+- itens oficiais da criação são gravados por ID de catálogo; itens narrativos recebem contexto de origem;
+- `equipado` é estado de uso, não o único registro de posse;
+- armaduras possuídas e não equipadas ficam em `equipamento.reservaArmaduras` e não concedem benefícios enquanto guardadas;
+- trocar a armadura equipada preserva a anterior na reserva;
+- a Mochila mostra os equipamentos possuídos junto dos itens;
+- o catálogo abre uma pré-visualização com detalhes antes de qualquer inclusão; `Selecionar` confirma e `Fechar` cancela;
+- o fluxo de compra também exige a pré-visualização antes de preencher/confirmar a compra;
+- a migração de fichas antigas reconhece itens oficiais somente quando há assinatura do inventário inicial da criação, sem converter por nome um item livre digitado pelo jogador.
+
+### Validação da árvore integrada
+
+GitHub Actions run `34612183183`:
+
+- sintaxe: 84 arquivos JS/MJS OK;
+- backend: **947 passaram, 0 falharam**;
+- E2E: **109 passos OK, 0 falharam**;
+- 14 geradores conferidos e consistentes;
+- CSS limpo;
+- auditoria Core 1.0: 0 pendências candidatas em classes/subclasses, comunidades, cartas, equipamentos e loot/consumíveis;
+- todas as baterias mobile e responsivas verdes, incluindo criação, mochila, dano, descanso, avanço, Mestre, regras, foto e baseline responsivo.
+
+### Supabase / `engine-api`
+
+O motor foi implantado antes da promoção do frontend:
+
+- Edge Function `engine-api`: **versão 10**;
+- status: `ACTIVE`;
+- `verify_jwt=false`, mantido porque a função usa autenticação própria de sessão;
+- `ENGINE_COMMIT=2761bb828287fe0c17009cf4d0e255ed21762e07`;
+- bundle SHA-256: `deabf224e975300370e6063a8520f5233509c97453b832d87d9f331fe5d22add`.
+
+A ordem segura para futuras promoções do motor permanece: escolher commit imutável → fixar `ENGINE_COMMIT` → implantar e reler a Edge Function → CI verde → promover `main`.
