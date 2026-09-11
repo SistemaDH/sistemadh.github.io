@@ -142,6 +142,13 @@ jobs:
           name: layout-descanso-mobile-${{ github.run_id }}
           path: artifacts/layout-descanso-mobile
           if-no-files-found: warn
+      - name: Guardar diagnóstico visual Dano HUD
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: layout-dano-mobile-${{ github.run_id }}
+          path: artifacts/layout-dano-mobile
+          if-no-files-found: warn
       - name: Guardar diagnóstico visual foto mobile
         if: always()
         uses: actions/upload-artifact@v4
