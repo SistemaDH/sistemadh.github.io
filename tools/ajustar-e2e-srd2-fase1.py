@@ -28,5 +28,29 @@ new = """  await passo('subir para o nível 2, com prévia antes de aplicar', as
 if s.count(old) != 1:
     raise SystemExit(f'bloco de level-up E2E: esperava 1 ocorrência, achei {s.count(old)}')
 s = s.replace(old, new, 1)
+
+# O anúncio acima é uma preparação exclusiva deste cenário. Depois que o
+# avanço é desfeito, devolvemos a mesa ao nível 1 para não contaminar os
+# cenários posteriores, que testam o anúncio normal do Mestre de 1 para 2.
+old = """    if (exps.some((t) => /Palco de mil vilarejos/.test(t))) {
+      throw new Error('a Experiência do nível 2 sobreviveu ao desfazer');
+    }
+  });
+"""
+new = """    if (exps.some((t) => /Palco de mil vilarejos/.test(t))) {
+      throw new Error('a Experiência do nível 2 sobreviveu ao desfazer');
+    }
+
+    const mestreReset = ambiente.contexto.executar_({ acao: 'entrarMestre', codigo: 'mestre-teste' });
+    const resetNivel = ambiente.contexto.executar_({
+      acao: 'anunciarNivelDaMesa', token: mestreReset.dados.token, nivel: 1
+    });
+    if (!resetNivel.ok) throw new Error('não consegui restaurar o nível da mesa após o cenário de avanço');
+  });
+"""
+if s.count(old) != 1:
+    raise SystemExit(f'isolamento do nível da mesa no E2E: esperava 1 ocorrência, achei {s.count(old)}')
+s = s.replace(old, new, 1)
+
 p.write_text(s, encoding='utf-8')
 print('E2E de level-up adaptado ao nível anunciado da mesa')
