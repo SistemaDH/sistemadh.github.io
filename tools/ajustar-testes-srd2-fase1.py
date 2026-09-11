@@ -71,9 +71,19 @@ oldsec = oldsec.replace('contexto.aplicarAvanco_(', 'aplicarAvancoComCartaTeste_
 s = s[:start] + oldsec + s[stop:]
 
 # O helper subirUm, inclusive usado por Multiclasse, sempre recebe a carta.
-old = "return contexto.aplicarAvanco_(ficha, finais).ficha;"
-new = "return aplicarAvancoComCartaTeste_(ficha, finais).ficha;"
-one(old, new, 'subirUm com carta')
+# A fase 1 já reescreve o retorno do helper; aceitamos tanto a forma nova
+# quanto a antiga para o adaptador continuar robusto se a ordem mudar.
+candidatos = [
+    "return contexto.aplicarAvanco_(ficha, finais).ficha;",
+    "return contexto.aplicarAvanco_(ficha, { ...base, ...escolhas }).ficha;"
+]
+for velho in candidatos:
+    if velho in s:
+        s = s.replace(velho, "return aplicarAvancoComCartaTeste_(ficha, finais).ficha;" if 'finais' in velho
+                      else "return aplicarAvancoComCartaTeste_(ficha, { ...base, ...escolhas }).ficha;", 1)
+        break
+else:
+    raise SystemExit('subirUm com carta: retorno do helper não encontrado')
 
 # Ao completar uma escolha explícita de Traços, não reutilize os dois que já
 # foram escolhidos no mesmo nível.
