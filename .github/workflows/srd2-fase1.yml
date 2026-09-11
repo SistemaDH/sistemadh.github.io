@@ -41,6 +41,8 @@ jobs:
         run: python3 tools/aplicar-srd2-fase1.py
       - name: Adaptar testes legados ao contrato obrigatório
         run: python3 tools/ajustar-testes-srd2-fase1.py
+      - name: Adaptar E2E ao nível anunciado da mesa
+        run: python3 tools/ajustar-e2e-srd2-fase1.py
       - name: Regenerar avanço
         run: node tools/gerar-4D-avanco.mjs
       - name: Sintaxe
@@ -63,7 +65,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/avanco.json data/srd2-fonte.json \
             tools/4D_Avanco.rodape.js backend/4D_Avanco.gs backend/99_Api.gs \
-            js/telas/avanco.js tools/testes-backend.mjs docs/srd2-conformidade.md
+            js/telas/avanco.js tools/testes-backend.mjs tools/testes-e2e.mjs \
+            docs/srd2-conformidade.md
           git diff --cached --check
           git commit -m "fix(srd2): alinhar avanço 1-10 ao SRD 2.0 [srd2-bot]"
           git push
