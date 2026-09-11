@@ -1,0 +1,49 @@
+/* ==========================================================================
+   L9-B25 · MOCHILA MOBILE — ITENS EM USO ANTES DO INVENTÁRIO
+   ========================================================================== */
+
+@media (max-width: 639px) {
+  .ficha__bloco--emUso {
+    border-color: var(--cor-borda-forte);
+    background:
+      linear-gradient(180deg, rgba(217, 171, 91, .05), transparent 46%),
+      var(--cor-superficie);
+  }
+
+  .ficha__bloco--emUso .ficha__blocoTopo {
+    align-items: baseline;
+  }
+
+  .ficha__emUsoResumo {
+    flex: 0 0 auto;
+    color: var(--cor-texto-fraco);
+    font-family: var(--fonte-mono);
+    font-size: var(--txt-xs);
+    white-space: nowrap;
+  }
+
+  .ficha__inventario--emUso {
+    margin-bottom: 0;
+  }
+
+  .ficha__inventario--emUso .ficha__item {
+    border-color: var(--cor-ouro-escuro);
+    background: var(--cor-superficie-alta);
+  }
+
+  .ficha__itemEstado {
+    display: inline-flex;
+    align-self: flex-start;
+    margin-top: -2px;
+    margin-bottom: 4px;
+    padding: 2px 8px;
+    border: 1px solid var(--cor-ouro-escuro);
+    border-radius: var(--raio-cheio);
+    color: var(--cor-ouro-claro);
+    font-size: var(--txt-xs);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+}
