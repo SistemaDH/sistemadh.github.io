@@ -56,13 +56,13 @@ Validação da Fase 1:
 - `data/srd2-traducao.json`: vocabulário obrigatório pt-BR; termos do Core são preservados e nomes novos de *Hope & Fear* ficam provisórios até existir tradução oficial;
 - `data/srd2-fonte.json`: fonte, hashes, erratas e pin do corpus;
 - `data/srd2-cobertura.json`: estado das 16 coleções; não considerar conteúdo antigo como conferido por semelhança;
-- `data/srd2-inventario.json`: 1.539 IDs individuais com nome inglês, tipo, `sourceLocator` quando aplicável, hash do corpus e estado; neste checkpoint são 1 fonte conferida, 29 mecânicas implementadas e 1.509 pendentes;
+- `data/srd2-inventario.json`: 1.539 IDs individuais com nome inglês, tipo, `sourceLocator` quando aplicável, hash do corpus e estado; neste checkpoint são 1 fonte conferida, 66 mecânicas implementadas e 1.472 pendentes;
 - `docs/srd2-conformidade.md`: critério formal para declarar 100%;
 - CI: `npm run teste:srd2` valida tradução e matriz de cobertura.
 
 ### Núcleo do jogador — checkpoint de preparação
 
-- `data/srd2-nucleo-auditoria.json` classifica 95 registros: 64 existentes, dos quais 27 já foram conferidos/implementados e 37 ainda exigem comparação, além de 31 novos em preparação;
+- `data/srd2-nucleo-auditoria.json` classifica 95 registros: os 64 existentes foram conferidos/implementados e os 31 novos continuam em preparação;
 - `data/srd2-classes-novas.json`: domínio Pavor e 4 classes novas traduzidos/estruturados;
 - `data/srd2-subclasses-novas.json`: 8 subclasses e 43 características traduzidas/estruturadas;
 - `data/srd2-origens-novas.json`: 6 ancestralidades e 6 comunidades traduzidas/estruturadas;
@@ -81,9 +81,28 @@ Validação da Fase 1:
 - `data/srd2-classes-core-auditoria.json` registra os 27 IDs e as correções;
 - falha conhecida do corpus: os JSON-LD de `subclasses/troubadour` e `subclasses/wordsmith` omitem Especialização/Maestria; o conteúdo correto existe no `SRD.md`/PDF e foi preservado.
 
-Validação deste checkpoint: `npm run teste:srd2` verde com 61 termos mecânicos, 31 nomes novos, 1.539 registros inventariados (**29 implementados**, 1.509 pendentes), 95 registros no recorte do núcleo e validadores específicos; backend **951/951**, gerados **14/14**, sintaxe local **95 arquivos**.
+### Origens do Core conferidas
 
-Próximo bloco exato: comparar os **28 registros de origem existentes** (18 ancestralidades + ancestralidade mista + 9 comunidades) com o SRD 2.0; depois conferir os 9 domínios Core restantes. Registrar cada diferença textual/mecânica antes de alterar dados exibidos. Em paralelo conceitual, projetar a persistência de Transformações, mas não expor as seis opções antes do ciclo completo de aquisição/remoção e efeitos permanentes estar protegido no servidor.
+- as 18 ancestralidades, a regra de ancestralidade mista e as 9 comunidades existentes foram comparadas às pp. 32–42 do SRD 2.0;
+- custos, dados, alcances, gatilhos, frequências e efeitos permanecem mecanicamente compatíveis;
+- `data/ancestralidades.json` e `data/comunidades.json` tiveram o vocabulário ativo normalizado: **Estresse**, **Dados de Dualidade**, **Distante**, **Longínquo**, **movimento de descanso**, **limpar**, **gastar** e **Mestre**;
+- a criação agora aceita um nome livre para a ancestralidade mista. Esse nome pode representar mais de duas ancestralidades narrativas, mas as duas características continuam vinculadas a exatamente duas fontes mecânicas diferentes;
+- `backend/43_Origens.gs` foi regenerado e o teste do motor confirma que o nome livre não concede características extras;
+- `data/srd2-origens-core-auditoria.json` registra os 28 IDs, correções e interpretações;
+- falhas conhecidas do corpus: `ancestries/faerie` omite suas duas características no JSON-LD, e `ancestries/mixed-ancestry` guarda a regra em `description`; o conteúdo correto do `SRD.md`/PDF foi preservado.
+
+### Domínios do Core conferidos
+
+- os 9 domínios existentes foram comparados à p. 7 do SRD 2.0;
+- temas e descrições permanecem compatíveis;
+- o metadado de acesso agora inclui as classes novas correspondentes, mas isso não as expõe na criação;
+- foram corrigidas as traduções literais “braço mais especializado” → **arma mais especializada** e “tesouros sequestrados” → **tesouros ocultos**;
+- `data/srd2-dominios-core-auditoria.json` registra os 9 IDs e a matriz de acesso SRD2;
+- `backend/41_Dominios.gs` foi regenerado com 9 domínios e 189 cartas Core ainda separadas do futuro domínio Pavor.
+
+Validação deste checkpoint: `npm run teste:srd2` verde com 61 termos mecânicos, 31 nomes novos, 1.539 registros inventariados (**66 implementados**, 1.472 pendentes), 95 registros no recorte do núcleo (**64/64 existentes conferidos**) e validadores específicos; backend **951/951**, gerados **14/14**, sintaxe local **97 arquivos**, CSS limpo. O E2E local não executou porque a imagem atual não contém o binário Chromium do Playwright; o bloqueio ocorreu antes de abrir o site e precisa ser repetido no CI/ambiente com navegador antes de promoção.
+
+Próximo bloco exato: comparar as **189 cartas dos 9 domínios Core** com o SRD 2.0, domínio por domínio, registrando diferença de nome, nível, custo de recordar, texto, automação e errata. Só depois integrar Pavor e suas 21 cartas. Em paralelo conceitual, projetar a persistência de Transformações, mas não expor as seis opções antes do ciclo completo de aquisição/remoção e efeitos permanentes estar protegido no servidor.
 
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 

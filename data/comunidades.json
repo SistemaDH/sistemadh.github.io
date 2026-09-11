@@ -164,11 +164,11 @@
    ],
    "caracteristica": {
     "nome": "Conhece a Maré",
-    "texto": "Você consegue sentir o fluxo e refluxo da vida. Quando rolar com Medo, coloque uma ficha nesta carta. Você pode manter um número de fichas igual ao seu nível. Antes de fazer uma jogada de ação, pode gastar qualquer número dessas fichas para ganhar +1 de bônus na jogada para cada ficha gasta. Ao final de cada sessão, descarte todas as fichas não utilizadas.",
+    "texto": "Você consegue sentir o fluxo e refluxo da vida. Quando rolar com Medo, coloque uma ficha nesta carta. Você pode manter um número de fichas igual ao seu nível. Antes de fazer uma jogada de ação, pode gastar qualquer número dessas fichas para ganhar +1 de bônus na jogada para cada ficha gasta. Ao final de cada sessão, limpe todas as fichas não gastas.",
     "contadorManual": {
      "chave": "comunidade:seaborne:conhece-a-mare",
      "gatilhoGanhar": "Depois de uma jogada com Medo, acrescente 1 ficha manualmente.",
-     "gasto": "Antes de uma jogada de ação, remova qualquer número de fichas e some +1 por ficha.",
+     "gasto": "Antes de uma jogada de ação, gaste qualquer número de fichas e some +1 por ficha.",
      "motivoManual": "O app não rola os Dados de Dualidade nem conhece o resultado da jogada sem entrada da mesa."
     }
    },
@@ -278,7 +278,7 @@
    ],
    "caracteristica": {
     "nome": "Mochila Nômade",
-    "texto": "Adicione uma Mochila Nômade ao seu inventário. Uma vez por sessão, você pode gastar 1 Esperança para vasculhar essa mochila e puxar um item mundano que seja útil para a situação. Trabalhe com o GM para definir qual item você encontrou.",
+    "texto": "Adicione uma Mochila Nômade ao seu inventário. Uma vez por sessão, você pode gastar 1 Esperança para vasculhar essa mochila e puxar um item mundano que seja útil para a situação. Trabalhe com o Mestre para definir qual item você encontrou.",
     "uso": {
      "custo": {
       "esperanca": 1

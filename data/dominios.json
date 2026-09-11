@@ -28,8 +28,9 @@
         "Blade"
       ],
       "cor": "#c0392b",
-      "descricao": "A Lâmina é o domínio da maestria das armas. Seja com aço, arco ou talvez com um braço mais especializado, aqueles que seguem esse caminho têm a habilidade de cortar a vida dos outros. Portadores de lâminas se dedicam a alcançar um poder inexorável sobre a morte.",
+      "descricao": "A Lâmina é o domínio da maestria das armas. Seja com aço, arco ou talvez com uma arma mais especializada, aqueles que seguem esse caminho têm a habilidade de abreviar a vida dos outros. Os portadores da Lâmina se dedicam a alcançar um poder inexorável sobre a morte.",
       "classes": [
+        "Assassino",
         "Guardião",
         "Guerreiro"
       ],
@@ -47,6 +48,7 @@
       "cor": "#b9a887",
       "descricao": "Osso é o domínio das táticas e do corpo. Os praticantes desse domínio têm um controle extraordinário sobre suas próprias habilidades físicas e um olho para prever o comportamento dos outros em combate. Os adeptos do Osso obtêm uma compreensão incomparável dos corpos e de seus movimentos.",
       "classes": [
+        "Brigão",
         "Patrulheiro",
         "Guerreiro"
       ],
@@ -82,7 +84,8 @@
       "descricao": "A Graça é o domínio do carisma. Por meio de narrativas arrebatadoras, feitiços encantadores ou um manto de mentiras, aqueles que canalizam esse poder definem as realidades de seus adversários, dobrando a percepção à sua vontade. A Graça oferece a seus portadores magnetismo bruto e domínio da linguagem.",
       "classes": [
         "Bardo",
-        "Ladino"
+        "Ladino",
+        "Bruxo"
       ],
       "totalCartas": 21,
       "pasta": "assets/cartas/dominios/GRACE"
@@ -97,8 +100,9 @@
         "Midnight"
       ],
       "cor": "#2f3b6e",
-      "descricao": "A Meia-Noite é o domínio das sombras e do sigilo. Seja por meio de truques inteligentes, magia habilidosa ou pelo manto da noite, aqueles que canalizam essas forças praticam a arte da obscuridade e podem descobrir tesouros sequestrados. A Meia-Noite oferece aos praticantes o poder de controlar e criar enigmas.",
+      "descricao": "A Meia-Noite é o domínio das sombras e do sigilo. Seja por meio de truques inteligentes, magia habilidosa ou pelo manto da noite, aqueles que canalizam essas forças praticam a arte da obscuridade e podem descobrir tesouros ocultos. A Meia-Noite oferece aos praticantes o poder de controlar e criar enigmas.",
       "classes": [
+        "Assassino",
         "Ladino",
         "Feiticeiro"
       ],
@@ -120,7 +124,8 @@
       "descricao": "Sábio é o domínio do mundo natural. Aqueles que trilham esse caminho aproveitam o poder irrestrito da terra e de suas criaturas para liberar a magia bruta. O Sábio concede a seus adeptos a vitalidade de uma flor desabrochando e a ferocidade de um predador voraz.",
       "classes": [
         "Druida",
-        "Patrulheiro"
+        "Patrulheiro",
+        "Bruxa"
       ],
       "totalCartas": 21,
       "pasta": "assets/cartas/dominios/SAGE"
@@ -150,6 +155,7 @@
       "cor": "#d97e2b",
       "descricao": "Valor é o domínio da proteção. Seja por meio de ataque ou defesa, aqueles que escolhem essa disciplina canalizam uma força formidável para proteger seus aliados na batalha. O Valor oferece grande poder àqueles que erguem seus escudos em defesa dos outros.",
       "classes": [
+        "Brigão",
         "Guardião",
         "Seraph"
       ],

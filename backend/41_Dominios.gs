@@ -37,14 +37,14 @@ const DOMINIO_ALIASES = {
 /** Dados básicos de cada domínio. */
 const DOMINIOS = {
   ARCANA: { nome: "Arcana", cor: "#8a5cf0", classes: ["Druida","Feiticeiro"] },
-  BLADE: { nome: "Lâmina", cor: "#c0392b", classes: ["Guardião","Guerreiro"] },
-  BONE: { nome: "Osso", cor: "#b9a887", classes: ["Patrulheiro","Guerreiro"] },
+  BLADE: { nome: "Lâmina", cor: "#c0392b", classes: ["Assassino","Guardião","Guerreiro"] },
+  BONE: { nome: "Osso", cor: "#b9a887", classes: ["Brigão","Patrulheiro","Guerreiro"] },
   CODEX: { nome: "Códice", cor: "#3f7fd0", classes: ["Bardo","Mago"] },
-  GRACE: { nome: "Graça", cor: "#d4519a", classes: ["Bardo","Ladino"] },
-  MIDNIGHT: { nome: "Meia-Noite", cor: "#2f3b6e", classes: ["Ladino","Feiticeiro"] },
-  SAGE: { nome: "Sábio", cor: "#4c9a5b", classes: ["Druida","Patrulheiro"] },
+  GRACE: { nome: "Graça", cor: "#d4519a", classes: ["Bardo","Ladino","Bruxo"] },
+  MIDNIGHT: { nome: "Meia-Noite", cor: "#2f3b6e", classes: ["Assassino","Ladino","Feiticeiro"] },
+  SAGE: { nome: "Sábio", cor: "#4c9a5b", classes: ["Druida","Patrulheiro","Bruxa"] },
   SPLENDOR: { nome: "Esplendor", cor: "#e0b13a", classes: ["Seraph","Mago"] },
-  VALOR: { nome: "Valor", cor: "#d97e2b", classes: ["Guardião","Seraph"] },
+  VALOR: { nome: "Valor", cor: "#d97e2b", classes: ["Brigão","Guardião","Seraph"] },
 };
 
 /** As 189 cartas: [id, nome, nível, tipo, custo de recordar]. */

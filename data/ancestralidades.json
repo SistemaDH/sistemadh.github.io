@@ -2,9 +2,9 @@
  "versao": 1,
  "fonte": "Cartas oficiais em PNG (pt-BR) para nomes e características + livro para as descrições",
  "regraAncestralidadeMista": {
-  "titulo": "ANCESTRIA MISTA",
-  "texto": "As famílias no mundo de Daggerheart são tão únicas quanto os povos e as culturas que as habitam. A aparência e o conjunto de habilidades de qualquer pessoa podem ser moldados por sangue, magia, proximidade ou uma variedade de outros fatores.\n\nSe você decidir que seu personagem é descendente de vários ancestrais e quiser representar isso mecanicamente no jogo, siga as etapas abaixo:\n\nETAPA 1: DETERMINAR A COMBINAÇÃO DE ANCESTRAIS\nAo escolher um ancestral na criação do personagem, escreva como ele se identifica na seção Heritage (Herança) da sua ficha de personagem. Por exemplo, sua ascendência pode ser \"goblin-orc\", ou apenas \"goblin\" (com orc na linhagem), ou um nome que você escolher, como \"toothling\".\n\nETAPA 2: ESCOLHA OS RECURSOS DE ANCESTRALIDADE\nTrabalhe com o seu GM para escolher duas características dos ancestrais da linhagem do seu personagem.\n\nVocê deve escolher a primeira característica de um ancestral e a segunda de outro. Anote ambas em uma ficha de anotações que pode ser guardada com as outras fichas ou ao lado da ficha do personagem. Por exemplo, se estiver criando um goblin-orc, você pode escolher as características \"Surefooted\" (Pé firme) e \"Tusks\" (Presas) ou as características \"Sturdy\" (Robusto) e \"Danger Sense\" (Sentido de perigo). Você não pode usar as características \"Surefooted\" (Pé firme) e \"Sturdy\" (Robusto).\n\nSe a herança do seu personagem incluir mais de dois ancestrais, você só escolherá as características de dois deles. Você pode representar outros ancestrais por meio de sua aparência ou história de fundo.",
-  "resumoMecanico": "Escolha duas características: a PRIMEIRA característica de uma ancestralidade e a SEGUNDA de outra. Se a herança tiver mais de duas ancestralidades, ainda assim só duas entram mecanicamente.",
+  "titulo": "ANCESTRALIDADE MISTA",
+  "texto": "As famílias no mundo de Daggerheart são tão únicas quanto os povos e as culturas que as habitam. A aparência e as habilidades de qualquer pessoa podem ser moldadas por sangue, magia, proximidade ou vários outros fatores.\n\nSe seu personagem descende de várias ancestralidades e você quer representar isso mecanicamente, siga estas etapas:\n\nETAPA 1: DETERMINE A COMBINAÇÃO DE ANCESTRALIDADES\nDurante a criação, escreva na seção Herança da ficha como o personagem identifica a própria ancestralidade. Você pode combinar os nomes das ancestralidades, usar apenas aquele com o qual o personagem mais se identifica ou inventar um nome.\n\nETAPA 2: ESCOLHA AS CARACTERÍSTICAS DE ANCESTRALIDADE\nCom o Mestre, escolha duas características dentre as ancestralidades da linhagem do personagem. Você deve escolher a primeira característica de uma ancestralidade e a segunda de outra.\n\nPor exemplo, um personagem goblin-orc pode escolher Pé Firme e Presas, ou Robusto e Sentido de Perigo. Ele não pode escolher Pé Firme e Robusto, pois ambas são a primeira característica de suas respectivas ancestralidades.\n\nA herança pode incluir mais de duas ancestralidades, mas somente duas delas fornecem características. As demais podem aparecer no nome, na aparência ou na história do personagem.",
+  "resumoMecanico": "Escolha duas características: a PRIMEIRA característica de uma ancestralidade e a SEGUNDA de outra. O nome e a história podem representar outras ancestralidades, mas somente essas duas fornecem características.",
   "problemasDeTraducao": [
    "\"Heritage (Herança)\" - termo em inglês com tradução entre parênteses, não totalmente traduzido.",
    "\"GM\" não traduzido (deveria ser \"Mestre\" ou \"Mestre de Jogo\").",
@@ -133,7 +133,7 @@
     {
      "ordem": 1,
      "nome": "Escamas",
-     "texto": "Suas escamas funcionam como proteção natural. Quando você for sofrer dano Severo, pode marcar um Stress para reduzir em 1 o número de Pontos de Vida perdidos.",
+     "texto": "Suas escamas funcionam como proteção natural. Quando você for sofrer dano Severo, pode marcar 1 Estresse para reduzir em 1 o número de Pontos de Vida perdidos.",
      "reacaoDano": {
       "momento": "depois-dos-limiares",
       "faixas": [
@@ -208,7 +208,7 @@
     {
      "ordem": 2,
      "nome": "Transe Celestial",
-     "texto": "Durante um descanso, você pode entrar em transe para escolher um movimento de tempo livre adicional.",
+     "texto": "Durante um descanso, você pode entrar em transe para escolher um movimento de descanso adicional.",
      "efeitoDescanso": {
       "movimentosAdicionais": 1,
       "fonte": "DH-DigitalRegras.pdf p.56"
@@ -241,13 +241,13 @@
     {
      "ordem": 1,
      "nome": "Dobradora da Sorte",
-     "texto": "Uma vez por sessão, após você ou um aliado voluntário em alcance Próximo fazer uma jogada de ação, você pode gastar 3 Esperança para rerrolar os Dados da Dualidade.",
+     "texto": "Uma vez por sessão, após você ou um aliado voluntário em alcance Próximo fazer uma jogada de ação, você pode gastar 3 Esperança para rerrolar os Dados de Dualidade.",
      "uso": {
       "custo": {
        "esperanca": 3
       },
       "marcaUso": "uso:ancestralidade:fada:dobradora-da-sorte",
-      "lembrete": "Rerrole os Dados da Dualidade manualmente; o novo resultado substitui o anterior."
+      "lembrete": "Rerrole os Dados de Dualidade manualmente; o novo resultado substitui o anterior."
      }
     },
     {
@@ -350,7 +350,7 @@
     {
      "ordem": 1,
      "nome": "Investida",
-     "texto": "Quando você obtiver sucesso em uma jogada de Agilidade para se mover de Alcance Longo ou Muito Longo para Alcance Corpo a Corpo com um ou mais alvos, pode marcar 1 Estresse para causar 1d12 de dano físico a todos os alvos em Alcance Corpo a Corpo.",
+     "texto": "Quando você obtiver sucesso em uma jogada de Agilidade para se mover de alcance Distante ou Longínquo para alcance Corpo a Corpo com um ou mais alvos, pode marcar 1 Estresse para causar 1d12 de dano físico a todos os alvos em alcance Corpo a Corpo.",
      "uso": {
       "custo": {
        "estresse": 1

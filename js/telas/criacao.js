@@ -432,6 +432,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
               rascunho.usarMista = ev.target.checked;
               rascunho.ancestralidadeMista = [];
               rascunho.caracteristicasEscolhidas = [];
+              rascunho.nomeAncestralidadeMista = '';
               desenhar();
             }
           }),
@@ -456,7 +457,13 @@ export async function abrirCriacao({ aoCriar } = {}) {
           }));
         } else {
           pai.append(el('p', { class: 'texto-sm texto-suave', texto:
-            'Escolha uma característica de cada coluna. Elas precisam vir de ancestralidades diferentes.' }));
+            'Escolha uma característica de cada coluna. Elas precisam vir de ancestralidades diferentes; outras ancestralidades da linhagem podem aparecer no nome e na história.' }));
+          pai.append(campoTexto(
+            'Como seu personagem identifica essa ancestralidade? (opcional)',
+            rascunho.nomeAncestralidadeMista,
+            (valor) => { rascunho.nomeAncestralidadeMista = valor; },
+            { placeholder: 'Ex.: goblin-orc, goblin ou um nome inventado' }
+          ));
           pai.append(colunaDeCaracteristicas(1), colunaDeCaracteristicas(2));
         }
 
@@ -1018,8 +1025,10 @@ export async function abrirCriacao({ aoCriar } = {}) {
         const secundaria = catalogo.equipamentos.armas.find((a) => a.id === rascunho.equipamento.secundaria);
         const armadura = catalogo.equipamentos.armaduras.find((a) => a.id === rascunho.equipamento.armadura);
 
+        const herancaMista = rascunho.nomeAncestralidadeMista.trim()
+          || rascunho.ancestralidadeMista.map((id) => (catalogo.ancestralidades.find((a) => a.id === id) || {}).nome).filter(Boolean).join('-');
         const heranca = rascunho.usarMista
-          ? `${rascunho.ancestralidadeMista.map((id) => (catalogo.ancestralidades.find((a) => a.id === id) || {}).nome).filter(Boolean).join('-')} (mista)`
+          ? `${herancaMista} (mista)`
           : (anc ? anc.nome : '—');
 
         pai.append(el('div', { class: 'cartao cartao--ornamentado' }, [
@@ -1199,7 +1208,8 @@ export async function abrirCriacao({ aoCriar } = {}) {
       })));
 
     const heranca = rascunho.usarMista
-      ? rascunho.ancestralidadeMista.map((id) => (catalogo.ancestralidades.find((a) => a.id === id) || {}).nome).filter(Boolean).join('-')
+      ? (rascunho.nomeAncestralidadeMista.trim()
+        || rascunho.ancestralidadeMista.map((id) => (catalogo.ancestralidades.find((a) => a.id === id) || {}).nome).filter(Boolean).join('-'))
       : (anc ? anc.nome : '');
 
     const caracteristicas = [];
@@ -1270,6 +1280,7 @@ function rascunhoVazio() {
     usarMista: false,
     ancestralidade: null,
     ancestralidadeMista: [],
+    nomeAncestralidadeMista: '',
     caracteristicasEscolhidas: [],
     comunidade: null,
     escolhasDeClasse: {},

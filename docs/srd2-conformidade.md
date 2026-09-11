@@ -65,7 +65,7 @@ A correção inicial implementa diretamente as pp. 53–54 do SRD 2.0:
 
 O recorte inicial contém 95 registros nas coleções de domínios, classes, subclasses, ancestralidades, comunidades e transformações. A comparação estrutural encontrou:
 
-- 64 registros já representados no Core, todos sujeitos a comparação individual com o SRD 2.0; 27 deles (9 classes + 18 subclasses) já foram conferidos e permanecem implementados;
+- 64 registros já representados no Core; todos foram conferidos e permanecem implementados: 9 domínios, 9 classes, 18 subclasses, 18 ancestralidades, ancestralidade mista e 9 comunidades;
 - 31 registros novos: Pavor, 4 classes, 8 subclasses, 6 ancestralidades, 6 comunidades e 6 transformações.
 
 Os 31 registros novos estão traduzidos e estruturados em catálogos de preparação, todos marcados como `traducao-provisoria-nao-exposta`:
@@ -89,3 +89,17 @@ Os 31 registros novos estão traduzidos e estruturados em catálogos de prepara�
 As 9 classes e 18 subclasses que já existiam foram conferidas contra as pp. 10–31 do SRD 2.0. Evasão inicial, Pontos de Vida iniciais, domínios, traços de Conjuração, quantidades de características, custos, alcances, frequências e efeitos permanecem mecanicamente compatíveis. A fonte exibida foi normalizada para o vocabulário SRD2 em `data/classes.json`, e `backend/42_Classes.gs` foi regenerado.
 
 O auditor específico é `data/srd2-classes-core-auditoria.json` + `tools/conferir-srd2-classes-core.mjs`. Ele também protege duas falhas do extrator auxiliar: os JSON-LD de Músico Errante e Artífice das Palavras omitem Especialização/Maestria, embora essas características estejam presentes no `SRD.md` e no PDF oficial.
+
+### Origens do Core
+
+As 18 ancestralidades, a ancestralidade mista e as 9 comunidades já existentes foram conferidas contra as pp. 32–42 do SRD 2.0. Custos, dados, alcances, gatilhos, limites por descanso/sessão, bônus derivados e efeitos de criação permanecem mecanicamente compatíveis. `data/ancestralidades.json` e `data/comunidades.json` tiveram somente normalização do texto mecânico ativo, e `backend/43_Origens.gs` foi regenerado.
+
+A regra de ancestralidade mista agora está representada por duas camadas separadas: o jogador pode escrever livremente como o personagem identifica a própria ancestralidade, inclusive refletindo uma linhagem com mais de duas; as características continuam vindo de exatamente duas fontes mecânicas diferentes — a primeira característica de uma ancestralidade e a segunda de outra. O nome livre não concede características adicionais.
+
+O auditor específico é `data/srd2-origens-core-auditoria.json` + `tools/conferir-srd2-origens-core.mjs`. Ele protege duas particularidades do corpus: Fada não possui `features` no JSON-LD auxiliar apesar de suas duas características constarem no SRD/PDF, e a ancestralidade mista está estruturada no campo `description`, não como uma lista de características.
+
+### Domínios do Core
+
+Os 9 domínios existentes foram conferidos contra a p. 7 do SRD 2.0. Seus temas e descrições continuam compatíveis. O metadado de acesso agora também registra as classes novas sem expô-las: Assassino em Lâmina e Meia-Noite; Brigão em Osso e Valor; Bruxo em Graça; Bruxa em Sábio.
+
+Duas traduções literais sem sentido foram corrigidas nas descrições: Lâmina agora menciona uma **arma mais especializada**, não um “braço”; Meia-Noite encontra **tesouros ocultos**, não “sequestrados”. O auditor específico é `data/srd2-dominios-core-auditoria.json` + `tools/conferir-srd2-dominios-core.mjs`.

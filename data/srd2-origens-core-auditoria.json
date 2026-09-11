@@ -1,0 +1,70 @@
+{
+  "versao": 1,
+  "estado": "conferido",
+  "fonte": {
+    "srd": "2.0",
+    "data": "2026-08-25",
+    "paginasPdf": "32–42",
+    "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64"
+  },
+  "conclusao": "As 18 ancestralidades, a regra de ancestralidade mista e as 9 comunidades do Core preservam no SRD 2.0 os efeitos mecânicos implementados. O lote normalizou vocabulário mecânico e passou a permitir um nome livre para a ancestralidade mista, sem mudar as duas fontes mecânicas de características.",
+  "ancestralidades": [
+    "ancestries/clank",
+    "ancestries/drakona",
+    "ancestries/dwarf",
+    "ancestries/elf",
+    "ancestries/faerie",
+    "ancestries/faun",
+    "ancestries/firbolg",
+    "ancestries/fungril",
+    "ancestries/galapa",
+    "ancestries/giant",
+    "ancestries/goblin",
+    "ancestries/halfling",
+    "ancestries/human",
+    "ancestries/infernis",
+    "ancestries/katari",
+    "ancestries/mixed-ancestry",
+    "ancestries/orc",
+    "ancestries/ribbet",
+    "ancestries/simiah"
+  ],
+  "comunidades": [
+    "communities/highborne",
+    "communities/loreborne",
+    "communities/orderborne",
+    "communities/ridgeborne",
+    "communities/seaborne",
+    "communities/slyborne",
+    "communities/underborne",
+    "communities/wanderborne",
+    "communities/wildborne"
+  ],
+  "excecoesDoCorpus": [
+    {
+      "id": "ancestries/faerie",
+      "problema": "O JSON-LD auxiliar omite as duas características; Luckbender e Wings constam no SRD.md e no PDF oficial.",
+      "quantidadeCorretaDeCaracteristicas": 2
+    },
+    {
+      "id": "ancestries/mixed-ancestry",
+      "problema": "A regra está no campo description, não em features; ela permite mais de duas ancestralidades narrativas, mas somente duas fontes mecânicas.",
+      "quantidadeDeFontesMecanicas": 2
+    }
+  ],
+  "interpretacoes": [
+    {
+      "id": "ancestries/drakona",
+      "regra": "Escamas reduz em 1 os Pontos de Vida marcados quando o dano alcança o limiar Severo. Se a regra opcional de dano massivo estiver ativa, o total continua acima do limiar Severo e a reação permanece aplicável."
+    }
+  ],
+  "correcoesDeVocabulario": [
+    { "id": "ancestries/drakona", "termos": ["Estresse"] },
+    { "id": "ancestries/elf", "termos": ["movimento de descanso"] },
+    { "id": "ancestries/faerie", "termos": ["Dados de Dualidade"] },
+    { "id": "ancestries/firbolg", "termos": ["Distante", "Longínquo"] },
+    { "id": "communities/seaborne", "termos": ["gastar fichas", "limpar fichas"] },
+    { "id": "communities/wanderborne", "termos": ["Mestre"] },
+    { "id": "ancestries/mixed-ancestry", "termos": ["Herança", "Mestre", "características de ancestralidade"] }
+  ]
+}

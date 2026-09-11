@@ -33,8 +33,8 @@ for (const [id, quantidade] of Object.entries(esperados)) {
 }
 
 if (auditoria.resumo.existentes !== 64) erros.push('o núcleo deveria ter 64 registros existentes');
-if (auditoria.resumo.existentesConferidosImplementados !== 27) erros.push('o núcleo deveria ter 27 registros existentes conferidos/implementados');
-if (auditoria.resumo.existentesQueRequeremComparacao !== 37) erros.push('o núcleo deveria ter 37 registros existentes ainda pendentes');
+if (auditoria.resumo.existentesConferidosImplementados !== 64) erros.push('o núcleo deveria ter 64 registros existentes conferidos/implementados');
+if (auditoria.resumo.existentesQueRequeremComparacao !== 0) erros.push('o núcleo não deveria ter registros existentes pendentes');
 if (auditoria.resumo.novosQueRequeremTraducaoEImplementacao !== 31) erros.push('o núcleo deveria ter 31 registros novos');
 
 if (erros.length) {
@@ -42,4 +42,4 @@ if (erros.length) {
   process.exit(1);
 }
 
-console.log('Auditoria do núcleo SRD2: 95 registros · 27 existentes conferidos · 37 existentes pendentes · 31 novos em preparação.');
+console.log('Auditoria do núcleo SRD2: 95 registros · 64 existentes conferidos · 0 existentes pendentes · 31 novos em preparação.');

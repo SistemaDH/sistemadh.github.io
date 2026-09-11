@@ -303,7 +303,7 @@ const HABILIDADES_DE_ORIGEM_COM_USO = {
     "estado": null,
     "rotuloAtivar": "",
     "reacaoEnquantoAtivo": null,
-    "lembrete": "Rerrole os Dados da Dualidade manualmente; o novo resultado substitui o anterior."
+    "lembrete": "Rerrole os Dados de Dualidade manualmente; o novo resultado substitui o anterior."
   },
   "Asas": {
     "origem": "ancestralidade",

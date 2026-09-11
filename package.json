@@ -38,7 +38,9 @@
     "teste:srd2-origens-novas": "node tools/conferir-srd2-origens-novas.mjs",
     "teste:srd2-transformacoes": "node tools/conferir-srd2-transformacoes.mjs",
     "teste:srd2-classes-core": "node tools/conferir-srd2-classes-core.mjs",
-    "teste:srd2": "npm run teste:srd2-traducao && npm run teste:srd2-cobertura && npm run teste:srd2-inventario && npm run teste:srd2-nucleo && npm run teste:srd2-classes-novas && npm run teste:srd2-subclasses-novas && npm run teste:srd2-origens-novas && npm run teste:srd2-transformacoes && npm run teste:srd2-classes-core"
+    "teste:srd2-origens-core": "node tools/conferir-srd2-origens-core.mjs",
+    "teste:srd2-dominios-core": "node tools/conferir-srd2-dominios-core.mjs",
+    "teste:srd2": "npm run teste:srd2-traducao && npm run teste:srd2-cobertura && npm run teste:srd2-inventario && npm run teste:srd2-nucleo && npm run teste:srd2-classes-novas && npm run teste:srd2-subclasses-novas && npm run teste:srd2-origens-novas && npm run teste:srd2-transformacoes && npm run teste:srd2-classes-core && npm run teste:srd2-origens-core && npm run teste:srd2-dominios-core"
   },
   "devDependencies": {
     "playwright": "1.62.1"

@@ -1,4 +1,4 @@
-YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíÛ]·×Ôèµ©hºÚn¶X§zÍKÊŠ‚ˆ
+YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíÛ]·çtèµ©hºÚn¶X§zÍKÊŠ‚ˆ
 ˆ\Ý\ËX˜XÚÙ[™›ZœÈ8 %\Ý\ÈH0ìÙÚXØHÈ˜XÚÙ[™›Ù[™ÈÈÛÙK™ÜÈ™X[‚ˆ
 ˆ\ÛÎˆ›ÙHÛÛËÝ\Ý\ËX˜XÚÙ[™›ZœÂˆ
 ‹Â‚š[\ÜœÈœ›ÛH	Û›ÙN™œÉÎÂš[\Ü]œ›ÛH	Û›ÙNœ]	ÎÂš[\ÜÈš[UT“Ô]Hœ›ÛH	Û›ÙN\›	ÎÂš[\ÜÈÜšX\[XšY[HHœ›ÛH	Ë‹Ø\Ë\ØÜš\[[ØÚË›ZœÉÎÂ‚˜ÛÛœÝTURHH]™\›˜[YJš[UT“Ô]
@@ -1078,7 +1078,7 @@ HOˆOOH	ÛX\˜ØYÜ™\×Û˜WØØ\IÈOOH	ØÛÛYÜ™\ÉÊJNÂˆÛÛQ\ÝYË™›Ü‘XXÚ
 
 ÊHOˆÂˆ™\™YJÛÛ^Ë˜ÛÛYÜ™\ÑÔ™Y—ÊËšY
 K›[™ÝHKØ\H	ØËšYHÙ[HÛÛYÜˆ›ÈØ]0è[ÙÛØ
-NÂˆJNÂŸJNÂ‚\ÝJ	Ûpè^[[ÈšYÝX[[ÈÙ]H˜péÛÈµëmõöÚ$z{-®éÜj×Maiores somam +1 exatamente ao traÃ§o correspondente', () => {
+NÂˆJNÂŸJNÂ‚\ÝJ	Ûpè^[[ÈšYÝX[[ÈÙ]H˜péÛÈµëmùÞÚ$z{-®éÜj×s Maiores somam +1 exatamente ao traÃ§o correspondente', () => {
   ['consumivel-25','consumivel-26','consumivel-27','consumivel-28','consumivel-29','consumivel-30'].forEach((id) => {
     const f=fichaConsumivelE2_(id,1), traco=TRACO_E2[id];
     const antes=contexto.valorDoTraco_(f,traco);

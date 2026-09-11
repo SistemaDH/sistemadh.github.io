@@ -1,0 +1,37 @@
+{
+  "versao": 1,
+  "estado": "conferido",
+  "fonte": {
+    "srd": "2.0",
+    "data": "2026-08-25",
+    "paginaPdf": 7,
+    "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64"
+  },
+  "conclusao": "Os 9 domínios do Core preservam no SRD 2.0 seus temas e descrições. O acesso foi ampliado no metadado para incluir as quatro classes novas de Hope & Fear, sem expô-las na criação antes da implementação completa.",
+  "dominios": [
+    "domains/arcana",
+    "domains/blade",
+    "domains/bone",
+    "domains/codex",
+    "domains/grace",
+    "domains/midnight",
+    "domains/sage",
+    "domains/splendor",
+    "domains/valor"
+  ],
+  "acessoSrd2": {
+    "ARCANA": ["Druida", "Feiticeiro"],
+    "BLADE": ["Assassino", "Guardião", "Guerreiro"],
+    "BONE": ["Brigão", "Patrulheiro", "Guerreiro"],
+    "CODEX": ["Bardo", "Mago"],
+    "GRACE": ["Bardo", "Ladino", "Bruxo"],
+    "MIDNIGHT": ["Assassino", "Ladino", "Feiticeiro"],
+    "SAGE": ["Druida", "Patrulheiro", "Bruxa"],
+    "SPLENDOR": ["Seraph", "Mago"],
+    "VALOR": ["Brigão", "Guardião", "Seraph"]
+  },
+  "correcoesEditoriais": [
+    { "id": "domains/blade", "antes": "braço mais especializado", "depois": "arma mais especializada" },
+    { "id": "domains/midnight", "antes": "tesouros sequestrados", "depois": "tesouros ocultos" }
+  ]
+}
