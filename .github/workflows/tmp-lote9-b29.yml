@@ -3,13 +3,14 @@ name: tmp Lote 9 B29 — HANDOFF
 on:
   push:
     branches: [tmp-lote9-b29-handoff-sol]
+    paths:
+      - '.github/workflows/tmp-lote9-b29.yml'
 
 permissions:
   contents: write
 
 jobs:
   validar:
-    if: ${{ !contains(github.event.head_commit.message, '[b29-doc]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -157,7 +158,7 @@ Este bloco sincroniza o HANDOFF com o estado já integrado de B6–B28. **Não a
       - name: Commitar apenas o HANDOFF validado
         shell: bash
         run: |
-          git diff -- . ':(exclude)docs/HANDOFF.md' --exit-code
+          git diff --exit-code -- . ':(exclude)docs/HANDOFF.md'
           if git diff --quiet -- docs/HANDOFF.md; then
             echo 'HANDOFF já estava sincronizado.'
             exit 0
