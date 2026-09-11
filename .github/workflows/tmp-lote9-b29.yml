@@ -1,10 +1,11 @@
-name: tmp Lote 9 B29 — HANDOFF
+name: tmp Lote 9 B29 HANDOFF
 
 on:
   push:
-    branches: [tmp-lote9-b29-handoff-sol]
+    branches:
+      - tmp-lote9-b29-handoff-sol
     paths:
-      - '.github/workflows/tmp-lote9-b29.yml'
+      - .github/workflows/tmp-lote9-b29.yml
 
 permissions:
   contents: write
@@ -19,93 +20,22 @@ jobs:
 
       - name: Sincronizar HANDOFF até B28
         shell: bash
+        env:
+          B29_ADDITION_B64: IyMjIEI24oCTQjEzIOKAlCBiYXNlbGluZSByZXNwb25zaXZvIGUgY29tcGFjdGHDp8OjbyBkb3MgZmx1eG9zIHByaW5jaXBhaXMKClJlZ2lzdHJvIGNvbnNvbGlkYWRvIGEgcGFydGlyIGRvIGhpc3TDs3JpY28gcmVhbCBkYSBicmFuY2ggYG5ld2VkaXRgOgoKLSAqKkI2IOKAlCBiYXNlbGluZSByZXNwb25zaXZvOioqIGNvbnNvbGlkb3UgYSBtZWRpw6fDo28gcmVzcG9uc2l2YSBkbyBMb3RlIDkgcGFyYSBhbMOpbSBkYXMgdHLDqnMgbGFyZ3VyYXMgZGUgY2VsdWxhciBlIHBhc3NvdSBhIHByZXNlcnZhciB0YW1iw6ltIG8gY29tcG9ydGFtZW50byBlbSB0ZWxhcyBtYWlvcmVzOwotICoqQjcg4oCUIE1vY2hpbGEgbW9iaWxlOioqIGFncnVwb3UgYcOnw7VlcyBzZWN1bmTDoXJpYXMsIG1hbnRldmUgYSBtb2NoaWxhIGNvbXBhY3RhIGVtIDM2MC8zOTBweCwgYXRpdm91IGHDp8O1ZXMgY29tcGFjdGFzIGUgYWRhcHRvdSBvIEUyRSBhbyBtZW51IG1vYmlsZTsKLSAqKkI4IOKAlCBwcsOpdmlhIGRlIHN1YmNsYXNzZToqKiBjb21wYWN0b3UgYSBwcsOpdmlhIGRlIHN1YmNsYXNzZSBubyBtb2JpbGUgc2VtIGFsdGVyYXIgYSByZWdyYSBkZSBlc2NvbGhhOwotICoqQjkg4oCUIGNhYmXDp2FsaG8gZSBvdXJvOioqIHJlZmlub3UgbyBjYWJlw6dhbGhvIGRhIGZpY2hhIGUgYSBhcHJlc2VudGHDp8OjbyBkZSBPdXJvIG5vIG1vYmlsZTsKLSAqKkIxMCDigJQgc3ViY2xhc3NlIGVtIGNlbHVsYXJlcyBlc3RyZWl0b3M6KiogcmVmb3LDp291IGEgY29tcGFjdGHDp8OjbyBkYSBzdWJjbGFzc2UgbmFzIG1lbm9yZXMgbGFyZ3VyYXMgc3Vwb3J0YWRhczsKLSAqKkIxMSDigJQgTWVzdHJlL0Jlc3Rpw6FyaW86KiogY3Jpb3UgYmFzZWxpbmUgZGVkaWNhZG8gZG8gcGFpbmVsIGRvIE1lc3RyZSwgbWVsaG9yb3UgYWx2b3MgZGUgdG9xdWUgZSB0cmFuc2Zvcm1vdSBvcyBmaWx0cm9zIGRvIEJlc3Rpw6FyaW8gZW0gKipzY3JvbGxlciBob3Jpem9udGFsIGludGVuY2lvbmFsKiogbm8gbW9iaWxlLiBWZXIgdW1hIHDDrWx1bGEgcGFyY2lhbG1lbnRlIHZpc8OtdmVsIG5hIGJvcmRhIGRpcmVpdGEgw6kgaW5kaWNhw6fDo28gZGUgY29udGludWlkYWRlIGRhIHJvbGFnZW0sIG7Do28gb3ZlcmZsb3cgYSBzZXIg4oCcY29ycmlnaWRv4oCdOwotICoqQjEyIOKAlCBidXNjYSBkbyBCZXN0acOhcmlvOioqIG1hbnRldmUgYSBidXNjYSBhY2Vzc8OtdmVsL3N0aWNreSBkdXJhbnRlIGEgcm9sYWdlbSBlIGFkaWNpb25vdSBwcm90ZcOnw6NvIGVzcGVjw61maWNhIHBhcmEgbyBlc3RhZG8gcm9sYWRvOwotICoqQjEzIOKAlCBjcmlhw6fDo28gbW9iaWxlOioqIHJlZ2lzdHJvdSBiYXNlbGluZSBkZWRpY2FkbyBkbyBmbHV4byBkZSBjcmlhw6fDo28gbmFzIGxhcmd1cmFzIDM2MC8zOTAvNDMwcHguCgojIyMgQjE04oCTQjIxIOKAlCBmbHV4b3MgbW9iaWxlIGVzcGVjw61maWNvcwoKLSAqKkIxNCDigJQgUmVncmFzOioqIHBhc3NvdSBhIG1lZGlyIGUgcHJvdGVnZXIgbyBtb2RhbCBkZSBSZWdyYXMgdGFtYsOpbSBkZXBvaXMgZGEgcm9sYWdlbSwgYWd1YXJkYW5kbyBjb3JyZXRhbWVudGUgYSBhbmltYcOnw6NvIGFudGVzIGRhcyBtZWRpw6fDtWVzOwotICoqQjE1IOKAlCBwcm9ncmVzc28gZGEgY3JpYcOnw6NvOioqIGVzdGFiaWxpem91IG8gY29udGFkb3IgZGEgY3JpYcOnw6NvLCBzZXBhcm91IGEgZXRhcGEgZG8gbGl2cm8gZG8gcGFzc28gZG8gYXNzaXN0ZW50ZSBlIHJlbW92ZXUgdW1hIG11dGHDp8OjbyByZWN1cnNpdmEgZG8gY29udGFkb3I7Ci0gKipCMTYg4oCUIGFiZXJ0dXJhOioqIGFkaWNpb25vdSBwcm90ZcOnw6NvIGRlZGljYWRhIGRhIHRlbGEgaW5pY2lhbCBlIHJlbW92ZXUgbyB0b2tlbiB2aXN1YWwgZmFudGFzbWEgZG8gYm90w6NvIGRlIG1vc3RyYXIgY8OzZGlnbzsKLSAqKkIxNyDigJQgZm90bzoqKiBwYXNzb3UgYSBwcm90ZWdlciBleHBsaWNpdGFtZW50ZSBvIHpvb20vdmlzdWFsaXphw6fDo28gZGUgZm90byBlbSAzNjAvMzkwLzQzMHB4OwotICoqQjE4IOKAlCBhanVkYSBkYSBjcmlhw6fDo286KiogcGVybWl0aXUgcmVjb2xoZXIgYSBhanVkYSBubyBtb2JpbGUgcGFyYSByZWR1emlyIGFsdHVyYSBvY3VwYWRhIHNlbSByZW1vdmVyIG8gY29udGXDumRvOwotICoqQjE5IOKAlCBlZGl0b3IgZGUgYWR2ZXJzw6FyaW86KiogcmVmaW5vdSBvIGVkaXRvciBubyBtb2JpbGUsIG1hbnRldmUgYcOnw7VlcyBhY2Vzc8OtdmVpcy9maXhhcyBxdWFuZG8gbmVjZXNzw6FyaW8sIHBlcm1pdGl1IHJlY29saGVyIGEgcmVjZWl0YSBlIGFkaWNpb25vdSBjb2JlcnR1cmEgZGVkaWNhZGE7Ci0gKipCMjAg4oCUIGhpZXJhcnF1aWEgZGEgYWJlcnR1cmE6Kiogc2VwYXJvdSBvcyBDVEFzIGRhIHRlbGEgaW5pY2lhbCBubyBtb2JpbGUgZSBwYXNzb3UgYSB0ZXN0YXIgYSBoaWVyYXJxdWlhIGVudHJlIGFzIGHDp8O1ZXM7Ci0gKipCMjEg4oCUIEFqdXN0ZXM6KiogcmVnaXN0cm91IGJhc2VsaW5lIGRlIEFqdXN0ZXMvY29uZXjDo28gbm8gbW9iaWxlIGUgY29sb2NvdSBlc3NhIHRlbGEgbm8gZ2F0ZSBwZXJtYW5lbnRlLgoKIyMjIEIyMuKAk0IyOCDigJQgZmVjaGFtZW50byBkbyByZWZpbm8gbW9iaWxlCgotICoqQjIyIOKAlCBBdmFuw6dvOioqIGFkaWNpb25vdSByZXN1bW8gc3RpY2t5IG5vIG1vZGFsIGRlIGF2YW7Dp28sIGZpeG91IHN1YSBwb3Npw6fDo28gbm8gdG9wbyBlIGNyaW91IHByb3Rlw6fDo28gcGVybWFuZW50ZSBlbSAzNjAvMzkwLzQzMHB4OwotICoqQjIzIOKAlCBEZXNjYW5zbzoqKiByZWZpbm91IG9yaWVudGHDp8OjbywgYcOnw7VlcyBmaXhhcyBlIHLDs3R1bG9zIGRvIGZsdXhvIGRlIGRlc2NhbnNvOyBvIENUQSBkZSBwcsOpdmlhIGUgb3MgcsOzdHVsb3MgY29tcGxldG9zIGRvIHN0ZXBwZXIgcGVybWFuZWNlbSBwcm90ZWdpZG9zIGVtIHRlbGFzIGVzdHJlaXRhczsKLSAqKkIyNCDigJQgRGFubzoqKiBjb3JyaWdpdSBvIHTDrXR1bG8gc2Vtw6JudGljbyBkbyBibG9jbyBkZSBkYW5vL0hVRCBlIGNyaW91IGJhc2VsaW5lIHBhcmEgaW1wZWRpciBvIHJldG9ybm8gZG8gdMOtdHVsbyBhbnRpZ287Ci0gKipCMjUg4oCUIE1vY2hpbGEgLyBJdGVucyBlbSB1c286Kiogc2VwYXJvdSB2aXN1YWxtZW50ZSBvcyBpdGVucyBlcXVpcGFkb3MvZW0gdXNvIGRvIGludmVudMOhcmlvIGNvbXVtIGUgY3Jpb3UgYHRlc3RlOmxheW91dC1tb2NoaWxhLWVtLXVzby1tb2JpbGVgOwotICoqQjI2IOKAlCBDb25qdXJhw6fDo286KiogZW0gYXTDqSAzOTBweCwgYC5yZXRyYXRvX19jb25qYCB1c2EgYHRleHQtd3JhcDogYmFsYW5jZWAgcGFyYSBpbXBlZGlyIHBvbnR1YcOnw6NvIMOzcmbDoyBlbSDigJx0cmHDp28gZGUgQ29uanVyYcOnw6NvLuKAnTsgcHJvdGVnaWRvIHBvciBgdGVzdGU6bGF5b3V0LWNvbmp1cmFjYW8tbW9iaWxlYDsKLSAqKkIyNyDigJQgcHJvdGXDp8OjbyBwZXJtYW5lbnRlIGRhIE1vY2hpbGE6KiogaW5jb3Jwb3JvdSBvIHRlc3RlIGVzcGVjw61maWNvIGRlIOKAnEl0ZW5zIGVtIHVzb+KAnSBhbyBDSSBvZmljaWFsIGRlIGBuZXdlZGl0YCBlIGFvcyBhcnRlZmF0b3MgdmlzdWFpczsKCiMjIyBCMjgg4oCUIGZlZWRiYWNrIHRyYW5zaXTDs3JpbyByZXNwZWl0YSBvIGNvbnRleHRvIGRhIGZpY2hhCgpJbnRlZ3JhZG8gZW0gYGMxNDc3YmIwODc5ZWZlYmFhMjdjYzJiNjE3ZjZiZmJmZmQ0YjdkMmFgLiBDSSBvZmljaWFsIGRlIGludGVncmHDp8OjbzogcnVuIGAzNDU1NjAyNTQxN2AsIHZlcmRlLgoKLSBhbyB0b2NhciBlbSAqKkFicmlyIGZpY2hhKiogbm8gcm9zdGVyLCBmZWVkYmFjayB0cmFuc2l0w7NyaW8gZG8gY29udGV4dG8gYW50ZXJpb3IgKGBzdWNlc3NvYC9gaW5mb2AsIHBvciBleGVtcGxvIGBGaWNoYSBjcmlhZGEuYCkgw6kgbGltcG8gYW50ZXMgZGEgZW50cmFkYTsKLSBgYWxlcnRhYCBlIGBlcnJvYCBuw6NvIHPDo28gYXBhZ2Fkb3MgcG9yIGVzc2EgdHJhbnNpw6fDo287Ci0gYSByZWdyZXNzw6NvIMOpIHByb3RlZ2lkYSBwb3IgYHRlc3RlOmxheW91dC10b2FzdC1jb250ZXh0by1tb2JpbGVgIGVtIDM2MC8zOTBweDsKLSBvIGdhdGUgdGVtcG9yw6FyaW8gY29tcGxldG8gZG8gQjI4IGZvaSBvIHJ1biBgMzQ1NTU3MzEyNDlgLCB0YW1iw6ltIHZlcmRlLgoKIyMjIENoZWNrcG9pbnQgb3BlcmFjaW9uYWwgYXDDs3MgQjI4CgpOYSByZWZlcsOqbmNpYSBhY2ltYSwgYG5ld2VkaXRgIGVzdMOhIGVtIGBjMTQ3N2JiMDg3OWVmZWJhYTI3Y2MyYjYxN2Y2YmZiZmZkNGI3ZDJhYC4gTyBDSSBwZXJtYW5lbnRlIGV4ZWN1dGEsIGFsw6ltIGRlIHNpbnRheGUvYmFja2VuZC9nZXJhZG9zL0NTUy9hdWRpdG9yaWEgQ29yZS9FMkU6CgotIGB0ZXN0ZTpsYXlvdXQtbW9iaWxlYCDigJQgMzYwLzM5MC80MzA7Ci0gYHRlc3RlOmxheW91dC1jb25qdXJhY2FvLW1vYmlsZWAg4oCUIDM2MC8zOTA7Ci0gYHRlc3RlOmxheW91dC10b2FzdC1jb250ZXh0by1tb2JpbGVgIOKAlCAzNjAvMzkwOwotIGB0ZXN0ZTpsYXlvdXQtbWVzdHJlLW1vYmlsZWAg4oCUIDM2MC8zOTAvNDMwLCBpbmNsdWluZG8gZWRpdG9yIGRlIGFkdmVyc8OhcmlvOwotIGB0ZXN0ZTpsYXlvdXQtY3JpYWNhby1tb2JpbGVgIOKAlCAzNjAvMzkwLzQzMCwgaW5jbHVpbmRvIGFqdWRhIGRhIGNyaWHDp8OjbzsKLSBgdGVzdGU6bGF5b3V0LXJlZ3Jhcy1tb2JpbGVgIOKAlCAzNjAvMzkwLzQzMCArIGVzdGFkbyByb2xhZG87Ci0gYHRlc3RlOmxheW91dC1hYmVydHVyYS1tb2JpbGVgIOKAlCAzNjAvMzkwLzQzMCArIG1vc3RyYXIgY8OzZGlnby9DVEFzOwotIGB0ZXN0ZTpsYXlvdXQtYWp1c3Rlcy1tb2JpbGVgIOKAlCAzNjAvMzkwLzQzMCArIGNvbmV4w6NvOwotIGB0ZXN0ZTpsYXlvdXQtYXZhbmNvLW1vYmlsZWAg4oCUIDM2MC8zOTAvNDMwICsgcmVzdW1vIHN0aWNreTsKLSBgdGVzdGU6bGF5b3V0LWRlc2NhbnNvLW1vYmlsZWAg4oCUIDM2MC8zOTAvNDMwICsgYcOnw7VlcyBmaXhhczsKLSBgdGVzdGU6bGF5b3V0LWRhbm8tbW9iaWxlYCDigJQgMzYwLzc2ODsKLSBgdGVzdGU6bGF5b3V0LW1vY2hpbGEtZW0tdXNvLW1vYmlsZWAg4oCUIDM2MC8zOTAvNDMwOwotIGB0ZXN0ZTpsYXlvdXQtZm90by1tb2JpbGVgIOKAlCAzNjAvMzkwLzQzMCArIHpvb207Ci0gYHRlc3RlOmxheW91dC1yZXNwb25zaXZvYCDigJQgNzY4LzEwMjQvMTQ0MC4KCkRlY2lzw7VlcyBxdWUgbsOjbyBkZXZlbSBzZXIgcmV2ZXJ0aWRhcyBwb3Ig4oCcY29ycmXDp8O1ZXPigJ0gcHVyYW1lbnRlIHZpc3VhaXM6CgoxLiBvcyBmaWx0cm9zIGRvIEJlc3Rpw6FyaW8gc8OjbyB1bSAqKnNjcm9sbGVyIGhvcml6b250YWwgaW50ZW5jaW9uYWwqKiBubyBtb2JpbGU7CjIuIOKAnEl0ZW5zIGVtIHVzb+KAnSBkYSBNb2NoaWxhIGRldmUgY29udGludWFyIHNlcGFyYWRvIGRvIGludmVudMOhcmlvIGUgY29iZXJ0byBwZWxvIHRlc3RlIGRlZGljYWRvOwozLiBhIGZyYXNlIGRlIENvbmp1cmHDp8OjbyBkZXZlIGNvbnRpbnVhciBzZW0gcG9udHVhw6fDo28gw7NyZsOjIG5hcyBsYXJndXJhcyBlc3RyZWl0YXM7CjQuIGBzdWNlc3NvL2luZm9gIGRvIHJvc3RlciBuw6NvIGRldmUgYXRyYXZlc3NhciBwYXJhIGEgZmljaGEsIG1hcyBgYWxlcnRhL2Vycm9gIGRldmUgc29icmV2aXZlcjsKNS4gbyBjb250cmF0byBCNSBkZSBjb21wYWN0b3MgaW50ZW5jaW9uYWlzIGNvbnRpbnVhIHZhbGVuZG87IG7Do28gYXVtZW50YXIgaW5kaXNjcmltaW5hZGFtZW50ZSB0b2RvcyBvcyBjb21wb25lbnRlcyBwYXJhIHNpbGVuY2lhciBkaWFnbsOzc3RpY29zLgoKIyMjIEIyOSDigJQgc2luY3Jvbml6YcOnw6NvIGRvY3VtZW50YWwgZGUgY29udGludWlkYWRlCgpFc3RlIGJsb2NvIHNpbmNyb25pemEgbyBIQU5ET0ZGIGNvbSBvIGVzdGFkbyBqw6EgaW50ZWdyYWRvIGRlIEI24oCTQjI4LiAqKk7Do28gYWx0ZXJhIGNvbXBvcnRhbWVudG8gZGEgYXBsaWNhw6fDo28sIHJlZ3JhcyBkZSBEYWdnZXJoZWFydCwgU3VwYWJhc2Ugb3UgZGFkb3MqKjsgbyBkaWZmIGZpbmFsIGRvIEIyOSBkZXZlIGNvbnRlciBhcGVuYXMgYGRvY3MvSEFORE9GRi5tZGAuIE8gd29ya2Zsb3cgdGVtcG9yw6FyaW8gdXNhZG8gcGFyYSB2YWxpZGFyIGVzdGEgc2luY3Jvbml6YcOnw6NvIGRldmUgc2VyIHJlbW92aWRvIGFudGVzIGRhIHByb21vw6fDo28gcGFyYSBgbmV3ZWRpdGAuCg==
         run: |
           python3 - <<'PY'
+          import base64
+          import os
           from pathlib import Path
 
           path = Path('docs/HANDOFF.md')
           text = path.read_text(encoding='utf-8')
           marker = '### Contrato permanente do Lote 9'
           guard = '### B28 — feedback transitório respeita o contexto da ficha'
-
           if guard not in text:
               if marker not in text:
                   raise SystemExit('marcador do contrato permanente do Lote 9 não encontrado')
-
-              addition = r'''### B6–B13 — baseline responsivo e compactação dos fluxos principais
-
-Registro consolidado a partir do histórico real da branch `newedit`:
-
-- **B6 — baseline responsivo:** consolidou a medição responsiva do Lote 9 para além das três larguras de celular e passou a preservar também o comportamento em telas maiores;
-- **B7 — Mochila mobile:** agrupou ações secundárias, manteve a mochila compacta em 360/390px, ativou ações compactas e adaptou o E2E ao menu mobile;
-- **B8 — prévia de subclasse:** compactou a prévia de subclasse no mobile sem alterar a regra de escolha;
-- **B9 — cabeçalho e ouro:** refinou o cabeçalho da ficha e a apresentação de Ouro no mobile;
-- **B10 — subclasse em celulares estreitos:** reforçou a compactação da subclasse nas menores larguras suportadas;
-- **B11 — Mestre/Bestiário:** criou baseline dedicado do painel do Mestre, melhorou alvos de toque e transformou os filtros do Bestiário em **scroller horizontal intencional** no mobile. Ver uma pílula parcialmente visível na borda direita é indicação de continuidade da rolagem, não overflow a ser “corrigido”;
-- **B12 — busca do Bestiário:** manteve a busca acessível/sticky durante a rolagem e adicionou proteção específica para o estado rolado;
-- **B13 — criação mobile:** registrou baseline dedicado do fluxo de criação nas larguras 360/390/430px.
-
-### B14–B21 — fluxos mobile específicos
-
-- **B14 — Regras:** passou a medir e proteger o modal de Regras também depois da rolagem, aguardando corretamente a animação antes das medições;
-- **B15 — progresso da criação:** estabilizou o contador da criação, separou a etapa do livro do passo do assistente e removeu uma mutação recursiva do contador;
-- **B16 — abertura:** adicionou proteção dedicada da tela inicial e removeu o token visual fantasma do botão de mostrar código;
-- **B17 — foto:** passou a proteger explicitamente o zoom/visualização de foto em 360/390/430px;
-- **B18 — ajuda da criação:** permitiu recolher a ajuda no mobile para reduzir altura ocupada sem remover o conteúdo;
-- **B19 — editor de adversário:** refinou o editor no mobile, manteve ações acessíveis/fixas quando necessário, permitiu recolher a receita e adicionou cobertura dedicada;
-- **B20 — hierarquia da abertura:** separou os CTAs da tela inicial no mobile e passou a testar a hierarquia entre as ações;
-- **B21 — Ajustes:** registrou baseline de Ajustes/conexão no mobile e colocou essa tela no gate permanente.
-
-### B22–B28 — fechamento do refino mobile
-
-- **B22 — Avanço:** adicionou resumo sticky no modal de avanço, fixou sua posição no topo e criou proteção permanente em 360/390/430px;
-- **B23 — Descanso:** refinou orientação, ações fixas e rótulos do fluxo de descanso; o CTA de prévia e os rótulos completos do stepper permanecem protegidos em telas estreitas;
-- **B24 — Dano:** corrigiu o título semântico do bloco de dano/HUD e criou baseline para impedir o retorno do título antigo;
-- **B25 — Mochila / Itens em uso:** separou visualmente os itens equipados/em uso do inventário comum e criou `teste:layout-mochila-em-uso-mobile`;
-- **B26 — Conjuração:** em até 390px, `.retrato__conj` usa `text-wrap: balance` para impedir pontuação órfã em “traço de Conjuração.”; protegido por `teste:layout-conjuracao-mobile`;
-- **B27 — proteção permanente da Mochila:** incorporou o teste específico de “Itens em uso” ao CI oficial de `newedit` e aos artefatos visuais;
-
-### B28 — feedback transitório respeita o contexto da ficha
-
-Integrado em `c1477bb0879efebaa27cc2b617f6bfbffd4b7d2a`. CI oficial de integração: run `34556025417`, verde.
-
-- ao tocar em **Abrir ficha** no roster, feedback transitório do contexto anterior (`sucesso`/`info`, por exemplo `Ficha criada.`) é limpo antes da entrada;
-- `alerta` e `erro` não são apagados por essa transição;
-- a regressão é protegida por `teste:layout-toast-contexto-mobile` em 360/390px;
-- o gate temporário completo do B28 foi o run `34555731249`, também verde.
-
-### Checkpoint operacional após B28
-
-Na referência acima, `newedit` está em `c1477bb0879efebaa27cc2b617f6bfbffd4b7d2a`. O CI permanente executa, além de sintaxe/backend/gerados/CSS/auditoria Core/E2E:
-
-- `teste:layout-mobile` — 360/390/430;
-- `teste:layout-conjuracao-mobile` — 360/390;
-- `teste:layout-toast-contexto-mobile` — 360/390;
-- `teste:layout-mestre-mobile` — 360/390/430, incluindo editor de adversário;
-- `teste:layout-criacao-mobile` — 360/390/430, incluindo ajuda da criação;
-- `teste:layout-regras-mobile` — 360/390/430 + estado rolado;
-- `teste:layout-abertura-mobile` — 360/390/430 + mostrar código/CTAs;
-- `teste:layout-ajustes-mobile` — 360/390/430 + conexão;
-- `teste:layout-avanco-mobile` — 360/390/430 + resumo sticky;
-- `teste:layout-descanso-mobile` — 360/390/430 + ações fixas;
-- `teste:layout-dano-mobile` — 360/768;
-- `teste:layout-mochila-em-uso-mobile` — 360/390/430;
-- `teste:layout-foto-mobile` — 360/390/430 + zoom;
-- `teste:layout-responsivo` — 768/1024/1440.
-
-Decisões que não devem ser revertidas por “correções” puramente visuais:
-
-1. os filtros do Bestiário são um **scroller horizontal intencional** no mobile;
-2. “Itens em uso” da Mochila deve continuar separado do inventário e coberto pelo teste dedicado;
-3. a frase de Conjuração deve continuar sem pontuação órfã nas larguras estreitas;
-4. `sucesso/info` do roster não deve atravessar para a ficha, mas `alerta/erro` deve sobreviver;
-5. o contrato B5 de compactos intencionais continua valendo; não aumentar indiscriminadamente todos os componentes para silenciar diagnósticos.
-
-### B29 — sincronização documental de continuidade
-
-Este bloco sincroniza o HANDOFF com o estado já integrado de B6–B28. **Não altera comportamento da aplicação, regras de Daggerheart, Supabase ou dados**; o diff final do B29 deve conter apenas `docs/HANDOFF.md`. O workflow temporário usado para validar esta sincronização deve ser removido antes da promoção para `newedit`.
-'''
-
+              addition = base64.b64decode(os.environ['B29_ADDITION_B64']).decode('utf-8')
               text = text.replace(marker, addition.rstrip() + '\n\n' + marker, 1)
               path.write_text(text, encoding='utf-8')
           PY
