@@ -1,0 +1,14 @@
+/* ==========================================================================
+   L9-B26 · FRASE DE CONJURAÇÃO SEM PONTUAÇÃO ÓRFÃ
+
+   Em 360px, a frase curta do retrato cabia por um fio e o ponto final podia
+   cair sozinho numa segunda linha depois do gatilho "Conjuração". O balance
+   só redistribui linhas quando há quebra; em larguras onde a frase cabe em
+   uma linha, nada muda.
+   ========================================================================== */
+
+@media (max-width: 390px) {
+  .retrato__conj {
+    text-wrap: balance;
+  }
+}
