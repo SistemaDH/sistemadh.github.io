@@ -3583,9 +3583,44 @@ function aplicarDanoNaFicha_(ficha, a) {
   // Na Beira é passivo: depois de saber que a faixa é Menor, nenhum PV é marcado.
   if (naBeiraAtiva) pv = 0;
 
+  // Tocado do Esplendor acontece depois de todas as reduções que já definiram
+  // quantos PV este dano realmente exigiria. O cliente só escolhe a trilha;
+  // posse, 4+ Esplendor, uso por descanso e recursos são revalidados aqui.
+  const tocadoBruto = chaveTexto_((a || {}).tocadoDoEsplendor || '');
+  const opcaoTocado = (tocadoBruto === 'estresse' || tocadoBruto === 'fadiga') ? 'estresse'
+    : (tocadoBruto === 'esperanca' || tocadoBruto === 'hope') ? 'esperanca' : '';
+  if (tocadoBruto && !opcaoTocado) {
+    return { erro:'Tocado do Esplendor: escolha Estresse ou Esperança.' };
+  }
+  let tocadoEsplendor = null;
+  let custoTocadoEstresse = 0, custoTocadoEsperanca = 0;
+  const chaveUsoTocado = 'uso:carta:splendor:tocado-do-esplendor';
+  if (opcaoTocado) {
+    if ((a || {}).usarImpenetravel === true) {
+      return { erro:'Escolha Tocado do Esplendor ou Impenetrável para substituir os PV deste dano, não os dois.' };
+    }
+    if (pv <= 0) return { erro:'Tocado do Esplendor só pode ser usado quando este dano ainda exige marcar PV.' };
+    const ativas = Array.isArray((((ficha || {}).cartas || {}).ativas)) ? ficha.cartas.ativas : [];
+    let temTocado = false, splendorAtivas = 0;
+    for (let i = 0; i < ativas.length; i++) {
+      const brutoCarta = (ativas[i] && typeof ativas[i] === 'object') ? (ativas[i].id || ativas[i].nome) : ativas[i];
+      const cartaAtiva = (typeof acharCarta_ === 'function') ? acharCarta_(brutoCarta) : null;
+      if (!cartaAtiva) continue;
+      if (cartaAtiva.id === 'splendor-tocado-do-esplendor') temTocado = true;
+      if (chaveTexto_(cartaAtiva.dominio) === chaveTexto_('SPLENDOR')) splendorAtivas++;
+    }
+    if (!temTocado) return { erro:'Tocado do Esplendor precisa estar entre as cartas ativas.' };
+    if (splendorAtivas < 4) return { erro:'Tocado do Esplendor exige 4 cartas de Esplendor ativas; há ' + splendorAtivas + '.' };
+    const usado = Math.max(0, Math.trunc(Number(((((ficha || {}).contadores || {})[chaveUsoTocado] || {}).valor))) || 0);
+    if (usado >= 1) return { erro:'Tocado do Esplendor já foi usado neste descanso longo.' };
+    if (opcaoTocado === 'estresse') custoTocadoEstresse = pv;
+    else custoTocadoEsperanca = pv;
+  }
+
   // 6) Soma e valida TODOS os custos antes de tocar na ficha: tudo ou nada.
   // O uso normal consome 1 PA; reações como Vontade de Ferro podem consumir outro.
-  let custoEstresse = 0, custoEsperanca = 0, custoArmadura = querUsarArmadura ? 1 : 0;
+  let custoEstresse = custoTocadoEstresse, custoEsperanca = custoTocadoEsperanca,
+      custoArmadura = querUsarArmadura ? 1 : 0;
   for (let i = 0; i < defs.length; i++) {
     const c = defs[i].custo || {};
     custoEstresse += Math.max(0, Math.trunc(Number(c.estresse)) || 0);
@@ -3689,7 +3724,20 @@ function aplicarDanoNaFicha_(ficha, a) {
     impenetravel = { fonte:regraImpenetravel.fonte, uso:chaveUso, pvEvitado:1, estresse:1 };
   }
 
+  if (opcaoTocado) {
+    ficha.contadores = ficha.contadores || {};
+    ficha.contadores[chaveUsoTocado] = { valor:1 };
+    tocadoEsplendor = {
+      carta:'splendor-tocado-do-esplendor', opcao:opcaoTocado,
+      pvSubstituidos:pv, uso:chaveUsoTocado
+    };
+    pv = 0;
+  }
+
   const mudancasInternas = [];
+  if (tocadoEsplendor) mudancasInternas.push({
+    tipo:'contador', chave:chaveUsoTocado, depois:1, fonte:'Tocado do Esplendor'
+  });
   if (anelResistencia) {
     const marcaAnel = ajustarContador_(ficha, { chave:anelResistencia.contador, valor:1 });
     if (marcaAnel && marcaAnel.erro) return marcaAnel;
@@ -3718,6 +3766,8 @@ function aplicarDanoNaFicha_(ficha, a) {
   if (querUsarArmadura) partes.push('1 PA reduz a gravidade em ' + passosArmadura +
     ' limiar' + (passosArmadura === 1 ? '' : 'es') + ' → ' + contaAposArmadura.rotulo);
   if (naBeiraAtiva) partes.push('Na Beira ignora o dano Menor');
+  else if (tocadoEsplendor) partes.push('Tocado do Esplendor substitui ' + tocadoEsplendor.pvSubstituidos +
+    ' PV por ' + tocadoEsplendor.pvSubstituidos + (tocadoEsplendor.opcao === 'estresse' ? ' de Estresse' : ' de Esperança'));
   else if (pv !== contaAposArmadura.pv) partes.push('reações deixam ' + pv + ' PV');
 
   const saida = {
@@ -3727,6 +3777,7 @@ function aplicarDanoNaFicha_(ficha, a) {
     pvDepoisArmadura: contaAposArmadura.pv,
     pvMarcados: pv,
     naBeira: naBeiraAtiva,
+    tocadoDoEsplendor: tocadoEsplendor,
     mitigacaoArmadura: querUsarArmadura ? {
       usada: true, passos: passosArmadura,
       faixaAntes: conta.faixa, faixaDepois: contaAposArmadura.faixa,

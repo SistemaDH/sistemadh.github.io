@@ -113,7 +113,7 @@ function acharCartaNoCatalogo(catalogo, referencia) {
   ) || null;
 }
 
-function criarCartaoDeDano(carta) {
+function criarCartaoDeDano(carta, ficha, catalogo) {
   const item = document.createElement('article');
   item.className = 'cartao pilha';
   item.dataset.cartaDano = carta.id || carta.nome || '';
@@ -126,17 +126,46 @@ function criarCartaoDeDano(carta) {
   nome.textContent = carta.nome || 'Carta de domínio';
   cabecalho.append(nome);
 
-  if (chave(carta.nome) === chave('Tocado do Esplendor')) {
+  const ehTocado = chave(carta.nome) === chave('Tocado do Esplendor');
+  if (ehTocado) {
+    const refs = referenciasAtivasDaFicha(ficha);
+    const ativas = refs.map((ref) => acharCartaNoCatalogo(catalogo, ref)).filter(Boolean);
+    const splendorAtivas = ativas.filter((c) => chave(c?.dominio) === chave('SPLENDOR')).length;
+    const uso = Math.max(0, Number(ficha?.contadores?.['uso:carta:splendor:tocado-do-esplendor']?.valor) || 0);
+    const disponivel = splendorAtivas >= 4 && uso < 1;
+
     const selo = document.createElement('span');
     selo.className = 'texto-xs texto-fraco';
-    selo.textContent = 'substitui PV';
+    selo.textContent = uso >= 1 ? 'já usado' : `${splendorAtivas}/4 Esplendor`;
     cabecalho.append(selo);
+
+    const escolha = document.createElement('select');
+    escolha.className = 'campo__entrada';
+    escolha.dataset.l9TocadoDoEsplendor = '1';
+    escolha.disabled = !disponivel;
+    escolha.setAttribute('aria-label', 'Usar Tocado do Esplendor neste dano');
+    [
+      ['', disponivel ? 'Não usar nesta vez' : (uso >= 1 ? 'Indisponível até o descanso longo' : 'Exige 4 cartas de Esplendor ativas')],
+      ['estresse', 'Substituir os PV por igual quantidade de Estresse'],
+      ['esperanca', 'Substituir os PV por igual quantidade de Esperança']
+    ].forEach(([valor, rotulo]) => {
+      const option = document.createElement('option');
+      option.value = valor;
+      option.textContent = rotulo;
+      escolha.append(option);
+    });
+    item.append(cabecalho);
+
+    const texto = document.createElement('p');
+    texto.className = 'texto-sm';
+    texto.textContent = String(carta.texto || '').trim();
+    item.append(texto, escolha);
+    return item;
   }
 
   const texto = document.createElement('p');
   texto.className = 'texto-sm';
   texto.textContent = String(carta.texto || '').trim();
-
   item.append(cabecalho, texto);
 
   const manual = carta.resolucaoManual?.gatilho;
@@ -190,7 +219,7 @@ async function enriquecerModalDeDano(raiz = document) {
     explicacao.className = 'texto-xs texto-fraco';
     explicacao.textContent = 'Só aparecem cartas que estão ativas nesta ficha. O app não inventa alvo, alcance nem resultado de dado.';
 
-    bloco.append(titulo, explicacao, ...cartas.map(criarCartaoDeDano));
+    bloco.append(titulo, explicacao, ...cartas.map((carta) => criarCartaoDeDano(carta, ficha, catalogo)));
 
     const avisoFinal = [...conteudo.querySelectorAll('p')].find((p) =>
       (p.textContent || '').includes('O app só aplica as reações que você marcar')

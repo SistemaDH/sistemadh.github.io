@@ -1157,3 +1157,14 @@ Este bloco sincroniza o HANDOFF com o estado já integrado de B6–B28. **Não a
 ### Contrato permanente do Lote 9
 
 O CI de `newedit` deve continuar executando, além da suíte funcional existente, o baseline mobile nas três viewports. Mudanças futuras não devem "resolver" alertas simplesmente aumentando tudo: a distinção entre **desenho visual** e **área real de toque** é parte da arquitetura da ficha. Componentes densos só podem permanecer compactos quando estiverem explicitamente cobertos pelo contrato acima; novos casos exigem decisão consciente e teste correspondente.
+
+
+### Diário — Lote 9: dano recebido e cartas ativas
+
+- O bloco completo de Esperança (título, explicação, trilha e característica) foi posicionado após `Aplicar dano recebido` no HUD de combate.
+- `Tocado do Esplendor` agora participa do mesmo ajuste atômico de dano: somente quando a carta está ativa, há 4+ cartas de Esplendor ativas e o uso de 1/descanso longo está disponível.
+- Depois de Armadura e demais reduções, se ainda houver PV a marcar, o jogador pode substituir todos eles pela mesma quantidade de Estresse ou gastar a mesma quantidade de Esperança; recurso insuficiente ou uso inválido não altera a ficha nem consome o uso.
+- O modal de dano continua mostrando apenas cartas de dano presentes no loadout ativo. Cartas que dependem de alvo, alcance, origem do ataque ou rolagem manual permanecem informativas em vez de receber automação insegura.
+- `Na Beira` continua passiva no motor; cartas contextuais continuam sem aplicação automática até o fluxo possuir todos os dados necessários.
+- Fonte de regra do Tocado: `data/cartas-dominio.json` / Core 1.0 adotado pelo projeto. A regra atual exige 4+ Esplendor e recupera o uso apenas no descanso longo.
+- Arquivos: `js/telas/ficha.js`, `js/lote9-dano.js`, `backend/4C_Ajustes.gs`, `tools/testes-backend.mjs`.

@@ -9194,6 +9194,45 @@ teste('Tocado do Esplendor exige 4 cartas para +3 no limiar Grave',()=>{
   verdade(contexto.aplicarAjustes_(quatro,[{tipo:'usarCarta',carta:'splendor-tocado-do-esplendor'}]).erros.length===1);
 });
 
+teste('Tocado do Esplendor substitui atomicamente os PV finais por Estresse ou Esperança',()=>{
+  const ativas=['splendor-tocado-do-esplendor','splendor-golpe-curativo','splendor-zona-de-protecao','splendor-restauracao'];
+  const porEstresse=fichaSplendorAlta_(7,ativas);
+  const dano=Math.max(1,Number(porEstresse.defesas.limiarMaior)||1);
+  let r=contexto.aplicarAjustes_(porEstresse,[{tipo:'dano',dano,tipoDeDano:'fisico',reacoes:[],tocadoDoEsplendor:'estresse'}]);
+  igual(r.erros,[]);
+  const m=r.mudancas[0];
+  verdade(m.tocadoDoEsplendor && m.tocadoDoEsplendor.pvSubstituidos>0,'deveria registrar a substituição');
+  igual(m.pvMarcados,0); igual(porEstresse.recursos.pontosDeVidaMarcados,0);
+  igual(porEstresse.recursos.estresseMarcado,m.tocadoDoEsplendor.pvSubstituidos);
+  igual(porEstresse.contadores['uso:carta:splendor:tocado-do-esplendor'].valor,1);
+
+  const antes=JSON.stringify(porEstresse);
+  r=contexto.aplicarAjustes_(porEstresse,[{tipo:'dano',dano,tipoDeDano:'fisico',reacoes:[],tocadoDoEsplendor:'esperanca'}]);
+  verdade(r.erros.length===1,'não pode usar Tocado duas vezes no mesmo descanso longo');
+  igual(JSON.stringify(porEstresse),antes,'falha deve ser atômica');
+
+  const porEsperanca=fichaSplendorAlta_(7,ativas);
+  r=contexto.aplicarAjustes_(porEsperanca,[{tipo:'dano',dano,tipoDeDano:'fisico',reacoes:[],tocadoDoEsplendor:'esperanca'}]);
+  igual(r.erros,[]);
+  igual(porEsperanca.recursos.esperanca,6-r.mudancas[0].tocadoDoEsplendor.pvSubstituidos);
+  igual(porEsperanca.recursos.pontosDeVidaMarcados,0);
+});
+
+teste('Tocado do Esplendor recusa loadout incompleto e recurso insuficiente sem consumir uso',()=>{
+  const tres=fichaSplendorAlta_(7,['splendor-tocado-do-esplendor','splendor-golpe-curativo','splendor-zona-de-protecao']);
+  const dano=Math.max(1,Number(tres.defesas.limiarMaior)||1);
+  let r=contexto.aplicarAjustes_(tres,[{tipo:'dano',dano,tipoDeDano:'fisico',reacoes:[],tocadoDoEsplendor:'estresse'}]);
+  verdade(r.erros.length===1,'3 cartas de Esplendor não habilitam Tocado');
+  verdade(!tres.contadores['uso:carta:splendor:tocado-do-esplendor'],'não deve consumir uso');
+
+  const quatro=fichaSplendorAlta_(7,['splendor-tocado-do-esplendor','splendor-golpe-curativo','splendor-zona-de-protecao','splendor-restauracao']);
+  quatro.recursos.esperanca=0;
+  r=contexto.aplicarAjustes_(quatro,[{tipo:'dano',dano,tipoDeDano:'fisico',reacoes:[],tocadoDoEsplendor:'esperanca'}]);
+  verdade(r.erros.length===1,'Esperança insuficiente deve recusar a substituição');
+  verdade(!quatro.contadores['uso:carta:splendor:tocado-do-esplendor'],'não deve consumir uso em falha');
+  igual(quatro.recursos.pontosDeVidaMarcados,0);
+});
+
 teste('Golpe Curativo e Aura de Escudo cobram apenas custos da própria ficha',()=>{
   const f=fichaSplendorAlta_(8,['splendor-golpe-curativo','splendor-aura-de-escudo']);
   let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-golpe-curativo'}]);
