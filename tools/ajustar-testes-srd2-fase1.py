@@ -49,11 +49,11 @@ function comCartaDoNivelTeste_(ficha, escolhas = {}) {
 }
 
 function previaAvancoComCartaTeste_(ficha, escolhas = {}) {
-  return contexto.previaDoAvanco_(ficha, comCartaDoNivelTeste_(ficha, escolhas));
+  return contexto['previaDoAvanco_'](ficha, comCartaDoNivelTeste_(ficha, escolhas));
 }
 
 function aplicarAvancoComCartaTeste_(ficha, escolhas = {}) {
-  return contexto.aplicarAvanco_(ficha, comCartaDoNivelTeste_(ficha, escolhas));
+  return contexto['aplicarAvanco_'](ficha, comCartaDoNivelTeste_(ficha, escolhas));
 }
 '''
 one(anchor, helper, 'inserir helpers de carta')
