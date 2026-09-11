@@ -1,0 +1,32 @@
+name: TEMP Lote 9 B24 dano mobile
+
+on:
+  push:
+    branches: [tmp-lote9-b24-dano-mobile-sol]
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - run: npm run teste:sintaxe
+      - run: npx playwright install --with-deps chromium
+      - name: Título do bloco de dano
+        run: npm run teste:layout-dano-mobile
+      - name: Layout mobile atual
+        run: npm run teste:layout-mobile
+      - name: Guardar ficha mobile
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lote9-b24-dano
+          path: artifacts/layout-mobile
+          if-no-files-found: warn
