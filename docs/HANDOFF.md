@@ -1081,6 +1081,79 @@ O teste mobile deixa de aceitar genericamente qualquer controle entre 24 e 43px.
 
 Qualquer outro controle ativo que apareça entre 24 e 43px passa a ser **regressão de CI**. Ações independentes mantêm piso de 44px; controles ativos não-inline mantêm piso absoluto de 24px; texto visível mantém piso de 12px.
 
+### B6–B13 — baseline responsivo e compactação dos fluxos principais
+
+Registro consolidado a partir do histórico real da branch `newedit`:
+
+- **B6 — baseline responsivo:** consolidou a medição responsiva do Lote 9 para além das três larguras de celular e passou a preservar também o comportamento em telas maiores;
+- **B7 — Mochila mobile:** agrupou ações secundárias, manteve a mochila compacta em 360/390px, ativou ações compactas e adaptou o E2E ao menu mobile;
+- **B8 — prévia de subclasse:** compactou a prévia de subclasse no mobile sem alterar a regra de escolha;
+- **B9 — cabeçalho e ouro:** refinou o cabeçalho da ficha e a apresentação de Ouro no mobile;
+- **B10 — subclasse em celulares estreitos:** reforçou a compactação da subclasse nas menores larguras suportadas;
+- **B11 — Mestre/Bestiário:** criou baseline dedicado do painel do Mestre, melhorou alvos de toque e transformou os filtros do Bestiário em **scroller horizontal intencional** no mobile. Ver uma pílula parcialmente visível na borda direita é indicação de continuidade da rolagem, não overflow a ser “corrigido”;
+- **B12 — busca do Bestiário:** manteve a busca acessível/sticky durante a rolagem e adicionou proteção específica para o estado rolado;
+- **B13 — criação mobile:** registrou baseline dedicado do fluxo de criação nas larguras 360/390/430px.
+
+### B14–B21 — fluxos mobile específicos
+
+- **B14 — Regras:** passou a medir e proteger o modal de Regras também depois da rolagem, aguardando corretamente a animação antes das medições;
+- **B15 — progresso da criação:** estabilizou o contador da criação, separou a etapa do livro do passo do assistente e removeu uma mutação recursiva do contador;
+- **B16 — abertura:** adicionou proteção dedicada da tela inicial e removeu o token visual fantasma do botão de mostrar código;
+- **B17 — foto:** passou a proteger explicitamente o zoom/visualização de foto em 360/390/430px;
+- **B18 — ajuda da criação:** permitiu recolher a ajuda no mobile para reduzir altura ocupada sem remover o conteúdo;
+- **B19 — editor de adversário:** refinou o editor no mobile, manteve ações acessíveis/fixas quando necessário, permitiu recolher a receita e adicionou cobertura dedicada;
+- **B20 — hierarquia da abertura:** separou os CTAs da tela inicial no mobile e passou a testar a hierarquia entre as ações;
+- **B21 — Ajustes:** registrou baseline de Ajustes/conexão no mobile e colocou essa tela no gate permanente.
+
+### B22–B28 — fechamento do refino mobile
+
+- **B22 — Avanço:** adicionou resumo sticky no modal de avanço, fixou sua posição no topo e criou proteção permanente em 360/390/430px;
+- **B23 — Descanso:** refinou orientação, ações fixas e rótulos do fluxo de descanso; o CTA de prévia e os rótulos completos do stepper permanecem protegidos em telas estreitas;
+- **B24 — Dano:** corrigiu o título semântico do bloco de dano/HUD e criou baseline para impedir o retorno do título antigo;
+- **B25 — Mochila / Itens em uso:** separou visualmente os itens equipados/em uso do inventário comum e criou `teste:layout-mochila-em-uso-mobile`;
+- **B26 — Conjuração:** em até 390px, `.retrato__conj` usa `text-wrap: balance` para impedir pontuação órfã em “traço de Conjuração.”; protegido por `teste:layout-conjuracao-mobile`;
+- **B27 — proteção permanente da Mochila:** incorporou o teste específico de “Itens em uso” ao CI oficial de `newedit` e aos artefatos visuais;
+
+### B28 — feedback transitório respeita o contexto da ficha
+
+Integrado em `c1477bb0879efebaa27cc2b617f6bfbffd4b7d2a`. CI oficial de integração: run `34556025417`, verde.
+
+- ao tocar em **Abrir ficha** no roster, feedback transitório do contexto anterior (`sucesso`/`info`, por exemplo `Ficha criada.`) é limpo antes da entrada;
+- `alerta` e `erro` não são apagados por essa transição;
+- a regressão é protegida por `teste:layout-toast-contexto-mobile` em 360/390px;
+- o gate temporário completo do B28 foi o run `34555731249`, também verde.
+
+### Checkpoint operacional após B28
+
+Na referência acima, `newedit` está em `c1477bb0879efebaa27cc2b617f6bfbffd4b7d2a`. O CI permanente executa, além de sintaxe/backend/gerados/CSS/auditoria Core/E2E:
+
+- `teste:layout-mobile` — 360/390/430;
+- `teste:layout-conjuracao-mobile` — 360/390;
+- `teste:layout-toast-contexto-mobile` — 360/390;
+- `teste:layout-mestre-mobile` — 360/390/430, incluindo editor de adversário;
+- `teste:layout-criacao-mobile` — 360/390/430, incluindo ajuda da criação;
+- `teste:layout-regras-mobile` — 360/390/430 + estado rolado;
+- `teste:layout-abertura-mobile` — 360/390/430 + mostrar código/CTAs;
+- `teste:layout-ajustes-mobile` — 360/390/430 + conexão;
+- `teste:layout-avanco-mobile` — 360/390/430 + resumo sticky;
+- `teste:layout-descanso-mobile` — 360/390/430 + ações fixas;
+- `teste:layout-dano-mobile` — 360/768;
+- `teste:layout-mochila-em-uso-mobile` — 360/390/430;
+- `teste:layout-foto-mobile` — 360/390/430 + zoom;
+- `teste:layout-responsivo` — 768/1024/1440.
+
+Decisões que não devem ser revertidas por “correções” puramente visuais:
+
+1. os filtros do Bestiário são um **scroller horizontal intencional** no mobile;
+2. “Itens em uso” da Mochila deve continuar separado do inventário e coberto pelo teste dedicado;
+3. a frase de Conjuração deve continuar sem pontuação órfã nas larguras estreitas;
+4. `sucesso/info` do roster não deve atravessar para a ficha, mas `alerta/erro` deve sobreviver;
+5. o contrato B5 de compactos intencionais continua valendo; não aumentar indiscriminadamente todos os componentes para silenciar diagnósticos.
+
+### B29 — sincronização documental de continuidade
+
+Este bloco sincroniza o HANDOFF com o estado já integrado de B6–B28. **Não altera comportamento da aplicação, regras de Daggerheart, Supabase ou dados**; o diff final do B29 deve conter apenas `docs/HANDOFF.md`. O workflow temporário usado para validar esta sincronização deve ser removido antes da promoção para `newedit`.
+
 ### Contrato permanente do Lote 9
 
 O CI de `newedit` deve continuar executando, além da suíte funcional existente, o baseline mobile nas três viewports. Mudanças futuras não devem "resolver" alertas simplesmente aumentando tudo: a distinção entre **desenho visual** e **área real de toque** é parte da arquitetura da ficha. Componentes densos só podem permanecer compactos quando estiverem explicitamente cobertos pelo contrato acima; novos casos exigem decisão consciente e teste correspondente.
