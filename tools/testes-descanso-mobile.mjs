@@ -125,6 +125,19 @@ async function auditar(page, viewport, estado, {
     if (Math.abs(ar.bottom - mr.bottom) > 2) {
       erros.push(`ações não encostam no rodapé: modal=${mr.bottom.toFixed(1)}, ações=${ar.bottom.toFixed(1)}`);
     }
+
+    acoes.querySelectorAll('.btn').forEach((botao) => {
+      const br = botao.getBoundingClientRect();
+      const nome = (botao.textContent || 'botão').trim();
+      if (br.left < mr.left - 1 || br.right > mr.right + 1) {
+        erros.push(`ação "${nome}" saiu da largura do modal`);
+      }
+      if (br.height < 43.5) erros.push(`ação "${nome}" mede ${br.height.toFixed(1)}px de altura`);
+      if (botao.scrollWidth > botao.clientWidth + 1) {
+        erros.push(`texto da ação "${nome}" transbordou (${botao.scrollWidth}px > ${botao.clientWidth}px)`);
+      }
+    });
+
     if (etapas.children.length !== 3) erros.push(`indicador tem ${etapas.children.length} etapas; esperava 3`);
     if (atual.dataset.etapa !== String(etapa)) {
       erros.push(`etapa atual=${atual.dataset.etapa}; esperava ${etapa}`);
