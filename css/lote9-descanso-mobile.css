@@ -51,6 +51,14 @@
     gap: var(--e2);
   }
 
+  /* Na prévia, o fluxo original usa um .crescer vazio entre Voltar e
+     Confirmar. Em 360px ele roubava um terço da linha e fazia o texto do CTA
+     dourado escapar do botão. Com as ações fixas, esse espaçador não é mais
+     necessário: os dois botões dividem a largura disponível. */
+  .modal__caixa--descanso > .modal__acoes > .linha > .crescer:empty {
+    display: none;
+  }
+
   .modal__caixa--descanso .descanso__contagem {
     display: none;
   }
