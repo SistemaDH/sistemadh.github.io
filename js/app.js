@@ -10,7 +10,7 @@ import { obterEstado, assinar, acoes, estaLogado, ehMestre } from './estado.js';
 import { avisarErro, avisar } from './ui.js';
 import { mensagemDoErro } from './api.js';
 import { telaAbertura } from './telas/abertura.js';
-import { telaRoster } from './telas/roster.js';
+import { telaRoster } from './telas/roster.js?v=20260911c';
 import { abrirAjustes } from './telas/ajustes.js';
 import { botaoDeRegras } from './telas/regras.js';
 import { icone } from './componentes/icone.js';

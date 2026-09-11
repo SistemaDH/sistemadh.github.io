@@ -8529,6 +8529,24 @@ function fichaBladeAlta_(nivel, cartas, ancestralidade='Humano') {
  const b=contexto.fichaRapida_({nome:'Blade alta',classe:'Guerreiro',subclasse:'Chamada dos Bravos',ancestralidade,comunidade:'Loreborne',cartas:['blade-levantar-se','blade-nao-foi-suficiente'],experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]});
  b.identidade.nivel=nivel;b.cartas={ativas:cartas.slice(),cofre:[]};const f=contexto.validarFicha_(b);f.recursos.esperanca=6;f.recursos.estresseMarcado=0;return f;
 }
+teste('Levantar-Se aparece como reacao real: reduz Severo e cobra 1 Estresse',()=>{
+  const f=fichaBladeAlta_(1,['blade-levantar-se']);
+  const grave=Number(f.defesas.limiarGrave);
+  const pvAntes=Number(f.recursos.pontosDeVidaMarcados)||0;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:grave,tipoDeDano:'fisico',reacoes:['Levantar-Se']}]);
+  igual(r.erros,[]); igual(f.recursos.pontosDeVidaMarcados,pvAntes+2); igual(f.recursos.estresseMarcado,1);
+  igual(r.mudancas[0].reacoes,['Levantar-Se']);
+});
+
+teste('Levantar-Se nao pode ser inventada pelo cliente quando a carta nao esta ativa',()=>{
+  const f=fichaBladeAlta_(1,[]);
+  const grave=Number(f.defesas.limiarGrave);
+  const pvAntes=Number(f.recursos.pontosDeVidaMarcados)||0;
+  const stressAntes=Number(f.recursos.estresseMarcado)||0;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:grave,tipoDeDano:'fisico',reacoes:['Levantar-Se']}]);
+  verdade(r.erros.length===1); igual(f.recursos.pontosDeVidaMarcados,pvAntes); igual(f.recursos.estresseMarcado,stressAntes);
+});
+
 teste('Endurecido pela Batalha cobra Esperança, limpa PV e respeita 1/descanso longo',()=>{const f=fichaBladeAlta_(6,['blade-endurecido-pela-batalha','blade-furia-crescente']);f.recursos.pontosDeVidaMarcados=2;let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'blade-endurecido-pela-batalha'}]);igual(r.erros,[]);igual(f.recursos.esperanca,5);igual(f.recursos.pontosDeVidaMarcados,1);verdade(contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'blade-endurecido-pela-batalha'}]).erros.length>0);});
 teste('Fúria Crescente permite 1 ou 2 custos e Inabalável intercepta somente cada +1',()=>{const f=fichaBladeAlta_(6,['blade-furia-crescente','blade-endurecido-pela-batalha']);let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'blade-furia-crescente',usosNesteAtaque:2}]);igual(r.erros,[]);igual(f.recursos.estresseMarcado,2);});
 teste('Tocado pela Lâmina exige quatro cartas Lâmina ativas para +2 ataque e +4 Severo',()=>{const f=fichaBladeAlta_(7,['blade-tocado-pela-lamina','blade-golpe-raso','blade-furia-crescente','blade-endurecido-pela-batalha']);const d=contexto.derivadosDoPersonagem_(f);igual(d.bonusAtaque,2);const g=fichaBladeAlta_(7,['blade-tocado-pela-lamina','blade-golpe-raso','blade-furia-crescente']);igual(contexto.derivadosDoPersonagem_(g).bonusAtaque,0);});
