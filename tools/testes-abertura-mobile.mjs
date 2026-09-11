@@ -58,6 +58,34 @@ async function auditarEstado(page, viewport, tela, esperado) {
       if (!input) erros.push(`#${id} ausente`);
       else if (input.type !== tipo) erros.push(`#${id} está ${input.type}; esperado ${tipo}`);
     }
+
+    if (esperado.ctas) {
+      const form = document.querySelector('.abertura form');
+      const principal = form?.querySelector('button[type="submit"]');
+      const troca = form?.querySelector('.abertura__troca');
+      const secundaria = troca?.querySelector('button');
+      if (!principal) erros.push('CTA principal ausente');
+      else {
+        if (principal.textContent.trim() !== esperado.ctas.principal) {
+          erros.push(`CTA principal é "${principal.textContent.trim()}"; esperado "${esperado.ctas.principal}"`);
+        }
+        if (!principal.classList.contains('btn--principal')) erros.push('CTA principal perdeu hierarquia dourada');
+        const r = principal.getBoundingClientRect();
+        if (r.width < 43.5 || r.height < 43.5) erros.push('CTA principal abaixo de 44px');
+      }
+      if (!secundaria) erros.push('CTA secundário de troca ausente');
+      else {
+        if (secundaria.textContent.trim() !== esperado.ctas.secundaria) {
+          erros.push(`CTA secundário é "${secundaria.textContent.trim()}"; esperado "${esperado.ctas.secundaria}"`);
+        }
+        if (!secundaria.classList.contains('btn--fantasma')) erros.push('CTA secundário não está visualmente subordinado');
+        const r = secundaria.getBoundingClientRect();
+        if (r.width < 43.5 || r.height < 43.5) erros.push('CTA secundário abaixo de 44px');
+        if ((troca.textContent || '').trim() !== esperado.ctas.secundaria) {
+          erros.push('troca de modo voltou a ter texto auxiliar redundante');
+        }
+      }
+    }
     return erros;
   }, esperado);
 
@@ -83,7 +111,8 @@ async function executar(viewport) {
     await page.waitForSelector('.abertura__titulo', { timeout: 10000 });
     await auditarEstado(page, viewport, 'jogador-oculto', {
       botoes: 1,
-      tipos: { codigo: 'password' }
+      tipos: { codigo: 'password' },
+      ctas: { principal: 'Entrar', secundaria: 'Criar acesso' }
     });
 
     const segredo = `segredo-${viewport.width}`;
@@ -92,7 +121,8 @@ async function executar(viewport) {
     if (await page.inputValue('#codigo') !== segredo) registrar(viewport, 'valor-login', ['valor mudou ao mostrar']);
     await auditarEstado(page, viewport, 'jogador-visivel', {
       botoes: 1,
-      tipos: { codigo: 'text' }
+      tipos: { codigo: 'text' },
+      ctas: { principal: 'Entrar', secundaria: 'Criar acesso' }
     });
     await page.locator('.abertura__codigoAcao').click();
     if (await page.inputValue('#codigo') !== segredo) registrar(viewport, 'valor-login-ocultar', ['valor mudou ao ocultar']);
@@ -107,7 +137,8 @@ async function executar(viewport) {
     }
     await auditarEstado(page, viewport, 'cadastro-independente', {
       botoes: 2,
-      tipos: { codigo: 'password', codigo2: 'text' }
+      tipos: { codigo: 'password', codigo2: 'text' },
+      ctas: { principal: 'Criar meu acesso', secundaria: 'Entrar' }
     });
 
     await page.getByRole('tab', { name: 'Mestre' }).click();
