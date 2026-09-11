@@ -36,7 +36,7 @@ async function abrirAjustes(page) {
 }
 
 async function auditar(page, viewport, estado, { conexao, detalhesAbertos, detalheTecnico }) {
-  const erros = await page.evaluate(({ conexao, detalhesAbertos, detalheTecnico }) => {
+  const erros = await page.evaluate(({ conexao, detalhesAbertos }) => {
     const erros = [];
     const largura = document.documentElement.clientWidth;
     const altura = innerHeight;
@@ -73,22 +73,12 @@ async function auditar(page, viewport, estado, { conexao, detalhesAbertos, detal
     const estilo = getComputedStyle(detalhe);
     const visivel = estilo.display !== 'none' && estilo.visibility !== 'hidden' && detalhe.getBoundingClientRect().height > 0;
     if (detalhesAbertos !== visivel) erros.push(`detalhe visível=${visivel}; esperava ${detalhesAbertos}`);
-    if (detalhesAbertos && detalheTecnico && !detalheTecnico.test(detalhe.textContent || '')) {
-      erros.push(`detalhe técnico inesperado: "${(detalhe.textContent || '').trim()}"`);
-    }
     return erros;
-  }, {
-    conexao,
-    detalhesAbertos,
-    detalheTecnico: detalheTecnico ? { source: detalheTecnico.source, flags: detalheTecnico.flags } : null
-  }).catch(() => ['falha ao avaliar a estrutura dos Ajustes']);
+  }, { conexao, detalhesAbertos });
 
-  // RegExp não atravessa evaluate serializado; valida o conteúdo textual aqui.
   if (detalhesAbertos && detalheTecnico) {
     const texto = (await page.locator('[data-ajustes-conexao-detalhe]').textContent()) || '';
-    if (!detalheTecnico.test(texto) && !erros.some((e) => e.startsWith('detalhe técnico inesperado'))) {
-      erros.push(`detalhe técnico inesperado: "${texto.trim()}"`);
-    }
+    if (!detalheTecnico.test(texto)) erros.push(`detalhe técnico inesperado: "${texto.trim()}"`);
   }
 
   await page.screenshot({ path: `${PASTA}/${viewport.nome}-${estado}.png`, fullPage: true });
