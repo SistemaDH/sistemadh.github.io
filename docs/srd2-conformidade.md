@@ -45,7 +45,7 @@ O lote só pode ser declarado concluído quando:
 
 O corpus auxiliar pinado registra 1.539 registros: 10 domínios, 13 classes, 26 subclasses, 25 registros de ancestralidade (24 ancestralidades nomeadas + a regra de ancestralidade mista), 15 comunidades, 6 transformações, 24 formas de fera, 358 armas, 76 armaduras, 120 itens, 120 consumíveis, 264 adversários, 47 ambientes, 210 cartas de domínio e 224 registros de regras, além do registro de fonte.
 
-O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. `npm run teste:srd2-cobertura` impede alteração acidental das contagens ou uso de um estado desconhecido. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
+O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. O inventário individual fica em `data/srd2-inventario.json`: cada um dos 1.539 registros preserva ID, nome inglês, tipo, hash do registro no corpus, estado de implementação e, quando aplicável, `sourceLocator`. `npm run teste:srd2` impede alteração acidental das contagens, IDs, hashes estruturais ou estados. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
 
 ## Fase 1 — Level Up
 

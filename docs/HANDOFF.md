@@ -49,13 +49,14 @@ Validação da Fase 1:
 
 - GitHub Actions `SRD2 fase 1` run **#13** (`34632488061`): `success`;
 - sintaxe: 84 arquivos antes do auditor de tradução; backend: **951/951**; gerados: **14/14**; CSS, E2E e baterias responsivas verdes;
-- após os auditores novos: sintaxe local **86 arquivos**, `npm run teste:srd2` verde, backend **951/951**, gerados **14/14**, CSS limpo.
+- após os auditores e o gerador de inventário: sintaxe local **88 arquivos**, `npm run teste:srd2` verde, backend **951/951**, gerados **14/14**, CSS limpo.
 
 ### Tradução e cobertura
 
 - `data/srd2-traducao.json`: vocabulário obrigatório pt-BR; termos do Core são preservados e nomes novos de *Hope & Fear* ficam provisórios até existir tradução oficial;
 - `data/srd2-fonte.json`: fonte, hashes, erratas e pin do corpus;
 - `data/srd2-cobertura.json`: estado das 16 coleções; não considerar conteúdo antigo como conferido por semelhança;
+- `data/srd2-inventario.json`: 1.539 IDs individuais com nome inglês, tipo, `sourceLocator` quando aplicável, hash do corpus e estado; somente a fonte e as regras `leveling-up`/`multiclassing` saem do estado pendente neste checkpoint (1 fonte conferida, 2 mecânicas implementadas, 1.536 pendentes);
 - `docs/srd2-conformidade.md`: critério formal para declarar 100%;
 - CI: `npm run teste:srd2` valida tradução e matriz de cobertura.
 

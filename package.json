@@ -23,13 +23,15 @@
     "teste:layout-foto-mobile": "node tools/testes-foto-mobile.mjs",
     "teste:layout-responsivo": "node tools/testes-layout-responsivo.mjs",
     "teste:css": "node tools/conferir-css.mjs",
-    "teste:tudo": "npm run teste:sintaxe && npm run teste:css && npm run teste && npm run teste:gerados && npm run teste:e2e",
+    "teste:tudo": "npm run teste:sintaxe && npm run teste:css && npm run teste && npm run teste:gerados && npm run teste:srd2 && npm run teste:e2e",
     "teste:sintaxe": "node tools/conferir-sintaxe.mjs",
     "teste:gerados": "node tools/conferir-gerados.mjs",
     "teste:auditoria": "python3 tools/auditar-pendencias-lote8.py",
     "teste:srd2-traducao": "node tools/conferir-srd2-traducao.mjs",
     "teste:srd2-cobertura": "node tools/conferir-srd2-cobertura.mjs",
-    "teste:srd2": "npm run teste:srd2-traducao && npm run teste:srd2-cobertura"
+    "gerar:srd2-inventario": "node tools/gerar-srd2-inventario.mjs",
+    "teste:srd2-inventario": "node tools/conferir-srd2-inventario.mjs",
+    "teste:srd2": "npm run teste:srd2-traducao && npm run teste:srd2-cobertura && npm run teste:srd2-inventario"
   },
   "devDependencies": {
     "playwright": "1.62.1"
