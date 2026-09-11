@@ -45,6 +45,8 @@ jobs:
         run: npm run teste:layout-abertura-mobile
       - name: Ajustes mobile 360 / 390 / 430 + conexão
         run: npm run teste:layout-ajustes-mobile
+      - name: Avanço mobile 360 / 390 / 430 + resumo sticky
+        run: npm run teste:layout-avanco-mobile
       - name: Foto mobile 360 / 390 / 430 + zoom
         run: npm run teste:layout-foto-mobile
       - name: Layout responsivo 768 / 1024 / 1440
@@ -94,6 +96,13 @@ jobs:
         with:
           name: layout-ajustes-mobile-${{ github.run_id }}
           path: artifacts/layout-ajustes-mobile
+          if-no-files-found: warn
+      - name: Guardar diagnóstico visual avanço mobile
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: layout-avanco-mobile-${{ github.run_id }}
+          path: artifacts/layout-avanco-mobile
           if-no-files-found: warn
       - name: Guardar diagnóstico visual foto mobile
         if: always()
