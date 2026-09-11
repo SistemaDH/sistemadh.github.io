@@ -118,6 +118,7 @@ function aplicarAjusteDireto_(ficha, a) {
   if (tipo === 'ouro') return ajustarOuroDaFicha_(ficha, a);
   if (tipo === 'inventario') return ajustarInventario_(ficha, a);
   if (tipo === 'arma') return ajustarArmasDaFicha_(ficha, a);
+  if (tipo === 'armadura') return ajustarArmadurasDaFicha_(ficha, a);
   if (tipo === 'compra') return comprarItem_(ficha, a);
   if (tipo === 'fichafilha') return ajustarFichaFilha_(ficha, a);
   if (tipo === 'escolhadeclasse') return ajustarEscolhaDeClasse_(ficha, a);
@@ -1706,6 +1707,114 @@ function ajustarEscolhaDeClasse_(ficha, a) {
   };
 }
 
+/**
+ * ARMADURAS GUARDADAS — posse e uso são coisas diferentes.
+ *
+ * A arma já tinha uma reserva própria porque o Core limita a duas adicionais.
+ * Armadura não tinha lugar equivalente: escolher outra significava apagar a
+ * anterior. `reservaArmaduras` guarda somente IDs canônicos; só `armadura`
+ * participa dos derivados, então uma couraça na mochila não concede benefício.
+ *
+ * O limite 60 é técnico, igual ao da mochila comum — não é uma regra do livro.
+ */
+const LIMITE_ARMADURAS_RESERVA = 60;
+
+function armaduraCanonicaDaReserva_(valor, nivelPersonagem) {
+  const armadura = (typeof acharArmadura_ === 'function') ? acharArmadura_(valor) : null;
+  if (!armadura) return { erro: 'Armadura desconhecida: "' + String(valor) + '".' };
+  const tierMax = (typeof tierDoNivel_ === 'function') ? tierDoNivel_(nivelPersonagem) : 1;
+  if (Number(armadura.tier) > tierMax) {
+    return { erro: '"' + armadura.nome + '" é da tabela de nível ' + armadura.tier +
+      ', acima do patamar disponível para este personagem.' };
+  }
+  return { id: armadura.id, nome: armadura.nome, armadura: armadura };
+}
+
+function validarArmadurasReserva_(ficha) {
+  ficha.equipamento = ficha.equipamento || {};
+  const bruto = ficha.equipamento.reservaArmaduras;
+  const erros = [];
+  if (bruto !== undefined && bruto !== null && !Array.isArray(bruto)) {
+    ficha.equipamento.reservaArmaduras = [];
+    return ['A reserva de armaduras precisa ser uma lista.'];
+  }
+  const lista = Array.isArray(bruto) ? bruto : [];
+  if (lista.length > LIMITE_ARMADURAS_RESERVA) {
+    erros.push('A reserva de armaduras passou do limite técnico de ' + LIMITE_ARMADURAS_RESERVA + ' peças.');
+  }
+  const nivel = Number((ficha.identidade || {}).nivel) || 1;
+  const normalizada = [];
+  for (let i = 0; i < Math.min(lista.length, LIMITE_ARMADURAS_RESERVA); i++) {
+    const r = armaduraCanonicaDaReserva_(lista[i], nivel);
+    if (r.erro) erros.push(r.erro);
+    else normalizada.push(r.id);
+  }
+  ficha.equipamento.reservaArmaduras = normalizada;
+  return erros;
+}
+
+function ajustarArmadurasDaFicha_(ficha, a) {
+  ficha.equipamento = ficha.equipamento || {};
+  const erros = validarArmadurasReserva_(ficha);
+  if (erros.length) return { erro: erros[0] };
+
+  const acao = chaveTexto_(a.acao);
+  const nivel = Number((ficha.identidade || {}).nivel) || 1;
+  const reserva = ficha.equipamento.reservaArmaduras.slice();
+
+  if (acao === 'adicionar') {
+    if (reserva.length >= LIMITE_ARMADURAS_RESERVA) {
+      return { erro: 'A reserva de armaduras chegou ao limite técnico de ' + LIMITE_ARMADURAS_RESERVA + ' peças.' };
+    }
+    const r = armaduraCanonicaDaReserva_(a.armadura, nivel);
+    if (r.erro) return r;
+    if (String(ficha.equipamento.armadura || '') === r.id) {
+      return { erro: '"' + r.nome + '" já está equipada.' };
+    }
+    if (reserva.indexOf(r.id) !== -1) {
+      return { erro: '"' + r.nome + '" já está guardada no inventário de equipamentos.' };
+    }
+    reserva.push(r.id);
+    ficha.equipamento.reservaArmaduras = reserva;
+    return { tipo: 'armadura', acao: 'adicionar', armadura: r.id, reservaArmaduras: reserva.slice() };
+  }
+
+  if (acao === 'remover') {
+    const indice = Math.trunc(Number(a.indice));
+    if (!isFinite(indice) || indice < 0 || indice >= reserva.length) {
+      return { erro: 'Escolha uma armadura guardada válida para remover.' };
+    }
+    const removida = reserva.splice(indice, 1)[0];
+    ficha.equipamento.reservaArmaduras = reserva;
+    return { tipo: 'armadura', acao: 'remover', armadura: removida, reservaArmaduras: reserva.slice() };
+  }
+
+  if (acao !== 'equipar') {
+    return { erro: 'Ação de armadura desconhecida: "' + String(a.acao) + '".' };
+  }
+
+  const r = armaduraCanonicaDaReserva_(a.armadura, nivel);
+  if (r.erro) return r;
+  const indice = reserva.indexOf(r.id);
+  if (indice === -1) return { erro: '"' + r.nome + '" não está guardada no inventário de equipamentos.' };
+
+  const anterior = ficha.equipamento.armadura || null;
+  const desejado = Object.assign({}, ficha.equipamento, { armadura: r.id });
+  const validacao = (typeof validarEquipamento_ === 'function')
+    ? validarEquipamento_(desejado, nivel, ficha)
+    : { ok: true, erros: [] };
+  if (!validacao.ok) return { erro: (validacao.erros || [])[0] || 'Equipamento inválido.' };
+
+  reserva.splice(indice, 1);
+  if (anterior && String(anterior) !== r.id) reserva.push(String(anterior));
+  ficha.equipamento.armadura = r.id;
+  ficha.equipamento.reservaArmaduras = reserva;
+  return {
+    tipo: 'armadura', acao: 'equipar', armadura: r.id,
+    anterior: anterior, reservaArmaduras: reserva.slice()
+  };
+}
+
 /** Máximo do Core: duas armas adicionais no inventário de equipamento. */
 const LIMITE_ARMAS_RESERVA = 2;
 
@@ -2232,14 +2341,74 @@ function grupoExclusivoDeSaque_(registro) {
   return passivo ? String(passivo.grupoExclusivo || '') : '';
 }
 
+/**
+ * Texto de criação antigo que pode voltar a apontar para um item oficial.
+ * "Poção de Vigor Menor" é o nome usado pelo fluxo de criação; o catálogo de
+ * consumíveis usa o sinônimo "Poção de resistência menor".
+ */
+function itemOficialDeNomeLegado_(nome) {
+  if (typeof acharItem_ !== 'function') return null;
+  let item = acharItem_(nome);
+  if (!item && chaveTexto_(nome) === chaveTexto_('Poção de Vigor Menor')) {
+    item = acharItem_('Poção de resistência menor');
+  }
+  return item;
+}
+
+function notaDeItemInicialLegado_(nome) {
+  const chave = chaveTexto_(nome);
+  const comuns = {
+    'uma tocha': 'Item comum das opções iniciais de personagem.',
+    'uma lanterna': 'Item comum das opções iniciais de personagem.',
+    '15 metros de corda': 'Item comum das opções iniciais de personagem.',
+    'suprimentos basicos': 'Suprimentos básicos de viagem: barraca, saco de dormir, caixa de isca, rações e itens semelhantes.',
+    'um punhado de ouro': 'Registro narrativo do equipamento inicial; o ouro utilizável é controlado também pela trilha de Ouro.'
+  };
+  if (comuns[chave]) return comuns[chave];
+
+  if (typeof GUIAS_DE_CLASSE === 'object' && GUIAS_DE_CLASSE) {
+    const guias = Object.keys(GUIAS_DE_CLASSE);
+    for (let g = 0; g < guias.length; g++) {
+      const pares = (((GUIAS_DE_CLASSE[guias[g]] || {}).inventario || {}).escolherEntre) || [];
+      for (let p = 1; p < pares.length; p++) {
+        const opcoes = pares[p] || [];
+        for (let i = 0; i < opcoes.length; i++) {
+          if (chaveTexto_(opcoes[i]) === chave) {
+            return 'Item narrativo oferecido pelo Guia de Caráter na criação. Sem efeito mecânico específico catalogado no app.';
+          }
+        }
+      }
+    }
+  }
+  return '';
+}
+
 /** A mochila inteira na forma nova, sem buracos. */
 function normalizarInventario_(ficha) {
   const lista = Array.isArray(ficha.inventario) ? ficha.inventario : [];
+  const chavesLegado = lista.map(function (bruto) {
+    const nome = (bruto && typeof bruto === 'object') ? bruto.nome : bruto;
+    return chaveTexto_(nome);
+  });
+  const marcadoresCriacao = ['15 metros de corda','Suprimentos básicos','Um punhado de ouro'];
+  let sinaisCriacao = 0;
+  for (let m = 0; m < marcadoresCriacao.length; m++) {
+    if (chavesLegado.indexOf(chaveTexto_(marcadoresCriacao[m])) !== -1) sinaisCriacao++;
+  }
+  const pareceInventarioInicialLegado = sinaisCriacao >= 2;
   const saida = [];
   const gruposEmUso = {};
   for (let i = 0; i < lista.length && saida.length < LIMITE_ITENS_INVENTARIO; i++) {
     const item = itemDeMochila_(lista[i]);
     if (!item) continue;
+    if (!item.id && pareceInventarioInicialLegado) {
+      const oficial = itemOficialDeNomeLegado_(item.nome);
+      if (oficial) { item.id = oficial.id; item.nome = oficial.nome; }
+      else if (!item.nota) {
+        const notaInicial = notaDeItemInicialLegado_(item.nome);
+        if (notaInicial) item.nota = notaInicial;
+      }
+    }
     const grupo = item.emUso ? grupoExclusivoDeSaque_(item) : '';
     if (grupo) {
       if (gruposEmUso[grupo]) item.emUso = false;

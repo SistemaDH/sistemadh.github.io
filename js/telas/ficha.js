@@ -3489,31 +3489,42 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     }, uso.rotulo || `Usar ${carac.nome}`)];
   }
 
-  function verEquipamento(rotulo, item) {
+  function conteudoDeEquipamento(rotulo, item) {
     const carac = item.caracteristica;
+    const pontosArmadura = Number(item.pontuacaoArmadura ?? item.pontuacao) || 0;
     const numeros = item.dano
       ? [linhaDeAtributo('Dano', item.dano), linhaDeAtributo('Traço', item.atributo),
          linhaDeAtributo('Alcance', item.alcance), linhaDeAtributo('Mãos', item.maos)]
       : [linhaDeAtributo('Limiares', item.limiares),
-         linhaDeAtributo('Armadura', item.pontuacaoArmadura)];
+         linhaDeAtributo('Armadura', pontosArmadura)];
+    return el('div', { class: 'pilha' }, [
+      el('p', { class: 'texto-sm texto-fraco', texto: `${rotulo} · patamar ${item.tier}` }),
+      el('div', { class: 'ficha__atributos' }, numeros),
+      carac ? el('div', { class: 'ficha__carac' }, [
+        el('h4', { class: 'ficha__caracNome' }, nomeComGlossa(carac.nome)),
+        el('p', { class: 'texto-sm' }, textoAnotado(carac.texto || ''))
+      ]) : null
+    ]);
+  }
 
+  function verEquipamento(rotulo, item, { montarAcoesExtras, permitirUso = true } = {}) {
     let modal = null;
     const fecharModal = () => { if (modal) modal.fechar(); };
+    const extras = typeof montarAcoesExtras === 'function'
+      ? (montarAcoesExtras(fecharModal) || []) : [];
     modal = abrirModal({
       titulo: item.nome,
-      conteudo: el('div', { class: 'pilha' }, [
-        el('p', { class: 'texto-sm texto-fraco', texto: `${rotulo} · patamar ${item.tier}` }),
-        el('div', { class: 'ficha__atributos' }, numeros),
-        carac ? el('div', { class: 'ficha__carac' }, [
-          el('h4', { class: 'ficha__caracNome' }, nomeComGlossa(carac.nome)),
-          el('p', { class: 'texto-sm' }, textoAnotado(carac.texto || ''))
-        ]) : null
-      ]),
-      acoes: [
+      conteudo: conteudoDeEquipamento(rotulo, item),
+      acoes: permitirUso ? [
         el('button', { type: 'button', class: 'btn btn--fantasma', onClick: fecharModal }, 'Fechar'),
+        ...extras,
         ...botoesDeUsoEquipamento_(item, fecharModal, p.ficha)
+      ] : [
+        el('button', { type: 'button', class: 'btn btn--fantasma', onClick: fecharModal }, 'Fechar'),
+        ...extras
       ]
     });
+    return modal;
   }
 
   /* ======================================================================== *
@@ -4572,7 +4583,7 @@ function ouroEmPunhados(ouro) {
         dano: e.dano || '',
         maos: e.maos || '',
         limiares: e.limiares || '',
-        pontuacao: Number(e.pontuacao) || 0,
+        pontuacaoArmadura: Number(e.pontuacao) || 0,
         caracteristica: e.carac ? { nome: e.carac } : null,
         _moldura: String(e.moldura || nomeMoldura || '')
       });
@@ -4668,7 +4679,10 @@ function ouroEmPunhados(ouro) {
           if (equipado.primaria === item.id || equipado.secundaria === item.id) return 'equipada';
           if ((Array.isArray(equipado.reserva) ? equipado.reserva : []).includes(item.id)) return 'na reserva';
         }
-        if (categoria.id === 'armadura' && equipado.armadura === item.id) return 'equipada';
+        if (categoria.id === 'armadura') {
+          if (equipado.armadura === item.id) return 'equipada';
+          if ((Array.isArray(equipado.reservaArmaduras) ? equipado.reservaArmaduras : []).includes(item.id)) return 'guardada';
+        }
         return '';
       };
 
@@ -4691,15 +4705,15 @@ function ouroEmPunhados(ouro) {
         }
         if (categoria.id === 'armadura') {
           return `Nível ${nivel}: mostrando armaduras permitidas até o patamar ${tierMax}. ` +
-            'Escolher substitui a armadura equipada e o servidor recalcula/valida as defesas.';
+            'Escolher guarda a peça no inventário de equipamentos; depois você decide quando equipá-la.';
         }
         return 'Escolher guarda o item na mochila com o ID oficial, preservando descrição e efeitos mecânicos.';
       };
 
-      const escolher = async (categoria, item, botao) => {
+      const aplicarEscolha = async (categoria, item, botao, aoSucesso) => {
         if (emCompra) {
           aoEscolher(item);
-          if (modal) modal.fechar();
+          if (typeof aoSucesso === 'function') aoSucesso();
           return;
         }
 
@@ -4708,7 +4722,7 @@ function ouroEmPunhados(ouro) {
             [{ tipo: 'inventario', acao: 'adicionar', itemId: item.id }],
             () => {
               campoNovo.value = '';
-              if (modal) modal.fechar();
+              if (typeof aoSucesso === 'function') aoSucesso();
             });
           return;
         }
@@ -4716,29 +4730,41 @@ function ouroEmPunhados(ouro) {
         if (categoria.id === 'arma') {
           acrescentar(botao,
             [{ tipo: 'arma', acao: 'adicionar', arma: item.id }],
-            () => { if (modal) modal.fechar(); });
+            () => { if (typeof aoSucesso === 'function') aoSucesso(); });
           return;
         }
 
         if (categoria.id === 'armadura') {
-          try {
-            const nova = await travarBotao(botao, (async () => {
-              // Um salvamento inteiro não pode passar na frente dos toques já
-              // enfileirados; depois deles, relê para usar a versão mais nova.
-              await aguardar(id);
-              p = await acoes.recarregarPersonagem(id);
-              const ficha = JSON.parse(JSON.stringify(p.ficha || {}));
-              ficha.equipamento = Object.assign({}, ficha.equipamento || {}, { armadura: item.id });
-              return acoes.salvarPersonagem(id, ficha, p.versao);
-            })());
-            p = nova;
-            if (modal) modal.fechar();
-            desenhar();
-            avisarSucesso(`${item.nome} equipada.`);
-          } catch (e) {
-            avisarErro(mensagemDoErro(e));
-          }
+          acrescentar(botao,
+            [{ tipo: 'armadura', acao: 'adicionar', armadura: item.id }],
+            () => { if (typeof aoSucesso === 'function') aoSucesso(); });
         }
+      };
+
+      const abrirPreviaDoCatalogo = (categoria, item) => {
+        let previa = null;
+        const selecionar = el('button', { type: 'button', class: 'btn btn--principal' }, 'Selecionar');
+        const fecharTudo = () => {
+          if (previa) previa.fechar();
+          if (modal) modal.fechar();
+        };
+        selecionar.addEventListener('click', () => aplicarEscolha(categoria, item, selecionar, fecharTudo));
+
+        const conteudo = (categoria.id === 'arma' || categoria.id === 'armadura')
+          ? conteudoDeEquipamento(tipoDoItem(item, categoria), item)
+          : el('div', { class: 'pilha' }, [
+              el('p', { class: 'texto-xs texto-fraco', texto: tipoDoItem(item, categoria) }),
+              el('p', { class: 'texto-sm' }, textoAnotado(item.descricao || 'Sem descrição adicional no catálogo.'))
+            ]);
+
+        previa = abrirModal({
+          titulo: item.nome,
+          conteudo,
+          acoes: [
+            el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => previa.fechar() }, 'Fechar'),
+            selecionar
+          ]
+        });
       };
 
       const categoriaSelecionada = () => categorias.find((c) => c.id === categoriaAtual) || categorias[0];
@@ -4787,7 +4813,7 @@ function ouroEmPunhados(ouro) {
             type: 'button',
             class: `ficha__catalogoItem ${estado ? 'esta-escolhido' : ''}`,
             disabled: Boolean(estado),
-            onClick: () => escolher(categoria, item, botao)
+            onClick: () => abrirPreviaDoCatalogo(categoria, item)
           }, [
             el('span', { class: 'ficha__catalogoNome', texto: item.nome }),
             el('span', { class: 'ficha__catalogoTipo', texto: tipo }),
@@ -5061,6 +5087,83 @@ function ouroEmPunhados(ouro) {
         ])
       ]);
     };
+
+    /*
+     * A Mochila também é onde a pessoa confere O QUE POSSUI como equipamento.
+     * Não duplicamos armas/armaduras em `inventario`: os IDs continuam nos
+     * campos mecânicos próprios e esta lista é só a visão unificada de posse.
+     */
+    const equipamentoPossuido = ficha.equipamento || {};
+    const reservaArmas = Array.isArray(equipamentoPossuido.reserva) ? equipamentoPossuido.reserva : [];
+    const reservaArmaduras = Array.isArray(equipamentoPossuido.reservaArmaduras)
+      ? equipamentoPossuido.reservaArmaduras : [];
+    const linhasEquipamento = [];
+
+    const linhaDeEquipamentoPossuido = (item, estado, aoAbrir) => item ? el('li', {
+      class: 'ficha__item'
+    }, [
+      el('div', { class: 'ficha__itemTexto' }, [
+        el('button', {
+          type: 'button', class: 'ficha__itemNome ficha__itemNome--doLivro',
+          'aria-label': `${item.nome} — ver equipamento`, onClick: aoAbrir
+        }, nomeComGlossa(item.nome)),
+        el('span', { class: 'ficha__itemNota', texto: estado })
+      ])
+    ]) : null;
+
+    const prim = catalogo.acharArma(equipamentoPossuido.primaria);
+    const sec = catalogo.acharArma(equipamentoPossuido.secundaria);
+    const armaduraAtiva = catalogo.acharArmadura(equipamentoPossuido.armadura);
+    if (prim) linhasEquipamento.push(linhaDeEquipamentoPossuido(prim, 'Arma primária · equipada',
+      () => verEquipamento('Arma primária equipada', prim)));
+    if (sec) linhasEquipamento.push(linhaDeEquipamentoPossuido(sec, 'Arma secundária · equipada',
+      () => verEquipamento('Arma secundária equipada', sec)));
+    if (armaduraAtiva) linhasEquipamento.push(linhaDeEquipamentoPossuido(armaduraAtiva, 'Armadura · equipada',
+      () => verEquipamento('Armadura equipada', armaduraAtiva)));
+
+    reservaArmas.forEach((armaId) => {
+      const arma = catalogo.acharArma(armaId);
+      if (arma) linhasEquipamento.push(linhaDeEquipamentoPossuido(arma, 'Arma · reserva',
+        () => verEquipamento('Arma na reserva', arma, { permitirUso: false })));
+    });
+    reservaArmaduras.forEach((armaduraId, indice) => {
+      const armadura = catalogo.acharArmadura(armaduraId);
+      if (!armadura) return;
+      linhasEquipamento.push(linhaDeEquipamentoPossuido(armadura, 'Armadura · guardada', () =>
+        verEquipamento('Armadura guardada', armadura, {
+          permitirUso: false,
+          montarAcoesExtras: (fechar) => [
+            el('button', {
+              type: 'button', class: 'btn btn--fantasma',
+              onClick: async (ev) => {
+                const r = await travarBotao(ev.currentTarget,
+                  enviar([{ tipo: 'armadura', acao: 'remover', indice }]));
+                if (r) fechar();
+              }
+            }, 'Remover'),
+            el('button', {
+              type: 'button', class: 'btn btn--principal',
+              onClick: async (ev) => {
+                const r = await travarBotao(ev.currentTarget,
+                  enviar([{ tipo: 'armadura', acao: 'equipar', armadura: armadura.id }]));
+                if (r) fechar();
+              }
+            }, 'Equipar')
+          ]
+        })));
+    });
+
+    pai.append(secao('Equipamentos', el('div', { class: 'coluna' }, [
+      linhasEquipamento.length
+        ? el('ul', { class: 'ficha__inventario', 'aria-label': 'Equipamentos possuídos' }, linhasEquipamento)
+        : el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhum equipamento registrado.' }),
+      el('p', { class: 'texto-xs texto-fraco', texto:
+        'Equipado é um estado. Armas e armaduras guardadas continuam sendo suas e aparecem aqui sem conceder benefícios enquanto não estiverem equipadas.' }),
+      el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--pequeno',
+        onClick: () => abrirGerenciadorDeArmas(ficha)
+      }, `Gerenciar armas · reserva ${reservaArmas.length}/2`)
+    ])));
 
     pai.append(secao('Inventário',
       el('div', { class: 'coluna' }, [

@@ -12411,6 +12411,35 @@ teste('E19: Anel da determinação custa 4 Esperança e é uma vez por sessão',
   contexto.aplicarGatilhoContadores_(f, 'fim-de-sessao');
   igual((((f.contadores || {})['uso:loot:loot-59'] || {}).valor) || 0, 0);
 });
+
+console.log('\nInventário de criação e posse de armaduras');
+teste('itens oficiais antigos da criação recuperam ID e itens narrativos ganham contexto', () => {
+  const r = avaliar(`(function(){
+    const f={inventario:['Poção de Saúde Menor','Poção de Vigor Menor','Suprimentos básicos','15 metros de corda','Um punhado de ouro']};
+    const lista=normalizarInventario_(f);
+    return lista;
+  })()`);
+  igual(r[0].id, 'consumivel-07');
+  igual(r[1].id, 'consumivel-08');
+  verdade(/Suprimentos básicos de viagem/.test(r[2].nota || ''), JSON.stringify(r[2]));
+});
+
+teste('armadura guardada pode ser equipada sem apagar a anterior', () => {
+  const r = avaliar(`(function(){
+    const f={identidade:{nivel:1},equipamento:{
+      primaria:'primaria-t1-espada-longa',secundaria:null,
+      armadura:'armadura-t1-armadura-gambeson',reserva:[],reservaArmaduras:[]
+    }};
+    const a=ajustarArmadurasDaFicha_(f,{acao:'adicionar',armadura:'armadura-t1-armadura-de-couro'});
+    const b=ajustarArmadurasDaFicha_(f,{acao:'equipar',armadura:'armadura-t1-armadura-de-couro'});
+    return {a:a,b:b,equipamento:f.equipamento};
+  })()`);
+  igual(r.a.acao, 'adicionar');
+  igual(r.b.acao, 'equipar');
+  igual(r.equipamento.armadura, 'armadura-t1-armadura-de-couro');
+  igual(r.equipamento.reservaArmaduras, ['armadura-t1-armadura-gambeson']);
+});
+
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {
   falhas.forEach((f) => console.error(f.nome, f.erro));
