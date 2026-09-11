@@ -18,6 +18,7 @@
     "teste:layout-descanso-mobile": "node tools/testes-descanso-mobile.mjs",
     "teste:layout-dano-mobile": "node tools/testes-dano-mobile.mjs",
     "teste:layout-mochila-em-uso-mobile": "node tools/testes-mochila-em-uso-mobile.mjs",
+    "teste:layout-conjuracao-mobile": "node tools/testes-conjuracao-mobile.mjs",
     "teste:layout-foto-mobile": "node tools/testes-foto-mobile.mjs",
     "teste:layout-responsivo": "node tools/testes-layout-responsivo.mjs",
     "teste:css": "node tools/conferir-css.mjs",
