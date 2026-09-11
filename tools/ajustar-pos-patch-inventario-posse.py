@@ -62,7 +62,8 @@ s = s.replace(
 )
 p.write_text(s, encoding='utf-8')
 
-# 4) Evita colisão com variável histórica no mesmo cenário E2E.
+# 4) Evita colisão com variável histórica no mesmo cenário E2E e alinha os
+# fluxos antigos com a nova etapa obrigatória de pré-visualização/seleção.
 p = Path('tools/testes-e2e.mjs')
 s = p.read_text(encoding='utf-8')
 s = s.replace(
@@ -75,6 +76,20 @@ troca = "    await esperarGravar(vCatalogoArmadura);\n    const doLivro = pagina
 if alvo not in s:
     raise SystemExit('espera do catálogo não encontrada')
 s = s.replace(alvo, troca, 1)
+
+alvo_compra = """    await pagina.locator('.ficha__catalogoItem').first().click();
+
+    // Voltou para o formulário de compra com o nome do livro preenchido.
+"""
+troca_compra = """    await pagina.locator('.ficha__catalogoItem').first().click();
+    const previaCompra = pagina.locator('.modal__caixa').last();
+    await previaCompra.getByRole('button', { name: 'Selecionar' }).click();
+
+    // Voltou para o formulário de compra com o nome do livro preenchido.
+"""
+if alvo_compra not in s:
+    raise SystemExit('fluxo antigo da compra pelo catálogo não encontrado')
+s = s.replace(alvo_compra, troca_compra, 1)
 p.write_text(s, encoding='utf-8')
 
 print('ajustes pós-patch aplicados')
