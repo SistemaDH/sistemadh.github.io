@@ -1,0 +1,31 @@
+name: TEMP Lote 9 B28 toast contexto
+
+on:
+  push:
+    branches: [tmp-lote9-b28-toast-contexto-sol]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - run: npm run teste:sintaxe
+      - run: npm run teste:css
+      - run: npx playwright install --with-deps chromium
+      - name: Toast contextual 360 / 390 ao abrir ficha
+        run: npm run teste:layout-toast-contexto-mobile
+      - name: Guardar diagnóstico visual B28
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lote9-b28-toast-contexto-${{ github.run_id }}
+          path: artifacts/layout-toast-contexto-mobile
+          if-no-files-found: warn
