@@ -24,16 +24,18 @@ As tabelas expostas têm RLS habilitado e não possuem policies públicas para `
 
 `engine-api` executa o código mantido em `backend/*.gs` através de uma camada de compatibilidade que substitui as antigas APIs de planilha por estado carregado do PostgreSQL.
 
-Produção atual, após o Lote 8 / Core 1.0:
+Produção atual, após o fechamento funcional do Lote 9:
 
 ```text
-engine-api: v7 ACTIVE
+engine-api: v9 ACTIVE
 verify_jwt: false
-ENGINE_COMMIT: 2572ee1270ee4f98c5c54158507df0783bd2696b
-ezbr_sha256: eb08d5ba112537dae1e9fe90e9b1022b7a7a6feaad0ab9a727d86b40574a76db
+ENGINE_COMMIT: 752c7abc0349222bd795254f8f023c047125a1fe
+ezbr_sha256: bb5b32f84dc598058c1b172eee05cd1d601476636dcf3fcc4de36df91b56ac23
 ```
 
-O pin é intencional. Alterações em `main` não passam a executar automaticamente com privilégios de backend.
+O source versionado em `supabase/functions/engine-api/index.ts` usa o mesmo `ENGINE_COMMIT` da função implantada. Esse alinhamento evita que um redeploy futuro feito a partir do repositório volte silenciosamente para um commit antigo.
+
+O pin é intencional. Alterações posteriores em `main` não passam a executar automaticamente com privilégios de backend.
 
 O `verify_jwt=false` também é intencional: esta aplicação não usa o JWT Supabase como identidade do jogador nesse endpoint; `engine-api` valida o token customizado de sessão no próprio handler antes de carregar dados e executar o motor. Não desativar essa validação interna.
 
@@ -44,19 +46,21 @@ Dentro da função, as diferenças são persistidas pela RPC `apply_engine_mutat
 Se o frontend novo depende de novos ajustes, contadores ou campos publicados pelo motor, seguir esta ordem:
 
 1. concluir e revisar a branch;
-2. fixar `ENGINE_COMMIT` num commit imutável revisado;
-3. implantar `engine-api` com esse pin;
-4. conferir versão, status, `verify_jwt` e código efetivamente implantado;
-5. só então fazer merge do frontend na `main`.
+2. executar sintaxe, backend, gerados, CSS, E2E e baselines visuais relevantes;
+3. fixar `ENGINE_COMMIT` num commit imutável revisado;
+4. implantar `engine-api` com esse pin;
+5. conferir versão, status, `verify_jwt`, `ENGINE_COMMIT` e código efetivamente implantado;
+6. alinhar `supabase/functions/engine-api/index.ts` ao mesmo pin;
+7. só então promover o frontend para `main`.
 
-Essa ordem evita uma janela de frontend novo contra motor antigo.
+Essa ordem evita uma janela de frontend novo contra motor antigo e também evita regressão em redeploy posterior.
 
 ## Arquivos gerados
 
 Parte do motor é gerada por `tools/gerar-*.mjs`. Antes de deploy, executar:
 
 ```bash
-node tools/conferir-gerados.mjs
+npm run teste:gerados
 ```
 
 O comando roda os geradores e compara byte a byte sem deixar o repositório alterado. Correções em arquivos gerados devem existir também no gerador correspondente.
@@ -86,6 +90,7 @@ Fotos novas são gravadas no bucket `character-photos`. A ficha guarda caminho i
 - preservar autenticação customizada das Edge Functions que a usam;
 - preservar `apply_engine_mutations` e o controle otimista;
 - não apontar `ENGINE_COMMIT` para `main` automática;
+- manter o source versionado do `engine-api` alinhado ao pin implantado;
 - não reintroduzir Google Apps Script ou Google Sheets como backend.
 
 O advisor pode reportar `RLS Enabled No Policy` como INFO; nesta arquitetura isso é esperado.
@@ -109,22 +114,33 @@ Históricas/aposentadas — não criar dependência nova:
 - `rules-engine`;
 - `runtime-test`.
 
-## Estado da implantação dos Lotes 6 e 7
+## Histórico de implantação
+
+### Lotes 6 e 7
 
 - commit de regras fixado: `c52b87cd1657ff7904554f2cc3035f552df7f8c8`;
 - commit de pin na branch: `bc8849b2493bc435ea9d74bb4c3b19993ecde204`;
 - PR #6;
 - merge commit: `8de4eec2b7fcc10658bf10443cff4b97a80a7a3c`;
-- `engine-api` v6 ACTIVE;
+- `engine-api` v6 ACTIVE naquele fechamento;
 - `verify_jwt=false` preservado;
 - sem migração de banco necessária.
 
-## Estado da implantação do Lote 8
+### Lote 8 / Core 1.0
 
-- Core 1.0 publicado em 10/09/2026;
+- publicado em 10/09/2026;
 - commit fonte imutável do motor: `2572ee1270ee4f98c5c54158507df0783bd2696b`;
 - commit de pin/frontend: `8689713a3846977b2e4f13e095c8417c761cec8f`;
-- `engine-api` v7 ACTIVE, `verify_jwt=false`;
+- `engine-api` v7 ACTIVE naquele fechamento;
 - pacote implantado: `eb08d5ba112537dae1e9fe90e9b1022b7a7a6feaad0ab9a727d86b40574a76db`;
-- GitHub Pages: build e deploy aprovados para o Lote 8;
-- nenhuma migração de banco foi necessária para a promoção.
+- nenhuma migração de banco necessária.
+
+### Lote 9 — dano/HUD e alinhamento final
+
+- commit funcional pinado pelo motor: `752c7abc0349222bd795254f8f023c047125a1fe`;
+- `engine-api` v9 ACTIVE;
+- pacote implantado: `bb5b32f84dc598058c1b172eee05cd1d601476636dcf3fcc4de36df91b56ac23`;
+- PR #9 integrou as correções finais do HUD de dano;
+- PR #10 alinhou `supabase/functions/engine-api/index.ts` ao mesmo pin já implantado;
+- GitHub Pages #81 publicou com sucesso a `main` após o alinhamento;
+- nenhuma migração de banco foi necessária.
