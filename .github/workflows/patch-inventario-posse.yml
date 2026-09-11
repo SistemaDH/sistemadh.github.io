@@ -1,3 +1,4 @@
+# execução única; o próprio job remove este arquivo ao concluir
 name: Patch temporário inventário e posse
 
 on:
@@ -34,7 +35,7 @@ jobs:
         run: |
           rm tools/patch-inventario-posse.py
           rm .github/workflows/patch-inventario-posse.yml
-          git config user.name "github-actions[bot]"
+          git config user.name "github-actions[bot]]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add backend/40_Regras.gs backend/4C_Ajustes.gs js/telas/criacao.js js/telas/ficha.js tools/testes-backend.mjs tools/testes-e2e.mjs tools/patch-inventario-posse.py .github/workflows/patch-inventario-posse.yml
           git commit -m "feat: unificar posse de equipamentos e mochila"
