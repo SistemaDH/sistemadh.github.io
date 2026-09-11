@@ -1,0 +1,31 @@
+{
+  "versao": "2.0",
+  "data": "2026-08-25",
+  "autoridade": "Daggerheart System Reference Document 2.0",
+  "paginaOficial": "https://www.daggerheart.com/srd/",
+  "pdfOficial": "https://www.daggerheart.com/wp-content/uploads/2026/08/DH_SRD_2_2026_08_25.pdf",
+  "pdfSha256": "55d8b92b7e58aa1da99a4a59aa77352483ef4fbda71baddb9af9bfc1f333bd2a",
+  "corpusAuxiliar": {
+    "repositorio": "klrkdekira/daggerheart-system-json",
+    "commit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64",
+    "uso": "extração e conferência; o PDF oficial continua sendo a autoridade"
+  },
+  "contagensEsperadasDoCorpus": {
+    "total": 1539,
+    "domains": 10,
+    "classes": 13,
+    "subclasses": 26,
+    "ancestries": 25,
+    "communities": 15,
+    "transformations": 6,
+    "beastforms": 24,
+    "weapons": 358,
+    "armor": 76,
+    "items": 120,
+    "consumables": 120,
+    "adversaries": 264,
+    "environments": 47,
+    "domain-cards": 210,
+    "rules": 224
+  }
+}

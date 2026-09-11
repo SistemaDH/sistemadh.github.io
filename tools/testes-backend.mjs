@@ -3951,6 +3951,40 @@ function bardoNivel1(extras = {}) {
   });
 }
 
+
+function cartaObrigatoriaParaTeste_(ficha, escolhas = {}) {
+  const copia = JSON.parse(JSON.stringify(ficha));
+  copia.identidade.nivel = (Number(copia.identidade.nivel) || 1) + 1;
+  const limites = contexto.limitesDeDominio_(copia);
+  const jaTem = new Set([].concat(copia.cartas?.ativas || [], copia.cartas?.cofre || [])
+    .map((x) => contexto.acharCarta_(x)).filter(Boolean).map((x) => x.id));
+  const reservadas = new Set((escolhas.avancos || []).map((x) => x && x.carta).filter(Boolean));
+  if (escolhas.troca?.entra) reservadas.add(escolhas.troca.entra);
+  const todas = avaliar('CARTAS_DOMINIO');
+  const candidatas = [];
+  limites.forEach((l) => {
+    (todas[l.dominio] || []).forEach((c) => {
+      if (c[2] <= l.nivelMaximo && !jaTem.has(c[0]) && !reservadas.has(c[0])) candidatas.push(c);
+    });
+  });
+  candidatas.sort((a, b) => b[2] - a[2] || String(a[1]).localeCompare(String(b[1])));
+  if (!candidatas.length) throw new Error('teste: não achei carta obrigatória legal para o próximo nível');
+  return candidatas[0][0];
+}
+
+function comCartaDoNivelTeste_(ficha, escolhas = {}) {
+  if (escolhas.carta) return escolhas;
+  return { ...escolhas, carta: cartaObrigatoriaParaTeste_(ficha, escolhas) };
+}
+
+function previaAvancoComCartaTeste_(ficha, escolhas = {}) {
+  return contexto['previaDoAvanco_'](ficha, comCartaDoNivelTeste_(ficha, escolhas));
+}
+
+function aplicarAvancoComCartaTeste_(ficha, escolhas = {}) {
+  return contexto['aplicarAvanco_'](ficha, comCartaDoNivelTeste_(ficha, escolhas));
+}
+
 /**
  * Sobe a ficha um nível escolhendo sozinho duas opções que ainda cabem.
  *
@@ -3965,15 +3999,27 @@ function subirUm(ficha, escolhas = {}) {
   const base = {};
   if (conquista) base.experienciaNova = `Experiência do nível ${nivelNovo}`;
 
-  if (!escolhas.avancos) {
+  if (!escolhas.avancos || escolhas.avancos.reduce((n, x) => {
+    const def = OPCOES_AVANCO.find((o) => o.id === x.opcao);
+    return n + (def ? def.consomeEscolhas : 1);
+  }, 0) < ESCOLHAS_POR_NIVEL) {
+    const predefinidos = Array.isArray(escolhas.avancos) ? escolhas.avancos.slice() : [];
     const livres = contexto.opcoesDisponiveis_(ficha, nivelNovo)
       .filter((o) => o.disponivel && !o.negrito && o.id !== 'subclasse');
-    const pedidos = [];
+    const pedidos = predefinidos.slice();
     // Traços tem 3 espaços por patamar e é o que mais rende; PV, Estresse e
     // Evasão entram depois. As que precisam de dado extra recebem o dado aqui.
-    const ordem = ['tracos', 'pontos-de-vida', 'estresse', 'evasao', 'experiencias'];
+    const temTracosPredefinidos = predefinidos.some((x) => x && x.opcao === 'tracos');
+    const ordem = temTracosPredefinidos
+      ? ['pontos-de-vida', 'estresse', 'evasao', 'experiencias', 'tracos']
+      : ['tracos', 'pontos-de-vida', 'estresse', 'evasao', 'experiencias'];
     const marcados = (ficha.avancos && ficha.avancos.tracosMarcados) || [];
     const usadosAgora = marcados.slice();
+    predefinidos.forEach((x) => {
+      if (x && x.opcao === 'tracos' && Array.isArray(x.tracos)) {
+        x.tracos.forEach((t) => { if (!usadosAgora.includes(t)) usadosAgora.push(t); });
+      }
+    });
 
     for (const id of ordem) {
       for (const o of livres.filter((x) => x.id === id)) {
@@ -4000,7 +4046,9 @@ function subirUm(ficha, escolhas = {}) {
     }
     base.avancos = pedidos;
   }
-  return contexto.aplicarAvanco_(ficha, { ...base, ...escolhas }).ficha;
+  const finais = { ...base, ...escolhas };
+  if (base.avancos) finais.avancos = base.avancos;
+  return aplicarAvancoComCartaTeste_(ficha, finais).ficha;
 }
 
 teste('os quatro patamares cobrem os dez níveis', () => {
@@ -4092,7 +4140,7 @@ console.log('\nAvanço — a prévia e a aplicação');
 teste('a prévia não encosta na ficha original', () => {
   const f = bardoNivel1();
   const antes = JSON.stringify(f);
-  contexto.previaDoAvanco_(f, {
+  previaAvancoComCartaTeste_(f, {
     experienciaNova: 'Nova', avancos: [{ opcao: 'evasao' }, { opcao: 'pontos-de-vida' }]
   });
   igual(JSON.stringify(f), antes, 'a prévia alterou a ficha');
@@ -4103,8 +4151,8 @@ teste('prever e aplicar dão exatamente o mesmo relatório', () => {
   const escolhas = {
     experienciaNova: 'Palco', avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }]
   };
-  const previa = contexto.previaDoAvanco_(f, escolhas);
-  const feito = contexto.aplicarAvanco_(f, escolhas);
+  const previa = previaAvancoComCartaTeste_(f, escolhas);
+  const feito = aplicarAvancoComCartaTeste_(f, escolhas);
   igual(JSON.stringify(feito.previa), JSON.stringify(previa), 'prévia e aplicação divergiram');
 });
 
@@ -4114,7 +4162,7 @@ teste('subir para o nível 2 faz tudo que o livro manda', () => {
   const cartas = avaliar('CARTAS_DOMINIO');
   const nivel2 = cartas.GRACE.find((c) => c[2] === 2);
 
-  const r = contexto.aplicarAvanco_(f, {
+  const r = aplicarAvancoComCartaTeste_(f, {
     experienciaNova: 'Palco de mil vilarejos',
     avancos: [{ opcao: 'tracos', tracos: ['agilidade', 'forca'] }, { opcao: 'evasao' }],
     carta: nivel2[0]
@@ -4136,18 +4184,18 @@ teste('subir para o nível 2 faz tudo que o livro manda', () => {
 
 teste('a conquista do nível 2 cobra o nome da Experiência nova', () => {
   const f = bardoNivel1();
-  const p = contexto.previaDoAvanco_(f, { avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }] });
+  const p = previaAvancoComCartaTeste_(f, { avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }] });
   igual(p.ok, false);
   verdade(p.erros.some((e) => /dê um nome/.test(e)), JSON.stringify(p.erros));
 });
 
 teste('mais de duas escolhas é recusado', () => {
   const f = bardoNivel1();
-  const p = contexto.previaDoAvanco_(f, {
+  const p = previaAvancoComCartaTeste_(f, {
     experienciaNova: 'X',
     avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }, { opcao: 'pontos-de-vida' }]
   });
-  verdade(p.erros.some((e) => new RegExp(`${ESCOLHAS_POR_NIVEL} escolhas por nível`).test(e)),
+  verdade(p.erros.some((e) => /exatamente 2 avanços por nível/.test(e)),
     JSON.stringify(p.erros));
 });
 
@@ -4155,14 +4203,14 @@ teste('os quadradinhos acabam e a opção sai de cena', () => {
   // Evasão tem 1 espaço no 2º patamar: dá para pegar uma vez só até o nível 5.
   let f = bardoNivel1();
   f = subirUm(f, { avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }] });
-  const p = contexto.previaDoAvanco_(f, { avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }] });
+  const p = previaAvancoComCartaTeste_(f, { avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }] });
   verdade(p.erros.some((e) => /espaços já estão marcados/.test(e)), JSON.stringify(p.erros));
 });
 
 teste('o mesmo traço não pode ser marcado duas vezes no patamar', () => {
   let f = bardoNivel1();
   f = subirUm(f, { avancos: [{ opcao: 'tracos', tracos: ['agilidade', 'forca'] }] });
-  const p = contexto.previaDoAvanco_(f, {
+  const p = previaAvancoComCartaTeste_(f, {
     avancos: [{ opcao: 'tracos', tracos: ['agilidade', 'finesse'] }]
   });
   verdade(p.erros.some((e) => /já foi marcado neste patamar/.test(e)), JSON.stringify(p.erros));
@@ -4182,7 +4230,7 @@ teste('a conquista do nível 5 limpa as marcações dos traços', () => {
 
 teste('a errata é respeitada: duas Experiências ganham +1 cada', () => {
   const f = bardoNivel1();
-  const r = contexto.aplicarAvanco_(f, {
+  const r = aplicarAvancoComCartaTeste_(f, {
     experienciaNova: 'Terceira',
     avancos: [{ opcao: 'experiencias', experiencias: [0, 1] }, { opcao: 'evasao' }]
   });
@@ -4193,7 +4241,7 @@ teste('a errata é respeitada: duas Experiências ganham +1 cada', () => {
 
 teste('a mesma Experiência duas vezes é recusada', () => {
   const f = bardoNivel1();
-  const p = contexto.previaDoAvanco_(f, {
+  const p = previaAvancoComCartaTeste_(f, {
     experienciaNova: 'X', avancos: [{ opcao: 'experiencias', experiencias: [0, 0] }]
   });
   verdade(p.erros.some((e) => /DIFERENTES/.test(e)), JSON.stringify(p.erros));
@@ -4210,27 +4258,36 @@ teste('a errata do teto de 12 vale para PV e Estresse', () => {
   verdade(/teto de 12/.test(estresse.motivo), estresse.motivo);
 });
 
-teste('a carta extra respeita o teto do patamar', () => {
+teste('SRD 2.0: carta extra de patamar inferior usa o nível atual, não o teto antigo 4/7', () => {
   const cartas = avaliar('CARTAS_DOMINIO');
-  const alta = cartas.GRACE.find((c) => c[2] === 5);
+  const nivel5 = cartas.GRACE.find((c) => c[2] === 5);
+  const nivel6 = cartas.GRACE.find((c) => c[2] === 6);
   let f = bardoNivel1();
-  f = subirUm(f);   // 2
-  f = subirUm(f);   // 3
-  f = subirUm(f);   // 4
+  f = subirUm(f); f = subirUm(f); f = subirUm(f);
   igual(f.identidade.nivel, 4);
-  // No 2º patamar o livro escreve o teto: nível 4. Uma carta de nível 5 não entra.
-  const p = contexto.previaDoAvanco_(f, {
+  const cabe = previaAvancoComCartaTeste_(f, {
     experienciaNova: 'Conquista do nível 5',
-    avancos: [{ opcao: 'carta-de-dominio', carta: alta[0], patamar: 2 }]
+    avancos: [
+      { opcao: 'carta-de-dominio', carta: nivel5[0], patamar: 2 },
+      { opcao: 'evasao', patamar: 3 }
+    ]
   });
-  verdade(p.erros.some((e) => /teto aqui é/.test(e)), JSON.stringify(p.erros));
+  igual(cabe.erros, [], JSON.stringify(cabe.erros));
+  const naoCabe = previaAvancoComCartaTeste_(f, {
+    experienciaNova: 'Conquista do nível 5',
+    avancos: [
+      { opcao: 'carta-de-dominio', carta: nivel6[0], patamar: 2 },
+      { opcao: 'evasao', patamar: 3 }
+    ]
+  });
+  verdade(naoCabe.erros.some((e) => /teto aqui é 5/.test(e)), JSON.stringify(naoCabe.erros));
 });
 
 teste('a troca de carta é por nível igual ou menor', () => {
   const cartas = avaliar('CARTAS_DOMINIO');
   const nivel2 = cartas.GRACE.find((c) => c[2] === 2);
   const f = bardoNivel1();
-  const p = contexto.previaDoAvanco_(f, {
+  const p = previaAvancoComCartaTeste_(f, {
     experienciaNova: 'X',
     avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }],
     troca: { sai: 'grace-palavras-inspiradoras', entra: nivel2[0] }
@@ -4241,7 +4298,7 @@ teste('a troca de carta é por nível igual ou menor', () => {
 teste('desfazer devolve a ficha exatamente como estava', () => {
   const f = bardoNivel1();
   const antes = JSON.stringify(f);
-  const r = contexto.aplicarAvanco_(f, {
+  const r = aplicarAvancoComCartaTeste_(f, {
     experienciaNova: 'Some depois',
     avancos: [{ opcao: 'tracos', tracos: ['agilidade', 'forca'] }, { opcao: 'evasao' }]
   });
@@ -4255,7 +4312,7 @@ teste('desfazer devolve a ficha exatamente como estava', () => {
 
 teste('desfazer duas vezes seguidas é recusado', () => {
   const f = bardoNivel1();
-  const r = contexto.aplicarAvanco_(f, {
+  const r = aplicarAvancoComCartaTeste_(f, {
     experienciaNova: 'X', avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }]
   });
   const desfeita = contexto.desfazerUltimoAvanco_(r.ficha);
@@ -4281,18 +4338,18 @@ teste('multiclasse não aparece antes do nível 5', () => {
 
 teste('multiclasse consome o nível inteiro', () => {
   const f = bardoNivel5();
-  const p = contexto.previaDoAvanco_(f, {
+  const p = previaAvancoComCartaTeste_(f, {
     avancos: [
       { opcao: 'multiclasse', classe: 'druida', dominio: 'SAGE', subclasse: 'druida-guardiao-dos-elementos' },
       { opcao: 'evasao' }
     ]
   });
-  verdade(p.erros.some((e) => /escolhas por nível/.test(e)), JSON.stringify(p.erros));
+  verdade(p.erros.some((e) => /exatamente 2 avanços por nível/.test(e)), JSON.stringify(p.erros));
 });
 
 teste('multiclasse entra e dá acesso ao domínio novo', () => {
   const f = bardoNivel5();
-  const r = contexto.aplicarAvanco_(f, {
+  const r = aplicarAvancoComCartaTeste_(f, {
     avancos: [{ opcao: 'multiclasse', classe: 'druida', dominio: 'SAGE', subclasse: 'druida-guardiao-dos-elementos' }]
   });
   igual(r.ficha.multiclasse.classe, 'druida');
@@ -4307,7 +4364,7 @@ teste('multiclasse entra e dá acesso ao domínio novo', () => {
 teste('multiclasse com duas fundações dá DOIS traços de Conjuração (fecha C6)', () => {
   // Bardo (Presença) que multiclassa em Druida (Instinto).
   const f = bardoNivel5();
-  const r = contexto.aplicarAvanco_(f, {
+  const r = aplicarAvancoComCartaTeste_(f, {
     avancos: [{ opcao: 'multiclasse', classe: 'druida', dominio: 'SAGE', subclasse: 'druida-guardiao-dos-elementos' }]
   });
   const ficha = r.ficha;
@@ -4349,7 +4406,7 @@ teste('sem multiclasse não há o que escolher, e escolha órfã é limpa', () =
 
 teste('multiclasse dá a característica de CLASSE e NÃO a de Esperança (fecha B1)', () => {
   const f = bardoNivel5();
-  const r = contexto.aplicarAvanco_(f, {
+  const r = aplicarAvancoComCartaTeste_(f, {
     avancos: [{ opcao: 'multiclasse', classe: 'druida', dominio: 'SAGE', subclasse: 'druida-guardiao-dos-elementos' }]
   });
   const nomes = (origem) => r.ficha.caracteristicas
@@ -4379,7 +4436,7 @@ teste('multiclasse dá a característica de CLASSE e NÃO a de Esperança (fecha
 
 teste('a ficha mostra o domínio da multiclasse junto com os dois da classe', () => {
   const f = bardoNivel5();
-  const r = contexto.aplicarAvanco_(f, {
+  const r = aplicarAvancoComCartaTeste_(f, {
     avancos: [{ opcao: 'multiclasse', classe: 'druida', dominio: 'SAGE', subclasse: 'druida-guardiao-dos-elementos' }]
   });
   igual(r.ficha.dominios, ['GRACE', 'CODEX', 'SAGE']);
@@ -4396,7 +4453,7 @@ teste('metade do nível arredonda PARA CIMA (exemplo do livro)', () => {
 
 teste('a carta do domínio novo é barrada acima da metade do nível', () => {
   const f = bardoNivel5();
-  const r = contexto.aplicarAvanco_(f, {
+  const r = aplicarAvancoComCartaTeste_(f, {
     avancos: [{ opcao: 'multiclasse', classe: 'druida', dominio: 'SAGE', subclasse: 'druida-guardiao-dos-elementos' }]
   });
   igual(r.ficha.identidade.nivel, 6, 'a multiclasse foi feita subindo para o 6');
@@ -4406,19 +4463,19 @@ teste('a carta do domínio novo é barrada acima da metade do nível', () => {
   const sage4 = cartas.SAGE.find((c) => c[2] === 4);
   const sage5 = cartas.SAGE.find((c) => c[2] === 5);
 
-  const cabe = contexto.previaDoAvanco_(r.ficha, {
+  const cabe = previaAvancoComCartaTeste_(r.ficha, {
     carta: sage4[0], avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }]
   });
   igual(cabe.erros, [], 'nível 4 cabe no teto 4');
 
-  const naoCabe = contexto.previaDoAvanco_(r.ficha, {
+  const naoCabe = previaAvancoComCartaTeste_(r.ficha, {
     carta: sage5[0], avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }]
   });
   verdade(naoCabe.erros.some((e) => /metade do nível/.test(e)), JSON.stringify(naoCabe.erros));
 
   // E o domínio ORIGINAL continua indo até o nível cheio.
   const graca7 = cartas.GRACE.find((c) => c[2] === 7);
-  const original = contexto.previaDoAvanco_(r.ficha, {
+  const original = previaAvancoComCartaTeste_(r.ficha, {
     carta: graca7[0], avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }]
   });
   igual(original.erros, [], 'o domínio da classe original vai até o nível cheio');
@@ -4426,7 +4483,7 @@ teste('a carta do domínio novo é barrada acima da metade do nível', () => {
 
 teste('só uma multiclasse por personagem', () => {
   const f = bardoNivel5();
-  const r = contexto.aplicarAvanco_(f, {
+  const r = aplicarAvancoComCartaTeste_(f, {
     avancos: [{ opcao: 'multiclasse', classe: 'druida', dominio: 'SAGE', subclasse: 'druida-guardiao-dos-elementos' }]
   });
   const opcoes = contexto.opcoesDisponiveis_(r.ficha, 7);
@@ -4435,19 +4492,26 @@ teste('só uma multiclasse por personagem', () => {
   verdade(/uma só por personagem/.test(mc.motivo), mc.motivo);
 });
 
-teste('quem faz multiclasse não pega mais subclasse aprimorada', () => {
+teste('SRD 2.0: Multiclasse risca subclasse aprimorada apenas no mesmo patamar', () => {
   const f = bardoNivel5();
-  const r = contexto.aplicarAvanco_(f, {
+  const r = aplicarAvancoComCartaTeste_(f, {
     avancos: [{ opcao: 'multiclasse', classe: 'druida', dominio: 'SAGE', subclasse: 'druida-guardiao-dos-elementos' }]
   });
-  const sub = contexto.opcoesDisponiveis_(r.ficha, 7).find((o) => o.id === 'subclasse');
-  igual(sub.disponivel, false);
-  verdade(/não recebe mais cartas de subclasse/.test(sub.motivo), sub.motivo);
+  const subT3 = contexto.opcoesDisponiveis_(r.ficha, 7)
+    .find((o) => o.id === 'subclasse' && o.patamar === 3);
+  igual(subT3.disponivel, false);
+  verdade(/mesmo patamar/.test(subT3.motivo), subT3.motivo);
+  const futura = JSON.parse(JSON.stringify(r.ficha));
+  futura.identidade.nivel = 7;
+  contexto.aplicarDerivados_(futura);
+  const subT4 = contexto.opcoesDisponiveis_(futura, 8)
+    .find((o) => o.id === 'subclasse' && o.patamar === 4);
+  verdade(subT4 && subT4.disponivel, JSON.stringify(subT4));
 });
 
 teste('pegar a subclasse aprimorada corta a multiclasse do patamar', () => {
   const f = bardoNivel5();
-  const r = contexto.aplicarAvanco_(f, { avancos: [{ opcao: 'subclasse' }, { opcao: 'evasao' }] });
+  const r = aplicarAvancoComCartaTeste_(f, { avancos: [{ opcao: 'subclasse' }, { opcao: 'evasao' }] });
   igual(r.ficha.subclasseCartas, ['fundacao', 'especializacao']);
   const mc = contexto.opcoesDisponiveis_(r.ficha, 6).find((o) => o.id === 'multiclasse');
   igual(mc.disponivel, false);
@@ -4456,12 +4520,12 @@ teste('pegar a subclasse aprimorada corta a multiclasse do patamar', () => {
 
 teste('a multiclasse precisa ser outra classe e um domínio novo', () => {
   const f = bardoNivel5();
-  const mesma = contexto.previaDoAvanco_(f, {
+  const mesma = previaAvancoComCartaTeste_(f, {
     avancos: [{ opcao: 'multiclasse', classe: 'bardo', dominio: 'CODEX', subclasse: 'bardo-musico-errante' }]
   });
   verdade(mesma.erros.some((e) => /classe diferente/.test(e)), JSON.stringify(mesma.erros));
 
-  const dominioRepetido = contexto.previaDoAvanco_(f, {
+  const dominioRepetido = previaAvancoComCartaTeste_(f, {
     // Códice é domínio do Bardo E do Mago: escolher Códice não daria nada novo.
     avancos: [{ opcao: 'multiclasse', classe: 'mago', dominio: 'CODEX', subclasse: 'mago-escola-do-conhecimento' }]
   });
@@ -4477,11 +4541,67 @@ teste('a ficha não consegue inventar bônus de avanço', () => {
   igual(f.avancos.espacos['2'].evasao, 1, 'foi recortado para o que cabe');
 });
 
+
+
+teste('SRD 2.0: avanço exige exatamente duas escolhas e uma carta do nível', () => {
+  const f = bardoNivel1();
+  let p = contexto.previaDoAvanco_(f, {
+    experienciaNova: 'X', avancos: [{ opcao: 'evasao' }]
+  });
+  verdade(p.erros.some((e) => /exatamente 2 avanços/.test(e)), JSON.stringify(p.erros));
+  p = contexto.previaDoAvanco_(f, {
+    experienciaNova: 'X', avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }]
+  });
+  verdade(p.erros.some((e) => /exige adquirir uma nova carta/.test(e)), JSON.stringify(p.erros));
+});
+
+teste('SRD 2.0: Proficiência gasta dois avanços e marca os dois espaços de uma vez', () => {
+  let f = bardoNivel1();
+  f = subirUm(f); f = subirUm(f); f = subirUm(f); // nível 4
+  const carta5 = avaliar('CARTAS_DOMINIO').GRACE.find((c) => c[2] === 5)[0];
+  const r = contexto.aplicarAvanco_(f, {
+    experienciaNova: 'Patamar 3', avancos: [{ opcao: 'proficiencia', patamar: 3 }], carta: carta5
+  });
+  igual(r.ficha.avancos.espacos['3'].proficiencia, 2);
+  igual(r.ficha.avancos.bonus.proficiencia, 1);
+  igual(r.previa.escolhasGastas, 2);
+  const op = contexto.opcoesDisponiveis_(r.ficha, 6)
+    .find((o) => o.id === 'proficiencia' && o.patamar === 3);
+  igual(op.disponivel, false);
+});
+
+teste('SRD 2.0: no 4º patamar ainda aparecem espaços livres do 2º patamar', () => {
+  const f = bardoNivel1();
+  f.identidade.nivel = 7;
+  f.avancos = { historico: [], espacos: { 2: {}, 3: {} }, tracosMarcados: [], bonus: {} };
+  contexto.aplicarDerivados_(f);
+  const ops = contexto.opcoesDisponiveis_(f, 8);
+  verdade(ops.some((o) => o.id === 'evasao' && o.patamar === 2 && o.disponivel),
+    'o espaço livre do T2 deve continuar elegível no T4');
+});
+
+teste('SRD 2.0: Multiclasse só risca subclasse aprimorada no mesmo patamar', () => {
+  let f = bardoNivel1();
+  for (let n = 2; n <= 4; n++) f = subirUm(f);
+  const carta5 = avaliar('CARTAS_DOMINIO').GRACE.find((c) => c[2] === 5)[0];
+  const mc = contexto.aplicarAvanco_(f, {
+    experienciaNova: 'Patamar 3', carta: carta5,
+    avancos: [{ opcao: 'multiclasse', patamar: 3, classe: 'druida', dominio: 'SAGE', subclasse: 'druida-guardiao-dos-elementos' }]
+  }).ficha;
+  const t3 = contexto.opcoesDisponiveis_(mc, 6).find((o) => o.id === 'subclasse' && o.patamar === 3);
+  igual(t3.disponivel, false);
+  mc.identidade.nivel = 7;
+  contexto.aplicarDerivados_(mc);
+  const t4 = contexto.opcoesDisponiveis_(mc, 8).find((o) => o.id === 'subclasse' && o.patamar === 4);
+  verdade(t4 && t4.disponivel, JSON.stringify(t4));
+});
+
 console.log('\nSubir de nível — pela API');
 
 teste('a API sobe o nível e devolve o relatório', () => {
   const token = api('registrar', { nome: 'Escalada', codigo: 'senha-escalada' }).dados.token;
   const criada = api('criarPersonagem', { token, ficha: bardoNivel1() }).dados.personagem;
+  api('anunciarNivelDaMesa', { token: tokenMestre, nivel: 2 });
 
   const opcoes = api('opcoesDeAvanco', { token, id: criada.id });
   verdade(opcoes.ok, JSON.stringify(opcoes));
@@ -4489,9 +4609,11 @@ teste('a API sobe o nível e devolve o relatório', () => {
   igual(opcoes.dados.patamar, 2);
   verdade(opcoes.dados.conquista, 'o nível 2 tem conquista');
 
+  const cartaNivel2 = avaliar('CARTAS_DOMINIO').GRACE.find((c) => c[2] === 2)[0];
+  const escolhasNivel2 = { experienciaNova: 'Estrada',
+    avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }], carta: cartaNivel2 };
   const previa = api('previaDeAvanco', {
-    token, id: criada.id,
-    escolhas: { experienciaNova: 'Estrada', avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }] }
+    token, id: criada.id, escolhas: escolhasNivel2
   });
   verdade(previa.ok && previa.dados.previa.ok, JSON.stringify(previa));
 
@@ -4500,7 +4622,7 @@ teste('a API sobe o nível e devolve o relatório', () => {
 
   const feito = api('aplicarAvanco', {
     token, id: criada.id, versao: criada.versao,
-    escolhas: { experienciaNova: 'Estrada', avancos: [{ opcao: 'evasao' }, { opcao: 'estresse' }] }
+    escolhas: escolhasNivel2
   });
   verdade(feito.ok, JSON.stringify(feito));
   igual(feito.dados.personagem.ficha.identidade.nivel, 2);
@@ -7976,13 +8098,13 @@ teste('Preparado via multiclasse exige a carta adicional e aceita o domínio rec
     opcao: 'multiclasse', classe: 'mago', dominio: 'SPLENDOR',
     subclasse: 'mago-escola-do-conhecimento'
   };
-  const sem = contexto.simularAvanco_(f, { avancos: [base] });
+  const sem = contexto.simularAvanco_(f, comCartaDoNivelTeste_(f, { avancos: [base] }));
   verdade(sem.previa.erros.some((e) => /Fundação da multiclasse.*carta\(s\) de domínio adicional/i.test(e)),
     JSON.stringify(sem.previa));
 
-  const comCarta = contexto.simularAvanco_(f, { avancos: [Object.assign({}, base, {
+  const comCarta = contexto.simularAvanco_(f, comCartaDoNivelTeste_(f, { avancos: [Object.assign({}, base, {
     cartasExtrasDeSubclasse: ['splendor-segundo-folego']
-  })] });
+  })] }));
   igual(comCarta.previa.erros, [], JSON.stringify(comCarta.previa));
   verdade(contexto.temCartaNaFicha_(comCarta.ficha, 'splendor-segundo-folego'),
     'Preparado precisa aceitar uma carta do domínio SPLENDOR recém-adquirido');

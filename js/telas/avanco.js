@@ -59,6 +59,12 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
         limpar(barra).append(fecharBotao('Fechar'));
         return;
       }
+      if (info.podeAvancar === false) {
+        limpar(corpo).append(el('p', { class: 'texto-suave', texto:
+          `A mesa está no nível ${info.nivelDaMesa}. O Mestre ainda não anunciou o nível ${info.nivelNovo}.` }));
+        limpar(barra).append(fecharBotao('Fechar'));
+        return;
+      }
       passoEscolhas();
     } catch (e) {
       limpar(corpo).append(el('p', { class: 'texto-suave', texto: mensagemDoErro(e) }));
@@ -90,8 +96,8 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
     corpo.append(
       el('h3', { class: 'avanco__titulo', texto: `Escolha ${info.escolhasPorNivel} avanços` }),
       el('p', { class: 'campo__ajuda', texto:
-        'Cada quadradinho é uma escolha. Quando os quadradinhos de uma opção acabam, ' +
-        'ela só volta no próximo patamar.' })
+        'Escolha exatamente dois avanços. Espaços livres podem vir do seu patamar ou de qualquer patamar inferior. ' +
+        'As caixas em negrito gastam os dois avanços e marcam os dois espaços de uma vez.' })
     );
 
     const lista = el('div', { class: 'pilha' });
@@ -104,7 +110,7 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
         texto: `${gastas()} de ${info.escolhasPorNivel}` }),
       el('button', {
         type: 'button', class: 'btn btn--principal',
-        disabled: gastas() === 0,
+        disabled: gastas() !== info.escolhasPorNivel,
         onClick: () => passoCarta()
       }, 'Continuar')
     );
@@ -233,9 +239,11 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
       class: 'avanco__quadradinhos',
       'aria-label': `${o.usados + escolhendoAgora} de ${o.espacos} espaços marcados`
     });
+    const marcaPorEscolha = o.negrito ? o.consomeEscolhas : 1;
+    const marcadosAgora = escolhendoAgora * marcaPorEscolha;
     for (let i = 0; i < o.espacos; i++) {
       const gravado = i < o.usados;
-      const agora = !gravado && i < o.usados + escolhendoAgora;
+      const agora = !gravado && i < o.usados + marcadosAgora;
       caixa.append(el('span', {
         class: `avanco__quadradinho ${gravado ? 'esta-cheio' : ''} ${agora ? 'esta-agora' : ''}`,
         'aria-hidden': 'true'
@@ -430,8 +438,8 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
     cartao.append(
       el('p', { class: 'avanco__aviso', texto:
         `Uma vez só na vida do personagem. As cartas do domínio novo ficam limitadas ao nível ${metade} ` +
-        '(metade do seu nível), e você deixa de receber cartas de subclasse aprimorada — ' +
-        'ou seja, nunca chega à maestria.' }),
+        '(metade do seu nível, arredondada para cima). A carta de subclasse aprimorada fica riscada apenas neste patamar; ' +
+        'todas as outras opções de Multiclasse ficam indisponíveis.' }),
       el('label', { class: 'campo' }, [
         el('span', { class: 'campo__rotulo', texto: 'Classe adicional' }), selClasse
       ]),
@@ -518,7 +526,10 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
       el('span', { class: 'crescer' }),
       el('button', {
         type: 'button', class: 'btn btn--principal',
-        onClick: (ev) => verPrevia(ev.currentTarget)
+        onClick: (ev) => {
+          if (!cartaDoNivel) { avisarErro('Escolha a carta de domínio obrigatória deste nível.'); return; }
+          verPrevia(ev.currentTarget);
+        }
       }, 'Ver o que muda')
     );
   }

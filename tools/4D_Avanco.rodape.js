@@ -323,21 +323,24 @@ function opcoesDeMulticlasse_(ficha) {
  * O que o personagem pode escolher ao subir para `nivelDestino`.
  *
  * Devolve cada opção com o patamar de onde ela vem e quantos espaços ainda
- * restam. A partir do 3º patamar o livro deixa usar também um espaço livre do
- * patamar ANTERIOR — só o anterior, não todos.
+ * restam. No SRD 2.0, o personagem pode usar qualquer espaço livre do seu
+ * patamar OU DE UM PATAMAR INFERIOR.
  */
 function opcoesDisponiveis_(ficha, nivelDestino) {
   const patamar = patamarDoNivel_(nivelDestino);
-  const patamares = [patamar];
-  if (patamar > 2) patamares.push(patamar - 1);
+  const patamares = [];
+  for (let pt = patamar; pt >= 2; pt--) patamares.push(pt);
 
   const nivel = Math.trunc(Number(nivelDestino)) || 1;
   const jaFezMulticlasse = Boolean(ficha && ficha.multiclasse && ficha.multiclasse.classe);
-  const pegouSubclasseNestePatamar = espacosUsados_(ficha, patamar, 'subclasse') > 0;
+  const patamarDaMulticlasse = jaFezMulticlasse
+    ? patamarDoNivel_(Number(ficha.multiclasse.nivelEmQueFoiFeita) || nivel)
+    : 0;
 
   const saida = [];
   for (let p = 0; p < patamares.length; p++) {
     const pt = patamares[p];
+    const pegouSubclasseNestePatamar = espacosUsados_(ficha, pt, 'subclasse') > 0;
     for (let i = 0; i < OPCOES_AVANCO.length; i++) {
       const def = OPCOES_AVANCO[i];
       const total = espacosDaOpcao_(def.id, pt);
@@ -375,9 +378,9 @@ function opcoesDisponiveis_(ficha, nivelDestino) {
           item.motivo = 'Você já pegou a carta de subclasse aprimorada neste patamar.';
         }
       }
-      if (def.id === 'subclasse' && jaFezMulticlasse) {
+      if (def.id === 'subclasse' && patamarDaMulticlasse === pt) {
         item.disponivel = false;
-        item.motivo = 'Quem faz multiclasse não recebe mais cartas de subclasse aprimorada.';
+        item.motivo = 'A Multiclasse deste patamar riscou a opção de carta de subclasse aprimorada deste mesmo patamar.';
       }
       if (def.id === 'subclasse') {
         const etapa = proximaCartaDeSubclasse_(ficha);
@@ -417,12 +420,9 @@ function opcoesDisponiveis_(ficha, nivelDestino) {
   return saida;
 }
 
-/** O teto de nível da carta EXTRA: o do livro, ou o próprio nível no 4º patamar. */
+/** No SRD 2.0 a carta EXTRA usa o nível ATUAL; limites de multiclasse são aplicados por adicionarCarta_. */
 function tetoDaCartaExtra_(def, patamar, nivel) {
-  const porPatamar = (def.efeito || {}).nivelMaximoPorPatamar || {};
-  const escrito = porPatamar[String(patamar)];
-  const teto = (escrito === null || escrito === undefined) ? nivel : Number(escrito);
-  return Math.min(teto, nivel);
+  return Math.max(1, Math.trunc(Number(nivel)) || 1);
 }
 
 function valorAtualDoRecurso_(ficha, chave) {
@@ -543,15 +543,15 @@ function simularAvanco_(ficha, escolhas) {
     if (!feito) continue;
 
     escolhasGastas += def.consomeEscolhas;
-    marcarEspaco_(copia, doPatamar, def.id);
+    // Caixas pretas (Proficiência/Multiclasse) gastam os dois avanços e
+    // MARCAM OS DOIS espaços no mesmo gesto, conforme o SRD 2.0.
+    const quantosEspacos = def.negrito ? def.consomeEscolhas : 1;
+    for (let m = 0; m < quantosEspacos; m++) marcarEspaco_(copia, doPatamar, def.id);
     passos.push(feito);
   }
 
-  if (escolhasGastas > ESCOLHAS_POR_NIVEL) {
-    erros.push('São ' + ESCOLHAS_POR_NIVEL + ' escolhas por nível; estas somam ' + escolhasGastas + '.');
-  } else if (escolhasGastas < ESCOLHAS_POR_NIVEL) {
-    avisos.push('Faltam escolhas: o nível dá ' + ESCOLHAS_POR_NIVEL +
-      ' e você gastou ' + escolhasGastas + '.');
+  if (escolhasGastas !== ESCOLHAS_POR_NIVEL) {
+    erros.push('São exatamente ' + ESCOLHAS_POR_NIVEL + ' avanços por nível; estas escolhas somam ' + escolhasGastas + '.');
   }
 
   /* --- 3. a carta de domínio do nível ----------------------------------- */
@@ -788,8 +788,8 @@ function aplicarOpcaoDeAvanco_(copia, def, pedido, doPatamar, nivelNovo, erros, 
     registro.detalhe = CLASSES[mc.classe].nome + ' · domínio ' +
       ((typeof DOMINIOS !== 'undefined' && DOMINIOS[mc.dominio]) ? DOMINIOS[mc.dominio].nome : mc.dominio) +
       ' (cartas até nível ' + metadeDoNivel_(nivelNovo) + ')';
-    avisos.push('Multiclasse feita: a partir de agora você não recebe mais cartas de subclasse aprimorada, ' +
-      'e as cartas do domínio novo ficam limitadas à metade do seu nível.');
+    avisos.push('Multiclasse feita: a opção de subclasse aprimorada deste patamar foi riscada e todas as demais opções de Multiclasse deixam de estar disponíveis. ' +
+      'As cartas do domínio novo ficam limitadas à metade do seu nível, arredondada para cima.');
     return registro;
   }
 
@@ -835,7 +835,7 @@ function resolverCartasDoAvanco_(copia, e, nivelNovo, erros, avisos) {
     const carta = adicionarCarta_(copia, e.carta, nivelNovo, erros, 'a carta do nível');
     if (carta) relatorio.doNivel = { id: carta.id, nome: carta.nome, nivel: carta.nivel };
   } else {
-    avisos.push('Todo nível dá uma carta de domínio nova — você ainda não escolheu a sua.');
+    erros.push('Todo nível acima do 1 exige adquirir uma nova carta de domínio. Escolha a carta antes de concluir o avanço.');
   }
 
   copia.cartas = copia.cartas || { ativas: [], cofre: [] };
@@ -1000,7 +1000,11 @@ function validarAvancos_(ficha) {
         delete doPatamar[ids[k]];
         continue;
       }
-      const usados = Math.max(0, Math.trunc(Number(doPatamar[ids[k]])) || 0);
+      let usados = Math.max(0, Math.trunc(Number(doPatamar[ids[k]])) || 0);
+      // Versões anteriores do SistemaDH marcavam só UM dos dois espaços das
+      // caixas pretas. Uma ficha legada com 1 marca representa uma compra
+      // válida de +1 e é migrada para os dois espaços do SRD 2.0.
+      if ((ids[k] === 'proficiencia' || ids[k] === 'multiclasse') && usados === 1) usados = 2;
       if (usados > total) {
         problemas.push('"' + ids[k] + '" tem ' + usados + ' marcações no ' + pt +
           'º patamar, mas só cabem ' + total + '.');
@@ -1020,11 +1024,18 @@ function validarAvancos_(ficha) {
 
   problemas.push.apply(problemas, validarMulticlasse_(ficha));
 
-  // Multiclasse corta a maestria: se a ficha veio com as duas coisas, o livro
-  // é claro sobre qual vale.
-  if (ficha.multiclasse && ficha.subclasseCartas.indexOf('maestria') !== -1) {
-    problemas.push('Quem fez multiclasse não recebe a carta de maestria de subclasse.');
-  }
+  // Bônus permanentes são DERIVADOS dos espaços válidos. Nunca confiamos no
+  // objeto bonus recebido do navegador. Nas caixas pretas, dois espaços = um
+  // único +1, porque ambos são marcados pela mesma compra.
+  const bonus = { pontosDeVidaMaximos: 0, estresseMaximo: 0, evasao: 0, proficiencia: 0 };
+  Object.keys(a.espacos).forEach(function (pt) {
+    const e = a.espacos[pt] || {};
+    bonus.pontosDeVidaMaximos += Math.max(0, Math.trunc(Number(e['pontos-de-vida'])) || 0);
+    bonus.estresseMaximo += Math.max(0, Math.trunc(Number(e.estresse)) || 0);
+    bonus.evasao += Math.max(0, Math.trunc(Number(e.evasao)) || 0);
+    bonus.proficiencia += Math.floor(Math.max(0, Math.trunc(Number(e.proficiencia)) || 0) / 2);
+  });
+  a.bonus = bonus;
 
   return problemas;
 }

@@ -511,10 +511,14 @@ function executar_(p) {
         const jogador = exigirSessao_(p.token);
         const atual = obterPersonagem_(jogador, p.id);
         const nivelNovo = (Number((atual.ficha.identidade || {}).nivel) || 1) + 1;
+        const nivelAtual = Number((atual.ficha.identidade || {}).nivel) || 1;
+        const nivelDaMesa = Math.max(1, Math.min(NIVEL_MAXIMO, Number(mesaLer_().nivelDaMesa) || 1));
         return ok_({
-          nivelAtual: Number((atual.ficha.identidade || {}).nivel) || 1,
+          nivelAtual: nivelAtual,
           nivelNovo: nivelNovo,
           nivelMaximo: NIVEL_MAXIMO,
+          nivelDaMesa: nivelDaMesa,
+          podeAvancar: nivelAtual < NIVEL_MAXIMO && nivelNovo <= nivelDaMesa,
           patamar: patamarDoNivel_(nivelNovo),
           escolhasPorNivel: ESCOLHAS_POR_NIVEL,
           conquista: conquistasDoNivel_(nivelNovo),
@@ -533,12 +537,25 @@ function executar_(p) {
       case 'previaDeAvanco': {
         const jogador = exigirSessao_(p.token);
         const atual = obterPersonagem_(jogador, p.id);
+        const proximo = (Number((atual.ficha.identidade || {}).nivel) || 1) + 1;
+        const nivelDaMesa = Math.max(1, Math.min(NIVEL_MAXIMO, Number(mesaLer_().nivelDaMesa) || 1));
+        if (proximo > nivelDaMesa) {
+          throw erroApi_(ERRO.DADOS_INVALIDOS,
+            'A mesa está no nível ' + nivelDaMesa + '. O Mestre ainda não anunciou o nível ' + proximo + '.');
+        }
         return ok_({ previa: previaDoAvanco_(atual.ficha, p.escolhas), versao: atual.versao });
       }
 
       /** Sobe o nível de verdade e devolve o mesmo relatório da prévia. */
       case 'aplicarAvanco': {
         const jogador = exigirSessao_(p.token);
+        const atual = obterPersonagem_(jogador, p.id);
+        const proximo = (Number((atual.ficha.identidade || {}).nivel) || 1) + 1;
+        const nivelDaMesa = Math.max(1, Math.min(NIVEL_MAXIMO, Number(mesaLer_().nivelDaMesa) || 1));
+        if (proximo > nivelDaMesa) {
+          throw erroApi_(ERRO.DADOS_INVALIDOS,
+            'A mesa está no nível ' + nivelDaMesa + '. O Mestre ainda não anunciou o nível ' + proximo + '.');
+        }
         const r = mutarPersonagem_(jogador, p.id, p.versao, function (ficha) {
           const feito = aplicarAvanco_(ficha, p.escolhas);
           return { ficha: feito.ficha, extra: feito.previa, evento: 'avanco-nivel-' + feito.previa.nivelDepois };
