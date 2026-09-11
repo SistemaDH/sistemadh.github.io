@@ -1,13 +1,9 @@
-# execução única; o próprio job remove este arquivo ao concluir
 name: Patch temporário inventário e posse
-
 on:
   push:
     branches: [newedit]
-
 permissions:
   contents: write
-
 jobs:
   patch:
     if: contains(github.event.head_commit.message, '[run-inventario-posse]')
@@ -21,33 +17,23 @@ jobs:
         with:
           node-version: '20'
           cache: npm
-      - name: Corrigir marcador final do aplicador
+      - name: Corrigir aplicador
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          p = Path('tools/patch-inventario-posse.py')
-          s = p.read_text(encoding='utf-8')
-          inicio = s.index('marcador_resultado = ')
-          fim = s.index("novos_testes = r'''", inicio)
-          correcao = '''indice_resultado = testes.rfind("console.log(`")\nif indice_resultado < 0:\n    raise SystemExit('não encontrei resumo dos testes backend')\n'''
-          s = s[:inicio] + correcao + s[fim:]
-          s = s.replace(
-              'testes = testes.replace(marcador_resultado, novos_testes + marcador_resultado, 1)',
-              'testes = testes[:indice_resultado] + novos_testes + testes[indice_resultado:]'
-          )
-          p.write_text(s, encoding='utf-8')
+          p=Path('tools/patch-inventario-posse.py'); s=p.read_text(encoding='utf-8')
+          inicio=s.index('marcador_resultado = '); fim=s.index("novos_testes = r'''", inicio)
+          s=s[:inicio]+'''indice_resultado = testes.rfind("console.log(`")\nif indice_resultado < 0:\n    raise SystemExit('não encontrei resumo dos testes backend')\n'''+s[fim:]
+          s=s.replace('testes = testes.replace(marcador_resultado, novos_testes + marcador_resultado, 1)','testes = testes[:indice_resultado] + novos_testes + testes[indice_resultado:]')
+          p.write_text(s,encoding='utf-8')
           PY
       - run: python3 tools/patch-inventario-posse.py
-      - name: Ajustar migração antiga, modal e variável do E2E
+      - name: Ajustes pós-patch
         run: |
           python3 - <<'PY'
           from pathlib import Path
-
-          # Migração: só trate como criação antiga quando a mochila tiver a
-          # assinatura do kit inicial. Um item digitado à mão continua livre.
-          p = Path('backend/4C_Ajustes.gs')
-          s = p.read_text(encoding='utf-8')
-          alvo = """function normalizarInventario_(ficha) {
+          p=Path('backend/4C_Ajustes.gs'); s=p.read_text(encoding='utf-8')
+          velho="""function normalizarInventario_(ficha) {
             const lista = Array.isArray(ficha.inventario) ? ficha.inventario : [];
             const saida = [];
             const gruposEmUso = {};
@@ -55,8 +41,8 @@ jobs:
               const item = itemDeMochila_(lista[i]);
               if (!item) continue;
               if (!item.id) {
-          """.replace('            ', '')
-          troca = """function normalizarInventario_(ficha) {
+          """.replace('            ','')
+          novo="""function normalizarInventario_(ficha) {
             const lista = Array.isArray(ficha.inventario) ? ficha.inventario : [];
             const chavesLegado = lista.map(function (bruto) {
               const nome = (bruto && typeof bruto === 'object') ? bruto.nome : bruto;
@@ -74,57 +60,48 @@ jobs:
               const item = itemDeMochila_(lista[i]);
               if (!item) continue;
               if (!item.id && pareceInventarioInicialLegado) {
-          """.replace('            ', '')
-          if alvo not in s:
-            raise SystemExit('não encontrei normalizarInventario_ pós-patch')
-          s = s.replace(alvo, troca, 1)
-          p.write_text(s, encoding='utf-8')
+          """.replace('            ','')
+          if velho not in s: raise SystemExit('normalizarInventario pós-patch não encontrado')
+          p.write_text(s.replace(velho,novo,1),encoding='utf-8')
 
-          # Modal: preserva literalmente o contrato dos botões de uso quando
-          # o equipamento está ativo, mas reserva pode abrir sem esses botões.
-          p = Path('js/telas/ficha.js')
-          s = p.read_text(encoding='utf-8')
-          alvo = """    modal = abrirModal({
-              titulo: item.nome,
-              conteudo: conteudoDeEquipamento(rotulo, item),
-              acoes: [
+          p=Path('js/telas/ficha.js'); s=p.read_text(encoding='utf-8')
+          velho="""      acoes: [
                 el('button', { type: 'button', class: 'btn btn--fantasma', onClick: fecharModal }, 'Fechar'),
                 ...extras,
                 ...(permitirUso ? botoesDeUsoEquipamento_(item, fecharModal, p.ficha) : [])
-              ]
-            });
-          """.replace('            ', '')
-          troca = """    const acoesBase = [
-              el('button', { type: 'button', class: 'btn btn--fantasma', onClick: fecharModal }, 'Fechar'),
-              ...extras
-            ];
-            modal = abrirModal({
-              titulo: item.nome,
-              conteudo: conteudoDeEquipamento(rotulo, item),
-              acoes: permitirUso
-                ? [...acoesBase, ...botoesDeUsoEquipamento_(item, fecharModal, p.ficha)]
-                : acoesBase
-            });
-          """.replace('            ', '')
-          if alvo not in s:
-            raise SystemExit('não encontrei verEquipamento pós-patch')
-          s = s.replace(alvo, troca, 1)
-          p.write_text(s, encoding='utf-8')
+              ]""".replace('              ','')
+          novo="""      acoes: permitirUso ? [
+                el('button', { type: 'button', class: 'btn btn--fantasma', onClick: fecharModal }, 'Fechar'),
+                ...extras,
+                ...botoesDeUsoEquipamento_(item, fecharModal, p.ficha)
+              ] : [
+                el('button', { type: 'button', class: 'btn btn--fantasma', onClick: fecharModal }, 'Fechar'),
+                ...extras
+              ]""".replace('              ','')
+          if velho not in s:
+            # forma literal sem normalização de recuo
+            velho="""      acoes: [
+        el('button', { type: 'button', class: 'btn btn--fantasma', onClick: fecharModal }, 'Fechar'),
+        ...extras,
+        ...(permitirUso ? botoesDeUsoEquipamento_(item, fecharModal, p.ficha) : [])
+      ]"""
+            novo="""      acoes: permitirUso ? [
+        el('button', { type: 'button', class: 'btn btn--fantasma', onClick: fecharModal }, 'Fechar'),
+        ...extras,
+        ...botoesDeUsoEquipamento_(item, fecharModal, p.ficha)
+      ] : [
+        el('button', { type: 'button', class: 'btn btn--fantasma', onClick: fecharModal }, 'Fechar'),
+        ...extras
+      ]"""
+          if velho not in s: raise SystemExit('ações de verEquipamento não encontradas')
+          p.write_text(s.replace(velho,novo,1),encoding='utf-8')
 
-          # Evita colisão com uma variável histórica do mesmo cenário E2E.
-          p = Path('tools/testes-e2e.mjs')
-          s = p.read_text(encoding='utf-8')
-          s = s.replace(
-            "    const v5 = await versaoNaTela();\n    const estadoArmadura = noBackend(`(function(){",
-            "    const vCatalogoArmadura = await versaoNaTela();\n    const estadoArmadura = noBackend(`(function(){",
-            1
-          )
-          alvo = "    await esperarGravar(v5);\n    const doLivro = pagina.locator('.ficha__item', { hasText: 'Saco de Dormir Premium' });"
-          troca = "    await esperarGravar(vCatalogoArmadura);\n    const doLivro = pagina.locator('.ficha__item', { hasText: 'Saco de Dormir Premium' });"
-          if alvo not in s:
-            raise SystemExit('não encontrei a espera do catálogo para renomear')
-          s = s.replace(alvo, troca, 1)
-          p.write_text(s, encoding='utf-8')
+          p=Path('tools/testes-e2e.mjs'); s=p.read_text(encoding='utf-8')
+          s=s.replace("    const v5 = await versaoNaTela();\n    const estadoArmadura = noBackend(`(function(){","    const vCatalogoArmadura = await versaoNaTela();\n    const estadoArmadura = noBackend(`(function(){",1)
+          alvo="    await esperarGravar(v5);\n    const doLivro = pagina.locator('.ficha__item', { hasText: 'Saco de Dormir Premium' });"
+          troca="    await esperarGravar(vCatalogoArmadura);\n    const doLivro = pagina.locator('.ficha__item', { hasText: 'Saco de Dormir Premium' });"
+          if alvo not in s: raise SystemExit('espera do catálogo não encontrada')
+          p.write_text(s.replace(alvo,troca,1),encoding='utf-8')
           PY
       - run: npm ci
       - run: npm run teste:sintaxe
@@ -137,8 +114,7 @@ jobs:
       - run: npm run teste:layout-criacao-mobile
       - name: Gravar patch e remover andaime temporário
         run: |
-          rm tools/patch-inventario-posse.py
-          rm .github/workflows/patch-inventario-posse.yml
+          rm tools/patch-inventario-posse.py .github/workflows/patch-inventario-posse.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add backend/40_Regras.gs backend/4C_Ajustes.gs js/telas/criacao.js js/telas/ficha.js tools/testes-backend.mjs tools/testes-e2e.mjs tools/patch-inventario-posse.py .github/workflows/patch-inventario-posse.yml
