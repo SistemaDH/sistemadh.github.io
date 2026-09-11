@@ -37,6 +37,8 @@ jobs:
         run: npm run teste:layout-mobile
       - name: Conjuração mobile 360 / 390 sem pontuação órfã
         run: npm run teste:layout-conjuracao-mobile
+      - name: Toast contextual 360 / 390 ao abrir ficha
+        run: npm run teste:layout-toast-contexto-mobile
       - name: Layout Mestre mobile 360 / 390 / 430
         run: npm run teste:layout-mestre-mobile
       - name: Layout criação mobile 360 / 390 / 430
@@ -72,6 +74,13 @@ jobs:
         with:
           name: layout-conjuracao-mobile-${{ github.run_id }}
           path: artifacts/layout-conjuracao-mobile
+          if-no-files-found: warn
+      - name: Guardar diagnóstico visual toast contextual
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: layout-toast-contexto-mobile-${{ github.run_id }}
+          path: artifacts/layout-toast-contexto-mobile
           if-no-files-found: warn
       - name: Guardar diagnóstico visual mochila mobile
         if: always()
