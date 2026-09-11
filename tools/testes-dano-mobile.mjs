@@ -1,11 +1,15 @@
 import { chromium } from 'playwright';
 import { existsSync } from 'node:fs';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { criarServidor } from './servidor-teste.mjs';
 
 const VIEWPORTS = [
   { nome: '360x800', width: 360, height: 800 },
   { nome: '768x1024', width: 768, height: 1024 }
 ];
+
+const PASTA = 'artifacts/layout-dano-mobile';
+await mkdir(PASTA, { recursive: true });
 
 const { servidor, porta } = await criarServidor({ porta: 0, semarcar: true });
 const base = `http://localhost:${porta}`;
@@ -15,6 +19,7 @@ const navegador = await chromium.launch({
   executablePath: existsSync(CHROMIUM_LOCAL) ? CHROMIUM_LOCAL : undefined
 });
 
+const relatorio = [];
 let falhou = false;
 
 async function executar(viewport) {
@@ -27,6 +32,7 @@ async function executar(viewport) {
   });
   const page = await contexto.newPage();
   const erros = [];
+  let estado = null;
 
   try {
     await page.goto(base, { waitUntil: 'networkidle' });
@@ -39,6 +45,7 @@ async function executar(viewport) {
     await page.evaluate(() => {
       const raiz = document.createElement('section');
       raiz.id = 'teste-dano-l9-b24';
+      raiz.setAttribute('aria-label', 'Diagnóstico do título de dano');
       raiz.innerHTML = [
         '<div class="papel__faixa">Esperança</div>',
         '<div class="papel__faixa" data-teste="dano">Dano e Vida</div>'
@@ -50,7 +57,7 @@ async function executar(viewport) {
       document.querySelector('[data-teste="dano"]')?.textContent.trim() === 'Dano'
     );
 
-    const estado = await page.evaluate(() => ({
+    estado = await page.evaluate(() => ({
       dano: document.querySelector('[data-teste="dano"]')?.textContent.trim() || '',
       esperanca: document.querySelector('#teste-dano-l9-b24 .papel__faixa')?.textContent.trim() || '',
       antigo: [...document.querySelectorAll('.papel__faixa')]
@@ -63,6 +70,22 @@ async function executar(viewport) {
   } catch (erro) {
     erros.push(erro && erro.message ? erro.message : String(erro));
   } finally {
+    try {
+      await page.screenshot({
+        path: `${PASTA}/${viewport.nome}-dano-hud.png`,
+        fullPage: true
+      });
+    } catch (erro) {
+      erros.push(`não foi possível registrar screenshot: ${erro && erro.message ? erro.message : String(erro)}`);
+    }
+
+    relatorio.push({
+      viewport: viewport.nome,
+      largura: viewport.width,
+      altura: viewport.height,
+      estado,
+      erros
+    });
     await contexto.close();
   }
 
@@ -78,4 +101,10 @@ try {
   await new Promise((resolve) => servidor.close(resolve));
 }
 
+await writeFile(
+  `${PASTA}/relatorio.json`,
+  JSON.stringify({ geradoEm: new Date().toISOString(), relatorio }, null, 2)
+);
+
+console.log(`\nDiagnóstico Dano HUD: ${relatorio.length} viewports registradas em ${PASTA}.`);
 if (falhou) process.exit(1);
