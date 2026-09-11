@@ -2327,17 +2327,19 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * A reserva é inventário: arma guardada não concede benefício. O botão abre
    * todas as operações que mudam equipamento e o servidor decide se são válidas.
    */
-  function controleDeArmas(ficha) {
+  function controleDeEquipamentos(ficha) {
     const eq = ficha.equipamento || {};
-    const reserva = Array.isArray(eq.reserva) ? eq.reserva : [];
-    const nomes = reserva.map(catalogo.acharArma).filter(Boolean).map((a) => a.nome);
+    const reservaArmas = Array.isArray(eq.reserva) ? eq.reserva : [];
+    const reservaArmaduras = Array.isArray(eq.reservaArmaduras) ? eq.reservaArmaduras : [];
+    const resumo = [];
+    resumo.push(`${reservaArmas.length} arma${reservaArmas.length === 1 ? '' : 's'} guardada${reservaArmas.length === 1 ? '' : 's'}`);
+    resumo.push(`${reservaArmaduras.length} armadura${reservaArmaduras.length === 1 ? '' : 's'} guardada${reservaArmaduras.length === 1 ? '' : 's'}`);
     return el('div', { class: 'pilha' }, [
-      el('p', { class: 'texto-xs texto-fraco', texto:
-        `Reserva de armas ${reserva.length}/2` + (nomes.length ? ` · ${nomes.join(' · ')}` : ' · vazia') }),
+      el('p', { class: 'texto-xs texto-fraco', texto: resumo.join(' · ') }),
       el('button', {
         type: 'button', class: 'btn btn--fantasma btn--pequeno',
-        onClick: () => abrirGerenciadorDeArmas(ficha)
-      }, 'Gerenciar armas')
+        onClick: () => abrirGerenciadorDeEquipamentos(ficha)
+      }, 'Gerenciar')
     ]);
   }
 
@@ -2351,21 +2353,23 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
   }
 
   /**
-   * Modal único para possuir, guardar e trocar armas.
+   * Modal único para organizar armas e armaduras que o personagem já possui.
    *
    * Não calcula regra: os selects só evitam escolhas absurdas na interface.
-   * O servidor valida propriedade, categoria, mãos, patamar, limite de reserva
-   * e cobra 1 Fadiga quando `cobrarCusto` vier verdadeiro.
+   * O servidor valida propriedade, categoria, mãos, patamar e limite de reserva.
+   * Trocas de arma ainda podem cobrar 1 Fadiga; armadura usa a ação própria de equipar.
    */
-  function abrirGerenciadorDeArmas(ficha) {
+  function abrirGerenciadorDeEquipamentos(ficha) {
     const eq = ficha.equipamento || {};
-    const reserva = Array.isArray(eq.reserva) ? eq.reserva : [];
-    const idsPossuidos = [eq.primaria, eq.secundaria].concat(reserva).filter(Boolean);
+    const reservaArmas = Array.isArray(eq.reserva) ? eq.reserva : [];
+    const reservaArmaduras = Array.isArray(eq.reservaArmaduras) ? eq.reservaArmaduras : [];
+
+    const idsPossuidos = [...new Set([eq.primaria, eq.secundaria].concat(reservaArmas).filter(Boolean))];
     const possuidas = idsPossuidos.map(catalogo.acharArma).filter(Boolean);
     const primarias = possuidas.filter((a) => a.categoria === 'primaria');
     const secundarias = possuidas.filter((a) => a.categoria === 'secundaria');
-
     const opcao = (a) => el('option', { value: a.id }, a.nome);
+
     const seletorPrim = el('select', {
       class: 'campo__entrada', 'aria-label': 'Arma primária equipada'
     }, [
@@ -2382,18 +2386,19 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     ]);
     seletorSec.value = eq.secundaria || '';
 
-    const nivel = Number((ficha.identidade || {}).nivel) || 1;
-    const tier = tierDeEquipamentoNaTela(nivel);
-    const disponiveis = (catalogo.todasAsArmas ? catalogo.todasAsArmas() : [])
-      .filter((a) => Number(a.tier) <= tier)
-      .slice()
-      .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
-    const seletorNova = el('select', {
-      class: 'campo__entrada', 'aria-label': 'Arma obtida'
-    }, disponiveis.map(opcao));
+    const idsArmaduras = [...new Set([eq.armadura].concat(reservaArmaduras).filter(Boolean))];
+    const armadurasPossuidas = idsArmaduras.map(catalogo.acharArmadura).filter(Boolean);
+    const seletorArmadura = el('select', {
+      class: 'campo__entrada', 'aria-label': 'Armadura equipada'
+    }, armadurasPossuidas.length
+      ? armadurasPossuidas.map(opcao)
+      : [el('option', { value: '', disabled: true }, 'Nenhuma armadura possuída')]);
+    seletorArmadura.value = eq.armadura || '';
 
-    const listaReserva = el('div', { class: 'pilha' }, reserva.length
-      ? reserva.map((id, indice) => {
+    let modal = null;
+
+    const listaReserva = el('div', { class: 'pilha' }, reservaArmas.length
+      ? reservaArmas.map((id, indice) => {
           const a = catalogo.acharArma(id);
           return el('div', { class: 'linha' }, [
             el('span', { class: 'texto-sm crescer', texto: a ? a.nome : id }),
@@ -2402,16 +2407,49 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
               'aria-label': `Remover ${a ? a.nome : id} da reserva`,
               onClick: async () => {
                 const r = await enviar([{ tipo: 'arma', acao: 'remover', indice }]);
-                if (r) modal.fechar();
+                if (r && modal) modal.fechar();
               }
             }, 'Remover')
           ]);
         })
       : [el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma arma guardada.' })]);
 
+    const listaArmaduras = el('div', { class: 'pilha' }, reservaArmaduras.length
+      ? reservaArmaduras.map((id, indice) => {
+          const a = catalogo.acharArmadura(id);
+          return el('div', { class: 'linha' }, [
+            el('span', { class: 'texto-sm crescer', texto: a ? a.nome : id }),
+            el('button', {
+              type: 'button', class: 'btn btn--fantasma btn--pequeno',
+              'aria-label': `Remover ${a ? a.nome : id} das armaduras guardadas`,
+              onClick: async () => {
+                const r = await enviar([{ tipo: 'armadura', acao: 'remover', indice }]);
+                if (r && modal) modal.fechar();
+              }
+            }, 'Remover')
+          ]);
+        })
+      : [el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma armadura guardada.' })]);
+
+    const equiparArmadura = el('button', {
+      type: 'button', class: 'btn btn--fantasma btn--pequeno',
+      disabled: !seletorArmadura.value || seletorArmadura.value === (eq.armadura || ''),
+      onClick: async (ev) => {
+        if (!seletorArmadura.value || seletorArmadura.value === (eq.armadura || '')) return;
+        const r = await travarBotao(ev.currentTarget,
+          enviar([{ tipo: 'armadura', acao: 'equipar', armadura: seletorArmadura.value }]));
+        if (r && modal) modal.fechar();
+      }
+    }, 'Equipar armadura');
+    seletorArmadura.addEventListener('change', () => {
+      equiparArmadura.disabled = !seletorArmadura.value || seletorArmadura.value === (eq.armadura || '');
+    });
+
     const conteudo = el('div', { class: 'pilha' }, [
+      el('p', { class: 'texto-xs texto-fraco', texto:
+        'Novos equipamentos são adicionados pela Mochila > Do livro. Aqui você só organiza o que o personagem já possui.' }),
       el('div', { class: 'pilha' }, [
-        el('strong', { texto: 'Equipadas' }),
+        el('strong', { texto: 'Armas equipadas' }),
         el('label', { class: 'campo' }, [
           el('span', { class: 'campo__rotulo', texto: 'Primária' }), seletorPrim
         ]),
@@ -2422,14 +2460,17 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           'Em situação perigosa, trocar armas custa 1 Fadiga. Em situação calma ou durante preparação num descanso, a troca é livre.' })
       ]),
       el('div', { class: 'pilha' }, [
-        el('strong', { texto: `Reserva ${reserva.length}/2` }),
+        el('strong', { texto: `Armas guardadas ${reservaArmas.length}/2` }),
         listaReserva
       ]),
       el('div', { class: 'pilha' }, [
-        el('strong', { texto: 'Registrar arma obtida' }),
-        seletorNova,
-        el('p', { class: 'texto-xs texto-fraco', texto:
-          'O app não decide compra ou saque: registre aqui uma arma que a mesa já determinou que o personagem obteve.' })
+        el('strong', { texto: 'Armadura equipada' }),
+        seletorArmadura,
+        equiparArmadura
+      ]),
+      el('div', { class: 'pilha' }, [
+        el('strong', { texto: `Armaduras guardadas ${reservaArmaduras.length}` }),
+        listaArmaduras
       ])
     ]);
 
@@ -2440,31 +2481,22 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         secundaria: seletorSec.value || null,
         cobrarCusto
       }]);
-      if (r) modal.fechar();
+      if (r && modal) modal.fechar();
     };
 
-    const registrar = async () => {
-      if (!seletorNova.value) return;
-      const r = await enviar([{ tipo: 'arma', acao: 'adicionar', arma: seletorNova.value }]);
-      if (r) modal.fechar();
-    };
-
-    const modal = abrirModal({
+    modal = abrirModal({
+      titulo: 'Gerenciar equipamentos',
       conteudo,
       acoes: [
         el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar() }, 'Fechar'),
         el('button', {
           type: 'button', class: 'btn btn--fantasma',
-          onClick: () => registrar()
-        }, 'Registrar na reserva'),
-        el('button', {
-          type: 'button', class: 'btn btn--fantasma',
           onClick: () => trocar(false)
-        }, 'Trocar sem custo'),
+        }, 'Trocar armas sem custo'),
         el('button', {
           type: 'button', class: 'btn btn--principal',
           onClick: () => trocar(true)
-        }, 'Trocar agora · 1 Fadiga')
+        }, 'Trocar armas agora · 1 Fadiga')
       ]
     });
     return modal;
@@ -2787,7 +2819,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     pai.append(painelDeDano(ficha));
 
     pai.append(tabelaDeEquipamento(ficha));
-    pai.append(controleDeArmas(ficha));
+    pai.append(controleDeEquipamentos(ficha));
 
     /* --- condições -------------------------------------------------------
      *
@@ -4709,7 +4741,7 @@ function ouroEmPunhados(ouro) {
         }
         if (categoria.id === 'arma') {
           return `Nível ${nivel}: mostrando armas permitidas até o patamar ${tierMax}. ` +
-            'Escolher registra a arma na reserva (máximo 2); use Gerenciar armas para trocar o conjunto equipado.';
+            'Escolher guarda a arma entre seus equipamentos; use Gerenciar para escolher quais ficam equipadas.';
         }
         if (categoria.id === 'armadura') {
           return `Nível ${nivel}: mostrando armaduras permitidas até o patamar ${tierMax}. ` +
@@ -5169,8 +5201,8 @@ function ouroEmPunhados(ouro) {
         'Equipado é um estado. Armas e armaduras guardadas continuam sendo suas e aparecem aqui sem conceder benefícios enquanto não estiverem equipadas.' }),
       el('button', {
         type: 'button', class: 'btn btn--fantasma btn--pequeno',
-        onClick: () => abrirGerenciadorDeArmas(ficha)
-      }, `Gerenciar armas · reserva ${reservaArmas.length}/2`)
+        onClick: () => abrirGerenciadorDeEquipamentos(ficha)
+      }, 'Gerenciar')
     ])));
 
     pai.append(secao('Inventário',
