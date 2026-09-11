@@ -29,15 +29,56 @@ export function abrirAjustes() {
    * ali que os testes apontam para o servidor local. O que sumiu é a PORTA na
    * interface, não o mecanismo.
    */
-  const estado = el('p', { class: 'campo__ajuda', texto: 'Conferindo a conexão…' });
+
+  /*
+   * L9-B21 — estado curto, diagnóstico sob demanda.
+   *
+   * "Servidor respondendo — serviço tal, versão tal" é útil para manutenção,
+   * mas não precisa ocupar a primeira leitura do modal. O selo responde à
+   * pergunta da pessoa (conectou ou não); serviço, versão e motivo do erro
+   * continuam logo abaixo, numa dobra de 44px já usada pelo restante do app.
+   * O símbolo acompanha o texto para o estado nunca depender só de cor.
+   */
+  const estado = el('span', {
+    class: 'selo',
+    'data-ajustes-conexao-estado': 'verificando',
+    texto: '… Conferindo'
+  });
+  const detalhe = el('p', {
+    class: 'texto-xs texto-fraco',
+    'data-ajustes-conexao-detalhe': 'true',
+    texto: 'Aguardando resposta do servidor.'
+  });
+  const detalhes = el('details', { class: 'dobra', 'data-ajustes-conexao-detalhes': 'true' }, [
+    el('summary', { class: 'dobra__topo' }, [
+      el('span', { class: 'dobra__nome', texto: 'Detalhes técnicos' }),
+      el('span', { class: 'dobra__seta', 'aria-hidden': 'true', texto: '›' })
+    ]),
+    el('div', { class: 'dobra__corpo' }, [detalhe])
+  ]);
+  const linhaEstado = el('div', {
+    class: 'linha',
+    role: 'status',
+    'aria-live': 'polite'
+  }, [estado]);
+
   api.ping()
-    .then((d) => { estado.textContent = `Servidor respondendo — ${d.servico}, versão ${d.versao}.`; })
-    .catch((e) => { estado.textContent = 'Sem resposta do servidor: ' + mensagemDoErro(e); });
+    .then((d) => {
+      estado.textContent = '✓ Conectado';
+      estado.dataset.ajustesConexaoEstado = 'conectado';
+      detalhe.textContent = `${d.servico} · versão ${d.versao}.`;
+    })
+    .catch((e) => {
+      estado.textContent = '! Sem resposta';
+      estado.dataset.ajustesConexaoEstado = 'erro';
+      detalhe.textContent = mensagemDoErro(e);
+    });
 
   const conteudo = el('div', { class: 'pilha' }, [
     el('div', { class: 'campo' }, [
       el('span', { class: 'campo__rotulo', texto: 'Conexão' }),
-      estado
+      linhaEstado,
+      detalhes
     ]),
     el('p', { class: 'texto-xs texto-fraco', texto: `Aplicativo versão ${CONFIG.VERSAO}` })
   ]);
