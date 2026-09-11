@@ -73,9 +73,9 @@ oldsec = oldsec.replace('contexto.previaDoAvanco_(', 'previaAvancoComCartaTeste_
 oldsec = oldsec.replace('contexto.aplicarAvanco_(', 'aplicarAvancoComCartaTeste_(')
 s = s[:start] + oldsec + s[stop:]
 
-# Quando o teste já escolheu Traços, completa a segunda escolha com outro tipo
-# antes de tentar Traços de novo; isso evita consumir marcações que o próprio
-# teste quer controlar nos níveis seguintes.
+# Se já há uma escolha explícita de Traços, a segunda escolha automática deve
+# preferir outra categoria. Assim o helper não marca traços que o teste quer
+# reservar para o nível seguinte.
 old = """    const ordem = ['tracos', 'pontos-de-vida', 'estresse', 'evasao', 'experiencias'];
     const marcados = (ficha.avancos && ficha.avancos.tracosMarcados) || [];
     const usadosAgora = marcados.slice();
@@ -89,18 +89,8 @@ new = """    const temTracosPredefinidos = predefinidos.some((x) => x && x.opcao
 """
 one(old, new, 'ordem helper traços')
 
-old = """    const marcados = (ficha.avancos && ficha.avancos.tracosMarcados) || [];
-    const usadosAgora = marcados.slice();
-    predefinidos.forEach((x) => {
-"""
-# Se a transformação da fase 1 não deixou exatamente esta sequência, a ordem
-# acima já contém as duas linhas; procure só a parte restante.
-if old in s:
-    new = """    const marcados = (ficha.avancos && ficha.avancos.tracosMarcados) || [];
-    const usadosAgora = marcados.slice();
-    predefinidos.forEach((x) => {
-"""
-# O bloco predefinidos é inserido pela fase 1; garantimos que existe.
+# A fase 1 já injeta os traços predefinidos em usadosAgora; se por alguma
+# razão esse bloco não estiver presente, acrescentamos aqui.
 if "predefinidos.forEach((x) => {" not in s:
     needle = """    const usadosAgora = marcados.slice();
 """
@@ -172,8 +162,6 @@ novo = r'''teste('SRD 2.0: Multiclasse risca subclasse aprimorada apenas no mesm
 '''
 s = s[:start] + novo + s[end:]
 
-# A antiga mensagem testava só "consome o nível"; o contrato novo é mais
-# preciso e diz que a soma deve ser exatamente dois.
 old = """  verdade(p.erros.some((e) => /escolhas por nível/.test(e)), JSON.stringify(p.erros));
 """
 new = """  verdade(p.erros.some((e) => /exatamente 2 avanços por nível/.test(e)), JSON.stringify(p.erros));
@@ -195,9 +183,8 @@ novo = r'''teste('SRD 2.0: no 4º patamar ainda aparecem espaços livres do 2º 
 '''
 s = s[:start] + novo + s[end:]
 
-# Preparado via Multiclasse testa a carta ADICIONAL da Fundação. A nova carta
-# normal do nível também é obrigatória, então a fixture a fornece sem interferir
-# no que está sendo testado.
+# Preparado via Multiclasse: a carta extra de Fundação continua sendo o objeto
+# do teste, mas a carta normal do nível precisa existir também.
 start = s.index("teste('Preparado via multiclasse exige a carta adicional e aceita o domínio recém-adquirido'")
 try:
     end = s.index("\nteste(", start + 10)
@@ -205,11 +192,11 @@ except ValueError:
     end = len(s)
 bloco = s[start:end]
 bloco = bloco.replace(
-    "contexto.simularAvanco_(f, { avancos: [base] })",
-    "contexto.simularAvanco_(f, comCartaDoNivelTeste_(f, { avancos: [base] }))")
+    "const sem = contexto.simularAvanco_(f, { avancos: [base] });",
+    "const sem = contexto.simularAvanco_(f, comCartaDoNivelTeste_(f, { avancos: [base] }));")
 bloco = bloco.replace(
-    "contexto.simularAvanco_(f, { avancos: [Object.assign({}, base, {\n    cartasExtrasDeSubclasse: ['splendor-segundo-folego']\n  })] })",
-    "contexto.simularAvanco_(f, comCartaDoNivelTeste_(f, { avancos: [Object.assign({}, base, {\n    cartasExtrasDeSubclasse: ['splendor-segundo-folego']\n  })] }))")
+    "const comCarta = contexto.simularAvanco_(f, { avancos: [Object.assign({}, base, {\n    cartasExtrasDeSubclasse: ['splendor-segundo-folego']\n  })] });",
+    "const comCarta = contexto.simularAvanco_(f, comCartaDoNivelTeste_(f, { avancos: [Object.assign({}, base, {\n    cartasExtrasDeSubclasse: ['splendor-segundo-folego']\n  })] }));")
 s = s[:start] + bloco + s[end:]
 
 p.write_text(s, encoding='utf-8')
