@@ -124,6 +124,13 @@ async function auditar(page, viewport, estado, { emUso, guardados, restaurado = 
       if (parseFloat(getComputedStyle(selo).fontSize) < 12) erros.push('selo Em uso abaixo de 12px');
     });
 
+    grupo.querySelectorAll('.ficha__itemTexto').forEach((texto) => {
+      const conteudo = getComputedStyle(texto, '::after').content;
+      if (!['none', 'normal', '""'].includes(conteudo)) {
+        erros.push(`estado Em uso duplicado pelo ::after: ${conteudo}`);
+      }
+    });
+
     [grupo, inventario].forEach((bloco) => {
       const r = bloco.getBoundingClientRect();
       if (r.left < -1 || r.right > largura + 1) erros.push('bloco da mochila saiu da viewport');
