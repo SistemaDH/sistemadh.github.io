@@ -1,4 +1,4 @@
-name: TEMP Lote 9 B25 mochila em uso
+name: TEMP Lote 9 B25 gate completo
 
 on:
   push:
@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 jobs:
-  diagnostico:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,14 +18,36 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run teste:sintaxe
+      - run: npm run teste
+      - run: npm run teste:gerados
       - run: npm run teste:css
+      - name: Auditoria Core 1.0 zerada
+        run: |
+          python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria.md
+          grep -F 'Classes/subclasses: **99 características**; **0** candidatas' /tmp/auditoria.md
+          grep -F 'Comunidades: **9 características**; **0** candidatas' /tmp/auditoria.md
+          grep -F 'Cartas de domínio: **189 cartas**; **0** candidatas' /tmp/auditoria.md
+          grep -F 'Características de armas/armaduras/molduras: **203 ocorrências**; **0** ocorrências candidatas' /tmp/auditoria.md
+          grep -F 'Loot/consumíveis com texto mecânico detectado: **81**; **0** candidatos' /tmp/auditoria.md
       - run: npx playwright install --with-deps chromium
+      - run: npm run teste:e2e
+      - run: npm run teste:layout-mobile
+      - run: npm run teste:layout-mestre-mobile
+      - run: npm run teste:layout-criacao-mobile
+      - run: npm run teste:layout-regras-mobile
+      - run: npm run teste:layout-abertura-mobile
+      - run: npm run teste:layout-ajustes-mobile
+      - run: npm run teste:layout-avanco-mobile
+      - run: npm run teste:layout-descanso-mobile
+      - run: npm run teste:layout-dano-mobile
+      - run: npm run teste:layout-foto-mobile
+      - run: npm run teste:layout-responsivo
       - name: Mochila mobile — itens em uso
         run: npm run teste:layout-mochila-em-uso-mobile
-      - name: Guardar diagnóstico visual
+      - name: Guardar diagnóstico visual B25
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lote9-b25-mochila-em-uso
-          path: artifacts/layout-mochila-em-uso-mobile
+          name: lote9-b25-gate-completo-${{ github.run_id }}
+          path: artifacts
           if-no-files-found: warn
