@@ -1382,6 +1382,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
             ataqueBemSucedido: usarAnel,
             reacoes
           };
+          const tocadoDoEsplendor = conteudo.querySelector('[data-l9-tocado-do-esplendor="1"]');
+          if (!usarEspelho && tocadoDoEsplendor && tocadoDoEsplendor.value) {
+            pedidoDano.tocadoDoEsplendor = tocadoDoEsplendor.value;
+          }
           if (!usarEspelho && usarAparar && usarAparar.checked) {
             const lerDados = (campo) => String(campo.value || '').trim().split(/[\s,;]+/).filter(Boolean).map(Number);
             const ataque = lerDados(dadosDanoAtacante);
@@ -1429,10 +1433,6 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         verbete: 'estresse',
         classe: 'estresse', marcados: r.estresseMarcado || 0, total: r.estresseMaximo || 0
       }),
-      faixa('Esperança'),
-      el('p', { class: 'papel__nota' }, textoAnotado(
-        'Gaste 1 Esperança para usar uma Experiência ou ajudar um aliado.')),
-      trilhaDeEsperanca(r),
       linhaDeDefesas(r, d),
       blocoDeReacoesDeEquipamento_(ficha),
       blocoDeReacoesDeConsumivel_(ficha),
@@ -1445,6 +1445,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         type: 'button', class: 'btn btn--fantasma',
         onClick: () => abrirDanoRecebido(ficha)
       }, 'Aplicar dano recebido'),
+      faixa('Esperança'),
+      el('p', { class: 'papel__nota' }, textoAnotado(
+        'Gaste 1 Esperança para usar uma Experiência ou ajudar um aliado.')),
+      trilhaDeEsperanca(r),
       /*
        * A característica de Esperança continua inteira e junto do mesmo bloco,
        * mas vem depois do HUD de combate: é referência de regra, não marcador
