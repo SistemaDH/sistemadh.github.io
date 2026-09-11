@@ -138,7 +138,17 @@ async function auditar(page, viewport, estado, {
       }
     });
 
-    if (etapas.children.length !== 3) erros.push(`indicador tem ${etapas.children.length} etapas; esperava 3`);
+    const nomesEtapas = ['Tipo', 'Movimentos', 'Prévia'];
+    const itensEtapa = [...etapas.querySelectorAll('.descanso__etapa')];
+    if (itensEtapa.length !== 3) erros.push(`indicador tem ${itensEtapa.length} etapas; esperava 3`);
+    itensEtapa.forEach((item, indice) => {
+      const rotulo = item.querySelector('.descanso__etapaNome');
+      const texto = (rotulo?.textContent || '').trim();
+      if (texto !== nomesEtapas[indice]) erros.push(`rótulo da etapa ${indice + 1}="${texto}"`);
+      if (rotulo && rotulo.scrollWidth > rotulo.clientWidth + 1) {
+        erros.push(`rótulo "${texto}" foi truncado (${rotulo.scrollWidth}px > ${rotulo.clientWidth}px)`);
+      }
+    });
     if (atual.dataset.etapa !== String(etapa)) {
       erros.push(`etapa atual=${atual.dataset.etapa}; esperava ${etapa}`);
     }
