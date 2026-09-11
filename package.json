@@ -15,6 +15,7 @@
     "teste:layout-abertura-mobile": "node tools/testes-abertura-mobile.mjs",
     "teste:layout-ajustes-mobile": "node tools/testes-ajustes-mobile.mjs",
     "teste:layout-avanco-mobile": "node tools/testes-avanco-mobile.mjs",
+    "teste:layout-descanso-mobile": "node tools/testes-descanso-mobile.mjs",
     "teste:layout-foto-mobile": "node tools/testes-foto-mobile.mjs",
     "teste:layout-responsivo": "node tools/testes-layout-responsivo.mjs",
     "teste:css": "node tools/conferir-css.mjs",
