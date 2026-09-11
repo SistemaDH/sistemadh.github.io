@@ -1,0 +1,19 @@
+{
+  "geradoEm": "2026-09-11T14:49:29.287Z",
+  "relatorio": [
+    {
+      "viewport": "360x800-toast-ficha",
+      "transitorios": 0,
+      "alertasB28": 1,
+      "fichaVisivel": true,
+      "erros": []
+    },
+    {
+      "viewport": "390x844-toast-ficha",
+      "transitorios": 0,
+      "alertasB28": 1,
+      "fichaVisivel": true,
+      "erros": []
+    }
+  ]
+}

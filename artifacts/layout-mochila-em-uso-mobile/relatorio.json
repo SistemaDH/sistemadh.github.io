@@ -1,0 +1,80 @@
+{
+  "geradoEm": "2026-09-11T14:50:48.475Z",
+  "relatorio": [
+    {
+      "viewport": "360x800",
+      "estado": "dois-em-uso",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "estado": "handler-preservado",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "estado": "um-em-uso",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "estado": "restauracao-768px",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "estado": "retorno-mobile",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "estado": "dois-em-uso",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "estado": "handler-preservado",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "estado": "um-em-uso",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "estado": "restauracao-768px",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "estado": "retorno-mobile",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "estado": "dois-em-uso",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "estado": "handler-preservado",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "estado": "um-em-uso",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "estado": "restauracao-768px",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "estado": "retorno-mobile",
+      "erros": []
+    }
+  ]
+}

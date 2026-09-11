@@ -1,0 +1,27 @@
+{
+  "geradoEm": "2026-09-11T14:50:43.306Z",
+  "relatorio": [
+    {
+      "viewport": "360x800",
+      "largura": 360,
+      "altura": 800,
+      "estado": {
+        "dano": "Dano",
+        "esperanca": "Esperança",
+        "antigo": false
+      },
+      "erros": []
+    },
+    {
+      "viewport": "768x1024",
+      "largura": 768,
+      "altura": 1024,
+      "estado": {
+        "dano": "Dano",
+        "esperanca": "Esperança",
+        "antigo": false
+      },
+      "erros": []
+    }
+  ]
+}

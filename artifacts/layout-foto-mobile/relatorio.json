@@ -1,0 +1,110 @@
+{
+  "geradoEm": "2026-09-11T14:50:53.915Z",
+  "relatorio": [
+    {
+      "viewport": "360x800",
+      "tela": "foto-sem-imagem",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "tela": "zoom-inicial",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "tela": "zoom-carregado",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "tela": "zoom-125",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "tela": "foto-zoom-125",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "tela": "zoom-maximo",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "tela": "zoom-minimo",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "tela": "foto-sem-imagem",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "tela": "zoom-inicial",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "tela": "zoom-carregado",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "tela": "zoom-125",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "tela": "foto-zoom-125",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "tela": "zoom-maximo",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "tela": "zoom-minimo",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "tela": "foto-sem-imagem",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "tela": "zoom-inicial",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "tela": "zoom-carregado",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "tela": "zoom-125",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "tela": "foto-zoom-125",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "tela": "zoom-maximo",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "tela": "zoom-minimo",
+      "erros": []
+    }
+  ]
+}

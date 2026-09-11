@@ -1,0 +1,21 @@
+{
+  "geradoEm": "2026-09-11T14:49:25.939Z",
+  "relatorio": [
+    {
+      "viewport": "360x800-conjuracao",
+      "erros": [],
+      "textWrap": "balance",
+      "gatilhoTop": 269.171875,
+      "pontoTop": 269.171875,
+      "linhasFrase": 2
+    },
+    {
+      "viewport": "390x844-conjuracao",
+      "erros": [],
+      "textWrap": "balance",
+      "gatilhoTop": 242.96875,
+      "pontoTop": 242.96875,
+      "linhasFrase": 1
+    }
+  ]
+}

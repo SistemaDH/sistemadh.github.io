@@ -1,0 +1,80 @@
+{
+  "geradoEm": "2026-09-11T14:49:46.295Z",
+  "relatorio": [
+    {
+      "viewport": "360x800",
+      "estado": "editor-topo",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "estado": "editor-receita-recolhida",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "estado": "editor-alterado",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "estado": "editor-fundo",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "estado": "restauracao-768px",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "estado": "editor-topo",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "estado": "editor-receita-recolhida",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "estado": "editor-alterado",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "estado": "editor-fundo",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "estado": "restauracao-768px",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "estado": "editor-topo",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "estado": "editor-receita-recolhida",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "estado": "editor-alterado",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "estado": "editor-fundo",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "estado": "restauracao-768px",
+      "erros": []
+    }
+  ]
+}

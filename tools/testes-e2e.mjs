@@ -215,6 +215,17 @@ try {
     if (nome.trim() !== 'Lyra Sombravento') throw new Error(`nome no card: "${nome}"`);
   });
 
+  await passo('itens iniciais da criação guardam vínculo ou contexto', async () => {
+    const inventario = noBackend(`(function(){
+      const linha=lerTudo_(ABAS.PERSONAGENS).find(function(x){return x.nome==='Lyra Sombravento';});
+      return linha ? JSON.parse(linha.dados).inventario : [];
+    })()`);
+    const pocao = inventario.find((x) => x && x.id === 'consumivel-07');
+    if (!pocao) throw new Error('Poção de Saúde Menor nasceu sem o ID oficial consumivel-07');
+    const suprimentos = inventario.find((x) => x && /suprimentos/i.test(x.nome || ''));
+    if (!suprimentos || !suprimentos.nota) throw new Error('Suprimentos básicos nasceram sem contexto de criação');
+  });
+
   await passo('a ficha criada tem classe, herança e nível', async () => {
     const linhas = await pagina.locator('.ficha-cartao__linha').allTextContents();
     const juntas = linhas.join(' | ');
@@ -1243,6 +1254,11 @@ try {
     await pagina.locator('.modal__caixa').last()
       .getByLabel('Buscar item do livro').fill('Saco de Dormir');
     await pagina.locator('.ficha__catalogoItem').first().click();
+    const previaLivro = pagina.locator('.modal__caixa').last();
+    if (!(await previaLivro.getByRole('button', { name: 'Selecionar' }).count())) {
+      throw new Error('clicar no catálogo não abriu a prévia com confirmação');
+    }
+    await previaLivro.getByRole('button', { name: 'Selecionar' }).click();
     await esperarGravar(v2);
 
     const doLivro = pagina.locator('.ficha__item', { hasText: 'Saco de Dormir Premium' });
@@ -1322,10 +1338,56 @@ try {
     // Item do LIVRO não tem botão de nota: ele já tem a página oficial.
     const v4 = await versaoNaTela();
     await pagina.locator('.ficha__novoItem').getByRole('button', { name: 'Do livro' }).click();
-    await pagina.locator('.modal__caixa').last()
-      .getByLabel('Buscar item do livro').fill('Saco de Dormir');
-    await pagina.locator('.ficha__catalogoItem').first().click();
+    const catalogoLivro = pagina.locator('.modal__caixa').last();
+    const buscaLivro = catalogoLivro.getByLabel('Buscar item do livro');
+
+    // O catálogo não pode mais esconder a segunda metade dos 120 itens.
+    await catalogoLivro.getByRole('button', { name: /^Consumíveis/ }).click();
+    await buscaLivro.fill('Gota Estelar');
+    if (!(await catalogoLivro.locator('.ficha__catalogoItem', { hasText: 'Gota Estelar' }).count())) {
+      throw new Error('o 60º consumível não apareceu no catálogo completo');
+    }
+
+    // Equipamento do livro precisa estar visível sem virar texto de mochila.
+    await catalogoLivro.getByRole('button', { name: /^Armas/ }).click();
+    await buscaLivro.fill('Espada Larga');
+    if (!(await catalogoLivro.locator('.ficha__catalogoItem', { hasText: 'Espada Larga' }).count())) {
+      throw new Error('arma de nível 1 não apareceu no catálogo da mochila');
+    }
+    await catalogoLivro.getByRole('button', { name: /^Armaduras/ }).click();
+    await buscaLivro.fill('Armadura de couro');
+    const couro = catalogoLivro.locator('.ficha__catalogoItem', { hasText: 'Armadura de couro' }).first();
+    if (!(await couro.count())) throw new Error('armadura de nível 1 não apareceu no catálogo da mochila');
+    await couro.click();
+    const previaCouro = pagina.locator('.modal__caixa').last();
+    if (!/Limiares/.test(await previaCouro.textContent())) throw new Error('prévia da armadura não mostrou os detalhes');
+    await previaCouro.getByRole('button', { name: 'Fechar' }).click();
+    igual(await versaoNaTela(), v4, 'fechar a prévia não pode alterar a ficha');
+
+    // Reabre a armadura e confirma: ela fica GUARDADA; não substitui a atual.
+    await couro.click();
+    await pagina.locator('.modal__caixa').last().getByRole('button', { name: 'Selecionar' }).click();
     await esperarGravar(v4);
+    const vCatalogoArmadura = await versaoNaTela();
+    const estadoArmadura = noBackend(`(function(){
+      const linha=lerTudo_(ABAS.PERSONAGENS).find(function(x){return x.nome==='Lyra Sombravento';});
+      const f=linha ? JSON.parse(linha.dados) : {};
+      return (f.equipamento || {});
+    })()`);
+    if (!((estadoArmadura.reservaArmaduras || []).includes('armadura-t1-armadura-de-couro'))) {
+      throw new Error('armadura selecionada não foi para o inventário de equipamentos');
+    }
+    if (estadoArmadura.armadura === 'armadura-t1-armadura-de-couro') {
+      throw new Error('selecionar no catálogo equipou a armadura sem o jogador decidir');
+    }
+
+    await pagina.locator('.ficha__novoItem').getByRole('button', { name: 'Do livro' }).click();
+    const catalogoSaque = pagina.locator('.modal__caixa').last();
+    await catalogoSaque.getByRole('button', { name: /^Saques/ }).click();
+    await catalogoSaque.getByLabel('Buscar item do livro').fill('Saco de Dormir');
+    await catalogoSaque.locator('.ficha__catalogoItem').first().click();
+    await pagina.locator('.modal__caixa').last().getByRole('button', { name: 'Selecionar' }).click();
+    await esperarGravar(vCatalogoArmadura);
     const doLivro = pagina.locator('.ficha__item', { hasText: 'Saco de Dormir Premium' });
     igual(await doLivro.locator('.ficha__itemNome--nota').count(), 0,
       'item do livro não pode aceitar nota — ele já tem a descrição oficial');
@@ -1442,6 +1504,8 @@ try {
     await pagina.locator('.modal__caixa').last()
       .getByLabel('Buscar item do livro').fill('Apito Piper');
     await pagina.locator('.ficha__catalogoItem').first().click();
+    const previaCompra = pagina.locator('.modal__caixa').last();
+    await previaCompra.getByRole('button', { name: 'Selecionar' }).click();
 
     // Voltou para o formulário de compra com o nome do livro preenchido.
     const nome = await caixa.locator('.campo__entrada').first().inputValue();

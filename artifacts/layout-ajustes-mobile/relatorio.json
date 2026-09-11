@@ -1,0 +1,65 @@
+{
+  "geradoEm": "2026-09-11T14:50:25.371Z",
+  "relatorio": [
+    {
+      "viewport": "360x800",
+      "estado": "ajustes-conectado",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "estado": "ajustes-detalhes",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "estado": "ajustes-sem-resposta",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "estado": "ajustes-erro-detalhes",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "estado": "ajustes-conectado",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "estado": "ajustes-detalhes",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "estado": "ajustes-sem-resposta",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "estado": "ajustes-erro-detalhes",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "estado": "ajustes-conectado",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "estado": "ajustes-detalhes",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "estado": "ajustes-sem-resposta",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "estado": "ajustes-erro-detalhes",
+      "erros": []
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "geradoEm": "2026-09-11T14:50:17.310Z",
+  "relatorio": [
+    {
+      "viewport": "360x800",
+      "tela": "jogador-oculto",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "tela": "jogador-visivel",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "tela": "cadastro-independente",
+      "erros": []
+    },
+    {
+      "viewport": "360x800",
+      "tela": "mestre-visivel",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "tela": "jogador-oculto",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "tela": "jogador-visivel",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "tela": "cadastro-independente",
+      "erros": []
+    },
+    {
+      "viewport": "390x844",
+      "tela": "mestre-visivel",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "tela": "jogador-oculto",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "tela": "jogador-visivel",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "tela": "cadastro-independente",
+      "erros": []
+    },
+    {
+      "viewport": "430x932",
+      "tela": "mestre-visivel",
+      "erros": []
+    }
+  ]
+}

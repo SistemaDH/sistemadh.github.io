@@ -1,0 +1,89 @@
+{
+  "geradoEm": "2026-09-11T14:49:55.417Z",
+  "relatorio": [
+    {
+      "viewport": "360x800",
+      "tela": "criacao-inicio",
+      "erros": [],
+      "larguraDocumento": 360,
+      "larguraViewport": 360
+    },
+    {
+      "viewport": "360x800",
+      "tela": "criacao-etapa-1",
+      "erros": [],
+      "larguraDocumento": 360,
+      "larguraViewport": 360
+    },
+    {
+      "viewport": "360x800",
+      "tela": "criacao-cartas",
+      "erros": [],
+      "larguraDocumento": 360,
+      "larguraViewport": 360
+    },
+    {
+      "viewport": "360x800",
+      "tela": "criacao-revisao",
+      "erros": [],
+      "larguraDocumento": 360,
+      "larguraViewport": 360
+    },
+    {
+      "viewport": "390x844",
+      "tela": "criacao-inicio",
+      "erros": [],
+      "larguraDocumento": 390,
+      "larguraViewport": 390
+    },
+    {
+      "viewport": "390x844",
+      "tela": "criacao-etapa-1",
+      "erros": [],
+      "larguraDocumento": 390,
+      "larguraViewport": 390
+    },
+    {
+      "viewport": "390x844",
+      "tela": "criacao-cartas",
+      "erros": [],
+      "larguraDocumento": 390,
+      "larguraViewport": 390
+    },
+    {
+      "viewport": "390x844",
+      "tela": "criacao-revisao",
+      "erros": [],
+      "larguraDocumento": 390,
+      "larguraViewport": 390
+    },
+    {
+      "viewport": "430x932",
+      "tela": "criacao-inicio",
+      "erros": [],
+      "larguraDocumento": 430,
+      "larguraViewport": 430
+    },
+    {
+      "viewport": "430x932",
+      "tela": "criacao-etapa-1",
+      "erros": [],
+      "larguraDocumento": 430,
+      "larguraViewport": 430
+    },
+    {
+      "viewport": "430x932",
+      "tela": "criacao-cartas",
+      "erros": [],
+      "larguraDocumento": 430,
+      "larguraViewport": 430
+    },
+    {
+      "viewport": "430x932",
+      "tela": "criacao-revisao",
+      "erros": [],
+      "larguraDocumento": 430,
+      "larguraViewport": 430
+    }
+  ]
+}

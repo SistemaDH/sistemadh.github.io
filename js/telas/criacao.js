@@ -1155,6 +1155,49 @@ export async function abrirCriacao({ aoCriar } = {}) {
     const com = catalogo.comunidades.find((c) => c.id === rascunho.comunidade);
     const guia = catalogo.guias.find((g) => g.classe === rascunho.classe);
 
+    /*
+     * A mochila da criação não pode nascer como uma lista de nomes soltos.
+     * Quando a escolha existe no catálogo (principalmente as poções), gravamos
+     * o ID oficial. O que é narrativo continua livre, mas já leva uma nota que
+     * explica de onde veio em vez de aparecer como uma palavra muda.
+     */
+    const itensCatalogados = []
+      .concat((catalogo.equipamentos.loot || []).map((i) => ({ ...i, tipo: 'saque' })))
+      .concat((catalogo.equipamentos.consumiveis || []).map((i) => ({ ...i, tipo: 'consumível' })));
+    const acharItemInicial = (nomes) => {
+      const procurados = new Set((nomes || []).filter(Boolean).map(dados.chave));
+      return itensCatalogados.find((item) => {
+        const nomesItem = [item.nome, item.nomeIngles]
+          .concat(item.aliases || [], item.sinonimos || []).filter(Boolean);
+        return nomesItem.some((n) => procurados.has(dados.chave(n)));
+      }) || null;
+    };
+    const registroInicial = (nome, { alternativos = [], nota = '' } = {}) => {
+      const oficial = acharItemInicial([nome].concat(alternativos));
+      if (oficial) return { id: oficial.id, nome: oficial.nome, qtd: 1, emUso: false };
+      const registro = { nome: String(nome || '').trim(), qtd: 1, emUso: false };
+      if (nota) registro.nota = nota;
+      return registro;
+    };
+    const opcaoPocao = ((((catalogo.criacao || {}).escolhaDePocao || {}).opcoes) || [])
+      .find((o) => dados.chave(o.nome) === dados.chave(rascunho.pocao)
+        || (o.sinonimos || []).some((s) => dados.chave(s) === dados.chave(rascunho.pocao)));
+    const inventarioInicial = (catalogo.criacao.inventarioPadrao || []).map((item) =>
+      registroInicial(item.nome, {
+        nota: item.nota
+          ? `Item inicial. ${item.nota}`
+          : 'Item inicial da criação de personagem. Sem efeito mecânico específico catalogado no app.'
+      }));
+    inventarioInicial.push(registroInicial(rascunho.pocao, {
+      alternativos: opcaoPocao ? (opcaoPocao.sinonimos || []) : [],
+      nota: opcaoPocao ? (opcaoPocao.efeito || '') : ''
+    }));
+    rascunho.itensEscolhidos.filter(Boolean).forEach((nome) => inventarioInicial.push(
+      registroInicial(nome, {
+        nota: `Item inicial do Guia de Caráter${classe ? ` de ${classe.nome}` : ''}. ` +
+          'Sem efeito mecânico específico catalogado no app.'
+      })));
+
     const heranca = rascunho.usarMista
       ? rascunho.ancestralidadeMista.map((id) => (catalogo.ancestralidades.find((a) => a.id === id) || {}).nome).filter(Boolean).join('-')
       : (anc ? anc.nome : '');
@@ -1188,8 +1231,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
       tracos: { ...rascunho.tracos },
       caracteristicas,
       equipamento: { ...rascunho.equipamento },
-      inventario: catalogo.criacao.inventarioPadrao.map((i) => i.nome)
-        .concat([rascunho.pocao], rascunho.itensEscolhidos.filter(Boolean)),
+      inventario: inventarioInicial,
       ouro: { punhados: 1, bolsas: 0, cofres: 0 },
       cartas: { ativas: rascunho.cartas.slice(), cofre: [] },
       experiencias: rascunho.experiencias.map((e, i) => ({ nome: (e || '').trim(), bonus: rascunhoTemCaracteristica('Projeto Intencional') && rascunho.projetoIntencional === i ? 3 : 2 })).filter((e) => e.nome),

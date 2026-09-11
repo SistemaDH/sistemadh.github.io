@@ -1,0 +1,149 @@
+{
+  "geradoEm": "2026-09-11T14:49:36.990Z",
+  "relatorio": [
+    {
+      "viewport": "360x800",
+      "tela": "mestre-mesa",
+      "erros": [],
+      "avisos": [],
+      "larguraDocumento": 360,
+      "larguraViewport": 360
+    },
+    {
+      "viewport": "360x800",
+      "tela": "mestre-contagens",
+      "erros": [],
+      "avisos": [],
+      "larguraDocumento": 360,
+      "larguraViewport": 360
+    },
+    {
+      "viewport": "360x800",
+      "tela": "mestre-grupo",
+      "erros": [],
+      "avisos": [],
+      "larguraDocumento": 360,
+      "larguraViewport": 360
+    },
+    {
+      "viewport": "360x800",
+      "tela": "mestre-cena",
+      "erros": [],
+      "avisos": [],
+      "larguraDocumento": 360,
+      "larguraViewport": 360
+    },
+    {
+      "viewport": "360x800",
+      "tela": "mestre-bestiario",
+      "erros": [],
+      "avisos": [],
+      "larguraDocumento": 360,
+      "larguraViewport": 360
+    },
+    {
+      "viewport": "360x800",
+      "tela": "mestre-bestiario-rolado",
+      "erros": [],
+      "avisos": [],
+      "larguraDocumento": 360,
+      "larguraViewport": 360
+    },
+    {
+      "viewport": "390x844",
+      "tela": "mestre-mesa",
+      "erros": [],
+      "avisos": [],
+      "larguraDocumento": 390,
+      "larguraViewport": 390
+    },
+    {
+      "viewport": "390x844",
+      "tela": "mestre-contagens",
+      "erros": [],
+      "avisos": [],
+      "larguraDocumento": 390,
+      "larguraViewport": 390
+    },
+    {
+      "viewport": "390x844",
+      "tela": "mestre-grupo",
+      "erros": [],
+      "avisos": [],
+      "larguraDocumento": 390,
+      "larguraViewport": 390
+    },
+    {
+      "viewport": "390x844",
+      "tela": "mestre-cena",
+      "erros": [],
+      "avisos": [],
+      "larguraDocumento": 390,
+      "larguraViewport": 390
+    },
+    {
+      "viewport": "390x844",
+      "tela": "mestre-bestiario",
+      "erros": [],
+      "avisos": [],
+      "larguraDocumento": 390,
+      "larguraViewport": 390
+    },
+    {
+      "viewport": "390x844",
+      "tela": "mestre-bestiario-rolado",
+      "erros": [],
+      "avisos": [],
+      "larguraDocumento": 390,
+      "larguraViewport": 390
+    },
+    {
+      "viewport": "430x932",
+      "tela": "mestre-mesa",
+      "erros": [],
+      "avisos": [],
+      "larguraDocumento": 430,
+      "larguraViewport": 430
+    },
+    {
+      "viewport": "430x932",
+      "tela": "mestre-contagens",
+      "erros": [],
+      "avisos": [],
+      "larguraDocumento": 430,
+      "larguraViewport": 430
+    },
+    {
+      "viewport": "430x932",
+      "tela": "mestre-grupo",
+      "erros": [],
+      "avisos": [],
+      "larguraDocumento": 430,
+      "larguraViewport": 430
+    },
+    {
+      "viewport": "430x932",
+      "tela": "mestre-cena",
+      "erros": [],
+      "avisos": [],
+      "larguraDocumento": 430,
+      "larguraViewport": 430
+    },
+    {
+      "viewport": "430x932",
+      "tela": "mestre-bestiario",
+      "erros": [],
+      "avisos": [],
+      "larguraDocumento": 430,
+      "larguraViewport": 430
+    },
+    {
+      "viewport": "430x932",
+      "tela": "mestre-bestiario-rolado",
+      "erros": [],
+      "avisos": [],
+      "larguraDocumento": 430,
+      "larguraViewport": 430
+    }
+  ]
+}
