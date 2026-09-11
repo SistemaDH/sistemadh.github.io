@@ -13,6 +13,7 @@
     "teste:layout-criacao-mobile": "node tools/testes-layout-criacao-mobile.mjs && node tools/testes-ajuda-criacao-mobile.mjs",
     "teste:layout-regras-mobile": "node tools/testes-layout-regras-mobile.mjs",
     "teste:layout-abertura-mobile": "node tools/testes-abertura-mobile.mjs",
+    "teste:layout-ajustes-mobile": "node tools/testes-ajustes-mobile.mjs",
     "teste:layout-foto-mobile": "node tools/testes-foto-mobile.mjs",
     "teste:layout-responsivo": "node tools/testes-layout-responsivo.mjs",
     "teste:css": "node tools/conferir-css.mjs",
