@@ -11,9 +11,6 @@ def one(old, new, label):
         raise SystemExit(f'{label}: esperava 1, achei {n}')
     s = s.replace(old, new, 1)
 
-# Helper que fornece uma carta LEGAL e ainda não possuída para testes cujo foco
-# não é a escolha da carta. Os testes novos da obrigatoriedade chamam o motor
-# cru e continuam provando que omitir a carta falha.
 anchor = """function bardoNivel1(extras = {}) {
   return contexto.fichaRapida_({
     nome: 'Subindo', classe: 'Bardo', subclasse: 'Músico Errante',
@@ -61,6 +58,17 @@ function aplicarAvancoComCartaTeste_(ficha, escolhas = {}) {
 '''
 one(anchor, helper, 'inserir helpers de carta')
 
+# O helper subirUm fica ANTES da bateria de avanço. Em vez de depender da
+# forma textual exata do retorno, isolamos o bloco e trocamos a chamada do motor
+# dentro dele. Isso funciona antes e depois da transformação da fase 1.
+h0 = s.index('function subirUm(ficha, escolhas = {}) {')
+h1 = s.index("\n}\n\nteste('os quatro patamares", h0) + 2
+hbloco = s[h0:h1]
+if hbloco.count('contexto.aplicarAvanco_(') != 1:
+    raise SystemExit('subirUm com carta: esperava uma chamada direta do motor no helper')
+hbloco = hbloco.replace('contexto.aplicarAvanco_(', 'aplicarAvancoComCartaTeste_(', 1)
+s = s[:h0] + hbloco + s[h1:]
+
 # Nos testes antigos de avanço, carta obrigatória vira fixture. Os testes SRD2
 # adicionados depois deste marcador continuam chamando o motor cru.
 start = s.index("teste('a prévia não encosta na ficha original'")
@@ -69,21 +77,6 @@ oldsec = s[start:stop]
 oldsec = oldsec.replace('contexto.previaDoAvanco_(', 'previaAvancoComCartaTeste_(')
 oldsec = oldsec.replace('contexto.aplicarAvanco_(', 'aplicarAvancoComCartaTeste_(')
 s = s[:start] + oldsec + s[stop:]
-
-# O helper subirUm, inclusive usado por Multiclasse, sempre recebe a carta.
-# A fase 1 já reescreve o retorno do helper; aceitamos tanto a forma nova
-# quanto a antiga para o adaptador continuar robusto se a ordem mudar.
-candidatos = [
-    "return contexto.aplicarAvanco_(ficha, finais).ficha;",
-    "return contexto.aplicarAvanco_(ficha, { ...base, ...escolhas }).ficha;"
-]
-for velho in candidatos:
-    if velho in s:
-        s = s.replace(velho, "return aplicarAvancoComCartaTeste_(ficha, finais).ficha;" if 'finais' in velho
-                      else "return aplicarAvancoComCartaTeste_(ficha, { ...base, ...escolhas }).ficha;", 1)
-        break
-else:
-    raise SystemExit('subirUm com carta: retorno do helper não encontrado')
 
 # Ao completar uma escolha explícita de Traços, não reutilize os dois que já
 # foram escolhidos no mesmo nível.
@@ -100,7 +93,6 @@ new = """    const marcados = (ficha.avancos && ficha.avancos.tracosMarcados) ||
 """
 one(old, new, 'helper traços usados agora')
 
-# Mensagem mudou de "até duas" para "exatamente dois".
 old = """  verdade(p.erros.some((e) => new RegExp(`${ESCOLHAS_POR_NIVEL} escolhas por nível`).test(e)),
     JSON.stringify(p.erros));
 """
@@ -109,8 +101,6 @@ new = """  verdade(p.erros.some((e) => /exatamente 2 avanços por nível/.test(e
 """
 one(old, new, 'mensagem exatamente dois')
 
-# SRD2 remove o teto fixo 4/7 da carta adicional de patamar inferior: vale o
-# nível atual (e o limite específico de multiclasse, se for o caso).
 start = s.index("teste('a carta extra respeita o teto do patamar'")
 end = s.index("teste('a troca de carta é por nível igual ou menor'", start)
 novo = r'''teste('SRD 2.0: carta extra de patamar inferior usa o nível atual, não o teto antigo 4/7', () => {
@@ -118,11 +108,8 @@ novo = r'''teste('SRD 2.0: carta extra de patamar inferior usa o nível atual, n
   const nivel5 = cartas.GRACE.find((c) => c[2] === 5);
   const nivel6 = cartas.GRACE.find((c) => c[2] === 6);
   let f = bardoNivel1();
-  f = subirUm(f);   // 2
-  f = subirUm(f);   // 3
-  f = subirUm(f);   // 4
+  f = subirUm(f); f = subirUm(f); f = subirUm(f);
   igual(f.identidade.nivel, 4);
-
   const cabe = previaAvancoComCartaTeste_(f, {
     experienciaNova: 'Conquista do nível 5',
     avancos: [
@@ -131,7 +118,6 @@ novo = r'''teste('SRD 2.0: carta extra de patamar inferior usa o nível atual, n
     ]
   });
   igual(cabe.erros, [], JSON.stringify(cabe.erros));
-
   const naoCabe = previaAvancoComCartaTeste_(f, {
     experienciaNova: 'Conquista do nível 5',
     avancos: [
@@ -145,8 +131,6 @@ novo = r'''teste('SRD 2.0: carta extra de patamar inferior usa o nível atual, n
 '''
 s = s[:start] + novo + s[end:]
 
-# A expectativa antiga era errada: multiclasse não elimina upgrades de
-# subclasse para sempre; só cruza a caixa do mesmo patamar.
 start = s.index("teste('quem faz multiclasse não pega mais subclasse aprimorada'")
 end = s.index("teste('pegar a subclasse aprimorada corta a multiclasse do patamar'", start)
 novo = r'''teste('SRD 2.0: Multiclasse risca subclasse aprimorada apenas no mesmo patamar', () => {
@@ -158,7 +142,6 @@ novo = r'''teste('SRD 2.0: Multiclasse risca subclasse aprimorada apenas no mesm
     .find((o) => o.id === 'subclasse' && o.patamar === 3);
   igual(subT3.disponivel, false);
   verdade(/mesmo patamar/.test(subT3.motivo), subT3.motivo);
-
   const futura = JSON.parse(JSON.stringify(r.ficha));
   futura.identidade.nivel = 7;
   contexto.aplicarDerivados_(futura);
@@ -170,7 +153,6 @@ novo = r'''teste('SRD 2.0: Multiclasse risca subclasse aprimorada apenas no mesm
 '''
 s = s[:start] + novo + s[end:]
 
-# O teste novo de tiers não precisa gastar seis avanços para provar a lista.
 start = s.index("teste('SRD 2.0: no 4º patamar ainda aparecem espaços livres do 2º patamar'")
 end = s.index("teste('SRD 2.0: Multiclasse só risca subclasse aprimorada no mesmo patamar'", start)
 novo = r'''teste('SRD 2.0: no 4º patamar ainda aparecem espaços livres do 2º patamar', () => {
@@ -186,7 +168,6 @@ novo = r'''teste('SRD 2.0: no 4º patamar ainda aparecem espaços livres do 2º 
 '''
 s = s[:start] + novo + s[end:]
 
-# Teste de Preparado em multiclasse mora longe da seção de avanço.
 start = s.index("teste('Preparado via multiclasse exige a carta adicional e aceita o domínio recém-adquirido'")
 try:
     end = s.index("\nteste(", start + 10)
