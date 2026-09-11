@@ -53,6 +53,8 @@ jobs:
         run: npm run teste:layout-descanso-mobile
       - name: Dano HUD 360 / 768 sem título antigo
         run: npm run teste:layout-dano-mobile
+      - name: Mochila mobile 360 / 390 / 430 + itens em uso
+        run: npm run teste:layout-mochila-em-uso-mobile
       - name: Foto mobile 360 / 390 / 430 + zoom
         run: npm run teste:layout-foto-mobile
       - name: Layout responsivo 768 / 1024 / 1440
@@ -70,6 +72,13 @@ jobs:
         with:
           name: layout-conjuracao-mobile-${{ github.run_id }}
           path: artifacts/layout-conjuracao-mobile
+          if-no-files-found: warn
+      - name: Guardar diagnóstico visual mochila mobile
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: layout-mochila-em-uso-mobile-${{ github.run_id }}
+          path: artifacts/layout-mochila-em-uso-mobile
           if-no-files-found: warn
       - name: Guardar diagnóstico visual Mestre mobile
         if: always()
