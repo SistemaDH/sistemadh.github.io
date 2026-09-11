@@ -32,8 +32,10 @@ jobs:
           test -f artifacts/layout-dano-mobile/relatorio.json
           grep -F '"dano": "Dano"' artifacts/layout-dano-mobile/relatorio.json
           grep -F '"antigo": false' artifacts/layout-dano-mobile/relatorio.json
-          grep -F 'layout-dano-mobile-${{ github.run_id }}' .github/workflows/ci.yml
+          grep -F 'name: layout-dano-mobile-' .github/workflows/ci.yml
+          grep -F 'path: artifacts/layout-dano-mobile' .github/workflows/ci.yml
       - name: Guardar diagnóstico visual Dano HUD
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: layout-dano-mobile-b30-${{ github.run_id }}
