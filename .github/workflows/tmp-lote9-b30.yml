@@ -1,0 +1,41 @@
+name: tmp Lote 9 B30 dano artifact
+
+on:
+  push:
+    branches:
+      - tmp-lote9-b30-dano-artifact-sol
+    paths:
+      - .github/workflows/tmp-lote9-b30.yml
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - run: npm run teste:sintaxe
+      - run: npx playwright install --with-deps chromium
+      - name: Dano HUD 360 / 768 com diagnóstico visual
+        run: npm run teste:layout-dano-mobile
+      - name: Conferir arquivos do diagnóstico
+        shell: bash
+        run: |
+          test -f artifacts/layout-dano-mobile/360x800-dano-hud.png
+          test -f artifacts/layout-dano-mobile/768x1024-dano-hud.png
+          test -f artifacts/layout-dano-mobile/relatorio.json
+          grep -F '"dano": "Dano"' artifacts/layout-dano-mobile/relatorio.json
+          grep -F '"antigo": false' artifacts/layout-dano-mobile/relatorio.json
+          grep -F 'layout-dano-mobile-${{ github.run_id }}' .github/workflows/ci.yml
+      - name: Guardar diagnóstico visual Dano HUD
+        uses: actions/upload-artifact@v4
+        with:
+          name: layout-dano-mobile-b30-${{ github.run_id }}
+          path: artifacts/layout-dano-mobile
+          if-no-files-found: error
