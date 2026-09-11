@@ -1271,3 +1271,11 @@ O motor foi implantado antes da promoção do frontend:
 - bundle SHA-256: `deabf224e975300370e6063a8520f5233509c97453b832d87d9f331fe5d22add`.
 
 A ordem segura para futuras promoções do motor permanece: escolher commit imutável → fixar `ENGINE_COMMIT` → implantar e reler a Edge Function → CI verde → promover `main`.
+
+## UX de equipamentos — gerenciador unificado (11/09/2026)
+
+- A Mochila > Do livro é a única porta da ficha para adicionar armas e armaduras oficiais.
+- O antigo bloco “Registrar arma obtida” foi removido do gerenciador para não duplicar o fluxo de aquisição.
+- “Gerenciar armas” virou “Gerenciar” e agora organiza, no mesmo modal, armas equipadas/guardadas e armadura equipada/guardadas.
+- Nenhuma regra de patamar mudou: nível 1 = T1; níveis 2–4 = T2; níveis 5–7 = T3; níveis 8–10 = T4. O catálogo mostra equipamentos de patamar menor ou igual ao permitido; uma peça já possuída não melhora automaticamente.
+- Mudança somente de frontend/E2E; nenhuma alteração de motor, banco ou Edge Function foi necessária.
