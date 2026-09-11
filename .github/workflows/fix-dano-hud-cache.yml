@@ -1,16 +1,16 @@
-name: Corrigir HUD de dano e cache
+name: fix-dano-hud-cache
 
 on:
   push:
-    branches: [fix/dano-hud-cartas-cache]
-    paths:
-      - '.github/workflows/fix-dano-hud-cache.yml'
+    branches:
+      - "fix/dano-hud-cartas-cache"
 
 permissions:
   contents: write
 
 jobs:
-  patch-and-test:
+  apply:
+    if: github.event.head_commit.message == 'chore: corrigir workflow temporario'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: '20'
           cache: npm
-      - name: Aplicar correcoes
+      - name: Patch
         shell: bash
         run: |
           python3 - <<'PY'
@@ -36,7 +36,6 @@ jobs:
                   raise SystemExit(f'{label}: esperava 1 ocorrencia, encontrei {n}')
               p.write_text(s.replace(old, new, 1), encoding='utf-8')
 
-          # 1) Nivel: nao pode encolher nem recortar acentos/letras nas pontas.
           p = Path('css/ficha.css')
           s = p.read_text(encoding='utf-8')
           old = '''.ficha__topoLinha .selo--nivel {
@@ -81,7 +80,6 @@ jobs:
               raise SystemExit('CSS selo nivel nao encontrado de forma unica')
           p.write_text(s.replace(old, new, 1), encoding='utf-8')
 
-          # 2) Levantar-Se vira uma reacao selecionavel no proprio modal de dano.
           p = Path('js/telas/ficha.js')
           s = p.read_text(encoding='utf-8')
           pattern = re.compile(r"  function reacoesDeDanoDaFicha_\(ficha\) \{.*?\n  \}\n\n  function blocoDeReacoesDeEquipamento_", re.S)
@@ -108,11 +106,8 @@ jobs:
               raise SystemExit(f'frontend reacoes dano: esperava 1 funcao, encontrei {n}')
           p.write_text(s2, encoding='utf-8')
 
-          # Evita duplicar Levantar-Se como cartao meramente informativo no mesmo modal.
           replace_once('js/lote9-dano.js', "  'levantar-se',\n", '', 'remover Levantar-Se informativo')
 
-          # 3) Servidor: o cliente nao pode inventar Levantar-Se. A carta precisa estar ativa,
-          # o dano precisa continuar Severo depois da Armadura e o Estresse precisa caber.
           p = Path('backend/4C_Ajustes.gs')
           s = p.read_text(encoding='utf-8')
           old = '''  for (let i = 0; i < nomes.length; i++) {
@@ -145,8 +140,7 @@ jobs:
       def = {
         nome:'Levantar-Se', origem:'carta-dominio', momento:'depois-dos-limiares',
         tipos:['fisico','magico'], faixas:['severo'], custo:{ estresse:1 },
-        efeito:{ reduzPv:1 },
-        fonte:'Carta de domínio ativa Levantar-Se.'
+        efeito:{ reduzPv:1 }, fonte:'Carta de domínio ativa Levantar-Se.'
       };
     }
 
@@ -165,8 +159,6 @@ jobs:
               raise SystemExit(f'backend registro de reacoes: esperava 1 bloco, encontrei {s.count(old)}')
           p.write_text(s.replace(old, new, 1), encoding='utf-8')
 
-          # 4) Cache-busting dos arquivos que mudaram. O app novo encadeia ate ficha.js,
-          # em vez de depender do cache HTTP antigo do GitHub Pages expirar.
           versao = '20260911c'
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
@@ -189,7 +181,6 @@ jobs:
             f"import {{ abrirFichaEmJogo }} from './ficha.js?v={versao}';",
             'cache bust ficha')
 
-          # 5) Regressao backend para a carta que o usuario pediu no fluxo.
           p = Path('tools/testes-backend.mjs')
           s = p.read_text(encoding='utf-8')
           marker = "teste('Endurecido pela Batalha cobra Esperança, limpa PV e respeita 1/descanso longo',()=>{"
@@ -216,15 +207,14 @@ teste('Levantar-Se nao pode ser inventada pelo cliente quando a carta nao esta a
 '''
           p.write_text(s.replace(marker, tests + marker, 1), encoding='utf-8')
           PY
-
       - run: npm ci
-      - name: Validar sintaxe e backend
+      - name: Test
         run: |
           npm run teste:sintaxe
           npm run teste
           npm run teste:gerados
           npm run teste:css
-      - name: Commitar correcoes validadas
+      - name: Commit
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
