@@ -38,10 +38,80 @@ jobs:
           p.write_text(s, encoding='utf-8')
           PY
       - run: python3 tools/patch-inventario-posse.py
-      - name: Evitar colisão de variável no cenário do catálogo
+      - name: Ajustar migração antiga, modal e variável do E2E
         run: |
           python3 - <<'PY'
           from pathlib import Path
+
+          # Migração: só trate como criação antiga quando a mochila tiver a
+          # assinatura do kit inicial. Um item digitado à mão continua livre.
+          p = Path('backend/4C_Ajustes.gs')
+          s = p.read_text(encoding='utf-8')
+          alvo = """function normalizarInventario_(ficha) {
+            const lista = Array.isArray(ficha.inventario) ? ficha.inventario : [];
+            const saida = [];
+            const gruposEmUso = {};
+            for (let i = 0; i < lista.length && saida.length < LIMITE_ITENS_INVENTARIO; i++) {
+              const item = itemDeMochila_(lista[i]);
+              if (!item) continue;
+              if (!item.id) {
+          """.replace('            ', '')
+          troca = """function normalizarInventario_(ficha) {
+            const lista = Array.isArray(ficha.inventario) ? ficha.inventario : [];
+            const chavesLegado = lista.map(function (bruto) {
+              const nome = (bruto && typeof bruto === 'object') ? bruto.nome : bruto;
+              return chaveTexto_(nome);
+            });
+            const marcadoresCriacao = ['15 metros de corda','Suprimentos básicos','Um punhado de ouro'];
+            let sinaisCriacao = 0;
+            for (let m = 0; m < marcadoresCriacao.length; m++) {
+              if (chavesLegado.indexOf(chaveTexto_(marcadoresCriacao[m])) !== -1) sinaisCriacao++;
+            }
+            const pareceInventarioInicialLegado = sinaisCriacao >= 2;
+            const saida = [];
+            const gruposEmUso = {};
+            for (let i = 0; i < lista.length && saida.length < LIMITE_ITENS_INVENTARIO; i++) {
+              const item = itemDeMochila_(lista[i]);
+              if (!item) continue;
+              if (!item.id && pareceInventarioInicialLegado) {
+          """.replace('            ', '')
+          if alvo not in s:
+            raise SystemExit('não encontrei normalizarInventario_ pós-patch')
+          s = s.replace(alvo, troca, 1)
+          p.write_text(s, encoding='utf-8')
+
+          # Modal: preserva literalmente o contrato dos botões de uso quando
+          # o equipamento está ativo, mas reserva pode abrir sem esses botões.
+          p = Path('js/telas/ficha.js')
+          s = p.read_text(encoding='utf-8')
+          alvo = """    modal = abrirModal({
+              titulo: item.nome,
+              conteudo: conteudoDeEquipamento(rotulo, item),
+              acoes: [
+                el('button', { type: 'button', class: 'btn btn--fantasma', onClick: fecharModal }, 'Fechar'),
+                ...extras,
+                ...(permitirUso ? botoesDeUsoEquipamento_(item, fecharModal, p.ficha) : [])
+              ]
+            });
+          """.replace('            ', '')
+          troca = """    const acoesBase = [
+              el('button', { type: 'button', class: 'btn btn--fantasma', onClick: fecharModal }, 'Fechar'),
+              ...extras
+            ];
+            modal = abrirModal({
+              titulo: item.nome,
+              conteudo: conteudoDeEquipamento(rotulo, item),
+              acoes: permitirUso
+                ? [...acoesBase, ...botoesDeUsoEquipamento_(item, fecharModal, p.ficha)]
+                : acoesBase
+            });
+          """.replace('            ', '')
+          if alvo not in s:
+            raise SystemExit('não encontrei verEquipamento pós-patch')
+          s = s.replace(alvo, troca, 1)
+          p.write_text(s, encoding='utf-8')
+
+          # Evita colisão com uma variável histórica do mesmo cenário E2E.
           p = Path('tools/testes-e2e.mjs')
           s = p.read_text(encoding='utf-8')
           s = s.replace(
