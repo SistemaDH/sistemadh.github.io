@@ -1,0 +1,140 @@
+/* ==========================================================================
+   L9-B23 · DESCANSO MOBILE — AÇÕES FIXAS, ETAPAS E RESUMO
+
+   O fluxo continua exatamente o mesmo; esta folha só reorganiza o modal abaixo
+   de 640px. O corpo ganha sua própria rolagem e o rodapé permanece visível,
+   levando junto a contagem e os movimentos já escolhidos.
+   ========================================================================== */
+
+.descanso__etapas,
+.descanso__rodapeResumo {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  .modal__caixa--descanso {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding-bottom: 0;
+  }
+
+  .modal__caixa--descanso > .cartao__titulo {
+    flex: 0 0 auto;
+    padding-bottom: var(--e3);
+  }
+
+  .modal__caixa--descanso > .descanso {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    margin-inline: calc(-1 * var(--e5));
+    padding: 0 var(--e5) var(--e4);
+  }
+
+  .modal__caixa--descanso > .modal__acoes {
+    flex: 0 0 auto;
+    align-items: center;
+    margin: 0 calc(-1 * var(--e5));
+    padding: var(--e3) var(--e5) calc(var(--e3) + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--cor-borda);
+    background: var(--cor-superficie);
+    box-shadow: 0 -8px 18px rgba(0, 0, 0, .28);
+  }
+
+  .modal__caixa--descanso > .modal__acoes > .linha {
+    width: 100%;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--e2);
+  }
+
+  .modal__caixa--descanso .descanso__contagem {
+    display: none;
+  }
+
+  .descanso__etapas {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--e1);
+    margin-bottom: var(--e4);
+  }
+
+  .descanso__etapa {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr);
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    min-height: 36px;
+    padding: 4px 6px;
+    border-bottom: 2px solid var(--cor-borda);
+    color: var(--cor-texto-fraco);
+    font-size: var(--txt-xs);
+    line-height: 1.1;
+  }
+
+  .descanso__etapa[data-estado='concluida'] {
+    color: var(--cor-texto-suave);
+    border-bottom-color: var(--cor-borda-forte);
+  }
+
+  .descanso__etapa[data-estado='atual'] {
+    color: var(--cor-titulo);
+    border-bottom-color: var(--cor-ouro);
+  }
+
+  .descanso__etapaNumero {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border: 1px solid currentColor;
+    border-radius: var(--raio-cheio);
+    font-family: var(--fonte-mono);
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .descanso__etapaNome {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 700;
+  }
+
+  .descanso__rodapeResumo {
+    order: -1;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--e2);
+    flex: 1 0 100%;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .descanso__rodapeContagem {
+    color: var(--cor-titulo);
+    font-family: var(--fonte-mono);
+    font-size: var(--txt-xs);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .descanso__rodapeEscolhas {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--cor-texto-suave);
+    font-size: var(--txt-xs);
+  }
+
+  .modal__caixa--descanso > .modal__acoes .btn {
+    min-width: 0;
+  }
+}
