@@ -1322,9 +1322,31 @@ try {
     // Item do LIVRO não tem botão de nota: ele já tem a página oficial.
     const v4 = await versaoNaTela();
     await pagina.locator('.ficha__novoItem').getByRole('button', { name: 'Do livro' }).click();
-    await pagina.locator('.modal__caixa').last()
-      .getByLabel('Buscar item do livro').fill('Saco de Dormir');
-    await pagina.locator('.ficha__catalogoItem').first().click();
+    const catalogoLivro = pagina.locator('.modal__caixa').last();
+    const buscaLivro = catalogoLivro.getByLabel('Buscar item do livro');
+
+    // O catálogo não pode mais esconder a segunda metade dos 120 itens.
+    await catalogoLivro.getByRole('button', { name: /^Consumíveis/ }).click();
+    await buscaLivro.fill('Gota Estelar');
+    if (!(await catalogoLivro.locator('.ficha__catalogoItem', { hasText: 'Gota Estelar' }).count())) {
+      throw new Error('o 60º consumível não apareceu no catálogo completo');
+    }
+
+    // Equipamento do livro precisa estar visível sem virar texto de mochila.
+    await catalogoLivro.getByRole('button', { name: /^Armas/ }).click();
+    await buscaLivro.fill('Espada Larga');
+    if (!(await catalogoLivro.locator('.ficha__catalogoItem', { hasText: 'Espada Larga' }).count())) {
+      throw new Error('arma de nível 1 não apareceu no catálogo da mochila');
+    }
+    await catalogoLivro.getByRole('button', { name: /^Armaduras/ }).click();
+    await buscaLivro.fill('Armadura de couro');
+    if (!(await catalogoLivro.locator('.ficha__catalogoItem', { hasText: 'Armadura de couro' }).count())) {
+      throw new Error('armadura de nível 1 não apareceu no catálogo da mochila');
+    }
+
+    await catalogoLivro.getByRole('button', { name: /^Saques/ }).click();
+    await buscaLivro.fill('Saco de Dormir');
+    await catalogoLivro.locator('.ficha__catalogoItem').first().click();
     await esperarGravar(v4);
     const doLivro = pagina.locator('.ficha__item', { hasText: 'Saco de Dormir Premium' });
     igual(await doLivro.locator('.ficha__itemNome--nota').count(), 0,

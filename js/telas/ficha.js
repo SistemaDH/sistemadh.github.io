@@ -4516,76 +4516,294 @@ function ouroEmPunhados(ouro) {
     }
 
     /**
-     * Escolher um dos 120 itens do livro, com busca.
+     * Catálogo completo do livro, separado pelo tipo real de coisa.
      *
-     * A mochila continua aceitando texto livre — a maior parte do que entra
-     * numa mochila em jogo é coisa que o Mestre inventou na hora. Mas o que
-     * ESTÁ no livro entra pelo livro: assim ele chega com o nome certo, com o
-     * id, e com o texto que explica o que faz.
+     * Antes esta janela dizia "120 itens" e cortava a renderização em 60.
+     * Os 120 eram só saque + consumíveis; armas e armaduras moravam em outro
+     * pedaço do catálogo e pareciam simplesmente ausentes para o jogador.
+     *
+     * Agora há quatro portas claras:
+     *   • Saques e Consumíveis entram na mochila com o ID oficial;
+     *   • Armas entram na reserva (as regras de mãos/tier continuam no servidor);
+     *   • Armaduras substituem a equipada por um salvamento validado completo.
+     *
+     * No modal de COMPRA continuam apenas saque/consumível: compra é atômica
+     * com o ouro e o backend atual põe o que foi comprado na mochila. Fazer uma
+     * espada passar por essa porta a transformaria em texto e perderia sua
+     * mecânica. Equipamento continua sendo equipamento.
      */
-    function abrirCatalogoDeItens({ aoEscolher } = {}) {
-      const todos = catalogo.todosOsItens();
-      const lista = el('div', { class: 'ficha__catalogo' });
+    async function abrirCatalogoDeItens({ aoEscolher } = {}) {
+      const emCompra = typeof aoEscolher === 'function';
+      let eq;
+      let molduraDaMesa = null;
+      try {
+        [eq, molduraDaMesa] = await Promise.all([
+          dados.carregar('equipamentos'),
+          emCompra ? Promise.resolve(null) : acoes.molduraDaMesa().catch(() => null)
+        ]);
+      } catch (e) {
+        avisarErro(mensagemDoErro(e));
+        return;
+      }
 
+      const nivel = Number((((p || {}).ficha || {}).identidade || {}).nivel)
+        || Number((p || {}).nivel) || 1;
+      const tierMax = tierDeEquipamentoNaTela(nivel);
+      const itensDoLivro = catalogo.todosOsItens();
+      const saques = itensDoLivro.filter((i) => dados.chave(i.tipo) === 'saque');
+      const consumiveis = itensDoLivro.filter((i) => dados.chave(i.tipo) === 'consumivel');
+
+      /*
+       * A moldura pode trazer armas/armaduras próprias (Festim das Feras etc.).
+       * A criação já faz esta normalização; a ficha passa a fazer o mesmo para
+       * que "Do livro" não esconda o equipamento da campanha em andamento.
+       */
+      const nomeMoldura = String((((molduraDaMesa || {}).moldura || {}).nome) || '');
+      const equipamentoMoldura = Array.isArray((molduraDaMesa || {}).equipamento)
+        ? molduraDaMesa.equipamento : [];
+      const normalizarDaMoldura = (e) => ({
+        id: e.id,
+        nome: e.nome,
+        categoria: e.cat,
+        tier: Number(e.tier) || 1,
+        tabela: e.tabela || '',
+        atributo: e.atributo || '',
+        alcance: e.alcance || '',
+        dano: e.dano || '',
+        maos: e.maos || '',
+        limiares: e.limiares || '',
+        pontuacao: Number(e.pontuacao) || 0,
+        caracteristica: e.carac ? { nome: e.carac } : null,
+        _moldura: String(e.moldura || nomeMoldura || '')
+      });
+
+      const porId = (lista) => {
+        const mapa = new Map();
+        lista.forEach((item) => { if (item && item.id) mapa.set(item.id, item); });
+        return [...mapa.values()];
+      };
+      const compararEquipamento = (a, b) =>
+        (Number(a.tier) || 1) - (Number(b.tier) || 1)
+        || String(a.categoria || '').localeCompare(String(b.categoria || ''), 'pt-BR')
+        || String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR');
+
+      const armas = porId([...(eq.armas || []), ...equipamentoMoldura
+        .filter((e) => e.cat === 'primaria' || e.cat === 'secundaria')
+        .map(normalizarDaMoldura)])
+        .filter((a) => (Number(a.tier) || 1) <= tierMax)
+        .sort(compararEquipamento);
+      const armaduras = porId([...(eq.armaduras || []), ...equipamentoMoldura
+        .filter((e) => e.cat === 'armadura')
+        .map(normalizarDaMoldura)])
+        .filter((a) => (Number(a.tier) || 1) <= tierMax)
+        .sort(compararEquipamento);
+
+      const categorias = [
+        { id: 'saque', rotulo: 'Saques', itens: saques },
+        { id: 'consumivel', rotulo: 'Consumíveis', itens: consumiveis }
+      ];
+      if (!emCompra) {
+        categorias.push(
+          { id: 'arma', rotulo: 'Armas', itens: armas },
+          { id: 'armadura', rotulo: 'Armaduras', itens: armaduras }
+        );
+      }
+
+      let categoriaAtual = categorias[0].id;
+      let modal = null;
+      const abas = el('div', { class: 'chips', 'aria-label': 'Categorias do catálogo' });
       const busca = el('input', semCorretor({
         type: 'search', class: 'campo__entrada',
-        placeholder: 'Buscar entre os 120 itens do livro…',
+        placeholder: 'Buscar no catálogo…',
         'aria-label': 'Buscar item do livro'
       }));
-
+      const ajuda = el('p', { class: 'texto-xs texto-fraco' });
       const contagem = el('p', { class: 'texto-xs texto-fraco' });
+      const lista = el('div', { class: 'ficha__catalogo' });
+
+      const caracteristica = (item) => {
+        const c = item && item.caracteristica;
+        if (!c) return null;
+        return typeof c === 'string' ? { nome: c, texto: '' } : c;
+      };
+
+      const textoDoItem = (item, categoria) => {
+        if (categoria.id === 'arma') {
+          const c = caracteristica(item);
+          const linha = [
+            item.atributo, item.alcance, item.dano, item.maos
+          ].filter(Boolean).join(' · ');
+          const regra = c && c.nome
+            ? `${c.nome}${c.texto ? ` — ${c.texto}` : ''}` : '';
+          return [linha, regra].filter(Boolean).join(' · ');
+        }
+        if (categoria.id === 'armadura') {
+          const c = caracteristica(item);
+          const pontos = Number(item.pontuacao ?? item.pontuacaoArmadura) || 0;
+          const linha = [
+            item.limiares ? `Limiares base ${item.limiares}` : '',
+            pontos ? `${pontos} Pontos de Armadura` : ''
+          ].filter(Boolean).join(' · ');
+          const regra = c && c.nome
+            ? `${c.nome}${c.texto ? ` — ${c.texto}` : ''}` : '';
+          return [linha, regra].filter(Boolean).join(' · ');
+        }
+        return item.descricao || '';
+      };
+
+      const tipoDoItem = (item, categoria) => {
+        if (categoria.id === 'arma') {
+          const classe = item.categoria === 'secundaria' ? 'arma secundária' : 'arma primária';
+          return `${classe} · T${Number(item.tier) || 1}` + (item._moldura ? ` · ${item._moldura}` : '');
+        }
+        if (categoria.id === 'armadura') {
+          return `armadura · T${Number(item.tier) || 1}` + (item._moldura ? ` · ${item._moldura}` : '');
+        }
+        return item.tipo || categoria.rotulo;
+      };
+
+      const estadoDoEquipamento = (item, categoria) => {
+        const equipado = (((p || {}).ficha || {}).equipamento || {});
+        if (categoria.id === 'arma') {
+          if (equipado.primaria === item.id || equipado.secundaria === item.id) return 'equipada';
+          if ((Array.isArray(equipado.reserva) ? equipado.reserva : []).includes(item.id)) return 'na reserva';
+        }
+        if (categoria.id === 'armadura' && equipado.armadura === item.id) return 'equipada';
+        return '';
+      };
+
+      const textoDeBusca = (item, categoria) => {
+        const c = caracteristica(item);
+        return dados.chave([
+          item.nome, item.nomeIngles, item.descricao, item.categoria, item.tabela,
+          item.atributo, item.alcance, item.dano, item.maos, item.limiares,
+          item._moldura, c && c.nome, c && c.texto, tipoDoItem(item, categoria)
+        ].filter(Boolean).join(' '));
+      };
+
+      const explicacaoDaCategoria = (categoria) => {
+        if (emCompra) {
+          return 'Escolher aqui só preenche a compra. O ouro e o item continuam sendo gravados juntos quando você confirmar Comprar.';
+        }
+        if (categoria.id === 'arma') {
+          return `Nível ${nivel}: mostrando armas permitidas até o patamar ${tierMax}. ` +
+            'Escolher registra a arma na reserva (máximo 2); use Gerenciar armas para trocar o conjunto equipado.';
+        }
+        if (categoria.id === 'armadura') {
+          return `Nível ${nivel}: mostrando armaduras permitidas até o patamar ${tierMax}. ` +
+            'Escolher substitui a armadura equipada e o servidor recalcula/valida as defesas.';
+        }
+        return 'Escolher guarda o item na mochila com o ID oficial, preservando descrição e efeitos mecânicos.';
+      };
+
+      const escolher = async (categoria, item, botao) => {
+        if (emCompra) {
+          aoEscolher(item);
+          if (modal) modal.fechar();
+          return;
+        }
+
+        if (categoria.id === 'saque' || categoria.id === 'consumivel') {
+          acrescentar(botao,
+            [{ tipo: 'inventario', acao: 'adicionar', itemId: item.id }],
+            () => {
+              campoNovo.value = '';
+              if (modal) modal.fechar();
+            });
+          return;
+        }
+
+        if (categoria.id === 'arma') {
+          acrescentar(botao,
+            [{ tipo: 'arma', acao: 'adicionar', arma: item.id }],
+            () => { if (modal) modal.fechar(); });
+          return;
+        }
+
+        if (categoria.id === 'armadura') {
+          try {
+            const nova = await travarBotao(botao, (async () => {
+              // Um salvamento inteiro não pode passar na frente dos toques já
+              // enfileirados; depois deles, relê para usar a versão mais nova.
+              await aguardar(id);
+              p = await acoes.recarregarPersonagem(id);
+              const ficha = JSON.parse(JSON.stringify(p.ficha || {}));
+              ficha.equipamento = Object.assign({}, ficha.equipamento || {}, { armadura: item.id });
+              return acoes.salvarPersonagem(id, ficha, p.versao);
+            })());
+            p = nova;
+            if (modal) modal.fechar();
+            desenhar();
+            avisarSucesso(`${item.nome} equipada.`);
+          } catch (e) {
+            avisarErro(mensagemDoErro(e));
+          }
+        }
+      };
+
+      const categoriaSelecionada = () => categorias.find((c) => c.id === categoriaAtual) || categorias[0];
+
+      const desenharAbas = () => {
+        limpar(abas);
+        categorias.forEach((categoria) => {
+          abas.append(el('button', {
+            type: 'button',
+            class: `chip ${categoriaAtual === categoria.id ? 'chip--ativo' : ''}`,
+            'aria-pressed': categoriaAtual === categoria.id ? 'true' : 'false',
+            onClick: () => {
+              categoriaAtual = categoria.id;
+              busca.value = '';
+              desenharAbas();
+              desenharLista();
+              busca.focus();
+            }
+          }, `${categoria.rotulo} ${categoria.itens.length}`));
+        });
+      };
 
       const desenharLista = () => {
+        const categoria = categoriaSelecionada();
         const termo = dados.chave(busca.value.trim());
-        const achados = !termo ? todos : todos.filter((i) =>
-          dados.chave(i.nome).includes(termo) ||
-          dados.chave(i.descricao || '').includes(termo) ||
-          dados.chave(i.nomeIngles || '').includes(termo));
+        const achados = termo
+          ? categoria.itens.filter((item) => textoDeBusca(item, categoria).includes(termo))
+          : categoria.itens;
 
-        contagem.textContent = achados.length === todos.length
-          ? `${todos.length} itens — 60 saques e 60 consumíveis.`
-          : `${achados.length} ${achados.length === 1 ? 'item' : 'itens'}.`;
+        ajuda.textContent = explicacaoDaCategoria(categoria);
+        busca.placeholder = `Buscar em ${categoria.rotulo.toLowerCase()}…`;
+        contagem.textContent = `${achados.length} de ${categoria.itens.length} ` +
+          `${categoria.itens.length === 1 ? 'opção' : 'opções'}.`;
 
         limpar(lista);
         if (!achados.length) {
           lista.append(el('p', { class: 'texto-sm texto-fraco', texto:
-            'Nada com esse nome. Se for coisa da sua mesa, feche isto e escreva no campo.' }));
+            'Nada com esse nome nesta categoria.' }));
           return;
         }
-        achados.slice(0, 60).forEach((i) => {
-          lista.append(el('button', {
-            type: 'button', class: 'ficha__catalogoItem',
-            onClick: () => {
-              /*
-               * Duas portas para o mesmo catálogo: da Mochila, escolher GUARDA
-               * o item; da compra, escolher só PREENCHE o formulário — quem
-               * grava lá é o botão Comprar, junto com o ouro.
-               */
-              if (aoEscolher) aoEscolher(i);
-              else {
-                acrescentar(botaoGuardar, [{ tipo: 'inventario', acao: 'adicionar', itemId: i.id }],
-                  () => { campoNovo.value = ''; });
-              }
-              modal.fechar();
-            }
+
+        achados.forEach((item) => {
+          const estado = estadoDoEquipamento(item, categoria);
+          const tipo = tipoDoItem(item, categoria) + (estado ? ` · ${estado}` : '');
+          const botao = el('button', {
+            type: 'button',
+            class: `ficha__catalogoItem ${estado ? 'esta-escolhido' : ''}`,
+            disabled: Boolean(estado),
+            onClick: () => escolher(categoria, item, botao)
           }, [
-            el('span', { class: 'ficha__catalogoNome', texto: i.nome }),
-            el('span', { class: 'ficha__catalogoTipo', texto: i.tipo }),
-            el('span', { class: 'ficha__catalogoTexto', texto: i.descricao || '' })
-          ]));
+            el('span', { class: 'ficha__catalogoNome', texto: item.nome }),
+            el('span', { class: 'ficha__catalogoTipo', texto: tipo }),
+            el('span', { class: 'ficha__catalogoTexto', texto: textoDoItem(item, categoria) })
+          ]);
+          lista.append(botao);
         });
-        if (achados.length > 60) {
-          lista.append(el('p', { class: 'texto-xs texto-fraco', texto:
-            `Mostrando 60 de ${achados.length}. Escreva mais para afinar a busca.` }));
-        }
       };
 
       busca.addEventListener('input', desenharLista);
+      desenharAbas();
       desenharLista();
 
-      const modal = abrirModal({
-        titulo: 'Itens do livro',
-        conteudo: el('div', { class: 'pilha' }, [busca, contagem, lista]),
+      modal = abrirModal({
+        titulo: emCompra ? 'Itens do livro' : 'Catálogo do livro',
+        conteudo: el('div', { class: 'pilha' }, [abas, busca, ajuda, contagem, lista]),
         acoes: [el('button', {
           type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar()
         }, 'Fechar')]
