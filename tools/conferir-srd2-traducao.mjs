@@ -49,7 +49,7 @@ const obrigatorios = [
   'Action Roll', 'Reaction Roll', 'Spellcast Roll', 'Hope', 'Fear', 'Stress',
   'Hit Point', 'Armor Slot', 'Evasion', 'Damage Thresholds', 'tier', 'Proficiency',
   'Recall Cost', 'Melee', 'Very Close', 'Close', 'Far', 'Very Far', 'Favor',
-  'Patron Die', 'Combo Die', 'Focus', 'Hex', 'Hexed', 'Active Weapon'
+  'Patron Die', 'Combo Die', 'Focus', 'Hex', 'Hexed', 'Active Weapon', 'Death Move'
 ];
 for (const termo of obrigatorios) {
   if (!inglesVistos.has(chave(termo))) erros.push(`termo mecânico obrigatório ausente: ${termo}`);

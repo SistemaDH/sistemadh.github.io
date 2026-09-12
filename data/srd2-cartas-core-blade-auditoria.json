@@ -1,0 +1,48 @@
+{
+  "versao": 1,
+  "estado": "conferido",
+  "fonte": {
+    "srd": "2.0",
+    "data": "2026-08-25",
+    "paginasPdf": "208–209",
+    "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64"
+  },
+  "dominio": "domains/blade",
+  "conclusao": "As 21 cartas de Lâmina preservam no SRD 2.0 os níveis, tipos, custos de recordar, números, custos, gatilhos, frequências e efeitos já implementados. O lote normalizou somente o texto mecânico ativo em pt-BR.",
+  "registros": [
+    { "idFonte": "domain-cards/get-back-up", "idLocal": "blade-levantar-se", "nomeIngles": "Get Back Up", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/not-good-enough", "idLocal": "blade-nao-foi-suficiente", "nomeIngles": "Not Good Enough", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/whirlwind", "idLocal": "blade-redemoinho", "nomeIngles": "Whirlwind", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/a-soldiers-bond", "idLocal": "blade-laco-de-soldado", "nomeIngles": "A Soldier’s Bond", "nivel": 2, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/reckless", "idLocal": "blade-imprudente", "nomeIngles": "Reckless", "nivel": 2, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/scramble", "idLocal": "blade-confusao", "nomeIngles": "Scramble", "nivel": 3, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/versatile-fighter", "idLocal": "blade-lutador-versatil", "nomeIngles": "Versatile Fighter", "nivel": 3, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/deadly-focus", "idLocal": "blade-foco-mortal", "nomeIngles": "Deadly Focus", "nivel": 4, "tipo": "Habilidade", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/fortified-armor", "idLocal": "blade-armadura-fortificada", "nomeIngles": "Fortified Armor", "nivel": 4, "tipo": "Habilidade", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/champions-edge", "idLocal": "blade-vantagem-do-campeao", "nomeIngles": "Champion’s Edge", "nivel": 5, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/vitality", "idLocal": "blade-vitalidade", "nomeIngles": "Vitality", "nivel": 5, "tipo": "Habilidade", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/battle-hardened", "idLocal": "blade-endurecido-pela-batalha", "nomeIngles": "Battle‑hardened", "nivel": 6, "tipo": "Habilidade", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/rage-up", "idLocal": "blade-furia-crescente", "nomeIngles": "Rage Up", "nivel": 6, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/blade-touched", "idLocal": "blade-tocado-pela-lamina", "nomeIngles": "Blade‑touched", "nivel": 7, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/glancing-blow", "idLocal": "blade-golpe-raso", "nomeIngles": "Glancing Blow", "nivel": 7, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/battle-cry", "idLocal": "blade-grito-de-batalha", "nomeIngles": "Battle Cry", "nivel": 8, "tipo": "Habilidade", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/frenzy", "idLocal": "blade-frenesi", "nomeIngles": "Frenzy", "nivel": 8, "tipo": "Habilidade", "custoRecordar": 3 },
+    { "idFonte": "domain-cards/gore-and-glory", "idLocal": "blade-sangue-e-gloria", "nomeIngles": "Gore and Glory", "nivel": 9, "tipo": "Habilidade", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/reapers-strike", "idLocal": "blade-golpe-do-ceifador", "nomeIngles": "Reaper’s Strike", "nivel": 9, "tipo": "Habilidade", "custoRecordar": 3 },
+    { "idFonte": "domain-cards/battle-monster", "idLocal": "blade-monstro-de-batalha", "nomeIngles": "Battle Monster", "nivel": 10, "tipo": "Habilidade", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/onslaught", "idLocal": "blade-massacre", "nomeIngles": "Onslaught", "nivel": 10, "tipo": "Habilidade", "custoRecordar": 3 }
+  ],
+  "correcoesDeVocabulario": [
+    "traço",
+    "jogada de dano",
+    "jogada de reação",
+    "Ponto de Armadura",
+    "cartas ativas",
+    "movimento de morte",
+    "reduzir a gravidade do dano em um limiar",
+    "jogada com Medo"
+  ],
+  "erratasConferidas": [
+    "Redemoinho já contém o texto revisado da errata do Core e coincide com Whirlwind no SRD 2.0."
+  ]
+}

@@ -46,6 +46,7 @@
     { "ingles": "downtime move", "portugues": "movimento de descanso", "fonte": "uso-consolidado-no-sistema" },
     { "ingles": "short rest", "portugues": "descanso curto", "fonte": "uso-consolidado-no-sistema" },
     { "ingles": "long rest", "portugues": "descanso longo", "fonte": "uso-consolidado-no-sistema" },
+    { "ingles": "Death Move", "portugues": "movimento de morte", "fonte": "uso-consolidado-no-sistema" },
     { "ingles": "spotlight", "portugues": "foco", "verbo": "colocar em foco", "fonte": "uso-consolidado-no-sistema" },
     { "ingles": "GM turn", "portugues": "turno do Mestre", "fonte": "uso-consolidado-no-sistema" },
     { "ingles": "Melee", "portugues": "Corpo a Corpo", "fonte": "uso-consolidado-no-sistema" },

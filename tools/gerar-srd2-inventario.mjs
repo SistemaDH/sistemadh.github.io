@@ -106,7 +106,28 @@ const implementados = new Set([
   'domain-cards/sensory-projection',
   'domain-cards/earthquake',
   'domain-cards/adjust-reality',
-  'domain-cards/falling-sky'
+  'domain-cards/falling-sky',
+  'domain-cards/get-back-up',
+  'domain-cards/not-good-enough',
+  'domain-cards/whirlwind',
+  'domain-cards/a-soldiers-bond',
+  'domain-cards/reckless',
+  'domain-cards/scramble',
+  'domain-cards/versatile-fighter',
+  'domain-cards/deadly-focus',
+  'domain-cards/fortified-armor',
+  'domain-cards/champions-edge',
+  'domain-cards/vitality',
+  'domain-cards/battle-hardened',
+  'domain-cards/rage-up',
+  'domain-cards/blade-touched',
+  'domain-cards/glancing-blow',
+  'domain-cards/battle-cry',
+  'domain-cards/frenzy',
+  'domain-cards/gore-and-glory',
+  'domain-cards/reapers-strike',
+  'domain-cards/battle-monster',
+  'domain-cards/onslaught'
 ]);
 const colecoes = [];
 
