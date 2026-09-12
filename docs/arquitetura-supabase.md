@@ -24,13 +24,13 @@ As tabelas expostas têm RLS habilitado e não possuem policies públicas para `
 
 `engine-api` executa o código mantido em `backend/*.gs` através de uma camada de compatibilidade que substitui as antigas APIs de planilha por estado carregado do PostgreSQL.
 
-Produção atual, após o fechamento funcional do Lote 9:
+Produção atual, após os refinamentos pós-Lote 9 de inventário/equipamentos:
 
 ```text
-engine-api: v9 ACTIVE
+engine-api: v10 ACTIVE
 verify_jwt: false
-ENGINE_COMMIT: 752c7abc0349222bd795254f8f023c047125a1fe
-ezbr_sha256: bb5b32f84dc598058c1b172eee05cd1d601476636dcf3fcc4de36df91b56ac23
+ENGINE_COMMIT: 2761bb828287fe0c17009cf4d0e255ed21762e07
+ezbr_sha256: deabf224e975300370e6063a8520f5233509c97453b832d87d9f331fe5d22add
 ```
 
 O source versionado em `supabase/functions/engine-api/index.ts` usa o mesmo `ENGINE_COMMIT` da função implantada. Esse alinhamento evita que um redeploy futuro feito a partir do repositório volte silenciosamente para um commit antigo.
@@ -138,9 +138,23 @@ Históricas/aposentadas — não criar dependência nova:
 ### Lote 9 — dano/HUD e alinhamento final
 
 - commit funcional pinado pelo motor: `752c7abc0349222bd795254f8f023c047125a1fe`;
-- `engine-api` v9 ACTIVE;
+- `engine-api` v9 ACTIVE naquele fechamento;
 - pacote implantado: `bb5b32f84dc598058c1b172eee05cd1d601476636dcf3fcc4de36df91b56ac23`;
 - PR #9 integrou as correções finais do HUD de dano;
 - PR #10 alinhou `supabase/functions/engine-api/index.ts` ao mesmo pin já implantado;
 - GitHub Pages #81 publicou com sucesso a `main` após o alinhamento;
 - nenhuma migração de banco foi necessária.
+
+### Pós-Lote 9 — inventário e gerenciamento de equipamentos
+
+- PR #13 integrou inventário/posse de equipamentos e a prévia do catálogo;
+- commit imutável do motor: `2761bb828287fe0c17009cf4d0e255ed21762e07`;
+- `engine-api` v10 ACTIVE;
+- `verify_jwt=false` preservado;
+- pacote implantado: `deabf224e975300370e6063a8520f5233509c97453b832d87d9f331fe5d22add`;
+- `supabase/functions/engine-api/index.ts` está alinhado ao mesmo pin `2761bb8...`;
+- PR #14 unificou o gerenciamento de armas/armaduras e não exigiu novo deploy do motor;
+- commit de frontend após PR #14: `64d32d793182b8d81f65f0933e2dc8ccfe55c479`;
+- GitHub Pages #84 publicou esse commit com sucesso;
+- CI #82 passou o gate funcional e visual completo nesse mesmo commit;
+- nenhuma migração de banco foi necessária nos PRs #13 e #14.
