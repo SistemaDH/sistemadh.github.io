@@ -127,7 +127,28 @@ const implementados = new Set([
   'domain-cards/gore-and-glory',
   'domain-cards/reapers-strike',
   'domain-cards/battle-monster',
-  'domain-cards/onslaught'
+  'domain-cards/onslaught',
+  'domain-cards/deft-maneuvers',
+  'domain-cards/i-see-it-coming',
+  'domain-cards/untouchable',
+  'domain-cards/ferocity',
+  'domain-cards/strategic-approach',
+  'domain-cards/brace',
+  'domain-cards/tactician',
+  'domain-cards/boost',
+  'domain-cards/redirect',
+  'domain-cards/know-thy-enemy',
+  'domain-cards/signature-move',
+  'domain-cards/rapid-riposte',
+  'domain-cards/recovery',
+  'domain-cards/bone-touched',
+  'domain-cards/cruel-precision',
+  'domain-cards/breaking-blow',
+  'domain-cards/wrangle',
+  'domain-cards/on-the-brink',
+  'domain-cards/splintering-strike',
+  'domain-cards/deathrun',
+  'domain-cards/swift-step'
 ]);
 const colecoes = [];
 

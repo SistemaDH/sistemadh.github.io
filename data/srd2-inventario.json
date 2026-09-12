@@ -11582,15 +11582,7 @@
           "tipo": "Consumable",
           "nomeIngles": "Shrinking Potion",
           "sourceLocator": {
-     „é∏o+^≤â¢∂◊ùaefc341a50f4dbda97e1d91ef4d063a41a009b17b869a52cd4312a1aa2fc7",
-          "estado": "pendente"
-        },
-        {
-          "id": "consumables/staff-of-reversal",
-          "tipo": "Consumable",
-          "nomeIngles": "Staff of Reversal",
-          "sourceLocator": {
-            "chapter": "CORE MECHANICS",
+     „Õºo+^≤â¢∂◊ù          "chapter": "CORE MECHANICS",
             "heading": "Additional Consumables",
             "lineStart": 4323,
             "lineEnd": 4323,
@@ -16851,7 +16843,7 @@
             "pdfPageEnd": 210
           },
           "corpusSha256": "63f5995c37e155e5e8cdc198ce08655c85a3b462d483c2a073bef2cef85befc3",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/book-of-ava",
@@ -17061,7 +17053,7 @@
             "pdfPageEnd": 210
           },
           "corpusSha256": "3d74d56e83451986c4e60a4078570e6022fb89f436f314e192f188dc3ac56e06",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/brace",
@@ -17076,7 +17068,7 @@
             "pdfPageEnd": 209
           },
           "corpusSha256": "4c512e0a76c5bbe09ca9adae3daae9834c34fc426584400968e92601f5324078",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/breaking-blow",
@@ -17091,7 +17083,7 @@
             "pdfPageEnd": 210
           },
           "corpusSha256": "d61c56dadb9625621ccee06adf13dcaf0043c6b2dc6e55ea27aaa5e7cef4c9ec",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/chain-lightning",
@@ -17316,7 +17308,7 @@
             "pdfPageEnd": 210
           },
           "corpusSha256": "7f6dfcc1dd50cd819b3582f120968cde469ddfbfa76ffe88558536c817b54ec0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/damnation",
@@ -17421,7 +17413,7 @@
             "pdfPageEnd": 210
           },
           "corpusSha256": "773e5ddaa2b0a97998bec01f792b888a9eed4d210639409e4a6983f75647f55c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/deft-deceiver",
@@ -17451,7 +17443,7 @@
             "pdfPageEnd": 209
           },
           "corpusSha256": "af745b4d8e40e299d7371f346374e0b756e7a478bf4baaab1d42430981fe4ab3",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/dire-strike",
@@ -17646,7 +17638,7 @@
             "pdfPageEnd": 209
           },
           "corpusSha256": "c6911a4eca51d0119b31559c16d5de6979d5c8b4cdc019626c5c739eeca2ca24",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/final-words",
@@ -18051,7 +18043,7 @@
             "pdfPageEnd": 209
           },
           "corpusSha256": "7a02bd40d433e8de0f35445983699f3a7cedaf08e8ba29c6a3c5868a803001dc",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/inevitable",
@@ -18156,7 +18148,7 @@
             "pdfPageEnd": 210
           },
           "corpusSha256": "890b995e9d1bbdbddcb36bb57f6592e8b768d32375e4f2a362855d08499f1f08",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/lead-by-example",
@@ -18411,7 +18403,7 @@
             "pdfPageEnd": 210
           },
           "corpusSha256": "07ea357e961a15af592a9cf357b5c8c3426f955cefc53ce622bafb12e031fcb7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/onslaught",
@@ -18561,7 +18553,7 @@
             "pdfPageEnd": 210
           },
           "corpusSha256": "e0927bbf96e4f73b3aac9f83369d624d08158fd8d674793e17776855a4c7d6f7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/reapers-strike",
@@ -18621,7 +18613,7 @@
             "pdfPageEnd": 210
           },
           "corpusSha256": "0dafbf70a8c8cfeecbba5b15299aa08e64d3fe567726f61d5f9f943c6b5d6c7e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/redirect",
@@ -18636,7 +18628,7 @@
             "pdfPageEnd": 210
           },
           "corpusSha256": "ac4c3f428f53d060512da30cf5f6db4f8d864b4006c1a16cd88f064b895262d0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/rejuvenation-barrier",
@@ -18981,7 +18973,7 @@
             "pdfPageEnd": 210
           },
           "corpusSha256": "03b924e6076e24e86ac9c680e9c88b899c9021c55bf18fe5fd355c6d6b7eb896",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/siphon-essence",
@@ -19101,7 +19093,7 @@
             "pdfPageEnd": 210
           },
           "corpusSha256": "eac60c4d0a7a0991c4021adc15afc1ff108011b2ccc6b9f0aa9f840b90d1f100",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/stealth-expertise",
@@ -19131,7 +19123,7 @@
             "pdfPageEnd": 209
           },
           "corpusSha256": "bba8038a402dd3f1bd7dc690f8762210191bd3edc40b8e813c300b55139ea617",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/stunning-sunlight",
@@ -19191,7 +19183,7 @@
             "pdfPageEnd": 210
           },
           "corpusSha256": "66641b6cc91deffdf321d33526e2d59cabfcc86d89343a435fc6f8c0e13f95c0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/tactician",
@@ -19206,7 +19198,7 @@
             "pdfPageEnd": 209
           },
           "corpusSha256": "a3f6c29c8688453234c2f7d97d9abadaa7e8d74da4ae82dde8fbcf0095ebc0c1",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/telekinesis",
@@ -19461,7 +19453,7 @@
             "pdfPageEnd": 209
           },
           "corpusSha256": "a37f61eb3a4115491d5f87638f5230c8c4412cea8e69ed99dd764c3aba603cd8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/unyielding-armor",
@@ -19701,7 +19693,7 @@
             "pdfPageEnd": 210
           },
           "corpusSha256": "853083ffe47c703ccb586abfd7edb2e918eaa3ff224b393a703e037585195e13",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/zone-of-protection",

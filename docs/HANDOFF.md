@@ -56,7 +56,7 @@ Validação da Fase 1:
 - `data/srd2-traducao.json`: vocabulário obrigatório pt-BR; termos do Core são preservados e nomes novos de *Hope & Fear* ficam provisórios até existir tradução oficial;
 - `data/srd2-fonte.json`: fonte, hashes, erratas e pin do corpus;
 - `data/srd2-cobertura.json`: estado das 16 coleções; não considerar conteúdo antigo como conferido por semelhança;
-- `data/srd2-inventario.json`: 1.539 IDs individuais com nome inglês, tipo, `sourceLocator` quando aplicável, hash do corpus e estado; neste checkpoint são 1 fonte conferida, 108 mecânicas implementadas e 1.430 pendentes;
+- `data/srd2-inventario.json`: 1.539 IDs individuais com nome inglês, tipo, `sourceLocator` quando aplicável, hash do corpus e estado; neste checkpoint são 1 fonte conferida, 129 mecânicas implementadas e 1.409 pendentes;
 - `docs/srd2-conformidade.md`: critério formal para declarar 100%;
 - CI: `npm run teste:srd2` valida tradução e matriz de cobertura.
 
@@ -119,9 +119,19 @@ Validação da Fase 1:
 - `tools/conferir-srd2-cartas-core-blade.mjs` também recusa vocabulário mecânico legado nos campos exibidos e de automação;
 - a cobertura de `domain-cards` está em auditoria: 42 de 189 cartas Core conferidas; 147 cartas Core e 21 cartas de Pavor ainda pendentes.
 
-Validação deste checkpoint: `npm run teste:srd2` verde com 62 termos mecânicos, 31 nomes novos, 1.539 registros inventariados (**108 implementados**, 1.430 pendentes), 95 registros no recorte do núcleo (**64/64 existentes conferidos**) e validadores específicos; backend **951/951**, gerados **14/14**, sintaxe local **99 arquivos**, CSS limpo. O E2E local não executou porque a imagem atual não contém o binário Chromium do Playwright; o bloqueio ocorreu antes de abrir o site e precisa ser repetido no CI/ambiente com navegador antes de promoção.
+### Cartas Core — Osso conferido
 
-Próximo bloco exato: comparar as **21 cartas de Osso** com o SRD 2.0, repetindo o mesmo vínculo individual de nome, nível, custo de recordar, texto, automação e errata. Depois continuar Códice, Graça, Meia-Noite, Sábio, Esplendor e Valor; só então integrar Pavor e suas 21 cartas. Em paralelo conceitual, projetar a persistência de Transformações, mas não expor as seis opções antes do ciclo completo de aquisição/remoção e efeitos permanentes estar protegido no servidor.
+- as 21 cartas de Osso foram comparadas às pp. 209–210 do SRD 2.0;
+- nomes/identidades, níveis, tipos, custos de recordar, dados, alcances, custos, frequências e efeitos permaneceram mecanicamente compatíveis;
+- **Eu Vi Chegando** e **Golpe Estilhaçante** já continham as revisões da errata do Core e coincidem com o SRD 2.0;
+- o texto ativo foi normalizado para o glossário SRD2, especialmente **traço**, **jogada de dano**, **Ponto de Armadura**, **Distante**, **cartas ativas**, **movimento de descanso**, **Dado de Esperança**, **Jogada em Equipe** e **Mestre**;
+- `data/srd2-cartas-core-bone-auditoria.json` vincula os 21 IDs oficiais aos IDs locais e protege nível, tipo e custo de recordar;
+- `tools/conferir-srd2-cartas-core-bone.mjs` também recusa vocabulário mecânico legado nos campos exibidos e de automação;
+- a cobertura de `domain-cards` está em auditoria: 63 de 189 cartas Core conferidas; 126 cartas Core e 21 cartas de Pavor ainda pendentes.
+
+Validação deste checkpoint: `npm run teste:srd2` verde com 65 termos mecânicos, 31 nomes novos, 1.539 registros inventariados (**129 implementados**, 1.409 pendentes), 95 registros no recorte do núcleo (**64/64 existentes conferidos**) e validadores específicos; backend **951/951**, gerados **14/14**, sintaxe local **100 arquivos**, CSS limpo. O E2E local não executou porque a imagem atual não contém o binário Chromium do Playwright; o bloqueio ocorreu antes de abrir o site e precisa ser repetido no CI/ambiente com navegador antes de promoção.
+
+Próximo bloco exato: comparar as **21 cartas de Códice** com o SRD 2.0, repetindo o mesmo vínculo individual de nome, nível, custo de recordar, texto, automação e errata. Depois continuar Graça, Meia-Noite, Sábio, Esplendor e Valor; só então integrar Pavor e suas 21 cartas. Em paralelo conceitual, projetar a persistência de Transformações, mas não expor as seis opções antes do ciclo completo de aquisição/remoção e efeitos permanentes estar protegido no servidor.
 
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 

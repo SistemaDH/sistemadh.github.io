@@ -1,0 +1,50 @@
+{
+  "versao": 1,
+  "estado": "conferido",
+  "fonte": {
+    "srd": "2.0",
+    "data": "2026-08-25",
+    "paginasPdf": "209–210",
+    "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64"
+  },
+  "dominio": "domains/bone",
+  "conclusao": "As 21 cartas de Osso preservam no SRD 2.0 os níveis, tipos, custos de recordar, números, custos, gatilhos, frequências e efeitos já implementados. O lote normalizou somente o texto mecânico ativo em pt-BR.",
+  "registros": [
+    { "idFonte": "domain-cards/deft-maneuvers", "idLocal": "bone-manobras-ageis", "nomeIngles": "Deft Maneuvers", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/i-see-it-coming", "idLocal": "bone-eu-vi-chegando", "nomeIngles": "I See It Coming", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/untouchable", "idLocal": "bone-intocavel", "nomeIngles": "Untouchable", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/ferocity", "idLocal": "bone-ferocidade", "nomeIngles": "Ferocity", "nivel": 2, "tipo": "Habilidade", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/strategic-approach", "idLocal": "bone-abordagem-estrategica", "nomeIngles": "Strategic Approach", "nivel": 2, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/brace", "idLocal": "bone-preparar", "nomeIngles": "Brace", "nivel": 3, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/tactician", "idLocal": "bone-tatico", "nomeIngles": "Tactician", "nivel": 3, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/boost", "idLocal": "bone-impulso", "nomeIngles": "Boost", "nivel": 4, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/redirect", "idLocal": "bone-redirecionar", "nomeIngles": "Redirect", "nivel": 4, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/know-thy-enemy", "idLocal": "bone-conheca-teu-inimigo", "nomeIngles": "Know Thy Enemy", "nivel": 5, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/signature-move", "idLocal": "bone-golpe-assinatura", "nomeIngles": "Signature Move", "nivel": 5, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/rapid-riposte", "idLocal": "bone-resposta-rapida", "nomeIngles": "Rapid Riposte", "nivel": 6, "tipo": "Habilidade", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/recovery", "idLocal": "bone-recuperacao", "nomeIngles": "Recovery", "nivel": 6, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/bone-touched", "idLocal": "bone-tocado-pelo-osso", "nomeIngles": "Bone‑touched", "nivel": 7, "tipo": "Habilidade", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/cruel-precision", "idLocal": "bone-precisao-cruel", "nomeIngles": "Cruel Precision", "nivel": 7, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/breaking-blow", "idLocal": "bone-golpe-arrasador", "nomeIngles": "Breaking Blow", "nivel": 8, "tipo": "Habilidade", "custoRecordar": 3 },
+    { "idFonte": "domain-cards/wrangle", "idLocal": "bone-dominar", "nomeIngles": "Wrangle", "nivel": 8, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/on-the-brink", "idLocal": "bone-na-beira", "nomeIngles": "On the Brink", "nivel": 9, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/splintering-strike", "idLocal": "bone-golpe-estilhacante", "nomeIngles": "Splintering Strike", "nivel": 9, "tipo": "Habilidade", "custoRecordar": 3 },
+    { "idFonte": "domain-cards/deathrun", "idLocal": "bone-corrida-da-morte", "nomeIngles": "Deathrun", "nivel": 10, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/swift-step", "idLocal": "bone-passo-agil", "nomeIngles": "Swift Step", "nivel": 10, "tipo": "Habilidade", "custoRecordar": 2 }
+  ],
+  "correcoesDeVocabulario": [
+    "traço",
+    "jogada de dano",
+    "Ponto de Armadura",
+    "Distante",
+    "cartas ativas",
+    "movimento de descanso",
+    "Dado de Esperança",
+    "Jogada em Equipe",
+    "Mestre"
+  ],
+  "erratasConferidas": [
+    "Eu Vi Chegando já contém o texto revisado da errata do Core e coincide com I See It Coming no SRD 2.0.",
+    "Golpe Estilhaçante já contém o texto revisado da errata do Core e coincide com Splintering Strike no SRD 2.0."
+  ]
+}
