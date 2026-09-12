@@ -11582,7 +11582,112 @@
           "tipo": "Consumable",
           "nomeIngles": "Shrinking Potion",
           "sourceLocator": {
-     „Õºo+^≤â¢∂◊ù          "chapter": "CORE MECHANICS",
+            "chapter": "CORE MECHANICS",
+            "heading": "Core Set Consumables",
+            "lineStart": 4266,
+            "lineEnd": 4266,
+            "pdfPageStart": 81,
+            "pdfPageEnd": 81
+          },
+          "corpusSha256": "b2df898bfd1d26162c14e367a0efc3c4e3c18b0b85e2bbb9d8ba5f899bc78d45",
+          "estado": "pendente"
+        },
+        {
+          "id": "consumables/slayers-salt",
+          "tipo": "Consumable",
+          "nomeIngles": "Slayer‚Äôs Salt",
+          "sourceLocator": {
+            "chapter": "CORE MECHANICS",
+            "heading": "Additional Consumables",
+            "lineStart": 4294,
+            "lineEnd": 4294,
+            "pdfPageStart": 82,
+            "pdfPageEnd": 82
+          },
+          "corpusSha256": "69de65960aedf6f7ae6e45f0faacde7bc8668949e0ae2dfd74f76b2b35b177a1",
+          "estado": "pendente"
+        },
+        {
+          "id": "consumables/sleeping-sap",
+          "tipo": "Consumable",
+          "nomeIngles": "Sleeping Sap",
+          "sourceLocator": {
+            "chapter": "CORE MECHANICS",
+            "heading": "Core Set Consumables",
+            "lineStart": 4263,
+            "lineEnd": 4263,
+            "pdfPageStart": 81,
+            "pdfPageEnd": 81
+          },
+          "corpusSha256": "bf19cd7896d0e9e315e1f633767bfdc11c6fdd859f057dc9218b0d81b1a28192",
+          "estado": "pendente"
+        },
+        {
+          "id": "consumables/snakeskin-spirit",
+          "tipo": "Consumable",
+          "nomeIngles": "Snakeskin Spirit",
+          "sourceLocator": {
+            "chapter": "CORE MECHANICS",
+            "heading": "Additional Consumables",
+            "lineStart": 4344,
+            "lineEnd": 4344,
+            "pdfPageStart": 83,
+            "pdfPageEnd": 83
+          },
+          "corpusSha256": "bb7df4ce1acaf04f8f92a5cc44a53b1f94b69b98dd0ca9c4b188ba8e3945b0ca",
+          "estado": "pendente"
+        },
+        {
+          "id": "consumables/snap-powder",
+          "tipo": "Consumable",
+          "nomeIngles": "Snap Powder",
+          "sourceLocator": {
+            "chapter": "CORE MECHANICS",
+            "heading": "Core Set Consumables",
+            "lineStart": 4223,
+            "lineEnd": 4223,
+            "pdfPageStart": 80,
+            "pdfPageEnd": 80
+          },
+          "corpusSha256": "ebfd20d5b5e767da5dbed3d553ca42db04ed71d6eb71b7714cd1df9e602d1baf",
+          "estado": "pendente"
+        },
+        {
+          "id": "consumables/snapthorn-seed",
+          "tipo": "Consumable",
+          "nomeIngles": "Snapthorn Seed",
+          "sourceLocator": {
+            "chapter": "CORE MECHANICS",
+            "heading": "Additional Consumables",
+            "lineStart": 4304,
+            "lineEnd": 4304,
+            "pdfPageStart": 82,
+            "pdfPageEnd": 82
+          },
+          "corpusSha256": "c04a0082a8511619b1a942b6433bed5a842a6903190692cfc4afcefc9d1d3b4b",
+          "estado": "pendente"
+        },
+        {
+          "id": "consumables/sprite-bottle",
+          "tipo": "Consumable",
+          "nomeIngles": "Sprite Bottle",
+          "sourceLocator": {
+            "chapter": "CORE MECHANICS",
+            "heading": "Additional Consumables",
+            "lineStart": 4305,
+            "lineEnd": 4305,
+            "pdfPageStart": 82,
+            "pdfPageEnd": 82
+          },
+          "corpusSha256": "ca2aefc341a50f4dbda97e1d91ef4d063a41a009b17b869a52cd4312a1aa2fc7",
+          "estado": "pendente"
+        },
+        {
+          "id": "consumables/staff-of-reversal",
+          "tipo": "Consumable",
+          "nomeIngles": "Staff of Reversal",
+          "sourceLocator": {
+            "chapter": "CORE MECHANICS",
             "heading": "Additional Consumables",
             "lineStart": 4323,
             "lineEnd": 4323,
@@ -16678,7 +16783,7 @@
             "pdfPageEnd": 212
           },
           "corpusSha256": "2e8014a311fafede2921906e7dddd15486d2787f403c27c92506f60c0be38f92",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/bare-bones",
@@ -16858,7 +16963,7 @@
             "pdfPageEnd": 211
           },
           "corpusSha256": "a7b587ec2edd70eff48954eae4c1c1a2ef1e234d441223a66d49455cdbc8d743",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/book-of-exota",
@@ -16873,7 +16978,7 @@
             "pdfPageEnd": 211
           },
           "corpusSha256": "1c6dc7a6d6f67191c21cac497d6a89dc47b3486f3761a4a5c6cbf9a6cd0172e2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/book-of-grynn",
@@ -16888,7 +16993,7 @@
             "pdfPageEnd": 212
           },
           "corpusSha256": "f8f5872aa39521fceffcb3b44367491d72fe57d9bb9a9ebe66d7f510f0e2b5b8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/book-of-homet",
@@ -16903,7 +17008,7 @@
             "pdfPageEnd": 212
           },
           "corpusSha256": "6b80c5b76e31e570e4cd51798db3dfddb44eea84df3f3d4b6a05eb8caf1f7e59",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/book-of-illiat",
@@ -16918,7 +17023,7 @@
             "pdfPageEnd": 211
           },
           "corpusSha256": "ff5d0bdd626b8ab93c7ef434c5497ce1ab7dc35525f9f855ac81a916cd07020a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/book-of-korvax",
@@ -16933,7 +17038,7 @@
             "pdfPageEnd": 211
           },
           "corpusSha256": "8334eefcf708853e2a97b22b186e5428f907f18ddfcd686d126cf1cc0c597ded",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/book-of-norai",
@@ -16948,7 +17053,7 @@
             "pdfPageEnd": 211
           },
           "corpusSha256": "afa39fc6012805fc4d64c889011583e3a6e2a83777a115451f3d0661d623faf9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/book-of-ronin",
@@ -16963,7 +17068,7 @@
             "pdfPageEnd": 213
           },
           "corpusSha256": "07839d99adb67de01b9f00fdd5f013a4e0146ede10685436ccd41d32be745903",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/book-of-sitil",
@@ -16978,7 +17083,7 @@
             "pdfPageEnd": 211
           },
           "corpusSha256": "01aaf27a950baaad9efbe222d7b0debd18bfb382f08fd0ba07725ef308e2b63c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/book-of-tyfar",
@@ -16993,7 +17098,7 @@
             "pdfPageEnd": 211
           },
           "corpusSha256": "88b6eabb7f37b1ef87056d902c3316140a1cb757b5e603ba5c3570bfc5e8855e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/book-of-vagras",
@@ -17008,7 +17113,7 @@
             "pdfPageEnd": 211
           },
           "corpusSha256": "5d0cdfd83f97f00de777f0987746d5b952601a7d50db0f2462873a22916b2a8d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/book-of-vyola",
@@ -17023,7 +17128,7 @@
             "pdfPageEnd": 212
           },
           "corpusSha256": "8c9c04367ec37ea627c19cacb9cf4c4443a93d3f3cc139342887981864033938",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/book-of-yarrow",
@@ -17038,7 +17143,7 @@
             "pdfPageEnd": 213
           },
           "corpusSha256": "0c7d3d0757616b7d336f1597764a45a7d3ef8b6c2f9ce1418a630931f3f0e751",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/boost",
@@ -17188,7 +17293,7 @@
             "pdfPageEnd": 212
           },
           "corpusSha256": "d53e8f28e40b76d35e5ccd8378b555f23a66cf24ecaf654b4aa5c60dc5e16427",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/confusing-aura",
@@ -17473,7 +17578,7 @@
             "pdfPageEnd": 213
           },
           "corpusSha256": "5ce94c0e3a718696d3d22f28c73c44e38ad27ca40351d2a266002b32686098ca",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/divination",
@@ -18208,7 +18313,7 @@
             "pdfPageEnd": 212
           },
           "corpusSha256": "a56e4d3648f0d002ff665d8e4f450b525ac355e8310b8c7d9ccb928b36e467d8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/mass-disguise",
@@ -18748,7 +18853,7 @@
             "pdfPageEnd": 212
           },
           "corpusSha256": "ea96be98069a0e52c0725a265916f926d6786c656c7d8d991d52954c3b869e28",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/sage-touched",
@@ -18958,7 +19063,7 @@
             "pdfPageEnd": 212
           },
           "corpusSha256": "b132c0dd7697b585c995a04fc1a96059b42e9d22bc86b8ff65f43fa23ef39145",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/signature-move",
@@ -19228,7 +19333,7 @@
             "pdfPageEnd": 212
           },
           "corpusSha256": "54788cda354e371b5145534796c7a44caae5723856da6c16ecfe0d67a58b6e2e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/tell-no-lies",
@@ -19348,7 +19453,7 @@
             "pdfPageEnd": 213
           },
           "corpusSha256": "10793a0829433cd52b8aa111bf02cc7aec5001a5f46333aa5aedfeae961d6fc3",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/troublemaker",

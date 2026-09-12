@@ -2569,7 +2569,7 @@
    "tipo": "Grimório",
    "tipoImpresso": "GRIMOIRE",
    "custoRecordar": 2,
-   "texto": "**Impulso Poderoso:** Faça uma jogada de Spellcast contra um alvo dentro do alcance Corpo a Corpo. Em caso de sucesso, ele é lançado para trás até o alcance Distante e sofre d10+2 de dano mágico usando sua Proficiência.\n**Armadura de Tava:** Gaste uma Esperança para conceder a um alvo que você possa tocar +1 de bônus em sua Pontuação de Armadura até o próximo descanso dele ou até você lançar Armadura de Tava novamente.\n**Espigão de Gelo:** Faça uma jogada de Spellcast (12) para invocar um grande espigão de gelo dentro do alcance Distante. Se você usá-lo como arma, faça a jogada de Spellcast contra a Dificuldade do alvo. Em caso de sucesso, cause d6 de dano físico usando sua Proficiência.",
+   "texto": "**Impulso Poderoso:** Faça uma jogada de Conjuração contra um alvo em alcance Corpo a Corpo. Em caso de sucesso, ele é lançado para trás até o alcance Distante e sofre d10+2 de dano mágico usando sua Proficiência.\n**Armadura de Tava:** Gaste 1 Esperança para conceder a um alvo que você possa tocar +1 de bônus em sua Pontuação de Armadura até o próximo descanso dele ou até você lançar Armadura de Tava novamente.\n**Espigão de Gelo:** Faça uma jogada de Conjuração (12) para invocar um grande espigão de gelo em alcance Distante. Se você usá-lo como arma, faça a jogada de Conjuração contra a Dificuldade do alvo. Em caso de sucesso, cause d6 de dano físico usando sua Proficiência.",
    "imagem": "assets/cartas/dominios/CODEX/Livro de Ava.png",
    "arquivo": "Livro de Ava.png",
    "condicoes": [],
@@ -2587,7 +2587,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Impulso Poderoso e Espigão de Gelo usam Jogadas de Conjuração/dano físicos. Em Armadura de Tava, aplique +1 de Armadura ao alvo tocado; encerre o estado ao descanso desse alvo ou antes de trocar o alvo."
+    "resumo": "Impulso Poderoso e Espigão de Gelo usam jogadas de Conjuração/dano físicos. Em Armadura de Tava, aplique +1 de Armadura ao alvo tocado; encerre o estado ao descanso desse alvo ou antes de trocar o alvo."
    },
    "uso": {
     "custo": {},
@@ -2622,7 +2622,7 @@
    "tipo": "Grimório",
    "tipoImpresso": "GRIMOIRE",
    "custoRecordar": 2,
-   "texto": "**Sono:** Faça uma jogada de Spellcast contra um alvo dentro do alcance Muito Próximo. Em caso de sucesso, ele fica Adormecido até sofrer dano ou até o GM gastar um Medo no turno dele para limpar essa condição.\n**Barragem Arcana:** Uma vez por descanso, gaste qualquer quantidade de Esperança e dispare projéteis mágicos que atingem um alvo de sua escolha dentro de alcance Próximo. Role um número de d6 igual à quantidade de Esperança gasta e cause esse dano mágico ao alvo.\n**Telepatia:** Gaste uma Esperança para abrir uma linha de comunicação mental com um alvo que você possa ver. Essa conexão dura até seu próximo descanso ou até você lançar Telepatia novamente.",
+   "texto": "**Sono:** Faça uma jogada de Conjuração contra um alvo em alcance Muito Próximo. Em caso de sucesso, ele fica Adormecido até sofrer dano ou até o Mestre gastar 1 Medo no turno dele para limpar essa condição.\n**Barragem Arcana:** Uma vez por descanso, gaste qualquer quantidade de Esperança e dispare projéteis mágicos que atingem um alvo de sua escolha em alcance Próximo. Role um número de d6 igual à quantidade de Esperança gasta e cause esse dano mágico ao alvo.\n**Telepatia:** Gaste 1 Esperança para abrir uma linha de comunicação mental com um alvo que você possa ver. Essa conexão dura até seu próximo descanso ou até você lançar Telepatia novamente.",
    "imagem": "assets/cartas/dominios/CODEX/Livro de Illiat.png",
    "arquivo": "Livro de Illiat.png",
    "condicoes": [
@@ -2697,7 +2697,7 @@
    "tipo": "Grimório",
    "tipoImpresso": "GRIMOIRE",
    "custoRecordar": 2,
-   "texto": "**Chama Selvagem:** Faça uma jogada de Spellcast contra até três adversários dentro do alcance Corpo a Corpo. Alvos contra os quais você tiver sucesso recebem 2d6 de dano mágico e devem marcar um Estresse enquanto chamas surgem da sua mão.\n**Mão Mágica:** Você conjura uma mão mágica do mesmo tamanho e força da sua, dentro do alcance Distante.\n**Névoa Misteriosa:** Faça uma jogada de Spellcast (13) para conjurar uma névoa espessa temporária que se acumula em uma área estacionária dentro do alcance Muito Próximo. A névoa obscurece fortemente essa área e tudo que estiver nela.",
+   "texto": "**Chama Selvagem:** Faça uma jogada de Conjuração contra até três adversários em alcance Corpo a Corpo. Alvos contra os quais você tiver sucesso recebem 2d6 de dano mágico e devem marcar 1 Estresse enquanto chamas surgem da sua mão.\n**Mão Mágica:** Você conjura uma mão mágica do mesmo tamanho e força da sua, em alcance Distante.\n**Névoa Misteriosa:** Faça uma jogada de Conjuração (13) para conjurar uma névoa espessa temporária que se acumula em uma área estacionária em alcance Muito Próximo. A névoa obscurece fortemente essa área e tudo que estiver nela.",
    "imagem": "assets/cartas/dominios/CODEX/Livro de Tyfar.png",
    "arquivo": "Livro de Tyfar.png",
    "condicoes": [],
@@ -2726,7 +2726,7 @@
    "tipo": "Grimório",
    "tipoImpresso": "GRIMOIRE",
    "custoRecordar": 2,
-   "texto": "**Ajustar Aparência:** Você muda magicamente sua aparência e roupas para evitar ser reconhecido.\n**Paralelo:** Gaste 2 Esperança para lançar este feitiço em você mesmo ou em um aliado dentro do alcance Próximo. Na próxima vez que o alvo fizer um ataque, ele pode atingir um alvo adicional dentro do alcance que sua jogada de ataque tenha sucesso contra. Você só pode manter este feitiço em uma criatura por vez.\n**Ilusão:** Faça uma jogada de Spellcast (14). Em caso de sucesso, crie uma ilusão visual temporária, não maior que você, dentro do alcance Próximo, que dura enquanto você a observa. A ilusão resiste ao escrutínio até que um observador esteja dentro do alcance Corpo a Corpo.",
+   "texto": "**Ajustar Aparência:** Você muda magicamente sua aparência e roupas para evitar ser reconhecido.\n**Paralelo:** Gaste 2 Esperanças para lançar este feitiço em você mesmo ou em um aliado em alcance Próximo. Na próxima vez que o alvo fizer um ataque, ele pode atingir um alvo adicional ao alcance contra o qual sua jogada de ataque teria sucesso. Você só pode manter este feitiço em uma criatura por vez.\n**Ilusão:** Faça uma jogada de Conjuração (14). Em caso de sucesso, crie uma ilusão visual temporária, não maior que você, em alcance Próximo, que dura enquanto você a observa. A ilusão resiste ao escrutínio até que um observador esteja em alcance Corpo a Corpo.",
    "imagem": "assets/cartas/dominios/CODEX/Livro de Sitil.png",
    "arquivo": "Livro de Sitil.png",
    "condicoes": [],
@@ -2742,7 +2742,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A mesa identifica o alvo de Paralelo e encerra o estado depois do próximo ataque dele; Ajustar Aparência e Ilusão são resolvidos pela ficção/Jogada de Conjuração."
+    "resumo": "A mesa identifica o alvo de Paralelo e encerra o estado depois do próximo ataque dele; Ajustar Aparência e Ilusão são resolvidos pela ficção/jogada de Conjuração."
    },
    "uso": {
     "custo": {},
@@ -2777,7 +2777,7 @@
    "tipo": "Grimório",
    "tipoImpresso": "GRIMOIRE",
    "custoRecordar": 2,
-   "texto": "**Tranca Rúnica:** Faça uma jogada de Spellcast (15) em um objeto que você esteja tocando e que possa ser fechado (como uma fechadura, baú ou caixa). Uma vez por descanso, em caso de sucesso, você pode trancar o objeto para que só possa ser aberto por criaturas de sua escolha. Alguém com acesso à magia e uma hora para estudar o feitiço pode quebrá-lo.\n**Porta Arcana:** Quando não houver adversários dentro do alcance Corpo a Corpo, faça uma jogada de Spellcast (13). Em caso de sucesso, gaste uma Esperança para criar um portal do local onde você está até um ponto dentro do alcance Distante que você possa ver. Ele se fecha após uma criatura atravessá-lo.\n**Revelar:** Faça uma jogada de Spellcast. Se houver algo magicamente oculto dentro do alcance Próximo que essa jogada tenha sucesso contra, ele será revelado.",
+   "texto": "**Tranca Rúnica:** Faça uma jogada de Conjuração (15) em um objeto que você esteja tocando e que possa ser fechado (como uma fechadura, baú ou caixa). Uma vez por descanso, em caso de sucesso, você pode trancar o objeto para que só possa ser aberto por criaturas de sua escolha. Alguém com acesso à magia e uma hora para estudar o feitiço pode quebrá-lo.\n**Porta Arcana:** Quando não houver adversários em alcance Corpo a Corpo, faça uma jogada de Conjuração (13). Em caso de sucesso, gaste 1 Esperança para criar um portal do local onde você está até um ponto em alcance Distante que você possa ver. Ele se fecha após uma criatura atravessá-lo.\n**Revelar:** Faça uma jogada de Conjuração. Se houver algo magicamente oculto em alcance Próximo, ele será revelado.",
    "imagem": "assets/cartas/dominios/CODEX/Livro de Vagras.png",
    "arquivo": "Livro de Vagras.png",
    "condicoes": [
@@ -2797,7 +2797,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "As Jogadas de Conjuração, quem pode abrir a Tranca e a posição do portal/Revelar continuam na mesa."
+    "resumo": "As jogadas de Conjuração, quem pode abrir a Tranca e a posição do portal/Revelar continuam na mesa."
    },
    "uso": {
     "custo": {},
@@ -2833,7 +2833,7 @@
    "tipo": "Grimório",
    "tipoImpresso": "GRIMOIRE",
    "custoRecordar": 2,
-   "texto": "**Levitação:** Faça uma jogada de Spellcast para levantar temporariamente um alvo que você possa ver no ar e movê-lo dentro do alcance Próximo de sua posição atual.\n**Retratar:** Gaste uma Esperança para forçar um alvo dentro do alcance Corpo a Corpo a fazer uma jogada de Reação (15). Em caso de falha, ele esquece o último minuto da conversa que teve com você.\n**Círculo Rúnico:** Marque um Estresse para criar um círculo mágico temporário no chão onde você está. Todos os adversários dentro do alcance Corpo a Corpo, ou que entrarem nesse alcance, sofrem 2d12+4 de dano mágico e são empurrados de volta para o alcance Muito Próximo.",
+   "texto": "**Levitação:** Faça uma jogada de Conjuração para levantar temporariamente um alvo que você possa ver no ar e movê-lo em alcance Próximo de sua posição atual.\n**Retratar:** Gaste 1 Esperança para forçar um alvo em alcance Corpo a Corpo a fazer uma jogada de reação (15). Em caso de falha, ele esquece o último minuto da conversa que teve com você.\n**Círculo Rúnico:** Marque 1 Estresse para criar um círculo mágico temporário no chão onde você está. Todos os adversários em alcance Corpo a Corpo, ou que entrarem nesse alcance, sofrem 2d12+4 de dano mágico e são empurrados de volta para alcance Muito Próximo.",
    "imagem": "assets/cartas/dominios/CODEX/Livro de Korvax.png",
    "arquivo": "Livro de Korvax.png",
    "condicoes": [],
@@ -2850,7 +2850,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Levitação, Reação 15, dano 2d12+4 e posicionamento são resolvidos na mesa. Inabalável continua interceptando o Estresse do Círculo Rúnico."
+    "resumo": "Levitação, jogada de reação 15, dano 2d12+4 e posicionamento são resolvidos na mesa. Inabalável continua interceptando o Estresse do Círculo Rúnico."
    },
    "uso": {
     "custo": {},
@@ -2861,7 +2861,7 @@
       "custo": {
        "esperanca": 1
       },
-      "lembrete": "O alvo Corpo a Corpo faz Reação (15); em falha, esquece o último minuto da conversa."
+      "lembrete": "O alvo Corpo a Corpo faz uma jogada de reação (15); em falha, esquece o último minuto da conversa."
      },
      {
       "id": "circulo-runico",
@@ -2877,7 +2877,7 @@
        "rotuloEncerrar": "Encerrar Círculo Rúnico",
        "avisoEncerrar": "Círculo Rúnico encerrado."
       },
-      "lembrete": "Adversários Corpo a Corpo ou que entrarem no alcance sofrem 2d12+4 mágico e são empurrados para Muito Próximo."
+      "lembrete": "Adversários em alcance Corpo a Corpo ou que entrarem nesse alcance sofrem 2d12+4 mágico e são empurrados para Muito Próximo."
      }
     ],
     "rotuloAtivar": "Usar Livro de Korvax"
@@ -2893,7 +2893,7 @@
    "tipo": "Grimório",
    "tipoImpresso": "GRIMOIRE",
    "custoRecordar": 2,
-   "texto": "**Vínculo Místico:** Faça uma jogada de Spellcast contra um alvo dentro do alcance Distante. Em caso de sucesso, ele fica temporariamente Restrito e deve marcar um Estresse. Se o alvo for uma criatura voadora, a magia o derruba ao chão e o restringe temporariamente.\n**Bola de Fogo:** Faça uma jogada de Spellcast contra um alvo dentro do alcance Muito Distante. Em caso de sucesso, você arremessa uma esfera de fogo que explode ao impactar. O alvo e todas as criaturas em alcance Muito Próximo dele devem fazer uma jogada de Reação (13). Alvos que falharem sofrem d20+5 de dano mágico, usando sua Proficiência. Alvos que obtiverem sucesso sofrem metade do dano.",
+   "texto": "**Vínculo Místico:** Faça uma jogada de Conjuração contra um alvo em alcance Distante. Em caso de sucesso, ele fica temporariamente Restrito e deve marcar 1 Estresse. Se o alvo for uma criatura voadora, a magia o derruba ao chão e o restringe temporariamente.\n**Bola de Fogo:** Faça uma jogada de Conjuração contra um alvo em alcance Longínquo. Em caso de sucesso, você arremessa uma esfera de fogo que explode ao impactar. O alvo e todas as criaturas em alcance Muito Próximo dele devem fazer uma jogada de reação (13). Alvos que falharem sofrem d20+5 de dano mágico, usando sua Proficiência. Alvos que obtiverem sucesso sofrem metade do dano.",
    "imagem": "assets/cartas/dominios/CODEX/Livro de Norai.png",
    "arquivo": "Livro de Norai.png",
    "condicoes": [
@@ -2913,7 +2913,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A mesa resolve Jogadas de Conjuração/Reação, Restrito, Estresse dos alvos e todo dano. Nenhum dado é rolado pelo app."
+    "resumo": "A mesa resolve jogadas de Conjuração/reação, Restrito, Estresse dos alvos e todo dano. Nenhum dado é rolado pelo app."
    }
   },
   {
@@ -2926,7 +2926,7 @@
    "tipo": "Grimório",
    "tipoImpresso": "GRIMOIRE",
    "custoRecordar": 3,
-   "texto": "**Repudiar:** Você pode interromper um efeito mágico que esteja ocorrendo. Faça uma jogada de Reação usando seu atributo de Spellcast. Uma vez por descanso, em caso de sucesso, o efeito é cancelado e quaisquer consequências são evitadas.\n**Criar Construto:** Gaste 1 Esperança para escolher um conjunto de objetos ao seu redor e formar um construto animado que obedece a comandos simples. Faça uma jogada de Spellcast para ordená-lo a agir. Quando necessário, o construto usa sua Evasão e atributos, e seus ataques causam 2d10+3 de dano físico. Você só pode manter um construto por vez, e ele se desfaz ao sofrer qualquer quantidade de dano.",
+   "texto": "**Repudiar:** Você pode interromper um efeito mágico que esteja ocorrendo. Faça uma jogada de reação usando seu traço de Conjuração. Uma vez por descanso, em caso de sucesso, o efeito é cancelado e quaisquer consequências são evitadas.\n**Criar Construto:** Gaste 1 Esperança para escolher um conjunto de objetos ao seu redor e formar um construto animado que obedece a comandos simples. Faça uma jogada de Conjuração para ordená-lo a agir. Quando necessário, o construto usa sua Evasão e traços, e seus ataques causam 2d10+3 de dano físico. Você só pode manter um construto por vez, e ele se desfaz ao sofrer qualquer quantidade de dano.",
    "imagem": "assets/cartas/dominios/CODEX/Livro de Exota.png",
    "arquivo": "Livro de Exota.png",
    "condicoes": [],
@@ -2972,7 +2972,7 @@
        "rotuloEncerrar": "Desfazer Construto",
        "avisoEncerrar": "O construto foi desfeito."
       },
-      "lembrete": "Mantenha apenas um construto. Ele usa sua Evasão e atributos; ataques causam 2d10+3 físico e ele se desfaz ao sofrer dano."
+      "lembrete": "Mantenha apenas um construto. Ele usa sua Evasão e traços; ataques causam 2d10+3 físico e ele se desfaz ao sofrer dano."
      }
     ],
     "rotuloAtivar": "Usar Livro de Exota"
@@ -2988,7 +2988,7 @@
    "tipo": "Grimório",
    "tipoImpresso": "GRIMOIRE",
    "custoRecordar": 2,
-   "texto": "**Deflexão Arcana:** Uma vez por descanso longo, gaste 1 Esperança para anular o dano de um ataque que esteja mirando em você ou em um aliado a Alcance Muito Próximo.\n**Tranca Temporal:** Aponte para um objeto em Alcance Longo. Esse objeto fica completamente congelado no tempo e espaço até o seu próximo descanso. Se uma criatura tentar movê-lo, faça uma jogada de Spellcast contra ela para manter o efeito ativo.\n**Muralha de Chamas:** Faça uma jogada de Spellcast (15). Em caso de sucesso, você cria uma muralha temporária de chamas mágicas entre dois pontos dentro de Alcance Longo. Todas as criaturas no trajeto da muralha devem escolher de qual lado ficar, e qualquer coisa que atravessar a muralha posteriormente sofre 4d10+3 de dano mágico.",
+   "texto": "**Deflexão Arcana:** Uma vez por descanso longo, gaste 1 Esperança para anular o dano de um ataque que esteja mirando em você ou em um aliado em alcance Muito Próximo.\n**Tranca Temporal:** Aponte para um objeto em alcance Distante. Esse objeto fica completamente congelado no tempo e espaço até o seu próximo descanso. Se uma criatura tentar movê-lo, faça uma jogada de Conjuração contra ela para manter o efeito ativo.\n**Muralha de Chamas:** Faça uma jogada de Conjuração (15). Em caso de sucesso, você cria uma muralha temporária de chamas mágicas entre dois pontos em alcance Distante. Todas as criaturas no trajeto da muralha devem escolher de qual lado ficar, e qualquer coisa que atravessar a muralha posteriormente sofre 4d10+3 de dano mágico.",
    "imagem": "assets/cartas/dominios/CODEX/Livro de Grynn.png",
    "arquivo": "Livro de Grynn.png",
    "condicoes": [],
@@ -3036,7 +3036,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 2,
-   "texto": "Faça uma jogada de Spellcast (15). Uma vez por descanso, ao ter sucesso, gaste 1 Esperança para criar uma muralha mágica temporária entre dois pontos dentro de Alcance Longo. A muralha pode ter até 15 metros de altura e se formar em qualquer ângulo. Criaturas ou objetos no caminho são empurrados para o lado que você escolher. A muralha permanece até seu próximo descanso ou até você conjurar Manifestar Muralha novamente.",
+   "texto": "Faça uma jogada de Conjuração (15). Uma vez por descanso, ao ter sucesso, gaste 1 Esperança para criar uma muralha mágica temporária entre dois pontos em alcance Distante. A muralha pode ter até 15 metros de altura e se formar em qualquer ângulo. Criaturas ou objetos no caminho são empurrados para o lado que você escolher. A muralha permanece até seu próximo descanso ou até você conjurar Manifestar Muralha novamente.",
    "imagem": "assets/cartas/dominios/CODEX/Manifestar Muralha.png",
    "arquivo": "Manifestar Muralha.png",
    "condicoes": [],
@@ -3053,7 +3053,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A Jogada de Conjuração 15, os pontos da muralha, o lado para o qual criaturas/objetos são empurrados e toda posição são resolvidos na mesa."
+    "resumo": "A jogada de Conjuração 15, os pontos da muralha, o lado para o qual criaturas/objetos são empurrados e toda posição são resolvidos na mesa."
    },
    "uso": {
     "custo": {
@@ -3072,7 +3072,7 @@
      "avisoEncerrar": "Manifestar Muralha foi encerrada."
     },
     "rotuloAtivar": "Sucesso: Manifestar Muralha · 1 Esperança",
-    "lembrete": "Crie a muralha entre dois pontos em alcance Longo. Ela dura até seu próximo descanso ou até ser encerrada/reconjurada."
+    "lembrete": "Crie a muralha entre dois pontos em alcance Distante. Ela dura até seu próximo descanso ou até ser encerrada/reconjurada."
    }
   },
   {
@@ -3085,7 +3085,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 2,
-   "texto": "Uma vez por descanso longo, você pode se teletransportar instantaneamente, junto de qualquer número de alvos voluntários dentro de Alcance Curto, para um lugar que você já tenha visitado antes. Escolha uma das opções abaixo e faça uma Jogada de Conjuração (16):\nSe você conhece muito bem o local, receba +3 na jogada.\nSe você já visitou o local com frequência, receba +1.\nSe você já visitou o local poucas vezes, não há modificador.\nSe você esteve lá apenas uma vez, receba −2 na jogada.\nEm caso de sucesso, vocês aparecem exatamente no destino pretendido. Em caso de falha, vocês aparecem fora do curso — a margem de falha determina o quão longe do local correto vocês surgem.",
+   "texto": "Uma vez por descanso longo, você pode se teletransportar instantaneamente, junto de qualquer número de alvos voluntários em alcance Próximo, para um lugar que você já tenha visitado antes. Escolha uma das opções abaixo e faça uma jogada de Conjuração (16):\nSe você conhece muito bem o local, receba +3 na jogada.\nSe você já visitou o local com frequência, receba +1.\nSe você já visitou o local poucas vezes, não há modificador.\nSe você esteve lá apenas uma vez, receba −2 na jogada.\nEm caso de sucesso, vocês aparecem exatamente no destino pretendido. Em caso de falha, vocês aparecem fora do curso — a margem de falha determina o quão longe do local correto vocês surgem.",
    "imagem": "assets/cartas/dominios/CODEX/Teleporte.png",
    "arquivo": "Teleporte.png",
    "condicoes": [],
@@ -3097,7 +3097,7 @@
    "observacao": "O rótulo de tipo impresso na carta está em inglês ('SPELL'), não 'Feitiço'.",
    "automacao": {
     "classificacao": "limite-automatizado-resolucao-manual",
-    "motivo": "O app registra o único uso por descanso longo. Familiaridade, Jogada de Conjuração 16, destino e margem de falha permanecem manuais."
+    "motivo": "O app registra o único uso por descanso longo. Familiaridade, jogada de Conjuração 16, destino e margem de falha permanecem manuais."
    },
    "uso": {
     "custo": {},
@@ -3106,11 +3106,11 @@
      "maximo": 1
     },
     "rotuloAtivar": "Registrar Teleporte · 1/descanso longo",
-    "lembrete": "Escolha um local já visitado e faça a Jogada de Conjuração 16 fora do app, aplicando +3/+1/0/−2 conforme a familiaridade. Em falha, a mesa define o desvio pela margem."
+    "lembrete": "Escolha um local já visitado e faça a jogada de Conjuração 16 fora do app, aplicando +3/+1/0/−2 conforme a familiaridade. Em falha, a mesa define o desvio pela margem."
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "jogada": "Jogada de Conjuração (16), com modificador de familiaridade",
+    "jogada": "jogada de Conjuração (16), com modificador de familiaridade",
     "resumo": "O app só controla o uso por descanso longo; não escolhe destino, não rola a jogada e não calcula o desvio em falha."
    }
   },
@@ -3124,7 +3124,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 0,
-   "texto": "Faça uma Jogada de Conjuração contra um alvo dentro do alcance Próximo. Em um sucesso, role um número de d20 igual ao seu traço de Conjuração. O alvo deve fazer uma jogada de reação com Dificuldade igual ao seu resultado mais alto. Em um sucesso, o alvo marca 1 Estresse, mas não é banido. Uma vez por descanso, se falhar, ele é banido deste reino.\nQuando os personagens rolarem com Medo, a Dificuldade sofre uma penalidade de -1 e o alvo faz outra jogada de reação. Em um sucesso, ele volta do banimento.",
+   "texto": "Faça uma jogada de Conjuração contra um alvo em alcance Próximo. Em um sucesso, role um número de d20 igual ao seu traço de Conjuração. O alvo deve fazer uma jogada de reação com Dificuldade igual ao seu resultado mais alto. Em um sucesso, o alvo marca 1 Estresse, mas não é banido. Uma vez por descanso, se falhar, ele é banido deste reino.\nQuando os personagens rolarem com Medo, a Dificuldade sofre uma penalidade de -1 e o alvo faz outra jogada de reação. Em um sucesso, ele volta do banimento.",
    "imagem": "assets/cartas/dominios/CODEX/Banir.png",
    "arquivo": "Banir.png",
    "condicoes": [],
@@ -3141,7 +3141,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A Jogada de Conjuração, os d20, a Dificuldade, a reação do alvo, o banimento e as novas reações quando houver Medo continuam na mesa."
+    "resumo": "A jogada de Conjuração, os d20, a Dificuldade, a reação do alvo, o banimento e as novas reações quando houver Medo continuam na mesa."
    },
    "uso": {
     "custo": {},
@@ -3163,7 +3163,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 2,
-   "texto": "Marque um adversário dentro de Alcance Próximo com um símbolo de retaliação. O GM ganha um Medo. Quando o adversário marcado causar dano a você ou seus aliados, coloque um d8 nesta carta. Você pode manter um número de d8 igual ao seu nível.\nQuando você atacar com sucesso o adversário marcado, role os dados desta carta e adicione o total à sua jogada de dano, então limpe os dados. Esse efeito termina quando o adversário marcado for derrotado ou quando você lançar Símbolo da Retaliação novamente.",
+   "texto": "Marque um adversário em alcance Próximo com um símbolo de retaliação. O Mestre ganha 1 Medo. Quando o adversário marcado causar dano a você ou seus aliados, coloque um d8 nesta carta. Você pode manter um número de d8 igual ao seu nível.\nQuando você atacar com sucesso o adversário marcado, role os dados desta carta e adicione o total à sua jogada de dano, então limpe os dados. Esse efeito termina quando o adversário marcado for derrotado ou quando você lançar Símbolo da Retaliação novamente.",
    "imagem": "assets/cartas/dominios/CODEX/Símbolo da Retaliação.png",
    "arquivo": "Símbolo da Retaliação.png",
    "condicoes": [],
@@ -3180,7 +3180,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Marque o adversário e dê 1 Medo ao GM na mesa. Acrescente um d8 ao contador quando o alvo causar dano; no próximo ataque bem-sucedido contra ele, role os d8 fora do app, some ao dano e limpe o contador."
+    "resumo": "Marque o adversário e dê 1 Medo ao Mestre na mesa. Acrescente um d8 ao contador quando o alvo causar dano; no próximo ataque bem-sucedido contra ele, role os d8 fora do app, some ao dano e limpe o contador."
    }
   },
   {
@@ -3193,7 +3193,7 @@
    "tipo": "Grimório",
    "tipoImpresso": "GRIMOIRE",
    "custoRecordar": 0,
-   "texto": "**Passar Através:** Faça uma Jogada de Conjuração (13). Uma vez por descanso, em caso de sucesso, você e todas as criaturas tocando em você podem passar por uma parede ou porta dentro de Alcance Próximo. O efeito termina quando todos estiverem do outro lado.\n**Portão Dimensional:** Faça uma Jogada de Conjuração (14). Uma vez por descanso longo, em caso de sucesso, abra um portal para um local em outra dimensão ou plano de existência que você já tenha visitado antes. Esse portal dura até seu próximo descanso.",
+   "texto": "**Passar Através:** Faça uma jogada de Conjuração (13). Uma vez por descanso, em caso de sucesso, você e todas as criaturas tocando em você podem passar por uma parede ou porta em alcance Próximo. O efeito termina quando todos estiverem do outro lado.\n**Portão Dimensional:** Faça uma jogada de Conjuração (14). Uma vez por descanso longo, em caso de sucesso, abra um portal para um local em outra dimensão ou plano de existência que você já tenha visitado antes. Esse portal dura até seu próximo descanso.",
    "imagem": "assets/cartas/dominios/CODEX/Livro de Homet.png",
    "arquivo": "Livro de Homet.png",
    "condicoes": [],
@@ -3202,14 +3202,14 @@
    ],
    "pendenteTraducao": false,
    "errata": null,
-   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'. Esta carta usa 'Jogada de Conjuração' em vez de 'jogada de Spellcast', diferente das demais cartas de Grimório do maço.",
+   "observacao": "O rótulo de tipo impresso na carta está em inglês ('GRIMOIRE'), não 'Grimório'. O texto ativo segue o vocabulário SRD2 para jogada de Conjuração.",
    "automacao": {
     "classificacao": "automatizada-opcoes-uso",
     "resumo": "Passar Através e Portão Dimensional possuem limites independentes e são registrados separadamente pelo servidor."
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "As duas Jogadas de Conjuração e a travessia/posição do portal são resolvidas na mesa; o app não rola dados."
+    "resumo": "As duas jogadas de Conjuração e a travessia/posição do portal são resolvidas na mesa; o app não rola dados."
    },
    "uso": {
     "custo": {},
@@ -3246,7 +3246,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 2,
-   "texto": "Quando 4 ou mais das cartas de domínio no seu conjunto forem do domínio Códice, você recebe os seguintes benefícios:\nVocê pode marcar 1 Estresse para adicionar sua Proficiência a uma Jogada de Conjuração.\nUma vez por descanso, você pode substituir esta carta por qualquer carta do seu cofre sem pagar seu Custo de Retorno.",
+   "texto": "Quando 4 ou mais das suas cartas ativas forem do domínio Códice, você recebe os seguintes benefícios:\nVocê pode marcar 1 Estresse para adicionar sua Proficiência a uma jogada de Conjuração.\nUma vez por descanso, você pode substituir esta carta por qualquer carta do seu cofre sem pagar o custo de recordar.",
    "imagem": "assets/cartas/dominios/CODEX/Tocado pelo Códice.png",
    "arquivo": "Tocado pelo Códice.png",
    "condicoes": [],
@@ -3260,12 +3260,12 @@
    "errata": null,
    "observacao": "O rótulo de tipo impresso na carta está em inglês ('ABILITY'), não 'Habilidade'.",
    "automacao": {
-    "classificacao": "automatizada-loadout-custo-troca",
-    "resumo": "Com quatro cartas Códice ativas, o app cobra 1 Estresse e publica a Proficiência atual para a Jogada de Conjuração; ou, 1/descanso, troca esta carta por uma carta do cofre sem cobrar recordar."
+    "classificacao": "automatizada-cartas-ativas-custo-troca",
+    "resumo": "Com quatro cartas Códice ativas, o app cobra 1 Estresse e publica a Proficiência atual para a jogada de Conjuração; ou, 1/descanso, troca esta carta por uma carta do cofre sem cobrar o custo de recordar."
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A Jogada de Conjuração continua física. Na troca, o jogador escolhe qual carta do cofre entra; nenhuma rolagem é feita pelo app."
+    "resumo": "A jogada de Conjuração continua física. Na troca, o jogador escolhe qual carta do cofre entra; nenhuma rolagem é feita pelo app."
    },
    "uso": {
     "custo": {},
@@ -3281,17 +3281,17 @@
        "estresse": 1
       },
       "bonusProficienciaConjuracaoAtual": true,
-      "lembrete": "Some sua Proficiência atual à Jogada de Conjuração que você está fazendo."
+      "lembrete": "Some sua Proficiência atual à jogada de Conjuração que você está fazendo."
      },
      {
       "id": "troca-sem-custo",
-      "rotulo": "Trocar com o cofre · sem Custo de Retorno",
+      "rotulo": "Trocar com o cofre · sem custo de recordar",
       "marcaUso": {
        "chave": "uso:carta:codex:tocado-pelo-codice:troca",
        "maximo": 1
       },
       "trocaComCofreSemCusto": true,
-      "lembrete": "Tocado pelo Códice vai para o cofre e a carta escolhida entra na mão sem pagar Custo de Retorno."
+      "lembrete": "Tocado pelo Códice vai para o cofre e a carta escolhida entra na mão sem pagar custo de recordar."
      }
     ],
     "rotuloAtivar": "Usar Tocado pelo Códice"
@@ -3307,7 +3307,7 @@
    "tipo": "Grimório",
    "tipoImpresso": "GRIMOIRE",
    "custoRecordar": 2,
-   "texto": "**Mergulho na Memória:** Faça uma Jogada de Conjuração contra um alvo dentro do alcance Longo. Em um sucesso, penetre na mente do alvo e pergunte ao Mestre uma questão. O Mestre descreve quaisquer memórias que o alvo tenha relacionadas à resposta.\n**Clareza Compartilhada:** Uma vez por descanso longo, gaste 1 Esperança para escolher duas criaturas voluntárias. Quando uma delas for marcar Estresse, elas podem escolher qual das duas marca. Esta magia dura até o próximo descanso delas.",
+   "texto": "**Mergulho na Memória:** Faça uma jogada de Conjuração contra um alvo em alcance Distante. Em um sucesso, penetre na mente do alvo e pergunte ao Mestre uma questão. O Mestre descreve quaisquer memórias que o alvo tenha relacionadas à resposta.\n**Clareza Compartilhada:** Uma vez por descanso longo, gaste 1 Esperança para escolher duas criaturas voluntárias. Quando uma delas for marcar Estresse, elas podem escolher qual das duas marca. Esta magia dura até o próximo descanso delas.",
    "imagem": "assets/cartas/dominios/CODEX/Livro de Vyola.png",
    "arquivo": "Livro de Vyola.png",
    "condicoes": [],
@@ -3357,7 +3357,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 3,
-   "texto": "Quando você tiver alguns minutos de calma para se concentrar, pode gastar 2 Esperança para invocar seu Refúgio Seguro, um grande lar interdimensional onde você e seus aliados podem se abrigar.\nQuando fizer isso, uma porta mágica aparece em algum lugar dentro do alcance Próximo. Apenas criaturas da sua escolha podem entrar. Uma vez dentro, você pode tornar a entrada invisível. Você e qualquer outra pessoa podem sempre sair. Depois que você sair, a porta precisa ser invocada novamente.\nQuando você descansar dentro do seu próprio Refúgio Seguro, pode adicionar um movimento de inatividade adicional.",
+   "texto": "Quando você tiver alguns minutos de calma para se concentrar, pode gastar 2 Esperanças para invocar seu Refúgio Seguro, um grande lar interdimensional onde você e seus aliados podem se abrigar.\nQuando fizer isso, uma porta mágica aparece em algum lugar em alcance Próximo. Apenas criaturas da sua escolha podem entrar. Uma vez dentro, você pode tornar a entrada invisível. Você e qualquer outra pessoa podem sempre sair. Depois que você sair, a porta precisa ser invocada novamente.\nQuando você descansar dentro do seu próprio Refúgio Seguro, pode adicionar um movimento de descanso adicional.",
    "imagem": "assets/cartas/dominios/CODEX/Refúgio Seguro.png",
    "arquivo": "Refúgio Seguro.png",
    "condicoes": [
@@ -3393,7 +3393,7 @@
      "avisoEncerrar": "Refúgio Seguro deixou de conceder o movimento adicional."
     },
     "rotuloAtivar": "Invocar Refúgio Seguro · 2 Esperanças",
-    "lembrete": "Enquanto descansar no seu próprio Refúgio Seguro, você recebe um movimento de inatividade adicional."
+    "lembrete": "Enquanto descansar no seu próprio Refúgio Seguro, você recebe um movimento de descanso adicional."
    }
   },
   {
@@ -3406,7 +3406,7 @@
    "tipo": "Grimório",
    "tipoImpresso": "GRIMOIRE",
    "custoRecordar": 4,
-   "texto": "**Transformação:** Faça uma Jogada de Conjuração (15). Em um sucesso, transforme-se em um objeto inanimado não maior que o dobro de seu tamanho normal. Você pode permanecer nessa forma até sofrer dano.\n**Enervação Eterna:** Uma vez por descanso longo, faça uma Jogada de Conjuração contra um alvo dentro do alcance Próximo. Em um sucesso, ele se torna permanentemente Vulnerável. Essa condição não pode ser removida por nenhum meio.",
+   "texto": "**Transformação:** Faça uma jogada de Conjuração (15). Em um sucesso, transforme-se em um objeto inanimado não maior que o dobro de seu tamanho normal. Você pode permanecer nessa forma até sofrer dano.\n**Enervação Eterna:** Uma vez por descanso longo, faça uma jogada de Conjuração contra um alvo em alcance Próximo. Em um sucesso, ele se torna permanentemente Vulnerável. Essa condição não pode ser removida por nenhum meio.",
    "imagem": "assets/cartas/dominios/CODEX/Livro do Ronin.png",
    "arquivo": "Livro do Ronin.png",
    "condicoes": [
@@ -3424,7 +3424,7 @@
    },
    "automacao": {
     "classificacao": "automatizada-parcial-com-opcoes",
-    "motivo": "Transformação mantém estado na ficha e termina ao sofrer dano; Enervação Eterna registra 1 uso por descanso longo. As Jogadas de Conjuração e o alvo Vulnerável permanente são resolvidos na mesa."
+    "motivo": "Transformação mantém estado na ficha e termina ao sofrer dano; Enervação Eterna registra 1 uso por descanso longo. As jogadas de Conjuração e o alvo Vulnerável permanente são resolvidos na mesa."
    },
    "uso": {
     "custo": {},
@@ -3440,7 +3440,7 @@
        "avisoEncerrar": "Transformação do Ronin encerrada."
       },
       "rotuloAtivar": "Sucesso: assumir Transformação",
-      "lembrete": "Use após uma Jogada de Conjuração 15 bem-sucedida. Você permanece como objeto inanimado até sofrer dano."
+      "lembrete": "Use após uma jogada de Conjuração 15 bem-sucedida. Você permanece como objeto inanimado até sofrer dano."
      },
      {
       "id": "enervacao",
@@ -3449,15 +3449,15 @@
        "maximo": 1
       },
       "rotuloAtivar": "Sucesso: registrar Enervação Eterna · 1/descanso longo",
-      "lembrete": "Use após a Jogada de Conjuração contra o alvo Próximo ser bem-sucedida. No encontro, deixe o alvo permanentemente Vulnerável."
+      "lembrete": "Use após a jogada de Conjuração contra o alvo Próximo ser bem-sucedida. No encontro, deixe o alvo permanentemente Vulnerável."
      }
     ]
    },
    "resolucaoManual": {
     "rolaNoApp": false,
     "opcoes": [
-     "Transformação: faça a Jogada de Conjuração 15 fora do app; em sucesso ative o estado. O backend o encerra quando dano for aplicado à ficha.",
-     "Enervação Eterna: uma vez por descanso longo, faça a Jogada de Conjuração contra um alvo Próximo; em sucesso use a opção e aplique Vulnerável permanente no encontro."
+     "Transformação: faça a jogada de Conjuração 15 fora do app; em sucesso ative o estado. O backend o encerra quando dano for aplicado à ficha.",
+     "Enervação Eterna: uma vez por descanso longo, faça a jogada de Conjuração contra um alvo Próximo; em sucesso use a opção e aplique Vulnerável permanente no encontro."
     ]
    }
   },
@@ -3471,7 +3471,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 4,
-   "texto": "Faça uma Jogada de Conjuração (18). Uma vez por descanso longo, em um sucesso, o Mestre informa quais adversários dentro do alcance Longo têm Dificuldade 18 ou menor. Marque 1 Estresse para cada um que você deseja atingir com esta magia. Eles são mortos e não podem voltar à vida por nenhum meio.",
+   "texto": "Faça uma jogada de Conjuração (18). Uma vez por descanso longo, em um sucesso, o Mestre informa quais adversários em alcance Distante têm Dificuldade 18 ou menor. Marque 1 Estresse para cada um que você deseja atingir com esta magia. Eles são mortos e não podem voltar à vida por nenhum meio.",
    "imagem": "assets/cartas/dominios/CODEX/Onda de Desintegração.png",
    "arquivo": "Onda de Desintegração.png",
    "condicoes": [],
@@ -3488,7 +3488,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A Jogada de Conjuração 18, quais adversários têm Dificuldade 18 ou menor e a remoção dos alvos da cena são confirmadas pelo Mestre."
+    "resumo": "A jogada de Conjuração 18, quais adversários têm Dificuldade 18 ou menor e a remoção dos alvos da cena são confirmadas pelo Mestre."
    },
    "uso": {
     "custo": {},
@@ -3521,7 +3521,7 @@
    "tipo": "Grimório",
    "tipoImpresso": "GRIMOIRE",
    "custoRecordar": 2,
-   "texto": "**Manipulador do Tempo:** Faça uma Jogada de Conjuração (18). Em um sucesso, o tempo desacelera temporariamente até parar para todos dentro do alcance Longo, exceto para você. Ele retoma na próxima vez que você fizer uma jogada de ação que tenha como alvo aquela criatura.\n**Imunidade Mágica:** Gaste 5 Esperança para ficar imune a dano mágico até seu próximo descanso.",
+   "texto": "**Manipulador do Tempo:** Faça uma jogada de Conjuração (18). Em um sucesso, o tempo desacelera temporariamente até parar para todos em alcance Distante, exceto para você. Ele retoma na próxima vez que você fizer uma jogada de ação que tenha como alvo outra criatura.\n**Imunidade Mágica:** Gaste 5 Esperanças para ficar imune a dano mágico até seu próximo descanso.",
    "imagem": "assets/cartas/dominios/CODEX/Livro de Yarrow.png",
    "arquivo": "Livro de Yarrow.png",
    "condicoes": [],
@@ -3566,7 +3566,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Uma vez por descanso longo, gaste 5 Esperança para lançar esta magia em duas ou mais criaturas voluntárias. Até seu próximo descanso, quando uma criatura conectada por essa união for marcar Estresse ou Pontos de Vida, as criaturas conectadas podem escolher quem marca.",
+   "texto": "Uma vez por descanso longo, gaste 5 Esperanças para lançar esta magia em duas ou mais criaturas voluntárias. Até seu próximo descanso, quando uma criatura conectada por essa união for marcar Estresse ou Pontos de Vida, as criaturas conectadas podem escolher quem marca.",
    "imagem": "assets/cartas/dominios/CODEX/União Transcendente.png",
    "arquivo": "União Transcendente.png",
    "condicoes": [],

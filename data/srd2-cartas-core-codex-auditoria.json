@@ -1,0 +1,54 @@
+{
+  "versao": 1,
+  "estado": "conferido",
+  "fonte": {
+    "srd": "2.0",
+    "data": "2026-08-25",
+    "paginasPdf": "211–213",
+    "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64"
+  },
+  "dominio": "domains/codex",
+  "conclusao": "As 21 cartas de Códice preservam no SRD 2.0 os níveis, tipos, custos de recordar, números, custos, gatilhos, frequências e efeitos implementados, após corrigir três divergências mecânicas no texto ativo e normalizar o vocabulário pt-BR.",
+  "registros": [
+    { "idFonte": "domain-cards/book-of-ava", "idLocal": "codex-livro-de-ava", "nomeIngles": "Book of Ava", "nivel": 1, "tipo": "Grimório", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/book-of-illiat", "idLocal": "codex-livro-de-illiat", "nomeIngles": "Book of Illiat", "nivel": 1, "tipo": "Grimório", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/book-of-tyfar", "idLocal": "codex-livro-de-tyfar", "nomeIngles": "Book of Tyfar", "nivel": 1, "tipo": "Grimório", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/book-of-sitil", "idLocal": "codex-livro-de-sitil", "nomeIngles": "Book of Sitil", "nivel": 2, "tipo": "Grimório", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/book-of-vagras", "idLocal": "codex-livro-de-vagras", "nomeIngles": "Book of Vagras", "nivel": 2, "tipo": "Grimório", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/book-of-korvax", "idLocal": "codex-livro-de-korvax", "nomeIngles": "Book of Korvax", "nivel": 3, "tipo": "Grimório", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/book-of-norai", "idLocal": "codex-livro-de-norai", "nomeIngles": "Book of Norai", "nivel": 3, "tipo": "Grimório", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/book-of-exota", "idLocal": "codex-livro-de-exota", "nomeIngles": "Book of Exota", "nivel": 4, "tipo": "Grimório", "custoRecordar": 3 },
+    { "idFonte": "domain-cards/book-of-grynn", "idLocal": "codex-livro-de-grynn", "nomeIngles": "Book of Grynn", "nivel": 4, "tipo": "Grimório", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/manifest-wall", "idLocal": "codex-manifestar-muralha", "nomeIngles": "Manifest Wall", "nivel": 5, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/teleport", "idLocal": "codex-teleporte", "nomeIngles": "Teleport", "nivel": 5, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/banish", "idLocal": "codex-banir", "nomeIngles": "Banish", "nivel": 6, "tipo": "Feitiço", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/sigil-of-retribution", "idLocal": "codex-simbolo-da-retaliacao", "nomeIngles": "Sigil of Retribution", "nivel": 6, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/book-of-homet", "idLocal": "codex-livro-de-homet", "nomeIngles": "Book of Homet", "nivel": 7, "tipo": "Grimório", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/codex-touched", "idLocal": "codex-tocado-pelo-codice", "nomeIngles": "Codex‑touched", "nivel": 7, "tipo": "Habilidade", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/book-of-vyola", "idLocal": "codex-livro-de-vyola", "nomeIngles": "Book of Vyola", "nivel": 8, "tipo": "Grimório", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/safe-haven", "idLocal": "codex-refugio-seguro", "nomeIngles": "Safe Haven", "nivel": 8, "tipo": "Feitiço", "custoRecordar": 3 },
+    { "idFonte": "domain-cards/book-of-ronin", "idLocal": "codex-livro-do-ronin", "nomeIngles": "Book of Ronin", "nivel": 9, "tipo": "Grimório", "custoRecordar": 4 },
+    { "idFonte": "domain-cards/disintegration-wave", "idLocal": "codex-onda-de-desintegracao", "nomeIngles": "Disintegration Wave", "nivel": 9, "tipo": "Feitiço", "custoRecordar": 4 },
+    { "idFonte": "domain-cards/book-of-yarrow", "idLocal": "codex-livro-de-yarrow", "nomeIngles": "Book of Yarrow", "nivel": 10, "tipo": "Grimório", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/transcendent-union", "idLocal": "codex-uniao-transcendente", "nomeIngles": "Transcendent Union", "nivel": 10, "tipo": "Feitiço", "custoRecordar": 1 }
+  ],
+  "correcoesMecanicas": [
+    "Livro de Vagras — Revelar não exige sucesso contra o efeito oculto; a jogada revela qualquer coisa magicamente oculta em alcance Próximo.",
+    "Teleporte — os alvos voluntários devem estar em alcance Próximo, não em Alcance Curto.",
+    "Livro de Yarrow — Manipulador do Tempo termina quando você faz uma jogada de ação que tenha como alvo outra criatura, não uma criatura específica anteriormente indicada."
+  ],
+  "correcoesDeVocabulario": [
+    "traço de Conjuração",
+    "jogada de Conjuração",
+    "jogada de reação",
+    "Distante",
+    "Longínquo",
+    "cartas ativas",
+    "custo de recordar",
+    "movimento de descanso",
+    "Mestre"
+  ],
+  "erratasConferidas": [
+    "Livro de Grynn já contém a revisão da errata do Core que torna temporária a Muralha de Chamas; o texto coincide com o SRD 2.0."
+  ]
+}

@@ -47,7 +47,7 @@ O corpus auxiliar pinado registra 1.539 registros: 10 domínios, 13 classes, 26 
 
 O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. O inventário individual fica em `data/srd2-inventario.json`: cada um dos 1.539 registros preserva ID, nome inglês, tipo, hash do registro no corpus, estado de implementação e, quando aplicável, `sourceLocator`. `npm run teste:srd2` impede alteração acidental das contagens, IDs, hashes estruturais ou estados. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
 
-No checkpoint atual, 129 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 1.409 permanecem `pendente`.
+No checkpoint atual, 150 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 1.388 permanecem `pendente`.
 
 ## Fase 1 — Level Up
 
@@ -123,3 +123,9 @@ O texto ativo foi normalizado para **traço**, **jogada de dano**, **jogada de r
 As 21 cartas de Osso foram conferidas contra as pp. 209–210 do SRD 2.0. Nome/identidade, nível, tipo, custo de recordar, custos de recursos, dados, alcances, frequências e efeitos permanecem mecanicamente compatíveis com o catálogo e as automações existentes. **Eu Vi Chegando** e **Golpe Estilhaçante** já continham as revisões da errata do Core e coincidem com *I See It Coming* e *Splintering Strike* no SRD 2.0.
 
 O texto ativo foi normalizado para **traço**, **jogada de dano**, **Ponto de Armadura**, **Distante**, **cartas ativas**, **movimento de descanso**, **Dado de Esperança**, **Jogada em Equipe** e **Mestre**. O vínculo carta a carta e os campos estruturais ficam protegidos por `data/srd2-cartas-core-bone-auditoria.json` e `tools/conferir-srd2-cartas-core-bone.mjs`.
+
+### Cartas de domínio do Core — Códice
+
+As 21 cartas de Códice foram conferidas contra as pp. 211–213 do SRD 2.0. Nome/identidade, nível, tipo, custo de recordar, custos de recursos, dados, frequências e efeitos permanecem mecanicamente compatíveis depois de três correções no texto ativo: **Revelar** não exige sucesso contra o efeito oculto; **Teleporte** alcança alvos voluntários em alcance Próximo; e **Manipulador do Tempo** termina quando a próxima jogada de ação tem como alvo outra criatura. **Muralha de Chamas** já continha a revisão da errata do Core e coincide com o SRD 2.0.
+
+O vocabulário ativo foi normalizado para **traço de Conjuração**, **jogada de Conjuração**, **jogada de reação**, **Distante**, **Longínquo**, **cartas ativas**, **custo de recordar**, **movimento de descanso** e **Mestre**. O vínculo carta a carta, os campos estruturais e as três correções mecânicas ficam protegidos por `data/srd2-cartas-core-codex-auditoria.json` e `tools/conferir-srd2-cartas-core-codex.mjs`.

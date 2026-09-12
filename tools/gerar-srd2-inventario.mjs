@@ -148,7 +148,28 @@ const implementados = new Set([
   'domain-cards/on-the-brink',
   'domain-cards/splintering-strike',
   'domain-cards/deathrun',
-  'domain-cards/swift-step'
+  'domain-cards/swift-step',
+  'domain-cards/book-of-ava',
+  'domain-cards/book-of-illiat',
+  'domain-cards/book-of-tyfar',
+  'domain-cards/book-of-sitil',
+  'domain-cards/book-of-vagras',
+  'domain-cards/book-of-korvax',
+  'domain-cards/book-of-norai',
+  'domain-cards/book-of-exota',
+  'domain-cards/book-of-grynn',
+  'domain-cards/manifest-wall',
+  'domain-cards/teleport',
+  'domain-cards/banish',
+  'domain-cards/sigil-of-retribution',
+  'domain-cards/book-of-homet',
+  'domain-cards/codex-touched',
+  'domain-cards/book-of-vyola',
+  'domain-cards/safe-haven',
+  'domain-cards/book-of-ronin',
+  'domain-cards/disintegration-wave',
+  'domain-cards/book-of-yarrow',
+  'domain-cards/transcendent-union'
 ]);
 const colecoes = [];
 
