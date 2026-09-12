@@ -8,7 +8,7 @@ O frontend é publicado pelo GitHub Pages e o backend oficial é Supabase: Edge 
 
 ## Estado atual
 
-> **Produção:** Core 1.0 + Lote 9 publicados em `main` em 11/09/2026.
+> **Produção:** Core 1.0 + Lote 9 publicados em `main` em 11/09/2026, com os refinamentos pós-Lote 9 de inventário/posse e gerenciamento unificado de equipamentos dos PRs #13 e #14.
 
 O estado atual inclui:
 
@@ -26,7 +26,11 @@ O estado atual inclui:
 - refino UX/UI mobile e responsivo com baseline dedicado em 360×800, 390×844, 430×932, 768×1024, 1024×768 e 1440×900;
 - fluxo de dano recebido integrado às cartas ativas suportadas pelo contexto atual, incluindo `Tocado do Esplendor` e `Levantar-Se`;
 - cache-busting dos assets críticos do HUD para evitar frontend antigo após deploy;
-- correção da pílula de nível e reposicionamento da seção completa de Esperança após `Aplicar dano recebido`.
+- correção da pílula de nível e reposicionamento da seção completa de Esperança após `Aplicar dano recebido`;
+- inventário pós-criação com vínculo de catálogo para itens oficiais e contexto preservado para itens narrativos;
+- posse de armaduras com reserva e troca validada, mantendo somente a armadura equipada como fonte de efeitos;
+- Mochila > Do livro como porta única para adquirir armas e armaduras oficiais;
+- modal `Gerenciar` unificado para organizar armas equipadas/guardadas e armadura equipada/guardadas.
 
 O Lote 9 está fechado. Novas mudanças devem partir de uma branch criada a partir da `main` atual e seguir por PR com CI verde; não existe uma branch de desenvolvimento persistente obrigatória.
 
@@ -59,10 +63,10 @@ O navegador não acessa diretamente as tabelas PostgreSQL. `js/api.js` distribui
 Produção atual:
 
 ```text
-engine-api: v9 ACTIVE
+engine-api: v10 ACTIVE
 verify_jwt: false
-ENGINE_COMMIT: 752c7abc0349222bd795254f8f023c047125a1fe
-ezbr_sha256: bb5b32f84dc598058c1b172eee05cd1d601476636dcf3fcc4de36df91b56ac23
+ENGINE_COMMIT: 2761bb828287fe0c17009cf4d0e255ed21762e07
+ezbr_sha256: deabf224e975300370e6063a8520f5233509c97453b832d87d9f331fe5d22add
 ```
 
 O arquivo versionado `supabase/functions/engine-api/index.ts` usa o mesmo `ENGINE_COMMIT` do deploy ativo. Esse alinhamento é deliberado para impedir regressão em futuros redeploys.
@@ -115,7 +119,7 @@ Os Lotes 6–9 mantêm a linha Core/SRD 1.0 adotada pelo projeto. O SRD 2.0 de 2
 
 ## Testes
 
-Gate completo mais recente antes do fechamento documental: **CI #63** em 11/09/2026.
+Gate completo do fechamento funcional do Lote 9: **CI #63** em 11/09/2026.
 
 ```text
 sintaxe                 → 84 arquivos JS/MJS OK
@@ -128,6 +132,8 @@ baseline mobile         → 27 telas, 0 erros, 0 avisos
 baseline responsivo     → 30 telas, 0 erros estruturais
 Dano HUD                → 360×800 e 768×1024 aprovados
 ```
+
+Após os refinamentos de inventário/equipamentos, o commit `64d32d793182b8d81f65f0933e2dc8ccfe55c479` passou novamente pelo gate completo no **CI #82**, incluindo sintaxe, backend, gerados, CSS, auditoria Core 1.0, E2E e todos os baselines mobile/responsivos do workflow.
 
 Comandos principais:
 
@@ -146,16 +152,19 @@ O workflow `.github/workflows/ci.yml` executa a suíte funcional e os contratos 
 
 ## Publicação atual
 
-Fechamento funcional do Lote 9 em produção em 11/09/2026:
+Estado funcional em produção após os refinamentos pós-Lote 9 de 11/09/2026:
 
-- commit funcional do motor/frontend: `752c7abc0349222bd795254f8f023c047125a1fe`;
-- `engine-api` v9 ACTIVE, `verify_jwt=false`;
-- `ENGINE_COMMIT`: `752c7abc0349222bd795254f8f023c047125a1fe`;
-- SHA do pacote Supabase: `bb5b32f84dc598058c1b172eee05cd1d601476636dcf3fcc4de36df91b56ac23`;
+- commit funcional do frontend atual: `64d32d793182b8d81f65f0933e2dc8ccfe55c479`;
+- commit imutável do motor: `2761bb828287fe0c17009cf4d0e255ed21762e07`;
+- `engine-api` v10 ACTIVE, `verify_jwt=false`;
+- `ENGINE_COMMIT`: `2761bb828287fe0c17009cf4d0e255ed21762e07`;
+- SHA do pacote Supabase: `deabf224e975300370e6063a8520f5233509c97453b832d87d9f331fe5d22add`;
 - PR #9 integrou o fechamento funcional do HUD de dano;
-- PR #10 alinhou o source versionado do `engine-api` ao pin de produção;
-- GitHub Pages #81 publicou com sucesso a `main` após esse alinhamento;
-- nenhuma migração de banco foi necessária nessa promoção.
+- PR #10 alinhou o source versionado do `engine-api` ao pin então usado em produção;
+- PR #13 integrou inventário, posse de equipamentos e prévia do catálogo, além do motor v10 pinado em `2761bb8...`;
+- PR #14 removeu a segunda porta de registro de armas e unificou o gerenciamento de armas/armaduras, sem alteração de backend;
+- GitHub Pages #84 publicou com sucesso o commit `64d32d7...` em `main`;
+- nenhuma migração de banco foi necessária nos PRs #13 e #14.
 
 O HEAD da `main` pode avançar por commits exclusivamente documentais sem exigir novo deploy do motor. O que define o backend privilegiado é sempre o `ENGINE_COMMIT` explícito da função.
 
