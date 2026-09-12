@@ -56,7 +56,7 @@ Validação da Fase 1:
 - `data/srd2-traducao.json`: vocabulário obrigatório pt-BR; termos do Core são preservados e nomes novos de *Hope & Fear* ficam provisórios até existir tradução oficial;
 - `data/srd2-fonte.json`: fonte, hashes, erratas e pin do corpus;
 - `data/srd2-cobertura.json`: estado das 16 coleções; não considerar conteúdo antigo como conferido por semelhança;
-- `data/srd2-inventario.json`: 1.539 IDs individuais com nome inglês, tipo, `sourceLocator` quando aplicável, hash do corpus e estado; neste checkpoint são 1 fonte conferida, 66 mecânicas implementadas e 1.472 pendentes;
+- `data/srd2-inventario.json`: 1.539 IDs individuais com nome inglês, tipo, `sourceLocator` quando aplicável, hash do corpus e estado; neste checkpoint são 1 fonte conferida, 87 mecânicas implementadas e 1.451 pendentes;
 - `docs/srd2-conformidade.md`: critério formal para declarar 100%;
 - CI: `npm run teste:srd2` valida tradução e matriz de cobertura.
 
@@ -100,9 +100,18 @@ Validação da Fase 1:
 - `data/srd2-dominios-core-auditoria.json` registra os 9 IDs e a matriz de acesso SRD2;
 - `backend/41_Dominios.gs` foi regenerado com 9 domínios e 189 cartas Core ainda separadas do futuro domínio Pavor.
 
-Validação deste checkpoint: `npm run teste:srd2` verde com 61 termos mecânicos, 31 nomes novos, 1.539 registros inventariados (**66 implementados**, 1.472 pendentes), 95 registros no recorte do núcleo (**64/64 existentes conferidos**) e validadores específicos; backend **951/951**, gerados **14/14**, sintaxe local **97 arquivos**, CSS limpo. O E2E local não executou porque a imagem atual não contém o binário Chromium do Playwright; o bloqueio ocorreu antes de abrir o site e precisa ser repetido no CI/ambiente com navegador antes de promoção.
+### Cartas Core — Arcana conferida
 
-Próximo bloco exato: comparar as **189 cartas dos 9 domínios Core** com o SRD 2.0, domínio por domínio, registrando diferença de nome, nível, custo de recordar, texto, automação e errata. Só depois integrar Pavor e suas 21 cartas. Em paralelo conceitual, projetar a persistência de Transformações, mas não expor as seis opções antes do ciclo completo de aquisição/remoção e efeitos permanentes estar protegido no servidor.
+- as 21 cartas de Arcana foram comparadas às pp. 206–207 do SRD 2.0;
+- nomes, níveis, tipos, custos de recordar, dados, alcances, custos, frequências e efeitos permaneceram mecanicamente compatíveis;
+- o texto ativo foi normalizado para o glossário SRD2, especialmente **traço de Conjuração**, **jogada de Conjuração**, **jogada de reação**, **Longínquo**, **cartas ativas** e **limpar fichas**;
+- `data/srd2-cartas-core-arcana-auditoria.json` vincula os 21 IDs oficiais aos IDs locais e protege nível, tipo e custo de recordar;
+- `tools/conferir-srd2-cartas-core-arcana.mjs` também recusa vocabulário mecânico legado nos campos exibidos e de automação;
+- a cobertura de `domain-cards` está em auditoria: 21 de 189 cartas Core conferidas; 168 cartas Core e 21 cartas de Pavor ainda pendentes.
+
+Validação deste checkpoint: `npm run teste:srd2` verde com 61 termos mecânicos, 31 nomes novos, 1.539 registros inventariados (**87 implementados**, 1.451 pendentes), 95 registros no recorte do núcleo (**64/64 existentes conferidos**) e validadores específicos; backend **951/951**, gerados **14/14**, sintaxe local **98 arquivos**, CSS limpo. O E2E local não executou porque a imagem atual não contém o binário Chromium do Playwright; o bloqueio ocorreu antes de abrir o site e precisa ser repetido no CI/ambiente com navegador antes de promoção.
+
+Próximo bloco exato: comparar as **21 cartas de Lâmina** com o SRD 2.0, repetindo o mesmo vínculo individual de nome, nível, custo de recordar, texto, automação e errata. Depois continuar Osso, Códice, Graça, Meia-Noite, Sábio, Esplendor e Valor; só então integrar Pavor e suas 21 cartas. Em paralelo conceitual, projetar a persistência de Transformações, mas não expor as seis opções antes do ciclo completo de aquisição/remoção e efeitos permanentes estar protegido no servidor.
 
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 

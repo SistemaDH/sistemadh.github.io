@@ -85,7 +85,28 @@ const implementados = new Set([
   'communities/slyborne',
   'communities/underborne',
   'communities/wanderborne',
-  'communities/wildborne'
+  'communities/wildborne',
+  'domain-cards/wall-walk',
+  'domain-cards/unleash-chaos',
+  'domain-cards/rune-ward',
+  'domain-cards/cinder-grasp',
+  'domain-cards/floating-eye',
+  'domain-cards/counterspell',
+  'domain-cards/flight',
+  'domain-cards/blink-out',
+  'domain-cards/preservation-blast',
+  'domain-cards/premonition',
+  'domain-cards/chain-lightning',
+  'domain-cards/rift-walker',
+  'domain-cards/telekinesis',
+  'domain-cards/cloaking-blast',
+  'domain-cards/arcana-touched',
+  'domain-cards/confusing-aura',
+  'domain-cards/arcane-reflection',
+  'domain-cards/sensory-projection',
+  'domain-cards/earthquake',
+  'domain-cards/adjust-reality',
+  'domain-cards/falling-sky'
 ]);
 const colecoes = [];
 

@@ -47,6 +47,8 @@ O corpus auxiliar pinado registra 1.539 registros: 10 domínios, 13 classes, 26 
 
 O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. O inventário individual fica em `data/srd2-inventario.json`: cada um dos 1.539 registros preserva ID, nome inglês, tipo, hash do registro no corpus, estado de implementação e, quando aplicável, `sourceLocator`. `npm run teste:srd2` impede alteração acidental das contagens, IDs, hashes estruturais ou estados. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
 
+No checkpoint atual, 87 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 1.451 permanecem `pendente`.
+
 ## Fase 1 — Level Up
 
 A correção inicial implementa diretamente as pp. 53–54 do SRD 2.0:
@@ -103,3 +105,9 @@ O auditor específico é `data/srd2-origens-core-auditoria.json` + `tools/confer
 Os 9 domínios existentes foram conferidos contra a p. 7 do SRD 2.0. Seus temas e descrições continuam compatíveis. O metadado de acesso agora também registra as classes novas sem expô-las: Assassino em Lâmina e Meia-Noite; Brigão em Osso e Valor; Bruxo em Graça; Bruxa em Sábio.
 
 Duas traduções literais sem sentido foram corrigidas nas descrições: Lâmina agora menciona uma **arma mais especializada**, não um “braço”; Meia-Noite encontra **tesouros ocultos**, não “sequestrados”. O auditor específico é `data/srd2-dominios-core-auditoria.json` + `tools/conferir-srd2-dominios-core.mjs`.
+
+### Cartas de domínio do Core — Arcana
+
+As 21 cartas de Arcana foram conferidas contra as pp. 206–207 do SRD 2.0. Nome/identidade, nível, tipo, custo de recordar, custos de recursos, dados, alcances, frequências e efeitos permanecem mecanicamente compatíveis com o catálogo e as automações existentes.
+
+O texto ativo foi normalizado para **traço de Conjuração**, **jogada de Conjuração**, **jogada de reação**, **Dados de Dualidade**, **Distante**, **Longínquo**, **cartas ativas**, **limpar fichas** e **Mestre**. O vínculo carta a carta e os campos estruturais ficam protegidos por `data/srd2-cartas-core-arcana-auditoria.json` e `tools/conferir-srd2-cartas-core-arcana.mjs`.

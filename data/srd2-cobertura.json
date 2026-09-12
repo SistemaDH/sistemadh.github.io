@@ -18,7 +18,7 @@
     { "id": "consumables", "esperados": 120, "estado": "nao-iniciado" },
     { "id": "adversaries", "esperados": 264, "estado": "nao-iniciado" },
     { "id": "environments", "esperados": 47, "estado": "nao-iniciado" },
-    { "id": "domain-cards", "esperados": 210, "estado": "nao-iniciado" },
+    { "id": "domain-cards", "esperados": 210, "estado": "em-auditoria", "observacao": "21 cartas de Arcana conferidas; 168 cartas dos outros domínios Core e 21 cartas de Pavor ainda pendentes." },
     { "id": "rules", "esperados": 224, "estado": "em-auditoria", "observacao": "Avanço dos níveis 1–10 corrigido; os demais registros de regras ainda precisam de classificação individual." }
   ]
 }

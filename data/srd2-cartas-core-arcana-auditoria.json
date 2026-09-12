@@ -1,0 +1,46 @@
+{
+  "versao": 1,
+  "estado": "conferido",
+  "fonte": {
+    "srd": "2.0",
+    "data": "2026-08-25",
+    "paginasPdf": "206–207",
+    "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64"
+  },
+  "dominio": "domains/arcana",
+  "conclusao": "As 21 cartas de Arcana preservam no SRD 2.0 os níveis, tipos, custos de recordar, números, custos, gatilhos e efeitos já implementados. O lote normalizou somente o texto mecânico ativo em pt-BR.",
+  "registros": [
+    { "idFonte": "domain-cards/wall-walk", "idLocal": "arcana-andar-na-parede", "nomeIngles": "Wall Walk", "nivel": 1, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/unleash-chaos", "idLocal": "arcana-liberar-o-caos", "nomeIngles": "Unleash Chaos", "nivel": 1, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/rune-ward", "idLocal": "arcana-talisma-runico", "nomeIngles": "Rune Ward", "nivel": 1, "tipo": "Feitiço", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/cinder-grasp", "idLocal": "arcana-aperto-de-cinzas", "nomeIngles": "Cinder Grasp", "nivel": 2, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/floating-eye", "idLocal": "arcana-olho-flutuante", "nomeIngles": "Floating Eye", "nivel": 2, "tipo": "Feitiço", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/counterspell", "idLocal": "arcana-contra-feitico", "nomeIngles": "Counterspell", "nivel": 3, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/flight", "idLocal": "arcana-voar", "nomeIngles": "Flight", "nivel": 3, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/blink-out", "idLocal": "arcana-desaparecer", "nomeIngles": "Blink Out", "nivel": 4, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/preservation-blast", "idLocal": "arcana-explosao-de-preservacao", "nomeIngles": "Preservation Blast", "nivel": 4, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/premonition", "idLocal": "arcana-premonicao", "nomeIngles": "Premonition", "nivel": 5, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/chain-lightning", "idLocal": "arcana-relampago-em-cadeia", "nomeIngles": "Chain Lightning", "nivel": 5, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/rift-walker", "idLocal": "arcana-andarilho-do-abismo", "nomeIngles": "Rift Walker", "nivel": 6, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/telekinesis", "idLocal": "arcana-telecinese", "nomeIngles": "Telekinesis", "nivel": 6, "tipo": "Feitiço", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/cloaking-blast", "idLocal": "arcana-explosao-de-camuflagem", "nomeIngles": "Cloaking Blast", "nivel": 7, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/arcana-touched", "idLocal": "arcana-tocado-pela-arcana", "nomeIngles": "Arcana-touched", "nivel": 7, "tipo": "Habilidade", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/confusing-aura", "idLocal": "arcana-aura-confusa", "nomeIngles": "Confusing Aura", "nivel": 8, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/arcane-reflection", "idLocal": "arcana-reflexo-arcano", "nomeIngles": "Arcane Reflection", "nivel": 8, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/sensory-projection", "idLocal": "arcana-projecao-sensorial", "nomeIngles": "Sensory Projection", "nivel": 9, "tipo": "Feitiço", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/earthquake", "idLocal": "arcana-terremoto", "nomeIngles": "Earthquake", "nivel": 9, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/adjust-reality", "idLocal": "arcana-ajustar-a-realidade", "nomeIngles": "Adjust Reality", "nivel": 10, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/falling-sky", "idLocal": "arcana-queda-do-ceu", "nomeIngles": "Falling Sky", "nivel": 10, "tipo": "Feitiço", "custoRecordar": 1 }
+  ],
+  "correcoesDeVocabulario": [
+    "traço de Conjuração",
+    "jogada de Conjuração",
+    "jogada de reação",
+    "Dados de Dualidade",
+    "Distante",
+    "Longínquo",
+    "cartas ativas",
+    "limpar fichas",
+    "Mestre"
+  ]
+}
