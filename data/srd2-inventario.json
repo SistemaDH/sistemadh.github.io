@@ -16753,7 +16753,7 @@
             "pdfPageEnd": 216
           },
           "corpusSha256": "4c813fcea96b2eb04eb03d9a025c7f3a81f9a9d1d4849c53b1df545e1ed4d783",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/avatar-of-terror",
@@ -17353,7 +17353,7 @@
             "pdfPageEnd": 216
           },
           "corpusSha256": "3a366061fd852bbd766cec292fd439d91483559c4627c2ed2b960e37241e098a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/corrosive-projectile",
@@ -17533,7 +17533,7 @@
             "pdfPageEnd": 215
           },
           "corpusSha256": "3a85db9fb85cefac590bb1a86bbf60e1793b84a304031a17950fabe1822b011b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/deft-maneuvers",
@@ -17668,7 +17668,7 @@
             "pdfPageEnd": 216
           },
           "corpusSha256": "8cd443da9636e9e71aa806ce71c1bb8e51bd20bd94054c57f4669becdfdeff87",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/endless-charisma",
@@ -17683,7 +17683,7 @@
             "pdfPageEnd": 216
           },
           "corpusSha256": "cfa7fa3bbeca2edd5dc7e7f6d33efeb0c54db7c181b64285019ddecb7b2c3982",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/enrapture",
@@ -17698,7 +17698,7 @@
             "pdfPageEnd": 215
           },
           "corpusSha256": "e4e057246dd4ea66ad51c8c78db29f4890c91099220e36383dbea2adb8d7055a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/falling-sky",
@@ -17998,7 +17998,7 @@
             "pdfPageEnd": 216
           },
           "corpusSha256": "e2673b51b3adc2fca5924576281ab1cf4001e5340006e490b3793226b42043ed",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/ground-pound",
@@ -18118,7 +18118,7 @@
             "pdfPageEnd": 215
           },
           "corpusSha256": "1d4e1c01bef4fcd386420c6887775263a44e645fb617b4bc2ca46a074cb7f536",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/i-am-your-shield",
@@ -18178,7 +18178,7 @@
             "pdfPageEnd": 215
           },
           "corpusSha256": "c8dc63a89c24a2aa5ac86fa7b6909dc73e87c1b2d685f98bc4ad7c232cf515a3",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/invigoration",
@@ -18208,7 +18208,7 @@
             "pdfPageEnd": 215
           },
           "corpusSha256": "0c74eb1c2fc31a6e3038bc1f2ab395b7d53412405ceacda80c60850e990be5d0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/invoke-torment",
@@ -18343,7 +18343,7 @@
             "pdfPageEnd": 216
           },
           "corpusSha256": "ff2fb55e8b1bc9deb0f0cd056843677f8e64ca28efd8b154137757b82727c8a5",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/master-of-the-craft",
@@ -18358,7 +18358,7 @@
             "pdfPageEnd": 216
           },
           "corpusSha256": "f51251b4c673ced66b2e8d872dc1a8f63cae1852fa8596e314c3dae32c9a8d91",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/mending-touch",
@@ -18448,7 +18448,7 @@
             "pdfPageEnd": 215
           },
           "corpusSha256": "fc65cf49565da3d80a16a970cab03d1b35acd7fc46bc72b4284867140a555454",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/night-terror",
@@ -18493,7 +18493,7 @@
             "pdfPageEnd": 216
           },
           "corpusSha256": "d29633297303bb1ecbd885e93d2d5d09eb114b317f42005c176eb6f57dd9c32e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/on-the-brink",
@@ -19003,7 +19003,7 @@
             "pdfPageEnd": 216
           },
           "corpusSha256": "7ddc26f5cab07d1dc874a841da674e1310637780a3203ffadc7d46b00439b725",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/shared-trauma",
@@ -19123,7 +19123,7 @@
             "pdfPageEnd": 215
           },
           "corpusSha256": "467646ed749c20b4c5469654d71f2b8e4f480bb2189a330aff5494388047e359",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/specter-of-the-dark",
@@ -19348,7 +19348,7 @@
             "pdfPageEnd": 215
           },
           "corpusSha256": "71a2756ab2fa5186766138267fb18df030ad9607f7cd06c736165292e2667d41",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/tempest",
@@ -19408,7 +19408,7 @@
             "pdfPageEnd": 215
           },
           "corpusSha256": "64f8ea063e48fa83e93beb15e3db392b5ae7c5a4ab4af35a7e518653f8d9324f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/through-your-eyes",
@@ -19423,7 +19423,7 @@
             "pdfPageEnd": 215
           },
           "corpusSha256": "502a3f39054eab313105c90b4aeb54c99204438433c0e940880e1a7a38c93fac",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/towering-stalk",
@@ -19468,7 +19468,7 @@
             "pdfPageEnd": 215
           },
           "corpusSha256": "e81488c219bd8581b493501064e24fa7b95f700c2b9f2e8da0a5c1c07189f80a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/twilight-toll",
@@ -19783,7 +19783,7 @@
             "pdfPageEnd": 215
           },
           "corpusSha256": "9df3c92a322ccf0ab8c3b040cc577dc057865ed42c13e18c0ee7be1f9af64875",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/wrangle",

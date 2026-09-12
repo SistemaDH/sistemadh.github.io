@@ -1,0 +1,50 @@
+{
+  "versao": 1,
+  "estado": "conferido",
+  "fonte": {
+    "srd": "2.0",
+    "data": "2026-08-25",
+    "paginasPdf": "215–216",
+    "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64"
+  },
+  "dominio": "domains/grace",
+  "conclusao": "As 21 cartas de Graça preservam no SRD 2.0 os níveis, tipos, custos de recordar, números, custos, gatilhos, frequências e efeitos implementados, após corrigir duas divergências mecânicas no texto ativo e normalizar o vocabulário pt-BR.",
+  "registros": [
+    { "idFonte": "domain-cards/deft-deceiver", "idLocal": "grace-enganador-habil", "nomeIngles": "Deft Deceiver", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/enrapture", "idLocal": "grace-encantar", "nomeIngles": "Enrapture", "nivel": 1, "tipo": "Feitiço", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/inspirational-words", "idLocal": "grace-palavras-inspiradoras", "nomeIngles": "Inspirational Words", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/tell-no-lies", "idLocal": "grace-nao-conte-mentiras", "nomeIngles": "Tell No Lies", "nivel": 2, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/troublemaker", "idLocal": "grace-encrenqueiro", "nomeIngles": "Troublemaker", "nivel": 2, "tipo": "Habilidade", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/hypnotic-shimmer", "idLocal": "grace-brilho-hipnotico", "nomeIngles": "Hypnotic Shimmer", "nivel": 3, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/invisibility", "idLocal": "grace-invisibilidade", "nomeIngles": "Invisibility", "nivel": 3, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/soothing-speech", "idLocal": "grace-discurso-acalmante", "nomeIngles": "Soothing Speech", "nivel": 4, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/through-your-eyes", "idLocal": "grace-pelos-seus-olhos", "nomeIngles": "Through Your Eyes", "nivel": 4, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/thought-delver", "idLocal": "grace-mergulhador-de-pensamentos", "nomeIngles": "Thought Delver", "nivel": 5, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/words-of-discord", "idLocal": "grace-words-of-discord", "nomeIngles": "Words of Discord", "nivel": 5, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/never-upstaged", "idLocal": "grace-nunca-ofuscado", "nomeIngles": "Never Upstaged", "nivel": 6, "tipo": "Habilidade", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/share-the-burden", "idLocal": "grace-share-the-burden", "nomeIngles": "Share the Burden", "nivel": 6, "tipo": "Feitiço", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/endless-charisma", "idLocal": "grace-carisma-infinito", "nomeIngles": "Endless Charisma", "nivel": 7, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/grace-touched", "idLocal": "grace-tocado-pela-graca", "nomeIngles": "Grace‑touched", "nivel": 7, "tipo": "Habilidade", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/astral-projection", "idLocal": "grace-projecao-astral", "nomeIngles": "Astral Projection", "nivel": 8, "tipo": "Feitiço", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/mass-enrapture", "idLocal": "grace-enfeiticar-em-massa", "nomeIngles": "Mass Enrapture", "nivel": 8, "tipo": "Feitiço", "custoRecordar": 3 },
+    { "idFonte": "domain-cards/copycat", "idLocal": "grace-imitador", "nomeIngles": "Copycat", "nivel": 9, "tipo": "Feitiço", "custoRecordar": 3 },
+    { "idFonte": "domain-cards/master-of-the-craft", "idLocal": "grace-mestre-do-oficio", "nomeIngles": "Master of the Craft", "nivel": 9, "tipo": "Habilidade", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/encore", "idLocal": "grace-reprise", "nomeIngles": "Encore", "nivel": 10, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/notorious", "idLocal": "grace-notorio", "nomeIngles": "Notorious", "nivel": 10, "tipo": "Habilidade", "custoRecordar": 0 }
+  ],
+  "correcoesMecanicas": [
+    "Projeção Astral — uma criatura que investigar a projeção percebe que ela tem origem mágica; o efeito não é incerto.",
+    "Notório — o SRD 2.0 removeu as exceções antigas que permitiam uma sexta carta ativa e impediam a carta de ir ao cofre."
+  ],
+  "correcoesDeVocabulario": [
+    "jogada de Conjuração",
+    "jogada de Presença",
+    "jogada de dano",
+    "Distante",
+    "Longínquo",
+    "cartas ativas",
+    "Ponto de Armadura",
+    "movimento de descanso",
+    "Mestre"
+  ]
+}

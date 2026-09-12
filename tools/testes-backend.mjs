@@ -9497,7 +9497,7 @@ teste('Invisibilidade cobra 1 Estresse e preserva o contador de marcadores da ca
   const defs=avaliar('CONTADORES'); verdade(!!defs['carta:grace-invisibilidade']);
 });
 
-teste('Discurso Acalmante recupera 2 PV somente da própria ficha',()=>{
+teste('Discurso Acalmante limpa 2 PV somente da própria ficha',()=>{
   const f=fichaGraceBaixa_(4,['grace-discurso-acalmante','grace-pelos-seus-olhos']);
   f.recursos.pontosDeVidaMarcados=3;
   const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-discurso-acalmante'}]);
@@ -9610,15 +9610,15 @@ teste('Mestre do Ofício preserva a implementação permanente existente',()=>{
   igual(c.efeitoPermanente.experiencias.length,2);
 });
 
-teste('Notório é sexta carta válida, não pode ir ao cofre e não conta no limite de cinco',()=>{
+teste('SRD 2.0: Notório conta no limite de cinco e pode ir ao cofre',()=>{
   const normais=['grace-carisma-infinito','grace-nunca-ofuscado','grace-share-the-burden','grace-enfeiticar-em-massa','grace-projecao-astral'];
   let v=contexto.validarCartasDoPersonagem_(normais.concat(['grace-notorio']),[],['GRACE'],10);
-  verdade(v.ok,JSON.stringify(v));
+  verdade(!v.ok && v.erros.some((e)=>e.includes('no máximo 5 cartas ativas')),JSON.stringify(v));
   v=contexto.validarCartasDoPersonagem_(normais,['grace-notorio'],['GRACE'],10);
-  verdade(!v.ok && v.erros.some((e)=>e.includes('não pode ser colocada no cofre')));
-  const f=fichaGraceAlta_(10,normais.concat(['grace-notorio']));
+  verdade(v.ok,JSON.stringify(v));
+  const f=fichaGraceAlta_(10,['grace-notorio','grace-reprise']);
   const r=contexto.aplicarAjustes_(f,[{tipo:'carta',carta:'grace-notorio',para:'cofre'}]);
-  verdade(r.erros.length===1); verdade(f.cartas.ativas.includes('grace-notorio'));
+  igual(r.erros,[]); verdade(!f.cartas.ativas.includes('grace-notorio')); verdade(f.cartas.cofre.includes('grace-notorio'));
 });
 
 teste('Notório cobra 1 Estresse para +10 e reduz compra em uma bolsa, mínimo um punhado',()=>{
@@ -9632,11 +9632,9 @@ teste('Notório cobra 1 Estresse para +10 e reduz compra em uma bolsa, mínimo u
   igual(r.erros,[]); igual(r.mudancas[0].custo,1);
 });
 
-teste('Notório não pode ser usado como carta-custo para ir ao cofre',()=>{
-  const f=fichaGraceAlta_(10,['grace-notorio','grace-reprise']);
-  const antes=f.cartas.ativas.slice();
-  const r=contexto.aplicarAjustes_(f,[{tipo:'habilidade',nome:'Canalizar Poder Bruto',carta:'grace-notorio',opcao:'esperanca'}]);
-  verdade(r.erros.length===1); igual(f.cartas.ativas,antes);
+teste('SRD 2.0: as duas exceções antigas de cartas ativas de Notório foram removidas',()=>{
+  verdade(contexto.cartaContaNoLimite_('grace-notorio'));
+  verdade(contexto.cartaPodeIrAoCofre_('grace-notorio'));
 });
 
 teste('Reprise só move ao cofre quando o jogador confirma sucesso com Medo',()=>{

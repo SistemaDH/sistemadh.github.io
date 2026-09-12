@@ -3624,7 +3624,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 0,
-   "texto": "Faça uma Jogada de Conjuração contra um alvo dentro do alcance Próximo. Em um sucesso, ele fica temporariamente Encantado. Enquanto estiver Encantado, a atenção do alvo fica fixa em você, reduzindo seu campo de visão e abafando todos os sons exceto a sua voz. Uma vez por descanso, em um sucesso, você pode marcar 1 Estresse para forçar o alvo Encantado a também marcar 1 Estresse.",
+   "texto": "Faça uma jogada de Conjuração contra um alvo em alcance Próximo. Em um sucesso, ele fica temporariamente Encantado. Enquanto estiver Encantado, a atenção do alvo fica fixa em você, reduzindo seu campo de visão e abafando todos os sons exceto a sua voz. Uma vez por descanso, em um sucesso, você pode marcar 1 Estresse para forçar o alvo Encantado a também marcar 1 Estresse.",
    "imagem": "assets/cartas/dominios/GRACE/Encantar.png",
    "arquivo": "Encantar.png",
    "condicoes": [
@@ -3644,7 +3644,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A Jogada de Conjuração, o alvo Próximo e a condição Encantado são resolvidos na cena. Use o botão apenas depois de um sucesso quando decidir forçar o alvo Encantado a marcar 1 Estresse."
+    "resumo": "A jogada de Conjuração, o alvo Próximo e a condição Encantado são resolvidos na cena. Use o botão apenas depois de um sucesso quando decidir forçar o alvo Encantado a marcar 1 Estresse."
    },
    "uso": {
     "custo": {
@@ -3705,7 +3705,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 1,
-   "texto": "Seu discurso está imbuído de poder. Após um descanso longo, coloque na carta um número de marcadores igual a sua Presença. Quando você falar com um aliado, pode gastar 1 marcador desta carta para dar a ele um dos seguintes benefícios:\n• Seu aliado remove 1 Estresse.\n• Seu aliado recupera 1 Ponto de Vida.\n• Seu aliado ganha 1 Esperança.\nQuando você fizer um descanso longo, remova todos os marcadores não gastos.",
+   "texto": "Seu discurso está imbuído de poder. Após um descanso longo, coloque na carta um número de marcadores igual a sua Presença. Quando você falar com um aliado, pode gastar 1 marcador desta carta para dar a ele um dos seguintes benefícios:\n• Seu aliado limpa 1 Estresse.\n• Seu aliado limpa 1 Ponto de Vida.\n• Seu aliado ganha 1 Esperança.\nQuando você fizer um descanso longo, limpe todos os marcadores não gastos.",
    "imagem": "assets/cartas/dominios/GRACE/Palavras Inspiradoras.png",
    "arquivo": "Palavras Inspiradoras.png",
    "condicoes": [],
@@ -3725,7 +3725,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Ao falar com um aliado, gaste 1 marcador da carta e aplique na ficha dele uma das três opções: limpar 1 Estresse, recuperar 1 PV ou ganhar 1 Esperança."
+    "resumo": "Ao falar com um aliado, gaste 1 marcador da carta e aplique na ficha dele uma das três opções: limpar 1 Estresse, limpar 1 PV ou ganhar 1 Esperança."
    }
   },
   {
@@ -3738,7 +3738,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 2,
-   "texto": "Quando você provoca um alvo dentro do alcance Longo, faça uma Jogada de Presença contra ele. Uma vez por descanso, em um sucesso, role um número de d4 igual à sua Proficiência. O alvo deve marcar Estresse igual ao maior resultado obtido.",
+   "texto": "Quando você provoca um alvo em alcance Distante, faça uma jogada de Presença contra ele. Uma vez por descanso, em um sucesso, role um número de d4 igual à sua Proficiência. O alvo deve marcar Estresse igual ao maior resultado obtido.",
    "imagem": "assets/cartas/dominios/GRACE/Encrenqueiro.png",
    "arquivo": "Encrenqueiro.png",
    "condicoes": [],
@@ -3756,7 +3756,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A Jogada de Presença e os d4 iguais à Proficiência são rolados fora do app; o alvo marca Estresse igual ao maior resultado."
+    "resumo": "A jogada de Presença e os d4 iguais à Proficiência são rolados fora do app; o alvo marca Estresse igual ao maior resultado."
    },
    "uso": {
     "custo": {},
@@ -3778,7 +3778,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Faça uma Jogada de Conjuração contra um alvo dentro do alcance Muito Próximo. Em um sucesso, ele não pode mentir para você enquanto permanecer dentro do alcance Próximo, mas não é obrigado a falar. Se você fizer uma pergunta e ele se recusar a responder, ele deve marcar 1 Estresse e o efeito termina. O alvo geralmente não sabe que essa magia foi lançada até que seja forçado a dizer a verdade.",
+   "texto": "Faça uma jogada de Conjuração contra um alvo em alcance Muito Próximo. Em um sucesso, ele não pode mentir para você enquanto permanecer em alcance Próximo, mas não é obrigado a falar. Se você fizer uma pergunta e ele se recusar a responder, ele deve marcar 1 Estresse e o efeito termina. O alvo geralmente não sabe que essa magia foi lançada até que seja forçado a dizer a verdade.",
    "imagem": "assets/cartas/dominios/GRACE/Não Conte Mentiras.png",
    "arquivo": "Não Conte Mentiras.png",
    "condicoes": [],
@@ -3794,7 +3794,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Faça a Jogada de Conjuração contra o alvo Muito Próximo e acompanhe na mesa a restrição de mentira, alcance e o eventual 1 Estresse do alvo quando ele se recusar a responder."
+    "resumo": "Faça a jogada de Conjuração contra o alvo Muito Próximo e acompanhe na mesa a restrição de mentira, alcance e o eventual 1 Estresse do alvo quando ele se recusar a responder."
    }
   },
   {
@@ -3807,7 +3807,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Faça uma Jogada de Conjuração contra todos os adversários à sua frente dentro do alcance Próximo. Uma vez por descanso, em um sucesso, crie uma ilusão de cores e luzes piscantes que temporariamente Atordoa os alvos que você acertar e os força a marcar 1 Estresse. Enquanto estiverem Atordoados, eles não podem usar reações nem realizar outras ações até remover essa condição.",
+   "texto": "Faça uma jogada de Conjuração contra todos os adversários à sua frente em alcance Próximo. Uma vez por descanso, em um sucesso, crie uma ilusão de cores e luzes piscantes que temporariamente Atordoa os alvos que você acertar e os força a marcar 1 Estresse. Enquanto estiverem Atordoados, eles não podem usar reações nem realizar outras ações até remover essa condição.",
    "imagem": "assets/cartas/dominios/GRACE/Brilho Hipnótico.png",
    "arquivo": "Brilho Hipnótico.png",
    "condicoes": [
@@ -3827,7 +3827,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A Jogada de Conjuração, os alvos acertados, o 1 Estresse deles e a condição Atordoado permanecem na cena/Mestre."
+    "resumo": "A jogada de Conjuração, os alvos acertados, o 1 Estresse deles e a condição Atordoado permanecem na cena/Mestre."
    },
    "uso": {
     "custo": {},
@@ -3849,7 +3849,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Faça uma Jogada de Conjuração (10). Em um sucesso, marque 1 Estresse e escolha você mesmo ou um aliado dentro do alcance de Corpo a Corpo para se tornar Invisível. Uma criatura Invisível não pode ser vista exceto por meios mágicos, e as jogadas de ataque contra ela são feitas com desvantagem. Coloque na carta um número de marcadores igual ao seu traço de Conjuração. Quando a criatura Invisível realizar uma ação, gaste 1 marcador desta carta. Após a ação que gastar o último marcador ser resolvida, o efeito termina.\nVocê só pode manter Invisibilidade em uma criatura por vez.",
+   "texto": "Faça uma jogada de Conjuração (10). Em um sucesso, marque 1 Estresse e escolha você mesmo ou um aliado em alcance Corpo a Corpo para se tornar Invisível. Uma criatura Invisível não pode ser vista exceto por meios mágicos, e as jogadas de ataque contra ela são feitas com desvantagem. Coloque na carta um número de marcadores igual ao seu traço de Conjuração. Quando a criatura Invisível realizar uma ação, gaste 1 marcador desta carta. Após a ação que gastar o último marcador ser resolvida, o efeito termina.\nVocê só pode manter Invisibilidade em uma criatura por vez.",
    "imagem": "assets/cartas/dominios/GRACE/Invisibilidade.png",
    "arquivo": "Invisibilidade.png",
    "condicoes": [
@@ -3890,7 +3890,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 1,
-   "texto": "Durante um descanso curto, quando você dedicar um tempo para confortar outro personagem enquanto usa o movimento de inatividade Cuidar de Ferimentos nele, remova 1 Ponto de Vida adicional desse personagem. Quando fizer isso, você também remove 2 Pontos de Vida.",
+   "texto": "Durante um descanso curto, quando você dedicar um tempo para confortar outro personagem enquanto usa o movimento de descanso Cuidar de Ferimentos nele, limpe 1 Ponto de Vida adicional desse personagem. Quando fizer isso, você também limpa 2 Pontos de Vida.",
    "imagem": "assets/cartas/dominios/GRACE/Discurso Acalmante.png",
    "arquivo": "Discurso Acalmante.png",
    "condicoes": [],
@@ -3903,11 +3903,11 @@
    "observacao": null,
    "automacao": {
     "classificacao": "automatizada-autocura-pos-descanso",
-    "resumo": "Quando o gatilho da carta já ocorreu durante um descanso curto, o app pode aplicar na própria ficha a recuperação de 2 PV."
+    "resumo": "Quando o gatilho da carta já ocorreu durante um descanso curto, o app pode limpar 2 PV na própria ficha."
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "O movimento Cuidar de Ferimentos deve ter sido usado em outro personagem durante descanso curto; esse personagem recupera 1 PV adicional na ficha dele/na resolução do descanso."
+    "resumo": "O movimento Cuidar de Ferimentos deve ter sido usado em outro personagem durante descanso curto; esse personagem limpa 1 PV adicional na ficha dele/na resolução do descanso."
    },
    "uso": {
     "custo": {},
@@ -3915,8 +3915,8 @@
      "chave": "pontosDeVidaMarcados",
      "delta": -2
     },
-    "rotuloAtivar": "Após cuidar de aliado: recuperar 2 PV",
-    "lembrete": "Use somente após Cuidar de Ferimentos em outro personagem durante descanso curto. Esse personagem também recupera 1 PV adicional."
+    "rotuloAtivar": "Após cuidar de aliado: limpar 2 PV",
+    "lembrete": "Use somente após Cuidar de Ferimentos em outro personagem durante descanso curto. Esse personagem também limpa 1 PV adicional."
    }
   },
   {
@@ -3929,7 +3929,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Escolha um alvo dentro do alcance Muito Longo. Você pode ver através dos olhos e ouvir pelos ouvidos dele. Pode alternar livremente entre usar seus próprios sentidos ou os do alvo até lançar outra magia ou até seu próximo descanso.",
+   "texto": "Escolha um alvo em alcance Longínquo. Você pode ver através dos olhos e ouvir pelos ouvidos dele. Pode alternar livremente entre usar seus próprios sentidos ou os do alvo até lançar outra magia ou até seu próximo descanso.",
    "imagem": "assets/cartas/dominios/GRACE/Pelos Seus Olhos.png",
    "arquivo": "Pelos Seus Olhos.png",
    "condicoes": [],
@@ -3943,7 +3943,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Escolha e registre na mesa o alvo Muito Longo. A alternância de sentidos é ficcional; se outro feitiço for conjurado fora do fluxo de botões do app, encerre o estado manualmente."
+    "resumo": "Escolha e registre na mesa o alvo em alcance Longínquo. A alternância de sentidos é ficcional; se outro feitiço for conjurado fora do fluxo de botões do app, encerre o estado manualmente."
    },
    "uso": {
     "custo": {},
@@ -3957,7 +3957,7 @@
      "avisoEncerrar": "Pelos Seus Olhos encerrado."
     },
     "rotuloAtivar": "Ativar Pelos Seus Olhos",
-    "lembrete": "Escolha um alvo Muito Longo e registre-o na mesa. Encerra no próximo descanso ou ao conjurar outro feitiço."
+    "lembrete": "Escolha um alvo em alcance Longínquo e registre-o na mesa. Encerra no próximo descanso ou ao conjurar outro feitiço."
    }
   },
   {
@@ -3970,7 +3970,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 2,
-   "texto": "Você pode espiar a mente dos outros.\nGaste 1 Esperança para ler os pensamentos superficiais e vagos de um alvo dentro do alcance Longo. Faça uma Jogada de Conjuração contra o alvo para mergulhar em pensamentos mais profundos e ocultos.\nEm uma jogada com Medo, o alvo pode, a critério do Mestre, perceber que você está lendo seus pensamentos.",
+   "texto": "Você pode espiar a mente dos outros.\nGaste 1 Esperança para ler os pensamentos superficiais e vagos de um alvo em alcance Distante. Faça uma jogada de Conjuração contra o alvo para mergulhar em pensamentos mais profundos e ocultos.\nEm uma jogada com Medo, o alvo pode, a critério do Mestre, perceber que você está lendo seus pensamentos.",
    "imagem": "assets/cartas/dominios/GRACE/Mergulhador de Pensamentos.png",
    "arquivo": "Mergulhador de Pensamentos.png",
    "condicoes": [
@@ -3990,14 +3990,14 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "O alvo Longo, os pensamentos revelados e a Jogada de Conjuração para pensamentos profundos continuam na mesa; em resultado com Medo, o Mestre decide se o alvo percebe."
+    "resumo": "O alvo em alcance Distante, os pensamentos revelados e a jogada de Conjuração para pensamentos profundos continuam na mesa; em resultado com Medo, o Mestre decide se o alvo percebe."
    },
    "uso": {
     "custo": {
      "esperanca": 1
     },
     "rotuloAtivar": "Ler pensamentos superficiais · 1 Esperança",
-    "lembrete": "Escolha um alvo Longo. Para pensamentos profundos, faça a Jogada de Conjuração fora do app; este botão representa apenas a leitura superficial."
+    "lembrete": "Escolha um alvo em alcance Distante. Para pensamentos profundos, faça a jogada de Conjuração fora do app; este botão representa apenas a leitura superficial."
    }
   },
   {
@@ -4010,7 +4010,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Sussurre palavras de discórdia para um adversário dentro do alcance de Corpo a Corpo e faça uma Jogada de Conjuração (13). Em um sucesso, o alvo deve marcar 1 Estresse e realizar um ataque contra outro adversário, em vez de você ou seus aliados. Após esse ataque, o alvo percebe o que aconteceu. Na próxima vez que você lançar Palavras de Discórdia nele, receba uma penalidade de -5 na Jogada de Conjuração.",
+   "texto": "Sussurre palavras de discórdia para um adversário em alcance Corpo a Corpo e faça uma jogada de Conjuração (13). Em um sucesso, o alvo deve marcar 1 Estresse e realizar um ataque contra outro adversário, em vez de você ou seus aliados. Após esse ataque, o alvo percebe o que aconteceu. Na próxima vez que você lançar Palavras de Discórdia nele, receba uma penalidade de -5 na jogada de Conjuração.",
    "imagem": "assets/cartas/dominios/GRACE/Words of Discord.png",
    "arquivo": "Words of Discord.png",
    "condicoes": [],
@@ -4029,7 +4029,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Faça a Jogada de Conjuração 13 contra o adversário Corpo a Corpo. Em sucesso, ele marca 1 Estresse e ataca outro adversário. Registre na mesa que a próxima conjuração sobre o mesmo alvo sofre −5."
+    "resumo": "Faça a jogada de Conjuração 13 contra o adversário Corpo a Corpo. Em sucesso, ele marca 1 Estresse e ataca outro adversário. Registre na mesa que a próxima conjuração sobre o mesmo alvo sofre −5."
    }
   },
   {
@@ -4042,7 +4042,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 2,
-   "texto": "Quando você perder 1 ou mais Pontos de Vida por um ataque, pode marcar 1 Estresse para colocar na carta um número de marcadores igual à quantidade de Pontos de Vida perdidos. No seu próximo ataque bem-sucedido, ganhe um bônus de +5 no dano para cada marcador nesta carta, então remova todos os marcadores.",
+   "texto": "Quando você marcar 1 ou mais Pontos de Vida por um ataque, pode marcar 1 Estresse para colocar na carta um número de marcadores igual à quantidade de Pontos de Vida marcados. No seu próximo ataque bem-sucedido, ganhe um bônus de +5 na jogada de dano para cada marcador nesta carta, então limpe todos os marcadores.",
    "imagem": "assets/cartas/dominios/GRACE/Nunca Ofuscado.png",
    "arquivo": "Nunca Ofuscado.png",
    "condicoes": [],
@@ -4056,11 +4056,11 @@
    "observacao": null,
    "automacao": {
     "classificacao": "automatizada-custo-com-contador-existente",
-    "resumo": "Ao confirmar que perdeu PV por um ataque, o app marca 1 Estresse e registra quantos PV dispararam o efeito. O contador persistente da carta já existe."
+    "resumo": "Ao confirmar que marcou PV por um ataque, o app marca 1 Estresse e registra quantos PV dispararam o efeito. O contador persistente da carta já existe."
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Some manualmente ao contador Nunca Ofuscado a quantidade de PV informada. No próximo ataque bem-sucedido, aplique +5 de dano por marcador e zere o contador."
+    "resumo": "Some manualmente ao contador Nunca Ofuscado a quantidade de PV informada. No próximo ataque bem-sucedido, aplique +5 na jogada de dano por marcador e limpe o contador."
    },
    "uso": {
     "custo": {
@@ -4068,13 +4068,13 @@
     },
     "entradaQuantidade": {
      "campo": "pontosDeVidaPerdidos",
-     "rotulo": "PV perdidos neste ataque",
+     "rotulo": "PV marcados neste ataque",
      "minimo": 1,
      "maximo": 12,
      "ajuda": "Informe quantos PV você marcou pelo ataque; a mesma quantidade deve ser adicionada ao contador Nunca Ofuscado."
     },
     "rotuloAtivar": "Registrar Nunca Ofuscado · 1 Estresse",
-    "lembrete": "Adicione ao contador Nunca Ofuscado marcadores iguais aos PV informados. No próximo ataque bem-sucedido, +5 de dano por marcador e depois zere o contador."
+    "lembrete": "Adicione ao contador Nunca Ofuscado marcadores iguais aos PV informados. No próximo ataque bem-sucedido, +5 na jogada de dano por marcador e depois limpe o contador."
    }
   },
   {
@@ -4087,7 +4087,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 0,
-   "texto": "Uma vez por descanso, assuma o Estresse de uma criatura voluntária dentro do alcance de Corpo a Corpo. O alvo descreve o conhecimento íntimo ou emoções que vazam telepaticamente da mente dele neste momento entre vocês. Transfira qualquer quantidade do Estresse marcado nele para você e ganhe 1 Esperança para cada Estresse transferido.",
+   "texto": "Uma vez por descanso, assuma o Estresse de uma criatura voluntária em alcance Corpo a Corpo. O alvo descreve o conhecimento íntimo ou emoções que vazam telepaticamente da mente dele neste momento entre vocês. Transfira qualquer quantidade do Estresse marcado nele para você e ganhe 1 Esperança para cada Estresse transferido.",
    "imagem": "assets/cartas/dominios/GRACE/Share the Burden.png",
    "arquivo": "Share the Burden.png",
    "condicoes": [],
@@ -4130,7 +4130,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 1,
-   "texto": "Após fazer uma jogada de ação para persuadir, mentir ou conquistar favor, você pode gastar 1 Esperança para rerrolar o dado de Esperança ou Medo.",
+   "texto": "Após fazer uma jogada de ação para persuadir, mentir ou conquistar favor, você pode gastar 1 Esperança para rerrolar o Dado de Esperança ou Dado de Medo.",
    "imagem": "assets/cartas/dominios/GRACE/Carisma Infinito.png",
    "arquivo": "Carisma Infinito.png",
    "condicoes": [],
@@ -4167,7 +4167,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 2,
-   "texto": "Quando 4 ou mais das cartas de domínio no seu conjunto forem do domínio Graça, você recebe os seguintes benefícios:\n• Você pode marcar 1 Espaço de Armadura em vez de marcar 1 Estresse.\n• Quando for forçar um alvo a marcar uma quantidade de Pontos de Vida, pode escolher em vez disso forçá-lo a marcar essa mesma quantidade de Estresse.",
+   "texto": "Quando 4 ou mais das suas cartas ativas forem do domínio Graça, você recebe os seguintes benefícios:\n• Você pode marcar 1 Ponto de Armadura em vez de marcar 1 Estresse.\n• Quando for forçar um alvo a marcar uma quantidade de Pontos de Vida, pode escolher em vez disso forçá-lo a marcar essa mesma quantidade de Estresse.",
    "imagem": "assets/cartas/dominios/GRACE/Tocado pela Graça.png",
    "arquivo": "Tocado pela Graça.png",
    "condicoes": [],
@@ -4207,7 +4207,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 3,
-   "texto": "Faça uma Jogada de Conjuração contra todos os alvos dentro do alcance Longo. Os alvos que você acertar ficam temporariamente Encantados. Enquanto Encantados, a atenção do alvo fica fixa em você, reduzindo seu campo de visão e abafando todos os sons exceto a sua voz. Marque 1 Estresse para forçar todos os alvos Encantados a também marcar 1 Estresse, encerrando esta magia.",
+   "texto": "Faça uma jogada de Conjuração contra todos os alvos em alcance Distante. Os alvos que você acertar ficam temporariamente Encantados. Enquanto Encantados, a atenção do alvo fica fixa em você, reduzindo seu campo de visão e abafando todos os sons exceto a sua voz. Marque 1 Estresse para forçar todos os alvos Encantados a também marcar 1 Estresse, encerrando esta magia.",
    "imagem": "assets/cartas/dominios/GRACE/Enfeitiçar em Massa.png",
    "arquivo": "Enfeitiçar em Massa.png",
    "condicoes": [
@@ -4226,7 +4226,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A Jogada de Conjuração, os alvos Encantados e o 1 Estresse que cada um marca ao encerrar continuam na cena/Mestre."
+    "resumo": "A jogada de Conjuração, os alvos Encantados e o 1 Estresse que cada um marca ao encerrar continuam na cena/Mestre."
    },
    "uso": {
     "custo": {
@@ -4246,7 +4246,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 0,
-   "texto": "Uma vez por descanso longo, marque 1 Estresse para criar uma cópia projetada de si mesmo que pode aparecer em qualquer lugar onde você já esteve.\nVocê pode ver e ouvir através da projeção como se fosse você e afetar o mundo como se estivesse lá. Uma criatura que investigar a projeção pode perceber que ela é de origem mágica. Este efeito dura até seu próximo descanso ou até sua projeção sofrer qualquer dano.",
+   "texto": "Uma vez por descanso longo, marque 1 Estresse para criar uma cópia projetada de si mesmo que pode aparecer em qualquer lugar onde você já esteve.\nVocê pode ver e ouvir através da projeção como se fosse você e afetar o mundo como se estivesse lá. Uma criatura que investigar a projeção percebe que ela é de origem mágica. Este efeito dura até seu próximo descanso ou até sua projeção sofrer qualquer dano.",
    "imagem": "assets/cartas/dominios/GRACE/Projeção Astral.png",
    "arquivo": "Projeção Astral.png",
    "condicoes": [],
@@ -4295,7 +4295,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 3,
-   "texto": "Uma vez por descanso longo, esta carta pode imitar as características de outra carta de domínio de nível 8 ou inferior no conjunto de outro jogador. Gaste Esperança igual à metade do nível da carta para acessar a característica. O efeito dura até seu próximo descanso ou até que o outro jogador coloque a carta no cofre.",
+   "texto": "Uma vez por descanso longo, esta carta pode imitar as características de outra carta de domínio de nível 8 ou inferior nas cartas ativas de outro jogador. Gaste Esperança igual à metade do nível da carta para acessar a característica. O efeito dura até seu próximo descanso ou até que o outro jogador coloque a carta no cofre.",
    "imagem": "assets/cartas/dominios/GRACE/Imitador.png",
    "arquivo": "Imitador.png",
    "condicoes": [],
@@ -4399,20 +4399,20 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 0,
-   "texto": "As pessoas sabem quem você é e o que você fez, e te tratam diferente por isso. Quando usar sua notoriedade para conseguir o que quer, pode marcar 1 Estresse antes de rolar para ganhar o bônus de +10 no resultado. Sua comida e bebida são sempre gratuitas onde quer que vá, e todo o resto que comprar tem o preço reduzido em uma bolsa de ouro (mínimo de uma mão cheia).\nEsta carta não conta para o limite máximo de 5 cartas de domínio no seu conjunto e não pode ser colocada no seu cofre.",
+   "texto": "As pessoas sabem quem você é e o que você fez, e te tratam diferente por isso. Quando usar sua notoriedade para conseguir o que quer, pode marcar 1 Estresse antes de rolar para ganhar o bônus de +10 no resultado. Sua comida e bebida são sempre gratuitas onde quer que vá, e todo o resto que comprar tem o preço reduzido em uma bolsa de ouro (mínimo de um punhado).",
    "imagem": "assets/cartas/dominios/GRACE/Notório.png",
    "arquivo": "Notório.png",
    "condicoes": [],
    "dependencias": [
     "estresse",
-    "cofre_e_loadout"
+    "ouro"
    ],
    "pendenteTraducao": false,
    "errata": null,
    "observacao": null,
    "automacao": {
-    "classificacao": "automatizada-custo-e-regras-especiais-de-loadout-compra",
-    "resumo": "O app marca 1 Estresse para o bônus +10. Notório não conta no limite de 5 cartas, não pode ir ao cofre e reduz compras em 1 bolsa de ouro, com mínimo de 1 punhado."
+    "classificacao": "automatizada-custo-e-compra",
+    "resumo": "O app marca 1 Estresse para o bônus +10 e reduz compras em 1 bolsa de ouro, com mínimo de 1 punhado."
    },
    "resolucaoManual": {
     "rolaNoApp": false,
@@ -4426,10 +4426,6 @@
     "lembrete": "Receba +10 na jogada que usa sua notoriedade. Comida e bebida são gratuitas; para elas, acrescente o item à mochila sem compra paga."
    },
    "regraEspecial": {
-    "loadout": {
-     "naoContaNoLimite": true,
-     "naoPodeIrAoCofre": true
-    },
     "compra": {
      "descontoBolsas": 1,
      "minimoPunhados": 1,
@@ -4447,7 +4443,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Quando um aliado dentro do alcance Próximo causar dano a um adversário, você pode fazer uma Jogada de Conjuração contra o mesmo alvo. Em um sucesso, você causa o mesmo dano que seu aliado causou. Se sua Jogada de Conjuração for bem-sucedida com Medo, coloque esta carta no seu cofre.",
+   "texto": "Quando um aliado em alcance Próximo causar dano a um adversário, você pode fazer uma jogada de Conjuração contra o mesmo alvo. Em um sucesso, você causa o mesmo dano que seu aliado causou. Se sua jogada de Conjuração for bem-sucedida com Medo, coloque esta carta no seu cofre.",
    "imagem": "assets/cartas/dominios/GRACE/Reprise.png",
    "arquivo": "Reprise.png",
    "condicoes": [],
@@ -4464,7 +4460,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A Jogada de Conjuração e o dano igual ao dano causado pelo aliado continuam fora do app. Em sucesso sem Medo, não há alteração determinística na própria ficha."
+    "resumo": "A jogada de Conjuração e o dano igual ao dano causado pelo aliado continuam fora do app. Em sucesso sem Medo, não há alteração determinística na própria ficha."
    },
    "uso": {
     "custo": {},

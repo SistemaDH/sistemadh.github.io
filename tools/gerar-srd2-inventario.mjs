@@ -169,7 +169,28 @@ const implementados = new Set([
   'domain-cards/book-of-ronin',
   'domain-cards/disintegration-wave',
   'domain-cards/book-of-yarrow',
-  'domain-cards/transcendent-union'
+  'domain-cards/transcendent-union',
+  'domain-cards/deft-deceiver',
+  'domain-cards/enrapture',
+  'domain-cards/inspirational-words',
+  'domain-cards/tell-no-lies',
+  'domain-cards/troublemaker',
+  'domain-cards/hypnotic-shimmer',
+  'domain-cards/invisibility',
+  'domain-cards/soothing-speech',
+  'domain-cards/through-your-eyes',
+  'domain-cards/thought-delver',
+  'domain-cards/words-of-discord',
+  'domain-cards/never-upstaged',
+  'domain-cards/share-the-burden',
+  'domain-cards/endless-charisma',
+  'domain-cards/grace-touched',
+  'domain-cards/astral-projection',
+  'domain-cards/mass-enrapture',
+  'domain-cards/copycat',
+  'domain-cards/master-of-the-craft',
+  'domain-cards/encore',
+  'domain-cards/notorious'
 ]);
 const colecoes = [];
 
