@@ -218,7 +218,14 @@ const implementados = new Set([
   'domain-cards/conjure-swarm',
   'domain-cards/natural-familiar',
   'domain-cards/corrosive-projectile',
-  'domain-cards/towering-stalk'
+  'domain-cards/towering-stalk',
+  'domain-cards/death-grip',
+  'domain-cards/healing-field',
+  'domain-cards/thorn-skin',
+  'domain-cards/wild-fortress',
+  'domain-cards/conjured-steeds',
+  'domain-cards/forager',
+  'domain-cards/sage-touched'
 ]);
 const colecoes = [];
 

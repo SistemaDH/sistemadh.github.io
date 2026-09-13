@@ -5681,10 +5681,12 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Faça uma Jogada de Conjuração contra um alvo dentro do alcance Próximo e escolha uma das opções a seguir:\nPuxe o alvo para o alcance Corpo a Corpo ou puxe-se para o alcance Corpo a Corpo dele.\nConstrinja o alvo e force-o a marcar 2 Estresses.\nTodos os adversários entre você e o alvo devem ter sucesso em uma Jogada de Reação (13) ou serem atingidos por vinhas, sofrendo 3d6 + 2 de dano físico.\nEm um sucesso, vinhas saem de suas mãos, causando o efeito escolhido e Imobilizando temporariamente o alvo.",
+   "texto": "Faça uma jogada de Conjuração contra um alvo em alcance Próximo e escolha uma das opções a seguir:\nPuxe o alvo para alcance Corpo a Corpo ou puxe-se para alcance Corpo a Corpo dele.\nConstrinja o alvo e force-o a marcar 2 Estresses.\nTodos os adversários entre você e o alvo devem ter sucesso em uma jogada de reação (13) ou serem atingidos por vinhas, sofrendo 3d6+2 de dano físico.\nEm caso de sucesso, vinhas saem de suas mãos, causando o efeito escolhido e deixando temporariamente Restrito o alvo.",
    "imagem": "assets/cartas/dominios/SAGE/Aperto da Morte.png",
    "arquivo": "Aperto da Morte.png",
-   "condicoes": [],
+   "condicoes": [
+    "Restrito"
+   ],
    "dependencias": [
     "estresse"
    ],
@@ -5697,7 +5699,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Faça a Jogada de Conjuração e escolha na mesa: puxar alvo/você, forçar 2 Estresses no alvo, ou resolver Reações 13 e 3d6+2 nos adversários entre vocês. Em sucesso, o alvo também fica temporariamente Imobilizado."
+    "resumo": "Faça a jogada de Conjuração e escolha na mesa: puxar alvo/você, forçar 2 Estresses no alvo, ou resolver jogadas de reação 13 e 3d6+2 nos adversários entre vocês. Em caso de sucesso, o alvo também fica temporariamente Restrito."
    }
   },
   {
@@ -5710,7 +5712,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 2,
-   "texto": "Uma vez por descanso longo, você pode conjurar um campo de plantas curativas ao seu redor. Em toda a área dentro do alcance Próximo de você, a natureza vibra, permitindo que você e todos os aliados na área curem 1 Ponto de Vida.\nGaste 2 Esperanças para que você e todos os aliados curem 2 Pontos de Vida em vez disso.",
+   "texto": "Uma vez por descanso longo, você pode conjurar um campo de plantas curativas ao seu redor. Em toda a área em alcance Próximo de você, a natureza vibra, permitindo que você e todos os aliados na área limpem 1 Ponto de Vida.\nGaste 2 Esperanças para que você e todos os aliados limpem 2 Pontos de Vida em vez disso.",
    "imagem": "assets/cartas/dominios/SAGE/Campo de Cura.png",
    "arquivo": "Campo de Cura.png",
    "condicoes": [],
@@ -5773,7 +5775,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Faça uma Jogada de Conjuração (13). Em um sucesso, gaste 2 Esperanças para fazer crescer uma barricada natural em forma de cúpula onde você e um aliado podem se proteger. Enquanto estiverem dentro da cúpula, uma criatura não pode ser alvo de ataques e não pode realizar ataques. Ataques contra a cúpula têm sucesso automático.\nA cúpula possui os seguintes limiares de dano e dura até marcar 3 Pontos de Vida. Coloque marcadores nesta carta para representar os Pontos de Vida marcados.\nMINOR DAMAGE 15 (Mark 1 HP) — MAJOR DAMAGE 30 (Mark 2 HP) — SEVERE DAMAGE (Mark 3 HP)",
+   "texto": "Faça uma jogada de Conjuração (13). Em caso de sucesso, gaste 2 Esperanças para fazer crescer uma barricada natural em forma de cúpula onde você e um aliado podem se proteger. Enquanto estiverem dentro da cúpula, uma criatura não pode ser alvo de ataques e não pode realizar ataques. Ataques contra a cúpula têm sucesso automático.\nA cúpula possui os seguintes limiares de dano e dura até marcar 3 Pontos de Vida. Coloque marcadores nesta carta para representar os Pontos de Vida marcados.\nDANO MENOR 15 (Marque 1 PV) — DANO MAIOR 30 (Marque 2 PV) — DANO SEVERO (Marque 3 PV)",
    "imagem": "assets/cartas/dominios/SAGE/Fortaleza Selvagem.png",
    "arquivo": "Fortaleza Selvagem.png",
    "condicoes": [],
@@ -5792,7 +5794,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Faça a Jogada de Conjuração 13 fora do app. Ao criar a cúpula, zere manualmente o contador; ataques contra ela são resolvidos na mesa pelos limiares 15/30/Severo e o contador marca até 3 PV."
+    "resumo": "Faça a jogada de Conjuração 13 fora do app. Ao criar a cúpula, zere manualmente o contador; ataques contra ela são resolvidos na mesa pelos limiares 15/30/Severo e o contador marca até 3 PV."
    },
    "uso": {
     "custo": {
@@ -5812,7 +5814,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Uma vez por descanso, gaste 1 Esperança para fazer espinhos crescerem por todo o seu corpo. Quando fizer isso, coloque um número de marcadores igual ao seu traço de Conjuração nesta carta.\nQuando sofrer dano, você pode gastar qualquer número de marcadores para rolar esse número de d6. Some os resultados e reduza o dano recebido por essa quantia. Se estiver no alcance Corpo a Corpo do atacante, cause o mesmo dano a ele.\nAo descansar, remova todos os marcadores não usados.",
+   "texto": "Uma vez por descanso, gaste 1 Esperança para fazer espinhos crescerem por todo o seu corpo. Quando fizer isso, coloque um número de marcadores igual ao seu traço de Conjuração nesta carta.\nQuando sofrer dano, você pode gastar qualquer número de marcadores para rolar esse número de d6. Some os resultados e reduza o dano recebido por essa quantia. Se estiver em alcance Corpo a Corpo do atacante, cause o mesmo dano a ele.\nAo descansar, limpe todos os marcadores não usados.",
    "imagem": "assets/cartas/dominios/SAGE/Pele Espinhosa.png",
    "arquivo": "Pele Espinhosa.png",
    "condicoes": [],
@@ -5854,7 +5856,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 1,
-   "texto": "Como um movimento de inatividade adicional que você pode escolher, role d6 para ver o que você coleta. Trabalhe com o Mestre para descrever e adicionar ao seu inventário como um consumível. Seu grupo pode carregar até cinco consumíveis coletados por vez.\nUma comida única (Cura 2 Estresses)\nUma relíquia bonita (Ganhe 2 Esperanças)\nUma runa arcana (+2 em uma Jogada de Conjuração)\nUm frasco de cura (Cura 2 Pontos de Vida)\nUm amuleto da sorte (Rerrole qualquer dado)\nEscolha uma das opções acima.",
+   "texto": "Como um movimento de descanso adicional que você pode escolher, role d6 para ver o que você coleta. Trabalhe com o Mestre para descrevê-lo e adicioná-lo ao seu inventário como um consumível. Seu grupo pode carregar até cinco consumíveis coletados por vez.\nUma comida única (Limpe 2 Estresses)\nUma relíquia bonita (Ganhe 2 Esperanças)\nUma runa arcana (+2 em uma jogada de Conjuração)\nUm frasco de cura (Limpe 2 Pontos de Vida)\nUm amuleto da sorte (Rerrole qualquer dado)\nEscolha uma das opções acima.",
    "imagem": "assets/cartas/dominios/SAGE/Coletor.png",
    "arquivo": "Coletor.png",
    "condicoes": [],
@@ -5873,7 +5875,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Escolha Coletor como movimento de inatividade adicional, role d6 fora do app (ou escolha quando a regra permitir), descreva o consumível com o Mestre e adicione-o ao inventário. O grupo mantém no máximo cinco consumíveis coletados."
+    "resumo": "Escolha Coletor como movimento de descanso adicional, role d6 fora do app (ou escolha quando a regra permitir), descreva o consumível com o Mestre e adicione-o ao inventário. O grupo mantém no máximo cinco consumíveis coletados."
    }
   },
   {
@@ -5886,7 +5888,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 0,
-   "texto": "Gaste qualquer quantidade de Esperança para conjurar esse mesmo número de montarias mágicas (como cavalos, camelos ou elefantes) que você e seus aliados podem montar até o próximo descanso longo ou até as montarias sofrerem qualquer dano.\nAs montarias dobram sua velocidade terrestre durante a viagem e, em perigo, permitem que você se mova dentro do alcance Distante sem precisar rolar. Criaturas montadas em uma montaria recebem -2 de penalidade em jogadas de ataque e +2 de bônus em jogadas de dano.",
+   "texto": "Gaste qualquer quantidade de Esperança para conjurar esse mesmo número de montarias mágicas (como cavalos, camelos ou elefantes) que você e seus aliados podem montar até seu próximo descanso longo ou até as montarias sofrerem qualquer dano.\nAs montarias dobram sua velocidade terrestre durante a viagem e, em perigo, permitem que você se mova em alcance Distante sem precisar rolar. Criaturas montadas em uma montaria recebem -2 de penalidade em jogadas de ataque e +2 de bônus em jogadas de dano.",
    "imagem": "assets/cartas/dominios/SAGE/Montarias Conjuradas.png",
    "arquivo": "Montarias Conjuradas.png",
    "condicoes": [],
@@ -5989,7 +5991,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 2,
-   "texto": "Quando 4 ou mais cartas de domínio em seu conjunto forem do domínio Sábio, ganhe os seguintes benefícios:\nEnquanto estiver em um ambiente natural, você ganha +2 de bônus em suas Jogadas de Conjuração.\nUma vez por descanso, você pode dobrar sua Agilidade ou Instinto ao fazer uma jogada que use esse traço. Deve escolher fazer isso antes de rolar.",
+   "texto": "Quando 4 ou mais cartas de domínio em suas cartas ativas forem do domínio Sábio, ganhe os seguintes benefícios:\nEnquanto estiver em um ambiente natural, você ganha +2 de bônus em suas jogadas de Conjuração.\nUma vez por descanso, você pode dobrar sua Agilidade ou Instinto ao fazer uma jogada que use esse traço. Deve escolher fazer isso antes de rolar.",
    "imagem": "assets/cartas/dominios/SAGE/Tocado pelo saber.png",
    "arquivo": "Tocado pelo saber.png",
    "condicoes": [],

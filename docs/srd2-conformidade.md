@@ -150,8 +150,12 @@ O terceiro checkpoint fechou o domínio com **Esquiva Desaparecente**, **Caçado
 
 As 21 cartas de Meia-Noite estão conferidas. O vocabulário final também protege **Evasão**, **jogada de reação**, **reserva de Medo**, **limpar fichas**, **jogada de Conjuração** e **dano Severo**.
 
-### Cartas de domínio do Core — Sábio (7/21)
+### Cartas de domínio do Core — Sábio (14/21)
 
 O primeiro checkpoint conferiu **Rastreador Habilidoso**, **Língua da Natureza**, **Emaranhado Cruel**, **Conjurar Enxame**, **Familiar Natural**, **Projétil Corrosivo** e **Caule Imponente** contra as pp. 218–219 do SRD 2.0. A única divergência mecânica foi corrigida em **Emaranhado Cruel**: o alvo principal e o segundo alvo opcional ficam temporariamente **Restritos**, não Imobilizados.
 
 Conjurar Enxame agora descreve precisamente a redução do próximo dano em um limiar; Familiar Natural soma **1d6 à jogada de dano**; e Projétil Corrosivo mantém o alvo singular. O vocabulário ativo usa **Mestre**, **jogada de Instinto**, **jogada de Conjuração**, **Distante**, **Próximo**, **Restrito** e **reduzir a gravidade em um limiar**. O vínculo parcial fica protegido por `data/srd2-cartas-core-sage-auditoria.json` e `tools/conferir-srd2-cartas-core-sage.mjs`.
+
+O segundo checkpoint conferiu **Aperto da Morte**, **Campo de Cura**, **Pele Espinhosa**, **Fortaleza Selvagem**, **Montarias Conjuradas**, **Coletor** e **Tocado pelo Saber**, dos níveis 4–7, contra as pp. 219–220. **Aperto da Morte** agora aplica **Restrito**, conforme o SRD 2.0, em vez da condição antiga Imobilizado.
+
+O texto ativo do lote também foi normalizado para **limpar**, **movimento de descanso**, **cartas ativas**, **jogada de reação** e as formulações canônicas de alcance. O bloco residual em inglês de **Fortaleza Selvagem** foi traduzido para **Dano Menor**, **Dano Maior** e **Dano Severo**, preservando os limiares 15/30 e a marcação de 1/2/3 PV.

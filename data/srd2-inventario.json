@@ -17338,7 +17338,7 @@
             "pdfPageEnd": 219
           },
           "corpusSha256": "7f652d99ba7e1b94907ee56d7a901c3175ab1b00026afe0bbd110d52bc2ab52d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/copycat",
@@ -17503,7 +17503,7 @@
             "pdfPageEnd": 219
           },
           "corpusSha256": "1e8244508fdbc3cdc40198db90b1ac23b04ff955decb7cca89e844f732dbc4bd",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/deathrun",
@@ -17803,7 +17803,7 @@
             "pdfPageEnd": 219
           },
           "corpusSha256": "27c49eb0f22d48e319bd8efcef6295b2099b3e40b0d2be281630730b672b2bc6",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/force-of-nature",
@@ -18028,7 +18028,7 @@
             "pdfPageEnd": 219
           },
           "corpusSha256": "987d43da251c9fcc47ac284c0483cb6415c00ee0904683e3e0ee70b836457716",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/healing-hands",
@@ -18868,7 +18868,7 @@
             "pdfPageEnd": 220
           },
           "corpusSha256": "5347a2ca63526dfebe9acf8e26aa87545829bf3ce8a3668b9c79d2f5ee91cb99",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/salvation-beam",
@@ -19393,7 +19393,7 @@
             "pdfPageEnd": 219
           },
           "corpusSha256": "ce21b703149fb93e5eee8b6e6dbe696f29da093f24f83bcd8b776c5e798f06b9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/thought-delver",
@@ -19753,7 +19753,7 @@
             "pdfPageEnd": 219
           },
           "corpusSha256": "3ad48104ae1a38ca8c150422e5ad2554d13c4b736619cbd5ad44aec1a08acb51",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/wild-surge",

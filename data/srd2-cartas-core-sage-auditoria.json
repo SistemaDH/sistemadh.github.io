@@ -9,19 +9,19 @@
   },
   "dominio": "domains/sage",
   "progresso": {
-    "conferidas": 7,
+    "conferidas": 14,
     "total": 21,
     "proximoLote": [
-      "domain-cards/death-grip",
-      "domain-cards/healing-field",
-      "domain-cards/thorn-skin",
-      "domain-cards/wild-fortress",
-      "domain-cards/conjured-steeds",
-      "domain-cards/forager",
-      "domain-cards/sage-touched"
+      "domain-cards/wild-surge",
+      "domain-cards/rejuvenation-barrier",
+      "domain-cards/forest-sprites",
+      "domain-cards/plant-dominion",
+      "domain-cards/fane-of-the-wilds",
+      "domain-cards/force-of-nature",
+      "domain-cards/tempest"
     ]
   },
-  "conclusaoParcial": "As sete primeiras cartas de Sábio preservam níveis, tipos, custos de recordar, dados, custos, gatilhos e efeitos implementados após corrigir a condição de Emaranhado Cruel e normalizar o vocabulário pt-BR do SRD 2.0.",
+  "conclusaoParcial": "As quatorze primeiras cartas de Sábio preservam níveis, tipos, custos de recordar, dados, custos, gatilhos e efeitos implementados após corrigir as condições de Emaranhado Cruel e Aperto da Morte, traduzir o bloco residual em inglês de Fortaleza Selvagem e normalizar o vocabulário pt-BR do SRD 2.0.",
   "registros": [
     { "idFonte": "domain-cards/gifted-tracker", "idLocal": "sage-rastreador-habilidoso", "nomeIngles": "Gifted Tracker", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 0 },
     { "idFonte": "domain-cards/natures-tongue", "idLocal": "sage-lingua-da-natureza", "nomeIngles": "Nature’s Tongue", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 0 },
@@ -29,10 +29,19 @@
     { "idFonte": "domain-cards/conjure-swarm", "idLocal": "sage-conjurar-enxame", "nomeIngles": "Conjure Swarm", "nivel": 2, "tipo": "Feitiço", "custoRecordar": 1 },
     { "idFonte": "domain-cards/natural-familiar", "idLocal": "sage-familiar-natural", "nomeIngles": "Natural Familiar", "nivel": 2, "tipo": "Feitiço", "custoRecordar": 1 },
     { "idFonte": "domain-cards/corrosive-projectile", "idLocal": "sage-projetil-corrosivo", "nomeIngles": "Corrosive Projectile", "nivel": 3, "tipo": "Feitiço", "custoRecordar": 1 },
-    { "idFonte": "domain-cards/towering-stalk", "idLocal": "sage-caule-imponente", "nomeIngles": "Towering Stalk", "nivel": 3, "tipo": "Feitiço", "custoRecordar": 1 }
+    { "idFonte": "domain-cards/towering-stalk", "idLocal": "sage-caule-imponente", "nomeIngles": "Towering Stalk", "nivel": 3, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/death-grip", "idLocal": "sage-aperto-da-morte", "nomeIngles": "Death Grip", "nivel": 4, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/healing-field", "idLocal": "sage-campo-de-cura", "nomeIngles": "Healing Field", "nivel": 4, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/thorn-skin", "idLocal": "sage-pele-espinhosa", "nomeIngles": "Thorn Skin", "nivel": 5, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/wild-fortress", "idLocal": "sage-fortaleza-selvagem", "nomeIngles": "Wild Fortress", "nivel": 5, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/conjured-steeds", "idLocal": "sage-montarias-conjuradas", "nomeIngles": "Conjured Steeds", "nivel": 6, "tipo": "Feitiço", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/forager", "idLocal": "sage-coletor", "nomeIngles": "Forager", "nivel": 6, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/sage-touched", "idLocal": "sage-tocado-pelo-saber", "nomeIngles": "Sage‑touched", "nivel": 7, "tipo": "Habilidade", "custoRecordar": 2 }
   ],
   "correcoesMecanicas": [
-    "Emaranhado Cruel — o alvo principal e o segundo alvo opcional ficam temporariamente Restritos, não Imobilizados."
+    "Emaranhado Cruel — o alvo principal e o segundo alvo opcional ficam temporariamente Restritos, não Imobilizados.",
+    "Aperto da Morte — em caso de sucesso, o alvo fica temporariamente Restrito, não Imobilizado.",
+    "Fortaleza Selvagem — o bloco residual de limiares em inglês foi traduzido para Dano Menor, Maior e Severo, preservando 15/30 e 1/2/3 PV."
   ],
   "correcoesDeVocabulario": [
     "Mestre",
@@ -43,6 +52,13 @@
     "Próximo",
     "Restrito",
     "reduzir a gravidade em um limiar",
-    "jogada de dano"
+    "jogada de dano",
+    "jogada de reação",
+    "limpar",
+    "movimento de descanso",
+    "cartas ativas",
+    "Dano Menor",
+    "Dano Maior",
+    "Dano Severo"
   ]
 }

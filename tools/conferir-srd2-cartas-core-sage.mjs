@@ -55,6 +55,29 @@ if (/lançar Familiar Natural/i.test(JSON.stringify(familiar || {}))) erros.push
 const projetil = cartas.get('sage-projetil-corrosivo');
 if (!projetil?.texto.includes('torná-lo permanentemente Corroído')) erros.push('Projétil Corrosivo: o alvo singular deve ficar Corroído');
 
+const aperto = cartas.get('sage-aperto-da-morte');
+if (!aperto?.texto.includes('temporariamente Restrito')) erros.push('Aperto da Morte: o alvo deve ficar Restrito em caso de sucesso');
+if (!(aperto?.condicoes || []).some((condicao) => /^Restrit/.test(condicao))) erros.push('Aperto da Morte: dependência de Restrito ausente');
+if (/Imobilizad/i.test(JSON.stringify(aperto || {}))) erros.push('Aperto da Morte: condição Imobilizado antiga ainda está ativa');
+
+const campo = cartas.get('sage-campo-de-cura');
+if (!campo?.texto.includes('limpem 1 Ponto de Vida') || !campo?.texto.includes('limpem 2 Pontos de Vida')) erros.push('Campo de Cura: recuperação deve usar o verbo limpar');
+
+const pele = cartas.get('sage-pele-espinhosa');
+if (!pele?.texto.includes('limpe todos os marcadores não usados')) erros.push('Pele Espinhosa: descanso deve limpar os marcadores não usados');
+
+const fortaleza = cartas.get('sage-fortaleza-selvagem');
+if (!fortaleza?.texto.includes('DANO MENOR 15 (Marque 1 PV) — DANO MAIOR 30 (Marque 2 PV) — DANO SEVERO (Marque 3 PV)')) erros.push('Fortaleza Selvagem: bloco de limiares traduzido está ausente ou diverge');
+
+const coletor = cartas.get('sage-coletor');
+if (!coletor?.texto.includes('movimento de descanso adicional')) erros.push('Coletor: downtime move deve usar movimento de descanso');
+
+const montarias = cartas.get('sage-montarias-conjuradas');
+if (!montarias?.texto.includes('em alcance Distante')) erros.push('Montarias Conjuradas: alcance deve usar a formulação canônica');
+
+const tocado = cartas.get('sage-tocado-pelo-saber');
+if (!tocado?.texto.includes('em suas cartas ativas')) erros.push('Tocado pelo Saber: requisito deve usar cartas ativas');
+
 const idsAuditados = new Set(registros.map((item) => item.idLocal));
 const textosAtivos = catalogo.cartas.filter((carta) => idsAuditados.has(carta.id)).map((carta) => JSON.stringify({
   texto: carta.texto,
@@ -71,7 +94,14 @@ const termosLegados = [
   /\bImobilizad/i,
   /\bseveridade em um nível\b/i,
   /\blançar Familiar Natural\b/i,
-  /\btorná-los permanentemente Corroídos\b/i
+  /\btorná-los permanentemente Corroídos\b/i,
+  /\b(?:Jogada|Jogadas) de Reação\b/,
+  /\bdentro do alcance\b/i,
+  /\bmovimento de inatividade\b/i,
+  /\bseu conjunto\b/i,
+  /\b(?:Cura|curem?) \d+ (?:Estresses|Pontos? de Vida)\b/,
+  /\bremova todos os marcadores não usados\b/i,
+  /\bMINOR DAMAGE\b|\bMAJOR DAMAGE\b|\bSEVERE DAMAGE\b|\bMark \d HP\b/i
 ];
 for (const termo of termosLegados) {
   if (termo.test(textosAtivos)) erros.push(`vocabulário mecânico legado ainda ativo no lote auditado de Sábio: ${termo}`);
