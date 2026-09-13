@@ -1,6 +1,6 @@
 {
   "versao": 1,
-  "estado": "em-andamento",
+  "estado": "conferido",
   "fonte": {
     "srd": "2.0",
     "data": "2026-08-25",
@@ -9,19 +9,11 @@
   },
   "dominio": "domains/splendor",
   "progresso": {
-    "conferidas": 14,
+    "conferidas": 21,
     "total": 21,
-    "proximoLote": [
-      "domain-cards/splendor-touched",
-      "domain-cards/shield-aura",
-      "domain-cards/stunning-sunlight",
-      "domain-cards/overwhelming-aura",
-      "domain-cards/salvation-beam",
-      "domain-cards/resurrection",
-      "domain-cards/invigoration"
-    ]
+    "proximoLote": []
   },
-  "conclusaoParcial": "As quatorze primeiras cartas de Esplendor preservam níveis, tipos, custos de recordar, dados, custos, gatilhos e efeitos implementados após corrigir o alcance de Farol Brilhante e normalizar o vocabulário pt-BR do SRD 2.0.",
+  "conclusao": "As 21 cartas de Esplendor preservam níveis, tipos, custos de recordar, dados, custos, gatilhos e efeitos implementados após corrigir o alcance de Farol Brilhante e normalizar o vocabulário pt-BR do SRD 2.0.",
   "registros": [
     { "idFonte": "domain-cards/bolt-beacon", "idLocal": "splendor-farol-brilhante", "nomeIngles": "Bolt Beacon", "nivel": 1, "tipo": "Feitiço", "custoRecordar": 1 },
     { "idFonte": "domain-cards/mending-touch", "idLocal": "splendor-toque-curativo", "nomeIngles": "Mending Touch", "nivel": 1, "tipo": "Feitiço", "custoRecordar": 1 },
@@ -36,7 +28,14 @@
     { "idFonte": "domain-cards/smite", "idLocal": "splendor-golpe-divino", "nomeIngles": "Smite", "nivel": 5, "tipo": "Feitiço", "custoRecordar": 2 },
     { "idFonte": "domain-cards/restoration", "idLocal": "splendor-restauracao", "nomeIngles": "Restoration", "nivel": 6, "tipo": "Feitiço", "custoRecordar": 2 },
     { "idFonte": "domain-cards/zone-of-protection", "idLocal": "splendor-zona-de-protecao", "nomeIngles": "Zone of Protection", "nivel": 6, "tipo": "Feitiço", "custoRecordar": 2 },
-    { "idFonte": "domain-cards/healing-strike", "idLocal": "splendor-golpe-curativo", "nomeIngles": "Healing Strike", "nivel": 7, "tipo": "Feitiço", "custoRecordar": 1 }
+    { "idFonte": "domain-cards/healing-strike", "idLocal": "splendor-golpe-curativo", "nomeIngles": "Healing Strike", "nivel": 7, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/splendor-touched", "idLocal": "splendor-tocado-do-esplendor", "nomeIngles": "Splendor‑touched", "nivel": 7, "tipo": "Habilidade", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/shield-aura", "idLocal": "splendor-aura-de-escudo", "nomeIngles": "Shield Aura", "nivel": 8, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/stunning-sunlight", "idLocal": "splendor-luz-ofuscante", "nomeIngles": "Stunning Sunlight", "nivel": 8, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/overwhelming-aura", "idLocal": "splendor-aura-avassaladora", "nomeIngles": "Overwhelming Aura", "nivel": 9, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/salvation-beam", "idLocal": "splendor-raio-da-salvacao", "nomeIngles": "Salvation Beam", "nivel": 9, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/resurrection", "idLocal": "splendor-ressurreicao", "nomeIngles": "Resurrection", "nivel": 10, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/invigoration", "idLocal": "splendor-revigoramento", "nomeIngles": "Invigoration", "nivel": 10, "tipo": "Feitiço", "custoRecordar": 3 }
   ],
   "correcoesMecanicas": [
     "Farol Brilhante — o alvo fica em alcance Distante, não Longínquo."

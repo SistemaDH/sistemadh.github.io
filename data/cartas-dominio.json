@@ -6904,7 +6904,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "Ability",
    "custoRecordar": 2,
-   "texto": "Quando 4 ou mais das cartas de domínio em seu conjunto forem do domínio Esplendor, você ganha os seguintes benefícios:\n• Bônus de +3 no seu limiar de dano Severo\n• Uma vez por descanso longo, quando um dano recebido exigir que você marque uma quantidade de pontos de vida, você pode escolher marcar essa quantidade em Estresse ou gastar essa quantidade em Esperança no lugar.",
+   "texto": "Quando 4 ou mais das cartas de domínio em seu conjunto forem do domínio Esplendor, você ganha os seguintes benefícios:\n• Bônus de +3 no seu limiar de dano Severo\n• Uma vez por descanso longo, quando um dano recebido exigir que você marque uma quantidade de Pontos de Vida, você pode escolher marcar essa quantidade em Estresse ou gastar essa quantidade em Esperança no lugar.",
    "imagem": "assets/cartas/dominios/SPLENDOR/tocado do esplendor.png",
    "arquivo": "tocado do esplendor.png",
    "condicoes": [],
@@ -6921,11 +6921,11 @@
    "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"ABILITY\"). O nome do arquivo está em minúsculas (\"tocado do esplendor.png\"), diferente da grafia impressa na carta.",
    "automacao": {
     "classificacao": "automatizada-passiva-e-limite-de-reacao",
-    "resumo": "Com 4+ cartas de Esplendor ativas, o app publica +3 no limiar Grave e registra a substituição de PV uma vez por descanso longo."
+    "resumo": "Com 4+ cartas de Esplendor ativas, o app publica +3 no limiar Severo e registra a substituição de PV uma vez por descanso longo."
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Quando usar a reação, ajuste os recursos conforme o dano: em vez dos PV que seriam marcados, marque a mesma quantidade de Fadiga ou gaste a mesma quantidade de Esperança. A escolha/quantidade vem do dano resolvido na mesa."
+    "resumo": "Quando usar a reação, ajuste os recursos conforme o dano: em vez dos PV que seriam marcados, marque a mesma quantidade de Estresse ou gaste a mesma quantidade de Esperança. A escolha e a quantidade vêm do dano resolvido na mesa."
    },
    "uso": {
     "custo": {},
@@ -6938,7 +6938,7 @@
      "maximo": 1
     },
     "rotuloAtivar": "Registrar substituição de PV · 1/descanso longo",
-    "lembrete": "Substitua todos os PV exigidos por esse dano pela mesma quantidade de Fadiga OU Esperança. Ajuste as trilhas conforme a opção escolhida."
+    "lembrete": "Substitua todos os PV exigidos por esse dano pela mesma quantidade de Estresse ou Esperança. Ajuste as trilhas conforme a opção escolhida."
    },
    "efeitoDerivado": {
     "bonusLimiarGrave": 3,
@@ -6958,7 +6958,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "Spell",
    "custoRecordar": 2,
-   "texto": "Marque um Estresse para conjurar uma aura protetora em um alvo dentro do alcance Muito Próximo. Quando o alvo marcar um Espaço de Armadura, ele reduz a severidade do ataque em um limite adicional. Se essa magia fizer com que uma criatura que receberia dano não marque nenhum ponto de vida, o efeito termina.\nVocê só pode manter a Aura de Escudo em uma criatura por vez.",
+   "texto": "Marque 1 Estresse para conjurar uma aura protetora em um alvo em alcance Muito Próximo. Quando o alvo marcar um Ponto de Armadura, ele reduz a gravidade do ataque em um limiar adicional. Se esse feitiço fizer com que uma criatura que receberia dano não marque nenhum Ponto de Vida, o efeito termina.\nVocê só pode manter a Aura de Escudo em uma criatura por vez.",
    "imagem": "assets/cartas/dominios/SPLENDOR/Aura de Escudo.png",
    "arquivo": "Aura de Escudo.png",
    "condicoes": [],
@@ -7004,7 +7004,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "Spell",
    "custoRecordar": 2,
-   "texto": "Faça uma Jogada de Conjuração para liberar poderosos raios de luz solar ardente contra todos os adversários à sua frente dentro do alcance Longínquo. Em caso de sucesso, gaste qualquer quantidade de Esperança e force esse número de alvos, contra os quais você teve sucesso, a fazer uma Jogada de Reação (14).\nAlvos que tiverem sucesso recebem 3d20 + 3 de dano mágico. Alvos que falharem recebem 4d20 + 5 de dano mágico e ficam temporariamente Atordoados. Enquanto Atordoados, eles não podem usar reações nem realizar outras ações até que essa condição seja removida.",
+   "texto": "Faça uma jogada de Conjuração para liberar poderosos raios de luz solar ardente contra todos os adversários à sua frente em alcance Distante. Em caso de sucesso, gaste qualquer quantidade de Esperança e force essa quantidade de alvos que você atingiu a fazer uma jogada de reação (14).\nAlvos que tiverem sucesso recebem 3d20 + 3 de dano mágico. Alvos que falharem recebem 4d20 + 5 de dano mágico e ficam temporariamente Atordoados. Enquanto Atordoados, eles não podem usar reações nem realizar outras ações até limparem essa condição.",
    "imagem": "assets/cartas/dominios/SPLENDOR/Luz Ofuscante.png",
    "arquivo": "Luz Ofuscante.png",
    "condicoes": [
@@ -7019,11 +7019,11 @@
    "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"SPELL\").",
    "automacao": {
     "classificacao": "automatizada-custo-variavel-apos-sucesso",
-    "resumo": "Depois do sucesso confirmado, o app cobra uma Esperança por alvo que você decidir forçar a fazer o jogada de reação."
+    "resumo": "Depois do sucesso confirmado, o app cobra 1 Esperança por alvo que você decidir forçar a fazer a jogada de reação."
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A Jogada de Conjuração, os jogadas de reação 14, os d20 de dano e Atordoado são resolvidos na mesa."
+    "resumo": "A jogada de Conjuração, as jogadas de reação 14, os d20 de dano e Atordoado são resolvidos na mesa."
    },
    "uso": {
     "custo": {},
@@ -7035,7 +7035,7 @@
      "custoPorUnidade": {
       "esperanca": 1
      },
-     "ajuda": "Informe quantos alvos atingidos você quer forçar a fazer o jogada de reação; gaste 1 Esperança por alvo."
+      "ajuda": "Informe quantos alvos atingidos você quer forçar a fazer a jogada de reação; gaste 1 Esperança por alvo."
     },
     "rotuloAtivar": "Sucesso: resolver Luz Ofuscante",
     "lembrete": "Cada alvo escolhido faz Reação 14. Sucesso: 3d20+3 mágico. Falha: 4d20+5 mágico e Atordoado temporariamente."
@@ -7051,7 +7051,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "Spell",
    "custoRecordar": 2,
-   "texto": "Faça uma Jogada de Conjuração (15) para fortalecer magicamente sua aura. Em caso de sucesso, gaste 2 de Esperança para que sua Presença seja igual ao seu traço de Conjuração até seu próximo descanso longo.\nEnquanto essa magia estiver ativa, um adversário deve marcar um estresse ao atacá-lo.",
+   "texto": "Faça uma jogada de Conjuração (15) para fortalecer magicamente sua aura. Em caso de sucesso, gaste 2 Esperanças para que sua Presença seja igual ao seu traço de Conjuração até seu próximo descanso longo.\nEnquanto esse feitiço estiver ativo, um adversário deve marcar 1 Estresse quando escolher você como alvo de um ataque.",
    "imagem": "assets/cartas/dominios/SPLENDOR/Aura Avassaladora.png",
    "arquivo": "Aura Avassaladora.png",
    "condicoes": [],
@@ -7069,7 +7069,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Enquanto ativa, trate Presença como igual ao atributo de Conjuração e faça adversários marcarem 1 Fadiga quando selecionarem você como alvo de um ataque. Esses efeitos contextuais continuam na mesa."
+    "resumo": "Enquanto ativa, trate Presença como igual ao traço de Conjuração e faça adversários marcarem 1 Estresse quando escolherem você como alvo de um ataque. Esses efeitos contextuais continuam na mesa."
    },
    "uso": {
     "custo": {
@@ -7083,7 +7083,7 @@
      "avisoEncerrar": "Aura Avassaladora encerrada."
     },
     "rotuloAtivar": "Sucesso: ativar Aura Avassaladora · 2 Esperanças",
-    "lembrete": "Até o próximo descanso longo, sua Presença é igual ao atributo de Conjuração; adversários marcam 1 Fadiga ao escolher você como alvo de ataque."
+    "lembrete": "Até o próximo descanso longo, sua Presença é igual ao traço de Conjuração; adversários marcam 1 Estresse ao escolher você como alvo de ataque."
    }
   },
   {
@@ -7096,7 +7096,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "Spell",
    "custoRecordar": 2,
-   "texto": "Faça uma Jogada de Conjuração (16). Em caso de sucesso, marque qualquer número de Estresses para escolher uma linha de aliados dentro do alcance Longe.\nVocê pode curar pontos de vida nos alvos iguais ao número de Estresses marcados, distribuídos entre eles da forma que desejar.",
+   "texto": "Faça uma jogada de Conjuração (16). Em caso de sucesso, marque qualquer número de Estresses para escolher uma linha de aliados em alcance Distante.\nVocê pode limpar Pontos de Vida dos alvos em quantidade igual ao número de Estresses marcados, distribuídos entre eles da forma que desejar.",
    "imagem": "assets/cartas/dominios/SPLENDOR/Raio da Salvação.png",
    "arquivo": "Raio da Salvação.png",
    "condicoes": [],
@@ -7142,7 +7142,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "Spell",
    "custoRecordar": 2,
-   "texto": "Faça uma Jogada de Conjuração (20). Em caso de sucesso, restaure uma criatura que esteja morta há no máximo 100 anos à força total. Em seguida, role um d6. Se o resultado for 5 ou menos, coloque esta carta permanentemente em seu cofre.\nEm caso de falha, você não poderá lançar Ressurreição novamente por uma semana.",
+   "texto": "Faça uma jogada de Conjuração (20). Em caso de sucesso, restaure uma criatura que esteja morta há no máximo 100 anos à força total. Em seguida, role um d6. Se o resultado for 5 ou menos, coloque esta carta permanentemente em seu cofre.\nEm caso de falha, você não poderá conjurar Ressurreição novamente por uma semana.",
    "imagem": "assets/cartas/dominios/SPLENDOR/Ressurreição.png",
    "arquivo": "Ressurreição.png",
    "condicoes": [],
@@ -7176,7 +7176,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "Spell",
    "custoRecordar": 3,
-   "texto": "Quando você ou um aliado dentro do alcance Próximo usar uma habilidade que possui limite de exaustão (como \"uma vez por descanso\" ou \"uma vez por sessão\"), você pode gastar qualquer quantidade de Esperança e rolar esse número de d6. Se algum deles tirar 6, a habilidade pode ser usada novamente.",
+   "texto": "Quando você ou um aliado em alcance Próximo usar uma habilidade que possui limite de exaustão (como \"uma vez por descanso\" ou \"uma vez por sessão\"), você pode gastar qualquer quantidade de Esperança e rolar essa quantidade de d6. Se algum deles tirar 6, a habilidade pode ser usada novamente.",
    "imagem": "assets/cartas/dominios/SPLENDOR/Revigoramento.png",
    "arquivo": "Revigoramento.png",
    "condicoes": [],

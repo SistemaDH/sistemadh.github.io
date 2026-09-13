@@ -164,7 +164,7 @@ O terceiro checkpoint fechou **Surto Selvagem**, **Barreira Rejuvenescedora**, *
 
 As 21 cartas de Sábio estão conferidas. O vocabulário final também protege **Ponto de Armadura**, **cartas ativas e cofre**, **limpar marcadores**, **feitiço**, **jogada de ação**, **jogada de Conjuração** e **Vulnerável**.
 
-### Cartas de domínio do Core — Esplendor (14/21)
+### Cartas de domínio do Core — Esplendor (21/21)
 
 O primeiro checkpoint conferiu **Farol Brilhante**, **Toque Curativo**, **Reforço**, **Palavras Finais**, **Mãos Curativas**, **Segundo Fôlego** e **Voz da Razão** contra a p. 221 do SRD 2.0. **Farol Brilhante** foi corrigido de Longínquo para **Distante**; os demais efeitos permaneceram mecanicamente compatíveis.
 
@@ -173,3 +173,7 @@ O vocabulário ativo foi normalizado para **jogada de Conjuração**, **jogada d
 O segundo checkpoint conferiu **Adivinhação**, **Guardião da Vida**, **Moldar Material**, **Golpe Divino**, **Restauração**, **Zona de Proteção** e **Golpe Curativo**, dos níveis 4–7, contra as pp. 221–222. Os efeitos, custos, usos por descanso e contadores permaneceram mecanicamente compatíveis com o SRD 2.0.
 
 O texto ativo do lote foi normalizado para **Esperança**, **movimento de morte**, **limpar**, **Ponto de Vida**, **Estresse**, **jogada de Conjuração** e as formulações canônicas de alcance. O validador também protege o custo e uso de Adivinhação, o sigilo de Guardião da Vida, a carga de Golpe Divino, os marcadores de Restauração e o d6 persistente de Zona de Proteção.
+
+O terceiro checkpoint fechou **Tocado do Esplendor**, **Aura de Escudo**, **Luz Ofuscante**, **Aura Avassaladora**, **Raio da Salvação**, **Ressurreição** e **Revigoramento**, dos níveis 7–10, contra a p. 222. As mecânicas existentes permaneceram compatíveis, incluindo o requisito de quatro cartas ativas, custos e estados persistentes, dano e Atordoado, cura proporcional ao Estresse, o d6 de Ressurreição e o custo variável de Revigoramento.
+
+As 21 cartas de Esplendor estão conferidas. O vocabulário final também protege **limiar Severo**, **Ponto de Armadura**, **jogada de reação**, **Distante**, **Muito Próximo**, **conjurar**, **cartas ativas**, **cofre** e **limpar condição**.

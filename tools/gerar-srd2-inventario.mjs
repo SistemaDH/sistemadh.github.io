@@ -246,7 +246,14 @@ const implementados = new Set([
   'domain-cards/smite',
   'domain-cards/restoration',
   'domain-cards/zone-of-protection',
-  'domain-cards/healing-strike'
+  'domain-cards/healing-strike',
+  'domain-cards/splendor-touched',
+  'domain-cards/shield-aura',
+  'domain-cards/stunning-sunlight',
+  'domain-cards/overwhelming-aura',
+  'domain-cards/salvation-beam',
+  'domain-cards/resurrection',
+  'domain-cards/invigoration'
 ]);
 const colecoes = [];
 

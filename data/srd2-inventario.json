@@ -18193,7 +18193,7 @@
             "pdfPageEnd": 222
           },
           "corpusSha256": "2d8a289fa247dbe9826ce5f5c3181101d58f8553e098a84705e34c2c2abd1881",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/invisibility",
@@ -18538,7 +18538,7 @@
             "pdfPageEnd": 222
           },
           "corpusSha256": "a4122aec446467163dea18d95bad9f81f037d8dce0ae3698249490ae43b2c725",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/phantom-retreat",
@@ -18778,7 +18778,7 @@
             "pdfPageEnd": 222
           },
           "corpusSha256": "4b716cf098bd7330c6008fc38d2844fc8e1d49ba4f9e3f83852b785b0c83f04b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/rift-walker",
@@ -18883,7 +18883,7 @@
             "pdfPageEnd": 222
           },
           "corpusSha256": "7276134cdaa306ba0b78a262bb11533b91dfd1866bf39ac7e190e69da5b538fa",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/savor-the-anguish",
@@ -19033,7 +19033,7 @@
             "pdfPageEnd": 222
           },
           "corpusSha256": "179b74f56d49adef86c5b7aa383560b02f742a95de3f532e94ee85b1f5f46486",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/shrug-it-off",
@@ -19183,7 +19183,7 @@
             "pdfPageEnd": 222
           },
           "corpusSha256": "79dd0899b3c5af7a34f6a3178fe46ae889a63eb0b48314b0d230577189cad08e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/splintering-strike",
@@ -19243,7 +19243,7 @@
             "pdfPageEnd": 222
           },
           "corpusSha256": "b30370d786f3e8797b7d6af1da470d22e3b1998ca7e52625c4fd1718e5f490cc",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/summon-horror",

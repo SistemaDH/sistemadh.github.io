@@ -74,6 +74,27 @@ if (!zona?.texto.includes('jogada de Conjuração (16)') || !zona?.texto.include
 const curativo = cartas.get('splendor-golpe-curativo');
 if (!curativo?.texto.includes('gastar 2 Esperanças') || !curativo?.texto.includes('limpar 1 Ponto de Vida') || !curativo?.texto.includes('aliado em alcance Próximo')) erros.push('Golpe Curativo: custo, recuperação ou alcance divergem');
 
+const tocado = cartas.get('splendor-tocado-do-esplendor');
+if (!tocado?.texto.includes('4 ou mais') || !tocado?.texto.includes('limiar de dano Severo') || !tocado?.texto.includes('marcar essa quantidade em Estresse') || tocado?.efeitoDerivado?.bonusLimiarGrave !== 3 || tocado?.uso?.marcaUso?.maximo !== 1) erros.push('Tocado do Esplendor: requisito, limiar ou substituição de PV divergem');
+
+const escudo = cartas.get('splendor-aura-de-escudo');
+if (!escudo?.texto.includes('Marque 1 Estresse') || !escudo?.texto.includes('alvo em alcance Muito Próximo') || !escudo?.texto.includes('Ponto de Armadura') || !escudo?.texto.includes('um limiar adicional')) erros.push('Aura de Escudo: custo, alcance ou redução adicional divergem');
+
+const luz = cartas.get('splendor-luz-ofuscante');
+if (!luz?.texto.includes('jogada de Conjuração') || !luz?.texto.includes('em alcance Distante') || !luz?.texto.includes('jogada de reação (14)') || !luz?.texto.includes('3d20 + 3') || !luz?.texto.includes('4d20 + 5') || !luz?.texto.includes('Atordoados')) erros.push('Luz Ofuscante: jogadas, alcance, dano ou condição divergem');
+
+const avassaladora = cartas.get('splendor-aura-avassaladora');
+if (!avassaladora?.texto.includes('jogada de Conjuração (15)') || !avassaladora?.texto.includes('gaste 2 Esperanças') || !avassaladora?.texto.includes('Presença seja igual ao seu traço de Conjuração') || !avassaladora?.texto.includes('marcar 1 Estresse')) erros.push('Aura Avassaladora: jogada, custo, traço ou punição divergem');
+
+const salvacao = cartas.get('splendor-raio-da-salvacao');
+if (!salvacao?.texto.includes('jogada de Conjuração (16)') || !salvacao?.texto.includes('aliados em alcance Distante') || !salvacao?.texto.includes('limpar Pontos de Vida') || !salvacao?.uso?.quantidadeLigadaAoEstresse) erros.push('Raio da Salvação: jogada, alcance ou conversão de Estresse divergem');
+
+const ressurreicao = cartas.get('splendor-ressurreicao');
+if (!ressurreicao?.texto.includes('jogada de Conjuração (20)') || !ressurreicao?.texto.includes('no máximo 100 anos') || !ressurreicao?.texto.includes('5 ou menos') || !ressurreicao?.efeitoPermanente?.trancaNoCofre) erros.push('Ressurreição: jogada, limite temporal, d6 ou cofre divergem');
+
+const revigoramento = cartas.get('splendor-revigoramento');
+if (!revigoramento?.texto.includes('aliado em alcance Próximo') || !revigoramento?.texto.includes('qualquer quantidade de Esperança') || !revigoramento?.texto.includes('Se algum deles tirar 6')) erros.push('Revigoramento: alcance, custo variável ou resultado divergem');
+
 const idsAuditados = new Set(registros.map((item) => item.idLocal));
 const textosAtivos = catalogo.cartas.filter((carta) => idsAuditados.has(carta.id)).map((carta) => JSON.stringify({
   texto: carta.texto,
