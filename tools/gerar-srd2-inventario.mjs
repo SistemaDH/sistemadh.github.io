@@ -232,7 +232,14 @@ const implementados = new Set([
   'domain-cards/plant-dominion',
   'domain-cards/fane-of-the-wilds',
   'domain-cards/force-of-nature',
-  'domain-cards/tempest'
+  'domain-cards/tempest',
+  'domain-cards/bolt-beacon',
+  'domain-cards/mending-touch',
+  'domain-cards/reassurance',
+  'domain-cards/final-words',
+  'domain-cards/healing-hands',
+  'domain-cards/second-wind',
+  'domain-cards/voice-of-reason'
 ]);
 const colecoes = [];
 

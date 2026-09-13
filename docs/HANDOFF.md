@@ -187,7 +187,16 @@ Validação deste checkpoint: `npm run teste:srd2` verde com 65 termos mecânico
 
 Este checkpoint também restaura como texto legível `data/classes.json` e `tools/testes-backend.mjs`, que estavam corrompidos no histórico da branch. O gerador de classes reproduz exatamente `backend/42_Classes.gs`, e a suíte completa protege o conteúdo recuperado.
 
-Próximo checkpoint exato: comparar as primeiras sete cartas de Esplendor, seguindo a ordem canônica do SRD 2.0. Depois fechar os dois lotes restantes de Esplendor, continuar Valor e só então integrar Pavor. Em paralelo conceitual, projetar a persistência de Transformações, mas não expor as seis opções antes do ciclo completo de aquisição/remoção e efeitos permanentes estar protegido no servidor.
+### Cartas Core — Esplendor 7/21 conferido
+
+- o primeiro checkpoint compara **Farol Brilhante**, **Toque Curativo**, **Reforço**, **Palavras Finais**, **Mãos Curativas**, **Segundo Fôlego** e **Voz da Razão** à p. 221 do SRD 2.0;
+- **Farol Brilhante** agora usa alcance **Distante**, não Longínquo; as demais mecânicas permaneceram compatíveis;
+- o vocabulário ativo usa **jogada de Conjuração**, **jogada de ação**, **jogada de dano**, **limpar**, **Ponto de Vida**, **Estresse**, **Vulnerável**, **Distante**, **Próximo** e **Corpo a Corpo**;
+- a cobertura de `domain-cards` está em auditoria: 154 de 189 cartas Core conferidas; 35 cartas Core e 21 cartas de Pavor ainda pendentes.
+
+Validação deste checkpoint: inventário com 1.539 registros (**220 implementados**, 1.318 pendentes), validador específico de Esplendor e gates completos sem navegador. O E2E local continua bloqueado pela ausência do Chromium do Playwright.
+
+Próximo checkpoint exato: comparar **Adivinhação**, **Guardião da Vida**, **Moldar Material**, **Golpe Divino**, **Restauração**, **Zona de Proteção** e **Golpe Curativo**. Depois fechar as sete restantes de Esplendor, continuar Valor e só então integrar Pavor.
 
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 

@@ -16933,7 +16933,7 @@
             "pdfPageEnd": 221
           },
           "corpusSha256": "52f60d618419c9b8f22b76c0755c419f9f840156c493cb2e5d978453123c0367",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/bone-touched",
@@ -17758,7 +17758,7 @@
             "pdfPageEnd": 221
           },
           "corpusSha256": "55868e566aa867523bb5081ad6ebd5ae8137b4d6716867071800c796b87140ef",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/flight",
@@ -18043,7 +18043,7 @@
             "pdfPageEnd": 221
           },
           "corpusSha256": "72dc4bf1ac17754e7da266bd06c22d336641a97ce36f6d7133ed99a39a338c24",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/healing-strike",
@@ -18373,7 +18373,7 @@
             "pdfPageEnd": 221
           },
           "corpusSha256": "aad06ec819ea5969e04980e370390445cc0cedca01809bbe05c66bef5783dceb",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/midnight-spirit",
@@ -18688,7 +18688,7 @@
             "pdfPageEnd": 221
           },
           "corpusSha256": "aed7d22d2aa4f1617cf67c3681309b013585681364c4ccceefbc2ef82ef08286",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/reckless",
@@ -18928,7 +18928,7 @@
             "pdfPageEnd": 221
           },
           "corpusSha256": "2ee7d72400738c3df2ba90034db5c5b14521c4b8590ad94d6d066cdf44a63eef",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/sensory-projection",
@@ -19693,7 +19693,7 @@
             "pdfPageEnd": 221
           },
           "corpusSha256": "42e4451be4ad6ec4ba753ab1cae35fcedc7e1c187f4db2740ecf71881c39f1bc",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/wall-of-hunger",

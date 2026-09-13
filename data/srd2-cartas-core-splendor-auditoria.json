@@ -1,0 +1,49 @@
+{
+  "versao": 1,
+  "estado": "em-andamento",
+  "fonte": {
+    "srd": "2.0",
+    "data": "2026-08-25",
+    "paginasPdf": "221",
+    "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64"
+  },
+  "dominio": "domains/splendor",
+  "progresso": {
+    "conferidas": 7,
+    "total": 21,
+    "proximoLote": [
+      "domain-cards/divination",
+      "domain-cards/life-ward",
+      "domain-cards/shape-material",
+      "domain-cards/smite",
+      "domain-cards/restoration",
+      "domain-cards/zone-of-protection",
+      "domain-cards/healing-strike"
+    ]
+  },
+  "conclusaoParcial": "As sete primeiras cartas de Esplendor preservam níveis, tipos, custos de recordar, dados, custos, gatilhos e efeitos implementados após corrigir o alcance de Farol Brilhante e normalizar o vocabulário pt-BR do SRD 2.0.",
+  "registros": [
+    { "idFonte": "domain-cards/bolt-beacon", "idLocal": "splendor-farol-brilhante", "nomeIngles": "Bolt Beacon", "nivel": 1, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/mending-touch", "idLocal": "splendor-toque-curativo", "nomeIngles": "Mending Touch", "nivel": 1, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/reassurance", "idLocal": "splendor-reforco", "nomeIngles": "Reassurance", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/final-words", "idLocal": "splendor-palavras-finais", "nomeIngles": "Final Words", "nivel": 2, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/healing-hands", "idLocal": "splendor-maos-curativas", "nomeIngles": "Healing Hands", "nivel": 2, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/second-wind", "idLocal": "splendor-segundo-folego", "nomeIngles": "Second Wind", "nivel": 3, "tipo": "Habilidade", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/voice-of-reason", "idLocal": "splendor-voz-da-razao", "nomeIngles": "Voice of Reason", "nivel": 3, "tipo": "Habilidade", "custoRecordar": 1 }
+  ],
+  "correcoesMecanicas": [
+    "Farol Brilhante — o alvo fica em alcance Distante, não Longínquo."
+  ],
+  "correcoesDeVocabulario": [
+    "jogada de Conjuração",
+    "jogada de ação",
+    "jogada de dano",
+    "Distante",
+    "Corpo a Corpo",
+    "Próximo",
+    "limpar",
+    "Ponto de Vida",
+    "Estresse",
+    "Vulnerável"
+  ]
+}

@@ -163,3 +163,9 @@ O texto ativo do lote também foi normalizado para **limpar**, **movimento de de
 O terceiro checkpoint fechou **Surto Selvagem**, **Barreira Rejuvenescedora**, **Espíritos da Floresta**, **Domínio das Plantas**, **Templo das Selvas**, **Força da Natureza** e **Tempestade**, dos níveis 7–10, contra as pp. 220–221. **Barreira Rejuvenescedora** agora explicita a recuperação de **1d4 Pontos de Vida**, e **Força da Natureza** concede imunidade a **Restrito**, não Imobilizado, além de limpar 1 Ponto de Armadura ao absorver uma criatura derrotada em alcance Próximo.
 
 As 21 cartas de Sábio estão conferidas. O vocabulário final também protege **Ponto de Armadura**, **cartas ativas e cofre**, **limpar marcadores**, **feitiço**, **jogada de ação**, **jogada de Conjuração** e **Vulnerável**.
+
+### Cartas de domínio do Core — Esplendor (7/21)
+
+O primeiro checkpoint conferiu **Farol Brilhante**, **Toque Curativo**, **Reforço**, **Palavras Finais**, **Mãos Curativas**, **Segundo Fôlego** e **Voz da Razão** contra a p. 221 do SRD 2.0. **Farol Brilhante** foi corrigido de Longínquo para **Distante**; os demais efeitos permaneceram mecanicamente compatíveis.
+
+O vocabulário ativo foi normalizado para **jogada de Conjuração**, **jogada de ação**, **jogada de dano**, **limpar**, **Ponto de Vida**, **Estresse**, **Vulnerável**, **Distante**, **Próximo** e **Corpo a Corpo**. O vínculo parcial fica protegido por `data/srd2-cartas-core-splendor-auditoria.json` e `tools/conferir-srd2-cartas-core-splendor.mjs`.

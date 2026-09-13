@@ -6312,7 +6312,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "Spell",
    "custoRecordar": 1,
-   "texto": "Faça uma Jogada de Conjuração contra um alvo dentro do alcance Longínquo. Em um sucesso, gaste 1 Esperança para enviar um raio de luz cintilante em direção a ele, causando d8+2 de dano mágico usando sua Proficiência. O alvo fica temporariamente Vulnerável e brilha intensamente até que essa condição seja removida.",
+   "texto": "Faça uma jogada de Conjuração contra um alvo em alcance Distante. Em caso de sucesso, gaste 1 Esperança para enviar um raio de luz cintilante em direção a ele, causando d8+2 de dano mágico usando sua Proficiência. O alvo fica temporariamente Vulnerável e brilha intensamente até que essa condição seja limpa.",
    "imagem": "assets/cartas/dominios/SPLENDOR/farol brilhante.png",
    "arquivo": "farol brilhante.png",
    "condicoes": [
@@ -6332,7 +6332,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A Jogada de Conjuração contra o alvo Longínquo, o dano mágico e o período em que o alvo fica Vulnerável e brilhando continuam na mesa."
+    "resumo": "A jogada de Conjuração contra o alvo Distante, o dano mágico e o período em que o alvo fica Vulnerável e brilhando continuam na mesa."
    },
    "uso": {
     "custo": {
@@ -6390,7 +6390,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "Spell",
    "custoRecordar": 1,
-   "texto": "Você coloca suas mãos sobre uma criatura e canaliza magia de cura para fechar suas feridas. Quando pode dedicar alguns minutos para focar no alvo que está ajudando, pode gastar 2 Esperanças para curar 1 Ponto de Vida ou 1 Estresse nele.\nUma vez por descanso longo, quando você usa esse tempo de cura para aprender algo novo sobre o alvo ou revelar algo sobre si mesmo, pode curar 2 Pontos de Vida ou 2 Estresses nele.",
+   "texto": "Você coloca suas mãos sobre uma criatura e canaliza magia de cura para fechar suas feridas. Quando pode dedicar alguns minutos para focar no alvo que está ajudando, pode gastar 2 Esperanças para limpar 1 Ponto de Vida ou 1 Estresse nele.\nUma vez por descanso longo, quando você usa esse tempo de cura para aprender algo novo sobre o alvo ou revelar algo sobre si mesmo, pode limpar 2 Pontos de Vida ou 2 Estresses nele.",
    "imagem": "assets/cartas/dominios/SPLENDOR/Toque Curativo.png",
    "arquivo": "Toque Curativo.png",
    "condicoes": [],
@@ -6448,7 +6448,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "Spell",
    "custoRecordar": 1,
-   "texto": "Faça uma Jogada de Conjuração (13) e escolha uma criatura que não seja você, dentro de alcance Corpo a Corpo. Em caso de sucesso, marque um Estresse para remover 2 pontos de vida ou 2 de Estresse do alvo. Em caso de falha, marque um Estresse para remover 1 ponto de vida ou 1 de Estresse do alvo. Você não pode curar o mesmo alvo novamente até seu próximo descanso longo.",
+   "texto": "Faça uma jogada de Conjuração (13) e escolha uma criatura que não seja você em alcance Corpo a Corpo. Em caso de sucesso, marque 1 Estresse para limpar 2 Pontos de Vida ou 2 Estresses do alvo. Em caso de falha, marque 1 Estresse para limpar 1 Ponto de Vida ou 1 Estresse do alvo. Você não pode curar o mesmo alvo novamente até seu próximo descanso longo.",
    "imagem": "assets/cartas/dominios/SPLENDOR/Mãos Curativas.png",
    "arquivo": "Mãos Curativas.png",
    "condicoes": [],
@@ -6466,7 +6466,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A Jogada de Conjuração 13, a criatura em Corpo a Corpo, a escolha entre PV/Estresse e a trava por alvo até o próximo descanso longo continuam na mesa."
+    "resumo": "A jogada de Conjuração 13, a criatura em Corpo a Corpo, a escolha entre PV/Estresse e a trava por alvo até o próximo descanso longo continuam na mesa."
    },
    "uso": {
     "custo": {},
@@ -6501,7 +6501,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "Spell",
    "custoRecordar": 1,
-   "texto": "Você pode infundir um cadáver com um momento de vida para falar com ele. Faça uma Jogada de Conjuração (13). Em um sucesso com Esperança, o cadáver responde até três perguntas. Em um sucesso com Medo, o cadáver responde uma pergunta. O cadáver responde com a verdade, mas não pode revelar informações que não sabia em vida. Em uma falha, ou quando o cadáver terminar de responder suas perguntas, o corpo se transforma em pó.",
+   "texto": "Você pode infundir um cadáver com um momento de vida para falar com ele. Faça uma jogada de Conjuração (13). Em caso de sucesso com Esperança, o cadáver responde até três perguntas. Em caso de sucesso com Medo, o cadáver responde uma pergunta. O cadáver responde com a verdade, mas não pode revelar informações que não sabia em vida. Em caso de falha, ou quando o cadáver terminar de responder suas perguntas, o corpo se transforma em pó.",
    "imagem": "assets/cartas/dominios/SPLENDOR/Palavras Finais.png",
    "arquivo": "Palavras Finais.png",
    "condicoes": [],
@@ -6518,7 +6518,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Faça a Jogada de Conjuração 13 contra o cadáver e resolva na mesa quantas perguntas podem ser feitas, as respostas e a transformação do corpo em pó."
+    "resumo": "Faça a jogada de Conjuração 13 contra o cadáver e resolva na mesa quantas perguntas podem ser feitas, as respostas e a transformação do corpo em pó."
    }
   },
   {
@@ -6531,7 +6531,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "Ability",
    "custoRecordar": 2,
-   "texto": "Uma vez por descanso, quando você for bem-sucedido em um ataque contra um adversário, pode remover 3 de estresse ou 1 ponto de vida. Com um sucesso com Esperança, você também remove 3 de estresse ou 1 ponto de vida de um aliado dentro de alcance Próximo.",
+   "texto": "Uma vez por descanso, quando você tiver sucesso em um ataque contra um adversário, pode limpar 3 Estresses ou 1 Ponto de Vida. Em caso de sucesso com Esperança, você também limpa 3 Estresses ou 1 Ponto de Vida de um aliado em alcance Próximo.",
    "imagem": "assets/cartas/dominios/SPLENDOR/Segundo Fôlego.png",
    "arquivo": "Segundo Fôlego.png",
    "condicoes": [],
@@ -6591,7 +6591,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "Ability",
    "custoRecordar": 1,
-   "texto": "Você fala com um poder e autoridade incomparáveis. Você tem vantagem em jogadas de ação para diminuir situações violentas ou convencer alguém a seguir sua liderança.\nAlém disso, você se fortalece em momentos de pressão. Quando todos os seus espaços de estresse estiverem marcados, você ganha um bônus de +1 na sua Proficiência para jogadas de dano.",
+   "texto": "Você fala com um poder e autoridade incomparáveis. Você tem vantagem em jogadas de ação para reduzir situações violentas ou convencer alguém a seguir sua liderança.\nAlém disso, você se fortalece em momentos de pressão. Quando todos os seus espaços de Estresse estiverem marcados, ganha +1 de bônus em sua Proficiência para jogadas de dano.",
    "imagem": "assets/cartas/dominios/SPLENDOR/Voz da Razão.png",
    "arquivo": "Voz da Razão.png",
    "condicoes": [],
