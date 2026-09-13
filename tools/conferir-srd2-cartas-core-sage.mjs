@@ -78,6 +78,25 @@ if (!montarias?.texto.includes('em alcance Distante')) erros.push('Montarias Con
 const tocado = cartas.get('sage-tocado-pelo-saber');
 if (!tocado?.texto.includes('em suas cartas ativas')) erros.push('Tocado pelo Saber: requisito deve usar cartas ativas');
 
+const barreira = cartas.get('sage-barreira-rejuvenescedora');
+if (!barreira?.texto.includes('limpam 1d4 Pontos de Vida')) erros.push('Barreira Rejuvenescedora: cura deve limpar 1d4 Pontos de Vida');
+
+const espiritos = cartas.get('sage-forest-sprites');
+if (!espiritos?.texto.includes('Ponto de Armadura adicional')) erros.push('Espíritos da Floresta: benefício deve usar Ponto de Armadura');
+
+const templo = cartas.get('sage-templo-das-selvas');
+if (!templo?.texto.includes('cartas ativas e cofre')) erros.push('Templo das Selvas: recarga deve contar cartas ativas e cofre');
+if (!templo?.texto.includes('limpe todos os marcadores não usados')) erros.push('Templo das Selvas: descanso deve limpar marcadores não usados');
+
+const forca = cartas.get('sage-forca-da-natureza');
+if (!forca?.texto.includes('não pode ficar Restrito')) erros.push('Força da Natureza: imunidade deve ser a Restrito');
+if (!forca?.texto.includes('limpa 1 Ponto de Armadura')) erros.push('Força da Natureza: absorção deve limpar 1 Ponto de Armadura');
+if (!(forca?.condicoes || []).some((condicao) => /^Restrit/.test(condicao))) erros.push('Força da Natureza: dependência de Restrito ausente');
+
+const tempestade = cartas.get('sage-tempestade');
+if (!tempestade?.texto.includes('em alcance Distante')) erros.push('Tempestade: alvos devem usar alcance Distante');
+if (!(tempestade?.condicoes || []).some((condicao) => /^Vulner/.test(condicao))) erros.push('Tempestade: dependência de Vulnerável ausente');
+
 const idsAuditados = new Set(registros.map((item) => item.idLocal));
 const textosAtivos = catalogo.cartas.filter((carta) => idsAuditados.has(carta.id)).map((carta) => JSON.stringify({
   texto: carta.texto,
@@ -101,7 +120,10 @@ const termosLegados = [
   /\bseu conjunto\b/i,
   /\b(?:Cura|curem?) \d+ (?:Estresses|Pontos? de Vida)\b/,
   /\bremova todos os marcadores não usados\b/i,
-  /\bMINOR DAMAGE\b|\bMAJOR DAMAGE\b|\bSEVERE DAMAGE\b|\bMark \d HP\b/i
+  /\bMINOR DAMAGE\b|\bMAJOR DAMAGE\b|\bSEVERE DAMAGE\b|\bMark \d HP\b/i,
+  /\bEspaço de Armadura\b/i,
+  /\bImobilizad[oa]\b/i,
+  /\bao lançar essa magia\b/i
 ];
 for (const termo of termosLegados) {
   if (termo.test(textosAtivos)) erros.push(`vocabulário mecânico legado ainda ativo no lote auditado de Sábio: ${termo}`);

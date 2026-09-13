@@ -17728,7 +17728,7 @@
             "pdfPageEnd": 220
           },
           "corpusSha256": "0b1658585d598e1c4b719f7f30c77a726b4cba8829f5ea1e428cf94fe1ffe9b8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/ferocity",
@@ -17818,7 +17818,7 @@
             "pdfPageEnd": 220
           },
           "corpusSha256": "e1344052d7fd9fc2833fa25ffef6dabd563d05210c4a1c951c57d33ee97458a5",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/forceful-push",
@@ -17848,7 +17848,7 @@
             "pdfPageEnd": 220
           },
           "corpusSha256": "3634015fcf6136e218cbef08e119863de51e335956b7348e185a43a025ca5055",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/fortified-armor",
@@ -18583,7 +18583,7 @@
             "pdfPageEnd": 220
           },
           "corpusSha256": "dde0d9e8a99b700cfc72861dd5a39af321c85fc5a5a8646d8bd494fdeb57bbcb",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/premonition",
@@ -18748,7 +18748,7 @@
             "pdfPageEnd": 220
           },
           "corpusSha256": "f482750a921ae12b90f09e70182c1f3da07e9f5203f216bb8037ab0a7b996abc",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/restoration",
@@ -19363,7 +19363,7 @@
             "pdfPageEnd": 220
           },
           "corpusSha256": "c24a233f6b9b5266d22f399f97ffd28868f7d30f78af15a74a104feb04bc88ce",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/terrify",
@@ -19768,7 +19768,7 @@
             "pdfPageEnd": 220
           },
           "corpusSha256": "5ecb8536ed3edbf4f686ea8fe62c4680b73495445d0918cd85bea9a22fd7fc34",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/words-of-discord",

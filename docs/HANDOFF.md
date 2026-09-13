@@ -168,7 +168,7 @@ Validação da Fase 1:
 - **Caçador das Sombras** usa Evasão; **Terror Noturno** descarta o Medo roubado; **Tributo do Crepúsculo** limpa as fichas; e Eclipse usa jogada de Conjuração;
 - a cobertura de `domain-cards` está em auditoria: 126 de 189 cartas Core conferidas; 63 cartas Core e 21 cartas de Pavor ainda pendentes.
 
-### Cartas Core — Sábio 14/21 conferido
+### Cartas Core — Sábio 21/21 conferido
 
 - o primeiro checkpoint de Sábio compara **Rastreador Habilidoso**, **Língua da Natureza**, **Emaranhado Cruel**, **Conjurar Enxame**, **Familiar Natural**, **Projétil Corrosivo** e **Caule Imponente** às pp. 218–219 do SRD 2.0;
 - níveis, tipos, custos de recordar, dados, custos, gatilhos, frequências e efeitos permaneceram mecanicamente compatíveis, exceto pela condição de **Emaranhado Cruel**, corrigida de Imobilizado para **Restrito** no alvo principal e no segundo alvo opcional;
@@ -178,13 +178,16 @@ Validação da Fase 1:
 - o segundo checkpoint compara **Aperto da Morte**, **Campo de Cura**, **Pele Espinhosa**, **Fortaleza Selvagem**, **Montarias Conjuradas**, **Coletor** e **Tocado pelo Saber**, dos níveis 4–7, às pp. 219–220;
 - **Aperto da Morte** agora deixa o alvo temporariamente **Restrito**, não Imobilizado; Campo de Cura e Pele Espinhosa usam **limpar**; Coletor usa **movimento de descanso**; Tocado pelo Saber usa **cartas ativas**;
 - Montarias Conjuradas usa a formulação canônica de alcance, e o bloco residual em inglês de Fortaleza Selvagem foi traduzido para **Dano Menor**, **Dano Maior** e **Dano Severo**, preservando 15/30 e 1/2/3 PV;
-- a cobertura de `domain-cards` está em auditoria: 140 de 189 cartas Core conferidas; 49 cartas Core e 21 cartas de Pavor ainda pendentes.
+- o terceiro checkpoint compara **Surto Selvagem**, **Barreira Rejuvenescedora**, **Espíritos da Floresta**, **Domínio das Plantas**, **Templo das Selvas**, **Força da Natureza** e **Tempestade**, dos níveis 7–10, às pp. 220–221;
+- Barreira Rejuvenescedora limpa **1d4 Pontos de Vida**; Força da Natureza concede imunidade a **Restrito**, não Imobilizado, e limpa 1 Ponto de Armadura ao absorver uma criatura derrotada em alcance Próximo;
+- Templo das Selvas conta **cartas ativas e cofre** e limpa os marcadores no descanso longo; Espíritos da Floresta usa **Ponto de Armadura**; Tempestade registra a dependência de **Vulnerável**;
+- as 21 cartas de Sábio estão conferidas; a cobertura de `domain-cards` está em auditoria: 147 de 189 cartas Core conferidas; 42 cartas Core e 21 cartas de Pavor ainda pendentes.
 
-Validação deste checkpoint: `npm run teste:srd2` verde com 65 termos mecânicos, 31 nomes novos, 1.539 registros inventariados (**206 implementados**, 1.332 pendentes), 95 registros no recorte do núcleo (**64/64 existentes conferidos**) e validadores específicos; backend **951/951**, gerados **14/14**, sintaxe local **104 arquivos**, CSS limpo. O E2E local não executou porque a imagem atual não contém o binário Chromium do Playwright; o bloqueio ocorreu antes de abrir o site e precisa ser repetido no CI/ambiente com navegador antes de promoção.
+Validação deste checkpoint: `npm run teste:srd2` verde com 65 termos mecânicos, 31 nomes novos, 1.539 registros inventariados (**213 implementados**, 1.325 pendentes), 95 registros no recorte do núcleo (**64/64 existentes conferidos**) e validadores específicos; backend **951/951**, gerados **14/14**, sintaxe local **104 arquivos**, CSS limpo. O E2E local não executou porque a imagem atual não contém o binário Chromium do Playwright; o bloqueio ocorreu antes de abrir o site e precisa ser repetido no CI/ambiente com navegador antes de promoção.
 
 Este checkpoint também restaura como texto legível `data/classes.json` e `tools/testes-backend.mjs`, que estavam corrompidos no histórico da branch. O gerador de classes reproduz exatamente `backend/42_Classes.gs`, e a suíte completa protege o conteúdo recuperado.
 
-Próximo checkpoint exato: comparar as sete cartas finais de Sábio — **Surto Selvagem**, **Barreira Rejuvenescedora**, **Espíritos da Floresta**, **Domínio das Plantas**, **Templo das Selvas**, **Força da Natureza** e **Tempestade**. Depois continuar Esplendor e Valor e só então integrar Pavor. Em paralelo conceitual, projetar a persistência de Transformações, mas não expor as seis opções antes do ciclo completo de aquisição/remoção e efeitos permanentes estar protegido no servidor.
+Próximo checkpoint exato: comparar as primeiras sete cartas de Esplendor, seguindo a ordem canônica do SRD 2.0. Depois fechar os dois lotes restantes de Esplendor, continuar Valor e só então integrar Pavor. Em paralelo conceitual, projetar a persistência de Transformações, mas não expor as seis opções antes do ciclo completo de aquisição/remoção e efeitos permanentes estar protegido no servidor.
 
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 

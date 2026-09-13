@@ -225,7 +225,14 @@ const implementados = new Set([
   'domain-cards/wild-fortress',
   'domain-cards/conjured-steeds',
   'domain-cards/forager',
-  'domain-cards/sage-touched'
+  'domain-cards/sage-touched',
+  'domain-cards/wild-surge',
+  'domain-cards/rejuvenation-barrier',
+  'domain-cards/forest-sprites',
+  'domain-cards/plant-dominion',
+  'domain-cards/fane-of-the-wilds',
+  'domain-cards/force-of-nature',
+  'domain-cards/tempest'
 ]);
 const colecoes = [];
 

@@ -6053,7 +6053,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Faça uma Jogada de Conjuração (15). Uma vez por descanso, em um sucesso, crie uma barreira temporária de energia protetora ao seu redor em alcance Muito Próximo. Você e todos os aliados dentro da barreira ao lançar essa magia curam d4 Pontos de Vida.\nEnquanto a barreira estiver ativa, você e todos os aliados dentro dela têm resistência a dano físico vindo de fora da barreira.\nQuando você se move, a barreira o acompanha.",
+   "texto": "Faça uma jogada de Conjuração (15). Uma vez por descanso, em caso de sucesso, crie uma barreira temporária de energia protetora ao seu redor em alcance Muito Próximo. Você e todos os aliados dentro da barreira quando este feitiço é conjurado limpam 1d4 Pontos de Vida.\nEnquanto a barreira estiver ativa, você e todos os aliados dentro dela têm resistência a dano físico vindo de fora da barreira.\nQuando você se move, a barreira o acompanha.",
    "imagem": "assets/cartas/dominios/SAGE/Barreira Rejuvenescedora.png",
    "arquivo": "Barreira Rejuvenescedora.png",
    "condicoes": [],
@@ -6070,7 +6070,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Role d4 fora do app e recupere esse número de PV em você e nos aliados abrangidos. Resistência física só vale contra dano vindo de fora da barreira, por isso não é aplicada automaticamente sem contexto espacial."
+    "resumo": "Role 1d4 fora do app e limpe esse número de PV em você e nos aliados abrangidos. Resistência física só vale contra dano vindo de fora da barreira, por isso não é aplicada automaticamente sem contexto espacial."
    },
    "uso": {
     "custo": {},
@@ -6100,7 +6100,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 2,
-   "texto": "Faça uma Jogada de Conjuração (13). Em um sucesso, gaste qualquer quantidade de Esperança para criar o mesmo número de pequenas fadas da floresta que aparecem em pontos que você escolher dentro do alcance Distante, fornecendo os seguintes benefícios:\nSeus aliados ganham +3 de bônus em jogadas de ataque contra adversários dentro do alcance Corpo a Corpo de uma fada.\nUm aliado que marcar um Espaço de Armadura enquanto estiver dentro do alcance Corpo a Corpo de uma fada pode marcar um Espaço de Armadura adicional.\nUma fada desaparece após conceder um benefício ou sofrer qualquer dano.",
+   "texto": "Faça uma jogada de Conjuração (13). Em caso de sucesso, gaste qualquer quantidade de Esperança para criar o mesmo número de pequenas fadas da floresta que aparecem em pontos que você escolher em alcance Distante, fornecendo os seguintes benefícios:\nSeus aliados ganham +3 de bônus em jogadas de ataque contra adversários em alcance Corpo a Corpo de uma fada.\nUm aliado que marcar um Ponto de Armadura enquanto estiver em alcance Corpo a Corpo de uma fada pode marcar um Ponto de Armadura adicional.\nUma fada desaparece após conceder um benefício ou sofrer qualquer dano.",
    "imagem": "assets/cartas/dominios/SAGE/Forest Sprites.png",
    "arquivo": "Forest Sprites.png",
    "condicoes": [],
@@ -6156,7 +6156,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Faça uma Jogada de Conjuração (18). Uma vez por descanso longo, em sucesso, você remodela o mundo natural, alterando a vegetação ao seu redor em qualquer ponto dentro do alcance Distante. Por exemplo, pode fazer árvores crescerem instantaneamente, abrir caminho por vinhas densas ou criar uma parede de raízes.",
+   "texto": "Faça uma jogada de Conjuração (18). Uma vez por descanso longo, em caso de sucesso, você remodela o mundo natural, alterando a vegetação ao seu redor em qualquer ponto em alcance Distante. Por exemplo, pode fazer árvores crescerem instantaneamente, abrir caminho por vinhas densas ou criar uma parede de raízes.",
    "imagem": "assets/cartas/dominios/SAGE/Domínio das Plantas.png",
    "arquivo": "Domínio das Plantas.png",
    "condicoes": [],
@@ -6172,7 +6172,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A Jogada de Conjuração 18 e a remodelagem da vegetação são totalmente ficcionais e permanecem na cena/Mestre."
+    "resumo": "A jogada de Conjuração 18 e a remodelagem da vegetação são totalmente ficcionais e permanecem na cena/Mestre."
    },
    "uso": {
     "custo": {},
@@ -6194,7 +6194,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 2,
-   "texto": "Após um descanso longo, coloque nesta carta um número de marcadores igual à quantidade de cartas do domínio Sábio em seu conjunto e cofre.\nAo fazer uma Jogada de Conjuração, você pode gastar qualquer número de marcadores após a rolagem para ganhar +1 de bônus por cada marcador gasto.\nAo obter um sucesso crítico em uma Jogada de Conjuração de magia do domínio Sábio, ganhe 1 marcador.\nAo descansar longo, remova todos os marcadores não usados.",
+   "texto": "Após um descanso longo, coloque nesta carta um número de marcadores igual à quantidade de cartas do domínio Sábio em suas cartas ativas e cofre.\nAo fazer uma jogada de Conjuração, você pode gastar qualquer número de marcadores após a rolagem para ganhar +1 de bônus por cada marcador gasto.\nAo obter um sucesso crítico em uma jogada de Conjuração de um feitiço do domínio Sábio, ganhe 1 marcador.\nAo fazer um descanso longo, limpe todos os marcadores não usados.",
    "imagem": "assets/cartas/dominios/SAGE/Templo das Selvas.png",
    "arquivo": "Templo das Selvas.png",
    "condicoes": [],
@@ -6226,11 +6226,11 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 2,
-   "texto": "Marque 1 Estresse para se transformar em um poderoso espírito da natureza, ganhando os seguintes benefícios:\nQuando tiver sucesso em uma jogada de ataque ou Conjuração, ganhe +10 de bônus na jogada de dano.\nAo causar dano suficiente para derrotar uma criatura dentro do alcance Próximo, você a absorve e cura 1 Espaço de Armadura.\nVocê não pode ser Imobilizado.\nAntes de fazer uma jogada de ação, deve gastar 1 Esperança. Se não puder, volta à sua forma normal.",
+   "texto": "Marque 1 Estresse para se transformar em um poderoso espírito da natureza, ganhando os seguintes benefícios:\nQuando tiver sucesso em uma jogada de ataque ou de Conjuração, ganhe +10 de bônus na jogada de dano.\nAo causar dano suficiente para derrotar uma criatura em alcance Próximo, você a absorve e limpa 1 Ponto de Armadura.\nVocê não pode ficar Restrito.\nAntes de fazer uma jogada de ação, deve gastar 1 Esperança. Se não puder, volta à sua forma normal.",
    "imagem": "assets/cartas/dominios/SAGE/Força da Natureza.png",
    "arquivo": "Força da Natureza.png",
    "condicoes": [
-    "Imobilizad"
+    "Restrito"
    ],
    "dependencias": [
     "condicoes",
@@ -6247,7 +6247,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Antes de cada jogada de ação, gaste 1 Esperança manualmente; se não puder, encerre a forma. Cura de Armadura ao derrotar criatura Próxima e imunidade a Imobilizado dependem do evento/alvo e ficam na mesa."
+    "resumo": "Antes de cada jogada de ação, gaste 1 Esperança manualmente; se não puder, encerre a forma. Limpar Armadura ao derrotar criatura Próxima e imunidade a Restrito dependem do evento/alvo e ficam na mesa."
    },
    "uso": {
     "custo": {
@@ -6280,10 +6280,12 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 2,
-   "texto": "Escolha uma das seguintes tempestades e faça uma Jogada de Conjuração contra todos os alvos dentro do alcance Distante. Os alvos que você acertar sofrem os efeitos até que o Mestre gaste 1 Medo no turno para encerrar a magia.\nNevasca: Cause 2d20 + 8 de dano mágico e os alvos ficam temporariamente Vulneráveis.\nFuracão: Cause 3d10 + 10 de dano mágico e escolha uma direção para o vento. Os alvos não podem se mover contra o vento.\nTempestade de Areia: Cause 5d6 + 9 de dano mágico. Ataques feitos de fora do alcance Corpo a Corpo têm desvantagem.",
+   "texto": "Escolha uma das seguintes tempestades e faça uma jogada de Conjuração contra todos os alvos em alcance Distante. Os alvos contra os quais você obtiver sucesso sofrem os efeitos até que o Mestre gaste 1 Medo no turno dele para encerrar este feitiço.\nNevasca: Cause 2d20+8 de dano mágico, e os alvos ficam temporariamente Vulneráveis.\nFuracão: Cause 3d10+10 de dano mágico e escolha uma direção para o vento. Os alvos não podem se mover contra o vento.\nTempestade de Areia: Cause 5d6+9 de dano mágico. Ataques feitos de além do alcance Corpo a Corpo têm desvantagem.",
    "imagem": "assets/cartas/dominios/SAGE/Tempestade.png",
    "arquivo": "Tempestade.png",
-   "condicoes": [],
+   "condicoes": [
+    "Vulnerável"
+   ],
    "dependencias": [
     "medo",
     "vantagem"
@@ -6297,7 +6299,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Escolha Nevasca, Furacão ou Tempestade de Areia, faça a Jogada de Conjuração contra os alvos Distantes e aplique dano/condições na cena até o Mestre gastar 1 Medo para encerrar."
+    "resumo": "Escolha Nevasca, Furacão ou Tempestade de Areia, faça a jogada de Conjuração contra os alvos Distantes e aplique dano/condições na cena até o Mestre gastar 1 Medo para encerrar."
    }
   },
   {

@@ -150,7 +150,7 @@ O terceiro checkpoint fechou o domínio com **Esquiva Desaparecente**, **Caçado
 
 As 21 cartas de Meia-Noite estão conferidas. O vocabulário final também protege **Evasão**, **jogada de reação**, **reserva de Medo**, **limpar fichas**, **jogada de Conjuração** e **dano Severo**.
 
-### Cartas de domínio do Core — Sábio (14/21)
+### Cartas de domínio do Core — Sábio (21/21)
 
 O primeiro checkpoint conferiu **Rastreador Habilidoso**, **Língua da Natureza**, **Emaranhado Cruel**, **Conjurar Enxame**, **Familiar Natural**, **Projétil Corrosivo** e **Caule Imponente** contra as pp. 218–219 do SRD 2.0. A única divergência mecânica foi corrigida em **Emaranhado Cruel**: o alvo principal e o segundo alvo opcional ficam temporariamente **Restritos**, não Imobilizados.
 
@@ -159,3 +159,7 @@ Conjurar Enxame agora descreve precisamente a redução do próximo dano em um l
 O segundo checkpoint conferiu **Aperto da Morte**, **Campo de Cura**, **Pele Espinhosa**, **Fortaleza Selvagem**, **Montarias Conjuradas**, **Coletor** e **Tocado pelo Saber**, dos níveis 4–7, contra as pp. 219–220. **Aperto da Morte** agora aplica **Restrito**, conforme o SRD 2.0, em vez da condição antiga Imobilizado.
 
 O texto ativo do lote também foi normalizado para **limpar**, **movimento de descanso**, **cartas ativas**, **jogada de reação** e as formulações canônicas de alcance. O bloco residual em inglês de **Fortaleza Selvagem** foi traduzido para **Dano Menor**, **Dano Maior** e **Dano Severo**, preservando os limiares 15/30 e a marcação de 1/2/3 PV.
+
+O terceiro checkpoint fechou **Surto Selvagem**, **Barreira Rejuvenescedora**, **Espíritos da Floresta**, **Domínio das Plantas**, **Templo das Selvas**, **Força da Natureza** e **Tempestade**, dos níveis 7–10, contra as pp. 220–221. **Barreira Rejuvenescedora** agora explicita a recuperação de **1d4 Pontos de Vida**, e **Força da Natureza** concede imunidade a **Restrito**, não Imobilizado, além de limpar 1 Ponto de Armadura ao absorver uma criatura derrotada em alcance Próximo.
+
+As 21 cartas de Sábio estão conferidas. O vocabulário final também protege **Ponto de Armadura**, **cartas ativas e cofre**, **limpar marcadores**, **feitiço**, **jogada de ação**, **jogada de Conjuração** e **Vulnerável**.
