@@ -47,7 +47,7 @@ O corpus auxiliar pinado registra 1.539 registros: 10 domínios, 13 classes, 26 
 
 O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. O inventário individual fica em `data/srd2-inventario.json`: cada um dos 1.539 registros preserva ID, nome inglês, tipo, hash do registro no corpus, estado de implementação e, quando aplicável, `sourceLocator`. `npm run teste:srd2` impede alteração acidental das contagens, IDs, hashes estruturais ou estados. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
 
-No checkpoint atual, 171 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 1.367 permanecem `pendente`.
+No checkpoint atual, 178 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 1.360 permanecem `pendente`.
 
 ## Fase 1 — Level Up
 
@@ -135,3 +135,9 @@ O vocabulário ativo foi normalizado para **traço de Conjuração**, **jogada d
 As 21 cartas de Graça foram conferidas contra as pp. 215–216 do SRD 2.0. Nome/identidade, nível, tipo, custo de recordar, custos de recursos, dados, frequências e efeitos permanecem mecanicamente compatíveis depois de duas correções no texto ativo: uma criatura que investigar a **Projeção Astral** percebe sua origem mágica; e **Notório** volta a contar no limite de cinco cartas ativas e pode ir ao cofre, conforme o SRD 2.0, preservando seus benefícios de notoriedade e compra.
 
 O vocabulário ativo foi normalizado para **jogada de Conjuração**, **jogada de Presença**, **jogada de dano**, **Distante**, **Longínquo**, **cartas ativas**, **Ponto de Armadura**, **movimento de descanso** e **Mestre**. O vínculo carta a carta, os campos estruturais e as duas correções mecânicas ficam protegidos por `data/srd2-cartas-core-grace-auditoria.json` e `tools/conferir-srd2-cartas-core-grace.mjs`.
+
+### Cartas de domínio do Core — Meia-Noite (7/21)
+
+O primeiro checkpoint conferiu **Abrir e Puxar**, **Chuva de Lâminas**, **Disfarce Incrível**, **Espírito da Meia-Noite**, **Vincular Sombras**, **Estrangulamento** e **Véu da Noite** contra as pp. 216–217 do SRD 2.0. A única divergência mecânica foi corrigida em **Vincular Sombras**: os alvos atingidos ficam temporariamente **Restritos**, não Imobilizados.
+
+O texto ativo também passou a usar **jogada de Conjuração**, **jogada de Presença**, **Longínquo**, **Distante** e **feitiço** de acordo com o glossário SRD2. O progresso parcial, os sete vínculos oficiais e o próximo lote ficam protegidos por `data/srd2-cartas-core-midnight-auditoria.json` e `tools/conferir-srd2-cartas-core-midnight.mjs`.

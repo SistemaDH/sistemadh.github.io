@@ -4479,7 +4479,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 0,
-   "texto": "Você tem vantagem em jogadas de ação para arrombar fechaduras não mágicas, desarmar armadilhas não mágicas ou roubar itens de um alvo (seja furtivamente ou pela força).",
+   "texto": "Você tem vantagem em jogadas de ação para abrir fechaduras não mágicas, desarmar armadilhas não mágicas ou roubar itens de um alvo (seja furtivamente ou pela força).",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Abrir e Puxar.png",
    "arquivo": "Abrir e Puxar.png",
    "condicoes": [],
@@ -4508,7 +4508,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Gaste 1 Esperança para fazer uma Jogada de Conjuração e conjurar lâminas arremessáveis que atingem todos os alvos dentro do alcance Muito Próximo. Alvos que você acertar sofrem d8 + 2 de dano mágico usando sua Proficiência.\nSe um alvo atingido estiver Vulnerável, ele sofre 1d8 de dano extra.",
+   "texto": "Gaste 1 Esperança para fazer uma jogada de Conjuração e conjurar lâminas arremessáveis que atingem todos os alvos em alcance Muito Próximo. Alvos contra os quais você obtiver sucesso sofrem d8+2 de dano mágico usando sua Proficiência.\nSe um alvo atingido estiver Vulnerável, ele sofre 1d8 de dano extra.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Chuva de Lâminas.png",
    "arquivo": "Chuva de Lâminas.png",
    "condicoes": [
@@ -4524,18 +4524,18 @@
    "observacao": null,
    "automacao": {
     "classificacao": "automatizada-custo-com-resolucao-de-encontro",
-    "resumo": "O app cobra 1 Esperança antes da Jogada de Conjuração."
+    "resumo": "O app cobra 1 Esperança antes da jogada de Conjuração."
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Faça a Jogada de Conjuração contra os alvos Muito Próximos fora do app. Alvos atingidos sofrem d8+2 de dano mágico usando Proficiência e Vulneráveis sofrem +1d8."
+    "resumo": "Faça a jogada de Conjuração contra os alvos em alcance Muito Próximo fora do app. Alvos atingidos sofrem d8+2 de dano mágico usando Proficiência e Vulneráveis sofrem +1d8."
    },
    "uso": {
     "custo": {
      "esperanca": 1
     },
     "rotuloAtivar": "Conjurar Chuva de Lâminas · 1 Esperança",
-    "lembrete": "Após pagar, faça a Jogada de Conjuração fora do app. Dano: d8+2 mágico usando Proficiência; +1d8 contra cada alvo Vulnerável atingido."
+    "lembrete": "Após pagar, faça a jogada de Conjuração fora do app. Dano: d8+2 mágico usando Proficiência; +1d8 contra cada alvo Vulnerável atingido."
    }
   },
   {
@@ -4548,7 +4548,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 0,
-   "texto": "Quando você tiver alguns minutos para se preparar, pode marcar 1 Estresse para assumir a aparência de qualquer humanoide que consiga visualizar claramente em sua mente. Enquanto disfarçado, você tem vantagem em Jogadas de Presença para evitar suspeitas.\nColoque na carta um número de marcadores igual ao seu traço de Conjuração. Quando realizar uma ação enquanto estiver disfarçado, gaste 1 marcador desta carta. Após a ação que gastar o último marcador ser resolvida, o disfarce desaparece.",
+   "texto": "Quando você tiver alguns minutos para se preparar, pode marcar 1 Estresse para assumir a aparência de qualquer humanoide que consiga visualizar claramente em sua mente. Enquanto disfarçado, você tem vantagem em jogadas de Presença para evitar suspeitas.\nColoque na carta um número de marcadores igual ao seu traço de Conjuração. Quando realizar uma ação enquanto estiver disfarçado, gaste 1 marcador desta carta. Após a ação que gastar o último marcador ser resolvida, o disfarce desaparece.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Disfarce Incrível.png",
    "arquivo": "Disfarce Incrível.png",
    "condicoes": [],
@@ -4586,7 +4586,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Gaste 1 Esperança para invocar um espírito do tamanho de um humanoide que pode se mover ou carregar coisas para você até seu próximo descanso.\nVocê também pode enviá-lo para atacar um adversário. Quando fizer isso, faça uma Jogada de Conjuração contra um alvo dentro do alcance Muito Longo. Em um sucesso, o espírito se move para o alcance de Corpo a Corpo desse alvo. Role um número de d6 igual ao seu traço de Conjuração e cause esse dano mágico ao alvo. O espírito então se dissipa. Você só pode ter um espírito por vez.",
+   "texto": "Gaste 1 Esperança para invocar um espírito do tamanho de um humanoide que pode se mover ou carregar coisas para você até seu próximo descanso.\nVocê também pode enviá-lo para atacar um adversário. Quando fizer isso, faça uma jogada de Conjuração contra um alvo em alcance Longínquo. Em caso de sucesso, o espírito se move para o alcance Corpo a Corpo desse alvo. Role um número de d6 igual ao seu traço de Conjuração e cause esse dano mágico ao alvo. O espírito então se dissipa. Você só pode ter um espírito por vez.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Espírito da Meia-Noite.png",
    "arquivo": "Espírito da Meia-Noite.png",
    "condicoes": [],
@@ -4602,7 +4602,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "O espírito pode mover/carregar coisas até o próximo descanso. Para atacar, faça a Jogada de Conjuração e role os d6 fora do app; depois do ataque, encerre o estado manualmente."
+    "resumo": "O espírito pode mover/carregar coisas até o próximo descanso. Para atacar, faça a jogada de Conjuração e role os d6 fora do app; depois do ataque, encerre o estado manualmente."
    },
    "uso": {
     "custo": {
@@ -4617,7 +4617,7 @@
      "avisoEncerrar": "Espírito da Meia-Noite dissipado."
     },
     "rotuloAtivar": "Invocar Espírito da Meia-Noite · 1 Esperança",
-    "lembrete": "Só um espírito por vez. Se atacar, faça a Jogada de Conjuração e o dano fora do app e depois dissipe o espírito; qualquer descanso também encerra."
+    "lembrete": "Só um espírito por vez. Se atacar, faça a jogada de Conjuração e o dano fora do app e depois dissipe o espírito; qualquer descanso também encerra."
    }
   },
   {
@@ -4630,11 +4630,11 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 0,
-   "texto": "Faça uma Jogada de Conjuração contra todos os adversários dentro do alcance Muito Próximo. Os alvos que você acertar ficam temporariamente Imobilizados, enquanto suas sombras os prendem no lugar.",
+   "texto": "Faça uma jogada de Conjuração contra todos os adversários em alcance Muito Próximo. Os alvos contra os quais você obtiver sucesso ficam temporariamente Restritos enquanto suas sombras os prendem no lugar.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Vincular Sombras.png",
    "arquivo": "Vincular Sombras.png",
    "condicoes": [
-    "Imobilizad"
+    "Restrit"
    ],
    "dependencias": [
     "condicoes"
@@ -4648,7 +4648,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Faça a Jogada de Conjuração contra os adversários Muito Próximos e marque na cena os alvos atingidos como temporariamente Imobilizados."
+    "resumo": "Faça a jogada de Conjuração contra os adversários em alcance Muito Próximo e marque na cena os alvos atingidos como temporariamente Restritos."
    }
   },
   {
@@ -4661,7 +4661,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 1,
-   "texto": "Quando você se posiciona atrás de uma criatura do seu tamanho, pode marcar 1 Estresse para agarrá-la em um estrangulamento, tornando-a temporariamente Vulnerável.\nQuando uma criatura atacar um alvo Vulnerável dessa forma, ela causa 2d6 de dano extra.",
+   "texto": "Quando você se posiciona atrás de uma criatura aproximadamente do seu tamanho, pode marcar 1 Estresse para agarrá-la em um estrangulamento, tornando-a temporariamente Vulnerável.\nQuando uma criatura atacar um alvo Vulnerável dessa forma, ela causa 2d6 de dano extra.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Estrangulamento.png",
    "arquivo": "Estrangulamento.png",
    "condicoes": [
@@ -4687,7 +4687,7 @@
      "estresse": 1
     },
     "rotuloAtivar": "Aplicar Estrangulamento · 1 Estresse",
-    "lembrete": "Use apenas estando atrás de uma criatura do seu tamanho. O alvo fica temporariamente Vulnerável e ataques contra ele causam +2d6 de dano enquanto essa condição vier do Estrangulamento."
+    "lembrete": "Use apenas estando atrás de uma criatura aproximadamente do seu tamanho. O alvo fica temporariamente Vulnerável e ataques contra ele causam +2d6 de dano enquanto essa condição vier do Estrangulamento."
    }
   },
   {
@@ -4700,7 +4700,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Faça uma Jogada de Conjuração (13). Em um sucesso, você cria uma cortina temporária de escuridão entre dois pontos dentro do alcance Longo. Apenas você pode ver através dessa escuridão. Você é considerado Oculto para adversários do outro lado do véu e tem vantagem em ataques feitos através da escuridão. O véu permanece até você lançar outra magia.",
+   "texto": "Faça uma jogada de Conjuração (13). Em caso de sucesso, você cria uma cortina temporária de escuridão entre dois pontos em alcance Distante. Apenas você pode ver através dessa escuridão. Você é considerado Oculto para adversários do outro lado do véu e tem vantagem em ataques feitos através da escuridão. O véu permanece até você conjurar outro feitiço.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Véu da Noite.png",
    "arquivo": "Véu da Noite.png",
    "condicoes": [
@@ -4715,11 +4715,11 @@
    "observacao": null,
    "automacao": {
     "classificacao": "automatizada-estado-apos-sucesso",
-    "resumo": "Depois do sucesso confirmado, o app mantém Véu da Noite como estado e o encerra automaticamente quando outra magia é usada pelo fluxo de cartas."
+    "resumo": "Depois do sucesso confirmado, o app mantém Véu da Noite como estado e o encerra automaticamente quando outro feitiço é conjurado pelo fluxo de cartas."
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Faça a Jogada de Conjuração 13 fora do app e posicione os dois pontos da cortina na cena. Oculto e vantagem são contextuais aos adversários do outro lado, não condições globais da ficha."
+    "resumo": "Faça a jogada de Conjuração 13 fora do app e posicione os dois pontos da cortina na cena. Oculto e vantagem são contextuais aos adversários do outro lado, não condições globais da ficha."
    },
    "uso": {
     "custo": {},
@@ -4733,7 +4733,7 @@
      "avisoEncerrar": "Véu da Noite encerrado."
     },
     "rotuloAtivar": "Sucesso: criar Véu da Noite",
-    "lembrete": "Use após sucesso na Jogada de Conjuração 13. Posicione a cortina na mesa; ela dura até você conjurar outra magia."
+    "lembrete": "Use após sucesso na jogada de Conjuração 13. Posicione a cortina na mesa; ela dura até você conjurar outro feitiço."
    }
   },
   {

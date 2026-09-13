@@ -17248,7 +17248,7 @@
             "pdfPageEnd": 217
           },
           "corpusSha256": "177cc80e09d26a5448192a526607bdad59495968aebb099604ab5213e88480e4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/cinder-grasp",
@@ -18388,7 +18388,7 @@
             "pdfPageEnd": 217
           },
           "corpusSha256": "43b95956fc74227481b623011c3ad9dce2369b93954261c2048cc83109c41f4a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/midnight-touched",
@@ -18568,7 +18568,7 @@
             "pdfPageEnd": 216
           },
           "corpusSha256": "b3a99d792e444c62c607dbbae3e2484b0e1854ec036306605a52fcf4b652f615",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/plant-dominion",
@@ -18643,7 +18643,7 @@
             "pdfPageEnd": 216
           },
           "corpusSha256": "80253e734812167e462fcca1b85f9698e5790cf0f996f8ca40141fc7220c6956",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/rapid-riposte",
@@ -18958,7 +18958,7 @@
             "pdfPageEnd": 217
           },
           "corpusSha256": "518f16ca2a493db509628c397796796a62b0eb16cd5296801593c5cd640aa517",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/shadowhunter",
@@ -19528,7 +19528,7 @@
             "pdfPageEnd": 216
           },
           "corpusSha256": "537ee0525adc676d8e4fc80b6eff7c518a990d7201a28ac32b9900ba751a30f9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/unleash-chaos",
@@ -19618,7 +19618,7 @@
             "pdfPageEnd": 217
           },
           "corpusSha256": "f4fa4abfd19511c2271f56a216d1d4047f458d6e980a8e25b42959a52bdbd51f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/versatile-fighter",

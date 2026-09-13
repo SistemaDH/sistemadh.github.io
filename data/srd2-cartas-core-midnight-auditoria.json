@@ -1,0 +1,45 @@
+{
+  "versao": 1,
+  "estado": "em-andamento",
+  "fonte": {
+    "srd": "2.0",
+    "data": "2026-08-25",
+    "paginasPdf": "216–217",
+    "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64"
+  },
+  "dominio": "domains/midnight",
+  "progresso": {
+    "conferidas": 7,
+    "total": 21,
+    "proximoLote": [
+      "domain-cards/glyph-of-nightfall",
+      "domain-cards/stealth-expertise",
+      "domain-cards/hush",
+      "domain-cards/phantom-retreat",
+      "domain-cards/dark-whispers",
+      "domain-cards/mass-disguise",
+      "domain-cards/midnight-touched"
+    ]
+  },
+  "conclusaoParcial": "As sete primeiras cartas de Meia-Noite preservam níveis, tipos, custos de recordar, dados, custos, gatilhos e efeitos implementados após corrigir a condição de Vincular Sombras e normalizar o vocabulário pt-BR do SRD 2.0.",
+  "registros": [
+    { "idFonte": "domain-cards/pick-and-pull", "idLocal": "midnight-abrir-e-puxar", "nomeIngles": "Pick and Pull", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/rain-of-blades", "idLocal": "midnight-chuva-de-laminas", "nomeIngles": "Rain of Blades", "nivel": 1, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/uncanny-disguise", "idLocal": "midnight-disfarce-incrivel", "nomeIngles": "Uncanny Disguise", "nivel": 1, "tipo": "Feitiço", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/midnight-spirit", "idLocal": "midnight-espirito-da-meia-noite", "nomeIngles": "Midnight Spirit", "nivel": 2, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/shadowbind", "idLocal": "midnight-vincular-sombras", "nomeIngles": "Shadowbind", "nivel": 2, "tipo": "Feitiço", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/chokehold", "idLocal": "midnight-estrangulamento", "nomeIngles": "Chokehold", "nivel": 3, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/veil-of-night", "idLocal": "midnight-veu-da-noite", "nomeIngles": "Veil of Night", "nivel": 3, "tipo": "Feitiço", "custoRecordar": 1 }
+  ],
+  "correcoesMecanicas": [
+    "Vincular Sombras — alvos atingidos ficam temporariamente Restritos, não Imobilizados."
+  ],
+  "correcoesDeVocabulario": [
+    "jogada de Conjuração",
+    "jogada de Presença",
+    "Longínquo",
+    "Distante",
+    "Restrito",
+    "feitiço"
+  ]
+}

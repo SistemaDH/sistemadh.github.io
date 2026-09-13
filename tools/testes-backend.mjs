@@ -9705,6 +9705,8 @@ teste('Vincular Sombras permanece no encontro e não cria condição global na f
   const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
   const c=d.cartas.find((x)=>x.id==='midnight-vincular-sombras');
   verdade(!c.uso); verdade(c.automacao.classificacao.includes('manual'));
+  verdade(c.texto.includes('temporariamente Restritos'));
+  verdade(!/Imobilizad/i.test(JSON.stringify(c)));
 });
 
 teste('Estrangulamento cobra 1 Estresse sem marcar Vulnerável globalmente',()=>{

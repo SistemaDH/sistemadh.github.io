@@ -190,7 +190,14 @@ const implementados = new Set([
   'domain-cards/copycat',
   'domain-cards/master-of-the-craft',
   'domain-cards/encore',
-  'domain-cards/notorious'
+  'domain-cards/notorious',
+  'domain-cards/pick-and-pull',
+  'domain-cards/rain-of-blades',
+  'domain-cards/uncanny-disguise',
+  'domain-cards/midnight-spirit',
+  'domain-cards/shadowbind',
+  'domain-cards/chokehold',
+  'domain-cards/veil-of-night'
 ]);
 const colecoes = [];
 

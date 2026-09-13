@@ -153,11 +153,20 @@ Validação da Fase 1:
 - `tools/conferir-srd2-cartas-core-grace.mjs` também recusa vocabulário mecânico legado nos campos exibidos, lembretes, automações e regras especiais;
 - a cobertura de `domain-cards` está em auditoria: 105 de 189 cartas Core conferidas; 84 cartas Core e 21 cartas de Pavor ainda pendentes.
 
-Validação deste checkpoint: `npm run teste:srd2` verde com 65 termos mecânicos, 31 nomes novos, 1.539 registros inventariados (**171 implementados**, 1.367 pendentes), 95 registros no recorte do núcleo (**64/64 existentes conferidos**) e validadores específicos; backend **951/951**, gerados **14/14**, sintaxe local **102 arquivos**, CSS limpo. O E2E local não executou porque a imagem atual não contém o binário Chromium do Playwright; o bloqueio ocorreu antes de abrir o site e precisa ser repetido no CI/ambiente com navegador antes de promoção.
+### Cartas Core — Meia-Noite 7/21 conferido
+
+- o primeiro checkpoint de Meia-Noite compara sete cartas dos níveis 1–3 às pp. 216–217 do SRD 2.0: **Abrir e Puxar**, **Chuva de Lâminas**, **Disfarce Incrível**, **Espírito da Meia-Noite**, **Vincular Sombras**, **Estrangulamento** e **Véu da Noite**;
+- níveis, tipos, custos de recordar, dados, custos, gatilhos, frequências e efeitos permaneceram mecanicamente compatíveis, exceto pela condição de **Vincular Sombras**, corrigida de Imobilizado para **Restrito**;
+- **Espírito da Meia-Noite** agora usa o alcance canônico **Longínquo**, e **Véu da Noite** usa **Distante** e termina quando outro **feitiço** é conjurado;
+- o texto ativo do lote também foi normalizado para **jogada de Conjuração**, **jogada de Presença** e as formulações de alcance do glossário SRD2;
+- `data/srd2-cartas-core-midnight-auditoria.json` registra o progresso parcial e os próximos sete IDs oficiais; `tools/conferir-srd2-cartas-core-midnight.mjs` protege identidade, nível, tipo, custo de recordar, inventário, condição e vocabulário;
+- a cobertura de `domain-cards` está em auditoria: 112 de 189 cartas Core conferidas; 77 cartas Core e 21 cartas de Pavor ainda pendentes.
+
+Validação deste checkpoint: `npm run teste:srd2` verde com 65 termos mecânicos, 31 nomes novos, 1.539 registros inventariados (**178 implementados**, 1.360 pendentes), 95 registros no recorte do núcleo (**64/64 existentes conferidos**) e validadores específicos; backend **951/951**, gerados **14/14**, sintaxe local **103 arquivos**, CSS limpo. O E2E local não executou porque a imagem atual não contém o binário Chromium do Playwright; o bloqueio ocorreu antes de abrir o site e precisa ser repetido no CI/ambiente com navegador antes de promoção.
 
 Este checkpoint também restaura como texto legível `data/classes.json` e `tools/testes-backend.mjs`, que estavam corrompidos no histórico da branch. O gerador de classes reproduz exatamente `backend/42_Classes.gs`, e a suíte completa protege o conteúdo recuperado.
 
-Próximo bloco exato: comparar as **21 cartas de Meia-Noite** com o SRD 2.0, repetindo o mesmo vínculo individual de nome, nível, custo de recordar, texto, automação e errata. Depois continuar Sábio, Esplendor e Valor; só então integrar Pavor e suas 21 cartas. Em paralelo conceitual, projetar a persistência de Transformações, mas não expor as seis opções antes do ciclo completo de aquisição/remoção e efeitos permanentes estar protegido no servidor.
+Próximo checkpoint exato: comparar as próximas sete cartas de Meia-Noite com o SRD 2.0 — **Glifo do Crepúsculo**, **Expert em Furtividade**, **Silêncio**, **Retirada Fantasma**, **Sussurros Sombrios**, **Disfarce em Massa** e **Tocado pela Meia-Noite**. Depois conferir as sete restantes para fechar o domínio, continuar Sábio, Esplendor e Valor e só então integrar Pavor. Em paralelo conceitual, projetar a persistência de Transformações, mas não expor as seis opções antes do ciclo completo de aquisição/remoção e efeitos permanentes estar protegido no servidor.
 
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 
