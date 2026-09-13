@@ -46,7 +46,8 @@
     "teste:srd2-cartas-core-codex": "node tools/conferir-srd2-cartas-core-codex.mjs",
     "teste:srd2-cartas-core-grace": "node tools/conferir-srd2-cartas-core-grace.mjs",
     "teste:srd2-cartas-core-midnight": "node tools/conferir-srd2-cartas-core-midnight.mjs",
-    "teste:srd2": "npm run teste:srd2-traducao && npm run teste:srd2-cobertura && npm run teste:srd2-inventario && npm run teste:srd2-nucleo && npm run teste:srd2-classes-novas && npm run teste:srd2-subclasses-novas && npm run teste:srd2-origens-novas && npm run teste:srd2-transformacoes && npm run teste:srd2-classes-core && npm run teste:srd2-origens-core && npm run teste:srd2-dominios-core && npm run teste:srd2-cartas-core-arcana && npm run teste:srd2-cartas-core-blade && npm run teste:srd2-cartas-core-bone && npm run teste:srd2-cartas-core-codex && npm run teste:srd2-cartas-core-grace && npm run teste:srd2-cartas-core-midnight"
+    "teste:srd2-cartas-core-sage": "node tools/conferir-srd2-cartas-core-sage.mjs",
+    "teste:srd2": "npm run teste:srd2-traducao && npm run teste:srd2-cobertura && npm run teste:srd2-inventario && npm run teste:srd2-nucleo && npm run teste:srd2-classes-novas && npm run teste:srd2-subclasses-novas && npm run teste:srd2-origens-novas && npm run teste:srd2-transformacoes && npm run teste:srd2-classes-core && npm run teste:srd2-origens-core && npm run teste:srd2-dominios-core && npm run teste:srd2-cartas-core-arcana && npm run teste:srd2-cartas-core-blade && npm run teste:srd2-cartas-core-bone && npm run teste:srd2-cartas-core-codex && npm run teste:srd2-cartas-core-grace && npm run teste:srd2-cartas-core-midnight && npm run teste:srd2-cartas-core-sage"
   },
   "devDependencies": {
     "playwright": "1.62.1"

@@ -9907,6 +9907,10 @@ teste('Sábio N1-N4 fica todo classificado e sem RNG no app',()=>{
 });
 
 teste('Emaranhado Cruel cobra 1 Esperança apenas pelo segundo alvo opcional',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const carta=d.cartas.find((x)=>x.id==='sage-emaranhado-cruel');
+  verdade(carta.texto.includes('temporariamente Restrito'));
+  verdade(!/Imobilizad/i.test(JSON.stringify(carta)));
   const f=fichaSageBaixa_(1,['sage-emaranhado-cruel','sage-lingua-da-natureza']);
   const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-emaranhado-cruel'}]);
   igual(r.erros,[]); igual(f.recursos.esperanca,5);
@@ -9925,6 +9929,10 @@ teste('Rastreador Habilidoso cobra uma Esperança por pergunta',()=>{
 });
 
 teste('Conjurar Enxame separa Besouros e Vagalumes sem rolar dados',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const carta=d.cartas.find((x)=>x.id==='sage-conjurar-enxame');
+  verdade(carta.texto.includes('Na próxima vez que sofrer dano'));
+  verdade(carta.texto.includes('reduza a gravidade em um limiar'));
   const f=fichaSageBaixa_(2,['sage-conjurar-enxame','sage-familiar-natural']);
   let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-conjurar-enxame',opcao:'besouros'}]);
   igual(r.erros,[]); igual(f.recursos.estresseMarcado,1); igual(f.contadores['estado:carta:sage:conjurar-enxame:besouros'].valor,1);
@@ -9933,6 +9941,9 @@ teste('Conjurar Enxame separa Besouros e Vagalumes sem rolar dados',()=>{
 });
 
 teste('Familiar Natural cobra 1 terrestre ou 2 voador e mantém só um estado',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const carta=d.cartas.find((x)=>x.id==='sage-familiar-natural');
+  verdade(carta.texto.includes('adicione 1d6 à sua jogada de dano'));
   const f=fichaSageBaixa_(2,['sage-familiar-natural','sage-conjurar-enxame']);
   let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-familiar-natural',opcao:'terrestre'}]);
   igual(r.erros,[]); igual(f.recursos.esperanca,5); igual(f.contadores['estado:carta:sage:familiar-natural'].valor,1);
@@ -9953,6 +9964,9 @@ teste('Caule Imponente é 1/descanso e ataque cobra 1 Estresse',()=>{
 });
 
 teste('Projétil Corrosivo cobra quantidade variável de Estresse após sucesso',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const carta=d.cartas.find((x)=>x.id==='sage-projetil-corrosivo');
+  verdade(carta.texto.includes('torná-lo permanentemente Corroído'));
   const f=fichaSageBaixa_(3,['sage-projetil-corrosivo','sage-caule-imponente']);
   const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'sage-projetil-corrosivo',estressesCorrosao:4}]);
   igual(r.erros,[]); igual(f.recursos.estresseMarcado,4); igual(r.mudancas[0].quantidade,4);

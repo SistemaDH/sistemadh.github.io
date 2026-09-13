@@ -168,11 +168,20 @@ Validação da Fase 1:
 - **Caçador das Sombras** usa Evasão; **Terror Noturno** descarta o Medo roubado; **Tributo do Crepúsculo** limpa as fichas; e Eclipse usa jogada de Conjuração;
 - a cobertura de `domain-cards` está em auditoria: 126 de 189 cartas Core conferidas; 63 cartas Core e 21 cartas de Pavor ainda pendentes.
 
-Validação deste checkpoint: `npm run teste:srd2` verde com 65 termos mecânicos, 31 nomes novos, 1.539 registros inventariados (**192 implementados**, 1.346 pendentes), 95 registros no recorte do núcleo (**64/64 existentes conferidos**) e validadores específicos; backend **951/951**, gerados **14/14**, sintaxe local **103 arquivos**, CSS limpo. O E2E local não executou porque a imagem atual não contém o binário Chromium do Playwright; o bloqueio ocorreu antes de abrir o site e precisa ser repetido no CI/ambiente com navegador antes de promoção.
+### Cartas Core — Sábio 7/21 conferido
+
+- o primeiro checkpoint de Sábio compara **Rastreador Habilidoso**, **Língua da Natureza**, **Emaranhado Cruel**, **Conjurar Enxame**, **Familiar Natural**, **Projétil Corrosivo** e **Caule Imponente** às pp. 218–219 do SRD 2.0;
+- níveis, tipos, custos de recordar, dados, custos, gatilhos, frequências e efeitos permaneceram mecanicamente compatíveis, exceto pela condição de **Emaranhado Cruel**, corrigida de Imobilizado para **Restrito** no alvo principal e no segundo alvo opcional;
+- **Conjurar Enxame** deixa explícito que os Besouros reduzem o próximo dano em um limiar; Familiar Natural soma **1d6 à jogada de dano**; e Projétil Corrosivo preserva o alvo singular;
+- o texto ativo foi normalizado para **Mestre**, **jogada de Instinto**, **jogada de Conjuração**, **Distante**, **Muito Próximo**, **Próximo**, **Restrito** e **reduzir a gravidade em um limiar**;
+- `data/srd2-cartas-core-sage-auditoria.json` registra os sete vínculos e o próximo lote; `tools/conferir-srd2-cartas-core-sage.mjs` protege identidade, campos estruturais, inventário, correção mecânica e vocabulário;
+- a cobertura de `domain-cards` está em auditoria: 133 de 189 cartas Core conferidas; 56 cartas Core e 21 cartas de Pavor ainda pendentes.
+
+Validação deste checkpoint: `npm run teste:srd2` verde com 65 termos mecânicos, 31 nomes novos, 1.539 registros inventariados (**199 implementados**, 1.339 pendentes), 95 registros no recorte do núcleo (**64/64 existentes conferidos**) e validadores específicos; backend **951/951**, gerados **14/14**, sintaxe local **104 arquivos**, CSS limpo. O E2E local não executou porque a imagem atual não contém o binário Chromium do Playwright; o bloqueio ocorreu antes de abrir o site e precisa ser repetido no CI/ambiente com navegador antes de promoção.
 
 Este checkpoint também restaura como texto legível `data/classes.json` e `tools/testes-backend.mjs`, que estavam corrompidos no histórico da branch. O gerador de classes reproduz exatamente `backend/42_Classes.gs`, e a suíte completa protege o conteúdo recuperado.
 
-Próximo bloco exato: comparar as **21 cartas de Sábio** com o SRD 2.0, repetindo os checkpoints de sete cartas e o vínculo individual de nome, nível, custo de recordar, texto e automação. Depois continuar Esplendor e Valor e só então integrar Pavor. Em paralelo conceitual, projetar a persistência de Transformações, mas não expor as seis opções antes do ciclo completo de aquisição/remoção e efeitos permanentes estar protegido no servidor.
+Próximo checkpoint exato: comparar as próximas sete cartas de Sábio — **Aperto da Morte**, **Campo de Cura**, **Pele Espinhosa**, **Fortaleza Selvagem**, **Montarias Conjuradas**, **Coletor** e **Tocado pelo Saber**. Depois conferir as sete restantes, continuar Esplendor e Valor e só então integrar Pavor. Em paralelo conceitual, projetar a persistência de Transformações, mas não expor as seis opções antes do ciclo completo de aquisição/remoção e efeitos permanentes estar protegido no servidor.
 
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 

@@ -1,0 +1,48 @@
+{
+  "versao": 1,
+  "estado": "em-andamento",
+  "fonte": {
+    "srd": "2.0",
+    "data": "2026-08-25",
+    "paginasPdf": "218–219",
+    "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64"
+  },
+  "dominio": "domains/sage",
+  "progresso": {
+    "conferidas": 7,
+    "total": 21,
+    "proximoLote": [
+      "domain-cards/death-grip",
+      "domain-cards/healing-field",
+      "domain-cards/thorn-skin",
+      "domain-cards/wild-fortress",
+      "domain-cards/conjured-steeds",
+      "domain-cards/forager",
+      "domain-cards/sage-touched"
+    ]
+  },
+  "conclusaoParcial": "As sete primeiras cartas de Sábio preservam níveis, tipos, custos de recordar, dados, custos, gatilhos e efeitos implementados após corrigir a condição de Emaranhado Cruel e normalizar o vocabulário pt-BR do SRD 2.0.",
+  "registros": [
+    { "idFonte": "domain-cards/gifted-tracker", "idLocal": "sage-rastreador-habilidoso", "nomeIngles": "Gifted Tracker", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/natures-tongue", "idLocal": "sage-lingua-da-natureza", "nomeIngles": "Nature’s Tongue", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/vicious-entangle", "idLocal": "sage-emaranhado-cruel", "nomeIngles": "Vicious Entangle", "nivel": 1, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/conjure-swarm", "idLocal": "sage-conjurar-enxame", "nomeIngles": "Conjure Swarm", "nivel": 2, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/natural-familiar", "idLocal": "sage-familiar-natural", "nomeIngles": "Natural Familiar", "nivel": 2, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/corrosive-projectile", "idLocal": "sage-projetil-corrosivo", "nomeIngles": "Corrosive Projectile", "nivel": 3, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/towering-stalk", "idLocal": "sage-caule-imponente", "nomeIngles": "Towering Stalk", "nivel": 3, "tipo": "Feitiço", "custoRecordar": 1 }
+  ],
+  "correcoesMecanicas": [
+    "Emaranhado Cruel — o alvo principal e o segundo alvo opcional ficam temporariamente Restritos, não Imobilizados."
+  ],
+  "correcoesDeVocabulario": [
+    "Mestre",
+    "jogada de Instinto",
+    "jogada de Conjuração",
+    "Distante",
+    "Muito Próximo",
+    "Próximo",
+    "Restrito",
+    "reduzir a gravidade em um limiar",
+    "jogada de dano"
+  ]
+}

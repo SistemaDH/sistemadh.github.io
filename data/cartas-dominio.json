@@ -5327,10 +5327,12 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Faça uma Jogada de Conjuração contra um alvo dentro do alcance Distante. Em um sucesso, raízes e vinhas saem do chão, causando 1d8 + 1 de dano físico e Imobilizando temporariamente o alvo.\nAlém disso, em um sucesso, você pode gastar 1 Esperança para Imobilizar temporariamente outro adversário dentro do alcance Muito Próximo do seu alvo.",
+   "texto": "Faça uma jogada de Conjuração contra um alvo em alcance Distante. Em caso de sucesso, raízes e vinhas saem do chão, causando 1d8+1 de dano físico e deixando o alvo temporariamente Restrito.\nAlém disso, em caso de sucesso, você pode gastar 1 Esperança para deixar temporariamente Restrito outro adversário em alcance Muito Próximo do seu alvo.",
    "imagem": "assets/cartas/dominios/SAGE/Emaranhado Cruel.png",
    "arquivo": "Emaranhado Cruel.png",
-   "condicoes": [],
+   "condicoes": [
+    "Restrit"
+   ],
    "dependencias": [
     "esperanca"
    ],
@@ -5343,14 +5345,14 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Faça a Jogada de Conjuração, dano 1d8+1 e Imobilizado do alvo principal fora do app. Em sucesso, use o botão se quiser pagar 1 Esperança para Imobilizar um segundo adversário Muito Próximo do alvo."
+    "resumo": "Faça a jogada de Conjuração, o dano 1d8+1 e a condição Restrito do alvo principal fora do app. Em caso de sucesso, use o botão se quiser pagar 1 Esperança para deixar Restrito um segundo adversário em alcance Muito Próximo do alvo."
    },
    "uso": {
     "custo": {
      "esperanca": 1
     },
     "rotuloAtivar": "Sucesso: atingir segundo alvo · 1 Esperança",
-    "lembrete": "Use somente após sucesso no alvo principal. Escolha outro adversário Muito Próximo dele e deixe-o temporariamente Imobilizado."
+    "lembrete": "Use somente após sucesso no alvo principal. Escolha outro adversário em alcance Muito Próximo dele e deixe-o temporariamente Restrito."
    }
   },
   {
@@ -5363,7 +5365,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 0,
-   "texto": "Você pode falar a linguagem do mundo natural. Quando quiser conversar com plantas e animais ao seu redor, faça uma Jogada de Instinto (12). Em um sucesso, eles lhe darão as informações que sabem. Em uma jogada com Medo, o conhecimento pode ser limitado ou vir com um custo.\nAlém disso, antes de fazer uma Jogada de Conjuração dentro de um ambiente natural, você pode gastar 1 Esperança para ganhar +2 de bônus na jogada.",
+   "texto": "Você pode falar a linguagem do mundo natural. Quando quiser conversar com plantas e animais ao seu redor, faça uma jogada de Instinto (12). Em caso de sucesso, eles lhe darão as informações que sabem. Em uma jogada com Medo, o conhecimento pode ser limitado ou vir com um custo.\nAlém disso, antes de fazer uma jogada de Conjuração em um ambiente natural, você pode gastar 1 Esperança para ganhar +2 de bônus na jogada.",
    "imagem": "assets/cartas/dominios/SAGE/Língua da Natureza.png",
    "arquivo": "Língua da Natureza.png",
    "condicoes": [],
@@ -5376,18 +5378,18 @@
    "observacao": "O rótulo de tipo está impresso em inglês (\"ABILITY\") na carta, não em português.",
    "automacao": {
     "classificacao": "automatizada-bonus-contextual-com-custo",
-    "resumo": "O app cobra 1 Esperança para o bônus de +2 antes de uma Jogada de Conjuração em ambiente natural."
+    "resumo": "O app cobra 1 Esperança para o bônus de +2 antes de uma jogada de Conjuração em ambiente natural."
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Conversar com plantas/animais, a Jogada de Instinto 12 e as informações dadas continuam na mesa. O +2 só vale em ambiente natural e na próxima Jogada de Conjuração indicada."
+    "resumo": "Conversar com plantas/animais, a jogada de Instinto 12 e as informações dadas continuam na mesa. O +2 só vale em ambiente natural e na próxima jogada de Conjuração indicada."
    },
    "uso": {
     "custo": {
      "esperanca": 1
     },
     "rotuloAtivar": "Ambiente natural: +2 Conjuração · 1 Esperança",
-    "lembrete": "Use antes de uma Jogada de Conjuração em ambiente natural; aplique +2 apenas nessa jogada."
+    "lembrete": "Use antes de uma jogada de Conjuração em ambiente natural; aplique +2 apenas nessa jogada."
    }
   },
   {
@@ -5400,7 +5402,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 0,
-   "texto": "Quando estiver rastreando uma criatura específica ou grupo de criaturas com base em sinais de sua passagem, você pode gastar qualquer quantidade de Esperança e fazer ao GM esse mesmo número de perguntas da lista a seguir:\nPara que direção eles foram?\nHá quanto tempo passaram por aqui?\nO que estavam fazendo neste local?\nQuantos deles estavam aqui?\nQuando encontrar criaturas que tenha rastreado dessa forma, receba +1 de bônus em sua Evasão contra elas.",
+   "texto": "Quando estiver rastreando uma criatura específica ou grupo de criaturas com base em sinais de sua passagem, você pode gastar qualquer quantidade de Esperança e fazer ao Mestre esse mesmo número de perguntas da lista a seguir:\nPara que direção elas foram?\nHá quanto tempo passaram por aqui?\nO que estavam fazendo neste local?\nQuantas delas estavam aqui?\nQuando encontrar criaturas que tenha rastreado dessa forma, receba +1 de bônus em sua Evasão contra elas.",
    "imagem": "assets/cartas/dominios/SAGE/Rastreador habilidoso.png",
    "arquivo": "Rastreador habilidoso.png",
    "condicoes": [],
@@ -5444,7 +5446,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Besouros Blindados Tekaira: Marque 1 Estresse para conjurar besouros blindados que o cercam. Quando você sofrer dano, reduza a severidade em um nível. Pode gastar 1 Esperança para manter os besouros conjurados após sofrer dano.\nVagalumes: Faça uma Jogada de Conjuração contra todos os adversários dentro do alcance Próximo. Gaste 1 Esperança para causar 2d8 + 3 de dano mágico aos alvos que você acertar.",
+   "texto": "Besouros Blindados Tekaira: Marque 1 Estresse para conjurar besouros blindados que o cercam. Na próxima vez que sofrer dano, reduza a gravidade em um limiar. Você pode gastar 1 Esperança para manter os besouros conjurados após sofrer o dano.\nVagalumes: Faça uma jogada de Conjuração contra todos os adversários em alcance Próximo. Gaste 1 Esperança para causar 2d8+3 de dano mágico aos alvos contra os quais você obteve sucesso.",
    "imagem": "assets/cartas/dominios/SAGE/Conjurar Enxame.png",
    "arquivo": "Conjurar Enxame.png",
    "condicoes": [],
@@ -5462,7 +5464,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Besouros: ao sofrer dano, reduza a severidade em um nível na mesa; depois encerre o estado, a menos que gaste 1 Esperança manualmente para mantê-los. Vagalumes: Jogada de Conjuração e 2d8+3 permanecem fora do app."
+    "resumo": "Besouros: no próximo dano, reduza a gravidade em um limiar na mesa; depois encerre o estado, a menos que gaste 1 Esperança manualmente para mantê-los. Vagalumes: jogada de Conjuração e 2d8+3 permanecem fora do app."
    },
    "uso": {
     "custo": {},
@@ -5481,7 +5483,7 @@
        "rotuloEncerrar": "Dispensar Besouros",
        "avisoEncerrar": "Besouros Blindados dispensados."
       },
-      "lembrete": "Ao sofrer dano, reduza a severidade em um nível. Depois, encerre os Besouros ou gaste 1 Esperança manualmente para mantê-los."
+        "lembrete": "No próximo dano, reduza a gravidade em um limiar. Depois, encerre os Besouros ou gaste 1 Esperança manualmente para mantê-los."
      },
      {
       "id": "vagalumes",
@@ -5489,7 +5491,7 @@
       "custo": {
        "esperanca": 1
       },
-      "lembrete": "Faça a Jogada de Conjuração contra adversários Próximos; alvos atingidos sofrem 2d8+3 de dano mágico rolado fora do app."
+        "lembrete": "Faça a jogada de Conjuração contra adversários em alcance Próximo; alvos atingidos sofrem 2d8+3 de dano mágico rolado fora do app."
      }
     ],
     "rotuloAtivar": "Conjurar Enxame"
@@ -5505,7 +5507,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Gaste 1 Esperança para invocar um pequeno espírito da natureza ou animalzinho da floresta ao seu lado até seu próximo descanso, até você lançar Familiar Natural novamente, ou o familiar for alvo de um ataque. Se gastar mais 1 Esperança, pode invocar um familiar que voe. Você pode se comunicar com ele, fazer uma Jogada de Conjuração para comandá-lo em tarefas simples, e marcar 1 Estresse para enxergar pelos seus olhos.\nQuando causar dano a um adversário dentro do alcance Corpo a Corpo do seu familiar, adicione d6 à sua jogada de dano.",
+   "texto": "Gaste 1 Esperança para invocar um pequeno espírito da natureza ou animalzinho da floresta ao seu lado até seu próximo descanso, até você conjurar Familiar Natural novamente ou o familiar ser alvo de um ataque. Se gastar 1 Esperança adicional, pode invocar um familiar que voe. Você pode se comunicar com ele, fazer uma jogada de Conjuração para comandá-lo em tarefas simples e marcar 1 Estresse para enxergar pelos olhos dele.\nQuando causar dano a um adversário em alcance Corpo a Corpo do seu familiar, adicione 1d6 à sua jogada de dano.",
    "imagem": "assets/cartas/dominios/SAGE/familiar Natural.png",
    "arquivo": "familiar Natural.png",
    "condicoes": [],
@@ -5573,7 +5575,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Uma vez por descanso, você pode conjurar um caule grosso e retorcido dentro do alcance Próximo que pode ser facilmente escalado. Sua altura pode crescer até o alcance Distante.\nMarque 1 Estresse para usar essa magia como ataque. Faça uma Jogada de Conjuração contra um adversário ou grupo de adversários dentro do alcance Próximo. O caule que irrompe levanta os alvos que você acertar no ar e os deixa cair, causando d8 de dano físico usando sua Proficiência.",
+   "texto": "Uma vez por descanso, você pode conjurar um caule grosso e retorcido em alcance Próximo que pode ser facilmente escalado. Sua altura pode crescer até alcance Distante.\nMarque 1 Estresse para usar este feitiço como ataque. Faça uma jogada de Conjuração contra um adversário ou grupo de adversários em alcance Próximo. O caule que irrompe levanta no ar os alvos contra os quais você obtiver sucesso e os deixa cair, causando d8 de dano físico usando sua Proficiência.",
    "imagem": "assets/cartas/dominios/SAGE/Caule Imponente.png",
    "arquivo": "Caule Imponente.png",
    "condicoes": [],
@@ -5591,7 +5593,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Altura/posição do caule, Jogada de Conjuração e d8 físico usando Proficiência são resolvidos fora do app."
+    "resumo": "Altura/posição do caule, jogada de Conjuração e d8 físico usando Proficiência são resolvidos fora do app."
    },
    "uso": {
     "custo": {},
@@ -5612,7 +5614,7 @@
       "custo": {
        "estresse": 1
       },
-      "lembrete": "Faça a Jogada de Conjuração contra os alvos Próximos e cause d8 físico usando Proficiência aos atingidos."
+        "lembrete": "Faça a jogada de Conjuração contra os alvos em alcance Próximo e cause d8 físico usando Proficiência aos atingidos."
      }
     ],
     "rotuloAtivar": "Conjurar Caule Imponente · 1/descanso"
@@ -5628,7 +5630,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Faça uma Jogada de Conjuração contra um alvo dentro do alcance Distante. Em um sucesso, cause d6 + 4 de dano mágico usando sua Proficiência. Além disso, marque 2 ou mais Estresses para torná-los permanentemente Corroídos. Enquanto o alvo estiver Corroído, ele sofre penalidade de -1 na Dificuldade para cada 2 Estresses que você gastou. Essa condição pode acumular.",
+   "texto": "Faça uma jogada de Conjuração contra um alvo em alcance Distante. Em caso de sucesso, cause d6+4 de dano mágico usando sua Proficiência. Além disso, marque 2 ou mais Estresses para torná-lo permanentemente Corroído. Enquanto o alvo estiver Corroído, ele sofre uma penalidade de −1 na Dificuldade para cada 2 Estresses que você gastou. Essa condição pode acumular.",
    "imagem": "assets/cartas/dominios/SAGE/Projétil Corrosivo.png",
    "arquivo": "Projétil Corrosivo.png",
    "condicoes": [
@@ -5651,7 +5653,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A Jogada de Conjuração e dano d6+4 usando Proficiência ficam fora do app. O alvo fica permanentemente Corroído e perde 1 de Dificuldade para cada 2 Estresses pagos; essa condição acumulável é anotada no adversário/encontro."
+    "resumo": "A jogada de Conjuração e o dano d6+4 usando Proficiência ficam fora do app. O alvo fica permanentemente Corroído e perde 1 de Dificuldade para cada 2 Estresses pagos; essa condição acumulável é anotada no adversário/encontro."
    },
    "uso": {
     "custo": {},

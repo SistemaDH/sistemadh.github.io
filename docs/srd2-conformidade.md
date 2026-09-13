@@ -47,7 +47,7 @@ O corpus auxiliar pinado registra 1.539 registros: 10 domínios, 13 classes, 26 
 
 O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. O inventário individual fica em `data/srd2-inventario.json`: cada um dos 1.539 registros preserva ID, nome inglês, tipo, hash do registro no corpus, estado de implementação e, quando aplicável, `sourceLocator`. `npm run teste:srd2` impede alteração acidental das contagens, IDs, hashes estruturais ou estados. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
 
-No checkpoint atual, 192 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 1.346 permanecem `pendente`.
+No checkpoint atual, 199 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 1.339 permanecem `pendente`.
 
 ## Fase 1 — Level Up
 
@@ -149,3 +149,9 @@ Esse lote também normalizou **jogada com Medo/Esperança**, **dano Maior**, **l
 O terceiro checkpoint fechou o domínio com **Esquiva Desaparecente**, **Caçador das Sombras**, **Carga Mágica**, **Terror Noturno**, **Tributo do Crepúsculo**, **Eclipse** e **Espectro da Escuridão**, todos na p. 218. Foram corrigidas três divergências mecânicas: Esquiva Desaparecente dispara quando falha um ataque que causaria dano físico; Carga Mágica conta os **Pontos de Vida marcados**; e Eclipse termina ao sofrer dano **Severo**, não Grave.
 
 As 21 cartas de Meia-Noite estão conferidas. O vocabulário final também protege **Evasão**, **jogada de reação**, **reserva de Medo**, **limpar fichas**, **jogada de Conjuração** e **dano Severo**.
+
+### Cartas de domínio do Core — Sábio (7/21)
+
+O primeiro checkpoint conferiu **Rastreador Habilidoso**, **Língua da Natureza**, **Emaranhado Cruel**, **Conjurar Enxame**, **Familiar Natural**, **Projétil Corrosivo** e **Caule Imponente** contra as pp. 218–219 do SRD 2.0. A única divergência mecânica foi corrigida em **Emaranhado Cruel**: o alvo principal e o segundo alvo opcional ficam temporariamente **Restritos**, não Imobilizados.
+
+Conjurar Enxame agora descreve precisamente a redução do próximo dano em um limiar; Familiar Natural soma **1d6 à jogada de dano**; e Projétil Corrosivo mantém o alvo singular. O vocabulário ativo usa **Mestre**, **jogada de Instinto**, **jogada de Conjuração**, **Distante**, **Próximo**, **Restrito** e **reduzir a gravidade em um limiar**. O vínculo parcial fica protegido por `data/srd2-cartas-core-sage-auditoria.json` e `tools/conferir-srd2-cartas-core-sage.mjs`.

@@ -17323,7 +17323,7 @@
             "pdfPageEnd": 219
           },
           "corpusSha256": "5fb1188b0a14608c0b81db32793daa8d442e8db8ddd2b033f4205ad80fc3971c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/conjured-steeds",
@@ -17368,7 +17368,7 @@
             "pdfPageEnd": 219
           },
           "corpusSha256": "f8ead14c1935f51b9b59f2112fdaca7c5cedb5bbb8cae5086e5e34023d85df84",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/counterspell",
@@ -17923,7 +17923,7 @@
             "pdfPageEnd": 218
           },
           "corpusSha256": "8cb505e1494368ec4a17749763a82c38430cf3ee5747b20eb91ae60291bc04ef",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/glancing-blow",
@@ -18418,7 +18418,7 @@
             "pdfPageEnd": 219
           },
           "corpusSha256": "309e0c2e49164072bc1f6e1b086f027303290237adce7b706f4547b145896de5",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/natures-tongue",
@@ -18433,7 +18433,7 @@
             "pdfPageEnd": 218
           },
           "corpusSha256": "1cba1128ad7ff5528d1a2c8fb6739185cf26042b5037ec9d8d39053a5834f6b1",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/never-upstaged",
@@ -19438,7 +19438,7 @@
             "pdfPageEnd": 219
           },
           "corpusSha256": "00d2980534fb80135106fb62eb29b8968634463250f644cbcd005d630942494d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/transcendent-union",
@@ -19648,7 +19648,7 @@
             "pdfPageEnd": 218
           },
           "corpusSha256": "eec360f6b579afd36adcad2a33e1c88e6c6d855040a45038f52c914ece038bf9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/vitality",
