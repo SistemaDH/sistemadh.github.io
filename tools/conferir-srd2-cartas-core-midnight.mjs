@@ -51,6 +51,19 @@ const veu = cartas.get('midnight-veu-da-noite');
 if (!veu?.texto.includes('alcance Distante')) erros.push('Véu da Noite: Far deve usar alcance Distante');
 if (/alcance Longo|outra magia/i.test(JSON.stringify(veu || {}))) erros.push('Véu da Noite: vocabulário legado ainda está ativo');
 
+const silencio = cartas.get('midnight-silencio');
+if (!silencio?.texto.includes('limpar essa condição')) erros.push('Silêncio: o Mestre deve limpar a condição, conforme o verbo canônico de clear');
+if (!silencio?.texto.includes('dano Maior')) erros.push('Silêncio: Major damage deve usar dano Maior');
+if (!silencio?.texto.includes('conjurar feitiços')) erros.push('Silêncio: cast spells deve usar conjurar feitiços');
+
+const disfarceMassa = cartas.get('midnight-disfarce-em-massa');
+if (!disfarceMassa?.texto.includes('quando o Mestre escolher isso como consequência')) erros.push('Disfarce em Massa: a redução da Contagem deve ser uma consequência escolhida pelo Mestre');
+if (/consequência definida|conforme a consequência escolhida/i.test(JSON.stringify(disfarceMassa || {}))) erros.push('Disfarce em Massa: gatilho previamente definido ainda está ativo');
+
+const tocado = cartas.get('midnight-tocado-pela-meia-noite');
+if (!tocado?.texto.includes('cartas ativas')) erros.push('Tocado pela Meia-Noite: loadout deve usar cartas ativas');
+if (!tocado?.texto.includes('Dado de Medo') || !tocado?.texto.includes('jogada de dano')) erros.push('Tocado pela Meia-Noite: Fear Die e damage roll devem usar o vocabulário canônico');
+
 const idsAuditados = new Set(registros.map((item) => item.idLocal));
 const textosAtivos = catalogo.cartas.filter((carta) => idsAuditados.has(carta.id)).map((carta) => JSON.stringify({
   texto: carta.texto,
@@ -63,7 +76,15 @@ const termosLegados = [
   /\b(?:Jogada|Jogadas) de (?:Conjuração|Presença)\b/,
   /\bdentro do alcance\b/i,
   /\bMuito Longo\b/i,
-  /\balcance Longo\b/i
+  /\balcance Longo\b/i,
+  /\bcartas de domínio no seu conjunto\b/i,
+  /\brequisito-de-loadout\b/i,
+  /\bdado de Medo\b/,
+  /\bdano causado\b/i,
+  /\bdano maior\b/,
+  /\bremover (?:essa )?condição\b/i,
+  /\blançar (?:outra magia|magias|Silêncio)\b/i,
+  /\brolar com (?:Medo|Esperança)\b/i
 ];
 for (const termo of termosLegados) {
   if (termo.test(textosAtivos)) erros.push(`vocabulário mecânico legado ainda ativo no lote auditado de Meia-Noite: ${termo}`);

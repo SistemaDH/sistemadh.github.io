@@ -2942,7 +2942,7 @@ teste('as 2 divergências em que o livro estava certo foram corrigidas', async (
   verdade(/metade do dano/.test(carta('blade-redemoinho').texto),
     'Redemoinho precisa da frase "sofrem metade do dano"');
   // Silêncio: a carta dizia "dano grave"; o oficial é "Major" = maior.
-  verdade(/dano maior/.test(carta('midnight-silencio').texto), 'Silêncio deveria dizer "dano maior"');
+  verdade(/dano Maior/.test(carta('midnight-silencio').texto), 'Silêncio deveria dizer "dano Maior"');
   verdade(!/dano grave/.test(carta('midnight-silencio').texto), 'Silêncio não pode mais dizer "dano grave"');
 });
 
@@ -9773,6 +9773,10 @@ teste('Silêncio cobra 1 Esperança após sucesso e não cria condição global 
 });
 
 teste('Disfarce em Massa marca 1 Estresse e inicia a Contagem Regressiva em 8',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const carta=d.cartas.find((x)=>x.id==='midnight-disfarce-em-massa');
+  verdade(carta.texto.includes('quando o Mestre escolher isso como consequência'));
+  verdade(!/consequência definida|conforme a consequência escolhida/i.test(JSON.stringify(carta)));
   const f=fichaMidnightAlta_(6,['midnight-disfarce-em-massa','midnight-sussurros-sombrios']);
   const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-disfarce-em-massa'}]);
   igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
@@ -9797,6 +9801,10 @@ teste('Esquiva Desaparecente custa 1 Esperança e mantém estado até encerramen
 });
 
 teste('Tocado pela Meia-Noite exige quatro cartas e cobra 1 Estresse no bônus de dano',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const carta=d.cartas.find((x)=>x.id==='midnight-tocado-pela-meia-noite');
+  verdade(carta.texto.includes('cartas ativas'));
+  verdade(carta.texto.includes('jogada de dano'));
   const quatro=['midnight-tocado-pela-meia-noite','midnight-esquiva-desaparecente','midnight-sussurros-sombrios','midnight-silencio'];
   const f=fichaMidnightAlta_(7,quatro);
   let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-tocado-pela-meia-noite'}]);

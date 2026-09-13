@@ -4746,7 +4746,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 0,
-   "texto": "Quando você rolar com Medo ao tentar se mover despercebido por uma área perigosa, pode marcar 1 Estresse para rolar com Esperança em vez disso.\nSe um aliado dentro do alcance Próximo também estiver tentando se mover despercebido e rolar com Medo, você pode marcar 1 Estresse para mudar o resultado dele para uma rolagem com Esperança.",
+   "texto": "Quando você fizer uma jogada com Medo ao tentar se mover despercebido por uma área perigosa, pode marcar 1 Estresse para tratá-la como uma jogada com Esperança.\nSe um aliado em alcance Próximo também estiver tentando se mover despercebido e fizer uma jogada com Medo, você pode marcar 1 Estresse para mudar o resultado dele para uma jogada com Esperança.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/expert em Furtividade.png",
    "arquivo": "expert em Furtividade.png",
    "condicoes": [],
@@ -4764,14 +4764,14 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A mesa confirma que a jogada era para mover-se despercebido em área perigosa, sua ou de aliado Próximo, e trata o resultado como rolado com Esperança."
+    "resumo": "A mesa confirma que a jogada era para mover-se despercebido em área perigosa, sua ou de um aliado em alcance Próximo, e trata o resultado como uma jogada com Esperança."
    },
    "uso": {
     "custo": {
      "estresse": 1
     },
     "rotuloAtivar": "Trocar Medo por Esperança · 1 Estresse",
-    "lembrete": "Use somente após você ou um aliado Próximo rolar com Medo ao tentar mover-se despercebido em uma área perigosa; trate o resultado como rolado com Esperança."
+    "lembrete": "Use somente após você ou um aliado em alcance Próximo fazer uma jogada com Medo ao tentar mover-se despercebido em uma área perigosa; trate o resultado como uma jogada com Esperança."
    }
   },
   {
@@ -4784,7 +4784,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Faça uma Jogada de Conjuração contra um alvo dentro do alcance Muito Próximo. Em um sucesso, gaste 1 Esperança para conjurar um glifo negro no corpo dele que expõe seus pontos fracos, reduzindo temporariamente a Dificuldade do alvo em um valor igual ao seu Conhecimento (mínimo 1).",
+   "texto": "Faça uma jogada de Conjuração contra um alvo em alcance Muito Próximo. Em caso de sucesso, gaste 1 Esperança para conjurar um glifo negro no corpo dele que expõe seus pontos fracos, reduzindo temporariamente a Dificuldade do alvo em um valor igual ao seu Conhecimento (mínimo 1).",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Glifo do Crepúsculo.png",
    "arquivo": "Glifo do Crepúsculo.png",
    "condicoes": [],
@@ -4800,14 +4800,14 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A Jogada de Conjuração, o alvo Muito Próximo e a redução temporária da Dificuldade igual ao Conhecimento (mínimo 1) continuam na cena/Mestre."
+    "resumo": "A jogada de Conjuração, o alvo em alcance Muito Próximo e a redução temporária da Dificuldade igual ao Conhecimento (mínimo 1) continuam na cena/Mestre."
    },
    "uso": {
     "custo": {
      "esperanca": 1
     },
     "rotuloAtivar": "Sucesso: conjurar Glifo do Crepúsculo · 1 Esperança",
-    "lembrete": "Use após acertar a Jogada de Conjuração. Reduza temporariamente a Dificuldade do alvo em seu Conhecimento, com mínimo de 1."
+    "lembrete": "Use após obter sucesso na jogada de Conjuração. Reduza temporariamente a Dificuldade do alvo em seu Conhecimento, com mínimo de 1."
    }
   },
   {
@@ -4820,7 +4820,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 2,
-   "texto": "Gaste 1 Esperança para ativar Retirada Fantasma onde você está. Gaste outra Esperança a qualquer momento antes do seu próximo descanso para desaparecer do local onde está e reaparecer no lugar onde ativou a Retirada Fantasma. Esta magia termina após você reaparecer.",
+   "texto": "Gaste 1 Esperança para ativar Retirada Fantasma onde você está. Gaste 1 Esperança adicional a qualquer momento antes do seu próximo descanso para desaparecer do local onde está e reaparecer no lugar onde ativou a Retirada Fantasma. Este feitiço termina após você reaparecer.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Retirada Fantasma.png",
    "arquivo": "Retirada Fantasma.png",
    "condicoes": [],
@@ -4836,7 +4836,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Na opção Ativar, registre na mesa o ponto onde a Retirada foi ancorada. Na opção Retornar, só use se ela estiver ativa antes do próximo descanso; teleporte ao ponto e encerre a magia."
+    "resumo": "Na opção Ativar, registre na mesa o ponto onde a Retirada foi ancorada. Na opção Retornar, só use se ela estiver ativa antes do próximo descanso; teleporte ao ponto e encerre o feitiço."
    },
    "uso": {
     "custo": {},
@@ -4855,7 +4855,7 @@
       "custo": {
        "esperanca": 1
       },
-      "lembrete": "Use somente com Retirada Fantasma já ativa e antes do próximo descanso; reapareça no ponto registrado e encerre a magia."
+        "lembrete": "Use somente com Retirada Fantasma já ativa e antes do próximo descanso; reapareça no ponto registrado e encerre o feitiço."
      }
     ],
     "rotuloAtivar": "Usar Retirada Fantasma",
@@ -4872,7 +4872,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Faça uma Jogada de Conjuração contra um alvo dentro do alcance Próximo. Em um sucesso, gaste 1 Esperança para conjurar uma magia supressora ao redor do alvo que abrange tudo dentro do alcance Muito Próximo dele e o acompanha enquanto se move.\nO alvo e tudo na área ficam Silenciados até que o Mestre gaste um Medo no turno dele para remover essa condição, você lance Silêncio novamente, ou você sofra dano maior. Enquanto Silenciados, eles não podem fazer barulho nem lançar magias.",
+   "texto": "Faça uma jogada de Conjuração contra um alvo em alcance Próximo. Em caso de sucesso, gaste 1 Esperança para conjurar uma magia supressora ao redor do alvo que abrange tudo em alcance Muito Próximo dele e o acompanha enquanto se move.\nO alvo e tudo na área ficam Silenciados até que o Mestre gaste 1 Medo no turno dele para limpar essa condição, você conjure Silêncio novamente ou você sofra dano Maior. Enquanto Silenciados, eles não podem fazer barulho nem conjurar feitiços.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Silêncio.png",
    "arquivo": "Silêncio.png",
    "condicoes": [
@@ -4896,7 +4896,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A Jogada de Conjuração, o alvo, a área Silenciada e os três gatilhos de término (Medo do Mestre, nova conjuração de Silêncio ou dano Maior) continuam no encontro."
+    "resumo": "A jogada de Conjuração, o alvo, a área Silenciada e os três gatilhos de término (Medo do Mestre, nova conjuração de Silêncio ou dano Maior) continuam no encontro."
    },
    "uso": {
     "custo": {
@@ -4916,7 +4916,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 0,
-   "texto": "Quando tiver alguns minutos de silêncio para se concentrar, pode marcar 1 Estresse para mudar a aparência de todas as criaturas voluntárias dentro do alcance Próximo. As novas formas devem ter estrutura corporal e tamanho geral semelhantes, podendo ser alguém ou algo que você já viu ou totalmente fabricado. Uma criatura disfarçada tem vantagem em Jogadas de Presença para evitar suspeitas.\nAtive uma Contagem Regressiva (8). Ela diminui conforme a consequência escolhida pelo Mestre. Quando disparar, o disfarce termina.",
+   "texto": "Quando tiver alguns minutos de silêncio para se concentrar, pode marcar 1 Estresse para mudar a aparência de todas as criaturas voluntárias em alcance Próximo. As novas formas devem ter estrutura corporal e tamanho geral semelhantes, podendo ser alguém ou algo que você já viu ou totalmente fabricado. Uma criatura disfarçada tem vantagem em jogadas de Presença para evitar suspeitas.\nAtive uma Contagem Regressiva (8). Ela diminui quando o Mestre escolher isso como consequência. Quando disparar, o disfarce termina.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Disfarce em Massa.png",
    "arquivo": "Disfarce em Massa.png",
    "condicoes": [],
@@ -4934,7 +4934,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Escolha as aparências e criaturas voluntárias na mesa. O Mestre decide quando a consequência reduz a Contagem Regressiva; ao chegar a 0, o disfarce termina."
+    "resumo": "Escolha as aparências e criaturas voluntárias na mesa. O Mestre pode escolher diminuir a Contagem Regressiva como consequência; ao chegar a 0, o disfarce termina."
    },
    "uso": {
     "custo": {
@@ -4949,7 +4949,7 @@
      "avisoEncerrar": "Disfarce em Massa encerrado."
     },
     "rotuloAtivar": "Criar Disfarce em Massa · 1 Estresse",
-    "lembrete": "A Contagem Regressiva começa em 8. Reduza-a quando a consequência definida pelo Mestre ocorrer; em 0, o disfarce termina."
+    "lembrete": "A Contagem Regressiva começa em 8. O Mestre pode escolher reduzi-la como consequência; em 0, o disfarce termina."
    }
   },
   {
@@ -4962,7 +4962,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 0,
-   "texto": "Você pode falar na mente de qualquer pessoa com quem tenha feito contato físico. Uma vez aberto o canal, ela pode responder em sua mente.\nAlém disso, você pode marcar 1 Estresse para fazer uma Jogada de Conjuração contra ela. Em um sucesso, pode fazer ao Mestre uma das seguintes perguntas e receber uma resposta:\nOnde ele está?\nO que ele está fazendo?\nDo que ele tem medo?\nO que ele mais valoriza no mundo?",
+   "texto": "Você pode falar na mente de qualquer pessoa com quem tenha feito contato físico. Uma vez aberto o canal, ela pode responder em sua mente.\nAlém disso, você pode marcar 1 Estresse para fazer uma jogada de Conjuração contra ela. Em caso de sucesso, pode fazer ao Mestre uma das seguintes perguntas e receber uma resposta:\nOnde essa pessoa está?\nO que ela está fazendo?\nDo que ela tem medo?\nO que ela mais valoriza no mundo?",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Sussurros Sombrios.png",
    "arquivo": "Sussurros Sombrios.png",
    "condicoes": [],
@@ -4979,14 +4979,14 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "O contato físico prévio, o alvo, a Jogada de Conjuração e a resposta do Mestre a uma das quatro perguntas permanecem na mesa."
+    "resumo": "O contato físico prévio, o alvo, a jogada de Conjuração e a resposta do Mestre a uma das quatro perguntas permanecem na mesa."
    },
    "uso": {
     "custo": {
      "estresse": 1
     },
     "rotuloAtivar": "Sondar pelos Sussurros · 1 Estresse",
-    "lembrete": "Use para a parte de sondagem após existir contato físico com o alvo. Faça a Jogada de Conjuração fora do app e, em sucesso, faça uma das quatro perguntas ao Mestre."
+    "lembrete": "Use para a parte de sondagem após existir contato físico com o alvo. Faça a jogada de Conjuração fora do app e, em caso de sucesso, faça uma das quatro perguntas ao Mestre."
    }
   },
   {
@@ -5046,7 +5046,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 2,
-   "texto": "Quando 4 ou mais das cartas de domínio no seu conjunto forem do domínio Meia-Noite, você recebe os seguintes benefícios:\nUma vez por descanso, quando você estiver com 0 Esperança e o Mestre for ganhar um Medo, você pode ganhar 1 Esperança em vez disso.\nQuando fizer um ataque bem-sucedido, pode marcar 1 Estresse para somar o resultado do seu dado de Medo ao dano causado.",
+   "texto": "Quando 4 ou mais de suas cartas ativas forem do domínio Meia-Noite, você recebe os seguintes benefícios:\nUma vez por descanso, quando você estiver com 0 Esperança e o Mestre for ganhar 1 Medo, você pode ganhar 1 Esperança em vez disso.\nQuando fizer um ataque bem-sucedido, pode marcar 1 Estresse para somar o resultado do seu Dado de Medo à sua jogada de dano.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Tocado pela Meia-Noite.png",
    "arquivo": "Tocado pela Meia-Noite.png",
    "condicoes": [],
@@ -5055,13 +5055,13 @@
     "medo",
     "esperanca",
     "estresse",
-    "cofre_e_loadout"
+    "cartas_ativas_e_cofre"
    ],
    "pendenteTraducao": false,
    "errata": null,
    "observacao": null,
    "automacao": {
-    "classificacao": "automatizada-parcial-com-requisito-de-loadout",
+    "classificacao": "automatizada-parcial-com-requisito-de-cartas-ativas",
     "resumo": "Com 4+ cartas de Meia-Noite ativas, o app permite pagar 1 Estresse para o benefício de dano e publica os dois benefícios como efeitos contextuais."
    },
    "resolucaoManual": {

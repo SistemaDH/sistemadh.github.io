@@ -197,7 +197,14 @@ const implementados = new Set([
   'domain-cards/midnight-spirit',
   'domain-cards/shadowbind',
   'domain-cards/chokehold',
-  'domain-cards/veil-of-night'
+  'domain-cards/veil-of-night',
+  'domain-cards/glyph-of-nightfall',
+  'domain-cards/stealth-expertise',
+  'domain-cards/hush',
+  'domain-cards/phantom-retreat',
+  'domain-cards/dark-whispers',
+  'domain-cards/mass-disguise',
+  'domain-cards/midnight-touched'
 ]);
 const colecoes = [];
 

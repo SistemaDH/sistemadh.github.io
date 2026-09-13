@@ -17458,7 +17458,7 @@
             "pdfPageEnd": 217
           },
           "corpusSha256": "dd1b992788d9972c514135110172ba64f50c2d7a2bee5d3baafafa0c45f08f06",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/darkfire",
@@ -17953,7 +17953,7 @@
             "pdfPageEnd": 217
           },
           "corpusSha256": "512711c8f69d393c1e75781f19331a109e890d0e8d6861de218294b3bc045f04",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/goad-them-on",
@@ -18103,7 +18103,7 @@
             "pdfPageEnd": 217
           },
           "corpusSha256": "2035e6d8c95d6b3c118add636f7c3b5fdcb06985d2c4e57372e4b3e6d5f7d3bd",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/hypnotic-shimmer",
@@ -18328,7 +18328,7 @@
             "pdfPageEnd": 217
           },
           "corpusSha256": "b51cd54fd06fb9d5d100d0ed1c16c8a90d5ab731391696df5fa02c83272e809f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/mass-enrapture",
@@ -18403,7 +18403,7 @@
             "pdfPageEnd": 217
           },
           "corpusSha256": "65ae60e2375ce52a6c19b20f6a2f07d4ca81d7c9e7966d49064db266c5c40801",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/natural-familiar",
@@ -18553,7 +18553,7 @@
             "pdfPageEnd": 217
           },
           "corpusSha256": "3eca9e38ac354d99e17bf411ba7c0c8e1436a7d32f01f998b9af2dd13e0b8dc5",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/pick-and-pull",
@@ -19213,7 +19213,7 @@
             "pdfPageEnd": 217
           },
           "corpusSha256": "0449067c470221baf5b3896348f88cb95b58b0a59028991f4f80b9f72a5815b5",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/strategic-approach",

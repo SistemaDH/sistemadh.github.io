@@ -9,19 +9,19 @@
   },
   "dominio": "domains/midnight",
   "progresso": {
-    "conferidas": 7,
+    "conferidas": 14,
     "total": 21,
     "proximoLote": [
-      "domain-cards/glyph-of-nightfall",
-      "domain-cards/stealth-expertise",
-      "domain-cards/hush",
-      "domain-cards/phantom-retreat",
-      "domain-cards/dark-whispers",
-      "domain-cards/mass-disguise",
-      "domain-cards/midnight-touched"
+      "domain-cards/vanishing-dodge",
+      "domain-cards/shadowhunter",
+      "domain-cards/spellcharge",
+      "domain-cards/night-terror",
+      "domain-cards/twilight-toll",
+      "domain-cards/eclipse",
+      "domain-cards/specter-of-the-dark"
     ]
   },
-  "conclusaoParcial": "As sete primeiras cartas de Meia-Noite preservam níveis, tipos, custos de recordar, dados, custos, gatilhos e efeitos implementados após corrigir a condição de Vincular Sombras e normalizar o vocabulário pt-BR do SRD 2.0.",
+  "conclusaoParcial": "As quatorze primeiras cartas de Meia-Noite preservam níveis, tipos, custos de recordar, dados, custos, gatilhos e efeitos implementados após corrigir a condição de Vincular Sombras, a resolução da Contagem Regressiva de Disfarce em Massa e o vocabulário pt-BR do SRD 2.0.",
   "registros": [
     { "idFonte": "domain-cards/pick-and-pull", "idLocal": "midnight-abrir-e-puxar", "nomeIngles": "Pick and Pull", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 0 },
     { "idFonte": "domain-cards/rain-of-blades", "idLocal": "midnight-chuva-de-laminas", "nomeIngles": "Rain of Blades", "nivel": 1, "tipo": "Feitiço", "custoRecordar": 1 },
@@ -29,10 +29,18 @@
     { "idFonte": "domain-cards/midnight-spirit", "idLocal": "midnight-espirito-da-meia-noite", "nomeIngles": "Midnight Spirit", "nivel": 2, "tipo": "Feitiço", "custoRecordar": 1 },
     { "idFonte": "domain-cards/shadowbind", "idLocal": "midnight-vincular-sombras", "nomeIngles": "Shadowbind", "nivel": 2, "tipo": "Feitiço", "custoRecordar": 0 },
     { "idFonte": "domain-cards/chokehold", "idLocal": "midnight-estrangulamento", "nomeIngles": "Chokehold", "nivel": 3, "tipo": "Habilidade", "custoRecordar": 1 },
-    { "idFonte": "domain-cards/veil-of-night", "idLocal": "midnight-veu-da-noite", "nomeIngles": "Veil of Night", "nivel": 3, "tipo": "Feitiço", "custoRecordar": 1 }
+    { "idFonte": "domain-cards/veil-of-night", "idLocal": "midnight-veu-da-noite", "nomeIngles": "Veil of Night", "nivel": 3, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/glyph-of-nightfall", "idLocal": "midnight-glifo-do-crepusculo", "nomeIngles": "Glyph of Nightfall", "nivel": 4, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/stealth-expertise", "idLocal": "midnight-expert-em-furtividade", "nomeIngles": "Stealth Expertise", "nivel": 4, "tipo": "Habilidade", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/hush", "idLocal": "midnight-silencio", "nomeIngles": "Hush", "nivel": 5, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/phantom-retreat", "idLocal": "midnight-retirada-fantasma", "nomeIngles": "Phantom Retreat", "nivel": 5, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/dark-whispers", "idLocal": "midnight-sussurros-sombrios", "nomeIngles": "Dark Whispers", "nivel": 6, "tipo": "Feitiço", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/mass-disguise", "idLocal": "midnight-disfarce-em-massa", "nomeIngles": "Mass Disguise", "nivel": 6, "tipo": "Feitiço", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/midnight-touched", "idLocal": "midnight-tocado-pela-meia-noite", "nomeIngles": "Midnight‑touched", "nivel": 7, "tipo": "Habilidade", "custoRecordar": 2 }
   ],
   "correcoesMecanicas": [
-    "Vincular Sombras — alvos atingidos ficam temporariamente Restritos, não Imobilizados."
+    "Vincular Sombras — alvos atingidos ficam temporariamente Restritos, não Imobilizados.",
+    "Disfarce em Massa — a Contagem Regressiva diminui quando o Mestre escolhe isso como consequência; não existe um gatilho previamente definido."
   ],
   "correcoesDeVocabulario": [
     "jogada de Conjuração",
@@ -40,6 +48,11 @@
     "Longínquo",
     "Distante",
     "Restrito",
-    "feitiço"
+    "feitiço",
+    "dano Maior",
+    "limpar condição",
+    "cartas ativas",
+    "Dado de Medo",
+    "jogada de dano"
   ]
 }
