@@ -9,19 +9,19 @@
   },
   "dominio": "domains/splendor",
   "progresso": {
-    "conferidas": 7,
+    "conferidas": 14,
     "total": 21,
     "proximoLote": [
-      "domain-cards/divination",
-      "domain-cards/life-ward",
-      "domain-cards/shape-material",
-      "domain-cards/smite",
-      "domain-cards/restoration",
-      "domain-cards/zone-of-protection",
-      "domain-cards/healing-strike"
+      "domain-cards/splendor-touched",
+      "domain-cards/shield-aura",
+      "domain-cards/stunning-sunlight",
+      "domain-cards/overwhelming-aura",
+      "domain-cards/salvation-beam",
+      "domain-cards/resurrection",
+      "domain-cards/invigoration"
     ]
   },
-  "conclusaoParcial": "As sete primeiras cartas de Esplendor preservam níveis, tipos, custos de recordar, dados, custos, gatilhos e efeitos implementados após corrigir o alcance de Farol Brilhante e normalizar o vocabulário pt-BR do SRD 2.0.",
+  "conclusaoParcial": "As quatorze primeiras cartas de Esplendor preservam níveis, tipos, custos de recordar, dados, custos, gatilhos e efeitos implementados após corrigir o alcance de Farol Brilhante e normalizar o vocabulário pt-BR do SRD 2.0.",
   "registros": [
     { "idFonte": "domain-cards/bolt-beacon", "idLocal": "splendor-farol-brilhante", "nomeIngles": "Bolt Beacon", "nivel": 1, "tipo": "Feitiço", "custoRecordar": 1 },
     { "idFonte": "domain-cards/mending-touch", "idLocal": "splendor-toque-curativo", "nomeIngles": "Mending Touch", "nivel": 1, "tipo": "Feitiço", "custoRecordar": 1 },
@@ -29,7 +29,14 @@
     { "idFonte": "domain-cards/final-words", "idLocal": "splendor-palavras-finais", "nomeIngles": "Final Words", "nivel": 2, "tipo": "Feitiço", "custoRecordar": 1 },
     { "idFonte": "domain-cards/healing-hands", "idLocal": "splendor-maos-curativas", "nomeIngles": "Healing Hands", "nivel": 2, "tipo": "Feitiço", "custoRecordar": 1 },
     { "idFonte": "domain-cards/second-wind", "idLocal": "splendor-segundo-folego", "nomeIngles": "Second Wind", "nivel": 3, "tipo": "Habilidade", "custoRecordar": 2 },
-    { "idFonte": "domain-cards/voice-of-reason", "idLocal": "splendor-voz-da-razao", "nomeIngles": "Voice of Reason", "nivel": 3, "tipo": "Habilidade", "custoRecordar": 1 }
+    { "idFonte": "domain-cards/voice-of-reason", "idLocal": "splendor-voz-da-razao", "nomeIngles": "Voice of Reason", "nivel": 3, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/divination", "idLocal": "splendor-adivinhacao", "nomeIngles": "Divination", "nivel": 4, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/life-ward", "idLocal": "splendor-guardiao-da-vida", "nomeIngles": "Life Ward", "nivel": 4, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/shape-material", "idLocal": "splendor-moldar-material", "nomeIngles": "Shape Material", "nivel": 5, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/smite", "idLocal": "splendor-golpe-divino", "nomeIngles": "Smite", "nivel": 5, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/restoration", "idLocal": "splendor-restauracao", "nomeIngles": "Restoration", "nivel": 6, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/zone-of-protection", "idLocal": "splendor-zona-de-protecao", "nomeIngles": "Zone of Protection", "nivel": 6, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/healing-strike", "idLocal": "splendor-golpe-curativo", "nomeIngles": "Healing Strike", "nivel": 7, "tipo": "Feitiço", "custoRecordar": 1 }
   ],
   "correcoesMecanicas": [
     "Farol Brilhante — o alvo fica em alcance Distante, não Longínquo."

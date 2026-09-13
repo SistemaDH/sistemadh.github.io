@@ -53,6 +53,27 @@ if (!maos?.texto.includes('limpar 2 Pontos de Vida ou 2 Estresses') || !maos?.te
 const segundo = cartas.get('splendor-segundo-folego');
 if (!segundo?.texto.includes('limpar 3 Estresses ou 1 Ponto de Vida')) erros.push('Segundo Fôlego: recuperação própria deve usar limpar');
 
+const adivinhacao = cartas.get('splendor-adivinhacao');
+if (!adivinhacao?.texto.includes('gaste 3 Esperanças') || adivinhacao?.uso?.custo?.esperanca !== 3) erros.push('Adivinhação: custo deve ser 3 Esperanças uma vez por descanso longo');
+
+const guardiao = cartas.get('splendor-guardiao-da-vida');
+if (!guardiao?.texto.includes('aliado em alcance Próximo') || !guardiao?.texto.includes('movimento de morte') || !guardiao?.texto.includes('limpa 1 Ponto de Vida')) erros.push('Guardião da Vida: alcance, movimento de morte ou recuperação divergem');
+
+const moldar = cartas.get('splendor-moldar-material');
+if (!moldar?.texto.includes('Gaste 1 Esperança') || !moldar?.texto.includes('em alcance Próximo do ponto')) erros.push('Moldar Material: custo ou limite de alcance divergem');
+
+const divino = cartas.get('splendor-golpe-divino');
+if (!divino?.texto.includes('Uma vez por descanso') || !divino?.texto.includes('dobre o resultado de sua jogada de dano') || divino?.uso?.custo?.esperanca !== 3) erros.push('Golpe Divino: uso, custo ou duplicação de dano divergem');
+
+const restauracao = cartas.get('splendor-restauracao');
+if (!restauracao?.texto.includes('limpar 2 Pontos de Vida ou 2 Estresses para cada marcador gasto') || !restauracao?.texto.includes('limpar a condição Vulnerável') || !restauracao?.texto.includes('limpe todos os marcadores não usados')) erros.push('Restauração: recuperação, condição ou limpeza de marcadores divergem');
+
+const zona = cartas.get('splendor-zona-de-protecao');
+if (!zona?.texto.includes('jogada de Conjuração (16)') || !zona?.texto.includes('ponto em alcance Longínquo') || !zona?.texto.includes('aliados em alcance Muito Próximo') || zona?.uso?.marcaUso?.maximo !== 1 || zona?.uso?.estado?.valor !== 1) erros.push('Zona de Proteção: jogada, alcances, uso ou dado inicial divergem');
+
+const curativo = cartas.get('splendor-golpe-curativo');
+if (!curativo?.texto.includes('gastar 2 Esperanças') || !curativo?.texto.includes('limpar 1 Ponto de Vida') || !curativo?.texto.includes('aliado em alcance Próximo')) erros.push('Golpe Curativo: custo, recuperação ou alcance divergem');
+
 const idsAuditados = new Set(registros.map((item) => item.idLocal));
 const textosAtivos = catalogo.cartas.filter((carta) => idsAuditados.has(carta.id)).map((carta) => JSON.stringify({
   texto: carta.texto,

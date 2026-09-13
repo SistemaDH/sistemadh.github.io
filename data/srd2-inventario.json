@@ -17593,7 +17593,7 @@
             "pdfPageEnd": 221
           },
           "corpusSha256": "c815761db3e577934a429128029a7eb746b379e45190aa57ea3a715b86c5cf10",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/dread-touched",
@@ -18058,7 +18058,7 @@
             "pdfPageEnd": 222
           },
           "corpusSha256": "3ec1fe43a8c190642424c07ddf1d9bc9a2a1650c6845405f52b71ca8176fe83a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/hideous-retribution",
@@ -18298,7 +18298,7 @@
             "pdfPageEnd": 221
           },
           "corpusSha256": "0db81878cb22188cfd992b7b4406aabfd3c22571c4274a0fd8085e8c1041256e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/manifest-wall",
@@ -18763,7 +18763,7 @@
             "pdfPageEnd": 221
           },
           "corpusSha256": "45acc9c5f72813079d9c206fe04db9253ae51a081bb2b733b65ce384c5957294",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/resurrection",
@@ -18988,7 +18988,7 @@
             "pdfPageEnd": 221
           },
           "corpusSha256": "745b6a7f36e090b7ad80b4d7fcf5dba0e89b54391c8167f04b14fc79b41bd384",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/share-the-burden",
@@ -19108,7 +19108,7 @@
             "pdfPageEnd": 221
           },
           "corpusSha256": "5bdc8e654df7249a7747b95a17935670c49b88731ddff299627584eb67a876cc",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/soothing-speech",
@@ -19813,7 +19813,7 @@
             "pdfPageEnd": 222
           },
           "corpusSha256": "08e20a17e8475105cd6fd6c554438ecb382837c7e293fc604c0b6ac5742cc45c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         }
       ]
     },

@@ -187,16 +187,19 @@ Validação deste checkpoint: `npm run teste:srd2` verde com 65 termos mecânico
 
 Este checkpoint também restaura como texto legível `data/classes.json` e `tools/testes-backend.mjs`, que estavam corrompidos no histórico da branch. O gerador de classes reproduz exatamente `backend/42_Classes.gs`, e a suíte completa protege o conteúdo recuperado.
 
-### Cartas Core — Esplendor 7/21 conferido
+### Cartas Core — Esplendor 14/21 conferido
 
 - o primeiro checkpoint compara **Farol Brilhante**, **Toque Curativo**, **Reforço**, **Palavras Finais**, **Mãos Curativas**, **Segundo Fôlego** e **Voz da Razão** à p. 221 do SRD 2.0;
 - **Farol Brilhante** agora usa alcance **Distante**, não Longínquo; as demais mecânicas permaneceram compatíveis;
 - o vocabulário ativo usa **jogada de Conjuração**, **jogada de ação**, **jogada de dano**, **limpar**, **Ponto de Vida**, **Estresse**, **Vulnerável**, **Distante**, **Próximo** e **Corpo a Corpo**;
-- a cobertura de `domain-cards` está em auditoria: 154 de 189 cartas Core conferidas; 35 cartas Core e 21 cartas de Pavor ainda pendentes.
+- o segundo checkpoint compara **Adivinhação**, **Guardião da Vida**, **Moldar Material**, **Golpe Divino**, **Restauração**, **Zona de Proteção** e **Golpe Curativo**, dos níveis 4–7, às pp. 221–222;
+- custos, limites por descanso, a carga de Golpe Divino e os contadores de Restauração e Zona de Proteção permaneceram mecanicamente compatíveis;
+- o vocabulário do segundo lote usa **Esperança**, **movimento de morte**, **limpar**, **Ponto de Vida**, **Estresse**, **jogada de Conjuração** e alcances canônicos;
+- a cobertura de `domain-cards` está em auditoria: 161 de 189 cartas Core conferidas; 28 cartas Core e 21 cartas de Pavor ainda pendentes.
 
-Validação deste checkpoint: inventário com 1.539 registros (**220 implementados**, 1.318 pendentes), validador específico de Esplendor e gates completos sem navegador. O E2E local continua bloqueado pela ausência do Chromium do Playwright.
+Validação deste checkpoint: inventário com 1.539 registros (**227 implementados**, 1.311 pendentes), validador específico de Esplendor e gates completos sem navegador. O E2E local continua bloqueado pela ausência do Chromium do Playwright.
 
-Próximo checkpoint exato: comparar **Adivinhação**, **Guardião da Vida**, **Moldar Material**, **Golpe Divino**, **Restauração**, **Zona de Proteção** e **Golpe Curativo**. Depois fechar as sete restantes de Esplendor, continuar Valor e só então integrar Pavor.
+Próximo checkpoint exato: comparar **Tocado do Esplendor**, **Aura de Escudo**, **Luz Ofuscante**, **Aura Avassaladora**, **Raio da Salvação**, **Ressurreição** e **Revigoramento**. Depois continuar Valor e só então integrar Pavor.
 
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 

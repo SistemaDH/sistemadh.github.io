@@ -239,7 +239,14 @@ const implementados = new Set([
   'domain-cards/final-words',
   'domain-cards/healing-hands',
   'domain-cards/second-wind',
-  'domain-cards/voice-of-reason'
+  'domain-cards/voice-of-reason',
+  'domain-cards/divination',
+  'domain-cards/life-ward',
+  'domain-cards/shape-material',
+  'domain-cards/smite',
+  'domain-cards/restoration',
+  'domain-cards/zone-of-protection',
+  'domain-cards/healing-strike'
 ]);
 const colecoes = [];
 
