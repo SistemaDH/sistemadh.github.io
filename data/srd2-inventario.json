@@ -17638,7 +17638,7 @@
             "pdfPageEnd": 218
           },
           "corpusSha256": "404bee11dd25b30ef3f73db63b2c0ac11c28dd7c6e08b48b4c0a234b8139fd73",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/eldritch-flesh",
@@ -18463,7 +18463,7 @@
             "pdfPageEnd": 218
           },
           "corpusSha256": "7e63f8fc91642c9bef4a000118da070992a9cb3b9f6b3b2568d92f3552b5d96e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/not-good-enough",
@@ -18973,7 +18973,7 @@
             "pdfPageEnd": 218
           },
           "corpusSha256": "9090a344e2713c49bf86751282607bb65efa0aa1345402e2a240d58f89a808a8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/shape-material",
@@ -19138,7 +19138,7 @@
             "pdfPageEnd": 218
           },
           "corpusSha256": "be163bf3b21dbf6971c91cb33b63dd45de9fb10905f9c9b1535f3e3ca4ad1b06",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/spectral-mist",
@@ -19168,7 +19168,7 @@
             "pdfPageEnd": 218
           },
           "corpusSha256": "6f29a071030eba7542ed59fd93c0af5956661f4b91791c3142761b727e7d61ad",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/splendor-touched",
@@ -19483,7 +19483,7 @@
             "pdfPageEnd": 218
           },
           "corpusSha256": "c11b6abac5856a349cfe67dd4c8773c1f95f0d40d2e5a89975b284c3cae96ef0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/umbral-veil",
@@ -19603,7 +19603,7 @@
             "pdfPageEnd": 218
           },
           "corpusSha256": "8173a95096e770a0237e795145eb9993b2497021a87e4704c82d1d31fb4bbc81",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/veil-of-night",

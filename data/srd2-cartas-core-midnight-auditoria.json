@@ -1,27 +1,19 @@
 {
   "versao": 1,
-  "estado": "em-andamento",
+  "estado": "conferido",
   "fonte": {
     "srd": "2.0",
     "data": "2026-08-25",
-    "paginasPdf": "216–217",
+    "paginasPdf": "216–218",
     "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64"
   },
   "dominio": "domains/midnight",
   "progresso": {
-    "conferidas": 14,
+    "conferidas": 21,
     "total": 21,
-    "proximoLote": [
-      "domain-cards/vanishing-dodge",
-      "domain-cards/shadowhunter",
-      "domain-cards/spellcharge",
-      "domain-cards/night-terror",
-      "domain-cards/twilight-toll",
-      "domain-cards/eclipse",
-      "domain-cards/specter-of-the-dark"
-    ]
+    "proximoLote": []
   },
-  "conclusaoParcial": "As quatorze primeiras cartas de Meia-Noite preservam níveis, tipos, custos de recordar, dados, custos, gatilhos e efeitos implementados após corrigir a condição de Vincular Sombras, a resolução da Contagem Regressiva de Disfarce em Massa e o vocabulário pt-BR do SRD 2.0.",
+  "conclusao": "As 21 cartas de Meia-Noite preservam níveis, tipos, custos de recordar, dados, custos, gatilhos e efeitos implementados após corrigir cinco divergências mecânicas e normalizar o vocabulário pt-BR do SRD 2.0.",
   "registros": [
     { "idFonte": "domain-cards/pick-and-pull", "idLocal": "midnight-abrir-e-puxar", "nomeIngles": "Pick and Pull", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 0 },
     { "idFonte": "domain-cards/rain-of-blades", "idLocal": "midnight-chuva-de-laminas", "nomeIngles": "Rain of Blades", "nivel": 1, "tipo": "Feitiço", "custoRecordar": 1 },
@@ -36,11 +28,21 @@
     { "idFonte": "domain-cards/phantom-retreat", "idLocal": "midnight-retirada-fantasma", "nomeIngles": "Phantom Retreat", "nivel": 5, "tipo": "Feitiço", "custoRecordar": 2 },
     { "idFonte": "domain-cards/dark-whispers", "idLocal": "midnight-sussurros-sombrios", "nomeIngles": "Dark Whispers", "nivel": 6, "tipo": "Feitiço", "custoRecordar": 0 },
     { "idFonte": "domain-cards/mass-disguise", "idLocal": "midnight-disfarce-em-massa", "nomeIngles": "Mass Disguise", "nivel": 6, "tipo": "Feitiço", "custoRecordar": 0 },
-    { "idFonte": "domain-cards/midnight-touched", "idLocal": "midnight-tocado-pela-meia-noite", "nomeIngles": "Midnight‑touched", "nivel": 7, "tipo": "Habilidade", "custoRecordar": 2 }
+    { "idFonte": "domain-cards/midnight-touched", "idLocal": "midnight-tocado-pela-meia-noite", "nomeIngles": "Midnight‑touched", "nivel": 7, "tipo": "Habilidade", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/vanishing-dodge", "idLocal": "midnight-esquiva-desaparecente", "nomeIngles": "Vanishing Dodge", "nivel": 7, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/shadowhunter", "idLocal": "midnight-cacador-das-sombras", "nomeIngles": "Shadowhunter", "nivel": 8, "tipo": "Habilidade", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/spellcharge", "idLocal": "midnight-carga-magica", "nomeIngles": "Spellcharge", "nivel": 8, "tipo": "Feitiço", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/night-terror", "idLocal": "midnight-terror-noturno", "nomeIngles": "Night Terror", "nivel": 9, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/twilight-toll", "idLocal": "midnight-tributo-do-crepusculo", "nomeIngles": "Twilight Toll", "nivel": 9, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/eclipse", "idLocal": "midnight-eclipse", "nomeIngles": "Eclipse", "nivel": 10, "tipo": "Feitiço", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/specter-of-the-dark", "idLocal": "midnight-espectro-da-escuridao", "nomeIngles": "Specter of the Dark", "nivel": 10, "tipo": "Feitiço", "custoRecordar": 1 }
   ],
   "correcoesMecanicas": [
     "Vincular Sombras — alvos atingidos ficam temporariamente Restritos, não Imobilizados.",
-    "Disfarce em Massa — a Contagem Regressiva diminui quando o Mestre escolhe isso como consequência; não existe um gatilho previamente definido."
+    "Disfarce em Massa — a Contagem Regressiva diminui quando o Mestre escolhe isso como consequência; não existe um gatilho previamente definido.",
+    "Esquiva Desaparecente — o gatilho é a falha de um ataque que causaria dano físico, não qualquer interpretação de ataque físico.",
+    "Carga Mágica — as fichas recebidas são iguais aos Pontos de Vida marcados pelo dano mágico, não a PV genericamente perdidos.",
+    "Eclipse — o feitiço termina quando o personagem sofre dano Severo, não dano Grave."
   ],
   "correcoesDeVocabulario": [
     "jogada de Conjuração",
@@ -53,6 +55,11 @@
     "limpar condição",
     "cartas ativas",
     "Dado de Medo",
-    "jogada de dano"
+    "jogada de dano",
+    "Evasão",
+    "Pontos de Vida marcados",
+    "jogada de reação",
+    "reserva de Medo",
+    "dano Severo"
   ]
 }

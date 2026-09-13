@@ -47,7 +47,7 @@ O corpus auxiliar pinado registra 1.539 registros: 10 domínios, 13 classes, 26 
 
 O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. O inventário individual fica em `data/srd2-inventario.json`: cada um dos 1.539 registros preserva ID, nome inglês, tipo, hash do registro no corpus, estado de implementação e, quando aplicável, `sourceLocator`. `npm run teste:srd2` impede alteração acidental das contagens, IDs, hashes estruturais ou estados. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
 
-No checkpoint atual, 185 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 1.353 permanecem `pendente`.
+No checkpoint atual, 192 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 1.346 permanecem `pendente`.
 
 ## Fase 1 — Level Up
 
@@ -136,12 +136,16 @@ As 21 cartas de Graça foram conferidas contra as pp. 215–216 do SRD 2.0. Nome
 
 O vocabulário ativo foi normalizado para **jogada de Conjuração**, **jogada de Presença**, **jogada de dano**, **Distante**, **Longínquo**, **cartas ativas**, **Ponto de Armadura**, **movimento de descanso** e **Mestre**. O vínculo carta a carta, os campos estruturais e as duas correções mecânicas ficam protegidos por `data/srd2-cartas-core-grace-auditoria.json` e `tools/conferir-srd2-cartas-core-grace.mjs`.
 
-### Cartas de domínio do Core — Meia-Noite (14/21)
+### Cartas de domínio do Core — Meia-Noite
 
 O primeiro checkpoint conferiu **Abrir e Puxar**, **Chuva de Lâminas**, **Disfarce Incrível**, **Espírito da Meia-Noite**, **Vincular Sombras**, **Estrangulamento** e **Véu da Noite** contra as pp. 216–217 do SRD 2.0. A única divergência mecânica foi corrigida em **Vincular Sombras**: os alvos atingidos ficam temporariamente **Restritos**, não Imobilizados.
 
-O texto ativo também passou a usar **jogada de Conjuração**, **jogada de Presença**, **Longínquo**, **Distante** e **feitiço** de acordo com o glossário SRD2. O progresso parcial, os quatorze vínculos oficiais e o próximo lote ficam protegidos por `data/srd2-cartas-core-midnight-auditoria.json` e `tools/conferir-srd2-cartas-core-midnight.mjs`.
+O texto ativo também passou a usar **jogada de Conjuração**, **jogada de Presença**, **Longínquo**, **Distante** e **feitiço** de acordo com o glossário SRD2. Os 21 vínculos oficiais e as correções ficam protegidos por `data/srd2-cartas-core-midnight-auditoria.json` e `tools/conferir-srd2-cartas-core-midnight.mjs`.
 
 O segundo checkpoint conferiu **Glifo do Crepúsculo**, **Expert em Furtividade**, **Silêncio**, **Retirada Fantasma**, **Sussurros Sombrios**, **Disfarce em Massa** e **Tocado pela Meia-Noite**, todos na p. 217. **Disfarce em Massa** foi corrigido para diminuir sua Contagem Regressiva quando o Mestre escolhe isso como consequência; o texto anterior inventava uma consequência previamente definida.
 
-Esse lote também normalizou **jogada com Medo/Esperança**, **dano Maior**, **limpar condição**, **cartas ativas**, **Dado de Medo** e **jogada de dano**. A auditoria parcial agora vincula 14 cartas oficiais e aponta explicitamente as sete restantes.
+Esse lote também normalizou **jogada com Medo/Esperança**, **dano Maior**, **limpar condição**, **cartas ativas**, **Dado de Medo** e **jogada de dano**.
+
+O terceiro checkpoint fechou o domínio com **Esquiva Desaparecente**, **Caçador das Sombras**, **Carga Mágica**, **Terror Noturno**, **Tributo do Crepúsculo**, **Eclipse** e **Espectro da Escuridão**, todos na p. 218. Foram corrigidas três divergências mecânicas: Esquiva Desaparecente dispara quando falha um ataque que causaria dano físico; Carga Mágica conta os **Pontos de Vida marcados**; e Eclipse termina ao sofrer dano **Severo**, não Grave.
+
+As 21 cartas de Meia-Noite estão conferidas. O vocabulário final também protege **Evasão**, **jogada de reação**, **reserva de Medo**, **limpar fichas**, **jogada de Conjuração** e **dano Severo**.

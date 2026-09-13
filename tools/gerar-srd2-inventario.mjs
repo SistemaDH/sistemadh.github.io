@@ -204,7 +204,14 @@ const implementados = new Set([
   'domain-cards/phantom-retreat',
   'domain-cards/dark-whispers',
   'domain-cards/mass-disguise',
-  'domain-cards/midnight-touched'
+  'domain-cards/midnight-touched',
+  'domain-cards/vanishing-dodge',
+  'domain-cards/shadowhunter',
+  'domain-cards/spellcharge',
+  'domain-cards/night-terror',
+  'domain-cards/twilight-toll',
+  'domain-cards/eclipse',
+  'domain-cards/specter-of-the-dark'
 ]);
 const colecoes = [];
 

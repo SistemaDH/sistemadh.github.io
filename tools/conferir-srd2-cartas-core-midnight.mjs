@@ -18,6 +18,7 @@ if (auditoria.progresso?.total !== 21) erros.push('o domínio deve registrar 21 
 if (auditoria.progresso?.conferidas !== registros.length) erros.push('a quantidade conferida não coincide com os registros auditados');
 if (registros.length < 1 || registros.length > 21 || new Set(registros.map((item) => item.idFonte)).size !== registros.length) erros.push('a auditoria deve conter de 1 a 21 cartas-fonte únicas');
 if (auditoria.estado === 'conferido' && registros.length !== 21) erros.push('Meia-Noite só pode ser concluída com as 21 cartas');
+if (auditoria.estado === 'conferido' && (auditoria.progresso?.proximoLote || []).length) erros.push('Meia-Noite concluída não pode manter próximo lote interno');
 if (cartas.size !== 21) erros.push(`catálogo local tem ${cartas.size} cartas de Meia-Noite, esperado 21`);
 
 for (const item of registros) {
@@ -64,6 +65,28 @@ const tocado = cartas.get('midnight-tocado-pela-meia-noite');
 if (!tocado?.texto.includes('cartas ativas')) erros.push('Tocado pela Meia-Noite: loadout deve usar cartas ativas');
 if (!tocado?.texto.includes('Dado de Medo') || !tocado?.texto.includes('jogada de dano')) erros.push('Tocado pela Meia-Noite: Fear Die e damage roll devem usar o vocabulário canônico');
 
+const esquiva = cartas.get('midnight-esquiva-desaparecente');
+if (!esquiva?.texto.includes('ataque contra você que causaria dano físico')) erros.push('Esquiva Desaparecente: o gatilho deve ser um ataque que causaria dano físico');
+
+const cacador = cartas.get('midnight-cacador-das-sombras');
+if (!cacador?.texto.includes('+1 em Evasão') || /\+1 em Esquiva/.test(cacador?.texto || '')) erros.push('Caçador das Sombras: Evasion deve usar Evasão');
+
+const carga = cartas.get('midnight-carga-magica');
+if (!carga?.texto.includes('Pontos de Vida que marcou')) erros.push('Carga Mágica: as fichas devem contar os Pontos de Vida marcados');
+if (/Pontos de Vida perdidos/i.test(JSON.stringify(carga || {}))) erros.push('Carga Mágica: PV perdidos legado ainda está ativo');
+
+const terror = cartas.get('midnight-terror-noturno');
+if (!terror?.texto.includes('Descarte o Medo roubado')) erros.push('Terror Noturno: o Medo roubado deve ser descartado');
+if (/devolva|pool do Mestre|Medos roubados/i.test(JSON.stringify(terror || {}))) erros.push('Terror Noturno: resolução ou vocabulário legado ainda está ativo');
+
+const tributo = cartas.get('midnight-tributo-do-crepusculo');
+if (!tributo?.texto.includes('limpe todas as fichas')) erros.push('Tributo do Crepúsculo: clear deve usar limpar as fichas');
+
+const eclipse = cartas.get('midnight-eclipse');
+if (!eclipse?.texto.includes('jogada de Conjuração (16)')) erros.push('Eclipse: Spellcast Roll deve usar jogada de Conjuração');
+if (!eclipse?.texto.includes('dano Severo')) erros.push('Eclipse: Severe damage deve usar dano Severo');
+if (/Jogada de Magia|dano Grave/.test(JSON.stringify(eclipse || {}))) erros.push('Eclipse: regra anterior de Conjuração ou dano Grave ainda está ativa');
+
 const idsAuditados = new Set(registros.map((item) => item.idLocal));
 const textosAtivos = catalogo.cartas.filter((carta) => idsAuditados.has(carta.id)).map((carta) => JSON.stringify({
   texto: carta.texto,
@@ -84,7 +107,10 @@ const termosLegados = [
   /\bdano maior\b/,
   /\bremover (?:essa )?condição\b/i,
   /\blançar (?:outra magia|magias|Silêncio)\b/i,
-  /\brolar com (?:Medo|Esperança)\b/i
+  /\brolar com (?:Medo|Esperança)\b/i,
+  /\bPontos de Vida perdidos\b/i,
+  /\bJogada de Magia\b/,
+  /\bdano Grave\b/
 ];
 for (const termo of termosLegados) {
   if (termo.test(textosAtivos)) erros.push(`vocabulário mecânico legado ainda ativo no lote auditado de Meia-Noite: ${termo}`);

@@ -9792,6 +9792,9 @@ teste('Sussurros Sombrios cobra 1 Estresse apenas na sondagem',()=>{
 });
 
 teste('Esquiva Desaparecente custa 1 Esperança e mantém estado até encerramento manual',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const carta=d.cartas.find((x)=>x.id==='midnight-esquiva-desaparecente');
+  verdade(carta.texto.includes('ataque contra você que causaria dano físico'));
   const f=fichaMidnightAlta_(7,['midnight-esquiva-desaparecente','midnight-tocado-pela-meia-noite']);
   let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-esquiva-desaparecente'}]);
   igual(r.erros,[]); igual(f.recursos.esperanca,5);
@@ -9817,6 +9820,10 @@ teste('Tocado pela Meia-Noite exige quatro cartas e cobra 1 Estresse no bônus d
 });
 
 teste('Carga Mágica preserva contador existente limitado por Conjuração',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const carta=d.cartas.find((x)=>x.id==='midnight-carga-magica');
+  verdade(carta.texto.includes('Pontos de Vida que marcou'));
+  verdade(!/Pontos de Vida perdidos/i.test(carta.texto));
   const defs=avaliar('CONTADORES');
   const c=defs['carta:midnight-carga-magica'];
   verdade(!!c); igual(c.maximo.tipo,'traco'); igual(c.maximo.traco,'Conjuração');
@@ -9825,10 +9832,15 @@ teste('Carga Mágica preserva contador existente limitado por Conjuração',()=>
 teste('Caçador das Sombras não altera Evasão base fora do contexto de iluminação',()=>{
   const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
   const c=d.cartas.find((x)=>x.id==='midnight-cacador-das-sombras');
+  verdade(c.texto.includes('+1 em Evasão'));
   verdade(!c.uso); verdade(!c.efeitoDerivado);
 });
 
 teste('Terror Noturno registra uma vez por descanso longo',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const carta=d.cartas.find((x)=>x.id==='midnight-terror-noturno');
+  verdade(carta.texto.includes('Descarte o Medo roubado'));
+  verdade(!/devolva/i.test(JSON.stringify(carta)));
   const f=fichaMidnightAlta_(9,['midnight-terror-noturno','midnight-tributo-do-crepusculo']);
   let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-terror-noturno'}]);
   igual(r.erros,[]); igual(f.contadores['uso:carta:midnight:terror-noturno'].valor,1);
@@ -9838,12 +9850,20 @@ teste('Terror Noturno registra uma vez por descanso longo',()=>{
 });
 
 teste('Tributo do Crepúsculo preserva contador aberto e zera em descanso/troca de alvo',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const carta=d.cartas.find((x)=>x.id==='midnight-tributo-do-crepusculo');
+  verdade(carta.texto.includes('limpe todas as fichas'));
   const defs=avaliar('CONTADORES');
   const c=defs['carta:midnight-tributo-do-crepusculo'];
   verdade(!!c); igual(c.maximo.tipo,'aberto'); verdade(c.zeraEm.includes('descanso')); verdade(c.zeraEm.includes('troca-de-alvo'));
 });
 
 teste('Eclipse registra 1/descanso longo e mantém estado até gatilho manual',()=>{
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const carta=d.cartas.find((x)=>x.id==='midnight-eclipse');
+  verdade(carta.texto.includes('jogada de Conjuração (16)'));
+  verdade(carta.texto.includes('dano Severo'));
+  verdade(!/Jogada de Magia|dano Grave/.test(JSON.stringify(carta)));
   const f=fichaMidnightAlta_(10,['midnight-eclipse','midnight-espectro-da-escuridao']);
   let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'midnight-eclipse'}]);
   igual(r.erros,[]); igual(f.contadores['uso:carta:midnight:eclipse'].valor,1); igual(f.contadores['estado:carta:midnight:eclipse'].valor,1);

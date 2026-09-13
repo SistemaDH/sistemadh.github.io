@@ -153,23 +153,26 @@ Validação da Fase 1:
 - `tools/conferir-srd2-cartas-core-grace.mjs` também recusa vocabulário mecânico legado nos campos exibidos, lembretes, automações e regras especiais;
 - a cobertura de `domain-cards` está em auditoria: 105 de 189 cartas Core conferidas; 84 cartas Core e 21 cartas de Pavor ainda pendentes.
 
-### Cartas Core — Meia-Noite 14/21 conferido
+### Cartas Core — Meia-Noite 21/21 conferido
 
 - o primeiro checkpoint de Meia-Noite compara sete cartas dos níveis 1–3 às pp. 216–217 do SRD 2.0: **Abrir e Puxar**, **Chuva de Lâminas**, **Disfarce Incrível**, **Espírito da Meia-Noite**, **Vincular Sombras**, **Estrangulamento** e **Véu da Noite**;
 - níveis, tipos, custos de recordar, dados, custos, gatilhos, frequências e efeitos permaneceram mecanicamente compatíveis, exceto pela condição de **Vincular Sombras**, corrigida de Imobilizado para **Restrito**;
 - **Espírito da Meia-Noite** agora usa o alcance canônico **Longínquo**, e **Véu da Noite** usa **Distante** e termina quando outro **feitiço** é conjurado;
 - o texto ativo do lote também foi normalizado para **jogada de Conjuração**, **jogada de Presença** e as formulações de alcance do glossário SRD2;
-- `data/srd2-cartas-core-midnight-auditoria.json` registra o progresso parcial e os próximos sete IDs oficiais; `tools/conferir-srd2-cartas-core-midnight.mjs` protege identidade, nível, tipo, custo de recordar, inventário, condição e vocabulário;
+- `data/srd2-cartas-core-midnight-auditoria.json` vincula os 21 IDs oficiais aos IDs locais; `tools/conferir-srd2-cartas-core-midnight.mjs` protege identidade, nível, tipo, custo de recordar, inventário, correções mecânicas e vocabulário;
 - o segundo checkpoint compara **Glifo do Crepúsculo**, **Expert em Furtividade**, **Silêncio**, **Retirada Fantasma**, **Sussurros Sombrios**, **Disfarce em Massa** e **Tocado pela Meia-Noite**, dos níveis 4–7, à p. 217;
 - **Disfarce em Massa** agora preserva a regra exata: a Contagem Regressiva diminui quando o Mestre escolhe isso como consequência, sem inventar um gatilho previamente definido;
 - o vocabulário ativo do segundo checkpoint usa **jogada com Medo/Esperança**, **jogada de Conjuração**, **jogada de Presença**, **dano Maior**, **limpar**, **feitiço**, **cartas ativas**, **Dado de Medo** e **jogada de dano**;
-- a cobertura de `domain-cards` está em auditoria: 119 de 189 cartas Core conferidas; 70 cartas Core e 21 cartas de Pavor ainda pendentes.
+- o terceiro checkpoint compara **Esquiva Desaparecente**, **Caçador das Sombras**, **Carga Mágica**, **Terror Noturno**, **Tributo do Crepúsculo**, **Eclipse** e **Espectro da Escuridão**, dos níveis 7–10, à p. 218;
+- **Esquiva Desaparecente** agora exige a falha de um ataque que causaria dano físico; **Carga Mágica** conta os PV realmente marcados; e **Eclipse** termina por dano **Severo**, não Grave;
+- **Caçador das Sombras** usa Evasão; **Terror Noturno** descarta o Medo roubado; **Tributo do Crepúsculo** limpa as fichas; e Eclipse usa jogada de Conjuração;
+- a cobertura de `domain-cards` está em auditoria: 126 de 189 cartas Core conferidas; 63 cartas Core e 21 cartas de Pavor ainda pendentes.
 
-Validação deste checkpoint: `npm run teste:srd2` verde com 65 termos mecânicos, 31 nomes novos, 1.539 registros inventariados (**185 implementados**, 1.353 pendentes), 95 registros no recorte do núcleo (**64/64 existentes conferidos**) e validadores específicos; backend **951/951**, gerados **14/14**, sintaxe local **103 arquivos**, CSS limpo. O E2E local não executou porque a imagem atual não contém o binário Chromium do Playwright; o bloqueio ocorreu antes de abrir o site e precisa ser repetido no CI/ambiente com navegador antes de promoção.
+Validação deste checkpoint: `npm run teste:srd2` verde com 65 termos mecânicos, 31 nomes novos, 1.539 registros inventariados (**192 implementados**, 1.346 pendentes), 95 registros no recorte do núcleo (**64/64 existentes conferidos**) e validadores específicos; backend **951/951**, gerados **14/14**, sintaxe local **103 arquivos**, CSS limpo. O E2E local não executou porque a imagem atual não contém o binário Chromium do Playwright; o bloqueio ocorreu antes de abrir o site e precisa ser repetido no CI/ambiente com navegador antes de promoção.
 
 Este checkpoint também restaura como texto legível `data/classes.json` e `tools/testes-backend.mjs`, que estavam corrompidos no histórico da branch. O gerador de classes reproduz exatamente `backend/42_Classes.gs`, e a suíte completa protege o conteúdo recuperado.
 
-Próximo checkpoint exato: comparar as sete cartas restantes de Meia-Noite com o SRD 2.0 — **Esquiva Desaparecente**, **Caçador das Sombras**, **Carga Mágica**, **Terror Noturno**, **Tributo do Crepúsculo**, **Eclipse** e **Espectro da Escuridão**. Esse checkpoint fecha o domínio; depois continuar Sábio, Esplendor e Valor e só então integrar Pavor. Em paralelo conceitual, projetar a persistência de Transformações, mas não expor as seis opções antes do ciclo completo de aquisição/remoção e efeitos permanentes estar protegido no servidor.
+Próximo bloco exato: comparar as **21 cartas de Sábio** com o SRD 2.0, repetindo os checkpoints de sete cartas e o vínculo individual de nome, nível, custo de recordar, texto e automação. Depois continuar Esplendor e Valor e só então integrar Pavor. Em paralelo conceitual, projetar a persistência de Transformações, mas não expor as seis opções antes do ciclo completo de aquisição/remoção e efeitos permanentes estar protegido no servidor.
 
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 
@@ -759,7 +762,7 @@ Meia-Noite está revisada integralmente (níveis 1–10). As doze cartas restant
 
 Automação segura: Retirada Fantasma cobra separadamente as duas Esperanças sem fingir que conhece a posição do ponto de retorno; Silêncio cobra Esperança após sucesso; Disfarce em Massa cobra Estresse e inicia a Contagem Regressiva existente em 8; Sussurros Sombrios cobra Estresse apenas para a sondagem; Esquiva Desaparecente mantém um estado contextual até a próxima ação. Tocado pela Meia-Noite exige 4+ cartas ativas para o botão de dano e publica os dois benefícios contextuais, sem manipular o Medo do Mestre automaticamente.
 
-Carga Mágica e Tributo do Crepúsculo preservam seus contadores persistentes já existentes. Caçador das Sombras permanece contextual para não gravar +1 Evasão fora de penumbra/escuridão. Terror Noturno registra 1/descanso longo sem mover o Medo do Mestre pela ficha do jogador. Eclipse registra uso/estado após sucesso e é encerrado manualmente pelos gatilhos de Medo/dano Grave. Espectro da Escuridão usa estado persistente e a infraestrutura já existente de imunidade de dano para anular dano físico enquanto a forma está ativa.
+Carga Mágica e Tributo do Crepúsculo preservam seus contadores persistentes já existentes. Caçador das Sombras permanece contextual para não gravar +1 Evasão fora de penumbra/escuridão. Terror Noturno registra 1/descanso longo sem mover o Medo do Mestre pela ficha do jogador. Na auditoria SRD2 posterior, Eclipse foi corrigido para encerrar por Medo/dano Severo, não dano Grave. Espectro da Escuridão usa estado persistente e a infraestrutura já existente de imunidade de dano para anular dano físico enquanto a forma está ativa.
 
 Próximo domínio canônico pendente do Lote 8: **Sábio níveis 1–4**.
 

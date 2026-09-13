@@ -4999,7 +4999,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Quando um ataque físico contra você falhar, pode gastar 1 Esperança para se envolver em sombras, tornando-se Oculto e teleportando para um ponto dentro do alcance Próximo do atacante. Você permanece Oculto até a próxima vez que fizer uma jogada de ação.",
+   "texto": "Quando um ataque contra você que causaria dano físico falhar, pode gastar 1 Esperança para se envolver em sombras, tornando-se Oculto e teleportando para um ponto em alcance Próximo do atacante. Você permanece Oculto até a próxima vez que fizer uma jogada de ação.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Esquiva Desaparecente.png",
    "arquivo": "Esquiva Desaparecente.png",
    "condicoes": [
@@ -5014,11 +5014,11 @@
    "observacao": null,
    "automacao": {
     "classificacao": "automatizada-custo-e-estado-contextual",
-    "resumo": "Após um ataque físico falhar, o app cobra 1 Esperança e mantém um estado de Esquiva Desaparecente ativo para lembrar o Oculto contextual."
+    "resumo": "Após um ataque que causaria dano físico falhar, o app cobra 1 Esperança e mantém um estado de Esquiva Desaparecente ativo para lembrar o Oculto contextual."
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Teleporte para um ponto Próximo do atacante e considere-se Oculto conforme a carta. Encerre o estado após sua próxima jogada de ação; o app não observa jogadas externas."
+    "resumo": "Teleporte para um ponto em alcance Próximo do atacante e considere-se Oculto conforme a carta. Encerre o estado após sua próxima jogada de ação; o app não observa jogadas externas."
    },
    "uso": {
     "custo": {
@@ -5032,8 +5032,8 @@
      "rotuloEncerrar": "Encerrar após a próxima ação",
      "avisoEncerrar": "Esquiva Desaparecente encerrada."
     },
-    "rotuloAtivar": "Ataque físico falhou: desaparecer · 1 Esperança",
-    "lembrete": "Teleporte para Próximo do atacante e fique Oculto até sua próxima jogada de ação; depois encerre este estado."
+    "rotuloAtivar": "Ataque que causaria dano físico falhou · 1 Esperança",
+    "lembrete": "Teleporte para um ponto em alcance Próximo do atacante e fique Oculto até sua próxima jogada de ação; depois encerre este estado."
    }
   },
   {
@@ -5098,7 +5098,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Quando você sofrer dano mágico, coloque na carta um número de marcadores igual à quantidade de Pontos de Vida perdidos. Você pode armazenar um número de marcadores igual ao seu traço de Conjuração.\nQuando fizer um ataque bem-sucedido contra um alvo, pode gastar qualquer número de marcadores para adicionar 1d6 ao dano para cada marcador gasto.",
+   "texto": "Quando você sofrer dano mágico, coloque nesta carta um número de fichas igual à quantidade de Pontos de Vida que marcou. Você pode armazenar um número de fichas igual ao seu traço de Conjuração.\nQuando fizer um ataque bem-sucedido contra um alvo, pode gastar qualquer número de fichas para adicionar 1d6 à sua jogada de dano para cada ficha gasta.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Carga Mágica.png",
    "arquivo": "Carga Mágica.png",
    "condicoes": [],
@@ -5115,7 +5115,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Quando sofrer dano mágico, adicione ao contador marcadores iguais aos PV perdidos, respeitando o teto. Após um ataque bem-sucedido, gaste quantos quiser e adicione 1d6 de dano por marcador."
+    "resumo": "Quando sofrer dano mágico, adicione ao contador fichas iguais aos PV marcados, respeitando o teto. Após um ataque bem-sucedido, gaste quantas quiser e adicione 1d6 à jogada de dano por ficha."
    }
   },
   {
@@ -5128,7 +5128,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 2,
-   "texto": "Sua habilidade é aprimorada sob o manto da sombra. Enquanto estiver envolto em pouca luz ou escuridão, você ganha +1 em Esquiva e realiza jogadas de ataque com vantagem.",
+   "texto": "Sua habilidade é aprimorada sob o manto da sombra. Enquanto estiver envolto em pouca luz ou escuridão, você ganha +1 em Evasão e realiza jogadas de ataque com vantagem.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Caçador das Sombras.png",
    "arquivo": "Caçador das Sombras.png",
    "condicoes": [],
@@ -5157,7 +5157,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 2,
-   "texto": "Uma vez por descanso longo, escolha alvos dentro do alcance Muito Próximo para perceber você como um horror aterrorizante. Os alvos devem ter sucesso em uma Jogada de Reação (16) ou ficarem temporariamente Aterrorizados. Enquanto Aterrorizados, eles ficam vulneráveis.\nRoube um número de Medos do Mestre igual à quantidade de alvos Aterrorizados (até o máximo disponível no pool do Mestre). Role um número de d6 igual ao número de Medos roubados e cause o dano total a cada alvo Aterrorizado. Descarte os Medos roubados.",
+   "texto": "Uma vez por descanso longo, escolha quaisquer alvos em alcance Muito Próximo para perceber você como um horror aterrorizante. Os alvos devem obter sucesso em uma jogada de reação (16) ou ficam temporariamente Aterrorizados. Enquanto Aterrorizados, eles ficam Vulneráveis.\nRoube uma quantidade de Medo do Mestre igual à quantidade de alvos Aterrorizados, limitada à quantidade disponível na reserva do Mestre. Role uma quantidade de d6 igual à quantidade de Medo roubada e cause o dano total a cada alvo Aterrorizado. Descarte o Medo roubado.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Terror Noturno.png",
    "arquivo": "Terror Noturno.png",
    "condicoes": [
@@ -5177,7 +5177,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Escolha os alvos, resolva as Reações 16, condições, transferência temporária de Medo do Mestre e d6 de dano fora do app; depois devolva/descarte o Medo conforme a carta."
+    "resumo": "Escolha os alvos, resolva as jogadas de reação 16, condições, transferência temporária de Medo do Mestre e d6 de dano fora do app; depois descarte o Medo roubado."
    },
    "uso": {
     "custo": {},
@@ -5186,7 +5186,7 @@
      "maximo": 1
     },
     "rotuloAtivar": "Registrar Terror Noturno · 1/descanso longo",
-    "lembrete": "Resolva Reações 16 e Medo do Mestre na mesa. Alvos que falham ficam Aterrorizados/Vulneráveis e recebem o dano dos d6 rolados fora do app."
+    "lembrete": "Resolva as jogadas de reação 16 e o Medo do Mestre na mesa. Alvos que falham ficam Aterrorizados e Vulneráveis e recebem o dano dos d6 rolados fora do app."
    }
   },
   {
@@ -5199,7 +5199,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "ABILITY",
    "custoRecordar": 1,
-   "texto": "Escolha um alvo dentro do alcance Distante. Quando você tiver sucesso em uma jogada de ação contra esse alvo que não resulte em uma jogada de dano, coloque uma ficha nesta carta. Quando causar dano a esse alvo, você pode gastar qualquer número de fichas para adicionar um d12 por ficha gasta à sua jogada de dano. Você só pode manter um Tributo do Crepúsculo ativo em uma criatura por vez.\nAo escolher um novo alvo ou realizar um descanso, remova todas as fichas não gastas.",
+   "texto": "Escolha um alvo em alcance Distante. Quando você tiver sucesso em uma jogada de ação contra esse alvo que não resulte em uma jogada de dano, coloque uma ficha nesta carta. Quando causar dano a esse alvo, você pode gastar qualquer número de fichas para adicionar 1d12 por ficha gasta à sua jogada de dano. Você só pode manter um Tributo do Crepúsculo ativo em uma criatura por vez.\nAo escolher um novo alvo ou fazer um descanso, limpe todas as fichas não gastas.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Tributo do Crepúsculo.png",
    "arquivo": "Tributo do Crepúsculo.png",
    "condicoes": [],
@@ -5228,7 +5228,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 2,
-   "texto": "Faça uma Jogada de Magia (16). Uma vez por descanso longo, em caso de sucesso, mergulhe toda a área dentro do alcance Distante em completa escuridão que apenas você e seus aliados conseguem enxergar. Jogadas de ataque têm desvantagem ao mirar em você ou em um aliado dentro dessa sombra.\nAlém disso, quando você ou um aliado tiver sucesso com Esperança contra um inimigo dentro dessa sombra, o alvo deve marcar um Estresse.\nEssa magia dura até o Mestre gastar um Medo em seu turno para dissipar o efeito ou até você sofrer dano Grave.",
+   "texto": "Faça uma jogada de Conjuração (16). Uma vez por descanso longo, em caso de sucesso, mergulhe toda a área em alcance Distante em completa escuridão que apenas você e seus aliados conseguem enxergar. Jogadas de ataque têm desvantagem ao mirar em você ou em um aliado dentro dessa sombra.\nAlém disso, quando você ou um aliado obtiver sucesso com Esperança contra um adversário dentro dessa sombra, o alvo deve marcar 1 Estresse.\nEste feitiço dura até o Mestre gastar 1 Medo no turno dele para limpar o efeito ou até você sofrer dano Severo.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Eclipse.png",
    "arquivo": "Eclipse.png",
    "condicoes": [],
@@ -5245,11 +5245,11 @@
    "observacao": null,
    "automacao": {
     "classificacao": "automatizada-uso-e-estado-apos-sucesso",
-    "resumo": "Depois de sucesso na Jogada de Magia 16, o app registra uma vez por descanso longo e mantém Eclipse como estado ativo."
+    "resumo": "Depois de sucesso na jogada de Conjuração 16, o app registra uma vez por descanso longo e mantém Eclipse como estado ativo."
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A escuridão, desvantagem, Estresse dos inimigos, gasto de Medo do Mestre e o gatilho de dano Grave pertencem à cena. Encerre o estado manualmente quando o Mestre gastar Medo ou você sofrer dano Grave."
+    "resumo": "A escuridão, desvantagem, Estresse dos adversários, gasto de Medo do Mestre e o gatilho de dano Severo pertencem à cena. Encerre o estado manualmente quando o Mestre gastar 1 Medo ou você sofrer dano Severo."
    },
    "uso": {
     "custo": {},
@@ -5266,7 +5266,7 @@
      "avisoEncerrar": "Eclipse encerrado."
     },
     "rotuloAtivar": "Sucesso: ativar Eclipse · 1/descanso longo",
-    "lembrete": "Use após sucesso na Jogada de Magia 16. Encerre quando o Mestre gastar 1 Medo em seu turno ou quando você sofrer dano Grave."
+    "lembrete": "Use após sucesso na jogada de Conjuração 16. Encerre quando o Mestre gastar 1 Medo no turno dele ou quando você sofrer dano Severo."
    }
   },
   {
@@ -5279,7 +5279,7 @@
    "tipo": "Feitiço",
    "tipoImpresso": "SPELL",
    "custoRecordar": 1,
-   "texto": "Marque um Estresse para se tornar Espectral até fazer uma jogada de ação que tenha como alvo outra criatura. Enquanto estiver Espectral, você é imune a dano físico e pode flutuar e atravessar objetos sólidos. Outras criaturas ainda podem vê-lo nessa forma.",
+   "texto": "Marque 1 Estresse para se tornar Espectral até fazer uma jogada de ação que tenha como alvo outra criatura. Enquanto estiver Espectral, você é imune a dano físico e pode flutuar e atravessar objetos sólidos. Outras criaturas ainda podem vê-lo nessa forma.",
    "imagem": "assets/cartas/dominios/MIDNIGHT/Espectro da Escuridão.png",
    "arquivo": "Espectro da Escuridão.png",
    "condicoes": [
