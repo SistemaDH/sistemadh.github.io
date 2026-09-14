@@ -12,7 +12,7 @@
     { "id": "communities", "esperados": 15, "estado": "em-auditoria", "observacao": "9 registros do Core conferidos; 6 comunidades novas estão traduzidas e estruturadas em catálogo não exposto, ainda sem implementação. O corpus usa a chave singular feature." },
     { "id": "transformations", "esperados": 6, "estado": "em-auditoria", "observacao": "As 6 transformações, 12 características e 36 perguntas estão traduzidas e estruturadas em catálogo não exposto; falta implementar o ciclo de vida e as automações." },
     { "id": "beastforms", "esperados": 24, "estado": "conferido", "observacao": "As 24 Formas de Fera estão implementadas, vinculadas individualmente às pp. 15–18 e corrigidas conforme o SRD 2.0." },
-    { "id": "weapons", "esperados": 358, "estado": "em-auditoria", "observacao": "226 armas conferidas registro a registro: 194 do núcleo e 32 de herói cotidiano; faltam 132 registros." },
+    { "id": "weapons", "esperados": 358, "estado": "em-auditoria", "observacao": "231 armas conferidas registro a registro: 194 do núcleo, 32 de herói cotidiano e 5 de faroeste; faltam 127 registros." },
     { "id": "armor", "esperados": 76, "estado": "conferido", "observacao": "As 76 armaduras foram conferidas contra as pp. 72–74, 192 e 201 do SRD 2.0; 7 opções suplementares incluem 4 já existentes e 3 famílias com valores por patamar." },
     { "id": "items", "esperados": 120, "estado": "nao-iniciado" },
     { "id": "consumables", "esperados": 120, "estado": "nao-iniciado" },

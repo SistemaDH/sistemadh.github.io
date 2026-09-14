@@ -1,0 +1,113 @@
+{
+  "versao": 1,
+  "estado": "conferido",
+  "fonte": "Daggerheart SRD 2.0, p. 197",
+  "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64",
+  "registros": [
+    [
+      "weapons/revolver",
+      [
+        "campanha-colosso-das-terras-aridas-revolver",
+        "campanha-colosso-das-terras-aridas-revolver-t2",
+        "campanha-colosso-das-terras-aridas-revolver-t3",
+        "campanha-colosso-das-terras-aridas-revolver-t4"
+      ],
+      "1e04b60cc1199ff2b8e699eb80d261b9465004fa7ab61594e855a74c4cedb6c8",
+      "primary",
+      "Finesse",
+      "Far",
+      [
+        "Tier 1: d8+1 phy",
+        "Tier 2: d8+4 phy",
+        "Tier 3: d8+7 phy",
+        "Tier 4: d8+10 phy"
+      ],
+      "One-Handed",
+      "Six Shot"
+    ],
+    [
+      "weapons/rifle",
+      [
+        "campanha-colosso-das-terras-aridas-rifle",
+        "campanha-colosso-das-terras-aridas-rifle-t2",
+        "campanha-colosso-das-terras-aridas-rifle-t3",
+        "campanha-colosso-das-terras-aridas-rifle-t4"
+      ],
+      "58a40232f00e96e92cb7c81fb6626a2da51263e8d653477cbfd09030e4bfc9fa",
+      "primary",
+      "Agility",
+      "Very Far",
+      [
+        "Tier 1: d8+2 phy",
+        "Tier 2: d8+5 phy",
+        "Tier 3: d8+8 phy",
+        "Tier 4: d8+11 phy"
+      ],
+      "Two-Handed",
+      "Sightline"
+    ],
+    [
+      "weapons/shotgun",
+      [
+        "campanha-colosso-das-terras-aridas-escopeta",
+        "campanha-colosso-das-terras-aridas-escopeta-t2",
+        "campanha-colosso-das-terras-aridas-escopeta-t3",
+        "campanha-colosso-das-terras-aridas-escopeta-t4"
+      ],
+      "99fb9639b4aa30c554dc12eec47b74268f030911faa381631766549051de3e63",
+      "primary",
+      "Strength",
+      "Very Close",
+      [
+        "Tier 1: d6+2 phy",
+        "Tier 2: d6+5 phy",
+        "Tier 3: d6+8 phy",
+        "Tier 4: d6+11 phy"
+      ],
+      "Two-Handed",
+      "Scattershot"
+    ],
+    [
+      "weapons/lasso",
+      [
+        "campanha-colosso-das-terras-aridas-laco",
+        "campanha-colosso-das-terras-aridas-laco-t2",
+        "campanha-colosso-das-terras-aridas-laco-t3",
+        "campanha-colosso-das-terras-aridas-laco-t4"
+      ],
+      "37fffeb3515cb790efcd558ada759d995628d0ed0ba0009116f01792b7525960",
+      "secondary",
+      "Agility",
+      "Very Close",
+      [
+        "Tier 1: d4 phy",
+        "Tier 2: d4+3 phy",
+        "Tier 3: d4+6 phy",
+        "Tier 4: d4+9 phy"
+      ],
+      "One-Handed",
+      "Roped"
+    ],
+    [
+      "weapons/small-revolver",
+      [
+        "campanha-colosso-das-terras-aridas-revolver-pequeno",
+        "campanha-colosso-das-terras-aridas-revolver-pequeno-t2",
+        "campanha-colosso-das-terras-aridas-revolver-pequeno-t3",
+        "campanha-colosso-das-terras-aridas-revolver-pequeno-t4"
+      ],
+      "f27058ffdfa77452a526fd51fcb3d4f1f6c3122e20badd4807e608a949b32d44",
+      "secondary",
+      "Finesse",
+      "Far",
+      [
+        "Tier 1: d6 phy",
+        "Tier 2: d6+3 phy",
+        "Tier 3: d6+6 phy",
+        "Tier 4: d6+9 phy"
+      ],
+      "One-Handed",
+      "Quick Shot"
+    ]
+  ]
+}

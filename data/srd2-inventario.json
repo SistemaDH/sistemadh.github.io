@@ -5092,7 +5092,7 @@
             "pdfPageEnd": 197
           },
           "corpusSha256": "37fffeb3515cb790efcd558ada759d995628d0ed0ba0009116f01792b7525960",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/legendary-arcane-frame-wheelchair",
@@ -6232,7 +6232,7 @@
             "pdfPageEnd": 197
           },
           "corpusSha256": "1e04b60cc1199ff2b8e699eb80d261b9465004fa7ab61594e855a74c4cedb6c8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/ricochet-axes",
@@ -6262,7 +6262,7 @@
             "pdfPageEnd": 197
           },
           "corpusSha256": "58a40232f00e96e92cb7c81fb6626a2da51263e8d653477cbfd09030e4bfc9fa",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/rime-scepter",
@@ -6532,7 +6532,7 @@
             "pdfPageEnd": 197
           },
           "corpusSha256": "99fb9639b4aa30c554dc12eec47b74268f030911faa381631766549051de3e63",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/sickle",
@@ -6652,7 +6652,7 @@
             "pdfPageEnd": 197
           },
           "corpusSha256": "f27058ffdfa77452a526fd51fcb3d4f1f6c3122e20badd4807e608a949b32d44",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/soldiers-pike",
