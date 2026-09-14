@@ -47,7 +47,7 @@ O corpus auxiliar pinado registra 1.539 registros: 10 domínios, 13 classes, 26 
 
 O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. O inventário individual fica em `data/srd2-inventario.json`: cada um dos 1.539 registros preserva ID, nome inglês, tipo, hash do registro no corpus, estado de implementação e, quando aplicável, `sourceLocator`. `npm run teste:srd2` impede alteração acidental das contagens, IDs, hashes estruturais ou estados. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
 
-No checkpoint atual, 334 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 1.204 permanecem `pendente`.
+No checkpoint atual, 338 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 1.200 permanecem `pendente`.
 
 ## Fase 1 — Level Up
 
@@ -212,10 +212,12 @@ As 16 armaduras básicas dos quatro patamares foram vinculadas individualmente �
 
 O vínculo e os efeitos derivados ficam protegidos por `data/srd2-armaduras-basicas-auditoria.json` e `tools/conferir-srd2-armaduras-basicas.mjs`.
 
-### Armaduras especiais existentes (34/76)
+### Armaduras existentes e novas de patamar 1 (38/76)
 
 As 18 armaduras especiais que já existiam no catálogo ativo foram conferidas individualmente contra as pp. 73–74. Patamares, limiares, Pontuação de Armadura e características permanecem mecanicamente compatíveis, incluindo os efeitos automatizados de Égide, Resiliente, Reforçado, Deslocamento, Esperançoso, Impenetrável, Físico, Magia, Doloroso, Temporal e Fortificado.
 
 Quatro textos ativos foram reparados: **Impenetrável** volta a mencionar o último Ponto de Vida; **Canalização** usa jogadas de Conjuração; **Busca da Verdade** volta a registrar mentira em alcance Próximo; e **Difícil** aplica sua penalidade aos traços e à Evasão. O vínculo integral fica protegido por `data/srd2-armaduras-especiais-auditoria.json` e `tools/conferir-srd2-armaduras-especiais.mjs`.
 
-A coleção permanece `em-auditoria`: faltam 35 armaduras do núcleo e 7 armaduras de campanhas suplementares, totalizando 42 registros novos.
+O primeiro lote novo adiciona Vestes de Mago, Armadura Brigandina, Armadura de Cota de Escamas e Armadura de Faixas, todas vinculadas à p. 72. Encantadas, Incômoda e a penalidade de Evasão de Volumosa já têm efeitos derivados; as reações de dano de Forrada e Volumosa permanecem classificadas como pendências mecânicas explícitas.
+
+A coleção permanece `em-auditoria`: faltam 31 armaduras do núcleo e 7 armaduras de campanhas suplementares, totalizando 38 registros novos.

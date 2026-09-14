@@ -1,0 +1,19 @@
+{
+  "versao": 1,
+  "estado": "conferido",
+  "catalogo": "data/equipamentos.json",
+  "fonte": { "srd": "2.0", "data": "2026-08-25", "paginasPdf": "72", "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64" },
+  "progresso": { "conferidasNesteBloco": 4, "conferidasNaColecao": 38, "totalColecao": 76 },
+  "registros": [
+    ["armor/mage-robes", "armadura-t1-vestes-de-mago"],
+    ["armor/brigandine-armor", "armadura-t1-armadura-brigandina"],
+    ["armor/scale-mail-armor", "armadura-t1-armadura-de-cota-de-escamas"],
+    ["armor/banded-armor", "armadura-t1-armadura-de-faixas"]
+  ],
+  "automacao": {
+    "completa": ["Encantadas", "Incômoda"],
+    "parcial": ["Volumosa"],
+    "pendente": ["Forrada"],
+    "observacao": "Os vínculos e números já integram o catálogo. As reações de dano de Forrada e Volumosa permanecem declaradas explicitamente para um checkpoint mecânico próprio."
+  }
+}

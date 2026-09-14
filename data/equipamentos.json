@@ -5385,6 +5385,107 @@
    }
   },
   {
+   "id": "armadura-t1-vestes-de-mago",
+   "categoria": "armadura",
+   "tier": 1,
+   "tabela": null,
+   "nome": "Vestes de Mago",
+   "origemNome": "traducao-srd2",
+   "nomeIngles": "Mage Robes",
+   "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 72",
+   "limiares": "4/10",
+   "pontuacaoArmadura": 2,
+   "caracteristica": {
+    "nomeIngles": "Enchanted",
+    "textoIngles": "Enchanted: Gain a bonus to your damage thresholds equal to your Spellcast trait.",
+    "nome": "Encantadas",
+    "texto": "Encantadas: Você recebe um bônus em seus limiares de dano igual ao seu traço de Conjuração.",
+    "fonteTraducao": "traducao-srd2",
+    "confianca": "alta",
+    "efeitoDerivado": {
+     "limiaresPorTracoConjuracao": true
+    }
+   }
+  },
+  {
+   "id": "armadura-t1-armadura-brigandina",
+   "categoria": "armadura",
+   "tier": 1,
+   "tabela": null,
+   "nome": "Armadura Brigandina",
+   "origemNome": "traducao-srd2",
+   "nomeIngles": "Brigandine Armor",
+   "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 72",
+   "limiares": "6/12",
+   "pontuacaoArmadura": 3,
+   "caracteristica": {
+    "nomeIngles": "Lined",
+    "textoIngles": "Lined: Mark a Stress to negate Minor damage.",
+    "nome": "Forrada",
+    "texto": "Forrada: Marque 1 Estresse para negar dano Menor.",
+    "fonteTraducao": "traducao-srd2",
+    "confianca": "alta",
+    "automacao": {
+     "classificacao": "reacao-dano-pendente",
+     "rolaNoApp": false,
+     "motivo": "A regra está publicada no catálogo; o custo e a negação do dano Menor serão ligados ao fluxo de dano em um checkpoint mecânico próprio."
+    }
+   }
+  },
+  {
+   "id": "armadura-t1-armadura-de-cota-de-escamas",
+   "categoria": "armadura",
+   "tier": 1,
+   "tabela": null,
+   "nome": "Armadura de Cota de Escamas",
+   "origemNome": "traducao-srd2",
+   "nomeIngles": "Scale Mail Armor",
+   "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 72",
+   "limiares": "7/14",
+   "pontuacaoArmadura": 3,
+   "caracteristica": {
+    "nomeIngles": "Cumbersome",
+    "textoIngles": "Cumbersome: −1 to Finesse",
+    "nome": "Incômoda",
+    "texto": "Incômoda: −1 em Finesse.",
+    "fonteTraducao": "traducao-srd2",
+    "confianca": "alta",
+    "efeitoDerivado": {
+     "tracos": { "finesse": -1 }
+    }
+   }
+  },
+  {
+   "id": "armadura-t1-armadura-de-faixas",
+   "categoria": "armadura",
+   "tier": 1,
+   "tabela": null,
+   "nome": "Armadura de Faixas",
+   "origemNome": "traducao-srd2",
+   "nomeIngles": "Banded Armor",
+   "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 72",
+   "limiares": "8/16",
+   "pontuacaoArmadura": 4,
+   "caracteristica": {
+    "nomeIngles": "Bulky",
+    "textoIngles": "Bulky: −1 to Evasion; when you take Severe damage, you must mark a Stress.",
+    "nome": "Volumosa",
+    "texto": "Volumosa: −1 em Evasão; quando sofrer dano Severo, você deve marcar 1 Estresse.",
+    "fonteTraducao": "traducao-srd2",
+    "confianca": "alta",
+    "efeitoDerivado": { "evasao": -1 },
+    "automacao": {
+     "classificacao": "passiva-parcial",
+     "rolaNoApp": false,
+     "motivo": "O −1 em Evasão é automático; a marcação de Estresse por dano Severo será ligada ao fluxo de dano em um checkpoint mecânico próprio."
+    }
+   }
+  },
+  {
    "id": "armadura-t2-armadura-de-gambeson-aprimorada",
    "categoria": "armadura",
    "tier": 2,

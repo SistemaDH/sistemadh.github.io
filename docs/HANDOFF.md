@@ -288,6 +288,18 @@ Validação esperada deste checkpoint: inventário com 1.539 registros (**334 im
 
 Próximo checkpoint seguro: implementar as 35 armaduras novas do núcleo; depois, tratar separadamente as 7 armaduras de campanhas suplementares. Restam 42 registros na coleção, não 49.
 
+### Checkpoint SRD2 — novas armaduras de patamar 1
+
+- adicionadas Vestes de Mago, Armadura Brigandina, Armadura de Cota de Escamas e Armadura de Faixas;
+- as quatro opções foram vinculadas individualmente à p. 72 do SRD 2.0;
+- Encantadas aplica aos dois limiares o valor do traço de Conjuração; Incômoda e a parte de Evasão de Volumosa usam efeitos derivados;
+- as reações de dano de Forrada e Volumosa estão classificadas como pendência mecânica explícita, sem fingir automação inexistente;
+- `data/srd2-armaduras-novas-tier1-auditoria.json` e `tools/conferir-srd2-armaduras-novas-tier1.mjs` protegem este lote.
+
+Validação esperada deste checkpoint: inventário com 1.539 registros (**338 implementados**, 1.200 pendentes), 38/76 armaduras conferidas e suíte SRD2/backend/gerados verde.
+
+Próximo checkpoint seguro: implementar as 10 armaduras novas de patamar 2; depois restarão 21 do núcleo e 7 suplementares.
+
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 
 Iniciado em 08/09/2026 na branch `ediçãoclaude`.

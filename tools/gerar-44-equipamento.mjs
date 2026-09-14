@@ -24,16 +24,14 @@ const emPortugues = (dano) => String(dano || '')
 
 
 /*
- * Conferência: nenhuma característica de arma/armadura pode ficar com tradução
- * minha. Eram 22 (o livro velho não trazia essas linhas legíveis); todas foram
- * conferidas no DH-DigitalRegras — e várias estavam diferentes do que eu tinha
- * chutado: Devastating é "Atroz", não "Devastador"; Greedy é "Egoísta", não
- * "Ganancioso"; Healing é "Vitalizante", não "Curativo".
+ * Conferência: traduções vêm do livro ou dos novos registros editoriais SRD2.
+ * Qualquer outra origem continua bloqueada para impedir texto improvisado no
+ * catálogo publicado.
  */
 {
   const minhas = [...(d.armas || []), ...(d.armaduras || [])]
     .map((x) => x.caracteristica).filter(Boolean)
-    .filter((c) => c.fonteTraducao !== 'livro')
+    .filter((c) => !['livro', 'traducao-srd2'].includes(c.fonteTraducao))
     .map((c) => c.nomeIngles);
   if (minhas.length) {
     throw new Error(`característica sem tradução do livro: ${[...new Set(minhas)].join(', ')}`);

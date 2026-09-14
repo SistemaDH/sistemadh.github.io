@@ -581,7 +581,7 @@ const ITENS = avaliar('ITENS');
 teste('contagem bate com o SRD oficial', () => {
   igual(ARMAS.filter((a) => a.cat === 'primaria').length, 167, 'armas primárias — 155 tabeladas + 12 cadeiras de combate');
   igual(ARMAS.filter((a) => a.cat === 'secundaria').length, 37, 'armas secundárias');
-  igual(ARMADURAS.length, 34, 'armaduras');
+  igual(ARMADURAS.length, 38, 'armaduras — 34 legadas + 4 novas do SRD2');
   igual(ITENS.filter((i) => i.tipo === 'saque').length, 60, 'itens de saque');
   igual(ITENS.filter((i) => i.tipo === 'consumivel').length, 60, 'consumíveis');
 });
@@ -1374,11 +1374,11 @@ teste('a mochila aceita item novo e devolve item tirado', () => {
   igual(contexto.aplicarAjustes_(f, [{ tipo: 'inventario', acao: 'remover', indice: 999 }]).erros.length, 1);
 });
 
-teste('nenhuma característica de equipamento é tradução minha (fecha B2)', () => {
+teste('toda característica de equipamento tem tradução editorial rastreável (fecha B2)', () => {
   const dados = JSON.parse(fs.readFileSync(new URL('../data/equipamentos.json', import.meta.url), 'utf8'));
   const cs = [...dados.armas, ...dados.armaduras].map((x) => x.caracteristica).filter(Boolean);
-  const minhas = cs.filter((c) => c.fonteTraducao !== 'livro').map((c) => c.nomeIngles);
-  igual([...new Set(minhas)], [], 'todas as 68 vêm do livro agora');
+  const semFonte = cs.filter((c) => !['livro', 'traducao-srd2'].includes(c.fonteTraducao)).map((c) => c.nomeIngles);
+  igual([...new Set(semFonte)], [], 'todas vêm do livro ou da tradução editorial SRD2');
   // Três que eu tinha traduzido diferente do oficial — se voltarem, foi
   // alguém regenerando por cima do arquivo velho.
   const por = (ing) => cs.find((c) => c.nomeIngles === ing);
@@ -2625,6 +2625,19 @@ teste('equipamento ativo altera Evasão, Armadura e traços; reserva não conced
     'arma na reserva não concede Armadura');
   igual(contexto.derivadosDoPersonagem_(guardado).evasao, 10,
     'arma na reserva não concede penalidade');
+});
+
+teste('Vestes de Mago somam o traço de Conjuração aos dois limiares', () => {
+  const vestes = ARMADURAS.find((a) => a.id === 'armadura-t1-vestes-de-mago');
+  verdade(vestes, 'Vestes de Mago não foram publicadas no backend');
+  const f = fichaDeModificador({
+    classe: 'mago', subclasse: 'mago-escola-do-conhecimento',
+    tracos: { conhecimento: 2 },
+    equipamento: { armadura: vestes.id, primaria: null, secundaria: null, reserva: [] }
+  });
+  const d = contexto.derivadosDoPersonagem_(f);
+  igual(d.limiarMaior, 7, '4 base + nível 1 + Conhecimento 2');
+  igual(d.limiarGrave, 13, '10 base + nível 1 + Conhecimento 2');
 });
 
 teste('Bellamoi e Cota Salvadora alteram o valor efetivo dos traços sem sobrescrever ficha.tracos', () => {

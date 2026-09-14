@@ -7393,7 +7393,7 @@
             "pdfPageEnd": 72
           },
           "corpusSha256": "20adf3d1bc35ba0742feeda6da4a21e19c3e90f469d53ae032dbcdf8d36e67f5",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/bellamoi-fine-armor",
@@ -7453,7 +7453,7 @@
             "pdfPageEnd": 72
           },
           "corpusSha256": "302b006dae01cbffc49e785d6b04499a85930c09d44db07084b2c4937dd61724",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/chainmail-armor",
@@ -8083,7 +8083,7 @@
             "pdfPageEnd": 72
           },
           "corpusSha256": "2f252d49be951a6f3b7bba83971241a1bf2cfd432344d467e43ea42257e61c02",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/monetts-cloak",
@@ -8218,7 +8218,7 @@
             "pdfPageEnd": 72
           },
           "corpusSha256": "77ace253ede33c05dbd4db4e0f99301059da8199c74d3989aeeeab94de523e33",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/silverweave-armor",

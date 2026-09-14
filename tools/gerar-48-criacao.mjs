@@ -418,6 +418,7 @@ function modificadoresDerivadosDaFicha_(ficha) {
     evasao: 0, limiares: 0, limiarMaior: 0, limiarGrave: 0,
     pontosDeVidaMaximos: 0, estresseMaximo: 0, pontuacaoArmadura: 0,
     limiaresSeUltimaArmaduraMarcada: 0,
+    limiaresPorTracoConjuracao: false,
     tracos: { agilidade: 0, forca: 0, finesse: 0, instinto: 0, presenca: 0, conhecimento: 0 },
     fontes: []
   };
@@ -446,6 +447,7 @@ function modificadoresDerivadosDaFicha_(ficha) {
     saida.estresseMaximo += numero('estresseMaximo');
     saida.pontuacaoArmadura += numero('pontuacaoArmadura');
     saida.limiaresSeUltimaArmaduraMarcada += numero('limiaresSeUltimaArmaduraMarcada');
+    if (e.limiaresPorTracoConjuracao) saida.limiaresPorTracoConjuracao = true;
     if (e.limiaresPorProficiencia) saida.limiares += prof * Number(e.limiaresPorProficiencia);
     if (e.limiarGravePorProficiencia) saida.limiarGrave += prof * Number(e.limiarGravePorProficiencia);
     if (e.tracosTodos) {
@@ -503,6 +505,11 @@ function modificadoresDerivadosDaFicha_(ficha) {
       saida.tracos[traco] += bonus;
       if (def.nome) saida.fontes.push(def.nome);
     });
+  }
+  if (saida.limiaresPorTracoConjuracao && typeof conjuracaoDoPersonagem_ === 'function') {
+    const tracoConjuracao = conjuracaoDoPersonagem_(ficha);
+    const base = Number(((ficha && ficha.tracos) || {})[tracoConjuracao]) || 0;
+    saida.limiares += base + (Number(saida.tracos[tracoConjuracao]) || 0);
   }
   return saida;
 }
