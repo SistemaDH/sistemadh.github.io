@@ -1,0 +1,49 @@
+{
+  "versao": 1,
+  "estado": "conferido",
+  "catalogo": "data/fichas-filhas.json",
+  "fonte": {
+    "srd": "2.0",
+    "data": "2026-08-25",
+    "paginasPdf": "15–18",
+    "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64"
+  },
+  "progresso": { "conferidas": 24, "total": 24 },
+  "registros": [
+    { "idFonte": "beastforms/agile-scout", "idLocal": "explorador-agil" },
+    { "idFonte": "beastforms/aquatic-predator", "idLocal": "predador-aquatico" },
+    { "idFonte": "beastforms/aquatic-scout", "idLocal": "explorador-aquatico" },
+    { "idFonte": "beastforms/armored-sentry", "idLocal": "carapaca-vigilante" },
+    { "idFonte": "beastforms/epic-aquatic-beast", "idLocal": "fera-aquatica-epica" },
+    { "idFonte": "beastforms/great-predator", "idLocal": "grande-predador" },
+    { "idFonte": "beastforms/great-winged-beast", "idLocal": "grande-fera-alada" },
+    { "idFonte": "beastforms/household-friend", "idLocal": "animal-domestico" },
+    { "idFonte": "beastforms/legendary-beast", "idLocal": "fera-lendaria" },
+    { "idFonte": "beastforms/legendary-hybrid", "idLocal": "hibrido-lendario" },
+    { "idFonte": "beastforms/massive-behemoth", "idLocal": "fera-massiva" },
+    { "idFonte": "beastforms/mighty-lizard", "idLocal": "lagarto-poderoso" },
+    { "idFonte": "beastforms/mighty-strider", "idLocal": "trotador-robusto" },
+    { "idFonte": "beastforms/mythic-aerial-hunter", "idLocal": "cacador-aereo-mitico" },
+    { "idFonte": "beastforms/mythic-beast", "idLocal": "fera-mitica" },
+    { "idFonte": "beastforms/mythic-hybrid", "idLocal": "hibrido-mitico" },
+    { "idFonte": "beastforms/nimble-grazer", "idLocal": "ruminante-arisco" },
+    { "idFonte": "beastforms/pack-predator", "idLocal": "predador-de-bando" },
+    { "idFonte": "beastforms/pouncing-predator", "idLocal": "predador-furtivo" },
+    { "idFonte": "beastforms/powerful-beast", "idLocal": "fera-poderosa" },
+    { "idFonte": "beastforms/stalking-arachnid", "idLocal": "aracnideo-espreitador" },
+    { "idFonte": "beastforms/striking-serpent", "idLocal": "serpente-traicoeira" },
+    { "idFonte": "beastforms/terrible-lizard", "idLocal": "lagarto-terrivel" },
+    { "idFonte": "beastforms/winged-beast", "idLocal": "fera-alada" }
+  ],
+  "correcoesSrd2": [
+    "Aracnídeo Espreitador: ataque d6+1 físico.",
+    "Carapaça Vigilante: Pontuação de Armadura e proibição de outras ações até sair da carapaça.",
+    "Serpente Traiçoeira: Bote Peçonhento alcança Muito Próximo.",
+    "Caçador Aéreo Mítico: movimento integra a ação e carrega três aliados.",
+    "Fera Massiva: carrega quatro aliados.",
+    "Fera Mítica: aceita base de 1º ou 2º patamar também no texto exibido.",
+    "Híbrido Mítico: combina três opções de 1º–3º patamar.",
+    "Ruminante Arisco: reação ocorre quando a jogada de ataque teria sucesso.",
+    "Restrained foi normalizado para Restrito e o erro 1 Pontos de Vida foi corrigido."
+  ]
+}

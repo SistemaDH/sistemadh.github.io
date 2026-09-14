@@ -199,3 +199,9 @@ O segundo checkpoint acrescentou **Correntes da Aflição**, **Invocar Horror**,
 O terceiro checkpoint fechou **Muralha de Fome**, **Exército Sombrio**, **Carne Sobrenatural**, **Danação**, **Saborear a Angústia**, **Avatar do Terror** e **Invocar Tormento**, dos níveis 7–10, contra a p. 214. A auditoria cobre a muralha de cena, os oito marcadores de Exército Sombrio, limiares derivados, custos variáveis de Estresse, gatilhos por dano Severo, transformação e dano dobrado.
 
 As cartas ficam em `data/srd2-cartas-pavor.json`, com `exposto: false`, fora de `data/cartas-dominio.json` e do backend Core. Cada entrada registra o vínculo de fonte, a classificação da automação futura e que nenhuma rolagem deve ser realizada pelo app. O validador específico impede exposição acidental, termos mecânicos em inglês e divergências nas 21 regras. Com isso, as **210/210 cartas dos dez domínios** estão conferidas contra o SRD 2.0.
+
+### Formas de Fera (24/24)
+
+As 24 Formas de Fera existentes foram vinculadas individualmente às pp. 15–18 do SRD 2.0. A auditoria confirmou patamares, traços, Evasão, ataques, vantagens e características e corrigiu divergências herdadas da prévia pt-BR: `d6+1` do Aracnídeo Espreitador, alcance Muito Próximo da Serpente Traiçoeira, três aliados do Caçador Aéreo Mítico, quatro da Fera Massiva, base de 1º ou 2º patamar da Fera Mítica e três opções do Híbrido Mítico. Restrained passa a usar **Restrito**, e as rolagens continuam físicas/manuais.
+
+O vínculo integral fica protegido por `data/srd2-formas-de-fera-auditoria.json` e `tools/conferir-srd2-formas-de-fera.mjs`.

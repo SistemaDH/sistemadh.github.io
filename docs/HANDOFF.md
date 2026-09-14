@@ -253,6 +253,17 @@ Validação deste checkpoint: inventário com 1.539 registros (**276 implementad
 
 Próximo checkpoint seguro: escolher outra coleção ainda não iniciada para auditoria. A exposição de Pavor e das quatro classes de Hope & Fear permanece uma decisão de integração separada.
 
+### Formas de Fera — 24/24 conferidas
+
+- as 24 formas existentes foram vinculadas individualmente às pp. 15–18 do SRD 2.0;
+- foram corrigidas divergências mecânicas da prévia pt-BR em dano, alcance, capacidade de carga, texto de reação e formas compostas;
+- Fera Mítica agora exibe corretamente base de 1º ou 2º patamar, e Híbrido Mítico exibe as três opções que o motor já exigia;
+- `data/srd2-formas-de-fera-auditoria.json` e `tools/conferir-srd2-formas-de-fera.mjs` protegem a coleção completa.
+
+Validação esperada deste checkpoint: inventário com 1.539 registros (**300 implementados**, 1.238 pendentes) e cobertura de `beastforms` concluída.
+
+Próximo checkpoint seguro: iniciar outra coleção de catálogo ainda não auditada, preservando a separação de Pavor e das classes de Hope & Fear.
+
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 
 Iniciado em 08/09/2026 na branch `ediçãoclaude`.
