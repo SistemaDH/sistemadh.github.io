@@ -581,7 +581,7 @@ const ITENS = avaliar('ITENS');
 teste('contagem bate com o SRD oficial', () => {
   igual(ARMAS.filter((a) => a.cat === 'primaria').length, 167, 'armas primárias — 155 tabeladas + 12 cadeiras de combate');
   igual(ARMAS.filter((a) => a.cat === 'secundaria').length, 37, 'armas secundárias');
-  igual(ARMADURAS.length, 38, 'armaduras — 34 legadas + 4 novas do SRD2');
+  igual(ARMADURAS.length, 49, 'armaduras — 34 legadas + 15 novas do SRD2');
   igual(ITENS.filter((i) => i.tipo === 'saque').length, 60, 'itens de saque');
   igual(ITENS.filter((i) => i.tipo === 'consumivel').length, 60, 'consumíveis');
 });

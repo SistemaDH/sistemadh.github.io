@@ -298,7 +298,17 @@ Próximo checkpoint seguro: implementar as 35 armaduras novas do núcleo; depois
 
 Validação esperada deste checkpoint: inventário com 1.539 registros (**338 implementados**, 1.200 pendentes), 38/76 armaduras conferidas e suíte SRD2/backend/gerados verde.
 
-Próximo checkpoint seguro: implementar as 10 armaduras novas de patamar 2; depois restarão 21 do núcleo e 7 suplementares.
+### Checkpoint SRD2 — novas armaduras de patamar 2
+
+- o mapeamento corrigiu a estimativa anterior: são 11, não 10 novas armaduras neste patamar;
+- as 11 opções foram adicionadas e vinculadas individualmente às pp. 72–73;
+- efeitos derivados de Encantadas, Incômoda, Volumosa e Escalada em Paredes reutilizam o cálculo canônico;
+- Planar foi classificada como contextual; seis capacidades dependentes de cena, descanso, condição ou reação ficaram registradas como pendências mecânicas explícitas;
+- `data/srd2-armaduras-novas-tier2-auditoria.json` e `tools/conferir-srd2-armaduras-novas-tier2.mjs` protegem o lote.
+
+Validação esperada: inventário com 1.539 registros (**349 implementados**, 1.189 pendentes), 49/76 armaduras conferidas e suíte SRD2/backend/gerados verde.
+
+Próximo checkpoint seguro: implementar as 10 armaduras novas de patamar 3; depois restarão 10 do núcleo e 7 suplementares.
 
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 

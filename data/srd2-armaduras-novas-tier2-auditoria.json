@@ -1,0 +1,25 @@
+{
+  "versao": 1,
+  "estado": "conferido",
+  "catalogo": "data/equipamentos.json",
+  "fonte": { "srd": "2.0", "data": "2026-08-25", "paginasPdf": "72–73", "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64" },
+  "progresso": { "conferidasNesteBloco": 11, "conferidasNaColecao": 49, "totalColecao": 76 },
+  "registros": [
+    ["armor/improved-mage-robes", "armadura-t2-vestes-de-mago-aprimoradas"],
+    ["armor/improved-brigandine-armor", "armadura-t2-armadura-brigandina-aprimorada"],
+    ["armor/improved-scale-mail-armor", "armadura-t2-armadura-de-cota-de-escamas-aprimorada"],
+    ["armor/improved-banded-armor", "armadura-t2-armadura-de-faixas-aprimorada"],
+    ["armor/enchanters-robes", "armadura-t2-vestes-do-encantador"],
+    ["armor/hawkguards-mantle", "armadura-t2-manto-de-hawkguard"],
+    ["armor/spidersilk-tunic", "armadura-t2-tunica-de-seda-de-aranha"],
+    ["armor/stormthread-habit", "armadura-t2-traje-de-fio-de-tempestade"],
+    ["armor/wyrdwood-splint-armor", "armadura-t2-armadura-de-talas-wyrdwood"],
+    ["armor/trollhide-cuirass", "armadura-t2-couraca-de-couro-de-troll"],
+    ["armor/gilded-sunplate", "armadura-t2-placa-solar-dourada"]
+  ],
+  "automacao": {
+    "derivada": ["Encantadas", "Incômoda", "Volumosa", "Escalada em Paredes"],
+    "contextual": ["Planar"],
+    "pendente": ["Forrada", "Mnemônica", "Absorvente", "Passos Rápidos", "Autorregeneração", "Resplandecente"]
+  }
+}

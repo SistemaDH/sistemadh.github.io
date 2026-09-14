@@ -7633,7 +7633,7 @@
             "pdfPageEnd": 72
           },
           "corpusSha256": "e514e3eaaa8d1bd36609615c48efd29cdb1e4eae33ffc6f61a14f8f9ad3f521d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/full-fortified-armor",
@@ -7693,7 +7693,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "81f9f1087cf6601f4e443ec829896f006fcfbec0d6ae4faf2a088d102317dec7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/godbound-laminar",
@@ -7768,7 +7768,7 @@
             "pdfPageEnd": 72
           },
           "corpusSha256": "8e932bedc8909fee7f036064cb13c7829670f5f0586be911a375e32211b9dfdb",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/improved-banded-armor",
@@ -7783,7 +7783,7 @@
             "pdfPageEnd": 72
           },
           "corpusSha256": "c84ee4d63456628ec0c01112db9efd56270dc6a511bce066709b330bc562ba74",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/improved-brigandine-armor",
@@ -7798,7 +7798,7 @@
             "pdfPageEnd": 72
           },
           "corpusSha256": "359d8f72b068cbd5fc13bfbabdf72a5d2719d07c369a24d6695692555cbd8621",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/improved-chainmail-armor",
@@ -7873,7 +7873,7 @@
             "pdfPageEnd": 72
           },
           "corpusSha256": "45384cad42a364acc623e55a20645462998d62b2b6eeb5c90f97a299a4eeb148",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/improved-scale-mail-armor",
@@ -7888,7 +7888,7 @@
             "pdfPageEnd": 72
           },
           "corpusSha256": "edc2e7d9cc8aa25fcb971d2d6d156909926b2c8b9565331459f001b4dcb2bfe0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/irontree-breastplate-armor",
@@ -8263,7 +8263,7 @@
             "pdfPageEnd": 72
           },
           "corpusSha256": "26fac16d155d72fd2790fc4abb4f683e90f41318bbb857064b61e23f48ffcdaf",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/spiked-plate-armor",
@@ -8293,7 +8293,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "854e1e72896c64807c695ac1bca8431c3d24802e6b7c5fb7ac4b2eaaaeab9582",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/tree-bark-armor",
@@ -8323,7 +8323,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "0901e65b11fc142fac955251956b2f0cbb8e165c40a613060f40b48f0f2f0646",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/tyris-soft-armor",
@@ -8368,7 +8368,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "631b1ac0402d650485f5f55f46ea738ad00fa66f20ea71ba1878ed1cdc532ded",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         }
       ]
     },

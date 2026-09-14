@@ -5486,6 +5486,72 @@
    }
   },
   {
+   "id": "armadura-t2-vestes-de-mago-aprimoradas", "categoria": "armadura", "tier": 2, "tabela": null,
+   "nome": "Vestes de Mago Aprimoradas", "origemNome": "traducao-srd2", "nomeIngles": "Improved Mage Robes", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 72", "limiares": "6/15", "pontuacaoArmadura": 3,
+   "caracteristica": { "nomeIngles": "Enchanted", "textoIngles": "Enchanted: Gain a bonus to your damage thresholds equal to your Spellcast trait.", "nome": "Encantadas", "texto": "Encantadas: Você recebe um bônus em seus limiares de dano igual ao seu traço de Conjuração.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "efeitoDerivado": { "limiaresPorTracoConjuracao": true } }
+  },
+  {
+   "id": "armadura-t2-armadura-brigandina-aprimorada", "categoria": "armadura", "tier": 2, "tabela": null,
+   "nome": "Armadura Brigandina Aprimorada", "origemNome": "traducao-srd2", "nomeIngles": "Improved Brigandine Armor", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 72", "limiares": "9/19", "pontuacaoArmadura": 4,
+   "caracteristica": { "nomeIngles": "Lined", "textoIngles": "Lined: Mark a Stress to negate Minor damage.", "nome": "Forrada", "texto": "Forrada: Marque 1 Estresse para negar dano Menor.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "automacao": { "classificacao": "reacao-dano-pendente", "rolaNoApp": false, "motivo": "A regra está publicada; custo e negação serão ligados ao fluxo de dano em checkpoint próprio." } }
+  },
+  {
+   "id": "armadura-t2-armadura-de-cota-de-escamas-aprimorada", "categoria": "armadura", "tier": 2, "tabela": null,
+   "nome": "Armadura de Cota de Escamas Aprimorada", "origemNome": "traducao-srd2", "nomeIngles": "Improved Scale Mail Armor", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 72", "limiares": "11/23", "pontuacaoArmadura": 4,
+   "caracteristica": { "nomeIngles": "Cumbersome", "textoIngles": "Cumbersome: −1 to Finesse", "nome": "Incômoda", "texto": "Incômoda: −1 em Finesse.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "efeitoDerivado": { "tracos": { "finesse": -1 } } }
+  },
+  {
+   "id": "armadura-t2-armadura-de-faixas-aprimorada", "categoria": "armadura", "tier": 2, "tabela": null,
+   "nome": "Armadura de Faixas Aprimorada", "origemNome": "traducao-srd2", "nomeIngles": "Improved Banded Armor", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 72", "limiares": "13/27", "pontuacaoArmadura": 5,
+   "caracteristica": { "nomeIngles": "Bulky", "textoIngles": "Bulky: −1 to Evasion; when you take Severe damage, you must mark a Stress.", "nome": "Volumosa", "texto": "Volumosa: −1 em Evasão; quando sofrer dano Severo, você deve marcar 1 Estresse.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "efeitoDerivado": { "evasao": -1 }, "automacao": { "classificacao": "passiva-parcial", "rolaNoApp": false, "motivo": "O −1 em Evasão é automático; a marcação de Estresse por dano Severo aguarda integração ao fluxo de dano." } }
+  },
+  {
+   "id": "armadura-t2-vestes-do-encantador", "categoria": "armadura", "tier": 2, "tabela": null,
+   "nome": "Vestes do Encantador", "origemNome": "traducao-srd2", "nomeIngles": "Enchanter’s Robes", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 72", "limiares": "9/20", "pontuacaoArmadura": 4,
+   "caracteristica": { "nomeIngles": "Mnemonic", "textoIngles": "Mnemonic: Once per scene, you can recall a domain card from your vault without paying its Recall Cost.", "nome": "Mnemônica", "texto": "Mnemônica: Uma vez por cena, você pode recordar uma carta de domínio do seu cofre sem pagar seu Custo de Recordar.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "automacao": { "classificacao": "recordar-sem-custo-pendente", "rolaNoApp": false, "motivo": "O benefício por cena está publicado e aguarda contador de cena integrado ao fluxo de Recordar." } }
+  },
+  {
+   "id": "armadura-t2-manto-de-hawkguard", "categoria": "armadura", "tier": 2, "tabela": null,
+   "nome": "Manto de Hawkguard", "origemNome": "traducao-srd2", "nomeIngles": "Hawkguard’s Mantle", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 72", "limiares": "9/20", "pontuacaoArmadura": 4,
+   "caracteristica": { "nomeIngles": "Gliding", "textoIngles": "Gliding: You can glide up to Far range and are immune to damage from falling.", "nome": "Planar", "texto": "Planar: Você pode planar até alcance Distante e é imune a dano de queda.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "automacao": { "classificacao": "passivo-contextual", "rolaNoApp": false, "motivo": "Deslocamento e dano de queda pertencem à cena e não alteram valores persistentes da ficha." } }
+  },
+  {
+   "id": "armadura-t2-tunica-de-seda-de-aranha", "categoria": "armadura", "tier": 2, "tabela": null,
+   "nome": "Túnica de Seda de Aranha", "origemNome": "traducao-srd2", "nomeIngles": "Spidersilk Tunic", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 72", "limiares": "9/20", "pontuacaoArmadura": 4,
+   "caracteristica": { "nomeIngles": "Wall-Crawling", "textoIngles": "Wall-Crawling: +1 Evasion; you can walk on walls as easily as on the ground.", "nome": "Escalada em Paredes", "texto": "Escalada em Paredes: +1 em Evasão; você pode andar pelas paredes com a mesma facilidade que pelo chão.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "efeitoDerivado": { "evasao": 1 }, "automacao": { "classificacao": "passiva-parcial", "rolaNoApp": false, "motivo": "O +1 em Evasão é automático; o deslocamento pelas paredes permanece contextual." } }
+  },
+  {
+   "id": "armadura-t2-traje-de-fio-de-tempestade", "categoria": "armadura", "tier": 2, "tabela": null,
+   "nome": "Traje de Fio de Tempestade", "origemNome": "traducao-srd2", "nomeIngles": "Stormthread Habit", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 73", "limiares": "9/20", "pontuacaoArmadura": 4,
+   "caracteristica": { "nomeIngles": "Absorbing", "textoIngles": "Absorbing: Once per scene when you take magic damage, you can clear an Armor Slot.", "nome": "Absorvente", "texto": "Absorvente: Uma vez por cena, quando sofrer dano mágico, você pode limpar 1 Ponto de Armadura.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "automacao": { "classificacao": "reacao-por-cena-pendente", "rolaNoApp": false, "motivo": "A reação aguarda contador de cena no fluxo de dano; o catálogo não presume a escolha do jogador." } }
+  },
+  {
+   "id": "armadura-t2-armadura-de-talas-wyrdwood", "categoria": "armadura", "tier": 2, "tabela": null,
+   "nome": "Armadura de Talas Wyrdwood", "origemNome": "traducao-srd2", "nomeIngles": "Wyrdwood Splint Armor", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 73", "limiares": "10/21", "pontuacaoArmadura": 5,
+   "caracteristica": { "nomeIngles": "Quick-Striding", "textoIngles": "Quick-Striding: You can’t be Restrained and can move up to Far range as part of an action roll.", "nome": "Passos Rápidos", "texto": "Passos Rápidos: Você não pode ficar Restrito e pode se mover até alcance Distante como parte de uma jogada de ação.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "automacao": { "classificacao": "imunidade-e-movimento-pendente", "rolaNoApp": false, "motivo": "A imunidade a Restrito aguarda integração ao normalizador de condições; o movimento pertence à cena." } }
+  },
+  {
+   "id": "armadura-t2-couraca-de-couro-de-troll", "categoria": "armadura", "tier": 2, "tabela": null,
+   "nome": "Couraça de Couro de Troll", "origemNome": "traducao-srd2", "nomeIngles": "Trollhide Cuirass", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 73", "limiares": "11/23", "pontuacaoArmadura": 5,
+   "caracteristica": { "nomeIngles": "Self-Healing", "textoIngles": "Self-Healing: When you take a rest, clear an Armor Slot.", "nome": "Autorregeneração", "texto": "Autorregeneração: Quando fizer um descanso, limpe 1 Ponto de Armadura.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "automacao": { "classificacao": "descanso-pendente", "rolaNoApp": false, "motivo": "A recuperação está publicada e aguarda integração determinística aos descansos curto e longo." } }
+  },
+  {
+   "id": "armadura-t2-placa-solar-dourada", "categoria": "armadura", "tier": 2, "tabela": null,
+   "nome": "Placa Solar Dourada", "origemNome": "traducao-srd2", "nomeIngles": "Gilded Sunplate", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 73", "limiares": "12/26", "pontuacaoArmadura": 5,
+   "caracteristica": { "nomeIngles": "Resplendent", "textoIngles": "Resplendent: Once per scene when you spend Hope, you can clear an Armor Slot.", "nome": "Resplandecente", "texto": "Resplandecente: Uma vez por cena, quando gastar Esperança, você pode limpar 1 Ponto de Armadura.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "automacao": { "classificacao": "gatilho-esperanca-por-cena-pendente", "rolaNoApp": false, "motivo": "A escolha de limpar Armadura aguarda contador de cena no fluxo central de gasto de Esperança." } }
+  },
+  {
    "id": "armadura-t2-armadura-de-gambeson-aprimorada",
    "categoria": "armadura",
    "tier": 2,
