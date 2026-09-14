@@ -17893,7 +17893,7 @@
             "pdfPageEnd": 223
           },
           "corpusSha256": "3001e5db96ef68350c84de7f2ec5f37caf0904bbf25e6e02979b6e6c0612e1cb",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/get-back-up",
@@ -18013,7 +18013,7 @@
             "pdfPageEnd": 223
           },
           "corpusSha256": "1ab179e35369e0f56db582afb4b71a7ed62550af20160b0e1c188682db35d1bc",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/healing-field",
@@ -18088,7 +18088,7 @@
             "pdfPageEnd": 223
           },
           "corpusSha256": "9e5966ad8cd726e5ef70fd7e7ddbe2045e99af33b928d44826eeb9a63ba5ba31",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/hush",
@@ -18268,7 +18268,7 @@
             "pdfPageEnd": 224
           },
           "corpusSha256": "833294cea665f9f98f0d09e93b377e8e9a69c628847675cb15c2099960bbfffe",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/lean-on-me",
@@ -19513,7 +19513,7 @@
             "pdfPageEnd": 224
           },
           "corpusSha256": "8c45fa02aff86094f44cb3e9d53e211b3e8d33b290e9ff22c3d3588f2e8f24e7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/uncanny-disguise",
@@ -19573,7 +19573,7 @@
             "pdfPageEnd": 224
           },
           "corpusSha256": "6821375dac0c05505902ad088f88e32556963409c9495162c7291e26629f1289",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/valor-touched",
@@ -19588,7 +19588,7 @@
             "pdfPageEnd": 223
           },
           "corpusSha256": "80de819736f6382d1ec9fd2ac0c8e3af08ae5ffcf2f4d966ae8ad6e382495775",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/vanishing-dodge",

@@ -7803,7 +7803,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "Ability",
    "custoRecordar": 1,
-   "texto": "Quando 4 ou mais cartas de domínio em seu equipamento forem do domínio Valor, ganhe os seguintes benefícios:\n• +1 de bônus na sua Pontuação de Armadura\n• Quando você marcar 1 ou mais Pontos de Vida sem marcar um Espaço de Armadura, cure 1 Espaço de Armadura.",
+   "texto": "Quando 4 ou mais cartas de domínio ativas forem do domínio Valor, ganhe os seguintes benefícios:\n• +1 de bônus na sua Pontuação de Armadura\n• Quando você marcar 1 ou mais Pontos de Vida sem marcar um Ponto de Armadura, limpe 1 Ponto de Armadura.",
    "imagem": "assets/cartas/dominios/VALOR/Tocado pelo Valor.png",
    "arquivo": "Tocado pelo Valor.png",
    "condicoes": [],
@@ -7817,11 +7817,11 @@
    "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
    "automacao": {
     "classificacao": "automatizada-passiva-e-reacao-com-loadout",
-    "resumo": "Com 4 ou mais cartas de Valor ativas, o servidor soma +1 à Pontuação de Armadura e habilita a reação que cura 1 Espaço de Armadura."
+    "resumo": "Com 4 ou mais cartas de Valor ativas, o servidor soma +1 à Pontuação de Armadura e habilita a reação que limpa 1 Ponto de Armadura."
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Use a reação somente quando você tiver marcado um ou mais PV sem marcar Espaço de Armadura naquele dano. O gatilho vem da resolução da mesa."
+    "resumo": "Use a reação somente quando você tiver marcado um ou mais PV sem marcar Ponto de Armadura naquele dano. O gatilho vem da resolução da mesa."
    },
    "uso": {
     "custo": {},
@@ -7833,8 +7833,8 @@
      "chave": "armaduraMarcada",
      "delta": -1
     },
-    "rotuloAtivar": "PV sem Armadura: curar 1 Espaço de Armadura",
-    "lembrete": "Use somente após marcar PV sem marcar Espaço de Armadura no mesmo dano."
+    "rotuloAtivar": "PV sem Armadura: limpar 1 Ponto de Armadura",
+    "lembrete": "Use somente após marcar PV sem marcar Ponto de Armadura no mesmo dano."
    },
    "efeitoDerivado": {
     "pontuacaoArmadura": 1,
@@ -7854,7 +7854,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "Ability",
    "custoRecordar": 2,
-   "texto": "Gaste 2 Esperança para golpear o chão onde você está e faça uma Jogada de Força contra todos os alvos dentro do alcance Muito Próximo. Os alvos que você acertar são lançados para o alcance Longe e devem fazer uma Jogada de Reação (17). Os que falharem levam 4d10+8 de dano. Os que tiverem sucesso levam metade do dano.",
+   "texto": "Gaste 2 Esperanças para golpear o chão onde você está e faça uma jogada de Força contra todos os alvos em alcance Muito Próximo. Os alvos que você acertar são lançados para o alcance Distante e devem fazer uma jogada de reação (17). Os que falharem levam 4d10+8 de dano. Os que tiverem sucesso levam metade do dano.",
    "imagem": "assets/cartas/dominios/VALOR/Golpe no Chão.png",
    "arquivo": "Golpe no Chão.png",
    "condicoes": [],
@@ -7870,14 +7870,14 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A Jogada de Força contra todos os alvos, lançamento para Longe, Reações 17 e dano/mitade são resolvidos na mesa."
+    "resumo": "A jogada de Força contra todos os alvos, lançamento para Distante, jogadas de reação 17 e dano ou metade são resolvidos na mesa."
    },
    "uso": {
     "custo": {
      "esperanca": 2
     },
     "rotuloAtivar": "Golpear o chão · 2 Esperanças",
-    "lembrete": "Faça Força contra todos em Muito Próximo; atingidos vão para Longe e fazem Reação 17. Falha: 4d10+8; sucesso: metade."
+    "lembrete": "Faça uma jogada de Força contra todos em Muito Próximo; atingidos vão para Distante e fazem uma jogada de reação 17. Falha: 4d10+8; sucesso: metade."
    }
   },
   {
@@ -7979,7 +7979,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "Ability",
    "custoRecordar": 1,
-   "texto": "Descreva a postura defensiva que você assume e gaste 1 Esperança. Se o adversário se mover para o alcance Muito Próximo, ele é puxado para o alcance Corpo a Corpo e Restrito. Essa condição dura até você se mover, falhar uma jogada com Medo, ou o Mestre gastar 2 Medo no turno dele para removê-la.",
+   "texto": "Descreva a postura defensiva que você assume e gaste 1 Esperança. Se um adversário se mover para o alcance Muito Próximo, ele é puxado para o alcance Corpo a Corpo e fica Restrito. Essa condição dura até você se mover, falhar uma jogada com Medo ou o Mestre gastar 2 Medos no turno dele para limpá-la.",
    "imagem": "assets/cartas/dominios/VALOR/Mantenha a posição.png",
    "arquivo": "Mantenha a posição.png",
    "condicoes": [
@@ -8027,7 +8027,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "Ability",
    "custoRecordar": 1,
-   "texto": "Quando você for marcar um Espaço de Armadura, role um número de d6 igual à sua Proficiência. Se algum resultar em 6, reduza a severidade em um limiar sem marcar um Espaço de Armadura.",
+   "texto": "Quando você for marcar um Ponto de Armadura, role uma quantidade de d6 igual à sua Proficiência. Se algum resultar em 6, reduza a gravidade em um limiar sem marcar um Ponto de Armadura.",
    "imagem": "assets/cartas/dominios/VALOR/Armadura Inabalável.png",
    "arquivo": "Armadura Inabalável.png",
    "condicoes": [],
@@ -8041,11 +8041,11 @@
    "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
    "automacao": {
     "classificacao": "manual-com-dados-de-proficiencia",
-    "resumo": "A carta não tem custo nem estado persistente próprio; ela reage no instante em que um Espaço de Armadura seria marcado."
+    "resumo": "A carta não tem custo nem estado persistente próprio; ela reage no instante em que um Ponto de Armadura seria marcado."
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Role fora do app um número de d6 igual à sua Proficiência. Se qualquer dado mostrar 6, reduza a severidade em um limiar e não marque aquele Espaço de Armadura."
+    "resumo": "Role fora do app uma quantidade de d6 igual à sua Proficiência. Se qualquer dado mostrar 6, reduza a gravidade em um limiar e não marque aquele Ponto de Armadura."
    }
   },
   {
@@ -8058,7 +8058,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "Ability",
    "custoRecordar": 4,
-   "texto": "Quando você marcar seu último Ponto de Vida, ao invés de fazer um movimento de morte, role um d6 e cure um número de Pontos de Vida igual ao resultado. Depois, coloque esta carta em seu cofre.",
+   "texto": "Quando você marcar seu último Ponto de Vida, em vez de fazer um movimento de morte, role 1d6 e limpe uma quantidade de Pontos de Vida igual ao resultado. Depois, coloque esta carta em seu cofre.",
    "imagem": "assets/cartas/dominios/VALOR/Inquebrável.png",
    "arquivo": "Inquebrável.png",
    "condicoes": [],
@@ -8076,7 +8076,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Quando o último PV seria marcado, em vez do Movimento de Morte role d6, cure esse total de PV e depois coloque Inquebrável no cofre. Faça a cura e a ida ao cofre pela ficha após a rolagem."
+    "resumo": "Quando o último PV seria marcado, em vez do movimento de morte role 1d6, limpe esse total de PV e depois coloque Inquebrável no cofre. Faça a recuperação e a ida ao cofre pela ficha após a rolagem."
    }
   }
  ],

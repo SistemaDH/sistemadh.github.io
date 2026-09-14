@@ -82,6 +82,27 @@ if (!inevitavel?.texto.includes('falhar uma jogada de ação') || !inevitavel?.t
 const passar = cartas.get('valor-deixe-passar');
 if (!passar?.texto.includes('sofrer dano') || !passar?.texto.includes('reduzir a gravidade do dano em um limiar') || !passar?.texto.includes('role 1d6') || !passar?.texto.includes('3 ou menos') || passar?.uso?.custo?.estresse !== 1) erros.push('Deixe Passar: custo, redução, d6 ou cofre divergem');
 
+const tocado = cartas.get('valor-tocado-pelo-valor');
+if (!tocado?.texto.includes('4 ou mais cartas de domínio ativas') || !tocado?.texto.includes('limpe 1 Ponto de Armadura') || tocado?.efeitoDerivado?.pontuacaoArmadura !== 1 || tocado?.uso?.exigeCartasAtivasDominio?.quantidade !== 4) erros.push('Tocado pelo Valor: requisito, bônus ou recuperação de Armadura divergem');
+
+const chao = cartas.get('valor-golpe-no-chao');
+if (!chao?.texto.includes('Gaste 2 Esperanças') || !chao?.texto.includes('jogada de Força') || !chao?.texto.includes('em alcance Muito Próximo') || !chao?.texto.includes('alcance Distante') || !chao?.texto.includes('jogada de reação (17)') || !chao?.texto.includes('4d10+8')) erros.push('Golpe no Chão: custo, jogadas, alcances ou dano divergem');
+
+const surto = cartas.get('valor-surto-total');
+if (!surto?.texto.includes('Uma vez por descanso longo') || !surto?.texto.includes('marque 3 Estresses') || !surto?.texto.includes('+2 de bônus em todas as suas características') || surto?.efeitoDerivado?.tracosTodos !== 2 || surto?.uso?.marcaUso?.maximo !== 1) erros.push('Surto Total: custo, bônus, estado ou limite divergem');
+
+const liderar = cartas.get('valor-liderar-pelo-exemplo');
+if (!liderar?.texto.includes('causa dano a um adversário') || !liderar?.texto.includes('marcar 1 Estresse') || !liderar?.texto.includes('próximo personagem jogador') || liderar?.uso?.custo?.estresse !== 1) erros.push('Liderar pelo Exemplo: gatilho, custo ou beneficiário divergem');
+
+const posicao = cartas.get('valor-mantenha-a-posicao');
+if (!posicao?.texto.includes('gaste 1 Esperança') || !posicao?.texto.includes('alcance Muito Próximo') || !posicao?.texto.includes('alcance Corpo a Corpo') || !posicao?.texto.includes('fica Restrito') || !posicao?.texto.includes('Mestre gastar 2 Medos') || posicao?.uso?.estado?.valor !== 1) erros.push('Mantenha a Posição: custo, alcances, condição ou encerramento divergem');
+
+const inabalavel = cartas.get('valor-armadura-inabalavel');
+if (!inabalavel?.texto.includes('marcar um Ponto de Armadura') || !inabalavel?.texto.includes('d6 igual à sua Proficiência') || !inabalavel?.texto.includes('reduza a gravidade em um limiar') || !inabalavel?.texto.includes('sem marcar um Ponto de Armadura')) erros.push('Armadura Inabalável: gatilho, dados ou redução divergem');
+
+const inquebravel = cartas.get('valor-inquebravel');
+if (!inquebravel?.texto.includes('último Ponto de Vida') || !inquebravel?.texto.includes('em vez de fazer um movimento de morte') || !inquebravel?.texto.includes('role 1d6') || !inquebravel?.texto.includes('limpe uma quantidade de Pontos de Vida') || !inquebravel?.texto.includes('carta em seu cofre')) erros.push('Inquebrável: gatilho, movimento de morte, d6, recuperação ou cofre divergem');
+
 const idsAuditados = new Set(registros.map((item) => item.idLocal));
 const textosAtivos = catalogo.cartas.filter((carta) => idsAuditados.has(carta.id)).map((carta) => JSON.stringify({
   texto: carta.texto,

@@ -267,7 +267,14 @@ const implementados = new Set([
   'domain-cards/rousing-strike',
   'domain-cards/rise-up',
   'domain-cards/inevitable',
-  'domain-cards/shrug-it-off'
+  'domain-cards/shrug-it-off',
+  'domain-cards/valor-touched',
+  'domain-cards/ground-pound',
+  'domain-cards/full-surge',
+  'domain-cards/lead-by-example',
+  'domain-cards/hold-the-line',
+  'domain-cards/unyielding-armor',
+  'domain-cards/unbreakable'
 ]);
 const colecoes = [];
 

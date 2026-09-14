@@ -1,6 +1,6 @@
 {
   "versao": 1,
-  "estado": "em-andamento",
+  "estado": "conferido",
   "fonte": {
     "srd": "2.0",
     "data": "2026-08-25",
@@ -9,19 +9,11 @@
   },
   "dominio": "domains/valor",
   "progresso": {
-    "conferidas": 14,
+    "conferidas": 21,
     "total": 21,
-    "proximoLote": [
-      "domain-cards/valor-touched",
-      "domain-cards/ground-pound",
-      "domain-cards/full-surge",
-      "domain-cards/lead-by-example",
-      "domain-cards/hold-the-line",
-      "domain-cards/unyielding-armor",
-      "domain-cards/unbreakable"
-    ]
+    "proximoLote": []
   },
-  "conclusaoParcial": "As quatorze primeiras cartas de Valor preservam níveis, tipos, custos de recordar, custos, gatilhos e efeitos implementados após corrigir Pele Dura para usar Patamares e normalizar o vocabulário pt-BR do SRD 2.0.",
+  "conclusao": "As 21 cartas de Valor preservam níveis, tipos, custos de recordar, custos, gatilhos e efeitos implementados após corrigir Pele Dura para usar Patamares e normalizar o vocabulário pt-BR do SRD 2.0.",
   "registros": [
     { "idFonte": "domain-cards/forceful-push", "idLocal": "valor-empurrao-forte", "nomeIngles": "Forceful Push", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 0 },
     { "idFonte": "domain-cards/i-am-your-shield", "idLocal": "valor-eu-sou-seu-escudo", "nomeIngles": "I Am Your Shield", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 1 },
@@ -36,7 +28,14 @@
     { "idFonte": "domain-cards/rousing-strike", "idLocal": "valor-golpe-estimulante", "nomeIngles": "Rousing Strike", "nivel": 5, "tipo": "Habilidade", "custoRecordar": 1 },
     { "idFonte": "domain-cards/rise-up", "idLocal": "valor-erga-se", "nomeIngles": "Rise Up", "nivel": 6, "tipo": "Habilidade", "custoRecordar": 2 },
     { "idFonte": "domain-cards/inevitable", "idLocal": "valor-inevitavel", "nomeIngles": "Inevitable", "nivel": 6, "tipo": "Habilidade", "custoRecordar": 1 },
-    { "idFonte": "domain-cards/shrug-it-off", "idLocal": "valor-deixe-passar", "nomeIngles": "Shrug It Off", "nivel": 7, "tipo": "Habilidade", "custoRecordar": 1 }
+    { "idFonte": "domain-cards/shrug-it-off", "idLocal": "valor-deixe-passar", "nomeIngles": "Shrug It Off", "nivel": 7, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/valor-touched", "idLocal": "valor-tocado-pelo-valor", "nomeIngles": "Valor‑touched", "nivel": 7, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/ground-pound", "idLocal": "valor-golpe-no-chao", "nomeIngles": "Ground Pound", "nivel": 8, "tipo": "Habilidade", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/full-surge", "idLocal": "valor-surto-total", "nomeIngles": "Full Surge", "nivel": 8, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/lead-by-example", "idLocal": "valor-liderar-pelo-exemplo", "nomeIngles": "Lead by Example", "nivel": 9, "tipo": "Habilidade", "custoRecordar": 3 },
+    { "idFonte": "domain-cards/hold-the-line", "idLocal": "valor-mantenha-a-posicao", "nomeIngles": "Hold the Line", "nivel": 9, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/unyielding-armor", "idLocal": "valor-armadura-inabalavel", "nomeIngles": "Unyielding Armor", "nivel": 10, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/unbreakable", "idLocal": "valor-inquebravel", "nomeIngles": "Unbreakable", "nivel": 10, "tipo": "Habilidade", "custoRecordar": 4 }
   ],
   "correcoesMecanicas": [
     "Pele Dura — os quatro pares de limiares são definidos por Patamar, não por nível de personagem."
