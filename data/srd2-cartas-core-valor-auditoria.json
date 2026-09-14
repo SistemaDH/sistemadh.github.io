@@ -1,0 +1,50 @@
+{
+  "versao": 1,
+  "estado": "em-andamento",
+  "fonte": {
+    "srd": "2.0",
+    "data": "2026-08-25",
+    "paginasPdf": "222–223",
+    "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64"
+  },
+  "dominio": "domains/valor",
+  "progresso": {
+    "conferidas": 7,
+    "total": 21,
+    "proximoLote": [
+      "domain-cards/goad-them-on",
+      "domain-cards/support-tank",
+      "domain-cards/armorer",
+      "domain-cards/rousing-strike",
+      "domain-cards/rise-up",
+      "domain-cards/inevitable",
+      "domain-cards/shrug-it-off"
+    ]
+  },
+  "conclusaoParcial": "As sete primeiras cartas de Valor preservam níveis, tipos, custos de recordar, custos, gatilhos e efeitos implementados após corrigir Pele Dura para usar Patamares e normalizar o vocabulário pt-BR do SRD 2.0.",
+  "registros": [
+    { "idFonte": "domain-cards/forceful-push", "idLocal": "valor-empurrao-forte", "nomeIngles": "Forceful Push", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/i-am-your-shield", "idLocal": "valor-eu-sou-seu-escudo", "nomeIngles": "I Am Your Shield", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/bare-bones", "idLocal": "valor-pele-dura", "nomeIngles": "Bare Bones", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/bold-presence", "idLocal": "valor-presenca-audaz", "nomeIngles": "Bold Presence", "nivel": 2, "tipo": "Habilidade", "custoRecordar": 0 },
+    { "idFonte": "domain-cards/body-basher", "idLocal": "valor-quebrador-corporal", "nomeIngles": "Body Basher", "nivel": 2, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/lean-on-me", "idLocal": "valor-apoie-se-em-mim", "nomeIngles": "Lean on Me", "nivel": 3, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/critical-inspiration", "idLocal": "valor-inspiracao-critica", "nomeIngles": "Critical Inspiration", "nivel": 3, "tipo": "Habilidade", "custoRecordar": 1 }
+  ],
+  "correcoesMecanicas": [
+    "Pele Dura — os quatro pares de limiares são definidos por Patamar, não por nível de personagem."
+  ],
+  "correcoesDeVocabulario": [
+    "em alcance",
+    "Corpo a Corpo",
+    "Muito Próximo",
+    "jogada de dano",
+    "jogada de Presença",
+    "jogada de ação",
+    "Ponto de Armadura",
+    "Ponto de Vida",
+    "Estresse",
+    "Esperança",
+    "Vulnerável"
+  ]
+}

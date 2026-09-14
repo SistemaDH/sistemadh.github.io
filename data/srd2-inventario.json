@@ -16798,7 +16798,7 @@
             "pdfPageEnd": 222
           },
           "corpusSha256": "d8d5362b6904bde20dfb6506673dbbeca45104015fc0055fcdd04acc5328ea53",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/battle-cry",
@@ -16903,7 +16903,7 @@
             "pdfPageEnd": 223
           },
           "corpusSha256": "58cc9910f03c16ac833560fc37eb9dbded4f0a7a0fdbd69c7cca5bed5152756e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/bold-presence",
@@ -16918,7 +16918,7 @@
             "pdfPageEnd": 223
           },
           "corpusSha256": "249246dbf0f3efc1cb435b7d228cfdb20b46095715e24771614661876e661002",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/bolt-beacon",
@@ -17398,7 +17398,7 @@
             "pdfPageEnd": 223
           },
           "corpusSha256": "d3fe6a7220c3e7f5f7384c20244febc01095a036ca3ebdd470503130545a3101",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/cruel-precision",
@@ -17833,7 +17833,7 @@
             "pdfPageEnd": 222
           },
           "corpusSha256": "3d88e412e30d7d6a1e28c86386f1301b2c855ac1d58f0a814b8ceb549702afbe",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/forest-sprites",
@@ -18133,7 +18133,7 @@
             "pdfPageEnd": 223
           },
           "corpusSha256": "035c9f013a5bca9d1a0e3cd0c96aa0ad33ffaed029cd3fdb91a0b89652f0cd00",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/i-see-it-coming",
@@ -18283,7 +18283,7 @@
             "pdfPageEnd": 223
           },
           "corpusSha256": "7fea23747544e2c12087038a87dfea84959c6005a1027ba76f459da25c1fcae7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/life-ward",

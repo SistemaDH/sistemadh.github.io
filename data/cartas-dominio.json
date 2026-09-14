@@ -7221,7 +7221,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "Ability",
    "custoRecordar": 0,
-   "texto": "Faça um ataque com sua arma principal contra um alvo dentro do alcance Corpo a Corpo. Em um sucesso, você causa dano e empurra o alvo para o alcance Próximo. Em um sucesso com Esperança, adicione d6 à jogada de dano.\nAlém disso, você pode gastar 1 Esperança para torná-lo temporariamente Vulnerável.",
+   "texto": "Faça um ataque com sua arma principal contra um alvo em alcance Corpo a Corpo. Em um sucesso, você causa dano e empurra o alvo para o alcance Próximo. Em um sucesso com Esperança, adicione 1d6 à jogada de dano.\nAlém disso, você pode gastar 1 Esperança para torná-lo temporariamente Vulnerável.",
    "imagem": "assets/cartas/dominios/VALOR/Empurrão Forte.png",
    "arquivo": "Empurrão Forte.png",
    "condicoes": [
@@ -7260,7 +7260,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "Ability",
    "custoRecordar": 1,
-   "texto": "Quando um aliado dentro do alcance Muito Próximo for atingir por dano, você pode marcar 1 Estresse para se colocar no lugar e tornar-se o alvo do ataque. Ao receber o dano, você pode marcar qualquer número de Espaços de Armadura.",
+   "texto": "Quando um aliado em alcance Muito Próximo for sofrer dano, você pode marcar 1 Estresse para se colocar no caminho e tornar-se o alvo do ataque. Quando sofrer dano desse ataque, você pode marcar qualquer número de Pontos de Armadura.",
    "imagem": "assets/cartas/dominios/VALOR/Eu Sou Seu Escudo.png",
    "arquivo": "Eu Sou Seu Escudo.png",
    "condicoes": [],
@@ -7277,14 +7277,14 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A troca de alvo do ataque e quantos Espaços de Armadura serão marcados ao receber o dano dependem da resolução da cena e continuam manuais."
+    "resumo": "A troca de alvo do ataque e quantos Pontos de Armadura serão marcados ao receber o dano dependem da resolução da cena e continuam manuais."
    },
    "uso": {
     "custo": {
      "estresse": 1
     },
     "rotuloAtivar": "Tomar o ataque do aliado · 1 Estresse",
-    "lembrete": "Você se torna o alvo do ataque que atingiria um aliado Muito Próximo. Ao receber o dano, resolva normalmente e escolha quantos Espaços de Armadura marcar."
+    "lembrete": "Você se torna o alvo do ataque que causaria dano a um aliado Muito Próximo. Ao sofrer o dano, resolva normalmente e escolha quantos Pontos de Armadura marcar."
    }
   },
   {
@@ -7297,7 +7297,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "Ability",
    "custoRecordar": 0,
-   "texto": "Quando você opta por não equipar armadura, sua Pontuação base de Armadura é 3 + sua Força e você usa os seguintes limiares de dano base:\n• Nível 1: 9/19\n• Nível 2: 11/24\n• Nível 3: 13/31\n• Nível 4: 15/38",
+   "texto": "Quando você opta por não equipar armadura, sua Pontuação base de Armadura é 3 + sua Força e você usa os seguintes limiares de dano base:\n• Patamar 1: 9/19\n• Patamar 2: 11/24\n• Patamar 3: 13/31\n• Patamar 4: 15/38",
    "imagem": "assets/cartas/dominios/VALOR/Pele Dura.png",
    "arquivo": "Pele Dura.png",
    "condicoes": [],
@@ -7352,7 +7352,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "Ability",
    "custoRecordar": 0,
-   "texto": "Quando fizer uma Jogada de Presença, você pode gastar 1 Esperança para adicionar sua Força à rolagem.\nAlém disso, uma vez por descanso, quando for receber uma condição, pode descrever como sua presença audaz o ajuda na situação e evitar receber a condição.",
+   "texto": "Quando fizer uma jogada de Presença, você pode gastar 1 Esperança para adicionar sua Força à rolagem.\nAlém disso, uma vez por descanso, quando for receber uma condição, pode descrever como sua presença audaz o ajuda na situação e evitar receber a condição.",
    "imagem": "assets/cartas/dominios/VALOR/Presença Audaz.png",
    "arquivo": "Presença Audaz.png",
    "condicoes": [],
@@ -7369,7 +7369,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "A Jogada de Presença e o valor de Força são aplicados na rolagem da mesa. Evitar a condição exige o gatilho narrativo descrito na carta; o app apenas registra que o uso do descanso foi gasto."
+    "resumo": "A jogada de Presença e o valor de Força são aplicados na rolagem da mesa. Evitar a condição exige o gatilho narrativo descrito na carta; o app apenas registra que o uso do descanso foi gasto."
    },
    "uso": {
     "custo": {},
@@ -7380,7 +7380,7 @@
       "custo": {
        "esperanca": 1
       },
-      "lembrete": "Use ao fazer uma Jogada de Presença e some seu valor atual de Força à rolagem."
+        "lembrete": "Use ao fazer uma jogada de Presença e some seu valor atual de Força à rolagem."
      },
      {
       "id": "evitar-condicao",
@@ -7479,7 +7479,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "Ability",
    "custoRecordar": 1,
-   "texto": "Uma vez por descanso, quando você obtém um sucesso crítico em um ataque, todos os aliados dentro do alcance Muito Próximo podem limpar 1 Estresse ou ganhar 1 Esperança.",
+   "texto": "Uma vez por descanso, quando você obtém um sucesso crítico em um ataque, todos os aliados em alcance Muito Próximo podem limpar 1 Estresse ou ganhar 1 Esperança.",
    "imagem": "assets/cartas/dominios/VALOR/Inspiração Crítica.png",
    "arquivo": "Inspiração Crítica.png",
    "condicoes": [],

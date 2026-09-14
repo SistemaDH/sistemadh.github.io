@@ -253,7 +253,14 @@ const implementados = new Set([
   'domain-cards/overwhelming-aura',
   'domain-cards/salvation-beam',
   'domain-cards/resurrection',
-  'domain-cards/invigoration'
+  'domain-cards/invigoration',
+  'domain-cards/forceful-push',
+  'domain-cards/i-am-your-shield',
+  'domain-cards/bare-bones',
+  'domain-cards/bold-presence',
+  'domain-cards/body-basher',
+  'domain-cards/lean-on-me',
+  'domain-cards/critical-inspiration'
 ]);
 const colecoes = [];
 
