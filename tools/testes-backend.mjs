@@ -748,9 +748,9 @@ teste('equipamento das molduras de campanha', () => {
   const camp = avaliar('EQUIPAMENTO_CAMPANHA');
   // 36 do Festim das Feras (15 físicas + 10 mágicas + 7 secundárias + 4
   // armaduras), 21 do Colosso (5 armas × 4 patamares + a Dinamite) e 7 da
-  // Placa-mãe.
-  igual(camp.length, 64);
-  igual(new Set(camp.map((c) => c.moldura)).size, 3, 'deveriam ser 3 molduras');
+  // Placa-mãe, mais 12 versões de armaduras da Caça a Monstros.
+  igual(camp.length, 76);
+  igual(new Set(camp.map((c) => c.moldura)).size, 4, 'deveriam ser 4 molduras');
   verdade(contexto.acharEquipamentoDeCampanha_('Dinamite'), 'não achou a Dinamite');
   verdade(contexto.acharEquipamentoDeCampanha_('Quantum'), 'não achou o Quantum');
 
@@ -2682,6 +2682,21 @@ teste('Pau-Ferro só aumenta os limiares depois de marcar o último espaço da A
   const depois = contexto.derivadosDoPersonagem_(f);
   igual(depois.limiarMaior, antes.limiarMaior + 2);
   igual(depois.limiarGrave, antes.limiarGrave + 2);
+});
+
+teste('Armadura de madeira de caixão acompanha espaços disponíveis e trama prateada mantém reação ao dano', () => {
+  const caca = avaliar('EQUIPAMENTO_CAMPANHA');
+  const caixao = caca.find((a) => a.id === 'campanha-caca-a-monstros-coffinwood-armor-t1');
+  const prata = caca.find((a) => a.id === 'campanha-caca-a-monstros-silverweave-armor-t1');
+  verdade(caixao && prata, 'armaduras de caça a monstros ausentes');
+  const f = fichaDeModificador({ equipamento: { armadura: caixao.id, primaria: null, secundaria: null, reserva: [] } });
+  const cheio = contexto.derivadosDoPersonagem_(f);
+  f.recursos.armaduraMarcada = 2;
+  const gasto = contexto.derivadosDoPersonagem_(f);
+  igual(cheio.limiarMaior - gasto.limiarMaior, 2);
+  igual(cheio.limiarGrave - gasto.limiarGrave, 2);
+  const armaduraPrata = contexto.acharArmadura_(prata.id);
+  igual(armaduraPrata.efeitoEquipamento.danoRecebido.reduzDanoMagicoPelaPontuacaoArmadura, true);
 });
 
 teste('passivos de dano de arma/armadura são calculados sem rolar e condicionais ficam explícitos', () => {
@@ -11030,9 +11045,9 @@ function ocorrenciasEquipD3_() {
   return avaliar('ARMAS').concat(avaliar('ARMADURAS'), avaliar('EQUIPAMENTO_CAMPANHA'))
     .filter((x) => NOMES_D3_EQUIP.has(String(x.carac || '')));
 }
-teste('D3 classifica explicitamente as 27 ocorrências restantes sem RNG nem uso ativo falso', () => {
+teste('D3 classifica explicitamente as 31 ocorrências restantes sem RNG nem uso ativo falso', () => {
   const xs = ocorrenciasEquipD3_();
-  igual(xs.length, 27);
+  igual(xs.length, 31);
   xs.forEach((x) => {
     verdade(x.automacao, `${x.nome} deveria ter classificação explícita`);
     igual(x.automacao.rolaNoApp, false, `${x.nome} não pode rolar no app`);
@@ -11044,7 +11059,7 @@ teste('D3 mantém as quantidades por característica exatamente como no catálog
   const xs = ocorrenciasEquipD3_();
   const esperado = {'Assustador':2,'Brutal':3,'Busca da verdade':1,'Comprimento':1,
     'De outro mundo':1,'Direcionado':1,'Distorção Temporal':2,'Dobrado':1,'Enganchado':4,
-    'Eruptivo':1,'Espalha-chumbo':4,'Gancho':1,'Perfeccionista':1,'Queimadura':2,'Serra':1,'Silencioso':1};
+    'Eruptivo':1,'Espalha-chumbo':4,'Gancho':1,'Perfeccionista':1,'Queimadura':2,'Serra':1,'Silencioso':5};
   Object.keys(esperado).forEach((nome) => igual(xs.filter((x)=>x.carac===nome).length, esperado[nome], nome));
 });
 teste('Aparar sai da pendência do D3 pelo bloco defensivo dedicado, sem RNG', () => {

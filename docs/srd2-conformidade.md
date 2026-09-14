@@ -47,7 +47,7 @@ O corpus auxiliar pinado registra 1.539 registros: 10 domínios, 13 classes, 26 
 
 O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. O inventário individual fica em `data/srd2-inventario.json`: cada um dos 1.539 registros preserva ID, nome inglês, tipo, hash do registro no corpus, estado de implementação e, quando aplicável, `sourceLocator`. `npm run teste:srd2` impede alteração acidental das contagens, IDs, hashes estruturais ou estados. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
 
-No checkpoint atual, 369 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 1.169 permanecem `pendente`.
+No checkpoint atual, 376 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 1.162 permanecem `pendente`.
 
 ## Fase 1 — Level Up
 
@@ -226,4 +226,8 @@ O patamar 3 acrescenta 10 opções do núcleo, todas na p. 73. Magnífico soma P
 
 O patamar 4 acrescenta as 10 opções finais do núcleo na p. 74. Sintonizado soma o patamar aos limiares, e Encantadas, Incômoda e Volumosa reutilizam os contratos derivados anteriores. Capacidades ligadas a dano, descanso, Esperança, morte ou limite do conjunto estão declaradas como integrações pendentes.
 
-A coleção permanece `em-auditoria` somente pelas 7 armaduras de campanhas suplementares; as 69 armaduras do núcleo estão catalogadas e vinculadas.
+A coleção de armaduras está conferida: as 69 opções do núcleo e as 7 opções de campanhas suplementares estão vinculadas às fontes.
+
+### Armaduras suplementares completas (76/76)
+
+As quatro opções de herói cotidiano da p. 192 já existiam na moldura Festim das Feras; foram vinculadas individualmente ao SRD 2.0. A p. 201 acrescenta três famílias de armaduras para Caça a Monstros, cada uma com valores próprios para os quatro patamares. Armadura de madeira de caixão soma os espaços de Armadura não marcados aos dois limiares; a Armadura de trama prateada reduz o dano mágico pela Pontuação de Armadura antes dos limiares; o bônus para mover-se silenciosamente do Casaco comprido de couro depende da jogada na mesa. `data/srd2-armaduras-suplementares-auditoria.json` registra os vínculos e `npm run teste:srd2-armaduras-suplementares` os confere.

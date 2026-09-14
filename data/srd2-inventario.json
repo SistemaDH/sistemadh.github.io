@@ -7378,7 +7378,7 @@
             "pdfPageEnd": 192
           },
           "corpusSha256": "7d2b612f02e56799a748f4720b0b587db7a7fedfdf9db93da4604a92ce6f8e75",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/banded-armor",
@@ -7528,7 +7528,7 @@
             "pdfPageEnd": 201
           },
           "corpusSha256": "2cb7b1d63ea213bb38d30648b19c60b61eba289c9ba188d798933bae36916efe",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/darkweave-shroud",
@@ -7918,7 +7918,7 @@
             "pdfPageEnd": 192
           },
           "corpusSha256": "57c120568717c6d3e12773a4f3bcbbda881054eb5268f60d008eec9c928a8ff7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/leather-armor",
@@ -7948,7 +7948,7 @@
             "pdfPageEnd": 201
           },
           "corpusSha256": "9aeba88ed024a7231ea9063cedda9a76b76b110cd1fd361803ee252d09aaf3d9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/legendary-banded-armor",
@@ -8113,7 +8113,7 @@
             "pdfPageEnd": 192
           },
           "corpusSha256": "cf12ebb2dfe19c4051d7d3ad89fd164100617f8348a68bab947b0bb61546a75f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/resonant-harness",
@@ -8233,7 +8233,7 @@
             "pdfPageEnd": 201
           },
           "corpusSha256": "0faad186caf0bd7736436bbbea9f5c19cc72edebde35b266aa8aff9c5baf3480",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/skywardens-lamellar",
@@ -8308,7 +8308,7 @@
             "pdfPageEnd": 192
           },
           "corpusSha256": "14409421532da13a946a6b1bc5a95b90a5cdf5fc791890b70837e38af41944e0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/trollhide-cuirass",

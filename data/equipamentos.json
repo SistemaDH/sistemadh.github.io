@@ -8883,6 +8883,296 @@
  ],
  "campanhas": [
   {
+   "id": "caca-a-monstros",
+   "nome": "Caça a Monstros",
+   "paginasLivro": [],
+   "substituiEquipamentoInicial": false,
+   "regra": "Equipamento opcional da mecânica suplementar de caça a monstros do SRD 2.0.",
+   "fonteDoTexto": "Daggerheart SRD 2.0, p. 201",
+   "itens": [
+    {
+     "id": "campanha-caca-a-monstros-coffinwood-armor-t1",
+     "moldura": "Caça a Monstros",
+     "categoria": "armadura",
+     "tier": 1,
+     "nome": "Armadura de madeira de caixão",
+     "nomeIngles": "Coffinwood Armor",
+     "limiares": "4/10",
+     "pontuacaoArmadura": 3,
+     "caracteristica": {
+      "nome": "Lascas",
+      "nomeIngles": "Splintering",
+      "texto": "Lascas: Ganhe um bônus em ambos os limiares de dano igual aos seus espaços de Armadura não marcados.",
+      "textoIngles": "Gain a bonus to your damage thresholds equal to your unmarked Armor Slots.",
+      "fonteTraducao": "traducao-srd2",
+      "confianca": "provisoria",
+      "efeitoDerivado": {
+       "limiaresPorArmaduraDisponivel": 1
+      }
+     },
+     "fonteDoTexto": "Daggerheart SRD 2.0, p. 201; tradução provisória"
+    },
+    {
+     "id": "campanha-caca-a-monstros-coffinwood-armor-t2",
+     "moldura": "Caça a Monstros",
+     "categoria": "armadura",
+     "tier": 2,
+     "nome": "Armadura de madeira de caixão",
+     "nomeIngles": "Coffinwood Armor",
+     "limiares": "6/15",
+     "pontuacaoArmadura": 4,
+     "caracteristica": {
+      "nome": "Lascas",
+      "nomeIngles": "Splintering",
+      "texto": "Lascas: Ganhe um bônus em ambos os limiares de dano igual aos seus espaços de Armadura não marcados.",
+      "textoIngles": "Gain a bonus to your damage thresholds equal to your unmarked Armor Slots.",
+      "fonteTraducao": "traducao-srd2",
+      "confianca": "provisoria",
+      "efeitoDerivado": {
+       "limiaresPorArmaduraDisponivel": 1
+      }
+     },
+     "fonteDoTexto": "Daggerheart SRD 2.0, p. 201; tradução provisória"
+    },
+    {
+     "id": "campanha-caca-a-monstros-coffinwood-armor-t3",
+     "moldura": "Caça a Monstros",
+     "categoria": "armadura",
+     "tier": 3,
+     "nome": "Armadura de madeira de caixão",
+     "nomeIngles": "Coffinwood Armor",
+     "limiares": "8/22",
+     "pontuacaoArmadura": 5,
+     "caracteristica": {
+      "nome": "Lascas",
+      "nomeIngles": "Splintering",
+      "texto": "Lascas: Ganhe um bônus em ambos os limiares de dano igual aos seus espaços de Armadura não marcados.",
+      "textoIngles": "Gain a bonus to your damage thresholds equal to your unmarked Armor Slots.",
+      "fonteTraducao": "traducao-srd2",
+      "confianca": "provisoria",
+      "efeitoDerivado": {
+       "limiaresPorArmaduraDisponivel": 1
+      }
+     },
+     "fonteDoTexto": "Daggerheart SRD 2.0, p. 201; tradução provisória"
+    },
+    {
+     "id": "campanha-caca-a-monstros-coffinwood-armor-t4",
+     "moldura": "Caça a Monstros",
+     "categoria": "armadura",
+     "tier": 4,
+     "nome": "Armadura de madeira de caixão",
+     "nomeIngles": "Coffinwood Armor",
+     "limiares": "10/31",
+     "pontuacaoArmadura": 6,
+     "caracteristica": {
+      "nome": "Lascas",
+      "nomeIngles": "Splintering",
+      "texto": "Lascas: Ganhe um bônus em ambos os limiares de dano igual aos seus espaços de Armadura não marcados.",
+      "textoIngles": "Gain a bonus to your damage thresholds equal to your unmarked Armor Slots.",
+      "fonteTraducao": "traducao-srd2",
+      "confianca": "provisoria",
+      "efeitoDerivado": {
+       "limiaresPorArmaduraDisponivel": 1
+      }
+     },
+     "fonteDoTexto": "Daggerheart SRD 2.0, p. 201; tradução provisória"
+    },
+    {
+     "id": "campanha-caca-a-monstros-leather-longcoat-t1",
+     "moldura": "Caça a Monstros",
+     "categoria": "armadura",
+     "tier": 1,
+     "nome": "Casaco comprido de couro",
+     "nomeIngles": "Leather Longcoat",
+     "limiares": "5/12",
+     "pontuacaoArmadura": 3,
+     "caracteristica": {
+      "nome": "Silencioso",
+      "nomeIngles": "Quiet",
+      "texto": "Silencioso: Ganhe +2 nas jogadas que fizer para se mover silenciosamente.",
+      "textoIngles": "Gain a +2 bonus to rolls you make to move silently.",
+      "fonteTraducao": "traducao-srd2",
+      "confianca": "provisoria",
+      "automacao": {
+       "classificacao": "passivo-contextual",
+       "rolaNoApp": false,
+       "motivo": "O bônus depende de a jogada envolver movimento silencioso; a mesa identifica esse contexto."
+      }
+     },
+     "fonteDoTexto": "Daggerheart SRD 2.0, p. 201; tradução provisória"
+    },
+    {
+     "id": "campanha-caca-a-monstros-leather-longcoat-t2",
+     "moldura": "Caça a Monstros",
+     "categoria": "armadura",
+     "tier": 2,
+     "nome": "Casaco comprido de couro",
+     "nomeIngles": "Leather Longcoat",
+     "limiares": "8/18",
+     "pontuacaoArmadura": 4,
+     "caracteristica": {
+      "nome": "Silencioso",
+      "nomeIngles": "Quiet",
+      "texto": "Silencioso: Ganhe +2 nas jogadas que fizer para se mover silenciosamente.",
+      "textoIngles": "Gain a +2 bonus to rolls you make to move silently.",
+      "fonteTraducao": "traducao-srd2",
+      "confianca": "provisoria",
+      "automacao": {
+       "classificacao": "passivo-contextual",
+       "rolaNoApp": false,
+       "motivo": "O bônus depende de a jogada envolver movimento silencioso; a mesa identifica esse contexto."
+      }
+     },
+     "fonteDoTexto": "Daggerheart SRD 2.0, p. 201; tradução provisória"
+    },
+    {
+     "id": "campanha-caca-a-monstros-leather-longcoat-t3",
+     "moldura": "Caça a Monstros",
+     "categoria": "armadura",
+     "tier": 3,
+     "nome": "Casaco comprido de couro",
+     "nomeIngles": "Leather Longcoat",
+     "limiares": "10/25",
+     "pontuacaoArmadura": 5,
+     "caracteristica": {
+      "nome": "Silencioso",
+      "nomeIngles": "Quiet",
+      "texto": "Silencioso: Ganhe +2 nas jogadas que fizer para se mover silenciosamente.",
+      "textoIngles": "Gain a +2 bonus to rolls you make to move silently.",
+      "fonteTraducao": "traducao-srd2",
+      "confianca": "provisoria",
+      "automacao": {
+       "classificacao": "passivo-contextual",
+       "rolaNoApp": false,
+       "motivo": "O bônus depende de a jogada envolver movimento silencioso; a mesa identifica esse contexto."
+      }
+     },
+     "fonteDoTexto": "Daggerheart SRD 2.0, p. 201; tradução provisória"
+    },
+    {
+     "id": "campanha-caca-a-monstros-leather-longcoat-t4",
+     "moldura": "Caça a Monstros",
+     "categoria": "armadura",
+     "tier": 4,
+     "nome": "Casaco comprido de couro",
+     "nomeIngles": "Leather Longcoat",
+     "limiares": "12/34",
+     "pontuacaoArmadura": 6,
+     "caracteristica": {
+      "nome": "Silencioso",
+      "nomeIngles": "Quiet",
+      "texto": "Silencioso: Ganhe +2 nas jogadas que fizer para se mover silenciosamente.",
+      "textoIngles": "Gain a +2 bonus to rolls you make to move silently.",
+      "fonteTraducao": "traducao-srd2",
+      "confianca": "provisoria",
+      "automacao": {
+       "classificacao": "passivo-contextual",
+       "rolaNoApp": false,
+       "motivo": "O bônus depende de a jogada envolver movimento silencioso; a mesa identifica esse contexto."
+      }
+     },
+     "fonteDoTexto": "Daggerheart SRD 2.0, p. 201; tradução provisória"
+    },
+    {
+     "id": "campanha-caca-a-monstros-silverweave-armor-t1",
+     "moldura": "Caça a Monstros",
+     "categoria": "armadura",
+     "tier": 1,
+     "nome": "Armadura de trama prateada",
+     "nomeIngles": "Silverweave Armor",
+     "limiares": "5/11",
+     "pontuacaoArmadura": 3,
+     "caracteristica": {
+      "nome": "Protegido",
+      "nomeIngles": "Warded",
+      "texto": "Protegido: Reduza o dano mágico recebido pela Pontuação de Armadura antes de compará-lo com os limiares de dano.",
+      "textoIngles": "You reduce incoming magic damage by your Armor Score before applying it to your damage thresholds.",
+      "fonteTraducao": "traducao-srd2",
+      "confianca": "provisoria",
+      "efeitoEquipamento": {
+       "danoRecebido": {
+        "reduzDanoMagicoPelaPontuacaoArmadura": true
+       }
+      }
+     },
+     "fonteDoTexto": "Daggerheart SRD 2.0, p. 201; tradução provisória"
+    },
+    {
+     "id": "campanha-caca-a-monstros-silverweave-armor-t2",
+     "moldura": "Caça a Monstros",
+     "categoria": "armadura",
+     "tier": 2,
+     "nome": "Armadura de trama prateada",
+     "nomeIngles": "Silverweave Armor",
+     "limiares": "7/16",
+     "pontuacaoArmadura": 4,
+     "caracteristica": {
+      "nome": "Protegido",
+      "nomeIngles": "Warded",
+      "texto": "Protegido: Reduza o dano mágico recebido pela Pontuação de Armadura antes de compará-lo com os limiares de dano.",
+      "textoIngles": "You reduce incoming magic damage by your Armor Score before applying it to your damage thresholds.",
+      "fonteTraducao": "traducao-srd2",
+      "confianca": "provisoria",
+      "efeitoEquipamento": {
+       "danoRecebido": {
+        "reduzDanoMagicoPelaPontuacaoArmadura": true
+       }
+      }
+     },
+     "fonteDoTexto": "Daggerheart SRD 2.0, p. 201; tradução provisória"
+    },
+    {
+     "id": "campanha-caca-a-monstros-silverweave-armor-t3",
+     "moldura": "Caça a Monstros",
+     "categoria": "armadura",
+     "tier": 3,
+     "nome": "Armadura de trama prateada",
+     "nomeIngles": "Silverweave Armor",
+     "limiares": "9/23",
+     "pontuacaoArmadura": 5,
+     "caracteristica": {
+      "nome": "Protegido",
+      "nomeIngles": "Warded",
+      "texto": "Protegido: Reduza o dano mágico recebido pela Pontuação de Armadura antes de compará-lo com os limiares de dano.",
+      "textoIngles": "You reduce incoming magic damage by your Armor Score before applying it to your damage thresholds.",
+      "fonteTraducao": "traducao-srd2",
+      "confianca": "provisoria",
+      "efeitoEquipamento": {
+       "danoRecebido": {
+        "reduzDanoMagicoPelaPontuacaoArmadura": true
+       }
+      }
+     },
+     "fonteDoTexto": "Daggerheart SRD 2.0, p. 201; tradução provisória"
+    },
+    {
+     "id": "campanha-caca-a-monstros-silverweave-armor-t4",
+     "moldura": "Caça a Monstros",
+     "categoria": "armadura",
+     "tier": 4,
+     "nome": "Armadura de trama prateada",
+     "nomeIngles": "Silverweave Armor",
+     "limiares": "11/32",
+     "pontuacaoArmadura": 6,
+     "caracteristica": {
+      "nome": "Protegido",
+      "nomeIngles": "Warded",
+      "texto": "Protegido: Reduza o dano mágico recebido pela Pontuação de Armadura antes de compará-lo com os limiares de dano.",
+      "textoIngles": "You reduce incoming magic damage by your Armor Score before applying it to your damage thresholds.",
+      "fonteTraducao": "traducao-srd2",
+      "confianca": "provisoria",
+      "efeitoEquipamento": {
+       "danoRecebido": {
+        "reduzDanoMagicoPelaPontuacaoArmadura": true
+       }
+      }
+     },
+     "fonteDoTexto": "Daggerheart SRD 2.0, p. 201; tradução provisória"
+    }
+   ]
+  },
+  {
    "id": "festim-das-feras",
    "nome": "Festim das Feras",
    "nomeAntigo": "Festa da Besta (Beast Feast)",

@@ -1,0 +1,14 @@
+{
+  "versao": 1,
+  "estado": "conferido",
+  "fonte": "Daggerheart SRD 2.0, pp. 192 e 201",
+  "registros": [
+    ["armor/quilted-clothing", ["campanha-festim-das-feras-vestimenta-acolchoada"], ["5/11"], [3], "evasao"],
+    ["armor/leather-apron", ["campanha-festim-das-feras-avental-de-couro"], ["6/13"], [3], null],
+    ["armor/tree-bark-armor", ["campanha-festim-das-feras-armadura-de-casca-de-arvore"], ["7/15"], [4], "evasao"],
+    ["armor/baking-tray-breastplate", ["campanha-festim-das-feras-peitoral-de-assadeira"], ["8/17"], [4], "agilidade"],
+    ["armor/coffinwood-armor", ["campanha-caca-a-monstros-coffinwood-armor-t1", "campanha-caca-a-monstros-coffinwood-armor-t2", "campanha-caca-a-monstros-coffinwood-armor-t3", "campanha-caca-a-monstros-coffinwood-armor-t4"], ["4/10", "6/15", "8/22", "10/31"], [3, 4, 5, 6], "limiaresPorArmaduraDisponivel"],
+    ["armor/leather-longcoat", ["campanha-caca-a-monstros-leather-longcoat-t1", "campanha-caca-a-monstros-leather-longcoat-t2", "campanha-caca-a-monstros-leather-longcoat-t3", "campanha-caca-a-monstros-leather-longcoat-t4"], ["5/12", "8/18", "10/25", "12/34"], [3, 4, 5, 6], null],
+    ["armor/silverweave-armor", ["campanha-caca-a-monstros-silverweave-armor-t1", "campanha-caca-a-monstros-silverweave-armor-t2", "campanha-caca-a-monstros-silverweave-armor-t3", "campanha-caca-a-monstros-silverweave-armor-t4"], ["5/11", "7/16", "9/23", "11/32"], [3, 4, 5, 6], "reduzDanoMagicoPelaPontuacaoArmadura"]
+  ]
+}

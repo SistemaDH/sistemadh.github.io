@@ -234,7 +234,8 @@ function acharArmadura_(idOuNome) {
     // A forma que validarEquipamento_ espera.
     return { id: daMoldura.id, nome: daMoldura.nome, tier: daMoldura.tier || 1,
              limiares: daMoldura.limiares, pontuacao: daMoldura.pontuacao, carac: daMoldura.carac,
-             efeitoDerivado: daMoldura.efeitoDerivado || null, moldura: daMoldura.moldura };
+             efeitoDerivado: daMoldura.efeitoDerivado || null,
+             efeitoEquipamento: daMoldura.efeitoEquipamento || null, moldura: daMoldura.moldura };
   }
   for (let i = 0; i < ARMADURAS.length; i++) {
     if (baterNome_(ARMADURAS[i], alvo)) return ARMADURAS[i];

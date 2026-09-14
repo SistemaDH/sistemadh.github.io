@@ -418,6 +418,7 @@ function modificadoresDerivadosDaFicha_(ficha) {
     evasao: 0, limiares: 0, limiarMaior: 0, limiarGrave: 0,
     pontosDeVidaMaximos: 0, estresseMaximo: 0, pontuacaoArmadura: 0,
     limiaresSeUltimaArmaduraMarcada: 0,
+    limiaresPorArmaduraDisponivel: 0,
     limiaresPorTracoConjuracao: false,
     pontuacaoArmaduraPorTraco: '',
     tracos: { agilidade: 0, forca: 0, finesse: 0, instinto: 0, presenca: 0, conhecimento: 0 },
@@ -449,6 +450,7 @@ function modificadoresDerivadosDaFicha_(ficha) {
     saida.pontuacaoArmadura += numero('pontuacaoArmadura');
     if (e.pontuacaoArmaduraPorTraco) saida.pontuacaoArmaduraPorTraco = String(e.pontuacaoArmaduraPorTraco);
     saida.limiaresSeUltimaArmaduraMarcada += numero('limiaresSeUltimaArmaduraMarcada');
+    saida.limiaresPorArmaduraDisponivel += numero('limiaresPorArmaduraDisponivel');
     if (e.limiaresPorTracoConjuracao) saida.limiaresPorTracoConjuracao = true;
     if (e.limiaresPorProficiencia) saida.limiares += prof * Number(e.limiaresPorProficiencia);
     if (e.limiarGravePorProficiencia) saida.limiarGrave += prof * Number(e.limiarGravePorProficiencia);
@@ -832,6 +834,12 @@ function derivadosDoPersonagem_(ficha) {
   if (limiarMaior !== null) {
     limiarMaior += bc.limiares + md.limiares + md.limiarMaior + bonusLimiaresCartas;
     limiarGrave += bc.limiares + md.limiares + md.limiarGrave + bonusLimiaresCartas;
+    if (armadura && md.limiaresPorArmaduraDisponivel) {
+      const marcados = Math.max(0, Number(((ficha || {}).recursos || {}).armaduraMarcada) || 0);
+      const disponiveis = Math.max(0, pontuacaoArmadura - Math.min(pontuacaoArmadura, marcados));
+      limiarMaior += disponiveis * md.limiaresPorArmaduraDisponivel;
+      limiarGrave += disponiveis * md.limiaresPorArmaduraDisponivel;
+    }
     // Pau-Ferro: vale enquanto o ÚLTIMO espaço da Armadura FINAL estiver marcado.
     const marcado = Math.max(0, Number(((ficha || {}).recursos || {}).armaduraMarcada) || 0);
     if (md.limiaresSeUltimaArmaduraMarcada && pontuacaoArmadura > 0 && marcado >= pontuacaoArmadura) {

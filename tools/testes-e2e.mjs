@@ -87,7 +87,8 @@ console.log(`\nServidor de teste: ${base}\n`);
 const CHROMIUM_LOCAL = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 const navegador = await chromium.launch({
   args: ['--no-sandbox'],
-  executablePath: existsSync(CHROMIUM_LOCAL) ? CHROMIUM_LOCAL : undefined
+  executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE ||
+    (existsSync(CHROMIUM_LOCAL) ? CHROMIUM_LOCAL : undefined)
 });
 const contexto = await navegador.newContext({
   viewport: { width: 390, height: 844 },   // iPhone 14 — mobile-first de verdade
