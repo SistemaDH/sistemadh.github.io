@@ -9301,7 +9301,7 @@
      "maos": "Uma mão",
      "caracteristica": {
       "nome": "Veloz",
-      "texto": "Veloz: ao fazer um ataque, marque 1 Estresse para atingir outra criatura no alcance",
+      "texto": "Veloz: ao fazer um ataque, você pode marcar 1 Estresse para atingir outra criatura no alcance",
       "automacao": {
        "classificacao": "uso-ativo-assistido",
        "motivo": "Ao fazer um ataque, marca 1 Estresse; o segundo alvo e a resolução do ataque continuam na mesa."

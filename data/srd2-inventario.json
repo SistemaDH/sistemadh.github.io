@@ -2767,7 +2767,7 @@
             "pdfPageEnd": 192
           },
           "corpusSha256": "22da75a0720bcdb6c8be7e12ff78d6ac2551f2f96bb5215ace292d4daceb8320",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/battleaxe",
@@ -3052,7 +3052,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "32a391af4ca896fc2e1efb9fc48d0214f393eb888a8e9e4b7ad9cb095e3ca939",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/cane-sword",
@@ -3142,7 +3142,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "5a6de9a78a96c72c896341a06542ed8a8e00b47a014bf25edb3592273712bd96",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/clockwork-crossbow",
@@ -3187,7 +3187,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "336061f2d6f929b592195260949cb123c99dce637766c430c19c3722e68b8c03",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/crop-scythe",
@@ -3202,7 +3202,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "25f6139ad8d5a6186046c96038a3ed00fa46409505f50d13536c8be97731ef00",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/crossbow",
@@ -3457,7 +3457,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "d8b2954165758d3aee2ccdf0a4af55e43b2c40eb27b6ed9dfe9f197a733e34d7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/enchanted-broomstick",
@@ -3472,7 +3472,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "81e5a4e38c2b116a63b8b9d63ed16eb8eefa768c7f05578628cd0f341b4fad41",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/enchanted-chakram",
@@ -3502,7 +3502,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "87243a564da0511143beaf84fccf1eb799d9bdae58353c792484c0b5c125ff1d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/enchanted-hammer",
@@ -3517,7 +3517,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "3f07a0220dcc599297669653b209f5340c781e4982c0794f7412a5c4508d2fbe",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/enchanted-kite",
@@ -3532,7 +3532,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "4a575f90583e27a10daee4da2888589ccce6787cc9a956f590fccc22f4265fda",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/enchanted-lute",
@@ -3562,7 +3562,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "0109698d3b82378c4f169e88bf9a377168f862939a17767134c92b289d55a04e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/enchanted-scissors",
@@ -3577,7 +3577,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "215498ef5dff41f3f48295360619ee9095c831621fde9e25c29fad26e7cb7674",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/enchanted-shillelagh",
@@ -3622,7 +3622,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "6dd4c81fc0aa8fde8683bea02a448e9344fd99ad657d23eb7bf4c45901e1f35a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/extended-polearm",
@@ -3652,7 +3652,7 @@
             "pdfPageEnd": 192
           },
           "corpusSha256": "67a0a114d5d5da166afe48c5c1558d60b5a093cf8dbbd7dcb86830487f0137d2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/fighting-cloak",
@@ -3697,7 +3697,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "2914c4ac32351b1fbcae40636d7beccefb211dc219b56c61312de82707992466",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/fishing-rod",
@@ -3712,7 +3712,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "6da0ed443a743240398a7814366933ff49f018749fecb4f961833ca42f3bf53d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/flare-launcher",
@@ -3727,7 +3727,7 @@
             "pdfPageEnd": 192
           },
           "corpusSha256": "f97813ab5840151d524a21b837f0933945faaf52c622d723fa4534e3a1e20c98",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/flickerfly-blade",
@@ -3787,7 +3787,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "5b193d6fcab28e695d964c4894a8249003583a98509b3b7a57a2bb22d2ada529",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/fury-gem",
@@ -4957,7 +4957,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "df447625aab5ed836be11c7b3a3116ba71b409476a442e47a3c431f297a5cf28",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/javelins",
@@ -5077,7 +5077,7 @@
             "pdfPageEnd": 192
           },
           "corpusSha256": "0733cfbdefc8b9e0db93ce44cdd1ca347949fb0a4b9826e95730b9a41f9cdda0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/lasso",
@@ -6037,7 +6037,7 @@
             "pdfPageEnd": 192
           },
           "corpusSha256": "97215aea28a061b9e9beec68dbf08efa41d7ab39912ff45c00b24611abce5aee",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/parrying-dagger",
@@ -6067,7 +6067,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "e30982ac819607e88e7c1260c5770bc2b3e025faf6856ab4528164ee50d60306",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/platinum-estoc",
@@ -6307,7 +6307,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "d83a515d48506404561cb40ca6978fe35d988d756a9bc8ee3f1bade6029dbcb0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/rope-dart",
@@ -6472,7 +6472,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "f4a4518c53fd826777568aed7c08ade5a6637d46d1a1af8c6d99f47f7235af23",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/shortbow",
@@ -6547,7 +6547,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "e0b0d4277d8792ce7b4bb6b8180af52f52155f416331d97227e50689c090a8d7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/singing-sword",
@@ -6607,7 +6607,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "003618d84478e0053de47f0bb45f23c5004a04940bf3c63d1ad2ef9d00766f87",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/slingshot",
@@ -6622,7 +6622,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "dcf96066007f74165d71272fd45b21080c60b027e2372ca1f8e0c39efb17a4dd",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/small-dagger",
@@ -6697,7 +6697,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "65a76ee9dd581fdcb2a9479abfa23c3a679285fc8e975cf2fa21798f39092e6c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/spear",
@@ -6877,7 +6877,7 @@
             "pdfPageEnd": 192
           },
           "corpusSha256": "713c964a0d402f014b5a41223de8cfe41cf7aac95b816d54757d73d36a6f16b9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/talon-blades",
@@ -6967,7 +6967,7 @@
             "pdfPageEnd": 192
           },
           "corpusSha256": "ebda49747b27151bbdace77154fa152939d1f2849e917ed36252e17d31049d1f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/twisted-dagger",
@@ -7042,7 +7042,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "6fbd084aa37c02471436bee971933bcfd004081c8fabde17cb14637b65303283",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/wand",
@@ -7192,7 +7192,7 @@
             "pdfPageEnd": 191
           },
           "corpusSha256": "50e0ecd74a492dd2d1304e7660524d02e388ff1956142c23d3d2d1ae68f1e4d6",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/wooden-stake",

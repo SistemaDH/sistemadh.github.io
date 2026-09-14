@@ -47,11 +47,15 @@ O corpus auxiliar pinado registra 1.539 registros: 10 domínios, 13 classes, 26 
 
 O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. O inventário individual fica em `data/srd2-inventario.json`: cada um dos 1.539 registros preserva ID, nome inglês, tipo, hash do registro no corpus, estado de implementação e, quando aplicável, `sourceLocator`. `npm run teste:srd2` impede alteração acidental das contagens, IDs, hashes estruturais ou estados. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
 
-No checkpoint atual, 570 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 968 permanecem `pendente`.
+No checkpoint atual, 602 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 936 permanecem `pendente`.
 
 ## Armas do núcleo — primeiro vínculo (194/358)
 
-As 194 armas já representadas no catálogo ativo foram comparadas registro a registro com o corpus SRD 2.0 fixado: patamar, categoria, traço, alcance, dano, mãos e característica conferidos. Os vínculos, hashes e valores esperados ficam em `data/srd2-armas-core-auditoria.json`, protegidos por `npm run teste:srd2-armas-core`. As 10 armas locais sem correspondente exato no SRD continuam fora dessa contagem. A comparação corrigiu as quatro Cadeiras de Rodas Arcanas: na p. 71 do SRD 2.0, elas causam dano **mágico**, não físico. Restam 164 registros de armas para a próxima etapa.
+As 194 armas já representadas no catálogo ativo foram comparadas registro a registro com o corpus SRD 2.0 fixado: patamar, categoria, traço, alcance, dano, mãos e característica conferidos. Os vínculos, hashes e valores esperados ficam em `data/srd2-armas-core-auditoria.json`, protegidos por `npm run teste:srd2-armas-core`. As 10 armas locais sem correspondente exato no SRD continuam fora dessa contagem. A comparação corrigiu as quatro Cadeiras de Rodas Arcanas: na p. 71 do SRD 2.0, elas causam dano **mágico**, não físico.
+
+## Armas de herói cotidiano (32/32)
+
+As 32 armas e escudos da moldura Festim das Feras foram vinculados às pp. 191–192 do SRD 2.0. A comparação confirmou categoria, traço, alcance, dano, mãos e característica; a Foice de mão agora deixa explícito que gastar Estresse para atingir um segundo alvo é opcional. `data/srd2-armas-heroi-cotidiano-auditoria.json` e `npm run teste:srd2-armas-heroi-cotidiano` protegem o lote. O total da coleção passou a 226/358, com 132 armas ainda pendentes.
 
 ## Fase 1 — Level Up
 
