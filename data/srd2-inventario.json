@@ -11567,7 +11567,182 @@
           "tipo": "Consumable",
           "nomeIngles": "Self-Sewing Thread",
           "sourceLocator": {
-        ÛNºo+^≤â¢∂◊ù       {
+            "chapter": "CORE MECHANICS",
+            "heading": "Additional Consumables",
+            "lineStart": 4310,
+            "lineEnd": 4310,
+            "pdfPageStart": 82,
+            "pdfPageEnd": 82
+          },
+          "corpusSha256": "b0ab2a2ca44ec9fe2508168f23ca4065e74ff67b1522436e842357289482413b",
+          "estado": "pendente"
+        },
+        {
+          "id": "consumables/shrinking-potion",
+          "tipo": "Consumable",
+          "nomeIngles": "Shrinking Potion",
+          "sourceLocator": {
+            "chapter": "CORE MECHANICS",
+            "heading": "Core Set Consumables",
+            "lineStart": 4266,
+            "lineEnd": 4266,
+            "pdfPageStart": 81,
+            "pdfPageEnd": 81
+          },
+          "corpusSha256": "b2df898bfd1d26162c14e367a0efc3c4e3c18b0b85e2bbb9d8ba5f899bc78d45",
+          "estado": "pendente"
+        },
+        {
+          "id": "consumables/slayers-salt",
+          "tipo": "Consumable",
+          "nomeIngles": "Slayer‚Äôs Salt",
+          "sourceLocator": {
+            "chapter": "CORE MECHANICS",
+            "heading": "Additional Consumables",
+            "lineStart": 4294,
+            "lineEnd": 4294,
+            "pdfPageStart": 82,
+            "pdfPageEnd": 82
+          },
+          "corpusSha256": "69de65960aedf6f7ae6e45f0faacde7bc8668949e0ae2dfd74f76b2b35b177a1",
+          "estado": "pendente"
+        },
+        {
+          "id": "consumables/sleeping-sap",
+          "tipo": "Consumable",
+          "nomeIngles": "Sleeping Sap",
+          "sourceLocator": {
+            "chapter": "CORE MECHANICS",
+            "heading": "Core Set Consumables",
+            "lineStart": 4263,
+            "lineEnd": 4263,
+            "pdfPageStart": 81,
+            "pdfPageEnd": 81
+          },
+          "corpusSha256": "bf19cd7896d0e9e315e1f633767bfdc11c6fdd859f057dc9218b0d81b1a28192",
+          "estado": "pendente"
+        },
+        {
+          "id": "consumables/snakeskin-spirit",
+          "tipo": "Consumable",
+          "nomeIngles": "Snakeskin Spirit",
+          "sourceLocator": {
+            "chapter": "CORE MECHANICS",
+            "heading": "Additional Consumables",
+            "lineStart": 4344,
+            "lineEnd": 4344,
+            "pdfPageStart": 83,
+            "pdfPageEnd": 83
+          },
+          "corpusSha256": "bb7df4ce1acaf04f8f92a5cc44a53b1f94b69b98dd0ca9c4b188ba8e3945b0ca",
+          "estado": "pendente"
+        },
+        {
+          "id": "consumables/snap-powder",
+          "tipo": "Consumable",
+          "nomeIngles": "Snap Powder",
+          "sourceLocator": {
+            "chapter": "CORE MECHANICS",
+            "heading": "Core Set Consumables",
+            "lineStart": 4223,
+            "lineEnd": 4223,
+            "pdfPageStart": 80,
+            "pdfPageEnd": 80
+          },
+          "corpusSha256": "ebfd20d5b5e767da5dbed3d553ca42db04ed71d6eb71b7714cd1df9e602d1baf",
+          "estado": "pendente"
+        },
+        {
+          "id": "consumables/snapthorn-seed",
+          "tipo": "Consumable",
+          "nomeIngles": "Snapthorn Seed",
+          "sourceLocator": {
+            "chapter": "CORE MECHANICS",
+            "heading": "Additional Consumables",
+            "lineStart": 4304,
+            "lineEnd": 4304,
+            "pdfPageStart": 82,
+            "pdfPageEnd": 82
+          },
+          "corpusSha256": "c04a0082a8511619b1a942b6433bed5a842a6903190692cfc4afcefc9d1d3b4b",
+          "estado": "pendente"
+        },
+        {
+          "id": "consumables/sprite-bottle",
+          "tipo": "Consumable",
+          "nomeIngles": "Sprite Bottle",
+          "sourceLocator": {
+            "chapter": "CORE MECHANICS",
+            "heading": "Additional Consumables",
+            "lineStart": 4305,
+            "lineEnd": 4305,
+            "pdfPageStart": 82,
+            "pdfPageEnd": 82
+          },
+          "corpusSha256": "ca2aefc341a50f4dbda97e1d91ef4d063a41a009b17b869a52cd4312a1aa2fc7",
+          "estado": "pendente"
+        },
+        {
+          "id": "consumables/staff-of-reversal",
+          "tipo": "Consumable",
+          "nomeIngles": "Staff of Reversal",
+          "sourceLocator": {
+            "chapter": "CORE MECHANICS",
+            "heading": "Additional Consumables",
+            "lineStart": 4323,
+            "lineEnd": 4323,
+            "pdfPageStart": 83,
+            "pdfPageEnd": 83
+          },
+          "corpusSha256": "87f3ef03e1897dccd40ab7d032684a53fefa731f85e899e954582ecf795eabf3",
+          "estado": "pendente"
+        },
+        {
+          "id": "consumables/stake-of-abjuration",
+          "tipo": "Consumable",
+          "nomeIngles": "Stake of Abjuration",
+          "sourceLocator": {
+            "chapter": "CORE MECHANICS",
+            "heading": "Additional Consumables",
+            "lineStart": 4336,
+            "lineEnd": 4336,
+            "pdfPageStart": 83,
+            "pdfPageEnd": 83
+          },
+          "corpusSha256": "60211e8eab1d313cd046c432ba20461688ca024563a07b6de115d9ab9efe803e",
+          "estado": "pendente"
+        },
+        {
+          "id": "consumables/stamina-potion",
+          "tipo": "Consumable",
+          "nomeIngles": "Stamina Potion",
+          "sourceLocator": {
+            "chapter": "CORE MECHANICS",
+            "heading": "Core Set Consumables",
+            "lineStart": 4225,
+            "lineEnd": 4225,
+            "pdfPageStart": 80,
+            "pdfPageEnd": 80
+          },
+          "corpusSha256": "70dda7aa22e9302499c1faace3e41248b72b9f81279218cab743125818225166",
+          "estado": "pendente"
+        },
+        {
+          "id": "consumables/stardrop",
+          "tipo": "Consumable",
+          "nomeIngles": "Stardrop",
+          "sourceLocator": {
+            "chapter": "CORE MECHANICS",
+            "heading": "Core Set Consumables",
+            "lineStart": 4273,
+            "lineEnd": 4273,
+            "pdfPageStart": 81,
+            "pdfPageEnd": 81
+          },
+          "corpusSha256": "981c77f183eaf8303d5becc28223ee093c6586e8962d4998050e0281dd9600ed",
+          "estado": "pendente"
+        },
+        {
           "id": "consumables/steelskin-salve",
           "tipo": "Consumable",
           "nomeIngles": "Steelskin Salve",
