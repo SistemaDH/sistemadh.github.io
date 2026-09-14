@@ -39,6 +39,20 @@ const trauma = cartas.get('pavor-trauma-compartilhado');
 if (!trauma?.texto.includes('criatura voluntária em alcance Corpo a Corpo') || !trauma?.texto.includes('limpar a mesma quantidade de Pontos de Vida')) erros.push('Trauma Compartilhado diverge da fonte');
 const aterrorizar = cartas.get('pavor-aterrorizar');
 if (!aterrorizar?.texto.includes('1d4 Estresses') || !aterrorizar?.texto.includes('Muito Próximo para Próximo') || !aterrorizar?.texto.includes('Próximo para Distante') || !aterrorizar?.texto.includes('temporariamente Vulnerável')) erros.push('Aterrorizar diverge da fonte');
+const correntes = cartas.get('pavor-correntes-da-aflicao');
+if (!correntes?.texto.includes('Marque 2 Estresses') || !correntes?.texto.includes('alvo em alcance Próximo') || !correntes?.texto.includes('marca 1 Ponto de Vida a menos') || !correntes?.texto.includes('uma criatura Acorrentada por vez')) erros.push('Correntes da Aflição diverge da fonte');
+const horror = cartas.get('pavor-invocar-horror');
+if (!horror?.texto.includes('Uma vez por cena') || !horror?.texto.includes('1d8+1') || !horror?.texto.includes('jogada de reação (12)') || !horror?.texto.includes('mesma quantidade de Estresses')) erros.push('Invocar Horror diverge da fonte');
+const terrivel = cartas.get('pavor-golpe-terrivel');
+if (!terrivel?.texto.includes('gastar 1 Esperança') || !terrivel?.texto.includes('Mestre perde 1 Medo')) erros.push('Golpe Terrível diverge da fonte');
+const nevoa = cartas.get('pavor-nevoa-espectral');
+if (!nevoa?.texto.includes('Gaste 2 Esperanças') || !nevoa?.texto.includes('incorpóreos') || !nevoa?.texto.includes('imune a dano físico') || !nevoa?.texto.includes('jogada de ação')) erros.push('Névoa Espectral diverge da fonte');
+const fogo = cartas.get('pavor-fogo-sombrio');
+if (!fogo?.texto.includes('Uma vez por cena') || !fogo?.texto.includes('mesma quantidade de adversários') || !fogo?.texto.includes('jogada de reação (15)') || !fogo?.texto.includes('1d8+6')) erros.push('Fogo Sombrio diverge da fonte');
+const susto = cartas.get('pavor-susto-repentino');
+if (!susto?.texto.includes('causar dano mágico') || !susto?.texto.includes('marcar 1 Estresse') || !susto?.texto.includes('alcance Corpo a Corpo') || !susto?.texto.includes('Vulnerável até marcar 1 ou mais Pontos de Vida')) erros.push('Susto Repentino diverge da fonte');
+const tocado = cartas.get('pavor-tocado-pelo-pavor');
+if (!tocado?.texto.includes('4 ou mais cartas de domínio ativas') || !tocado?.texto.includes('marcar 2 Estresses') || !tocado?.texto.includes('impedir que o Mestre ganhe 1 Medo') || !tocado?.texto.includes('bônus igual à quantidade de Medo')) erros.push('Tocado pelo Pavor diverge da fonte');
 
 const texto = JSON.stringify(catalogo.cartas);
 for (const termo of [/\bSpellcast\b/i, /\bGM\b/, /\bHit Points?\b/i, /\bStress\b/, /\bwithin (?:Melee|Very Close|Close|Far) range\b/i]) {

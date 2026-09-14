@@ -90,6 +90,90 @@
       "texto": "Faça uma jogada de Conjuração contra um alvo em alcance Próximo. Em um sucesso, o alvo marca 1d4 Estresses, e você pode fazê-lo fugir um alcance para longe de você, como de Muito Próximo para Próximo ou de Próximo para Distante. Em um sucesso com Medo, o alvo também fica temporariamente Vulnerável.",
       "automacao": { "classificacao": "manual-em-alvo", "resumo": "Jogada, Estresse, deslocamento e condição pertencem ao alvo e continuam na mesa." },
       "resolucaoManual": { "rolaNoApp": false, "resumo": "Role Conjuração e 1d4 fora do app; em sucesso com Medo, aplique também Vulnerável." }
+    },
+    {
+      "id": "pavor-correntes-da-aflicao",
+      "idFonte": "domain-cards/chains-of-affliction",
+      "nome": "Correntes da Aflição",
+      "nomeIngles": "Chains of Affliction",
+      "nivel": 4,
+      "tipo": "Feitiço",
+      "custoRecordar": 2,
+      "texto": "Marque 2 Estresses para acorrentar temporariamente um alvo em alcance Próximo. Quando uma criatura Acorrentada causar dano, o alvo do ataque dela marca 1 Ponto de Vida a menos do que marcaria normalmente. Você não pode manter mais de uma criatura Acorrentada por vez.",
+      "automacao": { "classificacao": "custo-e-alvo-futuros", "resumo": "A integração futura deverá cobrar 2 Estresses e manter somente um alvo Acorrentado." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Registre o alvo na mesa e reduza em 1 os PV que o ataque dele faria outra criatura marcar." }
+    },
+    {
+      "id": "pavor-invocar-horror",
+      "idFonte": "domain-cards/summon-horror",
+      "nome": "Invocar Horror",
+      "nomeIngles": "Summon Horror",
+      "nivel": 4,
+      "tipo": "Feitiço",
+      "custoRecordar": 2,
+      "texto": "Uma vez por cena, marque 1 Estresse para invocar uma criatura sobrenatural que causa 1d8+1 de dano mágico usando seu traço de Conjuração contra um alvo em alcance Distante. Se o alvo marcar qualquer quantidade de Pontos de Vida com esse ataque, ele deve obter sucesso em uma jogada de reação (12) para resistir ao horror ou marcar a mesma quantidade de Estresses. Depois de fazer o ataque, a criatura desaparece.",
+      "automacao": { "classificacao": "custo-e-limite-futuros", "resumo": "A integração futura deverá marcar 1 Estresse e registrar o uso uma vez por cena após a invocação." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Role dano e reação fora do app; em falha, o alvo marca Estresse igual aos PV marcados pelo ataque." }
+    },
+    {
+      "id": "pavor-golpe-terrivel",
+      "idFonte": "domain-cards/dire-strike",
+      "nome": "Golpe Terrível",
+      "nomeIngles": "Dire Strike",
+      "nivel": 5,
+      "tipo": "Feitiço",
+      "custoRecordar": 2,
+      "texto": "Quando um alvo marcar qualquer quantidade de Pontos de Vida com um ataque seu, você pode gastar 1 Esperança para drenar o poder dele. O Mestre perde 1 Medo.",
+      "automacao": { "classificacao": "custo-futuro-com-recurso-da-mesa", "resumo": "A integração futura deverá gastar 1 Esperança na ficha e reduzir 1 Medo da reserva da mesa de forma atômica." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Confirme que o ataque fez o alvo marcar PV antes de gastar Esperança e retirar Medo do Mestre." }
+    },
+    {
+      "id": "pavor-nevoa-espectral",
+      "idFonte": "domain-cards/spectral-mist",
+      "nome": "Névoa Espectral",
+      "nomeIngles": "Spectral Mist",
+      "nivel": 5,
+      "tipo": "Feitiço",
+      "custoRecordar": 0,
+      "texto": "Gaste 2 Esperanças para conjurar uma névoa sinistra que torna você e aliados à sua escolha em alcance Próximo momentaneamente incorpóreos. Enquanto estiver incorpórea, uma criatura pode atravessar objetos sólidos e é imune a dano físico. Ela volta a ser corpórea depois de atravessar um objeto sólido ou fazer uma jogada de ação. Caso contrário, o efeito dura até o fim da cena.",
+      "automacao": { "classificacao": "custo-e-alvos-futuros", "resumo": "A integração futura deverá gastar 2 Esperanças e controlar o estado individual de cada alvo sem alterar fichas alheias parcialmente." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Registre os alvos e encerre o estado de cada um ao atravessar um objeto, fazer uma jogada de ação ou terminar a cena." }
+    },
+    {
+      "id": "pavor-fogo-sombrio",
+      "idFonte": "domain-cards/darkfire",
+      "nome": "Fogo Sombrio",
+      "nomeIngles": "Darkfire",
+      "nivel": 6,
+      "tipo": "Feitiço",
+      "custoRecordar": 2,
+      "texto": "Uma vez por cena, gaste qualquer quantidade de Esperança para escolher a mesma quantidade de adversários em alcance Próximo. Cada alvo faz uma jogada de reação (15). Alvos que falharem sofrem 1d8+6 de dano mágico usando seu traço de Conjuração enquanto são envolvidos por fogo sombrio. Alvos que obtiverem sucesso sofrem metade do dano.",
+      "automacao": { "classificacao": "custo-variavel-e-limite-futuros", "resumo": "A integração futura deverá gastar Esperança igual aos alvos e registrar um uso por cena." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Cada alvo faz Reação 15; role o dano fora do app e aplique metade em sucesso." }
+    },
+    {
+      "id": "pavor-susto-repentino",
+      "idFonte": "domain-cards/jump-scare",
+      "nome": "Susto Repentino",
+      "nomeIngles": "Jump Scare",
+      "nivel": 6,
+      "tipo": "Feitiço",
+      "custoRecordar": 1,
+      "texto": "Quando você causar dano mágico a um alvo, pode marcar 1 Estresse para se teleportar para alcance Corpo a Corpo com ele. Quando fizer isso, o alvo fica Vulnerável até marcar 1 ou mais Pontos de Vida.",
+      "automacao": { "classificacao": "custo-futuro-apos-dano", "resumo": "A integração futura deverá cobrar 1 Estresse após dano mágico confirmado; teleporte e condição permanecem no encontro." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Mova-se para Corpo a Corpo e mantenha Vulnerável até o alvo marcar ao menos 1 PV." }
+    },
+    {
+      "id": "pavor-tocado-pelo-pavor",
+      "idFonte": "domain-cards/dread-touched",
+      "nome": "Tocado pelo Pavor",
+      "nomeIngles": "Dread-Touched",
+      "nivel": 7,
+      "tipo": "Habilidade",
+      "custoRecordar": 2,
+      "texto": "Quando 4 ou mais cartas de domínio ativas forem do domínio Pavor, você recebe os seguintes benefícios: ao obter sucesso com Medo, pode marcar 2 Estresses para impedir que o Mestre ganhe 1 Medo; uma vez por descanso, ao fazer uma jogada de ação, você pode receber um bônus igual à quantidade de Medo na reserva do Mestre.",
+      "automacao": { "classificacao": "requisito-e-limites-futuros", "resumo": "A integração futura deverá exigir quatro cartas ativas, oferecer o custo de 2 Estresses após sucesso com Medo e registrar o bônus uma vez por descanso." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Conte o Medo da reserva da mesa no momento da jogada; o app não deve rolar nem alterar a reserva sem confirmação." }
     }
   ]
 }

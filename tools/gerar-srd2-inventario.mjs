@@ -281,7 +281,14 @@ const implementados = new Set([
   'domain-cards/hideous-retribution',
   'domain-cards/siphon-essence',
   'domain-cards/shared-trauma',
-  'domain-cards/terrify'
+  'domain-cards/terrify',
+  'domain-cards/chains-of-affliction',
+  'domain-cards/summon-horror',
+  'domain-cards/dire-strike',
+  'domain-cards/spectral-mist',
+  'domain-cards/darkfire',
+  'domain-cards/jump-scare',
+  'domain-cards/dread-touched'
 ]);
 const colecoes = [];
 

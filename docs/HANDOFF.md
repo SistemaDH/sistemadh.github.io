@@ -231,6 +231,17 @@ Validação deste checkpoint: inventário com 1.539 registros (**262 implementad
 
 Próximo checkpoint exato: traduzir e conferir **Correntes da Aflição**, **Invocar Horror**, **Golpe Terrível**, **Névoa Espectral**, **Fogo Sombrio**, **Susto Repentino** e **Tocado pelo Pavor**, mantendo o domínio não exposto.
 
+### Cartas de Pavor — 14/21 preparadas sem exposição
+
+- o segundo grupo acrescenta **Correntes da Aflição**, **Invocar Horror**, **Golpe Terrível**, **Névoa Espectral**, **Fogo Sombrio**, **Susto Repentino** e **Tocado pelo Pavor**, dos níveis 4–7, às pp. 213–214 do SRD 2.0;
+- custos, alcances, limiares, dados e gatilhos foram vinculados individualmente, preservando o contrato de rolagem manual;
+- o catálogo permanece com `exposto: false`, sem alterar `data/cartas-dominio.json`, o backend Core ou as quatro classes de Hope & Fear;
+- a cobertura de `domain-cards` está em 203/210: 189 Core e 14 Pavor conferidas; 7 cartas de Pavor pendentes.
+
+Validação deste checkpoint: inventário com 1.539 registros (**269 implementados**, 1.269 pendentes), catálogo, auditoria e validador específico de Pavor. O E2E local continua condicionado à disponibilidade do Chromium do Playwright.
+
+Próximo checkpoint exato: traduzir e conferir **Muralha de Fome**, **Exército Sombrio**, **Carne Sobrenatural**, **Danação**, **Saborear a Angústia**, **Avatar do Terror** e **Invocar Tormento**, mantendo o domínio não exposto.
+
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 
 Iniciado em 08/09/2026 na branch `ediçãoclaude`.

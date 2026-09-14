@@ -5,16 +5,16 @@
   "catalogo": "data/srd2-cartas-pavor.json",
   "fonte": { "srd": "2.0", "data": "2026-08-25", "paginasPdf": "213", "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64" },
   "progresso": {
-    "conferidas": 7,
+    "conferidas": 14,
     "total": 21,
     "proximoLote": [
-      "domain-cards/chains-of-affliction",
-      "domain-cards/summon-horror",
-      "domain-cards/dire-strike",
-      "domain-cards/spectral-mist",
-      "domain-cards/darkfire",
-      "domain-cards/jump-scare",
-      "domain-cards/dread-touched"
+      "domain-cards/wall-of-hunger",
+      "domain-cards/dark-army",
+      "domain-cards/eldritch-flesh",
+      "domain-cards/damnation",
+      "domain-cards/savor-the-anguish",
+      "domain-cards/avatar-of-terror",
+      "domain-cards/invoke-torment"
     ]
   },
   "registros": [
@@ -24,6 +24,13 @@
     { "idFonte": "domain-cards/hideous-retribution", "idLocal": "pavor-retribuicao-horrenda" },
     { "idFonte": "domain-cards/siphon-essence", "idLocal": "pavor-sifonar-essencia" },
     { "idFonte": "domain-cards/shared-trauma", "idLocal": "pavor-trauma-compartilhado" },
-    { "idFonte": "domain-cards/terrify", "idLocal": "pavor-aterrorizar" }
+    { "idFonte": "domain-cards/terrify", "idLocal": "pavor-aterrorizar" },
+    { "idFonte": "domain-cards/chains-of-affliction", "idLocal": "pavor-correntes-da-aflicao" },
+    { "idFonte": "domain-cards/summon-horror", "idLocal": "pavor-invocar-horror" },
+    { "idFonte": "domain-cards/dire-strike", "idLocal": "pavor-golpe-terrivel" },
+    { "idFonte": "domain-cards/spectral-mist", "idLocal": "pavor-nevoa-espectral" },
+    { "idFonte": "domain-cards/darkfire", "idLocal": "pavor-fogo-sombrio" },
+    { "idFonte": "domain-cards/jump-scare", "idLocal": "pavor-susto-repentino" },
+    { "idFonte": "domain-cards/dread-touched", "idLocal": "pavor-tocado-pelo-pavor" }
   ]
 }
