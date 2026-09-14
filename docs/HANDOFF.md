@@ -242,6 +242,17 @@ Validação deste checkpoint: inventário com 1.539 registros (**269 implementad
 
 Próximo checkpoint exato: traduzir e conferir **Muralha de Fome**, **Exército Sombrio**, **Carne Sobrenatural**, **Danação**, **Saborear a Angústia**, **Avatar do Terror** e **Invocar Tormento**, mantendo o domínio não exposto.
 
+### Cartas de Pavor — 21/21 conferidas sem exposição
+
+- o lote final acrescenta **Muralha de Fome**, **Exército Sombrio**, **Carne Sobrenatural**, **Danação**, **Saborear a Angústia**, **Avatar do Terror** e **Invocar Tormento**, dos níveis 7–10, à p. 214 do SRD 2.0;
+- as **210/210 cartas dos dez domínios** estão conferidas: 189 Core integradas e 21 Pavor preservadas em catálogo não exposto;
+- o catálogo e a auditoria de Pavor estão marcados como `conferido`, enquanto `exposto: false` continua impedindo integração acidental;
+- o validador protege custos, dificuldades, alcances, oito marcadores, limiares, dados, transformação, gatilhos e o contrato de rolagem manual.
+
+Validação deste checkpoint: inventário com 1.539 registros (**276 implementados**, 1.262 pendentes), cobertura de `domain-cards` concluída e suíte SRD2 completa. O E2E local continua condicionado à disponibilidade do Chromium do Playwright.
+
+Próximo checkpoint seguro: escolher outra coleção ainda não iniciada para auditoria. A exposição de Pavor e das quatro classes de Hope & Fear permanece uma decisão de integração separada.
+
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 
 Iniciado em 08/09/2026 na branch `ediçãoclaude`.

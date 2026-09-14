@@ -190,10 +190,12 @@ O terceiro checkpoint fechou **Tocado pelo Valor**, **Golpe no Chão**, **Surto 
 
 As 21 cartas de Valor e, com elas, as **189 cartas dos nove domínios Core** estão conferidas contra o SRD 2.0.
 
-### Cartas do domínio Pavor (14/21, não expostas)
+### Cartas do domínio Pavor (21/21, não expostas)
 
 O primeiro checkpoint traduziu e conferiu **Golpe Definhante**, **Véu Umbral**, **Voz do Pavor**, **Retribuição Horrenda**, **Sifonar Essência**, **Trauma Compartilhado** e **Aterrorizar**, dos níveis 1–3, contra a p. 213 do SRD 2.0. Como ainda não há edição oficial pt-BR de Hope & Fear, os nomes e textos permanecem marcados como tradução provisória.
 
 O segundo checkpoint acrescentou **Correntes da Aflição**, **Invocar Horror**, **Golpe Terrível**, **Névoa Espectral**, **Fogo Sombrio**, **Susto Repentino** e **Tocado pelo Pavor**, dos níveis 4–7, contra as pp. 213–214. Os vínculos protegem os custos, alcances, limiares, dados e gatilhos de cada regra, ainda sem executar rolagens ou expor automações.
 
-As cartas ficam em `data/srd2-cartas-pavor.json`, com `exposto: false`, fora de `data/cartas-dominio.json` e do backend Core. Cada entrada registra o vínculo de fonte, a classificação da automação futura e que nenhuma rolagem deve ser realizada pelo app. O validador específico impede exposição acidental, termos mecânicos em inglês e divergências nas quatorze regras.
+O terceiro checkpoint fechou **Muralha de Fome**, **Exército Sombrio**, **Carne Sobrenatural**, **Danação**, **Saborear a Angústia**, **Avatar do Terror** e **Invocar Tormento**, dos níveis 7–10, contra a p. 214. A auditoria cobre a muralha de cena, os oito marcadores de Exército Sombrio, limiares derivados, custos variáveis de Estresse, gatilhos por dano Severo, transformação e dano dobrado.
+
+As cartas ficam em `data/srd2-cartas-pavor.json`, com `exposto: false`, fora de `data/cartas-dominio.json` e do backend Core. Cada entrada registra o vínculo de fonte, a classificação da automação futura e que nenhuma rolagem deve ser realizada pelo app. O validador específico impede exposição acidental, termos mecânicos em inglês e divergências nas 21 regras. Com isso, as **210/210 cartas dos dez domínios** estão conferidas contra o SRD 2.0.

@@ -1,6 +1,6 @@
 {
   "versao": 1,
-  "estado": "em-andamento",
+  "estado": "conferido",
   "exposto": false,
   "dominio": "PAVOR",
   "dominioNome": "Pavor",
@@ -174,6 +174,90 @@
       "texto": "Quando 4 ou mais cartas de domínio ativas forem do domínio Pavor, você recebe os seguintes benefícios: ao obter sucesso com Medo, pode marcar 2 Estresses para impedir que o Mestre ganhe 1 Medo; uma vez por descanso, ao fazer uma jogada de ação, você pode receber um bônus igual à quantidade de Medo na reserva do Mestre.",
       "automacao": { "classificacao": "requisito-e-limites-futuros", "resumo": "A integração futura deverá exigir quatro cartas ativas, oferecer o custo de 2 Estresses após sucesso com Medo e registrar o bônus uma vez por descanso." },
       "resolucaoManual": { "rolaNoApp": false, "resumo": "Conte o Medo da reserva da mesa no momento da jogada; o app não deve rolar nem alterar a reserva sem confirmação." }
+    },
+    {
+      "id": "pavor-muralha-de-fome",
+      "idFonte": "domain-cards/wall-of-hunger",
+      "nome": "Muralha de Fome",
+      "nomeIngles": "Wall of Hunger",
+      "nivel": 7,
+      "tipo": "Feitiço",
+      "custoRecordar": 2,
+      "texto": "Faça uma jogada de Conjuração (10). Em caso de sucesso, você pode gastar 1 Esperança para criar uma muralha visível de energia necrótica contorcida entre dois pontos em alcance Distante. A muralha dura até você marcar 1 Ponto de Vida ou conjurar este feitiço novamente. Uma criatura dentro da muralha quando ela surge ou que a atravesse deve marcar 2 Estresses.",
+      "automacao": { "classificacao": "custo-e-estado-de-cena-futuros", "resumo": "A integração futura deverá cobrar 1 Esperança após sucesso confirmado e encerrar a muralha ao marcar PV ou conjurar novamente." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Faça a jogada de Conjuração fora do app e controle a posição da muralha e as criaturas que a atravessam na mesa." }
+    },
+    {
+      "id": "pavor-exercito-sombrio",
+      "idFonte": "domain-cards/dark-army",
+      "nome": "Exército Sombrio",
+      "nomeIngles": "Dark Army",
+      "nivel": 8,
+      "tipo": "Feitiço",
+      "custoRecordar": 2,
+      "texto": "Faça uma jogada de Conjuração (14). Uma vez por descanso longo, em caso de sucesso, você pode invocar demônios que cercam e se movem com você. Coloque 8 marcadores nesta carta. Quando causar dano a um alvo em alcance Muito Próximo, você pode gastar qualquer quantidade de marcadores para adicionar 1d8 à sua jogada de dano para cada marcador gasto. Além disso, quando sofrer dano, você pode gastar qualquer quantidade de marcadores para reduzir o dano em 1d8 para cada marcador gasto. Sempre que gastar um marcador, um demônio age em seu favor e desaparece. Ao fazer um descanso, limpe todos os marcadores não gastos.",
+      "automacao": { "classificacao": "limite-e-contador-futuros", "resumo": "A integração futura deverá registrar um uso por descanso longo, criar oito marcadores e zerá-los em qualquer descanso." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Faça a Conjuração e todos os d8 fora do app; informe apenas quantos marcadores foram gastos." }
+    },
+    {
+      "id": "pavor-carne-sobrenatural",
+      "idFonte": "domain-cards/eldritch-flesh",
+      "nome": "Carne Sobrenatural",
+      "nomeIngles": "Eldritch Flesh",
+      "nivel": 8,
+      "tipo": "Feitiço",
+      "custoRecordar": 1,
+      "texto": "Receba +1 em seus limiares de dano para cada Estresse marcado. Além disso, quando fizer uma jogada com Medo, você pode gastar 2 Esperanças para limpar 1 Ponto de Armadura.",
+      "automacao": { "classificacao": "passivo-e-custo-futuros", "resumo": "A integração futura deverá derivar ambos os limiares pelo Estresse marcado e oferecer o custo após uma jogada com Medo." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Confirme a jogada com Medo; o app futuro poderá cobrar Esperança e limpar o Ponto de Armadura sem rolar." }
+    },
+    {
+      "id": "pavor-danacao",
+      "idFonte": "domain-cards/damnation",
+      "nome": "Danação",
+      "nomeIngles": "Damnation",
+      "nivel": 9,
+      "tipo": "Feitiço",
+      "custoRecordar": 2,
+      "texto": "Faça uma jogada de Conjuração contra um alvo em alcance Distante. Em caso de sucesso, marque qualquer quantidade de Estresses para rolar a mesma quantidade de d20, causando dano mágico igual ao resultado total. Se este ataque derrotar o alvo, todos os adversários em alcance Distante do alvo devem marcar 1 Estresse.",
+      "automacao": { "classificacao": "custo-variavel-e-efeito-de-encontro-futuros", "resumo": "A integração futura deverá marcar a quantidade escolhida de Estresses após sucesso, mantendo dano e adversários no encontro." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Faça a Conjuração e os d20 fora do app; aplique o dano e o Estresse dos adversários na mesa." }
+    },
+    {
+      "id": "pavor-saborear-a-angustia",
+      "idFonte": "domain-cards/savor-the-anguish",
+      "nome": "Saborear a Angústia",
+      "nomeIngles": "Savor the Anguish",
+      "nivel": 9,
+      "tipo": "Habilidade",
+      "custoRecordar": 1,
+      "texto": "Quando um adversário em alcance Próximo sofrer dano Severo, você pode limpar 1 Estresse.",
+      "automacao": { "classificacao": "gatilho-de-encontro-futuro", "resumo": "A integração futura deverá oferecer a recuperação somente após dano Severo confirmado em adversário Próximo." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Confirme na mesa o alcance e a gravidade do dano antes de limpar o Estresse." }
+    },
+    {
+      "id": "pavor-avatar-do-terror",
+      "idFonte": "domain-cards/avatar-of-terror",
+      "nome": "Avatar do Terror",
+      "nomeIngles": "Avatar of Terror",
+      "nivel": 10,
+      "tipo": "Feitiço",
+      "custoRecordar": 2,
+      "texto": "Marque 1 Estresse para se transformar em uma criatura alimentada pelo medo. Enquanto estiver nesta forma, receba 1d6 de bônus em suas jogadas de dano para cada Medo na reserva do Mestre. Além disso, você ganha 1 Esperança quando o Mestre gasta 1 Medo para destacar um adversário em alcance Muito Próximo. Antes de fazer uma jogada de ação, você deve gastar 1 Esperança. Se não puder, volta à sua forma normal.",
+      "automacao": { "classificacao": "transformacao-e-custos-futuros", "resumo": "A integração futura deverá cobrar Estresse na transformação, manter o estado e cobrar Esperança antes de cada ação ou encerrá-lo." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Conte o Medo da reserva para o bônus e confirme quando o Mestre gastar Medo para destacar um adversário." }
+    },
+    {
+      "id": "pavor-invocar-tormento",
+      "idFonte": "domain-cards/invoke-torment",
+      "nome": "Invocar Tormento",
+      "nomeIngles": "Invoke Torment",
+      "nivel": 10,
+      "tipo": "Habilidade",
+      "custoRecordar": 2,
+      "texto": "Você causa o dobro de dano a alvos que estejam com todos os Estresses marcados. Além disso, quando um adversário em alcance Próximo for derrotado com todos os Estresses marcados, você ganha 1 Esperança.",
+      "automacao": { "classificacao": "passivo-e-gatilho-de-encontro-futuros", "resumo": "A integração futura deverá publicar o multiplicador e oferecer Esperança após derrota confirmada de adversário Próximo com Estresse cheio." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Confirme o Estresse do alvo, o alcance e a derrota na mesa; o app não deve observar automaticamente fichas de adversários." }
     }
   ]
 }

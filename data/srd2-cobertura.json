@@ -18,7 +18,7 @@
     { "id": "consumables", "esperados": 120, "estado": "nao-iniciado" },
     { "id": "adversaries", "esperados": 264, "estado": "nao-iniciado" },
     { "id": "environments", "esperados": 47, "estado": "nao-iniciado" },
-    { "id": "domain-cards", "esperados": 210, "estado": "em-auditoria", "observacao": "189 cartas dos nove domínios Core conferidas; 14 cartas de Pavor preparadas em catálogo não exposto e 7 cartas de Pavor ainda pendentes." },
+    { "id": "domain-cards", "esperados": 210, "estado": "conferido", "observacao": "As 210 cartas dos dez domínios estão conferidas: 189 cartas Core e 21 cartas de Pavor em catálogo não exposto." },
     { "id": "rules", "esperados": 224, "estado": "em-auditoria", "observacao": "Avanço dos níveis 1–10 corrigido; os demais registros de regras ainda precisam de classificação individual." }
   ]
 }

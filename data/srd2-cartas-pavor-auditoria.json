@@ -1,21 +1,13 @@
 {
   "versao": 1,
-  "estado": "em-andamento",
+  "estado": "conferido",
   "dominio": "domains/dread",
   "catalogo": "data/srd2-cartas-pavor.json",
-  "fonte": { "srd": "2.0", "data": "2026-08-25", "paginasPdf": "213", "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64" },
+  "fonte": { "srd": "2.0", "data": "2026-08-25", "paginasPdf": "213–214", "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64" },
   "progresso": {
-    "conferidas": 14,
+    "conferidas": 21,
     "total": 21,
-    "proximoLote": [
-      "domain-cards/wall-of-hunger",
-      "domain-cards/dark-army",
-      "domain-cards/eldritch-flesh",
-      "domain-cards/damnation",
-      "domain-cards/savor-the-anguish",
-      "domain-cards/avatar-of-terror",
-      "domain-cards/invoke-torment"
-    ]
+    "proximoLote": []
   },
   "registros": [
     { "idFonte": "domain-cards/blighting-strike", "idLocal": "pavor-golpe-definhante" },
@@ -31,6 +23,13 @@
     { "idFonte": "domain-cards/spectral-mist", "idLocal": "pavor-nevoa-espectral" },
     { "idFonte": "domain-cards/darkfire", "idLocal": "pavor-fogo-sombrio" },
     { "idFonte": "domain-cards/jump-scare", "idLocal": "pavor-susto-repentino" },
-    { "idFonte": "domain-cards/dread-touched", "idLocal": "pavor-tocado-pelo-pavor" }
+    { "idFonte": "domain-cards/dread-touched", "idLocal": "pavor-tocado-pelo-pavor" },
+    { "idFonte": "domain-cards/wall-of-hunger", "idLocal": "pavor-muralha-de-fome" },
+    { "idFonte": "domain-cards/dark-army", "idLocal": "pavor-exercito-sombrio" },
+    { "idFonte": "domain-cards/eldritch-flesh", "idLocal": "pavor-carne-sobrenatural" },
+    { "idFonte": "domain-cards/damnation", "idLocal": "pavor-danacao" },
+    { "idFonte": "domain-cards/savor-the-anguish", "idLocal": "pavor-saborear-a-angustia" },
+    { "idFonte": "domain-cards/avatar-of-terror", "idLocal": "pavor-avatar-do-terror" },
+    { "idFonte": "domain-cards/invoke-torment", "idLocal": "pavor-invocar-tormento" }
   ]
 }

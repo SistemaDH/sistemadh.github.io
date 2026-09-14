@@ -288,7 +288,14 @@ const implementados = new Set([
   'domain-cards/spectral-mist',
   'domain-cards/darkfire',
   'domain-cards/jump-scare',
-  'domain-cards/dread-touched'
+  'domain-cards/dread-touched',
+  'domain-cards/wall-of-hunger',
+  'domain-cards/dark-army',
+  'domain-cards/eldritch-flesh',
+  'domain-cards/damnation',
+  'domain-cards/savor-the-anguish',
+  'domain-cards/avatar-of-terror',
+  'domain-cards/invoke-torment'
 ]);
 const colecoes = [];
 
