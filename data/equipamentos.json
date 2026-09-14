@@ -5200,12 +5200,12 @@
    "tabela": "Cadeira de Rodas de Combate",
    "nome": "Cadeira de rodas arcana",
    "origemNome": "livro",
-   "nomeIngles": "Arcane Wheelchair",
+   "nomeIngles": "Arcane-Frame Wheelchair",
    "nomeLivro": "Cadeira de rodas arcana",
-   "fonteNumeros": "DH-DigitalRegras.pdf p.123; errata 09/09/2025 sem alteração",
+   "fonteNumeros": "Daggerheart SRD 2.0 p. 71",
    "atributo": "Conjuração",
    "alcance": "Distante",
-   "dano": "d6 fís",
+   "dano": "d6 mág",
    "maos": "Uma mão",
    "caracteristica": {
     "nomeIngles": "Reliable",
@@ -5215,7 +5215,7 @@
     "fonteTraducao": "livro",
     "confianca": "alta"
    },
-   "danoSRD": "d6 phy",
+   "danoSRD": "d6 mag",
    "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
   },
   {
@@ -5225,12 +5225,12 @@
    "tabela": "Cadeira de Rodas de Combate",
    "nome": "Cadeira de rodas arcana aprimorada",
    "origemNome": "livro",
-   "nomeIngles": "Improved Arcane Wheelchair",
+   "nomeIngles": "Improved Arcane-Frame Wheelchair",
    "nomeLivro": "Cadeira de rodas arcana aprimorada",
-   "fonteNumeros": "DH-DigitalRegras.pdf p.123; errata 09/09/2025 sem alteração",
+   "fonteNumeros": "Daggerheart SRD 2.0 p. 71",
    "atributo": "Conjuração",
    "alcance": "Distante",
-   "dano": "d6+3 fís",
+   "dano": "d6+3 mág",
    "maos": "Uma mão",
    "caracteristica": {
     "nomeIngles": "Reliable",
@@ -5240,7 +5240,7 @@
     "fonteTraducao": "livro",
     "confianca": "alta"
    },
-   "danoSRD": "d6+3 phy",
+   "danoSRD": "d6+3 mag",
    "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
   },
   {
@@ -5250,12 +5250,12 @@
    "tabela": "Cadeira de Rodas de Combate",
    "nome": "Cadeira de rodas arcana avançada",
    "origemNome": "livro",
-   "nomeIngles": "Advanced Arcane Wheelchair",
+   "nomeIngles": "Advanced Arcane-Frame Wheelchair",
    "nomeLivro": "Cadeira de rodas arcana avançada",
-   "fonteNumeros": "DH-DigitalRegras.pdf p.123; errata 09/09/2025 sem alteração",
+   "fonteNumeros": "Daggerheart SRD 2.0 p. 71",
    "atributo": "Conjuração",
    "alcance": "Distante",
-   "dano": "d6+6 fís",
+   "dano": "d6+6 mág",
    "maos": "Uma mão",
    "caracteristica": {
     "nomeIngles": "Reliable",
@@ -5265,7 +5265,7 @@
     "fonteTraducao": "livro",
     "confianca": "alta"
    },
-   "danoSRD": "d6+6 phy",
+   "danoSRD": "d6+6 mag",
    "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
   },
   {
@@ -5275,12 +5275,12 @@
    "tabela": "Cadeira de Rodas de Combate",
    "nome": "Cadeira de rodas arcana lendária",
    "origemNome": "livro",
-   "nomeIngles": "Legendary Arcane Wheelchair",
+   "nomeIngles": "Legendary Arcane-Frame Wheelchair",
    "nomeLivro": "Cadeira de rodas arcana lendária",
-   "fonteNumeros": "DH-DigitalRegras.pdf p.123; errata 09/09/2025 sem alteração",
+   "fonteNumeros": "Daggerheart SRD 2.0 p. 71",
    "atributo": "Conjuração",
    "alcance": "Distante",
-   "dano": "d6+9 fís",
+   "dano": "d6+9 mág",
    "maos": "Uma mão",
    "caracteristica": {
     "nomeIngles": "Reliable",
@@ -5290,7 +5290,7 @@
     "fonteTraducao": "livro",
     "confianca": "alta"
    },
-   "danoSRD": "d6+9 phy",
+   "danoSRD": "d6+9 mag",
    "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
   }
  ],
