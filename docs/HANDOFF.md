@@ -322,6 +322,18 @@ Validação esperada: inventário com 1.539 registros (**359 implementados**, 1.
 
 Próximo checkpoint seguro: implementar as 10 armaduras novas de patamar 4; depois restarão apenas as 7 suplementares.
 
+### Checkpoint SRD2 — núcleo de armaduras completo
+
+- adicionadas as 10 novas armaduras do patamar 4, todas vinculadas à p. 74;
+- Sintonizado soma automaticamente o patamar atual aos dois limiares;
+- Encantadas, Incômoda e Volumosa reutilizam os contratos derivados anteriores;
+- sete capacidades dependentes de dano, descanso, Esperança, morte ou limite do conjunto permanecem pendências mecânicas explícitas;
+- `data/srd2-armaduras-novas-tier4-auditoria.json` registra `nucleoCompleto: true` e o auditor dedicado protege números e vínculos.
+
+Validação esperada: inventário com 1.539 registros (**369 implementados**, 1.169 pendentes), 69/76 armaduras conferidas e suítes verdes.
+
+Próximo checkpoint seguro: tratar separadamente as 7 armaduras suplementares sem misturá-las ao núcleo.
+
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 
 Iniciado em 08/09/2026 na branch `ediçãoclaude`.

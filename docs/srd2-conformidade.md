@@ -47,7 +47,7 @@ O corpus auxiliar pinado registra 1.539 registros: 10 domínios, 13 classes, 26 
 
 O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. O inventário individual fica em `data/srd2-inventario.json`: cada um dos 1.539 registros preserva ID, nome inglês, tipo, hash do registro no corpus, estado de implementação e, quando aplicável, `sourceLocator`. `npm run teste:srd2` impede alteração acidental das contagens, IDs, hashes estruturais ou estados. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
 
-No checkpoint atual, 359 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 1.179 permanecem `pendente`.
+No checkpoint atual, 369 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 1.169 permanecem `pendente`.
 
 ## Fase 1 — Level Up
 
@@ -212,7 +212,7 @@ As 16 armaduras básicas dos quatro patamares foram vinculadas individualmente �
 
 O vínculo e os efeitos derivados ficam protegidos por `data/srd2-armaduras-basicas-auditoria.json` e `tools/conferir-srd2-armaduras-basicas.mjs`.
 
-### Armaduras existentes e novas dos patamares 1–3 (59/76)
+### Armaduras do núcleo completas (69/76)
 
 As 18 armaduras especiais que já existiam no catálogo ativo foram conferidas individualmente contra as pp. 73–74. Patamares, limiares, Pontuação de Armadura e características permanecem mecanicamente compatíveis, incluindo os efeitos automatizados de Égide, Resiliente, Reforçado, Deslocamento, Esperançoso, Impenetrável, Físico, Magia, Doloroso, Temporal e Fortificado.
 
@@ -224,4 +224,6 @@ O patamar 2 acrescenta 11 opções do núcleo vinculadas às pp. 72–73. Encant
 
 O patamar 3 acrescenta 10 opções do núcleo, todas na p. 73. Magnífico soma Presença à Pontuação de Armadura, Vigilante soma +2 em Evasão e as famílias Encantadas, Incômoda e Volumosa reutilizam os contratos anteriores. As demais capacidades foram classificadas conforme dependam de cena ou confirmação de jogada.
 
-A coleção permanece `em-auditoria`: faltam 10 armaduras do núcleo e 7 armaduras de campanhas suplementares, totalizando 17 registros novos.
+O patamar 4 acrescenta as 10 opções finais do núcleo na p. 74. Sintonizado soma o patamar aos limiares, e Encantadas, Incômoda e Volumosa reutilizam os contratos derivados anteriores. Capacidades ligadas a dano, descanso, Esperança, morte ou limite do conjunto estão declaradas como integrações pendentes.
+
+A coleção permanece `em-auditoria` somente pelas 7 armaduras de campanhas suplementares; as 69 armaduras do núcleo estão catalogadas e vinculadas.

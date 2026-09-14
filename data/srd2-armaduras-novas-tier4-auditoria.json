@@ -1,0 +1,13 @@
+{
+  "versao": 1, "estado": "conferido", "catalogo": "data/equipamentos.json",
+  "fonte": { "srd": "2.0", "data": "2026-08-25", "paginasPdf": "74", "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64" },
+  "progresso": { "conferidasNesteBloco": 10, "conferidasNaColecao": 69, "totalColecao": 76, "nucleoCompleto": true },
+  "registros": [
+    ["armor/legendary-mage-robes", "armadura-t4-vestes-de-mago-lendarias"], ["armor/legendary-brigandine-armor", "armadura-t4-armadura-brigandina-lendaria"],
+    ["armor/legendary-scale-mail-armor", "armadura-t4-armadura-de-cota-de-escamas-lendaria"], ["armor/legendary-banded-armor", "armadura-t4-armadura-de-faixas-lendaria"],
+    ["armor/circle-forged-dreadplate", "armadura-t4-placa-sombria-forjada-em-circulo"], ["armor/darkweave-shroud", "armadura-t4-mortalha-de-darkweave"],
+    ["armor/godbound-laminar", "armadura-t4-lamelar-vinculada-aos-deuses"], ["armor/hallowed-heroplate", "armadura-t4-placa-heroica-sagrada"],
+    ["armor/resonant-harness", "armadura-t4-arnes-ressonante"], ["armor/rune-forged-exosuit", "armadura-t4-exotraje-forjado-com-runas"]
+  ],
+  "automacao": { "derivada": ["Encantadas", "Incômoda", "Volumosa", "Sintonizado (limiares)"], "pendente": ["Forrada", "Amaldiçoada", "Caminhante Fantasma", "Divina", "Abençoada", "Vítreo", "Sintonizado (limite do conjunto)"] }
+}

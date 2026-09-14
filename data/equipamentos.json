@@ -6153,6 +6153,66 @@
    }
   },
   {
+   "id": "armadura-t4-vestes-de-mago-lendarias", "categoria": "armadura", "tier": 4, "tabela": null,
+   "nome": "Vestes de Mago Lendárias", "origemNome": "traducao-srd2", "nomeIngles": "Legendary Mage Robes", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 74", "limiares": "10/31", "pontuacaoArmadura": 5,
+   "caracteristica": { "nomeIngles": "Enchanted", "textoIngles": "Enchanted: Gain a bonus to your damage thresholds equal to your Spellcast trait.", "nome": "Encantadas", "texto": "Encantadas: Você recebe um bônus em seus limiares de dano igual ao seu traço de Conjuração.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "efeitoDerivado": { "limiaresPorTracoConjuracao": true } }
+  },
+  {
+   "id": "armadura-t4-armadura-brigandina-lendaria", "categoria": "armadura", "tier": 4, "tabela": null,
+   "nome": "Armadura Brigandina Lendária", "origemNome": "traducao-srd2", "nomeIngles": "Legendary Brigandine Armor", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 74", "limiares": "13/35", "pontuacaoArmadura": 6,
+   "caracteristica": { "nomeIngles": "Lined", "textoIngles": "Lined: Mark a Stress to negate Minor damage.", "nome": "Forrada", "texto": "Forrada: Marque 1 Estresse para negar dano Menor.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "automacao": { "classificacao": "reacao-dano-pendente", "rolaNoApp": false, "motivo": "A regra está publicada; custo e negação aguardam integração ao fluxo de dano." } }
+  },
+  {
+   "id": "armadura-t4-armadura-de-cota-de-escamas-lendaria", "categoria": "armadura", "tier": 4, "tabela": null,
+   "nome": "Armadura de Cota de Escamas Lendária", "origemNome": "traducao-srd2", "nomeIngles": "Legendary Scale Mail Armor", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 74", "limiares": "15/39", "pontuacaoArmadura": 6,
+   "caracteristica": { "nomeIngles": "Cumbersome", "textoIngles": "Cumbersome: −1 to Finesse", "nome": "Incômoda", "texto": "Incômoda: −1 em Finesse.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "efeitoDerivado": { "tracos": { "finesse": -1 } } }
+  },
+  {
+   "id": "armadura-t4-armadura-de-faixas-lendaria", "categoria": "armadura", "tier": 4, "tabela": null,
+   "nome": "Armadura de Faixas Lendária", "origemNome": "traducao-srd2", "nomeIngles": "Legendary Banded Armor", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 74", "limiares": "17/43", "pontuacaoArmadura": 7,
+   "caracteristica": { "nomeIngles": "Bulky", "textoIngles": "Bulky: −1 to Evasion; when you take Severe damage, you must mark a Stress.", "nome": "Volumosa", "texto": "Volumosa: −1 em Evasão; quando sofrer dano Severo, você deve marcar 1 Estresse.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "efeitoDerivado": { "evasao": -1 }, "automacao": { "classificacao": "passiva-parcial", "rolaNoApp": false, "motivo": "O −1 em Evasão é automático; o Estresse por dano Severo aguarda integração ao fluxo de dano." } }
+  },
+  {
+   "id": "armadura-t4-placa-sombria-forjada-em-circulo", "categoria": "armadura", "tier": 4, "tabela": null,
+   "nome": "Placa Sombria Forjada em Círculo", "origemNome": "traducao-srd2", "nomeIngles": "Circle-Forged Dreadplate", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 74", "limiares": "14/38", "pontuacaoArmadura": 6,
+   "caracteristica": { "nomeIngles": "Accursed", "textoIngles": "Accursed: When you mark any number of Hit Points from an attack, roll a d4. On a result of 4, the attacker must mark an equal number of Stress.", "nome": "Amaldiçoada", "texto": "Amaldiçoada: Quando marcar qualquer quantidade de Pontos de Vida por um ataque, role 1d4. Em um resultado 4, o atacante deve marcar a mesma quantidade de Estresse.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "automacao": { "classificacao": "reacao-com-dado-manual-pendente", "rolaNoApp": false, "motivo": "O d4 e o Estresse do atacante pertencem à mesa; a reação aguarda apresentação no fluxo de dano." } }
+  },
+  {
+   "id": "armadura-t4-mortalha-de-darkweave", "categoria": "armadura", "tier": 4, "tabela": null,
+   "nome": "Mortalha de Darkweave", "origemNome": "traducao-srd2", "nomeIngles": "Darkweave Shroud", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 74", "limiares": "13/36", "pontuacaoArmadura": 5,
+   "caracteristica": { "nomeIngles": "Ghostwalker", "textoIngles": "Ghostwalker: Once per rest, mark a Stress to move up to Close range through solid objects.", "nome": "Caminhante Fantasma", "texto": "Caminhante Fantasma: Uma vez por descanso, marque 1 Estresse para se mover até alcance Próximo atravessando objetos sólidos.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "automacao": { "classificacao": "uso-por-descanso-pendente", "rolaNoApp": false, "motivo": "Custo e recarga aguardam botão de uso; o deslocamento permanece na mesa." } }
+  },
+  {
+   "id": "armadura-t4-lamelar-vinculada-aos-deuses", "categoria": "armadura", "tier": 4, "tabela": null,
+   "nome": "Lamelar Vinculada aos Deuses", "origemNome": "traducao-srd2", "nomeIngles": "Godbound Laminar", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 74", "limiares": "13/36", "pontuacaoArmadura": 6,
+   "caracteristica": { "nomeIngles": "Divine", "textoIngles": "Divine: When you mark an Armor Slot, gain a Hope.", "nome": "Divina", "texto": "Divina: Quando marcar 1 Ponto de Armadura, receba 1 Esperança.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "automacao": { "classificacao": "gatilho-de-armadura-pendente", "rolaNoApp": false, "motivo": "O ganho aguarda integração ao ponto central que marca Armadura para evitar duplicidade." } }
+  },
+  {
+   "id": "armadura-t4-placa-heroica-sagrada", "categoria": "armadura", "tier": 4, "tabela": null,
+   "nome": "Placa Heroica Sagrada", "origemNome": "traducao-srd2", "nomeIngles": "Hallowed Heroplate", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 74", "limiares": "13/35", "pontuacaoArmadura": 7,
+   "caracteristica": { "nomeIngles": "Blessed", "textoIngles": "Blessed: Once per long rest, you can spend any number of Hope before you make the Risk It All death move. You gain a bonus to the result of your Hope Die equal to the number of Hope spent.", "nome": "Abençoada", "texto": "Abençoada: Uma vez por descanso longo, antes de fazer o movimento de morte Arriscar Tudo, você pode gastar qualquer quantidade de Esperança e somar esse valor ao resultado do Dado de Esperança.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "automacao": { "classificacao": "movimento-de-morte-pendente", "rolaNoApp": false, "motivo": "O gasto variável e a recarga aguardam integração ao resolvedor de Arriscar Tudo." } }
+  },
+  {
+   "id": "armadura-t4-arnes-ressonante", "categoria": "armadura", "tier": 4, "tabela": null,
+   "nome": "Arnês Ressonante", "origemNome": "traducao-srd2", "nomeIngles": "Resonant Harness", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 74", "limiares": "15/40", "pontuacaoArmadura": 7,
+   "caracteristica": { "nomeIngles": "Vitreous", "textoIngles": "Vitreous: When you would take Severe or greater damage, you can mark 2 Armor Slots to negate that damage. If you do, you gain a −5 penalty to your damage thresholds until you choose to repair your armor as a downtime move.", "nome": "Vítreo", "texto": "Vítreo: Quando sofreria dano Severo ou maior, você pode marcar 2 Pontos de Armadura para negar esse dano. Se fizer isso, recebe −5 em seus limiares de dano até escolher reparar sua armadura como movimento de descanso.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "automacao": { "classificacao": "reacao-e-estado-pendente", "rolaNoApp": false, "motivo": "Negação, penalidade persistente e reparo exigem um contrato atômico dedicado no fluxo de dano e descanso." } }
+  },
+  {
+   "id": "armadura-t4-exotraje-forjado-com-runas", "categoria": "armadura", "tier": 4, "tabela": null,
+   "nome": "Exotraje Forjado com Runas", "origemNome": "traducao-srd2", "nomeIngles": "Rune-Forged Exosuit", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 74", "limiares": "12/39", "pontuacaoArmadura": 7,
+   "caracteristica": { "nomeIngles": "Attuned", "textoIngles": "Attuned: The maximum number of domain cards in your loadout is reduced by one, but you gain a bonus to your damage thresholds equal to your tier.", "nome": "Sintonizado", "texto": "Sintonizado: O número máximo de cartas de domínio em seu conjunto é reduzido em 1, mas você recebe um bônus em seus limiares de dano igual ao seu patamar.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "efeitoDerivado": { "limiaresPorPatamar": 1 }, "automacao": { "classificacao": "passiva-parcial", "rolaNoApp": false, "motivo": "O bônus nos limiares é automático; a redução do limite do conjunto aguarda integração ao validador de cartas." } }
+  },
+  {
    "id": "armadura-t4-armadura-de-gambeson-lendaria",
    "categoria": "armadura",
    "tier": 4,

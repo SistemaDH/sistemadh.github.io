@@ -581,7 +581,7 @@ const ITENS = avaliar('ITENS');
 teste('contagem bate com o SRD oficial', () => {
   igual(ARMAS.filter((a) => a.cat === 'primaria').length, 167, 'armas primárias — 155 tabeladas + 12 cadeiras de combate');
   igual(ARMAS.filter((a) => a.cat === 'secundaria').length, 37, 'armas secundárias');
-  igual(ARMADURAS.length, 59, 'armaduras — 34 legadas + 25 novas do SRD2');
+  igual(ARMADURAS.length, 69, 'armaduras — núcleo SRD2 completo');
   igual(ITENS.filter((i) => i.tipo === 'saque').length, 60, 'itens de saque');
   igual(ITENS.filter((i) => i.tipo === 'consumivel').length, 60, 'consumíveis');
 });
@@ -2648,6 +2648,15 @@ teste('Traje de Granminster soma Presença à Pontuação de Armadura', () => {
     equipamento: { armadura: traje.id, primaria: null, secundaria: null, reserva: [] }
   });
   igual(contexto.derivadosDoPersonagem_(f).pontuacaoArmadura, 4, '2 base + Presença 2');
+});
+
+teste('Exotraje Forjado com Runas soma o patamar aos dois limiares', () => {
+  const exotraje = ARMADURAS.find((a) => a.id === 'armadura-t4-exotraje-forjado-com-runas');
+  verdade(exotraje, 'Exotraje Forjado com Runas não foi publicado');
+  const f = fichaDeModificador({ nivel: 8, equipamento: { armadura: exotraje.id, primaria: null, secundaria: null, reserva: [] } });
+  const d = contexto.derivadosDoPersonagem_(f);
+  igual(d.limiarMaior, 24, '12 base + nível 8 + patamar 4');
+  igual(d.limiarGrave, 51, '39 base + nível 8 + patamar 4');
 });
 
 teste('Bellamoi e Cota Salvadora alteram o valor efetivo dos traços sem sobrescrever ficha.tracos', () => {

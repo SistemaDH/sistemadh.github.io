@@ -465,6 +465,11 @@ function modificadoresDerivadosDaFicha_(ficha) {
     if (e.limiaresPorTracoConjuracao) saida.limiaresPorTracoConjuracao = true;
     if (e.limiaresPorProficiencia) saida.limiares += prof * Number(e.limiaresPorProficiencia);
     if (e.limiarGravePorProficiencia) saida.limiarGrave += prof * Number(e.limiarGravePorProficiencia);
+    if (e.limiaresPorPatamar) {
+      const nivelAtual = Math.max(1, Math.min(10, Number((((ficha || {}).identidade || {}).nivel)) || 1));
+      const patamarAtual = nivelAtual <= 1 ? 1 : nivelAtual <= 4 ? 2 : nivelAtual <= 7 ? 3 : 4;
+      saida.limiares += patamarAtual * Number(e.limiaresPorPatamar);
+    }
     if (e.tracosTodos) {
       Object.keys(saida.tracos).forEach(function (k) { saida.tracos[k] += Number(e.tracosTodos) || 0; });
     }
