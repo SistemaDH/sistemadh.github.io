@@ -5783,7 +5783,7 @@
     "nomeIngles": "Impenetrable",
     "textoIngles": "Impenetrable: Once per short rest, mark Stress instead of Hit Point",
     "nome": "Impenetrável",
-    "texto": "Impenetrável: Uma vez por descanso curto, quando você marcaria seu último golpe Ponto, em vez disso, você pode marcar um Estresse.",
+    "texto": "Impenetrável: Uma vez por descanso curto, quando você marcaria seu último Ponto de Vida, em vez disso, pode marcar 1 Estresse.",
     "fonteTraducao": "livro",
     "confianca": "media",
     "automacao": {
@@ -6069,7 +6069,7 @@
     "nomeIngles": "Channeling",
     "textoIngles": "Channeling: +1 to Spellcast Rolls",
     "nome": "Canalização",
-    "texto": "Canalização: +1 para lançamentos de feitiços.",
+    "texto": "Canalização: +1 em jogadas de Conjuração.",
     "fonteTraducao": "livro",
     "confianca": "alta"
    }
@@ -6148,7 +6148,7 @@
     "nomeIngles": "Truthseeking",
     "textoIngles": "Truthseeking: This armor glows when creatures at Close range lie",
     "nome": "Busca da verdade",
-    "texto": "Busca da verdade: Essa armadura brilha quando outra criatura dentro dela se aproxima. O intervalo conta [...]",
+    "texto": "Busca da verdade: Esta armadura brilha quando outra criatura em alcance Próximo conta uma mentira.",
     "fonteTraducao": "livro",
     "confianca": "media",
     "automacao": {
@@ -6174,7 +6174,7 @@
     "nomeIngles": "Difficult",
     "textoIngles": "Difficult: -1 to all character traits and Evasion",
     "nome": "Difícil",
-    "texto": "Difícil: -1 para todas as características de caráter e Evasão",
+    "texto": "Difícil: -1 em todos os traços e na Evasão.",
     "fonteTraducao": "livro",
     "confianca": "alta",
     "efeitoDerivado": {

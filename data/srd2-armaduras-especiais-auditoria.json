@@ -1,0 +1,33 @@
+{
+  "versao": 1,
+  "estado": "conferido",
+  "catalogo": "data/equipamentos.json",
+  "fonte": { "srd": "2.0", "data": "2026-08-25", "paginasPdf": "73–74", "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64" },
+  "progresso": { "conferidasNesteBloco": 18, "conferidasNaColecao": 34, "totalColecao": 76 },
+  "registros": [
+    ["armor/elundrian-chain-armor", "armadura-t2-armadura-de-corrente-elundriana"],
+    ["armor/harrowbone-armor", "armadura-t2-armadura-harrowbone"],
+    ["armor/irontree-breastplate-armor", "armadura-t2-armadura-de-peitoral-irontree"],
+    ["armor/runetan-floating-armor", "armadura-t2-armadura-flutuante-de-runetan"],
+    ["armor/tyris-soft-armor", "armadura-t2-armadura-macia-tyris"],
+    ["armor/rosewild-armor", "armadura-t2-armadura-rosewild"],
+    ["armor/bellamoi-fine-armor", "armadura-t3-armadura-fina-bellamoi"],
+    ["armor/dragonscale-armor", "armadura-t3-armadura-de-escamas-de-dragao"],
+    ["armor/spiked-plate-armor", "armadura-t3-armadura-de-placas-com-espinhos"],
+    ["armor/bladefare-armor", "armadura-t3-armadura-bladefare"],
+    ["armor/monetts-cloak", "armadura-t3-manto-de-monett"],
+    ["armor/runes-of-fortification", "armadura-t3-runas-de-fortificacao"],
+    ["armor/dunamis-silkchain", "armadura-t4-corrente-de-seda-dunamis"],
+    ["armor/channeling-armor", "armadura-t4-armadura-de-canalizacao"],
+    ["armor/emberwoven-armor", "armadura-t4-armadura-de-brasa"],
+    ["armor/full-fortified-armor", "armadura-t4-armadura-fortificada-completa"],
+    ["armor/veritas-opal-armor", "armadura-t4-armadura-de-opala-veritas"],
+    ["armor/savior-chainmail", "armadura-t4-cota-de-malha-do-salvador"]
+  ],
+  "correcoesTextuais": [
+    "Impenetrável: restaurado Ponto de Vida no lugar de 'golpe Ponto'.",
+    "Canalização: normalizada para jogadas de Conjuração.",
+    "Busca da Verdade: restaurado o texto truncado sobre mentira em alcance Próximo.",
+    "Difícil: normalizado para todos os traços e Evasão."
+  ]
+}

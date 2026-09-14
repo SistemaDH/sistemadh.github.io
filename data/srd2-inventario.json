@@ -7408,7 +7408,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "b74b986ebf6c99ff50b5229d47504ddede05b5affdf5db6550ab275dc1b4246b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/bladefare-armor",
@@ -7423,7 +7423,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "80d6bdea4f0c89bc988a65fa7626598d090b39387cf954e4cb817734b3024f84",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/bloodstone-plate-armor",
@@ -7483,7 +7483,7 @@
             "pdfPageEnd": 74
           },
           "corpusSha256": "ed839ce5d0c79e74714f8bd396e663eedefaf5f515414ad922075d77872605b0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/circle-forged-dreadplate",
@@ -7573,7 +7573,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "5cfa6e0b7443b0a5be6f8902522b3a36b5a5ee4b9c14ed932907548513c4a63b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/dunamis-silkchain",
@@ -7588,7 +7588,7 @@
             "pdfPageEnd": 74
           },
           "corpusSha256": "02a6d89caab76e38407287e4dcce38f53ae81ab6a167449a5e8d7d1670f114e5",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/elundrian-chain-armor",
@@ -7603,7 +7603,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "66c97e87e08969ccdf26616b737f3d275ab4dd368dd4479668a71e946c8dcbcc",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/emberwoven-armor",
@@ -7618,7 +7618,7 @@
             "pdfPageEnd": 74
           },
           "corpusSha256": "c12067917eb704993b80fbaab9edcbbb432e4eb07cc7a1affaa99621fe088049",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/enchanters-robes",
@@ -7648,7 +7648,7 @@
             "pdfPageEnd": 74
           },
           "corpusSha256": "2b5a82911c87f61b4d917852ed6594704d1ecb79eac3dca007ac1b29ec280eee",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/full-plate-armor",
@@ -7753,7 +7753,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "fc23d77e3e8a6103e530280898339a3f5cea2ac931acc99682b18a047fb2c93d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/hawkguards-mantle",
@@ -7903,7 +7903,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "63fe81253f2db3e227a974b8c387ad486d21a751ad10cfc429d5601229a74eb0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/leather-apron",
@@ -8098,7 +8098,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "937dfabb1ba6bb1d568420729799b07d9defb93cc5f7ecb4f0e1ccd72c95dbee",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/quilted-clothing",
@@ -8143,7 +8143,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "950c8f34d0e2ec44b699bfdd44e0f3ecea4e38424b6a0cadffdf3421d242aa80",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/rune-forged-exosuit",
@@ -8173,7 +8173,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "25439def63dbe9347494367b1fa7b2bf3658b76e5bfff7c977575338e969c0e6",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/runetan-floating-armor",
@@ -8188,7 +8188,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "342096e68cdc1524a8757f7b7ae243661560f661e3bae83edb055924edc4a4c0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/savior-chainmail",
@@ -8203,7 +8203,7 @@
             "pdfPageEnd": 74
           },
           "corpusSha256": "fa1049a59d863e1e138eecffd860d9606f3ede4675df63708608128b1533454f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/scale-mail-armor",
@@ -8278,7 +8278,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "249dff8a4b97c5e46df7c5b56f47da46707a52e8e2f852943f405972fa889dc4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/stormthread-habit",
@@ -8338,7 +8338,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "0c9102d2ef4517c408b9d048d59256f89f6581f66bab00ae0c49d3a95b8384e3",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/veritas-opal-armor",
@@ -8353,7 +8353,7 @@
             "pdfPageEnd": 74
           },
           "corpusSha256": "0a315ae77e39a9910ed6216dc25c1352e05fc63ac517fa04ea3ad653cf370d29",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/wyrdwood-splint-armor",

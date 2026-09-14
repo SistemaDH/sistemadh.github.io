@@ -274,7 +274,19 @@ Próximo checkpoint seguro: iniciar outra coleção de catálogo ainda não audi
 
 Validação esperada deste checkpoint: inventário com 1.539 registros (**316 implementados**, 1.222 pendentes), coleção `armor` em auditoria e suíte SRD2 completa.
 
-Próximo checkpoint seguro: conferir as 18 armaduras especiais já existentes no catálogo antes de adicionar as 42 novas do núcleo e, por último, as 7 armaduras suplementares.
+### Armaduras — especiais existentes, 34/76 conferidas
+
+- as 18 armaduras especiais já expostas foram vinculadas individualmente às pp. 73–74 do SRD 2.0;
+- patamares, limiares, Pontuação de Armadura, características e automações existentes permaneceram mecanicamente compatíveis;
+- **Impenetrável** teve “último golpe Ponto” corrigido para último Ponto de Vida;
+- **Canalização** passou a usar o termo canônico jogadas de Conjuração;
+- **Busca da Verdade** teve o texto truncado restaurado: a armadura brilha quando uma criatura em alcance Próximo conta uma mentira;
+- **Difícil** passou a referir-se corretamente a todos os traços e à Evasão;
+- `data/srd2-armaduras-especiais-auditoria.json` e `tools/conferir-srd2-armaduras-especiais.mjs` protegem os 18 vínculos, números, textos críticos e automações defensivas.
+
+Validação esperada deste checkpoint: inventário com 1.539 registros (**334 implementados**, 1.204 pendentes), 34/76 armaduras conferidas e suíte SRD2/backend/gerados verde.
+
+Próximo checkpoint seguro: implementar as 35 armaduras novas do núcleo; depois, tratar separadamente as 7 armaduras de campanhas suplementares. Restam 42 registros na coleção, não 49.
 
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 
