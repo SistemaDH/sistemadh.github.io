@@ -264,6 +264,18 @@ Validação esperada deste checkpoint: inventário com 1.539 registros (**300 im
 
 Próximo checkpoint seguro: iniciar outra coleção de catálogo ainda não auditada, preservando a separação de Pavor e das classes de Hope & Fear.
 
+### Armaduras — básicas 16/76 conferidas
+
+- as 16 armaduras básicas dos quatro patamares foram vinculadas individualmente às pp. 72–74 do SRD 2.0;
+- Gambeson, Couro, Cota de Malha e Placa Completa, com suas versões Aprimorada, Avançada e Lendária, já coincidiam em patamar, limiares, Pontuação de Armadura e efeitos;
+- **Flexível** continua concedendo +1 Evasão, **Pesado** impõe -1 Evasão e **Muito Pesado** impõe -2 Evasão e -1 Agilidade;
+- nenhuma regra ativa, backend, interface ou persistência precisou ser alterada neste sublote;
+- `data/srd2-armaduras-basicas-auditoria.json` e `tools/conferir-srd2-armaduras-basicas.mjs` protegem os 16 vínculos e números.
+
+Validação esperada deste checkpoint: inventário com 1.539 registros (**316 implementados**, 1.222 pendentes), coleção `armor` em auditoria e suíte SRD2 completa.
+
+Próximo checkpoint seguro: conferir as 18 armaduras especiais já existentes no catálogo antes de adicionar as 42 novas do núcleo e, por último, as 7 armaduras suplementares.
+
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 
 Iniciado em 08/09/2026 na branch `ediçãoclaude`.

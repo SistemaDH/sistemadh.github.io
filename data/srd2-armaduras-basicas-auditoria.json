@@ -1,0 +1,31 @@
+{
+  "versao": 1,
+  "estado": "conferido",
+  "catalogo": "data/equipamentos.json",
+  "fonte": {
+    "srd": "2.0",
+    "data": "2026-08-25",
+    "paginasPdf": "72–74",
+    "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64"
+  },
+  "progresso": { "conferidas": 16, "totalColecao": 76 },
+  "registros": [
+    { "idFonte": "armor/gambeson-armor", "idLocal": "armadura-t1-armadura-gambeson" },
+    { "idFonte": "armor/leather-armor", "idLocal": "armadura-t1-armadura-de-couro" },
+    { "idFonte": "armor/chainmail-armor", "idLocal": "armadura-t1-armadura-de-cota-de-malha" },
+    { "idFonte": "armor/full-plate-armor", "idLocal": "armadura-t1-armadura-de-placa-completa" },
+    { "idFonte": "armor/improved-gambeson-armor", "idLocal": "armadura-t2-armadura-de-gambeson-aprimorada" },
+    { "idFonte": "armor/improved-leather-armor", "idLocal": "armadura-t2-armadura-de-couro-aprimorada" },
+    { "idFonte": "armor/improved-chainmail-armor", "idLocal": "armadura-t2-armadura-de-cota-de-malha-aprimorada" },
+    { "idFonte": "armor/improved-full-plate-armor", "idLocal": "armadura-t2-armadura-de-placa-completa-aprimorada" },
+    { "idFonte": "armor/advanced-gambeson-armor", "idLocal": "armadura-t3-armadura-de-gambeson-avancada" },
+    { "idFonte": "armor/advanced-leather-armor", "idLocal": "armadura-t3-armadura-de-couro-avancada" },
+    { "idFonte": "armor/advanced-chainmail-armor", "idLocal": "armadura-t3-armadura-de-cota-de-malha-avancada" },
+    { "idFonte": "armor/advanced-full-plate-armor", "idLocal": "armadura-t3-armadura-avancada-de-placa-completa" },
+    { "idFonte": "armor/legendary-gambeson-armor", "idLocal": "armadura-t4-armadura-de-gambeson-lendaria" },
+    { "idFonte": "armor/legendary-leather-armor", "idLocal": "armadura-t4-armadura-de-couro-lendaria" },
+    { "idFonte": "armor/legendary-chainmail-armor", "idLocal": "armadura-t4-armadura-de-cota-de-malha-lendaria" },
+    { "idFonte": "armor/legendary-full-plate-armor", "idLocal": "armadura-t4-armadura-lendaria-de-placa-completa" }
+  ],
+  "conclusao": "Os 16 registros básicos já coincidiam com o SRD 2.0 em patamar, limiares, Pontuação de Armadura e efeitos Flexível, Pesado e Muito Pesado; nenhuma regra ativa precisou ser alterada."
+}

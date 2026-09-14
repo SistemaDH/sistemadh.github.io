@@ -47,7 +47,7 @@ O corpus auxiliar pinado registra 1.539 registros: 10 domínios, 13 classes, 26 
 
 O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. O inventário individual fica em `data/srd2-inventario.json`: cada um dos 1.539 registros preserva ID, nome inglês, tipo, hash do registro no corpus, estado de implementação e, quando aplicável, `sourceLocator`. `npm run teste:srd2` impede alteração acidental das contagens, IDs, hashes estruturais ou estados. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
 
-No checkpoint atual, 199 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 1.339 permanecem `pendente`.
+No checkpoint atual, 316 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 1.222 permanecem `pendente`.
 
 ## Fase 1 — Level Up
 
@@ -205,3 +205,9 @@ As cartas ficam em `data/srd2-cartas-pavor.json`, com `exposto: false`, fora de 
 As 24 Formas de Fera existentes foram vinculadas individualmente às pp. 15–18 do SRD 2.0. A auditoria confirmou patamares, traços, Evasão, ataques, vantagens e características e corrigiu divergências herdadas da prévia pt-BR: `d6+1` do Aracnídeo Espreitador, alcance Muito Próximo da Serpente Traiçoeira, três aliados do Caçador Aéreo Mítico, quatro da Fera Massiva, base de 1º ou 2º patamar da Fera Mítica e três opções do Híbrido Mítico. Restrained passa a usar **Restrito**, e as rolagens continuam físicas/manuais.
 
 O vínculo integral fica protegido por `data/srd2-formas-de-fera-auditoria.json` e `tools/conferir-srd2-formas-de-fera.mjs`.
+
+### Armaduras básicas (16/76)
+
+As 16 armaduras básicas dos quatro patamares foram vinculadas individualmente às pp. 72–74 do SRD 2.0: Gambeson, Couro, Cota de Malha e Placa Completa, incluindo as versões Aprimorada, Avançada e Lendária. A comparação confirmou patamar, limiares, Pontuação de Armadura e as características **Flexível**, **Pesado** e **Muito Pesado**. O catálogo ativo já estava mecanicamente correto e não precisou de alteração.
+
+O vínculo e os efeitos derivados ficam protegidos por `data/srd2-armaduras-basicas-auditoria.json` e `tools/conferir-srd2-armaduras-basicas.mjs`. A coleção permanece `em-auditoria`: faltam as 53 armaduras especiais do núcleo e 7 armaduras de campanhas suplementares.

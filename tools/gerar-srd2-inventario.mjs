@@ -20,6 +20,22 @@ if (commit !== fonte.corpusAuxiliar.commit) {
 
 const manifesto = JSON.parse(fs.readFileSync(path.join(corpus, 'objects/daggerheart-system-data.jsonld'), 'utf8'));
 const implementados = new Set([
+  'armor/gambeson-armor',
+  'armor/leather-armor',
+  'armor/chainmail-armor',
+  'armor/full-plate-armor',
+  'armor/improved-gambeson-armor',
+  'armor/improved-leather-armor',
+  'armor/improved-chainmail-armor',
+  'armor/improved-full-plate-armor',
+  'armor/advanced-gambeson-armor',
+  'armor/advanced-leather-armor',
+  'armor/advanced-chainmail-armor',
+  'armor/advanced-full-plate-armor',
+  'armor/legendary-gambeson-armor',
+  'armor/legendary-leather-armor',
+  'armor/legendary-chainmail-armor',
+  'armor/legendary-full-plate-armor',
   'beastforms/agile-scout',
   'beastforms/aquatic-predator',
   'beastforms/aquatic-scout',
