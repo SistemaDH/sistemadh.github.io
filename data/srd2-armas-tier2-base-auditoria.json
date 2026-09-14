@@ -1,0 +1,95 @@
+{
+  "versao": 1,
+  "registros": [
+    [
+      "weapons/improved-arcane-rifle",
+      "primaria-t2-srd2-improved-arcane-rifle",
+      "d10+6 mag"
+    ],
+    [
+      "weapons/improved-brass-knuckles",
+      "primaria-t2-srd2-improved-brass-knuckles",
+      "d8+4 phy"
+    ],
+    [
+      "weapons/improved-brightsword",
+      "primaria-t2-srd2-improved-brightsword",
+      "d10+6 mag"
+    ],
+    [
+      "weapons/improved-casting-dagger",
+      "primaria-t2-srd2-improved-casting-dagger",
+      "d6+3 mag"
+    ],
+    [
+      "weapons/improved-enchanted-chakram",
+      "primaria-t2-srd2-improved-enchanted-chakram",
+      "d6+4 mag"
+    ],
+    [
+      "weapons/improved-fighting-cloak",
+      "secundaria-t2-srd2-improved-fighting-cloak",
+      "d4+2 phy"
+    ],
+    [
+      "weapons/improved-focus-runes",
+      "secundaria-t2-srd2-improved-focus-runes",
+      "d6+2 mag"
+    ],
+    [
+      "weapons/improved-hatchet",
+      "secundaria-t2-srd2-improved-hatchet",
+      "d8+2 phy"
+    ],
+    [
+      "weapons/improved-katana",
+      "primaria-t2-srd2-improved-katana",
+      "d10+6 phy"
+    ],
+    [
+      "weapons/improved-offhand-brass-knuckles",
+      "secundaria-t2-srd2-improved-offhand-brass-knuckles",
+      "d8+2 phy"
+    ],
+    [
+      "weapons/improved-rope-dart",
+      "primaria-t2-srd2-improved-rope-dart",
+      "d6+4 phy"
+    ],
+    [
+      "weapons/improved-rune-shield",
+      "secundaria-t2-srd2-improved-rune-shield",
+      "d4+2 mag"
+    ],
+    [
+      "weapons/improved-runelock-pistol",
+      "primaria-t2-srd2-improved-runelock-pistol",
+      "d6+6 mag"
+    ],
+    [
+      "weapons/improved-scimitar",
+      "primaria-t2-srd2-improved-scimitar",
+      "d8+4 phy"
+    ],
+    [
+      "weapons/improved-shadowblade",
+      "primaria-t2-srd2-improved-shadowblade",
+      "d8+3 phy/mag"
+    ],
+    [
+      "weapons/improved-throwing-knives",
+      "secundaria-t2-srd2-improved-throwing-knives",
+      "d8+2 phy"
+    ],
+    [
+      "weapons/improved-twisted-dagger",
+      "primaria-t2-srd2-improved-twisted-dagger",
+      "d8+3 phy"
+    ],
+    [
+      "weapons/improved-whipsword",
+      "primaria-t2-srd2-improved-whipsword",
+      "d8+3 phy"
+    ]
+  ]
+}

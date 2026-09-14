@@ -226,6 +226,12 @@ function usarCaracteristicaDeEquipamento_(ficha, a) {
   if (regra.exigeAtaqueBemSucedido === true && (a || {}).ataqueBemSucedido !== true) {
     return { erro:encontrada.caracteristica + ': confirme primeiro que o ataque foi bem-sucedido.' };
   }
+  if (regra.exigeCriticoPrimaria === true && (a || {}).criticoPrimaria !== true) {
+    return { erro:encontrada.caracteristica + ': confirme primeiro o sucesso crítico com a arma principal.' };
+  }
+  if (regra.exigeAtaqueComMedo === true && (a || {}).ataqueComMedo !== true) {
+    return { erro:encontrada.caracteristica + ': confirme primeiro o ataque com Medo.' };
+  }
 
   let dadoManual = null;
   const entrada = regra.entradaManual || null;
@@ -286,6 +292,7 @@ function usarCaracteristicaDeEquipamento_(ficha, a) {
   if (custoEstresse) detalhes.push(ajustarRecurso_(ficha, { chave:'estresseMarcado', delta:custoEstresse }));
   if (custoEsperanca) detalhes.push(ajustarRecurso_(ficha, { chave:'esperanca', delta:-custoEsperanca }));
   if (custoOuroPunhados) detalhes.push(ajustarOuroDaFicha_(ficha, { chave:'punhados', delta:-custoOuroPunhados }));
+  if (regra.ganhoEsperanca) detalhes.push(ajustarRecurso_(ficha, { chave:'esperanca', delta:Math.max(0, Math.trunc(Number(regra.ganhoEsperanca)) || 0) }));
 
   let recuperacao = null;
   if (acionaResultado && Number(resultadoRegra.limpaEstresse)) {
@@ -317,6 +324,7 @@ function usarCaracteristicaDeEquipamento_(ficha, a) {
   if (regra.bonusProficienciaDano) partes.push('Bônus de +' + Number(regra.bonusProficienciaDano.valor || 0) +
     ' de Proficiência nesta jogada de dano.');
   if (custoOuroPunhados) partes.push(custoOuroPunhados + ' punhado' + (custoOuroPunhados === 1 ? '' : 's') + ' de ouro gasto' + (custoOuroPunhados === 1 ? '' : 's') + '.');
+  if (regra.ganhoEsperanca) partes.push('+' + Math.trunc(Number(regra.ganhoEsperanca)) + ' Esperança.');
   if (entrada) partes.push('Resultado informado: ' + dadoManual + '.');
   if (entrada && resultadoRegra && !acionaResultado) partes.push('O gatilho especial não foi acionado.');
   if (acionaResultado && recuperacao) partes.push('Recuperação aplicada.');
@@ -3474,7 +3482,7 @@ function regraImpenetravelDaArmadura_(ficha) {
 }
 
 
-/** Aparar ativo: a única arma do Core com esta reação é a Adaga de proteção. */
+/** Aparar ativo: encontra qualquer arma equipada com esta reação. */
 function regraApararDaFicha_(ficha) {
   const ativos = (typeof equipamentoAtivoDaFicha_ === 'function') ? equipamentoAtivoDaFicha_(ficha) : [];
   for (let i = 0; i < ativos.length; i++) {
@@ -3488,13 +3496,13 @@ function regraApararDaFicha_(ficha) {
 /**
  * Resolve Aparar sem rolar nada.
  * `dano` continua sendo o TOTAL original (dados + modificadores). O jogador
- * informa separadamente os resultados dos dados do atacante e os d6 da Adaga;
+ * informa separadamente os resultados dos dados do atacante e da arma que apara;
  * só os dados do atacante cujo valor apareceu nos d6 de Aparar são retirados.
  */
 function resolverApararNoDano_(ficha, a, dano) {
   if ((a || {}).usarAparar !== true) return { usado:false, danoDepois:dano };
   const encontrada = regraApararDaFicha_(ficha);
-  if (!encontrada) return { erro:'Aparar só pode ser usado com a Adaga de proteção realmente equipada.' };
+  if (!encontrada) return { erro:'Aparar exige uma arma com essa característica realmente equipada.' };
 
   const m = /^d(\d+)/i.exec(String((encontrada.item || {}).dano || ''));
   const lados = m ? Math.max(2, Math.trunc(Number(m[1])) || 6) : 6;
@@ -3513,7 +3521,7 @@ function resolverApararNoDano_(ficha, a, dano) {
   for (let i=0;i<dadosAparar.length;i++) {
     const n=Math.trunc(Number(dadosAparar[i]));
     if (!isFinite(n) || Number(dadosAparar[i])!==n || n<1 || n>lados) {
-      return { erro:'Aparar: cada resultado da Adaga precisa ser um inteiro de 1 a ' + lados + '.' };
+      return { erro:'Aparar: cada resultado da arma precisa ser um inteiro de 1 a ' + lados + '.' };
     }
     seus.push(n);
   }

@@ -1,0 +1,85 @@
+{
+  "versao": 1,
+  "registros": [
+    [
+      "weapons/bladed-fan",
+      "primaria-t2-srd2-bladed-fan",
+      "d8+3 phy"
+    ],
+    [
+      "weapons/cane-sword",
+      "primaria-t2-srd2-cane-sword",
+      "d8+4 phy"
+    ],
+    [
+      "weapons/collapsible-baton",
+      "secundaria-t2-srd2-collapsible-baton",
+      "d8 phy"
+    ],
+    [
+      "weapons/cyrurgiens-scalpel",
+      "primaria-t2-srd2-cyrurgiens-scalpel",
+      "d8+3 phy"
+    ],
+    [
+      "weapons/displacement-razor",
+      "primaria-t2-srd2-displacement-razor",
+      "d8+3 mag"
+    ],
+    [
+      "weapons/eldritch-vambrace",
+      "secundaria-t2-srd2-eldritch-vambrace",
+      "d8 mag"
+    ],
+    [
+      "weapons/enchanted-lute",
+      "primaria-t2-srd2-enchanted-lute",
+      "d8+3 mag"
+    ],
+    [
+      "weapons/enchanted-shillelagh",
+      "primaria-t2-srd2-enchanted-shillelagh",
+      "d8+3 mag"
+    ],
+    [
+      "weapons/fury-gem",
+      "primaria-t2-srd2-fury-gem",
+      "d8+3 mag"
+    ],
+    [
+      "weapons/javelins",
+      "primaria-t2-srd2-javelins",
+      "d6+6 phy"
+    ],
+    [
+      "weapons/lance",
+      "primaria-t2-srd2-lance",
+      "d10+5 phy"
+    ],
+    [
+      "weapons/razor-wire",
+      "secundaria-t2-srd2-razor-wire",
+      "d6+3 phy"
+    ],
+    [
+      "weapons/segmented-staff",
+      "secundaria-t2-srd2-segmented-staff",
+      "d6+4 phy"
+    ],
+    [
+      "weapons/spellbound-bangles",
+      "primaria-t2-srd2-spellbound-bangles",
+      "d10+6 mag"
+    ],
+    [
+      "weapons/splintershaft-bow",
+      "primaria-t2-srd2-splintershaft-bow",
+      "d6+6 mag"
+    ],
+    [
+      "weapons/war-pick",
+      "primaria-t2-srd2-war-pick",
+      "d8+3 phy"
+    ]
+  ]
+}

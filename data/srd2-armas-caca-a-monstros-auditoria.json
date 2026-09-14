@@ -1,0 +1,60 @@
+{
+  "versao": 1,
+  "fonte": "Daggerheart SRD 2.0, p. 201",
+  "registros": [
+    [
+      "weapons/blessed-brass-knuckles",
+      [
+        "campanha-caca-a-monstros-blessed-brass-knuckles-t1",
+        "campanha-caca-a-monstros-blessed-brass-knuckles-t2",
+        "campanha-caca-a-monstros-blessed-brass-knuckles-t3",
+        "campanha-caca-a-monstros-blessed-brass-knuckles-t4"
+      ]
+    ],
+    [
+      "weapons/chain-whip",
+      [
+        "campanha-caca-a-monstros-chain-whip-t1",
+        "campanha-caca-a-monstros-chain-whip-t2",
+        "campanha-caca-a-monstros-chain-whip-t3",
+        "campanha-caca-a-monstros-chain-whip-t4"
+      ]
+    ],
+    [
+      "weapons/hallowed-shield",
+      [
+        "campanha-caca-a-monstros-hallowed-shield-t1",
+        "campanha-caca-a-monstros-hallowed-shield-t2",
+        "campanha-caca-a-monstros-hallowed-shield-t3",
+        "campanha-caca-a-monstros-hallowed-shield-t4"
+      ]
+    ],
+    [
+      "weapons/holy-shotgun",
+      [
+        "campanha-caca-a-monstros-holy-shotgun-t1",
+        "campanha-caca-a-monstros-holy-shotgun-t2",
+        "campanha-caca-a-monstros-holy-shotgun-t3",
+        "campanha-caca-a-monstros-holy-shotgun-t4"
+      ]
+    ],
+    [
+      "weapons/repeating-crossbow",
+      [
+        "campanha-caca-a-monstros-repeating-crossbow-t1",
+        "campanha-caca-a-monstros-repeating-crossbow-t2",
+        "campanha-caca-a-monstros-repeating-crossbow-t3",
+        "campanha-caca-a-monstros-repeating-crossbow-t4"
+      ]
+    ],
+    [
+      "weapons/wooden-stake",
+      [
+        "campanha-caca-a-monstros-wooden-stake-t1",
+        "campanha-caca-a-monstros-wooden-stake-t2",
+        "campanha-caca-a-monstros-wooden-stake-t3",
+        "campanha-caca-a-monstros-wooden-stake-t4"
+      ]
+    ]
+  ]
+}

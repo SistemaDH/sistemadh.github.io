@@ -1882,7 +1882,7 @@
             "pdfPageEnd": 65
           },
           "corpusSha256": "efdaae4f61925c445915d489dd161c74e4f911709222e8a9ada464d94cb20e72",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/advanced-arcane-frame-wheelchair",
@@ -1927,7 +1927,7 @@
             "pdfPageEnd": 62
           },
           "corpusSha256": "06678279e47f2d97540a065f04931837d83ecbaa15cd9ee5bacee6d15ebdecd0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/advanced-battleaxe",
@@ -1957,7 +1957,7 @@
             "pdfPageEnd": 60
           },
           "corpusSha256": "c9e7eb5917ebdddb0aff8e6d7d190493d3ccacfd564927ddf4e89276e6eff1fe",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/advanced-brightsword",
@@ -1972,7 +1972,7 @@
             "pdfPageEnd": 62
           },
           "corpusSha256": "2eb2a9664a4fe8c4e405d379ce4bcc2874e5f2f6637f96d117a31a5ac4b8bf3c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/advanced-broadsword",
@@ -2002,7 +2002,7 @@
             "pdfPageEnd": 62
           },
           "corpusSha256": "241fddf5fb838262b1414a3eade2b020d30e818ab6bd73bfa7a9abeb2f7a2781",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/advanced-crossbow",
@@ -2077,7 +2077,7 @@
             "pdfPageEnd": 62
           },
           "corpusSha256": "8caf393604ada7018f4aed0fcf893334fda36596e166053a16a87e22d1cd00cc",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/advanced-fighting-cloak",
@@ -2092,7 +2092,7 @@
             "pdfPageEnd": 68
           },
           "corpusSha256": "5b4dcea5b56ee28e3fe6b0ef00b93d20db44355939f3a5de5c0b4a0229ffab7d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/advanced-focus-runes",
@@ -2107,7 +2107,7 @@
             "pdfPageEnd": 68
           },
           "corpusSha256": "b59eb4c8cbd2298025ab46c30ed4fec6bdbafd60d96b1a5cc9deefdc9eb4b8a1",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/advanced-glowing-rings",
@@ -2242,7 +2242,7 @@
             "pdfPageEnd": 68
           },
           "corpusSha256": "dc1440b4374abe912fdab14900172aca60b216a16612601f8ea6f68a947215d2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/advanced-heavy-frame-wheelchair",
@@ -2272,7 +2272,7 @@
             "pdfPageEnd": 60
           },
           "corpusSha256": "edb09f281fe75b10f91f9b0ff2e65e71bd7a30c06d6ff215a292b900da795ef7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/advanced-light-frame-wheelchair",
@@ -2347,7 +2347,7 @@
             "pdfPageEnd": 68
           },
           "corpusSha256": "b64496591f2a32f3290b7e7e66395163a4eed847c1b6716f92816622f0d84dde",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/advanced-quarterstaff",
@@ -2407,7 +2407,7 @@
             "pdfPageEnd": 61
           },
           "corpusSha256": "91f5ba9d3ab21451ca0db049277690ffac727f3a0e781dddcf0f07256a2b8b6e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/advanced-round-shield",
@@ -2437,7 +2437,7 @@
             "pdfPageEnd": 68
           },
           "corpusSha256": "158d5a914fb537cb80c837579a460942956605e17e909236464099b2a8e33f89",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/advanced-runelock-pistol",
@@ -2452,7 +2452,7 @@
             "pdfPageEnd": 62
           },
           "corpusSha256": "a333493847a1ddba6ab7e61ad81a54510f85cc7a204c631c0726b2ac33eb482a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/advanced-scepter",
@@ -2482,7 +2482,7 @@
             "pdfPageEnd": 61
           },
           "corpusSha256": "eee43127ade87246054a5e067344f10a165f7a3d3d1b9f1ee7744e4ab0ec9b0f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/advanced-shadowblade",
@@ -2497,7 +2497,7 @@
             "pdfPageEnd": 62
           },
           "corpusSha256": "9160f27b5274d60e89d33d4129f1086f6e723d0235921ee39575c52bd5ce3bcc",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/advanced-shortbow",
@@ -2587,7 +2587,7 @@
             "pdfPageEnd": 68
           },
           "corpusSha256": "db254eafdbd1695cd4fcae2faed21a73b308eef8ec820f397895b137dced478b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/advanced-tower-shield",
@@ -2617,7 +2617,7 @@
             "pdfPageEnd": 61
           },
           "corpusSha256": "08e3964ae9e08820b4cce25b0482fffb6cfd4c2ed03e05279514d3e8881ec2fc",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/advanced-wand",
@@ -2677,7 +2677,7 @@
             "pdfPageEnd": 61
           },
           "corpusSha256": "35fc809c4002af6f17be8d426937f15fd17351e7440975acd7a54a2cd2b46669",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/arc-wand",
@@ -2692,7 +2692,7 @@
             "pdfPageEnd": 62
           },
           "corpusSha256": "9a6d3c99472b7d522c3f8a0d8d767fa036f849638365785175d7a45211a66528",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/arcane-frame-wheelchair",
@@ -2737,7 +2737,7 @@
             "pdfPageEnd": 57
           },
           "corpusSha256": "04c3f992172222257390c3407ef1e77ba5baba4ce94f4114ae339624b2fa39e4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/arquebus",
@@ -2752,7 +2752,7 @@
             "pdfPageEnd": 64
           },
           "corpusSha256": "a423522e7d14f4bffaea87d3232a5f9c167e066115d64a62de41e29c8b191287",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/barrel-lid-shield",
@@ -2797,7 +2797,7 @@
             "pdfPageEnd": 64
           },
           "corpusSha256": "cb026964d8080e5b67b160ab6c1349e72d36021da8897a51d8e0dc71f53bc9b5",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/black-powder-revolver",
@@ -2827,7 +2827,7 @@
             "pdfPageEnd": 64
           },
           "corpusSha256": "d20bc11bd7a0ddefb96e90f9a48bc03c64bf595a835b29c7fa7ea272344ef4be",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/blackblood-tendril",
@@ -2842,7 +2842,7 @@
             "pdfPageEnd": 69
           },
           "corpusSha256": "e2800d9a40292b3c0b130e50a4185687af996326c1ded0ea28bbf1d49adcd52a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/bladed-fan",
@@ -2857,7 +2857,7 @@
             "pdfPageEnd": 58
           },
           "corpusSha256": "49f9e455c4513941ce3736509e384da70a16d944ecedd07fdfb7976d2bd8d6ac",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/bladed-star",
@@ -2872,7 +2872,7 @@
             "pdfPageEnd": 61
           },
           "corpusSha256": "54ef085a43c9e76172789f13e784c612e42a930deab7978f6a03aa9729ccc64d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/bladed-whip",
@@ -2902,7 +2902,7 @@
             "pdfPageEnd": 201
           },
           "corpusSha256": "5a2cbe9970fb3069d1cccabd1a6dde9485711106f5581200ac5fdc0a2e4b0a85",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/blitz-hammer",
@@ -2917,7 +2917,7 @@
             "pdfPageEnd": 61
           },
           "corpusSha256": "0d5e9ba84b19fdaa40e45cbe0e750b3638286a11ff141c474cfcf30c066439ff",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/bloodstaff",
@@ -2962,7 +2962,7 @@
             "pdfPageEnd": 56
           },
           "corpusSha256": "c36d799ae7ecc2c12a75b470b2ca5b29e8667c8f0335c79d5f7b13beb60ce399",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/braveshield",
@@ -3007,7 +3007,7 @@
             "pdfPageEnd": 56
           },
           "corpusSha256": "5941732583a70b1d3cf50ecb429a7dd690a51c997ae7b586a4651c49b4a3374e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/broadsword",
@@ -3067,7 +3067,7 @@
             "pdfPageEnd": 58
           },
           "corpusSha256": "1638fce3045e18bd61f3504f1d2c2901089c10aa7a4c40a0b87132be49dd7e08",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/casting-dagger",
@@ -3082,7 +3082,7 @@
             "pdfPageEnd": 57
           },
           "corpusSha256": "39c96658d8b5e6520d1121ea7db4828e7b912b1e5735062a8f486cac042a397d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/casting-sword",
@@ -3112,7 +3112,7 @@
             "pdfPageEnd": 201
           },
           "corpusSha256": "2808ef482def32a7b51826ae065b37a4e358271108919928b7e39d51b66cf25b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/chained-scythe",
@@ -3127,7 +3127,7 @@
             "pdfPageEnd": 61
           },
           "corpusSha256": "5e019019ba6e9b36a6242c1d952af8b0ad73c31ff94be95f7ec3c58873b86b69",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/cleaver",
@@ -3157,7 +3157,7 @@
             "pdfPageEnd": 64
           },
           "corpusSha256": "1604dd9f478559a32be0b8468faed4150bc11ace60ebd302861effc33841ea38",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/collapsible-baton",
@@ -3172,7 +3172,7 @@
             "pdfPageEnd": 67
           },
           "corpusSha256": "907e5e95915cbb729b8a6149006c5d8c56e747fd56950106874ef6677a094f57",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/cooking-knife",
@@ -3232,7 +3232,7 @@
             "pdfPageEnd": 62
           },
           "corpusSha256": "84008297d8b243711c32c5c47e0da23a2b687a29c4dd5ccb9b38eadb20ea79ca",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/curved-dagger",
@@ -3277,7 +3277,7 @@
             "pdfPageEnd": 58
           },
           "corpusSha256": "1ee60100180c26935c8981b1771ad1aec34cfb977292258650da372698f619c2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/dagger",
@@ -3307,7 +3307,7 @@
             "pdfPageEnd": 65
           },
           "corpusSha256": "39f27a69f8c058735483db7b4449cd20a318b6f7ca29ffeafaf429486c69d6f0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/devouring-dagger",
@@ -3337,7 +3337,7 @@
             "pdfPageEnd": 59
           },
           "corpusSha256": "8528789151f712ae2791b71563c1f0bce60e513acceca72272d3231aacdf8635",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/double-flail",
@@ -3397,7 +3397,7 @@
             "pdfPageEnd": 69
           },
           "corpusSha256": "2c9c61a09ee855df49b76509dc2a5a58228e1b0d569ef458872122288d383ec9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/ego-blade",
@@ -3442,7 +3442,7 @@
             "pdfPageEnd": 67
           },
           "corpusSha256": "1f3a3d7b47f98cc10d66e483b768ab8d57d5d5b190384380c6edd3470d21f9e9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/enchanted-boomerang",
@@ -3487,7 +3487,7 @@
             "pdfPageEnd": 57
           },
           "corpusSha256": "bdc471b99f5d8cc6820cc31a6ec47622c4a19e98248ab32bafa86b14c910d77a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/enchanted-forge-lighter",
@@ -3547,7 +3547,7 @@
             "pdfPageEnd": 60
           },
           "corpusSha256": "fe59d7182a76cefb9259a335dabb54690839dd6489b0665ee95d163e67d2a282",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/enchanted-mop",
@@ -3592,7 +3592,7 @@
             "pdfPageEnd": 59
           },
           "corpusSha256": "c694e31521b838e8fff9db4745f30b5e56b4063413343c878049456e56f96e6e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/ethereal-zweih-nder",
@@ -3607,7 +3607,7 @@
             "pdfPageEnd": 65
           },
           "corpusSha256": "f4ecd9b90864b310fa79838cc4b9827f85581c9b3b6dc13801423c0164fa303d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/exploding-potions",
@@ -3667,7 +3667,7 @@
             "pdfPageEnd": 66
           },
           "corpusSha256": "59b769dbcbcc99c5ee03f351a2b2f8d248d9e2b88510e1ecbe7cd6f4f2592abe",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/finehair-bow",
@@ -3772,7 +3772,7 @@
             "pdfPageEnd": 66
           },
           "corpusSha256": "abd6283386e14575f030dea19c26642f3400720bac2038526f0dddb113411767",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/forge-poker",
@@ -3802,7 +3802,7 @@
             "pdfPageEnd": 60
           },
           "corpusSha256": "8b5d82a1b720bdb8a515db6e7343fddd52fd8ea353dbb7e7c7b87d6f265a6e7e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/fusion-gloves",
@@ -3877,7 +3877,7 @@
             "pdfPageEnd": 66
           },
           "corpusSha256": "67d886ce958c044b08b55d4c76906489ad86149e0bb5f9190438d58b2c92bcf3",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/greatbow",
@@ -3937,7 +3937,7 @@
             "pdfPageEnd": 63
           },
           "corpusSha256": "adb7ddeed81465e09fa7aecdd0efb680619ac6369cb3039f844a74f8375d4c1f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/halberd",
@@ -3982,7 +3982,7 @@
             "pdfPageEnd": 201
           },
           "corpusSha256": "b3ede3ac81d7570acf42f74d1f94b08d4c5763b3e1e09bee985ed62722288491",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/hammer-of-exota",
@@ -4087,7 +4087,7 @@
             "pdfPageEnd": 66
           },
           "corpusSha256": "da62cec0f6f74998bb0ee1db4cd04b41996de7348e2cb9bd9d83baadd8d88971",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/heavy-frame-wheelchair",
@@ -4117,7 +4117,7 @@
             "pdfPageEnd": 201
           },
           "corpusSha256": "d572849a55b99aa91c368c8f9b2dc8bbad62edcf5df94d7bf39cb103251605c4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/impact-gauntlet",
@@ -4177,7 +4177,7 @@
             "pdfPageEnd": 59
           },
           "corpusSha256": "c02e47a03516fb1cc12bf09367cd1df016c37dd064b32c9fb7fafdf90cc845c6",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/improved-battleaxe",
@@ -4207,7 +4207,7 @@
             "pdfPageEnd": 57
           },
           "corpusSha256": "8ee57634743ff3671285782778cde7fa075a160d5b3c9abd0fbfc34087bfef48",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/improved-brightsword",
@@ -4222,7 +4222,7 @@
             "pdfPageEnd": 59
           },
           "corpusSha256": "47c0342a00fa4bf6ec54fb6102d17d333061283af9942f2289dba615ae740971",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/improved-broadsword",
@@ -4252,7 +4252,7 @@
             "pdfPageEnd": 59
           },
           "corpusSha256": "bbd8e7f0ba23c10a22108b110da93b04e734462913add441f9fcf1383a6e073c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/improved-crossbow",
@@ -4327,7 +4327,7 @@
             "pdfPageEnd": 59
           },
           "corpusSha256": "67e7023d56d22f80d898941ebf7a34910ff855ecdb8a9123dc52a0b3f72202c4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/improved-fighting-cloak",
@@ -4342,7 +4342,7 @@
             "pdfPageEnd": 67
           },
           "corpusSha256": "df70f3144f8f3fc2ea1deb9a020e4f159c37ded496b8708a083f2f85c89ba1a2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/improved-focus-runes",
@@ -4357,7 +4357,7 @@
             "pdfPageEnd": 67
           },
           "corpusSha256": "ba5eb3a0b2c24e647c210755cd8ef222dd1c939fa22888c9198210145ba03201",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/improved-glowing-rings",
@@ -4492,7 +4492,7 @@
             "pdfPageEnd": 67
           },
           "corpusSha256": "54fcebd30c52979bffefe1f2c32ac6bf1445fa818aceaa6283d447710d3af523",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/improved-heavy-frame-wheelchair",
@@ -4522,7 +4522,7 @@
             "pdfPageEnd": 57
           },
           "corpusSha256": "5a95b36aab081141624b0738b54acc6ed84417bcc0cbecce3afdd99cfee736b8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/improved-light-frame-wheelchair",
@@ -4597,7 +4597,7 @@
             "pdfPageEnd": 67
           },
           "corpusSha256": "537f86f7a16d92029dc84736256d774de964f75458cc3c1429664ed6744b2732",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/improved-quarterstaff",
@@ -4657,7 +4657,7 @@
             "pdfPageEnd": 58
           },
           "corpusSha256": "3d52ad2280c797c045eca57f9fa3f4c294749526a3473824d9c1e8d036b1dc28",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/improved-round-shield",
@@ -4687,7 +4687,7 @@
             "pdfPageEnd": 67
           },
           "corpusSha256": "d602f1571d43aa2ff1bb3b9aca5ef9898353e79d2561635acbf851adf2def240",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/improved-runelock-pistol",
@@ -4702,7 +4702,7 @@
             "pdfPageEnd": 59
           },
           "corpusSha256": "4e253bc43f402e0faadaacd1a754b35d510c5209f77071fbde558b1836785733",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/improved-scepter",
@@ -4732,7 +4732,7 @@
             "pdfPageEnd": 57
           },
           "corpusSha256": "c54aabdc695b346a1c7abfdf7767e29714f4aef6e2d35ba9b1eca169d71eab8c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/improved-shadowblade",
@@ -4747,7 +4747,7 @@
             "pdfPageEnd": 59
           },
           "corpusSha256": "021f407bdc19bd84e00d0534fbc182d3e279d9e5224a26224f892f6deef546a8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/improved-shortbow",
@@ -4837,7 +4837,7 @@
             "pdfPageEnd": 67
           },
           "corpusSha256": "c7d28628cfff4f97d6ffa29fffb42fb98d71d8d19b557d0b47947d89311f4807",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/improved-tower-shield",
@@ -4867,7 +4867,7 @@
             "pdfPageEnd": 58
           },
           "corpusSha256": "2d4dd7724e58cc38ec28525276e0fde38dd733185f989e6152e9966151bb7b35",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/improved-wand",
@@ -4927,7 +4927,7 @@
             "pdfPageEnd": 58
           },
           "corpusSha256": "a96ed9d4d4f65353df47f3365faea6d1ee6fcd7d1dbca38d26dd700010551b74",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/infinite-staff",
@@ -4942,7 +4942,7 @@
             "pdfPageEnd": 64
           },
           "corpusSha256": "1ae35cd5d0cf60bc8570b1eb635ce34679cfdaea714ecae356c49df76335a2b8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/iron-skillet",
@@ -4972,7 +4972,7 @@
             "pdfPageEnd": 58
           },
           "corpusSha256": "fea2a9e2bdeb5a17365670723db33a9ff6428d30a649b5dcca4af2c663a21ecc",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/katana",
@@ -4987,7 +4987,7 @@
             "pdfPageEnd": 56
           },
           "corpusSha256": "0785ac69b396557970ffac6018fa6f04c5512fcabda41ddb37d852f4d6964711",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/keepers-staff",
@@ -5062,7 +5062,7 @@
             "pdfPageEnd": 58
           },
           "corpusSha256": "25646b5acb31a46981a32d66ec508fb3201a27102139355d833c11fc9908399d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/large-fork",
@@ -5137,7 +5137,7 @@
             "pdfPageEnd": 65
           },
           "corpusSha256": "97f28fdfdc8a8f18b1cd536cbf89051051015e095d797602a9f48eed2b3f24a2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/legendary-battleaxe",
@@ -5167,7 +5167,7 @@
             "pdfPageEnd": 63
           },
           "corpusSha256": "d2fc88f88df75bda3508c2b4fe8e52f955754ae956a51201381cf3b2a13670e1",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/legendary-brightsword",
@@ -5182,7 +5182,7 @@
             "pdfPageEnd": 64
           },
           "corpusSha256": "417fabeea8b4ed3520e3af5eae0a09440538217e0c5232a68d2357693e626d3f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/legendary-broadsword",
@@ -5212,7 +5212,7 @@
             "pdfPageEnd": 65
           },
           "corpusSha256": "82e13828e2bf245e5d9a8cb2913e8917c24809644f45a68515f9bc5405e38a21",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/legendary-crossbow",
@@ -5287,7 +5287,7 @@
             "pdfPageEnd": 65
           },
           "corpusSha256": "1e95cdedaec5eddb85b565c792bf4d244347dc375585b1d2fd8b8ffa8f4427a6",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/legendary-fighting-cloak",
@@ -5302,7 +5302,7 @@
             "pdfPageEnd": 69
           },
           "corpusSha256": "7ba4abf4d495d1fcb19d31a7f36577dbf24bdf661d4f418901b078f878c30091",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/legendary-focus-runes",
@@ -5317,7 +5317,7 @@
             "pdfPageEnd": 69
           },
           "corpusSha256": "ed6df1f1b7a432454fa661b7304c13bffb84a38d3c06776a1365f1542751e250",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/legendary-glowing-rings",
@@ -5452,7 +5452,7 @@
             "pdfPageEnd": 69
           },
           "corpusSha256": "a250a585ee45c168a3d8d32f66bf30ce2b7e082f2c3b52af0dc878287ae25e83",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/legendary-heavy-frame-wheelchair",
@@ -5482,7 +5482,7 @@
             "pdfPageEnd": 63
           },
           "corpusSha256": "76590014d65d4c3e2fcabfc3bcd192014bdc890fb3f52fcb127e1986514054f1",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/legendary-light-frame-wheelchair",
@@ -5557,7 +5557,7 @@
             "pdfPageEnd": 69
           },
           "corpusSha256": "059b1febd1cdabaf18afcb052829c66d1121ea74512c4fddd28a600e30a84622",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/legendary-quarterstaff",
@@ -5617,7 +5617,7 @@
             "pdfPageEnd": 63
           },
           "corpusSha256": "262265f685704128f26b0251703e033034d8ee8c9bb32116acab06cffbe6da41",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/legendary-round-shield",
@@ -5647,7 +5647,7 @@
             "pdfPageEnd": 69
           },
           "corpusSha256": "a2f6e33fae82293b52cb12992de3520fc258ab22ec8482eb18e8c7de7f66e34e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/legendary-runelock-pistol",
@@ -5662,7 +5662,7 @@
             "pdfPageEnd": 65
           },
           "corpusSha256": "517472b6a2edfc3accd2df41f8049482b975e80d601a99d949db0b5123f33fa0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/legendary-scepter",
@@ -5692,7 +5692,7 @@
             "pdfPageEnd": 63
           },
           "corpusSha256": "175181b6c10972532b2741ec69115ca78f3cdf20887499fa8f0f38a893a07405",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/legendary-shadowblade",
@@ -5707,7 +5707,7 @@
             "pdfPageEnd": 64
           },
           "corpusSha256": "24ac7763ba8a2afd2535afc29d8c65137c1f85b12d0e437edd226cd8d62ec2e9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/legendary-shortbow",
@@ -5797,7 +5797,7 @@
             "pdfPageEnd": 69
           },
           "corpusSha256": "25e3bf9bab4edf06e197caabd58b7bc107d26d18de94dc66e7ceb2cc4479e6be",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/legendary-tower-shield",
@@ -5827,7 +5827,7 @@
             "pdfPageEnd": 63
           },
           "corpusSha256": "32800a7f782fd540070bf9a468c89775baf012343bef83c081410031be5414dd",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/legendary-wand",
@@ -5887,7 +5887,7 @@
             "pdfPageEnd": 63
           },
           "corpusSha256": "d6b067634c583e5a15553773bb820b28cfe3686657883f4a0d76f699ccfb10e3",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/light-frame-wheelchair",
@@ -5947,7 +5947,7 @@
             "pdfPageEnd": 69
           },
           "corpusSha256": "33c2defd7d992006b0396566d4401017e638ee27612607c9557f46dede671fa6",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/mace",
@@ -6022,7 +6022,7 @@
             "pdfPageEnd": 66
           },
           "corpusSha256": "480f7acbfb28f56ffa45906b75104f9b07961da1df4f4a82f922d0a1e0da56ac",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/paring-knife",
@@ -6082,7 +6082,7 @@
             "pdfPageEnd": 61
           },
           "corpusSha256": "2cc86a9efdf218ff66fd3a2c4468e8b80c79929f1b03d8d934312ba81f746886",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/powered-gauntlet",
@@ -6157,7 +6157,7 @@
             "pdfPageEnd": 67
           },
           "corpusSha256": "8c19a6bb9c4efc9dc9dcd01595d54b65e86c9bd64a3a5a969201a438028cfbf6",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/repeating-crossbow",
@@ -6172,7 +6172,7 @@
             "pdfPageEnd": 201
           },
           "corpusSha256": "1ffafc1df189a0f2d8ca0b540aaa2480ebff9a0861b409a0f6cec15ffde93bf1",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/retractable-saber",
@@ -6277,7 +6277,7 @@
             "pdfPageEnd": 62
           },
           "corpusSha256": "efb2531542e5155fb1829e07984e414a1ccccba5bef70aa4ad26ffb0a57bd5da",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/rocket-maul",
@@ -6292,7 +6292,7 @@
             "pdfPageEnd": 62
           },
           "corpusSha256": "f366a166055e9445e927cc63c4a0d5ed527cd7c075b98066cda04fe7767a5666",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/rolling-pin",
@@ -6322,7 +6322,7 @@
             "pdfPageEnd": 56
           },
           "corpusSha256": "393e6785c96cf176797f6578d80298c900f0faf6efab29a7066fb1c16a5b33d0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/round-shield",
@@ -6352,7 +6352,7 @@
             "pdfPageEnd": 66
           },
           "corpusSha256": "90ee48a8df49fd1039bf07c46776f8ed56644b8d2a1313a38ac74222c050e225",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/runelock-pistol",
@@ -6367,7 +6367,7 @@
             "pdfPageEnd": 57
           },
           "corpusSha256": "54dd6ad93442f250b5b323aec36d0119bd6839ee77278f78dafd172afb10cdb0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/scepter",
@@ -6412,7 +6412,7 @@
             "pdfPageEnd": 56
           },
           "corpusSha256": "262301516f7b39d9fedabd3c65475e36bef3f77efe04c2dce4e5794b31302e2f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/segmented-staff",
@@ -6427,7 +6427,7 @@
             "pdfPageEnd": 67
           },
           "corpusSha256": "2fc3285ab1f060fbed0776fb8289e1629d2fb699c8b920d5010eea68597832d2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/severed-dragon-claw",
@@ -6442,7 +6442,7 @@
             "pdfPageEnd": 64
           },
           "corpusSha256": "60073dc6261f2c24b164d8def84a506bb9cb4107774f6512e239396401c35831",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/shadowblade",
@@ -6457,7 +6457,7 @@
             "pdfPageEnd": 56
           },
           "corpusSha256": "4ec6dd6a5eb32493a86595a3ea657334ad731fb243d635362b8db0289178e8c0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/sharpened-rake",
@@ -6562,7 +6562,7 @@
             "pdfPageEnd": 61
           },
           "corpusSha256": "065372357ed7dd10c61f4e548cdf172f53f346d067e0bbac8d3187b7d586b3e0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/siphoning-gauntlets",
@@ -6667,7 +6667,7 @@
             "pdfPageEnd": 61
           },
           "corpusSha256": "cae66450a3929f38afba4e4753396f9ba12b8a8fe37f03eb6e7c989e1a6d69ad",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/soul-chain",
@@ -6682,7 +6682,7 @@
             "pdfPageEnd": 68
           },
           "corpusSha256": "18b133a9acedb4272a622e7dc0c11af5f950fd5c652503b72b87957ddfa9669a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/sparkling-staff",
@@ -6727,7 +6727,7 @@
             "pdfPageEnd": 60
           },
           "corpusSha256": "d4f305208cfdbd9656f3cd86ed95e2cdb14abea2f2f3d818581331cfd3dbe49e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/spiked-bow",
@@ -6772,7 +6772,7 @@
             "pdfPageEnd": 60
           },
           "corpusSha256": "e9d09a49891462b7b790c8c130f0ad0ac814a225ef5e086ba17306b4e778343e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/staff-of-augma",
@@ -6787,7 +6787,7 @@
             "pdfPageEnd": 63
           },
           "corpusSha256": "2224acc4d8936fe3fb3650043cb11f23417fe59ae8ca53e9fb1bec9418d47463",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/starmetal-blade",
@@ -6802,7 +6802,7 @@
             "pdfPageEnd": 65
           },
           "corpusSha256": "5f4209ac42f011fabb4ea531bfe6a4dc769a42db5521f621b6bede32b0f2efe2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/steelforged-halberd",
@@ -6832,7 +6832,7 @@
             "pdfPageEnd": 65
           },
           "corpusSha256": "568c48c95f1f793370ffa00214fa8d3077c8c50c5ad049626decead47d009b06",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/swinging-ropeblade",
@@ -6862,7 +6862,7 @@
             "pdfPageEnd": 65
           },
           "corpusSha256": "9f7fdc9585014ad3e59cbe74597f1a99d72092ec34a5e6b8960e48196748a256",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/table-shield",
@@ -6922,7 +6922,7 @@
             "pdfPageEnd": 66
           },
           "corpusSha256": "0d0ed9fd3e65754efcd0ede698ed613e172a50211b6a36b2571dcc81fcb4321f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/tinkers-hammer",
@@ -6937,7 +6937,7 @@
             "pdfPageEnd": 68
           },
           "corpusSha256": "962829d0fad2d225380b0334e0a94c7e7388fc73a1d9caef13f12e0d9e2b443f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/tower-shield",
@@ -6982,7 +6982,7 @@
             "pdfPageEnd": 56
           },
           "corpusSha256": "0fdf8c5c2501d47e5a9fb600d74002c2a2e06604a5d86b9d62accb75e2fc0486",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/urok-broadsword",
@@ -7012,7 +7012,7 @@
             "pdfPageEnd": 69
           },
           "corpusSha256": "d8a58d9835abb86e71ade44aa0b7bc5c404b849b83673419a584b0b1c2237b17",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/vorpal-shard",
@@ -7027,7 +7027,7 @@
             "pdfPageEnd": 68
           },
           "corpusSha256": "0bb1fc536705bf6d0a75a85cff7aa3075754a72af6c528b012ad72c11e4b8ee0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/walking-staff",
@@ -7102,7 +7102,7 @@
             "pdfPageEnd": 68
           },
           "corpusSha256": "21b2e0c87c05799b49d42a020106080a830962d0a7b2c152c62ffd5cca016af1",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/war-pick",
@@ -7117,7 +7117,7 @@
             "pdfPageEnd": 58
           },
           "corpusSha256": "124fbef93878ba2f683fcadcda7dce4dce06b5d18735a905270e05a2613e288a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/war-scythe",
@@ -7177,7 +7177,7 @@
             "pdfPageEnd": 56
           },
           "corpusSha256": "090df2af7299a8fe3151fadbe87fc868ae75a8246293f173e493a4bc88f57f08",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/whisk-wand",
@@ -7207,7 +7207,7 @@
             "pdfPageEnd": 201
           },
           "corpusSha256": "2c69bed93a350a90b2f7093278943eb1bbaec7d3e5cc36274a1aebec18072a80",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "weapons/yutari-bloodbow",
@@ -8389,7 +8389,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "bff3ab3feafe93e25a83e8badb63ae87179fdf049c20d5b14ce8ca6686988e4e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/alistairs-torch",
@@ -8404,7 +8404,7 @@
             "pdfPageEnd": 75
           },
           "corpusSha256": "647f41cea450b4457a5faa7594bba8f958c8890f6328033f54c4f3972ac88a99",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/arcane-cloak",
@@ -8419,7 +8419,7 @@
             "pdfPageEnd": 75
           },
           "corpusSha256": "c69a3f7366fa255238d381c78f85eaf4a2ba765c01575662d8d2e2f5c36ac3a2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/arcane-prism",
@@ -8434,7 +8434,7 @@
             "pdfPageEnd": 75
           },
           "corpusSha256": "b2fefbee0e849403c608a781aa986be50b0261a495e4ab039d4a070820cd2a3e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/attune-relic",
@@ -8449,7 +8449,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "af92174e34aee4f3697ebce87b9248156c912af97735cddff6f50d4473efbd4b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/augurs-relic",
@@ -8479,7 +8479,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "7b6bd034110ece2e634137cbdb0aa51b0a8202cd1c70c1611eb4cf8d6ba1cfa6",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/ball-bearings",
@@ -8494,7 +8494,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "756241b15f76905cce021b5153e4a75b8d1d7a16a20f43c39bc0ee6e4c4c6702",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/belt-of-unity",
@@ -8509,7 +8509,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "5d279b27cbaf3c1e08b4910a8428f6b57fab2eca347d1f7ff97dc834872c202a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/blackwing-quill",
@@ -8524,7 +8524,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "e044b7e1bf4c5bc5334e292bd45d202ebe5efd671968de11f871264acb17fd94",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/bloodstone",
@@ -8539,7 +8539,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "d4b850664a5e0d1adccd5a89f81bfbb3af698eeda371be150d7210a1cbcaffd1",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/bolster-relic",
@@ -8554,7 +8554,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "41f4c3d2c01c9146522a58882f2a2dc07be6724ab775aeb1459901b7220414af",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/boots-of-supple-mystique",
@@ -8569,7 +8569,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "d1c61520fafa3f9ec82bbdc427b50711687627a74321724bf83518ab1bbc307c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/box-of-dragon-dust",
@@ -8584,7 +8584,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "7f58b61b9d190be9fdce9dff19b536f75a8ed13e74360098ec42dd76b0ab1251",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/box-of-many-goods",
@@ -8599,7 +8599,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "9eb85e16152260e705356ea42422bf6acdfdb33802cc1263ca39a2de61c0860d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/calming-pendant",
@@ -8614,7 +8614,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "9d52447d12ea85f8acf6d9aae51e079fec2bd41808592f92d18f5c2d5183245d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/caltrops",
@@ -8629,7 +8629,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "e389a648bbecf23b272e1e002e00c526fcebb8399c57dba1bfac474e0dee69bf",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/charging-quiver",
@@ -8644,7 +8644,7 @@
             "pdfPageEnd": 75
           },
           "corpusSha256": "8e74240d7259dd73db637c6d5ca1867bc6d418d0b442a40b4514e06f54eb3c0a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/charm-relic",
@@ -8659,7 +8659,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "1ccaa81c407fe95c635395da9430af706bb98b500a43f9347e22df74bce78c0d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/cheaters-coin",
@@ -8689,7 +8689,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "ce903e0f503d9e57430f9328992ce76582eef085585f6b4b067e758e34a33dd7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/collapsible-pole",
@@ -8704,7 +8704,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "28de4ba0ade2fdd79a1ccc63cc9308c7006525902297a38d724c5725931be15e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/collar-of-ascendancy",
@@ -8749,7 +8749,7 @@
             "pdfPageEnd": 75
           },
           "corpusSha256": "263f1378a5879329483429e5eb28bbd8c130b41500e3f4a22f59c4835b8bd35d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/control-relic",
@@ -8764,7 +8764,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "b09902358124e3560d62c734c67f33a79b1d0bb2f9e69ab6e5be390afa80f0f9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/corrector-sprite",
@@ -8779,7 +8779,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "39ec73a2987cca95a2d622b22a69e2c9f83786dd57cd80f16508a7a9c7b39ccb",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/crucible-frames",
@@ -8824,7 +8824,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "7dc28f468dd96864aec0aadc0b519d818708accd2158de6b3fdb97da877cbf7b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/eclipse-coin",
@@ -8854,7 +8854,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "3987751938c658709f6c750317a180073896e5a3b7c0eb224bc020891cdd9e5c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/elven-spyglass",
@@ -8869,7 +8869,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "4907f97e79f44df396132dc25045efd4563634c9bdf3e1752f63ebe6a7d07e94",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/empty-chest",
@@ -8884,7 +8884,7 @@
             "pdfPageEnd": 75
           },
           "corpusSha256": "d9ce6cc45c7738a6547ac44fe522ff896e0ea2b81d4429452c2a58d2eec1fb6b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/enchanters-loupe",
@@ -8914,7 +8914,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "98ee247796b6bd88614f52c465801a49b91fc2447e4f6d17a92f0e09c71f5ca4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/eschers-mirrorball",
@@ -8944,7 +8944,7 @@
             "pdfPageEnd": 75
           },
           "corpusSha256": "6d21a9c88e8e4f03011f368ccb7acd147041f8ee5284ac4d0204564967c40d4e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/flickerfly-pendant",
@@ -8959,7 +8959,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "73e0a450b8b21a76acb936141b88a65fb68ad0286870fe0bc7f67890801487aa",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/force-disc",
@@ -9019,7 +9019,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "956da78b6d81347c80e5ba91a0e2d96ee4719fa305415f7b29c0a1e43c260664",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/gem-of-alacrity",
@@ -9034,7 +9034,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "a6ea8951d773bb66b45f521096da41093140c15a7e3b39ef33b163dfdf139a3b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/gem-of-audacity",
@@ -9049,7 +9049,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "29a13c78c41aa2e264bae5b1876d531fb3e8d3d84ac5f01c728aff04950312ee",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/gem-of-insight",
@@ -9064,7 +9064,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "8d43e79f06e8f8dabb031864ec59ed3480cc94cda0ed83d0514e251d34a98d58",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/gem-of-might",
@@ -9079,7 +9079,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "8a54a54f37fc6e72188a4b007ba1ae47751d5bddad7e8613e39632d70d4e7bba",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/gem-of-precision",
@@ -9094,7 +9094,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "a9e7d9af6edfe23b0956fbfbd211fa9af43103ea330bd42c93b39810410fa91f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/gem-of-sagacity",
@@ -9109,7 +9109,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "0a2dbf2f4eb8c9ee9fea1c3f31f069493f6286518fa12b1cbd8181a6f6662035",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/ghoulskin-gloves",
@@ -9139,7 +9139,7 @@
             "pdfPageEnd": 75
           },
           "corpusSha256": "6fac6a9f78a40185a0e35ba74ffd0d52d8dd9d5a2fb4d9df3a37bff007e55429",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/glider",
@@ -9154,7 +9154,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "f49e31cc703442ed6e79a9a7fad1ff44545a55add209a2ec4d98161b2b87ce7c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/gloves-of-alacrity",
@@ -9184,7 +9184,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "dabf1823c889891088d22602a554d03e1986bd641305e0ea78d0e0c1ec5afc4b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/grapnel",
@@ -9199,7 +9199,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "7f44ccb44660e8e5d64350c21ee9f1c504c0f4aa6248b4e4f92cbd099d02e270",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/gravewardens-bell",
@@ -9229,7 +9229,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "c3431a8a65d5bf5aba70632a072c394b43f1e56ddf254871087c560f384da311",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/heros-helm",
@@ -9259,7 +9259,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "3a6ff3bdcaeb6435f1e1d51a220146e456c46f876d157b8a7cc7780ee5804bfb",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/homing-compasses",
@@ -9274,7 +9274,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "d3ef93c8e781d2e4788c77317f4d2ccf887421e5594ae9b1a657bc5814c0ff33",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/honing-relic",
@@ -9289,7 +9289,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "807234e0afe50eff4f7595bf0261f6269b2e3613527f4f85bad3a8605d75cda5",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/hopekeeper-locket",
@@ -9304,7 +9304,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "0ae7a75c2b97ee4b4b5e25b5c5b2a4ef2ab7c0e881794c5bb625aa8af7fa2002",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/infinite-bag",
@@ -9319,7 +9319,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "4ac5d034e9f35b74c6a260f80ab59f04974fc2788c047ab959f2d72138b986ba",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/insomniacs-periapt",
@@ -9409,7 +9409,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "e6201b110033c45e31ec5f5dab37e8bd50fba4019d7114aa9d3a8bca30b3f424",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/loaded-dice",
@@ -9424,7 +9424,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "1fc6645867486f2508ee9a46196668ccdca69ed2c26e136a5ad079cb55c72c50",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/lorekeeper",
@@ -9439,7 +9439,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "393de348389999a33abc03e80262e6c2f6b040b273f308ea3d5768d3a0bf6241",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/manacles",
@@ -9454,7 +9454,7 @@
             "pdfPageEnd": 75
           },
           "corpusSha256": "7c5a9dfebc26c5085496110db176b25cb83eaafe18c4d03e64620da55b4e1460",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/mandragorian-torch",
@@ -9469,7 +9469,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "ae2e2974672e6f5bc1df8fca5d881f264fecbc2b6891ed4d2d539e75c5281bff",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/map-of-revelation",
@@ -9499,7 +9499,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "d5be07fde6a7d0451f0c03ee55ff164d5024327523a55b0dff26c363df408c54",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/minor-stamina-potion-recipe",
@@ -9514,7 +9514,7 @@
             "pdfPageEnd": 75
           },
           "corpusSha256": "6e428495f04a00852d167c70802696bfd0c3b87e39146cf776af8c5c18182218",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/molepaw-mittens",
@@ -9544,7 +9544,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "46788a6f3a118373f74ac9af3eacfdbc8f33eab6ed584fb328a0877c13d85ab8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/namers-oracle",
@@ -9574,7 +9574,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "416e364fe1abdb5496c2bd8e661b52f80cef156c909d5a1d0dba00c4a67a591b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/paragons-chain",
@@ -9589,7 +9589,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "f9e08421257c1eeef597f967200f23a38ffeb61b08b36a4307dc1e34338c1c54",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/phobophages-circlet",
@@ -9619,7 +9619,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "ef28b766c5ebe65ea21ea074abd3c32822a8c3d9076d46d04d48a540f28db474",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/piercing-arrows",
@@ -9634,7 +9634,7 @@
             "pdfPageEnd": 75
           },
           "corpusSha256": "3129b794cb41bcfa402e4732e8e66531fea3ea3359030d48b1b3718000b614ec",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/piper-whistle",
@@ -9649,7 +9649,7 @@
             "pdfPageEnd": 75
           },
           "corpusSha256": "8a4a2e3069dcb2b11759ad366fd6afee52187c64fa3c3496c331c9cfbf16e719",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/portal-frames",
@@ -9679,7 +9679,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "1dbf28633607b4358c442d73a9cc7ca16f7a31ea35b8874903a870941918132d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/premium-bedroll",
@@ -9694,7 +9694,7 @@
             "pdfPageEnd": 75
           },
           "corpusSha256": "085b3f0b1e168ee316b4e4ef4b3f3d29c5a638f00699770ca38851bfd0ed40e3",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/quillshawl",
@@ -9739,7 +9739,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "6ff04f2cb64ed850538084b39df461abb77c87fd05940c7b15cf542ca907a30e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/ring-of-resistance",
@@ -9754,7 +9754,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "5e7aded7dbc6385640421e7a22f77bacd218c1a1764cb5b9edb86e4a890d6aa1",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/ring-of-silence",
@@ -9769,7 +9769,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "900a0c8d5f9bc1d6a29f50bc2f64d6b6ecb3fe772993f371798359d3c2a747d9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/ring-of-unbreakable-resolve",
@@ -9784,7 +9784,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "c3a7f01d26205479c000814688945afa8cd3f83a199d3e2852b787506a41008e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/rings-of-alliance",
@@ -9844,7 +9844,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "b72f8c242506d98581ffba23f23af93e0283e7e1bf84bc4676bb37a14e58074d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/shard-of-memory",
@@ -9859,7 +9859,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "a9394851bbd53ae1e56ed269d0748eb1bdf00d1b8ce7ff6af7789bc1187910b4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/silees-folding-knife",
@@ -9874,7 +9874,7 @@
             "pdfPageEnd": 77
           },
           "corpusSha256": "bdae2375f071883ad63348f07341d4b3d36f3028aaa49f9e21f80b452987170f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/skeleton-key",
@@ -9889,7 +9889,7 @@
             "pdfPageEnd": 75
           },
           "corpusSha256": "4fe12d76dd36bfae5e0b66f201b3a59080b9ada0dccf0e7ad9b9d8aabd8fcb85",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/sorcerers-hat",
@@ -9934,7 +9934,7 @@
             "pdfPageEnd": 75
           },
           "corpusSha256": "7195249213467d661c72947ce963a97c76390c24ebc3552d6d383b2b120bdd18",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/stride-relic",
@@ -9949,7 +9949,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "2406b178d4cb3d4265af66c93bbac9a6efd163290a29069e69b0337d99938180",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/suspended-rod",
@@ -9964,7 +9964,7 @@
             "pdfPageEnd": 75
           },
           "corpusSha256": "b86f1d2a9e2ce09eabb54e47090ced8bf4afc79549bcc994a3fa67d7b1411e81",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/temporal-sanctuary",
@@ -9994,7 +9994,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "defb2028ba6400139020e88deef9ff20c33d5fb86112fa7161dc58304b1df39b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/timekeepers-pendant",
@@ -10039,7 +10039,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "51becc2fb118e643fdde480518ab0f7cac8e860a32f1326cdbade0b4ad58c019",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/two-faced-aegis-brooch",
@@ -10069,7 +10069,7 @@
             "pdfPageEnd": 75
           },
           "corpusSha256": "a732effff8f1c4c3216609281f1e5beb48f96073755a5485fef6cdfb8e1abb25",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/vial-of-darksmoke-recipe",
@@ -10084,7 +10084,7 @@
             "pdfPageEnd": 76
           },
           "corpusSha256": "31c3319b37948ab004704e9fb70e7f273993dcfda322ad50e040593c9cff26b7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/warp-pendant",
@@ -10144,7 +10144,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "345ee062f9274e1b93f36d5821875ecd2d97a49aef0a66db1a834883ab8feb67",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/woven-net",
@@ -10159,7 +10159,7 @@
             "pdfPageEnd": 75
           },
           "corpusSha256": "6fdd4753f27c335c627bb8d3edddfabdb382ea4e2a0a9287c816ba572a23db9b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/zephyrs-jar",
@@ -10174,7 +10174,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "75ea04795024b410711488f7b9c11d5cbee07ddfc48aabddfc86fc46c3b43411",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         }
       ]
     },
@@ -10195,7 +10195,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "84129a42879c875416846f3c6d5c5c76ed729f1b50fd96fc7abefeac7bd45680",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/arcticite-shard",
@@ -10225,7 +10225,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "8438304eea326c6fc77cd672df16286629e100b6cb5e7991080e82074a08048a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/attune-potion",
@@ -10240,7 +10240,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "bd0492aba5fa9cdc86100fe9e3ecd5ff6688cbf571d05b1dac86fca8ef443a07",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/berserkers-brew",
@@ -10270,7 +10270,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "982e6d456e3b7b86b85496099bd2a48db0197c4d461c0eba0de719c502b46a78",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/blood-of-the-yorgi",
@@ -10285,7 +10285,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "b795c9e48704b8678455935fe1488c64f4020eb2180d9459df7dc913519254b8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/bolster-potion",
@@ -10300,7 +10300,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "a4305bb4d3c6f109a7514c69569b84e70457016438fe7621e609051d80e53edd",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/bonding-honey",
@@ -10315,7 +10315,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "d2df550152ff702419da7fc3751b14eceeb25ffdb50db0466caeecba724541ee",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/bridge-seed",
@@ -10330,7 +10330,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "60481f70ee26e1992b12ff58c9515ce5d4bf406483c4a29b4eda396bbf6541bd",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/bundle-of-spiderlegs",
@@ -10375,7 +10375,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "01a425d687a03ddd30582074d9a8d73bfeb6e9037c06f7dad5633d9281c084c8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/charm-potion",
@@ -10390,7 +10390,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "3bf0f7cb39edd8e733af75f3da60781d21d61f844884d61a98d3f1eebc32b6f9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/chimeric-saliva",
@@ -10420,7 +10420,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "bb02866fa5aee11e3a38d8adc115cf5c3fa17876bb3874dc86aad5fb27a23293",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/ciscan-fog-bottle",
@@ -10465,7 +10465,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "e60246af52ae41bd1253a4bc7c723c056eea9522e29a63f70662cc9f07ccf431",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/cupbearers-bezoar",
@@ -10495,7 +10495,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "41f06a87a81697b91e00f079271f5ccba961802ad7cb3b3825552a88546ff611",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/deathseers-powder",
@@ -10555,7 +10555,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "1633a3f92f8fced776b63c20795ea24c0c511ff97e04228cccdb16d4732de869",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/drakemantle",
@@ -10585,7 +10585,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "7b158f5e26ded8ed341dc6b9ddc413adf0b846414e53d042bc06039572669b29",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/emberite-shard",
@@ -10615,7 +10615,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "7031e210cd1578d72d2f526e9982fcb6b6aa682ce160c9ec27b62da505ada94e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/feast-of-xuria",
@@ -10630,7 +10630,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "8c840c3d805c9d4ed04fb618066bb50c387171b77c19c63c641577fd903fa18b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/featherbone",
@@ -10645,7 +10645,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "2e12d7c7c98a9520492a7a07afce9bfc6aee749df0a2794420bf5d420979ad2e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/featherstep-potion",
@@ -10720,7 +10720,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "550f55914efc1c32637ab66b957d63d9bb433fe65d69ecec6d2f8b13e0857ade",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/glowmoss-mushroom",
@@ -10810,7 +10810,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "e23cfad2d639094c5cb35df32b53be16f6dbe22cd744a59699bcb5520e202529",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/growing-potion",
@@ -10825,7 +10825,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "06b34172d442d0a209f0c45c162c808dedf33914ad6aba4ce7cac71fa0a4e35d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/health-potion",
@@ -10840,7 +10840,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "da8a70d9b1fbc2843f1c92d519cc9eb9d1d7134fa2e7561c59f57a6a486b5f7a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/homets-secret-potion",
@@ -10855,7 +10855,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "50e2474634bba4c3af9868d1226b65c97acd9b68425611192e1b209258f40cee",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/hopehold-flare",
@@ -10870,7 +10870,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "0fd43bb41d7d667689988103da7d0969bcedb16268e980b4db7c3ecfbdc3a0c4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/improved-arcane-shard",
@@ -10885,7 +10885,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "c41703c0ff84b2d2a08b91b53a9b03ca17aa2bd49aff68fec5cb3b995ff85eb3",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/improved-grindletooth-venom",
@@ -10900,7 +10900,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "0ca5f7b807758e46bb2f07161dd26c82b949d9026e9e52d69752ad13203603f7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/instant-camp",
@@ -10960,7 +10960,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "60391c0387a6e195d269f330a09dc41ee69f545e51626e94dc6a199f424c2ab7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/jumping-root",
@@ -10975,7 +10975,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "c99be534117b6ffb9b1ba1a38885f5773b33e386b3ebe571673a99c4ba1d5ae5",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/knowledge-stone",
@@ -10990,7 +10990,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "64bb12c8b07fab0e41ce4b172ab547d85d687835bcb574172796ed6b0a4af5fe",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/lionheart-tonic",
@@ -11050,7 +11050,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "74cd14d2004d2946f723e9a3bbc8a96ab4900d32c8047dd937f96416f0549546",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/major-attune-potion",
@@ -11065,7 +11065,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "66d60d1f437575cff346d7d3922ae550f9d47e3969f026578dce4a43ff44951e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/major-bolster-potion",
@@ -11080,7 +11080,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "8e69faba9942d36d489809be68aad70acafa669f55614bcc1dbea33b61fabd4c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/major-charm-potion",
@@ -11095,7 +11095,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "88d048053302b999fd4504e623c93cb075297eb0b2d7229be5a958435a6df3ce",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/major-control-potion",
@@ -11110,7 +11110,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "4adb6862f432d1d7573be3ce6aa758b9cb45497ffd7cd840c43ee3502bb112f3",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/major-enlighten-potion",
@@ -11125,7 +11125,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "47a8e7b00b7f501aec953116bb26280cd92f92bd9eee4653861fbfe31c129d48",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/major-health-potion",
@@ -11140,7 +11140,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "5ccbd2483ca2f43bf63493a20811c7c34f92019fcbd1f1bd8ceded2808f21042",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/major-stamina-potion",
@@ -11155,7 +11155,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "98bc36ce6c061cf0a5cadb96acf7c9bbef67215c4820e8f1c561a71bebe4fe4f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/major-stride-potion",
@@ -11170,7 +11170,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "e6f6a6cfc7bc70b31b9931660a9eaa6885efc1360372c6d3d81673e80f17f854",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/mask-of-the-echoed-self",
@@ -11230,7 +11230,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "cab21e8dedd7a28069c5ee96d23468bbc3776eaa0a1542eaaaba8539f593b637",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/minor-stamina-potion",
@@ -11245,7 +11245,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "c89b6cc4653a6872416fed1933946bdf3645d8ab4d31976b87c0c02b47ec4c98",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/mirror-of-marigold",
@@ -11260,7 +11260,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "876488d948c01b581da8f2d19d020dbc56beb6089904ba5775e324267b89994d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/mnemonic-potion",
@@ -11305,7 +11305,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "0ea0df11f12c30227e3d6f160077b58b1960f3fabb5588b1a5713309aaccfb6c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/mossmantle-potion",
@@ -11335,7 +11335,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "3111f1d84d50ab1359251b7e0514bc9af18269d086861a41c4bb93cc4c2dcb67",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/necroprancers-bell",
@@ -11395,7 +11395,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "440d907ce7d31013697fd489134f2e273d4c24f785fec75c1f913e421483bd28",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/packet-of-space-dust",
@@ -11455,7 +11455,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "a958575c2a98d164ea2258325e044639ac55b63320fa9ed99fb32014d405eef7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/potion-of-vigilance",
@@ -11530,7 +11530,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "91363056b2edb9d0c17eff0faffa1b25a0c3c625931c29fef556fd57bc681fe4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/replication-parchment",
@@ -11545,7 +11545,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "eada40e4de3e5bbcae63e563d1953a5d5937a276716e75e178fe4cd2b034171b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/salamander-salve",
@@ -11590,7 +11590,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "b2df898bfd1d26162c14e367a0efc3c4e3c18b0b85e2bbb9d8ba5f899bc78d45",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/slayers-salt",
@@ -11620,7 +11620,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "bf19cd7896d0e9e315e1f633767bfdc11c6fdd859f057dc9218b0d81b1a28192",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/snakeskin-spirit",
@@ -11650,7 +11650,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "ebfd20d5b5e767da5dbed3d553ca42db04ed71d6eb71b7714cd1df9e602d1baf",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/snapthorn-seed",
@@ -11725,7 +11725,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "70dda7aa22e9302499c1faace3e41248b72b9f81279218cab743125818225166",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/stardrop",
@@ -11740,7 +11740,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "981c77f183eaf8303d5becc28223ee093c6586e8962d4998050e0281dd9600ed",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/steelskin-salve",
@@ -11785,7 +11785,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "f189777dbe06018f12afd263098e6cd5f44a61aaf68a6f57810186d2c48a240a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/sun-tree-sap",
@@ -11800,7 +11800,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "61948e6ee9b35df274e5c9dbf5563049c5d98987d30f9d8773b173af72140554",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/sunlight-orb",
@@ -11830,7 +11830,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "d28fb5ac35a93455ac0de67423de1e0ed3179339d8ef637ae48bf8eb3205783b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/tears-of-the-undying-hero",
@@ -11860,7 +11860,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "0e54896f1fd1a7b279eac01a10aa56eacddf081e666787082fd9d60d8e7e7f8d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/varik-leaves",
@@ -11875,7 +11875,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "b99f7b29cb5c11db11c7adfa8d088e0a8e5338ca42e0da89a6711a3e285d4c25",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/verglasian-seed",
@@ -11905,7 +11905,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "bab9f8775f90169b6615da807e00a231a39b2d378b047bb482c29042db33e75c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/vial-of-featherfall",
@@ -11935,7 +11935,7 @@
             "pdfPageEnd": 80
           },
           "corpusSha256": "ef606f53df438ca83708e5ce4815f72108289f09059266e59a31da6fbf3be0ae",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/warding-candle",
@@ -11965,7 +11965,7 @@
             "pdfPageEnd": 81
           },
           "corpusSha256": "a73baf56e1efb5b9885a2b0a514ac970030bb535e658a956d488ed6b30da5a38",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/yakamel-milk",

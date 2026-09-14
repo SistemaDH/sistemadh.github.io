@@ -1,0 +1,145 @@
+{
+  "versao": 1,
+  "registros": [
+    [
+      "items/ball-bearings",
+      "loot-srd2-ball-bearings",
+      3,
+      "This pouch contains perfectly smooth metal spheres.",
+      "756241b15f76905cce021b5153e4a75b8d1d7a16a20f43c39bc0ee6e4c4c6702"
+    ],
+    [
+      "items/blackwing-quill",
+      "loot-srd2-blackwing-quill",
+      9,
+      "This writing quill never runs out of ink or needs to be sharpened.",
+      "e044b7e1bf4c5bc5334e292bd45d202ebe5efd671968de11f871264acb17fd94"
+    ],
+    [
+      "items/boots-of-supple-mystique",
+      "loot-srd2-boots-of-supple-mystique",
+      18,
+      "While wearing these boots, you don’t leave tracks or footprints.",
+      "d1c61520fafa3f9ec82bbdc427b50711687627a74321724bf83518ab1bbc307c"
+    ],
+    [
+      "items/box-of-dragon-dust",
+      "loot-srd2-box-of-dragon-dust",
+      4,
+      "This snuffbox is filled with combustible powder.",
+      "7f58b61b9d190be9fdce9dff19b536f75a8ed13e74360098ec42dd76b0ab1251"
+    ],
+    [
+      "items/caltrops",
+      "loot-srd2-caltrops",
+      1,
+      "You can spread these caltrops in a Very Close area around you. A creature hastening through that area must mark a Stress.",
+      "e389a648bbecf23b272e1e002e00c526fcebb8399c57dba1bfac474e0dee69bf"
+    ],
+    [
+      "items/collapsible-pole",
+      "loot-srd2-collapsible-pole",
+      8,
+      "You can break down this 18-foot pole into six interlinked 3-foot segments.",
+      "28de4ba0ade2fdd79a1ccc63cc9308c7006525902297a38d724c5725931be15e"
+    ],
+    [
+      "items/elven-spyglass",
+      "loot-srd2-elven-spyglass",
+      6,
+      "You can use this spyglass to magnify your vision a hundredfold.",
+      "4907f97e79f44df396132dc25045efd4563634c9bdf3e1752f63ebe6a7d07e94"
+    ],
+    [
+      "items/gourmet-granules",
+      "loot-srd2-gourmet-granules",
+      7,
+      "This savory powder makes any food it’s sprinkled on delicious and healthy, no matter how bland or rotten it is.",
+      "dabf1823c889891088d22602a554d03e1986bd641305e0ea78d0e0c1ec5afc4b"
+    ],
+    [
+      "items/grapnel",
+      "loot-srd2-grapnel",
+      2,
+      "You gain advantage on action rolls to climb sheer surfaces.",
+      "7f44ccb44660e8e5d64350c21ee9f1c504c0f4aa6248b4e4f92cbd099d02e270"
+    ],
+    [
+      "items/hollowbark-horn",
+      "loot-srd2-hollowbark-horn",
+      13,
+      "You can blow this horn to summon a small woodland creature to perform a simple task.",
+      "3a6ff3bdcaeb6435f1e1d51a220146e456c46f876d157b8a7cc7780ee5804bfb"
+    ],
+    [
+      "items/loaded-dice",
+      "loot-srd2-loaded-dice",
+      12,
+      "You can choose what result this set of weighted dice rolls with a successful Finesse Roll (14). If you roll with Fear, anyone watching knows the dice are loaded.",
+      "1fc6645867486f2508ee9a46196668ccdca69ed2c26e136a5ad079cb55c72c50"
+    ],
+    [
+      "items/mandragorian-torch",
+      "loot-srd2-mandragorian-torch",
+      17,
+      "This torch gives off light only the bearer can see.",
+      "ae2e2974672e6f5bc1df8fca5d881f264fecbc2b6891ed4d2d539e75c5281bff"
+    ],
+    [
+      "items/nighthawkers-ring",
+      "loot-srd2-nighthawkers-ring",
+      5,
+      "Spend a Hope to activate the gemstone in this ring until the end of the scene. While active, the gemstone changes color to indicate the wearer’s proximity to hidden treasure: warm colors for near, cool colors for far.",
+      "416e364fe1abdb5496c2bd8e661b52f80cef156c909d5a1d0dba00c4a67a591b"
+    ],
+    [
+      "items/returning-ring",
+      "loot-srd2-returning-ring",
+      20,
+      "When you throw your primary weapon while wearing this ring, the weapon appears in your hand immediately after the attack.",
+      "6ff04f2cb64ed850538084b39df461abb77c87fd05940c7b15cf542ca907a30e"
+    ],
+    [
+      "items/self-tying-rope",
+      "loot-srd2-self-tying-rope",
+      14,
+      "You can command this rope to tie or untie itself.",
+      "b72f8c242506d98581ffba23f23af93e0283e7e1bf84bc4676bb37a14e58074d"
+    ],
+    [
+      "items/silees-folding-knife",
+      "loot-srd2-silees-folding-knife",
+      10,
+      "This 3-inch blade has an edge that easily cuts through anything except the handle it’s stored in.",
+      "bdae2375f071883ad63348f07341d4b3d36f3028aaa49f9e21f80b452987170f"
+    ],
+    [
+      "items/thiefs-compass",
+      "loot-srd2-thiefs-compass",
+      15,
+      "This compass points the way toward the nearest exit while indoors and the closest entrance while outdoors.",
+      "defb2028ba6400139020e88deef9ff20c33d5fb86112fa7161dc58304b1df39b"
+    ],
+    [
+      "items/travelers-bell",
+      "loot-srd2-travelers-bell",
+      16,
+      "Once per long rest, you can ring this bell to magically open the shortest safe path through rough terrain for 1 hour.",
+      "51becc2fb118e643fdde480518ab0f7cac8e860a32f1326cdbade0b4ad58c019"
+    ],
+    [
+      "items/windup-toy",
+      "loot-srd2-windup-toy",
+      11,
+      "This small mechanical device is shaped like a strixwolf pup and can be programmed to perform simple tricks.",
+      "345ee062f9274e1b93f36d5821875ecd2d97a49aef0a66db1a834883ab8feb67"
+    ],
+    [
+      "items/zephyrs-jar",
+      "loot-srd2-zephyrs-jar",
+      19,
+      "You can open this empty jar during inclement weather to capture the storm and leave behind clear skies. The storm remains inside until unleashed by reopening the jar.",
+      "75ea04795024b410711488f7b9c11d5cbee07ddfc48aabddfc86fc46c3b43411"
+    ]
+  ]
+}

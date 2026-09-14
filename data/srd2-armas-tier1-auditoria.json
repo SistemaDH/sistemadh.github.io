@@ -1,0 +1,96 @@
+{
+  "versao": 1,
+  "fonte": "Daggerheart SRD 2.0, pp. 56–57 e 66",
+  "registros": [
+    [
+      "weapons/arcane-rifle",
+      "primaria-t1-srd2-arcane-rifle",
+      "d10+3 mag"
+    ],
+    [
+      "weapons/brass-knuckles",
+      "primaria-t1-srd2-brass-knuckles",
+      "d8+1 phy"
+    ],
+    [
+      "weapons/brightsword",
+      "primaria-t1-srd2-brightsword",
+      "d10+3 mag"
+    ],
+    [
+      "weapons/casting-dagger",
+      "primaria-t1-srd2-casting-dagger",
+      "d6 mag"
+    ],
+    [
+      "weapons/enchanted-chakram",
+      "primaria-t1-srd2-enchanted-chakram",
+      "d6+1 mag"
+    ],
+    [
+      "weapons/fighting-cloak",
+      "secundaria-t1-srd2-fighting-cloak",
+      "d4 phy"
+    ],
+    [
+      "weapons/focus-runes",
+      "secundaria-t1-srd2-focus-runes",
+      "d6 mag"
+    ],
+    [
+      "weapons/hatchet",
+      "secundaria-t1-srd2-hatchet",
+      "d8 phy"
+    ],
+    [
+      "weapons/katana",
+      "primaria-t1-srd2-katana",
+      "d10+3 phy"
+    ],
+    [
+      "weapons/offhand-brass-knuckles",
+      "secundaria-t1-srd2-offhand-brass-knuckles",
+      "d8 phy"
+    ],
+    [
+      "weapons/rope-dart",
+      "primaria-t1-srd2-rope-dart",
+      "d6+1 phy"
+    ],
+    [
+      "weapons/rune-shield",
+      "secundaria-t1-srd2-rune-shield",
+      "d4 mag"
+    ],
+    [
+      "weapons/runelock-pistol",
+      "primaria-t1-srd2-runelock-pistol",
+      "d6+3 mag"
+    ],
+    [
+      "weapons/scimitar",
+      "primaria-t1-srd2-scimitar",
+      "d8+1 phy"
+    ],
+    [
+      "weapons/shadowblade",
+      "primaria-t1-srd2-shadowblade",
+      "d8 phy/mag"
+    ],
+    [
+      "weapons/throwing-knives",
+      "secundaria-t1-srd2-throwing-knives",
+      "d8 phy"
+    ],
+    [
+      "weapons/twisted-dagger",
+      "primaria-t1-srd2-twisted-dagger",
+      "d8 phy"
+    ],
+    [
+      "weapons/whipsword",
+      "primaria-t1-srd2-whipsword",
+      "d8 phy"
+    ]
+  ]
+}

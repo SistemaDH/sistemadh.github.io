@@ -1,0 +1,426 @@
+{
+  "versao": 1,
+  "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64",
+  "registros": [
+    [
+      "items/premium-bedroll",
+      "loot-01",
+      1,
+      "During downtime, you automatically clear a Stress.",
+      "085b3f0b1e168ee316b4e4ef4b3f3d29c5a638f00699770ca38851bfd0ed40e3"
+    ],
+    [
+      "items/piper-whistle",
+      "loot-02",
+      2,
+      "This handcrafted whistle has a distinctive sound. When you blow this whistle, its piercing tone can be heard within a 1-mile radius.",
+      "8a4a2e3069dcb2b11759ad366fd6afee52187c64fa3c3496c331c9cfbf16e719"
+    ],
+    [
+      "items/charging-quiver",
+      "loot-03",
+      3,
+      "When you succeed on an attack with an arrow stored in this quiver, gain a bonus to the damage roll equal to your current tier.",
+      "8e74240d7259dd73db637c6d5ca1867bc6d418d0b442a40b4514e06f54eb3c0a"
+    ],
+    [
+      "items/alistairs-torch",
+      "loot-04",
+      4,
+      "You can light this magic torch at will. The flame’s light fills a much larger space than it should, enough to illuminate a cave bright as day.",
+      "647f41cea450b4457a5faa7594bba8f958c8890f6328033f54c4f3972ac88a99"
+    ],
+    [
+      "items/speaking-orbs",
+      "loot-05",
+      5,
+      "This pair of orbs allows any creatures holding them to communicate with each other across any distance.",
+      "7195249213467d661c72947ce963a97c76390c24ebc3552d6d383b2b120bdd18"
+    ],
+    [
+      "items/manacles",
+      "loot-06",
+      6,
+      "This pair of locking cuffs comes with a key.",
+      "7c5a9dfebc26c5085496110db176b25cb83eaafe18c4d03e64620da55b4e1460"
+    ],
+    [
+      "items/arcane-cloak",
+      "loot-07",
+      7,
+      "A creature with a Spellcast trait wearing this cloak can adjust its color, texture, and size at will.",
+      "c69a3f7366fa255238d381c78f85eaf4a2ba765c01575662d8d2e2f5c36ac3a2"
+    ],
+    [
+      "items/woven-net",
+      "loot-08",
+      8,
+      "You can make a Finesse Roll using this net to trap a small creature. A trapped target can break free with a successful Attack Roll (16).",
+      "6fdd4753f27c335c627bb8d3edddfabdb382ea4e2a0a9287c816ba572a23db9b"
+    ],
+    [
+      "items/fire-jar",
+      "loot-09",
+      9,
+      "You can pour out the strange liquid contents of this jar to instantly produce fire. The contents regenerate when you take a long rest.",
+      "6d21a9c88e8e4f03011f368ccb7acd147041f8ee5284ac4d0204564967c40d4e"
+    ],
+    [
+      "items/suspended-rod",
+      "loot-10",
+      10,
+      "This flat rod is inscribed with runes. When you activate the rod, it is immediately suspended in place. Until the rod is deactivated, it can’t move, doesn’t abide by the rules of gravity, and remains in place.",
+      "b86f1d2a9e2ce09eabb54e47090ced8bf4afc79549bcc994a3fa67d7b1411e81"
+    ],
+    [
+      "items/glamour-stone",
+      "loot-11",
+      11,
+      "Activate this pebble-sized stone to memorize the appearance of someone you can see. Spend a Hope to magically recreate this guise on yourself as an illusion.",
+      "6fac6a9f78a40185a0e35ba74ffd0d52d8dd9d5a2fb4d9df3a37bff007e55429"
+    ],
+    [
+      "items/empty-chest",
+      "loot-12",
+      12,
+      "This magical chest appears empty. When you speak a specific trigger word or action and open the chest, you can see the items stored within it.",
+      "d9ce6cc45c7738a6547ac44fe522ff896e0ea2b81d4429452c2a58d2eec1fb6b"
+    ],
+    [
+      "items/companion-case",
+      "loot-13",
+      13,
+      "This case can fit a small animal companion. While the companion is inside, the animal and case are immune to all damage and harmful effects.",
+      "263f1378a5879329483429e5eb28bbd8c130b41500e3f4a22f59c4835b8bd35d"
+    ],
+    [
+      "items/piercing-arrows",
+      "loot-14",
+      14,
+      "Three times per rest when you succeed on an attack with one of these arrows, you can add your Proficiency to the damage roll.",
+      "3129b794cb41bcfa402e4732e8e66531fea3ea3359030d48b1b3718000b614ec"
+    ],
+    [
+      "items/valorstone",
+      "loot-15",
+      15,
+      "You can attach this stone to armor that doesn’t already have a feature. The armor gains the following feature. Resilient: Before you mark your last Armor Slot, roll a d6. On a result of 6, reduce the severity by one threshold without marking an Armor Slot.",
+      "a732effff8f1c4c3216609281f1e5beb48f96073755a5485fef6cdfb8e1abb25"
+    ],
+    [
+      "items/skeleton-key",
+      "loot-16",
+      16,
+      "When you use this key to open a locked door, you gain advantage on the Finesse Roll.",
+      "4fe12d76dd36bfae5e0b66f201b3a59080b9ada0dccf0e7ad9b9d8aabd8fcb85"
+    ],
+    [
+      "items/arcane-prism",
+      "loot-17",
+      17,
+      "Position this prism in a location of your choosing and activate it. All allies within Close range of it gain a +1 bonus to their Spellcast Rolls. While activated, the prism can’t be moved. Once the prism is deactivated, it can’t be activated again until your next long rest.",
+      "b2fefbee0e849403c608a781aa986be50b0261a495e4ab039d4a070820cd2a3e"
+    ],
+    [
+      "items/minor-stamina-potion-recipe",
+      "loot-18",
+      18,
+      "As a downtime move, you can use the bone of a creature to craft a Minor Stamina Potion.",
+      "6e428495f04a00852d167c70802696bfd0c3b87e39146cf776af8c5c18182218"
+    ],
+    [
+      "items/minor-health-potion-recipe",
+      "loot-19",
+      19,
+      "As a downtime move, you can use a vial of blood to craft a Minor Health Potion.",
+      "d5be07fde6a7d0451f0c03ee55ff164d5024327523a55b0dff26c363df408c54"
+    ],
+    [
+      "items/homing-compasses",
+      "loot-20",
+      20,
+      "These two compasses point toward each other no matter how far apart they are.",
+      "d3ef93c8e781d2e4788c77317f4d2ccf887421e5594ae9b1a657bc5814c0ff33"
+    ],
+    [
+      "items/corrector-sprite",
+      "loot-21",
+      21,
+      "This tiny sprite sits in the curve of your ear canal and whispers helpful advice during combat. Once per short rest, you can gain advantage on an attack roll.",
+      "39ec73a2987cca95a2d622b22a69e2c9f83786dd57cd80f16508a7a9c7b39ccb"
+    ],
+    [
+      "items/gecko-gloves",
+      "loot-22",
+      22,
+      "You can climb up vertical surfaces and across ceilings.",
+      "956da78b6d81347c80e5ba91a0e2d96ee4719fa305415f7b29c0a1e43c260664"
+    ],
+    [
+      "items/lorekeeper",
+      "loot-23",
+      23,
+      "You can store the name and details of up to three hostile creatures inside this book. You gain a +1 bonus to action rolls against those creatures.",
+      "393de348389999a33abc03e80262e6c2f6b040b273f308ea3d5768d3a0bf6241"
+    ],
+    [
+      "items/vial-of-darksmoke-recipe",
+      "loot-24",
+      24,
+      "As a downtime move, you can mark a Stress to craft a Vial of Darksmoke.",
+      "31c3319b37948ab004704e9fb70e7f273993dcfda322ad50e040593c9cff26b7"
+    ],
+    [
+      "items/bloodstone",
+      "loot-25",
+      25,
+      "You can attach this stone to a weapon that doesn’t already have a feature. The weapon gains the following feature. Brutal: When you roll the maximum value on a damage die, roll an additional damage die.",
+      "d4b850664a5e0d1adccd5a89f81bfbb3af698eeda371be150d7210a1cbcaffd1"
+    ],
+    [
+      "items/greatstone",
+      "loot-26",
+      26,
+      "You can attach this stone to a weapon that doesn’t already have a feature. The weapon gains the following feature. Powerful: On a successful attack, roll an additional damage die and discard the lowest result.",
+      "c3431a8a65d5bf5aba70632a072c394b43f1e56ddf254871087c560f384da311"
+    ],
+    [
+      "items/glider",
+      "loot-27",
+      27,
+      "While falling, you can mark a Stress to deploy this small parachute and glide safely to the ground.",
+      "f49e31cc703442ed6e79a9a7fad1ff44545a55add209a2ec4d98161b2b87ce7c"
+    ],
+    [
+      "items/ring-of-silence",
+      "loot-28",
+      28,
+      "Spend a Hope to activate this ring. Your footsteps are silent until your next rest.",
+      "900a0c8d5f9bc1d6a29f50bc2f64d6b6ecb3fe772993f371798359d3c2a747d9"
+    ],
+    [
+      "items/calming-pendant",
+      "loot-29",
+      29,
+      "When you would mark your last Stress, roll a d6. On a result of 5 or higher, don’t mark it.",
+      "9d52447d12ea85f8acf6d9aae51e079fec2bd41808592f92d18f5c2d5183245d"
+    ],
+    [
+      "items/dual-flask",
+      "loot-30",
+      30,
+      "This flask can hold two different liquids. You can swap between them by flipping a small switch on the flask’s side.",
+      "7dc28f468dd96864aec0aadc0b519d818708accd2158de6b3fdb97da877cbf7b"
+    ],
+    [
+      "items/bag-of-ficklesand",
+      "loot-31",
+      31,
+      "You can convince this small bag of sand to be much heavier or lighter with a successful Presence Roll (10). Additionally, on a successful Finesse Roll (10), you can blow a bit of sand into a target’s face to make them temporarily Vulnerable.",
+      "7b6bd034110ece2e634137cbdb0aa51b0a8202cd1c70c1611eb4cf8d6ba1cfa6"
+    ],
+    [
+      "items/ring-of-resistance",
+      "loot-32",
+      32,
+      "Once per long rest, you can activate this ring after a successful attack against you to halve the damage.",
+      "5e7aded7dbc6385640421e7a22f77bacd218c1a1764cb5b9edb86e4a890d6aa1"
+    ],
+    [
+      "items/phoenix-feather",
+      "loot-33",
+      33,
+      "If you have at least one Phoenix Feather on you when you fall unconscious, you gain a +1 bonus to the roll you make to determine whether you gain a scar.",
+      "ef28b766c5ebe65ea21ea074abd3c32822a8c3d9076d46d04d48a540f28db474"
+    ],
+    [
+      "items/box-of-many-goods",
+      "loot-34",
+      34,
+      "Once per long rest, you can open this small box and roll a d12. On a result of 1–6, it’s empty. On a result of 7–10, it contains one random common consumable. On a result of 11–12, it contains two random common consumables.",
+      "9eb85e16152260e705356ea42422bf6acdfdb33802cc1263ca39a2de61c0860d"
+    ],
+    [
+      "items/airblade-charm",
+      "loot-35",
+      35,
+      "You can attach this charm to a weapon with a Melee range. Three times per rest, you can activate the charm and attack a target within Close range.",
+      "bff3ab3feafe93e25a83e8badb63ae87179fdf049c20d5b14ce8ca6686988e4e"
+    ],
+    [
+      "items/portal-seed",
+      "loot-36",
+      36,
+      "You can plant this seed in the ground to grow a portal in that spot. The portal is ready to use in 24 hours. You can use this portal to travel to any other location where you planted a portal seed. A portal can be destroyed by dealing any amount of magic damage to it.",
+      "1dbf28633607b4358c442d73a9cc7ca16f7a31ea35b8874903a870941918132d"
+    ],
+    [
+      "items/paragons-chain",
+      "loot-37",
+      37,
+      "As a downtime move, you can meditate on an ideal or principle you hold dear and focus your will into this chain. Once per long rest, you can spend a Hope to roll a d20 as your Hope Die for rolls that directly align with that principle.",
+      "f9e08421257c1eeef597f967200f23a38ffeb61b08b36a4307dc1e34338c1c54"
+    ],
+    [
+      "items/elusive-amulet",
+      "loot-38",
+      38,
+      "Once per long rest, you can activate this amulet to become Hidden until you move. While Hidden in this way, you remain unseen even if an adversary moves to where they would normally see you.",
+      "3987751938c658709f6c750317a180073896e5a3b7c0eb224bc020891cdd9e5c"
+    ],
+    [
+      "items/hopekeeper-locket",
+      "loot-39",
+      39,
+      "During a long rest, if you have 6 Hope, you can spend a Hope to imbue this locket with your bountiful resolve. When you have 0 Hope, you can use the locket to immediately gain a Hope. The locket must be re-imbued before it can be used this way again.",
+      "0ae7a75c2b97ee4b4b5e25b5c5b2a4ef2ab7c0e881794c5bb625aa8af7fa2002"
+    ],
+    [
+      "items/infinite-bag",
+      "loot-40",
+      40,
+      "When you store items in this bag, they are kept in a pocket dimension that never runs out of space. You can retrieve an item at any time.",
+      "4ac5d034e9f35b74c6a260f80ab59f04974fc2788c047ab959f2d72138b986ba"
+    ],
+    [
+      "items/stride-relic",
+      "loot-41",
+      41,
+      "You gain a +1 bonus to your Agility. You can only carry one relic.",
+      "2406b178d4cb3d4265af66c93bbac9a6efd163290a29069e69b0337d99938180"
+    ],
+    [
+      "items/bolster-relic",
+      "loot-42",
+      42,
+      "You gain a +1 bonus to your Strength. You can only carry one relic.",
+      "41f4c3d2c01c9146522a58882f2a2dc07be6724ab775aeb1459901b7220414af"
+    ],
+    [
+      "items/control-relic",
+      "loot-43",
+      43,
+      "You gain a +1 bonus to your Finesse. You can only carry one relic.",
+      "b09902358124e3560d62c734c67f33a79b1d0bb2f9e69ab6e5be390afa80f0f9"
+    ],
+    [
+      "items/attune-relic",
+      "loot-44",
+      44,
+      "You gain a +1 bonus to your Instinct. You can only carry one relic.",
+      "af92174e34aee4f3697ebce87b9248156c912af97735cddff6f50d4473efbd4b"
+    ],
+    [
+      "items/charm-relic",
+      "loot-45",
+      45,
+      "You gain a +1 bonus to your Presence. You can only carry one relic.",
+      "1ccaa81c407fe95c635395da9430af706bb98b500a43f9347e22df74bce78c0d"
+    ],
+    [
+      "items/enlighten-relic",
+      "loot-46",
+      46,
+      "You gain a +1 bonus to your Knowledge. You can only carry one relic.",
+      "98ee247796b6bd88614f52c465801a49b91fc2447e4f6d17a92f0e09c71f5ca4"
+    ],
+    [
+      "items/honing-relic",
+      "loot-47",
+      47,
+      "You gain a +1 bonus to an Experience of your choice. You can only carry one relic.",
+      "807234e0afe50eff4f7595bf0261f6269b2e3613527f4f85bad3a8605d75cda5"
+    ],
+    [
+      "items/flickerfly-pendant",
+      "loot-48",
+      48,
+      "While you carry this pendant, your weapons with a Melee range that deal physical damage have a gossamer sheen and can attack targets within Very Close range.",
+      "73e0a450b8b21a76acb936141b88a65fb68ad0286870fe0bc7f67890801487aa"
+    ],
+    [
+      "items/lakestrider-boots",
+      "loot-49",
+      49,
+      "You can walk on the surface of water as if it were soft ground.",
+      "e6201b110033c45e31ec5f5dab37e8bd50fba4019d7114aa9d3a8bca30b3f424"
+    ],
+    [
+      "items/clay-companion",
+      "loot-50",
+      50,
+      "When you sculpt this ball of clay into a clay animal companion, it behaves as that animal. For example, a clay spider can spin clay webs, while a clay bird can fly. The clay companion retains memory and identity across different shapes, but they can adopt new mannerisms with each form.",
+      "ce903e0f503d9e57430f9328992ce76582eef085585f6b4b067e758e34a33dd7"
+    ],
+    [
+      "items/mythic-dust-recipe",
+      "loot-51",
+      51,
+      "As a downtime move, you can use a handful of fine gold dust to craft Mythic Dust.",
+      "46788a6f3a118373f74ac9af3eacfdbc8f33eab6ed584fb328a0877c13d85ab8"
+    ],
+    [
+      "items/shard-of-memory",
+      "loot-52",
+      52,
+      "Once per long rest, you can spend 2 Hope to recall a domain card from your vault instead of paying its Recall Cost.",
+      "a9394851bbd53ae1e56ed269d0748eb1bdf00d1b8ce7ff6af7789bc1187910b4"
+    ],
+    [
+      "items/gem-of-alacrity",
+      "loot-53",
+      53,
+      "You can attach this gem to a weapon, allowing you to use your Agility when making an attack with that weapon.",
+      "a6ea8951d773bb66b45f521096da41093140c15a7e3b39ef33b163dfdf139a3b"
+    ],
+    [
+      "items/gem-of-might",
+      "loot-54",
+      54,
+      "You can attach this gem to a weapon, allowing you to use your Strength when making an attack with that weapon.",
+      "8a54a54f37fc6e72188a4b007ba1ae47751d5bddad7e8613e39632d70d4e7bba"
+    ],
+    [
+      "items/gem-of-precision",
+      "loot-55",
+      55,
+      "You can attach this gem to a weapon, allowing you to use your Finesse when making an attack with that weapon.",
+      "a9e7d9af6edfe23b0956fbfbd211fa9af43103ea330bd42c93b39810410fa91f"
+    ],
+    [
+      "items/gem-of-insight",
+      "loot-56",
+      56,
+      "You can attach this gem to a weapon, allowing you to use your Instinct when making an attack with that weapon.",
+      "8d43e79f06e8f8dabb031864ec59ed3480cc94cda0ed83d0514e251d34a98d58"
+    ],
+    [
+      "items/gem-of-audacity",
+      "loot-57",
+      57,
+      "You can attach this gem to a weapon, allowing you to use your Presence when making an attack with that weapon.",
+      "29a13c78c41aa2e264bae5b1876d531fb3e8d3d84ac5f01c728aff04950312ee"
+    ],
+    [
+      "items/gem-of-sagacity",
+      "loot-58",
+      58,
+      "You can attach this gem to a weapon, allowing you to use your Knowledge when making an attack with that weapon.",
+      "0a2dbf2f4eb8c9ee9fea1c3f31f069493f6286518fa12b1cbd8181a6f6662035"
+    ],
+    [
+      "items/ring-of-unbreakable-resolve",
+      "loot-59",
+      59,
+      "Once per session, when the GM spends a Fear, you can spend 4 Hope to cancel the effects of that spent Fear.",
+      "c3a7f01d26205479c000814688945afa8cd3f83a199d3e2852b787506a41008e"
+    ],
+    [
+      "items/belt-of-unity",
+      "loot-60",
+      60,
+      "Once per session, you can spend 5 Hope to lead a Tag Team Roll with three PCs instead of two.",
+      "5d279b27cbaf3c1e08b4910a8428f6b57fab2eca347d1f7ff97dc834872c202a"
+    ]
+  ]
+}

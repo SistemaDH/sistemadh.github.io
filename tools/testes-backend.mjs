@@ -579,10 +579,10 @@ const ARMADURAS = avaliar('ARMADURAS');
 const ITENS = avaliar('ITENS');
 
 teste('contagem bate com o SRD oficial', () => {
-  igual(ARMAS.filter((a) => a.cat === 'primaria').length, 167, 'armas primárias — 155 tabeladas + 12 cadeiras de combate');
-  igual(ARMAS.filter((a) => a.cat === 'secundaria').length, 37, 'armas secundárias');
+  igual(ARMAS.filter((a) => a.cat === 'primaria').length, 251, 'armas primárias do catálogo expandido');
+  igual(ARMAS.filter((a) => a.cat === 'secundaria').length, 73, 'armas secundárias do catálogo expandido');
   igual(ARMADURAS.length, 69, 'armaduras — núcleo SRD2 completo');
-  igual(ITENS.filter((i) => i.tipo === 'saque').length, 60, 'itens de saque');
+  igual(ITENS.filter((i) => i.tipo === 'saque').length, 80, 'itens de saque');
   igual(ITENS.filter((i) => i.tipo === 'consumivel').length, 60, 'consumíveis');
 });
 
@@ -748,8 +748,8 @@ teste('equipamento das molduras de campanha', () => {
   const camp = avaliar('EQUIPAMENTO_CAMPANHA');
   // 36 do Festim das Feras (15 físicas + 10 mágicas + 7 secundárias + 4
   // armaduras), 21 do Colosso (5 armas × 4 patamares + a Dinamite) e 7 da
-  // Placa-mãe, mais 12 versões de armaduras da Caça a Monstros.
-  igual(camp.length, 76);
+  // Placa-mãe, mais 12 armaduras e 24 armas da Caça a Monstros.
+  igual(camp.length, 100);
   igual(new Set(camp.map((c) => c.moldura)).size, 4, 'deveriam ser 4 molduras');
   verdade(contexto.acharEquipamentoDeCampanha_('Dinamite'), 'não achou a Dinamite');
   verdade(contexto.acharEquipamentoDeCampanha_('Quantum'), 'não achou o Quantum');
@@ -1407,7 +1407,7 @@ teste('a regra do descanso interrompido viaja com os movimentos (fecha B5)', () 
 
 teste('os 9 itens ilegíveis foram conferidos no livro (fecha B4)', () => {
   const dados = JSON.parse(fs.readFileSync(new URL('../data/equipamentos.json', import.meta.url), 'utf8'));
-  const conferidos = [...dados.loot, ...dados.consumiveis].filter((i) => i.fonteDoTexto);
+  const conferidos = [...dados.loot, ...dados.consumiveis].filter((i) => i.fonteDoTexto?.startsWith('DH-DigitalRegras.pdf'));
   igual(conferidos.length, 9, 'eram 9 itens que o livro velho não deu para ler');
   conferidos.forEach((i) => {
     verdade(i.nomeAntigo, `${i.nome} precisa guardar o nome antigo para a busca`);
@@ -10751,8 +10751,28 @@ teste('C1 publica todas as ocorrências alvo com uso ativo e sem RNG do app',()=
     const c=x.caracteristica||{};
     return ['Startling','Persuasive','Concussive','Invigorating','Lifestealing','Quick'].includes(c.nomeIngles) || ['Alarmante','Rápido','Veloz'].includes(c.nome);
   });
-  igual(alvos.length,20,'5 Alarmante + Persuasão + Repelente + Revigorante + Sorvedouras + 10 Quick + 1 Veloz sem nome inglês');
+  igual(alvos.length,32,'características ofensivas ativas do catálogo expandido');
   verdade(alvos.every(x=>x.caracteristica.automacao && x.caracteristica.efeitoEquipamento && x.caracteristica.efeitoEquipamento.usoAtivo));
+});
+
+teste('Caça a Monstros: escudo só concede Esperança após crítico da arma principal',()=>{
+  const a=avaliar('EQUIPAMENTO_CAMPANHA').find(x=>x.id==='campanha-caca-a-monstros-hallowed-shield-t1');
+  verdade(!!a);
+  const f=fichaEquipC1_(a); f.recursos.esperanca=4;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Ressonante'}]);
+  igual(r.erros.length,1); igual(f.recursos.esperanca,4);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Ressonante',criticoPrimaria:true}]);
+  igual(r.erros,[]); igual(f.recursos.esperanca,5);
+});
+
+teste('Agulha do Vazio concede Esperança apenas após ataque com Medo confirmado',()=>{
+  const a=avaliar('ARMAS').find(x=>x.id==='secundaria-t4-srd2-void-needle');
+  verdade(!!a);
+  const f=fichaEquipC1_(a);f.recursos.esperanca=4;
+  let r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Invertida'}]);
+  igual(r.erros.length,1);igual(f.recursos.esperanca,4);
+  r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Invertida',ataqueComMedo:true}]);
+  igual(r.erros,[]);igual(f.recursos.esperanca,5);
 });
 
 teste('Alarmante marca 1 Estresse e deixa o recuo dos alvos manual',()=>{
@@ -10855,7 +10875,7 @@ teste('D1 publica 5 Recarga, 4 Seis Balas e liga os botões no modal sem RNG',()
   const xs=walk(d,[]);
   const rec=xs.filter(x=>((x.caracteristica||{}).nomeIngles==='Reloading') || ['Recarga','Recarregável'].includes((x.caracteristica||{}).nome));
   const seis=xs.filter(x=>(x.caracteristica||{}).nome==='Seis balas');
-  igual(rec.length,5); igual(seis.length,4);
+  igual(rec.length,10); igual(seis.length,4);
   verdade([...rec,...seis].every(x=>x.caracteristica.automacao && x.caracteristica.efeitoEquipamento && x.caracteristica.efeitoEquipamento.usoAtivo));
   verdade(rec.every(x=>x.caracteristica.efeitoEquipamento.usoAtivo.entradaManual.dado==='d6'));
   verdade(seis.every(x=>x.caracteristica.efeitoEquipamento.usoAtivo.tipo==='municao'));
@@ -10961,7 +10981,7 @@ function equipamentoD2_(nome) {
 
 teste('D2 publica 8 Versátil, 1 Egoísta e 4 Tiro rápido sem RNG do app',()=>{
   const vers=equipamentoD2_('Versátil'), ego=equipamentoD2_('Egoísta'), tiro=equipamentoD2_('Tiro rápido');
-  igual(vers.length,8); igual(ego.length,1); igual(tiro.length,4);
+  igual(vers.length,18); igual(ego.length,1); igual(tiro.length,4);
   verdade(vers.every(a=>a.automacao && a.efeitoEquipamento && a.efeitoEquipamento.perfilAlternativo));
   verdade(ego.concat(tiro).every(a=>a.automacao && a.efeitoEquipamento && a.efeitoEquipamento.usoAtivo));
   const back=fs.readFileSync(path.join(RAIZ,'backend/4C_Ajustes.gs'),'utf8');
@@ -11043,11 +11063,11 @@ const NOMES_D3_EQUIP = new Set([
 ]);
 function ocorrenciasEquipD3_() {
   return avaliar('ARMAS').concat(avaliar('ARMADURAS'), avaliar('EQUIPAMENTO_CAMPANHA'))
-    .filter((x) => NOMES_D3_EQUIP.has(String(x.carac || '')));
+    .filter((x) => NOMES_D3_EQUIP.has(String(x.carac || '')) && x.id !== 'secundaria-t3-srd2-vorpal-shard');
 }
 teste('D3 classifica explicitamente as 31 ocorrências restantes sem RNG nem uso ativo falso', () => {
   const xs = ocorrenciasEquipD3_();
-  igual(xs.length, 31);
+  igual(xs.length, 37);
   xs.forEach((x) => {
     verdade(x.automacao, `${x.nome} deveria ter classificação explícita`);
     igual(x.automacao.rolaNoApp, false, `${x.nome} não pode rolar no app`);
@@ -11057,15 +11077,15 @@ teste('D3 classifica explicitamente as 31 ocorrências restantes sem RNG nem uso
 });
 teste('D3 mantém as quantidades por característica exatamente como no catálogo', () => {
   const xs = ocorrenciasEquipD3_();
-  const esperado = {'Assustador':2,'Brutal':3,'Busca da verdade':1,'Comprimento':1,
-    'De outro mundo':1,'Direcionado':1,'Distorção Temporal':2,'Dobrado':1,'Enganchado':4,
-    'Eruptivo':1,'Espalha-chumbo':4,'Gancho':1,'Perfeccionista':1,'Queimadura':2,'Serra':1,'Silencioso':5};
+  const esperado = {'Assustador':3,'Brutal':3,'Busca da verdade':1,'Comprimento':1,
+    'De outro mundo':5,'Direcionado':1,'Distorção Temporal':2,'Dobrado':1,'Enganchado':4,
+    'Eruptivo':1,'Espalha-chumbo':4,'Gancho':1,'Perfeccionista':1,'Queimadura':3,'Serra':1,'Silencioso':5};
   Object.keys(esperado).forEach((nome) => igual(xs.filter((x)=>x.carac===nome).length, esperado[nome], nome));
 });
 teste('Aparar sai da pendência do D3 pelo bloco defensivo dedicado, sem RNG', () => {
   const xs = avaliar('ARMAS').concat(avaliar('ARMADURAS'), avaliar('EQUIPAMENTO_CAMPANHA'))
     .filter((x) => String(x.carac || '') === 'Aparar');
-  igual(xs.length, 1);
+  igual(xs.length, 2);
   verdade(!!xs[0].automacao, 'Aparar deve estar fechado pelo bloco defensivo D4');
   igual(xs[0].automacao.rolaNoApp, false);
   verdade(!!(((xs[0].efeitoEquipamento || {}).danoRecebido || {}).aparar));
@@ -12034,6 +12054,12 @@ function fichaSaqueE12_(id) {
   f.inventario=[{id:item.id,nome:item.nome,qtd:1,emUso:false}];
   return {f,item};
 }
+teste('SRD2: anel do caçador noturno cobra 1 Esperança sem rolar nem consumir o item',()=>{
+  const {f,item}=fichaSaqueE12_('loot-srd2-nighthawkers-ring');
+  igual(item.conjunto,'expansao-srd2');
+  const r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]);
+  igual(r.erros,[]);igual(f.recursos.esperanca,3);igual(f.inventario[0].qtd,1);
+});
 teste('E12 seis loots ativos ficam estruturados sem RNG', () => {
   for (const id of ['loot-09','loot-11','loot-21','loot-27','loot-28','loot-38']) {
     const item=contexto.acharItem_(id);

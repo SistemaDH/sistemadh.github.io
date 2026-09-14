@@ -1,0 +1,95 @@
+{
+  "versao": 1,
+  "registros": [
+    [
+      "weapons/legendary-arcane-rifle",
+      "primaria-t4-srd2-legendary-arcane-rifle",
+      "d10+12 mag"
+    ],
+    [
+      "weapons/legendary-brass-knuckles",
+      "primaria-t4-srd2-legendary-brass-knuckles",
+      "d8+10 phy"
+    ],
+    [
+      "weapons/legendary-brightsword",
+      "primaria-t4-srd2-legendary-brightsword",
+      "d10+12 mag"
+    ],
+    [
+      "weapons/legendary-casting-dagger",
+      "primaria-t4-srd2-legendary-casting-dagger",
+      "d6+9 mag"
+    ],
+    [
+      "weapons/legendary-enchanted-chakram",
+      "primaria-t4-srd2-legendary-enchanted-chakram",
+      "d6+10 mag"
+    ],
+    [
+      "weapons/legendary-fighting-cloak",
+      "secundaria-t4-srd2-legendary-fighting-cloak",
+      "d4+6 phy"
+    ],
+    [
+      "weapons/legendary-focus-runes",
+      "secundaria-t4-srd2-legendary-focus-runes",
+      "d6+6 mag"
+    ],
+    [
+      "weapons/legendary-hatchet",
+      "secundaria-t4-srd2-legendary-hatchet",
+      "d8+6 phy"
+    ],
+    [
+      "weapons/legendary-katana",
+      "primaria-t4-srd2-legendary-katana",
+      "d10+12 phy"
+    ],
+    [
+      "weapons/legendary-offhand-brass-knuckles",
+      "secundaria-t4-srd2-legendary-offhand-brass-knuckles",
+      "d8+6 phy"
+    ],
+    [
+      "weapons/legendary-rope-dart",
+      "primaria-t4-srd2-legendary-rope-dart",
+      "d6+10 phy"
+    ],
+    [
+      "weapons/legendary-rune-shield",
+      "secundaria-t4-srd2-legendary-rune-shield",
+      "d4+6 mag"
+    ],
+    [
+      "weapons/legendary-runelock-pistol",
+      "primaria-t4-srd2-legendary-runelock-pistol",
+      "d6+12 mag"
+    ],
+    [
+      "weapons/legendary-scimitar",
+      "primaria-t4-srd2-legendary-scimitar",
+      "d8+10 phy"
+    ],
+    [
+      "weapons/legendary-shadowblade",
+      "primaria-t4-srd2-legendary-shadowblade",
+      "d8+9 phy/mag"
+    ],
+    [
+      "weapons/legendary-throwing-knives",
+      "secundaria-t4-srd2-legendary-throwing-knives",
+      "d8+6 phy"
+    ],
+    [
+      "weapons/legendary-twisted-dagger",
+      "primaria-t4-srd2-legendary-twisted-dagger",
+      "d8+9 phy"
+    ],
+    [
+      "weapons/legendary-whipsword",
+      "primaria-t4-srd2-legendary-whipsword",
+      "d8+9 phy"
+    ]
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "versao": 1,
+  "registros": [
+    [
+      "weapons/advanced-arcane-rifle",
+      "primaria-t3-srd2-advanced-arcane-rifle",
+      "d10+9 mag"
+    ],
+    [
+      "weapons/advanced-brass-knuckles",
+      "primaria-t3-srd2-advanced-brass-knuckles",
+      "d8+7 phy"
+    ],
+    [
+      "weapons/advanced-brightsword",
+      "primaria-t3-srd2-advanced-brightsword",
+      "d10+9 mag"
+    ],
+    [
+      "weapons/advanced-casting-dagger",
+      "primaria-t3-srd2-advanced-casting-dagger",
+      "d6+6 mag"
+    ],
+    [
+      "weapons/advanced-enchanted-chakram",
+      "primaria-t3-srd2-advanced-enchanted-chakram",
+      "d6+7 mag"
+    ],
+    [
+      "weapons/advanced-fighting-cloak",
+      "secundaria-t3-srd2-advanced-fighting-cloak",
+      "d4+4 phy"
+    ],
+    [
+      "weapons/advanced-focus-runes",
+      "secundaria-t3-srd2-advanced-focus-runes",
+      "d6+4 mag"
+    ],
+    [
+      "weapons/advanced-hatchet",
+      "secundaria-t3-srd2-advanced-hatchet",
+      "d8+4 phy"
+    ],
+    [
+      "weapons/advanced-katana",
+      "primaria-t3-srd2-advanced-katana",
+      "d10+9 phy"
+    ],
+    [
+      "weapons/advanced-offhand-brass-knuckles",
+      "secundaria-t3-srd2-advanced-offhand-brass-knuckles",
+      "d8+4 phy"
+    ],
+    [
+      "weapons/advanced-rope-dart",
+      "primaria-t3-srd2-advanced-rope-dart",
+      "d6+7 phy"
+    ],
+    [
+      "weapons/advanced-rune-shield",
+      "secundaria-t3-srd2-advanced-rune-shield",
+      "d4+4 mag"
+    ],
+    [
+      "weapons/advanced-runelock-pistol",
+      "primaria-t3-srd2-advanced-runelock-pistol",
+      "d6+9 mag"
+    ],
+    [
+      "weapons/advanced-scimitar",
+      "primaria-t3-srd2-advanced-scimitar",
+      "d8+7 phy"
+    ],
+    [
+      "weapons/advanced-shadowblade",
+      "primaria-t3-srd2-advanced-shadowblade",
+      "d8+6 phy/mag"
+    ],
+    [
+      "weapons/advanced-throwing-knives",
+      "secundaria-t3-srd2-advanced-throwing-knives",
+      "d8+4 phy"
+    ],
+    [
+      "weapons/advanced-twisted-dagger",
+      "primaria-t3-srd2-advanced-twisted-dagger",
+      "d8+6 phy"
+    ],
+    [
+      "weapons/advanced-whipsword",
+      "primaria-t3-srd2-advanced-whipsword",
+      "d8+6 phy"
+    ]
+  ]
+}

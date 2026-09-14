@@ -1,0 +1,85 @@
+{
+  "versao": 1,
+  "registros": [
+    [
+      "weapons/arc-wand",
+      "primaria-t3-srd2-arc-wand",
+      "d8+6 mag"
+    ],
+    [
+      "weapons/bladed-star",
+      "primaria-t3-srd2-bladed-star",
+      "d8+7 phy"
+    ],
+    [
+      "weapons/blitz-hammer",
+      "primaria-t3-srd2-blitz-hammer",
+      "d10+7 phy"
+    ],
+    [
+      "weapons/chained-scythe",
+      "primaria-t3-srd2-chained-scythe",
+      "d10+5 phy"
+    ],
+    [
+      "weapons/crystal-spear",
+      "primaria-t3-srd2-crystal-spear",
+      "d10+6 mag"
+    ],
+    [
+      "weapons/gunblade",
+      "primaria-t3-srd2-gunblade",
+      "d6+6 mag"
+    ],
+    [
+      "weapons/platinum-estoc",
+      "primaria-t3-srd2-platinum-estoc",
+      "d8+7 phy"
+    ],
+    [
+      "weapons/rime-scepter",
+      "primaria-t3-srd2-rime-scepter",
+      "d8+6 mag"
+    ],
+    [
+      "weapons/rocket-maul",
+      "primaria-t3-srd2-rocket-maul",
+      "d10+7 mag"
+    ],
+    [
+      "weapons/singing-sword",
+      "primaria-t3-srd2-singing-sword",
+      "d8+5 phy"
+    ],
+    [
+      "weapons/soldiers-pike",
+      "primaria-t3-srd2-soldiers-pike",
+      "d10+5 phy"
+    ],
+    [
+      "weapons/soul-chain",
+      "secundaria-t3-srd2-soul-chain",
+      "d6+5 mag"
+    ],
+    [
+      "weapons/staff-of-augma",
+      "primaria-t3-srd2-staff-of-augma",
+      "d6+7 mag"
+    ],
+    [
+      "weapons/tinkers-hammer",
+      "secundaria-t3-srd2-tinkers-hammer",
+      "d8+4 phy"
+    ],
+    [
+      "weapons/vorpal-shard",
+      "secundaria-t3-srd2-vorpal-shard",
+      "d4 mag"
+    ],
+    [
+      "weapons/war-dart",
+      "secundaria-t3-srd2-war-dart",
+      "d6+5 phy"
+    ]
+  ]
+}

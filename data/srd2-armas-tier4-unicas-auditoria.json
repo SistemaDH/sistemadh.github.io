@@ -1,0 +1,90 @@
+{
+  "versao": 1,
+  "registros": [
+    [
+      "weapons/adders-fang",
+      "primaria-t4-srd2-adders-fang",
+      "d8+9 mag"
+    ],
+    [
+      "weapons/arquebus",
+      "primaria-t4-srd2-arquebus",
+      "d8+10 phy"
+    ],
+    [
+      "weapons/bec-de-corbin",
+      "primaria-t4-srd2-bec-de-corbin",
+      "d10+9 phy"
+    ],
+    [
+      "weapons/black-powder-serpentine",
+      "primaria-t4-srd2-black-powder-serpentine",
+      "d8+12 phy"
+    ],
+    [
+      "weapons/blackblood-tendril",
+      "secundaria-t4-srd2-blackblood-tendril",
+      "d6+8 mag"
+    ],
+    [
+      "weapons/clockwork-crossbow",
+      "primaria-t4-srd2-clockwork-crossbow",
+      "d6+11 phy"
+    ],
+    [
+      "weapons/demons-edge",
+      "primaria-t4-srd2-demons-edge",
+      "d8+10 mag"
+    ],
+    [
+      "weapons/echo-blade",
+      "secundaria-t4-srd2-echo-blade",
+      "d4+6 mag"
+    ],
+    [
+      "weapons/ethereal-zweih-nder",
+      "primaria-t4-srd2-ethereal-zweih-nder",
+      "d10+9 mag"
+    ],
+    [
+      "weapons/gravity-arbalest",
+      "primaria-t4-srd2-gravity-arbalest",
+      "d8+6 mag"
+    ],
+    [
+      "weapons/infinite-staff",
+      "primaria-t4-srd2-infinite-staff",
+      "d10+9 phy"
+    ],
+    [
+      "weapons/m-bius-orb",
+      "secundaria-t4-srd2-m-bius-orb",
+      "d8+6 mag"
+    ],
+    [
+      "weapons/severed-dragon-claw",
+      "primaria-t4-srd2-severed-dragon-claw",
+      "d10+11 phy"
+    ],
+    [
+      "weapons/starmetal-blade",
+      "primaria-t4-srd2-starmetal-blade",
+      "d8+10 mag"
+    ],
+    [
+      "weapons/storm-gods-greataxe",
+      "primaria-t4-srd2-storm-gods-greataxe",
+      "d10+9 mag"
+    ],
+    [
+      "weapons/sword-of-light-flame",
+      "primaria-t4-espada-de-luz-e-chama",
+      "d10+11 mag"
+    ],
+    [
+      "weapons/void-needle",
+      "secundaria-t4-srd2-void-needle",
+      "d4+6 phy"
+    ]
+  ]
+}

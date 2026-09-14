@@ -1,0 +1,426 @@
+{
+  "versao": 1,
+  "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64",
+  "registros": [
+    [
+      "consumables/stride-potion",
+      "consumivel-01",
+      1,
+      "You gain a +1 bonus to your next Agility Roll.",
+      "f189777dbe06018f12afd263098e6cd5f44a61aaf68a6f57810186d2c48a240a"
+    ],
+    [
+      "consumables/bolster-potion",
+      "consumivel-02",
+      2,
+      "You gain a +1 bonus to your next Strength Roll.",
+      "a4305bb4d3c6f109a7514c69569b84e70457016438fe7621e609051d80e53edd"
+    ],
+    [
+      "consumables/control-potion",
+      "consumivel-03",
+      3,
+      "You gain a +1 bonus to your next Finesse Roll.",
+      "e60246af52ae41bd1253a4bc7c723c056eea9522e29a63f70662cc9f07ccf431"
+    ],
+    [
+      "consumables/attune-potion",
+      "consumivel-04",
+      4,
+      "You gain a +1 bonus to your next Instinct Roll.",
+      "bd0492aba5fa9cdc86100fe9e3ecd5ff6688cbf571d05b1dac86fca8ef443a07"
+    ],
+    [
+      "consumables/charm-potion",
+      "consumivel-05",
+      5,
+      "You gain a +1 bonus to your next Presence Roll.",
+      "3bf0f7cb39edd8e733af75f3da60781d21d61f844884d61a98d3f1eebc32b6f9"
+    ],
+    [
+      "consumables/enlighten-potion",
+      "consumivel-06",
+      6,
+      "You gain a +1 bonus to your next Knowledge Roll.",
+      "7031e210cd1578d72d2f526e9982fcb6b6aa682ce160c9ec27b62da505ada94e"
+    ],
+    [
+      "consumables/minor-health-potion",
+      "consumivel-07",
+      7,
+      "Clear 1d4 HP.",
+      "cab21e8dedd7a28069c5ee96d23468bbc3776eaa0a1542eaaaba8539f593b637"
+    ],
+    [
+      "consumables/minor-stamina-potion",
+      "consumivel-08",
+      8,
+      "Clear 1d4 Stress.",
+      "c89b6cc4653a6872416fed1933946bdf3645d8ab4d31976b87c0c02b47ec4c98"
+    ],
+    [
+      "consumables/grindletooth-venom",
+      "consumivel-09",
+      9,
+      "You can apply this venom to a weapon that deals physical damage to add a d6 to your next damage roll with that weapon.",
+      "e23cfad2d639094c5cb35df32b53be16f6dbe22cd744a59699bcb5520e202529"
+    ],
+    [
+      "consumables/varik-leaves",
+      "consumivel-10",
+      10,
+      "You can eat these paired leaves to immediately gain 2 Hope.",
+      "b99f7b29cb5c11db11c7adfa8d088e0a8e5338ca42e0da89a6711a3e285d4c25"
+    ],
+    [
+      "consumables/vial-of-moondrip",
+      "consumivel-11",
+      11,
+      "When you drink the contents of this vial, you can see in total darkness until your next rest.",
+      "ef606f53df438ca83708e5ce4815f72108289f09059266e59a31da6fbf3be0ae"
+    ],
+    [
+      "consumables/unstable-arcane-shard",
+      "consumivel-12",
+      12,
+      "You can make a Finesse Roll to throw this shard at a group of adversaries within Far range. Targets you succeed against take 1d20 magic damage.",
+      "0e54896f1fd1a7b279eac01a10aa56eacddf081e666787082fd9d60d8e7e7f8d"
+    ],
+    [
+      "consumables/potion-of-stability",
+      "consumivel-13",
+      13,
+      "You can drink this potion to choose one additional downtime move.",
+      "a958575c2a98d164ea2258325e044639ac55b63320fa9ed99fb32014d405eef7"
+    ],
+    [
+      "consumables/improved-grindletooth-venom",
+      "consumivel-14",
+      14,
+      "You can apply this venom to a weapon that deals physical damage to add a d8 to your next damage roll with that weapon.",
+      "0ca5f7b807758e46bb2f07161dd26c82b949d9026e9e52d69752ad13203603f7"
+    ],
+    [
+      "consumables/morphing-clay",
+      "consumivel-15",
+      15,
+      "You can spend a Hope to use this clay, altering your face enough to make you unrecognizable until your next rest.",
+      "0ea0df11f12c30227e3d6f160077b58b1960f3fabb5588b1a5713309aaccfb6c"
+    ],
+    [
+      "consumables/vial-of-darksmoke",
+      "consumivel-16",
+      16,
+      "When an adversary attacks you, use this vial and roll a number of d6s equal to your Agility. Add the highest result to your Evasion against the attack.",
+      "bab9f8775f90169b6615da807e00a231a39b2d378b047bb482c29042db33e75c"
+    ],
+    [
+      "consumables/jumping-root",
+      "consumivel-17",
+      17,
+      "Eat this root to leap up to Far range once without needing to roll.",
+      "c99be534117b6ffb9b1ba1a38885f5773b33e386b3ebe571673a99c4ba1d5ae5"
+    ],
+    [
+      "consumables/snap-powder",
+      "consumivel-18",
+      18,
+      "Mark a Stress and clear a HP.",
+      "ebfd20d5b5e767da5dbed3d553ca42db04ed71d6eb71b7714cd1df9e602d1baf"
+    ],
+    [
+      "consumables/health-potion",
+      "consumivel-19",
+      19,
+      "Clear 1d4+1 HP.",
+      "da8a70d9b1fbc2843f1c92d519cc9eb9d1d7134fa2e7561c59f57a6a486b5f7a"
+    ],
+    [
+      "consumables/stamina-potion",
+      "consumivel-20",
+      20,
+      "Clear 1d4+1 Stress.",
+      "70dda7aa22e9302499c1faace3e41248b72b9f81279218cab743125818225166"
+    ],
+    [
+      "consumables/armor-stitcher",
+      "consumivel-21",
+      21,
+      "You can use this stitcher to spend any number of Hope and clear that many Armor Slots.",
+      "8438304eea326c6fc77cd672df16286629e100b6cb5e7991080e82074a08048a"
+    ],
+    [
+      "consumables/gill-salve",
+      "consumivel-22",
+      22,
+      "You can apply this salve to your neck to breathe underwater for a number of minutes equal to your level.",
+      "550f55914efc1c32637ab66b957d63d9bb433fe65d69ecec6d2f8b13e0857ade"
+    ],
+    [
+      "consumables/replication-parchment",
+      "consumivel-23",
+      23,
+      "By touching this piece of parchment to another, you can perfectly copy the second parchment’s contents. Once used, this parchment becomes mundane paper.",
+      "eada40e4de3e5bbcae63e563d1953a5d5937a276716e75e178fe4cd2b034171b"
+    ],
+    [
+      "consumables/improved-arcane-shard",
+      "consumivel-24",
+      24,
+      "You can make a Finesse Roll to throw this shard at a group of adversaries within Far range. Targets you succeed against take 2d20 magic damage.",
+      "c41703c0ff84b2d2a08b91b53a9b03ca17aa2bd49aff68fec5cb3b995ff85eb3"
+    ],
+    [
+      "consumables/major-stride-potion",
+      "consumivel-25",
+      25,
+      "You gain a +1 bonus to your Agility until your next rest.",
+      "e6f6a6cfc7bc70b31b9931660a9eaa6885efc1360372c6d3d81673e80f17f854"
+    ],
+    [
+      "consumables/major-bolster-potion",
+      "consumivel-26",
+      26,
+      "You gain a +1 bonus to your Strength until your next rest.",
+      "8e69faba9942d36d489809be68aad70acafa669f55614bcc1dbea33b61fabd4c"
+    ],
+    [
+      "consumables/major-control-potion",
+      "consumivel-27",
+      27,
+      "You gain a +1 bonus to your Finesse until your next rest.",
+      "4adb6862f432d1d7573be3ce6aa758b9cb45497ffd7cd840c43ee3502bb112f3"
+    ],
+    [
+      "consumables/major-attune-potion",
+      "consumivel-28",
+      28,
+      "You gain a +1 bonus to your Instinct until your next rest.",
+      "66d60d1f437575cff346d7d3922ae550f9d47e3969f026578dce4a43ff44951e"
+    ],
+    [
+      "consumables/major-charm-potion",
+      "consumivel-29",
+      29,
+      "You gain a +1 bonus to your Presence until your next rest.",
+      "88d048053302b999fd4504e623c93cb075297eb0b2d7229be5a958435a6df3ce"
+    ],
+    [
+      "consumables/major-enlighten-potion",
+      "consumivel-30",
+      30,
+      "You gain a +1 bonus to your Knowledge until your next rest.",
+      "47a8e7b00b7f501aec953116bb26280cd92f92bd9eee4653861fbfe31c129d48"
+    ],
+    [
+      "consumables/blood-of-the-yorgi",
+      "consumivel-31",
+      31,
+      "You can drink this blood to disappear from where you are and immediately reappear at a point you can see within Very Far range.",
+      "b795c9e48704b8678455935fe1488c64f4020eb2180d9459df7dc913519254b8"
+    ],
+    [
+      "consumables/homets-secret-potion",
+      "consumivel-32",
+      32,
+      "After drinking this potion, the next successful attack you make critically succeeds.",
+      "50e2474634bba4c3af9868d1226b65c97acd9b68425611192e1b209258f40cee"
+    ],
+    [
+      "consumables/redthorn-saliva",
+      "consumivel-33",
+      33,
+      "You can apply this saliva to a weapon that deals physical damage to add a d12 to your next damage roll with that weapon.",
+      "91363056b2edb9d0c17eff0faffa1b25a0c3c625931c29fef556fd57bc681fe4"
+    ],
+    [
+      "consumables/channelstone",
+      "consumivel-34",
+      34,
+      "You can use this stone to take a spell or grimoire from your vault, use it once, and return it to your vault.",
+      "01a425d687a03ddd30582074d9a8d73bfeb6e9037c06f7dad5633d9281c084c8"
+    ],
+    [
+      "consumables/mythic-dust",
+      "consumivel-35",
+      35,
+      "You can apply this dust to a weapon that deals magic damage to add a d12 to your next damage roll with that weapon.",
+      "3111f1d84d50ab1359251b7e0514bc9af18269d086861a41c4bb93cc4c2dcb67"
+    ],
+    [
+      "consumables/acidpaste",
+      "consumivel-36",
+      36,
+      "This paste eats away walls and other surfaces in bright flashes.",
+      "84129a42879c875416846f3c6d5c5c76ed729f1b50fd96fc7abefeac7bd45680"
+    ],
+    [
+      "consumables/hopehold-flare",
+      "consumivel-37",
+      37,
+      "When you use this flare, allies within Close range roll a d6 when they spend a Hope. On a result of 6, they gain the effect of that Hope without spending it. The flare lasts until the end of the scene.",
+      "0fd43bb41d7d667689988103da7d0969bcedb16268e980b4db7c3ecfbdc3a0c4"
+    ],
+    [
+      "consumables/major-arcane-shard",
+      "consumivel-38",
+      38,
+      "You can make a Finesse Roll to throw this shard at a group of adversaries within Far range. Targets you succeed against take 4d20 magic damage.",
+      "74cd14d2004d2946f723e9a3bbc8a96ab4900d32c8047dd937f96416f0549546"
+    ],
+    [
+      "consumables/featherbone",
+      "consumivel-39",
+      39,
+      "You can use this bone to control your falling speed for a number of minutes equal to your level.",
+      "2e12d7c7c98a9520492a7a07afce9bfc6aee749df0a2794420bf5d420979ad2e"
+    ],
+    [
+      "consumables/circle-of-the-void",
+      "consumivel-40",
+      40,
+      "Mark a Stress to create a void that extends up to Far range. No magic can be cast inside the void, and creatures within the void are immune to magic damage.",
+      "bb02866fa5aee11e3a38d8adc115cf5c3fa17876bb3874dc86aad5fb27a23293"
+    ],
+    [
+      "consumables/sun-tree-sap",
+      "consumivel-41",
+      41,
+      "Consume this sap to roll a d6. On a result of 5–6, clear 2 HP. On a result of 2–4, clear 3 Stress. On a result of 1, see through the veil of death and return changed, gaining one scar.",
+      "61948e6ee9b35df274e5c9dbf5563049c5d98987d30f9d8773b173af72140554"
+    ],
+    [
+      "consumables/dripfang-poison",
+      "consumivel-42",
+      42,
+      "A creature who consumes this poison takes 8d10 direct magic damage.",
+      "7b158f5e26ded8ed341dc6b9ddc413adf0b846414e53d042bc06039572669b29"
+    ],
+    [
+      "consumables/major-health-potion",
+      "consumivel-43",
+      43,
+      "Clear 1d4+2 HP.",
+      "5ccbd2483ca2f43bf63493a20811c7c34f92019fcbd1f1bd8ceded2808f21042"
+    ],
+    [
+      "consumables/major-stamina-potion",
+      "consumivel-44",
+      44,
+      "Clear 1d4+2 Stress.",
+      "98bc36ce6c061cf0a5cadb96acf7c9bbef67215c4820e8f1c561a71bebe4fe4f"
+    ],
+    [
+      "consumables/ogre-musk",
+      "consumivel-45",
+      45,
+      "You can use this musk to prevent anyone from tracking you by mundane or magical means until your next rest.",
+      "440d907ce7d31013697fd489134f2e273d4c24f785fec75c1f913e421483bd28"
+    ],
+    [
+      "consumables/wingsprout",
+      "consumivel-46",
+      46,
+      "You gain magic wings that allow you to fly for a number of minutes equal to your level.",
+      "a73baf56e1efb5b9885a2b0a514ac970030bb535e658a956d488ed6b30da5a38"
+    ],
+    [
+      "consumables/jar-of-lost-voices",
+      "consumivel-47",
+      47,
+      "You can open this jar to release a deafening echo of voices for a number of minutes equal to your Instinct. Creatures within Far range unprepared for the sound take 6d8 magic damage.",
+      "60391c0387a6e195d269f330a09dc41ee69f545e51626e94dc6a199f424c2ab7"
+    ],
+    [
+      "consumables/dragonbloom-tea",
+      "consumivel-48",
+      48,
+      "You can drink this tea to unleash a fiery breath attack. Make an Instinct Roll against all adversaries in front of you within Close range. Targets you succeed against take d20 physical damage using your Proficiency.",
+      "1633a3f92f8fced776b63c20795ea24c0c511ff97e04228cccdb16d4732de869"
+    ],
+    [
+      "consumables/bridge-seed",
+      "consumivel-49",
+      49,
+      "Thick vines grow from your location to a point of your choice within Far range, allowing you to climb up or across them. The vines dissipate on your next short rest.",
+      "60481f70ee26e1992b12ff58c9515ce5d4bf406483c4a29b4eda396bbf6541bd"
+    ],
+    [
+      "consumables/sleeping-sap",
+      "consumivel-50",
+      50,
+      "You can drink this potion to fall asleep for a full night’s rest. You clear all Stress upon waking.",
+      "bf19cd7896d0e9e315e1f633767bfdc11c6fdd859f057dc9218b0d81b1a28192"
+    ],
+    [
+      "consumables/feast-of-xuria",
+      "consumivel-51",
+      51,
+      "You can eat this meal to clear all HP and Stress and gain 1d4 Hope.",
+      "8c840c3d805c9d4ed04fb618066bb50c387171b77c19c63c641577fd903fa18b"
+    ],
+    [
+      "consumables/bonding-honey",
+      "consumivel-52",
+      52,
+      "This honey can be used to glue two objects together permanently.",
+      "d2df550152ff702419da7fc3751b14eceeb25ffdb50db0466caeecba724541ee"
+    ],
+    [
+      "consumables/shrinking-potion",
+      "consumivel-53",
+      53,
+      "You can drink this potion to halve your size until you choose to drop this form or your next rest. While in this form, you have a +2 bonus to Agility and a −1 penalty to your Proficiency.",
+      "b2df898bfd1d26162c14e367a0efc3c4e3c18b0b85e2bbb9d8ba5f899bc78d45"
+    ],
+    [
+      "consumables/growing-potion",
+      "consumivel-54",
+      54,
+      "You can drink this potion to double your size until you choose to drop this form or your next rest. While in this form, you have a +2 bonus to Strength and a +1 bonus to your Proficiency.",
+      "06b34172d442d0a209f0c45c162c808dedf33914ad6aba4ce7cac71fa0a4e35d"
+    ],
+    [
+      "consumables/knowledge-stone",
+      "consumivel-55",
+      55,
+      "If you die while holding this stone, an ally can take a card from your loadout to place in their loadout or vault. After they take this knowledge, the stone crumbles.",
+      "64bb12c8b07fab0e41ce4b172ab547d85d687835bcb574172796ed6b0a4af5fe"
+    ],
+    [
+      "consumables/sweet-moss",
+      "consumivel-56",
+      56,
+      "You can consume this moss during a rest to clear 1d10 HP or 1d10 Stress.",
+      "d28fb5ac35a93455ac0de67423de1e0ed3179339d8ef637ae48bf8eb3205783b"
+    ],
+    [
+      "consumables/blinding-orb",
+      "consumivel-57",
+      57,
+      "You can activate this orb to create a flash of bright light. All targets within Close range become Vulnerable until they mark HP.",
+      "982e6d456e3b7b86b85496099bd2a48db0197c4d461c0eba0de719c502b46a78"
+    ],
+    [
+      "consumables/death-tea",
+      "consumivel-58",
+      58,
+      "After you drink this tea, you instantly kill your target when you critically succeed on an attack. If you don’t critically succeed on an attack before your next long rest, you die.",
+      "41f06a87a81697b91e00f079271f5ccba961802ad7cb3b3825552a88546ff611"
+    ],
+    [
+      "consumables/mirror-of-marigold",
+      "consumivel-59",
+      59,
+      "When you take damage, you can spend a Hope to negate that damage, after which the mirror shatters.",
+      "876488d948c01b581da8f2d19d020dbc56beb6089904ba5775e324267b89994d"
+    ],
+    [
+      "consumables/stardrop",
+      "consumivel-60",
+      60,
+      "You can use this stardrop to summon a hailstorm of comets that deals 8d20 physical damage to all targets within Very Far range.",
+      "981c77f183eaf8303d5becc28223ee093c6586e8962d4998050e0281dd9600ed"
+    ]
+  ]
+}

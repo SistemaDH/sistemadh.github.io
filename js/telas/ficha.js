@@ -3523,7 +3523,9 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           'Resolver · limpar Estresse')
       ];
     }
-    const extra = uso.exigeAtaqueBemSucedido ? {ataqueBemSucedido:true} : {};
+    const extra = uso.exigeAtaqueComMedo ? {ataqueComMedo:true} :
+      uso.exigeCriticoPrimaria ? {criticoPrimaria:true} :
+      uso.exigeAtaqueBemSucedido ? {ataqueBemSucedido:true} : {};
     return [el('button', {
       type:'button', class:'btn btn--principal', onClick:()=>enviarUso(extra)
     }, uso.rotulo || `Usar ${carac.nome}`)];

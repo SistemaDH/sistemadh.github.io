@@ -47,7 +47,7 @@ O corpus auxiliar pinado registra 1.539 registros: 10 domínios, 13 classes, 26 
 
 O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. O inventário individual fica em `data/srd2-inventario.json`: cada um dos 1.539 registros preserva ID, nome inglês, tipo, hash do registro no corpus, estado de implementação e, quando aplicável, `sourceLocator`. `npm run teste:srd2` impede alteração acidental das contagens, IDs, hashes estruturais ou estados. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
 
-No checkpoint atual, 607 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 931 permanecem `pendente`.
+No checkpoint atual, 874 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 664 permanecem `pendente`.
 
 ## Armas do núcleo — primeiro vínculo (194/358)
 
@@ -59,7 +59,11 @@ As 32 armas e escudos da moldura Festim das Feras foram vinculados às pp. 191�
 
 ## Armas de faroeste (5/5)
 
-As cinco famílias da moldura Colosso das Terras Áridas foram vinculadas à p. 197 do SRD 2.0. As 20 entradas por patamar já existentes foram comparadas em categoria, traço, alcance, dano, mãos e característica. `data/srd2-armas-faroeste-auditoria.json` e `npm run teste:srd2-armas-faroeste` protegem o vínculo. A coleção está em 231/358, com 127 armas ainda pendentes.
+As cinco famílias da moldura Colosso das Terras Áridas foram vinculadas à p. 197 do SRD 2.0. As 20 entradas por patamar já existentes foram comparadas em categoria, traço, alcance, dano, mãos e característica. `data/srd2-armas-faroeste-auditoria.json` e `npm run teste:srd2-armas-faroeste` protegem o vínculo.
+
+As seis famílias de armas de Caça a Monstros da p. 201 foram integradas nos quatro patamares. O bônus de dano da Estaca de madeira é derivado; Besta de repetição cobra Estresse; Escudo consagrado concede Esperança após crítico confirmado. Os demais efeitos dependem da resolução de ataque e posicionamento na mesa.
+
+As 18 armas novas de 1º patamar do núcleo foram vinculadas às pp. 56–57 e 66. As 18 versões aprimoradas de 2º patamar reutilizam os mesmos contratos e atualizam dano, limiares, Armadura e bônus da arma principal conforme as pp. 57–59 e 67. As 16 opções adicionais do 2º patamar incluem Aparar do Leque laminado, Revigorante do Alaúde, defesa do Bordão encantado, perfis alternativos e usos de Esperança; os demais efeitos que dependem de alvo ou rolagem continuam na mesa. As 18 versões avançadas de 3º patamar aplicam os valores das pp. 60–62 e 68, e as 18 versões lendárias de 4º patamar aplicam os valores das pp. 63–65 e 69. As 16 armas únicas de 3º patamar cobrem as pp. 61–63 e 68; as 17 armas únicas de 4º patamar completam a coleção. Custos fixos são cobrados pelo app quando aplicável; consequências sobre alvos e efeitos dependentes de jogada continuam na mesa. `data/srd2-armas-pendentes.json` agora está vazia, e `npm run teste:srd2-armas-pendentes` protege esse estado.
 
 ## Fase 1 — Level Up
 
@@ -239,6 +243,12 @@ O patamar 3 acrescenta 10 opções do núcleo, todas na p. 73. Magnífico soma P
 O patamar 4 acrescenta as 10 opções finais do núcleo na p. 74. Sintonizado soma o patamar aos limiares, e Encantadas, Incômoda e Volumosa reutilizam os contratos derivados anteriores. Capacidades ligadas a dano, descanso, Esperança, morte ou limite do conjunto estão declaradas como integrações pendentes.
 
 A coleção de armaduras está conferida: as 69 opções do núcleo e as 7 opções de campanhas suplementares estão vinculadas às fontes.
+
+### Itens e consumíveis existentes (60/120 cada)
+
+Os 60 itens do conjunto básico e os 60 consumíveis do conjunto básico foram vinculados individualmente às pp. 75–77 e 80–81 do SRD 2.0. Nome inglês, número na tabela e descrição inglesa coincidem com o corpus fixado. Quatro textos ingleses de consumíveis foram ajustados: plural de d6 em Frasco de Darksmoke, “alterado” em Seiva da Árvore do Sol, sinal de −1 na Poção de Encolhimento e Vulnerável no Orbe Ofuscante. A descrição portuguesa do Orbe Ofuscante já estava correta. `data/srd2-items-existentes-auditoria.json`, `data/srd2-consumables-existentes-auditoria.json` e `npm run teste:srd2-itens-existentes` protegem os vínculos. Restam 60 opções novas em cada coleção.
+
+As 120 opções adicionais foram extraídas com nome, número, descrição, página e hash do corpus fixado para `data/srd2-itens-expansao-pendentes.json`. O primeiro lote de 20 itens da expansão foi traduzido e integrado, com seu conjunto de tabela identificado separadamente do básico. `data/srd2-items-expansao-lote1-auditoria.json` e `npm run teste:srd2-items-expansao-lote1` protegem os vínculos. As 100 opções restantes continuam em preparação não exposta e não mudaram de estado; `npm run teste:srd2-itens-expansao-pendentes` protege essa correspondência.
 
 ### Armaduras suplementares completas (76/76)
 

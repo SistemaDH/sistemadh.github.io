@@ -118,7 +118,7 @@ for (const i of [...d.loot, ...d.consumiveis]) {
   // nome no livro. Continua achando na busca — foi o que a mesa leu por meses.
   const nomes = [...new Set([i.nome, i.nomeIngles, i.nomeAntigo, ...(i.aliases || [])].filter(Boolean))];
   L.push(`  ${j({
-    id: i.id, nome: i.nome, tipo: i.id.startsWith('loot') ? 'saque' : 'consumivel', nomes,
+    id: i.id, nome: i.nome, tipo: i.id.startsWith('loot') ? 'saque' : 'consumivel', conjunto: i.conjunto || 'basico', nomes,
     automacao: i.automacao || null,
     efeitoConsumivel: i.efeitoConsumivel || null,
     reacaoConsumivel: i.reacaoConsumivel || null,
