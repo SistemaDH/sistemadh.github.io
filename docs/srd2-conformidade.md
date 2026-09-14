@@ -178,8 +178,10 @@ O terceiro checkpoint fechou **Tocado do Esplendor**, **Aura de Escudo**, **Luz 
 
 As 21 cartas de Esplendor estão conferidas. O vocabulário final também protege **limiar Severo**, **Ponto de Armadura**, **jogada de reação**, **Distante**, **Muito Próximo**, **conjurar**, **cartas ativas**, **cofre** e **limpar condição**.
 
-### Cartas de domínio do Core — Valor (7/21)
+### Cartas de domínio do Core — Valor (14/21)
 
 O primeiro checkpoint conferiu **Empurrão Forte**, **Eu Sou Seu Escudo**, **Pele Dura**, **Presença Audaz**, **Quebrador Corporal**, **Apoie-Se em Mim** e **Inspiração Crítica** contra as pp. 222–223 do SRD 2.0. **Pele Dura** foi corrigida para associar os pares 9/19, 11/24, 13/31 e 15/38 aos quatro **Patamares**, não aos níveis de personagem; a automação interna já seguia o cálculo correto.
 
 O vocabulário ativo foi normalizado para **em alcance**, **Corpo a Corpo**, **Muito Próximo**, **1d6**, **jogada de Presença**, **jogada de ação**, **jogada de dano**, **Ponto de Armadura**, **Ponto de Vida**, **Estresse**, **Esperança** e **Vulnerável**. O vínculo parcial fica protegido por `data/srd2-cartas-core-valor-auditoria.json` e `tools/conferir-srd2-cartas-core-valor.mjs`.
+
+O segundo checkpoint conferiu **Provocação**, **Tanque de Suporte**, **Armadureiro**, **Golpe Estimulante**, **Erga-Se**, **Inevitável** e **Deixe Passar**, dos níveis 4–7, contra a p. 223. As mecânicas existentes permaneceram compatíveis; Provocação foi desambiguada para obrigar o adversário a atacar **você**, e os textos passaram a usar **movimento de descanso**, **limpar Ponto de Armadura**, **1d4 Estresses**, **gravidade do dano** e **1d6**.

@@ -9,19 +9,19 @@
   },
   "dominio": "domains/valor",
   "progresso": {
-    "conferidas": 7,
+    "conferidas": 14,
     "total": 21,
     "proximoLote": [
-      "domain-cards/goad-them-on",
-      "domain-cards/support-tank",
-      "domain-cards/armorer",
-      "domain-cards/rousing-strike",
-      "domain-cards/rise-up",
-      "domain-cards/inevitable",
-      "domain-cards/shrug-it-off"
+      "domain-cards/valor-touched",
+      "domain-cards/ground-pound",
+      "domain-cards/full-surge",
+      "domain-cards/lead-by-example",
+      "domain-cards/hold-the-line",
+      "domain-cards/unyielding-armor",
+      "domain-cards/unbreakable"
     ]
   },
-  "conclusaoParcial": "As sete primeiras cartas de Valor preservam níveis, tipos, custos de recordar, custos, gatilhos e efeitos implementados após corrigir Pele Dura para usar Patamares e normalizar o vocabulário pt-BR do SRD 2.0.",
+  "conclusaoParcial": "As quatorze primeiras cartas de Valor preservam níveis, tipos, custos de recordar, custos, gatilhos e efeitos implementados após corrigir Pele Dura para usar Patamares e normalizar o vocabulário pt-BR do SRD 2.0.",
   "registros": [
     { "idFonte": "domain-cards/forceful-push", "idLocal": "valor-empurrao-forte", "nomeIngles": "Forceful Push", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 0 },
     { "idFonte": "domain-cards/i-am-your-shield", "idLocal": "valor-eu-sou-seu-escudo", "nomeIngles": "I Am Your Shield", "nivel": 1, "tipo": "Habilidade", "custoRecordar": 1 },
@@ -29,7 +29,14 @@
     { "idFonte": "domain-cards/bold-presence", "idLocal": "valor-presenca-audaz", "nomeIngles": "Bold Presence", "nivel": 2, "tipo": "Habilidade", "custoRecordar": 0 },
     { "idFonte": "domain-cards/body-basher", "idLocal": "valor-quebrador-corporal", "nomeIngles": "Body Basher", "nivel": 2, "tipo": "Habilidade", "custoRecordar": 1 },
     { "idFonte": "domain-cards/lean-on-me", "idLocal": "valor-apoie-se-em-mim", "nomeIngles": "Lean on Me", "nivel": 3, "tipo": "Habilidade", "custoRecordar": 1 },
-    { "idFonte": "domain-cards/critical-inspiration", "idLocal": "valor-inspiracao-critica", "nomeIngles": "Critical Inspiration", "nivel": 3, "tipo": "Habilidade", "custoRecordar": 1 }
+    { "idFonte": "domain-cards/critical-inspiration", "idLocal": "valor-inspiracao-critica", "nomeIngles": "Critical Inspiration", "nivel": 3, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/goad-them-on", "idLocal": "valor-provocacao", "nomeIngles": "Goad Them On", "nivel": 4, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/support-tank", "idLocal": "valor-tanque-de-suporte", "nomeIngles": "Support Tank", "nivel": 4, "tipo": "Habilidade", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/armorer", "idLocal": "valor-armadureiro", "nomeIngles": "Armorer", "nivel": 5, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/rousing-strike", "idLocal": "valor-golpe-estimulante", "nomeIngles": "Rousing Strike", "nivel": 5, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/rise-up", "idLocal": "valor-erga-se", "nomeIngles": "Rise Up", "nivel": 6, "tipo": "Habilidade", "custoRecordar": 2 },
+    { "idFonte": "domain-cards/inevitable", "idLocal": "valor-inevitavel", "nomeIngles": "Inevitable", "nivel": 6, "tipo": "Habilidade", "custoRecordar": 1 },
+    { "idFonte": "domain-cards/shrug-it-off", "idLocal": "valor-deixe-passar", "nomeIngles": "Shrug It Off", "nivel": 7, "tipo": "Habilidade", "custoRecordar": 1 }
   ],
   "correcoesMecanicas": [
     "Pele Dura — os quatro pares de limiares são definidos por Patamar, não por nível de personagem."

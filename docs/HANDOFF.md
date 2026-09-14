@@ -203,17 +203,19 @@ Validação deste checkpoint: inventário com 1.539 registros (**234 implementad
 
 Próximo checkpoint exato: iniciar as sete primeiras cartas de **Valor**. Depois fechar os dois lotes restantes de Valor e só então integrar Pavor.
 
-### Cartas Core — Valor 7/21 conferido
+### Cartas Core — Valor 14/21 conferido
 
 - o primeiro checkpoint compara **Empurrão Forte**, **Eu Sou Seu Escudo**, **Pele Dura**, **Presença Audaz**, **Quebrador Corporal**, **Apoie-Se em Mim** e **Inspiração Crítica** às pp. 222–223 do SRD 2.0;
 - **Pele Dura** agora apresenta os quatro pares de limiares por **Patamar**, conforme a fonte; a automação derivada já usava o patamar corretamente;
 - Eu Sou Seu Escudo usa o gatilho de **sofrer dano** e **Pontos de Armadura**; Empurrão Forte explicita **1d6 à jogada de dano**;
 - o vocabulário ativo usa **em alcance**, **Corpo a Corpo**, **Muito Próximo**, **jogada de Presença**, **jogada de ação**, **Estresse**, **Esperança** e **Vulnerável**;
-- a cobertura de `domain-cards` está em auditoria: 175 de 189 cartas Core conferidas; 14 cartas Core e 21 cartas de Pavor ainda pendentes.
+- o segundo checkpoint compara **Provocação**, **Tanque de Suporte**, **Armadureiro**, **Golpe Estimulante**, **Erga-Se**, **Inevitável** e **Deixe Passar**, dos níveis 4–7, à p. 223;
+- Provocação explicita que o adversário deve atacar **você**; Armadureiro usa **movimento de descanso** e **limpar 1 Ponto de Armadura**; Golpe Estimulante usa **1d4 Estresses**; Deixe Passar reduz a **gravidade** e pede **1d6**;
+- a cobertura de `domain-cards` está em auditoria: 182 de 189 cartas Core conferidas; 7 cartas Core e 21 cartas de Pavor ainda pendentes.
 
-Validação deste checkpoint: inventário com 1.539 registros (**241 implementados**, 1.297 pendentes), validador específico de Valor e gates completos sem navegador. O E2E local continua bloqueado pela ausência do Chromium do Playwright.
+Validação deste checkpoint: inventário com 1.539 registros (**248 implementados**, 1.290 pendentes), validador específico de Valor e gates completos sem navegador. O E2E local continua bloqueado pela ausência do Chromium do Playwright.
 
-Próximo checkpoint exato: comparar **Provocação**, **Tanque de Suporte**, **Armadureiro**, **Golpe Estimulante**, **Erga-Se**, **Inevitável** e **Deixe Passar**. Depois fechar as sete cartas restantes de Valor e só então integrar Pavor.
+Próximo checkpoint exato: comparar **Tocado pelo Valor**, **Golpe no Chão**, **Surto Total**, **Liderar pelo Exemplo**, **Mantenha a Posição**, **Armadura Inabalável** e **Inquebrável**. Depois integrar Pavor.
 
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 

@@ -7520,7 +7520,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "Ability",
    "custoRecordar": 1,
-   "texto": "Descreva como você provoca um alvo dentro do alcance Próximo, então faça uma Jogada de Presença contra ele. Em sucesso, o alvo deve marcar 1 Estresse, e na próxima vez que o Mestre focar nele, deverá obrigatoriamente atacá-lo com desvantagem.",
+   "texto": "Descreva como você provoca um alvo em alcance Próximo, então faça uma jogada de Presença contra ele. Em sucesso, o alvo deve marcar 1 Estresse e, na próxima vez que o Mestre focar nele, deverá atacar você com desvantagem.",
    "imagem": "assets/cartas/dominios/VALOR/Provocação.png",
    "arquivo": "Provocação.png",
    "condicoes": [],
@@ -7537,7 +7537,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Faça a Jogada de Presença contra o alvo. Em sucesso, ele marca 1 Estresse e, na próxima vez em que o Mestre focá-lo, deve atacar você com desvantagem. Registre isso no encontro."
+    "resumo": "Faça a jogada de Presença contra o alvo. Em sucesso, ele marca 1 Estresse e, na próxima vez em que o Mestre focá-lo, deve atacar você com desvantagem. Registre isso no encontro."
    }
   },
   {
@@ -7550,7 +7550,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "Ability",
    "custoRecordar": 2,
-   "texto": "Quando um aliado dentro do alcance Próximo falhar em uma rolagem, você pode gastar 2 Esperança para permitir que ele refaça o dado de Esperança ou de Medo.",
+   "texto": "Quando um aliado em alcance Próximo falhar em uma jogada, você pode gastar 2 Esperanças para permitir que ele rerrole o Dado de Esperança ou o Dado de Medo.",
    "imagem": "assets/cartas/dominios/VALOR/Tanque de Suporte.png",
    "arquivo": "Tanque de Suporte.png",
    "condicoes": [],
@@ -7587,7 +7587,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "Ability",
    "custoRecordar": 1,
-   "texto": "Enquanto estiver usando armadura, ganhe +1 de bônus na sua Pontuação de Armadura.\nDurante um descanso, ao escolher reparar sua armadura como movimento de inatividade, seus aliados também curam 1 Espaço de Armadura.",
+   "texto": "Enquanto estiver usando armadura, ganhe +1 de bônus na sua Pontuação de Armadura.\nDurante um descanso, ao escolher reparar sua armadura como movimento de descanso, seus aliados também limpam 1 Ponto de Armadura.",
    "imagem": "assets/cartas/dominios/VALOR/Armadureiro.png",
    "arquivo": "Armadureiro.png",
    "condicoes": [],
@@ -7604,7 +7604,7 @@
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "No descanso, o benefício de reparar também 1 Espaço de Armadura dos aliados depende de eles participarem da cena e continua nas fichas deles/mesa."
+    "resumo": "No descanso, o benefício de limpar também 1 Ponto de Armadura dos aliados depende de eles participarem da cena e continua nas fichas deles/mesa."
    },
    "efeitoDerivado": {
     "pontuacaoArmadura": 1,
@@ -7621,7 +7621,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "Ability",
    "custoRecordar": 1,
-   "texto": "Uma vez por descanso, quando você obtém um sucesso crítico em um ataque, você e todos os aliados que puderem vê-lo ou ouvi-lo podem curar 1 Ponto de Vida ou d4 Estresses.",
+   "texto": "Uma vez por descanso, quando você obtém um sucesso crítico em um ataque, você e todos os aliados que puderem vê-lo ou ouvi-lo podem limpar 1 Ponto de Vida ou 1d4 Estresses.",
    "imagem": "assets/cartas/dominios/VALOR/Golpe Estimulante.png",
    "arquivo": "Golpe Estimulante.png",
    "condicoes": [],
@@ -7765,7 +7765,7 @@
    "tipo": "Habilidade",
    "tipoImpresso": "Ability",
    "custoRecordar": 1,
-   "texto": "Quando for receber dano, você pode marcar 1 Estresse para reduzir a severidade do dano em um limiar. Ao fazer isso, role d6. Com resultado 3 ou menos, coloque esta carta em seu cofre.",
+   "texto": "Quando for sofrer dano, você pode marcar 1 Estresse para reduzir a gravidade do dano em um limiar. Ao fazer isso, role 1d6. Com resultado 3 ou menos, coloque esta carta em seu cofre.",
    "imagem": "assets/cartas/dominios/VALOR/Deixe Passar.png",
    "arquivo": "Deixe Passar.png",
    "condicoes": [],
@@ -7779,18 +7779,18 @@
    "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
    "automacao": {
     "classificacao": "automatizada-custo-com-d6-manual",
-    "resumo": "Quando você escolher reduzir a severidade em um limiar, o app marca 1 Estresse."
+    "resumo": "Quando você escolher reduzir a gravidade em um limiar, o app marca 1 Estresse."
    },
    "resolucaoManual": {
     "rolaNoApp": false,
-    "resumo": "Depois da redução, role d6 fora do app. Com 3 ou menos, mova Deixe Passar para o cofre; a rolagem e a severidade do dano continuam na mesa."
+    "resumo": "Depois da redução, role 1d6 fora do app. Com 3 ou menos, mova Deixe Passar para o cofre; a rolagem e a gravidade do dano continuam na mesa."
    },
    "uso": {
     "custo": {
      "estresse": 1
     },
-    "rotuloAtivar": "Reduzir severidade em 1 limiar · 1 Estresse",
-    "lembrete": "Role d6 fora do app depois de reduzir a severidade. Com 3 ou menos, coloque esta carta no cofre."
+    "rotuloAtivar": "Reduzir gravidade em 1 limiar · 1 Estresse",
+    "lembrete": "Role 1d6 fora do app depois de reduzir a gravidade. Com 3 ou menos, coloque esta carta no cofre."
    }
   },
   {

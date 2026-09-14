@@ -16738,7 +16738,7 @@
             "pdfPageEnd": 223
           },
           "corpusSha256": "cdc1325616e1ca0daeb49486277551271fb3b3e7245ced953c8b4d9dfadeda4e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/astral-projection",
@@ -17968,7 +17968,7 @@
             "pdfPageEnd": 223
           },
           "corpusSha256": "45255df38f7ffd7266af702326d9e77dcbc59b4c197fb6fe0c8aa4e27fa85e45",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/gore-and-glory",
@@ -18163,7 +18163,7 @@
             "pdfPageEnd": 223
           },
           "corpusSha256": "f149f165d27ea69342fc86b6e1a11a4a8755229ab1841a8d058adc9202162278",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/inspirational-words",
@@ -18808,7 +18808,7 @@
             "pdfPageEnd": 223
           },
           "corpusSha256": "b62ba69628bee7fede14317a12d862aeb1954fbd4647b425731511d649c1ad4f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/rousing-strike",
@@ -18823,7 +18823,7 @@
             "pdfPageEnd": 223
           },
           "corpusSha256": "c2ff66252c70bae6c73ec5d815ea98b1dfd9f655f0fc7002e7349d214a33d1f8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/rune-ward",
@@ -19048,7 +19048,7 @@
             "pdfPageEnd": 223
           },
           "corpusSha256": "fd34afe54ce2e45929b9a894839ed8ea20c74d530b23dbb5ebc6b50f0cea70cc",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/sigil-of-retribution",
@@ -19273,7 +19273,7 @@
             "pdfPageEnd": 223
           },
           "corpusSha256": "59b420329f0a2c3e0dcba3ff6ea966d5674d17920bfd16d16f236a0c16c70f2b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/swift-step",

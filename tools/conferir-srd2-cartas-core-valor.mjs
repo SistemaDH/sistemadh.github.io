@@ -61,6 +61,27 @@ if (!apoio?.texto.includes('falhou em uma jogada de ação') || !apoio?.texto.in
 const inspiracao = cartas.get('valor-inspiracao-critica');
 if (!inspiracao?.texto.includes('sucesso crítico em um ataque') || !inspiracao?.texto.includes('aliados em alcance Muito Próximo') || !inspiracao?.texto.includes('limpar 1 Estresse ou ganhar 1 Esperança') || inspiracao?.uso?.marcaUso?.maximo !== 1) erros.push('Inspiração Crítica: gatilho, alcance, benefício ou limite divergem');
 
+const provocacao = cartas.get('valor-provocacao');
+if (!provocacao?.texto.includes('alvo em alcance Próximo') || !provocacao?.texto.includes('jogada de Presença') || !provocacao?.texto.includes('atacar você com desvantagem')) erros.push('Provocação: alcance, jogada ou ataque forçado divergem');
+
+const tanque = cartas.get('valor-tanque-de-suporte');
+if (!tanque?.texto.includes('aliado em alcance Próximo') || !tanque?.texto.includes('gastar 2 Esperanças') || !tanque?.texto.includes('Dado de Esperança ou o Dado de Medo') || tanque?.uso?.custo?.esperanca !== 2) erros.push('Tanque de Suporte: alcance, custo ou rerrolagem divergem');
+
+const armadureiro = cartas.get('valor-armadureiro');
+if (!armadureiro?.texto.includes('Pontuação de Armadura') || !armadureiro?.texto.includes('movimento de descanso') || !armadureiro?.texto.includes('limpam 1 Ponto de Armadura') || armadureiro?.efeitoDerivado?.pontuacaoArmadura !== 1 || !armadureiro?.efeitoDerivado?.exigeArmaduraEquipada) erros.push('Armadureiro: bônus, descanso ou recuperação de Armadura divergem');
+
+const estimulante = cartas.get('valor-golpe-estimulante');
+if (!estimulante?.texto.includes('sucesso crítico em um ataque') || !estimulante?.texto.includes('limpar 1 Ponto de Vida ou 1d4 Estresses') || estimulante?.uso?.marcaUso?.maximo !== 1 || estimulante?.uso?.opcoes?.length !== 2) erros.push('Golpe Estimulante: gatilho, recuperação, limite ou opções divergem');
+
+const erga = cartas.get('valor-erga-se');
+if (!erga?.texto.includes('limiar de dano Severo igual à sua Proficiência') || !erga?.texto.includes('marcar 1 ou mais Pontos de Vida de um ataque') || !erga?.texto.includes('limpe 1 Estresse') || erga?.efeitoDerivado?.limiarGravePorProficiencia !== 1) erros.push('Erga-Se: limiar, gatilho ou recuperação divergem');
+
+const inevitavel = cartas.get('valor-inevitavel');
+if (!inevitavel?.texto.includes('falhar uma jogada de ação') || !inevitavel?.texto.includes('próxima jogada de ação terá vantagem') || inevitavel?.uso?.estado?.valor !== 1) erros.push('Inevitável: gatilho ou vantagem persistente divergem');
+
+const passar = cartas.get('valor-deixe-passar');
+if (!passar?.texto.includes('sofrer dano') || !passar?.texto.includes('reduzir a gravidade do dano em um limiar') || !passar?.texto.includes('role 1d6') || !passar?.texto.includes('3 ou menos') || passar?.uso?.custo?.estresse !== 1) erros.push('Deixe Passar: custo, redução, d6 ou cofre divergem');
+
 const idsAuditados = new Set(registros.map((item) => item.idLocal));
 const textosAtivos = catalogo.cartas.filter((carta) => idsAuditados.has(carta.id)).map((carta) => JSON.stringify({
   texto: carta.texto,
@@ -75,6 +96,7 @@ const termosLegados = [
   /\bdentro do alcance\b/i,
   /\bdentro de alcance\b/i,
   /\bEspaços? de Armadura\b/i,
+  /\bseveridade\b/i,
   /\b(?:curar|cura|remover|remove) \d+ (?:de )?(?:Estresse|estresse|Pontos? de Vida|pontos? de vida)\b/i
 ];
 for (const termo of termosLegados) {
