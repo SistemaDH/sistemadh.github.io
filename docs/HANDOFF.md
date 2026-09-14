@@ -310,6 +310,18 @@ Validação esperada: inventário com 1.539 registros (**349 implementados**, 1.
 
 Próximo checkpoint seguro: implementar as 10 armaduras novas de patamar 3; depois restarão 10 do núcleo e 7 suplementares.
 
+### Checkpoint SRD2 — novas armaduras de patamar 3
+
+- adicionadas e vinculadas à p. 73 as 10 opções novas do patamar;
+- Magnífico calcula a Pontuação de Armadura pelo valor efetivo de Presença e Vigilante concede +2 em Evasão;
+- as famílias Encantadas, Incômoda e Volumosa reutilizam os contratos derivados dos patamares anteriores;
+- Aquática é contextual; Forrada, Estelar, Sedenta por Sangue e Favorecido pela Fortuna permanecem pendências mecânicas explícitas;
+- auditoria dedicada em `data/srd2-armaduras-novas-tier3-auditoria.json` e `tools/conferir-srd2-armaduras-novas-tier3.mjs`.
+
+Validação esperada: inventário com 1.539 registros (**359 implementados**, 1.179 pendentes), 59/76 armaduras conferidas e suítes verdes.
+
+Próximo checkpoint seguro: implementar as 10 armaduras novas de patamar 4; depois restarão apenas as 7 suplementares.
+
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 
 Iniciado em 08/09/2026 na branch `ediçãoclaude`.

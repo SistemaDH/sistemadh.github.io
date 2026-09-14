@@ -1,0 +1,18 @@
+{
+  "versao": 1, "estado": "conferido", "catalogo": "data/equipamentos.json",
+  "fonte": { "srd": "2.0", "data": "2026-08-25", "paginasPdf": "73", "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64" },
+  "progresso": { "conferidasNesteBloco": 10, "conferidasNaColecao": 59, "totalColecao": 76 },
+  "registros": [
+    ["armor/advanced-mage-robes", "armadura-t3-vestes-de-mago-avancadas"],
+    ["armor/advanced-brigandine-armor", "armadura-t3-armadura-brigandina-avancada"],
+    ["armor/advanced-scale-mail-armor", "armadura-t3-armadura-de-cota-de-escamas-avancada"],
+    ["armor/advanced-banded-armor", "armadura-t3-armadura-de-faixas-avancada"],
+    ["armor/astral-raiment", "armadura-t3-traje-astral"],
+    ["armor/bloodstone-plate-armor", "armadura-t3-armadura-de-placas-de-pedra-de-sangue"],
+    ["armor/cloverweave-cloak", "armadura-t3-manto-de-cloverweave"],
+    ["armor/deep-forged-coral-armor", "armadura-t3-armadura-de-coral-forjado-nas-profundezas"],
+    ["armor/granminsters-finery", "armadura-t3-traje-elegante-de-granminster"],
+    ["armor/skywardens-lamellar", "armadura-t3-lamelar-de-skywarden"]
+  ],
+  "automacao": { "derivada": ["Encantadas", "Incômoda", "Volumosa", "Magnífico", "Vigilante"], "contextual": ["Aquática"], "pendente": ["Forrada", "Estelar", "Sedenta por Sangue", "Favorecido pela Fortuna"] }
+}

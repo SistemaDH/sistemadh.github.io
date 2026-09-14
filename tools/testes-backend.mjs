@@ -581,7 +581,7 @@ const ITENS = avaliar('ITENS');
 teste('contagem bate com o SRD oficial', () => {
   igual(ARMAS.filter((a) => a.cat === 'primaria').length, 167, 'armas primárias — 155 tabeladas + 12 cadeiras de combate');
   igual(ARMAS.filter((a) => a.cat === 'secundaria').length, 37, 'armas secundárias');
-  igual(ARMADURAS.length, 49, 'armaduras — 34 legadas + 15 novas do SRD2');
+  igual(ARMADURAS.length, 59, 'armaduras — 34 legadas + 25 novas do SRD2');
   igual(ITENS.filter((i) => i.tipo === 'saque').length, 60, 'itens de saque');
   igual(ITENS.filter((i) => i.tipo === 'consumivel').length, 60, 'consumíveis');
 });
@@ -2638,6 +2638,16 @@ teste('Vestes de Mago somam o traço de Conjuração aos dois limiares', () => {
   const d = contexto.derivadosDoPersonagem_(f);
   igual(d.limiarMaior, 7, '4 base + nível 1 + Conhecimento 2');
   igual(d.limiarGrave, 13, '10 base + nível 1 + Conhecimento 2');
+});
+
+teste('Traje de Granminster soma Presença à Pontuação de Armadura', () => {
+  const traje = ARMADURAS.find((a) => a.id === 'armadura-t3-traje-elegante-de-granminster');
+  verdade(traje, 'Traje Elegante de Granminster não foi publicado');
+  const f = fichaDeModificador({
+    nivel: 5, tracos: { presenca: 2 },
+    equipamento: { armadura: traje.id, primaria: null, secundaria: null, reserva: [] }
+  });
+  igual(contexto.derivadosDoPersonagem_(f).pontuacaoArmadura, 4, '2 base + Presença 2');
 });
 
 teste('Bellamoi e Cota Salvadora alteram o valor efetivo dos traços sem sobrescrever ficha.tracos', () => {

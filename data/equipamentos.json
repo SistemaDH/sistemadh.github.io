@@ -5820,6 +5820,66 @@
    }
   },
   {
+   "id": "armadura-t3-vestes-de-mago-avancadas", "categoria": "armadura", "tier": 3, "tabela": null,
+   "nome": "Vestes de Mago Avançadas", "origemNome": "traducao-srd2", "nomeIngles": "Advanced Mage Robes", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 73", "limiares": "8/22", "pontuacaoArmadura": 4,
+   "caracteristica": { "nomeIngles": "Enchanted", "textoIngles": "Enchanted: Gain a bonus to your damage thresholds equal to your Spellcast trait.", "nome": "Encantadas", "texto": "Encantadas: Você recebe um bônus em seus limiares de dano igual ao seu traço de Conjuração.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "efeitoDerivado": { "limiaresPorTracoConjuracao": true } }
+  },
+  {
+   "id": "armadura-t3-armadura-brigandina-avancada", "categoria": "armadura", "tier": 3, "tabela": null,
+   "nome": "Armadura Brigandina Avançada", "origemNome": "traducao-srd2", "nomeIngles": "Advanced Brigandine Armor", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 73", "limiares": "11/26", "pontuacaoArmadura": 5,
+   "caracteristica": { "nomeIngles": "Lined", "textoIngles": "Lined: Mark a Stress to negate Minor damage.", "nome": "Forrada", "texto": "Forrada: Marque 1 Estresse para negar dano Menor.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "automacao": { "classificacao": "reacao-dano-pendente", "rolaNoApp": false, "motivo": "A regra está publicada; custo e negação aguardam integração ao fluxo de dano." } }
+  },
+  {
+   "id": "armadura-t3-armadura-de-cota-de-escamas-avancada", "categoria": "armadura", "tier": 3, "tabela": null,
+   "nome": "Armadura de Cota de Escamas Avançada", "origemNome": "traducao-srd2", "nomeIngles": "Advanced Scale Mail Armor", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 73", "limiares": "13/30", "pontuacaoArmadura": 5,
+   "caracteristica": { "nomeIngles": "Cumbersome", "textoIngles": "Cumbersome: −1 to Finesse", "nome": "Incômoda", "texto": "Incômoda: −1 em Finesse.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "efeitoDerivado": { "tracos": { "finesse": -1 } } }
+  },
+  {
+   "id": "armadura-t3-armadura-de-faixas-avancada", "categoria": "armadura", "tier": 3, "tabela": null,
+   "nome": "Armadura de Faixas Avançada", "origemNome": "traducao-srd2", "nomeIngles": "Advanced Banded Armor", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 73", "limiares": "15/34", "pontuacaoArmadura": 6,
+   "caracteristica": { "nomeIngles": "Bulky", "textoIngles": "Bulky: −1 to Evasion; when you take Severe damage, you must mark a Stress.", "nome": "Volumosa", "texto": "Volumosa: −1 em Evasão; quando sofrer dano Severo, você deve marcar 1 Estresse.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "efeitoDerivado": { "evasao": -1 }, "automacao": { "classificacao": "passiva-parcial", "rolaNoApp": false, "motivo": "O −1 em Evasão é automático; o Estresse por dano Severo aguarda integração ao fluxo de dano." } }
+  },
+  {
+   "id": "armadura-t3-traje-astral", "categoria": "armadura", "tier": 3, "tabela": null,
+   "nome": "Traje Astral", "origemNome": "traducao-srd2", "nomeIngles": "Astral Raiment", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 73", "limiares": "11/27", "pontuacaoArmadura": 5,
+   "caracteristica": { "nomeIngles": "Stellar", "textoIngles": "Stellar: Mark a Stress to gain advantage on a Spellcast roll.", "nome": "Estelar", "texto": "Estelar: Marque 1 Estresse para receber vantagem em uma jogada de Conjuração.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "automacao": { "classificacao": "uso-antes-de-rolagem-pendente", "rolaNoApp": false, "motivo": "O custo e a vantagem aguardam integração ao fluxo de jogadas de Conjuração." } }
+  },
+  {
+   "id": "armadura-t3-armadura-de-placas-de-pedra-de-sangue", "categoria": "armadura", "tier": 3, "tabela": null,
+   "nome": "Armadura de Placas de Pedra de Sangue", "origemNome": "traducao-srd2", "nomeIngles": "Bloodstone Plate Armor", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 73", "limiares": "13/35", "pontuacaoArmadura": 6,
+   "caracteristica": { "nomeIngles": "Bloodthirsty", "textoIngles": "Bloodthirsty: When you critically succeed on a weapon attack within Melee range, clear a Hit Point.", "nome": "Sedenta por Sangue", "texto": "Sedenta por Sangue: Quando obtiver um sucesso crítico em um ataque com arma em alcance Corpo a Corpo, limpe 1 Ponto de Vida.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "automacao": { "classificacao": "gatilho-de-critico-pendente", "rolaNoApp": false, "motivo": "O app não observa jogadas de ataque; a cura aguarda confirmação integrada do crítico." } }
+  },
+  {
+   "id": "armadura-t3-manto-de-cloverweave", "categoria": "armadura", "tier": 3, "tabela": null,
+   "nome": "Manto de Cloverweave", "origemNome": "traducao-srd2", "nomeIngles": "Cloverweave Cloak", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 73", "limiares": "11/27", "pontuacaoArmadura": 5,
+   "caracteristica": { "nomeIngles": "Fortune-Favored", "textoIngles": "Fortune-Favored: Once per scene, you can change a failure with Hope into a success with Fear.", "nome": "Favorecido pela Fortuna", "texto": "Favorecido pela Fortuna: Uma vez por cena, você pode transformar uma falha com Esperança em um sucesso com Medo.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "automacao": { "classificacao": "alteracao-de-resultado-pendente", "rolaNoApp": false, "motivo": "A troca de resultado aguarda confirmação da jogada e contador de cena." } }
+  },
+  {
+   "id": "armadura-t3-armadura-de-coral-forjado-nas-profundezas", "categoria": "armadura", "tier": 3, "tabela": null,
+   "nome": "Armadura de Coral Forjado nas Profundezas", "origemNome": "traducao-srd2", "nomeIngles": "Deep-Forged Coral Armor", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 73", "limiares": "13/35", "pontuacaoArmadura": 6,
+   "caracteristica": { "nomeIngles": "Aquatic", "textoIngles": "Aquatic: You can breathe underwater and gain advantage on Agility Rolls while submerged.", "nome": "Aquática", "texto": "Aquática: Você pode respirar debaixo d’água e recebe vantagem em jogadas de Agilidade enquanto estiver submerso.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "automacao": { "classificacao": "passivo-contextual", "rolaNoApp": false, "motivo": "Respiração, submersão e vantagem dependem da cena; nenhum valor persistente é alterado." } }
+  },
+  {
+   "id": "armadura-t3-traje-elegante-de-granminster", "categoria": "armadura", "tier": 3, "tabela": null,
+   "nome": "Traje Elegante de Granminster", "origemNome": "traducao-srd2", "nomeIngles": "Granminster’s Finery", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 73", "limiares": "11/27", "pontuacaoArmadura": 2,
+   "caracteristica": { "nomeIngles": "Magnificent", "textoIngles": "Magnificent: Gain a bonus to your Armor Score equal to your Presence.", "nome": "Magnífico", "texto": "Magnífico: Você recebe um bônus em sua Pontuação de Armadura igual à sua Presença.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "efeitoDerivado": { "pontuacaoArmaduraPorTraco": "presenca" } }
+  },
+  {
+   "id": "armadura-t3-lamelar-de-skywarden", "categoria": "armadura", "tier": 3, "tabela": null,
+   "nome": "Lamelar de Skywarden", "origemNome": "traducao-srd2", "nomeIngles": "Skywarden’s Lamellar", "nomeLivro": null,
+   "fonteNumeros": "SRD 2.0 p. 73", "limiares": "11/27", "pontuacaoArmadura": 5,
+   "caracteristica": { "nomeIngles": "Vigilant", "textoIngles": "Vigilant: +2 to Evasion", "nome": "Vigilante", "texto": "Vigilante: +2 em Evasão.", "fonteTraducao": "traducao-srd2", "confianca": "alta", "efeitoDerivado": { "evasao": 2 } }
+  },
+  {
    "id": "armadura-t3-armadura-de-gambeson-avancada",
    "categoria": "armadura",
    "tier": 3,

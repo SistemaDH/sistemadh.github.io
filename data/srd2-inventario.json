@@ -7243,7 +7243,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "70672739f4e06fdedaf2d005d19eb0050db7532e20b9ad2933d7b71bb66f10e3",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/advanced-brigandine-armor",
@@ -7258,7 +7258,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "dbe123593dcc08b4e9ca9d3bf708ecd1f139bd83adcc6264dea1ae18b45029c4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/advanced-chainmail-armor",
@@ -7333,7 +7333,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "0c27e4b9fa5d3324a4a25ec88983ebfa924eb8dbe52529bd406ac3f9ac545e26",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/advanced-scale-mail-armor",
@@ -7348,7 +7348,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "1ef5b939a4be00436baa352997e5034d07a2e234c251618881bdeaac77cd57e9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/astral-raiment",
@@ -7363,7 +7363,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "2a91b22348e8ca6471bb1b536d16730136d3f8b4729d4d19b0c6912b77cffa8e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/baking-tray-breastplate",
@@ -7438,7 +7438,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "08904fcbae571420b64fa57726734d086be37b37b4346faf5e81afcba30d3a90",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/brigandine-armor",
@@ -7513,7 +7513,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "259d7411986700e3e44bfb62aacddd8bc06e1bb56a9079e19f7539d8b12163be",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/coffinwood-armor",
@@ -7558,7 +7558,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "46a836e27598c7396326152b254bd024476a452a865797963aa651adc18f91cb",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/dragonscale-armor",
@@ -7723,7 +7723,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "ece367b7edf0c3ecf11fc1ce754e051cc99a6e71ec10e85dd5332ecd0f7f7204",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/hallowed-heroplate",
@@ -8248,7 +8248,7 @@
             "pdfPageEnd": 73
           },
           "corpusSha256": "d793fac148f702d743d8b2895929246e13b9080e239cf5494f37efd5981b126f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "armor/spidersilk-tunic",

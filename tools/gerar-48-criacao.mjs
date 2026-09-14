@@ -419,6 +419,7 @@ function modificadoresDerivadosDaFicha_(ficha) {
     pontosDeVidaMaximos: 0, estresseMaximo: 0, pontuacaoArmadura: 0,
     limiaresSeUltimaArmaduraMarcada: 0,
     limiaresPorTracoConjuracao: false,
+    pontuacaoArmaduraPorTraco: '',
     tracos: { agilidade: 0, forca: 0, finesse: 0, instinto: 0, presenca: 0, conhecimento: 0 },
     fontes: []
   };
@@ -446,6 +447,7 @@ function modificadoresDerivadosDaFicha_(ficha) {
     saida.pontosDeVidaMaximos += numero('pontosDeVidaMaximos');
     saida.estresseMaximo += numero('estresseMaximo');
     saida.pontuacaoArmadura += numero('pontuacaoArmadura');
+    if (e.pontuacaoArmaduraPorTraco) saida.pontuacaoArmaduraPorTraco = String(e.pontuacaoArmaduraPorTraco);
     saida.limiaresSeUltimaArmaduraMarcada += numero('limiaresSeUltimaArmaduraMarcada');
     if (e.limiaresPorTracoConjuracao) saida.limiaresPorTracoConjuracao = true;
     if (e.limiaresPorProficiencia) saida.limiares += prof * Number(e.limiaresPorProficiencia);
@@ -510,6 +512,11 @@ function modificadoresDerivadosDaFicha_(ficha) {
     const tracoConjuracao = conjuracaoDoPersonagem_(ficha);
     const base = Number(((ficha && ficha.tracos) || {})[tracoConjuracao]) || 0;
     saida.limiares += base + (Number(saida.tracos[tracoConjuracao]) || 0);
+  }
+  if (saida.pontuacaoArmaduraPorTraco) {
+    const tracoArmadura = saida.pontuacaoArmaduraPorTraco;
+    const base = Number(((ficha && ficha.tracos) || {})[tracoArmadura]) || 0;
+    saida.pontuacaoArmadura += base + (Number(saida.tracos[tracoArmadura]) || 0);
   }
   return saida;
 }

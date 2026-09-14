@@ -13,7 +13,7 @@
     { "id": "transformations", "esperados": 6, "estado": "em-auditoria", "observacao": "As 6 transformações, 12 características e 36 perguntas estão traduzidas e estruturadas em catálogo não exposto; falta implementar o ciclo de vida e as automações." },
     { "id": "beastforms", "esperados": 24, "estado": "conferido", "observacao": "As 24 Formas de Fera estão implementadas, vinculadas individualmente às pp. 15–18 e corrigidas conforme o SRD 2.0." },
     { "id": "weapons", "esperados": 358, "estado": "nao-iniciado" },
-    { "id": "armor", "esperados": 76, "estado": "em-auditoria", "observacao": "As 16 armaduras básicas, as 18 especiais já existentes e as 15 novas dos patamares 1–2 estão conferidas contra as pp. 72–74; faltam 20 armaduras do núcleo e 7 de campanhas suplementares." },
+    { "id": "armor", "esperados": 76, "estado": "em-auditoria", "observacao": "As 16 armaduras básicas, as 18 especiais já existentes e as 25 novas dos patamares 1–3 estão conferidas contra as pp. 72–74; faltam 10 armaduras do núcleo e 7 de campanhas suplementares." },
     { "id": "items", "esperados": 120, "estado": "nao-iniciado" },
     { "id": "consumables", "esperados": 120, "estado": "nao-iniciado" },
     { "id": "adversaries", "esperados": 264, "estado": "nao-iniciado" },
