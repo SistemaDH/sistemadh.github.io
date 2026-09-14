@@ -1,0 +1,29 @@
+{
+  "versao": 1,
+  "estado": "em-andamento",
+  "dominio": "domains/dread",
+  "catalogo": "data/srd2-cartas-pavor.json",
+  "fonte": { "srd": "2.0", "data": "2026-08-25", "paginasPdf": "213", "corpusCommit": "7677b0c28f2efb12bba4a29f23d8068d47f37d64" },
+  "progresso": {
+    "conferidas": 7,
+    "total": 21,
+    "proximoLote": [
+      "domain-cards/chains-of-affliction",
+      "domain-cards/summon-horror",
+      "domain-cards/dire-strike",
+      "domain-cards/spectral-mist",
+      "domain-cards/darkfire",
+      "domain-cards/jump-scare",
+      "domain-cards/dread-touched"
+    ]
+  },
+  "registros": [
+    { "idFonte": "domain-cards/blighting-strike", "idLocal": "pavor-golpe-definhante" },
+    { "idFonte": "domain-cards/umbral-veil", "idLocal": "pavor-veu-umbral" },
+    { "idFonte": "domain-cards/voice-of-dread", "idLocal": "pavor-voz-do-pavor" },
+    { "idFonte": "domain-cards/hideous-retribution", "idLocal": "pavor-retribuicao-horrenda" },
+    { "idFonte": "domain-cards/siphon-essence", "idLocal": "pavor-sifonar-essencia" },
+    { "idFonte": "domain-cards/shared-trauma", "idLocal": "pavor-trauma-compartilhado" },
+    { "idFonte": "domain-cards/terrify", "idLocal": "pavor-aterrorizar" }
+  ]
+}

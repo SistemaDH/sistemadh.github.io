@@ -1,0 +1,95 @@
+{
+  "versao": 1,
+  "estado": "em-andamento",
+  "exposto": false,
+  "dominio": "PAVOR",
+  "dominioNome": "Pavor",
+  "nomeIngles": "Dread",
+  "traducao": "provisoria",
+  "cartas": [
+    {
+      "id": "pavor-golpe-definhante",
+      "idFonte": "domain-cards/blighting-strike",
+      "nome": "Golpe Definhante",
+      "nomeIngles": "Blighting Strike",
+      "nivel": 1,
+      "tipo": "Feitiço",
+      "custoRecordar": 1,
+      "texto": "Faça uma jogada de Conjuração contra um alvo em alcance Distante. Em um sucesso: em uma jogada com Esperança, cause 1d6+1 de dano mágico usando sua Proficiência; em uma jogada com Medo, cause 1d10+1 de dano mágico usando sua Proficiência. O próximo ataque bem-sucedido do alvo causa metade do dano. Em uma falha, você deve gastar 1 Esperança ou marcar 1 Estresse.",
+      "automacao": { "classificacao": "resolucao-manual-com-custo-em-falha", "resumo": "Jogada e dano permanecem na mesa; após falha, a integração futura deverá oferecer gastar 1 Esperança ou marcar 1 Estresse." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Role Conjuração e o dano fora do app e aplique a redução ao próximo ataque bem-sucedido do alvo." }
+    },
+    {
+      "id": "pavor-veu-umbral",
+      "idFonte": "domain-cards/umbral-veil",
+      "nome": "Véu Umbral",
+      "nomeIngles": "Umbral Veil",
+      "nivel": 1,
+      "tipo": "Feitiço",
+      "custoRecordar": 1,
+      "texto": "Uma vez por descanso, você pode marcar 1 Estresse para se envolver em energia sombria. Quando fizer isso, coloque nesta carta uma quantidade de marcadores igual ao Medo na reserva do Mestre. Depois que uma jogada de ataque for feita contra você, gaste qualquer quantidade de marcadores para impor uma penalidade de −1 ao resultado por marcador gasto. No fim da cena, limpe todos os marcadores não gastos.",
+      "automacao": { "classificacao": "contador-futuro-com-custo-e-limite", "resumo": "A integração futura deverá marcar 1 Estresse, registrar o uso por descanso e carregar marcadores iguais à reserva de Medo do Mestre." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Após uma jogada de ataque contra você, escolha quantos marcadores gastar e aplique −1 por marcador ao resultado." }
+    },
+    {
+      "id": "pavor-voz-do-pavor",
+      "idFonte": "domain-cards/voice-of-dread",
+      "nome": "Voz do Pavor",
+      "nomeIngles": "Voice of Dread",
+      "nivel": 1,
+      "tipo": "Feitiço",
+      "custoRecordar": 0,
+      "texto": "Você pode falar magicamente com uma criatura que consiga ver, atormentando-a com suas palavras. Faça uma jogada de Conjuração contra ela. Em um sucesso, ela deve marcar 1 Estresse e fica paralisada de terror, tornando-se temporariamente Restrita.",
+      "automacao": { "classificacao": "manual-em-alvo", "resumo": "O efeito altera um alvo externo e permanece na mesa até existir integração transacional entre fichas e adversários." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Role Conjuração; em sucesso, o alvo marca 1 Estresse e fica temporariamente Restrito." }
+    },
+    {
+      "id": "pavor-retribuicao-horrenda",
+      "idFonte": "domain-cards/hideous-retribution",
+      "nome": "Retribuição Horrenda",
+      "nomeIngles": "Hideous Retribution",
+      "nivel": 2,
+      "tipo": "Feitiço",
+      "custoRecordar": 2,
+      "texto": "Quando um aliado em alcance Próximo sofrer dano de um alvo que você consiga ver, faça uma jogada de reação contra o alvo usando seu traço de Conjuração. Em um sucesso, marque 1 Estresse para causar 1d6 de dano mágico usando sua Proficiência.",
+      "automacao": { "classificacao": "custo-futuro-apos-reacao", "resumo": "A integração futura deverá cobrar 1 Estresse somente após o sucesso confirmado da jogada de reação." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Role a reação e 1d6 fora do app; aplique o dano mágico com sua Proficiência." }
+    },
+    {
+      "id": "pavor-sifonar-essencia",
+      "idFonte": "domain-cards/siphon-essence",
+      "nome": "Sifonar Essência",
+      "nomeIngles": "Siphon Essence",
+      "nivel": 2,
+      "tipo": "Feitiço",
+      "custoRecordar": 1,
+      "texto": "Faça uma jogada de Conjuração contra um alvo em alcance Muito Próximo. Uma vez por descanso longo, em um sucesso, o alvo sofre 1d12+4 de dano mágico usando sua Proficiência. Em um sucesso com Medo, você recebe +1 de bônus em sua Proficiência para esse ataque. Limpe uma quantidade de Pontos de Vida igual à quantidade de Pontos de Vida que o alvo marcou com esse ataque.",
+      "automacao": { "classificacao": "uso-futuro-com-recuperacao-apos-dano", "resumo": "A integração futura deverá registrar o uso por descanso longo e receber os PV marcados pelo alvo antes de limpar os mesmos PV do personagem." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Role Conjuração e dano fora do app, determine os PV marcados pelo alvo e use esse total para a recuperação." }
+    },
+    {
+      "id": "pavor-trauma-compartilhado",
+      "idFonte": "domain-cards/shared-trauma",
+      "nome": "Trauma Compartilhado",
+      "nomeIngles": "Shared Trauma",
+      "nivel": 3,
+      "tipo": "Feitiço",
+      "custoRecordar": 1,
+      "texto": "Você pode transferir sofrimento de uma criatura para outra. Uma vez por descanso, marque qualquer quantidade de Pontos de Vida em uma criatura voluntária em alcance Corpo a Corpo para limpar a mesma quantidade de Pontos de Vida de outra criatura voluntária em alcance Corpo a Corpo.",
+      "automacao": { "classificacao": "transferencia-futura-entre-alvos", "resumo": "A implementação depende de uma transação atômica entre duas fichas e permanece não exposta." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Escolha duas criaturas voluntárias em Corpo a Corpo, marque PV em uma e limpe exatamente o mesmo total na outra." }
+    },
+    {
+      "id": "pavor-aterrorizar",
+      "idFonte": "domain-cards/terrify",
+      "nome": "Aterrorizar",
+      "nomeIngles": "Terrify",
+      "nivel": 3,
+      "tipo": "Feitiço",
+      "custoRecordar": 1,
+      "texto": "Faça uma jogada de Conjuração contra um alvo em alcance Próximo. Em um sucesso, o alvo marca 1d4 Estresses, e você pode fazê-lo fugir um alcance para longe de você, como de Muito Próximo para Próximo ou de Próximo para Distante. Em um sucesso com Medo, o alvo também fica temporariamente Vulnerável.",
+      "automacao": { "classificacao": "manual-em-alvo", "resumo": "Jogada, Estresse, deslocamento e condição pertencem ao alvo e continuam na mesa." },
+      "resolucaoManual": { "rolaNoApp": false, "resumo": "Role Conjuração e 1d4 fora do app; em sucesso com Medo, aplique também Vulnerável." }
+    }
+  ]
+}

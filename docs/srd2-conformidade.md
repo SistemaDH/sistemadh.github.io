@@ -189,3 +189,9 @@ O segundo checkpoint conferiu **Provocação**, **Tanque de Suporte**, **Armadur
 O terceiro checkpoint fechou **Tocado pelo Valor**, **Golpe no Chão**, **Surto Total**, **Liderar pelo Exemplo**, **Mantenha a Posição**, **Armadura Inabalável** e **Inquebrável**, dos níveis 7–10, contra as pp. 223–224. Os efeitos permaneceram mecanicamente compatíveis; o vocabulário final protege **cartas ativas**, **Ponto de Armadura**, **Distante**, **jogada de reação**, **Restrito**, **gravidade**, **movimento de morte**, **limpar** e **1d6**.
 
 As 21 cartas de Valor e, com elas, as **189 cartas dos nove domínios Core** estão conferidas contra o SRD 2.0.
+
+### Cartas do domínio Pavor (7/21, não expostas)
+
+O primeiro checkpoint traduziu e conferiu **Golpe Definhante**, **Véu Umbral**, **Voz do Pavor**, **Retribuição Horrenda**, **Sifonar Essência**, **Trauma Compartilhado** e **Aterrorizar**, dos níveis 1–3, contra a p. 213 do SRD 2.0. Como ainda não há edição oficial pt-BR de Hope & Fear, os nomes e textos permanecem marcados como tradução provisória.
+
+As cartas ficam em `data/srd2-cartas-pavor.json`, com `exposto: false`, fora de `data/cartas-dominio.json` e do backend Core. Cada entrada registra o vínculo de fonte, a classificação da automação futura e que nenhuma rolagem deve ser realizada pelo app. O validador específico impede exposição acidental, termos mecânicos em inglês e divergências nas sete regras.

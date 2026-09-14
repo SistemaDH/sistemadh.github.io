@@ -16873,7 +16873,7 @@
             "pdfPageEnd": 213
           },
           "corpusSha256": "71dd1cbe310b8e783b4f05ea2a679e60772c93f7cf64671f77c6f984b10ece47",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/blink-out",
@@ -18073,7 +18073,7 @@
             "pdfPageEnd": 213
           },
           "corpusSha256": "c7533bb17f2a904e0ace616a33b21621a6fe9ea476000f6343545836525c65db",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/hold-the-line",
@@ -19018,7 +19018,7 @@
             "pdfPageEnd": 213
           },
           "corpusSha256": "ec070111c5c3a8b482b5aa14e6b8d06f1cf14a011cafde8c2db45a1f8a5e8baa",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/shield-aura",
@@ -19093,7 +19093,7 @@
             "pdfPageEnd": 213
           },
           "corpusSha256": "20be1e2a35b7e747aac2bef4a78e7281fbcd88287b78e0b70a4b70c55f6c0d30",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/smite",
@@ -19378,7 +19378,7 @@
             "pdfPageEnd": 213
           },
           "corpusSha256": "ddeb2680fc4fd31674c65ef4c82d6f82c1b136c4f813e9a00e73d99b3d5cd6e9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/thorn-skin",
@@ -19498,7 +19498,7 @@
             "pdfPageEnd": 213
           },
           "corpusSha256": "637a791088161f115f4df22e2b6f50b48b83591bcf3020e7423e27b9c552fc90",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/unbreakable",
@@ -19678,7 +19678,7 @@
             "pdfPageEnd": 213
           },
           "corpusSha256": "4bae65e2b996c7a1b8ba2342e3277a3ccf814631465e61672fd26f477cf5f14d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domain-cards/voice-of-reason",

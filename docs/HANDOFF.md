@@ -219,6 +219,18 @@ Validação deste checkpoint: inventário com 1.539 registros (**255 implementad
 
 Próximo checkpoint exato: iniciar as sete primeiras cartas do domínio **Pavor**, mantendo o domínio não exposto até a integração explícita das quatro classes de Hope & Fear.
 
+### Cartas de Pavor — 7/21 preparadas sem exposição
+
+- **Golpe Definhante**, **Véu Umbral**, **Voz do Pavor**, **Retribuição Horrenda**, **Sifonar Essência**, **Trauma Compartilhado** e **Aterrorizar** foram traduzidas e vinculadas à p. 213 do SRD 2.0;
+- o catálogo novo `data/srd2-cartas-pavor.json` permanece com `exposto: false` e não altera as 189 cartas Core nem `backend/41_Dominios.gs`;
+- traduções de nomes e textos continuam explicitamente provisórias enquanto não houver edição oficial pt-BR de Hope & Fear;
+- automações futuras foram classificadas, mas nenhuma integração de custo, contador, alvo ou rolagem foi exposta prematuramente;
+- a cobertura de `domain-cards` está em 196/210: 189 Core e 7 Pavor conferidas; 14 cartas de Pavor pendentes.
+
+Validação deste checkpoint: inventário com 1.539 registros (**262 implementados**, 1.276 pendentes), catálogo e auditoria específicos de Pavor, bloqueio de exposição e suíte SRD2. O E2E local continua bloqueado pela ausência do Chromium do Playwright.
+
+Próximo checkpoint exato: traduzir e conferir **Correntes da Aflição**, **Invocar Horror**, **Golpe Terrível**, **Névoa Espectral**, **Fogo Sombrio**, **Susto Repentino** e **Tocado pelo Pavor**, mantendo o domínio não exposto.
+
 ## Lote 8 — CONCLUÍDO: Core 1.0 auditado integralmente
 
 Iniciado em 08/09/2026 na branch `ediçãoclaude`.

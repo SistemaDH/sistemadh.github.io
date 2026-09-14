@@ -274,7 +274,14 @@ const implementados = new Set([
   'domain-cards/lead-by-example',
   'domain-cards/hold-the-line',
   'domain-cards/unyielding-armor',
-  'domain-cards/unbreakable'
+  'domain-cards/unbreakable',
+  'domain-cards/blighting-strike',
+  'domain-cards/umbral-veil',
+  'domain-cards/voice-of-dread',
+  'domain-cards/hideous-retribution',
+  'domain-cards/siphon-essence',
+  'domain-cards/shared-trauma',
+  'domain-cards/terrify'
 ]);
 const colecoes = [];
 
