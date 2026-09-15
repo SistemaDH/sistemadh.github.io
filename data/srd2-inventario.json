@@ -12151,7 +12151,7 @@
             "pdfPageEnd": 114
           },
           "corpusSha256": "259aa0eba2cd512b016fed1c2eb54b92c7c0517a89b691e94fce18a9b4ebe9db",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/basilisk",
@@ -12166,7 +12166,7 @@
             "pdfPageEnd": 115
           },
           "corpusSha256": "05a3393fd5ed39efc6e1b89506f27793d0e707b0efdc85b3a4f7883ab1e256c5",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/battle-box",
@@ -12211,7 +12211,7 @@
             "pdfPageEnd": 115
           },
           "corpusSha256": "9e63c224305393347d13ed47fedb9bf60e00382628b5a7f86ce9b824ebdc9509",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/berserker-initiate",
@@ -12226,7 +12226,7 @@
             "pdfPageEnd": 115
           },
           "corpusSha256": "c7edbe35d29d5e4e873ffcab9356e4233b856fd410b108d7f9673afa27e5b6b7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/bladed-guard",
@@ -12316,7 +12316,7 @@
             "pdfPageEnd": 115
           },
           "corpusSha256": "5db430804d49acf5bf2a85a1883ef9f77c7d5c255b368233fb8e2dd781ee3935",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/cephilith-abomination",
@@ -12421,7 +12421,7 @@
             "pdfPageEnd": 116
           },
           "corpusSha256": "0c863f8924ffc67212f213e8cf1624d461dacdaf8a6be23139eb73304fd709a7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/chimera",
@@ -12856,7 +12856,7 @@
             "pdfPageEnd": 117
           },
           "corpusSha256": "2fe114d9a73ccb0d79c130f83fc6e53c5d80d6d3d512eb8cf793fcf90f459f86",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/dire-wolf",
@@ -12886,7 +12886,7 @@
             "pdfPageEnd": 117
           },
           "corpusSha256": "e16008b3012b003d7a2bd427478194da34c8cb3240763f6aba2abe37eae5aae2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/dragon-knight",
@@ -12901,7 +12901,7 @@
             "pdfPageEnd": 117
           },
           "corpusSha256": "00bf830a39bcca5a6d464f3243c9d7f1c107a0638ca052542a0af9900e5718b8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/dragon-mother-mitera",
@@ -13006,7 +13006,7 @@
             "pdfPageEnd": 118
           },
           "corpusSha256": "b1e13bce2d21e2d2024ae523e03498813867141c7a2bad708843ecf93ed397ce",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/elite-soldier",
@@ -13051,7 +13051,7 @@
             "pdfPageEnd": 118
           },
           "corpusSha256": "b5b1e1c2ffbae4012838c9e121617c8f99a2f95a91320e8eaad0f8f957aa320e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/entombed-elite-guard",
@@ -13066,7 +13066,7 @@
             "pdfPageEnd": 118
           },
           "corpusSha256": "8a8fc3000d91057384a87a88ff6ef1db35513518f78ad7c8e2f4a5d36c377ce6",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/entombed-empress",
@@ -13081,7 +13081,7 @@
             "pdfPageEnd": 119
           },
           "corpusSha256": "78e973f9f3811803ae224f0cf5fec7688a95615886ca6266ca6b4aadf5ae05a2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/entombed-necropriest",
@@ -13096,7 +13096,7 @@
             "pdfPageEnd": 119
           },
           "corpusSha256": "f3e075f2542b6a3c26478cfacdacc159b4232cbf7604632225510056aa19c266",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/entombed-skin-beetles",
@@ -13111,7 +13111,7 @@
             "pdfPageEnd": 119
           },
           "corpusSha256": "be48cbd5760d988be16eb4791215d4b7f99df049991eecc5abd0071964391f5a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/entombed-stonemason",
@@ -13126,7 +13126,7 @@
             "pdfPageEnd": 119
           },
           "corpusSha256": "5a51dd095c10ea7b53ad2b186cc3b197dcecdc48fa78c10c8c016cf7b29ce197",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/failed-experiment",
@@ -13276,7 +13276,7 @@
             "pdfPageEnd": 120
           },
           "corpusSha256": "0d73b8b6303bcd3b8a0057cb78b779c6ec19d3f6288ca9b235d21e25aa9254a3",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/fowlbear",
@@ -13291,7 +13291,7 @@
             "pdfPageEnd": 120
           },
           "corpusSha256": "78ef9799a150de8c67ea6ee02add793ad0697a1f5a97cc6269afd70c245adf37",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/frost-titan",
@@ -13321,7 +13321,7 @@
             "pdfPageEnd": 120
           },
           "corpusSha256": "a85e825408987838b6693b1b08795682a2de99f99d3a03fb835d5c9e6f28a6a8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/fungispunj-sporophore",
@@ -13336,7 +13336,7 @@
             "pdfPageEnd": 120
           },
           "corpusSha256": "823a2a07a16881e2328c02c9bf9a56a10e4c6812f98df786f4590b50f2097322",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/gargantuan-sea-turtle",
@@ -13381,7 +13381,7 @@
             "pdfPageEnd": 121
           },
           "corpusSha256": "c036b417d9abe77ea2809bc99fd36e5f6cd0a49c32ee921538da2b3271f2f65c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/ghastly-legion",
@@ -13471,7 +13471,7 @@
             "pdfPageEnd": 122
           },
           "corpusSha256": "7e66ad2d680c9865f45b0942c26f1817ea8415e2ed312a34ec02ed64dd8f802d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/giant-rat",
@@ -13546,7 +13546,7 @@
             "pdfPageEnd": 122
           },
           "corpusSha256": "b6ac00a2f612406c5c56a876fbd3d6c1845a0e832509302b202f0e494c986c35",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/gorgon",
@@ -13651,7 +13651,7 @@
             "pdfPageEnd": 123
           },
           "corpusSha256": "b62bf5a808be226f28baeb6eec27801ccb33e141e9d52e4909d5c627e010bbae",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/guahalan-fang-lord",
@@ -13666,7 +13666,7 @@
             "pdfPageEnd": 123
           },
           "corpusSha256": "ac23712debf3c9d6acdfc2a56e77f69477c3a3fbd2e80a3725b09e9a6cdbffea",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/guahalan-shifter",
@@ -13681,7 +13681,7 @@
             "pdfPageEnd": 123
           },
           "corpusSha256": "5f2c3a1c1e0fa3b7893bba152d0c469a42cdebc2fa4ec509ce61f91e21b27a49",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/guahalan-spirit-beast",
@@ -13696,7 +13696,7 @@
             "pdfPageEnd": 124
           },
           "corpusSha256": "aa1b618f5637f10e1ff3625af9b440d314b5ea258fa691bfb05ad41a76d77639",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/guahalan-spirit-singer",
@@ -13711,7 +13711,7 @@
             "pdfPageEnd": 124
           },
           "corpusSha256": "fa01ccf56e890a34dbde63832d07beef57eeefd311d62265a2f31ef117ad1922",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/hallowed-archer",
@@ -13906,7 +13906,7 @@
             "pdfPageEnd": 124
           },
           "corpusSha256": "1a9a050346ce7468d5aa969e029605a083cdd4eb2ad21c485b4d2b0fc44ae1e9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/hive-walker",
@@ -13921,7 +13921,7 @@
             "pdfPageEnd": 124
           },
           "corpusSha256": "30a568758e916f24526e3a391695b35efff7b5abeea04abf31e222a903dfe87c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/huge-green-ooze",
@@ -13966,7 +13966,7 @@
             "pdfPageEnd": 124
           },
           "corpusSha256": "bd9310070a40fc3471ef9bb196036d07fe42006e5a579ffe9e2718feb64d7d0c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/jagged-knife-bandit",
@@ -14176,7 +14176,7 @@
             "pdfPageEnd": 125
           },
           "corpusSha256": "67b1eebea3f5113dd4d641c6e21c2788e9c2d1697e6d71aad1e866c87b2a867e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/landshark-behemoth",
@@ -14191,7 +14191,7 @@
             "pdfPageEnd": 125
           },
           "corpusSha256": "712f3e470e95af78e66faaccf932105964495f20d682e188f6cae0f1b402438a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/manticore",
@@ -14746,7 +14746,7 @@
             "pdfPageEnd": 126
           },
           "corpusSha256": "b6a8e83d5788f28850a527f97ed5d9dcffc9c616b20a47ce0b44a451ae938166",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/red-ooze",
@@ -14926,7 +14926,7 @@
             "pdfPageEnd": 127
           },
           "corpusSha256": "900d73a9d25ab8daf929f3455a0f473d34bdd4cbeb586969fe214b1de6a4c2f8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/sandwyrm",
@@ -14971,7 +14971,7 @@
             "pdfPageEnd": 127
           },
           "corpusSha256": "f63f02ed926c76f2d83db09ea0105f77103764b26e79a15d4c9b4adee75bcc46",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/secret-keeper",
@@ -15256,7 +15256,7 @@
             "pdfPageEnd": 128
           },
           "corpusSha256": "2c11f16d2c2f7d8d2e66e25daf9fa8850beaf0f32e39e06e18abe4b36d857c9a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/spy",
@@ -15301,7 +15301,7 @@
             "pdfPageEnd": 129
           },
           "corpusSha256": "c37b39f0f537d2fd5356d73c25859e851384771e17cce7fcff44ad6602d4c00a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/stonewraith",
@@ -15481,7 +15481,7 @@
             "pdfPageEnd": 129
           },
           "corpusSha256": "0e9e1f180979b56281ca61b52c05c6613a7217ca80200354416e44f081a22f35",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/tyrannosaurus",
@@ -15496,7 +15496,7 @@
             "pdfPageEnd": 129
           },
           "corpusSha256": "831582d75e3ab49bbf9f8c9754d9559769a1bed81d1b4a789bdc810ca49f893f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/unicorn",
@@ -15526,7 +15526,7 @@
             "pdfPageEnd": 130
           },
           "corpusSha256": "f3a2789f92f86039fa089087da90b0be321f29f4498270b29d81eca29876d611",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/valdenhax",
@@ -15541,7 +15541,7 @@
             "pdfPageEnd": 130
           },
           "corpusSha256": "82b9f58f1912879d6f7c2bca5d2dcc4124381b7ab1f2602a11fd206d1f19832a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/vampire",
