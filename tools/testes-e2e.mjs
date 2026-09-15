@@ -2081,11 +2081,11 @@ try {
     if (!/\d+\/\d+/.test(conta)) throw new Error(`conta da trilha: "${conta}"`);
   });
 
-  await passo('o bestiário abre com as 129 fichas e filtra por patamar e tipo', async () => {
+  await passo('o bestiário abre com as 264 fichas e filtra por patamar e tipo', async () => {
     await pagina.getByRole('tab', { name: 'Bestiário' }).click();
     await pagina.waitForSelector('.bestiario__linha', { timeout: 20000 });
     const todas = await pagina.locator('.bestiario__linha').count();
-    if (todas !== 129) throw new Error(`esperava 129 fichas, achei ${todas}`);
+    if (todas !== 264) throw new Error(`esperava 264 fichas, achei ${todas}`);
     await pagina.locator('.bestiario__pilulas').first().getByRole('button', { name: '1º' }).click();
     await pagina.locator('.bestiario__pilulas').last().getByRole('button', { name: 'Solo', exact: true }).click();
     await pagina.waitForTimeout(200);
@@ -2185,7 +2185,7 @@ try {
      *
      * Ela era uma lista dentro da aba Bestiário, e o "Abrir" do resumo "Em
      * cena" trocava para o Bestiário no CATÁLOGO. Quem tocava ali caía numa
-     * lista de 129 adversários, não na cena — e por isso nunca chegava aos
+     * lista de 264 adversários, não na cena — e por isso nunca chegava aos
      * botões de tirar da cena, que já existiam.
      *
      * ⚠ A decisão antiga tinha um motivo escrito ("em 390px cinco rótulos no
@@ -2240,7 +2240,7 @@ try {
      *
      * ⚠ O passo espera o botão APARECER em vez de exigir que ele já esteja
      * lá: a aba Cena desenha antes do catálogo chegar, de propósito, para não
-     * fazer a tela mais usada esperar pelos 129 adversários.
+     * fazer a tela mais usada esperar pelos 264 adversários.
      */
     const cartao = pagina.locator('.encontro__cartao').first();
     const botaoMov = cartao.getByRole('button', { name: 'Movimentos' });
