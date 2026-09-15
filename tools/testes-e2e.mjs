@@ -2090,7 +2090,7 @@ try {
     await pagina.locator('.bestiario__pilulas').last().getByRole('button', { name: 'Solo', exact: true }).click();
     await pagina.waitForTimeout(200);
     const solos = await pagina.locator('.bestiario__linha').count();
-    if (solos !== 7) throw new Error(`esperava 7 solos de 1º patamar, achei ${solos}`);
+    if (solos !== 13) throw new Error(`esperava 13 solos de 1º patamar, achei ${solos}`);
   });
 
   await passo('a busca acha pelo nome e a ficha abre com as habilidades', async () => {
@@ -2117,7 +2117,7 @@ try {
     await pagina.getByRole('tab', { name: 'Ambientes' }).click();
     await pagina.waitForSelector('.bestiario__linha', { timeout: 10000 });
     const quantos = await pagina.locator('.bestiario__linha').count();
-    if (quantos !== 19) throw new Error(`esperava 19 ambientes, achei ${quantos}`);
+    if (quantos !== 47) throw new Error(`esperava 47 ambientes, achei ${quantos}`);
     await pagina.locator('.bestiario__linha').first().click();
     await pagina.waitForSelector('.ficha-adversario');
     await pagina.locator('.modal__caixa').last().locator('.elo').first().click();
