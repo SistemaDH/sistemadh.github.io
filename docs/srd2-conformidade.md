@@ -47,7 +47,7 @@ O corpus auxiliar pinado registra 1.539 registros: 10 domínios, 13 classes, 26 
 
 O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. O inventário individual fica em `data/srd2-inventario.json`: cada um dos 1.539 registros preserva ID, nome inglês, tipo, hash do registro no corpus, estado de implementação e, quando aplicável, `sourceLocator`. `npm run teste:srd2` impede alteração acidental das contagens, IDs, hashes estruturais ou estados. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
 
-No checkpoint atual, 1.198 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 340 permanecem `pendente`.
+No checkpoint atual, 1.230 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 308 permanecem `pendente`.
 
 ## Armas do núcleo — primeiro vínculo (194/358)
 
@@ -252,7 +252,7 @@ As 120 opções adicionais foram extraídas com nome, número, descrição, pág
 
 ### Adversários existentes vinculados (129/264)
 
-As 129 fichas já presentes foram casadas estruturalmente com o SRD2 por patamar, função, dificuldade, limiares, PV, Estresse e ataque. Cada ficha agora guarda nome inglês, localização e hash da fonte. `data/srd2-adversarios-existentes-auditoria.json` e `npm run teste:srd2-adversarios-existentes` protegem esses vínculos. As 135 fichas adicionais foram consolidadas em `data/srd2-adversarios-novos-pendentes.json`. As 76 fichas dos 1º e 2º patamares já foram traduzidas, integradas e protegidas por `data/srd2-adversarios-tier1-auditoria.json`, `data/srd2-adversarios-tier2-auditoria.json`, `npm run teste:srd2-adversarios-tier1` e `npm run teste:srd2-adversarios-tier2`. Restam 59 fichas preparadas dos 3º e 4º patamares, com estatísticas, ataques, habilidades, páginas e hashes, ainda sem exposição.
+As 129 fichas já presentes foram casadas estruturalmente com o SRD2 por patamar, função, dificuldade, limiares, PV, Estresse e ataque. Cada ficha agora guarda nome inglês, localização e hash da fonte. `data/srd2-adversarios-existentes-auditoria.json` e `npm run teste:srd2-adversarios-existentes` protegem esses vínculos. As 135 fichas adicionais foram consolidadas em `data/srd2-adversarios-novos-pendentes.json`. As 108 fichas dos 1º, 2º e 3º patamares já foram traduzidas, integradas e protegidas por auditorias próprias. Restam 27 fichas preparadas do 4º patamar, com estatísticas, ataques, habilidades, páginas e hashes, ainda sem exposição.
 
 ### Ambientes existentes vinculados (19/47)
 

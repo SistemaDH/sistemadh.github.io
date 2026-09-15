@@ -5250,8 +5250,8 @@ teste('o painel resume as fichas sem carregar tudo', () => {
 /* -------------------------------------------------------------------------- */
 
 console.log('\nBestiário');
-teste('as 129 fichas e os 19 ambientes estão no servidor', () => {
-  igual(avaliar('ADVERSARIOS.length'), 205);
+teste('as 237 fichas e os 19 ambientes estão no servidor', () => {
+  igual(avaliar('ADVERSARIOS.length'), 237);
   igual(avaliar('AMBIENTES.length'), 19);
   igual(avaliar('TIPOS_DE_ADVERSARIO.length'), 10);
 });
@@ -5271,11 +5271,11 @@ teste('acha ambiente pelo nome do índice, que difere do cabeçalho', () => {
 
 teste('o catálogo filtra por patamar, tipo e busca', () => {
   const t1 = contexto.catalogoDeAdversarios_({ patamar: 1 });
-  igual(t1.total, 205, 'o total é sempre o do catálogo inteiro');
+  igual(t1.total, 237, 'o total é sempre o do catálogo inteiro');
   verdade(t1.itens.length === 86, 'são 86 fichas de 1º patamar, achei ' + t1.itens.length);
   verdade(t1.itens.every((x) => x.patamar === 1), 'todas de 1º patamar');
   const solos = contexto.catalogoDeAdversarios_({ tipo: 'Solo' });
-  igual(solos.itens.length, 33);
+  igual(solos.itens.length, 43);
   verdade(solos.itens.every((x) => x.pontosDeBatalha === 5), 'todo solo custa 5 PB');
   const busca = contexto.catalogoDeAdversarios_({ busca: 'zumbi' });
   verdade(busca.itens.length >= 4, 'a busca por "zumbi" acha os zumbis');
