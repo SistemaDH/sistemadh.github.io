@@ -102,7 +102,7 @@
       "id": "rules",
       "esperados": 224,
       "estado": "em-auditoria",
-      "observacao": "Avanço dos níveis 1–10 corrigido; os demais registros de regras ainda precisam de classificação individual."
+      "observacao": "125/224 fontes Rule vinculadas às coleções canônicas já implementadas; 99 regras centrais, do Mestre e de campanhas suplementares permanecem em auditoria."
     }
   ]
 }

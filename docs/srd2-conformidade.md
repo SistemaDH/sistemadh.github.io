@@ -47,7 +47,7 @@ O corpus auxiliar pinado registra 1.539 registros: 10 domínios, 13 classes, 26 
 
 O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. O inventário individual fica em `data/srd2-inventario.json`: cada um dos 1.539 registros preserva ID, nome inglês, tipo, hash do registro no corpus, estado de implementação e, quando aplicável, `sourceLocator`. `npm run teste:srd2` impede alteração acidental das contagens, IDs, hashes estruturais ou estados. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
 
-No checkpoint atual, 1.316 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 222 permanecem `pendente`.
+No checkpoint atual, 1.439 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 99 permanecem `pendente`. Das 224 fontes da coleção `rules`, 125 foram vinculadas às coleções canônicas já implementadas e testadas; as demais seguem separadas entre regras centrais, regras do Mestre e campanhas suplementares.
 
 ## Armas do núcleo — primeiro vínculo (194/358)
 
