@@ -1,7 +1,5 @@
 {
   "versao": 1,
-  "estado": "integrado",
-  "aviso": "Transformações integradas à ficha, ao servidor e à interface.",
   "fonte": {
     "srd": "2.0",
     "data": "2026-08-25",
@@ -44,6 +42,18 @@
         "pdfPageEnd": 43,
         "lineStart": 2646,
         "lineEnd": 2665
+      },
+      "fonteSrd2": {
+        "id": "transformations/demigod",
+        "sourceLocator": {
+          "chapter": "CORE MATERIALS",
+          "heading": "DEMIGOD",
+          "lineStart": 2646,
+          "lineEnd": 2665,
+          "pdfPageStart": 43,
+          "pdfPageEnd": 43
+        },
+        "corpusSha256": "df5a009ea60eee3754d96d766b013023b1a65e43373fbe3d49bfd7a61aefe967"
       }
     },
     {
@@ -80,6 +90,18 @@
         "pdfPageEnd": 43,
         "lineStart": 2667,
         "lineEnd": 2688
+      },
+      "fonteSrd2": {
+        "id": "transformations/ghost",
+        "sourceLocator": {
+          "chapter": "CORE MATERIALS",
+          "heading": "GHOST",
+          "lineStart": 2667,
+          "lineEnd": 2688,
+          "pdfPageStart": 43,
+          "pdfPageEnd": 43
+        },
+        "corpusSha256": "917d197ba009b3858c274a56c0b2c26f4dfc269f8dfc971e9c0113ac397a01ba"
       }
     },
     {
@@ -116,6 +138,18 @@
         "pdfPageEnd": 44,
         "lineStart": 2692,
         "lineEnd": 2711
+      },
+      "fonteSrd2": {
+        "id": "transformations/reanimated",
+        "sourceLocator": {
+          "chapter": "CORE MATERIALS",
+          "heading": "REANIMATED",
+          "lineStart": 2692,
+          "lineEnd": 2711,
+          "pdfPageStart": 44,
+          "pdfPageEnd": 44
+        },
+        "corpusSha256": "fa6bb81206e91dfc0ba0780d36ab481ea6aeef8b375811263a2843c4f051615a"
       }
     },
     {
@@ -152,6 +186,18 @@
         "pdfPageEnd": 44,
         "lineStart": 2713,
         "lineEnd": 2734
+      },
+      "fonteSrd2": {
+        "id": "transformations/shapeshifter",
+        "sourceLocator": {
+          "chapter": "CORE MATERIALS",
+          "heading": "SHAPESHIFTER",
+          "lineStart": 2713,
+          "lineEnd": 2734,
+          "pdfPageStart": 44,
+          "pdfPageEnd": 44
+        },
+        "corpusSha256": "403e4578ffe591b83ce3ec0a1d6a627eb9d5c89ed961313f08a5f1b13921ce19"
       }
     },
     {
@@ -188,6 +234,18 @@
         "pdfPageEnd": 45,
         "lineStart": 2738,
         "lineEnd": 2757
+      },
+      "fonteSrd2": {
+        "id": "transformations/vampire",
+        "sourceLocator": {
+          "chapter": "CORE MATERIALS",
+          "heading": "VAMPIRE",
+          "lineStart": 2738,
+          "lineEnd": 2757,
+          "pdfPageStart": 45,
+          "pdfPageEnd": 45
+        },
+        "corpusSha256": "242460e76570f6c28f6749d376fc9cbb66e03140de4e5b05190bf70e5d02ceb4"
       }
     },
     {
@@ -225,6 +283,18 @@
         "pdfPageEnd": 45,
         "lineStart": 2759,
         "lineEnd": 2778
+      },
+      "fonteSrd2": {
+        "id": "transformations/werewolf",
+        "sourceLocator": {
+          "chapter": "CORE MATERIALS",
+          "heading": "WEREWOLF",
+          "lineStart": 2759,
+          "lineEnd": 2778,
+          "pdfPageStart": 45,
+          "pdfPageEnd": 45
+        },
+        "corpusSha256": "b3846d7b12c329aab6a73644b618ff3487bb3d45b3d8754deb5127d2dba9101e"
       }
     }
   ]

@@ -57,6 +57,7 @@ function fichaVazia_() {
     dominios: [],        // domínios da classe
     cartas: { ativas: [], cofre: [] },
     caracteristicas: [], // ancestralidade, comunidade, classe, subclasse
+    transformacao: null, // transformação SRD2 adquirida durante a campanha
     escolhasDeClasse: {},// o número de 1 a 12 do Mago — ver 42_Classes.gs
     alvosDeHabilidade: {},// quem está Marcado/Priorizado — um por habilidade
     retaliacoesPendentes: [], // bônus temporário por adversário — ver 42_Classes.gs
@@ -402,6 +403,9 @@ function validarFicha_(fichaBruta) {
   }
   if (typeof validarRetaliacoesPendentes_ === 'function') {
     problemas = problemas.concat(validarRetaliacoesPendentes_(ficha));
+  }
+  if (typeof validarTransformacaoDaFicha_ === 'function') {
+    problemas = problemas.concat(validarTransformacaoDaFicha_(ficha));
   }
   // A multiclasse precisa estar resolvida ANTES das cartas: é ela que define
   // o teto de nível das cartas do domínio novo.

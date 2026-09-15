@@ -1405,7 +1405,7 @@
             "pdfPageEnd": 43
           },
           "corpusSha256": "df5a009ea60eee3754d96d766b013023b1a65e43373fbe3d49bfd7a61aefe967",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "transformations/ghost",
@@ -1420,7 +1420,7 @@
             "pdfPageEnd": 43
           },
           "corpusSha256": "917d197ba009b3858c274a56c0b2c26f4dfc269f8dfc971e9c0113ac397a01ba",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "transformations/reanimated",
@@ -1435,7 +1435,7 @@
             "pdfPageEnd": 44
           },
           "corpusSha256": "fa6bb81206e91dfc0ba0780d36ab481ea6aeef8b375811263a2843c4f051615a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "transformations/shapeshifter",
@@ -1450,7 +1450,7 @@
             "pdfPageEnd": 44
           },
           "corpusSha256": "403e4578ffe591b83ce3ec0a1d6a627eb9d5c89ed961313f08a5f1b13921ce19",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "transformations/vampire",
@@ -1465,7 +1465,7 @@
             "pdfPageEnd": 45
           },
           "corpusSha256": "242460e76570f6c28f6749d376fc9cbb66e03140de4e5b05190bf70e5d02ceb4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "transformations/werewolf",
@@ -1480,7 +1480,7 @@
             "pdfPageEnd": 45
           },
           "corpusSha256": "b3846d7b12c329aab6a73644b618ff3487bb3d45b3d8754deb5127d2dba9101e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         }
       ]
     },

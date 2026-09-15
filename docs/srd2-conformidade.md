@@ -47,7 +47,7 @@ O corpus auxiliar pinado registra 1.539 registros: 10 domínios, 13 classes, 26 
 
 O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. O inventário individual fica em `data/srd2-inventario.json`: cada um dos 1.539 registros preserva ID, nome inglês, tipo, hash do registro no corpus, estado de implementação e, quando aplicável, `sourceLocator`. `npm run teste:srd2` impede alteração acidental das contagens, IDs, hashes estruturais ou estados. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
 
-No checkpoint atual, 1.310 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 228 permanecem `pendente`.
+No checkpoint atual, 1.316 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 222 permanecem `pendente`.
 
 ## Armas do núcleo — primeiro vínculo (194/358)
 
@@ -91,9 +91,9 @@ Vinte e cinco dos 31 registros novos já estão traduzidos e integrados aos cat�
 - `data/srd2-classes-novas.json`: Pavor e 4 classes;
 - `data/srd2-subclasses-novas.json`: 8 subclasses e 43 características;
 - `data/srd2-origens-novas.json`: 6 ancestralidades e 6 comunidades;
-- `data/srd2-transformacoes.json`: as 6 transformações, 12 características e 36 perguntas permanecem no lote seguinte, que exige persistência e ciclo de aquisição próprio.
+- `data/transformacoes.json`: 6 transformações, 12 características e 36 perguntas, com persistência e ciclo de aquisição próprio.
 
-Pavor, as quatro classes, oito subclasses, seis ancestralidades e seis comunidades agora participam da validação do servidor e aparecem nas telas que consomem os catálogos canônicos. As seis transformações permanecem pendentes até o ciclo de aquisição, remoção e efeitos permanentes estar completo.
+Pavor, as quatro classes, oito subclasses, seis ancestralidades, seis comunidades e seis transformações participam da validação do servidor e aparecem nas telas. Transformações podem ser adquiridas e removidas durante a campanha; custos e marcadores determinísticos são aplicados pelo servidor, enquanto jogadas e decisões narrativas permanecem na mesa.
 
 ### Cuidados de extração confirmados
 

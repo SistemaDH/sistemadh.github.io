@@ -127,6 +127,7 @@ function aplicarAjusteDireto_(ficha, a) {
   if (tipo === 'reacaoconsumivel') return usarReacaoDeConsumivel_(ficha, a);
   if (tipo === 'usoequipamento') return usarCaracteristicaDeEquipamento_(ficha, a);
   if (tipo === 'habilidade') return usarHabilidadeDeClasse_(ficha, a);
+  if (tipo === 'transformacao') return ajustarTransformacao_(ficha, a);
   return { erro: 'Tipo de ajuste desconhecido: "' + String((a || {}).tipo) + '".' };
 }
 
@@ -3670,6 +3671,16 @@ function aplicarDanoNaFicha_(ficha, a) {
   const aparar = resolverApararNoDano_(ficha, a, bruto);
   if (aparar && aparar.erro) return aparar;
   let final = (aparar && aparar.usado) ? aparar.danoDepois : bruto;
+  const transformacaoDano = typeof normalizarTransformacao_ === 'function'
+    ? normalizarTransformacao_((ficha || {}).transformacao) : null;
+  let efeitoTransformacaoDano = null;
+  if (transformacaoDano === 'fantasma') {
+    const antesTransformacao = final;
+    final = tipo === 'fisico' ? Math.ceil(final / 2) : final * 2;
+    efeitoTransformacaoDano = { transformacao:'fantasma', tipo:tipo,
+      danoAntes:antesTransformacao, danoDepois:final,
+      efeito:tipo === 'fisico' ? 'resistencia' : 'dano-dobrado' };
+  }
   if (retraido) {
     // Reutiliza a implementação canônica da resistência DEPOIS de Aparar.
     const pelaResistencia = pvDoDano_(final, { maior: maior, severo: severo }, comMassivo, true);
@@ -3980,7 +3991,8 @@ function aplicarDanoNaFicha_(ficha, a) {
       fonte: regraArmadura.fonte, caracteristica: regraArmadura.caracteristica
     } : null,
     reacoes: usadas,
-    resistencia: retraido ? 'Retrair' : null,
+    resistencia: retraido ? 'Retrair' : (efeitoTransformacaoDano && tipo === 'fisico' ? 'Fantasma · Efêmero' : null),
+    transformacaoDano: efeitoTransformacaoDano,
     equipamentoDefensivo: reducaoEquipamento,
     aparar: (aparar && aparar.usado) ? aparar : null,
     dominioElementalTerra: dominioTerra,
@@ -4969,6 +4981,27 @@ function ajustarMovimentoDeMorte_(ficha, a) {
     }
 
     if (medo > esperanca) {
+      if (typeof normalizarTransformacao_ === 'function' && normalizarTransformacao_((ficha || {}).transformacao) === 'reanimado' && a.usarNaoFicaMorto === true) {
+        const escolhasT = ficha.transformacao.escolhas || (ficha.transformacao.escolhas = {});
+        const perdidos = Math.max(0, Math.trunc(Number(escolhasT.pvPermanentesPerdidos)) || 0);
+        const tetoAtual = Math.max(0, Number(r.pontosDeVidaMaximos) || 0);
+        if (tetoAtual <= 1) {
+          ficha.inconsciente = false;
+          const fimReanimado = encerrarFicha_(ficha, 'veu', nota);
+          return {tipo:'morte',movimento:'arriscar',resultado:'veu',encerrada:fimReanimado,
+            alerta:'Não Fica Morto marcou permanentemente o último Ponto de Vida: o personagem atravessa o véu.'};
+        }
+        escolhasT.pvPermanentesPerdidos = perdidos + 1;
+        const pedidoR = a.reparticao || {};
+        let pvR = Math.min(Math.max(0,Math.trunc(Number(pedidoR.pontosDeVida))||0),Number(r.pontosDeVidaMarcados)||0);
+        let estR = Math.min(Math.max(0,Math.trunc(Number(pedidoR.estresse))||0),Number(r.estresseMarcado)||0);
+        if (pvR + estR > esperanca || pvR + estR < 1) return {erro:'Não Fica Morto: distribua até '+esperanca+' entre Pontos de Vida e Estresse.'};
+        ficha.inconsciente=false;r.pontosDeVidaMarcados=Math.max(0,(Number(r.pontosDeVidaMarcados)||0)-pvR);r.estresseMarcado=Math.max(0,(Number(r.estresseMarcado)||0)-estR);
+        if(typeof aplicarDerivados_==='function')aplicarDerivados_(ficha);
+        return {tipo:'morte',movimento:'arriscar',resultado:'esperanca-reanimado',dadoEsperanca:esperanca,dadoMedo:medo,
+          limpou:{pontosDeVida:pvR,estresse:estR},pvPermanentesPerdidos:perdidos+1,
+          alerta:'Não Fica Morto: a falha virou sucesso e 1 espaço de Ponto de Vida foi perdido permanentemente.'};
+      }
       ficha.inconsciente = false;
       const fim = encerrarFicha_(ficha, 'veu', nota);
       return {

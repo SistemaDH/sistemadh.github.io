@@ -2801,6 +2801,48 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     // --- retrato e traços (o topo) ---------------------------------------
     pai.append(blocoDeRetrato(ficha));
 
+    const td = ficha.transformacaoDados || null;
+    const abrirTransformacoes = () => {
+      const opcoes = catalogo.transformacoes();
+      const modal = abrirModal({
+        titulo: td ? 'Transformação' : 'Adquirir transformação',
+        conteudo: el('div', { class: 'pilha' }, opcoes.map((t) => el('button', {
+          type: 'button', class: `btn ${td && td.id === t.id ? '' : 'btn--fantasma'}`,
+          onClick: async () => { await enviar([{ tipo:'transformacao', acao:'adquirir', id:t.id }]); modal.fechar(); }
+        }, t.nome))),
+        acoes: [
+          td ? el('button', { type:'button', class:'btn btn--perigo', onClick:async()=>{
+            await enviar([{tipo:'transformacao',acao:'remover'}]); modal.fechar();
+          } }, 'Remover transformação') : null,
+          el('button', { type:'button', class:'btn btn--fantasma', onClick:()=>modal.fechar() }, 'Fechar')
+        ].filter(Boolean)
+      });
+    };
+    if (td) {
+      const acoesTransformacao = [];
+      if (td.id === 'fantasma') acoesTransformacao.push(el('button', {type:'button',class:'btn btn--pequeno',onClick:()=>enviar([{tipo:'transformacao',acao:'atravessar-objeto'}])}, 'Atravessar objeto · 2 Estresses'));
+      if (td.id === 'lobisomem') {
+        acoesTransformacao.push(el('button', {type:'button',class:'btn btn--pequeno',onClick:()=>enviar([{tipo:'transformacao',acao:td.formaDeLobo?'sair-forma-de-lobo':'entrar-forma-de-lobo',pvMarcado:true}])}, td.formaDeLobo?'Sair da Forma de Lobo':'Entrar na Forma de Lobo · 1 Estresse'));
+        if (td.formaDeLobo) acoesTransformacao.push(el('button',{type:'button',class:'btn btn--fantasma btn--pequeno',onClick:()=>enviar([{tipo:'transformacao',acao:'jogada-com-esperanca'}])},'Registrar jogada com Esperança'));
+      }
+      if (td.id === 'metamorfo') acoesTransformacao.push(el('button',{type:'button',class:'btn btn--pequeno',onClick:async()=>{
+        const ancestralidade=prompt('Qual ancestralidade deseja assumir?', td.ancestralidadeAssumida||'');
+        if(!ancestralidade)return;const caracteristica=prompt('Qual característica dessa ancestralidade deseja receber?',td.caracteristicaAncestral||'');
+        if(caracteristica)await enviar([{tipo:'transformacao',acao:'mudar-forma',ancestralidade,caracteristica}]);
+      }},'Mudar de forma'));
+      if (td.id === 'vampiro') {
+        acoesTransformacao.push(el('button',{type:'button',class:'btn btn--pequeno',onClick:async()=>{const n=Number(prompt('Quantos PV o alvo marcou?', '1'));if(n>0)await enviar([{tipo:'transformacao',acao:'alimentar',pontosDeVida:n}])}},`Alimentar-se · ${td.marcadores}/6`));
+        acoesTransformacao.push(el('button',{type:'button',class:'btn btn--fantasma btn--pequeno',disabled:td.marcadores<1,onClick:()=>enviar([{tipo:'transformacao',acao:'gastar-marcador'}])},'Gastar marcador'));
+      }
+      pai.append(secao(`Transformação · ${td.nome}`, el('div',{class:'pilha'},[
+        el('p',{class:'texto-sm'},textoAnotado(td.descricao)),
+        ...td.caracteristicas.map(c=>el('div',{class:'ficha__carac'},[el('strong',{texto:c.nome}),el('p',{class:'texto-sm'},textoAnotado(c.texto))])),
+        el('div',{class:'linha'},[...acoesTransformacao,el('button',{type:'button',class:'btn btn--fantasma btn--pequeno',onClick:abrirTransformacoes},'Gerenciar')])
+      ])));
+    } else {
+      pai.append(el('button',{type:'button',class:'btn btn--fantasma btn--pequeno',onClick:abrirTransformacoes},'Adquirir transformação'));
+    }
+
     // --- o bloco da ficha de papel --------------------------------------
     pai.append(blocoDePapel(ficha));
 
@@ -5450,7 +5492,7 @@ function botaoPequeno(texto, aoTocar) {
  * mostrar nome, texto e cor sem uma ida à rede por item.
  */
 export async function carregarCatalogo() {
-  const [, , cartas, doms, cond, cont, eq, classes, tr, anc, com] = await Promise.all([
+  const [, , cartas, doms, cond, cont, eq, classes, tr, anc, com, transformacoes] = await Promise.all([
     prepararGlossario(),
     prepararVerbetes(),
     dados.carregar('cartas-dominio'),
@@ -5461,7 +5503,8 @@ export async function carregarCatalogo() {
     dados.carregar('classes'),
     dados.carregar('tracos'),
     dados.carregar('ancestralidades'),
-    dados.carregar('comunidades')
+    dados.carregar('comunidades'),
+    dados.carregar('transformacoes')
   ]);
 
   /**
@@ -5479,6 +5522,9 @@ export async function carregarCatalogo() {
     const k = c.caracteristica;
     if (k && k.nome) textosDeCaracteristica.set(dados.chave(k.nome), k.texto || '');
   });
+  (transformacoes.transformacoes || []).forEach((t) =>
+    (t.caracteristicas || []).forEach((c) =>
+      textosDeCaracteristica.set(dados.chave(c.nome), c.texto || '')));
   (classes.classes || []).forEach((c) => {
     (c.caracteristicasDeClasse || []).forEach((f) =>
       textosDeCaracteristica.set(dados.chave(f.nome), f.texto || ''));
@@ -5797,6 +5843,7 @@ export async function carregarCatalogo() {
     nomeDoDominio: (codigo) => (porCodigoDominio.get(codigo) || {}).nome || codigo,
     /** Usado pela tela de avanço para listar as cartas que cabem no teto. */
     todasAsCartas: () => cartas.cartas,
+    transformacoes: () => transformacoes.transformacoes || [],
     nomeDoTraco: (id) => {
       const t = (tr.tracos || []).find((x) => x.id === id);
       return t ? t.nome : id;

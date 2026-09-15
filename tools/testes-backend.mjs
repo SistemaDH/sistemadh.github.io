@@ -576,6 +576,81 @@ teste('ancestralidade mista: recusa duas iguais e quantidade errada', () => {
   }).ok, false);
 });
 
+console.log('\nTransformações SRD2');
+const fichaParaTransformacao = (transformacao = null) => {
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome:'Transformado', classe:'Bardo', subclasse:'Músico Errante',
+    ancestralidade:'Anão', comunidade:'Highborne',
+    cartas:['grace-encantar','codex-livro-de-illiat'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  }));
+  if (transformacao) f.transformacao=transformacao;
+  return contexto.validarFicha_(f);
+};
+teste('as seis transformações são reconhecidas em português e inglês', () => {
+  igual(Object.keys(avaliar('TRANSFORMACOES')).length, 6);
+  igual(contexto.normalizarTransformacao_('Lobisomem'), 'lobisomem');
+  igual(contexto.normalizarTransformacao_('Werewolf'), 'lobisomem');
+  igual(contexto.normalizarTransformacao_('inventada'), null);
+});
+teste('adquirir e remover transformação persiste na ficha', () => {
+  const f=fichaParaTransformacao();
+  let r=contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'adquirir',id:'fantasma'}]);
+  igual(r.erros,[]);igual(f.transformacao.id,'fantasma');
+  verdade(f.caracteristicas.some(c=>c.nome==='Efêmero'));
+  r=contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'remover'}]);
+  igual(r.erros,[]);igual(f.transformacao,null);
+});
+teste('Fantasma paga 2 Estresses para atravessar objeto atomicamente', () => {
+  const f=fichaParaTransformacao({id:'fantasma'});f.recursos.estresseMarcado=0;
+  igual(contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'atravessar-objeto'}]).erros,[]);
+  igual(f.recursos.estresseMarcado,2);
+  f.recursos.estresseMarcado=f.recursos.estresseMaximo-1;
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'atravessar-objeto'}]).erros.length===1);
+  igual(f.recursos.estresseMarcado,f.recursos.estresseMaximo-1);
+});
+teste('Vampiro guarda até 6 marcadores e gasta um para o Dado de Medo', () => {
+  const f=fichaParaTransformacao({id:'vampiro'});f.recursos.estresseMarcado=0;
+  igual(contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'alimentar',pontosDeVida:8}]).erros,[]);
+  igual(f.transformacao.marcadores,6);igual(f.recursos.estresseMarcado,1);
+  igual(contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'gastar-marcador'}]).erros,[]);
+  igual(f.transformacao.marcadores,5);
+});
+teste('Lobisomem exige PV marcado e cobra 1 Estresse para entrar na forma', () => {
+  const f=fichaParaTransformacao({id:'lobisomem'});f.recursos.estresseMarcado=0;
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'entrar-forma-de-lobo'}]).erros.length===1);
+  igual(contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'entrar-forma-de-lobo',pvMarcado:true}]).erros,[]);
+  igual(f.transformacao.formaDeLobo,true);igual(f.recursos.estresseMarcado,1);
+});
+teste('Fantasma aplica resistência física e dobra dano mágico antes dos limiares', () => {
+  const fisico=fichaParaTransformacao({id:'fantasma'}), magico=fichaParaTransformacao({id:'fantasma'});
+  let r=contexto.aplicarAjustes_(fisico,[{tipo:'dano',dano:10,tipoDeDano:'fisico',reacoes:[]}]);
+  igual(r.erros,[]);igual(r.mudancas[0].transformacaoDano.danoDepois,5);
+  r=contexto.aplicarAjustes_(magico,[{tipo:'dano',dano:10,tipoDeDano:'magico',reacoes:[]}]);
+  igual(r.erros,[]);igual(r.mudancas[0].transformacaoDano.danoDepois,20);
+});
+teste('Metamorfo usa somente uma característica da ancestralidade assumida', () => {
+  const f=fichaParaTransformacao({id:'metamorfo'});
+  const r=contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'mudar-forma',ancestralidade:'Goblin',caracteristica:'Sentido de Perigo'}]);
+  igual(r.erros,[]);igual(f.identidade.ancestralidade,'goblin');
+  verdade(f.caracteristicas.some(c=>c.nome==='Sentido de Perigo'));
+  verdade(!f.caracteristicas.some(c=>c.nome==='Pé Firme'));
+});
+teste('Reanimado transforma falha em Arriscar Tudo e perde um PV máximo permanente', () => {
+  const f=fichaParaTransformacao({id:'reanimado'}), max=f.recursos.pontosDeVidaMaximos;
+  f.recursos.pontosDeVidaMarcados=max;f.recursos.estresseMarcado=2;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'morte',movimento:'arriscar',dadoEsperanca:3,dadoMedo:9,
+    usarNaoFicaMorto:true,reparticao:{pontosDeVida:2,estresse:1}}]);
+  igual(r.erros,[]);igual(r.mudancas[0].resultado,'esperanca-reanimado');
+  igual(f.recursos.pontosDeVidaMaximos,max-1);igual(f.transformacao.escolhas.pvPermanentesPerdidos,1);
+});
+teste('Lobisomem marca Estresse em jogada com Esperança e sai da forma no Frenesi', () => {
+  const f=fichaParaTransformacao({id:'lobisomem',formaDeLobo:true});
+  f.recursos.estresseMarcado=f.recursos.estresseMaximo-1;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'jogada-com-esperanca'}]);
+  igual(r.erros,[]);igual(r.mudancas[0].frenesi,true);igual(f.transformacao.formaDeLobo,false);
+});
+
 console.log('\nEquipamento');
 const ARMAS = avaliar('ARMAS');
 const ARMADURAS = avaliar('ARMADURAS');

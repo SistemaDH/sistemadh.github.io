@@ -120,7 +120,16 @@ function caracteristicasDaOrigem_(ficha) {
   const v = validarOrigem_(origemDaFicha_(ficha));
   const r = v.resolvido || {};
   const saida = [];
-  (r.caracteristicas || []).forEach(function (c) {
+  let ancestrais = r.caracteristicas || [];
+  if (typeof normalizarTransformacao_ === 'function' && normalizarTransformacao_((ficha || {}).transformacao) === 'metamorfo') {
+    const escolhida = String(((((ficha || {}).transformacao || {}).escolhas || {}).caracteristicaAncestral) || '');
+    const ancId = typeof normalizarAncestralidade_ === 'function'
+      ? normalizarAncestralidade_(((ficha || {}).identidade || {}).ancestralidade) : null;
+    const catalogo = ancId && typeof ANCESTRALIDADES !== 'undefined' && ANCESTRALIDADES[ancId]
+      ? (ANCESTRALIDADES[ancId].caracteristicas || []) : [];
+    ancestrais = catalogo.filter(function (c) { return chaveTexto_(c.nome) === chaveTexto_(escolhida); });
+  }
+  ancestrais.forEach(function (c) {
     saida.push({ nome: c.nome, origem: 'ancestralidade' });
   });
   if (r.comunidade && typeof COMUNIDADES !== 'undefined' && COMUNIDADES[r.comunidade]) {
@@ -841,6 +850,9 @@ function derivadosDoPersonagem_(ficha) {
 
   if (pontosDeVidaMaximos !== null) {
     pontosDeVidaMaximos += (b.pontosDeVidaMaximos || 0) + bc.pontosDeVidaMaximos + md.pontosDeVidaMaximos;
+    if (typeof normalizarTransformacao_ === 'function' && normalizarTransformacao_((ficha || {}).transformacao) === 'reanimado') {
+      pontosDeVidaMaximos = Math.max(0, pontosDeVidaMaximos - Math.max(0, Number((((ficha.transformacao || {}).escolhas || {}).pvPermanentesPerdidos)) || 0));
+    }
   }
   const bonusLimiaresCartas = (typeof bonusLimiaresDeCartas_ === 'function')
     ? bonusLimiaresDeCartas_(ficha) : 0;
@@ -885,7 +897,8 @@ function derivadosDoPersonagem_(ficha) {
     limiarMaior: limiarMaior,
     limiarGrave: limiarGrave,
     dominios: dominiosDoPersonagem_(ficha),
-    caracteristicas: caracteristicasDaOrigem_(ficha).concat(caracteristicasDaClasse_(ficha)),
+    caracteristicas: caracteristicasDaOrigem_(ficha).concat(caracteristicasDaClasse_(ficha)).concat(
+      typeof caracteristicasDaTransformacao_ === 'function' ? caracteristicasDaTransformacao_(ficha) : []),
     bonusDeDano: bonusDeDanoDaFicha_(ficha),
     opcoesDeDadoEsperanca: opcoesDeDadoEsperancaDaFicha_(ficha),
     perfisDeAtaque: perfisDeAtaqueDaFicha_(ficha),
@@ -934,7 +947,8 @@ function derivadosDoPersonagem_(ficha) {
       fragil: (typeof formaEhFragil_ === 'function') ? formaEhFragil_(formaAtiva.id) : false
     } : null,
     tracoDeConjuracao: (typeof conjuracaoDoPersonagem_ === 'function') ? conjuracaoDoPersonagem_(ficha) : '',
-    conjuracoesDisponiveis: (typeof conjuracoesDaFicha_ === 'function') ? conjuracoesDaFicha_(ficha) : []
+    conjuracoesDisponiveis: (typeof conjuracoesDaFicha_ === 'function') ? conjuracoesDaFicha_(ficha) : [],
+    transformacao: (typeof dadosDaTransformacao_ === 'function') ? dadosDaTransformacao_(ficha) : null
   };
 }
 
@@ -1046,6 +1060,7 @@ function aplicarDerivados_(ficha) {
   ficha.bonusConjuracao = d.bonusConjuracao || 0;
   ficha.formaDeFera = d.formaDeFera;
   ficha.conjuracoesDisponiveis = d.conjuracoesDisponiveis;
+  ficha.transformacaoDados = d.transformacao;
 
   /*
    * O que uma habilidade ativa IMPEDE vem PRIMEIRO.

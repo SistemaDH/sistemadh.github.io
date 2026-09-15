@@ -47,8 +47,8 @@
     {
       "id": "transformations",
       "esperados": 6,
-      "estado": "em-auditoria",
-      "observacao": "As 6 transformações, 12 características e 36 perguntas estão traduzidas e estruturadas em catálogo não exposto; falta implementar o ciclo de vida e as automações."
+      "estado": "conferido",
+      "observacao": "6/6 transformações integradas com aquisição, remoção, persistência, características e efeitos determinísticos."
     },
     {
       "id": "beastforms",

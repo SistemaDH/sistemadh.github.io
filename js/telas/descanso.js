@@ -43,6 +43,7 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
   let patamar = 1;
   let porDescanso = 2;
   let escolhas = [];
+  let acessoRestosMortais = false;
   // As outras fichas da mesa: Tratar Feridas e Reparar Armadura podem ser
   // usados nelas, e agora a cura pousa lá de verdade.
   let aliados = [];
@@ -119,6 +120,17 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
       el('h3', { class: 'descanso__titulo', texto: `Escolha ${porDescanso} movimentos` }),
       el('p', { class: 'campo__ajuda', texto: 'Pode repetir o mesmo movimento duas vezes.' })
     );
+    const fichaAtual = personagem.ficha || personagem;
+    const transformacao = fichaAtual.transformacaoDados || fichaAtual.transformacao || null;
+    if (transformacao && transformacao.id === 'reanimado') {
+      const confirmarRestos = el('input', { type:'checkbox' });
+      confirmarRestos.checked = acessoRestosMortais;
+      confirmarRestos.addEventListener('change', () => { acessoRestosMortais = confirmarRestos.checked; });
+      corpo.append(el('label',{class:'linha texto-sm'},[
+        confirmarRestos,
+        el('span',{texto:'Tenho acesso aos restos mortais de uma criatura falecida recentemente para recuperar Pontos de Vida.'})
+      ]));
+    }
 
     /*
      * O "e se alguém aparecer no meio?" fica à vista ANTES de escolher.
@@ -307,6 +319,7 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
 
     adicionar.addEventListener('click', () => {
       const escolha = { movimento: m.id };
+      if (acessoRestosMortais) escolha.acessoRestosMortais = true;
       const alvoAliado = selAliado && selAliado.value;
       if (alvoAliado) {
         const quem = aliados.find((a) => a.id === alvoAliado);

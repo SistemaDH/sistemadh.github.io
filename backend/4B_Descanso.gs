@@ -765,6 +765,24 @@ function simularDescanso_(ficha, tipo, escolhas) {
   aplicarEquipamentoAutomaticoNoDescanso_(copia, avisos);
   aplicarSaqueAutomaticoNoDescanso_(copia, avisos);
 
+  const transformacaoDescanso = typeof normalizarTransformacao_ === 'function'
+    ? normalizarTransformacao_((copia || {}).transformacao) : null;
+  if (transformacaoDescanso === 'reanimado' &&
+      Number(copia.recursos.pontosDeVidaMarcados || 0) < antes.pontosDeVidaMarcados &&
+      !lista.some(function (e) { return e && e.acessoRestosMortais === true; })) {
+    copia.recursos.pontosDeVidaMarcados = antes.pontosDeVidaMarcados;
+    erros.push('Cadáver: confirme o acesso aos restos mortais de uma criatura falecida recentemente para limpar Pontos de Vida durante o descanso.');
+  }
+  if (transformacaoDescanso === 'vampiro' && t.id === 'longo') {
+    const antesMarcadores = Math.max(0, Number(copia.transformacao.marcadores) || 0);
+    copia.transformacao.marcadores = Math.max(0, antesMarcadores - 1);
+    if (antesMarcadores > 0) avisos.push('Alimentar-se: remova 1 marcador ao concluir um descanso longo.');
+  }
+  if (transformacaoDescanso === 'lobisomem' && copia.transformacao.formaDeLobo === true) {
+    copia.transformacao.formaDeLobo = false;
+    avisos.push('Forma de Lobo terminou com o descanso.');
+  }
+
   // Contadores das cartas: o gatilho do descanso zera ou recarrega o que a
   // carta mandar. Quem sabe quais é o 47_Contadores.gs.
   const contadoresAntes = clonarSimples_(copia.contadores || {});
