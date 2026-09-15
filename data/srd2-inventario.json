@@ -8464,7 +8464,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "ea4a22baaeaed5defa8b0c25c39ccc7145449c8d621e89e7fcaad2f0a7020d7a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/bag-of-ficklesand",
@@ -8674,7 +8674,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "4afaab03e56142c7bd84032b1aae3e15fde68762b95e58b5692b665d16d02c8e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/clay-companion",
@@ -8719,7 +8719,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "27fcd81ed886636a3068557f8aa275d588295c5b15fda4fd0413b4449203d4e5",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/communion-relic",
@@ -8734,7 +8734,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "d9381dc65c02f99179e2b2a155f625bac69fd6f8fe59600cbb285ba0e55a3334",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/companion-case",
@@ -8794,7 +8794,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "e2d4739d116546b14ac79af57f92711e6a6073170e9e3f05218e9da79148aed7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/dagginaes-obsidian-slate",
@@ -8809,7 +8809,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "be953b1f7b5ecfddde314f57fbc75330c53eaa895114f1675b17a04f1c07a857",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/dual-flask",
@@ -8839,7 +8839,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "e316c5d1f7139ca0fbe7e3df63472720a87daa83b0ee301931aae8070a9a136d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/elusive-amulet",
@@ -8899,7 +8899,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "15136f96e4b485f19abce62a90a06f8e1f8721d736f60f05b9d710641e6178ad",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/enlighten-relic",
@@ -8929,7 +8929,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "48897575ba6ab053c7c133c1837a9aa476251f4917551f5493eac18f13ddce83",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/fire-jar",
@@ -8974,7 +8974,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "ce57b63a4a84711a71d28026dfaed96c2ec3a7af9b9453a24eb989670255536b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/furball-bag",
@@ -8989,7 +8989,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "1cab0fa54d9d5462a4c6215d50c3daca9667e7c9bd693ea7bb0ffe3b53a81259",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/gadimans-backpack",
@@ -9004,7 +9004,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "3739a4537d2d6bdc6e58a8ed8262b63091d7d0a8f33a5ea837a659d24a132a6d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/gecko-gloves",
@@ -9124,7 +9124,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "cb6d0df29e5e89b2e6353b1026ccf25b8476a5f9303a2943ce7bf4a5986c0fb4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/glamour-stone",
@@ -9169,7 +9169,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "b5ae04afbca2682afd0ea3527992ade7d0b6292867b3f5da449e358d1946ab6d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/gourmet-granules",
@@ -9214,7 +9214,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "c883850f560f2d2fa8d65bb42b5d53fe7588c03b2c549794d381bcbf796f9715",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/greatstone",
@@ -9244,7 +9244,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "6000758769ca7854eeb76e439bba672b13b1c56a567808265b5f69ce14929441",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/hollowbark-horn",
@@ -9334,7 +9334,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "356fcc72163adbd7bccb7fb30c1314c1a808c6523600584566e00559bc138dd0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/iron-dagger-pendant",
@@ -9349,7 +9349,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "82c2fba26ac856a39ab8cc139f68946d73e43d66d2d816ccb825f21962edfe93",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/iron-veil",
@@ -9364,7 +9364,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "4affe650a6f2124744ef1c6049f372ba7873494709b5030d3b271ce236441461",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/kingfishers-net",
@@ -9379,7 +9379,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "419177fe3d9454942974356d4bcb7645396c4a60641e452055f8289ded81ba45",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/knockback-bracelets",
@@ -9394,7 +9394,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "90ecdd5288e92e8b63e8b1e7e15f22fd2addae3d9fe17bed62838a978f32a780",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/lakestrider-boots",
@@ -9484,7 +9484,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "1bbce448204b4dfd6dc2258c3225bbcf4de4780bc23a2d4c59e12491e140c64b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/minor-health-potion-recipe",
@@ -9529,7 +9529,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "fa0215cd55fb826b0d6e0e23a1d9d49d887e6ec57a54590e3e9c1ae856616fb3",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/mythic-dust-recipe",
@@ -9559,7 +9559,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "70c39f4254b600d2faff4820fd40d2d789ea8500035b51befe8702b781a0693a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/nighthawkers-ring",
@@ -9604,7 +9604,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "3732ccbd723c0ea31893fc704394aa46b8fbe6652dd39848c1abdf95f0df8ef0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/phoenix-feather",
@@ -9664,7 +9664,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "43c10e8199cc05377acc5179cc907aabd200362c9465cf4ff1c393426f4d1eb2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/portal-seed",
@@ -9709,7 +9709,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "f58c8e4a117742bbb3a9f1aeb1f3e9f476af88e7b87a3f275fa35fb0d85b05a1",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/reliquary-of-the-sightless-saint",
@@ -9724,7 +9724,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "5c4dcb9334aa9732f07bf72987981e4c00714e507bd1acbeb146d9f2e432a010",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/returning-ring",
@@ -9799,7 +9799,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "8e569aeb2c761874852198e7b76dc5c458f96ee434929a5e44f04aeee1793ac1",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/rings-of-camaraderie",
@@ -9814,7 +9814,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "039f9057080c851c92e4c7f1e4100fa7ad9378fc306914175ff60417de398dd8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/rings-of-friendship",
@@ -9829,7 +9829,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "03f5d2460c9df598b5ab7c54576ab9200f0c6ab80b7b5b27c951cd9ab8d6c32b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/self-tying-rope",
@@ -9904,7 +9904,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "139a9b6753f1acb5c9c573910b1317697e15f310521010614cee0bf9323c5ef1",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/soul-twin-circlets",
@@ -9919,7 +9919,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "03cf5ddcb0ed1cb4af646c82a07915a3eea536aa1ce3974d760e473e05b73044",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/speaking-orbs",
@@ -9979,7 +9979,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "3aa2ba7b6f53ca6049cd392b1e08445ed99c73114be5ec62398fa395c1d35c63",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/thiefs-compass",
@@ -10009,7 +10009,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "737b306387495ea43579f87720127b7dd9218f175d4f236021814998adf4e6dc",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/titans-girdle",
@@ -10024,7 +10024,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "fb1df2f8c27ba34ba6b0b97e2fb848ffcd28432088e1cbf7ff43ec1dbd58975b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/travelers-bell",
@@ -10054,7 +10054,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "2f22d9bb2bfe8c47bb16d11b0b28bb2c5acd387d4a7a82f30e75907b614de69c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/valorstone",
@@ -10099,7 +10099,7 @@
             "pdfPageEnd": 79
           },
           "corpusSha256": "4ffebd1afd364eca120bf5d8d183d6cc6d13a1c0bbe9aa08cd9ec395b083ad0f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/whisperstep-anklet",
@@ -10114,7 +10114,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "f7941a8db733522389505fb7f9057dc516808d25834330e01da684a6e33f234e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/wildriders-saddle",
@@ -10129,7 +10129,7 @@
             "pdfPageEnd": 78
           },
           "corpusSha256": "9b6de11d5ca6be7fa29e0eeb7e04832210e503bbf45152a62c97caee360e45f4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "items/windup-toy",
@@ -10210,7 +10210,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "a72a2f68c5c92d63cdbc5ea63e81a11361e1688972fa130ae62c17e9a600ae98",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/armor-stitcher",
@@ -10255,7 +10255,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "d6a4cc748aad55c714bc1d775edd73f5f1ffca670640eae6cbe698ed523e39a0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/blinding-orb",
@@ -10345,7 +10345,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "948f11c1d9942a510ab1057d90907485b0a3815015a4e4b88ea7d87abe3582fe",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/cacophonous-concoction",
@@ -10360,7 +10360,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "7c3f01cf7a54fb026457484dbe0f20d9b3d4eea5db3ba95944549e2d788d6011",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/channelstone",
@@ -10405,7 +10405,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "9f9f20e7e561d62cdb2792f4a07d377d6dba0f228efd05e9cffc9f9a3fc253a4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/circle-of-the-void",
@@ -10435,7 +10435,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "0c324a8995f91e3b4b75cf719bde49caa436a0811c21dc73a8287bcc8350cbf3",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/cockerel-claw-tea",
@@ -10450,7 +10450,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "543c340c75452769fe0cc2156e9331fac20045bac8ef7c2db2e76af49f47d1c5",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/control-potion",
@@ -10480,7 +10480,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "ae787cc4f439e4589d1544f05cce8ce931a96a7d75186365a24af78a52b02d5c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/death-tea",
@@ -10510,7 +10510,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "7caa2e8d7cbe9f620d3066ee4bf48f617c038cd5c94a592605de9f6b4fb2b52b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/demiurges-draught",
@@ -10525,7 +10525,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "b5bd4e816079114948ed967977655978268dd7790cc46abb35baa42aa5ac5240",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/displacement-token",
@@ -10540,7 +10540,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "4c3f8d0caab17cfc8caa8054321ffbd78c91a976f5f04d7a3514de45b99aa852",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/dragonbloom-tea",
@@ -10570,7 +10570,7 @@
             "pdfPageEnd": 84
           },
           "corpusSha256": "fadc1b26d465ea581364ec228f824ab1cd27b0d13c1ebbd23fdc0b71c423b802",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/dripfang-poison",
@@ -10600,7 +10600,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "c6f7a1c572b0d9aeac39cd5d1113d998d66c75df21ff44be85a49a5cd795d66e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/enlighten-potion",
@@ -10660,7 +10660,7 @@
             "pdfPageEnd": 84
           },
           "corpusSha256": "f4ddf41ff0acf4a9b09025c4fa9a2fa9e2eda4c4a800e757acf9cc2957a519be",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/formoid-serum",
@@ -10675,7 +10675,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "b0daa5875143f1d1d4634ff6e8fddd199f2fd41547055fc386ad0ed0cb21adf8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/fulgurite-shard",
@@ -10690,7 +10690,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "ebf9f061f063f7b714083bd235ffbb1de56ba7e6c5333f140428bab61df7d94c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/gamblers-fallacy",
@@ -10705,7 +10705,7 @@
             "pdfPageEnd": 84
           },
           "corpusSha256": "10cb28c646a0c4ff0655643483d47a25291b829d5df3f966b6d3289c4a8a92aa",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/gill-salve",
@@ -10735,7 +10735,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "77b76fdcde8655a32e8e98190c92307fcff36a71de67fd80d1974707a7ec5a34",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/godlings-pomelo",
@@ -10750,7 +10750,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "81ae2900e35efbb7a0945039b18f460522d35a861036d91f437898cb46266de0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/gossip-flower",
@@ -10765,7 +10765,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "afba9bebbef7afe132d638359dcf12077924ef5d0b7819b6fe5a664ec7fc76d3",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/gravity-bomb",
@@ -10780,7 +10780,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "7d18b8c5db9c455fc464b097ce5d8420eac60c0290cb12381ff8632b7686f750",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/green-ooze-oil",
@@ -10795,7 +10795,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "4869ec736be6c46e834750576218467b09a344b460a9c43d1bc1e67d6f54f1e7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/grindletooth-venom",
@@ -10915,7 +10915,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "f936c510f2d9ce9197bd477bf6a8bbe0e6d970d2de3fb411331047e5cf75f290",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/invisibility-potion",
@@ -10930,7 +10930,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "25bf0d571a23af44512c6ab51b0401173c2d83efac7868f96a2854f591e81f08",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/iridian-dust",
@@ -10945,7 +10945,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "95a28a6380d2245a88681d2076bc140552cbbff746d70f7a3b11b2695f8df46f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/jar-of-lost-voices",
@@ -11005,7 +11005,7 @@
             "pdfPageEnd": 84
           },
           "corpusSha256": "cc48c5f4f1850f5141d66fb9d4b9792167375c01dea71aa0e27659d37e918660",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/lyrebird-lozenge",
@@ -11020,7 +11020,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "2cdac2bfe3813ebf768b0629288cc064e297001cc1ed176e2f35517b53ea000b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/magic-users-malison",
@@ -11035,7 +11035,7 @@
             "pdfPageEnd": 84
           },
           "corpusSha256": "8657251d0a9b9c3d8ef1eb56263c1c4a9d8846326445e8a3c972f0397df93cde",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/major-arcane-shard",
@@ -11185,7 +11185,7 @@
             "pdfPageEnd": 84
           },
           "corpusSha256": "4cea2e05dbabf669721a9955eb9547ac4dce036ef9bd3ccc84674e5c6b0630f0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/mesmers-tonic",
@@ -11200,7 +11200,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "d8a998abd91b08e87ae932e054b989d5ec4d5bd09d0d7c9a57c0e007a04b66df",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/midas-flask",
@@ -11215,7 +11215,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "823fb06d97afceb7f3c80d6913e68513797ad4a29f8d79c36e0d9d96a5a987ae",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/minor-health-potion",
@@ -11275,7 +11275,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "dcc5b91eb63d583aeba8539ee4633d5c1c6e67aae74a85c99cd972a044b57ee2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/moonlight-orb",
@@ -11290,7 +11290,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "a2341e5d597e3f263b648256cc80f51fdb8014e94cdf8955fb339e24a8822a9a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/morphing-clay",
@@ -11320,7 +11320,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "7e434337fa958a2822b075b926c0a3cecbc967702794a96240b5d390a39ce4fe",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/mythic-dust",
@@ -11350,7 +11350,7 @@
             "pdfPageEnd": 84
           },
           "corpusSha256": "b989900f3f2f3464300997d427dc0e8e0876f36f1d23be0a72838d9785434b5b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/night-hags-dust",
@@ -11365,7 +11365,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "bcaaec7e16864e5223327c227b9cea3bd2d10c077feb066d1846dfb809f72f84",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/nightmare-mead",
@@ -11380,7 +11380,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "036d362816923c53d7d5b6e599772df3a70ffd53e1a82016ad995aa0291e0ed7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/ogre-musk",
@@ -11410,7 +11410,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "8c1cde76f77e18ca021047fbed26835cf8e9b3f2fb88dfae61d273e21ab268bf",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/phial-of-deep-ink",
@@ -11425,7 +11425,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "7dd67c4edbc927261fa82d170de2b32f13583bda5a8646c42b75f6c3e51994c8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/pipeweed",
@@ -11440,7 +11440,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "f0a23e45578b7b15160d59b682fb7b9746069855e22d7486058533948e974db4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/potion-of-stability",
@@ -11470,7 +11470,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "7c232a1cf367b9ae9dbe6194eee61f15231f721b5200e1f81e57c15f48f24aca",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/psychopomps-shroud",
@@ -11485,7 +11485,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "7af6ca73050b21d22e8ffa08e491384e2a81946e458644df753f182ab480017b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/quintessential-severant",
@@ -11500,7 +11500,7 @@
             "pdfPageEnd": 84
           },
           "corpusSha256": "562c4c6ef9f62ee5cc6bdf58c020aa1e96f2b30720f0e861a20a9dc1c2b4906c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/red-ooze-oil",
@@ -11515,7 +11515,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "7781d15022dbd08d280d527a070d027c243815e6430e36263450281470c2141c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/redthorn-saliva",
@@ -11560,7 +11560,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "a44e8a9ed8b9104078da10c3709e22d9f8eee3b6494d6ecff524024d0167ba75",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/self-sewing-thread",
@@ -11575,7 +11575,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "b0ab2a2ca44ec9fe2508168f23ca4065e74ff67b1522436e842357289482413b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/shrinking-potion",
@@ -11605,7 +11605,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "69de65960aedf6f7ae6e45f0faacde7bc8668949e0ae2dfd74f76b2b35b177a1",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/sleeping-sap",
@@ -11635,7 +11635,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "bb7df4ce1acaf04f8f92a5cc44a53b1f94b69b98dd0ca9c4b188ba8e3945b0ca",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/snap-powder",
@@ -11665,7 +11665,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "c04a0082a8511619b1a942b6433bed5a842a6903190692cfc4afcefc9d1d3b4b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/sprite-bottle",
@@ -11680,7 +11680,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "ca2aefc341a50f4dbda97e1d91ef4d063a41a009b17b869a52cd4312a1aa2fc7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/staff-of-reversal",
@@ -11695,7 +11695,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "87f3ef03e1897dccd40ab7d032684a53fefa731f85e899e954582ecf795eabf3",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/stake-of-abjuration",
@@ -11710,7 +11710,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "60211e8eab1d313cd046c432ba20461688ca024563a07b6de115d9ab9efe803e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/stamina-potion",
@@ -11755,7 +11755,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "2bcaaa376c5e08346e989d62f000d65d951362c56b0f760780b48e48845ff447",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/stonemasons-fortune",
@@ -11770,7 +11770,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "ef67943ced0693fcacb6e49658446e0236222894b28bed7305eb397919d564f4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/stride-potion",
@@ -11815,7 +11815,7 @@
             "pdfPageEnd": 83
           },
           "corpusSha256": "67c68c435f0d1730c6dc97102bdfc06259cdb8f4f50678c6b786237033ca18f9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/sweet-moss",
@@ -11845,7 +11845,7 @@
             "pdfPageEnd": 84
           },
           "corpusSha256": "04688ca16502300cacaa6a99184c42f884be263aad8e1c387ce8c256f4c78fcb",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/unstable-arcane-shard",
@@ -11890,7 +11890,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "8aa2e616f7312a418630734da7397437b77f95202e9baaee6195a11a3537d5b7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/vial-of-darksmoke",
@@ -11920,7 +11920,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "203edadd3a0e241a43a72bc697e011f1650b61d4256e8e411b4af3b35e3089db",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/vial-of-moondrip",
@@ -11950,7 +11950,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "4519efefead9b9aadfd9f699499b046a84508cbceb990b6c65ae313df874489c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "consumables/wingsprout",
@@ -11980,7 +11980,7 @@
             "pdfPageEnd": 82
           },
           "corpusSha256": "c6d5f705b8d8f27905bed37b27564b54f4d354c9ab44b26b8b30e706bc0385db",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         }
       ]
     },

@@ -1,0 +1,285 @@
+{
+  "versao": 1,
+  "registros": [
+    [
+      "items/kingfishers-net",
+      "loot-srd2-kingfishers-net",
+      21,
+      "Once per long rest, you can use this net to scoop one live fish out of any amount of water, no matter how unlikely it is for that water to have fish in it.",
+      "419177fe3d9454942974356d4bcb7645396c4a60641e452055f8289ded81ba45"
+    ],
+    [
+      "items/titans-girdle",
+      "loot-srd2-titans-girdle",
+      22,
+      "Once per scene, you can activate this girdle to gain a +1 bonus to your Proficiency for your next attack.",
+      "fb1df2f8c27ba34ba6b0b97e2fb848ffcd28432088e1cbf7ff43ec1dbd58975b"
+    ],
+    [
+      "items/iron-veil",
+      "loot-srd2-iron-veil",
+      23,
+      "This chain-link head covering renders the wearer invisible to fey creatures.",
+      "4affe650a6f2124744ef1c6049f372ba7873494709b5030d3b271ce236441461"
+    ],
+    [
+      "items/furball-bag",
+      "loot-srd2-furball-bag",
+      24,
+      "Once per rest, you can produce 2d20 harmless, cat-sized fur creatures of indeterminate origin and species from this bag.",
+      "1cab0fa54d9d5462a4c6215d50c3daca9667e7c9bd693ea7bb0ffe3b53a81259"
+    ],
+    [
+      "items/whisperstep-anklet",
+      "loot-srd2-whisperstep-anklet",
+      25,
+      "This anklet makes your steps silent as long as you don’t move faster than walking speed.",
+      "f7941a8db733522389505fb7f9057dc516808d25834330e01da684a6e33f234e"
+    ],
+    [
+      "items/enchanters-loupe",
+      "loot-srd2-enchanters-loupe",
+      26,
+      "You can use this loupe to see through illusions and enchantments.",
+      "15136f96e4b485f19abce62a90a06f8e1f8721d736f60f05b9d710641e6178ad"
+    ],
+    [
+      "items/eschers-mirrorball",
+      "loot-srd2-eschers-mirrorball",
+      27,
+      "Once per long rest, you can command this fist-sized silver orb to capture an omnidirectional image of its surroundings on its surface. This image lasts until your next long rest.",
+      "48897575ba6ab053c7c133c1837a9aa476251f4917551f5493eac18f13ddce83"
+    ],
+    [
+      "items/cheaters-coin",
+      "loot-srd2-cheaters-coin",
+      28,
+      "When you flip this coin, you can spend a Hope to determine which side it lands on.",
+      "4afaab03e56142c7bd84032b1aae3e15fde68762b95e58b5692b665d16d02c8e"
+    ],
+    [
+      "items/gravewardens-bell",
+      "loot-srd2-gravewardens-bell",
+      29,
+      "This bell rings when a ghost or undead creature moves within Far range of it.",
+      "c883850f560f2d2fa8d65bb42b5d53fe7588c03b2c549794d381bcbf796f9715"
+    ],
+    [
+      "items/reliquary-of-the-sightless-saint",
+      "loot-srd2-reliquary-of-the-sightless-saint",
+      30,
+      "You gain a +1 bonus to your Hope Die when you make the Risk It All death move.",
+      "5c4dcb9334aa9732f07bf72987981e4c00714e507bd1acbeb146d9f2e432a010"
+    ],
+    [
+      "items/map-of-revelation",
+      "loot-srd2-map-of-revelation",
+      31,
+      "You can attune this map to one creature at a time. The map always shows the attuned creature’s location.",
+      "1bbce448204b4dfd6dc2258c3225bbcf4de4780bc23a2d4c59e12491e140c64b"
+    ],
+    [
+      "items/dagginaes-obsidian-slate",
+      "loot-srd2-dagginaes-obsidian-slate",
+      32,
+      "This wafer-thin sheet of volcanic glass is used by archivists to keep notes. Any information etched onto its surface disappears but can be recalled via a command you set.",
+      "be953b1f7b5ecfddde314f57fbc75330c53eaa895114f1675b17a04f1c07a857"
+    ],
+    [
+      "items/gadimans-backpack",
+      "loot-srd2-gadimans-backpack",
+      33,
+      "Once per rest, you can spend a Hope to conjure a mundane item up to a cubic foot in size inside this satchel.",
+      "3739a4537d2d6bdc6e58a8ed8262b63091d7d0a8f33a5ea837a659d24a132a6d"
+    ],
+    [
+      "items/eclipse-coin",
+      "loot-srd2-eclipse-coin",
+      34,
+      "Once per rest, flip a coin. On heads, you gain a +1 bonus to attack rolls until your next successful attack. On tails, you gain +1 to your Evasion until an attack fails against you.",
+      "e316c5d1f7139ca0fbe7e3df63472720a87daa83b0ee301931aae8070a9a136d"
+    ],
+    [
+      "items/sorcerers-hat",
+      "loot-srd2-sorcerers-hat",
+      35,
+      "This conical blue hat is covered in silver stars. Once per rest, you can cast a spell from your vault with a Recall Cost equal to or less than your tier. This doesn’t work for permanently vaulted cards.",
+      "139a9b6753f1acb5c9c573910b1317697e15f310521010614cee0bf9323c5ef1"
+    ],
+    [
+      "items/ghoulskin-gloves",
+      "loot-srd2-ghoulskin-gloves",
+      36,
+      "When you attack with a physical weapon while wearing these gloves, the damage is considered both physical and magic.",
+      "cb6d0df29e5e89b2e6353b1026ccf25b8476a5f9303a2943ce7bf4a5986c0fb4"
+    ],
+    [
+      "items/gloves-of-alacrity",
+      "loot-srd2-gloves-of-alacrity",
+      37,
+      "When you would mark a Stress to reload a weapon, you don’t mark it.",
+      "b5ae04afbca2682afd0ea3527992ade7d0b6292867b3f5da449e358d1946ab6d"
+    ],
+    [
+      "items/insomniacs-periapt",
+      "loot-srd2-insomniacs-periapt",
+      38,
+      "When you take a rest without clearing Hit Points or Stress, you gain a +2 bonus to attack and damage rolls until your next rest.",
+      "356fcc72163adbd7bccb7fb30c1314c1a808c6523600584566e00559bc138dd0"
+    ],
+    [
+      "items/wildriders-saddle",
+      "loot-srd2-wildriders-saddle",
+      39,
+      "This saddle grants any animal it’s strapped onto the ability to understand their rider’s commands.",
+      "9b6de11d5ca6be7fa29e0eeb7e04832210e503bbf45152a62c97caee360e45f4"
+    ],
+    [
+      "items/soul-twin-circlets",
+      "loot-srd2-soul-twin-circlets",
+      40,
+      "Two creatures can wear this pair of circlets. You can spend a Hope to switch places with whoever is wearing the other circlet.",
+      "03cf5ddcb0ed1cb4af646c82a07915a3eea536aa1ce3974d760e473e05b73044"
+    ],
+    [
+      "items/namers-oracle",
+      "loot-srd2-namers-oracle",
+      41,
+      "Once per session, you can roll this set of runic dice to reveal the full name of the last person you touched.",
+      "70c39f4254b600d2faff4820fd40d2d789ea8500035b51befe8702b781a0693a"
+    ],
+    [
+      "items/crucible-frames",
+      "loot-srd2-crucible-frames",
+      42,
+      "These eyeglasses reveal weak points in objects and creatures. Three times per rest, you can spend a Hope to gain advantage on an attack roll.",
+      "e2d4739d116546b14ac79af57f92711e6a6073170e9e3f05218e9da79148aed7"
+    ],
+    [
+      "items/two-faced-aegis-brooch",
+      "loot-srd2-two-faced-aegis-brooch",
+      43,
+      "Once per rest, flip a coin. On heads, you become immune to the next physical damage you take. On tails, you become immune to the next magic damage you take.",
+      "2f22d9bb2bfe8c47bb16d11b0b28bb2c5acd387d4a7a82f30e75907b614de69c"
+    ],
+    [
+      "items/knockback-bracelets",
+      "loot-srd2-knockback-bracelets",
+      44,
+      "On a successful weapon attack, you can knock your target back up to Close range from their location.",
+      "90ecdd5288e92e8b63e8b1e7e15f22fd2addae3d9fe17bed62838a978f32a780"
+    ],
+    [
+      "items/force-disc",
+      "loot-srd2-force-disc",
+      45,
+      "This shimmering two-dimensional disc of magical force has a 4-foot diameter and is magically tethered to a pebble. The disc always floats 3 feet north of, and at the same elevation as, the pebble. The pebble has a mass equal to one-hundredth of the total mass carried by the disc.",
+      "ce57b63a4a84711a71d28026dfaed96c2ec3a7af9b9453a24eb989670255536b"
+    ],
+    [
+      "items/molepaw-mittens",
+      "loot-srd2-molepaw-mittens",
+      46,
+      "Spend a Hope to swim through earth as if it were water for the next 10 minutes.",
+      "fa0215cd55fb826b0d6e0e23a1d9d49d887e6ec57a54590e3e9c1ae856616fb3"
+    ],
+    [
+      "items/timekeepers-pendant",
+      "loot-srd2-timekeepers-pendant",
+      47,
+      "You can choose an additional downtime move each rest.",
+      "737b306387495ea43579f87720127b7dd9218f175d4f236021814998adf4e6dc"
+    ],
+    [
+      "items/iron-dagger-pendant",
+      "loot-srd2-iron-dagger-pendant",
+      48,
+      "Once per long rest, you can spend a Hope to tell the pendant a creature’s name. The pendant gently pulls you toward that creature’s current location until your next long rest.",
+      "82c2fba26ac856a39ab8cc139f68946d73e43d66d2d816ccb825f21962edfe93"
+    ],
+    [
+      "items/collar-of-ascendancy",
+      "loot-srd2-collar-of-ascendancy",
+      49,
+      "An animal who wears this collar gains the ability to speak and understand common speech.",
+      "27fcd81ed886636a3068557f8aa275d588295c5b15fda4fd0413b4449203d4e5"
+    ],
+    [
+      "items/temporal-sanctuary",
+      "loot-srd2-temporal-sanctuary",
+      50,
+      "A PC who takes a rest in the temporal sanctuary can choose an additional downtime move.",
+      "3aa2ba7b6f53ca6049cd392b1e08445ed99c73114be5ec62398fa395c1d35c63"
+    ],
+    [
+      "items/heros-helm",
+      "loot-srd2-heros-helm",
+      51,
+      "When you critically succeed on an attack, all allies within Close range gain a Hope.",
+      "6000758769ca7854eeb76e439bba672b13b1c56a567808265b5f69ce14929441"
+    ],
+    [
+      "items/rings-of-friendship",
+      "loot-srd2-rings-of-friendship",
+      52,
+      "Two creatures can wear this pair of rings shaped like coiled snakes. You can spend the Hope of whoever is wearing the other ring (with their permission) as if it were your own.",
+      "03f5d2460c9df598b5ab7c54576ab9200f0c6ab80b7b5b27c951cd9ab8d6c32b"
+    ],
+    [
+      "items/rings-of-camaraderie",
+      "loot-srd2-rings-of-camaraderie",
+      53,
+      "Two creatures can wear this pair of wooden rings. You can mark the Stress of whoever is wearing the other ring (with their permission) as if it were your own.",
+      "039f9057080c851c92e4c7f1e4100fa7ad9378fc306914175ff60417de398dd8"
+    ],
+    [
+      "items/rings-of-alliance",
+      "loot-srd2-rings-of-alliance",
+      54,
+      "Two creatures can wear this pair of rose gold rings. Once per session, you can initiate a Tag Team Roll with whoever is wearing the other ring without spending Hope or counting against your session limit for Tag Team Rolls.",
+      "8e569aeb2c761874852198e7b76dc5c458f96ee434929a5e44f04aeee1793ac1"
+    ],
+    [
+      "items/phobophages-circlet",
+      "loot-srd2-phobophages-circlet",
+      55,
+      "When the GM spends a Fear, roll a d4. Once per scene on a result of 4, you clear a Stress.",
+      "3732ccbd723c0ea31893fc704394aa46b8fbe6652dd39848c1abdf95f0df8ef0"
+    ],
+    [
+      "items/quillshawl",
+      "loot-srd2-quillshawl",
+      56,
+      "If an adversary attacks you within Melee range, they must succeed on a Reaction Roll (12) or mark a Hit Point.",
+      "f58c8e4a117742bbb3a9f1aeb1f3e9f476af88e7b87a3f275fa35fb0d85b05a1"
+    ],
+    [
+      "items/warp-pendant",
+      "loot-srd2-warp-pendant",
+      57,
+      "Once per rest, mark a Stress to teleport to a location you can clearly see.",
+      "4ffebd1afd364eca120bf5d8d183d6cc6d13a1c0bbe9aa08cd9ec395b083ad0f"
+    ],
+    [
+      "items/portal-frames",
+      "loot-srd2-portal-frames",
+      58,
+      "This pair of small ornate frames, one red and one blue, are connected. Anything that passes into one exits from the other.",
+      "43c10e8199cc05377acc5179cc907aabd200362c9465cf4ff1c393426f4d1eb2"
+    ],
+    [
+      "items/communion-relic",
+      "loot-srd2-communion-relic",
+      59,
+      "Once per rest, you can spend a Hope to use an ally’s Experience as if it were your own. You can carry only one relic.",
+      "d9381dc65c02f99179e2b2a155f625bac69fd6f8fe59600cbb285ba0e55a3334"
+    ],
+    [
+      "items/augurs-relic",
+      "loot-srd2-augurs-relic",
+      60,
+      "Once per long rest, you can activate your Hope feature without spending Hope. You can carry only one relic.",
+      "ea4a22baaeaed5defa8b0c25c39ccc7145449c8d621e89e7fcaad2f0a7020d7a"
+    ]
+  ]
+}

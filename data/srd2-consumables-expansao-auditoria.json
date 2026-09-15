@@ -1,0 +1,425 @@
+{
+  "versao": 1,
+  "registros": [
+    [
+      "consumables/warding-candle",
+      "consumivel-srd2-warding-candle",
+      1,
+      "You can light this candle to fill an area within Close range with a halo of light. A creature outside the halo can’t enter it if they have ill intent toward a creature within it. The candle burns for an hour.",
+      "4519efefead9b9aadfd9f699499b046a84508cbceb990b6c65ae313df874489c"
+    ],
+    [
+      "consumables/iridian-dust",
+      "consumivel-srd2-iridian-dust",
+      2,
+      "This multicolored powder sticks to everything and prevents creatures covered in it from becoming Hidden.",
+      "95a28a6380d2245a88681d2076bc140552cbbff746d70f7a3b11b2695f8df46f"
+    ],
+    [
+      "consumables/verglasian-seed",
+      "consumivel-srd2-verglasian-seed",
+      3,
+      "You can use this ice shard to instantly freeze an area of water up to Close range.",
+      "8aa2e616f7312a418630734da7397437b77f95202e9baaee6195a11a3537d5b7"
+    ],
+    [
+      "consumables/cupbearers-bezoar",
+      "consumivel-srd2-cupbearers-bezoar",
+      4,
+      "You can swallow this bezoar to become immune to poisons until your next long rest.",
+      "ae787cc4f439e4589d1544f05cce8ce931a96a7d75186365a24af78a52b02d5c"
+    ],
+    [
+      "consumables/mossmantle-potion",
+      "consumivel-srd2-mossmantle-potion",
+      5,
+      "You can drink this tea to perfectly blend into natural environments until your next rest.",
+      "7e434337fa958a2822b075b926c0a3cecbc967702794a96240b5d390a39ce4fe"
+    ],
+    [
+      "consumables/lyrebird-lozenge",
+      "consumivel-srd2-lyrebird-lozenge",
+      6,
+      "You can dissolve this lozenge in your mouth to perfectly mimic any voice you’ve heard until the end of the scene.",
+      "2cdac2bfe3813ebf768b0629288cc064e297001cc1ed176e2f35517b53ea000b"
+    ],
+    [
+      "consumables/vial-of-featherfall",
+      "consumivel-srd2-vial-of-featherfall",
+      7,
+      "You can drink this potion to ignore damage from falling for the next 10 minutes.",
+      "203edadd3a0e241a43a72bc697e011f1650b61d4256e8e411b4af3b35e3089db"
+    ],
+    [
+      "consumables/chimeric-saliva",
+      "consumivel-srd2-chimeric-saliva",
+      8,
+      "You can apply this saliva to a weapon that deals physical damage to change its damage type to magic until your next rest.",
+      "9f9f20e7e561d62cdb2792f4a07d377d6dba0f228efd05e9cffc9f9a3fc253a4"
+    ],
+    [
+      "consumables/packet-of-space-dust",
+      "consumivel-srd2-packet-of-space-dust",
+      9,
+      "This dust causes anything it covers to become lighter than air. One packet contains enough dust to cover the contents of a picnic basket, and the effects last for an hour.",
+      "8c1cde76f77e18ca021047fbed26835cf8e9b3f2fb88dfae61d273e21ab268bf"
+    ],
+    [
+      "consumables/pipeweed",
+      "consumivel-srd2-pipeweed",
+      10,
+      "When you choose the Clear Stress downtime move during a short rest, you can smoke this non-intoxicating leaf to clear an additional Stress. Any other PCs who chose the Clear Stress downtime move also gain this benefit.",
+      "f0a23e45578b7b15160d59b682fb7b9746069855e22d7486058533948e974db4"
+    ],
+    [
+      "consumables/deathseers-powder",
+      "consumivel-srd2-deathseers-powder",
+      11,
+      "You can sprinkle this powder over a recently deceased corpse to conjure a spectral reprise of their final minute of life.",
+      "7caa2e8d7cbe9f620d3066ee4bf48f617c038cd5c94a592605de9f6b4fb2b52b"
+    ],
+    [
+      "consumables/slayers-salt",
+      "consumivel-srd2-slayers-salt",
+      12,
+      "You can spread this salt in a line along windowsills or thresholds to create a magical barrier that undead creatures can’t cross until the line is broken.",
+      "69de65960aedf6f7ae6e45f0faacde7bc8668949e0ae2dfd74f76b2b35b177a1"
+    ],
+    [
+      "consumables/yakamel-milk",
+      "consumivel-srd2-yakamel-milk",
+      13,
+      "After consuming this milk, the next time you clear 1 or more Hit Points, you clear an additional Hit Point.",
+      "c6d5f705b8d8f27905bed37b27564b54f4d354c9ab44b26b8b30e706bc0385db"
+    ],
+    [
+      "consumables/glowmoss-mushroom",
+      "consumivel-srd2-glowmoss-mushroom",
+      14,
+      "You can break this mushroom into pieces, causing it to glow bright blue until your next long rest.",
+      "77b76fdcde8655a32e8e98190c92307fcff36a71de67fd80d1974707a7ec5a34"
+    ],
+    [
+      "consumables/red-ooze-oil",
+      "consumivel-srd2-red-ooze-oil",
+      15,
+      "You can coat your weapon in this oil. The next successful attack you make with this weapon deals an extra 1d8 magic damage and temporarily Ignites the target. While Ignited, the target takes 1d4 magic damage when they take the spotlight.",
+      "7781d15022dbd08d280d527a070d027c243815e6430e36263450281470c2141c"
+    ],
+    [
+      "consumables/instant-camp",
+      "consumivel-srd2-instant-camp",
+      16,
+      "You can unfold this small mechanical box into a camping tent large enough to safely house six people. The tent collapses at the end of your next long rest.",
+      "f936c510f2d9ce9197bd477bf6a8bbe0e6d970d2de3fb411331047e5cf75f290"
+    ],
+    [
+      "consumables/bundle-of-spiderlegs",
+      "consumivel-srd2-bundle-of-spiderlegs",
+      17,
+      "You can eat these spiderlegs to walk on walls until your next rest.",
+      "948f11c1d9942a510ab1057d90907485b0a3815015a4e4b88ea7d87abe3582fe"
+    ],
+    [
+      "consumables/ciscan-fog-bottle",
+      "consumivel-srd2-ciscan-fog-bottle",
+      18,
+      "You can break this jar to fill the area within Close range with magical mist. A creature who enters the mist clears a Stress and becomes Hidden.",
+      "0c324a8995f91e3b4b75cf719bde49caa436a0811c21dc73a8287bcc8350cbf3"
+    ],
+    [
+      "consumables/snapthorn-seed",
+      "consumivel-srd2-snapthorn-seed",
+      19,
+      "You can throw this seed at a point you can see. It explodes into a tangle of binding vines that temporarily Restrains all creatures within Close range of that point.",
+      "c04a0082a8511619b1a942b6433bed5a842a6903190692cfc4afcefc9d1d3b4b"
+    ],
+    [
+      "consumables/sprite-bottle",
+      "consumivel-srd2-sprite-bottle",
+      20,
+      "When you mark your last Hit Point, this bottle shatters to release the Sprite inside. The Sprite clears all your Hit Points before fading from the Mortal Realm.",
+      "ca2aefc341a50f4dbda97e1d91ef4d063a41a009b17b869a52cd4312a1aa2fc7"
+    ],
+    [
+      "consumables/gravity-bomb",
+      "consumivel-srd2-gravity-bomb",
+      21,
+      "You can throw this peach-sized mechanical orb at a point within Far range. It implodes and pulls all creatures and objects within Close range of that point into Melee range with it.",
+      "7d18b8c5db9c455fc464b097ce5d8420eac60c0290cb12381ff8632b7686f750"
+    ],
+    [
+      "consumables/gossip-flower",
+      "consumivel-srd2-gossip-flower",
+      22,
+      "You can plant this seed in soil. It instantly grows into a small flower that records everything it hears for up to one week. When plucked, the flower recites what it recorded in real time, then withers.",
+      "afba9bebbef7afe132d638359dcf12077924ef5d0b7819b6fe5a664ec7fc76d3"
+    ],
+    [
+      "consumables/displacement-token",
+      "consumivel-srd2-displacement-token",
+      23,
+      "You can swallow this token to conjure two illusions of yourself that you can control. Each illusion lasts until it takes damage or until your next rest.",
+      "4c3f8d0caab17cfc8caa8054321ffbd78c91a976f5f04d7a3514de45b99aa852"
+    ],
+    [
+      "consumables/night-hags-dust",
+      "consumivel-srd2-night-hags-dust",
+      24,
+      "You can blow this dust in an adversary’s face to prevent them from clearing Stress until your next long rest.",
+      "bcaaec7e16864e5223327c227b9cea3bd2d10c077feb066d1846dfb809f72f84"
+    ],
+    [
+      "consumables/self-sewing-thread",
+      "consumivel-srd2-self-sewing-thread",
+      25,
+      "You can use this thread to clear either a Hit Point or 2 Armor Slots.",
+      "b0ab2a2ca44ec9fe2508168f23ca4065e74ff67b1522436e842357289482413b"
+    ],
+    [
+      "consumables/stonemasons-fortune",
+      "consumivel-srd2-stonemasons-fortune",
+      26,
+      "When you throw this gray brick on the ground, it immediately grows into a 6-foot-tall, 10-foot-wide, and 2-foot-deep wall of solid stone.",
+      "ef67943ced0693fcacb6e49658446e0236222894b28bed7305eb397919d564f4"
+    ],
+    [
+      "consumables/mnemonic-potion",
+      "consumivel-srd2-mnemonic-potion",
+      27,
+      "You can drink this potion to Utilize an Experience without spending a Hope.",
+      "dcc5b91eb63d583aeba8539ee4633d5c1c6e67aae74a85c99cd972a044b57ee2"
+    ],
+    [
+      "consumables/salamander-salve",
+      "consumivel-srd2-salamander-salve",
+      28,
+      "You can apply this salve to your skin to make yourself immune to heat until your next rest.",
+      "a44e8a9ed8b9104078da10c3709e22d9f8eee3b6494d6ecff524024d0167ba75"
+    ],
+    [
+      "consumables/green-ooze-oil",
+      "consumivel-srd2-green-ooze-oil",
+      29,
+      "You can coat your weapon in this oil. The next successful attack you make with this weapon deals an extra 1d8 magic damage and temporarily Corrodes the target. While Corroded, the target gains a −2 penalty to their damage thresholds.",
+      "4869ec736be6c46e834750576218467b09a344b460a9c43d1bc1e67d6f54f1e7"
+    ],
+    [
+      "consumables/sunlight-orb",
+      "consumivel-srd2-sunlight-orb",
+      30,
+      "You can shatter this orb to make the area within Very Far range appear as though it’s sunlit daytime for the next 24 hours.",
+      "67c68c435f0d1730c6dc97102bdfc06259cdb8f4f50678c6b786237033ca18f9"
+    ],
+    [
+      "consumables/moonlight-orb",
+      "consumivel-srd2-moonlight-orb",
+      31,
+      "You can shatter this orb to make the area within Very Far range appear as though it’s moonlit nighttime for the next 24 hours.",
+      "a2341e5d597e3f263b648256cc80f51fdb8014e94cdf8955fb339e24a8822a9a"
+    ],
+    [
+      "consumables/midas-flask",
+      "consumivel-srd2-midas-flask",
+      32,
+      "You can pour this small flask of alchemical liquid over a mundane item to instantly transmute it into a handful of gold.",
+      "823fb06d97afceb7f3c80d6913e68513797ad4a29f8d79c36e0d9d96a5a987ae"
+    ],
+    [
+      "consumables/staff-of-reversal",
+      "consumivel-srd2-staff-of-reversal",
+      33,
+      "You can break this staff against the ground to reverse one magical transformation or effect within Far range.",
+      "87f3ef03e1897dccd40ab7d032684a53fefa731f85e899e954582ecf795eabf3"
+    ],
+    [
+      "consumables/berserkers-brew",
+      "consumivel-srd2-berserkers-brew",
+      34,
+      "When you drink this dram of liquid, you gain a bonus to your Strength and a penalty to your Finesse and Knowledge equal to your Instinct (minimum 1). This effect lasts until you make a death move or until your next rest.",
+      "d6a4cc748aad55c714bc1d775edd73f5f1ffca670640eae6cbe698ed523e39a0"
+    ],
+    [
+      "consumables/emberite-shard",
+      "consumivel-srd2-emberite-shard",
+      35,
+      "Choose a point within Far range. All targets within Close range of that point must succeed on a Reaction Roll (16) or take 3d6 magic damage and become temporarily Ablaze. While Ablaze, a creature must roll a d4 whenever they make an action roll. On a result of 1, they mark a Hit Point. On a result of 4, they clear the Ablaze condition.",
+      "c6f7a1c572b0d9aeac39cd5d1113d998d66c75df21ff44be85a49a5cd795d66e"
+    ],
+    [
+      "consumables/arcticite-shard",
+      "consumivel-srd2-arcticite-shard",
+      36,
+      "Choose a point within Far range. All targets within Close range of that point must succeed on a Reaction Roll (16) or take 3d6 magic damage and become temporarily Restrained by ice.",
+      "a72a2f68c5c92d63cdbc5ea63e81a11361e1688972fa130ae62c17e9a600ae98"
+    ],
+    [
+      "consumables/fulgurite-shard",
+      "consumivel-srd2-fulgurite-shard",
+      37,
+      "Choose a point within Far range. All targets within Close range of that point must succeed on a Reaction Roll (16) or take 3d6 magic damage and mark 1d4 Stress as lightning crackles through the area.",
+      "ebf9f061f063f7b714083bd235ffbb1de56ba7e6c5333f140428bab61df7d94c"
+    ],
+    [
+      "consumables/demiurges-draught",
+      "consumivel-srd2-demiurges-draught",
+      38,
+      "You can drink this draught to gain a +1 bonus to your Proficiency for your next successful attack roll.",
+      "b5bd4e816079114948ed967977655978268dd7790cc46abb35baa42aa5ac5240"
+    ],
+    [
+      "consumables/cockerel-claw-tea",
+      "consumivel-srd2-cockerel-claw-tea",
+      39,
+      "You can drink this tea to refresh your features as if you had taken a long rest.",
+      "543c340c75452769fe0cc2156e9331fac20045bac8ef7c2db2e76af49f47d1c5"
+    ],
+    [
+      "consumables/potion-of-vigilance",
+      "consumivel-srd2-potion-of-vigilance",
+      40,
+      "You can drink this potion to gain a +1 bonus to your Evasion until you mark a Hit Point.",
+      "7c232a1cf367b9ae9dbe6194eee61f15231f721b5200e1f81e57c15f48f24aca"
+    ],
+    [
+      "consumables/cacophonous-concoction",
+      "consumivel-srd2-cacophonous-concoction",
+      41,
+      "When you drink this potion, anything you say or do in the next hour becomes impossible for a witness to recount. Any attempts they make to communicate what they saw, heard, or otherwise sensed comes out garbled or nonsensical.",
+      "7c3f01cf7a54fb026457484dbe0f20d9b3d4eea5db3ba95944549e2d788d6011"
+    ],
+    [
+      "consumables/nightmare-mead",
+      "consumivel-srd2-nightmare-mead",
+      42,
+      "You can drink this potion to discover the deepest fear of the next person you make eye contact with. When you do, the GM gains a Fear.",
+      "036d362816923c53d7d5b6e599772df3a70ffd53e1a82016ad995aa0291e0ed7"
+    ],
+    [
+      "consumables/stake-of-abjuration",
+      "consumivel-srd2-stake-of-abjuration",
+      43,
+      "You can hammer this stake into the ground and make a proclamation. Until your next rest, a creature within Far range of the stake who transgresses that proclamation must mark a Stress. The stake lasts until your next rest, then it shatters.",
+      "60211e8eab1d313cd046c432ba20461688ca024563a07b6de115d9ab9efe803e"
+    ],
+    [
+      "consumables/psychopomps-shroud",
+      "consumivel-srd2-psychopomps-shroud",
+      44,
+      "You can place this shroud over the corpse of a recently deceased creature. The creature’s spirit enters the shroud and becomes your spectral assistant until the next sunrise, when they pass through the veil of death and take the shroud with them.",
+      "7af6ca73050b21d22e8ffa08e491384e2a81946e458644df753f182ab480017b"
+    ],
+    [
+      "consumables/phial-of-deep-ink",
+      "consumivel-srd2-phial-of-deep-ink",
+      45,
+      "You can drink this bottle of ink to transform into a cephalopod of roughly your size for the next hour. You gain rubbery skin, soft bones, the ability to breathe underwater, and new limbs until you have eight total.",
+      "7dd67c4edbc927261fa82d170de2b32f13583bda5a8646c42b75f6c3e51994c8"
+    ],
+    [
+      "consumables/mesmers-tonic",
+      "consumivel-srd2-mesmers-tonic",
+      46,
+      "When you drink this tonic, the only thing you can hear until your next rest are the surface thoughts of creatures within Very Close range.",
+      "d8a998abd91b08e87ae932e054b989d5ec4d5bd09d0d7c9a57c0e007a04b66df"
+    ],
+    [
+      "consumables/invisibility-potion",
+      "consumivel-srd2-invisibility-potion",
+      47,
+      "You are Hidden until you deal damage to another creature or until your next rest.",
+      "25bf0d571a23af44512c6ab51b0401173c2d83efac7868f96a2854f591e81f08"
+    ],
+    [
+      "consumables/formoid-serum",
+      "consumivel-srd2-formoid-serum",
+      48,
+      "You can drink this potion to become a swarm of 16 million ants until the end of the scene. You keep and have access to all equipment, loot, and features.",
+      "b0daa5875143f1d1d4634ff6e8fddd199f2fd41547055fc386ad0ed0cb21adf8"
+    ],
+    [
+      "consumables/steelskin-salve",
+      "consumivel-srd2-steelskin-salve",
+      49,
+      "You can apply this salve to your skin to gain a bonus to your damage thresholds equal to your tier until the end of the scene.",
+      "2bcaaa376c5e08346e989d62f000d65d951362c56b0f760780b48e48845ff447"
+    ],
+    [
+      "consumables/godlings-pomelo",
+      "consumivel-srd2-godlings-pomelo",
+      50,
+      "You can eat this citrus fruit to clear all Hit Points and Stress.",
+      "81ae2900e35efbb7a0945039b18f460522d35a861036d91f437898cb46266de0"
+    ],
+    [
+      "consumables/snakeskin-spirit",
+      "consumivel-srd2-snakeskin-spirit",
+      51,
+      "You can drink this potion to slough off your outer layer of skin and heal a scar.",
+      "bb7df4ce1acaf04f8f92a5cc44a53b1f94b69b98dd0ca9c4b188ba8e3945b0ca"
+    ],
+    [
+      "consumables/magic-users-malison",
+      "consumivel-srd2-magic-users-malison",
+      52,
+      "When you release this spellcaster’s trapped soul, you can cast one spell from a card in your vault as if it were in your loadout. This doesn’t work for permanently vaulted cards.",
+      "8657251d0a9b9c3d8ef1eb56263c1c4a9d8846326445e8a3c972f0397df93cde"
+    ],
+    [
+      "consumables/quintessential-severant",
+      "consumivel-srd2-quintessential-severant",
+      53,
+      "You can use this magic blade to cut one magical or metaphysical bond, such as an enchantment, contract, magical tether, or divine oath. When you do, the blade shatters.",
+      "562c4c6ef9f62ee5cc6bdf58c020aa1e96f2b30720f0e861a20a9dc1c2b4906c"
+    ],
+    [
+      "consumables/mask-of-the-echoed-self",
+      "consumivel-srd2-mask-of-the-echoed-self",
+      54,
+      "You can wear this mask during your next level up to swap the values of any of your traits. When you do, the mask becomes your permanent face.",
+      "4cea2e05dbabf669721a9955eb9547ac4dce036ef9bd3ccc84674e5c6b0630f0"
+    ],
+    [
+      "consumables/necroprancers-bell",
+      "consumivel-srd2-necroprancers-bell",
+      55,
+      "You can break this rusted, clapperless bell against the ground to summon a skeletal steed that climbs out of the earth and serves you until the next sunrise.",
+      "b989900f3f2f3464300997d427dc0e8e0876f36f1d23be0a72838d9785434b5b"
+    ],
+    [
+      "consumables/drakemantle",
+      "consumivel-srd2-drakemantle",
+      56,
+      "You can use this enchanted ancient dragon hide to gain draconic characteristics until the end of the scene, when the hide falls aways in tatters. Until then, you can fly and gain a +5 bonus to your damage thresholds and a +1 bonus to your Proficiency.",
+      "fadc1b26d465ea581364ec228f824ab1cd27b0d13c1ebbd23fdc0b71c423b802"
+    ],
+    [
+      "consumables/gamblers-fallacy",
+      "consumivel-srd2-gamblers-fallacy",
+      57,
+      "You can spend any number of handfuls of gold by placing them into this slotted ceramic jar shaped like a pig. When you throw the jar at a point within Far range, it explodes and deals 1d20 magic damage for each handful of gold spent to all creatures within Close range of that point. All gold within the jar is destroyed.",
+      "10cb28c646a0c4ff0655643483d47a25291b829d5df3f966b6d3289c4a8a92aa"
+    ],
+    [
+      "consumables/lionheart-tonic",
+      "consumivel-srd2-lionheart-tonic",
+      58,
+      "You can drink this tonic to gain a +1 bonus to your Proficiency until you roll with Fear.",
+      "cc48c5f4f1850f5141d66fb9d4b9792167375c01dea71aa0e27659d37e918660"
+    ],
+    [
+      "consumables/tears-of-the-undying-hero",
+      "consumivel-srd2-tears-of-the-undying-hero",
+      59,
+      "When you drink this potion, death can’t touch you until your next long rest. When you would mark your last Hit Point, instead of making a death move, you make one final action roll before falling into a dreamless slumber until an ally chooses the Tend to Wounds downtime move to clear your Hit Points.",
+      "04688ca16502300cacaa6a99184c42f884be263aad8e1c387ce8c256f4c78fcb"
+    ],
+    [
+      "consumables/featherstep-potion",
+      "consumivel-srd2-featherstep-potion",
+      60,
+      "You can drink this potion to sprout small wings from your ankles that give you a bonus to your Evasion equal to your tier until your next rest.",
+      "f4ddf41ff0acf4a9b09025c4fa9a2fa9e2eda4c4a800e757acf9cc2957a519be"
+    ]
+  ]
+}

@@ -582,8 +582,8 @@ teste('contagem bate com o SRD oficial', () => {
   igual(ARMAS.filter((a) => a.cat === 'primaria').length, 251, 'armas primárias do catálogo expandido');
   igual(ARMAS.filter((a) => a.cat === 'secundaria').length, 73, 'armas secundárias do catálogo expandido');
   igual(ARMADURAS.length, 69, 'armaduras — núcleo SRD2 completo');
-  igual(ITENS.filter((i) => i.tipo === 'saque').length, 80, 'itens de saque');
-  igual(ITENS.filter((i) => i.tipo === 'consumivel').length, 60, 'consumíveis');
+  igual(ITENS.filter((i) => i.tipo === 'saque').length, 120, 'itens de saque');
+  igual(ITENS.filter((i) => i.tipo === 'consumivel').length, 120, 'consumíveis');
 });
 
 teste('todo equipamento tem id único', () => {

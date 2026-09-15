@@ -47,7 +47,7 @@ O corpus auxiliar pinado registra 1.539 registros: 10 domínios, 13 classes, 26 
 
 O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. O inventário individual fica em `data/srd2-inventario.json`: cada um dos 1.539 registros preserva ID, nome inglês, tipo, hash do registro no corpus, estado de implementação e, quando aplicável, `sourceLocator`. `npm run teste:srd2` impede alteração acidental das contagens, IDs, hashes estruturais ou estados. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
 
-No checkpoint atual, 874 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 664 permanecem `pendente`.
+No checkpoint atual, 974 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 564 permanecem `pendente`.
 
 ## Armas do núcleo — primeiro vínculo (194/358)
 
@@ -248,7 +248,7 @@ A coleção de armaduras está conferida: as 69 opções do núcleo e as 7 opç�
 
 Os 60 itens do conjunto básico e os 60 consumíveis do conjunto básico foram vinculados individualmente às pp. 75–77 e 80–81 do SRD 2.0. Nome inglês, número na tabela e descrição inglesa coincidem com o corpus fixado. Quatro textos ingleses de consumíveis foram ajustados: plural de d6 em Frasco de Darksmoke, “alterado” em Seiva da Árvore do Sol, sinal de −1 na Poção de Encolhimento e Vulnerável no Orbe Ofuscante. A descrição portuguesa do Orbe Ofuscante já estava correta. `data/srd2-items-existentes-auditoria.json`, `data/srd2-consumables-existentes-auditoria.json` e `npm run teste:srd2-itens-existentes` protegem os vínculos. Restam 60 opções novas em cada coleção.
 
-As 120 opções adicionais foram extraídas com nome, número, descrição, página e hash do corpus fixado para `data/srd2-itens-expansao-pendentes.json`. O primeiro lote de 20 itens da expansão foi traduzido e integrado, com seu conjunto de tabela identificado separadamente do básico. `data/srd2-items-expansao-lote1-auditoria.json` e `npm run teste:srd2-items-expansao-lote1` protegem os vínculos. As 100 opções restantes continuam em preparação não exposta e não mudaram de estado; `npm run teste:srd2-itens-expansao-pendentes` protege essa correspondência.
+As 120 opções adicionais foram extraídas com nome, número, descrição, página e hash do corpus fixado para `data/srd2-itens-expansao-pendentes.json`. Os 60 itens da expansão foram traduzidos e integrados, com seu conjunto de tabela identificado separadamente do básico. `data/srd2-items-expansao-lote1-auditoria.json`, `data/srd2-items-expansao-lote2-auditoria.json` e seus testes protegem os vínculos. Os 60 consumíveis adicionais também foram traduzidos e integrados. `data/srd2-consumables-expansao-auditoria.json` e `npm run teste:srd2-consumables-expansao` protegem os vínculos. A fila preparada de itens e consumíveis está vazia.
 
 ### Armaduras suplementares completas (76/76)
 
