@@ -4,7 +4,10 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const raiz = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const corpus = path.resolve(raiz, '..', 'srd2-source', 'objects', 'rules');
+const corpusRaiz = process.env.SRD2_CORPUS_DIR
+  ? path.resolve(process.env.SRD2_CORPUS_DIR)
+  : (fs.existsSync(path.resolve(raiz, '..', 'srd2-source')) ? path.resolve(raiz, '..', 'srd2-source') : path.resolve(raiz, 'srd2-source'));
+const corpus = path.join(corpusRaiz, 'objects', 'rules');
 const ler = (p) => JSON.parse(fs.readFileSync(path.join(raiz, p), 'utf8'));
 
 const definicoes = [
@@ -132,7 +135,7 @@ const campanhas = definicoes.map((d) => {
     id:d.slug, termo:d.termo, resumo:d.resumo, explicacao:d.explicacao,
     resolucao:'manual-assistida', fonteId:`rules/${d.slug}`,
     sourceLocator:fonte.sourceLocator,
-    corpusSha256:crypto.createHash('sha256').update(fs.readFileSync(arquivo)).digest('hex')
+    corpusSha256:crypto.createHash('sha256').update(fs.readFileSync(arquivo, 'utf8').replace(/\r\n/g, '\n')).digest('hex')
   };
 });
 

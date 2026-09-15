@@ -407,7 +407,7 @@ for (const colecao of manifesto.collections || []) {
       tipo: registro['@type'],
       nomeIngles: registro.name,
       sourceLocator: localizador,
-      corpusSha256: crypto.createHash('sha256').update(bruto).digest('hex'),
+      corpusSha256: crypto.createHash('sha256').update(bruto.replace(/\r\n/g, '\n')).digest('hex'),
       estado: relativo === 'sources/daggerheart-srd-2-0'
         ? 'fonte-conferida'
         : (implementados.has(relativo) ? 'mecanica-implementada' : 'pendente')

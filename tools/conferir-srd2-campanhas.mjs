@@ -4,7 +4,10 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const raiz = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const corpus = path.resolve(raiz, '..', 'srd2-source', 'objects', 'rules');
+const corpusRaiz = process.env.SRD2_CORPUS_DIR
+  ? path.resolve(process.env.SRD2_CORPUS_DIR)
+  : (fs.existsSync(path.resolve(raiz, '..', 'srd2-source')) ? path.resolve(raiz, '..', 'srd2-source') : path.resolve(raiz, 'srd2-source'));
+const corpus = path.join(corpusRaiz, 'objects', 'rules');
 const ler = (p) => JSON.parse(fs.readFileSync(path.join(raiz, p), 'utf8'));
 const dados = ler('data/campanhas-srd2.json');
 const verbetes = new Map(ler('data/verbetes.json').verbetes.map((v) => [v.id, v]));
@@ -25,7 +28,7 @@ for (const id of esperados) {
   if (!v || v.sourceId !== c.fonteId || v.fonteRotulo !== 'SRD 2.0') erros.push(`${id}: não está exposto corretamente na busca de regras`);
   if ((c.explicacao || []).length < minimos[id]) erros.push(`${id}: cobertura operacional insuficiente`);
   if (i?.estado !== 'mecanica-implementada') erros.push(`${id}: inventário não concluído`);
-  const bruto = fs.readFileSync(path.join(corpus, `${id}.jsonld`));
+  const bruto = fs.readFileSync(path.join(corpus, `${id}.jsonld`), 'utf8').replace(/\r\n/g, '\n');
   const hash = crypto.createHash('sha256').update(bruto).digest('hex');
   if (hash !== c.corpusSha256 || hash !== i?.corpusSha256) erros.push(`${id}: hash da fonte diverge`);
   if (!Number.isInteger(c.sourceLocator?.pdfPageStart)) erros.push(`${id}: localização da fonte ausente`);

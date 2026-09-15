@@ -4,7 +4,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const raiz = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const corpus = path.resolve(raiz, '..', 'srd2-source', 'objects');
+const corpusRaiz = process.env.SRD2_CORPUS_DIR
+  ? path.resolve(process.env.SRD2_CORPUS_DIR)
+  : (fs.existsSync(path.resolve(raiz, '..', 'srd2-source')) ? path.resolve(raiz, '..', 'srd2-source') : path.resolve(raiz, 'srd2-source'));
+const corpus = path.join(corpusRaiz, 'objects');
 const inventario = JSON.parse(fs.readFileSync(path.join(raiz, 'data/srd2-inventario.json'), 'utf8'));
 const regras = inventario.colecoes.find((c) => c.id === 'rules').registros;
 
@@ -40,7 +43,7 @@ const registros = regras.map((r) => {
     temTexto: Boolean(fonte.rulesText),
     caracteresFonte: String(fonte.rulesText || '').length,
     sourceLocator: r.sourceLocator,
-    corpusSha256: crypto.createHash('sha256').update(bruto).digest('hex'),
+    corpusSha256: crypto.createHash('sha256').update(bruto.replace(/\r\n/g, '\n')).digest('hex'),
     estado: r.estado === 'mecanica-implementada' ? 'implementado-anteriormente' : 'em-auditoria'
   };
 });

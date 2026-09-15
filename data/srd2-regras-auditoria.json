@@ -36,7 +36,7 @@
         "pdfPageStart": 94,
         "pdfPageEnd": 94
       },
-      "corpusSha256": "6eda9f2a995fea055169e2301e3b845886cad20b0c9f1bf2bb776af742a3d90a",
+      "corpusSha256": "52b411cbd2ed100ce7e59bade5e95da9fa26a539a9dd0428c6edfdc95aad4cf1",
       "estado": "implementado-por-referencia"
     },
     {
@@ -57,7 +57,7 @@
         "pdfPageStart": 159,
         "pdfPageEnd": 159
       },
-      "corpusSha256": "ffaf6bb7e5a2462cf3425b29bf91df7a711799a7d445170b5ab049afad695f67",
+      "corpusSha256": "b94641e5922130bcd767034f74963a8e9a33c08dd29e07e95debe5baa6d2b776",
       "estado": "implementado-por-referencia"
     },
     {
@@ -78,7 +78,7 @@
         "pdfPageStart": 183,
         "pdfPageEnd": 184
       },
-      "corpusSha256": "5c7907e5770949bf70f29e1d337023733101655f61d78331aede2c0477448618",
+      "corpusSha256": "6d056f5fc6d680afcd23ccf4d9709735bdc3eee7bf50f857c646ae9802da4a2a",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "movimento-do-mestre",
@@ -106,7 +106,7 @@
         "pdfPageStart": 53,
         "pdfPageEnd": 53
       },
-      "corpusSha256": "4a6ac4ff364309154fc739df207bb5293b218302042cbc5c41fef91a2ecb0f7b",
+      "corpusSha256": "ed28a46103b8e8f1ebb3a1dc0cc5e3622d53cc30f7f39aec6e1c4338e3a45d12",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "arredondar-para-cima",
@@ -132,7 +132,7 @@
         "pdfPageStart": 91,
         "pdfPageEnd": 91
       },
-      "corpusSha256": "7280bafdde64d11dffa9494b563f2160e4bf68238e1a633c03ecf351c145c4e2",
+      "corpusSha256": "ab95027438206343aadcc9127811ccfc5789694d143afb5c8c6f835c6915f303",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "contagem-com-ciclo",
@@ -156,7 +156,7 @@
         "pdfPageStart": 93,
         "pdfPageEnd": 93
       },
-      "corpusSha256": "16b7a631c737e50823fa62350725bd7e97722fb58179a992ce242fa2e1f2c8e7",
+      "corpusSha256": "69281f24cd4a199e888913da88bdde864c7a1c5bd380bba39ad17b1825926f7f",
       "estado": "implementado-por-referencia"
     },
     {
@@ -177,7 +177,7 @@
         "pdfPageStart": 95,
         "pdfPageEnd": 96
       },
-      "corpusSha256": "b9f0dd1218e6fbbd11ccb9f176ef6516737d777eaaf0a66b88d3824f92aac08e",
+      "corpusSha256": "bae773d780496140cfc29e9427f4bee93f0a2e6f24da581f21292212e1c8d382",
       "estado": "implementado-por-referencia"
     },
     {
@@ -198,7 +198,7 @@
         "pdfPageStart": 86,
         "pdfPageEnd": 86
       },
-      "corpusSha256": "1ab966b1c3836b8d002d85a9aa202910431570b4225fb2b3e880b5e2927c96db",
+      "corpusSha256": "12d9f4b8e011d395d81068a6f1225be556f80817563178b25572fc1a34e73532",
       "estado": "implementado-por-referencia"
     },
     {
@@ -219,7 +219,7 @@
         "pdfPageStart": 95,
         "pdfPageEnd": 95
       },
-      "corpusSha256": "44c37b8a05493b3cd197ade5b3c7a81d0c2ec8a6296ce13922055d492bf37c41",
+      "corpusSha256": "83485290bf319b75b71533cbe4126810ebcf36555119c42d8669b345e4c6e9b6",
       "estado": "implementado-por-referencia"
     },
     {
@@ -240,7 +240,7 @@
         "pdfPageStart": 93,
         "pdfPageEnd": 93
       },
-      "corpusSha256": "abb07b5e8fdd78b9292eee71db1b48808e350c59fc46d95af67b0dda3b6c3bf3",
+      "corpusSha256": "bc2e9638e6645a6936b85eeb138a1b49a32b377456c7d478b08cae0dbbc89ee9",
       "estado": "implementado-por-referencia"
     },
     {
@@ -261,7 +261,7 @@
         "pdfPageStart": 15,
         "pdfPageEnd": 15
       },
-      "corpusSha256": "ab91ac194538033804399564abe7960763c4b06eaf504ab62122d973273b17b8",
+      "corpusSha256": "d3febbefd07b068b8c9784491a547952a9b9d08a820f8508f31f29b06e6351ec",
       "estado": "implementado-por-referencia"
     },
     {
@@ -284,7 +284,7 @@
         "pdfPageStart": 32,
         "pdfPageEnd": 32
       },
-      "corpusSha256": "f9f338a0ddd9b988b3a8cc0846e622b60eb0abc19ffc6df224764f99d92f558e",
+      "corpusSha256": "73248560b7e9505d00d706d7659f82c19c94ad742ff681b05976adc968844372",
       "estado": "implementado-por-referencia"
     },
     {
@@ -307,7 +307,7 @@
         "pdfPageStart": 35,
         "pdfPageEnd": 35
       },
-      "corpusSha256": "a5ad4d5013e9718148487241b9c473519071da6d42c75752a6440f6a234c0305",
+      "corpusSha256": "f39cc099a9cee06b1563fadfd73bf4b81ceb6a3a7fa7ffdedbce5017836198a0",
       "estado": "implementado-por-referencia"
     },
     {
@@ -330,7 +330,7 @@
         "pdfPageStart": 32,
         "pdfPageEnd": 32
       },
-      "corpusSha256": "e148e9feafa89c50d1af80d12e24846a3149942d74315fe04154f30c6231be17",
+      "corpusSha256": "87f3f31fcc82ef2629dc000576d2c1bf24717c70cd35ac4fb892ae8aa9a90046",
       "estado": "implementado-por-referencia"
     },
     {
@@ -350,7 +350,7 @@
         "pdfPageStart": 206,
         "pdfPageEnd": 206
       },
-      "corpusSha256": "64c018169770b3df4e09f1f8b341f158efd6dd5aa377e7ee3b21d6a3191d3888",
+      "corpusSha256": "713334760d84435726d62a46e77b6102eb27757623e8d373539419d753220893",
       "estado": "implementado-por-referencia"
     },
     {
@@ -371,7 +371,7 @@
         "pdfPageStart": 17,
         "pdfPageEnd": 17
       },
-      "corpusSha256": "36d214563196ca11022e873e531a5513967b8c59543f01619cc3e9ba84eb9f02",
+      "corpusSha256": "1423bd86b9f1fc9e912169d96409c8af86ac02f8ef86eb4a2c341ac9d73e0f90",
       "estado": "implementado-por-referencia"
     },
     {
@@ -392,7 +392,7 @@
         "pdfPageStart": 16,
         "pdfPageEnd": 16
       },
-      "corpusSha256": "51be23be77f353736475f76accbeebd7b4289afe7f4617801df091cf79a23ec2",
+      "corpusSha256": "ed2434e955ab66413280ba79b30421702276e114965aab38c51b96e81dbbe94b",
       "estado": "implementado-por-referencia"
     },
     {
@@ -412,7 +412,7 @@
         "pdfPageStart": 206,
         "pdfPageEnd": 206
       },
-      "corpusSha256": "6acfecdcb82b00cdeefd8818ac59b2bbf06af9bd15b52919580467fec38ff683",
+      "corpusSha256": "ea782db6dc3bebece720898e39decfee7a50b756f75f9d8e3d5bba40a6ff7fe3",
       "estado": "implementado-por-referencia"
     },
     {
@@ -433,7 +433,7 @@
         "pdfPageStart": 91,
         "pdfPageEnd": 91
       },
-      "corpusSha256": "56350f488d3f7a59b4c6261f9921bd7c4cc22b766eebad02f9aae4bbd101c506",
+      "corpusSha256": "458949968fadc579134de73ff87de41c4b015f28227ed8208c461f7f82577a69",
       "estado": "implementado-por-referencia"
     },
     {
@@ -454,7 +454,7 @@
         "pdfPageStart": 72,
         "pdfPageEnd": 74
       },
-      "corpusSha256": "1882dd5d3b1cb659c3d059ac294d013b00b65c8a5804d4f851be394cac9117a7",
+      "corpusSha256": "40b17295c681fc7af48aa0a5d66419d050166b26c5e014745919ce951c897151",
       "estado": "implementado-por-referencia"
     },
     {
@@ -475,7 +475,7 @@
         "pdfPageStart": 16,
         "pdfPageEnd": 16
       },
-      "corpusSha256": "8b101eaf7c0b577efd1909eec61ad495f43dcca143767a5536eef6d134d5ef85",
+      "corpusSha256": "db540763cb5e1fff9ec5dfac81d5328a0e04d640a49808789d9ef98a878ac131",
       "estado": "implementado-por-referencia"
     },
     {
@@ -496,7 +496,7 @@
         "pdfPageStart": 9,
         "pdfPageEnd": 9
       },
-      "corpusSha256": "d8941d37af1d4391f5da15f03ac3fbab2f68bccccaf476509c8afb0d950b3630",
+      "corpusSha256": "114c02d2682c39c4f88eac1e3503f5bfa1d65efcbc9a6852b50acdd47b5e9639",
       "estado": "implementado-por-referencia"
     },
     {
@@ -518,7 +518,7 @@
         "pdfPageStart": 50,
         "pdfPageEnd": 51
       },
-      "corpusSha256": "d96f580ed3e0b24cee887a201a4d7b8c74516f8b16e50f2605054739e57590c1",
+      "corpusSha256": "6a1fff74dd27344fcf3a9e00f71b480da93d382f433813b659990fcfa0f27b7f",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "jogada-de-ataque",
@@ -544,7 +544,7 @@
         "pdfPageStart": 22,
         "pdfPageEnd": 22
       },
-      "corpusSha256": "f7aff91c9909f534e3ccc1562465830fbc442c23addf3c50be1b852bf8b905f7",
+      "corpusSha256": "9db36e8daa7acb20f024f1a9f4ed6d18d63889846ee4fab84b5d72f700a1f708",
       "estado": "implementado-por-referencia"
     },
     {
@@ -565,7 +565,7 @@
         "pdfPageStart": 11,
         "pdfPageEnd": 11
       },
-      "corpusSha256": "1062470cf39140b1a1d5577d60d717c8181c4a8f32d2f1459e294db6a758fa8a",
+      "corpusSha256": "06766b9d73c486f85b72bce0463ea2ac3b1326d9a6c5c499a9633bca405c80a8",
       "estado": "implementado-por-referencia"
     },
     {
@@ -586,7 +586,7 @@
         "pdfPageStart": 20,
         "pdfPageEnd": 20
       },
-      "corpusSha256": "b89c2c8bac8b2889a478357d4d2944b8dedaf94c06e46e3e3286a68dbe496db3",
+      "corpusSha256": "3d6c1227db36bf528ba2e8f7a8426947f21c58034a3f9645b3ab41a88a3bb456",
       "estado": "implementado-por-referencia"
     },
     {
@@ -607,7 +607,7 @@
         "pdfPageStart": 15,
         "pdfPageEnd": 15
       },
-      "corpusSha256": "56c27c5200105e0ad6ab895182c4cbef96c84467182f7dfdf7f301facdc7976a",
+      "corpusSha256": "21081a7f280fa4715c0a1be0bed9e36143d9adb968d84d6235630684bcd03d1f",
       "estado": "implementado-por-referencia"
     },
     {
@@ -628,7 +628,7 @@
         "pdfPageStart": 159,
         "pdfPageEnd": 159
       },
-      "corpusSha256": "75861053068a9f55f7d6aa7cf5f84197a0b985545f5928299e11ce8cdc68715d",
+      "corpusSha256": "68beb671134c36b09e78ac1ab5d13225d290abbe5a8cbe7ae92724b35089f837",
       "estado": "implementado-por-referencia"
     },
     {
@@ -648,7 +648,7 @@
         "pdfPageStart": 208,
         "pdfPageEnd": 208
       },
-      "corpusSha256": "7d67e5cfcabc89c428928cbb18c22f0d8093c17f2262c9eac538cfbf452b7c95",
+      "corpusSha256": "231033c5598e456629405e0be6de7a16e3f39c1ff5bb5a65c6d82b3a0fe5bf86",
       "estado": "implementado-por-referencia"
     },
     {
@@ -668,7 +668,7 @@
         "pdfPageStart": 209,
         "pdfPageEnd": 209
       },
-      "corpusSha256": "3d262c5b72b4f3418b3cb9ea2b69060a64f933853b3f6c07bd5d3528ff2ea0c4",
+      "corpusSha256": "7d30a5ca133b24f097800d29e7e5d9f64bbb76ba1cee6b6db6fb7321bf74c62a",
       "estado": "implementado-por-referencia"
     },
     {
@@ -689,7 +689,7 @@
         "pdfPageStart": 12,
         "pdfPageEnd": 12
       },
-      "corpusSha256": "1dbee45b76d9b082204c0b9adf357a65c3437d14a7318d47948057373090f2e8",
+      "corpusSha256": "dc183a25b7759a2e19462e84882ab2d08969f823a51deee1b69128c50be9f7ef",
       "estado": "implementado-por-referencia"
     },
     {
@@ -710,7 +710,7 @@
         "pdfPageStart": 94,
         "pdfPageEnd": 94
       },
-      "corpusSha256": "ff195cdd0e498f94d58d99e0873166582f935c25f0dc073ff9b4353d9cf076d5",
+      "corpusSha256": "7ad99009a711073cf3092651cf7bb91d94fa68cab88eee13e9ef76ffd49d5911",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "guia-de-batalha",
@@ -735,7 +735,7 @@
         "pdfPageStart": 55,
         "pdfPageEnd": 55
       },
-      "corpusSha256": "e9c5ed1ddb813157019e71bc6e0db0c63de30235cd0f64b370c47aa4e3b8c81f",
+      "corpusSha256": "302d2c800e8c0e8b690030c5fd95f05cb2c57cbea595ea30bf7bae2b9d75ce15",
       "estado": "implementado-por-referencia"
     },
     {
@@ -756,7 +756,7 @@
         "pdfPageStart": 28,
         "pdfPageEnd": 28
       },
-      "corpusSha256": "14370523b80b4a15c8b69d2e9eccce1894a4cd62b5b0e5103fe46c6442cf086a",
+      "corpusSha256": "d953acf09745e0732559cb3dc5b0381c38a99a8a2008d674529d6c288e508367",
       "estado": "implementado-por-referencia"
     },
     {
@@ -777,7 +777,7 @@
         "pdfPageStart": 28,
         "pdfPageEnd": 29
       },
-      "corpusSha256": "0a60b6349511b7da4867bdc4904d2e82e7253e98c4f0e025fdd447a68cdfca5b",
+      "corpusSha256": "c93641dcd9cec30787db90684f4c2584f4ea0ad7183da124a131a46405b7c6c0",
       "estado": "implementado-por-referencia"
     },
     {
@@ -798,7 +798,7 @@
         "pdfPageStart": 55,
         "pdfPageEnd": 55
       },
-      "corpusSha256": "44e9700af1e404ccd011d071131988bbfcd682601d3515c04768b7f7341a9bb4",
+      "corpusSha256": "82bc2fbe9ed61da89538b0c5913b240b8f8ed9c972d986e0d5a657f1ff3bec8e",
       "estado": "implementado-por-referencia"
     },
     {
@@ -821,7 +821,7 @@
         "pdfPageStart": 4,
         "pdfPageEnd": 6
       },
-      "corpusSha256": "325ea35457f09893988b8f7c0749138d0e7d55a5a70130bc95a1e954be6ddea6",
+      "corpusSha256": "d2523d26bcba5e6301b07d869fc0afc3f3ffba2002776022bd7ad3674873d515",
       "estado": "implementado-por-referencia"
     },
     {
@@ -842,7 +842,7 @@
         "pdfPageStart": 86,
         "pdfPageEnd": 87
       },
-      "corpusSha256": "a666079fd1917c62bcc1132f9ccab6f80f6146c7a5326c2ccaaad20c37088f57",
+      "corpusSha256": "860305719445dc29b7a64fc9bdd71803caf7167621f8fcc41dbcf899196f3fd2",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "movimento-do-mestre"
@@ -868,7 +868,7 @@
         "pdfPageStart": 8,
         "pdfPageEnd": 8
       },
-      "corpusSha256": "ae26572873c9744b3891430b0033871fae40589d5eb69d12934f6c7752623ae5",
+      "corpusSha256": "dcf069d6f82c00c748b223af7d1c318339b76e281764658ad3ab1434815e5e27",
       "estado": "implementado-por-referencia"
     },
     {
@@ -891,7 +891,7 @@
         "pdfPageStart": 8,
         "pdfPageEnd": 8
       },
-      "corpusSha256": "3402b8e8d057936e0932c24f4a113f4ecb3c1d482d7ba7dce38bbc36b4fc1590",
+      "corpusSha256": "9f6829d21cd64d2d40e6c995c49e2c5cebbca1ebe569b30df40b2074f13e5dee",
       "estado": "implementado-por-referencia"
     },
     {
@@ -911,7 +911,7 @@
         "pdfPageStart": 211,
         "pdfPageEnd": 211
       },
-      "corpusSha256": "58c316c459172e54ef4b6f0714f24bfac873eba6d66ea091b103527c37042268",
+      "corpusSha256": "7ac1ad8e9195593f378e56164e80a9d063134792aa5ecc30806a81dc642f9436",
       "estado": "implementado-por-referencia"
     },
     {
@@ -932,7 +932,7 @@
         "pdfPageStart": 198,
         "pdfPageEnd": 199
       },
-      "corpusSha256": "3df346dacd935edf56cbdd51b09352697f9808f8cd7dc9c017305a0e9268757e",
+      "corpusSha256": "fd791430028baa3b5f60796b207e8c1a6ba33b91a18eafa7ccd718479d020d78",
       "estado": "implementado-por-referencia"
     },
     {
@@ -954,7 +954,7 @@
         "pdfPageStart": 50,
         "pdfPageEnd": 50
       },
-      "corpusSha256": "3a043cd7ae9d1f9489c1c7c649a62cfdf2f2d4ccaf732d80c490ecd9ea52a7b0",
+      "corpusSha256": "069fd6e961f08d06462dd536fff70adeb7a14424e10b5017dfb3ab51ee89eb7e",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "holofote",
@@ -980,7 +980,7 @@
         "pdfPageStart": 70,
         "pdfPageEnd": 71
       },
-      "corpusSha256": "8111794b2dc5a16ebb35bed69e717e8283a104fe368986fd3f54053d12e0f422",
+      "corpusSha256": "33853c8663f4be79a21b4fb72e576e2e6b9dc8724fc438e51e111f9c0bc53683",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1003,7 +1003,7 @@
         "pdfPageStart": 38,
         "pdfPageEnd": 38
       },
-      "corpusSha256": "3f0a8305b5b0e950ad0b4a471cecb1d50c2a93ad0cdf60274d6dc9833a1c1e27",
+      "corpusSha256": "705cb37558ae7f3dc724bc35326acadd4b0570607058a7c3cb15291151f32116",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1025,7 +1025,7 @@
         "pdfPageStart": 52,
         "pdfPageEnd": 52
       },
-      "corpusSha256": "9911862d489ac0f0a701359b8d31e035fb2ae8ccc0e1591a0aac69450759c0a4",
+      "corpusSha256": "faa335b5db7a47701cec63ee34ae52e9d19e8b3f0498e239914a87974d2523fe",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "condicoes",
@@ -1051,7 +1051,7 @@
         "pdfPageStart": 92,
         "pdfPageEnd": 92
       },
-      "corpusSha256": "0131b8acce1fd0b7db7386b733f2f98e31dc9c6cb2f256a96c45e57c0d4a32c1",
+      "corpusSha256": "9913414a837eef826a80844e8509c3e5c5d7c3d527dc2b2e95573b51ccbda0fb",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "conflito-entre-personagens"
@@ -1075,7 +1075,7 @@
         "pdfPageStart": 80,
         "pdfPageEnd": 84
       },
-      "corpusSha256": "51edb8c000a7780200e8cb7ee482013b25af5b5ced8ae2d2d71e1b73b3855387",
+      "corpusSha256": "0943c0d220d8a772b0310d9d73625fa90c3b3198ca4242611f4126c5cd942d3d",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1095,7 +1095,7 @@
         "pdfPageStart": 2,
         "pdfPageEnd": 2
       },
-      "corpusSha256": "a770734df08f98a87bbf11b0bf22c94d7bf76c5c319aa982c4b4d63828b6cfe6",
+      "corpusSha256": "abb35024c5a2e3834b62b44413aec837dff92e7083fce55a0651fe0f48a1dbcb",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1117,7 +1117,7 @@
         "pdfPageStart": 46,
         "pdfPageEnd": 46
       },
-      "corpusSha256": "27bec3629d00a6ddba89f3ccff4555803885d6a410d37ba955ec40da27e78e12",
+      "corpusSha256": "eb72d8b4f03188078800e9240f2ef36cdf8c4a3a6adf76aa5962547f865f61e7",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "jogada",
@@ -1143,7 +1143,7 @@
         "pdfPageStart": 86,
         "pdfPageEnd": 86
       },
-      "corpusSha256": "78c566a7af7c2038f60421f5d0b64424e6fd5ce7b9e0af061467c30a9e972566",
+      "corpusSha256": "ab4e0fef4d8eceff86969c81e1f166f1a755e4b5fba84e3e5024395c4034e02c",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1163,7 +1163,7 @@
         "pdfPageStart": 7,
         "pdfPageEnd": 7
       },
-      "corpusSha256": "575daff59d29225921b0b64b533440da4f785031e50703252e4a6d05a999055b",
+      "corpusSha256": "a4b80d881dfa6f902536807d6c71caa28a9199b8b04011790c5299ced5a0fe6f",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1183,7 +1183,7 @@
         "pdfPageStart": 46,
         "pdfPageEnd": 46
       },
-      "corpusSha256": "61e89513194658660757050ff17e89518bebecb52b6644b34ab8b4ec15c12ffe",
+      "corpusSha256": "c314dc888fe81bc1945f403550c4b8fb296f0a0d34018a49f4e8d9a63950347f",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1204,7 +1204,7 @@
         "pdfPageStart": 91,
         "pdfPageEnd": 91
       },
-      "corpusSha256": "480a3e9d5944026c942e6dedec5637ca26c30cce30de53e5c9f6b9d311da46be",
+      "corpusSha256": "d828b654f1f66e0edea8e3a0305389bd133192da7f0e001af8f0c5be8fed0d6a",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "contagem-regressiva",
@@ -1229,7 +1229,7 @@
         "pdfPageStart": 1,
         "pdfPageEnd": 1
       },
-      "corpusSha256": "fb894616eb54d3892e462696f6861d962f3ec9cff6ab9b236fa985a2a3f9a52f",
+      "corpusSha256": "23b5ab93fca1680b5dc8077c14bb5bd77766f06157380edcf62719e61bb8f443",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1251,7 +1251,7 @@
         "pdfPageStart": 55,
         "pdfPageEnd": 55
       },
-      "corpusSha256": "2918d40bba644b39a35c302374f79f6b72c03c0ed18cec886e355035c4b28c43",
+      "corpusSha256": "a02bbafc2d6648ff37e5af7a7815cb5e75da0c0dc637d7f83b435d0c891208ed",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "dano-sofrido"
@@ -1276,7 +1276,7 @@
         "pdfPageStart": 93,
         "pdfPageEnd": 94
       },
-      "corpusSha256": "987f199b8c1fd78d60fef847260564a0435fd3539b3304becdfec42f8381a3de",
+      "corpusSha256": "c563eb0a5119cf5466f51af8e91dc31d8d32a0a1094ee77ca672af4af37a23b4",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "limiares-de-dano",
@@ -1303,7 +1303,7 @@
         "pdfPageStart": 55,
         "pdfPageEnd": 55
       },
-      "corpusSha256": "41ed51396107efbe500da97921a5d5a200b1492162b250e248f3462f399f796c",
+      "corpusSha256": "a8f6ce96d68c915a79decd1601979929108311ca67361ae43e74b8a1f633af89",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "tipo-de-dano"
@@ -1328,7 +1328,7 @@
         "pdfPageStart": 53,
         "pdfPageEnd": 53
       },
-      "corpusSha256": "95ae2d18bb426f1b6bfbef7e05be9faa3cf2758308ad4e60223600f3626ad7aa",
+      "corpusSha256": "f599f474d9a07302a7d80740ae8df240d7d9d32138a954d6cbea4a3c72cb2149",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "morte",
@@ -1353,7 +1353,7 @@
         "pdfPageStart": 94,
         "pdfPageEnd": 94
       },
-      "corpusSha256": "6bbcc5acbfe2a81d22bce949acbd8ce1313be108aefcd763854bd53efb6a5f0c",
+      "corpusSha256": "3c0f6a27fa2885b90755ab9842ce5dcce3d475e53baefd172b74595a17791d8c",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1374,7 +1374,7 @@
         "pdfPageStart": 88,
         "pdfPageEnd": 90
       },
-      "corpusSha256": "ebab781128d5066738c3331278c40c4e60586abe52f78ed98c7923f67807bb3d",
+      "corpusSha256": "d072b18da24985e846b26bfc58e3db12ff14e45db0cc5a455fa2d48e868e87c4",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "dificuldade"
@@ -1398,7 +1398,7 @@
         "pdfPageStart": 24,
         "pdfPageEnd": 24
       },
-      "corpusSha256": "3d8b74cc43f0bc5c50b5d40288c11084d80b8f92903b5d1132ee15819c2fdc89",
+      "corpusSha256": "c2de47433c632fc2732388fcee9132337516b9095e0d1b91791383fa14f8e5a6",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1418,7 +1418,7 @@
         "pdfPageStart": 206,
         "pdfPageEnd": 206
       },
-      "corpusSha256": "504f42b00013a4a2c30d473b6664627beb2a2ebbf2b23ba21c425e683acc7425",
+      "corpusSha256": "2bae8e61df5efe9f03f5ddde801de82ad12c1f54fa143fb55498cfec750f91d8",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1440,7 +1440,7 @@
         "pdfPageStart": 7,
         "pdfPageEnd": 7
       },
-      "corpusSha256": "8bee30230420bed048b813d8ad8c1081b08d4d7d76eda76444023a6096055f90",
+      "corpusSha256": "f3030f34bb07f1c2e6827244ae4573dec9124f76b1383afed822f8e9fc1b3140",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1462,7 +1462,7 @@
         "pdfPageStart": 52,
         "pdfPageEnd": 52
       },
-      "corpusSha256": "2058f17c1b9e356bcc1c595bd48b0c4b3d9c9c7ee175396af740ae0fcf6a6291",
+      "corpusSha256": "4ce9a745ebbb6b953dcd5fcf44c7dc2d2e02d90c7d0f2ea840a887b15e04297c",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "repouso",
@@ -1486,7 +1486,7 @@
         "pdfPageStart": 213,
         "pdfPageEnd": 213
       },
-      "corpusSha256": "a16c1afc349870c3eb0fe6ca776e76b97e6140675bb829be467a0fb05c31327f",
+      "corpusSha256": "5d9134469d91bdcde4566a57c4f1bc6f4c0fbfcd2b19f461a0ae0ebe86537cad",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1507,7 +1507,7 @@
         "pdfPageStart": 13,
         "pdfPageEnd": 13
       },
-      "corpusSha256": "aac42b2f287c3395dc42f88380102962b11cc5a555b050edb95b3bf7512a875f",
+      "corpusSha256": "ab62c91c040b2b5866c6afa97635dcf40a0bdf43b3af558955218bdc822130a2",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1528,7 +1528,7 @@
         "pdfPageStart": 14,
         "pdfPageEnd": 14
       },
-      "corpusSha256": "209fb5a8be91f8e41dabe1659e103a8708e03414ccd905429a284b638d92bb29",
+      "corpusSha256": "b04d840fe23d2b7dafce610fdc76e7ba8c26f451d6a381d697a707f374dc0581",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1549,7 +1549,7 @@
         "pdfPageStart": 91,
         "pdfPageEnd": 91
       },
-      "corpusSha256": "3d57c7ba2ebed5697357b2900a0264402ec07e44ea78cb0e4f674b7255708478",
+      "corpusSha256": "0a27b53f72b1087620638d14a320cdc00dccd6d1e543c6d740adfdcee8827ed2",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "contagem-dinamica"
@@ -1573,7 +1573,7 @@
         "pdfPageStart": 33,
         "pdfPageEnd": 33
       },
-      "corpusSha256": "4bf4f6cbb6638140d13ffbc413d45b49e78f3745c281007809b2253c48c5b174",
+      "corpusSha256": "8c43bc667b19ec95cdfcae0877afeaf84928a5f4a273265c392164a318d7a370",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1594,7 +1594,7 @@
         "pdfPageStart": 25,
         "pdfPageEnd": 25
       },
-      "corpusSha256": "ded01dfa50f1ea20df2c8ce413fd84bb86bd19ba5504fd29c657bd6f1b2ef0d3",
+      "corpusSha256": "5b43f0b7d527920a18fcbb824e6c54f9229e968038445fea0136801defb14a77",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1615,7 +1615,7 @@
         "pdfPageStart": 158,
         "pdfPageEnd": 158
       },
-      "corpusSha256": "d71c02e855f511a9f72abd29626419ae5b5f9b9d33992f6aee2fbe7fde058280",
+      "corpusSha256": "d46aaae32d9f69af0dc8418dbc3433c42d84225c79f6e60aa61741c328e4d0c4",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1636,7 +1636,7 @@
         "pdfPageStart": 159,
         "pdfPageEnd": 159
       },
-      "corpusSha256": "a8d68e318d707622f1ee991735b26946b1d9efcdd653df2c5133b0479711f967",
+      "corpusSha256": "36c79d1c793563c97ac89b451399ff3c73d25c063aac3ee6acc7d7365181baa5",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1657,7 +1657,7 @@
         "pdfPageStart": 18,
         "pdfPageEnd": 18
       },
-      "corpusSha256": "9bbd1104cbf73c42daf7c609f4cc12c808649b6f781ad6ca01690e1f415315f6",
+      "corpusSha256": "af005f50d15c704fbc14d1d6383e0c57a33b6c04336a6c14481de306dcb754e4",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1678,7 +1678,7 @@
         "pdfPageStart": 55,
         "pdfPageEnd": 55
       },
-      "corpusSha256": "158bd849f24ab423d57e8aeb4ddce194d83e8b72cc18ca9dd9ca2b2f919b7931",
+      "corpusSha256": "da45f8bfb84c866eaeb3fb9bd5ab260f43ce4d3154d5b230d2a5695bae3077d6",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1699,7 +1699,7 @@
         "pdfPageStart": 191,
         "pdfPageEnd": 192
       },
-      "corpusSha256": "ac08fc9cfc4b3d9a326bd70da72bd767e485332878f283d6f56a742f73bb9a32",
+      "corpusSha256": "a8172b3e9e7f9188347f339f93a6c3e217b5ae7a77419bdc7378a652d5f8dfbd",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1720,7 +1720,7 @@
         "pdfPageStart": 94,
         "pdfPageEnd": 94
       },
-      "corpusSha256": "93bbf832969f580e01ec0a6ab5ca86383b1325f7ce9110f58b8bb6d75a8b9107",
+      "corpusSha256": "8cb388f8ec6529a53f550877b096dc6b5ad2653bfd20e205e39bf360c20979f4",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1741,7 +1741,7 @@
         "pdfPageStart": 9,
         "pdfPageEnd": 9
       },
-      "corpusSha256": "4feaec261c29926e46319a5b7b49fd558af988966416678124b32165a84c51c1",
+      "corpusSha256": "7bae4541f7d1ae26aebf0d15eb30ecacdb20f9630b2f92aaa8693631d2791299",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1764,7 +1764,7 @@
         "pdfPageStart": 190,
         "pdfPageEnd": 190
       },
-      "corpusSha256": "4de985427a3221da685149932d6c3cf160926ac3a140a07ad58638da5a0defcf",
+      "corpusSha256": "a843d38f1c9bea65832e99d65f6bd101a6eb64b443102981c84d084eebef7667",
       "estado": "implementado-diretamente",
       "verbetes": [
         "faction-tracking"
@@ -1790,7 +1790,7 @@
         "pdfPageStart": 200,
         "pdfPageEnd": 200
       },
-      "corpusSha256": "3176d43daa567c92a82f4228f55551494acdd86c3277ee6b4c635d20c1e64d37",
+      "corpusSha256": "4e483339cbd3b23d02630da79f5f7284b59178dc847554c26c1cdfdd1fc80fcc",
       "estado": "implementado-diretamente",
       "verbetes": [
         "fairy-tale-campaigns"
@@ -1815,7 +1815,7 @@
         "pdfPageStart": 92,
         "pdfPageEnd": 92
       },
-      "corpusSha256": "564faf2f143f46fb86519e1537c594f2e3e78b2d5d3e19bcf6c9bc358d80364b",
+      "corpusSha256": "4672ec73cd56e8cf2c830baab13b5240d7f21a0a2a2fb4817d7d3a9a1cc52281",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "dano-de-queda-e-colisao"
@@ -1840,7 +1840,7 @@
         "pdfPageStart": 92,
         "pdfPageEnd": 92
       },
-      "corpusSha256": "c57206e488126b5667e0c1f671eb3cf9ae76171dbf613bb003f9594e2de47851",
+      "corpusSha256": "0e3c06d98b692f567d5798b751c03b5a53947a2076749919c25c9c6c4b49512b",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "jogada-de-destino"
@@ -1864,7 +1864,7 @@
         "pdfPageStart": 94,
         "pdfPageEnd": 94
       },
-      "corpusSha256": "ef864e13c07f47f97ac3250e3a00eac05bb18db2621868ecf170f0c2ef24e1b3",
+      "corpusSha256": "e36b78243d5eee0d583cb712c493d22c26f8f6b02601f9feed7a40bd4563c9f0",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1887,7 +1887,7 @@
         "pdfPageStart": 192,
         "pdfPageEnd": 194
       },
-      "corpusSha256": "5cc4d974a47847a7722898883749cfce60f0cc785e65780f4ea9a9dd3840c39b",
+      "corpusSha256": "ff9a608b033341d525af577e3120515817865f8dfb87df4e7522b536a29d392b",
       "estado": "implementado-diretamente",
       "verbetes": [
         "feasts"
@@ -1911,7 +1911,7 @@
         "pdfPageStart": 55,
         "pdfPageEnd": 55
       },
-      "corpusSha256": "d1c2045fcff9feb75607d2bd7868a064fa918945343c839d30300d37a4d376db",
+      "corpusSha256": "75a20f12b12c7bc9eb9e6f1336c3195c0379e077641359f4ef5057983528cd50",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1931,7 +1931,7 @@
         "pdfPageStart": 158,
         "pdfPageEnd": 158
       },
-      "corpusSha256": "78b058244a591c911ed29282668b425a6bde01a13704d0ff5848910d5f0814f8",
+      "corpusSha256": "67c9bfd066143ef61749f1d83c62fb1cc6460f5a00d6e4bad75344d1fae76bf9",
       "estado": "implementado-por-referencia"
     },
     {
@@ -1954,7 +1954,7 @@
         "pdfPageStart": 199,
         "pdfPageEnd": 199
       },
-      "corpusSha256": "7d31e0b96d0aee3d99a573ee75e5e146dee339fd6001e8b54ec7b64d4c362c4f",
+      "corpusSha256": "59396a5a603ccfe247a142868127fe6fba1c53cf9bf8297ab807122452286344",
       "estado": "implementado-diretamente",
       "verbetes": [
         "floating-magic-school-campaigns"
@@ -1979,7 +1979,7 @@
         "pdfPageStart": 46,
         "pdfPageEnd": 46
       },
-      "corpusSha256": "e39804d616515e80dca3726f98af1f0cd1dfc965fc978edc346e30fb869306f7",
+      "corpusSha256": "aab3b8ec8393c4ebe6e8d7e4b414baa233c6ee8fd48e232aa109d538d835d0b2",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "holofote",
@@ -2004,7 +2004,7 @@
         "pdfPageStart": 13,
         "pdfPageEnd": 13
       },
-      "corpusSha256": "e527563eb39117ed0a1da2192a18aa1907f79d65fb492f5652537b2a3915a24b",
+      "corpusSha256": "73ce2a5806db76c8aaefb17af88de34f20a85a986da57d1564f63ba43b3d5126",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2026,7 +2026,7 @@
         "pdfPageStart": 90,
         "pdfPageEnd": 90
       },
-      "corpusSha256": "c3c9b8621c03c3d7a9f5c3f7fde9acac7ab0cf1c6863affd42f32b0522a8aab7",
+      "corpusSha256": "9193f87889c4547efe5d38aaf7104b54ec5f4f4fa528802642fa61a53d94488e",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "vantagem",
@@ -2051,7 +2051,7 @@
         "pdfPageStart": 91,
         "pdfPageEnd": 91
       },
-      "corpusSha256": "77cb06e900bfe7da4e7d3ce85118425cea38e6488f92f9bba1613407d7fd1aa4",
+      "corpusSha256": "45db7ec1ab85338839428c625e74561aca22759b8187621df56d1422217e60ee",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2072,7 +2072,7 @@
         "pdfPageStart": 85,
         "pdfPageEnd": 86
       },
-      "corpusSha256": "409ef66bc2205d5f062ad2fd6463d885863e42152604c9459e006ca0651cf89a",
+      "corpusSha256": "bbaacbb61e5869a1065c52b5b3b17036051ba58c6eecbbeb514712fdbc789a15",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "movimento-do-mestre"
@@ -2095,7 +2095,7 @@
         "pdfPageStart": 215,
         "pdfPageEnd": 215
       },
-      "corpusSha256": "68cbcd0b33e979131c25da475926ead151c110dacc59bd521e6f1cb5f82fffde",
+      "corpusSha256": "56b1ef18b093e4ddcccaa1d5be20f2f1c2ae4bc5031973d5c503489ba9763f36",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2116,7 +2116,7 @@
         "pdfPageStart": 42,
         "pdfPageEnd": 42
       },
-      "corpusSha256": "bff71e2d929c51b7f7d76bde27481a607206fc7df135f8eff3f493a362744497",
+      "corpusSha256": "675e92c894a8aeb7e7f267990cb026f8a05f2c5efcd1fa4dd872d23dbd161a37",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2137,7 +2137,7 @@
         "pdfPageStart": 17,
         "pdfPageEnd": 17
       },
-      "corpusSha256": "78cc0c8501ef0d94a66657fa3ba52b460f8bc34fdb5a88f7e961e1f003de8d47",
+      "corpusSha256": "6207aea6ca531f33f23577e4c54908f15f746b74fa3d1fe5097eff264921fdaa",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2158,7 +2158,7 @@
         "pdfPageStart": 17,
         "pdfPageEnd": 17
       },
-      "corpusSha256": "9751bb4dcf1c596035acdbbdc8496dab360d518356df4d2321dca5070538617b",
+      "corpusSha256": "b29a050cf5a8c4739584ce655bf225b986d7e35ffda9005e14fe41cce40b5d04",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2181,7 +2181,7 @@
         "pdfPageStart": 195,
         "pdfPageEnd": 195
       },
-      "corpusSha256": "637aba49e0ef41cb960f7a1e91a86aa6482636855a5b40d66988fa927bbac8ad",
+      "corpusSha256": "8085c6ffc4962bb53f509b3d8e49d9f34ee6f5e68f25826e233b57305e6ee4d8",
       "estado": "implementado-diretamente",
       "verbetes": [
         "grimdark-campaigns"
@@ -2205,7 +2205,7 @@
         "pdfPageStart": 19,
         "pdfPageEnd": 19
       },
-      "corpusSha256": "5f483f58135250d7b81ba2790bd5f80856a8212316251c9fe4138fd23a86190f",
+      "corpusSha256": "beffc7f3bc2b8d1d0e9afeb27e3e735dbbae1496e4574e094f01c72ac6ca7974",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2227,7 +2227,7 @@
         "pdfPageStart": 86,
         "pdfPageEnd": 86
       },
-      "corpusSha256": "53703b777ad0c931ab04445573191049a5abe060c076dff04460f9ab9bc5fa42",
+      "corpusSha256": "bc760f7e8b4b9eff84c8a4957f8c1854abf7e4d1821ce3799b7726de12ac9bec",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "jogada",
@@ -2252,7 +2252,7 @@
         "pdfPageStart": 29,
         "pdfPageEnd": 29
       },
-      "corpusSha256": "9a23b1ba485e44c667f23213370ac83d89b257fcaa201be794fccf5add7f1d07",
+      "corpusSha256": "3bac890b47d5161f24c170bb6e76dde5a31cf31a5de5b217ce67eb939e849ecb",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2275,7 +2275,7 @@
         "pdfPageStart": 203,
         "pdfPageEnd": 205
       },
-      "corpusSha256": "065aba0122be3f7cbfd2461ee5d922ff4d68978a3deb0495ec3fdb77d2ee9485",
+      "corpusSha256": "c1ed2b7cda276043cb0f78dc7269cb61fc637d16f96f55b76600108936aeb670",
       "estado": "implementado-diretamente",
       "verbetes": [
         "hex-crawl-campaigns"
@@ -2299,7 +2299,7 @@
         "pdfPageStart": 16,
         "pdfPageEnd": 16
       },
-      "corpusSha256": "6250c04a7ae231449dd25175005ef146d8bcc0ec1957ecb34253e766670fe339",
+      "corpusSha256": "30f35fe2a763f65f8e2722c974d22cd4688ac1ecec98df260270c41cd4291e8f",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2320,7 +2320,7 @@
         "pdfPageStart": 158,
         "pdfPageEnd": 158
       },
-      "corpusSha256": "d3b44b71bea1ef68281656c6a4c6b6efdd174e2ec21fe5ea839feb1066bd6a56",
+      "corpusSha256": "43ab3196275c644eed72a1c9c1161d86572e73082bed40c5713dd64c4d0580a2",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2341,7 +2341,7 @@
         "pdfPageStart": 92,
         "pdfPageEnd": 92
       },
-      "corpusSha256": "5a26fcfeb7ec8089ef190f3292c893b3f1b5a60a4bf898b77d0e757aa2404638",
+      "corpusSha256": "f66f534aaaa2d08d6fada25415003427646cb23a3e04df144dc3088eb9d66a49",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2361,7 +2361,7 @@
         "pdfPageStart": 3,
         "pdfPageEnd": 3
       },
-      "corpusSha256": "c7732e5d46798f87eda1ab0307fb9eb8df5df60f85668b8fb5ace1da58a3e81e",
+      "corpusSha256": "ac96c5c6bb3363f0a07fa03bfffb6d0c1c2b3c75091dc2358bf8bb26e6b20307",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2381,7 +2381,7 @@
         "pdfPageStart": 85,
         "pdfPageEnd": 85
       },
-      "corpusSha256": "59a73e6a9da7f3e9caa3d65aae92cd1d66f25e549a8b85b95137ecc107845467",
+      "corpusSha256": "740e4ed5d56a2499732f3c5537316b8d7e11ab8cae25f0955fc47998731e4c11",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2402,7 +2402,7 @@
         "pdfPageStart": 12,
         "pdfPageEnd": 12
       },
-      "corpusSha256": "fbf7f75ff6a349107582957891d443321a5e42467bc34fd47ff9c94bb2c1cd7d",
+      "corpusSha256": "62a5cbf1ddfbccc4670737155a42f06bd0dc088b74c8f8be50af2dff8a18202c",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2423,7 +2423,7 @@
         "pdfPageStart": 18,
         "pdfPageEnd": 18
       },
-      "corpusSha256": "d4ac3e76f0b146686367ea7dd95cdd1aa43cfdae548186d3f81700135baee420",
+      "corpusSha256": "c5ef9ed7c7868124dbcbca4deaac2bdbcc3dc4afc4c9cba572f763f7e3f3ba8f",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2444,7 +2444,7 @@
         "pdfPageStart": 18,
         "pdfPageEnd": 18
       },
-      "corpusSha256": "7dc1b052f1a7778526602920360bbce832c3a090eb47b70d4e36071624b27f59",
+      "corpusSha256": "1eb26171f267ab6175b6791aafb7043bf03f35502a182e1ee3100cd09f85c2f8",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2467,7 +2467,7 @@
         "pdfPageStart": 53,
         "pdfPageEnd": 54
       },
-      "corpusSha256": "50f279a963d6f7a5a46bb4526685f316686922b41f1b40340c27165acaca8cde",
+      "corpusSha256": "15287a682165ffc062059be3eb17c7e7ed878fcaf35f124206aaf64ad8303690",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2488,7 +2488,7 @@
         "pdfPageStart": 22,
         "pdfPageEnd": 22
       },
-      "corpusSha256": "11496ddfca3c8c9d080e2cf2bb2178edd8154748cf0e762badf76d0900f9cf91",
+      "corpusSha256": "73a4c4aed4989b3c012556a0b41513d0bc3ff133baf0b4c52556aa6377c5fbcd",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2509,7 +2509,7 @@
         "pdfPageStart": 75,
         "pdfPageEnd": 79
       },
-      "corpusSha256": "e5b4bfe1fd4073c34b3142a28a664bebc285f9f70504956ff4f82f4115c69137",
+      "corpusSha256": "324c649a9014f3cc0fb7dc9ded54283b9d0f877051094540a1f3b93dd9b02987",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2530,7 +2530,7 @@
         "pdfPageStart": 86,
         "pdfPageEnd": 86
       },
-      "corpusSha256": "17c8e659daf3daac7348ccf60d1586b251ab48490ce4f78a15b5bdfb18e3d577",
+      "corpusSha256": "e54a017d7bd6ed77942c868d1adc17be48437e183a29af166d7080d3a28c6a33",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "movimento-do-mestre"
@@ -2554,7 +2554,7 @@
         "pdfPageStart": 47,
         "pdfPageEnd": 49
       },
-      "corpusSha256": "a62891b3713eadcad6d9f3593f7f581c649108e0444ab63b5c06580914f344b0",
+      "corpusSha256": "4f72be1a9f889a6fcd56096210e4d1cd0c81aec66f3cfeda9483367274bef8b8",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "jogada",
@@ -2581,7 +2581,7 @@
         "pdfPageStart": 51,
         "pdfPageEnd": 51
       },
-      "corpusSha256": "4fd8c58944a8afc0301e8d7602772a7f1663b15d56bdc98106a9ae56489b3ffa",
+      "corpusSha256": "093baee18f71e469293b180fce01da4f1670d0c724227eea3efcb095f790789a",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "alcance",
@@ -2607,7 +2607,7 @@
         "pdfPageStart": 12,
         "pdfPageEnd": 12
       },
-      "corpusSha256": "4cc66f05e0b5a7f398d858aab5d157860e068675117e5d8d1c50b70eb3c48df9",
+      "corpusSha256": "ebf115d685972b322fa269a6fdc24f148dbeab6dbdbae68c6ebb097634a58025",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2628,7 +2628,7 @@
         "pdfPageStart": 13,
         "pdfPageEnd": 13
       },
-      "corpusSha256": "01ba3a9435ebda94d7721fc1149afd919870f076491ffe1b4efefc22ae521956",
+      "corpusSha256": "506b586062b7d4383b7501826d2b52ab5f8f54269f11eff152d70517011ac240",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2649,7 +2649,7 @@
         "pdfPageStart": 18,
         "pdfPageEnd": 18
       },
-      "corpusSha256": "22454c3990d676cd2b7753f30fe2cdb2480ca4f0efa3a25b3aba7337f1a9ea03",
+      "corpusSha256": "a29638eebbd191876573cb78a560c3b8d67c3851e91e5c18dfa493cf2c13af7d",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2670,7 +2670,7 @@
         "pdfPageStart": 92,
         "pdfPageEnd": 92
       },
-      "corpusSha256": "30f77af43ffca03df6bddaba968f62d1ec6df84c90e4bc14308b353b876d5e38",
+      "corpusSha256": "0ff900d64c0d0d76f60bf9c0851452c2f090e3e302ebd2dc77cc9b3647cb8ab7",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2690,7 +2690,7 @@
         "pdfPageStart": 216,
         "pdfPageEnd": 216
       },
-      "corpusSha256": "c9303535b8c4e8d09b612da76a1ae2f23844927afdd3c00e5af1ac339c571ca1",
+      "corpusSha256": "c7f0f178a4b9b7f4ece63399fdb533438a420738eef883798f0801ed44557fc2",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2711,7 +2711,7 @@
         "pdfPageStart": 17,
         "pdfPageEnd": 17
       },
-      "corpusSha256": "5ceed5a4bf86cebbd3840b3cfdda5e361bb32d14fb7aa4402d336aa5d11b0310",
+      "corpusSha256": "1e2895d17dfe362def3027d89ee41d6b466dc36a549701feede3671bfdacf460",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2732,7 +2732,7 @@
         "pdfPageStart": 17,
         "pdfPageEnd": 17
       },
-      "corpusSha256": "0d8e286de76703546976e959fed6cbfc7f370557bb4b3ad214536ab3da78a627",
+      "corpusSha256": "537bb26b188353174ae9b5921c1ef29888e7ea2896b0ecc476946164129a64fe",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2755,7 +2755,7 @@
         "pdfPageStart": 201,
         "pdfPageEnd": 202
       },
-      "corpusSha256": "9a8ad4b6f7a68daa7df0986005fb91bd7c0e10769bdb1c06bfd479962394b1a1",
+      "corpusSha256": "6f1fd42706e7a200030ac4750b7a22e10b458d7e547018d26b3e7bbd0a5d6877",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2776,7 +2776,7 @@
         "pdfPageStart": 30,
         "pdfPageEnd": 30
       },
-      "corpusSha256": "089105a31da9043ea1c9054df5f3696ee929a9affacf8f3e5987ccde8e6a6263",
+      "corpusSha256": "3f61d2331d77d590f1eabf1f5b5cc52b6133095055fa5ba8c1290c03c5775489",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2798,7 +2798,7 @@
         "pdfPageStart": 92,
         "pdfPageEnd": 92
       },
-      "corpusSha256": "8a8db02b431721dc3c1173e4c4f01a64dd2212225291655c647fb5271f0eaf6d",
+      "corpusSha256": "985a61d96b0fbd41e44c37670174b59001806fe9c02ffa0e02091ef56477bbdb",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "combate-submerso"
@@ -2824,7 +2824,7 @@
         "pdfPageStart": 54,
         "pdfPageEnd": 54
       },
-      "corpusSha256": "2407c8f5be661f61b84a106d1b14a439e63d7633330ac0a46a9f17ea4e0a0c6c",
+      "corpusSha256": "20f25e17e6c29083ce7fe929ec871e5d78bc69fa4906ed6367193116117bdb66",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2845,7 +2845,7 @@
         "pdfPageStart": 18,
         "pdfPageEnd": 18
       },
-      "corpusSha256": "abd2eee2485137b8d27585837fd90161a80349d98ea869e5a9fba338e325a26c",
+      "corpusSha256": "cef005bd69bae6dcf211cd778eeb8df5d3d6fe440ee9846c2d0662dc17aa45fe",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2866,7 +2866,7 @@
         "pdfPageStart": 18,
         "pdfPageEnd": 18
       },
-      "corpusSha256": "de9a8d6601cb4db1bfda058e41e4f7d2ede60a0830a86e7b845688184e270962",
+      "corpusSha256": "8336060faa3f3af3b610d694e3110165939b204fe078543109aea7719917a4dd",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2887,7 +2887,7 @@
         "pdfPageStart": 18,
         "pdfPageEnd": 18
       },
-      "corpusSha256": "0eac8d0751217f596a2c823f297f7c6d23dc6f395a05c1c4d8c86c89932dbce1",
+      "corpusSha256": "d67e41b055426ba157d85cbf71bb1ffb0b422a954919ee0c7707fa63a59457c3",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2908,7 +2908,7 @@
         "pdfPageStart": 23,
         "pdfPageEnd": 23
       },
-      "corpusSha256": "cd419a4431e6358e6656827d8cb885c81241eddd7db996e7a91aed804d203912",
+      "corpusSha256": "643a8edfadeafd95ce69ba979096267a5b871c52ff956f2c0fd13f61eb880335",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2929,7 +2929,7 @@
         "pdfPageStart": 16,
         "pdfPageEnd": 16
       },
-      "corpusSha256": "6f39e82d27b80a83f057a6941c633237ba7ca0b8d500527bff34976117df3f09",
+      "corpusSha256": "df121df0e1093f24c351883637e95184fa1dfa987463e9d90ecd50a3fc87ce24",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2949,7 +2949,7 @@
         "pdfPageStart": 92,
         "pdfPageEnd": 92
       },
-      "corpusSha256": "2443a912bee55fdb10f26023e7be54fb4aefb9bf94f01406813eb022a689fe08",
+      "corpusSha256": "e8cab263bfa7b1b42062d9a768b045786b80036fabf840a7432c4dc75c78c2d5",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2969,7 +2969,7 @@
         "pdfPageStart": 92,
         "pdfPageEnd": 92
       },
-      "corpusSha256": "cfacf5878fbb8b39703394d526bf8dc04402fd219ab93d4cb49f847be27a123f",
+      "corpusSha256": "0256dc0065c3fc08c5e1a8f5b13ee38ce1958b37faea6b387f0a883c1e6930b1",
       "estado": "implementado-por-referencia"
     },
     {
@@ -2990,7 +2990,7 @@
         "pdfPageStart": 16,
         "pdfPageEnd": 16
       },
-      "corpusSha256": "949b020beca55cad3addf86fb0a9d0d83412bd1cc8cf78160cee7789a3e62a91",
+      "corpusSha256": "f177cde88263614369cbe2da06c04e50aa02ca2f532eba195b169471d155a529",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3011,7 +3011,7 @@
         "pdfPageStart": 27,
         "pdfPageEnd": 27
       },
-      "corpusSha256": "e4bf0b72a2d32df5e671b11a33dd45d68d877793d04018e6fc49f2fa84a134a2",
+      "corpusSha256": "b3caf8d9263b70be95482726897b485ed7433eed14b30ca4beefe5b8d89b1db2",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3032,7 +3032,7 @@
         "pdfPageStart": 27,
         "pdfPageEnd": 27
       },
-      "corpusSha256": "40e396d9e55a7c618cf7a78eccb60177a97a4c5a0fd782469ee5ddcf1e7c971a",
+      "corpusSha256": "64d1939a9e906dea2b91f3cf9af81df8b82abe85ea4667fbd2060f4b120462d9",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3053,7 +3053,7 @@
         "pdfPageStart": 94,
         "pdfPageEnd": 94
       },
-      "corpusSha256": "7a486b61b89d2590b71088d8d2e27518dcf5a6c271c4e48460a57a64c3b4d765",
+      "corpusSha256": "cd0ff9e587f676490148224b4e43cef850807c0f5f88645aa3aac2e6afbc04d4",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3074,7 +3074,7 @@
         "pdfPageStart": 10,
         "pdfPageEnd": 10
       },
-      "corpusSha256": "374361f470f7093fc949eace087b20d5435196f652c1c906801bf65fc9acab01",
+      "corpusSha256": "2bff45a3827e1fb09ece51d3670c15f0648c4dc3d5e13a6c51df89694c150789",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3095,7 +3095,7 @@
         "pdfPageStart": 94,
         "pdfPageEnd": 94
       },
-      "corpusSha256": "5b5ec10adfce751c98f216ba4247090532e13a0e3559c46e8aa03cd0eac16950",
+      "corpusSha256": "f7933bd1ec39e7f40c8ba876711ec9e50652850684febff74a4e44fa64ec8628",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3116,7 +3116,7 @@
         "pdfPageStart": 158,
         "pdfPageEnd": 158
       },
-      "corpusSha256": "3c657cf1cd0ffc373a1b77b674b0689799a387686e35fad036a00e646c581eb4",
+      "corpusSha256": "c57049f10af4684be432952730f054ed9f4c2011b281fcb2733c56b1b159b9c9",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3137,7 +3137,7 @@
         "pdfPageStart": 17,
         "pdfPageEnd": 17
       },
-      "corpusSha256": "bcb99901f59cf3336de441b2b85d56a0eb72625801e5a0eb423e62b3b059019a",
+      "corpusSha256": "55f6923c4262552590d4e97be9bb9723e9cd86d57931ebdf55b0c2e37bea7d6c",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3158,7 +3158,7 @@
         "pdfPageStart": 16,
         "pdfPageEnd": 16
       },
-      "corpusSha256": "700d12df23e0cee7b19fc25db2e2b70e196e585d7e1ba813c85c25adf857cf97",
+      "corpusSha256": "ea3704f75708dc9f7601f28c329cb0e560d22a70084d3511c1289e8aabfdaa52",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3179,7 +3179,7 @@
         "pdfPageStart": 25,
         "pdfPageEnd": 26
       },
-      "corpusSha256": "56d923e7c112c63fe1b7380d2ceba5c5dd5f73673a23e34c289ed0cd0bfbda51",
+      "corpusSha256": "77414134d85505cd0fd750e217050e7d231f0280996fde5b31035ecf5112219d",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3200,7 +3200,7 @@
         "pdfPageStart": 56,
         "pdfPageEnd": 66
       },
-      "corpusSha256": "95a9dd8b1f63d9eca2a39e08c4cab7da64224b820d2be98c5715866efdeeb6ab",
+      "corpusSha256": "c0ef1e48ff6d4397fa958b28ebb3fb30541713baade580a9760497465c81eb97",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3222,7 +3222,7 @@
         "pdfPageStart": 87,
         "pdfPageEnd": 87
       },
-      "corpusSha256": "10b77685367739f7c7cbd6d24136a70542d2fc15ff67eb1eb275ee9162067b5e",
+      "corpusSha256": "184f2b5c37c959f439c8a4c198c08a7660252d9d69149c5a48db60f4632bcb8e",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "jogada",
@@ -3249,7 +3249,7 @@
         "pdfPageStart": 55,
         "pdfPageEnd": 55
       },
-      "corpusSha256": "7f03738d53c6b324683be8a7608418d88103de6986d566998405147829acce7a",
+      "corpusSha256": "cb2728730d2c73edb1bbc0de3e3fbf8668d3cff272473784f33da757e637355f",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "alcance"
@@ -3273,7 +3273,7 @@
         "pdfPageStart": 21,
         "pdfPageEnd": 21
       },
-      "corpusSha256": "e2887383fa7f54d44c5504d5b17cf353cee712d99588c31155b1507a50297829",
+      "corpusSha256": "35475647c979f329349b2ff4cf910d48b2645b5df5e7dd38802a75abed1bc898",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3294,7 +3294,7 @@
         "pdfPageStart": 20,
         "pdfPageEnd": 20
       },
-      "corpusSha256": "79da209d38383b3144698762379884f5ebae78c2379e41827ac2d071d5cf24c0",
+      "corpusSha256": "36ada1c936c35419c153420a9a92062b92cd86e8ec2094653e72f8141eaea313",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3315,7 +3315,7 @@
         "pdfPageStart": 94,
         "pdfPageEnd": 94
       },
-      "corpusSha256": "b2a04e47c3e7f61849dcdfbd6b072e832e0a02b0348339c9045cf5667b2884c7",
+      "corpusSha256": "f13942165fc91941d0665ad4d52f7a494365c19adb73bcb159a4c41a9c8d881d",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3336,7 +3336,7 @@
         "pdfPageStart": 92,
         "pdfPageEnd": 92
       },
-      "corpusSha256": "419eae92b300dc502b841013382b4291ebf450edb9721dea5f0aba816384a8da",
+      "corpusSha256": "9eb620e8e99c13327c10645f9d715350cfc4fb26e5fae7e29f6e4be0560e5f45",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3357,7 +3357,7 @@
         "pdfPageStart": 23,
         "pdfPageEnd": 23
       },
-      "corpusSha256": "fe74167d83d7535c52f420643704ecf991af31bbc3c1ffe4b6956d151fab80e3",
+      "corpusSha256": "2f31c33b8897d81f77a0637e6f6af52bc1a17a050ebeb14ab3fb0fadaf5c529f",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3379,7 +3379,7 @@
         "pdfPageStart": 86,
         "pdfPageEnd": 86
       },
-      "corpusSha256": "5d985a75ba7afb690b5e4e02faa908b94a3d1e48dea863106cd613c414629a61",
+      "corpusSha256": "c8fa9a6925616a78071ab808f31e8d3bff960316a852a778ef7cf14e0468f259",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "dados-de-dualidade"
@@ -3402,7 +3402,7 @@
         "pdfPageStart": 85,
         "pdfPageEnd": 85
       },
-      "corpusSha256": "f7e2cf864e7c95384e737883ed56e8db380c40fb059bc0b9bc6965dd4e79dba1",
+      "corpusSha256": "69632745e1820f4dae7a2acda932376e446b426c5258caa7322b3ed8364527c0",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3423,7 +3423,7 @@
         "pdfPageStart": 91,
         "pdfPageEnd": 91
       },
-      "corpusSha256": "5e661608c3171f6bfae59d0a877e2343b0c0187cf9c3a2b84096ae4869eb303e",
+      "corpusSha256": "d03ba76e174f3c63c3ae40fa28a1bd8a2a6be8e3fe4036a03114fddd35cabe17",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "jogada-de-adversario",
@@ -3447,7 +3447,7 @@
         "pdfPageStart": 218,
         "pdfPageEnd": 218
       },
-      "corpusSha256": "818dfa9b3864a45dcf95c0d6a6e6c5aa3a00d6595d716513e6d888f9455ea04a",
+      "corpusSha256": "74c301e952888dd9587c9898ea2006ee1b6e15952a440aad6251db132cd6fb6f",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3468,7 +3468,7 @@
         "pdfPageStart": 31,
         "pdfPageEnd": 31
       },
-      "corpusSha256": "0094e01a572845afb62b1842d035d30990ff806403e0bcd333a5ac466d8e9ec1",
+      "corpusSha256": "af447079b62ea3a1069523da371ba082e77d305d6fa7ea21075614a70a6a9da4",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3489,7 +3489,7 @@
         "pdfPageStart": 31,
         "pdfPageEnd": 31
       },
-      "corpusSha256": "c2e3b188e5eeb9e87f7e7838326e2c95e9e828c55ceb8d3263b7d9cc87fa66bc",
+      "corpusSha256": "815701e718608a304ee8e4a86d9d96d529902131782c79a48678ab512c9c1048",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3510,7 +3510,7 @@
         "pdfPageStart": 66,
         "pdfPageEnd": 69
       },
-      "corpusSha256": "2df34ac58ddc691a5c9a97434d7ace077f52f3c9a0944363983006df203e86ba",
+      "corpusSha256": "1a8008dbc1ff386e40b11cec673a37856b541723ffa6779dbf46cfff5e18c51f",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3531,7 +3531,7 @@
         "pdfPageStart": 24,
         "pdfPageEnd": 24
       },
-      "corpusSha256": "096ff4be24b837e36b48e7a851204a4ea337ef1d1e524402d72fd4fc436f2b7d",
+      "corpusSha256": "d5b78630f167b4acbb1f3db6d1ccf4330a744c22195086d0e1fcd14fa5d19075",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3552,7 +3552,7 @@
         "pdfPageStart": 13,
         "pdfPageEnd": 13
       },
-      "corpusSha256": "a3275b1ba8fd74430b7872b346512d651013eabceb308904cb57c908d1ad62c9",
+      "corpusSha256": "964f32d8cef1910c4c972fda6278c33473583aa4238b2d9bf4634dd950329974",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3573,7 +3573,7 @@
         "pdfPageStart": 87,
         "pdfPageEnd": 87
       },
-      "corpusSha256": "de34033625c7066501bc4ad484eb563d7e881eda3a032e18e26f360554854bd6",
+      "corpusSha256": "85a492dc3b5ebdd09e4aabee1d8a0fe737dec55e28e568f08325aa3460637543",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "movimento-do-mestre"
@@ -3597,7 +3597,7 @@
         "pdfPageStart": 25,
         "pdfPageEnd": 25
       },
-      "corpusSha256": "1852960f27a95237cf46bc1bd420b5ff864b79a5173bd474ce5489a93f8617f6",
+      "corpusSha256": "99ed99df72164c9d0af9877c00fe0ed72fb48f51ac9024f7f588d2c53e415a55",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3618,7 +3618,7 @@
         "pdfPageStart": 26,
         "pdfPageEnd": 26
       },
-      "corpusSha256": "7dd4f9f46e2a42353366cf270f522c6e978785b73ea5bbad210ecdcbd29b21eb",
+      "corpusSha256": "f6c429731620df9a5492687b9164ca52d47de85cf7a37445a963823a4872f9fd",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3638,7 +3638,7 @@
         "pdfPageStart": 221,
         "pdfPageEnd": 221
       },
-      "corpusSha256": "bee5a2645887494cc79178c0fea8f7831242e4cf98f495515e953bc0afdef267",
+      "corpusSha256": "a0c0962fc51ecfae516217465a9921b12ecdcdc470b33533cba3f0776a3d97b8",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3659,7 +3659,7 @@
         "pdfPageStart": 16,
         "pdfPageEnd": 16
       },
-      "corpusSha256": "860e83139e5cb85c690ad6b17fd39c064bbd05192f519d8af8da90d1fd98b5f4",
+      "corpusSha256": "3aa0f6ea818e2aaad1c4e925e637e44da842d074824ac4b24cc42a8dcd9ac4a3",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3680,7 +3680,7 @@
         "pdfPageStart": 19,
         "pdfPageEnd": 19
       },
-      "corpusSha256": "4f3b04eec5799e336a0d0c2b978843277bfff7575884ea7f84382b918a6a5c32",
+      "corpusSha256": "9686498a25c20b3f1472209056d90d387576feebeee986ea66c817baff2591c0",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3701,7 +3701,7 @@
         "pdfPageStart": 13,
         "pdfPageEnd": 13
       },
-      "corpusSha256": "2525124a77381934ec4b1be1d28df85577a6ac6e61add579c4859f9273ab20af",
+      "corpusSha256": "da41156bff12726f23e91f3f5a25896549772febaf94adcf333be6e2956fb047",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3722,7 +3722,7 @@
         "pdfPageStart": 13,
         "pdfPageEnd": 13
       },
-      "corpusSha256": "ec4fcfc4fe27d45a4ef961e4b2f4c2f928e66ad203e6af93c459a7b29d92d6bb",
+      "corpusSha256": "dbca401574793e338e3489848fd81038e5931ed89448294d942b9e3c679692ec",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3743,7 +3743,7 @@
         "pdfPageStart": 21,
         "pdfPageEnd": 21
       },
-      "corpusSha256": "cb58e91ad7c29285e4c79c82e0dcfa09d7dd55a1f2b8ee042a5ca210787d0d3b",
+      "corpusSha256": "5055b88c3ce77b9e61a757043bdb4a44b40c942ba1d92c58a05336a485f9d4fe",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3764,7 +3764,7 @@
         "pdfPageStart": 21,
         "pdfPageEnd": 21
       },
-      "corpusSha256": "a4692262824a2cd64bdd853d65b453adec71e4853f5a57ce672e5649b741ee51",
+      "corpusSha256": "eed07279c01e98b2b4e9421679ee12f812a7967ab4cf15529d6e17f5c3324d87",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3785,7 +3785,7 @@
         "pdfPageStart": 21,
         "pdfPageEnd": 21
       },
-      "corpusSha256": "3a53113dcd089d695004210ad2bc3330a392d37463de2b0d1e8633c02c579fd1",
+      "corpusSha256": "fa45163aeb95fb2dd41a189dde34747c3a080ff224e4b8f79bf2827b07b994a3",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3806,7 +3806,7 @@
         "pdfPageStart": 21,
         "pdfPageEnd": 21
       },
-      "corpusSha256": "ec5e0ec5f88d63bf155b428e686871c69ad24ec2961349c06d4af28b6627eca2",
+      "corpusSha256": "e9ada065c1972edf04c86a56f2088f89a007e0798b9857050c9b058e05b3e903",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3828,7 +3828,7 @@
         "pdfPageStart": 50,
         "pdfPageEnd": 50
       },
-      "corpusSha256": "dbb8f2f97c5c578c743d3cf7be35bdb77a6e66fc5e80741ca852886b938e51a2",
+      "corpusSha256": "57af186daf51e3188a0aebd16198e46e96b6b354286148608c2a230afb563fac",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "estresse"
@@ -3852,7 +3852,7 @@
         "pdfPageStart": 17,
         "pdfPageEnd": 17
       },
-      "corpusSha256": "90650295a794b0e612e70d50962f381569f33b671dfd156926dfc99e784a5511",
+      "corpusSha256": "1ae1be20b20aef1534a7f04a7b30b309638a8b0ed10053e5203d0c0320a6de72",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3873,7 +3873,7 @@
         "pdfPageStart": 9,
         "pdfPageEnd": 9
       },
-      "corpusSha256": "2a527ce334d74e1e825ccaa09bced960b603760b6d69f4ce0588a96255fd719d",
+      "corpusSha256": "335eef0333e666a3dc9967c700a5b3cec1816115d510ed133ee66b3189f5dcd1",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3893,7 +3893,7 @@
         "pdfPageStart": 190,
         "pdfPageEnd": 190
       },
-      "corpusSha256": "ce3889f3b0493dd3929e8aa1e75f70fd40d3e351d35a294691d9322b3336d697",
+      "corpusSha256": "25b0f03c4355147cdd6b996b9e8f337778386ef752850f81847f4ee33d4ed19b",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3914,7 +3914,7 @@
         "pdfPageStart": 23,
         "pdfPageEnd": 23
       },
-      "corpusSha256": "9020773c6efe65e50685f77123997eb689c57d65982e8d81032991eb304bbd83",
+      "corpusSha256": "57c5ab4977829544d453ab3d9ca71a9e0c3c1f439673dd786c15f9bbdd8ff9f5",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3934,7 +3934,7 @@
         "pdfPageStart": 1,
         "pdfPageEnd": 1
       },
-      "corpusSha256": "8381bd4f2b8f44df647481c3e53e720c1e14ca4f620f44e8c2f4053b2bc48e4b",
+      "corpusSha256": "ccbd8421025797b032c63eaa5086fb6719aa5f74ac7bd78ca9d8fd3eb3384734",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3955,7 +3955,7 @@
         "pdfPageStart": 22,
         "pdfPageEnd": 22
       },
-      "corpusSha256": "3421a9ce624fec33954e50ea0263e63fe01d43ee4892a4eecea33f410694c940",
+      "corpusSha256": "e66bec57f17844daffba9c1f10038bd44ce7498431100ffb06be5ef343827e4a",
       "estado": "implementado-por-referencia"
     },
     {
@@ -3978,7 +3978,7 @@
         "pdfPageStart": 195,
         "pdfPageEnd": 196
       },
-      "corpusSha256": "265634b67e4aea743ed0f8ecf2ae6a07bc4721c31e74192a1b3439b1d9404eb3",
+      "corpusSha256": "4352083ae0a04dc567a6ba4fff330cdb1730bd93f536a45cdce8bf6bcf4eaf44",
       "estado": "implementado-diretamente",
       "verbetes": [
         "tech-based-campaigns"
@@ -4002,7 +4002,7 @@
         "pdfPageStart": 18,
         "pdfPageEnd": 18
       },
-      "corpusSha256": "b063ea05abbb8e376d102f8a9b1c1a89f82a6562bdd0830b9bc47885badc91ea",
+      "corpusSha256": "19440839532a199fbd51bea380f2c862f356585dab7312a9a7e5a1cd3284ce60",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4023,7 +4023,7 @@
         "pdfPageStart": 46,
         "pdfPageEnd": 46
       },
-      "corpusSha256": "788c575274671f99f57d0d293a441a6467069c21434a97279866705cf4b12be9",
+      "corpusSha256": "7296e13c08c78387b76c3e26d9182085b7e65a890489851c090cb7dd02db4dcc",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "holofote"
@@ -4049,7 +4049,7 @@
         "pdfPageStart": 184,
         "pdfPageEnd": 189
       },
-      "corpusSha256": "968ceb01b7f3a1c2238cb2181b320c797c42e3349e66276e152550b78076d30d",
+      "corpusSha256": "afed4a1a6a1bbe209f1390700b9db4f98dad3dde38a2e02f0179f9ea26f0a8c9",
       "estado": "implementado-diretamente",
       "verbetes": [
         "the-witherwild"
@@ -4073,7 +4073,7 @@
         "pdfPageStart": 13,
         "pdfPageEnd": 13
       },
-      "corpusSha256": "0439e49b3c251b88c96efbb3edfa7d3492b0d918d187ed23f2e76751f8a51608",
+      "corpusSha256": "003a777254919b1594eac9695d4acc07c2a09eec95a71017f0bac7b92448c506",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4093,7 +4093,7 @@
         "pdfPageStart": 15,
         "pdfPageEnd": 15
       },
-      "corpusSha256": "30ed4ee98932ed463e6f35a367200500ee9bd70fb1408b4b89f77762e5da7268",
+      "corpusSha256": "1b68136ede1701e74efa2bfa52ff7caf5afef63dbda1678ac9dec46a8f6145aa",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4113,7 +4113,7 @@
         "pdfPageStart": 97,
         "pdfPageEnd": 97
       },
-      "corpusSha256": "330b773f8d5473f5436c64940725907e4f22c48f8353afd398f793a728410678",
+      "corpusSha256": "61546176efbd88e854ca3f81d747a35c0e488ee9f68f454105e3ce77de1b81eb",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4133,7 +4133,7 @@
         "pdfPageStart": 160,
         "pdfPageEnd": 160
       },
-      "corpusSha256": "55d0a492a6d19844cb8bffb67e5c3dac981ce0a8f3a6b59d330832e322b995b9",
+      "corpusSha256": "ada92c18b9f870d0b77a686e0fb710b479ff2326141482e13eae7d2509e0f207",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4154,7 +4154,7 @@
         "pdfPageStart": 13,
         "pdfPageEnd": 13
       },
-      "corpusSha256": "f9301d5fe1a04979313fef6167f0b5099e0f14e0e27ce39647bfff874cd55ccf",
+      "corpusSha256": "a5c4ec0dbb97aca99524aad11298288e6be9a07a66a4f029ab77504d880f8466",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4174,7 +4174,7 @@
         "pdfPageStart": 16,
         "pdfPageEnd": 16
       },
-      "corpusSha256": "9be605b1ba6aaf9e9bb95b6e69e599f28f22a43b8d1d0b07c5c75acadbf03af5",
+      "corpusSha256": "31800d419c6541f0477e1f68f3fc9a13ba1234220b73a193c2d17f0db401c8b6",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4194,7 +4194,7 @@
         "pdfPageStart": 114,
         "pdfPageEnd": 114
       },
-      "corpusSha256": "650c8291090e3f3224e71369c42da69822e57db3c1f6d18af9f5b3f3988c9700",
+      "corpusSha256": "be9b37bd52d6ad9b7c5d5577299d0103fbb910f556386e5f14dc1cf4e5140340",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4214,7 +4214,7 @@
         "pdfPageStart": 167,
         "pdfPageEnd": 167
       },
-      "corpusSha256": "d667669abfc80a0f377cee583533be754a49b18ec916126df12f8083c5afd18b",
+      "corpusSha256": "3c38cac9891e696f085f184f56b6f39895d177fb9f78066a5ad69b4de9095f65",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4235,7 +4235,7 @@
         "pdfPageStart": 13,
         "pdfPageEnd": 13
       },
-      "corpusSha256": "78be1674f6962177211e6f2861e535bfe1c1da041a8dfde02923563591b01dc4",
+      "corpusSha256": "1cfec71866b25c32322b625b45e7b031c8ab25f78c5edd176d5b806ac6332485",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4255,7 +4255,7 @@
         "pdfPageStart": 17,
         "pdfPageEnd": 17
       },
-      "corpusSha256": "6c7aab0456f00647fa8b5ef9eeca76dff43e4e48d1721704cbd4ac8b68929277",
+      "corpusSha256": "72a59bf4dee8cb1657b2ca393126878f63f8730a910a9bd33cec15d8a39674c0",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4275,7 +4275,7 @@
         "pdfPageStart": 131,
         "pdfPageEnd": 131
       },
-      "corpusSha256": "dc89eb056bbdf03a488b0164f0e6b38e5790aa973aa4fddd5c0d7a87c8e7d18b",
+      "corpusSha256": "d3d849eb90c83ee034b39f4493885e35426fc5e823a190cfce5469377192a826",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4295,7 +4295,7 @@
         "pdfPageStart": 173,
         "pdfPageEnd": 173
       },
-      "corpusSha256": "6705490fef72fc683cc8cecfd3ed1bffdb90282ee6f63b5a4f8bc2b18839a934",
+      "corpusSha256": "8325b2346d1ee0e4f2fdbc97be27b05b7de234ae11aa5130728d3d89febd1d66",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4316,7 +4316,7 @@
         "pdfPageStart": 13,
         "pdfPageEnd": 13
       },
-      "corpusSha256": "68f3fb5d90c102567e79e07f47b80f267852069d11ec734ed2768e7a1dd07dcd",
+      "corpusSha256": "f0717fae4fd3e8f71e89087891177e404b72107cbd85f1ea4f079b9c81bdf381",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4336,7 +4336,7 @@
         "pdfPageStart": 18,
         "pdfPageEnd": 18
       },
-      "corpusSha256": "9012e0d1e3228560a2fb4641671052faec219ae4332bb731b9254924110c61aa",
+      "corpusSha256": "0e6cee1b76a3be414033cc3758af8e9a2598c31ad3661923a9a0483b653fc604",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4356,7 +4356,7 @@
         "pdfPageStart": 145,
         "pdfPageEnd": 145
       },
-      "corpusSha256": "a86dcae150d93a0923dbaa2ef0183897588373b7bde63392e569de28946fd972",
+      "corpusSha256": "6eb0841d1555e08eb0829c595c0889198022e0e8040b6232701fea8491cc2ec0",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4376,7 +4376,7 @@
         "pdfPageStart": 178,
         "pdfPageEnd": 178
       },
-      "corpusSha256": "67cff1b9f381589a953518511b45d8bc22f2835c7b888e96a7838d36b5d968b2",
+      "corpusSha256": "f97fe5c163e590528bb7971e53d9e6de699dd6ccbdb54fe2ab08a4f1a876b98e",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4397,7 +4397,7 @@
         "pdfPageStart": 55,
         "pdfPageEnd": 55
       },
-      "corpusSha256": "4179f9c5531adbf8980124c8a4bfc72a4b2b291a62bdb6f2d420bb89063eaa37",
+      "corpusSha256": "db382024e4e05c3e1645a6037c22234ba2f36865e15cf120eadd67add5c0d729",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4418,7 +4418,7 @@
         "pdfPageStart": 42,
         "pdfPageEnd": 42
       },
-      "corpusSha256": "9b2202b3f1eb65a146f6563bf0118f450bc91b749722d06c7855f456a4a2e162",
+      "corpusSha256": "68c5f319e891ec8b4a806a2dcf23a1725610e664b348ec0bb5e76965d5ea4975",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4439,7 +4439,7 @@
         "pdfPageStart": 11,
         "pdfPageEnd": 11
       },
-      "corpusSha256": "e84e88e2e732220a22fb8411dbaef64535cc0f2158398604fda919d913367c92",
+      "corpusSha256": "3b9fc795cf0e5a014f391cf06e8737cd4c7c1e187c95e2e7ee024e94498b6446",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4461,7 +4461,7 @@
         "pdfPageStart": 47,
         "pdfPageEnd": 47
       },
-      "corpusSha256": "4abf3782705c70d973807f2358ee81795665866731584baa02e408376c54d5f5",
+      "corpusSha256": "1d4cf60efdc519f8d463b77a9bfd2d3b1995d93428b3611c5e528725c3e58331",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "holofote"
@@ -4484,7 +4484,7 @@
         "pdfPageStart": 93,
         "pdfPageEnd": 93
       },
-      "corpusSha256": "6ea2d072478ee7f25f14989d0f6b3229b699f7d542a2fafabc0b180b9f1edcba",
+      "corpusSha256": "81b9cf8909252c40990f7bf1216e9edd0dd4dad671ebfe81af395340b63436d8",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4504,7 +4504,7 @@
         "pdfPageStart": 158,
         "pdfPageEnd": 158
       },
-      "corpusSha256": "dc502414c1aca22be2caca8484dad2a07b569e44c32920d30aa858a4eadacfeb",
+      "corpusSha256": "bcba780538af7711579d5a7c08d8fa852cebde225a170eed1fb6e302d9bd420b",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4526,7 +4526,7 @@
         "pdfPageStart": 87,
         "pdfPageEnd": 88
       },
-      "corpusSha256": "f7979997a3e7322e68e71b27ac9080df392b9e161d25399ee8554af83cb84084",
+      "corpusSha256": "e73eeaac3c676e47dbfbd794c64c5146ad427777044aeb6939dcadd5412942a9",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "medo",
@@ -4552,7 +4552,7 @@
         "pdfPageStart": 21,
         "pdfPageEnd": 21
       },
-      "corpusSha256": "bc1afd3b0631b47fde04467bc076f78237ec5418bee813bcb07d1125541e3cd2",
+      "corpusSha256": "a35e9a83e21283ed2d845e7dc9affc8a22178fb0dea8bb417f0a9abe840a44eb",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "jogada-de-conjuracao",
@@ -4577,7 +4577,7 @@
         "pdfPageStart": 222,
         "pdfPageEnd": 222
       },
-      "corpusSha256": "7cf9df71127488b7af72430e2c74a6b0427611fa6e652fbb89dff39517095de3",
+      "corpusSha256": "ac2b537e4e57a39c7cb0c7947d996f821a482774cb576c425d5fd03337895801",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4598,7 +4598,7 @@
         "pdfPageStart": 19,
         "pdfPageEnd": 20
       },
-      "corpusSha256": "a716779ab0da8df82912fcb462a5704fdfebd493f71b3762f769e4c44b5db26d",
+      "corpusSha256": "dbefba817747ec4874ff0d5d1e9876bcd00edbc8c690e9ebda39a4ff3d73631a",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4619,7 +4619,7 @@
         "pdfPageStart": 92,
         "pdfPageEnd": 92
       },
-      "corpusSha256": "f44842f59e1ae707e66ceee43864c0ee10b243a75f4aa3ff9edde5fe2a770f61",
+      "corpusSha256": "753dcb2e817abf3693cc62b031610442c54291f5e2c696459669fb94a2c736c6",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4640,7 +4640,7 @@
         "pdfPageStart": 15,
         "pdfPageEnd": 15
       },
-      "corpusSha256": "70365fce8e3b0aa8588231de0d284ae5539b8725a78af632a1ce50fc1bd5d31f",
+      "corpusSha256": "09c2032f13eb7d72553c082d94e712c618c22878320ea5c3e208d8351ad2ae8f",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4661,7 +4661,7 @@
         "pdfPageStart": 14,
         "pdfPageEnd": 14
       },
-      "corpusSha256": "87a48648b18a042d8f5e41d94a109a78b71a52c0c67722fc2933018db688c8c1",
+      "corpusSha256": "06760cf4fa3bebc7f64a2584ccd6c49bd143eb11f251ec22b12a0dbfffe385a8",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4682,7 +4682,7 @@
         "pdfPageStart": 27,
         "pdfPageEnd": 27
       },
-      "corpusSha256": "1244b01a3b6410f086047c38defbe7ff8a8a501a01eac33c587bfb9d0e096faf",
+      "corpusSha256": "907888ff869856cf786cd9ff1edb8ac18d4d2b6bd2ca0e7bd81f2e38b1b46692",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4703,7 +4703,7 @@
         "pdfPageStart": 28,
         "pdfPageEnd": 28
       },
-      "corpusSha256": "0ca084c1a4520c474bad519fc93107787d691a42c09a21f8c189cf85d34f6128",
+      "corpusSha256": "5f5858417d441f61e8502198d870444f3e7d97c38515acb634ee55599e644ddd",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4724,7 +4724,7 @@
         "pdfPageStart": 21,
         "pdfPageEnd": 21
       },
-      "corpusSha256": "8be42fd44fc84598eb60440a042fda9e45a664926d639f82a0d3c1ab4fbe4995",
+      "corpusSha256": "9f1197503a1aa230d23a8ed0aa6aad43548e4637792c6ab523b2aa12482c4ffd",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4745,7 +4745,7 @@
         "pdfPageStart": 55,
         "pdfPageEnd": 55
       },
-      "corpusSha256": "b8147164371b040b5819b336af5aa45a2b68a2f267bc0910a358d70054efdaf7",
+      "corpusSha256": "43e5bd45af730731e7d620f113a9abfc483fd4b09fcea1f239966a30aee2b3da",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4766,7 +4766,7 @@
         "pdfPageStart": 197,
         "pdfPageEnd": 197
       },
-      "corpusSha256": "273be9869682102fc60fbec8283955fb7ba3ed393a2c347934134f6ce2ebdfb6",
+      "corpusSha256": "33becdb7b9dfb40f2cc8b0a363aecbb838bd707e5b354011e434a55f0d311438",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4787,7 +4787,7 @@
         "pdfPageStart": 86,
         "pdfPageEnd": 86
       },
-      "corpusSha256": "4ad791843b0da9fea9a8f5fb53cae03879f14d45d9d7cc7d874f730032c0c602",
+      "corpusSha256": "8a9b0e8bb098e156da63c7526636abe566402374be4f5cbd4a126d0303a2787f",
       "estado": "implementado-por-referencia",
       "verbetes": [
         "movimento-do-mestre"
@@ -4811,7 +4811,7 @@
         "pdfPageStart": 17,
         "pdfPageEnd": 17
       },
-      "corpusSha256": "7250fe5f8339306dae75cad05716a8ca4f30fe37785ed2e95ac2dae208ab1a2e",
+      "corpusSha256": "40c375daf8454d76fa10f5fa6a1dc48a272693171e5c1c482fcab7d43fbb6c30",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4832,7 +4832,7 @@
         "pdfPageStart": 24,
         "pdfPageEnd": 25
       },
-      "corpusSha256": "541b272ea720a6580730e7ff5d4c642ce5866f0e0f3f7e0e13b3a3eb5417179f",
+      "corpusSha256": "c32441ddc7a9a56131cf83913fe17fee4942455d451188038e686cdae6e08deb",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4853,7 +4853,7 @@
         "pdfPageStart": 29,
         "pdfPageEnd": 29
       },
-      "corpusSha256": "85c51f7d7f7a810b72229e63c937f48541cc159392eb5cea5aeba6f69996df3f",
+      "corpusSha256": "236e97cf96104c2227ea77cc2e47a977994b76e0e7b4b3c55b7925e753967c53",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4874,7 +4874,7 @@
         "pdfPageStart": 31,
         "pdfPageEnd": 31
       },
-      "corpusSha256": "d8b3b388a8ec030534682ccd804d8a58df33855111987d167ef48c0e2c857fe8",
+      "corpusSha256": "f1b6c0cb9b5da9bdb1857dd6e376a75e11dd9dfa614ae238d55c87b935eaa9fd",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4895,7 +4895,7 @@
         "pdfPageStart": 11,
         "pdfPageEnd": 11
       },
-      "corpusSha256": "76ceabcc3d997d9fc798d7521828f6bc23447e0aeb36d6ad6da565b0ed13a25d",
+      "corpusSha256": "e768b07c499b445da514c4cbf875fe5856d53b45da8a0d27d5d5cbbd2bfa420f",
       "estado": "implementado-por-referencia"
     },
     {
@@ -4916,7 +4916,7 @@
         "pdfPageStart": 21,
         "pdfPageEnd": 21
       },
-      "corpusSha256": "9f9e8c143d2413ec2e30248166d14bfd997e196c6d5f7bc1d6f16967f9747e1d",
+      "corpusSha256": "673a1435c26396140cc8aaf26573313601e3e5bc774e27d672773adfa9e257df",
       "estado": "implementado-por-referencia"
     }
   ],

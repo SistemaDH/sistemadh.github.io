@@ -14,6 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Baixar corpus auxiliar SRD 2.0 fixado
+        uses: actions/checkout@v4
+        with:
+          repository: klrkdekira/daggerheart-system-json
+          ref: 7677b0c28f2efb12bba4a29f23d8068d47f37d64
+          path: srd2-source
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -24,6 +31,8 @@ jobs:
       - run: npm run teste:gerados
       - run: npm run teste:css
       - name: Fonte, tradução e cobertura SRD 2.0
+        env:
+          SRD2_CORPUS_DIR: ${{ github.workspace }}/srd2-source
         run: npm run teste:srd2
       - name: Auditoria Core 1.0 zerada
         run: |
