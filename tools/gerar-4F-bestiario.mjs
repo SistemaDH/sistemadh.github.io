@@ -3,7 +3,7 @@
  * data/bestiario-tipos.json, data/adversarios.json e data/ambientes.json.
  * Uso: node tools/gerar-4F-bestiario.mjs
  *
- * O que vai para o SERVIDOR é só o RESUMO das 129 fichas e dos 19 ambientes —
+ * O que vai para o SERVIDOR é só o RESUMO das 264 fichas e dos 47 ambientes —
  * id, nome, tipo, patamar e as estatísticas. O texto das habilidades fica em
  * data/*.json, que o site serve estático pelo GitHub Pages, como já acontece
  * com as 189 cartas de domínio: mandar 200 KB de bestiário pelo Apps Script a
@@ -68,7 +68,7 @@ const L = [];
 L.push(`/**
  * ============================================================================
  *  Arquivo: 4F_Bestiario.gs
- *  O bestiário: 129 adversários e 19 ambientes, e o Guia de Batalha.
+ *  O bestiário: 264 adversários e 47 ambientes, e o Guia de Batalha.
  *
  *  GERADO por tools/gerar-4F-bestiario.mjs a partir de data/adversarios.json,
  *  data/ambientes.json e data/bestiario-tipos.json. NÃO edite à mão — a lógica

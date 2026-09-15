@@ -47,7 +47,7 @@ O corpus auxiliar pinado registra 1.539 registros: 10 domínios, 13 classes, 26 
 
 O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. O inventário individual fica em `data/srd2-inventario.json`: cada um dos 1.539 registros preserva ID, nome inglês, tipo, hash do registro no corpus, estado de implementação e, quando aplicável, `sourceLocator`. `npm run teste:srd2` impede alteração acidental das contagens, IDs, hashes estruturais ou estados. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
 
-No checkpoint atual, 1.257 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 281 permanecem `pendente`.
+No checkpoint atual, 1.285 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 253 permanecem `pendente`.
 
 ## Armas do núcleo — primeiro vínculo (194/358)
 
@@ -256,7 +256,7 @@ As 129 fichas já presentes foram casadas estruturalmente com o SRD2 por patamar
 
 ### Ambientes existentes vinculados (19/47)
 
-Os 19 ambientes já presentes foram casados estruturalmente com o SRD2 por patamar, categoria, dificuldade e habilidades. Cada ficha agora guarda nome inglês, localização e hash da fonte. Os 28 ambientes adicionais foram consolidados sem exposição em `data/srd2-ambientes-novos-pendentes.json`. `data/srd2-ambientes-existentes-auditoria.json` e `npm run teste:srd2-ambientes` protegem o conjunto.
+Os 47 ambientes foram casados estruturalmente com o SRD2 por patamar, categoria, dificuldade e habilidades. Cada ficha guarda nome inglês, localização e hash da fonte; os 28 ambientes adicionais foram traduzidos, integrados e auditados. `data/srd2-ambientes-existentes-auditoria.json`, `data/srd2-ambientes-novos-auditoria.json` e os testes de ambientes protegem o conjunto.
 
 ### Armaduras suplementares completas (76/76)
 

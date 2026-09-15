@@ -1,7 +1,7 @@
 /**
  * ============================================================================
  *  Arquivo: 4F_Bestiario.gs
- *  O bestiário: 129 adversários e 19 ambientes, e o Guia de Batalha.
+ *  O bestiário: 264 adversários e 47 ambientes, e o Guia de Batalha.
  *
  *  GERADO por tools/gerar-4F-bestiario.mjs a partir de data/adversarios.json,
  *  data/ambientes.json e data/bestiario-tipos.json. NÃO edite à mão — a lógica
@@ -427,7 +427,7 @@ const ADVERSARIOS = [
   ["xero-the-castle-killer", "Xero, o Destruidor de Castelos", "Solo", 4, 20, "35/70", 12, 10, 1],
 ];
 
-/** Os 19 ambientes: [id, nome, tipo, patamar, Dificuldade]. */
+/** Os 47 ambientes: [id, nome, tipo, patamar, Dificuldade]. */
 const AMBIENTES = [
   ["ascencao-ingreme", "Ascenção Íngreme", "Travessia", 1, 12],
   ["emboscada", "Emboscada", "Evento", 1, "especial (veja Força Relativa)"],
@@ -448,6 +448,34 @@ const AMBIENTES = [
   ["ossuario-do-necromante", "Ossuário do Necromante", "Exploração", 4, 19],
   ["reino-do-caos", "Reino do Caos", "Travessia", 4, 20],
   ["usurpacao-divina", "Usurpação Divina", "Evento", 4, 20],
+  ["abandoned-mine", "Mina Abandonada", "Travessia", 1, 11],
+  ["alchemists-abandoned-workshop", "Oficina Abandonada do Alquimista", "Exploração", 1, 11],
+  ["corrupted-swamp", "Pântano Corrompido", "Travessia", 1, 11],
+  ["cursed-graveyard", "Cemitério Amaldiçoado", "Exploração", 1, 11],
+  ["grand-feast", "Grande Banquete", "Social", 1, 11],
+  ["hold-the-line", "Segurar a Linha", "Evento", 1, 11],
+  ["local-festival", "Festival Local", "Social", 1, 11],
+  ["raiding-party", "Grupo de Saqueadores", "Evento", 1, 11],
+  ["beach-day", "Dia de Praia", "Social", 2, 14],
+  ["deadly-dungeon", "Masmorra Mortal", "Exploração", 2, 14],
+  ["duel", "Duelo", "Evento", 2, "Special (see “Relative Strength”)"],
+  ["heist", "Assalto", "Evento", 2, 14],
+  ["masquerade-ball", "Baile de Máscaras", "Social", 2, 14],
+  ["ocean-voyage", "Viagem pelo Oceano", "Travessia", 2, 14],
+  ["vast-desert", "Deserto Vasto", "Travessia", 2, 14],
+  ["witchs-hut", "Cabana da Bruxa", "Exploração", 2, 14],
+  ["archmages-tower", "Torre do Arquimago", "Exploração", 3, 16],
+  ["astral-realm", "Reino Astral", "Travessia", 3, 16],
+  ["crystal-wasteland", "Deserto de Cristal", "Travessia", 3, 16],
+  ["dragons-lair", "Covil do Dragão", "Exploração", 3, 16],
+  ["megastorm", "Megatormenta", "Evento", 3, 16],
+  ["sunken-citadel", "Cidadela Submersa", "Exploração", 3, 16],
+  ["upscale-casino", "Cassino de Luxo", "Social", 3, 16],
+  ["volcanic-eruption", "Erupção Vulcânica", "Evento", 3, 16],
+  ["convergence-the-city-of-portals", "Convergência, a Cidade dos Portais", "Social", 4, 20],
+  ["moon-kingdom", "Reino da Lua", "Exploração", 4, 20],
+  ["realm-of-the-dead", "Reino dos Mortos", "Travessia", 4, 20],
+  ["time-court", "Corte do Tempo", "Evento", 4, 20],
 ];
 
 /**

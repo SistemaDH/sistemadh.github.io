@@ -5250,9 +5250,9 @@ teste('o painel resume as fichas sem carregar tudo', () => {
 /* -------------------------------------------------------------------------- */
 
 console.log('\nBestiário');
-teste('as 264 fichas e os 19 ambientes estão no servidor', () => {
+teste('as 264 fichas e os 47 ambientes estão no servidor', () => {
   igual(avaliar('ADVERSARIOS.length'), 264);
-  igual(avaliar('AMBIENTES.length'), 19);
+  igual(avaliar('AMBIENTES.length'), 47);
   igual(avaliar('TIPOS_DE_ADVERSARIO.length'), 10);
 });
 

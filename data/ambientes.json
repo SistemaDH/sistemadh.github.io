@@ -1922,6 +1922,3053 @@
         },
         "corpusSha256": "fbe106d14e9590710d44ae71dfe79aa2fc635648c6bf0e55ce56fa36ae7d26cf"
       }
+    },
+    {
+      "id": "abandoned-mine",
+      "nome": "Mina Abandonada",
+      "nomeIngles": "Abandoned Mine",
+      "tipo": "Travessia",
+      "patamar": 1,
+      "dificuldade": 11,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Aranhas Trançadobro (Rastejador Trançadobro, Fiandeiro Trançadobro, Enxames Trançadobro), Fantasmas de Mineiros (Poltergeist, Fadas de Luz)",
+          "adversarios": [
+            {
+              "nome": "rastejante da trama negra",
+              "adversarioId": "darkweave-crawler"
+            },
+            {
+              "nome": "tecelão da trama negra",
+              "adversarioId": "darkweave-spinner"
+            },
+            {
+              "nome": "enxamezinhos da trama negra",
+              "adversarioId": "darkweave-swarmlings"
+            },
+            {
+              "nome": "poltergeist",
+              "adversarioId": "poltergeist"
+            },
+            {
+              "nome": "fogos-fátuos",
+              "adversarioId": "will-o-the-wisps"
+            }
+          ]
+        }
+      ],
+      "descricao": "Um labirinto tortuoso de túneis desativados esculpidos na rocha pelo empreendimento de mineração condenado.",
+      "descricaoIngles": "A twisting warren of disused tunnels carved out of the bedrock by a doomed mining outfit.",
+      "impulsos": [
+        "Envenenar o grupo com gases mortais",
+        "tremer e desmoronar",
+        "dividir o grupo",
+        "fazê-los voltar"
+      ],
+      "impulsosIngles": [
+        "Poison the party with deadly gasses",
+        "rumble and collapse",
+        "split the party",
+        "turn them around"
+      ],
+      "habilidades": [
+        {
+          "nome": "Escuridão Total",
+          "tipo": "passiva",
+          "perguntas": [
+            "Qual combustível a fonte de luz do grupo utiliza e quanto tempo ela vai durar?",
+            "Que atenção indesejada a luz atrai?"
+          ],
+          "texto": "Não há luz, natural ou de outro tipo, nesses túneis de mineração subterrâneos. Pergunte aos PJs o que eles usam para iluminação ou como eles encontram o caminho no escuro. PJs sem uma fonte confiável de luz fazem jogadas de ação e reação com desvantagem.",
+          "nomeIngles": "Pitch Black",
+          "textoIngles": "There is no light, natural or otherwise, in these underground mining tunnels. Ask the PCs what they use for light or how they otherwise find their way in the dark. PCs without a reliable source of light make action and reaction rolls with disadvantage.\n\nWhat fuel does the party’s light source use, and how long will it last? What unwanted attention does the light attract?"
+        },
+        {
+          "nome": "Labirinto",
+          "tipo": "passiva",
+          "perguntas": [
+            "O que os mineiros extraíram aqui anteriormente?",
+            "Quem no grupo sabe como se orientar subterraneamente?",
+            "Do que os PJs mais temem que possa acontecer com eles aqui embaixo?"
+          ],
+          "texto": "O grupo deve completar uma Contagem de Progresso (4) para encontrar seu caminho pelas minas. Cada vez que um PJ rola com Esperança enquanto se orienta, ele descobre uma das curiosidades abaixo. - Uma veia não explorada de metais preciosos ou gemas - Diversas ferramentas de mineração, incluindo um carrinho de mina quebrado (mas consertável) feito de adamantino - Ecos psíquicos do trágico fim dos mineiros - Os corpos dessecados de mineiros que se perderam nos túneis - Restos esfarrapados de seda de aranha tecida nas trevas",
+          "nomeIngles": "Labyrinth",
+          "textoIngles": "The party must complete a Progress Countdown (4) to find their way through the mines. Each time a PC rolls with Hope while finding their way through, they discover one of the curiosities below.\n\n- An unmined vein of precious metals or gemstones\n- Various mining tools, including a broken (but mendable) mine cart made of adamantine\n- Psychic echoes of the miners’ tragic end\n- The desiccated corpses of miners who lost their way in the tunnels\n- Tattered remnants of darkweave spider silk\n\nWhat did miners previously extract here? Who in the party knows how to navigate below ground? What are the PCs most afraid might happen to them down here?"
+        },
+        {
+          "nome": "Na Teia da Aranha",
+          "tipo": "ação",
+          "perguntas": [
+            "Como a Rainha Tecelã das Sombras usa seu covil a seu favor?",
+            "Quais vestígios de suas refeições passadas o grupo pode encontrar aqui?"
+          ],
+          "texto": "Gaste um Medo para invocar uma Rainha Tecelã das Sombras dentro de seu covil cheio de fios delicados. Ela desce do teto dentro do alcance Próximo de um PJ e imediatamente entra em foco.",
+          "nomeIngles": "Into the Spider’s Web",
+          "textoIngles": "Spend a Fear to summon a Darkweave Queen inside her gossamer-strewn lair. She drops from the ceiling within Close range of a PC and immediately takes the spotlight.\n\nHow does the Darkweave Queen use her lair to her advantage? What remnants of her past meals can the party find here?",
+          "custoDeMedo": 1
+        },
+        {
+          "nome": "Colapso Iminente",
+          "tipo": "reação",
+          "perguntas": [
+            "Que outros sinais de instabilidade a mina oferece ao grupo?",
+            "Que novos perigos a nova configuração do sistema de túneis expõe o grupo?"
+          ],
+          "texto": "Contagem Regressiva (2). Na primeira vez que os PJs rolarem com Medo, descreva como o chão vibra sutilmente enquanto pedras se movimentam acima e ativam a contagem regressiva. Ela diminui quando um PJ rola com Medo. Quando ela dispara, cada PJ deve ter sucesso em uma jogada de reação de Agilidade ou sofrer 1d8+3 de dano físico e ficar Restrito temporariamente pelos escombros.",
+          "nomeIngles": "Impending Collapse",
+          "textoIngles": "Countdown (2). The first time the PCs roll with Fear, describe how the ground subtly vibrates as rocks shift overhead and activate the countdown. It ticks down when a PC rolls with Fear. When it triggers, each PC must succeed on an Agility Reaction Roll or take 1d8+3 physical damage and become temporarily Restrained by the rubble.\n\nWhat other signs of instability does the mine offer the party? What new dangers does the tunnel system’s new configuration expose the party to?"
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/abandoned-mine",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "ABANDONED MINE",
+          "lineStart": 11620,
+          "lineEnd": 11654,
+          "pdfPageStart": 160,
+          "pdfPageEnd": 160
+        },
+        "corpusSha256": "3ee86cab57b0ef3c19794fd7ecff7d369512c07f9970e3ed9958306f72fdcd56"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "alchemists-abandoned-workshop",
+      "nome": "Oficina Abandonada do Alquimista",
+      "nomeIngles": "Alchemist’s Abandoned Workshop",
+      "tipo": "Exploração",
+      "patamar": 1,
+      "dificuldade": 11,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Sobras de Laboratório (Construto, Elemental de Fogo Menor, Zumbi Gigante Remendado, Nuvem de Ratos)",
+          "adversarios": [
+            {
+              "nome": "bando de ratos",
+              "adversarioId": "bando-de-ratos"
+            },
+            {
+              "nome": "construto",
+              "adversarioId": "construto"
+            },
+            {
+              "nome": "elemental menor do fogo",
+              "adversarioId": "elemental-menor-do-fogo"
+            },
+            {
+              "nome": "zumbi emendado",
+              "adversarioId": "zumbi-emendado"
+            }
+          ]
+        }
+      ],
+      "descricao": "Um laboratório movido a relâmpago construído por um cientista em busca do segredo da imortalidade.",
+      "descricaoIngles": "A lightning-powered laboratory built by a scientist searching for the secret to immortality.",
+      "impulsos": [
+        "Romper a barreira entre a vida e a morte",
+        "Atrair relâmpagos do céu",
+        "Superalimentar as máquinas"
+      ],
+      "impulsosIngles": [
+        "Break down the barrier between life and death",
+        "draw down lightning from the heavens",
+        "overclock the machinery"
+      ],
+      "habilidades": [
+        {
+          "nome": "Gabinete de Curiosidades",
+          "tipo": "passiva",
+          "perguntas": [
+            "O que o alquimista estava estudando?",
+            "Que cheiro te domina enquanto você remexe nas coisas dele?"
+          ],
+          "texto": "As prateleiras, armários e mesas da oficina estão abarrotados de quinquilharias macabras, incluindo partes do corpo em frascos de formol e instrumentos cirúrgicos ensanguentados. Uma vez por cena, um PJ pode fazer uma Rolagem de Instinto para procurar algo útil no caos.",
+          "nomeIngles": "Cabinet of Curiosities",
+          "textoIngles": "The workshop’s shelves, cupboards, and tables are cluttered with macabre bric-a-brac, including body parts in jars of formaldehyde and bloody surgical implements. Once per scene, a PC can make an Instinct Roll to look for something useful in the chaos.\n\nWhat was the alchemist studying? What smell overwhelms you as you shuffle through their things?"
+        },
+        {
+          "nome": "Máquinas Estranhas",
+          "tipo": "passiva",
+          "perguntas": [
+            "O que essas máquinas fazem?",
+            "O que esses instrumentos medem?"
+          ],
+          "texto": "A oficina contém inúmeras peças de tecnologia bizarra e instrumentos científicos. Um PJ pode fazer uma Jogada de Conhecimento para tentar descobrir como funciona. Em caso de sucesso, eles conseguem colocá-lo em funcionamento. Em caso de falha, quebram algo e recebem 1d8+4 de dano mágico direto ao serem atingidos por eletricidade e cobertos por produtos químicos cáusticos.",
+          "nomeIngles": "Strange Machinery",
+          "textoIngles": "The workshop contains numerous pieces of bizarre technology and scientific instrumentation. A PC can make a Knowledge Roll to try to figure out how it works. On a success, they can get it running. On a failure, they break something and take 1d8+4 direct magic damage as they’re shocked by electricity and doused in caustic chemicals.\n\nWhat do these machines do? What do these instruments measure?"
+        },
+        {
+          "nome": "Está Vivo!",
+          "tipo": "ação",
+          "perguntas": [
+            "O que o alquimista estava tentando alcançar com este experimento?",
+            "De onde ele conseguiu os materiais para ele?"
+          ],
+          "texto": "Contagem Regressiva da Consequência (6). Uma tempestade se forma no céu, ameaçando atingir o conjunto do para-raios instalado no topo da oficina. Ative a contagem regressiva e narre como o poder da tempestade aumenta cada vez que ela diminui quando um PJ faz um jogadas de ação. Quando disparar, um raio atinge o conjunto do para-raios e sobrecarrega as máquinas da oficina, que explodem após ressuscitar um dos projetos abandonados do alquimista. Cada alvo dentro do alcance Próximo das máquinas deve ter sucesso em uma jogada de reação de Agilidade ou sofrer 1d10 de dano mágico. Invoque um Experimento Falho em um local dentro da oficina e ganhe Medo para cada PJ dentro do alcance Muito Próximo dele.",
+          "nomeIngles": "It’s Alive!",
+          "textoIngles": "Consequence Countdown (6). A thunderstorm gathers overhead, threatening to jolt the lightning rod assembly installed atop the workshop. Activate the countdown and narrate how the storm’s power increases each time it ticks down when a PC makes an action roll. When it triggers, lightning strikes the rod assembly and overloads the workshop machinery, which explodes after resurrecting one of the alchemist’s abandoned projects. Each target within Close range of the machinery must succeed on an Agility Reaction Roll or take 1d10 magic damage. Summon a Failed Experiment at a location within the workshop and gain a Fear for each PC within Very Close range of it.\n\nWhat was the alchemist trying to achieve with this experiment? Where did they get the materials for it?"
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/alchemists-abandoned-workshop",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "ALCHEMIST’S ABANDONED WORKSHOP",
+          "lineStart": 11658,
+          "lineEnd": 11682,
+          "pdfPageStart": 161,
+          "pdfPageEnd": 161
+        },
+        "corpusSha256": "9070e5e399d37f15d5432a6232c1cec06ca59078e60011542330bc94304ddf9f"
+      }
+    },
+    {
+      "id": "corrupted-swamp",
+      "nome": "Pântano Corrompido",
+      "nomeIngles": "Corrupted Swamp",
+      "tipo": "Travessia",
+      "patamar": 1,
+      "dificuldade": 11,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Qualquer Morto-Vivo (Esqueleto, Zumbi, Guardião Espectral), Rato Gigante, Piche Verde, Trepadeira Emaranhada",
+          "adversarios": [
+            {
+              "nome": "arbusto espinhento",
+              "adversarioId": "arbusto-espinhento"
+            },
+            {
+              "nome": "lodo verde",
+              "adversarioId": "lodo-verde"
+            },
+            {
+              "nome": "rato gigante",
+              "adversarioId": "rato-gigante"
+            },
+            {
+              "nome": "espectro guardião",
+              "adversarioId": "espectro-guardiao"
+            }
+          ]
+        }
+      ],
+      "descricao": "Um trecho miserável de água lamacenta, criaturas tóxicas e decadência.",
+      "descricaoIngles": "A wretched stretch of slimy water, toxic creatures, and decay.",
+      "impulsos": [
+        "Corrompido",
+        "enfatizar a putrefação",
+        "revelar o tortuoso e não natural",
+        "causar repulsa"
+      ],
+      "impulsosIngles": [
+        "Corrupt",
+        "emphasize putrescence",
+        "reveal the twisted and unnatural",
+        "sicken"
+      ],
+      "habilidades": [
+        {
+          "nome": "Doença do Pântano",
+          "tipo": "passiva",
+          "perguntas": [
+            "O pântano está repleto de vida, cheio de decomposição, ou ambos?",
+            "Que força arruinou este pântano, e quais sinais de sua origem permanecem?"
+          ],
+          "texto": "No final de um descanso prolongado, cada PJ deve ter sucesso em uma jogada de reação de Força ou ganhar um dado d4 de Enjoo, começando com o valor 1 voltado para cima. Se um PJ falhar nessa jogada e já possuir um dado de Enjoo, ele aumenta o valor em 1, até um valor máximo de 4. Um PJ com um dado de Enjoo sofre uma penalidade em suas jogadas de ação igual ao valor do dado. Quando um PJ com um dado de Enjoo limparia PV, ele pode diminuir o valor de seu dado de Enjoo em 1 em vez disso. Quando o valor do dado cair para 0, remova-o.",
+          "nomeIngles": "Swamp Sickness",
+          "textoIngles": "At the end of a long rest, each PC must succeed on a Strength Reaction Roll or gain a d4 Sickened Die, starting with the 1 value facing up. If a PC fails this roll and already has a Sickened Die, they increase the value by 1, to a maximum value of 4. A PC with a Sickened Die gains a penalty to their action rolls equal to its value. When a PC with a Sickened Die would clear a HP, they can decrease the value of their Sickened Die by 1 instead. When the die’s value would fall to 0, remove it.\n\nIs the swamp teeming with life, filled with decay, or both? What force blighted this swamp, and what signs of its origins remain?"
+        },
+        {
+          "nome": "Encharcado e Arrastando-se",
+          "tipo": "passiva",
+          "perguntas": [
+            "Que criaturas, vivas ou não, espreitam sob a superfície turva da água?",
+            "Onde ou como os PJs encontram alívio da água fétida?"
+          ],
+          "texto": "Quando um PJ se move como parte de uma ação, ele só pode se mover até a alcance Muito Próximo. jogadas de ação feitos para se mover além da alcance Muito Próximo têm desvantagem. Antes de rolar, um PJ pode marcar um Estresse para remover essa desvantagem.",
+          "nomeIngles": "Soggy and Slogging It",
+          "textoIngles": "When a PC moves as part of an action, they can only move up to Very Close range. Action rolls made to move farther than Very Close range have disadvantage. Before rolling, a PC can mark a Stress to remove this disadvantage.\n\nWhat creatures, living or otherwise, lurk beneath the water’s murky surface? Where or how do the PCs find relief from the stinking water?",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Florapodre",
+          "tipo": "ação",
+          "perguntas": [
+            "Como você pode dizer que as plantas que liberam esse pólen são carnívoras?",
+            "Quais pesadelos ou cenários de sonhos o cheiro do pólen evoca?"
+          ],
+          "texto": "Gaste um Medo para espalhar em poeira uma área dentro do alcance Distante com pólen nocivo. Cada alvo nessa área deve ter sucesso em uma Jogada de Reação de Força ou Instinto, ou receber 1d6+3 de dano mágico e se tornar Vulnerável até o final da cena.",
+          "nomeIngles": "Rotbloom",
+          "textoIngles": "Spend a Fear to dust an area within Far range in noxious pollen. Each target in that area must succeed on a Strength or Instinct Reaction Roll or take 1d6+3 magic damage and become Vulnerable until the end of the scene.\n\nHow can you tell the plants that emit this pollen are carnivorous? What nightmares or dreamscapes does the pollen’s scent conjure?",
+          "custoDeMedo": 1
+        },
+        {
+          "nome": "Luzes Dançantes",
+          "tipo": "ação",
+          "perguntas": [
+            "O que o PJ perdido vê nas luzes que o atrai para a escuridão?",
+            "Quais outros vislumbres de beleza surpreendente os PJs encontram aqui?"
+          ],
+          "texto": "No início de um descanso, você pode gastar um Medo para que orbes flutuantes encantem os cansados e atraiam um PJ mais fundo no pântano. Um PJ diferente pode usar um movimento de descanso para fazer uma jogada de ação para procurá-los. Em caso de sucesso, ambos os PJs retornam ao acampamento e podem escolher movimento de descanso normalmente. Em caso de falha — ou se ninguém os procurar — o PJ perdido retorna horas depois, coberto de lama e com condições piores, e não pode escolher movimento de descanso até seu próximo descanso.",
+          "nomeIngles": "Dancing Lights",
+          "textoIngles": "At the start of a rest, you can spend a Fear to have floating orbs enthrall the weary and lure a PC deeper into the swamp. A different PC can use a downtime move to make an action roll to search for them. On a success, both PCs return to camp and can choose downtime moves as normal. On a failure—or if no one searches for them—the lost PC returns hours later, covered in mud and worse, and can’t choose downtime moves until their next rest.\n\nWhat does the lost PC see in the lights that draws them into the darkness? What other glimpses of surprising beauty do the PCs encounter here?",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/corrupted-swamp",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "CORRUPTED SWAMP",
+          "lineStart": 11792,
+          "lineEnd": 11820,
+          "pdfPageStart": 162,
+          "pdfPageEnd": 162
+        },
+        "corpusSha256": "0cd3f5474ff865ba6ecd33872f1e3abb7a39aafbcc72ed9bfaf1a9c12ab5e84f"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "cursed-graveyard",
+      "nome": "Cemitério Amaldiçoado",
+      "nomeIngles": "Cursed Graveyard",
+      "tipo": "Exploração",
+      "patamar": 1,
+      "dificuldade": 11,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Espíritos Corrompidos (Defensor Raiz Profunda, Fantasma), Mortos-Vivos (Guerreiro Esqueleto, Bando de Zumbis, Hulk Zumbi Remendado)",
+          "adversarios": [
+            {
+              "nome": "defensor enraizado",
+              "adversarioId": "defensor-enraizado"
+            },
+            {
+              "nome": "esqueleto guerreiro",
+              "adversarioId": "esqueleto-guerreiro"
+            },
+            {
+              "nome": "zumbi emendado",
+              "adversarioId": "zumbi-emendado"
+            },
+            {
+              "nome": "horda de zumbis",
+              "adversarioId": "horda-de-zumbis"
+            },
+            {
+              "nome": "fantasma",
+              "adversarioId": "phantom"
+            }
+          ]
+        }
+      ],
+      "descricao": "Um cemitério extenso repleto de lápides desmoronando, árvores retorcidas possuídas pelos mortos e criptas cobertas de musgo e hera.",
+      "descricaoIngles": "A sprawling cemetery filled with crumbling headstones, twisted trees possessed by the dead, and crypts overgrown with moss and ivy.",
+      "impulsos": [
+        "Enterre-os a dois metros de profundidade",
+        "sufocar com neblina",
+        "atrair com promessas de tesouro sepultado",
+        "liberar os mortos inquietos"
+      ],
+      "impulsosIngles": [
+        "Bury them six feet deep",
+        "choke with fog",
+        "lure with promises of entombed treasure",
+        "unleash the restless dead"
+      ],
+      "habilidades": [
+        {
+          "nome": "Espaço para Mais Um",
+          "tipo": "passiva",
+          "perguntas": [
+            "Que novas informações ou experiências um PJ ganha ao se tornar um espectro?",
+            "Como o grupo pode reunir o espírito do PJ com sua carne?",
+            "O que acontece se o ritual der errado?"
+          ],
+          "texto": "Se um PJ marca seu último PV enquanto está no cemitério, ele se torna um Espectro em vez de fazer um movimento de morte. Como Espectro, um PJ pode se comunicar com os vivos, mas não pode interagir com o mundo físico, e ele deve permanecer dentro do alcance Próximo de seu corpo ou atravessar o véu da morte. Essa condição é removida quando o PJ limpa um PV.",
+          "nomeIngles": "Room for One More",
+          "textoIngles": "If a PC marks their last HP while in the graveyard, they become a Specter instead of making a death move. While a Specter, a PC can communicate with the living but can’t interact with the physical world, and they must stay within Close range of their corpse or cross through the veil of death. This condition is cleared when the PC clears a HP.\n\nWhat new information or experience does a PC gain from becoming a specter? How can the party reunite the PC’s spirit with their flesh? What happens if their ritual goes wrong?"
+        },
+        {
+          "nome": "Terreno Sagrado",
+          "tipo": "passiva",
+          "perguntas": [
+            "Quem santificou este lugar, e o que aconteceu com ele?",
+            "Que relíquias sagradas podem ser encontradas aqui?"
+          ],
+          "texto": "No centro do cemitério há uma capela aparentemente intocada. Com uma jogada bem-sucedida de Instinto, um PJ pode descobrir que essa estrutura está santificada contra os habitantes do cemitério. Enquanto estiverem dentro da capela, os PJs têm vantagem em jogadas de ação para lutar ou expulsar espíritos e mortos-vivos.",
+          "nomeIngles": "Hallowed Ground",
+          "textoIngles": "At the center of the graveyard is a seemingly undisturbed chapel. On a successful Instinct Roll, a PC can discover this structure is sanctified against the cemetery’s denizens. While inside the chapel, the PCs have advantage on action rolls to fight or drive off spirits and undead.\n\nWho sanctified this place, and what happened to them? What holy relics can be found here?"
+        },
+        {
+          "nome": "Névoa Nebulosa",
+          "tipo": "ação",
+          "perguntas": [
+            "Que horrores os PJs veem na névoa?",
+            "Que cheiro desorientador a miasma emite?"
+          ],
+          "texto": "Gaste um Medo para preencher uma área dentro do alcance Distante com uma névoa ectoplásmica baixa que se espalha através da terra encharcada. Quando um PJ obter um resultado com Medo enquanto estiver na miasma, ele deve marcar um Estresse.",
+          "nomeIngles": "Misty Miasma",
+          "textoIngles": "Spend a Fear to fill an area within Far range with a low-lying ectoplasmic fog that seeps up through the soggy earth. When a PC rolls with Fear while in the miasma, they must mark a Stress.\n\nWhat horrors do the PCs see in the fog? What disorienting smell does the miasma emit?",
+          "custoDeMedo": 1,
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Os Mortos Surgem",
+          "tipo": "ação",
+          "perguntas": [
+            "Quem eram essas pessoas em vida?",
+            "Por que foram enterradas aqui?",
+            "Por que não permanecem mortas?"
+          ],
+          "texto": "Gaste um Medo para fazer mãos de mortos-vivos surgirem do chão sob um PJ. O alvo deve ter sucesso em uma jogada de reação de Agilidade ou Presença ou marcar um Estresse e ficar Restrito temporariamente enquanto mãos o agarram.",
+          "nomeIngles": "The Dead Arise",
+          "textoIngles": "Spend a Fear to have undead hands burst forth from the ground beneath a PC. The target must succeed on an Agility or Presence Reaction Roll or mark a Stress and become temporarily Restrained as hands grasp them.\n\nWho were these people in life? Why were they buried here? Why won’t they stay dead?",
+          "custoDeMedo": 1,
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Os Mortos Não Morrem Fácil",
+          "tipo": "reação",
+          "perguntas": [
+            "Quem comandou esta terra a rejeitar a morte?",
+            "Como os mortos retornam diferentes aqui?"
+          ],
+          "texto": "Quando um adversário fosse marcar seu último PV, role um d6. Com um resultado de 5 ou 6, o adversário não o marca.",
+          "nomeIngles": "The Dead Don’t Die Easy",
+          "textoIngles": "When an adversary would mark their last HP, roll a d6. On a result of 5 or 6, the adversary doesn’t mark it.\n\nWho commanded this land to reject death? How do the dead come back different here?"
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/cursed-graveyard",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "CURSED GRAVEYARD",
+          "lineStart": 11824,
+          "lineEnd": 11856,
+          "pdfPageStart": 163,
+          "pdfPageEnd": 163
+        },
+        "corpusSha256": "0b963946e9a0ab9a50917a95e367fb2017ccdec4cc0047a3a2d477c5dfa06602"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "grand-feast",
+      "nome": "Grande Banquete",
+      "nomeIngles": "Grand Feast",
+      "tipo": "Social",
+      "patamar": 1,
+      "dificuldade": 11,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Aprendiz de Assassino, Guarda, Comerciante, Nobre Menor, Mercenário, Espião",
+          "adversarios": [
+            {
+              "nome": "comerciante",
+              "adversarioId": "comerciante"
+            },
+            {
+              "nome": "mercenário",
+              "adversarioId": "mercenario"
+            },
+            {
+              "nome": "nobre menor",
+              "adversarioId": "nobre-menor"
+            },
+            {
+              "nome": "assassino aprendiz",
+              "adversarioId": "assassino-aprendiz"
+            },
+            {
+              "nome": "espião",
+              "adversarioId": "espiao"
+            }
+          ]
+        }
+      ],
+      "descricao": "Uma celebração comunitária com bebida, comida e diversão em excesso.",
+      "descricaoIngles": "A community-wide celebration featuring way too much drink, food, and fun.",
+      "impulsos": [
+        "Reunir todos",
+        "celebrar uma ocasião memorável",
+        "incentivar o abandono festivo"
+      ],
+      "impulsosIngles": [
+        "Bring everyone together",
+        "celebrate a momentous occasion",
+        "encourage revelrous abandon"
+      ],
+      "habilidades": [
+        {
+          "nome": "Línguas Soltas & Amigos Rápidos",
+          "tipo": "passiva",
+          "perguntas": [
+            "O que todos estão celebrando?",
+            "Onde está a festa?",
+            "Quem vai pagar a conta?"
+          ],
+          "texto": "Todos estão aqui para se divertir. PJs têm vantagem em jogadas de Presença para socializar com outros festeiros.",
+          "nomeIngles": "Loose Lips & Fast Friends",
+          "textoIngles": "Everyone is here to have a good time. PCs have advantage on Presence Rolls to socialize with other revelers.\n\nWhat is everyone celebrating? Where’s the party? Who’s footing the bill?"
+        },
+        {
+          "nome": "O Entretenimento da Noite",
+          "tipo": "ação",
+          "perguntas": [
+            "O que o anfitrião quer ver ou ouvir mais do que qualquer outra coisa?",
+            "O que ele pode oferecer aos PJs em troca?"
+          ],
+          "texto": "O anfitrião do banquete inicia a parte de entretenimento da noite. Cada PJ pode fazer uma jogada de ação para iniciar uma apresentação, competição ou outra distração divertida. Um PJ que tiver sucesso se torna um Convidado de Honra. Até o fim do banquete, um Convidado de Honra pode receber um presente do anfitrião e, em seguida, limpar a condição.",
+          "nomeIngles": "The Evening’s Entertainment",
+          "textoIngles": "The host of the feast kicks off the entertainment portion of the evening. Each PC can make an action roll to initiate a performance, competition, or other lighthearted diversion. A PC who succeeds becomes an Honored Guest. Until the feast ends, an Honored Guest can claim a gift from the host, then clear the condition.\n\nWhat does the host want to see or hear more than anything else? What can they offer the PCs in return?"
+        },
+        {
+          "nome": "“Sempre Existe Aquele Que…”",
+          "tipo": "ação",
+          "perguntas": [
+            "O que torna esse chato tão desagradável?",
+            "Qual é algo importante para o PJ que o chato constantemente diminui ou ignora?",
+            "Sobre que coisa entediante ou horrível o chato não consegue parar de falar?"
+          ],
+          "texto": "Gaste um Medo para prender um PJ em uma conversa com a pessoa mais desagradável da festa até que o PJ tenha sucesso em uma jogada de ação para se extrair desse buraco social. Enquanto Estiver Restrito, um PJ não pode fazer jogadas de ação, exceto para tentar eliminar essa condição. Quando um PJ Restrito falha em uma jogada de ação, ele deve marcar um Estresse.",
+          "nomeIngles": "“There’s Always That One…”",
+          "textoIngles": "Spend a Fear to Trap a PC in conversation with the most unpleasant person at the party until the PC succeeds on an action roll to extricate themself from this social black hole. While Trapped, a PC can’t make action rolls except to try to clear this condition. When a Trapped PC fails an action roll, they must mark a Stress.\n\nWhat makes this dud so unpleasant? What’s something the PC cares about that the dud constantly diminishes or dismisses? What boring or awful thing can the dud not shut up about?",
+          "custoDeMedo": 1,
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Última Chamada",
+          "tipo": "reação",
+          "perguntas": [
+            "Que histórias malucas os PJs compartilham entre si ao deixar a festa?",
+            "Quem os PJs veem inesperadamente se enroscando depois?"
+          ],
+          "texto": "Após uma longa noite, os festeiros começam a ir embora. Quando o banquete termina, todos os PJs que participaram das festividades limpam todo o Estresse e ganham uma Esperança. Além disso, cada Convidado de Honra limpa todos os PV e ganha uma Esperança adicional, e então limpa a condição. Cada PJ que se excedeu deve ter sucesso em uma Jogada de Reação de Força ou ficar de Ressaca até seu próximo descanso. Enquanto estiver de Ressaca, um PJ recebe uma penalidade de −1 em jogadas de ação.",
+          "nomeIngles": "Last Call",
+          "textoIngles": "After a long night, the partygoers start filtering out. When the feast concludes, all PCs who participated in the festivities clear all Stress and gain a Hope. Additionally, each Honored Guest clears all HP and gains an additional Hope, then clears the condition. Each PC who overindulged must succeed on a Strength Reaction Roll or become Hungover until their next rest. While Hungover, a PC gains a −1 penalty to action rolls.\n\nWhat crazy stories do the PCs share with one another as they leave the party? Who do the PCs see unexpectedly canoodling afterward?"
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/grand-feast",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "GRAND FEAST",
+          "lineStart": 11858,
+          "lineEnd": 11886,
+          "pdfPageStart": 163,
+          "pdfPageEnd": 163
+        },
+        "corpusSha256": "4e8ae201d8bda39f784bacee2e760072bf650079754370768ab609ca16b33241"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "hold-the-line",
+      "nome": "Segurar a Linha",
+      "nomeIngles": "Hold the Line",
+      "tipo": "Evento",
+      "patamar": 1,
+      "dificuldade": 11,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Guardas, Facas Serrilhadas, Piratas, Esqueletos, Zumbis",
+          "adversarios": [
+            {
+              "nome": "Guardas, Facas Serrilhadas, Piratas, Esqueletos, Zumbis",
+              "semFicha": "seleção livre conforme o SRD2"
+            }
+          ]
+        }
+      ],
+      "descricao": "O grupo deve repelir várias ondas de inimigos tempo suficiente para que um aliado complete um objetivo importante.",
+      "descricaoIngles": "The party must fend off multiple waves of enemies long enough for an ally to complete an important objective.",
+      "impulsos": [
+        "Lance ondas de inimigos sobre as costas do grupo",
+        "nunca os deixe respirar",
+        "mirarem na carga deles"
+      ],
+      "impulsosIngles": [
+        "Crash waves of enemies upon the party’s shores",
+        "never let them breathe",
+        "target their charge"
+      ],
+      "habilidades": [
+        {
+          "nome": "Guarda-costas",
+          "tipo": "passiva",
+          "perguntas": [
+            "Quem os PJs estão protegendo, e o que a Responsabilidade está tentando fazer?",
+            "Quem quer impedi-los?",
+            "O que acontecerá se a Responsabilidade não conseguir completar sua tarefa?"
+          ],
+          "texto": "Os PJs devem proteger um NPC (sua “Responsabilidade”) por tempo suficiente para que a Responsabilidade complete uma tarefa, como finalizar um ritual mágico ou consertar um dispositivo mecânico. No início da cena, ative uma Contagem Regressiva de Tarefa com um valor igual ao número de PJs na cena. Ela diminui quando os PJs derrotam uma onda de adversários. Quando ela disparar, a Responsabilidade completa sua tarefa.",
+          "nomeIngles": "Bodyguards",
+          "textoIngles": "The PCs must protect an NPC (their “Charge”) long enough for the Charge to complete a task, such as finishing a magical ritual or repairing a mechanical device. At the start of the scene, activate a Task Countdown with a value equal to the number of PCs in the scene. It ticks down when the PCs defeat a wave of adversaries. When it triggers, the Charge completes their task.\n\nWho are the PCs protecting, and what is the Charge trying to do? Who wants to stop them? What will happen if the Charge isn’t able to complete their task?"
+        },
+        {
+          "nome": "“Eu Não Posso Falhar!”",
+          "tipo": "passiva",
+          "perguntas": [
+            "Por que esta tarefa é tão importante para a Carga?",
+            "O que tem o poder de quebrar sua determinação?"
+          ],
+          "texto": "Quando a primeira onda de adversários aparecer, coloque uma Contagem Regressiva de Determinação ao lado da Carga com um valor igual ao número de PJs na cena. Quando um adversário faz um ataque contra a Carga, o ataque automaticamente tem sucesso e reduz a Contagem Regressiva de Determinação. Quando ela for acionada, a Carga ou foge, morre, ou fica incapacitada.",
+          "nomeIngles": "“I Must Not Fail!”",
+          "textoIngles": "When the first wave of adversaries appears, place a Resolve Countdown next to the Charge with a value equal to the number of PCs in the scene. When an adversary makes an attack against the Charge, the attack automatically succeeds and ticks down the Resolve Countdown. When it triggers, the Charge either flees, dies, or becomes incapacitated.\n\nWhy is this task so important to the Charge? What has the power to break their resolve?"
+        },
+        {
+          "nome": "Multidões Enxameantes",
+          "tipo": "passiva",
+          "perguntas": [
+            "De onde vem o poder recém-descoberto desses inimigos?",
+            "Existe alguma forma de cortá-los dele?"
+          ],
+          "texto": "Todos os adversários ganham a característica “Implacável (2)”: Eles podem ser posto em foco até duas vezes por turno do Mestre. Gaste Medo como de costume para destacá-los.",
+          "nomeIngles": "Swarming Multitudes",
+          "textoIngles": "All adversaries gain the “Relentless (2)” feature: They can be spotlighted up to two times per GM turn. Spend Fear as usual to spotlight them.\n\nWhere does these foes’ newfound power come from? Is there any way to cut them off from it?"
+        },
+        {
+          "nome": "Ondas sobre Ondas",
+          "tipo": "reação",
+          "perguntas": [
+            "De onde vêm esses adversários?",
+            "Quem os lidera a partir das sombras?"
+          ],
+          "texto": "Quando não houver adversários na cena, invoque uma onda de adversários a uma longa distância da Carga. Cada onda é composta por dois Lacaios de Nível 1 para cada PJ na cena.",
+          "nomeIngles": "Waves upon Waves",
+          "textoIngles": "When there are no adversaries in the scene, summon a wave of adversaries at Far range from the Charge. Each wave comprises two Tier 1 Minions for each PC in the scene.\n\nWhere do these adversaries come from? Who leads them from the shadows?"
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/hold-the-line",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "HOLD THE LINE",
+          "lineStart": 11890,
+          "lineEnd": 11918,
+          "pdfPageStart": 164,
+          "pdfPageEnd": 164
+        },
+        "corpusSha256": "3088b5336a71e8f75e8ec89b2e7c0c743716c7c5cfed23a9a30cad23c6633424"
+      }
+    },
+    {
+      "id": "local-festival",
+      "nome": "Festival Local",
+      "nomeIngles": "Local Festival",
+      "tipo": "Social",
+      "patamar": 1,
+      "dificuldade": 11,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Segurança do Festival (Guarda Armada, Guarda-Chefe), Figuras Locais (Comum, Comerciante, Pequeno Nobre), Diversos Delinquentes (Bandido Faca Serrilhada, Capanga)",
+          "adversarios": [
+            {
+              "nome": "comerciante",
+              "adversarioId": "comerciante"
+            },
+            {
+              "nome": "guarda armado",
+              "adversarioId": "guarda-armado"
+            },
+            {
+              "nome": "guarda chefe",
+              "adversarioId": "guarda-chefe"
+            },
+            {
+              "nome": "nobre menor",
+              "adversarioId": "nobre-menor"
+            },
+            {
+              "nome": "punhal escarpado, bandido",
+              "adversarioId": "punhal-escarpado-bandido"
+            }
+          ]
+        }
+      ],
+      "descricao": "Camponeses e nobres se reúnem da área circundante para uma celebração que dura uma semana.",
+      "descricaoIngles": "Commoners and nobles alike gather from the surrounding area for a weeklong celebration.",
+      "impulsos": [
+        "Expressar a cultura e a história locais",
+        "Forjar novos relacionamentos",
+        "Reforçar a comunidade"
+      ],
+      "impulsosIngles": [
+        "Express local culture and history",
+        "forge new relationships",
+        "reinforce community"
+      ],
+      "habilidades": [
+        {
+          "nome": "Lembre-se, Lembre-se",
+          "tipo": "passiva",
+          "perguntas": [
+            "O festival celebra uma colheita ou exportação que é crítica para a economia local. Qual é?",
+            "Por que o festival não aconteceu no ano passado?",
+            "Este festival é semelhante a outro realizado em uma região vizinha. O que os torna diferentes?",
+            "O que os habitantes estão celebrando?",
+            "Pelo que o festival é famoso?",
+            "Como os PJs ouviram sobre ele pela primeira vez?"
+          ],
+          "texto": "Esta época do ano marca um aniversário importante ou evento astronômico, como a fundação da cidade ou o solstício de verão. Em uma jogada de Conhecimento bem-sucedida, um PJ pode responder uma das perguntas abaixo (ou duas, se obtiver sucesso crítico). Em caso de falha, ele responde uma pergunta, mas você decide qual parte da resposta está incorreta e ganha um Medo.",
+          "nomeIngles": "Remember, Remember",
+          "textoIngles": "This time of year marks an important anniversary or astronomical event, such as the founding of the town or the summer solstice. On a successful Knowledge Roll, a PC can answer one of the questions below (or two, if they critically succeed). On a failure, they answer one question, but you decide which part of their answer is inaccurate and gain a Fear.\n\n- The festival celebrates a crop or export that is critical to the economy here. What is it?\n- Why didn’t the festival happen last year?\n- This festival is similar to another one held in a neighboring region. What makes them different?\n\nWhat are the locals celebrating? What is the festival famous for? How did the PCs first hear about it?"
+        },
+        {
+          "nome": "Manobras Políticas",
+          "tipo": "passiva",
+          "perguntas": [
+            "Qual nova crise está nos lábios de todos?",
+            "Por que esta comunidade não consegue resolver o problema sozinha?",
+            "Que recompensa eles podem oferecer aos PJs em troca de sua ajuda?"
+          ],
+          "texto": "Enquanto todos estão reunidos em um só lugar, os moradores aproveitam a oportunidade para extinguir desavenças, gerar novos negócios e lidar com a política local. Um PJ pode intrometer-se nos acontecimentos fazendo um jogadas de Presença. Em caso de sucesso, ele estabelece uma conexão com uma figura importante da comunidade que pode oferecer um trabalho, compartilhar informações importantes ou fazer apresentações úteis. Em caso de falha, deve-se marcar um Estresse.",
+          "nomeIngles": "Political Machinations",
+          "textoIngles": "While everyone is gathered in one place, the locals take the opportunity to quash feuds, drum up new business, and navigate local politics. A PC can stick their nose in the goings-on by making a Presence Roll. On a success, they make a connection to a local luminary who can give them a job, share important information, or make useful introductions. On a failure, they must mark a Stress.\n\nWhat new crisis is on everyone’s lips? Why can’t this community solve the problem on its own? What reward can they offer the PCs in exchange for their aid?",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "“Que os Jogos Comecem!”",
+          "tipo": "ação",
+          "perguntas": [
+            "Quais habilidades ou capacidades essa competição testa?",
+            "O que o vencedor ganha?",
+            "Por que o fracasso não é uma opção para os PJs ou seus rivais?"
+          ],
+          "texto": "Um dos eventos marcantes do festival é uma competição esportiva ou uma série de jogos. Se um ou mais PJs decidirem participar, apresente competidores rivais para eles enfrentarem. Para conquistar a vitória, os PJs devem completar uma Contagem Regressiva de Progresso (5) para ganhar os eventos ou marcar pontos antes que seus rivais completem uma Contagem Regressiva de Consequências (5).",
+          "nomeIngles": "“Let the Games Begin!”",
+          "textoIngles": "One of the festival’s signature events is a sporting competition or series of games. If one or more PCs throw their hat into the ring, introduce rival competitors for them to face off against. To claim victory, the PCs must complete a Progress Countdown (5) to win events or score points before their rivals complete a Consequence Countdown (5).\n\nWhat skills or abilities does this competition test? What does the victor win? Why is failure not an option for the PCs or their rivals?"
+        },
+        {
+          "nome": "Local Lendário",
+          "tipo": "ação",
+          "perguntas": [
+            "Esta é uma entidade singular ou um manto passado de pessoa para pessoa?",
+            "Que forma distinta eles possuem?",
+            "Qual é a fonte do poder deles para conceder bênçãos e maldições?"
+          ],
+          "texto": "O festival culmina com a chegada de uma figura do folclore local que desempenha funções especiais para a comunidade, como dar guloseimas às crianças, provocar a nobreza ou abençoar as colheitas do próximo ano. Se os PJs demonstrarem a essa figura a devida deferência e respeito, eles recebem uma bênção apropriada, como uma profecia enigmática ou um amuleto mágico, e ganham 1d4 de Esperança para distribuir entre o grupo. Se insultarem a figura, recebem 1d6+2 de dano mágico enquanto a figura os amaldiçoa, e você ganha um Medo.",
+          "nomeIngles": "Legendary Local",
+          "textoIngles": "The festival culminates in the arrival of a figure from local folklore who performs special duties for the local community, such as giving treats to children, heckling the gentry, or blessing next year’s crops. If the PCs show this figure the proper deference and respect, they gain an appropriate blessing, such as a cryptic prophecy or a magical trinket, and gain 1d4 Hope to distribute among the party. If they insult the figure, they take 1d6+2 magic damage as the figure curses them, and you gain a Fear.\n\nIs this a singular entity or a mantle passed from person to person? What distinctive form do they possess? What is the source of their power to grant boons and banes?"
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/local-festival",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "LOCAL FESTIVAL",
+          "lineStart": 11920,
+          "lineEnd": 11952,
+          "pdfPageStart": 164,
+          "pdfPageEnd": 164
+        },
+        "corpusSha256": "29ecd59201eaf1e5211eee2a462d163b945f3d62b3a10dd7d620b6aaa1301a9e"
+      }
+    },
+    {
+      "id": "raiding-party",
+      "nome": "Grupo de Saqueadores",
+      "nomeIngles": "Raiding Party",
+      "tipo": "Evento",
+      "patamar": 1,
+      "dificuldade": 11,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Tripulação do Navio (Capitão Pirata, Saqueadores Piratas, Pirata Durão)",
+          "adversarios": [
+            {
+              "nome": "pirata bruto",
+              "adversarioId": "pirata-bruto"
+            },
+            {
+              "nome": "pirata capitão",
+              "adversarioId": "pirata-capitao"
+            },
+            {
+              "nome": "piratas saqueadores",
+              "adversarioId": "piratas-saqueadores"
+            }
+          ]
+        }
+      ],
+      "descricao": "Um navio pirata despeja sua tripulação em uma cidade portuária ou vila costeira para saquear e pilhar.",
+      "descricaoIngles": "A pirate ship disgorges its crew into a port town or shoreline village to loot and plunder.",
+      "impulsos": [
+        "Coloque fogo",
+        "Sobrecarregue com velocidade e números",
+        "Leve tudo o que não estiver pregado"
+      ],
+      "impulsosIngles": [
+        "Light it on fire",
+        "overwhelm with speed and numbers",
+        "take everything that isn’t nailed down"
+      ],
+      "habilidades": [
+        {
+          "nome": "Reúna os Moradores",
+          "tipo": "passiva",
+          "perguntas": [
+            "Como os piratas ameaçam ou colocam a cidade em perigo além de atacar seus habitantes?",
+            "De quais defesas os PJs podem se aproveitar?"
+          ],
+          "texto": "Contagem Regressiva de Progresso (5). Quando os piratas aparecem pela primeira vez, ative a contagem regressiva. Ela diminui quando um PJ obtém sucesso em uma jogada de ação para conter o caos e a destruição do ataque pirata. Quando ela é acionada, os habitantes locais se inspiram nas ações do grupo e se juntam à luta contra os piratas. Cada PJ ganha um dado de Moral d6, que pode usar para somar a uma jogada de ação, reação ou de dano.",
+          "nomeIngles": "Rally the Locals",
+          "textoIngles": "Progress Countdown (5). When the pirates first appear, activate the countdown. It ticks down when a PC succeeds on an action roll to stem the chaos and destruction of the pirate raid. When it triggers, the locals become inspired by the party’s actions and join the fight against the pirates. Each PC gains a d6 Morale Die, which they can spend to add to an action, reaction, or damage roll.\n\nHow do the pirates threaten or endanger the town besides attacking its inhabitants? What defenses can the PCs take advantage of?"
+        },
+        {
+          "nome": "Negociação",
+          "tipo": "passiva",
+          "perguntas": [
+            "Por que esses piratas respeitam este capitão o suficiente para segui-lo?",
+            "O que eles valorizam mais do que tesouros obtidos de forma ilícita?"
+          ],
+          "texto": "Em uma jogada bem-sucedida de Conhecimento, um PJ sabe o suficiente sobre a lei dos piratas para exigir uma conversa com o Capitão Pirata. Uma vez que o diálogo é solicitado, o capitão pausa o combate para permitir que um PJ peça a paz ou negocie os termos de rendição com uma jogada de Presença.",
+          "nomeIngles": "Parley",
+          "textoIngles": "On a successful Knowledge Roll, a PC knows enough pirate law to demand a parley with the Pirate Captain. Once the parley is issued, the captain pauses the combat to allow a PC to sue for peace or negotiate the terms of surrender with a Presence Roll.\n\nWhy do these pirates respect this captain enough to follow them? What do they care about more than ill-gotten booty?"
+        },
+        {
+          "nome": "“Dispare os Canhões!”",
+          "tipo": "ação",
+          "perguntas": [
+            "Que danos colaterais esses canhões causam?",
+            "Quem suas vidas colocam descuidadamente em perigo?"
+          ],
+          "texto": "Gaste até 3 Medos para que o navio pirata dispare seus canhões no combate. Para cada Medo gasto, escolha um ponto em qualquer lugar do campo de batalha. Cada PJ dentro do alcance Próximo de um ou mais desses pontos deve fazer uma jogada de reação de Agilidade. Alvos que falharem recebem 1d8+3 de dano físico. Alvos que tiverem sucesso devem marcar um Estresse ou receber metade do dano.",
+          "nomeIngles": "“Fire the Cannons!”",
+          "textoIngles": "Spend up to 3 Fear to have the pirate ship fire its cannons into the combat. For each Fear spent, choose a point anywhere on the battlefield. Each PC within Close range of one or more of those points must make an Agility Reaction Roll. Targets who fail take 1d8+3 physical damage. Targets who succeed must mark a Stress or take half damage.\n\nWhat collateral damage do these cannonballs cause? Whose lives do they wantonly endanger?",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Tomar Cativos",
+          "tipo": "reação",
+          "perguntas": [
+            "Quem os piratas consideram os melhores cativos, e por quê?",
+            "O que eles querem em troca do retorno dos cativos?"
+          ],
+          "texto": "Quando um número de piratas igual ao número de PJs na cena é derrotado, role um d6. Com um resultado de 5 ou 6, os piratas mudam de tática, capturando os habitantes locais e recuando para o navio para que possam pedir resgate pelos cativos mais tarde. Ative uma Contagem de Consequência (4). Ela diminui quando um PJ realiza uma jogada de ação. Quando ela é ativada, os piratas partem com suas vítimas.",
+          "nomeIngles": "Take Captives",
+          "textoIngles": "When a number of pirates equal to the number of PCs in the scene are defeated, roll a d6. On a result of 5 or 6, the pirates change tactics, capturing locals and retreating to the ship so they can ransom the captives later. Activate a Consequence Countdown (4). It ticks down when a PC makes an action roll. When it triggers, the pirates sail away with their victims.\n\nWho do the pirates deem the best captives, and why? What do they want in exchange for the captives’ return?"
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/raiding-party",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "RAIDING PARTY",
+          "lineStart": 12062,
+          "lineEnd": 12090,
+          "pdfPageStart": 166,
+          "pdfPageEnd": 166
+        },
+        "corpusSha256": "0626763f372ee7ad5b1b5edc97b379e41266587d3bc5c0584626bb1b6ac7dac4"
+      }
+    },
+    {
+      "id": "beach-day",
+      "nome": "Dia de Praia",
+      "nomeIngles": "Beach Day",
+      "tipo": "Social",
+      "patamar": 2,
+      "dificuldade": 14,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Nenhum",
+          "adversarios": [
+            {
+              "nome": "Nenhum",
+              "semFicha": "seleção livre conforme o SRD2"
+            }
+          ]
+        }
+      ],
+      "descricao": "O grupo faz uma pausa em sua aventura para descansar e relaxar em um povoado à beira-mar.",
+      "descricaoIngles": "The party takes a break from their adventure for some rest and relaxation in a seaside settlement.",
+      "impulsos": [
+        "Conjure imagens de areia e surf",
+        "dê-lhes uma pausa",
+        "prepare-os para o conflito que está por vir"
+      ],
+      "impulsosIngles": [
+        "Conjure images of sand and surf",
+        "give them a breather",
+        "prepare them for the conflict ahead"
+      ],
+      "habilidades": [
+        {
+          "nome": "Descanso e Relaxamento",
+          "tipo": "passiva",
+          "perguntas": [
+            "O que é tão relaxante neste lugar?",
+            "Isso te lembra de algum lugar onde você já esteve antes?"
+          ],
+          "texto": "O grupo se encontra em um lugar onde as preocupações e conflitos do mundo exterior desaparecem. Quando os personagens descansam aqui, eles ganham um movimento adicional de tempo livre, o Mestre não ganha Medo, e nenhuma contagem regressiva de longo prazo avança.",
+          "nomeIngles": "R&R",
+          "textoIngles": "The party finds themselves in a location where the concerns and conflicts of the outside world melt away. When the PCs rest here, they gain an additional downtime move, the GM doesn’t gain Fear, and no long-term countdowns advance.\n\nWhat’s so relaxing about this place? Does it remind you of somewhere you’ve been before?"
+        },
+        {
+          "nome": "“Nossa História Até Agora…”",
+          "tipo": "passiva",
+          "perguntas": [
+            "Quais sons, cheiros ou sensações a memória evoca em sua mente?",
+            "Como aquele momento mudou você permanentemente – ou sua opinião sobre seu companheiro?"
+          ],
+          "texto": "Uma vez por cena, quando um PJ relembra um momento memorável da campanha em conversa com outro PJ, ambos ganham uma Esperança.",
+          "nomeIngles": "“Our Story So Far…”",
+          "textoIngles": "Once per scene when a PC recounts a memorable moment from the campaign in conversation with another PC, they both gain a Hope.\n\nWhat sounds, smells, or sensations does the memory conjure in your mind? How did that moment permanently change you—or your opinion of your companion?"
+        },
+        {
+          "nome": "Problema Local",
+          "tipo": "ação",
+          "perguntas": [
+            "Por que este PJ chama a atenção deles?",
+            "O que os locais valorizam mais do que esses aventureiros recém-chegados?"
+          ],
+          "texto": "Gaste um Medo para interromper o descanso de um PJ com uma complicação menor, como um grupo de malandros da praia, um fã excessivamente entusiasmado ou uma queimadura de sol muito ruim. O PJ deve resolver a situação com graça ou marcar um Estresse devido ao constrangimento ou frustração resultante.",
+          "nomeIngles": "Local Trouble",
+          "textoIngles": "Spend a Fear to interrupt a PC’s respite with a minor complication, such as a gang of surly beach bums, an overly exuberant fan, or a really bad sunburn. The PC must gracefully resolve the situation or mark a Stress from the resulting embarrassment or frustration.\n\nWhy does this PC draw their attention? What do the locals care about more than these newly arrived adventurers?",
+          "custoDeMedo": 1,
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Desfile de Moda",
+          "tipo": "reação",
+          "perguntas": [
+            "Qual é a moda nesta área?",
+            "Onde os PJs conseguem seus novos artigos e acessórios com tema de praia?"
+          ],
+          "texto": "Quando o grupo se prepara para seu primeiro dia na praia, peça a cada jogador que descreva como seu PJ muda seu traje para ficar mais adequado ao ambiente. O mestre dá ao PJ com a aparência mais elegante um d6 Dado de Frescor que pode ser usado para adicionar a qualquer jogada de ação ou reação.",
+          "nomeIngles": "Fashion Show",
+          "textoIngles": "When the party prepares for their first day at the beach, have each player describe how their PC changes their attire to be more appropriate for the environment. The GM gives the PC with the freshest look a d6 Fresh Die that can be spent to add to any action or reaction roll.\n\nWhat’s the fashion in this area? Where do the PCs source their new beach-themed articles and accessories?"
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/beach-day",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "BEACH DAY",
+          "lineStart": 12096,
+          "lineEnd": 12124,
+          "pdfPageStart": 167,
+          "pdfPageEnd": 167
+        },
+        "corpusSha256": "20c4e84da3c9ff18484b91e5b53b75d10f3256116ac42f3b6be3579adef68092"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "deadly-dungeon",
+      "nome": "Masmorra Mortal",
+      "nomeIngles": "Deadly Dungeon",
+      "tipo": "Exploração",
+      "patamar": 2,
+      "dificuldade": 14,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Habitantes da Masmorra (Caçador de Goblins, Lodo Verde, Zombaria Voraz, Comedor de Ferrugem), Aventureiros Rivais (Brigão Gigante, Ladrão Mascarado, Mago de Guerra)",
+          "adversarios": [
+            {
+              "nome": "lodo verde",
+              "adversarioId": "lodo-verde"
+            },
+            {
+              "nome": "gigante lutador",
+              "adversarioId": "gigante-lutador"
+            },
+            {
+              "nome": "mago de batalha",
+              "adversarioId": "mago-de-batalha"
+            },
+            {
+              "nome": "patife mascarado",
+              "adversarioId": "patife-mascarado"
+            },
+            {
+              "nome": "gobstalker",
+              "adversarioId": "gobstalker"
+            },
+            {
+              "nome": "arremedo voraz",
+              "adversarioId": "ravenous-mockery"
+            },
+            {
+              "nome": "devorador de ferrugem",
+              "adversarioId": "rust-eater"
+            }
+          ]
+        }
+      ],
+      "descricao": "Uma rede subterrânea mal iluminada de túneis e câmaras cheia de monstros, armadilhas e tesouros.",
+      "descricaoIngles": "A dimly lit subterranean network of tunnels and chambers filled with monsters, traps, and treasure.",
+      "impulsos": [
+        "Devorar os recursos do grupo",
+        "Acionar a armadilha",
+        "Tentá-los com tesouro",
+        "Lançar monstros contra eles",
+        "fazê-los voltar"
+      ],
+      "impulsosIngles": [
+        "Devour the party’s resources",
+        "spring the trap",
+        "tempt them with treasure",
+        "throw monsters at them",
+        "turn them around"
+      ],
+      "habilidades": [
+        {
+          "nome": "Reviravoltas",
+          "tipo": "passiva",
+          "perguntas": [
+            "Qual recompensa se encontra no coração do labirinto?",
+            "Quem construiu este labirinto para protegê-la?"
+          ],
+          "texto": "Contagem regressiva (6). Quando o grupo entra na masmorra, ative a contagem regressiva. Ela diminui quando um PJ consegue em uma jogada de ação para navegar pelos corredores. Quando ela dispara, os PJs alcançam a parte mais profunda, escura e bem defendida da masmorra.",
+          "nomeIngles": "Twists and Turns",
+          "textoIngles": "Countdown (6). When the party enters the dungeon, activate the countdown. It ticks down when a PC succeeds on an action roll to navigate the passages. When it triggers, the PCs reach the deepest, darkest, best-defended part of the dungeon.\n\nWhat reward lies at the heart of the maze? Who built this labyrinth to protect it?"
+        },
+        {
+          "nome": "Bolsos Fundos",
+          "tipo": "passiva",
+          "perguntas": [
+            "Como eram os donos anteriores?",
+            "Como os PJs planejam retirar os itens saqueados da masmorra?"
+          ],
+          "texto": "Uma vez por descanso, os PJs podem encontrar um tesouro escondido dentro da masmorra, seja nos corpos de exploradores anteriores ou atrás de portas secretas. em uma jogada bem-sucedida para navegar na masmorra, um PJ pode gastar até 5 Esperanças para rolar esse número de d6. Cada resultado obtido concede ao grupo o seguinte saque ou equipamento: 1. Pedras preciosas soltas, joias, bugigangas ou moedas equivalentes a um punhado de ouro 2. Um item ou consumível comum 3. Um item ou consumível incomum 4. Um item ou consumível raro 5. Um item ou consumível lendário 6. Uma arma ou armadura do nível do grupo",
+          "nomeIngles": "Deep Pockets",
+          "textoIngles": "Once per rest, the PCs can find a cache of treasure inside the dungeon, either on the corpses of previous delvers or behind hidden doors. On a successful roll to navigate the dungeon, a PC can spend up to 5 Hope to roll that number of d6s. Each result rolled gains the party the following loot or equipment:\n\n1. Loose gemstones, jewelry, baubles, or coins equal to a handful of gold 2. A common item or consumable 3. An uncommon item or consumable 4. A rare item or consumable 5. A legendary item or consumable 6. A weapon or an armor from the party’s tier\n\nWhat were the previous owners like? How do the PCs plan to get their purloined items out of the dungeon?"
+        },
+        {
+          "nome": "Monstro Errante",
+          "tipo": "reação",
+          "perguntas": [
+            "Como essas criaturas vieram parar aqui?",
+            "O que estavam fazendo quando os PJs os encontraram?"
+          ],
+          "texto": "Quando o grupo entra em uma nova área da masmorra, você pode gastar um Medo para invocar 1d4 adversários no nível do grupo ou abaixo dele, dentro do alcance Distante, e rolar um d6. Com um resultado de 1 ou 2, os PJs percebem sinais de alerta e podem se preparar para o encontro; o primeiro PJ a fazer uma jogada de ação ganha vantagem nela. Com um resultado de 3 ou 4, o combate ocorre normalmente. Com um resultado de 5 ou 6, os adversários surpreendem os PJs e imediatamente entram em foco, e você ganha um Medo.",
+          "nomeIngles": "Wandering Monster",
+          "textoIngles": "When the party enters a new area of the dungeon, you can spend a Fear to summon 1d4 adversaries at or below the party’s tier within Far range and roll a d6. On a result of 1 or 2, the PCs notice warning signs and can prepare for the encounter; the first PC to make an action roll gains advantage on it. On a result of 3 or 4, the combat occurs as usual. On a result of 5 or 6, the adversaries get the drop on the PCs and immediately take the spotlight, and you gain a Fear.\n\nHow did these creatures come to be here? What were they doing when the PCs encountered them?",
+          "custoDeMedo": 1
+        },
+        {
+          "nome": "Armadilhas",
+          "tipo": "reação",
+          "perguntas": [
+            "Que tipos de armadilhas e perigos preenchem esta masmorra?",
+            "O que a construção deles revela sobre quem os projetou?",
+            "Alguma delas já foi acionada antes da chegada do grupo?"
+          ],
+          "texto": "Quando um PJ falhar em uma tentativa de ação para navegar pela masmorra, ativar uma armadilha ou perigo, como poço de espinhos, manopla de lâminas oscilantes ou sala trancada que lentamente se enche de água, o grupo deve ter sucesso em uma jogada de ação conjunta para desativá-la, desarmá-la ou escapar dela. Em caso de falha, cada PJ envolvido na jogada de ação conjunta sofre 2d6+3 de dano físico ou mágico (à escolha do mestre).",
+          "nomeIngles": "Booby Traps",
+          "textoIngles": "When a PC fails an action roll to navigate the dungeon, activate a trap or hazard such as a spike pit, gauntlet of swinging blades, or locked room slowly filling with water. The party must succeed on a group action roll to deactivate, disarm, or escape it. On a failure, each PC involved in the group action roll takes 2d6+3 physical or magic damage (GM’s choice).\n\nWhat kinds of traps and hazards fill this dungeon? What does their construction tell you about whoever designed them? Have any of them been triggered prior to the party’s arrival?"
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/deadly-dungeon",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "DEADLY DUNGEON",
+          "lineStart": 12162,
+          "lineEnd": 12192,
+          "pdfPageStart": 168,
+          "pdfPageEnd": 168
+        },
+        "corpusSha256": "cc2b6b13ad241da70b4f721415adec73c8773a7f1efc2c443826eb6b705ece6e"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "duel",
+      "nome": "Duelo",
+      "nomeIngles": "Duel",
+      "tipo": "Evento",
+      "patamar": 2,
+      "dificuldade": "Special (see “Relative Strength”)",
+      "adversariosPotenciais": [
+        {
+          "grupo": "Qualquer",
+          "adversarios": [
+            {
+              "nome": "Qualquer",
+              "semFicha": "seleção livre conforme o SRD2"
+            }
+          ]
+        }
+      ],
+      "descricao": "Um adversário desafia um dos PJs para um combate individual enquanto o resto do grupo o auxilia de fora.",
+      "descricaoIngles": "An adversary challenges one of the PCs to single combat as the rest of the party aids them from the sidelines.",
+      "impulsos": [
+        "Foque em um PJ",
+        "provoque-o a se comprometer demais",
+        "inflija uma derrota embaraçosa",
+        "deixe o resto do grupo de fora"
+      ],
+      "impulsosIngles": [
+        "Focus on one PC",
+        "goad them into overcommitting",
+        "inflict an embarrassing defeat",
+        "sideline the rest of the party"
+      ],
+      "habilidades": [
+        {
+          "nome": "“Exijo Satisfação.”",
+          "tipo": "passiva",
+          "perguntas": [
+            "Por que esse PJ foi escolhido?",
+            "O que ele espera ganhar se se mostrar vitorioso?"
+          ],
+          "texto": "Quando um adversário desafia um PJ para um combate um-a-um, o PJ escolhe se aceita ou não. Se ele rejeitar o desafio, deve marcar um Estresse, e você ganha um Medo. Se um PJ aceitar o desafio de um adversário, ative uma Contagem Regressiva de Progresso (6) e uma Contagem Regressiva de Consequência (4). Se a Contagem Regressiva de Progresso disparar primeiro, o PJ vence o Duelo e ganha um favor ou concessão do adversário. Se a Contagem Regressiva de Consequência disparar primeiro, o adversário vence o Duelo e reivindica um favor ou concessão do PJ.",
+          "nomeIngles": "“I Demand Satisfaction.”",
+          "textoIngles": "When an adversary challenges a PC to one-on-one combat, the PC chooses whether to accept. If they reject the challenge, they must mark a Stress, and you gain a Fear. If a PC accepts an adversary’s challenge, activate a Progress Countdown (6) and a Consequence Countdown (4). If the Progress Countdown triggers first, the PC wins the Duel and gains a favor or concession from their adversary. If the Consequence Countdown triggers first, the adversary wins the Duel and claims a favor or concession from the PC.\n\nWhy was this PC chosen? What do they expect to win if they prove victorious?",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Força Relativa",
+          "tipo": "passiva",
+          "perguntas": [
+            "Quem lança o desafio?",
+            "Pelo que eles estão lutando?"
+          ],
+          "texto": "A Dificuldade deste ambiente é igual à do adversário que lançou o desafio.",
+          "nomeIngles": "Relative Strength",
+          "textoIngles": "The Difficulty of this environment equals that of the adversary who issued the challenge.\n\nWho issues the challenge? What are they fighting for?"
+        },
+        {
+          "nome": "Regras de Engajamento",
+          "tipo": "passiva",
+          "perguntas": [
+            "Onde ocorre esse conflito?",
+            "Como o ambiente oferece ao restante do grupo uma oportunidade de ajudar seu aliado sem interferir?"
+          ],
+          "texto": "Durante o Duelo, o PJ desafiado é o único que pode fazer jogadas de ação. Os outros PJs só podem ajudar o PJ desafiado indiretamente: Eles podem Ajudar um Aliado, iniciar jogadas de ação em grupo ou jogadas em equipe, e usar qualquer uma de suas habilidades que não afetem diretamente o adversário desafiador.",
+          "nomeIngles": "Rules of Engagement",
+          "textoIngles": "During the Duel, the challenged PC is the only one who can make action rolls. Other PCs can only aid the challenged PC indirectly: They can Help an Ally, initiate group action rolls or Tag Team Rolls, and use any of their features that don’t directly affect the challenging adversary.\n\nWhere does this conflict take place? How does the environment offer the rest of the party an opportunity to aid their ally without interfering?"
+        },
+        {
+          "nome": "Truques Sujos",
+          "tipo": "ação",
+          "perguntas": [
+            "O que é proibido neste conflito?",
+            "Como o aliado do adversário contorna as regras sem violá-las, ou quebra as regras sem ser pego?",
+            "Como os personagens podem equilibrar a situação?"
+          ],
+          "texto": "Gaste um Medo para permitir que o adversário desafiador ou um de seus aliados trapaceie. Um personagem pode perceber a ação desonesta com uma Jogada de Reação de Instinto bem-sucedida e responder da mesma maneira.",
+          "nomeIngles": "Dirty Tricks",
+          "textoIngles": "Spend a Fear to have the challenging adversary or one of their allies cheat. A PC can notice their underhanded action with a successful Instinct Reaction Roll and respond in kind.\n\nWhat’s off-limits in this conflict? How does the adversary’s ally bend the rules without breaking them, or break the rules without getting caught? How can the PCs rebalance the scales?",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/duel",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "DUEL",
+          "lineStart": 12194,
+          "lineEnd": 12222,
+          "pdfPageStart": 168,
+          "pdfPageEnd": 168
+        },
+        "corpusSha256": "9981ee6eb11202b0342f8a07102d8a80f5da70aee6c37238860b4273594c8d87"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "heist",
+      "nome": "Assalto",
+      "nomeIngles": "Heist",
+      "tipo": "Evento",
+      "patamar": 2,
+      "dificuldade": 14,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Guarda-Chefe, Destruidor Minotauro, Guardião dos Segredos, Guardião Espectral",
+          "adversarios": [
+            {
+              "nome": "guarda chefe",
+              "adversarioId": "guarda-chefe"
+            },
+            {
+              "nome": "espectro guardião",
+              "adversarioId": "espectro-guardiao"
+            },
+            {
+              "nome": "minotauro arrasador",
+              "adversarioId": "minotauro-arrasador"
+            },
+            {
+              "nome": "portador dos segredos",
+              "adversarioId": "portador-dos-segredos"
+            }
+          ]
+        }
+      ],
+      "descricao": "O grupo deve obter acesso a um local oculto ou bem protegido para adquirir as informações ou itens que estão guardados lá.",
+      "descricaoIngles": "The party must gain access to a hidden or well-protected location to acquire the information or items secured within.",
+      "impulsos": [
+        "Faça o grupo se preparar",
+        "separe-os",
+        "crie obstáculos",
+        "prenda-os dentro",
+        "esgote seus recursos"
+      ],
+      "impulsosIngles": [
+        "Make the party prepare",
+        "split them up",
+        "throw up obstacles",
+        "trap them inside",
+        "use up their resources"
+      ],
+      "habilidades": [
+        {
+          "nome": "Trabalho Preparatório",
+          "tipo": "passiva",
+          "perguntas": [
+            "Como o PJ ganha essa vantagem?",
+            "Eles fazem isso sozinhos ou pedem ajuda?",
+            "Quais complicações imprevistas surgem durante o próprio assalto?"
+          ],
+          "texto": "Antes do Assalto, cada PJ tem a oportunidade de reunir uma informação-chave, vigiar a localização ou adquirir uma ferramenta ou recurso útil. Dê a cada jogador a oportunidade de descrever um obstáculo que esperam encontrar e como se preparam para superá-lo, depois peça que façam uma jogada de ação. Em caso de sucesso, eles obtêm a informação ou recurso que buscavam. Em caso de sucesso com Medo, é menos útil do que esperavam (por exemplo, eles descobrem a localização de um ponto de acesso escondido, mas descobrem que invadi-lo provavelmente será difícil e barulhento).",
+          "nomeIngles": "Prep Work",
+          "textoIngles": "Prior to the Heist, each PC has the opportunity to gather a key piece of information, surveil the location, or acquire a helpful tool or resource. Give each player the opportunity to describe one obstacle they expect to encounter and how they set themselves up to overcome it, then have them make an action roll. On a success, they get the information or asset they sought. On a success with Fear, it’s less useful than they expected (for example, they discover the location of a hidden access point but learn that breaching it will likely be difficult and noisy).\n\nHow does the PC gain this advantage? Do they go it alone or ask for help? What unforeseen complications arise during the heist itself?"
+        },
+        {
+          "nome": "Infiltração",
+          "tipo": "passiva",
+          "perguntas": [
+            "O que o grupo está tentando conseguir e onde isso está localizado?",
+            "Quais obstáculos inesperados eles irão encontrar?",
+            "O que acontece se o grupo for pego?"
+          ],
+          "texto": "Estabeleça o objetivo do Assalto e inicie duas contagens regressivas dinâmicas: uma Contagem Regressiva de Progresso (12) para representar o trabalho do grupo em direção ao objetivo e uma Contagem Regressiva de Consequências (10) para representar o aumento do risco de descoberta e captura. Avance ambas de acordo com a tabela de Avanço de Contagem Regressiva Dinâmica à medida que os PJs realizam jogadas de ação para completar o Assalto. Se a Contagem Regressiva de Progresso for acionada primeiro, ponha em foco para usar o recurso “Exfiltração”. Se a Contagem Regressiva de Consequências for acionada primeiro, ganhe 1d4 de Medo, ponha em foco e use o recurso “Soar o Alarme”.",
+          "nomeIngles": "Infiltration",
+          "textoIngles": "Establish the goal of the Heist and start two dynamic countdowns: a Progress Countdown (12) to represent the party’s work toward their goal and a Consequence Countdown (10) to represent the rising risk of discovery and capture. Advance both according to the Dynamic Countdown Advancement table as the PCs make action rolls to complete the Heist. If the Progress Countdown triggers first, spotlight this environment to use the “Exfiltration” feature. If the Consequence Countdown triggers first, gain 1d4 Fear, spotlight this environment, and use the “Sound the Alarm” feature.\n\nWhat is the party going after, and where is it located? What unexpected obstacles will they encounter? What happens if the party gets caught?"
+        },
+        {
+          "nome": "Vi Isso Chegando",
+          "tipo": "passiva",
+          "perguntas": [
+            "O que o PJ preparou com antecedência?",
+            "Como ele sabia que precisaria disso?",
+            "Quanto lhe custou preparar, ou a quem ele deve um favor?"
+          ],
+          "texto": "Uma vez por sessão, um PJ pode gastar uma Esperança para explicar como se preparou para a situação atual e revelar uma informação chave (como a localização de uma passagem escondida ou a senha para uma área restrita) ou produzir um item útil (como o uniforme de um cultista deixado sem vigilância ou um consumível comum escondido em sua bota).",
+          "nomeIngles": "Saw This Coming",
+          "textoIngles": "Once per session, a PC can spend a Hope to explain how they prepared for the current situation and reveal a key piece of information (such as the location of a hidden passage or the password to a restricted area) or produce a helpful item (such as a cultist’s uniform left unattended or a common consumable hidden in their boot).\n\nWhat did the PC prepare in advance? How did they know they’d need it? What did it cost them to set up, or whom do they owe a favor to?"
+        },
+        {
+          "nome": "Exfiltração",
+          "tipo": "reação",
+          "perguntas": [
+            "O que torna sair ainda mais perigoso do que entrar?",
+            "Quais desenvolvimentos imprevistos atrapalham o plano original de fuga do grupo?"
+          ],
+          "texto": "Quando a Contagem Regressiva de Progresso é acionada, o grupo adquire o objeto do Assalto e deve ter sucesso em uma jogada de ação em grupo para escapar sem ser capturado. Em caso de falha, cada PJ recebe 2d12 de dano físico direto e deve marcar um Estresse.",
+          "nomeIngles": "Exfiltration",
+          "textoIngles": "When the Progress Countdown triggers, the party acquires the object of the Heist and must succeed on a group action roll to escape without capture. On a failure, each PC takes 2d12 direct physical damage and must mark a Stress.\n\nWhat makes getting out even more dangerous than getting in? What unforeseen developments stymie the party’s original escape plan?",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Soar o Alarme",
+          "tipo": "reação",
+          "perguntas": [
+            "O que torna esses adversários especialmente adequados para proteger este local?",
+            "O que eles sabem sobre este lugar que lhes dá uma vantagem?"
+          ],
+          "texto": "Quando a Contagem Regressiva da Consequência é acionada, o grupo é descoberto e a localização entra em Alerta Máximo. Invoque um número de adversários de Nível 2 igual ao número de PJs na cena e imediatamente ponha em foco deles. Enquanto este ambiente estiver em Alerta Máximo, todos os adversários recebem um bônus de +1 na sua Dificuldade.",
+          "nomeIngles": "Sound the Alarm",
+          "textoIngles": "When the Consequence Countdown triggers, the party is discovered and the location enters High Alert. Summon a number of Tier 2 adversaries equal to the number of PCs in the scene and immediately spotlight one. While this environment is on High Alert, all adversaries gain a +1 bonus to their Difficulty.\n\nWhat makes these adversaries uniquely suited to guard this location? What do they know about this place that gives them an edge?"
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/heist",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "HEIST",
+          "lineStart": 12298,
+          "lineEnd": 12330,
+          "pdfPageStart": 170,
+          "pdfPageEnd": 170
+        },
+        "corpusSha256": "233698f66f883ce7373aa0d1c83c16b5d9b43878e78cb4e598265aa9d1b23b43"
+      }
+    },
+    {
+      "id": "masquerade-ball",
+      "nome": "Baile de Máscaras",
+      "nomeIngles": "Masquerade Ball",
+      "tipo": "Social",
+      "patamar": 2,
+      "dificuldade": 14,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Operatives (Masked Thief, Master Assassin, Spy), Revelers (Courtesan, Merchant Baron, Royal Advisor)",
+          "adversarios": [
+            {
+              "nome": "comerciante",
+              "adversarioId": "comerciante"
+            },
+            {
+              "nome": "assassino mestre",
+              "adversarioId": "assassino-mestre"
+            },
+            {
+              "nome": "barão mercante",
+              "adversarioId": "barao-mercante"
+            },
+            {
+              "nome": "conselheiro real",
+              "adversarioId": "conselheiro-real"
+            },
+            {
+              "nome": "cortesão",
+              "adversarioId": "cortesao"
+            },
+            {
+              "nome": "espião",
+              "adversarioId": "espiao"
+            },
+            {
+              "nome": "patife mascarado",
+              "adversarioId": "patife-mascarado"
+            }
+          ]
+        }
+      ],
+      "descricao": "A high society gala where masked revelers trade secrets and favors.",
+      "descricaoIngles": "A high society gala where masked revelers trade secrets and favors.",
+      "impulsos": [
+        "Dance the night away",
+        "eat and be merry",
+        "make secret deals",
+        "trade valuable information"
+      ],
+      "impulsosIngles": [
+        "Dance the night away",
+        "eat and be merry",
+        "make secret deals",
+        "trade valuable information"
+      ],
+      "habilidades": [
+        {
+          "nome": "Costumes Required",
+          "tipo": "passiva",
+          "perguntas": [
+            "Como os PJs vêm vestidos?",
+            "O que seus trajes revelam sobre seus verdadeiros eus?"
+          ],
+          "texto": "Espera-se que todos no baile cheguem fantasiados. Os PJs têm vantagem nas jogadas de Presença para convencer os outros de que são alguém—ou algo—que não são.",
+          "nomeIngles": "Costumes Required",
+          "textoIngles": "Everyone at the ball is expected to arrive in costume. PCs have advantage on Presence Rolls to convince others they are someone—or something—they’re not.\n\nWhat do the PCs come dressed as? What do their costumes reveal about their true selves?"
+        },
+        {
+          "nome": "“Quer dançar?”",
+          "tipo": "passiva",
+          "perguntas": [
+            "O que é notável ou único sobre as danças que estão na moda aqui?",
+            "Onde os PJs aprenderam a executá-las?"
+          ],
+          "texto": "Enquanto dança, um PJ pode fazer um jogadas de Agilidade em vez de um jogadas de Presença para influenciar os outros.",
+          "nomeIngles": "“Care to Dance?”",
+          "textoIngles": "While dancing, a PC can make an Agility Roll instead of a Presence Roll to influence others.\n\nWhat’s notable or unique about the dances that are in fashion here? Where did the PCs learn how to perform them?"
+        },
+        {
+          "nome": "Identidade Equivocada",
+          "tipo": "ação",
+          "perguntas": [
+            "Quem o VIP acredita que ele seja?",
+            "Que portas esse engano abre?",
+            "Que perigos isso traz?"
+          ],
+          "texto": "Uma pessoa muito importante confunde um personagem jogador (PJ) com uma pessoa ainda mais importante. O alvo pode aproveitar o mal-entendido com uma Jogada de Reação de Presença. Em caso de sucesso, o PJ pode pedir ao VIP que faça um favor, transmita uma informação crucial ou faça uma apresentação. Em caso de falha, o PJ marca um Estresse ao ter sua verdadeira identidade descoberta e é ameaçado de ser expulso da festa.",
+          "nomeIngles": "Mistaken Identity",
+          "textoIngles": "A very important person confuses a PC with an even more important person. The target can play into the misunderstanding with a Presence Reaction Roll. On a success, the PC can ask the VIP to perform a favor, relay a key piece of information, or make an introduction. On a failure, the PC marks a Stress as their true identity is discovered, and they are threatened with ejection from the party.\n\nWho does the VIP mistake them for? What doors does their mistake open? What dangers does it bring?"
+        },
+        {
+          "nome": "Capa e Adaga",
+          "tipo": "ação",
+          "perguntas": [
+            "Para quem o agente trabalha?",
+            "Por que eles o enviaram ao baile de máscaras?"
+          ],
+          "texto": "Gaste um Medo para que um agente tente roubar algo valioso ou assassinar alguém importante. Um PJ pode fazer uma Jogada de Instinto para tentar percebê-lo antes que ele alcance seu objetivo. Em um sucesso, o PJ ganha a oportunidade de intervir. Em uma falha com Medo, o PJ é erroneamente implicado no crime.",
+          "nomeIngles": "Cloak and Dagger",
+          "textoIngles": "Spend a Fear to have an operative try to steal something valuable or assassinate someone important. A PC can make an Instinct Roll to try to notice them before they achieve their objective. On a success, the PC gains the opportunity to intervene. On a failure with Fear, the PC is erroneously implicated in the crime.\n\nWho does the operative work for? Why did they send them to the masquerade?",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/masquerade-ball",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "MASQUERADE BALL",
+          "lineStart": 12332,
+          "lineEnd": 12360,
+          "pdfPageStart": 170,
+          "pdfPageEnd": 170
+        },
+        "corpusSha256": "562310aadfc31f3e7c8880097d06cf6f020d39d07a236d85c86709ed7b249862"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "ocean-voyage",
+      "nome": "Viagem pelo Oceano",
+      "nomeIngles": "Ocean Voyage",
+      "tipo": "Travessia",
+      "patamar": 2,
+      "dificuldade": 14,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Habitantes do Mar Profundo (Enguias Elétricas, Kraken, Tubarão, Sereia), Piratas (Capitão Pirata, Saqueadores Piratas)",
+          "adversarios": [
+            {
+              "nome": "pirata capitão",
+              "adversarioId": "pirata-capitao"
+            },
+            {
+              "nome": "piratas saqueadores",
+              "adversarioId": "piratas-saqueadores"
+            },
+            {
+              "nome": "enguias elétricas",
+              "adversarioId": "enguias-eletricas"
+            },
+            {
+              "nome": "sereia",
+              "adversarioId": "sereia"
+            },
+            {
+              "nome": "tubarão",
+              "adversarioId": "tubarao"
+            },
+            {
+              "nome": "kraken",
+              "adversarioId": "kraken"
+            }
+          ]
+        }
+      ],
+      "descricao": "Os PJs conseguem passagem para um destino distante oferecendo seu trabalho em troca.",
+      "descricaoIngles": "The PCs gain passage to a far-off destination by offering their labor in exchange.",
+      "impulsos": [
+        "Revele o que se esconde sob as ondas",
+        "envie-os na direção errada",
+        "afunde o navio",
+        "esgote seus recursos"
+      ],
+      "impulsosIngles": [
+        "Reveal what lurks beneath the waves",
+        "send them in the wrong direction",
+        "sink the ship",
+        "use up their resources"
+      ],
+      "habilidades": [
+        {
+          "nome": "Mar Aberto",
+          "tipo": "passiva",
+          "perguntas": [
+            "Para onde o navio está indo?",
+            "Que perigos ao longo do caminho a tripulação comenta em tons baixos?"
+          ],
+          "texto": "Contagem Regressiva (8). Chegar ao destino requer que o grupo complete a Contagem Regressiva em Águas Abertas. Ela diminui quando um PJ obtém sucesso em uma jogada de ação para ajudar na jornada do navio.",
+          "nomeIngles": "Open Water",
+          "textoIngles": "Countdown (8). Reaching their destination requires the party to complete the Open Water Countdown. It ticks down when a PC succeeds on an action roll to aid the ship’s journey.\n\nWhere is the ship headed? What dangers along the route do the crew speak about in hushed tones?"
+        },
+        {
+          "nome": "Suprimentos Estão Acabando",
+          "tipo": "passiva",
+          "perguntas": [
+            "O que aconteceu com as rações?",
+            "Que medidas drásticas a tripulação toma para garantir que não morram todos de fome e sede?"
+          ],
+          "texto": "Na primeira vez que um PJ sofre uma falha em Medo nesta jornada, a tripulação descobre que a comida e a água potável no porão da nave foram contaminadas por pragas e mofo. Até que o grupo alcance seu destino, um PJ que fizer uma jogada de ação para avançar a Contagem Regressiva em Mar Aberto deve ter sucesso em uma jogada de reação de Força ou marcar Estresse primeiro.",
+          "nomeIngles": "Rations Run Low",
+          "textoIngles": "The first time a PC rolls a failure with Fear on this journey, the crew discovers that the food and fresh water in the ship’s hold have been befouled by pests and mold. Until the party reaches its destination, a PC who makes an action roll to advance the Open Water Countdown must succeed on a Strength Reaction Roll or mark a Stress first.\n\nWhat happened to the rations? What drastic measures does the crew take to ensure they don’t all die of hunger and thirst?",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "“Piratas!”",
+          "tipo": "ação",
+          "perguntas": [
+            "O capitão reconhece o navio que está perseguindo?",
+            "Quais práticas nada cavalheirescas os piratas desta região são famosos por?"
+          ],
+          "texto": "Gaste um Medo para ter um tripulante no ninho de corvo avistando velas negras no horizonte! Inicie uma Contagem Regressiva de Consequência (4). Se ela for acionada antes que o grupo alcance seu destino, os piratas alcançam o navio e o abordam. Ganhe um Medo e, em seguida, convoque um Capitão Pirata e três Hordas de Saqueadores Piratas em alcance Próximo do grupo.",
+          "nomeIngles": "“Pirates!”",
+          "textoIngles": "Spend a Fear to have a crewmember in the crow’s nest spy black sails on the horizon! Start a Consequence Countdown (4). If it triggers before the party reaches their destination, the pirates catch up to the ship and board it. Gain a Fear, then summon one Pirate Captain and three Hordes of Pirate Raiders within Close range of the party.\n\nDoes the captain recognize the ship that’s giving chase? What ungentlemanly practices are the pirates in this area famous for?",
+          "custoDeMedo": 1
+        },
+        {
+          "nome": "Mau Tempo",
+          "tipo": "reação",
+          "perguntas": [
+            "O que torna esse clima diferente de tudo que os PJs já experimentaram antes?",
+            "Como eles coordenam com a tripulação para encontrar o caminho através desse perigo?"
+          ],
+          "texto": "Quando a Contagem Regressiva de Águas Abertas atingir um número ímpar, role um d6. No resultado 4 ou superior, o navio enfrenta uma tempestade, como um banco de neblina que dificulta a navegação ou uma rajada que ameaça virar o navio. Cada PJ deve ter sucesso em uma jogada de reação usando uma característica relevante escolhida pelo mestre ou marcar 1d4 de Estresse.",
+          "nomeIngles": "Foul Weather",
+          "textoIngles": "When the Open Water Countdown ticks down to an odd number, roll a d6. On a result of 4 or higher, the ship runs into a patch of foul weather, such as a fog bank that makes navigation difficult or a squall that threatens to capsize the ship. Each PC must succeed on a reaction roll using a relevant trait chosen by the GM or mark 1d4 Stress.\n\nWhat makes this weather different from anything the PCs have experienced before? How do they coordinate with the crew to find their way through this hazard?"
+        },
+        {
+          "nome": "Aqui Há Monstros",
+          "tipo": "reação",
+          "perguntas": [
+            "O que atrai essas criaturas para o navio?",
+            "Há alguma maneira de afastá-las sem combate?"
+          ],
+          "texto": "Quando a Contagem Regressiva das Águas Abertas chegar a um número par, role um d6. Com um resultado de 4 ou mais, invoque 1d4 Habitantes das Profundezas.",
+          "nomeIngles": "Here There Be Monsters",
+          "textoIngles": "When the Open Water Countdown ticks down to an even number, roll a d6. On a result of 4 or higher, summon 1d4 Deep Sea Denizens.\n\nWhat attracts these creatures to the ship? Is there any way to drive them off without combat?"
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/ocean-voyage",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "OCEAN VOYAGE",
+          "lineStart": 12394,
+          "lineEnd": 12426,
+          "pdfPageStart": 171,
+          "pdfPageEnd": 171
+        },
+        "corpusSha256": "aa8bab72dcc5457095b0b64d1bcbdc5b0dace8d50deb02e505f2ac47263cd0d3"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "vast-desert",
+      "nome": "Deserto Vasto",
+      "nomeIngles": "Vast Desert",
+      "tipo": "Travessia",
+      "patamar": 2,
+      "dificuldade": 14,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Cavador Ácido, Saqueadores do Deserto (Bandidos Faca Serrilhada), Tubarão de Terra, Vermes de Areia",
+          "adversarios": [
+            {
+              "nome": "punhal escarpado, bandido",
+              "adversarioId": "punhal-escarpado-bandido"
+            },
+            {
+              "nome": "roedor corrosivo",
+              "adversarioId": "roedor-corrosivo"
+            },
+            {
+              "nome": "tubarão terrestre",
+              "adversarioId": "landshark"
+            },
+            {
+              "nome": "verme das areias",
+              "adversarioId": "sandwyrm"
+            }
+          ]
+        }
+      ],
+      "descricao": "Uma extensão ressequida de dunas arenosas, salinas desertas e formações rochosas moldadas pelo vento.",
+      "descricaoIngles": "A parched expanse of sandy dunes, desolate salt flats, and windblown rock formations.",
+      "impulsos": [
+        "Desidratar",
+        "mostrar beleza desolada",
+        "ameaçar perigo no horizonte"
+      ],
+      "impulsosIngles": [
+        "Dehydrate",
+        "show desolate beauty",
+        "threaten danger on the horizon"
+      ],
+      "habilidades": [
+        {
+          "nome": "Areias Infinitas",
+          "tipo": "passiva",
+          "perguntas": [
+            "Como os PJs viajam pelo deserto?",
+            "O que, além da distância extrema e da falta de água, torna esta área difícil de atravessar?"
+          ],
+          "texto": "Contagem regressiva (8). Para atravessar o deserto, o grupo deve completar a contagem regressiva. Ela diminui sempre que um PJ consegue em uma jogada de ação para navegar na aparentemente interminável extensão.",
+          "nomeIngles": "Endless Sands",
+          "textoIngles": "Countdown (8). To cross the desert, the party must complete the countdown. It ticks down whenever a PC succeeds on an action roll to navigate the seemingly endless expanse.\n\nHow do the PCs travel through the desert? What beyond the extreme distance and lack of water makes this area difficult to cross?"
+        },
+        {
+          "nome": "Abastecimento de Água",
+          "tipo": "passiva",
+          "perguntas": [
+            "Que tipos de flora ou características do terreno que preservam água os PJs ouviram que podem ser encontrados neste deserto?",
+            "Como os PJs coletam e transportam a água que encontram?"
+          ],
+          "texto": "Quando o grupo inicia sua jornada, coloque um número de marcadores neste bloco de estatísticas igual a 1 + o número de PJs na cena. Remova um marcador no final de cada descanso prolongado ou quando um PJ falhar em uma jogada de ação para navegar pelo deserto. Quando um marcador deveria ser removido, mas não há nenhum restante, cada PJ deve marcar 1 de PV e 1 de Estresse. Um PJ pode adicionar um marcador a este bloco de estatísticas usando um movimento de descanso e realizando uma jogada bem-sucedida de Conhecimento para caçar água.",
+          "nomeIngles": "Water Supply",
+          "textoIngles": "When the party starts their journey, place a number of tokens on this stat block equal to 1 + the number of PCs in the scene. Remove a token at the end of each long rest or when a PC fails an action roll to navigate the desert. When a token would be removed but there are none left, each PC must mark a HP and a Stress. A PC can add a token to this stat block by using a downtime move and making a successful Knowledge Roll to hunt for water.\n\nWhat sorts of water-preserving flora or terrain features have the PCs heard might be found in this desert? How do the PCs collect and carry the water they find?"
+        },
+        {
+          "nome": "Areias Movediças",
+          "tipo": "passiva",
+          "perguntas": [
+            "Como as dunas e a paisagem mudam sempre que os heróis descansam?",
+            "O que é coberto ou descoberto pelo vento?"
+          ],
+          "texto": "As dunas sempre em mudança e o vento cortante tornam difícil seguir criaturas por este ambiente. jogadas de ação para rastrear criaturas pelo deserto são feitos com desvantagem.",
+          "nomeIngles": "Shifting Sands",
+          "textoIngles": "The ever-shifting dunes and the whipping wind make trailing creatures through this environment difficult. Action rolls to track creatures through the desert are made with disadvantage.\n\nHow do the dunes and landscape shift whenever the heroes rest? What is covered or uncovered by the wind?"
+        },
+        {
+          "nome": "Trovoada",
+          "tipo": "ação",
+          "perguntas": [
+            "Como a tempestade parece para os heróis enquanto avança de quilômetros de distância?",
+            "A tempestade é natural ou sobrenatural?",
+            "Como você consegue perceber?"
+          ],
+          "texto": "Gaste um Medo para fazer um aguaceiro torrencial encharcar a terra. Cada PJ deve procurar abrigo da tempestade ou coletar água da chuva. Cada PJ que procurar abrigo marca um Estresse. Os PJs que coletarem água da chuva fazem uma jogada de ação em grupo. - Em um sucesso com Esperança, adicione 1d4 marcadores ao Suprimento de Água. - Em um sucesso com Medo, adicione 1 marcador ao Suprimento de Água. - Em uma falha com Esperança, cada PJ que participou da jogada de ação em grupo marca um Estresse. - Em uma falha com Medo, cada PJ que participou da jogada de ação em grupo marca um Estresse, e o PJ que rolou o menor valor sofre 2d8+4 de dano físico pela tempestade.",
+          "nomeIngles": "Thunderstorm",
+          "textoIngles": "Spend a Fear to have a torrential downpour soak the land. Each PC must either seek shelter from the storm or collect rainwater. Each PC who seeks shelter marks a Stress. The PCs who collect rainwater make a group action roll.\n\n- On a success with Hope, add 1d4 tokens to the Water Supply.\n- On a success with Fear, add 1 token to the Water Supply.\n- On a failure with Hope, each PC who took part in the group action roll marks a Stress.\n- On a failure with Fear, each PC who took part in the group action roll marks a Stress, and the PC who rolled the lowest takes 2d8+4 physical damage from the storm.\n\nHow does the storm look to the heroes as it rolls in from miles away? Is the storm natural or unnatural? How can you tell?",
+          "custoDeMedo": 1
+        },
+        {
+          "nome": "Tempestade de Areia",
+          "tipo": "ação",
+          "perguntas": [
+            "O que os habitantes deste deserto usam para enfrentar as tempestades de areia?",
+            "Como são projetadas as habitações que o grupo encontra aqui para resistir aos ventos?"
+          ],
+          "texto": "Gaste um Medo para invocar uma tempestade de areia que desorienta e atormenta os viajantes. Cada PJ sofre 2d6+3 de dano físico. Até que a tempestade de areia se dissipe, um PJ que fizer uma jogada de ação deve passar em uma jogada de reação de Agilidade para evitar o redemoinho de pedras e detritos, ou sofrer 2d6+3 de dano físico.",
+          "nomeIngles": "Sandstorm",
+          "textoIngles": "Spend a Fear to summon a sandstorm that disorients and harries travelers. Each PC takes 2d6+3 physical damage. Until the sandstorm dissipates, a PC who makes an action roll must succeed on an Agility Reaction Roll to avoid the swirl of rocks and debris or take 2d6+3 physical damage.\n\nWhat do the dwellers of this desert wear to weather the sandstorms? How are the dwelling places the party finds here designed to withstand the winds?",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/vast-desert",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "VAST DESERT",
+          "lineStart": 12430,
+          "lineEnd": 12467,
+          "pdfPageStart": 172,
+          "pdfPageEnd": 172
+        },
+        "corpusSha256": "11f2da48cdff4026377a8e5b77b6ab8ff4370f0be33894be8467eeb59c662f10"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "witchs-hut",
+      "nome": "Cabana da Bruxa",
+      "nomeIngles": "Witch’s Hut",
+      "tipo": "Exploração",
+      "patamar": 2,
+      "dificuldade": 14,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Cabana Pé-de-Galinha, Defesas Encantadas (Gárgula, Escárnio Voraz, Espantalho), Valdenhax, As Vítimas da Bruxa (Abóboras de Halloween, Mordedores Redcap)",
+          "adversarios": [
+            {
+              "nome": "mordedores de barrete vermelho",
+              "adversarioId": "redcap-biters"
+            },
+            {
+              "nome": "cabana com pés de galinha",
+              "adversarioId": "chicken-foot-hut"
+            },
+            {
+              "nome": "gárgula",
+              "adversarioId": "gargoyle"
+            },
+            {
+              "nome": "cabeça de abóbora",
+              "adversarioId": "jack-o-lantern"
+            },
+            {
+              "nome": "arremedo voraz",
+              "adversarioId": "ravenous-mockery"
+            },
+            {
+              "nome": "espantalho",
+              "adversarioId": "scarecrow"
+            },
+            {
+              "nome": "valdenhax",
+              "adversarioId": "valdenhax"
+            }
+          ]
+        }
+      ],
+      "descricao": "Uma cabana rústica, sem janelas, apoiada em duas enormes pernas de galinha.",
+      "descricaoIngles": "A rustic, windowless hut sitting atop two huge chicken legs.",
+      "impulsos": [
+        "Assuste-os",
+        "Faça-os esperar até o retorno da bruxa",
+        "Tranque-os dentro",
+        "Mude para um local diferente",
+        "Tente atraí-los com objetos mágicos curiosos"
+      ],
+      "impulsosIngles": [
+        "Creep them out",
+        "delay them until the witch’s return",
+        "lock them inside",
+        "move to a different location",
+        "tempt them with magical oddities"
+      ],
+      "habilidades": [
+        {
+          "nome": "Maior por Dentro",
+          "tipo": "passiva",
+          "perguntas": [
+            "Existe algum padrão na maneira como a cabana se rearranja?",
+            "Qual é o local mais surpreendente que os PJs poderiam encontrar aqui?"
+          ],
+          "texto": "Embora o exterior da cabana seja uma casa rústica de um único cômodo, o interior é uma propriedade em constante transformação de esplendor assombroso, repleta de diversos quartos, bibliotecas e jardins internos, entre outras instalações misteriosas.",
+          "nomeIngles": "Bigger on the Inside",
+          "textoIngles": "Though the hut’s exterior is a rustic single-room cottage, the interior is an ever-shifting estate of haunting splendor replete with numerous bedrooms, libraries, and indoor gardens, among other mysterious installations.\n\nIs there any pattern to the way the hut rearranges itself? What is the most surprising location the PCs could find here?"
+        },
+        {
+          "nome": "Coleção de Bonecas Assustadoras",
+          "tipo": "passiva",
+          "perguntas": [
+            "Quem eram essas bonecas antes?",
+            "Existe alguma forma de libertá-las de seu cativeiro?"
+          ],
+          "texto": "Contagem regressiva (5). Por toda a cabana, os PJs podem ver muitas, muitas bonecas de porcelana ou madeira com olhos estranhamente realistas. Quando o grupo entra pela primeira vez na linha de visão de uma boneca, ative a contagem regressiva. Ela diminui quando um PJ falha em uma rolagem ou rola com Medo. Quando isso acontece, as bonecas ganham vida e atacam. Invoque um número de bonecas vivas (Mordedores Redcap) igual ao dobro do número de PJs.",
+          "nomeIngles": "Creepy Doll Collection",
+          "textoIngles": "Countdown (5). Throughout the hut, the PCs can see many, many porcelain or wooden dolls with strangely lifelike eyes. When the party first enters a doll’s line of sight, activate the countdown. It ticks down when a PC fails a roll or rolls with Fear. When it triggers, the dolls come to life and attack. Summon a number of living dolls (Redcap Biters) equal to twice the number of PCs.\n\nWho were these dolls before? Is there any way to free them from their imprisonment?"
+        },
+        {
+          "nome": "Poção de Bruxas",
+          "tipo": "passiva",
+          "perguntas": [
+            "Que tipo de misturas a bruxa que possui esta cabana costuma preparar?",
+            "O que a bruxa faria se descobrisse os PJs usando suas coisas?"
+          ],
+          "texto": "A cabana contém uma oficina com todas as ferramentas ou componentes que uma bruxa poderia precisar, incluindo um grande caldeirão de ferro colocado sobre um fogo fumegante. Um PJ que quiser usar a oficina pode fazer uma jogada de Conjuração para criar uma poção mágica ou veneno da tabela de Consumíveis. - Qualquer Falha: O experimento explode na cara deles—literalmente. O PJ sofre 2d10+2 de dano mágico. - Qualquer Sucesso: O PJ rola um número de d12s igual a 1 + seu nível, soma os resultados e ganha o consumível que corresponda a esse valor na tabela de Consumíveis. Se ele tiver obtido sucesso crítico, pode rerrolar qualquer d12 que tenha dado 1.",
+          "nomeIngles": "Witches’ Brew",
+          "textoIngles": "The hut contains a workshop with every tool or component a witch could need, including a large iron cauldron set atop a smoldering fire. A PC who wants to use the workshop can make a Spellcast Roll to craft a magic potion or poison from the Consumables table.\n\n- Any Failure: The experiment blows up in their face—literally. The PC takes 2d10+2 magic damage.\n- Any Success: The PC rolls a number of d12s equal to 1 + their tier, adds the results together, and gains the consumable that matches that value on the Consumables table. If they critically succeeded, they can reroll any d12s showing a result of 1.\n\nWhat sorts of concoctions does the witch who owns this hut specialize in? What would the witch do if they found the PCs using their things?"
+        },
+        {
+          "nome": "Luxado",
+          "tipo": "reação",
+          "perguntas": [
+            "Por que a cabana se move com tanta frequência?",
+            "Para onde ela deseja levar os PJs?",
+            "Existe alguma maneira de direcioná-la para um local específico?"
+          ],
+          "texto": "O tempo se move de maneira diferente dentro da Cabana da Bruxa. Quando a porta da cabana está fechada, role um d6. Com um resultado de 4 ou mais, a cabana se move para um local diferente—geralmente impossivelmente distante—que só é revelado aos PJs quando eles abrem a porta da cabana novamente.",
+          "nomeIngles": "Dislocated",
+          "textoIngles": "Time moves differently inside the Witch’s Hut. When the door to the hut is closed, roll a d6. On a result of 4 or higher, the hut moves to a different—often impossibly far–location that’s only revealed to the PCs when they open the hut’s door again.\n\nWhy does the hut move so often? Where does it wish to bring the PCs? Is there any way to aim it at a specific location?"
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/witchs-hut",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "WITCH’S HUT",
+          "lineStart": 12469,
+          "lineEnd": 12500,
+          "pdfPageStart": 172,
+          "pdfPageEnd": 172
+        },
+        "corpusSha256": "1a7fe64741b7e09ae37bcd74c5c08ff152bca8aa75c6a7a399de59fb1f2b4bd9"
+      }
+    },
+    {
+      "id": "archmages-tower",
+      "nome": "Torre do Arquimago",
+      "nomeIngles": "Archmage’s Tower",
+      "tipo": "Exploração",
+      "patamar": 3,
+      "dificuldade": 16,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Criações Alquímicas (Quimera, Lâmia, Manticora), Arquimago",
+          "adversarios": [
+            {
+              "nome": "arquimago",
+              "adversarioId": "archmage"
+            },
+            {
+              "nome": "quimera",
+              "adversarioId": "chimera"
+            },
+            {
+              "nome": "lâmia",
+              "adversarioId": "lamia"
+            },
+            {
+              "nome": "mantícora",
+              "adversarioId": "manticore"
+            }
+          ]
+        }
+      ],
+      "descricao": "Uma torre impossivelmente alta que perfura os céus e ressoa com imenso poder.",
+      "descricaoIngles": "An impossibly tall spire that pierces the heavens and resonates with immense power.",
+      "impulsos": [
+        "Coletar energia mágica",
+        "Esgotar intrusos",
+        "Revelar o desconhecido",
+        "Liberar explosões de poder mágico"
+      ],
+      "impulsosIngles": [
+        "Collect magical energy",
+        "exhaust intruders",
+        "reveal the unknown",
+        "unleash bursts of magical power"
+      ],
+      "habilidades": [
+        {
+          "nome": "Defesas Místicas",
+          "tipo": "passiva",
+          "perguntas": [
+            "O que os desenhos das defesas do arquimago dizem sobre sua área específica de especialização?",
+            "Qual estilo ou toque característico todas as armadilhas e perigos compartilham?"
+          ],
+          "texto": "Contagem regressiva (12). Para subir na torre, os PJs devem completar a contagem regressiva. Em caso de falha ou de um resultado com Medo, eles acionam uma das muitas armadilhas e perigos arcanos do arquimago, recebendo 3d10 de dano mágico. Em caso de falha com Medo, o dano causado recebe um bônus igual ao nível do PJ.",
+          "nomeIngles": "Mystical Defenses",
+          "textoIngles": "Countdown (12). To climb the tower, the PCs must complete the countdown. On a failure or a roll with Fear, they trigger one of the archmage’s many arcane traps and hazards, taking 3d10 magic damage. On a failure with Fear, the damage dealt gains a bonus equal to the PC’s level.\n\nWhat do the designs of the archmage’s defenses tell you about their specific area of expertise? What signature style or flourish do the traps and hazards all share?"
+        },
+        {
+          "nome": "Ninho do Arquimago",
+          "tipo": "passiva",
+          "perguntas": [
+            "Que parte do ninho chama sua atenção?",
+            "O que as anotações do arquimago revelam para você?"
+          ],
+          "texto": "O último andar da torre é um laboratório com muitos compartimentos, biblioteca e oficina, contendo tudo o que é necessário para estudar magia em suas formas mais elevadas. Um PJ com o atributo de Conjuração pode fazer uma Jogada de Conhecimento para participar da pesquisa do arquimago. Em um sucesso, ele ganha um bônus de +1 nas suas jogadas de Conjuração até seu próximo descanso prolongado. Em uma falha, sua investigação dá errado e ele sofre 3d8+4 de dano mágico.",
+          "nomeIngles": "Archmage’s Aerie",
+          "textoIngles": "The top floor of the tower is a many-chambered laboratory, library, and workshop containing everything needed to study magic in its highest forms. A PC with a Spellcast Trait can make a Knowledge Roll to partake in the archmage’s research. On a success, they gain a +1 bonus to their Spellcast Rolls until their next long rest. On a failure, their investigation goes wrong, and they take 3d8+4 magic damage.\n\nWhat part of the aerie calls to you? What do the archmage’s notes reveal to you?"
+        },
+        {
+          "nome": "Adversários Fundidos",
+          "tipo": "reação",
+          "perguntas": [
+            "Quais criaturas o arquimago escolheu combinar?",
+            "O que ele espera aprender ao fazer isso?"
+          ],
+          "texto": "Gaste um Medo para invocar dois adversários dentro do alcance Próximo de um PJ. Cada adversário pode usar as características do outro como se fossem suas.",
+          "nomeIngles": "Amalgamated Adversaries",
+          "textoIngles": "Spend a Fear to summon two adversaries within Close range of a PC. Each adversary can use the other’s features as if they were their own.\n\nWhich creatures has the archmage chosen to combine? What do they hope to learn in doing so?",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/archmages-tower",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "ARCHMAGE’S TOWER",
+          "lineStart": 12506,
+          "lineEnd": 12530,
+          "pdfPageStart": 173,
+          "pdfPageEnd": 173
+        },
+        "corpusSha256": "dc303fffaf7cdb7b1ff20429cd790ce5828139a05233a5ee5d8002bb696526ab"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "astral-realm",
+      "nome": "Reino Astral",
+      "nomeIngles": "Astral Realm",
+      "tipo": "Travessia",
+      "patamar": 3,
+      "dificuldade": 16,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Demônio do Desespero, Faísca Elemental, Sacerdote da Dor, Vampiros Psíquicos (Vampiro Chefe, Crianças da Noite)",
+          "adversarios": [
+            {
+              "nome": "centelha elemental",
+              "adversarioId": "centelha-elemental"
+            },
+            {
+              "nome": "demônio do desespero",
+              "adversarioId": "demonio-do-desespero"
+            },
+            {
+              "nome": "vampiro",
+              "adversarioId": "vampiro"
+            },
+            {
+              "nome": "vampiro mestre",
+              "adversarioId": "vampiro-mestre"
+            },
+            {
+              "nome": "filhos da noite",
+              "adversarioId": "night-children"
+            },
+            {
+              "nome": "sacerdote da dor",
+              "adversarioId": "pain-priest"
+            }
+          ]
+        }
+      ],
+      "descricao": "Um reino psíquico de energia e emoção, onde os fortes de espírito podem reformular as regras da realidade.",
+      "descricaoIngles": "A psychic realm of energy and emotion, where the strong in spirit can reshape the rules of reality.",
+      "impulsos": [
+        "Ataque suas psiches",
+        "convoque seus medos subconscientes",
+        "distorça suas percepções"
+      ],
+      "impulsosIngles": [
+        "Attack their psyches",
+        "summon their subconscious fears",
+        "warp their perceptions"
+      ],
+      "habilidades": [
+        {
+          "nome": "Experiência Fora do Corpo",
+          "tipo": "passiva",
+          "perguntas": [
+            "Como a projeção de sua autoimagem mental difere de sua aparência física?",
+            "Qual delas você considera o “verdadeiro” você?"
+          ],
+          "texto": "Porque o grupo não está fisicamente neste reino, jogadas de Força, Agilidade e Finesse falham automaticamente. Além disso, quando um personagem deveria marcar um PV, ele deve perder uma Esperança ou marcar um Estresse em vez disso. Se um personagem não puder marcar um Estresse, ele deve realizar um movimento de morte.",
+          "nomeIngles": "Out-of-Body Experience",
+          "textoIngles": "Because the party isn’t physically in this realm, Strength, Agility, and Finesse Rolls automatically fail. Additionally, when a character would mark a HP, they must lose a Hope or mark a Stress instead. If a character can’t mark a Stress, they must make a death move.\n\nHow does the projection of your mental self-image differ from your physical appearance? Which one do you consider the “real” you?",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Manifestações Mentais",
+          "tipo": "passiva",
+          "perguntas": [
+            "O construto que você manifesta é uma memória da vida real ou uma criação da sua própria imaginação?",
+            "Em qual detalhe-chave você se concentra para torná-lo mais estável?"
+          ],
+          "texto": "Com uma jogada de Conhecimento bem-sucedida, os PJs podem alterar o ambiente psíquico, como invertendo a gravidade ou conjurando uma escada que se monta rapidamente sozinha. Um PJ pode usar uma manifestação mental uma vez por cena para ganhar vantagem em uma jogada para navegar pelo Reino Astral.",
+          "nomeIngles": "Mental Manifestations",
+          "textoIngles": "With a successful Knowledge Roll, PCs can alter the psychic environment, such as by inverting gravity or conjuring a rapidly self-assembling staircase. A PC can use a mental manifestation once per scene to gain advantage on a roll to navigate the Astral Realm.\n\nIs the construct you manifest a memory from real life or a figment of your own imagination? What key detail do you focus on to make it more stable?"
+        },
+        {
+          "nome": "Matéria é ilusão",
+          "tipo": "passiva",
+          "perguntas": [
+            "Você pensa ou sente seu caminho por este lugar?",
+            "Que diferença isso faz aqui?"
+          ],
+          "texto": "Contagem Regressiva (10). Tempo e distância são relativos aqui, e simplesmente se mover pelo espaço requer um ato de vontade. Para atravessar o Reino Astral, o grupo deve completar a contagem regressiva usando apenas jogadas de Conhecimento, Instinto ou Presença. Se houver uma falha com Medo, um PJ sofre 3d8 de dano direto de magia.",
+          "nomeIngles": "Matter Is Illusion",
+          "textoIngles": "Countdown (10). Time and distance are relative here, and simply moving through the space requires an act of will. To cross the Astral Realm, the party must complete the countdown using only Knowledge, Instinct, or Presence Rolls. On a failure with Fear, a PC takes 3d8 direct magic damage.\n\nDo you think or feel your way through this place? What difference does it make here?"
+        },
+        {
+          "nome": "Adversários Astrais",
+          "tipo": "passiva",
+          "perguntas": [
+            "Como a forma astral de um adversário difere de sua forma física?",
+            "Por que essas projeções psíquicas são atraídas pelos PJs?"
+          ],
+          "texto": "Adversários no Reino Astral são imunes a danos físicos, pois são projeções psíquicas em vez de carne e sangue.",
+          "nomeIngles": "Astral Adversaries",
+          "textoIngles": "Adversaries in the Astral Realm are immune to physical damage, as they are psychic projections instead of flesh and blood.\n\nHow does an adversary’s astral form differ from their physical form? Why are these psychic projections drawn to the PCs?"
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/astral-realm",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "ASTRAL REALM",
+          "lineStart": 12532,
+          "lineEnd": 12560,
+          "pdfPageStart": 173,
+          "pdfPageEnd": 173
+        },
+        "corpusSha256": "2120a91ec3f62b56a327d477054789cb0ba94ba7ffc332c57872df79f2fa7b3b"
+      }
+    },
+    {
+      "id": "crystal-wasteland",
+      "nome": "Deserto de Cristal",
+      "nomeIngles": "Crystal Wasteland",
+      "tipo": "Travessia",
+      "patamar": 3,
+      "dificuldade": 16,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Adulto Flickerfly, Constructos, Faísca Elemental, Guardiões do Cofre, Aparições Sussurrantes",
+          "adversarios": [
+            {
+              "nome": "construto",
+              "adversarioId": "construto"
+            },
+            {
+              "nome": "centelha elemental",
+              "adversarioId": "centelha-elemental"
+            },
+            {
+              "nome": "oscilume adulto",
+              "adversarioId": "oscilume-adulto"
+            },
+            {
+              "nome": "aparição sussurrante",
+              "adversarioId": "whisper-wraith"
+            }
+          ]
+        }
+      ],
+      "descricao": "Uma paisagem árdua e alienígena que brilha com torres de cristal cintilante.",
+      "descricaoIngles": "A harsh and alien landscape that shines with towers of glittering crystal.",
+      "impulsos": [
+        "Corte-os até o núcleo",
+        "fracture suas psique",
+        "mostre seu verdadeiro reflexo"
+      ],
+      "impulsosIngles": [
+        "Cut them to their core",
+        "fracture their psyches",
+        "show their true reflection"
+      ],
+      "habilidades": [
+        {
+          "nome": "Ressonância Harmônica",
+          "tipo": "passiva",
+          "perguntas": [
+            "Como a sintonia com este lugar altera sua experiência sensorial dele?",
+            "Qual som ou canção da sua infância este lugar evoca?"
+          ],
+          "texto": "Os cristais aqui reverberam com energia mágica. Um PJ pode usar um movimento de descanso para tentar Sintonizar-se com o ambiente através de uma jogada bem-sucedida de Conjuração. Enquanto Sintonizado, o PJ tem vantagem em jogadas de Conjuração dentro do Deserto de Cristal. A condição é removida quando o PJ deixa o Deserto de Cristal.",
+          "nomeIngles": "Harmonic Resonance",
+          "textoIngles": "The crystals here reverberate with magical energy. A PC can use a downtime move to try to Attune to the environment with a successful Spellcast Roll. While Attuned, the PC has advantage on Spellcast Rolls inside the Crystal Wasteland. The condition is cleared when the PC leaves the Crystal Wasteland.\n\nHow does attunement to this place alter your sensory experience of it? What sound or song from your childhood does this place conjure?"
+        },
+        {
+          "nome": "Anomalias Gravitacionais",
+          "tipo": "ação",
+          "perguntas": [
+            "Como se sente quando seu corpo e mente lutam para restabelecer o equilíbrio?",
+            "Existe alguma maneira de usar isso a seu favor?"
+          ],
+          "texto": "Estranhos fenômenos localizados pontilham a paisagem, distorcendo a distância e a direção. Gaste um Medo para alterar a gravidade em um ponto escolhido. Cada alvo dentro do alcance Próximo desse ponto deve fazer uma jogada de reação de Conhecimento para calcular sua nova trajetória. Alvos que falharem sofrem 3d8+4 de dano físico enquanto são lançados para cima e para longe. Alvos que tiverem sucesso devem marcar um Estresse ou receber metade do dano.",
+          "nomeIngles": "Gravitational Anomalies",
+          "textoIngles": "Strange, localized phenomena dot the landscape, warping distance and direction. Spend a Fear to alter the gravity at a chosen point. Each target within Close range of that point must make a Knowledge Reaction Roll to calculate their new trajectories. Targets who fail take 3d8+4 physical damage as they are thrown up and away. Targets who succeed must mark a Stress or take half damage.\n\nWhat does it feel like as your body and mind fight to reestablish equilibrium? Is there any way to use this to your advantage?",
+          "custoDeMedo": 1,
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Reflexão Arcana",
+          "tipo": "ação",
+          "perguntas": [
+            "Quem os PJs veem do outro lado do cristal?",
+            "Como isso os faz sentir?"
+          ],
+          "texto": "Gaste um Medo para que qualquer número de PJs vislumbre no cristal um reflexo de quem eles foram ou do que poderiam se tornar. Cada alvo deve fazer uma jogada de reação de Instinto. Alvos que tiverem sucesso veem uma visão de seu eu melhor e podem substituir uma Experiência. Alvos que falharem veem uma visão de seu passado sombrio — ou de um futuro ainda mais sombrio — e devem marcar um Estresse. Você ganha um Medo para cada alvo que falhou.",
+          "nomeIngles": "Arcane Reflection",
+          "textoIngles": "Spend a Fear to have any number of PCs glimpse a reflection in the crystal of who they once were or might become. Each target must make an Instinct Reaction Roll. Targets who succeed see a vision of their better self and can replace one Experience. Targets who fail see a vision of their dark past—or an even darker future—and must mark a Stress. You gain a Fear for each target who failed.\n\nWho do the PCs see on the other side of the crystal? How does it make them feel?",
+          "custoDeMedo": 1,
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Terreno Afiado como Lâmina",
+          "tipo": "reação",
+          "perguntas": [
+            "Como o cristal parece enquanto cresce?",
+            "Como ele se sente?"
+          ],
+          "texto": "Quando um PJ falha em uma rolagem para navegar pelo deserto, ele deve fazer uma jogada de reação de Destreza. Em caso de falha, ele se corta nas bordas afiadas do terreno. Fragmentos de cristal mágico ficam incrustados em sua ferida e crescem lentamente, cristalizando-o. Ative uma Contagem Regressiva de Cristal (1) para esse PJ. Até que ele remova a condição com uma Rolagem de Conhecimento bem-sucedida, um PJ em processo de cristalização aumenta sua Contagem Regressiva de Cristal no início de cada descanso e recebe uma penalidade em sua Evasão equivalente ao valor da contagem. A contagem termina quando a condição é removida.",
+          "nomeIngles": "Razor-Sharp Terrain",
+          "textoIngles": "When a PC fails a roll to navigate the wasteland, they must make a Finesse Reaction Roll. On a failure, they cut themselves on the sharp edges of the terrain. Shards of magic crystal become embedded in their wound and slowly grow, Crystallizing them. Activate a Crystal Countdown (1) for that PC. Until they remove the condition with a successful Knowledge Roll, a Crystallizing PC ticks up their Crystal Countdown at the start of each rest and gains a penalty to their Evasion equal to its value. The countdown ends when the condition is cleared.\n\nWhat does the crystal look like as it grows? What does it feel like?"
+        },
+        {
+          "nome": "Embaralhamento Psíquico",
+          "tipo": "reação",
+          "perguntas": [
+            "Como é estar na pele de outra pessoa?",
+            "Se você pudesse escolher permanecer como ela de uma maneira, qual seria?"
+          ],
+          "texto": "Quando os PJs fazem um descanso prolongado, você pode gastar um Medo para trocar suas psíquicas. Recolha todas as fichas de personagem dos jogadores, depois embaralhe e redistribua aleatoriamente. Cada ficha de personagem vem com os cartões de Domínio e os auxiliares de jogador daquele PJ. Um PJ pode recuperar sua psíquica com uma jogada de Conhecimento bem-sucedida, momento em que troca a ficha com o jogador que possui sua ficha de personagem original.",
+          "nomeIngles": "Psychic Shuﬄe",
+          "textoIngles": "When the PCs take a long rest, you can spend a Fear to swap their psyches. Collect all the players’ character sheets, then shuffle and randomly redistribute them. Each character sheet comes with that PC’s Domain cards and player aids. A PC can regain their psyche with a successful Knowledge Roll, at which point they trade sheets with the player who has their original character sheet.\n\nHow does it feel being in someone else’s skin? If you could choose to stay like them in one way, what would it be?",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/crystal-wasteland",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "CRYSTAL WASTELAND",
+          "lineStart": 12637,
+          "lineEnd": 12669,
+          "pdfPageStart": 175,
+          "pdfPageEnd": 175
+        },
+        "corpusSha256": "51057af9905afec6e3b65ea5358d3a45becbd9747ed07ebe8ab7d4e5ae60f7fa"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "dragons-lair",
+      "nome": "Covil do Dragão",
+      "nomeIngles": "Dragon’s Lair",
+      "tipo": "Exploração",
+      "patamar": 3,
+      "dificuldade": 16,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Os Servos do Dragão (Dracos, Serpes Aladas), Dragão de Fogo Jovem",
+          "adversarios": [
+            {
+              "nome": "draco",
+              "adversarioId": "drake"
+            },
+            {
+              "nome": "serpe alada",
+              "adversarioId": "wyvern"
+            },
+            {
+              "nome": "dragão de fogo jovem",
+              "adversarioId": "young-fire-dragon"
+            }
+          ]
+        }
+      ],
+      "descricao": "Uma coleção de ouro, joias e artefatos no coração de um vulcão ativo.",
+      "descricaoIngles": "A collection of gold, jewels, and artifacts in the heart of an active volcano.",
+      "impulsos": [
+        "Atrair para os níveis abaixo",
+        "tornar a fuga impossível",
+        "tentar com tesouros",
+        "acordar o dragão"
+      ],
+      "impulsosIngles": [
+        "Lure into the levels below",
+        "make escape impossible",
+        "tempt with treasure",
+        "wake the dragon"
+      ],
+      "habilidades": [
+        {
+          "nome": "O Dragão Desperta",
+          "tipo": "passiva",
+          "perguntas": [
+            "Onde este dragão dorme?",
+            "Com o que ele sonha?"
+          ],
+          "texto": "Contagem Regressiva da Consequência (8). O dragão que acumulou este tesouro está adormecido em algum lugar sobre, sob ou próximo ao tesouro. Quando os PJs entrarem na caverna, ative a contagem regressiva. Quando ela for acionada, o dragão acorda e cada PJ deve ter sucesso em uma jogada de reação de Presença ou marcar um Estresse. Você ganha um Medo para cada Estresse marcado desta forma.",
+          "nomeIngles": "The Dragon Wakes",
+          "textoIngles": "Consequence Countdown (8). The dragon that amassed this treasure lies sleeping somewhere on, under, or near the hoard. When the PCs enter the lair, activate the countdown. When it triggers, the dragon awakens and each PC must succeed on a Presence Reaction Roll or mark a Stress. You gain a Fear for each Stress marked this way.\n\nWhere does this dragon slumber? What does it dream about?",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Tesouro Acumulado",
+          "tipo": "passiva",
+          "perguntas": [
+            "Como o grupo soube desta coleção?",
+            "O que eles esperam encontrar aqui?"
+          ],
+          "texto": "No coração do covil encontra-se uma montanha de tesouros. Se o grupo desejar localizar o tesouro, eles devem completar uma Contagem Regressiva de Progresso (12). Quando isso for acionado, o grupo pode reduzir a Contagem Regressiva de Consequências para vasculhar a pilha de tesouros, rolando um número de d12s igual a 1 + o nível deles na tabela de Itens ou Consumíveis (à escolha deles).",
+          "nomeIngles": "Treasure Hoard",
+          "textoIngles": "At the heart of the lair sits a mountain of treasure. If the party wishes to locate the treasure, they must complete a Progress Countdown (12). When it triggers, the party can tick down the Consequence Countdown to search through the treasure mound by rolling a number of d12s equal to 1 + their tier on the Item or Consumable table (their choice).\n\nHow did the party learn of this collection? What do they hope to find here?"
+        },
+        {
+          "nome": "Atividade Vulcânica",
+          "tipo": "ação",
+          "perguntas": [
+            "Quais caminhos de saída estão bloqueados pela configuração instável do vulcão?",
+            "Como os PJs podem se proteger do calor sufocante?"
+          ],
+          "texto": "Gaste um Medo para desencadear uma erupção vulcânica. Cada personagem deve fazer uma jogada de reação de Agilidade. Os alvos que falharem são queimados por jatos de lava e chamas enquanto a terra se rompe ao redor deles e recebem 3d8+5 de dano físico. Os alvos que tiverem sucesso recebem metade do dano.",
+          "nomeIngles": "Volcanic Activity",
+          "textoIngles": "Spend a Fear to trigger a volcanic eruption. Each character must make an Agility Reaction Roll. Targets who fail are burned by gouts of lava and flame as the earth breaks around them and take 3d8+5 physical damage. Targets who succeed take half damage.\n\nWhat paths of egress are blocked by the volcano’s shifting configuration? How do the PCs protect themselves from the stifling heat?",
+          "custoDeMedo": 1
+        },
+        {
+          "nome": "Cães de Guarda",
+          "tipo": "reação",
+          "perguntas": [
+            "Por que essas criaturas servem ao dragão adormecido?",
+            "Quais sinais o grupo encontra que prenunciam sua presença?"
+          ],
+          "texto": "Quando um PJ falha em uma rolagem para navegar pelo covil, você pode gastar um Medo para convocar 1d6 Dracos e até duas Serpes Aladas, que aparecem em alcance Próximo de um PJ e são imediatamente posto em foco.",
+          "nomeIngles": "Watchdogs",
+          "textoIngles": "When a PC fails a roll to navigate the lair, you can spend a Fear to summon 1d6 Drakes and up to two Wyverns, who appear within Close range of a PC and are immediately spotlighted.\n\nWhy do these creatures serve the slumbering dragon? What signs does the party find that foreshadow their presence?",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/dragons-lair",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "DRAGON’S LAIR",
+          "lineStart": 12671,
+          "lineEnd": 12699,
+          "pdfPageStart": 175,
+          "pdfPageEnd": 175
+        },
+        "corpusSha256": "ed6466512c1a9cc963e3e12819555ed7ccf19a8fd34ef1a23afcd284be058427"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "megastorm",
+      "nome": "Megatormenta",
+      "nomeIngles": "Megastorm",
+      "tipo": "Evento",
+      "patamar": 3,
+      "dificuldade": 16,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Elemental Maior da Água, Titã da Tempestade",
+          "adversarios": [
+            {
+              "nome": "grande elemental da água",
+              "adversarioId": "grande-elemental-da-agua"
+            },
+            {
+              "nome": "titã da tempestade",
+              "adversarioId": "storm-titan"
+            }
+          ]
+        }
+      ],
+      "descricao": "Um evento climático extremo se manifesta repentinamente, forçando o grupo a equilibrar sua própria sobrevivência com a segurança dos outros.",
+      "descricaoIngles": "An extreme weather event suddenly manifests, forcing the party to balance their own survival against the safety of others.",
+      "impulsos": [
+        "Ventos de furacão",
+        "sufocar com deslizamentos de terra",
+        "desmoronar estruturas",
+        "inundar",
+        "lançar destroços",
+        "iluminar o céu"
+      ],
+      "impulsosIngles": [
+        "Blow hurricane winds",
+        "choke with mudslides",
+        "crumble structures",
+        "flood",
+        "throw debris",
+        "light up the sky"
+      ],
+      "habilidades": [
+        {
+          "nome": "Frente de Tempestade",
+          "tipo": "passiva",
+          "perguntas": [
+            "Qual é o lugar mais seguro para atravessar a tempestade?",
+            "Pelo que as pessoas aqui estão dispostas a arriscar suas vidas?"
+          ],
+          "texto": "Contagem regressiva (8). Quando a tempestade chegar, ative a contagem regressiva. Ela diminui quando um PJ rola com Esperança. Quando disparar, a tempestade se dispersa ou se move para outra área.",
+          "nomeIngles": "Stormfront",
+          "textoIngles": "Countdown (8). When the storm arrives, activate the countdown. It ticks down when a PC rolls with Hope. When it triggers, the storm disperses or moves on to a different area.\n\nWhere is the safest place to weather the storm? What are the people here willing to risk their lives for?"
+        },
+        {
+          "nome": "Condições Perigosas",
+          "tipo": "passiva",
+          "perguntas": [
+            "Quem mais se perdeu no vórtice?",
+            "Como você pode guiá-los para fora?"
+          ],
+          "texto": "O vento extremo, o nevoeiro e a cobertura de nuvens do Megatormenta tornam difícil a navegação por toda a área. Os PJs não podem se mover como parte de uma jogada de ação sem ter sucesso em uma jogada de reação de Agilidade.",
+          "nomeIngles": "Hazardous Conditions",
+          "textoIngles": "The Megastorm’s extreme wind, fog, and cloud cover make navigating the entire area difficult. PCs can’t move as part of an action roll without succeeding on an Agility Reaction Roll.\n\nWho else lost in the gyre? How can you lead them out?"
+        },
+        {
+          "nome": "Ciclone de Bombas",
+          "tipo": "ação",
+          "perguntas": [
+            "Este é o pior clima que algum dos PJs já enfrentou?",
+            "O que na área imediata os PJs podem usar para se proteger?"
+          ],
+          "texto": "Gaste um Medo para invocar um evento climático extremo, como uma tempestade ou tornado, em um ponto de sua escolha. Cada alvo dentro do alcance Próximo desse ponto deve ter sucesso em uma jogada de reação usando um traço que você escolher para evitar ser atingido por granizo, lançado no ar, atingido por um raio ou um efeito semelhante. Alvos que falharem recebem 2d10+2 de dano de um tipo que você escolher.",
+          "nomeIngles": "Bomb Cyclone",
+          "textoIngles": "Spend a Fear to summon an extreme weather event, such as a thunderstorm or tornado, at a point of your choice. Each target within Close range of that point must succeed on a reaction roll using a trait you choose to avoid being pummeled by hail, thrown into the air, blasted by lightning, or a similar effect. Targets who fail take 2d10+2 damage of a type you choose.\n\nIs this the worst weather any of the PCs have experienced? What in the immediate area can the PCs use to protect themselves?",
+          "custoDeMedo": 1
+        },
+        {
+          "nome": "Coração da Tempestade",
+          "tipo": "ação",
+          "perguntas": [
+            "Essa criatura conjurou a tempestade para seus próprios propósitos, ou serve a uma entidade ainda maior?",
+            "Por que eles designaram este lugar para destruição?"
+          ],
+          "texto": "Gaste um Medo para revelar a bateria viva da Megatormenta. Invoque um Gigante da Tempestade ou um Elemental Maior de Água em alcance Distante de um PJ, e então ponha-os imediatamente em foco. Até que este adversário seja derrotado, a contagem regressiva do “Frente de Tempestade” não diminui. Quando este adversário for derrotado, a Megatormenta termina.",
+          "nomeIngles": "Stormheart",
+          "textoIngles": "Spend a Fear to reveal the living battery of the Megastorm. Summon a Storm Giant or Greater Water Elemental within Far range of a PC, then immediately spotlight them. Until this adversary is defeated, the “Stormfront” countdown doesn’t tick down. When this adversary is defeated, the Megastorm ends.\n\nDid this creature conjure the storm for their own purposes, or do they serve an even greater entity? Why did they designate this place for destruction?",
+          "custoDeMedo": 1
+        },
+        {
+          "nome": "Pânico nas Ruas",
+          "tipo": "ação",
+          "perguntas": [
+            "Quem está aproveitando a situação?",
+            "Quem deveria estar no comando aqui, e o que aconteceu com ele?"
+          ],
+          "texto": "A Megatormenta está semeando medo e caos entre os habitantes locais. Descreva como a tempestade coloca um NPC em perigo. Se o PJ que entrar em foco em seguida não usar sua ação para resgatar o NPC em perigo, você ganha um Medo.",
+          "nomeIngles": "Panic in the Streets",
+          "textoIngles": "The Megastorm is sowing fear and chaos among the locals. Describe how the storm puts an NPC in danger. If the PC who next takes the spotlight doesn’t use their action to rescue the endangered NPC, you gain a Fear.\n\nWho’s taking advantage of the situation? Who’s supposed to be in charge here, and what happened to them?"
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/megastorm",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "MEGASTORM",
+          "lineStart": 12703,
+          "lineEnd": 12735,
+          "pdfPageStart": 176,
+          "pdfPageEnd": 176
+        },
+        "corpusSha256": "398c56ed6df38d39cb7d26c43a902fba9fcdf4960456cedc85caa1031d991713"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "sunken-citadel",
+      "nome": "Cidadela Submersa",
+      "nomeIngles": "Sunken Citadel",
+      "tipo": "Exploração",
+      "patamar": 3,
+      "dificuldade": 16,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Sereianos Amaldiçoados, Habitante das Profundezas, Plesiossauro",
+          "adversarios": [
+            {
+              "nome": "sereiano amaldiçoado",
+              "adversarioId": "cursed-merfolk"
+            },
+            {
+              "nome": "habitante das profundezas",
+              "adversarioId": "deep-dweller"
+            },
+            {
+              "nome": "plesiossauro",
+              "adversarioId": "plesiosaurus"
+            }
+          ]
+        }
+      ],
+      "descricao": "As ruínas submersas de uma civilização há muito perdida, repletas de tecnologia antiga e magia negra.",
+      "descricaoIngles": "The sunken ruins of a long-lost civilization filled with ancient technology and dark magic.",
+      "impulsos": [
+        "Puxe-os para o fundo",
+        "Afogue-os",
+        "Revele maravilhas antigas"
+      ],
+      "impulsosIngles": [
+        "Draw them deep",
+        "drown them",
+        "reveal ancient wonders"
+      ],
+      "habilidades": [
+        {
+          "nome": "Ambiente Subaquático",
+          "tipo": "passiva",
+          "perguntas": [
+            "Você já conheceu alguém que se afogou?",
+            "No que você pensa para se manter calmo e estender seu suprimento de ar?"
+          ],
+          "texto": "Este ambiente está submerso (veja as regras “Movendo-se e Lutando Debaixo d’Água” na página 168 do livro básico). Além dessas regras, uma criatura que respira ar acompanha seu suprimento com uma Contagem Regressiva de Ar. Seu valor inicial é igual a 3 + seu nível, e ele diminui cada vez que a criatura realiza uma ação. Se um PJ falhar em uma jogada de ação ou obter um resultado com Medo, você pode usar um movimento do mestre para diminuir a contagem regressiva mais uma vez. Se a jogada resultar em falha com Medo, você pode diminuí-la duas vezes em vez disso. Quando a contagem regressiva é acionada, o PJ deve marcar um Estresse sempre que realizar uma ação debaixo d’água até que retorne à superfície.",
+          "nomeIngles": "Underwater Environment",
+          "textoIngles": "This environment is underwater (see the “Moving and Fighting Underwater” rules on page 168 of the core rulebook). In addition to those rules, a creature who breathes air tracks their supply with an Air Supply Countdown. Its starting value is equal to 3 + their tier, and it ticks down when they take an action. If a PC fails an action roll or rolls with Fear, you can use a GM move to tick down their countdown an additional time. If the roll is a failure with Fear, you can tick it down twice instead. Once their countdown triggers, a PC must mark a Stress whenever they take an action underwater until they resurface.\n\nHave you ever known anyone who drowned? What do you think about to keep calm and stretch your air supply?",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Bolsões de Ar",
+          "tipo": "passiva",
+          "perguntas": [
+            "Que sinais ou estruturas você procura?",
+            "Como é sentir que este pode ser o último suspiro que você dará?"
+          ],
+          "texto": "Um PJ pode redefinir sua Contagem Regressiva de Suprimento de Ar para o valor inicial ao localizar um bolsão de ar com uma jogada bem-sucedida de Conhecimento ou Instinto.",
+          "nomeIngles": "Air Pockets",
+          "textoIngles": "A PC can reset their their Air Supply Countdown to its starting value by locating a pocket of air with a successful Knowledge or Instinct Roll.\n\nWhat signs or structures do you look for? What does it feel like to know this might be the last breath you take?"
+        },
+        {
+          "nome": "Tecnologia Perdida",
+          "tipo": "passiva",
+          "perguntas": [
+            "Quem um dia chamou este lugar de lar?",
+            "Como funcionava sua tecnologia?",
+            "Por que foram finalmente destruídos e lançados nas profundezas?"
+          ],
+          "texto": "As ruínas estão gravadas com estranhas runas mágicas e espalhadas com tecnologia perdida. Um personagem pode fazer uma Jogada de Conhecimento para aprender informações úteis sobre esta civilização perdida a partir de quaisquer runas ou dispositivos que encontrarem.",
+          "nomeIngles": "Lost Technology",
+          "textoIngles": "The ruins are carved with strange magical runes and littered with lost technology. A PC can make a Knowledge Roll to learn useful information about this lost civilization from any runes or devices they come across.\n\nWho once called this place home? How did their technology work? Why were they ultimately destroyed and cast down into the depths?"
+        },
+        {
+          "nome": "Habitantes das Águas Profundas",
+          "tipo": "ação",
+          "perguntas": [
+            "Por que essas criaturas permanecem aqui entre as ruínas?",
+            "Elas são incapazes ou não querem ressuscitar esta civilização outrora próspera?"
+          ],
+          "texto": "Gaste um Medo para invocar até dois Habitantes Profundos e 1d6 Sereianos Amaldiçoados que tentam subjugar os PJs à sua vontade. Esses adversários aparecem em alcance Próximo de um PJ, e então um imediatamente assume o centro das atenções.",
+          "nomeIngles": "Deepwater Denizens",
+          "textoIngles": "Spend a Fear to summon up to two Deep Dwellers and 1d6 Cursed Merfolk who try to bind the PCs to their will. These adversaries appear at Close range of a PC, then one immediately takes the spotlight.\n\nWhy do these creatures stay here among the ruins? Are they unwilling or unable to resurrect this once-prosperous civilization?",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/sunken-citadel",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "SUNKEN CITADEL",
+          "lineStart": 12769,
+          "lineEnd": 12797,
+          "pdfPageStart": 177,
+          "pdfPageEnd": 177
+        },
+        "corpusSha256": "fdbea0ce5a8df62a16c00a04f5061a0b8e5ea7d674e81b7043b56929dbd0d2d6"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "upscale-casino",
+      "nome": "Cassino de Luxo",
+      "nomeIngles": "Upscale Casino",
+      "tipo": "Social",
+      "patamar": 3,
+      "dificuldade": 16,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Segurança Automatizada (Guardiões do Cofre), Jogadores (Cortesã, Barão Comerciante, Nobre Menor, Espião)",
+          "adversarios": [
+            {
+              "nome": "comerciante",
+              "adversarioId": "comerciante"
+            },
+            {
+              "nome": "nobre menor",
+              "adversarioId": "nobre-menor"
+            },
+            {
+              "nome": "barão mercante",
+              "adversarioId": "barao-mercante"
+            },
+            {
+              "nome": "cortesão",
+              "adversarioId": "cortesao"
+            },
+            {
+              "nome": "espião",
+              "adversarioId": "espiao"
+            }
+          ]
+        }
+      ],
+      "descricao": "Um salão de jogos cintilante onde comerciantes abastados e nobres vêm desperdiçar suas fortunas.",
+      "descricaoIngles": "A glittering gambling hall where well-heeled merchants and nobles come to fritter away their fortunes.",
+      "impulsos": [
+        "Pendure o prêmio principal fora de alcance",
+        "Deslumbre-os com espetáculo",
+        "Explore seus vícios"
+      ],
+      "impulsosIngles": [
+        "Dangle the jackpot just out of reach",
+        "dazzle them with spectacle",
+        "prey on their vices"
+      ],
+      "habilidades": [
+        {
+          "nome": "Brilho & Glamour",
+          "tipo": "passiva",
+          "perguntas": [
+            "O que é tão maravilhoso nos ornamentos do cassino?",
+            "Eles são realmente mágicos por natureza ou meros prodígios mundanos levados a um extremo impossível?"
+          ],
+          "texto": "O espetáculo esmagador deste lugar pode fascinar até o cliente mais experiente. Enquanto estiver aqui, todos os PJs têm desvantagem em jogadas de reação causados por um membro da equipe ou frequentador regular do cassino.",
+          "nomeIngles": "Glitz & Glamor",
+          "textoIngles": "The overwhelming spectacle of this place can entrance even the most jaded patron. While here, all PCs have disadvantage on reaction rolls caused by a staff member or regular patron of the casino.\n\nWhat’s so wondrous about the casino’s trappings? Are they truly magical in nature or merely mundane wonders taken to an impossible extreme?"
+        },
+        {
+          "nome": "A Sorte Favorece os Audazes",
+          "tipo": "passiva",
+          "perguntas": [
+            "Qual jogo o PJ escolhe jogar?",
+            "Quais regras da casa este cassino possui?",
+            "Há algo além de ouro que os PJs estejam dispostos a arriscar?"
+          ],
+          "texto": "Uma vez por descanso prolongado, um PJ pode apostar qualquer quantidade de ouro declarando quanto deseja arriscar e rolando seu Dado de Esperança. Com um resultado de 7 ou mais, o PJ ganha a mesma quantia, dobrando seu dinheiro. Com um resultado de 6 ou menos, ele perde tudo.",
+          "nomeIngles": "Fortune Favors the Bold",
+          "textoIngles": "Once per long rest, a PC can gamble any amount of gold by stating how much they want to wager and rolling their Hope Die. On a result of 7 or higher, the PC wins an equal amount, doubling their money. On a result of 6 or lower, they lose it all.\n\nWhat game does the PC choose to play? What house rules does this casino have? Is there anything besides gold the PCs are willing to risk?"
+        },
+        {
+          "nome": "A Casa Sempre Ganha",
+          "tipo": "reação",
+          "perguntas": [
+            "Este lugar é abençoado com uma sorte impossível, ou algo amaldiçoa quem cruza suas portas?"
+          ],
+          "texto": "Quando um adversário falha em uma jogada, você pode gastar um Medo para transformá-la em um sucesso.",
+          "nomeIngles": "The House Always Wins",
+          "textoIngles": "When an adversary fails a roll, you can spend a Fear to make it a success instead.\n\nIs this place blessed with impossible fortune, or does something curse anyone who steps through its doors?",
+          "custoDeMedo": 1
+        },
+        {
+          "nome": "Segurança Automatizada",
+          "tipo": "reação",
+          "perguntas": [
+            "Quem construiu essas máquinas?",
+            "Por que elas são preferíveis a seres vivos?"
+          ],
+          "texto": "Quando um PJ tenta trapacear em um jogo no cassino e falha, ele deve marcar um Estresse ao ativar o detalhe de segurança mecânica do cassino. Ganhe um Medo e convoque um Guardião da Câmara Carcerário e uma Torre para cada PJ, além de um Guardião da Câmara Sentinela. Todos os adversários aparecem em alcance Distante dos PJs, e o Guardião da Câmara Sentinela imediatamente assume o foco da cena.",
+          "nomeIngles": "Automated Security",
+          "textoIngles": "When a PC attempts to cheat at a game in the casino and fails, they must mark a Stress as they activate the casino’s mechanical security detail. Gain a Fear and summon one Vault Guardian Gaoler and Turret for each PC, plus a Vault Guardian Sentinel. All adversaries appear within Far range of the PCs, and the Vault Guardian Sentinel immediately takes the spotlight.\n\nWho built these machines? Why are they preferable to living beings?",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "O Playground do Diabo",
+          "tipo": "reação",
+          "perguntas": [
+            "Como o demônio mascarou sua influência até agora?",
+            "Como o próprio cassino muda para revelar sua verdadeira natureza?"
+          ],
+          "texto": "Se os PJs derrotarem a segurança automatizada do cassino ou tentarem sair com os ganhos roubados, você pode gastar uma quantidade de Medo igual ao número de PJs para invocar o verdadeiro dono do cassino, um Demônio da Avareza, dentro do alcance Próximo de um PJ. O Demônio é imediatamente posto em foco e bloqueia a saída do grupo a qualquer custo.",
+          "nomeIngles": "The Devil’s Playground",
+          "textoIngles": "If the PCs defeat the casino’s automated security or try to leave with stolen winnings, you can spend an amount of Fear equal to the number of PCs to summon the casino’s true owner, a Demon of Avarice, within Close range of a PC. The Demon is immediately spotlighted and bars the party’s exit at all costs.\n\nHow did the demon mask their influence until now? How does the casino itself change to reveal its true nature?"
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/upscale-casino",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "UPSCALE CASINO",
+          "lineStart": 12799,
+          "lineEnd": 12831,
+          "pdfPageStart": 177,
+          "pdfPageEnd": 177
+        },
+        "corpusSha256": "32852dbd64d574aeca0b7946aab1f3840dbbb5d3ea23a9bb10106ba68f162e17"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "volcanic-eruption",
+      "nome": "Erupção Vulcânica",
+      "nomeIngles": "Volcanic Eruption",
+      "tipo": "Evento",
+      "patamar": 3,
+      "dificuldade": 16,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Faísca Elemental, Elemental de Lava (Grande Elemental da Terra), Dragão Vulcânico",
+          "adversarios": [
+            {
+              "nome": "centelha elemental",
+              "adversarioId": "centelha-elemental"
+            },
+            {
+              "nome": "grande elemental da terra",
+              "adversarioId": "grande-elemental-da-terra"
+            }
+          ]
+        }
+      ],
+      "descricao": "Uma explosão de calor e rocha derretida que deixa para trás apenas desolação carbonizada.",
+      "descricaoIngles": "An explosion of heat and molten rock that leaves behind only charred desolation.",
+      "impulsos": [
+        "Criar pânico por toda parte",
+        "Bloquear as saídas",
+        "Isolar",
+        "Fazer com que corram em busca de segurança",
+        "dividir o grupo"
+      ],
+      "impulsosIngles": [
+        "Create panic all around",
+        "cut off the exits",
+        "isolate",
+        "make them scramble for safety",
+        "split the party"
+      ],
+      "habilidades": [
+        {
+          "nome": "Solo Instável",
+          "tipo": "passiva",
+          "perguntas": [
+            "Que formas e cores estranhas os PJs veem na lava resfriada?",
+            "Como as pessoas que moram nas proximidades mantêm o equilíbrio na superfície lisa e brilhante?"
+          ],
+          "texto": "O solo aqui é irregular, propenso a desmoronar e está constantemente se movendo. Os PJs que falharem em uma Jogada de Agilidade para se mover devem marcar um PV e ficam temporariamente Presos.",
+          "nomeIngles": "Unstable Ground",
+          "textoIngles": "The ground here is uneven, prone to collapse, and constantly shifting. PCs who fail an Agility Roll to move must mark a HP and are temporarily Restrained.\n\nWhat strange shapes and colors do the PCs see in the cooled lava? How do the people who live nearby keep their footing on the slick, shiny surface?"
+        },
+        {
+          "nome": "Erupção Violenta",
+          "tipo": "ação",
+          "perguntas": [
+            "O que faz a lava parecer viva?",
+            "Como os PJs podem prever seu comportamento?"
+          ],
+          "texto": "Gaste um Medo para fazer o chão entrar em erupção em um ponto de sua escolha, lançando lava no ar e espalhando-a pelo chão. Todos os alvos dentro do alcance Muito Próximo desse ponto perdem uma Esperança e sofrem 3d8+3 de dano físico. A área dentro do alcance Muito Próximo do ponto de erupção se torna lava até o final da cena. Uma criatura que se mover para dentro ou através da lava sofre 3d8+3 de dano físico. Até o final da cena, você pode gastar um Medo para expandir a área de lava em um nível (como de Muito Próximo para Próximo ou de Próximo para Distante).",
+          "nomeIngles": "Violent Eruption",
+          "textoIngles": "Spend a Fear to have the ground erupt at a point of your choice, spewing lava into the air and spreading it along the ground. All targets within Very Close range of that point lose a Hope and take 3d8+3 physical damage. The area within Very Close range of the eruption point becomes lava until the end of the scene. A creature who moves into or through the lava takes 3d8+3 physical damage. Until the end of the scene, you can spend a Fear to expand the lava area by one step (such as Very Close to Close or Close to Far).\n\nWhat makes the lava seem alive? How can the PCs predict its behavior?",
+          "custoDeMedo": 1
+        },
+        {
+          "nome": "Gás Tóxico de Ventilação",
+          "tipo": "ação",
+          "perguntas": [
+            "Quais sinais você vê para indicar a presença de gás tóxico?",
+            "Que sabor permanece na boca dos PJs que inalam o gás?"
+          ],
+          "texto": "Gaste um Medo para abrir uma fissura que expele gás tóxico em um ponto de sua escolha, criando uma nuvem que cobre tudo dentro do alcance Distante. Enquanto estiver dentro da nuvem, um PJ deve controlar seu fornecimento de ar com uma Contagem Regressiva de Ar. Seu valor inicial é igual a 3 + seu nível, e ele diminui toda vez que o PJ realiza uma ação. Se um PJ falhar em uma jogada de ação ou obter um resultado com Medo, você pode usar um movimento do mestre para diminuir sua contagem mais uma vez. Se a jogada resultar em falha com Medo, você pode diminuir duas vezes em vez disso. Quando a contagem terminar, um PJ deve marcar um Estresse sempre que realizar uma ação dentro do gás até que saia da nuvem.",
+          "nomeIngles": "Vent Toxic Gas",
+          "textoIngles": "Spend a Fear to open a fissure that belches out toxic gas at a point of your choice, creating a cloud that blankets everything within Far range. While inside the cloud, a PC must track their air supply with an Air Supply Countdown. Its starting value is equal to 3 + their tier, and it ticks down when they take an action. If a PC fails an action roll or rolls with Fear, you can use a GM move to tick down their countdown an additional time. If the roll is a failure with Fear, you can tick it down twice instead. Once the countdown ends, a PC must mark a Stress whenever they take an action within the gas until they escape the cloud.\n\nWhat signs do you see to indicate the presence of toxic gas? What taste lingers in the mouths of the PCs who inhale the gas?",
+          "custoDeMedo": 1,
+          "custoDeEstresse": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/volcanic-eruption",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "VOLCANIC ERUPTION",
+          "lineStart": 12835,
+          "lineEnd": 12859,
+          "pdfPageStart": 178,
+          "pdfPageEnd": 178
+        },
+        "corpusSha256": "6b9ab41e61e5174a3c37966fe09603781186a387e429bcab273917f35811fc3c"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "convergence-the-city-of-portals",
+      "nome": "Convergência, a Cidade dos Portais",
+      "nomeIngles": "Convergence, the City of Portals",
+      "tipo": "Social",
+      "patamar": 4,
+      "dificuldade": 20,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Jogadores de Poder (Arqui-Necromante, Senhor Demônio Berzug, Senhor da Guerra Titã do Fogo, Alto Serafim, Monarca, Oráculo da Ruína, Senhor Vampiro), Viajantes e Residentes (Qualquer)",
+          "adversarios": [
+            {
+              "nome": "monarca",
+              "adversarioId": "monarca"
+            },
+            {
+              "nome": "vampiro",
+              "adversarioId": "vampiro"
+            },
+            {
+              "nome": "arquinecromante",
+              "adversarioId": "arquinecromante"
+            },
+            {
+              "nome": "oráculo da perdição",
+              "adversarioId": "oraculo-da-perdicao"
+            },
+            {
+              "nome": "serafim supremo",
+              "adversarioId": "serafim-supremo"
+            },
+            {
+              "nome": "titã de fogo",
+              "adversarioId": "fire-titan"
+            },
+            {
+              "nome": "lorde vampiro",
+              "adversarioId": "vampire-lord"
+            },
+            {
+              "nome": "lorde demônio berzug",
+              "adversarioId": "demon-lord-berzug"
+            },
+            {
+              "nome": "titã de fogo senhor da guerra",
+              "adversarioId": "fire-titan-warlord"
+            }
+          ]
+        }
+      ],
+      "descricao": "Uma metrópole expansiva no nexo da criação, onde figuras influentes de todos os reinos se reúnem.",
+      "descricaoIngles": "A sprawling metropolis at the nexus of creation, where influential figures from across the realms gather.",
+      "impulsos": [
+        "Confronte-os com costumes alienígenas",
+        "Deslumbre-os com variedade infinita",
+        "Tente-os com o impossível"
+      ],
+      "impulsosIngles": [
+        "Confront them with alien customs",
+        "dazzle them with infinite variety",
+        "tempt them with the impossible"
+      ],
+      "habilidades": [
+        {
+          "nome": "Impossibilidades Abundam",
+          "tipo": "passiva",
+          "perguntas": [
+            "Que tipo de ser atualmente exerce influência na cidade?",
+            "Que costumes estranhos eles praticam?",
+            "Qual PJ está mais confuso ou ofendido por eles, e qual PJ adota esses costumes como seus?"
+          ],
+          "texto": "Convergência é um nexo de deuses, monstros, alienígenas e toda sorte de viajantes dimensionais. Como a vida mortal geralmente está abaixo da consideração desses seres, os PJs têm desvantagem em jogadas de ação para influenciá-los, a menos que tenham algum tipo de vantagem sobre eles ou saibam o que interessa ao NPC.",
+          "nomeIngles": "Impossibilities Abound",
+          "textoIngles": "Convergence is a nexus of gods, monsters, aliens, and all manner of dimension-hoppers. Because mortal life is generally beneath these beings’ concern, PCs have disadvantage on action rolls to influence them unless they have leverage against them or know what the NPC cares about.\n\nWhat manner of being currently holds sway in the city? What strange customs do they practice? Which PC is most confused or offended by them, and which PC adopts these customs as their own?"
+        },
+        {
+          "nome": "No Multiverso",
+          "tipo": "passiva",
+          "perguntas": [
+            "Para onde (ou quando) o grupo quer ir?",
+            "Onde esse portal está localizado e quem controla essa área?"
+          ],
+          "texto": "A cidade de Convergência possui um portal ou porta para cada reino da existência.",
+          "nomeIngles": "Into the Multiverse",
+          "textoIngles": "The city of Convergence has a portal or door to every realm of existence.\n\nWhere (or when) does the party want to go? Where is that portal located, and who controls that area?"
+        },
+        {
+          "nome": "Inventário Infinito",
+          "tipo": "passiva",
+          "perguntas": [
+            "Quem possui o item que o grupo precisa?",
+            "O que eles querem em troca?"
+          ],
+          "texto": "Esta cidade tem a solução para qualquer problema, se você conseguir encontrá-la. Um PJ procurando um item específico com propriedades maravilhosas pode fazer uma jogada de Instinto ou Presença para encontrá-lo no mercado pandimensional da cidade. - Sucesso Crítico: O PJ encontra o item perfeito, e o comerciante que o possui só quer algo que o PJ considere insignificante em troca. - Sucesso com Esperança: O PJ encontra o item perfeito e pode trocar algo de valor equivalente por ele. - Sucesso com Medo: O PJ encontra o item perfeito, mas o comerciante que o possui só o trocará por algo que o grupo ainda não pode dar... pelo menos por enquanto. - Qualquer Falha: O PJ deve marcar um Estresse enquanto segue atrás de algo impossível de encontrar, mas acaba de mãos vazias. O PJ pode marcar um Estresse adicional para transformar este resultado em um sucesso com Medo.",
+          "nomeIngles": "Infinite Inventory",
+          "textoIngles": "This city has the solution to any problem, if you can find it. A PC seeking a particular item with wondrous properties can make an Instinct or Presence Roll to find it in the city’s pandimensional marketplace.\n\n- Critical Success: The PC finds the perfect item, and the merchant who has it only wants something the PC considers inconsequential in exchange.\n- Success with Hope: The PC finds the perfect item and can exchange something of equal value for it.\n- Success with Fear: The PC finds the perfect item, but the merchant who has it will only exchange it for something the party can’t give them... yet.\n- Any Failure: The PC must mark a Stress as they go on a wild goose chase but come up empty-handed. The PC can mark an additional Stress to change this result into a success with Fear.\n\nWho has the item the party needs? What do they want in return?",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Não Faça Ondas",
+          "tipo": "passiva",
+          "perguntas": [
+            "O que o grupo fez (ou o que planeja fazer) que atrai a atenção e a ira dos oficiais da cidade?",
+            "Como eles podem corrigir o problema que causaram?"
+          ],
+          "texto": "Contagem regressiva (6). Porque tudo é possível em Convergência, a cidade mantém uma burocracia labiríntica que emite e aplica decretos sobre todas as trocas e interações entre os reinos. Quando o grupo chega em Convergência, ative a contagem regressiva. Ela diminui quando um PJ faz algo que perturba o delicado equilíbrio político da cidade. Quando ela é acionada, os PJs se tornam Procurados até que limpem seus nomes junto às autoridades. Quando um PJ Procurado rola com Medo, você pode invocar 1d4 Agentes Temporais que aparecem em alcance Muito Próximo, entram imediatamente em foco, e tentam capturar o grupo.",
+          "nomeIngles": "Don’t Make Waves",
+          "textoIngles": "Countdown (6). Because anything is possible in Convergence, the city maintains a labyrinthine bureaucracy that issues and enforces ordinances regarding all exchanges and interactions between the realms. When the party arrives in Convergence, activate the countdown. It ticks down when a PC does something that upsets the city’s delicate political equilibrium. When it triggers, the PCs become Wanted until they clear their names with the authorities. When a Wanted PC rolls with Fear, you can summon 1d4 Temporal Enforcers who appear within Very Close range, immediately take the spotlight, and try to apprehend the party.\n\nWhat has the party done (or what do they plan to do) that draws the attention and ire of the city officials? How can they fix the problem they caused?"
+        },
+        {
+          "nome": "Uma Oferta Que Você Não Pode Recusar",
+          "tipo": "ação",
+          "perguntas": [
+            "Qual facção oferece seu apoio ao grupo?",
+            "Contra quem eles querem que o grupo aja?"
+          ],
+          "texto": "Convergência é lar de uma rede tênue de facções rivais. Gaste um Medo para que uma delas apresente ao grupo uma solução fácil para um problema difícil em troca de sua lealdade. Se o grupo recusar, cada PJ deve marcar um Estresse, e eles não poderão recorrer a essa facção para ajuda no futuro.",
+          "nomeIngles": "An Offer You Can’t Refuse",
+          "textoIngles": "Convergence is home to a tenuous network of rival factions. Spend a Fear to have one of them present the party with an easy solution to a difficult problem in exchange for their allegiance. If the party refuses, each PC must mark a Stress, and they can’t turn to that faction for help in the future.\n\nWhich faction offers the party their support? Who do they want the party to act against?",
+          "custoDeMedo": 1,
+          "custoDeEstresse": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/convergence-the-city-of-portals",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "CONVERGENCE, THE CITY OF PORTALS",
+          "lineStart": 12899,
+          "lineEnd": 12936,
+          "pdfPageStart": 179,
+          "pdfPageEnd": 179
+        },
+        "corpusSha256": "9dd1553900bb4a29731402e18e739e141b20e7fedbd17648dc6d306122f700f9"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "moon-kingdom",
+      "nome": "Reino da Lua",
+      "nomeIngles": "Moon Kingdom",
+      "tipo": "Exploração",
+      "patamar": 4,
+      "dificuldade": 20,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Fauna Local (Criptimoth, Yufos), Espírito da Rainha da Lua (Arqui-Necromante), Relíquias Reacordadas (Construtos, Guardiões do Cofre)",
+          "adversarios": [
+            {
+              "nome": "construto",
+              "adversarioId": "construto"
+            },
+            {
+              "nome": "arquinecromante",
+              "adversarioId": "arquinecromante"
+            },
+            {
+              "nome": "yufo",
+              "adversarioId": "yufo"
+            },
+            {
+              "nome": "mariposa críptica",
+              "adversarioId": "cryptimoth"
+            }
+          ]
+        }
+      ],
+      "descricao": "As misteriosas, luminosas e isoladas ruínas de um reino lunar há muito perdido que ecoa com magia esquecida e tecnologia antiga.",
+      "descricaoIngles": "The mysterious, luminous, and isolated ruins of a long-lost lunar kingdom that echoes with forgotten magic and ancient technology.",
+      "impulsos": [
+        "Desfocar a linha entre sonho e realidade",
+        "Deixar a consciência fluir e refluir como a maré",
+        "Sussurrar ecos de opulência antiga"
+      ],
+      "impulsosIngles": [
+        "Blur the line between dream and reality",
+        "let consciousness ebb and flow like the tide",
+        "whisper echoes of ancient opulence"
+      ],
+      "habilidades": [
+        {
+          "nome": "Atmosfera Onírica",
+          "tipo": "passiva",
+          "perguntas": [
+            "Quais aromas ou sensações etéreas os PJs experimentam?",
+            "Como a atmosfera afeta as interações entre eles?"
+          ],
+          "texto": "Tudo no Reino da Lua parece onírico e flutuante. Um salto te leva longe, e o som é abafado. O ar está cheio de uma poeira cristalina iridescente que muda em resposta a pensamentos ou emoções e pode registrar memórias do passado ou visões do futuro. Uma vez por cena, um PJ pode fazer uma Jogada de Instinto para ler as impressões psíquicas deixadas por eventos passados.",
+          "nomeIngles": "Dreamlike Atmosphere",
+          "textoIngles": "Everything in the Moon Kingdom feels dreamlike and floaty. A leap carries you far, and the sound is muted. The air is full of an iridescent crystalline dust that shifts in response to thoughts or emotions and might record memories of the past or visions of the future. Once per scene, a PC can make an Instinct Roll to read the psychic impressions left by past events.\n\nWhat ethereal scents or sensations do the PCs experience? How does the atmosphere affect the interactions between them?"
+        },
+        {
+          "nome": "Ruínas Silenciosas",
+          "tipo": "passiva",
+          "perguntas": [
+            "Que flora terrestre essas plantas lunares se parecem?",
+            "Qual é o sabor delas, e como afetam fisicamente quem as consome?"
+          ],
+          "texto": "A imponente arquitetura prateada e azul da capital está intacta, mas coberta por flora bioluminescente que pulsa em sintonia com as marés lunares. Um PJ que tiver sucesso em uma jogada de Destreza pode colher uma planta lunar sem matá-la. Um PJ que comer uma ou mais plantas lunares vivas ganha um bônus de +1 em jogadas de Conjuração até o próximo descanso prolongado.",
+          "nomeIngles": "Silent Ruins",
+          "textoIngles": "The towering silver and blue architecture of the capital is undamaged but overgrown with bioluminescent flora that pulses in time with the lunar tides. A PC who succceeds on a Finesse Roll can harvest a moon plant without killing it. A PC who eats one or more living moon plants gains a +1 bonus to Spellcast Rolls until their next long rest.\n\nWhat earth flora do these moon plants look like? What do they taste like, and how do they affect the eater physically?"
+        },
+        {
+          "nome": "Astrologium Lunar",
+          "tipo": "passiva",
+          "perguntas": [
+            "Como essa máquina se parece e como funciona?",
+            "O que os PJs aprendem sobre a história do Reino da Lua?"
+          ],
+          "texto": "No topo da torre mais alta da cidade capital, encontra-se uma máquina de sonhos de cristal que pode reproduzir a história. Um PJ que tiver sucesso em uma jogada de Conhecimento pode reparar a máquina. Uma vez reparada, um PJ que tiver sucesso em uma jogada de Presença pode operá-la para aprender sobre a ascensão e queda do Reino da Lua. - Sucesso Crítico: O PJ recebe informações claras sobre eventos chave e figuras importantes da história do Reino da Lua e ganha 1d4 de Esperança, que ele pode distribuir entre os PJs com quem compartilhar suas visões. - Sucesso com Esperança: O PJ recebe informações claras sobre eventos chave e figuras importantes da história do Reino da Lua. - Qualquer jogada com Medo: O PJ recebe flashes breves e sensações relacionadas ao fim catastrófico do reino. Se a jogada resultar em falha, o PJ sofre 4d10+5 de dano mágico à medida que as visões atacam sua psique.",
+          "nomeIngles": "Lunar Astrologium",
+          "textoIngles": "Atop the highest tower in the capital city sits a crystal dream machine that can replay history. A PC who succeeds on a Knowledge Roll can repair the machine. Once the machine is repaired, a PC who succeeds on a Presence Roll can operate it to learn the history of the Moon Kingdom’s rise and fall.\n\n- Critical Success: The PC receives clear information about key events and figures in the Moon Kingdom’s history and gains 1d4 Hope, which they can distribute among PCs they share their visions with.\n- Success with Hope: The PC receives clear information about key events and figures in the Moon Kingdom’s history.\n- Any roll with Fear: The PC receives brief flashes and sensations related to the kingdom’s cataclysmic end. If the roll was a failure, the PC takes 4d10+5 magic damage as the visions assault their psyche.\n\nWhat does this machinery look like, and how does it work? What do the PCs learn about the Moon Kingdom’s history?"
+        },
+        {
+          "nome": "A Tumba da Rainha da Lua",
+          "tipo": "reação",
+          "perguntas": [
+            "Quem a enterrou aqui, e por quê?",
+            "Ela pode ser ressuscitada, ou destruir seu espírito é o único caminho a seguir?"
+          ],
+          "texto": "O último governante do Reino da Lua foi preservado em um caixão de selenita nas profundezas da cidadela. Se alguém falhar em uma jogada de Medo para investigar sua câmara, sua sombra maligna desperta e ataca o grupo. Invoque o Espírito da Rainha da Lua (Arqui-Necromante) ao lado de seu caixão e imediatamente ponha-a em foco.",
+          "nomeIngles": "The Moon Queen’s Tomb",
+          "textoIngles": "The Moon Kingdom’s final ruler has been preserved in a selenite coffin deep within the citadel. On a roll with Fear to investigate her chamber, her baleful shade awakens and attacks the party. Summon the Moon Queen’s Spirit (Arch-Necromancer) next to her coffin and immediately spotlight her.\n\nWho buried her here, and why? Can she be resurrected, or is destroying her spirit the only path forward?"
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/moon-kingdom",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "MOON KINGDOM",
+          "lineStart": 13012,
+          "lineEnd": 13044,
+          "pdfPageStart": 180,
+          "pdfPageEnd": 180
+        },
+        "corpusSha256": "56b7795edfc08ecfa2375473f36fde6036d1139daf705c1725012c0f979e3ac6"
+      }
+    },
+    {
+      "id": "realm-of-the-dead",
+      "nome": "Reino dos Mortos",
+      "nomeIngles": "Realm of the Dead",
+      "tipo": "Travessia",
+      "patamar": 4,
+      "dificuldade": 20,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Qualquer um (veja “Habitantes Tocados pela Morte”)",
+          "adversarios": [
+            {
+              "nome": "Qualquer um (veja “Habitantes Tocados pela Morte”)",
+              "semFicha": "seleção livre conforme o SRD2"
+            }
+          ]
+        }
+      ],
+      "descricao": "Uma vasta extensão aparentemente infinita de água imóvel sem cor ou risos.",
+      "descricaoIngles": "A seemingly infinite expanse of still water without color or laughter.",
+      "impulsos": [
+        "Afogar-se no desespero",
+        "Sugar a vida",
+        "Tentar induzir ao sono sem fim"
+      ],
+      "impulsosIngles": [
+        "Drown in despair",
+        "leech life",
+        "tempt into endless slumber"
+      ],
+      "habilidades": [
+        {
+          "nome": "Mar da Tristeza",
+          "tipo": "passiva",
+          "perguntas": [
+            "Que perigos se escondem abaixo da superfície?",
+            "Como alguém encontra a borda de um mundo sem fim, e o que existe além dela?"
+          ],
+          "texto": "Este reino é um oceano prateado sem limites, coberto por uma névoa cinzenta, sem estrelas visíveis ou horizonte. A corrente sutil puxa inexoravelmente as pernas dos PJs, mas é suave demais para perturbar a superfície plana e espelhada da água. jogadas de ação para navegar por este reino têm desvantagem.",
+          "nomeIngles": "Sea of Gloom",
+          "textoIngles": "This realm is a boundless silver ocean blanketed in a gray gloom with no visible stars or horizon. The subtle current pulls inexorably at the PCs’ legs, but it’s too gentle to disturb the flat, mirrored surface of the water. Action rolls to navigate this realm have disadvantage.\n\nWhat dangers lie below the surface? How does one find the edge of a world without end, and what lies beyond it?"
+        },
+        {
+          "nome": "O Fardo da Vigília",
+          "tipo": "passiva",
+          "perguntas": [
+            "Quais pensamentos mantêm os PJs acordados aqui?",
+            "Como eles podem apoiar uns aos outros sem sucumbir ao desespero?"
+          ],
+          "texto": "É impossível dormir aqui. Quando o grupo descansa, cada PJ pode escolher apenas um movimento de descanso.",
+          "nomeIngles": "The Burden of Wakefulness",
+          "textoIngles": "It’s impossible to sleep here. When the party rests, each PC can choose only one downtime move.\n\nWhat thoughts keep the PCs awake here? How can they support one another without succumbing to hopelessness themselves?"
+        },
+        {
+          "nome": "Habitantes Tocados pela Morte",
+          "tipo": "passiva",
+          "perguntas": [
+            "Por que essas criaturas se recusam a seguir adiante?",
+            "Existe algum padrão nas formas em que a penumbra as desvanesce?"
+          ],
+          "texto": "Todas as criaturas mortais eventualmente passam por este lugar em sua jornada para o outro lado, mas aquelas que permanecem ou vagueiam se tornam distorcidas e mutadas pela penumbra. Quaisquer adversários que o grupo encontrar aqui são Desvanecidos. Descreva como o tempo deles aqui os deformou em algo pior do que a morte. Quando um PJ sofre dano de um ataque de um adversário Desvanecido, ele também deve marcar um Estresse. Se um PJ for derrotado aqui, ele se torna um adversário Desvanecido controlado pelo mestre em vez de realizar um movimento de morte.",
+          "nomeIngles": "Death-Touched Denizens",
+          "textoIngles": "All mortal creatures eventually pass through this place on their journey to the other side, but those who linger or wander become warped and mutated by the gloom. Any adversaries the party encounters here are Faded. Describe how their time here has warped them into something worse than dead. When a PC takes damage from a Faded adversary’s attack, they must also mark a Stress. If a PC is defeated here, they become a Faded adversary controlled by the GM instead of making a death move.\n\nWhy do these creatures refuse to move on? Is there any pattern to the forms the gloom fades them into?",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "O Frio da Morte",
+          "tipo": "ação",
+          "perguntas": [
+            "Como é sentir a vontade de viver sendo drenada à força de você?",
+            "Como você se concentra através do desespero?"
+          ],
+          "texto": "Gaste um Medo para obrigar um PJ a fazer uma jogada de reação de Presença enquanto o Mar da Penumbra suga o calor de seu sangue e ossos. Em uma falha, ele sofre 4d10 de dano mágico direto. Em um sucesso, ele deve marcar um Estresse.",
+          "nomeIngles": "The Chill of Death",
+          "textoIngles": "Spend a Fear to force a PC to make a Presence Reaction Roll as the Sea of Gloom leeches the warmth from their blood and bones. On a failure, they take 4d10 direct magic damage. On a success, they must mark a Stress.\n\nWhat does it feel like to have the will to live forcibly drained from you? How do you focus through the despair?",
+          "custoDeMedo": 1,
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Abandonai toda a esperança",
+          "tipo": "reação",
+          "perguntas": [
+            "Que arrependimentos corroem a borda da sua consciência enquanto você está aqui?",
+            "Que memórias ainda o prendem ao Reino Mortal?"
+          ],
+          "texto": "Quando um PJ gastar Esperança no Reino dos Mortos, ele deve rolar um d6. Com um resultado ímpar, ele deve gastar uma Esperança adicional ou perder o benefício da Esperança que já gastou.",
+          "nomeIngles": "Abandon All Hope",
+          "textoIngles": "When a PC spends Hope in the Realm of the Dead, they must roll a d6. On an odd result, they must spend an additional Hope or lose the benefit of the Hope they already spent.\n\nWhat regrets gnaw at the edge of your consciousness while you’re here? What memories still tether you to the Mortal Realm?"
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/realm-of-the-dead",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "REALM OF THE DEAD",
+          "lineStart": 13082,
+          "lineEnd": 13114,
+          "pdfPageStart": 181,
+          "pdfPageEnd": 181
+        },
+        "corpusSha256": "325755adba87a7f0a7189f8ee3ffd4fe363cf9a4549aff1165a50321fdf325e6"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "time-court",
+      "nome": "Corte do Tempo",
+      "nomeIngles": "Time Court",
+      "tipo": "Evento",
+      "patamar": 4,
+      "dificuldade": 20,
+      "adversariosPotenciais": [
+        {
+          "grupo": "Juiz (Monarca), Júri (Coro Sagrado), Carrascos (Executor Temporal)",
+          "adversarios": [
+            {
+              "nome": "monarca",
+              "adversarioId": "monarca"
+            },
+            {
+              "nome": "coro consagrado",
+              "adversarioId": "hallowed-choir"
+            },
+            {
+              "nome": "executor temporal",
+              "adversarioId": "temporal-enforcer"
+            }
+          ]
+        }
+      ],
+      "descricao": "Um ou mais PJs são forçadamente arrancados da linha do tempo e julgados por crimes contra a continuidade.",
+      "descricaoIngles": "One or more PCs are forcibly plucked from the timeline and put on trial for crimes against continuity.",
+      "impulsos": [
+        "Descobrir a verdade",
+        "Aplicar a justiça",
+        "Anular seus poderes"
+      ],
+      "impulsosIngles": [
+        "Find the truth",
+        "mete out justice",
+        "nullify their powers"
+      ],
+      "habilidades": [
+        {
+          "nome": "Fora do Tempo",
+          "tipo": "passiva",
+          "perguntas": [
+            "O que, além do tribunal, reside nesta dimensão de bolso?",
+            "Que poderes mantêm a barreira universal que protege este lugar?"
+          ],
+          "texto": "O julgamento ocorre em uma dimensão de bolso que existe além da influência dos outros reinos. Enquanto estiverem aqui, os PJs não podem usar seus recursos e habilidades. Cada jogador deve colocar suas cartas de Domínio em seu cofre.",
+          "nomeIngles": "Out of Time",
+          "textoIngles": "The trial takes place in a pocket dimension that exists beyond the influence of the other realms. While here, PCs can’t use their features and abilities. Each player must put their Domain cards in their vault.\n\nWhat besides the courtroom resides in this pocket dimension? What powers maintain the universal barrier protecting this place?"
+        },
+        {
+          "nome": "Julgamento por Júri",
+          "tipo": "passiva",
+          "perguntas": [
+            "Quais PJs são colocados em julgamento?",
+            "De que eles estão sendo acusados?",
+            "Quais penalidades potenciais um veredito de culpa traria?"
+          ],
+          "texto": "Ao final do processo, um júri vota se absolve ou condena a parte. Quando o tribunal é chamado à ordem, faça com que a promotoria apresente seu caso contra os PJs e inicie uma Contagem Regressiva (9). Ela diminui quando um PJ faz uma jogada de ação. Quando ela dispara, os PJs e o mestre rolam seus Dados de Julgamento. Se o resultado total da parte for igual ou superior ao do mestre, o júri os absolve.",
+          "nomeIngles": "Trial by Jury",
+          "textoIngles": "At the end of the proceedings, a jury votes whether to acquit or convict the party. When the court is called to order, have the prosecution present its case against the PCs and start a Countdown (9). It ticks down when a PC makes an action roll. When it triggers, the PCs and GM roll their Judgment Dice. If the party’s total result meets or exceeds the GM’s, the jury acquits them.\n\nWhich PCs are put on trial? What are they accused of? What potential penalties would a guilty verdict bring?"
+        },
+        {
+          "nome": "Advogado de Defesa",
+          "tipo": "passiva",
+          "perguntas": [
+            "Qual é a parte mais fraca do caso da acusação?",
+            "Qual é a parte mais forte da defesa do grupo?"
+          ],
+          "texto": "Um personagem jogador (PJ) pode fazer uma jogada de ação para argumentar em defesa de sua inocência (como uma jogada de Conhecimento para interpretar a letra da lei, uma jogada de Presença para sensibilizar a emoção do júri, ou uma jogada de Instinto para apontar falhas no caso da acusação). Em caso de sucesso, o grupo ganha um dado de julgamento (d6). Em caso de sucesso crítico, ganham dois. Em caso de falha, a acusação rebate o argumento do PJ, e você ganha um dado de julgamento (d6).",
+          "nomeIngles": "Counsel for the Defense",
+          "textoIngles": "A PC can make an action roll to argue for their innocence (such as a Knowledge Roll to interpret the letter of the law, a Presence Roll to play on the jury’s emotions, or an Instinct Roll to point out holes in the prosecution’s case). On a success, the party gains a d6 Judgment Die. On a critical success, they gain two. On a failure, the prosecution rebuts the PC’s argument, and you gain a d6 Judgment Die.\n\nWhat is the weakest part of the prosecution’s case? What is the strongest part of the party’s defense?"
+        },
+        {
+          "nome": "Advogado de Acusação",
+          "tipo": "ação",
+          "perguntas": [
+            "Quem lidera a acusação e qual é a sua relação com o Conselho do Tempo?",
+            "Que tipo de magia ou tecnologia este tribunal utiliza para apresentar e registrar provas?"
+          ],
+          "texto": "A acusação apresenta uma prova incriminadora (como o testemunho de uma testemunha ocular, resultados de análises ou um objeto físico retirado da cena do crime), e você ganha um Dado de Julgamento d6. Um PJ pode marcar um Estresse para tentar refutar a prova com uma Jogada de Reação de Conhecimento, Instinto ou Presença. Em caso de sucesso, o grupo ganha o Dado de Julgamento em vez de você. Em caso de falha, você ganha um Dado de Julgamento d6 adicional.",
+          "nomeIngles": "Counsel for the Prosecution",
+          "textoIngles": "The prosecution introduces a damning piece of evidence (such as an eyewitness testimony, test results, or a physical exhibit taken from the scene of the crime), and you gain a d6 Judgment Die. A PC can mark a Stress to attempt a rebuttal of the evidence with a Knowledge, Instinct, or Presence Reaction Roll. On a success, the party gains the Judgment Die instead of you. On a failure, you gain an additional d6 Judgment Die.\n\nWho leads the prosecution, and what is their relationship to the Time Council? What magic or technology does this court rely on to present and record evidence?",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "“Ordem na corte!”",
+          "tipo": "reação",
+          "perguntas": [
+            "A autoridade deste tribunal é digna de respeito?",
+            "O que além do poder do Conselho do Tempo e de seus agentes justifica o controle deles sobre a linha do tempo?"
+          ],
+          "texto": "Quando os PJs tentarem escapar ou encerrar o julgamento pela força, convoque um número de Agentes Temporais igual ao número de PJs na cena dentro de alcance Próximo e imediatamente ponha em foco.",
+          "nomeIngles": "“Order in the Court!”",
+          "textoIngles": "When the PCs attempt to escape or end the trial through force, summon a number of Temporal Enforcers equal to the number of PCs in the scene within Close range and immediately spotlight one.\n\nIs this court’s authority worthy of respect? What besides the might of the Time Council and its enforcers justifies their control over the timeline?"
+        }
+      ],
+      "fonteSrd2": {
+        "id": "environments/time-court",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "TIME COURT",
+          "lineStart": 13118,
+          "lineEnd": 13150,
+          "pdfPageStart": 182,
+          "pdfPageEnd": 182
+        },
+        "corpusSha256": "7c13ea4ddd8815c959329b494142d18594b12f914e657b3fcb185a3b7577522a"
+      }
     }
   ],
   "ligacao": "Cada nome da lista \"Adversários\" de um ambiente aponta para o id da ficha correspondente. Quem fica sem `adversarioId` traz `semFicha` dizendo por quê — o livro cita nomes que não têm ficha própria."
