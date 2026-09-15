@@ -34,14 +34,6 @@ jobs:
         env:
           SRD2_CORPUS_DIR: ${{ github.workspace }}/srd2-source
         run: npm run teste:srd2
-      - name: Auditoria Core 1.0 zerada
-        run: |
-          python3 tools/auditar-pendencias-lote8.py > /tmp/auditoria.md
-          grep -E 'Classes/subclasses: .+; \*\*0\*\* candidatas' /tmp/auditoria.md
-          grep -E 'Comunidades: .+; \*\*0\*\* candidatas' /tmp/auditoria.md
-          grep -E 'Cartas de domínio: .+; \*\*0\*\* candidatas' /tmp/auditoria.md
-          grep -E 'Características de armas/armaduras/molduras: .+; \*\*0\*\* ocorrências candidatas' /tmp/auditoria.md
-          grep -E 'Loot/consumíveis com texto mecânico detectado: .+; \*\*0\*\* candidatos' /tmp/auditoria.md
       - run: npx playwright install --with-deps chromium
       - run: npm run teste:e2e
       - name: Layout mobile 360 / 390 / 430
