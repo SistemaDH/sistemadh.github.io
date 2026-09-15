@@ -89,7 +89,8 @@
     {
       "id": "environments",
       "esperados": 47,
-      "estado": "nao-iniciado"
+      "estado": "em-auditoria",
+      "observacao": "19 ambientes existentes vinculados estruturalmente ao SRD2; 28 ambientes adicionais preparados e pendentes."
     },
     {
       "id": "domain-cards",

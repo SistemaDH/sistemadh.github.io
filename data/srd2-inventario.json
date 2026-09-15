@@ -15967,7 +15967,7 @@
             "pdfPageEnd": 160
           },
           "corpusSha256": "184109217032bca5d955449494ad8df0654692b0359a9a60af33f32bd1ceb7b6",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/abandoned-mine",
@@ -16012,7 +16012,7 @@
             "pdfPageEnd": 161
           },
           "corpusSha256": "3699963819e1e6cd05491291ce50bfb0a757542b288ee505325bde0d0c977233",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/ambushers",
@@ -16027,7 +16027,7 @@
             "pdfPageEnd": 161
           },
           "corpusSha256": "d1c803ba057f24a37105fb306e131785fee13316351270b1c1cc3c9caf69711a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/archmages-tower",
@@ -16087,7 +16087,7 @@
             "pdfPageEnd": 174
           },
           "corpusSha256": "a4bcb124de4aaeb4daf8e5244da984259e986dfb2fac624230d3960cc99d26c0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/bustling-marketplace",
@@ -16102,7 +16102,7 @@
             "pdfPageEnd": 161
           },
           "corpusSha256": "b93e9bd39cf6c1e7e204dadb09c84cf1d46fa5ad1557eb247c99da4bf8d0b26e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/castle-siege",
@@ -16117,7 +16117,7 @@
             "pdfPageEnd": 174
           },
           "corpusSha256": "41a271ab821ba8da1436b96fa34ba2c38569969c6068f0fcbfb061992c5585bd",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/chaos-realm",
@@ -16132,7 +16132,7 @@
             "pdfPageEnd": 178
           },
           "corpusSha256": "2b83bf9c3fb04b89cf5457152be45a2eb0837444bd7e79e70ca2883f01d29e70",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/cliffside-ascent",
@@ -16147,7 +16147,7 @@
             "pdfPageEnd": 162
           },
           "corpusSha256": "4770608ac0c001e52747210923cf7ffd0c6859136b60f0b6f6b51ee977989125",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/convergence-the-city-of-portals",
@@ -16207,7 +16207,7 @@
             "pdfPageEnd": 167
           },
           "corpusSha256": "0030367c9de815332b4632fda18fefedfa2842ea5b8d3a19a2f84458ed9ba124",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/cursed-graveyard",
@@ -16252,7 +16252,7 @@
             "pdfPageEnd": 179
           },
           "corpusSha256": "fbe106d14e9590710d44ae71dfe79aa2fc635648c6bf0e55ce56fa36ae7d26cf",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/dragons-lair",
@@ -16312,7 +16312,7 @@
             "pdfPageEnd": 169
           },
           "corpusSha256": "f2c04750d7f3743e1c98aa42377534a8ae33a611874e34dc4820d4ef40ad23a7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/haunted-city",
@@ -16327,7 +16327,7 @@
             "pdfPageEnd": 169
           },
           "corpusSha256": "a411861b58e2ee9feaa3dd0d8d8f0b0f4b511b78f2e7adba9109e792105daacb",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/heist",
@@ -16372,7 +16372,7 @@
             "pdfPageEnd": 180
           },
           "corpusSha256": "0fbaeaed29663820e9df89731b6d42342fe2558a6288891e19b9975181c4c4c3",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/local-festival",
@@ -16402,7 +16402,7 @@
             "pdfPageEnd": 165
           },
           "corpusSha256": "8c62da03bb14c5947f6441c2d48300a119ed6a4cb87c8cf755b8c25a34755c9b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/masquerade-ball",
@@ -16462,7 +16462,7 @@
             "pdfPageEnd": 171
           },
           "corpusSha256": "2376d037fa52cbf7f7a7c319cf2e2f7e2755d4c428bd14744660b46980eefa60",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/necromancers-ossuary",
@@ -16477,7 +16477,7 @@
             "pdfPageEnd": 181
           },
           "corpusSha256": "f7095ca36412b1bb7885fcd9e82921a532f4227f9f5e09258d1b6cc24a7f0103",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/ocean-voyage",
@@ -16507,7 +16507,7 @@
             "pdfPageEnd": 165
           },
           "corpusSha256": "6c0b82f1b1470bfb0039d7f2cee6577e5a0d337218c014c751e18d3b4d936a40",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/pitched-battle",
@@ -16522,7 +16522,7 @@
             "pdfPageEnd": 176
           },
           "corpusSha256": "7f9f2cd4b1e85f3c0f578719df48dea3cecf940def514f9925d169db893e9e70",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/raging-river",
@@ -16537,7 +16537,7 @@
             "pdfPageEnd": 166
           },
           "corpusSha256": "77988b33274c3b4699936595528d4da0080f0f4aa34e3ef56edde45e43a20f38",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "environments/raiding-party",
