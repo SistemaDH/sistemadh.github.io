@@ -38,7 +38,7 @@ function conferirTexto(rotulo, texto) {
   else if (termosInglesesEmTextoPt.test(texto)) erros.push(`${rotulo}: termo mecânico inglês em texto pt-BR`);
 }
 
-if (catalogo.estado !== 'traducao-provisoria-nao-exposta') erros.push('catálogo parcial não está protegido como não exposto');
+if (catalogo.estado !== 'integrado') erros.push('catálogo de classes novas não está integrado');
 if ((catalogo.classes || []).length !== 4) erros.push(`esperadas 4 classes novas, encontradas ${(catalogo.classes || []).length}`);
 
 conferirFonte(catalogo.dominioNovo);
@@ -82,4 +82,4 @@ if (erros.length) {
   process.exit(1);
 }
 
-console.log('SRD2: domínio Pavor e 4 classes novas traduzidos, estruturados e protegidos como não expostos.');
+console.log('SRD2: domínio Pavor e 4 classes novas traduzidos, integrados e protegidos por auditoria.');

@@ -1,7 +1,7 @@
 {
   "versao": 1,
-  "estado": "traducao-provisoria-nao-exposta",
-  "aviso": "Este catálogo é uma etapa de revisão. Não deve ser carregado pela criação até subclasses, cartas de domínio, automações e testes estarem completos.",
+  "estado": "integrado",
+  "aviso": "Conteúdo integrado aos catálogos canônicos e protegido por auditoria.",
   "fonte": {
     "srd": "2.0",
     "data": "2026-08-25",
@@ -13,7 +13,12 @@
     "nome": "Pavor",
     "nomeEstado": "provisorio",
     "descricao": "Pavor é o domínio do medo e dos pesadelos. Este domínio concede poder sobre forças que a maioria teme utilizar. Seus adeptos podem aterrorizar inimigos, debilitá-los e recorrer a poderes sombrios para destruí-los. As classes Bruxo e Bruxa têm acesso ao domínio Pavor.",
-    "sourceLocator": { "pdfPageStart": 7, "pdfPageEnd": 7, "lineStart": 263, "lineEnd": 265 }
+    "sourceLocator": {
+      "pdfPageStart": 7,
+      "pdfPageEnd": 7,
+      "lineStart": 263,
+      "lineEnd": 265
+    }
   },
   "classes": [
     {
@@ -22,7 +27,10 @@
       "nomeIngles": "Assassin",
       "nome": "Assassino",
       "nomeEstado": "provisorio",
-      "dominios": ["Lâmina", "Meia-Noite"],
+      "dominios": [
+        "Lâmina",
+        "Meia-Noite"
+      ],
       "evasaoInicial": 12,
       "pontosDeVidaIniciais": 5,
       "descricao": "Assassinos são mestres em infligir ferimentos mortais com ataques precisos. Para eles, a morte é uma profissão. Muitos consideram seu ofício digno ou até sagrado e ingressam em guildas para aperfeiçoar sua técnica, definir suas crenças e ganhar dinheiro. Governantes, líderes comerciais e pessoas comuns recorrem a assassinos quando precisam eliminar alguém que parecia impossível de matar. Alguns destroem qualquer um em seu caminho pelo motivo ou preço certo; outros seguem códigos morais e regras pessoais rígidas sobre quem pode ser alvo.",
@@ -30,7 +38,14 @@
         "nomeIngles": "Deadly Determination",
         "nome": "Determinação Mortal",
         "texto": "Gaste 3 Esperança para limpar 2 Estresses.",
-        "uso": { "custo": { "esperanca": 3 }, "efeito": { "limparEstresse": 2 } }
+        "uso": {
+          "custo": {
+            "esperanca": 3
+          },
+          "efeito": {
+            "limparEstresse": 2
+          }
+        }
       },
       "caracteristicasDeClasse": [
         {
@@ -46,7 +61,10 @@
           "automacao": "custo-e-estado-da-proxima-jogada"
         }
       ],
-      "itensDeClasse": ["Uma lista de nomes com vários deles riscados", "Uma lâmina enferrujada com uma insígnia gravada"],
+      "itensDeClasse": [
+        "Uma lista de nomes com vários deles riscados",
+        "Uma lâmina enferrujada com uma insígnia gravada"
+      ],
       "perguntasDeFundo": [
         "Você matou alguém próximo. O que aconteceu e como isso mudou você?",
         "Qual organização treinou você na arte de matar e como você entrou nela?",
@@ -57,8 +75,16 @@
         "Como você me salvou quando eu estava à beira da morte? O que prometi como pagamento?",
         "Que segredo sobre mim eu contei a você e como ele mudou sua visão a meu respeito?"
       ],
-      "subclassesFonte": ["executioners-guild", "poisoners-guild"],
-      "sourceLocator": { "pdfPageStart": 9, "pdfPageEnd": 9, "lineStart": 374, "lineEnd": 396 }
+      "subclassesFonte": [
+        "executioners-guild",
+        "poisoners-guild"
+      ],
+      "sourceLocator": {
+        "pdfPageStart": 9,
+        "pdfPageEnd": 9,
+        "lineStart": 374,
+        "lineEnd": 396
+      }
     },
     {
       "idFonte": "classes/brawler",
@@ -66,7 +92,10 @@
       "nomeIngles": "Brawler",
       "nome": "Brigão",
       "nomeEstado": "provisorio",
-      "dominios": ["Valor", "Osso"],
+      "dominios": [
+        "Valor",
+        "Osso"
+      ],
       "evasaoInicial": 10,
       "pontosDeVidaIniciais": 6,
       "descricao": "Especialistas em combate desarmado, brigões transformam o próprio corpo numa arma letal. Seja por treinamento formal, estudo com um mentor ou experiência adquirida luta após luta, eles desenvolvem corpo e mente para agir como um só. Valorizados por sua força e versatilidade, brigões buscam desafios e parceiros de treino para manter suas habilidades e acrescentar novas técnicas ao repertório. Mesmo parecendo desarmados, frequentemente realizam com os punhos o que um soldado comum não conseguiria com uma espada.",
@@ -74,7 +103,15 @@
         "nomeIngles": "Square Up",
         "nome": "Frente a Frente",
         "texto": "Gaste 3 Esperança para intimidar um alvo em alcance Próximo, deixando-o temporariamente Vulnerável.",
-        "uso": { "custo": { "esperanca": 3 }, "efeito": { "condicaoAlvo": "Vulnerável", "temporaria": true } }
+        "uso": {
+          "custo": {
+            "esperanca": 3
+          },
+          "efeito": {
+            "condicaoAlvo": "Vulnerável",
+            "temporaria": true
+          }
+        }
       },
       "caracteristicasDeClasse": [
         {
@@ -90,7 +127,10 @@
           "automacao": "custo-e-progressao;rolagens-manuais"
         }
       ],
-      "itensDeClasse": ["Faixas de mão recebidas de um mentor", "Um livro sobre seu passatempo secreto"],
+      "itensDeClasse": [
+        "Faixas de mão recebidas de um mentor",
+        "Um livro sobre seu passatempo secreto"
+      ],
       "perguntasDeFundo": [
         "Onde você passou seus anos de formação e aprendeu, direta ou indiretamente, o estilo de luta que utiliza?",
         "Qual organização jurou matar você assim que o encontrasse e o que você fez para provocar essa ira?",
@@ -101,8 +141,16 @@
         "Para que eu dependo de você durante nossas viagens e como você se sente a respeito?",
         "Ainda não perdoei algo que você me disse. O que foi e por que você disse aquilo?"
       ],
-      "subclassesFonte": ["juggernaut", "martial-artist"],
-      "sourceLocator": { "pdfPageStart": 11, "pdfPageEnd": 12, "lineStart": 575, "lineEnd": 599 }
+      "subclassesFonte": [
+        "juggernaut",
+        "martial-artist"
+      ],
+      "sourceLocator": {
+        "pdfPageStart": 11,
+        "pdfPageEnd": 12,
+        "lineStart": 575,
+        "lineEnd": 599
+      }
     },
     {
       "idFonte": "classes/warlock",
@@ -110,7 +158,10 @@
       "nomeIngles": "Warlock",
       "nome": "Bruxo",
       "nomeEstado": "provisorio",
-      "dominios": ["Pavor", "Graça"],
+      "dominios": [
+        "Pavor",
+        "Graça"
+      ],
       "evasaoInicial": 11,
       "pontosDeVidaIniciais": 5,
       "descricao": "Bruxos entregaram a vida — talvez até a alma — a um patrono sobrenatural em troca de poder. Muitas vezes esse sacrifício nasce do desespero: proteger alguém, ajudar a comunidade, buscar vingança ou alcançar uma ambição. Deuses, espíritos, demônios e entidades desconhecidas podem ocupar esse papel, cada qual com sua própria esfera de influência. O poder de um bruxo é definido pela relação mantida com seu patrono e pode vir acompanhado da dúvida sobre quem realmente controla quem.",
@@ -118,7 +169,12 @@
         "nomeIngles": "Patron’s Boon",
         "nome": "Dádiva do Patrono",
         "texto": "Quando falhar em uma jogada, você pode gastar 3 Esperança para rerrolar com vantagem.",
-        "uso": { "custo": { "esperanca": 3 }, "efeito": "rerrolagem-manual-com-vantagem" }
+        "uso": {
+          "custo": {
+            "esperanca": 3
+          },
+          "efeito": "rerrolagem-manual-com-vantagem"
+        }
       },
       "caracteristicasDeClasse": [
         {
@@ -134,7 +190,10 @@
           "automacao": "recurso-de-classe-com-teto-6"
         }
       ],
-      "itensDeClasse": ["Uma escultura que representa seu patrono", "Um anel que você não consegue remover"],
+      "itensDeClasse": [
+        "Uma escultura que representa seu patrono",
+        "Um anel que você não consegue remover"
+      ],
       "perguntasDeFundo": [
         "Quem de sua comunidade passou a rejeitar você depois do pacto com seu patrono?",
         "Que situação desesperadora levou você a jurar sua vida ao patrono?",
@@ -145,8 +204,16 @@
         "Nossa relação mudou depois que você me viu prestar tributo ao patrono. O que você viu e como isso afetou você?",
         "Certa vez fiz algo muito tolo e você nunca me deixou esquecer. O que foi?"
       ],
-      "subclassesFonte": ["pact-of-the-endless", "pact-of-the-wrathful"],
-      "sourceLocator": { "pdfPageStart": 26, "pdfPageEnd": 26, "lineStart": 1730, "lineEnd": 1752 }
+      "subclassesFonte": [
+        "pact-of-the-endless",
+        "pact-of-the-wrathful"
+      ],
+      "sourceLocator": {
+        "pdfPageStart": 26,
+        "pdfPageEnd": 26,
+        "lineStart": 1730,
+        "lineEnd": 1752
+      }
     },
     {
       "idFonte": "classes/witch",
@@ -154,7 +221,10 @@
       "nomeIngles": "Witch",
       "nome": "Bruxa",
       "nomeEstado": "provisorio",
-      "dominios": ["Pavor", "Sábio"],
+      "dominios": [
+        "Pavor",
+        "Sábio"
+      ],
       "evasaoInicial": 10,
       "pontosDeVidaIniciais": 6,
       "descricao": "Bruxas praticam magia em comunhão com forças da natureza e entidades de outros reinos. Elas evocam poder por meio de seu ofício, combinando o tangível e o efêmero com feitiços, encantamentos, talismãs, ilusões e rituais pessoais. Seu conhecimento pode ser transmitido por ancestrais, divindades, aspectos da natureza ou gerações de praticantes reunidas em pequenos grupos. Seus métodos misteriosos e às vezes macabros fazem com que sejam temidas ou incompreendidas.",
@@ -162,7 +232,12 @@
         "nomeIngles": "Witch’s Charm",
         "nome": "Encanto da Bruxa",
         "texto": "Quando você ou um aliado em alcance Distante falhar numa jogada de ação, você pode gastar 3 Esperança para transformar o resultado em um sucesso com Medo.",
-        "uso": { "custo": { "esperanca": 3 }, "efeito": "converter-falha-em-sucesso-com-medo" }
+        "uso": {
+          "custo": {
+            "esperanca": 3
+          },
+          "efeito": "converter-falha-em-sucesso-com-medo"
+        }
       },
       "caracteristicasDeClasse": [
         {
@@ -178,7 +253,10 @@
           "automacao": "uso-por-descanso;rolagens-e-resolucao-narrativas-manuais"
         }
       ],
-      "itensDeClasse": ["Um animal de estimação pequeno e inofensivo", "Uma pedra de vidência"],
+      "itensDeClasse": [
+        "Um animal de estimação pequeno e inofensivo",
+        "Uma pedra de vidência"
+      ],
       "perguntasDeFundo": [
         "Quem de sua comunidade temia seu ofício mágico? Que rumor essa pessoa espalhou e que verdade havia nele?",
         "Você usou seu poder para ajudar alguém numa situação desesperadora. Quem era e por que procurou você?",
@@ -189,8 +267,16 @@
         "Certa vez apareci em um sonho e compartilhei uma visão do futuro. O que contei a você?",
         "Sobre o que você costuma me pedir conselhos?"
       ],
-      "subclassesFonte": ["hedge", "moon"],
-      "sourceLocator": { "pdfPageStart": 29, "pdfPageEnd": 29, "lineStart": 1928, "lineEnd": 1956 }
+      "subclassesFonte": [
+        "hedge",
+        "moon"
+      ],
+      "sourceLocator": {
+        "pdfPageStart": 29,
+        "pdfPageEnd": 29,
+        "lineStart": 1928,
+        "lineEnd": 1956
+      }
     }
   ]
 }

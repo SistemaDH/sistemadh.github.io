@@ -1,349 +1,595 @@
 {
- "versao": 1,
- "fonte": "Cartas oficiais em PNG (pt-BR) para nomes e características + livro para as descrições",
- "introducaoLivro": "COMUnIDADE\n\nAs comunidades representam a cultura ou o ambiente em que seu personagem cresceu. Embora um personagem possa ter sido membro de várias comunidades durante sua criação, essa escolha representa aquela que ele acha que teve mais influência sobre sua personalidade e seu conjunto de habilidades atuais.\n\nAssim como acontece com os ancestrais, a descrição das características de um coletivo é matizada, pois as pessoas sempre veem as outras pelas lentes de sua própria experiência. Por exemplo, enquanto um marinheiro marítimo pode achar que sua própria comunidade é particularmente rígida, um personagem de uma metrópole ordenada pode achar que esse grupo é muito mutável. O relacionamento de um indivíduo com sua comunidade também cria uma grande variedade de experiências. Se seu personagem se desentendeu com as pessoas que definiram sua educação, ele pode continuar a carregar essa influência, mas também pode se esforçar para viver de forma diferente da que lhe foi ensinada.\n\nAo explorar as comunidades desta seção, imagine a variedade de maneiras pelas quais elas podem se manifestar no jogo. Algumas cartas de comunidade fazem referência a locais, outras a um ethos e outras a um objetivo comum, mas não há dois lugares idênticos que se enquadrem na mesma categoria. Se uma caravana errante viaja pelo mundo por vontade própria e outra foi expulsa de seu lar à força, os acessórios materiais de cada comunidade e os sentimentos de seu povo sobre seu estilo de vida seriam muito diferentes.\n\nAo construir seu personagem, você pode se inspirar em outras comunidades além da que escolheu. Como sempre, esse aspecto do jogo deve ser utilizado da maneira que melhor atenda ao seu grupo.\n\nCada comunidade tem um recurso de comunidade concedido ao personagem y                por sua comunidade que pode ser utilizado em jogo.\n\nDica: Cada entrada da comunidade sugere seis adjetivos que você pode usar como inspiração ao criar um personagem. Se desejar, escolha uma ou mais dessas palavras (ou role um d6) para ajudar a desenvolver a personalidade do seu personagem, sua relação com a educação ou com os colegas, ou até mesmo o comportamento com o qual ele interage com o restante do grupo.",
- "comunidades": [
-  {
-   "id": "highborne",
-   "nome": "Highborne",
-   "nomeCarta": "HIGHBORNE",
-   "descricao": "Fazer parte de uma comunidade nobre significa estar acostumado a uma vida de elegância, opulência e prestígio nos escalões superiores da sociedade.",
-   "descricaoLivro": "Fazer parte de uma comunidade highborne significa que você está acostumado a uma vida de elegância, opulência e prestígio nos altos escalões da sociedade. Tradicionalmente, os membros de uma comunidade de alta nobreza possuem uma incrível riqueza material. Embora isso possa ocorrer de várias formas Esse status sempre vem acompanhado de poder e influência. Os highborne valorizam muito os títulos e as posses, e há pouca mobilidade social em suas fileiras. Os membros de uma comunidade highborne geralmente controlam o status político e econômico das áreas em que vivem devido à sua capacidade de influenciar as pessoas e a economia com sua riqueza substancial. A saúde e a segurança das pessoas menos abastadas que vivem nessas localidades geralmente dependem da capacidade dessa classe dominante de alta nobreza de priorizar o bem-estar de seus súditos em detrimento do lucro.",
-   "adjetivos": [
-    "amáveis",
-    "sinceros",
-    "coniventes",
-    "empreendedores",
-    "ostensivos",
-    "inofensivos"
-   ],
-   "caracteristica": {
-    "nome": "Privilégio",
-    "texto": "Você tem vantagem em jogadas para socializar com nobres, negociar preços ou usar sua reputação para conseguir o que deseja.",
-    "rolagemManual": {
-     "tipo": "vantagem-situacional",
-     "aplicacao": "manual",
-     "lembrete": "Vantagem em jogadas para socializar com nobres, negociar preços ou usar sua reputação, quando a situação descrita na regra se aplicar.",
-     "motivoManual": "O app não conhece o contexto ficcional da jogada e não rola dados."
-    }
-   },
-   "caracteristicaNoLivro": {
-    "nome": "Privilégio",
-    "texto": "Você tem vantagem nas jogadas para se relacionar com nobres, negociar preços ou usar sua reputação para obter o que deseja."
-   },
-   "imagem": "assets/cartas/comunidades/Highborne.png",
-   "arquivo": "Highborne.png",
-   "paginaLivro": 74,
-   "observacao": null,
-   "problemasDeTraducao": [
-    "Frase truncada, sem pontuação de fechamento antes da próxima: 'Embora isso possa ocorrer de várias formas Esse status sempre vem acompanhado de poder e influência.'",
-    "Legendas das ilustrações mantidas em inglês: 'A HIGHBORNE ISLAND COMMUNITY CITY BUILT AROUND A POWERFUL MAGE'S TOWER. THOSE WITH GREATER WEALTH LIVE IN HIGHER TIERS OF THE CITY.'; 'HIGHBORNE FROM THIS CITY ARE ALL WEALTHY AND INFLUENTIAL MAGICAL PRACTITIONERS WITH GOLD AND TITLES GRANTED BY THE GRAND MAGE.'; 'HIGHBORNE NOBLEMAN'; 'HIGHBORNE NOBLEWOMAN'; 'ROYAL BALLS AND EXTRAVAGENT PARTIES ARE A REGULAR FIXTURE IN HIGHBORNE COMMUNITIES. THEY OFFER AN EXCELLENT AVENUE TO RUB ELBOWS WITH OTHER MEMBERS OF HIGH SOCIETY.'"
-   ]
-  },
-  {
-   "id": "loreborne",
-   "nome": "Loreborne",
-   "nomeCarta": "LOREBORNE",
-   "descricao": "Fazer parte de uma comunidade erudita significa vir de uma sociedade que valoriza fortemente o conhecimento acadêmico ou a habilidade política.",
-   "descricaoLivro": "[TEXTO PRINCIPAL AUSENTE NA PÁGINA — falha de renderização/extração confirmada por inspeção direta e zoom da imagem: não há título 'LOREBORNE', parágrafo descritivo, lista de adjetivos nem caixa de Recurso Comunitário visíveis nesta página; aparecem apenas ilustrações de apoio com legendas em inglês.]",
-   "adjetivos": [],
-   "caracteristica": {
-    "nome": "Bem-Instruído",
-    "texto": "Você tem vantagem em jogadas que envolvam a história, cultura ou política de uma pessoa ou lugar proeminente.",
-    "rolagemManual": {
-     "tipo": "vantagem-situacional",
-     "aplicacao": "manual",
-     "lembrete": "Vantagem em jogadas que envolvam história, cultura ou política de pessoa ou lugar proeminente, quando a situação se aplicar.",
-     "motivoManual": "O app não conhece o contexto ficcional da jogada e não rola dados."
-    }
-   },
-   "caracteristicaNoLivro": null,
-   "imagem": "assets/cartas/comunidades/Loreborne.png",
-   "arquivo": "Loreborne.png",
-   "paginaLivro": 75,
-   "observacao": null,
-   "problemasDeTraducao": [
-    "Página inteira sem o texto principal (título, descrição, adjetivos e recurso comunitário) do Loreborne — a área correspondente aparece em branco mesmo após zoom",
-    "Legendas das ilustrações em inglês: 'SOME LOREBORNE COMMUNITIES ARE SMALL ENCLAVES OF SCHOLARS THAT SHARE A FIELD OF STUDY.'; 'ALCHEMICAL GUILDS CAN EARN GOLD BY SELLING POTIONS TO NEIGHBORS AND PASSERSBY.'; 'AN ORRERY THAT TRACKS THE MOVEMENT OF THE STARS'; 'FIELDS OF STUDY — THOSE WHO BELONG TO A LOREBORNE COMMUNITY OFTEN HAVE A DEDICATED FIELD OF STUDY. THEY CULTIVATE SPACES THAT ALLOW THEM TO ACQUIRE NEW INFORMATION AND PRESERVE IT OVER THE CENTURIES.'; 'LIBRARIES PLAY AN IMPORTANT PART IN MANY LOREBORNE COMMUNITIES, SERVING BOTH AS VALUABLE SOURCES OF ANCIENT INFORMATION AS WELL AS REPOSITORIES FOR RECENT DISCOVERIES.'"
-   ]
-  },
-  {
-   "id": "orderborne",
-   "nome": "Orderborne",
-   "nomeCarta": "ORDERBORNE",
-   "descricao": "Fazer parte de uma comunidade ordeira significa vir de um coletivo que valoriza a disciplina ou a fé, e você segue um conjunto de princípios que refletem sua vivência nesse meio.",
-   "descricaoLivro": "Fazer parte de uma comunidade Orderborne significa que você pertence a uma coletividade que se concentra na disciplina ou na fé e que defende um conjunto de princípios que refletem sua experiência nessa comunidade. Os Orderborne são frequentemente alguns dos mais poderosos entre as comunidades vizinhas. Ao alinhar os membros de sua sociedade em torno de um valor ou objetivo comum, como um deus, uma doutrina, um ethos ou até mesmo um negócio ou comércio compartilhado, os corpos governantes\ndesses enclaves são capazes de mobilizar populações maiores com menos esforço. Embora as comunidades de origem da ordem assumam uma variedade de formas - algumas até mesmo profundamente pacifistas -, talvez a mais temida seja a comunidade de origem da ordem.\nsão aquelas que se estruturam em torno de proezas militares. Nesse caso, não é incomum que a Orderborne forneça soldados para aluguel a outras cidades ou países.",
-   "adjetivos": [
-    "ambiciosos",
-    "benevolentes",
-    "pensativos",
-    "prudentes",
-    "sardônicos",
-    "estóicos"
-   ],
-   "caracteristica": {
-    "nome": "Dedicado",
-    "texto": "Registre três provérbios ou valores que sua criação lhe ensinou. Uma vez por descanso, ao descrever como você está incorporando um desses princípios por meio de sua ação atual, você pode rolar um d20 como seu Dado de Esperança.",
-    "uso": {
-     "custo": {},
-     "marcaUso": "uso:comunidade:orderborne:dedicado",
-     "rotuloAtivar": "Usar Dedicado",
-     "lembrete": "Depois de descrever como incorpora um de seus três princípios, role um d20 fora do app como seu Dado de Esperança nesta jogada."
+  "versao": 1,
+  "fonte": "Cartas oficiais em PNG (pt-BR) para nomes e características + livro para as descrições",
+  "introducaoLivro": "COMUnIDADE\n\nAs comunidades representam a cultura ou o ambiente em que seu personagem cresceu. Embora um personagem possa ter sido membro de várias comunidades durante sua criação, essa escolha representa aquela que ele acha que teve mais influência sobre sua personalidade e seu conjunto de habilidades atuais.\n\nAssim como acontece com os ancestrais, a descrição das características de um coletivo é matizada, pois as pessoas sempre veem as outras pelas lentes de sua própria experiência. Por exemplo, enquanto um marinheiro marítimo pode achar que sua própria comunidade é particularmente rígida, um personagem de uma metrópole ordenada pode achar que esse grupo é muito mutável. O relacionamento de um indivíduo com sua comunidade também cria uma grande variedade de experiências. Se seu personagem se desentendeu com as pessoas que definiram sua educação, ele pode continuar a carregar essa influência, mas também pode se esforçar para viver de forma diferente da que lhe foi ensinada.\n\nAo explorar as comunidades desta seção, imagine a variedade de maneiras pelas quais elas podem se manifestar no jogo. Algumas cartas de comunidade fazem referência a locais, outras a um ethos e outras a um objetivo comum, mas não há dois lugares idênticos que se enquadrem na mesma categoria. Se uma caravana errante viaja pelo mundo por vontade própria e outra foi expulsa de seu lar à força, os acessórios materiais de cada comunidade e os sentimentos de seu povo sobre seu estilo de vida seriam muito diferentes.\n\nAo construir seu personagem, você pode se inspirar em outras comunidades além da que escolheu. Como sempre, esse aspecto do jogo deve ser utilizado da maneira que melhor atenda ao seu grupo.\n\nCada comunidade tem um recurso de comunidade concedido ao personagem y                por sua comunidade que pode ser utilizado em jogo.\n\nDica: Cada entrada da comunidade sugere seis adjetivos que você pode usar como inspiração ao criar um personagem. Se desejar, escolha uma ou mais dessas palavras (ou role um d6) para ajudar a desenvolver a personalidade do seu personagem, sua relação com a educação ou com os colegas, ou até mesmo o comportamento com o qual ele interage com o restante do grupo.",
+  "comunidades": [
+    {
+      "id": "highborne",
+      "nome": "Highborne",
+      "nomeCarta": "HIGHBORNE",
+      "descricao": "Fazer parte de uma comunidade nobre significa estar acostumado a uma vida de elegância, opulência e prestígio nos escalões superiores da sociedade.",
+      "descricaoLivro": "Fazer parte de uma comunidade highborne significa que você está acostumado a uma vida de elegância, opulência e prestígio nos altos escalões da sociedade. Tradicionalmente, os membros de uma comunidade de alta nobreza possuem uma incrível riqueza material. Embora isso possa ocorrer de várias formas Esse status sempre vem acompanhado de poder e influência. Os highborne valorizam muito os títulos e as posses, e há pouca mobilidade social em suas fileiras. Os membros de uma comunidade highborne geralmente controlam o status político e econômico das áreas em que vivem devido à sua capacidade de influenciar as pessoas e a economia com sua riqueza substancial. A saúde e a segurança das pessoas menos abastadas que vivem nessas localidades geralmente dependem da capacidade dessa classe dominante de alta nobreza de priorizar o bem-estar de seus súditos em detrimento do lucro.",
+      "adjetivos": [
+        "amáveis",
+        "sinceros",
+        "coniventes",
+        "empreendedores",
+        "ostensivos",
+        "inofensivos"
+      ],
+      "caracteristica": {
+        "nome": "Privilégio",
+        "texto": "Você tem vantagem em jogadas para socializar com nobres, negociar preços ou usar sua reputação para conseguir o que deseja.",
+        "rolagemManual": {
+          "tipo": "vantagem-situacional",
+          "aplicacao": "manual",
+          "lembrete": "Vantagem em jogadas para socializar com nobres, negociar preços ou usar sua reputação, quando a situação descrita na regra se aplicar.",
+          "motivoManual": "O app não conhece o contexto ficcional da jogada e não rola dados."
+        }
+      },
+      "caracteristicaNoLivro": {
+        "nome": "Privilégio",
+        "texto": "Você tem vantagem nas jogadas para se relacionar com nobres, negociar preços ou usar sua reputação para obter o que deseja."
+      },
+      "imagem": "assets/cartas/comunidades/Highborne.png",
+      "arquivo": "Highborne.png",
+      "paginaLivro": 74,
+      "observacao": null,
+      "problemasDeTraducao": [
+        "Frase truncada, sem pontuação de fechamento antes da próxima: 'Embora isso possa ocorrer de várias formas Esse status sempre vem acompanhado de poder e influência.'",
+        "Legendas das ilustrações mantidas em inglês: 'A HIGHBORNE ISLAND COMMUNITY CITY BUILT AROUND A POWERFUL MAGE'S TOWER. THOSE WITH GREATER WEALTH LIVE IN HIGHER TIERS OF THE CITY.'; 'HIGHBORNE FROM THIS CITY ARE ALL WEALTHY AND INFLUENTIAL MAGICAL PRACTITIONERS WITH GOLD AND TITLES GRANTED BY THE GRAND MAGE.'; 'HIGHBORNE NOBLEMAN'; 'HIGHBORNE NOBLEWOMAN'; 'ROYAL BALLS AND EXTRAVAGENT PARTIES ARE A REGULAR FIXTURE IN HIGHBORNE COMMUNITIES. THEY OFFER AN EXCELLENT AVENUE TO RUB ELBOWS WITH OTHER MEMBERS OF HIGH SOCIETY.'"
+      ]
     },
-    "rolagemManual": {
-     "tipo": "substituir-dado-esperanca",
-     "dado": "d20",
-     "aplicacao": "manual",
-     "lembrete": "A mesa rola o d20; o app apenas registra o uso uma vez por descanso."
-    }
-   },
-   "caracteristicaNoLivro": {
-    "nome": "Dedicado",
-    "texto": "Registre três frases ou valores que sua educação lhe incutiu. Uma vez por descanso, ao descrever como você está incorporando um desses princípios por meio de sua ação atual, você pode rolar um d20 como seu Hope Die."
-   },
-   "imagem": "assets/cartas/comunidades/Orderborne.png",
-   "arquivo": "Orderborne.png",
-   "paginaLivro": 76,
-   "observacao": null,
-   "problemasDeTraducao": [
-    "'d20 como seu Hope Die' — 'Hope Die' não foi traduzido (deveria ser 'Dado de Esperança')",
-    "Trecho confuso/mal quebrado, parecendo erro de tradução ou parágrafo cortado: 'talvez a mais temida seja a comunidade de origem da ordem. são aquelas que se estruturam em torno de proezas militares.'",
-    "Legendas em inglês: 'ORDERBORNE COMMUNITIES WITH STRONG MILITARIES OFTEN MAKE AND UTILIZE SPECIALIZED WEAPONS AND ARMOR.'; 'ISOLATIONIST — SOME DEVOUT ORDERBORNE COMMUNITIES ARE BUILT ISOLATED HIGH IN THE MOUNTAINS.'; 'A HUGE GATED CITY PROTECTS FERTILE FARMLAND FROM INVADING ARMIES. ALL CITIZENS THAT LIVE WITHIN THE WALLS ARE CONSCRIPTED INTO SERVICE FROM THE MOMENT THEY'RE BORN AND GIVEN TASKS THEY MUST PREFORM AS SOON AS THEY'RE STRONG ENOUGH TO CARRY A BUCKET OF WATER.'"
-   ]
-  },
-  {
-   "id": "ridgeborne",
-   "nome": "Ridgeborne",
-   "nomeCarta": "RIDGEBORNE",
-   "descricao": "Fazer parte de uma comunidade montanhosa significa ter chamado os picos rochosos e penhascos íngremes de lar.",
-   "descricaoLivro": "Fazer parte de uma comunidade de cumeada significa que você já teve como lar os picos rochosos e os penhascos afiados da encosta da montanha. Aqueles que viveram nas montanhas geralmente se consideram mais resistentes do que a maioria, pois prosperaram no terreno mais perigoso que muitos continentes têm a oferecer. Esses grupos são adeptos da adaptação, desenvolvendo tecnologias e equipamentos exclusivos para transportar pessoas e produtos em terrenos difíceis. Dessa forma, os ridgeborne crescem lutando e escalando, o que os torna resistentes e com força de vontade. As localidades de Ridgeborne aparecem em uma variedade de formas - algumas cidades esculpem faces inteiras de penhascos, outras constroem castelos de pedra e outras ainda vivem em pequenas casas em picos soprados pelo vento. As forças externas geralmente têm dificuldade para atacar os grupos de ridgeborne, pois as pequenas milícias e as grandes forças militares das montanhas são adeptas da utilização de sua vantagem de terreno elevado.",
-   "adjetivos": [
-    "ousados",
-    "resistentes",
-    "indomáveis",
-    "leais",
-    "reservados",
-    "teimosos"
-   ],
-   "caracteristica": {
-    "nome": "Firme",
-    "texto": "Você tem vantagem em jogadas para atravessar penhascos e bordas perigosas, navegar por ambientes hostis e usar seus conhecimentos de sobrevivência.",
-    "rolagemManual": {
-     "tipo": "vantagem-situacional",
-     "aplicacao": "manual",
-     "lembrete": "Vantagem em jogadas para atravessar terreno perigoso, navegar ambiente hostil ou usar conhecimentos de sobrevivência, quando a situação se aplicar.",
-     "motivoManual": "O app não conhece o contexto ficcional da jogada e não rola dados."
-    }
-   },
-   "caracteristicaNoLivro": {
-    "nome": "Firmeza",
-    "texto": "Você tem vantagem nas jogadas para atravessar penhascos e saliências perigosas, navegar em ambientes adversos e usar seus conhecimentos de sobrevivência."
-   },
-   "imagem": "assets/cartas/comunidades/Ridgeborne.png",
-   "arquivo": "Ridgeborne.png",
-   "paginaLivro": 77,
-   "observacao": null,
-   "problemasDeTraducao": [
-    "Nome próprio 'Ridgeborne' mantido em inglês no título, mas traduzido no corpo do texto como 'comunidade de cumeada', gerando inconsistência",
-    "Legendas em inglês: 'PLATEAU SETTLEMENT — A VILLAGE BUILT ON THE MANY LEVELS OF A HIGH PLATEAU. EACH LEVEL HOLDS UNIQUE ARCHITECTURE BASED ON THE STRUCTURE OF THE STONE.'; 'HIGHER ELEVATION ALLOWS THEM TO USE WIND FOR POWER.'; 'THIS RIDGEBORNE COMMUNITY HAS A MYTH ABOUT A FORGOTTEN GOD ROLLING THEIR STONE HOME ACROSS THE ENTIRE MORTAL REALM BEFORE IT WAS FINALLY PLACED AT THE TOP OF A MOUNTAIN.'; 'A MASSIVE FOSSIL EXPOSED BOTH BY EROSION AND BY THE WORK OF A RIDGEBORNE COMMUNITY CARVING HOMES INTO THE CANYON WALLS.'; 'THE BONES OF AN ANCIENT DRAGON, SACRED TO THE INHABITANTS OF THE CITY.'; 'A RIDGEBORNE COMMUNITY CARVED SWITCHBACKS INTO THE MOUNTAIN TO BUILD THEIR HOMES. THEIR FORTIFICATIONS ARE HIGHLY DEFENSIBLE IF THEIR ENEMIES ATTACK FROM BELOW.'"
-   ]
-  },
-  {
-   "id": "seaborne",
-   "nome": "Seaborne",
-   "nomeCarta": "SEABORNE",
-   "descricao": "Fazer parte de uma comunidade costeira significa ter vivido sobre ou próximo a um grande corpo d'água.",
-   "descricaoLivro": "Fazer parte de uma comunidade marítima significa que você vivia em um grande corpo de água ou próximo a ele. As comunidades marítimas são construídas, tanto física quanto culturalmente, em torno das águas específicas que chamam de lar. Alguns desses grupos vivem ao longo da costa, construindo portos para os habitantes locais e viajantes. Esses portos funcionam como centros de comércio, atrações turísticas ou até mesmo um lugar seguro para descansar após semanas de viagem. Outros habitantes do mar vivem na água em pequenos barcos ou grandes navios, com a ideia de \"lar\" compreendendo um navio e sua tripulação, em vez de uma massa de terra.\nIndependentemente de sua localização exata, as comunidades marítimas estão intimamente ligadas às marés do oceano e às criaturas que as habitam. Os habitantes do mar aprendem a pescar ainda jovens e são treinados desde o nascimento para prender a respiração e nadar até mesmo nas águas mais tumultuadas. Indivíduos desses grupos são muito procurados por suas habilidades de navegação, e muitos se tornam capitães de embarcações, seja em sua própria comunidade, trabalhando para outra ou até mesmo no comando de uma poderosa operação naval.",
-   "adjetivos": [
-    "sinceros",
-    "cooperativos",
-    "exuberantes",
-    "ferozes",
-    "resolutos",
-    "resistentes"
-   ],
-   "caracteristica": {
-    "nome": "Conhece a Maré",
-    "texto": "Você consegue sentir o fluxo e refluxo da vida. Quando rolar com Medo, coloque uma ficha nesta carta. Você pode manter um número de fichas igual ao seu nível. Antes de fazer uma jogada de ação, pode gastar qualquer número dessas fichas para ganhar +1 de bônus na jogada para cada ficha gasta. Ao final de cada sessão, limpe todas as fichas não gastas.",
-    "contadorManual": {
-     "chave": "comunidade:seaborne:conhece-a-mare",
-     "gatilhoGanhar": "Depois de uma jogada com Medo, acrescente 1 ficha manualmente.",
-     "gasto": "Antes de uma jogada de ação, gaste qualquer número de fichas e some +1 por ficha.",
-     "motivoManual": "O app não rola os Dados de Dualidade nem conhece o resultado da jogada sem entrada da mesa."
-    }
-   },
-   "caracteristicaNoLivro": {
-    "nome": "Know the Tide",
-    "texto": "Você pode sentir o fluxo e o refluxo da vida. Quando rolar com Medo, coloque uma ficha em sua carta de comunidade. Você pode manter um número de fichas igual ao seu nível. Antes de fazer uma rolagem de ação, você pode gastar qualquer número desses tokens para ganhar um bônus de +1 na rolagem para cada token gasto. No final de cada sessão, limpe todas as fichas não gastas."
-   },
-   "imagem": "assets/cartas/comunidades/Seaborne.png",
-   "arquivo": "Seaborne.png",
-   "paginaLivro": 78,
-   "observacao": null,
-   "problemasDeTraducao": [
-    "Nome do recurso comunitário 'Know the Tide' não foi traduzido (ficou em inglês)",
-    "O texto de adjetivos se refere a 'Os marítimos costumam ser...' em vez de 'Os Seaborne', inconsistente com o padrão das outras entradas",
-    "Legendas em inglês: 'MEMBERS OF SEABORNE COMMUNITIES MAY UTILIZE WATER IN THEIR MAGICAL PRACTICE, CARRYING IT WITH THEM WHEN THEY TRAVEL TO DRY CLIMATES.'; 'LIFE ON DECK — SOME SEABORNE COMMUNITIES ARE BUILT ON MASSIVE SHIPS. THIS VESSEL TRAVELS THE SAME ROUTE EVERY YEAR. TRAVELERS CAN JOIN THE COMMUNITY FOR MONTHS AT A TIME, DISEMBARKING AND REJOINING WHEN THE SHIP COMES BACK THE FOLLOWING YEAR.'; 'MEMBERS OF SEABORNE COMMUNITIES MIGHT ADORN THEIR HAIR WITH CORAL OR SHELLS THAT WASH UP ON THE BEACH.'; 'SOME SEABORNE COMMUNITIES ARE MERCANTILE, KNOWN TO TRADE GOODS FROM ACROSS THE MORTAL REALM WHEREVER THEY SAIL.'; 'SEABORNE ISLANDS — SEABORNE COMMUNITIES ARE PROMINENT ON SMALL ISLANDS WHERE CITIZEN'S DAILY LIFE IS INFLUENCED BY THE OCEAN THEY'RE SURROUNDED BY.'"
-   ]
-  },
-  {
-   "id": "slyborne",
-   "nome": "Slyborne",
-   "nomeCarta": "SLYBORNE",
-   "descricao": "Fazer parte de uma comunidade furtiva significa vir de um grupo que opera fora da lei, incluindo todos os tipos de criminosos, trapaceiros e vigaristas.",
-   "descricaoLivro": "Fazer parte de uma comunidade slyborne significa que você vem de um grupo que opera fora da lei, incluindo todos os tipos de criminosos, vigaristas e vigaristas. Os membros das comunidades slyborne são unidos por seus objetivos desonestos e seus meios inteligentes de alcançá-los. Muitas pessoas dessas comunidades têm uma série de habilidades inescrupulosas: falsificação, roubo, contrabando e violência. Pessoas de qualquer classe social podem ser slyborne, desde aquelas que acumularam grande riqueza e influência até as que não possuem uma moeda sequer em seu nome. Para quem vê de fora, os slyborne podem parecer rufiões sem lealdade, mas essas comunidades possuem alguns dos mais rígidos códigos de honra\nque, quando quebrado, pode resultar em um fim aterrorizante para o transgressor.",
-   "adjetivos": [
-    "calculistas",
-    "inteligentes",
-    "formidáveis",
-    "perspicazes",
-    "astutos",
-    "tenazes"
-   ],
-   "caracteristica": {
-    "nome": "Canalha",
-    "texto": "Você tem vantagem em jogadas para negociar com criminosos, detectar mentiras ou encontrar um lugar seguro para se esconder.",
-    "rolagemManual": {
-     "tipo": "vantagem-situacional",
-     "aplicacao": "manual",
-     "lembrete": "Vantagem em jogadas para negociar com criminosos, detectar mentiras ou encontrar lugar seguro para se esconder, quando a situação se aplicar.",
-     "motivoManual": "O app não conhece o contexto ficcional da jogada e não rola dados."
-    }
-   },
-   "caracteristicaNoLivro": {
-    "nome": "Vigarista",
-    "texto": "Você tem vantagem nas rolagens para negociar com criminosos, detectar mentiras ou encontrar um lugar seguro para se esconder."
-   },
-   "imagem": "assets/cartas/comunidades/Slyborne.png",
-   "arquivo": "Slyborne.png",
-   "paginaLivro": 79,
-   "observacao": null,
-   "problemasDeTraducao": [
-    "Repetição indevida de palavra por erro de tradução: 'incluindo todos os tipos de criminosos, vigaristas e vigaristas'",
-    "Erro de concordância verbal: 'códigos de honra que, quando quebrado, pode resultar...' (deveria ser 'quebrados... podem resultar')",
-    "Legendas em inglês: 'PIRATE TOWER — A LARGE TOWER SITTING IN THE MIDDLE OF THE SEA WHERE PIRATES GATHER TO SELL STOLEN LOOT, ASSEMBLE CREWS, AND TRADE INFORMATION ABOUT FUTURE TARGETS.'; 'QUICK GETAWAY — COMPLEX COUNTER-BALANCED PULLEY SYSTEMS ALLOW INHABITANTS TO MAKE A HASTY RETREAT WHEN THE SITUATION REQUIRES IT.'; 'GAMBLING IS A COMMON PASTIME IN MANY SLYBORNE COMMUNITIES. GAMES MAY HAVE MORE THAN MONEY ON THE LINE: MAGICAL ITEMS, INFORMATION, AND EVEN AN INDIVIDUAL'S MEMORIES CAN BE GAMBLED AWAY.'; 'SLY FIVE — A CARD GAME THAT REQUIRES DECEPTION AND SKILL. CHEATING ISN'T AGAINST THE RULES, BUT THOSE WHO ARE CAUGHT WILL HAVE A FINGER REMOVED—THE DEALER CHOOSES WHICH ONE.'; 'SLYBOURNE MARKETS ALLOW CRIMINALS TO FENCE STOLEN ITEMS, BUY AND SELL CONTRABAND, AND GATHER ILLICIT INFORMATION.'"
-   ]
-  },
-  {
-   "id": "underborne",
-   "nome": "Underborne",
-   "nomeCarta": "UNDERBORNE",
-   "descricao": "Fazer parte de uma comunidade subterrânea significa que você vem de uma sociedade que vive abaixo da superfície.",
-   "descricaoLivro": "Fazer parte de uma comunidade underborne significa que você pertence a uma sociedade subterrânea. Muitos underborne vivem logo abaixo das cidades e vilarejos de outros coletivos, enquanto alguns vivem muito mais profundamente. Essas comunidades variam de pequenos grupos familiares em tocas a grandes metrópoles em cavernas de pedra. Em muitos locais, os underborne são reconhecidos por sua incrível ousadia e habilidade, que permitem grandes feitos de arquitetura e engenharia. Os Underborne são regularmente contratados para\nsua bravura, já que até mesmo o menos ousado deles provavelmente já encontrou feras formidáveis no subsolo, e aprender a despachar essas criaturas é uma prática comum entre essas sociedades.\nDevido aos perigos de seu ambiente, muitas comunidades submersas desenvolvem linguagens não verbais exclusivas que se mostram igualmente úteis na superfície.",
-   "adjetivos": [
-    "compenetrados",
-    "evasivos",
-    "indomáveis",
-    "inovadores",
-    "engenhosos",
-    "despretensiosos"
-   ],
-   "caracteristica": {
-    "nome": "Vida na Penumbra",
-    "texto": "Quando estiver em uma área com pouca luz ou sombras densas, você tem vantagem em jogadas para se esconder, investigar ou perceber detalhes dentro dessa área.",
-    "rolagemManual": {
-     "tipo": "vantagem-situacional",
-     "aplicacao": "manual",
-     "lembrete": "Vantagem em jogadas para se esconder, investigar ou perceber detalhes em pouca luz ou sombras densas, quando a situação se aplicar.",
-     "motivoManual": "O app não conhece o contexto ficcional da jogada e não rola dados."
-    }
-   },
-   "caracteristicaNoLivro": {
-    "nome": "Vida com pouca luz",
-    "texto": "Quando estiver em uma área com pouca luz ou muita sombra, você tem vantagem nas rolagens para se esconder, investigar ou perceber detalhes dentro dessa área."
-   },
-   "imagem": "assets/cartas/comunidades/Underborne.png",
-   "arquivo": "Underborne.png",
-   "paginaLivro": 80,
-   "observacao": null,
-   "problemasDeTraducao": [
-    "Frase truncada/mal construída sem complemento: 'Os Underborne são regularmente contratados para sua bravura, já que até mesmo o menos ousado deles...' (falta o objeto: contratados para quê)",
-    "Uso da palavra 'submersas' para descrever comunidades subterrâneas ('muitas comunidades submersas desenvolvem linguagens não verbais') — tradução equivocada, sugerindo 'debaixo d'água' em vez de 'subterrâneas'",
-    "Legendas em inglês: 'CAVE SPIDER SILK CAN BE USED INSTEAD OF ROPE TO SUSPEND THESE UNDERBORNE HOMES, AS IT'S PARTICULARLY STRONG AND LIGHTWEIGHT.'; 'SUSPENDED CITIES — AN UNDERBORNE COMMUNITY SUSPENDED FROM THE ROOF OF A CAVE TO PROTECT CITIZENS FROM SUBTERRANEAN THREATS.'; 'CHISELED FROM A MASSIVE CRYSTAL, THIS HOLLOWED-OUT HOME IS STRUCTURED LIKE ANY TOWER FOUND ABOVEGROUND.'; 'GREAT ARCHITECTURAL SKILL IS REQUIRED TO BATTLE THE CRUSHING FORCES OF THE SURFACE ABOVE AND TO MAINTAIN THE INTEGRITY OF STALAGMITES AND STALACTITES.'; 'UNDERGROUND PREDATORS CAN ATTACK FROM THE CAVE CEILINGS AS WELL AS THE FLOOR, SO UNDERBORNE COMMUNITIES MUST INVEST IN UNIQUE PROTECTIVE MEASURES.'; 'JUST BENEATH — SOME UNDERBORNE COMMUNITIES LIVE JUST BENEATH THE SURFACE, ALLOWING THEM TO MOVE BENEATH THE UPPER WORLD UNDETECTED.'; 'ABOVEGROUND ENTRANCE'"
-   ]
-  },
-  {
-   "id": "wanderborne",
-   "nome": "Wanderborne",
-   "nomeCarta": "WANDERBORNE",
-   "descricao": "Fazer parte de uma comunidade errante significa ter vivido como um nômade, abrindo mão de um lar permanente e experimentando uma grande variedade de culturas.",
-   "descricaoLivro": "Fazer parte de uma comunidade wanderborne significa que você viveu como um nômade, renunciando a um lar permanente e conhecendo uma grande variedade de culturas. Ao contrário de muitas comunidades que são definidas por sua localidade, os wanderborne são definidos por seu estilo de vida itinerante. Devido à sua migração frequente, os wanderborne dão menos valor ao acúmulo de bens materiais em favor da aquisição de informações, habilidades e conexões. Enquanto alguns wanderborne são aliados por um ethos comum, como uma religião ou um conjunto de valores políticos ou econômicos, outros se unem após uma tragédia compartilhada, como a perda de seu lar ou terra. Independentemente do motivo, os perigos apresentados pela vida na estrada e a escolha de continuar nessa estrada juntos fazem com que os wanderborne sejam conhecidos por sua lealdade inabalável.",
-   "adjetivos": [
-    "inescrutáveis",
-    "magnânimos",
-    "alegres",
-    "confiáveis",
-    "experientes",
-    "pouco ortodoxos"
-   ],
-   "caracteristica": {
-    "nome": "Mochila Nômade",
-    "texto": "Adicione uma Mochila Nômade ao seu inventário. Uma vez por sessão, você pode gastar 1 Esperança para vasculhar essa mochila e puxar um item mundano que seja útil para a situação. Trabalhe com o Mestre para definir qual item você encontrou.",
-    "uso": {
-     "custo": {
-      "esperanca": 1
-     },
-     "marcaUso": "uso:comunidade:wanderborne:mochila-nomade",
-     "rotuloAtivar": "Vasculhar Mochila Nômade · 1 Esperança",
-     "lembrete": "Defina com o Mestre um item mundano útil e registre o item encontrado no inventário. O app não escolhe o item por você."
+    {
+      "id": "loreborne",
+      "nome": "Loreborne",
+      "nomeCarta": "LOREBORNE",
+      "descricao": "Fazer parte de uma comunidade erudita significa vir de uma sociedade que valoriza fortemente o conhecimento acadêmico ou a habilidade política.",
+      "descricaoLivro": "[TEXTO PRINCIPAL AUSENTE NA PÁGINA — falha de renderização/extração confirmada por inspeção direta e zoom da imagem: não há título 'LOREBORNE', parágrafo descritivo, lista de adjetivos nem caixa de Recurso Comunitário visíveis nesta página; aparecem apenas ilustrações de apoio com legendas em inglês.]",
+      "adjetivos": [],
+      "caracteristica": {
+        "nome": "Bem-Instruído",
+        "texto": "Você tem vantagem em jogadas que envolvam a história, cultura ou política de uma pessoa ou lugar proeminente.",
+        "rolagemManual": {
+          "tipo": "vantagem-situacional",
+          "aplicacao": "manual",
+          "lembrete": "Vantagem em jogadas que envolvam história, cultura ou política de pessoa ou lugar proeminente, quando a situação se aplicar.",
+          "motivoManual": "O app não conhece o contexto ficcional da jogada e não rola dados."
+        }
+      },
+      "caracteristicaNoLivro": null,
+      "imagem": "assets/cartas/comunidades/Loreborne.png",
+      "arquivo": "Loreborne.png",
+      "paginaLivro": 75,
+      "observacao": null,
+      "problemasDeTraducao": [
+        "Página inteira sem o texto principal (título, descrição, adjetivos e recurso comunitário) do Loreborne — a área correspondente aparece em branco mesmo após zoom",
+        "Legendas das ilustrações em inglês: 'SOME LOREBORNE COMMUNITIES ARE SMALL ENCLAVES OF SCHOLARS THAT SHARE A FIELD OF STUDY.'; 'ALCHEMICAL GUILDS CAN EARN GOLD BY SELLING POTIONS TO NEIGHBORS AND PASSERSBY.'; 'AN ORRERY THAT TRACKS THE MOVEMENT OF THE STARS'; 'FIELDS OF STUDY — THOSE WHO BELONG TO A LOREBORNE COMMUNITY OFTEN HAVE A DEDICATED FIELD OF STUDY. THEY CULTIVATE SPACES THAT ALLOW THEM TO ACQUIRE NEW INFORMATION AND PRESERVE IT OVER THE CENTURIES.'; 'LIBRARIES PLAY AN IMPORTANT PART IN MANY LOREBORNE COMMUNITIES, SERVING BOTH AS VALUABLE SOURCES OF ANCIENT INFORMATION AS WELL AS REPOSITORIES FOR RECENT DISCOVERIES.'"
+      ]
     },
-    "efeitoCriacao": {
-     "tipo": "inventario",
-     "item": "Mochila Nômade",
-     "quantidade": 1,
-     "fonte": "DH-DigitalRegras.pdf p.81"
+    {
+      "id": "orderborne",
+      "nome": "Orderborne",
+      "nomeCarta": "ORDERBORNE",
+      "descricao": "Fazer parte de uma comunidade ordeira significa vir de um coletivo que valoriza a disciplina ou a fé, e você segue um conjunto de princípios que refletem sua vivência nesse meio.",
+      "descricaoLivro": "Fazer parte de uma comunidade Orderborne significa que você pertence a uma coletividade que se concentra na disciplina ou na fé e que defende um conjunto de princípios que refletem sua experiência nessa comunidade. Os Orderborne são frequentemente alguns dos mais poderosos entre as comunidades vizinhas. Ao alinhar os membros de sua sociedade em torno de um valor ou objetivo comum, como um deus, uma doutrina, um ethos ou até mesmo um negócio ou comércio compartilhado, os corpos governantes\ndesses enclaves são capazes de mobilizar populações maiores com menos esforço. Embora as comunidades de origem da ordem assumam uma variedade de formas - algumas até mesmo profundamente pacifistas -, talvez a mais temida seja a comunidade de origem da ordem.\nsão aquelas que se estruturam em torno de proezas militares. Nesse caso, não é incomum que a Orderborne forneça soldados para aluguel a outras cidades ou países.",
+      "adjetivos": [
+        "ambiciosos",
+        "benevolentes",
+        "pensativos",
+        "prudentes",
+        "sardônicos",
+        "estóicos"
+      ],
+      "caracteristica": {
+        "nome": "Dedicado",
+        "texto": "Registre três provérbios ou valores que sua criação lhe ensinou. Uma vez por descanso, ao descrever como você está incorporando um desses princípios por meio de sua ação atual, você pode rolar um d20 como seu Dado de Esperança.",
+        "uso": {
+          "custo": {},
+          "marcaUso": "uso:comunidade:orderborne:dedicado",
+          "rotuloAtivar": "Usar Dedicado",
+          "lembrete": "Depois de descrever como incorpora um de seus três princípios, role um d20 fora do app como seu Dado de Esperança nesta jogada."
+        },
+        "rolagemManual": {
+          "tipo": "substituir-dado-esperanca",
+          "dado": "d20",
+          "aplicacao": "manual",
+          "lembrete": "A mesa rola o d20; o app apenas registra o uso uma vez por descanso."
+        }
+      },
+      "caracteristicaNoLivro": {
+        "nome": "Dedicado",
+        "texto": "Registre três frases ou valores que sua educação lhe incutiu. Uma vez por descanso, ao descrever como você está incorporando um desses princípios por meio de sua ação atual, você pode rolar um d20 como seu Hope Die."
+      },
+      "imagem": "assets/cartas/comunidades/Orderborne.png",
+      "arquivo": "Orderborne.png",
+      "paginaLivro": 76,
+      "observacao": null,
+      "problemasDeTraducao": [
+        "'d20 como seu Hope Die' — 'Hope Die' não foi traduzido (deveria ser 'Dado de Esperança')",
+        "Trecho confuso/mal quebrado, parecendo erro de tradução ou parágrafo cortado: 'talvez a mais temida seja a comunidade de origem da ordem. são aquelas que se estruturam em torno de proezas militares.'",
+        "Legendas em inglês: 'ORDERBORNE COMMUNITIES WITH STRONG MILITARIES OFTEN MAKE AND UTILIZE SPECIALIZED WEAPONS AND ARMOR.'; 'ISOLATIONIST — SOME DEVOUT ORDERBORNE COMMUNITIES ARE BUILT ISOLATED HIGH IN THE MOUNTAINS.'; 'A HUGE GATED CITY PROTECTS FERTILE FARMLAND FROM INVADING ARMIES. ALL CITIZENS THAT LIVE WITHIN THE WALLS ARE CONSCRIPTED INTO SERVICE FROM THE MOMENT THEY'RE BORN AND GIVEN TASKS THEY MUST PREFORM AS SOON AS THEY'RE STRONG ENOUGH TO CARRY A BUCKET OF WATER.'"
+      ]
+    },
+    {
+      "id": "ridgeborne",
+      "nome": "Ridgeborne",
+      "nomeCarta": "RIDGEBORNE",
+      "descricao": "Fazer parte de uma comunidade montanhosa significa ter chamado os picos rochosos e penhascos íngremes de lar.",
+      "descricaoLivro": "Fazer parte de uma comunidade de cumeada significa que você já teve como lar os picos rochosos e os penhascos afiados da encosta da montanha. Aqueles que viveram nas montanhas geralmente se consideram mais resistentes do que a maioria, pois prosperaram no terreno mais perigoso que muitos continentes têm a oferecer. Esses grupos são adeptos da adaptação, desenvolvendo tecnologias e equipamentos exclusivos para transportar pessoas e produtos em terrenos difíceis. Dessa forma, os ridgeborne crescem lutando e escalando, o que os torna resistentes e com força de vontade. As localidades de Ridgeborne aparecem em uma variedade de formas - algumas cidades esculpem faces inteiras de penhascos, outras constroem castelos de pedra e outras ainda vivem em pequenas casas em picos soprados pelo vento. As forças externas geralmente têm dificuldade para atacar os grupos de ridgeborne, pois as pequenas milícias e as grandes forças militares das montanhas são adeptas da utilização de sua vantagem de terreno elevado.",
+      "adjetivos": [
+        "ousados",
+        "resistentes",
+        "indomáveis",
+        "leais",
+        "reservados",
+        "teimosos"
+      ],
+      "caracteristica": {
+        "nome": "Firme",
+        "texto": "Você tem vantagem em jogadas para atravessar penhascos e bordas perigosas, navegar por ambientes hostis e usar seus conhecimentos de sobrevivência.",
+        "rolagemManual": {
+          "tipo": "vantagem-situacional",
+          "aplicacao": "manual",
+          "lembrete": "Vantagem em jogadas para atravessar terreno perigoso, navegar ambiente hostil ou usar conhecimentos de sobrevivência, quando a situação se aplicar.",
+          "motivoManual": "O app não conhece o contexto ficcional da jogada e não rola dados."
+        }
+      },
+      "caracteristicaNoLivro": {
+        "nome": "Firmeza",
+        "texto": "Você tem vantagem nas jogadas para atravessar penhascos e saliências perigosas, navegar em ambientes adversos e usar seus conhecimentos de sobrevivência."
+      },
+      "imagem": "assets/cartas/comunidades/Ridgeborne.png",
+      "arquivo": "Ridgeborne.png",
+      "paginaLivro": 77,
+      "observacao": null,
+      "problemasDeTraducao": [
+        "Nome próprio 'Ridgeborne' mantido em inglês no título, mas traduzido no corpo do texto como 'comunidade de cumeada', gerando inconsistência",
+        "Legendas em inglês: 'PLATEAU SETTLEMENT — A VILLAGE BUILT ON THE MANY LEVELS OF A HIGH PLATEAU. EACH LEVEL HOLDS UNIQUE ARCHITECTURE BASED ON THE STRUCTURE OF THE STONE.'; 'HIGHER ELEVATION ALLOWS THEM TO USE WIND FOR POWER.'; 'THIS RIDGEBORNE COMMUNITY HAS A MYTH ABOUT A FORGOTTEN GOD ROLLING THEIR STONE HOME ACROSS THE ENTIRE MORTAL REALM BEFORE IT WAS FINALLY PLACED AT THE TOP OF A MOUNTAIN.'; 'A MASSIVE FOSSIL EXPOSED BOTH BY EROSION AND BY THE WORK OF A RIDGEBORNE COMMUNITY CARVING HOMES INTO THE CANYON WALLS.'; 'THE BONES OF AN ANCIENT DRAGON, SACRED TO THE INHABITANTS OF THE CITY.'; 'A RIDGEBORNE COMMUNITY CARVED SWITCHBACKS INTO THE MOUNTAIN TO BUILD THEIR HOMES. THEIR FORTIFICATIONS ARE HIGHLY DEFENSIBLE IF THEIR ENEMIES ATTACK FROM BELOW.'"
+      ]
+    },
+    {
+      "id": "seaborne",
+      "nome": "Seaborne",
+      "nomeCarta": "SEABORNE",
+      "descricao": "Fazer parte de uma comunidade costeira significa ter vivido sobre ou próximo a um grande corpo d'água.",
+      "descricaoLivro": "Fazer parte de uma comunidade marítima significa que você vivia em um grande corpo de água ou próximo a ele. As comunidades marítimas são construídas, tanto física quanto culturalmente, em torno das águas específicas que chamam de lar. Alguns desses grupos vivem ao longo da costa, construindo portos para os habitantes locais e viajantes. Esses portos funcionam como centros de comércio, atrações turísticas ou até mesmo um lugar seguro para descansar após semanas de viagem. Outros habitantes do mar vivem na água em pequenos barcos ou grandes navios, com a ideia de \"lar\" compreendendo um navio e sua tripulação, em vez de uma massa de terra.\nIndependentemente de sua localização exata, as comunidades marítimas estão intimamente ligadas às marés do oceano e às criaturas que as habitam. Os habitantes do mar aprendem a pescar ainda jovens e são treinados desde o nascimento para prender a respiração e nadar até mesmo nas águas mais tumultuadas. Indivíduos desses grupos são muito procurados por suas habilidades de navegação, e muitos se tornam capitães de embarcações, seja em sua própria comunidade, trabalhando para outra ou até mesmo no comando de uma poderosa operação naval.",
+      "adjetivos": [
+        "sinceros",
+        "cooperativos",
+        "exuberantes",
+        "ferozes",
+        "resolutos",
+        "resistentes"
+      ],
+      "caracteristica": {
+        "nome": "Conhece a Maré",
+        "texto": "Você consegue sentir o fluxo e refluxo da vida. Quando rolar com Medo, coloque uma ficha nesta carta. Você pode manter um número de fichas igual ao seu nível. Antes de fazer uma jogada de ação, pode gastar qualquer número dessas fichas para ganhar +1 de bônus na jogada para cada ficha gasta. Ao final de cada sessão, limpe todas as fichas não gastas.",
+        "contadorManual": {
+          "chave": "comunidade:seaborne:conhece-a-mare",
+          "gatilhoGanhar": "Depois de uma jogada com Medo, acrescente 1 ficha manualmente.",
+          "gasto": "Antes de uma jogada de ação, gaste qualquer número de fichas e some +1 por ficha.",
+          "motivoManual": "O app não rola os Dados de Dualidade nem conhece o resultado da jogada sem entrada da mesa."
+        }
+      },
+      "caracteristicaNoLivro": {
+        "nome": "Know the Tide",
+        "texto": "Você pode sentir o fluxo e o refluxo da vida. Quando rolar com Medo, coloque uma ficha em sua carta de comunidade. Você pode manter um número de fichas igual ao seu nível. Antes de fazer uma rolagem de ação, você pode gastar qualquer número desses tokens para ganhar um bônus de +1 na rolagem para cada token gasto. No final de cada sessão, limpe todas as fichas não gastas."
+      },
+      "imagem": "assets/cartas/comunidades/Seaborne.png",
+      "arquivo": "Seaborne.png",
+      "paginaLivro": 78,
+      "observacao": null,
+      "problemasDeTraducao": [
+        "Nome do recurso comunitário 'Know the Tide' não foi traduzido (ficou em inglês)",
+        "O texto de adjetivos se refere a 'Os marítimos costumam ser...' em vez de 'Os Seaborne', inconsistente com o padrão das outras entradas",
+        "Legendas em inglês: 'MEMBERS OF SEABORNE COMMUNITIES MAY UTILIZE WATER IN THEIR MAGICAL PRACTICE, CARRYING IT WITH THEM WHEN THEY TRAVEL TO DRY CLIMATES.'; 'LIFE ON DECK — SOME SEABORNE COMMUNITIES ARE BUILT ON MASSIVE SHIPS. THIS VESSEL TRAVELS THE SAME ROUTE EVERY YEAR. TRAVELERS CAN JOIN THE COMMUNITY FOR MONTHS AT A TIME, DISEMBARKING AND REJOINING WHEN THE SHIP COMES BACK THE FOLLOWING YEAR.'; 'MEMBERS OF SEABORNE COMMUNITIES MIGHT ADORN THEIR HAIR WITH CORAL OR SHELLS THAT WASH UP ON THE BEACH.'; 'SOME SEABORNE COMMUNITIES ARE MERCANTILE, KNOWN TO TRADE GOODS FROM ACROSS THE MORTAL REALM WHEREVER THEY SAIL.'; 'SEABORNE ISLANDS — SEABORNE COMMUNITIES ARE PROMINENT ON SMALL ISLANDS WHERE CITIZEN'S DAILY LIFE IS INFLUENCED BY THE OCEAN THEY'RE SURROUNDED BY.'"
+      ]
+    },
+    {
+      "id": "slyborne",
+      "nome": "Slyborne",
+      "nomeCarta": "SLYBORNE",
+      "descricao": "Fazer parte de uma comunidade furtiva significa vir de um grupo que opera fora da lei, incluindo todos os tipos de criminosos, trapaceiros e vigaristas.",
+      "descricaoLivro": "Fazer parte de uma comunidade slyborne significa que você vem de um grupo que opera fora da lei, incluindo todos os tipos de criminosos, vigaristas e vigaristas. Os membros das comunidades slyborne são unidos por seus objetivos desonestos e seus meios inteligentes de alcançá-los. Muitas pessoas dessas comunidades têm uma série de habilidades inescrupulosas: falsificação, roubo, contrabando e violência. Pessoas de qualquer classe social podem ser slyborne, desde aquelas que acumularam grande riqueza e influência até as que não possuem uma moeda sequer em seu nome. Para quem vê de fora, os slyborne podem parecer rufiões sem lealdade, mas essas comunidades possuem alguns dos mais rígidos códigos de honra\nque, quando quebrado, pode resultar em um fim aterrorizante para o transgressor.",
+      "adjetivos": [
+        "calculistas",
+        "inteligentes",
+        "formidáveis",
+        "perspicazes",
+        "astutos",
+        "tenazes"
+      ],
+      "caracteristica": {
+        "nome": "Canalha",
+        "texto": "Você tem vantagem em jogadas para negociar com criminosos, detectar mentiras ou encontrar um lugar seguro para se esconder.",
+        "rolagemManual": {
+          "tipo": "vantagem-situacional",
+          "aplicacao": "manual",
+          "lembrete": "Vantagem em jogadas para negociar com criminosos, detectar mentiras ou encontrar lugar seguro para se esconder, quando a situação se aplicar.",
+          "motivoManual": "O app não conhece o contexto ficcional da jogada e não rola dados."
+        }
+      },
+      "caracteristicaNoLivro": {
+        "nome": "Vigarista",
+        "texto": "Você tem vantagem nas rolagens para negociar com criminosos, detectar mentiras ou encontrar um lugar seguro para se esconder."
+      },
+      "imagem": "assets/cartas/comunidades/Slyborne.png",
+      "arquivo": "Slyborne.png",
+      "paginaLivro": 79,
+      "observacao": null,
+      "problemasDeTraducao": [
+        "Repetição indevida de palavra por erro de tradução: 'incluindo todos os tipos de criminosos, vigaristas e vigaristas'",
+        "Erro de concordância verbal: 'códigos de honra que, quando quebrado, pode resultar...' (deveria ser 'quebrados... podem resultar')",
+        "Legendas em inglês: 'PIRATE TOWER — A LARGE TOWER SITTING IN THE MIDDLE OF THE SEA WHERE PIRATES GATHER TO SELL STOLEN LOOT, ASSEMBLE CREWS, AND TRADE INFORMATION ABOUT FUTURE TARGETS.'; 'QUICK GETAWAY — COMPLEX COUNTER-BALANCED PULLEY SYSTEMS ALLOW INHABITANTS TO MAKE A HASTY RETREAT WHEN THE SITUATION REQUIRES IT.'; 'GAMBLING IS A COMMON PASTIME IN MANY SLYBORNE COMMUNITIES. GAMES MAY HAVE MORE THAN MONEY ON THE LINE: MAGICAL ITEMS, INFORMATION, AND EVEN AN INDIVIDUAL'S MEMORIES CAN BE GAMBLED AWAY.'; 'SLY FIVE — A CARD GAME THAT REQUIRES DECEPTION AND SKILL. CHEATING ISN'T AGAINST THE RULES, BUT THOSE WHO ARE CAUGHT WILL HAVE A FINGER REMOVED—THE DEALER CHOOSES WHICH ONE.'; 'SLYBOURNE MARKETS ALLOW CRIMINALS TO FENCE STOLEN ITEMS, BUY AND SELL CONTRABAND, AND GATHER ILLICIT INFORMATION.'"
+      ]
+    },
+    {
+      "id": "underborne",
+      "nome": "Underborne",
+      "nomeCarta": "UNDERBORNE",
+      "descricao": "Fazer parte de uma comunidade subterrânea significa que você vem de uma sociedade que vive abaixo da superfície.",
+      "descricaoLivro": "Fazer parte de uma comunidade underborne significa que você pertence a uma sociedade subterrânea. Muitos underborne vivem logo abaixo das cidades e vilarejos de outros coletivos, enquanto alguns vivem muito mais profundamente. Essas comunidades variam de pequenos grupos familiares em tocas a grandes metrópoles em cavernas de pedra. Em muitos locais, os underborne são reconhecidos por sua incrível ousadia e habilidade, que permitem grandes feitos de arquitetura e engenharia. Os Underborne são regularmente contratados para\nsua bravura, já que até mesmo o menos ousado deles provavelmente já encontrou feras formidáveis no subsolo, e aprender a despachar essas criaturas é uma prática comum entre essas sociedades.\nDevido aos perigos de seu ambiente, muitas comunidades submersas desenvolvem linguagens não verbais exclusivas que se mostram igualmente úteis na superfície.",
+      "adjetivos": [
+        "compenetrados",
+        "evasivos",
+        "indomáveis",
+        "inovadores",
+        "engenhosos",
+        "despretensiosos"
+      ],
+      "caracteristica": {
+        "nome": "Vida na Penumbra",
+        "texto": "Quando estiver em uma área com pouca luz ou sombras densas, você tem vantagem em jogadas para se esconder, investigar ou perceber detalhes dentro dessa área.",
+        "rolagemManual": {
+          "tipo": "vantagem-situacional",
+          "aplicacao": "manual",
+          "lembrete": "Vantagem em jogadas para se esconder, investigar ou perceber detalhes em pouca luz ou sombras densas, quando a situação se aplicar.",
+          "motivoManual": "O app não conhece o contexto ficcional da jogada e não rola dados."
+        }
+      },
+      "caracteristicaNoLivro": {
+        "nome": "Vida com pouca luz",
+        "texto": "Quando estiver em uma área com pouca luz ou muita sombra, você tem vantagem nas rolagens para se esconder, investigar ou perceber detalhes dentro dessa área."
+      },
+      "imagem": "assets/cartas/comunidades/Underborne.png",
+      "arquivo": "Underborne.png",
+      "paginaLivro": 80,
+      "observacao": null,
+      "problemasDeTraducao": [
+        "Frase truncada/mal construída sem complemento: 'Os Underborne são regularmente contratados para sua bravura, já que até mesmo o menos ousado deles...' (falta o objeto: contratados para quê)",
+        "Uso da palavra 'submersas' para descrever comunidades subterrâneas ('muitas comunidades submersas desenvolvem linguagens não verbais') — tradução equivocada, sugerindo 'debaixo d'água' em vez de 'subterrâneas'",
+        "Legendas em inglês: 'CAVE SPIDER SILK CAN BE USED INSTEAD OF ROPE TO SUSPEND THESE UNDERBORNE HOMES, AS IT'S PARTICULARLY STRONG AND LIGHTWEIGHT.'; 'SUSPENDED CITIES — AN UNDERBORNE COMMUNITY SUSPENDED FROM THE ROOF OF A CAVE TO PROTECT CITIZENS FROM SUBTERRANEAN THREATS.'; 'CHISELED FROM A MASSIVE CRYSTAL, THIS HOLLOWED-OUT HOME IS STRUCTURED LIKE ANY TOWER FOUND ABOVEGROUND.'; 'GREAT ARCHITECTURAL SKILL IS REQUIRED TO BATTLE THE CRUSHING FORCES OF THE SURFACE ABOVE AND TO MAINTAIN THE INTEGRITY OF STALAGMITES AND STALACTITES.'; 'UNDERGROUND PREDATORS CAN ATTACK FROM THE CAVE CEILINGS AS WELL AS THE FLOOR, SO UNDERBORNE COMMUNITIES MUST INVEST IN UNIQUE PROTECTIVE MEASURES.'; 'JUST BENEATH — SOME UNDERBORNE COMMUNITIES LIVE JUST BENEATH THE SURFACE, ALLOWING THEM TO MOVE BENEATH THE UPPER WORLD UNDETECTED.'; 'ABOVEGROUND ENTRANCE'"
+      ]
+    },
+    {
+      "id": "wanderborne",
+      "nome": "Wanderborne",
+      "nomeCarta": "WANDERBORNE",
+      "descricao": "Fazer parte de uma comunidade errante significa ter vivido como um nômade, abrindo mão de um lar permanente e experimentando uma grande variedade de culturas.",
+      "descricaoLivro": "Fazer parte de uma comunidade wanderborne significa que você viveu como um nômade, renunciando a um lar permanente e conhecendo uma grande variedade de culturas. Ao contrário de muitas comunidades que são definidas por sua localidade, os wanderborne são definidos por seu estilo de vida itinerante. Devido à sua migração frequente, os wanderborne dão menos valor ao acúmulo de bens materiais em favor da aquisição de informações, habilidades e conexões. Enquanto alguns wanderborne são aliados por um ethos comum, como uma religião ou um conjunto de valores políticos ou econômicos, outros se unem após uma tragédia compartilhada, como a perda de seu lar ou terra. Independentemente do motivo, os perigos apresentados pela vida na estrada e a escolha de continuar nessa estrada juntos fazem com que os wanderborne sejam conhecidos por sua lealdade inabalável.",
+      "adjetivos": [
+        "inescrutáveis",
+        "magnânimos",
+        "alegres",
+        "confiáveis",
+        "experientes",
+        "pouco ortodoxos"
+      ],
+      "caracteristica": {
+        "nome": "Mochila Nômade",
+        "texto": "Adicione uma Mochila Nômade ao seu inventário. Uma vez por sessão, você pode gastar 1 Esperança para vasculhar essa mochila e puxar um item mundano que seja útil para a situação. Trabalhe com o Mestre para definir qual item você encontrou.",
+        "uso": {
+          "custo": {
+            "esperanca": 1
+          },
+          "marcaUso": "uso:comunidade:wanderborne:mochila-nomade",
+          "rotuloAtivar": "Vasculhar Mochila Nômade · 1 Esperança",
+          "lembrete": "Defina com o Mestre um item mundano útil e registre o item encontrado no inventário. O app não escolhe o item por você."
+        },
+        "efeitoCriacao": {
+          "tipo": "inventario",
+          "item": "Mochila Nômade",
+          "quantidade": 1,
+          "fonte": "DH-DigitalRegras.pdf p.81"
+        }
+      },
+      "caracteristicaNoLivro": {
+        "nome": "Pacote Nômade",
+        "texto": "Adicione um Pacote Nômade ao seu inventário. Uma vez por sessão, você pode gastar uma Esperança para entrar nesse pacote e retirar um item mundano que seja útil para a sua situação. Trabalhe com o GM para descobrir qual item você deve retirar."
+      },
+      "imagem": "assets/cartas/comunidades/Wanderborne.png",
+      "arquivo": "Wanderborne.png",
+      "paginaLivro": 81,
+      "observacao": null,
+      "problemasDeTraducao": [
+        "'Trabalhe com o GM' — sigla 'GM' (Game Master) não traduzida para 'Mestre'",
+        "Legendas em inglês: 'MEMBERS OF THIS WANDERBORNE COMMUNITY LIVE IN TENTS THAT CAN FLOAT IN THE AIR WITH THE HELP OF LARGE BALLOONS MADE OF SPECIALLY TREATED, WEATHER-RESISTANT HIDES.'; 'THESE WANDERBORNE CARRY FEW BELONGINGS WITH THEM BUT CAN QUICKLY TRAVEL A DISTANCE THAT WOULD NORMALLY TAKE A DAY OR MORE BY FOOT.'; 'WHEN THEY LAND, THE HOT AIR BALLOON CAN BE USED TO PROTECT THEIR TENTS FROM HARSH WEATHER. IF THEY NEED TO, THIS COMMUNITY CAN MAKE A QUICK GETAWAY FROM DANGEROUS SITUATIONS.'; 'WANDERBORNE COMMUNITIES EACH HAVE DIFFERENT WAYS TO CARRY THEIR BELONGINGS, FROM SIMPLE BACKPACKS TO ENTIRE CARAVANS PULLED BY HORSES.'; 'MULTI-FAMILY KITE SKIMMER'; 'SINGLE-FAMILY KITE SKIMMER'; 'KITE SKIMMERS ARE SPECIALIZED MOBILE HOMES FOR WANDERBORNE GROUPS WHO LIVE IN THE DESERT, WHERE THE GROUND CAN BE TOO LOOSE TO WALK ON FOR LONG DISTANCES. THE KITES AND SAILS CAN BE LOWERED WHEN THE COMMUNITY ISN'T TRAVELING. THEY ARE USED AS SHADE STRUCTURES DURING THE HEAT OF THE DAY.'"
+      ]
+    },
+    {
+      "id": "wildborne",
+      "nome": "Wildborne",
+      "nomeCarta": "WILDBORNE",
+      "descricao": "Fazer parte de uma comunidade selvagem significa ter vivido nas profundezas da floresta.",
+      "descricaoLivro": "Fazer parte de uma comunidade silvestre significa que você viveu nas profundezas da floresta. As comunidades selvagens são definidas por sua dedicação à conservação de suas terras natais e muitas têm fortes laços religiosos ou culturais com a fauna em que vivem. Isso resulta em avanços arquitetônicos e tecnológicos exclusivos que favorecem a sustentabilidade em vez de resultados de curto prazo e de alto rendimento. É uma marca registrada das sociedades selvagens integrar suas vilas e cidades ao ambiente natural e evitar perturbar a vida das plantas e dos animais. Enquanto alguns constroem seus alojamentos no alto dos galhos das árvores, outros estabelecem suas casas no chão, sob a copa da floresta. Não é incomum que os selvagens permaneçam reclusos e escondidos em suas casas na floresta.",
+      "adjetivos": [
+        "resistentes",
+        "leais",
+        "carinhosos",
+        "reclusos",
+        "sagazes",
+        "vibrantes"
+      ],
+      "caracteristica": {
+        "nome": "Pé-Leve",
+        "texto": "Seu movimento é naturalmente silencioso. Você tem vantagem em jogadas para se mover sem ser ouvido.",
+        "rolagemManual": {
+          "tipo": "vantagem-situacional",
+          "aplicacao": "manual",
+          "lembrete": "Vantagem em jogadas para se mover sem ser ouvido, quando a situação se aplicar.",
+          "motivoManual": "O app não conhece o contexto ficcional da jogada e não rola dados."
+        }
+      },
+      "caracteristicaNoLivro": {
+        "nome": "Lightfoot",
+        "texto": "Seu movimento é naturalmente silencioso. Você tem vantagem nas rolagens para se movimentar sem ser ouvido."
+      },
+      "imagem": "assets/cartas/comunidades/Wildborne.png",
+      "arquivo": "Wildborne.png",
+      "paginaLivro": 82,
+      "observacao": null,
+      "problemasDeTraducao": [
+        "Nome do recurso comunitário 'Lightfoot' não foi traduzido",
+        "Título 'WILDBORNE' mantido em inglês, mas traduzido no corpo do texto como 'comunidade silvestre'/'selvagens', gerando inconsistência com o nome próprio",
+        "Legendas em inglês: 'MUSHROOM VILLAGE — A FOREST OF GIANT MUSHROOMS MAKES A PERFECT HOME FOR A WILDBORNE COMMUNITY.'; 'IN THE EVENING, THE MUSHROOMS GLOW WITH A RAINBOW OF BIOLUMINESCENCE.'; 'SYMBIOTIC RELATIONSHIP — MANY WILDBORNE COMMUNITIES PAY PARTICULAR ATTENTION TO THE HEALTH OF THE TREES THEY LIVE IN AND AROUND. IN ADDITION TO USING THESE TREES FOR FOOD AND SHELTER, THE COMMUNITY ALSO CARES FOR THEM THROUGH MAGICAL AND NONMAGICAL MEANS.'"
+      ]
+    },
+    {
+      "id": "nascido-nas-dunas",
+      "nome": "Nascido nas Dunas",
+      "nomeCarta": "NASCIDO NAS DUNAS",
+      "nomeLivro": "DUNEBORNE",
+      "nomeIngles": "Duneborne",
+      "descricao": "Fazer parte de uma comunidade Nascida nas Dunas significa ter construído um lar entre areias móveis e o clima árido do deserto, aprendendo a atravessar as dunas e preservar recursos preciosos.",
+      "descricaoLivro": "Fazer parte de uma comunidade Nascida nas Dunas significa ter construído um lar entre areias móveis e o clima árido do deserto, aprendendo a atravessar as dunas e preservar recursos preciosos.",
+      "adjetivos": [
+        "adaptável",
+        "centrado",
+        "colaborativo",
+        "dedicado",
+        "alegre",
+        "observador"
+      ],
+      "caracteristica": {
+        "nomeIngles": "Oasis",
+        "nome": "Oásis",
+        "texto": "Durante um descanso curto, você ou um aliado pode rerrolar um dado usado em um movimento de descanso e ficar com o resultado maior.",
+        "automacao": "rerrolagem-manual-durante-descanso-curto"
+      },
+      "caracteristicaNoLivro": null,
+      "imagem": null,
+      "arquivo": null,
+      "paginaLivro": 38,
+      "observacao": null,
+      "problemasDeTraducao": [],
+      "fonteSrd2": {
+        "id": "communities/duneborne",
+        "sourceLocator": {
+          "chapter": "CORE MATERIALS",
+          "heading": "DUNEBORNE",
+          "lineStart": 2456,
+          "lineEnd": 2464,
+          "pdfPageStart": 38,
+          "pdfPageEnd": 38
+        },
+        "corpusSha256": "394215bbd5988a9a6a7a008b3c4042b0120199e49fb3fba56a5a5be9b63aed20"
+      }
+    },
+    {
+      "id": "nascido-livre",
+      "nome": "Nascido Livre",
+      "nomeCarta": "NASCIDO LIVRE",
+      "nomeLivro": "FREEBORNE",
+      "nomeIngles": "Freeborne",
+      "descricao": "Fazer parte de uma comunidade Nascida Livre significa vir de um povo que já viveu sob domínio tirânico e agora é livre, unido pela luta para preservar e celebrar sua cultura.",
+      "descricaoLivro": "Fazer parte de uma comunidade Nascida Livre significa vir de um povo que já viveu sob domínio tirânico e agora é livre, unido pela luta para preservar e celebrar sua cultura.",
+      "adjetivos": [
+        "otimista",
+        "reservado",
+        "corajoso",
+        "alegre",
+        "subversivo",
+        "traumatizado"
+      ],
+      "caracteristica": {
+        "nomeIngles": "Unbound",
+        "nome": "Liberto",
+        "texto": "Uma vez por sessão, quando fizer uma jogada com Medo, você pode transformá-la em uma jogada com Esperança.",
+        "automacao": "uso-por-sessao-e-conversao-de-resultado"
+      },
+      "caracteristicaNoLivro": null,
+      "imagem": null,
+      "arquivo": null,
+      "paginaLivro": 38,
+      "observacao": null,
+      "problemasDeTraducao": [],
+      "fonteSrd2": {
+        "id": "communities/freeborne",
+        "sourceLocator": {
+          "chapter": "CORE MATERIALS",
+          "heading": "FREEBORNE",
+          "lineStart": 2466,
+          "lineEnd": 2478,
+          "pdfPageStart": 38,
+          "pdfPageEnd": 39
+        },
+        "corpusSha256": "a524cab4156415dcdc23f6e03e9d2a8957002f4d3710f16a621cd1da223e2c5d"
+      }
+    },
+    {
+      "id": "nascido-no-gelo",
+      "nome": "Nascido no Gelo",
+      "nomeCarta": "NASCIDO NO GELO",
+      "nomeLivro": "FROSTBORNE",
+      "nomeIngles": "Frostborne",
+      "descricao": "Fazer parte de uma comunidade Nascida no Gelo significa vir de um lugar de neve e gelo, preparado para sobreviver em condições implacáveis e compartilhar os recursos essenciais.",
+      "descricaoLivro": "Fazer parte de uma comunidade Nascida no Gelo significa vir de um lugar de neve e gelo, preparado para sobreviver em condições implacáveis e compartilhar os recursos essenciais.",
+      "adjetivos": [
+        "astuto",
+        "gregário",
+        "intrépido",
+        "determinado",
+        "quieto",
+        "acolhedor"
+      ],
+      "caracteristica": {
+        "nomeIngles": "Hardy",
+        "nome": "Resistente",
+        "texto": "Quando fizer um descanso, limpe 1 Ponto de Vida.",
+        "automacao": "cura-automatica-em-descanso"
+      },
+      "caracteristicaNoLivro": null,
+      "imagem": null,
+      "arquivo": null,
+      "paginaLivro": 39,
+      "observacao": null,
+      "problemasDeTraducao": [],
+      "fonteSrd2": {
+        "id": "communities/frostborne",
+        "sourceLocator": {
+          "chapter": "CORE MATERIALS",
+          "heading": "FROSTBORNE",
+          "lineStart": 2480,
+          "lineEnd": 2488,
+          "pdfPageStart": 39,
+          "pdfPageEnd": 39
+        },
+        "corpusSha256": "d330f69b38fcbd817776dd9ee0d73f833e7efeaef0d79ee5de0aef13c1d00e40"
+      }
+    },
+    {
+      "id": "nascido-no-lar",
+      "nome": "Nascido no Lar",
+      "nomeCarta": "NASCIDO NO LAR",
+      "nomeLivro": "HEARTHBORNE",
+      "nomeIngles": "Hearthborne",
+      "descricao": "Fazer parte de uma comunidade Nascida no Lar significa ter origens humildes numa aldeia modesta ou região campestre, onde relações próximas, agricultura, criação e ofícios sustentam a vida coletiva.",
+      "descricaoLivro": "Fazer parte de uma comunidade Nascida no Lar significa ter origens humildes numa aldeia modesta ou região campestre, onde relações próximas, agricultura, criação e ofícios sustentam a vida coletiva.",
+      "adjetivos": [
+        "cuidadoso",
+        "generoso",
+        "insular",
+        "falante",
+        "sorridente",
+        "tradicional"
+      ],
+      "caracteristica": {
+        "nomeIngles": "Close-Knit",
+        "nome": "Laços Estreitos",
+        "texto": "Uma vez por descanso longo, você pode gastar qualquer quantidade de Esperança para conceder a um aliado em alcance Distante a mesma quantidade de Esperança.",
+        "automacao": "transferencia-de-recurso-uma-vez-por-descanso-longo"
+      },
+      "caracteristicaNoLivro": null,
+      "imagem": null,
+      "arquivo": null,
+      "paginaLivro": 39,
+      "observacao": null,
+      "problemasDeTraducao": [],
+      "fonteSrd2": {
+        "id": "communities/hearthborne",
+        "sourceLocator": {
+          "chapter": "CORE MATERIALS",
+          "heading": "HEARTHBORNE",
+          "lineStart": 2490,
+          "lineEnd": 2498,
+          "pdfPageStart": 39,
+          "pdfPageEnd": 39
+        },
+        "corpusSha256": "ca841c134f6ea2a9eb81c9acd7fa43d4983cbc1996a4a820ff31c96e3e03cd61"
+      }
+    },
+    {
+      "id": "renascido",
+      "nome": "Renascido",
+      "nomeCarta": "RENASCIDO",
+      "nomeLivro": "REBORNE",
+      "nomeIngles": "Reborne",
+      "descricao": "Você já pertenceu a outra comunidade, mas deixou de fazer parte dela. Renascidos são unidos pela experiência de isolamento, embora possam se voltar ao futuro, redefinir a si mesmos e construir novos vínculos.",
+      "descricaoLivro": "Você já pertenceu a outra comunidade, mas deixou de fazer parte dela. Renascidos são unidos pela experiência de isolamento, embora possam se voltar ao futuro, redefinir a si mesmos e construir novos vínculos.",
+      "adjetivos": [
+        "curioso",
+        "esperançoso",
+        "inocente",
+        "isolado",
+        "melancólico",
+        "insólito"
+      ],
+      "caracteristica": {
+        "nomeIngles": "Found Family",
+        "nome": "Família Escolhida",
+        "texto": "Uma vez por descanso, você pode gastar 1 Esperança para usar a Experiência de um aliado como se fosse sua. Ao fazer isso, descreva como o tempo ao lado desse aliado preparou você para este momento. Quando ingressar em uma nova comunidade ou redescobrir sua antiga comunidade, você pode trocar esta carta permanentemente pela carta daquela comunidade.",
+        "automacao": "uso-contextual-de-experiencia-e-troca-permanente-manual"
+      },
+      "caracteristicaNoLivro": null,
+      "imagem": null,
+      "arquivo": null,
+      "paginaLivro": 40,
+      "observacao": null,
+      "problemasDeTraducao": [],
+      "fonteSrd2": {
+        "id": "communities/reborne",
+        "sourceLocator": {
+          "chapter": "CORE MATERIALS",
+          "heading": "REBORNE",
+          "lineStart": 2532,
+          "lineEnd": 2546,
+          "pdfPageStart": 40,
+          "pdfPageEnd": 40
+        },
+        "corpusSha256": "1118813725967e073bebbb7dae71f0a64baae7024ed3f94f67be498351b41c35"
+      }
+    },
+    {
+      "id": "nascido-na-guerra",
+      "nome": "Nascido na Guerra",
+      "nomeCarta": "NASCIDO NA GUERRA",
+      "nomeLivro": "WARBORNE",
+      "nomeIngles": "Warborne",
+      "descricao": "Fazer parte de uma comunidade Nascida na Guerra significa vir de um lugar devastado por conflitos. Civis ou militares, seus integrantes aprendem autodefesa e desenvolvem engenhosidade para sobreviver e reconstruir.",
+      "descricaoLivro": "Fazer parte de uma comunidade Nascida na Guerra significa vir de um lugar devastado por conflitos. Civis ou militares, seus integrantes aprendem autodefesa e desenvolvem engenhosidade para sobreviver e reconstruir.",
+      "adjetivos": [
+        "estratégico",
+        "devastado",
+        "determinado",
+        "calculista",
+        "inabalável",
+        "dedicado"
+      ],
+      "caracteristica": {
+        "nomeIngles": "Brave Face",
+        "nome": "Cara de Coragem",
+        "texto": "Uma vez por sessão, quando você seria forçado a marcar 1 Estresse, pode gastar 1 Esperança em vez disso.",
+        "automacao": "substituicao-de-custo-uma-vez-por-sessao"
+      },
+      "caracteristicaNoLivro": null,
+      "imagem": null,
+      "arquivo": null,
+      "paginaLivro": 41,
+      "observacao": null,
+      "problemasDeTraducao": [],
+      "fonteSrd2": {
+        "id": "communities/warborne",
+        "sourceLocator": {
+          "chapter": "CORE MATERIALS",
+          "heading": "WARBORNE",
+          "lineStart": 2600,
+          "lineEnd": 2610,
+          "pdfPageStart": 41,
+          "pdfPageEnd": 41
+        },
+        "corpusSha256": "136d205367cbd19883856305920cbdb24a634e05d3a92c16ca7d6eddbfad89e4"
+      }
     }
-   },
-   "caracteristicaNoLivro": {
-    "nome": "Pacote Nômade",
-    "texto": "Adicione um Pacote Nômade ao seu inventário. Uma vez por sessão, você pode gastar uma Esperança para entrar nesse pacote e retirar um item mundano que seja útil para a sua situação. Trabalhe com o GM para descobrir qual item você deve retirar."
-   },
-   "imagem": "assets/cartas/comunidades/Wanderborne.png",
-   "arquivo": "Wanderborne.png",
-   "paginaLivro": 81,
-   "observacao": null,
-   "problemasDeTraducao": [
-    "'Trabalhe com o GM' — sigla 'GM' (Game Master) não traduzida para 'Mestre'",
-    "Legendas em inglês: 'MEMBERS OF THIS WANDERBORNE COMMUNITY LIVE IN TENTS THAT CAN FLOAT IN THE AIR WITH THE HELP OF LARGE BALLOONS MADE OF SPECIALLY TREATED, WEATHER-RESISTANT HIDES.'; 'THESE WANDERBORNE CARRY FEW BELONGINGS WITH THEM BUT CAN QUICKLY TRAVEL A DISTANCE THAT WOULD NORMALLY TAKE A DAY OR MORE BY FOOT.'; 'WHEN THEY LAND, THE HOT AIR BALLOON CAN BE USED TO PROTECT THEIR TENTS FROM HARSH WEATHER. IF THEY NEED TO, THIS COMMUNITY CAN MAKE A QUICK GETAWAY FROM DANGEROUS SITUATIONS.'; 'WANDERBORNE COMMUNITIES EACH HAVE DIFFERENT WAYS TO CARRY THEIR BELONGINGS, FROM SIMPLE BACKPACKS TO ENTIRE CARAVANS PULLED BY HORSES.'; 'MULTI-FAMILY KITE SKIMMER'; 'SINGLE-FAMILY KITE SKIMMER'; 'KITE SKIMMERS ARE SPECIALIZED MOBILE HOMES FOR WANDERBORNE GROUPS WHO LIVE IN THE DESERT, WHERE THE GROUND CAN BE TOO LOOSE TO WALK ON FOR LONG DISTANCES. THE KITES AND SAILS CAN BE LOWERED WHEN THE COMMUNITY ISN'T TRAVELING. THEY ARE USED AS SHADE STRUCTURES DURING THE HEAT OF THE DAY.'"
-   ]
-  },
-  {
-   "id": "wildborne",
-   "nome": "Wildborne",
-   "nomeCarta": "WILDBORNE",
-   "descricao": "Fazer parte de uma comunidade selvagem significa ter vivido nas profundezas da floresta.",
-   "descricaoLivro": "Fazer parte de uma comunidade silvestre significa que você viveu nas profundezas da floresta. As comunidades selvagens são definidas por sua dedicação à conservação de suas terras natais e muitas têm fortes laços religiosos ou culturais com a fauna em que vivem. Isso resulta em avanços arquitetônicos e tecnológicos exclusivos que favorecem a sustentabilidade em vez de resultados de curto prazo e de alto rendimento. É uma marca registrada das sociedades selvagens integrar suas vilas e cidades ao ambiente natural e evitar perturbar a vida das plantas e dos animais. Enquanto alguns constroem seus alojamentos no alto dos galhos das árvores, outros estabelecem suas casas no chão, sob a copa da floresta. Não é incomum que os selvagens permaneçam reclusos e escondidos em suas casas na floresta.",
-   "adjetivos": [
-    "resistentes",
-    "leais",
-    "carinhosos",
-    "reclusos",
-    "sagazes",
-    "vibrantes"
-   ],
-   "caracteristica": {
-    "nome": "Pé-Leve",
-    "texto": "Seu movimento é naturalmente silencioso. Você tem vantagem em jogadas para se mover sem ser ouvido.",
-    "rolagemManual": {
-     "tipo": "vantagem-situacional",
-     "aplicacao": "manual",
-     "lembrete": "Vantagem em jogadas para se mover sem ser ouvido, quando a situação se aplicar.",
-     "motivoManual": "O app não conhece o contexto ficcional da jogada e não rola dados."
-    }
-   },
-   "caracteristicaNoLivro": {
-    "nome": "Lightfoot",
-    "texto": "Seu movimento é naturalmente silencioso. Você tem vantagem nas rolagens para se movimentar sem ser ouvido."
-   },
-   "imagem": "assets/cartas/comunidades/Wildborne.png",
-   "arquivo": "Wildborne.png",
-   "paginaLivro": 82,
-   "observacao": null,
-   "problemasDeTraducao": [
-    "Nome do recurso comunitário 'Lightfoot' não foi traduzido",
-    "Título 'WILDBORNE' mantido em inglês, mas traduzido no corpo do texto como 'comunidade silvestre'/'selvagens', gerando inconsistência com o nome próprio",
-    "Legendas em inglês: 'MUSHROOM VILLAGE — A FOREST OF GIANT MUSHROOMS MAKES A PERFECT HOME FOR A WILDBORNE COMMUNITY.'; 'IN THE EVENING, THE MUSHROOMS GLOW WITH A RAINBOW OF BIOLUMINESCENCE.'; 'SYMBIOTIC RELATIONSHIP — MANY WILDBORNE COMMUNITIES PAY PARTICULAR ATTENTION TO THE HEALTH OF THE TREES THEY LIVE IN AND AROUND. IN ADDITION TO USING THESE TREES FOR FOOD AND SHELTER, THE COMMUNITY ALSO CARES FOR THEM THROUGH MAGICAL AND NONMAGICAL MEANS.'"
-   ]
-  }
- ]
+  ]
 }

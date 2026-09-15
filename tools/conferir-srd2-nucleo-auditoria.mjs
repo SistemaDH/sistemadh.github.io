@@ -26,7 +26,7 @@ for (const [id, quantidade] of Object.entries(esperados)) {
   for (const registro of colecao.registros) {
     if (ids.has(registro.id)) erros.push(`ID duplicado: ${registro.id}`);
     ids.add(registro.id);
-    if (registro.presencaNoCore === 'novo' && registro.estado !== 'novo-requer-traducao-implementacao') erros.push(`${registro.id}: estado novo incoerente`);
+    if (registro.presencaNoCore === 'novo' && !['novo-requer-traducao-implementacao', 'novo-conferido-implementado'].includes(registro.estado)) erros.push(`${registro.id}: estado novo incoerente`);
     if (registro.presencaNoCore === 'existente' && !['existente-requer-comparacao', 'existente-conferido-implementado'].includes(registro.estado)) erros.push(`${registro.id}: estado existente incoerente`);
     if (!registro.sourceLocator || !registro.corpusSha256) erros.push(`${registro.id}: fonte incompleta`);
   }
@@ -35,11 +35,12 @@ for (const [id, quantidade] of Object.entries(esperados)) {
 if (auditoria.resumo.existentes !== 64) erros.push('o núcleo deveria ter 64 registros existentes');
 if (auditoria.resumo.existentesConferidosImplementados !== 64) erros.push('o núcleo deveria ter 64 registros existentes conferidos/implementados');
 if (auditoria.resumo.existentesQueRequeremComparacao !== 0) erros.push('o núcleo não deveria ter registros existentes pendentes');
-if (auditoria.resumo.novosQueRequeremTraducaoEImplementacao !== 31) erros.push('o núcleo deveria ter 31 registros novos');
+if (auditoria.resumo.novosQueRequeremTraducaoEImplementacao !== 6) erros.push('o núcleo deveria ter 6 transformações pendentes');
+if (auditoria.resumo.novosConferidosImplementados !== 25) erros.push('o núcleo deveria ter 25 registros novos implementados');
 
 if (erros.length) {
   console.error(erros.map((erro) => `- ${erro}`).join('\n'));
   process.exit(1);
 }
 
-console.log('Auditoria do núcleo SRD2: 95 registros · 64 existentes conferidos · 0 existentes pendentes · 31 novos em preparação.');
+console.log('Auditoria do núcleo SRD2: 95 registros · 89 implementados · 6 transformações pendentes.');

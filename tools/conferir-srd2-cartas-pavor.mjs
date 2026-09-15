@@ -11,10 +11,10 @@ const erros = [];
 const cartas = new Map((catalogo.cartas || []).map((carta) => [carta.id, carta]));
 const fontes = new Map(inventario.colecoes.flatMap((colecao) => colecao.registros).map((registro) => [registro.id, registro]));
 
-if (catalogo.exposto !== false) erros.push('catálogo de Pavor deve permanecer não exposto');
+if (catalogo.exposto !== true) erros.push('catálogo de Pavor deve estar exposto');
 if (catalogo.dominio !== 'PAVOR' || catalogo.nomeIngles !== 'Dread') erros.push('identidade do catálogo de Pavor inválida');
 if (catalogo.traducao !== 'provisoria') erros.push('tradução de Pavor deve continuar marcada como provisória');
-if (catalogo.estado !== (cartas.size === 21 ? 'conferido' : 'em-andamento')) erros.push('estado do catálogo de Pavor não acompanha o progresso');
+if (catalogo.estado !== 'integrado') erros.push('catálogo de Pavor não está integrado');
 if (auditoria.progresso?.total !== 21 || auditoria.progresso?.conferidas !== auditoria.registros?.length) erros.push('progresso da auditoria de Pavor inválido');
 if (auditoria.progresso?.proximoLote?.length !== 21 - auditoria.progresso.conferidas) erros.push('próximo lote de Pavor não acompanha a quantidade pendente');
 if (cartas.size !== auditoria.registros?.length) erros.push('catálogo e auditoria parcial de Pavor divergem');
@@ -79,4 +79,4 @@ if (erros.length) {
   console.error(erros.map((erro) => `- ${erro}`).join('\n'));
   process.exit(1);
 }
-console.log(`SRD2: ${cartas.size}/21 cartas de Pavor traduzidas, conferidas e mantidas não expostas.`);
+console.log(`SRD2: ${cartas.size}/21 cartas de Pavor traduzidas, conferidas e expostas.`);

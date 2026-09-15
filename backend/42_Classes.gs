@@ -100,6 +100,42 @@ const CLASSES = {
     caracteristicaEsperanca: "Alicerce da Vida",
     subclasses: [{"id":"seraph-portador-divino","nome":"Portador Divino","conjuracao":"STRENGTH","caracteristicas":{"fundacao":["Arma Espiritual","Toque Moderado"],"especializacao":["Devoto"],"maestria":["Ressonância Sagrada"]}}, {"id":"seraph-sentinela-alado","nome":"Sentinela Alado","conjuracao":"STRENGTH","caracteristicas":{"fundacao":["Asas de Luz"],"especializacao":["Vulto Etéreo"],"maestria":["Ascendente","Poder dos Deuses"]}}]
   },
+  "assassino": {
+    nome: "Assassino",
+    dominios: ["BLADE","MIDNIGHT"],
+    evasaoInicial: 12,
+    pontosDeVidaIniciais: 5,
+    caracteristicas: ["Marcado para Morrer","Entrar e Sair"],
+    caracteristicaEsperanca: "Determinação Mortal",
+    subclasses: [{"id":"assassino-guilda-dos-executores","nome":"Guilda dos Executores","conjuracao":"AGILIDADE","caracteristicas":{"fundacao":["Primeiro Golpe","Emboscada"],"especializacao":["Golpe Mortal","Postura do Escorpião"],"maestria":["Golpe Certeiro","Ataque pelas Costas"]}}, {"id":"assassino-guilda-dos-envenenadores","nome":"Guilda dos Envenenadores","conjuracao":"CONHECIMENTO","caracteristicas":{"fundacao":["Preparos Tóxicos"],"especializacao":["Compêndio de Venenos","Presas Gêmeas"],"maestria":["Venomante","Bênção da Víbora"]}}]
+  },
+  "brigao": {
+    nome: "Brigão",
+    dominios: ["VALOR","BONE"],
+    evasaoInicial: 10,
+    pontosDeVidaIniciais: 6,
+    caracteristicas: ["Eu Sou a Arma","Golpe em Combo"],
+    caracteristicaEsperanca: "Frente a Frente",
+    subclasses: [{"id":"brigao-colosso","nome":"Colosso","conjuracao":null,"caracteristicas":{"fundacao":["Robusto","Avassalar"],"especializacao":["Cercado","Olho por Olho"],"maestria":["Gosto pela Pancadaria","Ainda Não Acabei"]}}, {"id":"brigao-artista-marcial","nome":"Artista Marcial","conjuracao":null,"caracteristicas":{"fundacao":["Lutador de Posturas"],"especializacao":["Defesas Aguçadas","Canhão de Foco"],"maestria":["Romper Limites","Estado de Fluxo"]}}]
+  },
+  "bruxo": {
+    nome: "Bruxo",
+    dominios: ["DREAD","GRACE"],
+    evasaoInicial: 11,
+    pontosDeVidaIniciais: 5,
+    caracteristicas: ["Pacto do Patrono","Favor"],
+    caracteristicaEsperanca: "Dádiva do Patrono",
+    subclasses: [{"id":"bruxo-pacto-do-eterno","nome":"Pacto do Eterno","conjuracao":"PRESENÇA","caracteristicas":{"fundacao":["Manto do Patrono","Abraço Imortal"],"especializacao":["Invocação Atormentadora","Absorção de Dano"],"maestria":["Égide Sombria","Flagelo Drenante"]}}, {"id":"bruxo-pacto-do-colerico","nome":"Pacto do Colérico","conjuracao":"PRESENÇA","caracteristicas":{"fundacao":["Fúria do Patrono","Vingança Mortal"],"especializacao":["Alcance Ameaçador","Debilitar Meus Inimigos"],"maestria":["Ataque Aterrorizante","Ira Sobrenatural"]}}]
+  },
+  "bruxa": {
+    nome: "Bruxa",
+    dominios: ["DREAD","SAGE"],
+    evasaoInicial: 10,
+    pontosDeVidaIniciais: 6,
+    caracteristicas: ["Maldição","Comunhão"],
+    caracteristicaEsperanca: "Encanto da Bruxa",
+    subclasses: [{"id":"bruxa-erveira","nome":"Erveira","conjuracao":"CONHECIMENTO","caracteristicas":{"fundacao":["Remédios Herbais","Talismã Encantado"],"especializacao":["Caminhar Entre Mundos","Maldição Atormentadora"],"maestria":["Círculo de Poder"]}}, {"id":"bruxa-lua","nome":"Lua","conjuracao":"INSTINTO","caracteristicas":{"fundacao":["Encanto da Noite"],"especializacao":["Raio Lunar","Ira da Luz Pálida"],"maestria":["Fases Lunares"]}}]
+  },
 };
 
 /** Modificadores derivados das características de classe/subclasse. */
@@ -1316,6 +1352,114 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
+  },
+  "Determinação Mortal": {
+    "classe": "assassino",
+    "origem": "esperança",
+    "custo": {
+      "esperanca": 3
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "",
+    "lembrete": "",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
+    "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
+    "requerArmaAlcance": null,
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
+    "custoCondicionalEntradaManual": null,
+    "confirmacao": null,
+    "estado": null
+  },
+  "Frente a Frente": {
+    "classe": "brigao",
+    "origem": "esperança",
+    "custo": {
+      "esperanca": 3
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "",
+    "lembrete": "",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
+    "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
+    "requerArmaAlcance": null,
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
+    "custoCondicionalEntradaManual": null,
+    "confirmacao": null,
+    "estado": null
+  },
+  "Dádiva do Patrono": {
+    "classe": "bruxo",
+    "origem": "esperança",
+    "custo": {
+      "esperanca": 3
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "",
+    "lembrete": "",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
+    "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
+    "requerArmaAlcance": null,
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
+    "custoCondicionalEntradaManual": null,
+    "confirmacao": null,
+    "estado": null
+  },
+  "Encanto da Bruxa": {
+    "classe": "bruxa",
+    "origem": "esperança",
+    "custo": {
+      "esperanca": 3
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "",
+    "lembrete": "",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
+    "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
+    "requerArmaAlcance": null,
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
+    "custoCondicionalEntradaManual": null,
+    "confirmacao": null,
+    "estado": null
   }
 };
 /** Efeitos de classe/subclasse que alteram um recurso de OUTRA ficha. */
@@ -1622,6 +1766,10 @@ const CLASSE_ALIASES = {
   "mago": ["Mago"],
   "patrulheiro": ["Caçador","patrulheiro","Ranger"],
   "seraph": ["Serafim","seraph"],
+  "assassino": ["ASSASSIN","Assassino"],
+  "brigao": ["BRAWLER","Brigão"],
+  "bruxo": ["Bruxo","WARLOCK"],
+  "bruxa": ["Bruxa","WITCH"],
 };
 
 /** Nomes alternativos de subclasse (carta x livro). */
@@ -1644,6 +1792,14 @@ const SUBCLASSE_ALIASES = {
   "patrulheiro-explorador": ["Explorador","O Wayfinder","rastreador"],
   "seraph-portador-divino": ["Portador Divino","Soldador Divino"],
   "seraph-sentinela-alado": ["Sentinela Alada","Sentinela Alado"],
+  "assassino-guilda-dos-executores": ["Executioners Guild","Guilda dos Executores"],
+  "assassino-guilda-dos-envenenadores": ["Guilda dos Envenenadores","Poisoners Guild"],
+  "brigao-colosso": ["Colosso","Juggernaut"],
+  "brigao-artista-marcial": ["Artista Marcial","Martial Artist"],
+  "bruxo-pacto-do-eterno": ["Pact of the Endless","Pacto do Eterno"],
+  "bruxo-pacto-do-colerico": ["Pact of the Wrathful","Pacto do Colérico"],
+  "bruxa-erveira": ["Erveira","Hedge"],
+  "bruxa-lua": ["Lua","Moon"],
 };
 
 /* ------------------------------------------------------------------------ *

@@ -26,7 +26,7 @@ const inglesEmTextoPt = /\b(?:Hope|Stress|Evasion|Hit Points?|Fear|Spellcast|Mel
 const ids = new Set();
 let totalCaracteristicas = 0;
 
-if (catalogo.estado !== 'traducao-provisoria-nao-exposta') erros.push('catálogo parcial não está protegido como não exposto');
+if (catalogo.estado !== 'integrado') erros.push('catálogo de subclasses novas não está integrado');
 if ((catalogo.subclasses || []).length !== 8) erros.push(`esperadas 8 subclasses, encontradas ${(catalogo.subclasses || []).length}`);
 
 for (const subclasse of catalogo.subclasses || []) {

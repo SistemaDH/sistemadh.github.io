@@ -161,6 +161,35 @@
       ],
       "totalCartas": 21,
       "pasta": "assets/cartas/dominios/VALOR"
+    },
+    {
+      "codigo": "DREAD",
+      "nome": "Pavor",
+      "nomeIngles": "Dread",
+      "aliases": [
+        "Dread",
+        "Pavor"
+      ],
+      "cor": "#692c47",
+      "descricao": "Pavor é o domínio do medo e dos pesadelos. Este domínio concede poder sobre forças que a maioria teme utilizar. Seus adeptos podem aterrorizar inimigos, debilitá-los e recorrer a poderes sombrios para destruí-los. As classes Bruxo e Bruxa têm acesso ao domínio Pavor.",
+      "classes": [
+        "Bruxo",
+        "Bruxa"
+      ],
+      "totalCartas": 21,
+      "pasta": null,
+      "fonteSrd2": {
+        "id": "domains/dread",
+        "sourceLocator": {
+          "chapter": "CORE MATERIALS",
+          "heading": "DREAD",
+          "lineStart": 263,
+          "lineEnd": 265,
+          "pdfPageStart": 7,
+          "pdfPageEnd": 7
+        },
+        "corpusSha256": "656de4b5c4667d94f0debbcca0da6a54da09b80401b8c393a7aee1f9405df6c9"
+      }
     }
   ]
 }

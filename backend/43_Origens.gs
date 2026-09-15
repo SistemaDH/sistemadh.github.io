@@ -41,6 +41,12 @@ const ANCESTRALIDADES = {
   "orc": { nome: "Orc", caracteristicas: [{"ordem":1,"nome":"Robusto"}, {"ordem":2,"nome":"Presas"}] },
   "ribbet": { nome: "Ribbet", caracteristicas: [{"ordem":1,"nome":"Anfíbio"}, {"ordem":2,"nome":"Língua Comprida"}] },
   "simiah": { nome: "Simiah", caracteristicas: [{"ordem":1,"nome":"Escalador Nato"}, {"ordem":2,"nome":"Ágil"}] },
+  "aetheris": { nome: "Aetheris", caracteristicas: [{"ordem":1,"nome":"Aura Consagrada"}, {"ordem":2,"nome":"Asas Celestiais"}] },
+  "povo-da-terra": { nome: "Povo da Terra", caracteristicas: [{"ordem":1,"nome":"Pele de Pedra"}, {"ordem":2,"nome":"Imovível"}] },
+  "povo-das-brasas": { nome: "Povo das Brasas", caracteristicas: [{"ordem":1,"nome":"À Prova de Fogo"}, {"ordem":2,"nome":"Ignição"}] },
+  "gnomo": { nome: "Gnomo", caracteristicas: [{"ordem":1,"nome":"Dedos Ágeis"}, {"ordem":2,"nome":"Passo Cintilante"}] },
+  "povo-do-ceu": { nome: "Povo do Céu", caracteristicas: [{"ordem":1,"nome":"Força do Vendaval"}, {"ordem":2,"nome":"Olho da Tempestade"}] },
+  "povo-das-mares": { nome: "Povo das Marés", caracteristicas: [{"ordem":1,"nome":"Anfíbio"}, {"ordem":2,"nome":"Fonte de Vida"}] },
 };
 
 /** Efeitos de ancestralidade ligados à criação, descanso e sessão. */
@@ -524,6 +530,12 @@ const ANCESTRALIDADE_ALIASES = {
   "orc": ["Orc"],
   "ribbet": ["Quacho","Ribbet"],
   "simiah": ["Simiah","Símio"],
+  "aetheris": ["Aetheris"],
+  "povo-da-terra": ["EARTHKIN","Povo da Terra"],
+  "povo-das-brasas": ["EMBERKIN","Povo das Brasas"],
+  "gnomo": ["GNOME","Gnomo"],
+  "povo-do-ceu": ["Povo do Céu","SKYKIN"],
+  "povo-das-mares": ["Povo das Marés","TIDEKIN"],
 };
 
 /** Comunidades: id -> nome e a característica. */
@@ -537,6 +549,12 @@ const COMUNIDADES = {
   "underborne": { nome: "Underborne", caracteristica: "Vida na Penumbra" },
   "wanderborne": { nome: "Wanderborne", caracteristica: "Mochila Nômade" },
   "wildborne": { nome: "Wildborne", caracteristica: "Pé-Leve" },
+  "nascido-nas-dunas": { nome: "Nascido nas Dunas", caracteristica: "Oásis" },
+  "nascido-livre": { nome: "Nascido Livre", caracteristica: "Liberto" },
+  "nascido-no-gelo": { nome: "Nascido no Gelo", caracteristica: "Resistente" },
+  "nascido-no-lar": { nome: "Nascido no Lar", caracteristica: "Laços Estreitos" },
+  "renascido": { nome: "Renascido", caracteristica: "Família Escolhida" },
+  "nascido-na-guerra": { nome: "Nascido na Guerra", caracteristica: "Cara de Coragem" },
 };
 
 /** Nomes alternativos de comunidade — as 9 mudam na tradução da Jambô. */
@@ -550,6 +568,12 @@ const COMUNIDADE_ALIASES = {
   "underborne": ["Subterrânea","Underborne"],
   "wanderborne": ["Nômade","Wanderborne"],
   "wildborne": ["Silvestre","Wildborne"],
+  "nascido-nas-dunas": ["Nascido nas Dunas"],
+  "nascido-livre": ["Nascido Livre"],
+  "nascido-no-gelo": ["Nascido no Gelo"],
+  "nascido-no-lar": ["Nascido no Lar"],
+  "renascido": ["Renascido"],
+  "nascido-na-guerra": ["Nascido na Guerra"],
 };
 
 /* ------------------------------------------------------------------------ *

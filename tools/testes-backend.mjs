@@ -300,9 +300,9 @@ console.log('\nDomínios e cartas de domínio');
 const CARTAS_DOMINIO = avaliar('CARTAS_DOMINIO');
 const MAX_CARTAS_ATIVAS = avaliar('MAX_CARTAS_ATIVAS');
 
-teste('9 domínios com 21 cartas cada', () => {
+teste('10 domínios com 21 cartas cada', () => {
   const codigos = Object.keys(CARTAS_DOMINIO);
-  igual(codigos.length, 9);
+  igual(codigos.length, 10);
   codigos.forEach((c) => igual(CARTAS_DOMINIO[c].length, 21, `${c} deveria ter 21 cartas`));
 });
 
@@ -330,6 +330,7 @@ teste('normaliza as várias grafias de domínio do próprio livro', () => {
   igual(contexto.normalizarDominio_('Códice'), 'CODEX');
   igual(contexto.normalizarDominio_('meia noite'), 'MIDNIGHT');
   igual(contexto.normalizarDominio_('Arcano'), 'ARCANA');
+  igual(contexto.normalizarDominio_('Pavor'), 'DREAD');
   igual(contexto.normalizarDominio_('Bruxaria'), null);
 });
 
@@ -382,21 +383,22 @@ teste('conjunto válido de 2 cartas iniciais passa', () => {
 console.log('\nClasses e subclasses');
 const CLASSES = avaliar('CLASSES');
 
-teste('9 classes, cada uma com 2 domínios e 2 subclasses', () => {
+teste('13 classes, cada uma com 2 domínios e 2 subclasses', () => {
   const ids = Object.keys(CLASSES);
-  igual(ids.length, 9);
+  igual(ids.length, 13);
   ids.forEach((id) => {
     igual(CLASSES[id].dominios.length, 2, `${id} deveria ter 2 domínios`);
     igual(CLASSES[id].subclasses.length, 2, `${id} deveria ter 2 subclasses`);
   });
 });
 
-teste('cada domínio é usado por exatamente 2 classes', () => {
+teste('cada domínio é usado por ao menos 2 classes e Pavor pelas duas classes novas', () => {
   const uso = {};
   Object.keys(CLASSES).forEach((id) =>
     CLASSES[id].dominios.forEach((d) => { uso[d] = (uso[d] || 0) + 1; }));
-  igual(Object.keys(uso).length, 9);
-  Object.keys(uso).forEach((d) => igual(uso[d], 2, `domínio ${d}`));
+  igual(Object.keys(uso).length, 10);
+  Object.keys(uso).forEach((d) => verdade(uso[d] >= 2, `domínio ${d}`));
+  igual(uso.DREAD, 2, 'Pavor pertence a Bruxo e Bruxa');
 });
 
 teste('todo domínio de classe existe no catálogo de cartas', () => {
@@ -434,7 +436,7 @@ teste('recusa ficha sem subclasse', () => {
 teste('devolve os domínios certos por classe', () => {
   igual(contexto.dominiosDaClasse_('Guerreiro').sort(), ['BLADE', 'BONE']);
   igual(contexto.dominiosDaClasse_('Mago').sort(), ['CODEX', 'SPLENDOR']);
-  igual(contexto.dominiosDaClasse_('Bruxo'), []);
+  igual(contexto.dominiosDaClasse_('Bruxo'), ['DREAD', 'GRACE']);
 });
 
 teste('evasão e PV iniciais vêm da classe', () => {
@@ -453,14 +455,14 @@ teste('carta de domínio validada pela classe do personagem', () => {
   verdade(nao.erro.indexOf('Lâmina') >= 0, nao.erro);
 });
 
-teste('só Guardião e Guerreiro ficam sem atributo de Conjuração', () => {
+teste('Brigão, Guardião e Guerreiro ficam sem atributo de Conjuração', () => {
   const semConjuracao = Object.keys(CLASSES).filter((id) =>
     CLASSES[id].subclasses.every((s) => !s.conjuracao));
-  igual(semConjuracao.sort(), ['guardiao', 'guerreiro']);
+  igual(semConjuracao.sort(), ['brigao', 'guardiao', 'guerreiro']);
 });
 
-teste('as duas subclasses de uma classe usam o mesmo atributo de Conjuração', () => {
-  Object.keys(CLASSES).forEach((id) => {
+teste('as subclasses originais mantêm o mesmo atributo de Conjuração por classe', () => {
+  Object.keys(CLASSES).filter(id => !['assassino','brigao','bruxo','bruxa'].includes(id)).forEach((id) => {
     const traits = CLASSES[id].subclasses.map((s) => s.conjuracao);
     igual(traits[0], traits[1], `${id} tem atributos diferentes entre as subclasses`);
   });
@@ -470,9 +472,9 @@ console.log('\nAncestralidades e comunidades');
 const ANCESTRALIDADES = avaliar('ANCESTRALIDADES');
 const COMUNIDADES = avaliar('COMUNIDADES');
 
-teste('18 ancestralidades com 2 características cada, na ordem', () => {
+teste('24 ancestralidades com 2 características cada, na ordem', () => {
   const ids = Object.keys(ANCESTRALIDADES);
-  igual(ids.length, 18);
+  igual(ids.length, 24);
   ids.forEach((id) => {
     const cs = ANCESTRALIDADES[id].caracteristicas;
     igual(cs.length, 2, `${id} deveria ter 2 características`);
@@ -480,18 +482,19 @@ teste('18 ancestralidades com 2 características cada, na ordem', () => {
   });
 });
 
-teste('9 comunidades com 1 característica cada', () => {
+teste('15 comunidades com 1 característica cada', () => {
   const ids = Object.keys(COMUNIDADES);
-  igual(ids.length, 9);
+  igual(ids.length, 15);
   ids.forEach((id) => verdade(COMUNIDADES[id].caracteristica, `${id} sem característica`));
 });
 
-teste('nenhum nome de característica de ancestralidade se repete', () => {
+teste('nomes repetidos de característica preservam apenas o Anfíbio oficial', () => {
   const nomes = [];
   Object.keys(ANCESTRALIDADES).forEach((id) =>
     ANCESTRALIDADES[id].caracteristicas.forEach((c) => nomes.push(c.nome.toLowerCase())));
-  igual(nomes.length, 36);
-  igual(new Set(nomes).size, 36, 'há nomes de característica repetidos entre ancestralidades');
+  igual(nomes.length, 48);
+  igual(new Set(nomes).size, 47, 'há repetição além do Anfíbio de Ribbet e Povo das Marés');
+  igual(nomes.filter(n => n === 'anfíbio').length, 2);
 });
 
 teste('normaliza ancestralidade pelo nome da carta e pelo do livro', () => {
@@ -2075,8 +2078,8 @@ teste('a habilidade de Esperança COBRA os 3 — e recusa quando não tem', () =
    */
   const HAB = avaliar('HABILIDADES_DE_CLASSE_COM_CUSTO');
   verdade(!HAB['Evolução'], 'a Evolução não pode ter um segundo caminho de cobrança');
-  igual(Object.keys(HAB).filter((n) => HAB[n].origem === 'esperança').length, 8,
-    'oito habilidades de Esperança com botão — a nona é a Evolução');
+  igual(Object.keys(HAB).filter((n) => HAB[n].origem === 'esperança').length, 12,
+    'doze habilidades de Esperança com botão — a Evolução continua em seu fluxo próprio');
 });
 
 teste('Canalizar Poder Bruto troca a carta por Esperança na MESMA gravação', () => {
@@ -2523,6 +2526,7 @@ teste('as perguntas de origem e vínculos vieram do livro bom (fecha B6)', () =>
     // O guia do apêndice mostra as MESMAS perguntas — se divergirem, o jogador
     // lê uma coisa na criação e outra no livro.
     const g = guias.guias.find((x) => x.classe === c.id);
+    if (!g) return; // As quatro classes adicionais do SRD2 não possuem guia rápido oficial.
     igual(g.perguntasDeFundo.map((x) => x.texto), c.perguntasDeFundo, `${c.nome}: guia x classe`);
     igual(g.perguntasDeConexao.map((x) => x.texto), c.conexoes, `${c.nome}: guia x classe`);
   });

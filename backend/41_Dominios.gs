@@ -32,6 +32,7 @@ const DOMINIO_ALIASES = {
   SAGE: ["Sabedoria","Saber","Sábio","SAGE","Sálvia"],
   SPLENDOR: ["Esplendor","SPLENDOR"],
   VALOR: ["VALOR"],
+  DREAD: ["DREAD","Pavor"],
 };
 
 /** Dados básicos de cada domínio. */
@@ -45,6 +46,7 @@ const DOMINIOS = {
   SAGE: { nome: "Sábio", cor: "#4c9a5b", classes: ["Druida","Patrulheiro","Bruxa"] },
   SPLENDOR: { nome: "Esplendor", cor: "#e0b13a", classes: ["Seraph","Mago"] },
   VALOR: { nome: "Valor", cor: "#d97e2b", classes: ["Brigão","Guardião","Seraph"] },
+  DREAD: { nome: "Pavor", cor: "#692c47", classes: ["Bruxo","Bruxa"] },
 };
 
 /** As 189 cartas: [id, nome, nível, tipo, custo de recordar]. */
@@ -255,6 +257,29 @@ const CARTAS_DOMINIO = {
     ["valor-mantenha-a-posicao", "Mantenha a Posição", 9, "Habilidade", 1],
     ["valor-armadura-inabalavel", "Armadura Inabalável", 10, "Habilidade", 1],
     ["valor-inquebravel", "Inquebrável", 10, "Habilidade", 4],
+  ],
+  DREAD: [
+    ["pavor-golpe-definhante", "Golpe Definhante", 1, "Feitiço", 1],
+    ["pavor-veu-umbral", "Véu Umbral", 1, "Feitiço", 1],
+    ["pavor-voz-do-pavor", "Voz do Pavor", 1, "Feitiço", 0],
+    ["pavor-retribuicao-horrenda", "Retribuição Horrenda", 2, "Feitiço", 2],
+    ["pavor-sifonar-essencia", "Sifonar Essência", 2, "Feitiço", 1],
+    ["pavor-aterrorizar", "Aterrorizar", 3, "Feitiço", 1],
+    ["pavor-trauma-compartilhado", "Trauma Compartilhado", 3, "Feitiço", 1],
+    ["pavor-correntes-da-aflicao", "Correntes da Aflição", 4, "Feitiço", 2],
+    ["pavor-invocar-horror", "Invocar Horror", 4, "Feitiço", 2],
+    ["pavor-golpe-terrivel", "Golpe Terrível", 5, "Feitiço", 2],
+    ["pavor-nevoa-espectral", "Névoa Espectral", 5, "Feitiço", 0],
+    ["pavor-fogo-sombrio", "Fogo Sombrio", 6, "Feitiço", 2],
+    ["pavor-susto-repentino", "Susto Repentino", 6, "Feitiço", 1],
+    ["pavor-muralha-de-fome", "Muralha de Fome", 7, "Feitiço", 2],
+    ["pavor-tocado-pelo-pavor", "Tocado pelo Pavor", 7, "Habilidade", 2],
+    ["pavor-carne-sobrenatural", "Carne Sobrenatural", 8, "Feitiço", 1],
+    ["pavor-exercito-sombrio", "Exército Sombrio", 8, "Feitiço", 2],
+    ["pavor-danacao", "Danação", 9, "Feitiço", 2],
+    ["pavor-saborear-a-angustia", "Saborear a Angústia", 9, "Habilidade", 1],
+    ["pavor-avatar-do-terror", "Avatar do Terror", 10, "Feitiço", 2],
+    ["pavor-invocar-tormento", "Invocar Tormento", 10, "Habilidade", 2],
   ],
 };
 

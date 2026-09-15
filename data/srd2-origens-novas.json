@@ -1,6 +1,6 @@
 {
   "versao": 1,
-  "estado": "traducao-provisoria-nao-exposta",
+  "estado": "integrado",
   "aviso": "Este catálogo é uma etapa de revisão. Não deve ser carregado pela criação até as automações e os testes de integração estarem completos.",
   "fonte": {
     "srd": "2.0",
@@ -30,7 +30,12 @@
           "automacao": "substituicao-de-custo-uma-vez-por-cena"
         }
       ],
-      "sourceLocator": { "pdfPageStart": 32, "pdfPageEnd": 32, "lineStart": 2153, "lineEnd": 2163 }
+      "sourceLocator": {
+        "pdfPageStart": 32,
+        "pdfPageEnd": 32,
+        "lineStart": 2153,
+        "lineEnd": 2163
+      }
     },
     {
       "idFonte": "ancestries/earthkin",
@@ -53,7 +58,12 @@
           "automacao": "regra-contextual-manual"
         }
       ],
-      "sourceLocator": { "pdfPageStart": 33, "pdfPageEnd": 33, "lineStart": 2209, "lineEnd": 2219 }
+      "sourceLocator": {
+        "pdfPageStart": 33,
+        "pdfPageEnd": 33,
+        "lineStart": 2209,
+        "lineEnd": 2219
+      }
     },
     {
       "idFonte": "ancestries/emberkin",
@@ -76,7 +86,12 @@
           "automacao": "custo-e-bonus-de-dano-por-cena"
         }
       ],
-      "sourceLocator": { "pdfPageStart": 33, "pdfPageEnd": 34, "lineStart": 2221, "lineEnd": 2235 }
+      "sourceLocator": {
+        "pdfPageStart": 33,
+        "pdfPageEnd": 34,
+        "lineStart": 2221,
+        "lineEnd": 2235
+      }
     },
     {
       "idFonte": "ancestries/gnome",
@@ -99,7 +114,12 @@
           "automacao": "uso-por-cena-e-movimento-manual"
         }
       ],
-      "sourceLocator": { "pdfPageStart": 36, "pdfPageEnd": 36, "lineStart": 2341, "lineEnd": 2349 }
+      "sourceLocator": {
+        "pdfPageStart": 36,
+        "pdfPageEnd": 36,
+        "lineStart": 2341,
+        "lineEnd": 2349
+      }
     },
     {
       "idFonte": "ancestries/skykin",
@@ -122,7 +142,12 @@
           "automacao": "custo-e-bonus-persistente-com-termino"
         }
       ],
-      "sourceLocator": { "pdfPageStart": 34, "pdfPageEnd": 34, "lineStart": 2237, "lineEnd": 2247 }
+      "sourceLocator": {
+        "pdfPageStart": 34,
+        "pdfPageEnd": 34,
+        "lineStart": 2237,
+        "lineEnd": 2247
+      }
     },
     {
       "idFonte": "ancestries/tidekin",
@@ -145,7 +170,12 @@
           "automacao": "custo-uso-por-descanso-e-cura-com-alvo"
         }
       ],
-      "sourceLocator": { "pdfPageStart": 34, "pdfPageEnd": 34, "lineStart": 2249, "lineEnd": 2259 }
+      "sourceLocator": {
+        "pdfPageStart": 34,
+        "pdfPageEnd": 34,
+        "lineStart": 2249,
+        "lineEnd": 2259
+      }
     }
   ],
   "comunidades": [
@@ -156,14 +186,26 @@
       "nome": "Nascido nas Dunas",
       "nomeEstado": "provisorio",
       "descricao": "Fazer parte de uma comunidade Nascida nas Dunas significa ter construído um lar entre areias móveis e o clima árido do deserto, aprendendo a atravessar as dunas e preservar recursos preciosos.",
-      "adjetivos": ["adaptável", "centrado", "colaborativo", "dedicado", "alegre", "observador"],
+      "adjetivos": [
+        "adaptável",
+        "centrado",
+        "colaborativo",
+        "dedicado",
+        "alegre",
+        "observador"
+      ],
       "caracteristica": {
         "nomeIngles": "Oasis",
         "nome": "Oásis",
         "texto": "Durante um descanso curto, você ou um aliado pode rerrolar um dado usado em um movimento de descanso e ficar com o resultado maior.",
         "automacao": "rerrolagem-manual-durante-descanso-curto"
       },
-      "sourceLocator": { "pdfPageStart": 38, "pdfPageEnd": 38, "lineStart": 2456, "lineEnd": 2464 }
+      "sourceLocator": {
+        "pdfPageStart": 38,
+        "pdfPageEnd": 38,
+        "lineStart": 2456,
+        "lineEnd": 2464
+      }
     },
     {
       "idFonte": "communities/freeborne",
@@ -172,14 +214,26 @@
       "nome": "Nascido Livre",
       "nomeEstado": "provisorio",
       "descricao": "Fazer parte de uma comunidade Nascida Livre significa vir de um povo que já viveu sob domínio tirânico e agora é livre, unido pela luta para preservar e celebrar sua cultura.",
-      "adjetivos": ["otimista", "reservado", "corajoso", "alegre", "subversivo", "traumatizado"],
+      "adjetivos": [
+        "otimista",
+        "reservado",
+        "corajoso",
+        "alegre",
+        "subversivo",
+        "traumatizado"
+      ],
       "caracteristica": {
         "nomeIngles": "Unbound",
         "nome": "Liberto",
         "texto": "Uma vez por sessão, quando fizer uma jogada com Medo, você pode transformá-la em uma jogada com Esperança.",
         "automacao": "uso-por-sessao-e-conversao-de-resultado"
       },
-      "sourceLocator": { "pdfPageStart": 38, "pdfPageEnd": 39, "lineStart": 2466, "lineEnd": 2478 }
+      "sourceLocator": {
+        "pdfPageStart": 38,
+        "pdfPageEnd": 39,
+        "lineStart": 2466,
+        "lineEnd": 2478
+      }
     },
     {
       "idFonte": "communities/frostborne",
@@ -188,14 +242,26 @@
       "nome": "Nascido no Gelo",
       "nomeEstado": "provisorio",
       "descricao": "Fazer parte de uma comunidade Nascida no Gelo significa vir de um lugar de neve e gelo, preparado para sobreviver em condições implacáveis e compartilhar os recursos essenciais.",
-      "adjetivos": ["astuto", "gregário", "intrépido", "determinado", "quieto", "acolhedor"],
+      "adjetivos": [
+        "astuto",
+        "gregário",
+        "intrépido",
+        "determinado",
+        "quieto",
+        "acolhedor"
+      ],
       "caracteristica": {
         "nomeIngles": "Hardy",
         "nome": "Resistente",
         "texto": "Quando fizer um descanso, limpe 1 Ponto de Vida.",
         "automacao": "cura-automatica-em-descanso"
       },
-      "sourceLocator": { "pdfPageStart": 39, "pdfPageEnd": 39, "lineStart": 2480, "lineEnd": 2488 }
+      "sourceLocator": {
+        "pdfPageStart": 39,
+        "pdfPageEnd": 39,
+        "lineStart": 2480,
+        "lineEnd": 2488
+      }
     },
     {
       "idFonte": "communities/hearthborne",
@@ -204,14 +270,26 @@
       "nome": "Nascido no Lar",
       "nomeEstado": "provisorio",
       "descricao": "Fazer parte de uma comunidade Nascida no Lar significa ter origens humildes numa aldeia modesta ou região campestre, onde relações próximas, agricultura, criação e ofícios sustentam a vida coletiva.",
-      "adjetivos": ["cuidadoso", "generoso", "insular", "falante", "sorridente", "tradicional"],
+      "adjetivos": [
+        "cuidadoso",
+        "generoso",
+        "insular",
+        "falante",
+        "sorridente",
+        "tradicional"
+      ],
       "caracteristica": {
         "nomeIngles": "Close-Knit",
         "nome": "Laços Estreitos",
         "texto": "Uma vez por descanso longo, você pode gastar qualquer quantidade de Esperança para conceder a um aliado em alcance Distante a mesma quantidade de Esperança.",
         "automacao": "transferencia-de-recurso-uma-vez-por-descanso-longo"
       },
-      "sourceLocator": { "pdfPageStart": 39, "pdfPageEnd": 39, "lineStart": 2490, "lineEnd": 2498 }
+      "sourceLocator": {
+        "pdfPageStart": 39,
+        "pdfPageEnd": 39,
+        "lineStart": 2490,
+        "lineEnd": 2498
+      }
     },
     {
       "idFonte": "communities/reborne",
@@ -220,14 +298,26 @@
       "nome": "Renascido",
       "nomeEstado": "provisorio",
       "descricao": "Você já pertenceu a outra comunidade, mas deixou de fazer parte dela. Renascidos são unidos pela experiência de isolamento, embora possam se voltar ao futuro, redefinir a si mesmos e construir novos vínculos.",
-      "adjetivos": ["curioso", "esperançoso", "inocente", "isolado", "melancólico", "insólito"],
+      "adjetivos": [
+        "curioso",
+        "esperançoso",
+        "inocente",
+        "isolado",
+        "melancólico",
+        "insólito"
+      ],
       "caracteristica": {
         "nomeIngles": "Found Family",
         "nome": "Família Escolhida",
         "texto": "Uma vez por descanso, você pode gastar 1 Esperança para usar a Experiência de um aliado como se fosse sua. Ao fazer isso, descreva como o tempo ao lado desse aliado preparou você para este momento. Quando ingressar em uma nova comunidade ou redescobrir sua antiga comunidade, você pode trocar esta carta permanentemente pela carta daquela comunidade.",
         "automacao": "uso-contextual-de-experiencia-e-troca-permanente-manual"
       },
-      "sourceLocator": { "pdfPageStart": 40, "pdfPageEnd": 40, "lineStart": 2532, "lineEnd": 2546 }
+      "sourceLocator": {
+        "pdfPageStart": 40,
+        "pdfPageEnd": 40,
+        "lineStart": 2532,
+        "lineEnd": 2546
+      }
     },
     {
       "idFonte": "communities/warborne",
@@ -236,14 +326,26 @@
       "nome": "Nascido na Guerra",
       "nomeEstado": "provisorio",
       "descricao": "Fazer parte de uma comunidade Nascida na Guerra significa vir de um lugar devastado por conflitos. Civis ou militares, seus integrantes aprendem autodefesa e desenvolvem engenhosidade para sobreviver e reconstruir.",
-      "adjetivos": ["estratégico", "devastado", "determinado", "calculista", "inabalável", "dedicado"],
+      "adjetivos": [
+        "estratégico",
+        "devastado",
+        "determinado",
+        "calculista",
+        "inabalável",
+        "dedicado"
+      ],
       "caracteristica": {
         "nomeIngles": "Brave Face",
         "nome": "Cara de Coragem",
         "texto": "Uma vez por sessão, quando você seria forçado a marcar 1 Estresse, pode gastar 1 Esperança em vez disso.",
         "automacao": "substituicao-de-custo-uma-vez-por-sessao"
       },
-      "sourceLocator": { "pdfPageStart": 41, "pdfPageEnd": 41, "lineStart": 2600, "lineEnd": 2610 }
+      "sourceLocator": {
+        "pdfPageStart": 41,
+        "pdfPageEnd": 41,
+        "lineStart": 2600,
+        "lineEnd": 2610
+      }
     }
   ]
 }

@@ -100,7 +100,7 @@
             "pdfPageEnd": 7
           },
           "corpusSha256": "656de4b5c4667d94f0debbcca0da6a54da09b80401b8c393a7aee1f9405df6c9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "domains/grace",
@@ -196,7 +196,7 @@
             "pdfPageEnd": 9
           },
           "corpusSha256": "35a0faf4bcace310a79e579f5b2e3402c9d1672ef9b3d5a5f78a8d0c31cd81e0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "classes/bard",
@@ -226,7 +226,7 @@
             "pdfPageEnd": 12
           },
           "corpusSha256": "2dc810a9fd8d56ba9129e991e4ab213399be27ea31810cc1baae8753fe80c804",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "classes/druid",
@@ -331,7 +331,7 @@
             "pdfPageEnd": 26
           },
           "corpusSha256": "195a9aca69f795113c88f763600058f3c98c9adae1a1ace18d3a9ec07e584bf5",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "classes/warrior",
@@ -361,7 +361,7 @@
             "pdfPageEnd": 29
           },
           "corpusSha256": "64d533a03c5ff7b34d595a19b4582b67657d604ed2aa771d650620da3fda2733",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "classes/wizard",
@@ -472,7 +472,7 @@
             "pdfPageEnd": 9
           },
           "corpusSha256": "1db24e548a5caa7d00677ee878c31a5dc98e96cf06b980842dcab0dacf224b7e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "subclasses/hedge",
@@ -487,7 +487,7 @@
             "pdfPageEnd": 29
           },
           "corpusSha256": "b27a7c4f32c803d7e74bde02e5b7b3f9bab11c4661156bc1103776049e1347a9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "subclasses/juggernaut",
@@ -502,7 +502,7 @@
             "pdfPageEnd": 12
           },
           "corpusSha256": "fa7b46993b42dcd40a00f415a8c6827e6103fd10b4b6c30e41cb0ac0fc634cdb",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "subclasses/martial-artist",
@@ -517,7 +517,7 @@
             "pdfPageEnd": 12
           },
           "corpusSha256": "9e65b0cda6c258186b4f775f158a42a8b3b7589efb24c0a10b8eabf2f9392930",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "subclasses/moon",
@@ -532,7 +532,7 @@
             "pdfPageEnd": 30
           },
           "corpusSha256": "1fdf77e08aa286e6f8943c07d660bc17949e750eabef1a304fb49d171b45c726",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "subclasses/nightwalker",
@@ -562,7 +562,7 @@
             "pdfPageEnd": 27
           },
           "corpusSha256": "8c38cd504a277ace0c5ae1461eacd3fe4a17f8f6da07535f2fd27becba5ba9e5",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "subclasses/pact-of-the-wrathful",
@@ -577,7 +577,7 @@
             "pdfPageEnd": 27
           },
           "corpusSha256": "04f464cc463c0b09989b80cc0d79b02e77fcdac43232aa6a18831f1d233daff4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "subclasses/poisoners-guild",
@@ -592,7 +592,7 @@
             "pdfPageEnd": 10
           },
           "corpusSha256": "959180121800c3459527c83a67006af78abce15f8be17ea8d83bce20bf049be4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "subclasses/primal-origin",
@@ -793,7 +793,7 @@
             "pdfPageEnd": 32
           },
           "corpusSha256": "ac822dbd74cdc7ac995eba7bf29930bf3dc3a7efdf5b6b53e32eb6797a968d6d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "ancestries/clank",
@@ -853,7 +853,7 @@
             "pdfPageEnd": 33
           },
           "corpusSha256": "d4c2af6194ee9e18455837604fe208a74ad938566f133ec1389a4b5695551a82",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "ancestries/elf",
@@ -883,7 +883,7 @@
             "pdfPageEnd": 34
           },
           "corpusSha256": "a70d437dd2c7e2f4babb918c552f29abf82da6bc5856aeb2943946bb3b20c0df",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "ancestries/faerie",
@@ -988,7 +988,7 @@
             "pdfPageEnd": 36
           },
           "corpusSha256": "3aba377b592b8f589f039a2eec37dea6cb7b01b323daa7e5c43f992911c49067",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "ancestries/goblin",
@@ -1138,7 +1138,7 @@
             "pdfPageEnd": 34
           },
           "corpusSha256": "cb55513853c7bfbb7ba4ba9b186300f5e042d8b25249b2f7eacd768b8d108444",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "ancestries/tidekin",
@@ -1153,7 +1153,7 @@
             "pdfPageEnd": 34
           },
           "corpusSha256": "cca0027ad493e0016dd6887d1aeb4ffa8b5edd28b5ff62ad13ea675931c7a4c2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         }
       ]
     },
@@ -1174,7 +1174,7 @@
             "pdfPageEnd": 38
           },
           "corpusSha256": "394215bbd5988a9a6a7a008b3c4042b0120199e49fb3fba56a5a5be9b63aed20",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "communities/freeborne",
@@ -1189,7 +1189,7 @@
             "pdfPageEnd": 39
           },
           "corpusSha256": "a524cab4156415dcdc23f6e03e9d2a8957002f4d3710f16a621cd1da223e2c5d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "communities/frostborne",
@@ -1204,7 +1204,7 @@
             "pdfPageEnd": 39
           },
           "corpusSha256": "d330f69b38fcbd817776dd9ee0d73f833e7efeaef0d79ee5de0aef13c1d00e40",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "communities/hearthborne",
@@ -1219,7 +1219,7 @@
             "pdfPageEnd": 39
           },
           "corpusSha256": "ca841c134f6ea2a9eb81c9acd7fa43d4983cbc1996a4a820ff31c96e3e03cd61",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "communities/highborne",
@@ -1279,7 +1279,7 @@
             "pdfPageEnd": 40
           },
           "corpusSha256": "1118813725967e073bebbb7dae71f0a64baae7024ed3f94f67be498351b41c35",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "communities/ridgeborne",
@@ -1369,7 +1369,7 @@
             "pdfPageEnd": 41
           },
           "corpusSha256": "136d205367cbd19883856305920cbdb24a634e05d3a92c16ca7d6eddbfad89e4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "communities/wildborne",

@@ -47,7 +47,7 @@ O corpus auxiliar pinado registra 1.539 registros: 10 domínios, 13 classes, 26 
 
 O estado vivo das 16 coleções fica em `data/srd2-cobertura.json`. O inventário individual fica em `data/srd2-inventario.json`: cada um dos 1.539 registros preserva ID, nome inglês, tipo, hash do registro no corpus, estado de implementação e, quando aplicável, `sourceLocator`. `npm run teste:srd2` impede alteração acidental das contagens, IDs, hashes estruturais ou estados. Uma coleção existente no Core continua **não conferida** até ser comparada registro a registro com o SRD 2.0.
 
-No checkpoint atual, 1.285 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 253 permanecem `pendente`.
+No checkpoint atual, 1.310 registros estão como `mecanica-implementada`, 1 como `fonte-conferida` e 228 permanecem `pendente`.
 
 ## Armas do núcleo — primeiro vínculo (194/358)
 
@@ -86,14 +86,14 @@ O recorte inicial contém 95 registros nas coleções de domínios, classes, sub
 - 64 registros já representados no Core; todos foram conferidos e permanecem implementados: 9 domínios, 9 classes, 18 subclasses, 18 ancestralidades, ancestralidade mista e 9 comunidades;
 - 31 registros novos: Pavor, 4 classes, 8 subclasses, 6 ancestralidades, 6 comunidades e 6 transformações.
 
-Os 31 registros novos estão traduzidos e estruturados em catálogos de preparação, todos marcados como `traducao-provisoria-nao-exposta`:
+Vinte e cinco dos 31 registros novos já estão traduzidos e integrados aos catálogos canônicos carregados pela criação e pela ficha:
 
 - `data/srd2-classes-novas.json`: Pavor e 4 classes;
 - `data/srd2-subclasses-novas.json`: 8 subclasses e 43 características;
 - `data/srd2-origens-novas.json`: 6 ancestralidades e 6 comunidades;
-- `data/srd2-transformacoes.json`: 6 transformações, 12 características e 36 perguntas.
+- `data/srd2-transformacoes.json`: as 6 transformações, 12 características e 36 perguntas permanecem no lote seguinte, que exige persistência e ciclo de aquisição próprio.
 
-“Estruturado” ainda não significa “implementado”: os registros permanecem pendentes no inventário oficial até existir persistência, validação de servidor, interface e regressão mecânica. Por isso esses catálogos não são carregados pela criação atual.
+Pavor, as quatro classes, oito subclasses, seis ancestralidades e seis comunidades agora participam da validação do servidor e aparecem nas telas que consomem os catálogos canônicos. As seis transformações permanecem pendentes até o ciclo de aquisição, remoção e efeitos permanentes estar completo.
 
 ### Cuidados de extração confirmados
 

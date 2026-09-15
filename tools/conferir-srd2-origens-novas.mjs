@@ -16,7 +16,7 @@ const esperadas = {
   comunidades: new Set(['Duneborne', 'Freeborne', 'Frostborne', 'Hearthborne', 'Reborne', 'Warborne'])
 };
 
-if (catalogo.estado !== 'traducao-provisoria-nao-exposta') erros.push('catálogo parcial não está protegido como não exposto');
+if (catalogo.estado !== 'integrado') erros.push('catálogo de origens novas não está integrado');
 if ((catalogo.ancestralidades || []).length !== 6) erros.push(`esperadas 6 ancestralidades, encontradas ${(catalogo.ancestralidades || []).length}`);
 if ((catalogo.comunidades || []).length !== 6) erros.push(`esperadas 6 comunidades, encontradas ${(catalogo.comunidades || []).length}`);
 if (!catalogo.fonte?.observacaoComunidades?.includes('chave singular feature')) erros.push('diferença de esquema das comunidades não está documentada');
@@ -24,7 +24,7 @@ if (!catalogo.fonte?.observacaoComunidades?.includes('chave singular feature')) 
 function conferirBase(item, tipo) {
   const fonte = registros.get(item.idFonte);
   const nome = nomes.get(item.nomeIngles);
-  if (!fonte || fonte.estado !== 'pendente' || !item.idFonte.startsWith(`${tipo}/`)) erros.push(`${item.idFonte}: fonte nova inválida`);
+  if (!fonte || fonte.estado !== 'mecanica-implementada' || !item.idFonte.startsWith(`${tipo}/`)) erros.push(`${item.idFonte}: fonte nova inválida`);
   if (!nome || nome.portugues !== item.nome || nome.estado !== 'provisorio') erros.push(`${item.idFonte}: nome provisório fora do glossário`);
   if (!item.id || !item.descricao || inglesEmTextoPt.test(item.descricao)) erros.push(`${item.idFonte}: descrição incompleta ou com termo mecânico inglês`);
   for (const campo of ['lineStart', 'lineEnd', 'pdfPageStart', 'pdfPageEnd']) {
