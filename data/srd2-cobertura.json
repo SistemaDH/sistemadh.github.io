@@ -102,7 +102,7 @@
       "id": "rules",
       "esperados": 224,
       "estado": "em-auditoria",
-      "observacao": "125/224 fontes Rule vinculadas às coleções canônicas já implementadas; 99 regras centrais, do Mestre e de campanhas suplementares permanecem em auditoria."
+      "observacao": "198/224 fontes Rule vinculadas e conferidas; restam 14 regras do Mestre e 12 módulos de campanhas suplementares."
     }
   ]
 }

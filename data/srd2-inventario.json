@@ -19834,7 +19834,7 @@
             "pdfPageEnd": 94
           },
           "corpusSha256": "52b411cbd2ed100ce7e59bade5e95da9fa26a539a9dd0428c6edfdc95aad4cf1",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/adapting-environments",
@@ -19879,7 +19879,7 @@
             "pdfPageEnd": 53
           },
           "corpusSha256": "ed28a46103b8e8f1ebb3a1dc0cc5e3622d53cc30f7f39aec6e1c4338e3a45d12",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/advanced-countdown-features",
@@ -20044,7 +20044,7 @@
             "pdfPageEnd": 206
           },
           "corpusSha256": "713334760d84435726d62a46e77b6102eb27757623e8d373539419d753220893",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/aquatic-predator",
@@ -20104,7 +20104,7 @@
             "pdfPageEnd": 91
           },
           "corpusSha256": "458949968fadc579134de73ff87de41c4b015f28227ed8208c461f7f82577a69",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/armor",
@@ -20164,7 +20164,7 @@
             "pdfPageEnd": 51
           },
           "corpusSha256": "6a1fff74dd27344fcf3a9e00f71b480da93d382f433813b659990fcfa0f27b7f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/attacking-with-your-companion",
@@ -20314,7 +20314,7 @@
             "pdfPageEnd": 55
           },
           "corpusSha256": "302d2c800e8c0e8b690030c5fd95f05cb2c57cbea595ea30bf7bae2b9d75ce15",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/call-of-the-brave",
@@ -20359,7 +20359,7 @@
             "pdfPageEnd": 55
           },
           "corpusSha256": "82bc2fbe9ed61da89538b0c5913b240b8f8ed9c972d986e0d5a657f1ff3bec8e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/character-creation",
@@ -20464,7 +20464,7 @@
             "pdfPageEnd": 50
           },
           "corpusSha256": "069fd6e961f08d06462dd536fff70adeb7a14424e10b5017dfb3ab51ee89eb7e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/combat-wheelchair",
@@ -20509,7 +20509,7 @@
             "pdfPageEnd": 52
           },
           "corpusSha256": "faa335b5db7a47701cec63ee34ae52e9d19e8b3f0498e239914a87974d2523fe",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/conflict-between-pcs",
@@ -20524,7 +20524,7 @@
             "pdfPageEnd": 92
           },
           "corpusSha256": "9913414a837eef826a80844e8509c3e5c5d7c3d527dc2b2e95573b51ccbda0fb",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/consumables",
@@ -20554,7 +20554,7 @@
             "pdfPageEnd": 2
           },
           "corpusSha256": "abb35024c5a2e3834b62b44413aec837dff92e7083fce55a0651fe0f48a1dbcb",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/core-gameplay-loop",
@@ -20569,7 +20569,7 @@
             "pdfPageEnd": 46
           },
           "corpusSha256": "eb72d8b4f03188078800e9240f2ef36cdf8c4a3a6adf76aa5962547f865f61e7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/core-gm-mechanics",
@@ -20584,7 +20584,7 @@
             "pdfPageEnd": 86
           },
           "corpusSha256": "ab4e0fef4d8eceff86969c81e1f166f1a755e4b5fba84e3e5024395c4034e02c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/core-materials",
@@ -20599,7 +20599,7 @@
             "pdfPageEnd": 7
           },
           "corpusSha256": "a4b80d881dfa6f902536807d6c71caa28a9199b8b04011790c5299ced5a0fe6f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/core-mechanics",
@@ -20614,7 +20614,7 @@
             "pdfPageEnd": 46
           },
           "corpusSha256": "c314dc888fe81bc1945f403550c4b8fb296f0a0d34018a49f4e8d9a63950347f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/countdowns",
@@ -20644,7 +20644,7 @@
             "pdfPageEnd": 1
           },
           "corpusSha256": "23b5ab93fca1680b5dc8077c14bb5bd77766f06157380edcf62719e61bb8f443",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/damage",
@@ -20659,7 +20659,7 @@
             "pdfPageEnd": 55
           },
           "corpusSha256": "a02bbafc2d6648ff37e5af7a7815cb5e75da0c0dc637d7f83b435d0c891208ed",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/damage-thresholds-hit-points-and-stress",
@@ -20674,7 +20674,7 @@
             "pdfPageEnd": 94
           },
           "corpusSha256": "c563eb0a5119cf5466f51af8e91dc31d8d32a0a1094ee77ca672af4af37a23b4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/damage-type",
@@ -20689,7 +20689,7 @@
             "pdfPageEnd": 55
           },
           "corpusSha256": "a8f6ce96d68c915a79decd1601979929108311ca67361ae43e74b8a1f633af89",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/death",
@@ -20704,7 +20704,7 @@
             "pdfPageEnd": 53
           },
           "corpusSha256": "f599f474d9a07302a7d80740ae8df240d7d9d32138a954d6cbea4a3c72cb2149",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/defeated-adversaries",
@@ -20764,7 +20764,7 @@
             "pdfPageEnd": 206
           },
           "corpusSha256": "2bae8e61df5efe9f03f5ddde801de82ad12c1f54fa143fb55498cfec750f91d8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/domains",
@@ -20779,7 +20779,7 @@
             "pdfPageEnd": 7
           },
           "corpusSha256": "f3030f34bb07f1c2e6827244ae4573dec9124f76b1383afed822f8e9fc1b3140",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/downtime",
@@ -20794,7 +20794,7 @@
             "pdfPageEnd": 52
           },
           "corpusSha256": "4ce9a745ebbb6b953dcd5fcf44c7dc2d2e02d90c7d0f2ea840a887b15e04297c",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/dread-domain",
@@ -20824,7 +20824,7 @@
             "pdfPageEnd": 13
           },
           "corpusSha256": "ab62c91c040b2b5866c6afa97635dcf40a0bdf43b3af558955218bdc822130a2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/druid-subclasses",
@@ -20974,7 +20974,7 @@
             "pdfPageEnd": 94
           },
           "corpusSha256": "8cb388f8ec6529a53f550877b096dc6b5ad2653bfd20e205e39bf360c20979f4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/executioners-guild",
@@ -21034,7 +21034,7 @@
             "pdfPageEnd": 92
           },
           "corpusSha256": "4672ec73cd56e8cf2c830baab13b5240d7f21a0a2a2fb4817d7d3a9a1cc52281",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/fate-rolls",
@@ -21049,7 +21049,7 @@
             "pdfPageEnd": 92
           },
           "corpusSha256": "0e3c06d98b692f567d5798b751c03b5a53947a2076749919c25c9c6c4b49512b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/fear-features",
@@ -21094,7 +21094,7 @@
             "pdfPageEnd": 55
           },
           "corpusSha256": "75a20f12b12c7bc9eb9e6f1336c3195c0379e077641359f4ef5057983528cd50",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/feature-questions",
@@ -21109,7 +21109,7 @@
             "pdfPageEnd": 158
           },
           "corpusSha256": "67c9bfd066143ef61749f1d83c62fb1cc6460f5a00d6e4bad75344d1fae76bf9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/floating-magic-school-campaigns",
@@ -21139,7 +21139,7 @@
             "pdfPageEnd": 46
           },
           "corpusSha256": "aab3b8ec8393c4ebe6e8d7e4b414baa233c6ee8fd48e232aa109d538d835d0b2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/focus",
@@ -21169,7 +21169,7 @@
             "pdfPageEnd": 90
           },
           "corpusSha256": "9193f87889c4547efe5d38aaf7104b54ec5f4f4fa528802642fa61a53d94488e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/giving-out-gold-equipment-and-loot",
@@ -21304,7 +21304,7 @@
             "pdfPageEnd": 86
           },
           "corpusSha256": "bc760f7e8b4b9eff84c8a4957f8c1854abf7e4d1821ce3799b7726de12ac9bec",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/hedge",
@@ -21349,7 +21349,7 @@
             "pdfPageEnd": 16
           },
           "corpusSha256": "30f35fe2a763f65f8e2722c974d22cd4688ac1ecec98df260270c41cd4291e8f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/impulses",
@@ -21364,7 +21364,7 @@
             "pdfPageEnd": 158
           },
           "corpusSha256": "43ab3196275c644eed72a1c9c1161d86572e73082bed40c5713dd64c4d0580a2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/into-the-night",
@@ -21379,7 +21379,7 @@
             "pdfPageEnd": 92
           },
           "corpusSha256": "f66f534aaaa2d08d6fada25415003427646cb23a3e04df144dc3088eb9d66a49",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/introduction",
@@ -21394,7 +21394,7 @@
             "pdfPageEnd": 3
           },
           "corpusSha256": "ac96c5c6bb3363f0a07fa03bfffb6d0c1c2b3c75091dc2358bf8bb26e6b20307",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/introduction-2",
@@ -21409,7 +21409,7 @@
             "pdfPageEnd": 85
           },
           "corpusSha256": "740e4ed5d56a2499732f3c5537316b8d7e11ab8cae25f0955fc47998731e4c11",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/juggernaut",
@@ -21544,7 +21544,7 @@
             "pdfPageEnd": 51
           },
           "corpusSha256": "093baee18f71e469293b180fce01da4f1670d0c724227eea3efcb095f790789a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/martial-artist",
@@ -21574,7 +21574,7 @@
             "pdfPageEnd": 13
           },
           "corpusSha256": "506b586062b7d4383b7501826d2b52ab5f8f54269f11eff152d70517011ac240",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/massive-behemoth",
@@ -21589,7 +21589,7 @@
             "pdfPageEnd": 18
           },
           "corpusSha256": "a29638eebbd191876573cb78a560c3b8d67c3851e91e5c18dfa493cf2c13af7d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/mentor",
@@ -21694,7 +21694,7 @@
             "pdfPageEnd": 92
           },
           "corpusSha256": "985a61d96b0fbd41e44c37670174b59001806fe9c02ffa0e02091ef56477bbdb",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/multiclassing",
@@ -21724,7 +21724,7 @@
             "pdfPageEnd": 18
           },
           "corpusSha256": "cef005bd69bae6dcf211cd778eeb8df5d3d6fe440ee9846c2d0662dc17aa45fe",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/mythic-beast",
@@ -21784,7 +21784,7 @@
             "pdfPageEnd": 16
           },
           "corpusSha256": "df121df0e1093f24c351883637e95184fa1dfa987463e9d90ecd50a3fc87ce24",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/npc-feature-examples",
@@ -21799,7 +21799,7 @@
             "pdfPageEnd": 92
           },
           "corpusSha256": "e8cab263bfa7b1b42062d9a768b045786b80036fabf840a7432c4dc75c78c2d5",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/optional-gm-mechanics",
@@ -21814,7 +21814,7 @@
             "pdfPageEnd": 92
           },
           "corpusSha256": "0256dc0065c3fc08c5e1a8f5b13ee38ce1958b37faea6b387f0a883c1e6930b1",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/pack-predator",
@@ -21904,7 +21904,7 @@
             "pdfPageEnd": 94
           },
           "corpusSha256": "f7933bd1ec39e7f40c8ba876711ec9e50652850684febff74a4e44fa64ec8628",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/potential-adversaries",
@@ -21994,7 +21994,7 @@
             "pdfPageEnd": 87
           },
           "corpusSha256": "184f2b5c37c959f439c8a4c198c08a7660252d9d69149c5a48db60f4632bcb8e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/range",
@@ -22009,7 +22009,7 @@
             "pdfPageEnd": 55
           },
           "corpusSha256": "cb2728730d2c73edb1bbc0de3e3fbf8668d3cff272473784f33da757e637355f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/ranger-companion",
@@ -22054,7 +22054,7 @@
             "pdfPageEnd": 94
           },
           "corpusSha256": "f13942165fc91941d0665ad4d52f7a494365c19adb73bcb159a4c41a9c8d881d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/regroup",
@@ -22069,7 +22069,7 @@
             "pdfPageEnd": 92
           },
           "corpusSha256": "9eb620e8e99c13327c10645f9d715350cfc4fb26e5fae7e29f6e4be0560e5f45",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/rogue-subclasses",
@@ -22099,7 +22099,7 @@
             "pdfPageEnd": 86
           },
           "corpusSha256": "c8fa9a6925616a78071ab808f31e8d3bff960316a852a778ef7cf14e0468f259",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/running-an-adventure",
@@ -22114,7 +22114,7 @@
             "pdfPageEnd": 85
           },
           "corpusSha256": "69632745e1820f4dae7a2acda932376e446b426c5258caa7322b3ed8364527c0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/running-gm-npcs",
@@ -22219,7 +22219,7 @@
             "pdfPageEnd": 13
           },
           "corpusSha256": "964f32d8cef1910c4c972fda6278c33473583aa4238b2d9bf4634dd950329974",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/soft-and-hard-moves",
@@ -22264,7 +22264,7 @@
             "pdfPageEnd": 26
           },
           "corpusSha256": "f6c429731620df9a5492687b9164ca52d47de85cf7a37445a963823a4872f9fd",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/splendor-domain",
@@ -22324,7 +22324,7 @@
             "pdfPageEnd": 13
           },
           "corpusSha256": "da41156bff12726f23e91f3f5a25896549772febaf94adcf333be6e2956fb047",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/stances",
@@ -22339,7 +22339,7 @@
             "pdfPageEnd": 13
           },
           "corpusSha256": "dbca401574793e338e3489848fd81038e5931ed89448294d942b9e3c679692ec",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/step-1-name-your-companion",
@@ -22369,7 +22369,7 @@
             "pdfPageEnd": 21
           },
           "corpusSha256": "eed07279c01e98b2b4e9421679ee12f812a7967ab4cf15529d6e17f5c3324d87",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/step-3-choose-their-companion-experience",
@@ -22399,7 +22399,7 @@
             "pdfPageEnd": 21
           },
           "corpusSha256": "e9ada065c1972edf04c86a56f2088f89a007e0798b9857050c9b058e05b3e903",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/stress",
@@ -22414,7 +22414,7 @@
             "pdfPageEnd": 50
           },
           "corpusSha256": "57af186daf51e3188a0aebd16198e46e96b6b354286148608c2a230afb563fac",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/striking-serpent",
@@ -22489,7 +22489,7 @@
             "pdfPageEnd": 1
           },
           "corpusSha256": "ccbd8421025797b032c63eaa5086fb6719aa5f74ac7bd78ca9d8fd3eb3384734",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/taking-damage-as-stress",
@@ -22504,7 +22504,7 @@
             "pdfPageEnd": 22
           },
           "corpusSha256": "e66bec57f17844daffba9c1f10038bd44ce7498431100ffb06be5ef343827e4a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/tech-based-campaigns",
@@ -22579,7 +22579,7 @@
             "pdfPageEnd": 13
           },
           "corpusSha256": "003a777254919b1594eac9695d4acc07c2a09eec95a71017f0bac7b92448c506",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/tier-1-2",
@@ -22594,7 +22594,7 @@
             "pdfPageEnd": 15
           },
           "corpusSha256": "1b68136ede1701e74efa2bfa52ff7caf5afef63dbda1678ac9dec46a8f6145aa",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/tier-1-adversaries-level-1",
@@ -22639,7 +22639,7 @@
             "pdfPageEnd": 13
           },
           "corpusSha256": "a5c4ec0dbb97aca99524aad11298288e6be9a07a66a4f029ab77504d880f8466",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/tier-2-2",
@@ -22654,7 +22654,7 @@
             "pdfPageEnd": 16
           },
           "corpusSha256": "31800d419c6541f0477e1f68f3fc9a13ba1234220b73a193c2d17f0db401c8b6",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/tier-2-adversaries-levels-2-4",
@@ -22699,7 +22699,7 @@
             "pdfPageEnd": 13
           },
           "corpusSha256": "1cfec71866b25c32322b625b45e7b031c8ab25f78c5edd176d5b806ac6332485",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/tier-3-2",
@@ -22714,7 +22714,7 @@
             "pdfPageEnd": 17
           },
           "corpusSha256": "72a59bf4dee8cb1657b2ca393126878f63f8730a910a9bd33cec15d8a39674c0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/tier-3-adversaries-levels-5-7",
@@ -22759,7 +22759,7 @@
             "pdfPageEnd": 13
           },
           "corpusSha256": "f0717fae4fd3e8f71e89087891177e404b72107cbd85f1ea4f079b9c81bdf381",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/tier-4-2",
@@ -22774,7 +22774,7 @@
             "pdfPageEnd": 18
           },
           "corpusSha256": "0e6cee1b76a3be414033cc3758af8e9a2598c31ad3661923a9a0483b653fc604",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/tier-4-adversaries-levels-8-10",
@@ -22819,7 +22819,7 @@
             "pdfPageEnd": 55
           },
           "corpusSha256": "db382024e4e05c3e1645a6037c22234ba2f36865e15cf120eadd67add5c0d729",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/transformations",
@@ -22864,7 +22864,7 @@
             "pdfPageEnd": 47
           },
           "corpusSha256": "1d4cf60efdc519f8d463b77a9bfd2d3b1995d93428b3611c5e528725c3e58331",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/using-adversaries",
@@ -22909,7 +22909,7 @@
             "pdfPageEnd": 88
           },
           "corpusSha256": "e73eeaac3c676e47dbfbd794c64c5146ad427777044aeb6939dcadd5412942a9",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/using-spellcast-rolls-hope-and-experiences",
@@ -22924,7 +22924,7 @@
             "pdfPageEnd": 21
           },
           "corpusSha256": "a35e9a83e21283ed2d845e7dc9affc8a22178fb0dea8bb417f0a9abe840a44eb",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/valor-domain",

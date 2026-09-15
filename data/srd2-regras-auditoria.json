@@ -3,16 +3,17 @@
   "srd": "2.0",
   "quantidade": 224,
   "resumo": {
-    "regras-centrais": 70,
-    "ambientes": 9,
-    "regras-do-mestre": 17,
     "adversarios": 16,
-    "formas-de-fera": 21,
+    "ambientes": 5,
+    "regras-do-mestre": 14,
+    "regras-centrais": 25,
+    "estrutura-documental": 39,
+    "formas-de-fera": 25,
     "criacao-e-avanco": 9,
-    "dominios": 10,
-    "equipamento": 11,
-    "classes-e-subclasses": 40,
-    "companheiro": 7,
+    "equipamento": 15,
+    "classes-e-subclasses": 50,
+    "companheiro": 11,
+    "dominios": 1,
     "campanhas-suplementares": 12,
     "transformacoes": 2
   },
@@ -20,11 +21,10 @@
     {
       "idFonte": "rules/actions",
       "nomeIngles": "Actions",
-      "grupo": "regras-centrais",
+      "grupo": "adversarios",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/adversarios.json",
+        "backend/4F_Bestiario.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 467,
@@ -37,7 +37,7 @@
         "pdfPageEnd": 94
       },
       "corpusSha256": "6eda9f2a995fea055169e2301e3b845886cad20b0c9f1bf2bb776af742a3d90a",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/adapting-environments",
@@ -101,7 +101,12 @@
         "pdfPageEnd": 53
       },
       "corpusSha256": "4a6ac4ff364309154fc739df207bb5293b218302042cbc5c41fef91a2ecb0f7b",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "arredondar-para-cima",
+        "efeitos-simultaneos",
+        "rolando-dados-novamente"
+      ]
     },
     {
       "idFonte": "rules/advanced-countdown-features",
@@ -127,10 +132,9 @@
     {
       "idFonte": "rules/adversaries-and-environments",
       "nomeIngles": "Adversaries and Environments",
-      "grupo": "adversarios",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/adversarios.json",
-        "backend/4F_Bestiario.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -322,11 +326,9 @@
     {
       "idFonte": "rules/appendix",
       "nomeIngles": "Appendix",
-      "grupo": "regras-centrais",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": true,
       "caracteresFonte": 134,
@@ -339,7 +341,7 @@
         "pdfPageEnd": 206
       },
       "corpusSha256": "64c018169770b3df4e09f1f8b341f158efd6dd5aa377e7ee3b21d6a3191d3888",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/aquatic-predator",
@@ -386,11 +388,9 @@
     {
       "idFonte": "rules/arcana-domain",
       "nomeIngles": "Arcana Domain",
-      "grupo": "dominios",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/dominios.json",
-        "data/cartas-dominio.json",
-        "backend/41_Dominios.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -408,11 +408,10 @@
     {
       "idFonte": "rules/arcane-hold",
       "nomeIngles": "Arcane Hold",
-      "grupo": "regras-centrais",
+      "grupo": "adversarios",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/adversarios.json",
+        "backend/4F_Bestiario.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 319,
@@ -425,7 +424,7 @@
         "pdfPageEnd": 91
       },
       "corpusSha256": "56350f488d3f7a59b4c6261f9921bd7c4cc22b766eebad02f9aae4bbd101c506",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/armor",
@@ -510,7 +509,12 @@
         "pdfPageEnd": 51
       },
       "corpusSha256": "d96f580ed3e0b24cee887a201a4d7b8c74516f8b16e50f2605054739e57590c1",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "jogada-de-ataque",
+        "rolagem-de-dano",
+        "alcance"
+      ]
     },
     {
       "idFonte": "rules/attacking-with-your-companion",
@@ -620,11 +624,9 @@
     {
       "idFonte": "rules/blade-domain",
       "nomeIngles": "Blade Domain",
-      "grupo": "dominios",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/dominios.json",
-        "data/cartas-dominio.json",
-        "backend/41_Dominios.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -642,11 +644,9 @@
     {
       "idFonte": "rules/bone-domain",
       "nomeIngles": "Bone Domain",
-      "grupo": "dominios",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/dominios.json",
-        "data/cartas-dominio.json",
-        "backend/41_Dominios.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -706,11 +706,10 @@
     {
       "idFonte": "rules/burden",
       "nomeIngles": "Burden",
-      "grupo": "regras-centrais",
+      "grupo": "equipamento",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/equipamentos.json",
+        "backend/44_Equipamento.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 113,
@@ -723,7 +722,7 @@
         "pdfPageEnd": 55
       },
       "corpusSha256": "e9c5ed1ddb813157019e71bc6e0db0c63de30235cd0f64b370c47aa4e3b8c81f",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/call-of-the-brave",
@@ -770,11 +769,10 @@
     {
       "idFonte": "rules/category",
       "nomeIngles": "Category",
-      "grupo": "regras-centrais",
+      "grupo": "equipamento",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/equipamentos.json",
+        "backend/44_Equipamento.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 149,
@@ -787,7 +785,7 @@
         "pdfPageEnd": 55
       },
       "corpusSha256": "44e9700af1e404ccd011d071131988bbfcd682601d3515c04768b7f7341a9bb4",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/character-creation",
@@ -882,11 +880,9 @@
     {
       "idFonte": "rules/codex-domain",
       "nomeIngles": "Codex Domain",
-      "grupo": "dominios",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/dominios.json",
-        "data/cartas-dominio.json",
-        "backend/41_Dominios.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -942,7 +938,12 @@
         "pdfPageEnd": 50
       },
       "corpusSha256": "3a043cd7ae9d1f9489c1c7c649a62cfdf2f2d4ccaf732d80c490ecd9ea52a7b0",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "holofote",
+        "jogada-de-ataque",
+        "dano-sofrido"
+      ]
     },
     {
       "idFonte": "rules/combat-wheelchair",
@@ -1008,7 +1009,11 @@
         "pdfPageEnd": 52
       },
       "corpusSha256": "9911862d489ac0f0a701359b8d31e035fb2ae8ccc0e1591a0aac69450759c0a4",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "condicoes",
+        "condicao-temporaria"
+      ]
     },
     {
       "idFonte": "rules/conflict-between-pcs",
@@ -1030,7 +1035,10 @@
         "pdfPageEnd": 92
       },
       "corpusSha256": "0131b8acce1fd0b7db7386b733f2f98e31dc9c6cb2f256a96c45e57c0d4a32c1",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "conflito-entre-personagens"
+      ]
     },
     {
       "idFonte": "rules/consumables",
@@ -1056,11 +1064,9 @@
     {
       "idFonte": "rules/contents",
       "nomeIngles": "Contents",
-      "grupo": "regras-centrais",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": true,
       "caracteresFonte": 5180,
@@ -1073,7 +1079,7 @@
         "pdfPageEnd": 2
       },
       "corpusSha256": "a770734df08f98a87bbf11b0bf22c94d7bf76c5c319aa982c4b4d63828b6cfe6",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/core-gameplay-loop",
@@ -1095,15 +1101,20 @@
         "pdfPageEnd": 46
       },
       "corpusSha256": "27bec3629d00a6ddba89f3ccff4555803885d6a410d37ba955ec40da27e78e12",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "jogada",
+        "resultado-da-jogada",
+        "esperanca",
+        "medo"
+      ]
     },
     {
       "idFonte": "rules/core-gm-mechanics",
       "nomeIngles": "Core Gm Mechanics",
-      "grupo": "regras-do-mestre",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/4E_Mesa.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -1116,16 +1127,14 @@
         "pdfPageEnd": 86
       },
       "corpusSha256": "78c566a7af7c2038f60421f5d0b64424e6fd5ce7b9e0af061467c30a9e972566",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/core-materials",
       "nomeIngles": "Core Materials",
-      "grupo": "regras-centrais",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -1138,16 +1147,14 @@
         "pdfPageEnd": 7
       },
       "corpusSha256": "575daff59d29225921b0b64b533440da4f785031e50703252e4a6d05a999055b",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/core-mechanics",
       "nomeIngles": "Core Mechanics",
-      "grupo": "regras-centrais",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -1160,7 +1167,7 @@
         "pdfPageEnd": 46
       },
       "corpusSha256": "61e89513194658660757050ff17e89518bebecb52b6644b34ab8b4ec15c12ffe",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/countdowns",
@@ -1186,11 +1193,9 @@
     {
       "idFonte": "rules/daggerheart",
       "nomeIngles": "Daggerheart",
-      "grupo": "regras-centrais",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -1203,7 +1208,7 @@
         "pdfPageEnd": 1
       },
       "corpusSha256": "fb894616eb54d3892e462696f6861d962f3ec9cff6ab9b236fa985a2a3f9a52f",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/damage",
@@ -1225,7 +1230,10 @@
         "pdfPageEnd": 55
       },
       "corpusSha256": "2918d40bba644b39a35c302374f79f6b72c03c0ed18cec886e355035c4b28c43",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "dano-sofrido"
+      ]
     },
     {
       "idFonte": "rules/damage-thresholds-hit-points-and-stress",
@@ -1247,7 +1255,12 @@
         "pdfPageEnd": 94
       },
       "corpusSha256": "987f199b8c1fd78d60fef847260564a0435fd3539b3304becdfec42f8381a3de",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "limiares-de-dano",
+        "pontos-de-vida",
+        "estresse"
+      ]
     },
     {
       "idFonte": "rules/damage-type",
@@ -1269,7 +1282,10 @@
         "pdfPageEnd": 55
       },
       "corpusSha256": "41ed51396107efbe500da97921a5d5a200b1492162b250e248f3462f399f796c",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "tipo-de-dano"
+      ]
     },
     {
       "idFonte": "rules/death",
@@ -1291,7 +1307,11 @@
         "pdfPageEnd": 53
       },
       "corpusSha256": "95ae2d18bb426f1b6bfbef7e05be9faa3cf2758308ad4e60223600f3626ad7aa",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "morte",
+        "cicatrizes"
+      ]
     },
     {
       "idFonte": "rules/defeated-adversaries",
@@ -1359,11 +1379,9 @@
     {
       "idFonte": "rules/domain-card-reference",
       "nomeIngles": "Domain Card Reference",
-      "grupo": "regras-centrais",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -1376,16 +1394,16 @@
         "pdfPageEnd": 206
       },
       "corpusSha256": "504f42b00013a4a2c30d473b6664627beb2a2ebbf2b23ba21c425e683acc7425",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/domains",
       "nomeIngles": "Domains",
-      "grupo": "regras-centrais",
+      "grupo": "dominios",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/dominios.json",
+        "data/cartas-dominio.json",
+        "backend/41_Dominios.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 281,
@@ -1398,7 +1416,7 @@
         "pdfPageEnd": 7
       },
       "corpusSha256": "8bee30230420bed048b813d8ad8c1081b08d4d7d76eda76444023a6096055f90",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/downtime",
@@ -1420,16 +1438,18 @@
         "pdfPageEnd": 52
       },
       "corpusSha256": "2058f17c1b9e356bcc1c595bd48b0c4b3d9c9c7ee175396af740ae0fcf6a6291",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "repouso",
+        "projeto"
+      ]
     },
     {
       "idFonte": "rules/dread-domain",
       "nomeIngles": "Dread Domain",
-      "grupo": "dominios",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/dominios.json",
-        "data/cartas-dominio.json",
-        "backend/41_Dominios.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -1447,11 +1467,10 @@
     {
       "idFonte": "rules/dropping-out-of-stances",
       "nomeIngles": "Dropping Out of Stances",
-      "grupo": "regras-centrais",
+      "grupo": "classes-e-subclasses",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/classes.json",
+        "backend/42_Classes.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 372,
@@ -1464,7 +1483,7 @@
         "pdfPageEnd": 13
       },
       "corpusSha256": "aac42b2f287c3395dc42f88380102962b11cc5a555b050edb95b3bf7512a875f",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/druid-subclasses",
@@ -1658,11 +1677,10 @@
     {
       "idFonte": "rules/evolution",
       "nomeIngles": "Evolution",
-      "grupo": "regras-centrais",
+      "grupo": "companheiro",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/fichas-filhas.json",
+        "backend/49_FichasFilhas.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 326,
@@ -1675,7 +1693,7 @@
         "pdfPageEnd": 94
       },
       "corpusSha256": "93bbf832969f580e01ec0a6ab5ca86383b1325f7ce9110f58b8bb6d75a8b9107",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/executioners-guild",
@@ -1760,7 +1778,10 @@
         "pdfPageEnd": 92
       },
       "corpusSha256": "564faf2f143f46fb86519e1537c594f2e3e78b2d5d3e19bcf6c9bc358d80364b",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "dano-de-queda-e-colisao"
+      ]
     },
     {
       "idFonte": "rules/fate-rolls",
@@ -1782,7 +1803,10 @@
         "pdfPageEnd": 92
       },
       "corpusSha256": "c57206e488126b5667e0c1f671eb3cf9ae76171dbf613bb003f9594e2de47851",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "jogada-de-destino"
+      ]
     },
     {
       "idFonte": "rules/fear-features",
@@ -1829,11 +1853,10 @@
     {
       "idFonte": "rules/feature",
       "nomeIngles": "Feature",
-      "grupo": "regras-centrais",
+      "grupo": "equipamento",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/equipamentos.json",
+        "backend/44_Equipamento.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 396,
@@ -1846,16 +1869,14 @@
         "pdfPageEnd": 55
       },
       "corpusSha256": "d1c2045fcff9feb75607d2bd7868a064fa918945343c839d30300d37a4d376db",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/feature-questions",
       "nomeIngles": "Feature Questions",
-      "grupo": "regras-centrais",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": true,
       "caracteresFonte": 83,
@@ -1868,7 +1889,7 @@
         "pdfPageEnd": 158
       },
       "corpusSha256": "78b058244a591c911ed29282668b425a6bde01a13704d0ff5848910d5f0814f8",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/floating-magic-school-campaigns",
@@ -1911,7 +1932,11 @@
         "pdfPageEnd": 46
       },
       "corpusSha256": "e39804d616515e80dca3726f98af1f0cd1dfc965fc978edc346e30fb869306f7",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "holofote",
+        "movimento-do-mestre"
+      ]
     },
     {
       "idFonte": "rules/focus",
@@ -1954,7 +1979,11 @@
         "pdfPageEnd": 90
       },
       "corpusSha256": "c3c9b8621c03c3d7a9f5c3f7fde9acac7ab0cf1c6863affd42f32b0522a8aab7",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "vantagem",
+        "jogada-de-adversario"
+      ]
     },
     {
       "idFonte": "rules/giving-out-gold-equipment-and-loot",
@@ -2001,11 +2030,9 @@
     {
       "idFonte": "rules/grace-domain",
       "nomeIngles": "Grace Domain",
-      "grupo": "dominios",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/dominios.json",
-        "data/cartas-dominio.json",
-        "backend/41_Dominios.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -2145,7 +2172,11 @@
         "pdfPageEnd": 86
       },
       "corpusSha256": "53703b777ad0c931ab04445573191049a5abe060c076dff04460f9ab9bc5fa42",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "jogada",
+        "dificuldade"
+      ]
     },
     {
       "idFonte": "rules/hedge",
@@ -2192,11 +2223,10 @@
     {
       "idFonte": "rules/household-friend",
       "nomeIngles": "Household Friend",
-      "grupo": "regras-centrais",
+      "grupo": "formas-de-fera",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/fichas-filhas.json",
+        "backend/49_FichasFilhas.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 286,
@@ -2209,16 +2239,15 @@
         "pdfPageEnd": 16
       },
       "corpusSha256": "6250c04a7ae231449dd25175005ef146d8bcc0ec1957ecb34253e766670fe339",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/impulses",
       "nomeIngles": "Impulses",
-      "grupo": "regras-centrais",
+      "grupo": "ambientes",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/ambientes.json",
+        "backend/4F_Bestiario.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 214,
@@ -2231,16 +2260,15 @@
         "pdfPageEnd": 158
       },
       "corpusSha256": "d3b44b71bea1ef68281656c6a4c6b6efdd174e2ec21fe5ea839feb1066bd6a56",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/into-the-night",
       "nomeIngles": "Into the Night",
-      "grupo": "regras-centrais",
+      "grupo": "adversarios",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/adversarios.json",
+        "backend/4F_Bestiario.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 198,
@@ -2253,16 +2281,14 @@
         "pdfPageEnd": 92
       },
       "corpusSha256": "5a26fcfeb7ec8089ef190f3292c893b3f1b5a60a4bf898b77d0e757aa2404638",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/introduction",
       "nomeIngles": "Introduction",
-      "grupo": "regras-centrais",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": true,
       "caracteresFonte": 4546,
@@ -2275,16 +2301,14 @@
         "pdfPageEnd": 3
       },
       "corpusSha256": "c7732e5d46798f87eda1ab0307fb9eb8df5df60f85668b8fb5ace1da58a3e81e",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/introduction-2",
       "nomeIngles": "Introduction",
-      "grupo": "regras-centrais",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": true,
       "caracteresFonte": 337,
@@ -2297,7 +2321,7 @@
         "pdfPageEnd": 85
       },
       "corpusSha256": "59a73e6a9da7f3e9caa3d65aae92cd1d66f25e549a8b85b95137ecc107845467",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/juggernaut",
@@ -2489,7 +2513,12 @@
         "pdfPageEnd": 51
       },
       "corpusSha256": "4fd8c58944a8afc0301e8d7602772a7f1663b15d56bdc98106a9ae56489b3ffa",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "alcance",
+        "movimento",
+        "cobertura"
+      ]
     },
     {
       "idFonte": "rules/martial-artist",
@@ -2515,11 +2544,10 @@
     {
       "idFonte": "rules/martial-stances",
       "nomeIngles": "Martial Stances",
-      "grupo": "regras-centrais",
+      "grupo": "classes-e-subclasses",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/classes.json",
+        "backend/42_Classes.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 192,
@@ -2532,16 +2560,15 @@
         "pdfPageEnd": 13
       },
       "corpusSha256": "01ba3a9435ebda94d7721fc1149afd919870f076491ffe1b4efefc22ae521956",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/massive-behemoth",
       "nomeIngles": "Massive Behemoth",
-      "grupo": "regras-centrais",
+      "grupo": "formas-de-fera",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/fichas-filhas.json",
+        "backend/49_FichasFilhas.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 548,
@@ -2554,7 +2581,7 @@
         "pdfPageEnd": 18
       },
       "corpusSha256": "22454c3990d676cd2b7753f30fe2cdb2480ca4f0efa3a25b3aba7337f1a9ea03",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/mentor",
@@ -2580,11 +2607,9 @@
     {
       "idFonte": "rules/midnight-domain",
       "nomeIngles": "Midnight Domain",
-      "grupo": "dominios",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/dominios.json",
-        "data/cartas-dominio.json",
-        "backend/41_Dominios.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -2703,7 +2728,10 @@
         "pdfPageEnd": 92
       },
       "corpusSha256": "8a8db02b431721dc3c1173e4c4f01a64dd2212225291655c647fb5271f0eaf6d",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "combate-submerso"
+      ]
     },
     {
       "idFonte": "rules/multiclassing",
@@ -2731,11 +2759,10 @@
     {
       "idFonte": "rules/mythic-aerial-hunter",
       "nomeIngles": "Mythic Aerial Hunter",
-      "grupo": "regras-centrais",
+      "grupo": "formas-de-fera",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/fichas-filhas.json",
+        "backend/49_FichasFilhas.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 551,
@@ -2748,7 +2775,7 @@
         "pdfPageEnd": 18
       },
       "corpusSha256": "abd2eee2485137b8d27585837fd90161a80349d98ea869e5a9fba338e325a26c",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/mythic-beast",
@@ -2816,11 +2843,10 @@
     {
       "idFonte": "rules/nimble-grazer",
       "nomeIngles": "Nimble Grazer",
-      "grupo": "regras-centrais",
+      "grupo": "formas-de-fera",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/fichas-filhas.json",
+        "backend/49_FichasFilhas.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 359,
@@ -2833,16 +2859,14 @@
         "pdfPageEnd": 16
       },
       "corpusSha256": "6f39e82d27b80a83f057a6941c633237ba7ca0b8d500527bff34976117df3f09",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/npc-feature-examples",
       "nomeIngles": "Npc Feature Examples",
-      "grupo": "regras-centrais",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -2855,15 +2879,14 @@
         "pdfPageEnd": 92
       },
       "corpusSha256": "2443a912bee55fdb10f26023e7be54fb4aefb9bf94f01406813eb022a689fe08",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/optional-gm-mechanics",
       "nomeIngles": "Optional Gm Mechanics",
-      "grupo": "regras-do-mestre",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/4E_Mesa.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -2876,7 +2899,7 @@
         "pdfPageEnd": 92
       },
       "corpusSha256": "cfacf5878fbb8b39703394d526bf8dc04402fd219ab93d4cb49f847be27a123f",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/pack-predator",
@@ -2986,11 +3009,10 @@
     {
       "idFonte": "rules/pool",
       "nomeIngles": "Pool",
-      "grupo": "regras-centrais",
+      "grupo": "adversarios",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/adversarios.json",
+        "backend/4F_Bestiario.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 362,
@@ -3003,7 +3025,7 @@
         "pdfPageEnd": 94
       },
       "corpusSha256": "5b5ec10adfce751c98f216ba4247090532e13a0e3559c46e8aa03cd0eac16950",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/potential-adversaries",
@@ -3130,7 +3152,12 @@
         "pdfPageEnd": 87
       },
       "corpusSha256": "10b77685367739f7c7cbd6d24136a70542d2fc15ff67eb1eb275ee9162067b5e",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "jogada",
+        "resultado-da-jogada",
+        "sucesso-critico"
+      ]
     },
     {
       "idFonte": "rules/range",
@@ -3152,7 +3179,10 @@
         "pdfPageEnd": 55
       },
       "corpusSha256": "7f03738d53c6b324683be8a7608418d88103de6986d566998405147829acce7a",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "alcance"
+      ]
     },
     {
       "idFonte": "rules/ranger-companion",
@@ -3199,11 +3229,10 @@
     {
       "idFonte": "rules/reactions",
       "nomeIngles": "Reactions",
-      "grupo": "regras-centrais",
+      "grupo": "adversarios",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/adversarios.json",
+        "backend/4F_Bestiario.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 478,
@@ -3216,16 +3245,15 @@
         "pdfPageEnd": 94
       },
       "corpusSha256": "b2a04e47c3e7f61849dcdfbd6b072e832e0a02b0348339c9045cf5667b2884c7",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/regroup",
       "nomeIngles": "Regroup",
-      "grupo": "regras-centrais",
+      "grupo": "adversarios",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/adversarios.json",
+        "backend/4F_Bestiario.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 226,
@@ -3238,7 +3266,7 @@
         "pdfPageEnd": 92
       },
       "corpusSha256": "419eae92b300dc502b841013382b4291ebf450edb9721dea5f0aba816384a8da",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/rogue-subclasses",
@@ -3281,15 +3309,17 @@
         "pdfPageEnd": 86
       },
       "corpusSha256": "5d985a75ba7afb690b5e4e02faa908b94a3d1e48dea863106cd613c414629a61",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "dados-de-dualidade"
+      ]
     },
     {
       "idFonte": "rules/running-an-adventure",
       "nomeIngles": "Running an Adventure",
-      "grupo": "regras-do-mestre",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/4E_Mesa.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -3302,7 +3332,7 @@
         "pdfPageEnd": 85
       },
       "corpusSha256": "f7e2cf864e7c95384e737883ed56e8db380c40fb059bc0b9bc6965dd4e79dba1",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/running-gm-npcs",
@@ -3328,11 +3358,9 @@
     {
       "idFonte": "rules/sage-domain",
       "nomeIngles": "Sage Domain",
-      "grupo": "dominios",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/dominios.json",
-        "data/cartas-dominio.json",
-        "backend/41_Dominios.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -3434,11 +3462,10 @@
     {
       "idFonte": "rules/shifting-into-stances",
       "nomeIngles": "Shifting Into Stances",
-      "grupo": "regras-centrais",
+      "grupo": "classes-e-subclasses",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/classes.json",
+        "backend/42_Classes.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 391,
@@ -3451,7 +3478,7 @@
         "pdfPageEnd": 13
       },
       "corpusSha256": "a3275b1ba8fd74430b7872b346512d651013eabceb308904cb57c908d1ad62c9",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/soft-and-hard-moves",
@@ -3498,11 +3525,10 @@
     {
       "idFonte": "rules/sphere-of-influence-examples",
       "nomeIngles": "Sphere of Influence Examples",
-      "grupo": "regras-centrais",
+      "grupo": "classes-e-subclasses",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/classes.json",
+        "backend/42_Classes.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 405,
@@ -3515,16 +3541,14 @@
         "pdfPageEnd": 26
       },
       "corpusSha256": "7dd4f9f46e2a42353366cf270f522c6e978785b73ea5bbad210ecdcbd29b21eb",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/splendor-domain",
       "nomeIngles": "Splendor Domain",
-      "grupo": "dominios",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/dominios.json",
-        "data/cartas-dominio.json",
-        "backend/41_Dominios.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -3584,11 +3608,10 @@
     {
       "idFonte": "rules/stance-features",
       "nomeIngles": "Stance Features",
-      "grupo": "regras-centrais",
+      "grupo": "classes-e-subclasses",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/classes.json",
+        "backend/42_Classes.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 56,
@@ -3601,16 +3624,15 @@
         "pdfPageEnd": 13
       },
       "corpusSha256": "2525124a77381934ec4b1be1d28df85577a6ac6e61add579c4859f9273ab20af",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/stances",
       "nomeIngles": "Stances",
-      "grupo": "regras-centrais",
+      "grupo": "classes-e-subclasses",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/classes.json",
+        "backend/42_Classes.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 455,
@@ -3623,7 +3645,7 @@
         "pdfPageEnd": 13
       },
       "corpusSha256": "ec4fcfc4fe27d45a4ef961e4b2f4c2f928e66ad203e6af93c459a7b29d92d6bb",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/step-1-name-your-companion",
@@ -3649,11 +3671,10 @@
     {
       "idFonte": "rules/step-2-write-their-evasion",
       "nomeIngles": "Step 2: Write Their Evasion",
-      "grupo": "regras-centrais",
+      "grupo": "companheiro",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/fichas-filhas.json",
+        "backend/49_FichasFilhas.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 42,
@@ -3666,7 +3687,7 @@
         "pdfPageEnd": 21
       },
       "corpusSha256": "a4692262824a2cd64bdd853d65b453adec71e4853f5a57ce672e5649b741ee51",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/step-3-choose-their-companion-experience",
@@ -3692,11 +3713,10 @@
     {
       "idFonte": "rules/step-4-choose-their-attack-and-record-damage-die",
       "nomeIngles": "Step 4: Choose Their Attack and Record Damage Die",
-      "grupo": "regras-centrais",
+      "grupo": "companheiro",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/fichas-filhas.json",
+        "backend/49_FichasFilhas.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 256,
@@ -3709,7 +3729,7 @@
         "pdfPageEnd": 21
       },
       "corpusSha256": "ec5e0ec5f88d63bf155b428e686871c69ad24ec2961349c06d4af28b6627eca2",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/stress",
@@ -3731,7 +3751,10 @@
         "pdfPageEnd": 50
       },
       "corpusSha256": "dbb8f2f97c5c578c743d3cf7be35bdb77a6e66fc5e80741ca852886b938e51a2",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "estresse"
+      ]
     },
     {
       "idFonte": "rules/striking-serpent",
@@ -3820,11 +3843,9 @@
     {
       "idFonte": "rules/system-reference-document-2-0",
       "nomeIngles": "System Reference Document 2.0",
-      "grupo": "regras-centrais",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": true,
       "caracteresFonte": 492,
@@ -3837,16 +3858,15 @@
         "pdfPageEnd": 1
       },
       "corpusSha256": "8381bd4f2b8f44df647481c3e53e720c1e14ca4f620f44e8c2f4053b2bc48e4b",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/taking-damage-as-stress",
       "nomeIngles": "Taking Damage as Stress",
-      "grupo": "regras-centrais",
+      "grupo": "companheiro",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/fichas-filhas.json",
+        "backend/49_FichasFilhas.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 398,
@@ -3859,7 +3879,7 @@
         "pdfPageEnd": 22
       },
       "corpusSha256": "3421a9ce624fec33954e50ea0263e63fe01d43ee4892a4eecea33f410694c940",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/tech-based-campaigns",
@@ -3948,11 +3968,10 @@
     {
       "idFonte": "rules/tier-1",
       "nomeIngles": "Tier 1",
-      "grupo": "regras-centrais",
+      "grupo": "classes-e-subclasses",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/classes.json",
+        "backend/42_Classes.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 347,
@@ -3965,16 +3984,14 @@
         "pdfPageEnd": 13
       },
       "corpusSha256": "0439e49b3c251b88c96efbb3edfa7d3492b0d918d187ed23f2e76751f8a51608",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/tier-1-2",
       "nomeIngles": "Tier 1",
-      "grupo": "regras-centrais",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -3987,15 +4004,14 @@
         "pdfPageEnd": 15
       },
       "corpusSha256": "30ed4ee98932ed463e6f35a367200500ee9bd70fb1408b4b89f77762e5da7268",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/tier-1-adversaries-level-1",
       "nomeIngles": "Tier 1 Adversaries (level 1)",
-      "grupo": "adversarios",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/adversarios.json",
-        "backend/4F_Bestiario.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -4013,10 +4029,9 @@
     {
       "idFonte": "rules/tier-1-environments-level-1",
       "nomeIngles": "Tier 1 Environments (level 1)",
-      "grupo": "ambientes",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/ambientes.json",
-        "backend/4F_Bestiario.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -4034,11 +4049,10 @@
     {
       "idFonte": "rules/tier-2",
       "nomeIngles": "Tier 2",
-      "grupo": "regras-centrais",
+      "grupo": "classes-e-subclasses",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/classes.json",
+        "backend/42_Classes.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 483,
@@ -4051,16 +4065,14 @@
         "pdfPageEnd": 13
       },
       "corpusSha256": "f9301d5fe1a04979313fef6167f0b5099e0f14e0e27ce39647bfff874cd55ccf",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/tier-2-2",
       "nomeIngles": "Tier 2",
-      "grupo": "regras-centrais",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -4073,15 +4085,14 @@
         "pdfPageEnd": 16
       },
       "corpusSha256": "9be605b1ba6aaf9e9bb95b6e69e599f28f22a43b8d1d0b07c5c75acadbf03af5",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/tier-2-adversaries-levels-2-4",
       "nomeIngles": "Tier 2 Adversaries (levels 2-4)",
-      "grupo": "adversarios",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/adversarios.json",
-        "backend/4F_Bestiario.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -4099,10 +4110,9 @@
     {
       "idFonte": "rules/tier-2-environments-levels-2-4",
       "nomeIngles": "Tier 2 Environments (levels 2-4)",
-      "grupo": "ambientes",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/ambientes.json",
-        "backend/4F_Bestiario.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -4120,11 +4130,10 @@
     {
       "idFonte": "rules/tier-3",
       "nomeIngles": "Tier 3",
-      "grupo": "regras-centrais",
+      "grupo": "classes-e-subclasses",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/classes.json",
+        "backend/42_Classes.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 443,
@@ -4137,16 +4146,14 @@
         "pdfPageEnd": 13
       },
       "corpusSha256": "78be1674f6962177211e6f2861e535bfe1c1da041a8dfde02923563591b01dc4",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/tier-3-2",
       "nomeIngles": "Tier 3",
-      "grupo": "regras-centrais",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -4159,15 +4166,14 @@
         "pdfPageEnd": 17
       },
       "corpusSha256": "6c7aab0456f00647fa8b5ef9eeca76dff43e4e48d1721704cbd4ac8b68929277",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/tier-3-adversaries-levels-5-7",
       "nomeIngles": "Tier 3 Adversaries (levels 5-7)",
-      "grupo": "adversarios",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/adversarios.json",
-        "backend/4F_Bestiario.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -4185,10 +4191,9 @@
     {
       "idFonte": "rules/tier-3-environments-levels-5-7",
       "nomeIngles": "Tier 3 Environments (levels 5-7)",
-      "grupo": "ambientes",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/ambientes.json",
-        "backend/4F_Bestiario.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -4206,11 +4211,10 @@
     {
       "idFonte": "rules/tier-4",
       "nomeIngles": "Tier 4",
-      "grupo": "regras-centrais",
+      "grupo": "classes-e-subclasses",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/classes.json",
+        "backend/42_Classes.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 465,
@@ -4223,16 +4227,14 @@
         "pdfPageEnd": 13
       },
       "corpusSha256": "68f3fb5d90c102567e79e07f47b80f267852069d11ec734ed2768e7a1dd07dcd",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/tier-4-2",
       "nomeIngles": "Tier 4",
-      "grupo": "regras-centrais",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -4245,15 +4247,14 @@
         "pdfPageEnd": 18
       },
       "corpusSha256": "9012e0d1e3228560a2fb4641671052faec219ae4332bb731b9254924110c61aa",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/tier-4-adversaries-levels-8-10",
       "nomeIngles": "Tier 4 Adversaries (levels 8-10)",
-      "grupo": "adversarios",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/adversarios.json",
-        "backend/4F_Bestiario.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -4271,10 +4272,9 @@
     {
       "idFonte": "rules/tier-4-environments-levels-8-10",
       "nomeIngles": "Tier 4 Environments (levels 8-10)",
-      "grupo": "ambientes",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/ambientes.json",
-        "backend/4F_Bestiario.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -4292,11 +4292,10 @@
     {
       "idFonte": "rules/trait",
       "nomeIngles": "Trait",
-      "grupo": "regras-centrais",
+      "grupo": "equipamento",
       "artefatos": [
-        "data/verbetes.json",
-        "backend/40_Regras.gs",
-        "backend/4C_Ajustes.gs"
+        "data/equipamentos.json",
+        "backend/44_Equipamento.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 81,
@@ -4309,7 +4308,7 @@
         "pdfPageEnd": 55
       },
       "corpusSha256": "4179f9c5531adbf8980124c8a4bfc72a4b2b291a62bdb6f2d420bb89063eaa37",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/transformations",
@@ -4373,15 +4372,17 @@
         "pdfPageEnd": 47
       },
       "corpusSha256": "4abf3782705c70d973807f2358ee81795665866731584baa02e408376c54d5f5",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "holofote"
+      ]
     },
     {
       "idFonte": "rules/using-adversaries",
       "nomeIngles": "Using Adversaries",
-      "grupo": "adversarios",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/adversarios.json",
-        "backend/4F_Bestiario.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -4399,10 +4400,9 @@
     {
       "idFonte": "rules/using-environments",
       "nomeIngles": "Using Environments",
-      "grupo": "ambientes",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/ambientes.json",
-        "backend/4F_Bestiario.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -4437,7 +4437,11 @@
         "pdfPageEnd": 88
       },
       "corpusSha256": "f7979997a3e7322e68e71b27ac9080df392b9e161d25399ee8554af83cb84084",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "medo",
+        "movimento-do-mestre"
+      ]
     },
     {
       "idFonte": "rules/using-spellcast-rolls-hope-and-experiences",
@@ -4459,16 +4463,19 @@
         "pdfPageEnd": 21
       },
       "corpusSha256": "bc1afd3b0631b47fde04467bc076f78237ec5418bee813bcb07d1125541e3cd2",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "jogada-de-conjuracao",
+        "esperanca",
+        "experiencia"
+      ]
     },
     {
       "idFonte": "rules/valor-domain",
       "nomeIngles": "Valor Domain",
-      "grupo": "dominios",
+      "grupo": "estrutura-documental",
       "artefatos": [
-        "data/dominios.json",
-        "data/cartas-dominio.json",
-        "backend/41_Dominios.gs"
+        "data/srd2-fonte.json"
       ],
       "temTexto": false,
       "caracteresFonte": 0,
@@ -4830,9 +4837,10 @@
       "ambientes",
       "companheiro",
       "transformacoes",
-      "criacao-e-avanco"
+      "criacao-e-avanco",
+      "estrutura-documental"
     ],
-    "quantidade": 125,
+    "quantidade": 198,
     "criterio": "A fonte Rule repete uma coleção canônica já integrada e testada; os artefatos indicados são a implementação única."
   }
 }

@@ -2105,6 +2105,131 @@
       "veja": [
         "jogada"
       ]
+    },
+    {
+      "id": "conflito-entre-personagens",
+      "termo": "Conflito entre personagens",
+      "variantes": [
+        "conflito entre PJs",
+        "ataque contra personagem"
+      ],
+      "categoria": "jogada",
+      "pagina": 92,
+      "resumo": "Converse primeiro; se todos quiserem rolar, ataque enfrenta Evasão e outras ações enfrentam uma jogada de reação.",
+      "explicacao": [
+        "Antes de usar dados, as duas pessoas envolvidas combinam como resolver o conflito e quais serão os termos da jogada.",
+        "Num ataque contra outro personagem, a jogada de ataque enfrenta a Evasão do defensor. Em outra ação, quem inicia faz uma jogada de ação e precisa superar uma Dificuldade igual ao total da jogada de reação do alvo."
+      ],
+      "veja": [
+        "jogada-de-ataque",
+        "jogada-de-reacao",
+        "evasao"
+      ],
+      "fonteSrd2": {
+        "id": "rules/conflict-between-pcs",
+        "pdfPageStart": 92
+      },
+      "ancora": "Às vezes, um jogador pode querer que seu personagem aja contra outro personagem"
+    },
+    {
+      "id": "dano-de-queda-e-colisao",
+      "termo": "Dano de queda e colisão",
+      "variantes": [
+        "queda",
+        "colisão"
+      ],
+      "categoria": "dano",
+      "pagina": 92,
+      "resumo": "Muito Próximo: 1d10+3; Próximo: 1d20+5; Distante ou Muito Distante: 1d100+15 ou morte. Colisão perigosa causa 1d20+5 direto.",
+      "explicacao": [
+        "Uma queda de alcance Muito Próximo causa 1d10+3 de dano físico; de alcance Próximo, 1d20+5 de dano físico.",
+        "Uma queda de alcance Distante ou Muito Distante causa 1d100+15 de dano físico, ou morte a critério do Mestre. Colidir em velocidade perigosa causa 1d20+5 de dano físico direto. O app não rola esses dados."
+      ],
+      "veja": [
+        "alcance",
+        "dano-direto",
+        "tipo-de-dano"
+      ],
+      "fonteSrd2": {
+        "id": "rules/falling-and-collision-damage",
+        "pdfPageStart": 92
+      },
+      "ancora": "Se um personagem cair no chão, use o alcance da queda para determinar o dano"
+    },
+    {
+      "id": "jogada-de-destino",
+      "termo": "Jogada de destino",
+      "variantes": [
+        "destino",
+        "fate roll"
+      ],
+      "categoria": "jogada",
+      "pagina": 92,
+      "resumo": "O Mestre define o que está em jogo; uma pessoa rola apenas um de seus Dados de Dualidade e o resultado decide a questão.",
+      "explicacao": [
+        "Use quando o Mestre quiser deixar um resultado inteiramente ao acaso. Antes da rolagem, ele informa qual dado será usado e como cada resultado será interpretado.",
+        "A jogada pode definir se algo acontece, o tamanho inicial de uma contagem, a quantidade de pessoas ou a disponibilidade de um recurso."
+      ],
+      "veja": [
+        "dados-de-dualidade",
+        "contagem-regressiva"
+      ],
+      "fonteSrd2": {
+        "id": "rules/fate-rolls",
+        "pdfPageStart": 92
+      },
+      "ancora": "Quando o Mestre quiser deixar um resultado inteiramente ao acaso, peça uma jogada de destino"
+    },
+    {
+      "id": "combate-submerso",
+      "termo": "Movimento e combate submerso",
+      "variantes": [
+        "debaixo d’água",
+        "submerso",
+        "afogamento"
+      ],
+      "categoria": "cena",
+      "pagina": 92,
+      "resumo": "Ataques submersos têm desvantagem; quem não respira usa uma Contagem Padrão (3) e, quando ela termina, marca Estresse a cada ação.",
+      "explicacao": [
+        "Por padrão, uma jogada de ataque feita por alguém submerso tem desvantagem.",
+        "Quem não respira debaixo d’água recebe uma Contagem Padrão (3), avançada a cada ação. O Mestre pode avançá-la outra vez numa falha ou jogada com Medo, ou duas vezes numa falha com Medo. Depois que termina, cada ação marca 1 Estresse."
+      ],
+      "veja": [
+        "vantagem",
+        "contagem-padrao",
+        "estresse"
+      ],
+      "fonteSrd2": {
+        "id": "rules/moving-and-fighting-underwater",
+        "pdfPageStart": 92
+      },
+      "ancora": "Por padrão, jogadas de ataque feitas enquanto o atacante está submerso têm desvantagem"
+    },
+    {
+      "id": "holofote",
+      "termo": "Holofote",
+      "variantes": [
+        "ordem de turno",
+        "economia de ações",
+        "spotlight"
+      ],
+      "categoria": "cena",
+      "pagina": 47,
+      "resumo": "Não há iniciativa rígida: o foco acompanha gatilhos, a ficção e quem está há mais tempo sem agir.",
+      "explicacao": [
+        "Quem está sob o holofote descreve sua ação. Em seguida, o foco passa para quem uma regra indicar, para quem a ficção destacar ou para alguém que não age há algum tempo.",
+        "Opcionalmente, cada pessoa pode começar a cena com três marcadores de holofote e gastar um por ação. Quando todos acabarem, os marcadores são recuperados."
+      ],
+      "veja": [
+        "jogada",
+        "foco"
+      ],
+      "fonteSrd2": {
+        "id": "rules/turn-order-action-economy",
+        "pdfPageStart": 47
+      },
+      "ancora": "Os turnos não seguem um formato tradicional e rígido"
     }
   ]
 }

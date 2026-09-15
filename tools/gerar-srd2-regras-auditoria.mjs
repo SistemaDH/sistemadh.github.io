@@ -9,13 +9,13 @@ const inventario = JSON.parse(fs.readFileSync(path.join(raiz, 'data/srd2-inventa
 const regras = inventario.colecoes.find((c) => c.id === 'rules').registros;
 
 const grupos = [
-  ['formas-de-fera', /(?:scout|predator|beast|hybrid|lizard|strider|arachnid|serpent|beastform)/, ['data/fichas-filhas.json','backend/49_FichasFilhas.gs']],
-  ['classes-e-subclasses', /(?:subclasses|beastbound|brave|slayer|wielder|origin|nightwalker|knowledge|school-of-war|stalwart|syndicate|troubadour|vengeance|warden|wayfinder|sentinel|wordsmith|juggernaut|martial-artist|mentor|pact|executioners-guild|poisoners-guild|hedge$|moon$)/, ['data/classes.json','backend/42_Classes.gs']],
-  ['dominios', /(?:domain$|arcana|blade|bone|codex|dread|grace|midnight|sage|splendor|valor)/, ['data/dominios.json','data/cartas-dominio.json','backend/41_Dominios.gs']],
-  ['equipamento', /(?:armor|weapon|equipment|loot|consumables|wheelchair)/, ['data/equipamentos.json','backend/44_Equipamento.gs']],
-  ['adversarios', /(?:adversar|stat-block-benchmark|colossal|focus|fear-features|passives)/, ['data/adversarios.json','backend/4F_Bestiario.gs']],
-  ['ambientes', /(?:environment)/, ['data/ambientes.json','backend/4F_Bestiario.gs']],
-  ['companheiro', /(?:companion|volley-of-arrows)/, ['data/fichas-filhas.json','backend/49_FichasFilhas.gs']],
+  ['formas-de-fera', /(?:scout|predator|beast|hybrid|lizard|strider|arachnid|serpent|beastform|household-friend|massive-behemoth|mythic-aerial-hunter|nimble-grazer)/, ['data/fichas-filhas.json','backend/49_FichasFilhas.gs']],
+  ['classes-e-subclasses', /(?:subclasses|beastbound|brave|slayer|wielder|origin|nightwalker|knowledge|school-of-war|stalwart|syndicate|troubadour|vengeance|warden|wayfinder|sentinel|wordsmith|juggernaut|martial-artist|mentor|pact|executioners-guild|poisoners-guild|hedge$|moon$|stances|stance-features|shifting-into-stances|dropping-out-of-stances|sphere-of-influence|^tier-[1-4]$)/, ['data/classes.json','backend/42_Classes.gs']],
+  ['dominios', /(?:domain$|^domains$|arcana|blade|bone|codex|dread|grace|midnight|sage|splendor|valor)/, ['data/dominios.json','data/cartas-dominio.json','backend/41_Dominios.gs']],
+  ['equipamento', /(?:armor|weapon|equipment|loot|consumables|wheelchair|^burden$|^category$|^feature$|^trait$)/, ['data/equipamentos.json','backend/44_Equipamento.gs']],
+  ['adversarios', /(?:adversar|stat-block-benchmark|colossal|focus|fear-features|passives|^actions$|arcane-hold|into-the-night|^pool$|^regroup$|^reactions$)/, ['data/adversarios.json','backend/4F_Bestiario.gs']],
+  ['ambientes', /(?:environment|^impulses$)/, ['data/ambientes.json','backend/4F_Bestiario.gs']],
+  ['companheiro', /(?:companion|volley-of-arrows|step-2-write|step-4-choose|taking-damage-as-stress|^evolution$)/, ['data/fichas-filhas.json','backend/49_FichasFilhas.gs']],
   ['transformacoes', /(?:transformation)/, ['data/transformacoes.json','backend/45_Transformacoes.gs']],
   ['campanhas-suplementares', /(?:campaign|faction|feasts|witherwild|elemental-kin)/, ['data/equipamentos.json','data/mesa.json']],
   ['criacao-e-avanco', /(?:character-creation|leveling|multiclass|ancestr|communities|classes|subclasses|class-domains)/, ['data/criacao.json','data/avanco.json','backend/48_Criacao.gs','backend/4D_Avanco.gs']],
@@ -28,7 +28,10 @@ const registros = regras.map((r) => {
   const bruto = fs.readFileSync(arquivo, 'utf8');
   const fonte = JSON.parse(bruto);
   const slug = r.id.slice('rules/'.length);
-  const grupo = grupos.find(([, padrao]) => padrao.test(slug));
+  const documental = /^(appendix|contents|feature-questions|introduction|introduction-2|system-reference-document-2-0)$/.test(slug);
+  const grupo = !fonte.rulesText || documental
+    ? ['estrutura-documental', null, ['data/srd2-fonte.json']]
+    : grupos.find(([, padrao]) => padrao.test(slug));
   return {
     idFonte: r.id,
     nomeIngles: r.nomeIngles,
