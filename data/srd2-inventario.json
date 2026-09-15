@@ -19864,7 +19864,7 @@
             "pdfPageEnd": 184
           },
           "corpusSha256": "6d056f5fc6d680afcd23ccf4d9709735bdc3eee7bf50f857c646ae9802da4a2a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/additional-rules",
@@ -19894,7 +19894,7 @@
             "pdfPageEnd": 91
           },
           "corpusSha256": "ab95027438206343aadcc9127811ccfc5789694d143afb5c8c6f835c6915f303",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/adversaries-and-environments",
@@ -20299,7 +20299,7 @@
             "pdfPageEnd": 94
           },
           "corpusSha256": "7ad99009a711073cf3092651cf7bb91d94fa68cab88eee13e9ef76ffd49d5911",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/burden",
@@ -20389,7 +20389,7 @@
             "pdfPageEnd": 87
           },
           "corpusSha256": "860305719445dc29b7a64fc9bdd71803caf7167621f8fcc41dbcf899196f3fd2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/class-domains",
@@ -20629,7 +20629,7 @@
             "pdfPageEnd": 91
           },
           "corpusSha256": "d828b654f1f66e0edea8e3a0305389bd133192da7f0e001af8f0c5be8fed0d6a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/daggerheart",
@@ -20734,7 +20734,7 @@
             "pdfPageEnd": 90
           },
           "corpusSha256": "d072b18da24985e846b26bfc58e3db12ff14e45db0cc5a455fa2d48e868e87c4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/divine-wielder",
@@ -20854,7 +20854,7 @@
             "pdfPageEnd": 91
           },
           "corpusSha256": "0a27b53f72b1087620638d14a320cdc00dccd6d1e543c6d740adfdcee8827ed2",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/elemental-kin",
@@ -21199,7 +21199,7 @@
             "pdfPageEnd": 86
           },
           "corpusSha256": "bbaacbb61e5869a1065c52b5b3b17036051ba58c6eecbbeb514712fdbc789a15",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/grace-domain",
@@ -21514,7 +21514,7 @@
             "pdfPageEnd": 86
           },
           "corpusSha256": "e54a017d7bd6ed77942c868d1adc17be48437e183a29af166d7080d3a28c6a33",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/making-moves-taking-action",
@@ -21529,7 +21529,7 @@
             "pdfPageEnd": 49
           },
           "corpusSha256": "4f72be1a9f889a6fcd56096210e4d1cd0c81aec66f3cfeda9483367274bef8b8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/maps-range-and-movement",
@@ -22129,7 +22129,7 @@
             "pdfPageEnd": 91
           },
           "corpusSha256": "d03ba76e174f3c63c3ae40fa28a1bd8a2a6be8e3fe4036a03114fddd35cabe17",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/sage-domain",
@@ -22234,7 +22234,7 @@
             "pdfPageEnd": 87
           },
           "corpusSha256": "85a492dc3b5ebdd09e4aabee1d8a0fe737dec55e28e568f08325aa3460637543",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/sorcerer-subclasses",
@@ -22549,7 +22549,7 @@
             "pdfPageEnd": 46
           },
           "corpusSha256": "7296e13c08c78387b76c3e26d9182085b7e65a890489851c090cb7dd02db4dcc",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/the-witherwild",
@@ -23089,7 +23089,7 @@
             "pdfPageEnd": 86
           },
           "corpusSha256": "8a9b0e8bb098e156da63c7526636abe566402374be4f5cbd4a126d0303a2787f",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "rules/winged-beast",

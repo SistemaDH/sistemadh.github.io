@@ -37,6 +37,22 @@ const vinculosCentrais = {
   'rules/using-fear':['medo','movimento-do-mestre'],
   'rules/using-spellcast-rolls-hope-and-experiences':['jogada-de-conjuracao','esperanca','experiencia']
 };
+const vinculosMestre = {
+  'rules/additional-gm-guidance':['movimento-do-mestre','guia-de-batalha','projeto','repouso'],
+  'rules/advanced-countdown-features':['contagem-com-ciclo','contagem-dinamica'],
+  'rules/building-balanced-encounters':['guia-de-batalha','pontos-de-batalha'],
+  'rules/choosing-gm-moves':['movimento-do-mestre'],
+  'rules/countdowns':['contagem-regressiva','contagem-padrao','contagem-de-longo-prazo'],
+  'rules/difficulty-benchmarks':['dificuldade'],
+  'rules/dynamic-countdown-advancement':['contagem-dinamica'],
+  'rules/gm-guidance':['movimento-do-mestre'],
+  'rules/making-moves':['movimento-do-mestre'],
+  'rules/making-moves-taking-action':['jogada','resultado-da-jogada','movimento-do-mestre'],
+  'rules/running-gm-npcs':['jogada-de-adversario','vantagem-de-npc'],
+  'rules/soft-and-hard-moves':['movimento-do-mestre'],
+  'rules/the-spotlight':['holofote'],
+  'rules/when-to-make-a-move':['movimento-do-mestre']
+};
 const porId = new Map(auditoria.registros.map((r) => [r.idFonte, r]));
 let integrados = 0;
 for (const colecao of inventario.colecoes) for (const registro of colecao.registros) {
@@ -50,7 +66,7 @@ for (const colecao of inventario.colecoes) for (const registro of colecao.regist
   integrados++;
 }
 const idsVerbetes = new Set(ler('data/verbetes.json').verbetes.map((v) => v.id));
-for (const [id, verbetes] of Object.entries(vinculosCentrais)) {
+for (const [id, verbetes] of Object.entries({...vinculosCentrais, ...vinculosMestre})) {
   const registro = inventario.colecoes.flatMap((c) => c.registros).find((r) => r.id === id);
   const auditado = porId.get(id);
   if (!registro || !auditado) throw new Error(`${id}: fonte central ausente`);

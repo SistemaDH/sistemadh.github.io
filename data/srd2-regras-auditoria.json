@@ -79,7 +79,13 @@
         "pdfPageEnd": 184
       },
       "corpusSha256": "5c7907e5770949bf70f29e1d337023733101655f61d78331aede2c0477448618",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "movimento-do-mestre",
+        "guia-de-batalha",
+        "projeto",
+        "repouso"
+      ]
     },
     {
       "idFonte": "rules/additional-rules",
@@ -127,7 +133,11 @@
         "pdfPageEnd": 91
       },
       "corpusSha256": "7280bafdde64d11dffa9494b563f2160e4bf68238e1a633c03ecf351c145c4e2",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "contagem-com-ciclo",
+        "contagem-dinamica"
+      ]
     },
     {
       "idFonte": "rules/adversaries-and-environments",
@@ -701,7 +711,11 @@
         "pdfPageEnd": 94
       },
       "corpusSha256": "ff195cdd0e498f94d58d99e0873166582f935c25f0dc073ff9b4353d9cf076d5",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "guia-de-batalha",
+        "pontos-de-batalha"
+      ]
     },
     {
       "idFonte": "rules/burden",
@@ -829,7 +843,10 @@
         "pdfPageEnd": 87
       },
       "corpusSha256": "a666079fd1917c62bcc1132f9ccab6f80f6146c7a5326c2ccaaad20c37088f57",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "movimento-do-mestre"
+      ]
     },
     {
       "idFonte": "rules/class-domains",
@@ -1188,7 +1205,12 @@
         "pdfPageEnd": 91
       },
       "corpusSha256": "480a3e9d5944026c942e6dedec5637ca26c30cce30de53e5c9f6b9d311da46be",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "contagem-regressiva",
+        "contagem-padrao",
+        "contagem-de-longo-prazo"
+      ]
     },
     {
       "idFonte": "rules/daggerheart",
@@ -1353,7 +1375,10 @@
         "pdfPageEnd": 90
       },
       "corpusSha256": "ebab781128d5066738c3331278c40c4e60586abe52f78ed98c7923f67807bb3d",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "dificuldade"
+      ]
     },
     {
       "idFonte": "rules/divine-wielder",
@@ -1525,7 +1550,10 @@
         "pdfPageEnd": 91
       },
       "corpusSha256": "3d57c7ba2ebed5697357b2900a0264402ec07e44ea78cb0e4f674b7255708478",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "contagem-dinamica"
+      ]
     },
     {
       "idFonte": "rules/elemental-kin",
@@ -2025,7 +2053,10 @@
         "pdfPageEnd": 86
       },
       "corpusSha256": "409ef66bc2205d5f062ad2fd6463d885863e42152604c9459e006ca0651cf89a",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "movimento-do-mestre"
+      ]
     },
     {
       "idFonte": "rules/grace-domain",
@@ -2470,7 +2501,10 @@
         "pdfPageEnd": 86
       },
       "corpusSha256": "17c8e659daf3daac7348ccf60d1586b251ab48490ce4f78a15b5bdfb18e3d577",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "movimento-do-mestre"
+      ]
     },
     {
       "idFonte": "rules/making-moves-taking-action",
@@ -2491,7 +2525,12 @@
         "pdfPageEnd": 49
       },
       "corpusSha256": "a62891b3713eadcad6d9f3593f7f581c649108e0444ab63b5c06580914f344b0",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "jogada",
+        "resultado-da-jogada",
+        "movimento-do-mestre"
+      ]
     },
     {
       "idFonte": "rules/maps-range-and-movement",
@@ -3353,7 +3392,11 @@
         "pdfPageEnd": 91
       },
       "corpusSha256": "5e661608c3171f6bfae59d0a877e2343b0c0187cf9c3a2b84096ae4869eb303e",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "jogada-de-adversario",
+        "vantagem-de-npc"
+      ]
     },
     {
       "idFonte": "rules/sage-domain",
@@ -3499,7 +3542,10 @@
         "pdfPageEnd": 87
       },
       "corpusSha256": "de34033625c7066501bc4ad484eb563d7e881eda3a032e18e26f360554854bd6",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "movimento-do-mestre"
+      ]
     },
     {
       "idFonte": "rules/sorcerer-subclasses",
@@ -3942,7 +3988,10 @@
         "pdfPageEnd": 46
       },
       "corpusSha256": "788c575274671f99f57d0d293a441a6467069c21434a97279866705cf4b12be9",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "holofote"
+      ]
     },
     {
       "idFonte": "rules/the-witherwild",
@@ -4698,7 +4747,10 @@
         "pdfPageEnd": 86
       },
       "corpusSha256": "4ad791843b0da9fea9a8f5fb53cae03879f14d45d9d7cc7d874f730032c0c602",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia",
+      "verbetes": [
+        "movimento-do-mestre"
+      ]
     },
     {
       "idFonte": "rules/winged-beast",
@@ -4840,7 +4892,7 @@
       "criacao-e-avanco",
       "estrutura-documental"
     ],
-    "quantidade": 198,
+    "quantidade": 212,
     "criterio": "A fonte Rule repete uma coleção canônica já integrada e testada; os artefatos indicados são a implementação única."
   }
 }
