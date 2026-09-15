@@ -2818,6 +2818,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         ].filter(Boolean)
       });
     };
+    let blocoTransformacao;
     if (td) {
       const acoesTransformacao = [];
       if (td.id === 'fantasma') acoesTransformacao.push(el('button', {type:'button',class:'btn btn--pequeno',onClick:()=>enviar([{tipo:'transformacao',acao:'atravessar-objeto'}])}, 'Atravessar objeto · 2 Estresses'));
@@ -2834,17 +2835,18 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         acoesTransformacao.push(el('button',{type:'button',class:'btn btn--pequeno',onClick:async()=>{const n=Number(prompt('Quantos PV o alvo marcou?', '1'));if(n>0)await enviar([{tipo:'transformacao',acao:'alimentar',pontosDeVida:n}])}},`Alimentar-se · ${td.marcadores}/6`));
         acoesTransformacao.push(el('button',{type:'button',class:'btn btn--fantasma btn--pequeno',disabled:td.marcadores<1,onClick:()=>enviar([{tipo:'transformacao',acao:'gastar-marcador'}])},'Gastar marcador'));
       }
-      pai.append(secao(`Transformação · ${td.nome}`, el('div',{class:'pilha'},[
+      blocoTransformacao = secao(`Transformação · ${td.nome}`, el('div',{class:'pilha'},[
         el('p',{class:'texto-sm'},textoAnotado(td.descricao)),
         ...td.caracteristicas.map(c=>el('div',{class:'ficha__carac'},[el('strong',{texto:c.nome}),el('p',{class:'texto-sm'},textoAnotado(c.texto))])),
         el('div',{class:'linha'},[...acoesTransformacao,el('button',{type:'button',class:'btn btn--fantasma btn--pequeno',onClick:abrirTransformacoes},'Gerenciar')])
-      ])));
+      ]));
     } else {
-      pai.append(el('button',{type:'button',class:'btn btn--fantasma btn--pequeno',onClick:abrirTransformacoes},'Adquirir transformação'));
+      blocoTransformacao = el('button',{type:'button',class:'btn btn--fantasma btn--pequeno',onClick:abrirTransformacoes},'Adquirir transformação');
     }
 
     // --- o bloco da ficha de papel --------------------------------------
     pai.append(blocoDePapel(ficha));
+    pai.append(blocoTransformacao);
 
     /* --- equipamento -----------------------------------------------------
      *
