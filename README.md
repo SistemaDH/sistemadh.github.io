@@ -8,9 +8,7 @@ O frontend é publicado pelo GitHub Pages e o backend oficial é Supabase: Edge 
 
 ## Estado atual
 
-> **Produção:** Core 1.0 + Lote 9 publicados em `main` em 11/09/2026.
-
-> **Em desenvolvimento:** migração integral para o SRD 2.0 na branch `srd2-conformidade`. Fonte, erratas, tradução e cobertura estão documentadas em `docs/srd2-conformidade.md`; nada desse lote foi implantado em produção.
+> **Produção:** motor SRD 2.0 implantado no Supabase; a publicação do frontend SRD2 em `main` está no fechamento desta promoção.
 
 O estado atual inclui:
 
@@ -28,7 +26,11 @@ O estado atual inclui:
 - refino UX/UI mobile e responsivo com baseline dedicado em 360×800, 390×844, 430×932, 768×1024, 1024×768 e 1440×900;
 - fluxo de dano recebido integrado às cartas ativas suportadas pelo contexto atual, incluindo `Tocado do Esplendor` e `Levantar-Se`;
 - cache-busting dos assets críticos do HUD para evitar frontend antigo após deploy;
-- correção da pílula de nível e reposicionamento da seção completa de Esperança após `Aplicar dano recebido`.
+- correção da pílula de nível e reposicionamento da seção completa de Esperança após `Aplicar dano recebido`;
+- inventário pós-criação com vínculo de catálogo para itens oficiais e contexto preservado para itens narrativos;
+- posse de armaduras com reserva e troca validada, mantendo somente a armadura equipada como fonte de efeitos;
+- Mochila > Do livro como porta única para adquirir armas e armaduras oficiais;
+- modal `Gerenciar` unificado para organizar armas equipadas/guardadas e armadura equipada/guardadas.
 
 O Lote 9 está fechado. Novas mudanças devem partir de uma branch criada a partir da `main` atual e seguir por PR com CI verde; não existe uma branch de desenvolvimento persistente obrigatória.
 
@@ -61,10 +63,10 @@ O navegador não acessa diretamente as tabelas PostgreSQL. `js/api.js` distribui
 Produção atual:
 
 ```text
-engine-api: v10 ACTIVE
+engine-api: v11 ACTIVE
 verify_jwt: false
-ENGINE_COMMIT: 2761bb828287fe0c17009cf4d0e255ed21762e07
-ezbr_sha256: deabf224e975300370e6063a8520f5233509c97453b832d87d9f331fe5d22add
+ENGINE_COMMIT: 4fef4d95ced0c3a92cb51eac15f067d2abfadc7c
+ezbr_sha256: 31e9fcffc7600c5e0ec50df64f821bc908b3c90ad75da615367419e9d6608982
 ```
 
 O arquivo versionado `supabase/functions/engine-api/index.ts` usa o mesmo `ENGINE_COMMIT` do deploy ativo. Esse alinhamento é deliberado para impedir regressão em futuros redeploys.
@@ -113,16 +115,16 @@ Históricas/aposentadas: `apps-script-db`, `character-api`, `game-api`, `rules-e
 
 Catálogos estáticos permanecem em `data/*.json`. Mudanças de regra de Daggerheart devem registrar a fonte e respeitar a hierarquia adotada pelo projeto. O material pt-BR usado na conferência é pré-errata; divergências já decididas estão documentadas em `docs/`.
 
-Os Lotes 6–9 mantêm a linha Core/SRD 1.0 adotada em produção. A migração para o SRD 2.0 de 25/08/2026 é explícita, auditável e permanece isolada na branch `srd2-conformidade` até completar seus gates.
+O SRD 2.0 foi integralmente inventariado e conferido: 1.539 registros, 1.538 mecânicas implementadas, 224/224 fontes de regras e nenhuma pendência.
 
 ## Testes
 
-Gate completo da integração de inventário em produção: GitHub Actions run `34612183183`, em 11/09/2026.
+Gate completo do fechamento funcional do Lote 9: **CI #63** em 11/09/2026.
 
 ```text
 sintaxe                 → 84 arquivos JS/MJS OK
-backend                 → 947 passaram, 0 falharam
-E2E                     → 109 passos OK, 0 falharam
+backend                 → 945 passaram, 0 falharam
+E2E                     → 108 passos OK, 0 falharam
 gerados                 → 14 geradores conferidos
 CSS                     → nada a limpar nem a escrever
 auditoria Core 1.0      → 0 candidatos mecânicos pendentes
@@ -130,6 +132,8 @@ baseline mobile         → 27 telas, 0 erros, 0 avisos
 baseline responsivo     → 30 telas, 0 erros estruturais
 Dano HUD                → 360×800 e 768×1024 aprovados
 ```
+
+Após os refinamentos de inventário/equipamentos, o commit `64d32d793182b8d81f65f0933e2dc8ccfe55c479` passou novamente pelo gate completo no **CI #82**, incluindo sintaxe, backend, gerados, CSS, auditoria Core 1.0, E2E e todos os baselines mobile/responsivos do workflow.
 
 Comandos principais:
 
@@ -142,25 +146,25 @@ npm run teste:e2e
 npm run teste:layout-mobile
 npm run teste:layout-dano-mobile
 npm run teste:layout-responsivo
-npm run teste:srd2
 ```
 
 O workflow `.github/workflows/ci.yml` executa a suíte funcional e os contratos visuais do projeto.
 
-## Publicação atual
+## Publicação anterior ao SRD 2.0
 
-Fechamento funcional mais recente em produção em 11/09/2026:
+Estado preservado como histórico após os refinamentos pós-Lote 9 de 11/09/2026:
 
-- commit funcional do motor: `2761bb828287fe0c17009cf4d0e255ed21762e07`;
+- commit funcional do frontend atual: `64d32d793182b8d81f65f0933e2dc8ccfe55c479`;
+- commit imutável do motor: `2761bb828287fe0c17009cf4d0e255ed21762e07`;
 - `engine-api` v10 ACTIVE, `verify_jwt=false`;
 - `ENGINE_COMMIT`: `2761bb828287fe0c17009cf4d0e255ed21762e07`;
 - SHA do pacote Supabase: `deabf224e975300370e6063a8520f5233509c97453b832d87d9f331fe5d22add`;
 - PR #9 integrou o fechamento funcional do HUD de dano;
-- PR #10 alinhou o source versionado do `engine-api` ao pin de produção;
-- PR #13 integrou posse/inventário e PR #14 unificou o gerenciamento de equipamentos;
-- `main`: `64d32d793182b8d81f65f0933e2dc8ccfe55c479`;
-- GitHub Pages publicou com sucesso a `main` após essas integrações;
-- nenhuma migração de banco foi necessária nessa promoção.
+- PR #10 alinhou o source versionado do `engine-api` ao pin então usado em produção;
+- PR #13 integrou inventário, posse de equipamentos e prévia do catálogo, além do motor v10 pinado em `2761bb8...`;
+- PR #14 removeu a segunda porta de registro de armas e unificou o gerenciamento de armas/armaduras, sem alteração de backend;
+- GitHub Pages #84 publicou com sucesso o commit `64d32d7...` em `main`;
+- nenhuma migração de banco foi necessária nos PRs #13 e #14.
 
 O HEAD da `main` pode avançar por commits exclusivamente documentais sem exigir novo deploy do motor. O que define o backend privilegiado é sempre o `ENGINE_COMMIT` explícito da função.
 

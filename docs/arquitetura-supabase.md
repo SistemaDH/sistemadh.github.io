@@ -24,13 +24,13 @@ As tabelas expostas têm RLS habilitado e não possuem policies públicas para `
 
 `engine-api` executa o código mantido em `backend/*.gs` através de uma camada de compatibilidade que substitui as antigas APIs de planilha por estado carregado do PostgreSQL.
 
-Produção atual, após a integração do inventário sobre o Lote 9:
+Produção atual, após a implantação do SRD 2.0:
 
 ```text
-engine-api: v10 ACTIVE
+engine-api: v11 ACTIVE
 verify_jwt: false
-ENGINE_COMMIT: 2761bb828287fe0c17009cf4d0e255ed21762e07
-ezbr_sha256: deabf224e975300370e6063a8520f5233509c97453b832d87d9f331fe5d22add
+ENGINE_COMMIT: 4fef4d95ced0c3a92cb51eac15f067d2abfadc7c
+ezbr_sha256: 31e9fcffc7600c5e0ec50df64f821bc908b3c90ad75da615367419e9d6608982
 ```
 
 O source versionado em `supabase/functions/engine-api/index.ts` usa o mesmo `ENGINE_COMMIT` da função implantada. Esse alinhamento evita que um redeploy futuro feito a partir do repositório volte silenciosamente para um commit antigo.
@@ -138,23 +138,32 @@ Históricas/aposentadas — não criar dependência nova:
 ### Lote 9 — dano/HUD e alinhamento final
 
 - commit funcional pinado pelo motor: `752c7abc0349222bd795254f8f023c047125a1fe`;
-- `engine-api` v9 ACTIVE;
+- `engine-api` v9 ACTIVE naquele fechamento;
 - pacote implantado: `bb5b32f84dc598058c1b172eee05cd1d601476636dcf3fcc4de36df91b56ac23`;
 - PR #9 integrou as correções finais do HUD de dano;
 - PR #10 alinhou `supabase/functions/engine-api/index.ts` ao mesmo pin já implantado;
 - GitHub Pages #81 publicou com sucesso a `main` após o alinhamento;
 - nenhuma migração de banco foi necessária.
 
-### Inventário integrado sobre o Lote 9
+### Pós-Lote 9 — inventário e gerenciamento de equipamentos
 
+- PR #13 integrou inventário/posse de equipamentos e a prévia do catálogo;
 - commit imutável do motor: `2761bb828287fe0c17009cf4d0e255ed21762e07`;
 - `engine-api` v10 ACTIVE;
+- `verify_jwt=false` preservado;
 - pacote implantado: `deabf224e975300370e6063a8520f5233509c97453b832d87d9f331fe5d22add`;
-- `verify_jwt=false` e autenticação customizada preservados;
-- PR #13 integrou posse/inventário e PR #14 unificou o gerenciador de equipamentos;
-- `main` publicada: `64d32d793182b8d81f65f0933e2dc8ccfe55c479`;
-- nenhuma migração de banco necessária.
+- `supabase/functions/engine-api/index.ts` está alinhado ao mesmo pin `2761bb8...`;
+- PR #14 unificou o gerenciamento de armas/armaduras e não exigiu novo deploy do motor;
+- commit de frontend após PR #14: `64d32d793182b8d81f65f0933e2dc8ccfe55c479`;
+- GitHub Pages #84 publicou esse commit com sucesso;
+- CI #82 passou o gate funcional e visual completo nesse mesmo commit;
+- nenhuma migração de banco foi necessária nos PRs #13 e #14.
 
-### Migração SRD 2.0
+### SRD 2.0
 
-Permanece isolada na branch `srd2-conformidade`. Enquanto o lote não estiver integralmente auditado e verde, não alterar o pin de produção. Fonte, hashes, erratas, glossário e cobertura ficam em `data/srd2-*.json` e `docs/srd2-conformidade.md`.
+- inventário fechado em 1.539 registros: 1 fonte conferida e 1.538 mecânicas implementadas;
+- 224/224 fontes de regras e 16/16 coleções conferidas, sem pendências;
+- commit imutável do motor: `4fef4d95ced0c3a92cb51eac15f067d2abfadc7c`;
+- `engine-api` v11 ACTIVE, com `verify_jwt=false` preservado;
+- pacote implantado: `31e9fcffc7600c5e0ec50df64f821bc908b3c90ad75da615367419e9d6608982`;
+- nenhuma migração de banco foi necessária.
