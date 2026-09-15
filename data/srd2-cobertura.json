@@ -83,7 +83,8 @@
     {
       "id": "adversaries",
       "esperados": 264,
-      "estado": "nao-iniciado"
+      "estado": "em-auditoria",
+      "observacao": "129 adversários existentes vinculados estruturalmente ao SRD2; 135 fichas adicionais pendentes."
     },
     {
       "id": "environments",
