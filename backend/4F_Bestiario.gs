@@ -159,7 +159,7 @@ const ESTATISTICAS_POR_PATAMAR = {
   }
 };
 
-/** As 129 fichas: [id, nome, tipo, patamar, Dificuldade, limiares, PV, Estresse, maior custo de Medo]. */
+/** As 163 fichas: [id, nome, tipo, patamar, Dificuldade, limiares, PV, Estresse, maior custo de Medo]. */
 const ADVERSARIOS = [
   ["arbusto-espinhento", "Arbusto Espinhento", "Lacaio", 1, 11, "", 1, 1, 1],
   ["enxame-de-arbustos", "Enxame de Arbustos", "Horda", 1, 12, "6/11", 6, 3, 0],
@@ -290,6 +290,40 @@ const ADVERSARIOS = [
   ["serafim-supremo", "Serafim Supremo", "Líder", 4, 20, "37/70", 7, 5, 1],
   ["zumbi-aperfeicoado", "Zumbi Aperfeiçoado", "Brutamonte", 4, 20, "40/70", 9, 4, 1],
   ["legiao-de-zumbis", "Legião de Zumbis", "Horda", 4, 17, "25/45", 8, 5, 0],
+  ["ahuizotl", "Ahuizotl", "Oportunista", 1, 12, "5/9", 4, 3, 1],
+  ["atototl", "Atototl", "Comum", 1, 12, "8/12", 5, 3, 1],
+  ["bugboar", "Javaporco", "Brutamonte", 1, 13, "8/15", 5, 3, 1],
+  ["common-ruffian", "Rufião Comum", "Comum", 1, 12, "6/10", 4, 4, 1],
+  ["darkweave-crawler", "Rastejante da Trama Negra", "Lacaio", 1, 10, "", 1, 1, 1],
+  ["darkweave-queen", "Rainha da Trama Negra", "Solo", 1, 14, "8/15", 9, 4, 2],
+  ["darkweave-spinner", "Tecelão da Trama Negra", "Comum", 1, 12, "6/9", 4, 3, 1],
+  ["darkweave-swarmlings", "Enxamezinhos da Trama Negra", "Horda", 1, 9, "4/8", 8, 4, 0],
+  ["elk", "Alce", "Oportunista", 1, 13, "4/8", 3, 2, 0],
+  ["falcon", "Falcão", "Oportunista", 1, 12, "5/8", 3, 3, 0],
+  ["grimmling-warband", "Bando de Guerra Grimmling", "Horda", 1, 12, "5/11", 3, 2, 0],
+  ["harpy", "Harpia", "Oportunista", 1, 12, "3/7", 3, 3, 0],
+  ["kelpie", "Kelpie", "Oportunista", 1, 12, "4/8", 3, 5, 1],
+  ["masque-muerte", "Masque Muerte", "Solo", 1, 13, "7/14", 8, 4, 1],
+  ["mechanorb", "Mecanorbe", "Comum", 1, 12, "5/10", 4, 3, 0],
+  ["mountain-troll", "Troll da Montanha", "Solo", 1, 14, "8/15", 8, 3, 1],
+  ["octopus", "Polvo", "Oportunista", 1, 12, "3/None", 2, 3, 0],
+  ["panther", "Pantera", "Oportunista", 1, 14, "5/10", 4, 3, 0],
+  ["phantom", "Fantasma", "Comum", 1, 11, "5/None", 2, 1, 1],
+  ["poltergeist", "Poltergeist", "Atirador", 1, 9, "4/None", 2, 2, 1],
+  ["rabble-mawb", "Turba Mawb", "Horda", 1, 8, "4/8", 4, 2, 1],
+  ["redcap-biters", "Mordedores de Barrete Vermelho", "Horda", 1, 10, "6/11", 5, 3, 0],
+  ["redcap-breaker", "Quebrador de Barrete Vermelho", "Brutamonte", 1, 13, "8/15", 6, 3, 1],
+  ["redcap-butcher", "Açougueiro de Barrete Vermelho", "Comum", 1, 12, "5/10", 4, 3, 0],
+  ["redcap-candlemaker", "Fabricante de Velas de Barrete Vermelho", "Líder", 1, 13, "7/13", 6, 3, 0],
+  ["redcap-skinner", "Esfolador de Barrete Vermelho", "Lacaio", 1, 9, "", 1, 1, 1],
+  ["rugaru", "Rugaru", "Solo", 1, 14, "7/14", 8, 4, 0],
+  ["sawtoothed-gillbeast", "Besta Branquial Serrilhada", "Comum", 1, 12, "5/10", 4, 2, 1],
+  ["soul-shattered-mage", "Mago de Alma Despedaçada", "Solo", 1, 12, "8/15", 6, 5, 0],
+  ["spellbound-armor", "Armadura Encantada", "Brutamonte", 1, 10, "9/17", 6, 0, 1],
+  ["viper", "Víbora", "Lacaio", 1, 11, "", 1, 1, 1],
+  ["waxwork-creation", "Criação de Cera", "Solo", 1, 13, "8/15", 10, 3, 1],
+  ["will-o-the-wisps", "Fogos-fátuos", "Horda", 1, 9, "5/9", 4, 2, 1],
+  ["yufo", "Yufo", "Manipulador", 1, 14, "6/10", 3, 5, 1],
 ];
 
 /** Os 19 ambientes: [id, nome, tipo, patamar, Dificuldade]. */
@@ -336,10 +370,13 @@ const LACAIOS = {
   "caido-defensor": 12,
   "exaltado-soldado": 13,
   "reinos-exteriores-servo": 13,
+  "darkweave-crawler": 3,
+  "redcap-skinner": 4,
+  "viper": 4,
 };
 
 /**
- * As 200 habilidades que custam recurso ou trazem contagem:
+ * As 245 habilidades que custam recurso ou trazem contagem:
  * [ficha, índice, nome, tipo, custo de Medo, custo de Estresse,
  *  valor da contagem, dado da contagem, é ciclo].
  *
@@ -547,6 +584,51 @@ const HABILIDADES_COM_CUSTO = [
   ["zumbi-aperfeicoado", 2, "Golpe Perfeito", "ação", 0, 1, 0, "", 0],
   ["zumbi-aperfeicoado", 3, "Oportunista", "reação", 1, 0, 0, "", 0],
   ["legiao-de-zumbis", 3, "Exceder", "reação", 0, 1, 0, "", 0],
+  ["ahuizotl", 1, "Golpe de Cauda", "ação", 0, 1, 0, "", 0],
+  ["ahuizotl", 2, "Arrastar e Sacudir", "ação", 1, 0, 0, "", 0],
+  ["atototl", 2, "Ruína do Arqueiro", "reação", 1, 0, 0, "", 0],
+  ["bugboar", 2, "Coração Guerreiro", "reação", 1, 0, 0, "", 0],
+  ["common-ruffian", 0, "Ataque em grupo", "ação", 1, 0, 0, "", 0],
+  ["darkweave-crawler", 1, "Rastejamento de Pele", "ação", 1, 0, 0, "", 0],
+  ["darkweave-crawler", 2, "Ataque em Grupo", "ação", 1, 0, 0, "", 0],
+  ["darkweave-queen", 2, "Mãe da Ninhada", "ação", 2, 0, 0, "", 0],
+  ["darkweave-queen", 3, "Mais rápido do que parece", "ação", 1, 0, 0, "", 0],
+  ["darkweave-queen", 4, "Veneno da Trama Negra", "reação", 1, 0, 0, "", 0],
+  ["darkweave-spinner", 0, "Envolva-se em Seda Sombria", "ação", 0, 1, 0, "", 0],
+  ["darkweave-spinner", 1, "Presa Sombria", "reação", 1, 0, 0, "", 0],
+  ["falcon", 1, "Bomba de mergulho", "ação", 0, 1, 0, "", 0],
+  ["harpy", 1, "Ataque em Mergulho", "ação", 0, 1, 0, "", 0],
+  ["kelpie", 2, "Metamorfo", "ação", 0, 1, 0, "", 0],
+  ["kelpie", 3, "Encantar", "ação", 1, 0, 0, "", 0],
+  ["masque-muerte", 1, "Giro de Calcanhar", "ação", 0, 1, 0, "", 0],
+  ["masque-muerte", 2, "Suplex Espectral", "ação", 1, 0, 0, "", 0],
+  ["masque-muerte", 3, "Desmascarando a Morte", "ação", 1, 0, 0, "", 0],
+  ["masque-muerte", 4, "Jogada em Dupla", "reação", 1, 0, 0, "", 0],
+  ["mountain-troll", 2, "Golpe com mangual", "ação", 0, 1, 0, "", 0],
+  ["mountain-troll", 4, "Golpe Duplo", "ação", 1, 0, 0, "", 0],
+  ["octopus", 1, "Esguicho de tinta", "ação", 0, 1, 0, "", 0],
+  ["panther", 1, "Salto Predatório", "ação", 0, 1, 0, "", 0],
+  ["phantom", 2, "Assombração Persistente", "reação", 1, 0, 0, "", 0],
+  ["poltergeist", 0, "Espectro", "passiva", 0, 1, 0, "", 0],
+  ["poltergeist", 1, "Possuidor", "ação", 0, 1, 0, "", 0],
+  ["poltergeist", 2, "Tempestade Fantasma", "ação", 1, 0, 0, "", 0],
+  ["rabble-mawb", 1, "Volte pior", "reação", 1, 0, 0, "", 0],
+  ["redcap-breaker", 0, "Quebra-costas", "ação", 0, 1, 0, "", 0],
+  ["redcap-breaker", 1, "Quebra-joelhos", "reação", 1, 0, 0, "", 0],
+  ["redcap-butcher", 0, "Feliz no Corte", "ação", 0, 1, 0, "", 0],
+  ["redcap-butcher", 1, "Lançador de facas", "ação", 0, 1, 0, "", 0],
+  ["redcap-skinner", 2, "Ataque em Grupo", "ação", 1, 0, 0, "", 0],
+  ["rugaru", 3, "Uivar para a Lua", "ação", 0, 1, 0, "", 0],
+  ["rugaru", 4, "Estripador de Carne", "ação", 0, 1, 0, "", 0],
+  ["sawtoothed-gillbeast", 0, "Mordida Serrilhada", "ação", 0, 1, 0, "", 0],
+  ["sawtoothed-gillbeast", 1, "Frenesi de Alimentação", "reação", 1, 0, 0, "", 0],
+  ["soul-shattered-mage", 1, "Magia Quebrada", "ação", 0, 1, 0, "", 0],
+  ["spellbound-armor", 1, "Estrondo e Recomposição", "reação", 1, 0, 0, "", 0],
+  ["viper", 2, "Ataque em Grupo", "ação", 1, 0, 0, "", 0],
+  ["waxwork-creation", 2, "Bola de Cera", "ação", 0, 1, 0, "", 0],
+  ["waxwork-creation", 4, "Agarrão Sufocante", "reação", 1, 0, 0, "", 0],
+  ["will-o-the-wisps", 2, "Fascinante", "ação", 1, 0, 0, "", 0],
+  ["yufo", 2, "Onda de Falha", "ação", 1, 0, 0, "", 0],
 ];
 
 /**

@@ -8159,6 +8159,2299 @@
         },
         "corpusSha256": "778e55037f8d395587aeadfd2022d23f0a7f43d4e3309a74ec67cab573003df8"
       }
+    },
+    {
+      "id": "ahuizotl",
+      "nome": "Ahuizotl",
+      "nomeIngles": "Ahuizotl",
+      "tipo": "Oportunista",
+      "patamar": 1,
+      "dificuldade": 12,
+      "limiares": "5/9",
+      "pontosDeVida": 4,
+      "estresse": 3,
+      "ataque": {
+        "modificador": "+2",
+        "nome": "Mordida",
+        "nomeIngles": "Bite",
+        "alcance": "Corpo a Corpo",
+        "dano": "1d6+2 fís"
+      },
+      "descricao": "Um predador de emboscada semelhante a um cão que tem uma mão com garras na ponta de uma longa cauda preênsil e arrasta as vítimas para os rios para afogá-las.",
+      "descricaoIngles": "A doglike ambush predator that has a clawed hand on the end of a long prehensile tail and drags victims into rivers to drown them.",
+      "motivacoes": [
+        "emboscada",
+        "afogar",
+        "conter"
+      ],
+      "motivacoesIngles": [
+        "Ambush",
+        "drown",
+        "restrain"
+      ],
+      "habilidades": [
+        {
+          "nome": "Atacante Aquático",
+          "tipo": "passiva",
+          "texto": "Quando o Ahuizotl ataca da água, ele tem vantagem no ataque e causa 1d6 de dano extra.",
+          "nomeIngles": "Aquatic Attacker",
+          "textoIngles": "When the Ahuizotl attacks from the water, it has advantage on the attack and deals an extra 1d6 damage."
+        },
+        {
+          "nome": "Golpe de Cauda",
+          "tipo": "ação",
+          "texto": "Marca um Estresse para fazer um ataque contra um alvo dentro do alcance Muito Próximo. Se obtiver sucesso, cause 1d8+2 de dano físico.",
+          "nomeIngles": "Tail Swat",
+          "textoIngles": "Mark a Stress to make an attack against a target within Very Close range. On a success, deal 1d8+2 physical damage.",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Arrastar e Sacudir",
+          "tipo": "ação",
+          "texto": "Gaste um Medo para que o Ahuizotl agarre um alvo próximo com sua cauda, ​​puxe o alvo para o alcance Corpo a Corpo e Contenha-o temporariamente. O Ahuizotl tem vantagem em ataques contra alvos Restringidos desta forma.",
+          "nomeIngles": "Drag and Bag",
+          "textoIngles": "Spend a Fear to have the Ahuizotl grab a target within Close range with its tail, pull the target into Melee range, and temporarily Restrain them. The Ahuizotl has advantage on attacks against targets Restrained in this way.",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/ahuizotl",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "AHUIZOTL",
+          "lineStart": 5378,
+          "lineEnd": 5398,
+          "pdfPageStart": 97,
+          "pdfPageEnd": 97
+        },
+        "corpusSha256": "88d82526a383698abea6b6b352d8d47cab182d31ee054266c14baa24fce7840b"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "atototl",
+      "nome": "Atototl",
+      "nomeIngles": "Atototl",
+      "tipo": "Comum",
+      "patamar": 1,
+      "dificuldade": 12,
+      "limiares": "8/12",
+      "pontosDeVida": 5,
+      "estresse": 3,
+      "ataque": {
+        "modificador": "+1",
+        "nome": "Garras",
+        "nomeIngles": "Talons",
+        "alcance": "Corpo a Corpo",
+        "dano": "1d8+1 fís"
+      },
+      "descricao": "Um majestoso pássaro aquático verde que tem uma envergadura de três metros e é caçado pela pedra da sorte dentro de seu estômago.",
+      "descricaoIngles": "A majestic green water bird that has a ten-foot wingspan and is hunted for the fortune-telling stone inside their stomach.",
+      "motivacoes": [
+        "evitar",
+        "escapar",
+        "direcionar incorretamente"
+      ],
+      "motivacoesIngles": [
+        "Avoid",
+        "escape",
+        "misdirect"
+      ],
+      "habilidades": [
+        {
+          "nome": "Senhor do Vento",
+          "tipo": "passiva",
+          "texto": "Enquanto o Atototl estiver voando, os ataques contra ele serão feitos com desvantagem.",
+          "nomeIngles": "Wind Lord",
+          "textoIngles": "While the Atototl is flying, attacks against it is made with disadvantage."
+        },
+        {
+          "nome": "Pedra dos Presságios",
+          "tipo": "passiva",
+          "texto": "Dentro do Atototl há uma pedra que prediz boa ou má sorte, dependendo de sua cor. Um PJ que vasculhe os restos mortais do Atototl encontra a pedra e faz uma jogada de destino. Em um resultado par, o PJ ganha Esperança igual à metade do resultado, que pode distribuir entre os PJs como desejar. Com um resultado ímpar, você ganha Medo igual à metade do resultado.",
+          "nomeIngles": "Stone of Omens",
+          "textoIngles": "Inside the Atototl is a stone that foretells good or ill fortune, depending on its color. A PC who searches the Atototl’s remains finds the stone and makes a fate roll. On an even result, the PC gains Hope equal to half the result, which they can distribute among the PCs however they wish. On an odd result, you gain Fear equal to half the result."
+        },
+        {
+          "nome": "Ruína do Arqueiro",
+          "tipo": "reação",
+          "texto": "Quando uma criatura além do alcance Muito Próximo causaria dano ao Atototl com um ataque com arma, você pode gastar um Medo para fazer uma jogada de ataque contra ela. Se obtiver sucesso, os ventos rodopiantes refletem o ataque e devolvem o dano do atacante a eles.",
+          "nomeIngles": "Archer’s Bane",
+          "textoIngles": "When a creature beyond Very Close range would deal damage to the Atototl with a weapon attack, you can spend a Fear to make an attack roll against them. On a success, whirling winds reflect the attack and deal the attacker’s damage back to them.",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/atototl",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "ATOTOTL",
+          "lineStart": 5400,
+          "lineEnd": 5420,
+          "pdfPageStart": 97,
+          "pdfPageEnd": 97
+        },
+        "corpusSha256": "e280fb6841f434756e9a5847930e9fe83ce1a46e4b01c8558728bf434352267d"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "bugboar",
+      "nome": "Javaporco",
+      "nomeIngles": "Bugboar",
+      "tipo": "Brutamonte",
+      "patamar": 1,
+      "dificuldade": 13,
+      "limiares": "8/15",
+      "pontosDeVida": 5,
+      "estresse": 3,
+      "ataque": {
+        "modificador": "+1",
+        "nome": "Maça Espinhosa",
+        "nomeIngles": "Spiked Mace",
+        "alcance": "Muito Próximo",
+        "dano": "1d8+6 fís"
+      },
+      "descricao": "Uma grande criatura bípede que tem um focinho com presas e pêlo áspero.",
+      "descricaoIngles": "A large bipedal creature that has a tusked snout and coarse fur.",
+      "motivacoes": [
+        "emboscada",
+        "valentão",
+        "busca carnificina e coisas brilhantes"
+      ],
+      "motivacoesIngles": [
+        "Ambush",
+        "bully",
+        "seek carnage and shiny things"
+      ],
+      "habilidades": [
+        {
+          "nome": "Surpresa!",
+          "tipo": "passiva",
+          "texto": "Se o Bugboar fizer seu primeiro ataque em uma cena antes de ser marcado com PV ou Estresse, ele terá vantagem no ataque e causará 1d8 de dano extra.",
+          "nomeIngles": "Surprise!",
+          "textoIngles": "If the Bugboar makes its first attack in a scene before it’s marked HP or Stress, it has advantage on the attack and deals an extra 1d8 damage."
+        },
+        {
+          "nome": "Brutal",
+          "tipo": "reação",
+          "texto": "Quando o Bugboar realiza um ataque padrão bem-sucedido, você pode marcar um Estresse para causar 1d6 de dano extra.",
+          "nomeIngles": "Brutal",
+          "textoIngles": "When the Bugboar makes a successful standard attack, you can mark a Stress to deal an extra 1d6 damage."
+        },
+        {
+          "nome": "Coração Guerreiro",
+          "tipo": "reação",
+          "texto": "Quando uma condição seria imposta ao Bugboar, você pode gastar um Medo para negá-la.",
+          "nomeIngles": "Warheart",
+          "textoIngles": "When a condition would be imposed on the Bugboar, you can spend a Fear to negate it.",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/bugboar",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "BUGBOAR",
+          "lineStart": 5446,
+          "lineEnd": 5466,
+          "pdfPageStart": 98,
+          "pdfPageEnd": 98
+        },
+        "corpusSha256": "95a10c26e0e21ee8a832ef59a3b23331807d0b4143861d5b1ec0e6bb7b379480"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "common-ruffian",
+      "nome": "Rufião Comum",
+      "nomeIngles": "Common Ruffian",
+      "tipo": "Comum",
+      "patamar": 1,
+      "dificuldade": 12,
+      "limiares": "6/10",
+      "pontosDeVida": 4,
+      "estresse": 4,
+      "ataque": {
+        "modificador": "+0",
+        "nome": "Arma Improvisada",
+        "nomeIngles": "Improvised Weapon",
+        "alcance": "Corpo a Corpo",
+        "dano": "1d8 fís"
+      },
+      "descricao": "Um trabalhador ou artesão local levado pelas circunstâncias a atacar outros.",
+      "descricaoIngles": "A local laborer or artisan pushed by circumstances to assail others.",
+      "motivacoes": [
+        "faça violência",
+        "busque segurança e sobrevivência"
+      ],
+      "motivacoesIngles": [
+        "Do violence",
+        "seek security and survival"
+      ],
+      "habilidades": [
+        {
+          "nome": "Ataque em grupo",
+          "tipo": "ação",
+          "texto": "Gaste um medo para escolher um alvo e destaque todos os rufiões dentro do alcance deles. Os Rufiões se movem para o alcance Corpo a Corpo do alvo e fazem uma jogada de ataque compartilhada. Se obtiverem sucesso, eles causam 1d8 de dano físico cada. Combine esse dano.",
+          "nomeIngles": "Group Attack",
+          "textoIngles": "Spend a Fear to choose a target and spotlight all Ruffians within Close range of them. The Ruffians move into Melee range of the target and make one shared attack roll. On a success, they deal 1d8 physical damage each. Combine this damage.",
+          "custoDeMedo": 1
+        },
+        {
+          "nome": "Instinto de Sobrevivência",
+          "tipo": "reação",
+          "texto": "Quando o Rufião marcar metade de seu PV, jogue um d6. Com um resultado 4 ou superior, o Rufião foge de cena. Caso contrário, você ganha Medo.",
+          "nomeIngles": "Survival Instinct",
+          "textoIngles": "When the Ruffian marks half their HP, roll a d6. On a result of 4 or higher, the Ruffian flees the scene. Otherwise, you gain a Fear."
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/common-ruffian",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "COMMON RUFFIAN",
+          "lineStart": 5492,
+          "lineEnd": 5510,
+          "pdfPageStart": 98,
+          "pdfPageEnd": 98
+        },
+        "corpusSha256": "278f2ab358488663ff868c10c78e0722d0e5e9d2d9472fae209c6cdf2e480c11"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "darkweave-crawler",
+      "nome": "Rastejante da Trama Negra",
+      "nomeIngles": "Darkweave Crawler",
+      "tipo": "Lacaio",
+      "patamar": 1,
+      "dificuldade": 10,
+      "limiares": null,
+      "pontosDeVida": 1,
+      "estresse": 1,
+      "ataque": {
+        "modificador": "–2",
+        "nome": "Mordida",
+        "nomeIngles": "Bite",
+        "alcance": "Corpo a Corpo",
+        "dano": "2 fís"
+      },
+      "descricao": "Uma aranha do tamanho de uma cabeça humana, tecida com seda sombria.",
+      "descricaoIngles": "A spider the size of a human head, woven out of shadow-silk.",
+      "motivacoes": [
+        "esconda-se na sombra",
+        "ataque o incauto",
+        "espere por uma abertura"
+      ],
+      "motivacoesIngles": [
+        "Hide in shadow",
+        "strike the unwary",
+        "wait for an opening"
+      ],
+      "habilidades": [
+        {
+          "nome": "Lacaio (3)",
+          "tipo": "passiva",
+          "texto": "O Crawler é derrotado quando sofre algum dano. Para cada 3 danos que um PJ causa ao Rastejante, o PJ derrota um Lacaio adicional dentro do alcance contra o qual o ataque teria sucesso.",
+          "nomeIngles": "Minion (3)",
+          "textoIngles": "The Crawler is defeated when it takes any damage. For every 3 damage a PC deals to the Crawler, the PC defeats an additional Minion within range the attack would succeed against."
+        },
+        {
+          "nome": "Rastejamento de Pele",
+          "tipo": "ação",
+          "texto": "Gaste um Medo para forçar todos os PJs dentro do alcance Corpo a Corpo do Rastejante a marcar um Estresse.",
+          "nomeIngles": "Skin-Crawling",
+          "textoIngles": "Spend a Fear to force all PCs within Melee range of the Crawler to mark a Stress.",
+          "custoDeMedo": 1
+        },
+        {
+          "nome": "Ataque em Grupo",
+          "tipo": "ação",
+          "texto": "Gaste um Medo para escolher um alvo e destaque todos os Rastejadores Trama Negra dentro do alcance deles. Esses Lacaios se movem para o alcance Corpo a Corpo do alvo e fazem uma jogada de ataque compartilhada. Se obtiverem sucesso, eles causam 2 de dano físico cada. Combine esse dano.",
+          "nomeIngles": "Group Attack",
+          "textoIngles": "Spend a Fear to choose a target and spotlight all Darkweave Crawlers within Close range of them. Those Minions move into Melee range of the target and make one shared attack roll. On a success, they deal 2 physical damage each. Combine this damage.",
+          "custoDeMedo": 1
+        },
+        {
+          "nome": "Veneno de Trama Negra",
+          "tipo": "reação",
+          "texto": "Quando o Rastejante faz um ataque bem sucedido, você pode marcar um Estresse para Esgotar o alvo até que ele tenha sucesso em um Jogada de Força (9). Enquanto estiver Exausto, o alvo deve marcar um Estresse cada vez que fizer uma jogada de ação.",
+          "nomeIngles": "Darkweave Venom",
+          "textoIngles": "When the Crawler makes a successful attack, you can mark a Stress to Exhaust the target until they succeed on a Strength Roll (9). While Exhausted, the target must mark a Stress each time they make an action roll."
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/darkweave-crawler",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "DARKWEAVE CRAWLER",
+          "lineStart": 5558,
+          "lineEnd": 5580,
+          "pdfPageStart": 99,
+          "pdfPageEnd": 99
+        },
+        "corpusSha256": "2d010cb1d7d1f3c51e160821544d765eb355639608095ee6a7bf0849010a04ea"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "darkweave-queen",
+      "nome": "Rainha da Trama Negra",
+      "nomeIngles": "Darkweave Queen",
+      "tipo": "Solo",
+      "patamar": 1,
+      "dificuldade": 14,
+      "limiares": "8/15",
+      "pontosDeVida": 9,
+      "estresse": 4,
+      "ataque": {
+        "modificador": "+3",
+        "nome": "Picada de Aranha",
+        "nomeIngles": "Spider Bite",
+        "alcance": "Muito Próximo",
+        "dano": "1d12+4 fís"
+      },
+      "descricao": "Uma aranha do tamanho de uma carroça tecida com seda sombria por um deus há muito esquecido. Cada um de seus muitos olhos traz o rosto de uma vítima diferente.",
+      "descricaoIngles": "A wagon-sized spider woven from shadow-silk by a long-forgotten god. Each of her many eyes bears the face of a different victim.",
+      "motivacoes": [
+        "emboscar presas",
+        "escalar as paredes e o teto",
+        "direcionar mal",
+        "paralisar",
+        "esconder corpos para mais tarde",
+        "roubar rostos"
+      ],
+      "motivacoesIngles": [
+        "Ambush prey",
+        "climb the walls and ceiling",
+        "misdirect",
+        "paralyze",
+        "stash bodies away for later",
+        "steal faces"
+      ],
+      "habilidades": [
+        {
+          "nome": "Implacável (3)",
+          "tipo": "passiva",
+          "texto": "A Rainha pode ser destacada até três vezes por turno do Mestre. Passe o Medo como de costume para destacá-la.",
+          "nomeIngles": "Relentless (3)",
+          "textoIngles": "The Queen can be spotlighted up to three times per GM turn. Spend Fear as usual to spotlight her."
+        },
+        {
+          "nome": "Aterrorizante",
+          "tipo": "passiva",
+          "texto": "Quando um PJ falha em uma jogada de ataque contra a Rainha, você ganha Medo.",
+          "nomeIngles": "Terrifying",
+          "textoIngles": "When a PC fails an attack roll against the Queen, you gain a Fear."
+        },
+        {
+          "nome": "Mãe da Ninhada",
+          "tipo": "ação",
+          "texto": "Uma vez por cena, gaste 2 de Medo para invocar até dois adversários Trama Negra (além das Rainhas Trama Negra), que aparecem dentro do alcance e imediatamente assumem o centro das atenções.",
+          "nomeIngles": "Den Mother",
+          "textoIngles": "Once per scene, spend 2 Fear to summon up to two Darkweave adversaries (other than Darkweave Queens), who appear within Close range and immediately take the spotlight.",
+          "custoDeMedo": 2
+        },
+        {
+          "nome": "Mais rápido do que parece",
+          "tipo": "ação",
+          "texto": "Gaste um Medo para se mover até Longe alcance e faça um ataque padrão com vantagem.",
+          "nomeIngles": "Quicker Than She Looks",
+          "textoIngles": "Spend a Fear to move up to Far range and make a standard attack with advantage.",
+          "custoDeMedo": 1
+        },
+        {
+          "nome": "Veneno da Trama Negra",
+          "tipo": "reação",
+          "texto": "Quando a Rainha obtém sucesso em um ataque padrão, você pode gastar um Medo para tornar o alvo Vulnerável e Restringido até que ele tenha sucesso em um Jogada de Força (12) ou descanse.",
+          "nomeIngles": "Darkfang Envenomation",
+          "textoIngles": "When the Queen succeeds on a standard attack, you can spend a Fear to make the target Vulnerable and Restrained until they succeed on a Strength Roll (12) or take a rest.",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/darkweave-queen",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "DARKWEAVE QUEEN",
+          "lineStart": 5582,
+          "lineEnd": 5606,
+          "pdfPageStart": 99,
+          "pdfPageEnd": 99
+        },
+        "corpusSha256": "96b6a00dc7c7c0765c28ca2268364fca63edbbb1e498632b343b4f325dffc71d"
+      },
+      "custoDeMedoMaximo": 2
+    },
+    {
+      "id": "darkweave-spinner",
+      "nome": "Tecelão da Trama Negra",
+      "nomeIngles": "Darkweave Spinner",
+      "tipo": "Comum",
+      "patamar": 1,
+      "dificuldade": 12,
+      "limiares": "6/9",
+      "pontosDeVida": 4,
+      "estresse": 3,
+      "ataque": {
+        "modificador": "+1",
+        "nome": "Presas",
+        "nomeIngles": "Fangs",
+        "alcance": "Corpo a Corpo",
+        "dano": "1d8+1 fís"
+      },
+      "descricao": "Um aracnídeo do tamanho de um javali tecido com seda sombria primordial.",
+      "descricaoIngles": "A boar-sized arachnid woven from primordial shadow-silk.",
+      "motivacoes": [
+        "mordida",
+        "fique na escuridão"
+      ],
+      "motivacoesIngles": [
+        "Bite",
+        "stick to the darkness"
+      ],
+      "habilidades": [
+        {
+          "nome": "Envolva-se em Seda Sombria",
+          "tipo": "ação",
+          "texto": "Marque um Estresse para fazer um ataque contra um alvo dentro do alcance Corpo a Corpo. Em caso de sucesso, o alvo fica Vulnerável e Restringido até obter sucesso em um Jogada de Força (10).",
+          "nomeIngles": "Wrap in Shadow-Silk",
+          "textoIngles": "Mark a Stress to make an attack against a target within Melee range. On a success, the target is Vulnerable and Restrained until they succeed on a Strength Roll (10).",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Presa Sombria",
+          "tipo": "reação",
+          "texto": "Quando o Spinner faz um ataque bem sucedido contra um alvo dentro do alcance Corpo a Corpo, você pode gastar um Medo para deixar o alvo Trêmulo até que ele tenha sucesso em uma Jogada de Instinto (10). Enquanto estiver instável, o alvo terá desvantagem nas jogadas de ataque.",
+          "nomeIngles": "Shadow Fang",
+          "textoIngles": "When the Spinner makes a successful attack against a target within Melee range, you can spend a Fear to make the target Shaky until they succeed on an Instinct Roll (10). While Shaky, the target has disadvantage on attack rolls.",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/darkweave-spinner",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "DARKWEAVE SPINNER",
+          "lineStart": 5608,
+          "lineEnd": 5626,
+          "pdfPageStart": 99,
+          "pdfPageEnd": 99
+        },
+        "corpusSha256": "9a14ac477c95258b37515a6af30173f3ddb24639b318f45f0547911ad6810b0b"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "darkweave-swarmlings",
+      "nome": "Enxamezinhos da Trama Negra",
+      "nomeIngles": "Darkweave Swarmlings",
+      "tipo": "Horda",
+      "patamar": 1,
+      "dificuldade": 9,
+      "limiares": "4/8",
+      "pontosDeVida": 8,
+      "estresse": 4,
+      "ataque": {
+        "modificador": "+0",
+        "nome": "Mordiscar",
+        "nomeIngles": "Nibble",
+        "alcance": "Corpo a Corpo",
+        "dano": "1d8 fís"
+      },
+      "descricao": "Um enxame abundante de pequenas aranhas tecidas com seda sombria.",
+      "descricaoIngles": "A teeming swarm of tiny spiders woven out of shadow-silk.",
+      "motivacoes": [
+        "explode para fora dos buracos",
+        "sobe pelas pernas",
+        "rasteja até as orelhas",
+        "corre sob as roupas"
+      ],
+      "motivacoesIngles": [
+        "Burst out of holes",
+        "climb up legs",
+        "crawl into ears",
+        "scuttle under clothes"
+      ],
+      "habilidades": [
+        {
+          "nome": "Horda (1d4)",
+          "tipo": "passiva",
+          "texto": "Quando os Swarmlings marcam metade ou mais de seu PV, seu ataque padrão causa 1d4 de dano físico.",
+          "nomeIngles": "Horde (1d4)",
+          "textoIngles": "When the Swarmlings have marked half or more of their HP, their standard attack deals 1d4 physical damage instead."
+        },
+        {
+          "nome": "“Tire-os, tire-os!”",
+          "tipo": "reação",
+          "texto": "Quando um ataque dos Swarmlings faz com que um alvo marque PV, você pode marcar um Estresse para deixar o alvo temporariamente coberto de aranhas. Enquanto estiver coberto de aranhas, o alvo deve rolar um d6 ao fazer uma jogada de ação. Com um resultado 4 ou superior, eles devem marcar um Estresse ou você ganha um Medo.",
+          "nomeIngles": "“Get ’em Off, Get ’em Off!”",
+          "textoIngles": "When an attack from the Swarmlings causes a target to mark HP, you can mark a Stress to make the target temporarily Covered in Spiders. While Covered in Spiders, the target must roll a d6 when they make an action roll. On a result of 4 or higher, they must mark a Stress or you gain a Fear."
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/darkweave-swarmlings",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "DARKWEAVE SWARMLINGS",
+          "lineStart": 5628,
+          "lineEnd": 5646,
+          "pdfPageStart": 99,
+          "pdfPageEnd": 99
+        },
+        "corpusSha256": "18dd08670c62fe33723f912618eb87ae6e33206f494f04e4a7ca55965a92d5e3"
+      }
+    },
+    {
+      "id": "elk",
+      "nome": "Alce",
+      "nomeIngles": "Elk",
+      "tipo": "Oportunista",
+      "patamar": 1,
+      "dificuldade": 13,
+      "limiares": "4/8",
+      "pontosDeVida": 3,
+      "estresse": 2,
+      "ataque": {
+        "modificador": "+0",
+        "nome": "Chifres",
+        "nomeIngles": "Antlers",
+        "alcance": "Corpo a Corpo",
+        "dano": "1d8+1 fís"
+      },
+      "descricao": "Um cervo grande.",
+      "descricaoIngles": "A large deer.",
+      "motivacoes": [
+        "afastar-se",
+        "raspar",
+        "rotina",
+        "sentir perigo"
+      ],
+      "motivacoesIngles": [
+        "Bound away",
+        "graze",
+        "rut",
+        "sense danger"
+      ],
+      "habilidades": [
+        {
+          "nome": "Cabeçada",
+          "tipo": "passiva",
+          "texto": "Quando o Alce se move de perto ou mais longe antes de fazer um ataque padrão, ele causa 1d12+2 de dano físico em vez de seu dano padrão.",
+          "nomeIngles": "Headbutt",
+          "textoIngles": "When the Elk moves from Close range or farther before making a standard attack, it deals 1d12+2 physical damage instead of its standard damage."
+        },
+        {
+          "nome": "Raio",
+          "tipo": "reação",
+          "texto": "Quando o Alce marca um PV ou Estresse, ele deve ter sucesso em um Jogada de Reação (10) ou fugir do local.",
+          "nomeIngles": "Bolt",
+          "textoIngles": "When the Elk marks a HP or Stress, it must succeed on a Reaction Roll (10) or flee the scene."
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/elk",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "ELK",
+          "lineStart": 5690,
+          "lineEnd": 5708,
+          "pdfPageStart": 100,
+          "pdfPageEnd": 100
+        },
+        "corpusSha256": "eb539929ade990711cdc7723992affa1e148f8f28ff658f70802441061189896"
+      }
+    },
+    {
+      "id": "falcon",
+      "nome": "Falcão",
+      "nomeIngles": "Falcon",
+      "tipo": "Oportunista",
+      "patamar": 1,
+      "dificuldade": 12,
+      "limiares": "5/8",
+      "pontosDeVida": 3,
+      "estresse": 3,
+      "ataque": {
+        "modificador": "+2",
+        "nome": "Garras",
+        "nomeIngles": "Talons",
+        "alcance": "Corpo a Corpo",
+        "dano": "1d6+1 fís"
+      },
+      "descricao": "Ave de rapina que possui asas longas e pontiagudas e bico entalhado.",
+      "descricaoIngles": "A bird of prey that has long, pointed wings and a notched beak.",
+      "motivacoes": [
+        "círculo",
+        "embreagem",
+        "mergulho",
+        "espião"
+      ],
+      "motivacoesIngles": [
+        "Circle",
+        "clutch",
+        "dive",
+        "spy"
+      ],
+      "habilidades": [
+        {
+          "nome": "Voador Ágil",
+          "tipo": "passiva",
+          "texto": "Enquanto voa, o Falcão ganha +3 de bônus em sua Dificuldade.",
+          "nomeIngles": "Nimble Flyer",
+          "textoIngles": "While flying, the Falcon gains a +3 bonus to its Difficulty."
+        },
+        {
+          "nome": "Bomba de mergulho",
+          "tipo": "ação",
+          "texto": "Marque um Estresse para fazer um ataque padrão contra um alvo vindo de cima. O Falcão ganha um bônus de +2 nas jogadas de ataque e dano.",
+          "nomeIngles": "Dive Bomb",
+          "textoIngles": "Mark a Stress to make a standard attack against a target from above. The Falcon gains a +2 bonus to the attack and damage rolls.",
+          "custoDeEstresse": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/falcon",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "FALCON",
+          "lineStart": 5710,
+          "lineEnd": 5728,
+          "pdfPageStart": 100,
+          "pdfPageEnd": 100
+        },
+        "corpusSha256": "a728b212c8b05076a2aca4a9821a56b55e7b9dd92d2a7267ce2296f6eb3ec188"
+      }
+    },
+    {
+      "id": "grimmling-warband",
+      "nome": "Bando de Guerra Grimmling",
+      "nomeIngles": "Grimmling Warband",
+      "tipo": "Horda",
+      "patamar": 1,
+      "dificuldade": 12,
+      "limiares": "5/11",
+      "pontosDeVida": 3,
+      "estresse": 2,
+      "ataque": {
+        "modificador": "+1",
+        "nome": "Tesouras de Alfaiate",
+        "nomeIngles": "Tailor’s Shears",
+        "alcance": "Corpo a Corpo",
+        "dano": "1d8+2 fís"
+      },
+      "descricao": "Um grupo de criaturas pequenas e estranhas vestindo armaduras feitas de lixo e utensílios domésticos roubados.",
+      "descricaoIngles": "A cluster of small, strange creatures wearing armor fashioned from trash and stolen housewares.",
+      "motivacoes": [
+        "emboscada",
+        "comemorar um pouco cedo demais",
+        "bater e correr",
+        "luta interna",
+        "sabotagem",
+        "semear o caos"
+      ],
+      "motivacoesIngles": [
+        "Ambush",
+        "celebrate a little too early",
+        "hit and run",
+        "infight",
+        "sabotage",
+        "sow chaos"
+      ],
+      "habilidades": [
+        {
+          "nome": "Horda (1d4+1)",
+          "tipo": "passiva",
+          "texto": "Quando o Warband marcou metade ou mais de seu PV, seu ataque padrão causa 1d4+1 de dano físico em vez disso.",
+          "nomeIngles": "Horde (1d4+1)",
+          "textoIngles": "When the Warband has marked half or more of its HP, its standard attack deals 1d4+1 physical damage instead."
+        },
+        {
+          "nome": "Covarde",
+          "tipo": "reação",
+          "texto": "Quando o Bando de Guerra marca seu último Estresse ou um Líder aliado é derrotado, jogue um d6. Com um resultado de 2 ou menos, o Bando de Guerra foge de cena.",
+          "nomeIngles": "Cowardly",
+          "textoIngles": "When the Warband marks its last Stress or an allied Leader is defeated, roll a d6. On a result of 2 or lower, the Warband flees the scene."
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/grimmling-warband",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "GRIMMLING WARBAND",
+          "lineStart": 5816,
+          "lineEnd": 5834,
+          "pdfPageStart": 101,
+          "pdfPageEnd": 101
+        },
+        "corpusSha256": "156040e671c2839d0e3f7509a4d6541644b5711558b9a52b604d15c7118b9fbe"
+      }
+    },
+    {
+      "id": "harpy",
+      "nome": "Harpia",
+      "nomeIngles": "Harpy",
+      "tipo": "Oportunista",
+      "patamar": 1,
+      "dificuldade": 12,
+      "limiares": "3/7",
+      "pontosDeVida": 3,
+      "estresse": 3,
+      "ataque": {
+        "modificador": "+0",
+        "nome": "Garras",
+        "nomeIngles": "Talons",
+        "alcance": "Corpo a Corpo",
+        "dano": "1d8+1 fís"
+      },
+      "descricao": "Um pássaro feroz e malcheiroso com envergadura de asas de 2,5 metros e parte superior do corpo e rosto de um humano.",
+      "descricaoIngles": "A fierce and foul-smelling bird with an eight-foot wingspan and the upper body and face of a human.",
+      "motivacoes": [
+        "defenda o ninho",
+        "derruba inimigos de uma grande altura",
+        "saqueador do ar",
+        "grita incessantemente"
+      ],
+      "motivacoesIngles": [
+        "Defend nest",
+        "drop enemies from a great height",
+        "maraud from the air",
+        "screech incessantly"
+      ],
+      "habilidades": [
+        {
+          "nome": "Aura Tóxica",
+          "tipo": "passiva",
+          "texto": "A Harpia emite um fedor desagradável que torna todos os não-Harpias Vulneráveis ​​enquanto estiverem dentro do alcance Muito Próximo.",
+          "nomeIngles": "Toxic Aura",
+          "textoIngles": "The Harpy emits a foul stench that renders all non-Harpies Vulnerable while within Very Close range."
+        },
+        {
+          "nome": "Ataque em Mergulho",
+          "tipo": "ação",
+          "texto": "Marque um Estresse para fazer a Harpia se mover em linha reta até um ponto dentro do alcance Longe e fazer um ataque contra um alvo no caminho da Harpia. Se obtiver sucesso, a Harpia causa 3d6 de dano físico.",
+          "nomeIngles": "Swooping Attack",
+          "textoIngles": "Mark a Stress to have the Harpy move in a straight line to a point within Far range and make an attack against a target in the Harpy’s path. On a success, the Harpy deals 3d6 physical damage.",
+          "custoDeEstresse": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/harpy",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "HARPY",
+          "lineStart": 5898,
+          "lineEnd": 5916,
+          "pdfPageStart": 102,
+          "pdfPageEnd": 102
+        },
+        "corpusSha256": "ff8cae366ac1d2992bf796033756057a22a3d19e485164e68f60835c8fe8b00a"
+      }
+    },
+    {
+      "id": "kelpie",
+      "nome": "Kelpie",
+      "nomeIngles": "Kelpie",
+      "tipo": "Oportunista",
+      "patamar": 1,
+      "dificuldade": 12,
+      "limiares": "4/8",
+      "pontosDeVida": 3,
+      "estresse": 5,
+      "ataque": {
+        "modificador": "-2",
+        "nome": "Cascos",
+        "nomeIngles": "Hooves",
+        "alcance": "Muito Próximo",
+        "dano": "1d8+2 fís"
+      },
+      "descricao": "Um metamorfo que vive no rio e prefere uma forma equina encantadora dentro e fora da água.",
+      "descricaoIngles": "A river-dwelling shapeshifter who prefers an enchanting equine form in and out of the water.",
+      "motivacoes": [
+        "adote uma forma atraente ou útil",
+        "afogue e devore",
+        "atraia viajantes incautos"
+      ],
+      "motivacoesIngles": [
+        "Adopt an attractive or useful shape",
+        "drown and devour",
+        "entice unwary travelers"
+      ],
+      "habilidades": [
+        {
+          "nome": "Cativante",
+          "tipo": "passiva",
+          "texto": "Um PJ deve marcar um Estresse para sair do alcance Corpo a Corpo do Kelpie.",
+          "nomeIngles": "Captivating",
+          "textoIngles": "A PC must mark a Stress to move out of the Kelpie’s Melee range."
+        },
+        {
+          "nome": "Desejo do Coração",
+          "tipo": "passiva",
+          "texto": "Depois que o Kelpie interage ou observa uma criatura por pelo menos cem batimentos cardíacos, o Kelpie conhece a forma física que a criatura acharia mais agradável ou atraente.",
+          "nomeIngles": "Heart’s Desire",
+          "textoIngles": "After the Kelpie interacts with or watches a creature for at least a hundred heartbeats, the Kelpie knows the physical form that creature would find most pleasing or alluring."
+        },
+        {
+          "nome": "Metamorfo",
+          "tipo": "ação",
+          "texto": "Marque um Estresse para transformar a forma física do Kelpie em qualquer criatura ou objeto menor que uma carroça. Uma criatura tem desvantagem nas jogadas contra o Kelpie enquanto o Kelpie estiver em uma forma que a criatura considere agradável ou atraente.",
+          "nomeIngles": "Shapeshifter",
+          "textoIngles": "Mark a Stress to change the Kelpie’s physical form into any creature or object smaller than a wagon. A creature has disadvantage on rolls against the Kelpie while the Kelpie is in a form the creature finds pleasing or alluring.",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Encantar",
+          "tipo": "ação",
+          "texto": "Gaste um Medo para que o Kelpie seduza um PJ dentro do alcance. O PJ deve ter sucesso em um Jogada de Reação de Instinto ou ficará Encantado até sofrer dano. Enquanto Encantado, o PJ percebe o Kelpie como um amigo ou aliado de confiança e fará o que o Kelpie diz, a menos que isso contradiga a moral mais profundamente arraigada do PJ.",
+          "nomeIngles": "Enchant",
+          "textoIngles": "Spend a Fear to have the Kelpie beguile a PC within Close range. The PC must succeed on an Instinct Reaction Roll or become Enchanted until they take damage. While Enchanted, the PC perceives the Kelpie as a trusted friend or ally and will do what the Kelpie says unless it contradicts the PC’s most deeply held morals.",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/kelpie",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "KELPIE",
+          "lineStart": 6082,
+          "lineEnd": 6104,
+          "pdfPageStart": 103,
+          "pdfPageEnd": 103
+        },
+        "corpusSha256": "9369680b54b796ed49fc6815096c232a2483c4f8b37650d400a148bd71cae7b1"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "masque-muerte",
+      "nome": "Masque Muerte",
+      "nomeIngles": "Masque Muerte",
+      "tipo": "Solo",
+      "patamar": 1,
+      "dificuldade": 13,
+      "limiares": "7/14",
+      "pontosDeVida": 8,
+      "estresse": 4,
+      "ataque": {
+        "modificador": "+4",
+        "nome": "Golpe de Mão Aberta",
+        "nomeIngles": "Open-Handed Strike",
+        "alcance": "Corpo a Corpo",
+        "dano": "1d12+2 mág"
+      },
+      "descricao": "A alma furiosa de um vilão lutador mascarado.",
+      "descricaoIngles": "The raging soul of a villainous masked wrestler.",
+      "motivacoes": [
+        "chame",
+        "envergonhe",
+        "energize o público",
+        "prenda os oponentes no chão"
+      ],
+      "motivacoesIngles": [
+        "Call out",
+        "embarrass",
+        "energize the audience",
+        "pin opponents to the ground"
+      ],
+      "habilidades": [
+        {
+          "nome": "Libre",
+          "tipo": "passiva",
+          "texto": "A Máscara Muerte não pode ser contida.",
+          "nomeIngles": "Libre",
+          "textoIngles": "The Masque Muerte can’t be Restrained."
+        },
+        {
+          "nome": "Giro de Calcanhar",
+          "tipo": "ação",
+          "texto": "Marque um Estresse para fazer um ataque contra um PJ dentro do alcance. Se obtiver sucesso, o alvo deve marcar um Estresse e fica temporariamente Vulnerável enquanto a Máscara Muerte o ataca com uma série de provocações insultuosas.",
+          "nomeIngles": "Heel Turn",
+          "textoIngles": "Mark a Stress to make an attack against a PC within Close range. On a success, the target must mark a Stress and is temporarily Vulnerable as the Masque Muerte assaults them with a string of insulting taunts.",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Suplex Espectral",
+          "tipo": "ação",
+          "texto": "Gaste um Medo para fazer com que a Máscara Muerte suplexa um PJ Restringido, causando 1d10+6 de dano mágico a eles.",
+          "nomeIngles": "Spectral Suplex",
+          "textoIngles": "Spend a Fear to have the Masque Muerte suplex a Restrained PC, dealing 1d10+6 magic damage to them.",
+          "custoDeMedo": 1
+        },
+        {
+          "nome": "Desmascarando a Morte",
+          "tipo": "ação",
+          "texto": "Gaste um Medo para que a Máscara Muerte remova momentaneamente sua máscara, revelando seu rosto horrível por baixo. Cada PJ dentro do alcance Próximo deve ter sucesso em um Jogada de Reação de Presença ou marcar um Estresse.",
+          "nomeIngles": "Unmasking Death",
+          "textoIngles": "Spend a Fear to have the Masque Muerte momentarily remove their mask, revealing their horrifying face underneath. Each PC within Close range must succeed on a Presence Reaction Roll or mark a Stress.",
+          "custoDeMedo": 1
+        },
+        {
+          "nome": "Jogada em Dupla",
+          "tipo": "reação",
+          "texto": "Quando a Máscara Muerte causa dano a um PJ, você pode gastar um Medo para que um lutador espectral apareça e imobilize o alvo até que ele escape com um jogada de Força bem-sucedido. Enquanto estiver imobilizado, o alvo fica contido e sofre 1d12 de dano mágico extra dos ataques da Máscara Muerte.",
+          "nomeIngles": "Tag Team",
+          "textoIngles": "When the Masque Muerte deals damage to a PC, you can spend a Fear to have a spectral wrestler appear and Pin the target until they escape with a successful Strength Roll. While Pinned, the target is Restrained and takes an extra 1d12 magic damage from the Masque Muerte’s attacks.",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/masque-muerte",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "MASQUE MUERTE",
+          "lineStart": 6106,
+          "lineEnd": 6130,
+          "pdfPageStart": 103,
+          "pdfPageEnd": 103
+        },
+        "corpusSha256": "1af6093a5aa6b740d66476ac8a86af4bb2436460d5ce6ecd8ecc90e4c17098cf"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "mechanorb",
+      "nome": "Mecanorbe",
+      "nomeIngles": "Mechanorb",
+      "tipo": "Comum",
+      "patamar": 1,
+      "dificuldade": 12,
+      "limiares": "5/10",
+      "pontosDeVida": 4,
+      "estresse": 3,
+      "ataque": {
+        "modificador": "+1",
+        "nome": "Agulha",
+        "nomeIngles": "Needle",
+        "alcance": "Corpo a Corpo",
+        "dano": "1d10+1 fís"
+      },
+      "descricao": "Uma esfera mecânica flutuante que possui membros telescópicos e vem de um reino de máquinas e metal.",
+      "descricaoIngles": "A floating clockwork sphere that has telescoping limbs and comes from a realm of machines and metal.",
+      "motivacoes": [
+        "coordenada",
+        "(des)montar",
+        "mover-se ortogonalmente",
+        "falar em binário"
+      ],
+      "motivacoesIngles": [
+        "Coordinate",
+        "(dis)assemble",
+        "move orthogonally",
+        "speak in binary"
+      ],
+      "habilidades": [
+        {
+          "nome": "Mente de Colmeia",
+          "tipo": "passiva",
+          "texto": "O Mecanorbe ganha um bônus de +1 na Dificuldade para cada outro Mecanorbe dentro do alcance Próximo.",
+          "nomeIngles": "Hive Mind",
+          "textoIngles": "The Mechanorb gains a +1 bonus to their Difficulty for each other Mechanorb within Close range."
+        },
+        {
+          "nome": "Táticas Adaptativas",
+          "tipo": "passiva",
+          "texto": "Piscina. Quando o Mecanorbe falhar em uma jogada de ataque, adicione uma ficha à Reserva de Mecanorbe. Todos os Mecanorbes na cena ganham um bônus nas jogadas de ataque igual ao número de fichas na Reserva de Mecanorbes. Limpe todas as fichas quando qualquer Mecanorbe sofrer dano Severo ou for derrotado.",
+          "nomeIngles": "Adaptive Tactics",
+          "textoIngles": "Pool. When the Mechanorb fails an attack roll, add a token to the Mechanorb Pool. All Mechanorbs in the scene gain a bonus to attack rolls equal to the number of tokens in the Mechanorb Pool. Clear all tokens when any Mechanorb takes Severe damage or is defeated."
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/mechanorb",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "MECHANORB",
+          "lineStart": 6134,
+          "lineEnd": 6152,
+          "pdfPageStart": 104,
+          "pdfPageEnd": 104
+        },
+        "corpusSha256": "c9013c01fe1b125f3848a25508e364d2c38ab20c9c0e586ddfae14bdbd3586da"
+      }
+    },
+    {
+      "id": "mountain-troll",
+      "nome": "Troll da Montanha",
+      "nomeIngles": "Mountain Troll",
+      "tipo": "Solo",
+      "patamar": 1,
+      "dificuldade": 14,
+      "limiares": "8/15",
+      "pontosDeVida": 8,
+      "estresse": 3,
+      "ataque": {
+        "modificador": "+2",
+        "nome": "Mangual de Caveira",
+        "nomeIngles": "Skull Flail",
+        "alcance": "Muito Próximo",
+        "dano": "1d8+1 fís"
+      },
+      "descricao": "Um gigante horrível nascido de uma rocha enorme. Eles usam armaduras roubadas e um cinto com cabeças ou crânios decepados.",
+      "descricaoIngles": "A hideous giant born out of a massive rock. They wear purloined armor and a belt of severed heads or skulls.",
+      "motivacoes": [
+        "emboscada",
+        "abaixo",
+        "arremessar pedras grandes",
+        "esmagar",
+        "pisar"
+      ],
+      "motivacoesIngles": [
+        "Ambush",
+        "bellow",
+        "hurl large boulders",
+        "smash",
+        "stomp"
+      ],
+      "habilidades": [
+        {
+          "nome": "Implacável (3)",
+          "tipo": "passiva",
+          "texto": "O Troll pode ser destacado até três vezes por turno do Mestre. Gaste o Medo como de costume para destacá-los.",
+          "nomeIngles": "Relentless (3)",
+          "textoIngles": "The Troll can be spotlighted up to three times per GM turn. Spend Fear as usual to spotlight them."
+        },
+        {
+          "nome": "Armadura roubada",
+          "tipo": "passiva",
+          "texto": "Contagem regressiva. Quando o combate começar, ative uma contagem regressiva com valor igual ao número de PJs. Quando o Troll sofrer dano, reduza a gravidade em um limite e, em seguida, marque a contagem regressiva. Quando é ativado, o Troll evolui (veja “Troll da Montanha Enfurecido”).",
+          "nomeIngles": "Stolen Armor",
+          "textoIngles": "Countdown. When combat begins, activate a countdown with a value equal to the number of PCs. When the Troll takes damage, reduce the severity by one threshold, then tick down the countdown. When it triggers, the Troll evolves (see “Enraged Mountain Troll”)."
+        },
+        {
+          "nome": "Golpe com mangual",
+          "tipo": "ação",
+          "texto": "Marque um Estresse para fazer um ataque contra todos os alvos na frente do Troll dentro do alcance Muito Próximo. Os alvos contra os quais o Troll consegue sofrer sofrem 2d8+2 de dano físico.",
+          "nomeIngles": "Flail Swipe",
+          "textoIngles": "Mark a Stress to make an attack against all targets in front of the Troll within Very Close range. Targets the Troll succeeds against take 2d8+2 physical damage.",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Troll da Montanha Enfurecido",
+          "texto": "O Troll perde seus recursos “Armadura Roubada” e “Golpe do Mangual” e ganha um bônus de +1 em sua Dificuldade. Além disso, eles ganham o recurso “Double Swipe” e substituem “Skull Flail” pelo seguinte ataque padrão: Claw Swipe: Very Close | 1d10+3 phy",
+          "nomeIngles": "Enraged Mountain Troll",
+          "textoIngles": "The Troll loses their “Stolen Armor” and “Flail Swipe” features, then gains a +1 bonus to their Difficulty. Additionally, they gain the “Double Swipe” feature and replace “Skull Flail” with the following standard attack: Claw Swipe: Very Close | 1d10+3 phy"
+        },
+        {
+          "nome": "Golpe Duplo",
+          "tipo": "ação",
+          "texto": "Gaste um Medo para se mover para perto e faça dois ataques padrão contra um alvo dentro do alcance Corpo a Corpo. Se ambos os ataques forem bem sucedidos, combine o dano e o alvo perde uma Esperança.",
+          "nomeIngles": "Double Swipe",
+          "textoIngles": "Spend a Fear to move up to Close range and make two standard attacks against a target within Melee range. If both attacks succeed, combine the damage, and the target loses a Hope.",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/mountain-troll",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "MOUNTAIN TROLL",
+          "lineStart": 6266,
+          "lineEnd": 6290,
+          "pdfPageStart": 105,
+          "pdfPageEnd": 105
+        },
+        "corpusSha256": "14117dff1ba11d78404d53ec5fb80ec8f9ca705b762ac216b30737acedcf7af5"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "octopus",
+      "nome": "Polvo",
+      "nomeIngles": "Octopus",
+      "tipo": "Oportunista",
+      "patamar": 1,
+      "dificuldade": 12,
+      "limiares": "3/None",
+      "pontosDeVida": 2,
+      "estresse": 3,
+      "ataque": {
+        "modificador": "-1",
+        "nome": "Bico",
+        "nomeIngles": "Beak",
+        "alcance": "Corpo a Corpo",
+        "dano": "1d6 fís"
+      },
+      "descricao": "Molusco aquático de corpo mole que possui oito braços com ventosas e uma mandíbula dura em forma de bico.",
+      "descricaoIngles": "An aquatic, soft-bodied mollusk that has eight sucker-bearing arms and a hard, beaklike jaw.",
+      "motivacoes": [
+        "rasteje pelo fundo do oceano",
+        "coma peixes",
+        "esguiche tinta para escapar"
+      ],
+      "motivacoesIngles": [
+        "Crawl along the ocean floor",
+        "eat fish",
+        "squirt ink to escape"
+      ],
+      "habilidades": [
+        {
+          "nome": "Agarre",
+          "tipo": "ação",
+          "texto": "Faça uma jogada de ataque contra um alvo dentro do alcance. Com um sucesso, o alvo fica Restringido e Vulnerável até escapar com um jogada de Força bem-sucedido.",
+          "nomeIngles": "Grapple",
+          "textoIngles": "Make an attack roll against a target within Close range. On a success, the target becomes Restrained and Vulnerable until they escape with a successful Strength Roll."
+        },
+        {
+          "nome": "Esguicho de tinta",
+          "tipo": "ação",
+          "texto": "Marque um Estresse para que o Polvo esguiche tinta. Em terra, a tinta cobre o solo dentro do alcance Muito Próximo. Cada criatura que se move através daquela área deve ser bem sucedida em um Jogada de Reação de Agilidade ou escorregará e cairá, tornando-se Vulnerável até sair da área. Se esse recurso for usado enquanto o Octopus estiver debaixo d'água, ele criará uma nuvem de escuridão que preencherá uma área dentro do alcance Muito Próximo e bloqueará a linha de visão.",
+          "nomeIngles": "Squirt Ink",
+          "textoIngles": "Mark a Stress to have the Octopus squirt ink. On land, the ink covers the ground within Very Close range. Each creature who moves through that area must succeed on an Agility Reaction Roll or slip and fall, becoming Vulnerable until they exit the area. If this feature is used while the Octopus is underwater, it instead creates a cloud of darkness that fills an area within Very Close range and blocks line of sight.",
+          "custoDeEstresse": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/octopus",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "OCTOPUS",
+          "lineStart": 6292,
+          "lineEnd": 6310,
+          "pdfPageStart": 105,
+          "pdfPageEnd": 105
+        },
+        "corpusSha256": "01d110db99b8bb829b6165213da843f87df83f87ff0ada37b659544073cdddf4"
+      }
+    },
+    {
+      "id": "panther",
+      "nome": "Pantera",
+      "nomeIngles": "Panther",
+      "tipo": "Oportunista",
+      "patamar": 1,
+      "dificuldade": 14,
+      "limiares": "5/10",
+      "pontosDeVida": 4,
+      "estresse": 3,
+      "ataque": {
+        "modificador": "+2",
+        "nome": "Dentes e Garras",
+        "nomeIngles": "Teeth and Claws",
+        "alcance": "Corpo a Corpo",
+        "dano": "1d8+1 fís"
+      },
+      "descricao": "Um grande predador felino que persegue sua presa nas sombras.",
+      "descricaoIngles": "A large feline predator that stalks its prey from the shadows.",
+      "motivacoes": [
+        "subir em árvores",
+        "atacar",
+        "perseguir"
+      ],
+      "motivacoesIngles": [
+        "Climb trees",
+        "pounce",
+        "stalk"
+      ],
+      "habilidades": [
+        {
+          "nome": "Espreitador Sombrio",
+          "tipo": "passiva",
+          "texto": "Enquanto estiver Escondida, a Pantera ganha +2 de bônus em suas jogadas de ataque.",
+          "nomeIngles": "Shadow Stalker",
+          "textoIngles": "While Hidden, the Panther gains a +2 bonus to its attack rolls."
+        },
+        {
+          "nome": "Salto Predatório",
+          "tipo": "ação",
+          "texto": "Marque um Estresse para fazer a Pantera saltar para o alcance Corpo a Corpo de um alvo dentro do alcance Distante e fazer um ataque contra ele. Se obtiver sucesso, cause 1d12+2 de dano físico.",
+          "nomeIngles": "Pouncing Strike",
+          "textoIngles": "Mark a Stress to have the Panther leap into Melee range of a target within Far range and make an attack against them. On a success, deal 1d12+2 physical damage.",
+          "custoDeEstresse": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/panther",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "PANTHER",
+          "lineStart": 6392,
+          "lineEnd": 6410,
+          "pdfPageStart": 106,
+          "pdfPageEnd": 106
+        },
+        "corpusSha256": "794ecf748b288def76d323cfa55a945ae1840253e491c5249177e8b9742d1010"
+      }
+    },
+    {
+      "id": "phantom",
+      "nome": "Fantasma",
+      "nomeIngles": "Phantom",
+      "tipo": "Comum",
+      "patamar": 1,
+      "dificuldade": 11,
+      "limiares": "5/None",
+      "pontosDeVida": 2,
+      "estresse": 1,
+      "ataque": {
+        "modificador": "-1",
+        "nome": "Chill Touch",
+        "nomeIngles": "Chill Touch",
+        "alcance": "Corpo a Corpo",
+        "dano": "1d6+2 mág"
+      },
+      "descricao": "O eco de uma alma perdida na forma de uma sombra ectoplasmática.",
+      "descricaoIngles": "The echo of a lost soul in the form of an ectoplasmic shadow.",
+      "motivacoes": [
+        "cria pontos frios",
+        "voa pelo ar",
+        "sussurra notícias sombrias"
+      ],
+      "motivacoesIngles": [
+        "Create cold spots",
+        "swoop through the air",
+        "whisper dark tidings"
+      ],
+      "habilidades": [
+        {
+          "nome": "Incorpóreo",
+          "tipo": "passiva",
+          "texto": "O Fantasma tem resistência a danos físicos e pode se mover através de objetos sólidos.",
+          "nomeIngles": "Incorporeal",
+          "textoIngles": "The Phantom has resistance to physical damage and can move through solid objects."
+        },
+        {
+          "nome": "Aura de Medo",
+          "tipo": "passiva",
+          "texto": "Um PJ que ficar sob os holofotes dentro do alcance Muito Próximo do Fantasma deve ter sucesso em um Jogada de Reação de Presença (10) ou marcar um Estresse.",
+          "nomeIngles": "Fear Aura",
+          "textoIngles": "A PC who takes the spotlight within Very Close range of the Phantom must succeed on a Presence Reaction Roll (10) or mark a Stress."
+        },
+        {
+          "nome": "Assombração Persistente",
+          "tipo": "reação",
+          "texto": "Contagem regressiva (1d6). Quando o Fantasma for derrotado, você poderá gastar um Medo para ativar a contagem regressiva. Ele diminui quando um PJ rola com Medo. Quando for acionado, limpe o PV do Fantasma e destaque-o imediatamente.",
+          "nomeIngles": "Lingering Haunt",
+          "textoIngles": "Countdown (1d6). When the Phantom is defeated, you can spend a Fear to activate the countdown. It ticks down when a PC rolls with Fear. When it triggers, clear the Phantom’s HP and immediately spotlight them.",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/phantom",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "PHANTOM",
+          "lineStart": 6434,
+          "lineEnd": 6454,
+          "pdfPageStart": 106,
+          "pdfPageEnd": 106
+        },
+        "corpusSha256": "cea87d53d21724b627ffc1a5a10e83e3dfaa9073178858798e08009812b1da22"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "poltergeist",
+      "nome": "Poltergeist",
+      "nomeIngles": "Poltergeist",
+      "tipo": "Atirador",
+      "patamar": 1,
+      "dificuldade": 9,
+      "limiares": "4/None",
+      "pontosDeVida": 2,
+      "estresse": 2,
+      "ataque": {
+        "modificador": "-1",
+        "nome": "Objeto arremessado",
+        "nomeIngles": "Thrown Object",
+        "alcance": "Distante",
+        "dano": "1d6+3 fís"
+      },
+      "descricao": "Um espírito sinistro e translúcido que possui objetos inanimados.",
+      "descricaoIngles": "A baleful, translucent spirit that possesses inanimate objects.",
+      "motivacoes": [
+        "velas tremeluzentes",
+        "chocalho correntes",
+        "sacode janelas",
+        "joga pessoas pela sala"
+      ],
+      "motivacoesIngles": [
+        "Flicker candles",
+        "rattle chains",
+        "shake windows",
+        "throw people around the room"
+      ],
+      "habilidades": [
+        {
+          "nome": "Espectro",
+          "tipo": "passiva",
+          "texto": "O Poltergeist tem resistência a danos físicos. Marque uma tensão para mover-se para perto através de objetos sólidos.",
+          "nomeIngles": "Specter",
+          "textoIngles": "The Poltergeist has resistance to physical damage. Mark a Stress to move up to Close range through solid objects.",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Possuidor",
+          "tipo": "ação",
+          "texto": "Marque um Estresse para que o Poltergeist habite um objeto não mágico que esteja inteiramente dentro do alcance, infundindo o objeto com um brilho fantasmagórico. Na próxima vez que o Poltergeist sofrer dano, o objeto será destruído e o Poltergeist será expulso dele.",
+          "nomeIngles": "Possessor",
+          "textoIngles": "Mark a Stress to have the Poltergeist inhabit a nonmagical object that is entirely within Close range, infusing the object with a ghostly glow. The next time the Poltergeist would take damage, the object is destroyed instead, and the Poltergeist is expelled from it.",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Tempestade Fantasma",
+          "tipo": "ação",
+          "texto": "Gaste um Medo para fazer com que o Poltergeist puxe todos os objetos não mágicos não equipados dentro do alcance Muito Próximo para um vórtice violento. Cada alvo naquela área deve fazer um Jogada de Reação de Agilidade. Os alvos que falham sofrem 1d12+2 de dano físico. Os alvos bem-sucedidos sofrem metade do dano.",
+          "nomeIngles": "Ghost Storm",
+          "textoIngles": "Spend a Fear to have the Poltergeist pull all unequipped nonmagical objects within Very Close range into a violent vortex. Each target in that area must make an Agility Reaction Roll. Targets who fail take 1d12+2 physical damage. Targets who succeed take half damage.",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/poltergeist",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "POLTERGEIST",
+          "lineStart": 6522,
+          "lineEnd": 6542,
+          "pdfPageStart": 107,
+          "pdfPageEnd": 107
+        },
+        "corpusSha256": "ea81b0a1ec79cce5d36d2a3f222cb6c43f64e3f5ed76abf5aca10154c3b4c5f9"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "rabble-mawb",
+      "nome": "Turba Mawb",
+      "nomeIngles": "Rabble Mawb",
+      "tipo": "Horda",
+      "patamar": 1,
+      "dificuldade": 8,
+      "limiares": "4/8",
+      "pontosDeVida": 4,
+      "estresse": 2,
+      "ataque": {
+        "modificador": "-2",
+        "nome": "Chomp",
+        "nomeIngles": "Chomp",
+        "alcance": "Corpo a Corpo",
+        "dano": "1d6+3 fís"
+      },
+      "descricao": "Essas bolas de pêlo, membros e dentes do tamanho de um gato viajam em uma dúzia de “mawb”.",
+      "descricaoIngles": "These cat-sized balls of hair, limbs, and teeth travel in a “mawb” of a dozen.",
+      "motivacoes": [
+        "chitter e mastigar",
+        "amontoar-se",
+        "rolar"
+      ],
+      "motivacoesIngles": [
+        "Chitter and chew",
+        "clump together",
+        "roll around"
+      ],
+      "habilidades": [
+        {
+          "nome": "Horda (1d4+1)",
+          "tipo": "passiva",
+          "texto": "Quando o Rabble Mawb tiver marcado metade ou mais de seu PV, seu ataque padrão causa 1d4+1 de dano físico.",
+          "nomeIngles": "Horde (1d4+1)",
+          "textoIngles": "When the Rabble Mawb has marked half or more of its HP, its standard attack deals 1d4+1 physical damage instead."
+        },
+        {
+          "nome": "Volte pior",
+          "tipo": "reação",
+          "texto": "Quando o Rabble Mawb for derrotado, você pode gastar um Medo para trazê-lo de volta à vida, limpando todo o PV e Estresse. O Rabble Mawb ganha um bônus em todas as jogadas igual ao número de vezes que esse recurso foi usado por este Rabble Mawb.",
+          "nomeIngles": "Come Back Worse",
+          "textoIngles": "When the Rabble Mawb is defeated, you can spend a Fear to bring it back to life, clearing all HP and Stress. The Rabble Mawb gains a bonus to all rolls equal to the number of times this feature has been used by this Rabble Mawb.",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/rabble-mawb",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "RABBLE MAWB",
+          "lineStart": 6544,
+          "lineEnd": 6562,
+          "pdfPageStart": 107,
+          "pdfPageEnd": 107
+        },
+        "corpusSha256": "f8b81b1200723d9faf94a63b500d53e04880107b2c516276d0627b1a6d44ac2b"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "redcap-biters",
+      "nome": "Mordedores de Barrete Vermelho",
+      "nomeIngles": "Redcap Biters",
+      "tipo": "Horda",
+      "patamar": 1,
+      "dificuldade": 10,
+      "limiares": "6/11",
+      "pontosDeVida": 5,
+      "estresse": 3,
+      "ataque": {
+        "modificador": "-1",
+        "nome": "Gnash",
+        "nomeIngles": "Gnash",
+        "alcance": "Corpo a Corpo",
+        "dano": "1d8+4 fís"
+      },
+      "descricao": "Uma tropa de criaturas feéricas do tamanho de um punho que têm dentes afiados como agulhas e gorros cônicos vermelhos selados em suas cabeças com cera de vela.",
+      "descricaoIngles": "A troop of fist-sized fey creatures who have needle-sharp teeth and conical red caps sealed on their heads with candle wax.",
+      "motivacoes": [
+        "derrube-os",
+        "comemore pequenas vitórias",
+        "ri e chitter",
+        "corre entre as paredes"
+      ],
+      "motivacoesIngles": [
+        "Bring ’em down",
+        "celebrate tiny victories",
+        "giggle and chitter",
+        "scamper between the walls"
+      ],
+      "habilidades": [
+        {
+          "nome": "Horda (1d4+2)",
+          "tipo": "passiva",
+          "texto": "Quando os Mordedores marcam metade ou mais de seu PV, seu ataque padrão causa 1d4+2 de dano físico.",
+          "nomeIngles": "Horde (1d4+2)",
+          "textoIngles": "When the Biters have marked half or more of their HP, their standard attack deals 1d4+2 physical damage instead."
+        },
+        {
+          "nome": "Pesos de Tornozelo",
+          "tipo": "passiva",
+          "texto": "Um PJ deve marcar um Estresse para sair do alcance Corpo a Corpo dos Mordedores.",
+          "nomeIngles": "Ankle Weights",
+          "textoIngles": "A PC must mark a Stress to move out of the Biters’ Melee range."
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/redcap-biters",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "REDCAP BITERS",
+          "lineStart": 6564,
+          "lineEnd": 6582,
+          "pdfPageStart": 107,
+          "pdfPageEnd": 107
+        },
+        "corpusSha256": "bc88cecc70b8a78684698a9dc2b00852db65dcc0f165e7911b7ec1dbea715a4e"
+      }
+    },
+    {
+      "id": "redcap-breaker",
+      "nome": "Quebrador de Barrete Vermelho",
+      "nomeIngles": "Redcap Breaker",
+      "tipo": "Brutamonte",
+      "patamar": 1,
+      "dificuldade": 13,
+      "limiares": "8/15",
+      "pontosDeVida": 6,
+      "estresse": 3,
+      "ataque": {
+        "modificador": "+1",
+        "nome": "Marreta de Madeira",
+        "nomeIngles": "Wooden Mallet",
+        "alcance": "Corpo a Corpo",
+        "dano": "1d12+2 fís"
+      },
+      "descricao": "Uma criatura feérica grande e brutal que tem um boné vermelho cônico selado em sua cabeça com cera de vela.",
+      "descricaoIngles": "A large, brutish fey creature who has a conical red cap sealed on their head with candle wax.",
+      "motivacoes": [
+        "bata no peito e abaixo",
+        "inimigos insignificantes ragdoll",
+        "avança de forma imprudente"
+      ],
+      "motivacoesIngles": [
+        "Beat chest and bellow",
+        "ragdoll puny enemies",
+        "rush forward recklessly"
+      ],
+      "habilidades": [
+        {
+          "nome": "Quebra-costas",
+          "tipo": "ação",
+          "texto": "Marque um Estresse para fazer um ataque contra um alvo dentro do alcance Corpo a Corpo. Se obtiver sucesso, cause 3d4+10 de dano físico. Um alvo que marque PV com este ataque fica Restringido até liberar um PV.",
+          "nomeIngles": "Backbreaker",
+          "textoIngles": "Mark a Stress to make an attack against a target within Melee range. On a success, deal 3d4+10 physical damage. A target who marks HP from this attack is Restrained until they clear a HP.",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Quebra-joelhos",
+          "tipo": "reação",
+          "texto": "Quando o Quebrador faz um ataque padrão bem-sucedido, você pode gastar um Medo para tornar o alvo temporariamente Vulnerável.",
+          "nomeIngles": "Kneecapper",
+          "textoIngles": "When the Breaker makes a successful standard attack, you can spend a Fear to make the target temporarily Vulnerable.",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/redcap-breaker",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "REDCAP BREAKER",
+          "lineStart": 6586,
+          "lineEnd": 6604,
+          "pdfPageStart": 108,
+          "pdfPageEnd": 108
+        },
+        "corpusSha256": "325276be60de123ef2602208393929eccc07328478a44bfe3b9c7e68e2322527"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "redcap-butcher",
+      "nome": "Açougueiro de Barrete Vermelho",
+      "nomeIngles": "Redcap Butcher",
+      "tipo": "Comum",
+      "patamar": 1,
+      "dificuldade": 12,
+      "limiares": "5/10",
+      "pontosDeVida": 4,
+      "estresse": 3,
+      "ataque": {
+        "modificador": "+1",
+        "nome": "Cutelo de Carne",
+        "nomeIngles": "Meat Cleaver",
+        "alcance": "Corpo a Corpo",
+        "dano": "1d8+1 fís"
+      },
+      "descricao": "Uma criatura feérica do tamanho de um halfling que esquarteja suas vítimas com uma variedade de instrumentos cortantes. Eles usam um chapéu cônico vermelho selado na cabeça com cera de vela.",
+      "descricaoIngles": "A halfling-sized fey creature who hacks their victims apart with a variety of cutting implements. They wear a conical red hat sealed on their head with candle wax.",
+      "motivacoes": [
+        "sorrir desconcertantemente",
+        "hackear e cortar",
+        "embaralhar"
+      ],
+      "motivacoesIngles": [
+        "Grin disconcertingly",
+        "hack and slash",
+        "scramble"
+      ],
+      "habilidades": [
+        {
+          "nome": "Feliz no Corte",
+          "tipo": "ação",
+          "texto": "Marque um Estresse para fazer um ataque padrão contra até três alvos. Para cada alvo que marcar PV, você ganha um Medo.",
+          "nomeIngles": "Chop Happy",
+          "textoIngles": "Mark a Stress to make a standard attack against up to three targets. For each target who marks HP, you gain a Fear.",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Lançador de facas",
+          "tipo": "ação",
+          "texto": "Marque um Estresse para fazer um ataque padrão contra um alvo dentro do alcance Distante. Se o Açougueiro estiver Escondido, eles atacam com vantagem.",
+          "nomeIngles": "Knife Thrower",
+          "textoIngles": "Mark a Stress to make a standard attack against a target within Far range. If the Butcher is Hidden, they make the attack with advantage.",
+          "custoDeEstresse": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/redcap-butcher",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "REDCAP BUTCHER",
+          "lineStart": 6606,
+          "lineEnd": 6624,
+          "pdfPageStart": 108,
+          "pdfPageEnd": 108
+        },
+        "corpusSha256": "388afeb5ceac685f1b47a69d76551dfc6b21dd6b6eb6e0e0ac7661aaff161781"
+      }
+    },
+    {
+      "id": "redcap-candlemaker",
+      "nome": "Fabricante de Velas de Barrete Vermelho",
+      "nomeIngles": "Redcap Candlemaker",
+      "tipo": "Líder",
+      "patamar": 1,
+      "dificuldade": 13,
+      "limiares": "7/13",
+      "pontosDeVida": 6,
+      "estresse": 3,
+      "ataque": {
+        "modificador": "+3",
+        "nome": "Castiçal Aceso",
+        "nomeIngles": "Burning Candlestick",
+        "alcance": "Muito Próximo",
+        "dano": "1d10+2 mág"
+      },
+      "descricao": "Um líder de culto pálido e magro usando um boné cônico vermelho selado na cabeça com cera de vela. Eles empunham uma longa vara com uma vela feita pela mão de um criminoso enforcado.",
+      "descricaoIngles": "A pale, gaunt cult leader wearing a conical red cap sealed on their head with candle wax. They wield a long rod with a candle atop it made from a hanged criminal’s hand.",
+      "motivacoes": [
+        "projete longas sombras",
+        "mantenha-se fora da briga",
+        "mostre-lhes a luz"
+      ],
+      "motivacoesIngles": [
+        "Cast long shadows",
+        "keep out of the fray",
+        "show them the light"
+      ],
+      "habilidades": [
+        {
+          "nome": "Mão da Glória",
+          "tipo": "passiva",
+          "texto": "Quando o Fabricante de Velas aparecer, coloque 5 fichas neste bloco de estatísticas. Remova uma ficha sempre que o Fabricante de Velas marcar um PV. Embora este bloco de estatísticas tenha 1 ou mais fichas, o Fabricante de Velas está oculto.",
+          "nomeIngles": "Hand of Glory",
+          "textoIngles": "When the Candlemaker appears, place 5 tokens on this stat block. Remove a token whenever the Candlemaker marks a HP. While this stat block has 1 or more tokens on it, the Candlemaker is Hidden."
+        },
+        {
+          "nome": "Portador da Tocha",
+          "tipo": "passiva",
+          "texto": "A luz da Mão da Glória do Candelabro inspira sede de sangue em seus aliados. Embora este bloco de estatísticas tenha 1 ou mais fichas, cada adversário Barrete Vermelho dentro do alcance Próximo ganha um bônus de +1 em suas jogadas de dano.",
+          "nomeIngles": "Torchbearer",
+          "textoIngles": "The light of the Candlemaker’s Hand of Glory inspires bloodlust in their allies. While this stat block has 1 or more tokens on it, each Redcap adversary within Close range gains a +1 bonus to their damage rolls."
+        },
+        {
+          "nome": "Dança nas Chamas",
+          "tipo": "ação",
+          "texto": "Gaste uma ficha deste bloco de estatísticas. O Fabricante de Velas conjura uma bola de fogo em um grupo de PJs dentro do alcance Distante. Cada alvo deve fazer um Jogada de Reação de Agilidade. Os alvos que falham sofrem 2d10 de dano mágico. Os alvos bem-sucedidos sofrem metade do dano.",
+          "nomeIngles": "Dance in the Flames",
+          "textoIngles": "Spend a token from this stat block. The Candlemaker conjures a ball of fire on a group of PCs within Far range. Each target must make an Agility Reaction Roll. Targets who fail take 2d10 magic damage. Targets who succeed take half damage."
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/redcap-candlemaker",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "REDCAP CANDLEMAKER",
+          "lineStart": 6626,
+          "lineEnd": 6646,
+          "pdfPageStart": 108,
+          "pdfPageEnd": 108
+        },
+        "corpusSha256": "8ede08cbec5237432ece82996ec08c7304889dcc65ced7da7eedaeda790b94e3"
+      }
+    },
+    {
+      "id": "redcap-skinner",
+      "nome": "Esfolador de Barrete Vermelho",
+      "nomeIngles": "Redcap Skinner",
+      "tipo": "Lacaio",
+      "patamar": 1,
+      "dificuldade": 9,
+      "limiares": null,
+      "pontosDeVida": 1,
+      "estresse": 1,
+      "ataque": {
+        "modificador": "-1",
+        "nome": "Navalha",
+        "nomeIngles": "Razor",
+        "alcance": "Corpo a Corpo",
+        "dano": "2 fís"
+      },
+      "descricao": "Uma criatura feérica do tamanho de um gato empunhando uma navalha e usando um boné cônico vermelho selado na cabeça com cera de vela.",
+      "descricaoIngles": "A cat-sized fey creature wielding a straight razor and wearing a conical red cap sealed on their head with candle wax.",
+      "motivacoes": [
+        "flense",
+        "risadinha",
+        "raspar",
+        "fatiar"
+      ],
+      "motivacoesIngles": [
+        "Flense",
+        "giggle",
+        "scrape",
+        "slice"
+      ],
+      "habilidades": [
+        {
+          "nome": "Lacaio (4)",
+          "tipo": "passiva",
+          "texto": "O Esfolador é derrotado quando sofre algum dano. Para cada 4 de dano que um PJ causa ao Calejador, o PJ derrota um Lacaio adicional dentro do alcance contra o qual o ataque teria sucesso.",
+          "nomeIngles": "Minion (4)",
+          "textoIngles": "The Skinner is defeated when they take any damage. For every 4 damage a PC deals to the Skinner, the PC defeats an additional Minion within range the attack would succeed against."
+        },
+        {
+          "nome": "Cortes Superficiais",
+          "tipo": "passiva",
+          "texto": "Quando um PJ falha em um jogada, ele sofre 1 de dano físico para cada Esfolador dentro do alcance Corpo a Corpo dele. Combine esse dano.",
+          "nomeIngles": "Shallow Cuts",
+          "textoIngles": "When a PC fails a roll, they take 1 physical damage for each Skinner within Melee range of them. Combine this damage."
+        },
+        {
+          "nome": "Ataque em Grupo",
+          "tipo": "ação",
+          "texto": "Gaste um Medo para escolher um alvo e destaque todos os Barrete Vermelho Skinners dentro do alcance deles. Esses Lacaios se movem para o alcance Corpo a Corpo do alvo e fazem uma jogada de ataque compartilhada. Se obtiverem sucesso, eles causam 2 de dano físico cada. Combine esse dano.",
+          "nomeIngles": "Group Attack",
+          "textoIngles": "Spend a Fear to choose a target and spotlight all Redcap Skinners within Close range of them. Those Minions move into Melee range of the target and make one shared attack roll. On a success, they deal 2 physical damage each. Combine this damage.",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/redcap-skinner",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "REDCAP SKINNER",
+          "lineStart": 6648,
+          "lineEnd": 6668,
+          "pdfPageStart": 108,
+          "pdfPageEnd": 108
+        },
+        "corpusSha256": "0ed4c43dd09e1e573f418cb2bef924373f537c3a36d138b6501a616c5f744c56"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "rugaru",
+      "nome": "Rugaru",
+      "nomeIngles": "Rugaru",
+      "tipo": "Solo",
+      "patamar": 1,
+      "dificuldade": 14,
+      "limiares": "7/14",
+      "pontosDeVida": 8,
+      "estresse": 4,
+      "ataque": {
+        "modificador": "+4",
+        "nome": "Mandíbulas Cortantes",
+        "nomeIngles": "Snapping Jaws",
+        "alcance": "Corpo a Corpo",
+        "dano": "2d8+4 fís"
+      },
+      "descricao": "Um humanóide com cabeça de lobo amaldiçoado pelos deuses para rondar os pântanos em busca de sangue.",
+      "descricaoIngles": "A wolf-headed humanoid cursed by the gods to prowl the swamps in search of blood.",
+      "motivacoes": [
+        "blasfemar",
+        "ir para a garganta",
+        "perseguir",
+        "aterrorizar"
+      ],
+      "motivacoesIngles": [
+        "Blaspheme",
+        "go for the throat",
+        "stalk",
+        "terrorize"
+      ],
+      "habilidades": [
+        {
+          "nome": "Implacável (3)",
+          "tipo": "passiva",
+          "texto": "O Rugaru pode ser destacado até três vezes por turno do Mestre. Gaste o Medo como de costume para destacá-los.",
+          "nomeIngles": "Relentless (3)",
+          "textoIngles": "The Rugaru can be spotlighted up to three times per GM turn. Spend Fear as usual to spotlight them."
+        },
+        {
+          "nome": "Filho da Noite",
+          "tipo": "passiva",
+          "texto": "Enquanto estiver sob o luar, o Rugaru ganha +2 de bônus em sua dificuldade.",
+          "nomeIngles": "Child of Night",
+          "textoIngles": "While in moonlight, the Rugaru gains a +2 bonus to their Difficulty."
+        },
+        {
+          "nome": "Sanguinário",
+          "tipo": "passiva",
+          "texto": "Quando um PJ marca PV do ataque padrão do Rugaru, adicione uma ficha a este bloco de estatísticas. O Rugaru ganha um bônus nas jogadas de ataque igual ao número de fichas neste bloco de estatísticas. Limpe todas as fichas quando o Rugaru sofrer dano Severo.",
+          "nomeIngles": "Bloodthirsty",
+          "textoIngles": "When a PC marks HP from the Rugaru’s standard attack, add a token to this stat block. The Rugaru gains a bonus to attack rolls equal to the number of tokens on this stat block. Clear all tokens when the Rugaru takes Severe damage."
+        },
+        {
+          "nome": "Uivar para a Lua",
+          "tipo": "ação",
+          "texto": "Marque um Estresse para forçar cada PJ dentro do alcance Longe a fazer um Jogada de Reação de Presença (15). Alvos que falham perdem uma Esperança. Ganhe um Medo para cada Esperança perdida. Se um PJ não tiver Esperança, ele deve marcar um Estresse e se tornar Vulnerável até rolar com Esperança.",
+          "nomeIngles": "Howl at the Moon",
+          "textoIngles": "Mark a Stress to force each PC within Far range to make a Presence Reaction Roll (15). Targets who fail lose a Hope. Gain a Fear for each Hope lost. If a PC has no Hope, they must mark a Stress and become Vulnerable until they roll with Hope.",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Estripador de Carne",
+          "tipo": "ação",
+          "texto": "Marque um Estresse para fazer um ataque contra um alvo dentro do alcance Corpo a Corpo. Se obtiver sucesso, cause 1d12+2 de dano físico direto.",
+          "nomeIngles": "Flesh Ripper",
+          "textoIngles": "Mark a Stress to make an attack against a target within Melee range. On a success, deal 1d12+2 direct physical damage.",
+          "custoDeEstresse": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/rugaru",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "RUGARU",
+          "lineStart": 6670,
+          "lineEnd": 6694,
+          "pdfPageStart": 108,
+          "pdfPageEnd": 108
+        },
+        "corpusSha256": "02ac10de56417ce1396fa518727981864df0513784324ffd178028c437ad238d"
+      }
+    },
+    {
+      "id": "sawtoothed-gillbeast",
+      "nome": "Besta Branquial Serrilhada",
+      "nomeIngles": "Sawtoothed Gillbeast",
+      "tipo": "Comum",
+      "patamar": 1,
+      "dificuldade": 12,
+      "limiares": "5/10",
+      "pontosDeVida": 4,
+      "estresse": 2,
+      "ataque": {
+        "modificador": "+1",
+        "nome": "Armamento Encharcado",
+        "nomeIngles": "Waterlogged Weaponry",
+        "alcance": "Próximo",
+        "dano": "1d8+1 fís"
+      },
+      "descricao": "Uma criatura atarracada de peixe que tem fileiras de dentes afiados como navalhas.",
+      "descricaoIngles": "A stocky fish creature that has rows of razor-sharp teeth.",
+      "motivacoes": [
+        "escalar em terra",
+        "acertar e correr",
+        "espiar acima da linha d'água"
+      ],
+      "motivacoesIngles": [
+        "Clamber ashore",
+        "hit and run",
+        "peek above the waterline"
+      ],
+      "habilidades": [
+        {
+          "nome": "Mordida Serrilhada",
+          "tipo": "ação",
+          "texto": "Marque um Estresse para atacar um alvo dentro do alcance Corpo a Corpo. Se obtiver sucesso, o alvo sofre 1d12 de dano físico e deve marcar um Espaço de Armadura sem receber seu benefício (ele ainda pode usar armadura para reduzir o dano).",
+          "nomeIngles": "Ka-Chomp",
+          "textoIngles": "Mark a Stress to attack a target within Melee range. On a success, the target takes 1d12 physical damage and must mark an Armor Slot without gaining its benefit (they can still use armor to reduce the damage).",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Frenesi de Alimentação",
+          "tipo": "reação",
+          "texto": "Quando uma criatura marca PV, você pode gastar um Medo para destacar todas as Bestas de Dente de Serra dentro do alcance Muito Próximo delas. Essas Gillbeasts se movem para o alcance Corpo a Corpo da criatura e cada uma faz um ataque padrão contra elas. Se algum ataque for bem-sucedido, combine seus danos.",
+          "nomeIngles": "Feeding Frenzy",
+          "textoIngles": "When a creature marks HP, you can spend a Fear to spotlight all Sawtoothed Gillbeasts within Very Close range of them. Those Gillbeasts move into Melee range of the creature and each make a standard attack against them. If any attacks succeed, combine their damage.",
+          "custoDeMedo": 1
+        },
+        {
+          "nome": "Escamoso",
+          "tipo": "reação",
+          "texto": "Quando o Besta Branquial marcaria qualquer número de PV, role um d6. Com um resultado 6, você pode marcar um Estresse.",
+          "nomeIngles": "Scaly",
+          "textoIngles": "When the Gillbeast would mark any number of HP, roll a d6. On a result of 6, you can mark a Stress instead."
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/sawtoothed-gillbeast",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "SAWTOOTHED GILLBEAST",
+          "lineStart": 6698,
+          "lineEnd": 6718,
+          "pdfPageStart": 109,
+          "pdfPageEnd": 109
+        },
+        "corpusSha256": "7be8af06b3beb900573825ae07d8c9eb724a34a051e1ddcef6c9e056dcc29036"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "soul-shattered-mage",
+      "nome": "Mago de Alma Despedaçada",
+      "nomeIngles": "Soul-Shattered Mage",
+      "tipo": "Solo",
+      "patamar": 1,
+      "dificuldade": 12,
+      "limiares": "8/15",
+      "pontosDeVida": 6,
+      "estresse": 5,
+      "ataque": {
+        "modificador": "+2",
+        "nome": "Cajado de Absinto",
+        "nomeIngles": "Wormwood Staff",
+        "alcance": "Distante",
+        "dano": "1d12 mág"
+      },
+      "descricao": "Um feiticeiro com uma psique quebrada pelo conhecimento que é melhor deixar escondido.",
+      "descricaoIngles": "A spellcaster with a psyche broken by knowledge best left hidden.",
+      "motivacoes": [
+        "balbucia em um idioma desconhecido",
+        "ri inquietantemente",
+        "exerce poder além do controle"
+      ],
+      "motivacoesIngles": [
+        "Babble in an unknown language",
+        "laugh unsettlingly",
+        "wield power beyond control"
+      ],
+      "habilidades": [
+        {
+          "nome": "Implacável (3)",
+          "tipo": "passiva",
+          "texto": "O Mago pode ser destacado até três vezes por turno do Mestre. Gaste o Medo como de costume para destacá-los.",
+          "nomeIngles": "Relentless (3)",
+          "textoIngles": "The Mage can be spotlighted up to three times per GM turn. Spend Fear as usual to spotlight them."
+        },
+        {
+          "nome": "Magia Quebrada",
+          "tipo": "ação",
+          "texto": "Marque um Estresse para rolar um d6. O Mago usa o movimento correspondente: 1–2: Dimension Rift. Escolha um alvo dentro do alcance Distante. O alvo se teletransporta para um ponto que você escolher dentro do alcance de sua posição original e sofre 2d6 de dano mágico direto enquanto seu corpo e mente se recompõem. 3–4: Dilatação do Tempo. Escolha um grupo de PJs dentro do alcance Distante. Cada alvo fica lento até rolar com Esperança. Enquanto estiver Lento, o alvo fica Vulnerável e deve marcar um Estresse ao se mover. 5–6: Visões Discordantes. Faça um ataque contra até três alvos dentro do alcance Próximo. Os alvos contra os quais o Mago consegue sofrem 2d8 de dano mágico direto.",
+          "nomeIngles": "Broken Magic",
+          "textoIngles": "Mark a Stress to roll a d6. The Mage uses the corresponding move: 1–2: Dimension Rift. Choose a target within Far range. The target teleports to a point you choose within Close range of their original position and takes 2d6 direct magic damage as their body and mind reassemble. 3–4: Time Dilation. Choose a group of PCs within Far range. Each target is Slowed until they roll with Hope. While Slowed, a target is Vulnerable and must mark a Stress when they move. 5–6: Discordant Visions. Make an attack against up to three targets within Close range. Targets the Mage succeeds against take 2d8 direct magic damage.",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Sinta Minha Dor",
+          "tipo": "reação",
+          "texto": "Quando o Mago marca PV, role um número de d6s igual ao número de Estresse que o Mago marcou. O Mago causa dano mágico direto igual ao resultado total a todos os PJs dentro do alcance Muito Próximo.",
+          "nomeIngles": "Feel My Pain",
+          "textoIngles": "When the Mage marks HP, roll a number of d6s equal to the number of Stress the Mage has marked. The Mage deals direct magic damage equal to the total result to all PCs within Very Close range."
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/soul-shattered-mage",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "SOUL-SHATTERED MAGE",
+          "lineStart": 6814,
+          "lineEnd": 6834,
+          "pdfPageStart": 110,
+          "pdfPageEnd": 110
+        },
+        "corpusSha256": "638258fd9951f0c836f033fbad2ba47dfca818c250d2d7f20121779ce0e19909"
+      }
+    },
+    {
+      "id": "spellbound-armor",
+      "nome": "Armadura Encantada",
+      "nomeIngles": "Spellbound Armor",
+      "tipo": "Brutamonte",
+      "patamar": 1,
+      "dificuldade": 10,
+      "limiares": "9/17",
+      "pontosDeVida": 6,
+      "estresse": 0,
+      "ataque": {
+        "modificador": "+0",
+        "nome": "Zweihänder",
+        "nomeIngles": "Zweihänder",
+        "alcance": "Muito Próximo",
+        "dano": "1d10+1 fís"
+      },
+      "descricao": "Uma armadura vazia de placas completa que brilha com uma leve coroa de luz fantasmagórica.",
+      "descricaoIngles": "An empty suit of full plate armor that glows with a faint corona of ghostly light.",
+      "motivacoes": [
+        "clank ruidosamente",
+        "move-se como um relógio",
+        "observa silenciosamente"
+      ],
+      "motivacoesIngles": [
+        "Clank noisily",
+        "move like clockwork",
+        "watch silently"
+      ],
+      "habilidades": [
+        {
+          "nome": "Incansável",
+          "tipo": "passiva",
+          "texto": "A Armadura não pode ser forçada a marcar Estresse. Quando um efeito marcaria Estresse, a Armadura ignora essa parte do efeito.",
+          "nomeIngles": "Tireless",
+          "textoIngles": "The Armor can’t be forced to mark Stress. When an effect would cause it to mark Stress, the Armor ignores that part of the effect."
+        },
+        {
+          "nome": "Estrondo e Recomposição",
+          "tipo": "reação",
+          "texto": "Uma vez por cena, quando a Armadura for derrotada, você pode gastar um Medo para reativá-la. Limpe 2 PV e destaque-o imediatamente.",
+          "nomeIngles": "Clatter & Recombobulate",
+          "textoIngles": "Once per scene when the Armor is defeated, you can spend a Fear to reactivate it. Clear 2 HP and immediately spotlight it.",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/spellbound-armor",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "SPELLBOUND ARMOR",
+          "lineStart": 6860,
+          "lineEnd": 6878,
+          "pdfPageStart": 110,
+          "pdfPageEnd": 110
+        },
+        "corpusSha256": "0e110640e9ece635b0b015bb3d3c8dd751e87b92b6552fbdc42fbd93894612a9"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "viper",
+      "nome": "Víbora",
+      "nomeIngles": "Viper",
+      "tipo": "Lacaio",
+      "patamar": 1,
+      "dificuldade": 11,
+      "limiares": null,
+      "pontosDeVida": 1,
+      "estresse": 1,
+      "ataque": {
+        "modificador": "+3",
+        "nome": "Mordida",
+        "nomeIngles": "Bite",
+        "alcance": "Corpo a Corpo",
+        "dano": "1 fís"
+      },
+      "descricao": "Pequena serpente que envenena sua presa com presas articuladas.",
+      "descricaoIngles": "A small serpent that envenomates its prey with hinged fangs.",
+      "motivacoes": [
+        "ficar esperando",
+        "deslizar",
+        "atacar"
+      ],
+      "motivacoesIngles": [
+        "Lie in wait",
+        "slither",
+        "strike"
+      ],
+      "habilidades": [
+        {
+          "nome": "Lacaio (4)",
+          "tipo": "passiva",
+          "texto": "A Víbora é derrotada quando sofre algum dano. Para cada 4 danos que um PJ causa ao Víbora, o PJ derrota um Lacaio adicional dentro do alcance contra o qual o ataque teria sucesso.",
+          "nomeIngles": "Minion (4)",
+          "textoIngles": "The Viper is defeated when it takes any damage. For every 4 damage a PC deals to the Viper, the PC defeats an additional Minion within range the attack would succeed against."
+        },
+        {
+          "nome": "Venenoso",
+          "tipo": "passiva",
+          "texto": "Quando o Víbora faz um ataque padrão bem-sucedido, o alvo fica temporariamente Envenenado. Enquanto Envenenado, o alvo deve marcar um Estresse sempre que fizer uma jogada de ação.",
+          "nomeIngles": "Venomous",
+          "textoIngles": "When the Viper makes a successful standard attack, the target becomes temporarily Envenomated. While Envenomated, the target must mark a Stress whenever they make an action roll."
+        },
+        {
+          "nome": "Ataque em Grupo",
+          "tipo": "ação",
+          "texto": "Gaste um Medo para escolher um alvo e destaque todos os Vipers dentro do alcance deles. Esses Lacaios se movem para o alcance Corpo a Corpo do alvo e fazem uma jogada de ataque compartilhada. Se obtiverem sucesso, eles causam 1 de dano físico cada. Combine esse dano.",
+          "nomeIngles": "Group Attack",
+          "textoIngles": "Spend a Fear to choose a target and spotlight all Vipers within Close range of them. Those Minions move into Melee range of the target and make one shared attack roll. On a success, they deal 1 physical damage each. Combine this damage.",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/viper",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "VIPER",
+          "lineStart": 6964,
+          "lineEnd": 6984,
+          "pdfPageStart": 111,
+          "pdfPageEnd": 111
+        },
+        "corpusSha256": "84be6503275801695a1d21b41056adf0c5eeb378040b565abca775f467c67bcb"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "waxwork-creation",
+      "nome": "Criação de Cera",
+      "nomeIngles": "Waxwork Creation",
+      "tipo": "Solo",
+      "patamar": 1,
+      "dificuldade": 13,
+      "limiares": "8/15",
+      "pontosDeVida": 10,
+      "estresse": 3,
+      "ataque": {
+        "modificador": "+2",
+        "nome": "Punhos",
+        "nomeIngles": "Fists",
+        "alcance": "Muito Próximo",
+        "dano": "1d20 fís"
+      },
+      "descricao": "Uma construção de cera de vela semissólida (e semissenciente) de três metros de altura.",
+      "descricaoIngles": "A ten-foot-tall, semisolid (and semisentient) candle wax construct.",
+      "motivacoes": [
+        "madeira ameaçadoramente",
+        "geme com a dor da não-vida",
+        "sufoca"
+      ],
+      "motivacoesIngles": [
+        "Lumber menacingly",
+        "moan with the pain of unlife",
+        "smother"
+      ],
+      "habilidades": [
+        {
+          "nome": "Implacável (2)",
+          "tipo": "passiva",
+          "texto": "A Criação pode ser destacada até duas vezes por turno do Mestre. Gaste o Medo como de costume para destacá-lo.",
+          "nomeIngles": "Relentless (2)",
+          "textoIngles": "The Creation can be spotlighted up to two times per GM turn. Spend Fear as usual to spotlight it."
+        },
+        {
+          "nome": "Sem Órgãos Vitais",
+          "tipo": "passiva",
+          "texto": "A Criação não sofre dano extra de ataques que tenham sucesso crítico contra ela.",
+          "nomeIngles": "No Vital Organs",
+          "textoIngles": "The Creation doesn’t take extra damage from attacks that critically succeed against it."
+        },
+        {
+          "nome": "Bola de Cera",
+          "tipo": "ação",
+          "texto": "Marque um Estresse para que a Criação jogue uma bola de cera em um alvo dentro do alcance Longe. Faça um ataque contra o alvo. Se obtiver sucesso, o alvo sofre 1d12+2 de dano físico e fica Restringido até obter sucesso em um Jogada de Força (15).",
+          "nomeIngles": "Wax Ball",
+          "textoIngles": "Mark a Stress to have the Creation throw a ball of wax at a target within Far range. Make an attack against the target. On a success, the target takes 1d12+2 physical damage and becomes Restrained until they succeed on a Strength Roll (15).",
+          "custoDeEstresse": 1
+        },
+        {
+          "nome": "Grude!",
+          "tipo": "reação",
+          "texto": "Quando um PJ dentro do alcance Corpo a Corpo da Criação fizer um ataque com arma contra ele, jogue um d6. Com 5 ou mais, a arma do atacante fica presa na Criação e só pode ser removida com um jogada de Força bem-sucedido (15).",
+          "nomeIngles": "Splutch!",
+          "textoIngles": "When a PC within Melee range of the Creation makes a weapon attack against it, roll a d6. On a 5 or higher, the attacker’s weapon gets stuck in the Creation and can be removed only with a successful Strength Roll (15)."
+        },
+        {
+          "nome": "Agarrão Sufocante",
+          "tipo": "reação",
+          "texto": "Quando a Criação faz um ataque padrão bem sucedido contra um alvo dentro do alcance Corpo a Corpo, você pode gastar um Medo para Prender o alvo dentro do corpo de cera da Criação. Enquanto Preso, o alvo fica Restringido e deve marcar um Estresse e se mover com a Criação cada vez que for destacado. Uma criatura Presa é libertada quando a Criação sofre dano Maior ou maior.",
+          "nomeIngles": "Smothering Grapple",
+          "textoIngles": "When the Creation makes a successful standard attack against a target within Melee range, you can spend a Fear to Trap the target inside the Creation’s wax body. While Trapped, the target is Restrained and must mark a Stress and move with the Creation each time it’s spotlighted. A Trapped creature is freed when the Creation takes Major or greater damage.",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/waxwork-creation",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "WAXWORK CREATION",
+          "lineStart": 6986,
+          "lineEnd": 7010,
+          "pdfPageStart": 111,
+          "pdfPageEnd": 111
+        },
+        "corpusSha256": "b433589ac859b50ce92fff984eb9b898308f8a315fd1b759aba133856ea4eaaa"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "will-o-the-wisps",
+      "nome": "Fogos-fátuos",
+      "nomeIngles": "Will-O’-The-Wisps",
+      "tipo": "Horda",
+      "patamar": 1,
+      "dificuldade": 9,
+      "limiares": "5/9",
+      "pontosDeVida": 4,
+      "estresse": 2,
+      "ataque": {
+        "modificador": "-3",
+        "nome": "Flash",
+        "nomeIngles": "Flash",
+        "alcance": "Próximo",
+        "dano": "1d4+2 mág"
+      },
+      "descricao": "Orbes flutuantes preguiçosamente de luz que muda de cor.",
+      "descricaoIngles": "Lazily floating orbs of color-shifting werelight.",
+      "motivacoes": [
+        "deslumbrar e distrair",
+        "desorientar",
+        "desencaminhar"
+      ],
+      "motivacoesIngles": [
+        "Dazzle and distract",
+        "disorient",
+        "lead astray"
+      ],
+      "habilidades": [
+        {
+          "nome": "Horda (1d4−1)",
+          "tipo": "passiva",
+          "texto": "Quando o Fogo-fátuo tiver marcado metade ou mais de seu PV, seu ataque padrão causa 1d4−1 de dano mágico.",
+          "nomeIngles": "Horde (1d4−1)",
+          "textoIngles": "When the Will-o’-the-Wisps have marked half or more of their HP, their standard attack deals 1d4−1 magic damage instead."
+        },
+        {
+          "nome": "Caleidoscópico",
+          "tipo": "passiva",
+          "texto": "Os fogos-fátuos pulsam e dançam em padrões hipnóticos que mudam de cor e encantam qualquer criatura que os olhe. Todos os alvos dentro do alcance Muito Próximo do Fogos-fátuos são vulneráveis.",
+          "nomeIngles": "Kaleidoscopic",
+          "textoIngles": "The Will-o’-the-Wisps pulse and dance in hypnotic, color-changing patterns that entrance any creature who looks upon them. All targets within Very Close range of the Will-o’-the-Wisps are Vulnerable."
+        },
+        {
+          "nome": "Fascinante",
+          "tipo": "ação",
+          "texto": "Tenha medo para que os fogos-fátuos tracem trilhas de luz no ar, deixando imagens residuais que imploram para serem decifradas. Cada PJ dentro do alcance Longe deve ter sucesso em um Jogada de Reação de Instinto (13) ou marcar um Estresse e mover-se para o alcance Próximo em direção ao Fogo-fátuo.",
+          "nomeIngles": "Fascinating",
+          "textoIngles": "Spend a Fear to have the Will-o’-the-Wisps trace looping light trails through the air, leaving afterimages that beg to be deciphered. Each PC within Far range must succeed on an Instinct Reaction Roll (13) or mark a Stress and move up to Close range toward the Will-o’-the-Wisps.",
+          "custoDeMedo": 1
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/will-o-the-wisps",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "WILL-O’-THE-WISPS",
+          "lineStart": 7034,
+          "lineEnd": 7054,
+          "pdfPageStart": 112,
+          "pdfPageEnd": 112
+        },
+        "corpusSha256": "6f5125fe3b786aaca7c385dda02728d11f060f231aa9e8c7dbd2cec34e0c14d1"
+      },
+      "custoDeMedoMaximo": 1
+    },
+    {
+      "id": "yufo",
+      "nome": "Yufo",
+      "nomeIngles": "Yufo",
+      "tipo": "Manipulador",
+      "patamar": 1,
+      "dificuldade": 14,
+      "limiares": "6/10",
+      "pontosDeVida": 3,
+      "estresse": 5,
+      "ataque": {
+        "modificador": "-3",
+        "nome": "Chicote de Tentáculo",
+        "nomeIngles": "Tentacle Lash",
+        "alcance": "Muito Próximo",
+        "dano": "1d6+3 fís"
+      },
+      "descricao": "Uma grande criatura interdimensional semelhante a uma água-viva que flutua dentro e fora do fluxo do tempo.",
+      "descricaoIngles": "A large, interdimensional jellyfishlike creature that floats in and out of the timestream.",
+      "motivacoes": [
+        "troca informações sobre possíveis linhas de tempo",
+        "alimenta-se de emoções intensificadas",
+        "observa das sombras"
+      ],
+      "motivacoesIngles": [
+        "Exchange information about possible timelines",
+        "feed on heightened emotions",
+        "watch from the shadows"
+      ],
+      "habilidades": [
+        {
+          "nome": "Telepático",
+          "tipo": "passiva",
+          "texto": "O Yufo pode se comunicar mentalmente com criaturas dentro do alcance Muito Longe.",
+          "nomeIngles": "Telepathic",
+          "textoIngles": "The Yufo can mentally communicate with creatures within Very Far range."
+        },
+        {
+          "nome": "Cofre Psíquico",
+          "tipo": "passiva",
+          "texto": "O Yufo é imune a habilidades e características que afetariam ou alterariam seus pensamentos ou emoções.",
+          "nomeIngles": "Psychic Strongbox",
+          "textoIngles": "The Yufo is immune to abilities and features that would affect or alter its thoughts or emotions."
+        },
+        {
+          "nome": "Onda de Falha",
+          "tipo": "ação",
+          "texto": "Gaste um Medo e escolha até três alvos dentro do alcance. Cada alvo deve ter sucesso em um Jogada de Reação de Instinto ou perderá a sincronia da realidade e terá desvantagem em Jogadas de Instinto até que use um movimento de inatividade para fundamentar sua psique no agora.",
+          "nomeIngles": "Glitch Wave",
+          "textoIngles": "Spend a Fear and choose up to three targets within Close range. Each target must succeed on a Instinct Reaction Roll or become desynced from reality and have disadvantage on Instinct Rolls until they use a downtime move to ground their psyches in the now.",
+          "custoDeMedo": 1
+        },
+        {
+          "nome": "Corrosão Temporal",
+          "tipo": "reação",
+          "texto": "Quando o Yufo obtém sucesso em um ataque padrão, você pode marcar um Estresse para que o Yufo excrete um ácido entrópico através de sua pele, dando ao alvo uma penalidade de -2 em seus limites de dano até que ele use um movimento de inatividade para reparar sua armadura.",
+          "nomeIngles": "Temporal Corrosion",
+          "textoIngles": "When the Yufo succeeds on a standard attack, you can mark a Stress to have the Yufo excrete an entropic acid through its skin, giving the target a −2 penalty to their damage thresholds until they use a downtime move to repair their armor."
+        }
+      ],
+      "fonteSrd2": {
+        "id": "adversaries/yufo",
+        "sourceLocator": {
+          "chapter": "RUNNING AN ADVENTURE",
+          "heading": "YUFO",
+          "lineStart": 7078,
+          "lineEnd": 7100,
+          "pdfPageStart": 112,
+          "pdfPageEnd": 112
+        },
+        "corpusSha256": "c8e01c3dc68f0cc3a8bc2d7d348ed8fd0de618649002c849ea184dc1f3e2aa40"
+      },
+      "custoDeMedoMaximo": 1
     }
   ]
 }
