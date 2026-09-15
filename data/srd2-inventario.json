@@ -12331,7 +12331,7 @@
             "pdfPageEnd": 145
           },
           "corpusSha256": "d02a50745a6d230022d18b44893073b8bbf781783e3373c612e8a3df4cdcf43a",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/cephilith-hatchling",
@@ -12346,7 +12346,7 @@
             "pdfPageEnd": 145
           },
           "corpusSha256": "67a637a1b9a6e8e0f31a45b242a64573437db50cc05918c5c4f83ac5f576689d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/cephilith-novitiate",
@@ -12361,7 +12361,7 @@
             "pdfPageEnd": 146
           },
           "corpusSha256": "6bc9e180c0e3d14b1fe5699f5f946cfa947ad68f679eb4cae1250efef78e2697",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/cephilith-priest",
@@ -12376,7 +12376,7 @@
             "pdfPageEnd": 146
           },
           "corpusSha256": "c2f51de705cfd58879f0467d2dcbf9c1ed8c2c1a910983397c8080a0f2531b80",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/cephilith-titan",
@@ -12391,7 +12391,7 @@
             "pdfPageEnd": 146
           },
           "corpusSha256": "ee925a88e0f585f084eda9b371184f7a89eaedf8fbaf2079e35ccb209be99c75",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/chaos-skull",
@@ -12451,7 +12451,7 @@
             "pdfPageEnd": 146
           },
           "corpusSha256": "ab0c666ca9ea28fce8733d5825b8ea95e93fa73b02e1fdb5ddd91699b2b17ab1",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/cloud-titan",
@@ -12466,7 +12466,7 @@
             "pdfPageEnd": 147
           },
           "corpusSha256": "ecd305f3e4616af7bc35e498219b4ffc26eb6c258dc1c72c87fd33d4b84a0d6d",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/common-ruffian",
@@ -12736,7 +12736,7 @@
             "pdfPageEnd": 147
           },
           "corpusSha256": "e3e9f1e020b87564bbb39f16bfaf6115be2cd6abf5c3f9e30e31c1925e1e9acc",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/demon-of-avarice",
@@ -12916,7 +12916,7 @@
             "pdfPageEnd": 148
           },
           "corpusSha256": "57b42c665e6756449613b227874d1268e4038f7cbcf27a6675bd30101d63ba98",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/drake",
@@ -13261,7 +13261,7 @@
             "pdfPageEnd": 150
           },
           "corpusSha256": "e5d4166fb192d186ef41d277d093b9c63cae8ee487bb8e437850ca23533b5859",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/flock-of-feather-fiends",
@@ -13366,7 +13366,7 @@
             "pdfPageEnd": 150
           },
           "corpusSha256": "9d0b1aae4e04f36f65a5b91a330e651de029fbc04b2569c6a7a5fc9f22ca02a8",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/gargoyle",
@@ -13396,7 +13396,7 @@
             "pdfPageEnd": 150
           },
           "corpusSha256": "96e1bf14cfd87ae75cc9e1286657bbd21620943a815a5ba6fe1e7c7d4447f458",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/giant-beastmaster",
@@ -13621,7 +13621,7 @@
             "pdfPageEnd": 150
           },
           "corpusSha256": "49fa6730c27770c83376ab80b0b9a0644fd8054f216faffe45388aceb9f585d0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/grimmling-warband",
@@ -13741,7 +13741,7 @@
             "pdfPageEnd": 151
           },
           "corpusSha256": "dc51f50f1e4caaa5914da9780098a282d0aaaf6ed841c37231192404b8af4467",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/hallowed-soldier",
@@ -13771,7 +13771,7 @@
             "pdfPageEnd": 151
           },
           "corpusSha256": "eb61e0fda7d476e642307a8ecad0208e37f992cebc7c96639cfef43d6a0c9626",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/harbinger-of-famine",
@@ -13786,7 +13786,7 @@
             "pdfPageEnd": 151
           },
           "corpusSha256": "c393c8ee34519feb4eef0575d73ceb2346d498612c7d54bf4cba71505c68ed53",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/harbinger-of-pestilence",
@@ -13801,7 +13801,7 @@
             "pdfPageEnd": 152
           },
           "corpusSha256": "134c0df16b4b2a488138d955124b5eea8781a7e218c797811102e8ee2deb00c6",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/harbinger-of-war",
@@ -13816,7 +13816,7 @@
             "pdfPageEnd": 152
           },
           "corpusSha256": "a4be79a75e29f22b3253fcc5e5f583107327087ee0b45caf943016cb8a4961e4",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/harpy",
@@ -14536,7 +14536,7 @@
             "pdfPageEnd": 154
           },
           "corpusSha256": "bf016036e55ed1dc79e7e370527d9bd8c443350343dc2f2bece4e9b033f3d22b",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/pain-priest",
@@ -14896,7 +14896,7 @@
             "pdfPageEnd": 154
           },
           "corpusSha256": "dc1eebf1fda79b1be1c2ee3efa93230198059a0cc1d77f114b2dc8876d922bef",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/rugaru",
@@ -15016,7 +15016,7 @@
             "pdfPageEnd": 154
           },
           "corpusSha256": "e63bce11ef0f26be311c550816238d7f04a186335937bd65209d3606951473eb",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/shambling-zombie",
@@ -15346,7 +15346,7 @@
             "pdfPageEnd": 155
           },
           "corpusSha256": "3f66778c647889009dd9066df46df397c6b5c5fd4e82b770d7606a51057dafa0",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/swarm-of-rats",
@@ -15421,7 +15421,7 @@
             "pdfPageEnd": 155
           },
           "corpusSha256": "22af6543778a8b53801c578f54215579d91c01a765bb430d2592f7cb4e1593bc",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/tiny-green-ooze",
@@ -15736,7 +15736,7 @@
             "pdfPageEnd": 157
           },
           "corpusSha256": "9aae116a39867a1577d6ba14526d87ace1d5a37c494821cfd236af2305b47e9e",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/waxwork-creation",
@@ -15811,7 +15811,7 @@
             "pdfPageEnd": 157
           },
           "corpusSha256": "c110873f5284096411f747fb83c9c4690706f224366e65ed7df5ea64cfaa82dc",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/wyrmlings",
@@ -15826,7 +15826,7 @@
             "pdfPageEnd": 157
           },
           "corpusSha256": "a469c83c92d237c580f437262087b9d801088ec893f2cb60edd2c6b2200523be",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/wyvern",
@@ -15856,7 +15856,7 @@
             "pdfPageEnd": 157
           },
           "corpusSha256": "8ca868100b33ddc33ddae5a606a540b250957dd123538de63f034e25596a3cb7",
-          "estado": "pendente"
+          "estado": "mecanica-implementada"
         },
         {
           "id": "adversaries/young-dryad",
