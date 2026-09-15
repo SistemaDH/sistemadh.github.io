@@ -53,6 +53,12 @@ const vinculosMestre = {
   'rules/the-spotlight':['holofote'],
   'rules/when-to-make-a-move':['movimento-do-mestre']
 };
+const vinculosCampanhaExistentes = {
+  'rules/elemental-kin':['data/ancestralidades.json','backend/43_Origens.gs'],
+  'rules/monster-hunting-campaigns':['data/equipamentos.json','data/transformacoes.json','backend/44_Equipamento.gs','backend/45_Transformacoes.gs'],
+  'rules/supplemental-campaign-mechanics':['data/srd2-fonte.json'],
+  'rules/western-campaigns':['data/equipamentos.json','backend/44_Equipamento.gs']
+};
 const porId = new Map(auditoria.registros.map((r) => [r.idFonte, r]));
 let integrados = 0;
 for (const colecao of inventario.colecoes) for (const registro of colecao.registros) {
@@ -75,6 +81,13 @@ for (const [id, verbetes] of Object.entries({...vinculosCentrais, ...vinculosMes
   auditado.estado = 'implementado-por-referencia';
   auditado.verbetes = verbetes;
   integrados++;
+}
+for (const [id, artefatos] of Object.entries(vinculosCampanhaExistentes)) {
+  const registro = inventario.colecoes.flatMap((c) => c.registros).find((r) => r.id === id);
+  const auditado = porId.get(id);
+  if (!registro || !auditado) throw new Error(`${id}: fonte suplementar ausente`);
+  for (const artefato of artefatos) if (!fs.existsSync(path.join(raiz, artefato))) throw new Error(`${id}: artefato ausente ${artefato}`);
+  registro.estado='mecanica-implementada';auditado.estado='implementado-por-referencia';auditado.artefatos=artefatos;integrados++;
 }
 auditoria.integracao = {
   gruposReferenciados:[...gruposReferenciados],

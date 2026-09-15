@@ -40,6 +40,7 @@ const CATEGORIAS = [
   ['mestre', 'Do Mestre'],
   ['adversario', 'Adversários'],
   ['ambiente', 'Ambientes'],
+  ['campanha', 'Campanhas e módulos opcionais'],
 ];
 
 function chave(txt) {
@@ -82,7 +83,7 @@ export async function abrirIndiceDeRegras() {
         ? el('span', { class: 'regras__jambo', texto: v.noLivro })
         : null,
       el('span', { class: 'regras__resumo', texto: v.resumo }),
-      el('span', { class: 'regras__pagina', texto: 'p.' + v.pagina })
+      el('span', { class: 'regras__pagina', texto: `${v.fonteRotulo || 'Livro'} · p.${v.pagina}` })
     ]);
   }
 

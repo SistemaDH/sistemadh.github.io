@@ -143,10 +143,11 @@ export function abrirVerbete(idOuPalavra) {
     ]));
   }
 
+  const fonteRotulo = v.fonteRotulo || 'Livro';
   corpo.append(el('p', { class: 'verbete__pagina' }, [
-    el('strong', { texto: 'Livro, p.' + v.pagina }),
+    el('strong', { texto: fonteRotulo + ', p.' + v.pagina }),
     el('span', { class: 'texto-xs texto-fraco',
-      texto: ' — o resumo é nosso; o texto inteiro está lá.' })
+      texto: ' — o resumo é nosso; o texto inteiro está na fonte.' })
   ]));
 
   return abrirModal({ titulo: v.termo, conteudo: corpo });

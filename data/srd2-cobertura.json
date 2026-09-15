@@ -1,6 +1,6 @@
 {
   "versao": 1,
-  "estado": "em-construcao",
+  "estado": "conferido",
   "totalEsperado": 1539,
   "estadosPermitidos": [
     "nao-iniciado",
@@ -101,8 +101,8 @@
     {
       "id": "rules",
       "esperados": 224,
-      "estado": "em-auditoria",
-      "observacao": "212/224 fontes Rule vinculadas e conferidas; restam 12 módulos de campanhas suplementares."
+      "estado": "conferido",
+      "observacao": "224/224 fontes Rule vinculadas e conferidas; os oito módulos de campanha restantes estão traduzidos e expostos na busca de regras."
     }
   ]
 }

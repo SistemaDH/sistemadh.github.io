@@ -261,3 +261,9 @@ Os 47 ambientes foram casados estruturalmente com o SRD2 por patamar, categoria,
 ### Armaduras suplementares completas (76/76)
 
 As quatro opções de herói cotidiano da p. 192 já existiam na moldura Festim das Feras; foram vinculadas individualmente ao SRD 2.0. A p. 201 acrescenta três famílias de armaduras para Caça a Monstros, cada uma com valores próprios para os quatro patamares. Armadura de madeira de caixão soma os espaços de Armadura não marcados aos dois limiares; a Armadura de trama prateada reduz o dano mágico pela Pontuação de Armadura antes dos limiares; o bônus para mover-se silenciosamente do Casaco comprido de couro depende da jogada na mesa. `data/srd2-armaduras-suplementares-auditoria.json` registra os vínculos e `npm run teste:srd2-armaduras-suplementares` os confere.
+
+### Fechamento das regras e campanhas suplementares (224/224)
+
+As oito fontes finais — acompanhamento de facções, conto de fadas, banquetes, escola mágica flutuante, campanha sombria, exploração em hexágonos, campanha tecnológica e A Selva Definhada — foram traduzidas e integradas à busca de regras. Os verbetes preservam os números, custos, gatilhos, limites e consequências da fonte, enquanto a ambientação sem efeito na ficha permanece identificada como orientação narrativa.
+
+`data/campanhas-srd2.json` guarda os vínculos individuais, páginas e hashes. `tools/conferir-srd2-campanhas.mjs` protege as oito fontes e sua exposição. O inventário final contém **1 fonte conferida, 1.538 mecânicas implementadas e nenhuma pendência**; a coleção `rules` está em **224/224**.

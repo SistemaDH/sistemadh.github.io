@@ -1560,8 +1560,8 @@
       "nomeIngles": "Elemental Kin",
       "grupo": "campanhas-suplementares",
       "artefatos": [
-        "data/equipamentos.json",
-        "data/mesa.json"
+        "data/ancestralidades.json",
+        "backend/43_Origens.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 1679,
@@ -1574,7 +1574,7 @@
         "pdfPageEnd": 33
       },
       "corpusSha256": "4bf4f6cbb6638140d13ffbc413d45b49e78f3745c281007809b2253c48c5b174",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/elemental-origin",
@@ -1749,8 +1749,10 @@
       "nomeIngles": "Faction Tracking",
       "grupo": "campanhas-suplementares",
       "artefatos": [
-        "data/equipamentos.json",
-        "data/mesa.json"
+        "data/campanhas-srd2.json",
+        "data/verbetes.json",
+        "js/verbete.js",
+        "js/telas/regras.js"
       ],
       "temTexto": true,
       "caracteresFonte": 2818,
@@ -1763,15 +1765,20 @@
         "pdfPageEnd": 190
       },
       "corpusSha256": "4de985427a3221da685149932d6c3cf160926ac3a140a07ad58638da5a0defcf",
-      "estado": "em-auditoria"
+      "estado": "implementado-diretamente",
+      "verbetes": [
+        "faction-tracking"
+      ]
     },
     {
       "idFonte": "rules/fairy-tale-campaigns",
       "nomeIngles": "Fairy Tale Campaigns",
       "grupo": "campanhas-suplementares",
       "artefatos": [
-        "data/equipamentos.json",
-        "data/mesa.json"
+        "data/campanhas-srd2.json",
+        "data/verbetes.json",
+        "js/verbete.js",
+        "js/telas/regras.js"
       ],
       "temTexto": true,
       "caracteresFonte": 2452,
@@ -1784,7 +1791,10 @@
         "pdfPageEnd": 200
       },
       "corpusSha256": "3176d43daa567c92a82f4228f55551494acdd86c3277ee6b4c635d20c1e64d37",
-      "estado": "em-auditoria"
+      "estado": "implementado-diretamente",
+      "verbetes": [
+        "fairy-tale-campaigns"
+      ]
     },
     {
       "idFonte": "rules/falling-and-collision-damage",
@@ -1862,8 +1872,10 @@
       "nomeIngles": "Feasts",
       "grupo": "campanhas-suplementares",
       "artefatos": [
-        "data/equipamentos.json",
-        "data/mesa.json"
+        "data/campanhas-srd2.json",
+        "data/verbetes.json",
+        "js/verbete.js",
+        "js/telas/regras.js"
       ],
       "temTexto": true,
       "caracteresFonte": 8593,
@@ -1876,7 +1888,10 @@
         "pdfPageEnd": 194
       },
       "corpusSha256": "5cc4d974a47847a7722898883749cfce60f0cc785e65780f4ea9a9dd3840c39b",
-      "estado": "em-auditoria"
+      "estado": "implementado-diretamente",
+      "verbetes": [
+        "feasts"
+      ]
     },
     {
       "idFonte": "rules/feature",
@@ -1924,8 +1939,10 @@
       "nomeIngles": "Floating Magic School Campaigns",
       "grupo": "campanhas-suplementares",
       "artefatos": [
-        "data/equipamentos.json",
-        "data/mesa.json"
+        "data/campanhas-srd2.json",
+        "data/verbetes.json",
+        "js/verbete.js",
+        "js/telas/regras.js"
       ],
       "temTexto": true,
       "caracteresFonte": 1865,
@@ -1938,7 +1955,10 @@
         "pdfPageEnd": 199
       },
       "corpusSha256": "7d31e0b96d0aee3d99a573ee75e5e146dee339fd6001e8b54ec7b64d4c362c4f",
-      "estado": "em-auditoria"
+      "estado": "implementado-diretamente",
+      "verbetes": [
+        "floating-magic-school-campaigns"
+      ]
     },
     {
       "idFonte": "rules/flow-of-the-game",
@@ -2146,8 +2166,10 @@
       "nomeIngles": "Grimdark Campaigns",
       "grupo": "campanhas-suplementares",
       "artefatos": [
-        "data/equipamentos.json",
-        "data/mesa.json"
+        "data/campanhas-srd2.json",
+        "data/verbetes.json",
+        "js/verbete.js",
+        "js/telas/regras.js"
       ],
       "temTexto": true,
       "caracteresFonte": 1271,
@@ -2160,7 +2182,10 @@
         "pdfPageEnd": 195
       },
       "corpusSha256": "637aba49e0ef41cb960f7a1e91a86aa6482636855a5b40d66988fa927bbac8ad",
-      "estado": "em-auditoria"
+      "estado": "implementado-diretamente",
+      "verbetes": [
+        "grimdark-campaigns"
+      ]
     },
     {
       "idFonte": "rules/guardian-subclasses",
@@ -2235,8 +2260,10 @@
       "nomeIngles": "Hex Crawl Campaigns",
       "grupo": "campanhas-suplementares",
       "artefatos": [
-        "data/equipamentos.json",
-        "data/mesa.json"
+        "data/campanhas-srd2.json",
+        "data/verbetes.json",
+        "js/verbete.js",
+        "js/telas/regras.js"
       ],
       "temTexto": true,
       "caracteresFonte": 11054,
@@ -2249,7 +2276,10 @@
         "pdfPageEnd": 205
       },
       "corpusSha256": "065aba0122be3f7cbfd2461ee5d922ff4d68978a3deb0495ec3fdb77d2ee9485",
-      "estado": "em-auditoria"
+      "estado": "implementado-diretamente",
+      "verbetes": [
+        "hex-crawl-campaigns"
+      ]
     },
     {
       "idFonte": "rules/household-friend",
@@ -2711,7 +2741,9 @@
       "grupo": "campanhas-suplementares",
       "artefatos": [
         "data/equipamentos.json",
-        "data/mesa.json"
+        "data/transformacoes.json",
+        "backend/44_Equipamento.gs",
+        "backend/45_Transformacoes.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 6680,
@@ -2724,7 +2756,7 @@
         "pdfPageEnd": 202
       },
       "corpusSha256": "9a8ad4b6f7a68daa7df0986005fb91bd7c0e10769bdb1c06bfd479962394b1a1",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/moon",
@@ -3849,8 +3881,7 @@
       "nomeIngles": "Supplemental Campaign Mechanics",
       "grupo": "campanhas-suplementares",
       "artefatos": [
-        "data/equipamentos.json",
-        "data/mesa.json"
+        "data/srd2-fonte.json"
       ],
       "temTexto": true,
       "caracteresFonte": 70,
@@ -3863,7 +3894,7 @@
         "pdfPageEnd": 190
       },
       "corpusSha256": "ce3889f3b0493dd3929e8aa1e75f70fd40d3e351d35a294691d9322b3336d697",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/syndicate",
@@ -3932,8 +3963,10 @@
       "nomeIngles": "Tech-Based Campaigns",
       "grupo": "campanhas-suplementares",
       "artefatos": [
-        "data/equipamentos.json",
-        "data/mesa.json"
+        "data/campanhas-srd2.json",
+        "data/verbetes.json",
+        "js/verbete.js",
+        "js/telas/regras.js"
       ],
       "temTexto": true,
       "caracteresFonte": 6838,
@@ -3946,7 +3979,10 @@
         "pdfPageEnd": 196
       },
       "corpusSha256": "265634b67e4aea743ed0f8ecf2ae6a07bc4721c31e74192a1b3439b1d9404eb3",
-      "estado": "em-auditoria"
+      "estado": "implementado-diretamente",
+      "verbetes": [
+        "tech-based-campaigns"
+      ]
     },
     {
       "idFonte": "rules/terrible-lizard",
@@ -3998,8 +4034,10 @@
       "nomeIngles": "The Witherwild",
       "grupo": "campanhas-suplementares",
       "artefatos": [
-        "data/equipamentos.json",
-        "data/mesa.json"
+        "data/campanhas-srd2.json",
+        "data/verbetes.json",
+        "js/verbete.js",
+        "js/telas/regras.js"
       ],
       "temTexto": true,
       "caracteresFonte": 27934,
@@ -4012,7 +4050,10 @@
         "pdfPageEnd": 189
       },
       "corpusSha256": "968ceb01b7f3a1c2238cb2181b320c797c42e3349e66276e152550b78076d30d",
-      "estado": "em-auditoria"
+      "estado": "implementado-diretamente",
+      "verbetes": [
+        "the-witherwild"
+      ]
     },
     {
       "idFonte": "rules/tier-1",
@@ -4713,7 +4754,7 @@
       "grupo": "campanhas-suplementares",
       "artefatos": [
         "data/equipamentos.json",
-        "data/mesa.json"
+        "backend/44_Equipamento.gs"
       ],
       "temTexto": true,
       "caracteresFonte": 2057,
@@ -4726,7 +4767,7 @@
         "pdfPageEnd": 197
       },
       "corpusSha256": "273be9869682102fc60fbec8283955fb7ba3ed393a2c347934134f6ce2ebdfb6",
-      "estado": "em-auditoria"
+      "estado": "implementado-por-referencia"
     },
     {
       "idFonte": "rules/when-to-make-a-move",
@@ -4892,7 +4933,7 @@
       "criacao-e-avanco",
       "estrutura-documental"
     ],
-    "quantidade": 212,
+    "quantidade": 216,
     "criterio": "A fonte Rule repete uma coleção canônica já integrada e testada; os artefatos indicados são a implementação única."
   }
 }
