@@ -48,6 +48,10 @@ if (formaDeLobo?.errata !== 'hope-and-fear-aplicada' || !formaDeLobo.texto.inclu
 if (esperadas.size) erros.push(`transformações ausentes: ${[...esperadas].join(', ')}`);
 
 const backend = fs.readFileSync(path.join(raiz, 'backend/45_Transformacoes.gs'), 'utf8');
+const edge = fs.readFileSync(path.join(raiz, 'supabase/functions/engine-api/index.ts'), 'utf8');
+if (!edge.includes('"45_Transformacoes.gs"')) {
+  erros.push('engine-api não carrega backend/45_Transformacoes.gs');
+}
 const tela = fs.readFileSync(path.join(raiz, 'js/telas/ficha.js'), 'utf8');
 for (const trecho of ['transformacaoDano', 'usarNaoFicaMorto', 'jogada-com-esperanca', 'mudar-forma']) {
   if (!backend.includes(trecho) && !fs.readFileSync(path.join(raiz, 'backend/4C_Ajustes.gs'), 'utf8').includes(trecho)) erros.push(`motor não expõe ${trecho}`);
