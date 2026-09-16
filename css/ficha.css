@@ -648,8 +648,10 @@
 
 .ficha__contadorNomeBotao {
   display: inline-flex;
+  align-items: center;
   max-width: 100%;
-  padding: 0;
+  min-height: 24px;
+  padding: 1px 0;
   border: 0;
   border-bottom: 1px dotted var(--cor-ouro-escuro);
   background: transparent;
