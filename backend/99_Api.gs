@@ -537,6 +537,7 @@ function executar_(p) {
         const nivelNovo = (Number((atual.ficha.identidade || {}).nivel) || 1) + 1;
         const nivelAtual = Number((atual.ficha.identidade || {}).nivel) || 1;
         const nivelDaMesa = Math.max(1, Math.min(NIVEL_MAXIMO, Number(mesaLer_().nivelDaMesa) || 1));
+        const fichaDasEscolhas = fichaParaEscolhasDeAvanco_(atual.ficha, nivelNovo);
         return ok_({
           nivelAtual: nivelAtual,
           nivelNovo: nivelNovo,
@@ -546,12 +547,12 @@ function executar_(p) {
           patamar: patamarDoNivel_(nivelNovo),
           escolhasPorNivel: ESCOLHAS_POR_NIVEL,
           conquista: conquistasDoNivel_(nivelNovo),
-          opcoes: opcoesDisponiveis_(atual.ficha, nivelNovo),
-          limitesDeDominio: limitesDeDominio_(atual.ficha),
+          opcoes: opcoesDisponiveis_(fichaDasEscolhas, nivelNovo),
+          limitesDeDominio: limitesDeDominio_(fichaDasEscolhas),
           multiclasse: {
             regras: MULTICLASSE,
             jaFez: Boolean(atual.ficha.multiclasse && atual.ficha.multiclasse.classe),
-            opcoes: opcoesDeMulticlasse_(atual.ficha)
+            opcoes: opcoesDeMulticlasse_(fichaDasEscolhas)
           },
           versao: atual.versao
         });

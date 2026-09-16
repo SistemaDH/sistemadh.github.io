@@ -1,8 +1,8 @@
 {
-  "versao": 1,
-  "fonte": "Daggerheart — Livro de Regras, edição Jambô (1ª ed., 2025, 368p), conferido contra a errata oficial de 9/9/2025 e o SRD 1.0 em inglês.",
+  "versao": 2,
+  "fonte": "Daggerheart System Reference Document 2.0 (25/08/2026), localizado em pt-BR e conferido com a edição Jambô e a errata quando aplicável.",
   "regra": "O app fala a língua das CARTAS. O verbete traz o termo da carta, o do livro entre parênteses quando divergem, e a página para quem quiser ler o texto inteiro.",
-  "aviso": "Os verbetes são resumo escrito para a mesa, não transcrição do livro. Quando a errata muda a regra, o verbete conta a versão CORRIGIDA e diz que corrigiu — a ordem de precedência é errata > SRD > livro.",
+  "aviso": "Os verbetes são resumos para a mesa, não transcrição do livro. A regra vigente do sistema é o SRD 2.0; a edição Jambô e a errata continuam como referência de tradução e paginação quando aplicáveis.",
   "paginasDoLivro": 368,
   "verbetes": [
     {
@@ -1762,8 +1762,9 @@
       "categoria": "nivel",
       "pagina": 110,
       "ancora": "Avanço",
-      "resumo": "As DUAS escolhas por nível, tiradas da lista do seu patamar.",
+      "resumo": "Duas escolhas por nível, usando espaços livres do patamar atual ou de qualquer patamar inferior.",
       "explicacao": [
+        "Aplique primeiro a conquista do nível. Nos níveis 5 e 8, ela apaga as marcas antigas e permite melhorar esses traços novamente.",
         "Depois dos avanços, os limiares sobem +1 (você sempre soma o nível atual aos limiares).",
         "Por fim, escolha uma carta de domínio nova de nível igual ou menor que o seu."
       ],

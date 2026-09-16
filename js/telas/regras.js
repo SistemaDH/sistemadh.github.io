@@ -7,7 +7,7 @@
  * morte, não tinha por onde chegar — a não ser caindo por acaso no "veja
  * também" de outro verbete.
  *
- * Então esta é a porta da frente: 93 regras, agrupadas, com busca. Ela mora no
+ * Então esta é a porta da frente: as regras do SRD2, agrupadas, com busca. Ela mora no
  * cabeçalho e não dentro dos Ajustes de propósito — regra se procura no meio da
  * cena, e ninguém abre uma engrenagem no meio da cena.
  */
@@ -101,7 +101,7 @@ export async function abrirIndiceDeRegras() {
     }
 
     conta.textContent = achados.length === todos.length
-      ? `${todos.length} regras do livro, com a página de cada uma.`
+      ? `${todos.length} verbetes atualizados para o SRD 2.0, com a referência de cada um.`
       : `${achados.length} de ${todos.length}.`;
 
     CATEGORIAS.forEach(([id, rotulo]) => {
@@ -128,8 +128,10 @@ export async function abrirIndiceDeRegras() {
   desenhar('');
 
   const modal = abrirModal({
-    titulo: 'Regras do livro',
+    titulo: 'Regras — SRD 2.0',
     conteudo: el('div', { class: 'regras' }, [
+      el('p', { class: 'ficha__nota', texto:
+        'Atualizado para o SRD 2.0 de 25/08/2026. A edição Jambô e a errata são usadas como referência de tradução e paginação quando aplicáveis.' }),
       el('div', { class: 'regras__busca' }, [busca]),
       conta,
       lista

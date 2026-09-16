@@ -100,9 +100,23 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
         'As caixas em negrito gastam os dois avanços e marcam os dois espaços de uma vez.' })
     );
 
-    const lista = el('div', { class: 'pilha' });
-    (info.opcoes || []).forEach((o) => lista.append(cartaoDeOpcao(o)));
-    corpo.append(lista);
+    const atuais = (info.opcoes || []).filter((o) => !o.doPatamarAnterior);
+    const anteriores = (info.opcoes || []).filter((o) => o.doPatamarAnterior);
+    corpo.append(
+      el('h4', { class: 'avanco__subtitulo', texto: `Opções do ${info.patamar}º patamar` }),
+      el('div', { class: 'pilha' }, atuais.map(cartaoDeOpcao))
+    );
+    if (anteriores.length) {
+      const antigas = el('details', { class: 'avanco__anteriores' });
+      antigas.append(
+        el('summary', { class: 'avanco__anterioresTitulo', texto:
+          'Espaços livres de patamares anteriores (permitidos pelo SRD2)' }),
+        el('p', { class: 'texto-xs texto-fraco', texto:
+          'Use esta lista somente se quiser preencher um espaço que deixou livre antes.' }),
+        el('div', { class: 'pilha' }, anteriores.map(cartaoDeOpcao))
+      );
+      corpo.append(antigas);
+    }
 
     limpar(barra).append(
       fecharBotao('Cancelar'),

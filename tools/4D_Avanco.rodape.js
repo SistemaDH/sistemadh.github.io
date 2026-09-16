@@ -327,14 +327,15 @@ function opcoesDeMulticlasse_(ficha) {
  * patamar OU DE UM PATAMAR INFERIOR.
  */
 function opcoesDisponiveis_(ficha, nivelDestino) {
+  const fichaDasEscolhas = fichaParaEscolhasDeAvanco_(ficha, nivelDestino);
   const patamar = patamarDoNivel_(nivelDestino);
   const patamares = [];
   for (let pt = patamar; pt >= 2; pt--) patamares.push(pt);
 
   const nivel = Math.trunc(Number(nivelDestino)) || 1;
-  const jaFezMulticlasse = Boolean(ficha && ficha.multiclasse && ficha.multiclasse.classe);
+  const jaFezMulticlasse = Boolean(fichaDasEscolhas && fichaDasEscolhas.multiclasse && fichaDasEscolhas.multiclasse.classe);
   const patamarDaMulticlasse = jaFezMulticlasse
-    ? patamarDoNivel_(Number(ficha.multiclasse.nivelEmQueFoiFeita) || nivel)
+    ? patamarDoNivel_(Number(fichaDasEscolhas.multiclasse.nivelEmQueFoiFeita) || nivel)
     : 0;
 
   const saida = [];
@@ -383,13 +384,13 @@ function opcoesDisponiveis_(ficha, nivelDestino) {
         item.motivo = 'A Multiclasse deste patamar riscou a opção de carta de subclasse aprimorada deste mesmo patamar.';
       }
       if (def.id === 'subclasse') {
-        const etapa = proximaCartaDeSubclasse_(ficha);
+        const etapa = proximaCartaDeSubclasse_(fichaDasEscolhas);
         item.etapaSubclasse = etapa;
         item.cartasExtrasDeSubclasse = (etapa && typeof cartasExtrasDeDominioDaSubclasse_ === 'function')
-          ? cartasExtrasDeDominioDaSubclasse_((ficha.identidade || {}).classe, (ficha.identidade || {}).subclasse, etapa) : [];
+          ? cartasExtrasDeDominioDaSubclasse_((fichaDasEscolhas.identidade || {}).classe, (fichaDasEscolhas.identidade || {}).subclasse, etapa) : [];
       }
       if (def.id === 'tracos') {
-        item.tracosLivres = tracosLivres_(ficha);
+        item.tracosLivres = tracosLivres_(fichaDasEscolhas);
         if (item.disponivel && item.tracosLivres.length < 2) {
           item.disponivel = false;
           item.motivo = 'Não há dois traços desmarcados neste patamar.';
@@ -399,7 +400,7 @@ function opcoesDisponiveis_(ficha, nivelDestino) {
         item.nivelMaximoDaCarta = tetoDaCartaExtra_(def, pt, nivel);
       }
       if (def.id === 'experiencias') {
-        item.experiencias = ((ficha && ficha.experiencias) || []).map(function (e, k) {
+        item.experiencias = ((fichaDasEscolhas && fichaDasEscolhas.experiencias) || []).map(function (e, k) {
           return { indice: k, nome: e.nome, bonus: e.bonus };
         });
         if (item.disponivel && item.experiencias.length < 2) {
@@ -408,7 +409,7 @@ function opcoesDisponiveis_(ficha, nivelDestino) {
         }
       }
       if (def.efeito && def.efeito.teto) {
-        const atual = valorAtualDoRecurso_(ficha, def.efeito.chave);
+        const atual = valorAtualDoRecurso_(fichaDasEscolhas, def.efeito.chave);
         if (item.disponivel && atual >= def.efeito.teto) {
           item.disponivel = false;
           item.motivo = 'Já está no teto de ' + def.efeito.teto + ' (errata).';
@@ -418,6 +419,22 @@ function opcoesDisponiveis_(ficha, nivelDestino) {
     }
   }
   return saida;
+}
+
+/**
+ * Estado que já inclui as conquistas automáticas do nível de destino.
+ * A seleção acontece depois dessas conquistas; no nível 5/8, portanto, os
+ * traços do patamar anterior já precisam aparecer desmarcados.
+ */
+function fichaParaEscolhasDeAvanco_(ficha, nivelDestino) {
+  const copia = clonarFicha_(ficha || {});
+  copia.identidade = copia.identidade || {};
+  copia.identidade.nivel = Math.max(1, Math.trunc(Number(nivelDestino)) || 1);
+  const conquista = conquistasDoNivel_(copia.identidade.nivel);
+  if ((conquista && conquista.efeitos || []).some(function (e) { return e.tipo === 'limpar-tracos-marcados'; })) {
+    avancosDaFicha_(copia).tracosMarcados = [];
+  }
+  return copia;
 }
 
 /** No SRD 2.0 a carta EXTRA usa o nível ATUAL; limites de multiclasse são aplicados por adicionarCarta_. */

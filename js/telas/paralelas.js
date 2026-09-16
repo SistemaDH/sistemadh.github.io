@@ -184,6 +184,19 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
     else desenharCompanheiro(ficha, minha);
   }
 
+  /** Redesenha uma escolha sem jogar a pessoa de volta ao início do modal. */
+  function redesenharEscolha(focarCartao) {
+    const topo = modal.caixa.scrollTop;
+    desenhar();
+    requestAnimationFrame(() => {
+      if (focarCartao && escolhaAberta) {
+        corpo.querySelector(`[data-forma-id="${escolhaAberta}"]`)?.scrollIntoView({ block: 'start' });
+      } else {
+        modal.caixa.scrollTop = topo;
+      }
+    });
+  }
+
   /* --------------------------------------------------------------------- *
    *  Forma de Fera
    * --------------------------------------------------------------------- */
@@ -289,7 +302,22 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
 
     corpo.append(el('h3', { class: 'paralela__titulo', texto: ativa ? 'Trocar de forma' : 'Escolha uma forma' }));
 
-    const disponiveis = catalogoFilhas.formaDeFera.formas.filter((f) => f.patamar <= patamar);
+    const todasDisponiveis = catalogoFilhas.formaDeFera.formas.filter((f) => f.patamar <= patamar);
+    const disponiveis = escolhaAberta
+      ? todasDisponiveis.filter((f) => f.id === escolhaAberta)
+      : todasDisponiveis;
+    if (escolhaAberta) {
+      const escolhida = disponiveis[0];
+      corpo.append(el('div', { class: 'paralela__foco' }, [
+        el('p', { class: 'texto-sm', texto: escolhida
+          ? `Configure ${escolhida.nome}. As outras formas ficam recolhidas enquanto você escolhe.`
+          : 'Configure a forma escolhida.' }),
+        el('button', {
+          type: 'button', class: 'btn btn--fantasma btn--pequeno',
+          onClick: () => { fecharEscolha(); redesenharEscolha(false); }
+        }, 'Ver todas as formas')
+      ]));
+    }
     const porPatamar = new Map();
     disponiveis.forEach((f) => {
       if (!porPatamar.has(f.patamar)) porPatamar.set(f.patamar, []);
@@ -305,7 +333,7 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
   function cartaoDeForma(f, ativa) {
     const ehAtiva = ativa && ativa.id === f.id;
     const numeros = temNumeros(f);
-    return el('div', { class: `cartao paralela__forma ${ehAtiva ? 'esta-ativa' : ''}` }, [
+    return el('div', { class: `cartao paralela__forma ${ehAtiva ? 'esta-ativa' : ''}`, 'data-forma-id': f.id }, [
       el('div', { class: 'paralela__formaTopo' }, [
         el('h4', { class: 'cartao__titulo crescer' }, nomeComGlossa(f.nome)),
         numeros
@@ -375,7 +403,7 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
           escolhaBase = null;
           escolhaHibrido = regraDeHibrido(f.id)
             ? { opcoes: [], vantagens: [], habilidades: [] } : null;
-          desenhar();
+          redesenharEscolha(true);
         }
       }, `Escolher e entrar — ${preco}`);
     }
@@ -395,7 +423,7 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
       hib ? escolhaDaHibrida(hib) : null,
       el('button', {
         type: 'button', class: 'btn btn--fantasma btn--pequeno',
-        onClick: () => { fecharEscolha(); desenhar(); }
+        onClick: () => { fecharEscolha(); redesenharEscolha(false); }
       }, 'Cancelar')
     ].filter(Boolean));
   }
@@ -409,7 +437,7 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
         formasDosPatamares(apr.patamaresDaBase).map((b) => el('button', {
           type: 'button',
           class: `btn ${escolhaBase === b.id ? 'btn--principal' : 'btn--fantasma'} btn--pequeno`,
-          onClick: () => { escolhaBase = b.id; desenhar(); }
+          onClick: () => { escolhaBase = b.id; redesenharEscolha(false); }
         }, b.nome))),
       escolhaBase
         ? el('p', { class: 'texto-xs texto-fraco', texto: resumoDoAprimoramento(apr) })
@@ -454,7 +482,7 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
       const i = lista.indexOf(valor);
       if (i !== -1) lista.splice(i, 1);
       else if (lista.length < teto) lista.push(valor);
-      desenhar();
+      redesenharEscolha(false);
     };
 
     return el('div', { class: 'pilha' }, [
@@ -485,7 +513,7 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
               e.opcoes.push(o.id);
             }
             escolhaHibrido = e;
-            desenhar();
+            redesenharEscolha(false);
           }
         }, `${o.nome} (${o.patamar}º)`))),
 

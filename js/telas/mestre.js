@@ -611,6 +611,23 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       } catch (e) { avisarErro(mensagemDoErro(e)); }
     }));
 
+    if (m.nivelDaMesa > 1) {
+      botoes.push(botao(`Voltar mesa ao nível ${m.nivelDaMesa - 1}`, async () => {
+        const destino = m.nivelDaMesa - 1;
+        const ok = await confirmar({
+          titulo: `Voltar a mesa ao nível ${destino}`,
+          mensagem: 'Isso corrige o nível anunciado da mesa. As fichas dos personagens não perdem níveis nem avanços já escolhidos.',
+          confirmarTexto: 'Voltar nível da mesa'
+        });
+        if (!ok) return;
+        try {
+          const r = await acoes.anunciarNivelDaMesa(destino);
+          avisarSucesso(`Mesa voltou ao nível ${r.depois}.`);
+          recarregar();
+        } catch (e) { avisarErro(mensagemDoErro(e)); }
+      }));
+    }
+
     /*
      * "Voltar para antes da primeira" fica FORA da fileira dos outros dois, e
      * apagado. É o gesto de desmontar a campanha — raro, e o único da tela que

@@ -4417,6 +4417,19 @@ teste('a conquista do nível 5 limpa as marcações dos traços', () => {
   igual(f.recursos.proficiencia, 3);
 });
 
+teste('as opções do nível 5 já mostram novamente os traços limpos pela conquista', () => {
+  const f = bardoNivel1();
+  const todosOsTracos = ['agilidade', 'forca', 'finesse', 'instinto', 'presenca', 'conhecimento'];
+  f.identidade.nivel = 4;
+  f.avancos = { historico: [], espacos: {}, tracosMarcados: todosOsTracos.slice(), bonus: {} };
+  contexto.aplicarDerivados_(f);
+  const tracos = contexto.opcoesDisponiveis_(f, 5)
+    .find((o) => o.id === 'tracos' && o.patamar === 3);
+  verdade(tracos && tracos.disponivel, JSON.stringify(tracos));
+  igual(tracos.tracosLivres, todosOsTracos, 'os seis traços voltam a poder ser escolhidos');
+  igual(f.avancos.tracosMarcados, todosOsTracos, 'a consulta não altera a ficha original');
+});
+
 teste('a errata é respeitada: duas Experiências ganham +1 cada', () => {
   const f = bardoNivel1();
   const r = aplicarAvancoComCartaTeste_(f, {

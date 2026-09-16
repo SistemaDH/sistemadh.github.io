@@ -908,6 +908,20 @@
  */
 .paralela__opcoes { flex-wrap: wrap; }
 
+.paralela__foco {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e2);
+  padding: var(--e3);
+  border: 1px solid var(--cor-ouro-escuro);
+  border-radius: var(--raio-sm);
+  background: rgba(217, 171, 91, .08);
+}
+
+.paralela__foco p { margin: 0; }
+
 /* A escolha de uma característica (o número do Mago), colada no texto dela. */
 .ficha__escolha { margin-top: var(--e2); }
 /* Doze botões não cabem numa linha de 390px: eles QUEBRAM, não somem. */
@@ -1596,6 +1610,18 @@
   font-family: var(--fonte-titulo);
   font-size: var(--txt-md);
   color: var(--cor-titulo);
+}
+
+.avanco__anteriores {
+  padding: var(--e3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+}
+
+.avanco__anterioresTitulo {
+  cursor: pointer;
+  color: var(--cor-titulo);
+  font-weight: 600;
 }
 
 /* --- as opções ------------------------------------------------------------ */
