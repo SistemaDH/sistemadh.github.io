@@ -284,7 +284,8 @@ export async function abrirParalela({ personagem, filha, catalogo, enviar, aoFec
      * ligado, os botões de entrar passam a cobrar Esperança em vez de
      * Estresse, e perguntam qual traço sobe.
      */
-    corpo.append(cartaoDaEvolucao(ficha, ativa));
+    const evolucao = cartaoDaEvolucao(ficha, ativa);
+    if (evolucao) corpo.append(evolucao);
 
     corpo.append(el('h3', { class: 'paralela__titulo', texto: ativa ? 'Trocar de forma' : 'Escolha uma forma' }));
 

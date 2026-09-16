@@ -646,6 +646,31 @@
   color: var(--cor-texto);
 }
 
+.ficha__contadorNomeBotao {
+  display: inline-flex;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px dotted var(--cor-ouro-escuro);
+  background: transparent;
+  text-align: left;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.ficha__contadorNomeBotao::after {
+  content: ' ?';
+  margin-left: .35em;
+  color: var(--cor-ouro);
+  font-family: var(--fonte-corpo);
+  font-size: .8em;
+}
+
+.ficha__contadorRegra {
+  padding-top: var(--e3);
+  border-top: 1px solid var(--cor-borda);
+}
+
 .ficha__contadorValor {
   font-family: var(--fonte-mono);
   font-size: var(--txt-lg);
@@ -889,6 +914,18 @@
 /* O botão de gastar a habilidade, e o campo de quem foi marcado. */
 .ficha__usarHabilidade { margin-top: var(--e2); align-self: flex-start; }
 .ficha__habilidadeComAlvo { margin-top: var(--e2); gap: var(--e2); }
+.ficha__habilidadeOpcoes {
+  flex-wrap: wrap;
+  width: 100%;
+  min-width: 0;
+}
+.ficha__habilidadeOpcoes > .btn {
+  flex: 1 1 9rem;
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
 
 /* A ficha que ficou para trás do grupo. Aviso, não bloqueio. */
 .ficha__atrasada {

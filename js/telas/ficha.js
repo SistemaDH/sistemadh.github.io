@@ -1899,7 +1899,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     }
 
     if (!uso.alvo && Array.isArray(uso.opcoes) && uso.opcoes.length) {
-      return el('div', { class: 'linha' }, uso.opcoes.map((o) => el('button', {
+      return el('div', { class: 'linha ficha__habilidadeOpcoes' }, uso.opcoes.map((o) => el('button', {
         type: 'button', class: 'btn btn--fantasma btn--pequeno ficha__usarHabilidade',
         disabled: !temEsperanca || !cabeEstresse,
         onClick: () => enviar([{ tipo: 'habilidade', nome, opcao: o.id }])
@@ -3402,7 +3402,11 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const detalhe = `${c.rotulo || 'marcadores'} · máx ${c.maximo}` + (c.quando ? ` · ${c.quando}` : '');
     return el('div', { class: 'ficha__contador' }, [
       el('div', { class: 'crescer' }, [
-        el('h4', { class: 'ficha__contadorNome' }, nomeComGlossa(c.nome)),
+        el('button', {
+          type: 'button', class: 'ficha__contadorNome ficha__contadorNomeBotao',
+          'aria-label': `Entender o marcador ${c.nome}`,
+          onClick: () => abrirAjudaDoContador(c, detalhe)
+        }, nomeComGlossa(c.nome)),
         el('p', { class: 'texto-xs texto-fraco', texto: detalhe })
       ]),
       botaoDelta('−',
@@ -3413,6 +3417,33 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         () => enviar([{ tipo: 'contador', chave: c.chave, valor: Math.min(c.maximo, atual + 1) }]),
         `Aumentar ${c.nome}`)
     ]);
+  }
+
+  function abrirAjudaDoContador(c, detalhe) {
+    const carta = c.refId ? catalogo.acharCarta(c.refId) : null;
+    const textoDaOrigem = carta
+      ? (carta.texto || carta.descricao || '')
+      : catalogo.textoDaCaracteristica(c.nome);
+    const conteudo = el('div', { class: 'pilha' }, [
+      el('p', { class: 'texto-sm', texto: detalhe }),
+      c.observacao
+        ? el('p', { class: 'texto-sm' }, textoAnotado(c.observacao))
+        : null,
+      textoDaOrigem
+        ? el('div', { class: 'ficha__contadorRegra' }, [
+          el('strong', { texto: carta ? `Regra de ${carta.nome || c.nome}` : 'Regra relacionada' }),
+          el('p', { class: 'texto-sm' }, textoAnotado(textoDaOrigem))
+        ])
+        : el('p', { class: 'texto-xs texto-fraco', texto:
+          'Use os botões − e + para registrar quantos marcadores estão ativos.' })
+    ]);
+    const modal = abrirModal({
+      titulo: c.nome,
+      conteudo,
+      acoes: [el('button', {
+        type: 'button', class: 'btn btn--principal', onClick: () => modal.fechar()
+      }, 'Entendi')]
+    });
   }
 
   /**
@@ -3428,7 +3459,11 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const maximo = Number(c.maximo) || 99;
     return el('div', { class: 'ficha__contador' }, [
       el('div', { class: 'crescer' }, [
-        el('h4', { class: 'ficha__contadorNome', texto: c.nome }),
+        el('button', {
+          type: 'button', class: 'ficha__contadorNome ficha__contadorNomeBotao',
+          'aria-label': `Entender o marcador ${c.nome}`,
+          onClick: () => abrirAjudaDoMarcadorLivre(c, maximo)
+        }, c.nome),
         el('p', { class: 'texto-xs texto-fraco', texto: `marcas · máx ${maximo} · criado nesta ficha` })
       ]),
       botaoDelta('−',
@@ -3445,6 +3480,21 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         onClick: () => confirmarApagarMarcador(c)
       }, icone('lixeira'))
     ]);
+  }
+
+  function abrirAjudaDoMarcadorLivre(c, maximo) {
+    const modal = abrirModal({
+      titulo: c.nome,
+      conteudo: el('div', { class: 'pilha' }, [
+        el('p', { class: 'texto-sm', texto:
+          `Este é um marcador criado nesta ficha. Ele pode guardar de 0 a ${maximo} marcas.` }),
+        el('p', { class: 'texto-xs texto-fraco', texto:
+          'O significado depende da regra ou efeito para o qual ele foi criado.' })
+      ]),
+      acoes: [el('button', {
+        type: 'button', class: 'btn btn--principal', onClick: () => modal.fechar()
+      }, 'Entendi')]
+    });
   }
 
   function confirmarApagarMarcador(c) {
