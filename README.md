@@ -8,7 +8,7 @@ O frontend é publicado pelo GitHub Pages e o backend oficial é Supabase: Edge 
 
 ## Estado atual
 
-> **Produção:** motor SRD 2.0 implantado no Supabase; a publicação do frontend SRD2 em `main` está no fechamento desta promoção.
+> **Produção:** sistema SRD 2.0 publicado no GitHub Pages e motor implantado no Supabase. Última correção operacional: 16/09/2026.
 
 O estado atual inclui:
 
@@ -31,6 +31,11 @@ O estado atual inclui:
 - posse de armaduras com reserva e troca validada, mantendo somente a armadura equipada como fonte de efeitos;
 - Mochila > Do livro como porta única para adquirir armas e armaduras oficiais;
 - modal `Gerenciar` unificado para organizar armas equipadas/guardadas e armadura equipada/guardadas.
+- controle de transformações pelo Mestre, com permissão para o jogador alternar quando liberado;
+- avanço de patamar conforme o SRD2, incluindo a liberação das marcas de traço nos níveis 5 e 8 e o uso opcional de espaços de patamares anteriores;
+- correção do nível anunciado da mesa para cima ou para baixo, sem alterar automaticamente as fichas;
+- seleção focada das Formas de Fera compostas, preservando a posição da tela no celular;
+- índice de regras identificado e atualizado para o SRD 2.0.
 
 O Lote 9 está fechado. Novas mudanças devem partir de uma branch criada a partir da `main` atual e seguir por PR com CI verde; não existe uma branch de desenvolvimento persistente obrigatória.
 
@@ -63,10 +68,9 @@ O navegador não acessa diretamente as tabelas PostgreSQL. `js/api.js` distribui
 Produção atual:
 
 ```text
-engine-api: v11 ACTIVE
+engine-api: ACTIVE (deploy conferido em 16/09/2026)
 verify_jwt: false
-ENGINE_COMMIT: 4fef4d95ced0c3a92cb51eac15f067d2abfadc7c
-ezbr_sha256: 31e9fcffc7600c5e0ec50df64f821bc908b3c90ad75da615367419e9d6608982
+ENGINE_COMMIT: 856f025ff891b593175e12f8af3d05318edccb58
 ```
 
 O arquivo versionado `supabase/functions/engine-api/index.ts` usa o mesmo `ENGINE_COMMIT` do deploy ativo. Esse alinhamento é deliberado para impedir regressão em futuros redeploys.
@@ -83,9 +87,10 @@ Ao alterar regras em `backend/*.gs`:
 6. executar `npm run teste:css`;
 7. executar `npm run teste:e2e` e os baselines visuais relevantes;
 8. fixar `ENGINE_COMMIT` num commit imutável revisado;
-9. implantar `engine-api` quando o frontend novo depender do motor novo;
-10. conferir versão/status/pin efetivamente implantados;
-11. só então promover para `main`.
+9. conferir que todo arquivo global usado pelo motor está em `SOURCE_FILES` — inclusive `45_Transformacoes.gs`;
+10. implantar `engine-api` quando o frontend novo depender do motor novo;
+11. conferir versão/status/pin e a lista de fontes efetivamente implantados;
+12. só então promover para `main`.
 
 Nunca apontar o motor privilegiado diretamente para uma branch móvel como `main`.
 
@@ -118,6 +123,8 @@ Catálogos estáticos permanecem em `data/*.json`. Mudanças de regra de Daggerh
 O SRD 2.0 foi integralmente inventariado e conferido: 1.539 registros, 1.538 mecânicas implementadas, 224/224 fontes de regras e nenhuma pendência.
 
 ## Testes
+
+Estado validado em 16/09/2026: **971 testes do motor**, 3 jornadas completas do nível 1 ao 10, 224/224 fontes de regras SRD2 e 24/24 Formas de Fera. O CI #98 e o GitHub Pages #101 concluíram com sucesso para a correção que garante a presença das transformações no motor publicado.
 
 Gate completo do fechamento funcional do Lote 9: **CI #63** em 11/09/2026.
 

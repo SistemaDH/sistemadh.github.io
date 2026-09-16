@@ -1592,3 +1592,34 @@ A ordem segura para futuras promoções do motor permanece: escolher commit imut
 - “Gerenciar armas” virou “Gerenciar” e agora organiza, no mesmo modal, armas equipadas/guardadas e armadura equipada/guardadas.
 - Nenhuma regra de patamar mudou: nível 1 = T1; níveis 2–4 = T2; níveis 5–7 = T3; níveis 8–10 = T4. O catálogo mostra equipamentos de patamar menor ou igual ao permitido; uma peça já possuída não melhora automaticamente.
 - Mudança somente de frontend/E2E; nenhuma alteração de motor, banco ou Edge Function foi necessária.
+
+## Produção SRD2 — avanço, transformações e Druida (16/09/2026)
+
+### Comportamento entregue
+
+- As opções de avanço dos níveis 5 e 8 são calculadas depois da conquista automática; as marcas antigas de traço já aparecem limpas para a nova escolha.
+- Espaços do patamar atual aparecem primeiro. Espaços livres de patamares anteriores, permitidos pelo SRD2, ficam numa seção recolhida e identificada.
+- O Mestre pode aumentar ou reduzir o nível anunciado da mesa. A redução não altera níveis nem desfaz avanços das fichas.
+- O Mestre concede uma transformação e decide se o jogador pode ligá-la e desligá-la.
+- Ao configurar uma Forma de Fera composta, as demais formas ficam recolhidas e a posição do modal é preservada entre escolhas.
+- O índice de regras informa SRD 2.0 e o verbete de Avanço explica a ordem conquista → escolhas.
+
+### Incidente e proteção
+
+O primeiro deploy do lote omitiu `backend/45_Transformacoes.gs` de `SOURCE_FILES` da `engine-api`. Como `99_Api.gs` usa a constante global `TRANSFORMACOES` ao montar o painel, a tela do Mestre falhava com `TRANSFORMACOES is not defined`.
+
+A função foi reimplantada com o módulo incluído. `tools/conferir-srd2-transformacoes.mjs` agora falha se o arquivo sair da lista, cobrindo a diferença entre “arquivo válido no repositório” e “arquivo realmente carregado pela Edge Function”.
+
+### Estado validado
+
+- commit funcional do motor: `856f025ff891b593175e12f8af3d05318edccb58`;
+- commit da correção do pacote: `c1504b264328993c0d6e903a52ee034943cea3d1`;
+- backend: **971 passaram, 0 falharam**;
+- jornadas SRD2: 3 personagens do nível 1 ao 10, 55 verificações;
+- regras SRD2: 224/224 fontes implementadas;
+- Formas de Fera: 24/24 conferidas;
+- transformações: 6, com 12 características e 36 perguntas conferidas;
+- CI #98 concluído com sucesso;
+- GitHub Pages #101 concluído com sucesso;
+- Supabase confirmou `Successfully updated edge function`;
+- nenhuma migração de banco foi necessária.

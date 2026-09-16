@@ -4,9 +4,10 @@
 > tiver como clicar na palavra que seria para checar no livro e abre tipo um
 > popup explicando?"
 
-É isso. **93 verbetes**, cada um com a explicação curta, o quadro com os
-números quando existe, o termo da Jambô e o número da página conferido contra
-o PDF do livro.
+É isso. **106 verbetes**, cada um com a explicação curta, o quadro com os
+números quando existe e a referência aplicável. O índice visível está marcado
+como **SRD 2.0 (25/08/2026)**; a edição Jambô e sua errata permanecem como
+referência de tradução e paginação quando aplicáveis.
 
 ---
 
@@ -48,7 +49,9 @@ está na p.98.**
 
 Todas corrigidas. E, para não acontecer de novo, cada verbete carrega uma
 **âncora**: uma frase curta que TEM de aparecer naquela página do PDF.
-`tools/conferir-paginas.py` abre o livro e confere as 93. Hoje: **0 erradas**.
+`tools/conferir-paginas.py` abre o livro e confere as referências que usam a
+edição Jambô. As regras atualizadas pelo SRD2 são auditadas também pelo
+inventário de fontes em `data/srd2-regras-auditoria.json`.
 
 Isso cobria os verbetes. O que sobrava — as outras citações espalhadas pelo
 código — virou o **J3**, e está na §8.

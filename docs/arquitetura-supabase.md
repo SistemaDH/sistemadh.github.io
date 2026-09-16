@@ -27,10 +27,9 @@ As tabelas expostas têm RLS habilitado e não possuem policies públicas para `
 Produção atual, após a implantação do SRD 2.0:
 
 ```text
-engine-api: v11 ACTIVE
+engine-api: ACTIVE (deploy conferido em 16/09/2026)
 verify_jwt: false
-ENGINE_COMMIT: 4fef4d95ced0c3a92cb51eac15f067d2abfadc7c
-ezbr_sha256: 31e9fcffc7600c5e0ec50df64f821bc908b3c90ad75da615367419e9d6608982
+ENGINE_COMMIT: 856f025ff891b593175e12f8af3d05318edccb58
 ```
 
 O source versionado em `supabase/functions/engine-api/index.ts` usa o mesmo `ENGINE_COMMIT` da função implantada. Esse alinhamento evita que um redeploy futuro feito a partir do repositório volte silenciosamente para um commit antigo.
@@ -49,9 +48,10 @@ Se o frontend novo depende de novos ajustes, contadores ou campos publicados pel
 2. executar sintaxe, backend, gerados, CSS, E2E e baselines visuais relevantes;
 3. fixar `ENGINE_COMMIT` num commit imutável revisado;
 4. implantar `engine-api` com esse pin;
-5. conferir versão, status, `verify_jwt`, `ENGINE_COMMIT` e código efetivamente implantado;
-6. alinhar `supabase/functions/engine-api/index.ts` ao mesmo pin;
-7. só então promover o frontend para `main`.
+5. conferir que `SOURCE_FILES` contém todos os módulos globais usados pelo backend;
+6. conferir versão, status, `verify_jwt`, `ENGINE_COMMIT` e código efetivamente implantado;
+7. alinhar `supabase/functions/engine-api/index.ts` ao mesmo pin;
+8. só então promover o frontend para `main`.
 
 Essa ordem evita uma janela de frontend novo contra motor antigo e também evita regressão em redeploy posterior.
 
@@ -166,4 +166,15 @@ Históricas/aposentadas — não criar dependência nova:
 - commit imutável do motor: `4fef4d95ced0c3a92cb51eac15f067d2abfadc7c`;
 - `engine-api` v11 ACTIVE, com `verify_jwt=false` preservado;
 - pacote implantado: `31e9fcffc7600c5e0ec50df64f821bc908b3c90ad75da615367419e9d6608982`;
+- nenhuma migração de banco foi necessária.
+
+### Correções de avanço, Druida e painel do Mestre — 16/09/2026
+
+- motor funcional fixado em `856f025ff891b593175e12f8af3d05318edccb58`;
+- avanço passa a montar as escolhas depois das conquistas automáticas dos níveis 5 e 8;
+- o Mestre pode reduzir o nível anunciado sem rebaixar fichas;
+- a seleção de Forma de Fera composta preserva a rolagem e recolhe as demais formas durante a configuração;
+- `45_Transformacoes.gs` foi incluído explicitamente em `SOURCE_FILES` após a ausência causar `TRANSFORMACOES is not defined` ao abrir o painel do Mestre;
+- `tools/conferir-srd2-transformacoes.mjs` agora impede a publicação de uma lista de fontes sem esse módulo;
+- Supabase confirmou a atualização da Edge Function; CI #98 e Pages #101 concluíram com sucesso;
 - nenhuma migração de banco foi necessária.

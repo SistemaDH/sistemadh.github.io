@@ -65,6 +65,8 @@ uma contagem de 8 abriria nove campos na cara de quem só queria trocar o nome.
 - **A5 Limite de 3 descansos curtos** — a contagem do GRUPO mora na mesa.
 - **A6 Mestre sobe a mesa de nível** — como **anúncio**, não como imposição: a
   ficha de quem ficou para trás ganha o aviso, e o jogador escolhe os avanços.
+  O mesmo controle permite reduzir o nível anunciado para corrigir testes; isso
+  não remove níveis nem desfaz avanços das fichas.
 
 ## 7. O que a Parte 9 não fechou — e a passada do backlog fechou depois
 

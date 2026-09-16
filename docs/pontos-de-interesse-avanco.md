@@ -194,3 +194,11 @@ Experiências dá **+1 em DUAS** Experiências, não +2 em uma (p.110).
 palavra não aparece uma única vez no PDF de erratas. Nem sobre multiclasse,
 limiares ligados a avanço, ou o quadro de avanço das fichas. A regra do livro
 vale como está.
+
+## 14. Ordem correta ao entrar em um novo patamar
+
+O SRD2 manda aplicar a conquista antes das duas escolhas. Isso é observável nos níveis 5 e 8: a conquista apaga as marcas de traço do patamar anterior, então esses traços já precisam aparecer livres no seletor do mesmo avanço.
+
+`fichaParaEscolhasDeAvanco_` monta uma cópia no nível de destino e aplica essa limpeza somente para calcular as opções e os limites. A ficha gravada continua intocada até a confirmação do avanço. Há regressão cobrindo os seis traços livres e a imutabilidade da ficha consultada.
+
+A tela mostra primeiro o patamar atual. Espaços livres de patamares inferiores continuam válidos pelo SRD2, mas ficam recolhidos e identificados para não parecerem opções indevidas.

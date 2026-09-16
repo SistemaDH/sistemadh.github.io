@@ -79,6 +79,10 @@ A correção inicial implementa diretamente as pp. 53–54 do SRD 2.0:
 - fichas antigas com apenas 1 marca em uma caixa preta são normalizadas para 2, preservando o benefício adquirido;
 - a API impede a ficha de ultrapassar o nível anunciado pelo Mestre.
 
+Correção validada em 16/09/2026: a tela de escolhas agora usa uma cópia da ficha com a conquista do nível de destino já aplicada. Assim, ao subir para os níveis 5 e 8, as marcas antigas são apagadas antes de calcular `tracosLivres`, e os seis traços podem voltar a aparecer. A consulta não altera a ficha original. A interface separa as opções do patamar atual e recolhe as opções legais de patamares anteriores para deixar clara a diferença.
+
+O nível da mesa continua sendo um limite anunciado, sem alterar fichas automaticamente. O Mestre pode aumentá-lo ou reduzi-lo; reduzir serve para corrigir testes e não desfaz avanços que os personagens já aplicaram.
+
 ## Núcleo do jogador — auditoria e preparação
 
 O recorte inicial contém 95 registros nas coleções de domínios, classes, subclasses, ancestralidades, comunidades e transformações. A comparação estrutural encontrou:
@@ -94,6 +98,8 @@ Vinte e cinco dos 31 registros novos já estão traduzidos e integrados aos cat�
 - `data/transformacoes.json`: 6 transformações, 12 características e 36 perguntas, com persistência e ciclo de aquisição próprio.
 
 Pavor, as quatro classes, oito subclasses, seis ancestralidades, seis comunidades e seis transformações participam da validação do servidor e aparecem nas telas. Transformações podem ser adquiridas e removidas durante a campanha; custos e marcadores determinísticos são aplicados pelo servidor, enquanto jogadas e decisões narrativas permanecem na mesa.
+
+Em produção, o Mestre concede a transformação e define se o jogador pode ligá-la e desligá-la. O módulo gerado `backend/45_Transformacoes.gs` precisa fazer parte de `SOURCE_FILES` da `engine-api`; essa presença é verificada pelo teste específico das transformações.
 
 ### Cuidados de extração confirmados
 
