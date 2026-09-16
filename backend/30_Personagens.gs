@@ -131,6 +131,9 @@ function obterPersonagem_(jogador, id) {
  * @param {Object} ficha o JSON da ficha (validado por validarFicha_)
  */
 function criarPersonagem_(jogador, ficha) {
+  if (jogador.papel !== PAPEL.MESTRE && ficha && typeof ficha === 'object') {
+    ficha = Object.assign({}, ficha, { controleTransformacao: null, transformacao: null });
+  }
   const validada = validarFicha_(ficha);
   const json = JSON.stringify(validada);
   if (json.length > LIMITE_DADOS_CHARS) {
@@ -171,11 +174,6 @@ function criarPersonagem_(jogador, ficha) {
  * devolvemos CONFLITO em vez de sobrescrever silenciosamente.
  */
 function salvarPersonagem_(jogador, id, ficha, versaoEsperada) {
-  const validada = validarFicha_(ficha);
-  const json = JSON.stringify(validada);
-  if (json.length > LIMITE_DADOS_CHARS) {
-    throw erroApi_(ERRO.DADOS_INVALIDOS, 'A ficha ficou grande demais para uma célula da planilha.');
-  }
   return comTrava_(function () {
     const linha = acharPersonagem_(id);
     if (!linha || String(linha.excluido).toUpperCase() === 'TRUE') {
@@ -183,6 +181,20 @@ function salvarPersonagem_(jogador, id, ficha, versaoEsperada) {
     }
     if (!podeAcessar_(jogador, linha)) {
       throw erroApi_(ERRO.SEM_PERMISSAO, 'Essa ficha não é sua.');
+    }
+    let recebida = ficha;
+    if (jogador.papel !== PAPEL.MESTRE) {
+      let atualProtegida = {};
+      try { atualProtegida = JSON.parse(linha.dados || '{}'); } catch (e) { atualProtegida = {}; }
+      recebida = Object.assign({}, ficha || {}, {
+        controleTransformacao: atualProtegida.controleTransformacao || null,
+        transformacao: atualProtegida.transformacao || null
+      });
+    }
+    const validada = validarFicha_(recebida);
+    const json = JSON.stringify(validada);
+    if (json.length > LIMITE_DADOS_CHARS) {
+      throw erroApi_(ERRO.DADOS_INVALIDOS, 'A ficha ficou grande demais para uma célula da planilha.');
     }
     const versaoAtual = Number(linha.versao) || 1;
     if (versaoEsperada !== undefined && versaoEsperada !== null &&

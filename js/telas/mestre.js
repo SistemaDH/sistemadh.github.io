@@ -1370,7 +1370,60 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       p.condicoes.length
         ? el('div', { class: 'ficha__chips' }, p.condicoes.map((c) =>
             el('span', { class: 'chip chip--condicao' }, nomeComGlossa(c))))
-        : null
+        : null,
+      controleDeTransformacao(p)
+    ]);
+  }
+
+  function controleDeTransformacao(p) {
+    const atual = p.transformacao || null;
+    const seletor = el('select', {
+      class: 'campo__entrada', 'aria-label': `Transformação de ${p.nome}`
+    }, [
+      el('option', { value: '', selected: !atual }, 'Sem transformação'),
+      ...(painel.transformacoes || []).map((t) => el('option', {
+        value: t.id, selected: atual && atual.id === t.id
+      }, t.nome))
+    ]);
+    const permissao = el('input', {
+      type: 'checkbox', class: 'criacao__caixa', checked: atual && atual.jogadorPodeAlternar
+    });
+    const salvar = el('button', {
+      type: 'button', class: 'btn btn--fantasma btn--pequeno',
+      onClick: () => travarBotao(salvar, acoes.configurarTransformacao(p.id, {
+        transformacaoId: seletor.value || null,
+        jogadorPodeAlternar: permissao.checked,
+        ativa: atual && atual.id === seletor.value ? atual.ativa : false
+      }).then(() => {
+        avisarSucesso(seletor.value ? 'Controle da transformação salvo.' : 'Transformação revogada.');
+        return recarregar();
+      }).catch((e) => avisarErro(mensagemDoErro(e))))
+    }, 'Salvar controle');
+    const alternar = atual ? el('button', {
+      type: 'button', class: `btn btn--pequeno ${atual.ativa ? 'btn--fantasma' : ''}`,
+      onClick: () => travarBotao(alternar, acoes.configurarTransformacao(p.id, {
+        transformacaoId: atual.id,
+        jogadorPodeAlternar: atual.jogadorPodeAlternar,
+        ativa: !atual.ativa
+      }).then(() => {
+        avisarSucesso(atual.ativa ? 'Transformação desligada.' : 'Personagem transformado.');
+        return recarregar();
+      }).catch((e) => avisarErro(mensagemDoErro(e))))
+    }, atual.ativa ? 'Desligar transformação' : 'Transformar agora') : null;
+
+    return el('div', { class: 'mestre__transformacao' }, [
+      el('strong', { texto: 'Transformação' }),
+      el('p', { class: 'texto-xs texto-fraco', texto: atual
+        ? `${atual.nome} · ${atual.ativa ? 'ativa' : 'desligada'} · ${atual.jogadorPodeAlternar ? 'jogador pode alternar' : 'somente o Mestre alterna'}`
+        : 'Nenhuma transformação concedida.' }),
+      el('label', { class: 'campo' }, [
+        el('span', { class: 'campo__rotulo', texto: 'Transformação concedida' }), seletor
+      ]),
+      el('label', { class: 'linha texto-sm' }, [
+        permissao,
+        el('span', { texto: 'Jogador pode ligar e desligar' })
+      ]),
+      el('div', { class: 'linha' }, [salvar, alternar])
     ]);
   }
 

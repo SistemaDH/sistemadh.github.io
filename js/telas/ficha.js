@@ -2802,22 +2802,9 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     pai.append(blocoDeRetrato(ficha));
 
     const td = ficha.transformacaoDados || null;
-    const abrirTransformacoes = () => {
-      const opcoes = catalogo.transformacoes();
-      const modal = abrirModal({
-        titulo: td ? 'Transformação' : 'Adquirir transformação',
-        conteudo: el('div', { class: 'pilha' }, opcoes.map((t) => el('button', {
-          type: 'button', class: `btn ${td && td.id === t.id ? '' : 'btn--fantasma'}`,
-          onClick: async () => { await enviar([{ tipo:'transformacao', acao:'adquirir', id:t.id }]); modal.fechar(); }
-        }, t.nome))),
-        acoes: [
-          td ? el('button', { type:'button', class:'btn btn--perigo', onClick:async()=>{
-            await enviar([{tipo:'transformacao',acao:'remover'}]); modal.fechar();
-          } }, 'Remover transformação') : null,
-          el('button', { type:'button', class:'btn btn--fantasma', onClick:()=>modal.fechar() }, 'Fechar')
-        ].filter(Boolean)
-      });
-    };
+    const controleTransformacao = ficha.controleTransformacao || null;
+    const transformacaoConcedida = controleTransformacao
+      ? catalogo.transformacoes().find((t) => t.id === controleTransformacao.id) : null;
     let blocoTransformacao;
     if (td) {
       const acoesTransformacao = [];
@@ -2838,10 +2825,30 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       blocoTransformacao = secao(`Transformação · ${td.nome}`, el('div',{class:'pilha'},[
         el('p',{class:'texto-sm'},textoAnotado(td.descricao)),
         ...td.caracteristicas.map(c=>el('div',{class:'ficha__carac'},[el('strong',{texto:c.nome}),el('p',{class:'texto-sm'},textoAnotado(c.texto))])),
-        el('div',{class:'linha'},[...acoesTransformacao,el('button',{type:'button',class:'btn btn--fantasma btn--pequeno',onClick:abrirTransformacoes},'Gerenciar')])
+        el('p',{class:'texto-xs texto-fraco',texto:controleTransformacao && controleTransformacao.jogadorPodeAlternar
+          ? 'Você pode voltar à forma normal. O Mestre escolhe qual transformação está concedida.'
+          : 'O Mestre controla quando esta transformação é ligada ou desligada.'}),
+        el('div',{class:'linha'},[
+          ...acoesTransformacao,
+          controleTransformacao && controleTransformacao.jogadorPodeAlternar
+            ? el('button',{type:'button',class:'btn btn--fantasma btn--pequeno',
+                onClick:()=>enviar([{tipo:'transformacao',acao:'desativar-concedida'}])},'Voltar à forma normal')
+            : null
+        ])
+      ]));
+    } else if (controleTransformacao && transformacaoConcedida) {
+      blocoTransformacao = secao(`Transformação · ${transformacaoConcedida.nome}`, el('div',{class:'pilha'},[
+        el('p',{class:'texto-sm',texto:'A transformação está desligada.'}),
+        el('p',{class:'texto-xs texto-fraco',texto:controleTransformacao.jogadorPodeAlternar
+          ? 'O Mestre permitiu que você ligue e desligue esta transformação.'
+          : 'Somente o Mestre pode transformar este personagem.'}),
+        controleTransformacao.jogadorPodeAlternar
+          ? el('button',{type:'button',class:'btn btn--pequeno',
+              onClick:()=>enviar([{tipo:'transformacao',acao:'ativar-concedida'}])},'Transformar')
+          : null
       ]));
     } else {
-      blocoTransformacao = el('button',{type:'button',class:'btn btn--fantasma btn--pequeno',onClick:abrirTransformacoes},'Adquirir transformação');
+      blocoTransformacao = el('p',{class:'texto-xs texto-fraco',texto:'Nenhuma transformação foi concedida pelo Mestre.'});
     }
 
     // --- o bloco da ficha de papel --------------------------------------

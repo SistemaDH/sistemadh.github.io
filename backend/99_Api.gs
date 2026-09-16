@@ -65,6 +65,13 @@ function resumoDoPersonagem_(linha) {
     evasao: d.evasao === undefined ? null : d.evasao,
     limiares: { maior: d.limiarMaior, grave: d.limiarGrave },
     condicoes: (ficha.condicoes || []).map(function (c) { return c.nome || c.id; }),
+    transformacao: ficha.controleTransformacao ? {
+      id: ficha.controleTransformacao.id,
+      nome: (typeof TRANSFORMACOES === 'object' && TRANSFORMACOES[ficha.controleTransformacao.id])
+        ? TRANSFORMACOES[ficha.controleTransformacao.id].nome : ficha.controleTransformacao.id,
+      ativa: ficha.controleTransformacao.ativa === true,
+      jogadorPodeAlternar: ficha.controleTransformacao.jogadorPodeAlternar === true
+    } : null,
     atualizadoEm: linha.atualizadoEm
   };
 }
@@ -300,6 +307,23 @@ function executar_(p) {
         const jogador = exigirSessao_(p.token);
         let relatorio = null;
         const r = mutarPersonagem_(jogador, p.id, p.versao, function (ficha) {
+          if (jogador.papel !== PAPEL.MESTRE) {
+            const controle = ficha.controleTransformacao || null;
+            (p.ajustes || []).forEach(function (ajuste) {
+              if (chaveTexto_((ajuste || {}).tipo) !== 'transformacao') return;
+              const acaoTransformacao = chaveTexto_(ajuste.acao);
+              if (acaoTransformacao === 'adquirir' || acaoTransformacao === 'remover') {
+                throw erroApi_(ERRO.SEM_PERMISSAO,
+                  'A transformação é concedida e removida pelo Mestre na aba Grupo.');
+              }
+              if (acaoTransformacao === 'ativar-concedida' || acaoTransformacao === 'desativar-concedida') {
+                if (!controle || controle.jogadorPodeAlternar !== true) {
+                  throw erroApi_(ERRO.SEM_PERMISSAO,
+                    'Somente o Mestre pode ligar ou desligar esta transformação.');
+                }
+              }
+            });
+          }
           relatorio = aplicarAjustes_(ficha, p.ajustes);
           if (relatorio.pendenciaRolagem) {
             return { ficha: ficha, extra: relatorio, evento: 'ficha-ajustada', naoGravar: true };
@@ -598,6 +622,9 @@ function executar_(p) {
           recursosDeContagem: RECURSOS_DE_CONTAGEM,
           elementosDeContagem: ELEMENTOS_DE_CONTAGEM,
           personagens: fichas,
+          transformacoes: Object.keys(TRANSFORMACOES).map(function (id) {
+            return { id: id, nome: TRANSFORMACOES[id].nome };
+          }),
           molduras: MOLDURAS,
           medoSugeridoNoInicio: medoInicial_(fichas.length),
           // o bestiário: só os TIPOS e a conta do Guia de Batalha. As 129 fichas
@@ -619,6 +646,46 @@ function executar_(p) {
            */
           encontro: encontroParaTela_(m, fichas.length)
         });
+      }
+
+      /** Concede, revoga, liga ou desliga a transformação de uma ficha. */
+      case 'configurarTransformacao': {
+        const mestre = exigirMestre_(p.token);
+        const r = mutarPersonagem_(mestre, p.id, p.versao, function (ficha) {
+          const id = p.transformacaoId ? normalizarTransformacao_(p.transformacaoId) : null;
+          if (p.transformacaoId && !id) {
+            throw erroApi_(ERRO.DADOS_INVALIDOS, 'Transformação desconhecida.');
+          }
+          if (!id) {
+            ficha.controleTransformacao = null;
+            ficha.transformacao = null;
+            return { ficha: ficha, extra: { transformacao: null }, evento: 'transformacao-revogada' };
+          }
+          const anterior = ficha.controleTransformacao || {};
+          const mesma = normalizarTransformacao_(anterior) === id;
+          const ativa = p.ativa === undefined ? (mesma && anterior.ativa === true) : p.ativa === true;
+          ficha.controleTransformacao = {
+            id: id,
+            jogadorPodeAlternar: p.jogadorPodeAlternar === true,
+            ativa: ativa
+          };
+          if (ativa) {
+            if (!mesma || normalizarTransformacao_(ficha.transformacao) !== id) {
+              ficha.transformacao = { id: id, marcadores: 0, formaDeLobo: false, escolhas: {} };
+            }
+          } else ficha.transformacao = null;
+          return {
+            ficha: ficha,
+            extra: { transformacao: ficha.controleTransformacao },
+            evento: ativa ? 'transformacao-ligada' : 'transformacao-desligada'
+          };
+        });
+        registrarLog_(mestre, 'controle-transformacao', r.personagem.nome + ': ' +
+          (r.extra.transformacao ? (TRANSFORMACOES[r.extra.transformacao.id].nome +
+            (r.extra.transformacao.ativa ? ' ligada' : ' desligada') +
+            (r.extra.transformacao.jogadorPodeAlternar ? ' · controle do jogador' : ' · controle do Mestre'))
+            : 'sem transformação'));
+        return ok_({ personagem: r.personagem, transformacao: r.extra.transformacao });
       }
 
       /**

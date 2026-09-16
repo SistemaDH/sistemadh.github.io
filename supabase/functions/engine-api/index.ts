@@ -20,7 +20,7 @@ const ACOES = new Set([
   "criarPersonagem","salvarPersonagem","ajustarFicha","usarHabilidadeEmAliado","usarProtecaoEmAliado",
   "previaDescanso","movimentosDeDescanso","aplicarDescanso",
   "opcoesDeAvanco","previaDeAvanco","aplicarAvanco","desfazerAvanco","aplicarCartaPermanente",
-  "painelDoMestre","definirMoldura","molduraDaMesa",
+  "painelDoMestre","configurarTransformacao","definirMoldura","molduraDaMesa",
   "abrirSessao","encerrarSessaoDaMesa","voltarParaAPrimeiraSessao",
   "encontro","definirEncontro","acrescentarAoEncontro","ajustarAdversario",
   "porEmFoco","limparFoco","usarHabilidade","removerDoEncontro","limparEncontro",

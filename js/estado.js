@@ -401,6 +401,10 @@ export const acoes = {
     return api.painelDoMestre(estado.token);
   },
 
+  configurarTransformacao(id, dados) {
+    return api.configurarTransformacao(estado.token, id, dados);
+  },
+
   async ajustarMedo(dados) {
     const r = await api.ajustarMedo(estado.token, dados);
     definir({ medo: r.medo.depois });

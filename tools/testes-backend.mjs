@@ -651,6 +651,69 @@ teste('Lobisomem marca Estresse em jogada com Esperança e sai da forma no Frene
   igual(r.erros,[]);igual(r.mudancas[0].frenesi,true);igual(f.transformacao.formaDeLobo,false);
 });
 
+teste('Mestre concede e liga transformação pela aba Grupo', () => {
+  const registro = api('registrar', { nome:'Transformável', codigo:'senha-transformavel' });
+  const token = registro.dados.token;
+  const ficha = contexto.fichaRapida_({
+    nome:'Lua', classe:'Bardo', subclasse:'Músico Errante', ancestralidade:'Anão',
+    comunidade:'Highborne', cartas:['grace-encantar','codex-livro-de-illiat'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  const criada = api('criarPersonagem', { token:token, ficha:ficha }).dados.personagem;
+  let r = api('configurarTransformacao', {
+    token:tokenMestre, id:criada.id, transformacaoId:'fantasma',
+    jogadorPodeAlternar:false, ativa:true
+  });
+  verdade(r.ok, JSON.stringify(r));
+  igual(r.dados.personagem.ficha.controleTransformacao,
+    {id:'fantasma',jogadorPodeAlternar:false,ativa:true});
+  igual(r.dados.personagem.ficha.transformacao.id,'fantasma');
+  const painel = api('painelDoMestre', {token:tokenMestre}).dados;
+  const resumo = painel.personagens.find((p) => p.id === criada.id);
+  igual(resumo.transformacao.nome,'Fantasma');
+  igual(resumo.transformacao.ativa,true);
+  verdade(painel.transformacoes.some((t) => t.id === 'fantasma'));
+});
+
+teste('controle exclusivo do Mestre bloqueia o jogador e modo liberado permite um clique', () => {
+  const entrada = api('entrar', { nome:'Transformável', codigo:'senha-transformavel' });
+  const token = entrada.dados.token;
+  const personagem = api('listarPersonagens', {token:token}).dados.personagens[0];
+  let bloqueado = api('ajustarFicha', {token:token,id:personagem.id,
+    ajustes:[{tipo:'transformacao',acao:'desativar-concedida'}]});
+  igual(bloqueado.ok,false);
+  igual(bloqueado.erro.codigo,'SEM_PERMISSAO');
+  let mestre = api('configurarTransformacao', {token:tokenMestre,id:personagem.id,
+    transformacaoId:'fantasma',jogadorPodeAlternar:true,ativa:false});
+  verdade(mestre.ok,JSON.stringify(mestre));
+  let jogador = api('ajustarFicha', {token:token,id:personagem.id,
+    ajustes:[{tipo:'transformacao',acao:'ativar-concedida'}]});
+  verdade(jogador.ok,JSON.stringify(jogador));
+  igual(jogador.dados.personagem.ficha.transformacao.id,'fantasma');
+  igual(jogador.dados.personagem.ficha.controleTransformacao.ativa,true);
+  jogador = api('ajustarFicha', {token:token,id:personagem.id,
+    ajustes:[{tipo:'transformacao',acao:'desativar-concedida'}]});
+  verdade(jogador.ok,JSON.stringify(jogador));
+  igual(jogador.dados.personagem.ficha.transformacao,null);
+  igual(jogador.dados.personagem.ficha.controleTransformacao.ativa,false);
+});
+
+teste('jogador não troca, remove nem injeta transformação ao salvar a ficha', () => {
+  const token = api('entrar', { nome:'Transformável', codigo:'senha-transformavel' }).dados.token;
+  let atual = api('listarPersonagens', {token:token}).dados.personagens[0];
+  igual(api('ajustarFicha', {token:token,id:atual.id,
+    ajustes:[{tipo:'transformacao',acao:'adquirir',id:'vampiro'}]}).erro.codigo,'SEM_PERMISSAO');
+  atual = api('obterPersonagem', {token:token,id:atual.id}).dados.personagem;
+  const adulterada = JSON.parse(JSON.stringify(atual.ficha));
+  adulterada.controleTransformacao={id:'vampiro',jogadorPodeAlternar:true,ativa:true};
+  adulterada.transformacao={id:'vampiro',marcadores:6};
+  const salva = api('salvarPersonagem', {token:token,id:atual.id,ficha:adulterada,versao:atual.versao});
+  verdade(salva.ok,JSON.stringify(salva));
+  igual(salva.dados.personagem.ficha.controleTransformacao.id,'fantasma');
+  igual(salva.dados.personagem.ficha.controleTransformacao.ativa,false);
+  igual(salva.dados.personagem.ficha.transformacao,null);
+});
+
 console.log('\nEquipamento');
 const ARMAS = avaliar('ARMAS');
 const ARMADURAS = avaliar('ARMADURAS');

@@ -41,6 +41,7 @@ const ACOES_ENGINE = new Set([
   'previaDescanso','movimentosDeDescanso','aplicarDescanso',
   'opcoesDeAvanco','previaDeAvanco','aplicarAvanco','desfazerAvanco','aplicarCartaPermanente',
   'painelDoMestre','definirMoldura','molduraDaMesa',
+  'configurarTransformacao',
   'abrirSessao','encerrarSessaoDaMesa','voltarParaAPrimeiraSessao',
   'encontro','definirEncontro','acrescentarAoEncontro','ajustarAdversario',
   'porEmFoco','limparFoco','usarHabilidade','removerDoEncontro','limparEncontro',
@@ -161,6 +162,7 @@ export const api = {
   aplicarCartaPermanente: (token,id,carta,escolhas,versao) => chamar('aplicarCartaPermanente',{token,id,carta,escolhas,versao}),
 
   painelDoMestre: token => chamar('painelDoMestre',{token}),
+  configurarTransformacao: (token,id,dados) => chamar('configurarTransformacao',{token,id,...dados}),
   ajustarMedo: (token,dados) => chamar('ajustarMedo',{token,...dados}),
   criarContagem: (token,contagem) => chamar('criarContagem',{token,contagem}),
   avancarContagem: (token,id,dados) => chamar('avancarContagem',{token,id,...dados}),
