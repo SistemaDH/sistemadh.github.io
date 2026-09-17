@@ -29,11 +29,15 @@ jobs:
       - run: npm run teste:sintaxe
       - run: npm run teste
       - run: npm run teste:gerados
+      - run: npm run teste:funcoes
+      - run: npm run teste:motor-mesa
       - run: npm run teste:css
       - name: Fonte, tradução e cobertura SRD 2.0
         env:
           SRD2_CORPUS_DIR: ${{ github.workspace }}/srd2-source
         run: npm run teste:srd2
+      - name: Jornadas SRD 2.0 — 3 personagens do nível 1 ao 10
+        run: npm run teste:jornadas-srd2
       - run: npx playwright install --with-deps chromium
       - run: npm run teste:e2e
       - name: Layout mobile 360 / 390 / 430
