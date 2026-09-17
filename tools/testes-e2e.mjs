@@ -6,7 +6,7 @@
  */
 
 import { chromium } from 'playwright';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import zlib from 'node:zlib';
 import { criarServidor } from './servidor-teste.mjs';
 
@@ -3313,7 +3313,7 @@ try {
     await isolada.close();
   });
 
-  await passo('o app fala com as seis Edge Functions pelo nome, não com uma rota só', async () => {
+  await passo('o app fala com cada Edge Function pelo nome, não com uma rota só', async () => {
     /*
      * ⚠ ESTE PASSO GUARDA A FORMA DA URL, NÃO O RESULTADO DA CHAMADA.
      *
@@ -3328,8 +3328,33 @@ try {
      * teste e o mundo real. Se alguém voltar a colar o nome da função dentro
      * do valor guardado, ou centralizar tudo numa rota, isto aqui apita.
      */
-    const esperadas = ['/auth-api', '/app-api', '/mesa-api', '/player-api', '/engine-api', '/photo-api'];
-    const faltando = esperadas.filter((r) => !rotasChamadas.has(r));
+    /*
+     * A LISTA VEM DO js/api.js, e não escrita à mão aqui.
+     *
+     * Ela já foi `['/auth-api','/app-api','/mesa-api','/player-api','/engine-api','/photo-api']`
+     * — seis, cravadas. Quando as dez ações de mesa migraram para o motor e o
+     * mesa-api parou de ser chamado, este passo quebrou por um motivo que não
+     * era defeito: o app estava certo, a lista é que tinha envelhecido.
+     *
+     * Derivando do roteamento real, o passo continua guardando o que importa
+     * (cada função é chamada pelo próprio nome, e nenhuma fica órfã de tráfego)
+     * e passa a acompanhar sozinho quem entra e quem sai.
+     */
+    const apiJs = readFileSync(new URL('../js/api.js', import.meta.url), 'utf8');
+    const mapa = {};
+    const blocoFuncoes = apiJs.match(/const FUNCOES\s*=\s*\{([\s\S]*?)\}/);
+    for (const m of blocoFuncoes[1].matchAll(/(\w+)\s*:\s*'([^']+)'/g)) mapa[m[1]] = m[2];
+    const conjuntos = {};
+    for (const m of apiJs.matchAll(/const ACOES_(\w+)\s*=\s*new Set\(\[([\s\S]*?)\]\)/g)) {
+      conjuntos[m[1].toLowerCase()] = [...m[2].matchAll(/'([^']+)'/g)].length;
+    }
+    const apelido = { auth: 'auth', mesa: 'mesa', player: 'player', app: 'app', engine: 'engine', foto: 'photo' };
+    // Só as funções que ainda têm ação roteada para elas. Uma função sem ação
+    // é uma função aposentada esperando ser apagada — não é regressão.
+    const esperadas = Object.entries(conjuntos)
+      .filter(([nome, quantas]) => quantas > 0 && mapa[apelido[nome]])
+      .map(([nome]) => '/' + mapa[apelido[nome]]);
+    const faltando = [...new Set(esperadas)].filter((r) => !rotasChamadas.has(r));
     if (faltando.length) {
       throw new Error(
         `estas funções nunca foram chamadas: ${faltando.join(', ')} — ` +

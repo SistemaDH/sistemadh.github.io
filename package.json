@@ -23,7 +23,7 @@
     "teste:layout-foto-mobile": "node tools/testes-foto-mobile.mjs",
     "teste:layout-responsivo": "node tools/testes-layout-responsivo.mjs",
     "teste:css": "node tools/conferir-css.mjs",
-    "teste:tudo": "npm run teste:sintaxe && npm run teste:css && npm run teste && npm run teste:jornadas-srd2 && npm run teste:gerados && npm run teste:srd2 && npm run teste:e2e",
+    "teste:tudo": "npm run teste:sintaxe && npm run teste:css && npm run teste && npm run teste:jornadas-srd2 && npm run teste:gerados && npm run teste:funcoes && npm run teste:motor-mesa && npm run teste:srd2 && npm run teste:e2e",
     "teste:jornadas-srd2": "node tools/testes-jornadas-srd2.mjs",
     "teste:sintaxe": "node tools/conferir-sintaxe.mjs",
     "teste:gerados": "node tools/conferir-gerados.mjs",
@@ -89,7 +89,9 @@
     "gerar:srd2-regras": "node tools/gerar-srd2-regras-auditoria.mjs",
     "teste:srd2-regras-referenciadas": "node tools/conferir-srd2-regras-referenciadas.mjs",
     "integrar:srd2-campanhas": "node tools/integrar-srd2-campanhas.mjs",
-    "teste:srd2-campanhas": "node tools/conferir-srd2-campanhas.mjs"
+    "teste:srd2-campanhas": "node tools/conferir-srd2-campanhas.mjs",
+    "teste:funcoes": "node tools/conferir-funcoes-publicadas.mjs",
+    "teste:motor-mesa": "node tools/conferir-motor-mesa.mjs"
   },
   "devDependencies": {
     "playwright": "1.62.1"

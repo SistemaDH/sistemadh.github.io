@@ -26,6 +26,13 @@ const ACOES = new Set([
   "encontro","definirEncontro","acrescentarAoEncontro","ajustarAdversario",
   "porEmFoco","limparFoco","usarHabilidade","removerDoEncontro","limparEncontro",
   "adversariosDaMesa","salvarAdversarioDaMesa","excluirAdversarioDaMesa",
+  // As dez da MESA, que até 17/09/2026 eram servidas pelo mesa-api. Elas já
+  // existiam no backend/4E_Mesa.gs — com os comentários, as citações de página
+  // e 28 dos 971 testes — mas em produção quem respondia era outro código, em
+  // outra linguagem, sem fonte no repositório. Ver o commit do Elo 2.
+  "ajustarMedo","criarContagem","avancarContagem","editarContagem","excluirContagem",
+  "parearContagens","desparearContagem","avancarPerseguicao",
+  "previaDescansoDaMesa","aplicarDescansoDaMesa",
 ]);
 
 function resposta(obj: unknown, status = 200) {

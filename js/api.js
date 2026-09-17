@@ -25,10 +25,29 @@ const FUNCOES = {
 };
 
 const ACOES_AUTH = new Set(['registrar','entrar','entrarMestre','trocarCodigo']);
-const ACOES_MESA = new Set([
-  'ajustarMedo','criarContagem','avancarContagem','editarContagem','excluirContagem',
-  'parearContagens','desparearContagem','avancarPerseguicao','previaDescansoDaMesa','aplicarDescansoDaMesa'
-]);
+/*
+ * A MESA MUDOU DE FUNÇÃO — e o conjunto ficou vazio de propósito.
+ *
+ * Estas dez ações eram servidas pelo `mesa-api`, uma Edge Function que não
+ * tinha fonte no repositório e reimplementava em TypeScript regras que já
+ * estavam no `backend/4E_Mesa.gs`: o teto de 12 do Medo, a tabela dinâmica das
+ * contagens, as fórmulas de descanso da mesa. Duas cópias vivas da mesma
+ * regra, e só uma testada — os 28 testes que cobrem isso exercitam o `.gs`,
+ * porque o servidor de teste manda as seis rotas para o mesmo `doPost`.
+ *
+ * A deriva já tinha começado: a mensagem do teto cita "(livro p.154)" na cópia
+ * testada e não cita na que rodava.
+ *
+ * Agora quem serve é o motor, que é o código versionado, comentado e testado.
+ *
+ * ⚠ O conjunto fica VAZIO, e não apagado, porque o `mesa-api` continua
+ * IMPLANTADO. Enquanto ele estiver no ar, o repositório deve dizer que ele
+ * existe — apagar a entrada aqui faria o código descrever um estado que ainda
+ * não é verdade. A aposentadoria (tirar de FUNCOES, apagar a fonte, remover a
+ * função da Supabase) é o passo seguinte, depois que o motor novo estiver no ar
+ * e a mesa tiver jogado uma sessão sobre ele.
+ */
+const ACOES_MESA = new Set([]);
 const ACOES_PLAYER = new Set(['aliadosDaMesa','meusProjetos']);
 const ACOES_APP = new Set([
   'ping','sessao','listarPersonagens','obterPersonagem','excluirPersonagem','restaurarPersonagem',
@@ -45,7 +64,11 @@ const ACOES_ENGINE = new Set([
   'abrirSessao','encerrarSessaoDaMesa','voltarParaAPrimeiraSessao',
   'encontro','definirEncontro','acrescentarAoEncontro','ajustarAdversario',
   'porEmFoco','limparFoco','usarHabilidade','removerDoEncontro','limparEncontro',
-  'adversariosDaMesa','salvarAdversarioDaMesa','excluirAdversarioDaMesa'
+  'adversariosDaMesa','salvarAdversarioDaMesa','excluirAdversarioDaMesa',
+  // As dez da mesa, vindas do mesa-api — veja o comentário em ACOES_MESA.
+  'ajustarMedo','criarContagem','avancarContagem','editarContagem','excluirContagem',
+  'parearContagens','desparearContagem','avancarPerseguicao',
+  'previaDescansoDaMesa','aplicarDescansoDaMesa'
 ]);
 
 export class ErroApi extends Error {
