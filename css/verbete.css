@@ -228,9 +228,21 @@
   gap: var(--e5);
 }
 
+/*
+ * ⚠ ERA `--fonte-mono`, E NÃO PODIA SER.
+ *
+ * No app inteiro a monoespaçada quer dizer NÚMERO OU CÓDIGO: a contagem ao lado
+ * do título da seção, o número da aba, o código de acesso, a glosa da Jambô.
+ * Ela nunca é letra de título. Estes quinze são os títulos de grupo da tela de
+ * Regras — "Jogadas", "Condições", "Adversários" —, e saíam com cara de trecho
+ * de código no meio de uma tela de leitura.
+ *
+ * Só a FAMÍLIA mudou. Tamanho, caixa-alta, espaçamento e cor continuam os
+ * mesmos, então o ritmo da tela não se mexe.
+ */
 .regras__grupoTitulo {
   margin: 0 0 var(--e2);
-  font-family: var(--fonte-mono);
+  font-family: var(--fonte-titulo);
   font-size: var(--txt-xs);
   text-transform: uppercase;
   letter-spacing: .08em;

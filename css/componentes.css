@@ -290,10 +290,20 @@
 }
 .cartao--alvo:active { transform: scale(.99); }
 
-/* De volta para cima: tudo que continua sendo um alvo próprio. */
+/*
+ * De volta para cima: tudo que continua sendo um alvo próprio.
+ *
+ * A lista cresceu quando o passo de AVANÇO virou cartão-alvo: lá a escolha mora
+ * DENTRO do cartão (dois traços, duas Experiências, uma carta), e o "Tirar"
+ * também. Se qualquer um deles ficasse debaixo da área esticada, tocar nele
+ * escolheria o cartão em vez de fazer o que diz.
+ */
 .cartao--alvo .nome-carta,
 .cartao--alvo .verbete__gatilho,
 .cartao--alvo .campo,
+.cartao--alvo .pilha,
+.cartao--alvo .avanco__pilula,
+.cartao--alvo .avanco__tirar,
 .cartao--alvo select,
 .cartao--alvo input,
 .cartao--alvo textarea {

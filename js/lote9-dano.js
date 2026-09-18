@@ -54,9 +54,23 @@ function corrigirTituloDeDano(raiz = document) {
     raiz.querySelectorAll?.('.papel__faixa').forEach((faixa) => faixas.add(faixa));
   }
 
+  /*
+   * ⚠ TROCA O TEXTO DO <h3>, NÃO O DA FAIXA.
+   *
+   * Escrever `faixa.textContent = ...` no DIV da faixa APAGA o
+   * `<h3 class="papel__faixaTexto">` que estava dentro e deixa um nó de texto
+   * solto no lugar. O texto perde a fonte de título, o caixa-alta e o
+   * espaçamento — e era por isso que "Dano" era a única faixa da ficha escrita
+   * com a letra do corpo, enquanto "ESPERANÇA" ao lado saía em versal serifada.
+   *
+   * Os braços de floreio continuavam (são `::before`/`::after` do div), então
+   * de longe parecia certo: uma faixa com o texto errado dentro.
+   */
   faixas.forEach((faixa) => {
-    if ((faixa.textContent || '').trim() === ROTULO_ANTIGO) {
-      faixa.textContent = ROTULO_NOVO;
+    const titulo = faixa.querySelector('.papel__faixaTexto');
+    if (!titulo) return;
+    if ((titulo.textContent || '').trim() === ROTULO_ANTIGO) {
+      titulo.textContent = ROTULO_NOVO;
     }
   });
 }

@@ -62,7 +62,7 @@ await p.waitForSelector('.grade-opcoes__item');
 await escolherNoCartao(p.locator('.grade-opcoes__item .cartao__alvo').first());
 await escolherNoCartao(p.locator('.grade-opcoes').last().locator('.cartao__alvo').first());
 await p.locator('.criacao__rodape .btn--principal').click();
-for (let i = 0; i < 2; i++) { const b = p.locator('.criacao__corpo button:has-text("Escolher")'); if (await b.count()) await b.first().click(); }
+for (let i = 0; i < 2; i++) { const b = p.locator('.criacao__corpo .lista-escolha__item .cartao__alvo:not([disabled])'); if (await b.count()) await escolherNoCartao(b.nth(i)); }
 await p.locator('.criacao__rodape .btn--principal').click().catch(() => {});
 const cx = p.locator('.criacao__corpo input[type="text"]');
 const n = await cx.count(); for (let i = 0; i < Math.min(2, n); i++) await cx.nth(i).fill(i ? 'Língua de prata' : 'Contadora de histórias');

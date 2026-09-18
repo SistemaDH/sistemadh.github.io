@@ -46,9 +46,23 @@ async function executar(viewport) {
       const raiz = document.createElement('section');
       raiz.id = 'teste-dano-l9-b24';
       raiz.setAttribute('aria-label', 'Diagnóstico do título de dano');
+      /*
+       * ⚠ O FIXTURE PRECISA TER O <h3>, COMO A FICHA DE VERDADE TEM.
+       *
+       * Até 18/09/2026 este teste montava a faixa como um <div> com texto solto
+       * dentro. A ficha nunca foi assim: o `faixa()` do ficha.js põe um
+       * `<h3 class="papel__faixaTexto">` dentro do div, e é o h3 que carrega a
+       * fonte de título, o caixa-alta e o espaçamento.
+       *
+       * Com o fixture errado, o teste só conseguia perguntar "o TEXTO virou
+       * Dano?" — e a resposta era sim, enquanto no app o `textContent = ...`
+       * aplicado ao DIV apagava o h3 junto e o título saía com a letra do
+       * corpo. O defeito estava na tela desde sempre e passou por este teste
+       * todas as vezes, porque o teste não testava a mesma coisa.
+       */
       raiz.innerHTML = [
-        '<div class="papel__faixa">Esperança</div>',
-        '<div class="papel__faixa" data-teste="dano">Dano e Vida</div>'
+        '<div class="papel__faixa"><h3 class="papel__faixaTexto">Esperança</h3></div>',
+        '<div class="papel__faixa" data-teste="dano"><h3 class="papel__faixaTexto">Dano e Vida</h3></div>'
       ].join('');
       document.body.append(raiz);
     });
@@ -67,6 +81,36 @@ async function executar(viewport) {
     if (estado.dano !== 'Dano') erros.push(`título de dano ficou "${estado.dano}"`);
     if (estado.esperanca !== 'Esperança') erros.push(`título não relacionado foi alterado para "${estado.esperanca}"`);
     if (estado.antigo) erros.push('a expressão antiga "Dano e Vida" ainda está visível');
+
+    /*
+     * O QUE FALTAVA PERGUNTAR: o h3 continua lá, e o título continua com a
+     * letra de título? Trocar o texto é fácil; o defeito era trocar o texto
+     * DESTRUINDO o elemento que dava a fonte.
+     */
+    const tipografia = await page.evaluate(() => {
+      const faixa = document.querySelector('[data-teste="dano"]');
+      const h3 = faixa && faixa.querySelector('.papel__faixaTexto');
+      const raizCss = getComputedStyle(document.documentElement);
+      const esperada = raizCss.getPropertyValue('--fonte-titulo').split(',')[0].trim().replace(/['"]/g, '');
+      if (!h3) return { temH3: false };
+      const s = getComputedStyle(h3);
+      return {
+        temH3: true,
+        fonte: s.fontFamily.split(',')[0].trim().replace(/['"]/g, ''),
+        esperada,
+        caixa: s.textTransform
+      };
+    });
+    if (!tipografia.temH3) {
+      erros.push('o <h3 class="papel__faixaTexto"> foi destruído: o título perde a fonte de título');
+    } else {
+      if (tipografia.fonte !== tipografia.esperada) {
+        erros.push(`o título de dano saiu em "${tipografia.fonte}" e devia sair em "${tipografia.esperada}"`);
+      }
+      if (tipografia.caixa !== 'uppercase') {
+        erros.push(`o título de dano devia estar em caixa-alta e está "${tipografia.caixa}"`);
+      }
+    }
   } catch (erro) {
     erros.push(erro && erro.message ? erro.message : String(erro));
   } finally {

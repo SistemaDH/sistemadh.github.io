@@ -122,9 +122,18 @@ async function auditar(page, viewport, estado, { contagem, nomes = [], rolado = 
   registrar(viewport, estado, erros);
 }
 
+/*
+ * O cartão de avanço virou o alvo: o botão "Escolher" saiu.
+ *
+ * O toque é no CANTO SUPERIOR do cartão, onde só existe o título e os
+ * quadradinhos. A metade de baixo pode ter os seletores de dentro (dois traços,
+ * duas Experiências, a carta), que sobem por cima da área esticada de propósito
+ * — tocar neles ali faria outra coisa.
+ */
 async function escolher(page, texto) {
   const cartao = page.locator('.avanco__opcao', { hasText: texto }).first();
-  await cartao.getByRole('button', { name: 'Escolher', exact: true }).click();
+  const alvo = cartao.locator('.cartao__alvo');
+  await alvo.click({ position: { x: 24, y: 20 } });
 }
 
 async function executar(viewport) {

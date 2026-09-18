@@ -1711,9 +1711,9 @@ try {
 
     // Duas escolhas baratas: Evasão e Estresse.
     const evasao = pagina.locator('.avanco__opcao', { hasText: 'Evasão +1' });
-    await evasao.getByRole('button', { name: 'Escolher' }).click();
+    await evasao.locator('.cartao__alvo').click();
     const estresse = pagina.locator('.avanco__opcao', { hasText: 'Estresse +1' });
-    await estresse.getByRole('button', { name: 'Escolher' }).click();
+    await estresse.locator('.cartao__alvo').click();
 
     await pagina.getByRole('button', { name: 'Continuar' }).click();
     await pagina.waitForSelector('.avanco__limites');

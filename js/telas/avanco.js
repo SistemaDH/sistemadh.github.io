@@ -170,12 +170,23 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
    * ainda precisa saber (quais traços, quais Experiências, qual carta).
    */
   function cartaoDeOpcao(o) {
+    /*
+     * ⚠ INVARIANTE E102 — declarado no TOPO do escopo.
+     *
+     * Os seletores de dentro (traços, Experiências, carta) precisam chamar
+     * `escolher()`, que só é definida lá embaixo, depois deles. Como eles só
+     * disparam no clique, hoje funcionaria de qualquer jeito — e é exatamente
+     * essa a forma do bug que custou duas tardes no modal de forma de fera.
+     */
+    let pedirEscolha = () => {};
+    const tentarEntrar = () => pedirEscolha();
     const jaEscolhida = escolhidos.filter((e) => e.opcao === o.id && e.patamar === o.patamar).length;
     const cheio = gastas() >= info.escolhasPorNivel;
     const naoCabe = cheio || (gastas() + o.consomeEscolhas > info.escolhasPorNivel);
 
     const cartao = el('div', {
-      class: `cartao avanco__opcao ${jaEscolhida ? 'esta-escolhido' : ''} ${o.negrito ? 'e-negrito' : ''}`
+      class: `cartao cartao--alvo avanco__opcao ${jaEscolhida ? 'esta-escolhido' : ''}`
+        + (o.negrito ? ' e-negrito' : '') + (naoCabe ? ' esta-bloqueado' : '')
     });
 
     cartao.append(el('div', { class: 'avanco__opcaoTopo' }, [
@@ -200,17 +211,27 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
 
     // Os campos que a escolha precisa antes de entrar.
     const extras = {};
-    if (o.id === 'tracos') extras.tracos = escolherTracos(o, cartao);
-    if (o.id === 'experiencias') extras.experiencias = escolherExperiencias(o, cartao);
-    if (o.id === 'carta-de-dominio') extras.carta = escolherCarta(o, cartao);
-    if (o.id === 'subclasse' && (o.cartasExtrasDeSubclasse || []).length) extras.cartasExtrasDeSubclasse = escolherCartasExtrasDeSubclasse(o.cartasExtrasDeSubclasse, cartao);
+    if (o.id === 'tracos') extras.tracos = escolherTracos(o, cartao, tentarEntrar);
+    if (o.id === 'experiencias') extras.experiencias = escolherExperiencias(o, cartao, tentarEntrar);
+    if (o.id === 'carta-de-dominio') extras.carta = escolherCarta(o, cartao, tentarEntrar);
+    if (o.id === 'subclasse' && (o.cartasExtrasDeSubclasse || []).length) extras.cartasExtrasDeSubclasse = escolherCartasExtrasDeSubclasse(o.cartasExtrasDeSubclasse, cartao, tentarEntrar);
     if (o.id === 'multiclasse') extras.multiclasse = escolherMulticlasse(cartao);
 
-    const adicionar = el('button', {
-      type: 'button', class: 'btn btn--fantasma btn--pequeno', disabled: naoCabe
-    }, naoCabe ? 'Não cabe neste nível' : 'Escolher');
-
-    adicionar.addEventListener('click', () => {
+    /*
+     * O CARTÃO INTEIRO ESCOLHE, como na criação — e aqui tem um agravante que
+     * lá não existia: as opções deste passo trazem a escolha DENTRO delas (dois
+     * traços, duas Experiências, uma carta). Dava para marcar os dois traços,
+     * achar que estava feito e sair do nível sem ter apertado "Escolher".
+     *
+     * Então, além do cartão ser o alvo, COMPLETAR a escolha de dentro já
+     * adiciona o cartão. Marcou o segundo traço, entrou. É o que a mesa espera.
+     *
+     * ⚠ A multiclasse fica de fora do automático de propósito: são quatro
+     * campos e a decisão mais pesada do nível; entrar sozinha ali seria susto,
+     * não conveniência. Lá o toque no cartão continua sendo o gesto.
+     */
+    const escolher = () => {
+      if (naoCabe) return;
       const pedido = { opcao: o.id, patamar: o.patamar, consomeEscolhas: o.consomeEscolhas, nome: o.nome };
       if (extras.tracos) {
         const t = extras.tracos.valor();
@@ -240,20 +261,34 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
       }
       escolhidos.push(pedido);
       passoEscolhas();
-    });
+    };
+    pedirEscolha = escolher;
 
-    const acoesCartao = el('div', { class: 'linha' }, [adicionar]);
-    if (jaEscolhida) {
-      acoesCartao.append(el('button', {
-        type: 'button', class: 'btn btn--fantasma btn--pequeno',
-        onClick: () => {
-          const i = escolhidos.map((e) => e.opcao + '|' + e.patamar).lastIndexOf(o.id + '|' + o.patamar);
-          if (i >= 0) escolhidos.splice(i, 1);
-          passoEscolhas();
-        }
-      }, 'Tirar'));
+    if (naoCabe) {
+      cartao.append(el('span', { class: 'selo', texto: 'Não cabe neste nível' }));
     }
-    cartao.append(acoesCartao);
+
+    /* "Tirar" continua sendo botão visível: desfazer é gesto explícito. */
+    if (jaEscolhida) {
+      cartao.append(el('div', { class: 'linha' }, [
+        el('button', {
+          type: 'button', class: 'btn btn--fantasma btn--pequeno avanco__tirar',
+          onClick: () => {
+            const i = escolhidos.map((e) => e.opcao + '|' + e.patamar).lastIndexOf(o.id + '|' + o.patamar);
+            if (i >= 0) escolhidos.splice(i, 1);
+            passoEscolhas();
+          }
+        }, 'Tirar')
+      ]));
+    }
+
+    cartao.append(el('button', {
+      type: 'button',
+      class: 'cartao__alvo',
+      'aria-label': `Escolher ${o.nome}`,
+      disabled: naoCabe,
+      onClick: escolher
+    }));
     return cartao;
   }
 
@@ -278,7 +313,7 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
 
   /* --- os campos extras de cada opção ------------------------------------ */
 
-  function escolherTracos(o, cartao) {
+  function escolherTracos(o, cartao, aoCompletar) {
     const escolhidosAqui = [];
     const grade = el('div', { class: 'avanco__grade' });
     (o.tracosLivres || []).forEach((t) => {
@@ -291,6 +326,8 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
         else if (escolhidosAqui.length < 2) escolhidosAqui.push(t);
         else { avisarErro('São dois traços — tire um antes de pôr outro.'); return; }
         botao.classList.toggle('esta-escolhido', escolhidosAqui.includes(t));
+        // Marcou o segundo: o cartão entra sozinho.
+        if (escolhidosAqui.length === 2 && aoCompletar) aoCompletar();
       });
       grade.append(botao);
     });
@@ -301,7 +338,7 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
     return { valor: () => escolhidosAqui.slice() };
   }
 
-  function escolherExperiencias(o, cartao) {
+  function escolherExperiencias(o, cartao, aoCompletar) {
     const marcados = [];
     const grade = el('div', { class: 'avanco__grade' });
     (o.experiencias || []).forEach((x) => {
@@ -314,6 +351,8 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
         else if (marcados.length < 2) marcados.push(x.indice);
         else { avisarErro('São duas Experiências — tire uma antes de pôr outra.'); return; }
         botao.classList.toggle('esta-escolhido', marcados.includes(x.indice));
+        // Marcou a segunda: o cartão entra sozinho.
+        if (marcados.length === 2 && aoCompletar) aoCompletar();
       });
       grade.append(botao);
     });
@@ -324,14 +363,28 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
     return { valor: () => marcados.slice() };
   }
 
-  function escolherCarta(o, cartao) {
+  /*
+   * A CARTA ESCOLHIDA VOLTA A SER TOCÁVEL.
+   *
+   * Depois de escolher, o nome aparecia como texto morto — `nomeComGlossa`, que
+   * é só o nome com a glosa da Jambô. No app inteiro o nome de carta abre a
+   * IMAGEM da carta; aqui, justamente onde você acabou de decidir, não abria.
+   * Trocado por `nomeQueAbreCarta`, o mesmo gesto do resto do app.
+   */
+  function escolherCarta(o, cartao, aoCompletar) {
     let escolhida = null;
     const rotulo = el('span', { class: 'texto-sm texto-fraco', texto: 'Nenhuma escolhida ainda.' });
     const botao = el('button', {
       type: 'button', class: 'btn btn--fantasma btn--pequeno',
       onClick: () => abrirEscolhaDeCarta({
         nivelMaximo: o.nivelMaximoDaCarta,
-        aoEscolher: (c) => { escolhida = c.id; limpar(rotulo).append(nomeComGlossa(c.nome)); }
+        aoEscolher: (c) => {
+          escolhida = c.id;
+          rotulo.className = 'texto-sm';
+          limpar(rotulo).append(nomeQueAbreCarta(c.nome, () => ({ itens: [daCartaDeDominio(c)] })));
+          botao.textContent = 'Trocar a carta';
+          if (aoCompletar) aoCompletar();
+        }
       })
     }, 'Escolher a carta');
     cartao.append(el('div', { class: 'campo' }, [
@@ -341,12 +394,18 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
     return { valor: () => escolhida };
   }
 
-  function escolherCartasExtrasDeSubclasse(regras, cartao) {
+  function escolherCartasExtrasDeSubclasse(regras, cartao, aoCompletar) {
     const esperado = (regras || []).reduce((n, r) => n + (Number(r.quantidade) || 0), 0);
     const escolhidas = [];
     const rotulo = el('span', { class: 'texto-sm texto-fraco', texto: 'Nenhuma escolhida ainda.' });
     const botao = el('button', { type: 'button', class: 'btn btn--fantasma btn--pequeno', onClick: () => abrirEscolhaDeCarta({
-      nivelMaximo: info.nivelNovo, aoEscolher: (c) => { escolhidas.length = 0; escolhidas.push(c.id); rotulo.textContent = c.nome; }
+      nivelMaximo: info.nivelNovo,
+      aoEscolher: (c) => {
+        escolhidas.length = 0; escolhidas.push(c.id);
+        rotulo.className = 'texto-sm';
+        limpar(rotulo).append(nomeQueAbreCarta(c.nome, () => ({ itens: [daCartaDeDominio(c)] })));
+        if (escolhidas.length === esperado && aoCompletar) aoCompletar();
+      }
     }) }, esperado === 1 ? 'Escolher carta adicional' : 'Escolher cartas adicionais');
     cartao.append(el('div', { class: 'campo' }, [el('span', { class: 'campo__rotulo', texto: 'Carta de domínio adicional da subclasse' }),
       el('div', { class: 'linha' }, [rotulo, el('span', { class: 'crescer' }), botao]) ]));

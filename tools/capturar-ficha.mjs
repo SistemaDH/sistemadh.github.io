@@ -134,8 +134,8 @@ await p.locator('.criacao__corpo .lista-escolha__item .cartao__alvo, .criacao__c
   .first().click().catch(() => {});
 // Escolhe as duas primeiras cartas oferecidas e segue.
 for (let i = 0; i < 2; i++) {
-  const botoes = p.locator('.criacao__corpo button:has-text("Escolher")');
-  if (await botoes.count()) await botoes.first().click();
+  const botoes = p.locator('.criacao__corpo .lista-escolha__item .cartao__alvo:not([disabled])');
+  if (await botoes.count()) await escolherNoCartao(botoes.nth(i));
 }
 await p.locator('.criacao__rodape .btn--principal').click().catch(() => {});
 
@@ -458,9 +458,9 @@ await foto('f13-avanco-opcoes');
 
 await p.fill('.avanco__conquista input', 'Palco de mil vilarejos');
 const evasao = p.locator('.avanco__opcao', { hasText: 'Evasão +1' });
-await evasao.getByRole('button', { name: 'Escolher' }).click();
+await evasao.locator('.cartao__alvo').click();
 const estresse = p.locator('.avanco__opcao', { hasText: 'Estresse +1' });
-await estresse.getByRole('button', { name: 'Escolher' }).click();
+await estresse.locator('.cartao__alvo').click();
 await foto('f14-avanco-escolhido');
 
 await p.getByRole('button', { name: 'Continuar' }).click();

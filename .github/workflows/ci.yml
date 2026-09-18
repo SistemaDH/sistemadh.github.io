@@ -44,6 +44,8 @@ jobs:
         run: npm run teste:jornadas-srd2
       - run: npx playwright install --with-deps chromium
       - run: npm run teste:e2e
+      - name: A rolagem sobrevive a uma escolha
+        run: npm run teste:rolagem
       - name: Layout mobile 360 / 390 / 430
         run: npm run teste:layout-mobile
       - name: Conjuração mobile 360 / 390 sem pontuação órfã
