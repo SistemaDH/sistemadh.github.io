@@ -26,7 +26,7 @@ import { abrirModal, avisarErro, avisarSucesso, blocoVazio } from '../ui.js';
 import { acoes } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
 import * as dados from '../dados.js';
-import { prepararGlossario, nomeComGlossa } from '../glossario.js';
+import { prepararGlossario } from '../glossario.js';
 import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js';
 import { abrirEditorDeAdversario, confirmarExclusao } from './adversario-da-mesa.js';
 

@@ -26,11 +26,15 @@ jobs:
           node-version: '20'
           cache: npm
       - run: npm ci
+      - name: Análise estática (ESLint)
+        run: npm run teste:lint
       - run: npm run teste:sintaxe
       - run: npm run teste
       - run: npm run teste:gerados
       - run: npm run teste:funcoes
       - run: npm run teste:motor-mesa
+      - name: Motor — todo nome chamado existe no motor
+        run: npm run teste:motor-simbolos
       - run: npm run teste:css
       - name: Fonte, tradução e cobertura SRD 2.0
         env:

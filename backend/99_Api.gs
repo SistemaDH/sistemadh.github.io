@@ -1198,8 +1198,26 @@ function executar_(p) {
       }
 
       /* --- mesa / configuração ----------------------------------------- */
+      /*
+       * LER CONFIGURAÇÃO É DO MESTRE, igual a gravar.
+       *
+       * Até 17/09/2026 qualquer jogador autenticado podia ler QUALQUER chave de
+       * configuração da mesa — e havia um teste dizendo que isso era o certo.
+       * Não era: `gravarConfig` sempre exigiu Mestre, então as chaves que
+       * existem são, por construção, coisa que só o Mestre pôs ali. Deixar a
+       * leitura aberta é dar ao jogador acesso a tudo que o Mestre guardar na
+       * mesa no futuro — sem nenhum jogador ganhar nada com isso hoje, porque
+       * NENHUMA tela do app chama `lerConfig`.
+       *
+       * O que o jogador precisa da mesa (Medo, nível, número da sessão, regra
+       * de moedas) continua vindo pela ação `sessao`, que é feita para isso e
+       * devolve só esses campos.
+       */
       case 'lerConfig': {
-        exigirSessao_(p.token);
+        const jogador = exigirSessao_(p.token);
+        if (jogador.papel !== PAPEL.MESTRE) {
+          throw erroApi_(ERRO.SEM_PERMISSAO, 'Só o Mestre pode ler a configuração da mesa.');
+        }
         return ok_({ chave: p.chave, valor: configLer_(p.chave, null) });
       }
 

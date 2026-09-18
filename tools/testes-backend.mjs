@@ -262,12 +262,18 @@ teste('exclusão é lógica: some da lista mas fica na planilha', () => {
 });
 
 console.log('\nMesa e permissões');
-teste('só o Mestre grava configuração da mesa', () => {
+teste('só o Mestre grava E LÊ configuração da mesa', () => {
   const negado = api('gravarConfig', { token: tokenAna, chave: 'medo', valor: 5 });
   igual(negado.erro.codigo, 'SEM_PERMISSAO');
   const ok = api('gravarConfig', { token: tokenMestre, chave: 'medo', valor: 5 });
   verdade(ok.ok, JSON.stringify(ok));
-  igual(api('lerConfig', { token: tokenAna, chave: 'medo' }).dados.valor, 5);
+  /*
+   * A versão antiga deste teste afirmava o contrário — que o jogador comum LÊ
+   * a configuração — e por isso a brecha sobreviveu a 971 testes. O que o
+   * jogador precisa da mesa vem pela ação `sessao`, não daqui.
+   */
+  igual(api('lerConfig', { token: tokenAna, chave: 'medo' }).erro.codigo, 'SEM_PERMISSAO');
+  igual(api('lerConfig', { token: tokenMestre, chave: 'medo' }).dados.valor, 5);
 });
 
 teste('só o Mestre lista jogadores', () => {
@@ -3527,7 +3533,6 @@ teste('delta e valor: o + e o − contra o toque no marcador', () => {
 });
 
 teste('o nome do recurso aceita as duas traduções', () => {
-  const f = fichaCansada();
   igual(contexto.normalizarRecursoAjustavel_('Fadiga'), 'estresseMarcado');
   igual(contexto.normalizarRecursoAjustavel_('Estresse'), 'estresseMarcado');
   igual(contexto.normalizarRecursoAjustavel_('PV'), 'pontosDeVidaMarcados');
@@ -4510,6 +4515,26 @@ teste('desfazer devolve a ficha exatamente como estava', () => {
   igual(desfeita.defesas.evasao, f.defesas.evasao);
   igual(desfeita.tracos, f.tracos);
   igual(desfeita.avancos.tracosMarcados, []);
+  /*
+   * O nome do teste promete "exatamente como estava" — então compara a ficha
+   * INTEIRA, não só os cinco campos acima. Antes disto, `antes` era calculado
+   * e jogado fora, e o teste só conferia o que alguém lembrou de listar.
+   *
+   * ÚNICA DIVERGÊNCIA CONHECIDA E BENIGNA: `avancos.bonus`. A ficha nova nasce
+   * com `{}` e o avanço materializa as quatro chaves; desfazer zera os valores
+   * mas não apaga as chaves. Como todo leitor usa `bonus.x || 0`, `{}` e
+   * `{tudo: 0}` são a mesma coisa para o app. Em vez de afrouxar a comparação
+   * inteira por causa disso, este campo é conferido à parte — e o resto tem de
+   * bater byte a byte.
+   */
+  igual(desfeita.avancos.bonus,
+    { pontosDeVidaMaximos: 0, estresseMaximo: 0, evasao: 0, proficiencia: 0 });
+  const semBonus = (txt) => {
+    const o = JSON.parse(txt);
+    delete o.avancos.bonus;
+    return JSON.stringify(o);
+  };
+  igual(semBonus(JSON.stringify(desfeita)), semBonus(antes));
 });
 
 teste('desfazer duas vezes seguidas é recusado', () => {
@@ -10580,7 +10605,6 @@ teste('as quatro cartas legadas têm classificação explícita sem perder suas 
   });
   const vit=dados.find(x=>x.id==='blade-vitalidade');
   verdade(vit.efeitoPermanente && vit.efeitoPermanente.trancaNoCofre===true);
-  const sim=dados.find(x=>x.id==='codex-simbolo-da-retaliacao');
   verdade(avaliar('CONTADORES')['carta:codex-simbolo-da-retaliacao']);
   const ron=dados.find(x=>x.id==='codex-livro-do-ronin');
   verdade(ron.efeitoPermanente && ron.efeitoPermanente.noAlvo);
@@ -10899,7 +10923,6 @@ function fichaEquipC1_(arma) {
 
 teste('C1 publica todas as ocorrências alvo com uso ativo e sem RNG do app',()=>{
   const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/equipamentos.json'),'utf8'));
-  const itens=[...(d.armas||[]),...(d.armaduras||[]),...Object.values(d.molduras||{}).flatMap(x=>Array.isArray(x)?x:[])];
   const walk=(x,out=[])=>{ if(Array.isArray(x)) x.forEach(v=>walk(v,out)); else if(x&&typeof x==='object'){ if(x.caracteristica) out.push(x); Object.values(x).forEach(v=>walk(v,out)); } return out; };
   const xs=walk(d,[]);
   const alvos=xs.filter(x=>{
@@ -11486,10 +11509,6 @@ teste('persistência sem referência não se espalha para contadores normais', (
 
 
 console.log('\nLote 8 — consumíveis com estado até descanso E3');
-function itemE3PorIngles_(nome) {
-  return avaliar('ITENS').find((x)=>String(x.nomeIngles || '').toLowerCase()===String(nome).toLowerCase()) ||
-    Object.values(avaliar('ITENS')).find((x)=>String(x.nomeIngles || '').toLowerCase()===String(nome).toLowerCase());
-}
 function fichaConsumivelE3_(item,qtd=1) {
   const f=contexto.fichaVazia_();
   f.identidade={nome:'E3',nivel:10,classe:'Guerreiro',subclasse:'Chamada do Matador'};
@@ -11498,7 +11517,6 @@ function fichaConsumivelE3_(item,qtd=1) {
   return f;
 }
 teste('E3 estrutura Gota Lunar, Argila Transformadora e Almíscar do Ogro sem RNG', () => {
-  const itens=avaliar('ITENS');
   const nomes=['Vial of Moondrip','Morphing Clay','Ogre Musk'];
   nomes.forEach((nome) => {
     const item=contexto.acharItem_(nome);
@@ -11939,6 +11957,9 @@ teste('E9 corrige o deslocamento do E7: Encolhimento=53, Crescimento=54 e Pedra 
   const encolher=contexto.acharItem_('consumivel-53');
   const crescer=contexto.acharItem_('consumivel-54');
   const pedra=contexto.acharItem_('consumivel-55');
+  igual(pedra.nome,'Pedra do Conhecimento');
+  verdade(!/tamanho/.test(String(pedra.automacao&&pedra.automacao.classificacao||'')),
+    'consumivel-55 não pode ser classificado como estado de tamanho');
   igual(encolher.nome,'Poção de encolhimento');
   igual(crescer.nome,'Poção de crescimento');
   igual(encolher.automacao.classificacao,'consumivel-estado-tamanho-e7');

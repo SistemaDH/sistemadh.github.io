@@ -185,6 +185,70 @@ async function abrirCriacao(page, viewport) {
   await page.waitForSelector('.criacao__corpo .campo__entrada', { timeout: 15000 });
 }
 
+/**
+ * O CAMINHO GUIADO, que é onde moram os alvos que ninguém media.
+ *
+ * Esta bateria só percorria o caminho RÁPIDO — que pula subclasse, herança,
+ * traços, equipamento, Experiências e história. Seis dos dez passos. Foi nesse
+ * vão que 122 chips de 36px ficaram anos sem serem medidos: o predicado desta
+ * mesma bateria os reprovaria, ela só nunca chegou lá.
+ *
+ * Os três estados auditados aqui (equipamento, Experiências e história) são
+ * exatamente os que tinham chip. Se alguém baixar o `.chip` de volta para 36px,
+ * o CI para a mudança.
+ */
+async function percorrerCaminhoGuiado(page, viewport) {
+  await page.waitForSelector('.lista-escolha__botao');
+  await page.locator('.lista-escolha__botao').first().click();   // classe
+  await page.waitForSelector('.lista-escolha__botao');
+  await auditar(page, viewport, 'criacao-guiada-subclasse');
+  await page.locator('.lista-escolha__botao').first().click();   // subclasse
+
+  await page.waitForSelector('.grade-opcoes__item');
+  await auditar(page, viewport, 'criacao-guiada-heranca');
+  await page.locator('.grade-opcoes__item .btn').first().click();
+  await page.locator('.criacao__secao', { hasText: 'Comunidade' }).waitFor();
+  await page.locator('.grade-opcoes').last().locator('.btn').first().click();
+  await page.locator('.criacao__rodape .btn--principal').click();
+
+  await auditar(page, viewport, 'criacao-guiada-tracos');
+  await page.getByRole('button', { name: /Usar a sugestão do livro/ }).click();
+  await page.locator('.criacao__rodape .btn--principal').click();
+
+  await page.waitForSelector('.painel-derivados');
+  await auditar(page, viewport, 'criacao-guiada-equipamento');   // 4 chips
+  await page.locator('.chips .chip').first().click();
+  const chipsItem = page.locator('.chips').nth(1).locator('.chip');
+  if (await chipsItem.count()) await chipsItem.first().click();
+  await page.locator('.criacao__rodape .btn--principal').click();
+
+  await page.waitForSelector('.lista-escolha--compacta .btn--pequeno');
+  await page.locator('.lista-escolha--compacta .btn--pequeno').nth(0).click();
+  await page.locator('.lista-escolha--compacta .btn--pequeno:not([disabled])').nth(1).click();
+  await page.locator('.criacao__rodape .btn--principal').click();
+
+  // As sanfonas de exemplo precisam estar ABERTAS: fechadas, os chips não têm
+  // caixa e a medição não vê nada. Era outra forma de o alvo escapar.
+  await page.waitForTimeout(300);
+  await abrirSanfonas(page);
+  await auditar(page, viewport, 'criacao-guiada-experiencias');  // 79 chips
+  await page.fill('.criacao__corpo .campo__entrada >> nth=0', 'Contadora de histórias');
+  await page.fill('.criacao__corpo .campo__entrada >> nth=1', 'Ouvido para segredos');
+  await page.locator('.criacao__rodape .btn--principal').click();
+
+  await page.waitForTimeout(300);
+  await abrirSanfonas(page);
+  await auditar(page, viewport, 'criacao-guiada-historia');      // 39 chips
+}
+
+/** Abre todo <details> da tela — chip dentro de sanfona fechada não se mede. */
+async function abrirSanfonas(page) {
+  await page.evaluate(() => {
+    document.querySelectorAll('.criacao__corpo details').forEach((d) => { d.open = true; });
+  });
+  await page.waitForTimeout(250);
+}
+
 async function irDaEtapa1ARevisaoRapida(page, viewport) {
   // Volta ao início mantendo o nome, troca para o caminho rápido e percorre
   // as mesmas escolhas que o E2E usa. Nenhum estado interno é forjado.
@@ -225,7 +289,8 @@ async function irDaEtapa1ARevisaoRapida(page, viewport) {
   });
 }
 
-async function executar(viewport) {
+/** Abre um contexto limpo, leva até a etapa 1 do guiado e devolve os dois. */
+async function abrirNaEtapa1(viewport, auditarInicio) {
   const contexto = await navegador.newContext({
     viewport: { width: viewport.width, height: viewport.height },
     deviceScaleFactor: 2,
@@ -237,25 +302,49 @@ async function executar(viewport) {
     localStorage.setItem('dh:baseApi', JSON.stringify(url).slice(1, -1));
   }, [base]);
   const page = await contexto.newPage();
+  await abrirCriacao(page, viewport);
+  if (auditarInicio) await auditar(page, viewport, 'criacao-inicio', { tituloEsperado: 'Novo personagem' });
 
-  try {
-    await abrirCriacao(page, viewport);
-    await auditar(page, viewport, 'criacao-inicio', { tituloEsperado: 'Novo personagem' });
-
-    await page.fill('.criacao__corpo .campo__entrada >> nth=0', 'Lyra Teste');
-    await page.getByRole('button', { name: /Criação guiada/ }).click();
-    await page.locator('.criacao__rodape .btn--principal').click();
-    await page.waitForSelector('.criacao__etiqueta');
-    await page.waitForSelector('.lista-escolha__item');
+  await page.fill('.criacao__corpo .campo__entrada >> nth=0', 'Lyra Teste');
+  await page.getByRole('button', { name: /Criação guiada/ }).click();
+  await page.locator('.criacao__rodape .btn--principal').click();
+  await page.waitForSelector('.criacao__etiqueta');
+  await page.waitForSelector('.lista-escolha__item');
+  if (auditarInicio) {
     await auditar(page, viewport, 'criacao-etapa-1', {
       etapaLivroEsperada: 1,
       passoEsperado: 1,
       tituloEsperado: 'Escolha sua classe'
     });
+  }
+  return { contexto, page };
+}
 
-    await irDaEtapa1ARevisaoRapida(page, viewport);
+/*
+ * DUAS PASSAGENS, cada uma em contexto próprio.
+ *
+ * Não dá para encadear os dois caminhos na mesma página: o rápido começa
+ * clicando "Voltar" a partir da ETAPA 1, e depois do guiado a tela está na
+ * história. Tentar rebobinar seria frágil e esconderia falha atrás de
+ * navegação. Dois contextos custam alguns segundos e não mentem.
+ *
+ * O guiado é o que importa aqui: é ele que passa pelas seis etapas que esta
+ * bateria nunca visitou, e onde estavam os 122 alvos de 36px. O rápido segue
+ * guardando a ordem das etapas do livro, que é outra coisa.
+ */
+async function executar(viewport) {
+  let r = await abrirNaEtapa1(viewport, true);
+  try {
+    await percorrerCaminhoGuiado(r.page, viewport);
   } finally {
-    await contexto.close();
+    await r.contexto.close();
+  }
+
+  r = await abrirNaEtapa1(viewport, false);
+  try {
+    await irDaEtapa1ARevisaoRapida(r.page, viewport);
+  } finally {
+    await r.contexto.close();
   }
 }
 

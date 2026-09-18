@@ -387,10 +387,21 @@ export const acoes = {
    * chave solta de configuração: o teto de 12 é regra do livro e quem aplica
    * é o servidor, não o botão.
    */
+  /*
+   * ⚠ DEVOLVE O RELATÓRIO INTEIRO, não só o número.
+   *
+   * Antes devolvia `dados.medo.depois` e jogava fora o resto — e no resto ia o
+   * `aviso`, que o servidor escreve com a página do livro: "O máximo é 12
+   * Pontos de Medo (livro p.154)." Resultado medido: no cabeçalho do roster,
+   * quinze toques no "+" paravam em 12 SEM DIZER NADA. Os três últimos eram
+   * no-op mudo, e o botão parecia quebrado.
+   *
+   * Quem chama decide o que mostrar; o que não pode é a informação morrer aqui.
+   */
   async definirMedo(valor) {
     const dados = await api.ajustarMedo(estado.token, { valor });
     definir({ medo: dados.medo.depois });
-    return dados.medo.depois;
+    return dados.medo;
   },
 
   /* ------------------------------------------------------------------------

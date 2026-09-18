@@ -20,7 +20,7 @@
  *  • Nada destrutivo sem prévia — o descanso do grupo mostra antes.
  */
 
-import { el, limpar, dataRelativa, travarBotao, semCorretor } from '../util.js';
+import { el, limpar, travarBotao, semCorretor } from '../util.js';
 import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js';
 import { acoes } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
@@ -485,6 +485,18 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
    * remontar a lista de adversários no meio de um combate é pior do que
    * piscar.
    */
+  /*
+   * O `aviso` do teto NÃO aparece aqui, e está certo assim.
+   *
+   * Este painel desenha o Medo como uma TRILHA de 12 pontos: não existe um 13º
+   * para tocar, então o servidor nunca recebe um valor acima do teto e nunca
+   * tem motivo de avisar. A linha `if (r.medo.aviso)` abaixo fica como rede —
+   * ela cobre um pedido por `delta`, que não passa pela trilha.
+   *
+   * Quem precisava do aviso era o contador do CABEÇALHO DO ROSTER, que é um
+   * "+" sem teto visível: lá o 13 saía do app, voltava limitado, e o jogador
+   * via o número parar sem explicação. O conserto foi no roster.js.
+   */
   async function mexerNoMedo(pedido) {
     const alvo = (pedido && pedido.valor !== undefined)
       ? Math.max(0, Math.min(painel.medoRegras.maximo, pedido.valor))
@@ -595,8 +607,15 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       }));
     }
 
-    botoes.push(botao(`Anunciar nível ${m.nivelDaMesa + 1}`, async () => {
-      if (m.nivelDaMesa >= 10) { avisar('A mesa já está no nível 10.', 'info'); return; }
+    /*
+     * NO NÍVEL 10 O BOTÃO SOME, em vez de anunciar um nível 11 que não existe.
+     *
+     * Ele montava o rótulo com `nivelDaMesa + 1` sempre — então, no teto, a
+     * mesa lia "Anunciar nível 11" e só descobria o problema depois de tocar.
+     * Um controle que mostra um número impossível é pior que um controle
+     * ausente: ele ensina errado sobre a regra.
+     */
+    if (m.nivelDaMesa < 10) botoes.push(botao(`Anunciar nível ${m.nivelDaMesa + 1}`, async () => {
       const ok = await confirmar({
         titulo: `Mesa no nível ${m.nivelDaMesa + 1}`,
         mensagem: 'Isso avisa os jogadores. As fichas NÃO sobem sozinhas — cada um ' +

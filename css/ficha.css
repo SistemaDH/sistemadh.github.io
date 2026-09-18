@@ -573,10 +573,20 @@
  * A pílula desenha 32px e a margem completa os 44px de alvo: com 4+ condições
  * a lista embrulha em duas fileiras sem virar um bloco maciço.
  */
+/*
+ * A condição também sobe para 44px. Ela baixava o chip para 32 em nome da
+ * densidade — mas condição é o que a mesa mais toca depois das trilhas, e
+ * acontece sempre no meio de uma cena. O `margin-block` menor compensa parte da
+ * altura, então a lista continua embrulhando em duas fileiras sem virar bloco.
+ *
+ * Isto nunca falhou o CI porque o personagem de teste da bateria mobile NUNCA
+ * TEM CONDIÇÃO: os chips não existiam na hora da medição. O conserto vem com o
+ * teste que dá condição ao personagem.
+ */
 .chip--condicao {
-  min-height: 32px;
+  min-height: 44px;
   padding-inline: 12px;
-  margin-block: 6px;
+  margin-block: 4px;
   border-color: var(--cor-alerta);
   color: #f0d9a8;
   background: rgba(224, 162, 58, .12);

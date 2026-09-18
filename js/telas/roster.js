@@ -10,7 +10,7 @@ import { el, dataRelativa } from '../util.js';
 import { CONFIG } from '../config.js';
 import { obterEstado, acoes, ehMestre, assinar } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
-import { confirmar, avisarErro, avisarSucesso, blocoVazio } from '../ui.js';
+import { confirmar, avisar, avisarErro, avisarSucesso, blocoVazio } from '../ui.js';
 import { abrirCriacao } from './criacao.js';
 import { abrirFichaEmJogo } from './ficha.js?v=20260911c';
 import { abrirPainelDoMestre } from './mestre.js';
@@ -203,8 +203,29 @@ export function telaRoster() {
   async function pedirExclusao(p) {
     const certeza = await confirmar({
       titulo: 'Excluir ficha',
-      mensagem: `“${p.nome}” sai da lista. A linha continua guardada na planilha, ` +
-        'então o Mestre consegue restaurar.',
+      /*
+       * A MENSAGEM PROMETIA O QUE O APP NÃO FAZ.
+       *
+       * Ela dizia: "A linha continua guardada na planilha, então o Mestre
+       * consegue restaurar." Duas coisas erradas numa frase só.
+       *
+       * 1. "Planilha" morreu na migração para o Supabase. O invariante 6 do
+       *    projeto é justamente não voltar para o Sheets, e o texto ficou para
+       *    trás dizendo à mesa que os dados moram lá.
+       *
+       * 2. "O Mestre consegue restaurar" é falso NA PRÁTICA. O backend tem
+       *    `restaurarPersonagem_`, o `js/api.js` tem `api.restaurarPersonagem`,
+       *    e nenhuma tela chama. Não existe botão em lugar nenhum. A promessa
+       *    fazia alguém excluir com confiança e descobrir depois que não havia
+       *    volta.
+       *
+       * O que é verdade: a exclusão é uma MARCA (`excluido: true`), o registro
+       * não é apagado, e recuperar é possível — só não pelo app. Dizer isso é
+       * mais útil do que prometer um botão que não existe.
+       */
+      mensagem: `“${p.nome}” sai da lista e o app não tem como trazer de volta. ` +
+        'O registro não é apagado do banco, então uma recuperação é possível ' +
+        'por fora — mas dá trabalho. Tenha certeza.',
       confirmarTexto: 'Excluir',
       perigo: true
     });
@@ -253,10 +274,24 @@ export function telaRoster() {
     const mestre = ehMestre();
     const valor = el('strong', { class: 'roster__medoValor', texto: String(obterEstado().medo || 0) });
 
+    /*
+     * NO TETO, O BOTÃO DIZ POR QUE NÃO ANDOU.
+     *
+     * O servidor limita em 12 (livro p.154) e devolve um `aviso` com a citação
+     * da página. Esta tela descartava esse aviso: quinze toques no "+" paravam
+     * em 12 e os três últimos não faziam nem diziam nada. Num celular, no meio
+     * de uma cena, um botão que não responde parece defeito.
+     *
+     * O aviso só aparece quando o valor REALMENTE não mudou — senão ele
+     * apareceria em toda subida a partir do 11.
+     */
     const ajustar = (delta) => async () => {
-      const novo = Math.max(0, (obterEstado().medo || 0) + delta);
+      const antes = obterEstado().medo || 0;
+      const novo = Math.max(0, antes + delta);
       try {
-        await acoes.definirMedo(novo);
+        const r = await acoes.definirMedo(novo);
+        const depois = (r && typeof r === 'object') ? r.depois : r;
+        if (depois === antes && r && r.aviso) avisar(r.aviso, 'info', 4000);
       } catch (e) {
         avisarErro(mensagemDoErro(e));
       }

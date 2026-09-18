@@ -7,7 +7,7 @@
  */
 
 import { el, travarBotao } from '../util.js';
-import { abrirModal, avisarErro, avisarSucesso } from '../ui.js';
+import { abrirModal, avisarErro, avisarSucesso, confirmar } from '../ui.js';
 import { acoes } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
 
@@ -52,7 +52,24 @@ function paraBase64(blob) {
 }
 
 export function abrirEditorDeFoto(personagem, aoTrocar) {
+  /*
+   * ⚠ INVARIANTE E102 — `const`/`let` no TOPO do escopo do modal.
+   *
+   * O botão "Salvar foto" era declarado ~110 linhas abaixo, e `usarArquivo()`
+   * já mexia nele lá em cima (`salvar.disabled = false`). Hoje não quebra,
+   * porque `usarArquivo` só roda no `change` do seletor de arquivo — muito
+   * depois de o módulo terminar de montar. Mas é EXATAMENTE a forma do bug que
+   * custou duas tardes no modal de forma de fera e virou invariante: um
+   * `ReferenceError` de zona morta, sem pista no console, num botão que
+   * simplesmente não faz nada.
+   *
+   * Bastava alguém chamar `usarArquivo` na montagem — para pré-carregar a foto
+   * atual, por exemplo — e o editor inteiro morria em silêncio. Declarar no
+   * topo custa três linhas e fecha a porta.
+   */
   const temFoto = Boolean((personagem.ficha && personagem.ficha.identidade || {}).foto);
+  const salvar = el('button', { type: 'button', class: 'btn btn--principal', disabled: true }, 'Salvar foto');
+  const remover = temFoto ? el('button', { type: 'button', class: 'btn btn--perigo' }, 'Remover') : null;
   const tela = el('canvas', { class: 'foto__tela', width: FOTO_LARGURA, height: FOTO_ALTURA });
   const pincel = tela.getContext('2d');
   const escolher = el('input', {
@@ -169,7 +186,6 @@ export function abrirEditorDeFoto(personagem, aoTrocar) {
   tela.addEventListener('pointerup', soltar);
   tela.addEventListener('pointercancel', soltar);
 
-  const salvar = el('button', { type: 'button', class: 'btn btn--principal', disabled: true }, 'Salvar foto');
   salvar.addEventListener('click', async () => {
     if (!imagem) return;
     try {
@@ -185,9 +201,24 @@ export function abrirEditorDeFoto(personagem, aoTrocar) {
     } catch (e) { avisarErro(mensagemDoErro(e)); }
   });
 
-  const remover = temFoto ? el('button', { type: 'button', class: 'btn btn--perigo' }, 'Remover') : null;
   if (remover) {
+    /*
+     * REMOVER PERGUNTA — ele é vermelho e mora ao lado de "Salvar foto".
+     *
+     * Numa fileira de 390px, "Fechar · Remover · Salvar foto" põem o botão que
+     * apaga encostado no que grava. Todas as outras ações destrutivas do app
+     * confirmam (excluir ficha, sair da conta); esta ia direto, e o que se
+     * perde é uma imagem que alguém enquadrou à mão.
+     */
     remover.addEventListener('click', async () => {
+      const ok = await confirmar({
+        titulo: 'Remover a foto',
+        mensagem: `A foto de ${personagem.nome || 'seu personagem'} sai da ficha. ` +
+          'Para ter de volta é preciso escolher e enquadrar a imagem de novo.',
+        confirmarTexto: 'Remover',
+        perigo: true
+      });
+      if (!ok) return;
       try {
         const r = await travarBotao(remover, acoes.removerFoto(personagem.id));
         avisarSucesso('Foto removida.');

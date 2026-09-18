@@ -110,11 +110,28 @@
    folha da tela; o componente é daqui.
    -------------------------------------------------------------------------- */
 
+/*
+ * O CHIP TEM 44px, e não 36 — o piso de toque do projeto.
+ *
+ * Ele ficou em 36px por anos sem ninguém notar, porque os chips só aparecem em
+ * telas que NENHUMA bateria visitava: equipamento, Experiências e história da
+ * criação (a bateria da criação usa o caminho rápido, que pula essas três) e a
+ * lista de condições da ficha (o personagem de teste nunca tem condição).
+ * Medido: 122 alvos de 36px que reprovariam no predicado da própria bateria.
+ *
+ * ⚠ AQUI NÃO SERVE O TRUQUE DO `::after`.
+ *
+ * O botão de Medo e o selo de nível resolvem o mesmo problema esticando a área
+ * de toque com um pseudo-elemento, mantendo o desenho pequeno. Para chip isso
+ * seria pior: eles ficam lado a lado numa grade que quebra linha, e hitboxes
+ * infladas se SOBREPORIAM — o dedo no meio de dois chips acertaria o errado.
+ * Quando os alvos são vizinhos, a área tem de ser a área de verdade.
+ */
 .chip {
   display: inline-flex;
   align-items: center;
   gap: var(--e1);
-  min-height: 36px;
+  min-height: 44px;
   padding: var(--e1) var(--e3);
   border-radius: var(--raio-cheio);
   border: 1px solid var(--cor-borda-forte);
@@ -439,4 +456,18 @@
     font-size: var(--txt-sm);
     line-height: 1.35;
   }
+}
+
+/* --------------------------------------------------------------------------
+   Divisor
+   -------------------------------------------------------------------------- */
+
+/*
+ * Era um `style` embutido no ajustes.js — o único `style` inline do app inteiro.
+ * Uma linha só, mas ela obrigava quem mexesse no tema a caçar cor dentro do JS.
+ */
+.divisor {
+  border: 0;
+  border-top: 1px solid var(--cor-borda);
+  margin: var(--e2) 0;
 }

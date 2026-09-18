@@ -12,7 +12,7 @@ const VIEWPORTS = [
 const PASTA = 'artifacts/layout-mobile';
 await mkdir(PASTA, { recursive: true });
 
-const { servidor, porta } = await criarServidor({ porta: 0, semarcar: true });
+const { servidor, porta, ambiente } = await criarServidor({ porta: 0, semarcar: true });
 const base = `http://localhost:${porta}`;
 const CHROMIUM_LOCAL = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 const navegador = await chromium.launch({
@@ -225,6 +225,28 @@ for (const aviso of [...document.querySelectorAll('.aviso')].filter(visivel)) {
   registrar(viewport, tela, dados);
 }
 
+/**
+ * Põe três condições na ficha recém-criada, direto no backend do servidor de
+ * teste. Três, e não uma: os nomes têm larguras bem diferentes (curto, com
+ * glosa da Jambô, e temporário), e é a variedade que faz a lista embrulhar —
+ * que é quando o alvo pequeno aparece de verdade.
+ */
+function darCondicoesAoTeste() {
+  return ambiente.avaliar(`(function(){
+    const linhas = lerTudo_(ABAS.PERSONAGENS);
+    const linha = linhas[linhas.length - 1];
+    if (!linha) return 'sem ficha';
+    const d = JSON.parse(linha.dados);
+    d.condicoes = [
+      { id:'vulneravel', nome:'Vulnerável', temporaria:false, origem:'baseline mobile' },
+      { id:'oculto',     nome:'Oculto',     temporaria:true,  origem:'baseline mobile' },
+      { id:'restrito',   nome:'Restrito',   temporaria:false, origem:'baseline mobile' }
+    ];
+    atualizarLinha_(ABAS.PERSONAGENS, linha._linha, { dados: JSON.stringify(d) });
+    return 'ok';
+  })()`);
+}
+
 async function criarPersonagemRapido(page) {
   await page.getByRole('button', { name: 'Criar acesso' }).click();
   await page.fill('#nome', `Mobile ${Math.random().toString(36).slice(2, 8)}`);
@@ -288,8 +310,26 @@ async function executar(viewport) {
     await criarPersonagemRapido(page);
     await auditar(page, viewport, 'roster');
 
+    /*
+     * O PERSONAGEM DE TESTE PRECISA TER CONDIÇÃO.
+     *
+     * Sem isto, o `.chip--condicao` simplesmente NÃO EXISTE na hora da medição —
+     * e um alvo que não está na tela não é medido. Foi assim que um chip de
+     * 32px ficou anos numa tela que esta bateria visita: o CI olhava a ficha
+     * certa, na largura certa, e não via o controle porque a Lyra de teste
+     * nunca ficava Vulnerável.
+     *
+     * Escreve direto no backend, que é o mesmo do servidor de teste: não há
+     * ação de app que ponha condição arbitrária, e forjar pela tela seria
+     * inventar um caminho que o jogador não tem.
+     */
+    darCondicoesAoTeste();
+    await page.reload({ waitUntil: 'networkidle' });
+    await page.waitForSelector('.roster', { timeout: 15000 });
+
     await page.click('.ficha-cartao__abrir');
     await page.waitForSelector('.ficha__rodape', { timeout: 15000 });
+    await page.waitForSelector('.chip--condicao', { timeout: 10000 });
     await auditar(page, viewport, 'ficha-jogo');
 
     const abas = [
@@ -316,6 +356,54 @@ async function executar(viewport) {
     await auditar(page, viewport, 'ajustes');
     await page.keyboard.press('Escape');
     await page.waitForSelector('.modal', { state: 'detached' });
+
+    await auditarComoMestre(viewport);
+  } finally {
+    await contexto.close();
+  }
+}
+
+/**
+ * O MESTRE, que este baseline nunca via.
+ *
+ * Esta bateria andava só por telas de jogador — abertura, roster, ficha,
+ * regras, ajustes. O roster do Mestre é OUTRA tela: ganha o contador de Medo
+ * com dois passos, o botão do painel e o rodapé com o dono de cada ficha. Nada
+ * disso era medido em largura nenhuma.
+ *
+ * ⚠ CONTEXTO PRÓPRIO, e não uma aba nova no mesmo.
+ *
+ * Abas do mesmo contexto compartilham o localStorage — e com a sessão do
+ * jogador guardada lá, a aba nova pulava a abertura e caía direto no roster
+ * dele. O teste morria esperando `.abertura__titulo`. Contexto separado começa
+ * deslogado, que é o estado em que o Mestre entra de verdade.
+ */
+async function auditarComoMestre(viewport) {
+  const contexto = await navegador.newContext({
+    viewport: { width: viewport.width, height: viewport.height },
+    deviceScaleFactor: 2,
+    isMobile: true,
+    hasTouch: true,
+    locale: 'pt-BR'
+  });
+  await contexto.addInitScript(([url]) => {
+    localStorage.setItem('dh:baseApi', JSON.stringify(url).slice(1, -1));
+  }, [base]);
+  const page = await contexto.newPage();
+  try {
+    await page.goto(base, { waitUntil: 'networkidle' });
+    await page.waitForSelector('.abertura__titulo', { timeout: 15000 });
+    await page.getByRole('tab', { name: 'Mestre' }).click();
+    await auditar(page, viewport, 'abertura-mestre');
+
+    await page.fill('#codigo', 'mestre-teste');
+    await page.getByRole('button', { name: 'Entrar como Mestre' }).click();
+    await page.waitForSelector('.ficha-cartao__nome', { timeout: 20000 });
+    await auditar(page, viewport, 'roster-mestre');
+
+    await page.getByRole('button', { name: /Abrir o painel do Mestre/i }).click();
+    await page.waitForSelector('.mestre__aba', { timeout: 15000 });
+    await auditar(page, viewport, 'painel-mestre');
   } finally {
     await contexto.close();
   }

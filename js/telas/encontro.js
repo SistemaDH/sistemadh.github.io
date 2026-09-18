@@ -491,7 +491,30 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
     } catch (e) { avisarErro(mensagemDoErro(e)); }
   }
 
+  /*
+   * TIRAR UM DA CENA PERGUNTA, IGUAL A TIRAR TODOS.
+   *
+   * "Encerrar a cena" já confirmava, e a mensagem dela dizia o motivo certo —
+   * "e zerar as trilhas?". Quem escreveu sabia que o custo que vale avisar é a
+   * perda da trilha. Só que "Tirar da cena", que faz o MESMO estrago numa
+   * criatura só, ia direto — e é o botão mais fácil de errar: aparece em todo
+   * cartão de adversário, encostado em "Condições" e "Movimentos", no meio de
+   * uma luta, num celular.
+   *
+   * O que se perde são os PV, o Estresse e as condições daquele adversário, sem
+   * desfazer. A pergunta diz isso com o nome dele.
+   */
   async function remover(a) {
+    const marcados = Number(a.pontosDeVida) || 0;
+    const ok = await confirmar({
+      titulo: `Tirar ${a.nome} da cena`,
+      mensagem: marcados > 0
+        ? `A trilha dele zera: ${marcados} de dano marcado, o Estresse e as condições somem junto. Não dá para desfazer.`
+        : 'Ele sai da cena com as condições e a trilha dele. Não dá para desfazer.',
+      confirmarTexto: 'Tirar da cena',
+      perigo: true
+    });
+    if (!ok) return;
     try { aplicar(await acoes.removerDoEncontro(a.id)); }
     catch (e) { avisarErro(mensagemDoErro(e)); }
   }

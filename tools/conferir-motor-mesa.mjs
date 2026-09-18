@@ -24,9 +24,12 @@
  *
  * ⚠ ESCOPO, para ninguém confiar demais: ela exercita as DEZ ações de mesa, e
  * só. Tirar o 4E_Mesa.gs do SOURCE_FILES a derruba; tirar o 47_Contadores.gs
- * não, porque nenhuma ação de mesa chega nos contadores. Um guarda geral de
- * SOURCE_FILES teria de exercitar as 42 ações roteadas — vale escrever um dia,
- * e não é este arquivo.
+ * não, porque nenhuma ação de mesa chega nos contadores.
+ *
+ * Esse buraco foi FECHADO pelo `conferir-motor-simbolos.mjs`, que caminha as 42
+ * ações roteadas e confere que todo nome chamado no caminho existe no motor.
+ * Os dois andam juntos: aquele prova que o motor COMPILA inteiro e responde;
+ * este prova que as dez ações da mesa EXECUTAM e recusam jogador comum.
  *
  * Uso: node tools/conferir-motor-mesa.mjs
  */

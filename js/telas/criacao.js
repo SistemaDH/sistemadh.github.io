@@ -16,12 +16,12 @@
  */
 
 import { el, limpar, travarBotao, semCorretor } from '../util.js';
-import { avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js';
+import { avisarErro, avisarSucesso, avisar, confirmar, temModalAberto, abrirModal } from '../ui.js';
 import { acoes, obterEstado } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
 import * as dados from '../dados.js';
 import {
-  abrirCarta, nomeQueAbreCarta,
+  nomeQueAbreCarta,
   daCartaDeDominio, daSubclasse, daAncestralidade, daComunidade
 } from '../componentes/carta.js';
 import { prepararGlossario, nomeComGlossa } from '../glossario.js';
@@ -70,7 +70,26 @@ export async function abrirCriacao({ aoCriar } = {}) {
     document.removeEventListener('keydown', aoTeclar);
   }
 
-  const aoTeclar = (ev) => { if (ev.key === 'Escape') tentarSair(); };
+  /*
+   * O ESCAPE SÓ SAI DA CRIAÇÃO QUANDO NÃO HÁ MODAL POR CIMA.
+   *
+   * O `temModalAberto()` do ui.js foi escrito exatamente para isto — o
+   * comentário dele cita "ficha, criação" —, mas a criação era a única das
+   * três telas de tela-cheia que não o usava. O resultado, medido: com a carta
+   * da subclasse aberta, UM Escape abria o "Sair da criação?" POR CIMA dela e
+   * deixava a carta presa atrás, porque o visor só fecha quando é o topo da
+   * pilha. Dois modais empilhados, e um botão "Sair" a um toque de apagar o
+   * personagem inteiro.
+   *
+   * A ordem importa: este ouvinte foi registrado ANTES do modal da carta, então
+   * ele roda primeiro. Sem a guarda, ele empilha antes de o modal ter chance de
+   * se fechar.
+   */
+  const aoTeclar = (ev) => {
+    if (ev.key !== 'Escape') return;
+    if (temModalAberto()) return;
+    tentarSair();
+  };
   document.addEventListener('keydown', aoTeclar);
 
   async function tentarSair() {
@@ -602,9 +621,21 @@ export async function abrirCriacao({ aoCriar } = {}) {
       }
     };
 
-    /** Valores da distribuição que ainda não foram colocados. */
+    /**
+     * Valores da distribuição que ainda não foram colocados.
+     *
+     * ⚠ A DISTRIBUIÇÃO VEM DO DADO, não digitada aqui.
+     *
+     * Era `const pilha = [2, 1, 1, 0, 0, -1]` — uma cópia manual de uma regra
+     * que já existe em DOIS arquivos de dados (`criacao.json → numeros.
+     * distribuicaoDeTracos` e `tracos.json → distribuicaoInicial`) e que o
+     * backend GERA a partir deles (`45_Tracos.gs` sai do gerador). Quatro
+     * lugares, e só um era cópia à mão — justamente o que o jogador usa.
+     *
+     * O `catalogo` já carrega os dois arquivos. Estava tudo aqui do lado.
+     */
     function pilhaRestante() {
-      const pilha = [2, 1, 1, 0, 0, -1];
+      const pilha = distribuicaoDeTracos().slice();
       TRACOS_ORDEM.forEach((id) => {
         const v = rascunho.tracos[id];
         if (v === null || v === undefined) return;
@@ -621,6 +652,39 @@ export async function abrirCriacao({ aoCriar } = {}) {
       if (atual !== null && atual !== undefined) disponiveis.add(atual);
       return [2, 1, 0, -1].filter((v) => disponiveis.has(v));
     }
+  }
+
+  /**
+   * A distribuição inicial dos seis traços, lida do catálogo.
+   *
+   * Prefere `tracos.json` (é o arquivo que o gerador do backend consome, então
+   * é a fonte mais canônica) e cai em `criacao.json` se faltar. O último
+   * recurso é a distribuição do livro escrita aqui — se os dois arquivos
+   * sumirem, é melhor o assistente abrir com a regra certa do que não abrir.
+   */
+  function distribuicaoDeTracos() {
+    const a = catalogo.tracos && catalogo.tracos.distribuicaoInicial;
+    if (Array.isArray(a) && a.length === 6) return a;
+    const b = catalogo.criacao && catalogo.criacao.numeros
+      && catalogo.criacao.numeros.distribuicaoDeTracos;
+    if (Array.isArray(b) && b.length === 6) return b;
+    return [2, 1, 1, 0, 0, -1];
+  }
+
+  /** Quantas cartas de domínio a criação dá, antes dos extras de subclasse. */
+  function cartasIniciaisDaCriacao() {
+    const n = catalogo.criacao && catalogo.criacao.numeros
+      && catalogo.criacao.numeros.cartasDeDominio
+      && catalogo.criacao.numeros.cartasDeDominio.quantidade;
+    return Number.isFinite(Number(n)) && Number(n) > 0 ? Math.trunc(Number(n)) : 2;
+  }
+
+  /** Quantas Experiências a criação pede. */
+  function quantasExperiencias() {
+    const n = catalogo.criacao && catalogo.criacao.numeros
+      && catalogo.criacao.numeros.experiencias
+      && catalogo.criacao.numeros.experiencias.quantidade;
+    return Number.isFinite(Number(n)) && Number(n) > 0 ? Math.trunc(Number(n)) : 2;
   }
 
   function formatarValor(v) {
@@ -813,7 +877,8 @@ export async function abrirCriacao({ aoCriar } = {}) {
    * ======================================================================= */
 
   function quantidadeCartasDaCriacao() {
-    let total = 2;
+    // Era `let total = 2`, cravado — o número está em criacao.json.
+    let total = cartasIniciaisDaCriacao();
     const classe = catalogo.classes.find((c) => c.id === rascunho.classe);
     const sub = classe && classe.subclasses.find((s) => s.id === rascunho.subclasse);
     const feats = ((((sub || {}).cartas || {}).fundacao || {}).caracteristicas || []);
@@ -886,6 +951,52 @@ export async function abrirCriacao({ aoCriar } = {}) {
    *  Etapa 7 — Experiências
    * ======================================================================= */
 
+  /**
+   * Com as duas Experiências escritas, pergunta qual o exemplo substitui.
+   * Devolve 0, 1 ou null (desistiu).
+   *
+   * ⚠ NÃO usa o `confirmar` do ui.js. Ele tem dois botões e resolve true/false,
+   * e — o que importa aqui — fechar no Escape ou no fundo também resolve FALSE.
+   * Num "qual das duas?", esse false viraria "troque a segunda": desistir
+   * apagaria uma Experiência. Um modal próprio deixa a desistência devolver
+   * null, que é o único jeito de fechar sem destruir nada.
+   *
+   * Os botões carregam o NOME da Experiência que sai, porque "Experiência 1"
+   * não diz o que se perde.
+   */
+  function escolherExperienciaParaTrocar(novo) {
+    return new Promise((resolve) => {
+      let respondido = false;
+      const responder = (valor) => {
+        if (respondido) return;
+        respondido = true;
+        resolve(valor);
+        modal.fechar();
+      };
+      const opcao = (i) => el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--bloco',
+        onClick: () => responder(i)
+      }, `Trocar "${String(rascunho.experiencias[i] || '').slice(0, 30)}"`);
+
+      const modal = abrirModal({
+        titulo: 'Trocar qual Experiência?',
+        conteudo: el('div', { class: 'pilha' }, [
+          el('p', { class: 'texto-suave', texto:
+            `As duas já estão escritas. "${novo}" entra no lugar de uma delas.` }),
+          opcao(0),
+          opcao(1)
+        ]),
+        acoes: [
+          el('button', {
+            type: 'button', class: 'btn btn--fantasma',
+            onClick: () => responder(null)
+          }, 'Deixar como está')
+        ],
+        aoFechar: () => responder(null)
+      });
+    });
+  }
+
   function rascunhoTemCaracteristica(nome) {
     if (rascunho.usarMista) return rascunho.caracteristicasEscolhidas.includes(nome);
     const a = catalogo.ancestralidades.find((x) => x.id === rascunho.ancestralidade);
@@ -904,7 +1015,8 @@ export async function abrirCriacao({ aoCriar } = {}) {
           pai.append(el('p', { class: 'cartao cartao--alerta texto-sm', texto:
             'Projeto Intencional: escolha UMA das duas Experiências que combina com o propósito para o qual você foi criado. Ela recebe +1 permanente e começa em +3.' }));
         }
-        [0, 1].forEach((i) => {
+        // Quantas Experiências, vindo de criacao.json — era [0, 1] cravado.
+        Array.from({ length: quantasExperiencias() }, (_, i) => i).forEach((i) => {
           const aprimorada = projeto && rascunho.projetoIntencional === i;
           pai.append(el('div', { class: `cartao ${aprimorada ? 'esta-escolhido' : ''}` }, [
             campoTexto(`Experiência ${i + 1}`, rascunho.experiencias[i] || '', (v) => {
@@ -928,9 +1040,28 @@ export async function abrirCriacao({ aoCriar } = {}) {
           const chips = el('div', { class: 'chips' });
           itens.forEach((x) => chips.append(el('button', {
             type: 'button', class: 'chip',
-            onClick: () => {
+            /*
+             * O EXEMPLO PREENCHE O VAZIO — E NUNCA APAGA O QUE VOCÊ ESCREVEU.
+             *
+             * Antes era `rascunho.experiencias[vazio >= 0 ? vazio : 0] = x`: com
+             * as duas já escritas, o `findIndex` devolvia -1 e o código caía no
+             * `: 0`, sobrescrevendo a Experiência 1 sem avisar. Bastava abrir a
+             * sanfona de exemplos por curiosidade e tocar num deles.
+             *
+             * Agora, com as duas cheias, o app PERGUNTA qual você quer trocar —
+             * e o nome da que vai embora aparece no botão, porque "Experiência 1"
+             * não diz o que se perde.
+             */
+            onClick: async () => {
               const vazio = rascunho.experiencias.findIndex((e) => !e || !e.trim());
-              rascunho.experiencias[vazio >= 0 ? vazio : 0] = x;
+              if (vazio >= 0) {
+                rascunho.experiencias[vazio] = x;
+                desenhar();
+                return;
+              }
+              const alvo = await escolherExperienciaParaTrocar(x);
+              if (alvo === null) return;
+              rascunho.experiencias[alvo] = x;
               desenhar();
             }
           }, x)));
@@ -945,7 +1076,8 @@ export async function abrirCriacao({ aoCriar } = {}) {
         if (preenchidas < 2) return 'Escreva as duas Experiências.';
         const [a, b] = rascunho.experiencias.map((e) => dados.chave(e));
         if (a === b) return 'As duas Experiências precisam ser diferentes.';
-        if (rascunhoTemCaracteristica('Projeto Intencional') && ![0, 1].includes(rascunho.projetoIntencional)) {
+        const indices = Array.from({ length: quantasExperiencias() }, (_, i) => i);
+        if (rascunhoTemCaracteristica('Projeto Intencional') && !indices.includes(rascunho.projetoIntencional)) {
           return 'Escolha qual Experiência recebe Projeto Intencional.';
         }
         return null;
@@ -1152,7 +1284,8 @@ export async function abrirCriacao({ aoCriar } = {}) {
     const quantidadeCartas = quantidadeCartasDaCriacao();
     if (rascunho.cartas.length !== quantidadeCartas) p.push(`Faltam cartas de domínio (precisa de ${quantidadeCartas}).`);
     if (rascunho.experiencias.filter((e) => e && e.trim()).length !== 2) p.push('Faltam as duas Experiências.');
-    if (rascunhoTemCaracteristica('Projeto Intencional') && ![0, 1].includes(rascunho.projetoIntencional)) p.push('Falta escolher a Experiência de Projeto Intencional.');
+    const indicesDeExperiencia = Array.from({ length: quantasExperiencias() }, (_, i) => i);
+    if (rascunhoTemCaracteristica('Projeto Intencional') && !indicesDeExperiencia.includes(rascunho.projetoIntencional)) p.push('Falta escolher a Experiência de Projeto Intencional.');
     return p;
   }
 

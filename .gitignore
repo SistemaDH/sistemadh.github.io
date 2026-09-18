@@ -8,5 +8,7 @@ __pycache__/
 !.env.example
 *.log
 playwright-report/
+# Diagnóstico visual das baterias mobile: gerado a cada rodada, nunca versionado.
+artifacts/
 test-results/
 supabase/.temp/

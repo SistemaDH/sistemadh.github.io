@@ -1,5 +1,5 @@
 import fs from'node:fs';import path from'node:path';import{fileURLToPath}from'node:url';
-const raiz=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),dados=JSON.parse(fs.readFileSync(path.join(raiz,'data/transformacoes.json'),'utf8')),j=JSON.stringify;
+const raiz=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),dados=JSON.parse(fs.readFileSync(path.join(raiz,'data/transformacoes.json'),'utf8'));
 const mapa=Object.fromEntries(dados.transformacoes.map(t=>[t.id,{nome:t.nome,nomeIngles:t.nomeIngles,descricao:t.descricao,caracteristicas:t.caracteristicas,perguntas:t.perguntas}]));
 const out=`/** GERADO por tools/gerar-45-transformacoes.mjs. NÃO edite à mão. */
 const TRANSFORMACOES = ${JSON.stringify(mapa,null,2)};

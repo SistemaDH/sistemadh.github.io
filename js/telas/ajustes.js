@@ -85,7 +85,7 @@ export function abrirAjustes() {
 
   if (token && jogador && !jogador.ehMestre) {
     conteudo.append(
-      el('hr', { style: 'border:0;border-top:1px solid var(--cor-borda);margin:8px 0' }),
+      el('hr', { class: 'divisor' }),
       el('button', {
         type: 'button',
         class: 'btn btn--fantasma btn--bloco',
@@ -128,14 +128,33 @@ export function abrirAjustes() {
 }
 
 function abrirTrocaDeCodigo() {
-  const atual = el('input', { class: 'campo__entrada campo__entrada--codigo', type: 'password', maxlength: 32 });
-  const novo = el('input', { class: 'campo__entrada campo__entrada--codigo', type: 'password', maxlength: 32 });
-  const repetir = el('input', { class: 'campo__entrada campo__entrada--codigo', type: 'password', maxlength: 32 });
+  /*
+   * OS TRÊS CAMPOS GANHARAM <label for>.
+   *
+   * Eram `<span class="campo__rotulo">` com o texto ao lado do input — que a
+   * vista resolve e o leitor de tela não: medido no navegador, eram 3 de 3
+   * campos SEM nome acessível. Quem usa leitor ouvia "campo de senha" três
+   * vezes seguidas, sem saber qual era o atual, qual o novo e qual a
+   * repetição — num formulário em que errar a ordem tranca a conta.
+   *
+   * O `abertura.js` já fazia certo no mesmo tipo de campo. Aqui é só alinhar.
+   */
+  const campoId = (sufixo) => `troca-codigo-${sufixo}`;
+  const entrada = (sufixo) => el('input', {
+    id: campoId(sufixo),
+    class: 'campo__entrada campo__entrada--codigo',
+    type: 'password',
+    maxlength: 32,
+    autocomplete: sufixo === 'atual' ? 'current-password' : 'new-password'
+  });
+  const atual = entrada('atual');
+  const novo = entrada('novo');
+  const repetir = entrada('repetir');
 
-  const bloco = (rotulo, entrada, ajuda) =>
+  const bloco = (rotulo, campo, ajuda) =>
     el('div', { class: 'campo' }, [
-      el('span', { class: 'campo__rotulo', texto: rotulo }),
-      entrada,
+      el('label', { class: 'campo__rotulo', for: campo.id, texto: rotulo }),
+      campo,
       ajuda ? el('span', { class: 'campo__ajuda', texto: ajuda }) : null
     ]);
 

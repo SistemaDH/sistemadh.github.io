@@ -218,6 +218,21 @@ export const api = {
   salvarAdversarioDaMesa: (token,ficha) => chamar('salvarAdversarioDaMesa',{token,ficha}),
   excluirAdversarioDaMesa: (token,id) => chamar('excluirAdversarioDaMesa',{token,id}),
 
+  /*
+   * ⚠ TRÊS MÉTODOS SEM CHAMADOR, e é de propósito — o linter não acusa porque
+   * o objeto inteiro é exportado. Registrado aqui para ninguém apagar por
+   * engano nem achar que é esquecimento:
+   *
+   *   restaurarPersonagem — o backend restaura, a tela ainda não existe. A
+   *     ficha excluída continua na base e o Mestre a traz de volta por aqui
+   *     quando a tela for feita. É item aberto, não código morto.
+   *
+   *   lerConfig / gravarConfig — configuração livre da mesa, do tempo do Apps
+   *     Script. Desde 17/09/2026 as DUAS exigem Mestre nos dois backends; o
+   *     que o app realmente usa (Medo, nível, sessão, regra de moedas) vem
+   *     pela ação `sessao`. Ficam como porta de serviço para um painel de
+   *     mesa futuro, não como caminho do app.
+   */
   lerConfig: (token,chave) => chamar('lerConfig',{token,chave}),
   gravarConfig: (token,chave,valor) => chamar('gravarConfig',{token,chave,valor}),
   listarJogadores: token => chamar('listarJogadores',{token})

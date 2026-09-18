@@ -262,6 +262,19 @@
  * barra. Aqui o desenho tem 26px e o `::after` estica o alvo até 44 — o dedo
  * ganha a área inteira, o olho vê um passo discreto. Mesma separação do selo
  * de nível e da trilha de PV.
+ *
+ * ⚠ O `inset` MEDE DA CAIXA DE PADDING, NÃO DA BORDA.
+ *
+ * O valor era -9px, e este comentário dizia "estica até 44". Media 42. A conta
+ * que engana: o botão tem 26px de caixa de BORDA, mas `border: 1px` deixa a
+ * caixa de padding em 24 — e é dela que o `inset` parte. 24 + 9 + 9 = 42, um
+ * fio e meio abaixo do piso de 43.5 que o próprio projeto usa.
+ *
+ * Passou despercebido por muito tempo porque NENHUMA bateria fazia login como
+ * Mestre: o contador de Medo só existe no roster dele. Quando o baseline mobile
+ * passou a entrar como Mestre, os 42px apareceram no primeiro passo.
+ *
+ * -10px dá 24 + 20 = 44. Se alguém mexer na borda, refaça a conta.
  */
 .roster__medoPasso {
   position: relative;
@@ -280,7 +293,7 @@
 .roster__medoPasso::after {
   content: '';
   position: absolute;
-  inset: -9px;
+  inset: -10px;
 }
 
 .roster__medoPasso:active { background: var(--cor-medo); color: #10061f; }

@@ -158,6 +158,8 @@ Deno.serve(async (req) => {
       return ok({ jogador: jogadorPublico(jogador), versao: "2.0.0", medo: mesa.medo, nivelDaMesa: mesa.nivelDaMesa, sessaoDaMesa: mesa.sessao.numero, ouroComMoedas: mesa.ouroComMoedas });
     }
     if (acao === "lerConfig") {
+      // Ler é do Mestre, igual a gravar — veja o comentário em backend/99_Api.gs.
+      if (jogador.papel !== "mestre") return falha("SEM_PERMISSAO", "Só o Mestre pode ler a configuração da mesa.", null, 403);
       const chave = String(p?.chave || "");
       if (!chave) return falha("DADOS_INVALIDOS", "Chave de configuração ausente.");
       return ok({ chave, valor: await configLer(db, chave, null) });
@@ -176,6 +178,14 @@ Deno.serve(async (req) => {
       if (error) throw error;
       return ok({ jogadores: data || [] });
     }
+    /*
+     * ⚠ HANDLER SEM TRÂNSITO. Desde o Elo 2, `abrirSessao` está no ACOES_ENGINE
+     * do js/api.js e vai para o engine-api, que a serve a partir do 4E_Mesa.gs
+     * — o código versionado, comentado e testado. Este bloco continua aqui
+     * porque o app-api SEGUE IMPLANTADO com ele, e o repositório deve descrever
+     * o que está no ar, não o que gostaríamos que estivesse. Sai junto com a
+     * aposentadoria do mesa-api, depois que a mesa jogar uma sessão no motor.
+     */
     if (acao === "abrirSessao") {
       if (jogador.papel !== "mestre") return falha("SEM_PERMISSAO", "Só o Mestre pode abrir uma sessão.", null, 403);
       const { mesa, resultado } = await mesaAtualizar(db, m => {

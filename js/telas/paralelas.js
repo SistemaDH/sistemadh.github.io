@@ -12,15 +12,22 @@
  * maioria dos personagens nunca vê seria peso morto no rodapé.
  *
  * O que o app NÃO faz, de propósito:
- *  • não marca o Estresse de entrar na forma (mesma regra do "só ficha, sem
- *    dados": ele lembra, quem marca é o jogador);
  *  • não deriva o dado do Companheiro a partir das evoluções, porque "Feroz"
  *    deixa escolher entre subir o dado OU o alcance.
+ *
+ * ⚠ ESTE CABEÇALHO JÁ MENTIU. Até 17/09/2026 ele dizia que o app "não marca o
+ * Estresse de entrar na forma", invocando o "só ficha, sem dados" para
+ * justificar. Desde o Lote 6/7 ele MARCA: `custoDeEntrarNaForma_` cobra
+ * atomicamente, e existe teste e2e chamado "virar fera COBRA o Estresse".
+ * Quem mudou o comportamento e esqueceu o cabeçalho fui eu.
+ *
+ * Fica o registro porque o risco era concreto: alguém lendo a primeira coisa
+ * do arquivo poderia "consertar" o código para bater com o comentário e
+ * quebrar a cobrança. Entrar na forma custa Estresse, e o custo é do servidor.
  */
 
 import { el, limpar, semCorretor } from '../util.js';
-import { abrirModal, avisarErro, avisarSucesso, blocoVazio } from '../ui.js';
-import { acoes } from '../estado.js';
+import { abrirModal, avisarSucesso, blocoVazio } from '../ui.js';
 import { mensagemDoErro } from '../api.js';
 import * as dados from '../dados.js';
 import { nomeComGlossa } from '../glossario.js';

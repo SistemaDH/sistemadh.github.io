@@ -487,8 +487,9 @@
   line-height: 1.1;
 }
 
+/* Mesmo caso do `--linhaTrilhaNome`: 10px cravado, abaixo do piso da escala. */
 .mestre__linhaEsperancaNome {
-  font-size: 10px;
+  font-size: var(--txt-xs);
   font-weight: 700;
   letter-spacing: .06em;
   text-transform: uppercase;
@@ -511,9 +512,17 @@
   min-width: 0;
 }
 
+/*
+ * "PV", "Estr" e "Esp" estavam em 10px cravado — abaixo do `--txt-xs`, que o
+ * tema.css declara como "piso real da escala" (12px). Num celular, a essa
+ * altura, três letras maiúsculas com `letter-spacing` viram borrão.
+ *
+ * Ninguém tinha visto porque o baseline mobile nunca fazia login como Mestre:
+ * esta linha só existe na aba Grupo do painel dele.
+ */
 .mestre__linhaTrilhaNome {
   flex: 0 0 auto;
-  font-size: 10px;
+  font-size: var(--txt-xs);
   font-weight: 700;
   letter-spacing: .04em;
   text-transform: uppercase;

@@ -1291,7 +1291,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       type:'text', class:'campo__entrada', inputmode:'numeric', placeholder:'ex.: 4, 1'
     })) : null;
     const profAparar = Math.max(1, Math.trunc(Number(recursosDano.proficiencia) || 1));
-    const dadoAparar = armaAparar ? ((/^d(\d+)/i.exec(String(armaAparar.dano || '')) || [,'6'])[1]) : '6';
+    const dadoAparar = armaAparar ? ((/^d(\d+)/i.exec(String(armaAparar.dano || '')) || ['', '6'])[1]) : '6';
     const blocoAparar = armaAparar ? el('div', { class:'pilha', hidden:true }, [
       el('p', { class:'texto-xs texto-fraco', texto:
         `Role ${profAparar}d${dadoAparar} da ${armaAparar.nome} na mesa. O dano acima continua sendo o total original; liste abaixo só os resultados dos dados, sem bônus fixos.` }),
@@ -1580,13 +1580,31 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           linhas.push(el('p', { class: 'texto-xs texto-fraco', texto:
             'Sucesso: escolha ' + (regra.resultados.sucesso || 1) + ' · Crítico: escolha ' + (regra.resultados.critico || 2) + '.' }));
         }
+        /*
+         * ⚠ AQUI HAVIA UM BUG VIVO: `...botoesDeUsoEquipamento_(item, modal)`.
+         *
+         * `item` NÃO EXISTE neste escopo — `botaoDeResolucaoManual` recebe só
+         * `nome`. Tocar em "Resolver na mesa" lançava
+         * `ReferenceError: item is not defined` e o modal NÃO ABRIA: o botão
+         * ficava mudo, sem nada no console para quem estivesse jogando.
+         *
+         * Alcançável de verdade, e não em caso raro: "Arma Espiritual"
+         * (Serafim/Portador Divino) e "Predador Implacável"
+         * (Patrulheiro/Explorador) são características de FUNDAÇÃO — nível 1.
+         * Há 237 ocorrências de `resolucaoManual` nos dados.
+         *
+         * Passou anos porque nem os 971 testes nem os 109 passos do E2E tocam
+         * este botão. Quem achou foi o ESLint, na primeira vez que rodou.
+         *
+         * E os botões de uso de EQUIPAMENTO não pertenciam aqui de todo jeito:
+         * isto é uma característica de classe, não um item da mochila.
+         */
         const modal = abrirModal({
           titulo: nome,
           conteudo: el('div', { class: 'pilha' }, linhas),
           acoes: [
-        el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar() }, 'Fechar'),
-        ...botoesDeUsoEquipamento_(item, modal)
-      ]
+            el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar() }, 'Fechar')
+          ]
         });
       }
     }, regra.rotuloAtivar || 'Resolver na mesa');
@@ -2759,8 +2777,6 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * ======================================================================== */
 
   function abaJogo(pai, ficha) {
-    const r = ficha.recursos || {};
-    const d = ficha.defesas || {};
 
     // Retração é estado de combate: não pode ficar escondida dentro da dobra
     // de Características. A regra continua vindo do catálogo/servidor.
@@ -5521,13 +5537,6 @@ function secao(titulo, conteudo, acao) {
   return el('section', { class: 'ficha__bloco' }, [
     el('div', { class: 'ficha__blocoTopo' }, [cabeca, acao || null]),
     conteudo
-  ]);
-}
-
-function caixinha(rotulo, valor, ajuda) {
-  return el('div', { class: 'ficha__caixinha', title: ajuda || '' }, [
-    el('span', { class: 'ficha__caixinhaRotulo' }, nomeAnotado(rotulo, { comGlossa: false })),
-    el('strong', { class: 'ficha__caixinhaValor', texto: String(valor) })
   ]);
 }
 

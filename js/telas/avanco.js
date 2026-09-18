@@ -404,9 +404,25 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
         onClick: () => abrirEscolhaDeCarta({
           nivelMaximo: info.nivelNovo,
           limitesOverride: limitesComDominioDaMulticlasse(),
+          /*
+           * ⚠ ACUMULA até o esperado, em vez de substituir sempre.
+           *
+           * Era `= [c.id]` — uma carta só, sempre. Os rótulos ao redor já
+           * falavam no plural ("Cartas de domínio adicionais (N)"), então a
+           * tela prometia N e o código guardava 1. Hoje isso é inalcançável:
+           * só o Mago/Escola do Conhecimento concede extra na fundação, e
+           * concede exatamente 1 (conferido em data/classes.json). Mas o dia em
+           * que o SRD trouxer uma subclasse com 2, a escolha do jogador sumiria
+           * calada — que é o pior jeito de errar.
+           */
           aoEscolher: (c) => {
-            escolha.cartasExtrasDeSubclasse = [c.id];
-            rotulo.textContent = c.nome;
+            const jaTem = escolha.cartasExtrasDeSubclasse.includes(c.id);
+            if (!jaTem) escolha.cartasExtrasDeSubclasse.push(c.id);
+            escolha.cartasExtrasDeSubclasse = escolha.cartasExtrasDeSubclasse.slice(-esperado);
+            const quantas = escolha.cartasExtrasDeSubclasse.length;
+            rotulo.textContent = quantas >= esperado
+              ? (esperado === 1 ? c.nome : `${quantas} escolhidas`)
+              : `${quantas} de ${esperado} — falta escolher mais`;
           }
         })
       }, esperado === 1 ? 'Escolher a carta de Preparado' : 'Escolher cartas adicionais');
