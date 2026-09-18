@@ -27,10 +27,15 @@ As tabelas expostas têm RLS habilitado e não possuem policies públicas para `
 Produção atual, após a implantação do SRD 2.0:
 
 ```text
-engine-api: ACTIVE (deploy conferido em 16/09/2026)
+engine-api: v15 ACTIVE (deploy conferido em 17/09/2026)
 verify_jwt: false
 ENGINE_COMMIT: 856f025ff891b593175e12f8af3d05318edccb58
+bundle: 5e6c16fb14d9ffc9cd9843234335b0a1144a16d092961f9d27462ba1983c779c
 ```
+
+A v15 acrescentou ao `ACOES` as dez ações de mesa que até então eram servidas pelo
+`mesa-api`. O `ENGINE_COMMIT` **não** mudou: as dez já existiam no `backend/4E_Mesa.gs`
+do commit fixado, o que faltava era a função aceitá-las.
 
 O source versionado em `supabase/functions/engine-api/index.ts` usa o mesmo `ENGINE_COMMIT` da função implantada. Esse alinhamento evita que um redeploy futuro feito a partir do repositório volte silenciosamente para um commit antigo.
 
@@ -40,6 +45,37 @@ O `verify_jwt=false` também é intencional: esta aplicação não usa o JWT Sup
 
 Dentro da função, as diferenças são persistidas pela RPC `apply_engine_mutations`, que aplica personagens, configuração e logs numa transação única e confere versão/timestamp esperado para detectar concorrência.
 
+## As outras funções, e o que o repositório sabe sobre elas
+
+```text
+app-api:    v6 ACTIVE (implantada e relida em 18/09/2026)
+auth-api:   v3 ACTIVE
+photo-api:  v1 ACTIVE
+player-api: v1 ACTIVE
+mesa-api:   v2 ACTIVE — implantada, mas sem trânsito desde a v15 do engine-api
+```
+
+A **v6 do `app-api`** fechou a leitura de configuração da mesa: `lerConfig` passou a
+exigir Mestre, como `gravarConfig` sempre exigiu. Antes, qualquer jogador autenticado
+lia qualquer chave — e havia um teste afirmando que isso era o comportamento correto,
+o que fez a brecha sobreviver a 971 testes. O que o jogador precisa da mesa (Medo,
+nível, número da sessão, regra de moedas) vem pela ação `sessao`.
+
+Antes de implantar, a v5 foi baixada e comparada com o arquivo do repositório: a
+diferença eram exatamente as dez linhas da correção, nada mais. Depois de implantar,
+a v6 foi relida e bate **byte a byte** (md5 `049cc683…`) com
+`supabase/functions/app-api/index.ts` na `main`. Esse arquivo deixou de ser
+transcrição e passou a ser fonte conferida.
+
+⚠ `mesa-api/index.ts` e `player-api/index.ts` **continuam sendo transcrição**, feita a
+partir da função publicada, e ainda não foram conferidas contra um download. Antes de
+qualquer redeploy dessas duas, baixar e comparar primeiro — implantar por cima pode
+apagar em silêncio algo que está no ar e não está no repositório.
+
+As funções `apps-script-db`, `character-api`, `rules-engine`, `game-api` e
+`runtime-test` continuam ACTIVE, mas são lápides: respondem `410 DESATIVADO` e não
+tocam no banco. Conferidas uma a uma em 18/09/2026.
+
 ## Ordem de implantação quando frontend e motor mudam juntos
 
 Se o frontend novo depende de novos ajustes, contadores ou campos publicados pelo motor, seguir esta ordem:
@@ -48,7 +84,9 @@ Se o frontend novo depende de novos ajustes, contadores ou campos publicados pel
 2. executar sintaxe, backend, gerados, CSS, E2E e baselines visuais relevantes;
 3. fixar `ENGINE_COMMIT` num commit imutável revisado;
 4. implantar `engine-api` com esse pin;
-5. conferir que `SOURCE_FILES` contém todos os módulos globais usados pelo backend;
+5. conferir que `SOURCE_FILES` contém todos os módulos globais usados pelo backend
+   — isso agora é automático: `npm run teste:motor-simbolos` caminha as 42 ações
+   roteadas e falha se qualquer nome chamado no caminho não existir no motor;
 6. conferir versão, status, `verify_jwt`, `ENGINE_COMMIT` e código efetivamente implantado;
 7. alinhar `supabase/functions/engine-api/index.ts` ao mesmo pin;
 8. só então promover o frontend para `main`.
