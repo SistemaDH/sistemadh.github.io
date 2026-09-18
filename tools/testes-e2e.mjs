@@ -10,6 +10,24 @@ import { existsSync, readFileSync } from 'node:fs';
 import zlib from 'node:zlib';
 import { criarServidor } from './servidor-teste.mjs';
 
+/*
+ * ⚠ TOQUE NA PARTE DE BAIXO DO CARTÃO, e não no centro.
+ *
+ * Desde que o cartão inteiro virou alvo de escolha, o topo dele continua sendo
+ * do nome-que-abre-a-carta, e no texto das cartas de domínio as palavras
+ * glosadas também são botões. Medido: a metade de BAIXO de todo cartão está
+ * pelo menos 73% livre (mediana 100%), mas o centro geométrico cai em cima do
+ * nome em 8 dos 39 cartões da grade.
+ *
+ * Isto NÃO é contorno de teste: é a mesma mira que um dedo usa, e é a área que
+ * a medição prova estar sempre livre.
+ */
+async function escolherNoCartao(alvo) {
+  const caixa = await alvo.boundingBox();
+  await alvo.click({ position: { x: Math.round(caixa.width / 2), y: Math.round(caixa.height - 12) } });
+}
+
+
 /**
  * Um PNG de verdade, montado à mão.
  *
@@ -168,18 +186,18 @@ try {
     await continuar();
 
     // Etapa 1 — classe (o botão "Escolher" já avança sozinho)
-    await pagina.waitForSelector('.lista-escolha__botao');
-    await pagina.locator('.lista-escolha__botao').first().click();
-
+    await pagina.waitForSelector('.lista-escolha__item .cartao__alvo');
+    await pagina.locator('.lista-escolha__item .cartao__alvo').first().click();
+    await pagina.locator('.criacao__rodape .btn--principal').click();
     // Etapa 1b — subclasse
-    await pagina.waitForSelector('.lista-escolha__botao');
-    await pagina.locator('.lista-escolha__botao').first().click();
-
+    await pagina.waitForSelector('.lista-escolha__item .cartao__alvo');
+    await pagina.locator('.lista-escolha__item .cartao__alvo').first().click();
+    await pagina.locator('.criacao__rodape .btn--principal').click();
     // Etapa 2 — herança
     await pagina.waitForSelector('.grade-opcoes__item');
-    await pagina.locator('.grade-opcoes__item .btn').first().click();          // ancestralidade
+    await escolherNoCartao(pagina.locator('.grade-opcoes__item .cartao__alvo').first());          // ancestralidade
     await pagina.locator('.criacao__secao', { hasText: 'Comunidade' }).waitFor();
-    await pagina.locator('.grade-opcoes').last().locator('.btn').first().click(); // comunidade
+    await escolherNoCartao(pagina.locator('.grade-opcoes').last().locator('.cartao__alvo').first()); // comunidade
     await continuar();
 
     // Etapa 3 — traços, pela sugestão do livro
@@ -194,9 +212,9 @@ try {
     await continuar();
 
     // Etapa 8 — duas cartas de domínio
-    await pagina.waitForSelector('.lista-escolha--compacta .btn--pequeno');
-    await pagina.locator('.lista-escolha--compacta .btn--pequeno').nth(0).click();
-    await pagina.locator('.lista-escolha--compacta .btn--pequeno:not([disabled])').nth(1).click();
+    await pagina.waitForSelector('.lista-escolha--compacta .cartao__alvo');
+    await escolherNoCartao(pagina.locator('.lista-escolha--compacta .cartao__alvo').nth(0));
+    await escolherNoCartao(pagina.locator('.lista-escolha--compacta .cartao__alvo:not([disabled])').nth(1));
     await continuar();
 
     // Etapa 7 — Experiências

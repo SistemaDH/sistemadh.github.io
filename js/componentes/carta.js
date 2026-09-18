@@ -13,7 +13,7 @@
 
 import { el } from '../util.js';
 import { abrirModal } from '../ui.js';
-import { nomeComGlossa } from '../glossario.js';
+import { nomeComGlossa, glosaDe } from '../glossario.js';
 import { textoAnotado } from '../verbete.js';
 
 /**
@@ -197,8 +197,25 @@ export const daComunidade = (c) => ({
  * Botão-nome padrão: mostra o nome e, ao tocar, abre a carta.
  * É o gesto que se repete em toda a criação de ficha.
  */
-export function nomeQueAbreCarta(texto, obterCarta, extras = {}) {
-  return el('button', {
+/**
+ * O nome que abre a carta.
+ *
+ * `opcoes.glosaFora` tira o parêntese da Jambô de DENTRO do botão e o devolve
+ * como irmão, logo depois. Visualmente é igual; muda quem é alvo de toque.
+ *
+ * ⚠ ISSO EXISTE POR CAUSA DA GRADE COMPACTA. Nos cartões de 178×164 de
+ * ancestralidade e comunidade, "Highborne (Aristocrática)" quebra em duas
+ * linhas e o botão passa a ocupar 43% do cartão — e desde que o cartão inteiro
+ * virou alvo de escolha, isso significa que o CENTRO do cartão abria a carta em
+ * vez de escolher. Medido: 17 dos 39 cartões da grade. Com a glosa fora, o
+ * botão cai para ~16% e o centro fica livre.
+ *
+ * A tradução da Jambô é nota de rodapé, não é o nome — então ela sair do alvo
+ * não tira nada de ninguém. Nas listas largas (classe, subclasse, carta de
+ * domínio) nada muda: lá o nome cabe numa linha e o botão pesa 5%.
+ */
+export function nomeQueAbreCarta(texto, obterCarta, extras = {}, opcoes = {}) {
+  const botao = el('button', {
     type: 'button',
     class: 'nome-carta',
     'aria-label': `Ver a carta de ${texto}`,
@@ -213,6 +230,10 @@ export function nomeQueAbreCarta(texto, obterCarta, extras = {}) {
     // (Aristocrática) 🂠"). Na frente, ele marca o nome como tocável e nunca
     // fica órfão.
     el('span', { class: 'nome-carta__icone', 'aria-hidden': 'true' }, '🂠'),
-    nomeComGlossa(texto)
+    opcoes.glosaFora ? document.createTextNode(String(texto || '')) : nomeComGlossa(texto)
   ]);
+  if (!opcoes.glosaFora) return botao;
+  const frag = document.createDocumentFragment();
+  frag.append(botao, glosaDe(texto));
+  return frag;
 }

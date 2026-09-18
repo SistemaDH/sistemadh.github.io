@@ -3,6 +3,24 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { criarServidor } from './servidor-teste.mjs';
 
+/*
+ * ⚠ TOQUE NA PARTE DE BAIXO DO CARTÃO, e não no centro.
+ *
+ * Desde que o cartão inteiro virou alvo de escolha, o topo dele continua sendo
+ * do nome-que-abre-a-carta, e no texto das cartas de domínio as palavras
+ * glosadas também são botões. Medido: a metade de BAIXO de todo cartão está
+ * pelo menos 73% livre (mediana 100%), mas o centro geométrico cai em cima do
+ * nome em 8 dos 39 cartões da grade.
+ *
+ * Isto NÃO é contorno de teste: é a mesma mira que um dedo usa, e é a área que
+ * a medição prova estar sempre livre.
+ */
+async function escolherNoCartao(alvo) {
+  const caixa = await alvo.boundingBox();
+  await alvo.click({ position: { x: Math.round(caixa.width / 2), y: Math.round(caixa.height - 12) } });
+}
+
+
 const VIEWPORTS = [
   { nome: '360x800', width: 360, height: 800 },
   { nome: '390x844', width: 390, height: 844 },
@@ -198,17 +216,19 @@ async function abrirCriacao(page, viewport) {
  * o CI para a mudança.
  */
 async function percorrerCaminhoGuiado(page, viewport) {
-  await page.waitForSelector('.lista-escolha__botao');
-  await page.locator('.lista-escolha__botao').first().click();   // classe
-  await page.waitForSelector('.lista-escolha__botao');
+  await page.waitForSelector('.lista-escolha__item .cartao__alvo');
+  await page.locator('.lista-escolha__item .cartao__alvo').first().click();   // classe
+  await page.locator('.criacao__rodape .btn--principal').click();
+  await page.waitForSelector('.lista-escolha__item .cartao__alvo');
   await auditar(page, viewport, 'criacao-guiada-subclasse');
-  await page.locator('.lista-escolha__botao').first().click();   // subclasse
+  await page.locator('.lista-escolha__item .cartao__alvo').first().click();   // subclasse
+  await page.locator('.criacao__rodape .btn--principal').click();
 
   await page.waitForSelector('.grade-opcoes__item');
   await auditar(page, viewport, 'criacao-guiada-heranca');
-  await page.locator('.grade-opcoes__item .btn').first().click();
+  await escolherNoCartao(page.locator('.grade-opcoes__item .cartao__alvo').first());
   await page.locator('.criacao__secao', { hasText: 'Comunidade' }).waitFor();
-  await page.locator('.grade-opcoes').last().locator('.btn').first().click();
+  await escolherNoCartao(page.locator('.grade-opcoes').last().locator('.cartao__alvo').first());
   await page.locator('.criacao__rodape .btn--principal').click();
 
   await auditar(page, viewport, 'criacao-guiada-tracos');
@@ -222,9 +242,9 @@ async function percorrerCaminhoGuiado(page, viewport) {
   if (await chipsItem.count()) await chipsItem.first().click();
   await page.locator('.criacao__rodape .btn--principal').click();
 
-  await page.waitForSelector('.lista-escolha--compacta .btn--pequeno');
-  await page.locator('.lista-escolha--compacta .btn--pequeno').nth(0).click();
-  await page.locator('.lista-escolha--compacta .btn--pequeno:not([disabled])').nth(1).click();
+  await page.waitForSelector('.lista-escolha--compacta .cartao__alvo');
+  await escolherNoCartao(page.locator('.lista-escolha--compacta .cartao__alvo').nth(0));
+  await escolherNoCartao(page.locator('.lista-escolha--compacta .cartao__alvo:not([disabled])').nth(1));
   await page.locator('.criacao__rodape .btn--principal').click();
 
   // As sanfonas de exemplo precisam estar ABERTAS: fechadas, os chips não têm
@@ -256,26 +276,27 @@ async function irDaEtapa1ARevisaoRapida(page, viewport) {
   await page.getByRole('button', { name: /Criação rápida/ }).click();
   await page.locator('.criacao__rodape .btn--principal').click();
 
-  await page.waitForSelector('.lista-escolha__botao');
-  await page.locator('.lista-escolha__botao').first().click();
-  await page.waitForSelector('.lista-escolha__botao');
-  await page.locator('.lista-escolha__botao').first().click();
-
+  await page.waitForSelector('.lista-escolha__item .cartao__alvo');
+  await page.locator('.lista-escolha__item .cartao__alvo').first().click();
+  await page.locator('.criacao__rodape .btn--principal').click();
+  await page.waitForSelector('.lista-escolha__item .cartao__alvo');
+  await page.locator('.lista-escolha__item .cartao__alvo').first().click();
+  await page.locator('.criacao__rodape .btn--principal').click();
   await page.waitForSelector('.grade-opcoes__item');
-  await page.locator('.grade-opcoes__item .btn').first().click();
+  await escolherNoCartao(page.locator('.grade-opcoes__item .cartao__alvo').first());
   await page.locator('.criacao__secao', { hasText: 'Comunidade' }).waitFor();
-  await page.locator('.grade-opcoes').last().locator('.btn').first().click();
+  await escolherNoCartao(page.locator('.grade-opcoes').last().locator('.cartao__alvo').first());
   await page.locator('.criacao__rodape .btn--principal').click();
 
-  await page.waitForSelector('.lista-escolha--compacta .btn--pequeno');
+  await page.waitForSelector('.lista-escolha--compacta .cartao__alvo');
   await auditar(page, viewport, 'criacao-cartas', {
     etapaLivroEsperada: 8,
     passoEsperado: 6,
     tituloEsperado: 'Escolha suas cartas de domínio'
   });
 
-  await page.locator('.lista-escolha--compacta .btn--pequeno').nth(0).click();
-  await page.locator('.lista-escolha--compacta .btn--pequeno:not([disabled])').nth(1).click();
+  await escolherNoCartao(page.locator('.lista-escolha--compacta .cartao__alvo').nth(0));
+  await escolherNoCartao(page.locator('.lista-escolha--compacta .cartao__alvo:not([disabled])').nth(1));
   await page.locator('.criacao__rodape .btn--principal').click();
 
   await page.fill('.criacao__corpo .campo__entrada >> nth=0', 'Contadora de histórias');

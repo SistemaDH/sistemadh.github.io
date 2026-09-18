@@ -202,7 +202,6 @@
   overflow: hidden;
 }
 
-.lista-escolha__botao { align-self: flex-start; min-height: var(--alvo-toque); }
 
 .grade-opcoes {
   display: grid;

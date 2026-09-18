@@ -265,7 +265,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
           const escolhida = rascunho.classe === c.id;
           const guia = catalogo.guias.find((g) => g.classe === c.id);
           lista.append(el('div', {
-            class: `cartao lista-escolha__item ${escolhida ? 'esta-escolhido' : ''}`
+            class: `cartao cartao--alvo lista-escolha__item ${escolhida ? 'esta-escolhido' : ''}`
           }, [
             el('div', { class: 'lista-escolha__cabecalho' }, [
               nomeQueAbreCarta(c.nome, () => ({
@@ -273,9 +273,10 @@ export async function abrirCriacao({ aoCriar } = {}) {
                 indice: 0
               })),
               el('span', { class: 'crescer' }),
+              escolhida ? seloEscolhido({ curto: true }) : null,
               el('span', { class: 'selo', texto: `Evasão ${c.evasaoInicial}` }),
               el('span', { class: 'selo', texto: `${c.pontosDeVidaIniciais} PV` })
-            ]),
+            ].filter(Boolean)),
             el('p', { class: 'texto-sm lista-escolha__resumo', texto: guia ? guia.chamada : c.descricao.slice(0, 180) }),
             el('p', { class: 'texto-sm texto-suave' }, [
               document.createTextNode('Domínios: '),
@@ -283,10 +284,10 @@ export async function abrirCriacao({ aoCriar } = {}) {
               document.createTextNode(' e '),
               nomeComGlossa(c.dominiosNomes[1])
             ]),
-            el('button', {
-              type: 'button',
-              class: `btn ${escolhida ? 'btn--principal' : 'btn--fantasma'} lista-escolha__botao`,
-              onClick: () => {
+            alvoDoCartao({
+              rotulo: `Escolher ${c.nome}`,
+              escolhido: escolhida,
+              aoEscolher: () => {
                 if (rascunho.classe !== c.id) {
                   rascunho.classe = c.id;
                   rascunho.subclasse = null;
@@ -294,9 +295,9 @@ export async function abrirCriacao({ aoCriar } = {}) {
                   rascunho.escolhasDeClasse = {};
                   aplicarSugestoesDaClasse();
                 }
-                ir(passoAtual + 1);
+                desenhar();
               }
-            }, escolhida ? 'Escolhida' : 'Escolher')
+            })
           ]));
         });
         pai.append(lista);
@@ -331,6 +332,64 @@ export async function abrirCriacao({ aoCriar } = {}) {
     const f = (fundacao.caracteristicas || []).find((x) =>
       x && x.escolha && x.escolha.obrigatoriaNaCriacao === true);
     return f ? Object.assign({ caracteristica: f.nome }, f.escolha) : null;
+  }
+
+  /*
+   * O CARTÃO INTEIRO ESCOLHE — e quem avança é o "Continuar" do rodapé.
+   *
+   * Antes, cada cartão trazia um botão "Escolher" no rodapé dele, e nos passos
+   * de classe e subclasse esse botão AINDA avançava de passo sozinho. Três
+   * incômodos numa coisa só:
+   *
+   *  • o corpo do cartão não fazia nada — era área morta ocupando a tela;
+   *  • o botão custava ~56px por cartão. Na tela de herança são 24 opções em
+   *    duas colunas: 1000px de rolagem, 22% da altura total do passo;
+   *  • dos cinco passos de escolha, três já não avançavam sozinhos e o
+   *    equipamento já era cartão clicável sem botão. Classe e subclasse eram
+   *    a exceção, não a regra.
+   *
+   * ⚠ POR QUE O CARTÃO NÃO VIRA `<button>`.
+   *
+   * Seria o caminho óbvio, e é o que o seletor de equipamento faz — mas ele
+   * pode, porque não tem nada clicável dentro. Estes têm: o nome que abre a
+   * carta, as palavras glosadas do verbete, e no cartão de subclasse até um
+   * `<select>`. Botão dentro de botão é HTML inválido e o leitor de tela se
+   * perde no meio.
+   *
+   * Então o cartão continua sendo `<div>` e ganha um botão transparente que
+   * cobre a área inteira. O nome, os gatilhos de verbete e os campos sobem
+   * por cima dele com `z-index` — veja `.cartao--alvo` no componentes.css.
+   * O nome acessível vive no `aria-label`, e o estado no `aria-pressed`.
+   */
+  function alvoDoCartao({ rotulo, escolhido, desabilitado, aoEscolher }) {
+    return el('button', {
+      type: 'button',
+      class: 'cartao__alvo',
+      'aria-label': rotulo,
+      'aria-pressed': escolhido ? 'true' : 'false',
+      disabled: Boolean(desabilitado),
+      onClick: aoEscolher
+    });
+  }
+
+  /*
+   * A marca de escolhido, que herdou o trabalho do texto do botão que saiu.
+   *
+   * ⚠ DUAS FORMAS, e a diferença é de LARGURA, não de gosto. No cabeçalho das
+   * listas o selo divide a linha com "Evasão 10" e "5 PV"; com "✓ Escolhida"
+   * por extenso a linha estourava e o "5 PV" caía sozinho numa segunda linha —
+   * o cartão escolhido pulava de altura na hora em que você toca nele. Lá vai
+   * só o "✓", com `title` para o ponteiro; quem lê a tela ouve o estado pelo
+   * `aria-pressed` do alvo, que é onde ele deve estar mesmo.
+   *
+   * Na grade os cartões são estreitos e altos, o selo tem linha própria, e aí
+   * o texto por extenso cabe e ajuda.
+   */
+  function seloEscolhido({ curto = false } = {}) {
+    if (curto) {
+      return el('span', { class: 'selo selo--nivel', title: 'Escolhida', 'aria-hidden': 'true' }, '\u2713');
+    }
+    return el('span', { class: 'selo selo--nivel' }, '\u2713 Escolhida');
   }
 
   function campoDaEscolhaObrigatoria(def) {
@@ -375,9 +434,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
           const escolhida = rascunho.subclasse === s.id;
           const fundacao = (s.cartas || {}).fundacao || {};
           const escolhaCriacao = escolhaObrigatoriaDaSubclasse(s);
-          const valorEscolha = escolhaCriacao
-            ? String((rascunho.escolhasDeClasse || {})[escolhaCriacao.chave] || '') : '';
-          lista.append(el('div', { class: `cartao lista-escolha__item ${escolhida ? 'esta-escolhido' : ''}` }, [
+          lista.append(el('div', { class: `cartao cartao--alvo lista-escolha__item ${escolhida ? 'esta-escolhido' : ''}` }, [
             el('div', { class: 'lista-escolha__cabecalho' }, [
               nomeQueAbreCarta(s.nome, () => ({
                 itens: ['fundacao', 'especializacao', 'maestria']
@@ -385,10 +442,11 @@ export async function abrirCriacao({ aoCriar } = {}) {
                   .map((k) => daSubclasse(s, k))
               })),
               el('span', { class: 'crescer' }),
+              escolhida ? seloEscolhido({ curto: true }) : null,
               s.caracteristicaConjuracaoImpressa
                 ? el('span', { class: 'selo', texto: `Conjura com ${s.caracteristicaConjuracaoImpressa}` })
                 : el('span', { class: 'selo', texto: 'Não conjura' })
-            ]),
+            ].filter(Boolean)),
             s.chamada ? el('p', { class: 'texto-sm lista-escolha__resumo', texto: s.chamada }) : null,
             ...(fundacao.caracteristicas || []).map((f) =>
               el('p', { class: 'texto-sm' }, [
@@ -396,23 +454,24 @@ export async function abrirCriacao({ aoCriar } = {}) {
                 textoAnotado(f.texto)
               ])),
             escolhida && escolhaCriacao ? campoDaEscolhaObrigatoria(escolhaCriacao) : null,
-            el('button', {
-              type: 'button',
-              class: `btn ${escolhida ? 'btn--principal' : 'btn--fantasma'} lista-escolha__botao`,
-              disabled: Boolean(escolhida && escolhaCriacao && !valorEscolha),
-              onClick: () => {
-                const trocou = rascunho.subclasse !== s.id;
-                if (trocou) {
+            /*
+             * A escolha obrigatória (o traço de conjuração de algumas
+             * subclasses) aparece DENTRO do cartão, e o `<select>` dela sobe
+             * por cima do alvo — senão tocar no campo re-selecionaria o
+             * cartão. Quem segura o "Continuar" enquanto ela estiver vazia é
+             * o `problema()` deste passo, que já fazia isso.
+             */
+            alvoDoCartao({
+              rotulo: `Escolher ${s.nome}`,
+              escolhido: escolhida,
+              aoEscolher: () => {
+                if (rascunho.subclasse !== s.id) {
                   rascunho.subclasse = s.id;
                   rascunho.escolhasDeClasse = {};
                 }
-                if (escolhaCriacao && !String((rascunho.escolhasDeClasse || {})[escolhaCriacao.chave] || '')) {
-                  desenhar();
-                  return;
-                }
-                ir(passoAtual + 1);
+                desenhar();
               }
-            }, escolhida && escolhaCriacao ? 'Continuar' : (escolhida ? 'Escolhida' : 'Escolher'))
+            })
           ]));
         });
         pai.append(lista);
@@ -548,15 +607,13 @@ export async function abrirCriacao({ aoCriar } = {}) {
   function gradeDeOpcoes(itens, { escolhido, carta, detalhe, aoEscolher }) {
     const grade = el('div', { class: 'grade-opcoes' });
     itens.forEach((item) => {
-      grade.append(el('div', { class: `cartao grade-opcoes__item ${escolhido(item) ? 'esta-escolhido' : ''}` }, [
-        nomeQueAbreCarta(item.nome, () => carta(item)),
+      const esta = escolhido(item);
+      grade.append(el('div', { class: `cartao cartao--alvo grade-opcoes__item ${esta ? 'esta-escolhido' : ''}` }, [
+        nomeQueAbreCarta(item.nome, () => carta(item), {}, { glosaFora: true }),
         el('p', { class: 'texto-sm texto-suave' }, textoAnotado(detalhe(item))),
-        el('button', {
-          type: 'button',
-          class: `btn ${escolhido(item) ? 'btn--principal' : 'btn--fantasma'} btn--pequeno`,
-          onClick: () => aoEscolher(item)
-        }, escolhido(item) ? '✓ Escolhida' : 'Escolher')
-      ]));
+        esta ? seloEscolhido() : null,
+        alvoDoCartao({ rotulo: `Escolher ${item.nome}`, escolhido: esta, aoEscolher: () => aoEscolher(item) })
+      ].filter(Boolean)));
     });
     return grade;
   }
@@ -909,7 +966,17 @@ export async function abrirCriacao({ aoCriar } = {}) {
           doDominio.forEach((c, i) => {
             const escolhida = rascunho.cartas.includes(c.id);
             const cheio = rascunho.cartas.length >= quantidade && !escolhida;
-            lista.append(el('div', { class: `cartao lista-escolha__item ${escolhida ? 'esta-escolhido' : ''}` }, [
+            /*
+             * Aqui o toque ALTERNA, e existe o estado "limite preenchido".
+             * Com o cartão inteiro virando alvo, cartão cheio precisa PARECER
+             * bloqueado — senão o toque não responde e parece defeito. Daí o
+             * `esta-bloqueado` e o selo, que herdaram o que o texto do botão
+             * dizia antes.
+             */
+            lista.append(el('div', {
+              class: `cartao cartao--alvo lista-escolha__item ${escolhida ? 'esta-escolhido' : ''}`
+                + (cheio ? ' esta-bloqueado' : '')
+            }, [
               el('div', { class: 'lista-escolha__cabecalho' }, [
                 nomeQueAbreCarta(c.nome, () => ({
                   itens: doDominio.map(daCartaDeDominio),
@@ -918,15 +985,17 @@ export async function abrirCriacao({ aoCriar } = {}) {
                   textoEscolher: 'Escolher esta'
                 })),
                 el('span', { class: 'crescer' }),
+                escolhida ? seloEscolhido({ curto: true }) : null,
+                cheio ? el('span', { class: 'selo', texto: 'Limite preenchido' }) : null,
                 el('span', { class: 'selo', texto: c.tipo })
-              ]),
+              ].filter(Boolean)),
               el('p', { class: 'texto-sm lista-escolha__resumo' }, textoAnotado(c.texto)),
-              el('button', {
-                type: 'button',
-                class: `btn ${escolhida ? 'btn--principal' : 'btn--fantasma'} btn--pequeno`,
-                disabled: cheio,
-                onClick: () => alternarCarta(c)
-              }, escolhida ? '✓ Escolhida' : (cheio ? 'Limite preenchido' : 'Escolher'))
+              alvoDoCartao({
+                rotulo: escolhida ? `Tirar ${c.nome}` : `Escolher ${c.nome}`,
+                escolhido: escolhida,
+                desabilitado: cheio,
+                aoEscolher: () => alternarCarta(c)
+              })
             ]));
           });
           pai.append(lista);

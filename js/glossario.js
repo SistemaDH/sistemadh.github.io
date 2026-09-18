@@ -95,6 +95,26 @@ export function nomeComGlossa(canonico) {
   return frag;
 }
 
+/**
+ * Só o parêntese da Jambô, sem o nome — para quando ele precisa ficar FORA do
+ * botão que abre a carta. Devolve um fragmento vazio quando as duas traduções
+ * concordam, para quem chama não precisar checar.
+ *
+ * Ver `nomeQueAbreCarta({ glosaFora: true })` em componentes/carta.js.
+ */
+export function glosaDe(canonico) {
+  const frag = document.createDocumentFragment();
+  const outro = jamboDe(canonico);
+  if (outro) {
+    frag.append(document.createTextNode(' '));
+    frag.append(el('span', {
+      class: 'glosa',
+      title: `Na tradução da Jambô: ${outro}`
+    }, `(${outro})`));
+  }
+  return frag;
+}
+
 /* --------------------------------------------------------------------------
    Glosa dentro do texto da carta
    -------------------------------------------------------------------------- */

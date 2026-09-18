@@ -3,6 +3,24 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { criarServidor } from './servidor-teste.mjs';
 
+/*
+ * ⚠ TOQUE NA PARTE DE BAIXO DO CARTÃO, e não no centro.
+ *
+ * Desde que o cartão inteiro virou alvo de escolha, o topo dele continua sendo
+ * do nome-que-abre-a-carta, e no texto das cartas de domínio as palavras
+ * glosadas também são botões. Medido: a metade de BAIXO de todo cartão está
+ * pelo menos 73% livre (mediana 100%), mas o centro geométrico cai em cima do
+ * nome em 8 dos 39 cartões da grade.
+ *
+ * Isto NÃO é contorno de teste: é a mesma mira que um dedo usa, e é a área que
+ * a medição prova estar sempre livre.
+ */
+async function escolherNoCartao(alvo) {
+  const caixa = await alvo.boundingBox();
+  await alvo.click({ position: { x: Math.round(caixa.width / 2), y: Math.round(caixa.height - 12) } });
+}
+
+
 const VIEWPORTS = [
   { nome: '768x1024', width: 768, height: 1024, hasTouch: true },
   { nome: '1024x768', width: 1024, height: 768, hasTouch: false },
@@ -178,20 +196,21 @@ async function criarPersonagemRapido(page, viewport) {
   await page.getByRole('button', { name: /Criação rápida/ }).click();
   await page.locator('.criacao__rodape .btn--principal').click();
 
-  await page.waitForSelector('.lista-escolha__botao');
-  await page.locator('.lista-escolha__botao').first().click();
-  await page.waitForSelector('.lista-escolha__botao');
-  await page.locator('.lista-escolha__botao').first().click();
-
+  await page.waitForSelector('.lista-escolha__item .cartao__alvo');
+  await page.locator('.lista-escolha__item .cartao__alvo').first().click();
+  await page.locator('.criacao__rodape .btn--principal').click();
+  await page.waitForSelector('.lista-escolha__item .cartao__alvo');
+  await page.locator('.lista-escolha__item .cartao__alvo').first().click();
+  await page.locator('.criacao__rodape .btn--principal').click();
   await page.waitForSelector('.grade-opcoes__item');
-  await page.locator('.grade-opcoes__item .btn').first().click();
+  await escolherNoCartao(page.locator('.grade-opcoes__item .cartao__alvo').first());
   await page.locator('.criacao__secao', { hasText: 'Comunidade' }).waitFor();
-  await page.locator('.grade-opcoes').last().locator('.btn').first().click();
+  await escolherNoCartao(page.locator('.grade-opcoes').last().locator('.cartao__alvo').first());
   await page.locator('.criacao__rodape .btn--principal').click();
 
-  await page.waitForSelector('.lista-escolha--compacta .btn--pequeno');
-  await page.locator('.lista-escolha--compacta .btn--pequeno').nth(0).click();
-  await page.locator('.lista-escolha--compacta .btn--pequeno:not([disabled])').nth(1).click();
+  await page.waitForSelector('.lista-escolha--compacta .cartao__alvo');
+  await escolherNoCartao(page.locator('.lista-escolha--compacta .cartao__alvo').nth(0));
+  await escolherNoCartao(page.locator('.lista-escolha--compacta .cartao__alvo:not([disabled])').nth(1));
   await page.locator('.criacao__rodape .btn--principal').click();
 
   await page.fill('.criacao__corpo .campo__entrada >> nth=0', 'Contadora de histórias');

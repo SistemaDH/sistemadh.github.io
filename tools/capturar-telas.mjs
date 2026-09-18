@@ -9,6 +9,24 @@
  */
 import { chromium } from 'playwright';
 import { criarServidor } from './servidor-teste.mjs';
+
+/*
+ * ⚠ TOQUE NA PARTE DE BAIXO DO CARTÃO, e não no centro.
+ *
+ * Desde que o cartão inteiro virou alvo de escolha, o topo dele continua sendo
+ * do nome-que-abre-a-carta, e no texto das cartas de domínio as palavras
+ * glosadas também são botões. Medido: a metade de BAIXO de todo cartão está
+ * pelo menos 73% livre (mediana 100%), mas o centro geométrico cai em cima do
+ * nome em 8 dos 39 cartões da grade.
+ *
+ * Isto NÃO é contorno de teste: é a mesma mira que um dedo usa, e é a área que
+ * a medição prova estar sempre livre.
+ */
+async function escolherNoCartao(alvo) {
+  const caixa = await alvo.boundingBox();
+  await alvo.click({ position: { x: Math.round(caixa.width / 2), y: Math.round(caixa.height - 12) } });
+}
+
 const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 const { servidor, porta } = await criarServidor({ porta: 0, semarcar: true });
 const base = `http://localhost:${porta}`;
@@ -31,19 +49,21 @@ await p.fill('.criacao__corpo .campo__entrada >> nth=0', 'Lyra Sombravento');
 await p.getByRole('button', { name: /Criação guiada/ }).click();
 await p.screenshot({ path: '/tmp/s1-inicio.png' });
 await p.locator('.criacao__rodape .btn--principal').click();
-await p.waitForSelector('.lista-escolha__botao');
+await p.waitForSelector('.lista-escolha__item .cartao__alvo');
 await p.screenshot({ path: '/tmp/s2-classe.png' });
 await p.locator('.nome-carta').first().click();
 await p.waitForSelector('.modal__caixa--carta'); await p.waitForTimeout(700);
 await p.screenshot({ path: '/tmp/s3-carta.png' });
 await p.locator('.modal__caixa--carta').getByRole('button', { name: 'Fechar' }).click();
-await p.locator('.lista-escolha__botao').first().click();
-await p.waitForSelector('.lista-escolha__botao');
-await p.locator('.lista-escolha__botao').first().click();
+await p.locator('.lista-escolha__item .cartao__alvo').first().click();
+await p.locator('.criacao__rodape .btn--principal').click();
+await p.waitForSelector('.lista-escolha__item .cartao__alvo');
+await p.locator('.lista-escolha__item .cartao__alvo').first().click();
+await p.locator('.criacao__rodape .btn--principal').click();
 await p.waitForSelector('.grade-opcoes__item');
 await p.screenshot({ path: '/tmp/s4-heranca.png' });
-await p.locator('.grade-opcoes__item .btn').first().click();
-await p.locator('.grade-opcoes').last().locator('.btn').first().click();
+await escolherNoCartao(p.locator('.grade-opcoes__item .cartao__alvo').first());
+await escolherNoCartao(p.locator('.grade-opcoes').last().locator('.cartao__alvo').first());
 await p.locator('.criacao__rodape .btn--principal').click();
 await p.waitForSelector('.criacao__traco');
 await p.screenshot({ path: '/tmp/s5-tracos.png' });

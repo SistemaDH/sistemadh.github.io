@@ -224,6 +224,93 @@
 .cartao--clicavel:hover { border-color: var(--cor-ouro-escuro); }
 .cartao--clicavel:active { transform: scale(.99); }
 
+/*
+ * CARTÃO-ALVO: o cartão inteiro escolhe, sem virar `<button>`.
+ *
+ * O `.cartao--clicavel` acima é o caso fácil — cartão SEM nada clicável
+ * dentro, que pode simplesmente ser a tag `<button>`. É o que o seletor de
+ * equipamento usa.
+ *
+ * Os cartões de classe, subclasse, ancestralidade, comunidade e carta de
+ * domínio não podem: cada um tem pelo menos o nome que abre a carta, e o de
+ * subclasse tem um `<select>`. Botão dentro de botão é HTML inválido.
+ *
+ * Aqui o cartão continua `<div>` e recebe um botão transparente esticado por
+ * cima de tudo. O que ainda precisa ser tocável — o nome, as palavras glosadas
+ * do verbete, os campos de formulário — sobe de volta com `z-index: 1`.
+ *
+ * ⚠ ORDEM IMPORTA. O `.cartao__alvo` é o ÚLTIMO filho no DOM e é posicionado,
+ * então ele pinta (e recebe toque) acima de todo irmão não posicionado: o
+ * parágrafo de resumo, os selos, o texto. É exatamente o que se quer — tocar
+ * em qualquer lugar "vazio" do cartão escolhe. O preço é que o texto do cartão
+ * deixa de ser selecionável, o mesmo preço que o cartão de equipamento já paga
+ * por ser um `<button>`.
+ */
+.cartao--alvo {
+  position: relative;
+  transition: transform var(--transicao), border-color var(--transicao);
+}
+
+.cartao__alvo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: inherit;
+  cursor: pointer;
+}
+
+/* O foco de teclado desenha no contorno do CARTÃO, porque é o que o alvo é. */
+.cartao__alvo:focus-visible {
+  outline: 2px solid var(--cor-ouro);
+  outline-offset: -2px;
+}
+
+/*
+ * ⚠ O HOVER AQUI PRECISA DE GUARDA, e os outros do app talvez precisem também.
+ *
+ * No celular o `:hover` GRUDA: depois de um toque, o cartão continua "sob o
+ * ponteiro" até alguém tocar noutro lugar. Em quase todo componente isso é só
+ * um realce esquecido. Aqui não: o cartão ESCOLHIDO se anuncia por uma borda
+ * dourada, e o hover desenha uma borda dourada mais escura. Um cartão tocado
+ * de passagem fica parecendo escolhido — foi o que apareceu no print de
+ * 18/09/2026, com o "Highborne" dourado sem estar escolhido.
+ *
+ * `@media (hover: hover)` resolve: só aparelho com ponteiro de verdade pinta.
+ * O resto do app ainda não tem essa guarda; está anotado como ponto de
+ * interesse, não mexido aqui para não misturar assunto.
+ */
+@media (hover: hover) {
+  .cartao--alvo:hover { border-color: var(--cor-ouro-escuro); }
+}
+.cartao--alvo:active { transform: scale(.99); }
+
+/* De volta para cima: tudo que continua sendo um alvo próprio. */
+.cartao--alvo .nome-carta,
+.cartao--alvo .verbete__gatilho,
+.cartao--alvo .campo,
+.cartao--alvo select,
+.cartao--alvo input,
+.cartao--alvo textarea {
+  position: relative;
+  z-index: 1;
+}
+
+/*
+ * Cartão que não aceita mais escolha (o "limite preenchido" das cartas de
+ * domínio). Precisa PARECER bloqueado: com o cartão inteiro como alvo, um
+ * toque que não responde e não se explica passa por defeito.
+ */
+.esta-bloqueado {
+  opacity: .45;
+}
+.esta-bloqueado .cartao__alvo { cursor: not-allowed; }
+
 .cartao__titulo {
   font-family: var(--fonte-titulo);
   font-size: var(--txt-lg);
