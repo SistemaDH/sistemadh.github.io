@@ -32,8 +32,8 @@
   .ficha__itemNome {
     display: -webkit-box;
     width: 100%;
-    min-width: 44px;
-    min-height: 44px;
+    min-width: var(--alvo-min);
+    min-height: var(--alvo-min);
     max-height: 3.2em;
     line-height: 1.35;
     -webkit-box-orient: vertical;
@@ -64,13 +64,13 @@
     display: grid;
     place-items: center;
     min-width: 3.2ch;
-    min-height: 44px;
+    min-height: var(--alvo-min);
   }
 
   .ficha__itemBotao {
-    width: 44px;
-    min-width: 44px;
-    height: 44px;
+    width: var(--alvo-min);
+    min-width: var(--alvo-min);
+    height: var(--alvo-min);
   }
 
   .ficha__item.esta-em-uso .ficha__itemTexto::after {
@@ -151,8 +151,8 @@
 
   .trilha--medoMesa .medo__chama {
     width: 100%;
-    min-width: 44px;
-    height: 44px;
+    min-width: var(--alvo-min);
+    height: var(--alvo-min);
     flex: none;
   }
 
@@ -174,12 +174,12 @@
 
   .bestiario__pilulas .pilula {
     flex: 0 0 auto;
-    min-width: 44px;
-    min-height: 44px;
+    min-width: var(--alvo-min);
+    min-height: var(--alvo-min);
   }
 
   .bestiario__porEmCena {
-    min-height: 44px;
+    min-height: var(--alvo-min);
   }
 }
 
@@ -266,7 +266,7 @@
   right: 2px;
   bottom: 2px;
   min-width: 76px;
-  min-height: 44px;
+  min-height: var(--alvo-min);
   padding: 0 var(--e2);
   border: 0;
   border-left: 1px solid var(--cor-borda);
@@ -311,10 +311,10 @@
 }
 
 .foto__zoomPasso {
-  width: 44px;
-  min-width: 44px;
-  height: 44px;
-  min-height: 44px;
+  width: var(--alvo-min);
+  min-width: var(--alvo-min);
+  height: var(--alvo-min);
+  min-height: var(--alvo-min);
   padding: 0;
   border-radius: var(--raio-cheio);
   font-size: var(--txt-xl);
@@ -356,10 +356,12 @@
 .criacao__ajudaAlternar {
   display: grid;
   place-items: center;
-  width: 44px;
-  min-width: 44px;
-  height: 44px;
-  min-height: 44px;
+  /* Botão sozinho no canto do cabeçalho: não tem vizinho para disputar área,
+     então usa o alvo confortável e não o piso. */
+  width: var(--alvo-toque);
+  min-width: var(--alvo-toque);
+  height: var(--alvo-toque);
+  min-height: var(--alvo-toque);
   padding: 0;
   border: 0;
   background: none;
@@ -406,7 +408,7 @@
 .editor-adversario__receitaTopo {
   display: flex;
   align-items: center;
-  min-height: 44px;
+  min-height: var(--alvo-min);
   padding: var(--e2) var(--e3);
   list-style: none;
   color: var(--cor-titulo);

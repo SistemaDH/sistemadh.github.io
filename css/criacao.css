@@ -120,7 +120,7 @@
   align-items: flex-start;
   gap: 10px;
   padding: 12px;
-  min-height: 44px;
+  min-height: var(--alvo-toque);
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio);
   background: var(--cor-fundo-2);
@@ -155,7 +155,7 @@
   line-height: 1.3;
 }
 
-.criacao__rodape .btn { min-height: 44px; }
+.criacao__rodape .btn { min-height: var(--alvo-toque); }
 
 /* ------------------------------------------------------------ caminhos --- */
 
@@ -202,7 +202,7 @@
   overflow: hidden;
 }
 
-.lista-escolha__botao { align-self: flex-start; min-height: 44px; }
+.lista-escolha__botao { align-self: flex-start; min-height: var(--alvo-toque); }
 
 .grade-opcoes {
   display: grid;
@@ -239,7 +239,8 @@
 
 .sanfona > summary {
   cursor: pointer;
-  min-height: 32px;
+  /* 32px era menos que o piso do projeto — e `summary` nunca foi auditado. */
+  min-height: var(--alvo-toque);
   display: flex;
   align-items: center;
   font-weight: 600;
@@ -276,7 +277,7 @@
 
 .chips--valores .chip--valor {
   min-width: 52px;
-  min-height: 44px;
+  min-height: var(--alvo-toque);
   justify-content: center;
   text-align: center;
   font-variant-numeric: tabular-nums;
@@ -371,7 +372,7 @@
      em coluna estreita ("Highborne" / "(Aristocrática)" / "🂠"). */
   display: inline-block;
   max-width: 100%;
-  min-height: 44px;
+  min-height: var(--alvo-toque);
   padding: 4px 2px;
   border: 0;
   background: none;
@@ -447,8 +448,8 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 44px;
-  height: 44px;
+  width: var(--alvo-toque);
+  height: var(--alvo-toque);
   border-radius: 999px;
   border: 1px solid var(--cor-borda);
   background: rgba(12, 10, 18, 0.75);

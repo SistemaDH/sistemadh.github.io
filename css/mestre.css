@@ -262,7 +262,7 @@
   cursor: pointer;
   font-size: var(--txt-sm);
   color: var(--cor-titulo);
-  min-height: 32px;
+  min-height: var(--alvo-toque);
   display: flex;
   align-items: center;
 }

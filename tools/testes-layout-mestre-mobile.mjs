@@ -85,7 +85,7 @@ async function auditar(page, viewport, tela) {
     };
 
     const interativos = [...document.querySelectorAll(
-      '.mestre button, .mestre input, .mestre select, .mestre textarea, .mestre [role="button"], .mestre [role="tab"]'
+      '.mestre button, .mestre summary, .mestre input, .mestre select, .mestre textarea, .mestre [role="button"], .mestre [role="tab"]'
     )]
       .filter(visivel)
       .filter((el) => !el.matches(':disabled, [aria-disabled="true"], .verbete__gatilho'))

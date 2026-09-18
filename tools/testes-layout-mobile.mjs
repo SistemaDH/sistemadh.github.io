@@ -51,7 +51,7 @@ async function auditar(page, viewport, tela) {
       return s.display !== 'none' && s.visibility !== 'hidden' && Number(s.opacity) !== 0 && r.width > 0 && r.height > 0;
     };
 
-    const interativos = [...document.querySelectorAll('button, a[href], input, select, textarea, [role="button"], [role="tab"]')]
+    const interativos = [...document.querySelectorAll('button, summary, a[href], input, select, textarea, [role="button"], [role="tab"]')]
       .filter(visivel)
       .filter((el) => !el.matches(':disabled, [aria-disabled="true"]'));
 

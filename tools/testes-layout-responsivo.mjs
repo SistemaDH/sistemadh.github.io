@@ -54,7 +54,7 @@ async function auditar(page, viewport, tela) {
     if (overflow > 1) erros.push(`overflow horizontal de ${overflow}px`);
 
     const interativos = [...document.querySelectorAll(
-      'button, a[href], input, select, textarea, [role="button"], [role="tab"]'
+      'button, summary, a[href], input, select, textarea, [role="button"], [role="tab"]'
     )]
       .filter(visivel)
       .filter((el) => !el.matches(':disabled, [aria-disabled="true"]'));

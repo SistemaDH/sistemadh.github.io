@@ -112,7 +112,7 @@
  */
 .ficha__topoLinha .btn--icone[aria-label="Regras do livro"],
 .mestre__topoLinha .btn--icone[aria-label="Regras do livro"] {
-  min-width: 44px;
+  min-width: var(--alvo-min);
   padding: 0;
   border-color: transparent;
 }
@@ -432,7 +432,7 @@
  */
 .trilha__ponto {
   width: 40px;
-  height: 44px;
+  height: var(--alvo-min);
   padding: 0;
   border-radius: var(--raio-sm);
   border: 2px solid var(--cor-borda-forte);
@@ -584,7 +584,7 @@
  * teste que dá condição ao personagem.
  */
 .chip--condicao {
-  min-height: 44px;
+  min-height: var(--alvo-toque);
   padding-inline: 12px;
   margin-block: 4px;
   border-color: var(--cor-alerta);
@@ -660,7 +660,7 @@
   display: inline-flex;
   align-items: center;
   max-width: 100%;
-  min-height: 44px;
+  min-height: var(--alvo-min);
   padding: var(--e2) 0;
   border: 0;
   border-bottom: 1px dotted var(--cor-ouro-escuro);
@@ -1163,8 +1163,8 @@
 .ficha__itemNome {
   display: inline-flex;
   align-items: center;
-  min-width: 44px;
-  min-height: 44px;
+  min-width: var(--alvo-min);
+  min-height: var(--alvo-min);
   padding: 0;
   border: 0;
   background: none;
@@ -1243,9 +1243,9 @@
 .ficha__itemBotao {
   display: grid;
   place-items: center;
-  width: 44px;
-  min-width: 44px;
-  height: 44px;
+  width: var(--alvo-min);
+  min-width: var(--alvo-min);
+  height: var(--alvo-min);
   padding: 0;
   border: 0;
   background: none;
@@ -1747,7 +1747,7 @@
   cursor: pointer;
   font-size: var(--txt-sm);
   color: var(--cor-titulo);
-  min-height: 32px;
+  min-height: var(--alvo-toque);
   display: flex;
   align-items: center;
 }

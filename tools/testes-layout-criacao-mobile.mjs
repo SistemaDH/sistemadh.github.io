@@ -74,7 +74,7 @@ async function auditar(page, viewport, tela, {
     }
 
     const interativos = [...document.querySelectorAll(
-      '.criacao button, .criacao input, .criacao select, .criacao textarea, .criacao [role="button"]'
+      '.criacao button, .criacao summary, .criacao input, .criacao select, .criacao textarea, .criacao [role="button"]'
     )]
       .filter(visivel)
       .filter((el) => !el.matches(':disabled, [aria-disabled="true"], input[type="checkbox"], input[type="radio"], input[type="range"]'));

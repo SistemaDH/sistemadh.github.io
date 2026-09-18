@@ -69,11 +69,11 @@
  * ordem de carga — ou seja, era ELA que valia no app inteiro. Trazer os
  * números para cá não mudou um pixel; só acabou com as duas versões.
  */
-.btn--pequeno { min-height: 44px; padding: 8px 14px; font-size: 14px; }
+.btn--pequeno { min-height: var(--alvo-toque); padding: 8px 14px; font-size: 14px; }
 
 .btn--contador {
-  min-height: 44px;
-  min-width: 44px;
+  min-height: var(--alvo-min);
+  min-width: var(--alvo-min);
   padding: var(--e2);
   font-size: var(--txt-lg);
   line-height: 1;
@@ -131,7 +131,10 @@
   display: inline-flex;
   align-items: center;
   gap: var(--e1);
-  min-height: 44px;
+  min-height: var(--alvo-toque);
+  /* A LARGURA também: um chip de palavra curta ("alto") media 47×48, e alvo
+     de toque é área, não só altura. */
+  min-width: var(--alvo-toque);
   padding: var(--e1) var(--e3);
   border-radius: var(--raio-cheio);
   border: 1px solid var(--cor-borda-forte);
@@ -470,4 +473,28 @@
   border: 0;
   border-top: 1px solid var(--cor-borda);
   margin: var(--e2) 0;
+}
+
+/* --------------------------------------------------------------------------
+   Sanfonas: o <summary> é alvo de toque
+   -------------------------------------------------------------------------- */
+
+/*
+ * TODO <summary> DO APP É BOTÃO — e nenhum deles tinha sido medido.
+ *
+ * São 12, espalhados por descanso, bestiário, painel do Mestre, criação,
+ * ficha, ajustes, avanço e editor de adversário. Estavam entre 32px e "o que
+ * a altura de linha der", porque a auditoria de alvo de toque das baterias
+ * procurava `button, input, select, textarea, [role=button]` — e `summary`
+ * não está nessa lista. Um elemento que ninguém consulta não reprova nunca.
+ *
+ * A regra é base de propósito: pega inclusive os `<summary>` sem classe
+ * nenhuma (o "E se o descanso for interrompido?" e o de erratas do bestiário),
+ * que é justamente onde uma regra por classe não chegaria.
+ */
+details > summary {
+  min-height: var(--alvo-toque);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
