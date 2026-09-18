@@ -21,7 +21,7 @@
  * passo seguinte. O botão "Pontos de Batalha" já faz a conta do encontro.
  */
 
-import { el, limpar, adiar } from '../util.js';
+import { el, limpar, adiar, guardarRolagem } from '../util.js';
 import { abrirModal, avisarErro, avisarSucesso, blocoVazio } from '../ui.js';
 import { acoes } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
@@ -115,9 +115,13 @@ export function abaBestiario(pai, painel, { aoMudarMedo, aoCriarContagem } = {})
     el('span', { class: 'texto-sm', texto: 'Abrindo o bestiário…' })
   ]));
 
+  /* Filtrar, buscar ou pôr em cena redesenha a lista inteira; a rolagem tem de
+     ficar onde estava. Ver `guardarRolagem` em util.js. */
   function desenhar() {
+    const devolver = guardarRolagem(area);
     limpar(area);
     area.append(barraDeListas(), barraDeFiltros(), barraDeFerramentas(painel), lista());
+    devolver();
   }
 
   /* ----------------------------------------------------------- filtros --- */

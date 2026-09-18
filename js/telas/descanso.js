@@ -104,6 +104,7 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
       tabelaDeProjeto = meus.tabela || [];
       escolhas = [];
       passoMovimentos();
+      modal.caixa.scrollTop = 0;      // troca de passo COMEÇA no topo
     } catch (e) {
       avisarErro(mensagemDoErro(e));
       passoTipo();
@@ -113,6 +114,13 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
   /* ---------------------------------------------------------------------- */
 
   function passoMovimentos() {
+    /*
+     * Guarda a rolagem: `limpar(corpo)` zera o `scrollTop` da caixa do modal, e
+     * esta função é chamada a cada escolha. Sem isto, marcar a sexta opção da
+     * lista jogava você de volta para o topo. Mesmo tratamento que ficha.js,
+     * mestre.js e paralelas.js já faziam.
+     */
+    const rolagem = modal.caixa.scrollTop;
     limpar(corpo);
     corpo.append(
       el('p', { class: 'descanso__migalha', texto:
@@ -186,6 +194,8 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
       el('span', { class: 'crescer descanso__contagem', texto: `${escolhas.length} de ${porDescanso}` }),
       botaoVerPrevia()
     );
+
+    modal.caixa.scrollTop = rolagem;
   }
 
   /**

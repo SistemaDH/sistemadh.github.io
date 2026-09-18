@@ -66,6 +66,7 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
         return;
       }
       passoEscolhas();
+      modal.caixa.scrollTop = 0;      // troca de passo COMEÇA no topo
     } catch (e) {
       limpar(corpo).append(el('p', { class: 'texto-suave', texto: mensagemDoErro(e) }));
       limpar(barra).append(fecharBotao('Fechar'));
@@ -85,6 +86,13 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
    * ======================================================================== */
 
   function passoEscolhas() {
+    /*
+     * Guarda a rolagem: `limpar(corpo)` zera o `scrollTop` da caixa do modal, e
+     * esta função é chamada a cada escolha. Sem isto, marcar a sexta opção da
+     * lista jogava você de volta para o topo. Mesmo tratamento que ficha.js,
+     * mestre.js e paralelas.js já faziam.
+     */
+    const rolagem = modal.caixa.scrollTop;
     limpar(corpo);
     corpo.append(
       el('p', { class: 'avanco__migalha', texto:
@@ -128,6 +136,8 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
         onClick: () => passoCarta()
       }, 'Continuar')
     );
+
+    modal.caixa.scrollTop = rolagem;
   }
 
   function blocoDaConquista() {

@@ -23,7 +23,7 @@
     "teste:layout-foto-mobile": "node tools/testes-foto-mobile.mjs",
     "teste:layout-responsivo": "node tools/testes-layout-responsivo.mjs",
     "teste:css": "node tools/conferir-css.mjs",
-    "teste:tudo": "npm run teste:lint && npm run teste:sintaxe && npm run teste:css && npm run teste && npm run teste:jornadas-srd2 && npm run teste:gerados && npm run teste:funcoes && npm run teste:motor-mesa && npm run teste:motor-simbolos && npm run teste:srd2 && npm run teste:e2e",
+    "teste:tudo": "npm run teste:lint && npm run teste:sintaxe && npm run teste:css && npm run teste && npm run teste:jornadas-srd2 && npm run teste:gerados && npm run teste:funcoes && npm run teste:motor-mesa && npm run teste:motor-simbolos && npm run teste:srd2 && npm run teste:e2e && npm run teste:rolagem",
     "teste:jornadas-srd2": "node tools/testes-jornadas-srd2.mjs",
     "teste:lint": "eslint .",
     "teste:sintaxe": "node tools/conferir-sintaxe.mjs",
@@ -93,7 +93,8 @@
     "teste:srd2-campanhas": "node tools/conferir-srd2-campanhas.mjs",
     "teste:funcoes": "node tools/conferir-funcoes-publicadas.mjs",
     "teste:motor-mesa": "node tools/conferir-motor-mesa.mjs",
-    "teste:motor-simbolos": "node tools/conferir-motor-simbolos.mjs"
+    "teste:motor-simbolos": "node tools/conferir-motor-simbolos.mjs",
+    "teste:rolagem": "node tools/testes-rolagem.mjs"
   },
   "devDependencies": {
     "eslint": "^9.39.5",

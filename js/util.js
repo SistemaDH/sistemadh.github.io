@@ -120,3 +120,47 @@ export function travarBotao(botao, promessa) {
     botao.disabled = false;
   });
 }
+
+/**
+ * Guarda a rolagem antes de um redesenho e devolve depois.
+ *
+ * POR QUE EXISTE.
+ *
+ * Quase toda tela do app redesenha esvaziando um contêiner e montando tudo de
+ * novo. Contêiner esvaziado tem altura zero por um instante, e o navegador
+ * grampeia o `scrollTop` de quem rola — então a tela volta para o topo. Quando
+ * o redesenho vem de uma ESCOLHA, isso é sentido como defeito: você marca o
+ * dano do sexto adversário da cena e a lista pula para o começo, no meio do
+ * combate.
+ *
+ * O `ficha.js`, o `mestre.js` e o `paralelas.js` já guardavam a rolagem à mão,
+ * porque sabem quem é o contêiner que rola (`corpo`, `modal.caixa`). Esta
+ * função é para quem NÃO sabe: o `encontro.js` e o `bestiario.js` desenham
+ * dentro de um `pai` que vem de fora, e que pode ser a aba do Mestre hoje e um
+ * modal amanhã. Ela sobe a árvore até achar quem de fato rola.
+ *
+ * Uso:
+ *   function desenhar() {
+ *     const devolver = guardarRolagem(area);
+ *     limpar(area);
+ *     area.append(...);
+ *     devolver();
+ *   }
+ */
+export function guardarRolagem(no) {
+  const alvo = rolavelMaisProximo(no);
+  const y = alvo ? alvo.scrollTop : 0;
+  return () => { if (alvo && y) alvo.scrollTop = y; };
+}
+
+/** O ancestral mais próximo que realmente rola — ou null se ninguém rola. */
+function rolavelMaisProximo(no) {
+  let x = no;
+  while (x && x !== document.body && x.nodeType === 1) {
+    const s = getComputedStyle(x);
+    const rola = /(auto|scroll|overlay)/.test(s.overflowY);
+    if (rola && x.scrollHeight > x.clientHeight + 1) return x;
+    x = x.parentElement;
+  }
+  return null;
+}

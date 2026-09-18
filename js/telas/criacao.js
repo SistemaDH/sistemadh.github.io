@@ -149,6 +149,23 @@ export async function abrirCriacao({ aoCriar } = {}) {
   }
 
   function desenhar() {
+    /*
+     * A ROLAGEM NÃO PODE VOLTAR PARA O TOPO A CADA ESCOLHA.
+     *
+     * `desenhar()` esvazia o corpo e monta tudo de novo — e contêiner esvaziado
+     * perde o `scrollTop`. Enquanto classe e subclasse avançavam de passo
+     * sozinhas isso passava despercebido, porque a tela trocava mesmo. Desde
+     * que escolher passou a deixar você NA MESMA TELA, virou o pior tipo de
+     * defeito: você escolhe a 18ª ancestralidade da lista e o app te joga lá em
+     * cima, para rolar tudo de novo até a comunidade.
+     *
+     * Quem troca de passo é o `ir()`, e ele zera a rolagem DEPOIS desta função
+     * — então guardar e devolver aqui não atrapalha a troca de passo.
+     *
+     * Mesmo tratamento que ficha.js, mestre.js e paralelas.js já faziam. A
+     * criação era a que estava fora do compasso.
+     */
+    const rolagem = corpo.scrollTop;
     const passo = passos[passoAtual];
 
     limpar(cabecalho).append(
@@ -179,6 +196,8 @@ export async function abrirCriacao({ aoCriar } = {}) {
       el('div', { class: 'crescer criacao__rodapeAviso' }, problema ? el('span', { class: 'texto-sm', texto: problema }) : null),
       passo.acao ? passo.acao() : botaoAvancar(problema)
     );
+
+    corpo.scrollTop = rolagem;
   }
 
   function botaoAvancar(problema) {
@@ -534,15 +553,38 @@ export async function abrirCriacao({ aoCriar } = {}) {
             }
           }));
         } else {
+          /*
+           * A MISTA DEIXOU DE SER OUTRA TELA.
+           *
+           * Antes, marcar a caixinha trocava TRÊS coisas de uma vez: a grade de
+           * cartões virava duas listas de pílulas, entravam dois blocos novos
+           * acima da escolha, e o rodapé passava a ocupar três linhas. Deixava
+           * de parecer a mesma tela — foi o que a Vanessa apontou.
+           *
+           * E havia coisa pior que layout. Medido nas 48 pílulas do modo misto:
+           * 48 tinham o texto da característica só no `title`, e ZERO abriam a
+           * carta. `title` é balão de mouse. No celular não há como ler. Você
+           * escolhia "Anão · Pele Grossa" sem ter como descobrir o que Pele
+           * Grossa faz — justo na tela que mais precisa de informação.
+           *
+           * Agora é a MESMA grade de cartões. O nome continua abrindo a carta,
+           * e cada cartão oferece as suas duas características como duas
+           * escolhas nomeadas. Ligar a caixinha quase não mexe no desenho.
+           *
+           * O campo de nome, que é OPCIONAL, desceu para depois da escolha: ele
+           * estava entre você e a lista.
+           */
+          /* A caixinha logo acima já explica a regra do livro; repetir aqui só
+             empurrava a lista para baixo. Fica só o que ela não diz. */
           pai.append(el('p', { class: 'texto-sm texto-suave', texto:
-            'Escolha uma característica de cada coluna. Elas precisam vir de ancestralidades diferentes; outras ancestralidades da linhagem podem aparecer no nome e na história.' }));
+            'As duas precisam vir de ancestralidades diferentes. As demais da linhagem podem aparecer no nome e na história.' }));
+          pai.append(gradeDaMista());
           pai.append(campoTexto(
             'Como seu personagem identifica essa ancestralidade? (opcional)',
             rascunho.nomeAncestralidadeMista,
             (valor) => { rascunho.nomeAncestralidadeMista = valor; },
             { placeholder: 'Ex.: goblin-orc, goblin ou um nome inventado' }
           ));
-          pai.append(colunaDeCaracteristicas(1), colunaDeCaracteristicas(2));
         }
 
         /* --- comunidade --- */
@@ -565,37 +607,70 @@ export async function abrirCriacao({ aoCriar } = {}) {
       }
     };
 
-    /** Coluna com todas as características de uma dada ORDEM (1ª ou 2ª). */
-    function colunaDeCaracteristicas(ordem) {
-      const escolhidaAqui = rascunho.caracteristicasEscolhidas[ordem - 1] || null;
+    /**
+     * A grade da mista: os MESMOS cartões da grade normal, cada um oferecendo
+     * as suas duas características.
+     *
+     * Um cartão fica bloqueado quando a OUTRA vaga já foi preenchida com uma
+     * característica dele — a regra do livro (p.71) é que as duas venham de
+     * ancestralidades diferentes. Bloqueado precisa PARECER bloqueado, senão o
+     * toque que não responde passa por defeito.
+     */
+    function gradeDaMista() {
+      const grade = el('div', { class: 'grade-opcoes' });
+      catalogo.ancestralidades.forEach((a) => {
+        /*
+         * Com as duas vagas cheias, tocar na 1ª de outra ancestralidade TROCA a
+         * vaga 1 — não bloqueia. Bloquear obrigaria a desmarcar antes, e trocar
+         * de ideia é o que mais se faz nesta tela. O único impedimento real é o
+         * do livro: as duas não podem sair da mesma ancestralidade.
+         */
+        const usada = a.caracteristicas.some((f) =>
+          rascunho.caracteristicasEscolhidas.includes(f.nome));
+
+        grade.append(el('div', {
+          class: `cartao grade-opcoes__item ${usada ? 'esta-escolhido' : ''}`
+        }, [
+          nomeQueAbreCarta(a.nome, () => ({ itens: [daAncestralidade(a)] }), {}, { glosaFora: true }),
+          ...a.caracteristicas
+            .slice()
+            .sort((x, y) => x.ordem - y.ordem)
+            .map((f) => botaoDeCaracteristica(a, f))
+        ]));
+      });
+      return grade;
+    }
+
+    /** Uma característica como escolha: "1ª · Pele Grossa". */
+    function botaoDeCaracteristica(ancestralidade, f) {
+      const ordem = f.ordem;
+      const escolhidaAqui = rascunho.caracteristicasEscolhidas[ordem - 1] === f.nome;
       const outra = rascunho.caracteristicasEscolhidas[ordem === 1 ? 1 : 0] || null;
       const ancestralDaOutra = outra ? ancestralDaCaracteristica(outra) : null;
+      const impedida = ancestralDaOutra === ancestralidade.id && !escolhidaAqui;
 
-      const lista = el('div', { class: 'chips' });
-      catalogo.ancestralidades.forEach((a) => {
-        const f = a.caracteristicas.find((x) => x.ordem === ordem);
-        if (!f) return;
-        const bloqueada = ancestralDaOutra === a.id;
-        lista.append(el('button', {
-          type: 'button',
-          class: `chip ${escolhidaAqui === f.nome ? 'chip--ativo' : ''}`,
-          disabled: bloqueada,
-          title: bloqueada ? 'As duas características precisam vir de ancestralidades diferentes.' : f.texto,
-          onClick: () => {
-            rascunho.caracteristicasEscolhidas[ordem - 1] = escolhidaAqui === f.nome ? null : f.nome;
-            rascunho.caracteristicasEscolhidas = rascunho.caracteristicasEscolhidas.filter(Boolean);
-            rascunho.ancestralidadeMista = rascunho.caracteristicasEscolhidas
-              .map(ancestralDaCaracteristica).filter(Boolean);
-            desenhar();
-          }
-        }, `${a.nome} · ${f.nome}`));
-      });
-
-      return el('div', { class: 'criacao__coluna' }, [
-        el('h3', { class: 'criacao__subsecao', texto: ordem === 1 ? 'Primeira característica' : 'Segunda característica' }),
-        lista
-      ]);
+      return el('button', {
+        type: 'button',
+        class: `btn btn--pequeno criacao__caracteristica ${escolhidaAqui ? 'btn--principal' : 'btn--fantasma'}`,
+        disabled: impedida,
+        'aria-pressed': escolhidaAqui ? 'true' : 'false',
+        title: impedida
+          ? 'As duas características precisam vir de ancestralidades diferentes.'
+          : f.texto,
+        onClick: () => {
+          rascunho.caracteristicasEscolhidas[ordem - 1] = escolhidaAqui ? null : f.nome;
+          rascunho.caracteristicasEscolhidas = rascunho.caracteristicasEscolhidas.filter(Boolean);
+          rascunho.ancestralidadeMista = rascunho.caracteristicasEscolhidas
+            .map(ancestralDaCaracteristica).filter(Boolean);
+          desenhar();
+        }
+      }, [
+        el('span', { class: 'criacao__caracteristicaOrdem', texto: ordem === 1 ? '1ª' : '2ª' }),
+        el('span', { class: 'crescer', texto: f.nome }),
+        escolhidaAqui ? el('span', { 'aria-hidden': 'true' }, '\u2713') : null
+      ].filter(Boolean));
     }
+
 
     function ancestralDaCaracteristica(nome) {
       const a = catalogo.ancestralidades.find((x) => x.caracteristicas.some((f) => f.nome === nome));

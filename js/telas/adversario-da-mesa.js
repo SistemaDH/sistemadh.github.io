@@ -15,7 +15,7 @@
  * para…", a habilidade passa a cobrar 1 Medo na cena, igual às impressas.
  */
 
-import { el, limpar, semCorretor } from '../util.js';
+import { el, limpar, semCorretor, guardarRolagem } from '../util.js';
 import { abrirModal, avisarErro, avisarSucesso, confirmar } from '../ui.js';
 import { acoes } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
@@ -63,6 +63,9 @@ export function abrirEditorDeAdversario({ ficha, tabela, tipos, aoSalvar } = {})
   }
 
   function desenhar() {
+    /* O editor redesenha a cada campo mexido; sem isto, trocar o tipo lá
+       embaixo joga o formulário para o topo. Ver util.js. */
+    const devolverRolagem = guardarRolagem(corpo);
     const s = sugestao();
     const guardarFoco = document.activeElement && document.activeElement.dataset
       ? document.activeElement.dataset.campo : null;
@@ -175,6 +178,7 @@ export function abrirEditorDeAdversario({ ficha, tabela, tipos, aoSalvar } = {})
       const alvo = corpo.querySelector(`[data-campo="${guardarFoco}"]`);
       if (alvo) alvo.focus();
     }
+    devolverRolagem();
   }
 
   /**

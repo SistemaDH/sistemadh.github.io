@@ -20,7 +20,7 @@
  * a causar o dano reduzido quando marca metade dos PV.
  */
 
-import { el, limpar, travarBotao } from '../util.js';
+import { el, limpar, travarBotao, guardarRolagem } from '../util.js';
 import { abrirModal, avisar, avisarErro, avisarSucesso, blocoVazio, confirmar } from '../ui.js';
 import { acoes } from '../estado.js';
 import { mensagemDoErro } from '../api.js';
@@ -81,7 +81,18 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
 
   /* --------------------------------------------------------------- topo --- */
 
+  /*
+   * A cena redesenha a cada dano marcado, a cada foco, a cada ajuste. Sem
+   * guardar a rolagem, marcar o dano do sexto adversário joga a lista para o
+   * topo — no meio do combate. Ver `guardarRolagem` em util.js.
+   */
   function desenhar() {
+    const devolver = guardarRolagem(area);
+    desenharConteudo();
+    devolver();
+  }
+
+  function desenharConteudo() {
     limpar(area);
     area.append(barraDaConta());
     if (!dados.adversarios.length) {

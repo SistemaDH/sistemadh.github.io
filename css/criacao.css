@@ -134,7 +134,6 @@
   accent-color: var(--cor-ouro);
 }
 
-.criacao__coluna { margin-top: 8px; }
 .criacao__linhaDescricao { margin-bottom: 4px; }
 
 /* -------------------------------------------------------------- rodapé --- */
@@ -577,3 +576,33 @@
   font-size: var(--txt-md);
   color: var(--cor-titulo);
 }
+
+/* ------------------------------------------- ancestralidade mista --- */
+
+/*
+ * A característica como escolha, dentro do cartão da ancestralidade.
+ *
+ * Ela substituiu as pílulas "Anão · Pele Grossa" das duas colunas antigas. A
+ * diferença que importa não é de estilo: a pílula guardava o texto da
+ * característica no `title`, que no celular ninguém lê. Aqui o nome do cartão
+ * abre a carta, e a carta tem o texto.
+ */
+.criacao__caracteristica {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  width: 100%;
+  text-align: left;
+  font-size: var(--txt-sm);
+}
+
+/* O "1ª"/"2ª" é o que diz qual vaga aquele toque preenche. */
+.criacao__caracteristicaOrdem {
+  flex: 0 0 auto;
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-xs);
+  color: var(--cor-ouro);
+  opacity: .85;
+}
+
+.criacao__caracteristica.btn--principal .criacao__caracteristicaOrdem { color: inherit; }
