@@ -46,6 +46,8 @@ jobs:
       - run: npm run teste:e2e
       - name: A rolagem sobrevive a uma escolha
         run: npm run teste:rolagem
+      - name: Avanço — a tela impede antes de gravar
+        run: npm run teste:avanco-limites
       - name: Layout mobile 360 / 390 / 430
         run: npm run teste:layout-mobile
       - name: Conjuração mobile 360 / 390 sem pontuação órfã

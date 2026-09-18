@@ -182,7 +182,33 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
     const tentarEntrar = () => pedirEscolha();
     const jaEscolhida = escolhidos.filter((e) => e.opcao === o.id && e.patamar === o.patamar).length;
     const cheio = gastas() >= info.escolhasPorNivel;
-    const naoCabe = cheio || (gastas() + o.consomeEscolhas > info.escolhasPorNivel);
+
+    /*
+     * DUAS COISAS DIFERENTES IMPEDEM ESCOLHER, e elas não se confundem.
+     *
+     *  • NÃO CABE — o nível só dá duas escolhas e elas acabaram. Amanhã, noutro
+     *    nível, esta opção volta a estar disponível.
+     *  • SEM ESPAÇO — os quadradinhos DESTA opção neste patamar já estão todos
+     *    marcados. Ela não volta enquanto o patamar não virar.
+     *
+     * O backend recusava as duas no fim ("já teve todos os espaços marcados
+     * neste patamar"), mas a tela deixava marcar e só reclamava na hora de
+     * gravar. A conta dos espaços é a mesma que os quadradinhos já desenhavam:
+     * caixa preta marca `consomeEscolhas` espaços de uma vez, o resto marca um.
+     */
+    const marcaPorEscolha = o.negrito ? o.consomeEscolhas : 1;
+    const semEspaco = (Number(o.usados) || 0) + jaEscolhida * marcaPorEscolha >= (Number(o.espacos) || 0);
+    const naoCabe = cheio || (gastas() + o.consomeEscolhas > info.escolhasPorNivel) || semEspaco;
+
+    /*
+     * Os traços que ESTA sessão já marcou neste patamar. O livro não deixa o
+     * mesmo traço subir duas vezes no mesmo patamar (o backend recusa com
+     * "o traço X já foi marcado neste patamar"), e até aqui a tela só descobria
+     * isso na hora de gravar — depois de a pessoa ter escolhido tudo.
+     */
+    const tracosJaMarcados = escolhidos
+      .filter((e) => e.patamar === o.patamar && Array.isArray(e.tracos))
+      .flatMap((e) => e.tracos);
 
     const cartao = el('div', {
       class: `cartao cartao--alvo avanco__opcao ${jaEscolhida ? 'esta-escolhido' : ''}`
@@ -211,7 +237,7 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
 
     // Os campos que a escolha precisa antes de entrar.
     const extras = {};
-    if (o.id === 'tracos') extras.tracos = escolherTracos(o, cartao, tentarEntrar);
+    if (o.id === 'tracos') extras.tracos = escolherTracos(o, cartao, tentarEntrar, tracosJaMarcados);
     if (o.id === 'experiencias') extras.experiencias = escolherExperiencias(o, cartao, tentarEntrar);
     if (o.id === 'carta-de-dominio') extras.carta = escolherCarta(o, cartao, tentarEntrar);
     if (o.id === 'subclasse' && (o.cartasExtrasDeSubclasse || []).length) extras.cartasExtrasDeSubclasse = escolherCartasExtrasDeSubclasse(o.cartasExtrasDeSubclasse, cartao, tentarEntrar);
@@ -265,7 +291,8 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
     pedirEscolha = escolher;
 
     if (naoCabe) {
-      cartao.append(el('span', { class: 'selo', texto: 'Não cabe neste nível' }));
+      cartao.append(el('span', { class: 'selo', texto:
+        semEspaco ? 'Todos os espaços marcados neste patamar' : 'Não cabe neste nível' }));
     }
 
     /* "Tirar" continua sendo botão visível: desfazer é gesto explícito. */
@@ -313,14 +340,25 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
 
   /* --- os campos extras de cada opção ------------------------------------ */
 
-  function escolherTracos(o, cartao, aoCompletar) {
+  /*
+   * `o.tracosLivres` vem do backend com os traços ainda livres NO INÍCIO do
+   * nível. O que ele não sabe é o que esta mesma sessão marcou depois — se você
+   * pegar "dois traços" duas vezes no mesmo nível, a segunda vez precisa
+   * esconder os dois da primeira. Daí o `jaMarcados`.
+   */
+  function escolherTracos(o, cartao, aoCompletar, jaMarcados = []) {
     const escolhidosAqui = [];
     const grade = el('div', { class: 'avanco__grade' });
     (o.tracosLivres || []).forEach((t) => {
+      const bloqueado = jaMarcados.includes(t);
       const botao = el('button', {
-        type: 'button', class: 'btn btn--fantasma btn--pequeno avanco__pilula'
+        type: 'button',
+        class: 'btn btn--fantasma btn--pequeno avanco__pilula',
+        disabled: bloqueado,
+        title: bloqueado ? 'Já subiu neste patamar — o mesmo traço não sobe duas vezes.' : ''
       }, catalogo.nomeDoTraco(t));
       botao.addEventListener('click', () => {
+        if (bloqueado) return;
         const i = escolhidosAqui.indexOf(t);
         if (i >= 0) escolhidosAqui.splice(i, 1);
         else if (escolhidosAqui.length < 2) escolhidosAqui.push(t);
@@ -331,10 +369,15 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
       });
       grade.append(botao);
     });
+    const livresAgora = (o.tracosLivres || []).filter((t) => !jaMarcados.includes(t));
     cartao.append(el('label', { class: 'campo' }, [
       el('span', { class: 'campo__rotulo', texto: 'Quais dois traços?' }),
-      grade
-    ]));
+      grade,
+      livresAgora.length < 2
+        ? el('span', { class: 'campo__ajuda', texto:
+            'Não sobraram dois traços livres neste patamar.' })
+        : null
+    ].filter(Boolean)));
     return { valor: () => escolhidosAqui.slice() };
   }
 
