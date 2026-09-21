@@ -177,15 +177,28 @@ function doPost(e) {
  * Eles NÃO rodam dentro de aplicarAjustes_: aquela função faz uma prévia em clone.
  * Assim Vulto Etéreo não remove Medo duas vezes durante a validação.
  */
-function aplicarEfeitosDeMesaDosAjustes_(mudancas) {
+function aplicarEfeitosDeMesaDosAjustes_(mudancas, quem) {
   let deltaMedo = 0;
+  const recados = [];
   (mudancas || []).forEach(function (m) {
     const e = (m || {}).efeitoMesa || null;
-    if (e && e.medoDelta !== undefined) deltaMedo += Math.trunc(Number(e.medoDelta)) || 0;
+    if (!e) return;
+    if (e.medoDelta !== undefined) deltaMedo += Math.trunc(Number(e.medoDelta)) || 0;
+    /*
+     * ⚠ O RECADO VEM DA MUDANÇA JÁ ACEITA, nunca do pedido do cliente. Se o
+     * texto viesse no `p`, qualquer um escreveria qualquer coisa no painel do
+     * Mestre; vindo daqui, ele só existe se a regra tiver sido validada.
+     */
+    if (e.recado) {
+      recados.push({ texto:String(e.recado), origem:String(e.origemDoRecado || (m || {}).caracteristica || '') });
+    }
   });
-  if (!deltaMedo) return null;
+  if (!deltaMedo && !recados.length) return null;
   const mesa = mesaLer_();
-  ajustarMedo_(mesa, { delta: deltaMedo });
+  if (deltaMedo) ajustarMedo_(mesa, { delta: deltaMedo });
+  recados.forEach(function (r) {
+    publicarRecadoNaMesa_(mesa, { texto:r.texto, de:String(quem || ''), origem:r.origem });
+  });
   mesaGravar_(mesa);
   return Number(mesa.medo) || 0;
 }
@@ -231,6 +244,9 @@ function executar_(p) {
           medo: m.medo,
           nivelDaMesa: m.nivelDaMesa,
           sessaoDaMesa: m.sessao.numero,
+          // A CENA chega pela mesma porta da sessão: a ficha compara com a
+          // última a que reagiu e se acerta sozinha, com o token do dono.
+          cenaDaMesa: (m.cena || {}).numero || 0,
           // A regra opcional das moedas é da MESA: a ficha do jogador precisa
           // saber para mostrar (ou não) a coluna, e é aqui que ela chega.
           ouroComMoedas: Boolean(m.ouroComMoedas)
@@ -333,7 +349,8 @@ function executar_(p) {
           }
           return { ficha: ficha, extra: relatorio, evento: 'ficha-ajustada' };
         });
-        const medoDepois = aplicarEfeitosDeMesaDosAjustes_(r.extra.mudancas);
+        const medoDepois = aplicarEfeitosDeMesaDosAjustes_(r.extra.mudancas,
+          (r.personagem || {}).nome || '');
         return ok_({
           personagem: r.personagem,
           mudancas: r.extra.mudancas,
@@ -791,7 +808,14 @@ function executar_(p) {
       case 'encontro': {
         exigirMestre_(p.token);
         const m = mesaLer_();
-        return ok_({ encontro: encontroParaTela_(m, quantosPersonagens_()), medo: m.medo });
+        /*
+         * OS RECADOS VIAJAM COM A CENA porque é na cena que eles valem: "o
+         * atacante marca 2 Estresses" é notícia sobre o bicho que está na
+         * tela ao lado. Uma aba só para eles seria um lugar a mais para
+         * lembrar de olhar no meio de um combate.
+         */
+        return ok_({ encontro: encontroParaTela_(m, quantosPersonagens_()), medo: m.medo,
+          recados: m.recados || [] });
       }
 
       /** Nome da cena, ambiente e os ajustes do Guia de Batalha. */
@@ -919,16 +943,31 @@ function executar_(p) {
         });
       }
 
+      /*
+       * ENCERRAR O ENCONTRO É ENCERRAR A CENA — um gesto, os dois efeitos.
+       *
+       * A tela já chamava isto de "Encerrar a cena", e estava certa: quando o
+       * Mestre tira os adversários e zera as trilhas, a cena acabou. Faltava a
+       * outra metade — os marcadores que duram uma cena, nas fichas dos
+       * jogadores, continuavam de pé.
+       *
+       * ⚠ OS DOIS NA MESMA TRAVA. Subir o número da cena numa chamada separada
+       * deixaria uma janela em que o encontro acabou e a cena não, e um jogador
+       * que abrisse a ficha ali no meio ficaria com o marcador preso até a
+       * cena seguinte.
+       */
       case 'limparEncontro': {
         const mestre = exigirMestre_(p.token);
         return comTrava_(function () {
           const m = mesaLer_();
           const quantos = m.encontro.adversarios.length;
           limparEncontro_(m);
+          const cena = encerrarCenaDaMesa_(m);
           mesaGravar_(m);
-          registrarLog_(mestre, 'encontro', 'encerrado (' + quantos + ' adversários)');
+          registrarLog_(mestre, 'encontro',
+            'encerrado (' + quantos + ' adversários) · cena ' + cena.numero);
           const atual = mesaLer_();
-          return ok_({ encontro: encontroParaTela_(atual, quantosPersonagens_()) });
+          return ok_({ encontro: encontroParaTela_(atual, quantosPersonagens_()), cena: cena });
         });
       }
 
@@ -1183,6 +1222,25 @@ function executar_(p) {
           mesaGravar_(m);
           registrarLog_(jogador, 'sessao-encerrada', 'Sessão ' + r.numero + ' · Medo ' + r.medo);
           return ok_({ sessao: r, mesa: m });
+        });
+      }
+
+      /*
+       * ENCERRAR A CENA é do Mestre, e não escreve na ficha de ninguém.
+       *
+       * Sobe o número na mesa e pronto. Cada jogador recebe o efeito na ficha
+       * dele quando abrir — igualzinho ao que já acontece com a sessão, e pelo
+       * mesmo motivo: o Mestre não tem (nem deve ter) permissão de gravar na
+       * ficha alheia, e quem estava offline acerta quando volta.
+       */
+      case 'encerrarCenaDaMesa': {
+        const jogador = exigirMestre_(p.token);
+        return comTrava_(function () {
+          const m = mesaLer_();
+          const r = encerrarCenaDaMesa_(m);
+          mesaGravar_(m);
+          registrarLog_(jogador, 'cena-encerrada', 'Cena ' + r.numero);
+          return ok_({ cena: r, mesa: m });
         });
       }
 

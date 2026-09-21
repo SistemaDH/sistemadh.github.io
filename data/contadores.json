@@ -2702,6 +2702,125 @@
    "observacao": "Uso de Impenetrável da Armadura de Escamas de Dragão. Ausência/0 = disponível; 1 = já usado desde o último descanso."
   },
   {
+   "chave": "uso:equipamento:armadura-t2-traje-de-fio-de-tempestade:absorvente",
+   "origem": "equipamento",
+   "refId": "armadura-t2-traje-de-fio-de-tempestade",
+   "nome": "Absorvente",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "fim-da-cena"
+   ],
+   "observacao": "Uso de Absorvente do Traje de Fio de Tempestade. Ausência/0 = disponível; 1 = já usado nesta cena. Zera quando a cena termina — pelo botão da ficha ou pelo Mestre, na aba Cena."
+  },
+  {
+   "chave": "uso:equipamento:armadura-t2-placa-solar-dourada:resplandecente",
+   "origem": "equipamento",
+   "refId": "armadura-t2-placa-solar-dourada",
+   "nome": "Resplandecente",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "fim-da-cena"
+   ],
+   "observacao": "Uso de Resplandecente da Placa Solar Dourada. Ausência/0 = disponível; 1 = já gastou Esperança nesta cena e limpou 1 Ponto de Armadura. Zera quando a cena termina — pelo botão da ficha ou pelo Mestre, na aba Cena."
+  },
+  {
+   "chave": "uso:equipamento:armadura-t3-manto-de-cloverweave:favorecido-pela-fortuna",
+   "origem": "equipamento",
+   "refId": "armadura-t3-manto-de-cloverweave",
+   "nome": "Favorecido pela Fortuna",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "fim-da-cena"
+   ],
+   "observacao": "Uso de Favorecido pela Fortuna do Manto de Cloverweave. Ausência/0 = disponível; 1 = já trocou uma falha com Esperança por sucesso com Medo nesta cena."
+  },
+  {
+   "chave": "uso:equipamento:armadura-t2-vestes-do-encantador:mnemonica",
+   "origem": "equipamento",
+   "refId": "armadura-t2-vestes-do-encantador",
+   "nome": "Mnemônica",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "fim-da-cena"
+   ],
+   "observacao": "Uso de Mnemônica das Vestes do Encantador. Ausência/0 = disponível; 1 = já usado nesta cena. Zera quando a cena termina."
+  },
+  {
+   "chave": "estado:equipamento:armadura-t4-arnes-ressonante:vitreo",
+   "origem": "equipamento",
+   "refId": "armadura-t4-arnes-ressonante",
+   "nome": "Vítreo",
+   "rotulo": "ativo",
+   "tipo": "estado",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "manual"
+   ],
+   "observacao": "Armadura estilhaçada pelo Vítreo do Arnês Ressonante: -5 nos dois limiares enquanto ligado. NÃO zera em descanso qualquer — some quando a pessoa faz o movimento de Reparar Armadura, que é o que o SRD manda."
+  },
+  {
+   "chave": "uso:equipamento:armadura-t4-mortalha-de-darkweave:caminhante-fantasma",
+   "origem": "equipamento",
+   "refId": "armadura-t4-mortalha-de-darkweave",
+   "nome": "Caminhante Fantasma",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso"
+   ],
+   "observacao": "Uso de Caminhante Fantasma da Mortalha de Darkweave. Ausência/0 = disponível; 1 = já usado desde o último descanso."
+  },
+  {
+   "chave": "uso:equipamento:armadura-t4-placa-heroica-sagrada:abencoada",
+   "origem": "equipamento",
+   "refId": "armadura-t4-placa-heroica-sagrada",
+   "nome": "Abençoada",
+   "rotulo": "uso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Uso de Abençoada da Placa Heroica Sagrada. Ausência/0 = disponível; 1 = já usada desde o último descanso LONGO — o curto não devolve."
+  },
+  {
    "chave": "estado:equipamento:campanha-colosso-das-terras-aridas-revolver:balas-gastas",
    "origem": "equipamento",
    "refId": "campanha-colosso-das-terras-aridas-revolver",

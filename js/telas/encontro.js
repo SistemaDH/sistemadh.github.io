@@ -50,6 +50,15 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
   let catalogoAtual = catalogo || null;
 
   let dados = null;
+  /*
+   * O MURAL DE RECADOS: o único canal que vai da ficha de um jogador para cá.
+   *
+   * Duas características de armadura têm metade da regra fora da ficha de quem
+   * as veste — a Amaldiçoada manda o atacante marcar Estresse, o Favorecido
+   * pela Fortuna sobe o Medo da mesa. O jogador não escreve na trilha de
+   * ninguém: ele deixa o número pronto aqui, e o Mestre aplica.
+   */
+  let recados = [];
   /** Guarda o texto digitado por adversário para o redesenho não apagar. */
   const danoDigitado = new Map();
 
@@ -67,6 +76,7 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
     try {
       const r = await acoes.encontro();
       dados = r.encontro;
+      recados = Array.isArray(r.recados) ? r.recados : [];
       desenhar();
     } catch (e) {
       limpar(area).append(el('p', { class: 'texto-suave', texto: mensagemDoErro(e) }));
@@ -92,14 +102,66 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
     devolver();
   }
 
+  /**
+   * ⚠ O RECADO É NOTÍCIA, NÃO COMANDO. Nada aqui mexe na trilha de ninguém: o
+   * Mestre lê, aplica se concordar e o mural se esvazia quando a cena acaba.
+   * É a mesma escolha do resto do app — o servidor faz a conta, a mesa decide
+   * o que aconteceu.
+   */
+  function muralDeRecados() {
+    if (!recados.length) return null;
+    return el('section', { class: 'encontro__recados' }, [
+      el('h3', { class: 'encontro__recadosTitulo', texto:
+        recados.length === 1 ? 'Um recado dos jogadores' : `${recados.length} recados dos jogadores` }),
+      el('ul', { class: 'encontro__recadosLista' }, recados.map((r) => el('li', {
+        class: 'encontro__recado'
+      }, [
+        el('strong', { class: 'encontro__recadoDe', texto: r.de || 'Alguém' }),
+        el('span', { class: 'texto-sm', texto: ` ${r.texto}` }),
+        r.origem ? el('span', { class: 'texto-xs texto-fraco', texto: ` (${r.origem})` }) : null
+      ].filter(Boolean)))),
+      el('p', { class: 'texto-xs texto-fraco', texto:
+        'Aplique na trilha do adversário se concordar. O mural se esvazia quando a cena acaba.' })
+    ]);
+  }
+
   function desenharConteudo() {
     limpar(area);
     area.append(barraDaConta());
+    const mural = muralDeRecados();
+    if (mural) area.append(mural);
     if (!dados.adversarios.length) {
       area.append(blocoVazio(
         'Nenhum adversário em cena',
         'Vá em Adversários, ache o bicho e toque em "Pôr em cena". A conta de ' +
         'Pontos de Batalha aparece aqui em cima.'));
+      /*
+       * ⚠ CENA SEM COMBATE TAMBÉM ACABA.
+       *
+       * Sem adversários, a tela mostrava o vazio e mais nada — e o único
+       * "Encerrar a cena" do app estava na barra que só aparece com bicho em
+       * cena. Uma conversa tensa numa taverna é cena, termina, e os marcadores
+       * que duram uma cena tinham de voltar. Aqui o gesto é só isso: não há
+       * adversário para tirar.
+       */
+      area.append(el('div', { class: 'encontro__acoes' }, [
+        el('button', {
+          type: 'button', class: 'btn btn--fantasma btn--pequeno',
+          onClick: async (ev) => {
+            const ok = await confirmar({
+              titulo: 'Encerrar a cena',
+              mensagem: 'Não há adversário em cena. Os marcadores que duram uma cena voltam ' +
+                'ao que eram na ficha de cada jogador, quando ele abrir. Nada mais muda.',
+              confirmarTexto: 'Encerrar'
+            });
+            if (!ok) return;
+            try {
+              const r = await travarBotao(ev.currentTarget, acoes.encerrarCenaDaMesa());
+              avisarSucesso(`Cena ${r.cena.numero} encerrada. Cada ficha se acerta ao abrir.`);
+            } catch (e) { avisarErro(mensagemDoErro(e)); }
+          }
+        }, 'Encerrar a cena')
+      ]));
       return;
     }
     area.append(barraDeAcoes());
@@ -156,7 +218,8 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
             mensagem: (dados.adversarios.length === 1
         ? 'Tirar o adversário em cena e zerar a trilha dele? '
         : `Tirar os ${dados.adversarios.length} adversários e zerar as trilhas? `) +
-              'O Medo da mesa não é tocado.',
+              'Os marcadores que duram uma cena também voltam ao que eram na ficha de ' +
+              'cada jogador, quando ele abrir. O Medo da mesa não é tocado.',
             confirmarTexto: 'Encerrar', perigo: true
           });
           if (!ok) return;

@@ -31,7 +31,22 @@ for (const [slug, idLocal, limiares, pontuacao, caracteristica] of esperado) {
 if (locais.get('armadura-t1-vestes-de-mago')?.caracteristica?.efeitoDerivado?.limiaresPorTracoConjuracao !== true) erros.push('Encantadas perdeu o bônus pelo traço de Conjuração');
 if (locais.get('armadura-t1-armadura-de-cota-de-escamas')?.caracteristica?.efeitoDerivado?.tracos?.finesse !== -1) erros.push('Incômoda perdeu −1 em Finesse');
 if (locais.get('armadura-t1-armadura-de-faixas')?.caracteristica?.efeitoDerivado?.evasao !== -1) erros.push('Volumosa perdeu −1 em Evasão');
-if (locais.get('armadura-t1-armadura-brigandina')?.caracteristica?.automacao?.classificacao !== 'reacao-dano-pendente') erros.push('Forrada perdeu a classificação explícita de pendência');
+/*
+ * ⚠ ESTA LINHA GUARDAVA A PENDÊNCIA, e a pendência acabou.
+ *
+ * Ela exigia `reacao-dano-pendente` — a classificação que a Forrada tinha
+ * quando esta conferência nasceu. Quando a característica foi automatizada, a
+ * guarda passou a cobrar o passado: ficou vermelha por a Brigandina ter
+ * MELHORADO. Uma guarda que impede o conserto é pior que guarda nenhuma.
+ *
+ * Agora ela guarda o que vale a pena não perder: a reação está ligada de
+ * verdade, com efeito declarado, e não só classificada como automática (E108).
+ */
+const brigandina = locais.get('armadura-t1-armadura-brigandina')?.caracteristica;
+if (!/pendente$/.test(String(brigandina?.automacao?.classificacao || 'pendente')) &&
+  brigandina?.efeitoEquipamento?.danoRecebido?.forrada?.estresse !== 1) {
+  erros.push('Forrada diz ser automatizada e não tem o efeito ligado');
+}
 
 if (erros.length) { console.error(erros.map((erro) => `- ${erro}`).join('\n')); process.exit(1); }
 console.log('SRD2: 38/76 armaduras conferidas; as 4 novas opções de patamar 1 estão vinculadas e protegidas por regressão.');

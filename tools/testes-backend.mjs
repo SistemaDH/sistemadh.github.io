@@ -622,11 +622,85 @@ teste('Vampiro guarda até 6 marcadores e gasta um para o Dado de Medo', () => {
   igual(contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'gastar-marcador'}]).erros,[]);
   igual(f.transformacao.marcadores,5);
 });
-teste('Lobisomem exige PV marcado e cobra 1 Estresse para entrar na forma', () => {
-  const f=fichaParaTransformacao({id:'lobisomem'});f.recursos.estresseMarcado=0;
-  verdade(contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'entrar-forma-de-lobo'}]).erros.length===1);
-  igual(contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'entrar-forma-de-lobo',pvMarcado:true}]).erros,[]);
+/*
+ * ⚠ ESTE TESTE AFIRMAVA O BUG.
+ *
+ * O livro (p. da transformação Lobisomem) diz: "Quando marcar 1 ou mais Pontos
+ * de Vida, você pode marcar 1 Estresse para entrar na Forma de Lobo."
+ *
+ * A versão antiga mandava `pvMarcado: true` — uma FLAG DO CLIENTE — e o backend
+ * acreditava nela. Ou seja: a condição existia no papel e não existia no
+ * código, porque quem afirmava que ela foi cumprida era quem queria entrar na
+ * forma. Agora o backend olha o PV marcado na própria ficha.
+ */
+teste('Lobisomem só entra na Forma de Lobo com PV marcado, e cobra 1 Estresse', () => {
+  const f=fichaParaTransformacao({id:'lobisomem'});
+  f.recursos.estresseMarcado=0; f.recursos.pontosDeVidaMarcados=0;
+  // Sem PV marcado, recusa — mesmo com o cliente jurando que marcou.
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'entrar-forma-de-lobo',pvMarcado:true}]).erros.length===1);
+  igual(f.transformacao.formaDeLobo,false);
+  f.recursos.pontosDeVidaMarcados=1;
+  igual(contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'entrar-forma-de-lobo'}]).erros,[]);
   igual(f.transformacao.formaDeLobo,true);igual(f.recursos.estresseMarcado,1);
+  // E entrar de novo não custa outro Estresse.
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'entrar-forma-de-lobo'}]).erros.length===1);
+  igual(f.recursos.estresseMarcado,1);
+});
+
+/*
+ * "A forma dura até você entrar em Frenesi Uivante ou fazer um descanso."
+ * Não existe sair à vontade — era o que a Vanessa via como "ele fica podendo
+ * alternar".
+ */
+teste('Lobisomem não sai da Forma de Lobo à vontade', () => {
+  const f=fichaParaTransformacao({id:'lobisomem'});
+  f.recursos.pontosDeVidaMarcados=1; f.recursos.estresseMarcado=0;
+  igual(contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'entrar-forma-de-lobo'}]).erros,[]);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'sair-forma-de-lobo'}]);
+  verdade(r.erros.length===1, JSON.stringify(r.erros));
+  igual(f.transformacao.formaDeLobo,true);
+});
+
+/*
+ * "Role uma quantidade de d20 igual ao seu PATAMAR." Era `ceil(nível/3)`, que
+ * acerta por coincidência nos níveis 1, 4, 7 e 10 e erra nos níveis 2 e 3 —
+ * justamente onde a maioria das mesas está quando pega a transformação.
+ */
+teste('Frenesi Uivante rola d20 igual ao PATAMAR, não a nível/3', () => {
+  const casos=[[1,1],[2,2],[3,2],[4,2],[5,3],[7,3],[8,4],[10,4]];
+  casos.forEach(([nivel,esperado]) => {
+    const f=fichaParaTransformacao({id:'lobisomem'});
+    f.identidade.nivel=nivel;
+    f.recursos.pontosDeVidaMarcados=1;
+    f.recursos.estresseMaximo=6; f.recursos.estresseMarcado=0;
+    igual(contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'entrar-forma-de-lobo'}]).erros,[]);
+    f.recursos.estresseMarcado=f.recursos.estresseMaximo-1;
+    const r=contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'jogada-com-esperanca'}]);
+    igual(r.erros,[]);
+    const m=r.mudancas.find((x)=>x && x.dadosDeFrenesi!==undefined);
+    verdade(!!m,'faltou o relatório do frenesi no nível '+nivel);
+    igual(m.dadosDeFrenesi,esperado);
+  });
+});
+
+/*
+ * O Mestre concede a transformação e decide se o jogador pode ligar e desligar.
+ * O frontend já escondia os botões quando não podia; o BACKEND aceitava assim
+ * mesmo — a regra da mesa valia só enquanto ninguém mandasse o pedido na mão.
+ */
+teste('sem jogadorPodeAlternar, o jogador não liga nem desliga a transformação', () => {
+  const f=fichaParaTransformacao({id:'lobisomem'});
+  f.controleTransformacao={id:'lobisomem',jogadorPodeAlternar:false,ativa:true};
+  const desligar=contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'desativar-concedida'}]);
+  verdade(desligar.erros.length===1, JSON.stringify(desligar.erros));
+  f.controleTransformacao={id:'lobisomem',jogadorPodeAlternar:false,ativa:false};
+  f.transformacao=null;
+  const ligar=contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'ativar-concedida'}]);
+  verdade(ligar.erros.length===1, JSON.stringify(ligar.erros));
+  // Com a permissão, os dois funcionam.
+  f.controleTransformacao={id:'lobisomem',jogadorPodeAlternar:true,ativa:false};
+  igual(contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'ativar-concedida'}]).erros,[]);
+  igual(contexto.aplicarAjustes_(f,[{tipo:'transformacao',acao:'desativar-concedida'}]).erros,[]);
 });
 teste('Fantasma aplica resistência física e dobra dano mágico antes dos limiares', () => {
   const fisico=fichaParaTransformacao({id:'fantasma'}), magico=fichaParaTransformacao({id:'fantasma'});
@@ -1694,7 +1768,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 190 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 5 de equipamento, 24 de consumível e 16 de loot', () => {
+teste('o catálogo tem 197 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 12 de equipamento, 24 de consumível e 16 de loot', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1708,7 +1782,20 @@ teste('o catálogo tem 190 contadores: 113 de carta, 25 de classe/subclasse, 4 d
    *    sessão" do Apoio Confiável não é contador novo — ele SOBE O TETO do
    *    Contatos em Todo Lugar, que é a mesma habilidade.)
    */
-  igual(Object.keys(CONTADORES).length, 190);
+  /*
+   * Os três últimos são de equipamento e nasceram juntos: ABSORVENTE (Traje de
+   * Fio de Tempestade) e MNEMÔNICA (Vestes do Encantador), de "uma vez por
+   * CENA" — que só fazem sentido agora que a cena tem como terminar —, e o
+   * VÍTREO (Arnês Ressonante), que não é uso e sim ESTADO: a armadura fica
+   * estilhaçada, com -5 nos limiares, até alguém repará-la num descanso.
+   *
+   * E os dois mais novos são por CENA e nasceram do mesmo lote: a
+   * RESPLANDECENTE (Placa Solar Dourada), que só existiu depois que a
+   * Esperança ganhou um caminho único para sair da ficha, e o FAVORECIDO PELA
+   * FORTUNA (Manto de Cloverweave), que precisou de um canal da ficha do
+   * jogador para o Medo da mesa.
+   */
+  igual(Object.keys(CONTADORES).length, 197);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 113);
@@ -1717,7 +1804,7 @@ teste('o catálogo tem 190 contadores: 113 de carta, 25 de classe/subclasse, 4 d
   igual(porOrigem['consumivel'], 24);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
-  igual(porOrigem['equipamento'], 5);
+  igual(porOrigem['equipamento'], 12);
   igual(porOrigem['loot'], 16);
 });
 
@@ -3891,6 +3978,8 @@ teste('gatilho inventado é recusado', () => {
   const f = fichaCansada();
   const r = contexto.aplicarAjustes_(f, [{ tipo: 'gatilho', gatilho: 'lua-cheia' }]);
   verdade(r.erros.length === 1, JSON.stringify(r));
+  // E a recusa DIZ o motivo: um erro genérico manda quem lê procurar no código.
+  verdade(/desconhecido/i.test(r.erros[0]), r.erros[0]);
 });
 
 teste('rajada de toques tem teto', () => {
@@ -7475,6 +7564,35 @@ teste('limpar o encontro zera a cena sem tocar no Medo', () => {
   contexto.limparEncontro_(m);
   igual(m.encontro.adversarios.length, 0);
   igual(m.medo, 5);
+});
+
+/*
+ * ⚠ ENCERRAR O ENCONTRO É ENCERRAR A CENA — e isto se testa pela AÇÃO, não
+ * pela função do motor.
+ *
+ * `limparEncontro_` sozinha continua só tirando adversários: ela é usada como
+ * preparo em dezenas de testes, e subir o número da cena ali daria um efeito
+ * colateral em cada um deles. Quem junta as duas metades é a ação da API, que
+ * faz as duas na MESMA trava — sem isso haveria uma janela em que o encontro
+ * acabou e a cena não, e um jogador que abrisse a ficha ali ficaria com o
+ * marcador preso até a cena seguinte.
+ */
+teste('a ação de encerrar o encontro também encerra a cena da mesa', () => {
+  const original = JSON.parse(JSON.stringify(contexto.mesaLer_()));
+  try {
+    const m = mesaComEncontro(5);
+    contexto.acrescentarAoEncontro_(m, { adversario: 'urso' });
+    contexto.mesaGravar_(m);
+    const cenaAntes = (contexto.mesaLer_().cena || {}).numero || 0;
+
+    const r = api('limparEncontro', { token: tokenMestre });
+    verdade(r.ok, JSON.stringify(r));
+    igual(r.dados.cena.numero, cenaAntes + 1, 'a cena da mesa tinha de ter subido');
+    igual(contexto.mesaLer_().encontro.adversarios.length, 0);
+    igual(contexto.mesaLer_().medo, 5, 'e o Medo continua onde estava');
+  } finally {
+    contexto.mesaGravar_(original);
+  }
 });
 
 /* -------------------------------------------------------------------------- */
@@ -12869,6 +12987,1516 @@ teste('armadura guardada pode ser equipada sem apagar a anterior', () => {
   igual(r.b.acao, 'equipar');
   igual(r.equipamento.armadura, 'armadura-t1-armadura-de-couro');
   igual(r.equipamento.reservaArmaduras, ['armadura-t1-armadura-gambeson']);
+});
+
+console.log('\nCaracterísticas de equipamento que viraram número');
+
+/*
+ * O app não rola dados — mas isso nunca foi desculpa para deixar um bônus
+ * FIXO só como texto. "Confiável: +1 para rolagens de ataque" (SRD p.703)
+ * estava assim em 14 armas, e "Canalização: +1 em jogadas de Conjuração" numa
+ * armadura. Publicar o número é o que o app já fazia com Proficiência e com
+ * os bônus de dano: a mesa rola, a ficha diz com quanto.
+ */
+const fichaComEquipamento_ = (o = {}) => {
+  const f = fichaDeModificador({
+    classe: o.classe || 'bardo', subclasse: o.subclasse || 'bardo-musico-errante',
+    nivel: o.nivel || 1,
+    equipamento: {
+      primaria: o.primaria || null, secundaria: o.secundaria || null,
+      armadura: o.armadura || null, reserva: []
+    }
+  });
+  if (o.cartas) f.cartas = { ativas: o.cartas, cofre: [] };
+  return f;
+};
+
+teste('Confiável vira +1 no ataque DA ARMA que o tem, e não no personagem', () => {
+  const d = contexto.derivadosDoPersonagem_(fichaComEquipamento_({
+    primaria: 'primaria-t1-espada-larga',      // Confiável
+    secundaria: 'secundaria-t1-punhal-pequeno' // sem Confiável
+  }));
+  igual(d.bonusDeAtaque.porArma.length, 1, JSON.stringify(d.bonusDeAtaque));
+  igual(d.bonusDeAtaque.porArma[0].valor, 1);
+  igual(d.bonusDeAtaque.porArma[0].armaId, 'primaria-t1-espada-larga');
+  igual(d.bonusDeAtaque.porArma[0].fonte, 'Confiável');
+  igual(d.bonusDeAtaque.geral, []);
+});
+
+teste('sem arma Confiável, não há bônus de ataque nenhum', () => {
+  const d = contexto.derivadosDoPersonagem_(fichaComEquipamento_({
+    primaria: 'secundaria-t1-punhal-pequeno'
+  }));
+  igual(d.bonusDeAtaque, { geral: [], porArma: [] });
+});
+
+teste('as 14 armas Confiável do catálogo publicam o +1, e só elas', () => {
+  const armas = avaliar('ARMAS') || [];
+  const comConfiavel = armas.filter((a) => a.carac === 'Confiável');
+  igual(comConfiavel.length, 14, 'o catálogo mudou de tamanho — confira o SRD antes de mexer no número');
+  comConfiavel.forEach((a) => {
+    igual((a.efeitoDerivado || {}).bonusAtaqueDaArma, 1, `${a.nome} perdeu o +1 de Confiável`);
+  });
+  const outras = armas.filter((a) => a.carac !== 'Confiável' &&
+    (a.efeitoDerivado || {}).bonusAtaqueDaArma);
+  igual(outras.map((a) => a.nome), [], 'arma sem Confiável não pode ter bônus de ataque');
+});
+
+teste('a Armadura de canalização soma +1 na Conjuração enquanto estiver vestida', () => {
+  const vestida = fichaComEquipamento_({ nivel: 8, armadura: 'armadura-t4-armadura-de-canalizacao' });
+  igual(contexto.derivadosDoPersonagem_(vestida).bonusConjuracao, 1);
+  const semArmadura = fichaComEquipamento_({ nivel: 8 });
+  igual(contexto.derivadosDoPersonagem_(semArmadura).bonusConjuracao, 0);
+});
+
+/*
+ * ⚠ ESTE É O TESTE QUE PEGOU O ERRO.
+ *
+ * As cartas de domínio guardam o bônus delas com o prefixo "bonus"
+ * (bonusConjuracao) e passam pelo MESMO aplicar() dos efeitos de equipamento.
+ * Quando o canal do equipamento leu esse nome, a carta foi contada duas vezes
+ * e o Tocado pela Arcana virou +2. A chave do canal de equipamento é o número
+ * puro ("conjuracao") exatamente por isso.
+ */
+teste('carta e armadura de Conjuração somam uma vez cada, nunca duas', () => {
+  const soArmadura = fichaComEquipamento_({ nivel: 8, armadura: 'armadura-t4-armadura-de-canalizacao' });
+  igual(contexto.derivadosDoPersonagem_(soArmadura).bonusConjuracao, 1, 'só a armadura');
+
+  const soCarta = fichaArcanaN7_([
+    'arcana-tocado-pela-arcana', 'arcana-desaparecer', 'arcana-olho-flutuante', 'arcana-andar-na-parede'
+  ]);
+  igual(contexto.derivadosDoPersonagem_(soCarta).bonusConjuracao, 1, 'só a carta');
+
+  const asDuas = fichaArcanaN7_([
+    'arcana-tocado-pela-arcana', 'arcana-desaparecer', 'arcana-olho-flutuante', 'arcana-andar-na-parede'
+  ]);
+  asDuas.equipamento.armadura = 'armadura-t4-armadura-de-canalizacao';
+  igual(contexto.derivadosDoPersonagem_(asDuas).bonusConjuracao, 2,
+    'carta 1 + armadura 1 = 2; se der 3, o canal do equipamento voltou a ler a chave da carta');
+});
+
+teste('o bônus de ataque é gravado na ficha junto dos outros derivados', () => {
+  const f = fichaComEquipamento_({ primaria: 'primaria-t1-espada-larga' });
+  contexto.aplicarDerivados_(f);
+  igual((f.bonusDeAtaque.porArma || []).length, 1);
+  igual(f.bonusDeAtaque.porArma[0].arma, 'Espada Larga');
+});
+
+teste('Divina: marcar Ponto de Armadura dá 1 Esperança por Ponto', () => {
+  const f = fichaComEquipamento_({ nivel: 8, armadura: 'armadura-t4-lamelar-vinculada-aos-deuses' });
+  contexto.aplicarDerivados_(f);
+  f.recursos.esperanca = 2;
+  f.recursos.armaduraMarcada = 0;
+
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'recurso', chave: 'armaduraMarcada', valor: 2 }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 4, 'dois Pontos marcados, duas Esperanças');
+  const m = r.mudancas[0];
+  igual(m.divina.esperancaPedida, 2);
+  igual(m.divina.esperancaRecebida, 2);
+  verdade(/Divina: \+2 Esperança/.test(m.aviso || ''), m.aviso);
+});
+
+/*
+ * ⚠ A ESPERANÇA CHEIA NÃO É ERRO — e o aviso não pode prometer o que não deu.
+ *
+ * Seria fácil somar +1 e deixar o limitador cortar em silêncio: a ficha ficaria
+ * certa e a tela diria "+1 Esperança" para quem não recebeu nada. O registro
+ * guarda o pedido e o recebido, e a frase muda.
+ */
+teste('Divina: com a Esperança cheia, o aviso diz que não coube', () => {
+  const f = fichaComEquipamento_({ nivel: 8, armadura: 'armadura-t4-lamelar-vinculada-aos-deuses' });
+  contexto.aplicarDerivados_(f);
+  f.recursos.esperanca = f.recursos.esperancaMaxima;
+  f.recursos.armaduraMarcada = 0;
+
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'recurso', chave: 'armaduraMarcada', valor: 1 }]);
+  igual(f.recursos.esperanca, f.recursos.esperancaMaxima, 'não passa do teto');
+  const m = r.mudancas[0];
+  igual(m.divina.esperancaPedida, 1);
+  igual(m.divina.esperancaRecebida, 0);
+  verdade(/já está cheia/.test(m.aviso || ''), m.aviso);
+});
+
+teste('Divina só dá Esperança ao MARCAR: desmarcar não devolve nada', () => {
+  const f = fichaComEquipamento_({ nivel: 8, armadura: 'armadura-t4-lamelar-vinculada-aos-deuses' });
+  contexto.aplicarDerivados_(f);
+  f.recursos.esperanca = 2;
+  f.recursos.armaduraMarcada = 3;
+
+  contexto.aplicarAjustes_(f, [{ tipo: 'recurso', chave: 'armaduraMarcada', valor: 1 }]);
+  igual(f.recursos.esperanca, 2, 'limpar armadura não é marcar armadura');
+});
+
+teste('Autorregeneração limpa 1 Ponto de Armadura em qualquer descanso', () => {
+  for (const tipo of ['curto', 'longo']) {
+    const f = fichaComEquipamento_({ nivel: 8, armadura: 'armadura-t2-couraca-de-couro-de-troll' });
+    contexto.aplicarDerivados_(f);
+    f.recursos.armaduraMarcada = 2;
+    const escolhas = tipo === 'curto'
+      // Dois movimentos SEM mexer em armadura: o único PA que some é o da
+      // característica, senão o teste não saberia dizer quem limpou.
+      ? [{ movimento: 'reduzir-estresse', rolagem: 2 }, { movimento: 'reduzir-estresse', rolagem: 2 }]
+      : [{ movimento: 'zerar-estresse' }, { movimento: 'trabalhar-em-um-projeto' }];
+    const r = contexto.aplicarDescanso_(f, tipo, escolhas);
+    verdade(r.ficha.recursos.armaduraMarcada <= 1,
+      `descanso ${tipo}: sobrou ${r.ficha.recursos.armaduraMarcada} marcado`);
+    verdade(((r.previa || {}).avisos || []).some((a) => /Autorregeneração/.test(a)),
+      `descanso ${tipo}: sem aviso — ${JSON.stringify((r.previa || {}).avisos)}`);
+  }
+});
+
+teste('Autorregeneração sem Ponto marcado não faz nada e não avisa', () => {
+  const f = fichaComEquipamento_({ nivel: 8, armadura: 'armadura-t2-couraca-de-couro-de-troll' });
+  contexto.aplicarDerivados_(f);
+  f.recursos.armaduraMarcada = 0;
+  const r = contexto.aplicarDescanso_(f, 'longo', [
+    { movimento: 'zerar-estresse' }, { movimento: 'trabalhar-em-um-projeto' }
+  ]);
+  igual(r.ficha.recursos.armaduraMarcada, 0);
+  verdade(!(((r.previa || {}).avisos) || []).some((a) => /Autorregeneração/.test(a)),
+    JSON.stringify((r.previa || {}).avisos));
+});
+
+/*
+ * FORRADA (SRD, Armadura Brigandina): "Mark a Stress to negate Minor damage."
+ *
+ * A pegadinha da regra está na palavra "Minor": a faixa que conta é a que
+ * sobrou DEPOIS do uso normal de Armadura, não a do golpe cru. Quem levou dano
+ * Maior e marcou 1 PA está diante de dano Menor — e é aí que a característica
+ * mais serve. Olhar a faixa de antes recusaria justamente o uso mais comum.
+ */
+teste('Forrada anula dano Menor por 1 Estresse', () => {
+  const f = fichaEquipamentoDefensivo_(1, null, 'armadura-t1-armadura-brigandina');
+  f.recursos.pontosDeVidaMarcados = 0;
+  f.recursos.estresseMarcado = 0;
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'dano', dano:1, tipoDeDano:'fisico', usarForrada:true }]);
+  igual(r.erros, []);
+  igual(f.recursos.pontosDeVidaMarcados, 0, 'nenhum PV marcado');
+  igual(f.recursos.estresseMarcado, 1, 'custou 1 Estresse');
+  verdade(r.mudancas[0].forrada, JSON.stringify(r.mudancas[0]));
+  verdade(/dano Menor anulado/.test(r.mudancas[0].aviso || ''), r.mudancas[0].aviso);
+});
+
+teste('Forrada vale depois da Armadura rebaixar Maior para Menor', () => {
+  const f = fichaEquipamentoDefensivo_(1, null, 'armadura-t1-armadura-brigandina');
+  f.recursos.pontosDeVidaMarcados = 0;
+  f.recursos.estresseMarcado = 0;
+  f.recursos.armaduraMarcada = 0;
+  const danoMaior = Number(f.defesas.limiarMaior);
+
+  // Sem marcar Armadura, o golpe é Maior e a Forrada recusa.
+  const recusa = contexto.aplicarAjustes_(f, [{ tipo:'dano', dano:danoMaior, tipoDeDano:'fisico', usarForrada:true }]);
+  igual(recusa.erros.length, 1, JSON.stringify(recusa.erros));
+  verdade(/só anula dano Menor/.test(recusa.erros[0]), recusa.erros[0]);
+  igual(f.recursos.pontosDeVidaMarcados, 0, 'recusa não pode ter marcado nada');
+
+  // Marcando 1 PA ele desce para Menor, e aí vale.
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:danoMaior, tipoDeDano:'fisico', usarArmadura:true, usarForrada:true
+  }]);
+  igual(r.erros, []);
+  igual(f.recursos.pontosDeVidaMarcados, 0, 'o PV que sobraria foi anulado');
+  igual(f.recursos.estresseMarcado, 1);
+  igual(f.recursos.armaduraMarcada, 1, 'o Ponto de Armadura foi marcado normalmente');
+});
+
+teste('Forrada não tem limite por descanso: vale de novo no golpe seguinte', () => {
+  const f = fichaEquipamentoDefensivo_(1, null, 'armadura-t1-armadura-brigandina');
+  f.recursos.pontosDeVidaMarcados = 0;
+  f.recursos.estresseMarcado = 0;
+  contexto.aplicarAjustes_(f, [{ tipo:'dano', dano:1, tipoDeDano:'fisico', usarForrada:true }]);
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'dano', dano:1, tipoDeDano:'fisico', usarForrada:true }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, 2, 'duas vezes, dois Estresses');
+  igual(f.recursos.pontosDeVidaMarcados, 0);
+});
+
+teste('Forrada com a trilha de Estresse cheia é recusada, e nada é gasto', () => {
+  const f = fichaEquipamentoDefensivo_(1, null, 'armadura-t1-armadura-brigandina');
+  f.recursos.pontosDeVidaMarcados = 0;
+  f.recursos.estresseMarcado = f.recursos.estresseMaximo;
+  const antes = JSON.stringify(f.recursos);
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'dano', dano:1, tipoDeDano:'fisico', usarForrada:true }]);
+  igual(r.erros.length, 1, JSON.stringify(r.erros));
+  verdade(/trilha cheia/.test(r.erros[0]), r.erros[0]);
+  igual(JSON.stringify(f.recursos), antes, 'tudo ou nada');
+});
+
+/*
+ * ABSORVENTE (SRD, Traje de Fio de Tempestade): "Once per scene when you take
+ * magic damage, you can clear an Armor Slot."
+ *
+ * ⚠ LIMPA, NÃO MARCA. É o único do equipamento que DEVOLVE Ponto de Armadura,
+ * e por isso ele não entra na conta de custos junto com as reações: entra
+ * depois, no mesmo delta, para marcar-1-e-limpar-1 dar líquido zero em vez de
+ * passar por um estado intermediário que dispara o Doloroso.
+ */
+const CHAVE_ABSORVENTE = 'uso:equipamento:armadura-t2-traje-de-fio-de-tempestade:absorvente';
+
+teste('Absorvente limpa 1 Ponto de Armadura contra dano mágico, uma vez por cena', () => {
+  const f = fichaEquipamentoDefensivo_(3, null, 'armadura-t2-traje-de-fio-de-tempestade');
+  f.recursos.armaduraMarcada = 2;
+  f.recursos.pontosDeVidaMarcados = 0;
+
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'dano', dano:1, tipoDeDano:'magico', usarAbsorvente:true }]);
+  igual(r.erros, []);
+  igual(f.recursos.armaduraMarcada, 1, 'devolveu um Ponto');
+  igual((f.contadores[CHAVE_ABSORVENTE] || {}).valor, 1, 'o uso da cena foi gasto');
+  verdade(r.mudancas[0].absorvente, JSON.stringify(r.mudancas[0]));
+
+  // De novo na mesma cena, não.
+  const outra = contexto.aplicarAjustes_(f, [{ tipo:'dano', dano:1, tipoDeDano:'magico', usarAbsorvente:true }]);
+  igual(outra.erros.length, 1, JSON.stringify(outra.erros));
+  verdade(/nesta cena/.test(outra.erros[0]), outra.erros[0]);
+});
+
+teste('o fim da cena devolve o uso do Absorvente', () => {
+  const f = fichaEquipamentoDefensivo_(3, null, 'armadura-t2-traje-de-fio-de-tempestade');
+  f.contadores[CHAVE_ABSORVENTE] = { valor: 1 };
+  contexto.aplicarAjustes_(f, [{ tipo:'gatilho', gatilho:'fim-da-cena' }]);
+  verdade(!(f.contadores || {})[CHAVE_ABSORVENTE],
+    `o uso continuou gasto: ${JSON.stringify(f.contadores[CHAVE_ABSORVENTE])}`);
+});
+
+teste('Absorvente não vale contra dano físico', () => {
+  const f = fichaEquipamentoDefensivo_(3, null, 'armadura-t2-traje-de-fio-de-tempestade');
+  f.recursos.armaduraMarcada = 2;
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'dano', dano:1, tipoDeDano:'fisico', usarAbsorvente:true }]);
+  igual(r.erros.length, 1, JSON.stringify(r.erros));
+  verdade(/dano mágico/.test(r.erros[0]), r.erros[0]);
+  igual(f.recursos.armaduraMarcada, 2, 'recusa não pode ter mexido em nada');
+  verdade(!(f.contadores || {})[CHAVE_ABSORVENTE], 'nem gastado o uso da cena');
+});
+
+/*
+ * ⚠ SEM PONTO MARCADO, RECUSA. Deixar usar gastaria o uso da cena em troca de
+ * nada, e a pessoa só descobriria no golpe seguinte — quando fosse precisar.
+ */
+teste('Absorvente recusa quando não há Ponto de Armadura para limpar', () => {
+  const f = fichaEquipamentoDefensivo_(3, null, 'armadura-t2-traje-de-fio-de-tempestade');
+  f.recursos.armaduraMarcada = 0;
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'dano', dano:1, tipoDeDano:'magico', usarAbsorvente:true }]);
+  igual(r.erros.length, 1, JSON.stringify(r.erros));
+  verdade(/para o Absorvente limpar/.test(r.erros[0]), r.erros[0]);
+  verdade(!(f.contadores || {})[CHAVE_ABSORVENTE], 'o uso da cena tem de continuar disponível');
+});
+
+teste('marcar 1 pela mitigação e limpar 1 pelo Absorvente dá líquido zero', () => {
+  const f = fichaEquipamentoDefensivo_(3, null, 'armadura-t2-traje-de-fio-de-tempestade');
+  f.recursos.armaduraMarcada = 2;
+  f.recursos.pontosDeVidaMarcados = 0;
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:Number(f.defesas.limiarMaior), tipoDeDano:'magico',
+    usarArmadura:true, usarAbsorvente:true
+  }]);
+  igual(r.erros, []);
+  igual(f.recursos.armaduraMarcada, 2, 'marcou um e limpou um: continua onde estava');
+});
+
+/*
+ * MNEMÔNICA (SRD, Vestes do Encantador): "Once per scene, you can recall a
+ * domain card from your vault without paying its Recall Cost."
+ *
+ * ⚠ OPT-IN, E TEM DE SER. Gastar o uso da cena sozinha, na primeira carta que
+ * a pessoa recordar, seria decidir por ela — e uma troca durante descanso (que
+ * já é livre) queimaria o uso à toa. O app oferece; quem escolhe é a mesa.
+ */
+const CHAVE_MNEMONICA = 'uso:equipamento:armadura-t2-vestes-do-encantador:mnemonica';
+
+/** Um Mago com a carta no cofre e as Vestes do Encantador vestidas. */
+function fichaComMnemonica_() {
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Encantador', classe: 'Mago', subclasse: 'Escola do Conhecimento',
+    ancestralidade: 'Humano', comunidade: 'Highborne',
+    cartas: ['codex-livro-de-ava', 'codex-livro-de-illiat'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  f.equipamento = f.equipamento || {};
+  f.equipamento.armadura = 'armadura-t2-vestes-do-encantador';
+  f.identidade.nivel = 3;
+  const guardada = f.cartas.ativas[0];
+  f.cartas.ativas = f.cartas.ativas.slice(1);
+  f.cartas.cofre = [guardada];
+  f.recursos.estresseMarcado = 0;
+  return { ficha: contexto.validarFicha_(f), carta: guardada };
+}
+
+teste('Mnemônica traz a carta do cofre sem pagar o Custo de Recordar', () => {
+  const { ficha, carta } = fichaComMnemonica_();
+  const antes = ficha.recursos.estresseMarcado;
+
+  const r = contexto.aplicarAjustes_(ficha, [{
+    tipo:'carta', carta:carta, para:'ativas', cobrarCusto:true, usarMnemonica:true
+  }]);
+  igual(r.erros, []);
+  igual(ficha.recursos.estresseMarcado, antes, 'não custou Estresse nenhum');
+  verdade(ficha.cartas.ativas.indexOf(carta) >= 0, 'a carta tinha de estar na mão');
+  igual((ficha.contadores[CHAVE_MNEMONICA] || {}).valor, 1, 'o uso da cena foi gasto');
+  verdade(r.mudancas[0].mnemonica, JSON.stringify(r.mudancas[0]));
+});
+
+teste('Mnemônica é uma vez por cena, e o fim da cena devolve o uso', () => {
+  const { ficha, carta } = fichaComMnemonica_();
+  contexto.aplicarAjustes_(ficha, [{ tipo:'carta', carta:carta, para:'ativas', usarMnemonica:true }]);
+  contexto.aplicarAjustes_(ficha, [{ tipo:'carta', carta:carta, para:'cofre' }]);
+
+  const r = contexto.aplicarAjustes_(ficha, [{ tipo:'carta', carta:carta, para:'ativas', usarMnemonica:true }]);
+  igual(r.erros.length, 1, JSON.stringify(r.erros));
+  verdade(/nesta cena/.test(r.erros[0]), r.erros[0]);
+
+  contexto.aplicarAjustes_(ficha, [{ tipo:'gatilho', gatilho:'fim-da-cena' }]);
+  const depois = contexto.aplicarAjustes_(ficha, [{
+    tipo:'carta', carta:carta, para:'ativas', usarMnemonica:true
+  }]);
+  igual(depois.erros, [], 'passada a cena, o uso volta');
+});
+
+/*
+ * ⚠ NÃO DEIXA QUEIMAR À TOA. Uma troca que já não custa Estresse (durante um
+ * descanso, ou uma carta de custo 0) não tem custo para evitar — usar ali
+ * gastaria o uso da cena em troca de nada.
+ */
+teste('Mnemônica recusa quando não há custo para evitar', () => {
+  const { ficha } = fichaComMnemonica_();
+  // Guardar uma carta da MÃO no cofre não tem Custo de Recordar — ele existe
+  // só no caminho de volta.
+  const naMao = ficha.cartas.ativas[0];
+  const r = contexto.aplicarAjustes_(ficha, [{ tipo:'carta', carta:naMao, para:'cofre', usarMnemonica:true }]);
+  igual(r.erros.length, 1, JSON.stringify(r.erros));
+  verdade(/já não custa/.test(r.erros[0]), r.erros[0]);
+  verdade(!(ficha.contadores || {})[CHAVE_MNEMONICA], 'o uso da cena continua disponível');
+});
+
+teste('Mnemônica só existe para quem está vestindo as Vestes do Encantador', () => {
+  const { ficha, carta } = fichaComMnemonica_();
+  ficha.equipamento.armadura = 'armadura-t1-armadura-de-couro';
+  const r = contexto.aplicarAjustes_(ficha, [{
+    tipo:'carta', carta:carta, para:'ativas', usarMnemonica:true
+  }]);
+  igual(r.erros.length, 1, JSON.stringify(r.erros));
+  verdade(/não tem Mnemônica/.test(r.erros[0]), r.erros[0]);
+});
+
+/*
+ * VÍTREO (SRD, Arnês Ressonante): 2 Pontos de Armadura negam dano Severo ou
+ * maior, e os limiares ficam -5 até a armadura ser reparada.
+ *
+ * ⚠ É A ÚNICA DO EQUIPAMENTO QUE COBRA DEPOIS. As outras reações se resolvem
+ * no golpe; esta deixa a pessoa mais frágil pelos próximos — e por isso o -5
+ * é modificador derivado ligado a um ESTADO, não um número gravado em cima do
+ * limiar. Gravado, ele não voltaria sozinho no dia do conserto (E17).
+ */
+const ESTADO_VITREO = 'estado:equipamento:armadura-t4-arnes-ressonante:vitreo';
+
+teste('Vítreo nega dano Severo por 2 Pontos de Armadura e baixa os limiares em 5', () => {
+  const f = fichaEquipamentoDefensivo_(8, null, 'armadura-t4-arnes-ressonante');
+  f.recursos.armaduraMarcada = 0;
+  f.recursos.pontosDeVidaMarcados = 0;
+  const limiarAntes = Number(f.defesas.limiarMaior);
+  const graveAntes = Number(f.defesas.limiarGrave);
+
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:Number(f.defesas.limiarGrave), tipoDeDano:'fisico', usarVitreo:true
+  }]);
+  igual(r.erros, []);
+  igual(f.recursos.pontosDeVidaMarcados, 0, 'o dano foi negado');
+  igual(f.recursos.armaduraMarcada, 2, 'custou dois Pontos de Armadura');
+  igual((f.contadores[ESTADO_VITREO] || {}).valor, 1, 'a armadura ficou estilhaçada');
+
+  const d = contexto.derivadosDoPersonagem_(f);
+  igual(d.limiarMaior, limiarAntes - 5, 'o limiar Maior desceu 5');
+  igual(d.limiarGrave, graveAntes - 5, 'o Severo também');
+});
+
+teste('a penalidade do Vítreo NÃO se acumula com um segundo uso', () => {
+  const f = fichaEquipamentoDefensivo_(8, null, 'armadura-t4-arnes-ressonante');
+  f.recursos.armaduraMarcada = 0;
+  f.recursos.pontosDeVidaMarcados = 0;
+  const graveAntes = Number(f.defesas.limiarGrave);
+
+  contexto.aplicarAjustes_(f, [{ tipo:'dano', dano:graveAntes, tipoDeDano:'fisico', usarVitreo:true }]);
+  const depoisDeUm = contexto.derivadosDoPersonagem_(f).limiarGrave;
+  contexto.aplicarDerivados_(f);
+
+  contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:Number(f.defesas.limiarGrave), tipoDeDano:'fisico', usarVitreo:true
+  }]);
+  igual(contexto.derivadosDoPersonagem_(f).limiarGrave, depoisDeUm,
+    'o livro diz "-5 nos seus limiares", não "-5 por uso"');
+});
+
+teste('Vítreo recusa quando o dano não é Severo, e quando não sobram 2 Pontos', () => {
+  const f = fichaEquipamentoDefensivo_(8, null, 'armadura-t4-arnes-ressonante');
+  f.recursos.armaduraMarcada = 0;
+  const leve = contexto.aplicarAjustes_(f, [{ tipo:'dano', dano:1, tipoDeDano:'fisico', usarVitreo:true }]);
+  igual(leve.erros.length, 1, JSON.stringify(leve.erros));
+  verdade(/Severo ou maior/.test(leve.erros[0]), leve.erros[0]);
+
+  f.recursos.armaduraMarcada = Number(f.defesas.pontuacaoArmadura) - 1;
+  const semArmadura = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:Number(f.defesas.limiarGrave), tipoDeDano:'fisico', usarVitreo:true
+  }]);
+  igual(semArmadura.erros.length, 1, JSON.stringify(semArmadura.erros));
+  verdade(/Pontos de Armadura livres/.test(semArmadura.erros[0]), semArmadura.erros[0]);
+  verdade(!(f.contadores || {})[ESTADO_VITREO], 'recusa não pode ter estilhaçado a armadura');
+});
+
+/*
+ * ⚠ DESCANSAR NÃO BASTA — o SRD diz "until you choose to repair your armor as
+ * a downtime move". Quem descansa sem reparar continua com os limiares baixos.
+ */
+teste('só o movimento de Reparar Armadura tira a penalidade do Vítreo', () => {
+  const f = fichaEquipamentoDefensivo_(8, null, 'armadura-t4-arnes-ressonante');
+  f.recursos.armaduraMarcada = 2;
+  f.contadores[ESTADO_VITREO] = { valor: 1 };
+
+  const semReparo = contexto.aplicarDescanso_(f, 'curto', [
+    { movimento: 'reduzir-estresse', rolagem: 2 }, { movimento: 'reduzir-estresse', rolagem: 2 }
+  ]);
+  igual((semReparo.ficha.contadores[ESTADO_VITREO] || {}).valor, 1,
+    'descansar sem reparar deixa a armadura estilhaçada');
+
+  const comReparo = contexto.aplicarDescanso_(semReparo.ficha, 'curto', [
+    { movimento: 'reparar-armadura', rolagem: 3 }, { movimento: 'reduzir-estresse', rolagem: 2 }
+  ]);
+  verdade(!(comReparo.ficha.contadores || {})[ESTADO_VITREO],
+    'reparar conserta: o estado tinha de sumir');
+});
+
+teste('o descanso longo que repara tudo também conserta a armadura estilhaçada', () => {
+  const f = fichaEquipamentoDefensivo_(8, null, 'armadura-t4-arnes-ressonante');
+  f.recursos.armaduraMarcada = 3;
+  f.contadores[ESTADO_VITREO] = { valor: 1 };
+  const r = contexto.aplicarDescanso_(f, 'longo', [
+    { movimento: 'reparar-armadura-por-completo' }, { movimento: 'zerar-estresse' }
+  ]);
+  verdade(!(r.ficha.contadores || {})[ESTADO_VITREO], JSON.stringify(r.ficha.contadores));
+  igual(r.ficha.recursos.armaduraMarcada, 0);
+});
+
+/*
+ * SEDENTA POR SANGUE (SRD, Placas de Pedra de Sangue): "When you critically
+ * succeed on a weapon attack within Melee range, clear a Hit Point."
+ *
+ * ⚠ QUEM CONFIRMA É A MESA. O app não observa jogadas de ataque — é a mesma
+ * família do "sucesso confirmado" que já existia (Repelente). O que o servidor
+ * faz é a parte determinística: limpar o Ponto de Vida.
+ *
+ * ⚠ E É CRÍTICO CORPO A CORPO, não "crítico com a primária". Reaproveitar a
+ * confirmação que já existia teria sido menos código e estaria errado em quem
+ * critica com a arma secundária.
+ */
+teste('Sedenta por Sangue limpa 1 PV quando a mesa confirma o crítico Corpo a Corpo', () => {
+  const f = fichaEquipamentoDefensivo_(6, null, 'armadura-t3-armadura-de-placas-de-pedra-de-sangue');
+  f.recursos.pontosDeVidaMarcados = 3;
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'usoEquipamento', itemId:'armadura-t3-armadura-de-placas-de-pedra-de-sangue',
+    nome:'Sedenta por Sangue', criticoCorpoACorpo:true
+  }]);
+  igual(r.erros, []);
+  igual(f.recursos.pontosDeVidaMarcados, 2, 'limpou um Ponto de Vida');
+  igual(r.mudancas[0].pvLimpos, 1);
+});
+
+teste('sem a confirmação da mesa, a Sedenta por Sangue não faz nada', () => {
+  const f = fichaEquipamentoDefensivo_(6, null, 'armadura-t3-armadura-de-placas-de-pedra-de-sangue');
+  f.recursos.pontosDeVidaMarcados = 3;
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'usoEquipamento', itemId:'armadura-t3-armadura-de-placas-de-pedra-de-sangue',
+    nome:'Sedenta por Sangue'
+  }]);
+  igual(r.erros.length, 1, JSON.stringify(r.erros));
+  verdade(/Corpo a Corpo/.test(r.erros[0]), r.erros[0]);
+  igual(f.recursos.pontosDeVidaMarcados, 3, 'recusa não cura');
+});
+
+/*
+ * ⚠ TRILHA LIMPA NÃO É ERRO — mas o aviso não pode prometer cura que não houve.
+ * Recusar aqui seria pior: a característica dispara sozinha com o crítico, e a
+ * mesa não deveria ter de conferir se sobrou PV marcado antes de confirmar.
+ */
+teste('com os Pontos de Vida já limpos, o aviso diz que não havia o que curar', () => {
+  const f = fichaEquipamentoDefensivo_(6, null, 'armadura-t3-armadura-de-placas-de-pedra-de-sangue');
+  f.recursos.pontosDeVidaMarcados = 0;
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'usoEquipamento', itemId:'armadura-t3-armadura-de-placas-de-pedra-de-sangue',
+    nome:'Sedenta por Sangue', criticoCorpoACorpo:true
+  }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].pvLimpos, 0);
+  verdade(/já estavam limpos/.test(r.mudancas[0].aviso || ''), r.mudancas[0].aviso);
+});
+
+/*
+ * PASSOS RÁPIDOS (SRD, Armadura de Talas Wyrdwood): "You can't be Restrained
+ * and can move up to Far range as part of an action roll."
+ *
+ * ⚠ DUAS METADES, E SÓ UMA É NÚMERO. A imunidade a Restrito o app aplica; o
+ * movimento é posicionamento, que é da mesa. Por isso a característica se
+ * declara `passiva-parcial` — dizer "automatizada" com metade manual seria
+ * mentir para quem audita.
+ *
+ * ⚠ E A PROTEÇÃO VEM DO EQUIPAMENTO, não de um contador. A máquina de impedir
+ * condição existia pendurada só em contador (o Dado de Determinação), e é por
+ * isso que ela não alcançava uma armadura: a proteção da Wyrdwood é permanente
+ * enquanto vestida, e não tem contador nenhum por trás.
+ */
+teste('Passos Rápidos impede a condição Restrito enquanto a armadura está vestida', () => {
+  const f = fichaEquipamentoDefensivo_(4, null, 'armadura-t2-armadura-de-talas-wyrdwood');
+  contexto.aplicarDerivados_(f);
+  const impedidas = contexto.condicoesImpedidasDaFicha_(f);
+  igual(impedidas.restrito, 'Passos Rápidos', JSON.stringify(impedidas));
+
+  /*
+   * ⚠ O APP NÃO RECUSA A CONDIÇÃO: ELE A TIRA.
+   *
+   * É a mesma escolha que já valia para o Guardião Determinado — marcar é um
+   * gesto da mesa, e recusar no meio dele deixaria a pessoa achando que o
+   * toque não funcionou. O que existe é `sincronizarCondicoesImpedidas_`, que
+   * roda na gravação e devolve o que tirou, para a tela dizer por quê em vez
+   * de a condição sumir enquanto a mesa olha.
+   */
+  contexto.aplicarAjustes_(f, [{ tipo:'condicao', chave:'Restrito', ligar:true }]);
+  const tirados = contexto.sincronizarCondicoesImpedidas_(f);
+  igual(tirados.length, 1, JSON.stringify(tirados));
+  igual(tirados[0].porCausaDe, 'Passos Rápidos');
+  verdade(!(f.condicoes || []).some((c) => c.id === 'restrito'), JSON.stringify(f.condicoes));
+});
+
+teste('sem a armadura, Restrito volta a ser possível', () => {
+  const f = fichaEquipamentoDefensivo_(4, null, 'armadura-t1-armadura-de-couro');
+  contexto.aplicarDerivados_(f);
+  igual(contexto.condicoesImpedidasDaFicha_(f).restrito, undefined);
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'condicao', chave:'Restrito', ligar:true }]);
+  igual(r.erros, []);
+  igual(contexto.sincronizarCondicoesImpedidas_(f), [], 'nada a tirar');
+  verdade((f.condicoes || []).some((c) => c.id === 'restrito'), JSON.stringify(f.condicoes));
+});
+
+/*
+ * ⚠ AS DUAS FONTES SE SOMAM. Quem está Determinado vestindo a Wyrdwood tem as
+ * duas proteções — e a do contador continua valendo para Vulnerável, que a
+ * armadura não cobre.
+ */
+teste('a proteção do contador e a do equipamento convivem', () => {
+  const f = fichaEquipamentoDefensivo_(4, null, 'armadura-t2-armadura-de-talas-wyrdwood');
+  contexto.aplicarDerivados_(f);
+  f.contadores['classe:guardiao:imparavel'] = { valor: 3 };
+  const impedidas = contexto.condicoesImpedidasDaFicha_(f);
+  verdade(impedidas.restrito, 'Restrito continua impedido');
+  igual(impedidas.vulneravel, 'Dado de Determinação',
+    'e o Vulnerável, que a armadura não cobre, vem do contador');
+});
+
+/*
+ * "UMA VEZ POR ..." NO USO ATIVO DE EQUIPAMENTO.
+ *
+ * O caminho das cartas já tinha `marcaUso`; o do equipamento não, e cada
+ * característica assim vinha resolvendo o controle por fora. Agora é genérico,
+ * e QUEM DIZ O QUANDO é o catálogo de contadores (`zeraEm`), não o código: por
+ * descanso, por cena, por sessão — o mesmo mecanismo serve.
+ */
+const USO_CAMINHANTE = 'uso:equipamento:armadura-t4-mortalha-de-darkweave:caminhante-fantasma';
+
+teste('Caminhante Fantasma custa 1 Estresse e vale uma vez por descanso', () => {
+  const f = fichaEquipamentoDefensivo_(8, null, 'armadura-t4-mortalha-de-darkweave');
+  f.recursos.estresseMarcado = 0;
+  const pedido = { tipo:'usoEquipamento', itemId:'armadura-t4-mortalha-de-darkweave',
+    nome:'Caminhante Fantasma' };
+
+  const r = contexto.aplicarAjustes_(f, [pedido]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, 1);
+  igual((f.contadores[USO_CAMINHANTE] || {}).valor, 1);
+  verdade(/atravessando objetos/.test(r.mudancas[0].aviso || ''), r.mudancas[0].aviso);
+
+  const outra = contexto.aplicarAjustes_(f, [pedido]);
+  igual(outra.erros.length, 1, JSON.stringify(outra.erros));
+  verdade(/desde o último descanso/.test(outra.erros[0]), outra.erros[0]);
+  igual(f.recursos.estresseMarcado, 1, 'a recusa não pode ter cobrado de novo');
+
+  contexto.aplicarGatilhoContadores_(f, 'descanso');
+  verdade(!(f.contadores || {})[USO_CAMINHANTE], 'o descanso devolve o uso');
+});
+
+/*
+ * ⚠ O USO SÓ É GASTO SE O CUSTO COUBER. Marcar o uso antes de conferir o
+ * Estresse deixaria a pessoa sem a característica até o descanso, em troca de
+ * nada — e ela só descobriria na hora de precisar.
+ */
+teste('sem Estresse para pagar, o Caminhante Fantasma não gasta o uso', () => {
+  const f = fichaEquipamentoDefensivo_(8, null, 'armadura-t4-mortalha-de-darkweave');
+  f.recursos.estresseMarcado = f.recursos.estresseMaximo;
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'usoEquipamento', itemId:'armadura-t4-mortalha-de-darkweave', nome:'Caminhante Fantasma'
+  }]);
+  igual(r.erros.length, 1, JSON.stringify(r.erros));
+  verdade(!(f.contadores || {})[USO_CAMINHANTE],
+    `o uso foi gasto à toa: ${JSON.stringify(f.contadores[USO_CAMINHANTE])}`);
+});
+
+teste('Estelar marca 1 Estresse e publica o lembrete da vantagem', () => {
+  const f = fichaEquipamentoDefensivo_(6, null, 'armadura-t3-traje-astral');
+  f.recursos.estresseMarcado = 0;
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'usoEquipamento', itemId:'armadura-t3-traje-astral', nome:'Estelar'
+  }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, 1);
+  verdade(/vantagem/i.test(r.mudancas[0].aviso || ''), r.mudancas[0].aviso);
+  // Sem limite: é "marque 1 Estresse", não "uma vez por".
+  const outra = contexto.aplicarAjustes_(f, [{
+    tipo:'usoEquipamento', itemId:'armadura-t3-traje-astral', nome:'Estelar'
+  }]);
+  igual(outra.erros, []);
+  igual(f.recursos.estresseMarcado, 2);
+});
+
+/*
+ * ABENÇOADA (SRD, Placa Heroica Sagrada): gastar Esperança ANTES de Arriscar
+ * Tudo soma esse valor ao resultado do Dado de Esperança, uma vez por descanso
+ * longo.
+ *
+ * ⚠ A DECISÃO DE REGRA MAIS DELICADA DESTA LEVA: o bônus NÃO entra no crítico.
+ * Crítico em Daggerheart é os dois DADOS mostrando o mesmo número, não os dois
+ * totais empatando. Se contasse, gastar exatamente a diferença viraria crítico
+ * à vontade — "pago 3 Esperanças e limpo tudo" — e o texto fala em somar ao
+ * RESULTADO DO DADO, não em igualar dados.
+ */
+const USO_ABENCOADA = 'uso:equipamento:armadura-t4-placa-heroica-sagrada:abencoada';
+
+/** Um moribundo com a Placa Heroica Sagrada vestida e Esperança no bolso. */
+function fichaAbencoada_(esperanca) {
+  const f = fichaEquipamentoDefensivo_(8, null, 'armadura-t4-placa-heroica-sagrada');
+  contexto.aplicarDerivados_(f);
+  f.recursos.pontosDeVidaMarcados = f.recursos.pontosDeVidaMaximos;
+  f.recursos.estresseMarcado = 2;
+  f.recursos.esperanca = esperanca;
+  f.inconsciente = false;
+  return f;
+}
+
+teste('Abençoada vira uma derrota em vitória e cobra a Esperança', () => {
+  const f = fichaAbencoada_(4);
+  // Dado 3 contra Medo 5: sem ajuda, o véu. Com 3 de Esperança, 6 contra 5.
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'morte', movimento:'arriscar', dadoEsperanca:3, dadoMedo:5,
+    abencoadaEsperancaGasta:3, reparticao:{ pontosDeVida:4, estresse:2 }
+  }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].resultado, 'esperanca', JSON.stringify(r.mudancas[0]));
+  igual(r.mudancas[0].abencoada.dadoCru, 3);
+  igual(r.mudancas[0].abencoada.dadoComBonus, 6);
+  igual(f.recursos.esperanca, 1, 'gastou três das quatro Esperanças');
+  igual((f.contadores[USO_ABENCOADA] || {}).valor, 1);
+  igual(f.inconsciente, false, 'ficou de pé');
+});
+
+/*
+ * ⚠ ESPERANÇA GASTA NÃO VOLTA. O livro diz "spend ... BEFORE you make the
+ * move": quem apostou e mesmo assim atravessou o véu apostou do mesmo jeito.
+ * Devolver transformaria um risco em aposta grátis.
+ */
+teste('quem gasta na Abençoada e mesmo assim perde, perde a Esperança também', () => {
+  const f = fichaAbencoada_(4);
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'morte', movimento:'arriscar', dadoEsperanca:2, dadoMedo:11,
+    abencoadaEsperancaGasta:2
+  }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].resultado, 'veu', JSON.stringify(r.mudancas[0]));
+  igual(f.recursos.esperanca, 2, 'as duas Esperanças foram embora');
+  igual((f.contadores[USO_ABENCOADA] || {}).valor, 1, 'e o uso também');
+});
+
+teste('o bônus da Abençoada NÃO fabrica crítico', () => {
+  const f = fichaAbencoada_(6);
+  // Dado 4 contra Medo 6: gastar 2 daria "6 contra 6". Não é crítico — os
+  // DADOS continuam 4 e 6, e o que vale é a comparação 6 > 6, que é falsa.
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'morte', movimento:'arriscar', dadoEsperanca:4, dadoMedo:6,
+    abencoadaEsperancaGasta:2
+  }]);
+  igual(r.erros, []);
+  verdade(r.mudancas[0].resultado !== 'critico',
+    `virou crítico com o bônus: ${JSON.stringify(r.mudancas[0])}`);
+  igual(r.mudancas[0].resultado, 'veu', 'empate com bônus não é vitória nem crítico');
+});
+
+teste('Abençoada é uma vez por descanso LONGO — o curto não devolve', () => {
+  const f = fichaAbencoada_(6);
+  contexto.aplicarAjustes_(f, [{
+    tipo:'morte', movimento:'arriscar', dadoEsperanca:8, dadoMedo:3,
+    abencoadaEsperancaGasta:1, reparticao:{ pontosDeVida:5, estresse:2 }
+  }]);
+  igual((f.contadores[USO_ABENCOADA] || {}).valor, 1);
+
+  contexto.aplicarGatilhoContadores_(f, 'descanso');
+  igual((f.contadores[USO_ABENCOADA] || {}).valor, 1, 'descanso curto não devolve');
+  contexto.aplicarGatilhoContadores_(f, 'descanso-longo');
+  verdade(!(f.contadores || {})[USO_ABENCOADA], 'o descanso longo devolve');
+});
+
+teste('Abençoada recusa sem a armadura, sem uso e sem Esperança suficiente', () => {
+  const semArmadura = fichaAbencoada_(4);
+  semArmadura.equipamento.armadura = 'armadura-t1-armadura-de-couro';
+  const a = contexto.aplicarAjustes_(semArmadura, [{
+    tipo:'morte', movimento:'arriscar', dadoEsperanca:3, dadoMedo:5, abencoadaEsperancaGasta:2
+  }]);
+  verdade(/não tem Abençoada/.test((a.erros || [''])[0]), JSON.stringify(a.erros));
+
+  const semEsperanca = fichaAbencoada_(1);
+  const b = contexto.aplicarAjustes_(semEsperanca, [{
+    tipo:'morte', movimento:'arriscar', dadoEsperanca:3, dadoMedo:5, abencoadaEsperancaGasta:3
+  }]);
+  verdade(/quis gastar 3/.test((b.erros || [''])[0]), JSON.stringify(b.erros));
+  igual(semEsperanca.recursos.esperanca, 1, 'recusa não cobra nada');
+
+  const jaUsou = fichaAbencoada_(4);
+  jaUsou.contadores[USO_ABENCOADA] = { valor: 1 };
+  const c = contexto.aplicarAjustes_(jaUsou, [{
+    tipo:'morte', movimento:'arriscar', dadoEsperanca:3, dadoMedo:5, abencoadaEsperancaGasta:2
+  }]);
+  verdade(/descanso longo/.test((c.erros || [''])[0]), JSON.stringify(c.erros));
+});
+
+/*
+ * ⚠ E110 — A CHAVE DO CATÁLOGO TEM DE CABER NO QUE O SERVIDOR GRAVA.
+ *
+ * Isto nasceu de um defeito mudo que quase foi para a mesa. `sanitizar_`
+ * cortava toda chave de objeto em 60 caracteres, e NOVE chaves de contador do
+ * próprio app passam disso — Impenetrável, Absorvente, Caminhante Fantasma e
+ * as balas dos quatro revólveres. Chave cortada é outra chave: o contador
+ * virava "desconhecido" e a gravação da ficha inteira era recusada. Usar o
+ * Impenetrável numa mesa de verdade dava erro ao salvar.
+ *
+ * Nenhum teste via. Os de backend mexem na ficha em memória, sem passar por
+ * `validarFicha_`; as baterias de tela ofereciam a caixa e nunca chegavam a
+ * aplicá-la. Apareceu quando a Resplandecente (62 caracteres) foi ligada e a
+ * bateria de tela gastou Esperança de verdade.
+ *
+ * Este teste é a rede: se alguém criar amanhã um contador de nome comprido, a
+ * conta quebra aqui, e não na mesa.
+ */
+teste('E110: toda chave do catálogo de contadores cabe no limite de gravação', () => {
+  const CONTADORES = avaliar('CONTADORES');
+  const LIMITES = avaliar('LIMITES');
+  const grandes = Object.keys(CONTADORES)
+    .filter((k) => k.length > LIMITES.TAMANHO_CHAVE)
+    .map((k) => `${k} (${k.length})`);
+  igual(grandes, [], `limite de ${LIMITES.TAMANHO_CHAVE}: ${grandes.join(' · ')}`);
+});
+
+/*
+ * ⚠ E A CHAVE COMPRIDA DEMAIS É DESCARTADA, NÃO CORTADA. Cortar renomeia em
+ * silêncio — duas chaves diferentes podem virar a mesma. Perder o campo é
+ * ruim; trocar o significado dele é pior.
+ */
+teste('E110: chave acima do limite some, em vez de virar outra chave', () => {
+  const LIMITES = avaliar('LIMITES');
+  const gigante = 'marcador:' + 'x'.repeat(LIMITES.TAMANHO_CHAVE);
+  const f = contexto.fichaRapida_({
+    nome:'Chave Grande', classe:'Mago', subclasse:'Escola do Conhecimento',
+    ancestralidade:'Humano', comunidade:'Highborne',
+    cartas:['codex-livro-de-ava','codex-livro-de-illiat'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  f.historia = f.historia || {};
+  f.historia[gigante] = 'isto não pode virar outra chave';
+  const v = contexto.validarFicha_(f);
+  const cortada = gigante.slice(0, LIMITES.TAMANHO_CHAVE);
+  igual(Object.keys(v.historia || {}).indexOf(cortada), -1, 'a chave foi cortada e gravada');
+});
+
+/*
+ * ⚠ E A PROVA DE QUE O CAMINHO INTEIRO AGUENTA: escrever o contador de nome
+ * comprido e passar pelo `validarFicha_`, que é por onde a gravação passa. É
+ * exatamente o passo que faltava nos testes antigos.
+ */
+teste('o contador do Impenetrável sobrevive a uma gravação', () => {
+  const f = fichaEquipamentoDefensivo_(5, null, 'armadura-t3-armadura-de-escamas-de-dragao');
+  const chave = 'uso:equipamento:armadura-t3-armadura-de-escamas-de-dragao:impenetravel';
+  f.contadores = f.contadores || {};
+  f.contadores[chave] = { valor:1 };
+  const v = contexto.validarFicha_(f);
+  igual((v.contadores[chave] || {}).valor, 1, JSON.stringify(Object.keys(v.contadores || {})));
+});
+
+/* ======================================================================== *
+ *  RESPLANDECENTE — e o caminho único da Esperança que ela obrigou a existir
+ * ======================================================================== */
+
+/*
+ * > "Radiant: Once per scene when you spend Hope, you can clear an Armor Slot."
+ *
+ * Ela ficou pendente por um motivo de arquitetura, não de regra: a Esperança
+ * saía da ficha por seis lugares diferentes, cada um subtraindo por conta
+ * própria. Pendurada em um deles, a característica funcionaria ÀS VEZES — e
+ * uma automação que funciona às vezes ensina errado sobre a regra.
+ *
+ * Agora existe uma porta só, `gastarEsperanca_`, e estes testes cobram os dois
+ * lados: que a porta é mesmo única (E109) e que a característica atende em
+ * todos os caminhos que passam por ela.
+ */
+const USO_RESPLANDECENTE = 'uso:equipamento:armadura-t2-placa-solar-dourada:resplandecente';
+
+/** Alguém de Placa Solar Dourada, com Armadura marcada e Esperança no bolso. */
+function fichaResplandecente_(esperanca, armaduraMarcada) {
+  const f = fichaEquipamentoDefensivo_(3, null, 'armadura-t2-placa-solar-dourada');
+  contexto.aplicarDerivados_(f);
+  f.recursos.esperanca = esperanca;
+  f.recursos.armaduraMarcada = armaduraMarcada;
+  return f;
+}
+
+/*
+ * ⚠ E109 — A PORTA DA ESPERANÇA É UMA SÓ, e isto se confere no CÓDIGO-FONTE.
+ *
+ * Nenhum teste de comportamento pega o caminho que ainda não existe: daqui a
+ * três meses, alguém escreve um efeito novo que cobra Esperança, subtrai o
+ * número na mão, e a Resplandecente volta a funcionar "às vezes" — sem nada
+ * ficar vermelho. Este teste lê os .gs e exige que toda descida de
+ * `recursos.esperanca` passe por `gastarEsperanca_`.
+ */
+teste('E109: nenhum caminho baixa a Esperança por fora de gastarEsperanca_', () => {
+  const pastaBackend = path.join(RAIZ, 'backend');
+  const arquivos = fs.readdirSync(pastaBackend).filter((n) => n.endsWith('.gs'))
+    .map((nome) => ({ nome, texto: fs.readFileSync(path.join(pastaBackend, nome), 'utf8') }));
+  const forasteiros = [];
+  arquivos.forEach(({ nome, texto }) => {
+    const linhas = texto.split('\n');
+    linhas.forEach((linha, i) => {
+      const escrita = linha.match(/[\w.]*\.esperanca\s*(-=|=[^=])(.*)$/);
+      if (!escrita) return;
+      if (/esperancaMaxima|esperancaInicial/.test(linha)) return;
+      /*
+       * `custos.esperanca` é campo do RESULTADO, não da ficha: é o Esperançoso
+       * abatendo do preço que vai ser mostrado na tela. Ninguém fica com menos
+       * Esperança por causa dessa linha.
+       */
+      if (/custos\.esperanca/.test(linha)) return;
+      /*
+       * SUBIR A ESPERANÇA NÃO É GASTAR, e é por isso que a conferência olha o
+       * lado DIREITO: ganhar, sincronizar um campo de resultado e o bônus de
+       * sessão também escrevem em `.esperanca`, e nenhum deles é um preço.
+       * O que a porta única guarda é a subtração.
+       */
+      const desce = escrita[1] === '-=' || /-\s*[\w(]/.test(escrita[2]);
+      if (!desce) return;
+      const acima = linhas.slice(Math.max(0, i - 25), i).join('\n');
+      if (/function gastarEsperanca_/.test(acima)) return;
+      forasteiros.push(`${nome}:${i + 1}: ${linha.trim()}`);
+    });
+  });
+  igual(forasteiros, [], forasteiros.join(' · '));
+});
+
+teste('Resplandecente limpa 1 Ponto de Armadura ao pagar uma Experiência', () => {
+  const f = fichaResplandecente_(4, 3);
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'recurso', chave:'esperanca', delta:-3 }]);
+  igual(r.erros, []);
+  igual(f.recursos.esperanca, 1);
+  igual(f.recursos.armaduraMarcada, 2, 'um Ponto de Armadura voltou');
+  igual((f.contadores[USO_RESPLANDECENTE] || {}).valor, 1);
+  verdade(/Resplandecente/.test(r.mudancas[0].aviso || ''), r.mudancas[0].aviso);
+});
+
+/*
+ * ⚠ É ISTO QUE O CAMINHO ÚNICO COMPRA. Usar uma carta e tocar na trilha são
+ * dois trechos de código bem distantes um do outro; antes, cada um subtraía a
+ * Esperança do seu jeito. Se algum dia divergirem de novo, este teste cai.
+ */
+teste('e limpa igual quando a Esperança sai pelo custo de uma carta', () => {
+  const f = fichaResplandecente_(4, 2);
+  f.cartas = { ativas:['codex-livro-de-ava'], cofre:[] };
+  const gasto = contexto.gastarEsperanca_(f, 1, 'custo de carta');
+  igual(gasto.erro, undefined, JSON.stringify(gasto));
+  igual(f.recursos.esperanca, 3);
+  igual(f.recursos.armaduraMarcada, 1, 'o mesmo Ponto limpo, por outro caminho');
+  igual(gasto.reacoes.length, 1);
+});
+
+/*
+ * ⚠ NÃO QUEIMA O USO À TOA. Com a Armadura limpa não há o que limpar, e o
+ * livro diz "you CAN clear an Armor Slot". Gastar o uso da cena em troca de
+ * nada é o tipo de coisa que só se descobre na hora em que se precisava dele.
+ */
+teste('com a Armadura toda limpa, a Resplandecente guarda o uso da cena', () => {
+  const f = fichaResplandecente_(4, 0);
+  contexto.aplicarAjustes_(f, [{ tipo:'recurso', chave:'esperanca', delta:-1 }]);
+  igual(f.recursos.armaduraMarcada, 0);
+  igual((f.contadores[USO_RESPLANDECENTE] || {}).valor, undefined, 'o uso continuou na mão');
+
+  f.recursos.armaduraMarcada = 2;
+  contexto.aplicarAjustes_(f, [{ tipo:'recurso', chave:'esperanca', delta:-1 }]);
+  igual(f.recursos.armaduraMarcada, 1, 'agora sim, porque havia o que limpar');
+  igual((f.contadores[USO_RESPLANDECENTE] || {}).valor, 1);
+});
+
+teste('é uma vez por CENA: o segundo gasto não limpa, e o fim da cena devolve', () => {
+  const f = fichaResplandecente_(6, 4);
+  contexto.aplicarAjustes_(f, [{ tipo:'recurso', chave:'esperanca', delta:-1 }]);
+  igual(f.recursos.armaduraMarcada, 3);
+  contexto.aplicarAjustes_(f, [{ tipo:'recurso', chave:'esperanca', delta:-1 }]);
+  igual(f.recursos.armaduraMarcada, 3, 'o segundo gasto da mesma cena não limpa nada');
+
+  contexto.aplicarAjustes_(f, [{ tipo:'gatilho', gatilho:'fim-da-cena' }]);
+  igual(Math.trunc(Number((f.contadores[USO_RESPLANDECENTE] || {}).valor)) || 0, 0,
+    'a cena acabou e o uso voltou');
+  contexto.aplicarAjustes_(f, [{ tipo:'recurso', chave:'esperanca', delta:-1 }]);
+  igual(f.recursos.armaduraMarcada, 2, 'na cena seguinte, limpa de novo');
+});
+
+/*
+ * ⚠ GANHAR ESPERANÇA NÃO É GASTAR. Parece óbvio escrito assim, e não é no
+ * código: `ajustarRecurso_` é a mesma função para os dois sentidos, e o
+ * desvio para a porta única está a uma comparação de distância de valer
+ * também para quem sobe a trilha.
+ */
+teste('ganhar Esperança não aciona a Resplandecente', () => {
+  const f = fichaResplandecente_(2, 3);
+  contexto.aplicarAjustes_(f, [{ tipo:'recurso', chave:'esperanca', delta:2 }]);
+  igual(f.recursos.esperanca, 4);
+  igual(f.recursos.armaduraMarcada, 3, 'nada foi limpo');
+  igual((f.contadores[USO_RESPLANDECENTE] || {}).valor, undefined);
+});
+
+teste('sem a Placa Solar Dourada, gastar Esperança não limpa Armadura nenhuma', () => {
+  const f = fichaEquipamentoDefensivo_(3, null, 'armadura-t1-armadura-de-couro');
+  contexto.aplicarDerivados_(f);
+  f.recursos.esperanca = 4;
+  f.recursos.armaduraMarcada = 2;
+  contexto.aplicarAjustes_(f, [{ tipo:'recurso', chave:'esperanca', delta:-2 }]);
+  igual(f.recursos.armaduraMarcada, 2);
+});
+
+/*
+ * ⚠ AS DUAS NOTÍCIAS, não uma. Quem pede para gastar mais Esperança do que
+ * tem recebe o aviso do chão da trilha E o do Ponto que voltou. Sobrescrever
+ * apagaria uma delas justamente quando as duas importam.
+ */
+teste('pedir mais Esperança do que se tem avisa as duas coisas', () => {
+  const f = fichaResplandecente_(2, 2);
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'recurso', chave:'esperanca', delta:-5 }]);
+  igual(f.recursos.esperanca, 0);
+  igual(f.recursos.armaduraMarcada, 1);
+  const aviso = r.mudancas[0].aviso || '';
+  verdade(/abaixo de zero/.test(aviso) && /Resplandecente/.test(aviso), aviso);
+});
+
+/* ======================================================================== *
+ *  FAVORECIDO PELA FORTUNA e AMALDIÇOADA — as duas que precisavam falar com
+ *  a mesa, e o mural que nasceu delas
+ * ======================================================================== */
+
+/*
+ * As duas ficaram pendentes pela mesma razão, e não era código: METADE DA
+ * REGRA MORA FORA DA FICHA DE QUEM VESTE A ARMADURA.
+ *
+ *  • Favorecido pela Fortuna troca uma falha com Esperança por um sucesso com
+ *    Medo — e o Medo é da mesa.
+ *  • Amaldiçoada manda o ATACANTE marcar Estresse — e o atacante é adversário
+ *    do Mestre.
+ *
+ * O canal para o Medo já existia (o Vulto Etéreo do Serafim TIRA 1 Medo pela
+ * ficha do jogador). Faltava o outro sentido, e faltava um lugar onde uma
+ * notícia da ficha pudesse esperar o Mestre: o mural de recados.
+ *
+ * ⚠ RECADO NÃO É COMANDO. Nada disto escreve na trilha de ninguém.
+ */
+const USO_FORTUNA = 'uso:equipamento:armadura-t3-manto-de-cloverweave:favorecido-pela-fortuna';
+
+teste('Favorecido pela Fortuna sobe o Medo da mesa e deixa recado — 1× por cena', () => {
+  const f = fichaEquipamentoDefensivo_(5, null, 'armadura-t3-manto-de-cloverweave');
+  contexto.aplicarDerivados_(f);
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'usoEquipamento', itemId:'armadura-t3-manto-de-cloverweave',
+    nome:'Favorecido pela Fortuna'
+  }]);
+  igual(r.erros, []);
+  const m = r.mudancas[0] || {};
+  igual((m.efeitoMesa || {}).medoDelta, 1, JSON.stringify(m.efeitoMesa));
+  verdade(/falha com Esperança/i.test((m.efeitoMesa || {}).recado || ''), JSON.stringify(m.efeitoMesa));
+  igual((f.contadores[USO_FORTUNA] || {}).valor, 1);
+  /*
+   * ⚠ A FRASE TEM DE DIZER O QUE FOI PARA A MESA. Quem lê só "uma falha virou
+   * sucesso" não sabe que o Mestre acabou de ganhar 1 Medo por causa disso.
+   */
+  verdade(/Medo/.test(m.aviso || ''), m.aviso);
+  verdade(/NÃO ganha a Esperança/i.test(m.aviso || ''), m.aviso);
+
+  const outra = contexto.aplicarAjustes_(f, [{
+    tipo:'usoEquipamento', itemId:'armadura-t3-manto-de-cloverweave',
+    nome:'Favorecido pela Fortuna'
+  }]);
+  verdade(/nesta cena/.test((outra.erros || [''])[0]), JSON.stringify(outra.erros));
+
+  contexto.aplicarAjustes_(f, [{ tipo:'gatilho', gatilho:'fim-da-cena' }]);
+  const depois = contexto.aplicarAjustes_(f, [{
+    tipo:'usoEquipamento', itemId:'armadura-t3-manto-de-cloverweave',
+    nome:'Favorecido pela Fortuna'
+  }]);
+  igual(depois.erros, [], 'na cena seguinte, pode de novo');
+});
+
+/*
+ * ⚠ O EFEITO NA MESA É DECLARADO, NÃO APLICADO, dentro de aplicarAjustes_:
+ * aquela função roda uma prévia em clone, e mexer no Medo ali o moveria duas
+ * vezes. Foi a pedra em que o Vulto Etéreo bateu, e este teste existe para
+ * que ninguém a reencontre.
+ */
+teste('o efeito de mesa sai declarado do ajuste, e quem aplica é a API', () => {
+  const f = fichaEquipamentoDefensivo_(5, null, 'armadura-t3-manto-de-cloverweave');
+  contexto.aplicarDerivados_(f);
+  const mesaAntes = contexto.mesaLer_();
+  const medoAntes = Number(mesaAntes.medo) || 0;
+  contexto.aplicarAjustes_(f, [{
+    tipo:'usoEquipamento', itemId:'armadura-t3-manto-de-cloverweave',
+    nome:'Favorecido pela Fortuna'
+  }]);
+  igual(Number(contexto.mesaLer_().medo) || 0, medoAntes, 'o ajuste sozinho não mexeu no Medo');
+});
+
+teste('aplicarEfeitosDeMesaDosAjustes_ sobe o Medo e pendura o recado no mural', () => {
+  const mesa = contexto.mesaLer_();
+  mesa.medo = 3; mesa.recados = [];
+  contexto.mesaGravar_(mesa);
+  contexto.aplicarEfeitosDeMesaDosAjustes_([{
+    caracteristica:'Favorecido pela Fortuna',
+    efeitoMesa:{ medoDelta:1, recado:'uma falha com Esperança virou sucesso com Medo.',
+      origemDoRecado:'Manto de Cloverweave · Favorecido pela Fortuna' }
+  }], 'Lyra');
+  const depois = contexto.mesaLer_();
+  igual(depois.medo, 4);
+  igual(depois.recados.length, 1);
+  igual(depois.recados[0].de, 'Lyra');
+  verdade(/Manto de Cloverweave/.test(depois.recados[0].origem), JSON.stringify(depois.recados[0]));
+});
+
+/*
+ * ⚠ O MURAL É CURTO DE PROPÓSITO. Um lugar que cresce sem fim é um lugar onde
+ * ninguém olha — e recado velho de cena passada é ruído no meio de um combate.
+ */
+teste('o mural guarda os 30 últimos recados e esvazia quando a cena acaba', () => {
+  const mesa = contexto.mesaLer_();
+  mesa.medo = 0; mesa.recados = [];
+  contexto.mesaGravar_(mesa);
+  for (let i = 0; i < 35; i++) {
+    contexto.aplicarEfeitosDeMesaDosAjustes_([{ efeitoMesa:{ recado:'recado ' + i } }], 'Lyra');
+  }
+  const cheio = contexto.mesaLer_();
+  igual(cheio.recados.length, 30);
+  verdade(/recado 34/.test(cheio.recados[29].texto), cheio.recados[29].texto);
+
+  const m2 = contexto.mesaLer_();
+  const fim = contexto.encerrarCenaDaMesa_(m2);
+  contexto.mesaGravar_(m2);
+  igual(fim.recadosApagados, 30);
+  igual(contexto.mesaLer_().recados.length, 0);
+});
+
+/*
+ * AMALDIÇOADA (SRD, Placa Sombria Forjada em Círculo):
+ *
+ * > "When you mark any number of Hit Points from an attack, roll a d4. On a
+ * > result of 4, the attacker must mark an equal number of Stress."
+ *
+ * ⚠ NÃO É DANO DE VOLTA, é ESTRESSE — e é igual ao número de PV marcados, não
+ * ao resultado do dado. Li errado na primeira leitura; o texto inglês é quem
+ * manda.
+ */
+function fichaAmaldicoada_() {
+  const f = fichaEquipamentoDefensivo_(8, null, 'armadura-t4-placa-sombria-forjada-em-circulo');
+  contexto.aplicarDerivados_(f);
+  return f;
+}
+
+teste('Amaldiçoada: no 4, o recado leva quantos Estresses o atacante marca', () => {
+  const f = fichaAmaldicoada_();
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:30, tipoDeDano:'fisico', amaldicoadaDado:4
+  }]);
+  igual(r.erros, []);
+  const m = r.mudancas[0] || {};
+  verdade(m.pvMarcados > 0, JSON.stringify(m.pvMarcados));
+  igual(m.amaldicoada.acionou, true);
+  igual(m.amaldicoada.estresseDoAtacante, m.pvMarcados, 'o Estresse é igual aos PV marcados');
+  verdade(/atacante marca/.test((m.efeitoMesa || {}).recado || ''), JSON.stringify(m.efeitoMesa));
+});
+
+teste('em 1, 2 ou 3 não volta nada, e a tela diz o número que saiu', () => {
+  const f = fichaAmaldicoada_();
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:30, tipoDeDano:'fisico', amaldicoadaDado:3
+  }]);
+  const m = r.mudancas[0] || {};
+  igual(m.amaldicoada.acionou, false);
+  igual(m.efeitoMesa, null);
+  verdade(/d4 deu 3/.test(m.aviso || ''), m.aviso);
+});
+
+/*
+ * ⚠ SEM PONTO DE VIDA MARCADO NÃO HÁ REGRA. O texto é "when you mark any
+ * number of Hit Points": quem absorveu tudo na Armadura não rola d4 nenhum, e
+ * um 4 informado à toa não pode virar Estresse do atacante.
+ */
+teste('golpe que não marca Ponto de Vida não aciona a Amaldiçoada', () => {
+  const f = fichaAmaldicoada_();
+  /* 1 de dano é Menor; 1 Ponto de Armadura derruba a gravidade e sobra zero PV */
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:1, tipoDeDano:'fisico', usarArmadura:true, amaldicoadaDado:4
+  }]);
+  const m = r.mudancas[0] || {};
+  igual(m.pvMarcados, 0);
+  igual(m.amaldicoada, null);
+  igual(m.efeitoMesa, null);
+});
+
+/*
+ * ⚠ O DADO ESQUECIDO NÃO TRAVA O DANO. Recusar a marcação de Pontos de Vida
+ * por causa de um d4 que a mesa não informou trocaria um esquecimento por um
+ * travamento — no pior momento possível.
+ */
+teste('sem o d4 informado, o dano entra do mesmo jeito e o aviso cobra o dado', () => {
+  const f = fichaAmaldicoada_();
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'dano', dano:30, tipoDeDano:'fisico' }]);
+  igual(r.erros, []);
+  const m = r.mudancas[0] || {};
+  verdade(m.pvMarcados > 0, String(m.pvMarcados));
+  igual(m.amaldicoada.dado, null);
+  verdade(/informe o d4/i.test(m.aviso || ''), m.aviso);
+});
+
+teste('um d4 fora da faixa é recusado em vez de arredondado', () => {
+  const f = fichaAmaldicoada_();
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:30, tipoDeDano:'fisico', amaldicoadaDado:7
+  }]);
+  verdade(/vai de 1 a 4/.test((r.erros || [''])[0]), JSON.stringify(r.erros));
+});
+
+teste('sem a Placa Sombria, o d4 informado é simplesmente ignorado', () => {
+  const f = fichaEquipamentoDefensivo_(8, null, 'armadura-t1-armadura-de-couro');
+  contexto.aplicarDerivados_(f);
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:30, tipoDeDano:'fisico', amaldicoadaDado:4
+  }]);
+  igual(r.erros, []);
+  igual((r.mudancas[0] || {}).amaldicoada, null);
+});
+
+teste('Forrada só existe para quem está vestindo a armadura que a tem', () => {
+  const f = fichaEquipamentoDefensivo_(1, null, 'armadura-t1-armadura-de-couro');
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'dano', dano:1, tipoDeDano:'fisico', usarForrada:true }]);
+  igual(r.erros.length, 1, JSON.stringify(r.erros));
+  verdade(/não tem Forrada/.test(r.erros[0]), r.erros[0]);
+});
+
+console.log('\nFim da cena — o gatilho que estava escrito e nunca acontecia');
+
+/*
+ * Nove marcadores do catálogo declaram que zeram (ou recarregam) no FIM DA
+ * CENA, entre eles o Dado de Determinação do Guardião, que é característica de
+ * classe. O motor sempre soube fazer isso; nenhuma tela jamais enviou o ajuste.
+ *
+ * Estes testes guardam as duas metades: que o gatilho existe no catálogo, e
+ * que ele faz o que promete quando alguém finalmente o dispara.
+ */
+teste('há marcadores que dependem do fim da cena, e eles não são poucos', () => {
+  const contadores = avaliar('CONTADORES');
+  const daCena = Object.keys(contadores).filter((k) => {
+    const c = contadores[k] || {};
+    return [].concat(c.zeraEm || [], c.recarregaEm || []).indexOf('fim-da-cena') >= 0;
+  });
+  verdade(daCena.length >= 9, `só achei ${daCena.length} marcadores de fim de cena`);
+  verdade(daCena.indexOf('classe:guardiao:imparavel') >= 0,
+    'o Dado de Determinação do Guardião é o caso que mais dói — ele tem de estar aqui');
+});
+
+teste('o gatilho de fim da cena zera o Dado de Determinação', () => {
+  const f = fichaDeModificador({ classe: 'guardiao', subclasse: 'guardiao-robusto', nivel: 5 });
+  contexto.aplicarDerivados_(f);
+  f.contadores['classe:guardiao:imparavel'] = { valor: 4 };
+
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'gatilho', gatilho: 'fim-da-cena' }]);
+  igual(r.erros, []);
+  const depois = (f.contadores || {})['classe:guardiao:imparavel'];
+  verdade(!depois || !depois.valor, `o dado continuou em ${JSON.stringify(depois)}`);
+
+  const mexidos = (r.mudancas[0].contadores || []).map((x) => x.chave);
+  verdade(mexidos.indexOf('classe:guardiao:imparavel') >= 0,
+    `o relatório precisa dizer o que mexeu: ${JSON.stringify(mexidos)}`);
+});
+
+teste('o fim da cena não encosta no que dura até o descanso', () => {
+  const f = fichaDeModificador({ classe: 'ladino', subclasse: 'ladino-caminhante-noturno', nivel: 5 });
+  contexto.aplicarDerivados_(f);
+  // A Esquiva de Ladino dura "até um ataque acertar ou até um descanso" — e
+  // uma cena que acaba não é nenhum dos dois.
+  f.contadores['estado:ladino:esquiva'] = { valor: 1 };
+  contexto.aplicarAjustes_(f, [{ tipo: 'gatilho', gatilho: 'fim-da-cena' }]);
+  igual(((f.contadores || {})['estado:ladino:esquiva'] || {}).valor, 1,
+    'a Esquiva não termina com a cena');
+});
+
+console.log('\nA cena da mesa — o Mestre encerra, cada ficha se acerta sozinha');
+
+/*
+ * Mesma arquitetura da sessão, e pelos mesmos motivos: o Mestre não escreve na
+ * ficha de ninguém, quem estava offline acerta quando volta, e o número vem da
+ * MESA, nunca do pedido — senão uma tela desatualizada zeraria marcadores de
+ * cena fora de hora.
+ *
+ * ⚠ Estes testes MEXEM NA MESA DE VERDADE (ajustarCenaDaFicha_ lê a mesa por
+ * dentro, que é o ponto), então cada um devolve o que achou. Uma mesa deixada
+ * numa cena qualquer vazaria para as baterias de painel que rodam depois — foi
+ * assim que um Medo 7 esquecido já quebrou uma bateria inteira.
+ */
+teste('o Mestre encerra a cena e a ficha se acerta ao abrir', () => {
+  const original = JSON.parse(JSON.stringify(contexto.mesaLer_()));
+  try {
+    const mesa = contexto.mesaLer_();
+    contexto.encerrarCenaDaMesa_(mesa);
+    contexto.mesaGravar_(mesa);
+    const numeroDaCena = contexto.mesaLer_().cena.numero;
+    verdade(numeroDaCena > 0, `a cena da mesa ficou em ${numeroDaCena}`);
+
+    const f = fichaDeModificador({ classe: 'guardiao', subclasse: 'guardiao-robusto', nivel: 5 });
+    contexto.aplicarDerivados_(f);
+    f.contadores['classe:guardiao:imparavel'] = { valor: 4 };
+    f.cenaVista = 0;
+
+    const r = contexto.aplicarAjustes_(f, [{ tipo: 'cena', numero: 999 }]);
+    igual(r.erros, []);
+    igual(f.cenaVista, numeroDaCena, 'grava o número da MESA, não o do pedido');
+    const dado = (f.contadores || {})['classe:guardiao:imparavel'];
+    verdade(!dado || !dado.valor, `o Dado de Determinação continuou em ${JSON.stringify(dado)}`);
+
+    // De novo não faz nada: esta ficha já reagiu a esta cena.
+    f.contadores['classe:guardiao:imparavel'] = { valor: 2 };
+    const outra = contexto.aplicarAjustes_(f, [{ tipo: 'cena' }]);
+    verdade(outra.mudancas[0].jaEstava, JSON.stringify(outra.mudancas[0]));
+    igual((f.contadores['classe:guardiao:imparavel'] || {}).valor, 2,
+      'reagir duas vezes à mesma cena apagaria o que veio depois dela');
+  } finally {
+    contexto.mesaGravar_(original);
+  }
+});
+
+teste('quem perdeu três cenas volta com UMA zeragem, não três', () => {
+  const original = JSON.parse(JSON.stringify(contexto.mesaLer_()));
+  try {
+    const mesa = contexto.mesaLer_();
+    contexto.encerrarCenaDaMesa_(mesa);
+    contexto.encerrarCenaDaMesa_(mesa);
+    contexto.encerrarCenaDaMesa_(mesa);
+    contexto.mesaGravar_(mesa);
+
+    const f = fichaDeModificador({ classe: 'guardiao', subclasse: 'guardiao-robusto', nivel: 5 });
+    contexto.aplicarDerivados_(f);
+    f.contadores['classe:guardiao:imparavel'] = { valor: 4 };
+    f.cenaVista = 0;
+    const r = contexto.aplicarAjustes_(f, [{ tipo: 'cena' }]);
+    igual(r.erros, []);
+    igual(f.cenaVista, contexto.mesaLer_().cena.numero, 'pula direto para a cena atual');
+  } finally {
+    contexto.mesaGravar_(original);
+  }
+});
+
+teste('encerrar a cena não mexe no Medo nem na sessão', () => {
+  const original = JSON.parse(JSON.stringify(contexto.mesaLer_()));
+  try {
+    const mesa = contexto.mesaLer_();
+    mesa.medo = 7;
+    mesa.sessao.numero = 3;
+    mesa.sessao.aberta = true;
+    contexto.mesaGravar_(mesa);
+
+    const m2 = contexto.mesaLer_();
+    contexto.encerrarCenaDaMesa_(m2);
+    contexto.mesaGravar_(m2);
+
+    const depois = contexto.mesaLer_();
+    igual(depois.medo, 7, 'cena não é sessão: o Medo não se move');
+    igual(depois.sessao.numero, 3);
+    igual(depois.sessao.aberta, true, 'a sessão continua aberta');
+  } finally {
+    contexto.mesaGravar_(original);
+  }
+});
+
+/*
+ * ⚠ CENA NÃO EXIGE SESSÃO ABERTA. Cena é unidade de ficção, não de
+ * contabilidade — uma mesa pode encerrar uma cena sem nunca ter tocado no
+ * botão de sessão, e recusar aí seria o app ensinando uma regra que o livro
+ * não tem.
+ */
+teste('dá para encerrar cena numa mesa que nunca abriu sessão', () => {
+  const original = JSON.parse(JSON.stringify(contexto.mesaLer_()));
+  try {
+    const mesa = contexto.mesaLer_();
+    mesa.sessao.numero = 0;
+    mesa.sessao.aberta = false;
+    mesa.sessao.comecouEm = '';
+    mesa.sessao.terminouEm = '';
+    mesa.cena = { numero: 0, encerradaEm: '' };
+    contexto.mesaGravar_(mesa);
+
+    const m2 = contexto.mesaLer_();
+    const r = contexto.encerrarCenaDaMesa_(m2);
+    igual(r.numero, 1);
+  } finally {
+    contexto.mesaGravar_(original);
+  }
+});
+
+/*
+ * E108 — NENHUMA CARACTERÍSTICA DE EQUIPAMENTO FICA SEM DONO.
+ *
+ * O catálogo tinha 304 características e 196 registros de automação. Os outros
+ * 108 não eram "manuais": eram indistinguíveis de esquecimento — ninguém,
+ * olhando o dado, sabia dizer se a Incômoda não movia o traço por decisão ou
+ * por falta de alguém ter reparado.
+ *
+ * Agora toda característica DECLARA o que o app faz com ela, e quem se declara
+ * automatizada tem de provar: precisa ter efeito ligado. Uma declaração sem
+ * efeito seria pior que nenhuma — mentiria para quem audita.
+ */
+teste('E108: toda característica de equipamento declara o que o app faz com ela', () => {
+  const armas = avaliar('ARMAS') || [];
+  const armaduras = avaliar('ARMADURAS') || [];
+  const orfas = [];
+  [].concat(armas, armaduras).forEach((item) => {
+    if (!item.carac) return;
+    const a = item.automacao;
+    if (!a || !a.classificacao || !a.motivo) orfas.push(`${item.nome} (${item.carac})`);
+  });
+  igual(orfas, [], `sem registro de automação: ${orfas.length}`);
+});
+
+teste('E108: quem se declara automatizada tem efeito ligado de verdade', () => {
+  const armas = avaliar('ARMAS') || [];
+  const armaduras = avaliar('ARMADURAS') || [];
+  const mentirosas = [];
+  [].concat(armas, armaduras).forEach((item) => {
+    const cl = String(((item.automacao || {}).classificacao) || '');
+    if (cl !== 'passiva-automatizada' && cl !== 'passiva-parcial') return;
+    const temEfeito = !!(item.efeitoDerivado || item.efeitoEquipamento);
+    if (!temEfeito) mentirosas.push(`${item.nome} (${item.carac}) diz "${cl}" e não liga nada`);
+  });
+  igual(mentirosas, [], mentirosas.join(' · '));
+});
+
+console.log('\nDe onde vem cada número — a memória da conta (E107)');
+
+/*
+ * E107 — A TRILHA TEM QUE FECHAR COM O NÚMERO.
+ *
+ * derivadosDoPersonagem_ devolve, junto de cada número derivado, a lista das
+ * parcelas que o formaram. A tela só desenha essa lista; ela não recalcula
+ * nada. Então o único jeito de a tela mentir é a lista não fechar — e é
+ * exatamente isso que este bloco impede: para toda ficha testada, a soma das
+ * linhas é o próprio número. Somou sem anotar, o teste quebra aqui.
+ */
+const CHAVES_DA_MEMORIA = ['evasao', 'pontuacaoArmadura', 'limiarMaior', 'limiarGrave',
+  'pontosDeVidaMaximos', 'estresseMaximo'];
+
+function conferirMemoria(rotuloDaFicha, ficha) {
+  const d = contexto.derivadosDoPersonagem_(ficha);
+  verdade(d.memoria && typeof d.memoria === 'object', `${rotuloDaFicha}: sem memória`);
+  CHAVES_DA_MEMORIA.forEach((chave) => {
+    const linhas = d.memoria[chave];
+    verdade(Array.isArray(linhas), `${rotuloDaFicha}/${chave}: memória não é lista`);
+    if (d[chave] === null || d[chave] === undefined) {
+      igual(linhas.length, 0, `${rotuloDaFicha}/${chave}: número ausente não pode ter linhas`);
+      return;
+    }
+    const soma = linhas.reduce((t, x) => t + x.valor, 0);
+    if (soma !== d[chave]) {
+      throw new Error(`${rotuloDaFicha}/${chave}: a trilha soma ${soma} e o número é ${d[chave]} — ${JSON.stringify(linhas)}`);
+    }
+    linhas.forEach((x) => {
+      verdade(typeof x.rotulo === 'string' && x.rotulo.trim().length > 0,
+        `${rotuloDaFicha}/${chave}: linha sem rótulo — ${JSON.stringify(x)}`);
+      verdade(Number.isInteger(x.valor), `${rotuloDaFicha}/${chave}: valor não inteiro — ${JSON.stringify(x)}`);
+    });
+  });
+  return d;
+}
+
+teste('a soma das linhas é o próprio número, em toda combinação testada', () => {
+  const classes = [
+    ['bardo', 'bardo-musico-errante'], ['guardiao', 'guardiao-robusto'],
+    ['guardiao', 'guardiao-vinganca'], ['mago', 'mago-escola-da-guerra'],
+    ['seraph', 'seraph-sentinela-alado'], ['ladino', 'ladino-caminhante-noturno'],
+    ['druida', 'druida-guardiao-dos-elementos'], ['patrulheiro', 'patrulheiro-laco-bestial']
+  ];
+  const ancestralidades = ['elfo', 'galapa', 'gigante', 'humano', 'simiah', 'orc'];
+  const armaduras = [null, 'Armadura de couro', 'Armadura de cota de malha'];
+  const cartas = [['fundacao'], ['fundacao', 'especializacao'], ['fundacao', 'especializacao', 'maestria']];
+  let casos = 0;
+  // Um id de classe errado devolveria bases nulas e a varredura passaria à toa.
+  // Por isso contamos também quantas linhas de verdade cada número ganhou.
+  const linhasPorChave = { evasao: 0, pontuacaoArmadura: 0, limiarMaior: 0, limiarGrave: 0,
+    pontosDeVidaMaximos: 0, estresseMaximo: 0 };
+  classes.forEach(([classe, subclasse]) => {
+    ancestralidades.forEach((ancestralidade) => {
+      armaduras.forEach((armadura) => {
+        cartas.forEach((subclasseCartas) => {
+          [1, 5, 10].forEach((nivel) => {
+            const ficha = fichaDeModificador({
+              classe, subclasse, ancestralidade, nivel, subclasseCartas,
+              equipamento: { armadura, primaria: null, secundaria: null, reserva: [] }
+            });
+            casos++;
+            const d = conferirMemoria(`${classe}/${ancestralidade}/${armadura || 'sem armadura'}/n${nivel}/${subclasseCartas.length}`, ficha);
+            CHAVES_DA_MEMORIA.forEach((chave) => { linhasPorChave[chave] += d.memoria[chave].length; });
+          });
+        });
+      });
+    });
+  });
+  verdade(casos > 1000, `esperava uma varredura larga, rodei só ${casos}`);
+  CHAVES_DA_MEMORIA.forEach((chave) => {
+    verdade(linhasPorChave[chave] >= casos,
+      `${chave}: a varredura mal encostou no número (${linhasPorChave[chave]} linhas em ${casos} fichas) — fixture provavelmente inválida`);
+  });
+});
+
+teste('bônus de avanço, cartas permanentes e armadura marcada também fecham', () => {
+  const comBonus = fichaDeModificador({
+    nivel: 5, classe: 'guardiao', subclasse: 'guardiao-robusto',
+    subclasseCartas: ['fundacao', 'especializacao', 'maestria'],
+    equipamento: { armadura: 'Armadura de couro', primaria: null, secundaria: null, reserva: [] },
+    recursos: { esperanca: 2, armaduraMarcada: 3 }
+  });
+  comBonus.avancos.bonus = { evasao: 2, pontosDeVidaMaximos: 3, estresseMaximo: 1, proficiencia: 1 };
+  comBonus.bonusDeCartas = { pontosDeVidaMaximos: 2, estresseMaximo: 1, limiares: 2 };
+  const d = conferirMemoria('guardião com avanços e cartas', comBonus);
+
+  const rotulos = d.memoria.pontosDeVidaMaximos.map((x) => x.rotulo);
+  verdade(rotulos.indexOf('Avanços de nível') >= 0, `faltou o avanço: ${JSON.stringify(rotulos)}`);
+  verdade(rotulos.indexOf('Cartas permanentes') >= 0, `faltou a carta: ${JSON.stringify(rotulos)}`);
+});
+
+teste('a Esquiva de Ladino aparece com nome na trilha da Evasão', () => {
+  const ladino = fichaDeModificador({ classe: 'ladino', subclasse: 'ladino-caminhante-noturno', nivel: 5 });
+  const parado = conferirMemoria('ladino parado', ladino);
+  ladino.contadores['estado:ladino:esquiva'] = { valor: 1 };
+  const esquivando = conferirMemoria('ladino esquivando', ladino);
+  igual(esquivando.evasao - parado.evasao, 2, 'a Esquiva soma +2');
+  const linha = esquivando.memoria.evasao.find((x) => x.rotulo === 'Esquiva de Ladino');
+  verdade(linha && linha.valor === 2, `a Esquiva precisa aparecer na trilha: ${JSON.stringify(esquivando.memoria.evasao)}`);
+});
+
+teste('a primeira linha é sempre a base, e ela vem marcada', () => {
+  const d = conferirMemoria('bardo simples', fichaDeModificador({ ancestralidade: 'simiah' }));
+  igual(d.memoria.evasao[0].base, true, 'a base tem que vir marcada');
+  igual(d.memoria.evasao[0].rotulo, 'Base da classe (Bardo)');
+  igual(d.memoria.evasao[1], { rotulo: 'Ágil', valor: 1 }, 'a característica entra com o nome dela');
+  igual(d.memoria.evasao.filter((x) => x.base).length, 1, 'só pode haver uma base');
 });
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

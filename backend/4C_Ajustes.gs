@@ -112,6 +112,7 @@ function aplicarAjusteDireto_(ficha, a) {
   if (tipo === 'carta') return ajustarCarta_(ficha, a);
   if (tipo === 'usarcarta') return usarCartaDeDominio_(ficha, a);
   if (tipo === 'gatilho') return ajustarGatilho_(ficha, a);
+  if (tipo === 'cena') return ajustarCenaDaFicha_(ficha, a);
   if (tipo === 'sessao') return ajustarSessaoDaFicha_(ficha, a);
   if (tipo === 'morte') return ajustarMovimentoDeMorte_(ficha, a);
   if (tipo === 'conjuracao') return ajustarConjuracao_(ficha, a);
@@ -230,6 +231,43 @@ function usarCaracteristicaDeEquipamento_(ficha, a) {
   if (regra.exigeCriticoPrimaria === true && (a || {}).criticoPrimaria !== true) {
     return { erro:encontrada.caracteristica + ': confirme primeiro o sucesso crítico com a arma principal.' };
   }
+  /*
+   * ⚠ CRÍTICO CORPO A CORPO É OUTRA COISA de crítico com a arma principal.
+   *
+   * O SRD da Sedenta por Sangue diz "critically succeed on a weapon attack
+   * within Melee range" — qualquer arma, desde que o alcance seja Corpo a
+   * Corpo. Reaproveitar `exigeCriticoPrimaria` teria sido menos código e
+   * estaria errado em quem critica com a secundária.
+   *
+   * Quem confirma é a mesa, como em toda a família "sucesso confirmado": o app
+   * não observa jogadas de ataque e não vai começar a fingir que observa.
+   */
+  if (regra.exigeCriticoCorpoACorpo === true && (a || {}).criticoCorpoACorpo !== true) {
+    return { erro:encontrada.caracteristica +
+      ': confirme primeiro o sucesso crítico com arma em alcance Corpo a Corpo.' };
+  }
+
+  /*
+   * "UMA VEZ POR ..." no uso ativo de equipamento.
+   *
+   * O caminho das CARTAS já tinha `marcaUso` (é como o "uma vez por sessão"
+   * delas funciona); o do equipamento não, e cada característica assim vinha
+   * resolvendo o controle por fora — o Impenetrável e o Absorvente têm cada um
+   * o seu pedaço de código conferindo o mesmo contador do mesmo jeito.
+   *
+   * Aqui ele é genérico: quem o QUANDO recarrega é o catálogo de contadores
+   * (`zeraEm`), não este código. Por descanso, por cena, por sessão — o mesmo
+   * mecanismo serve, e a próxima característica assim não precisa de código.
+   */
+  const chaveUsoAtivo = String(regra.marcaUso || '');
+  if (chaveUsoAtivo) {
+    const gastoAtivo = Math.trunc(Number(((ficha.contadores || {})[chaveUsoAtivo] || {}).valor)) || 0;
+    if (gastoAtivo > 0) {
+      const def = (typeof CONTADORES === 'object' ? CONTADORES[chaveUsoAtivo] : null) || {};
+      const quando = (def.zeraEm || []).indexOf('fim-da-cena') >= 0 ? 'nesta cena' : 'desde o último descanso';
+      return { erro:encontrada.caracteristica + ' já foi usada ' + quando + '.' };
+    }
+  }
   if (regra.exigeAtaqueComMedo === true && (a || {}).ataqueComMedo !== true) {
     return { erro:encontrada.caracteristica + ': confirme primeiro o ataque com Medo.' };
   }
@@ -290,10 +328,32 @@ function usarCaracteristicaDeEquipamento_(ficha, a) {
   }
 
   const detalhes = [];
+  // O uso é marcado JUNTO dos custos, não antes: uma recusa de Estresse mais
+  // abaixo deixaria o uso gasto sem nada ter acontecido.
+  if (chaveUsoAtivo) {
+    ficha.contadores = ficha.contadores || {};
+    ficha.contadores[chaveUsoAtivo] = { valor:1 };
+  }
   if (custoEstresse) detalhes.push(ajustarRecurso_(ficha, { chave:'estresseMarcado', delta:custoEstresse }));
   if (custoEsperanca) detalhes.push(ajustarRecurso_(ficha, { chave:'esperanca', delta:-custoEsperanca }));
   if (custoOuroPunhados) detalhes.push(ajustarOuroDaFicha_(ficha, { chave:'punhados', delta:-custoOuroPunhados }));
   if (regra.ganhoEsperanca) detalhes.push(ajustarRecurso_(ficha, { chave:'esperanca', delta:Math.max(0, Math.trunc(Number(regra.ganhoEsperanca)) || 0) }));
+  /*
+   * LIMPAR PONTO DE VIDA é o irmão do ganhoEsperanca logo acima: benefício
+   * fixo, sem escolha. `ajustarRecurso_` já para no zero, então quem está com
+   * a trilha limpa simplesmente não ganha nada — e o aviso diz isso, em vez de
+   * prometer uma cura que não houve.
+   */
+  let pvLimpos = 0;
+  if (regra.limpaPv) {
+    const pedido = Math.max(1, Math.trunc(Number(regra.limpaPv)) || 1);
+    const marcadosAntes = Math.max(0, Number(((ficha || {}).recursos || {}).pontosDeVidaMarcados) || 0);
+    if (marcadosAntes > 0) {
+      const limpa = ajustarRecurso_(ficha, { chave:'pontosDeVidaMarcados', delta:-Math.min(pedido, marcadosAntes) });
+      detalhes.push(limpa);
+      pvLimpos = marcadosAntes - (Math.max(0, Number(((ficha || {}).recursos || {}).pontosDeVidaMarcados) || 0));
+    }
+  }
 
   let recuperacao = null;
   if (acionaResultado && Number(resultadoRegra.limpaEstresse)) {
@@ -314,9 +374,31 @@ function usarCaracteristicaDeEquipamento_(ficha, a) {
     bonusRolagem:regra.bonusRolagem || null,
     bonusDano:regra.bonusDano || null,
     bonusProficienciaDano:regra.bonusProficienciaDano || null,
-    recuperacao:recuperacao, detalhes:detalhes
+    recuperacao:recuperacao, detalhes:detalhes,
+    pvLimpos:pvLimpos,
+    /*
+     * ⚠ O EFEITO NA MESA SAI DAQUI, e não é aplicado aqui.
+     *
+     * `aplicarAjustes_` roda uma prévia em clone; mexer no Medo neste ponto o
+     * moveria duas vezes — foi a pedra em que o Vulto Etéreo bateu. Quem
+     * publica é `aplicarEfeitosDeMesaDosAjustes_`, depois de a mudança ter
+     * sido aceita. Aqui só se DECLARA o que a regra faz fora da ficha.
+     */
+    efeitoMesa:regra.efeitoMesa ? (function () {
+      const e = JSON.parse(JSON.stringify(regra.efeitoMesa));
+      if (e.recado) {
+        e.recado = String(e.recado);
+        e.origemDoRecado = encontrada.fonte + ' · ' + encontrada.caracteristica;
+      }
+      return e;
+    })() : null
   };
   const partes = [];
+  if (regra.limpaPv) {
+    partes.push(pvLimpos
+      ? ('Você limpou ' + pvLimpos + ' Ponto' + (pvLimpos === 1 ? '' : 's') + ' de Vida.')
+      : 'Seus Pontos de Vida já estavam limpos — não havia o que curar.');
+  }
   if (r.efeitoManual) partes.push(r.efeitoManual);
   if (regra.bonusRolagem) partes.push('Bônus de +' + Number(regra.bonusRolagem.valor || 0) +
     ' na jogada de ' + String(regra.bonusRolagem.traco || '') + '.');
@@ -326,6 +408,11 @@ function usarCaracteristicaDeEquipamento_(ficha, a) {
     ' de Proficiência nesta jogada de dano.');
   if (custoOuroPunhados) partes.push(custoOuroPunhados + ' punhado' + (custoOuroPunhados === 1 ? '' : 's') + ' de ouro gasto' + (custoOuroPunhados === 1 ? '' : 's') + '.');
   if (regra.ganhoEsperanca) partes.push('+' + Math.trunc(Number(regra.ganhoEsperanca)) + ' Esperança.');
+  if (r.efeitoMesa && Math.trunc(Number(r.efeitoMesa.medoDelta))) {
+    const dm = Math.trunc(Number(r.efeitoMesa.medoDelta));
+    partes.push(dm > 0 ? ('O Mestre ganha ' + dm + ' de Medo.') : ('O Mestre perde ' + (-dm) + ' de Medo.'));
+  }
+  if (r.efeitoMesa && r.efeitoMesa.recado) partes.push('O painel do Mestre recebeu o recado.');
   if (entrada) partes.push('Resultado informado: ' + dadoManual + '.');
   if (entrada && resultadoRegra && !acionaResultado) partes.push('O gatilho especial não foi acionado.');
   if (acionaResultado && recuperacao) partes.push('Recuperação aplicada.');
@@ -914,7 +1001,8 @@ function ajustarFichaFilha_(ficha, a) {
 
     ficha.recursos = r;
     if (custo.estresse > 0) r.estresseMarcado = (Number(r.estresseMarcado) || 0) + custo.estresse;
-    if (custo.esperanca > 0) r.esperanca = (Number(r.esperanca) || 0) - custo.esperanca;
+    const gastoFera = gastarEsperanca_(ficha, custo.esperanca, 'entrar em forma de fera');
+    if (gastoFera.erro) return gastoFera;
 
     filha.dados.formaAtiva = forma;
     filha.dados.evolucaoTraco = tracoEvolucao;
@@ -935,7 +1023,7 @@ function ajustarFichaFilha_(ficha, a) {
     if (custo.esperanca > 0) pago.push(custo.esperanca + ' de Esperança');
     if (pago.length) m.aviso = 'Virar ' + nomeDaForma + ' custou ' + pago.join(' e ') + '.';
     else m.aviso = 'A Evolução pagou a transformação: nenhum Estresse marcado.';
-    return m;
+    return anexarReacoesDeEsperanca_(m, gastoFera);
   }
 
   if (acao === 'sair') {
@@ -1434,7 +1522,8 @@ function usarHabilidadeDeClasse_(ficha, a) {
     }
 
     ficha.recursos = rReacao;
-    if (custoReacaoEsperanca > 0) rReacao.esperanca = (Number(rReacao.esperanca) || 0) - custoReacaoEsperanca;
+    const gastoReacao = gastarEsperanca_(ficha, custoReacaoEsperanca, 'reação de "' + def.nome + '"');
+    if (gastoReacao.erro) return gastoReacao;
     if (custoReacaoEstresse > 0) rReacao.estresseMarcado = (Number(rReacao.estresseMarcado) || 0) + custoReacaoEstresse;
 
     const bonusEvasao = Math.trunc(Number(reacao.bonusEvasao)) || 0;
@@ -1455,7 +1544,7 @@ function usarHabilidadeDeClasse_(ficha, a) {
       (bonusEvasao ? '+' + bonusEvasao + ' de Evasão contra este ataque.' : '');
     if (dadoExtra) lembreteReacao += (lembreteReacao ? ' ' : '') + 'Dado extra desta resolução: ' + dadoExtra + '.';
     const efeitoMesaReacao = (opcaoReacao && opcaoReacao.efeitoMesa) || reacao.efeitoMesa || null;
-    return {
+    return anexarReacoesDeEsperanca_({
       tipo: 'habilidade', nome: def.nome, reacao: true,
       custoEsperanca: custoReacaoEsperanca, custoEstresse: custoReacaoEstresse,
       esperanca: rReacao.esperanca, estresseMarcado: rReacao.estresseMarcado,
@@ -1467,7 +1556,7 @@ function usarHabilidadeDeClasse_(ficha, a) {
       estado: estadoRequerido.chave, estadoAtivo: reacao.consomeEstado !== true,
       estadoConsumido: reacao.consomeEstado === true,
       aviso: def.nome + (pago.length ? ' custou ' + pago.join(' e ') : '') + '. ' + lembreteReacao
-    };
+    }, gastoReacao);
   }
 
   /*
@@ -1581,7 +1670,8 @@ function usarHabilidadeDeClasse_(ficha, a) {
   }
 
   ficha.recursos = r;
-  if (custoEsperanca > 0) r.esperanca = (Number(r.esperanca) || 0) - custoEsperanca;
+  const gastoMovimento = gastarEsperanca_(ficha, custoEsperanca, '"' + def.nome + '"');
+  if (gastoMovimento.erro) return gastoMovimento;
   if (custoEstresse > 0) r.estresseMarcado = (Number(r.estresseMarcado) || 0) + custoEstresse;
 
   // Efeito determinístico que altera a própria trilha no mesmo ajuste. Coragem
@@ -1650,7 +1740,7 @@ function usarHabilidadeDeClasse_(ficha, a) {
   const alcanceFinal = def.alcanceBase
     ? alcanceFinalDaHabilidade_(ficha, def.nome, def.alcanceBase) : '';
 
-  return {
+  return anexarReacoesDeEsperanca_({
     tipo: 'habilidade', nome: def.nome,
     custoEsperanca: custoEsperanca, custoEstresse: custoEstresse,
     esperanca: r.esperanca, estresseMarcado: r.estresseMarcado,
@@ -1674,7 +1764,7 @@ function usarHabilidadeDeClasse_(ficha, a) {
       (ganho.length ? '. Você recebeu ' + ganho.join('; ') : '') + '.' +
       (alcanceFinal ? ' Alcance desta habilidade: ' + alcanceFinal + '.' : '') +
       (def.lembrete ? ' ' + def.lembrete : '')
-  };
+  }, gastoMovimento);
 }
 
 /**
@@ -3411,9 +3501,20 @@ function efeitosAoMarcarArmaduraDeEquipamento_(ficha) {
     const item = (ativos[i] || {}).item || {};
     const regra = ((item.efeitoEquipamento || {}).aoMarcarArmadura) || null;
     if (!regra) continue;
+    /*
+     * MARCAR ARMADURA TEM DUAS CONSEQUÊNCIAS POSSÍVEIS, E ELAS SÃO OPOSTAS.
+     *
+     * Doloroso cobra 1 Estresse por PA marcado; Divina (SRD, Lamelar Vinculada
+     * aos Deuses) DÁ 1 Esperança pelo mesmo gesto. Antes a coleta descartava
+     * qualquer fonte sem `estressePorSlot` — a Divina entrava aqui e era jogada
+     * fora uma linha depois. Agora a fonte entra se tiver qualquer uma das
+     * duas, e quem soma decide o que fazer com cada número.
+     */
     const estresse = Math.max(0, Math.trunc(Number(regra.estressePorSlot)) || 0);
-    if (!estresse) continue;
-    saida.push({ fonte:item.nome || item.id || 'Equipamento', caracteristica:item.carac || '', estressePorSlot:estresse });
+    const esperanca = Math.max(0, Math.trunc(Number(regra.esperancaPorSlot)) || 0);
+    if (!estresse && !esperanca) continue;
+    saida.push({ fonte:item.nome || item.id || 'Equipamento', caracteristica:item.carac || '',
+      estressePorSlot:estresse, esperancaPorSlot:esperanca });
   }
   return saida;
 }
@@ -3482,6 +3583,79 @@ function regraImpenetravelDaArmadura_(ficha) {
   return null;
 }
 
+
+/**
+ * FORRADA (SRD, Armadura Brigandina T1-T4): "Mark a Stress to negate Minor
+ * damage." É a mesma forma do Impenetrável — reação opcional da armadura
+ * equipada — com duas diferenças que mudam tudo: não tem limite por descanso,
+ * e o gatilho é a FAIXA do dano (Menor), não o último Ponto de Vida.
+ */
+function regraForradaDaArmadura_(ficha) {
+  const ativos = (typeof equipamentoAtivoDaFicha_ === 'function') ? equipamentoAtivoDaFicha_(ficha) : [];
+  for (let i = 0; i < ativos.length; i++) {
+    if ((ativos[i] || {}).papel !== 'armadura') continue;
+    const item = (ativos[i] || {}).item || {};
+    const regra = (((item.efeitoEquipamento || {}).danoRecebido || {}).forrada) || null;
+    if (regra) return { fonte:item.nome || item.id, caracteristica:item.carac || 'Forrada', regra:regra };
+  }
+  return null;
+}
+
+
+/**
+ * ABSORVENTE (SRD, Traje de Fio de Tempestade): "Once per scene when you take
+ * magic damage, you can clear an Armor Slot."
+ *
+ * ⚠ LIMPA, NÃO MARCA. É benefício, não custo: o golpe mágico devolve um Ponto
+ * de Armadura em vez de gastar um. Por isso ele não entra na conta de custos
+ * junto com as reações — entra depois, como alívio.
+ */
+function regraAbsorventeDaArmadura_(ficha) {
+  const ativos = (typeof equipamentoAtivoDaFicha_ === 'function') ? equipamentoAtivoDaFicha_(ficha) : [];
+  for (let i = 0; i < ativos.length; i++) {
+    if ((ativos[i] || {}).papel !== 'armadura') continue;
+    const item = (ativos[i] || {}).item || {};
+    const regra = (((item.efeitoEquipamento || {}).danoRecebido || {}).absorvente) || null;
+    if (regra) return { fonte:item.nome || item.id, caracteristica:item.carac || 'Absorvente', regra:regra };
+  }
+  return null;
+}
+
+
+/**
+ * VÍTREO (SRD, Arnês Ressonante): "When you would take Severe or greater
+ * damage, you can mark 2 Armor Slots to negate that damage. If you do, you
+ * gain a −5 penalty to your damage thresholds until you choose to repair your
+ * armor as a downtime move."
+ *
+ * ⚠ TEM PREÇO QUE DURA. Não é reação de um golpe: os -5 nos limiares ficam até
+ * a armadura ser reparada num descanso, e isso significa que os PRÓXIMOS
+ * golpes doem mais. Por isso o estado é um contador de verdade, lido pela
+ * derivação, e não um número gravado em cima do limiar.
+ */
+function regraVitreaDaArmadura_(ficha) {
+  const ativos = (typeof equipamentoAtivoDaFicha_ === 'function') ? equipamentoAtivoDaFicha_(ficha) : [];
+  for (let i = 0; i < ativos.length; i++) {
+    if ((ativos[i] || {}).papel !== 'armadura') continue;
+    const item = (ativos[i] || {}).item || {};
+    const regra = (((item.efeitoEquipamento || {}).danoRecebido || {}).vitreo) || null;
+    if (regra) return { fonte:item.nome || item.id, caracteristica:item.carac || 'Vítreo', regra:regra };
+  }
+  return null;
+}
+
+
+/** Amaldiçoada ativa: a armadura que devolve Estresse ao atacante. */
+function regraAmaldicoadaDaArmadura_(ficha) {
+  const ativos = (typeof equipamentoAtivoDaFicha_ === 'function') ? equipamentoAtivoDaFicha_(ficha) : [];
+  for (let i = 0; i < ativos.length; i++) {
+    if ((ativos[i] || {}).papel !== 'armadura') continue;
+    const item = (ativos[i] || {}).item || {};
+    const regra = (((item.efeitoEquipamento || {}).danoRecebido || {}).amaldicoada) || null;
+    if (regra) return { fonte:item.nome || item.id, caracteristica:item.carac || 'Amaldiçoada', regra:regra };
+  }
+  return null;
+}
 
 /** Aparar ativo: encontra qualquer arma equipada com esta reação. */
 function regraApararDaFicha_(ficha) {
@@ -3603,7 +3777,7 @@ function aplicarDanoNaFicha_(ficha, a) {
       pvPelaFaixa:0, pvDepoisArmadura:0, pvMarcados:0,
       naBeira:false, mitigacaoArmadura:null, reacoes:[], resistencia:null,
       equipamentoDefensivo:null, aparar:null, dominioElementalTerra:null,
-      resiliente:null, impenetravel:null,
+      resiliente:null, impenetravel:null, forrada:null, absorvente:null, vitreo:null,
       espelhoMarigold:{ itemId:encontrada.item.id, item:encontrada.item.nome,
         qtdAntes:gasto.antes, qtdDepois:gasto.depois, consumiu:1 },
       custos:{ estresse:0, esperanca:custo, armadura:0 },
@@ -3907,6 +4081,44 @@ function aplicarDanoNaFicha_(ficha, a) {
     dominioTerra = { dados: limpos, evitados: evitados, pvDepois: pv };
   }
 
+  /*
+   * FORRADA anula dano MENOR por 1 Estresse. Sem limite por descanso: a única
+   * trava é o próprio Estresse, que é como o livro escreveu.
+   *
+   * ⚠ A FAIXA É A DEPOIS DA ARMADURA, não a original. Quem levou dano Maior e
+   * marcou 1 PA para descer um degrau está, agora, diante de dano Menor — e a
+   * característica diz "negate Minor damage", não "negate damage that was
+   * Minor to begin with". Olhar a faixa de antes recusaria exatamente o uso
+   * mais comum dela.
+   *
+   * ⚠ E ela recusa quando não há o que anular. Se Na Beira já zerou o PV, ou
+   * se o dano não é Menor, gastar 1 Estresse não compraria nada — e a ficha
+   * deixaria a pessoa gastar em silêncio.
+   */
+  let forrada = null;
+  const regraForrada = regraForradaDaArmadura_(ficha);
+  if (a.usarForrada === true) {
+    if (!regraForrada) return { erro:'Este personagem não tem Forrada na armadura equipada.' };
+    if (a.usarImpenetravel === true) {
+      return { erro:'Escolha Forrada ou Impenetrável para este dano, não os dois.' };
+    }
+    if (opcaoTocado) {
+      return { erro:'Escolha Forrada ou Tocado do Esplendor para este dano, não os dois.' };
+    }
+    if (contaAposArmadura.faixa !== 'menor') {
+      return { erro:'Forrada só anula dano Menor; este é ' + contaAposArmadura.rotulo + '.' };
+    }
+    if (pv <= 0) return { erro:'Este dano já não marca Ponto de Vida nenhum — Forrada não tem o que anular.' };
+    const custoForrada = Math.max(1, Math.trunc(Number(regraForrada.regra.estresse)) || 1);
+    if (estresseAtual + custoEstresse + custoForrada > estresseMax) {
+      return { erro:'Forrada precisa marcar ' + custoForrada + ' Estresse; com a trilha cheia ele viraria PV e não anularia nada.' };
+    }
+    pv = 0;
+    custoEstresse += custoForrada;
+    forrada = { fonte:regraForrada.fonte, caracteristica:regraForrada.caracteristica,
+      pvEvitado:contaAposArmadura.pv, estresse:custoForrada };
+  }
+
   // IMPENETRÁVEL olha o PV que REALMENTE sobraria depois das reduções/rolagens.
   // Ele troca somente o último espaço de PV por 1 Estresse e marca o uso.
   let impenetravel = null;
@@ -3931,6 +4143,67 @@ function aplicarDanoNaFicha_(ficha, a) {
     impenetravel = { fonte:regraImpenetravel.fonte, uso:chaveUso, pvEvitado:1, estresse:1 };
   }
 
+  /*
+   * VÍTREO nega dano SEVERO OU MAIOR por 2 Pontos de Armadura — e cobra os -5
+   * nos limiares até a armadura ser reparada.
+   *
+   * ⚠ A FAIXA É A DEPOIS DA ARMADURA, como na Forrada: quem desceu de Massivo
+   * para Severo marcando 1 PA continua diante de dano Severo, e é aí que o
+   * Vítreo serve.
+   *
+   * ⚠ E O ESTADO NÃO SE ACUMULA. Usar duas vezes antes de reparar não dá -10:
+   * o livro diz "-5 nos seus limiares", não "-5 por uso". O contador é estado
+   * (ligado/desligado), não contagem.
+   */
+  let vitreo = null;
+  const regraVitrea = regraVitreaDaArmadura_(ficha);
+  if (a.usarVitreo === true) {
+    if (!regraVitrea) return { erro:'Este personagem não tem Vítreo na armadura equipada.' };
+    if (contaAposArmadura.faixa !== 'severo' && contaAposArmadura.faixa !== 'massivo') {
+      return { erro:'Vítreo só nega dano Severo ou maior; este é ' + contaAposArmadura.rotulo + '.' };
+    }
+    if (pv <= 0) return { erro:'Este dano já não marca Ponto de Vida nenhum — Vítreo não tem o que negar.' };
+    const custoVitreo = Math.max(1, Math.trunc(Number(regraVitrea.regra.armadura)) || 2);
+    if (armaduraAtual + custoArmadura + custoVitreo > armaduraMax) {
+      return { erro:'Vítreo precisa de ' + custoVitreo + ' Pontos de Armadura livres, e não sobram tantos.' };
+    }
+    const chaveEstado = String(regraVitrea.regra.marcaEstado || '');
+    if (!chaveEstado) return { erro:'Vítreo está sem o estado que guarda a penalidade.' };
+    pv = 0;
+    custoArmadura += custoVitreo;
+    ficha.contadores = ficha.contadores || {};
+    ficha.contadores[chaveEstado] = { valor:1 };
+    vitreo = { fonte:regraVitrea.fonte, caracteristica:regraVitrea.caracteristica,
+      estado:chaveEstado, armadura:custoVitreo,
+      penalidadeLimiares: Math.max(0, Math.trunc(Number(regraVitrea.regra.penalidadeLimiares)) || 0) };
+  }
+
+  /*
+   * ABSORVENTE devolve 1 Ponto de Armadura quando o dano é MÁGICO, uma vez por
+   * cena. Ele não muda o PV deste golpe — muda o que sobra para o próximo.
+   *
+   * ⚠ RECUSA QUANDO NÃO HÁ O QUE LIMPAR. Sem Ponto marcado, usar gastaria o
+   * uso da cena em troca de nada, e a pessoa só descobriria no golpe seguinte.
+   */
+  let absorvente = null;
+  const regraAbsorvente = regraAbsorventeDaArmadura_(ficha);
+  if (a.usarAbsorvente === true) {
+    if (!regraAbsorvente) return { erro:'Este personagem não tem Absorvente na armadura equipada.' };
+    if (tipo !== 'magico') return { erro:'Absorvente só vale contra dano mágico.' };
+    const chaveUsoAbsorvente = String(regraAbsorvente.regra.marcaUso || '');
+    const usadoAbsorvente = Math.trunc(Number(((((ficha.contadores || {})[chaveUsoAbsorvente]) || {}).valor))) || 0;
+    if (!chaveUsoAbsorvente || usadoAbsorvente > 0) {
+      return { erro:'Absorvente já foi usado nesta cena.' };
+    }
+    if (armaduraAtual <= 0) {
+      return { erro:'Não há Ponto de Armadura marcado para o Absorvente limpar.' };
+    }
+    ficha.contadores = ficha.contadores || {};
+    ficha.contadores[chaveUsoAbsorvente] = { valor:1 };
+    absorvente = { fonte:regraAbsorvente.fonte, caracteristica:regraAbsorvente.caracteristica,
+      uso:chaveUsoAbsorvente, armaduraLimpa:1 };
+  }
+
   if (opcaoTocado) {
     ficha.contadores = ficha.contadores || {};
     ficha.contadores[chaveUsoTocado] = { valor:1 };
@@ -3952,11 +4225,56 @@ function aplicarDanoNaFicha_(ficha, a) {
   }
   if (custoEsperanca) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'esperanca', delta: -custoEsperanca }));
   if (custoEstresse) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'estresseMarcado', delta: custoEstresse }));
-  if (custoArmadura) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'armaduraMarcada', delta: custoArmadura }));
+  /*
+   * O Absorvente entra aqui, no MESMO delta do custo, e não numa chamada à
+   * parte: marcar 1 pela mitigação e limpar 1 pelo Absorvente é líquido zero,
+   * e duas chamadas fariam a ficha passar por um estado intermediário que
+   * dispara gatilhos (o Doloroso cobra Estresse por PA marcado) sem que nada
+   * de verdade tenha mudado.
+   */
+  const deltaArmadura = custoArmadura - (absorvente ? absorvente.armaduraLimpa : 0);
+  if (deltaArmadura) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'armaduraMarcada', delta: deltaArmadura }));
   let toquePv = null;
   if (pv > 0) {
     toquePv = ajustarRecurso_(ficha, { chave: 'pontosDeVidaMarcados', delta: pv });
     mudancasInternas.push(toquePv);
+  }
+
+  /*
+   * AMALDIÇOADA (SRD, Placa Sombria Forjada em Círculo):
+   *
+   * > "When you mark any number of Hit Points from an attack, roll a d4. On a
+   * > result of 4, the attacker must mark an equal number of Stress."
+   *
+   * ⚠ METADE DESTA REGRA MORA NUMA FICHA QUE ESTA AQUI NÃO ALCANÇA. O Estresse
+   * é do ATACANTE, que é adversário do Mestre — e este é o servidor da ficha
+   * do jogador. O que o app faz é a metade que é dele: pergunta o d4 (não rola
+   * — nenhum dado deste app é rolado por ele), sabe quantos PV foram marcados
+   * e, quando o d4 dá 4, deixa um recado no painel do Mestre com o número
+   * pronto. Ele aplica na trilha do adversário, que já está aberta ali.
+   *
+   * ⚠ E ELA NÃO IMPEDE O DANO DE ACONTECER. Se ninguém informou o d4, o dano
+   * entra do mesmo jeito e o aviso diz que o dado ficou faltando. Recusar a
+   * marcação de Pontos de Vida por causa de um dado que a mesa esqueceu seria
+   * trocar um esquecimento por um travamento.
+   */
+  let amaldicoada = null;
+  const regraAmaldicoada = (pv > 0) ? regraAmaldicoadaDaArmadura_(ficha) : null;
+  if (regraAmaldicoada) {
+    const lados = Math.max(2, Math.trunc(Number(regraAmaldicoada.regra.lados)) || 4);
+    const acionaEm = Math.max(1, Math.trunc(Number(regraAmaldicoada.regra.acionaEm)) || lados);
+    const bruto4 = a.amaldicoadaDado;
+    const informado = (bruto4 === undefined || bruto4 === null || bruto4 === '')
+      ? null : Math.trunc(Number(bruto4));
+    if (informado !== null && (!isFinite(informado) || informado < 1 || informado > lados)) {
+      return { erro:regraAmaldicoada.caracteristica + ': o dado vai de 1 a ' + lados + '.' };
+    }
+    amaldicoada = {
+      fonte:regraAmaldicoada.fonte, caracteristica:regraAmaldicoada.caracteristica,
+      lados:lados, acionaEm:acionaEm, dado:informado,
+      pvMarcados:pv, acionou:informado === acionaEm,
+      estresseDoAtacante:(informado === acionaEm) ? pv : 0
+    };
   }
 
   const usadas = defs.map(function (x) { return x.nome; });
@@ -3999,6 +4317,17 @@ function aplicarDanoNaFicha_(ficha, a) {
     resiliente: resiliente,
     anelResistencia: anelResistencia,
     impenetravel: impenetravel,
+    forrada: forrada,
+    absorvente: absorvente,
+    vitreo: vitreo,
+    amaldicoada: amaldicoada,
+    efeitoMesa: (amaldicoada && amaldicoada.acionou) ? {
+      recado:amaldicoada.caracteristica + ': marcou ' + amaldicoada.pvMarcados + ' Ponto' +
+        (amaldicoada.pvMarcados === 1 ? '' : 's') + ' de Vida e o d' + amaldicoada.lados +
+        ' deu ' + amaldicoada.dado + ' — o atacante marca ' + amaldicoada.estresseDoAtacante +
+        ' Estresse' + (amaldicoada.estresseDoAtacante === 1 ? '' : 's') + '.',
+      origemDoRecado:amaldicoada.fonte + ' · ' + amaldicoada.caracteristica
+    } : null,
     custos: { estresse: custoEstresse, esperanca: custoEsperanca, armadura: custoArmadura },
     detalhes: mudancasInternas,
     aviso: partes.join(' · ') + '.'
@@ -4008,6 +4337,27 @@ function aplicarDanoNaFicha_(ficha, a) {
   if (anelResistencia) saida.aviso += ' Anel de Resistência: dano reduzido de ' +
     anelResistencia.danoAntes + ' para ' + anelResistencia.danoDepois + '; uso gasto até o próximo descanso longo.';
   if (impenetravel) saida.aviso += ' Impenetrável: o último PV foi trocado por 1 Estresse.';
+  if (forrada) saida.aviso += ' ' + forrada.caracteristica + ': dano Menor anulado por ' +
+    forrada.estresse + ' Estresse.';
+  if (absorvente) saida.aviso += ' ' + absorvente.caracteristica +
+    ': 1 Ponto de Armadura limpo (uma vez por cena).';
+  if (vitreo) saida.aviso += ' ' + vitreo.caracteristica + ': dano negado por ' + vitreo.armadura +
+    ' Pontos de Armadura; os limiares ficam ' + vitreo.penalidadeLimiares +
+    ' mais baixos até a armadura ser reparada num descanso.';
+  if (amaldicoada) {
+    if (amaldicoada.dado === null) {
+      saida.aviso += ' ' + amaldicoada.caracteristica + ': informe o d' + amaldicoada.lados +
+        ' para saber se o atacante marca Estresse.';
+    } else if (amaldicoada.acionou) {
+      saida.aviso += ' ' + amaldicoada.caracteristica + ': d' + amaldicoada.lados + ' deu ' +
+        amaldicoada.dado + ' — o atacante marca ' + amaldicoada.estresseDoAtacante +
+        ' Estresse' + (amaldicoada.estresseDoAtacante === 1 ? '' : 's') +
+        '. O recado foi para o painel do Mestre.';
+    } else {
+      saida.aviso += ' ' + amaldicoada.caracteristica + ': d' + amaldicoada.lados + ' deu ' +
+        amaldicoada.dado + ' — nada volta para o atacante.';
+    }
+  }
   if (toquePv && toquePv.alerta) saida.alerta = toquePv.alerta;
   if (toquePv && toquePv.movimentoDeMorte) saida.movimentoDeMorte = true;
   // Doloroso pode converter Estresse sem espaço em PV durante a marcação de PA.
@@ -4040,6 +4390,119 @@ function aplicarDanoNaFicha_(ficha, a) {
   return saida;
 }
 
+/**
+ * A REGRA QUE PRECISOU DE UM CAMINHO ÚNICO.
+ *
+ * > Resplandecente: "Once per scene when you spend Hope, you can clear an
+ * > Armor Slot."
+ *
+ * Ela ficou meses sem automação, e o motivo não era preguiça: a Esperança
+ * saía da ficha por muitos lugares — Experiência, ajudar um aliado, custo de
+ * carta, movimento de fera, reação, Arriscar Tudo — e cada um subtraía por
+ * conta própria. Pendurar a característica em um deles faria a regra
+ * funcionar ÀS VEZES: gastar numa Experiência limparia o Ponto, gastar numa
+ * carta não, e nada na tela explicaria a diferença. Uma automação que
+ * funciona às vezes é pior que nenhuma, porque ensina errado.
+ *
+ * Então a Esperança passou a ter uma porta só. Daqui para frente, quem quiser
+ * reagir a "gastou Esperança" escreve em `reacoesAoGastarEsperanca_` e
+ * funciona em todos os caminhos de uma vez — inclusive nos que ainda não
+ * existem. O teste E109 guarda a porta: nenhum outro lugar do backend baixa
+ * `recursos.esperanca`.
+ *
+ * ⚠ GASTAR NÃO É PERDER. Esta função é para Esperança que sai como PREÇO de
+ * alguma coisa. Se algum dia existir um efeito que DRENA Esperança, ele não
+ * passa por aqui — a característica diz "when you spend".
+ */
+function gastarEsperanca_(ficha, quanto, motivo) {
+  const q = Math.max(0, Math.trunc(Number(quanto)) || 0);
+  ficha.recursos = ficha.recursos || {};
+  const r = ficha.recursos;
+  const antes = Math.max(0, Number(r.esperanca) || 0);
+  if (!q) return { gasto:0, antes:antes, depois:antes, reacoes:[] };
+  if (q > antes) {
+    return { erro:'Não há Esperança suficiente: você tem ' + antes + ' e o gasto é ' + q + '.' };
+  }
+  r.esperanca = antes - q;
+  const reacoes = reacoesAoGastarEsperanca_(ficha, q, motivo);
+  return {
+    gasto:q, antes:antes, depois:r.esperanca,
+    motivo:String(motivo || ''),
+    reacoes:reacoes
+  };
+}
+
+/** Quem tem a Resplandecente ativa, se é que alguém tem. */
+function regraResplandecenteDaFicha_(ficha) {
+  const ativos = (typeof equipamentoAtivoDaFicha_ === 'function') ? equipamentoAtivoDaFicha_(ficha) : [];
+  for (let i = 0; i < ativos.length; i++) {
+    const item = (ativos[i] || {}).item || {};
+    const regra = (((item.efeitoEquipamento || {}).aoGastarEsperanca) || {}).resplandecente || null;
+    if (regra) {
+      return { fonte:item.nome || item.id, caracteristica:item.carac || 'Resplandecente', regra:regra };
+    }
+  }
+  return null;
+}
+
+/**
+ * O que acontece POR TER GASTADO Esperança, seja qual for o caminho.
+ *
+ * ⚠ ELA NÃO QUEIMA O USO À TOA. O livro diz "you can clear an Armor Slot" — e
+ * com a Armadura toda limpa não há Ponto para limpar. Gastar o uso da cena em
+ * troca de nada é o tipo de coisa que só se descobre no momento em que se
+ * precisava dele, então quem está com a Armadura limpa continua com o uso na
+ * mão.
+ *
+ * ⚠ E ELA ACONTECE SOZINHA quando há o que limpar, em vez de perguntar.
+ * Limpar 1 Ponto agora ou daqui a três gastos dá exatamente o mesmo Ponto: o
+ * uso é um por cena de qualquer jeito. Perguntar seria um toque a mais para
+ * uma escolha que não existe.
+ */
+function reacoesAoGastarEsperanca_(ficha, quanto, motivo) {
+  const saida = [];
+  const encontrada = regraResplandecenteDaFicha_(ficha);
+  if (!encontrada) return saida;
+
+  const chaveUso = String(encontrada.regra.marcaUso || '');
+  if (!chaveUso) return saida;
+  const usada = Math.trunc(Number(((((ficha.contadores || {})[chaveUso]) || {}).valor))) || 0;
+  if (usada > 0) return saida;
+
+  const marcados = Math.max(0, Number(((ficha || {}).recursos || {}).armaduraMarcada) || 0);
+  const limpa = Math.max(1, Math.trunc(Number(encontrada.regra.limpaArmadura)) || 1);
+  if (marcados < 1) return saida;
+
+  const limpou = Math.min(limpa, marcados);
+  ficha.recursos.armaduraMarcada = marcados - limpou;
+  ficha.contadores = ficha.contadores || {};
+  ficha.contadores[chaveUso] = { valor:1 };
+  saida.push({
+    caracteristica:encontrada.caracteristica, fonte:encontrada.fonte,
+    uso:chaveUso, esperancaGasta:Math.max(0, Math.trunc(Number(quanto)) || 0),
+    armaduraLimpa:limpou, motivo:String(motivo || ''),
+    aviso:encontrada.caracteristica + ': gastar Esperança limpou ' + limpou +
+      ' Ponto de Armadura (1× por cena).'
+  });
+  return saida;
+}
+
+/**
+ * Pendura no resultado o que a Resplandecente (ou quem vier depois) fez.
+ *
+ * ⚠ A FRASE É PARTE DO EFEITO. O Ponto de Armadura limpo aparece sozinho na
+ * trilha quando a tela redesenha — mas sem a frase ninguém sabe POR QUE ele
+ * voltou, e um número que muda sem explicação parece defeito do app.
+ */
+function anexarReacoesDeEsperanca_(resultado, gasto) {
+  const reacoes = (gasto && gasto.reacoes) || [];
+  if (!reacoes.length || !resultado || typeof resultado !== 'object') return resultado;
+  resultado.aoGastarEsperanca = reacoes;
+  const frases = reacoes.map(function (x) { return x.aviso; }).join(' ');
+  resultado.aviso = resultado.aviso ? (resultado.aviso + ' ' + frases) : frases;
+  return resultado;
+}
+
 function ajustarRecurso_(ficha, a) {
   const chave = normalizarRecursoAjustavel_(a.chave);
   if (!chave) return { erro: 'Recurso desconhecido: "' + String(a.chave) + '".' };
@@ -4056,7 +4519,22 @@ function ajustarRecurso_(ficha, a) {
   if (!isFinite(alvo)) return { erro: 'Valor inválido para "' + RECURSOS_AJUSTAVEIS[chave].rotulo + '".' };
 
   const depois = Math.max(0, Math.min(teto, alvo));
-  ficha.recursos[chave] = depois;
+  /*
+   * ⚠ ESPERANÇA QUE DESCE SAI PELA PORTA ÚNICA, e não por esta atribuição.
+   *
+   * Este é o caminho mais usado de todos — é o que acontece quando alguém
+   * toca na trilha de Esperança para pagar uma Experiência. Se ele escrevesse
+   * o número direto, a Resplandecente funcionaria em todos os outros lugares e
+   * justamente neste não; e é aqui que a maioria dos gastos da mesa passa.
+   */
+  let reacoesDoGasto = [];
+  if (chave === 'esperanca' && depois < antes) {
+    const gasto = gastarEsperanca_(ficha, antes - depois, a.motivo || 'ajuste da ficha');
+    if (gasto && gasto.erro) return gasto;
+    reacoesDoGasto = (gasto && gasto.reacoes) || [];
+  } else {
+    ficha.recursos[chave] = depois;
+  }
 
   const m = {
     tipo: 'recurso',
@@ -4070,6 +4548,17 @@ function ajustarRecurso_(ficha, a) {
   // Avisos que valem uma frase na tela — sem impedir nada.
   if (alvo > teto) m.aviso = 'O máximo é ' + teto + '.';
   if (alvo < 0) m.aviso = 'Não dá para ficar abaixo de zero.';
+  /*
+   * ⚠ ACRESCENTA, NÃO SUBSTITUI. Quem pediu para gastar mais Esperança do que
+   * tinha recebe as duas notícias: o que não deu para pagar e o Ponto de
+   * Armadura que a Resplandecente limpou. Sobrescrever apagaria uma delas
+   * justamente quando as duas importam.
+   */
+  if (reacoesDoGasto.length) {
+    m.aoGastarEsperanca = reacoesDoGasto;
+    const frases = reacoesDoGasto.map(function (x) { return x.aviso; }).join(' ');
+    m.aviso = m.aviso ? (m.aviso + ' ' + frases) : frases;
+  }
   if (chave === 'pontosDeVidaMarcados' && teto && depois >= teto && antes < teto) {
     m.alerta = 'Pontos de Vida no limite: escolha um movimento de morte (livro p.106).';
     m.movimentoDeMorte = true;
@@ -4077,11 +4566,16 @@ function ajustarRecurso_(ficha, a) {
 
   // DOLOROSO não é uma regra de uma armadura específica: há armas com a mesma
   // característica. Cada fonte ATIVA dispara para cada PA realmente marcado.
+  // DIVINA usa o mesmo gatilho para o efeito oposto: dá Esperança em vez de
+  // cobrar Estresse. As duas contam por PA realmente marcado, e nada impede
+  // que as duas estejam vestidas ao mesmo tempo.
   if (chave === 'armaduraMarcada' && depois > antes) {
     const fontes = efeitosAoMarcarArmaduraDeEquipamento_(ficha);
-    if (fontes.length) {
-      const slots = depois - antes;
-      const porSlot = fontes.reduce(function (n,x) { return n + (Number(x.estressePorSlot) || 0); }, 0);
+    const slots = depois - antes;
+    const avisos = [];
+
+    const porSlot = fontes.reduce(function (n,x) { return n + (Number(x.estressePorSlot) || 0); }, 0);
+    if (porSlot > 0) {
       const total = slots * porSlot;
       const detalhes = [];
       let marcados = 0, convertidosEmPv = 0;
@@ -4100,12 +4594,43 @@ function ajustarRecurso_(ficha, a) {
           if (pvSub && pvSub.movimentoDeMorte) { m.movimentoDeMorte = true; m.alerta = pvSub.alerta; }
         }
       }
-      m.doloroso = { fontes:fontes.map(function(x){return x.fonte;}), slots:slots,
-        estresseSolicitado:total, estresseMarcado:marcados, pvSubstitutos:convertidosEmPv };
+      m.doloroso = { fontes:fontes.filter(function(x){return x.estressePorSlot;}).map(function(x){return x.fonte;}),
+        slots:slots, estresseSolicitado:total, estresseMarcado:marcados, pvSubstitutos:convertidosEmPv };
       m.detalhes = (m.detalhes || []).concat(detalhes);
-      m.aviso = 'Doloroso: ' + total + ' Estresse exigido' +
-        (convertidosEmPv ? '; ' + convertidosEmPv + ' virou PV por falta de espaço.' : '.');
+      avisos.push('Doloroso: ' + total + ' Estresse exigido' +
+        (convertidosEmPv ? '; ' + convertidosEmPv + ' virou PV por falta de espaço.' : '.'));
     }
+
+    /*
+     * DIVINA (SRD: "When you mark an Armor Slot, gain a Hope").
+     *
+     * ⚠ A Esperança pode não caber, e isso não é erro: quem já está com a
+     * Esperança cheia simplesmente não ganha. Por isso o registro guarda o que
+     * foi PEDIDO e o que de fato entrou — o aviso na tela diz a verdade em vez
+     * de prometer um ponto que não existe.
+     */
+    const esperancaPorSlot = fontes.reduce(function (n,x) { return n + (Number(x.esperancaPorSlot) || 0); }, 0);
+    if (esperancaPorSlot > 0) {
+      const pedida = slots * esperancaPorSlot;
+      const detalhesEsperanca = [];
+      let recebida = 0;
+      for (let i = 0; i < pedida; i++) {
+        const rr = ficha.recursos || {};
+        const atual = Math.max(0, Number(rr.esperanca) || 0);
+        const teto = Math.max(0, Number(rr.esperancaMaxima) || 0);
+        if (atual >= teto) break;
+        detalhesEsperanca.push(ajustarRecurso_(ficha, { chave:'esperanca', delta:1 }));
+        recebida++;
+      }
+      m.divina = { fontes:fontes.filter(function(x){return x.esperancaPorSlot;}).map(function(x){return x.fonte;}),
+        slots:slots, esperancaPedida:pedida, esperancaRecebida:recebida };
+      m.detalhes = (m.detalhes || []).concat(detalhesEsperanca);
+      avisos.push(recebida
+        ? 'Divina: +' + recebida + ' Esperança.'
+        : 'Divina: a Esperança já está cheia.');
+    }
+
+    if (avisos.length) m.aviso = avisos.join(' ');
   }
 
   /*
@@ -4524,7 +5049,8 @@ function usarCartaDeDominio_(ficha, a) {
   }
 
   ficha.recursos = r;
-  if (custoEsperanca) r.esperanca = (Number(r.esperanca) || 0) - custoEsperanca;
+  const gastoCarta = gastarEsperanca_(ficha, custoEsperanca, '"' + carta.nome + '"');
+  if (gastoCarta.erro) return gastoCarta;
   if (custoEstresse) r.estresseMarcado = (Number(r.estresseMarcado) || 0) + custoEstresse;
 
   let efeitoRecursoResultado = null;
@@ -4616,7 +5142,7 @@ function usarCartaDeDominio_(ficha, a) {
   if (trocaSemCustoResultado) {
     complemento += (complemento ? ' ' : '') + 'Troca com o cofre feita sem Custo de Retorno.';
   }
-  return {
+  return anexarReacoesDeEsperanca_({
     tipo:'usarCarta', carta:carta.id, nome:carta.nome,
     opcao:opcaoUso ? opcaoUso.id : null,
     custoEsperanca:custoEsperanca, custoEstresse:custoEstresse,
@@ -4638,7 +5164,7 @@ function usarCartaDeDominio_(ficha, a) {
     estadosDeCartaEncerrados:estadosEncerrados,
     lembrete:lembrete,
     aviso:carta.nome + (pago.length ? ' custou ' + pago.join(' e ') : '') + '. ' + lembrete + (complemento ? ' ' + complemento : '')
-  };
+  }, gastoCarta);
 }
 
 function ajustarCarta_(ficha, a) {
@@ -4702,7 +5228,40 @@ function ajustarCarta_(ficha, a) {
    * existe o estado meio-termo de carta na mão sem Estresse marcado.
    */
   const custo = (para === 'ativas' && estavaLaAtras) ? (Number(carta.custoRecordar) || 0) : 0;
-  const cobrar = custo > 0 && a.cobrarCusto === true;
+
+  /*
+   * MNEMÔNICA (SRD, Vestes do Encantador): "Once per scene, you can recall a
+   * domain card from your vault without paying its Recall Cost."
+   *
+   * ⚠ É OPT-IN, e tem de ser. Gastar sozinha o uso da cena na primeira carta
+   * que a pessoa recordar seria decidir por ela — e uma carta de custo 0 ou
+   * uma troca durante descanso (que já é livre) queimariam o uso à toa. O app
+   * oferece; quem escolhe é quem está na mesa.
+   */
+  let mnemonica = null;
+  if (a.usarMnemonica === true) {
+    const regraMnemonica = (function () {
+      const ativos = (typeof equipamentoAtivoDaFicha_ === 'function') ? equipamentoAtivoDaFicha_(ficha) : [];
+      for (let i = 0; i < ativos.length; i++) {
+        if ((ativos[i] || {}).papel !== 'armadura') continue;
+        const item = (ativos[i] || {}).item || {};
+        const regra = (((item.efeitoEquipamento || {}).recordar) || {}).semCusto ? item : null;
+        if (regra) return { fonte:item.nome || item.id, caracteristica:item.carac || 'Mnemônica',
+          marcaUso:String((((item.efeitoEquipamento || {}).recordar) || {}).marcaUso || '') };
+      }
+      return null;
+    })();
+    if (!regraMnemonica) return { erro:'Este personagem não tem Mnemônica na armadura equipada.' };
+    if (!custo) return { erro:'Esta troca já não custa Estresse — guarde a Mnemônica para quando custar.' };
+    const usada = Math.trunc(Number(((((ficha.contadores || {})[regraMnemonica.marcaUso]) || {}).valor))) || 0;
+    if (!regraMnemonica.marcaUso || usada > 0) return { erro:'Mnemônica já foi usada nesta cena.' };
+    ficha.contadores = ficha.contadores || {};
+    ficha.contadores[regraMnemonica.marcaUso] = { valor:1 };
+    mnemonica = { fonte:regraMnemonica.fonte, caracteristica:regraMnemonica.caracteristica,
+      uso:regraMnemonica.marcaUso, custoEvitado:custo };
+  }
+
+  const cobrar = custo > 0 && a.cobrarCusto === true && !mnemonica;
 
   if (cobrar) {
     const r = ficha.recursos || {};
@@ -4724,7 +5283,11 @@ function ajustarCarta_(ficha, a) {
     custoRecordar: carta.custoRecordar
   };
 
-  if (cobrar) {
+  if (mnemonica) {
+    m.mnemonica = mnemonica;
+    m.aviso = mnemonica.caracteristica + ': "' + carta.nome + '" voltou para a mão sem pagar os ' +
+      custo + ' de Estresse (uma vez por cena).';
+  } else if (cobrar) {
     ficha.recursos.estresseMarcado = (Number(ficha.recursos.estresseMarcado) || 0) + custo;
     m.custoCobrado = custo;
     m.estresseMarcado = ficha.recursos.estresseMarcado;
@@ -4760,6 +5323,50 @@ function ajustarCarta_(ficha, a) {
  * três recargas — recarregar não acumula, e "uma vez por sessão" nunca quis
  * dizer "três vezes de uma vez".
  */
+/**
+ * A FICHA SE ACERTA COM A CENA DA MESA — mesma mecânica da sessão.
+ *
+ * O Mestre encerrou a cena: o número na mesa subiu. Esta ficha, quando abre,
+ * compara com a última cena a que ela reagiu e aplica `fim-da-cena` uma vez.
+ *
+ * ⚠ O NÚMERO NÃO VEM DO CLIENTE, pelo mesmo motivo da sessão: uma tela
+ * desatualizada (ou curiosa) poderia zerar marcadores de cena fora de hora.
+ *
+ * ⚠ E PULAR TRÊS CENAS APLICA O GATILHO UMA VEZ SÓ. Zerar não acumula, e quem
+ * ficou offline por três cenas não deve três zeragens: deve estar zerado.
+ */
+function ajustarCenaDaFicha_(ficha, a) {
+  if (typeof mesaLer_ !== 'function') {
+    return { erro: 'Este servidor não sabe ler a mesa.' };
+  }
+  const mesa = mesaLer_();
+  const daMesa = Math.max(0, Math.trunc(Number((mesa.cena || {}).numero)) || 0);
+  const vista = Math.max(0, Math.trunc(Number(ficha.cenaVista)) || 0);
+
+  if (daMesa <= vista) {
+    return { tipo: 'cena', cena: daMesa, jaEstava: true, contadores: [] };
+  }
+
+  const mexidos = (typeof aplicarGatilhoContadores_ === 'function')
+    ? (aplicarGatilhoContadores_(ficha, 'fim-da-cena') || []) : [];
+  ficha.cenaVista = daMesa;
+
+  return {
+    tipo: 'cena',
+    cena: daMesa,
+    jaEstava: false,
+    contadores: mexidos.map(function (chave) {
+      const def = (typeof CONTADORES === 'object' ? CONTADORES[chave] : null) || {};
+      const agora = (ficha.contadores || {})[chave];
+      return {
+        chave: chave, nome: def.nome || chave,
+        acao: agora ? 'recarregado' : 'zerado',
+        valor: agora ? (agora.valor || 0) : 0
+      };
+    })
+  };
+}
+
 function ajustarSessaoDaFicha_(ficha, a) {
   if (typeof mesaLer_ !== 'function') {
     return { erro: 'Este servidor não sabe ler a mesa.' };
@@ -4961,26 +5568,96 @@ function ajustarMovimentoDeMorte_(ficha, a) {
    * de pé com tudo limpo.
    */
   if (movimento === 'arriscar') {
-    const esperanca = Math.trunc(Number(a.dadoEsperanca));
+    const dadoCru = Math.trunc(Number(a.dadoEsperanca));
     const medo = Math.trunc(Number(a.dadoMedo));
     const valido = (n) => isFinite(n) && n >= 1 && n <= LADOS_DADO_DUALIDADE;
-    if (!valido(esperanca) || !valido(medo)) {
+    if (!valido(dadoCru) || !valido(medo)) {
       return { erro: 'Diga os dois dados da Dualidade (1 a ' + LADOS_DADO_DUALIDADE + ' cada).' };
     }
 
-    // Dados iguais são SUCESSO CRÍTICO — a mesma regra de qualquer jogada.
-    if (esperanca === medo) {
+    /*
+     * ABENÇOADA (SRD, Placa Heroica Sagrada): "Once per long rest, you can
+     * spend any number of Hope before you make the Risk It All death move. You
+     * gain a bonus to the result of your Hope Die equal to the number of Hope
+     * spent."
+     *
+     * ⚠ O BÔNUS NÃO ENTRA NO CRÍTICO — e esta foi a decisão de regra mais
+     * delicada da característica.
+     *
+     * Crítico em Daggerheart é os dois DADOS mostrando o mesmo número, não os
+     * dois totais empatando. Se o bônus contasse aqui, gastar exatamente a
+     * diferença viraria crítico à vontade — "pago 3 Esperanças e limpo TUDO" —
+     * e o texto fala em somar ao RESULTADO DO DADO, não em igualar dados.
+     * Então o crítico olha o dado cru, e o bônus vale para quem ganha e para
+     * quanto se limpa, que é onde a característica existe para ajudar.
+     *
+     * ⚠ E A ESPERANÇA SAI ANTES DO RESULTADO. O livro diz "spend ... before
+     * you make the move": quem gastou e mesmo assim atravessou o véu gastou
+     * do mesmo jeito. Devolver seria transformar um risco em aposta grátis.
+     */
+    let abencoada = null;
+    let pagoAbencoada = null;
+    const gastoAbencoada = Math.max(0, Math.trunc(Number(a.abencoadaEsperancaGasta)) || 0);
+    if (gastoAbencoada > 0) {
+      const regraAbencoada = (function () {
+        const ativos = (typeof equipamentoAtivoDaFicha_ === 'function') ? equipamentoAtivoDaFicha_(ficha) : [];
+        for (let i = 0; i < ativos.length; i++) {
+          if ((ativos[i] || {}).papel !== 'armadura') continue;
+          const item = (ativos[i] || {}).item || {};
+          const regra = (((item.efeitoEquipamento || {}).movimentoDeMorte) || {}).abencoada || null;
+          if (regra) return { fonte:item.nome || item.id, caracteristica:item.carac || 'Abençoada', regra:regra };
+        }
+        return null;
+      })();
+      if (!regraAbencoada) return { erro:'Este personagem não tem Abençoada na armadura equipada.' };
+      const chaveUsoAbencoada = String(regraAbencoada.regra.marcaUso || '');
+      const usada = Math.trunc(Number(((((ficha.contadores || {})[chaveUsoAbencoada]) || {}).valor))) || 0;
+      if (!chaveUsoAbencoada || usada > 0) {
+        return { erro:'Abençoada já foi usada desde o último descanso longo.' };
+      }
+      const temEsperanca = Math.max(0, Number(r.esperanca) || 0);
+      if (gastoAbencoada > temEsperanca) {
+        return { erro:'Abençoada: você tem ' + temEsperanca + ' de Esperança e quis gastar ' + gastoAbencoada + '.' };
+      }
+      pagoAbencoada = gastarEsperanca_(ficha, gastoAbencoada, 'Abençoada');
+      if (pagoAbencoada.erro) return pagoAbencoada;
+      ficha.contadores = ficha.contadores || {};
+      ficha.contadores[chaveUsoAbencoada] = { valor:1 };
+      abencoada = { fonte:regraAbencoada.fonte, caracteristica:regraAbencoada.caracteristica,
+        uso:chaveUsoAbencoada, esperancaGasta:gastoAbencoada,
+        dadoCru:dadoCru, dadoComBonus:dadoCru + gastoAbencoada };
+    }
+
+    const esperanca = dadoCru + gastoAbencoada;
+
+    // Dados iguais são SUCESSO CRÍTICO — a mesma regra de qualquer jogada, e
+    // por isso a comparação é entre os DADOS, não entre os totais.
+    if (dadoCru === medo) {
       ficha.inconsciente = false;
       r.pontosDeVidaMarcados = 0;
       r.estresseMarcado = 0;
-      return {
+      return anexarReacoesDeEsperanca_({
         tipo: 'morte', movimento: 'arriscar', resultado: 'critico',
-        dadoEsperanca: esperanca, dadoMedo: medo,
-        alerta: 'Crítico: de pé, com os Pontos de Vida e o Estresse todos limpos.'
-      };
+        dadoEsperanca: dadoCru, dadoMedo: medo, abencoada: abencoada,
+        alerta: 'Crítico: de pé, com os Pontos de Vida e o Estresse todos limpos.' +
+          (abencoada ? ' (A Esperança gasta na Abençoada não voltou — o crítico olha os dados.)' : '')
+      }, pagoAbencoada);
     }
 
-    if (medo > esperanca) {
+    /*
+     * ⚠ EMPATE NO TOTAL NÃO É VITÓRIA — e este caso só existe por causa da
+     * Abençoada.
+     *
+     * Sem bônus, dados iguais já saíram acima como crítico, e aqui só chegam
+     * números diferentes: `>=` e `>` dariam no mesmo. COM bônus, dá para o
+     * total empatar sem os dados empatarem (dado 4 + 2 contra Medo 6), e o
+     * livro é claro sobre a condição de ficar de pé: "if your Hope Die is
+     * HIGHER". Empatado não é maior.
+     *
+     * É interpretação minha, e está anotada como tal: o SRD não previu o
+     * empate de totais porque, sem a Abençoada, ele não acontece.
+     */
+    if (medo >= esperanca) {
       if (typeof normalizarTransformacao_ === 'function' && normalizarTransformacao_((ficha || {}).transformacao) === 'reanimado' && a.usarNaoFicaMorto === true) {
         const escolhasT = ficha.transformacao.escolhas || (ficha.transformacao.escolhas = {});
         const perdidos = Math.max(0, Math.trunc(Number(escolhasT.pvPermanentesPerdidos)) || 0);
@@ -5004,12 +5681,13 @@ function ajustarMovimentoDeMorte_(ficha, a) {
       }
       ficha.inconsciente = false;
       const fim = encerrarFicha_(ficha, 'veu', nota);
-      return {
+      return anexarReacoesDeEsperanca_({
         tipo: 'morte', movimento: 'arriscar', resultado: 'veu',
-        dadoEsperanca: esperanca, dadoMedo: medo, encerrada: fim,
+        dadoEsperanca: esperanca, dadoMedo: medo, encerrada: fim, abencoada: abencoada,
         alerta: 'O Medo veio mais alto (' + medo + ' contra ' + esperanca + '): ' +
-          ((ficha.identidade || {}).nome || 'o personagem') + ' atravessa o véu.'
-      };
+          ((ficha.identidade || {}).nome || 'o personagem') + ' atravessa o véu.' +
+          (abencoada ? ' A Esperança gasta na Abençoada não volta — ela sai antes da jogada.' : '')
+      }, pagoAbencoada);
     }
 
     /*
@@ -5044,14 +5722,16 @@ function ajustarMovimentoDeMorte_(ficha, a) {
     r.estresseMarcado = (Number(r.estresseMarcado) || 0) - paraEstresse;
 
     const sobrou = esperanca - (paraPV + paraEstresse);
-    return {
+    return anexarReacoesDeEsperanca_({
       tipo: 'morte', movimento: 'arriscar', resultado: 'esperanca',
-      dadoEsperanca: esperanca, dadoMedo: medo,
+      dadoEsperanca: esperanca, dadoMedo: medo, abencoada: abencoada,
       limpou: { pontosDeVida: paraPV, estresse: paraEstresse },
       alerta: 'A Esperança veio mais alta (' + esperanca + ' contra ' + medo + '): de pé, com ' +
-        paraPV + ' de Pontos de Vida e ' + paraEstresse + ' de Estresse limpos.',
+        paraPV + ' de Pontos de Vida e ' + paraEstresse + ' de Estresse limpos.' +
+        (abencoada ? ' Abençoada: o dado deu ' + abencoada.dadoCru + ' e ' +
+          abencoada.esperancaGasta + ' de Esperança levou a ' + abencoada.dadoComBonus + '.' : ''),
       aviso: sobrou ? ('Sobraram ' + sobrou + ' do dado sem uso — as trilhas não tinham mais o que limpar.') : ''
-    };
+    }, pagoAbencoada);
   }
 
   return { erro: 'Movimento de morte desconhecido: "' + String(a.movimento) + '".' };

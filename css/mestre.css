@@ -964,6 +964,36 @@
   gap: var(--e2);
 }
 
+/*
+ * O MURAL DE RECADOS fica no topo da cena, antes dos adversários: é notícia
+ * que chegou durante o combate e que perde o sentido depois dele. A borda
+ * lateral marca que veio de fora — não é mais um controle do Mestre.
+ */
+.encontro__recados {
+  padding: var(--e2) var(--e3);
+  border-left: 3px solid var(--cor-ouro);
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+}
+
+.encontro__recadosTitulo {
+  margin: 0 0 var(--e1);
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-sm);
+  color: var(--cor-titulo);
+}
+
+.encontro__recadosLista {
+  margin: 0;
+  padding-left: var(--e3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+}
+
+.encontro__recado { line-height: 1.4; }
+.encontro__recadoDe { color: var(--cor-titulo); }
+
 .encontro__cartao {
   display: flex;
   flex-direction: column;

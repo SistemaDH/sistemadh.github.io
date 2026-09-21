@@ -24,7 +24,25 @@ const LIMITES = {
   ITENS_ARRAY: 500,
   CHAVES_OBJETO: 200,
   TAMANHO_TEXTO: 5000,
-  TAMANHO_CHAVE: 60,
+  /*
+   * ⚠ ERAM 60, E O PRÓPRIO CATÁLOGO NÃO CABIA.
+   *
+   * Nove chaves de contador do app passam de 60 caracteres — entre elas as do
+   * Impenetrável, do Absorvente, do Caminhante Fantasma e das balas do
+   * revólver. `sanitizar_` cortava a chave no limite, e a chave cortada é
+   * OUTRA chave: o contador virava desconhecido e a gravação inteira da ficha
+   * era recusada. Ou seja: usar o Impenetrável numa mesa de verdade dava erro
+   * ao salvar.
+   *
+   * Nenhum teste via, porque os testes de backend mexem na ficha em memória e
+   * as baterias de tela ofereciam a caixa sem chegar a aplicá-la. Achei ao
+   * ligar a Resplandecente, cuja chave tem 62.
+   *
+   * 120 dá folga para a próxima armadura de nome comprido, e o teste
+   * "nenhuma chave do catálogo passa do limite" existe para avisar antes da
+   * mesa.
+   */
+  TAMANHO_CHAVE: 120,
   TAMANHO_NOME: 40
 };
 
@@ -167,7 +185,16 @@ function sanitizar_(valor, profundidade) {
     const saida = {};
     const chaves = Object.keys(valor).slice(0, LIMITES.CHAVES_OBJETO);
     chaves.forEach(function (chave) {
-      const k = String(chave).slice(0, LIMITES.TAMANHO_CHAVE);
+      /*
+       * ⚠ CHAVE COMPRIDA DEMAIS É DESCARTADA, NÃO CORTADA.
+       *
+       * Cortar transforma a chave em outra chave: duas entradas diferentes
+       * podem virar a mesma, e um contador do catálogo vira "desconhecido".
+       * Perder o campo é ruim; renomeá-lo em silêncio é pior.
+       */
+      const bruta = String(chave);
+      if (bruta.length > LIMITES.TAMANHO_CHAVE) return;
+      const k = bruta;
       if (!k) return;
       saida[k] = sanitizar_(valor[chave], profundidade + 1);
     });

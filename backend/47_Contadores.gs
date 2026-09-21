@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 190 cartas e características mandam
+ *  O problema que este arquivo resolve: 197 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -186,6 +186,13 @@ const CONTADORES = {
   "estado:carta:codex:livro-do-ronin-transformacao": { origem: "carta-dominio", refId: "codex-livro-do-ronin", nome: "Transformação", rotulo: "ativa", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
   "uso:carta:codex:livro-do-ronin-enervacao": { origem: "carta-dominio", refId: "codex-livro-do-ronin", nome: "Enervação Eterna", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
   "uso:equipamento:armadura-t3-armadura-de-escamas-de-dragao:impenetravel": { origem: "equipamento", refId: "armadura-t3-armadura-de-escamas-de-dragao", nome: "Impenetrável", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:equipamento:armadura-t2-traje-de-fio-de-tempestade:absorvente": { origem: "equipamento", refId: "armadura-t2-traje-de-fio-de-tempestade", nome: "Absorvente", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-da-cena"], recarregaEm: [] },
+  "uso:equipamento:armadura-t2-placa-solar-dourada:resplandecente": { origem: "equipamento", refId: "armadura-t2-placa-solar-dourada", nome: "Resplandecente", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-da-cena"], recarregaEm: [] },
+  "uso:equipamento:armadura-t3-manto-de-cloverweave:favorecido-pela-fortuna": { origem: "equipamento", refId: "armadura-t3-manto-de-cloverweave", nome: "Favorecido pela Fortuna", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-da-cena"], recarregaEm: [] },
+  "uso:equipamento:armadura-t2-vestes-do-encantador:mnemonica": { origem: "equipamento", refId: "armadura-t2-vestes-do-encantador", nome: "Mnemônica", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-da-cena"], recarregaEm: [] },
+  "estado:equipamento:armadura-t4-arnes-ressonante:vitreo": { origem: "equipamento", refId: "armadura-t4-arnes-ressonante", nome: "Vítreo", rotulo: "ativo", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
+  "uso:equipamento:armadura-t4-mortalha-de-darkweave:caminhante-fantasma": { origem: "equipamento", refId: "armadura-t4-mortalha-de-darkweave", nome: "Caminhante Fantasma", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso"], recarregaEm: [] },
+  "uso:equipamento:armadura-t4-placa-heroica-sagrada:abencoada": { origem: "equipamento", refId: "armadura-t4-placa-heroica-sagrada", nome: "Abençoada", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
   "estado:equipamento:campanha-colosso-das-terras-aridas-revolver:balas-gastas": { origem: "equipamento", refId: "campanha-colosso-das-terras-aridas-revolver", nome: "Seis balas", rotulo: "balas gastas", tipo: "marcadores", maximo: {"tipo":"fixo","valor":6}, zeraEm: ["manual"], recarregaEm: [] },
   "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t2:balas-gastas": { origem: "equipamento", refId: "campanha-colosso-das-terras-aridas-revolver-t2", nome: "Seis balas", rotulo: "balas gastas", tipo: "marcadores", maximo: {"tipo":"fixo","valor":6}, zeraEm: ["manual"], recarregaEm: [] },
   "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t3:balas-gastas": { origem: "equipamento", refId: "campanha-colosso-das-terras-aridas-revolver-t3", nome: "Seis balas", rotulo: "balas gastas", tipo: "marcadores", maximo: {"tipo":"fixo","valor":6}, zeraEm: ["manual"], recarregaEm: [] },
@@ -380,6 +387,13 @@ const CONTADOR_ALIASES = {
   "estado:carta:codex:livro-do-ronin-transformacao": ["Transformação"],
   "uso:carta:codex:livro-do-ronin-enervacao": ["Enervação Eterna"],
   "uso:equipamento:armadura-t3-armadura-de-escamas-de-dragao:impenetravel": ["Impenetrável"],
+  "uso:equipamento:armadura-t2-traje-de-fio-de-tempestade:absorvente": ["Absorvente"],
+  "uso:equipamento:armadura-t2-placa-solar-dourada:resplandecente": ["Resplandecente"],
+  "uso:equipamento:armadura-t3-manto-de-cloverweave:favorecido-pela-fortuna": ["Favorecido pela Fortuna"],
+  "uso:equipamento:armadura-t2-vestes-do-encantador:mnemonica": ["Mnemônica"],
+  "estado:equipamento:armadura-t4-arnes-ressonante:vitreo": ["Vítreo"],
+  "uso:equipamento:armadura-t4-mortalha-de-darkweave:caminhante-fantasma": ["Caminhante Fantasma"],
+  "uso:equipamento:armadura-t4-placa-heroica-sagrada:abencoada": ["Abençoada"],
   "estado:equipamento:campanha-colosso-das-terras-aridas-revolver:balas-gastas": ["Seis balas"],
   "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t2:balas-gastas": ["Seis balas"],
   "estado:equipamento:campanha-colosso-das-terras-aridas-revolver-t3:balas-gastas": ["Seis balas"],
@@ -804,6 +818,35 @@ function contadorEDaFicha_(def, ficha, refs, chave) {
  * Devolve um objeto { idDaCondicao: nomeDoContador } — o nome serve para o
  * aviso na tela dizer de onde veio a proteção.
  */
+/**
+ * AS CONDIÇÕES QUE ESTA FICHA NÃO PODE RECEBER — de todas as fontes.
+ *
+ * Eram só as de contador (o Dado de Determinação impede Vulnerável e Restrito
+ * enquanto está na ficha). O EQUIPAMENTO também impede: a Armadura de Talas
+ * Wyrdwood diz "You can't be Restrained" — permanente enquanto vestida, sem
+ * contador nenhum por trás.
+ *
+ * ⚠ As duas fontes se somam em vez de uma substituir a outra: quem está
+ * Determinado VESTINDO a Wyrdwood tem as duas proteções, e tirar a armadura no
+ * meio da cena não devolve a condição que o Dado ainda impede.
+ */
+function condicoesImpedidasDaFicha_(ficha) {
+  const saida = (typeof condicoesImpedidasPorContador_ === 'function')
+    ? condicoesImpedidasPorContador_(ficha) : {};
+  const ativos = (typeof equipamentoAtivoDaFicha_ === 'function') ? equipamentoAtivoDaFicha_(ficha) : [];
+  for (let i = 0; i < ativos.length; i++) {
+    const item = (ativos[i] || {}).item || {};
+    const lista = ((item.efeitoEquipamento || {}).impedeCondicoes) || null;
+    if (!Array.isArray(lista)) continue;
+    for (let k = 0; k < lista.length; k++) {
+      // O nome que vai para o aviso é o da CARACTERÍSTICA, não o do item: é
+      // ela que a pessoa lê na ficha e procura no livro.
+      if (!saida[lista[k]]) saida[lista[k]] = item.carac || item.nome || 'Equipamento';
+    }
+  }
+  return saida;
+}
+
 function condicoesImpedidasPorContador_(ficha) {
   const saida = {};
   const contadores = (ficha && ficha.contadores) || {};

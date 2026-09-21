@@ -47,6 +47,27 @@ import { icone } from '../componentes/icone.js';
 const TETO_TRILHA = 12;
 
 /*
+ * OS NÚMEROS DERIVADOS QUE SABEM EXPLICAR DE ONDE VÊM.
+ *
+ * ⚠ MORA NO ESCOPO DO MÓDULO pelo MESMO motivo do TETO_TRILHA acima, e eu
+ * aprendi isso de novo do jeito difícil: com a lista declarada lá embaixo, a
+ * ficha desenhou antes de a declaração ser alcançada e a primeira pintura
+ * estourou com "Cannot access 'CONTAS_DA_FICHA' before initialization" — o
+ * E102 em pessoa. `onde` recebe a ficha porque cada número mora num canto
+ * diferente dela (defesas, recursos).
+ */
+const CONTAS_DA_FICHA = [
+  { chave: 'evasao', titulo: 'Evasão', onde: (f) => (f.defesas || {}).evasao },
+  { chave: 'pontuacaoArmadura', titulo: 'Pontuação de Armadura', onde: (f) => (f.defesas || {}).pontuacaoArmadura },
+  { chave: 'limiarMaior', titulo: 'Limiar Maior', onde: (f) => (f.defesas || {}).limiarMaior },
+  { chave: 'limiarGrave', titulo: 'Limiar Severo', onde: (f) => (f.defesas || {}).limiarGrave },
+  { chave: 'pontosDeVidaMaximos', titulo: 'Pontos de Vida (máximo)', onde: (f) => (f.recursos || {}).pontosDeVidaMaximos },
+  { chave: 'estresseMaximo', titulo: 'Estresse (máximo)', onde: (f) => (f.recursos || {}).estresseMaximo }
+];
+
+const comSinal = (n) => (n > 0 ? `+${n}` : String(n));
+
+/*
  * As seis siglas, escritas e não calculadas.
  *
  * `slice(0, 3)` daria as seis certas por acaso hoje, e passaria a dar errado
@@ -904,6 +925,38 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       ])
     ]);
 
+    /* --- Abençoada (Placa Heroica Sagrada) -------------------------------- *
+     *
+     * "Uma vez por descanso longo, antes de fazer o movimento de morte
+     * Arriscar Tudo, você pode gastar qualquer quantidade de Esperança e somar
+     * esse valor ao resultado do Dado de Esperança."
+     *
+     * ⚠ O CAMPO SÓ EXISTE QUANDO O SERVIDOR VAI ACEITAR: armadura vestida, uso
+     * ainda na mão e Esperança na ficha. Uma caixa que promete e depois volta
+     * atrás é pior que caixa nenhuma — e aqui o preço é a morte do
+     * personagem, não um Estresse.
+     *
+     * ⚠ E O CAMPO VEM ANTES DOS DADOS na tela, na mesma ordem da regra: gastar
+     * é uma aposta feita às cegas, não um conserto depois de ver o resultado.
+     */
+    const esperancaNaMao = Math.max(0, Number(r.esperanca) || 0);
+    const usoAbencoada = Number((((ficha.contadores || {})
+      ['uso:equipamento:armadura-t4-placa-heroica-sagrada:abencoada']) || {}).valor) || 0;
+    const temAbencoada = temCaracteristicaDeEquipamento_(ficha, 'Abençoada') &&
+      !usoAbencoada && esperancaNaMao > 0;
+    const gastoAbencoada = temAbencoada
+      ? el('input', semCorretor({
+        type: 'number', class: 'campo__entrada ficha__precoCampo',
+        min: '0', max: String(esperancaNaMao), step: '1', inputmode: 'numeric',
+        'aria-label': 'Esperança a gastar na Abençoada'
+      }))
+      : null;
+    const avisoAbencoada = temAbencoada ? el('p', { class: 'texto-xs texto-fraco' }) : null;
+    const lerGastoAbencoada = () => {
+      if (!gastoAbencoada) return 0;
+      return Math.min(esperancaNaMao, Math.max(0, Math.trunc(Number(gastoAbencoada.value)) || 0));
+    };
+
     /*
      * O VEREDITO APARECE ANTES DE CONFIRMAR.
      *
@@ -915,21 +968,48 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const lerArriscar = () => {
       const e = Number(dadoEsp.value);
       const m = Number(dadoMedo.value);
+      const g = lerGastoAbencoada();
+      const total = e + g;
+      if (avisoAbencoada) {
+        avisoAbencoada.textContent = g > 0
+          ? `${g} de Esperança sai da ficha antes da jogada e não volta, nem se o Medo vier mais alto. ` +
+            `O Dado de Esperança conta como ${e ? total : `o que saiu +${g}`}.`
+          : `Você tem ${esperancaNaMao} de Esperança. Uma vez por descanso longo.`;
+      }
       if (!e || !m) { veredito.textContent = ''; reparticao.hidden = true; return; }
+      /*
+       * ⚠ O CRÍTICO OLHA O DADO CRU, não o total. Se o bônus contasse aqui,
+       * gastar exatamente a diferença viraria crítico à vontade — e a regra
+       * fala em somar ao RESULTADO DO DADO, não em igualar dados. A tela diz
+       * o mesmo que o servidor faz; discordar dele aqui seria mentir na hora
+       * mais cara.
+       */
       if (e === m) {
-        veredito.textContent = 'Crítico: de pé, com Pontos de Vida e Estresse todos limpos.';
+        veredito.textContent = 'Crítico: de pé, com Pontos de Vida e Estresse todos limpos.'
+          + (g > 0 ? ` A Esperança gasta na Abençoada (${g}) não volta: o crítico olha os dados.` : '');
         reparticao.hidden = true;
-      } else if (m > e) {
-        veredito.textContent = `O Medo veio mais alto (${m} contra ${e}): ${nome} atravessa o véu.`;
+      } else if (m >= total) {
+        /*
+         * Empate de totais NÃO é vitória: a regra pede o Dado de Esperança
+         * MAIS ALTO. Sem a Abençoada este caso não existe — empate de dados
+         * já saiu acima como crítico.
+         */
+        veredito.textContent = g > 0
+          ? `O Medo veio ${m === total ? 'igual' : 'mais alto'} (${m} contra ${e}+${g}): ${nome} atravessa o véu.`
+          : `O Medo veio mais alto (${m} contra ${e}): ${nome} atravessa o véu.`;
         reparticao.hidden = true;
       } else {
-        veredito.textContent = `A Esperança veio mais alta (${e} contra ${m}): de pé. Você escolhe como repartir os ${e} entre as duas trilhas.`;
+        veredito.textContent = g > 0
+          ? `A Esperança veio mais alta (${e}+${g} = ${total} contra ${m}): de pé. Você escolhe como repartir os ${total} entre as duas trilhas.`
+          : `A Esperança veio mais alta (${e} contra ${m}): de pé. Você escolhe como repartir os ${e} entre as duas trilhas.`;
         reparticao.hidden = false;
-        paraPV.max = String(Math.min(e, Number(r.pontosDeVidaMarcados) || 0));
-        paraEstresse.max = String(Math.min(e, Number(r.estresseMarcado) || 0));
+        paraPV.max = String(Math.min(total, Number(r.pontosDeVidaMarcados) || 0));
+        paraEstresse.max = String(Math.min(total, Number(r.estresseMarcado) || 0));
       }
     };
-    [dadoEsp, dadoMedo, paraPV, paraEstresse].forEach((c) => c.addEventListener('input', lerArriscar));
+    [dadoEsp, dadoMedo, paraPV, paraEstresse, gastoAbencoada].filter(Boolean)
+      .forEach((c) => c.addEventListener('input', lerArriscar));
+    if (avisoAbencoada) lerArriscar();
 
     /*
      * ⚠ OS RÓTULOS DIZEM QUE O DADO É SEU.
@@ -949,6 +1029,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       'limpando o valor do dado entre Pontos de Vida e Estresse. Medo mais alto: ' +
       'atravessa o véu. Iguais: crítico, tudo limpo.',
       [
+        ...(temAbencoada ? [el('div', { class: 'ficha__morteAbencoada' }, [
+          rotulado('Abençoada · Esperança a gastar antes de rolar', gastoAbencoada),
+          avisoAbencoada
+        ])] : []),
         el('div', { class: 'ficha__precos' }, [
           el('label', { class: 'ficha__preco' }, [
             el('span', { class: 'texto-xs texto-fraco', texto: 'Você tirou · Esperança' }), dadoEsp
@@ -964,6 +1048,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         movimento: 'arriscar',
         dadoEsperanca: Number(dadoEsp.value),
         dadoMedo: Number(dadoMedo.value),
+        abencoadaEsperancaGasta: lerGastoAbencoada(),
         reparticao: {
           pontosDeVida: Number(paraPV.value) || 0,
           estresse: Number(paraEstresse.value) || 0
@@ -1151,7 +1236,27 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     enviar([{ tipo: 'sessao' }]);
   }
 
+  /*
+   * E A CENA CHEGA PELA MESMA PORTA.
+   *
+   * O Mestre encerrou a cena no painel dele: o número subiu na mesa. Esta
+   * ficha compara com a última cena a que ela reagiu e aplica o gatilho uma
+   * vez — com o token DESTE jogador, porque o Mestre não escreve na ficha de
+   * ninguém. Quem estava offline acerta quando volta.
+   *
+   * O botão "A cena acabou" da dobra Marcadores continua existindo: nem toda
+   * mesa tem o Mestre com o app aberto, e uma cena pode terminar só para um
+   * personagem.
+   */
+  function acertarComACenaDaMesa() {
+    const daMesa = Number(obterEstado().cenaDaMesa) || 0;
+    const vista = Number((p.ficha || {}).cenaVista) || 0;
+    if (!daMesa || daMesa <= vista) return;
+    enviar([{ tipo: 'cena' }]);
+  }
+
   acertarComASessaoDaMesa();
+  acertarComACenaDaMesa();
 
   /* ======================================================================== *
    *  O BLOCO DA FICHA DE PAPEL
@@ -1186,6 +1291,29 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
   function temCaracteristica_(ficha, nome) {
     const alvo = dados.chave(nome);
     return ((ficha || {}).caracteristicas || []).some((c) => dados.chave((c || {}).nome) === alvo);
+  }
+
+  /*
+   * ⚠ CARACTERÍSTICA DE EQUIPAMENTO NÃO MORA EM ficha.caracteristicas.
+   *
+   * Aquela lista é origem + classe + transformação, e só. O Impenetrável, que
+   * é da Armadura de Escamas de Dragão, era procurado lá desde sempre —
+   * `temCaracteristica_(ficha, 'Impenetrável')` NUNCA foi verdadeiro, e a
+   * caixa que oferece a reação nunca chegou a ser desenhada. O servidor
+   * aceitava `usarImpenetravel` o tempo todo; a tela é que não perguntava.
+   *
+   * Achei isso ao pendurar a Forrada no mesmo gancho. Aqui a pergunta é feita
+   * a quem tem a resposta: as peças equipadas.
+   */
+  function temCaracteristicaDeEquipamento_(ficha, nome) {
+    const alvo = dados.chave(nome);
+    const eq = (ficha || {}).equipamento || {};
+    const pecas = [
+      catalogo.acharArmadura(eq.armadura),
+      catalogo.acharArma(eq.primaria),
+      catalogo.acharArma(eq.secundaria)
+    ];
+    return pecas.some((p) => p && dados.chave(((p.caracteristica || {}).nome) || p.carac || '') === alvo);
   }
 
   /**
@@ -1267,8 +1395,28 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const paMax = Math.max(0, Number(defesasDano.pontuacaoArmadura) || 0);
     const paMarcados = Math.max(0, Number(recursosDano.armaduraMarcada) || 0);
     const usarArmadura = el('input', { type: 'checkbox', disabled: !paMax || paMarcados >= paMax });
-    const temImpenetravel = temCaracteristica_(ficha, 'Impenetrável');
+    const temImpenetravel = temCaracteristicaDeEquipamento_(ficha, 'Impenetrável');
     const usarImpenetravel = temImpenetravel ? el('input', { type:'checkbox' }) : null;
+    const temForrada = temCaracteristicaDeEquipamento_(ficha, 'Forrada');
+    const usarForrada = temForrada ? el('input', { type:'checkbox' }) : null;
+    /*
+     * O Absorvente só aparece com o uso DISPONÍVEL e com Ponto marcado para
+     * limpar: uma caixa que o servidor vai recusar é pior que caixa nenhuma —
+     * ela promete e depois volta atrás.
+     */
+    const usoAbsorvente = Number((((ficha.contadores || {})
+      ['uso:equipamento:armadura-t2-traje-de-fio-de-tempestade:absorvente']) || {}).valor) || 0;
+    const temAbsorvente = temCaracteristicaDeEquipamento_(ficha, 'Absorvente') &&
+      !usoAbsorvente && paMarcados > 0;
+    const usarAbsorvente = temAbsorvente ? el('input', { type:'checkbox' }) : null;
+    /*
+     * O Vítreo pede DOIS Pontos livres e cobra depois: os limiares ficam 5 mais
+     * baixos até alguém reparar a armadura num descanso. A caixa diz as duas
+     * coisas — quem só lê "nega o dano" escolhe sem saber o preço.
+     */
+    const temVitreo = temCaracteristicaDeEquipamento_(ficha, 'Vítreo') &&
+      paMax > 0 && (paMax - paMarcados) >= 2;
+    const usarVitreo = temVitreo ? el('input', { type:'checkbox' }) : null;
     const linhaMarigold = (Array.isArray(ficha.inventario) ? ficha.inventario : [])
       .find((x) => x && x.id === 'consumivel-59' && Math.max(0, Number(x.qtd) || 0) > 0);
     const itemMarigold = linhaMarigold ? catalogo.acharItem('consumivel-59') : null;
@@ -1279,6 +1427,29 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const itemAnelResistencia = linhaAnelResistencia ? catalogo.acharItem('loot-32') : null;
     const usarAnelResistencia = itemAnelResistencia && itemAnelResistencia.efeitoSaquePassivo
       ? el('input', { type:'checkbox' }) : null;
+
+    /*
+     * AMALDIÇOADA (Placa Sombria): o d4 é perguntado aqui porque é aqui que se
+     * sabe quantos Pontos de Vida entraram — e é esse número que o atacante
+     * marca em Estresse.
+     *
+     * ⚠ O CAMPO FICA VAZIO POR PADRÃO E NÃO TRAVA NADA. Quem esqueceu o dado
+     * ainda aplica o dano; o aviso diz que o d4 ficou faltando. Recusar a
+     * marcação de PV por causa de um dado esquecido trocaria um esquecimento
+     * por um travamento, no pior momento possível.
+     */
+    const temAmaldicoada = temCaracteristicaDeEquipamento_(ficha, 'Amaldiçoada');
+    const dadoAmaldicoada = temAmaldicoada ? el('input', semCorretor({
+      type:'number', class:'campo__entrada', min:'1', max:'4', step:'1',
+      inputmode:'numeric', placeholder:'1 a 4'
+    })) : null;
+    const blocoAmaldicoada = temAmaldicoada ? el('label', { class:'campo' }, [
+      el('span', { class:'campo__rotulo', texto:'Amaldiçoada · o d4 que você rolou' }),
+      dadoAmaldicoada,
+      el('span', { class:'texto-xs texto-fraco', texto:
+        'Se marcar Pontos de Vida e o d4 der 4, o atacante marca a mesma quantidade de ' +
+        'Estresse — o aviso vai para o painel do Mestre, que aplica na trilha do adversário.' })
+    ]) : null;
 
     const eqAparar = ficha.equipamento || {};
     const armaAparar = [eqAparar.primaria, eqAparar.secundaria].filter(Boolean)
@@ -1318,6 +1489,9 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       usarArmadura.disabled = ativo || !paMax || paMarcados >= paMax;
       if (ativo) usarArmadura.checked = false;
       if (usarImpenetravel) { usarImpenetravel.disabled = ativo; if (ativo) usarImpenetravel.checked = false; }
+      if (usarForrada) { usarForrada.disabled = ativo; if (ativo) usarForrada.checked = false; }
+      if (usarAbsorvente) { usarAbsorvente.disabled = ativo; if (ativo) usarAbsorvente.checked = false; }
+      if (usarVitreo) { usarVitreo.disabled = ativo; if (ativo) usarVitreo.checked = false; }
       if (usarAparar) { usarAparar.disabled = ativo; if (ativo) usarAparar.checked = false; }
       if (usarAnelResistencia) { usarAnelResistencia.disabled = ativo; if (ativo) usarAnelResistencia.checked = false; }
       escolhas.forEach((x) => { x.caixa.disabled = ativo; if (ativo) x.caixa.checked = false; });
@@ -1355,13 +1529,40 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       el('label', { class: 'criacao__alternador' }, [
         usarArmadura,
         el('span', { texto: paMax
-          ? `Marcar 1 Ponto de Armadura para reduzir a gravidade (${Math.max(0, paMax - paMarcados)} disponível${Math.max(0, paMax - paMarcados) === 1 ? '' : 'is'})`
+          /*
+           * "disponíveis", não "disponívelis". O plural era montado colando
+           * "is" no fim de "disponível", e a palavra não faz plural assim —
+           * saía "5 disponívelis" na janela de dano. Apareceu num despejo de
+           * teste desta tela; ninguém tinha lido a frase com mais de 1 PA.
+           */
+          ? `Marcar 1 Ponto de Armadura para reduzir a gravidade (${Math.max(0, paMax - paMarcados)} ${Math.max(0, paMax - paMarcados) === 1 ? 'disponível' : 'disponíveis'})`
           : 'Sem Pontos de Armadura disponíveis para mitigação' })
       ]),
       usarImpenetravel ? el('label', { class:'criacao__alternador' }, [
         usarImpenetravel,
         el('span', { texto:'Impenetrável — se este dano marcaria seu último PV, marque 1 Estresse em vez dele (1× por descanso)' })
       ]) : null,
+      /*
+       * A FRASE DIZ "depois da Armadura" porque é ali que a regra olha.
+       *
+       * Quem levou dano Maior e marcou 1 PA está, agora, diante de dano Menor
+       * — e a Forrada vale. Sem essa meia linha, a pessoa lê "dano Menor",
+       * vê "Maior" no golpe que tomou e não marca a caixa que resolveria.
+       */
+      usarForrada ? el('label', { class:'criacao__alternador' }, [
+        usarForrada,
+        el('span', { texto:'Forrada — marcar 1 Estresse para anular dano Menor (a faixa conta depois da Armadura)' })
+      ]) : null,
+      usarAbsorvente ? el('label', { class:'criacao__alternador' }, [
+        usarAbsorvente,
+        el('span', { texto:'Absorvente — limpar 1 Ponto de Armadura (só contra dano mágico, 1× por cena)' })
+      ]) : null,
+      usarVitreo ? el('label', { class:'criacao__alternador' }, [
+        usarVitreo,
+        el('span', { texto:'Vítreo — marcar 2 Pontos de Armadura para negar dano Severo ou maior; ' +
+          'depois disso seus limiares ficam 5 mais baixos até reparar a armadura num descanso' })
+      ]) : null,
+      blocoAmaldicoada,
       escolhas.length ? el('div', { class: 'pilha' }, [
         el('strong', { texto: 'Reações ao dano' }),
         ...escolhas.map((x) => x.linha)
@@ -1385,11 +1586,17 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
             tipo: 'dano', dano: n, tipoDeDano: tipo.value,
             usarArmadura: !usarEspelho && usarArmadura.checked,
             usarImpenetravel: !usarEspelho && !!(usarImpenetravel && usarImpenetravel.checked),
+            usarForrada: !usarEspelho && !!(usarForrada && usarForrada.checked),
+            usarAbsorvente: !usarEspelho && !!(usarAbsorvente && usarAbsorvente.checked),
+            usarVitreo: !usarEspelho && !!(usarVitreo && usarVitreo.checked),
             usarEspelhoMarigold: usarEspelho,
             usarAnelResistencia: usarAnel,
             ataqueBemSucedido: usarAnel,
             reacoes
           };
+          if (dadoAmaldicoada && String(dadoAmaldicoada.value || '').trim()) {
+            pedidoDano.amaldicoadaDado = Math.trunc(Number(dadoAmaldicoada.value));
+          }
           const tocadoDoEsplendor = conteudo.querySelector('[data-l9-tocado-do-esplendor="1"]');
           if (!usarEspelho && tocadoDoEsplendor && tocadoDoEsplendor.value) {
             pedidoDano.tocadoDoEsplendor = tocadoDoEsplendor.value;
@@ -1434,21 +1641,22 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     return el('section', { class: 'papel' }, [
       trilhaDePapel({
         chave: 'pontosDeVidaMarcados', rotulo: 'PV', nomeCompleto: 'Pontos de Vida',
+        conta: contaDe(ficha, 'pontosDeVidaMaximos'),
         classe: 'pv', marcados: r.pontosDeVidaMarcados || 0, total: r.pontosDeVidaMaximos || 0
       }),
       trilhaDePapel({
         chave: 'estresseMarcado', rotulo: 'Estr.', nomeCompleto: 'Estresse',
-        verbete: 'estresse',
+        verbete: 'estresse', conta: contaDe(ficha, 'estresseMaximo'),
         classe: 'estresse', marcados: r.estresseMarcado || 0, total: r.estresseMaximo || 0
       }),
-      linhaDeDefesas(r, d),
+      linhaDeDefesas(ficha, r, d),
       blocoDeReacoesDeEquipamento_(ficha),
       blocoDeReacoesDeConsumivel_(ficha),
       faixa('Dano e Vida'),
       el('p', { class: 'papel__nota' }, textoAnotado(
         'Compare o dano recebido com estes números — a faixa em que ele cai diz ' +
         'quantos PV marcar.')),
-      faixaDeLimiares(d),
+      faixaDeLimiares(ficha, d),
       el('button', {
         type: 'button', class: 'btn btn--fantasma',
         onClick: () => abrirDanoRecebido(ficha)
@@ -2191,6 +2399,29 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     return extras;
   }
 
+  /*
+   * O QUE SOMA NO ATAQUE DESTA ARMA — que não é a mesma coisa que o dano.
+   *
+   * "Confiável: +1 para rolagens de ataque" aparecia só como texto na janela
+   * do equipamento, em 14 armas. O jogador lia e tinha de lembrar na hora de
+   * somar. Agora o número vem do servidor por arma (ficha.bonusDeAtaque) e é
+   * escrito na linha dela — do mesmo jeito que a Proficiência e os bônus de
+   * dano já eram. O app continua sem rolar nada.
+   */
+  function ataqueDaArma(ficha, arma) {
+    const b = (ficha || {}).bonusDeAtaque || {};
+    const partes = [];
+    for (const x of (b.porArma || [])) {
+      if (x.armaId && arma && x.armaId === arma.id) partes.push(x);
+    }
+    for (const x of (b.geral || [])) partes.push(x);
+    if (!partes.length) return '';
+    const total = partes.reduce((t, x) => t + (Number(x.valor) || 0), 0);
+    if (!total) return '';
+    const fontes = partes.filter((x) => Number(x.valor)).map((x) => x.fonte).join(', ');
+    return `ataque ${total > 0 ? '+' : ''}${total}${fontes ? ` (${fontes})` : ''}`;
+  }
+
   /**
    * RESUMO DE DANO: automatiza a conta, não a rolagem nem a ficção.
    * Ataque Furtivo depende do alvo/posição; por isso aparece como alternativa
@@ -2228,8 +2459,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         dados.chave(alcanceOriginal) === dados.chave(regraFlickerfly.de)
           ? regraFlickerfly.para
           : alcanceEfetivoNaFicha(ficha, alcanceOriginal);
+      const ataque = ataqueDaArma(ficha, arma);
       linhas.push(el('p', { class: 'texto-sm', texto:
-        `${arma.nome}: ${alcance ? alcance + ' · ' : ''}${danoDaArmaComProficiencia(ficha, arma)}${sufixo}` }));
+        `${arma.nome}: ${alcance ? alcance + ' · ' : ''}${ataque ? ataque + ' · ' : ''}` +
+        `${danoDaArmaComProficiencia(ficha, arma)}${sufixo}` }));
 
       const perfil = (((arma || {}).efeitoEquipamento || {}).perfilAlternativo) || null;
       if (perfil) {
@@ -2298,7 +2531,12 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     }
 
     return el('div', { class: 'pilha' }, [
-      el('strong', { texto: 'Dano da ficha' }),
+      /*
+       * O título deixou de ser só "Dano": desde que o bônus de ataque da arma
+       * entrou, o bloco responde às duas perguntas da jogada. Manter o nome
+       * antigo faria o +1 de Confiável parecer bônus de dano.
+       */
+      el('strong', { texto: 'Ataque e dano da ficha' }),
       ...linhas
     ]);
   }
@@ -2544,7 +2782,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
 
   /* --- Evasão · Armadura ---------------------------------------------------- */
 
-  function linhaDeDefesas(r, d) {
+  function linhaDeDefesas(ficha, r, d) {
     const total = d.pontuacaoArmadura || 0;
     const marcados = r.armaduraMarcada || 0;
 
@@ -2578,9 +2816,9 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       // Sem notinha embaixo: ela sobrava só de um lado e empurrava aquele
       // escudo para cima do outro. O que ela dizia ("começa em 10", "sem
       // armadura") o verbete de cada um diz melhor.
-      escudo('evasao', 'Evasão', d.evasao),
+      escudo('evasao', 'Evasão', d.evasao, contaDe(ficha, 'evasao')),
       el('div', { class: 'papel__divisor' }),
-      escudo('armadura', 'Armadura', total || '—'),
+      escudo('armadura', 'Armadura', total || '—', contaDe(ficha, 'pontuacaoArmadura')),
       slots
     ]);
   }
@@ -2606,7 +2844,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * uma coisa só, e o losango já é da Esperança — foi exatamente esse o erro
    * que a Vanessa pegou.
    */
-  function escudo(classe, rotulo, valor) {
+  function escudo(classe, rotulo, valor, conta) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('viewBox', '0 0 60 68');
     svg.setAttribute('class', 'papel__escudoForma');
@@ -2629,13 +2867,23 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       svg.append(p2);
     });
 
+    const miolo = [
+      svg,
+      el('strong', { class: 'papel__escudoValor',
+        texto: (valor === null || valor === undefined) ? '—' : String(valor) })
+    ];
+    /*
+     * UM ALVO SÓ, E É O NOME.
+     *
+     * Cheguei a fazer o desenho abrir a conta e o nome abrir a regra. Estava
+     * errado: são a mesma pergunta em dois tempos, e dois alvos obrigavam a
+     * pessoa a adivinhar qual deles responderia o quê. O nome abre a regra COM
+     * a conta embaixo; o escudo volta a ser desenho, que é o que ele sempre foi.
+     */
     return el('div', { class: `papel__escudoBloco papel__escudoBloco--${classe}` }, [
-      el('div', { class: 'papel__escudo' }, [
-        svg,
-        el('strong', { class: 'papel__escudoValor',
-          texto: (valor === null || valor === undefined) ? '—' : String(valor) })
-      ]),
-      el('div', { class: 'papel__escudoRotulo' }, nomeAnotado(rotulo, { comGlossa: false }))
+      el('div', { class: 'papel__escudo' }, miolo),
+      el('div', { class: 'papel__escudoRotulo' },
+        nomeAnotado(rotulo, { comGlossa: false, extra: conta }))
     ]);
   }
 
@@ -2648,7 +2896,110 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * eles são: a fronteira. "9" não pertence a Menor nem a Maior — é onde uma
    * vira a outra.
    */
-  function faixaDeLimiares(d) {
+  /* --- de onde vem cada número ----------------------------------------------- */
+
+  /*
+   * A CONTA DE CADA NÚMERO DERIVADO — desenhada, nunca refeita.
+   *
+   * O servidor manda, junto da ficha, `memoriaDosNumeros`: para cada número
+   * derivado, a lista das parcelas que o formaram, na ordem em que entraram na
+   * soma. Esta tela SÓ DESENHA essa lista. Ela não soma, não completa e não
+   * adivinha nada — se refizesse a conta aqui, a mesma regra passaria a estar
+   * escrita nos dois lados, e foi exatamente isso que congelou a Proficiência
+   * por três partes (E4). Um teste do backend (E107) garante que a soma das
+   * linhas é o próprio número; se um dia não for, quebra lá, não aqui.
+   *
+   * Ficha antiga, gravada antes disto existir, não tem a lista. Nesse caso a
+   * tela DIZ que não tem, em vez de inventar uma conta plausível.
+   */
+  /*
+   * Dentro do verbete "Evasão", chamar a tabela de "Evasão" de novo era eco:
+   * o título da janela já disse isso. "Na sua ficha" diz o que ela é — a sua
+   * parte da regra que está logo acima. Quando a janela traz MAIS de uma
+   * conta (a faixa de limiares traz duas), cada uma volta a usar o nome dela,
+   * senão as duas ficariam indistinguíveis.
+   */
+  function blocoDaConta(ficha, def, { titulo } = {}) {
+    const memoria = (ficha && ficha.memoriaDosNumeros) || {};
+    const linhas = Array.isArray(memoria[def.chave]) ? memoria[def.chave] : null;
+    const total = def.onde(ficha);
+    const temNumero = !(total === null || total === undefined);
+
+    const corpo = el('section', { class: 'parcelas', 'data-parcelas': def.chave }, [
+      el('div', { class: 'parcelas__topo' }, [
+        el('h3', { class: 'parcelas__titulo', texto: titulo || def.titulo }),
+        el('strong', { class: 'parcelas__total', texto: temNumero ? String(total) : '—' })
+      ])
+    ]);
+
+    if (!temNumero) {
+      corpo.append(el('p', { class: 'parcelas__nota',
+        texto: 'Este personagem ainda não tem este número — falta a armadura ou a carta que o define.' }));
+      return corpo;
+    }
+    if (!linhas || !linhas.length) {
+      corpo.append(el('p', { class: 'parcelas__nota',
+        texto: 'A conta deste número aparece depois da próxima vez que esta ficha for gravada.' }));
+      return corpo;
+    }
+
+    const lista = el('ul', { class: 'parcelas__linhas' });
+    linhas.forEach((linha) => {
+      const valor = Number(linha.valor) || 0;
+      lista.append(el('li', {
+        class: `parcelas__linha${linha.base ? ' parcelas__linha--base' : ''}`
+      }, [
+        el('span', { class: 'parcelas__rotulo', texto: String(linha.rotulo || '') }),
+        el('span', {
+          class: `parcelas__valor${!linha.base && valor < 0 ? ' parcelas__valor--tira' : ''}`,
+          texto: linha.base ? String(valor) : comSinal(valor)
+        })
+      ]));
+    });
+    corpo.append(lista);
+    return corpo;
+  }
+
+  /*
+   * A CONTA MORA DENTRO DO VERBETE — não numa janela só dela.
+   *
+   * A primeira versão pendurou a conta em alvos próprios: o número abria a
+   * conta, o nome abria a regra, e uma porta escrita ("De onde vêm estes
+   * números") cobria PV e Estresse. A Vanessa cortou, e com razão: são duas
+   * metades da MESMA pergunta. Quem toca em "Evasão" quer saber o que é
+   * Evasão e por que a dele é 11 — e recebe as duas coisas, nessa ordem, na
+   * mesma janela.
+   *
+   * Passa uma FUNÇÃO porque o verbete pode ser reaberto depois de a ficha
+   * mudar (marcou armadura, entrou em Forma de Fera); montar o bloco agora
+   * mostraria a conta de antes.
+   */
+  function contaDe(ficha, chave) {
+    const def = CONTAS_DA_FICHA.find((x) => x.chave === chave);
+    if (!def) return undefined;
+    return () => blocoDaConta(ficha, def, { titulo: 'Na sua ficha' });
+  }
+
+  /** Vários números na mesma janela — é o caso dos dois limiares. */
+  function contasDe(ficha, chaves) {
+    return () => el('div', { class: 'pilha' },
+      chaves.map((chave) => {
+        const def = CONTAS_DA_FICHA.find((x) => x.chave === chave);
+        return def ? blocoDaConta(ficha, def) : null;
+      }).filter(Boolean));
+  }
+
+  /*
+   * A FAIXA INTEIRA É UM ALVO SÓ — e voltou a ser, depois de um desvio.
+   *
+   * Por um momento os dois números abriram contas separadas, e para caber
+   * botão dentro de botão a faixa virou caixa com alvo esticado por baixo.
+   * Com a conta dentro do verbete isso perdeu a razão de ser: um toque em
+   * qualquer ponto da faixa traz a regra dos limiares E as contas dos dois
+   * números, que é o que alguém quer saber ao olhar para eles. Menos DOM,
+   * menos z-index, e o alvo é a faixa toda.
+   */
+  function faixaDeLimiares(ficha, d) {
     const maior = d.limiarMaior;
     const severo = d.limiarGrave;
     const bloco = (nome, custo) => el('div', { class: 'papel__limiarBloco' }, [
@@ -2660,8 +3011,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
 
     return el('button', {
       type: 'button', class: 'papel__limiares',
-      'aria-label': 'Limiares de dano — o que cada faixa custa',
-      onClick: () => abrirVerbete('limiares-de-dano')
+      'aria-label': 'Limiares de dano — o que cada faixa custa, e de onde vêm estes números',
+      onClick: () => abrirVerbete('limiares-de-dano', {
+        extra: contasDe(ficha, ['limiarMaior', 'limiarGrave'])
+      })
     }, [
       /*
        * "1 PV", e não "marque 1 PV": com o verbo, o custo quebrava em três
@@ -2678,7 +3031,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
 
   /* --- PV e Estresse --------------------------------------------------------- */
 
-  function trilhaDePapel({ chave, rotulo, nomeCompleto, verbete, classe, marcados, total }) {
+  function trilhaDePapel({ chave, rotulo, nomeCompleto, verbete, conta, classe, marcados, total }) {
     /*
      * SÓ OS ESPAÇOS QUE EXISTEM — e por isso eles são grandes.
      *
@@ -2716,7 +3069,9 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
        * grupo, que é o que um leitor de tela anuncia.
        */
       el('span', { class: 'papel__trilhaRotulo' },
-        verbete ? gatilhoPara(rotulo, verbete) : nomeAnotado(rotulo, { comGlossa: false })),
+        verbete
+          ? gatilhoPara(rotulo, verbete, { extra: conta })
+          : nomeAnotado(rotulo, { comGlossa: false, extra: conta })),
       caixas
     ]);
   }
@@ -2826,8 +3181,32 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       const acoesTransformacao = [];
       if (td.id === 'fantasma') acoesTransformacao.push(el('button', {type:'button',class:'btn btn--pequeno',onClick:()=>enviar([{tipo:'transformacao',acao:'atravessar-objeto'}])}, 'Atravessar objeto · 2 Estresses'));
       if (td.id === 'lobisomem') {
-        acoesTransformacao.push(el('button', {type:'button',class:'btn btn--pequeno',onClick:()=>enviar([{tipo:'transformacao',acao:td.formaDeLobo?'sair-forma-de-lobo':'entrar-forma-de-lobo',pvMarcado:true}])}, td.formaDeLobo?'Sair da Forma de Lobo':'Entrar na Forma de Lobo · 1 Estresse'));
-        if (td.formaDeLobo) acoesTransformacao.push(el('button',{type:'button',class:'btn btn--fantasma btn--pequeno',onClick:()=>enviar([{tipo:'transformacao',acao:'jogada-com-esperanca'}])},'Registrar jogada com Esperança'));
+        /*
+         * A FORMA DE LOBO NÃO É UM INTERRUPTOR.
+         *
+         * O livro: "Quando marcar 1 ou mais Pontos de Vida, você pode marcar
+         * 1 Estresse para entrar na Forma de Lobo. […] A forma dura até você
+         * entrar em Frenesi Uivante ou fazer um descanso."
+         *
+         * São duas regras, e o app quebrava as duas: mandava `pvMarcado: true`
+         * fixo no pedido (então a condição de entrada nunca era conferida de
+         * verdade) e oferecia um "Sair da Forma de Lobo" que o livro não dá.
+         * Entrar e sair à vontade é o que a mesa via como "ele fica alternando".
+         *
+         * Agora o botão de entrar só acende com PV marcado, e não existe botão
+         * de sair: quem tira da forma é o Frenesi Uivante ou o descanso.
+         */
+        const pvMarcados = Math.max(0, Number((ficha.recursos || {}).pontosDeVidaMarcados) || 0);
+        if (td.formaDeLobo) {
+          acoesTransformacao.push(el('button',{type:'button',class:'btn btn--fantasma btn--pequeno',onClick:()=>enviar([{tipo:'transformacao',acao:'jogada-com-esperanca'}])},'Registrar jogada com Esperança'));
+        } else {
+          acoesTransformacao.push(el('button', {
+            type: 'button', class: 'btn btn--pequeno',
+            disabled: pvMarcados < 1,
+            title: pvMarcados < 1 ? 'A Forma de Lobo só começa depois de marcar 1 ou mais Pontos de Vida.' : '',
+            onClick: () => enviar([{ tipo: 'transformacao', acao: 'entrar-forma-de-lobo' }])
+          }, 'Entrar na Forma de Lobo · 1 Estresse'));
+        }
       }
       if (td.id === 'metamorfo') acoesTransformacao.push(el('button',{type:'button',class:'btn btn--pequeno',onClick:async()=>{
         const ancestralidade=prompt('Qual ancestralidade deseja assumir?', td.ancestralidadeAssumida||'');
@@ -2844,14 +3223,18 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         el('p',{class:'texto-xs texto-fraco',texto:controleTransformacao && controleTransformacao.jogadorPodeAlternar
           ? 'Você pode voltar à forma normal. O Mestre escolhe qual transformação está concedida.'
           : 'O Mestre controla quando esta transformação é ligada ou desligada.'}),
+        td.id === 'lobisomem' && td.formaDeLobo
+          ? el('p',{class:'texto-xs texto-fraco',texto:
+              'A Forma de Lobo dura até o Frenesi Uivante ou um descanso.'})
+          : null,
         el('div',{class:'linha'},[
           ...acoesTransformacao,
           controleTransformacao && controleTransformacao.jogadorPodeAlternar
             ? el('button',{type:'button',class:'btn btn--fantasma btn--pequeno',
                 onClick:()=>enviar([{tipo:'transformacao',acao:'desativar-concedida'}])},'Voltar à forma normal')
             : null
-        ])
-      ]));
+        ].filter(Boolean))
+      ].filter(Boolean)));
     } else if (controleTransformacao && transformacaoConcedida) {
       blocoTransformacao = secao(`Transformação · ${transformacaoConcedida.nome}`, el('div',{class:'pilha'},[
         el('p',{class:'texto-sm',texto:'A transformação está desligada.'}),
@@ -2953,7 +3336,12 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           ])
           : el('p', { class: 'texto-sm texto-fraco', texto:
             'Nenhum marcador. Os das cartas aparecem sozinhos; o botão cria os que o livro não tem.' }),
-        botaoPequeno('+ Marcador', criarMarcador)
+        el('div', { class: 'linha' }, [
+          botaoPequeno('+ Marcador', criarMarcador),
+          marcadoresQueTerminamComACena(ficha).length
+            ? botaoPequeno('A cena acabou', () => encerrarCena(ficha))
+            : null
+        ].filter(Boolean))
       ]),
       // Com algo marcado a dobra já abre: é o estado que a mesa precisa ver.
       { aberta: ativos > 0 }));
@@ -3539,6 +3927,61 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * ficha. Ele nunca vai cobrir o que ainda não existe — carta nova,
    * característica de expansão, ou a contagem que o Mestre inventou na cena.
    */
+  /*
+   * ⚠ "FIM DA CENA" ESTAVA DECLARADO E NUNCA ACONTECIA.
+   *
+   * Nove marcadores do catálogo dizem que zeram no fim da cena — o Voar, a
+   * Invisibilidade, os dois Disfarces, a Fortaleza Selvagem, a Zona de
+   * Proteção e o DADO DE DETERMINAÇÃO do Guardião, que é característica de
+   * classe. Sete deles não têm nem saída manual.
+   *
+   * O servidor sabe fazer isso desde sempre: `{tipo:'gatilho',
+   * gatilho:'fim-da-cena'}` cai em ajustarGatilho_, que zera e recarrega o que
+   * for o caso. Nenhuma tela jamais enviou esse ajuste. Era uma regra escrita
+   * nos dados, implementada no motor, e que não tinha por onde ser disparada
+   * — o jogador zerava na mão, ou não zerava.
+   *
+   * O botão só aparece quando há o que limpar, e diz o que vai limpar antes
+   * de limpar: quem toca nisso no meio de um combate por engano perde o Dado
+   * de Determinação que estava segurando.
+   */
+  function marcadoresQueTerminamComACena(ficha) {
+    return catalogo.contadoresDaFicha(ficha)
+      .filter((c) => [...(c.zeraEm || []), ...(c.recarregaEm || [])].indexOf('fim-da-cena') >= 0)
+      .map((c) => ({
+        nome: c.nome || c.chave,
+        valor: Number((((ficha.contadores || {})[c.chave]) || {}).valor) || 0,
+        recarrega: (c.recarregaEm || []).indexOf('fim-da-cena') >= 0
+      }))
+      .filter((c) => c.valor > 0 || c.recarrega);
+  }
+
+  function encerrarCena(ficha) {
+    const afetados = marcadoresQueTerminamComACena(ficha);
+    const confirmar = el('button', { type: 'button', class: 'btn btn--principal' }, 'A cena acabou');
+    confirmar.addEventListener('click', () => {
+      acrescentar(confirmar, [{ tipo: 'gatilho', gatilho: 'fim-da-cena' }],
+        () => modal.fechar());
+    });
+    const modal = abrirModal({
+      titulo: 'Fim da cena',
+      conteudo: el('div', { class: 'pilha' }, [
+        el('p', { class: 'texto-sm' }, textoAnotado(
+          'Marcadores que duram uma cena voltam ao que eram. Nada mais na ficha muda.')),
+        el('ul', { class: 'pilha' }, afetados.map((c) => el('li', { class: 'texto-sm',
+          texto: `${c.nome}: ${c.recarrega ? 'recarrega' : `zera (está em ${c.valor})`}` }))),
+        el('p', { class: 'texto-xs texto-fraco', texto:
+          'Quem decide que a cena acabou é a mesa — o app não adivinha isso.' })
+      ]),
+      acoes: [
+        el('button', { type: 'button', class: 'btn btn--fantasma',
+          onClick: () => modal.fechar() }, 'Ainda não'),
+        confirmar
+      ]
+    });
+    return modal;
+  }
+
   function criarMarcador() {
     const nome = el('input', semCorretor({
       type: 'text', class: 'campo__entrada', maxlength: 40,
@@ -3641,11 +4084,22 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       ];
     }
     const extra = uso.exigeAtaqueComMedo ? {ataqueComMedo:true} :
+      uso.exigeCriticoCorpoACorpo ? {criticoCorpoACorpo:true} :
       uso.exigeCriticoPrimaria ? {criticoPrimaria:true} :
       uso.exigeAtaqueBemSucedido ? {ataqueBemSucedido:true} : {};
+    /*
+     * "UMA VEZ POR ..." APAGA O BOTÃO em vez de deixá-lo prometer.
+     *
+     * O servidor recusa o segundo uso, mas um botão aceso que responde com
+     * erro faz a pessoa achar que algo quebrou. Apagado, ele diz o que
+     * aconteceu — e continua à vista, lembrando que a característica existe.
+     */
+    const gastou = uso.marcaUso &&
+      (Number((((ficha || {}).contadores || {})[uso.marcaUso] || {}).valor) || 0) > 0;
     return [el('button', {
-      type:'button', class:'btn btn--principal', onClick:()=>enviarUso(extra)
-    }, uso.rotulo || `Usar ${carac.nome}`)];
+      type:'button', class:'btn btn--principal', disabled: !!gastou,
+      onClick:()=>enviarUso(extra)
+    }, gastou ? `${uso.rotulo || carac.nome} — já usada` : (uso.rotulo || `Usar ${carac.nome}`))];
   }
 
   function conteudoDeEquipamento(rotulo, item) {
@@ -3766,6 +4220,17 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * está na mesa.
    */
   function perguntarCustoDeRecordar(c) {
+    /*
+     * A MNEMÔNICA vira uma terceira saída, e só quando ela existe de verdade:
+     * armadura vestida e o uso da cena ainda na mão. Mostrar a opção gasta é
+     * prometer e voltar atrás; escondê-la quando está disponível é deixar a
+     * pessoa pagar Estresse que não precisava.
+     */
+    const ficha = p.ficha || {};
+    const usoMnemonica = Number((((ficha.contadores || {})
+      ['uso:equipamento:armadura-t2-vestes-do-encantador:mnemonica']) || {}).valor) || 0;
+    const temMnemonica = temCaracteristicaDeEquipamento_(ficha, 'Mnemônica') && !usoMnemonica;
+
     const modal = abrirModal({
       titulo: `Recordar ${c.nome}`,
       conteudo: el('div', { class: 'pilha' }, [
@@ -3781,13 +4246,21 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
             enviar([{ tipo: 'carta', carta: c.id, para: 'ativas', cobrarCusto: true }]);
           }
         }, `Marcar ${c.custoRecordar} de Estresse e trazer`),
+        temMnemonica ? el('button', {
+          type: 'button', class: 'btn btn--fantasma ficha__escolhaLarga',
+          onClick: () => {
+            modal.fechar();
+            enviar([{ tipo: 'carta', carta: c.id, para: 'ativas', usarMnemonica: true }]);
+          }
+        }, 'Usar Mnemônica — sem custo, 1× por cena') : null,
         el('button', {
           type: 'button', class: 'btn btn--fantasma ficha__escolhaLarga',
           onClick: () => { modal.fechar(); enviar([{ tipo: 'carta', carta: c.id, para: 'ativas' }]); }
         }, 'Estou num descanso — trocar de graça')
       ]),
-      // As duas saídas ficam no CORPO, uma embaixo da outra: três botões lado a
-      // lado num celular de 390px quebram em três linhas cada e viram sopa.
+      // As saídas ficam no CORPO, uma embaixo da outra: botões lado a lado num
+      // celular de 390px quebram em três linhas cada e viram sopa. Com a
+      // Mnemônica disponível são três; sem ela, duas.
       acoes: [
         el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar() }, 'Cancelar')
       ]

@@ -42,6 +42,23 @@ function normalizarMesa_(m) {
     m.sessao.aberta = Boolean(m.sessao.aberta);
   }
 
+  /*
+   * A CENA É DA MESA, COMO A SESSÃO — e pelo mesmo motivo.
+   *
+   * Quem decide que a cena acabou é o Mestre, e o efeito tem de chegar a todas
+   * as fichas. Mas o Mestre NÃO escreve na ficha de ninguém: ele mexe num
+   * número aqui, e cada ficha se acerta sozinha, com o token do próprio
+   * jogador, quando abre. É a mesma arquitetura da sessão, e vale pelas mesmas
+   * razões — quem estava offline acerta quando volta, e ninguém precisa de um
+   * canal em tempo real que o resto do app não tem.
+   *
+   * O número só sobe. Comparar "a que cena esta ficha já reagiu" com "em que
+   * cena a mesa está" é o que impede o gatilho de rodar duas vezes.
+   */
+  m.cena = (m.cena && typeof m.cena === 'object') ? m.cena : {};
+  m.cena.numero = Math.max(0, Math.trunc(Number(m.cena.numero)) || 0);
+  m.cena.encerradaEm = String(m.cena.encerradaEm || '');
+
   // A contagem de descansos curtos é do GRUPO — o livro é claro (p.105), e
   // por isso ela mora aqui e não na ficha de cada um.
   m.descansosCurtosSeguidos = Math.max(0, Math.trunc(Number(m.descansosCurtosSeguidos)) || 0);
@@ -89,7 +106,58 @@ function normalizarMesa_(m) {
    */
   m.ouroComMoedas = Boolean(m.ouroComMoedas);
 
+  /*
+   * RECADOS: o único canal que vai da ficha do jogador para o Mestre.
+   *
+   * Nasceu da Amaldiçoada (Placa Sombria) e do Favorecido pela Fortuna (Manto
+   * de Cloverweave). As duas têm metade da regra numa ficha que a do jogador
+   * não alcança — o Estresse de um adversário, o Medo da mesa —, e as duas
+   * ficaram pendentes por isso.
+   *
+   * ⚠ RECADO NÃO É COMANDO. Nada aqui escreve na trilha de ninguém: o Mestre
+   * lê, aplica se concordar e apaga. É a mesma escolha do resto do app — o
+   * servidor faz a conta, a mesa decide o que aconteceu.
+   *
+   * A lista é curta de propósito (as 30 últimas). Um mural que cresce sem fim
+   * vira um lugar onde ninguém olha.
+   */
+  if (!Array.isArray(m.recados)) m.recados = [];
+  m.recados = m.recados.map(function (x) {
+    const r = (x && typeof x === 'object') ? x : {};
+    return {
+      id: String(r.id || ''),
+      em: String(r.em || ''),
+      de: String(r.de || '').slice(0, 60),
+      texto: String(r.texto || '').slice(0, 240),
+      origem: String(r.origem || '').slice(0, 60)
+    };
+  }).filter(function (r) { return r.texto; }).slice(-30);
+
   return m;
+}
+
+/**
+ * Pendura um recado no mural da mesa.
+ *
+ * ⚠ NÃO CHAME ISTO DE DENTRO DE `aplicarAjustes_`: aquela função roda uma
+ * prévia em clone, e o recado sairia duas vezes — uma na validação e outra
+ * de verdade. Quem publica é `aplicarEfeitosDeMesaDosAjustes_`, depois de a
+ * mudança ter sido aceita. Foi a mesma pedra em que o Vulto Etéreo bateu
+ * quando o Medo passou a poder ser mexido pela ficha.
+ */
+function publicarRecadoNaMesa_(m, recado) {
+  const texto = String((recado || {}).texto || '').trim();
+  if (!texto) return null;
+  const novo = {
+    id: 'recado-' + (typeof agoraIso_ === 'function' ? agoraIso_() : String(Date.now())) +
+      '-' + Math.floor(Math.random() * 1000),
+    em: (typeof agoraIso_ === 'function') ? agoraIso_() : '',
+    de: String((recado || {}).de || '').slice(0, 60),
+    texto: texto.slice(0, 240),
+    origem: String((recado || {}).origem || '').slice(0, 60)
+  };
+  m.recados = (Array.isArray(m.recados) ? m.recados : []).concat([novo]).slice(-30);
+  return novo;
 }
 
 /** A mesa está usando a regra opcional das moedas? */
@@ -613,6 +681,34 @@ function encerrarSessaoDaMesa_(m) {
     numero: m.sessao.numero,
     medo: m.medo,
     nota: 'O Medo fica em ' + m.medo + ' para a próxima sessão (p.154).'
+  };
+}
+
+/**
+ * Encerra a CENA da mesa.
+ *
+ * Não pede sessão aberta: cena é unidade de ficção, e uma mesa pode encerrar
+ * uma cena de um jogo que começou sem ninguém ter tocado no botão de sessão.
+ * Como encerrar sessão, isto só registra — o efeito acontece nas FICHAS, que
+ * ao abrirem veem que a mesa passou de cena e aplicam o gatilho nelas mesmas.
+ */
+function encerrarCenaDaMesa_(m) {
+  m.cena = (m.cena && typeof m.cena === 'object') ? m.cena : {};
+  m.cena.numero = Math.max(0, Math.trunc(Number(m.cena.numero)) || 0) + 1;
+  m.cena.encerradaEm = agoraIso_();
+  /*
+   * O mural vai junto. Recado é notícia de cena: "o atacante marca 2
+   * Estresses" não quer dizer nada três cenas depois, e um mural que só
+   * cresce é um mural que ninguém lê.
+   */
+  const recadosApagados = (Array.isArray(m.recados) ? m.recados.length : 0);
+  m.recados = [];
+  return {
+    numero: m.cena.numero,
+    recadosApagados: recadosApagados,
+    nota: 'Cada jogador recebe isto na ficha dele quando abrir — marcador que ' +
+      'dura uma cena volta ao que era.' +
+      (recadosApagados ? ' Os recados desta cena saíram do mural.' : '')
   };
 }
 

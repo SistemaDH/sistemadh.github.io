@@ -2008,6 +2008,19 @@
   color: var(--cor-texto);
 }
 
+/*
+ * A Abençoada fica ACIMA dos dados, separada por uma linha: ela é a aposta
+ * que se faz antes de rolar, e a borda existe para que ninguém a confunda com
+ * mais um campo de resultado.
+ */
+.ficha__morteAbencoada {
+  margin-bottom: var(--e2);
+  padding-bottom: var(--e2);
+  border-bottom: 1px dashed var(--cor-borda);
+}
+
+.ficha__morteAbencoada p { margin: var(--e1) 0 0; }
+
 /* ==========================================================================
    L9-B1 · DENSIDADE MOBILE DA FICHA
    ========================================================================== */

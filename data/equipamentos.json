@@ -43,7 +43,15 @@
         "nome": "Confiável",
         "texto": "Confiável: +1 para rolagens de ataque",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "efeitoDerivado": {
+          "bonusAtaqueDaArma": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "SRD p.703: +1 fixo nas jogadas de ataque COM ESTA ARMA. O app soma na linha da arma no resumo de ataque; a rolagem continua da mesa.",
+          "rolaNoApp": false
+        }
       },
       "danoSRD": "d8 phy"
     },
@@ -104,6 +112,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-parcial",
+          "motivo": "-1 na Evasão entra na conta da ficha. O dado de dano adicional com descarte do menor fica com a mesa: o app não rola."
         }
       },
       "danoSRD": "d10+3 phy"
@@ -148,6 +160,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 na Evasão entra na conta da ficha."
         }
       },
       "danoSRD": "d12+3 phy"
@@ -263,6 +279,10 @@
           "tracos": {
             "finesse": -1
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 em Finesse entra no traço enquanto a arma estiver equipada."
         }
       },
       "danoSRD": "d10+2 phy"
@@ -343,6 +363,10 @@
           "tracos": {
             "finesse": -1
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 em Finesse entra no traço enquanto a arma estiver equipada."
         }
       },
       "danoSRD": "d8+3 phy"
@@ -367,7 +391,15 @@
         "nome": "Confiável",
         "texto": "Confiável: +1 para rolagens de ataque",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "efeitoDerivado": {
+          "bonusAtaqueDaArma": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "SRD p.703: +1 fixo nas jogadas de ataque COM ESTA ARMA. O app soma na linha da arma no resumo de ataque; a rolagem continua da mesa.",
+          "rolaNoApp": false
+        }
       },
       "danoSRD": "d8+3 phy"
     },
@@ -428,6 +460,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-parcial",
+          "motivo": "-1 na Evasão entra na conta da ficha. O dado de dano adicional com descarte do menor fica com a mesa: o app não rola."
         }
       },
       "danoSRD": "d10+6 phy"
@@ -472,6 +508,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 na Evasão entra na conta da ficha."
         }
       },
       "aliases": [
@@ -590,6 +630,10 @@
           "tracos": {
             "finesse": -1
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 em Finesse entra no traço enquanto a arma estiver equipada."
         }
       },
       "danoSRD": "d10+5 phy"
@@ -670,6 +714,10 @@
           "tracos": {
             "finesse": -1
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 em Finesse entra no traço enquanto a arma estiver equipada."
         }
       },
       "danoSRD": "d8+6 phy"
@@ -694,7 +742,11 @@
         "nome": "Poderoso",
         "texto": "Poderoso: Em um ataque bem-sucedido, role um dado de dano adicional e descarte o resultado mais baixo.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "dado-manual-assistido",
+          "motivo": "SRD: em ataque bem-sucedido, role um dado de dano adicional e descarte o menor. O app não rola dados; a arma leva o lembrete na janela dela."
+        }
       },
       "danoSRD": "d10+4 phy"
     },
@@ -747,7 +799,11 @@
         "nome": "Mortal",
         "texto": "Mortal: Quando você causa dano Grave, o alvo deve marcar um HP adicional.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "resultado-manual-da-mesa",
+          "motivo": "SRD: em dano Severo, o alvo marca 1 PV adicional. O alvo é do Mestre; a ficha do jogador não tem onde aplicar isso."
+        }
       },
       "danoSRD": "d8+3 phy"
     },
@@ -835,7 +891,15 @@
         "nome": "Confiável",
         "texto": "Confiável: +1 para rolagens de ataque",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "efeitoDerivado": {
+          "bonusAtaqueDaArma": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "SRD p.703: +1 fixo nas jogadas de ataque COM ESTA ARMA. O app soma na linha da arma no resumo de ataque; a rolagem continua da mesa.",
+          "rolaNoApp": false
+        }
       },
       "danoSRD": "d8+5 phy"
     },
@@ -908,7 +972,11 @@
         "nome": "Poderoso",
         "texto": "Poderoso: Em um ataque bem-sucedido, role um dado de dano adicional e descarte o resultado mais baixo.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "dado-manual-assistido",
+          "motivo": "SRD: em ataque bem-sucedido, role um dado de dano adicional e descarte o menor. O app não rola dados; a arma leva o lembrete na janela dela."
+        }
       },
       "danoSRD": "d6+6 phy"
     },
@@ -932,7 +1000,15 @@
         "nome": "Confiável",
         "texto": "Confiável: +1 para rolagens de ataque",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "efeitoDerivado": {
+          "bonusAtaqueDaArma": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "SRD p.703: +1 fixo nas jogadas de ataque COM ESTA ARMA. O app soma na linha da arma no resumo de ataque; a rolagem continua da mesa.",
+          "rolaNoApp": false
+        }
       },
       "danoSRD": "d6+5 phy"
     },
@@ -956,7 +1032,15 @@
         "nome": "Confiável",
         "texto": "Confiável: +1 para rolagens de ataque",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "efeitoDerivado": {
+          "bonusAtaqueDaArma": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "SRD p.703: +1 fixo nas jogadas de ataque COM ESTA ARMA. O app soma na linha da arma no resumo de ataque; a rolagem continua da mesa.",
+          "rolaNoApp": false
+        }
       },
       "danoSRD": "d8+6 phy"
     },
@@ -1017,6 +1101,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-parcial",
+          "motivo": "-1 na Evasão entra na conta da ficha. O dado de dano adicional com descarte do menor fica com a mesa: o app não rola."
         }
       },
       "danoSRD": "d10+9 phy"
@@ -1061,6 +1149,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 na Evasão entra na conta da ficha."
         }
       },
       "danoSRD": "d12+9 phy"
@@ -1176,6 +1268,10 @@
           "tracos": {
             "finesse": -1
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 em Finesse entra no traço enquanto a arma estiver equipada."
         }
       },
       "danoSRD": "d10+8 phy"
@@ -1256,6 +1352,10 @@
           "tracos": {
             "finesse": -1
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 em Finesse entra no traço enquanto a arma estiver equipada."
         }
       },
       "danoSRD": "d8+9 phy"
@@ -1285,6 +1385,10 @@
         "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
         "efeitoDerivado": {
           "danoDaArmaPorTraco": "agilidade"
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "o dano da arma soma o valor atual de Agilidade."
         }
       },
       "danoSRD": "d8+5 phy"
@@ -1316,6 +1420,10 @@
         "efeitoDerivado": {
           "evasao": -1,
           "limiarGrave": 3
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 na Evasão e +3 no limiar Severo entram na conta da ficha."
         }
       },
       "danoSRD": "d12+7 phy"
@@ -1342,7 +1450,11 @@
         "fonteTraducao": "livro",
         "confianca": "alta",
         "nomeAntigo": "Devastador",
-        "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras"
+        "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
+        "automacao": {
+          "classificacao": "dado-manual-assistido",
+          "motivo": "SRD: marque 1 Estresse antes da jogada para usar d20 como dado de dano. A troca de dado e o Estresse são feitos à mão — o app não rola nem adivinha a intenção."
+        }
       },
       "danoSRD": "d10+7 phy"
     },
@@ -1369,6 +1481,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "pontuacaoArmadura": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+1 na Pontuação de Armadura entra na conta da ficha."
         }
       },
       "danoSRD": "d10+7 phy"
@@ -1428,7 +1544,11 @@
         "texto": "Retrátil: esta lâmina pode ser escondida no cabo para dificultar a detecção",
         "fonteTraducao": "livro",
         "confianca": "alta",
-        "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras"
+        "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
+        "automacao": {
+          "classificacao": "narrativa-sem-numero",
+          "motivo": "SRD: a lâmina se esconde no cabo para dificultar a detecção. É ficção de cena."
+        }
       },
       "danoSRD": "d10+7 phy"
     },
@@ -1452,7 +1572,11 @@
         "nome": "Poderoso",
         "texto": "Poderoso: Em um ataque bem-sucedido, role um dado de dano adicional e descarte o resultado mais baixo.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "dado-manual-assistido",
+          "motivo": "SRD: em ataque bem-sucedido, role um dado de dano adicional e descarte o menor. O app não rola dados; a arma leva o lembrete na janela dela."
+        }
       },
       "danoSRD": "d10+8 phy"
     },
@@ -1588,7 +1712,15 @@
         "nome": "Confiável",
         "texto": "Confiável: +1 para rolagens de ataque",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "efeitoDerivado": {
+          "bonusAtaqueDaArma": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "SRD p.703: +1 fixo nas jogadas de ataque COM ESTA ARMA. O app soma na linha da arma no resumo de ataque; a rolagem continua da mesa.",
+          "rolaNoApp": false
+        }
       },
       "danoSRD": "d8+9 phy"
     },
@@ -1649,6 +1781,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-parcial",
+          "motivo": "-1 na Evasão entra na conta da ficha. O dado de dano adicional com descarte do menor fica com a mesa: o app não rola."
         }
       },
       "danoSRD": "d10+12 phy"
@@ -1693,6 +1829,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 na Evasão entra na conta da ficha."
         }
       },
       "danoSRD": "d12+12 phy"
@@ -1808,6 +1948,10 @@
           "tracos": {
             "finesse": -1
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 em Finesse entra no traço enquanto a arma estiver equipada."
         }
       },
       "danoSRD": "d10+11 phy"
@@ -1888,6 +2032,10 @@
           "tracos": {
             "finesse": -1
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 em Finesse entra no traço enquanto a arma estiver equipada."
         }
       },
       "danoSRD": "d8+12 phy"
@@ -1992,6 +2140,10 @@
           "tracos": {
             "agilidade": -1
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-parcial",
+          "motivo": "-1 em Agilidade entra na conta da ficha. O Estresse dos adversários Muito Próximos é da mesa — o app não tem a ficha deles no ataque."
         }
       },
       "danoSRD": "d12+13 phy"
@@ -2083,7 +2235,11 @@
         "fonteTraducao": "livro",
         "confianca": "alta",
         "nomeAntigo": "Agarrão",
-        "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras"
+        "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
+        "automacao": {
+          "classificacao": "resultado-manual-da-mesa",
+          "motivo": "SRD 2.0: em acerto Corpo a Corpo, gaste um Foco OU marque 1 Estresse para deixar o alvo Restrito ou puxá-lo. ⚠ O texto pt-BR do livro diz \"gastar 1 de Esperança\" — divergência anotada, não resolvida: o app ainda não modela o recurso Foco do SRD 2.0."
+        }
       },
       "danoSRD": "d8+9 phy"
     },
@@ -2109,7 +2265,11 @@
         "fonteTraducao": "livro",
         "confianca": "alta",
         "nomeAntigo": "Saltitante",
-        "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras"
+        "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
+        "automacao": {
+          "classificacao": "alvo-manual",
+          "motivo": "SRD: marque 1 ou mais Estresse para acertar a mesma quantidade de alvos. Quantos alvos cabem no alcance é decisão da mesa."
+        }
       },
       "danoSRD": "d6+11 phy"
     },
@@ -2133,7 +2293,15 @@
         "nome": "Confiável",
         "texto": "Confiável: +1 para rolagens de ataque",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "efeitoDerivado": {
+          "bonusAtaqueDaArma": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "SRD p.703: +1 fixo nas jogadas de ataque COM ESTA ARMA. O app soma na linha da arma no resumo de ataque; a rolagem continua da mesa.",
+          "rolaNoApp": false
+        }
       },
       "danoSRD": "d6+11 phy"
     },
@@ -2274,7 +2442,11 @@
         "nome": "Retorno",
         "texto": "Retorno: Quando essa arma é lançada dentro de seu alcance, ela aparece em sua mão imediatamente após o ataque.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "narrativa-sem-numero",
+          "motivo": "SRD: a arma lançada volta à mão depois do ataque. Não há número de ficha para mover."
+        }
       },
       "danoSRD": "d8 mag"
     },
@@ -2389,7 +2561,11 @@
         "nome": "Poderoso",
         "texto": "Poderoso: Em um ataque bem-sucedido, role um dado de dano adicional e descarte o resultado mais baixo.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "dado-manual-assistido",
+          "motivo": "SRD: em ataque bem-sucedido, role um dado de dano adicional e descarte o menor. O app não rola dados; a arma leva o lembrete na janela dela."
+        }
       },
       "aliases": [
         "Cajado grande",
@@ -2485,7 +2661,11 @@
         "nome": "Retorno",
         "texto": "Retorno: Quando essa arma é lançada dentro de seu alcance, ela aparece em sua mão imediatamente após o ataque.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "narrativa-sem-numero",
+          "motivo": "SRD: a arma lançada volta à mão depois do ataque. Não há número de ficha para mover."
+        }
       },
       "danoSRD": "d8+3 mag"
     },
@@ -2597,7 +2777,11 @@
         "nome": "Poderoso",
         "texto": "Poderoso: Em um ataque bem-sucedido, role um dado de dano adicional e descarte o resultado mais baixo.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "dado-manual-assistido",
+          "motivo": "SRD: em ataque bem-sucedido, role um dado de dano adicional e descarte o menor. O app não rola dados; a arma leva o lembrete na janela dela."
+        }
       },
       "danoSRD": "d6+3 mag"
     },
@@ -2621,7 +2805,11 @@
         "nome": "Pomposo",
         "texto": "Pomposo: Você deve ter uma Presença igual ou inferior a 0 para usar essa arma.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "restricao-manual-de-arma",
+          "motivo": "SRD: exige Presença 0 ou menor para usar a arma. Hoje a conferência é a olho — dá para o app recusar na hora de equipar, como já faz com armadura."
+        }
       },
       "danoSRD": "d12+4 mag"
     },
@@ -2772,7 +2960,11 @@
         "nome": "Poderoso",
         "texto": "Poderoso: Em um ataque bem-sucedido, role um dado de dano adicional e descarte o resultado mais baixo.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "dado-manual-assistido",
+          "motivo": "SRD: em ataque bem-sucedido, role um dado de dano adicional e descarte o menor. O app não rola dados; a arma leva o lembrete na janela dela."
+        }
       },
       "danoSRD": "d6+4 mag"
     },
@@ -2883,7 +3075,15 @@
         "nome": "Confiável",
         "texto": "Confiável: +1 para rolagens de ataque",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "efeitoDerivado": {
+          "bonusAtaqueDaArma": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "SRD p.703: +1 fixo nas jogadas de ataque COM ESTA ARMA. O app soma na linha da arma no resumo de ataque; a rolagem continua da mesa.",
+          "rolaNoApp": false
+        }
       },
       "danoSRD": "d6+4 mag"
     },
@@ -2975,7 +3175,11 @@
         "nome": "Retorno",
         "texto": "Retorno: Quando essa arma é lançada dentro de seu alcance, ela aparece em sua mão imediatamente após o ataque.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "narrativa-sem-numero",
+          "motivo": "SRD: a arma lançada volta à mão depois do ataque. Não há número de ficha para mover."
+        }
       },
       "danoSRD": "d8+6 mag"
     },
@@ -3090,7 +3294,11 @@
         "nome": "Poderoso",
         "texto": "Poderoso: Em um ataque bem-sucedido, role um dado de dano adicional e descarte o resultado mais baixo.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "dado-manual-assistido",
+          "motivo": "SRD: em ataque bem-sucedido, role um dado de dano adicional e descarte o menor. O app não rola dados; a arma leva o lembrete na janela dela."
+        }
       },
       "danoSRD": "d6+6 mag"
     },
@@ -3116,7 +3324,11 @@
         "fonteTraducao": "livro",
         "confianca": "alta",
         "nomeAntigo": "Sortudo",
-        "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras"
+        "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
+        "automacao": {
+          "classificacao": "resultado-manual-da-mesa",
+          "motivo": "SRD: ao errar, marque 1 Estresse para repetir a jogada. O app não sabe que a jogada errou, porque não foi ele quem rolou."
+        }
       },
       "danoSRD": "d10+8 mag"
     },
@@ -3330,7 +3542,11 @@
         "nome": "Poderoso",
         "texto": "Poderoso: Em um ataque bem-sucedido, role um dado de dano adicional e descarte o resultado mais baixo.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "dado-manual-assistido",
+          "motivo": "SRD: em ataque bem-sucedido, role um dado de dano adicional e descarte o menor. O app não rola dados; a arma leva o lembrete na janela dela."
+        }
       },
       "danoSRD": "d6+7 mag"
     },
@@ -3468,7 +3684,11 @@
         "nome": "Retorno",
         "texto": "Retorno: Quando essa arma é lançada dentro de seu alcance, ela aparece em sua mão imediatamente após o ataque.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "narrativa-sem-numero",
+          "motivo": "SRD: a arma lançada volta à mão depois do ataque. Não há número de ficha para mover."
+        }
       },
       "danoSRD": "d8+9 mag"
     },
@@ -3580,7 +3800,11 @@
         "nome": "Poderoso",
         "texto": "Poderoso: Em um ataque bem-sucedido, role um dado de dano adicional e descarte o resultado mais baixo.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "dado-manual-assistido",
+          "motivo": "SRD: em ataque bem-sucedido, role um dado de dano adicional e descarte o menor. O app não rola dados; a arma leva o lembrete na janela dela."
+        }
       },
       "danoSRD": "d6+9 mag"
     },
@@ -3606,7 +3830,11 @@
         "fonteTraducao": "livro",
         "confianca": "alta",
         "nomeAntigo": "Incandescente",
-        "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras"
+        "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
+        "automacao": {
+          "classificacao": "narrativa-sem-numero",
+          "motivo": "SRD: a arma corta material sólido. É ficção de cena."
+        }
       },
       "danoSRD": "d10+11 mag"
     },
@@ -3722,7 +3950,11 @@
         "nome": "Poderoso",
         "texto": "Poderoso: Em um ataque bem-sucedido, role um dado de dano adicional e descarte o resultado mais baixo.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "dado-manual-assistido",
+          "motivo": "SRD: em ataque bem-sucedido, role um dado de dano adicional e descarte o menor. O app não rola dados; a arma leva o lembrete na janela dela."
+        }
       },
       "danoSRD": "d8+9 mag"
     },
@@ -3779,7 +4011,15 @@
         "nome": "Confiável",
         "texto": "Confiável: +1 para rolagens de ataque",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "efeitoDerivado": {
+          "bonusAtaqueDaArma": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "SRD p.703: +1 fixo nas jogadas de ataque COM ESTA ARMA. O app soma na linha da arma no resumo de ataque; a rolagem continua da mesa.",
+          "rolaNoApp": false
+        }
       },
       "danoSRD": "d6+13 mag"
     },
@@ -3885,6 +4125,10 @@
         "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
         "efeitoDerivado": {
           "danoDaArmaPorNivel": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "o dano da arma soma o nível do personagem."
         }
       },
       "danoSRD": "d6+9 mag"
@@ -3912,6 +4156,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "danoPrimariaCorpoACorpo": 2
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+2 no dano da arma primária, publicado como bônus condicional: quem decide se o alvo está Corpo a Corpo é a mesa."
         }
       },
       "danoSRD": "d8 phy"
@@ -3939,6 +4187,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "pontuacaoArmadura": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+1 na Pontuação de Armadura entra na conta da ficha."
         }
       },
       "danoSRD": "d4 phy"
@@ -3967,6 +4219,10 @@
         "efeitoDerivado": {
           "pontuacaoArmadura": 2,
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+2 na Armadura e -1 na Evasão entram na conta da ficha."
         }
       },
       "danoSRD": "d6 phy"
@@ -3994,6 +4250,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "danoPrimariaCorpoACorpo": 2
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+2 no dano da arma primária, publicado como bônus condicional: quem decide se o alvo está Corpo a Corpo é a mesa."
         }
       },
       "aliases": [
@@ -4107,6 +4367,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "danoPrimariaCorpoACorpo": 2
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+2 no dano da arma primária, publicado como bônus condicional: quem decide se o alvo está Corpo a Corpo é a mesa."
         }
       },
       "danoSRD": "d8+2 phy"
@@ -4134,6 +4398,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "pontuacaoArmadura": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+1 na Pontuação de Armadura entra na conta da ficha."
         }
       },
       "danoSRD": "d4+2 phy"
@@ -4162,6 +4430,10 @@
         "efeitoDerivado": {
           "pontuacaoArmadura": 2,
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+2 na Armadura e -1 na Evasão entram na conta da ficha."
         }
       },
       "danoSRD": "d6+2 phy"
@@ -4189,6 +4461,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "danoPrimariaCorpoACorpo": 2
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+2 no dano da arma primária, publicado como bônus condicional: quem decide se o alvo está Corpo a Corpo é a mesa."
         }
       },
       "aliases": [
@@ -4302,6 +4578,10 @@
         "efeitoDerivado": {
           "pontuacaoArmadura": 1,
           "danoPrimariaCorpoACorpo": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+1 na Armadura entra na conta; o +1 de dano na primária sai como bônus condicional de alcance."
         }
       },
       "danoSRD": "d6+2 phy"
@@ -4365,7 +4645,11 @@
         "nome": "Retorno",
         "texto": "Retorno: Quando essa arma é lançada dentro de seu alcance, ela aparece em sua mão imediatamente após o ataque.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "narrativa-sem-numero",
+          "motivo": "SRD: a arma lançada volta à mão depois do ataque. Não há número de ficha para mover."
+        }
       },
       "danoSRD": "d6+4 phy"
     },
@@ -4392,6 +4676,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "danoPrimariaCorpoACorpo": 2
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+2 no dano da arma primária, publicado como bônus condicional: quem decide se o alvo está Corpo a Corpo é a mesa."
         }
       },
       "danoSRD": "d8+4 phy"
@@ -4419,6 +4707,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "pontuacaoArmadura": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+1 na Pontuação de Armadura entra na conta da ficha."
         }
       },
       "danoSRD": "d4+4 phy"
@@ -4447,6 +4739,10 @@
         "efeitoDerivado": {
           "pontuacaoArmadura": 2,
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+2 na Armadura e -1 na Evasão entram na conta da ficha."
         }
       },
       "danoSRD": "d6+4 phy"
@@ -4474,6 +4770,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "danoPrimariaCorpoACorpo": 2
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+2 no dano da arma primária, publicado como bônus condicional: quem decide se o alvo está Corpo a Corpo é a mesa."
         }
       },
       "danoSRD": "d8+4 phy"
@@ -4620,7 +4920,11 @@
         "nome": "Carregado",
         "texto": "Carregado: Marque um Estresse para ganhar um bônus de +1 na sua Proficiência em um ataque com arma primária.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "uso-manual-com-custo",
+          "motivo": "SRD: marque 1 Estresse para +1 de Proficiência num ataque com a primária. Tem custo e gatilho claros; falta o uso ativo no app para não ficar só no texto."
+        }
       },
       "aliases": [
         "Gauntlet energizado"
@@ -4687,6 +4991,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "danoPrimariaCorpoACorpo": 2
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+2 no dano da arma primária, publicado como bônus condicional: quem decide se o alvo está Corpo a Corpo é a mesa."
         }
       },
       "danoSRD": "d8+6 phy"
@@ -4714,6 +5022,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "pontuacaoArmadura": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+1 na Pontuação de Armadura entra na conta da ficha."
         }
       },
       "danoSRD": "d4+6 phy"
@@ -4742,6 +5054,10 @@
         "efeitoDerivado": {
           "pontuacaoArmadura": 2,
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+2 na Armadura e -1 na Evasão entram na conta da ficha."
         }
       },
       "danoSRD": "d6+6 phy"
@@ -4769,6 +5085,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "danoPrimariaCorpoACorpo": 2
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+2 no dano da arma primária, publicado como bônus condicional: quem decide se o alvo está Corpo a Corpo é a mesa."
         }
       },
       "danoSRD": "d8+6 phy"
@@ -4880,6 +5200,10 @@
         "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
         "efeitoDerivado": {
           "pontuacaoArmadura": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+1 na Pontuação de Armadura entra na conta da ficha."
         }
       },
       "danoSRD": "d4+6 phy"
@@ -4933,7 +5257,11 @@
         "nome": "Travado",
         "texto": "Travado: em um ataque bem-sucedido, seu próximo ataque contra o mesmo alvo com sua arma principal é automaticamente bem-sucedido.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "automacao": {
+          "classificacao": "resultado-manual-da-mesa",
+          "motivo": "SRD: o próximo ataque contra o mesmo alvo é automaticamente bem-sucedido. Quem guarda \"o mesmo alvo\" entre duas jogadas é a mesa."
+        }
       },
       "danoSRD": "d4 phy"
     },
@@ -5104,6 +5432,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 na Evasão entra na conta da ficha."
         }
       },
       "danoSRD": "d12+3 phy",
@@ -5132,6 +5464,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 na Evasão entra na conta da ficha."
         }
       },
       "danoSRD": "d12+6 phy",
@@ -5160,6 +5496,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 na Evasão entra na conta da ficha."
         }
       },
       "danoSRD": "d12+9 phy",
@@ -5188,6 +5528,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 na Evasão entra na conta da ficha."
         }
       },
       "danoSRD": "d12+12 phy",
@@ -5213,7 +5557,15 @@
         "nome": "Confiável",
         "texto": "Confiável: +1 em jogadas de ataque.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "efeitoDerivado": {
+          "bonusAtaqueDaArma": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "SRD p.703: +1 fixo nas jogadas de ataque COM ESTA ARMA. O app soma na linha da arma no resumo de ataque; a rolagem continua da mesa.",
+          "rolaNoApp": false
+        }
       },
       "danoSRD": "d6 mag",
       "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
@@ -5238,7 +5590,15 @@
         "nome": "Confiável",
         "texto": "Confiável: +1 em jogadas de ataque.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "efeitoDerivado": {
+          "bonusAtaqueDaArma": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "SRD p.703: +1 fixo nas jogadas de ataque COM ESTA ARMA. O app soma na linha da arma no resumo de ataque; a rolagem continua da mesa.",
+          "rolaNoApp": false
+        }
       },
       "danoSRD": "d6+3 mag",
       "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
@@ -5263,7 +5623,15 @@
         "nome": "Confiável",
         "texto": "Confiável: +1 em jogadas de ataque.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "efeitoDerivado": {
+          "bonusAtaqueDaArma": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "SRD p.703: +1 fixo nas jogadas de ataque COM ESTA ARMA. O app soma na linha da arma no resumo de ataque; a rolagem continua da mesa.",
+          "rolaNoApp": false
+        }
       },
       "danoSRD": "d6+6 mag",
       "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
@@ -5288,7 +5656,15 @@
         "nome": "Confiável",
         "texto": "Confiável: +1 em jogadas de ataque.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "efeitoDerivado": {
+          "bonusAtaqueDaArma": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "SRD p.703: +1 fixo nas jogadas de ataque COM ESTA ARMA. O app soma na linha da arma no resumo de ataque; a rolagem continua da mesa.",
+          "rolaNoApp": false
+        }
       },
       "danoSRD": "d6+9 mag",
       "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
@@ -5430,9 +5806,8 @@
           }
         },
         "automacao": {
-          "classificacao": "uso-ativo-assistido",
-          "motivo": "O app publica o perfil ou cobra recurso; a jogada permanece na mesa.",
-          "rolaNoApp": false
+          "classificacao": "alvo-manual",
+          "motivo": "SRD: marque 1 ou mais Estresse para acertar a mesma quantidade de alvos. Quantos alvos cabem no alcance é decisão da mesa."
         }
       },
       "danoSRD": "d6+1 mag"
@@ -5649,9 +6024,8 @@
           "pontuacaoArmadura": 1
         },
         "automacao": {
-          "classificacao": "efeito-derivado",
-          "motivo": "Bônus determinístico aplicado ao equipamento ativo.",
-          "rolaNoApp": false
+          "classificacao": "passiva-automatizada",
+          "motivo": "+1 na Pontuação de Armadura entra na conta da ficha."
         }
       },
       "danoSRD": "d4 mag"
@@ -5991,9 +6365,8 @@
           }
         },
         "automacao": {
-          "classificacao": "uso-ativo-assistido",
-          "motivo": "O app publica o perfil ou cobra recurso; a jogada permanece na mesa.",
-          "rolaNoApp": false
+          "classificacao": "alvo-manual",
+          "motivo": "SRD: marque 1 ou mais Estresse para acertar a mesma quantidade de alvos. Quantos alvos cabem no alcance é decisão da mesa."
         }
       },
       "danoSRD": "d6+4 mag"
@@ -6210,9 +6583,8 @@
           "pontuacaoArmadura": 2
         },
         "automacao": {
-          "classificacao": "efeito-derivado",
-          "motivo": "Bônus determinístico aplicado ao equipamento ativo.",
-          "rolaNoApp": false
+          "classificacao": "passiva-automatizada",
+          "motivo": "+1 na Pontuação de Armadura entra na conta da ficha."
         }
       },
       "danoSRD": "d4+2 mag"
@@ -6476,9 +6848,8 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "provisoria",
         "automacao": {
-          "classificacao": "resultado-manual-da-mesa",
-          "motivo": "A consequência determinística é aplicada pelo app quando há contrato; dados, alvo e resultado do ataque ficam na mesa.",
-          "rolaNoApp": false
+          "classificacao": "narrativa-sem-numero",
+          "motivo": "SRD: a lâmina se esconde no cabo para dificultar a detecção. É ficção de cena."
         }
       },
       "danoSRD": "d8+4 phy"
@@ -6680,9 +7051,8 @@
           "pontuacaoArmadura": 1
         },
         "automacao": {
-          "classificacao": "efeito-derivado",
-          "motivo": "A consequência determinística é aplicada pelo app quando há contrato; dados, alvo e resultado do ataque ficam na mesa.",
-          "rolaNoApp": false
+          "classificacao": "passiva-automatizada",
+          "motivo": "+1 na Pontuação de Armadura entra na conta da ficha."
         }
       },
       "danoSRD": "d8+3 mag"
@@ -6782,9 +7152,8 @@
           }
         },
         "automacao": {
-          "classificacao": "efeito-derivado",
-          "motivo": "A consequência determinística é aplicada pelo app quando há contrato; dados, alvo e resultado do ataque ficam na mesa.",
-          "rolaNoApp": false
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 em Finesse entra no traço enquanto a arma estiver equipada."
         }
       },
       "danoSRD": "d10+5 phy"
@@ -6935,8 +7304,7 @@
         "confianca": "provisoria",
         "automacao": {
           "classificacao": "resultado-manual-da-mesa",
-          "motivo": "A consequência determinística é aplicada pelo app quando há contrato; dados, alvo e resultado do ataque ficam na mesa.",
-          "rolaNoApp": false
+          "motivo": "SRD: em dano Severo, o alvo marca 1 PV adicional. O alvo é do Mestre; a ficha do jogador não tem onde aplicar isso."
         }
       },
       "danoSRD": "d8+3 phy"
@@ -7078,9 +7446,8 @@
           }
         },
         "automacao": {
-          "classificacao": "uso-ativo-assistido",
-          "motivo": "O app publica o perfil ou cobra recurso; a jogada permanece na mesa.",
-          "rolaNoApp": false
+          "classificacao": "alvo-manual",
+          "motivo": "SRD: marque 1 ou mais Estresse para acertar a mesma quantidade de alvos. Quantos alvos cabem no alcance é decisão da mesa."
         }
       },
       "danoSRD": "d6+7 mag"
@@ -7297,9 +7664,8 @@
           "pontuacaoArmadura": 3
         },
         "automacao": {
-          "classificacao": "efeito-derivado",
-          "motivo": "Bônus determinístico aplicado ao equipamento ativo.",
-          "rolaNoApp": false
+          "classificacao": "passiva-automatizada",
+          "motivo": "+1 na Pontuação de Armadura entra na conta da ficha."
         }
       },
       "danoSRD": "d4+4 mag"
@@ -7639,9 +8005,8 @@
           }
         },
         "automacao": {
-          "classificacao": "uso-ativo-assistido",
-          "motivo": "O app publica o perfil ou cobra recurso; a jogada permanece na mesa.",
-          "rolaNoApp": false
+          "classificacao": "alvo-manual",
+          "motivo": "SRD: marque 1 ou mais Estresse para acertar a mesma quantidade de alvos. Quantos alvos cabem no alcance é decisão da mesa."
         }
       },
       "danoSRD": "d6+10 mag"
@@ -7858,9 +8223,8 @@
           "pontuacaoArmadura": 4
         },
         "automacao": {
-          "classificacao": "efeito-derivado",
-          "motivo": "Bônus determinístico aplicado ao equipamento ativo.",
-          "rolaNoApp": false
+          "classificacao": "passiva-automatizada",
+          "motivo": "+1 na Pontuação de Armadura entra na conta da ficha."
         }
       },
       "danoSRD": "d4+6 mag"
@@ -8502,9 +8866,12 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "provisoria",
         "automacao": {
-          "classificacao": "resultado-manual-da-mesa",
-          "motivo": "Custo fixo cobrado quando aplicável; ataque, alvo e consequência contextual são confirmados na mesa.",
+          "classificacao": "passiva-automatizada",
+          "motivo": "SRD p.703: +1 fixo nas jogadas de ataque COM ESTA ARMA. O app soma na linha da arma no resumo de ataque; a rolagem continua da mesa.",
           "rolaNoApp": false
+        },
+        "efeitoDerivado": {
+          "bonusAtaqueDaArma": 1
         }
       },
       "danoSRD": "d8+4 phy"
@@ -9133,6 +9500,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+1 na Evasão entra na conta da ficha."
         }
       }
     },
@@ -9171,6 +9542,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 na Evasão entra na conta da ficha."
         }
       }
     },
@@ -9198,6 +9573,10 @@
           "tracos": {
             "agilidade": -1
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-2 na Evasão e -1 em Agilidade entram na conta da ficha."
         }
       }
     },
@@ -9222,6 +9601,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "limiaresPorTracoConjuracao": true
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "os dois limiares somam o traço de Conjuração, recalculado a cada mudança."
         }
       }
     },
@@ -9245,9 +9628,16 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "reacao-dano-pendente",
-          "rolaNoApp": false,
-          "motivo": "A regra está publicada no catálogo; o custo e a negação do dano Menor serão ligados ao fluxo de dano em um checkpoint mecânico próprio."
+          "classificacao": "reacao-ataque-assistida",
+          "motivo": "Na hora de aplicar dano, a tela oferece anular dano Menor por 1 Estresse. O servidor confere a faixa DEPOIS da Armadura, cobra o Estresse e zera o PV; recusa quando não há o que anular ou quando a trilha de Estresse está cheia.",
+          "rolaNoApp": false
+        },
+        "efeitoEquipamento": {
+          "danoRecebido": {
+            "forrada": {
+              "estresse": 1
+            }
+          }
         }
       }
     },
@@ -9274,6 +9664,10 @@
           "tracos": {
             "finesse": -1
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 em Finesse entra no traço enquanto a arma estiver equipada."
         }
       }
     },
@@ -9327,6 +9721,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "limiaresPorTracoConjuracao": true
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "os dois limiares somam o traço de Conjuração, recalculado a cada mudança."
         }
       }
     },
@@ -9350,9 +9748,16 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "reacao-dano-pendente",
-          "rolaNoApp": false,
-          "motivo": "A regra está publicada; custo e negação serão ligados ao fluxo de dano em checkpoint próprio."
+          "classificacao": "reacao-ataque-assistida",
+          "motivo": "Na hora de aplicar dano, a tela oferece anular dano Menor por 1 Estresse. O servidor confere a faixa DEPOIS da Armadura, cobra o Estresse e zera o PV; recusa quando não há o que anular ou quando a trilha de Estresse está cheia.",
+          "rolaNoApp": false
+        },
+        "efeitoEquipamento": {
+          "danoRecebido": {
+            "forrada": {
+              "estresse": 1
+            }
+          }
         }
       }
     },
@@ -9379,6 +9784,10 @@
           "tracos": {
             "finesse": -1
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 em Finesse entra no traço enquanto a arma estiver equipada."
         }
       }
     },
@@ -9431,9 +9840,15 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "recordar-sem-custo-pendente",
-          "rolaNoApp": false,
-          "motivo": "O benefício por cena está publicado e aguarda contador de cena integrado ao fluxo de Recordar."
+          "classificacao": "uso-ativo-assistido",
+          "motivo": "Na janela de recordar carta, a tela oferece trazer sem pagar o Custo de Recordar. É opt-in de propósito: gastar o uso da cena na primeira carta recordada decidiria pela pessoa, e uma troca em descanso (já livre) queimaria o uso à toa. O uso volta quando a cena termina.",
+          "rolaNoApp": false
+        },
+        "efeitoEquipamento": {
+          "recordar": {
+            "semCusto": true,
+            "marcaUso": "uso:equipamento:armadura-t2-vestes-do-encantador:mnemonica"
+          }
         }
       }
     },
@@ -9512,9 +9927,16 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "reacao-por-cena-pendente",
-          "rolaNoApp": false,
-          "motivo": "A reação aguarda contador de cena no fluxo de dano; o catálogo não presume a escolha do jogador."
+          "classificacao": "reacao-ataque-assistida",
+          "motivo": "Na janela de dano, contra dano mágico, a tela oferece limpar 1 Ponto de Armadura. O uso é guardado até a cena terminar; o servidor recusa contra dano físico, com o uso já gasto, ou sem Ponto marcado para limpar.",
+          "rolaNoApp": false
+        },
+        "efeitoEquipamento": {
+          "danoRecebido": {
+            "absorvente": {
+              "marcaUso": "uso:equipamento:armadura-t2-traje-de-fio-de-tempestade:absorvente"
+            }
+          }
         }
       }
     },
@@ -9538,9 +9960,14 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "imunidade-e-movimento-pendente",
-          "rolaNoApp": false,
-          "motivo": "A imunidade a Restrito aguarda integração ao normalizador de condições; o movimento pertence à cena."
+          "classificacao": "passiva-parcial",
+          "motivo": "Enquanto a armadura estiver vestida, o app recusa a condição Restrito e diz de onde vem a proteção. O movimento até alcance Distante como parte de uma jogada de ação é posicionamento — continua da mesa.",
+          "rolaNoApp": false
+        },
+        "efeitoEquipamento": {
+          "impedeCondicoes": [
+            "restrito"
+          ]
         }
       }
     },
@@ -9564,9 +9991,14 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "descanso-pendente",
-          "rolaNoApp": false,
-          "motivo": "A recuperação está publicada e aguarda integração determinística aos descansos curto e longo."
+          "classificacao": "passiva-automatizada",
+          "motivo": "Qualquer descanso limpa 1 Ponto de Armadura, aplicado pelo servidor junto com o resto do descanso. Sem Ponto marcado, não faz nada e não avisa nada.",
+          "rolaNoApp": false
+        },
+        "efeitoEquipamento": {
+          "descanso": {
+            "limpaArmadura": 1
+          }
         }
       }
     },
@@ -9590,9 +10022,17 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "gatilho-esperanca-por-cena-pendente",
-          "rolaNoApp": false,
-          "motivo": "A escolha de limpar Armadura aguarda contador de cena no fluxo central de gasto de Esperança."
+          "classificacao": "gatilho-automatizado-de-esperanca",
+          "motivo": "Todo gasto de Esperança do servidor passa por gastarEsperanca_. A primeira vez em cada cena que houver Ponto de Armadura marcado, a característica limpa 1 e avisa na tela. Sem Ponto marcado, o uso da cena não é gasto.",
+          "rolaNoApp": false
+        },
+        "efeitoEquipamento": {
+          "aoGastarEsperanca": {
+            "resplandecente": {
+              "marcaUso": "uso:equipamento:armadura-t2-placa-solar-dourada:resplandecente",
+              "limpaArmadura": 1
+            }
+          }
         }
       }
     },
@@ -9617,6 +10057,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+1 na Evasão entra na conta da ficha."
         }
       }
     },
@@ -9655,6 +10099,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 na Evasão entra na conta da ficha."
         }
       }
     },
@@ -9682,6 +10130,10 @@
           "tracos": {
             "agilidade": -1
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-2 na Evasão e -1 em Agilidade entram na conta da ficha."
         }
       }
     },
@@ -9773,6 +10225,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "limiaresSeUltimaArmaduraMarcada": 2
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+2 nos limiares enquanto o último Ponto de Armadura estiver marcado; o app liga e desliga sozinho."
         }
       }
     },
@@ -9885,6 +10341,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "limiaresPorTracoConjuracao": true
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "os dois limiares somam o traço de Conjuração, recalculado a cada mudança."
         }
       }
     },
@@ -9908,9 +10368,16 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "reacao-dano-pendente",
-          "rolaNoApp": false,
-          "motivo": "A regra está publicada; custo e negação aguardam integração ao fluxo de dano."
+          "classificacao": "reacao-ataque-assistida",
+          "motivo": "Na hora de aplicar dano, a tela oferece anular dano Menor por 1 Estresse. O servidor confere a faixa DEPOIS da Armadura, cobra o Estresse e zera o PV; recusa quando não há o que anular ou quando a trilha de Estresse está cheia.",
+          "rolaNoApp": false
+        },
+        "efeitoEquipamento": {
+          "danoRecebido": {
+            "forrada": {
+              "estresse": 1
+            }
+          }
         }
       }
     },
@@ -9937,6 +10404,10 @@
           "tracos": {
             "finesse": -1
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 em Finesse entra no traço enquanto a arma estiver equipada."
         }
       }
     },
@@ -9989,9 +10460,16 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "uso-antes-de-rolagem-pendente",
-          "rolaNoApp": false,
-          "motivo": "O custo e a vantagem aguardam integração ao fluxo de jogadas de Conjuração."
+          "classificacao": "uso-ativo-assistido",
+          "motivo": "O app marca o Estresse e publica o lembrete; a vantagem é um dado que a mesa rola, como todo dado deste app.",
+          "rolaNoApp": false
+        },
+        "efeitoEquipamento": {
+          "usoAtivo": {
+            "custoEstresse": 1,
+            "rotulo": "Estelar · 1 Estresse por vantagem",
+            "efeitoManual": "Role a jogada de Conjuração com vantagem (d6 a mais, na mesa)."
+          }
         }
       }
     },
@@ -10015,9 +10493,16 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "gatilho-de-critico-pendente",
-          "rolaNoApp": false,
-          "motivo": "O app não observa jogadas de ataque; a cura aguarda confirmação integrada do crítico."
+          "classificacao": "sucesso-confirmado-assistido",
+          "motivo": "A mesa confirma o sucesso crítico com arma em alcance Corpo a Corpo e o servidor limpa 1 Ponto de Vida. Com a trilha já limpa, o aviso diz que não havia o que curar em vez de prometer cura.",
+          "rolaNoApp": false
+        },
+        "efeitoEquipamento": {
+          "usoAtivo": {
+            "exigeCriticoCorpoACorpo": true,
+            "limpaPv": 1,
+            "rotulo": "Confirmar crítico Corpo a Corpo · limpar 1 PV"
+          }
         }
       }
     },
@@ -10041,9 +10526,20 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "alteracao-de-resultado-pendente",
-          "rolaNoApp": false,
-          "motivo": "A troca de resultado aguarda confirmação da jogada e contador de cena."
+          "classificacao": "uso-ativo-assistido",
+          "motivo": "A tela oferece a troca uma vez por cena; o servidor guarda o uso, sobe 1 no Medo da mesa e deixa um recado no painel do Mestre dizendo de onde veio. Quem confirma que a jogada foi falha com Esperança é a mesa — o app não observa jogadas.",
+          "rolaNoApp": false
+        },
+        "efeitoEquipamento": {
+          "usoAtivo": {
+            "marcaUso": "uso:equipamento:armadura-t3-manto-de-cloverweave:favorecido-pela-fortuna",
+            "rotulo": "Favorecido pela Fortuna · 1× por cena",
+            "efeitoMesa": {
+              "medoDelta": 1,
+              "recado": "Favorecido pela Fortuna: uma falha com Esperança virou sucesso com Medo. O Medo da mesa subiu 1."
+            },
+            "efeitoManual": "Sua falha com Esperança vira sucesso com Medo. Você NÃO ganha a Esperança dessa jogada."
+          }
         }
       }
     },
@@ -10094,6 +10590,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "pontuacaoArmaduraPorTraco": "presenca"
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "a Armadura soma o valor atual de Presença, recalculado a cada mudança."
         }
       }
     },
@@ -10118,6 +10618,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": 2
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+2 na Evasão entram na conta da ficha."
         }
       }
     },
@@ -10142,6 +10646,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+1 na Evasão entra na conta da ficha."
         }
       }
     },
@@ -10180,6 +10688,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 na Evasão entra na conta da ficha."
         }
       }
     },
@@ -10207,6 +10719,10 @@
           "tracos": {
             "agilidade": -1
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-2 na Evasão e -1 em Agilidade entram na conta da ficha."
         }
       }
     },
@@ -10233,6 +10749,10 @@
           "tracos": {
             "presenca": 1
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+1 em Presença entra no traço."
         }
       }
     },
@@ -10293,6 +10813,10 @@
             "quantidade": 1,
             "dado": "d4"
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "o d4 adicional é publicado na jogada de dano com a condição junto; o app não rola o dado."
         }
       }
     },
@@ -10415,6 +10939,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "limiaresPorTracoConjuracao": true
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "os dois limiares somam o traço de Conjuração, recalculado a cada mudança."
         }
       }
     },
@@ -10438,9 +10966,16 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "reacao-dano-pendente",
-          "rolaNoApp": false,
-          "motivo": "A regra está publicada; custo e negação aguardam integração ao fluxo de dano."
+          "classificacao": "reacao-ataque-assistida",
+          "motivo": "Na hora de aplicar dano, a tela oferece anular dano Menor por 1 Estresse. O servidor confere a faixa DEPOIS da Armadura, cobra o Estresse e zera o PV; recusa quando não há o que anular ou quando a trilha de Estresse está cheia.",
+          "rolaNoApp": false
+        },
+        "efeitoEquipamento": {
+          "danoRecebido": {
+            "forrada": {
+              "estresse": 1
+            }
+          }
         }
       }
     },
@@ -10467,6 +11002,10 @@
           "tracos": {
             "finesse": -1
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 em Finesse entra no traço enquanto a arma estiver equipada."
         }
       }
     },
@@ -10519,9 +11058,17 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "reacao-com-dado-manual-pendente",
-          "rolaNoApp": false,
-          "motivo": "O d4 e o Estresse do atacante pertencem à mesa; a reação aguarda apresentação no fluxo de dano."
+          "classificacao": "dado-manual-assistido",
+          "motivo": "Na janela de dano, quando a armadura está vestida e o golpe marca Pontos de Vida, a tela pede o resultado do d4 (o app não rola). Em 4, o servidor publica no painel do Mestre quantos Estresses o atacante marca — a trilha do adversário é dele.",
+          "rolaNoApp": false
+        },
+        "efeitoEquipamento": {
+          "danoRecebido": {
+            "amaldicoada": {
+              "lados": 4,
+              "acionaEm": 4
+            }
+          }
         }
       }
     },
@@ -10545,9 +11092,17 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "uso-por-descanso-pendente",
-          "rolaNoApp": false,
-          "motivo": "Custo e recarga aguardam botão de uso; o deslocamento permanece na mesa."
+          "classificacao": "uso-ativo-assistido",
+          "motivo": "O app marca o Estresse e guarda o uso até o próximo descanso; o movimento atravessando objetos é posicionamento, que é da mesa.",
+          "rolaNoApp": false
+        },
+        "efeitoEquipamento": {
+          "usoAtivo": {
+            "custoEstresse": 1,
+            "marcaUso": "uso:equipamento:armadura-t4-mortalha-de-darkweave:caminhante-fantasma",
+            "rotulo": "Caminhante Fantasma · 1 Estresse, 1× por descanso",
+            "efeitoManual": "Mova-se até alcance Próximo atravessando objetos sólidos."
+          }
         }
       }
     },
@@ -10571,9 +11126,14 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "gatilho-de-armadura-pendente",
-          "rolaNoApp": false,
-          "motivo": "O ganho aguarda integração ao ponto central que marca Armadura para evitar duplicidade."
+          "classificacao": "gatilho-automatizado-de-armadura",
+          "motivo": "Marcar 1 Ponto de Armadura dá 1 Esperança, aplicada pelo servidor no mesmo ajuste. Se a Esperança já estiver cheia, o aviso diz isso em vez de prometer.",
+          "rolaNoApp": false
+        },
+        "efeitoEquipamento": {
+          "aoMarcarArmadura": {
+            "esperancaPorSlot": 1
+          }
         }
       }
     },
@@ -10597,9 +11157,16 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "movimento-de-morte-pendente",
-          "rolaNoApp": false,
-          "motivo": "O gasto variável e a recarga aguardam integração ao resolvedor de Arriscar Tudo."
+          "classificacao": "uso-ativo-assistido",
+          "motivo": "No movimento de morte Arriscar Tudo, a tela oferece gastar Esperança antes de informar os dados; o servidor cobra, soma ao Dado de Esperança para a comparação e para o que se limpa, e guarda o uso até o descanso longo. A Esperança sai ANTES da jogada — quem atravessou o véu gastou do mesmo jeito, porque o livro diz \"spend ... before you make the move\".",
+          "rolaNoApp": false
+        },
+        "efeitoEquipamento": {
+          "movimentoDeMorte": {
+            "abencoada": {
+              "marcaUso": "uso:equipamento:armadura-t4-placa-heroica-sagrada:abencoada"
+            }
+          }
         }
       }
     },
@@ -10623,9 +11190,22 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "reacao-e-estado-pendente",
-          "rolaNoApp": false,
-          "motivo": "Negação, penalidade persistente e reparo exigem um contrato atômico dedicado no fluxo de dano e descanso."
+          "classificacao": "reacao-ataque-assistida",
+          "motivo": "Na janela de dano, contra dano Severo ou maior, a tela oferece negar o dano marcando 2 Pontos de Armadura. O servidor liga o estado que tira 5 dos dois limiares, e ele some no movimento de Reparar Armadura — não em descanso qualquer.",
+          "rolaNoApp": false
+        },
+        "efeitoDerivado": {
+          "limiares": -5,
+          "exigeEstado": "estado:equipamento:armadura-t4-arnes-ressonante:vitreo"
+        },
+        "efeitoEquipamento": {
+          "danoRecebido": {
+            "vitreo": {
+              "armadura": 2,
+              "penalidadeLimiares": 5,
+              "marcaEstado": "estado:equipamento:armadura-t4-arnes-ressonante:vitreo"
+            }
+          }
         }
       }
     },
@@ -10679,6 +11259,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "+1 na Evasão entra na conta da ficha."
         }
       }
     },
@@ -10717,6 +11301,10 @@
         "confianca": "alta",
         "efeitoDerivado": {
           "evasao": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 na Evasão entra na conta da ficha."
         }
       }
     },
@@ -10744,6 +11332,10 @@
           "tracos": {
             "agilidade": -1
           }
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-2 na Evasão e -1 em Agilidade entram na conta da ficha."
         }
       }
     },
@@ -10804,7 +11396,15 @@
         "nome": "Canalização",
         "texto": "Canalização: +1 em jogadas de Conjuração.",
         "fonteTraducao": "livro",
-        "confianca": "alta"
+        "confianca": "alta",
+        "efeitoDerivado": {
+          "conjuracao": 1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "SRD (Channeling Armor): +1 fixo nas jogadas de Conjuração enquanto a armadura estiver equipada. Entra no bônus de Conjuração da ficha, que a tela já mostra.",
+          "rolaNoApp": false
+        }
       }
     },
     {
@@ -10913,6 +11513,10 @@
         "efeitoDerivado": {
           "evasao": -1,
           "tracosTodos": -1
+        },
+        "automacao": {
+          "classificacao": "passiva-automatizada",
+          "motivo": "-1 em todos os traços e na Evasão entram na conta da ficha."
         }
       }
     }
