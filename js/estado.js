@@ -22,6 +22,7 @@ const estado = {
   // Qual sessão a MESA está. A ficha compara com o que ela mesma já viu e se
   // acerta sozinha — ver `ajustarSessaoDaFicha_` (backend/4C_Ajustes.gs).
   sessaoDaMesa: 0,
+  cenaDaMesa: 0,
   /* Regra opcional do SRD ("Gold Coins"): quem liga é o Mestre, e a ficha só
      obedece. Ver `ouroComMoedas_` em 4E_Mesa.gs. */
   ouroComMoedas: false,
@@ -89,6 +90,7 @@ export const acoes = {
         medo: dados.medo ?? 0,
         nivelDaMesa: dados.nivelDaMesa ?? 1,
         sessaoDaMesa: dados.sessaoDaMesa ?? 0,
+        cenaDaMesa: dados.cenaDaMesa ?? 0,
         ouroComMoedas: Boolean(dados.ouroComMoedas),
         versaoServidor: dados.versao,
         iniciando: false
@@ -125,6 +127,7 @@ export const acoes = {
         medo: dados.medo ?? estado.medo,
         nivelDaMesa: para,
         sessaoDaMesa: dados.sessaoDaMesa ?? estado.sessaoDaMesa,
+        cenaDaMesa: dados.cenaDaMesa ?? estado.cenaDaMesa,
         // Pela mesma porta chega a regra das moedas: se o Mestre ligar com o
         // jogador já dentro do app, a coluna aparece ao voltar para a tela.
         ouroComMoedas: Boolean(dados.ouroComMoedas)
@@ -447,6 +450,13 @@ export const acoes = {
     const r = await api.encerrarSessaoDaMesa(estado.token);
     definir({ medo: r.mesa.medo });
     return r;
+  },
+  /*
+   * O Mestre encerra a CENA e nada acontece na ficha dele — de propósito. O
+   * número sobe na mesa; cada jogador recebe o efeito quando abrir a ficha.
+   */
+  async encerrarCenaDaMesa() {
+    return api.encerrarCenaDaMesa(estado.token);
   },
   async voltarParaAPrimeiraSessao() {
     const r = await api.voltarParaAPrimeiraSessao(estado.token);

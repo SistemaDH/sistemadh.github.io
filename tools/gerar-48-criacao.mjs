@@ -426,12 +426,23 @@ function modificadoresDerivadosDaFicha_(ficha) {
   const saida = {
     evasao: 0, limiares: 0, limiarMaior: 0, limiarGrave: 0,
     pontosDeVidaMaximos: 0, estresseMaximo: 0, pontuacaoArmadura: 0,
+    bonusConjuracao: 0,
     limiaresSeUltimaArmaduraMarcada: 0,
     limiaresPorArmaduraDisponivel: 0,
     limiaresPorTracoConjuracao: false,
     pontuacaoArmaduraPorTraco: '',
     tracos: { agilidade: 0, forca: 0, finesse: 0, instinto: 0, presenca: 0, conhecimento: 0 },
-    fontes: []
+    fontes: [],
+    /*
+     * A TRILHA: quem mexeu em qual número, e em quanto.
+     *
+     * fontes[] só dizia QUE algo mexeu. A tela precisa dizer ao jogador DE
+     * ONDE vem cada ponto, então aqui cada fonte entra com o seu delta —
+     * medido antes e depois de aplicar o efeito, não recalculado a partir do
+     * catálogo. Recalcular do catálogo foi o que congelou a Proficiência (E4):
+     * a mesma regra escrita em dois lugares sempre diverge.
+     */
+    trilha: []
   };
   const prof = proficienciaEfetivaDaFicha_(ficha);
   const r = (ficha && ficha.recursos) || {};
@@ -439,8 +450,46 @@ function modificadoresDerivadosDaFicha_(ficha) {
     ? ((typeof CRIACAO !== 'undefined' && CRIACAO.esperancaInicial) || 2)
     : (Number(r.esperanca) || 0);
 
+  const CAMPOS_DA_TRILHA = ['evasao', 'limiares', 'limiarMaior', 'limiarGrave',
+    'pontosDeVidaMaximos', 'estresseMaximo', 'pontuacaoArmadura', 'bonusConjuracao',
+    'limiaresSeUltimaArmaduraMarcada', 'limiaresPorArmaduraDisponivel'];
+  const fotografar = function () {
+    const foto = {};
+    for (let i = 0; i < CAMPOS_DA_TRILHA.length; i++) foto[CAMPOS_DA_TRILHA[i]] = saida[CAMPOS_DA_TRILHA[i]];
+    return foto;
+  };
+  const anotar = function (fonte, antes) {
+    const rotulo = fonte ? String(fonte) : 'Efeito sem nome';
+    const delta = {};
+    let mexeu = false;
+    for (let i = 0; i < CAMPOS_DA_TRILHA.length; i++) {
+      const k = CAMPOS_DA_TRILHA[i];
+      const d = (Number(saida[k]) || 0) - (Number(antes[k]) || 0);
+      if (d) { delta[k] = d; mexeu = true; }
+    }
+    if (mexeu) saida.trilha.push({ fonte: rotulo, delta: delta });
+  };
+
   const aplicar = function (e, fonte) {
     if (!e) return;
+    /*
+     * EFEITO QUE SÓ VALE ENQUANTO UM ESTADO ESTIVER LIGADO.
+     *
+     * As cartas já tinham isso (requisitoDeEfeitoDerivadoDeCartaVale_ confere
+     * exigeEstado antes de chegar aqui). O equipamento não tinha, e passou a
+     * precisar com o Vítreo do Arnês Ressonante: ele nega um dano Severo e, em
+     * troca, deixa -5 nos limiares ATÉ a armadura ser reparada. A penalidade é
+     * um modificador derivado comum; o que muda é que ela só existe enquanto o
+     * estado existir.
+     *
+     * A conferência mora aqui, e não no caminho do equipamento, para valer
+     * igual em qualquer fonte que um dia precise dela.
+     */
+    if (e.exigeEstado) {
+      const reg = ((ficha && ficha.contadores) || {})[e.exigeEstado];
+      const ligado = Math.trunc(Number(reg && typeof reg === 'object' ? reg.valor : reg)) || 0;
+      if (ligado <= 0) return;
+    }
     if (e.canalizacaoElemental) {
       const ativo = efeitoAtivoDaCanalizacaoElemental_(ficha, e.canalizacaoElemental);
       if (ativo) aplicar(ativo.efeito, fonte + ' · ' + ativo.elemento);
@@ -449,6 +498,7 @@ function modificadoresDerivadosDaFicha_(ficha) {
       if (!Object.keys(resto).length) return;
       e = resto;
     }
+    const antes = fotografar();
     const numero = function (k) { return Number(e[k]) || 0; };
     saida.evasao += numero('evasao');
     saida.limiares += numero('limiares');
@@ -457,6 +507,13 @@ function modificadoresDerivadosDaFicha_(ficha) {
     saida.pontosDeVidaMaximos += numero('pontosDeVidaMaximos');
     saida.estresseMaximo += numero('estresseMaximo');
     saida.pontuacaoArmadura += numero('pontuacaoArmadura');
+    /*
+     * ⚠ 'conjuracao', não 'bonusConjuracao'. As cartas de domínio guardam a
+     * delas com o prefixo "bonus" e passam por aqui pelo mesmo caminho; ler o
+     * nome delas somaria a carta duas vezes (o teste do Tocado pela Arcana
+     * viu +2 onde o SRD dá +1). Neste canal a chave é sempre o número puro.
+     */
+    saida.bonusConjuracao += numero('conjuracao');
     if (e.pontuacaoArmaduraPorTraco) saida.pontuacaoArmaduraPorTraco = String(e.pontuacaoArmaduraPorTraco);
     saida.limiaresSeUltimaArmaduraMarcada += numero('limiaresSeUltimaArmaduraMarcada');
     saida.limiaresPorArmaduraDisponivel += numero('limiaresPorArmaduraDisponivel');
@@ -479,6 +536,7 @@ function modificadoresDerivadosDaFicha_(ficha) {
     if (escudo && esperanca >= (Number(escudo.esperanca) || 0)) {
       saida.evasao += prof * (Number(escudo.multiplicador) || 1);
     }
+    anotar(fonte, antes);
     if (fonte) saida.fontes.push(fonte);
   };
 
@@ -527,12 +585,22 @@ function modificadoresDerivadosDaFicha_(ficha) {
   if (saida.limiaresPorTracoConjuracao && typeof conjuracaoDoPersonagem_ === 'function') {
     const tracoConjuracao = conjuracaoDoPersonagem_(ficha);
     const base = Number(((ficha && ficha.tracos) || {})[tracoConjuracao]) || 0;
-    saida.limiares += base + (Number(saida.tracos[tracoConjuracao]) || 0);
+    const somaConjuracao = base + (Number(saida.tracos[tracoConjuracao]) || 0);
+    saida.limiares += somaConjuracao;
+    if (somaConjuracao) {
+      saida.trilha.push({ fonte: 'Limiares pelo traço de conjuração (' + tracoConjuracao + ')',
+        delta: { limiares: somaConjuracao } });
+    }
   }
   if (saida.pontuacaoArmaduraPorTraco) {
     const tracoArmadura = saida.pontuacaoArmaduraPorTraco;
     const base = Number(((ficha && ficha.tracos) || {})[tracoArmadura]) || 0;
-    saida.pontuacaoArmadura += base + (Number(saida.tracos[tracoArmadura]) || 0);
+    const somaArmadura = base + (Number(saida.tracos[tracoArmadura]) || 0);
+    saida.pontuacaoArmadura += somaArmadura;
+    if (somaArmadura) {
+      saida.trilha.push({ fonte: 'Armadura pelo traço (' + tracoArmadura + ')',
+        delta: { pontuacaoArmadura: somaArmadura } });
+    }
   }
   return saida;
 }
@@ -574,6 +642,45 @@ function defesaSemArmaduraDeCartas_(ficha, nivelPersonagem) {
     };
   }
   return null;
+}
+
+/**
+ * DE QUANTO É O ATAQUE — e de onde vem.
+ *
+ * O app não rola. Mas "Confiável: +1 para rolagens de ataque" estava só como
+ * TEXTO na ficha, em 14 armas, e o jogador tinha de lembrar dele na hora de
+ * somar. Publicar o número é o que o app já faz com Proficiência, bônus de
+ * dano e Evasão: a mesa rola, a ficha diz com quanto.
+ *
+ * ⚠ O BÔNUS É DA ARMA, NÃO DO PERSONAGEM. Quem empunha uma Espada Larga
+ * (Confiável) e um Punhal só tem o +1 no ataque da Espada — e nenhum nos
+ * feitiços. Por isso a lista vem separada em porArma e geral, e a tela
+ * escreve cada uma na linha certa. Um número só, somado no personagem, seria
+ * mais simples e estaria errado em toda ficha com duas armas.
+ */
+function bonusDeAtaqueDaFicha_(ficha) {
+  const saida = { geral: [], porArma: [] };
+
+  const daCarta = (typeof bonusAtaqueDeCartas_ === 'function') ? bonusAtaqueDeCartas_(ficha) : 0;
+  if (daCarta) saida.geral.push({ fonte: 'Cartas de domínio', valor: daCarta });
+
+  const equipados = (typeof equipamentoAtivoDaFicha_ === 'function')
+    ? equipamentoAtivoDaFicha_(ficha) : [];
+  for (let i = 0; i < equipados.length; i++) {
+    const papel = equipados[i].papel;
+    if (papel !== 'primaria' && papel !== 'secundaria') continue;
+    const item = equipados[i].item || {};
+    const valor = Math.trunc(Number((item.efeitoDerivado || {}).bonusAtaqueDaArma)) || 0;
+    if (!valor) continue;
+    saida.porArma.push({
+      fonte: item.carac || item.nome,
+      valor: valor,
+      armaId: item.id,
+      arma: item.nome,
+      papel: papel
+    });
+  }
+  return saida;
 }
 
 /**
@@ -772,6 +879,33 @@ function derivadosDoPersonagem_(ficha) {
   const nivel = Number(id.nivel) || NIVEL_INICIAL;
   const bases = (typeof basesDaClasse_ === 'function') ? basesDaClasse_(id.classe) : null;
 
+  /*
+   * A MEMÓRIA DA CONTA — de onde vem cada ponto de cada número derivado.
+   *
+   * Não é engenharia reversa: cada linha é anotada NA HORA em que a parcela
+   * entra na soma, logo abaixo do += que a somou. É o que garante que a
+   * trilha feche com o número; um teste soma as linhas e compara (E107).
+   * Se um dia alguém somar sem anotar, o teste quebra antes da tela mentir.
+   */
+  const memoria = {
+    evasao: [], pontuacaoArmadura: [], limiarMaior: [], limiarGrave: [],
+    pontosDeVidaMaximos: [], estresseMaximo: []
+  };
+  const rotuloDaClasse = (function () {
+    const c = (typeof classe_ === 'function') ? classe_(id.classe) : null;
+    const nome = (c && c.nome) || id.classe || '';
+    return nome ? 'Base da classe (' + nome + ')' : 'Base da classe';
+  })();
+  const lembrar = function (chave, rotulo, valor) {
+    const n = Math.trunc(Number(valor)) || 0;
+    if (!n) return;
+    memoria[chave].push({ rotulo: String(rotulo), valor: n });
+  };
+  // A base entra mesmo valendo zero: ela é o ponto de partida, não um bônus.
+  const lembrarBase = function (chave, rotulo, valor) {
+    memoria[chave].push({ rotulo: String(rotulo), valor: Math.trunc(Number(valor)) || 0, base: true });
+  };
+
   const eq = (ficha && ficha.equipamento) || {};
   const armadura = (typeof acharArmadura_ === 'function' && eq.armadura)
     ? acharArmadura_(eq.armadura) : null;
@@ -796,26 +930,58 @@ function derivadosDoPersonagem_(ficha) {
   const bonusEsquivaLadino = esquivaDeLadinoAtiva ? 2 : 0;
 
   let evasao = bases ? bases.evasaoInicial : null;
+  if (evasao !== null) lembrarBase('evasao', rotuloDaClasse, evasao);
   let limiarMaior = null, limiarGrave = null;
   const defesaSemArmadura = !armadura && typeof defesaSemArmaduraDeCartas_ === 'function'
     ? defesaSemArmaduraDeCartas_(ficha, nivel) : null;
 
   if (armadura) {
     const lim = partirLimiares_(armadura.limiares);
-    if (lim) { limiarMaior = lim.menor + nivel; limiarGrave = lim.maior + nivel; }
+    if (lim) {
+      limiarMaior = lim.menor + nivel; limiarGrave = lim.maior + nivel;
+      lembrarBase('limiarMaior', armadura.nome, lim.menor);
+      lembrarBase('limiarGrave', armadura.nome, lim.maior);
+      lembrar('limiarMaior', 'Nível ' + nivel, nivel);
+      lembrar('limiarGrave', 'Nível ' + nivel, nivel);
+    }
   } else if (defesaSemArmadura) {
     limiarMaior = defesaSemArmadura.limiarMaiorBase + nivel;
     limiarGrave = defesaSemArmadura.limiarGraveBase + nivel;
+    lembrarBase('limiarMaior', defesaSemArmadura.fonte, defesaSemArmadura.limiarMaiorBase);
+    lembrarBase('limiarGrave', defesaSemArmadura.fonte, defesaSemArmadura.limiarGraveBase);
+    lembrar('limiarMaior', 'Nível ' + nivel, nivel);
+    lembrar('limiarGrave', 'Nível ' + nivel, nivel);
   }
 
   const proficiencia = proficienciaEfetivaDaFicha_(ficha);
   const md = modificadoresDerivadosDaFicha_(ficha);
+  // Cada fonte que mexeu neste campo vira uma linha, com o nome que ela tem na ficha.
+  const lembrarTrilha = function (chave, campo, sufixo, fator) {
+    const mult = (fator === undefined || fator === null) ? 1 : fator;
+    for (let i = 0; i < md.trilha.length; i++) {
+      const passo = md.trilha[i];
+      const valor = passo.delta[campo];
+      if (valor) lembrar(chave, passo.fonte + (sufixo || ''), valor * mult);
+    }
+  };
   // Armadura final inclui base alternativa de carta, escudos/armas e nunca passa de 12.
   const basePontuacaoArmadura = armadura
     ? (Number(armadura.pontuacao) || 0)
     : (defesaSemArmadura ? defesaSemArmadura.pontuacaoArmaduraBase : 0);
   const pontuacaoArmadura = Math.max(0, Math.min(12,
     basePontuacaoArmadura + (Number(md.pontuacaoArmadura) || 0)));
+  lembrarBase('pontuacaoArmadura',
+    armadura ? armadura.nome
+      : (defesaSemArmadura ? defesaSemArmadura.fonte : 'Sem armadura'),
+    basePontuacaoArmadura);
+  lembrarTrilha('pontuacaoArmadura', 'pontuacaoArmadura');
+  {
+    const semTeto = basePontuacaoArmadura + (Number(md.pontuacaoArmadura) || 0);
+    if (pontuacaoArmadura !== semTeto) {
+      lembrar('pontuacaoArmadura', pontuacaoArmadura < semTeto ? 'Teto de 12' : 'Piso de 0',
+        pontuacaoArmadura - semTeto);
+    }
+  }
 
   // Os bônus PERMANENTES que a subida de nível deixou na ficha. Ficam num
   // balde separado (ficha.avancos.bonus) de propósito: assim a base continua
@@ -836,9 +1002,15 @@ function derivadosDoPersonagem_(ficha) {
     : { pontosDeVidaMaximos: 0, estresseMaximo: 0, limiares: 0 };
 
   if (pontosDeVidaMaximos !== null) {
+    lembrarBase('pontosDeVidaMaximos', rotuloDaClasse, pontosDeVidaMaximos);
     pontosDeVidaMaximos += (b.pontosDeVidaMaximos || 0) + bc.pontosDeVidaMaximos + md.pontosDeVidaMaximos;
+    lembrar('pontosDeVidaMaximos', 'Avanços de nível', b.pontosDeVidaMaximos || 0);
+    lembrar('pontosDeVidaMaximos', 'Cartas permanentes', bc.pontosDeVidaMaximos);
+    lembrarTrilha('pontosDeVidaMaximos', 'pontosDeVidaMaximos');
     if (typeof normalizarTransformacao_ === 'function' && normalizarTransformacao_((ficha || {}).transformacao) === 'reanimado') {
+      const antesDoReanimado = pontosDeVidaMaximos;
       pontosDeVidaMaximos = Math.max(0, pontosDeVidaMaximos - Math.max(0, Number((((ficha.transformacao || {}).escolhas || {}).pvPermanentesPerdidos)) || 0));
+      lembrar('pontosDeVidaMaximos', 'Reanimado: PV perdidos', pontosDeVidaMaximos - antesDoReanimado);
     }
   }
   const bonusLimiaresCartas = (typeof bonusLimiaresDeCartas_ === 'function')
@@ -846,23 +1018,58 @@ function derivadosDoPersonagem_(ficha) {
   if (limiarMaior !== null) {
     limiarMaior += bc.limiares + md.limiares + md.limiarMaior + bonusLimiaresCartas;
     limiarGrave += bc.limiares + md.limiares + md.limiarGrave + bonusLimiaresCartas;
+    lembrar('limiarMaior', 'Cartas permanentes', bc.limiares);
+    lembrar('limiarGrave', 'Cartas permanentes', bc.limiares);
+    lembrarTrilha('limiarMaior', 'limiares');
+    lembrarTrilha('limiarGrave', 'limiares');
+    lembrarTrilha('limiarMaior', 'limiarMaior');
+    lembrarTrilha('limiarGrave', 'limiarGrave');
+    lembrar('limiarMaior', 'Cartas de domínio', bonusLimiaresCartas);
+    lembrar('limiarGrave', 'Cartas de domínio', bonusLimiaresCartas);
     if (armadura && md.limiaresPorArmaduraDisponivel) {
       const marcados = Math.max(0, Number(((ficha || {}).recursos || {}).armaduraMarcada) || 0);
       const disponiveis = Math.max(0, pontuacaoArmadura - Math.min(pontuacaoArmadura, marcados));
       limiarMaior += disponiveis * md.limiaresPorArmaduraDisponivel;
       limiarGrave += disponiveis * md.limiaresPorArmaduraDisponivel;
+      const porArmadura = ' (' + disponiveis + ' de Armadura livre)';
+      lembrarTrilha('limiarMaior', 'limiaresPorArmaduraDisponivel', porArmadura, disponiveis);
+      lembrarTrilha('limiarGrave', 'limiaresPorArmaduraDisponivel', porArmadura, disponiveis);
     }
     // Pau-Ferro: vale enquanto o ÚLTIMO espaço da Armadura FINAL estiver marcado.
     const marcado = Math.max(0, Number(((ficha || {}).recursos || {}).armaduraMarcada) || 0);
     if (md.limiaresSeUltimaArmaduraMarcada && pontuacaoArmadura > 0 && marcado >= pontuacaoArmadura) {
       limiarMaior += md.limiaresSeUltimaArmaduraMarcada;
       limiarGrave += md.limiaresSeUltimaArmaduraMarcada;
+      lembrarTrilha('limiarMaior', 'limiaresSeUltimaArmaduraMarcada', ' (Armadura toda marcada)');
+      lembrarTrilha('limiarGrave', 'limiaresSeUltimaArmaduraMarcada', ' (Armadura toda marcada)');
     }
   }
   const bonusEvasaoCarta = (typeof bonusEvasaoDeCartas_ === 'function') ? bonusEvasaoDeCartas_(ficha) : 0;
-  if (evasao !== null) evasao += (b.evasao || 0) + bonusDaForma + bonusEsquivaLadino + md.evasao + bonusEvasaoCarta;
+  if (evasao !== null) {
+    evasao += (b.evasao || 0) + bonusDaForma + bonusEsquivaLadino + md.evasao + bonusEvasaoCarta;
+    lembrar('evasao', 'Avanços de nível', b.evasao || 0);
+    lembrar('evasao', 'Forma de Fera' + (formaAtiva && formaAtiva.nome ? ': ' + formaAtiva.nome : ''), bonusDaForma);
+    lembrar('evasao', 'Esquiva de Ladino', bonusEsquivaLadino);
+    lembrarTrilha('evasao', 'evasao');
+    lembrar('evasao', 'Cartas de domínio', bonusEvasaoCarta);
+  }
 
-  const bonusConjuracao = (typeof bonusConjuracaoDeCartas_ === 'function') ? bonusConjuracaoDeCartas_(ficha) : 0;
+  const estresseMaximo = CRIACAO.estresse + (b.estresseMaximo || 0) + bc.estresseMaximo + md.estresseMaximo;
+  lembrarBase('estresseMaximo', 'Base de todo personagem', CRIACAO.estresse);
+  lembrar('estresseMaximo', 'Avanços de nível', b.estresseMaximo || 0);
+  lembrar('estresseMaximo', 'Cartas permanentes', bc.estresseMaximo);
+  lembrarTrilha('estresseMaximo', 'estresseMaximo');
+
+  /*
+   * A CONJURAÇÃO SOMA DUAS FONTES, e faltava a segunda.
+   *
+   * Só as cartas entravam. A Armadura de canalização diz "+1 em jogadas de
+   * Conjuração" (SRD) e não chegava a lugar nenhum — o texto estava na ficha,
+   * o número não. Agora o modificador derivado da ficha (característica,
+   * carta, equipamento, saque) entra junto.
+   */
+  const bonusConjuracao = ((typeof bonusConjuracaoDeCartas_ === 'function')
+    ? bonusConjuracaoDeCartas_(ficha) : 0) + (Number(md.bonusConjuracao) || 0);
   const bonusAtaque = (typeof bonusAtaqueDeCartas_ === 'function') ? bonusAtaqueDeCartas_(ficha) : 0;
   const bonusLimiarGraveCarta = (typeof bonusLimiarGraveDeCartas_ === 'function') ? bonusLimiarGraveDeCartas_(ficha) : 0;
   const bonusDanoCarta = (typeof bonusDanoDeCartas_ === 'function') ? bonusDanoDeCartas_(ficha) : 0;
@@ -877,7 +1084,7 @@ function derivadosDoPersonagem_(ficha) {
     bonusDanoCarta: bonusDanoCarta,
     danoMinimoPvEmSucesso: danoMinimoPvEmSucesso,
     pontosDeVidaMaximos: pontosDeVidaMaximos,
-    estresseMaximo: CRIACAO.estresse + (b.estresseMaximo || 0) + bc.estresseMaximo + md.estresseMaximo,
+    estresseMaximo: estresseMaximo,
     esperancaMaxima: CRIACAO.esperancaMaxima,
     proficiencia: proficiencia,
     pontuacaoArmadura: pontuacaoArmadura,
@@ -887,12 +1094,20 @@ function derivadosDoPersonagem_(ficha) {
     caracteristicas: caracteristicasDaOrigem_(ficha).concat(caracteristicasDaClasse_(ficha)).concat(
       typeof caracteristicasDaTransformacao_ === 'function' ? caracteristicasDaTransformacao_(ficha) : []),
     bonusDeDano: bonusDeDanoDaFicha_(ficha),
+    bonusDeAtaque: bonusDeAtaqueDaFicha_(ficha),
     opcoesDeDadoEsperanca: opcoesDeDadoEsperancaDaFicha_(ficha),
     perfisDeAtaque: perfisDeAtaqueDaFicha_(ficha),
     modificadoresDeAlcance: (typeof modificadoresDeAlcanceDeOrigem_ === 'function')
       ? modificadoresDeAlcanceDeOrigem_(ficha) : [],
     modificadoresDeTraco: md.tracos,
     fontesDeModificadores: md.fontes,
+    /*
+     * DE ONDE VEM CADA PONTO. Uma lista por número derivado, na ordem da
+     * soma: a primeira linha é a base (marcada com base:true) e as demais são
+     * as parcelas, com o nome da fonte como ela aparece na ficha. A soma dos
+     * valores é o próprio número — a tela não recalcula nada, só desenha.
+     */
+    memoria: memoria,
     esquivaDeLadinoAtiva: esquivaDeLadinoAtiva,
     /*
      * A FORMA INTEIRA, JÁ COMPOSTA, VAI PARA A TELA — e ela mexe em DOIS
@@ -1027,11 +1242,21 @@ function aplicarDerivados_(ficha) {
   // O cliente recebe o perfil de dano já calculado pelo servidor. Qualquer
   // valor que tenha vindo no payload é sobrescrito aqui, como os outros derivados.
   ficha.bonusDeDano = d.bonusDeDano;
+  ficha.bonusDeAtaque = d.bonusDeAtaque;
   ficha.opcoesDeDadoEsperanca = d.opcoesDeDadoEsperanca;
   ficha.perfisDeAtaque = d.perfisDeAtaque;
   ficha.modificadoresDeAlcance = d.modificadoresDeAlcance;
   ficha.modificadoresDeTraco = d.modificadoresDeTraco;
   ficha.fontesDeModificadores = d.fontesDeModificadores;
+  /*
+   * DE ONDE VEM CADA NÚMERO — vai junto da ficha, como todo derivado.
+   *
+   * A tela não refaz a conta para explicá-la: ela desenha esta lista. Refazer
+   * a conta do outro lado é escrever a mesma regra duas vezes, e foi isso que
+   * congelou a Proficiência por três partes (E4). Aqui, quem soma é quem
+   * explica — e o teste E107 garante que a explicação fecha com o número.
+   */
+  ficha.memoriaDosNumeros = d.memoria;
   ficha.esquivaDeLadinoAtiva = d.esquivaDeLadinoAtiva;
 
   /*
@@ -1065,8 +1290,8 @@ function aplicarDerivados_(ficha) {
    * quê; com isso, a seção de condições diz "Determinado: não pode ficar
    * Vulnerável nem Restrito", que é a mesma frase que a mesa diria.
    */
-  ficha.condicoesImpedidas = (typeof condicoesImpedidasPorContador_ === 'function')
-    ? condicoesImpedidasPorContador_(ficha) : {};
+  ficha.condicoesImpedidas = (typeof condicoesImpedidasDaFicha_ === 'function')
+    ? condicoesImpedidasDaFicha_(ficha) : {};
 
   // Encher o Estresse deixa Vulnerável (livro p.92 e SRD). Aqui, depois dos
   // tetos: é o único ponto em que o máximo de Estresse já está calculado.

@@ -463,6 +463,35 @@ function contadorEDaFicha_(def, ficha, refs, chave) {
  * Devolve um objeto { idDaCondicao: nomeDoContador } — o nome serve para o
  * aviso na tela dizer de onde veio a proteção.
  */
+/**
+ * AS CONDIÇÕES QUE ESTA FICHA NÃO PODE RECEBER — de todas as fontes.
+ *
+ * Eram só as de contador (o Dado de Determinação impede Vulnerável e Restrito
+ * enquanto está na ficha). O EQUIPAMENTO também impede: a Armadura de Talas
+ * Wyrdwood diz "You can't be Restrained" — permanente enquanto vestida, sem
+ * contador nenhum por trás.
+ *
+ * ⚠ As duas fontes se somam em vez de uma substituir a outra: quem está
+ * Determinado VESTINDO a Wyrdwood tem as duas proteções, e tirar a armadura no
+ * meio da cena não devolve a condição que o Dado ainda impede.
+ */
+function condicoesImpedidasDaFicha_(ficha) {
+  const saida = (typeof condicoesImpedidasPorContador_ === 'function')
+    ? condicoesImpedidasPorContador_(ficha) : {};
+  const ativos = (typeof equipamentoAtivoDaFicha_ === 'function') ? equipamentoAtivoDaFicha_(ficha) : [];
+  for (let i = 0; i < ativos.length; i++) {
+    const item = (ativos[i] || {}).item || {};
+    const lista = ((item.efeitoEquipamento || {}).impedeCondicoes) || null;
+    if (!Array.isArray(lista)) continue;
+    for (let k = 0; k < lista.length; k++) {
+      // O nome que vai para o aviso é o da CARACTERÍSTICA, não o do item: é
+      // ela que a pessoa lê na ficha e procura no livro.
+      if (!saida[lista[k]]) saida[lista[k]] = item.carac || item.nome || 'Equipamento';
+    }
+  }
+  return saida;
+}
+
 function condicoesImpedidasPorContador_(ficha) {
   const saida = {};
   const contadores = (ficha && ficha.contadores) || {};

@@ -23,7 +23,7 @@
     "teste:layout-foto-mobile": "node tools/testes-foto-mobile.mjs",
     "teste:layout-responsivo": "node tools/testes-layout-responsivo.mjs",
     "teste:css": "node tools/conferir-css.mjs",
-    "teste:tudo": "npm run teste:lint && npm run teste:sintaxe && npm run teste:css && npm run teste && npm run teste:jornadas-srd2 && npm run teste:gerados && npm run teste:funcoes && npm run teste:motor-mesa && npm run teste:motor-simbolos && npm run teste:srd2 && npm run teste:e2e && npm run teste:rolagem && npm run teste:avanco-limites",
+    "teste:tudo": "npm run teste:lint && npm run teste:sintaxe && npm run teste:css && npm run teste && npm run teste:jornadas-srd2 && npm run teste:gerados && npm run teste:funcoes && npm run teste:motor-mesa && npm run teste:motor-simbolos && npm run teste:srd2 && npm run teste:e2e && npm run teste:rolagem && npm run teste:avanco-limites && npm run teste:de-onde-vem && npm run teste:ataque-equipamento && npm run teste:reacoes-armadura && npm run teste:fim-da-cena && npm run teste:cena-da-mesa",
     "teste:jornadas-srd2": "node tools/testes-jornadas-srd2.mjs",
     "teste:lint": "eslint .",
     "teste:sintaxe": "node tools/conferir-sintaxe.mjs",
@@ -95,6 +95,11 @@
     "teste:motor-mesa": "node tools/conferir-motor-mesa.mjs",
     "teste:motor-simbolos": "node tools/conferir-motor-simbolos.mjs",
     "teste:rolagem": "node tools/testes-rolagem.mjs",
+    "teste:de-onde-vem": "node tools/testes-de-onde-vem.mjs",
+    "teste:ataque-equipamento": "node tools/testes-ataque-equipamento.mjs",
+    "teste:reacoes-armadura": "node tools/testes-reacoes-armadura.mjs",
+    "teste:fim-da-cena": "node tools/testes-fim-da-cena.mjs",
+    "teste:cena-da-mesa": "node tools/testes-cena-da-mesa.mjs",
     "teste:avanco-limites": "node tools/testes-avanco-limites.mjs"
   },
   "devDependencies": {

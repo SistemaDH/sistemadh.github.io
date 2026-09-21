@@ -825,7 +825,12 @@ try {
 
   await passo('o dano da ficha aplica a Proficiência sem rolar dados', async () => {
     const corpo = pagina.locator('.ficha__corpo');
-    await corpo.getByText('Dano da ficha', { exact: true }).waitFor({ timeout: 5000 });
+    /*
+     * O bloco passou a se chamar "Ataque e dano da ficha" quando o +1 de
+     * Confiável entrou na linha da arma — antes ele só falava de dano, e o
+     * nome antigo faria o bônus de ataque parecer bônus de dano.
+     */
+    await corpo.getByText('Ataque e dano da ficha', { exact: true }).waitFor({ timeout: 5000 });
     const texto = (await corpo.textContent()).replace(/\s+/g, ' ');
     if (!/Florete:\s*(?:(?:Corpo a Corpo|Muito Próximo|Próximo|Distante|Muito Distante)\s*·\s*)?1d\d+/i.test(texto)) {
       throw new Error('a arma não mostrou o dado multiplicado pela Proficiência: ' + texto);

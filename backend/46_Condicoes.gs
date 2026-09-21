@@ -168,8 +168,8 @@ function sincronizarVulneravelPorEstresse_(ficha) {
    * sabe quais condições estão barradas agora é o CONTADOR ativo: ter a
    * habilidade não é estar Determinado.
    */
-  const impedidas = (typeof condicoesImpedidasPorContador_ === 'function')
-    ? condicoesImpedidasPorContador_(ficha) : {};
+  const impedidas = (typeof condicoesImpedidasDaFicha_ === 'function')
+    ? condicoesImpedidasDaFicha_(ficha) : {};
   const cheio = maximo > 0 && marcado >= maximo && !impedidas['vulneravel'];
 
   const lista = Array.isArray(ficha.condicoes) ? ficha.condicoes : [];
@@ -212,8 +212,8 @@ function sincronizarVulneravelPorEstresse_(ficha) {
  */
 function sincronizarCondicoesImpedidas_(ficha) {
   if (!ficha) return [];
-  const impedidas = (typeof condicoesImpedidasPorContador_ === 'function')
-    ? condicoesImpedidasPorContador_(ficha) : {};
+  const impedidas = (typeof condicoesImpedidasDaFicha_ === 'function')
+    ? condicoesImpedidasDaFicha_(ficha) : {};
   const ids = Object.keys(impedidas);
   if (!ids.length) return [];
 

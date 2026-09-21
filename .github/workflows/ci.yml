@@ -48,6 +48,16 @@ jobs:
         run: npm run teste:rolagem
       - name: Avanço — a tela impede antes de gravar
         run: npm run teste:avanco-limites
+      - name: De onde vem cada número
+        run: npm run teste:de-onde-vem
+      - name: O bônus de ataque da arma chega à tela
+        run: npm run teste:ataque-equipamento
+      - name: As reações da armadura aparecem na janela de dano
+        run: npm run teste:reacoes-armadura
+      - name: A ficha tem como dizer que a cena acabou
+        run: npm run teste:fim-da-cena
+      - name: O Mestre encerra a cena e a sessão, e chega nas fichas
+        run: npm run teste:cena-da-mesa
       - name: Layout mobile 360 / 390 / 430
         run: npm run teste:layout-mobile
       - name: Conjuração mobile 360 / 390 sem pontuação órfã

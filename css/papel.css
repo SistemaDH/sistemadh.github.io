@@ -364,7 +364,13 @@
 .papel__limiarBloco:nth-of-type(2) { padding-inline: 12px; }
 .papel__limiarBloco:nth-of-type(3) { padding-left: 12px; }
 
-.papel__limiares:hover .papel__limiarBloco,
+/*
+ * ⚠ GUARDA DE HOVER: no celular o `:hover` GRUDA depois do toque, e a faixa
+ * ficava acesa como se estivesse selecionada. O realce é só de ponteiro.
+ */
+@media (hover: hover) {
+  .papel__limiares:hover .papel__limiarBloco { background: var(--cor-ouro-escuro); }
+}
 .papel__limiares:focus-visible .papel__limiarBloco {
   background: var(--cor-ouro-escuro);
 }
@@ -394,10 +400,10 @@
   text-decoration-color: var(--cor-ouro-escuro);
 }
 
-.papel__limiares:hover .papel__limiarNome,
-.papel__limiares:focus-visible .papel__limiarNome {
-  text-decoration-color: var(--cor-ouro);
+@media (hover: hover) {
+  .papel__limiares:hover .papel__limiarNome { text-decoration-color: var(--cor-ouro); }
 }
+.papel__limiares:focus-visible .papel__limiarNome { text-decoration-color: var(--cor-ouro); }
 
 .papel__limiarCusto {
   font-size: var(--txt-xs);
@@ -421,6 +427,86 @@
   font-weight: 700;
   color: var(--cor-titulo);
 }
+
+/* --- a conta de cada número ------------------------------------------------- */
+
+/*
+ * UMA LINHA POR PARCELA, com o nome da fonte à esquerda e quanto ela soma à
+ * direita. A primeira é a BASE — vem sem sinal e com um fio embaixo, porque
+ * ela não soma a nada: ela é o começo.
+ */
+.parcelas {
+  padding: var(--e3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+  background: var(--cor-superficie-alta);
+}
+
+
+.parcelas__topo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--e2);
+}
+
+.parcelas__titulo {
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-md);
+  color: var(--cor-titulo);
+}
+
+.parcelas__total {
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-xl);
+  color: var(--cor-texto);
+}
+
+.parcelas__nota {
+  margin: var(--e2) 0 0;
+  font-size: var(--txt-sm);
+  color: var(--cor-texto-fraco);
+}
+
+.parcelas__linhas {
+  display: grid;
+  gap: var(--e1);
+  margin: var(--e2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.parcelas__linha {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--e2);
+  font-size: var(--txt-sm);
+}
+
+/*
+ * O fio separa a base do que vem DEPOIS dela — então só existe quando há um
+ * depois. Sem o `:not(:last-child)`, um número sem nenhum bônus (o caso mais
+ * comum no nível 1) fica com um traço pendurado embaixo, prometendo uma
+ * linha que não vem.
+ */
+.parcelas__linha--base:not(:last-child) {
+  padding-bottom: var(--e1);
+  border-bottom: 1px dashed var(--cor-borda);
+}
+
+.parcelas__rotulo { color: var(--cor-texto); }
+
+.parcelas__valor {
+  font-family: var(--fonte-mono);
+  font-weight: 700;
+  color: var(--cor-texto);
+  white-space: nowrap;
+}
+
+/* O que TIRA ponto tem de se ler como tal — cicatriz, teto, perda. */
+.parcelas__valor--tira { color: var(--cor-perigo); }
 
 /* --- PV e Estresse --------------------------------------------------------- */
 

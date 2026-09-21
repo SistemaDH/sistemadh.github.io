@@ -101,7 +101,7 @@ function desenharQuadro(q) {
  * aberta, de um descanso, do que estiver na tela — e o "veja também" abre outro
  * por cima deste, com o Escape voltando um de cada vez.
  */
-export function abrirVerbete(idOuPalavra) {
+export function abrirVerbete(idOuPalavra, { extra } = {}) {
   const v = verbetePorId(idOuPalavra) || verbeteDe(idOuPalavra);
   if (!v) return null;
 
@@ -129,6 +129,23 @@ export function abrirVerbete(idOuPalavra) {
       el('span', { class: 'verbete__etiqueta', texto: 'Errata 9/9/2025' }),
       el('span', { texto: v.errata })
     ]));
+  }
+
+  /*
+   * A REGRA PRIMEIRO, O SEU NÚMERO DEPOIS — e no MESMO lugar.
+   *
+   * Quem toca em "Evasão" quer duas coisas que são a mesma pergunta em dois
+   * tempos: o que é Evasão, e por que a MINHA é 11. Separar isso em dois alvos
+   * obrigava a pessoa a adivinhar qual dos dois ia receber; separar em duas
+   * janelas obrigava a abrir duas vezes.
+   *
+   * `extra` é uma FUNÇÃO, não um nó pronto: o verbete pode ser reaberto depois
+   * de a ficha mudar (marcou armadura, entrou em Forma de Fera), e um nó
+   * montado na hora de criar o gatilho mostraria a conta de antes.
+   */
+  if (extra) {
+    const bloco = (typeof extra === 'function') ? extra() : extra;
+    if (bloco) corpo.append(bloco);
   }
 
   const vizinhos = (v.veja || []).map(verbetePorId).filter(Boolean);
@@ -166,13 +183,15 @@ export function abrirVerbete(idOuPalavra) {
  * arrebentaria a entrelinha do parágrafo. A própria WCAG abre essa exceção
  * para alvos inline.
  */
-export function gatilho(texto, verbete) {
+export function gatilho(texto, verbete, { extra } = {}) {
   return el('button', {
     type: 'button',
     class: 'verbete__gatilho',
-    'aria-label': `${texto} — o que é, e onde está no livro`,
+    'aria-label': extra
+      ? `${texto} — o que é, e de onde vem o seu número`
+      : `${texto} — o que é, e onde está no livro`,
     title: `${verbete.termo} — livro p.${verbete.pagina}`,
-    onClick: (ev) => { ev.stopPropagation(); abrirVerbete(verbete.id); }
+    onClick: (ev) => { ev.stopPropagation(); abrirVerbete(verbete.id, { extra }); }
   }, texto);
 }
 
@@ -235,10 +254,10 @@ export function textoComVerbetes(texto) {
  * da p.193, que é justamente a que substitui a Evasão. Deixar a busca por
  * palavra decidir abriria o verbete errado na metade dos casos.
  */
-export function gatilhoPara(texto, id) {
+export function gatilhoPara(texto, id, { extra } = {}) {
   const v = verbetePorId(id);
   if (!v) return document.createTextNode(String(texto || ''));
-  return gatilho(String(texto), v);
+  return gatilho(String(texto), v, { extra });
 }
 
 /**
@@ -249,12 +268,12 @@ export function gatilhoPara(texto, id) {
  * seria dizer a mesma coisa duas vezes num rótulo que tem meia linha de
  * largura. Sem verbete, cai na glosa de sempre.
  */
-export function nomeAnotado(nome, { comGlossa = true } = {}) {
+export function nomeAnotado(nome, { comGlossa = true, extra } = {}) {
   const texto = String(nome || '');
   const v = verbeteDe(texto);
   if (v) {
     const frag = document.createDocumentFragment();
-    frag.append(gatilho(texto, v));
+    frag.append(gatilho(texto, v, { extra }));
     return frag;
   }
   return comGlossa ? nomeComGlossa(texto) : document.createTextNode(texto);

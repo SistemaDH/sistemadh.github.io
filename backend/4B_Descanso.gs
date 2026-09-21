@@ -415,17 +415,42 @@ function aplicarEquipamentoAutomaticoNoDescanso_(ficha, avisos) {
     const item = ativos[i].item || {};
     const regra = (((item.efeitoEquipamento || {}).descanso) || {});
     const cura = Math.max(0, Math.trunc(Number(regra.recuperaPv)) || 0);
-    if (!cura) continue;
-    ficha.recursos = ficha.recursos || {};
-    const antes = Math.max(0, Number(ficha.recursos.pontosDeVidaMarcados) || 0);
-    const depois = Math.max(0, antes - cura);
-    const efetivo = antes - depois;
-    ficha.recursos.pontosDeVidaMarcados = depois;
-    recuperados += efetivo;
-    if (efetivo > 0) {
-      avisos.push((item.nome || item.carac || 'Equipamento') + ' · ' +
-        (item.carac || 'efeito de descanso') + ': recuperou automaticamente ' +
-        efetivo + ' Ponto' + (efetivo === 1 ? '' : 's') + ' de Vida.');
+    if (cura) {
+      ficha.recursos = ficha.recursos || {};
+      const antes = Math.max(0, Number(ficha.recursos.pontosDeVidaMarcados) || 0);
+      const depois = Math.max(0, antes - cura);
+      const efetivo = antes - depois;
+      ficha.recursos.pontosDeVidaMarcados = depois;
+      recuperados += efetivo;
+      if (efetivo > 0) {
+        avisos.push((item.nome || item.carac || 'Equipamento') + ' · ' +
+          (item.carac || 'efeito de descanso') + ': recuperou automaticamente ' +
+          efetivo + ' Ponto' + (efetivo === 1 ? '' : 's') + ' de Vida.');
+      }
+    }
+
+    /*
+     * AUTORREGENERAÇÃO (SRD, Couraça de Couro de Troll):
+     * "Self-Healing: When you take a rest, clear an Armor Slot."
+     *
+     * ⚠ VALE NOS DOIS DESCANSOS. O livro diz "a rest", sem qualificar — quem
+     * quiser restringir ao longo tem de mostrar a linha que restringe, e ela
+     * não existe. E limpar PA é DESMARCAR: mexe em recursos.armaduraMarcada
+     * para baixo, nunca na Pontuação de Armadura, que é derivada e se recalcula
+     * sozinha na gravação (E17).
+     */
+    const limpaPa = Math.max(0, Math.trunc(Number(regra.limpaArmadura)) || 0);
+    if (limpaPa) {
+      ficha.recursos = ficha.recursos || {};
+      const antesPa = Math.max(0, Number(ficha.recursos.armaduraMarcada) || 0);
+      const depoisPa = Math.max(0, antesPa - limpaPa);
+      const efetivoPa = antesPa - depoisPa;
+      ficha.recursos.armaduraMarcada = depoisPa;
+      if (efetivoPa > 0) {
+        avisos.push((item.nome || 'Equipamento') + ' · ' + (item.carac || 'efeito de descanso') +
+          ': limpou automaticamente ' + efetivoPa + ' Ponto' + (efetivoPa === 1 ? '' : 's') +
+          ' de Armadura.');
+      }
     }
   }
   return recuperados;
@@ -726,6 +751,7 @@ function simularDescanso_(ficha, tipo, escolhas) {
       feito.contaDaFormula = 'tudo';
       if (!atual) feito.observacao = 'Já estava limpo — o movimento não recupera nada.';
       copia.recursos[ef.recurso] = 0;
+      if (ef.recurso === 'armaduraMarcada') consertarArmaduraEstilhacada_(copia, feito);
       feitos.push(feito);
       continue;
     }
@@ -745,6 +771,7 @@ function simularDescanso_(ficha, tipo, escolhas) {
       const total = bruto + (ef.somaPatamar ? patamar : 0);
       const atual = Number(copia.recursos[ef.recurso]) || 0;
       const novo = Math.max(0, atual - total);
+      if (ef.recurso === 'armaduraMarcada') consertarArmaduraEstilhacada_(copia, feito);
       feito.quantidade = atual - novo;
       feito.contaDaFormula = ef.dado + ' (' + bruto + ')' +
         (ef.somaPatamar ? ' + patamar ' + patamar : '') + ' = ' + total;
@@ -934,6 +961,35 @@ function curaParaAliado_(def, escolha, patamar, erros) {
 
   erros.push('"' + def.nome + '" não pode ser usado em um aliado.');
   return null;
+}
+
+/**
+ * REPARAR A ARMADURA TIRA A PENALIDADE DO VÍTREO.
+ *
+ * O SRD é específico: os -5 nos limiares ficam "until you choose to repair your
+ * armor as a downtime move". Não é "até o próximo descanso" — é até a pessoa
+ * gastar um movimento consertando. Por isso isto mora nos dois movimentos de
+ * reparo, e não no gatilho geral de descanso: quem descansa sem reparar
+ * continua com a armadura estilhaçada, que é o que o livro diz.
+ *
+ * ⚠ O ESTADO É PROCURADO PELO PREFIXO, não pela armadura equipada. Quem tomou
+ * o golpe com o Arnês e trocou de armadura continua com os limiares baixos até
+ * reparar — e, se a conferência olhasse o que está vestido agora, a penalidade
+ * ficaria presa para sempre.
+ */
+function consertarArmaduraEstilhacada_(ficha, feito) {
+  const contadores = (ficha && ficha.contadores) || {};
+  const chaves = Object.keys(contadores).filter(function (k) {
+    return /:vitreo$/.test(k) &&
+      (Math.trunc(Number((contadores[k] || {}).valor)) || 0) > 0;
+  });
+  if (!chaves.length) return 0;
+  chaves.forEach(function (k) { delete ficha.contadores[k]; });
+  if (feito) {
+    feito.observacao = (feito.observacao ? feito.observacao + ' ' : '') +
+      'A armadura estilhaçada foi consertada: os limiares voltam ao normal.';
+  }
+  return chaves.length;
 }
 
 /**
