@@ -1623,3 +1623,58 @@ A função foi reimplantada com o módulo incluído. `tools/conferir-srd2-transf
 - GitHub Pages #101 concluído com sucesso;
 - Supabase confirmou `Successfully updated edge function`;
 - nenhuma migração de banco foi necessária.
+
+---
+
+## Deploy do motor — v17, 21/09/2026
+
+`engine-api` **v17 ACTIVE**, `verify_jwt: false`, bundle
+`175c143335ebdb09c60af6fa603042d29b84e336fc92ae4f1cdc9eeb884e509d`,
+`ENGINE_COMMIT: 7424846cd88103653359e4fcd31d009b409d3880`.
+
+O que entrou no motor: o lote inteiro do equipamento (a porta única da Esperança
+`gastarEsperanca_`, Resplandecente, Favorecido pela Fortuna, Amaldiçoada, o mural
+de recados da mesa, Abençoada, Vítreo, Absorvente, Mnemônica, Forrada e as
+demais), o gatilho `fim-da-cena`, a cena da mesa e o limite de chave de 120.
+No `ACOES`, uma ação nova: `encerrarCenaDaMesa`.
+
+### Duas coisas quase deram errado, e as duas viraram regra
+
+**1. O commit fixado estava incompleto, e isso não dá erro.**
+
+Antes do deploy, o `origin/main` estava sem três arquivos do motor —
+`48_Criacao.gs`, `4B_Descanso.gs` e `46_Condicoes.gs` — que a suíte testava havia
+semanas; ficaram para trás numa entrega anterior, no caminho entre este
+ambiente e o clone da Vanessa. Fixar ali teria montado um motor Frankenstein:
+`4C`, `47`, `44`, `99`, `40` e `4E` novos rodando com `48`, `4B` e `46` antigos.
+O Vítreo nunca cobraria o preço, a conta dentro do verbete voltaria vazia, o
+Passos Rápidos não impediria Restrito — e **nada disso apareceria como erro**.
+Apareceria na mesa.
+
+> **Regra:** antes de fixar, comparar os 23 arquivos de `SOURCE_FILES` **servidos
+> pelo GitHub naquele commit**, byte a byte, com os que a suíte rodou. Não basta
+> o commit existir; ele tem de conter o motor testado.
+
+**2. A v16 existiu por 98 segundos com o portão de JWT ligado.**
+
+O deploy sem declarar `verify_jwt` usa o padrão `true` da ferramenta, e a função
+voltou com `verify_jwt: true`. O app não manda header de autorização nenhum
+(`js/api.js` envia só `Content-Type`), então **todo pedido teria sido recusado no
+portão**, antes de o handler rodar — o app inteiro fora do ar, sem erro no código.
+A releitura obrigatória do deploy pegou na hora; a v17 devolveu `verify_jwt: false`.
+
+> **Regra:** todo deploy desta função passa `verify_jwt: false` **explicitamente**.
+> Quem autentica aqui é o token de sessão próprio, dentro do handler, contra a
+> tabela `sessoes` (hash SHA-256). O portão de JWT do Supabase recusaria o app
+> antes de essa verificação acontecer.
+
+### Estado validado
+
+- 23/23 arquivos do motor servidos pelo GitHub no commit fixado e **idênticos aos testados**;
+- backend: **1053 passaram, 0 falharam**;
+- suíte inteira (`npm run teste:tudo`) verde, incluindo as cinco baterias de navegador;
+- releitura da função implantada confirma pin, `status: ACTIVE`, `verify_jwt: false`
+  e `encerrarCenaDaMesa` no `ACOES`;
+- advisors de segurança: só o `RLS Enabled No Policy` esperado, nas 6 tabelas
+  (as políticas públicas continuam deliberadamente ausentes);
+- nenhuma migração de banco foi necessária.

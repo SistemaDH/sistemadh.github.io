@@ -27,15 +27,35 @@ As tabelas expostas têm RLS habilitado e não possuem policies públicas para `
 Produção atual, após a implantação do SRD 2.0:
 
 ```text
-engine-api: v15 ACTIVE (deploy conferido em 17/09/2026)
+engine-api: v17 ACTIVE (deploy conferido em 21/09/2026)
 verify_jwt: false
-ENGINE_COMMIT: 856f025ff891b593175e12f8af3d05318edccb58
-bundle: 5e6c16fb14d9ffc9cd9843234335b0a1144a16d092961f9d27462ba1983c779c
+ENGINE_COMMIT: 7424846cd88103653359e4fcd31d009b409d3880
+bundle: 175c143335ebdb09c60af6fa603042d29b84e336fc92ae4f1cdc9eeb884e509d
 ```
 
-A v15 acrescentou ao `ACOES` as dez ações de mesa que até então eram servidas pelo
-`mesa-api`. O `ENGINE_COMMIT` **não** mudou: as dez já existiam no `backend/4E_Mesa.gs`
-do commit fixado, o que faltava era a função aceitá-las.
+A v17 acrescentou `encerrarCenaDaMesa` ao `ACOES` e moveu o `ENGINE_COMMIT` para o
+commit acima, que traz o lote inteiro do equipamento: a porta única da Esperança
+(`gastarEsperanca_`), a Resplandecente, o Favorecido pela Fortuna, a Amaldiçoada, o
+mural de recados da mesa e o limite de chave de 120 — sem o qual usar o Impenetrável
+dava erro ao gravar a ficha.
+
+⚠ **A v16 existiu por 98 segundos e nunca deveria ter existido.** O deploy sem
+declarar `verify_jwt` usa o padrão `true` da ferramenta, e a função voltou com o
+portão de JWT ligado — o app não manda header de autorização nenhum, então TODO
+pedido teria sido recusado no portão, antes de o handler rodar. A releitura
+obrigatória do deploy pegou, e a v17 devolveu `verify_jwt: false` em 1m38s. A
+lição virou regra: **todo deploy desta função passa `verify_jwt: false`
+explicitamente**, porque quem autentica aqui é o token de sessão próprio, dentro
+do handler.
+
+⚠ **E o commit fixado tem de conter TODO o motor testado.** Antes deste deploy, o
+`origin/main` estava sem três arquivos do motor (`48_Criacao.gs`, `4B_Descanso.gs`,
+`46_Condicoes.gs`) que a suíte já testava havia semanas — ficaram para trás numa
+entrega anterior. Fixar ali teria montado um motor Frankenstein: `4C` e `47` novos
+com `48` e `4B` antigos, o Vítreo nunca cobrando o preço e a conta do verbete
+voltando vazia, sem nada disso dar erro. A conferência que hoje precede o deploy é
+comparar os 23 arquivos servidos pelo GitHub naquele commit, byte a byte, com os
+que a suíte rodou.
 
 O source versionado em `supabase/functions/engine-api/index.ts` usa o mesmo `ENGINE_COMMIT` da função implantada. Esse alinhamento evita que um redeploy futuro feito a partir do repositório volte silenciosamente para um commit antigo.
 
@@ -208,7 +228,7 @@ Históricas/aposentadas — não criar dependência nova:
 
 ### Correções de avanço, Druida e painel do Mestre — 16/09/2026
 
-- motor funcional fixado em `856f025ff891b593175e12f8af3d05318edccb58`;
+- motor funcional fixado em `7424846cd88103653359e4fcd31d009b409d3880`;
 - avanço passa a montar as escolhas depois das conquistas automáticas dos níveis 5 e 8;
 - o Mestre pode reduzir o nível anunciado sem rebaixar fichas;
 - a seleção de Forma de Fera composta preserva a rolagem e recolhe as demais formas durante a configuração;

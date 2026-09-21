@@ -7,7 +7,7 @@ const cors = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const ENGINE_COMMIT = "856f025ff891b593175e12f8af3d05318edccb58";
+const ENGINE_COMMIT = "7424846cd88103653359e4fcd31d009b409d3880";
 const SOURCE_FILES = [
   "00_Config.gs","30_Personagens.gs","40_Regras.gs","41_Dominios.gs","42_Classes.gs",
   "43_Origens.gs","44_Equipamento.gs","45_Tracos.gs","46_Condicoes.gs","47_Contadores.gs",
@@ -22,7 +22,7 @@ const ACOES = new Set([
   "previaDescanso","movimentosDeDescanso","aplicarDescanso",
   "opcoesDeAvanco","previaDeAvanco","aplicarAvanco","desfazerAvanco","aplicarCartaPermanente",
   "painelDoMestre","configurarTransformacao","definirMoldura","molduraDaMesa",
-  "abrirSessao","encerrarSessaoDaMesa","voltarParaAPrimeiraSessao",
+  "abrirSessao","encerrarSessaoDaMesa","voltarParaAPrimeiraSessao","encerrarCenaDaMesa",
   "encontro","definirEncontro","acrescentarAoEncontro","ajustarAdversario",
   "porEmFoco","limparFoco","usarHabilidade","removerDoEncontro","limparEncontro",
   "adversariosDaMesa","salvarAdversarioDaMesa","excluirAdversarioDaMesa",

@@ -68,9 +68,9 @@ O navegador não acessa diretamente as tabelas PostgreSQL. `js/api.js` distribui
 Produção atual:
 
 ```text
-engine-api: ACTIVE (deploy conferido em 16/09/2026)
+engine-api: v17 ACTIVE (deploy conferido em 21/09/2026)
 verify_jwt: false
-ENGINE_COMMIT: 856f025ff891b593175e12f8af3d05318edccb58
+ENGINE_COMMIT: 7424846cd88103653359e4fcd31d009b409d3880
 ```
 
 O arquivo versionado `supabase/functions/engine-api/index.ts` usa o mesmo `ENGINE_COMMIT` do deploy ativo. Esse alinhamento é deliberado para impedir regressão em futuros redeploys.
