@@ -13824,6 +13824,396 @@ teste('o contador do Impenetrável sobrevive a uma gravação', () => {
 });
 
 /* ======================================================================== *
+ *  POSTURAS MARCIAIS e o FOCO — o subsistema que faltava
+ * ======================================================================== */
+
+/*
+ * Era a única coisa do catálogo classificada como subsistema AUSENTE: o
+ * Artista Marcial (subclasse do Brigão) podia ser escolhido na criação e
+ * chegava à mesa com uma característica de fundação que manda "pegue a folha
+ * de Posturas Marciais" e duas de especialização que custam Foco — sem folha,
+ * sem Foco e sem posturas.
+ *
+ * ⚠ E O FOCO NÃO É O HOLOFOTE. Em português as duas palavras colidem, e a
+ * confusão custou caro uma vez: eu tinha reportado uma divergência de regra na
+ * característica Agarrar da Lâmina de Corda Oscilante comparando-a com a
+ * POSTURA Agarrar, que é outra regra com o mesmo nome. A arma custa 1
+ * Esperança (livro e SRD concordam); a postura custa 1 Foco ou 1 Estresse.
+ */
+/** Um Artista Marcial de nível escolhido, sem passar pelo Guia de Caráter. */
+function fichaArtistaMarcial_(nivel, armadura) {
+  let f = contexto.fichaVazia_();
+  f.identidade.nome = 'Kai';
+  f.identidade.nivel = 1;
+  f.identidade.classe = 'Brigão';
+  f.identidade.subclasse = 'Artista Marcial';
+  f.identidade.ancestralidade = 'Humano';
+  f.identidade.comunidade = 'Highborne';
+  f.tracos = { agilidade: 1, forca: 1, finesse: 0, instinto: 2, presenca: -1, conhecimento: 0 };
+  f.experiencias = [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }];
+  if (armadura) f.equipamento = { armadura: armadura };
+  f = contexto.validarFicha_(f);
+  if (nivel && nivel > 1) { f.identidade.nivel = nivel; f = contexto.validarFicha_(f); }
+  return f;
+}
+
+teste('as posturas pertencem ao Artista Marcial, e o motor sabe disso', () => {
+  igual(avaliar('POSTURAS_CONFIG').subclasse, 'brigao-artista-marcial');
+  igual(contexto.ehArtistaMarcial_(fichaArtistaMarcial_(1)), true);
+});
+
+teste('o catálogo tem as 16 posturas, quatro por patamar', () => {
+  const POSTURAS = avaliar('POSTURAS');
+  const ids = Object.keys(POSTURAS);
+  igual(ids.length, 16);
+  const porTier = {};
+  ids.forEach((id) => { porTier[POSTURAS[id].tier] = (porTier[POSTURAS[id].tier] || 0) + 1; });
+  igual(porTier, { 1: 4, 2: 4, 3: 4, 4: 4 }, JSON.stringify(porTier));
+});
+
+/*
+ * ⚠ SÓ O ARTISTA MARCIAL TEM FOCO, e o teto de todo mundo mais é ZERO — não
+ * "ausente". Com zero, o mesmo caminho de ajuste de recurso recusa sozinho, a
+ * trilha não é desenhada, e um Foco que sobrou de uma troca de subclasse é
+ * aparado na primeira gravação.
+ */
+teste('o Foco existe para o Artista Marcial e para mais ninguém', () => {
+  const kai = fichaArtistaMarcial_(1);
+  igual(kai.recursos.focoMaximo, 6);
+
+  const mago = contexto.fichaRapida_({
+    nome: 'Não Marcial', classe: 'Mago', subclasse: 'Escola do Conhecimento',
+    ancestralidade: 'Humano', comunidade: 'Highborne',
+    cartas: ['codex-livro-de-ava', 'codex-livro-de-illiat'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  const v = contexto.validarFicha_(mago);
+  igual(v.recursos.focoMaximo, 0);
+  const r = contexto.aplicarAjustes_(v, [{ tipo: 'recurso', chave: 'foco', delta: 3 }]);
+  igual(r.erros, []);
+  igual(v.recursos.foco, 0, 'o teto zero recusa sozinho');
+});
+
+teste('trocar de subclasse leva as posturas e o Foco junto', () => {
+  const f = fichaArtistaMarcial_(1);
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'aprender', postura: 'confiavel' }]);
+  f.recursos.foco = 4;
+  igual(f.posturas.conhecidas, ['confiavel']);
+
+  f.identidade.subclasse = 'Colosso';
+  const v = contexto.validarFicha_(f);
+  igual(v.posturas.conhecidas, []);
+  igual(v.posturas.ativa, null);
+  igual(v.recursos.foco, 0);
+  igual(v.recursos.focoMaximo, 0);
+});
+
+/*
+ * ⚠ DO SEU PATAMAR OU INFERIOR, e o nível manda. No nível 1 só as quatro de
+ * Patamar 1 existem; quem grava uma de Patamar 2 na ficha à mão a perde na
+ * validação, com o problema dito por escrito.
+ */
+teste('a postura tem de ser do seu patamar ou de um inferior', () => {
+  const f = fichaArtistaMarcial_(1);
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'aprender', postura: 'ancorada' }]);
+  verdade(/patamar acima/.test((r.erros || [''])[0]), JSON.stringify(r.erros));
+
+  const f5 = fichaArtistaMarcial_(5);
+  const ok = contexto.aplicarAjustes_(f5, [{ tipo: 'postura', acao: 'aprender', postura: 'ancorada' }]);
+  igual(ok.erros, [], 'no patamar 2 ela já pode');
+});
+
+teste('são duas posturas no nível 1 e mais uma a cada nível', () => {
+  igual(contexto.quantasPosturasPodeConhecer_(fichaArtistaMarcial_(1)), 2);
+  igual(contexto.quantasPosturasPodeConhecer_(fichaArtistaMarcial_(5)), 6);
+  igual(contexto.quantasPosturasPodeConhecer_(fichaArtistaMarcial_(10)), 11);
+
+  const f = fichaArtistaMarcial_(1);
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'aprender', postura: 'confiavel' }]);
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'aprender', postura: 'rapida' }]);
+  const terceira = contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'aprender', postura: 'favorecida' }]);
+  verdade(/já escolheu as 2/.test((terceira.erros || [''])[0]), JSON.stringify(terceira.erros));
+});
+
+teste('assumir custa 1 Foco, e sem Foco não se assume', () => {
+  const f = fichaArtistaMarcial_(1);
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'aprender', postura: 'confiavel' }]);
+  const semFoco = contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'assumir', postura: 'confiavel' }]);
+  verdade(/custa 1 de Foco/.test((semFoco.erros || [''])[0]), JSON.stringify(semFoco.erros));
+  igual(f.posturas.ativa, null, 'recusa não deixa meia mudança');
+
+  f.recursos.foco = 3;
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'assumir', postura: 'confiavel' }]);
+  igual(r.erros, []);
+  igual(f.posturas.ativa, 'confiavel');
+  igual(f.recursos.foco, 2);
+});
+
+/*
+ * ⚠ UMA ATIVA POR VEZ, e a verdade mora em UM lugar (ficha.posturas.ativa).
+ * A alternativa era um contador por postura com zeraEm fim-da-cena: dezesseis
+ * contadores para guardar um único fato, e dezesseis chances de discordarem.
+ */
+teste('assumir outra postura derruba a anterior', () => {
+  const f = fichaArtistaMarcial_(1);
+  ['confiavel', 'rapida'].forEach((p) =>
+    contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'aprender', postura: p }]));
+  f.recursos.foco = 6;
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'assumir', postura: 'confiavel' }]);
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'assumir', postura: 'rapida' }]);
+  igual(f.posturas.ativa, 'rapida');
+  igual(r.mudancas[0].anterior, 'confiavel');
+  igual(f.recursos.foco, 4, 'cada troca custa o seu Foco');
+});
+
+/*
+ * ⚠ SÓ COM O ESTADO DE FLUXO O ESTRESSE PAGA. O livro diz "spend a Focus to
+ * shift into a martial stance"; a maestria acrescenta "you can mark a Stress
+ * instead". Sem ela, oferecer a troca seria inventar regra.
+ */
+teste('Estresse só troca de postura com o Estado de Fluxo', () => {
+  const f = fichaArtistaMarcial_(1);
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'aprender', postura: 'confiavel' }]);
+  const sem = contexto.aplicarAjustes_(f, [{
+    tipo: 'postura', acao: 'assumir', postura: 'confiavel', custo: 'estresse'
+  }]);
+  verdade(/Estado de Fluxo/.test((sem.erros || [''])[0]), JSON.stringify(sem.erros));
+
+  /*
+   * ⚠ A MAESTRIA NÃO VEM SOZINHA COM O NÍVEL. As cartas de subclasse são
+   * pegas como avanço, e uma ficha de nível 10 pode ter só a fundação — foi o
+   * que este teste descobriu ao pedir o Estado de Fluxo e não achar.
+   */
+  const f10 = fichaArtistaMarcial_(10);
+  f10.subclasseCartas = ['fundacao', 'especializacao', 'maestria'];
+  contexto.validarFicha_(f10);
+  contexto.aplicarAjustes_(f10, [{ tipo: 'postura', acao: 'aprender', postura: 'confiavel' }]);
+  const estresseAntes = f10.recursos.estresseMarcado;
+  const com = contexto.aplicarAjustes_(f10, [{
+    tipo: 'postura', acao: 'assumir', postura: 'confiavel', custo: 'estresse'
+  }]);
+  igual(com.erros, [], 'no nível 10 a maestria já está na ficha');
+  igual(f10.recursos.foco, 0, 'nenhum Foco saiu');
+  igual(f10.recursos.estresseMarcado, estresseAntes + 1);
+});
+
+teste('a Confiável soma no bônus de ataque do personagem, não da arma', () => {
+  const f = fichaArtistaMarcial_(1);
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'aprender', postura: 'confiavel' }]);
+  f.recursos.foco = 2;
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'assumir', postura: 'confiavel' }]);
+  const geral = (f.bonusDeAtaque || {}).geral || [];
+  verdade(geral.some((x) => /Postura Confiável/.test(x.fonte) && x.valor === 1), JSON.stringify(geral));
+  igual(((f.bonusDeAtaque || {}).porArma || []).length, 0, 'não virou bônus de arma');
+});
+
+/*
+ * ⚠ E A TRILHA DO NÚMERO EXPLICA A POSTURA. O E107 exige que a soma das
+ * parcelas feche com o número; a postura entra como mais uma parcela, com
+ * nome, sem ninguém ter escrito código de explicação para ela.
+ */
+teste('a Ancorada soma 2 nos limiares e aparece na conta', () => {
+  const f = fichaArtistaMarcial_(5, 'armadura-t1-armadura-de-couro');
+  const antes = { maior: f.defesas.limiarMaior, grave: f.defesas.limiarGrave };
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'aprender', postura: 'ancorada' }]);
+  f.recursos.foco = 2;
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'assumir', postura: 'ancorada' }]);
+  igual(f.defesas.limiarMaior, antes.maior + 2);
+  igual(f.defesas.limiarGrave, antes.grave + 2);
+  const trilha = (f.memoriaDosNumeros || {}).limiarMaior || [];
+  verdade(trilha.some((x) => /Postura Ancorada/.test(x.rotulo) && x.valor === 2), JSON.stringify(trilha));
+
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'sair' }]);
+  igual(f.defesas.limiarMaior, antes.maior, 'sair devolve o número no mesmo instante');
+});
+
+teste('a Agressiva tira 1 de Evasão enquanto estiver ativa', () => {
+  const f = fichaArtistaMarcial_(5);
+  const antes = f.defesas.evasao;
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'aprender', postura: 'agressiva' }]);
+  f.recursos.foco = 2;
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'assumir', postura: 'agressiva' }]);
+  igual(f.defesas.evasao, antes - 1);
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'sair' }]);
+  igual(f.defesas.evasao, antes);
+});
+
+/*
+ * As três saídas que não são escolha: fim da cena, dano Severo e o último
+ * Ponto de Vida.
+ *
+ * ⚠ A GRAVIDADE CONTA DEPOIS DA ARMADURA — quem levou Severo e gastou 1 Ponto
+ * de Armadura está diante de dano Maior, e NÃO sai da postura. É a mesma
+ * leitura que a Forrada já usa para a faixa Menor.
+ */
+teste('a cena acabou: a postura cai junto', () => {
+  const f = fichaArtistaMarcial_(1);
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'aprender', postura: 'confiavel' }]);
+  f.recursos.foco = 2;
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'assumir', postura: 'confiavel' }]);
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'gatilho', gatilho: 'fim-da-cena' }]);
+  igual(f.posturas.ativa, null);
+  verdade(/saiu da postura/i.test(r.mudancas[0].aviso || ''), r.mudancas[0].aviso);
+});
+
+teste('dano Severo derruba a postura — e o Ponto de Armadura pode salvá-la', () => {
+  const f = fichaArtistaMarcial_(5, 'armadura-t1-armadura-de-couro');
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'aprender', postura: 'confiavel' }]);
+  f.recursos.foco = 6;
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'assumir', postura: 'confiavel' }]);
+  const severo = f.defesas.limiarGrave;
+
+  contexto.aplicarAjustes_(f, [{ tipo: 'dano', dano: severo, tipoDeDano: 'fisico', usarArmadura: true }]);
+  igual(f.posturas.ativa, 'confiavel', 'a Armadura derrubou a gravidade para Maior');
+
+  contexto.aplicarAjustes_(f, [{ tipo: 'dano', dano: severo, tipoDeDano: 'fisico' }]);
+  igual(f.posturas.ativa, null, 'sem mitigação, o Severo derruba a postura');
+});
+
+teste('marcar o último Ponto de Vida também derruba a postura', () => {
+  const f = fichaArtistaMarcial_(5, 'armadura-t1-armadura-de-couro');
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'aprender', postura: 'confiavel' }]);
+  f.recursos.foco = 6;
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'assumir', postura: 'confiavel' }]);
+  f.recursos.pontosDeVidaMarcados = f.recursos.pontosDeVidaMaximos - 1;
+  contexto.aplicarAjustes_(f, [{ tipo: 'dano', dano: 1, tipoDeDano: 'fisico' }]);
+  igual(f.recursos.pontosDeVidaMarcados, f.recursos.pontosDeVidaMaximos);
+  igual(f.posturas.ativa, null);
+});
+
+/*
+ * ⚠ "INSTEAD OF" É LITERAL na Estável: quem paga com Foco não precisa ter
+ * Ponto de Armadura livre. Exigir os dois cobraria duas moedas por uma
+ * redução — e a postura existe justamente para quem está com a armadura no
+ * fim.
+ */
+teste('a Estável paga a mitigação com Foco, sem tocar na Armadura', () => {
+  const f = fichaArtistaMarcial_(5, 'armadura-t1-armadura-de-couro');
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'aprender', postura: 'estavel' }]);
+  f.recursos.foco = 6;
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'assumir', postura: 'estavel' }]);
+  const focoAntes = f.recursos.foco;
+  /* a Armadura toda marcada: sem a postura, nem daria para mitigar */
+  f.recursos.armaduraMarcada = f.defesas.pontuacaoArmadura;
+
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano: f.defesas.limiarMaior, tipoDeDano: 'fisico',
+    usarArmadura: true, pagarArmaduraComFoco: true
+  }]);
+  igual(r.erros, []);
+  igual(f.recursos.foco, focoAntes - 1);
+  igual(f.recursos.armaduraMarcada, f.defesas.pontuacaoArmadura, 'nenhum Ponto novo foi marcado');
+  igual(f.recursos.pontosDeVidaMarcados, 1, 'a gravidade caiu de Maior para Menor');
+  verdade(/Postura Estável/.test(r.mudancas[0].aviso || ''), r.mudancas[0].aviso);
+});
+
+teste('sem a postura Estável, ninguém paga mitigação com Foco', () => {
+  const f = fichaArtistaMarcial_(5, 'armadura-t1-armadura-de-couro');
+  f.recursos.foco = 6;
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano: f.defesas.limiarMaior, tipoDeDano: 'fisico',
+    usarArmadura: true, pagarArmaduraComFoco: true
+  }]);
+  verdade(/postura Estável/.test((r.erros || [''])[0]), JSON.stringify(r.erros));
+});
+
+teste('a Revigorante ganha Foco no 4 e não ganha nada no resto', () => {
+  const f = fichaArtistaMarcial_(1);
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'aprender', postura: 'revigorante' }]);
+  f.recursos.foco = 2;
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'assumir', postura: 'revigorante' }]);
+  igual(f.recursos.foco, 1);
+
+  const quatro = contexto.aplicarAjustes_(f, [{
+    tipo: 'postura', acao: 'usar', ataqueBemSucedido: true, dado: 4
+  }]);
+  igual(quatro.erros, []);
+  igual(f.recursos.foco, 2);
+  const dois = contexto.aplicarAjustes_(f, [{
+    tipo: 'postura', acao: 'usar', ataqueBemSucedido: true, dado: 2
+  }]);
+  igual(f.recursos.foco, 2, 'o gatilho não foi acionado');
+  verdade(/não foi acionado/.test(dois.mudancas[0].aviso || ''), dois.mudancas[0].aviso);
+
+  const semAtaque = contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'usar', dado: 4 }]);
+  verdade(/ataque foi bem-sucedido/.test((semAtaque.erros || [''])[0]), JSON.stringify(semAtaque.erros));
+  const semDado = contexto.aplicarAjustes_(f, [{
+    tipo: 'postura', acao: 'usar', ataqueBemSucedido: true
+  }]);
+  verdade(/informe/i.test((semDado.erros || [''])[0]), JSON.stringify(semDado.erros));
+});
+
+/*
+ * ⚠ SÓ A POSTURA ATIVA TEM GESTO. Usar o uso ativo de uma postura que se
+ * conhece mas não se assumiu seria ter todas ao mesmo tempo — exatamente o
+ * que a regra de "uma ativa por vez" impede.
+ */
+teste('o uso ativo é da postura ATIVA, não de qualquer conhecida', () => {
+  const f = fichaArtistaMarcial_(1);
+  ['revigorante', 'confiavel'].forEach((p) =>
+    contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'aprender', postura: p }]));
+  f.recursos.foco = 3;
+  contexto.aplicarAjustes_(f, [{ tipo: 'postura', acao: 'assumir', postura: 'confiavel' }]);
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'postura', acao: 'usar', postura: 'revigorante', ataqueBemSucedido: true, dado: 4
+  }]);
+  verdade(/postura ativa é a Confiável/.test((r.erros || [''])[0]), JSON.stringify(r.erros));
+});
+
+/*
+ * ⚠ A RECARGA LIMPA ANTES DE ENCHER, e é uma aposta de verdade: quem estava
+ * com 5 e tirou 2 fica com 2. O livro manda limpar a trilha primeiro.
+ */
+teste('Refocar limpa a trilha antes de encher — e pode sair caro', () => {
+  const f = fichaArtistaMarcial_(1);
+  f.recursos.foco = 5;
+  const r = contexto.recarregarFocoDaFicha_(f, 2);
+  igual(r.erro, undefined, JSON.stringify(r));
+  igual(f.recursos.foco, 2);
+  igual(r.antes, 5);
+
+  const ate = contexto.recarregarFocoDaFicha_(f, 6);
+  igual(f.recursos.foco, 6);
+  igual(ate.erro, undefined);
+
+  const fora = contexto.recarregarFocoDaFicha_(f, 9);
+  verdade(/1 a 6/.test(fora.erro || ''), JSON.stringify(fora));
+});
+
+teste('Refocar é movimento de descanso e pede o MAIOR d6 do Instinto', () => {
+  const f = fichaArtistaMarcial_(1);
+  igual(contexto.dadosDeRecargaDeFoco_(f), f.tracos.instinto);
+  const movimentos = contexto.movimentosDoDescanso_('curto', f).map((m) => m.id);
+  verdade(movimentos.indexOf('foco:refocar') >= 0, JSON.stringify(movimentos));
+
+  f.recursos.foco = 0;
+  const r = contexto.aplicarDescanso_(f, 'curto', [{ movimento: 'foco:refocar', maiorResultado: 4 }]);
+  igual(r.ficha.recursos.foco, 4);
+
+  /* e não aparece para quem não é Artista Marcial */
+  const mago = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Sem Foco', classe: 'Mago', subclasse: 'Escola do Conhecimento',
+    ancestralidade: 'Humano', comunidade: 'Highborne',
+    cartas: ['codex-livro-de-ava', 'codex-livro-de-illiat'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  const dele = contexto.movimentosDoDescanso_('curto', mago).map((m) => m.id);
+  igual(dele.indexOf('foco:refocar'), -1, JSON.stringify(dele));
+});
+
+teste('o bloco que a tela desenha vem pronto do servidor', () => {
+  const f = fichaArtistaMarcial_(1);
+  const t = f.posturasDaTela;
+  verdade(!!t, 'a ficha não trouxe posturasDaTela');
+  igual(t.maximoDeFoco, 6);
+  igual(t.aEscolher, 2);
+  igual(t.dadosDeRecarga, f.tracos.instinto);
+  igual(t.disponiveis.length, 4, 'as quatro de patamar 1');
+  igual(t.ativa, null);
+  igual(t.podeTrocarPorEstresse, false);
+});
+
+/* ======================================================================== *
  *  RESPLANDECENTE — e o caminho único da Esperança que ela obrigou a existir
  * ======================================================================== */
 

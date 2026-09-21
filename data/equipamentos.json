@@ -2238,7 +2238,7 @@
         "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 2: Armas e Armaduras",
         "automacao": {
           "classificacao": "resultado-manual-da-mesa",
-          "motivo": "SRD 2.0: em acerto Corpo a Corpo, gaste um Foco OU marque 1 Estresse para deixar o alvo Restrito ou puxá-lo. ⚠ O texto pt-BR do livro diz \"gastar 1 de Esperança\" — divergência anotada, não resolvida: o app ainda não modela o recurso Foco do SRD 2.0."
+          "motivo": "SRD 2.0 (tabela de armas): em acerto, gaste 1 de Esperança para deixar o alvo Restrito ou puxá-lo para alcance Corpo a Corpo — o mesmo que o livro pt-BR. O app cobra a Esperança pelo caminho único de gasto; a condição entra na ficha do alvo, que é do Mestre. ⚠ Não confundir com a POSTURA Agarrar do Artista Marcial, regra diferente de mesmo nome, que custa 1 Foco ou 1 Estresse."
         }
       },
       "danoSRD": "d8+9 phy"

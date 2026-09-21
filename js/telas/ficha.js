@@ -1438,6 +1438,37 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
      * marcação de PV por causa de um dado esquecido trocaria um esquecimento
      * por um travamento, no pior momento possível.
      */
+    /*
+     * POSTURA ESTÁVEL: "you can spend a Focus instead of an Armor Slot to
+     * reduce damage."
+     *
+     * ⚠ "INSTEAD OF" É LITERAL, e é por isso que a caixa aparece MESMO com a
+     * Armadura toda marcada — é justamente aí que ela salva. A única coisa que
+     * ela pede é Foco na trilha.
+     */
+    const posturaDoDano = (ficha || {}).posturasDaTela ? ficha.posturasDaTela.ativa : null;
+    const temEstavel = !!(posturaDoDano && (posturaDoDano.danoRecebido || {}).estavel) &&
+      Math.max(0, Number((ficha.posturasDaTela || {}).foco) || 0) >= 1;
+    const usarFocoNaArmadura = temEstavel ? el('input', { type:'checkbox' }) : null;
+    /*
+     * ⚠ MARCAR A ESTÁVEL DESTRAVA A MITIGAÇÃO. A caixa de Armadura fica
+     * apagada quando não há Ponto livre — e com a Estável não é preciso ter
+     * nenhum. Sem esta linha, quem está com a armadura no fim veria a caixa
+     * que resolve o problema ao lado de outra apagada, e não conseguiria usar
+     * exatamente a postura que existe para esse momento.
+     */
+    if (usarFocoNaArmadura) {
+      usarFocoNaArmadura.addEventListener('change', () => {
+        if (usarFocoNaArmadura.checked) {
+          usarArmadura.disabled = false;
+          usarArmadura.checked = true;
+        } else {
+          usarArmadura.disabled = !paMax || paMarcados >= paMax;
+          if (usarArmadura.disabled) usarArmadura.checked = false;
+        }
+      });
+    }
+
     const temAmaldicoada = temCaracteristicaDeEquipamento_(ficha, 'Amaldiçoada');
     const dadoAmaldicoada = temAmaldicoada ? el('input', semCorretor({
       type:'number', class:'campo__entrada', min:'1', max:'4', step:'1',
@@ -1538,6 +1569,11 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           ? `Marcar 1 Ponto de Armadura para reduzir a gravidade (${Math.max(0, paMax - paMarcados)} ${Math.max(0, paMax - paMarcados) === 1 ? 'disponível' : 'disponíveis'})`
           : 'Sem Pontos de Armadura disponíveis para mitigação' })
       ]),
+      usarFocoNaArmadura ? el('label', { class:'criacao__alternador' }, [
+        usarFocoNaArmadura,
+        el('span', { texto:'Postura Estável — pagar essa redução com 1 Foco em vez do Ponto de Armadura ' +
+          '(vale mesmo com a Armadura toda marcada)' })
+      ]) : null,
       usarImpenetravel ? el('label', { class:'criacao__alternador' }, [
         usarImpenetravel,
         el('span', { texto:'Impenetrável — se este dano marcaria seu último PV, marque 1 Estresse em vez dele (1× por descanso)' })
@@ -1589,6 +1625,8 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
             usarForrada: !usarEspelho && !!(usarForrada && usarForrada.checked),
             usarAbsorvente: !usarEspelho && !!(usarAbsorvente && usarAbsorvente.checked),
             usarVitreo: !usarEspelho && !!(usarVitreo && usarVitreo.checked),
+            pagarArmaduraComFoco: !usarEspelho &&
+              !!(usarFocoNaArmadura && usarFocoNaArmadura.checked),
             usarEspelhoMarigold: usarEspelho,
             usarAnelResistencia: usarAnel,
             ataqueBemSucedido: usarAnel,
@@ -1670,8 +1708,309 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
        * mas vem depois do HUD de combate: é referência de regra, não marcador
        * que a pessoa precisa localizar a cada golpe.
        */
-      cartaDeEsperanca(ficha)
+      cartaDeEsperanca(ficha),
+      /*
+       * ⚠ O FOCO VEM DEPOIS DA CARTA DE ESPERANÇA, não entre ela e a trilha.
+       *
+       * A trilha de Esperança e a característica que a gasta (o "Frente a
+       * Frente" do Brigão, e a equivalente de cada classe) são UMA coisa: o
+       * recurso e o que se faz com ele. O Foco entrando no meio partia esse
+       * par ao meio — a proprietária viu isso na primeira tela que recebeu.
+       *
+       * Ele continua no mesmo bloco, logo abaixo, porque é gasto numa REAÇÃO
+       * ("quando for alvo de um ataque, gaste 1 Foco") e precisa estar onde a
+       * mão já procura. Num marcador dentro da dobra de Marcadores estaria a
+       * dois toques de distância no pior momento possível.
+       *
+       * Só aparece para o Artista Marcial: o teto de todo mundo mais é zero.
+       */
+      blocoDeFoco(ficha)
     ]);
+  }
+
+  /* ======================================================================== *
+   *  FOCO e POSTURAS MARCIAIS — só do Artista Marcial
+   * ======================================================================== */
+
+  /**
+   * A trilha de Foco, a postura ativa e a porta para escolher posturas.
+   *
+   * ⚠ O QUE A TELA SABE SOBRE POSTURAS VEM PRONTO DO SERVIDOR
+   * (`ficha.posturasDaTela`). O catálogo das dezesseis mora lá; aqui só se
+   * desenha. Recalcular deste lado quem está disponível seria a mesma regra
+   * escrita duas vezes — que é como a Proficiência ficou congelada por três
+   * partes (E4).
+   */
+  function blocoDeFoco(ficha) {
+    const t = (ficha || {}).posturasDaTela;
+    if (!t || !t.maximoDeFoco) return null;
+
+    return el('div', { class: 'papel__foco' }, [
+      faixa('Foco'),
+      el('p', { class: 'papel__nota' }, textoAnotado(
+        'Gaste 1 Foco para assumir uma postura marcial. Recarregue num descanso, ' +
+        'pelo movimento "Refocar".')),
+      trilhaDeFoco(t),
+      faixaDaPostura(ficha, t)
+    ]);
+  }
+
+  /**
+   * ⚠ A TRILHA DO FOCO NÃO PARECE A DA ESPERANÇA, de propósito.
+   *
+   * São dois recursos que se gastam do mesmo jeito e ficam um embaixo do
+   * outro; se tivessem a mesma forma, o dedo erraria o de cima no meio de uma
+   * cena. A Esperança são losangos; o Foco são círculos.
+   */
+  function trilhaDeFoco(t) {
+    const max = Math.max(0, Number(t.maximoDeFoco) || 0);
+    const atual = Math.max(0, Math.min(max, Number(t.foco) || 0));
+    const pista = el('div', {
+      class: 'papel__pistaFoco', role: 'group', 'aria-label': 'Foco'
+    });
+    for (let i = 1; i <= max; i++) {
+      const cheio = i <= atual;
+      pista.append(el('button', {
+        type: 'button',
+        class: `papel__focoPonto ${cheio ? 'esta-cheio' : ''}`,
+        'aria-label': `Foco: ${i} de ${max}`,
+        'aria-pressed': cheio ? 'true' : 'false',
+        onClick: (ev) => marcarAte(ev.currentTarget.parentNode, 'foco', i)
+      }));
+    }
+    return el('div', { class: 'papel__focoTrilha' }, [pista]);
+  }
+
+  /** A postura ativa — ou o convite para assumir uma. */
+  function faixaDaPostura(ficha, t) {
+    const ativa = t.ativa;
+    const podeAssumir = (t.conhecidas || []).length > 0;
+    const temFoco = Math.max(0, Number(t.foco) || 0) >= 1;
+
+    const botoes = el('div', { class: 'linha' }, [
+      el('button', {
+        type: 'button', class: 'btn btn--pequeno',
+        disabled: !podeAssumir || (!temFoco && !t.podeTrocarPorEstresse),
+        onClick: () => abrirPosturas(ficha, t)
+      }, ativa ? 'Trocar de postura' : 'Assumir uma postura'),
+      ativa ? el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--pequeno',
+        onClick: () => enviar([{ tipo: 'postura', acao: 'sair' }])
+      }, 'Sair da postura') : null,
+      t.aEscolher > 0 ? el('button', {
+        type: 'button', class: 'btn btn--principal btn--pequeno',
+        onClick: () => abrirPosturas(ficha, t, { aprender: true })
+      }, t.aEscolher === 1 ? 'Escolher 1 postura' : `Escolher ${t.aEscolher} posturas`) : null
+    ].filter(Boolean));
+
+    return el('div', { class: 'papel__postura' }, [
+      ativa
+        ? el('div', { class: 'papel__posturaAtiva' }, [
+          el('h4', { class: 'papel__posturaNome' }, [
+            el('span', { class: 'texto-xs texto-fraco', texto: 'Postura ativa · ' }),
+            el('span', {}, nomeComGlossa(ativa.nome))
+          ]),
+          el('p', { class: 'texto-sm' }, textoAnotado(ativa.texto)),
+          ativa.escolha && ativa.escolha.traco
+            ? el('p', { class: 'texto-xs texto-fraco', texto: `Traço escolhido: ${ativa.escolha.traco}.` })
+            : null,
+          ...botoesDeUsoDaPostura(ativa, t)
+        ].filter(Boolean))
+        : el('p', { class: 'texto-sm texto-fraco', texto: podeAssumir
+          ? 'Nenhuma postura ativa.'
+          : 'Você ainda não escolheu nenhuma postura marcial.' }),
+      botoes
+    ]);
+  }
+
+  /**
+   * O gesto que a postura ativa oferece, quando ela tem um.
+   *
+   * ⚠ SÓ A POSTURA ATIVA TEM GESTO. Cinco das dezesseis pedem um toque
+   * (o d4 da Revigorante, a moeda da Rápida e da Agarrar, o Foco da
+   * Aperfeiçoada, a Esperança da Esmagadora); as outras valem sozinhas ou são
+   * da mesa, e para elas o texto acima já é tudo o que a tela tem a dizer.
+   */
+  function botoesDeUsoDaPostura(ativa, t) {
+    const uso = ativa.usoAtivo;
+    if (!uso) return [];
+
+    if (uso.entradaManual) {
+      return [el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--pequeno',
+        onClick: () => perguntarDadoDaPostura(ativa, uso)
+      }, `${ativa.nome} · informar o d${uso.entradaManual.lados}`)];
+    }
+
+    const custos = [];
+    if (uso.custoAlternativo) {
+      const semFoco = Math.max(0, Number(t.foco) || 0) < 1;
+      custos.push(el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--pequeno', disabled: semFoco,
+        onClick: () => enviar([{ tipo: 'postura', acao: 'usar', custo: 'foco',
+          ataqueBemSucedido: uso.exigeAtaqueBemSucedido === true }])
+      }, semFoco ? 'Usar · 1 Foco (sem Foco)' : 'Usar · 1 Foco'));
+      custos.push(el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--pequeno',
+        onClick: () => enviar([{ tipo: 'postura', acao: 'usar', custo: 'estresse',
+          ataqueBemSucedido: uso.exigeAtaqueBemSucedido === true }])
+      }, 'Usar · 1 Estresse'));
+      return [el('div', { class: 'linha' }, custos)];
+    }
+
+    const preco = uso.custoFoco ? `${uso.custoFoco} de Foco`
+      : uso.custoEsperanca ? `${uso.custoEsperanca} de Esperança` : 'sem custo';
+    return [el('button', {
+      type: 'button', class: 'btn btn--fantasma btn--pequeno',
+      disabled: !!uso.custoFoco && Math.max(0, Number(t.foco) || 0) < uso.custoFoco,
+      onClick: () => enviar([{ tipo: 'postura', acao: 'usar',
+        ataqueBemSucedido: uso.exigeAtaqueBemSucedido === true }])
+    }, `${ativa.nome} · ${preco}`)];
+  }
+
+  /** O d4 da Revigorante (e de quem vier depois com a mesma forma). */
+  function perguntarDadoDaPostura(ativa, uso) {
+    const campo = el('input', semCorretor({
+      type: 'number', class: 'campo__entrada', min: '1',
+      max: String(uso.entradaManual.lados), step: '1', inputmode: 'numeric'
+    }));
+    const modal = abrirModal({
+      titulo: `${ativa.nome}`,
+      conteudo: el('div', { class: 'pilha' }, [
+        el('p', { class: 'texto-sm' }, textoAnotado(ativa.texto)),
+        el('label', { class: 'campo' }, [
+          el('span', { class: 'campo__rotulo', texto:
+            `Informe ${uso.entradaManual.rotulo || 'o dado'}` }),
+          campo
+        ]),
+        el('p', { class: 'texto-xs texto-fraco', texto:
+          'Quem rola é você, na mesa. O app só guarda o resultado.' })
+      ]),
+      acoes: [
+        el('button', { type: 'button', class: 'btn btn--fantasma',
+          onClick: () => modal.fechar() }, 'Cancelar'),
+        el('button', { type: 'button', class: 'btn', onClick: async () => {
+          const n = Math.trunc(Number(campo.value));
+          if (!n || n < 1 || n > uso.entradaManual.lados) {
+            avisarErro(`Informe um número de 1 a ${uso.entradaManual.lados}.`); return;
+          }
+          const pedido = { tipo: 'postura', acao: 'usar' };
+          pedido[uso.entradaManual.campo || 'dado'] = n;
+          if (uso.exigeAtaqueBemSucedido === true) pedido.ataqueBemSucedido = true;
+          const r = await enviar([pedido]);
+          if (r) modal.fechar();
+        } }, 'Confirmar')
+      ]
+    });
+    setTimeout(() => campo.focus(), 0);
+  }
+
+  /**
+   * A folha de Posturas: escolher quais se conhece e em qual entrar.
+   *
+   * ⚠ DUAS LISTAS NA MESMA JANELA, e não duas janelas: "as que eu tenho" e
+   * "as que posso aprender" são a mesma pergunta em dois momentos da vida do
+   * personagem, e no nível 1 a segunda é a única que importa.
+   */
+  function abrirPosturas(ficha, t, { aprender = false } = {}) {
+    const corpo = el('div', { class: 'pilha' });
+
+    const conhecidas = t.conhecidas || [];
+    if (conhecidas.length) {
+      corpo.append(el('strong', { texto: 'Suas posturas' }));
+      corpo.append(el('p', { class: 'texto-xs texto-fraco', texto: t.podeTrocarPorEstresse
+        ? 'Assumir custa 1 Foco — ou 1 Estresse, pelo Estado de Fluxo.'
+        : 'Assumir custa 1 Foco. Só uma fica ativa por vez.' }));
+      conhecidas.forEach((p) => {
+        const ativa = t.ativa && t.ativa.id === p.id;
+        corpo.append(el('div', { class: 'ficha__carac' }, [
+          el('h4', { class: 'ficha__caracNome' }, [
+            el('span', {}, nomeComGlossa(p.nome)),
+            el('span', { class: 'texto-xs texto-fraco', texto: ` · patamar ${p.tier}` })
+          ]),
+          el('p', { class: 'texto-sm' }, textoAnotado(p.texto)),
+          p.nota ? el('p', { class: 'texto-xs texto-fraco', texto: p.nota }) : null,
+          ativa
+            ? el('p', { class: 'texto-xs texto-fraco', texto: 'Esta é a postura ativa.' })
+            : el('div', { class: 'linha' }, [
+              el('button', {
+                type: 'button', class: 'btn btn--pequeno',
+                disabled: Math.max(0, Number(t.foco) || 0) < 1,
+                onClick: () => assumirPostura(p, 'foco')
+              }, 'Assumir · 1 Foco'),
+              t.podeTrocarPorEstresse ? el('button', {
+                type: 'button', class: 'btn btn--fantasma btn--pequeno',
+                onClick: () => assumirPostura(p, 'estresse')
+              }, 'Assumir · 1 Estresse') : null
+            ].filter(Boolean))
+        ].filter(Boolean)));
+      });
+    }
+
+    if (t.aEscolher > 0 || aprender) {
+      corpo.append(el('strong', { texto: t.aEscolher > 0
+        ? (t.aEscolher === 1 ? 'Escolha 1 postura' : `Escolha ${t.aEscolher} posturas`)
+        : 'Nada a escolher agora' }));
+      if (t.aEscolher > 0) {
+        corpo.append(el('p', { class: 'texto-xs texto-fraco', texto:
+          'Do seu patamar ou de um inferior. Escolher não gasta nada — o Foco só sai ao assumir.' }));
+        (t.disponiveis || []).forEach((p) => {
+          corpo.append(el('div', { class: 'ficha__carac' }, [
+            el('h4', { class: 'ficha__caracNome' }, [
+              el('span', {}, nomeComGlossa(p.nome)),
+              el('span', { class: 'texto-xs texto-fraco', texto: ` · patamar ${p.tier}` })
+            ]),
+            el('p', { class: 'texto-sm' }, textoAnotado(p.texto)),
+            p.nota ? el('p', { class: 'texto-xs texto-fraco', texto: p.nota }) : null,
+            el('button', {
+              type: 'button', class: 'btn btn--pequeno',
+              onClick: async () => {
+                const r = await enviar([{ tipo: 'postura', acao: 'aprender', postura: p.id }]);
+                if (r) modal.fechar();
+              }
+            }, 'Aprender esta')
+          ].filter(Boolean)));
+        });
+      }
+    }
+
+    const modal = abrirModal({ titulo: 'Posturas marciais', conteudo: corpo });
+
+    async function assumirPostura(p, custo) {
+      const pedido = { tipo: 'postura', acao: 'assumir', postura: p.id, custo: custo };
+      /*
+       * A Favorecida pergunta QUAL TRAÇO soma ao dano, e a pergunta é feita na
+       * hora de assumir porque é quando a regra manda escolher.
+       */
+      if (p.escolha && p.escolha.campo === 'traco') {
+        const traco = await perguntarTracoDaPostura(p);
+        if (!traco) return;
+        pedido.escolha = { traco: traco };
+      }
+      const r = await enviar([pedido]);
+      if (r) modal.fechar();
+    }
+  }
+
+  /** O traço que a Favorecida soma ao dano. */
+  function perguntarTracoDaPostura(p) {
+    return new Promise((resolver) => {
+      let escolhido = null;
+      const lista = el('div', { class: 'linha' }, TRACOS_ORDEM.map((t) => el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--pequeno',
+        onClick: () => { escolhido = t; modal.fechar(); resolver(t); }
+      }, t)));
+      const modal = abrirModal({
+        titulo: p.nome,
+        conteudo: el('div', { class: 'pilha' }, [
+          el('p', { class: 'texto-sm' }, textoAnotado(
+            (p.escolha && p.escolha.pergunta) || 'Escolha o traço.')),
+          lista
+        ]),
+        acoes: [el('button', { type: 'button', class: 'btn btn--fantasma',
+          onClick: () => { modal.fechar(); if (!escolhido) resolver(null); } }, 'Cancelar')]
+      });
+    });
   }
 
   /**

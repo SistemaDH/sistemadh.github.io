@@ -34,7 +34,14 @@ const RECURSOS_AJUSTAVEIS = {
   pontosDeVidaMarcados: { rotulo: 'Pontos de Vida', maximo: 'pontosDeVidaMaximos', onde: 'recursos', marcador: true },
   estresseMarcado:      { rotulo: 'Estresse',       maximo: 'estresseMaximo',      onde: 'recursos', marcador: true },
   armaduraMarcada:      { rotulo: 'Pontos de Armadura', maximo: 'pontuacaoArmadura', onde: 'defesas', marcador: true },
-  esperanca:            { rotulo: 'Esperança',      maximo: 'esperancaMaxima',     onde: 'recursos', marcador: false }
+  esperanca:            { rotulo: 'Esperança',      maximo: 'esperancaMaxima',     onde: 'recursos', marcador: false },
+  /*
+   * ⚠ O FOCO É A ÚNICA TRILHA QUE NEM TODA FICHA TEM. Ele é do Artista
+   * Marcial, e o teto de todo mundo mais é zero — então este mesmo caminho
+   * recusa sozinho quem não deveria ter, sem uma conferência à parte que um
+   * dia divergiria.
+   */
+  foco:                 { rotulo: 'Foco',           maximo: 'focoMaximo',          onde: 'recursos', marcador: false }
 };
 
 /** Apelidos para o cliente não precisar decorar o nome interno do campo. */
@@ -42,7 +49,8 @@ const RECURSO_AJUSTE_ALIASES = {
   pontosDeVidaMarcados: ['pv', 'pontosDeVida', 'vida', 'hp'],
   estresseMarcado: ['estresse', 'fadiga', 'stress', 'pf'],
   armaduraMarcada: ['armadura', 'pa', 'pontosDeArmadura'],
-  esperanca: ['esperanca', 'hope']
+  esperanca: ['esperanca', 'hope'],
+  foco: ['foco', 'focus']
 };
 
 /** Resolve qualquer grafia para a chave interna do recurso. */
@@ -129,6 +137,8 @@ function aplicarAjusteDireto_(ficha, a) {
   if (tipo === 'usoequipamento') return usarCaracteristicaDeEquipamento_(ficha, a);
   if (tipo === 'habilidade') return usarHabilidadeDeClasse_(ficha, a);
   if (tipo === 'transformacao') return ajustarTransformacao_(ficha, a);
+  if (tipo === 'postura') return ajustarPostura_(ficha, a);
+  if (tipo === 'foco') return ajustarFocoDaFicha_(ficha, a);
   return { erro: 'Tipo de ajuste desconhecido: "' + String((a || {}).tipo) + '".' };
 }
 
@@ -3911,16 +3921,40 @@ function aplicarDanoNaFicha_(ficha, a) {
   const recursosAntesArmadura = (ficha || {}).recursos || {};
   const armaduraAtual = Math.max(0, Number(recursosAntesArmadura.armaduraMarcada) || 0);
   const armaduraMax = Math.max(0, Number((ficha.defesas || {}).pontuacaoArmadura) || 0);
-  if (querUsarArmadura) {
+
+  /*
+   * POSTURA ESTÁVEL: "you can spend a Focus instead of an Armor Slot to
+   * reduce damage."
+   *
+   * ⚠ "INSTEAD OF" É LITERAL: quem paga com Foco NÃO precisa ter Ponto de
+   * Armadura livre. Exigir os dois seria cobrar duas moedas por uma redução —
+   * e a postura existe justamente para quem está com a armadura no fim.
+   */
+  const posturaNoDano = (typeof posturaAtivaDaFicha_ === 'function') ? posturaAtivaDaFicha_(ficha) : null;
+  const regraEstavel = ((posturaNoDano && posturaNoDano.danoRecebido) || {}).estavel || null;
+  const querPagarComFoco = querUsarArmadura && a.pagarArmaduraComFoco === true;
+  let custoFoco = 0;
+  if (querPagarComFoco) {
+    if (!regraEstavel) {
+      return { erro: 'Só a postura Estável troca o Ponto de Armadura por Foco.' };
+    }
+    custoFoco = Math.max(1, Math.trunc(Number(regraEstavel.foco)) || 1);
+    const temFoco = Math.max(0, Number(recursosAntesArmadura.foco) || 0);
+    if (temFoco < custoFoco) {
+      return { erro: 'Postura Estável: são ' + custoFoco + ' de Foco, e você tem ' + temFoco + '.' };
+    }
+  }
+
+  if (querUsarArmadura && !querPagarComFoco) {
     if (!armaduraMax || armaduraAtual + 1 > armaduraMax) {
       return { erro: 'Não sobra Ponto de Armadura para reduzir este dano.' };
     }
-    if (regraArmadura.tiposPermitidos.indexOf(tipo) === -1) {
-      return { erro: (regraArmadura.fonte || 'A armadura equipada') +
-        (regraArmadura.caracteristica ? ' · ' + regraArmadura.caracteristica : '') +
-        ': não pode marcar Ponto de Armadura para reduzir dano ' +
-        (tipo === 'fisico' ? 'físico' : 'mágico') + '.' };
-    }
+  }
+  if (querUsarArmadura && regraArmadura.tiposPermitidos.indexOf(tipo) === -1) {
+    return { erro: (regraArmadura.fonte || 'A armadura equipada') +
+      (regraArmadura.caracteristica ? ' · ' + regraArmadura.caracteristica : '') +
+      ': não pode marcar Ponto de Armadura para reduzir dano ' +
+      (tipo === 'fisico' ? 'físico' : 'mágico') + '.' };
   }
   const passosArmadura = querUsarArmadura ? Math.max(1, regraArmadura.passos || 1) : 0;
   const contaAposArmadura = gravidadeDoPv_(Math.max(0, conta.pv - passosArmadura));
@@ -4001,7 +4035,7 @@ function aplicarDanoNaFicha_(ficha, a) {
   // 6) Soma e valida TODOS os custos antes de tocar na ficha: tudo ou nada.
   // O uso normal consome 1 PA; reações como Vontade de Ferro podem consumir outro.
   let custoEstresse = custoTocadoEstresse, custoEsperanca = custoTocadoEsperanca,
-      custoArmadura = querUsarArmadura ? 1 : 0;
+      custoArmadura = (querUsarArmadura && !querPagarComFoco) ? 1 : 0;
   for (let i = 0; i < defs.length; i++) {
     const c = defs[i].custo || {};
     custoEstresse += Math.max(0, Math.trunc(Number(c.estresse)) || 0);
@@ -4224,6 +4258,7 @@ function aplicarDanoNaFicha_(ficha, a) {
     mudancasInternas.push(marcaAnel);
   }
   if (custoEsperanca) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'esperanca', delta: -custoEsperanca }));
+  if (custoFoco) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'foco', delta: -custoFoco }));
   if (custoEstresse) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'estresseMarcado', delta: custoEstresse }));
   /*
    * O Absorvente entra aqui, no MESMO delta do custo, e não numa chamada à
@@ -4238,6 +4273,33 @@ function aplicarDanoNaFicha_(ficha, a) {
   if (pv > 0) {
     toquePv = ajustarRecurso_(ficha, { chave: 'pontosDeVidaMarcados', delta: pv });
     mudancasInternas.push(toquePv);
+  }
+
+  /*
+   * SAIR DA POSTURA: as duas saídas que o dano provoca.
+   *
+   * > "You also drop out of your active stance when you take Severe damage or
+   * > mark your last Hit Point."
+   *
+   * ⚠ A GRAVIDADE CONTA DEPOIS DA ARMADURA. Quem levou dano Severo e gastou 1
+   * Ponto de Armadura está diante de dano Maior — e não sai da postura. É a
+   * mesma leitura que a Forrada já usa para a faixa Menor, e ela vale aqui
+   * pela mesma razão: a mitigação acontece antes de a gravidade valer.
+   *
+   * ⚠ E É O ÚLTIMO PV, não "ficou sem PV". Marcar o último é o gatilho do
+   * movimento de morte; é o mesmo instante.
+   */
+  let posturaEncerradaPeloDano = null;
+  if (typeof sairDaPosturaDaFicha_ === 'function') {
+    const rDepois = ficha.recursos || {};
+    const pvMax = Math.max(0, Number(rDepois.pontosDeVidaMaximos) || 0);
+    const pvMarcados = Math.max(0, Number(rDepois.pontosDeVidaMarcados) || 0);
+    const foiSevero = contaAposArmadura.pv >= 3;
+    const noUltimo = pvMax > 0 && pvMarcados >= pvMax;
+    if (foiSevero || noUltimo) {
+      posturaEncerradaPeloDano = sairDaPosturaDaFicha_(ficha,
+        foiSevero ? 'dano Severo' : 'último Ponto de Vida');
+    }
   }
 
   /*
@@ -4288,7 +4350,8 @@ function aplicarDanoNaFicha_(ficha, a) {
   if (reducaoEquipamento) partes.push(reducaoEquipamento.fonte + ' · ' + reducaoEquipamento.caracteristica +
     ' reduziu até ' + reducaoEquipamento.valor + ' do dano mágico');
   partes.push(conta.rotulo + ': ' + conta.pv + ' PV pela faixa');
-  if (querUsarArmadura) partes.push('1 PA reduz a gravidade em ' + passosArmadura +
+  if (querUsarArmadura) partes.push((querPagarComFoco ? '1 Foco' : '1 PA') +
+    ' reduz a gravidade em ' + passosArmadura +
     ' limiar' + (passosArmadura === 1 ? '' : 'es') + ' → ' + contaAposArmadura.rotulo);
   if (naBeiraAtiva) partes.push('Na Beira ignora o dano Menor');
   else if (tocadoEsplendor) partes.push('Tocado do Esplendor substitui ' + tocadoEsplendor.pvSubstituidos +
@@ -4320,6 +4383,9 @@ function aplicarDanoNaFicha_(ficha, a) {
     forrada: forrada,
     absorvente: absorvente,
     vitreo: vitreo,
+    postura: posturaNoDano ? { id: posturaNoDano.id, nome: posturaNoDano.nome } : null,
+    posturaEncerrada: posturaEncerradaPeloDano,
+    custoFoco: custoFoco,
     amaldicoada: amaldicoada,
     efeitoMesa: (amaldicoada && amaldicoada.acionou) ? {
       recado:amaldicoada.caracteristica + ': marcou ' + amaldicoada.pvMarcados + ' Ponto' +
@@ -4358,6 +4424,10 @@ function aplicarDanoNaFicha_(ficha, a) {
         amaldicoada.dado + ' — nada volta para o atacante.';
     }
   }
+  if (custoFoco) saida.aviso += ' Postura Estável: a redução foi paga com ' + custoFoco +
+    ' de Foco, e nenhum Ponto de Armadura foi marcado.';
+  if (posturaEncerradaPeloDano) saida.aviso += ' ' + posturaEncerradaPeloDano.aviso +
+    ' (' + posturaEncerradaPeloDano.motivo + ')';
   if (toquePv && toquePv.alerta) saida.alerta = toquePv.alerta;
   if (toquePv && toquePv.movimentoDeMorte) saida.movimentoDeMorte = true;
   // Doloroso pode converter Estresse sem espaço em PV durante a marcação de PA.
@@ -5744,10 +5814,25 @@ function ajustarGatilho_(ficha, a) {
     return { erro: 'Gatilho desconhecido: "' + gatilho + '".' };
   }
   const mexidos = aplicarGatilhoContadores_(ficha, gatilho) || [];
+  /*
+   * ⚠ A POSTURA MARCIAL NÃO É CONTADOR, e por isso sai daqui à mão.
+   *
+   * O livro diz que se sai da postura no fim da cena. Ela podia ter virado um
+   * contador por postura com zeraEm fim-da-cena — dezesseis contadores para
+   * guardar um único fato ("em qual postura você está"). Com a verdade num
+   * lugar só, o gatilho pergunta por ela em vez de manter uma segunda cópia
+   * que um dia discordaria (E4).
+   */
+  let posturaEncerrada = null;
+  if (gatilho === 'fim-da-cena' && typeof sairDaPosturaDaFicha_ === 'function') {
+    posturaEncerrada = sairDaPosturaDaFicha_(ficha, 'fim da cena');
+  }
   return {
     tipo: 'gatilho',
     gatilho: gatilho,
     quando: CONTADOR_GATILHOS[gatilho],
+    postura: posturaEncerrada,
+    aviso: posturaEncerrada ? posturaEncerrada.aviso : '',
     contadores: mexidos.map(function (chave) {
       const def = CONTADORES[chave] || {};
       const agora = (ficha.contadores || {})[chave];

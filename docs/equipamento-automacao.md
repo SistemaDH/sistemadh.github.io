@@ -399,14 +399,35 @@ confere na ficha do jogador.
   Hoje a conferência é a olho. O app já recusa armadura por restrição
   (`restricao-automatizada-de-armadura`) — falta fazer o mesmo com arma.
 
-### Uma divergência de regra, anotada e NÃO resolvida
+### A divergência de regra que eu inventei — e o que ela revelou
 
-- **Agarrar** (*Lâmina de corda oscilante*): o texto pt-BR do livro diz *"gastar
-  1 de Esperança"*. O **SRD 2.0 (p.717)** diz *"spend a Focus or mark a
-  Stress"*. O app **não modela o recurso Foco** do SRD 2.0 em lugar nenhum —
-  então a característica ficou como `resultado-manual-da-mesa` com a
-  divergência escrita no motivo. Resolver isto é decidir se o Foco entra no
-  app, que é assunto maior que uma arma.
+Este relatório afirmou por um tempo que a característica **Agarrar** (*Lâmina de
+Corda Oscilante*) divergia: o livro pt-BR pedindo 1 de Esperança e o SRD 2.0
+pedindo *"spend a Focus or mark a Stress"*. **Não havia divergência. O erro era
+meu.**
+
+Existem **duas coisas chamadas Agarrar** no SRD 2.0:
+
+- a **postura marcial** de Patamar 3 do Artista Marcial (linha 717): *"spend a
+  Focus or mark a Stress to temporarily Restrain the target or throw the target
+  up to Close range"*;
+- a **característica de arma** da Lâmina de Corda Oscilante (tabela de armas,
+  linha 3667): *"On a successful attack, you can spend a **Hope** to Restrain the
+  target or pull them into Melee range with you."*
+
+Eu comparei a arma contra a postura. Livro, SRD e app sempre concordaram.
+
+⚠ **E o mesmo par existe em mais três casos**: Confiável, Rápida e Revigorante
+são nomes de arma **e** de postura, com textos diferentes. Conferi os três pela
+tabela de armas: as versões do app batem. É por isso que o catálogo das posturas
+(`data/posturas-marciais.json`) é separado do de equipamento, e por que a tela
+qualifica os nomes — "Postura Confiável" nunca aparece sozinha.
+
+A pergunta que sobrou dessa confusão foi outra, e boa: **o Foco existe no app?**
+Não existia. Ele é o recurso do Artista Marcial — uma trilha de até 6, recarregada
+uma vez por descanso rolando d6 iguais ao Instinto e ficando com o maior — e era a
+única coisa do catálogo classificada como subsistema ausente. Entrou num lote
+próprio, com as dezesseis posturas: ver `docs/posturas-marciais.md`.
 
 ---
 

@@ -775,6 +775,19 @@ function simularAvanco_(ficha, escolhas) {
     tracos: diferencaDeTracos_(ficha, copia),
     cartas: cartas,
     tracosMarcados: (avancosDaFicha_(copia).tracosMarcados || []).slice(),
+    /*
+     * POSTURAS MARCIAIS: o Artista Marcial ganha uma a cada nível.
+     *
+     * ⚠ A ESCOLHA NÃO ACONTECE AQUI, e é de propósito. Quem tem direito a
+     * quantas é conta do nível, feita num lugar só; a prévia do avanço apenas
+     * AVISA que a ficha vai pedir mais uma. Pôr a escolha dentro do avanço
+     * criaria um segundo caminho para a mesma decisão — e quem subisse dois
+     * níveis de uma vez, ou desfizesse um avanço, teria duas contas a acertar.
+     */
+    posturasAEscolher: (typeof quantasPosturasPodeConhecer_ === 'function')
+      ? Math.max(0, quantasPosturasPodeConhecer_(copia) -
+        (((copia.posturas || {}).conhecidas || []).length))
+      : 0,
     multiclasse: copia.multiclasse || null,
     erros: erros,
     avisos: avisos

@@ -472,6 +472,21 @@ export async function abrirCriacao({ aoCriar } = {}) {
                 el('strong', { texto: `${f.nome}: ` }),
                 textoAnotado(f.texto)
               ])),
+            /*
+             * ⚠ AS POSTURAS SÃO ESCOLHIDAS NA FICHA, e este aviso existe para
+             * ninguém sair da criação achando que esqueceu alguma coisa.
+             *
+             * O Artista Marcial escolhe duas no nível 1 e mais uma a cada
+             * nível. Quem tem direito a quantas é conta do NÍVEL, feita num
+             * lugar só no servidor — então a escolha mora num lugar só também,
+             * no bloco de Foco da ficha. Duplicá-la aqui daria dois caminhos
+             * para a mesma decisão, e eles divergiriam no primeiro avanço.
+             */
+            escolhida && s.id === 'brigao-artista-marcial'
+              ? el('p', { class: 'texto-xs texto-fraco', texto:
+                'Você escolhe suas duas primeiras posturas marciais na ficha, no bloco de Foco — ' +
+                'e mais uma a cada nível.' })
+              : null,
             escolhida && escolhaCriacao ? campoDaEscolhaObrigatoria(escolhaCriacao) : null,
             /*
              * A escolha obrigatória (o traço de conjuração de algumas

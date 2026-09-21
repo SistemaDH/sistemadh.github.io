@@ -304,6 +304,44 @@ function movimentosDoDescanso_(tipo, ficha) {
     saida.push(copia);
   }
 
+  /*
+   * REFOCAR — o movimento do Artista Marcial, e o único jeito de encher a
+   * trilha de Foco.
+   *
+   * > "Once per rest during a moment of calm, you can clear your mind and
+   * > refocus your martial instincts. Clear your Focus track, then roll a
+   * > number of d6s equal to your Instinct and gain Focus equal to the highest
+   * > result rolled."
+   *
+   * ⚠ ELE É UM MOVIMENTO DE DESCANSO, e isso tem preço: são dois por descanso,
+   * então encher o Foco custa metade do descanso. É o que a regra diz, e a
+   * tela mostra o gasto junto das outras escolhas em vez de dar o recurso de
+   * graça no fim.
+   *
+   * ⚠ E O APP NÃO ROLA. Ele pergunta o MAIOR resultado — é só isso que a regra
+   * usa, e pedir os N dados um a um daria no mesmo número com mais trabalho.
+   */
+  if (typeof ehArtistaMarcial_ === 'function' && ehArtistaMarcial_(ficha)) {
+    const dados = (typeof dadosDeRecargaDeFoco_ === 'function') ? dadosDeRecargaDeFoco_(ficha) : 0;
+    const lados = 6;
+    saida.push({
+      id: 'foco:refocar',
+      nome: 'Refocar',
+      nomeJambo: '', tipos: ['curto', 'longo'],
+      texto: 'Limpe a trilha de Foco, role ' + dados + 'd' + lados +
+        ' (seu Instinto) fora do app e informe o MAIOR resultado. Você fica com esse tanto de Foco.',
+      formula: dados + 'd' + lados + ', o maior',
+      podeMirarAliado: false,
+      perguntas: [{
+        chave: 'maiorResultado', tipo: 'numero',
+        texto: 'Maior resultado dos seus ' + dados + 'd' + lados,
+        minimo: 1, maximo: lados, padrao: ''
+      }],
+      deOutroDescanso: '',
+      efeito: { modo: 'recarregar-foco', lados: lados, dados: dados }
+    });
+  }
+
   // Receitas de loot são movimentos de repouso enquanto a receita estiver
   // realmente na mochila. Ingredientes são ficção/estado do mundo e, portanto,
   // a seleção do movimento é a confirmação da mesa; nenhum dado é rolado aqui.
@@ -726,6 +764,34 @@ function simularDescanso_(ficha, tipo, escolhas) {
           texto: String(escolha.projeto).slice(0, 200),
           em: (typeof agoraIso_ === 'function') ? agoraIso_() : ''
         });
+      }
+      feitos.push(feito);
+      continue;
+    }
+
+    if (ef.modo === 'recarregar-foco') {
+      const r = (typeof recarregarFocoDaFicha_ === 'function')
+        ? recarregarFocoDaFicha_(copia, escolha.maiorResultado)
+        : { erro: 'Este servidor não sabe recarregar o Foco.' };
+      /*
+       * ⚠ O ERRO ENTRA NA LISTA, NÃO SAI PELA PORTA. Um `return` aqui devolve
+       * um objeto com a forma errada e a prévia inteira vira undefined lá na
+       * frente — o cliente recebe "Cannot read properties of undefined" no
+       * lugar de "informe o maior d6". Todo o resto deste laço acumula em
+       * `erros` e segue; este segue também.
+       */
+      if (r && r.erro) { erros.push('"' + def.nome + '": ' + r.erro); continue; }
+      feito.quantidade = r.depois - r.antes;
+      feito.contaDaFormula = 'limpou ' + r.antes + ' e encheu com o maior d' + (ef.lados || 6) +
+        ' = ' + r.maiorResultado;
+      /*
+       * ⚠ A OBSERVAÇÃO EXISTE PORQUE A APOSTA PODE SAIR CARA. Quem estava com
+       * 5 de Foco e tirou 2 fica com 2 — o livro manda limpar antes de encher.
+       * Sem esta frase, o número diminuindo pareceria defeito do app.
+       */
+      if (r.depois < r.antes) {
+        feito.observacao = 'A trilha foi limpa antes de encher: você tinha ' + r.antes +
+          ' e ficou com ' + r.depois + '.';
       }
       feitos.push(feito);
       continue;

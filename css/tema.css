@@ -120,6 +120,25 @@
   --cor-medo-apagado:      #3b2f56;
   --cor-esperanca-apagada: #4a3f24;
 
+  /* ---- Foco: o recurso do Artista Marcial -----------------------------
+   *
+   * Cor própria, e pelo motivo de sempre (E86): uma cor que quer dizer duas
+   * coisas não quer dizer nenhuma. O Foco fica na ficha logo abaixo da
+   * Esperança; se fosse dourado seria "mais Esperança", se fosse prata seria
+   * "título", se fosse o azul do Estresse seria outra trilha.
+   *
+   * O jade é o que sobrou de livre e, por acaso feliz, é o que a coisa quer
+   * dizer: frio, parado, centrado — o oposto do âmbar quente que explode
+   * logo acima.
+   *
+   * ⚠ E A DIFERENÇA NÃO DEPENDE DA COR. A Esperança são losangos numa pista;
+   * o Foco são discos com anéis concêntricos. A trilha se conta pelo formato
+   * antes de se contar pelo tom — quem não separa jade de azul continua
+   * separando círculo de losango.
+   */
+  --cor-foco:          #3fb6a8;
+  --cor-foco-apagado:  #21413f;
+
   --cor-medo:           #8b5cf6;
   --cor-medo-fundo:     #241141;
 

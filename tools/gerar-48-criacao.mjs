@@ -555,6 +555,20 @@ function modificadoresDerivadosDaFicha_(ficha) {
     aplicar(item.efeitoDerivado, item.nome);
   }
 
+  /*
+   * A POSTURA ATIVA do Artista Marcial é a terceira fonte de números da ficha,
+   * ao lado das características e do equipamento.
+   *
+   * ⚠ ELA ENTRA SÓ ENQUANTO ESTÁ ATIVA, e é por isso que não precisa de
+   * exigeEstado: quem responde "qual é a postura ativa" é uma pergunta só, e a
+   * resposta mora em ficha.posturas.ativa. Sair da postura tira o número no
+   * mesmo instante, sem ninguém ter de lembrar de desfazer nada.
+   */
+  if (typeof posturaAtivaDaFicha_ === 'function') {
+    const postura = posturaAtivaDaFicha_(ficha);
+    if (postura) aplicar(postura.efeitoDerivado, 'Postura ' + postura.nome);
+  }
+
   // Loot permanente só concede passivo quando a própria linha da mochila está
   // marcada como em uso. Isso permite guardar várias relíquias sem somá-las.
   const saquesAtivos = saquesAtivosDaFicha_(ficha);
@@ -663,6 +677,19 @@ function bonusDeAtaqueDaFicha_(ficha) {
 
   const daCarta = (typeof bonusAtaqueDeCartas_ === 'function') ? bonusAtaqueDeCartas_(ficha) : 0;
   if (daCarta) saida.geral.push({ fonte: 'Cartas de domínio', valor: daCarta });
+
+  /*
+   * ⚠ A POSTURA CONFIÁVEL É BÔNUS DO PERSONAGEM, NÃO DA ARMA — e aqui está a
+   * diferença que importa. O Confiável da ARMA vale só nos ataques com aquela
+   * arma; a postura vale em todos, porque quem está na postura é a pessoa.
+   * Dois nomes iguais, dois canais diferentes, e eles SOMAM quando os dois
+   * valem ao mesmo tempo.
+   */
+  if (typeof posturaAtivaDaFicha_ === 'function') {
+    const postura = posturaAtivaDaFicha_(ficha);
+    const valorPostura = Math.trunc(Number((postura && postura.efeitoDerivado || {}).bonusAtaque)) || 0;
+    if (valorPostura) saida.geral.push({ fonte: 'Postura ' + postura.nome, valor: valorPostura });
+  }
 
   const equipados = (typeof equipamentoAtivoDaFicha_ === 'function')
     ? equipamentoAtivoDaFicha_(ficha) : [];
@@ -1211,6 +1238,18 @@ function aplicarDerivados_(ficha) {
   r.esperancaImpressa = d.esperancaMaxima;
   r.esperancaMaxima = Math.max(0, d.esperancaMaxima - quantasCicatrizes);
 
+  /*
+   * O FOCO É DO ARTISTA MARCIAL, E DE MAIS NINGUÉM.
+   *
+   * ⚠ O teto é ZERO para todo mundo, e não "ausente". Com zero, a trilha
+   * simplesmente não é desenhada, o ajuste de recurso já recusa sozinho, e um
+   * Foco que sobrou de uma troca de subclasse é aparado na primeira gravação —
+   * do mesmo jeito que a cicatriz apara a Esperança logo acima.
+   */
+  r.focoMaximo = (typeof maximoDeFocoDaFicha_ === 'function') ? maximoDeFocoDaFicha_(ficha) : 0;
+  if (r.foco === undefined || r.foco === null) r.foco = 0;
+  r.foco = limitar_(r.foco, 0, r.focoMaximo);
+
   // Valores correntes: se ainda não existem, começam onde o livro manda.
   if (r.pontosDeVidaMarcados === undefined || r.pontosDeVidaMarcados === null) r.pontosDeVidaMarcados = 0;
   if (r.estresseMarcado === undefined || r.estresseMarcado === null) r.estresseMarcado = 0;
@@ -1258,6 +1297,14 @@ function aplicarDerivados_(ficha) {
    */
   ficha.memoriaDosNumeros = d.memoria;
   ficha.esquivaDeLadinoAtiva = d.esquivaDeLadinoAtiva;
+
+  /*
+   * O BLOCO DE POSTURAS VIAJA PRONTO, pelo mesmo motivo da memória dos
+   * números: o catálogo das dezesseis posturas mora no servidor, e mandar a
+   * tela recalcular quem está disponível seria a mesma regra escrita dos dois
+   * lados (E4). A tela desenha o que chega; ela não decide nada.
+   */
+  ficha.posturasDaTela = (typeof posturasParaTela_ === 'function') ? posturasParaTela_(ficha) : null;
 
   /*
    * O traço de Conjuração também é derivado. A tela desenhava o dele sozinha,

@@ -34,8 +34,15 @@ const BACKEND = path.join(RAIZ, 'backend');
  * (por exemplo gerar-srd2-*.mjs) materializam arquivos em data/ e possuem um
  * conferidor próprio; executá-los aqui misturaria dois contratos diferentes.
  */
+/*
+ * ⚠ O ALFABETO VAI ATÉ Z, E ISSO JÁ FALHOU UMA VEZ. O filtro era
+ * `4[0-9A-F]` — parava no F porque era até onde o backend ia. Quando o
+ * 4J_Posturas.gs nasceu, o gerador dele simplesmente não era conferido: o .gs
+ * podia divergir do gerador para sempre sem nada ficar vermelho, que é
+ * exatamente o defeito que este arquivo existe para impedir.
+ */
 const geradores = fs.readdirSync(AQUI)
-  .filter((f) => /^gerar-4[0-9A-F]-.*\.mjs$/.test(f))
+  .filter((f) => /^gerar-4[0-9A-Z]-.*\.mjs$/.test(f))
   .sort();
 
 if (!geradores.length) {

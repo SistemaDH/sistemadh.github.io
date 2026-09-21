@@ -125,6 +125,16 @@ function fichaVazia_() {
      */
     cicatrizes: [],
     /*
+     * POSTURAS MARCIAIS — só o Artista Marcial as tem, e a caixa existe para
+     * todo mundo pelo mesmo motivo dos outros baldes: uma ficha antiga sobe
+     * para a forma nova na primeira gravação, sem migração à parte.
+     *
+     * `conhecidas` é a folha de Posturas; `ativa` é a única verdade sobre em
+     * qual delas o personagem está; `escolhas` guarda o que uma postura
+     * pergunta ao ser assumida (hoje só o traço da Favorecida).
+     */
+    posturas: { conhecidas: [], ativa: null, escolhas: {} },
+    /*
      * INCONSCIENTE é estado, não condição.
      *
      * As condições do livro são Oculto, Restrito e Vulnerável (o resto vem de
@@ -433,6 +443,14 @@ function validarFicha_(fichaBruta) {
   }
   if (typeof validarTransformacaoDaFicha_ === 'function') {
     problemas = problemas.concat(validarTransformacaoDaFicha_(ficha));
+  }
+  /*
+   * As POSTURAS dependem só de nível e subclasse, que já estão normalizados
+   * acima — e precisam vir antes dos derivados, porque a postura ativa é uma
+   * das fontes dos números da ficha.
+   */
+  if (typeof validarPosturasDaFicha_ === 'function') {
+    problemas = problemas.concat(validarPosturasDaFicha_(ficha));
   }
   // A multiclasse precisa estar resolvida ANTES das cartas: é ela que define
   // o teto de nível das cartas do domínio novo.

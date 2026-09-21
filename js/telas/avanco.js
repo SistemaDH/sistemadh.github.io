@@ -843,6 +843,23 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
       }).filter(Boolean)));
     }
 
+    /*
+     * A POSTURA NOVA É AVISO, NÃO ESCOLHA — e o lugar de escolher é a ficha.
+     *
+     * O Artista Marcial ganha uma postura a cada nível. Quem tem direito a
+     * quantas é conta do nível, feita num lugar só no servidor; aqui só se diz
+     * que ela apareceu, para ninguém subir de nível e não saber que ganhou.
+     */
+    if (previa.posturasAEscolher > 0) {
+      corpo.append(el('h4', { class: 'avanco__subtitulo', texto: 'Posturas marciais' }));
+      corpo.append(el('p', { class: 'texto-sm' }, [
+        el('span', { texto: previa.posturasAEscolher === 1
+          ? 'Você ganhou 1 postura para escolher. '
+          : `Você tem ${previa.posturasAEscolher} posturas para escolher. ` }),
+        el('span', { class: 'texto-fraco', texto: 'A escolha fica na ficha, no bloco de Foco.' })
+      ]));
+    }
+
     corpo.append(el('h4', { class: 'avanco__subtitulo', texto: 'Avanços escolhidos' }));
     corpo.append(el('div', { class: 'pilha' }, (previa.avancos || []).map((a) => {
       // Não repete o detalhe quando ele só reescreve o nome ("Evasão +1" duas

@@ -402,10 +402,20 @@ CLASSIFICAR = {
     'Sorte':      ('resultado-manual-da-mesa',
                    'SRD: ao errar, marque 1 Estresse para repetir a jogada. O app não sabe que a jogada errou, '
                    'porque não foi ele quem rolou.'),
+    # ⚠ AQUI ESTEVE UMA DIVERGÊNCIA DE REGRA QUE NÃO EXISTIA, e a correção
+    # merece ficar escrita: eu tinha comparado esta característica de ARMA com
+    # a POSTURA Agarrar do Artista Marcial (SRD 2.0, l. 717), que é outra regra
+    # com o mesmo nome e custa 1 Foco ou 1 Estresse.
+    #
+    # A tabela de armas do SRD (l. 3667, Swinging Ropeblade) diz "spend a HOPE
+    # to Restrain the target or pull them into Melee range" — exatamente o que
+    # o livro pt-BR e o app já dizem. Livro, SRD e app concordam.
     'Agarrar':    ('resultado-manual-da-mesa',
-                   'SRD 2.0: em acerto Corpo a Corpo, gaste um Foco OU marque 1 Estresse para deixar o alvo '
-                   'Restrito ou puxá-lo. ⚠ O texto pt-BR do livro diz "gastar 1 de Esperança" — divergência '
-                   'anotada, não resolvida: o app ainda não modela o recurso Foco do SRD 2.0.'),
+                   'SRD 2.0 (tabela de armas): em acerto, gaste 1 de Esperança para deixar o alvo Restrito '
+                   'ou puxá-lo para alcance Corpo a Corpo — o mesmo que o livro pt-BR. O app cobra a '
+                   'Esperança pelo caminho único de gasto; a condição entra na ficha do alvo, que é do '
+                   'Mestre. ⚠ Não confundir com a POSTURA Agarrar do Artista Marcial, regra diferente de '
+                   'mesmo nome, que custa 1 Foco ou 1 Estresse.'),
     'Carregado':  ('uso-manual-com-custo',
                    'SRD: marque 1 Estresse para +1 de Proficiência num ataque com a primária. '
                    'Tem custo e gatilho claros; falta o uso ativo no app para não ficar só no texto.'),

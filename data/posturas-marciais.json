@@ -1,0 +1,302 @@
+{
+ "versao": 1,
+ "fonte": "SRD 2.0, MARTIAL STANCES (p. 13–14). Tradução da casa, marcada como traducao-srd2: as posturas são material novo do SRD e não têm tradução oficial da Jambô.",
+ "explicacao": "As dezesseis posturas marciais do Artista Marcial (subclasse do Brigão). Assumir uma custa 1 Foco; só uma fica ativa por vez; sai-se dela ao assumir outra, ao sofrer dano Severo, ao marcar o último Ponto de Vida e no fim da cena. ⚠ Vários nomes coincidem com características de ARMA (Confiável, Rápida, Revigorante, Agarrar) e são regras diferentes com o mesmo nome — o catálogo é separado de propósito.",
+ "custoParaAssumir": {
+  "foco": 1,
+  "alternativaComEstadoDeFluxo": {
+   "estresse": 1
+  }
+ },
+ "maximoDeFoco": 6,
+ "recarga": {
+  "quando": "descanso",
+  "comoNoLivro": "Once per rest during a moment of calm, you can clear your mind and refocus your martial instincts. Clear your Focus track, then roll a number of d6s equal to your Instinct and gain Focus equal to the highest result rolled.",
+  "limpaAntes": true,
+  "dadosPorTraco": "instinto",
+  "lados": 6,
+  "usaMaiorResultado": true
+ },
+ "saiDaPostura": [
+  "troca-de-postura",
+  "dano-severo",
+  "ultimo-ponto-de-vida",
+  "fim-da-cena"
+ ],
+ "escolhaInicial": 2,
+ "escolhaPorNivel": 1,
+ "posturas": [
+  {
+   "id": "favorecida",
+   "tier": 1,
+   "nomeIngles": "Favored",
+   "nome": "Favorecida",
+   "textoIngles": "Favored: Gain a bonus to damage rolls equal to a trait of your choice.",
+   "texto": "Favorecida: receba um bônus nas jogadas de dano igual a um traço à sua escolha.",
+   "escolha": {
+    "campo": "traco",
+    "rotulo": "Traço que soma ao dano",
+    "pergunta": "Qual traço soma ao seu dano nesta postura?"
+   },
+   "automacao": {
+    "classificacao": "passiva-parcial",
+    "rolaNoApp": false,
+    "motivo": "O traço é escolhido ao assumir a postura e o app guarda a escolha e mostra o bônus na linha da arma. Quem rola o dano é a mesa, como sempre."
+   }
+  },
+  {
+   "id": "revigorante",
+   "tier": 1,
+   "nomeIngles": "Invigorating",
+   "nome": "Revigorante",
+   "textoIngles": "Invigorating: On a successful attack, roll a d4. On a result of 4, gain a Focus.",
+   "texto": "Revigorante: em um ataque bem-sucedido, role 1d4. Em um resultado 4, ganhe 1 Foco.",
+   "usoAtivo": {
+    "exigeAtaqueBemSucedido": true,
+    "entradaManual": {
+     "campo": "dado",
+     "lados": 4,
+     "rotulo": "o d4 que você rolou"
+    },
+    "resultado": {
+     "acionaEm": 4,
+     "ganhaFoco": 1
+    }
+   },
+   "automacao": {
+    "classificacao": "dado-manual-assistido",
+    "rolaNoApp": false,
+    "motivo": "A mesa confirma o ataque bem-sucedido e informa o d4; no 4, o servidor soma 1 Foco, respeitando o teto de 6."
+   }
+  },
+  {
+   "id": "rapida",
+   "tier": 1,
+   "nomeIngles": "Quick",
+   "nome": "Rápida",
+   "textoIngles": "Quick: When you make an attack, you can spend a Focus or mark a Stress to target another creature within range with that attack.",
+   "texto": "Rápida: ao fazer um ataque, você pode gastar 1 Foco ou marcar 1 Estresse para atingir outra criatura dentro do alcance com esse ataque.",
+   "usoAtivo": {
+    "custoAlternativo": {
+     "foco": 1,
+     "estresse": 1
+    },
+    "efeitoManual": "O mesmo ataque atinge outra criatura dentro do alcance."
+   },
+   "automacao": {
+    "classificacao": "uso-ativo-assistido",
+    "rolaNoApp": false,
+    "motivo": "A tela oferece as duas moedas — 1 Foco ou 1 Estresse — e o servidor cobra a escolhida. Quem o segundo alvo é continua sendo decisão da mesa."
+   }
+  },
+  {
+   "id": "confiavel",
+   "tier": 1,
+   "nomeIngles": "Reliable",
+   "nome": "Confiável",
+   "textoIngles": "Reliable: Gain a +1 bonus to your attack rolls.",
+   "texto": "Confiável: receba +1 nas suas jogadas de ataque.",
+   "efeitoDerivado": {
+    "bonusAtaque": 1
+   },
+   "automacao": {
+    "classificacao": "passiva-automatizada",
+    "rolaNoApp": false,
+    "motivo": "Entra no bônus de ataque da ficha enquanto a postura estiver ativa, pelo mesmo canal do Confiável das armas — e some junto com o dele quando os dois valem."
+   }
+  },
+  {
+   "id": "agressiva",
+   "tier": 2,
+   "nomeIngles": "Aggressive",
+   "nome": "Agressiva",
+   "textoIngles": "Aggressive: Gain a −1 penalty to your Evasion. On a successful attack, roll an additional damage die and discard the lowest result.",
+   "texto": "Agressiva: receba −1 de Evasão. Em um ataque bem-sucedido, role um dado de dano adicional e descarte o menor resultado.",
+   "efeitoDerivado": {
+    "evasao": -1
+   },
+   "automacao": {
+    "classificacao": "passiva-parcial",
+    "rolaNoApp": false,
+    "motivo": "O −1 de Evasão entra sozinho e aparece na trilha do número. O dado de dano adicional é da mesa: o app não rola dano."
+   }
+  },
+  {
+   "id": "ancorada",
+   "tier": 2,
+   "nomeIngles": "Anchored",
+   "nome": "Ancorada",
+   "textoIngles": "Anchored: Gain a +2 bonus to your damage thresholds. While in this stance, you can’t be moved against your will.",
+   "texto": "Ancorada: receba +2 nos seus limiares de dano. Enquanto estiver nesta postura, você não pode ser movido contra a sua vontade.",
+   "efeitoDerivado": {
+    "limiares": 2
+   },
+   "automacao": {
+    "classificacao": "passiva-parcial",
+    "rolaNoApp": false,
+    "motivo": "O +2 entra nos dois limiares e aparece na conta de cada um. Não poder ser movido é ficção de cena, resolvida na mesa."
+   }
+  },
+  {
+   "id": "defensiva",
+   "tier": 2,
+   "nomeIngles": "Defensive",
+   "nome": "Defensiva",
+   "textoIngles": "Defensive: Attack rolls targeting you from within Melee range have disadvantage unless the attacker marks a Stress to negate the disadvantage.",
+   "texto": "Defensiva: jogadas de ataque contra você feitas em alcance Corpo a Corpo têm desvantagem, a menos que o atacante marque 1 Estresse para anular a desvantagem.",
+   "automacao": {
+    "classificacao": "resultado-manual-da-mesa",
+    "rolaNoApp": false,
+    "motivo": "A desvantagem é na jogada do atacante, que o app não observa nem rola. A postura ativa fica à vista na ficha para a mesa lembrar."
+   }
+  },
+  {
+   "id": "sobrenatural",
+   "tier": 2,
+   "nomeIngles": "Otherworldly",
+   "nome": "Sobrenatural",
+   "textoIngles": "Otherworldly: On a successful attack, you can deal physical or magic damage.",
+   "texto": "Sobrenatural: em um ataque bem-sucedido, você pode causar dano físico ou mágico.",
+   "automacao": {
+    "classificacao": "escolha-manual-da-mesa",
+    "rolaNoApp": false,
+    "motivo": "A escolha do tipo de dano é por ataque e acontece na mesa; o app não rola nem resolve o ataque."
+   }
+  },
+  {
+   "id": "agarrar",
+   "tier": 3,
+   "nomeIngles": "Grappling",
+   "nome": "Agarrar",
+   "textoIngles": "Grappling: On a successful attack within Melee range, you can spend a Focus or mark a Stress to temporarily Restrain the target or throw the target up to Close range.",
+   "texto": "Agarrar: em um ataque bem-sucedido em alcance Corpo a Corpo, você pode gastar 1 Foco ou marcar 1 Estresse para deixar o alvo temporariamente Restrito ou arremessá-lo até alcance Próximo.",
+   "nota": "⚠ Não confundir com a característica Agarrar da Lâmina de Corda Oscilante, que é outra regra com o mesmo nome e custa 1 Esperança.",
+   "usoAtivo": {
+    "exigeAtaqueBemSucedido": true,
+    "custoAlternativo": {
+     "foco": 1,
+     "estresse": 1
+    },
+    "efeitoManual": "O alvo fica temporariamente Restrito ou é arremessado até alcance Próximo."
+   },
+   "automacao": {
+    "classificacao": "uso-ativo-assistido",
+    "rolaNoApp": false,
+    "motivo": "A mesa confirma o acerto Corpo a Corpo, a tela oferece 1 Foco ou 1 Estresse e o servidor cobra. A condição entra na ficha do alvo, que é do Mestre."
+   }
+  },
+  {
+   "id": "assustadora",
+   "tier": 3,
+   "nomeIngles": "Scary",
+   "nome": "Assustadora",
+   "textoIngles": "Scary: On a successful attack, the target must mark a Stress.",
+   "texto": "Assustadora: em um ataque bem-sucedido, o alvo deve marcar 1 Estresse.",
+   "automacao": {
+    "classificacao": "alvo-manual",
+    "rolaNoApp": false,
+    "motivo": "O Estresse é do alvo, que é adversário do Mestre. A postura ativa fica à vista e o recado pode ir pelo mural quando o app souber o alvo."
+   }
+  },
+  {
+   "id": "estavel",
+   "tier": 3,
+   "nomeIngles": "Stable",
+   "nome": "Estável",
+   "textoIngles": "Stable: You can spend a Focus instead of an Armor Slot to reduce damage.",
+   "texto": "Estável: você pode gastar 1 Foco em vez de marcar 1 Ponto de Armadura para reduzir o dano.",
+   "danoRecebido": {
+    "estavel": {
+     "foco": 1
+    }
+   },
+   "automacao": {
+    "classificacao": "reacao-ataque-assistida",
+    "rolaNoApp": false,
+    "motivo": "Na janela de dano, quando a postura está ativa e há Foco na trilha, a tela oferece pagar a mitigação com 1 Foco em vez do Ponto de Armadura. O servidor cobra e aplica a mesma redução."
+   }
+  },
+  {
+   "id": "vigilante",
+   "tier": 3,
+   "nomeIngles": "Vigilant",
+   "nome": "Vigilante",
+   "textoIngles": "Vigilant: When you are targeted by an attack, you can mark a Stress to gain a d6 bonus to your Evasion against the attack.",
+   "texto": "Vigilante: quando for alvo de um ataque, você pode marcar 1 Estresse para receber um bônus de 1d6 na sua Evasão contra esse ataque.",
+   "reacaoAtaque": {
+    "custoEstresse": 1,
+    "dadoManual": {
+     "lados": 6,
+     "rotulo": "o d6 que você rolou"
+    },
+    "aplicaComo": "bonusEvasao"
+   },
+   "automacao": {
+    "classificacao": "dado-manual-assistido",
+    "rolaNoApp": false,
+    "motivo": "O app cobra o Estresse e soma à Evasão o d6 que a mesa informar, como já faz com a Temporal da armadura. O dado continua sendo rolado na mesa."
+   }
+  },
+  {
+   "id": "esmagadora",
+   "tier": 4,
+   "nomeIngles": "Crushing",
+   "nome": "Esmagadora",
+   "textoIngles": "Crushing: When you deal Severe damage, you can spend a Hope to force the target to mark an additional Hit Point.",
+   "texto": "Esmagadora: quando causar dano Severo, você pode gastar 1 Esperança para obrigar o alvo a marcar 1 Ponto de Vida adicional.",
+   "usoAtivo": {
+    "custoEsperanca": 1,
+    "efeitoManual": "O alvo marca 1 Ponto de Vida adicional."
+   },
+   "automacao": {
+    "classificacao": "uso-ativo-assistido",
+    "rolaNoApp": false,
+    "motivo": "O app cobra a Esperança pelo caminho único de gasto; o Ponto de Vida é do alvo, que é adversário do Mestre."
+   }
+  },
+  {
+   "id": "precisa",
+   "tier": 4,
+   "nomeIngles": "Exacting",
+   "nome": "Precisa",
+   "textoIngles": "Exacting: When you roll a 1 on a damage die, you can treat it as the highest value on the die instead.",
+   "texto": "Precisa: quando tirar 1 em um dado de dano, você pode tratá-lo como o maior valor do dado.",
+   "automacao": {
+    "classificacao": "resultado-manual-da-mesa",
+    "rolaNoApp": false,
+    "motivo": "Vale sobre dados de dano que o app não rola. A postura ativa fica à vista para a mesa lembrar antes de somar."
+   }
+  },
+  {
+   "id": "aperfeicoada",
+   "tier": 4,
+   "nomeIngles": "Honed",
+   "nome": "Aperfeiçoada",
+   "textoIngles": "Honed: Spend a Focus before you make an attack roll to gain a +1 bonus to your Proficiency for that attack.",
+   "texto": "Aperfeiçoada: gaste 1 Foco antes de fazer uma jogada de ataque para receber +1 de Proficiência nesse ataque.",
+   "usoAtivo": {
+    "custoFoco": 1,
+    "bonusProficienciaDano": 1,
+    "efeitoManual": "+1 de Proficiência nesta jogada de ataque."
+   },
+   "automacao": {
+    "classificacao": "uso-ativo-assistido",
+    "rolaNoApp": false,
+    "motivo": "O app cobra 1 Foco antes da jogada e publica o +1 de Proficiência para esta jogada, como já faz com outras características de bônus por jogada."
+   }
+  },
+  {
+   "id": "isolante",
+   "tier": 4,
+   "nomeIngles": "Isolating",
+   "nome": "Isolante",
+   "textoIngles": "Isolating: Gain advantage on attack rolls when there are no other creatures within Very Close range of you or your target.",
+   "texto": "Isolante: receba vantagem nas jogadas de ataque quando não houver outras criaturas em alcance Muito Próximo de você ou do seu alvo.",
+   "automacao": {
+    "classificacao": "passivo-contextual",
+    "rolaNoApp": false,
+    "motivo": "A vantagem depende de quem está em cena e a que distância — posicionamento é da mesa. A postura ativa fica à vista na ficha."
+   }
+  }
+ ]
+}

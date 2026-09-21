@@ -14,7 +14,7 @@ const SOURCE_FILES = [
   "45_Transformacoes.gs",
   "48_Criacao.gs","49_FichasFilhas.gs","4A_Glossario.gs","4B_Descanso.gs","4C_Ajustes.gs",
   "4D_Avanco.gs","4E_Mesa.gs","4F_Bestiario.gs","4G_Encontro.gs","4H_AdversariosDaMesa.gs",
-  "4I_CartasPermanentes.gs","99_Api.gs",
+  "4I_CartasPermanentes.gs","4J_Posturas.gs","99_Api.gs",
 ];
 
 const ACOES = new Set([

@@ -737,6 +737,94 @@
   mask-size: 26px 26px;
 }
 
+/* --- Foco e posturas marciais (só o Artista Marcial) ----------------------- */
+
+/*
+ * ⚠ O FOCO NÃO PARECE A ESPERANÇA, DE PROPÓSITO.
+ *
+ * São dois recursos que se gastam do mesmo jeito, um logo abaixo do outro.
+ * Com a mesma forma, o dedo erraria o de cima no meio de uma cena — e o erro
+ * seria caro nos dois sentidos. A Esperança são losangos; o Foco são círculos
+ * cheios, sem pista de fundo, e numa cor própria.
+ */
+.papel__foco {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+}
+
+.papel__focoTrilha {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+}
+
+.papel__pistaFoco {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--e2);
+}
+
+/*
+ * ⚠ MESMA SILHUETA CHEIA E VAZIA, outro preenchimento — a mesma disciplina da
+ * Esperança e do Medo. A trilha se conta pelo formato; se cheio e vazio
+ * tivessem contornos diferentes, contar ficaria mais lento, e isso acontece no
+ * meio de um combate.
+ *
+ * A marca é máscara, não imagem: assim a cor vem do tema e o mesmo arquivo
+ * serve aceso e apagado.
+ */
+.papel__focoPonto {
+  width: var(--alvo-min);
+  height: var(--alvo-min);
+  padding: 0;
+  border: 0;
+  background-color: var(--cor-foco-apagado);
+  -webkit-mask: url('../assets/marca/foco.svg') no-repeat center / 28px 28px;
+  mask: url('../assets/marca/foco.svg') no-repeat center / 28px 28px;
+  cursor: pointer;
+  transition: background-color var(--transicao);
+}
+
+.papel__focoPonto.esta-cheio { background-color: var(--cor-foco); }
+
+.papel__focoPonto:focus-visible {
+  outline: 2px solid var(--cor-ouro);
+  outline-offset: 2px;
+}
+
+/*
+ * A POSTURA ATIVA é texto de regra, não marcador: ela fica dentro de uma
+ * caixa com borda, como as características, porque é isso que ela é — uma
+ * regra que está valendo agora e que a mesa precisa reler no meio da cena.
+ */
+.papel__postura {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+}
+
+.papel__posturaAtiva {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+  padding: var(--e2) var(--e3);
+  border-left: 3px solid var(--cor-titulo);
+  border-radius: var(--raio);
+  background: var(--cor-superficie-alta);
+}
+
+.papel__posturaNome {
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-md);
+  color: var(--cor-titulo);
+}
+
+.papel__posturaAtiva p { margin: 0; }
+
 /* --- telas bem estreitas --------------------------------------------------- */
 
 @media (max-width: 360px) {
@@ -746,6 +834,13 @@
   .papel__escudo { width: 52px; height: 58px; }
   .papel__armaduraSlots { grid-template-columns: repeat(4, 24px); }
   .papel__slot { width: 24px; height: 24px; }
+  /*
+   * ⚠ O PONTO DE FOCO NÃO ENCOLHE. Seis alvos de 44px mais os vãos cabem em
+   * 360px, e 44px é o piso do dedo (--alvo-min). Encolher aqui passaria na
+   * régua da largura e falharia na do toque — que é a régua que importa numa
+   * trilha usada no meio de uma luta. O que cede é o vão, não o alvo.
+   */
+  .papel__pistaFoco { gap: var(--e1); }
 }
 
 /* ==========================================================================
