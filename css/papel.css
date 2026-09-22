@@ -1318,3 +1318,22 @@
     font-size: var(--txt-md);
   }
 }
+
+/*
+ * O QUE NÃO ENTRA NA SOMA fica visivelmente do lado de fora dela.
+ *
+ * A trilha de parcelas tem um contrato: as linhas somam o número (E107). Um
+ * bônus condicional quebraria esse contrato se parecesse uma parcela — então
+ * ele vem depois de uma nota, recuado, e com o valor em cor de texto fraco:
+ * está ali para ser lembrado, não para ser somado.
+ */
+.parcelas__linhas--fora {
+  margin-top: var(--e1);
+  padding-left: var(--e2);
+  border-left: 2px solid var(--cor-borda);
+}
+
+.parcelas__linha--condicional .parcelas__rotulo,
+.parcelas__linha--condicional .parcelas__valor {
+  color: var(--cor-texto-fraco);
+}

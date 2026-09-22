@@ -734,6 +734,44 @@ function bonusDeAtaqueDaFicha_(ficha) {
  * fichaTemCaracteristicaDeClasse_ inclui multiclasse, então adquirir a
  * característica de classe por multiclasse também adquire seu efeito mecânico.
  */
+/**
+ * BÔNUS DE DEFESA QUE SÓ VALEM CONTRA ALGUÉM.
+ *
+ * ⚠ ESTES NÚMEROS NÃO ENTRAM NA SOMA. A Evasão impressa na ficha é o número
+ * que vale contra qualquer um; um +2 que só existe quando quem ataca é uma
+ * pessoa específica somado ali daria um número falso em todo ataque dos
+ * outros — e quebraria E107, que exige que a trilha feche com o número.
+ *
+ * Então eles viajam à parte, com a CONDIÇÃO junto, e a tela os desenha
+ * debaixo do número, separados da conta. Quando o app sabe o nome de quem
+ * dispara a condição, o nome vai junto: "+2 contra Grak" é informação;
+ * "+2 às vezes" é ruído.
+ */
+function defesasCondicionaisDaFicha_(ficha) {
+  const saida = [];
+  const feats = (typeof efeitosDeCaracteristicasDaFicha_ === 'function')
+    ? efeitosDeCaracteristicasDaFicha_(ficha) : [];
+  const alvos = ((ficha || {}).alvosDeHabilidade) || {};
+  for (let i = 0; i < feats.length; i++) {
+    const regra = (feats[i].efeito || {}).bonusEvasaoContraAlvoDeHabilidade;
+    if (!regra) continue;
+    const valor = Math.trunc(Number(regra.valor)) || 0;
+    if (!valor) continue;
+    const habilidade = String(regra.habilidade || '');
+    const quem = String(alvos[habilidade] || '');
+    saida.push({
+      fonte: feats[i].nome, aplicaEm: 'evasao', valor: valor,
+      habilidade: habilidade, alvo: quem,
+      condicao: quem
+        ? ('ataques feitos por ' + quem)
+        : (String(regra.condicao || '') ||
+           ('ataques feitos por quem você marcou com "' + habilidade + '"')),
+      ativo: !!quem
+    });
+  }
+  return saida;
+}
+
 function bonusDeDanoDaFicha_(ficha) {
   const id = (ficha && ficha.identidade) || {};
   const nivel = Math.max(1, Math.min(10, Math.trunc(Number(id.nivel)) || 1));
@@ -1134,6 +1172,7 @@ function derivadosDoPersonagem_(ficha) {
     caracteristicas: caracteristicasDaOrigem_(ficha).concat(caracteristicasDaClasse_(ficha)).concat(
       typeof caracteristicasDaTransformacao_ === 'function' ? caracteristicasDaTransformacao_(ficha) : []),
     bonusDeDano: bonusDeDanoDaFicha_(ficha),
+    defesasCondicionais: defesasCondicionaisDaFicha_(ficha),
     bonusDeAtaque: bonusDeAtaqueDaFicha_(ficha),
     opcoesDeDadoEsperanca: opcoesDeDadoEsperancaDaFicha_(ficha),
     perfisDeAtaque: perfisDeAtaqueDaFicha_(ficha),
@@ -1294,6 +1333,7 @@ function aplicarDerivados_(ficha) {
   // O cliente recebe o perfil de dano já calculado pelo servidor. Qualquer
   // valor que tenha vindo no payload é sobrescrito aqui, como os outros derivados.
   ficha.bonusDeDano = d.bonusDeDano;
+  ficha.defesasCondicionais = d.defesasCondicionais;
   ficha.bonusDeAtaque = d.bonusDeAtaque;
   ficha.opcoesDeDadoEsperanca = d.opcoesDeDadoEsperanca;
   ficha.perfisDeAtaque = d.perfisDeAtaque;

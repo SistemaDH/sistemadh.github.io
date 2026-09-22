@@ -521,6 +521,46 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     });
   }
 
+  /*
+   * A escolha de Tocado pela Graça — Estresse ou Ponto de Armadura.
+   *
+   * ⚠ O primeiro botão é MARCAR ESTRESSE, e não a troca. A carta é uma passiva
+   * que vale a cena inteira: quem tem 4 cartas de Graça no loadout vê esta
+   * janela toda vez que algo impõe Estresse. O caminho normal é o de sempre, e
+   * ele precisa ser o primeiro dedo.
+   */
+  function pedirEscolhaTocadoPelaGraca(pendencia) {
+    return new Promise((resolve) => {
+      let respondeu = false;
+      const maximo = Math.max(0, Number((pendencia || {}).maximo) || 0);
+      const estresse = Math.max(1, Number((pendencia || {}).estresse) || 1);
+      const responder = (valor) => {
+        if (respondeu) return;
+        respondeu = true;
+        modal.fechar();
+        resolve(valor);
+      };
+      const botoes = [el('button', {
+        type:'button', class:'btn btn--fantasma btn--pequeno', onClick:()=>responder(0)
+      }, `Marcar ${estresse} Estresse${estresse === 1 ? '' : 's'}`)];
+      for (let n=1; n<=maximo; n++) botoes.push(el('button', {
+        type:'button', class:'btn btn--pequeno', onClick:()=>responder(n)
+      }, `Marcar ${n} PA`));
+      const modal = abrirModal({
+        titulo:`${(pendencia && pendencia.fonte) || 'Tocado pela Graça'} — Armadura em vez de Estresse`,
+        conteudo:el('div',{class:'pilha'},[
+          el('p',{class:'texto-sm',texto:(pendencia && pendencia.mensagem) ||
+            'Escolha quantos Estresses serão marcados como Pontos de Armadura.'}),
+          el('p',{class:'texto-xs texto-fraco',texto:
+            'Esta é uma escolha sua. O app não marca Armadura automaticamente.'}),
+          el('div',{class:'linha'},botoes)
+        ]),
+        acoes:[el('button',{type:'button',class:'btn btn--fantasma',onClick:()=>responder(null)},'Cancelar')],
+        aoFechar:()=>{ if(!respondeu){respondeu=true;resolve(null);} }
+      });
+    });
+  }
+
   async function enviar(ajustes, { soSeMudou = false } = {}) {
     const esperado = soSeMudou ? assinatura(p.ficha) : null;
     try {
@@ -531,6 +571,14 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         const indice = Number(r.pendenciaRolagem.indice) || 0;
         const repetidos = (Array.isArray(ajustes) ? ajustes : [ajustes]).map((a, i) =>
           i === indice ? Object.assign({}, a, { esperancosoArmadura: quantidade }) : Object.assign({}, a));
+        return enviar(repetidos, { soSeMudou });
+      }
+      if (r && r.pendenciaRolagem && r.pendenciaRolagem.tipo === 'graca-armadura') {
+        const quantidade = await pedirEscolhaTocadoPelaGraca(r.pendenciaRolagem);
+        if (quantidade === null) { p = r.personagem; desenhar(); return r; }
+        const indice = Number(r.pendenciaRolagem.indice) || 0;
+        const repetidos = (Array.isArray(ajustes) ? ajustes : [ajustes]).map((a, i) =>
+          i === indice ? Object.assign({}, a, { gracaArmadura: quantidade }) : Object.assign({}, a));
         return enviar(repetidos, { soSeMudou });
       }
       if (r && r.pendenciaRolagem && r.pendenciaRolagem.tipo === 'dominio-elemental-terra') {
@@ -1337,12 +1385,43 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     return saida;
   }
 
+  /**
+   * As reações ao ataque que o EQUIPAMENTO VESTIDO oferece.
+   *
+   * ⚠ ESTE BLOCO NUNCA TINHA APARECIDO NA TELA — é o defeito do Impenetrável
+   * de novo, no arquivo ao lado. A lista era fixa (Deslocamento, Temporal,
+   * Desafetação) e filtrada por `temCaracteristica_`, que é origem + classe +
+   * transformação. As três são características de EQUIPAMENTO: a pergunta era
+   * feita a quem não tinha a resposta, e a resposta era sempre "não".
+   *
+   * Agora a lista sai das peças equipadas que declaram a reação, e quem
+   * acrescentar a próxima no catálogo não precisa mexer aqui.
+   */
   function blocoDeReacoesDeEquipamento_(ficha) {
-    const defs = [
-      ['Deslocamento', 'Marque 1 PA para impor desvantagem ao ataque contra você.'],
-      ['Temporal', 'Marque 1 PA, role 1d4 na mesa e some o resultado à Evasão contra este ataque.'],
-      ['Desafetação', 'Marque 1 PA e some à Evasão os PA que continuarem disponíveis contra este ataque.']
-    ].filter(([nome]) => temCaracteristica_(ficha, nome));
+    const eq = (ficha || {}).equipamento || {};
+    const pecas = [
+      catalogo.acharArmadura(eq.armadura),
+      catalogo.acharArma(eq.primaria),
+      catalogo.acharArma(eq.secundaria)
+    ].filter(Boolean);
+    const defs = pecas
+      .filter((p) => ((p.efeitoEquipamento || {}).reacaoAtaqueRecebido))
+      .map((p) => {
+        const nome = ((p.caracteristica || {}).nome) || p.carac || '';
+        const regra = (p.efeitoEquipamento || {}).reacaoAtaqueRecebido || {};
+        const bonus = regra.bonusEvasao || {};
+        const conta = regra.desvantagemAtaque === true
+          ? 'impõe desvantagem ao ataque contra você'
+          : bonus.tipo === 'resultado-dado-manual'
+            ? 'role 1d' + (bonus.lados || 4) + ' na mesa e some o resultado à Evasão'
+            : bonus.tipo === 'pontuacao-armadura'
+              ? 'some a Pontuação de Armadura inteira à Evasão'
+              : bonus.tipo === 'armadura-disponivel-apos-custo'
+                ? 'some à Evasão os Pontos de Armadura que continuarem disponíveis'
+                : 'reação registrada';
+        return [nome, `${p.nome}: marque ${regra.custoArmadura || 1} PA e ${conta}, contra este ataque.`];
+      })
+      .filter(([nome]) => nome);
     if (!defs.length) return null;
     const r=(ficha || {}).recursos || {};
     const d=(ficha || {}).defesas || {};
@@ -3305,6 +3384,31 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       ]));
     });
     corpo.append(lista);
+
+    /*
+     * ⚠ FORA DA SOMA, DE PROPÓSITO.
+     *
+     * Um bônus que só vale contra uma pessoa não pode entrar na conta: o
+     * número impresso é o que vale contra todo mundo. Ele aparece embaixo,
+     * separado por uma linha, com a condição escrita por extenso — e com o
+     * nome de quem a dispara quando o app o conhece.
+     */
+    const condicionais = (Array.isArray((ficha || {}).defesasCondicionais)
+      ? ficha.defesasCondicionais : []).filter((x) => x && x.aplicaEm === def.chave);
+    if (condicionais.length) {
+      const extras = el('ul', { class: 'parcelas__linhas parcelas__linhas--fora' });
+      condicionais.forEach((x) => {
+        extras.append(el('li', { class: 'parcelas__linha parcelas__linha--condicional' }, [
+          el('span', { class: 'parcelas__rotulo',
+            texto: `${x.fonte}: ${x.condicao}` }),
+          el('span', { class: 'parcelas__valor', texto: comSinal(Number(x.valor) || 0) })
+        ]));
+      });
+      corpo.append(el('p', { class: 'parcelas__nota',
+        texto: 'Não entra na soma — só vale na situação descrita:' }));
+      corpo.append(extras);
+    }
+
     return corpo;
   }
 
@@ -4763,6 +4867,90 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * mais, e o de "trazer para a mão" some, porque o livro diz
    * "permanentemente".
    */
+  /**
+   * O BOTÃO DA CARTA QUE SE USA EM ALGUÉM.
+   *
+   * Restauração é a primeira: os marcadores saem da carta de quem conjurou e a
+   * cura pousa na ficha de quem foi tocado — que pode ser a própria pessoa.
+   *
+   * ⚠ ALCANCE E PERMISSÃO CONTINUAM DA MESA. A lista de alvos é a das fichas
+   * da mesa; quem está perto o bastante para ser tocado é conta de quem joga.
+   */
+  function botaoDeCartaEmCriatura(c, uso, modalDaCarta) {
+    const marcadores = Math.max(0, Number(((((p.ficha || {}).contadores || {})[uso.contador] || {}).valor)) || 0);
+    const rotuloMarcadores = uso.rotuloMarcadores || 'marcadores';
+    if (!marcadores) {
+      return el('span', { class: 'texto-xs texto-fraco',
+        texto: `Sem ${rotuloMarcadores} na carta — eles voltam no descanso longo.` });
+    }
+    return el('button', {
+      type: 'button', class: 'btn btn--pequeno',
+      onClick: async () => {
+        let lista = [];
+        try { lista = (await acoes.aliadosDaMesa(p.id)).aliados || []; }
+        catch (e) { lista = []; }
+        if (modalDaCarta) modalDaCarta.fechar();
+
+        const opcoesAlvo = [el('option', { value: '' }, 'Eu mesmo')].concat(
+          lista.map((x) => el('option', { value: x.id }, `${x.nome}${x.donoNome ? ' · ' + x.donoNome : ''}`)));
+        const alvo = el('select', { class: 'campo__entrada', 'aria-label': 'Criatura tocada' }, opcoesAlvo);
+
+        const quantidade = el('input', semCorretor({
+          type: 'number', class: 'campo__entrada', inputmode: 'numeric', step: 1,
+          min: 1, max: marcadores, value: 1
+        }));
+        const linhaQuantidade = el('label', { class: 'campo' }, [
+          el('span', { class: 'campo__rotulo',
+            texto: `${(uso.entradaQuantidade || {}).rotulo || 'Marcadores a gastar'} (há ${marcadores})` }),
+          quantidade
+        ]);
+
+        let janela = null;
+        const aplicar = async (opcao) => {
+          const fixos = (opcao.marcadoresFixos === undefined || opcao.marcadoresFixos === null)
+            ? null : Number(opcao.marcadoresFixos);
+          const n = fixos === null ? Number(quantidade.value) : fixos;
+          if (!Number.isInteger(n) || n < 1 || n > marcadores) {
+            avisarErro(`Informe um número inteiro de 1 a ${marcadores}.`); return;
+          }
+          try {
+            if (!alvo.value) {
+              const r = await enviar([{ tipo: 'cartaEmCriatura', carta: c.id, opcao: opcao.id, marcadores: n }]);
+              if (r && !(r.avisos || []).length && janela) janela.fechar();
+              return;
+            }
+            const r = await acoes.usarCartaEmAliado(p.id, c.id, alvo.value, opcao.id, n);
+            if (janela) janela.fechar();
+            avisarSucesso((r.resultado && r.resultado.aviso) || `${c.nome} aplicada.`);
+            desenhar();
+          } catch (e) { avisarErro(mensagemDoErro(e)); }
+        };
+
+        const botoes = (uso.opcoes || []).map((o) => el('button', {
+          type: 'button', class: 'btn btn--pequeno', onClick: () => aplicar(o)
+        }, o.rotulo || o.id));
+
+        const lembretes = (uso.opcoes || []).filter((o) => o.lembrete).map((o) =>
+          el('p', { class: 'texto-xs texto-fraco', texto: `${o.rotulo || o.id}: ${o.lembrete}` }));
+
+        janela = abrirModal({
+          titulo: c.nome,
+          conteudo: el('div', { class: 'pilha' }, [
+            el('p', { class: 'texto-sm', texto: (uso.entradaQuantidade || {}).ajuda ||
+              'Escolha quem foi tocado e quantos marcadores gastar.' }),
+            el('label', { class: 'campo' }, [
+              el('span', { class: 'campo__rotulo', texto: 'Criatura tocada' }), alvo
+            ]),
+            linhaQuantidade,
+            el('div', { class: 'linha' }, botoes)
+          ].concat(lembretes)),
+          acoes: [el('button', { type: 'button', class: 'btn btn--fantasma',
+            onClick: () => janela.fechar() }, 'Cancelar')]
+        });
+      }
+    }, uso.rotuloAtivar || `Usar ${c.nome} em uma criatura`);
+  }
+
   function botoesDaCarta(c, destino, modal) {
     if (!c) return [];
     const permanente = c.efeitoPermanente || null;
@@ -4774,7 +4962,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
 
     const saida = [];
     const usoCarta = c.uso || null;
-    if (destino === 'cofre' && usoCarta) {
+    if (destino === 'cofre' && usoCarta && usoCarta.usoEmCriatura) {
+      saida.push(botaoDeCartaEmCriatura(c, usoCarta.usoEmCriatura, modal));
+    }
+    if (destino === 'cofre' && usoCarta && !usoCarta.usoEmCriatura) {
       const estado = usoCarta.estado || null;
       const itemEstado = estado && estado.chave ? ((((p.ficha || {}).contadores || {})[estado.chave]) || {}) : {};
       const ativo = !!(estado && estado.chave && Number(itemEstado.valor));

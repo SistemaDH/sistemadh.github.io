@@ -298,6 +298,43 @@ function validarEquipamento_(equipado, nivelPersonagem, ficha) {
   resolvido.secundaria = conferirArma(equipado.secundaria, 'secundaria');
 
   /*
+   * POMPOSO (Lâmina Ego): "você deve ter uma Presença igual ou inferior a 0
+   * para usar essa arma."
+   *
+   * ⚠ RESTRIÇÃO DE ARMA É CONTA DA PRÓPRIA FICHA, e por isso entra aqui, no
+   * mesmo lugar do patamar e das mãos. Ela estava classificada como
+   * "conferência a olho" — o que quer dizer que ninguém conferia: o número do
+   * traço está na tela, mas nada impedia equipar.
+   *
+   * O traço lido é o DERIVADO (ficha.tracos), que já traz os bônus de
+   * equipamento e de postura. Ler o número cru deixaria passar uma Presença
+   * que só é 0 porque outra peça a empurrou para baixo.
+   */
+  const conferirRestricao = function (arma) {
+    if (!arma) return;
+    const regra = (arma.efeitoEquipamento || {}).exigeTraco || null;
+    if (!regra) return;
+    const traco = String(regra.traco || '');
+    /* O nome bonito vem do catálogo de traços; "presenca" não é palavra. */
+    const rotulo = (typeof TRACOS === 'object' && TRACOS[traco] && TRACOS[traco].nome) || traco;
+    const tracos = (ficha || {}).tracos || {};
+    const valor = Math.trunc(Number(tracos[traco]));
+    if (!isFinite(valor)) return;
+    const maximo = Math.trunc(Number(regra.maximo));
+    if (isFinite(maximo) && valor > maximo) {
+      erros.push('"' + arma.nome + '" (' + (arma.carac || 'restrição') + ') exige ' +
+        rotulo + ' igual ou menor que ' + maximo + ', e a sua é ' + valor + '.');
+    }
+    const minimo = Math.trunc(Number(regra.minimo));
+    if (isFinite(minimo) && valor < minimo) {
+      erros.push('"' + arma.nome + '" (' + (arma.carac || 'restrição') + ') exige ' +
+        rotulo + ' igual ou maior que ' + minimo + ', e a sua é ' + valor + '.');
+    }
+  };
+  conferirRestricao(resolvido.primaria);
+  conferirRestricao(resolvido.secundaria);
+
+  /*
    * ⚠ O GUERREIRO NÃO OBEDECE À CONTA DE MÃOS.
    *
    * "Treinamento de Combate: você IGNORA O TIPO DE EMPUNHADURA de armas

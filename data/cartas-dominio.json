@@ -6802,13 +6802,58 @@
       "pendenteTraducao": false,
       "errata": null,
       "observacao": "O rótulo de tipo aparece impresso em inglês na carta (\"SPELL\").",
+      "uso": {
+        "custo": {},
+        "rotuloAtivar": "Tocar uma criatura · gastar marcadores",
+        "lembrete": "Os marcadores saem da sua carta; a cura pousa na ficha de quem você tocou. Alcance e permissão são da mesa.",
+        "usoEmCriatura": {
+          "contador": "carta:splendor-restauracao",
+          "rotuloMarcadores": "marcadores",
+          "rotuloAtivar": "Tocar uma criatura · Restauração",
+          "permiteSiMesmo": true,
+          "entradaQuantidade": {
+            "campo": "marcadores",
+            "rotulo": "Marcadores a gastar",
+            "minimo": 1,
+            "maximo": 12,
+            "ajuda": "Cada marcador limpa 2 Pontos de Vida ou 2 Estresses da criatura tocada."
+          },
+          "opcoes": [
+            {
+              "id": "pv",
+              "rotulo": "Limpar 2 Pontos de Vida por marcador",
+              "recurso": "pontosDeVidaMarcados",
+              "porMarcador": -2
+            },
+            {
+              "id": "estresse",
+              "rotulo": "Limpar 2 Estresses por marcador",
+              "recurso": "estresseMarcado",
+              "porMarcador": -2
+            },
+            {
+              "id": "vulneravel",
+              "rotulo": "Limpar Vulnerável · 1 marcador",
+              "marcadoresFixos": 1,
+              "limpaCondicao": "Vulnerável"
+            },
+            {
+              "id": "enfermidade",
+              "rotulo": "Curar enfermidade física ou mágica",
+              "marcadoresALivreEscolha": true,
+              "somenteLembrete": true,
+              "lembrete": "O Mestre pode exigir marcadores adicionais conforme a gravidade; informe aqui o total combinado na mesa."
+            }
+          ]
+        }
+      },
       "automacao": {
-        "classificacao": "contador-automatico-alvo-manual",
-        "resumo": "O contador já existente de Restauração recarrega após descanso longo até o atributo de Conjuração e descarta sobras no mesmo gatilho."
+        "classificacao": "contador-e-alvo-automatizados",
+        "resumo": "O contador recarrega no descanso longo e o app gasta os marcadores, limpando PV, Estresse ou Vulnerável na ficha de quem foi tocado — a própria ou a de um aliado da mesa."
       },
       "resolucaoManual": {
         "rolaNoApp": false,
-        "resumo": "Gaste os marcadores exibidos na carta e aplique na mesa 2 PV/Fadigas recuperados por marcador, ou a remoção de Vulnerável/doença conforme a regra e decisão do Mestre."
+        "resumo": "Alcance, permissão do alvo e a gravidade de uma enfermidade continuam da mesa. Os marcadores, a cura e a limpeza de Vulnerável são do app."
       }
     },
     {

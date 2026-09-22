@@ -2807,8 +2807,14 @@
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "restricao-manual-de-arma",
-          "motivo": "SRD: exige Presença 0 ou menor para usar a arma. Hoje a conferência é a olho — dá para o app recusar na hora de equipar, como já faz com armadura."
+          "classificacao": "restricao-automatizada-de-arma",
+          "motivo": "SRD: exige Presença 0 ou menor para usar a arma. O servidor recusa na hora de equipar, no mesmo lugar onde já confere patamar e mãos — e lê o traço DERIVADO, para não deixar passar uma Presença que só é 0 por causa de outra peça."
+        },
+        "efeitoEquipamento": {
+          "exigeTraco": {
+            "traco": "presenca",
+            "maximo": 0
+          }
         }
       },
       "danoSRD": "d12+4 mag"
@@ -4922,8 +4928,18 @@
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
-          "classificacao": "uso-manual-com-custo",
-          "motivo": "SRD: marque 1 Estresse para +1 de Proficiência num ataque com a primária. Tem custo e gatilho claros; falta o uso ativo no app para não ficar só no texto."
+          "classificacao": "uso-ativo-assistido",
+          "motivo": "O app cobra o Estresse e pendura o bônus na ficha como BÔNUS PREPARADO: ele fica à vista até alguém tocar em \"usei\", e o fim da cena apaga o que sobrou. O app não soma o +1 em lugar nenhum porque não vê a jogada — quem rola é a mesa.",
+          "rolaNoApp": false
+        },
+        "efeitoEquipamento": {
+          "usoAtivo": {
+            "custoEstresse": 1,
+            "rotulo": "Carregado · 1 Estresse",
+            "bonusPreparado": {
+              "texto": "+1 de Proficiência no próximo ataque com a arma primária."
+            }
+          }
         }
       },
       "aliases": [
@@ -6973,9 +6989,17 @@
         "fonteTraducao": "traducao-srd2",
         "confianca": "provisoria",
         "automacao": {
-          "classificacao": "resultado-manual-da-mesa",
-          "motivo": "A consequência determinística é aplicada pelo app quando há contrato; dados, alvo e resultado do ataque ficam na mesa.",
+          "classificacao": "reacao-ataque-assistida",
+          "motivo": "Marca 1 Ponto de Armadura e publica, para aquele ataque, bônus de Evasão igual à Pontuação de Armadura inteira. O ataque continua sendo resolvido na mesa; o app só faz a conta e cobra o Ponto.",
           "rolaNoApp": false
+        },
+        "efeitoEquipamento": {
+          "reacaoAtaqueRecebido": {
+            "custoArmadura": 1,
+            "bonusEvasao": {
+              "tipo": "pontuacao-armadura"
+            }
+          }
         }
       },
       "danoSRD": "d8 mag"

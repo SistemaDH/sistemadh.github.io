@@ -257,6 +257,13 @@ const EFEITOS_DERIVADOS_DE_CLASSE = {
       "para": "d12",
       "enquantoEstado": "estado:seraph:asas-de-luz:voando"
     }
+  },
+  "Postura do Escorpião": {
+    "bonusEvasaoContraAlvoDeHabilidade": {
+      "valor": 2,
+      "habilidade": "Marcado para Morrer",
+      "condicao": "ataques feitos por quem você deixou Marcado para Morrer"
+    }
   }
 };
 /** Reações de dano concedidas por classe/subclasse. */
@@ -1394,6 +1401,37 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "marcaUso": "",
     "rotuloAtivar": "",
     "lembrete": "",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
+    "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
+    "requerArmaAlcance": null,
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
+    "custoCondicionalEntradaManual": null,
+    "confirmacao": null,
+    "estado": null
+  },
+  "Marcado para Morrer": {
+    "classe": "assassino",
+    "origem": "classe",
+    "custo": {
+      "estresse": 1
+    },
+    "alvo": {
+      "rotulo": "Alvo Marcado para Morrer",
+      "verbo": "Marcar para Morrer"
+    },
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "Marcar para Morrer · 1 Estresse",
+    "lembrete": "Use depois de um ataque com arma bem-sucedido. Enquanto a marca durar, some à jogada de dano contra ele uma quantidade de dados igual ao seu patamar — o dado é da mesa. A marca acaba num descanso, quando o alvo é derrotado ou quando o Mestre gasta Medo: encerre-a aqui quando isso acontecer.",
     "reacaoEnquantoAtivo": null,
     "somenteReacao": false,
     "requerEstado": null,

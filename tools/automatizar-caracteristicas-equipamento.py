@@ -317,6 +317,53 @@ LIGAR = {
             'rolaNoApp': False
         }
     },
+    # SRD (Ego Blade): "Pompous: You must have a Presence of 0 or lower to use
+    # this weapon."
+    'Pomposo': {
+        'efeitoEquipamento': {'exigeTraco': {'traco': 'presenca', 'maximo': 0}}
+    },
+    # SRD (Charged): "Mark a Stress to gain a +1 bonus to your Proficiency on
+    # an attack with your primary weapon."
+    #
+    # ⚠ O BÔNUS NÃO VIRA ESTADO ACESO. O app não vê o ataque acontecer, então
+    # ele registra o custo, pendura um BÔNUS PREPARADO na ficha e espera o
+    # toque de "usei" — com o fim da cena como rede. Ver a seção do tempo dos
+    # bônus em 4C_Ajustes.gs.
+    'Carregado': {
+        'efeitoEquipamento': {'usoAtivo': {
+            'custoEstresse': 1,
+            'rotulo': 'Carregado · 1 Estresse',
+            'bonusPreparado': {
+                'texto': '+1 de Proficiência no próximo ataque com a arma primária.'
+            }
+        }},
+        'automacao': {
+            'classificacao': 'uso-ativo-assistido',
+            'motivo': 'O app cobra o Estresse e pendura o bônus na ficha como BÔNUS PREPARADO: ele '
+                      'fica à vista até alguém tocar em "usei", e o fim da cena apaga o que sobrou. '
+                      'O app não soma o +1 em lugar nenhum porque não vê a jogada — quem rola é a '
+                      'mesa.',
+            'rolaNoApp': False
+        }
+    },
+    # SRD (Deflecting): "When you are attacked, you can mark an Armor Slot to
+    # add your Armor Score to your Evasion against the attack."
+    #
+    # ⚠ É A PONTUAÇÃO INTEIRA, não os Pontos que sobraram — a Desafetação do
+    # Broquel é que soma o que resta. Dois nomes parecidos, dois números.
+    'Defletora': {
+        'efeitoEquipamento': {'reacaoAtaqueRecebido': {
+            'custoArmadura': 1,
+            'bonusEvasao': {'tipo': 'pontuacao-armadura'}
+        }},
+        'automacao': {
+            'classificacao': 'reacao-ataque-assistida',
+            'motivo': 'Marca 1 Ponto de Armadura e publica, para aquele ataque, bônus de Evasão '
+                      'igual à Pontuação de Armadura inteira. O ataque continua sendo resolvido '
+                      'na mesa; o app só faz a conta e cobra o Ponto.',
+            'rolaNoApp': False
+        }
+    },
     'Canalização': {
         'efeitoDerivado': {'conjuracao': 1},
         'automacao': {
@@ -419,9 +466,10 @@ CLASSIFICAR = {
     'Carregado':  ('uso-manual-com-custo',
                    'SRD: marque 1 Estresse para +1 de Proficiência num ataque com a primária. '
                    'Tem custo e gatilho claros; falta o uso ativo no app para não ficar só no texto.'),
-    'Pomposo':    ('restricao-manual-de-arma',
-                   'SRD: exige Presença 0 ou menor para usar a arma. Hoje a conferência é a olho — '
-                   'dá para o app recusar na hora de equipar, como já faz com armadura.'),
+    'Pomposo':    ('restricao-automatizada-de-arma',
+                   'SRD: exige Presença 0 ou menor para usar a arma. O servidor recusa na hora de '
+                   'equipar, no mesmo lugar onde já confere patamar e mãos — e lê o traço DERIVADO, '
+                   'para não deixar passar uma Presença que só é 0 por causa de outra peça.'),
     'Retorno':    ('narrativa-sem-numero',
                    'SRD: a arma lançada volta à mão depois do ataque. Não há número de ficha para mover.'),
     'Retrátil':   ('narrativa-sem-numero',

@@ -2601,7 +2601,19 @@
           "nomeIngles": "Marked for Death",
           "nome": "Marcado para Morrer",
           "texto": "Após um ataque bem-sucedido com arma, você pode marcar 1 Estresse para deixar o alvo Marcado para Morrer. Quando causar dano ao alvo Marcado para Morrer, adicione à jogada de dano uma quantidade de d4 igual ao seu patamar. Você só pode manter um adversário Marcado para Morrer por vez. A marca dura até você fazer um descanso, o adversário ser derrotado ou o Mestre gastar uma quantidade de Medo igual ao seu patamar para limpá-la.",
-          "automacao": "deterministica-com-alvo-e-dano-contextual"
+          "uso": {
+            "custo": {
+              "estresse": 1
+            },
+            "alvo": {
+              "rotulo": "Alvo Marcado para Morrer",
+              "verbo": "Marcar para Morrer"
+            },
+            "rotuloAtivar": "Marcar para Morrer · 1 Estresse",
+            "lembrete": "Use depois de um ataque com arma bem-sucedido. Enquanto a marca durar, some à jogada de dano contra ele uma quantidade de dados igual ao seu patamar — o dado é da mesa. A marca acaba num descanso, quando o alvo é derrotado ou quando o Mestre gasta Medo: encerre-a aqui quando isso acontecer."
+          },
+          "automacao": "deterministica-com-alvo-e-dano-contextual",
+          "fonteDoCusto": "SRD 2.0 / Guilda dos Executores — \"Após um ataque bem-sucedido com arma, você pode marcar 1 Estresse para deixar o alvo Marcado para Morrer… Você só pode manter um adversário Marcado para Morrer por vez.\" Errata de 25/08/2026 não toca nesta característica."
         },
         {
           "nomeIngles": "Get In & Get Out",
@@ -2675,7 +2687,14 @@
                   "nomeIngles": "Scorpion’s Poise",
                   "nome": "Postura do Escorpião",
                   "texto": "Você recebe +2 de Evasão contra ataques feitos por uma criatura que tenha deixado Marcada para Morrer.",
-                  "automacao": "evasao-contextual-por-atacante"
+                  "automacao": "evasao-contextual-por-atacante",
+                  "efeitoDerivado": {
+                    "bonusEvasaoContraAlvoDeHabilidade": {
+                      "valor": 2,
+                      "habilidade": "Marcado para Morrer",
+                      "condicao": "ataques feitos por quem você deixou Marcado para Morrer"
+                    }
+                  }
                 }
               ],
               "texto": "",

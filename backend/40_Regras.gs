@@ -135,6 +135,15 @@ function fichaVazia_() {
      */
     posturas: { conhecidas: [], ativa: null, escolhas: {} },
     /*
+     * BÔNUS PREPARADOS — a forma honesta do "no próximo ataque".
+     *
+     * O app não vê o ataque acontecer (quem resolve o dano no adversário é o
+     * Mestre), então um estado "+1 ativo" ficaria aceso para sempre. Aqui o
+     * bônus fica À VISTA esperando um toque de "usei", e o fim da cena apaga o
+     * que ninguém usou. Ver a seção do 4C_Ajustes.gs.
+     */
+    bonusPreparados: [],
+    /*
      * INCONSCIENTE é estado, não condição.
      *
      * As condições do livro são Oculto, Restrito e Vulnerável (o resto vem de
@@ -451,6 +460,23 @@ function validarFicha_(fichaBruta) {
    */
   if (typeof validarPosturasDaFicha_ === 'function') {
     problemas = problemas.concat(validarPosturasDaFicha_(ficha));
+  }
+  /*
+   * Os bônus preparados são só texto e um id; a normalização existe para uma
+   * ficha antiga (ou um cliente criativo) não deixar lixo na lista.
+   */
+  if (Array.isArray(ficha.bonusPreparados)) {
+    ficha.bonusPreparados = ficha.bonusPreparados.map(function (b) {
+      const r = (b && typeof b === 'object') ? b : {};
+      return {
+        id: String(r.id || '').slice(0, 80),
+        fonte: String(r.fonte || '').slice(0, 60),
+        texto: String(r.texto || '').slice(0, 160),
+        em: String(r.em || '')
+      };
+    }).filter(function (b) { return b.id && b.texto; }).slice(-8);
+  } else {
+    ficha.bonusPreparados = [];
   }
   // A multiclasse precisa estar resolvida ANTES das cartas: é ela que define
   // o teto de nível das cartas do domínio novo.

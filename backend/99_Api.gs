@@ -388,6 +388,29 @@ function executar_(p) {
       }
 
       /**
+       * Uma CARTA DE DOMÍNIO gasta marcadores na sua ficha e limpa a trilha de
+       * um aliado. Restauração é o primeiro caso.
+       *
+       * ⚠ As duas fichas são gravadas na MESMA trava: o marcador não pode sair
+       * da sua carta sem a cura chegar do outro lado, nem o contrário.
+       */
+      case 'usarCartaEmAliado': {
+        const jogador = exigirSessao_(p.token);
+        const r = mutarPersonagemEOutro_(jogador, p.id, p.aliadoId, p.versao,
+          function (fichaOrigem, fichaAliado) {
+            const rel = aplicarCartaEmCriatura_(fichaOrigem, fichaAliado, {
+              carta: p.carta, opcao: p.opcao, marcadores: p.marcadores
+            });
+            if (rel.erro) throw erroApi_(ERRO.DADOS_INVALIDOS, rel.erro);
+            return {
+              fichaOrigem: fichaOrigem, fichaAliado: fichaAliado,
+              extra: rel, evento: 'carta-em-aliado'
+            };
+          });
+        return ok_({ origem: r.origem, aliado: r.aliado, resultado: r.extra });
+      }
+
+      /**
        * Proteções do Guardião que atravessam de uma ficha para outra.
        * O motor recebe a escolha da regra e fatos da mesa; deltas/custos vêm
        * exclusivamente do catálogo. Se Inabalável pedir d6, nenhuma ficha é gravada.

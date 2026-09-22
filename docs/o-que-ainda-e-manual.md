@@ -12,7 +12,7 @@ sobre si.
 |---:|---|
 | **615** | características com classificação de automação |
 | **155** | declaram alguma parte manual (25%) |
-| **8** | são o que vale olhar primeiro (lista no fim) |
+| **8** | eram o que valia olhar primeiro — **7 feitas**, 1 de pé |
 
 ---
 
@@ -62,88 +62,105 @@ sabe o número**.
 
 ---
 
-## As oito que eu faria, em ordem
+## As oito que eu faria, em ordem — e o que aconteceu com cada uma
 
-Cada uma aqui tem mecânica já pronta no app. Não é lista de desejos: é lista de
-cópia de padrão existente.
+> **Estado em 22/09/2026.** Sete das oito estão feitas. A oitava continua de pé,
+> e duas das sete estavam com o diagnóstico errado — o que está contado aqui
+> embaixo, porque errar calado é pior que errar.
 
-### 1. Pomposo — recusar a arma na hora de equipar
+| # | o que era | estado |
+|---:|---|---|
+| 1 | **Pomposo** — recusar a arma na hora de equipar | ✅ feito |
+| 2 | **Carregado** — 1 Estresse por +1 de Proficiência | ✅ feito, como *bônus preparado* |
+| 3 | **Defletora** — 1 Ponto de Armadura vira Evasão | ✅ feito |
+| 4 | **Tocado pela Graça** — o app sabe contar as cartas | ✅ feito |
+| 5 | **Restauração** — a cura que vai para um aliado | ✅ feito, e abriu uma porta nova |
+| 6 | **Escorpião / Maldição Atormentadora** | ⚠️ metade feita — o diagnóstico estava errado |
+| 7 | **Cadáver** — a pergunta que falta no descanso | ⚠️ **já existia**; eu é que não tinha olhado |
+| 8 | **Os 24 consumíveis que terminam no adversário** | ⬜ continua de pé |
 
-> *"Você deve ter uma Presença igual ou inferior a 0 para usar essa arma."*
+### 4. Tocado pela Graça — feito
 
-O app **já recusa armadura por restrição** (`restricao-automatizada-de-armadura`).
-É o mesmo gancho, do outro lado. Hoje a conferência é a olho.
+> *"Quando 4 ou mais das suas cartas ativas forem do domínio Graça… pode marcar
+> 1 Ponto de Armadura em vez de marcar 1 Estresse."*
 
-**Custo:** pequeno. **Risco:** nenhum — a restrição é um número da própria ficha.
+A condição já era contada pelo motor (`exigeCartasAtivasDominio`); o que faltava
+era a **troca**. Ela virou a camada mais externa das defesas de Estresse: quando
+algo IMPÕE Estresse, o app pergunta quantos você quer marcar como Ponto de
+Armadura, e o primeiro botão é sempre "marcar Estresse".
 
-### 2. Carregado — 1 Estresse por +1 de Proficiência
+⚠ **Tocar a própria trilha de Estresse não abre pergunta nenhuma.** Quem tocou a
+trilha de Estresse já escolheu a moeda — a de Armadura está do lado. Perguntar
+ali transformaria uma passiva que vale a cena inteira num pop-up por toque.
 
-> *"Marque um Estresse para ganhar um bônus de +1 na sua Proficiência em um
-> ataque com arma primária."*
+⚠ **Inabalável e Pingente Calmante rodam ANTES.** Os dois evitam a marca de
+graça, com um d6 físico; a Graça evita pagando um Ponto de Armadura. Perguntar a
+Graça primeiro cobraria a moeda de um Estresse que o dado talvez nem deixasse
+marcar.
 
-É **exatamente a forma da postura Aperfeiçoada**, que acabou de entrar: cobra a
-moeda, publica o bônus da jogada, a mesa rola. Copiar.
+*Fonte conferida:* SRD 2.0, GRACE‑TOUCHED — *"You can mark an Armor Slot instead
+of marking a Stress."* A errata de 25/08/2026 não toca nesta carta.
 
-**Custo:** pequeno.
+### 5. Restauração — feito, e virou uma ponte
 
-### 3. Defletora — 1 Ponto de Armadura vira Evasão
+O contador já recarregava sozinho havia meses; gastar um marcador ainda era um
+gesto de papel. Agora o app gasta os marcadores **da sua carta** e limpa a
+trilha **de quem você tocou** — que pode ser você ou outra ficha da mesa, as
+duas gravadas na mesma trava.
 
-> *"Quando você for atacado, pode marcar 1 espaço de Armadura para somar a
-> Pontuação de Armadura à sua Evasão contra esse ataque."*
+⚠ **A porta só limpa.** Marcar Estresse ou Ponto de Vida na ficha de outra
+pessoa não passa por ela, nem que um dia o catálogo peça: o motor recusa
+qualquer delta que não seja negativo, e só nas duas trilhas de cura. Um teste
+varre o catálogo inteiro para garantir isso.
 
-O app **já tem essa família**: a Desafetação faz quase isso (marca 1 PA e soma
-à Evasão os PA que sobraram), e está automatizada. A Defletora é o mesmo gancho
-com outra conta.
+E ela nasceu **genérica**: `usoEmCriatura` é um bloco declarativo. Toque
+Curativo, Mãos Curativas, Golpe Curativo e Raio da Salvação são a mesma forma —
+entram sem código novo quando for a vez delas.
 
-**Custo:** pequeno.
+### 6. Escorpião e Maldição Atormentadora — metade, e a outra metade era mentira minha
 
-### 4. Tocado pela Graça — o app sabe contar as cartas
+**O que eu escrevi aqui antes estava errado:** eu disse que o app já guardava o
+alvo dessas marcas em `alvosDeHabilidade`. Ele guardava o da **Marca da Presa**;
+"Marcado para Morrer" não estava registrado como habilidade nenhuma — não cobrava
+o Estresse, não guardava o nome, não existia como botão.
 
-> *"Quando 4 ou mais das suas cartas ativas forem do domínio Graça, você recebe
-> … pode marcar 1 Ponto de Armadura em vez de marcar 1 Estresse."*
+Então a Postura do Escorpião precisou de duas coisas, e as duas foram feitas:
 
-A condição é **contável pelo próprio app** (ele conhece as cartas ativas e o
-domínio de cada uma), e o benefício é uma troca de moeda que a janela de dano
-já sabe fazer. Está classificada como contextual porque ninguém tinha olhado
-para a condição.
+1. **Marcado para Morrer virou habilidade de verdade**: cobra 1 Estresse, guarda
+   quem ficou marcado (um por vez, como manda a regra) e tem botão de encerrar,
+   porque a marca acaba num descanso, quando o alvo cai ou quando o Mestre gasta
+   Medo — e só a mesa sabe qual dos três.
+2. **O +2 de Evasão aparece com o nome de quem ataca**: "Postura do Escorpião:
+   ataques feitos por Grak · +2".
 
-**Custo:** médio. **Ganho:** alto — é passiva, vale em toda cena.
+⚠ **E ele NÃO entra na soma da Evasão.** O número impresso é o que vale contra
+todo mundo; um +2 que só existe contra uma pessoa somado ali daria um número
+falso em todo ataque dos outros, e quebraria E107. Ele mora numa faixa própria,
+embaixo da conta, com a condição escrita por extenso.
 
-### 5. Restauração — a cura que vai para um aliado
+**A Maldição Atormentadora continua de fora**, e agora por um motivo medido: o
+app **não sabe quem está Amaldiçoado**. A Maldição permite manter várias
+criaturas amaldiçoadas ao mesmo tempo (o teto é o traço de Conjuração), e
+`alvosDeHabilidade` guarda um alvo por habilidade. Sem essa lista, o lembrete
+seria "você tem vantagem contra criaturas Amaldiçoadas" — genérico, e por isso
+ruído. Com ela, seria "+vantagem contra Grak", que é informação. **A lista é o
+trabalho que falta**, e ela é legal sob a regra das durações: "temporariamente"
+acaba no fim da cena, que o app observa.
 
-> *"Após um descanso longo, coloque na carta marcadores iguais ao seu traço de
-> Conjuração. Toque uma criatura e gaste qualquer número para limpar 2 Pontos
-> de Vida ou 2 Estresses para cada marcador."*
+### 7. Cadáver — já estava pronto, e eu não tinha olhado
 
-O contador já existe e já recarrega sozinho. O que falta é o **alvo aliado** — e
-o app tem `usarHabilidadeEmAliado` desde o Maestro. O alvo aqui não é adversário:
-é outro jogador, que o app alcança.
+Escrevi aqui que a restrição existia só no texto. Não existia: `simularDescanso_`
+já devolvia os Pontos de Vida e recusava o descanso quando um Reanimado limpava
+PV sem confirmar o acesso aos restos mortais, e a tela de descanso já trazia a
+caixa de confirmação no topo.
 
-**Custo:** médio. **Ganho:** alto — é a cura de um Serafim inteiro.
+Eu cheguei a escrever a "solução" — uma pergunta por movimento — e ela teria
+escrito a MESMA REGRA DUAS VEZES, com outro nome de campo: a tela mandava
+`acessoRestosMortais` e o meu código novo esperava `restosMortais`. Um Reanimado
+não conseguiria mais descansar. Foi revertido antes de qualquer teste rodar, e
+fica aqui como o exemplo do porquê de E4.
 
-### 6. Postura do Escorpião e Maldição Atormentadora — o app já sabe quem está marcado
-
-> *"+2 de Evasão contra ataques de uma criatura que tenha deixado Marcada para
-> Morrer."* · *"Vantagem nos ataques contra criaturas Amaldiçoadas."*
-
-Parecem contextuais, mas o app **guarda o alvo dessas marcas** (`alvosDeHabilidade`,
-que existe desde a Marca da Presa). Dá para oferecer o +2 como reação na janela
-de dano quando o atacante for o marcado, e publicar o lembrete da vantagem.
-
-**Custo:** médio.
-
-### 7. Cadáver — a pergunta que falta no descanso
-
-> *"Durante um descanso, você só pode limpar Pontos de Vida se tiver acesso aos
-> restos mortais de uma criatura falecida recentemente."*
-
-O app não sabe se há um cadáver por perto — mas sabe **perguntar antes de
-deixar escolher "Tratar Feridas"**, do mesmo jeito que já pergunta o dado. Hoje
-a restrição existe só no texto, e some na hora em que importa.
-
-**Custo:** pequeno. **Ganho:** é uma regra que hoje ninguém aplica.
-
-### 8. Os consumíveis que terminam no adversário (24 itens)
+### 8. Os consumíveis que terminam no adversário (24 itens) — de pé
 
 As classificações `consumivel-resolucao-manual-e5` e `-e11` cobrem 24 itens —
 venenos, fragmentos arcanos, orbes — que o app consome e depois solta a mão.
@@ -186,3 +203,8 @@ desatualizado, como estava a classificação do Lutador de Posturas até hoje.
 O censo sai de `automacao.classificacao` nos `data/*.json`. Qualquer um pode
 refazê-lo: é uma varredura dos arquivos, sem nada guardado — e é assim de
 propósito, para a lista não envelhecer escondida num documento.
+
+⚠ **Os números do topo são da varredura de setembro/2026 e não foram
+remedidos** depois deste lote. Sete características mudaram de classificação;
+a ordem de grandeza continua, o número exato não. Quem for refazer a conta,
+refaça a varredura — não confie na tabela.

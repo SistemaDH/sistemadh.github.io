@@ -19,6 +19,7 @@ const SOURCE_FILES = [
 
 const ACOES = new Set([
   "criarPersonagem","salvarPersonagem","ajustarFicha","usarHabilidadeEmAliado","usarProtecaoEmAliado",
+  "usarCartaEmAliado",
   "previaDescanso","movimentosDeDescanso","aplicarDescanso",
   "opcoesDeAvanco","previaDeAvanco","aplicarAvanco","desfazerAvanco","aplicarCartaPermanente",
   "painelDoMestre","configurarTransformacao","definirMoldura","molduraDaMesa",

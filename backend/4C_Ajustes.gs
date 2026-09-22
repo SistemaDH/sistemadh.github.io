@@ -119,6 +119,7 @@ function aplicarAjusteDireto_(ficha, a) {
   if (tipo === 'marcador') return ajustarMarcador_(ficha, a);
   if (tipo === 'carta') return ajustarCarta_(ficha, a);
   if (tipo === 'usarcarta') return usarCartaDeDominio_(ficha, a);
+  if (tipo === 'cartaemcriatura') return usarCartaEmSiMesmo_(ficha, a);
   if (tipo === 'gatilho') return ajustarGatilho_(ficha, a);
   if (tipo === 'cena') return ajustarCenaDaFicha_(ficha, a);
   if (tipo === 'sessao') return ajustarSessaoDaFicha_(ficha, a);
@@ -138,6 +139,7 @@ function aplicarAjusteDireto_(ficha, a) {
   if (tipo === 'habilidade') return usarHabilidadeDeClasse_(ficha, a);
   if (tipo === 'transformacao') return ajustarTransformacao_(ficha, a);
   if (tipo === 'postura') return ajustarPostura_(ficha, a);
+  if (tipo === 'bonuspreparado') return ajustarBonusPreparado_(ficha, a);
   if (tipo === 'foco') return ajustarFocoDaFicha_(ficha, a);
   return { erro: 'Tipo de ajuste desconhecido: "' + String((a || {}).tipo) + '".' };
 }
@@ -365,6 +367,19 @@ function usarCaracteristicaDeEquipamento_(ficha, a) {
     }
   }
 
+  /*
+   * ⚠ O BÔNUS PREPARADO É PENDURADO DEPOIS DOS CUSTOS, nunca antes. Se o
+   * Estresse não coubesse, a pessoa ficaria com um bônus na ficha sem ter
+   * pagado por ele — e descobriria isso na hora de somar.
+   */
+  let bonusPendurado = null;
+  if (regra.bonusPreparado && typeof prepararBonusDaFicha_ === 'function') {
+    bonusPendurado = prepararBonusDaFicha_(ficha, {
+      fonte: encontrada.fonte + ' · ' + encontrada.caracteristica,
+      texto: String(regra.bonusPreparado.texto || '')
+    });
+  }
+
   let recuperacao = null;
   if (acionaResultado && Number(resultadoRegra.limpaEstresse)) {
     recuperacao = ajustarRecurso_(ficha, { chave:'estresseMarcado', delta:-Math.max(1, Math.trunc(Number(resultadoRegra.limpaEstresse))) });
@@ -386,6 +401,7 @@ function usarCaracteristicaDeEquipamento_(ficha, a) {
     bonusProficienciaDano:regra.bonusProficienciaDano || null,
     recuperacao:recuperacao, detalhes:detalhes,
     pvLimpos:pvLimpos,
+    bonusPreparado:bonusPendurado,
     /*
      * ⚠ O EFEITO NA MESA SAI DAQUI, e não é aplicado aqui.
      *
@@ -423,11 +439,185 @@ function usarCaracteristicaDeEquipamento_(ficha, a) {
     partes.push(dm > 0 ? ('O Mestre ganha ' + dm + ' de Medo.') : ('O Mestre perde ' + (-dm) + ' de Medo.'));
   }
   if (r.efeitoMesa && r.efeitoMesa.recado) partes.push('O painel do Mestre recebeu o recado.');
+  if (bonusPendurado) {
+    partes.push(bonusPendurado.texto + ' (fica na ficha até você dizer que usou; o fim da cena apaga.)');
+  }
   if (entrada) partes.push('Resultado informado: ' + dadoManual + '.');
   if (entrada && resultadoRegra && !acionaResultado) partes.push('O gatilho especial não foi acionado.');
   if (acionaResultado && recuperacao) partes.push('Recuperação aplicada.');
   r.aviso = encontrada.fonte + ' · ' + encontrada.caracteristica + ': ' + partes.join(' ');
   return r;
+}
+
+/* ------------------------------------------------------------------------ *
+ *  A PONTE QUE FALTAVA: cartas que curam quem você TOCA
+ *
+ *  Até aqui, toda cura de carta que não caía na própria ficha terminava em
+ *  "aplique na mesa". O contador da Restauração recarregava sozinho havia
+ *  meses, e mesmo assim gastar um marcador era um gesto de papel.
+ *
+ *  ⚠ ESTA PORTA SÓ LIMPA. Marcar Estresse ou Ponto de Vida na ficha de outra
+ *  pessoa não passa por aqui, nem que o catálogo peça: a ficha de cada um é
+ *  dela, e o que a machuca vem do Mestre, não da carta de um aliado. O motor
+ *  recusa qualquer delta que não seja negativo, e só nas duas trilhas de cura.
+ *
+ *  Os marcadores saem da ficha de QUEM CONJUROU; a cura pousa na de quem foi
+ *  tocado. Quando as duas são a mesma pessoa, é o mesmo objeto — a carta diz
+ *  "toque uma criatura", e você é uma.
+ * ------------------------------------------------------------------------ */
+
+/** O bloco declarativo de uso-em-criatura de uma carta, ou null. */
+function usoEmCriaturaDaCarta_(cartaId) {
+  if (typeof USOS_CARTAS_DOMINIO === 'undefined') return null;
+  const def = USOS_CARTAS_DOMINIO[String(cartaId || '')] || null;
+  return (def && def.usoEmCriatura) ? def.usoEmCriatura : null;
+}
+
+/** As cartas em mão que podem ser usadas em uma criatura tocada. */
+function cartasComUsoEmCriaturaDaFicha_(ficha) {
+  const saida = [];
+  const ativas = (((ficha || {}).cartas || {}).ativas) || [];
+  for (let i = 0; i < ativas.length; i++) {
+    const carta = (typeof acharCarta_ === 'function') ? acharCarta_(ativas[i]) : null;
+    if (!carta) continue;
+    const uso = usoEmCriaturaDaCarta_(carta.id);
+    if (!uso) continue;
+    const chave = String(uso.contador || '');
+    const disponiveis = Math.max(0,
+      Math.trunc(Number(((((ficha || {}).contadores || {})[chave]) || {}).valor)) || 0);
+    saida.push({
+      id:carta.id, nome:carta.nome, contador:chave, marcadores:disponiveis,
+      rotuloMarcadores:String(uso.rotuloMarcadores || 'marcadores'),
+      rotuloAtivar:String(uso.rotuloAtivar || ('Usar ' + carta.nome + ' em uma criatura')),
+      permiteSiMesmo:uso.permiteSiMesmo !== false,
+      entradaQuantidade:uso.entradaQuantidade || null,
+      opcoes:(uso.opcoes || []).map(function (o) {
+        return {
+          id:o.id, rotulo:o.rotulo || o.id,
+          marcadoresFixos:(o.marcadoresFixos === undefined ? null : o.marcadoresFixos),
+          marcadoresALivreEscolha:o.marcadoresALivreEscolha === true,
+          lembrete:o.lembrete || ''
+        };
+      })
+    });
+  }
+  return saida;
+}
+
+/**
+ * Gasta marcadores da carta na ficha de origem e limpa a trilha de quem tocou.
+ *
+ * `fichaOrigem` e `fichaAlvo` podem ser o MESMO objeto (uso em si mesmo).
+ */
+function aplicarCartaEmCriatura_(fichaOrigem, fichaAlvo, a) {
+  const carta = (typeof acharCarta_ === 'function') ? acharCarta_((a || {}).carta) : null;
+  if (!carta) return { erro:'Carta de domínio desconhecida: "' + String((a || {}).carta) + '".' };
+  const uso = usoEmCriaturaDaCarta_(carta.id);
+  if (!uso) return { erro:'"' + carta.nome + '" não tem uso em criatura registrado.' };
+
+  fichaOrigem.cartas = fichaOrigem.cartas || { ativas:[], cofre:[] };
+  const ativas = Array.isArray(fichaOrigem.cartas.ativas) ? fichaOrigem.cartas.ativas : [];
+  const naMao = ativas.some(function (x) { return chaveTexto_(x) === chaveTexto_(carta.id); });
+  if (!naMao) return { erro:'"' + carta.nome + '" precisa estar na mão para ser usada.' };
+
+  const mesmaFicha = fichaOrigem === fichaAlvo;
+  if (mesmaFicha && uso.permiteSiMesmo === false) {
+    return { erro:'"' + carta.nome + '" só vale em outra criatura.' };
+  }
+
+  const opcoes = Array.isArray(uso.opcoes) ? uso.opcoes : [];
+  let opcao = null;
+  for (let i = 0; i < opcoes.length; i++) {
+    if (chaveTexto_(opcoes[i].id) === chaveTexto_((a || {}).opcao)) { opcao = opcoes[i]; break; }
+  }
+  if (!opcao) return { erro:'"' + carta.nome + '": escolha um benefício válido.' };
+
+  const chaveContador = String(uso.contador || '');
+  if (!chaveContador || typeof CONTADORES === 'undefined' || !CONTADORES[chaveContador]) {
+    return { erro:'"' + carta.nome + '": contador de marcadores não configurado.' };
+  }
+  fichaOrigem.contadores = fichaOrigem.contadores || {};
+  const disponiveis = Math.max(0,
+    Math.trunc(Number(((fichaOrigem.contadores[chaveContador] || {}).valor))) || 0);
+
+  let marcadores;
+  if (opcao.marcadoresFixos !== undefined && opcao.marcadoresFixos !== null) {
+    marcadores = Math.max(1, Math.trunc(Number(opcao.marcadoresFixos)) || 1);
+  } else {
+    const entrada = uso.entradaQuantidade || {};
+    const campo = String(entrada.campo || 'marcadores');
+    const bruto = (a || {})[campo];
+    marcadores = Math.trunc(Number(bruto));
+    const minimo = Math.max(1, Math.trunc(Number(entrada.minimo)) || 1);
+    const maximo = Math.max(minimo, Math.trunc(Number(entrada.maximo)) || minimo);
+    if (!isFinite(marcadores) || Number(bruto) !== marcadores ||
+        marcadores < minimo || marcadores > maximo) {
+      return { erro:carta.nome + ': informe quantos marcadores gastar, de ' + minimo + ' a ' + maximo + '.' };
+    }
+  }
+  if (marcadores > disponiveis) {
+    return { erro:carta.nome + ': a carta tem ' + disponiveis + ' marcador' +
+      (disponiveis === 1 ? '' : 'es') + ' e você pediu ' + marcadores + '.' };
+  }
+
+  // O efeito é conferido ANTES de o marcador sair: gastar por nada é pior que
+  // recusar. Uma trilha já vazia não é cura, é marcador queimado.
+  let mudancaAlvo = null;
+  let condicao = null;
+  if (opcao.recurso) {
+    if (opcao.recurso !== 'pontosDeVidaMarcados' && opcao.recurso !== 'estresseMarcado') {
+      return { erro:carta.nome + ': o catálogo pediu um recurso que esta porta não altera em outra ficha.' };
+    }
+    const porMarcador = Math.trunc(Number(opcao.porMarcador)) || 0;
+    if (porMarcador >= 0) {
+      return { erro:carta.nome + ': esta porta só limpa trilhas; marcar a ficha de outra pessoa não passa por ela.' };
+    }
+    const antes = Math.max(0, Number(((fichaAlvo || {}).recursos || {})[opcao.recurso]) || 0);
+    if (antes <= 0) {
+      return { erro:opcao.recurso === 'pontosDeVidaMarcados'
+        ? 'A criatura tocada não tem Pontos de Vida marcados para limpar.'
+        : 'A criatura tocada não tem Estresse para limpar.' };
+    }
+    mudancaAlvo = ajustarRecurso_(fichaAlvo, { chave:opcao.recurso, delta:porMarcador * marcadores });
+    if (mudancaAlvo && mudancaAlvo.erro) return mudancaAlvo;
+  } else if (opcao.limpaCondicao) {
+    const chaveCondicao = (typeof normalizarCondicao_ === 'function')
+      ? normalizarCondicao_(opcao.limpaCondicao) : '';
+    if (!chaveCondicao) return { erro:carta.nome + ': condição desconhecida no catálogo.' };
+    const tem = (Array.isArray((fichaAlvo || {}).condicoes) ? fichaAlvo.condicoes : []).some(function (x) {
+      return ((x && typeof x === 'object') ? x.id : x) === chaveCondicao;
+    });
+    if (!tem) return { erro:'A criatura tocada não está com ' + String(opcao.limpaCondicao) + '.' };
+    condicao = ajustarCondicao_(fichaAlvo, { chave:chaveCondicao, ligar:false });
+    if (condicao && condicao.erro) return condicao;
+  } else if (!opcao.somenteLembrete) {
+    return { erro:carta.nome + ': o catálogo não disse o que esta opção faz.' };
+  }
+
+  const gasto = ajustarContador_(fichaOrigem, { chave:chaveContador, delta:-marcadores });
+  if (gasto && gasto.erro) return gasto;
+
+  const restam = Math.max(0,
+    Math.trunc(Number(((fichaOrigem.contadores[chaveContador] || {}).valor))) || 0);
+  const partes = [carta.nome + ': ' + marcadores + ' marcador' + (marcadores === 1 ? '' : 'es') +
+    ' gasto' + (marcadores === 1 ? '' : 's') + ' (restam ' + restam + ').'];
+  if (mudancaAlvo) partes.push(String(opcao.rotulo || opcao.id) + '.');
+  if (condicao) partes.push(String(opcao.limpaCondicao) + ' foi limpa.');
+  if (opcao.lembrete) partes.push(String(opcao.lembrete));
+
+  return {
+    tipo:'cartaEmCriatura', carta:carta.id, nome:carta.nome,
+    opcao:opcao.id, rotulo:opcao.rotulo || opcao.id,
+    marcadoresGastos:marcadores, marcadoresRestantes:restam,
+    emSiMesmo:mesmaFicha, recurso:opcao.recurso || null,
+    mudancaAlvo:mudancaAlvo, condicao:condicao,
+    aviso:partes.join(' ')
+  };
+}
+
+/** Uso em si mesmo: origem e alvo são a mesma ficha, pelo caminho de ajustes. */
+function usarCartaEmSiMesmo_(ficha, a) {
+  return aplicarCartaEmCriatura_(ficha, ficha, a);
 }
 
 /** Esperançoso ativo: substitui gasto de Esperança por PA, sempre por escolha. */
@@ -822,6 +1012,150 @@ function aplicarAjusteComDefesasDeEstresse_(ficha, a) {
   return { resultado:r };
 }
 
+/**
+ * Tocado pela Graça (SRD 2.0 "Grace-Touched"): com 4+ cartas de Graça no
+ * loadout, "você pode marcar 1 Ponto de Armadura em vez de marcar 1 Estresse".
+ *
+ * O requisito das quatro cartas NÃO é conferido aqui — quem o confere é
+ * `requisitoDeEfeitoDerivadoDeCartaVale_`, no caminho único dos efeitos
+ * derivados de carta. Esta função só pergunta se a troca está publicada.
+ */
+function regraTocadoPelaGracaDaFicha_(ficha) {
+  const lista = (typeof efeitosDerivadosAtivosDeCartas_ === 'function')
+    ? efeitosDerivadosAtivosDeCartas_(ficha) : [];
+  for (let i = 0; i < lista.length; i++) {
+    const e = (lista[i] || {}).efeito || {};
+    if (e.podeMarcarArmaduraEmVezDeEstresse === true) {
+      return { id:lista[i].id, fonte:lista[i].nome || 'Tocado pela Graça' };
+    }
+  }
+  return null;
+}
+
+/**
+ * ⚠ O TOQUE NA PRÓPRIA TRILHA NÃO PERGUNTA NADA.
+ *
+ * Quem marcou Estresse tocando a trilha de Estresse já escolheu a moeda: se
+ * quisesse Armadura, teria tocado a trilha de Armadura, que está logo ao lado.
+ * Perguntar ali transformaria uma passiva em um pop-up a cada toque — e a
+ * passiva vale a cena inteira, todo dia de jogo.
+ *
+ * A pergunta fica onde o jogador NÃO escolhe a moeda: custo de carta, custo de
+ * habilidade, Doloroso, e o que mais o app impuser.
+ */
+function ajusteEhToqueNaTrilhaDeEstresse_(a) {
+  if (chaveTexto_((a || {}).tipo) !== 'recurso') return false;
+  return (typeof normalizarRecursoAjustavel_ === 'function')
+    && normalizarRecursoAjustavel_((a || {}).chave) === 'estresseMarcado';
+}
+
+/**
+ * Camada mais externa das defesas de Estresse.
+ *
+ * ⚠ A ORDEM É DE PROPÓSITO: Inabalável e Pingente Calmante rodam ANTES.
+ * Os dois evitam a marca de graça (um d6 físico, sem custo); a Graça evita
+ * pagando 1 Ponto de Armadura. Perguntar a Graça primeiro cobraria a moeda de
+ * um Estresse que o d6 talvez nem deixasse marcar. Então a Graça pergunta por
+ * último, e sobre o que REALMENTE sobrou marcado.
+ */
+function aplicarAjusteComTrocaDaGraca_(ficha, a) {
+  const antesFicha = JSON.parse(JSON.stringify(ficha || {}));
+  const antes = Math.max(0, Number(((antesFicha || {}).recursos || {}).estresseMarcado) || 0);
+  const regra = regraTocadoPelaGracaDaFicha_(antesFicha);
+
+  const bruto = (a || {}).gracaArmadura;
+  const informado = bruto !== undefined && bruto !== null && bruto !== '';
+  let escolha = 0;
+  if (informado) {
+    escolha = Math.trunc(Number(bruto));
+    if (!isFinite(escolha) || escolha < 0 || Number(bruto) !== escolha) {
+      return { resultado:{ erro:'Tocado pela Graça: a quantidade de Pontos de Armadura precisa ser um inteiro não negativo.' } };
+    }
+    if (escolha > 0 && !regra) {
+      return { resultado:{ erro:'Tocado pela Graça não está ativo nesta ficha.' } };
+    }
+  }
+
+  const tentativa = aplicarAjusteComDefesasDeEstresse_(ficha, a);
+  if (tentativa && tentativa.pendencia) return tentativa;
+  const r = tentativa ? tentativa.resultado : null;
+  if (!r || r.erro) return { resultado:r };
+  if (!regra) return { resultado:r };
+
+  const depois = Math.max(0, Number(((ficha || {}).recursos || {}).estresseMarcado) || 0);
+  const marcado = depois - antes;
+  if (marcado <= 0) return { resultado:r };
+
+  const armaduraMax = Math.max(0, Number(((ficha || {}).defesas || {}).pontuacaoArmadura) || 0);
+  const armaduraAtual = Math.max(0, Number(((ficha || {}).recursos || {}).armaduraMarcada) || 0);
+  const livres = Math.max(0, armaduraMax - armaduraAtual);
+  const maximo = Math.min(marcado, livres);
+
+  if (!informado) {
+    if (maximo <= 0 || ajusteEhToqueNaTrilhaDeEstresse_(a)) return { resultado:r };
+    substituirFichaEmLugar_(ficha, antesFicha);
+    return { pendencia:{
+      tipo:'graca-armadura', caracteristica:regra.fonte, fonte:regra.fonte,
+      estresse:marcado, maximo:maximo,
+      mensagem:regra.fonte + ': isto marcaria ' + marcado + ' Estresse' + (marcado === 1 ? '' : 's') +
+        '. Quantos você quer marcar como Ponto de Armadura?'
+    } };
+  }
+
+  if (escolha <= 0) return { resultado:r };
+  if (escolha > marcado) {
+    substituirFichaEmLugar_(ficha, antesFicha);
+    return { resultado:{ erro:'Tocado pela Graça só troca Estresse que este ajuste realmente marcaria.' } };
+  }
+  if (escolha > livres) {
+    substituirFichaEmLugar_(ficha, antesFicha);
+    return { resultado:{ erro:'Tocado pela Graça: não há Pontos de Armadura livres suficientes para trocar ' + escolha + ' Estresse.' } };
+  }
+
+  ficha.recursos = ficha.recursos || {};
+  ficha.recursos.estresseMarcado = Math.max(0, depois - escolha);
+  if (typeof sincronizarVulneravelPorEstresse_ === 'function') sincronizarVulneravelPorEstresse_(ficha);
+
+  const marca = ajustarRecurso_(ficha, { chave:'armaduraMarcada', delta:escolha });
+  if (marca && marca.erro) {
+    substituirFichaEmLugar_(ficha, antesFicha);
+    return { resultado:{ erro:'Tocado pela Graça: ' + marca.erro } };
+  }
+
+  // O resultado já foi escrito contando o Estresse que agora virou Armadura.
+  if (r.tipo === 'recurso' && r.chave === 'estresseMarcado') {
+    r.depois = ficha.recursos.estresseMarcado;
+    delete r.alerta;
+  }
+  if (Array.isArray(r.detalhes)) r.detalhes.forEach(function (m) {
+    if (m && m.tipo === 'recurso' && m.chave === 'estresseMarcado') {
+      m.depois = ficha.recursos.estresseMarcado;
+      delete m.alerta;
+    }
+  });
+  if (r.estresseMarcado !== undefined) r.estresseMarcado = ficha.recursos.estresseMarcado;
+  if (r.custoEstresse !== undefined) r.custoEstresse = Math.max(0, (Math.trunc(Number(r.custoEstresse)) || 0) - escolha);
+  if (r.custos && r.custos.estresse !== undefined) {
+    r.custos.estresse = Math.max(0, (Math.trunc(Number(r.custos.estresse)) || 0) - escolha);
+  }
+  if (r.doloroso && r.doloroso.estresseMarcado !== undefined) {
+    r.doloroso.estresseMarcado = Math.max(0, (Math.trunc(Number(r.doloroso.estresseMarcado)) || 0) - escolha);
+  }
+  r.detalhes = (Array.isArray(r.detalhes) ? r.detalhes : []).concat([marca]);
+  if (marca && marca.doloroso) r.doloroso = marca.doloroso;
+  if (marca && marca.movimentoDeMorte) r.movimentoDeMorte = true;
+  if (marca && marca.alerta) r.alerta = marca.alerta;
+
+  r.tocadoPelaGraca = {
+    fonte:regra.fonte, estresseOriginal:marcado, trocado:escolha,
+    estresseEfetivo:Math.max(0, marcado - escolha), armaduraMarcada:escolha
+  };
+  const nota = regra.fonte + ': ' + escolha + ' Estresse' + (escolha === 1 ? '' : 's') +
+    ' trocado' + (escolha === 1 ? '' : 's') + ' por ' + escolha + ' Ponto' + (escolha === 1 ? '' : 's') + ' de Armadura.';
+  r.aviso = (r.aviso ? r.aviso + ' ' : '') + nota;
+  return { resultado:r };
+}
+
 function aplicarAjustes_(ficha, ajustes) {
   const mudancas = [];
   const erros = [];
@@ -841,7 +1175,7 @@ function aplicarAjustes_(ficha, ajustes) {
   const previa = JSON.parse(JSON.stringify(ficha || {}));
   for (let i = 0; i < lista.length; i++) {
     const a = lista[i] || {};
-    const tentativa = aplicarAjusteComDefesasDeEstresse_(previa, a);
+    const tentativa = aplicarAjusteComTrocaDaGraca_(previa, a);
     if (tentativa && tentativa.pendencia) {
       return {
         mudancas: [], erros: [],
@@ -3369,6 +3703,18 @@ function usarReacaoDeEquipamento_(ficha, a) {
     const agora=Math.max(0,Number(((ficha || {}).recursos || {}).armaduraMarcada)||0);
     bonusEvasao=Math.max(0,maxArmadura-agora);
   }
+  /*
+   * ⚠ A DEFLETORA SOMA A PONTUAÇÃO INTEIRA, não o que sobrou.
+   *
+   * "some a Pontuação de Armadura à sua Evasão" — é o número da armadura, não
+   * os Pontos livres. A diferença é a Desafetação, que fica logo acima e diz
+   * "os PA que continuarem disponíveis". Duas reações parecidas, dois números
+   * diferentes; reaproveitar o tipo da outra teria sido menos código e um
+   * bônus errado toda vez que a armadura estivesse marcada.
+   */
+  if (bonus && bonus.tipo === 'pontuacao-armadura') {
+    bonusEvasao=Math.max(0,maxArmadura);
+  }
 
   const saida={
     tipo:'reacaoEquipamento', nome:encontrada.caracteristica, fonte:encontrada.fonte,
@@ -4616,6 +4962,112 @@ function anexarReacoesDeEsperanca_(resultado, gasto) {
   const frases = reacoes.map(function (x) { return x.aviso; }).join(' ');
   resultado.aviso = resultado.aviso ? (resultado.aviso + ' ' + frases) : frases;
   return resultado;
+}
+
+/* ========================================================================== *
+ *  BÔNUS PREPARADO — o tempo dos "no próximo ataque"
+ *
+ *  ⚠ ESTA PARTE EXISTE POR UMA PERGUNTA DA VANESSA, e ela viu o problema
+ *  antes de qualquer linha ser escrita:
+ *
+ *    "tem alguns buffs que acabam depois de usar, ou da cena... ex: ganha +1
+ *     no próximo ataque, como ficaria isso? afinal, o jogador dando dano num
+ *     adversário provavelmente nunca vai entrar no app, pois o Mestre faria
+ *     isso. Tem que tomar cuidado no tempo de algumas habilidades."
+ *
+ *  Ela está certa, e a consequência é dura: o app NUNCA vê o ataque
+ *  acontecer. Um estado chamado "+1 no próximo ataque" ficaria aceso para
+ *  sempre, porque não existe no app o evento que o apagaria. Seria um número
+ *  na ficha que vira mentira depois do primeiro golpe — e mentira que a mesa
+ *  descobre tarde, somando errado.
+ *
+ *  AS TRÊS DURAÇÕES HONESTAS DESTE APP, e não há uma quarta:
+ *
+ *   1. ENQUANTO A FONTE DURAR — o derivado. Armadura vestida, postura ativa,
+ *      carta em jogo. Some sozinho quando a fonte sai, sem ninguém lembrar.
+ *
+ *   2. ATÉ UM GATILHO QUE O APP CONHECE — contador com `zeraEm`. Fim da cena,
+ *      descanso, sessão. São os únicos momentos que o app vê chegar.
+ *
+ *   3. ATÉ QUEM USOU DIZER QUE USOU — o BÔNUS PREPARADO daqui. É a forma
+ *      honesta do "próximo ataque": o app registra o custo (que é dele),
+ *      mostra o bônus na ficha (para ninguém esquecer que pagou) e espera um
+ *      toque para apagá-lo. E apaga sozinho no fim da cena, como rede — assim
+ *      ele nunca atravessa para a cena seguinte nem que a mesa esqueça.
+ *
+ *  ⚠ A REGRA GERAL, que vale para tudo o que vier depois: NUNCA CRIAR ESTADO
+ *  CUJA SAÍDA O APP NÃO OBSERVA. Se não há gatilho, ou é uma frase dita uma
+ *  vez, ou é um bônus preparado com botão — nunca um número que fica aceso
+ *  esperando um evento que não chega.
+ * ========================================================================== */
+
+/** Teto de segurança: a lista é curta porque a mesa não gerencia fila. */
+const LIMITE_BONUS_PREPARADOS = 8;
+
+function bonusPreparadosDaFicha_(ficha) {
+  if (!Array.isArray((ficha || {}).bonusPreparados)) ficha.bonusPreparados = [];
+  return ficha.bonusPreparados;
+}
+
+/**
+ * Pendura um bônus preparado na ficha.
+ *
+ * ⚠ O TEXTO É O EFEITO. O app não soma esse bônus em lugar nenhum — ele não
+ * pode, porque a jogada acontece fora dele. O que ele faz é não deixar a
+ * pessoa esquecer que pagou por algo, e dar um lugar para dizer "usei".
+ */
+function prepararBonusDaFicha_(ficha, dados) {
+  const texto = String((dados || {}).texto || '').trim();
+  if (!texto) return null;
+  const lista = bonusPreparadosDaFicha_(ficha);
+  const registro = {
+    id: 'bonus-' + (typeof agoraIso_ === 'function' ? agoraIso_() : String(Date.now())) +
+      '-' + Math.floor(Math.random() * 1000),
+    fonte: String((dados || {}).fonte || '').slice(0, 60),
+    texto: texto.slice(0, 160),
+    em: (typeof agoraIso_ === 'function') ? agoraIso_() : ''
+  };
+  lista.push(registro);
+  if (lista.length > LIMITE_BONUS_PREPARADOS) {
+    ficha.bonusPreparados = lista.slice(-LIMITE_BONUS_PREPARADOS);
+  }
+  return registro;
+}
+
+/** Limpa os bônus preparados. É o que o fim da cena chama. */
+function limparBonusPreparadosDaFicha_(ficha) {
+  const quantos = bonusPreparadosDaFicha_(ficha).length;
+  ficha.bonusPreparados = [];
+  return quantos;
+}
+
+/**
+ * Dar baixa num bônus preparado: "usei" ou "deixa pra lá".
+ *
+ * ⚠ OS DOIS BOTÕES EXISTEM, e não é enfeite. "Usei" é o caminho normal;
+ * "descartar" é para quando a cena virou e o bônus não vale mais — sem ele, a
+ * única saída seria esperar o fim da cena com um número errado à vista.
+ */
+function ajustarBonusPreparado_(ficha, a) {
+  const acao = chaveTexto_((a || {}).acao) || 'usar';
+  const lista = bonusPreparadosDaFicha_(ficha);
+  if (acao === 'limpar') {
+    const quantos = limparBonusPreparadosDaFicha_(ficha);
+    return { tipo:'bonusPreparado', acao:'limpar', quantos:quantos,
+      aviso: quantos ? ('Os ' + quantos + ' bônus preparados saíram da ficha.') : 'Não havia bônus preparado.' };
+  }
+  if (acao !== 'usar' && acao !== 'descartar') {
+    return { erro: 'Ação de bônus preparado desconhecida: "' + String((a || {}).acao) + '".' };
+  }
+  const id = String((a || {}).id || '');
+  const onde = lista.map(function (x) { return x.id; }).indexOf(id);
+  if (onde === -1) return { erro: 'Esse bônus preparado não está mais na ficha.' };
+  const registro = lista[onde];
+  lista.splice(onde, 1);
+  return {
+    tipo:'bonusPreparado', acao:acao, id:id, fonte:registro.fonte, texto:registro.texto,
+    aviso: (acao === 'usar' ? 'Usado: ' : 'Descartado: ') + registro.texto
+  };
 }
 
 function ajustarRecurso_(ficha, a) {
@@ -5869,15 +6321,32 @@ function ajustarGatilho_(ficha, a) {
    * que um dia discordaria (E4).
    */
   let posturaEncerrada = null;
-  if (gatilho === 'fim-da-cena' && typeof sairDaPosturaDaFicha_ === 'function') {
-    posturaEncerrada = sairDaPosturaDaFicha_(ficha, 'fim da cena');
+  let bonusApagados = 0;
+  if (gatilho === 'fim-da-cena') {
+    if (typeof sairDaPosturaDaFicha_ === 'function') {
+      posturaEncerrada = sairDaPosturaDaFicha_(ficha, 'fim da cena');
+    }
+    /*
+     * ⚠ A REDE DE SEGURANÇA DO BÔNUS PREPARADO. Ele espera um toque que diz
+     * "usei" — e se ninguém tocar, o fim da cena apaga. Sem isto, um "+1 no
+     * próximo ataque" atravessaria para a cena seguinte e viraria número
+     * errado à vista, que é exatamente o risco que esta parte existe para
+     * evitar.
+     */
+    bonusApagados = limparBonusPreparadosDaFicha_(ficha);
   }
   return {
     tipo: 'gatilho',
     gatilho: gatilho,
     quando: CONTADOR_GATILHOS[gatilho],
     postura: posturaEncerrada,
-    aviso: posturaEncerrada ? posturaEncerrada.aviso : '',
+    bonusPreparadosApagados: bonusApagados,
+    aviso: [
+      posturaEncerrada ? posturaEncerrada.aviso : '',
+      bonusApagados ? (bonusApagados === 1
+        ? 'O bônus preparado que ninguém usou saiu da ficha.'
+        : 'Os ' + bonusApagados + ' bônus preparados que ninguém usou saíram da ficha.') : ''
+    ].filter(Boolean).join(' '),
     contadores: mexidos.map(function (chave) {
       const def = CONTADORES[chave] || {};
       const agora = (ficha.contadores || {})[chave];

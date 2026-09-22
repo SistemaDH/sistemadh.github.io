@@ -9660,6 +9660,247 @@ teste('Restauração recarrega marcadores de Conjuração no descanso longo',()=
   verdade(f.contadores['carta:splendor-restauracao'].valor>0,'o descanso longo deveria recarregar Restauração');
 });
 
+console.log('\nBônus preparado — a duração que o app consegue observar');
+/** Uma ficha com a Manopla Energizada (Carregado) como arma secundária. */
+function fichaComCarregado_() {
+  let f = contexto.fichaRapida_({
+    nome:'Pila', classe:'Guerreiro', subclasse:'Chamada dos Bravos',
+    ancestralidade:'Humano', comunidade:'Highborne',
+    cartas:['blade-levantar-se','bone-intocavel'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  f.equipamento = f.equipamento || {};
+  f.equipamento.secundaria = 'secundaria-t3-gauntlet-energizado';
+  return contexto.validarFicha_(f);
+}
+
+teste('Carregado cobra 1 Estresse e pendura o bônus em vez de somar nada',()=>{
+  const f = fichaComCarregado_();
+  const evasaoAntes = f.defesas.evasao;
+  const r = contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',nome:'Carregado'}]);
+  igual(r.erros,[]);
+  igual(f.recursos.estresseMarcado,1,'o custo é cobrado de verdade');
+  igual(f.bonusPreparados.length,1);
+  verdade(f.bonusPreparados[0].texto.indexOf('Proficiência')>=0);
+  igual(contexto.validarFicha_(f).defesas.evasao,evasaoAntes,'nenhum número derivado se mexe');
+  igual(Number(f.recursos.proficiencia)||0, Number(fichaComCarregado_().recursos.proficiencia)||0,
+    'a Proficiência gravada não muda: o +1 é da jogada, não da ficha');
+});
+
+teste('"usei" tira o bônus da ficha; "descartar" também, e sem devolver o custo',()=>{
+  const f = fichaComCarregado_();
+  contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',nome:'Carregado'}]);
+  contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',nome:'Carregado'}]);
+  igual(f.bonusPreparados.length,2);
+  const usar = contexto.aplicarAjustes_(f,[{tipo:'bonusPreparado',acao:'usar',id:f.bonusPreparados[0].id}]);
+  igual(usar.erros,[]); igual(f.bonusPreparados.length,1);
+  const descartar = contexto.aplicarAjustes_(f,[{tipo:'bonusPreparado',acao:'descartar',id:f.bonusPreparados[0].id}]);
+  igual(descartar.erros,[]); igual(f.bonusPreparados.length,0);
+  igual(f.recursos.estresseMarcado,2,'o Estresse pago não volta');
+});
+
+teste('dar baixa duas vezes no mesmo bônus é recusado',()=>{
+  const f = fichaComCarregado_();
+  contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',nome:'Carregado'}]);
+  const id = f.bonusPreparados[0].id;
+  igual(contexto.aplicarAjustes_(f,[{tipo:'bonusPreparado',acao:'usar',id:id}]).erros,[]);
+  verdade(contexto.aplicarAjustes_(f,[{tipo:'bonusPreparado',acao:'usar',id:id}]).erros.length===1);
+});
+
+teste('⚠ O FIM DA CENA É A REDE: o bônus não atravessa para a cena seguinte',()=>{
+  const f = fichaComCarregado_();
+  contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',nome:'Carregado'}]);
+  igual(f.bonusPreparados.length,1);
+  const r = contexto.aplicarAjustes_(f,[{tipo:'gatilho',gatilho:'fim-da-cena'}]);
+  igual(r.erros,[]);
+  igual(f.bonusPreparados.length,0);
+  igual(r.mudancas[0].bonusPreparadosApagados,1);
+  verdade(String(r.mudancas[0].aviso||'').indexOf('bônus preparado')>=0,
+    'quem estava olhando precisa saber que o bônus sumiu');
+});
+
+teste('o descanso NÃO apaga bônus preparado — quem apaga é o fim da cena',()=>{
+  const f = fichaComCarregado_();
+  contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',nome:'Carregado'}]);
+  contexto.aplicarGatilhoContadores_(f,'descanso');
+  igual(f.bonusPreparados.length,1,'o descanso não é o gatilho deste estado');
+});
+
+teste('a fila de bônus preparados tem teto e descarta o mais velho',()=>{
+  const f = fichaComCarregado_();
+  f.recursos.estresseMaximo = 20;
+  for (let i=0;i<10;i++) contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',nome:'Carregado'}]);
+  verdade(f.bonusPreparados.length <= avaliar('LIMITE_BONUS_PREPARADOS'),
+    'a lista não pode crescer sem fim');
+});
+
+teste('nenhum bônus preparado sobrevive a uma gravação depois do fim da cena',()=>{
+  const f = fichaComCarregado_();
+  contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',nome:'Carregado'}]);
+  contexto.aplicarAjustes_(f,[{tipo:'gatilho',gatilho:'fim-da-cena'}]);
+  const v = contexto.validarFicha_(f);
+  igual(v.bonusPreparados,[]);
+});
+
+console.log('\nMarcado para Morrer e a Postura do Escorpião');
+/** Um Executor no nível 5, com a carta de especialização escolhida. */
+function fichaExecutor_() {
+  let f = contexto.fichaVazia_();
+  f.identidade.nome = 'Vez';
+  f.identidade.nivel = 1;
+  f.identidade.classe = 'Assassino';
+  f.identidade.subclasse = 'Guilda dos Executores';
+  f.identidade.ancestralidade = 'Humano';
+  f.identidade.comunidade = 'Highborne';
+  f.tracos = { agilidade:1, forca:0, finesse:2, instinto:1, presenca:-1, conhecimento:0 };
+  f.experiencias = [{ nome:'A', bonus:2 }, { nome:'B', bonus:2 }];
+  f = contexto.validarFicha_(f);
+  f.identidade.nivel = 5;
+  f.subclasseCartas = ['fundacao', 'especializacao'];
+  return contexto.validarFicha_(f);
+}
+
+teste('Marcar para Morrer cobra 1 Estresse e guarda quem ficou marcado',()=>{
+  const f = fichaExecutor_();
+  const r = contexto.aplicarAjustes_(f,[{tipo:'habilidade',nome:'Marcado para Morrer',alvo:'Grak'}]);
+  igual(r.erros,[]);
+  igual(f.recursos.estresseMarcado,1);
+  igual(f.alvosDeHabilidade['Marcado para Morrer'],'Grak');
+});
+
+teste('só um adversário Marcado para Morrer por vez, e dá para encerrar',()=>{
+  const f = fichaExecutor_();
+  contexto.aplicarAjustes_(f,[{tipo:'habilidade',nome:'Marcado para Morrer',alvo:'Grak'}]);
+  contexto.aplicarAjustes_(f,[{tipo:'habilidade',nome:'Marcado para Morrer',alvo:'Nadir'}]);
+  igual(Object.keys(f.alvosDeHabilidade).length,1);
+  igual(f.alvosDeHabilidade['Marcado para Morrer'],'Nadir');
+  const fim = contexto.aplicarAjustes_(f,[{tipo:'habilidade',nome:'Marcado para Morrer',encerrar:true}]);
+  igual(fim.erros,[]);
+  verdade(!f.alvosDeHabilidade['Marcado para Morrer']);
+});
+
+teste('a Postura do Escorpião publica o +2 com o nome de quem está marcado',()=>{
+  let f = fichaExecutor_();
+  const semAlvo = (f.defesasCondicionais||[]).find((x)=>x.fonte==='Postura do Escorpião');
+  verdade(!!semAlvo,'a condicional deveria existir mesmo sem alvo');
+  igual(semAlvo.ativo,false);
+  igual(semAlvo.valor,2);
+  igual(semAlvo.aplicaEm,'evasao');
+
+  contexto.aplicarAjustes_(f,[{tipo:'habilidade',nome:'Marcado para Morrer',alvo:'Grak'}]);
+  f = contexto.validarFicha_(f);
+  const comAlvo = (f.defesasCondicionais||[]).find((x)=>x.fonte==='Postura do Escorpião');
+  igual(comAlvo.ativo,true);
+  igual(comAlvo.alvo,'Grak');
+  verdade(comAlvo.condicao.indexOf('Grak')>=0,'a condição deveria nomear quem ataca');
+});
+
+teste('o +2 condicional NÃO entra na soma da Evasão (E107 continua fechando)',()=>{
+  let f = fichaExecutor_();
+  const antes = f.defesas.evasao;
+  contexto.aplicarAjustes_(f,[{tipo:'habilidade',nome:'Marcado para Morrer',alvo:'Grak'}]);
+  f = contexto.validarFicha_(f);
+  igual(f.defesas.evasao,antes,'a Evasão impressa não pode mudar por causa de um condicional');
+  const linhas = (f.memoriaDosNumeros||{}).evasao||[];
+  verdade(linhas.length>0);
+  const soma = linhas.reduce((t,l)=>t+(Number(l.valor)||0),0);
+  igual(soma,f.defesas.evasao);
+  verdade(!linhas.some((l)=>String(l.rotulo||'').indexOf('Escorpião')>=0),
+    'a postura não pode aparecer como parcela');
+});
+
+teste('quem não tem a Postura do Escorpião não recebe condicional nenhuma',()=>{
+  let f = fichaExecutor_();
+  f.subclasseCartas = ['fundacao'];
+  f = contexto.validarFicha_(f);
+  verdade(!(f.defesasCondicionais||[]).some((x)=>x.fonte==='Postura do Escorpião'));
+});
+
+console.log('\nRestauração — a cura que atravessa para outra ficha');
+function fichaRestauracao_(marcadores) {
+  const f=fichaSplendorAlta_(6,['splendor-restauracao','splendor-zona-de-protecao']);
+  f.contadores['carta:splendor-restauracao']={valor:marcadores};
+  return f;
+}
+
+teste('Restauração em si mesmo gasta marcadores e limpa 2 PV por marcador',()=>{
+  const f=fichaRestauracao_(3);
+  f.recursos.pontosDeVidaMarcados=5;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'cartaEmCriatura',carta:'splendor-restauracao',opcao:'pv',marcadores:2}]);
+  igual(r.erros,[]);
+  igual(f.recursos.pontosDeVidaMarcados,1);
+  igual(f.contadores['carta:splendor-restauracao'].valor,1);
+  verdade(r.mudancas[0].emSiMesmo===true);
+});
+
+teste('Restauração num aliado: o marcador sai daqui, a cura pousa lá',()=>{
+  const origem=fichaRestauracao_(2);
+  const aliado=fichaSplendorAlta_(6,['splendor-zona-de-protecao']);
+  aliado.recursos.estresseMarcado=5;
+  const r=contexto.aplicarCartaEmCriatura_(origem,aliado,{carta:'splendor-restauracao',opcao:'estresse',marcadores:2});
+  verdade(!r.erro,String(r.erro));
+  igual(aliado.recursos.estresseMarcado,1);
+  igual(origem.recursos.estresseMarcado,0,'a ficha de origem não é tocada');
+  verdade(!origem.contadores['carta:splendor-restauracao'],'gastou os dois marcadores');
+  igual(r.marcadoresRestantes,0);
+});
+
+teste('Restauração não gasta marcador numa trilha já limpa',()=>{
+  const origem=fichaRestauracao_(2);
+  const aliado=fichaSplendorAlta_(6,['splendor-zona-de-protecao']);
+  aliado.recursos.pontosDeVidaMarcados=0;
+  const r=contexto.aplicarCartaEmCriatura_(origem,aliado,{carta:'splendor-restauracao',opcao:'pv',marcadores:1});
+  verdade(!!r.erro);
+  igual(origem.contadores['carta:splendor-restauracao'].valor,2,'o marcador continua na carta');
+});
+
+teste('Restauração recusa mais marcadores do que a carta tem',()=>{
+  const f=fichaRestauracao_(1);
+  f.recursos.pontosDeVidaMarcados=6;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'cartaEmCriatura',carta:'splendor-restauracao',opcao:'pv',marcadores:3}]);
+  verdade(r.erros.length===1);
+  igual(f.recursos.pontosDeVidaMarcados,6);
+  igual(f.contadores['carta:splendor-restauracao'].valor,1);
+});
+
+teste('Restauração limpa Vulnerável por 1 marcador fixo e recusa quem não está',()=>{
+  const origem=fichaRestauracao_(3);
+  const aliado=fichaSplendorAlta_(6,['splendor-zona-de-protecao']);
+  const semCondicao=contexto.aplicarCartaEmCriatura_(origem,aliado,{carta:'splendor-restauracao',opcao:'vulneravel'});
+  verdade(!!semCondicao.erro);
+  igual(origem.contadores['carta:splendor-restauracao'].valor,3);
+  contexto.ajustarCondicao_(aliado,{chave:'Vulnerável',ligar:true});
+  const r=contexto.aplicarCartaEmCriatura_(origem,aliado,{carta:'splendor-restauracao',opcao:'vulneravel'});
+  verdade(!r.erro,String(r.erro));
+  igual(r.marcadoresGastos,1);
+  igual(origem.contadores['carta:splendor-restauracao'].valor,2);
+  verdade(!(aliado.condicoes||[]).some((x)=>(x&&typeof x==='object'?x.id:x)==='vulneravel'));
+});
+
+teste('Restauração precisa da carta na mão',()=>{
+  const origem=fichaSplendorAlta_(6,['splendor-zona-de-protecao']);
+  origem.contadores['carta:splendor-restauracao']={valor:3};
+  const aliado=fichaSplendorAlta_(6,['splendor-zona-de-protecao']);
+  aliado.recursos.pontosDeVidaMarcados=4;
+  const r=contexto.aplicarCartaEmCriatura_(origem,aliado,{carta:'splendor-restauracao',opcao:'pv',marcadores:1});
+  verdade(!!r.erro);
+  igual(aliado.recursos.pontosDeVidaMarcados,4);
+});
+
+teste('A porta de uso em criatura só limpa: nenhum catálogo marca a ficha do outro',()=>{
+  const usos=avaliar('USOS_CARTAS_DOMINIO');
+  const comUso=Object.keys(usos).filter((id)=>usos[id] && usos[id].usoEmCriatura);
+  verdade(comUso.length>0,'deveria haver ao menos uma carta com uso em criatura');
+  comUso.forEach((id)=>{
+    (usos[id].usoEmCriatura.opcoes||[]).forEach((o)=>{
+      if (o.recurso===undefined || o.recurso===null) return;
+      verdade(o.recurso==='pontosDeVidaMarcados'||o.recurso==='estresseMarcado',
+        id+'/'+o.id+': recurso fora das duas trilhas de cura');
+      verdade(Number(o.porMarcador)<0, id+'/'+o.id+': delta precisa ser negativo');
+    });
+  });
+});
+
 teste('Zona de Proteção inicia d6 em 1 e não reativa antes do descanso longo',()=>{
   const f=fichaSplendorAlta_(6,['splendor-zona-de-protecao','splendor-restauracao']);
   let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'splendor-zona-de-protecao'}]);
@@ -9918,6 +10159,64 @@ teste('Tocado pela Graça só publica substituições com quatro cartas Graça a
   const a=contexto.efeitosDerivadosAtivosDeCartas_(f4).find((x)=>x.id==='grace-tocado-pela-graca');
   const b=contexto.efeitosDerivadosAtivosDeCartas_(f3).find((x)=>x.id==='grace-tocado-pela-graca');
   verdade(a && a.efeito.podeMarcarArmaduraEmVezDeEstresse===true); verdade(!b);
+});
+
+teste('Tocado pela Graça pergunta antes de marcar Estresse imposto e troca por Armadura',()=>{
+  const ativas=['grace-tocado-pela-graca','grace-enfeiticar-em-massa','grace-carisma-infinito','grace-share-the-burden'];
+  const f=fichaGraceAlta_(8,ativas);
+  f.defesas=f.defesas||{}; f.defesas.pontuacaoArmadura=3; f.recursos.armaduraMarcada=0;
+  const pendente=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-enfeiticar-em-massa'}]);
+  verdade(pendente.pendenciaRolagem && pendente.pendenciaRolagem.tipo==='graca-armadura','pergunta a troca');
+  igual(pendente.pendenciaRolagem.maximo,1);
+  igual(f.recursos.estresseMarcado,0,'nada foi gravado antes da resposta');
+  igual(f.recursos.armaduraMarcada,0);
+
+  const trocou=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-enfeiticar-em-massa',gracaArmadura:1}]);
+  igual(trocou.erros,[]);
+  igual(f.recursos.estresseMarcado,0,'o Estresse não chega a ficar marcado');
+  igual(f.recursos.armaduraMarcada,1);
+  verdade(trocou.mudancas.some((m)=>m.tocadoPelaGraca && m.tocadoPelaGraca.trocado===1));
+});
+
+teste('Tocado pela Graça respeitando a recusa: zero mantém o Estresse',()=>{
+  const ativas=['grace-tocado-pela-graca','grace-enfeiticar-em-massa','grace-carisma-infinito','grace-share-the-burden'];
+  const f=fichaGraceAlta_(8,ativas);
+  f.defesas=f.defesas||{}; f.defesas.pontuacaoArmadura=3; f.recursos.armaduraMarcada=0;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-enfeiticar-em-massa',gracaArmadura:0}]);
+  igual(r.erros,[]); igual(f.recursos.estresseMarcado,1); igual(f.recursos.armaduraMarcada,0);
+});
+
+teste('Sem as quatro cartas de Graça a troca nem é oferecida',()=>{
+  const f=fichaGraceAlta_(8,['grace-tocado-pela-graca','grace-enfeiticar-em-massa','grace-carisma-infinito']);
+  f.defesas=f.defesas||{}; f.defesas.pontuacaoArmadura=3; f.recursos.armaduraMarcada=0;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-enfeiticar-em-massa'}]);
+  verdade(!r.pendenciaRolagem); igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+  const recusa=contexto.aplicarAjustes_(f,[{tipo:'recurso',chave:'estresseMarcado',delta:1,gracaArmadura:1}]);
+  verdade(recusa.erros.length===1,'pedir a troca sem a carta ativa é erro');
+});
+
+teste('Tocar a própria trilha de Estresse não abre a pergunta da Graça',()=>{
+  const ativas=['grace-tocado-pela-graca','grace-enfeiticar-em-massa','grace-carisma-infinito','grace-share-the-burden'];
+  const f=fichaGraceAlta_(8,ativas);
+  f.defesas=f.defesas||{}; f.defesas.pontuacaoArmadura=3; f.recursos.armaduraMarcada=0;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'recurso',chave:'estresseMarcado',delta:1}]);
+  verdade(!r.pendenciaRolagem,'o dedo já escolheu a moeda'); igual(f.recursos.estresseMarcado,1);
+});
+
+teste('Sem Ponto de Armadura livre a Graça não pergunta nada',()=>{
+  const ativas=['grace-tocado-pela-graca','grace-enfeiticar-em-massa','grace-carisma-infinito','grace-share-the-burden'];
+  const f=fichaGraceAlta_(8,ativas);
+  f.defesas=f.defesas||{}; f.defesas.pontuacaoArmadura=2; f.recursos.armaduraMarcada=2;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-enfeiticar-em-massa'}]);
+  verdade(!r.pendenciaRolagem); igual(r.erros,[]); igual(f.recursos.estresseMarcado,1);
+});
+
+teste('A Graça não troca mais Estresse do que o ajuste marcaria',()=>{
+  const ativas=['grace-tocado-pela-graca','grace-enfeiticar-em-massa','grace-carisma-infinito','grace-share-the-burden'];
+  const f=fichaGraceAlta_(8,ativas);
+  f.defesas=f.defesas||{}; f.defesas.pontuacaoArmadura=3; f.recursos.armaduraMarcada=0;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'grace-enfeiticar-em-massa',gracaArmadura:2}]);
+  verdade(r.erros.length===1); igual(f.recursos.estresseMarcado,0); igual(f.recursos.armaduraMarcada,0);
 });
 
 teste('Enfeitiçar em Massa cobra 1 Estresse somente no encerramento escolhido',()=>{

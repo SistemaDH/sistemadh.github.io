@@ -1678,3 +1678,73 @@ A releitura obrigatória do deploy pegou na hora; a v17 devolveu `verify_jwt: fa
 - advisors de segurança: só o `RLS Enabled No Policy` esperado, nas 6 tabelas
   (as políticas públicas continuam deliberadamente ausentes);
 - nenhuma migração de banco foi necessária.
+
+---
+
+## Lote das durações honestas — 22/09/2026 (ainda SEM deploy)
+
+**Pergunta que abriu o lote:** *"acredito que tem alguns 'buffs' que acaba depois
+de usar ou cena ou algo… ex: ganha +1 no próximo ataque, como ficaria isso?"*
+
+A resposta virou a regra que governa tudo o que veio depois:
+
+> **Nunca criar estado cuja saída o app não observa.** Só existem três durações
+> honestas: (1) enquanto a fonte dura — é derivado; (2) até um gatilho que o app
+> conhece — é contador com `zeraEm`; (3) até a pessoa dizer que usou — é **bônus
+> preparado**, com o fim da cena como rede.
+
+### O que entrou
+
+| o que | onde |
+|---|---|
+| **Bônus preparado** (Carregado e os que vierem) | `4C_Ajustes.gs` · 7 testes novos |
+| **Tocado pela Graça** — PA em vez de Estresse | `4C_Ajustes.gs` · 6 testes |
+| **Restauração** — e a porta `usoEmCriatura` | `4C_Ajustes.gs`, `99_Api.gs`, `data/cartas-dominio.json` · 7 testes |
+| **Marcado para Morrer** como habilidade de verdade | `data/classes.json` → `42_Classes.gs` |
+| **Postura do Escorpião** — `defesasCondicionais` | `gerar-48-criacao.mjs`, `ficha.js`, `papel.css` · 5 testes |
+| **Pomposo, Carregado, Defletora** | catálogo de equipamento |
+
+### Uma ação nova na `engine-api`
+
+`usarCartaEmAliado` entrou em `ACOES` (`supabase/functions/engine-api/index.ts`),
+em `ACOES_ENGINE` (`js/api.js`) e no `switch` de `99_Api.gs`. `SOURCE_FILES`
+continua com os mesmos **24** arquivos — `4J_Posturas.gs` já estava lá desde a
+preparação da v17 e **continua sem deploy**.
+
+⚠ **Duas fichas, uma trava.** `usarCartaEmAliado` passa por
+`mutarPersonagemEOutro_`: o marcador não sai da sua carta sem a cura chegar do
+outro lado, nem o contrário. E a porta **só limpa** — marcar a ficha de outra
+pessoa não passa por ela, e um teste varre o catálogo inteiro garantindo que
+nenhum `porMarcador` positivo entre por descuido.
+
+### O que pegou, e vale lembrar
+
+**O Cadáver já estava pronto.** Eu tinha listado "a pergunta que falta no
+descanso" como trabalho a fazer; ela existia desde antes, com outro nome de
+campo (`acessoRestosMortais`). A minha implementação nova teria escrito a mesma
+regra duas vezes e **quebrado o descanso de todo Reanimado** — a tela mandaria
+`acessoRestosMortais` e o código novo esperaria `restosMortais`. Revertido antes
+de rodar. É E4 em estado puro: a regra já existia em um lugar.
+
+**`alvosDeHabilidade` não guardava "Marcado para Morrer".** Eu tinha escrito em
+`docs/o-que-ainda-e-manual.md` que guardava. Guardava o da Marca da Presa; a do
+Executor não era habilidade registrada — não cobrava Estresse, não guardava
+nome, não tinha botão. O documento foi corrigido.
+
+### Estado
+
+- backend: **1102 passaram, 0 falharam** (eram 1077 antes do lote);
+- `npm run teste:tudo` verde de ponta a ponta, incluindo as baterias de navegador
+  e `teste:posturas` (22/22);
+- `conferir-gerados`: 16 geradores, todos batendo;
+- `conferir-funcoes-publicadas`: 65 ações roteadas, todas com fonte.
+
+### O que falta antes do próximo deploy
+
+1. A Vanessa subir a branch (nada aqui foi publicado);
+2. escolher o commit imutável e **comparar os 24 `SOURCE_FILES` servidos pelo
+   GitHub naquele commit, byte a byte, com os que a suíte rodou**;
+3. fixar `ENGINE_COMMIT`, implantar com `verify_jwt: false` **explícito**, reler
+   a função implantada e conferir pin, `status` e a presença de
+   `usarCartaEmAliado` no `ACOES`;
+4. só então promover `main`.
