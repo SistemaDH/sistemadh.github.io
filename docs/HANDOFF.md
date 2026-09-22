@@ -1748,3 +1748,69 @@ nome, não tinha botão. O documento foi corrigido.
    a função implantada e conferir pin, `status` e a presença de
    `usarCartaEmAliado` no `ACOES`;
 4. só então promover `main`.
+
+---
+
+## Deploy do motor — v18, 22/09/2026
+
+`engine-api` **v18 ACTIVE**, `verify_jwt: false`, bundle
+`50ebc432572a737aeaa7f161ab7fd9f1a3ee4c00a7b5993bfc558bae57106b2d`,
+`ENGINE_COMMIT: feb64393014f2b17e1652e3a62711ae71d8546f1`.
+
+**Este deploy subiu DOIS lotes de uma vez**, porque o primeiro nunca tinha ido
+ao ar:
+
+1. **Posturas Marciais e o Foco** — preparado para a v17 e deixado de fora. O
+   `SOURCE_FILES` da v17 tinha 23 arquivos e o commit fixado (`7424846`) era
+   **anterior ao subsistema inteiro**. Na prática, quem abrisse a ficha de um
+   Artista Marcial não via Foco, não via postura e não podia Refocar. A tela se
+   protegia sozinha (`if (!t || !t.maximoDeFoco) return null`), então ninguém
+   via erro — via ausência.
+2. **As três durações honestas** — bônus preparado, Tocado pela Graça,
+   Restauração com a porta `usoEmCriatura`, Marcado para Morrer como habilidade
+   e a Postura do Escorpião.
+
+### O que mudou na função
+
+- `SOURCE_FILES` passou de **23 para 24**, com `4J_Posturas.gs`;
+- `ACOES` ganhou **`usarCartaEmAliado`** (a carta que gasta marcadores aqui e
+  limpa a trilha de lá, com as duas fichas na mesma trava).
+
+### Conferências antes de fixar
+
+> **Regra (nascida do quase-acidente da v17):** antes de fixar, comparar os
+> arquivos de `SOURCE_FILES` **servidos pelo GitHub naquele commit**, byte a
+> byte, com os que a suíte rodou.
+
+```
+conferidos: 24 | divergentes: 0
+commit no GitHub: feb64393014f2b17e1652e3a62711ae71d8546f1
+```
+
+E `conferir-motor-simbolos`: *44 ações roteadas, 406 funções alcançadas, todos
+os nomes definidos no prelúdio + 24 arquivos* — é este conferidor que pega o
+`ReferenceError` em produção antes de ele existir.
+
+### Releitura obrigatória da função implantada
+
+> **Regra (nascida da v16, que viveu 98 segundos com o portão de JWT ligado):**
+> todo deploy desta função passa `verify_jwt: false` **explicitamente**, e a
+> função implantada é **relida** depois.
+
+Relida: `version: 18`, `status: ACTIVE`, `verify_jwt: false`,
+`ENGINE_COMMIT` correto, `4J_Posturas.gs` no `SOURCE_FILES` e
+`usarCartaEmAliado` no `ACOES`.
+
+### Estado validado
+
+- backend: **1102 passaram, 0 falharam**;
+- suíte inteira (`npm run teste:tudo`) verde, incluindo as baterias de navegador
+  e `teste:posturas` (22/22);
+- advisors de segurança: só os **6** `RLS Enabled No Policy` esperados
+  (as políticas públicas continuam deliberadamente ausentes);
+- nenhuma migração de banco foi necessária.
+
+⚠ **O que este deploy NÃO prova.** O motor carrega os 24 arquivos de forma
+preguiçosa, no primeiro pedido autenticado. Até alguém abrir uma ficha, não há
+log nenhum — e um erro de carga só apareceria lá. A primeira abertura de ficha
+depois de um deploy é parte do deploy, não um detalhe.
