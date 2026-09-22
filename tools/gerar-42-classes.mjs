@@ -258,6 +258,13 @@ for (const c of dados.classes) {
       requerArmaAlcance: f.uso.requerArmaAlcance || null,
       requerAlvoDeHabilidade: f.uso.requerAlvoDeHabilidade || '',
       bonusProficienciaDano: Number(f.uso.bonusProficienciaDano) || 0,
+      /*
+       * ⚠ BÔNUS QUE MUDA COM O PATAMAR É REGRA, NÃO NÚMERO. As Defesas
+       * Aguçadas dão "+Evasão igual ao seu patamar"; gravar 1 aqui congelaria
+       * a característica no patamar 1 para sempre, e o botão continuaria
+       * funcionando — errado e calado. O número sai do nível na hora do uso.
+       */
+      bonusEvasaoPorPatamar: f.uso.bonusEvasaoPorPatamar === true,
       custoCondicionalEntradaManual: f.uso.custoCondicionalEntradaManual || null,
       confirmacao: f.uso.confirmacao || null,
       // Algumas habilidades ligam um estado persistente depois de pagar.

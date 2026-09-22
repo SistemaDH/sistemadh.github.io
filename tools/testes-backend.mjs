@@ -14201,6 +14201,49 @@ teste('Refocar é movimento de descanso e pede o MAIOR d6 do Instinto', () => {
   igual(dele.indexOf('foco:refocar'), -1, JSON.stringify(dele));
 });
 
+/*
+ * ⚠ AS DUAS CARACTERÍSTICAS QUE GASTAM FOCO. Construir a trilha e deixá-las
+ * de fora seria entregar um recurso sem destino — e foi o risco que eu mesmo
+ * tinha apontado quando a Vanessa perguntou se dava para fazer só a trilha.
+ */
+teste('Canhão de Foco cobra 1 de Foco e devolve a conta do dano para a mesa', () => {
+  const f = fichaArtistaMarcial_(6);
+  f.subclasseCartas = ['fundacao', 'especializacao'];
+  contexto.validarFicha_(f);
+  f.recursos.foco = 2;
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Canhão de Foco' }]);
+  igual(r.erros, []);
+  igual(f.recursos.foco, 1);
+  verdade(/d20\+3/.test(r.mudancas[0].aviso || ''), r.mudancas[0].aviso);
+
+  f.recursos.foco = 0;
+  const sem = contexto.aplicarAjustes_(f, [{ tipo: 'habilidade', nome: 'Canhão de Foco' }]);
+  verdade(/custa 1 de Foco/.test((sem.erros || [''])[0]), JSON.stringify(sem.erros));
+});
+
+/*
+ * ⚠ O BÔNUS DAS DEFESAS AGUÇADAS É "IGUAL AO SEU PATAMAR", e por isso o
+ * catálogo guarda a REGRA, não o número. Gravado como 1, ele congelaria no
+ * patamar 1 para sempre — e o botão continuaria funcionando, errado e calado.
+ */
+teste('Defesas Aguçadas dá Evasão igual ao PATAMAR, não um número fixo', () => {
+  const baixo = fichaArtistaMarcial_(2);
+  baixo.subclasseCartas = ['fundacao', 'especializacao'];
+  contexto.validarFicha_(baixo);
+  baixo.recursos.foco = 3;
+  const r2 = contexto.aplicarAjustes_(baixo, [{ tipo: 'habilidade', nome: 'Defesas Aguçadas' }]);
+  igual(r2.mudancas[0].bonusEvasao, contexto.patamarDoNivel_(2));
+
+  const alto = fichaArtistaMarcial_(9);
+  alto.subclasseCartas = ['fundacao', 'especializacao'];
+  contexto.validarFicha_(alto);
+  alto.recursos.foco = 3;
+  const r9 = contexto.aplicarAjustes_(alto, [{ tipo: 'habilidade', nome: 'Defesas Aguçadas' }]);
+  igual(r9.mudancas[0].bonusEvasao, contexto.patamarDoNivel_(9));
+  verdade(r9.mudancas[0].bonusEvasao > r2.mudancas[0].bonusEvasao, 'o bônus não cresceu com o patamar');
+  igual(alto.recursos.foco, 2, 'e custou 1 de Foco');
+});
+
 teste('o bloco que a tela desenha vem pronto do servidor', () => {
   const f = fichaArtistaMarcial_(1);
   const t = f.posturasDaTela;

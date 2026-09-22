@@ -3054,7 +3054,7 @@
                   "nomeIngles": "Stance Fighter",
                   "nome": "Lutador de Posturas",
                   "texto": "Você canaliza sua determinação interior para assumir posturas marciais que concedem benefícios especiais em combate. Pegue a folha de Posturas Marciais e escolha duas posturas de Patamar 1. Sempre que subir de nível, escolha outra postura do seu patamar ou inferior.",
-                  "automacao": "subsistema-de-posturas-e-progressao"
+                  "automacao": "subsistema-de-posturas-automatizado"
                 }
               ],
               "texto": "",
@@ -3079,13 +3079,26 @@
                   "nomeIngles": "Keen Defenses",
                   "nome": "Defesas Aguçadas",
                   "texto": "Quando for alvo de um ataque, você pode gastar 1 Foco para receber contra esse ataque um bônus de Evasão igual ao seu patamar.",
-                  "automacao": "reacao-pre-ataque-com-recurso"
+                  "automacao": "reacao-com-custo-de-foco-automatizada",
+                  "uso": {
+                    "custo": {
+                      "foco": 1
+                    },
+                    "bonusEvasaoPorPatamar": true,
+                    "lembrete": "O bônus vale somente contra este ataque."
+                  }
                 },
                 {
                   "nomeIngles": "Focus Cannon",
                   "nome": "Canhão de Foco",
                   "texto": "Gaste 1 Foco para fazer uma jogada de Instinto contra um adversário em alcance Distante. Em caso de sucesso, cause d20+3 de dano mágico usando sua Proficiência.",
-                  "automacao": "custo-e-dano-apos-resultado-informado"
+                  "automacao": "custo-automatizado-resultado-da-mesa",
+                  "uso": {
+                    "custo": {
+                      "foco": 1
+                    },
+                    "lembrete": "Faça a jogada de Instinto contra um adversário em alcance Distante. Em caso de sucesso, cause d20+3 de dano mágico usando sua Proficiência."
+                  }
                 }
               ],
               "texto": "",

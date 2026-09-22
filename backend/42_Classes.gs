@@ -407,6 +407,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -434,6 +435,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -482,6 +484,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": {
@@ -525,6 +528,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -552,6 +556,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -590,6 +595,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -628,6 +634,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -663,6 +670,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -711,6 +719,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -756,6 +765,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": {
@@ -788,6 +798,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -818,6 +829,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -845,6 +857,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -874,6 +887,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": "falha-com-medo",
     "estado": null
@@ -899,6 +913,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -926,6 +941,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": {
@@ -962,6 +978,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -993,6 +1010,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": {
@@ -1026,6 +1044,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -1058,6 +1077,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": {
       "recurso": "esperanca",
       "quantidade": 1,
@@ -1089,6 +1109,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -1116,6 +1137,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -1146,6 +1168,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -1173,6 +1196,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 1,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -1200,6 +1224,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "Marca da Presa",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -1227,6 +1252,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -1257,6 +1283,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     ],
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -1309,6 +1336,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": {
@@ -1349,6 +1377,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -1376,6 +1405,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -1403,6 +1433,63 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
+    "custoCondicionalEntradaManual": null,
+    "confirmacao": null,
+    "estado": null
+  },
+  "Defesas Aguçadas": {
+    "classe": "brigao",
+    "origem": "subclasse",
+    "custo": {
+      "foco": 1
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "",
+    "lembrete": "O bônus vale somente contra este ataque.",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
+    "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
+    "requerArmaAlcance": null,
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": true,
+    "custoCondicionalEntradaManual": null,
+    "confirmacao": null,
+    "estado": null
+  },
+  "Canhão de Foco": {
+    "classe": "brigao",
+    "origem": "subclasse",
+    "custo": {
+      "foco": 1
+    },
+    "alvo": null,
+    "cartaDaMao": null,
+    "opcoes": null,
+    "marcaUso": "",
+    "rotuloAtivar": "",
+    "lembrete": "Faça a jogada de Instinto contra um adversário em alcance Distante. Em caso de sucesso, cause d20+3 de dano mágico usando sua Proficiência.",
+    "reacaoEnquantoAtivo": null,
+    "somenteReacao": false,
+    "requerEstado": null,
+    "entradaManual": null,
+    "carregaComDano": null,
+    "efeitoRecurso": null,
+    "efeitoCondicao": null,
+    "alcanceBase": "",
+    "requerArmaAlcance": null,
+    "requerAlvoDeHabilidade": "",
+    "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -1430,6 +1517,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null
@@ -1457,6 +1545,7 @@ const HABILIDADES_DE_CLASSE_COM_CUSTO = {
     "requerArmaAlcance": null,
     "requerAlvoDeHabilidade": "",
     "bonusProficienciaDano": 0,
+    "bonusEvasaoPorPatamar": false,
     "custoCondicionalEntradaManual": null,
     "confirmacao": null,
     "estado": null

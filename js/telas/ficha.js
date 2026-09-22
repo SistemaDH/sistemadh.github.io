@@ -2355,14 +2355,23 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const custo = uso.custo || {};
     const precisaEsperanca = Number(custo.esperanca) || 0;
     const precisaEstresse = Number(custo.estresse) || 0;
+    /*
+     * ⚠ O FOCO É A TERCEIRA MOEDA, e entra aqui pelo mesmo caminho das outras
+     * duas. As duas características de especialização do Artista Marcial
+     * custam Foco; sem esta linha, o botão delas nasceria sem preço e sempre
+     * aceso — pior que não existir, porque prometeria.
+     */
+    const precisaFoco = Number(custo.foco) || 0;
     const r = ficha.recursos || {};
     const temEsperanca = (Number(r.esperanca) || 0) >= precisaEsperanca;
+    const temFoco = (Number(r.foco) || 0) >= precisaFoco;
     const cabeEstresse = !precisaEstresse ||
       ((Number(r.estresseMarcado) || 0) + precisaEstresse) <= (Number(r.estresseMaximo) || 0);
 
     const preco = [
       precisaEsperanca ? `${precisaEsperanca} Esperança` : '',
-      precisaEstresse ? `${precisaEstresse} Estresse` : ''
+      precisaEstresse ? `${precisaEstresse} Estresse` : '',
+      precisaFoco ? `${precisaFoco} Foco` : ''
     ].filter(Boolean).join(' e ');
 
     /*
@@ -2466,7 +2475,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     if (!uso.alvo && Array.isArray(uso.opcoes) && uso.opcoes.length) {
       return el('div', { class: 'linha ficha__habilidadeOpcoes' }, uso.opcoes.map((o) => el('button', {
         type: 'button', class: 'btn btn--fantasma btn--pequeno ficha__usarHabilidade',
-        disabled: !temEsperanca || !cabeEstresse,
+        disabled: !temEsperanca || !cabeEstresse || !temFoco,
         onClick: () => enviar([{ tipo: 'habilidade', nome, opcao: o.id }])
       }, `${o.rotulo}${preco ? ` · ${preco}` : ''}`)));
     }
@@ -2474,7 +2483,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     if (!uso.alvo) {
       return el('button', {
         type: 'button', class: 'btn btn--fantasma btn--pequeno ficha__usarHabilidade',
-        disabled: !temEsperanca || !cabeEstresse,
+        disabled: !temEsperanca || !cabeEstresse || !temFoco,
         onClick: () => enviar([{ tipo: 'habilidade', nome }])
       }, uso.rotuloAtivar || (preco ? `Usar — ${preco}` : 'Usar'));
     }
@@ -2509,7 +2518,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       campo,
       el('button', {
         type: 'button', class: 'btn btn--fantasma btn--pequeno',
-        disabled: !temEsperanca || !cabeEstresse,
+        disabled: !temEsperanca || !cabeEstresse || !temFoco,
         onClick: () => {
           const alvo = campo.value.trim();
           if (!alvo) return;

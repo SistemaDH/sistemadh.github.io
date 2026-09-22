@@ -235,7 +235,56 @@ try {
   await page.keyboard.press('Escape');
   await page.waitForSelector('.modal__caixa', { state: 'detached', timeout: 5000 });
 
-  /* --- 8. Refocar aparece no descanso ------------------------------------ */
+  /* --- 8. as duas características que GASTAM Foco ------------------------ */
+  /*
+   * ⚠ UM RECURSO SEM DESTINO É MEIA REGRA. A trilha de Foco só faz sentido se
+   * o que gasta Foco também funcionar — e além das posturas são duas
+   * características de especialização do Artista Marcial. O botão delas tem de
+   * dizer o preço e ficar apagado sem Foco, como todos os outros do app.
+   */
+  escreverNaFichaDeTeste(ambiente, `d.identidade.nivel = 6;
+    d.subclasseCartas = ['fundacao', 'especializacao'];
+    d.posturas = { conhecidas: ['confiavel'], ativa: null, escolhas: {} };
+    d.recursos.foco = 2;`);
+  await reabrir();
+
+  /* as características moram numa dobra; abrir todas é o que um dedo faria */
+  const abrirDobras = () => page.evaluate(() =>
+    document.querySelectorAll('details').forEach((d) => { d.open = true; }));
+  await abrirDobras();
+
+  const cartaoDoCanhao = page.locator('.ficha__carac', { hasText: 'Canhão de Foco' });
+  const botaoCanhao = cartaoDoCanhao.locator('button.ficha__usarHabilidade');
+  placar.conferir('a ficha oferece o Canhão de Foco com o preço escrito',
+    (await botaoCanhao.count()) > 0 && /1 Foco/.test((await botaoCanhao.first().textContent()) || ''),
+    (await botaoCanhao.first().textContent().catch(() => '—')) || 'não achei o botão');
+
+  const focoAntes = await focoCheio();
+  await botaoCanhao.first().click();
+  await page.waitForTimeout(800);
+  placar.conferir('e usá-lo gasta 1 de Foco',
+    (await focoCheio()) === focoAntes - 1, `de ${focoAntes} para ${await focoCheio()}`);
+
+  /*
+   * ⚠ E AS DEFESAS AGUÇADAS DÃO EVASÃO IGUAL AO PATAMAR. O botão existir não
+   * basta: o número tem de ser o do patamar, e não um 1 gravado no catálogo.
+   */
+  await abrirDobras();
+  const botaoDefesas = page.locator('.ficha__carac', { hasText: 'Defesas Aguçadas' })
+    .locator('button.ficha__usarHabilidade');
+  placar.conferir('e oferece as Defesas Aguçadas pelo mesmo preço',
+    (await botaoDefesas.count()) > 0 && /1 Foco/.test((await botaoDefesas.first().textContent()) || ''),
+    (await botaoDefesas.first().textContent().catch(() => '—')) || 'não achei o botão');
+
+  escreverNaFichaDeTeste(ambiente, 'd.recursos.foco = 0;');
+  await reabrir();
+  await abrirDobras();
+  const semFoco = page.locator('.ficha__carac', { hasText: 'Canhão de Foco' })
+    .locator('button.ficha__usarHabilidade');
+  placar.conferir('com a trilha vazia, o botão fica apagado em vez de prometer',
+    await semFoco.first().isDisabled(), 'o botão continuou aceso sem Foco');
+
+  /* --- 9. Refocar aparece no descanso ------------------------------------ */
   const movimentos = ambiente.avaliar(`(function(){
     const linhas = lerTudo_(ABAS.PERSONAGENS);
     const d = JSON.parse(linhas[linhas.length - 1].dados);

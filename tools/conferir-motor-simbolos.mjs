@@ -24,7 +24,7 @@
  *
  * O QUE ELE FAZ.
  *
- * Monta o corpus REAL do motor (prelúdio + os 23 arquivos, lidos da própria
+ * Monta o corpus REAL do motor (prelúdio + os arquivos de SOURCE_FILES, lidos da própria
  * Edge Function), caminha a partir dos `case` das ações que o `ACOES` aceita,
  * e confere que todo nome chamado no caminho está definido em algum lugar do
  * corpus. Nada de rede, nada de credencial: roda no CI.

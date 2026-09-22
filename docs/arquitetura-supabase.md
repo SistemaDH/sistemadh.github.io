@@ -54,7 +54,8 @@ do handler.
 entrega anterior. Fixar ali teria montado um motor Frankenstein: `4C` e `47` novos
 com `48` e `4B` antigos, o Vítreo nunca cobrando o preço e a conta do verbete
 voltando vazia, sem nada disso dar erro. A conferência que hoje precede o deploy é
-comparar os 23 arquivos servidos pelo GitHub naquele commit, byte a byte, com os
+comparar **todos os arquivos de `SOURCE_FILES`** servidos pelo GitHub naquele
+commit, byte a byte, com os
 que a suíte rodou.
 
 O source versionado em `supabase/functions/engine-api/index.ts` usa o mesmo `ENGINE_COMMIT` da função implantada. Esse alinhamento evita que um redeploy futuro feito a partir do repositório volte silenciosamente para um commit antigo.

@@ -1520,8 +1520,20 @@ function usarHabilidadeDeClasse_(ficha, a) {
       custoOpcaoReacao.esperanca !== undefined ? custoOpcaoReacao.esperanca : custoBaseReacao.esperanca)) || 0);
     const custoReacaoEstresse = Math.max(0, Math.trunc(Number(
       custoOpcaoReacao.estresse !== undefined ? custoOpcaoReacao.estresse : custoBaseReacao.estresse)) || 0);
+    /*
+     * ⚠ O FOCO ENTRA NO MESMO LUGAR DAS OUTRAS MOEDAS. As Defesas Aguçadas do
+     * Artista Marcial são a primeira reação de classe que cobra Foco; deixar
+     * esse custo do lado de fora faria a característica virar um botão que não
+     * cobra nada — que é pior que não ter botão.
+     */
+    const custoReacaoFoco = Math.max(0, Math.trunc(Number(
+      custoOpcaoReacao.foco !== undefined ? custoOpcaoReacao.foco : custoBaseReacao.foco)) || 0);
     if (custoReacaoEsperanca > 0 && (Number(rReacao.esperanca) || 0) < custoReacaoEsperanca) {
       return { erro: 'Não sobra Esperança para reagir com "' + def.nome + '".' };
+    }
+    if (custoReacaoFoco > 0 && (Number(rReacao.foco) || 0) < custoReacaoFoco) {
+      return { erro: '"' + def.nome + '" custa ' + custoReacaoFoco + ' de Foco, e você tem ' +
+        Math.max(0, Number(rReacao.foco) || 0) + '.' };
     }
     if (custoReacaoEstresse > 0) {
       const teto = Number(rReacao.estresseMaximo) || 0;
@@ -1535,8 +1547,22 @@ function usarHabilidadeDeClasse_(ficha, a) {
     const gastoReacao = gastarEsperanca_(ficha, custoReacaoEsperanca, 'reação de "' + def.nome + '"');
     if (gastoReacao.erro) return gastoReacao;
     if (custoReacaoEstresse > 0) rReacao.estresseMarcado = (Number(rReacao.estresseMarcado) || 0) + custoReacaoEstresse;
+    if (custoReacaoFoco > 0) {
+      const pagoFoco = ajustarRecurso_(ficha, { chave: 'foco', delta: -custoReacaoFoco });
+      if (pagoFoco && pagoFoco.erro) return pagoFoco;
+    }
 
-    const bonusEvasao = Math.trunc(Number(reacao.bonusEvasao)) || 0;
+    /*
+     * ⚠ UM BÔNUS QUE MUDA COM O PATAMAR NÃO PODE SER NÚMERO NO CATÁLOGO.
+     *
+     * As Defesas Aguçadas dão "bônus de Evasão igual ao seu patamar": gravar 1
+     * no dado congelaria a característica no patamar 1 para sempre, e ninguém
+     * perceberia — o botão continuaria funcionando, só que errado. O catálogo
+     * declara a REGRA (bonusEvasaoPorPatamar) e o número sai do nível na hora.
+     */
+    const bonusEvasao = reacao.bonusEvasaoPorPatamar === true
+      ? Math.max(1, Math.trunc(Number(patamarDoNivel_(Number((ficha.identidade || {}).nivel) || 1))) || 1)
+      : (Math.trunc(Number(reacao.bonusEvasao)) || 0);
     let dadoExtra = String((opcaoReacao && opcaoReacao.dadoExtra) || reacao.dadoExtra || '');
     const progressaoDado = (opcaoReacao && opcaoReacao.progressaoDado) || reacao.progressaoDado || [];
     for (let pd = 0; pd < progressaoDado.length; pd++) {
@@ -1549,6 +1575,7 @@ function usarHabilidadeDeClasse_(ficha, a) {
     const pago = [];
     if (custoReacaoEsperanca) pago.push(custoReacaoEsperanca + ' de Esperança');
     if (custoReacaoEstresse) pago.push(custoReacaoEstresse + ' de Estresse');
+    if (custoReacaoFoco) pago.push(custoReacaoFoco + ' de Foco');
     if (reacao.consomeEstado === true) delete ficha.contadores[estadoRequerido.chave];
     let lembreteReacao = (opcaoReacao && opcaoReacao.lembrete) || reacao.lembrete ||
       (bonusEvasao ? '+' + bonusEvasao + ' de Evasão contra este ataque.' : '');
@@ -1557,7 +1584,9 @@ function usarHabilidadeDeClasse_(ficha, a) {
     return anexarReacoesDeEsperanca_({
       tipo: 'habilidade', nome: def.nome, reacao: true,
       custoEsperanca: custoReacaoEsperanca, custoEstresse: custoReacaoEstresse,
+      custoFoco: custoReacaoFoco,
       esperanca: rReacao.esperanca, estresseMarcado: rReacao.estresseMarcado,
+      foco: Math.max(0, Number((ficha.recursos || {}).foco) || 0),
       bonusEvasao: bonusEvasao,
       evasaoBase: Number((ficha.defesas || {}).evasao) || 0,
       dadoExtra: dadoExtra || null,
@@ -1592,6 +1621,8 @@ function usarHabilidadeDeClasse_(ficha, a) {
   const r = ficha.recursos || {};
   let custoEsperanca = Math.max(0, Math.trunc(Number((def.custo || {}).esperanca)) || 0);
   const custoEstresse = Math.max(0, Math.trunc(Number((def.custo || {}).estresse)) || 0);
+  /* O Foco entra pela mesma porta das outras moedas (Canhão de Foco). */
+  const custoFocoHabilidade = Math.max(0, Math.trunc(Number((def.custo || {}).foco)) || 0);
   const custoManual = def.custoCondicionalEntradaManual || null;
   if (custoManual && entradaManualValor !== null) {
     const minimo = (custoManual.cobraSeMinimo === undefined || custoManual.cobraSeMinimo === null) ? -Infinity : Number(custoManual.cobraSeMinimo);
@@ -1672,6 +1703,10 @@ function usarHabilidadeDeClasse_(ficha, a) {
       return { erro: 'Não sobra Estresse para "' + def.nome + '" (custa ' + custoEstresse + ').' };
     }
   }
+  if (custoFocoHabilidade > 0 && (Number(r.foco) || 0) < custoFocoHabilidade) {
+    return { erro: '"' + def.nome + '" custa ' + custoFocoHabilidade + ' de Foco, e você tem ' +
+      Math.max(0, Number(r.foco) || 0) + '.' };
+  }
 
   let alvo = '';
   if (def.alvo) {
@@ -1682,6 +1717,10 @@ function usarHabilidadeDeClasse_(ficha, a) {
   ficha.recursos = r;
   const gastoMovimento = gastarEsperanca_(ficha, custoEsperanca, '"' + def.nome + '"');
   if (gastoMovimento.erro) return gastoMovimento;
+  if (custoFocoHabilidade > 0) {
+    const pagoFocoHab = ajustarRecurso_(ficha, { chave: 'foco', delta: -custoFocoHabilidade });
+    if (pagoFocoHab && pagoFocoHab.erro) return pagoFocoHab;
+  }
   if (custoEstresse > 0) r.estresseMarcado = (Number(r.estresseMarcado) || 0) + custoEstresse;
 
   // Efeito determinístico que altera a própria trilha no mesmo ajuste. Coragem
@@ -1730,6 +1769,7 @@ function usarHabilidadeDeClasse_(ficha, a) {
 
   const pago = [];
   if (custoEsperanca > 0) pago.push(custoEsperanca + ' de Esperança');
+  if (custoFocoHabilidade > 0) pago.push(custoFocoHabilidade + ' de Foco');
   if (custoEstresse > 0) pago.push(custoEstresse + ' de Estresse');
   if (cartaMovida) pago.push('"' + cartaMovida.nome + '" (foi para o cofre)');
 
@@ -1753,7 +1793,9 @@ function usarHabilidadeDeClasse_(ficha, a) {
   return anexarReacoesDeEsperanca_({
     tipo: 'habilidade', nome: def.nome,
     custoEsperanca: custoEsperanca, custoEstresse: custoEstresse,
+    custoFoco: custoFocoHabilidade,
     esperanca: r.esperanca, estresseMarcado: r.estresseMarcado,
+    foco: Math.max(0, Number((ficha.recursos || {}).foco) || 0),
     alvo: alvo || null, alvoAntes: alvoAntes || null,
     carta: cartaMovida ? cartaMovida.id : null,
     opcao: opcaoEscolhida ? opcaoEscolhida.id : null,
@@ -1766,8 +1808,11 @@ function usarHabilidadeDeClasse_(ficha, a) {
     estado: (def.estado && def.estado.chave) ? def.estado.chave : null,
     estadoAtivo: !!(def.estado && def.estado.chave),
     resultadoManual: entradaManualValor,
-    bonusEvasao: (def.entradaManual && def.entradaManual.aplicaComo === 'bonusEvasao') ? entradaManualValor : 0,
-    evasaoBase: (def.entradaManual && def.entradaManual.aplicaComo === 'bonusEvasao')
+    bonusEvasao: def.bonusEvasaoPorPatamar === true
+      ? Math.max(1, Math.trunc(Number(patamarDoNivel_(Number((ficha.identidade || {}).nivel) || 1))) || 1)
+      : ((def.entradaManual && def.entradaManual.aplicaComo === 'bonusEvasao') ? entradaManualValor : 0),
+    evasaoBase: (def.bonusEvasaoPorPatamar === true ||
+      (def.entradaManual && def.entradaManual.aplicaComo === 'bonusEvasao'))
       ? (Number((ficha.defesas || {}).evasao) || 0) : null,
     aviso: def.nome + (pago.length ? ' custou ' + pago.join(' e ') : '') +
       (alvo ? ' — ' + def.alvo.verbo.toLowerCase() + ' ' + alvo : '') +
