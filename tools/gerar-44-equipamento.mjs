@@ -103,13 +103,72 @@ for (const a of d.armaduras) {
 }
 L.push('];\n');
 
+/*
+ * OS APELIDOS NÃO PODEM APONTAR PARA DOIS ITENS (invariante E113).
+ *
+ * `nomeLivro` guarda o que o livro IMPRIMIU, e o livro imprimiu a mesma linha
+ * cortada — "Avançado (nome cortado/incompleto)" — para duas armas diferentes
+ * (Advanced Scepter e Advanced Greatstaff). Jogado cru na tabela de apelidos,
+ * esse texto passava a achar sempre a PRIMEIRA delas na ordem do array: quem
+ * procurasse a outra recebia silenciosamente a vizinha.
+ *
+ * A montagem abaixo resolve isso em duas camadas, sem apagar registro nenhum
+ * do JSON:
+ *
+ *  1. Um texto que é o `id` ou o `nome` de ALGUM item pertence a esse item.
+ *     A pretensão de qualquer outro item sobre ele cai. (É o caso de
+ *     "Espada Larga Avançada", que é o nome da Espada larga avançada e ao
+ *     mesmo tempo o `nomeLivro` da Espada Grande Avançada.)
+ *  2. O que sobra e ainda é reivindicado por dois itens não pertence a
+ *     nenhum: sai da tabela de apelidos e vai para
+ *     EQUIPAMENTO_APELIDOS_AMBIGUOS, para o app poder DIZER que o nome serve
+ *     para dois itens em vez de escolher um por ordem de array.
+ */
+const chaveGerador = (t) => String(t || '').trim().toLowerCase()
+  .normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, ' ');
+
+const doCapitulo2 = [...d.armas, ...d.armaduras];
+const canonicos = new Map();
+for (const a of doCapitulo2) {
+  canonicos.set(chaveGerador(a.id), a.id);
+  if (!canonicos.has(chaveGerador(a.nome))) canonicos.set(chaveGerador(a.nome), a.id);
+}
+const pretendentes = new Map();
+const apelidosCrus = new Map();
+for (const a of doCapitulo2) {
+  const als = [...new Set([a.nome, a.nomeIngles, a.nomeLivro, a.nomeAntigo, ...(a.aliases || [])].filter(Boolean))];
+  apelidosCrus.set(a.id, als);
+  for (const s of als) {
+    const k = chaveGerador(s);
+    if (canonicos.has(k) && canonicos.get(k) !== a.id) continue; // camada 1
+    if (!pretendentes.has(k)) pretendentes.set(k, { texto: s, ids: [] });
+    if (!pretendentes.get(k).ids.includes(a.id)) pretendentes.get(k).ids.push(a.id);
+  }
+}
+const ambiguos = [...pretendentes.values()].filter((p) => p.ids.length > 1)
+  .sort((x, y) => x.texto.localeCompare(y.texto, 'pt'));
+const chavesAmbiguas = new Set(ambiguos.map((p) => chaveGerador(p.texto)));
+
 L.push('/** Nomes alternativos: o do livro (às vezes errado) e o original em inglês. */');
 L.push('const EQUIPAMENTO_ALIASES = {');
-for (const a of [...d.armas, ...d.armaduras]) {
-  const als = [...new Set([a.nome, a.nomeIngles, a.nomeLivro, a.nomeAntigo, ...(a.aliases || [])].filter(Boolean))];
+for (const a of doCapitulo2) {
+  const als = apelidosCrus.get(a.id).filter((s) => {
+    const k = chaveGerador(s);
+    if (chavesAmbiguas.has(k)) return false;
+    return !(canonicos.has(k) && canonicos.get(k) !== a.id);
+  });
   if (als.length > 1) L.push(`  ${j(a.id)}: ${j(als)},`);
 }
 L.push('};\n');
+
+L.push(`/**
+ * Textos que o livro deu a MAIS DE UM item. Não achar é o certo: o app não tem
+ * como saber qual dos dois a pessoa quis, e escolher por ordem de array seria
+ * uma escolha invisível. Serve para a mensagem de erro dizer o que houve.
+ */`);
+L.push('const EQUIPAMENTO_APELIDOS_AMBIGUOS = [');
+for (const p of ambiguos) L.push(`  ${j({ texto: p.texto, ids: p.ids })},`);
+L.push('];\n');
 
 L.push('/** Itens de saque e consumíveis. `nomes` guarda os sinônimos para a busca. */');
 L.push('const ITENS = [');
@@ -207,6 +266,21 @@ function baterNome_(item, alvo) {
     if (chaveTexto_(als[i]) === alvo) return true;
   }
   return false;
+}
+
+/**
+ * O texto procurado é um daqueles que o livro deu a dois itens? Devolve os ids
+ * que ele alcançava, para a mensagem de erro dizer isso em vez de só "não
+ * encontrado". Devolve null quando o texto não é ambíguo.
+ */
+function apelidoAmbiguoDeEquipamento_(idOuNome) {
+  const alvo = chaveTexto_(idOuNome);
+  if (!alvo) return null;
+  for (let i = 0; i < EQUIPAMENTO_APELIDOS_AMBIGUOS.length; i++) {
+    const p = EQUIPAMENTO_APELIDOS_AMBIGUOS[i];
+    if (chaveTexto_(p.texto) === alvo) return p;
+  }
+  return null;
 }
 
 /** Acha uma arma pelo id, pelo nome em português, pelo nome do livro ou pelo inglês. */

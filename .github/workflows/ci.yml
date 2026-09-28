@@ -60,6 +60,8 @@ jobs:
         run: npm run teste:cena-da-mesa
       - name: Foco e posturas marciais na ficha
         run: npm run teste:posturas
+      - name: Criação das quatro classes sem Guia de Caráter
+        run: npm run teste:criacao-classes-novas
       - name: Layout mobile 360 / 390 / 430
         run: npm run teste:layout-mobile
       - name: Conjuração mobile 360 / 390 sem pontuação órfã

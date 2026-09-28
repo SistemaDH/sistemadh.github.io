@@ -96,6 +96,41 @@ export async function armaduras({ tierMaximo = 1 } = {}) {
   return eq.armaduras.filter((a) => a.tier <= tierMaximo);
 }
 
+/**
+ * O `efeitoEquipamento` de uma peça, venha ela de onde vier.
+ *
+ * ⚠ A MESMA ARMA TEM DUAS FORMAS, e essa diferença já matou dois blocos da
+ * ficha em silêncio:
+ *
+ *  • quem vem DESTE catálogo (data/equipamentos.json, que é o que
+ *    `acharArma`/`acharArmadura` devolvem) guarda o efeito ANINHADO, em
+ *    `caracteristica.efeitoEquipamento`;
+ *  • quem vem do SERVIDOR (ARMAS/ARMADURAS em 44_Equipamento.gs, gerado a
+ *    partir do mesmo JSON) guarda o efeito ACHATADO, em `efeitoEquipamento`,
+ *    com o nome da característica solto em `carac`.
+ *
+ * Ler só uma das formas não dá erro nenhum: dá `undefined`, o bloco decide que
+ * a peça não tem efeito e não desenha nada. Foi o que aconteceu com o perfil
+ * alternativo do Versátil e com a lista de reações de equipamento — o código
+ * existia, os dados existiam, e a linha nunca apareceu na tela.
+ */
+export function efeitoDeEquipamento(peca) {
+  const p = peca || {};
+  return p.efeitoEquipamento || (p.caracteristica || {}).efeitoEquipamento || {};
+}
+
+/*
+ * A TELA procura por `id` — é o que a ficha gravada guarda — e por `nome`, que
+ * é o que a pessoa lê. `aliases` entra porque é lá que ficam os IDS ANTIGOS de
+ * armas renomeadas: sem ele, renomear um id órfãos a arma de quem já a equipou.
+ *
+ * ⚠ `nomeLivro` e `nomeIngles` ficam DE FORA de propósito. O livro imprimiu o
+ * mesmo texto cortado para duas armas diferentes, então buscar por `nomeLivro`
+ * é escolher uma das duas pela ordem do array. O servidor, que precisa aceitar
+ * esses nomes, resolve a colisão na geração de 44_Equipamento.gs (invariante
+ * E113) e publica os casos ambíguos em EQUIPAMENTO_APELIDOS_AMBIGUOS. Aqui não
+ * há caso de uso: a tela nunca procura arma por nome do livro.
+ */
 export async function acharArma(idOuNome) {
   const eq = await equipamentos();
   const alvo = chave(idOuNome);

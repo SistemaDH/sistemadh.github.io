@@ -1034,7 +1034,7 @@
             "O que os cultistas pretendem fazer com esse demônio caso sejam bem-sucedidos?",
             "O que eles tentarão invocar depois?"
           ],
-          "texto": "Contagem (6). Quando os personagens entram na cena ou quando o culto inicia seu ritual de invocação demoníaca, ative a contagem. Escolha um adversário para liderar o ritual. A contagem diminui sempre que um personagem fizer uma rolagem com Medo. Quando ela terminar, invoque um demônio menor Muito Próximo do líder do ritual. Se o líder for derrotado, a contagem é encerrada sem efeito e o ritual falha."
+          "texto": "Contagem (6). Quando os personagens entram na cena ou quando o culto inicia seu ritual de invocação demoníaca, ative a contagem. Escolha um adversário para liderar o ritual. A contagem diminui sempre que um personagem fizer uma jogada com Medo. Quando ela terminar, invoque um demônio menor Muito Próximo do líder do ritual. Se o líder for derrotado, a contagem é encerrada sem efeito e o ritual falha."
         }
       ],
       "custoDeMedoMaximo": 1,
@@ -1109,7 +1109,7 @@
           "perguntas": [
             "Quais emoções ou memórias vêm à tona quando o medo surge?"
           ],
-          "texto": "uma vez por cena, cada personagem pode marcar 1 Estresse para transformar uma rolagem com Medo numa rolagem com Esperança."
+          "texto": "uma vez por cena, cada personagem pode marcar 1 Estresse para transformar uma jogada com Medo numa jogada com Esperança."
         },
         {
           "nome": "Reprovação Divina",
@@ -2083,7 +2083,7 @@
             "O que o alquimista estava estudando?",
             "Que cheiro te domina enquanto você remexe nas coisas dele?"
           ],
-          "texto": "As prateleiras, armários e mesas da oficina estão abarrotados de quinquilharias macabras, incluindo partes do corpo em frascos de formol e instrumentos cirúrgicos ensanguentados. Uma vez por cena, um PJ pode fazer uma Rolagem de Instinto para procurar algo útil no caos.",
+          "texto": "As prateleiras, armários e mesas da oficina estão abarrotados de quinquilharias macabras, incluindo partes do corpo em frascos de formol e instrumentos cirúrgicos ensanguentados. Uma vez por cena, um PJ pode fazer uma Jogada de Instinto para procurar algo útil no caos.",
           "nomeIngles": "Cabinet of Curiosities",
           "textoIngles": "The workshop’s shelves, cupboards, and tables are cluttered with macabre bric-a-brac, including body parts in jars of formaldehyde and bloody surgical implements. Once per scene, a PC can make an Instinct Roll to look for something useful in the chaos.\n\nWhat was the alchemist studying? What smell overwhelms you as you shuffle through their things?"
         },
@@ -3961,7 +3961,7 @@
             "Como o cristal parece enquanto cresce?",
             "Como ele se sente?"
           ],
-          "texto": "Quando um PJ falha em uma rolagem para navegar pelo deserto, ele deve fazer uma jogada de reação de Destreza. Em caso de falha, ele se corta nas bordas afiadas do terreno. Fragmentos de cristal mágico ficam incrustados em sua ferida e crescem lentamente, cristalizando-o. Ative uma Contagem Regressiva de Cristal (1) para esse PJ. Até que ele remova a condição com uma Rolagem de Conhecimento bem-sucedida, um PJ em processo de cristalização aumenta sua Contagem Regressiva de Cristal no início de cada descanso e recebe uma penalidade em sua Evasão equivalente ao valor da contagem. A contagem termina quando a condição é removida.",
+          "texto": "Quando um PJ falha em uma rolagem para navegar pelo deserto, ele deve fazer uma jogada de reação de Destreza. Em caso de falha, ele se corta nas bordas afiadas do terreno. Fragmentos de cristal mágico ficam incrustados em sua ferida e crescem lentamente, cristalizando-o. Ative uma Contagem Regressiva de Cristal (1) para esse PJ. Até que ele remova a condição com uma Jogada de Conhecimento bem-sucedida, um PJ em processo de cristalização aumenta sua Contagem Regressiva de Cristal no início de cada descanso e recebe uma penalidade em sua Evasão equivalente ao valor da contagem. A contagem termina quando a condição é removida.",
           "nomeIngles": "Razor-Sharp Terrain",
           "textoIngles": "When a PC fails a roll to navigate the wasteland, they must make a Finesse Reaction Roll. On a failure, they cut themselves on the sharp edges of the terrain. Shards of magic crystal become embedded in their wound and slowly grow, Crystallizing them. Activate a Crystal Countdown (1) for that PC. Until they remove the condition with a successful Knowledge Roll, a Crystallizing PC ticks up their Crystal Countdown at the start of each rest and gains a penalty to their Evasion equal to its value. The countdown ends when the condition is cleared.\n\nWhat does the crystal look like as it grows? What does it feel like?"
         },

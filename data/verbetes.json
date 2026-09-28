@@ -453,6 +453,58 @@
       ]
     },
     {
+      "id": "reserva-de-adversario",
+      "termo": "Reserva de adversário",
+      "variantes": [
+        "reserva compartilhada",
+        "pool"
+      ],
+      "categoria": "adversario",
+      "pagina": 61,
+      "fonteRotulo": "Daggerheart: Hope & Fear, p.61 (New Adversary Features)",
+      "resumo": "Um punhado de marcadores COMPARTILHADO por vários adversários. Não fica na ficha de nenhum: o Mestre junta à parte. Começa vazia na cena e é limpa no fim dela.",
+      "explicacao": [
+        "Cada reserva tem um nome próprio, normalmente o nome que os adversários afetados dividem — a Reserva do Mecanorbe, a do Senhor das Presas Guahalan.",
+        "⚠ Ela NÃO é marcador de ficha. Marcador comum de adversário mora na ficha dele; o da reserva o Mestre guarda num lugar separado, porque vários adversários gastam do mesmo bolo.",
+        "⚠ Vazia quando a cena começa, limpa quando a cena termina. É das durações que o app observa: o gatilho \"fim da cena\" já existe.",
+        "⚠ E cuidado com a palavra: no livro da Jambô, \"reserva\" é o COFRE de cartas de domínio. São coisas diferentes, e é por isso que aqui o termo vem sempre qualificado.",
+        "No app, hoje, a reserva vive dentro do TEXTO da habilidade do adversário, não como contador estruturado. Quem controla é o Mestre, no papel."
+      ],
+      "veja": [
+        "adversario",
+        "habilidade-de-adversario",
+        "fim-da-cena",
+        "contagem-padrao"
+      ],
+      "ancora": "A Pool is a collection of tokens shared by multiple adversaries",
+      "noLivro": "\"Pool\" no Hope & Fear. ⚠ NÃO confundir com \"reserva\", que é como o livro da Jambô chama o COFRE de cartas de domínio — são duas coisas sem relação, e por isso este verbete nunca usa a palavra sozinha."
+    },
+    {
+      "id": "evolucao-de-adversario",
+      "termo": "Evolução",
+      "variantes": [
+        "evoluções",
+        "evolution"
+      ],
+      "categoria": "adversario",
+      "pagina": 61,
+      "fonteRotulo": "Daggerheart: Hope & Fear, p.61 (New Adversary Features)",
+      "resumo": "Habilidade que TRANSFORMA o adversário quando um gatilho é cumprido. Normalmente limpa PV ou Estresse, muda o ataque padrão e destrava habilidades novas.",
+      "explicacao": [
+        "⚠ UMA VEZ POR CENA, e não mais: a evolução de um adversário não pode ser disparada duas vezes na mesma cena.",
+        "É um quarto tipo de habilidade, ao lado de passiva, ação e reação — e por isso aparece agrupada à parte na ficha.",
+        "As seis do bestiário: Ressurreição (Fênix), Guardião do Ninho (Roc), Asa Infernal (Lorde Vampiro), \"Está Aqui…\" (Titã Cefilita), Alfa ao Ômega (Demiurgo Supremo Adonix) e Troll da Montanha Enfurecido.",
+        "⚠ Essa última passou meses sem tipo nenhum no catálogo — era a única habilidade de 264 adversários com `tipo: null`, e habilidade sem tipo desaparece do agrupamento da tela sem erro. O invariante E111 existe para isso não voltar."
+      ],
+      "veja": [
+        "adversario",
+        "habilidade-de-adversario",
+        "tipo-de-adversario",
+        "fim-da-cena"
+      ],
+      "ancora": "Evolutions are features that alter an adversary when certain"
+    },
+    {
       "id": "adaptando-ambientes",
       "termo": "Adaptando ambientes",
       "variantes": [
@@ -1155,7 +1207,7 @@
       ],
       "veja": [
         "patamar-de-jogo",
-        "rolagem-de-dano"
+        "jogada-de-dano"
       ]
     },
     {
@@ -1180,10 +1232,11 @@
       ]
     },
     {
-      "id": "rolagem-de-dano",
-      "termo": "Rolagem de dano",
+      "id": "jogada-de-dano",
+      "termo": "Jogada de dano",
       "variantes": [
-        "dados de dano"
+        "dados de dano",
+        "rolagem de dano"
       ],
       "categoria": "dano",
       "pagina": 98,
@@ -1371,7 +1424,7 @@
       "errata": "A errata (p.112) deixou claro: em calmaria ou durante um descanso, a troca de arma NÃO custa Estresse.",
       "veja": [
         "inventario",
-        "rolagem-de-dano"
+        "jogada-de-dano"
       ]
     },
     {
@@ -1512,7 +1565,7 @@
       ],
       "veja": [
         "jogada-de-conjuracao",
-        "rolagem-de-dano",
+        "jogada-de-dano",
         "alvos-e-grupos"
       ]
     },
@@ -1633,7 +1686,7 @@
       ],
       "veja": [
         "dados-de-dualidade",
-        "rolagem-de-dano"
+        "jogada-de-dano"
       ]
     },
     {
@@ -1726,7 +1779,7 @@
       "categoria": "mestre",
       "pagina": 149,
       "ancora": "movimento",
-      "resumo": "O que o Mestre faz quando o jogo volta para ele: uma falha, uma rolagem com Medo, ou 1 Medo gasto para interromper.",
+      "resumo": "O que o Mestre faz quando o jogo volta para ele: uma falha, uma jogada com Medo, ou 1 Medo gasto para interromper.",
       "explicacao": [
         "Depois de um movimento, 1 Medo compra um movimento a mais no mesmo turno."
       ],
@@ -1871,7 +1924,7 @@
       "explicacao": [
         "A Esperança ATRAVESSA sessões, como o Medo do Mestre.",
         "Gasta-se 1 Esperança por Experiência que você quiser somar a uma jogada.",
-        "Também paga Prestar Ajuda, a jogada em dupla e as habilidades de Esperança da classe.",
+        "Também paga Prestar Ajuda, a Jogada em Equipe e as habilidades de Esperança da classe.",
         "Cada cicatriz apaga PARA SEMPRE um espaço de Esperança (p.106)."
       ],
       "veja": [
@@ -2381,7 +2434,7 @@
       "resumo": "Substitui magia por tecnologia e oferece arma icônica, melhorias, Rede Tecnológica, Créditos, Sucata e fabricação.",
       "explicacao": [
         "Dano tecnológico substitui dano mágico; ataques mágicos podem ser descritos como som, luz, nanorrobôs, plasma ou outra tecnologia.",
-        "Cada personagem substitui armas primária e secundária por uma Arma Icônica de duas mãos. Escolha atributo, alcance e dano; dê nome e descrição. Vinculada: some seu nível às rolagens de dano.",
+        "Cada personagem substitui armas primária e secundária por uma Arma Icônica de duas mãos. Escolha atributo, alcance e dano; dê nome e descrição. Vinculada: some seu nível às jogadas de dano.",
         "A Arma Icônica começa com 2 espaços de Melhoria no patamar 1 e recebe mais 1 em cada patamar seguinte. Melhorias instaladas são características de arma.",
         "É possível fabricar qualquer quantidade de Melhorias, mas instalar somente até os espaços disponíveis. Durante o repouso, troque livremente as Melhorias que já possui.",
         "Cada personagem começa com um Conector de Rede Tecnológica. É preciso conectar-se à rede mundial de dados e energia da campanha para fazer movimentos de repouso.",

@@ -55,7 +55,7 @@ const GUIA_DE_BATALHA = {
   ajustes: [
     { id: "mais-facil", delta: -1, texto: "a luta deve ser mais fácil ou curta" },
     { id: "dois-solos", delta: -2, texto: "está usando 2 ou mais adversários solos" },
-    { id: "dano-extra", delta: -2, texto: "quer somar +1d4 (ou +2) à rolagem de dano de todos os adversários" },
+    { id: "dano-extra", delta: -2, texto: "quer somar +1d4 (ou +2) à jogada de dano de todos os adversários" },
     { id: "patamar-inferior", delta: 1, texto: "escolheu um adversário de um patamar inferior" },
     { id: "sem-pesados", delta: 1, texto: "não vai incluir nenhum brutamonte, horda, líder ou solo" },
     { id: "mais-perigosa", delta: 2, texto: "a luta precisa ser mais perigosa ou duradoura" },
@@ -741,7 +741,7 @@ const HABILIDADES_COM_CUSTO = [
   ["masque-muerte", 1, "Giro de Calcanhar", "ação", 0, 1, 0, "", 0],
   ["masque-muerte", 2, "Suplex Espectral", "ação", 1, 0, 0, "", 0],
   ["masque-muerte", 3, "Desmascarando a Morte", "ação", 1, 0, 0, "", 0],
-  ["masque-muerte", 4, "Jogada em Dupla", "reação", 1, 0, 0, "", 0],
+  ["masque-muerte", 4, "Jogada em Equipe", "reação", 1, 0, 0, "", 0],
   ["mountain-troll", 2, "Golpe com mangual", "ação", 0, 1, 0, "", 0],
   ["mountain-troll", 4, "Golpe Duplo", "ação", 1, 0, 0, "", 0],
   ["octopus", 1, "Esguicho de tinta", "ação", 0, 1, 0, "", 0],

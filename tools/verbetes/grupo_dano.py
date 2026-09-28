@@ -48,9 +48,13 @@ VERBETES = [
         'veja': ['limiares-de-dano']
     },
     {
-        'id': 'rolagem-de-dano',
-        'termo': 'Rolagem de dano',
-        'variantes': ['dados de dano'],
+        'id': 'jogada-de-dano',
+        # ⚠ O GLOSSÁRIO TINHA OS DOIS NOMES LADO A LADO: `jogada-de-ataque`
+        # "jogada de ataque" e este, "Rolagem de dano". As cartas oficiais dizem
+        # "jogada" 196 vezes contra 2, e é delas que o app tira a língua. O nome
+        # antigo fica em `variantes` — é o que mantém a busca achando.
+        'termo': 'Jogada de dano',
+        'variantes': ['dados de dano', 'rolagem de dano'],
         'categoria': 'dano',
         'pagina': 98,
         'ancora': 'Rolagens de dano são compostas por duas',
@@ -59,7 +63,7 @@ VERBETES = [
         'explicacao': [
             'Proficiência 2 com uma espada d8 = 2d8. O modificador ("+3") entra uma vez '
             'só, no fim — a Proficiência não multiplica ele.',
-            'Bônus na rolagem entram ANTES de rolar, nunca depois de ver o resultado.'
+            'Bônus na jogada entram ANTES de rolar, nunca depois de ver o resultado.'
         ],
         'veja': ['proficiencia', 'sucesso-critico', 'multiplas-fontes-de-dano']
     },
@@ -77,7 +81,7 @@ VERBETES = [
             'É parecida com o patamar, mas não é a mesma coisa — a Proficiência pode '
             'passar do patamar.'
         ],
-        'veja': ['patamar-de-jogo', 'rolagem-de-dano']
+        'veja': ['patamar-de-jogo', 'jogada-de-dano']
     },
     {
         'id': 'multiplas-fontes-de-dano',

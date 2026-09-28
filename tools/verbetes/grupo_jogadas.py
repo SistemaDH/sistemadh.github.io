@@ -62,7 +62,7 @@ VERBETES = [
             'Num ataque, o dano crítico é: o máximo possível dos dados + uma rolagem '
             'normal + o modificador.'
         ],
-        'veja': ['dados-de-dualidade', 'rolagem-de-dano']
+        'veja': ['dados-de-dualidade', 'jogada-de-dano']
     },
     {
         'id': 'resultado-da-jogada',
@@ -144,7 +144,7 @@ VERBETES = [
             'compare com a Dificuldade de cada um.',
             'Sem arma, é uma jogada de Força ou Finesse (Acuidade).'
         ],
-        'veja': ['jogada-de-conjuracao', 'rolagem-de-dano', 'alvos-e-grupos']
+        'veja': ['jogada-de-conjuracao', 'jogada-de-dano', 'alvos-e-grupos']
     },
     {
         'id': 'jogada-de-conjuracao',

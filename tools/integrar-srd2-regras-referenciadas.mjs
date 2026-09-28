@@ -12,7 +12,7 @@ const gruposReferenciados = new Set([
 ]);
 const vinculosCentrais = {
   'rules/additional-rules':['arredondar-para-cima','efeitos-simultaneos','rolando-dados-novamente'],
-  'rules/attacking':['jogada-de-ataque','rolagem-de-dano','alcance'],
+  'rules/attacking':['jogada-de-ataque','jogada-de-dano','alcance'],
   'rules/combat':['holofote','jogada-de-ataque','dano-sofrido'],
   'rules/conditions':['condicoes','condicao-temporaria'],
   'rules/conflict-between-pcs':['conflito-entre-personagens'],

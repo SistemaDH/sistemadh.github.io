@@ -261,7 +261,7 @@ VERBETES = [
         ],
         'errata': 'A errata (p.112) deixou claro: em calmaria ou durante um descanso, a '
                   'troca de arma NÃO custa Estresse.',
-        'veja': ['inventario', 'rolagem-de-dano']
+        'veja': ['inventario', 'jogada-de-dano']
     },
     {
         'id': 'armadura-base',

@@ -1405,10 +1405,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       catalogo.acharArma(eq.secundaria)
     ].filter(Boolean);
     const defs = pecas
-      .filter((p) => ((p.efeitoEquipamento || {}).reacaoAtaqueRecebido))
+      .filter((p) => (dados.efeitoDeEquipamento(p).reacaoAtaqueRecebido))
       .map((p) => {
         const nome = ((p.caracteristica || {}).nome) || p.carac || '';
-        const regra = (p.efeitoEquipamento || {}).reacaoAtaqueRecebido || {};
+        const regra = dados.efeitoDeEquipamento(p).reacaoAtaqueRecebido || {};
         const bonus = regra.bonusEvasao || {};
         const conta = regra.desvantagemAtaque === true
           ? 'impõe desvantagem ao ataque contra você'
@@ -1426,14 +1426,28 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const r=(ficha || {}).recursos || {};
     const d=(ficha || {}).defesas || {};
     const livres=Math.max(0,(Number(d.pontuacaoArmadura)||0)-(Number(r.armaduraMarcada)||0));
+    /*
+     * ⚠ A REGRA NÃO PODE MORAR NO `title`. O botão diz só "Deslocamento", e
+     * `title` é tooltip de mouse: no celular, que é onde esta ficha é usada, ele
+     * não aparece de jeito nenhum. A regra fica escrita ao lado do botão, e o
+     * `title` continua como conveniência de quem está no computador.
+     *
+     * Quando não há Ponto de Armadura livre, o botão apaga E a linha diz por
+     * quê — botão apagado sem motivo é a pergunta que a mesa faz em voz alta.
+     */
     return el('div',{class:'pilha'},[
       el('strong',{texto:'Reações ao ataque'}),
       el('p',{class:'texto-xs texto-fraco',texto:
         'Use antes de resolver o ataque recebido. O app registra o PA; qualquer dado continua sendo rolado na mesa.'}),
-      el('div',{class:'linha'},defs.map(([nome,texto])=>el('button',{
-        type:'button',class:'btn btn--fantasma btn--pequeno',disabled:livres<1,
-        title:texto,onClick:()=>enviar([{tipo:'reacaoEquipamento',nome}])
-      },nome)))
+      ...defs.map(([nome,texto])=>el('div',{class:'pilha pilha--rente'},[
+        el('p',{class:'texto-xs',texto}),
+        el('button',{
+          type:'button',class:'btn btn--fantasma btn--pequeno',disabled:livres<1,
+          title:texto,onClick:()=>enviar([{tipo:'reacaoEquipamento',nome}])
+        },nome)
+      ])),
+      livres<1 ? el('p',{class:'texto-xs texto-fraco',texto:
+        'Sem Ponto de Armadura livre: repare a Armadura para voltar a usar estas reações.'}) : null
     ]);
   }
 
@@ -1536,15 +1550,33 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
      * que resolve o problema ao lado de outra apagada, e não conseguiria usar
      * exatamente a postura que existe para esse momento.
      */
+    /*
+     * ⚠ A REGRA DA CAIXA DE ARMADURA MORA AQUI, E SÓ AQUI.
+     *
+     * Ela estava escrita em dois lugares — no listener da Estável e dentro de
+     * `sincronizarMarigold` — e os dois divergiram. O resultado era um estado
+     * que se contradizia: depois de marcar a Estável, marcar o Espelho de
+     * Marigold e desmarcá-lo, a Estável ficava MARCADA e a caixa de Armadura
+     * APAGADA E DESMARCADA. Quem apertasse "Aplicar dano" nesse estado tomava
+     * o dano inteiro, sem redução, porque o envio manda
+     * `usarArmadura: usarArmadura.checked`.
+     *
+     * Duas coisas destravam a mitigação: ter Ponto de Armadura livre, ou a
+     * Postura Estável marcada — "you can spend a Focus INSTEAD OF an Armor
+     * Slot", e é justamente com a armadura no fim que ela salva.
+     */
+    const espelhoAtivo = () => !!(usarMarigold && usarMarigold.checked);
+    const sincronizarArmadura = () => {
+      const livre = (!!paMax && paMarcados < paMax) ||
+        !!(usarFocoNaArmadura && usarFocoNaArmadura.checked);
+      usarArmadura.disabled = espelhoAtivo() || !livre;
+      if (usarArmadura.disabled) usarArmadura.checked = false;
+    };
     if (usarFocoNaArmadura) {
       usarFocoNaArmadura.addEventListener('change', () => {
-        if (usarFocoNaArmadura.checked) {
-          usarArmadura.disabled = false;
-          usarArmadura.checked = true;
-        } else {
-          usarArmadura.disabled = !paMax || paMarcados >= paMax;
-          if (usarArmadura.disabled) usarArmadura.checked = false;
-        }
+        sincronizarArmadura();
+        // Marcar a Estável é dizer "quero mitigar": a caixa acompanha.
+        if (usarFocoNaArmadura.checked && !usarArmadura.disabled) usarArmadura.checked = true;
       });
     }
 
@@ -1596,8 +1628,17 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     const sincronizarMarigold = () => {
       if (!usarMarigold) return;
       const ativo = usarMarigold.checked;
-      usarArmadura.disabled = ativo || !paMax || paMarcados >= paMax;
-      if (ativo) usarArmadura.checked = false;
+      /*
+       * ⚠ A ESTÁVEL TAMBÉM É APAGADA. Ela era a única caixa que sobrava
+       * clicável enquanto o espelho estava ativo — o que fazia a janela
+       * parecer coerente quando não estava. O espelho nega o dano inteiro:
+       * não há mitigação a pagar, nem com Foco.
+       */
+      if (usarFocoNaArmadura) {
+        usarFocoNaArmadura.disabled = ativo;
+        if (ativo) usarFocoNaArmadura.checked = false;
+      }
+      sincronizarArmadura();
       if (usarImpenetravel) { usarImpenetravel.disabled = ativo; if (ativo) usarImpenetravel.checked = false; }
       if (usarForrada) { usarForrada.disabled = ativo; if (ativo) usarForrada.checked = false; }
       if (usarAbsorvente) { usarAbsorvente.disabled = ativo; if (ativo) usarAbsorvente.checked = false; }
@@ -1893,7 +1934,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           ativa.escolha && ativa.escolha.traco
             ? el('p', { class: 'texto-xs texto-fraco', texto: `Traço escolhido: ${ativa.escolha.traco}.` })
             : null,
-          ...botoesDeUsoDaPostura(ativa, t)
+          ...botoesDeUsoDaPostura(ativa, t, ficha)
         ].filter(Boolean))
         : el('p', { class: 'texto-sm texto-fraco', texto: podeAssumir
           ? 'Nenhuma postura ativa.'
@@ -1910,15 +1951,54 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * Aperfeiçoada, a Esperança da Esmagadora); as outras valem sozinhas ou são
    * da mesa, e para elas o texto acima já é tudo o que a tela tem a dizer.
    */
-  function botoesDeUsoDaPostura(ativa, t) {
+  function botoesDeUsoDaPostura(ativa, t, ficha) {
+    const saidaExtra = [];
+
+    /*
+     * ⚠ A REAÇÃO DA POSTURA — hoje a Vigilante, e é o botão que não existia.
+     *
+     * A postura declarava `reacaoAtaque` no catálogo, o servidor copiava o
+     * campo até aqui, e esta função devolvia lista vazia porque só olhava
+     * `usoAtivo`. A regra de patamar 3 estava escrita em três arquivos e não
+     * tinha um único toque na tela.
+     *
+     * Ela é REAÇÃO, não gesto: acontece quando você é escolhido como alvo,
+     * antes de o ataque ser resolvido. Por isso o rótulo diz "quando for
+     * alvo", e o dado é pedido pelo mesmo diálogo de pendência que a Temporal
+     * da armadura já usa.
+     */
+    if (ativa.reacaoAtaque) {
+      const r = ativa.reacaoAtaque;
+      const lados = Math.max(2, Number((r.dadoManual || {}).lados) || 6);
+      /*
+       * O Estresse mora em `ficha.recursos`, não no bloco de posturas — e ler
+       * do lugar errado deixaria este botão apagado para sempre, que foi
+       * exatamente o que aconteceu na primeira versão desta linha.
+       */
+      const rec = (ficha || {}).recursos || {};
+      const cabeEstresse = Math.max(0, Number(rec.estresseMarcado) || 0) +
+        Math.max(0, Number(r.custoEstresse) || 1) <=
+        Math.max(0, Number(rec.estresseMaximo) || 0);
+      saidaExtra.push(el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--pequeno',
+        disabled: !cabeEstresse,
+        title: `Quando for alvo de um ataque: marque ${r.custoEstresse || 1} Estresse, ` +
+          `role 1d${lados} na mesa e some o resultado à sua Evasão contra esse ataque. ` +
+          'O bônus não fica na ficha.',
+        onClick: () => enviar([{ tipo: 'reacaoPostura' }])
+      }, cabeEstresse
+        ? `${ativa.nome} · quando for alvo · 1 Estresse + 1d${lados}`
+        : `${ativa.nome} · sem Estresse livre`));
+    }
+
     const uso = ativa.usoAtivo;
-    if (!uso) return [];
+    if (!uso) return saidaExtra;
 
     if (uso.entradaManual) {
       return [el('button', {
         type: 'button', class: 'btn btn--fantasma btn--pequeno',
         onClick: () => perguntarDadoDaPostura(ativa, uso)
-      }, `${ativa.nome} · informar o d${uso.entradaManual.lados}`)];
+      }, `${ativa.nome} · informar o d${uso.entradaManual.lados}`)].concat(saidaExtra);
     }
 
     const custos = [];
@@ -1934,7 +2014,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         onClick: () => enviar([{ tipo: 'postura', acao: 'usar', custo: 'estresse',
           ataqueBemSucedido: uso.exigeAtaqueBemSucedido === true }])
       }, 'Usar · 1 Estresse'));
-      return [el('div', { class: 'linha' }, custos)];
+      return [el('div', { class: 'linha' }, custos)].concat(saidaExtra);
     }
 
     const preco = uso.custoFoco ? `${uso.custoFoco} de Foco`
@@ -1944,7 +2024,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       disabled: !!uso.custoFoco && Math.max(0, Number(t.foco) || 0) < uso.custoFoco,
       onClick: () => enviar([{ tipo: 'postura', acao: 'usar',
         ataqueBemSucedido: uso.exigeAtaqueBemSucedido === true }])
-    }, `${ativa.nome} · ${preco}`)];
+    }, `${ativa.nome} · ${preco}`)].concat(saidaExtra);
   }
 
   /** O d4 da Revigorante (e de quem vier depois com a mesma forma). */
@@ -2887,17 +2967,34 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           ? regraFlickerfly.para
           : alcanceEfetivoNaFicha(ficha, alcanceOriginal);
       const ataque = ataqueDaArma(ficha, arma);
+      /*
+       * O TRAÇO SÓ APARECE AQUI QUANDO ALGUMA COISA O TROCOU. A linha normal
+       * continua igual — é a que a mesa já leu cem vezes — e a exceção fica
+       * visível justamente por ser exceção: é o momento em que rolar o traço da
+       * arma seria rolar o dado errado.
+       */
+      const doTraco = tracoDeAtaqueDaArma(arma);
+      const trocado = doTraco.fonte ? `${doTraco.traco} (${doTraco.fonte}) · ` : '';
       linhas.push(el('p', { class: 'texto-sm', texto:
-        `${arma.nome}: ${alcance ? alcance + ' · ' : ''}${ataque ? ataque + ' · ' : ''}` +
+        `${arma.nome}: ${trocado}${alcance ? alcance + ' · ' : ''}${ataque ? ataque + ' · ' : ''}` +
         `${danoDaArmaComProficiencia(ficha, arma)}${sufixo}` }));
 
-      const perfil = (((arma || {}).efeitoEquipamento || {}).perfilAlternativo) || null;
+      const perfil = dados.efeitoDeEquipamento(arma).perfilAlternativo || null;
       if (perfil) {
         const traco = catalogo.nomeDoTraco ? catalogo.nomeDoTraco(perfil.traco) : perfil.traco;
         const alcanceAlt = alcanceEfetivoNaFicha(ficha, perfil.alcance || '');
         const danoAlt = danoDaArmaComProficiencia(ficha, { dano:perfil.dano });
+        /*
+         * ⚠ O PERFIL ALTERNATIVO PODE VIR COM PREÇO. A Navalha de deslocamento
+         * alcança Muito Distante "mas com desvantagem" — e a linha mostrava só
+         * o alcance melhor, ou seja, oferecia a arma melhor do que a regra
+         * permite. `desvantagem` estava no catálogo desde a importação e não
+         * tinha leitor nenhum.
+         */
+        const partes = [traco, alcanceAlt, danoAlt].filter(Boolean);
+        if (perfil.desvantagem === true) partes.push('com desvantagem');
         linhas.push(el('p', { class: 'texto-xs texto-fraco', texto:
-          `${perfil.rotulo || 'Versátil'} — ${arma.nome}: ${[traco, alcanceAlt, danoAlt].filter(Boolean).join(' · ')}${sufixo}` }));
+          `${perfil.rotulo || 'Versátil'} — ${arma.nome}: ${partes.join(' · ')}${sufixo}` }));
       }
     }
 
@@ -4497,7 +4594,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
   }
 
   function usoAtivoDoEquipamento_(item) {
-    return ((((item || {}).caracteristica || {}).efeitoEquipamento || {}).usoAtivo) || null;
+    return dados.efeitoDeEquipamento(item).usoAtivo || null;
   }
 
   function botoesDeUsoEquipamento_(item, fecharModal, ficha) {
@@ -4554,17 +4651,58 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     }, gastou ? `${uso.rotulo || carac.nome} — já usada` : (uso.rotulo || `Usar ${carac.nome}`))];
   }
 
+  /**
+   * O TRAÇO COM QUE SE ATACA COM ESTA ARMA, e de onde ele vem.
+   *
+   * ⚠ As seis Gemas do saque (Alacridade, Poder, precisão, percepção, Audácia,
+   * Sagacidade) TROCAM o traço do ataque da arma em que foram encaixadas — SRD
+   * 2.0: "attach this gem to a weapon, allowing you to use your <Traço> when
+   * making an attack with that weapon". Antes disso a ficha continuava mostrando
+   * o traço da arma, e quem tivesse a Gema da Alacridade numa Espada Larga lia
+   * "Traço: Força" e rolava Força. O número errado, sem aviso nenhum.
+   *
+   * A fonte volta junto com o traço porque é a regra da casa: número publicado
+   * diz de onde veio (E107).
+   */
+  function tracoDeAtaqueDaArma(arma) {
+    const base = { traco: (arma || {}).atributo || '', fonte: '' };
+    if (!arma || !arma.id) return base;
+    const inventario = ((p.ficha || {}).inventario) || [];
+    for (const registro of inventario) {
+      if (!registro || !registro.emUso || !registro.id || !registro.vinculo) continue;
+      const item = catalogo.acharItem(registro.id);
+      const anexo = item && (item.efeitoSaquePassivo || {}).anexoArma;
+      if (!anexo || !anexo.trocaTracoDeAtaque) continue;
+      if (dados.chave(registro.vinculo) !== dados.chave(arma.id)) continue;
+      /*
+       * ⚠ GEMA QUE EMPRESTA O TRAÇO QUE A ARMA JÁ TEM NÃO TROCA NADA. A Espada
+       * Larga já ataca com Agilidade; com a Gema da Alacridade encaixada, a
+       * ficha chegou a escrever "usa Agilidade em vez de Agilidade". Sem troca
+       * não há fonte a anunciar — a linha volta a ser a linha normal.
+       */
+      if (dados.chave(anexo.trocaTracoDeAtaque) === dados.chave(arma.atributo)) return base;
+      return { traco: anexo.trocaTracoDeAtaque, fonte: item.nome };
+    }
+    return base;
+  }
+
   function conteudoDeEquipamento(rotulo, item) {
     const carac = item.caracteristica;
     const pontosArmadura = Number(item.pontuacaoArmadura ?? item.pontuacao) || 0;
+    const doTraco = item.dano ? tracoDeAtaqueDaArma(item) : null;
     const numeros = item.dano
-      ? [linhaDeAtributo('Dano', item.dano), linhaDeAtributo('Traço', item.atributo),
+      ? [linhaDeAtributo('Dano', item.dano),
+         linhaDeAtributo('Traço', doTraco.fonte
+           ? `${doTraco.traco} (${doTraco.fonte})` : doTraco.traco),
          linhaDeAtributo('Alcance', item.alcance), linhaDeAtributo('Mãos', item.maos)]
       : [linhaDeAtributo('Limiares', item.limiares),
          linhaDeAtributo('Armadura', pontosArmadura)];
     return el('div', { class: 'pilha' }, [
       el('p', { class: 'texto-sm texto-fraco', texto: `${rotulo} · patamar ${item.tier}` }),
       el('div', { class: 'ficha__atributos' }, numeros),
+      doTraco && doTraco.fonte ? el('p', { class: 'texto-xs texto-fraco', texto:
+        `${doTraco.fonte} está encaixada nesta arma: o ataque usa ${doTraco.traco} ` +
+        `em vez de ${item.atributo}.` }) : null,
       carac ? el('div', { class: 'ficha__carac' }, [
         el('h4', { class: 'ficha__caracNome' }, nomeComGlossa(carac.nome)),
         el('p', { class: 'texto-sm' }, textoAnotado(carac.texto || ''))
@@ -5533,14 +5671,23 @@ function ouroEmPunhados(ouro) {
       const passivoSaque = doLivro && doLivro.efeitoSaquePassivo;
       const configuracaoVinculo = passivoSaque && passivoSaque.configuracao;
       const opcoesVinculo = [];
-      if (configuracaoVinculo && configuracaoVinculo.tipo === 'arma-sem-caracteristica') {
+      if (configuracaoVinculo && (configuracaoVinculo.tipo === 'arma-sem-caracteristica' ||
+          configuracaoVinculo.tipo === 'arma-qualquer')) {
+        /*
+         * A Pedra só entra em arma SEM característica (o livro exige); a Gema
+         * entra em qualquer arma (o livro não exige nada). Oferecer a lista
+         * errada seria a tela proibir o que a regra permite, ou prometer o que o
+         * servidor vai recusar.
+         */
+        const soSemCaracteristica = configuracaoVinculo.tipo === 'arma-sem-caracteristica';
         const eqAtual = (p.ficha || {}).equipamento || {};
         const ids = [eqAtual.primaria, eqAtual.secundaria]
           .concat(Array.isArray(eqAtual.reserva) ? eqAtual.reserva : [])
           .filter(Boolean);
         const vistos = new Set();
         ids.map(catalogo.acharArma).filter(Boolean).forEach((arma) => {
-          if (vistos.has(arma.id) || arma.caracteristica) return;
+          if (vistos.has(arma.id)) return;
+          if (soSemCaracteristica && arma.caracteristica) return;
           vistos.add(arma.id);
           opcoesVinculo.push({ valor:arma.id, rotulo:arma.nome });
         });

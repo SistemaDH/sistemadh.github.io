@@ -134,15 +134,30 @@ export async function abrirCriacao({ aoCriar } = {}) {
    * Caráter — só faltam as duas cartas e as duas Experiências, que o livro não
    * sugere. Então o rápido pula equipamento e história.
    */
+  /*
+   * ⚠ O RÁPIDO SÓ PODE PULAR O QUE O GUIA PREENCHEU.
+   *
+   * Ele saltava traços, equipamento e história sempre — porque o Guia de
+   * Caráter os preencheria. Para as quatro classes SEM guia isso virava um beco
+   * sem saída: a revisão chegava com o botão desabilitado pedindo "Faltam
+   * traços. Falta a arma primária. Falta a armadura." e o "Voltar" ia de
+   * Experiências para Cartas para Herança — as duas etapas que resolveriam
+   * nunca apareciam. A única saída era voltar seis telas e trocar de modo, o
+   * que a tela não dizia em lugar nenhum.
+   */
+  function rapidoPreencheSozinho() {
+    return rascunho.modo === 'rapida' && !!guiaDaClasse();
+  }
+
   function proximoPasso() {
-    if (rascunho.modo !== 'rapida') return passoAtual + 1;
+    if (!rapidoPreencheSozinho()) return passoAtual + 1;
     if (passoAtual === IDX_HERANCA) return 6;   // -> cartas
     if (passoAtual === 7) return IDX_REVISAO;   // experiências -> revisão
     return passoAtual + 1;
   }
 
   function passoAnterior() {
-    if (rascunho.modo !== 'rapida') return passoAtual - 1;
+    if (!rapidoPreencheSozinho()) return passoAtual - 1;
     if (passoAtual === 6) return IDX_HERANCA;
     if (passoAtual === IDX_REVISAO) return 7;
     return passoAtual - 1;
@@ -325,10 +340,76 @@ export async function abrirCriacao({ aoCriar } = {}) {
     };
   }
 
-  /** Preenche o que o Guia de Caráter sugere — usado no rápido e como ponto de partida. */
+  /**
+   * O GUIA DE CARÁTER DESTA CLASSE — ou null, e isso é normal.
+   *
+   * ⚠ QUATRO CLASSES NÃO TÊM GUIA, E NÃO É DESCUIDO: é fonte inexistente.
+   * Assassino, Brigão, Bruxo e Bruxa vieram no SRD 2.0 / Hope & Fear, e as
+   * folhas de Guia de Caráter só existem para as nove originais. Medido nas
+   * três fontes: o livro pt-BR não tem as quatro classes (zero ocorrências de
+   * Brigão, Bruxo e Bruxa), o SRD 2.0 menciona os "character guide printouts"
+   * sem trazê-los, e o Hope & Fear traz as quatro sem traços, arma ou armadura
+   * sugeridos. Inventar seria material autoral.
+   *
+   * Então a tela tem de funcionar sem guia — e, onde não há sugestão, NÃO
+   * FINGIR que há.
+   */
+  function guiaDaClasse() {
+    return catalogo.guias.find((g) => g.classe === rascunho.classe) || null;
+  }
+
+  /**
+   * As perguntas de fundo e de conexão desta classe, venham de onde vierem.
+   *
+   * ⚠ ELAS SEMPRE EXISTIRAM PARA AS TREZE. Estão em `data/classes.json`, em
+   * `perguntasDeFundo` e `conexoes`, como texto simples. A tela lia só do guia
+   * — e por isso a etapa de História abria com título, texto de ajuda e NADA
+   * dentro para as quatro classes sem guia, com o "Continuar" habilitado.
+   */
+  function perguntasDaClasse() {
+    const guia = guiaDaClasse();
+    if (guia) {
+      return {
+        fundo: (guia.perguntasDeFundo || []).map((p) => p.texto),
+        conexoes: (guia.perguntasDeConexao || []).map((p) => p.texto),
+        temDescricaoFisica: true
+      };
+    }
+    const classe = catalogo.classes.find((c) => c.id === rascunho.classe) || {};
+    return {
+      fundo: (classe.perguntasDeFundo || []).slice(),
+      conexoes: (classe.conexoes || []).slice(),
+      temDescricaoFisica: false
+    };
+  }
+
+  /** As duas opções de item de classe, do guia ou do catálogo da classe. */
+  function itensDeClasseDaClasse() {
+    const guia = guiaDaClasse();
+    if (guia) return ((guia.inventario || {}).escolherEntre || []).slice(1);
+    const classe = catalogo.classes.find((c) => c.id === rascunho.classe) || {};
+    return (classe.itensDeClasse || []).length ? [classe.itensDeClasse.slice()] : [];
+  }
+
+  /**
+   * Preenche o que o Guia de Caráter sugere — usado no rápido e como ponto de
+   * partida.
+   *
+   * ⚠ E LIMPA QUANDO NÃO HÁ GUIA. Esta função fazia `if (!guia) return;` sem
+   * limpar nada, e isso GRAVAVA FICHA ERRADA: escolher Bardo (que tem guia) e
+   * trocar para Bruxa (que não tem) deixava na Bruxa os traços, o Florete, o
+   * Punhal pequeno, a Armadura Gambeson e o "livro de romance" do Bardo — com o
+   * botão "Criar personagem" habilitado e sem aviso nenhum.
+   */
   function aplicarSugestoesDaClasse() {
-    const guia = catalogo.guias.find((g) => g.classe === rascunho.classe);
-    if (!guia) return;
+    const guia = guiaDaClasse();
+    if (!guia) {
+      rascunho.equipamento = { primaria: null, secundaria: null, armadura: null };
+      rascunho.itensEscolhidos = [];
+      TRACOS_ORDEM.forEach((t) => { rascunho.tracos[t] = null; });
+      rascunho.descricaoFisica = {};
+      return;
+    }
     rascunho.equipamento = {
       primaria: (guia.armaPrimaria && guia.armaPrimaria.id) || null,
       secundaria: (guia.armaSecundaria && guia.armaSecundaria.id) || null,
@@ -939,8 +1020,15 @@ export async function abrirCriacao({ aoCriar } = {}) {
         });
         pai.append(chipsPocao);
 
-        const guia = catalogo.guias.find((g) => g.classe === rascunho.classe);
-        const pares = ((guia && guia.inventario && guia.inventario.escolherEntre) || []).slice(1);
+        const guia = guiaDaClasse();
+        /*
+         * ⚠ O ITEM DE CLASSE EXISTE PARA AS TREZE, e esta tela só o achava para
+         * nove. As duas opções estão em `data/classes.json` → `itensDeClasse`
+         * (ex.: a Bruxa escolhe entre "Um animal de estimação pequeno e
+         * inofensivo" e "Uma pedra de vidência"). Lendo só do guia, a escolha
+         * simplesmente desaparecia da criação das quatro classes novas.
+         */
+        const pares = itensDeClasseDaClasse();
         pares.forEach((par, i) => {
           pai.append(el('h3', { class: 'criacao__subsecao', texto: 'Item de classe' }));
           const chips = el('div', { class: 'chips' });
@@ -1252,11 +1340,31 @@ export async function abrirCriacao({ aoCriar } = {}) {
     return {
       etiqueta: 'Etapas 6 e 9',
       titulo: 'Histórico e conexões',
-      ajuda: 'Tudo aqui é opcional — dá para pular e responder na mesa. As perguntas são as do Guia de Caráter da sua classe.',
+      ajuda: 'Tudo aqui é opcional — dá para pular e responder na mesa.',
       desenhar(pai) {
-        const guia = catalogo.guias.find((g) => g.classe === rascunho.classe);
-        if (!guia) return;
+        const guia = guiaDaClasse();
+        const perguntas = perguntasDaClasse();
 
+        /*
+         * ⚠ SEM GUIA, SEM CHIPS DE DESCRIÇÃO FÍSICA — e a etapa NÃO abre vazia.
+         *
+         * As tabelas de "Como ele é" (roupas, olhos, corpo, pele, atitude) só
+         * existem nas folhas de Guia de Caráter das nove classes originais. As
+         * perguntas de fundo e de conexão, ao contrário, existem para as treze,
+         * em data/classes.json — e a tela lia só do guia. Resultado: para
+         * Assassino, Brigão, Bruxo e Bruxa esta etapa abria com título, texto de
+         * ajuda e NADA dentro, com o "Continuar" habilitado. Ela aparecia na
+         * contagem ("Passo 8 de 9") e não tinha o que fazer.
+         *
+         * Onde não há tabela, esta tela não desenha caixa vazia nem promete uma
+         * sugestão que não existe: ela diz que a descrição é livre.
+         */
+        if (!perguntas.temDescricaoFisica) {
+          pai.append(el('p', { class: 'texto-sm texto-suave', texto:
+            'Esta classe não tem tabelas de descrição no livro — descreva com suas '
+            + 'próprias palavras, na mesa ou nas anotações da ficha.' }));
+        }
+        if (perguntas.temDescricaoFisica) {
         pai.append(el('h2', { class: 'criacao__secao', texto: 'Como ele é' }));
         Object.entries(guia.descricao).forEach(([rotulo, opcoes]) => {
           const chips = el('div', { class: 'chips' });
@@ -1276,11 +1384,12 @@ export async function abrirCriacao({ aoCriar } = {}) {
             chips
           ]));
         });
+        }
 
         pai.append(el('h2', { class: 'criacao__secao', texto: 'Perguntas de histórico' }));
-        guia.perguntasDeFundo.forEach((p, i) => {
+        perguntas.fundo.forEach((texto, i) => {
           pai.append(el('div', { class: 'cartao' }, [
-            el('p', { class: 'criacao__pergunta', texto: p.texto }),
+            el('p', { class: 'criacao__pergunta', texto: texto }),
             campoArea(rascunho.fundo[i] || '', (v) => { rascunho.fundo[i] = v; })
           ]));
         });
@@ -1288,9 +1397,9 @@ export async function abrirCriacao({ aoCriar } = {}) {
         pai.append(el('h2', { class: 'criacao__secao', texto: 'Conexões' }));
         pai.append(el('p', { class: 'texto-sm texto-suave', texto:
           'Faça a cada colega de mesa uma destas perguntas. Anote quem respondeu o quê — ou deixe em branco e resolva na sessão zero.' }));
-        guia.perguntasDeConexao.forEach((p, i) => {
+        perguntas.conexoes.forEach((texto, i) => {
           pai.append(el('div', { class: 'cartao' }, [
-            el('p', { class: 'criacao__pergunta', texto: p.texto }),
+            el('p', { class: 'criacao__pergunta', texto: texto }),
             campoArea(rascunho.conexoes[i] || '', (v) => { rascunho.conexoes[i] = v; })
           ]));
         });
@@ -1454,7 +1563,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
     const sub = classe && classe.subclasses.find((s) => s.id === rascunho.subclasse);
     const anc = catalogo.ancestralidades.find((a) => a.id === rascunho.ancestralidade);
     const com = catalogo.comunidades.find((c) => c.id === rascunho.comunidade);
-    const guia = catalogo.guias.find((g) => g.classe === rascunho.classe);
+    const perguntasGravadas = perguntasDaClasse();
 
     /*
      * A mochila da criação não pode nascer como uma lista de nomes soltos.
@@ -1540,10 +1649,16 @@ export async function abrirCriacao({ aoCriar } = {}) {
       condicoes: [],
       contadores: {},
       fichasFilhas: [],
+      /*
+       * ⚠ GRAVA DA MESMA FONTE QUE A TELA DESENHOU. Aqui era
+       * `guia ? guia.perguntasDeFundo : []` — então para as quatro classes sem
+       * guia a resposta que a pessoa escrevesse seria descartada na gravação,
+       * mesmo depois de a etapa passar a mostrar as perguntas.
+       */
       historia: {
-        fundo: (guia ? guia.perguntasDeFundo : []).map((p, i) => ({ pergunta: p.texto, resposta: rascunho.fundo[i] || '' }))
+        fundo: perguntasGravadas.fundo.map((texto, i) => ({ pergunta: texto, resposta: rascunho.fundo[i] || '' }))
           .filter((x) => x.resposta),
-        conexoes: (guia ? guia.perguntasDeConexao : []).map((p, i) => ({ pergunta: p.texto, resposta: rascunho.conexoes[i] || '' }))
+        conexoes: perguntasGravadas.conexoes.map((texto, i) => ({ pergunta: texto, resposta: rascunho.conexoes[i] || '' }))
           .filter((x) => x.resposta),
         descricaoFisica: { ...rascunho.descricaoFisica }
       },

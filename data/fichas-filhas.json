@@ -484,7 +484,7 @@
     "caracteristicas": [
      {
       "nome": "Ataque Violento",
-      "texto": "quando tira 1 em um dado de dano, você pode rolar 1d10 e somar o resultado à rolagem de dano. Além disso, antes de fazer uma jogada de ataque, você pode marcar 1 Estresse para receber um bônus de +1 em sua Proficiência para esse ataque.",
+      "texto": "quando tira 1 em um dado de dano, você pode rolar 1d10 e somar o resultado à jogada de dano. Além disso, antes de fazer uma jogada de ataque, você pode marcar 1 Estresse para receber um bônus de +1 em sua Proficiência para esse ataque.",
       "textoLivro": "quando tira 1 em um dado de dano, você pode rolar 1d10 e somar o resultado à rolagem de dano. Além disso, antes de fazer um teste de ataque, você pode marcar 1 Ponto de Fadiga para receber um bônus de +1 em sua Proficiência para esse ataque."
      },
      {
@@ -637,7 +637,7 @@
     "caracteristicas": [
      {
       "nome": "Evoluído",
-      "texto": "escolha uma Forma de Fera de 1º patamar e torne-se uma versão maior e mais poderosa dessa criatura. Enquanto estiver nessa forma, você mantém todos os atributos e habilidades da forma original e recebe os seguintes bônus:\n • Bônus de +6 em rolagens de dano\n • Bônus de +1 no atributo da forma\n • Bônus de +2 na Evasão"
+      "texto": "escolha uma Forma de Fera de 1º patamar e torne-se uma versão maior e mais poderosa dessa criatura. Enquanto estiver nessa forma, você mantém todos os atributos e habilidades da forma original e recebe os seguintes bônus:\n • Bônus de +6 em jogadas de dano\n • Bônus de +1 no atributo da forma\n • Bônus de +2 na Evasão"
      }
     ],
     "exemplos": [],

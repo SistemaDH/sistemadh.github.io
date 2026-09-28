@@ -661,6 +661,84 @@ function ajustarPostura_(ficha, a) {
  * ⚠ E O CUSTO SAI DEPOIS DE TODA CONFERÊNCIA. Cobrar e só então descobrir que
  * faltava confirmar o ataque deixaria a pessoa sem o recurso e sem o efeito.
  */
+/**
+ * A REAÇÃO DA POSTURA ATIVA — hoje só a Vigilante.
+ *
+ * > "Vigilant: When you are targeted by an attack, you can mark a Stress to
+ * > gain a d6 bonus to your Evasion against the attack."
+ *
+ * ⚠ ESTA REGRA EXISTIA NO CATÁLOGO E EM MAIS NENHUM LUGAR. A postura declarava
+ * reacaoAtaque, o gerador copiava o campo para cá e para o bloco da tela, e
+ * ninguém lia: usarPosturaAtiva_ só conhece usoAtivo, ajustarPostura_ só
+ * conhece aprender/esquecer/assumir/sair/usar, e o bloco de reações da tela só
+ * varre EQUIPAMENTO. A ficha prometia a reação por escrito — em
+ * docs/posturas-marciais.md — e recusava por todas as portas. É a mesma família
+ * do defeito do Impenetrável: a chave na convenção errada vira silenciosamente
+ * nada. Aqui o nome era reacaoAtaque, e o leitor que existe procura
+ * reacaoAtaqueRecebido, em peças equipadas.
+ *
+ * ⚠ O BÔNUS NUNCA É GRAVADO NA EVASÃO. Ele vale para UM ataque, e a Evasão
+ * impressa é a que vale contra todos. O motor cobra o Estresse e devolve o
+ * número para a mesa aplicar naquela resolução — o mesmo contrato das Asas e
+ * da Temporal da armadura.
+ *
+ * ⚠ E O CUSTO SAI DEPOIS DO DADO. Sem o d6 informado devolve pendência, não
+ * erro: quem esqueceu de rolar não perde o Estresse.
+ */
+function usarReacaoDaPosturaAtiva_(ficha, a) {
+  const postura = posturaAtivaDaFicha_(ficha);
+  if (!postura) return { erro: 'Você não está em nenhuma postura.' };
+  const pedida = normalizarPostura_((a || {}).postura || (a || {}).id || (a || {}).nome);
+  if (pedida && pedida !== postura.id) {
+    return { erro: 'A postura ativa é a ' + postura.nome + ', não a ' + POSTURAS[pedida].nome + '.' };
+  }
+  const regra = postura.reacaoAtaque;
+  if (!regra) {
+    return { erro: 'A postura ' + postura.nome + ' não tem reação a ataque recebido.' };
+  }
+
+  const manual = regra.dadoManual || null;
+  let dado = null;
+  if (manual) {
+    const campo = String(manual.campo || 'resultadoManual');
+    const lados = Math.max(2, Math.trunc(Number(manual.lados)) || 6);
+    const bruto = (a || {})[campo];
+    if (bruto === undefined || bruto === null || bruto === '') {
+      return { pendenciaRolagem: {
+        tipo: 'habilidade-manual', campo: campo, caracteristica: postura.nome,
+        dado: 'd' + lados, minimo: 1, maximo: lados,
+        mensagem: 'Postura ' + postura.nome + ': role 1d' + lados +
+          ' fora do app e informe o resultado. Ele vira bônus de Evasão contra este ataque.'
+      } };
+    }
+    dado = Math.trunc(Number(bruto));
+    if (!isFinite(dado) || dado < 1 || dado > lados || Number(bruto) !== dado) {
+      return { erro: 'Postura ' + postura.nome + ': informe o resultado inteiro de 1 a ' + lados + '.' };
+    }
+  }
+
+  const custoEstresse = Math.max(0, Math.trunc(Number(regra.custoEstresse)) || 0);
+  if (custoEstresse > 0) {
+    const r = ficha.recursos || {};
+    const teto = Math.max(0, Number(r.estresseMaximo) || 0);
+    const marcado = Math.max(0, Number(r.estresseMarcado) || 0);
+    if (!teto || marcado + custoEstresse > teto) {
+      return { erro: 'Postura ' + postura.nome + ': não sobra Estresse para esta reação.' };
+    }
+    const pago = ajustarRecurso_(ficha, { chave: 'estresseMarcado', delta: custoEstresse });
+    if (pago && pago.erro) return pago;
+  }
+
+  const bonusEvasao = (regra.aplicaComo === 'bonusEvasao') ? (dado || 0) : 0;
+  return {
+    tipo: 'reacaoPostura', postura: postura.id, nome: postura.nome,
+    custoEstresse: custoEstresse, dadoManual: dado, bonusEvasao: bonusEvasao,
+    gravadoNaFicha: false,
+    aviso: 'Postura ' + postura.nome + ': ' + custoEstresse + ' Estresse marcado. Some +' +
+      bonusEvasao + ' à sua Evasão contra ESTE ataque. O bônus não fica na ficha.'
+  };
+}
+
 function usarPosturaAtiva_(ficha, a) {
   const postura = posturaAtivaDaFicha_(ficha);
   if (!postura) return { erro: 'Você não está em nenhuma postura.' };

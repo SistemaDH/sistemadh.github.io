@@ -12,3 +12,9 @@ playwright-report/
 artifacts/
 test-results/
 supabase/.temp/
+
+# Recado de entrega, não conteúdo do repositório. O arquivo se declara assim
+# na primeira linha ("não está na pasta do repositório de propósito") e entrou
+# no commit 68d6d87 por acidente. O que permanece é docs/diario-dos-commits.md.
+MENSAGEM-DO-COMMIT.md
+MENSAGEM-DO-COMMIT*.md

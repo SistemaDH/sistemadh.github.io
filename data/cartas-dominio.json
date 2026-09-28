@@ -6213,7 +6213,7 @@
       },
       "resolucaoManual": {
         "rolaNoApp": false,
-        "resumo": "Após a rolagem de Conjuração, gaste manualmente quantos marcadores quiser para +1 cada. Em crítico de uma magia Sábio, acrescente 1 marcador respeitando o teto."
+        "resumo": "Após a jogada de Conjuração, gaste manualmente quantos marcadores quiser para +1 cada. Em crítico de uma magia Sábio, acrescente 1 marcador respeitando o teto."
       }
     },
     {
@@ -6719,7 +6719,7 @@
       },
       "resolucaoManual": {
         "rolaNoApp": false,
-        "resumo": "O próximo ataque de arma e a rolagem de dano continuam na mesa. Ao acertá-lo, dobre o resultado, trate o dano como mágico e encerre o estado carregado no app."
+        "resumo": "O próximo ataque de arma e a jogada de dano continuam na mesa. Ao acertá-lo, dobre o resultado, trate o dano como mágico e encerre o estado carregado no app."
       },
       "uso": {
         "custo": {
@@ -6737,7 +6737,7 @@
           "avisoEncerrar": "Golpe Divino consumido no próximo ataque de arma bem-sucedido."
         },
         "rotuloAtivar": "Carregar Golpe Divino · 3 Esperanças",
-        "lembrete": "No próximo ataque de arma bem-sucedido, dobre o resultado da rolagem de dano e trate o ataque como dano mágico; depois encerre a carga."
+        "lembrete": "No próximo ataque de arma bem-sucedido, dobre o resultado da jogada de dano e trate o ataque como dano mágico; depois encerre a carga."
       }
     },
     {

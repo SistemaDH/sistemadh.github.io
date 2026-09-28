@@ -20,7 +20,8 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { criarServidor } from './servidor-teste.mjs';
 import {
-  criarPersonagemRapido, abrirFicha, escreverNaFichaDeTeste, criarPlacar
+  criarPersonagemRapido, abrirFicha, escreverNaFichaDeTeste, criarPlacar,
+  esperarNoServidor
 } from './ajuda-bateria-ficha.mjs';
 
 const PASTA = 'artifacts/reacoes-armadura';
@@ -260,13 +261,18 @@ try {
   await morte.getByRole('button', { name: 'Escolher este' }).nth(2).click();
   await page.waitForSelector('.modal__caixa', { state: 'detached', timeout: 10000 });
 
-  const depoisDaMorte = ambiente.avaliar(`(function(){
+  /*
+   * ⚠ Fechar a janela é a TELA confirmando; a gravação vai pela fila e pode não
+   * ter chegado ao servidor. Esta leitura já falhou UMA vez na suíte inteira e
+   * passou sozinha — então ela espera a condição, em vez de dormir e torcer.
+   */
+  const depoisDaMorte = await esperarNoServidor(ambiente, `(function(){
     const linhas = lerTudo_(ABAS.PERSONAGENS);
     const d = JSON.parse(linhas[linhas.length - 1].dados);
     const c = (d.contadores || {})['uso:equipamento:armadura-t4-placa-heroica-sagrada:abencoada'];
     return JSON.stringify({ esperanca: d.recursos.esperanca,
       uso: c ? (c.valor || 0) : 0, vivo: !d.encerrada });
-  })()`);
+  })()`, (bruto) => (JSON.parse(bruto).uso || 0) >= 1);
   placar.conferir('o servidor cobrou as 2 Esperanças, marcou o uso e o personagem ficou de pé',
     depoisDaMorte === JSON.stringify({ esperanca: 3, uso: 1, vivo: true }), depoisDaMorte);
 
@@ -370,6 +376,150 @@ try {
     'JSON.stringify((mesaLer_().recados || []).map(function(r){return r.texto;}))');
   placar.conferir('o d4 = 4 põe o recado no mural da mesa, com o número pronto',
     /atacante marca/.test(recadoNaMesa), recadoNaMesa);
+
+  /* --- 9. O CICLO DO ESPELHO NÃO PODE APAGAR A EXCEÇÃO DA ESTÁVEL -------- *
+   *
+   * ⚠ ESTA CONFERÊNCIA NASCEU DE UM DEFEITO DE SEQUÊNCIA, e é por isso que
+   * ela clica em vez de só olhar. Na abertura, as 16 opções da janela estavam
+   * todas corretas — o defeito só aparecia depois de três cliques:
+   *
+   *   Postura Estável marcada  -> a caixa de Armadura era liberada (certo,
+   *                               "instead of" é literal: não precisa ter PA)
+   *   Espelho de Marigold on   -> tudo apagado (certo, o espelho nega o dano)
+   *   Espelho de Marigold OFF  -> a Armadura ficava APAGADA E DESMARCADA,
+   *                               enquanto a Estável seguia marcada.
+   *
+   * Nesse estado a janela se contradizia, e quem apertasse "Aplicar dano"
+   * recebia o dano SEM redução nenhuma — porque o envio manda
+   * `usarArmadura: usarArmadura.checked`. A causa era a regra "quando a caixa
+   * de Armadura fica livre" estar escrita em DOIS lugares que divergiram.
+   */
+  await vestir('armadura-t3-armadura-de-escamas-de-dragao');
+  escreverNaFichaDeTeste(ambiente, `d.identidade.classe = 'Brigão';
+    d.identidade.subclasse = 'Artista Marcial';
+    d.recursos = d.recursos || {}; d.recursos.foco = 4;
+    d.recursos.armaduraMarcada = 99;
+    d.posturas = { conhecidas:['estavel'], ativa:'estavel', escolhas:{} };
+    d.inventario = [{ id:'consumivel-59', qtd:1 }];`);
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.waitForSelector('.roster', { timeout: 15000 });
+  await abrirFicha(page);
+
+  await page.getByRole('button', { name: 'Aplicar dano recebido' }).click();
+  await page.waitForSelector('.modal__caixa', { timeout: 5000 });
+
+  /** Lê disabled/checked das duas caixas que interessam, pelo texto do rótulo. */
+  const estadoDasCaixas = () => page.evaluate(() => {
+    const achar = (pedaco) => [...document.querySelectorAll('.modal__caixa .criacao__alternador')]
+      .find((l) => l.textContent.includes(pedaco));
+    const ler = (pedaco) => {
+      const l = achar(pedaco);
+      if (!l) return null;
+      const c = l.querySelector('input[type="checkbox"]');
+      return c ? { disabled: c.disabled, checked: c.checked } : null;
+    };
+    return { armadura: ler('Ponto de Armadura'), estavel: ler('Postura Estável'),
+             espelho: ler('Espelho') };
+  });
+  const clicar = (pedaco) => page.evaluate((p) => {
+    const l = [...document.querySelectorAll('.modal__caixa .criacao__alternador')]
+      .find((x) => x.textContent.includes(p));
+    l.querySelector('input[type="checkbox"]').click();
+  }, pedaco);
+
+  const passo1 = await estadoDasCaixas();
+  placar.conferir('com a Armadura toda marcada, a caixa de Armadura começa apagada',
+    passo1.armadura && passo1.armadura.disabled === true, JSON.stringify(passo1.armadura));
+
+  await clicar('Postura Estável');
+  const passo2 = await estadoDasCaixas();
+  placar.conferir('marcar a Estável LIBERA a mitigação mesmo sem Ponto de Armadura livre',
+    passo2.armadura && passo2.armadura.disabled === false && passo2.armadura.checked === true,
+    JSON.stringify(passo2.armadura));
+
+  await clicar('Espelho');
+  const passo3 = await estadoDasCaixas();
+  placar.conferir('o Espelho de Marigold apaga a Estável junto com as outras',
+    passo3.estavel && passo3.estavel.disabled === true, JSON.stringify(passo3.estavel));
+
+  await clicar('Espelho');
+  const passo4 = await estadoDasCaixas();
+  /*
+   * Desmarcar o espelho volta ao ZERO, não ao estado de antes: o espelho
+   * limpou as escolhas e elas não ressuscitam sozinhas. O que NÃO pode
+   * acontecer é sobrar contradição — Estável marcada com a Armadura apagada.
+   */
+  placar.conferir('⚠ desmarcar o Espelho não deixa a janela se contradizendo',
+    !(passo4.estavel && passo4.estavel.checked === true &&
+      passo4.armadura && passo4.armadura.disabled === true),
+    JSON.stringify(passo4));
+  placar.conferir('e a Estável volta a ser clicável',
+    passo4.estavel && passo4.estavel.disabled === false, JSON.stringify(passo4.estavel));
+
+  await clicar('Postura Estável');
+  const passo5 = await estadoDasCaixas();
+  placar.conferir('⚠ e a exceção é alcançável DE NOVO, sem sair da janela',
+    passo5.armadura && passo5.armadura.disabled === false && passo5.armadura.checked === true,
+    JSON.stringify(passo5.armadura));
+  await fecharJanela();
+
+  /* --- a LISTA de reações na ficha, que é outro bloco -------------------- */
+  /*
+   * ⚠ ESTE BLOCO ESTAVA MORTO. `blocoDeReacoesDeEquipamento_` lia
+   * `peca.efeitoEquipamento` — a forma do SERVIDOR — mas recebe a peça do
+   * CATÁLOGO, onde o efeito mora em `caracteristica.efeitoEquipamento`. O
+   * filtro nunca encontrava nada, a função devolvia null e o bloco não era
+   * desenhado. Quatro peças declaram `reacaoAtaqueRecebido` e nenhuma aparecia.
+   *
+   * A janela de dano (conferida acima) vem do servidor e por isso sempre
+   * funcionou — o que esconde o defeito de quem olha a ficha de relance.
+   */
+  const lerBlocoDeReacoes = () => page.evaluate(() => {
+    const t = [...document.querySelectorAll('strong')]
+      .find((x) => /^Reações ao ataque$/.test((x.textContent || '').trim()));
+    if (!t) return null;
+    const bloco = t.parentElement;
+    /*
+     * A regra tem de estar VISÍVEL, não só no `title`: no celular o tooltip não
+     * existe. Por isso o teste lê o texto da linha, e o title só de lambuja.
+     */
+    return {
+      visivel: [...bloco.querySelectorAll('p')].map((x) => x.textContent.trim()),
+      botoes: [...bloco.querySelectorAll('button')].map((b) => ({
+        rotulo: (b.textContent || '').trim(),
+        title: b.getAttribute('title') || '',
+        desabilitado: b.disabled === true
+      }))
+    };
+  });
+
+  /* a Armadura vem marcada das cenas anteriores; aqui o assunto é outro */
+  const limparArmadura = () => escreverNaFichaDeTeste(ambiente,
+    'd.recursos = d.recursos || {}; d.recursos.armaduraMarcada = 0;');
+
+  await vestir('armadura-t2-armadura-flutuante-de-runetan');
+  limparArmadura();
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.waitForSelector('.roster', { timeout: 15000 });
+  await abrirFicha(page);
+  const bloco = await lerBlocoDeReacoes();
+  const listaDeReacoes = bloco && bloco.botoes;
+  const deslocamento = (listaDeReacoes || []).find((b) => /Deslocamento/.test(b.rotulo));
+  placar.conferir('⚠ a ficha oferece a reação da Armadura flutuante de Runetan',
+    !!deslocamento, JSON.stringify(listaDeReacoes));
+  const linhaVisivel = ((bloco && bloco.visivel) || []).find((l) => /Runetan/.test(l));
+  placar.conferir('⚠ e a regra está VISÍVEL na linha, não escondida no tooltip',
+    !!linhaVisivel && /1 PA/.test(linhaVisivel) && /desvantagem/.test(linhaVisivel),
+    JSON.stringify((bloco || {}).visivel));
+  placar.conferir('com Ponto de Armadura livre, o botão está clicável',
+    !!deslocamento && deslocamento.desabilitado === false, JSON.stringify(deslocamento));
+
+  await vestir('armadura-t1-armadura-de-couro');
+  const semReacoes = await lerBlocoDeReacoes();
+  placar.conferir('CONTROLE · armadura comum não oferece reação nenhuma',
+    semReacoes === null, JSON.stringify(semReacoes));
+  await page.screenshot({ path: `${PASTA}/lista-de-reacoes.png`, fullPage: false });
+
 } finally {
   await contexto.close();
   await navegador.close();

@@ -128,11 +128,11 @@
     {
       "id": "em-chamas",
       "nome": "Em Chamas",
-      "nomeIngles": "On Fire",
+      "nomeIngles": "On Fire / Ablaze",
       "tipo": "especial",
-      "origem": "Carta de domínio Arcana — Aperto de Cinzas.",
-      "texto": "Quando uma criatura agir enquanto estiver Em Chamas, ela deve sofrer dano conforme descrito na carta que aplicou a condição.",
-      "sinonimos": ["On Fire", "Queimando"],
+      "origem": "Carta de domínio Arcana — Aperto de Cinzas; Fragmento de emberita (consumível); Incendiar do Lodo vermelho (bestiário).",
+      "texto": "Marcador de fogo. A regra — quanto dói, quando dói e como apaga — é sempre a de QUEM APLICOU a condição: a carta, o item ou o adversário. Os três casos do app são diferentes de propósito: Aperto de Cinzas cobra 2d6 ao fim de cada ação; o Fragmento de emberita pede um d4 a cada jogada de ação (em 1 marca 1 Ponto de Vida, em 4 acaba); o Incendiar do Lodo vermelho cobra 1d4 por jogada e só apaga com uma jogada de Finesse (14).",
+      "sinonimos": ["On Fire", "Ablaze", "Flamejante", "Queimando"],
       "acumulavel": false
     }
   ],

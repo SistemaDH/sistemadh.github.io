@@ -139,6 +139,7 @@ function aplicarAjusteDireto_(ficha, a) {
   if (tipo === 'habilidade') return usarHabilidadeDeClasse_(ficha, a);
   if (tipo === 'transformacao') return ajustarTransformacao_(ficha, a);
   if (tipo === 'postura') return ajustarPostura_(ficha, a);
+  if (tipo === 'reacaopostura') return usarReacaoDaPosturaAtiva_(ficha, a);
   if (tipo === 'bonuspreparado') return ajustarBonusPreparado_(ficha, a);
   if (tipo === 'foco') return ajustarFocoDaFicha_(ficha, a);
   return { erro: 'Tipo de ajuste desconhecido: "' + String((a || {}).tipo) + '".' };
@@ -2769,10 +2770,39 @@ function validarVinculoDeSaque_(ficha, lista, indice, valor, verificarConflito) 
     .trim().replace(/\s+/g, ' ').slice(0, LIMITE_ITEM_INVENTARIO);
   if (!bruto) return { vinculo:'', rotulo:'' };
 
-  if (cfg.tipo === 'arma-sem-caracteristica') {
+  /*
+   * DOIS VÍNCULOS DE ARMA, e a diferença é do LIVRO, não de gosto:
+   *
+   *  • `arma-sem-caracteristica` — as Pedras (de sangue, Maior) ACRESCENTAM uma
+   *    característica, e o livro exige que a arma ainda não tenha nenhuma.
+   *  • `arma-qualquer` — as seis Gemas TROCAM o traço do ataque. O SRD 2.0
+   *    (linhas 4793-4804) diz só "attach this gem to a weapon": não há restrição
+   *    nenhuma, e inventar uma seria proibir o que o livro permite.
+   */
+  if (cfg.tipo === 'arma-sem-caracteristica' || cfg.tipo === 'arma-qualquer') {
     if (typeof acharArma_ !== 'function') return { erro:'Catálogo de armas indisponível.' };
     const arma = acharArma_(bruto);
-    if (!arma) return { erro:item.nome + ': escolha uma arma da ficha.' };
+    if (!arma) {
+      /*
+       * Há textos que o LIVRO deu a duas armas diferentes — a mesma linha
+       * cortada para o Cetro avançado e para o Bastão Longo Avançado. Achar
+       * "a primeira da lista" seria escolher pela pessoa sem ela ver; então a
+       * busca não acha, e aqui a mensagem diz por quê.
+       */
+      const ambiguo = (typeof apelidoAmbiguoDeEquipamento_ === 'function')
+        ? apelidoAmbiguoDeEquipamento_(bruto) : null;
+      if (ambiguo) {
+        const nomes = [];
+        for (let z = 0; z < ambiguo.ids.length; z++) {
+          const a = acharArma_(ambiguo.ids[z]);
+          if (a) nomes.push(a.nome);
+        }
+        return { erro:item.nome + ': "' + bruto + '" é como o livro chamou ' +
+          nomes.length + ' armas diferentes (' + nomes.join(' e ') +
+          '). Diga qual delas.' };
+      }
+      return { erro:item.nome + ': escolha uma arma da ficha.' };
+    }
 
     const eq = (ficha || {}).equipamento || {};
     const ids = [eq.primaria, eq.secundaria]
@@ -2784,11 +2814,24 @@ function validarVinculoDeSaque_(ficha, lista, indice, valor, verificarConflito) 
       if (a && a.id === arma.id) { possuida = true; break; }
     }
     if (!possuida) return { erro:item.nome + ': a arma escolhida não está equipada nem na reserva.' };
-    if (arma.carac || arma.caracteristica) {
+    if (cfg.tipo === 'arma-sem-caracteristica' && (arma.carac || arma.caracteristica)) {
       return { erro:item.nome + ': a pedra só pode ser incrustada em uma arma que ainda não tenha característica.' };
     }
 
-    if (verificarConflito) {
+    /*
+     * O CONFLITO É POR VAGA, não por arma. Uma Pedra ACRESCENTA característica e
+     * uma Gema TROCA o traço: são coisas diferentes, e as duas na mesma arma
+     * convivem. Duas Pedras, ou duas Gemas, é que disputam — e aí quem ganharia
+     * seria a ordem da mochila, que ninguém vê.
+     */
+    const vagaDoAnexo = (anexo) => {
+      if (!anexo) return '';
+      if (anexo.trocaTracoDeAtaque) return 'traco-de-ataque';
+      if (anexo.caracteristica) return 'caracteristica';
+      return '';
+    };
+    const minhaVaga = vagaDoAnexo(passivo.anexoArma);
+    if (verificarConflito && minhaVaga) {
       for (let k = 0; k < lista.length; k++) {
         if (k === indice) continue;
         const outro = lista[k] || {};
@@ -2796,10 +2839,12 @@ function validarVinculoDeSaque_(ficha, lista, indice, valor, verificarConflito) 
         const outroItem = (typeof acharItem_ === 'function') ? acharItem_(outro.id) : null;
         const outroPassivo = outroItem && outroItem.tipo === 'saque'
           ? outroItem.efeitoSaquePassivo : null;
-        if (!outroPassivo || !outroPassivo.anexoArma) continue;
+        if (!outroPassivo || vagaDoAnexo(outroPassivo.anexoArma) !== minhaVaga) continue;
         const outraArma = acharArma_(outro.vinculo);
         if (outraArma && outraArma.id === arma.id) {
-          return { erro:item.nome + ': ' + arma.nome + ' já recebeu uma característica de ' + outroItem.nome + '.' };
+          return { erro:item.nome + ': ' + arma.nome + (minhaVaga === 'traco-de-ataque'
+            ? ' já usa o traço de ' + outroItem.nome + '.'
+            : ' já recebeu uma característica de ' + outroItem.nome + '.') };
         }
       }
     }

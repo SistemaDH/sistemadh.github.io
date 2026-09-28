@@ -105,7 +105,7 @@
    {
     "id": "dano-extra",
     "delta": -2,
-    "texto": "quer somar +1d4 (ou +2) à rolagem de dano de todos os adversários"
+    "texto": "quer somar +1d4 (ou +2) à jogada de dano de todos os adversários"
    },
    {
     "id": "patamar-inferior",

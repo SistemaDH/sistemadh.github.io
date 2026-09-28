@@ -326,7 +326,7 @@
         {
           "nome": "Sobrecarga",
           "tipo": "reação",
-          "texto": "antes de rolar dano do ataque do construto, você pode marcar 1 Estresse para receber um bônus de +10 na rolagem de dano. Então ponha o construto em foco novamente.",
+          "texto": "antes de rolar dano do ataque do construto, você pode marcar 1 Estresse para receber um bônus de +10 na jogada de dano. Então ponha o construto em foco novamente.",
           "custoDeEstresse": 1
         },
         {
@@ -449,7 +449,7 @@
         {
           "nome": "Ceifador",
           "tipo": "reação",
-          "texto": "antes da rolagem de dano do demônio, você pode marcar 1 Estresse para aumentar o dano causado em uma quantidade igual aos PV marcados do demônio.",
+          "texto": "antes da jogada de dano do demônio, você pode marcar 1 Estresse para aumentar o dano causado em uma quantidade igual aos PV marcados do demônio.",
           "custoDeEstresse": 1
         },
         {
@@ -2229,7 +2229,7 @@
         {
           "nome": "Amaldiçoar",
           "tipo": "ação",
-          "texto": "escolha um alvo Distante para ser temporariamente Amaldiçoado. Enquanto o alvo estiver Amaldiçoado, você pode marcar 1 Estresse para forçar as rolagens com Esperança do alvo a serem rolagens com Medo.",
+          "texto": "escolha um alvo Distante para ser temporariamente Amaldiçoado. Enquanto o alvo estiver Amaldiçoado, você pode marcar 1 Estresse para forçar as jogadas com Esperança do alvo a serem jogadas com Medo.",
           "custoDeEstresse": 1
         },
         {
@@ -3524,7 +3524,7 @@
         {
           "nome": "Táticas Aleatórias",
           "tipo": "ação",
-          "texto": "marque 1 Estresse e rola 1d6. A caixa de batalha usa uma das seguintes táticas: 1. Feixe de Mana. A caixa atira um feixe de calor. Faça um ataque contra um alvo Distante. Em caso de sucesso, o alvo sofre 2d10+2 pontos de dano mágico. 2. Jatos de Fogo. A caixa se atira para o alto, girando e soltando jatos de fogo. Faça um ataque contra todos os alvos Próximos. Alvos atingidos sofrem 2d8 pontos de dano físico. 3. Atropelar. A caixa se move de maneira imprevisível. Faça um ataque contra todos os personagens Próximos. Alvos atingidos sofrem 1d6+5 pontos de dano físico e ficam Vulneráveis até que rolem com Coragem. 4. Gás Eletrizado. A caixa dispara um gás prateado que solta raios brilhantes. Todos os alvos Próximos devem passar em uma jogada de reação de Finesse, ou devem marcar 3 Estresse. 5. Impacto Atordoante. A caixa salta e provoca um impacto em suas faces, criando um estrondo sônico. Todos os alvos Muito Próximos devem passar em uma jogada de reação de Forca, ou ficam Vulneráveis até que a caixa seja derrotada. 6. Ganido Psiônico. A caixa libera um enxame de abelhas mecânicas, cujo zumbido afeta as mentes dos mortais. Todos os alvos Próximos devem passar em uma jogada de reação de Presença ou sofrem 2d4+9 pontos de dano mágico direto.",
+          "texto": "marque 1 Estresse e rola 1d6. A caixa de batalha usa uma das seguintes táticas: 1. Feixe de Mana. A caixa atira um feixe de calor. Faça um ataque contra um alvo Distante. Em caso de sucesso, o alvo sofre 2d10+2 pontos de dano mágico. 2. Jatos de Fogo. A caixa se atira para o alto, girando e soltando jatos de fogo. Faça um ataque contra todos os alvos Próximos. Alvos atingidos sofrem 2d8 pontos de dano físico. 3. Atropelar. A caixa se move de maneira imprevisível. Faça um ataque contra todos os personagens Próximos. Alvos atingidos sofrem 1d6+5 pontos de dano físico e ficam Vulneráveis até que rolem com Esperança. 4. Gás Eletrizado. A caixa dispara um gás prateado que solta raios brilhantes. Todos os alvos Próximos devem passar em uma jogada de reação de Finesse, ou devem marcar 3 Estresse. 5. Impacto Atordoante. A caixa salta e provoca um impacto em suas faces, criando um estrondo sônico. Todos os alvos Muito Próximos devem passar em uma jogada de reação de Forca, ou ficam Vulneráveis até que a caixa seja derrotada. 6. Ganido Psiônico. A caixa libera um enxame de abelhas mecânicas, cujo zumbido afeta as mentes dos mortais. Todos os alvos Próximos devem passar em uma jogada de reação de Presença ou sofrem 2d4+9 pontos de dano mágico direto.",
           "custoDeEstresse": 1
         },
         {
@@ -3902,7 +3902,7 @@
         {
           "nome": "Grilhões de Sombra",
           "tipo": "ação",
-          "texto": "gaste 1 Medo e escolha um ponto em alcance Distante. Todos os alvos Próximos desse ponto ficam Restritos por correntes de névoa até que se libertem com sucesso em uma jogada de Força ou Instinto. Um alvo Restrito por essa habilidade deve gastar 1 Ponto de Coragem para fazer essa jogada.",
+          "texto": "gaste 1 Medo e escolha um ponto em alcance Distante. Todos os alvos Próximos desse ponto ficam Restritos por correntes de névoa até que se libertem com sucesso em uma jogada de Força ou Instinto. Um alvo Restrito por essa habilidade deve gastar 1 Esperança para fazer essa jogada.",
           "custoDeMedo": 1
         },
         {
@@ -4371,7 +4371,7 @@
         {
           "nome": "Saraivada Concentrada",
           "tipo": "ação",
-          "texto": "marque 1 Estresse para escolher um ponto em alcance Distante. Até a próxima rolagem com Medo, qualquer criatura que se mova em alcance Próximo do ponto escolhido deve fazer uma jogada de reação de Agilidade. Se falhar, a criatura sofre 2d6+3 pontos de dano físico. Se passar, sofre metade do dano.",
+          "texto": "marque 1 Estresse para escolher um ponto em alcance Distante. Até a próxima jogada com Medo, qualquer criatura que se mova em alcance Próximo do ponto escolhido deve fazer uma jogada de reação de Agilidade. Se falhar, a criatura sofre 2d6+3 pontos de dano físico. Se passar, sofre metade do dano.",
           "custoDeEstresse": 1
         },
         {
@@ -4800,7 +4800,7 @@
       "nomeLivro": "MATILHA DEMONÍACA",
       "tipo": "Horda",
       "patamar": 2,
-      "sufixoDoTipo": "(1/HP)",
+      "sufixoDoTipo": "(1/PV)",
       "dificuldade": 15,
       "limiares": "11/23",
       "pontosDeVida": 6,
@@ -4832,7 +4832,7 @@
         {
           "nome": "Uivo Apavorante",
           "tipo": "ação",
-          "texto": "marque 1 Estresse para fazer com que todos os alvos Muito Próximos percam 1 Ponto de Coragem. Se o alvo não puder perder 1 Ponto de Coragem, ele deve marcar 2 Estresse no lugar.",
+          "texto": "marque 1 Estresse para fazer com que todos os alvos Muito Próximos percam 1 Esperança. Se o alvo não puder perder 1 Esperança, ele deve marcar 2 Estresse no lugar.",
           "custoDeEstresse": 1
         },
         {
@@ -4961,7 +4961,7 @@
         {
           "nome": "Sopro Alucinógeno",
           "tipo": "reação",
-          "texto": "Contagem (ciclo 1d6). Quando o oscilume sofrer dano pela primeira vez, ative a contagem regressiva. Quando ela terminar, o oscilume sopra um gás alucinógeno em todos os alvos Distantes à sua frente. Alvos precisam passar em uma jogada de reação de Instinto ou têm visões terríveis. Alvos cujos medos o oscilume conheça sofrem desvantagem nessa jogada. Alvos que falhem na jogada devem marcar 1 Estresse e perder 1 Ponto de Coragem.",
+          "texto": "Contagem (ciclo 1d6). Quando o oscilume sofrer dano pela primeira vez, ative a contagem regressiva. Quando ela terminar, o oscilume sopra um gás alucinógeno em todos os alvos Distantes à sua frente. Alvos precisam passar em uma jogada de reação de Instinto ou têm visões terríveis. Alvos cujos medos o oscilume conheça sofrem desvantagem nessa jogada. Alvos que falhem na jogada devem marcar 1 Estresse e perder 1 Esperança.",
           "contagem": {
             "valor": null,
             "dado": "1d6",
@@ -5504,7 +5504,7 @@
         {
           "nome": "Concentrar Fogo",
           "tipo": "reação",
-          "texto": "quando outro adversário causar dano a um alvo Distante da torreta, você pode marcar 1 Estresse para somar o ataque padrão da torreta à rolagem de dano.",
+          "texto": "quando outro adversário causar dano a um alvo Distante da torreta, você pode marcar 1 Estresse para somar o ataque padrão da torreta à jogada de dano.",
           "custoDeEstresse": 1
         },
         {
@@ -5736,12 +5736,12 @@
         {
           "nome": "Profundezas do Desespero",
           "tipo": "passiva",
-          "texto": "o demônio causa dano dobrado a personagens com 0 Pontos de Coragem."
+          "texto": "o demônio causa dano dobrado a personagens com 0 Esperanças."
         },
         {
           "nome": "Esforço é Inútil",
           "tipo": "ação",
-          "texto": "gaste 1 Medo para afetar os espíritos de todos os personagens Distantes. Alvos afetados devem substituir seus dados de Coragem por 1d8 até rolar um sucesso com Coragem ou até seu próximo descanso.",
+          "texto": "gaste 1 Medo para afetar os espíritos de todos os personagens Distantes. Alvos afetados devem substituir seu Dado de Esperança por 1d8 até rolar um sucesso com Esperança ou até seu próximo descanso.",
           "custoDeMedo": 1
         },
         {
@@ -5752,7 +5752,7 @@
         {
           "nome": "Amigos São uma Decepção",
           "tipo": "reação",
-          "texto": "quando um personagem falhar com Medo. Você pode marcar 1 Estresse para fazer com que todos os outros personagens Próximos percam 1 Ponto de Coragem.",
+          "texto": "quando um personagem falhar com Medo. Você pode marcar 1 Estresse para fazer com que todos os outros personagens Próximos percam 1 Esperança.",
           "custoDeEstresse": 1
         }
       ],
@@ -5819,7 +5819,7 @@
         {
           "nome": "Rivalidade",
           "tipo": "reação",
-          "texto": "quando uma criatura Próximo sofre dano de outro adversário, você pode marcar 1 Estresse para somar 1d4 à rolagem de dano.",
+          "texto": "quando uma criatura Próximo sofre dano de outro adversário, você pode marcar 1 Estresse para somar 1d4 à jogada de dano.",
           "custoDeEstresse": 1
         }
       ],
@@ -5948,7 +5948,7 @@
         {
           "nome": "Aterrorizante",
           "tipo": "passiva",
-          "texto": "quando o demônio acerta um ataque, todos os personagens Distantes perdem 1 Ponto de Coragem. Receba 1 Medo."
+          "texto": "quando o demônio acerta um ataque, todos os personagens Distantes perdem 1 Esperança. Receba 1 Medo."
         },
         {
           "nome": "Dobro ou Nada",
@@ -6294,7 +6294,7 @@
         {
           "nome": "Deslizamento",
           "tipo": "ação",
-          "texto": "marque 1 Estresse para criar um deslizamento que soterra com escombros a área Próxima em frente ao elemental. Todos os alvos na área devem fazer uma jogada de reação de Agilidade (19). Quem falhar sofre 2d12+5 pontos de dano físico e ficam Vulneráveis fazer uma rolagem com Coragem. Quem passar sofre metade do dano.",
+          "texto": "marque 1 Estresse para criar um deslizamento que soterra com escombros a área Próxima em frente ao elemental. Todos os alvos na área devem fazer uma jogada de reação de Agilidade (19). Quem falhar sofre 2d12+5 pontos de dano físico e ficam Vulneráveis até fazerem uma jogada com Esperança. Quem passar sofre metade do dano.",
           "custoDeEstresse": 1
         },
         {
@@ -6424,7 +6424,7 @@
         {
           "nome": "Fraqueza Mágica",
           "tipo": "reação",
-          "texto": "quando a hidra sofre dano mágico, ela fica Atordoada até a próxima rolagem com Medo. Enquanto estiver Atordoada, ela não pode usar Regeneração, mas fica imune a dano mágico."
+          "texto": "quando a hidra sofre dano mágico, ela fica Atordoada até a próxima jogada com Medo. Enquanto estiver Atordoada, ela não pode usar Regeneração, mas fica imune a dano mágico."
         }
       ],
       "custoDeMedoMaximo": 1,
@@ -6703,7 +6703,7 @@
         {
           "nome": "Sopro Alucinógeno",
           "tipo": "reação",
-          "texto": "Contagem (ciclo 1d6). Quando o oscilume sofrer dano pela primeira vez, ative a contagem regressiva. Quando ela terminar, o oscilume sopra um gás alucinógeno em todos os alvos Distantes à sua frente. Alvos precisam passar em uma jogada de reação de Instinto ou têm visões terríveis. Alvos cujos medos o oscilume conheça sofrem desvantagem nessa jogada. Alvos que falhem na jogada perdem 2 Pontos de Coragem e sofrem 3d8+3 pontos de dano mágico direto.",
+          "texto": "Contagem (ciclo 1d6). Quando o oscilume sofrer dano pela primeira vez, ative a contagem regressiva. Quando ela terminar, o oscilume sopra um gás alucinógeno em todos os alvos Distantes à sua frente. Alvos precisam passar em uma jogada de reação de Instinto ou têm visões terríveis. Alvos cujos medos o oscilume conheça sofrem desvantagem nessa jogada. Alvos que falhem na jogada perdem 2 Esperanças e sofrem 3d8+3 pontos de dano mágico direto.",
           "contagem": {
             "valor": null,
             "dado": "1d6",
@@ -6760,7 +6760,7 @@
         {
           "nome": "Mordida Vampírica",
           "tipo": "ação",
-          "texto": "faça um ataque contra um alvo Corpo a Corpo. Em caso de sucesso, cause 5d4 pontos de dano físico. Um alvo que marque Pontos de Vida por causa deste ataque perde 1 Ponto de Coragem e deve marcar 1 Estresse. O vampiro, então, recupera 1 PV."
+          "texto": "faça um ataque contra um alvo Corpo a Corpo. Em caso de sucesso, cause 5d4 pontos de dano físico. Um alvo que marque Pontos de Vida por causa deste ataque perde 1 Esperança e deve marcar 1 Estresse. O vampiro, então, recupera 1 PV."
         },
         {
           "nome": "Forma de Névoa",
@@ -6901,7 +6901,7 @@
         {
           "nome": "Feixe Decadente",
           "tipo": "ação",
-          "texto": "marque 2 Estresse para fazer com que todos os alvos Distantes façam uma jogada de reação de Forca. Quem falhar sofre 2d20+12 pontos de dano mágico e você sofre 1 Medo. Quem passar sofre metade do dano. Um alvo que marque 2 PV ou mais também deve marcar 2 Estresse e fica Vulnerável até rolar com Coragem.",
+          "texto": "marque 2 Estresse para fazer com que todos os alvos Distantes façam uma jogada de reação de Forca. Quem falhar sofre 2d20+12 pontos de dano mágico e você sofre 1 Medo. Quem passar sofre metade do dano. Um alvo que marque 2 PV ou mais também deve marcar 2 Estresse e fica Vulnerável até rolar com Esperança.",
           "custoDeEstresse": 2
         },
         {
@@ -6992,7 +6992,7 @@
         {
           "nome": "Grilhões da Culpa",
           "tipo": "reação",
-          "texto": "Contagem (Ciclo 2d6). Quando o feiticeiro for posto em foco pela primeira vez, ative a contagem regressiva. Quando a contagem terminar, todos os alvos Distantes ficam Vulneráveis e devem marcar 1 Estresse por terem revivido seus maiores arrependimentos. Um alvo pode se libertar da culpa com sucesso em uma jogada de Presença ou Força. Falhar nessa jogada causa perda de 1 Ponto de Coragem.",
+          "texto": "Contagem (Ciclo 2d6). Quando o feiticeiro for posto em foco pela primeira vez, ative a contagem regressiva. Quando a contagem terminar, todos os alvos Distantes ficam Vulneráveis e devem marcar 1 Estresse por terem revivido seus maiores arrependimentos. Um alvo pode se libertar da culpa com sucesso em uma jogada de Presença ou Força. Falhar nessa jogada causa perda de 1 Esperança.",
           "contagem": {
             "valor": null,
             "dado": "2d6",
@@ -7133,7 +7133,7 @@
         {
           "nome": "Arauto da Ruína",
           "tipo": "reação",
-          "texto": "quando um alvo marcar Pontos de Vida por causa de um ataque do arrasa-reinos, todos os personagens Distantes deste alvo perdem 1 Ponto de Coragem."
+          "texto": "quando um alvo marcar Pontos de Vida por causa de um ataque do arrasa-reinos, todos os personagens Distantes deste alvo perdem 1 Esperança."
         },
         {
           "nome": "Cólera Desmedida",
@@ -7211,7 +7211,7 @@
         {
           "nome": "Golpe Destruidor",
           "tipo": "ação",
-          "texto": "marque 1 Estresse para fazer um ataque padrão contra todos os alvos Muito Próximos. Personagens atingidos perdem uma quantidade de Pontos de Coragem igual ao número de PV marcados pelo ataque.",
+          "texto": "marque 1 Estresse para fazer um ataque padrão contra todos os alvos Muito Próximos. Personagens atingidos perdem uma quantidade de Esperanças igual ao número de PV marcados pelo ataque.",
           "custoDeEstresse": 1
         },
         {
@@ -7223,7 +7223,7 @@
         {
           "nome": "Arauto da Ruína",
           "tipo": "reação",
-          "texto": "quando um alvo marcar Pontos de Vida por causa de um ataque do arrasa-reinos, todos os personagens Distantes deste alvo perdem 1 Ponto de Coragem."
+          "texto": "quando um alvo marcar Pontos de Vida por causa de um ataque do arrasa-reinos, todos os personagens Distantes deste alvo perdem 1 Esperança."
         },
         {
           "nome": "Círculo de Profanação",
@@ -7307,13 +7307,13 @@
         {
           "nome": "Bomba Rasante",
           "tipo": "ação",
-          "texto": "se o dragão estiver em voo, marque 1 Estresse para escolher um ponto em alcance Distante. Mova-o até o ponto escolhido e faça um ataque contra todos os alvos Muito Próximos. Alvos atingidos pelo dragão sofrem 2d10+6 pontos de dano físico, devem marcar 1 Estresse e perdem 1 Ponto de Coragem.",
+          "texto": "se o dragão estiver em voo, marque 1 Estresse para escolher um ponto em alcance Distante. Mova-o até o ponto escolhido e faça um ataque contra todos os alvos Muito Próximos. Alvos atingidos pelo dragão sofrem 2d10+6 pontos de dano físico, devem marcar 1 Estresse e perdem 1 Esperança.",
           "custoDeEstresse": 1
         },
         {
           "nome": "Cauda-avalanche",
           "tipo": "ação",
-          "texto": "marque 1 Estresse para fazer um ataque contra todos os alvos Próximos. Alvos atingidos pelo dragão sofrem 4d6+4 pontos de dano físico, são empurrados para um ponto em alcance Distante e ficam Vulneráveis até suas próxima rolagem com Coragem.",
+          "texto": "marque 1 Estresse para fazer um ataque contra todos os alvos Próximos. Alvos atingidos pelo dragão sofrem 4d6+4 pontos de dano físico, são empurrados para um ponto em alcance Distante e ficam Vulneráveis até sua próxima jogada com Esperança.",
           "custoDeEstresse": 1
         },
         {
@@ -7394,7 +7394,7 @@
         {
           "nome": "Poder Pulverizante",
           "tipo": "ação",
-          "texto": "marque 1 Estresse para fazer um ataque contra um alvo Muito Próximo. Em caso de sucesso, o alvo sofre 4d8+1 pontos de dano físico, perde 1 Ponto de Coragem e é empurrado para um ponto em alcance Próximo. O dragão recupera 1 Estresse.",
+          "texto": "marque 1 Estresse para fazer um ataque contra um alvo Muito Próximo. Em caso de sucesso, o alvo sofre 4d8+1 pontos de dano físico, perde 1 Esperança e é empurrado para um ponto em alcance Próximo. O dragão recupera 1 Estresse.",
           "custoDeEstresse": 1
         },
         {
@@ -7473,7 +7473,7 @@
         {
           "nome": "Reduzir a Cinzas",
           "tipo": "passiva",
-          "texto": "quando um personagem Próximo do dragão falhar em uma jogada, ele perde 1 Ponto de Coragem e você recebe 1 Medo. Se um personagem não puder perder 1 Ponto de Coragem, ele deve marcar 1 PV."
+          "texto": "quando um personagem Próximo do dragão falhar em uma jogada, ele perde 1 Esperança e você recebe 1 Medo. Se um personagem não puder perder 1 Esperança, ele deve marcar 1 PV."
         },
         {
           "nome": "Hecatombe",
@@ -7732,7 +7732,7 @@
         {
           "nome": "Aterrorizante",
           "tipo": "passiva",
-          "texto": "quando o oráculo acerta um ataque, todos os personagens Distantes perdem 1 Ponto de Coragem. Receba 1 Medo."
+          "texto": "quando o oráculo acerta um ataque, todos os personagens Distantes perdem 1 Esperança. Receba 1 Medo."
         },
         {
           "nome": "Fechar Paredes",
@@ -7748,7 +7748,7 @@
         {
           "nome": "Prever Destino",
           "tipo": "ação",
-          "texto": "gaste 1 Medo para conceder a um alvo Distante uma visão de seus pesadelos pessoais. O alvo deve fazer uma jogada de reação de Conhecimento. Se falhar, o alvo perde todos os Pontos de Coragem e sofre 2d20+4 pontos de dano mágico direto. Se passar, sofre metade do dano e perde 1 Ponto de Coragem.",
+          "texto": "gaste 1 Medo para conceder a um alvo Distante uma visão de seus pesadelos pessoais. O alvo deve fazer uma jogada de reação de Conhecimento. Se falhar, o alvo perde todas as suas Esperanças e sofre 2d20+4 pontos de dano mágico direto. Se passar, sofre metade do dano e perde 1 Esperança.",
           "custoDeMedo": 1
         },
         {
@@ -7814,7 +7814,7 @@
         {
           "nome": "Abalar Realidade",
           "tipo": "ação",
-          "texto": "gaste 1 Medo para abalar as bordas da realidade em alcance Distante da abominação. Todos os alvos na área devem passar em uma jogada de reação de Conhecimento, ou ficam Dissociados da realidade até o fim da cena. Quando um alvo Dissociado gasta Coragem ou marca PA, PV ou Estresse, deve gastar ou marcar o dobro de pontos necessários.",
+          "texto": "gaste 1 Medo para abalar as bordas da realidade em alcance Distante da abominação. Todos os alvos na área devem passar em uma jogada de reação de Conhecimento, ou ficam Dissociados da realidade até o fim da cena. Quando um alvo Dissociado gasta Esperança ou marca PA, PV ou Estresse, deve gastar ou marcar o dobro de pontos necessários.",
           "custoDeMedo": 1
         },
         {
@@ -7868,7 +7868,7 @@
         {
           "nome": "Estilhaçar o Âmago",
           "tipo": "passiva",
-          "texto": "um personagem que sofra dano do corruptor perde 1 Ponto de Coragem."
+          "texto": "um personagem que sofra dano do corruptor perde 1 Esperança."
         },
         {
           "nome": "Vomitar Realidade",
@@ -7993,7 +7993,7 @@
         {
           "nome": "Julgamento",
           "tipo": "ação",
-          "texto": "gaste 1 Medo para marcar um alvo como Culpado aos olhos da divindade do serafim até que este seja derrotado. Alvos Culpados não recebem Coragem ao rolar com Coragem. Quando o serafim acerta um ataque padrão contra um alvo Culpado, ele causa dano Severo, em vez do dano padrão. O serafim só pode marcar um alvo por vez.",
+          "texto": "gaste 1 Medo para marcar um alvo como Culpado aos olhos da divindade do serafim até que este seja derrotado. Alvos Culpados não recebem Esperança ao rolar com Esperança. Quando o serafim acerta um ataque padrão contra um alvo Culpado, ele causa dano Severo, em vez do dano padrão. O serafim só pode marcar um alvo por vez.",
           "custoDeMedo": 1
         },
         {
@@ -8051,12 +8051,12 @@
         {
           "nome": "Aterrorizante",
           "tipo": "passiva",
-          "texto": "quando o zumbi acerta um ataque, todos os personagens Distantes perdem 1 Ponto de Coragem. Receba 1 Medo."
+          "texto": "quando o zumbi acerta um ataque, todos os personagens Distantes perdem 1 Esperança. Receba 1 Medo."
         },
         {
           "nome": "Presença Aterradora",
           "tipo": "passiva",
-          "texto": "personagens não pode gastar Coragem para usar habilidades contra o Zumbi."
+          "texto": "personagens não pode gastar Esperança para usar habilidades contra o Zumbi."
         },
         {
           "nome": "Golpe Perfeito",
@@ -8208,7 +8208,7 @@
         {
           "nome": "Arrastar e Sacudir",
           "tipo": "ação",
-          "texto": "Gaste um Medo para que o Ahuizotl agarre um alvo próximo com sua cauda, ​​puxe o alvo para o alcance Corpo a Corpo e Contenha-o temporariamente. O Ahuizotl tem vantagem em ataques contra alvos Restringidos desta forma.",
+          "texto": "Gaste um Medo para que o Ahuizotl agarre um alvo próximo com sua cauda, ​​puxe o alvo para o alcance Corpo a Corpo e Contenha-o temporariamente. O Ahuizotl tem vantagem em ataques contra alvos Restritos desta forma.",
           "nomeIngles": "Drag and Bag",
           "textoIngles": "Spend a Fear to have the Ahuizotl grab a target within Close range with its tail, pull the target into Melee range, and temporarily Restrain them. The Ahuizotl has advantage on attacks against targets Restrained in this way.",
           "custoDeMedo": 1
@@ -8393,7 +8393,7 @@
         {
           "nome": "Ataque em grupo",
           "tipo": "ação",
-          "texto": "Gaste um medo para escolher um alvo e destaque todos os rufiões dentro do alcance deles. Os Rufiões se movem para o alcance Corpo a Corpo do alvo e fazem uma jogada de ataque compartilhada. Se obtiverem sucesso, eles causam 1d8 de dano físico cada. Combine esse dano.",
+          "texto": "Gaste 1 Medo para escolher um alvo e destaque todos os rufiões dentro do alcance deles. Os Rufiões se movem para o alcance Corpo a Corpo do alvo e fazem uma jogada de ataque compartilhada. Se obtiverem sucesso, eles causam 1d8 de dano físico cada. Combine esse dano.",
           "nomeIngles": "Group Attack",
           "textoIngles": "Spend a Fear to choose a target and spotlight all Ruffians within Close range of them. The Ruffians move into Melee range of the target and make one shared attack roll. On a success, they deal 1d8 physical damage each. Combine this damage.",
           "custoDeMedo": 1
@@ -8564,7 +8564,7 @@
         {
           "nome": "Veneno da Trama Negra",
           "tipo": "reação",
-          "texto": "Quando a Rainha obtém sucesso em um ataque padrão, você pode gastar um Medo para tornar o alvo Vulnerável e Restringido até que ele tenha sucesso em um Jogada de Força (12) ou descanse.",
+          "texto": "Quando a Rainha obtém sucesso em um ataque padrão, você pode gastar um Medo para tornar o alvo Vulnerável e Restrito até que ele tenha sucesso em um Jogada de Força (12) ou descanse.",
           "nomeIngles": "Darkfang Envenomation",
           "textoIngles": "When the Queen succeeds on a standard attack, you can spend a Fear to make the target Vulnerable and Restrained until they succeed on a Strength Roll (12) or take a rest.",
           "custoDeMedo": 1
@@ -8615,7 +8615,7 @@
         {
           "nome": "Envolva-se em Seda Sombria",
           "tipo": "ação",
-          "texto": "Marque um Estresse para fazer um ataque contra um alvo dentro do alcance Corpo a Corpo. Em caso de sucesso, o alvo fica Vulnerável e Restringido até obter sucesso em um Jogada de Força (10).",
+          "texto": "Marque um Estresse para fazer um ataque contra um alvo dentro do alcance Corpo a Corpo. Em caso de sucesso, o alvo fica Vulnerável e Restrito até obter sucesso em um Jogada de Força (10).",
           "nomeIngles": "Wrap in Shadow-Silk",
           "textoIngles": "Mark a Stress to make an attack against a target within Melee range. On a success, the target is Vulnerable and Restrained until they succeed on a Strength Roll (10).",
           "custoDeEstresse": 1
@@ -9074,7 +9074,7 @@
         {
           "nome": "Suplex Espectral",
           "tipo": "ação",
-          "texto": "Gaste um Medo para fazer com que a Máscara Muerte suplexa um PJ Restringido, causando 1d10+6 de dano mágico a eles.",
+          "texto": "Gaste um Medo para fazer com que a Máscara Muerte suplexa um PJ Restrito, causando 1d10+6 de dano mágico a eles.",
           "nomeIngles": "Spectral Suplex",
           "textoIngles": "Spend a Fear to have the Masque Muerte suplex a Restrained PC, dealing 1d10+6 magic damage to them.",
           "custoDeMedo": 1
@@ -9088,7 +9088,7 @@
           "custoDeMedo": 1
         },
         {
-          "nome": "Jogada em Dupla",
+          "nome": "Jogada em Equipe",
           "tipo": "reação",
           "texto": "Quando a Máscara Muerte causa dano a um PJ, você pode gastar um Medo para que um lutador espectral apareça e imobilize o alvo até que ele escape com um jogada de Força bem-sucedido. Enquanto estiver imobilizado, o alvo fica contido e sofre 1d12 de dano mágico extra dos ataques da Máscara Muerte.",
           "nomeIngles": "Tag Team",
@@ -9230,7 +9230,8 @@
           "nome": "Troll da Montanha Enfurecido",
           "texto": "O Troll perde seus recursos “Armadura Roubada” e “Golpe do Mangual” e ganha um bônus de +1 em sua Dificuldade. Além disso, eles ganham o recurso “Double Swipe” e substituem “Skull Flail” pelo seguinte ataque padrão: Claw Swipe: Very Close | 1d10+3 phy",
           "nomeIngles": "Enraged Mountain Troll",
-          "textoIngles": "The Troll loses their “Stolen Armor” and “Flail Swipe” features, then gains a +1 bonus to their Difficulty. Additionally, they gain the “Double Swipe” feature and replace “Skull Flail” with the following standard attack: Claw Swipe: Very Close | 1d10+3 phy"
+          "textoIngles": "The Troll loses their “Stolen Armor” and “Flail Swipe” features, then gains a +1 bonus to their Difficulty. Additionally, they gain the “Double Swipe” feature and replace “Skull Flail” with the following standard attack: Claw Swipe: Very Close | 1d10+3 phy",
+          "tipo": "evolução"
         },
         {
           "nome": "Golpe Duplo",
@@ -9288,7 +9289,7 @@
         {
           "nome": "Agarre",
           "tipo": "ação",
-          "texto": "Faça uma jogada de ataque contra um alvo dentro do alcance. Com um sucesso, o alvo fica Restringido e Vulnerável até escapar com um jogada de Força bem-sucedido.",
+          "texto": "Faça uma jogada de ataque contra um alvo dentro do alcance. Com um sucesso, o alvo fica Restrito e Vulnerável até escapar com um jogada de Força bem-sucedido.",
           "nomeIngles": "Grapple",
           "textoIngles": "Make an attack roll against a target within Close range. On a success, the target becomes Restrained and Vulnerable until they escape with a successful Strength Roll."
         },
@@ -9413,7 +9414,7 @@
         {
           "nome": "Aura de Medo",
           "tipo": "passiva",
-          "texto": "Um PJ que ficar sob os holofotes dentro do alcance Muito Próximo do Fantasma deve ter sucesso em um Jogada de Reação de Presença (10) ou marcar um Estresse.",
+          "texto": "Um PJ que entrar em foco dentro do alcance Muito Próximo do Fantasma deve ter sucesso em um Jogada de Reação de Presença (10) ou marcar um Estresse.",
           "nomeIngles": "Fear Aura",
           "textoIngles": "A PC who takes the spotlight within Very Close range of the Phantom must succeed on a Presence Reaction Roll (10) or mark a Stress."
         },
@@ -9664,7 +9665,7 @@
         {
           "nome": "Quebra-costas",
           "tipo": "ação",
-          "texto": "Marque um Estresse para fazer um ataque contra um alvo dentro do alcance Corpo a Corpo. Se obtiver sucesso, cause 3d4+10 de dano físico. Um alvo que marque PV com este ataque fica Restringido até liberar um PV.",
+          "texto": "Marque um Estresse para fazer um ataque contra um alvo dentro do alcance Corpo a Corpo. Se obtiver sucesso, cause 3d4+10 de dano físico. Um alvo que marque PV com este ataque fica Restrito até liberar um PV.",
           "nomeIngles": "Backbreaker",
           "textoIngles": "Mark a Stress to make an attack against a target within Melee range. On a success, deal 3d4+10 physical damage. A target who marks HP from this attack is Restrained until they clear a HP.",
           "custoDeEstresse": 1
@@ -10277,7 +10278,7 @@
         {
           "nome": "Bola de Cera",
           "tipo": "ação",
-          "texto": "Marque um Estresse para que a Criação jogue uma bola de cera em um alvo dentro do alcance Longe. Faça um ataque contra o alvo. Se obtiver sucesso, o alvo sofre 1d12+2 de dano físico e fica Restringido até obter sucesso em um Jogada de Força (15).",
+          "texto": "Marque um Estresse para que a Criação jogue uma bola de cera em um alvo dentro do alcance Longe. Faça um ataque contra o alvo. Se obtiver sucesso, o alvo sofre 1d12+2 de dano físico e fica Restrito até obter sucesso em um Jogada de Força (15).",
           "nomeIngles": "Wax Ball",
           "textoIngles": "Mark a Stress to have the Creation throw a ball of wax at a target within Far range. Make an attack against the target. On a success, the target takes 1d12+2 physical damage and becomes Restrained until they succeed on a Strength Roll (15).",
           "custoDeEstresse": 1
@@ -10292,7 +10293,7 @@
         {
           "nome": "Agarrão Sufocante",
           "tipo": "reação",
-          "texto": "Quando a Criação faz um ataque padrão bem sucedido contra um alvo dentro do alcance Corpo a Corpo, você pode gastar um Medo para Prender o alvo dentro do corpo de cera da Criação. Enquanto Preso, o alvo fica Restringido e deve marcar um Estresse e se mover com a Criação cada vez que for destacado. Uma criatura Presa é libertada quando a Criação sofre dano Maior ou maior.",
+          "texto": "Quando a Criação faz um ataque padrão bem sucedido contra um alvo dentro do alcance Corpo a Corpo, você pode gastar um Medo para Prender o alvo dentro do corpo de cera da Criação. Enquanto Preso, o alvo fica Restrito e deve marcar um Estresse e se mover com a Criação cada vez que for destacado. Uma criatura Presa é libertada quando a Criação sofre dano Maior ou maior.",
           "nomeIngles": "Smothering Grapple",
           "textoIngles": "When the Creation makes a successful standard attack against a target within Melee range, you can spend a Fear to Trap the target inside the Creation’s wax body. While Trapped, the target is Restrained and must mark a Stress and move with the Creation each time it’s spotlighted. A Trapped creature is freed when the Creation takes Major or greater damage.",
           "custoDeMedo": 1
@@ -10426,7 +10427,7 @@
         {
           "nome": "Onda de Falha",
           "tipo": "ação",
-          "texto": "Gaste um Medo e escolha até três alvos dentro do alcance. Cada alvo deve ter sucesso em um Jogada de Reação de Instinto ou perderá a sincronia da realidade e terá desvantagem em Jogadas de Instinto até que use um movimento de inatividade para fundamentar sua psique no agora.",
+          "texto": "Gaste um Medo e escolha até três alvos dentro do alcance. Cada alvo deve ter sucesso em um Jogada de Reação de Instinto ou perderá a sincronia da realidade e terá desvantagem em Jogadas de Instinto até que use um movimento de descanso para fundamentar sua psique no agora.",
           "nomeIngles": "Glitch Wave",
           "textoIngles": "Spend a Fear and choose up to three targets within Close range. Each target must succeed on a Instinct Reaction Roll or become desynced from reality and have disadvantage on Instinct Rolls until they use a downtime move to ground their psyches in the now.",
           "custoDeMedo": 1
@@ -10434,7 +10435,7 @@
         {
           "nome": "Corrosão Temporal",
           "tipo": "reação",
-          "texto": "Quando o Yufo obtém sucesso em um ataque padrão, você pode marcar um Estresse para que o Yufo excrete um ácido entrópico através de sua pele, dando ao alvo uma penalidade de -2 em seus limites de dano até que ele use um movimento de inatividade para reparar sua armadura.",
+          "texto": "Quando o Yufo obtém sucesso em um ataque padrão, você pode marcar um Estresse para que o Yufo excrete um ácido entrópico através de sua pele, dando ao alvo uma penalidade de -2 em seus limiares de dano até que ele use um movimento de descanso para reparar sua armadura.",
           "nomeIngles": "Temporal Corrosion",
           "textoIngles": "When the Yufo succeeds on a standard attack, you can mark a Stress to have the Yufo excrete an entropic acid through its skin, giving the target a −2 penalty to their damage thresholds until they use a downtime move to repair their armor."
         }
@@ -10496,14 +10497,14 @@
         {
           "nome": "Aterrorizante",
           "tipo": "passiva",
-          "texto": "Quando a Banshee realiza um ataque bem-sucedido, todos os PJs dentro da distância Próxima perdem uma Esperança, e você ganha um Medo.",
+          "texto": "Quando a Banshee realiza um ataque bem-sucedido, todos os PJs em alcance Próximo perdem uma Esperança, e você ganha um Medo.",
           "nomeIngles": "Terrifying",
           "textoIngles": "When the Banshee makes a successful attack, all PCs within Close range lose a Hope, and you gain a Fear."
         },
         {
           "nome": "Tática de Intimidação",
           "tipo": "ação",
-          "texto": "Até três vezes por cena, gaste um Medo para fazer a Banshee se teleportar até o alcance Muito Longo e assustar um PJ dentro do alcance Corpo a Corpo. O PJ marca 1d4 de Estresse. Se isso fizer com que ele marque PV, ele também perde uma Esperança.",
+          "texto": "Até três vezes por cena, gaste um Medo para fazer a Banshee se teleportar até o alcance Muito Distante e assustar um PJ dentro do alcance Corpo a Corpo. O PJ marca 1d4 de Estresse. Se isso fizer com que ele marque PV, ele também perde uma Esperança.",
           "nomeIngles": "Scare Tactic",
           "textoIngles": "Up to three times per scene, spend a Fear to have the Banshee teleport up to Very Far range and scare a PC within Melee range. The PC marks 1d4 Stress. If this causes them to mark HP, they also lose a Hope.",
           "custoDeMedo": 1
@@ -10511,7 +10512,7 @@
         {
           "nome": "Lamento do Desespero",
           "tipo": "ação",
-          "texto": "Marque um Estresse para fazer a Banshee soltar um grito lamentoso de dor e angústia. Cada PJ dentro do alcance Próximo deve fazer uma Rolagem de Reação de Presença. Alvos que tiverem sucesso recebem 1d12+1 de dano mágico. Alvos que falharem recebem dano dobrado e são empurrados para o alcance Próximo.",
+          "texto": "Marque um Estresse para fazer a Banshee soltar um grito lamentoso de dor e angústia. Cada PJ dentro do alcance Próximo deve fazer uma Jogada de Reação de Presença. Alvos que tiverem sucesso recebem 1d12+1 de dano mágico. Alvos que falharem recebem dano dobrado e são empurrados para o alcance Próximo.",
           "nomeIngles": "Wail of Despair",
           "textoIngles": "Mark a Stress to have the Banshee unleash a mournful scream of pain and anguish. Each PC within Close range must make a Presence Reaction Roll. Targets who succeed take 1d12+1 magic damage. Targets who fail take double damage and are knocked back to Close range.",
           "custoDeEstresse": 1
@@ -10566,7 +10567,7 @@
         {
           "nome": "Petrificar",
           "tipo": "ação",
-          "texto": "Gaste um Medo para forçar um PJ dentro do alcance Longo a fazer uma Rolagem de Reação Instintiva. Em caso de sucesso, o alvo marca um Estresse. Em caso de falha, o alvo se torna Rígido. Se o alvo já estiver Rígido, ele se torna Petrificado. Enquanto estiver Rígido, o PJ deve marcar um Estresse cada vez que agir até descansar ou o Basilisco ser derrotado. Enquanto Petrificado, o PJ não pode agir. A condição de Petrificado só pode ser removida aplicando saliva de Basilisco no alvo.",
+          "texto": "Gaste um Medo para forçar um PJ dentro do alcance Distante a fazer uma Jogada de Reação de Instinto. Em caso de sucesso, o alvo marca um Estresse. Em caso de falha, o alvo se torna Rígido. Se o alvo já estiver Rígido, ele se torna Petrificado. Enquanto estiver Rígido, o PJ deve marcar um Estresse cada vez que agir até descansar ou o Basilisco ser derrotado. Enquanto Petrificado, o PJ não pode agir. A condição de Petrificado só pode ser removida aplicando saliva de Basilisco no alvo.",
           "nomeIngles": "Petrify",
           "textoIngles": "Spend a Fear to force a PC within Far range to make an Instinct Reaction Roll. On a success, the target marks a Stress. On a failure, the target becomes Stiff. If the target is already Stiff, they become Petrified. While Stiff, the PC must mark a Stress each time they act until they take a rest or the Basilisk is defeated. While Petrified, the PC can’t act. The Petrified condition can be cleared only by applying Basilisk saliva to the target.",
           "custoDeMedo": 1
@@ -10574,7 +10575,7 @@
         {
           "nome": "CRONCH!",
           "tipo": "ação",
-          "texto": "Marque um Estresse para fazer o Basilisco morder um PJ Petrificado dentro do alcance de Combate Corpo a Corpo. O alvo deve fazer um movimento de morte.",
+          "texto": "Marque um Estresse para fazer o Basilisco morder um PJ Petrificado dentro do alcance Corpo a Corpo Corpo a Corpo. O alvo deve fazer um movimento de morte.",
           "nomeIngles": "CRONCH!",
           "textoIngles": "Mark a Stress to have the Basilisk chomp down on a Petrified PC within Melee range. The target must make a death move.",
           "custoDeEstresse": 1
@@ -10754,14 +10755,14 @@
         {
           "nome": "Manobra de Flanco",
           "tipo": "passiva",
-          "texto": "Quando o Guardião realiza um ataque normal contra um alvo dentro do alcance Corpo a Corpo de um ou mais aliados do Guardião, o Guardião ganha um bônus de +2 na rolagem de ataque.",
+          "texto": "Quando o Guardião realiza um ataque normal contra um alvo dentro do alcance Corpo a Corpo de um ou mais aliados do Guardião, o Guardião ganha um bônus de +2 na jogada de ataque.",
           "nomeIngles": "Flanking Maneuver",
           "textoIngles": "When the Warden makes a standard attack against a target within Melee range of one or more of the Warden’s allies, the Warden gains a +2 bonus to the attack roll."
         },
         {
           "nome": "Olho do Sábio",
           "tipo": "ação",
-          "texto": "Marque um Estresse para realizar um ataque normal. O Guardião tem vantagem na rolagem de ataque e obtém sucesso crítico em uma rolagem de 19–20.",
+          "texto": "Marque um Estresse para realizar um ataque normal. O Guardião tem vantagem na jogada de ataque e obtém sucesso crítico em uma jogada de 19–20.",
           "nomeIngles": "Eye of the Sage",
           "textoIngles": "Mark a Stress to make a standard attack. The Warden has advantage on the attack roll and critically succeeds on a roll of 19–20.",
           "custoDeEstresse": 1
@@ -10769,7 +10770,7 @@
         {
           "nome": "Pisoteio",
           "tipo": "ação",
-          "texto": "Gaste um Medo para fazer o Guardião galopar até Alcance Longo em linha reta. Cada alvo em seu caminho deve fazer uma Jogada de Reação de Agilidade. Alvos que obtiverem sucesso recebem 1d6+2 de dano físico. Alvos que falharem recebem dano em dobro e devem marcar um Estresse.",
+          "texto": "Gaste um Medo para fazer o Guardião galopar até alcance Distante em linha reta. Cada alvo em seu caminho deve fazer uma Jogada de Reação de Agilidade. Alvos que obtiverem sucesso recebem 1d6+2 de dano físico. Alvos que falharem recebem dano em dobro e devem marcar um Estresse.",
           "nomeIngles": "Trample",
           "textoIngles": "Spend a Fear to have the Warden gallop up to Far range in a straight line. Each target in their path must make an Agility Reaction Roll. Targets who succeed take 1d6+2 physical damage. Targets who fail take double damage and must mark a Stress.",
           "custoDeMedo": 1
@@ -10831,7 +10832,7 @@
         {
           "nome": "Rápido",
           "tipo": "passiva",
-          "texto": "A Cabana pode se mover até o alcance Longo quando estiver iluminada por holofote.",
+          "texto": "A Cabana pode se mover até o alcance Distante quando estiver em foco.",
           "nomeIngles": "Fast",
           "textoIngles": "The Hut can move up to Far range when spotlighted."
         },
@@ -10846,7 +10847,7 @@
         {
           "nome": "Prender",
           "tipo": "reação",
-          "texto": "Quando a Cabana realiza um ataque padrão bem-sucedido, você pode marcar um Estresse para temporariamente Restringir o alvo. A Cabana arrasta o alvo Restringido quando se move.",
+          "texto": "Quando a Cabana realiza um ataque padrão bem-sucedido, você pode marcar um Estresse para temporariamente Restringir o alvo. A Cabana arrasta o alvo Restrito quando se move.",
           "nomeIngles": "Pin",
           "textoIngles": "When the Hut makes a successful standard attack, you can mark a Stress to temporarily Restrain the target. The Hut drags the Restrained target when it moves."
         }
@@ -10897,7 +10898,7 @@
         {
           "nome": "Devorador de Armadura",
           "tipo": "passiva",
-          "texto": "Quando o Pangolati realiza um ataque bem-sucedido contra um PJ, esse PJ deve marcar um Slot de Armadura adicional para reduzir a gravidade do dano.",
+          "texto": "Quando o Pangolati realiza um ataque bem-sucedido contra um PJ, esse PJ deve marcar um Ponto de Armadura adicional para reduzir a gravidade do dano.",
           "nomeIngles": "Armor Eater",
           "textoIngles": "When the Pangolati makes a successful attack against a PC, that PC must mark an additional Armor Slot to reduce the severity of the damage."
         },
@@ -10912,7 +10913,7 @@
         {
           "nome": "Lançamento de Lâmina",
           "tipo": "ação",
-          "texto": "Marque um Estresse para fazer o Pangolati mover a cauda e lançar uma placa de armadura afiada como uma navalha. Faça um ataque contra um alvo dentro do alcance Longo. Em caso de sucesso, o ataque causa 2d6+10 de dano físico.",
+          "texto": "Marque um Estresse para fazer o Pangolati mover a cauda e lançar uma placa de armadura afiada como uma navalha. Faça um ataque contra um alvo dentro do alcance Distante. Em caso de sucesso, o ataque causa 2d6+10 de dano físico.",
           "nomeIngles": "Blade Fling",
           "textoIngles": "Mark a Stress to have the Pangolati flick its tail and fling a razor-edged armor plate. Make an attack against a target within Far range. On a success, the attack deals 2d6+10 physical damage.",
           "custoDeEstresse": 1
@@ -10974,7 +10975,7 @@
         {
           "nome": "Besta do Piscar",
           "tipo": "passiva",
-          "texto": "Quando o combate começa, coloque um duplicado a uma distância próxima do Doppelhound. O Doppelhound ocupa tanto seu próprio lugar quanto o do seu duplicado. O duplicado pode se mover quando o Doppelhound está iluminado, e o Doppelhound pode atacar inimigos como se estivesse no lugar do seu duplicado. Quando o Doppelhound ou o duplicado é atacado, o atacante lança um d6. Em um resultado par, ele atinge o Doppelhound. Em um resultado ímpar, ele atinge o duplicado, e o ataque falha. Se um ataque tiver sucesso contra o Doppelhound, o duplicado é dissipado até que você gaste um Medo para conjurá-lo novamente.",
+          "texto": "Quando o combate começa, coloque um duplicado em alcance Próximo do Doppelhound. O Doppelhound ocupa tanto seu próprio lugar quanto o do seu duplicado. O duplicado pode se mover quando o Doppelhound está em foco, e o Doppelhound pode atacar inimigos como se estivesse no lugar do seu duplicado. Quando o Doppelhound ou o duplicado é atacado, o atacante lança um d6. Em um resultado par, ele atinge o Doppelhound. Em um resultado ímpar, ele atinge o duplicado, e o ataque falha. Se um ataque tiver sucesso contra o Doppelhound, o duplicado é dissipado até que você gaste um Medo para conjurá-lo novamente.",
           "nomeIngles": "Blink Beast",
           "textoIngles": "When combat begins, place a duplicate within Close range of the Doppelhound. The Doppelhound occupies both its place and its duplicate’s. The duplicate can move when the Doppelhound is spotlighted, and the Doppelhound can target enemies with attacks as if it were in its duplicate’s place. When the Doppelhound or duplicate is attacked, the attacker rolls a d6. On an even result, they target the Doppelhound. On an odd result, they target the duplicate, and the attack fails. If an attack succeeds against the Doppelhound, the duplicate is dispelled until you spend a Fear to conjure it again.",
           "custoDeMedo": 1
@@ -11044,7 +11045,7 @@
         {
           "nome": "Ataque Saltitante",
           "tipo": "ação",
-          "texto": "Marque um Estresse para que o Cavaleiro salte para a distância de Combate de um alvo dentro do alcance Longo e faça um ataque padrão contra ele. Em caso de sucesso, o ataque causa 1d12 de dano extra, e o alvo deve marcar um Slot de Armadura sem receber seus benefícios (eles ainda podem usar armadura para reduzir o dano).",
+          "texto": "Marque um Estresse para que o Cavaleiro salte para a alcance Corpo a Corpo de um alvo dentro do alcance Distante e faça um ataque padrão contra ele. Em caso de sucesso, o ataque causa 1d12 de dano extra, e o alvo deve marcar um Ponto de Armadura sem receber seus benefícios (eles ainda podem usar armadura para reduzir o dano).",
           "nomeIngles": "Leaping Strike",
           "textoIngles": "Mark a Stress to have the Knight leap into Melee range of a target within Far range and make a standard attack against them. On a success, the attack deals an extra 1d12 damage, and the target must mark an Armor Slot without receiving its benefits (they can still use armor to reduce the damage).",
           "custoDeEstresse": 1
@@ -11105,7 +11106,7 @@
         {
           "nome": "Pisotear",
           "tipo": "ação",
-          "texto": "Marque um Estresse para que o Elefante avance até Alcance Longo em linha reta. Cada alvo em seu caminho deve ter sucesso em um Jogada de Reação de Agilidade ou receber 2d10+3 de dano físico.",
+          "texto": "Marque um Estresse para que o Elefante avance até alcance Distante em linha reta. Cada alvo em seu caminho deve ter sucesso em um Jogada de Reação de Agilidade ou receber 2d10+3 de dano físico.",
           "nomeIngles": "Trample",
           "textoIngles": "Mark a Stress to have the Elephant charge up to Far range in a straight line. Each target in its path must succeed on an Agility Reaction Roll or take 2d10+3 physical damage.",
           "custoDeEstresse": 1
@@ -11180,7 +11181,7 @@
         {
           "nome": "Uivo Estridente",
           "tipo": "ação",
-          "texto": "Marque um Estresse para forçar cada PJ dentro do alcance Longo da Fera Gato a fazer uma Rolagem de Reação de Presença. Alvos que falharem ficam Atordoados até que rolem com Esperança. Quando a Fera Gato realiza um ataque bem-sucedido contra um PJ Atordoado, role o dano duas vezes e use o melhor resultado, então remova a condição Atordoado do alvo.",
+          "texto": "Marque um Estresse para forçar cada PJ dentro do alcance Distante da Fera Gato a fazer uma Jogada de Reação de Presença. Alvos que falharem ficam Atordoados até que rolem com Esperança. Quando a Fera Gato realiza um ataque bem-sucedido contra um PJ Atordoado, role o dano duas vezes e use o melhor resultado, então remova a condição Atordoado do alvo.",
           "nomeIngles": "Screeching Caterwaul",
           "textoIngles": "Mark a Stress to force each PC within Far range of the Cat Beast to make a Presence Reaction Roll. Targets who fail become Rattled until they roll with Hope. When the Cat Beast makes a successful attack against a Rattled PC, roll damage twice and take the better result, then clear the Rattled condition from the target.",
           "custoDeEstresse": 1
@@ -11396,7 +11397,7 @@
         {
           "nome": "Revigorar",
           "tipo": "ação",
-          "texto": "Marque um Estresse para escolher até três aliados dentro do alcance Longo. Cada um ganha vantagem na sua próxima jogada de ataque.",
+          "texto": "Marque um Estresse para escolher até três aliados dentro do alcance Distante. Cada um ganha vantagem na sua próxima jogada de ataque.",
           "nomeIngles": "Invigorate",
           "textoIngles": "Mark a Stress to choose up to three allies within Far range. Each one gains advantage on their next attack roll.",
           "custoDeEstresse": 1
@@ -11404,7 +11405,7 @@
         {
           "nome": "Último Aperto",
           "tipo": "ação",
-          "texto": "Gaste um Medo para escolher um PJ dentro do alcance Longo. Mãos esqueléticas irrompem do chão aos pés do PJ e o Prendem até que o PJ se liberte com uma jogada de Força bem-sucedida. Quando um alvo Preso desta forma gasta Esperança, você ganha um Medo.",
+          "texto": "Gaste um Medo para escolher um PJ dentro do alcance Distante. Mãos esqueléticas irrompem do chão aos pés do PJ e o Prendem até que o PJ se liberte com uma jogada de Força bem-sucedida. Quando um alvo Preso desta forma gasta Esperança, você ganha um Medo.",
           "nomeIngles": "Last Grasp",
           "textoIngles": "Spend a Fear to choose a PC within Far range. Skeletal hands burst out of the ground at the PC’s feet and Restrain them until the PC breaks free with a successful Strength Roll. When a target Restrained in this way spends Hope, you gain a Fear.",
           "custoDeMedo": 1
@@ -11535,7 +11536,7 @@
         {
           "nome": "Ataque em Grupo",
           "tipo": "ação",
-          "texto": "Gaste um Medo para escolher um alvo e destacar todos os Pedreiros Sepultados dentro do alcance Curto dele. Esses Lacaios se movem para o alcance de Combate do alvo e fazem uma rolagem de ataque compartilhada. Em caso de sucesso, causam 5 de dano físico cada. Combine esse dano.",
+          "texto": "Gaste um Medo para escolher um alvo e destacar todos os Pedreiros Sepultados dentro do alcance Curto dele. Esses Lacaios se movem para o alcance Corpo a Corpo do alvo e fazem uma jogada de ataque compartilhada. Em caso de sucesso, causam 5 de dano físico cada. Combine esse dano.",
           "nomeIngles": "Group Attack",
           "textoIngles": "Spend a Fear to choose a target and spotlight all Entombed Stonemasons within Close range of them. Those Minions move into Melee range of the target and make one shared attack roll. On a success, they deal 5 physical damage each. Combine this damage.",
           "custoDeMedo": 1
@@ -11730,7 +11731,7 @@
         {
           "nome": "Ataque em Grupo",
           "tipo": "ação",
-          "texto": "Gaste um Medo para escolher um alvo e destacar todos os Esporulinos Fungispunj dentro do alcance Próximo deles. Esses Lacaios se movem para o alcance de Combate Corpo a Corpo do alvo e fazem uma rolagem de ataque compartilhada. Em caso de sucesso, eles causam 4 de dano mágico cada um. Combine esse dano.",
+          "texto": "Gaste um Medo para escolher um alvo e destacar todos os Esporulinos Fungispunj dentro do alcance Próximo deles. Esses Lacaios se movem para o alcance Corpo a Corpo Corpo a Corpo do alvo e fazem uma jogada de ataque compartilhada. Em caso de sucesso, eles causam 4 de dano mágico cada um. Combine esse dano.",
           "nomeIngles": "Group Attack",
           "textoIngles": "Spend a Fear to choose a target and spotlight all Fungispunj Sporelings within Close range of them. Those Minions move into Melee range of the target and make one shared attack roll. On a success, they deal 4 magic damage each. Combine this damage.",
           "custoDeMedo": 1
@@ -11799,7 +11800,7 @@
         {
           "nome": "Reanimador",
           "tipo": "ação",
-          "texto": "Gaste um Medo para fazer o Sporophore pulverizar um cadáver a uma distância Muito Próxima com uma nuvem de esporos psíquicos. O cadáver limpa todo o PV e Estresse, e então se reanima sob o controle psíquico do Sporophore. Quando o Sporophore está em destaque, você também pode colocar em destaque todos os cadáveres que ele controla.",
+          "texto": "Gaste um Medo para fazer o Sporophore pulverizar um cadáver em alcance Muito Próximo com uma nuvem de esporos psíquicos. O cadáver limpa todo o PV e Estresse, e então se reanima sob o controle psíquico do Sporophore. Quando o Sporophore está em foco, você também pode destacar todos os cadáveres que ele controla.",
           "nomeIngles": "Reanimator",
           "textoIngles": "Spend a Fear to have the Sporophore spray a corpse within Very Close range with a cloud of psychic spores. The corpse clears all HP and Stress, then reanimates under the psychic control of the Sporophore. When the Sporophore is spotlighted, you can also spotlight all corpses it controls.",
           "custoDeMedo": 1
@@ -11807,7 +11808,7 @@
         {
           "nome": "Colônia",
           "tipo": "ação",
-          "texto": "Marque qualquer quantidade de Estresse para que o Sporophore convoque um número igual de Fungispunj Esporulantes a uma distância Próxima.",
+          "texto": "Marque qualquer quantidade de Estresse para que o Sporophore convoque um número igual de Fungispunj Esporulantes em alcance Próximo.",
           "nomeIngles": "Colony",
           "textoIngles": "Mark any number of Stress to have the Sporophore summon an equal number of Fungispunj Sporelings within Close range."
         },
@@ -11873,14 +11874,14 @@
         {
           "nome": "Golpe em Mergulho",
           "tipo": "ação",
-          "texto": "Escolha um ponto dentro do alcance Longo. A Gárgula se move para esse ponto e faz um ataque padrão contra um alvo ao longo de seu caminho.",
+          "texto": "Escolha um ponto dentro do alcance Distante. A Gárgula se move para esse ponto e faz um ataque padrão contra um alvo ao longo de seu caminho.",
           "nomeIngles": "Swooping Strike",
           "textoIngles": "Choose a point within Far range. The Gargoyle moves to that point and makes a standard attack against one target along its path."
         },
         {
           "nome": "Golpe Petrificante",
           "tipo": "reação",
-          "texto": "Quando a Gárgula causa dano, o alvo deve ter sucesso em uma Rolagem de Reação de Força ou se tornar Vulnerável. Se o alvo já estiver Vulnerável, ele se torna Imobilizado. Se o alvo já estiver Vulnerável e Imobilizado, ele deve fazer um movimento de morte. O personagem pode gastar uma Esperança por condição para removê-la.",
+          "texto": "Quando a Gárgula causa dano, o alvo deve ter sucesso em uma Jogada de Reação de Força ou se tornar Vulnerável. Se o alvo já estiver Vulnerável, ele se torna Imobilizado. Se o alvo já estiver Vulnerável e Imobilizado, ele deve fazer um movimento de morte. O personagem pode gastar uma Esperança por condição para removê-la.",
           "nomeIngles": "Petrifying Slash",
           "textoIngles": "When the Gargoyle deals damage, the target must succeed on a Strength Reaction Roll or become Vulnerable. If the target is already Vulnerable, they become Restrained. If the target is already Vulnerable and Restrained, they must make a death move. The PC can spend a Hope per condition to clear it."
         }
@@ -11940,7 +11941,7 @@
         {
           "nome": "Armado e Perigoso",
           "tipo": "passiva",
-          "texto": "Quando o Polvo aparecer pela primeira vez, coloque um d8 neste bloco de estatísticas com o valor 8 voltado para cima. Quando o Polvo fizer um ataque padrão bem-sucedido contra um PJ, você pode adicionar o valor do dado ao dano causado. Depois de adicionar seu valor a uma rolagem, diminua o valor do dado em 1.",
+          "texto": "Quando o Polvo aparecer pela primeira vez, coloque um d8 neste bloco de estatísticas com o valor 8 voltado para cima. Quando o Polvo fizer um ataque padrão bem-sucedido contra um PJ, você pode adicionar o valor do dado ao dano causado. Depois de adicionar seu valor a uma jogada, diminua o valor do dado em 1.",
           "nomeIngles": "Armed and Dangerous",
           "textoIngles": "When the Octopus first appears, place a d8 on this stat block with the 8 value facing up. When the Octopus makes a successful standard attack against a PC, you can add the die’s value to the damage dealt. After you add its value to a roll, decrease the die’s value by 1."
         },
@@ -12015,14 +12016,14 @@
         {
           "nome": "Anti-Mística-Hálito",
           "tipo": "passiva",
-          "texto": "O hálito rançoso do Gobstalker cria um miasma invisível que anula a magia. Um ataque, uma habilidade ou um feitiço que cause dano mágico ou crie um efeito mágico falha automaticamente se usado a uma distância Curta do Gobstalker.",
+          "texto": "O hálito rançoso do Gobstalker cria um miasma invisível que anula a magia. Um ataque, uma habilidade ou um feitiço que cause dano mágico ou crie um efeito mágico falha automaticamente se usado em alcance Próximo do Gobstalker.",
           "nomeIngles": "Anti-Mystica-Halitosis",
           "textoIngles": "The Gobstalker’s rancid breath creates an invisible, magic-negating miasma. An attack, an ability, or a spell that deals magic damage or creates a magic effect fails automatically if used within Close range of the Gobstalker."
         },
         {
           "nome": "Raios de Tentáculo",
           "tipo": "ação",
-          "texto": "Marque um Estresse para atacar um alvo dentro do alcance Longo. Em caso de sucesso, role um d8 para um ataque de feixe aleatório ou gaste um Medo para escolher em vez disso: 1. Enganar. O Raptorgob engana o alvo. Enquanto estiver enganado, o alvo vê o Raptorgob como um amigo e não pode atacá-lo. Além disso, quando um PJ rola com Medo, um PJ enganado deve marcar um Estresse ou atacar um alvo escolhido pelo Raptorgob. Um PJ enganado deve ter sucesso em uma Jogada de Instinto (16) para se livrar da condição. 2. Corroer. O alvo recebe 2d8 de dano mágico e deve marcar um Espaço de Armadura sem receber seus benefícios (eles ainda podem usar a armadura para reduzir o dano). Se não puderem, dobre o dano. 3. Perdição. O alvo deve marcar todos os PP, mas pode gastar qualquer quantidade de Esperança para reduzir o número de PP marcados dessa forma pelo mesmo valor. 4. Hipnose. O alvo entra em um Transe Profundo e não pode agir, exceto tentando acordar. Esta condição dura até que o alvo sofra dano ou acorde com um jogada bem-sucedido de Presença (16). 5. Paralisar. O alvo congela no lugar, tornando-se Vulnerável e Restrito até que marque 2 de Estresse. 6. Queimar. O alvo recebe 2d8 de dano mágico direto. 7. Assustar. O alvo está Assustado. Enquanto estiver Assustado, o alvo não pode realizar ações além de fugir da batalha ou tentar se livrar do seu terror. Além disso, o alvo deve marcar um Estresse sempre que você gastar um Medo. O alvo pode remover a condição com um jogada bem-sucedido de Presença (16). 8. Lento. O alvo fica Vulnerável e deve marcar um Estresse para se mover até gastar 2 Esperança.",
+          "texto": "Marque um Estresse para atacar um alvo dentro do alcance Distante. Em caso de sucesso, role um d8 para um ataque de feixe aleatório ou gaste um Medo para escolher em vez disso: 1. Enganar. O Raptorgob engana o alvo. Enquanto estiver enganado, o alvo vê o Raptorgob como um amigo e não pode atacá-lo. Além disso, quando um PJ rola com Medo, um PJ enganado deve marcar um Estresse ou atacar um alvo escolhido pelo Raptorgob. Um PJ enganado deve ter sucesso em uma Jogada de Instinto (16) para se livrar da condição. 2. Corroer. O alvo recebe 2d8 de dano mágico e deve marcar um Espaço de Armadura sem receber seus benefícios (eles ainda podem usar a armadura para reduzir o dano). Se não puderem, dobre o dano. 3. Perdição. O alvo deve marcar todos os PP, mas pode gastar qualquer quantidade de Esperança para reduzir o número de PP marcados dessa forma pelo mesmo valor. 4. Hipnose. O alvo entra em um Transe Profundo e não pode agir, exceto tentando acordar. Esta condição dura até que o alvo sofra dano ou acorde com um jogada bem-sucedido de Presença (16). 5. Paralisar. O alvo congela no lugar, tornando-se Vulnerável e Restrito até que marque 2 de Estresse. 6. Queimar. O alvo recebe 2d8 de dano mágico direto. 7. Assustar. O alvo está Assustado. Enquanto estiver Assustado, o alvo não pode realizar ações além de fugir da batalha ou tentar se livrar do seu terror. Além disso, o alvo deve marcar um Estresse sempre que você gastar um Medo. O alvo pode remover a condição com um jogada bem-sucedido de Presença (16). 8. Lento. O alvo fica Vulnerável e deve marcar um Estresse para se mover até gastar 2 Esperança.",
           "nomeIngles": "Tentacle Rays",
           "textoIngles": "Mark a Stress to attack a target within Far range. On a success, roll a d8 for a random beam attack or spend a Fear to choose instead:\n\n1. Beguile. The Gobstalker Beguiles the target. While Beguiled, the target sees the Gobstalker as a friend and can’t attack it. Additionally, when a PC rolls with Fear, a Beguiled PC must mark a Stress or attack a target chosen by the Gobstalker. A Beguiled PC must succeed on an Instinct Roll (16) to clear the condition.\n2. Corrode. The target takes 2d8 magic damage and must mark an Armor Slot without receiving its benefits (they can still use armor to reduce the damage). If they can’t, double the damage.\n3. Doom. The target must mark all HP, but they can spend any number of Hope to reduce the number of HP marked this way by an equal amount.\n4. Hypnosis. The target falls into a Deep Trance and can’t act except to try to wake up. This condition lasts until the target takes damage or wakes up with a successful Presence Roll (16).\n5. Paralyze. The target freezes in place, becoming Vulnerable and Restrained until they mark 2 Stress.\n6. Sear. The target takes 2d8 direct magic damage.\n7. Scare. The target is Scared. While Scared, the target can’t take actions other than fleeing the battle or trying to shake off their terror. Additionally, the target must mark a Stress whenever you spend a Fear. The target can clear the condition with a successful Presence Roll (16).\n8. Slow. The target becomes Vulnerable and must mark a Stress to move until they spend 2 Hope.",
           "custoDeMedo": 1,
@@ -12084,14 +12085,14 @@
         {
           "nome": "A Fera Libertada",
           "tipo": "passiva",
-          "texto": "O Alebrujo recebe um bônus nas rolagens de dano igual ao número de Medo que você tem.",
+          "texto": "O Alebrujo recebe um bônus nas jogadas de dano igual ao número de Medo que você tem.",
           "nomeIngles": "The Beast Unleashed",
           "textoIngles": "The Alebrujo gains a bonus to damage rolls equal to the number of Fear you have."
         },
         {
           "nome": "Sacrifício Guahalan",
           "tipo": "ação",
-          "texto": "Gaste um Medo para que o Alebrujo devore um Lacaio a uma distância Muito Próxima, então remova 1 de PV ou Estresse.",
+          "texto": "Gaste um Medo para que o Alebrujo devore um Lacaio em alcance Muito Próximo, então remova 1 de PV ou Estresse.",
           "nomeIngles": "Guahalan Sacrifice",
           "textoIngles": "Spend a Fear to have the Alebrujo devour a Minion within Very Close range, then clear a HP or a Stress.",
           "custoDeMedo": 1
@@ -12099,7 +12100,7 @@
         {
           "nome": "Uivo do Guahala",
           "tipo": "ação",
-          "texto": "Marque um Estresse para que o Alebrujo emita um uivo. Cada PJ em alcance Longínquo deve passar em uma Rolagem de Reação de Presença ou ficar Temporariamente Apavorado. Enquanto Apavorado, um PJ deve marcar um Estresse quando assumir o destaque.",
+          "texto": "Marque um Estresse para que o Alebrujo emita um uivo. Cada PJ em alcance Longínquo deve passar em uma Jogada de Reação de Presença ou ficar Temporariamente Apavorado. Enquanto Apavorado, um PJ deve marcar um Estresse quando assumir o destaque.",
           "nomeIngles": "Howl of the Guahala",
           "textoIngles": "Mark a Stress to have the Alebrujo emit a howl. Each PC within Far range must succeed on a Presence Reaction Roll or become temporarily Panicked. While Panicked, a PC must mark a Stress when they take the spotlight.",
           "custoDeEstresse": 1
@@ -12107,7 +12108,7 @@
         {
           "nome": "Rasgar & Dilacerar",
           "tipo": "ação",
-          "texto": "Gaste um Medo para fazer um ataque padrão com vantagem. Em caso de sucesso, você pode marcar um Estresse para fazer outro ataque padrão contra um alvo adicional dentro do alcance. Você pode continuar marcando Estresse para fazer ataques adicionais até que o Alebrujo falhe em uma rolagem de ataque.",
+          "texto": "Gaste um Medo para fazer um ataque padrão com vantagem. Em caso de sucesso, você pode marcar um Estresse para fazer outro ataque padrão contra um alvo adicional dentro do alcance. Você pode continuar marcando Estresse para fazer ataques adicionais até que o Alebrujo falhe em uma jogada de ataque.",
           "nomeIngles": "Rip & Tear",
           "textoIngles": "Spend a Fear to make a standard attack with advantage. On a success, you can mark a Stress to make another standard attack against an additional target within range. You can continue marking Stress to make additional attacks until the Alebrujo fails an attack roll.",
           "custoDeMedo": 1
@@ -12168,14 +12169,14 @@
         {
           "nome": "Alfa da Matilha",
           "tipo": "passiva",
-          "texto": "Reserva. Quando o Senhor das Presas realiza um ataque bem-sucedido, adicione um marcador à Reserva Guahalan. Quando um aliado Guahalan dentro do alcance Próximo realiza um ataque, você pode gastar um marcador da Reserva Guahalan para dar vantagem na rolagem a ele.",
+          "texto": "Reserva. Quando o Senhor das Presas realiza um ataque bem-sucedido, adicione um marcador à Reserva Guahalan. Quando um aliado Guahalan dentro do alcance Próximo realiza um ataque, você pode gastar um marcador da Reserva Guahalan para dar vantagem na jogada a ele.",
           "nomeIngles": "Pack Alpha",
           "textoIngles": "Pool. When the Fang Lord makes a successful attack, add a token to the Guahalan Pool. When a Guahalan ally within Close range makes an attack, you can spend a token from the Guahalan Pool to give them advantage on the roll."
         },
         {
           "nome": "Libertar a Fera",
           "tipo": "ação",
-          "texto": "Gaste um Medo para que o Senhor das Presas assuma uma forma bestial. Enquanto estiver nessa forma, ele ganha um bônus em ataques e rolagens de dano igual ao número de Estresse que marcou. Além disso, ele pode se mover até o alcance Distante em vez do alcance Próximo antes de realizar uma ação.",
+          "texto": "Gaste um Medo para que o Senhor das Presas assuma uma forma bestial. Enquanto estiver nessa forma, ele ganha um bônus em ataques e jogadas de dano igual ao número de Estresse que marcou. Além disso, ele pode se mover até o alcance Distante em vez do alcance Próximo antes de realizar uma ação.",
           "nomeIngles": "Unleash the Beast",
           "textoIngles": "Spend a Fear to have the Fang Lord adopt a bestial form. While in this form, they gain a bonus to attack and damage rolls equal to the number of Stress they have marked. Additionally, they can move up to Far range instead of Close range before taking an action.",
           "custoDeMedo": 1
@@ -12251,7 +12252,7 @@
         {
           "nome": "Ataque em Matilha",
           "tipo": "ação",
-          "texto": "Marque um Estresse para fazer um ataque padrão. Em caso de sucesso, o ataque recebe um bônus de dano igual ao número de outros Mutantes dentro da distância Muito Próxima do alvo.",
+          "texto": "Marque um Estresse para fazer um ataque padrão. Em caso de sucesso, o ataque recebe um bônus de dano igual ao número de outros Mutantes em alcance Muito Próximo do alvo.",
           "nomeIngles": "Pack Attack",
           "textoIngles": "Mark a Stress to make a standard attack. On a success, the attack gains a bonus to damage equal to the number of other Shifters within Very Close range of the target.",
           "custoDeEstresse": 1
@@ -12318,7 +12319,7 @@
         {
           "nome": "Ataque em Grupo",
           "tipo": "ação",
-          "texto": "Gaste um Medo para escolher um alvo e destacar todos os Espíritos da Fera Guahalan dentro do alcance Próximo deles. Esses Servos se movem para o alcance Corpo a Corpo do alvo e fazem uma rolagem de ataque compartilhada. Em caso de sucesso, cada um causa 5 de dano mágico. Combine esse dano.",
+          "texto": "Gaste um Medo para escolher um alvo e destacar todos os Espíritos da Fera Guahalan dentro do alcance Próximo deles. Esses Servos se movem para o alcance Corpo a Corpo do alvo e fazem uma jogada de ataque compartilhada. Em caso de sucesso, cada um causa 5 de dano mágico. Combine esse dano.",
           "nomeIngles": "Group Attack",
           "textoIngles": "Spend a Fear to choose a target and spotlight all Guahalan Spirit Beasts within Close range of them. Those Minions move into Melee range of the target and make one shared attack roll. On a success, they deal 5 magic damage each. Combine this damage.",
           "custoDeMedo": 1
@@ -12386,7 +12387,7 @@
         {
           "nome": "Chamador de Feras",
           "tipo": "ação",
-          "texto": "Gaste um Medo para que o Cantor Espiritual invoque 2d4 Feras Espirituais Guahalan em distância Muito Próxima e imediatamente destaque uma delas.",
+          "texto": "Gaste um Medo para que o Cantor Espiritual invoque 2d4 Feras Espirituais Guahalan em alcance Muito Próximo e imediatamente destaque uma delas.",
           "nomeIngles": "Beast-Caller",
           "textoIngles": "Spend a Fear to have the Spirit Singer summon 2d4 Guahalan Spirit Beasts within Very Close range and immediately spotlight one.",
           "custoDeMedo": 1
@@ -12675,7 +12676,7 @@
         {
           "nome": "Mordida Dilacerante",
           "tipo": "reação",
-          "texto": "Quando o Landshark realiza um ataque bem-sucedido contra um PJ dentro do alcance de Combate Corpo a Corpo, você pode gastar um Medo para forçar o alvo a marcar um Espaço de Armadura sem receber seus benefícios (eles ainda podem usar a armadura para reduzir o dano).",
+          "texto": "Quando o Landshark realiza um ataque bem-sucedido contra um PJ dentro do alcance Corpo a Corpo Corpo a Corpo, você pode gastar um Medo para forçar o alvo a marcar um Espaço de Armadura sem receber seus benefícios (eles ainda podem usar a armadura para reduzir o dano).",
           "nomeIngles": "Rending Chomp",
           "textoIngles": "When the Landshark makes a successful attack against a PC within Melee range, you can spend a Fear to force the target to mark an Armor Slot without receiving its benefits (they can still use armor to reduce the damage).",
           "custoDeMedo": 1
@@ -12728,7 +12729,7 @@
         {
           "nome": "Implacável (3)",
           "tipo": "passiva",
-          "texto": "O Behemoth pode ser iluminado até três vezes por turno do Mestre. Gaste Medo normalmente para iluminá-lo.",
+          "texto": "O Behemoth pode entrar em foco até três vezes por turno do Mestre. Gaste Medo normalmente para iluminá-lo.",
           "nomeIngles": "Relentless (3)",
           "textoIngles": "The Behemoth can be spotlighted up to three times per GM turn. Spend Fear as usual to spotlight it."
         },
@@ -12871,7 +12872,7 @@
         {
           "nome": "Feromônios Sufocantes",
           "tipo": "passiva",
-          "texto": "Um PJ que fizer uma rolagem de ação dentro do alcance Muito Próximo do Comedor de Ferrugem deve ter sucesso em uma Rolagem de Reação por Instinto ou marcar um Estresse.",
+          "texto": "Um PJ que fizer uma jogada de ação dentro do alcance Muito Próximo do Comedor de Ferrugem deve ter sucesso em uma Jogada de Reação por Instinto ou marcar um Estresse.",
           "nomeIngles": "Stifling Pheromones",
           "textoIngles": "A PC who makes an action roll within Very Close range of the Rust Eater must succeed on an Instinct Reaction Roll or mark a Stress."
         },
@@ -13069,14 +13070,14 @@
         {
           "nome": "Doença da Luz Solar",
           "tipo": "passiva",
-          "texto": "Quando o Titã aparece pela primeira vez acima do solo, role um d4. Marque uma quantidade de Estresse igual ao resultado. O Titã ganha um bônus em suas rolagens de ataque e dano igual ao número de Estresse marcado.",
+          "texto": "Quando o Titã aparece pela primeira vez acima do solo, role um d4. Marque uma quantidade de Estresse igual ao resultado. O Titã ganha um bônus em suas jogadas de ataque e dano igual ao número de Estresse marcado.",
           "nomeIngles": "Sunlight Sickness",
           "textoIngles": "When the Titan first appears above ground, roll a d4. Mark a number of Stress equal to the result. The Titan gains a bonus to their attack and damage rolls equal to the number of Stress marked."
         },
         {
           "nome": "Smashing do Martelo",
           "tipo": "ação",
-          "texto": "Quando um PJ marca PV a partir do ataque padrão do Titã, você pode gastar um Medo para forçar o alvo a marcar um Slot de Armadura sem ganhar seus benefícios (eles ainda podem usar a armadura para reduzir o dano).",
+          "texto": "Quando um PJ marca PV a partir do ataque padrão do Titã, você pode gastar um Medo para forçar o alvo a marcar um Ponto de Armadura sem ganhar seus benefícios (eles ainda podem usar a armadura para reduzir o dano).",
           "nomeIngles": "Hammer Smash",
           "textoIngles": "When a PC marks HP from the Titan’s standard attack, you can spend a Fear to force the target to mark an Armor Slot without gaining its benefits (they can still use armor to reduce the damage).",
           "custoDeMedo": 1
@@ -13144,7 +13145,7 @@
         {
           "nome": "Investida de Touro",
           "tipo": "ação",
-          "texto": "Marque um Estresse para escolher um alvo dentro do alcance Próximo. O Triceratops se move para o alcance de Combate Corpo a Corpo com o alvo e realiza um ataque. Em caso de sucesso, causa 3d10 de dano físico direto.",
+          "texto": "Marque um Estresse para escolher um alvo dentro do alcance Próximo. O Triceratops se move para o alcance Corpo a Corpo Corpo a Corpo com o alvo e realiza um ataque. Em caso de sucesso, causa 3d10 de dano físico direto.",
           "nomeIngles": "Bull Rush",
           "textoIngles": "Mark a Stress to choose a target within Close range. The Triceratops moves into Melee range with the target and makes an attack. On a success, deal 3d10 direct physical damage.",
           "custoDeEstresse": 1
@@ -13286,7 +13287,7 @@
         {
           "nome": "Olhar Ameaçador",
           "tipo": "reação",
-          "texto": "Quando o Urco sofre dano de um ataque, você pode gastar um Medo para fazer com que os limites de dano do atacante recebam uma penalidade de −1 até o final da cena. Este efeito pode se acumular.",
+          "texto": "Quando o Urco sofre dano de um ataque, você pode gastar um Medo para fazer com que os limiares de dano do atacante recebam uma penalidade de −1 até o final da cena. Este efeito pode se acumular.",
           "nomeIngles": "Baleful Gaze",
           "textoIngles": "When the Urco takes damage from an attack, you can spend a Fear to cause the attacker’s damage thresholds to gain a −1 penalty until the end of the scene. This effect can stack.",
           "custoDeMedo": 1
@@ -13339,14 +13340,14 @@
         {
           "nome": "Para mim, meus bonitinhos",
           "tipo": "ação",
-          "texto": "Uma vez por cena, invoque 2d4 Hordas de Nível 2, que aparecem em alcance Longo. Você ganha um Medo para cada Horda invocada dessa forma.",
+          "texto": "Uma vez por cena, invoque 2d4 Hordas de Nível 2, que aparecem em alcance Distante. Você ganha um Medo para cada Horda invocada dessa forma.",
           "nomeIngles": "To Me, My Pretties",
           "textoIngles": "Once per scene, summon 2d4 Tier 2 Hordes, which appear at Far range. You gain a Fear for each Horde summoned in this way."
         },
         {
           "nome": "Estrangulador Sombrio",
           "tipo": "ação",
-          "texto": "Marque um Estresse para atacar um alvo em alcance Longo. Em caso de sucesso, a sombra da mão de Valdenhax se estende pelo chão até agarrar a sombra do alvo e drenar sua essência. O alvo marca 1d4 Estresse, e você ganha um número igual de Medo.",
+          "texto": "Marque um Estresse para atacar um alvo em alcance Distante. Em caso de sucesso, a sombra da mão de Valdenhax se estende pelo chão até agarrar a sombra do alvo e drenar sua essência. O alvo marca 1d4 Estresse, e você ganha um número igual de Medo.",
           "nomeIngles": "Shadow Strangler",
           "textoIngles": "Mark a Stress to attack a target within Far range. On a success, the shadow of the Valdenhax’s hand stretches across the ground until it grasps the target’s shadow and drains their essence. The target marks 1d4 Stress, and you gain an equal number of Fear.",
           "custoDeEstresse": 1
@@ -13362,7 +13363,7 @@
         {
           "nome": "Palavra Perturbadora",
           "tipo": "reação",
-          "texto": "Depois que um PJ fizer uma rolagem, você pode marcar um Estresse para forçá-lo a rerrolar. Essa habilidade não pode ser usada se o PJ obtiver um sucesso crítico.",
+          "texto": "Depois que um PJ fizer uma jogada, você pode marcar um Estresse para forçá-lo a rerrolar. Essa habilidade não pode ser usada se o PJ obtiver um sucesso crítico.",
           "nomeIngles": "Vexing Word",
           "textoIngles": "After a PC makes a roll, you can mark a Stress to force them to reroll it. This feature can’t be used if the PC critically succeeds."
         }
@@ -13752,7 +13753,7 @@
         {
           "nome": "Olhar Paranóico",
           "tipo": "ação",
-          "texto": "Gaste um Medo para fazer com que o Mariposa Críptica olhe nos olhos de um PJ em alcance Próximo e o deixe Paranoico. Enquanto estiver Paranoico, o PJ ficará desconfiado de outros PJs e não poderá Ajudar um Aliado nem participar de Jogadas em Dupla. Para remover essa condição, o PJ deve passar em uma jogada de Instinto (16) ou participar do movimento de preparação durante o tempo de inatividade com um ou mais membros de seu grupo durante um descanso.",
+          "texto": "Gaste um Medo para fazer com que o Mariposa Críptica olhe nos olhos de um PJ em alcance Próximo e o deixe Paranoico. Enquanto estiver Paranoico, o PJ ficará desconfiado de outros PJs e não poderá Ajudar um Aliado nem participar de Jogadas em Equipe. Para remover essa condição, o PJ deve passar em uma jogada de Instinto (16) ou participar do movimento Preparar-se com um ou mais membros de seu grupo durante um descanso.",
           "nomeIngles": "Paranoia Glare",
           "textoIngles": "Spend a Fear to have the Cryptimoth gaze into the eyes of a PC within Close range and make them Paranoid. While Paranoid, the PC is suspicious of other PCs and can’t Help an Ally or take part in Tag Team Rolls. To clear this condition, the PC must succeed on an Instinct Roll (16) or participate in the Prepare downtime move with one or more members of their party during a rest.",
           "custoDeMedo": 1
@@ -13873,7 +13874,7 @@
         {
           "nome": "Explosão Psíquica",
           "tipo": "ação",
-          "texto": "Gaste um Medo para escolher até três alvos dentro de alcance Próximo e force-os a fazerem uma jogada de reação de Instinto ou Conhecimento. Alvos que tiverem sucesso marcam um Estresse. Alvos que falharem recebem 3d10+4 de dano mágico direto e ficam Vulneráveis até serem postos em foco pelo holofote.",
+          "texto": "Gaste um Medo para escolher até três alvos dentro de alcance Próximo e force-os a fazerem uma jogada de reação de Instinto ou Conhecimento. Alvos que tiverem sucesso marcam um Estresse. Alvos que falharem recebem 3d10+4 de dano mágico direto e ficam Vulneráveis até entrarem em foco.",
           "nomeIngles": "Psychic Blast",
           "textoIngles": "Spend a Fear to choose up to three targets within Close range and force them to make an Instinct or Knowledge Reaction Roll. Targets who succeed mark a Stress. Targets who fail take 3d10+4 direct magic damage and are Vulnerable until spotlighted.",
           "custoDeMedo": 1,
@@ -13898,7 +13899,7 @@
         {
           "nome": "Contaminação Mucosa",
           "tipo": "ação",
-          "texto": "Faça uma jogada de ataque contra um PJ dentro de um alcance Muito Próximo. Em caso de sucesso, o Habitante das Profundezas usa seus tentáculos para imobilizar o alvo, cobrindo-o com lodo tóxico. O alvo fica Restrito até se libertar ou escapar com uma jogada bem-sucedida de Força ou Agilidade. Cada vez que o Habitante das Profundezas é posto em foco, todos os PJs Presos dessa forma recebem 3d8 de dano físico direto. O Habitante das Profundezas libera todas as criaturas Presas por ele quando é derrotado ou sofre dano grave.",
+          "texto": "Faça uma jogada de ataque contra um PJ dentro de um alcance Muito Próximo. Em caso de sucesso, o Habitante das Profundezas usa seus tentáculos para imobilizar o alvo, cobrindo-o com lodo tóxico. O alvo fica Restrito até se libertar ou escapar com uma jogada bem-sucedida de Força ou Agilidade. Cada vez que o Habitante das Profundezas é posto em foco, todos os PJs Presos dessa forma recebem 3d8 de dano físico direto. O Habitante das Profundezas libera todas as criaturas Presas por ele quando é derrotado ou sofre dano Severo.",
           "nomeIngles": "Mucosal Contamination",
           "textoIngles": "Make an attack roll against a PC within Very Close range. On a success, the Deep Dweller uses its tentacles to immobilize the target, sliming them with toxic sludge. The target is Restrained until they break free or slip out with a successful Strength or Finesse Roll. Each time the Deep Dweller is spotlighted, all PCs Restrained in this way take 3d8 direct physical damage. The Deep Dweller releases all creatures Restrained by it when it’s defeated or takes Severe damage."
         }
@@ -14089,7 +14090,7 @@
         {
           "nome": "Montaria Maldita",
           "tipo": "passiva",
-          "texto": "Enquanto o Rei Sombrio estiver montado, ele ganha um bônus de +2 em sua Dificuldade. Quando o Rei Sombrio sofre dano grave, ele é derrubado de sua montaria. Se o Rei Sombrio estiver desmontado, sua montaria desaparece até que você marque um Estresse para convocá-la novamente.",
+          "texto": "Enquanto o Rei Sombrio estiver montado, ele ganha um bônus de +2 em sua Dificuldade. Quando o Rei Sombrio sofre dano Severo, ele é derrubado de sua montaria. Se o Rei Sombrio estiver desmontado, sua montaria desaparece até que você marque um Estresse para convocá-la novamente.",
           "nomeIngles": "Fellmount",
           "textoIngles": "While the Shadow King is on his mount, he gains a +2 bonus to his Difficulty. When the Shadow King takes Severe damage, he’s knocked from his mount. If the Shadow King is unmounted, his mount disappears until you mark a Stress to summon it again.",
           "custoDeEstresse": 1
@@ -14963,7 +14964,7 @@
         {
           "nome": "Aura Eletrizante",
           "tipo": "passiva",
-          "texto": "O Roc tem resistência a dano mágico. PJs que falharem em uma rolagem a uma distância Muito Próxima devem gastar uma Esperança ou marcar 1d4 de Estresse.",
+          "texto": "O Roc tem resistência a dano mágico. PJs que falharem em uma jogada em alcance Muito Próximo devem gastar uma Esperança ou marcar 1d4 de Estresse.",
           "nomeIngles": "Electrifying Aura",
           "textoIngles": "The Roc has resistance to magic damage. PCs who fail a roll within Very Close range must spend a Hope or mark 1d4 Stress."
         }
@@ -15490,7 +15491,7 @@
         {
           "nome": "Coração da Meia-Noite",
           "tipo": "passiva",
-          "texto": "Contagem Regressiva a Longo Prazo (6). O Lorde Vampiro mantém seu coração escondido em um local seguro. Se ele for destruído, o Lorde Vampiro morre. Caso contrário, quando o Lorde Vampiro for derrotado, ative a contagem regressiva. Ela diminui cada vez que os PJs terminam um descanso longo. Quando for acionada, o Lorde Vampiro revive dentro do alcance Próximo do coração com todos os PV e Estresse restaurados.",
+          "texto": "Contagem de longo prazo (6). O Lorde Vampiro mantém seu coração escondido em um local seguro. Se ele for destruído, o Lorde Vampiro morre. Caso contrário, quando o Lorde Vampiro for derrotado, ative a contagem regressiva. Ela diminui cada vez que os PJs terminam um descanso longo. Quando for acionada, o Lorde Vampiro revive dentro do alcance Próximo do coração com todos os PV e Estresse restaurados.",
           "nomeIngles": "Midnight Heart",
           "textoIngles": "Long-Term Countdown (6). The Vampire Lord keeps their heart hidden in a safe place. If it’s destroyed, the Vampire Lord dies. Otherwise, when the Vampire Lord is defeated, activate the countdown. It ticks down each time the PCs finish a long rest. When it triggers, the Vampire Lord revives within Close range of the heart with all HP and Stress cleared."
         },
@@ -16305,7 +16306,7 @@
         {
           "nome": "Alimentação Frenética",
           "tipo": "ação",
-          "texto": "Gaste um Medo para forçar todos os PJs dentro do alcance Próximo a terem sucesso em uma jogada de reação de Instinto ou sofrer 4d6 de dano físico direto. O Cipactli limpa um PV para cada criatura que sofreu dano grave desse ataque.",
+          "texto": "Gaste um Medo para forçar todos os PJs dentro do alcance Próximo a terem sucesso em uma jogada de reação de Instinto ou sofrer 4d6 de dano físico direto. O Cipactli limpa um PV para cada criatura que sofreu dano Severo desse ataque.",
           "nomeIngles": "Frenzied Feeding",
           "textoIngles": "Spend a Fear to force all PCs within Close range to succeed on an Instinct Reaction Roll or take 4d6 direct physical damage. The Cipactli clears a HP for each creature who took Severe damage from this attack.",
           "custoDeMedo": 1
@@ -16321,7 +16322,7 @@
         {
           "nome": "Sangue Vital",
           "tipo": "reação",
-          "texto": "Quando o Cipactli sofre dano grave, seu sangue respinga no chão e instantaneamente se transforma em uma selva. Todas as criaturas dentro do alcance Próximo ficam temporariamente Presas.",
+          "texto": "Quando o Cipactli sofre dano Severo, seu sangue respinga no chão e instantaneamente se transforma em uma selva. Todas as criaturas dentro do alcance Próximo ficam temporariamente Presas.",
           "nomeIngles": "Lifeblooded",
           "textoIngles": "When the Cipactli takes Severe damage, its blood splashes to the ground and instantly erupts into a jungle. All creatures within Close range are temporarily Restrained."
         },
@@ -16396,7 +16397,7 @@
         {
           "nome": "Transformação Nebulosa",
           "tipo": "ação",
-          "texto": "Marque um Estresse para fazer o Titã se transformar em uma nuvem nebulosa que preenche uma área Muito Próxima. Enquanto estiver nesta forma, o Titã recebe o dobro de dano mágico e é imune a dano físico. Esta forma dura até que o Titã escolha sair dela ou receba dano grave.",
+          "texto": "Marque um Estresse para fazer o Titã se transformar em uma nuvem nebulosa que preenche uma área Muito Próxima. Enquanto estiver nesta forma, o Titã recebe o dobro de dano mágico e é imune a dano físico. Esta forma dura até que o Titã escolha sair dela ou receba dano Severo.",
           "nomeIngles": "Nebulous Transformation",
           "textoIngles": "Mark a Stress to have the Titan transform into a misty cloud that fills a Very Close area. While in this form, the Titan takes double magic damage and has immunity to physical damage. This form lasts until the Titan chooses to drop out of it or takes Severe damage.",
           "custoDeEstresse": 1
@@ -16590,7 +16591,7 @@
         {
           "nome": "Temível",
           "tipo": "reação",
-          "texto": "Quando Mitera fizer uma jogada de ataque bem-sucedida contra um PJ ou um PJ falhar em uma rolagem dentro do alcance Distante, você ganha um Medo.",
+          "texto": "Quando Mitera fizer uma jogada de ataque bem-sucedida contra um PJ ou um PJ falhar em uma jogada dentro do alcance Distante, você ganha um Medo.",
           "nomeIngles": "Fearsome",
           "textoIngles": "When Mitera makes a successful attack roll against a PC or a PC fails a roll within Far range, you gain a Fear."
         },
@@ -16760,7 +16761,7 @@
         {
           "nome": "Supercarregado",
           "tipo": "reação",
-          "texto": "Contagem Regressiva (Recorrente 2d6). Quando a Máquina for posto em foco pela primeira vez, ative a contagem regressiva. Ela diminui a cada vez que a Máquina é posto em foco. Quando for acionada, coloque um marcador neste bloco de estatísticas enquanto o crisol do peito da Máquina se inflama com chamas mágicas. Para cada marcador neste bloco de estatísticas, a Máquina ganha um bônus de +1 em jogada de Dificuldade e jogadas de ataque, e seu ataque padrão causa 1d12 de dano adicional. Remova um marcador quando a Máquina sofrer dano grave.",
+          "texto": "Contagem Regressiva (Recorrente 2d6). Quando a Máquina for posto em foco pela primeira vez, ative a contagem regressiva. Ela diminui a cada vez que a Máquina é posto em foco. Quando for acionada, coloque um marcador neste bloco de estatísticas enquanto o crisol do peito da Máquina se inflama com chamas mágicas. Para cada marcador neste bloco de estatísticas, a Máquina ganha um bônus de +1 em jogada de Dificuldade e jogadas de ataque, e seu ataque padrão causa 1d12 de dano adicional. Remova um marcador quando a Máquina sofrer dano Severo.",
           "nomeIngles": "Supercharged",
           "textoIngles": "Countdown (Loop 2d6). When the Machine is spotlighted for the first time, activate the countdown. It ticks down each time the Machine is spotlighted. When it triggers, place a token on this stat block as the Machine’s chest crucible flares with magical flame. For each token on this stat block, the Machine gains a +1 bonus to Difficulty and attack rolls, and its standard attack deals an extra 1d12 damage. Remove a token when the Machine takes Severe damage."
         }
@@ -17009,7 +17010,7 @@
         {
           "nome": "Montaria",
           "tipo": "passiva",
-          "texto": "Enquanto o Arauto estiver em sua montaria, ele recebe um bônus de +2 em sua Dificuldade. Quando o Arauto sofre dano grave, ele é derrubado de sua montaria. Se o Arauto for derrubado, sua montaria desaparece até que você marque um Estresse para convocá-la novamente.",
+          "texto": "Enquanto o Arauto estiver em sua montaria, ele recebe um bônus de +2 em sua Dificuldade. Quando o Arauto sofre dano Severo, ele é derrubado de sua montaria. Se o Arauto for derrubado, sua montaria desaparece até que você marque um Estresse para convocá-la novamente.",
           "nomeIngles": "Mount",
           "textoIngles": "While the Harbinger is on their mount, they gain a +2 bonus to their Difficulty. When the Harbinger takes Severe damage, they’re knocked from their mount. If the Harbinger is unhorsed, their mount disappears until you mark a Stress to summon it again.",
           "custoDeEstresse": 1
@@ -17102,7 +17103,7 @@
         {
           "nome": "Montaria",
           "tipo": "passiva",
-          "texto": "Enquanto o Arauto estiver em sua montaria, ele recebe um bônus de +2 em sua Dificuldade. Quando o Arauto sofre dano grave, ele é derrubado de sua montaria. Se o Arauto for derrubado, sua montaria desaparece até que você marque um Estresse para convocá-la novamente.",
+          "texto": "Enquanto o Arauto estiver em sua montaria, ele recebe um bônus de +2 em sua Dificuldade. Quando o Arauto sofre dano Severo, ele é derrubado de sua montaria. Se o Arauto for derrubado, sua montaria desaparece até que você marque um Estresse para convocá-la novamente.",
           "nomeIngles": "Mount",
           "textoIngles": "While the Harbinger is on their mount, they gain a +2 bonus to their Difficulty. When the Harbinger takes Severe damage, they’re knocked from their mount. If the Harbinger is unhorsed, their mount disappears until you mark a Stress to summon it again.",
           "custoDeEstresse": 1
@@ -17194,7 +17195,7 @@
         {
           "nome": "Montaria",
           "tipo": "passiva",
-          "texto": "Enquanto o Arauto estiver em sua montaria, ele recebe um bônus de +2 em sua Dificuldade. Quando o Arauto sofre dano grave, ele é derrubado de sua montaria. Se o Arauto for derrubado, sua montaria desaparece até que você marque um Estresse para convocá-la novamente.",
+          "texto": "Enquanto o Arauto estiver em sua montaria, ele recebe um bônus de +2 em sua Dificuldade. Quando o Arauto sofre dano Severo, ele é derrubado de sua montaria. Se o Arauto for derrubado, sua montaria desaparece até que você marque um Estresse para convocá-la novamente.",
           "nomeIngles": "Mount",
           "textoIngles": "While the Harbinger is on their mount, they gain a +2 bonus to their Difficulty. When the Harbinger takes Severe damage, they’re knocked from their mount. If the Harbinger is unhorsed, their mount disappears until you mark a Stress to summon it again.",
           "custoDeEstresse": 1
@@ -17281,7 +17282,7 @@
         {
           "nome": "Montaria",
           "tipo": "passiva",
-          "texto": "Enquanto o Arauto estiver em sua montaria, ele recebe um bônus de +2 em sua Dificuldade. Quando o Arauto sofre dano grave, ele é derrubado de sua montaria. Se o Arauto for derrubado, sua montaria desaparece até que você marque um Estresse para convocá-la novamente.",
+          "texto": "Enquanto o Arauto estiver em sua montaria, ele recebe um bônus de +2 em sua Dificuldade. Quando o Arauto sofre dano Severo, ele é derrubado de sua montaria. Se o Arauto for derrubado, sua montaria desaparece até que você marque um Estresse para convocá-la novamente.",
           "nomeIngles": "Mount",
           "textoIngles": "While the Harbinger is on their mount, they gain a +2 bonus to their Difficulty. When the Harbinger takes Severe damage, they’re knocked from their mount. If the Harbinger is unhorsed, their mount disappears until you mark a Stress to summon it again.",
           "custoDeEstresse": 1
@@ -17372,7 +17373,7 @@
         {
           "nome": "Imitação de Voz",
           "tipo": "ação",
-          "texto": "Gaste um Medo para que a Bruxa-Coruja chame com a voz de uma figura querida uma criatura que esteja ao alcance da audição. O alvo deve ter sucesso em uma Rolagem de Reação Instintiva ou se mover até o alcance Distante em direção à Bruxa-Coruja.",
+          "texto": "Gaste um Medo para que a Bruxa-Coruja chame com a voz de uma figura querida uma criatura que esteja ao alcance da audição. O alvo deve ter sucesso em uma Jogada de Reação de Instinto ou se mover até o alcance Distante em direção à Bruxa-Coruja.",
           "nomeIngles": "Voice Mimicry",
           "textoIngles": "Spend a Fear to have the Owl Witch beckon with the voice of a beloved figure to a creature within earshot. The target must succeed on an Instinct Reaction Roll or move up to Far range toward the Owl Witch.",
           "custoDeMedo": 1
@@ -17600,7 +17601,7 @@
         {
           "nome": "Arconte Elemental",
           "tipo": "ação",
-          "texto": "Marque um Estresse para rolar um d4. Adonix ativa o efeito correspondente: 1. Feixe de Fogo. Adonix manifesta um feixe de fogo elemental com largura Muito Próxima, partindo de si até a borda do campo de batalha. Cada alvo no trajeto do feixe deve fazer uma jogada de reação de Agilidade. Alvos que falharem sofrem dano grave. Alvos que passarem sofrem dano menor. 2. Estrondo do Trovão. Todas as criaturas em alcance Distante devem marcar um Estresse e ficam Vulneráveis até acertarem uma jogada de ataque ou o Demiurgo ser derrotado. 3. Raio. Faça um ataque contra um alvo em alcance Muito Distante, causando 4d8 de dano mágico em caso de sucesso. Se todos os resultados forem pares, faça o mesmo ataque contra outro alvo, repetindo o ciclo até obter um resultado ímpar ou não haver mais alvos. 4. Tempestade de Gelo. Cada PJ em alcance Próximo deve passar em uma jogada de reação de Força ou marcar 1d4 Estresses e ficar Restrito até gastar uma Esperança para escapar.",
+          "texto": "Marque um Estresse para rolar um d4. Adonix ativa o efeito correspondente: 1. Feixe de Fogo. Adonix manifesta um feixe de fogo elemental com largura Muito Próxima, partindo de si até a borda do campo de batalha. Cada alvo no trajeto do feixe deve fazer uma jogada de reação de Agilidade. Alvos que falharem sofrem dano Severo. Alvos que passarem sofrem dano menor. 2. Estrondo do Trovão. Todas as criaturas em alcance Distante devem marcar um Estresse e ficam Vulneráveis até acertarem uma jogada de ataque ou o Demiurgo ser derrotado. 3. Raio. Faça um ataque contra um alvo em alcance Muito Distante, causando 4d8 de dano mágico em caso de sucesso. Se todos os resultados forem pares, faça o mesmo ataque contra outro alvo, repetindo o ciclo até obter um resultado ímpar ou não haver mais alvos. 4. Tempestade de Gelo. Cada PJ em alcance Próximo deve passar em uma jogada de reação de Força ou marcar 1d4 Estresses e ficar Restrito até gastar uma Esperança para escapar.",
           "nomeIngles": "Elemental Archon",
           "textoIngles": "Mark a Stress to roll a d4. Adonix activates the corresponding effect: 1. Fire Beam. Adonix manifests a beam of elemental fire with a Very Close width from themself to the edge of the battlefield. Each target in the beam’s path must make an Agility Reaction Roll. Targets who fail take Severe damage. Targets who succeed take Minor damage.\n\n2. Thunderclap. All creatures within Far range must mark a Stress and become Vulnerable until they succeed on an attack roll or the Demiurge is defeated.\n3. Lightning Bolt. Make an attack against a target within Very Far range, dealing 4d8 magic damage on a success. If all results are even, make the same attack against a different target, repeating the cycle until you roll an odd result or run out of targets.\n4. Ice Storm. Each PC within Close range must succeed on a Strength Reaction Roll or mark 1d4 Stress and become Restrained until they spend a Hope to escape.",
           "custoDeEstresse": 1
@@ -17615,7 +17616,7 @@
         {
           "nome": "Adonix ganha as seguintes características nesta forma: Abandonado",
           "tipo": "ação",
-          "texto": "Gaste um Medo para escolher um PJ e ativar uma Contagem Regressiva Abandonada (1d8) para ele. Ela diminui quando Adonix está em foco. Quando disparar, o PJ deve marcar todos os seus PV. A contagem regressiva termina se Adonix sofrer dano grave. Você só pode ter uma Contagem Regressiva Abandonada ativa por vez.",
+          "texto": "Gaste um Medo para escolher um PJ e ativar uma Contagem Regressiva Abandonada (1d8) para ele. Ela diminui quando Adonix está em foco. Quando disparar, o PJ deve marcar todos os seus PV. A contagem regressiva termina se Adonix sofrer dano Severo. Você só pode ter uma Contagem Regressiva Abandonada ativa por vez.",
           "nomeIngles": "Adonix gains the following features in this form: Forsaken",
           "textoIngles": "Spend a Fear to choose a PC and activate a Forsaken Countdown (1d8) for them. It ticks down when Adonix is spotlighted. When it triggers, the PC must mark all their HP. The countdown ends if Adonix takes Severe damage. You can have only one Forsaken Countdown active at a time.",
           "custoDeMedo": 1
@@ -17682,7 +17683,7 @@
         {
           "nome": "Ciclo Temporal",
           "tipo": "passiva",
-          "texto": "Contagem Regressiva (Recorrente 2d6). Quando o Executor aparecer pela primeira vez, ative a contagem regressiva. Ela diminui quando o Executor é posto em foco. Quando disparar, o Executor limpa todos os PV, Estresses e condições. Refaça a contagem regressiva quando o Executor sofrer dano grave.",
+          "texto": "Contagem Regressiva (Recorrente 2d6). Quando o Executor aparecer pela primeira vez, ative a contagem regressiva. Ela diminui quando o Executor é posto em foco. Quando disparar, o Executor limpa todos os PV, Estresses e condições. Refaça a contagem regressiva quando o Executor sofrer dano Severo.",
           "nomeIngles": "Time Looper",
           "textoIngles": "Countdown (Loop 2d6). When the Enforcer first appears, activate the countdown. It ticks down when the Enforcer is spotlighted. When it triggers, the Enforcer clears all HP, Stress, and conditions. Reroll the countdown when the Enforcer takes Severe damage."
         },
@@ -17996,7 +17997,7 @@
         {
           "nome": "Investida Poderosa",
           "tipo": "ação",
-          "texto": "Marque um Estresse para avançar para o alcance Próximo. Cada PJ Xero pelo qual passar deve ter sucesso em uma Jogada de Reação de Força ou escolher marcar 2 Pontos de Armadura ou sofrer dano grave.",
+          "texto": "Marque um Estresse para avançar para o alcance Próximo. Cada PJ Xero pelo qual passar deve ter sucesso em uma Jogada de Reação de Força ou escolher marcar 2 Pontos de Armadura ou sofrer dano Severo.",
           "nomeIngles": "Power Slide",
           "textoIngles": "Mark a Stress to move up to Close range. Each PC Xero moves through must succeed on a Strength Reaction Roll or choose to either mark 2 Armor Slots or take Severe damage.",
           "custoDeEstresse": 1
@@ -18004,7 +18005,7 @@
         {
           "nome": "Sopro Radioativo",
           "tipo": "ação",
-          "texto": "Gaste um Medo para fazer Xero carregar um feixe nuclear. Coloque um marcador neste bloco de estatísticas. Na próxima vez que Xero estiver em destaque, você pode gastar este marcador e liberar um feixe de alcance Muito Distante. O feixe tem largura de alcance Próximo. Cada PJ nesta área deve fazer uma jogada de reação de Agilidade. Alvos que falharem recebem 4d12+12 de dano mágico direto. Alvos que tiverem sucesso recebem metade do dano. Xero não pode usar esta característica novamente até receber dano grave.",
+          "texto": "Gaste um Medo para fazer Xero carregar um feixe nuclear. Coloque um marcador neste bloco de estatísticas. Na próxima vez que Xero estiver em foco, você pode gastar este marcador e liberar um feixe de alcance Muito Distante. O feixe tem largura de alcance Próximo. Cada PJ nesta área deve fazer uma jogada de reação de Agilidade. Alvos que falharem recebem 4d12+12 de dano mágico direto. Alvos que tiverem sucesso recebem metade do dano. Xero não pode usar esta característica novamente até receber dano Severo.",
           "nomeIngles": "Radioactive Breath",
           "textoIngles": "Spend a Fear to have Xero charge up a nuclear beam. Place a token on this stat block. The next time Xero is spotlighted, you can spend this token and unleash a beam to Very Far range. The beam has a width of Close range. Each PC in this area must make an Agility Reaction Roll. Targets who fail take 4d12+12 direct magic damage. Targets who succeed take half damage. Xero can’t use this feature again until it takes Severe damage.",
           "custoDeMedo": 1

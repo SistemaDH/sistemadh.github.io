@@ -1043,7 +1043,7 @@ Próximo subbloco defensivo: Doloroso e as reações/alterações de mitigação
 
 - **Versátil (8 ocorrências):** os perfis alternativos foram conferidos individualmente no Core e estruturados em `efeitoEquipamento.perfilAlternativo`; a ficha mostra o perfil alternativo com a Proficiência atual sem alterar o perfil principal nem rolar dados.
 - A auditoria detectou que o `textoIngles` importado de Versátil havia sido repetido entre armas diferentes; a mecânica agora usa os valores conferidos no Core, não esse campo contaminado.
-- O placeholder **“Avançado (nome cortado/incompleto)”** foi identificado como `Advanced Scepter` e corrigido para **Cetro avançado**, mantendo o nome antigo como alias.
+- O placeholder **“Avançado (nome cortado/incompleto)”** foi identificado como `Advanced Scepter` e corrigido para **Cetro avançado**, mantendo o nome antigo como alias. ⚠ Esse alias **caiu depois** (ver E113 mais abaixo): o livro imprimiu a mesma linha cortada para o Bastão Longo Avançado, então o texto alcançava duas armas.
 - **Egoísta / Foice de Midas:** gasta exatamente `1 punhado` pela escada central de ouro e publica `+1 Proficiência` somente para aquela jogada de dano; não altera a Proficiência base.
 - **Tiro rápido (4 Revólveres pequenos):** gasta `2 Esperanças` e publica `+4 dano` para a arma principal somente naquela jogada.
 - Todos os efeitos transitórios continuam fora do estado permanente da ficha; nenhuma jogada ou dado é gerado pelo app.
@@ -1814,3 +1814,310 @@ Relida: `version: 18`, `status: ACTIVE`, `verify_jwt: false`,
 preguiçosa, no primeiro pedido autenticado. Até alguém abrir uma ficha, não há
 log nenhum — e um erro de carga só apareceria lá. A primeira abertura de ficha
 depois de um deploy é parte do deploy, não um detalhe.
+
+---
+
+## Frente 7 (28/09) — o vocabulário, e os dois blocos da ficha que estavam mudos
+
+Bloco só de **código e catálogo**. Nada foi implantado: o motor continua pinado
+em `feb6439`, e este bloco **não está no ar**.
+
+### O que muda o que a Vanessa vê na ficha
+
+1. **O Versátil finalmente aparece.** Os 8 perfis alternativos conferidos no
+   Core, mais o da Navalha de deslocamento, nunca chegaram à tela. O bloco lia
+   `arma.efeitoEquipamento` — a forma do **servidor** — num objeto que vem do
+   **catálogo**, onde o efeito mora em `caracteristica.efeitoEquipamento`. Ler a
+   forma errada não dá erro: dá `undefined`, e o bloco não desenha.
+2. **A lista "Reações ao ataque" também estava muda**, pela mesma causa: as
+   reações de 4 peças (Fivela, Eldritch Vambrace, Armadura flutuante de Runetan,
+   Corrente de seda Dunamis) nunca apareceram.
+3. **A regra de cada reação saiu do `title`.** Era tooltip de mouse: no celular
+   o botão dizia só "Deslocamento" e a regra era inalcançável. Agora está escrita
+   ao lado, e o botão apagado diz por que está apagado.
+4. **O perfil alternativo agora diz o preço.** A Navalha alcança Muito Distante
+   *"mas com desvantagem"*; o campo `desvantagem` existia no catálogo sem leitor,
+   e a ficha oferecia a arma melhor do que a regra permite.
+5. **43 textos de item e equipamento reescritos** — inclusive dois com **regra
+   perdida na tradução**: o Orbe Ofuscante tinha perdido o alcance ("within Close
+   range" virou "dentro da área de alcance") e as Lágrimas do herói imortal
+   tinham perdido a primeira frase e chamavam "Tratar Feridas" de "Cuidar dos
+   Ferimentos", nome que não existe na ficha.
+
+### Um leitor só para as duas formas
+
+`js/dados.js` ganhou `efeitoDeEquipamento(peca)`, que aceita a forma aninhada do
+catálogo e a achatada do servidor. Os 4 leitores de `ficha.js` passaram a usá-lo.
+Um teste de backend prova que as duas formas existem, que descrevem o mesmo
+perfil e que **nenhum** item do catálogo guarda a forma achatada.
+
+⚠ **O teste que existia estava congelando o defeito**: conferia que o arquivo
+*continha a linha de código* — a linha errada. Teste que confere texto de código
+chancela o que encontra. Foi reescrito, e o que aparece na tela passou a ser
+conferido abrindo a ficha.
+
+### Invariantes novos
+
+- **E113** — nenhum apelido de equipamento alcança dois itens. O livro imprimiu a
+  mesma linha cortada para o Cetro avançado e o Bastão Longo Avançado; a busca
+  devolvia sempre o primeiro do array. Agora o texto ambíguo **não acha nada** e
+  fica declarado em `EQUIPAMENTO_APELIDOS_AMBIGUOS`, com os dois donos, para o
+  app poder dizer o que houve.
+- **E114** — o texto de exibição fala a língua das cartas
+  (`tools/lib-vocabulario-exibido.mjs`). Vale só para os campos de exibição;
+  `textoIngles`, `descricaoIngles`, `nomeLivro` e `textoLivro` são registro da
+  fonte. Tem um teste que o faz falhar de propósito.
+- **E112 ampliado** para saque e consumíveis, olhando o fim do nome: pegou
+  `loot-24` "Frasco de Darksmoke Receita", o mesmo erro de extração do
+  "Avançado cetro".
+- **E114 no bestiário** — `adversarios.json` tinha **56** defeitos do mesmo
+  tipo. Primeiro entraram como dívida pinada por grupo; no mesmo dia foram
+  consertados (62 trocas) e o teste passou a exigir **zero**.
+
+### Ids renomeados — e por que os antigos continuam vivos
+
+`primaria-t3-avancado-nome-cortado-incompleto` → **`primaria-t3-cetro-avancado`**
+e `primaria-t3-avancado-cetro` → **`primaria-t3-varinha-avancada`** (esta nunca
+foi Cetro: Conhecimento, Distante, d6+7, uma mão é o Advanced Wand).
+
+> **Regra:** ficha gravada guarda **id**. Todo id renomeado entra em `aliases`,
+> senão a arma de quem já a equipou é desequipada em silêncio, na mesa, no meio
+> da sessão. Os dois leitores — `acharArma_` no servidor e `acharArma` na tela —
+> consultam `aliases`.
+
+### Estado validado
+
+- backend: **1122 passaram, 0 falharam**;
+- `npm run teste:tudo` verde; `testes-ataque-equipamento` 11/11 (eram 5),
+  `testes-reacoes-armadura` 38/38 (eram 34);
+- baterias de layout mobile conferidas à parte por causa do bloco de reações
+  novo: baseline mobile 36 telas · 0 erros, responsivo 30 telas · 0 erros,
+  Dano HUD 2 viewports;
+- `conferir-css` 679 classes · nada a limpar nem a escrever;
+- `conferir-gerados`: 16 geradores byte a byte.
+
+### Pendências que este bloco deixa
+
+- **O deploy.** `4B`, `4C`, `44` e o catálogo **não estão no motor** (pinado em
+  `feb6439`). Precisa do seu push e da sua palavra, e da ordem obrigatória de
+  deploy inteira.
+- ~~O bestiário (56 textos)~~ — **fechado**, ver Frente 7.8.
+- **`Repouso` × `descanso`**: o verbete diz "movimento de repouso", 47 lugares
+  dizem "movimento de descanso" e 22 dizem "de repouso". Escrevi "descanso" nos
+  textos que consertei; a escolha é sua.
+- ~~E108 ainda não alcança loot nem consumíveis~~ — **fechado**, ver Frente 7.10.
+
+### Frente 7.8 (mesmo dia) — o bestiário
+
+**62 trocas em 56 habilidades**, todas conferidas contra o `textoIngles` guardado
+ou contra o termo dominante do próprio arquivo.
+
+O achado grande: **14 habilidades mandavam medir "alcance Longo"/"Muito Longo"**,
+que não são alcances do jogo. O inglês guardado dizia qual era em todos os casos
+(`Far` em treze, `Very Far` num). Uma delas dizia "distância de Combate" onde o
+original diz `Melee range`.
+
+O resto era o mesmo termo escrito de dois jeitos no MESMO arquivo: "dano grave"
+(15) contra "dano Severo" (11) · "Restringido" (9) contra "Restrito" (47) ·
+"Rolagem de Reação" (7) contra "Jogada de Reação" (110) · "holofote" (4) contra
+"em foco" (140) · "Slot de Armadura" (3) · "inatividade" (3) · "limites de dano"
+(2) · uma horda com "(1/HP)" entre quatro com "(N/PV)".
+
+> **Duas armadilhas que a medição contornou, e que estão escritas nas regras:**
+> `PV` é a convenção do bestiário (130 usos) e não deve ser expandido como no
+> equipamento; e o "Iluminado" da górgona é condição de **luz**, não o foco da
+> mesa — trocar teria apagado uma condição e inventado outra. Há um teste
+> dedicado a guardar essa frase.
+
+Também nomeado, não consertado: `Iluminado` e `Paranoico` são impostos por
+habilidades e **não estão em `condicoes.json`** — mesma família de `Abalado`,
+`Enlaçado` e `Maldito`, adiada pelo mesmo motivo (sem moldura, seriam declarações
+sem consumidor). E "Tag Team Roll" tem três nomes no app: o verbete e o bestiário
+dizem **jogada/Jogadas em Dupla**, `classes.json` diz **Jogada em Equipe**. O
+outlier é `classes.json`, e é palavra da Vanessa.
+
+**Estado:** backend **1123 passaram, 0 falharam**; `teste:tudo` verde; Mestre
+mobile 18 telas · 0 erros e editor de adversário 15 estados · 0 erros (rodados à
+parte, porque o texto do bestiário mudou de tamanho).
+
+### Frente 7.9 (mesmo dia) — o vocabulário no app inteiro, e duas armadilhas
+
+**E115 — o vocabulário de regra é o mesmo em todo o app.** O E114 olhava dois
+arquivos por um mapa de campo escrito à mão, e foi assim que **`efeitoManual`** —
+o lembrete que a ficha escreve embaixo do item — ficou fora com **sete jogadas
+nomeadas erradas** dentro. O E115 inverte: percorre *todo* arquivo de `data/` e só
+pula o que está declarado em `CAMPOS_DE_REGISTRO`. Campo novo entra na medição
+sozinho.
+
+> **A regra é sobre a jogada com NOME.** A primeira versão acusava qualquer
+> "rolagem" e teria acusado "recupere tudo, sem rolagem", onde a palavra está
+> certa. Quem decide o nome não sou eu: **as cartas oficiais dizem "jogada" 196
+> vezes contra 2.**
+
+Fechados: 52 no equipamento, 41 no bestiário, 23 nos outros nove arquivos.
+
+#### ⚠⚠ "Ponto de Coragem" era Esperança — 31 trocas em 21 adversários
+
+A ficha não tem trilha de Coragem: a regra era **inexecutável na mesa**. A prova
+é literal, no *Dreadhowl* (`srd2.txt:7620`): *"lose a Hope … If a target is not
+able to lose a Hope, they must instead mark 2 Stress"*, contra *"percam 1 Ponto de
+Coragem … marcar 2 Estresse"*.
+
+Ninguém tinha visto porque **essas habilidades não têm `textoIngles`** — o
+conferidor de tradução compara com o inglês, e não havia inglês. A medição de
+vocabulário não depende de fonte.
+
+> ⚠ E quase virou estrago: `classes.json` tem uma característica de subclasse
+> **chamada "Coragem"** e `comunidades.json` tem "Cara de Coragem". Troca cega
+> teria renomeado uma habilidade do jogo. A regra só pega `Ponto(s) de Coragem` e
+> `rolar com Coragem`.
+
+#### ⚠ `tools/montar-verbetes.py` está DEFASADO
+
+Rodar o montador hoje escreve **versão 1 com 93 verbetes** e **apaga os 15** que
+entraram depois, inclusive `reserva-de-adversario` e `evolucao-de-adversario`.
+Descobri executando, e tive de restaurar o arquivo.
+
+> **Enquanto o montador não for atualizado, `data/verbetes.json` é a fonte.** Os
+> fontes Python são mantidos em paralelo só para não reintroduzirem o vocabulário
+> antigo. Um teste falha se a versão cair para 1, se o arquivo perder verbetes ou
+> se algum dos três ids sumir. **Decidir entre atualizar o montador ou aposentá-lo
+> é da Vanessa.**
+
+#### O glossário tinha os dois nomes lado a lado
+
+`rolagem-de-dano` virou **`jogada-de-dano`**, com o nome antigo em `variantes`. O
+rename rippleou para quatro `veja`, o mapa de regras do SRD, a auditoria de
+regras e três fontes Python — e os conferidores pegaram cada um
+(*"rules/attacking: verbete ausente rolagem-de-dano"*).
+
+#### A linha que não se atravessa
+
+As **duas** transcrições de carta que dizem "rolagem" (Templo das Selvas, Presença
+Audaz) ficaram como estão, com teste dedicado: o app fala a língua das cartas.
+Quatro campos que a medição acusou e estavam certos entraram na lista de registro
+com o motivo escrito (`ambiguidades`, `substituicoes`, `doisNiveisDeGlosa`,
+`sinonimos`).
+
+**Estado:** backend **1126 passaram, 0 falharam**; `teste:tudo` verde; os quatro
+gerados (`41`, `44`, `49`, `4F`) regerados e conferidos byte a byte; Regras mobile
+6 telas · 0 erros, Mestre mobile 18 · 0, editor de adversário 15 · 0, mochila 15 ·
+0.
+
+### Frente 7.10 (mesmo dia) — o E108 chega aos 240 itens, e as Gemas saem do papel
+
+Fecha a lacuna estrutural mais antiga da varredura (Frente 4.5): o E108 varria só
+`ARMAS` e `ARMADURAS`, e os **240** itens de saque e consumíveis ficavam fora —
+era ali que estavam todas as ausências. Eram **68 sem declaração nenhuma**.
+
+#### ⚠ As seis Gemas trocavam o traço do ataque, e isso era só texto
+
+SRD 2.0, linhas 4793-4804: *"attach this gem to a weapon, allowing you to use your
+\<Traço\> when making an attack with that weapon."* A ficha ignorava: quem
+encaixasse a **Gema do Poder** numa arma de Agilidade continuava lendo "Traço:
+Agilidade" e rolava Agilidade — **o dado errado, sem aviso**. Mesma família do
+Versátil mudo da 7.3.
+
+Três decisões, todas tiradas do livro:
+
+- **`arma-qualquer`, não `arma-sem-caracteristica`.** A Pedra *acrescenta*
+  característica e o livro exige arma sem nenhuma; a Gema *troca* o traço e o
+  livro não exige nada. Copiar a restrição seria o app proibir o que a regra
+  permite.
+- **O conflito é por VAGA.** Pedra + Gema na mesma arma convivem; duas Gemas não.
+- **Gema que empresta o traço que a arma já tem não anuncia nada** — a ficha
+  chegou a escrever "usa Agilidade em vez de Agilidade".
+
+> ⚠ **E o teste da Pedra passava pelo motivo errado:** conferia 1 erro dizendo
+> "arma com Confiável não pode receber a pedra", mas a arma nem estava equipada e
+> o erro era "não está equipada nem na reserva". A regra da característica nunca
+> foi exercitada. Hoje a arma é equipada de propósito e a mensagem é conferida.
+
+#### Os outros 62, em três destinos declarados
+
+`ficcao-sem-efeito` (42) · `mesa-decide` (7) · `pendente-deterministico` (13).
+
+A dívida de 13 está pinada por um teste, item por item. Os dois piores: o
+**Pingente do guardião do tempo** e o **Santuário temporal** dão um movimento de
+descanso adicional, e a tela hoje **recusa o terceiro** — o app proíbe o que o
+item permite. As **Luvas de pele de carniçal** já têm consumidor pronto (Bladefare
+e Manto de Monett proíbem marcar Armadura contra um tipo de dano). O **Chá da
+Morte** tem prazo com consequência: sem crítico até o próximo descanso longo, o
+personagem morre.
+
+#### ⚠ `contextual.regra` — a regra escrita duas vezes, e nenhuma lida
+
+Dez itens guardam a mesma frase em `descricao` (que a ficha mostra) e em
+`efeitoSaquePassivo.contextual.regra` — literal, idêntica, **sem leitor nenhum**.
+Foi essa duplicata que me fez classificar sete itens como "já tem efeito": ela
+parece fiação. **Apagado na 7.12** — a frase é idêntica à `descricao`, que a ficha
+já mostra; renderizar escreveria a mesma regra duas vezes na mesma tela. ⚠ Três
+itens usam `contextual` para dado ESTRUTURADO (Chave-Mestra, Semente de Portal,
+Gancho de escalada) e esses ficam: o proibido é a forma `contextual.regra`.
+
+#### ⚠ Um teste que às vezes passava
+
+`testes-reacoes-armadura.mjs` falhou UMA vez na suíte e passou sozinho: ele lia o
+servidor logo depois de fechar a janela de morte, e a gravação vai pela fila.
+Agora existe `esperarNoServidor` em `tools/ajuda-bateria-ficha.mjs`, que espera a
+CONDIÇÃO em vez de dormir 500ms e torcer.
+
+#### ⚠ O Fragmento de emberita tinha perdido metade da regra
+
+O português terminava em "ficar temporariamente Em Chamas." e parava — e o verbete
+de "Em Chamas" manda buscar a regra em quem aplicou a condição. Quem aplicou não
+dizia nada.
+
+> ⚠ **São DUAS condições de fogo no SRD 2.0, e o português chama as duas de "Em
+> Chamas":** "On Fire" (carta Aperto de Cinzas, 2d6 ao agir) e "Ablaze" (este
+> fragmento, d4 por jogada de ação). Sem o texto no item, a mesa aplicaria a regra
+> DA CARTA. Mesma armadilha que o glossário documenta para "Oculto".
+
+Os três Fragmentos também recuperaram o **"desse ponto"**: o alcance Próximo é a
+partir do ponto escolhido, não de quem usa.
+
+#### A decisão do fogo (7.11): um marcador, três regras
+
+A Vanessa passou a escolha entre "Em Chamas" e "Flamejante". Contando os fogos do
+app, são **três**, não dois: a carta Aperto de Cinzas (`On Fire`, 2d6 ao fim da
+ação), o Fragmento de emberita (`Ablaze`, d4 por jogada de ação) e o Incendiar do
+Lodo vermelho (1d4 por jogada, apaga com Finesse 14 — só no livro pt-BR).
+
+**Escolha: NÃO criar "Flamejante".** Dois nomes não cobririam três regras — o Lodo
+ficaria órfão ou pediria um terceiro marcador, e três marcadores de fogo é a ficha
+pedindo que a mesa lembre qual é qual no meio do combate. E "Flamejante" já vive no
+app como palavra e como nome de habilidade (*Coração Flamejante*, *Escamas
+Flamejantes*), então promovê-la criaria a confusão que o glossário documenta para
+"Oculto".
+
+O desenho já era esse de propósito; o que estava errado era a execução. Em troca, a
+condição parou de dizer "conforme descrito **na carta**" (dois dos três não são
+cartas), `nomeIngles` virou `"On Fire / Ablaze"`, "Ablaze" e "Flamejante" entraram
+como sinônimos e `origem` lista as três fontes. Um teste guarda a decisão — inclusive
+o caso "apareceu outra condição de fogo".
+
+**Estado:** backend **1134 passaram, 0 falharam**; `teste:tudo` verde quatro vezes
+seguidas; `testes-ataque-equipamento` 17/17 (eram 5 no começo do dia).
+
+### Frente 7.12 (mesmo dia) — as pendências que sobraram
+
+**⚠ "Jogada em Equipe": eu errei e desfiz.** Ao consertar o `loot-60` troquei "Tag
+Team Roll" por "jogada em dupla", achado no `verbetes.json`. Conferindo a origem de
+cada grafia, o verbete era o forasteiro: **"Jogada em Equipe" tem 12 usos e está na
+transcrição da carta oficial** (Chamada dos Bravos); "em dupla" tinha 7, nenhum em
+carta, e um era meu. O app fala a língua das cartas — as sete viraram "Jogada em
+Equipe", e o E115 passou a guardar (inclusive "Tag Team", para o inglês não voltar).
+
+**`contextual.regra` apagado** nos dez itens. ⚠ E o teste me corrigiu outra vez: a
+primeira versão proibia `contextual` inteiro, e três itens o usam para dado
+ESTRUTURADO (Chave-Mestra, Semente de Portal, Gancho de escalada) — isso é
+modelagem. O proibido é a forma `contextual.regra`.
+
+**`montar-verbetes.py` agora se recusa a rodar** quando escreveria menos verbetes
+do que o arquivo tem, dizendo quantos seriam apagados, com escapatória explícita
+(`--sobrescrever-mesmo-sabendo`) para quem atualizar os fontes. A decisão entre
+atualizar e aposentar segue da Vanessa; a mina está desarmada.
+
+**Estado:** backend **1134 passaram, 0 falharam**; `teste:tudo` verde; os gerados
+`44`, `46` e `4F` regerados e conferidos byte a byte; mochila mobile 15 estados · 0
+erros, Regras mobile 6 telas · 0 erros.

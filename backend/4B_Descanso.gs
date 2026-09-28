@@ -338,6 +338,22 @@ function movimentosDoDescanso_(tipo, ficha) {
         minimo: 1, maximo: lados, padrao: ''
       }],
       deOutroDescanso: '',
+      /*
+       * ⚠ "ONCE PER REST" É LITERAL, e a falta disto custava Foco.
+       *
+       * O livro permite repetir um movimento de descanso — e o motor permitia,
+       * certo, para todos. Mas o Refocar LIMPA A TRILHA antes de encher: quem
+       * escolhia Refocar duas vezes tirava 5 na primeira e 2 na segunda
+       * terminava com DOIS, tendo gastado os dois movimentos do descanso para
+       * ficar com menos do que o primeiro já havia dado. Perda silenciosa.
+       *
+       * > "Once per rest during a moment of calm, you can clear your mind and
+       * > refocus your martial instincts." (SRD 2.0, p.13)
+       *
+       * A marca é genérica de propósito: o próximo movimento com esta regra
+       * só precisa declarar o campo.
+       */
+      umaVezPorDescanso: true,
       efeito: { modo: 'recarregar-foco', lados: lados, dados: dados }
     });
   }
@@ -558,6 +574,9 @@ function simularDescanso_(ficha, tipo, escolhas) {
   // A cura que este descanso manda para OUTRAS fichas.
   const paraAliados = [];
 
+  /* Quais movimentos "uma vez por descanso" já foram gastos neste descanso. */
+  const umaVezUsados = {};
+
   /* Quantos movimentos vieram do OUTRO tipo de descanso — ver o teto abaixo. */
   let emprestadosUsados = 0;
   const fonteEmprestimo = fonteMovimentoLongoNoCurto_(copia);
@@ -583,16 +602,38 @@ function simularDescanso_(ficha, tipo, escolhas) {
     }
     let permitido = false;
     let emprestado = false;
+    let oferecido = null;
     for (let k = 0; k < disponiveis.length; k++) {
       if (disponiveis[k].id === def.id) {
         permitido = true;
         emprestado = !!disponiveis[k].deOutroDescanso;
+        oferecido = disponiveis[k];
         break;
       }
     }
     if (!permitido) {
       erros.push('"' + def.nome + '" não é um movimento de ' + t.nome.toLowerCase() + '.');
       continue;
+    }
+
+    /*
+     * ⚠ O MOVIMENTO QUE SÓ VALE UMA VEZ POR DESCANSO.
+     *
+     * A regra geral do livro é a oposta — "você pode escolher o mesmo
+     * movimento duas vezes" — e ela continua valendo para todos os outros.
+     * Este ramo existe para os que dizem o contrário no próprio texto, e o
+     * primeiro deles é o Refocar, que limpa a trilha de Foco antes de enchê-la:
+     * repeti-lo fazia o jogador PERDER Foco gastando dois movimentos.
+     *
+     * Recusar é o ponto. Aceitar com aviso seria a regra continuar não
+     * existindo, só com mais texto na tela.
+     */
+    if (oferecido && oferecido.umaVezPorDescanso === true) {
+      if (umaVezUsados[def.id]) {
+        erros.push('"' + def.nome + '" só pode ser escolhido uma vez por descanso.');
+        continue;
+      }
+      umaVezUsados[def.id] = true;
     }
 
     /*

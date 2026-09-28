@@ -292,6 +292,52 @@ try {
   })()`);
   placar.conferir('o movimento Refocar existe no descanso deste personagem',
     /foco:refocar/.test(movimentos), movimentos);
+
+  /* --- A VIGILANTE: a reação de patamar 3 que não tinha um único toque ---- *
+   *
+   * ⚠ Esta conferência nasceu de um defeito mudo. A postura declarava
+   * `reacaoAtaque` no catálogo, o gerador copiava o campo até o bloco da tela,
+   * e `botoesDeUsoDaPostura` devolvia lista vazia porque só olhava `usoAtivo`.
+   * A regra estava escrita em três arquivos, prometida em
+   * docs/posturas-marciais.md, e recusada por todas as portas do motor.
+   */
+  escreverNaFichaDeTeste(ambiente, `d.identidade.nivel = 5;
+    d.recursos = d.recursos || {};
+    d.recursos.foco = 4; d.recursos.estresseMarcado = 0;
+    d.posturas = { conhecidas:['vigilante'], ativa:'vigilante', escolhas:{} };`);
+  await reabrir();
+
+  const botaoVigilante = await page.evaluate(() =>
+    [...document.querySelectorAll('button')]
+      .map((b) => b.textContent.trim())
+      .filter((t) => t.includes('quando for alvo')));
+  placar.conferir('⚠ a Vigilante ativa mostra o botão da reação',
+    botaoVigilante.length === 1, JSON.stringify(botaoVigilante));
+  placar.conferir('e o rótulo diz o custo e o dado',
+    /1 Estresse \+ 1d6/.test(botaoVigilante[0] || ''), String(botaoVigilante[0]));
+
+  await page.getByRole('button', { name: /quando for alvo/ }).click();
+  await page.waitForSelector('.modal__caixa', { timeout: 5000 });
+  const pedeDado = await page.evaluate(() =>
+    document.querySelector('.modal__caixa').textContent);
+  placar.conferir('o botão pede o d6 rolado na mesa, em vez de rolar',
+    /d6|resultado/i.test(pedeDado), pedeDado.slice(0, 120));
+
+  await page.locator('.modal__caixa input[type="number"]').first().fill('5');
+  await page.getByRole('button', { name: 'Aplicar resultado' }).click();
+  await page.waitForSelector('.modal__caixa', { state:'detached', timeout: 10000 });
+  await page.waitForTimeout(600);
+
+  const depois = ambiente.avaliar(
+    'JSON.stringify((function(){var p=lerTudo_(ABAS.PERSONAGENS)[0];' +
+    'var d=JSON.parse(p.dados);return {estresse:d.recursos.estresseMarcado,' +
+    'evasao:d.defesas.evasao};})())');
+  const lido = JSON.parse(depois);
+  placar.conferir('⚠ a reação cobrou 1 Estresse de verdade',
+    lido.estresse === 1, JSON.stringify(lido));
+  placar.conferir('e o +5 NÃO foi gravado na Evasão da ficha (vale para um ataque só)',
+    lido.evasao !== 5 && lido.evasao > 0, JSON.stringify(lido));
+
 } finally {
   await contexto.close();
   await navegador.close();

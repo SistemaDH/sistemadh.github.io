@@ -29,6 +29,15 @@ duas de especialização que custam Foco. Sem folha, sem Foco, sem posturas.
 
 ---
 
+## ⚠ Cinco nomes colidem, não quatro
+
+Confiável, Rápida, Revigorante e Agarrar existem **também** como características
+de arma, com regras diferentes. A lista estava incompleta: **Vigilante** é
+igualmente característica de armadura (Lamelar de Skywarden, +2 de Evasão fixo),
+enquanto a **postura** Vigilante cobra 1 Estresse e soma 1d6 contra um ataque.
+
+Os catálogos são separados de propósito.
+
 ## O Foco não é o holofote
 
 Em português as duas palavras colidem, e a confusão já custou caro uma vez: eu
@@ -110,6 +119,18 @@ sem a frase, o número diminuindo pareceria defeito do app.
 E **Refocar é um movimento de descanso**, não um brinde: são dois por descanso,
 então encher o Foco custa metade dele.
 
+⚠ **E é UMA VEZ por descanso — isto custou Foco a quem jogou.** O livro diz
+*"Once per rest"*, e o motor de descanso permitia repetir qualquer movimento
+(regra geral correta: *"ou o mesmo duas vezes"*). Escolher Refocar duas vezes
+tirando 5 e depois 2 deixava o jogador com **dois** de Foco: gastava os dois
+movimentos do descanso para ficar com menos do que o primeiro já havia dado,
+porque o segundo limpa a trilha antes de encher. Sem erro nenhum na tela.
+
+Agora existe a marca genérica `umaVezPorDescanso` no movimento, conferida em
+`simularDescanso_`. O descanso inteiro é recusado, com a frase que diz qual
+movimento e por quê — aplicar só o primeiro seria entregar um descanso diferente
+do pedido, sem avisar.
+
 ### Só a postura ativa tem gesto
 
 Cinco das dezesseis pedem um toque: o d4 da Revigorante, a moeda da Rápida e da
@@ -140,11 +161,29 @@ inventar regra.
 | 3 | **Agarrar** | confirma o acerto e cobra 1 Foco ou 1 Estresse |
 | 3 | **Assustadora** | o Estresse é do alvo, que é do Mestre |
 | 3 | **Estável** | paga a mitigação com 1 Foco, na janela de dano |
-| 3 | **Vigilante** | cobra 1 Estresse e soma o d6 informado à Evasão |
+| 3 | **Vigilante** | cobra 1 Estresse e soma o d6 informado à Evasão · ver ⚠ abaixo |
 | 4 | **Esmagadora** | cobra 1 Esperança pelo caminho único de gasto |
 | 4 | **Precisa** | vale sobre dados que o app não rola: fica à vista |
 | 4 | **Aperfeiçoada** | cobra 1 Foco e publica o +1 de Proficiência |
 | 4 | **Isolante** | depende de posicionamento: fica à vista |
+
+> ⚠ **A Vigilante esteve escrita aqui e não existia no app — de 21/09 a
+> 27/09/2026.** Esta tabela prometia "cobra 1 Estresse e soma o d6 informado à
+> Evasão", e a postura declarava `reacaoAtaque` no catálogo. Só que **ninguém
+> lia essa chave**: o gerador a copiava até o bloco da tela,
+> `usarPosturaAtiva_` só conhecia `usoAtivo`, `ajustarPostura_` só conhecia
+> aprender/esquecer/assumir/sair/usar, e o bloco de reações da tela só varre
+> EQUIPAMENTO. Todas as portas recusavam.
+>
+> É a mesma família do defeito do Impenetrável: **a chave na convenção errada
+> vira silenciosamente nada.** O leitor que existia procurava
+> `reacaoAtaqueRecebido`, em peças equipadas; a postura chamou o campo de
+> `reacaoAtaque`, sem o `Recebido`, e nunca encontrou ninguém.
+>
+> Agora existe `usarReacaoDaPosturaAtiva_` (tipo de ajuste `reacaoPostura`), o
+> botão "quando for alvo" na faixa da postura, e cinco conferências de tela que
+> abrem a janela, informam o d6 e provam que o Estresse foi cobrado e que o
+> bônus **não** foi gravado na Evasão.
 
 ⚠ **As traduções são da casa** (`traducao-srd2`). As posturas são material novo
 do SRD 2.0 e não têm tradução oficial da Jambô — a própria subclasse está marcada

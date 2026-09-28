@@ -7,6 +7,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { criarAmbiente } from './apps-script-mock.mjs';
+import {
+  acharDefeitosE114, REGRAS_E114, textosExibidos,
+  acharDefeitosBestiario, textosExibidosDeAdversarios,
+  acharDefeitosE115, REGRAS_E115, CAMPOS_DE_REGISTRO, caminhoDeRegistro
+} from './lib-vocabulario-exibido.mjs';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const RAIZ = path.resolve(AQUI, '..');
@@ -969,11 +974,29 @@ teste('equipamento das molduras de campanha', () => {
   const camp = avaliar('EQUIPAMENTO_CAMPANHA');
   // 36 do Festim das Feras (15 físicas + 10 mágicas + 7 secundárias + 4
   // armaduras), 21 do Colosso (5 armas × 4 patamares + a Dinamite) e 7 da
-  // Placa-mãe, mais 12 armaduras e 24 armas da Caça a Monstros.
-  igual(camp.length, 100);
-  igual(new Set(camp.map((c) => c.moldura)).size, 4, 'deveriam ser 4 molduras');
+  // Placa-mãe, mais 12 armaduras e 24 armas da Caça a Monstros, mais as 2
+  // Chaves para a Vitória do Reino do Weredragão (Hope & Fear, p.142).
+  igual(camp.length, 102);
+  igual(new Set(camp.map((c) => c.moldura)).size, 5, 'deveriam ser 5 molduras');
   verdade(contexto.acharEquipamentoDeCampanha_('Dinamite'), 'não achou a Dinamite');
   verdade(contexto.acharEquipamentoDeCampanha_('Quantum'), 'não achou o Quantum');
+
+  /*
+   * ⚠ AS DUAS DO WEREDRAGÃO ENTRARAM COMO "manual de mesa", DE PROPÓSITO.
+   *
+   * As duas limpam "todas as maldições mágicas" — e a família Maldito (Maldição
+   * do Weredrake, Maldição Petrificada) NÃO existe em condicoes.json: ela nasce
+   * de habilidades de adversário daquela moldura. Marcar como automatizada
+   * prometeria limpar uma condição que o app não guarda. A terceira Chave da
+   * moldura, a Espada de Sarças do Cavaleiro Cervo, não entrou porque usa as
+   * estatísticas do Cutelo Avançado, que já está no Capítulo 2: é reflavor.
+   */
+  const espadaLavender = contexto.acharEquipamentoDeCampanha_('Espada longa de Lady Lavender');
+  verdade(espadaLavender, 'não achou a Espada longa de Lady Lavender');
+  igual(espadaLavender.dano, 'd8+10 fís');
+  igual(espadaLavender.maos, 'Duas mãos');
+  verdade(contexto.acharEquipamentoDeCampanha_('Zootrópio do Bacanal Radiante'),
+    'não achou o Zootrópio do Bacanal Radiante');
 
   // Reimportado do livro bom: cada arma sabe se é primária ou secundária, e a
   // moldura que substitui as tabelas do Capítulo 2 diz isso.
@@ -7802,6 +7825,51 @@ teste('todo verbete tem página dentro do livro e resumo que cabe no celular', (
   verdade(d.verbetes.length >= 90, 'esperava os ~93 verbetes, achei ' + d.verbetes.length);
 });
 
+teste('⚠ o montador de verbetes está DEFASADO e não pode rodar por engano',()=>{
+  /*
+   * ARMADILHA REAL, ACHADA DA PIOR FORMA: rodando.
+   *
+   * `data/verbetes.json` é montado por tools/montar-verbetes.py a partir de
+   * tools/verbetes/*.py. Só que o JSON seguiu em frente e os fontes Python não:
+   * rodar o montador hoje escreve a versão 1, com 93 verbetes, e APAGA os 15
+   * que entraram depois — inclusive `reserva-de-adversario` e
+   * `evolucao-de-adversario`, do Esperança e Medo.
+   *
+   * Descobri isso executando o montador e tendo de restaurar o arquivo. Este
+   * teste existe para que a próxima pessoa descubra LENDO, não restaurando.
+   *
+   * Enquanto o montador não for atualizado, `data/verbetes.json` é a fonte —
+   * e os fontes Python são mantidos em paralelo só para não reintroduzirem o
+   * vocabulário antigo se alguém os rodar.
+   */
+  const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/verbetes.json'), 'utf8'));
+  igual(d.versao, 2, 'a versão caiu para 1 — alguém rodou tools/montar-verbetes.py');
+  verdade(d.verbetes.length >= 108,
+    'o arquivo perdeu verbetes (tem ' + d.verbetes.length + ', esperava 108+) — ' +
+    'quase certamente tools/montar-verbetes.py foi rodado e sobrescreveu o JSON');
+  ['reserva-de-adversario', 'evolucao-de-adversario', 'jogada-de-dano'].forEach((id) => {
+    verdade(d.verbetes.some((v) => v.id === id), 'verbete ' + id + ' desapareceu');
+  });
+  // e os fontes Python não podem voltar a dizer "Rolagem de dano"
+  const fonte = fs.readFileSync(path.join(RAIZ, 'tools/verbetes/grupo_dano.py'), 'utf8');
+  verdade(/'id': 'jogada-de-dano'/.test(fonte), 'o fonte Python voltou ao id antigo');
+  verdade(!/'rolagem-de-dano'/.test(fonte), 'sobrou referência ao id antigo no fonte Python');
+
+  /*
+   * E O MONTADOR AGORA SE RECUSA, em vez de sobrescrever. Descobri o problema
+   * rodando e tendo de restaurar o arquivo; a próxima pessoa recebe uma mensagem
+   * dizendo quantas entradas seriam apagadas. Quem quiser rodar de propósito
+   * passa `--sobrescrever-mesmo-sabendo`.
+   */
+  const montador = fs.readFileSync(path.join(RAIZ, 'tools/montar-verbetes.py'), 'utf8');
+  verdade(/def recusar_se_estiver_defasado/.test(montador),
+    'o montador voltou a poder rodar sem aviso: ele APAGA 15 verbetes');
+  verdade(/--sobrescrever-mesmo-sabendo/.test(montador),
+    'não há mais como rodar de propósito — a recusa não pode ser um beco sem saída');
+  verdade(/recusar_se_estiver_defasado\(\)/.test(montador),
+    'a recusa existe mas ninguém a chama');
+});
+
 teste('nenhuma palavra aciona DOIS verbetes', () => {
   // Se duas entradas disputassem a mesma palavra, qual abriria dependeria da
   // ordem do arquivo — e o jogador leria a regra errada sem desconfiar.
@@ -11592,7 +11660,7 @@ teste('Versátil guarda os oito perfis alternativos conferidos no Core',()=>{
     'primaria-t1-cetro':['Presença','Corpo a Corpo','d8 mág'],
     'primaria-t2-cetro-aprimorado':['Presença','Corpo a Corpo','d8 mág'],
     'primaria-t2-espada-de-fundicao':['Conhecimento','Distante','d6+3 mág'],
-    'primaria-t3-avancado-nome-cortado-incompleto':['Presença','Corpo a Corpo','d8+4 mág'],
+    'primaria-t3-cetro-avancado':['Presença','Corpo a Corpo','d8+4 mág'],
     'primaria-t3-arco-com-espigoes':['Agilidade','Corpo a Corpo','d10+5 fís'],
     'secundaria-t3-funda-de-mao':['Finesse','Próximo','d8+4 fís'],
     'primaria-t4-cetro-lendario':['Presença','Corpo a Corpo','d8+6 mág'],
@@ -11606,19 +11674,141 @@ teste('Versátil guarda os oito perfis alternativos conferidos no Core',()=>{
   }
 });
 
-teste('Advanced Scepter deixa o placeholder e vira Cetro avançado sem quebrar a busca antiga',()=>{
+teste('Advanced Scepter deixa o placeholder e vira Cetro avançado sem órfãos de ficha',()=>{
   const a=contexto.acharArma_('Cetro avançado'); verdade(!!a); igual(a.nome,'Cetro avançado');
+  igual(a.id,'primaria-t3-cetro-avancado');
   const peloIngles=contexto.acharArma_('Advanced Scepter'); verdade(!!peloIngles); igual(peloIngles.id,a.id);
-  const antigo=contexto.acharArma_('Avançado (nome cortado/incompleto)'); verdade(!!antigo); igual(antigo.id,a.id);
+  /*
+   * O ID ANTIGO É O QUE A FICHA GRAVADA GUARDA. Renomear o id sem deixar o
+   * antigo alcançável desequipa a arma de quem já a tinha — silenciosamente, na
+   * mesa, no meio da sessão.
+   */
+  const peloIdAntigo=contexto.acharArma_('primaria-t3-avancado-nome-cortado-incompleto');
+  verdade(!!peloIdAntigo,'o id antigo do Cetro avançado tem de continuar achando a arma');
+  igual(peloIdAntigo.id,a.id);
+  /*
+   * Já o NOME DO LIVRO não volta: o livro imprimiu essa mesma linha cortada
+   * para o Bastão Longo Avançado também. Não achar é o certo — antes disso a
+   * busca devolvia sempre o Cetro, e quem procurava o Bastão recebia a arma
+   * errada sem aviso.
+   */
+  igual(contexto.acharArma_('Avançado (nome cortado/incompleto)'),null);
+  const amb=contexto.apelidoAmbiguoDeEquipamento_('Avançado (nome cortado/incompleto)');
+  verdade(!!amb,'o texto ambíguo tem de ser reconhecido como ambíguo');
+  igual(amb.ids.slice().sort(),['primaria-t3-bastao-longo-avancado','primaria-t3-cetro-avancado']);
+});
+
+teste('Advanced Wand deixa de se chamar Cetro e a família Varinha fecha o patamar 3',()=>{
+  const v=contexto.acharArma_('Varinha avançada'); verdade(!!v);
+  igual([v.id,v.nome,v.atributo,v.alcance,v.dano,v.maos],
+    ['primaria-t3-varinha-avancada','Varinha avançada','Conhecimento','Distante','d6+7 mág','Uma mão']);
+  igual(contexto.acharArma_('Advanced Wand').id,v.id);
+  // o id antigo dizia "cetro" e continua achando a Varinha, por causa das fichas gravadas
+  igual(contexto.acharArma_('primaria-t3-avancado-cetro').id,v.id);
+  // e "Avançado cetro", que era o nome impresso dela, não pode virar o Cetro avançado
+  igual(contexto.acharArma_('Avançado cetro').id,v.id);
+});
+
+teste('⚠ E113: nenhum apelido de equipamento alcança dois itens diferentes',()=>{
+  /*
+   * `nomeLivro` guarda o que o livro IMPRIMIU, e o livro repetiu texto: a mesma
+   * linha cortada para duas armas, e o nome de uma arma como nome-de-livro de
+   * outra. Jogado cru na tabela de apelidos, isso faz a busca devolver sempre a
+   * PRIMEIRA da ordem do array — uma escolha que ninguém vê.
+   *
+   * O invariante é sobre o RESULTADO da montagem: cada texto alcançável no
+   * catálogo do Capítulo 2 chega a um item só. O que o livro deu a dois fica
+   * fora da busca e vai para EQUIPAMENTO_APELIDOS_AMBIGUOS.
+   */
+  const armas=avaliar('ARMAS'), armaduras=avaliar('ARMADURAS');
+  const apelidos=avaliar('EQUIPAMENTO_ALIASES');
+  const todos=[...armas,...armaduras];
+  const dono=new Map(); const colisoes=[];
+  const k=(t)=>String(t||'').trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' ');
+  todos.forEach((it)=>{
+    const textos=[it.id,it.nome,...(apelidos[it.id]||[])];
+    new Set(textos.map(k)).forEach((chave)=>{
+      if(dono.has(chave)&&dono.get(chave)!==it.id) colisoes.push(`${chave} → ${dono.get(chave)} e ${it.id}`);
+      else dono.set(chave,it.id);
+    });
+  });
+  igual(colisoes,[],'textos que alcançam dois itens');
+
+  // e o que saiu da busca está declarado, com os dois donos, em vez de sumir
+  const ambiguos=avaliar('EQUIPAMENTO_APELIDOS_AMBIGUOS');
+  verdade(Array.isArray(ambiguos)&&ambiguos.length>0,'o caso do livro tem de estar declarado');
+  ambiguos.forEach((p)=>{
+    verdade(p.ids.length>1,p.texto+' está na lista de ambíguos com um dono só');
+    igual(contexto.acharArma_(p.texto)&&contexto.acharArma_(p.texto).id||null,null,
+      p.texto+' não pode achar arma nenhuma');
+    p.ids.forEach((id)=>verdade(!(apelidos[id]||[]).some((s)=>k(s)===k(p.texto)),
+      p.texto+' ainda está nos apelidos de '+id));
+  });
+  igual(ambiguos.map((p)=>p.texto),['Avançado (nome cortado/incompleto)']);
+});
+
+teste('o nome ambíguo do livro vira mensagem, não silêncio',()=>{
+  // quem digita o texto que serve para duas armas tem de ouvir que serve para duas
+  const back=fs.readFileSync(path.join(RAIZ,'backend/4C_Ajustes.gs'),'utf8');
+  verdade(back.includes("apelidoAmbiguoDeEquipamento_(bruto)"),
+    'o vínculo de arma não consulta os apelidos ambíguos');
+  verdade(back.includes("é como o livro chamou "),'a mensagem do caso ambíguo não está lá');
+  const p=contexto.apelidoAmbiguoDeEquipamento_('avancado (nome cortado/incompleto)');
+  verdade(!!p,'a consulta tem de ignorar acento e caixa, como chaveTexto_');
+  igual(contexto.apelidoAmbiguoDeEquipamento_('Cetro avançado'),null,
+    'nome que acha uma arma só não é ambíguo');
 });
 
 teste('painel de dano publica Versátil com a Proficiência atual sem trocar o perfil principal',()=>{
+  /*
+   * ⚠ ESTE TESTE ESTAVA CONGELANDO O DEFEITO.
+   *
+   * Ele conferia que o arquivo CONTINHA a linha
+   * `(((arma || {}).efeitoEquipamento || {}).perfilAlternativo)` — e essa linha
+   * lia a forma do SERVIDOR num objeto que vem do CATÁLOGO, onde o efeito mora
+   * dentro de `caracteristica`. Resultado: o perfil alternativo do Versátil
+   * nunca apareceu na ficha, e o teste passava justamente porque o texto errado
+   * estava lá. Teste que confere texto de código chancela o que encontra.
+   *
+   * O que a linha na tela faz é conferido de verdade em
+   * tools/testes-ataque-equipamento.mjs, que abre a ficha, equipa o Cetro e lê
+   * a linha desenhada. Aqui ficou o que é do backend: os números do catálogo, e
+   * que a tela lê o efeito pelas DUAS formas em que ele existe.
+   */
   const front=fs.readFileSync(path.join(RAIZ,'js/telas/ficha.js'),'utf8');
-  verdade(front.includes("const perfil = (((arma || {}).efeitoEquipamento || {}).perfilAlternativo) || null"));
+  const dadosJs=fs.readFileSync(path.join(RAIZ,'js/dados.js'),'utf8');
+  verdade(/export function efeitoDeEquipamento\(/.test(dadosJs),
+    'o leitor das duas formas desapareceu de js/dados.js');
+  verdade(/p\.efeitoEquipamento \|\| \(p\.caracteristica \|\| \{\}\)\.efeitoEquipamento/.test(dadosJs),
+    'efeitoDeEquipamento parou de aceitar a forma do catálogo');
+  verdade(!/\(\(\(arma \|\| \{\}\)\.efeitoEquipamento \|\| \{\}\)\.perfilAlternativo\)/.test(front),
+    'a ficha voltou a ler só a forma achatada do servidor');
   verdade(front.includes("danoDaArmaComProficiencia(ficha, { dano:perfil.dano })"));
   const a=contexto.acharArma_('Cetro avançado');
   igual(a.atributo,'Presença'); igual(a.alcance,'Distante'); igual(a.dano,'d6+6 mág');
   igual(a.efeitoEquipamento.perfilAlternativo.alcance,'Corpo a Corpo');
+});
+
+teste('⚠ efeitoDeEquipamento acha o efeito nas duas formas do mesmo item',()=>{
+  /*
+   * As duas formas são reais e nascem do MESMO JSON: o catálogo entrega
+   * `caracteristica.efeitoEquipamento`, o gerador achata para
+   * `efeitoEquipamento`. Ler uma só não dá erro — dá `undefined`, e o bloco
+   * simplesmente não desenha. Foi assim que dois blocos da ficha ficaram mudos.
+   */
+  const catalogo=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/equipamentos.json'),'utf8'));
+  const doCatalogo=catalogo.armas.find((a)=>a.id==='primaria-t1-cetro');
+  const doServidor=avaliar('ARMAS').find((a)=>a.id==='primaria-t1-cetro');
+  verdade(!!(doCatalogo.caracteristica||{}).efeitoEquipamento,'o catálogo guarda aninhado');
+  verdade(!doCatalogo.efeitoEquipamento,'o catálogo NÃO guarda achatado');
+  verdade(!!doServidor.efeitoEquipamento,'o servidor guarda achatado');
+  // e as duas formas descrevem o mesmo perfil
+  igual(doCatalogo.caracteristica.efeitoEquipamento.perfilAlternativo,
+    doServidor.efeitoEquipamento.perfilAlternativo,
+    'as duas formas divergiram — o gerador e o JSON não estão dizendo o mesmo');
+  // nenhuma arma do catálogo guarda a forma achatada, senão o leitor escolheria errado
+  const achatadas=[...catalogo.armas,...catalogo.armaduras].filter((a)=>a.efeitoEquipamento).map((a)=>a.id);
+  igual(achatadas,[],'itens do catálogo com efeitoEquipamento no topo');
 });
 
 teste('Tiro rápido gasta 2 Esperanças e devolve +4 só para o dano da arma principal',()=>{
@@ -13037,10 +13227,28 @@ teste('E18 — Pedra de Sangue exige vínculo e só aceita arma possuída sem ca
   igual(r.erros.length, 1);
   verdade(/vínculo/i.test(r.erros[0]), r.erros[0]);
 
+  /*
+   * ⚠ ESTE PEDAÇO PASSAVA PELO MOTIVO ERRADO. Ele conferia que vincular à Espada
+   * Larga dava 1 erro e dizia na mensagem "arma com Confiável não pode receber a
+   * pedra" — mas a Espada Larga nem estava equipada nesta ficha, e o erro que
+   * vinha era "não está equipada nem na reserva". A regra da característica
+   * nunca foi exercitada. Agora a arma é equipada de propósito e a mensagem é
+   * conferida.
+   */
+  const comCaracteristica = fichaLootE18(
+    [{ id:'loot-25', nome:'Pedra de sangue', qtd:1, emUso:false }], 'primaria-t1-espada-larga');
+  const rCarac = contexto.aplicarAjustes_(comCaracteristica, [{
+    tipo:'inventario', acao:'vinculo', indice:0, vinculo:'primaria-t1-espada-larga'
+  }]);
+  igual(rCarac.erros.length, 1, 'arma com Confiável não pode receber a pedra');
+  verdade(/só pode ser incrustada em uma arma que ainda não tenha característica/i
+    .test(rCarac.erros[0]), rCarac.erros[0]);
+
   r = contexto.aplicarAjustes_(f, [{
     tipo:'inventario', acao:'vinculo', indice:0, vinculo:'primaria-t1-espada-larga'
   }]);
-  igual(r.erros.length, 1, 'arma com Confiável não pode receber a pedra');
+  igual(r.erros.length, 1, 'e a arma que não é da ficha continua recusada');
+  verdade(/não está equipada nem na reserva/i.test(r.erros[0]), r.erros[0]);
 
   r = contexto.aplicarAjustes_(f, [{
     tipo:'inventario', acao:'vinculo', indice:0, vinculo:'primaria-t1-espada-longa'
@@ -13067,6 +13275,81 @@ teste('E18 — duas pedras não podem conceder duas características à mesma ar
   igual(r.erros.length, 1);
   verdade(/já recebeu uma característica/i.test(r.erros[0]), r.erros[0]);
   igual(f.inventario[1].emUso, false);
+});
+
+teste('⚠ E20 — as seis Gemas trocam o traço do ataque, e isso estava só no texto', () => {
+  /*
+   * SRD 2.0, linhas 4793-4804: "You can attach this gem to a weapon, allowing
+   * you to use your <Traço> when making an attack with that weapon."
+   *
+   * As seis eram texto e nada mais. Quem encaixasse a Gema da Alacridade numa
+   * Espada Larga continuava lendo "Traço: Força" na ficha e rolava Força — o
+   * dado errado, sem aviso nenhum.
+   */
+  const esperado = {
+    'loot-53': 'Agilidade', 'loot-54': 'Força', 'loot-55': 'Finesse',
+    'loot-56': 'Instinto', 'loot-57': 'Presença', 'loot-58': 'Conhecimento'
+  };
+  Object.entries(esperado).forEach(([id, traco]) => {
+    const item = contexto.acharItem_(id);
+    verdade(!!item, id + ' saiu do catálogo');
+    igual((item.efeitoSaquePassivo.anexoArma || {}).trocaTracoDeAtaque, traco, id);
+    igual(item.efeitoSaquePassivo.configuracao.tipo, 'arma-qualquer', id);
+    igual(item.automacao.rolaNoApp, false, id + ' não pode rolar dado nenhum');
+    // e o traço prometido tem de ser um traço que existe
+    verdade(['Agilidade', 'Força', 'Finesse', 'Instinto', 'Presença', 'Conhecimento']
+      .includes(traco), traco + ' não é traço do jogo');
+  });
+});
+
+teste('⚠ E20 — a Gema entra em arma COM característica; a Pedra não', () => {
+  /*
+   * A diferença é do LIVRO, não de gosto: a Pedra ACRESCENTA característica e o
+   * livro exige que a arma não tenha nenhuma; a Gema TROCA o traço e o livro não
+   * exige nada. Copiar a restrição da Pedra para a Gema seria o app proibir o
+   * que a regra permite.
+   */
+  // a Espada Larga TEM Confiável, e aqui ela está EQUIPADA: a pedra é recusada
+  // nela (ver o teste da Pedra acima), a gema não
+  const f = fichaLootE18([{ id:'loot-53', nome:'Gema da Alacridade', qtd:1, emUso:false }],
+    'primaria-t1-espada-larga');
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'inventario', acao:'vinculo', indice:0, vinculo:'primaria-t1-espada-larga'
+  }]);
+  igual(r.erros, [], 'a gema tem de aceitar arma com característica');
+  igual(f.inventario[0].vinculo, 'primaria-t1-espada-larga');
+  igual(contexto.aplicarAjustes_(f, [
+    { tipo:'inventario', acao:'uso', indice:0, ligar:true }
+  ]).erros, []);
+
+  // e continua exigindo que a arma seja da ficha
+  const f2 = fichaLootE18([{ id:'loot-54', nome:'Gema do Poder', qtd:1, emUso:false }]);
+  const r2 = contexto.aplicarAjustes_(f2, [{
+    tipo:'inventario', acao:'vinculo', indice:0, vinculo:'primaria-t4-cetro-lendario'
+  }]);
+  igual(r2.erros.length, 1);
+  verdade(/não está equipada nem na reserva/i.test(r2.erros[0]), r2.erros[0]);
+});
+
+teste('⚠ E20 — o conflito é por VAGA: Pedra e Gema convivem, duas Gemas não', () => {
+  /*
+   * Uma ACRESCENTA característica, a outra TROCA o traço: são vagas diferentes e
+   * as duas na mesma arma convivem. Duas Gemas é que disputam — e aí quem
+   * ganharia seria a ordem da mochila, que ninguém vê.
+   */
+  const f = fichaLootE18([
+    { id:'loot-25', nome:'Pedra de sangue', qtd:1, emUso:false, vinculo:'primaria-t1-espada-longa' },
+    { id:'loot-53', nome:'Gema da Alacridade', qtd:1, emUso:false, vinculo:'primaria-t1-espada-longa' },
+    { id:'loot-54', nome:'Gema do Poder', qtd:1, emUso:false, vinculo:'primaria-t1-espada-longa' }
+  ]);
+  igual(contexto.aplicarAjustes_(f, [{ tipo:'inventario', acao:'uso', indice:0, ligar:true }]).erros, [],
+    'a Pedra entra');
+  igual(contexto.aplicarAjustes_(f, [{ tipo:'inventario', acao:'uso', indice:1, ligar:true }]).erros, [],
+    '⚠ a Gema tem de conviver com a Pedra na mesma arma');
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'inventario', acao:'uso', indice:2, ligar:true }]);
+  igual(r.erros.length, 1, 'duas Gemas na mesma arma têm de ser recusadas');
+  verdade(/já usa o traço de/i.test(r.erros[0]), r.erros[0]);
+  igual(f.inventario[2].emUso, false);
 });
 
 teste('E18 — Relíquia de Afiação vincula somente Experiência real e respeita uma relíquia', () => {
@@ -14156,6 +14439,367 @@ function fichaArtistaMarcial_(nivel, armadura) {
   return f;
 }
 
+teste('⚠ E112: nenhum nome de arma traz a assinatura de erro de extração',()=>{
+  /*
+   * As tabelas de armas do SRD são de 2-3 colunas e quebram o nome em duas
+   * linhas ("Advanced" numa, "Wand" na outra). Quando o par se desalinha, o
+   * nome sai INVERTIDO ("Avançado cetro" em vez de "Cetro avançado") ou com o
+   * marcador do extrator no id.
+   *
+   * ⚠ ISTO ACHOU DUAS COISAS DE UMA VEZ, e a segunda era grave:
+   *  - `primaria-t3-avancado-nome-cortado-incompleto` — id com o marcador do
+   *    extrator vazado, mas com os dados CERTOS do Cetro avançado; hoje
+   *    `primaria-t3-cetro-avancado`, com o id antigo em `aliases`;
+   *  - `primaria-t3-avancado-cetro` "Avançado cetro" — que não era Cetro
+   *    nenhum: Conhecimento, Distante, d6+7, uma mão, sem característica é a
+   *    VARINHA AVANÇADA (Advanced Wand, SRD 2.0). A família Varinha ia
+   *    d6+1 → d6+4 → (nada) → d6+10: o patamar 3 estava invisível para quem
+   *    procurasse "Varinha", e aparecia como um segundo Cetro para quem
+   *    procurasse "Cetro". Hoje `primaria-t3-varinha-avancada`, também com o
+   *    id antigo em `aliases`.
+   *
+   * Os dois ids antigos vivem em `aliases` porque FICHA GRAVADA GUARDA ID:
+   * renomear sem deixar o antigo alcançável desequipa a arma de quem já a
+   * tinha. Ver E113 para a colisão de nomes que essa renomeação destampou.
+   */
+  const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/equipamentos.json'), 'utf8'));
+  const invertidos = [];
+  const idsQuebrados = [];
+  const prefixos = /^(Avançado|Aprimorado|Lendário|Avançada|Aprimorada|Lendária)\s/;
+  /*
+   * O MESMO ERRO ACHOU O SAQUE. `loot-24` se chamava "Frasco de Darksmoke
+   * Receita" — "Vial of Darksmoke Recipe" com a palavra da frente jogada para o
+   * fim — enquanto as outras três receitas do catálogo dizem "Receita de X".
+   * Por isso a medição agora cobre saque e consumíveis, e olha o FIM do nome
+   * também.
+   */
+  const sufixos = /\s(Receita|Poção|Poções)$/;
+  ['armas', 'armaduras', 'loot', 'consumiveis'].forEach((bloco) => {
+    (d[bloco] || []).forEach((x) => {
+      const nome = String(x.nome || '');
+      if (prefixos.test(nome) || sufixos.test(nome)) invertidos.push(`${x.id}: ${nome}`);
+      if (/cortado|incompleto|placeholder|sem-nome/i.test(nome)) invertidos.push(`${x.id}: ${nome}`);
+      if (/nome-cortado|incompleto|placeholder|sem-nome/.test(String(x.id || ''))) {
+        idsQuebrados.push(String(x.id));
+      }
+    });
+  });
+  igual(invertidos, [], 'nomes com a ordem das palavras invertida ou com marcador do extrator');
+  igual(idsQuebrados, [], 'ids com marcador do extrator');
+});
+
+teste('⚠ E114: o texto que o jogador lê fala a língua das cartas',()=>{
+  /*
+   * ISTO ACHOU 50 DEFEITOS EM 43 ITENS, e dois deles não eram vocabulário:
+   *
+   *  - `consumivel-57` (Orbe Ofuscante) tinha PERDIDO O ALCANCE. O original diz
+   *    "All targets within Close range become Vulnerable"; o texto em português
+   *    dizia "dentro da área de alcance", que não é regra nenhuma — a mesa não
+   *    tinha como saber até onde o clarão pegava.
+   *  - `consumivel-srd2-tears-of-the-undying-hero` tinha PERDIDO A PRIMEIRA
+   *    FRASE ("death can't touch you until your next long rest") e chamava o
+   *    movimento de descanso de "Cuidar dos Ferimentos", nome que não existe na
+   *    ficha — o certo é "Tratar Feridas", e quem fosse procurar não achava.
+   *
+   * O resto era resto de tradução automática: "Clear 1d4+2 HP." inteiro em
+   * inglês, "limpe isso Muitos slots de armadura", "Gaste uma Hope", "marcar um
+   * estresse", "Ponto de Fadiga", "Acuidade", "dano Grave", "PCs".
+   *
+   * As regras vivem em tools/lib-vocabulario-exibido.mjs, e valem só para os
+   * campos de EXIBIÇÃO — `textoIngles`, `descricaoIngles` e `nomeLivro` são
+   * registro da fonte e continuam intocados.
+   */
+  const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/equipamentos.json'), 'utf8'));
+  const textos = textosExibidos(d);
+  verdade(textos.length > 500, 'esperava o catálogo inteiro, achei ' + textos.length + ' textos');
+  const defeitos = acharDefeitosE114(d).map((x) =>
+    `${x.id} · ${x.regra} · ${JSON.stringify(x.achado)} → ${x.conserto}`);
+  igual(defeitos, [], 'textos de exibição fora do vocabulário das cartas');
+});
+
+teste('⚠ E114 no bestiário: o texto do Mestre fala a língua da ficha',()=>{
+  /*
+   * ERAM 56 DEFEITOS, e o pior deles mandava o Mestre medir uma distância que o
+   * jogo não tem: **15 habilidades diziam "alcance Longo"**. Os alcances são
+   * Corpo a Corpo, Muito Próximo, Próximo, Distante e Muito Distante. No meio
+   * do combate, a mesa tinha de adivinhar se "Longo" era Distante ou Muito
+   * Distante — e o `textoIngles` guardado dizia, em todos os 15 casos, qual era.
+   *
+   * O resto era o mesmo termo escrito de dois jeitos dentro do MESMO arquivo:
+   * "dano grave" (15) contra "dano Severo" (11) · "Restringido" (9) contra
+   * "Restrito" (47) · "Rolagem de Reação" (7) contra "Jogada de Reação" (110) ·
+   * "sob os holofotes" / "iluminado por holofote" (4) contra "em foco" (140) ·
+   * "Slot de Armadura" (3) · "movimento de inatividade" (3) · "limites de dano"
+   * (2) · uma horda dizendo "(1/HP)" enquanto as outras quatro dizem "(N/PV)".
+   *
+   * ⚠ DUAS COISAS QUE PARECEM DEFEITO E NÃO SÃO — estão nas regras, escritas:
+   *  - `PV` é a convenção DAQUI (130 textos abreviam, como o bloco de
+   *    estatísticas do livro). No equipamento é o contrário.
+   *  - o "Iluminado" da górgona NÃO é o foco da mesa: é condição de luz
+   *    ("não pode se esconder"). Trocar teria inventado uma regra.
+   */
+  const b = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/adversarios.json'), 'utf8'));
+  verdade(textosExibidosDeAdversarios(b).length > 3000, 'esperava o bestiário inteiro');
+  const defeitos = acharDefeitosBestiario(b).map((x) =>
+    `${x.id} · ${x.onde} · ${x.regra} · ${JSON.stringify(x.achado)} → ${x.conserto}`);
+  igual(defeitos, [], 'textos do bestiário fora do vocabulário da ficha');
+});
+
+teste('o bestiário não perdeu a condição de luz da górgona',()=>{
+  /*
+   * A varredura do "spotlight" passou perto desta: trocar "Iluminado" por "em
+   * foco" aqui teria apagado uma condição e inventado outra. O teste existe
+   * para que a próxima varredura não a atropele.
+   */
+  const b = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/adversarios.json'), 'utf8'));
+  const g = b.adversarios.find((a) => a.id === 'gorgona');
+  verdade(!!g, 'a górgona saiu do bestiário');
+  const textos = (g.habilidades || []).map((h) => h.texto || '').join(' ');
+  verdade(/fica Iluminado até o fim da cena/.test(textos),
+    'a condição Iluminado da górgona virou outra coisa');
+  verdade(/não pode se esconder/.test(textos), 'o efeito da condição Iluminado sumiu');
+});
+
+teste('⚠ E115: o vocabulário de regra é o mesmo em TODO o app',()=>{
+  /*
+   * POR QUE ESTE INVARIANTE EXISTE, e não bastava o E114.
+   *
+   * O E114 olha dois arquivos por um mapa de campo escrito à mão. Foi assim que
+   * `efeitoManual` — o lembrete que a ficha escreve embaixo do item, que a
+   * pessoa LÊ na mesa — ficou fora do mapa com sete jogadas nomeadas erradas
+   * dentro. Um mapa à mão esquece campo; e campo esquecido não dá erro, dá
+   * silêncio.
+   *
+   * Aqui a varredura é ao contrário: percorre TODO arquivo de `data/` e só pula
+   * o que está declarado como REGISTRO em CAMPOS_DE_REGISTRO. Campo novo entra
+   * na medição sozinho, e quem quiser deixá-lo de fora tem de escrever por quê.
+   *
+   * ⚠ A LISTA DE REGISTRO GANHOU QUATRO ENTRADAS PORQUE A MEDIÇÃO ACUSOU TEXTO
+   * QUE ESTAVA CERTO: `ambiguidades` anota que o livro escreve "PF" num quadro e
+   * "Pontos de Fadiga" na explicação; `substituicoes` precisa do termo da Jambô
+   * do lado esquerdo, senão a troca não acha nada; `doisNiveisDeGlosa` explica a
+   * glosa usando "Estresse × Ponto de Fadiga" como exemplo; `sinonimos` guarda
+   * "Spellcast" para a busca em inglês achar. Corrigir qualquer um deles teria
+   * quebrado a coisa que ele serve.
+   *
+   * E há UMA exceção de caminho, não de campo: `companheiroAnimal.base.dano` é
+   * uma nota que CITA o livro entre aspas simples.
+   */
+  const pasta = path.join(RAIZ, 'data');
+  const arquivos = fs.readdirSync(pasta)
+    .filter((f) => f.endsWith('.json'))
+    .filter((f) => !/auditoria|inventario|correcoes|^srd2-/.test(f));
+  verdade(arquivos.length > 15, 'esperava a pasta data inteira, achei ' + arquivos.length);
+  const defeitos = [];
+  arquivos.forEach((f) => {
+    const d = JSON.parse(fs.readFileSync(path.join(pasta, f), 'utf8'));
+    acharDefeitosE115(d, { arquivo: f, pularCaminho: caminhoDeRegistro }).forEach((x) => {
+      defeitos.push(`${x.arquivo}${x.caminho} · ${x.regra} · ${JSON.stringify(x.achado)} → ${x.conserto}`);
+    });
+  });
+  igual(defeitos, [], 'vocabulário de regra divergente');
+  verdade(REGRAS_E115.length >= 7, 'as regras do E115 encolheram sem ninguém notar');
+  verdade(CAMPOS_DE_REGISTRO.has('ancora'),
+    '`ancora` é texto literal do livro e NÃO pode entrar na medição');
+  verdade(CAMPOS_DE_REGISTRO.has('doLivro'),
+    '`doLivro` guarda o que o livro imprimiu e NÃO pode ser corrigido');
+});
+
+teste('a transcrição da carta oficial não foi "corrigida"',()=>{
+  /*
+   * A LINHA QUE NÃO SE ATRAVESSA: o app fala a língua das CARTAS. Se a carta
+   * imprimiu "rolagem", a transcrição mantém — o que muda é o texto NOSSO ao
+   * lado dela. As cartas dizem "jogada" 196 vezes contra 2, e essas 2 são
+   * justamente as que têm de sobreviver a qualquer varredura de vocabulário.
+   */
+  const c = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/cartas-dominio.json'), 'utf8'));
+  const comRolagem = c.cartas.filter((x) => /rolage(m|ns)/i.test(x.texto || ''));
+  igual(comRolagem.map((x) => x.nome).sort(), ['Presença Audaz', 'Templo das Selvas'],
+    'as duas transcrições que dizem "rolagem" têm de continuar dizendo');
+});
+
+teste('E114 sabe achar o defeito, e não acusa a palavra comum',()=>{
+  // um invariante que não falha em nada não protege nada: aqui ele falha de propósito
+  const falso = { armas:[], armaduras:[], loot:[
+    { id:'teste-sujo', descricao:'Clear 1d4 HP e marque um estresse.' },
+    { id:'teste-limpo', descricao:'Beba para descobrir o medo mais profundo de alguém. O Mestre recebe 1 Medo.' }
+  ], consumiveis:[] };
+  const achados = acharDefeitosE114(falso);
+  verdade(achados.length >= 3, 'o texto sujo tem de acusar inglês, HP e recurso em minúscula');
+  igual(achados.filter((x) => x.id === 'teste-limpo'), [],
+    '"o medo mais profundo" é a palavra, não o recurso do Mestre');
+  verdade(REGRAS_E114.length >= 9, 'as regras do E114 encolheram sem ninguém notar');
+});
+
+teste('a família Varinha tem os quatro patamares, sem buraco',()=>{
+  const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/equipamentos.json'), 'utf8'));
+  const base = d.armas.filter((a) =>
+    /^Varinha (mágica|aprimorada|avançada|Lendária)$/i.test(String(a.nome || '')));
+  igual(base.map((a) => a.tier).sort(), [1, 2, 3, 4], 'patamares da Varinha: ' +
+    JSON.stringify(base.map((a) => `t${a.tier} ${a.nome} ${a.dano}`)));
+  // a progressão do SRD é +3 por patamar
+  igual(base.sort((a, b) => a.tier - b.tier).map((a) => a.dano),
+    ['d6+1 mág', 'd6+4 mág', 'd6+7 mág', 'd6+10 mág']);
+});
+
+teste('o Versátil do Cetro aprimorado diz o dano do patamar dele',()=>{
+  /*
+   * SRD 2.0: "Improved Scepter … Versatile: This weapon can also be used with
+   * these statistics—Presence, Melee, d8+3." O app dizia "d8", o valor do
+   * patamar 1 — três pontos abaixo, no texto que a mesa lê para rolar.
+   */
+  const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/equipamentos.json'), 'utf8'));
+  const esperado = { 'primaria-t1-cetro': 'd8', 'primaria-t2-cetro-aprimorado': 'd8+3',
+    'primaria-t4-cetro-lendario': 'd8+6' };
+  Object.entries(esperado).forEach(([id, alvo]) => {
+    const a = d.armas.find((x) => x.id === id);
+    verdade(!!a, 'não achei ' + id);
+    const t = String(((a.caracteristica || {}).texto) || '');
+    verdade(t.includes('Corpo a Corpo, ' + alvo + '.'),
+      id + ': o Versátil tem de dizer ' + alvo + '; diz "' + t.slice(-40) + '"');
+  });
+});
+
+teste('⚠ E111: nenhuma habilidade de adversário fica sem tipo',()=>{
+  /*
+   * O tipo (passiva / ação / reação / evolução) é o que a tela usa para
+   * agrupar e para saber o que o Mestre pode acionar. Uma habilidade com
+   * `tipo: null` desaparece do agrupamento sem erro nenhum.
+   *
+   * ⚠ ISTO ACHOU UM DEFEITO REAL: "Troll da Montanha Enfurecido" era a ÚNICA
+   * de 264 adversários com tipo nulo, e no livro ela é
+   * "Enraged Mountain Troll - Evolution" (Hope & Fear, p.65). As outras cinco
+   * Evolutions do bestiário (Fênix, Roc, Lorde Vampiro, Titã Cefilita,
+   * Adonix) estavam corretas — só ela ficou de fora.
+   */
+  const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/adversarios.json'), 'utf8'));
+  const semTipo = [];
+  const tiposVistos = {};
+  (function varrer(o) {
+    if (Array.isArray(o)) { o.forEach(varrer); return; }
+    if (!o || typeof o !== 'object') return;
+    (o.habilidades || []).forEach((h) => {
+      if (!h || !h.tipo) semTipo.push(String(o.nome || '?') + ' → ' + String((h || {}).nome || '?'));
+      else tiposVistos[h.tipo] = (tiposVistos[h.tipo] || 0) + 1;
+    });
+    Object.values(o).forEach(varrer);
+  })(d);
+  igual(semTipo, [], 'habilidades sem tipo');
+  verdade(Number(tiposVistos['evolução']) >= 6,
+    'o bestiário tem de ter as seis Evolutions; vi ' + JSON.stringify(tiposVistos['evolução']));
+});
+
+console.log('\nVigilante — a reação de patamar 3 que a ficha prometia e não entregava');
+/** Um Artista Marcial com a Vigilante conhecida e assumida. */
+function fichaVigilante_(foco) {
+  let f = fichaArtistaMarcial_(5);
+  f.recursos.foco = foco === undefined ? 4 : foco;
+  f = contexto.validarFicha_(f);
+  contexto.aplicarAjustes_(f, [{ tipo:'postura', acao:'aprender', postura:'vigilante' }]);
+  contexto.aplicarAjustes_(f, [{ tipo:'postura', acao:'assumir', postura:'vigilante' }]);
+  return contexto.validarFicha_(f);
+}
+
+teste('a Vigilante fica ativa e o catálogo declara a reação',()=>{
+  const f = fichaVigilante_();
+  igual((f.posturas || {}).ativa, 'vigilante');
+  const def = avaliar('POSTURAS').vigilante;
+  verdade(!!def.reacaoAtaque, 'o catálogo tem de declarar reacaoAtaque');
+  igual(def.reacaoAtaque.custoEstresse, 1);
+  igual(def.reacaoAtaque.dadoManual.lados, 6);
+});
+
+teste('⚠ sem o d6 informado, a reação PEDE o dado em vez de recusar',()=>{
+  const f = fichaVigilante_();
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'reacaoPostura' }]);
+  verdade(!!r.pendenciaRolagem, 'tinha de devolver pendência de rolagem; veio ' + JSON.stringify(r.erros));
+  igual(r.pendenciaRolagem.caracteristica, 'Vigilante');
+  igual(f.recursos.estresseMarcado, 0, 'nada é cobrado antes de o dado chegar');
+});
+
+teste('⚠ com o d6, cobra 1 Estresse e devolve o bônus de Evasão daquele ataque',()=>{
+  const f = fichaVigilante_();
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'reacaoPostura', resultadoManual:5 }]);
+  igual(r.erros, []);
+  igual(f.recursos.estresseMarcado, 1, 'o Estresse é cobrado de verdade');
+  const m = r.mudancas[0] || {};
+  igual(m.bonusEvasao, 5, 'o d6 informado vira o bônus daquele ataque');
+  igual(contexto.validarFicha_(f).defesas.evasao, fichaVigilante_().defesas.evasao,
+    'e NUNCA é gravado na Evasão da ficha: vale para um ataque só');
+});
+
+teste('o d6 fora da faixa é recusado em vez de arredondado',()=>{
+  const f = fichaVigilante_();
+  verdade(contexto.aplicarAjustes_(f, [{ tipo:'reacaoPostura', resultadoManual:7 }]).erros.length === 1);
+  igual(f.recursos.estresseMarcado, 0);
+});
+
+teste('quem não está na Vigilante não tem a reação',()=>{
+  let f = fichaArtistaMarcial_(5);
+  f.recursos.foco = 4; f = contexto.validarFicha_(f);
+  contexto.aplicarAjustes_(f, [{ tipo:'postura', acao:'aprender', postura:'confiavel' }]);
+  contexto.aplicarAjustes_(f, [{ tipo:'postura', acao:'assumir', postura:'confiavel' }]);
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'reacaoPostura', resultadoManual:5 }]);
+  verdade(r.erros.length === 1, 'a Confiável não tem reação de ataque');
+  igual(f.recursos.estresseMarcado, 0);
+});
+
+teste('sem Estresse livre, a reação é recusada e não fica meio aplicada',()=>{
+  const f = fichaVigilante_();
+  f.recursos.estresseMarcado = f.recursos.estresseMaximo;
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'reacaoPostura', resultadoManual:5 }]);
+  verdade(r.erros.length === 1, 'esperava recusa; veio ' + JSON.stringify(r));
+});
+
+console.log('\nRefocar — "uma vez por descanso" é literal');
+teste('⚠ Refocar duas vezes no mesmo descanso é RECUSADO, e nada é gravado',()=>{
+  /*
+   * Antes desta guarda: maior=5 e depois maior=2 terminava com DOIS de Foco.
+   * O jogador gastava os dois movimentos do descanso para ficar com MENOS do
+   * que o primeiro Refocar já lhe havia dado, porque o segundo limpa a trilha
+   * antes de encher. Perda silenciosa, sem erro nenhum.
+   *
+   * ⚠ O motor recusa o descanso INTEIRO, não só o segundo movimento. É o
+   * contrato que `aplicarDescanso_` já tinha para qualquer erro, e é o certo
+   * aqui: aplicar só o primeiro seria entregar um descanso diferente do que a
+   * pessoa pediu, sem dizer. Assim ela relê a tela e escolhe de novo.
+   */
+  const f = fichaArtistaMarcial_(1);
+  f.recursos.foco = 0;
+  const antes = f.recursos.foco;
+  let lancou = null;
+  try {
+    contexto.aplicarDescanso_(f, 'curto', [
+      { movimento:'foco:refocar', maiorResultado:5 },
+      { movimento:'foco:refocar', maiorResultado:2 }
+    ]);
+  } catch (e) { lancou = e; }
+  verdade(!!lancou, 'o segundo Refocar tinha de ser recusado');
+  verdade(String(lancou.message).indexOf('Refocar') >= 0,
+    'o erro tem de dizer QUAL movimento foi recusado; veio: ' + lancou.message);
+  verdade(String(lancou.message).indexOf('uma vez por descanso') >= 0,
+    'e tem de dizer POR QUÊ; veio: ' + lancou.message);
+  igual(f.recursos.foco, antes, 'nada foi gravado: o jogador não perde Foco');
+});
+
+teste('um Refocar sozinho continua funcionando',()=>{
+  const f = fichaArtistaMarcial_(1);
+  f.recursos.foco = 0;
+  const r = contexto.aplicarDescanso_(f, 'curto', [{ movimento:'foco:refocar', maiorResultado:5 }]);
+  igual(((r.previa || {}).erros) || [], []);
+  igual(((r.ficha || {}).recursos || {}).foco, 5);
+});
+
+teste('repetir OUTRO movimento duas vezes continua permitido (a regra geral não mudou)',()=>{
+  const f = fichaArtistaMarcial_(1);
+  f.recursos.estresseMarcado = 6;
+  const r = contexto.aplicarDescanso_(f, 'curto', [
+    { movimento:'reduzir-estresse', rolagem:3 },
+    { movimento:'reduzir-estresse', rolagem:3 }
+  ]);
+  igual(((r.previa || {}).erros) || [], [], 'o livro permite o mesmo movimento duas vezes');
+});
+
 teste('as posturas pertencem ao Artista Marcial, e o motor sabe disso', () => {
   igual(avaliar('POSTURAS_CONFIG').subclasse, 'brigao-artista-marcial');
   igual(contexto.ehArtistaMarcial_(fichaArtistaMarcial_(1)), true);
@@ -15106,6 +15750,219 @@ teste('E108: toda característica de equipamento declara o que o app faz com ela
     if (!a || !a.classificacao || !a.motivo) orfas.push(`${item.nome} (${item.carac})`);
   });
   igual(orfas, [], `sem registro de automação: ${orfas.length}`);
+});
+
+teste('⚠ E108 alcança saque e consumíveis: os 240 itens declaram também', () => {
+  /*
+   * A LACUNA QUE A FRENTE 4.5 TINHA APONTADO. O E108 varria só ARMAS e
+   * ARMADURAS: `loot` e `consumiveis` — 240 dos 637 itens — ficavam fora, e era
+   * justamente ali que estavam TODAS as ausências. O teste dava uma confiança
+   * que não cobria.
+   *
+   * Eram 68 itens sem declaração nenhuma, e "nada declarado" é indistinguível de
+   * esquecimento: ninguém sabia dizer se a Bolsa infinita não move número por
+   * decisão ou porque ninguém reparou. No meio deles estavam as SEIS GEMAS, com
+   * mecânica determinística parada — hoje ligadas (ver E20).
+   *
+   * Os três destinos dizem o que a mesa faz na hora:
+   *  • `ficcao-sem-efeito` — não há número a mover, e isso é uma decisão;
+   *  • `mesa-decide` — a resolução é do Mestre ou de um dado rolado na mesa;
+   *  • `pendente-deterministico` — o app PODERIA e não faz. Dívida com nome.
+   */
+  const itens = avaliar('ITENS') || [];
+  igual(itens.length, 240, 'esperava os 240 itens de saque e consumíveis');
+  const orfas = [];
+  const classificacoesRuins = [];
+  itens.forEach((i) => {
+    const a = i.automacao;
+    if (!a || !a.classificacao || !a.motivo) { orfas.push(`${i.id} ${i.nome}`); return; }
+    if (String(a.motivo).trim().length < 20) {
+      classificacoesRuins.push(`${i.id}: motivo curto demais para significar algo`);
+    }
+  });
+  igual(orfas, [], `itens sem registro de automação: ${orfas.length}`);
+  igual(classificacoesRuins, [], classificacoesRuins.join(' · '));
+});
+
+teste('⚠ E108: a dívida dos itens é contada, item por item', () => {
+  /*
+   * `pendente-deterministico` é o único destino que admite "o app poderia e não
+   * faz" — e por isso ele é o que precisa de número. A lista abaixo é a dívida
+   * inteira, com nome; se um item entrar ou sair dela sem ninguém mexer aqui, o
+   * teste quebra e diz qual.
+   *
+   * Está tudo escrito em docs/varredura-100-por-cento.md, Frente 7.10.
+   */
+  const itens = avaliar('ITENS') || [];
+  const pendentes = itens
+    .filter((i) => /pendente-deterministico$/.test((i.automacao || {}).classificacao || ''))
+    .map((i) => i.id).sort();
+  igual(pendentes, [
+    'consumivel-56',
+    'consumivel-58',
+    'loot-33',
+    'loot-srd2-ghoulskin-gloves',
+    'loot-srd2-gloves-of-alacrity',
+    'loot-srd2-insomniacs-periapt',
+    'loot-srd2-phobophages-circlet',
+    'loot-srd2-reliquary-of-the-sightless-saint',
+    'loot-srd2-rings-of-camaraderie',
+    'loot-srd2-rings-of-friendship',
+    'loot-srd2-temporal-sanctuary',
+    'loot-srd2-timekeepers-pendant',
+    'loot-srd2-travelers-bell'
+  ], 'a dívida dos itens mudou — atualize a lista e a Frente 7.10');
+  /*
+   * ⚠ E AQUI ESTE TESTE ME PEGOU. A primeira versão cobrava que item pendente
+   * não tivesse `efeitoSaquePassivo` nenhum, e sete deles têm — só que o que
+   * eles têm é `contextual.regra`, que NÃO É EFEITO: é um texto de lembrete, e
+   * um texto que ninguém lê (ver a Frente 7.10). O que não pode conviver com
+   * "pendente" é efeito que AGE: cobrar recurso, mexer em trilha, anexar na
+   * arma, dar bônus de Experiência, alterar descanso.
+   */
+  const EFEITOS_QUE_AGEM = ['anexoArma', 'experiencia', 'descanso', 'alcanceArmas',
+    'recuperaEstresse', 'movimentoRepouso', 'grupoExclusivo'];
+  const mentindo = itens
+    .filter((i) => /pendente-deterministico$/.test((i.automacao || {}).classificacao || ''))
+    .filter((i) => {
+      if (i.efeitoConsumivel || i.efeitoSaque || i.reacaoConsumivel) return true;
+      const passivo = i.efeitoSaquePassivo || {};
+      return EFEITOS_QUE_AGEM.some((k) => passivo[k]);
+    })
+    .map((i) => i.id);
+  igual(mentindo, [], 'item pendente com efeito que AGE: ou não é pendente, ou o efeito é mentira');
+});
+
+teste('⚠ "Em Chamas" é UM marcador para três regras de fogo, e isso é a decisão',()=>{
+  /*
+   * A DECISÃO, e o motivo dela.
+   *
+   * O SRD 2.0 tem duas condições de fogo com nomes diferentes — "On Fire" (a da
+   * carta Aperto de Cinzas) e "Ablaze" (a do Fragmento de emberita) — e o livro
+   * pt-BR usa "Em Chamas" e "Flamejante" em momentos diferentes. Dava para criar
+   * uma segunda condição, "Flamejante", e mapear Ablaze nela.
+   *
+   * NÃO FOI ISSO. O app tem UM marcador, e a regra viaja com quem aplicou. Duas
+   * razões:
+   *
+   *  1. o desenho já era esse e é melhor: são TRÊS regras de fogo no app, não
+   *     duas — a carta cobra 2d6 ao fim da ação, o Fragmento pede d4 por jogada
+   *     de ação, e o Incendiar do Lodo vermelho cobra 1d4 por jogada e só apaga
+   *     com Finesse (14). Dois marcadores não cobririam três regras; três
+   *     marcadores para "pegar fogo" seria a ficha pedindo que a mesa lembrasse
+   *     de qual fogo é qual.
+   *  2. "Flamejante" já vive no app como PALAVRA e como nome de habilidade —
+   *     "Coração Flamejante", "Escamas Flamejantes", "gosma vermelha flamejante".
+   *     Promovê-la a nome de condição criaria a confusão que o glossário já
+   *     documenta para "Oculto".
+   *
+   * O que a decisão exige em troca: a condição DIZ que a regra é de quem aplicou
+   * (e não só "da carta", como dizia antes — dois dos três não são cartas), os
+   * dois nomes em inglês ficam registrados, "Flamejante" e "Ablaze" entram como
+   * sinônimos para a busca achar, e CADA fonte escreve a sua própria regra.
+   */
+  const c = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/condicoes.json'), 'utf8'));
+  const fogo = c.condicoes.find((x) => x.id === 'em-chamas');
+  verdade(!!fogo, 'a condição Em Chamas saiu do catálogo');
+  igual(fogo.nomeIngles, 'On Fire / Ablaze', 'os dois nomes do SRD têm de estar registrados');
+  ['On Fire', 'Ablaze', 'Flamejante'].forEach((s) => verdade((fogo.sinonimos || []).includes(s),
+    'falta o sinônimo ' + s + ' — a busca não acharia'));
+  verdade(!/conforme descrito na carta/.test(fogo.texto),
+    'o texto voltou a dizer só "na carta"; dois dos três aplicadores não são cartas');
+  verdade(/QUEM APLICOU/.test(fogo.texto), fogo.texto);
+  // e não pode ter nascido uma segunda condição de fogo pelas costas
+  const fogos = c.condicoes.filter((x) => /chama|flamej|fogo|ablaze/i.test(
+    [x.id, x.nome, x.nomeIngles].join(' ')));
+  igual(fogos.map((x) => x.id), ['em-chamas'],
+    'apareceu outra condição de fogo — se foi de propósito, troque este teste e a Frente 7.11');
+
+  /* as TRÊS fontes escrevem a própria regra, que é o que o marcador genérico exige */
+  const eq = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/equipamentos.json'), 'utf8'));
+  const frag = eq.consumiveis.find((x) => x.id === 'consumivel-srd2-emberite-shard');
+  verdade(/d4 sempre que fizer uma jogada de ação/.test(frag.descricao), 'o Fragmento');
+  const cartas = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/cartas-dominio.json'), 'utf8'));
+  const cinzas = cartas.cartas.find((x) => (x.condicoes || []).includes('Em Chamas'));
+  verdade(!!cinzas && /2d6/.test(JSON.stringify(cinzas)), 'a carta Aperto de Cinzas');
+  const bes = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/adversarios.json'), 'utf8'));
+  const lodo = bes.adversarios.find((a) => a.id === 'lodo-vermelho');
+  const incendiar = (lodo.habilidades || []).find((h) => /Incendiar/i.test(h.nome || ''));
+  verdade(/jogada de Finesse \(14\)/.test(incendiar.texto), 'o Lodo vermelho');
+});
+
+teste('⚠ o Fragmento de emberita diz o que a condição FAZ',()=>{
+  /*
+   * A tradução tinha PERDIDO a metade da regra. O português terminava em "ficar
+   * temporariamente Em Chamas" — e o verbete de "Em Chamas" manda buscar a regra
+   * EM QUEM APLICOU a condição. Quem aplicou não dizia nada: a mesa ficava sem
+   * saber o que a condição faz.
+   *
+   * ⚠ E o motivo de a regra ter de estar escrita no item: o SRD 2.0 tem DUAS
+   * condições de fogo, com regras diferentes — "On Fire" (a da carta Aperto de
+   * Cinzas: 2d6 ao agir) e "Ablaze" (a deste fragmento: d4 por jogada de ação, 1
+   * marca Ponto de Vida, 4 encerra). O português chama as duas de "Em Chamas".
+   * Sem o texto no item, a mesa aplicaria a regra da carta.
+   */
+  const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/equipamentos.json'), 'utf8'));
+  const f = d.consumiveis.find((x) => x.id === 'consumivel-srd2-emberite-shard');
+  verdade(!!f, 'o Fragmento de emberita saiu do catálogo');
+  verdade(/d4 sempre que fizer uma jogada de ação/.test(f.descricao),
+    'a regra do d4 sumiu da descrição: ' + f.descricao);
+  verdade(/em 1, marca 1 Ponto de Vida/.test(f.descricao), f.descricao);
+  verdade(/em 4, a condição acaba/.test(f.descricao), f.descricao);
+  // e os três fragmentos dizem que o alcance é a partir DO PONTO escolhido
+  ['consumivel-srd2-emberite-shard', 'consumivel-srd2-arcticite-shard',
+   'consumivel-srd2-fulgurite-shard'].forEach((id) => {
+    const x = d.consumiveis.find((y) => y.id === id);
+    verdade(/em alcance Próximo desse ponto/.test(x.descricao),
+      id + ': o alcance Próximo é do ponto escolhido, não de quem usa — ' + x.descricao);
+  });
+});
+
+teste('⚠ o campo morto `contextual.regra` não pode voltar',()=>{
+  /*
+   * DEZ ITENS GUARDAVAM A MESMA REGRA DUAS VEZES: em `descricao`, que a ficha
+   * mostra, e em `efeitoSaquePassivo.contextual.regra` — a MESMA frase, literal,
+   * e que nenhuma tela lia.
+   *
+   * Duas cópias da mesma regra podem divergir, e aí o app se contradiz: a mesa lê
+   * uma na descrição e o código guarda outra. Pior: era essa duplicata que fazia
+   * os itens PARECEREM automatizados — foi por ela que sete deles passaram por
+   * "já têm efeito" na classificação do E108, e foi o próprio teste que me pegou.
+   *
+   * Apagado, com registro no ledger. O que sobrou é o que importa: a `descricao`,
+   * que a pessoa lê, e a `automacao`, onde a decisão mora.
+   */
+  const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/equipamentos.json'), 'utf8'));
+  /*
+   * ⚠ E ESTE TESTE TAMBÉM ME CORRIGIU. A primeira versão proibia `contextual`
+   * inteiro — e três itens o usam para guardar DADO ESTRUTURADO, que é outro
+   * animal: a Chave-Mestra diz `{bonusRolagem:"vantagem", traco:"finesse",
+   * condicao:"…"}`, a Semente de Portal diz `{tempoParaFicarProntoHoras:24, …}`.
+   * Isso é modelagem, não frase repetida. O que está proibido é a FORMA
+   * `contextual.regra`: uma cópia da `descricao` fingindo ser fiação.
+   */
+  const comRegra = [...d.loot, ...d.consumiveis]
+    .filter((i) => ((i.efeitoSaquePassivo || {}).contextual || {}).regra)
+    .map((i) => i.id);
+  igual(comRegra, [], 'a cópia voltou — se for de propósito, escreva o leitor junto');
+  // o `contextual` estruturado continua permitido, e são estes três
+  const estruturados = [...d.loot, ...d.consumiveis]
+    .filter((i) => ((i.efeitoSaquePassivo || {}).contextual))
+    .map((i) => i.id).sort();
+  igual(estruturados, ['loot-16', 'loot-36', 'loot-srd2-grapnel'],
+    'mudou quem usa `contextual` estruturado — confira se não voltou a ser frase repetida');
+  // e ninguém pode ter perdido a descrição no caminho
+  const dezQueTinham = ['loot-srd2-reliquary-of-the-sightless-saint',
+    'loot-srd2-ghoulskin-gloves', 'loot-srd2-gloves-of-alacrity',
+    'loot-srd2-insomniacs-periapt', 'loot-srd2-knockback-bracelets',
+    'loot-srd2-timekeepers-pendant', 'loot-srd2-temporal-sanctuary',
+    'loot-srd2-heros-helm', 'loot-srd2-phobophages-circlet', 'loot-srd2-quillshawl'];
+  dezQueTinham.forEach((id) => {
+    const i = [...d.loot, ...d.consumiveis].find((x) => x.id === id);
+    verdade(!!i, id + ' desapareceu do catálogo');
+    verdade(String(i.descricao || '').trim().length > 20, id + ' ficou sem descrição');
+    verdade(!!(i.automacao || {}).motivo, id + ' ficou sem declaração de automação');
+  });
 });
 
 teste('E108: quem se declara automatizada tem efeito ligado de verdade', () => {

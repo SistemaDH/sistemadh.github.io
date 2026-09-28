@@ -1,6 +1,6 @@
 {
  "versao": 1,
- "total": 149,
+ "total": 197,
  "correcoes": [
   {
    "item": "Ricochet Axes / Aantari Bow",
@@ -1074,6 +1074,342 @@
    "de": "Avançado (nome cortado/incompleto)",
    "para": "Cetro avançado",
    "motivo": "a linha do Core identifica o Cetro avançado por Presença/Distante/d6+6 e pela característica Versátil; o placeholder veio do OCR/import anterior"
+  },
+  {
+   "item": "Espada larga de Urok",
+   "tipo": "vocabulario-exibido",
+   "de": "Mortal: Quando você causa dano Grave, o alvo deve marcar um HP adicional.",
+   "para": "Mortal: Quando você causar dano Severo, o alvo deve marcar 1 Ponto de Vida adicional.",
+   "motivo": "\"dano Grave\" é o termo da Jambô e \"HP\" não é português; a gêmea (Picareta de guerra) já dizia \"dano Severo\" e \"1 Ponto de Vida adicional\""
+  },
+  {
+   "item": "Trabuco",
+   "tipo": "vocabulario-exibido",
+   "de": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar um estresse para recarregar antes de atirar novamente.",
+   "para": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar 1 Estresse para recarregar antes de atirar novamente.",
+   "motivo": "recurso em minúscula"
+  },
+  {
+   "item": "Revólver de Pólvora Negra",
+   "tipo": "vocabulario-exibido",
+   "de": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar um estresse para recarregar antes de atirar novamente.",
+   "para": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar 1 Estresse para recarregar antes de atirar novamente.",
+   "motivo": "recurso em minúscula"
+  },
+  {
+   "item": "Canhão de mão",
+   "tipo": "vocabulario-exibido",
+   "de": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar um estresse para recarregar antes de atirar novamente.",
+   "para": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar 1 Estresse para recarregar antes de atirar novamente.",
+   "motivo": "recurso em minúscula"
+  },
+  {
+   "item": "Rifle de Ilmari",
+   "tipo": "vocabulario-exibido",
+   "de": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar um estresse para recarregar antes de atirar novamente.",
+   "para": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar 1 Estresse para recarregar antes de atirar novamente.",
+   "motivo": "recurso em minúscula"
+  },
+  {
+   "item": "Revólver Magus",
+   "tipo": "vocabulario-exibido",
+   "de": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar um estresse para recarregar antes de atirar novamente.",
+   "para": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar 1 Estresse para recarregar antes de atirar novamente.",
+   "motivo": "recurso em minúscula"
+  },
+  {
+   "item": "Varinha do Fascínio",
+   "tipo": "vocabulario-exibido",
+   "de": "Persuasão: Antes de fazer uma rolagem de presença, você pode marcar um estresse para ganhar um bônus de +2 no resultado.",
+   "para": "Persuasão: Antes de fazer uma jogada de Presença, você pode marcar 1 Estresse para ganhar um bônus de +2 no resultado.",
+   "motivo": "recurso em minúscula; e \"rolagem de presença\" virou \"jogada de Presença\", como no resto do catálogo"
+  },
+  {
+   "item": "Runas da Ruína",
+   "tipo": "vocabulario-exibido",
+   "de": "Doloroso: Toda vez que marcar um slot de armadura, você deve marcar um estresse.",
+   "para": "Doloroso: Toda vez que marcar 1 Ponto de Armadura, você deve marcar 1 Estresse.",
+   "motivo": "\"slot de armadura\" e recurso em minúscula"
+  },
+  {
+   "item": "Cajado de sangue",
+   "tipo": "vocabulario-exibido",
+   "de": "Doloroso: Toda vez que marcar um slot de armadura, você deve marcar um estresse.",
+   "para": "Doloroso: Toda vez que marcar 1 Ponto de Armadura, você deve marcar 1 Estresse.",
+   "motivo": "\"slot de armadura\" e recurso em minúscula"
+  },
+  {
+   "item": "Runas de Fortificação",
+   "tipo": "vocabulario-exibido",
+   "de": "Doloroso: Toda vez que marcar um slot de armadura, você deve marcar um estresse.",
+   "para": "Doloroso: Toda vez que marcar 1 Ponto de Armadura, você deve marcar 1 Estresse.",
+   "motivo": "\"slot de armadura\" e recurso em minúscula"
+  },
+  {
+   "item": "Funda de mão",
+   "tipo": "vocabulario-exibido",
+   "de": "Versátil: também pode ser usada com estas estatísticas — Acuidade, Próximo, d8+4.",
+   "para": "Versátil: também pode ser usada com estas estatísticas — Finesse, Próximo, d8+4.",
+   "motivo": "\"Acuidade\" é o termo da Jambô para Finesse; o perfil alternativo estruturado já dizia Finesse, só o texto divergia"
+  },
+  {
+   "item": "Cadeira de rodas leve",
+   "tipo": "vocabulario-exibido",
+   "de": "Veloz: ao fazer um ataque, marque 1 Ponto de Fadiga para atingir outra criatura no alcance.",
+   "para": "Veloz: ao fazer um ataque, marque 1 Estresse para atingir outra criatura no alcance.",
+   "motivo": "\"Ponto de Fadiga\" é o termo da Jambô para Estresse"
+  },
+  {
+   "item": "Cadeira de rodas leve aprimorada",
+   "tipo": "vocabulario-exibido",
+   "de": "Veloz: ao fazer um ataque, marque 1 Ponto de Fadiga para atingir outra criatura no alcance.",
+   "para": "Veloz: ao fazer um ataque, marque 1 Estresse para atingir outra criatura no alcance.",
+   "motivo": "\"Ponto de Fadiga\" é o termo da Jambô para Estresse"
+  },
+  {
+   "item": "Cadeira de rodas leve avançada",
+   "tipo": "vocabulario-exibido",
+   "de": "Veloz: ao fazer um ataque, marque 1 Ponto de Fadiga para atingir outra criatura no alcance.",
+   "para": "Veloz: ao fazer um ataque, marque 1 Estresse para atingir outra criatura no alcance.",
+   "motivo": "\"Ponto de Fadiga\" é o termo da Jambô para Estresse"
+  },
+  {
+   "item": "Cadeira de rodas leve lendária",
+   "tipo": "vocabulario-exibido",
+   "de": "Veloz: ao fazer um ataque, marque 1 Ponto de Fadiga para atingir outra criatura no alcance.",
+   "para": "Veloz: ao fazer um ataque, marque 1 Estresse para atingir outra criatura no alcance.",
+   "motivo": "\"Ponto de Fadiga\" é o termo da Jambô para Estresse"
+  },
+  {
+   "item": "Armadura Harrowbone",
+   "tipo": "vocabulario-exibido",
+   "de": "Resiliente: Antes de marcar seu último slot de armadura, role um d6. Com um resultado de 6, reduza a gravidade em um limiar sem marcar um slot de armadura.",
+   "para": "Resiliente: Antes de marcar seu último Ponto de Armadura, role um d6. Com um resultado de 6, reduza a gravidade em um limiar sem marcar o Ponto de Armadura.",
+   "motivo": "\"slot de armadura\" → Ponto de Armadura"
+  },
+  {
+   "item": "Armadura de peitoral Irontree",
+   "tipo": "vocabulario-exibido",
+   "de": "Reforçado: Quando você marcar seu último slot de armadura, aumente seus limites de dano em +2 até liberar pelo menos 1 slot de armadura.",
+   "para": "Reforçado: Quando você marcar seu último Ponto de Armadura, aumente seus limiares de dano em +2 até limpar pelo menos 1 Ponto de Armadura.",
+   "motivo": "\"slot de armadura\" → Ponto de Armadura; e \"limites de dano\" → limiares de dano, que é como a ficha chama a conta"
+  },
+  {
+   "item": "Armadura flutuante de Runetan",
+   "tipo": "vocabulario-exibido",
+   "de": "Deslocamento: Quando for alvo de um ataque, você pode marcar um slot de armadura para dar desvantagem à rolagem de ataque contra você.",
+   "para": "Deslocamento: Quando for alvo de um ataque, você pode marcar 1 Ponto de Armadura para dar desvantagem à jogada de ataque contra você.",
+   "motivo": "\"slot de armadura\" → Ponto de Armadura; \"rolagem\" → jogada"
+  },
+  {
+   "item": "Armadura Rosewild",
+   "tipo": "vocabulario-exibido",
+   "de": "Esperançoso: Quando você gastaria uma Esperança, pode marcar um slot de armadura.",
+   "para": "Esperançoso: Quando você gastaria 1 Esperança, pode marcar 1 Ponto de Armadura.",
+   "motivo": "\"slot de armadura\" → Ponto de Armadura"
+  },
+  {
+   "item": "Armadura Bladefare",
+   "tipo": "vocabulario-exibido",
+   "de": "Físico: Não é possível marcar um slot de armadura para reduzir o dano mágico.",
+   "para": "Físico: Não é possível marcar Pontos de Armadura para reduzir dano mágico.",
+   "motivo": "\"slot de armadura\" → Ponto de Armadura"
+  },
+  {
+   "item": "Manto de Monett",
+   "tipo": "vocabulario-exibido",
+   "de": "Magia: Você não pode marcar um slot de armadura para reduzir o dano físico.",
+   "para": "Magia: Você não pode marcar Pontos de Armadura para reduzir dano físico.",
+   "motivo": "\"slot de armadura\" → Ponto de Armadura"
+  },
+  {
+   "item": "Corrente de seda Dunamis",
+   "tipo": "vocabulario-exibido",
+   "de": "Temporal: Marque um slot de armadura para rolar um d4 e adicione o resultado como um bônus à sua Evasão contra um ataque recebido.",
+   "para": "Temporal: Marque 1 Ponto de Armadura para rolar um d4 e some o resultado como bônus à sua Evasão contra um ataque recebido.",
+   "motivo": "\"slot de armadura\" → Ponto de Armadura"
+  },
+  {
+   "item": "Armadura Fortificada Completa",
+   "tipo": "vocabulario-exibido",
+   "de": "Fortificado: Ao marcar um slot de armadura, você reduz a gravidade de um ataque em dois limiares em vez de um.",
+   "para": "Fortificado: Ao marcar 1 Ponto de Armadura, você reduz a gravidade de um ataque em dois limiares em vez de um.",
+   "motivo": "\"slot de armadura\" → Ponto de Armadura"
+  },
+  {
+   "item": "Saco de Dormir Premium",
+   "tipo": "vocabulario-exibido",
+   "de": "Durante o tempo de inatividade, você limpa automaticamente um estresse.",
+   "para": "Durante um descanso, você limpa automaticamente 1 Estresse.",
+   "motivo": "recurso em minúscula; \"tempo de inatividade\" é tradução de máquina de \"downtime\", que aqui é o descanso"
+  },
+  {
+   "item": "Pedra Glamour",
+   "tipo": "vocabulario-exibido",
+   "de": "Ative essa pedra do tamanho de um seixo para memorizar a aparência de alguém que você pode ver. Gaste uma Hope para recriar magicamente essa aparência em você como uma ilusão.",
+   "para": "Ative essa pedra do tamanho de um seixo para memorizar a aparência de alguém que você pode ver. Gaste 1 Esperança para recriar magicamente essa aparência em você como uma ilusão.",
+   "motivo": "\"Hope\" ficou em inglês"
+  },
+  {
+   "item": "Frasco de Darksmoke Receita",
+   "tipo": "vocabulario-exibido",
+   "de": "Como movimento de inatividade, você pode marcar um Stress para criar um Vial of Darksmoke.",
+   "para": "Como movimento de descanso, você pode marcar 1 Estresse para criar um Frasco de Darksmoke.",
+   "motivo": "\"Stress\" e o nome do item ficaram em inglês; o item existe no catálogo como \"Frasco de Darksmoke\" (consumivel-16)"
+  },
+  {
+   "item": "Planador",
+   "tipo": "vocabulario-exibido",
+   "de": "Enquanto estiver caindo, você pode marcar um Stress para acionar esse pequeno paraquedas e deslizar com segurança até o chão.",
+   "para": "Enquanto estiver caindo, você pode marcar 1 Estresse para acionar esse pequeno paraquedas e deslizar com segurança até o chão.",
+   "motivo": "\"Stress\" ficou em inglês"
+  },
+  {
+   "item": "Corrente do Paragon",
+   "tipo": "vocabulario-exibido",
+   "de": "Como movimento de tempo de inatividade, você pode meditar em um ideal ou princípio que lhe seja caro e concentrar sua vontade nessa corrente. Uma vez por descanso longo, você pode gastar uma Esperança para rolar um d20 como seu Hope Die (dado de esperança) para rolagens que se alinhem diretamente com esse princípio.",
+   "para": "Como movimento de descanso, você pode meditar em um ideal ou princípio que lhe seja caro e concentrar sua vontade nessa corrente. Uma vez por descanso longo, você pode gastar 1 Esperança para rolar um d20 como seu Dado de Esperança nas jogadas que se alinhem diretamente com esse princípio.",
+   "motivo": "\"Hope Die\" ficou em inglês com a tradução entre parênteses; o app diz Dado de Esperança"
+  },
+  {
+   "item": "Cinturão da unidade",
+   "tipo": "vocabulario-exibido",
+   "de": "Uma vez por sessão, você pode gastar 5 de Esperança para liderar um Tag Team Roll com três PCs em vez de dois.",
+   "para": "Uma vez por sessão, você pode gastar 5 Esperanças para liderar uma jogada em dupla com três PJs em vez de dois.",
+   "motivo": "\"Tag Team Roll\" e \"PCs\" ficaram em inglês; o app diz jogada em dupla e PJ"
+  },
+  {
+   "item": "Poção de saúde menor",
+   "tipo": "vocabulario-exibido",
+   "de": "Limpar 1d4 HP.",
+   "para": "Limpe 1d4 Pontos de Vida.",
+   "motivo": "\"HP\" não é português e o verbo estava no infinitivo"
+  },
+  {
+   "item": "Poção de resistência menor",
+   "tipo": "vocabulario-exibido",
+   "de": "Limpar 1d4 de estresse.",
+   "para": "Limpe 1d4 Estresses.",
+   "motivo": "recurso em minúscula e verbo no infinitivo"
+  },
+  {
+   "item": "Poção de saúde",
+   "tipo": "vocabulario-exibido",
+   "de": "Limpa 1d4+1 HP.",
+   "para": "Limpe 1d4+1 Pontos de Vida.",
+   "motivo": "\"HP\" não é português"
+  },
+  {
+   "item": "Poção de resistência",
+   "tipo": "vocabulario-exibido",
+   "de": "Elimina 1d4+1 de estresse.",
+   "para": "Limpe 1d4+1 Estresses.",
+   "motivo": "recurso em minúscula; o app diz \"limpar\", não \"eliminar\""
+  },
+  {
+   "item": "Costurador de Armadura",
+   "tipo": "vocabulario-exibido",
+   "de": "Você pode usar esse grampeador para gastar qualquer número de Hope e limpe isso Muitos slots de armadura.",
+   "para": "Você pode usar esse costurador para gastar qualquer quantidade de Esperança e limpar essa mesma quantidade de Pontos de Armadura.",
+   "motivo": "tradução de máquina ilegível: \"clear that many Armor Slots\" virou \"limpe isso Muitos slots de armadura\""
+  },
+  {
+   "item": "Círculo do Vazio",
+   "tipo": "vocabulario-exibido",
+   "de": "Marque uma Stress para criar um vazio que se estende até o alcance distante. Nenhuma magia pode ser lançada dentro do vazio, e as criaturas dentro do vazio são imunes a dano mágico.",
+   "para": "Marque 1 Estresse para criar um vazio que se estende até alcance Distante. Nenhuma magia pode ser lançada dentro do vazio, e as criaturas dentro dele são imunes a dano mágico.",
+   "motivo": "\"Stress\" ficou em inglês; \"alcance distante\" é o alcance Distante, com nome próprio"
+  },
+  {
+   "item": "Seiva da árvore do sol",
+   "tipo": "vocabulario-exibido",
+   "de": "Consuma essa seiva para rolar um d6. Com um resultado de 5-6, elimine 2 HP. Com um resultado de 2-4, elimine 3 de estresse. Em um resultado de 1, veja através do véu da morte e retorne mudado, ganhando uma cicatriz.",
+   "para": "Consuma essa seiva para rolar um d6. Com um resultado de 5-6, limpe 2 Pontos de Vida. Com um resultado de 2-4, limpe 3 Estresses. Em um resultado de 1, veja através do véu da morte e retorne mudado, ganhando uma cicatriz.",
+   "motivo": "\"HP\", recurso em minúscula e \"eliminar\" em vez de \"limpar\""
+  },
+  {
+   "item": "Poção de Saúde Maior",
+   "tipo": "vocabulario-exibido",
+   "de": "Clear 1d4+2 HP.",
+   "para": "Limpe 1d4+2 Pontos de Vida.",
+   "motivo": "a descrição inteira estava em inglês, sem tradução nenhuma"
+  },
+  {
+   "item": "Poção de Resistência Maior",
+   "tipo": "vocabulario-exibido",
+   "de": "Limpar 1d4+2 de estresse.",
+   "para": "Limpe 1d4+2 Estresses.",
+   "motivo": "recurso em minúscula e verbo no infinitivo"
+  },
+  {
+   "item": "Musgo Doce",
+   "tipo": "vocabulario-exibido",
+   "de": "Você pode consumir esse musgo durante um descanso para limpar 1d10 PV ou 1d10 de Estresse.",
+   "para": "Você pode consumir esse musgo durante um descanso para limpar 1d10 Pontos de Vida ou 1d10 Estresses.",
+   "motivo": "\"PV\" não é a forma que o app escreve"
+  },
+  {
+   "item": "Orbe Ofuscante",
+   "tipo": "vocabulario-exibido",
+   "de": "Você pode ativar esse orbe para criar um flash de luz brilhante. Todos os alvos dentro da área de alcance tornam-se vulneráveis até marcarem HP.",
+   "para": "Você pode ativar esse orbe para criar um clarão de luz. Todos os alvos em alcance Próximo ficam Vulneráveis até marcarem Pontos de Vida.",
+   "motivo": "⚠ a tradução havia PERDIDO o alcance: o original diz \"within Close range\" e o texto dizia \"dentro da área de alcance\", que não é regra nenhuma. Também \"HP\" e \"vulneráveis\" em minúscula, sendo condição de nome próprio"
+  },
+  {
+   "item": "Lágrimas do herói imortal",
+   "tipo": "vocabulario-exibido",
+   "de": "Até seu próximo descanso longo, ao marcar o último Ponto de Vida, faça uma ação final e durma sem sonhos em vez de realizar um movimento de morte; um aliado deve Cuidar dos Ferimentos para limpar seus PV.",
+   "para": "Ao beber esta poção, a morte não pode te tocar até seu próximo descanso longo. Quando você marcaria seu último Ponto de Vida, em vez de fazer um movimento de morte você faz uma última jogada de ação e cai num sono sem sonhos, até que um aliado escolha o movimento de descanso Tratar Feridas para limpar seus Pontos de Vida.",
+   "motivo": "⚠ a tradução havia PERDIDO a primeira frase (\"death can't touch you until your next long rest\") e trocava o nome do movimento: o app chama Tend to Wounds de \"Tratar Feridas\", não \"Cuidar dos Ferimentos\". Também \"PV\""
+  },
+  {
+   "item": "Quantum",
+   "tipo": "vocabulario-exibido",
+   "de": "Moeda própria da campanha (substitui o ouro). PCs começam com 5 quantum. Conversão: 10 quantum = 1 punhado de ouro; 100 quantum = 1 saco de ouro; 1000 quantum = 1 baú de ouro.",
+   "para": "Moeda própria da campanha (substitui o ouro). PJs começam com 5 quantum. Conversão: 10 quantum = 1 punhado de ouro; 100 quantum = 1 saco de ouro; 1000 quantum = 1 baú de ouro.",
+   "motivo": "\"PCs\" ficou em inglês; o app diz PJ"
+  },
+  {
+   "item": "Corda de rede (com gancho)",
+   "tipo": "vocabulario-exibido",
+   "de": "Todo PC adiciona ao inventário na criação do personagem; permite jogar o gancho em um fio suspenso para se deslocar e acessar 'a rede' pelas Wastes; necessária para movimentos de tempo de inatividade.",
+   "para": "Todo PJ adiciona ao inventário na criação do personagem; permite jogar o gancho em um fio suspenso para se deslocar e acessar 'a rede' pelas Wastes; necessária para movimentos de descanso.",
+   "motivo": "\"PC\" ficou em inglês e \"movimentos de tempo de inatividade\" é tradução de máquina de downtime moves"
+  },
+  {
+   "item": "Vial of Darksmoke Recipe",
+   "tipo": "nome-auditoria",
+   "de": "Frasco de Darksmoke Receita",
+   "para": "Receita de Frasco de Darksmoke",
+   "motivo": "ordem das palavras invertida na extração, como em \"Avançado cetro\": as outras três receitas do catálogo (loot-18, loot-19, loot-51) dizem \"Receita de X\""
+  },
+  {
+   "item": "Hand Sling",
+   "tipo": "texto-ingles-contaminado",
+   "de": "Versatile: Can also be used with Knowledge, Far, d6+3",
+   "para": "Versatile: This weapon can also be used with these statistics—Finesse, Close, d8+4.",
+   "motivo": "o stub guardado era o da Adaga de conjuração; o SRD 2.0 diz \"Hand Sling — Finesse, Very Far, d6+4 phy, One-Handed, Versatile: …Finesse, Close, d8+4.\""
+  },
+  {
+   "item": "Emberite Shard",
+   "tipo": "regra-perdida-na-traducao",
+   "de": "…ficar temporariamente Em Chamas. (a frase terminava aqui)",
+   "para": "…ficar temporariamente Em Chamas. Enquanto estiver Em Chamas por este fragmento, a criatura rola um d4 sempre que fizer uma jogada de ação: em 1, marca 1 Ponto de Vida; em 4, a condição acaba.",
+   "motivo": "A tradução tinha PERDIDO a metade que diz o que a condição FAZ. O verbete de \"Em Chamas\" manda buscar a regra em quem aplicou a condição — e quem aplicou não dizia nada. ⚠ O SRD 2.0 tem DUAS condições de fogo: \"On Fire\" (a da carta Aperto de Cinzas, 2d6 ao agir) e \"Ablaze\" (a deste fragmento, d4 por jogada de ação). O português chama as duas de \"Em Chamas\", então a regra TEM de estar escrita no item."
+  },
+  {
+   "item": "Arcticite Shard / Fulgurite Shard",
+   "tipo": "vocabulario-exibido",
+   "de": "Alvos em alcance Próximo devem passar em Reação (16)",
+   "para": "Os alvos em alcance Próximo desse ponto devem passar em uma jogada de Reação (16)",
+   "motivo": "Faltava \"desse ponto\" — o alcance Próximo é do ponto escolhido, não de quem usa; e \"Reação\" virou \"jogada de Reação\", como no resto do app. O Fulgurita também recuperou o fecho da frase (\"enquanto o relâmpago estala pela área\")."
+  },
+  {
+   "item": "loot-srd2-reliquary-of-the-sightless-saint, loot-srd2-ghoulskin-gloves, loot-srd2-gloves-of-alacrity, loot-srd2-insomniacs-periapt, loot-srd2-knockback-bracelets, loot-srd2-timekeepers-pendant, loot-srd2-temporal-sanctuary, loot-srd2-heros-helm, loot-srd2-phobophages-circlet, loot-srd2-quillshawl",
+   "tipo": "campo-morto-removido",
+   "de": "efeitoSaquePassivo.contextual.regra (cópia literal de `descricao`)",
+   "para": "(removido)",
+   "motivo": "Dez itens guardavam a MESMA frase em dois lugares: `descricao`, que a ficha mostra, e `contextual.regra`, que nenhuma tela lia. Duas cópias da mesma regra podem divergir, e aí o app se contradiz — a mesa lê uma na descrição e o código guarda outra. Também era o que fazia esses itens PARECEREM automatizados: foi por essa duplicata que sete deles passaram por \"já têm efeito\" na classificação do E108. A decisão e o motivo de cada um continuam em `automacao`."
   }
  ]
 }

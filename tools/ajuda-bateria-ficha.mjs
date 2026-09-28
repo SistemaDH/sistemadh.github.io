@@ -94,6 +94,37 @@ export function escreverNaFichaDeTeste(ambiente, mudancas) {
   })()`);
 }
 
+/**
+ * ESPERA O SERVIDOR, em vez de dormir e torcer.
+ *
+ * ⚠ POR QUE ISTO EXISTE: a bateria de reações de armadura falhou UMA vez na
+ * suíte inteira e passou sozinha — no trecho que lê o servidor logo depois de
+ * fechar a janela de morte. Fechar a janela é a TELA confirmando; a gravação vai
+ * pela fila (js/fila.js) e pode não ter chegado. Um teste que às vezes passa é
+ * pior que um que falha: ele ensina a ignorar a falha.
+ *
+ * As outras leituras da mesma bateria usavam `waitForTimeout(500)` — que é a
+ * mesma aposta, só com mais sorte. Aqui a espera é pela CONDIÇÃO: lê, confere,
+ * e só desiste no fim do prazo, devolvendo a última leitura para a mensagem de
+ * erro poder dizer o que chegou.
+ *
+ * @param {object} ambiente o ambiente do servidor de teste
+ * @param {string} expressao expressão avaliada no servidor, devolve string
+ * @param {Function} pronto recebe a leitura e diz se já chegou
+ */
+export async function esperarNoServidor(ambiente, expressao, pronto, { prazo = 8000, passo = 120 } = {}) {
+  const limite = Date.now() + prazo;
+  let ultima = null;
+  for (;;) {
+    ultima = ambiente.avaliar(expressao);
+    let chegou = false;
+    try { chegou = !!pronto(ultima); } catch { chegou = false; }
+    if (chegou) return ultima;
+    if (Date.now() >= limite) return ultima;
+    await new Promise((resolve) => setTimeout(resolve, passo));
+  }
+}
+
 /** O placar de uma bateria: conta, imprime e lembra se algo falhou. */
 export function criarPlacar() {
   const relatorio = [];

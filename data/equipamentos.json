@@ -41,7 +41,7 @@
         "nomeIngles": "Reliable",
         "textoIngles": "Reliable: +1 to attack rolls",
         "nome": "Confiável",
-        "texto": "Confiável: +1 para rolagens de ataque",
+        "texto": "Confiável: +1 para jogadas de ataque",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "efeitoDerivado": {
@@ -389,7 +389,7 @@
         "nomeIngles": "Reliable",
         "textoIngles": "Reliable: +1 to attack rolls",
         "nome": "Confiável",
-        "texto": "Confiável: +1 para rolagens de ataque",
+        "texto": "Confiável: +1 para jogadas de ataque",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "efeitoDerivado": {
@@ -797,13 +797,14 @@
         "nomeIngles": "Deadly",
         "textoIngles": "Deadly: When dealing Severe damage, target must mark additional HP",
         "nome": "Mortal",
-        "texto": "Mortal: Quando você causa dano Grave, o alvo deve marcar um HP adicional.",
+        "texto": "Mortal: Quando você causar dano Severo, o alvo deve marcar 1 Ponto de Vida adicional.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
           "classificacao": "resultado-manual-da-mesa",
           "motivo": "SRD: em dano Severo, o alvo marca 1 PV adicional. O alvo é do Mestre; a ficha do jogador não tem onde aplicar isso."
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       },
       "danoSRD": "d8+3 phy"
     },
@@ -889,7 +890,7 @@
         "nomeIngles": "Reliable",
         "textoIngles": "Reliable: +1 to attack rolls",
         "nome": "Confiável",
-        "texto": "Confiável: +1 para rolagens de ataque",
+        "texto": "Confiável: +1 para jogadas de ataque",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "efeitoDerivado": {
@@ -921,7 +922,7 @@
         "nomeIngles": "Reloading",
         "textoIngles": "Reloading: After attack, roll d6; on 1, mark Stress to reload before firing again",
         "nome": "Recarga",
-        "texto": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar um estresse para recarregar antes de atirar novamente.",
+        "texto": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar 1 Estresse para recarregar antes de atirar novamente.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -945,7 +946,8 @@
               "efeitoManual": "No resultado 1, a arma precisa ser recarregada antes de poder atirar novamente."
             }
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       },
       "aliases": [
         "Cassetete"
@@ -998,7 +1000,7 @@
         "nomeIngles": "Reliable",
         "textoIngles": "Reliable: +1 to attack rolls",
         "nome": "Confiável",
-        "texto": "Confiável: +1 para rolagens de ataque",
+        "texto": "Confiável: +1 para jogadas de ataque",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "efeitoDerivado": {
@@ -1030,7 +1032,7 @@
         "nomeIngles": "Reliable",
         "textoIngles": "Reliable: +1 to attack rolls",
         "nome": "Confiável",
-        "texto": "Confiável: +1 para rolagens de ataque",
+        "texto": "Confiável: +1 para jogadas de ataque",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "efeitoDerivado": {
@@ -1627,7 +1629,7 @@
         "nomeIngles": "Reloading",
         "textoIngles": "Reloading: After attack, roll d6; on 1, mark Stress to reload before firing again",
         "nome": "Recarga",
-        "texto": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar um estresse para recarregar antes de atirar novamente.",
+        "texto": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar 1 Estresse para recarregar antes de atirar novamente.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -1651,7 +1653,8 @@
               "efeitoManual": "No resultado 1, a arma precisa ser recarregada antes de poder atirar novamente."
             }
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       },
       "danoSRD": "d6+8 phy"
     },
@@ -1710,7 +1713,7 @@
         "nomeIngles": "Reliable",
         "textoIngles": "Reliable: +1 to attack rolls",
         "nome": "Confiável",
-        "texto": "Confiável: +1 para rolagens de ataque",
+        "texto": "Confiável: +1 para jogadas de ataque",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "efeitoDerivado": {
@@ -2291,7 +2294,7 @@
         "nomeIngles": "Reliable",
         "textoIngles": "Reliable: +1 to attack rolls",
         "nome": "Confiável",
-        "texto": "Confiável: +1 para rolagens de ataque",
+        "texto": "Confiável: +1 para jogadas de ataque",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "efeitoDerivado": {
@@ -2323,7 +2326,7 @@
         "nomeIngles": "Reloading",
         "textoIngles": "Reloading: After attack, roll d6; on 1, mark Stress to reload before firing again",
         "nome": "Recarga",
-        "texto": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar um estresse para recarregar antes de atirar novamente.",
+        "texto": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar 1 Estresse para recarregar antes de atirar novamente.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -2347,7 +2350,8 @@
               "efeitoManual": "No resultado 1, a arma precisa ser recarregada antes de poder atirar novamente."
             }
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       },
       "danoSRD": "d6+12 phy"
     },
@@ -2503,7 +2507,7 @@
       "maos": "Duas mãos",
       "caracteristica": {
         "nomeIngles": "Versatile",
-        "textoIngles": "Versatile: Can also be used with Knowledge, Far, d6+3",
+        "textoIngles": "Versatile: This weapon can also be used with these statistics—Presence, Melee, d8.",
         "nome": "Versátil",
         "texto": "Versátil: também pode ser usada com estas estatísticas — Presença, Corpo a Corpo, d8.",
         "fonteTraducao": "livro",
@@ -2520,7 +2524,8 @@
             "usaProficiencia": true,
             "rotulo": "Versátil"
           }
-        }
+        },
+        "fonteTextoIngles": "Daggerheart SRD 2.0 — o textoIngles guardado era um stub copiado da Adaga de Conjuração (\"Knowledge, Far, d6+3\") e foi reposto da tabela certa."
       },
       "danoSRD": "d6 mag"
     },
@@ -2719,9 +2724,9 @@
       "maos": "Duas mãos",
       "caracteristica": {
         "nomeIngles": "Versatile",
-        "textoIngles": "Versatile: Can also be used with Knowledge, Far, d6+3",
+        "textoIngles": "Versatile: This weapon can also be used with these statistics—Presence, Melee, d8+3.",
         "nome": "Versátil",
-        "texto": "Versátil: também pode ser usada com estas estatísticas — Presença, Corpo a Corpo, d8.",
+        "texto": "Versátil: também pode ser usada com estas estatísticas — Presença, Corpo a Corpo, d8+3.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -2736,7 +2741,8 @@
             "usaProficiencia": true,
             "rotulo": "Versátil"
           }
-        }
+        },
+        "fonteTextoIngles": "Daggerheart SRD 2.0 — o textoIngles guardado era um stub copiado da Adaga de Conjuração (\"Knowledge, Far, d6+3\") e foi reposto da tabela certa."
       },
       "danoSRD": "d6+3 mag"
     },
@@ -2906,7 +2912,7 @@
         "nomeIngles": "Eruptive",
         "textoIngles": "Eruptive: On successful attack vs Melee target, other adversaries within Very Close must succeed on reaction roll (14) or take half damage",
         "nome": "Eruptivo",
-        "texto": "Eruptivo: Em um ataque bem-sucedido contra um alvo dentro do alcance Corpo a Corpo, todos os outros adversários dentro do alcance Muito Próximo devem ser bem-sucedidos em uma rolagem de reação (14) ou receberão metade do dano.",
+        "texto": "Eruptivo: Em um ataque bem-sucedido contra um alvo dentro do alcance Corpo a Corpo, todos os outros adversários dentro do alcance Muito Próximo devem ser bem-sucedidos em uma jogada de reação (14) ou receberão metade do dano.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -3037,7 +3043,7 @@
         "nomeIngles": "Persuasive",
         "textoIngles": "Persuasive: Before Presence Roll, mark Stress to gain +2 bonus to result",
         "nome": "Persuasão",
-        "texto": "Persuasão: Antes de fazer uma rolagem de presença, você pode marcar um estresse para ganhar um bônus de +2 no resultado.",
+        "texto": "Persuasão: Antes de fazer uma jogada de Presença, você pode marcar 1 Estresse para ganhar um bônus de +2 no resultado.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -3054,7 +3060,8 @@
             },
             "momento": "antes-rolagem-presenca"
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       },
       "aliases": [
         "Varinha de Entusiasmo"
@@ -3079,7 +3086,7 @@
         "nomeIngles": "Reliable",
         "textoIngles": "Reliable: +1 to attack rolls",
         "nome": "Confiável",
-        "texto": "Confiável: +1 para rolagens de ataque",
+        "texto": "Confiável: +1 para jogadas de ataque",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "efeitoDerivado": {
@@ -3224,7 +3231,7 @@
       "danoSRD": "d6+9 mag"
     },
     {
-      "id": "primaria-t3-avancado-nome-cortado-incompleto",
+      "id": "primaria-t3-cetro-avancado",
       "categoria": "primaria",
       "tier": 3,
       "tabela": "Mágica",
@@ -3232,14 +3239,14 @@
       "origemNome": "corrigido",
       "nomeIngles": "Advanced Scepter",
       "nomeLivro": "Avançado (nome cortado/incompleto)",
-      "fonteNumeros": "SRD oficial (já com as erratas aplicadas)",
+      "fonteNumeros": "SRD 2.0: \"Advanced Scepter — Presence, Far, d6+6 mag, Two-Handed, Versatile: …Presence, Melee, d8+4.\" Os dados sempre estiveram certos; o nome e o id vinham do extrator. O id antigo (`primaria-t3-avancado-nome-cortado-incompleto`) ficou em `aliases` para que fichas gravadas continuem achando a arma. ⚠ O `nomeLivro` \"Avançado (nome cortado/incompleto)\" NÃO serve de apelido: o livro imprimiu essa mesma linha cortada para o Bastão Longo Avançado, então a string alcançava dois itens e a busca devolvia sempre este. Agora ela é declarada ambígua (E113).",
       "atributo": "Presença",
       "alcance": "Distante",
       "dano": "d6+6 mág",
       "maos": "Duas mãos",
       "caracteristica": {
         "nomeIngles": "Versatile",
-        "textoIngles": "Versatile: Can also be used with Knowledge, Far, d6+3",
+        "textoIngles": "Versatile: This weapon can also be used with these statistics—Presence, Melee, d8+4.",
         "nome": "Versátil",
         "texto": "Versátil: também pode ser usada com estas estatísticas — Presença, Corpo a Corpo, d8+4.",
         "fonteTraducao": "livro",
@@ -3256,29 +3263,33 @@
             "usaProficiencia": true,
             "rotulo": "Versátil"
           }
-        }
+        },
+        "fonteTextoIngles": "Daggerheart SRD 2.0 — o textoIngles guardado era um stub copiado da Adaga de Conjuração (\"Knowledge, Far, d6+3\") e foi reposto da tabela certa."
       },
       "danoSRD": "d6+6 mag",
       "aliases": [
-        "Avançado (nome cortado/incompleto)"
+        "primaria-t3-avancado-nome-cortado-incompleto"
       ]
     },
     {
-      "id": "primaria-t3-avancado-cetro",
+      "id": "primaria-t3-varinha-avancada",
       "categoria": "primaria",
       "tier": 3,
       "tabela": "Mágica",
-      "nome": "Avançado cetro",
+      "nome": "Varinha avançada",
       "origemNome": "livro",
       "nomeIngles": "Advanced Wand",
       "nomeLivro": "Avançado cetro",
-      "fonteNumeros": "SRD oficial (já com as erratas aplicadas)",
+      "fonteNumeros": "SRD 2.0, tabela de primárias mágicas de patamar 3: \"Advanced Wand — Knowledge, Far, d6+7 mag, One-Handed, —\". ⚠ Esta entrada estava com o NOME e o ID de Cetro (\"Avançado cetro\", `primaria-t3-avancado-cetro`), efeito de um desalinhamento na extração da tabela de 3 colunas, onde \"Advanced\" e \"Wand\" vivem em linhas diferentes. Os números sempre foram da Varinha; só o nome era do vizinho. O id antigo ficou em `aliases` para que fichas gravadas continuem achando a arma.",
       "atributo": "Conhecimento",
       "alcance": "Distante",
       "dano": "d6+7 mág",
       "maos": "Uma mão",
       "caracteristica": null,
-      "danoSRD": "d6+7 mag"
+      "danoSRD": "d6+7 mag",
+      "aliases": [
+        "primaria-t3-avancado-cetro"
+      ]
     },
     {
       "id": "primaria-t3-bastao-longo-avancado",
@@ -3422,7 +3433,7 @@
         "nomeIngles": "Painful",
         "textoIngles": "Painful: Each time you mark Armor Slot, mark a Stress",
         "nome": "Doloroso",
-        "texto": "Doloroso: Toda vez que marcar um slot de armadura, você deve marcar um estresse.",
+        "texto": "Doloroso: Toda vez que marcar 1 Ponto de Armadura, você deve marcar 1 Estresse.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -3433,7 +3444,8 @@
           "aoMarcarArmadura": {
             "estressePorSlot": 1
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       },
       "danoSRD": "d20+4 mag"
     },
@@ -3574,7 +3586,7 @@
         "nomeIngles": "Reloading",
         "textoIngles": "Reloading: After attack, roll d6; on 1, mark Stress to reload before firing again",
         "nome": "Recarga",
-        "texto": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar um estresse para recarregar antes de atirar novamente.",
+        "texto": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar 1 Estresse para recarregar antes de atirar novamente.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -3598,7 +3610,8 @@
               "efeitoManual": "No resultado 1, a arma precisa ser recarregada antes de poder atirar novamente."
             }
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       },
       "danoSRD": "d6+6 mag"
     },
@@ -3748,7 +3761,7 @@
       "maos": "Duas mãos",
       "caracteristica": {
         "nomeIngles": "Versatile",
-        "textoIngles": "Versatile: Can also be used with Knowledge, Far, d6+3",
+        "textoIngles": "Versatile: This weapon can also be used with these statistics—Presence, Melee, d8+6.",
         "nome": "Versátil",
         "texto": "Versátil: também pode ser usada com estas estatísticas — Presença, Corpo a Corpo, d8+6.",
         "fonteTraducao": "livro",
@@ -3765,7 +3778,8 @@
             "usaProficiencia": true,
             "rotulo": "Versátil"
           }
-        }
+        },
+        "fonteTextoIngles": "Daggerheart SRD 2.0 — o textoIngles guardado era um stub copiado da Adaga de Conjuração (\"Knowledge, Far, d6+3\") e foi reposto da tabela certa."
       },
       "danoSRD": "d6+9 mag"
     },
@@ -3982,7 +3996,7 @@
         "nomeIngles": "Painful",
         "textoIngles": "Painful: Each time you mark Armor Slot, mark a Stress",
         "nome": "Doloroso",
-        "texto": "Doloroso: Toda vez que marcar um slot de armadura, você deve marcar um estresse.",
+        "texto": "Doloroso: Toda vez que marcar 1 Ponto de Armadura, você deve marcar 1 Estresse.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -3993,7 +4007,8 @@
           "aoMarcarArmadura": {
             "estressePorSlot": 1
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       },
       "danoSRD": "d20+7 mag"
     },
@@ -4015,7 +4030,7 @@
         "nomeIngles": "Reliable",
         "textoIngles": "Reliable: +1 to attack rolls",
         "nome": "Confiável",
-        "texto": "Confiável: +1 para rolagens de ataque",
+        "texto": "Confiável: +1 para jogadas de ataque",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "efeitoDerivado": {
@@ -4078,7 +4093,7 @@
         "nomeIngles": "Reloading",
         "textoIngles": "Reloading: After attack, roll d6; on 1, mark Stress to reload before firing again",
         "nome": "Recarga",
-        "texto": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar um estresse para recarregar antes de atirar novamente.",
+        "texto": "Recarga: Depois de fazer um ataque, role um d6. No caso de um resultado de 1, você deve marcar 1 Estresse para recarregar antes de atirar novamente.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -4102,7 +4117,8 @@
               "efeitoManual": "No resultado 1, a arma precisa ser recarregada antes de poder atirar novamente."
             }
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       },
       "danoSRD": "d6+13 mag"
     },
@@ -4322,7 +4338,7 @@
         "nomeIngles": "Hooked",
         "textoIngles": "Hooked: On a successful attack, you can pull the target into Melee range",
         "nome": "Enganchado",
-        "texto": "Enganchado: Em um ataque bem-sucedido, você pode puxar o alvo para o alcance corpo a corpo.",
+        "texto": "Enganchado: Em um ataque bem-sucedido, você pode puxar o alvo para o alcance Corpo a Corpo.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -4532,7 +4548,7 @@
         "nomeIngles": "Hooked",
         "textoIngles": "Hooked: On a successful attack, you can pull the target into Melee range",
         "nome": "Enganchado",
-        "texto": "Enganchado: Em um ataque bem-sucedido, você pode puxar o alvo para o alcance corpo a corpo.",
+        "texto": "Enganchado: Em um ataque bem-sucedido, você pode puxar o alvo para o alcance Corpo a Corpo.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -4578,7 +4594,7 @@
         "nomeIngles": "Double Duty",
         "textoIngles": "Double Duty: +1 to Armor Score; +1 to primary weapon damage within Melee range",
         "nome": "Trabalho em dobro",
-        "texto": "Trabalho em dobro: +1 para pontuação de armadura; +1 para dano de arma primária dentro do alcance corpo a corpo",
+        "texto": "Trabalho em dobro: +1 para pontuação de armadura; +1 para dano de arma primária dentro do alcance Corpo a Corpo",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "efeitoDerivado": {
@@ -4838,7 +4854,7 @@
         "nomeIngles": "Hooked",
         "textoIngles": "Hooked: On a successful attack, you can pull the target into Melee range",
         "nome": "Enganchado",
-        "texto": "Enganchado: Em um ataque bem-sucedido, você pode puxar o alvo para o alcance corpo a corpo.",
+        "texto": "Enganchado: Em um ataque bem-sucedido, você pode puxar o alvo para o alcance Corpo a Corpo.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -4963,9 +4979,9 @@
       "maos": "Uma mão",
       "caracteristica": {
         "nomeIngles": "Versatile",
-        "textoIngles": "Versatile: Can also be used with Knowledge, Far, d6+3",
+        "textoIngles": "Versatile: This weapon can also be used with these statistics—Finesse, Close, d8+4.",
         "nome": "Versátil",
-        "texto": "Versátil: também pode ser usada com estas estatísticas — Acuidade, Próximo, d8+4.",
+        "texto": "Versátil: também pode ser usada com estas estatísticas — Finesse, Próximo, d8+4.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -4980,7 +4996,9 @@
             "usaProficiencia": true,
             "rotulo": "Versátil"
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json",
+        "fonteTextoIngles": "Daggerheart SRD 2.0, tabela de secundárias de patamar 3 — o textoIngles guardado era um stub copiado da Adaga de Conjuração (\"Knowledge, Far, d6+3\") e foi reposto da linha certa."
       },
       "danoSRD": "d6+4 phy"
     },
@@ -5163,7 +5181,7 @@
         "nomeIngles": "Hooked",
         "textoIngles": "Hooked: On a successful attack, you can pull the target into Melee range",
         "nome": "Enganchado",
-        "texto": "Enganchado: Em um ataque bem-sucedido, você pode puxar o alvo para o alcance corpo a corpo.",
+        "texto": "Enganchado: Em um ataque bem-sucedido, você pode puxar o alvo para o alcance Corpo a Corpo.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -5242,7 +5260,7 @@
         "nomeIngles": "Doubled Up",
         "textoIngles": "Doubled Up: When you make an attack with your primary weapon, you can deal damage to another target within Melee range",
         "nome": "Dobrado",
-        "texto": "Dobrado: ao fazer um ataque com sua arma principal, você pode causar dano a outro alvo dentro do alcance corpo a corpo.",
+        "texto": "Dobrado: ao fazer um ataque com sua arma principal, você pode causar dano a outro alvo dentro do alcance Corpo a Corpo.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -5299,7 +5317,7 @@
         "nomeIngles": "Quick",
         "textoIngles": "Quick: When you make an attack, you can mark a Stress to target another creature within range.",
         "nome": "Veloz",
-        "texto": "Veloz: ao fazer um ataque, marque 1 Ponto de Fadiga para atingir outra criatura no alcance.",
+        "texto": "Veloz: ao fazer um ataque, marque 1 Estresse para atingir outra criatura no alcance.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -5312,7 +5330,8 @@
             "rotulo": "Usar Rápido · 1 Estresse",
             "efeitoManual": "Atingir outra criatura dentro do alcance com o mesmo ataque."
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       },
       "danoSRD": "d8 phy",
       "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
@@ -5335,7 +5354,7 @@
         "nomeIngles": "Quick",
         "textoIngles": "Quick: When you make an attack, you can mark a Stress to target another creature within range.",
         "nome": "Veloz",
-        "texto": "Veloz: ao fazer um ataque, marque 1 Ponto de Fadiga para atingir outra criatura no alcance.",
+        "texto": "Veloz: ao fazer um ataque, marque 1 Estresse para atingir outra criatura no alcance.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -5348,7 +5367,8 @@
             "rotulo": "Usar Rápido · 1 Estresse",
             "efeitoManual": "Atingir outra criatura dentro do alcance com o mesmo ataque."
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       },
       "danoSRD": "d8+3 phy",
       "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
@@ -5371,7 +5391,7 @@
         "nomeIngles": "Quick",
         "textoIngles": "Quick: When you make an attack, you can mark a Stress to target another creature within range.",
         "nome": "Veloz",
-        "texto": "Veloz: ao fazer um ataque, marque 1 Ponto de Fadiga para atingir outra criatura no alcance.",
+        "texto": "Veloz: ao fazer um ataque, marque 1 Estresse para atingir outra criatura no alcance.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -5384,7 +5404,8 @@
             "rotulo": "Usar Rápido · 1 Estresse",
             "efeitoManual": "Atingir outra criatura dentro do alcance com o mesmo ataque."
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       },
       "danoSRD": "d8+6 phy",
       "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
@@ -5407,7 +5428,7 @@
         "nomeIngles": "Quick",
         "textoIngles": "Quick: When you make an attack, you can mark a Stress to target another creature within range.",
         "nome": "Veloz",
-        "texto": "Veloz: ao fazer um ataque, marque 1 Ponto de Fadiga para atingir outra criatura no alcance.",
+        "texto": "Veloz: ao fazer um ataque, marque 1 Estresse para atingir outra criatura no alcance.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -5420,7 +5441,8 @@
             "rotulo": "Usar Rápido · 1 Estresse",
             "efeitoManual": "Atingir outra criatura dentro do alcance com o mesmo ataque."
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       },
       "danoSRD": "d8+9 phy",
       "fonteLote8": "DH-DigitalRegras.pdf pp.122-123"
@@ -10209,7 +10231,7 @@
         "nomeIngles": "Resilient",
         "textoIngles": "Resilient: Before marking last Armor Slot, roll d6; on 6, reduce severity",
         "nome": "Resiliente",
-        "texto": "Resiliente: Antes de marcar seu último slot de armadura, role um d6. Com um resultado de 6, reduza a gravidade em um limiar sem marcar um slot de armadura.",
+        "texto": "Resiliente: Antes de marcar seu último Ponto de Armadura, role um d6. Com um resultado de 6, reduza a gravidade em um limiar sem marcar o Ponto de Armadura.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -10225,7 +10247,8 @@
               ]
             }
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       }
     },
     {
@@ -10244,7 +10267,7 @@
         "nomeIngles": "Reinforced",
         "textoIngles": "Reinforced: When marking last Armor Slot, increase damage thresholds +2",
         "nome": "Reforçado",
-        "texto": "Reforçado: Quando você marcar seu último slot de armadura, aumente seus limites de dano em +2 até liberar pelo menos 1 slot de armadura.",
+        "texto": "Reforçado: Quando você marcar seu último Ponto de Armadura, aumente seus limiares de dano em +2 até limpar pelo menos 1 Ponto de Armadura.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "efeitoDerivado": {
@@ -10253,7 +10276,8 @@
         "automacao": {
           "classificacao": "passiva-automatizada",
           "motivo": "+2 nos limiares enquanto o último Ponto de Armadura estiver marcado; o app liga e desliga sozinho."
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       }
     },
     {
@@ -10272,7 +10296,7 @@
         "nomeIngles": "Shifting",
         "textoIngles": "Shifting: When targeted, mark Armor Slot to give attack disadvantage",
         "nome": "Deslocamento",
-        "texto": "Deslocamento: Quando for alvo de um ataque, você pode marcar um slot de armadura para dar desvantagem à rolagem de ataque contra você.",
+        "texto": "Deslocamento: Quando for alvo de um ataque, você pode marcar 1 Ponto de Armadura para dar desvantagem à jogada de ataque contra você.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -10284,7 +10308,8 @@
             "custoArmadura": 1,
             "desvantagemAtaque": true
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       }
     },
     {
@@ -10303,7 +10328,7 @@
         "nomeIngles": "Quiet",
         "textoIngles": "Quiet: You gain a +2 bonus to rolls to move silently",
         "nome": "Silencioso",
-        "texto": "Silencioso: você ganha um bônus de +2 nas rolagens que fizer para se mover silenciosamente.",
+        "texto": "Silencioso: você ganha um bônus de +2 nas jogadas que fizer para se mover silenciosamente.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -10329,7 +10354,7 @@
         "nomeIngles": "Hopeful",
         "textoIngles": "Hopeful: When you would spend Hope, mark Armor Slot instead",
         "nome": "Esperançoso",
-        "texto": "Esperançoso: Quando você gastaria uma Esperança, pode marcar um slot de armadura.",
+        "texto": "Esperançoso: Quando você gastaria 1 Esperança, pode marcar 1 Ponto de Armadura.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -10341,7 +10366,8 @@
             "podeMarcarArmaduraEmVez": true,
             "armaduraPorEsperanca": 1
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       }
     },
     {
@@ -10829,7 +10855,7 @@
         "nomeIngles": "Sharp",
         "textoIngles": "Sharp: On successful Melee attack, add d4 to damage roll",
         "nome": "Afiada",
-        "texto": "Afiada: Em um ataque bem-sucedido contra um alvo dentro do alcance Corpo a Corpo, adicione um d4 para a rolagem de dano.",
+        "texto": "Afiada: Em um ataque bem-sucedido contra um alvo dentro do alcance Corpo a Corpo, adicione um d4 para a jogada de dano.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "efeitoDerivado": {
@@ -10860,7 +10886,7 @@
         "nomeIngles": "Physical",
         "textoIngles": "Physical: You can't mark Armor Slot to reduce magic damage",
         "nome": "Físico",
-        "texto": "Físico: Não é possível marcar um slot de armadura para reduzir o dano mágico.",
+        "texto": "Físico: Não é possível marcar Pontos de Armadura para reduzir dano mágico.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -10875,7 +10901,8 @@
               ]
             }
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       }
     },
     {
@@ -10894,7 +10921,7 @@
         "nomeIngles": "Magic",
         "textoIngles": "Magic: You can't mark Armor Slot to reduce physical damage",
         "nome": "Magia",
-        "texto": "Magia: Você não pode marcar um slot de armadura para reduzir o dano físico.",
+        "texto": "Magia: Você não pode marcar Pontos de Armadura para reduzir dano físico.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -10909,7 +10936,8 @@
               ]
             }
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       }
     },
     {
@@ -10928,7 +10956,7 @@
         "nomeIngles": "Painful",
         "textoIngles": "Painful: Each time you mark Armor Slot, mark a Stress",
         "nome": "Doloroso",
-        "texto": "Doloroso: Toda vez que marcar um slot de armadura, você deve marcar um estresse.",
+        "texto": "Doloroso: Toda vez que marcar 1 Ponto de Armadura, você deve marcar 1 Estresse.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -10939,7 +10967,8 @@
           "aoMarcarArmadura": {
             "estressePorSlot": 1
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       }
     },
     {
@@ -11379,7 +11408,7 @@
         "nomeIngles": "Timeslowing",
         "textoIngles": "Timeslowing: Mark Armor Slot to roll d4 and add as Evasion bonus",
         "nome": "Temporal",
-        "texto": "Temporal: Marque um slot de armadura para rolar um d4 e adicione o resultado como um bônus à sua Evasão contra um ataque recebido.",
+        "texto": "Temporal: Marque 1 Ponto de Armadura para rolar um d4 e some o resultado como bônus à sua Evasão contra um ataque recebido.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -11399,7 +11428,8 @@
               "tipo": "resultado-dado-manual"
             }
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       }
     },
     {
@@ -11473,7 +11503,7 @@
         "nomeIngles": "Fortified",
         "textoIngles": "Fortified: When marking Armor Slot, reduce severity by two thresholds",
         "nome": "Fortificado",
-        "texto": "Fortificado: Ao marcar um slot de armadura, você reduz a gravidade de um ataque em dois limiares em vez de um.",
+        "texto": "Fortificado: Ao marcar 1 Ponto de Armadura, você reduz a gravidade de um ataque em dois limiares em vez de um.",
         "fonteTraducao": "livro",
         "confianca": "alta",
         "automacao": {
@@ -11486,7 +11516,8 @@
               "passos": 2
             }
           }
-        }
+        },
+        "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
       }
     },
     {
@@ -11550,7 +11581,7 @@
       "id": "loot-01",
       "rolagem": "01",
       "nome": "Saco de Dormir Premium",
-      "descricao": "Durante o tempo de inatividade, você limpa automaticamente um estresse.",
+      "descricao": "Durante um descanso, você limpa automaticamente 1 Estresse.",
       "nomeIngles": "Premium Bedroll",
       "descricaoIngles": "During downtime, you automatically clear a Stress.",
       "origemNome": "corrigido-auditoria",
@@ -11566,7 +11597,8 @@
         "descanso": {
           "recuperaEstresse": 1
         }
-      }
+      },
+      "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
     },
     {
       "id": "loot-02",
@@ -11575,13 +11607,18 @@
       "descricao": "Este apito artesanal tem um som característico. Quando você sopra o apito, seu tom penetrante pode ser ouvido em um raio de 1 milha.",
       "nomeIngles": "Piper Whistle",
       "descricaoIngles": "This handcrafted whistle has a distinctive sound. When you blow this whistle, its piercing tone can be heard within a 1-mile radius.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Um apito ouvido a 1 milha: ficção sonora, nenhum número."
+      }
     },
     {
       "id": "loot-03",
       "rolagem": "03",
       "nome": "Aljava de carga",
-      "descricao": "Quando for bem-sucedido em um ataque com uma flecha armazenada nessa aljava, ganhe um bônus na rolagem de dano igual ao seu patamar atual.",
+      "descricao": "Quando for bem-sucedido em um ataque com uma flecha armazenada nessa aljava, ganhe um bônus na jogada de dano igual ao seu patamar atual.",
       "nomeIngles": "Charging Quiver",
       "descricaoIngles": "When you succeed on an attack with an arrow stored in this quiver, gain a bonus to the damage roll equal to your current tier.",
       "origemNome": "livro",
@@ -11605,7 +11642,12 @@
       "descricao": "Você pode acender essa tocha mágica à vontade. A luz da chama preenche um espaço muito maior do que deveria, o suficiente para iluminar uma caverna como se fosse dia.",
       "nomeIngles": "Alistair's Torch",
       "descricaoIngles": "You can light this magic torch at will. The flame's light fills a much larger space than it should, enough to illuminate a cave bright as day.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Luz mágica que ilumina uma caverna: ficção de cena."
+      }
     },
     {
       "id": "loot-05",
@@ -11614,7 +11656,12 @@
       "descricao": "Esse par de orbes permite que qualquer criatura que os possua se comunique entre si a qualquer distância.",
       "nomeIngles": "Speaking Orbs",
       "descricaoIngles": "This pair of orbs allows any creatures holding them to communicate with each other across any distance.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Comunicação a qualquer distância: ficção de cena."
+      }
     },
     {
       "id": "loot-06",
@@ -11626,25 +11673,40 @@
       "origemNome": "corrigido-auditoria",
       "aliases": [
         "Manáculas"
-      ]
+      ],
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Um par de algemas com chave: objeto, sem regra."
+      }
     },
     {
       "id": "loot-07",
       "rolagem": "07",
       "nome": "Manto Arcano",
-      "descricao": "Uma criatura com o traço Spellcast que esteja usando esse manto pode ajustar sua cor, textura e tamanho à vontade.",
+      "descricao": "Uma criatura com o traço de Conjuração que esteja usando esse manto pode ajustar sua cor, textura e tamanho à vontade.",
       "nomeIngles": "Arcane Cloak",
       "descricaoIngles": "A creature with a Spellcast trait wearing this cloak can adjust its color, texture, and size at will.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Ajusta cor, textura e tamanho à vontade: puramente cosmético."
+      }
     },
     {
       "id": "loot-08",
       "rolagem": "08",
       "nome": "Rede tecida",
-      "descricao": "Você pode fazer uma rolagem de finesse usando essa rede para prender uma criatura pequena. O alvo preso pode se libertar com um lançamento de ataque bem-sucedido (16).",
+      "descricao": "Você pode fazer uma jogada de Finesse usando essa rede para prender uma criatura pequena. O alvo preso pode se libertar com um jogada de ataque bem-sucedida (16).",
       "nomeIngles": "Woven Net",
       "descricaoIngles": "You can make a Finesse Roll using this net to trap a small creature. A trapped target can break free with a successful Attack Roll (16).",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-mesa-decide",
+        "rolaNoApp": false,
+        "motivo": "A rede pede uma jogada de Finesse na mesa, e o alvo escapa com uma jogada de ataque (16). Dado e alvo são da mesa."
+      }
     },
     {
       "id": "loot-09",
@@ -11673,13 +11735,18 @@
       "descricao": "Essa haste plana está inscrita com runas. Quando você ativa a haste, ela é imediatamente suspensa no lugar. Até que a haste seja desativada, ela não pode se mover, não obedece às regras da gravidade e permanece no lugar.",
       "nomeIngles": "Suspended Rod",
       "descricaoIngles": "This flat rod is inscribed with runes. When you activate the rod, it is immediately suspended in place. Until the rod is deactivated, it can't move, doesn't abide by the rules of gravity, and remains in place.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "A haste fica suspensa no lugar: ficção de cena."
+      }
     },
     {
       "id": "loot-11",
       "rolagem": "11",
       "nome": "Pedra Glamour",
-      "descricao": "Ative essa pedra do tamanho de um seixo para memorizar a aparência de alguém que você pode ver. Gaste uma Hope para recriar magicamente essa aparência em você como uma ilusão.",
+      "descricao": "Ative essa pedra do tamanho de um seixo para memorizar a aparência de alguém que você pode ver. Gaste 1 Esperança para recriar magicamente essa aparência em você como uma ilusão.",
       "nomeIngles": "Glamour Stone",
       "descricaoIngles": "Activate this pebble-sized stone to memorize the appearance of someone you can see. Spend a Hope to magically recreate this guise on yourself as an illusion.",
       "origemNome": "livro",
@@ -11693,7 +11760,8 @@
         "custoEsperanca": 1,
         "rolaNoApp": false,
         "efeitoManual": "Recrie como ilusão a aparência previamente memorizada pela Pedra do Glamour. A escolha da aparência permanece na mesa."
-      }
+      },
+      "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
     },
     {
       "id": "loot-12",
@@ -11702,7 +11770,12 @@
       "descricao": "Esse baú mágico parece vazio. Quando você fala uma palavra ou ação desencadeadora específica e abre o baú, pode ver os itens armazenados nele.",
       "nomeIngles": "Empty Chest",
       "descricaoIngles": "This magical chest appears empty. When you speak a specific trigger word or action and open the chest, you can see the items stored within it.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Esconde o conteúdo até a palavra de comando: ficção de cena."
+      }
     },
     {
       "id": "loot-13",
@@ -11714,13 +11787,18 @@
       "origemNome": "corrigido-auditoria",
       "aliases": [
         "Estojo complementar"
-      ]
+      ],
+      "automacao": {
+        "classificacao": "loot-mesa-decide",
+        "rolaNoApp": false,
+        "motivo": "A imunidade vale enquanto o companheiro está dentro do estojo — quem diz se está é o Mestre."
+      }
     },
     {
       "id": "loot-14",
       "rolagem": "14",
       "nome": "Flechas Perfurantes",
-      "descricao": "Três vezes por descanso, quando for bem-sucedido em um ataque com uma dessas flechas, você pode adicionar sua Proficiência a Você a rolagem de dano.",
+      "descricao": "Três vezes por descanso, quando for bem-sucedido em um ataque com uma dessas flechas, você pode adicionar sua Proficiência à jogada de dano.",
       "nomeIngles": "Piercing Arrows",
       "descricaoIngles": "Three times per rest when you succeed on an attack with one of these arrows, you can add your Proficiency to the damage roll.",
       "origemNome": "corrigido-auditoria",
@@ -11737,7 +11815,7 @@
         "contadorUso": "uso:loot:loot-14",
         "bonusProficienciaDano": true,
         "rolaNoApp": false,
-        "efeitoManual": "Depois de acertar um ataque com uma Flecha Perfurante, some sua Proficiência à rolagem de dano deste ataque."
+        "efeitoManual": "Depois de acertar um ataque com uma Flecha Perfurante, some sua Proficiência à jogada de dano deste ataque."
       }
     },
     {
@@ -11775,7 +11853,7 @@
       "id": "loot-16",
       "rolagem": "16",
       "nome": "Chave-Mestra",
-      "descricao": "Ao usar essa chave para abrir uma porta trancada, você ganha vantagem na rolagem de finesse.",
+      "descricao": "Ao usar essa chave para abrir uma porta trancada, você ganha vantagem na jogada de Finesse.",
       "nomeIngles": "Skeleton Key",
       "descricaoIngles": "When you use this key to open a locked door, you gain advantage on the Finesse Roll.",
       "origemNome": "corrigido-auditoria",
@@ -11799,7 +11877,7 @@
       "id": "loot-17",
       "rolagem": "17",
       "nome": "Prisma Arcano",
-      "descricao": "Posicione esse prisma em um local de sua escolha e ative-o. Todos os aliados dentro do alcance próximo dele ganham um bônus de +1 em seus lançamentos de feitiço. Enquanto estiver ativado, o prisma não pode ser movido. Uma vez desativado, o prisma não poderá ser ativado novamente até seu próximo descanso longo.",
+      "descricao": "Posicione esse prisma em um local de sua escolha e ative-o. Todos os aliados dentro do alcance Próximo dele ganham um bônus de +1 em seus jogadas de Conjuração. Enquanto estiver ativado, o prisma não pode ser movido. Uma vez desativado, o prisma não poderá ser ativado novamente até seu próximo descanso longo.",
       "nomeIngles": "Arcane Prism",
       "descricaoIngles": "Position this prism in a location of your choosing and activate it. All allies within Close range of it gain a +1 bonus to their Spellcast Rolls. While activated, the prism can't be moved. Once the prism is deactivated, it can't be activated again until your next long rest.",
       "origemNome": "livro",
@@ -11882,13 +11960,18 @@
       "descricao": "Essas duas bússolas apontam uma para a outra, independentemente da distância entre elas.",
       "nomeIngles": "Homing Compasses",
       "descricaoIngles": "These two compasses point toward each other no matter how far apart they are.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Duas bússolas que apontam uma para a outra: ficção de cena."
+      }
     },
     {
       "id": "loot-21",
       "rolagem": "21",
       "nome": "Espírito Corretor",
-      "descricao": "Esse pequeno duende fica na curva de seu canal auditivo e sussurra conselhos úteis durante o combate. Uma vez por descanso curto, você pode ganhar vantagem em uma rolagem de ataque.",
+      "descricao": "Esse pequeno duende fica na curva de seu canal auditivo e sussurra conselhos úteis durante o combate. Uma vez por descanso curto, você pode ganhar vantagem em uma jogada de ataque.",
       "nomeIngles": "Corrector Sprite",
       "descricaoIngles": "This tiny sprite sits in the curve of your ear canal and whispers helpful advice during combat. Once per short rest, you can gain advantage on an attack roll.",
       "origemNome": "corrigido-auditoria",
@@ -11915,13 +11998,18 @@
       "descricao": "Você pode subir em superfícies verticais e atravessar tetos.",
       "nomeIngles": "Gecko Gloves",
       "descricaoIngles": "You can climb up vertical surfaces and across ceilings.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Subir paredes e andar no teto: movimento narrado, sem número."
+      }
     },
     {
       "id": "loot-23",
       "rolagem": "23",
       "nome": "Guardião do Saber",
-      "descricao": "Você pode armazenar o nome e os detalhes de até três criaturas hostis dentro desse livro. Você ganha um bônus de +1 nas rolagens de ação contra essas criaturas.",
+      "descricao": "Você pode armazenar o nome e os detalhes de até três criaturas hostis dentro desse livro. Você ganha um bônus de +1 nas jogadas de ação contra essas criaturas.",
       "nomeIngles": "Lorekeeper",
       "descricaoIngles": "You can store the name and details of up to three hostile creatures inside this book. You gain a +1 bonus to action rolls against those creatures.",
       "origemNome": "corrigido-auditoria",
@@ -11947,11 +12035,11 @@
     {
       "id": "loot-24",
       "rolagem": "24",
-      "nome": "Frasco de Darksmoke Receita",
-      "descricao": "Como movimento de inatividade, você pode marcar um Stress para criar um Vial of Darksmoke.",
+      "nome": "Receita de Frasco de Darksmoke",
+      "descricao": "Como movimento de descanso, você pode marcar 1 Estresse para criar um Frasco de Darksmoke.",
       "nomeIngles": "Vial of Darksmoke Recipe",
       "descricaoIngles": "As a downtime move, you can mark a Stress to craft a Vial of Darksmoke.",
-      "origemNome": "livro",
+      "origemNome": "corrigido-auditoria",
       "automacao": {
         "classificacao": "loot-receita-movimento-repouso-e16",
         "rolaNoApp": false,
@@ -11970,7 +12058,9 @@
           "custoEstresse": 1,
           "rolaNoApp": false
         }
-      }
+      },
+      "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json",
+      "nomeAntigo": "Frasco de Darksmoke Receita"
     },
     {
       "id": "loot-25",
@@ -12031,7 +12121,7 @@
       "id": "loot-27",
       "rolagem": "27",
       "nome": "Planador",
-      "descricao": "Enquanto estiver caindo, você pode marcar um Stress para acionar esse pequeno paraquedas e deslizar com segurança até o chão.",
+      "descricao": "Enquanto estiver caindo, você pode marcar 1 Estresse para acionar esse pequeno paraquedas e deslizar com segurança até o chão.",
       "nomeIngles": "Glider",
       "descricaoIngles": "While falling, you can mark a Stress to deploy this small parachute and glide safely to the ground.",
       "origemNome": "livro",
@@ -12045,7 +12135,8 @@
         "custoEstresse": 1,
         "rolaNoApp": false,
         "efeitoManual": "Acione o planador durante uma queda e deslize em segurança até o chão."
-      }
+      },
+      "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
     },
     {
       "id": "loot-28",
@@ -12102,13 +12193,18 @@
       "descricao": "Esse frasco pode conter dois líquidos diferentes. Você pode alternar entre eles acionando um pequeno interruptor na lateral do frasco.",
       "nomeIngles": "Dual Flask",
       "descricaoIngles": "This flask can hold two different liquids. You can swap between them by flipping a small switch on the flask's side.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Dois líquidos num frasco: objeto, sem regra."
+      }
     },
     {
       "id": "loot-31",
       "rolagem": "31",
       "nome": "Saco de Ficklesand",
-      "descricao": "Você pode convencer esse pequeno saco de areia a ficar muito mais pesado ou mais leve com um Rolamento de Presença bem-sucedido (10). Além disso, com uma rolagem bem-sucedida de Finesse (10), você pode soprar um pouco de areia no rosto do alvo para torná-lo temporariamente vulnerável.",
+      "descricao": "Você pode convencer esse pequeno saco de areia a ficar muito mais pesado ou mais leve com um Rolamento de Presença bem-sucedido (10). Além disso, com uma jogada bem-sucedida de Finesse (10), você pode soprar um pouco de areia no rosto do alvo para torná-lo temporariamente vulnerável.",
       "nomeIngles": "Bag of Ficklesand",
       "descricaoIngles": "You can convince this small bag of sand to be much heavier or lighter with a successful Presence Roll (10). Additionally, on a successful Finesse Roll (10), you can blow a bit of sand into a target's face to make them temporarily Vulnerable.",
       "origemNome": "livro",
@@ -12159,10 +12255,15 @@
       "id": "loot-33",
       "rolagem": "33",
       "nome": "Pena de Fênix",
-      "descricao": "Se você tiver pelo menos uma Pena de Fênix consigo quando cair inconsciente, receberá um bônus de +1 na rolagem que fizer para determinar se ganhará uma cicatriz.",
+      "descricao": "Se você tiver pelo menos uma Pena de Fênix consigo quando cair inconsciente, receberá um bônus de +1 na jogada que fizer para determinar se ganhará uma cicatriz.",
       "nomeIngles": "Phoenix Feather",
       "descricaoIngles": "If you have at least one Phoenix Feather on you when you fall unconscious, you gain a +1 bonus to the roll you make to determine whether you gain a scar.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-pendente-deterministico",
+        "rolaNoApp": false,
+        "motivo": "O +1 vale na jogada de cicatriz, que a ficha já sabe pedir no movimento de morte. Falta publicar o bônus nessa janela."
+      }
     },
     {
       "id": "loot-34",
@@ -12261,7 +12362,7 @@
       "id": "loot-37",
       "rolagem": "37",
       "nome": "Corrente do Paragon",
-      "descricao": "Como movimento de tempo de inatividade, você pode meditar em um ideal ou princípio que lhe seja caro e concentrar sua vontade nessa corrente. Uma vez por descanso longo, você pode gastar uma Esperança para rolar um d20 como seu Hope Die (dado de esperança) para rolagens que se alinhem diretamente com esse princípio.",
+      "descricao": "Como movimento de descanso, você pode meditar em um ideal ou princípio que lhe seja caro e concentrar sua vontade nessa corrente. Uma vez por descanso longo, você pode gastar 1 Esperança para rolar um d20 como seu Dado de Esperança nas jogadas que se alinhem diretamente com esse princípio.",
       "nomeIngles": "Paragon's Chain",
       "descricaoIngles": "As a downtime move, you can meditate on an ideal or principle you hold dear and focus your will into this chain. Once per long rest, you can spend a Hope to roll a d20 as your Hope Die for rolls that directly align with that principle.",
       "origemNome": "livro",
@@ -12291,7 +12392,8 @@
         "requerVinculo": true,
         "rolaNoApp": false,
         "efeitoManual": "Em uma jogada diretamente relacionada ao princípio registrado, role 1d20 como seu Dado de Esperança."
-      }
+      },
+      "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
     },
     {
       "id": "loot-38",
@@ -12352,7 +12454,12 @@
       "descricao": "Quando você armazena itens nessa bolsa, eles são mantidos em uma dimensão de bolso que nunca fica sem espaço. Você pode recuperar um item a qualquer momento.",
       "nomeIngles": "Infinite Bag",
       "descricaoIngles": "When you store items in this bag, they are kept in a pocket dimension that never runs out of space. You can retrieve an item at any time.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Espaço infinito na bolsa: ficção de inventário. A carga do app é por mãos, não por volume."
+      }
     },
     {
       "id": "loot-41",
@@ -12383,7 +12490,7 @@
       "id": "loot-42",
       "rolagem": "42",
       "nome": "Relíquia de reforço",
-      "descricao": "Você recebe um bônus de +1 na sua força. Você só pode carregar uma relíquia.",
+      "descricao": "Você recebe um bônus de +1 na sua Força. Você só pode carregar uma relíquia.",
       "nomeIngles": "Bolster Relic",
       "descricaoIngles": "You gain a +1 bonus to your Strength. You can only carry one relic.",
       "origemNome": "livro",
@@ -12523,7 +12630,7 @@
       "id": "loot-48",
       "rolagem": "48",
       "nome": "Pingente Flickerfly",
-      "descricao": "Enquanto você estiver portando esse pingente, suas armas com alcance corpo a corpo que causam dano físico terão um brilho de véu e poderão atacar alvos a uma distância muito próxima.",
+      "descricao": "Enquanto você estiver portando esse pingente, suas armas com alcance Corpo a Corpo que causam dano físico terão um brilho de véu e poderão atacar alvos a uma distância muito próxima.",
       "nomeIngles": "Flickerfly Pendant",
       "descricaoIngles": "While you carry this pendant, your weapons with a Melee range that deal physical damage have a gossamer sheen and can attack targets within Very Close range.",
       "origemNome": "livro",
@@ -12547,7 +12654,12 @@
       "descricao": "Você pode caminhar sobre a superfície da água como se fosse um solo macio.",
       "nomeIngles": "Lakestrider Boots",
       "descricaoIngles": "You can walk on the surface of water as if it were soft ground.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Andar sobre a água: movimento narrado, sem número."
+      }
     },
     {
       "id": "loot-50",
@@ -12556,7 +12668,12 @@
       "descricao": "Quando você esculpe essa bola de argila em um companheiro animal de argila, ela se comporta como esse animal. Por exemplo, uma aranha de argila pode tecer teias de argila, enquanto um pássaro de argila pode voar. O companheiro de argila mantém a memória e a identidade em diferentes formas, mas pode adotar novos maneirismos em cada forma.",
       "nomeIngles": "Clay Companion",
       "descricaoIngles": "When you sculpt this ball of clay into a clay animal companion, it behaves as that animal. For example, a clay spider can spin clay webs, while a clay bird can fly. The clay companion retains memory and identity across different shapes, but they can adopt new mannerisms with each form.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "O companheiro de argila muda de forma: ficção de cena."
+      }
     },
     {
       "id": "loot-51",
@@ -12619,7 +12736,23 @@
       "descricao": "Você pode anexar essa gema a uma arma, o que lhe permite usar sua Agilidade ao fazer um ataque com essa arma.",
       "nomeIngles": "Gem of Alacrity",
       "descricaoIngles": "You can attach this gem to a weapon, allowing you to use your Agility when making an attack with that weapon.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-anexo-arma-troca-traco-e20",
+        "rolaNoApp": false,
+        "motivo": "A ficha registra em qual arma a gema foi encaixada e passa a publicar o traço da gema no lugar do traço da arma, dizendo de onde ele vem. A jogada continua sendo feita na mesa."
+      },
+      "efeitoSaquePassivo": {
+        "configuracao": {
+          "tipo": "arma-qualquer",
+          "campo": "vinculo",
+          "rotulo": "Arma que recebeu a Gema da Alacridade",
+          "obrigatoria": true
+        },
+        "anexoArma": {
+          "trocaTracoDeAtaque": "Agilidade"
+        }
+      }
     },
     {
       "id": "loot-54",
@@ -12628,7 +12761,23 @@
       "descricao": "Você pode anexar essa gema a uma arma, o que lhe permite usar sua Força ao fazer um ataque com essa arma.",
       "nomeIngles": "Gem of Might",
       "descricaoIngles": "You can attach this gem to a weapon, allowing you to use your Strength when making an attack with that weapon.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-anexo-arma-troca-traco-e20",
+        "rolaNoApp": false,
+        "motivo": "A ficha registra em qual arma a gema foi encaixada e passa a publicar o traço da gema no lugar do traço da arma, dizendo de onde ele vem. A jogada continua sendo feita na mesa."
+      },
+      "efeitoSaquePassivo": {
+        "configuracao": {
+          "tipo": "arma-qualquer",
+          "campo": "vinculo",
+          "rotulo": "Arma que recebeu a Gema do Poder",
+          "obrigatoria": true
+        },
+        "anexoArma": {
+          "trocaTracoDeAtaque": "Força"
+        }
+      }
     },
     {
       "id": "loot-55",
@@ -12637,7 +12786,23 @@
       "descricao": "Você pode anexar essa gema a uma arma, o que lhe permite usar sua Finesse ao fazer um ataque com essa arma.",
       "nomeIngles": "Gem of Precision",
       "descricaoIngles": "You can attach this gem to a weapon, allowing you to use your Finesse when making an attack with that weapon.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-anexo-arma-troca-traco-e20",
+        "rolaNoApp": false,
+        "motivo": "A ficha registra em qual arma a gema foi encaixada e passa a publicar o traço da gema no lugar do traço da arma, dizendo de onde ele vem. A jogada continua sendo feita na mesa."
+      },
+      "efeitoSaquePassivo": {
+        "configuracao": {
+          "tipo": "arma-qualquer",
+          "campo": "vinculo",
+          "rotulo": "Arma que recebeu a Gema de precisão",
+          "obrigatoria": true
+        },
+        "anexoArma": {
+          "trocaTracoDeAtaque": "Finesse"
+        }
+      }
     },
     {
       "id": "loot-56",
@@ -12646,7 +12811,23 @@
       "descricao": "Você pode anexar essa gema a uma arma, o que lhe permite usar o Instinto ao fazer um ataque com essa arma.",
       "nomeIngles": "Gem of Insight",
       "descricaoIngles": "You can attach this gem to a weapon, allowing you to use your Instinct when making an attack with that weapon.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-anexo-arma-troca-traco-e20",
+        "rolaNoApp": false,
+        "motivo": "A ficha registra em qual arma a gema foi encaixada e passa a publicar o traço da gema no lugar do traço da arma, dizendo de onde ele vem. A jogada continua sendo feita na mesa."
+      },
+      "efeitoSaquePassivo": {
+        "configuracao": {
+          "tipo": "arma-qualquer",
+          "campo": "vinculo",
+          "rotulo": "Arma que recebeu a Gema da percepção",
+          "obrigatoria": true
+        },
+        "anexoArma": {
+          "trocaTracoDeAtaque": "Instinto"
+        }
+      }
     },
     {
       "id": "loot-57",
@@ -12655,7 +12836,23 @@
       "descricao": "Você pode anexar essa gema a uma arma, o que lhe permite usar sua Presença ao fazer um ataque com essa arma.",
       "nomeIngles": "Gem of Audacity",
       "descricaoIngles": "You can attach this gem to a weapon, allowing you to use your Presence when making an attack with that weapon.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-anexo-arma-troca-traco-e20",
+        "rolaNoApp": false,
+        "motivo": "A ficha registra em qual arma a gema foi encaixada e passa a publicar o traço da gema no lugar do traço da arma, dizendo de onde ele vem. A jogada continua sendo feita na mesa."
+      },
+      "efeitoSaquePassivo": {
+        "configuracao": {
+          "tipo": "arma-qualquer",
+          "campo": "vinculo",
+          "rotulo": "Arma que recebeu a Gema da Audácia",
+          "obrigatoria": true
+        },
+        "anexoArma": {
+          "trocaTracoDeAtaque": "Presença"
+        }
+      }
     },
     {
       "id": "loot-58",
@@ -12664,7 +12861,23 @@
       "descricao": "Você pode anexar essa gema a uma arma, o que lhe permite usar seu Conhecimento ao fazer um ataque com essa arma.",
       "nomeIngles": "Gem of Sagacity",
       "descricaoIngles": "You can attach this gem to a weapon, allowing you to use your Knowledge when making an attack with that weapon.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "loot-anexo-arma-troca-traco-e20",
+        "rolaNoApp": false,
+        "motivo": "A ficha registra em qual arma a gema foi encaixada e passa a publicar o traço da gema no lugar do traço da arma, dizendo de onde ele vem. A jogada continua sendo feita na mesa."
+      },
+      "efeitoSaquePassivo": {
+        "configuracao": {
+          "tipo": "arma-qualquer",
+          "campo": "vinculo",
+          "rotulo": "Arma que recebeu a Gema da Sagacidade",
+          "obrigatoria": true
+        },
+        "anexoArma": {
+          "trocaTracoDeAtaque": "Conhecimento"
+        }
+      }
     },
     {
       "id": "loot-59",
@@ -12691,22 +12904,23 @@
       "id": "loot-60",
       "rolagem": "60",
       "nome": "Cinturão da unidade",
-      "descricao": "Uma vez por sessão, você pode gastar 5 de Esperança para liderar um Tag Team Roll com três PCs em vez de dois.",
+      "descricao": "Uma vez por sessão, você pode gastar 5 Esperanças para liderar uma Jogada em Equipe com três PJs em vez de dois.",
       "nomeIngles": "Belt of Unity",
       "descricaoIngles": "Once per session, you can spend 5 Hope to lead a Tag Team Roll with three PCs instead of two.",
       "origemNome": "livro",
       "automacao": {
         "classificacao": "loot-custo-por-sessao-e15",
         "rolaNoApp": false,
-        "motivo": "A ficha cobra 5 Esperança e registra o uso da sessão; participantes e resolução do Jogada em Dupla permanecem na mesa."
+        "motivo": "A ficha cobra 5 Esperança e registra o uso da sessão; participantes e resolução da Jogada em Equipe permanecem na mesa."
       },
       "efeitoSaque": {
         "tipo": "uso-assistido",
         "contadorUso": "uso:loot:loot-60",
         "custoEsperanca": 5,
         "rolaNoApp": false,
-        "efeitoManual": "Lidere um Jogada em Dupla com três personagens em vez de dois."
-      }
+        "efeitoManual": "Lidere uma Jogada em Equipe com três personagens em vez de dois."
+      },
+      "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
     },
     {
       "id": "loot-srd2-ball-bearings",
@@ -12717,7 +12931,12 @@
       "nomeIngles": "Ball Bearings",
       "descricaoIngles": "This pouch contains perfectly smooth metal spheres.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 77"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 77",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Uma bolsa de esferas lisas: objeto, sem regra."
+      }
     },
     {
       "id": "loot-srd2-blackwing-quill",
@@ -12728,7 +12947,12 @@
       "nomeIngles": "Blackwing Quill",
       "descricaoIngles": "This writing quill never runs out of ink or needs to be sharpened.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 77"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 77",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Pena que nunca acaba a tinta: objeto, sem regra."
+      }
     },
     {
       "id": "loot-srd2-boots-of-supple-mystique",
@@ -12739,7 +12963,12 @@
       "nomeIngles": "Boots of Supple Mystique",
       "descricaoIngles": "While wearing these boots, you don’t leave tracks or footprints.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Não deixa rastros: ficção de cena."
+      }
     },
     {
       "id": "loot-srd2-box-of-dragon-dust",
@@ -12750,7 +12979,12 @@
       "nomeIngles": "Box of Dragon Dust",
       "descricaoIngles": "This snuffbox is filled with combustible powder.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 77"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 77",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Pó combustível: o que ele faz é o Mestre narrar."
+      }
     },
     {
       "id": "loot-srd2-caltrops",
@@ -12761,7 +12995,12 @@
       "nomeIngles": "Caltrops",
       "descricaoIngles": "You can spread these caltrops in a Very Close area around you. A creature hastening through that area must mark a Stress.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 77"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 77",
+      "automacao": {
+        "classificacao": "loot-mesa-decide",
+        "rolaNoApp": false,
+        "motivo": "Quem atravessa marca 1 Estresse, e quem atravessa é ADVERSÁRIO: Estresse de adversário vive na mesa do Mestre, não na ficha."
+      }
     },
     {
       "id": "loot-srd2-collapsible-pole",
@@ -12772,7 +13011,12 @@
       "nomeIngles": "Collapsible Pole",
       "descricaoIngles": "You can break down this 18-foot pole into six interlinked 3-foot segments.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 77"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 77",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Uma vara que desmonta em seis: objeto, sem regra."
+      }
     },
     {
       "id": "loot-srd2-elven-spyglass",
@@ -12783,7 +13027,12 @@
       "nomeIngles": "Elven Spyglass",
       "descricaoIngles": "You can use this spyglass to magnify your vision a hundredfold.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 77"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 77",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Amplia a visão cem vezes: ficção de cena."
+      }
     },
     {
       "id": "loot-srd2-gourmet-granules",
@@ -12794,7 +13043,12 @@
       "nomeIngles": "Gourmet Granules",
       "descricaoIngles": "This savory powder makes any food it’s sprinkled on delicious and healthy, no matter how bland or rotten it is.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 77"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 77",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Torna qualquer comida boa: ficção de cena."
+      }
     },
     {
       "id": "loot-srd2-grapnel",
@@ -12827,7 +13081,12 @@
       "nomeIngles": "Hollowbark Horn",
       "descricaoIngles": "You can blow this horn to summon a small woodland creature to perform a simple task.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Invoca uma criatura pequena para uma tarefa simples: o Mestre resolve."
+      }
     },
     {
       "id": "loot-srd2-loaded-dice",
@@ -12838,7 +13097,12 @@
       "nomeIngles": "Loaded Dice",
       "descricaoIngles": "You can choose what result this set of weighted dice rolls with a successful Finesse Roll (14). If you roll with Fear, anyone watching knows the dice are loaded.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
+      "automacao": {
+        "classificacao": "loot-mesa-decide",
+        "rolaNoApp": false,
+        "motivo": "Escolher o resultado depende de uma jogada de Finesse (14) feita na mesa; e rolar com Medo revela a fraude."
+      }
     },
     {
       "id": "loot-srd2-mandragorian-torch",
@@ -12849,7 +13113,12 @@
       "nomeIngles": "Mandragorian Torch",
       "descricaoIngles": "This torch gives off light only the bearer can see.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Luz que só quem carrega vê: ficção de cena."
+      }
     },
     {
       "id": "loot-srd2-nighthawkers-ring",
@@ -12882,7 +13151,12 @@
       "nomeIngles": "Returning Ring",
       "descricaoIngles": "When you throw your primary weapon while wearing this ring, the weapon appears in your hand immediately after the attack.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "A arma arremessada volta à mão: não muda alcance, dano nem traço."
+      }
     },
     {
       "id": "loot-srd2-self-tying-rope",
@@ -12893,7 +13167,12 @@
       "nomeIngles": "Self-Tying Rope",
       "descricaoIngles": "You can command this rope to tie or untie itself.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "A corda se amarra sozinha: ficção de cena."
+      }
     },
     {
       "id": "loot-srd2-silees-folding-knife",
@@ -12904,7 +13183,12 @@
       "nomeIngles": "Silee’s Folding Knife",
       "descricaoIngles": "This 3-inch blade has an edge that easily cuts through anything except the handle it’s stored in.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 77"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 77",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Uma lâmina que corta quase tudo: objeto, sem regra."
+      }
     },
     {
       "id": "loot-srd2-thiefs-compass",
@@ -12915,7 +13199,12 @@
       "nomeIngles": "Thief’s Compass",
       "descricaoIngles": "This compass points the way toward the nearest exit while indoors and the closest entrance while outdoors.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Aponta a saída mais próxima: ficção de cena."
+      }
     },
     {
       "id": "loot-srd2-travelers-bell",
@@ -12926,7 +13215,12 @@
       "nomeIngles": "Traveler’s Bell",
       "descricaoIngles": "Once per long rest, you can ring this bell to magically open the shortest safe path through rough terrain for 1 hour.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
+      "automacao": {
+        "classificacao": "loot-pendente-deterministico",
+        "rolaNoApp": false,
+        "motivo": "O efeito é ficção (caminho seguro por 1 hora), mas o \"uma vez por descanso longo\" é contável: o app já tem `umaVezPorDescanso`."
+      }
     },
     {
       "id": "loot-srd2-windup-toy",
@@ -12937,7 +13231,12 @@
       "nomeIngles": "Windup Toy",
       "descricaoIngles": "This small mechanical device is shaped like a strixwolf pup and can be programmed to perform simple tricks.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Um brinquedo que faz truques: objeto, sem regra."
+      }
     },
     {
       "id": "loot-srd2-zephyrs-jar",
@@ -12948,7 +13247,12 @@
       "nomeIngles": "Zephyr’s Jar",
       "descricaoIngles": "You can open this empty jar during inclement weather to capture the storm and leave behind clear skies. The storm remains inside until unleashed by reopening the jar.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Guarda a tempestade no jarro: ficção de cena."
+      }
     },
     {
       "id": "loot-srd2-kingfishers-net",
@@ -12991,7 +13295,12 @@
       "nomeIngles": "Iron Veil",
       "descricaoIngles": "This chain-link head covering renders the wearer invisible to fey creatures.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Invisível para criaturas feéricas: o Mestre decide quando conta."
+      }
     },
     {
       "id": "loot-srd2-furball-bag",
@@ -13018,7 +13327,12 @@
       "nomeIngles": "Whisperstep Anklet",
       "descricaoIngles": "This anklet makes your steps silent as long as you don’t move faster than walking speed.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Passos silenciosos em ritmo de caminhada: ficção de cena."
+      }
     },
     {
       "id": "loot-srd2-enchanters-loupe",
@@ -13029,7 +13343,12 @@
       "nomeIngles": "Enchanter’s Loupe",
       "descricaoIngles": "You can use this loupe to see through illusions and enchantments.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Enxerga através de ilusões: o Mestre decide o que se vê."
+      }
     },
     {
       "id": "loot-srd2-eschers-mirrorball",
@@ -13078,7 +13397,12 @@
       "nomeIngles": "Gravewarden’s Bell",
       "descricaoIngles": "This bell rings when a ghost or undead creature moves within Far range of it.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Toca quando um morto-vivo chega em alcance Distante: aviso de cena."
+      }
     },
     {
       "id": "loot-srd2-reliquary-of-the-sightless-saint",
@@ -13090,10 +13414,10 @@
       "descricaoIngles": "You gain a +1 bonus to your Hope Die when you make the Risk It All death move.",
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
-      "efeitoSaquePassivo": {
-        "contextual": {
-          "regra": "Receba +1 no seu Dado de Esperança ao realizar o movimento de morte Arriscar Tudo."
-        }
+      "automacao": {
+        "classificacao": "loot-pendente-deterministico",
+        "rolaNoApp": false,
+        "motivo": "O +1 no Dado de Esperança vale no Arriscar Tudo, que a ficha JÁ resolve (a Placa Heroica Sagrada gasta Esperança na mesma janela). Falta somar este bônus lá."
       }
     },
     {
@@ -13105,7 +13429,12 @@
       "nomeIngles": "Map of Revelation",
       "descricaoIngles": "You can attune this map to one creature at a time. The map always shows the attuned creature’s location.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Mostra onde está a criatura sintonizada: ficção de cena."
+      }
     },
     {
       "id": "loot-srd2-dagginaes-obsidian-slate",
@@ -13116,7 +13445,12 @@
       "nomeIngles": "Dagginae’s Obsidian Slate",
       "descricaoIngles": "This wafer-thin sheet of volcanic glass is used by archivists to keep notes. Any information etched onto its surface disappears but can be recalled via a command you set.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Guarda e revela anotações: objeto, sem regra."
+      }
     },
     {
       "id": "loot-srd2-gadimans-backpack",
@@ -13182,10 +13516,10 @@
       "descricaoIngles": "When you attack with a physical weapon while wearing these gloves, the damage is considered both physical and magic.",
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
-      "efeitoSaquePassivo": {
-        "contextual": {
-          "regra": "Quando atacar com uma arma física usando estas luvas, o dano será considerado físico e mágico."
-        }
+      "automacao": {
+        "classificacao": "loot-pendente-deterministico",
+        "rolaNoApp": false,
+        "motivo": "O dano físico passa a contar como físico E mágico — e isso muda quem pode mitigar: a Bladefare e o Manto de Monett proíbem marcar Armadura contra um dos tipos. Determinístico e com consumidor pronto."
       }
     },
     {
@@ -13198,10 +13532,10 @@
       "descricaoIngles": "When you would mark a Stress to reload a weapon, you don’t mark it.",
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
-      "efeitoSaquePassivo": {
-        "contextual": {
-          "regra": "Quando você deveria marcar 1 Estresse para recarregar uma arma, não o marque."
-        }
+      "automacao": {
+        "classificacao": "loot-pendente-deterministico",
+        "rolaNoApp": false,
+        "motivo": "Cancelar o Estresse da Recarga é determinístico: cinco armas declaram Recarga, e o app já conhece esse custo."
       }
     },
     {
@@ -13214,10 +13548,10 @@
       "descricaoIngles": "When you take a rest without clearing Hit Points or Stress, you gain a +2 bonus to attack and damage rolls until your next rest.",
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
-      "efeitoSaquePassivo": {
-        "contextual": {
-          "regra": "Ao descansar sem limpar Pontos de Vida nem Estresse, receba +2 em jogadas de ataque e dano até seu próximo descanso."
-        }
+      "automacao": {
+        "classificacao": "loot-pendente-deterministico",
+        "rolaNoApp": false,
+        "motivo": "Descansar sem limpar nada publica +2 em ataque e dano até o próximo descanso: é bônus preparado, uma das três durações honestas que o app já sabe manter."
       }
     },
     {
@@ -13229,7 +13563,12 @@
       "nomeIngles": "Wildrider’s Saddle",
       "descricaoIngles": "This saddle grants any animal it’s strapped onto the ability to understand their rider’s commands.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "O animal entende quem o monta: ficção de cena."
+      }
     },
     {
       "id": "loot-srd2-soul-twin-circlets",
@@ -13311,10 +13650,10 @@
       "descricaoIngles": "On a successful weapon attack, you can knock your target back up to Close range from their location.",
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 79",
-      "efeitoSaquePassivo": {
-        "contextual": {
-          "regra": "Em um ataque de arma bem-sucedido, você pode empurrar o alvo até alcance Próximo a partir da posição dele."
-        }
+      "automacao": {
+        "classificacao": "loot-mesa-decide",
+        "rolaNoApp": false,
+        "motivo": "Empurrar o alvo até alcance Próximo é posição de adversário: a mesa move."
       }
     },
     {
@@ -13326,7 +13665,12 @@
       "nomeIngles": "Force Disc",
       "descricaoIngles": "This shimmering two-dimensional disc of magical force has a 4-foot diameter and is magically tethered to a pebble. The disc always floats 3 feet north of, and at the same elevation as, the pebble. The pebble has a mass equal to one-hundredth of the total mass carried by the disc.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 79"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 79",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Um disco flutuante que carrega peso: ficção de cena."
+      }
     },
     {
       "id": "loot-srd2-molepaw-mittens",
@@ -13360,10 +13704,10 @@
       "descricaoIngles": "You can choose an additional downtime move each rest.",
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 79",
-      "efeitoSaquePassivo": {
-        "contextual": {
-          "regra": "Você pode escolher um movimento de repouso adicional a cada descanso."
-        }
+      "automacao": {
+        "classificacao": "loot-pendente-deterministico",
+        "rolaNoApp": false,
+        "motivo": "Um movimento de descanso ADICIONAL. O app conta os dois movimentos e recusa o terceiro — então hoje ele PROÍBE o que o item permite."
       }
     },
     {
@@ -13397,7 +13741,12 @@
       "nomeIngles": "Collar of Ascendancy",
       "descricaoIngles": "An animal who wears this collar gains the ability to speak and understand common speech.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 79"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 79",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "O animal passa a falar: ficção de cena."
+      }
     },
     {
       "id": "loot-srd2-temporal-sanctuary",
@@ -13409,10 +13758,10 @@
       "descricaoIngles": "A PC who takes a rest in the temporal sanctuary can choose an additional downtime move.",
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 79",
-      "efeitoSaquePassivo": {
-        "contextual": {
-          "regra": "Um PJ que descansa no santuário temporal pode escolher um movimento de repouso adicional."
-        }
+      "automacao": {
+        "classificacao": "loot-pendente-deterministico",
+        "rolaNoApp": false,
+        "motivo": "Mesmo caso do Pingente do guardião do tempo: movimento de descanso adicional que a tela hoje recusa."
       }
     },
     {
@@ -13425,10 +13774,10 @@
       "descricaoIngles": "When you critically succeed on an attack, all allies within Close range gain a Hope.",
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 79",
-      "efeitoSaquePassivo": {
-        "contextual": {
-          "regra": "Quando você obtiver um sucesso crítico em um ataque, todos os aliados em alcance Próximo recebem 1 Esperança."
-        }
+      "automacao": {
+        "classificacao": "loot-mesa-decide",
+        "rolaNoApp": false,
+        "motivo": "No sucesso crítico, os ALIADOS ganham 1 Esperança cada — é ganho nas fichas dos outros, repartido na mesa."
       }
     },
     {
@@ -13440,7 +13789,12 @@
       "nomeIngles": "Rings of Friendship",
       "descricaoIngles": "Two creatures can wear this pair of rings shaped like coiled snakes. You can spend the Hope of whoever is wearing the other ring (with their permission) as if it were your own.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 79"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 79",
+      "automacao": {
+        "classificacao": "loot-pendente-deterministico",
+        "rolaNoApp": false,
+        "motivo": "Gastar a Esperança de quem usa o outro anel mexe em DUAS fichas, e o app já tem como fazer isso num lock só (`mutarPersonagemEOutro_`)."
+      }
     },
     {
       "id": "loot-srd2-rings-of-camaraderie",
@@ -13451,14 +13805,19 @@
       "nomeIngles": "Rings of Camaraderie",
       "descricaoIngles": "Two creatures can wear this pair of wooden rings. You can mark the Stress of whoever is wearing the other ring (with their permission) as if it were your own.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 79"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 79",
+      "automacao": {
+        "classificacao": "loot-pendente-deterministico",
+        "rolaNoApp": false,
+        "motivo": "Mesmo caso dos Anéis da amizade, com Estresse em vez de Esperança."
+      }
     },
     {
       "id": "loot-srd2-rings-of-alliance",
       "conjunto": "expansao-srd2",
       "rolagem": "54",
       "nome": "Anéis da aliança",
-      "descricao": "Uma vez por sessão, inicie uma Jogada em Dupla com quem usa o outro anel sem gastar Esperança nem consumir o limite da sessão.",
+      "descricao": "Uma vez por sessão, inicie uma Jogada em Equipe com quem usa o outro anel sem gastar Esperança nem consumir o limite da sessão.",
       "nomeIngles": "Rings of Alliance",
       "descricaoIngles": "Two creatures can wear this pair of rose gold rings. Once per session, you can initiate a Tag Team Roll with whoever is wearing the other ring without spending Hope or counting against your session limit for Tag Team Rolls.",
       "origemNome": "traducao-srd2",
@@ -13479,10 +13838,10 @@
       "descricaoIngles": "When the GM spends a Fear, roll a d4. Once per scene on a result of 4, you clear a Stress.",
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 79",
-      "efeitoSaquePassivo": {
-        "contextual": {
-          "regra": "Quando o Mestre gastar 1 Medo, role 1d4. Uma vez por cena, com resultado 4, limpe 1 Estresse."
-        }
+      "automacao": {
+        "classificacao": "loot-pendente-deterministico",
+        "rolaNoApp": false,
+        "motivo": "O d4 é rolado na mesa, mas o \"uma vez por cena\" é contável — e o gatilho (o Mestre gastar 1 Medo) já passa pelo motor da mesa."
       }
     },
     {
@@ -13495,10 +13854,10 @@
       "descricaoIngles": "If an adversary attacks you within Melee range, they must succeed on a Reaction Roll (12) or mark a Hit Point.",
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 79",
-      "efeitoSaquePassivo": {
-        "contextual": {
-          "regra": "Se um adversário atacar você em alcance Corpo a Corpo, ele deve passar em uma Jogada de Reação (12) ou marcar 1 Ponto de Vida."
-        }
+      "automacao": {
+        "classificacao": "loot-mesa-decide",
+        "rolaNoApp": false,
+        "motivo": "O adversário faz uma Jogada de Reação (12) e, falhando, marca 1 Ponto de Vida: jogada e ficha do adversário são do Mestre."
       }
     },
     {
@@ -13532,7 +13891,12 @@
       "nomeIngles": "Portal Frames",
       "descricaoIngles": "This pair of small ornate frames, one red and one blue, are connected. Anything that passes into one exits from the other.",
       "origemNome": "traducao-srd2",
-      "fonteDoTexto": "Daggerheart SRD 2.0, p. 79"
+      "fonteDoTexto": "Daggerheart SRD 2.0, p. 79",
+      "automacao": {
+        "classificacao": "loot-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Duas molduras ligadas: ficção de cena."
+      }
     },
     {
       "id": "loot-srd2-communion-relic",
@@ -13578,7 +13942,7 @@
       "id": "consumivel-01",
       "rolagem": "01",
       "nome": "Poção da passada",
-      "descricao": "Você ganha um bônus de +1 na sua próxima rolagem de agilidade.",
+      "descricao": "Você ganha um bônus de +1 na sua próxima jogada de Agilidade.",
       "nomeIngles": "Stride Potion",
       "descricaoIngles": "You gain a +1 bonus to your next Agility Roll.",
       "origemNome": "livro",
@@ -13599,7 +13963,7 @@
       "id": "consumivel-02",
       "rolagem": "02",
       "nome": "Poção de reforço",
-      "descricao": "Você ganha um bônus de +1 na sua próxima rolagem de força.",
+      "descricao": "Você ganha um bônus de +1 na sua próxima jogada de Força.",
       "nomeIngles": "Bolster Potion",
       "descricaoIngles": "You gain a +1 bonus to your next Strength Roll.",
       "origemNome": "livro",
@@ -13620,7 +13984,7 @@
       "id": "consumivel-03",
       "rolagem": "03",
       "nome": "Poção de controle",
-      "descricao": "Você ganha um bônus de +1 na sua próxima rolagem de finesse.",
+      "descricao": "Você ganha um bônus de +1 na sua próxima jogada de Finesse.",
       "nomeIngles": "Control Potion",
       "descricaoIngles": "You gain a +1 bonus to your next Finesse Roll.",
       "origemNome": "livro",
@@ -13641,7 +14005,7 @@
       "id": "consumivel-04",
       "rolagem": "04",
       "nome": "Poção de sintonização",
-      "descricao": "Você ganha um bônus de +1 na sua próxima rolagem de instinto.",
+      "descricao": "Você ganha um bônus de +1 na sua próxima jogada de Instinto.",
       "nomeIngles": "Attune Potion",
       "descricaoIngles": "You gain a +1 bonus to your next Instinct Roll.",
       "origemNome": "livro",
@@ -13662,7 +14026,7 @@
       "id": "consumivel-05",
       "rolagem": "05",
       "nome": "Poção de Encantamento",
-      "descricao": "Você ganha um bônus de +1 na sua próxima rolagem de presença.",
+      "descricao": "Você ganha um bônus de +1 na sua próxima jogada de Presença.",
       "nomeIngles": "Charm Potion",
       "descricaoIngles": "You gain a +1 bonus to your next Presence Roll.",
       "origemNome": "livro",
@@ -13683,7 +14047,7 @@
       "id": "consumivel-06",
       "rolagem": "06",
       "nome": "Poção de Iluminação",
-      "descricao": "Você ganha um bônus de +1 na sua próxima rolagem de conhecimento.",
+      "descricao": "Você ganha um bônus de +1 na sua próxima jogada de Conhecimento.",
       "nomeIngles": "Enlighten Potion",
       "descricaoIngles": "You gain a +1 bonus to your next Knowledge Roll.",
       "origemNome": "livro",
@@ -13704,7 +14068,7 @@
       "id": "consumivel-07",
       "rolagem": "07",
       "nome": "Poção de saúde menor",
-      "descricao": "Limpar 1d4 HP.",
+      "descricao": "Limpe 1d4 Pontos de Vida.",
       "nomeIngles": "Minor Health Potion",
       "descricaoIngles": "Clear 1d4 HP.",
       "origemNome": "livro",
@@ -13718,13 +14082,14 @@
         "recurso": "pontosDeVidaMarcados",
         "dado": "d4",
         "bonus": 0
-      }
+      },
+      "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
     },
     {
       "id": "consumivel-08",
       "rolagem": "08",
       "nome": "Poção de resistência menor",
-      "descricao": "Limpar 1d4 de estresse.",
+      "descricao": "Limpe 1d4 Estresses.",
       "nomeIngles": "Minor Stamina Potion",
       "descricaoIngles": "Clear 1d4 Stress.",
       "origemNome": "livro",
@@ -13738,13 +14103,14 @@
         "recurso": "estresseMarcado",
         "dado": "d4",
         "bonus": 0
-      }
+      },
+      "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
     },
     {
       "id": "consumivel-09",
       "rolagem": "09",
       "nome": "Veneno de Grindletooth",
-      "descricao": "Você pode aplicar esse veneno a uma arma que causa dano físico para adicionar um d6 à sua próxima rolagem de dano com essa arma.",
+      "descricao": "Você pode aplicar esse veneno a uma arma que causa dano físico para adicionar um d6 à sua próxima jogada de dano com essa arma.",
       "nomeIngles": "Grindletooth Venom",
       "descricaoIngles": "You can apply this venom to a weapon that deals physical damage to add a d6 to your next damage roll with that weapon.",
       "origemNome": "corrigido-auditoria",
@@ -13807,7 +14173,7 @@
       "id": "consumivel-12",
       "rolagem": "12",
       "nome": "Fragmento Arcano Instável",
-      "descricao": "Você pode fazer uma rolagem de Finesse para arremessar esse fragmento em um grupo de adversários dentro do alcance de Longe. Os alvos contra os quais você for bem-sucedido receberão 1d20 de dano mágico.",
+      "descricao": "Você pode fazer uma jogada de Finesse para arremessar esse fragmento em um grupo de adversários dentro do alcance de Longe. Os alvos contra os quais você for bem-sucedido receberão 1d20 de dano mágico.",
       "nomeIngles": "Unstable Arcane Shard",
       "descricaoIngles": "You can make a Finesse Roll to throw this shard at a group of adversaries within Far range. Targets you succeed against take 1d20 magic damage.",
       "origemNome": "livro",
@@ -13818,7 +14184,7 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Você pode fazer uma rolagem de Finesse para arremessar esse fragmento em um grupo de adversários dentro do alcance de Longe. Os alvos contra os quais você for bem-sucedido receberão 1d20 de dano mágico.",
+        "efeitoManual": "Você pode fazer uma jogada de Finesse para arremessar esse fragmento em um grupo de adversários dentro do alcance de Longe. Os alvos contra os quais você for bem-sucedido receberão 1d20 de dano mágico.",
         "rolaNoApp": false
       }
     },
@@ -13851,7 +14217,7 @@
       "id": "consumivel-14",
       "rolagem": "14",
       "nome": "Veneno de Grindletooth Aprimorado",
-      "descricao": "Você pode aplicar esse veneno a uma arma que causa dano físico para adicionar um d8 à sua próxima rolagem de dano com essa arma.",
+      "descricao": "Você pode aplicar esse veneno a uma arma que causa dano físico para adicionar um d8 à sua próxima jogada de dano com essa arma.",
       "nomeIngles": "Improved Grindletooth Venom",
       "descricaoIngles": "You can apply this venom to a weapon that deals physical damage to add a d8 to your next damage roll with that weapon.",
       "origemNome": "corrigido-auditoria",
@@ -13919,7 +14285,7 @@
       "id": "consumivel-17",
       "rolagem": "17",
       "nome": "Raiz de salto",
-      "descricao": "Coma essa raiz para saltar até o alcance distante uma vez sem precisar rolar.",
+      "descricao": "Coma essa raiz para saltar até o alcance Distante uma vez sem precisar rolar.",
       "nomeIngles": "Jumping Root",
       "descricaoIngles": "Eat this root to leap up to Far range once without needing to roll.",
       "origemNome": "livro",
@@ -13966,7 +14332,7 @@
       "id": "consumivel-19",
       "rolagem": "19",
       "nome": "Poção de saúde",
-      "descricao": "Limpa 1d4+1 HP.",
+      "descricao": "Limpe 1d4+1 Pontos de Vida.",
       "nomeIngles": "Health Potion",
       "descricaoIngles": "Clear 1d4+1 HP.",
       "origemNome": "livro",
@@ -13980,13 +14346,14 @@
         "recurso": "pontosDeVidaMarcados",
         "dado": "d4",
         "bonus": 1
-      }
+      },
+      "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
     },
     {
       "id": "consumivel-20",
       "rolagem": "20",
       "nome": "Poção de resistência",
-      "descricao": "Elimina 1d4+1 de estresse.",
+      "descricao": "Limpe 1d4+1 Estresses.",
       "nomeIngles": "Stamina Potion",
       "descricaoIngles": "Clear 1d4+1 Stress.",
       "origemNome": "livro",
@@ -14000,13 +14367,14 @@
         "recurso": "estresseMarcado",
         "dado": "d4",
         "bonus": 1
-      }
+      },
+      "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
     },
     {
       "id": "consumivel-21",
       "rolagem": "21",
       "nome": "Costurador de Armadura",
-      "descricao": "Você pode usar esse grampeador para gastar qualquer número de Hope e limpe isso Muitos slots de armadura.",
+      "descricao": "Você pode usar esse costurador para gastar qualquer quantidade de Esperança e limpar essa mesma quantidade de Pontos de Armadura.",
       "nomeIngles": "Armor Stitcher",
       "descricaoIngles": "You can use this stitcher to spend any number of Hope and clear that many Armor Slots.",
       "origemNome": "corrigido-auditoria",
@@ -14027,7 +14395,8 @@
           "recursoRecuperado": "armaduraMarcada"
         },
         "rolaNoApp": false
-      }
+      },
+      "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
     },
     {
       "id": "consumivel-22",
@@ -14039,7 +14408,12 @@
       "origemNome": "corrigido-auditoria",
       "aliases": [
         "Salva de gânglios"
-      ]
+      ],
+      "automacao": {
+        "classificacao": "consumivel-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Respirar embaixo d'água por minutos iguais ao nível: duração de cena, sem número na ficha."
+      }
     },
     {
       "id": "consumivel-23",
@@ -14064,7 +14438,7 @@
       "id": "consumivel-24",
       "rolagem": "24",
       "nome": "Fragmento Arcano Aprimorado",
-      "descricao": "Você pode fazer uma rolagem de Finesse para arremessar esse fragmento em um grupo de adversários dentro do alcance de Longe. Os alvos contra os quais você for bem-sucedido receberão 2d20 de dano mágico.",
+      "descricao": "Você pode fazer uma jogada de Finesse para arremessar esse fragmento em um grupo de adversários dentro do alcance de Longe. Os alvos contra os quais você for bem-sucedido receberão 2d20 de dano mágico.",
       "nomeIngles": "Improved Arcane Shard",
       "descricaoIngles": "You can make a Finesse Roll to throw this shard at a group of adversaries within Far range. Targets you succeed against take 2d20 magic damage.",
       "origemNome": "livro",
@@ -14075,7 +14449,7 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Você pode fazer uma rolagem de Finesse para arremessar esse fragmento em um grupo de adversários dentro do alcance de Longe. Os alvos contra os quais você for bem-sucedido receberão 2d20 de dano mágico.",
+        "efeitoManual": "Você pode fazer uma jogada de Finesse para arremessar esse fragmento em um grupo de adversários dentro do alcance de Longe. Os alvos contra os quais você for bem-sucedido receberão 2d20 de dano mágico.",
         "rolaNoApp": false
       }
     },
@@ -14254,7 +14628,7 @@
       "id": "consumivel-33",
       "rolagem": "33",
       "nome": "Saliva de Redthorn",
-      "descricao": "Você pode aplicar essa saliva em uma arma que causa dano físico para adicionar um d12 para sua próxima rolagem de dano com essa arma.",
+      "descricao": "Você pode aplicar essa saliva em uma arma que causa dano físico para adicionar um d12 para sua próxima jogada de dano com essa arma.",
       "nomeIngles": "Redthorn Saliva",
       "descricaoIngles": "You can apply this saliva to a weapon that deals physical damage to add a d12 to your next damage roll with that weapon.",
       "origemNome": "livro",
@@ -14295,7 +14669,7 @@
       "id": "consumivel-35",
       "rolagem": "35",
       "nome": "Poeira Mítica",
-      "descricao": "Você pode aplicar esse pó a uma arma que causa dano mágico para adicionar um d12 à sua próxima rolagem de dano com essa arma.",
+      "descricao": "Você pode aplicar esse pó a uma arma que causa dano mágico para adicionar um d12 à sua próxima jogada de dano com essa arma.",
       "nomeIngles": "Mythic Dust",
       "descricaoIngles": "You can apply this dust to a weapon that deals magic damage to add a d12 to your next damage roll with that weapon.",
       "origemNome": "livro",
@@ -14318,13 +14692,18 @@
       "descricao": "Essa pasta corrói paredes e outras superfícies em flashes brilhantes.",
       "nomeIngles": "Acidpaste",
       "descricaoIngles": "This paste eats away walls and other surfaces in bright flashes.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "consumivel-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Corrói paredes e superfícies: o Mestre narra o efeito."
+      }
     },
     {
       "id": "consumivel-37",
       "rolagem": "37",
       "nome": "Sinalizador de Hopehold",
-      "descricao": "Quando você usa esse sinalizador, os aliados dentro do alcance próximo rolam um d6 quando gastam uma Esperança. Com um resultado 6, eles ganham o efeito dessa Esperança sem gastá-la. O sinalizador dura até o final da cena.",
+      "descricao": "Quando você usa esse sinalizador, os aliados dentro do alcance Próximo rolam um d6 quando gastam uma Esperança. Com um resultado 6, eles ganham o efeito dessa Esperança sem gastá-la. O sinalizador dura até o final da cena.",
       "nomeIngles": "Hopehold Flare",
       "descricaoIngles": "When you use this flare, allies within Close range roll a d6 when they spend a Hope. On a result of 6, they gain the effect of that Hope without spending it. The flare lasts until the end of the scene.",
       "origemNome": "corrigido-auditoria",
@@ -14345,7 +14724,7 @@
       "id": "consumivel-38",
       "rolagem": "38",
       "nome": "Fragmento Arcano Maior",
-      "descricao": "Você pode fazer uma rolagem de finesse para arremessar este fragmento em um grupo de adversários dentro do alcance distante. Os alvos contra os quais você for bem-sucedido receberão 4d20 de dano mágico.",
+      "descricao": "Você pode fazer uma jogada de Finesse para arremessar este fragmento em um grupo de adversários dentro do alcance Distante. Os alvos contra os quais você for bem-sucedido receberão 4d20 de dano mágico.",
       "nomeIngles": "Major Arcane Shard",
       "descricaoIngles": "You can make a Finesse Roll to throw this shard at a group of adversaries within Far range. Targets you succeed against take 4d20 magic damage.",
       "origemNome": "livro",
@@ -14369,13 +14748,18 @@
       "origemNome": "corrigido-auditoria",
       "aliases": [
         "Espinha de peixe"
-      ]
+      ],
+      "automacao": {
+        "classificacao": "consumivel-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Controla a queda por alguns minutos: ficção de cena."
+      }
     },
     {
       "id": "consumivel-40",
       "rolagem": "40",
       "nome": "Círculo do Vazio",
-      "descricao": "Marque uma Stress para criar um vazio que se estende até o alcance distante. Nenhuma magia pode ser lançada dentro do vazio, e as criaturas dentro do vazio são imunes a dano mágico.",
+      "descricao": "Marque 1 Estresse para criar um vazio que se estende até alcance Distante. Nenhuma magia pode ser lançada dentro do vazio, e as criaturas dentro dele são imunes a dano mágico.",
       "nomeIngles": "Circle of the Void",
       "descricaoIngles": "Mark a Stress to create a void that extends up to Far range. No magic can be cast inside the void, and creatures within the void are immune to magic damage.",
       "origemNome": "livro",
@@ -14388,13 +14772,14 @@
         "tipo": "consumir-e-resolver-na-mesa",
         "custoEstresse": 1,
         "efeitoManual": "Crie o vazio até alcance Distante: nenhuma magia pode ser conjurada dentro dele e criaturas dentro do vazio são imunes a dano mágico. Controle posição/duração na mesa."
-      }
+      },
+      "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
     },
     {
       "id": "consumivel-41",
       "rolagem": "41",
       "nome": "Seiva da árvore do sol",
-      "descricao": "Consuma essa seiva para rolar um d6. Com um resultado de 5-6, elimine 2 HP. Com um resultado de 2-4, elimine 3 de estresse. Em um resultado de 1, veja através do véu da morte e retorne mudado, ganhando uma cicatriz.",
+      "descricao": "Consuma essa seiva para rolar um d6. Com um resultado de 5-6, limpe 2 Pontos de Vida. Com um resultado de 2-4, limpe 3 Estresses. Em um resultado de 1, veja através do véu da morte e retorne mudado, ganhando uma cicatriz.",
       "nomeIngles": "Sun Tree Sap",
       "descricaoIngles": "Consume this sap to roll a d6. On a result of 5–6, clear 2 HP. On a result of 2–4, clear 3 Stress. On a result of 1, see through the veil of death and return changed, gaining one scar.",
       "origemNome": "livro",
@@ -14431,7 +14816,8 @@
             }
           }
         ]
-      }
+      },
+      "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
     },
     {
       "id": "consumivel-42",
@@ -14456,7 +14842,7 @@
       "id": "consumivel-43",
       "rolagem": "43",
       "nome": "Poção de Saúde Maior",
-      "descricao": "Clear 1d4+2 HP.",
+      "descricao": "Limpe 1d4+2 Pontos de Vida.",
       "nomeIngles": "Major Health Potion",
       "descricaoIngles": "Clear 1d4+2 HP.",
       "origemNome": "livro",
@@ -14470,13 +14856,14 @@
         "recurso": "pontosDeVidaMarcados",
         "dado": "d4",
         "bonus": 2
-      }
+      },
+      "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
     },
     {
       "id": "consumivel-44",
       "rolagem": "44",
       "nome": "Poção de Resistência Maior",
-      "descricao": "Limpar 1d4+2 de estresse.",
+      "descricao": "Limpe 1d4+2 Estresses.",
       "nomeIngles": "Major Stamina Potion",
       "descricaoIngles": "Clear 1d4+2 Stress.",
       "origemNome": "corrigido-auditoria",
@@ -14493,7 +14880,8 @@
         "recurso": "estresseMarcado",
         "dado": "d4",
         "bonus": 2
-      }
+      },
+      "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
     },
     {
       "id": "consumivel-45",
@@ -14545,7 +14933,7 @@
       "id": "consumivel-47",
       "rolagem": "47",
       "nome": "Frasco de vozes perdidas",
-      "descricao": "Você pode abrir esse frasco para liberar um eco ensurdecedor de vozes por um número de minutos igual ao seu Instinto. As criaturas dentro do alcance distante que não estiverem preparadas para o som recebem 6d8 de dano mágico.",
+      "descricao": "Você pode abrir esse frasco para liberar um eco ensurdecedor de vozes por um número de minutos igual ao seu Instinto. As criaturas dentro do alcance Distante que não estiverem preparadas para o som recebem 6d8 de dano mágico.",
       "nomeIngles": "Jar of Lost Voices",
       "descricaoIngles": "You can open this jar to release a deafening echo of voices for a number of minutes equal to your Instinct. Creatures within Far range unprepared for the sound take 6d8 magic damage.",
       "origemNome": "livro",
@@ -14564,7 +14952,7 @@
       "id": "consumivel-48",
       "rolagem": "48",
       "nome": "Chá de Flor-de-Dragão",
-      "descricao": "Você pode beber esse chá para liberar um ataque de fôlego ardente. Crie um instinto Jogue contra todos os adversários na frente você a curta distância. Os alvos contra os quais você for bem-sucedido recebem d20 de dano físico usando sua proficiência.",
+      "descricao": "Você pode beber esse chá para liberar um ataque de fôlego ardente. Faça uma jogada de Instinto contra todos os adversários à sua frente em alcance Próximo. Os alvos contra os quais você for bem-sucedido recebem d20 de dano físico usando sua Proficiência.",
       "nomeIngles": "Dragonbloom Tea",
       "descricaoIngles": "You can drink this tea to unleash a fiery breath attack. Make an Instinct Roll against all adversaries in front of you within Close range. Targets you succeed against take d20 physical damage using your Proficiency.",
       "origemNome": "corrigido-auditoria",
@@ -14663,13 +15051,18 @@
       "origemNome": "corrigido-auditoria",
       "aliases": [
         "Colagem de mel"
-      ]
+      ],
+      "automacao": {
+        "classificacao": "consumivel-ficcao-sem-efeito",
+        "rolaNoApp": false,
+        "motivo": "Cola dois objetos para sempre: objeto, sem regra."
+      }
     },
     {
       "id": "consumivel-53",
       "rolagem": "53",
       "nome": "Poção de encolhimento",
-      "descricao": "Você pode beber essa poção para reduzir seu tamanho pela metade até escolher abandonar essa forma ou até seu próximo descanso. Enquanto estiver nessa forma, você tem um bônus de +2 em Agilidade e um bônus de Penalidade de -1 em sua proficiência.",
+      "descricao": "Você pode beber essa poção para reduzir seu tamanho pela metade até escolher abandonar essa forma ou até seu próximo descanso. Enquanto estiver nessa forma, você tem um bônus de +2 em Agilidade e uma penalidade de -1 na sua Proficiência.",
       "nomeIngles": "Shrinking Potion",
       "descricaoIngles": "You can drink this potion to halve your size until you choose to drop this form or your next rest. While in this form, you have a +2 bonus to Agility and a −1 penalty to your Proficiency.",
       "origemNome": "livro",
@@ -14689,7 +15082,7 @@
       "id": "consumivel-54",
       "rolagem": "54",
       "nome": "Poção de crescimento",
-      "descricao": "Você pode beber essa poção para dobrar seu tamanho até escolher abandonar essa forma ou até seu próximo descanso. Enquanto estiver nessa forma, você tem um bônus de +2 para Força e um bônus de +1 para sua proficiência.",
+      "descricao": "Você pode beber essa poção para dobrar seu tamanho até escolher abandonar essa forma ou até seu próximo descanso. Enquanto estiver nessa forma, você tem um bônus de +2 em Força e um bônus de +1 na sua Proficiência.",
       "nomeIngles": "Growing Potion",
       "descricaoIngles": "You can drink this potion to double your size until you choose to drop this form or your next rest. While in this form, you have a +2 bonus to Strength and a +1 bonus to your Proficiency.",
       "origemNome": "livro",
@@ -14732,17 +15125,23 @@
       "id": "consumivel-56",
       "rolagem": "56",
       "nome": "Musgo Doce",
-      "descricao": "Você pode consumir esse musgo durante um descanso para limpar 1d10 PV ou 1d10 de Estresse.",
+      "descricao": "Você pode consumir esse musgo durante um descanso para limpar 1d10 Pontos de Vida ou 1d10 Estresses.",
       "nomeIngles": "Sweet Moss",
       "descricaoIngles": "You can consume this moss during a rest to clear 1d10 HP or 1d10 Stress.",
       "origemNome": "livro",
-      "traducaoDescricao": "minha (errata aplicada)"
+      "traducaoDescricao": "minha (errata aplicada)",
+      "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json",
+      "automacao": {
+        "classificacao": "consumivel-pendente-deterministico",
+        "rolaNoApp": false,
+        "motivo": "Limpar 1d10 Pontos de Vida ou 1d10 Estresses durante um descanso: o app já recebe dado informado e já aplica limpeza no descanso."
+      }
     },
     {
       "id": "consumivel-57",
       "rolagem": "57",
       "nome": "Orbe Ofuscante",
-      "descricao": "Você pode ativar esse orbe para criar um flash de luz brilhante. Todos os alvos dentro da área de alcance tornam-se vulneráveis até marcarem HP.",
+      "descricao": "Você pode ativar esse orbe para criar um clarão de luz. Todos os alvos em alcance Próximo ficam Vulneráveis até marcarem Pontos de Vida.",
       "nomeIngles": "Blinding Orb",
       "descricaoIngles": "You can activate this orb to create a flash of bright light. All targets within Close range become Vulnerable until they mark HP.",
       "origemNome": "corrigido-auditoria",
@@ -14758,7 +15157,8 @@
         "tipo": "consumir-e-resolver-na-mesa",
         "efeitoManual": "Você pode ativar esse orbe para criar um flash de luz brilhante. Todos os alvos dentro da área de alcance tornam-se vulneráveis até marcarem HP.",
         "rolaNoApp": false
-      }
+      },
+      "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
     },
     {
       "id": "consumivel-58",
@@ -14767,7 +15167,12 @@
       "descricao": "Depois de beber esse chá, você mata instantaneamente seu alvo quando é criticamente bem-sucedido em um ataque. Se você não fizer uma análise crítica for bem-sucedido em um ataque antes do seu próximo descanso longo, você morrerá.",
       "nomeIngles": "Death Tea",
       "descricaoIngles": "After you drink this tea, you instantly kill your target when you critically succeed on an attack. If you don't critically succeed on an attack before your next long rest, you die.",
-      "origemNome": "livro"
+      "origemNome": "livro",
+      "automacao": {
+        "classificacao": "consumivel-pendente-deterministico",
+        "rolaNoApp": false,
+        "motivo": "⚠ O prazo é que pesa: sem sucesso crítico até o próximo descanso longo, o personagem MORRE. É um marcador com saída observável, e hoje não existe nenhum."
+      }
     },
     {
       "id": "consumivel-59",
@@ -15537,7 +15942,7 @@
       "conjunto": "expansao-srd2",
       "rolagem": "35",
       "nome": "Fragmento de emberita",
-      "descricao": "Escolha um ponto em alcance Distante. Alvos em alcance Próximo devem passar em Reação (16) ou sofrer 3d6 de dano mágico e ficar temporariamente Em Chamas.",
+      "descricao": "Escolha um ponto em alcance Distante. Os alvos em alcance Próximo desse ponto devem passar em uma jogada de Reação (16) ou sofrer 3d6 de dano mágico e ficar temporariamente Em Chamas. Enquanto estiver Em Chamas por este fragmento, a criatura rola um d4 sempre que fizer uma jogada de ação: em 1, marca 1 Ponto de Vida; em 4, a condição acaba.",
       "nomeIngles": "Emberite Shard",
       "descricaoIngles": "Choose a point within Far range. All targets within Close range of that point must succeed on a Reaction Roll (16) or take 3d6 magic damage and become temporarily Ablaze. While Ablaze, a creature must roll a d4 whenever they make an action roll. On a result of 1, they mark a Hit Point. On a result of 4, they clear the Ablaze condition.",
       "origemNome": "traducao-srd2",
@@ -15551,14 +15956,15 @@
         "tipo": "consumir-e-resolver-na-mesa",
         "efeitoManual": "Escolha um ponto em alcance Distante. Alvos em alcance Próximo devem passar em Reação (16) ou sofrer 3d6 de dano mágico e ficar temporariamente Em Chamas.",
         "rolaNoApp": false
-      }
+      },
+      "traducaoDescricao": "revisada-do-ingles"
     },
     {
       "id": "consumivel-srd2-arcticite-shard",
       "conjunto": "expansao-srd2",
       "rolagem": "36",
       "nome": "Fragmento de arcticita",
-      "descricao": "Escolha um ponto em alcance Distante. Alvos em alcance Próximo devem passar em Reação (16) ou sofrer 3d6 de dano mágico e ficar temporariamente Restritos pelo gelo.",
+      "descricao": "Escolha um ponto em alcance Distante. Os alvos em alcance Próximo desse ponto devem passar em uma jogada de Reação (16) ou sofrer 3d6 de dano mágico e ficar temporariamente Restritos pelo gelo.",
       "nomeIngles": "Arcticite Shard",
       "descricaoIngles": "Choose a point within Far range. All targets within Close range of that point must succeed on a Reaction Roll (16) or take 3d6 magic damage and become temporarily Restrained by ice.",
       "origemNome": "traducao-srd2",
@@ -15572,14 +15978,15 @@
         "tipo": "consumir-e-resolver-na-mesa",
         "efeitoManual": "Escolha um ponto em alcance Distante. Alvos em alcance Próximo devem passar em Reação (16) ou sofrer 3d6 de dano mágico e ficar temporariamente Restritos pelo gelo.",
         "rolaNoApp": false
-      }
+      },
+      "traducaoDescricao": "revisada-do-ingles"
     },
     {
       "id": "consumivel-srd2-fulgurite-shard",
       "conjunto": "expansao-srd2",
       "rolagem": "37",
       "nome": "Fragmento de fulgurita",
-      "descricao": "Escolha um ponto em alcance Distante. Alvos em alcance Próximo devem passar em Reação (16) ou sofrer 3d6 de dano mágico e marcar 1d4 Estresse.",
+      "descricao": "Escolha um ponto em alcance Distante. Os alvos em alcance Próximo desse ponto devem passar em uma jogada de Reação (16) ou sofrer 3d6 de dano mágico e marcar 1d4 Estresse enquanto o relâmpago estala pela área.",
       "nomeIngles": "Fulgurite Shard",
       "descricaoIngles": "Choose a point within Far range. All targets within Close range of that point must succeed on a Reaction Roll (16) or take 3d6 magic damage and mark 1d4 Stress as lightning crackles through the area.",
       "origemNome": "traducao-srd2",
@@ -15593,7 +16000,8 @@
         "tipo": "consumir-e-resolver-na-mesa",
         "efeitoManual": "Escolha um ponto em alcance Distante. Alvos em alcance Próximo devem passar em Reação (16) ou sofrer 3d6 de dano mágico e marcar 1d4 Estresse.",
         "rolaNoApp": false
-      }
+      },
+      "traducaoDescricao": "revisada-do-ingles"
     },
     {
       "id": "consumivel-srd2-demiurges-draught",
@@ -16041,7 +16449,7 @@
       "conjunto": "expansao-srd2",
       "rolagem": "59",
       "nome": "Lágrimas do herói imortal",
-      "descricao": "Até seu próximo descanso longo, ao marcar o último Ponto de Vida, faça uma ação final e durma sem sonhos em vez de realizar um movimento de morte; um aliado deve Cuidar dos Ferimentos para limpar seus PV.",
+      "descricao": "Ao beber esta poção, a morte não pode te tocar até seu próximo descanso longo. Quando você marcaria seu último Ponto de Vida, em vez de fazer um movimento de morte você faz uma última jogada de ação e cai num sono sem sonhos, até que um aliado escolha o movimento de descanso Tratar Feridas para limpar seus Pontos de Vida.",
       "nomeIngles": "Tears of the Undying Hero",
       "descricaoIngles": "When you drink this potion, death can’t touch you until your next long rest. When you would mark your last Hit Point, instead of making a death move, you make one final action roll before falling into a dreamless slumber until an ally chooses the Tend to Wounds downtime move to clear your Hit Points.",
       "origemNome": "traducao-srd2",
@@ -16055,7 +16463,8 @@
         "tipo": "consumir-e-resolver-na-mesa",
         "efeitoManual": "Até seu próximo descanso longo, ao marcar o último Ponto de Vida, faça uma ação final e durma sem sonhos em vez de realizar um movimento de morte; um aliado deve Cuidar dos Ferimentos para limpar seus PV.",
         "rolaNoApp": false
-      }
+      },
+      "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
     },
     {
       "id": "consumivel-srd2-featherstep-potion",
@@ -17712,7 +18121,7 @@
                 "rotulo": "Atacar · gastar 1 bala",
                 "rotuloRecarregar": "Recarregar · 1 Estresse",
                 "custoRecarregarEstresse": 1,
-                "efeitoManual": "A jogada de ataque e a rolagem de dano continuam sendo feitas na mesa."
+                "efeitoManual": "A jogada de ataque e a jogada de dano continuam sendo feitas na mesa."
               }
             }
           },
@@ -17746,7 +18155,7 @@
                 "rotulo": "Atacar · gastar 1 bala",
                 "rotuloRecarregar": "Recarregar · 1 Estresse",
                 "custoRecarregarEstresse": 1,
-                "efeitoManual": "A jogada de ataque e a rolagem de dano continuam sendo feitas na mesa."
+                "efeitoManual": "A jogada de ataque e a jogada de dano continuam sendo feitas na mesa."
               }
             }
           },
@@ -17780,7 +18189,7 @@
                 "rotulo": "Atacar · gastar 1 bala",
                 "rotuloRecarregar": "Recarregar · 1 Estresse",
                 "custoRecarregarEstresse": 1,
-                "efeitoManual": "A jogada de ataque e a rolagem de dano continuam sendo feitas na mesa."
+                "efeitoManual": "A jogada de ataque e a jogada de dano continuam sendo feitas na mesa."
               }
             }
           },
@@ -17814,7 +18223,7 @@
                 "rotulo": "Atacar · gastar 1 bala",
                 "rotuloRecarregar": "Recarregar · 1 Estresse",
                 "custoRecarregarEstresse": 1,
-                "efeitoManual": "A jogada de ataque e a rolagem de dano continuam sendo feitas na mesa."
+                "efeitoManual": "A jogada de ataque e a jogada de dano continuam sendo feitas na mesa."
               }
             }
           },
@@ -18211,7 +18620,7 @@
           "nome": "Ikonis",
           "origemNome": "livro",
           "ilegivel": false,
-          "descricao": "Arma pessoal customizável dada aos cidadãos do Echo Vale ao atingirem a maioridade; substitui as armas primárias/secundárias padrão. Começa como uma haste simples de metal e é moldada pelo jogador (usando módulo próprio de ficha) em cajado, arco, martelo, lança etc. Sempre tratada como arma de duas mãos; começa com a característica 'Vinculado: ganhe um bônus para suas rolagens de dano igual ao seu nível'. Tem 2 espaços de aprimoramento no Nível 1 (mais 1 por nível seguinte) para instalar 'aumentos/augmentos' construídos com sucata."
+          "descricao": "Arma pessoal customizável dada aos cidadãos do Echo Vale ao atingirem a maioridade; substitui as armas primárias/secundárias padrão. Começa como uma haste simples de metal e é moldada pelo jogador (usando módulo próprio de ficha) em cajado, arco, martelo, lança etc. Sempre tratada como arma de duas mãos; começa com a característica 'Vinculado: ganhe um bônus para suas jogadas de dano igual ao seu nível'. Tem 2 espaços de aprimoramento no Nível 1 (mais 1 por nível seguinte) para instalar 'aumentos/augmentos' construídos com sucata."
         },
         {
           "id": "campanha-placa-mae-motherboard-quantum",
@@ -18220,7 +18629,8 @@
           "nome": "Quantum",
           "origemNome": "livro",
           "ilegivel": false,
-          "descricao": "Moeda própria da campanha (substitui o ouro). PCs começam com 5 quantum. Conversão: 10 quantum = 1 punhado de ouro; 100 quantum = 1 saco de ouro; 1000 quantum = 1 baú de ouro."
+          "descricao": "Moeda própria da campanha (substitui o ouro). PJs começam com 5 quantum. Conversão: 10 quantum = 1 punhado de ouro; 100 quantum = 1 saco de ouro; 1000 quantum = 1 baú de ouro.",
+          "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
         },
         {
           "id": "campanha-placa-mae-motherboard-sucata-fragmentos-d6",
@@ -18265,13 +18675,78 @@
           "nome": "Corda de rede (com gancho)",
           "origemNome": "livro",
           "ilegivel": false,
-          "descricao": "Todo PC adiciona ao inventário na criação do personagem; permite jogar o gancho em um fio suspenso para se deslocar e acessar 'a rede' pelas Wastes; necessária para movimentos de tempo de inatividade."
+          "descricao": "Todo PJ adiciona ao inventário na criação do personagem; permite jogar o gancho em um fio suspenso para se deslocar e acessar 'a rede' pelas Wastes; necessária para movimentos de descanso.",
+          "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
         }
       ],
       "substituiEquipamentoInicial": false,
       "nomeAntigo": "Placa-mãe (Motherboard)",
       "id": "placa-mae",
       "regra": "A arma de cada personagem é o Ikonis, customizável, e o cenário troca o ouro pela moeda quantum. Não há tabela de equipamento inicial para escolher aqui."
+    },
+    {
+      "id": "reino-do-weredragao",
+      "nome": "Reino do Weredragão",
+      "nomeIngles": "Reign of the Weredragon",
+      "paginasLivro": [
+        128,
+        143
+      ],
+      "substituiEquipamentoInicial": false,
+      "regra": "As duas \"Chaves para a Vitória\" da moldura que são itens próprios. A terceira, a Espada de Sarças do Cavaleiro Cervo, usa as estatísticas do Cutelo Avançado — que já está no catálogo — e portanto é reflavor, não item novo.",
+      "fonteDoTexto": "Daggerheart: Hope & Fear, p.142",
+      "itens": [
+        {
+          "id": "campanha-reino-do-weredragao-lady-lavenders-longsword",
+          "moldura": "Reino do Weredragão",
+          "categoria": "primaria",
+          "tabela": "Física",
+          "tier": 4,
+          "nome": "Espada longa de Lady Lavender",
+          "nomeIngles": "Lady Lavender's Longsword",
+          "atributo": "Agilidade",
+          "alcance": "Corpo a Corpo",
+          "dano": "d8+10 fís",
+          "maos": "Duas mãos",
+          "descricao": "O punho desta lâmina tem a forma de dois cães saltando em direções opostas. A arma pertence a Lady Lavender, uma cavaleira aposentada de Whelvia.",
+          "caracteristica": {
+            "nome": "Quebra-Maldição",
+            "nomeIngles": "Curse Breaker",
+            "texto": "Quebra-Maldição: esta arma limpa todas as maldições mágicas de uma criatura que ela tocar.",
+            "textoIngles": "Curse Breaker: This weapon clears all magical curses on a creature it touches.",
+            "fonteTraducao": "minha",
+            "confianca": "alta",
+            "automacao": {
+              "classificacao": "resolucao-manual-de-mesa",
+              "rolaNoApp": false,
+              "motivo": "As maldições desta moldura (Maldição do Weredrake e Maldição Petrificada) não são condições do catálogo do app: elas nascem de habilidades de adversário e só somem por magia, ritual, item, local ou poder superior. Enquanto a família \"Maldito\" não existir em condicoes.json, limpar é decisão da mesa e o app não tem o que marcar."
+            }
+          },
+          "fonteDoTexto": "Daggerheart: Hope & Fear, p.142 (Reign of the Weredragon)",
+          "fonteNumeros": "⚠ O dígito do patamar saiu ilegível na extração do PDF (\"Tier  Physical Weapon (Primary)\"). Resolvido como patamar 4 contra a própria tabela do app: d8+10 é o dano das primárias lendárias de patamar 4 (Maça, Adaga e Cutelo Lendários). Confirmar na imagem do PDF antes de tratar como definitivo."
+        },
+        {
+          "id": "campanha-reino-do-weredragao-zoetrope-of-the-bright-bacchanal",
+          "moldura": "Reino do Weredragão",
+          "categoria": "item",
+          "nome": "Zootrópio do Bacanal Radiante",
+          "nomeIngles": "Zoetrope of the Bright Bacchanal",
+          "descricao": "Um berloque mágico de cobre: um cilindro vazado com faunos dançantes recortados nele. Jaz enterrado entre as cinzas e as vigas da cabana dos Lykona, em Fim da Bruxa, intacto ao fogo e à passagem do tempo.",
+          "caracteristica": {
+            "nome": "Desfile de faunos",
+            "texto": "Ponha uma vela no cilindro e gire no sentido anti-horário a chave de metal presa à base: o cilindro roda e projeta um desfile luminoso de faunos dançantes nas superfícies próximas. Enquanto o zootrópio aceso gira, ele limpa todas as maldições mágicas das criaturas em alcance Próximo.",
+            "textoIngles": "When you place a candle in this zoetrope’s cylinder and turn the metal key attached to the base counterclockwise, the cylinder rotates, casting a luminous parade of dancing fauns on nearby surfaces. While the lit zoetrope turns, it clears all magical curses on creatures within Close range.",
+            "fonteTraducao": "minha",
+            "confianca": "alta",
+            "automacao": {
+              "classificacao": "resolucao-manual-de-mesa",
+              "rolaNoApp": false,
+              "motivo": "Mesmo motivo da Espada longa de Lady Lavender: alcance é da mesa e a família \"Maldito\" ainda não existe como condição no app."
+            }
+          },
+          "fonteDoTexto": "Daggerheart: Hope & Fear, p.142 (Reign of the Weredragon)"
+        }
+      ]
     }
   ],
   "ouro": {

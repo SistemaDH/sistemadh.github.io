@@ -145,5 +145,43 @@ def montar():
           % (len(verbetes), len(dono)))
 
 
+def recusar_se_estiver_defasado():
+    """
+    ⚠ ESTE MONTADOR ESTÁ DEFASADO, E RODÁ-LO APAGA TRABALHO.
+
+    `data/verbetes.json` seguiu em frente e estes fontes Python não: montar hoje
+    escreve a versão 1, com 93 verbetes, e APAGA os 15 que entraram depois —
+    inclusive `reserva-de-adversario` e `evolucao-de-adversario`, do Esperança e
+    Medo.
+
+    Isso foi descoberto do pior jeito: rodando, e tendo de restaurar o arquivo.
+    Então o montador agora se recusa em vez de sobrescrever. Enquanto a decisão
+    não for tomada — atualizar os fontes para as 108 entradas, ou aposentar o
+    montador e assumir o JSON como fonte — quem quiser rodar de propósito passa
+    `--sobrescrever-mesmo-sabendo`.
+
+    Um teste em tools/testes-backend.mjs guarda o outro lado: se o JSON cair para
+    a versão 1 ou perder verbetes, a bateria quebra.
+    """
+    caminho = os.path.join(RAIZ, 'data', 'verbetes.json')
+    if not os.path.exists(caminho):
+        return
+    atual = json.load(open(caminho, encoding='utf-8'))
+    quantos_tem = len(atual.get('verbetes') or [])
+    quantos_sairiam = sum(len(g.VERBETES) for g in GRUPOS)
+    if quantos_sairiam >= quantos_tem and atual.get('versao', 1) <= 1:
+        return
+    print(
+        'RECUSADO: montar agora escreveria %d verbetes (versao 1) sobre os %d que o '
+        'arquivo tem (versao %s) — %d entradas seriam APAGADAS.\n'
+        'Os fontes em tools/verbetes/ estão defasados em relação a data/verbetes.json.\n'
+        'Se for de propósito: python3 tools/montar-verbetes.py --sobrescrever-mesmo-sabendo'
+        % (quantos_sairiam, quantos_tem, atual.get('versao'), quantos_tem - quantos_sairiam),
+        file=sys.stderr)
+    raise SystemExit(1)
+
+
 if __name__ == '__main__':
+    if '--sobrescrever-mesmo-sabendo' not in sys.argv:
+        recusar_se_estiver_defasado()
     montar()
