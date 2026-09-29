@@ -75,7 +75,16 @@ const curativo = cartas.get('splendor-golpe-curativo');
 if (!curativo?.texto.includes('gastar 2 Esperanças') || !curativo?.texto.includes('limpar 1 Ponto de Vida') || !curativo?.texto.includes('aliado em alcance Próximo')) erros.push('Golpe Curativo: custo, recuperação ou alcance divergem');
 
 const tocado = cartas.get('splendor-tocado-do-esplendor');
-if (!tocado?.texto.includes('4 ou mais') || !tocado?.texto.includes('limiar de dano Severo') || !tocado?.texto.includes('marcar essa quantidade em Estresse') || tocado?.efeitoDerivado?.bonusLimiarGrave !== 3 || tocado?.uso?.marcaUso?.maximo !== 1) erros.push('Tocado do Esplendor: requisito, limiar ou substituição de PV divergem');
+if (!tocado?.texto.includes('4 ou mais') || !tocado?.texto.includes('limiar de dano Severo') || !tocado?.texto.includes('marcar essa quantidade em Estresse') || tocado?.efeitoDerivado?.bonusLimiarGrave !== 3 || tocado?.reacaoSubstituiPv?.usosPorDescansoLongo !== 1 || tocado?.reacaoSubstituiPv?.exigeCartasAtivasDominio?.quantidade !== 4 || tocado?.uso) erros.push('Tocado do Esplendor: requisito, limiar ou substituição de PV divergem');
+/*
+ * ⚠ A DECLARAÇÃO MUDOU DE CASA, e este conferidor foi quem avisou — como o do
+ * Valor tinha avisado no bloco anterior. O limite de 1 por descanso longo era
+ * `uso.marcaUso`, um BOTÃO de painel que só marcava o uso e deixava a pessoa
+ * mexer nas trilhas à mão; virou `reacaoSubstituiPv`, que a janela de dano
+ * resolve sabendo quantos PV o dano exigia. O `tocado?.uso` acima exige que o
+ * botão continue fora: com os dois, clicar nele gastaria o uso sem substituir
+ * nada.
+ */
 
 const escudo = cartas.get('splendor-aura-de-escudo');
 if (!escudo?.texto.includes('Marque 1 Estresse') || !escudo?.texto.includes('alvo em alcance Muito Próximo') || !escudo?.texto.includes('Ponto de Armadura') || !escudo?.texto.includes('um limiar adicional')) erros.push('Aura de Escudo: custo, alcance ou redução adicional divergem');

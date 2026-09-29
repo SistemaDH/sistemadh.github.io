@@ -53,7 +53,7 @@ VERBETES = [
         'explicacao': [
             'A Esperança ATRAVESSA sessões, como o Medo do Mestre.',
             'Gasta-se 1 Esperança por Experiência que você quiser somar a uma jogada.',
-            'Também paga Prestar Ajuda, a jogada em dupla e as habilidades de Esperança '
+            'Também paga Prestar Ajuda, a Jogada em Equipe e as habilidades de Esperança '
             'da classe.',
             'Cada cicatriz apaga PARA SEMPRE um espaço de Esperança (p.106).'
         ],

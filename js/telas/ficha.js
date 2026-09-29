@@ -1376,13 +1376,127 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       ['Vontade de Ferro', 'Dano físico: marque 1 Ponto de Armadura adicional para reduzir a severidade em um limiar.']
     ].filter(([nome]) => temCaracteristica_(ficha, nome));
 
+    /*
+     * ⚠ AQUI HAVIA UMA CARTA ESCRITA À MÃO. A lista tinha quatro características
+     * e um `if` para o Levantar-Se — então qualquer outra carta que reaja ao
+     * dano não aparecia na janela ONDE A REGRA DELA ACONTECE. O Preparar era o
+     * caso que doía: o gatilho dele é "quando você marcar 1 Ponto de Armadura
+     * para reduzir o dano", e sair da janela para usar a carta no painel não
+     * reproduz essa ordem.
+     *
+     * Agora a lista sai das cartas ATIVAS que declaram `reacaoDano` no catálogo
+     * — a mesma declaração que o motor valida. Quem acrescentar a próxima carta
+     * não precisa mexer aqui.
+     */
     const ativas = ((ficha.cartas || {}).ativas || [])
       .map((ref) => catalogo.acharCarta(ref))
       .filter(Boolean);
-    if (ativas.some((carta) => dados.chave(carta.nome) === dados.chave('Levantar-Se'))) {
-      saida.push(['Levantar-Se', 'Dano Severo: marque 1 Estresse para reduzir a severidade em um nível.']);
-    }
+    ativas.forEach((carta) => {
+      const reacao = carta && carta.reacaoDano;
+      if (!reacao) return;
+      if (saida.some(([nome]) => dados.chave(nome) === dados.chave(carta.nome))) return;
+      saida.push([carta.nome, frasePedidaPelaReacao_(reacao)]);
+    });
     return saida;
+  }
+
+  /**
+   * A frase da caixinha, montada a partir do contrato — não escrita à mão.
+   *
+   * Escrever a frase à mão ao lado do contrato é o jeito de as duas versões
+   * discordarem: a caixinha diria "1 Estresse" enquanto o motor cobra dois, e
+   * quem lê a tela não teria como saber qual é a verdadeira.
+   */
+  function frasePedidaPelaReacao_(reacao) {
+    const faixas = Array.isArray(reacao.faixas) ? reacao.faixas : [];
+    const NOME_DA_FAIXA = { menor:'Menor', maior:'Maior', severo:'Severo', massivo:'Massivo' };
+    const gatilho = faixas.length && faixas.length < 4
+      ? 'Dano ' + faixas.map((f) => NOME_DA_FAIXA[f] || f).join('/')
+      : 'Ao sofrer dano';
+    const custo = [];
+    const c = reacao.custo || {};
+    if (c.estresse) custo.push(`${c.estresse} Estresse`);
+    if (c.armadura) custo.push(`${c.armadura} Ponto de Armadura adicional`);
+    if (c.esperanca) custo.push(`${c.esperanca} Esperança`);
+    const reduz = ((reacao.efeito || {}).reduzPv) || 0;
+    const efeito = reduz
+      ? `reduzir a gravidade em ${reduz === 1 ? 'um limiar' : reduz + ' limiares'}`
+      : 'aplicar o efeito da carta';
+    const exigencia = reacao.exigeMitigacaoArmadura === true
+      ? ' (só junto da marcação de Armadura que reduz este dano)' : '';
+    return `${gatilho}: ${custo.length ? 'marque ' + custo.join(' e ') + ' para ' : ''}${efeito}${exigencia}.`;
+  }
+
+  /** As cartas ativas da ficha, já achadas no catálogo. */
+  function cartasAtivasDaFicha_(ficha) {
+    return ((ficha.cartas || {}).ativas || [])
+      .map((ref) => catalogo.acharCarta(ref))
+      .filter(Boolean);
+  }
+
+  /**
+   * AS CARTAS QUE NÃO DIZEM "PODE" — e por isso não são caixinha.
+   *
+   * ⚠ Erga-Se e Tocado pelo Valor ficavam de fora da janela, e eu tinha escrito
+   * que era por não caberem no contrato. Medindo o texto das seis cartas que
+   * reagem ao dano: TODA carta que é escolha diz "pode". Estas não dizem — são
+   * consequência de marcar PV, e o motor já sabe tudo o que a caixinha
+   * perguntaria. Aqui a janela só ANUNCIA, para a mesa ver que o app sabe.
+   *
+   * A frase sai do contrato, como a das caixinhas: escrever à mão ao lado do
+   * contrato é o jeito de as duas discordarem.
+   */
+  function efeitosAutomaticosAoMarcarPv_(ficha) {
+    const ativas = cartasAtivasDaFicha_(ficha);
+    return ativas.filter((c) => c && c.efeitoAoMarcarPv).map((carta) => {
+      const e = carta.efeitoAoMarcarPv || {};
+      const req = e.exigeCartasAtivasDominio || null;
+      let cumpre = true, contagem = 0, exigido = 0;
+      if (req) {
+        exigido = Math.max(1, Math.trunc(Number(req.quantidade)) || 1);
+        contagem = ativas.filter((c) => dados.chave(c.dominio) === dados.chave(req.dominio)).length;
+        cumpre = contagem >= exigido;
+      }
+      const limpa = e.limpa || {};
+      const partes = [];
+      if (limpa.estresse) partes.push(`${limpa.estresse} Estresse`);
+      if (limpa.armadura) partes.push(`${limpa.armadura} Ponto de Armadura`);
+      const condicao = e.exigeSemMarcarArmadura === true
+        ? ' sem marcar Ponto de Armadura' : '';
+      return {
+        nome: carta.nome,
+        cumpre,
+        texto: `Ao marcar PV${condicao}: limpa ${partes.join(' e ') || 'o recurso da carta'}.`,
+        pendencia: cumpre ? '' : `exige ${exigido} cartas de ${req.dominio} ativas; há ${contagem}.`
+      };
+    });
+  }
+
+  /**
+   * A reação de dano que tem CUSTO VARIÁVEL e dado da mesa — hoje o Reflexo
+   * Arcano, a única das seis assim.
+   *
+   * ⚠ NÃO CABE NUMA CAIXINHA: quantas Esperanças gastar é decisão de quem joga,
+   * e o número de dados sai dessa decisão. Por isso a janela pede o número e os
+   * resultados, no mesmo formato que o Aparar já usa.
+   */
+  function reacaoComDadosDaFicha_(ficha) {
+    const carta = cartasAtivasDaFicha_(ficha).find((c) => c && c.reacaoDanoComDados);
+    if (!carta) return null;
+    return { nome: carta.nome, texto: carta.texto || '', contrato: carta.reacaoDanoComDados };
+  }
+
+  /**
+   * A reação que dispara no instante em que um Ponto de Armadura seria marcado.
+   *
+   * ⚠ Ela não diz "pode": quando a marcação acontece, a rolagem acontece. Por
+   * isso a janela PEDE os dados junto da caixa de Armadura, em vez de oferecer
+   * mais uma caixinha que a mesa pode esquecer de marcar.
+   */
+  function reacaoAoMarcarArmaduraDaFicha_(ficha) {
+    const carta = cartasAtivasDaFicha_(ficha).find((c) => c && c.reacaoAoMarcarArmadura);
+    if (!carta) return null;
+    return { nome: carta.nome, contrato: carta.reacaoAoMarcarArmadura };
   }
 
   /**
@@ -1448,6 +1562,45 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       ])),
       livres<1 ? el('p',{class:'texto-xs texto-fraco',texto:
         'Sem Ponto de Armadura livre: repare a Armadura para voltar a usar estas reações.'}) : null
+    ]);
+  }
+
+  /**
+   * A TELA DE ACEITAR — o outro lado dos Anéis.
+   *
+   * ⚠ É AQUI, E SÓ AQUI, QUE O RECURSO SE MOVE. Quem usou o anel escreveu um
+   * pedido nesta ficha e não tirou nada de ninguém; o Estresse ou a Esperança
+   * saem da ficha de quem aceita, pela porta normal dela, com a permissão dela.
+   *
+   * ⚠ E "RECUSAR" NÃO É ENFEITE. Sem os dois botões, a única saída de um pedido
+   * indesejado seria aceitá-lo ou conviver com ele na tela para sempre — e no
+   * caso da camaradagem, aceitar é sair prejudicado.
+   */
+  function blocoDePedidos_(ficha) {
+    const pedidos = Array.isArray((ficha || {}).pedidos) ? ficha.pedidos : [];
+    if (!pedidos.length) return null;
+    return el('div', { class:'pilha', 'data-dh-pedidos':'1' }, [
+      el('strong', { texto: pedidos.length === 1
+        ? 'Um pedido esperando você' : `${pedidos.length} pedidos esperando você` }),
+      ...pedidos.map((pedido) => el('article', { class:'cartao pilha pilha--rente' }, [
+        el('p', { class:'texto-sm', texto: pedido.texto || pedido.item }),
+        el('p', { class:'texto-xs texto-fraco', texto:
+          pedido.recurso === 'esperanca'
+            ? `Se você aceitar, ${pedido.quantidade} de Esperança sai da SUA ficha.`
+            : `Se você aceitar, ${pedido.quantidade} de Estresse é marcado na SUA ficha.` }),
+        el('div', { class:'linha' }, [
+          el('button', {
+            type:'button', class:'btn btn--pequeno btn--principal',
+            onClick: (ev) => travarBotao(ev.currentTarget,
+              enviar([{ tipo:'pedido', pedido:pedido.id, resposta:'aceitar' }]))
+          }, 'Aceitar'),
+          el('button', {
+            type:'button', class:'btn btn--pequeno btn--fantasma',
+            onClick: (ev) => travarBotao(ev.currentTarget,
+              enviar([{ tipo:'pedido', pedido:pedido.id, resposta:'recusar' }]))
+          }, 'Recusar')
+        ])
+      ]))
     ]);
   }
 
@@ -1617,6 +1770,63 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     ]) : null;
     if (usarAparar && blocoAparar) usarAparar.addEventListener('change', () => { blocoAparar.hidden = !usarAparar.checked; });
 
+    /*
+     * REFLEXO ARCANO — campo, não caixinha. O custo é variável e os d6 são da
+     * mesa, exatamente como o Aparar: a janela pergunta, o servidor confere.
+     */
+    const comDados = reacaoComDadosDaFicha_(ficha);
+    const contratoDados = comDados ? (comDados.contrato || {}) : {};
+    const ladosDados = Math.max(2, Math.trunc(Number((contratoDados.dado || {}).lados)) || 6);
+    const esperancaDisponivel = Math.max(0, Number(recursosDano.esperanca) || 0);
+    const qtdComDados = comDados ? el('input', semCorretor({
+      type:'text', class:'campo__entrada', inputmode:'numeric', placeholder:'ex.: 2'
+    })) : null;
+    const resultadosComDados = comDados ? el('input', semCorretor({
+      type:'text', class:'campo__entrada', inputmode:'numeric', placeholder:'ex.: 2, 6'
+    })) : null;
+    const usarComDados = comDados ? el('input', { type:'checkbox' }) : null;
+    const blocoComDados = comDados ? el('div', { class:'pilha', hidden:true }, [
+      el('p', { class:'texto-xs texto-fraco', texto:
+        `${comDados.texto} Você tem ${esperancaDisponivel} de Esperança; role 1d${ladosDados} na mesa por Esperança gasta.` }),
+      el('label', { class:'campo' }, [
+        el('span', { class:'campo__rotulo', texto:'Esperanças a gastar' }), qtdComDados
+      ]),
+      el('label', { class:'campo' }, [
+        el('span', { class:'campo__rotulo', texto:`Resultados dos d${ladosDados}` }), resultadosComDados
+      ])
+    ]) : null;
+    if (usarComDados && blocoComDados) {
+      usarComDados.addEventListener('change', () => { blocoComDados.hidden = !usarComDados.checked; });
+    }
+
+    const aoMarcarArmadura = reacaoAoMarcarArmaduraDaFicha_(ficha);
+    const contratoArmadura = aoMarcarArmadura ? (aoMarcarArmadura.contrato || {}) : {};
+    const ladosArmadura = Math.max(2, Math.trunc(Number((contratoArmadura.dado || {}).lados)) || 6);
+    const proficienciaDano = Math.max(1, Math.trunc(Number(recursosDano.proficiencia) || 1));
+    const quantosArmadura = proficienciaDano *
+      Math.max(1, Math.trunc(Number(contratoArmadura.quantidadePorProficiencia)) || 1);
+    const dadosArmadura = aoMarcarArmadura ? el('input', semCorretor({
+      type:'text', class:'campo__entrada', inputmode:'numeric', placeholder:'ex.: 2, 6'
+    })) : null;
+    const blocoArmaduraInabalavel = aoMarcarArmadura ? el('div', { class:'pilha pilha--rente', hidden:true }, [
+      el('p', { class:'texto-xs texto-fraco', texto:
+        `${aoMarcarArmadura.nome}: você vai marcar Ponto de Armadura, então role ` +
+        `${quantosArmadura}d${ladosArmadura} na mesa. Com um ${(contratoArmadura.dado || {}).sucessoEm || ladosArmadura}, ` +
+        'a gravidade cai do mesmo jeito e o Ponto NÃO é marcado.' }),
+      el('label', { class:'campo' }, [
+        el('span', { class:'campo__rotulo', texto:`Seus ${quantosArmadura}d${ladosArmadura}` }), dadosArmadura
+      ])
+    ]) : null;
+    if (blocoArmaduraInabalavel) {
+      const sincronizarInabalavel = () => {
+        blocoArmaduraInabalavel.hidden = !usarArmadura.checked;
+      };
+      usarArmadura.addEventListener('change', sincronizarInabalavel);
+      if (usarFocoNaArmadura) usarFocoNaArmadura.addEventListener('change', sincronizarInabalavel);
+    }
+
+    const automaticos = efeitosAutomaticosAoMarcarPv_(ficha);
+
     const defs = reacoesDeDanoDaFicha_(ficha);
     const escolhas = defs.map(([nome, texto]) => {
       const caixa = el('input', { type: 'checkbox' });
@@ -1646,6 +1856,11 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       if (usarAparar) { usarAparar.disabled = ativo; if (ativo) usarAparar.checked = false; }
       if (usarAnelResistencia) { usarAnelResistencia.disabled = ativo; if (ativo) usarAnelResistencia.checked = false; }
       escolhas.forEach((x) => { x.caixa.disabled = ativo; if (ativo) x.caixa.checked = false; });
+      if (usarComDados) {
+        usarComDados.disabled = ativo;
+        if (ativo) usarComDados.checked = false;
+      }
+      if (blocoComDados) blocoComDados.hidden = ativo || !(usarComDados && usarComDados.checked);
       if (blocoAparar) blocoAparar.hidden = ativo || !(usarAparar && usarAparar.checked);
     };
     if (usarMarigold) usarMarigold.addEventListener('change', sincronizarMarigold);
@@ -1694,6 +1909,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         el('span', { texto:'Postura Estável — pagar essa redução com 1 Foco em vez do Ponto de Armadura ' +
           '(vale mesmo com a Armadura toda marcada)' })
       ]) : null,
+      blocoArmaduraInabalavel,
       usarImpenetravel ? el('label', { class:'criacao__alternador' }, [
         usarImpenetravel,
         el('span', { texto:'Impenetrável — se este dano marcaria seu último PV, marque 1 Estresse em vez dele (1× por descanso)' })
@@ -1719,12 +1935,40 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           'depois disso seus limiares ficam 5 mais baixos até reparar a armadura num descanso' })
       ]) : null,
       blocoAmaldicoada,
+      usarComDados ? el('label', { class:'criacao__alternador' }, [
+        usarComDados,
+        el('span', { texto:`${comDados.nome} — gastar Esperança e informar os d${ladosDados} rolados na mesa` })
+      ]) : null,
+      blocoComDados,
+      automaticos.length ? el('div', { class: 'pilha pilha--rente', 'data-dh-automaticos': '1' }, [
+        el('strong', { texto: automaticos.length === 1
+          ? 'O app aplica sozinho' : 'O app aplica sozinhos' }),
+        /*
+         * ⚠ ISTO NÃO É CAIXINHA DE PROPÓSITO. Estas cartas não dizem "pode" —
+         * são consequência de marcar PV, e o motor já sabe se marcou, se um
+         * Ponto de Armadura foi marcado e quantas cartas do domínio estão
+         * ativas. Perguntar seria pedir para a mesa lembrar de uma regra que o
+         * app tem; não avisar seria mudar a ficha em silêncio.
+         */
+        ...automaticos.map((x) => el('p', { class:'texto-xs texto-fraco', texto:
+          x.cumpre ? `${x.nome} — ${x.texto}` : `${x.nome} — inativa: ${x.pendencia}` }))
+      ]) : null,
       escolhas.length ? el('div', { class: 'pilha' }, [
         el('strong', { texto: 'Reações ao dano' }),
         ...escolhas.map((x) => x.linha)
       ]) : null,
+      /*
+       * ⚠ A FRASE MUDOU porque ela passou a ser meia-verdade: as cartas que não
+       * dizem "pode" o app aplica sozinho, e prometer o contrário na mesma
+       * janela em que isso acontece é pior que não prometer nada.
+       *
+       * O prefixo é o mesmo porque o `lote9-dano.js` procura por ele para saber
+       * onde encaixar o bloco de cartas ativas.
+       */
       el('p', { class: 'texto-xs texto-fraco', texto:
-        'O app só aplica as reações que você marcar. Ele não rola dados nem decide gastar Estresse, Esperança ou Armadura por você.' })
+        'O app só aplica as reações que você marcar' +
+        (automaticos.length ? ' — fora as que a carta não deixa escolher, listadas acima' : '') +
+        '. Ele não rola dados nem decide gastar Estresse, Esperança ou Armadura por você.' })
     ].filter(Boolean));
 
     const modal = abrirModal({
@@ -1752,6 +1996,28 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
             ataqueBemSucedido: usarAnel,
             reacoes
           };
+          if (!usarEspelho && aoMarcarArmadura && pedidoDano.usarArmadura) {
+            const rolados = String(dadosArmadura.value || '').trim()
+              .split(/[\s,;]+/).filter(Boolean).map(Number);
+            if (rolados.length !== quantosArmadura) {
+              avisarErro(`${aoMarcarArmadura.nome} pede exatamente ${quantosArmadura} resultado(s) de d${ladosArmadura}.`);
+              return;
+            }
+            pedidoDano[String(contratoArmadura.campoDados || '')] = rolados;
+          }
+          if (!usarEspelho && usarComDados && usarComDados.checked) {
+            const quantos = Math.trunc(Number(qtdComDados.value));
+            if (!quantos || quantos < 1) {
+              avisarErro(`${comDados.nome}: informe quantas Esperanças gastar.`); return;
+            }
+            const rolados = String(resultadosComDados.value || '').trim()
+              .split(/[\s,;]+/).filter(Boolean).map(Number);
+            if (rolados.length !== quantos) {
+              avisarErro(`${comDados.nome} pede exatamente ${quantos} resultado(s) de d${ladosDados}.`); return;
+            }
+            pedidoDano[String(contratoDados.campoQuantidade || '')] = quantos;
+            pedidoDano[String(contratoDados.campoDados || '')] = rolados;
+          }
           if (dadoAmaldicoada && String(dadoAmaldicoada.value || '').trim()) {
             pedidoDano.amaldicoadaDado = Math.trunc(Number(dadoAmaldicoada.value));
           }
@@ -1797,6 +2063,12 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
      * continuarem iguais.
      */
     return el('section', { class: 'papel' }, [
+      /*
+       * ⚠ OS PEDIDOS VÊM ANTES DAS TRILHAS, de propósito. Alguém está esperando
+       * uma resposta sua, e o recurso só sai da SUA ficha se você disser sim —
+       * isso não pode ficar abaixo da primeira dobra do celular.
+       */
+      blocoDePedidos_(ficha),
       trilhaDePapel({
         chave: 'pontosDeVidaMarcados', rotulo: 'PV', nomeCompleto: 'Pontos de Vida',
         conta: contaDe(ficha, 'pontosDeVidaMaximos'),
@@ -5735,6 +6007,69 @@ function ouroEmPunhados(ouro) {
       const estadoSaqueAtivo = chaveEstadoSaque
         ? Number((((p.ficha || {}).contadores || {})[chaveEstadoSaque] || {}).valor) > 0 : false;
 
+      /*
+       * MUSGO DOCE: o dado é da mesa e a TRILHA é escolha de quem joga ("1d10
+       * Pontos de Vida OU 1d10 Estresses"). Sem este seletor o item ficaria
+       * declarado e inusável — o motor recusa sem a escolha, de propósito.
+       */
+      const escolheRecurso = podeUsar && Array.isArray(efeitoConsumivel.recursoEscolhido)
+        ? efeitoConsumivel.recursoEscolhido : null;
+      const NOME_DA_TRILHA = { pontosDeVidaMarcados:'Pontos de Vida', estresseMarcado:'Estresse' };
+      const VALOR_DA_TRILHA = { pontosDeVidaMarcados:'pontosDeVida', estresseMarcado:'estresse' };
+      const seletorRecurso = escolheRecurso ? el('select', {
+        class:'campo__entrada', 'aria-label':'Trilha a limpar'
+      }, escolheRecurso.map((r) => el('option', { value:VALOR_DA_TRILHA[r] || r },
+        `Limpar ${NOME_DA_TRILHA[r] || r}`))) : null;
+
+      /*
+       * ANÉIS: usar o anel abre um PEDIDO na ficha de quem usa o outro. Nada sai
+       * de ficha nenhuma aqui — quem recebe é que aceita, na tela dela.
+       */
+      const pedeAoPar = passivoSaque && passivoSaque.pedeAoPar;
+      const escolhaDoPedido = pedeAoPar ? (pedeAoPar.quantidadeEscolhida || {}) : {};
+      const alvoDoPedido = pedeAoPar ? el('select', {
+        class:'campo__entrada', 'aria-label':'Quem usa o outro anel'
+      }, [el('option', { value:'' }, '— carregando a mesa —')]) : null;
+      const quantidadeDoPedido = pedeAoPar ? el('input', semCorretor({
+        type:'number', class:'campo__entrada', inputmode:'numeric', step:'1',
+        min:String(Math.max(1, Number(escolhaDoPedido.minimo) || 1)),
+        max:String(Math.max(1, Number(escolhaDoPedido.maximo) || 6)), value:'1'
+      })) : null;
+      if (alvoDoPedido) {
+        acoes.aliadosDaMesa(p.id)
+          .then((r) => {
+            const lista = (r && r.aliados) || [];
+            alvoDoPedido.textContent = '';
+            alvoDoPedido.append(el('option', { value:'' }, lista.length ? '— escolha —' : 'nenhuma outra ficha na mesa'));
+            lista.forEach((x) => alvoDoPedido.append(
+              el('option', { value:x.id }, `${x.nome}${x.donoNome ? ' · ' + x.donoNome : ''}`)));
+          })
+          .catch(() => {
+            alvoDoPedido.textContent = '';
+            alvoDoPedido.append(el('option', { value:'' }, 'não foi possível carregar a mesa'));
+          });
+      }
+      const pedirAoPar = pedeAoPar ? el('button', {
+        type:'button', class:'btn btn--principal',
+        onClick: async (ev) => {
+          const alvo = alvoDoPedido ? alvoDoPedido.value : '';
+          if (!alvo) { avisarErro('Escolha quem usa o outro anel.'); return; }
+          const n = Number(quantidadeDoPedido.value);
+          const minimo = Math.max(1, Number(escolhaDoPedido.minimo) || 1);
+          const maximo = Math.max(minimo, Number(escolhaDoPedido.maximo) || minimo);
+          if (!Number.isInteger(n) || n < minimo || n > maximo) {
+            avisarErro(`Escolha uma quantidade inteira de ${minimo} a ${maximo}.`); return;
+          }
+          try {
+            const r = await travarBotao(ev.currentTarget,
+              acoes.pedirAoPar(p.id, doLivro.id, alvo, n));
+            avisarSucesso((r.resultado && r.resultado.aviso) || 'Pedido enviado.');
+            if (modal) modal.fechar();
+            desenhar();
+          } catch (e) { avisarErro(mensagemDoErro(e)); }
+        }
+      }, pedeAoPar.rotulo || 'Pedir a quem usa o outro anel') : null;
+
       const pedeQuantidade = podeUsar && efeitoConsumivel.tipo === 'recuperar-armadura-por-esperanca';
       const recursosAtuais = (p.ficha || {}).recursos || {};
       const limiteQuantidade = Math.max(0, Math.min(
@@ -5752,6 +6087,7 @@ function ouroEmPunhados(ouro) {
         onClick: async (ev) => {
           const pedido = { tipo:'inventario', acao:'consumir', indice };
           if (quantidadeConsumivel) pedido.quantidade = Number(quantidadeConsumivel.value);
+          if (seletorRecurso) pedido.recurso = seletorRecurso.value;
           const r = await travarBotao(ev.currentTarget, enviar([pedido]));
           if (r && modal) modal.fechar();
         }
@@ -5812,6 +6148,26 @@ function ouroEmPunhados(ouro) {
               `${regraRegistros.rotulo || 'Registros'} · máximo ${regraRegistros.limite || 3} · +${regraRegistros.bonusRolagem || 1} em testes contra elas` }),
             ...camposRegistros
           ]) : null,
+          seletorRecurso ? el('label', { class:'campo' }, [
+            el('span', { class:'campo__rotulo', texto:'Qual trilha limpar' }), seletorRecurso
+          ]) : null,
+          pedeAoPar ? el('div', { class:'pilha' }, [
+            el('label', { class:'campo' }, [
+              el('span', { class:'campo__rotulo', texto:'Quem usa o outro anel' }), alvoDoPedido
+            ]),
+            el('label', { class:'campo' }, [
+              el('span', { class:'campo__rotulo', texto:
+                pedeAoPar.recurso === 'esperanca' ? 'Esperança a pedir' : 'Estresse a pedir' }),
+              quantidadeDoPedido
+            ]),
+            /*
+             * ⚠ A FRASE IMPORTA. A pessoa precisa saber que nada sai de ficha
+             * nenhuma agora — e que quem decide é do outro lado.
+             */
+            el('p', { class:'texto-xs texto-fraco', texto:
+              'O pedido aparece na ficha de quem usa o outro anel. Nada sai de ficha nenhuma ' +
+              'até essa pessoa aceitar, na tela dela.' })
+          ]) : null,
           trocaCartas ? el('div', { class:'pilha' }, [
             el('label', { class:'campo' }, [el('span', { class:'campo__rotulo', texto:'Sai da mão' }), cartaDaMao]),
             el('label', { class:'campo' }, [el('span', { class:'campo__rotulo', texto:'Entra da reserva' }), cartaDaReserva]),
@@ -5838,6 +6194,7 @@ function ouroEmPunhados(ouro) {
           }, 'Salvar vínculo') : null,
           salvarRegistros,
           carregarSaque,
+          pedirAoPar,
           usar,
           usarSaque
         ].filter(Boolean)

@@ -63,7 +63,11 @@ VERBETES = [
         'explicacao': [
             'Proficiência 2 com uma espada d8 = 2d8. O modificador ("+3") entra uma vez '
             'só, no fim — a Proficiência não multiplica ele.',
-            'Bônus na jogada entram ANTES de rolar, nunca depois de ver o resultado.'
+            # ⚠ "rolagem" SOLTA está certa aqui, e o conferidor de vocabulário diz isso
+            # no comentário dele: a regra acusa jogada NOMEADA ("Rolagem de Força"),
+            # não a palavra comum. Trocar por "jogada" foi o que o fichário fez, e
+            # foi o fichário que ficou para trás.
+            'Bônus na rolagem entram ANTES de rolar, nunca depois de ver o resultado.'
         ],
         'veja': ['proficiencia', 'sucesso-critico', 'multiplas-fontes-de-dano']
     },

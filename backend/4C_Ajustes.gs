@@ -124,6 +124,7 @@ function aplicarAjusteDireto_(ficha, a) {
   if (tipo === 'cena') return ajustarCenaDaFicha_(ficha, a);
   if (tipo === 'sessao') return ajustarSessaoDaFicha_(ficha, a);
   if (tipo === 'morte') return ajustarMovimentoDeMorte_(ficha, a);
+  if (tipo === 'pedido') return responderPedidoDaFicha_(ficha, a);
   if (tipo === 'conjuracao') return ajustarConjuracao_(ficha, a);
   if (tipo === 'ouro') return ajustarOuroDaFicha_(ficha, a);
   if (tipo === 'inventario') return ajustarInventario_(ficha, a);
@@ -318,8 +319,30 @@ function usarCaracteristicaDeEquipamento_(ficha, a) {
     }
   }
 
-  const custoEstresse = Math.max(0, Math.trunc(Number(regra.custoEstresse)) || 0) +
+  let custoEstresse = Math.max(0, Math.trunc(Number(regra.custoEstresse)) || 0) +
     (acionaResultado ? Math.max(0, Math.trunc(Number((resultadoRegra || {}).custoEstresse)) || 0) : 0);
+
+  /*
+   * ⚠ SAQUE EM USO QUE CANCELA O CUSTO. As Luvas de alacridade dizem "quando
+   * você deveria marcar 1 Estresse para recarregar uma arma, não o marque" — e o
+   * custo da Recarga já era conhecido pelo motor; faltava quem o cancelasse.
+   *
+   * A declaração diz QUAL característica tem o custo cancelado, em vez de um
+   * booleano com o nome de uma arma dentro: o próximo item que cancelar outro
+   * custo entra pela mesma porta.
+   */
+  let custoCanceladoPor = null;
+  if (custoEstresse > 0 && typeof saquesAtivosDaFicha_ === 'function') {
+    const ativosDoCusto = saquesAtivosDaFicha_(ficha);
+    for (let i = 0; i < ativosDoCusto.length; i++) {
+      const itemAtivo = (ativosDoCusto[i] || {}).item || {};
+      const alvo = String((itemAtivo.efeitoSaquePassivo || {}).cancelaEstresseDaCaracteristica || '');
+      if (!alvo || chaveTexto_(alvo) !== chaveTexto_(encontrada.caracteristica)) continue;
+      custoEstresse = 0;
+      custoCanceladoPor = { item:itemAtivo.nome || itemAtivo.id, caracteristica:encontrada.caracteristica };
+      break;
+    }
+  }
   const custoEsperanca = Math.max(0, Math.trunc(Number(regra.custoEsperanca)) || 0) +
     (acionaResultado ? Math.max(0, Math.trunc(Number((resultadoRegra || {}).custoEsperanca)) || 0) : 0);
   const custoOuroPunhados = Math.max(0, Math.trunc(Number(regra.custoOuroPunhados)) || 0) +
@@ -443,9 +466,19 @@ function usarCaracteristicaDeEquipamento_(ficha, a) {
   if (bonusPendurado) {
     partes.push(bonusPendurado.texto + ' (fica na ficha até você dizer que usou; o fim da cena apaga.)');
   }
+  /*
+   * ⚠ CANCELAR CUSTO NÃO PODE SER SILENCIOSO. Se o Estresse não foi marcado, a
+   * pessoa precisa saber por quê — senão a próxima vez que ela recarregar SEM as
+   * luvas em uso vai parecer erro do app.
+   */
+  if (custoCanceladoPor) {
+    partes.push(custoCanceladoPor.item + ' cancelou o Estresse de ' +
+      custoCanceladoPor.caracteristica + '.');
+  }
   if (entrada) partes.push('Resultado informado: ' + dadoManual + '.');
   if (entrada && resultadoRegra && !acionaResultado) partes.push('O gatilho especial não foi acionado.');
   if (acionaResultado && recuperacao) partes.push('Recuperação aplicada.');
+  if (custoCanceladoPor) r.custoCancelado = custoCanceladoPor;
   r.aviso = encontrada.fonte + ' · ' + encontrada.caracteristica + ': ' + partes.join(' ');
   return r;
 }
@@ -3045,7 +3078,27 @@ function usarConsumivelDaMochila_(ficha, lista, indice, a) {
     if (!isFinite(resultadoManual) || Number(bruto)!==resultadoManual || resultadoManual<1 || resultadoManual>lados) {
       return { erro:item.nome + ': informe um resultado inteiro de 1 a ' + lados + '.' };
     }
-    const recurso=String(efeito.recurso || '');
+    /*
+     * ⚠ O RECURSO PODE SER ESCOLHA DE QUEM JOGA. O Musgo Doce limpa "1d10 Pontos
+     * de Vida OU 1d10 Estresses" — mesmo dado, trilha escolhida. As seis poções
+     * continuam declarando `recurso` fixo; quem declara `recursoEscolhido`
+     * espera a escolha no pedido, e RECUSA quando ela não vem, em vez de decidir
+     * pela pessoa.
+     */
+    const escolhas = Array.isArray(efeito.recursoEscolhido) ? efeito.recursoEscolhido : null;
+    let recurso;
+    if (escolhas) {
+      const pedido = chaveTexto_((a || {}).recurso || '');
+      const NOMES = { pontosdevida:'pontosDeVidaMarcados', pv:'pontosDeVidaMarcados',
+        pontosdevidamarcados:'pontosDeVidaMarcados', estresse:'estresseMarcado',
+        estressemarcado:'estresseMarcado' };
+      recurso = NOMES[pedido] || '';
+      if (!recurso || escolhas.indexOf(recurso) === -1) {
+        return { erro:item.nome + ': escolha limpar Pontos de Vida ou Estresse.' };
+      }
+    } else {
+      recurso = String(efeito.recurso || '');
+    }
     if (recurso !== 'pontosDeVidaMarcados' && recurso !== 'estresseMarcado') {
       return { erro:item.nome + ': recurso de recuperação inválido no catálogo.' };
     }
@@ -3443,7 +3496,52 @@ function usarSaqueDaMochila_(ficha, lista, indice, a) {
     if (atual + custoEstresse > teto) return { erro:item.nome + ': não sobra Estresse para este uso.' };
   }
 
+  /*
+   * ⚠ ATÉ AQUI O USO DE SAQUE SÓ SABIA COBRAR. O Diadema do fagófobo limpa 1
+   * Estresse quando o d4 dá 4 — e sem isto o app pediria o dado e não faria nada
+   * com o resultado, que é o silêncio de sempre com um dado no meio.
+   *
+   * ⚠ E O USO SÓ É GASTO QUANDO A CONSEQUÊNCIA ACONTECE. Errar o d4 não pode
+   * queimar a única limpeza da cena: a carta condiciona o efeito ao resultado,
+   * não a tentativa.
+   */
+  let limpezaDoResultado = null;
+  const regraLimpa = efeito.resultadoQueLimpa || null;
+  if (regraLimpa) {
+    if (resultadoManual === null) {
+      return { erro:item.nome + ': informe o resultado do dado antes de aplicar.' };
+    }
+    const alvoLimpa = Math.trunc(Number(regraLimpa.igual));
+    if (resultadoManual === alvoLimpa) {
+      const limpa = regraLimpa.limpa || {};
+      const chaves = { estresse:'estresseMarcado', armadura:'armaduraMarcada', pv:'pontosDeVidaMarcados' };
+      const nomes = { estresse:'Estresse', armadura:'Ponto de Armadura', pv:'Ponto de Vida' };
+      const quais = Object.keys(limpa);
+      for (let li = 0; li < quais.length; li++) {
+        const chaveRecurso = chaves[quais[li]];
+        if (!chaveRecurso) return { erro:item.nome + ': recurso desconhecido para limpar.' };
+        const pedido = Math.max(0, Math.trunc(Number(limpa[quais[li]])) || 0);
+        const marcado = Math.max(0, Number(recursos[chaveRecurso]) || 0);
+        const quanto = Math.min(pedido, marcado);
+        limpezaDoResultado = limpezaDoResultado || { resultado:resultadoManual, partes:[] };
+        limpezaDoResultado.partes.push({
+          recurso:chaveRecurso, nome:nomes[quais[li]], pedido:pedido, limpou:quanto,
+          nadaParaLimpar:quanto < pedido
+        });
+      }
+    }
+  }
+
   const detalhes = [];
+  if (limpezaDoResultado) {
+    for (let li = 0; li < limpezaDoResultado.partes.length; li++) {
+      const parte = limpezaDoResultado.partes[li];
+      if (!parte.limpou) continue;
+      const r = ajustarRecurso_(ficha, { chave:parte.recurso, delta:-parte.limpou });
+      if (r && r.erro) return r;
+      detalhes.push(r);
+    }
+  }
   if (custoEsperanca) {
     const r = ajustarRecurso_(ficha, { chave:'esperanca', delta:-custoEsperanca });
     if (r && r.erro) return r;
@@ -3462,7 +3560,9 @@ function usarSaqueDaMochila_(ficha, lista, indice, a) {
       entrouNaMao:trocaCartas.entra.id, custoChamada:0
     });
   }
-  if (contadorUso) {
+  const consequenciaAconteceu = !regraLimpa ||
+    !!(limpezaDoResultado && limpezaDoResultado.partes.some(function (x) { return x.limpou > 0; }));
+  if (contadorUso && consequenciaAconteceu) {
     const r = ajustarContador_(ficha, { chave:contadorUso, valor:usosAntes + 1 });
     if (r && r.erro) return r;
     detalhes.push(r);
@@ -3478,7 +3578,8 @@ function usarSaqueDaMochila_(ficha, lista, indice, a) {
     tipo:'inventario', acao:'usar', item:item.nome, itemId:item.id,
     custoEsperanca:custoEsperanca, custoEstresse:custoEstresse,
     contadorUso:contadorUso || null, contadorEstado:contadorEstado || null,
-    usosAntes:contadorUso ? usosAntes : null, usosDepois:contadorUso ? usosAntes + 1 : null,
+    usosAntes:contadorUso ? usosAntes : null,
+    usosDepois:contadorUso ? (usosAntes + (consequenciaAconteceu ? 1 : 0)) : null,
     maxUsos:contadorUso ? maxUsos : null,
     bonusRolagem:efeito.bonusRolagem || null,
     bonusProficienciaDano:efeito.bonusProficienciaDano === true && typeof proficienciaEfetivaDaFicha_ === 'function'
@@ -3488,7 +3589,23 @@ function usarSaqueDaMochila_(ficha, lista, indice, a) {
     trocaCartas:trocaCartas ? { saiuDaMao:trocaCartas.sai.id, entrouNaMao:trocaCartas.entra.id, custoChamada:0 } : null,
     efeitoManual:efeitoManual || null,
     detalhes:detalhes,
-    aviso:item.nome + ': uso registrado.' + (efeitoManual ? ' ' + efeitoManual : '')
+    limpezaDoResultado:limpezaDoResultado,
+    /*
+     * ⚠ O AVISO TEM DE DIZER O QUE ACONTECEU COM O DADO. "uso registrado" numa
+     * tentativa que não limpou nada, e sem dizer que o uso da cena continua
+     * disponível, faria a mesa achar que perdeu a chance.
+     */
+    aviso:item.nome + ': ' +
+      (regraLimpa
+        ? (limpezaDoResultado
+            ? limpezaDoResultado.partes.map(function (x) {
+                return x.limpou
+                  ? ('limpou ' + x.limpou + ' ' + x.nome + '.')
+                  : ('não havia ' + x.nome + ' marcado para limpar.');
+              }).join(' ')
+            : ('o dado deu ' + resultadoManual + '; nada acontece, e o uso desta cena continua disponível.'))
+        : 'uso registrado.') +
+      (efeitoManual ? ' ' + efeitoManual : '')
   };
 }
 
@@ -4234,6 +4351,104 @@ function aplicarDanoNaFicha_(ficha, a) {
     };
   }
 
+  /*
+   * REFLEXO ARCANO — a única reação de dano com CUSTO VARIÁVEL e dado da mesa.
+   *
+   * > "Quando você for receber dano mágico, pode gastar qualquer número de
+   * > Esperança para rolar essa quantidade de d6. Se algum deles resultar em 6,
+   * > o ataque é refletido de volta para o conjurador."
+   *
+   * ⚠ NÃO CABE NUMA CAIXINHA, e foi por isso que ela ficou de fora até agora:
+   * quantas Esperanças gastar é decisão de quem joga, e o número de dados sai
+   * dessa decisão. Por isso a janela pergunta o número e os resultados.
+   *
+   * ⚠ A ESPERANÇA É GASTA DE QUALQUER JEITO. Sem nenhum 6 o dano entra inteiro
+   * e a Esperança foi embora — é o que a carta diz, e é a razão de o app não
+   * poder "resolver sozinho" por quem está jogando.
+   *
+   * ⚠ E A OUTRA METADE DA REGRA NÃO É DESTA FICHA: o dano refletido é do
+   * CONJURADOR, que é adversário do Mestre. O app faz a metade dele — cobra,
+   * confere os dados, não marca nada — e manda o recado com o número pronto.
+   */
+  let reflexoArcano = null;
+  const defComDados = (typeof reacaoDeDanoComDadosPedida_ === 'function')
+    ? reacaoDeDanoComDadosPedida_(ficha, a) : null;
+  if (defComDados && defComDados.exigeAtiva) {
+    return { erro: defComDados.exigeAtiva + ' precisa estar entre as cartas ativas.' };
+  }
+  if (defComDados) {
+    const brutoQuantidadeDados = a[String(defComDados.campoQuantidade || '')];
+    const nomeReflexo = defComDados.nome;
+    const lados = Math.max(2, Math.trunc(Number((defComDados.dado || {}).lados)) || 6);
+    const sucessoEm = Math.max(1, Math.trunc(Number((defComDados.dado || {}).sucessoEm)) || lados);
+    const quantos = Math.trunc(Number(brutoQuantidadeDados));
+    if (!isFinite(quantos) || quantos < 1 || Number(brutoQuantidadeDados) !== quantos) {
+      return { erro: nomeReflexo + ': informe um número inteiro maior que zero de Esperanças a gastar.' };
+    }
+    if ((defComDados.tipos || []).length && defComDados.tipos.indexOf(tipo) === -1) {
+      return { erro: '"' + nomeReflexo + '" não se aplica a dano ' + (tipo === 'fisico' ? 'físico' : 'mágico') + '.' };
+    }
+    const porDado = Math.max(1, Math.trunc(Number((defComDados.custoPorDado || {}).esperanca)) || 1);
+    const custoReflexo = quantos * porDado;
+    const esperancaDisponivel = Math.max(0, Number(((ficha || {}).recursos || {}).esperanca) || 0);
+    if (esperancaDisponivel < custoReflexo) {
+      return { erro: nomeReflexo + ' precisa de ' + custoReflexo + ' Esperança, e você tem ' + esperancaDisponivel + '.' };
+    }
+    const dadosReflexo = a[String(defComDados.campoDados || '')];
+    if (!Array.isArray(dadosReflexo)) {
+      return { erro: nomeReflexo + ': role ' + quantos + 'd' + lados +
+        ' fora do app e informe os ' + quantos + ' resultados.' };
+    }
+    if (dadosReflexo.length !== quantos) {
+      return { erro: nomeReflexo + ': informe exatamente ' + quantos + ' resultado(s) de d' + lados + '.' };
+    }
+    const limposReflexo = [];
+    let acertosReflexo = 0;
+    for (let i = 0; i < dadosReflexo.length; i++) {
+      const n = Math.trunc(Number(dadosReflexo[i]));
+      if (!isFinite(n) || n < 1 || n > lados || Number(dadosReflexo[i]) !== n) {
+        return { erro: nomeReflexo + ': cada resultado precisa ser um inteiro de 1 a ' + lados + '.' };
+      }
+      limposReflexo.push(n);
+      if (n >= sucessoEm) acertosReflexo++;
+    }
+    reflexoArcano = {
+      carta: nomeReflexo, esperanca: custoReflexo, dados: limposReflexo,
+      lados: lados, sucessoEm: sucessoEm, refletiu: acertosReflexo > 0
+    };
+
+    /*
+     * ⚠ REFLETIU: SAI DAQUI SEM MARCAR NADA. Nenhuma outra escolha da janela é
+     * cobrada — não se gasta Armadura contra um dano que não chegou. Se a
+     * pessoa tinha marcado Armadura ou outra reação como plano B, o aviso diz
+     * que elas não foram usadas, para ninguém achar que o Ponto sumiu.
+     */
+    if (reflexoArcano.refletiu) {
+      const pagaReflexo = ajustarRecurso_(ficha, { chave: 'esperanca', delta: -custoReflexo });
+      if (pagaReflexo && pagaReflexo.erro) return pagaReflexo;
+      const outrasEscolhas = (Array.isArray(a.reacoes) && a.reacoes.length) ||
+        a.usarArmadura === true || a.usarImpenetravel === true || a.usarForrada === true ||
+        a.usarAbsorvente === true || a.usarVitreo === true || a.usarAparar === true;
+      return {
+        tipo: 'dano',
+        dano: { bruto: bruto, final: 0, tipo: tipo, faixa: 'refletido', rotulo: 'Dano refletido' },
+        pvPelaFaixa: 0, pvDepoisArmadura: 0, pvMarcados: 0,
+        naBeira: false, mitigacaoArmadura: null, reacoes: [], resistencia: null,
+        reflexoArcano: reflexoArcano,
+        custos: { estresse: 0, esperanca: custoReflexo, armadura: 0 },
+        detalhes: [pagaReflexo],
+        efeitoMesa: {
+          recado: nomeReflexo + ': ' + String(defComDados.recadoDaMesa || 'o ataque é refletido') +
+            ' — aplique ' + bruto + ' de dano ' + (tipo === 'fisico' ? 'físico' : 'mágico') +
+            ' no conjurador.'
+        },
+        aviso: nomeReflexo + ': ' + custoReflexo + ' Esperança gasta, d' + lados + ' = ' +
+          limposReflexo.join(', ') + ' — saiu ' + sucessoEm + ', o dano foi refletido e nada foi marcado na sua ficha.' +
+          (outrasEscolhas ? ' As outras opções marcadas nesta janela não foram usadas.' : '')
+      };
+    }
+  }
+
   const d = ficha.defesas || {};
   const maior = Number(d.limiarMaior);
   const severo = Number(d.limiarGrave);
@@ -4248,21 +4463,23 @@ function aplicarDanoNaFicha_(ficha, a) {
     let def = (typeof reacaoDeDanoDeOrigem_ === 'function') ? reacaoDeDanoDeOrigem_(nomes[i]) : null;
     if (!def && typeof reacaoDeDanoDeClasse_ === 'function') def = reacaoDeDanoDeClasse_(nomes[i]);
 
-    const pediuLevantarSe = chaveTexto_(nomes[i]) === chaveTexto_('Levantar-Se');
-    if (!def && pediuLevantarSe) {
-      const ativas = Array.isArray((((ficha || {}).cartas || {}).ativas)) ? ficha.cartas.ativas : [];
-      let ativa = false;
-      for (let c = 0; c < ativas.length; c++) {
-        const ref = (ativas[c] && typeof ativas[c] === 'object') ? (ativas[c].id || ativas[c].nome) : ativas[c];
-        const carta = (typeof acharCarta_ === 'function') ? acharCarta_(ref) : null;
-        if (carta && carta.id === 'blade-levantar-se') { ativa = true; break; }
+    /*
+     * ⚠ AQUI HAVIA UM `if` COM UMA CARTA DIGITADA DENTRO. Só o Levantar-Se era
+     * reconhecido, com o efeito escrito à mão no meio do resolvedor — e por
+     * isso qualquer outra carta que reaja ao dano ficava invisível na janela
+     * onde a regra dela acontece (ver o Preparar, que perde o gatilho se a
+     * pessoa sair da janela para usar a carta no painel).
+     *
+     * Agora a carta DECLARA `reacaoDano` no catálogo, e `reacaoDeDanoDeCarta_`
+     * — gerado junto com as cartas — devolve o contrato e já confere que ela
+     * está entre as ativas. Quem acrescentar a próxima não mexe aqui.
+     */
+    if (!def && typeof reacaoDeDanoDeCarta_ === 'function') {
+      const daCarta = reacaoDeDanoDeCarta_(nomes[i], ficha);
+      if (daCarta && daCarta.exigeAtiva) {
+        return { erro: daCarta.exigeAtiva + ' precisa estar entre as cartas ativas.' };
       }
-      if (!ativa) return { erro:'Levantar-Se precisa estar entre as cartas ativas.' };
-      def = {
-        nome:'Levantar-Se', origem:'carta-dominio', momento:'depois-dos-limiares',
-        tipos:['fisico','magico'], faixas:['severo'], custo:{ estresse:1 },
-        efeito:{ reduzPv:1 }, fonte:'Carta de domínio ativa Levantar-Se.'
-      };
+      if (daCarta) def = daCarta;
     }
 
     if (!def) return { erro: 'Reação de dano desconhecida: "' + String(nomes[i]) + '".' };
@@ -4412,6 +4629,15 @@ function aplicarDanoNaFicha_(ficha, a) {
     if ((def.faixas || []).indexOf(contaAposArmadura.faixa) === -1) {
       return { erro: '"' + def.nome + '" não se aplica a ' + contaAposArmadura.rotulo + '.' };
     }
+    /*
+     * ⚠ GATILHO QUE DEPENDE DA MITIGAÇÃO NORMAL. O Preparar diz "quando você
+     * marcar 1 Ponto de Armadura para reduzir o dano recebido": sem essa
+     * marcação não há gatilho, e aceitar assim mesmo cobraria 1 Estresse e 1
+     * Ponto de Armadura por uma regra que não disparou.
+     */
+    if (def.exigeMitigacaoArmadura === true && !querUsarArmadura) {
+      return { erro: '"' + def.nome + '" só vale junto da marcação de Ponto de Armadura que reduz este dano.' };
+    }
     const efeito = def.efeito || {};
     if (efeito.pvEmVezDe !== undefined) pv = Math.max(0, Math.trunc(Number(efeito.pvEmVezDe)) || 0);
     if (efeito.reduzPv) {
@@ -4434,36 +4660,55 @@ function aplicarDanoNaFicha_(ficha, a) {
   // Na Beira é passivo: depois de saber que a faixa é Menor, nenhum PV é marcado.
   if (naBeiraAtiva) pv = 0;
 
-  // Tocado do Esplendor acontece depois de todas as reduções que já definiram
-  // quantos PV este dano realmente exigiria. O cliente só escolhe a trilha;
-  // posse, 4+ Esplendor, uso por descanso e recursos são revalidados aqui.
-  const tocadoBruto = chaveTexto_((a || {}).tocadoDoEsplendor || '');
+  /*
+   * SUBSTITUIR OS PV DESTE DANO POR OUTRO RECURSO — hoje o Tocado do Esplendor.
+   *
+   * Acontece depois de todas as reduções que já definiram quantos PV este dano
+   * realmente exigiria. O cliente só escolhe a trilha; posse da carta, cartas do
+   * domínio, uso por descanso longo e recursos são revalidados aqui.
+   *
+   * ⚠ AQUI HAVIA A ÚLTIMA CARTA DIGITADA DENTRO DO MOTOR. O id, o domínio, o
+   * número 4 e a chave do contador estavam escritos à mão — e de novo no
+   * `lote9-dano.js`, que monta o seletor. Era o mesmo formato do `if` que
+   * segurava o Levantar-Se. Agora a carta declara `reacaoSubstituiPv`.
+   */
+  const contratoSubstituiPv = (typeof reacaoSubstituiPvDaFicha_ === 'function')
+    ? reacaoSubstituiPvDaFicha_(ficha) : null;
+  const defSubstituiPv = contratoSubstituiPv ? contratoSubstituiPv.def : null;
+  const campoSubstituiPv = defSubstituiPv ? String(defSubstituiPv.campoEscolha || '') : '';
+  const tocadoBruto = chaveTexto_((campoSubstituiPv ? (a || {})[campoSubstituiPv] : '') || '');
+  const recursosSubstituiPv = (defSubstituiPv && Array.isArray(defSubstituiPv.recursos))
+    ? defSubstituiPv.recursos : [];
   const opcaoTocado = (tocadoBruto === 'estresse' || tocadoBruto === 'fadiga') ? 'estresse'
     : (tocadoBruto === 'esperanca' || tocadoBruto === 'hope') ? 'esperanca' : '';
   if (tocadoBruto && !opcaoTocado) {
-    return { erro:'Tocado do Esplendor: escolha Estresse ou Esperança.' };
+    return { erro:(defSubstituiPv ? defSubstituiPv.nome : 'Substituição de PV') + ': escolha Estresse ou Esperança.' };
+  }
+  if (opcaoTocado && recursosSubstituiPv.indexOf(opcaoTocado) === -1) {
+    return { erro:defSubstituiPv.nome + ' não troca os PV por ' +
+      (opcaoTocado === 'estresse' ? 'Estresse' : 'Esperança') + '.' };
   }
   let tocadoEsplendor = null;
   let custoTocadoEstresse = 0, custoTocadoEsperanca = 0;
-  const chaveUsoTocado = 'uso:carta:splendor:tocado-do-esplendor';
+  const chaveUsoTocado = defSubstituiPv ? String(defSubstituiPv.contadorDeUso || '') : '';
   if (opcaoTocado) {
     if ((a || {}).usarImpenetravel === true) {
-      return { erro:'Escolha Tocado do Esplendor ou Impenetrável para substituir os PV deste dano, não os dois.' };
+      return { erro:'Escolha ' + defSubstituiPv.nome + ' ou Impenetrável para substituir os PV deste dano, não os dois.' };
     }
-    if (pv <= 0) return { erro:'Tocado do Esplendor só pode ser usado quando este dano ainda exige marcar PV.' };
-    const ativas = Array.isArray((((ficha || {}).cartas || {}).ativas)) ? ficha.cartas.ativas : [];
-    let temTocado = false, splendorAtivas = 0;
-    for (let i = 0; i < ativas.length; i++) {
-      const brutoCarta = (ativas[i] && typeof ativas[i] === 'object') ? (ativas[i].id || ativas[i].nome) : ativas[i];
-      const cartaAtiva = (typeof acharCarta_ === 'function') ? acharCarta_(brutoCarta) : null;
-      if (!cartaAtiva) continue;
-      if (cartaAtiva.id === 'splendor-tocado-do-esplendor') temTocado = true;
-      if (chaveTexto_(cartaAtiva.dominio) === chaveTexto_('SPLENDOR')) splendorAtivas++;
+    if (pv <= 0) return { erro:defSubstituiPv.nome + ' só pode ser usado quando este dano ainda exige marcar PV.' };
+    if (!contratoSubstituiPv.ativa) {
+      return { erro:defSubstituiPv.nome + ' precisa estar entre as cartas ativas.' };
     }
-    if (!temTocado) return { erro:'Tocado do Esplendor precisa estar entre as cartas ativas.' };
-    if (splendorAtivas < 4) return { erro:'Tocado do Esplendor exige 4 cartas de Esplendor ativas; há ' + splendorAtivas + '.' };
+    const exigidas = Math.max(1, Math.trunc(Number(
+      (defSubstituiPv.exigeCartasAtivasDominio || {}).quantidade)) || 1);
+    if (contratoSubstituiPv.doDominio < exigidas) {
+      return { erro:defSubstituiPv.nome + ' exige ' + exigidas + ' cartas de ' +
+        ((typeof normalizarDominio_ === 'function' && normalizarDominio_(defSubstituiPv.dominio)) ||
+          defSubstituiPv.dominio) + ' ativas; há ' + contratoSubstituiPv.doDominio + '.' };
+    }
+    const limiteUsos = Math.max(1, Math.trunc(Number(defSubstituiPv.usosPorDescansoLongo)) || 1);
     const usado = Math.max(0, Math.trunc(Number(((((ficha || {}).contadores || {})[chaveUsoTocado] || {}).valor))) || 0);
-    if (usado >= 1) return { erro:'Tocado do Esplendor já foi usado neste descanso longo.' };
+    if (usado >= limiteUsos) return { erro:defSubstituiPv.nome + ' já foi usado neste descanso longo.' };
     if (opcaoTocado === 'estresse') custoTocadoEstresse = pv;
     else custoTocadoEsperanca = pv;
   }
@@ -4478,10 +4723,74 @@ function aplicarDanoNaFicha_(ficha, a) {
     custoEsperanca += Math.max(0, Math.trunc(Number(c.esperanca)) || 0);
     custoArmadura += Math.max(0, Math.trunc(Number(c.armadura)) || 0);
   }
+  /*
+   * O Reflexo Arcano que NÃO refletiu entra aqui, na mesma bolsa: a Esperança
+   * foi gasta do mesmo jeito, e precisa ser validada junto com todo o resto
+   * para o "tudo ou nada" continuar valendo.
+   */
+  if (reflexoArcano) custoEsperanca += reflexoArcano.esperanca;
   const r = ficha.recursos || {};
   const estresseAtual = Math.max(0, Number(r.estresseMarcado) || 0);
   const estresseMax = Math.max(0, Number(r.estresseMaximo) || 0);
   const esperancaAtual = Math.max(0, Number(r.esperanca) || 0);
+
+  /*
+   * ARMADURA INABALÁVEL — a carta que decide se o Ponto chega a ser marcado.
+   *
+   * > "Quando você for marcar um Ponto de Armadura, role uma quantidade de d6
+   * > igual à sua Proficiência. Se algum resultar em 6, reduza a gravidade em um
+   * > limiar sem marcar um Ponto de Armadura."
+   *
+   * ⚠ ELA NÃO DIZ "PODE": quando a marcação acontece, a rolagem acontece. Por
+   * isso o motor EXIGE os dados em vez de oferecer uma caixinha — caixa de
+   * marcar para regra obrigatória é caixa que a mesa esquece.
+   *
+   * ⚠ E ELA VEM ANTES DO RESILIENTE, de propósito. Os dois evitam marcar Ponto
+   * de Armadura, e é aqui que eles poderiam descontar o MESMO Ponto duas vezes.
+   * Resolvendo esta primeiro, o Resiliente recalcula em cima do custo já
+   * reduzido: se não sobrou Ponto para marcar, ele não tem último Ponto a
+   * evitar e nem chega a pedir o d6.
+   */
+  let armaduraInabalavel = null;
+  const defInabalavel = (typeof reacaoAoMarcarArmaduraDaFicha_ === 'function')
+    ? reacaoAoMarcarArmaduraDaFicha_(ficha) : null;
+  if (defInabalavel && custoArmadura > 0) {
+    const ladosInabalavel = Math.max(2, Math.trunc(Number((defInabalavel.dado || {}).lados)) || 6);
+    const sucessoInabalavel = Math.max(1, Math.trunc(Number((defInabalavel.dado || {}).sucessoEm)) || ladosInabalavel);
+    const porProficiencia = Math.max(1, Math.trunc(Number(defInabalavel.quantidadePorProficiencia)) || 1);
+    const proficiencia = (typeof proficienciaDaFicha_ === 'function')
+      ? Math.max(1, Math.trunc(Number(proficienciaDaFicha_(ficha))) || 1) : 1;
+    const quantosInabalavel = proficiencia * porProficiencia;
+    const brutoInabalavel = a[String(defInabalavel.campoDados || '')];
+    if (!Array.isArray(brutoInabalavel)) {
+      return { erro: defInabalavel.nome + ': você vai marcar Ponto de Armadura — role ' +
+        quantosInabalavel + 'd' + ladosInabalavel + ' fora do app e informe os ' +
+        quantosInabalavel + ' resultados.' };
+    }
+    if (brutoInabalavel.length !== quantosInabalavel) {
+      return { erro: defInabalavel.nome + ': informe exatamente ' + quantosInabalavel +
+        ' resultado(s) de d' + ladosInabalavel + ' (a sua Proficiência é ' + proficiencia + ').' };
+    }
+    const limposInabalavel = [];
+    let acertouInabalavel = false;
+    for (let i = 0; i < brutoInabalavel.length; i++) {
+      const n = Math.trunc(Number(brutoInabalavel[i]));
+      if (!isFinite(n) || n < 1 || n > ladosInabalavel || Number(brutoInabalavel[i]) !== n) {
+        return { erro: defInabalavel.nome + ': cada resultado precisa ser um inteiro de 1 a ' + ladosInabalavel + '.' };
+      }
+      limposInabalavel.push(n);
+      if (n >= sucessoInabalavel) acertouInabalavel = true;
+    }
+    const evitaInabalavel = acertouInabalavel
+      ? Math.max(0, Math.trunc(Number((defInabalavel.efeito || {}).evitaMarcarArmadura)) || 0) : 0;
+    // A gravidade JÁ foi reduzida lá em cima pela mitigação normal; o que a carta
+    // muda é só o custo. Por isso aqui não se mexe em `pv`.
+    if (evitaInabalavel) custoArmadura = Math.max(0, custoArmadura - evitaInabalavel);
+    armaduraInabalavel = {
+      carta: defInabalavel.nome, dados: limposInabalavel, lados: ladosInabalavel,
+      sucessoEm: sucessoInabalavel, evitouMarcar: evitaInabalavel > 0
+    };
+  }
 
   // RESILIENTE acontece antes de marcar o ÚLTIMO PA. A rolagem continua na mesa.
   // Se o pedido usa mais de um PA, só a unidade que ocuparia o último slot é
@@ -4678,10 +4987,58 @@ function aplicarDanoNaFicha_(ficha, a) {
     ficha.contadores = ficha.contadores || {};
     ficha.contadores[chaveUsoTocado] = { valor:1 };
     tocadoEsplendor = {
-      carta:'splendor-tocado-do-esplendor', opcao:opcaoTocado,
+      carta:contratoSubstituiPv.id, opcao:opcaoTocado,
       pvSubstituidos:pv, uso:chaveUsoTocado
     };
     pv = 0;
+  }
+
+  /*
+   * AS CARTAS QUE NÃO DIZEM "PODE": Erga-Se e Tocado pelo Valor.
+   *
+   * ⚠ ELAS NÃO SÃO CAIXINHA. Toda carta que é escolha diz "pode" — Levantar-Se,
+   * Preparar, Deixe Passar e Reflexo Arcano dizem; estas duas não. São
+   * consequência de marcar PV, e o motor já sabe tudo o que a caixinha
+   * perguntaria: se marcou PV, se algum Ponto de Armadura foi marcado neste
+   * dano e quantas cartas do domínio estão ativas.
+   *
+   * ⚠ AQUI É O ÚLTIMO PONTO EM QUE `pv` E OS CUSTOS SÃO FINAIS. Forrada,
+   * Impenetrável, Vítreo, Domínio Elemental e Tocado do Esplendor ainda mexem
+   * em `pv` depois da conta de custos; olhar antes deles faria a carta disparar
+   * por um PV que ninguém chegou a marcar.
+   *
+   * ⚠ E A LIMPEZA ENTRA NO MESMO DELTA DO CUSTO, pelo motivo que o Absorvente
+   * já documenta ali embaixo: marcar 1 e limpar 1 é líquido zero, e duas
+   * chamadas fariam a ficha passar por um estado intermediário que dispara
+   * gatilhos sem que nada tenha mudado de verdade.
+   */
+  let limpaEstresse = 0, limpaArmadura = 0;
+  const limpezasAoMarcarPv = [];
+  if (pv > 0 && typeof efeitosAoMarcarPvDaFicha_ === 'function') {
+    const automaticos = efeitosAoMarcarPvDaFicha_(ficha);
+    for (let i = 0; i < automaticos.length; i++) {
+      const e = automaticos[i] || {};
+      // A condição NEGATIVA do Tocado pelo Valor: "sem marcar um Ponto de
+      // Armadura". Conta o total deste dano, inclusive o Ponto extra do
+      // Preparar e os dois do Vítreo.
+      if (e.exigeSemMarcarArmadura === true && custoArmadura > 0) continue;
+      const limpa = e.limpa || {};
+      const pedidoEstresse = Math.max(0, Math.trunc(Number(limpa.estresse)) || 0);
+      const pedidoArmadura = Math.max(0, Math.trunc(Number(limpa.armadura)) || 0);
+      const estresseDisponivel = Math.max(0, estresseAtual + custoEstresse - limpaEstresse);
+      const armaduraDisponivel = Math.max(0, armaduraAtual + custoArmadura - limpaArmadura -
+        (absorvente ? absorvente.armaduraLimpa : 0));
+      const limpouEstresse = Math.min(pedidoEstresse, estresseDisponivel);
+      const limpouArmadura = Math.min(pedidoArmadura, armaduraDisponivel);
+      limpaEstresse += limpouEstresse;
+      limpaArmadura += limpouArmadura;
+      limpezasAoMarcarPv.push({
+        carta: e.nome, estresse: limpouEstresse, armadura: limpouArmadura,
+        // Sem nada marcado não há o que limpar. A carta não custa nada, então
+        // isso não é erro — mas fica dito, para ninguém procurar o efeito.
+        nadaParaLimpar: (pedidoEstresse > limpouEstresse) || (pedidoArmadura > limpouArmadura)
+      });
+    }
   }
 
   const mudancasInternas = [];
@@ -4695,7 +5052,8 @@ function aplicarDanoNaFicha_(ficha, a) {
   }
   if (custoEsperanca) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'esperanca', delta: -custoEsperanca }));
   if (custoFoco) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'foco', delta: -custoFoco }));
-  if (custoEstresse) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'estresseMarcado', delta: custoEstresse }));
+  const deltaEstresse = custoEstresse - limpaEstresse;
+  if (deltaEstresse) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'estresseMarcado', delta: deltaEstresse }));
   /*
    * O Absorvente entra aqui, no MESMO delta do custo, e não numa chamada à
    * parte: marcar 1 pela mitigação e limpar 1 pelo Absorvente é líquido zero,
@@ -4703,7 +5061,7 @@ function aplicarDanoNaFicha_(ficha, a) {
    * dispara gatilhos (o Doloroso cobra Estresse por PA marcado) sem que nada
    * de verdade tenha mudado.
    */
-  const deltaArmadura = custoArmadura - (absorvente ? absorvente.armaduraLimpa : 0);
+  const deltaArmadura = custoArmadura - (absorvente ? absorvente.armaduraLimpa : 0) - limpaArmadura;
   if (deltaArmadura) mudancasInternas.push(ajustarRecurso_(ficha, { chave: 'armaduraMarcada', delta: deltaArmadura }));
   let toquePv = null;
   if (pv > 0) {
@@ -4793,6 +5151,22 @@ function aplicarDanoNaFicha_(ficha, a) {
   else if (tocadoEsplendor) partes.push('Tocado do Esplendor substitui ' + tocadoEsplendor.pvSubstituidos +
     ' PV por ' + tocadoEsplendor.pvSubstituidos + (tocadoEsplendor.opcao === 'estresse' ? ' de Estresse' : ' de Esperança'));
   else if (pv !== contaAposArmadura.pv) partes.push('reações deixam ' + pv + ' PV');
+  if (armaduraInabalavel) partes.push(armaduraInabalavel.carta + ': d' +
+    armaduraInabalavel.lados + ' = ' + armaduraInabalavel.dados.join(', ') +
+    (armaduraInabalavel.evitouMarcar
+      ? ' — saiu ' + armaduraInabalavel.sucessoEm + ', o Ponto de Armadura não é marcado'
+      : ' — nenhum ' + armaduraInabalavel.sucessoEm + ', o Ponto é marcado'));
+  if (reflexoArcano) partes.push(reflexoArcano.carta + ': ' + reflexoArcano.esperanca +
+    ' Esperança e d' + reflexoArcano.lados + ' = ' + reflexoArcano.dados.join(', ') +
+    ' — nenhum ' + reflexoArcano.sucessoEm + ', o dano segue');
+  for (let i = 0; i < limpezasAoMarcarPv.length; i++) {
+    const L = limpezasAoMarcarPv[i];
+    partes.push(L.nadaParaLimpar
+      ? L.carta + ' não achou o que limpar'
+      : L.carta + ' limpa ' + (L.estresse ? L.estresse + ' Estresse' : '') +
+        (L.estresse && L.armadura ? ' e ' : '') +
+        (L.armadura ? L.armadura + ' Ponto de Armadura' : ''));
+  }
 
   const saida = {
     tipo: 'dano',
@@ -4831,6 +5205,9 @@ function aplicarDanoNaFicha_(ficha, a) {
       origemDoRecado:amaldicoada.fonte + ' · ' + amaldicoada.caracteristica
     } : null,
     custos: { estresse: custoEstresse, esperanca: custoEsperanca, armadura: custoArmadura },
+    limpezasAoMarcarPv: limpezasAoMarcarPv,
+    armaduraInabalavel: armaduraInabalavel,
+    reflexoArcano: reflexoArcano,
     detalhes: mudancasInternas,
     aviso: partes.join(' · ') + '.'
   };
@@ -5065,11 +5442,22 @@ function prepararBonusDaFicha_(ficha, dados) {
   const texto = String((dados || {}).texto || '').trim();
   if (!texto) return null;
   const lista = bonusPreparadosDaFicha_(ficha);
+  /*
+   * ⚠ A DURAÇÃO PASSOU A SER DECLARADA. Antes havia uma só, implícita: o fim da
+   * cena apagava tudo. O Periapto do insone vale "até seu próximo descanso", que
+   * é mais longo que uma cena — e sem esta linha ele seria apagado antes da hora,
+   * silenciosamente.
+   *
+   * O padrão continua `fim-da-cena`, para nenhum bônus antigo mudar de
+   * comportamento por causa de um campo que ele não declara.
+   */
+  const duracao = String((dados || {}).duracao || 'fim-da-cena');
   const registro = {
     id: 'bonus-' + (typeof agoraIso_ === 'function' ? agoraIso_() : String(Date.now())) +
       '-' + Math.floor(Math.random() * 1000),
     fonte: String((dados || {}).fonte || '').slice(0, 60),
     texto: texto.slice(0, 160),
+    duracao: duracao,
     em: (typeof agoraIso_ === 'function') ? agoraIso_() : ''
   };
   lista.push(registro);
@@ -5079,11 +5467,21 @@ function prepararBonusDaFicha_(ficha, dados) {
   return registro;
 }
 
-/** Limpa os bônus preparados. É o que o fim da cena chama. */
-function limparBonusPreparadosDaFicha_(ficha) {
-  const quantos = bonusPreparadosDaFicha_(ficha).length;
-  ficha.bonusPreparados = [];
-  return quantos;
+/**
+ * Limpa os bônus preparados de UMA duração. É o que o fim da cena chama.
+ *
+ * ⚠ O FILTRO É POR DURAÇÃO, não "apaga tudo". Um bônus que vale até o próximo
+ * descanso não pode morrer no fim da cena — e sem o filtro morreria em silêncio,
+ * que é o defeito de sempre.
+ */
+function limparBonusPreparadosDaFicha_(ficha, duracao) {
+  const alvo = String(duracao || 'fim-da-cena');
+  const lista = bonusPreparadosDaFicha_(ficha);
+  const ficam = lista.filter(function (b) {
+    return String((b || {}).duracao || 'fim-da-cena') !== alvo;
+  });
+  ficha.bonusPreparados = ficam;
+  return lista.length - ficam.length;
 }
 
 /**
@@ -6096,6 +6494,203 @@ function encerrarFicha_(ficha, motivo, nota) {
  * ⚠ SÓ COM OS PONTOS DE VIDA CHEIOS. O gatilho da regra é marcar o último PV;
  * sem essa trava, um toque errado no diálogo aposentaria um personagem vivo.
  */
+/**
+ * Passivos de saque CARREGADO na mochila.
+ *
+ * ⚠ DIFERENTE do `saquesAtivosDaFicha_`, que exige `emUso` sempre. Aqui quem
+ * manda é a DECLARAÇÃO: só filtra por em uso o passivo que pediu `exigeEmUso`.
+ * A Pena de Fênix diz "se você tiver pelo menos uma CONSIGO" — ter basta, e
+ * obrigar a marcar em uso seria inventar uma condição que o texto não tem.
+ */
+function passivosDeSaqueDaMochila_(ficha) {
+  const lista = Array.isArray((ficha || {}).inventario) ? ficha.inventario : [];
+  const saida = [];
+  for (let i = 0; i < lista.length; i++) {
+    const reg = lista[i] || {};
+    if (!reg.id || typeof acharItem_ !== 'function') continue;
+    const item = acharItem_(reg.id);
+    if (!item || item.tipo !== 'saque') continue;
+    const passivo = item.efeitoSaquePassivo || null;
+    if (!passivo) continue;
+    if (passivo.exigeEmUso === true && reg.emUso !== true) continue;
+    saida.push({ registro:reg, item:item, passivo:passivo });
+  }
+  return saida;
+}
+
+/**
+ * Soma um bônus de movimento de morte declarado por saque carregado.
+ *
+ * ⚠ NÃO ACUMULA POR QUANTIDADE. "Pelo menos uma Pena de Fênix" é uma condição,
+ * não um multiplicador — duas penas na mochila não viram +2. Um item, um bônus.
+ */
+function bonusDeMovimentoDeMorteDeSaque_(ficha, chave) {
+  const ativos = passivosDeSaqueDaMochila_(ficha);
+  const fontes = [];
+  let total = 0;
+  for (let i = 0; i < ativos.length; i++) {
+    const regra = ((ativos[i].passivo || {}).movimentoDeMorte) || {};
+    const valor = Math.max(0, Math.trunc(Number(regra[chave])) || 0);
+    if (!valor) continue;
+    total += valor;
+    fontes.push({ item:ativos[i].item.nome || ativos[i].item.id, valor:valor });
+  }
+  return { total:total, fontes:fontes };
+}
+
+const LIMITE_PEDIDOS = 8;
+
+/** Os pedidos abertos de uma ficha, sempre como lista. */
+function pedidosDaFicha_(ficha) {
+  if (!Array.isArray((ficha || {}).pedidos)) ficha.pedidos = [];
+  return ficha.pedidos;
+}
+
+/**
+ * UM ANEL PEDE; QUEM USA O OUTRO É QUE DECIDE.
+ *
+ * ⚠ ESTA FUNÇÃO NÃO TIRA NADA DE NINGUÉM, e é esse o ponto. Ela escreve um
+ * PEDIDO na ficha do par — texto, ids e um número — e para aí. O recurso só sai
+ * quando a outra pessoa aceita, na tela dela, pela porta normal da ficha dela.
+ *
+ * É assim que o fluxo que a Vanessa decidiu resolve o E116 sem abrir exceção: o
+ * que cruza de uma ficha para a outra é a PERGUNTA, nunca o custo.
+ *
+ * ⚠ E OS DOIS LADOS PRECISAM DO ANEL EM USO. "Duas criaturas podem usar este par
+ * de anéis": pedir a quem não está usando o par não é a regra da carta, e a
+ * recusa diz qual dos dois lados está faltando.
+ */
+function criarPedidoDeAnel_(fichaOrigem, fichaAlvo, a) {
+  const itemId = String((a || {}).itemId || '');
+  if (!itemId) return { erro:'Diga qual item está pedindo.' };
+  const item = (typeof acharItem_ === 'function') ? acharItem_(itemId) : null;
+  const regra = item ? (((item.efeitoSaquePassivo || {}).pedeAoPar) || null) : null;
+  if (!item || !regra) return { erro:'Este item não pede nada a quem usa o par.' };
+
+  const temEmUso = function (ficha) {
+    const lista = Array.isArray((ficha || {}).inventario) ? ficha.inventario : [];
+    for (let i = 0; i < lista.length; i++) {
+      const reg = lista[i] || {};
+      if (String(reg.id || '') !== itemId) continue;
+      if ((item.efeitoSaquePassivo || {}).exigeEmUso === true && reg.emUso !== true) continue;
+      return true;
+    }
+    return false;
+  };
+  if (!temEmUso(fichaOrigem)) {
+    return { erro:item.nome + ': marque o seu anel como em uso antes de pedir.' };
+  }
+  if (!temEmUso(fichaAlvo)) {
+    return { erro:item.nome + ': quem você escolheu não está usando o outro anel do par.' };
+  }
+
+  const escolha = regra.quantidadeEscolhida || {};
+  const minimo = Math.max(1, Math.trunc(Number(escolha.minimo)) || 1);
+  const maximo = Math.max(minimo, Math.trunc(Number(escolha.maximo)) || minimo);
+  const bruto = (a || {})[String(escolha.campo || 'quantidade')];
+  const quantidade = Math.trunc(Number(bruto));
+  if (!isFinite(quantidade) || Number(bruto) !== quantidade ||
+      quantidade < minimo || quantidade > maximo) {
+    return { erro:item.nome + ': escolha uma quantidade inteira de ' + minimo + ' a ' + maximo + '.' };
+  }
+
+  /*
+   * ⚠ O PEDIDO IMPOSSÍVEL É RECUSADO AGORA, não na hora do sim. Pedir 3 de
+   * Esperança a quem tem 1 faria a outra pessoa aceitar uma coisa que não pode
+   * acontecer — e descobrir isso depois de dizer sim.
+   */
+  const recurso = String(regra.recurso || '');
+  const recursosAlvo = (fichaAlvo || {}).recursos || {};
+  if (recurso === 'esperanca') {
+    const tem = Math.max(0, Number(recursosAlvo.esperanca) || 0);
+    if (tem < quantidade) {
+      return { erro:item.nome + ': quem usa o outro anel tem ' + tem + ' de Esperança, e você pediu ' + quantidade + '.' };
+    }
+  } else if (recurso === 'estresseMarcado') {
+    const atual = Math.max(0, Number(recursosAlvo.estresseMarcado) || 0);
+    const teto = Math.max(0, Number(recursosAlvo.estresseMaximo) || 0);
+    if (!teto || atual + quantidade > teto) {
+      return { erro:item.nome + ': não sobra Estresse na trilha de quem usa o outro anel para marcar ' + quantidade + '.' };
+    }
+  } else {
+    return { erro:item.nome + ': recurso de pedido inválido no catálogo.' };
+  }
+
+  const pedidos = pedidosDaFicha_(fichaAlvo);
+  if (pedidos.some(function (p) { return String((p || {}).itemId || '') === itemId; })) {
+    return { erro:item.nome + ': já existe um pedido deste anel esperando resposta.' };
+  }
+
+  const deNome = String(((fichaOrigem || {}).identidade || {}).nome || 'Quem usa o outro anel');
+  const registro = {
+    id: 'pedido-' + (typeof agoraIso_ === 'function' ? agoraIso_() : String(Date.now())) +
+      '-' + Math.floor(Math.random() * 1000),
+    de: String(((fichaOrigem || {}).identidade || {}).id || ''),
+    deNome: deNome.slice(0, 60),
+    item: String(item.nome || itemId).slice(0, 60),
+    itemId: itemId,
+    recurso: recurso,
+    quantidade: quantidade,
+    texto: (deNome + ' ' + String(regra.textoDoPedido || '').replace('{quantidade}', String(quantidade))).slice(0, 200),
+    em: (typeof agoraIso_ === 'function') ? agoraIso_() : ''
+  };
+  pedidos.push(registro);
+  if (pedidos.length > LIMITE_PEDIDOS) fichaAlvo.pedidos = pedidos.slice(-LIMITE_PEDIDOS);
+
+  return {
+    tipo:'pedido', acao:'criar', pedido:registro, item:item.nome,
+    aviso:item.nome + ': o pedido foi para ' +
+      String(((fichaAlvo || {}).identidade || {}).nome || 'a outra ficha') +
+      '. Nada saiu de ficha nenhuma até ela aceitar.'
+  };
+}
+
+/**
+ * A RESPOSTA — e é aqui, e só aqui, que o recurso se move.
+ *
+ * ⚠ ACONTECE NA PRÓPRIA FICHA de quem responde, pela porta normal dela. Aceitar
+ * gasta a Esperança (ou marca o Estresse) de quem aceitou; recusar apaga o
+ * pedido e não cobra nada de ninguém.
+ */
+function responderPedidoDaFicha_(ficha, a) {
+  const id = String((a || {}).pedido || '');
+  const resposta = chaveTexto_((a || {}).resposta || '');
+  if (resposta !== 'aceitar' && resposta !== 'recusar') {
+    return { erro:'Diga se você aceita ou recusa o pedido.' };
+  }
+  const pedidos = pedidosDaFicha_(ficha);
+  const indice = pedidos.findIndex(function (p) { return String((p || {}).id || '') === id; });
+  if (indice < 0) return { erro:'Este pedido já não está esperando resposta.' };
+  const pedido = pedidos[indice];
+
+  if (resposta === 'recusar') {
+    pedidos.splice(indice, 1);
+    return {
+      tipo:'pedido', acao:'recusar', pedido:pedido,
+      aviso:pedido.item + ': pedido recusado. Nada foi tirado da sua ficha.'
+    };
+  }
+
+  const delta = (pedido.recurso === 'esperanca') ? -pedido.quantidade : pedido.quantidade;
+  const mudanca = ajustarRecurso_(ficha, { chave:pedido.recurso, delta:delta });
+  if (mudanca && mudanca.erro) return mudanca;
+  pedidos.splice(indice, 1);
+
+  const nomeRecurso = (pedido.recurso === 'esperanca') ? 'Esperança' : 'Estresse';
+  return {
+    tipo:'pedido', acao:'aceitar', pedido:pedido, detalhes:[mudanca],
+    /*
+     * O recado vai para o painel do Mestre porque a outra ficha não tem como
+     * ser avisada daqui — e a mesa precisa saber que o sim aconteceu.
+     */
+    efeitoMesa:{ recado:pedido.item + ': ' +
+      String(((ficha || {}).identidade || {}).nome || 'a outra ficha') + ' aceitou o pedido de ' +
+      pedido.deNome + ' — ' + pedido.quantidade + ' de ' + nomeRecurso + '.' },
+    aviso:pedido.item + ': aceito. ' + pedido.quantidade + ' de ' + nomeRecurso +
+      (pedido.recurso === 'esperanca' ? ' saiu da sua ficha.' : ' foi marcado na sua ficha.')
+  };
+}
+
 function ajustarMovimentoDeMorte_(ficha, a) {
   if (ficha.encerrada) {
     return { erro: 'Esta ficha já foi encerrada.' };
@@ -6140,8 +6735,20 @@ function ajustarMovimentoDeMorte_(ficha, a) {
     ficha.inconsciente = true;
     if (!Array.isArray(ficha.cicatrizes)) ficha.cicatrizes = [];
 
+    /*
+     * PENA DE FÊNIX: "se você tiver pelo menos uma Pena de Fênix consigo quando
+     * cair inconsciente, receberá um bônus de +1 na jogada que fizer para
+     * determinar se ganhará uma cicatriz".
+     *
+     * ⚠ O BÔNUS AJUDA SUBINDO O DADO, porque a cicatriz acontece quando o dado
+     * NÃO PASSA do nível. Somar aqui é o que a pena faz: empurra o resultado
+     * para cima do nível.
+     */
+    const ajudaCicatriz = bonusDeMovimentoDeMorteDeSaque_(ficha, 'bonusJogadaDeCicatriz');
+    const dadoComAjuda = dado + ajudaCicatriz.total;
+
     // ⚠ "equal to or under": o dado IGUAL ao nível também cicatriza.
-    const cicatrizou = dado <= nivel;
+    const cicatrizou = dadoComAjuda <= nivel;
     let fim = null;
     if (cicatrizou) {
       if (ficha.cicatrizes.length >= LIMITE_CICATRIZES) {
@@ -6163,13 +6770,24 @@ function ajustarMovimentoDeMorte_(ficha, a) {
     return {
       tipo: 'morte', movimento: 'evitar',
       dado: dado, nivel: nivel, cicatrizou: cicatrizou,
+      dadoComAjuda: dadoComAjuda,
+      ajudaDeSaque: ajudaCicatriz.total ? ajudaCicatriz : null,
       cicatrizes: ficha.cicatrizes.length,
       encerrada: fim,
       alerta: fim
         ? 'A última cicatriz apagou o último espaço de Esperança: a jornada deste personagem acabou (p.106).'
-        : (cicatrizou
+        : ((cicatrizou
           ? 'O dado (' + dado + ') não passou do nível ' + nivel + ': uma cicatriz apaga um espaço de Esperança para sempre.'
-          : 'O dado (' + dado + ') passou do nível ' + nivel + ': sem cicatriz desta vez.'),
+          : 'O dado (' + dado + ') passou do nível ' + nivel + ': sem cicatriz desta vez.') +
+          /*
+           * ⚠ O NÚMERO QUE VALEU TEM DE APARECER. Dizer só "o dado (3)" quando a
+           * conta usou 4 faria a pessoa achar que o app errou — e ela não teria
+           * como saber que a pena entrou.
+           */
+          (ajudaCicatriz.total
+            ? ' ' + ajudaCicatriz.fontes.map(function (f) { return f.item + ' somou +' + f.valor; }).join(', ') +
+              ', então a conta usou ' + dadoComAjuda + '.'
+            : '')),
       aviso: fim ? '' : 'Inconsciente até recuperar 1 Ponto de Vida ou até um descanso longo (p.106).'
     };
   }
@@ -6240,7 +6858,17 @@ function ajustarMovimentoDeMorte_(ficha, a) {
         dadoCru:dadoCru, dadoComBonus:dadoCru + gastoAbencoada };
     }
 
-    const esperanca = dadoCru + gastoAbencoada;
+    /*
+     * RELICÁRIO DO SANTO SEM VISÃO: "+1 no seu Dado de Esperança ao realizar o
+     * movimento de morte Arriscar Tudo".
+     *
+     * ⚠ ELE ENTRA ONDE A ABENÇOADA ENTRA, E FICA FORA DO CRÍTICO PELA MESMA
+     * RAZÃO. Crítico em Daggerheart é os dois DADOS mostrando o mesmo número;
+     * somar aqui deixaria o crítico à venda. O bônus vale para quem ganha a
+     * comparação e para quanto se limpa — que é onde o item existe para ajudar.
+     */
+    const ajudaArriscar = bonusDeMovimentoDeMorteDeSaque_(ficha, 'bonusDadoEsperancaArriscarTudo');
+    const esperanca = dadoCru + gastoAbencoada + ajudaArriscar.total;
 
     // Dados iguais são SUCESSO CRÍTICO — a mesma regra de qualquer jogada, e
     // por isso a comparação é entre os DADOS, não entre os totais.
@@ -6251,8 +6879,10 @@ function ajustarMovimentoDeMorte_(ficha, a) {
       return anexarReacoesDeEsperanca_({
         tipo: 'morte', movimento: 'arriscar', resultado: 'critico',
         dadoEsperanca: dadoCru, dadoMedo: medo, abencoada: abencoada,
+        ajudaDeSaque: ajudaArriscar.total ? ajudaArriscar : null,
         alerta: 'Crítico: de pé, com os Pontos de Vida e o Estresse todos limpos.' +
-          (abencoada ? ' (A Esperança gasta na Abençoada não voltou — o crítico olha os dados.)' : '')
+          (abencoada ? ' (A Esperança gasta na Abençoada não voltou — o crítico olha os dados.)' : '') +
+          (ajudaArriscar.total ? ' (O crítico olha os dados, então o bônus do saque não fez diferença aqui.)' : '')
       }, pagoAbencoada);
     }
 
@@ -6296,6 +6926,8 @@ function ajustarMovimentoDeMorte_(ficha, a) {
       return anexarReacoesDeEsperanca_({
         tipo: 'morte', movimento: 'arriscar', resultado: 'veu',
         dadoEsperanca: esperanca, dadoMedo: medo, encerrada: fim, abencoada: abencoada,
+        dadoEsperancaCru: dadoCru,
+        ajudaDeSaque: ajudaArriscar.total ? ajudaArriscar : null,
         alerta: 'O Medo veio mais alto (' + medo + ' contra ' + esperanca + '): ' +
           ((ficha.identidade || {}).nome || 'o personagem') + ' atravessa o véu.' +
           (abencoada ? ' A Esperança gasta na Abençoada não volta — ela sai antes da jogada.' : '')
@@ -6337,11 +6969,17 @@ function ajustarMovimentoDeMorte_(ficha, a) {
     return anexarReacoesDeEsperanca_({
       tipo: 'morte', movimento: 'arriscar', resultado: 'esperanca',
       dadoEsperanca: esperanca, dadoMedo: medo, abencoada: abencoada,
+      dadoEsperancaCru: dadoCru,
+      ajudaDeSaque: ajudaArriscar.total ? ajudaArriscar : null,
       limpou: { pontosDeVida: paraPV, estresse: paraEstresse },
       alerta: 'A Esperança veio mais alta (' + esperanca + ' contra ' + medo + '): de pé, com ' +
         paraPV + ' de Pontos de Vida e ' + paraEstresse + ' de Estresse limpos.' +
         (abencoada ? ' Abençoada: o dado deu ' + abencoada.dadoCru + ' e ' +
-          abencoada.esperancaGasta + ' de Esperança levou a ' + abencoada.dadoComBonus + '.' : ''),
+          abencoada.esperancaGasta + ' de Esperança levou a ' + abencoada.dadoComBonus + '.' : '') +
+        (ajudaArriscar.total
+          ? ' ' + ajudaArriscar.fontes.map(function (f) { return f.item + ' somou +' + f.valor; }).join(', ') +
+            ' ao Dado de Esperança.'
+          : ''),
       aviso: sobrou ? ('Sobraram ' + sobrou + ' do dado sem uso — as trilhas não tinham mais o que limpar.') : ''
     }, pagoAbencoada);
   }

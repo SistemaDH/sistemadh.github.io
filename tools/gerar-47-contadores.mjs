@@ -68,6 +68,15 @@ for (const c of d.contadores) {
   // característica nomeada aqui.
   if (c.exigeCaracteristica) campos.push(`exigeCaracteristica: ${j(c.exigeCaracteristica)}`);
   if (c.persisteSemRef) campos.push('persisteSemRef: true');
+  /*
+   * ⚠ PRAZO COM CONSEQUÊNCIA DECLARADA — hoje só o Chá da Morte. O contador dele
+   * não zera em gatilho nenhum, de propósito, e o descanso longo AVISA em vez de
+   * apagar: apagar sozinho seria apagar a única prova de que o prazo venceu.
+   *
+   * Este campo teve de ser acrescentado aqui porque o gerador emite uma lista
+   * FIXA de campos — declarar no JSON não bastava, e o teste foi quem cobrou.
+   */
+  if (c.prazoNoDescansoLongo) campos.push(`prazoNoDescansoLongo: ${j(c.prazoNoDescansoLongo)}`);
   if (c.bonusProximaJogada) campos.push(`bonusProximaJogada: ${j(c.bonusProximaJogada)}`);
   if (c.modificadorTraco) campos.push(`modificadorTraco: ${j(c.modificadorTraco)}`);
   if (c.modificadorProficiencia !== undefined) campos.push(`modificadorProficiencia: ${j(c.modificadorProficiencia)}`);

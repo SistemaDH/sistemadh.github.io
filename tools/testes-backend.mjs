@@ -1791,7 +1791,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 197 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 12 de equipamento, 24 de consumível e 16 de loot', () => {
+teste('o catálogo tem 200 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 12 de equipamento, 25 de consumível e 18 de loot', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1818,17 +1818,29 @@ teste('o catálogo tem 197 contadores: 113 de carta, 25 de classe/subclasse, 4 d
    * FORTUNA (Manto de Cloverweave), que precisou de um canal da ficha do
    * jogador para o Medo da mesa.
    */
-  igual(Object.keys(CONTADORES).length, 197);
+  /*
+   * Os dois mais novos são de LOOT e saíram da lista dos 13 pendentes: o SINO DO
+   * VIAJANTE (1 por descanso longo) e o DIADEMA DO FAGÓFOBO (1 por cena). Os dois
+   * eram "pendente-deterministico" por falta de contador — o efeito de um é ficção
+   * e o do outro depende de um d4 da mesa, mas o LIMITE é contável, e limite sem
+   * contador é a mesa lembrando de cabeça.
+   */
+  /*
+   * O mais novo é o PRAZO DO CHÁ DA MORTE — o único contador do catálogo com
+   * `zeraEm` vazio de propósito: deixar o descanso longo apagá-lo sozinho seria
+   * apagar a única prova de que o prazo venceu.
+   */
+  igual(Object.keys(CONTADORES).length, 200);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 113);
   igual(porOrigem['caracteristica-classe'], 5);
   igual(porOrigem['caracteristica-subclasse'], 20);
-  igual(porOrigem['consumivel'], 24);
+  igual(porOrigem['consumivel'], 25);
   igual(porOrigem['caracteristica-ancestralidade'], 4);
   igual(porOrigem['caracteristica-comunidade'], 3);
   igual(porOrigem['equipamento'], 12);
-  igual(porOrigem['loot'], 16);
+  igual(porOrigem['loot'], 18);
 });
 
 teste('"uma vez por" conta o uso GASTO, e o gatilho certo o apaga', () => {
@@ -7825,49 +7837,71 @@ teste('todo verbete tem página dentro do livro e resumo que cabe no celular', (
   verdade(d.verbetes.length >= 90, 'esperava os ~93 verbetes, achei ' + d.verbetes.length);
 });
 
-teste('⚠ o montador de verbetes está DEFASADO e não pode rodar por engano',()=>{
+teste('⚠ o montador de verbetes voltou a ser o DONO do arquivo',()=>{
   /*
-   * ARMADILHA REAL, ACHADA DA PIOR FORMA: rodando.
+   * ARMADILHA REAL, ACHADA DA PIOR FORMA: rodando. Os fontes Python tinham 93
+   * verbetes e o `data/verbetes.json` tinha 108 — montar APAGAVA 15, inclusive
+   * os do Esperança e Medo. Foi preciso restaurar de um backup de minutos antes.
    *
-   * `data/verbetes.json` é montado por tools/montar-verbetes.py a partir de
-   * tools/verbetes/*.py. Só que o JSON seguiu em frente e os fontes Python não:
-   * rodar o montador hoje escreve a versão 1, com 93 verbetes, e APAGA os 15
-   * que entraram depois — inclusive `reserva-de-adversario` e
-   * `evolucao-de-adversario`, do Esperança e Medo.
+   * ⚠ E O ESTRAGO SILENCIOSO ERA MAIOR QUE O SUSTO. Por estarem fora do gerador,
+   * aqueles 15 não passavam por conferência NENHUMA (página, "veja" apontando
+   * para o nada, duas palavras disputando o mesmo verbete). Pior: os dois
+   * arquivos se afastaram NOS DOIS SENTIDOS — quatro verbetes tinham texto
+   * diferente, e o do Avanço ainda dizia "a lista do seu patamar" no fichário
+   * enquanto o JSON já seguia o SRD 2.0 ("espaços livres do patamar atual ou de
+   * qualquer inferior"). Rodar o montador teria devolvido a REGRA VELHA para o
+   * popup que a mesa lê.
    *
-   * Descobri isso executando o montador e tendo de restaurar o arquivo. Este
-   * teste existe para que a próxima pessoa descubra LENDO, não restaurando.
-   *
-   * Enquanto o montador não for atualizado, `data/verbetes.json` é a fonte —
-   * e os fontes Python são mantidos em paralelo só para não reintroduzirem o
-   * vocabulário antigo se alguém os rodar.
+   * Agora os 108 saem dos fontes, e `npm run teste:verbetes` confere byte a byte
+   * — o mesmo contrato do conferir-gerados para os .gs.
    */
   const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/verbetes.json'), 'utf8'));
-  igual(d.versao, 2, 'a versão caiu para 1 — alguém rodou tools/montar-verbetes.py');
+  igual(d.versao, 2);
   verdade(d.verbetes.length >= 108,
-    'o arquivo perdeu verbetes (tem ' + d.verbetes.length + ', esperava 108+) — ' +
-    'quase certamente tools/montar-verbetes.py foi rodado e sobrescreveu o JSON');
+    'o arquivo perdeu verbetes (tem ' + d.verbetes.length + ', esperava 108+)');
   ['reserva-de-adversario', 'evolucao-de-adversario', 'jogada-de-dano'].forEach((id) => {
     verdade(d.verbetes.some((v) => v.id === id), 'verbete ' + id + ' desapareceu');
   });
-  // e os fontes Python não podem voltar a dizer "Rolagem de dano"
+
+  // os 15 de fora do livro da Jambô têm fichário próprio, com a fonte declarada
+  const suplementos = fs.readFileSync(path.join(RAIZ, 'tools/verbetes/grupo_suplementos.py'), 'utf8');
+  verdade(/'reserva-de-adversario'/.test(suplementos) && /'the-witherwild'/.test(suplementos),
+    'os verbetes de fora do livro saíram do fichário');
+  const deFora = d.verbetes.filter((v) => v.fonteRotulo || v.fonteSrd2);
+  igual(deFora.length, 15, 'esperava 15 verbetes de outra fonte');
+  deFora.forEach((v) => verdade(v.pagina > 0, v.id + ': página inválida'));
+
+  // e o vocabulário corrigido não pode voltar pelo fichário
+  const recursos = fs.readFileSync(path.join(RAIZ, 'tools/verbetes/grupo_recursos.py'), 'utf8');
+  verdade(/Jogada em Equipe/.test(recursos) && !/jogada em dupla/.test(recursos),
+    'o fichário voltou a dizer "jogada em dupla"');
+  const ficha = fs.readFileSync(path.join(RAIZ, 'tools/verbetes/grupo_ficha.py'), 'utf8');
+  verdade(/patamar inferior/.test(ficha),
+    'o verbete do Avanço voltou à regra velha, de antes do SRD 2.0');
+
   const fonte = fs.readFileSync(path.join(RAIZ, 'tools/verbetes/grupo_dano.py'), 'utf8');
   verdade(/'id': 'jogada-de-dano'/.test(fonte), 'o fonte Python voltou ao id antigo');
   verdade(!/'rolagem-de-dano'/.test(fonte), 'sobrou referência ao id antigo no fonte Python');
 
   /*
-   * E O MONTADOR AGORA SE RECUSA, em vez de sobrescrever. Descobri o problema
-   * rodando e tendo de restaurar o arquivo; a próxima pessoa recebe uma mensagem
-   * dizendo quantas entradas seriam apagadas. Quem quiser rodar de propósito
-   * passa `--sobrescrever-mesmo-sabendo`.
+   * ⚠ A TRAVA CONTINUA, e ela é o que sobra do estrago: montar nunca pode
+   * escrever MENOS verbetes do que o arquivo tem. Se puder, alguém escreveu
+   * direto no JSON de novo.
    */
   const montador = fs.readFileSync(path.join(RAIZ, 'tools/montar-verbetes.py'), 'utf8');
-  verdade(/def recusar_se_estiver_defasado/.test(montador),
-    'o montador voltou a poder rodar sem aviso: ele APAGA 15 verbetes');
+  verdade(/def recusar_se_perder_verbete/.test(montador),
+    'o montador voltou a poder rodar sem trava');
+  verdade(/recusar_se_perder_verbete\(\)/.test(montador), 'a trava existe mas ninguém a chama');
   verdade(/--sobrescrever-mesmo-sabendo/.test(montador),
     'não há mais como rodar de propósito — a recusa não pode ser um beco sem saída');
-  verdade(/recusar_se_estiver_defasado\(\)/.test(montador),
-    'a recusa existe mas ninguém a chama');
+  verdade(/--conferir/.test(montador), 'o modo que confere byte a byte sumiu');
+
+  // o conferidor precisa estar NA BATERIA, senão ele é promessa e não garantia
+  const pacote = JSON.parse(fs.readFileSync(path.join(RAIZ, 'package.json'), 'utf8'));
+  verdade(/--conferir/.test(pacote.scripts['teste:verbetes'] || ''),
+    'sumiu o script que confere os verbetes');
+  verdade(/teste:verbetes/.test(pacote.scripts['teste:tudo'] || ''),
+    'o conferidor de verbetes saiu do teste:tudo');
 });
 
 teste('nenhuma palavra aciona DOIS verbetes', () => {
@@ -8912,16 +8946,94 @@ teste('Aura Confusa usa somente d6 digitados: 5+ consome camada; falha encerra a
   igual(invalida.contadores['estado:carta:arcana:aura-confusa:camadas'].valor, 2);
 });
 
-teste('Reflexo Arcano cobra a Esperança escolhida e qualquer 6 reflete, sem RNG do app', () => {
+teste('⚠ Reflexo Arcano reage NA JANELA DE DANO: qualquer 6 reflete e nada é marcado', () => {
+  /*
+   * O DEFEITO: o Reflexo Arcano não aparecia na janela de dano, e o botão do
+   * painel cobrava a Esperança num momento em que o dano ainda não existe.
+   *
+   * ⚠ ELE NÃO CABE NUMA CAIXINHA, e é a única das seis assim: quantas
+   * Esperanças gastar é decisão de quem joga, e o número de d6 sai dessa
+   * decisão. Por isso a janela pergunta o número E os resultados.
+   *
+   * ⚠ E A OUTRA METADE DA REGRA NÃO É DESTA FICHA. "causando o dano nele" é
+   * dano no CONJURADOR, que é adversário do Mestre. O app faz a metade dele:
+   * cobra, confere, não marca nada e manda o recado com o número pronto.
+   */
   const f = fichaArcanaN10_(['arcana-reflexo-arcano','arcana-andar-na-parede']);
-  let r = contexto.aplicarAjustes_(f, [{ tipo:'usarCarta', carta:'arcana-reflexo-arcano', esperancasGastas:2, dadosReflexoArcano:[2,6] }]);
-  igual(r.erros, []);
-  igual(f.recursos.esperanca, 4);
-  igual(r.mudancas[0].dadosManuais.sucesso, true);
-  const invalida = fichaArcanaN10_(['arcana-reflexo-arcano','arcana-andar-na-parede']);
-  r = contexto.aplicarAjustes_(invalida, [{ tipo:'usarCarta', carta:'arcana-reflexo-arcano', esperancasGastas:2, dadosReflexoArcano:[6] }]);
-  verdade(r.erros.length > 0);
-  igual(invalida.recursos.esperanca, 6, 'dado faltando não cobra recurso');
+  const pvAntes = f.recursos.pontosDeVidaMarcados || 0;
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:f.defesas.limiarGrave, tipoDeDano:'magico',
+    esperancasReflexoArcano:2, dadosReflexoArcano:[2,6], reacoes:[]
+  }]);
+  igual(r.erros, [], JSON.stringify(r.erros));
+  igual(f.recursos.esperanca, 4, 'duas Esperanças, dois d6');
+  igual(f.recursos.pontosDeVidaMarcados, pvAntes, 'dano refletido não marca PV');
+  igual(r.mudancas[0].reflexoArcano.refletiu, true);
+  igual(r.mudancas[0].dano.faixa, 'refletido');
+  verdade(/aplique \d+ de dano mágico no conjurador/.test(r.mudancas[0].efeitoMesa.recado),
+    r.mudancas[0].efeitoMesa.recado);
+});
+
+teste('⚠ Reflexo Arcano sem nenhum 6: a Esperança foi gasta e o dano entra inteiro', () => {
+  /*
+   * É o que a carta diz, e é a razão de o app não poder decidir por quem joga.
+   * Um app "generoso" que devolvesse a Esperança estaria inventando regra.
+   */
+  const f = fichaArcanaN10_(['arcana-reflexo-arcano','arcana-andar-na-parede']);
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:f.defesas.limiarMaior, tipoDeDano:'magico',
+    esperancasReflexoArcano:2, dadosReflexoArcano:[2,5], reacoes:[]
+  }]);
+  igual(r.erros, [], JSON.stringify(r.erros));
+  igual(f.recursos.esperanca, 4, 'gasta do mesmo jeito');
+  igual(f.recursos.pontosDeVidaMarcados, 2, 'dano Maior = 2 PV, sem desconto nenhum');
+  igual(r.mudancas[0].reflexoArcano.refletiu, false);
+  verdade(/nenhum 6, o dano segue/.test(r.mudancas[0].aviso), r.mudancas[0].aviso);
+});
+
+teste('⚠ Reflexo Arcano sem os dados informados recusa, e não cobra nada', () => {
+  const f = fichaArcanaN10_(['arcana-reflexo-arcano','arcana-andar-na-parede']);
+  let r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:4, tipoDeDano:'magico', esperancasReflexoArcano:2, reacoes:[]
+  }]);
+  igual(r.erros.length, 1);
+  verdade(/role 2d6 fora do app/.test(r.erros[0]), r.erros[0]);
+  igual(f.recursos.esperanca, 6, 'dado faltando não cobra recurso');
+
+  // quantidade e dados têm de bater
+  r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:4, tipoDeDano:'magico', esperancasReflexoArcano:2,
+    dadosReflexoArcano:[6], reacoes:[]
+  }]);
+  igual(r.erros.length, 1);
+  verdade(/exatamente 2 resultado/.test(r.erros[0]), r.erros[0]);
+  igual(f.recursos.esperanca, 6);
+});
+
+teste('⚠ Reflexo Arcano não vale contra dano físico, nem sem a carta ativa', () => {
+  const f = fichaArcanaN10_(['arcana-reflexo-arcano','arcana-andar-na-parede']);
+  let r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:4, tipoDeDano:'fisico', esperancasReflexoArcano:1,
+    dadosReflexoArcano:[6], reacoes:[]
+  }]);
+  igual(r.erros.length, 1);
+  verdade(/não se aplica a dano físico/.test(r.erros[0]), r.erros[0]);
+  igual(f.recursos.esperanca, 6);
+
+  /*
+   * ⚠ SEM A CARTA ATIVA O PEDIDO É RECUSADO, não ignorado. O motor procura pelo
+   * CAMPO que o cliente preencheu, e não pelas cartas ativas — olhar só as
+   * ativas faria um pedido inventado passar em silêncio, que é exatamente o
+   * defeito que este bloco inteiro existe para tirar da janela de dano.
+   */
+  const sem = fichaArcanaN10_(['arcana-andar-na-parede','arcana-projecao-sensorial']);
+  r = contexto.aplicarAjustes_(sem, [{
+    tipo:'dano', dano:4, tipoDeDano:'magico', esperancasReflexoArcano:1,
+    dadosReflexoArcano:[6], reacoes:[]
+  }]);
+  igual(r.erros.length, 1);
+  verdade(/precisa estar entre as cartas ativas/.test(r.erros[0]), r.erros[0]);
+  igual(sem.recursos.esperanca, 6);
 });
 
 teste('Projeção Sensorial é 1/descanso e encerra ao sofrer dano ou conjurar outro feitiço', () => {
@@ -9181,6 +9293,109 @@ teste('Preparar marca Armadura adicional e continua passando pelo Inabalável ce
   igual(r.erros, []);
   igual(f.recursos.estresseMarcado, 0);
   igual(f.recursos.armaduraMarcada, 1, 'Inabalável evita só o Estresse, não o outro efeito');
+});
+
+teste('⚠ Preparar reage NA JANELA DE DANO, junto da Armadura que dispara o gatilho', () => {
+  /*
+   * O DEFEITO: a janela de dano listava o Preparar como TEXTO, sem controle. O
+   * motor só reconhecia UMA carta como reação de dano — o Levantar-Se, com o
+   * efeito digitado dentro de um `if` no resolvedor.
+   *
+   * Usar a carta pelo painel não resolve, e não é questão de conforto: o
+   * gatilho é "quando você marcar 1 Ponto de Armadura para reduzir o dano
+   * recebido". Pelo painel, a marcação que dispara o gatilho ainda não
+   * aconteceu — e aplicar depois marcaria o Ponto de Armadura SEM a redução
+   * que ele compra, cobrando o custo e não entregando o efeito.
+   */
+  const f = fichaBoneN4_(['bone-preparar', 'bone-impulso'], 'Humano');
+  f.recursos.armaduraMarcada = 0;
+  f.recursos.estresseMarcado = 0;
+  const pvAntes = f.recursos.pontosDeVidaMarcados || 0;
+  const maior = f.defesas.limiarMaior, severo = f.defesas.limiarGrave;
+  verdade(maior > 0 && severo > maior, 'limiares: ' + maior + '/' + severo);
+
+  // um dano Severo: 3 PV. Armadura normal desce para 2; Preparar desce para 1.
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:severo, tipoDeDano:'fisico', usarArmadura:true, reacoes:['Preparar']
+  }]);
+  igual(r.erros, [], JSON.stringify(r.erros));
+  igual(f.recursos.armaduraMarcada, 2, 'a normal + a adicional do Preparar');
+  igual(f.recursos.estresseMarcado, 1, 'o Estresse que a carta cobra');
+  igual(f.recursos.pontosDeVidaMarcados - pvAntes, 1,
+    'Severo = 3 PV; Armadura tira 1 e Preparar tira outro');
+});
+
+teste('⚠ Preparar sem a Armadura marcada é RECUSADO, em vez de cobrar por nada', () => {
+  /*
+   * Sem a marcação de Armadura não há gatilho. Aceitar assim mesmo cobraria 1
+   * Estresse e 1 Ponto de Armadura por uma regra que não disparou — que é o
+   * jeito de o app parecer generoso e estar errado.
+   */
+  const f = fichaBoneN4_(['bone-preparar', 'bone-impulso'], 'Humano');
+  f.recursos.armaduraMarcada = 0;
+  f.recursos.estresseMarcado = 0;
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:f.defesas.limiarGrave, tipoDeDano:'fisico', usarArmadura:false, reacoes:['Preparar']
+  }]);
+  igual(r.erros.length, 1);
+  verdade(/só vale junto da marcação de Ponto de Armadura/i.test(r.erros[0]), r.erros[0]);
+  igual(f.recursos.estresseMarcado, 0, 'nada pode ter sido cobrado');
+  igual(f.recursos.armaduraMarcada, 0);
+});
+
+teste('⚠ Preparar sem a carta ativa é recusado pelo nome, como o Levantar-Se', () => {
+  const f = fichaBoneN4_(['bone-impulso'], 'Humano');
+  f.recursos.armaduraMarcada = 0;
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:f.defesas.limiarGrave, tipoDeDano:'fisico', usarArmadura:true, reacoes:['Preparar']
+  }]);
+  igual(r.erros.length, 1);
+  verdade(/precisa estar entre as cartas ativas/i.test(r.erros[0]), r.erros[0]);
+});
+
+teste('⚠ a reação de carta saiu do `if` e virou dado, sem mudar o Levantar-Se', () => {
+  /*
+   * O Levantar-Se já funcionava — mas por um `if` com o efeito digitado dentro
+   * do motor. Ele saiu de lá e virou `reacaoDano` no catálogo, com os MESMOS
+   * valores. Este teste existe para provar que a mudança de forma não mexeu na
+   * regra, e que o resolvedor não tem mais carta nenhuma escrita à mão.
+   */
+  const tabela = avaliar('REACOES_DE_DANO_DE_CARTA');
+  igual(Object.keys(tabela).sort(),
+    ['blade-levantar-se', 'bone-preparar', 'valor-deixe-passar']);
+  const lev = tabela['blade-levantar-se'];
+  igual([lev.momento, lev.faixas, lev.custo, lev.efeito],
+    ['depois-dos-limiares', ['severo'], { estresse:1 }, { reduzPv:1 }]);
+  const motor = fs.readFileSync(path.join(RAIZ, 'backend/4C_Ajustes.gs'), 'utf8');
+  verdade(!/pediuLevantarSe/.test(motor),
+    'o resolvedor voltou a ter uma carta digitada dentro dele');
+  verdade(/reacaoDeDanoDeCarta_/.test(motor), 'o resolvedor não consulta a tabela de cartas');
+});
+
+teste('⚠ Deixe Passar também reage na janela, e o d6 continua na mesa', () => {
+  /*
+   * Mesmo defeito do Preparar: a carta aparecia como texto sem controle. A
+   * forma dela cabe no contrato que já existe — 1 Estresse reduz um limiar.
+   * O que NÃO entra no motor é o d6 que decide se a carta vai para o cofre:
+   * isso continua na mesa, e o lembrete da carta já diz.
+   */
+  const f = fichaValorBaixa_(7, ['valor-deixe-passar', 'valor-tocado-pelo-valor']);
+  f.recursos.estresseMarcado = 0;
+  const pvAntes = f.recursos.pontosDeVidaMarcados || 0;
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:f.defesas.limiarGrave, tipoDeDano:'fisico',
+    usarArmadura:false, reacoes:['Deixe Passar']
+  }]);
+  igual(r.erros, [], JSON.stringify(r.erros));
+  igual(f.recursos.estresseMarcado, 1, 'o Estresse que a carta cobra');
+  igual(f.recursos.pontosDeVidaMarcados - pvAntes, 2, 'Severo = 3 PV; a carta tira 1');
+  // e sem a carta ativa, o nome é recusado
+  const g = fichaValorBaixa_(7, ['valor-tocado-pelo-valor']);
+  const r2 = contexto.aplicarAjustes_(g, [{
+    tipo:'dano', dano:g.defesas.limiarGrave, tipoDeDano:'fisico', reacoes:['Deixe Passar']
+  }]);
+  igual(r2.erros.length, 1);
+  verdade(/precisa estar entre as cartas ativas/i.test(r2.erros[0]), r2.erros[0]);
 });
 
 teste('Impulso e Redirecionar cobram só o custo determinístico e nunca rolam dados', () => {
@@ -9901,6 +10116,206 @@ teste('Restauração em si mesmo gasta marcadores e limpa 2 PV por marcador',()=
   verdade(r.mudancas[0].emSiMesmo===true);
 });
 
+teste('⚠ Anéis: o pedido cruza as fichas, o CUSTO não',()=>{
+  /*
+   * O fluxo é o que a Vanessa decidiu: usar o anel abre uma tela para o outro
+   * jogador aceitar; aceito, o efeito acontece.
+   *
+   * ⚠ E ISSO RESOLVE O E116 SEM ABRIR EXCEÇÃO. Criar o pedido não tira nada de
+   * ninguém — só escreve texto, ids e um número na ficha do par. O recurso sai
+   * depois, na ficha de quem ACEITOU, pela porta normal dela.
+   */
+  const comAnel=(nome,id,emUso)=>{
+    const f=contexto.fichaRapida_({
+      nome:nome,classe:'Guerreiro',subclasse:'Chamada do Matador',
+      ancestralidade:'Humano',comunidade:'Highborne',cartas:['blade-redemoinho','bone-intocavel'],
+      experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+    });
+    f.identidade.nome=nome;
+    f.inventario=[{id:id,nome:'Anéis da amizade',qtd:1,emUso:emUso}];
+    return f;
+  };
+  const ANEL='loot-srd2-rings-of-friendship';
+
+  // os DOIS lados precisam do anel em uso, e a recusa diz qual lado falta
+  const semMeu=comAnel('Ana',ANEL,false), comSeu=comAnel('Bia',ANEL,true);
+  let r=contexto.criarPedidoDeAnel_(semMeu,comSeu,{itemId:ANEL,quantidade:2});
+  verdade(/marque o seu anel como em uso/.test(String(r.erro)),String(r.erro));
+
+  const meu=comAnel('Ana',ANEL,true), semSeu=comAnel('Bia',ANEL,false);
+  r=contexto.criarPedidoDeAnel_(meu,semSeu,{itemId:ANEL,quantidade:2});
+  verdade(/não está usando o outro anel/.test(String(r.erro)),String(r.erro));
+
+  // ⚠ pedido impossível é recusado AGORA, não depois do sim
+  const pobre=comAnel('Bia',ANEL,true); pobre.recursos.esperanca=1;
+  r=contexto.criarPedidoDeAnel_(meu,pobre,{itemId:ANEL,quantidade:3});
+  verdade(/tem 1 de Esperança, e você pediu 3/.test(String(r.erro)),String(r.erro));
+
+  // o pedido normal: escreve na ficha do par e NÃO move recurso nenhum
+  const ana=comAnel('Ana',ANEL,true), bia=comAnel('Bia',ANEL,true);
+  const esperancaAntes={ana:ana.recursos.esperanca,bia:bia.recursos.esperanca};
+  r=contexto.criarPedidoDeAnel_(ana,bia,{itemId:ANEL,quantidade:2});
+  verdade(!r.erro,String(r.erro));
+  igual((bia.pedidos||[]).length,1);
+  igual((ana.pedidos||[]).length,0,'o pedido mora na ficha de quem decide');
+  igual(bia.recursos.esperanca,esperancaAntes.bia,'⚠ nada pode ter saído antes do sim');
+  igual(ana.recursos.esperanca,esperancaAntes.ana);
+  verdade(/Ana quer gastar 2 de Esperança/.test(bia.pedidos[0].texto),bia.pedidos[0].texto);
+  verdade(/Nada saiu de ficha nenhuma até ela aceitar/.test(r.aviso),r.aviso);
+
+  // o mesmo anel não empilha pedidos
+  const repetido=contexto.criarPedidoDeAnel_(ana,bia,{itemId:ANEL,quantidade:1});
+  verdade(/já existe um pedido deste anel/.test(String(repetido.erro)),String(repetido.erro));
+
+  // RECUSAR: apaga o pedido e não cobra nada
+  const recusa=contexto.aplicarAjustes_(bia,[{tipo:'pedido',pedido:bia.pedidos[0].id,resposta:'recusar'}]);
+  igual(recusa.erros,[],JSON.stringify(recusa.erros));
+  igual(bia.pedidos.length,0);
+  igual(bia.recursos.esperanca,esperancaAntes.bia,'recusar não pode cobrar nada');
+
+  // ACEITAR: a Esperança sai da ficha de quem aceitou, e a mesa recebe o recado
+  contexto.criarPedidoDeAnel_(ana,bia,{itemId:ANEL,quantidade:2});
+  const sim=contexto.aplicarAjustes_(bia,[{tipo:'pedido',pedido:bia.pedidos[0].id,resposta:'aceitar'}]);
+  igual(sim.erros,[],JSON.stringify(sim.erros));
+  igual(bia.recursos.esperanca,esperancaAntes.bia-2);
+  igual(ana.recursos.esperanca,esperancaAntes.ana,'a ficha de quem pediu não é tocada');
+  igual(bia.pedidos.length,0);
+  verdade(/Bia aceitou o pedido de Ana/.test(sim.mudancas[0].efeitoMesa.recado),
+    sim.mudancas[0].efeitoMesa.recado);
+
+  // e responder um pedido que já foi respondido é recusado
+  const tarde=contexto.aplicarAjustes_(bia,[{tipo:'pedido',pedido:'pedido-inventado',resposta:'aceitar'}]);
+  igual(tarde.erros.length,1);
+  verdade(/já não está esperando resposta/.test(tarde.erros[0]),tarde.erros[0]);
+});
+
+teste('⚠ Anéis da camaradagem: aceitar MARCA o Estresse de quem aceitou, e a trilha cheia recusa antes',()=>{
+  /*
+   * ⚠ AQUI O CONSENTIMENTO PESA MAIS: quem aceita sai prejudicado. É exatamente
+   * por isso que o app não marca nada sem a pessoa dizer sim na própria tela.
+   */
+  const comAnel=(nome,emUso)=>{
+    const f=contexto.fichaRapida_({
+      nome:nome,classe:'Guerreiro',subclasse:'Chamada do Matador',
+      ancestralidade:'Humano',comunidade:'Highborne',cartas:['blade-redemoinho','bone-intocavel'],
+      experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+    });
+    f.identidade.nome=nome;
+    f.inventario=[{id:'loot-srd2-rings-of-camaraderie',nome:'Anéis da camaradagem',qtd:1,emUso:emUso}];
+    return f;
+  };
+  const ANEL='loot-srd2-rings-of-camaraderie';
+  const ana=comAnel('Ana',true), bia=comAnel('Bia',true);
+  bia.recursos.estresseMarcado=0;
+
+  let r=contexto.criarPedidoDeAnel_(ana,bia,{itemId:ANEL,quantidade:2});
+  verdade(!r.erro,String(r.erro));
+  igual(bia.recursos.estresseMarcado,0,'nada antes do sim');
+  const sim=contexto.aplicarAjustes_(bia,[{tipo:'pedido',pedido:bia.pedidos[0].id,resposta:'aceitar'}]);
+  igual(sim.erros,[],JSON.stringify(sim.erros));
+  igual(bia.recursos.estresseMarcado,2);
+  igual(ana.recursos.estresseMarcado,0,'quem pediu não marca nada');
+
+  // trilha cheia: o pedido é recusado na hora de pedir, não na hora do sim
+  const cheia=comAnel('Bia',true);
+  cheia.recursos.estresseMarcado=cheia.recursos.estresseMaximo;
+  r=contexto.criarPedidoDeAnel_(ana,cheia,{itemId:ANEL,quantidade:1});
+  verdade(/não sobra Estresse na trilha/.test(String(r.erro)),String(r.erro));
+  igual((cheia.pedidos||[]).length,0);
+});
+
+teste('⚠ os pedidos sobrevivem à GRAVAÇÃO, com os campos que importam',()=>{
+  /*
+   * A lição do bônus preparado, aplicada antes de doer: `validarFicha_`
+   * RECONSTRÓI cada pedido campo por campo, então tudo que importa precisa estar
+   * listado lá. Um campo esquecido some na primeira gravação, sem erro nenhum.
+   */
+  const f=contexto.fichaRapida_({
+    nome:'Bia',classe:'Guerreiro',subclasse:'Chamada do Matador',
+    ancestralidade:'Humano',comunidade:'Highborne',cartas:['blade-redemoinho','bone-intocavel'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  f.pedidos=[{id:'p1',de:'x',deNome:'Ana',item:'Anéis da amizade',
+    itemId:'loot-srd2-rings-of-friendship',recurso:'esperanca',quantidade:3,
+    texto:'Ana quer gastar 3 de Esperança da sua ficha.',em:'2026-09-29T00:00:00Z'}];
+  const gravada=contexto.validarFicha_(JSON.parse(JSON.stringify(f)));
+  igual(gravada.pedidos.length,1);
+  igual(gravada.pedidos[0].quantidade,3,'a quantidade foi apagada na gravação');
+  igual(gravada.pedidos[0].recurso,'esperanca');
+  igual(gravada.pedidos[0].itemId,'loot-srd2-rings-of-friendship');
+  igual(gravada.pedidos[0].deNome,'Ana');
+
+  // recurso inventado cai no padrão; quantidade zero vira 1; pedido sem texto sai
+  const torto=contexto.validarFicha_(Object.assign(JSON.parse(JSON.stringify(f)),{
+    pedidos:[
+      {id:'p2',itemId:'x',recurso:'ouro',quantidade:0,texto:'algo'},
+      {id:'p3',itemId:'y',recurso:'esperanca',quantidade:2}
+    ]
+  }));
+  igual(torto.pedidos.length,1,'pedido sem texto tinha de sair');
+  igual(torto.pedidos[0].recurso,'esperanca');
+  igual(torto.pedidos[0].quantidade,1);
+});
+
+teste('⚠ E116: a porta para outra ficha SÓ LIMPA — e nada no catálogo pode pedir o contrário',()=>{
+  /*
+   * ⚠ ESTE INVARIANTE NASCEU DOS ANÉIS. Os Anéis da amizade e da camaradagem
+   * pedem exatamente o que esta porta proíbe: gastar a Esperança e marcar o
+   * Estresse de OUTRA ficha. O código já recusava; o que faltava era o teste,
+   * porque uma recusa sem teste é uma recusa que alguém apaga sem perceber.
+   *
+   * ⚠ E A RAZÃO NÃO É TÉCNICA. `mutarPersonagemEOutro_` confere a permissão
+   * apenas da ficha de ORIGEM — a do aliado é gravada sem conferir nada. Para
+   * curar, isso é seguro (ninguém se ofende com Estresse limpo). Para tirar
+   * recurso, seria um jogador escrevendo na ficha do outro sem o outro saber.
+   */
+  const motor=fs.readFileSync(path.join(RAIZ,'backend/4C_Ajustes.gs'),'utf8');
+  verdade(/esta porta só limpa trilhas/.test(motor),'a recusa da porta desapareceu do motor');
+  verdade(/ESTA PORTA SÓ LIMPA/.test(motor),'o comentário que explica a recusa desapareceu');
+
+  // a recusa funciona de verdade: um catálogo que peça delta positivo é barrado
+  const origem=fichaRestauracao_(2);
+  const aliado=fichaSplendorAlta_(6,['splendor-zona-de-protecao']);
+  aliado.recursos.estresseMarcado=0;
+  const r=contexto.aplicarCartaEmCriatura_(origem,aliado,{carta:'splendor-restauracao',opcao:'estresse',marcadores:1});
+  verdade(!!r.erro,'curar trilha vazia tinha de ser recusado');
+  igual(aliado.recursos.estresseMarcado,0);
+
+  // e nenhum item do catálogo declara efeito que tire recurso de outra ficha
+  const itens=avaliar('ITENS')||[];
+  const proibidos=[];
+  itens.forEach((i)=>{
+    const texto=JSON.stringify([i.efeitoSaque,i.efeitoSaquePassivo,i.efeitoConsumivel,i.reacaoConsumivel]);
+    if (/outraFicha|aliadoRecurso|gastaEsperancaDeOutro|marcaEstresseDeOutro/.test(texto)) proibidos.push(i.id);
+  });
+  igual(proibidos,[],'algum item declarou efeito em outra ficha sem passar pela decisão de fluxo');
+
+  /*
+   * ⚠ E OS ANÉIS FECHARAM SEM ABRIR EXCEÇÃO NENHUMA AQUI. O fluxo decidido pela
+   * Vanessa — usar o anel abre uma tela para o outro jogador aceitar — faz o que
+   * cruza entre fichas ser o PEDIDO, e o recurso sair da ficha de quem aceitou,
+   * pela porta normal dela. Este invariante continua inteiro.
+   */
+  const aneis=itens.filter((i)=>/rings-of-(friendship|camaraderie)/.test(i.id));
+  igual(aneis.length,2);
+  aneis.forEach((i)=>{
+    igual((i.automacao||{}).classificacao,'loot-pedido-com-consentimento-e21',i.id);
+    const pede=((i.efeitoSaquePassivo||{}).pedeAoPar)||null;
+    verdade(!!pede,i.id+': o contrato do pedido desapareceu');
+    verdade(!!pede.textoDoPedido && !!pede.rotulo,i.id+': o pedido precisa ter texto e rótulo');
+  });
+
+  // e o motor não pode ter ganhado um caminho que TIRE recurso da outra ficha
+  verdade(/ESTA FUNÇÃO NÃO TIRA NADA DE NINGUÉM/.test(motor),
+    'o comentário que guarda o desenho do pedido saiu do motor');
+  const criar=motor.slice(motor.indexOf('function criarPedidoDeAnel_'),
+    motor.indexOf('function responderPedidoDaFicha_'));
+  verdade(!/ajustarRecurso_\(\s*fichaAlvo/.test(criar),
+    '⚠ criarPedidoDeAnel_ passou a mexer em recurso da outra ficha — é exatamente o que o E116 proíbe');
+  verdade(/pedidosDaFicha_\(fichaAlvo\)/.test(criar),
+    'o pedido tem de ser escrito na ficha do par');
+});
+
 teste('Restauração num aliado: o marcador sai daqui, a cura pousa lá',()=>{
   const origem=fichaRestauracao_(2);
   const aliado=fichaSplendorAlta_(6,['splendor-zona-de-protecao']);
@@ -9978,14 +10393,65 @@ teste('Zona de Proteção inicia d6 em 1 e não reativa antes do descanso longo'
   verdade(r.erros.length===1,'Zona deveria ser 1/descanso longo');
 });
 
-teste('Tocado do Esplendor exige 4 cartas para +3 no limiar Grave',()=>{
+teste('⚠ Tocado do Esplendor: +3 no limiar com 4 cartas, e o botão do painel SAIU',()=>{
+  /*
+   * ⚠ O BOTÃO DO PAINEL ERA PIOR QUE INÚTIL. Ele só MARCAVA o uso ("Registrar
+   * substituição de PV") e deixava a pessoa mexer nas trilhas à mão — a janela
+   * de dano sabe quantos PV o dano exigiria, o painel não. Com os dois vivos,
+   * clicar no botão gastava o uso por descanso longo sem substituir nada.
+   */
   const quatro=fichaSplendorAlta_(7,['splendor-tocado-do-esplendor','splendor-golpe-curativo','splendor-zona-de-protecao','splendor-restauracao']);
   const base=fichaSplendorAlta_(7,['splendor-tocado-do-esplendor','splendor-golpe-curativo','splendor-zona-de-protecao']);
   const d4=contexto.derivadosDoPersonagem_(quatro), d3=contexto.derivadosDoPersonagem_(base);
-  igual(d4.limiarGrave,d3.limiarGrave+3);
-  let r=contexto.aplicarAjustes_(quatro,[{tipo:'usarCarta',carta:'splendor-tocado-do-esplendor'}]);
-  igual(r.erros,[]); igual(quatro.contadores['uso:carta:splendor:tocado-do-esplendor'].valor,1);
-  verdade(contexto.aplicarAjustes_(quatro,[{tipo:'usarCarta',carta:'splendor-tocado-do-esplendor'}]).erros.length===1);
+  igual(d4.limiarGrave,d3.limiarGrave+3,'o passivo continua de pé');
+
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const carta=d.cartas.find((x)=>x.id==='splendor-tocado-do-esplendor');
+  verdade(!carta.uso,'o botão do painel voltou, e ele gasta o uso sem substituir nada');
+  const r=contexto.aplicarAjustes_(quatro,[{tipo:'usarCarta',carta:'splendor-tocado-do-esplendor'}]);
+  igual(r.erros.length,1,'o painel não pode mais gastar o uso: '+JSON.stringify(r.erros));
+  verdade(!quatro.contadores['uso:carta:splendor:tocado-do-esplendor'],'nenhum uso foi gasto');
+
+  // e o uso por descanso longo continua valendo pela JANELA, que é onde ele vale
+  const dano=Math.max(1,Number(quatro.defesas.limiarMaior)||1);
+  const r1=contexto.aplicarAjustes_(quatro,[{tipo:'dano',dano,tipoDeDano:'fisico',reacoes:[],tocadoDoEsplendor:'estresse'}]);
+  igual(r1.erros,[],JSON.stringify(r1.erros));
+  igual(quatro.contadores['uso:carta:splendor:tocado-do-esplendor'].valor,1);
+  const r2=contexto.aplicarAjustes_(quatro,[{tipo:'dano',dano,tipoDeDano:'fisico',reacoes:[],tocadoDoEsplendor:'estresse'}]);
+  igual(r2.erros.length,1);
+  verdade(/já foi usado neste descanso longo/.test(r2.erros[0]),r2.erros[0]);
+});
+
+teste('⚠ o Tocado do Esplendor saiu de dentro do motor e virou contrato',()=>{
+  /*
+   * Era a ÚLTIMA carta com a regra digitada no código: o id, o domínio exigido,
+   * o número 4 e a chave do contador estavam escritos à mão no resolvedor de
+   * dano — e de novo no `lote9-dano.js`, que monta o seletor.
+   */
+  const tabela=avaliar('REACOES_SUBSTITUI_PV');
+  igual(Object.keys(tabela),['splendor-tocado-do-esplendor']);
+  const def=tabela['splendor-tocado-do-esplendor'];
+  igual(def.recursos,['estresse','esperanca']);
+  igual(def.exigeCartasAtivasDominio,{dominio:'SPLENDOR',quantidade:4});
+  igual(def.usosPorDescansoLongo,1);
+
+  const motor=fs.readFileSync(path.join(RAIZ,'backend/4C_Ajustes.gs'),'utf8');
+  verdade(!/splendor-tocado-do-esplendor/.test(motor),
+    'o id da carta voltou a estar digitado dentro do resolvedor');
+  verdade(!/uso:carta:splendor:tocado-do-esplendor/.test(motor),
+    'a chave do contador voltou a estar digitada dentro do resolvedor');
+  verdade(/reacaoSubstituiPvDaFicha_/.test(motor),'o resolvedor não consulta o contrato');
+
+  const overlay=fs.readFileSync(path.join(RAIZ,'js/lote9-dano.js'),'utf8');
+  verdade(!/Tocado do Esplendor/.test(overlay),
+    'o nome da carta voltou a estar digitado no lote9-dano.js');
+
+  // e sem as 4 cartas do domínio a janela recusa, dizendo quantas há
+  const tres=fichaSplendorAlta_(7,['splendor-tocado-do-esplendor','splendor-golpe-curativo','splendor-zona-de-protecao']);
+  const r=contexto.aplicarAjustes_(tres,[{tipo:'dano',dano:Math.max(1,Number(tres.defesas.limiarMaior)||1),
+    tipoDeDano:'fisico',reacoes:[],tocadoDoEsplendor:'estresse'}]);
+  igual(r.erros.length,1);
+  verdade(/exige 4 cartas de .* ativas; há 3/.test(r.erros[0]),r.erros[0]);
 });
 
 teste('Tocado do Esplendor substitui atomicamente os PV finais por Estresse ou Esperança',()=>{
@@ -10892,10 +11358,86 @@ teste('Erga-Se soma Proficiência somente ao limiar Grave',()=>{
   igual(com.limiarGrave-sem.limiarGrave,contexto.proficienciaDaFicha_(f));
 });
 
-teste('Erga-Se limpa 1 Estresse depois do gatilho confirmado',()=>{
+teste('⚠ Erga-Se limpa o Estresse NA JANELA DE DANO, sozinha, porque não diz "pode"',()=>{
+  /*
+   * O DEFEITO: a carta não aparecia na janela de dano, e eu tinha escrito no
+   * relatório que era por "não caber no contrato". Medindo o texto das seis
+   * cartas que reagem ao dano, o que aparece é outra coisa: TODA carta que é
+   * escolha diz "pode" (Levantar-Se, Preparar, Deixe Passar, Reflexo Arcano).
+   * Esta não diz. Ela é consequência de marcar PV, não escolha.
+   *
+   * E o que ela perguntaria, o motor já sabe. O botão do painel dependia de a
+   * pessoa lembrar da regra e do lembrete "use somente quando um ataque acabou
+   * de fazer você marcar um ou mais PV" — que o servidor nunca conferia.
+   */
   const f=fichaValorBaixa_(6,['valor-erga-se','valor-inevitavel']); f.recursos.estresseMarcado=3;
-  const r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-erga-se'}]);
-  igual(r.erros,[]); igual(f.recursos.estresseMarcado,2);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:1,tipoDeDano:'fisico',reacoes:[]}]);
+  igual(r.erros,[],JSON.stringify(r.erros));
+  igual(f.recursos.pontosDeVidaMarcados,1,'dano Menor marca 1 PV — é o gatilho');
+  igual(f.recursos.estresseMarcado,2,'e o Estresse foi limpo sem ninguém marcar caixa');
+  igual(r.mudancas[0].limpezasAoMarcarPv,[{carta:'Erga-Se',estresse:1,armadura:0,nadaParaLimpar:false}]);
+  verdade(/Erga-Se limpa 1 Estresse/.test(r.mudancas[0].aviso),r.mudancas[0].aviso);
+});
+
+teste('⚠ Erga-Se não dispara quando o dano NÃO marca PV',()=>{
+  // Dano Menor + 1 Ponto de Armadura = faixa nenhuma. Sem PV marcado não há
+  // gatilho, e limpar assim mesmo seria dar de graça o que a carta condiciona.
+  const f=fichaValorBaixa_(6,['valor-erga-se','valor-inevitavel']);
+  f.recursos.estresseMarcado=3; f.recursos.armaduraMarcada=0;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:1,tipoDeDano:'fisico',usarArmadura:true,reacoes:[]}]);
+  igual(r.erros,[],JSON.stringify(r.erros));
+  igual(f.recursos.pontosDeVidaMarcados,0);
+  igual(f.recursos.estresseMarcado,3,'nada foi limpo');
+  igual(r.mudancas[0].limpezasAoMarcarPv,[]);
+});
+
+teste('⚠ Erga-Se com a trilha de Estresse vazia DIZ que não achou o que limpar',()=>{
+  /*
+   * A carta não custa nada, então não achar o que limpar não é erro — mas
+   * também não pode ser silêncio, ou a pessoa fica procurando o efeito.
+   */
+  const f=fichaValorBaixa_(6,['valor-erga-se','valor-inevitavel']); f.recursos.estresseMarcado=0;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:1,tipoDeDano:'fisico',reacoes:[]}]);
+  igual(r.erros,[]);
+  igual(f.recursos.estresseMarcado,0);
+  igual(r.mudancas[0].limpezasAoMarcarPv[0].nadaParaLimpar,true);
+  verdade(/Erga-Se não achou o que limpar/.test(r.mudancas[0].aviso),r.mudancas[0].aviso);
+});
+
+teste('⚠ o botão do painel SUMIU das duas cartas automáticas, para não aplicar duas vezes',()=>{
+  /*
+   * Com a janela de dano aplicando sozinha, deixar o botão do painel seria
+   * deixar a pessoa limpar DOIS Estresses pelo mesmo golpe. É a duplicata que
+   * acabamos de tirar do Preparar, ao contrário: lá a regra aparecia duas
+   * vezes e uma delas não tinha botão; aqui ela seria aplicada duas vezes.
+   */
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  for (const id of ['valor-erga-se','valor-tocado-pelo-valor','arcana-reflexo-arcano']) {
+    const c=d.cartas.find((x)=>x.id===id);
+    verdade(!c.uso, id+' voltou a ter botão de painel para uma regra que a janela já aplica');
+  }
+  // e o passivo das duas continua de pé: o botão saiu, o efeito derivado não.
+  const erga=d.cartas.find((x)=>x.id==='valor-erga-se');
+  igual(erga.efeitoDerivado.limiarGravePorProficiencia,1);
+  const tocado=d.cartas.find((x)=>x.id==='valor-tocado-pelo-valor');
+  igual(tocado.efeitoDerivado.pontuacaoArmadura,1);
+});
+
+teste('⚠ toda carta que é ESCOLHA diz "pode"; as automáticas não dizem',()=>{
+  /*
+   * Este é o critério que separou as duas famílias, e ele fica medido para não
+   * virar opinião minha: quem declara `reacaoDano`/`reacaoDanoComDados` (caixa
+   * ou campo na janela) diz "pode"; quem declara `efeitoAoMarcarPv` (o motor
+   * resolve) não diz.
+   */
+  const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
+  const escolhas=d.cartas.filter((c)=>c.reacaoDano||c.reacaoDanoComDados);
+  const automaticas=d.cartas.filter((c)=>c.efeitoAoMarcarPv);
+  verdade(escolhas.length>=4 && automaticas.length>=2);
+  verdade(escolhas.every((c)=>/\bpode\b/i.test(c.texto)),
+    'carta de escolha sem "pode": '+escolhas.filter((c)=>!/\bpode\b/i.test(c.texto)).map((c)=>c.id));
+  verdade(automaticas.every((c)=>!/\bpode\b/i.test(c.texto)),
+    'carta automática que diz "pode": '+automaticas.filter((c)=>/\bpode\b/i.test(c.texto)).map((c)=>c.id));
 });
 
 teste('Inevitável guarda a vantagem da próxima ação sem rolar nada',()=>{
@@ -10917,13 +11459,138 @@ teste('Tocado pelo Valor dá +1 Armadura só com quatro cartas Valor ativas',()=
   igual(com.pontuacaoArmadura,sem.pontuacaoArmadura+1);
 });
 
-teste('Tocado pelo Valor cura 1 Armadura no gatilho confirmado e exige quatro cartas',()=>{
+teste('⚠ Tocado pelo Valor limpa 1 Ponto de Armadura na janela, e exige as quatro cartas',()=>{
   const ids4=['valor-tocado-pelo-valor','valor-deixe-passar','valor-erga-se','valor-inevitavel'];
   const f=fichaValorBaixa_(7,ids4); f.recursos.armaduraMarcada=2;
-  let r=contexto.aplicarAjustes_(f,[{tipo:'usarCarta',carta:'valor-tocado-pelo-valor'}]);
-  igual(r.erros,[]); igual(f.recursos.armaduraMarcada,1);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:1,tipoDeDano:'fisico',reacoes:[]}]);
+  igual(r.erros,[],JSON.stringify(r.erros));
+  igual(f.recursos.pontosDeVidaMarcados,1,'marcou PV — é o gatilho');
+  igual(f.recursos.armaduraMarcada,1,'e limpou 1 Ponto de Armadura');
+
+  // com três cartas de Valor a carta inteira não vale: nem o +1, nem a limpeza.
   const f3=fichaValorBaixa_(7,ids4.slice(0,3)); f3.recursos.armaduraMarcada=2;
-  verdade(contexto.aplicarAjustes_(f3,[{tipo:'usarCarta',carta:'valor-tocado-pelo-valor'}]).erros.length===1);
+  const r3=contexto.aplicarAjustes_(f3,[{tipo:'dano',dano:1,tipoDeDano:'fisico',reacoes:[]}]);
+  igual(r3.erros,[]);
+  igual(f3.recursos.armaduraMarcada,2,'sem as quatro cartas, nada é limpo');
+  verdade(!(r3.mudancas[0].limpezasAoMarcarPv||[]).some((x)=>x.carta==='Tocado pelo Valor'));
+});
+
+teste('⚠ Armadura Inabalável PEDE os d6 quando você vai marcar Ponto de Armadura',()=>{
+  /*
+   * Eu tinha escrito que esta carta era "dado da mesa, sem contrato". Era, até
+   * o contrato de dados existir — a forma dela é a MESMA do Resiliente, que o
+   * motor já resolvia.
+   *
+   * ⚠ E ela não diz "pode": quando a marcação acontece, a rolagem acontece.
+   * Por isso o motor EXIGE os dados em vez de oferecer uma caixinha.
+   */
+  const f=fichaValorBaixa_(10,['valor-armadura-inabalavel','valor-inevitavel']);
+  f.recursos.armaduraMarcada=0;
+  const prof=contexto.proficienciaDaFicha_(f);
+  const r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:f.defesas.limiarMaior,tipoDeDano:'fisico',usarArmadura:true,reacoes:[]}]);
+  igual(r.erros.length,1);
+  verdade(new RegExp('role '+prof+'d6').test(r.erros[0]),r.erros[0]);
+  igual(f.recursos.armaduraMarcada,0,'nada pode ter sido marcado');
+});
+
+teste('⚠ Armadura Inabalável: com um 6 o Ponto NÃO é marcado, e a gravidade cai do mesmo jeito',()=>{
+  const f=fichaValorBaixa_(10,['valor-armadura-inabalavel','valor-inevitavel']);
+  f.recursos.armaduraMarcada=0; f.recursos.pontosDeVidaMarcados=0;
+  const prof=contexto.proficienciaDaFicha_(f);
+  const dados=new Array(prof).fill(1); dados[0]=6;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:f.defesas.limiarMaior,tipoDeDano:'fisico',
+    usarArmadura:true,dadosArmaduraInabalavel:dados,reacoes:[]}]);
+  igual(r.erros,[],JSON.stringify(r.erros));
+  igual(f.recursos.armaduraMarcada,0,'o Ponto não foi marcado');
+  igual(f.recursos.pontosDeVidaMarcados,1,'Maior = 2 PV; a mitigação desce para 1 mesmo assim');
+  igual(r.mudancas[0].armaduraInabalavel.evitouMarcar,true);
+
+  // sem nenhum 6, o Ponto é marcado normalmente
+  const g=fichaValorBaixa_(10,['valor-armadura-inabalavel','valor-inevitavel']);
+  g.recursos.armaduraMarcada=0; g.recursos.pontosDeVidaMarcados=0;
+  const r2=contexto.aplicarAjustes_(g,[{tipo:'dano',dano:g.defesas.limiarMaior,tipoDeDano:'fisico',
+    usarArmadura:true,dadosArmaduraInabalavel:new Array(prof).fill(1),reacoes:[]}]);
+  igual(r2.erros,[],JSON.stringify(r2.erros));
+  igual(g.recursos.armaduraMarcada,1,'o Ponto foi marcado');
+  igual(g.recursos.pontosDeVidaMarcados,1);
+  igual(r2.mudancas[0].armaduraInabalavel.evitouMarcar,false);
+});
+
+teste('⚠ Armadura Inabalável + Resiliente NÃO descontam o mesmo Ponto duas vezes',()=>{
+  /*
+   * ⚠ ESTE ERA O RISCO DE FECHAR A CARTA, e é o motivo de ela vir ANTES do
+   * Resiliente no resolvedor: os dois evitam marcar Ponto de Armadura. Com a
+   * Inabalável resolvida primeiro, o Resiliente recalcula em cima do custo já
+   * reduzido — e, sem Ponto a marcar, ele nem chega a pedir o d6 dele.
+   */
+  const f=fichaValorBaixa_(10,['valor-armadura-inabalavel','valor-inevitavel']);
+  f.equipamento=f.equipamento||{}; f.equipamento.armadura='armadura-t2-armadura-harrowbone';
+  f.defesas=f.defesas||{}; f.defesas.pontuacaoArmadura=Math.max(2,Number(f.defesas.pontuacaoArmadura)||0);
+  const paMax=f.defesas.pontuacaoArmadura;
+  f.recursos.armaduraMarcada=paMax-1;   // o próximo é o ÚLTIMO Ponto
+  f.recursos.pontosDeVidaMarcados=0;
+  const prof=contexto.proficienciaDaFicha_(f);
+  const dados=new Array(prof).fill(1); dados[0]=6;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:f.defesas.limiarMaior,tipoDeDano:'fisico',
+    usarArmadura:true,dadosArmaduraInabalavel:dados,reacoes:[]}]);
+  igual(r.erros,[],JSON.stringify(r.erros));
+  verdade(!r.mudancas[0].pendenciaRolagem,'o Resiliente não pode pedir d6 por um Ponto que não será marcado');
+  igual(f.recursos.armaduraMarcada,paMax-1,'nenhum Ponto marcado, e nenhum desconto a mais');
+  igual(r.mudancas[0].resiliente,null,'o Resiliente não disparou');
+  igual(f.recursos.pontosDeVidaMarcados,1,'e a gravidade caiu do mesmo jeito');
+
+  /*
+   * ⚠ CONTROLE — sem isto o teste acima passaria pelo motivo errado. Se o
+   * Resiliente não estivesse valendo nesta ficha, "ele não disparou" seria
+   * verdade sozinho, e o teste não estaria provando ordem nenhuma. Sem o 6 na
+   * Inabalável, o Ponto SERIA marcado, e aí o Resiliente tem de pedir o d6 dele.
+   */
+  const g=fichaValorBaixa_(10,['valor-armadura-inabalavel','valor-inevitavel']);
+  g.equipamento=g.equipamento||{}; g.equipamento.armadura='armadura-t2-armadura-harrowbone';
+  g.defesas=g.defesas||{}; g.defesas.pontuacaoArmadura=paMax;
+  g.recursos.armaduraMarcada=paMax-1; g.recursos.pontosDeVidaMarcados=0;
+  const r2=contexto.aplicarAjustes_(g,[{tipo:'dano',dano:g.defesas.limiarMaior,tipoDeDano:'fisico',
+    usarArmadura:true,dadosArmaduraInabalavel:new Array(prof).fill(1),reacoes:[]}]);
+  const pend=(r2.mudancas[0]||{}).pendenciaRolagem||r2.pendenciaRolagem||null;
+  verdade(!!pend && /Resiliente/i.test(JSON.stringify(pend)),
+    'o Resiliente precisava pedir o d6 aqui — senão o teste de cima não prova ordem: '+JSON.stringify(r2).slice(0,240));
+});
+
+teste('⚠ o limite da Armadura Inabalável está DECLARADO, não esquecido',()=>{
+  /*
+   * A carta diz "quando você for marcar UM Ponto de Armadura", no singular.
+   * Quando o mesmo dano marca dois (Preparar, Vítreo), multiplicar a rolagem
+   * seria inventar; uma rolagem por dano é a leitura conservadora. O que não
+   * pode é isso ficar implícito no código.
+   */
+  const tabela=avaliar('REACOES_AO_MARCAR_ARMADURA');
+  igual(Object.keys(tabela),['valor-armadura-inabalavel']);
+  igual(tabela['valor-armadura-inabalavel'].umaRolagemPorDano,true);
+  igual(tabela['valor-armadura-inabalavel'].efeito,{evitaMarcarArmadura:1});
+});
+
+teste('⚠ Tocado pelo Valor NÃO dispara quando um Ponto de Armadura foi marcado',()=>{
+  /*
+   * A condição é NEGATIVA — "quando você marcar 1 ou mais Pontos de Vida SEM
+   * marcar um Ponto de Armadura" — e é a primeira do contrato que exige que
+   * algo não tenha acontecido.
+   *
+   * ⚠ ESTE DANO É MAIOR DE PROPÓSITO: com dano Menor, a Armadura zeraria o PV
+   * e o teste passaria pelo motivo errado (sem PV marcado não há gatilho para
+   * carta nenhuma). Maior vira Menor com o Ponto marcado, ainda marca 1 PV — e
+   * aí dá para ver o Erga-Se disparando e o Tocado pelo Valor não.
+   */
+  const ids4=['valor-tocado-pelo-valor','valor-deixe-passar','valor-erga-se','valor-inevitavel'];
+  const f=fichaValorBaixa_(7,ids4);
+  f.recursos.armaduraMarcada=1; f.recursos.estresseMarcado=2;
+  const maior=f.defesas.limiarMaior;
+  const r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:maior,tipoDeDano:'fisico',usarArmadura:true,reacoes:[]}]);
+  igual(r.erros,[],JSON.stringify(r.erros));
+  igual(f.recursos.pontosDeVidaMarcados,1,'Maior = 2 PV; a Armadura desce para 1');
+  const cartas=(r.mudancas[0].limpezasAoMarcarPv||[]).map((x)=>x.carta);
+  igual(cartas,['Erga-Se'],'o Erga-Se dispara, o Tocado pelo Valor não');
+  igual(f.recursos.armaduraMarcada,2,'o Ponto marcado continua marcado');
+  igual(f.recursos.estresseMarcado,1,'e o Erga-Se limpou o seu');
 });
 
 teste('Golpe no Chão cobra exatamente 2 Esperanças',()=>{
@@ -10958,11 +11625,26 @@ teste('Mantenha a Posição cobra 1 Esperança e mantém estado explícito',()=>
   igual(r.erros,[]); igual(f.recursos.esperanca,5); igual(f.contadores['estado:carta:valor:mantenha-a-posicao'].valor,1);
 });
 
-teste('Armadura Inabalável e Inquebrável não inventam RNG no servidor',()=>{
+teste('⚠ nem a Armadura Inabalável nem o Inquebrável inventam RNG no servidor',()=>{
+  /*
+   * ⚠ ESTE TESTE MUDOU DE LADO, e foi ele que me avisou. A Armadura Inabalável
+   * era "manual-com-dados-de-proficiência" porque o app não tinha onde receber
+   * os dados; agora a janela de dano pede, e a classificação virou
+   * "automatizada-com-dados-manuais".
+   *
+   * O que NÃO mudou, e é o que este teste guarda: o app continua sem rolar dado
+   * nenhum. `rolaNoApp` tem de seguir falso nas duas.
+   */
   const d=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/cartas-dominio.json'),'utf8'));
   for(const id of ['valor-armadura-inabalavel','valor-inquebravel']){
-    const c=d.cartas.find(x=>x.id===id); verdade(!c.uso); verdade(c.automacao.classificacao.includes('manual'));
+    const c=d.cartas.find(x=>x.id===id);
+    verdade(!c.uso, id+' voltou a ter botão de painel');
+    igual(c.resolucaoManual.rolaNoApp,false,id+': o app não rola dado');
   }
+  const inabalavel=d.cartas.find(x=>x.id==='valor-armadura-inabalavel');
+  igual(inabalavel.automacao.classificacao,'automatizada-com-dados-manuais');
+  verdade(d.cartas.find(x=>x.id==='valor-inquebravel').automacao.classificacao.includes('manual'),
+    'o Inquebrável continua manual — o movimento de morte não é desta janela');
 });
 
 console.log('\nLote 8 — equipamento defensivo B1');
@@ -11557,6 +12239,567 @@ teste('Recarga pede d6 manual e só o resultado 1 cobra 1 Estresse',()=>{
   igual(r.erros,[]); igual(f.recursos.estresseMarcado,0); igual(r.mudancas[0].acionouResultado,false);
   r=contexto.aplicarAjustes_(f,[{tipo:'usoEquipamento',itemId:a.id,nome:'Recarga',dadoRecarga:1}]);
   igual(r.erros,[]); igual(f.recursos.estresseMarcado,1); igual(r.mudancas[0].custoEstresse,1); igual(r.mudancas[0].acionouResultado,true);
+});
+
+teste('⚠ Chá da Morte: a descrição estava QUEBRADA, e o prazo virou marcador com saída',()=>{
+  /*
+   * ⚠ A DESCRIÇÃO ESTAVA ILEGÍVEL, na regra mais grave do catálogo:
+   *   "Se você não fizer uma análise crítica for bem-sucedido em um ataque
+   *    antes do seu próximo descanso longo, você morrerá."
+   *
+   * "análise crítica" é tradução automática de "critically succeed", e sobrou o
+   * "for bem-sucedido" da outra tentativa colado no meio. O inglês guardado
+   * responde: "If you don't critically succeed on an attack before your next
+   * long rest, you die."
+   *
+   * ⚠ A VARREDURA DE VOCABULÁRIO PASSOU POR CIMA TRÊS VEZES, porque as regras
+   * procuram PALAVRA errada, não frase quebrada. Virou regra nova no E115.
+   */
+  /*
+   * ⚠ A DESCRIÇÃO NÃO VIAJA PARA O .gs — o gerado leva nome, mecânica e
+   * automação, não o texto longo. A primeira versão deste teste leu
+   * `cha.descricao` de `ITENS` e comparou com `undefined`, o que fazia a metade
+   * das asserções passar por vacuidade. O texto que a mesa lê mora no catálogo.
+   */
+  const catalogo=JSON.parse(fs.readFileSync(path.join(RAIZ,'data/equipamentos.json'),'utf8'));
+  const achar=(id)=>{
+    const pilha=[catalogo];
+    while(pilha.length){
+      const o=pilha.pop();
+      if(Array.isArray(o)){ pilha.push(...o); continue; }
+      if(o && typeof o==='object'){
+        if(o.id===id) return o;
+        pilha.push(...Object.values(o));
+      }
+    }
+    return null;
+  };
+  const cha=achar('consumivel-58');
+  verdade(!!cha && !!cha.descricao,'o item ou a descrição desapareceu');
+  verdade(!/análise crítica/i.test(cha.descricao),'a tradução quebrada voltou');
+  verdade(/sucesso crítico/.test(cha.descricao),cha.descricao);
+  verdade(!/for bem-sucedido/.test(cha.descricao),'sobrou a segunda tentativa de tradução');
+
+  // e a regra nova do E115 pega a palavra errada de volta, se ela voltar
+  const lib=fs.readFileSync(path.join(RAIZ,'tools/lib-vocabulario-exibido.mjs'),'utf8');
+  verdade(/an\[áa\]lise cr\[íi\]tica/.test(lib),'a regra do E115 que pega "análise crítica" saiu');
+
+  // o marcador NÃO zera em gatilho nenhum: apagar sozinho apagaria a prova
+  const CONTADORES=avaliar('CONTADORES');
+  const def=CONTADORES['estado:consumivel:consumivel-58'];
+  verdade(!!def,'o contador do prazo não existe');
+  igual(def.zeraEm,[],'o prazo não pode ser apagado por gatilho — é a prova de que venceu');
+  verdade(!!def.prazoNoDescansoLongo);
+  verdade(/morre/.test(def.prazoNoDescansoLongo.consequencia),def.prazoNoDescansoLongo.consequencia);
+  verdade(/apague/.test(def.prazoNoDescansoLongo.saida),'a saída precisa estar dita');
+
+  const base=()=>{
+    const f=contexto.fichaRapida_({
+      nome:'Envenenada',classe:'Guerreiro',subclasse:'Chamada do Matador',
+      ancestralidade:'Humano',comunidade:'Highborne',cartas:['blade-redemoinho','bone-intocavel'],
+      experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+    });
+    f.inventario=[{id:'consumivel-58',nome:'Chá da Morte',qtd:1,emUso:false}];
+    return f;
+  };
+
+  // beber acende o prazo
+  const f=base();
+  let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r.erros));
+  igual(f.contadores['estado:consumivel:consumivel-58'].valor,1);
+
+  // ⚠ e o descanso longo AVISA, com o texto da carta — sem encerrar a ficha
+  const sim=contexto.simularDescanso_(f,'longo',[{movimento:'preparar-se'},{movimento:'preparar-se'}]);
+  igual(sim.previa.erros,[],JSON.stringify(sim.previa.erros));
+  igual((sim.previa.prazosAcesos||[]).length,1,JSON.stringify(sim.previa.prazosAcesos));
+  verdade(sim.previa.avisos.some((x)=>/Chá da Morte/.test(x) && /morre/.test(x)),
+    JSON.stringify(sim.previa.avisos));
+  verdade(sim.previa.avisos.some((x)=>/apague/.test(x)),'o aviso tem de dizer a saída também');
+  verdade(!f.encerrada && !sim.previa.encerrada,'o app não pode encerrar a ficha por conta própria');
+
+  // CONTROLE: com o marcador apagado (o sucesso crítico veio), o descanso é normal
+  const saiu=base();
+  contexto.aplicarAjustes_(saiu,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  delete saiu.contadores['estado:consumivel:consumivel-58'];
+  const limpo=contexto.simularDescanso_(saiu,'longo',[{movimento:'preparar-se'},{movimento:'preparar-se'}]);
+  igual((limpo.previa.prazosAcesos||[]).length,0);
+  verdade(!limpo.previa.avisos.some((x)=>/Chá da Morte/.test(x)),JSON.stringify(limpo.previa.avisos));
+
+  // CONTROLE: descanso CURTO não cobra o prazo, que é do longo
+  const curto=base();
+  contexto.aplicarAjustes_(curto,[{tipo:'inventario',acao:'consumir',indice:0}]);
+  const simCurto=contexto.simularDescanso_(curto,'curto',[{movimento:'preparar-se'},{movimento:'preparar-se'}]);
+  igual((simCurto.previa.prazosAcesos||[]).length,0,'o prazo é do descanso longo');
+});
+
+teste('⚠ Periapto do insone: o gatilho é uma NÃO-AÇÃO, e o bônus dura até o próximo descanso',()=>{
+  /*
+   * "Ao descansar sem limpar Pontos de Vida nem Estresse, receba +2 em jogadas de
+   * ataque e dano até seu próximo descanso."
+   *
+   * ⚠ DUAS COISAS NOVAS, as duas por falta e não por escolha:
+   *  1. o bônus preparado só tinha UMA duração, implícita — o fim da cena apagava
+   *     tudo. "Até o próximo descanso" é mais longo, e sem duração declarada este
+   *     bônus morreria antes da hora, em silêncio;
+   *  2. o gatilho é o descanso TERMINAR sem nenhuma das duas trilhas melhorar.
+   */
+  const base=()=>{
+    const f=contexto.fichaRapida_({
+      nome:'Insone',classe:'Guerreiro',subclasse:'Chamada do Matador',
+      ancestralidade:'Humano',comunidade:'Highborne',cartas:['blade-redemoinho','bone-intocavel'],
+      experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+    });
+    f.recursos.pontosDeVidaMarcados=3; f.recursos.estresseMarcado=3;
+    f.inventario=[{id:'loot-srd2-insomniacs-periapt',nome:'Periapto do insone',qtd:1,emUso:false}];
+    return f;
+  };
+
+  // descanso que NÃO limpa nada (Preparar-se dá Esperança): o bônus é pendurado
+  const vazio=base();
+  let sim=contexto.simularDescanso_(vazio,'curto',[{movimento:'preparar-se'},{movimento:'preparar-se'}]);
+  igual(sim.previa.erros,[],JSON.stringify(sim.previa.erros));
+  verdade(!!sim.previa.bonusPendurado,'o bônus não foi pendurado: '+JSON.stringify(sim.previa.recursos));
+  verdade(/\+2 em jogadas de ataque e dano/.test(sim.previa.bonusPendurado.texto),
+    sim.previa.bonusPendurado.texto);
+  igual(sim.previa.bonusPendurado.duracao,'proximo-descanso');
+  verdade(/Periapto do insone/.test(sim.previa.bonusPendurado.fonte),sim.previa.bonusPendurado.fonte);
+
+  // ⚠ CONTROLE: um descanso que LIMPA algo não pendura nada
+  const curou=base();
+  /*
+   * ⚠ O DADO VAI JUNTO. Sem `rolagem`, o movimento de cura só PEDE o dado e não
+   * limpa nada — e o controle passaria pelo motivo errado, provando que o bônus
+   * é pendurado quando nada foi limpo (o que o teste de cima já prova).
+   */
+  sim=contexto.simularDescanso_(curou,'curto',
+    [{movimento:'tratar-feridas',rolagem:3},{movimento:'reduzir-estresse',rolagem:3}]);
+  igual(sim.previa.erros,[],JSON.stringify(sim.previa.erros));
+  verdade(!sim.previa.bonusPendurado,
+    'limpou PV/Estresse e o bônus foi pendurado de todo jeito: '+JSON.stringify(sim.previa.recursos));
+
+  // ⚠ CONTROLE: sem o periapto na mochila, descanso vazio não pendura nada
+  const sem=base(); sem.inventario=[];
+  sim=contexto.simularDescanso_(sem,'curto',[{movimento:'preparar-se'},{movimento:'preparar-se'}]);
+  verdade(!sim.previa.bonusPendurado);
+});
+
+teste('⚠ a duração do bônus preparado sobrevive à GRAVAÇÃO',()=>{
+  /*
+   * ⚠ POR UM TRIZ ELA NÃO SOBREVIVIA, e o defeito era meu — do bloco anterior.
+   *
+   * `validarFicha_` RECONSTRÓI cada bônus preparado campo por campo, então um
+   * campo novo que ele não conheça é apagado na primeira gravação, sem erro
+   * nenhum. O bônus do Periapto voltaria como `fim-da-cena` e morreria na virada
+   * de cena seguinte — horas antes da hora, e em silêncio.
+   *
+   * Os testes do bloco passado passavam porque nenhum deles gravava a ficha.
+   * Normalizador que reconstrói é sempre o lugar onde um campo novo desaparece.
+   */
+  const f=contexto.fichaRapida_({
+    nome:'Gravacao',classe:'Guerreiro',subclasse:'Chamada do Matador',
+    ancestralidade:'Humano',comunidade:'Highborne',cartas:['blade-redemoinho','bone-intocavel'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  contexto.prepararBonusDaFicha_(f,{fonte:'Periapto',texto:'+2 até o próximo descanso.',duracao:'proximo-descanso'});
+  contexto.prepararBonusDaFicha_(f,{fonte:'Cena',texto:'+1 no próximo ataque.'});
+
+  const gravada=contexto.validarFicha_(JSON.parse(JSON.stringify(f)));
+  igual(gravada.bonusPreparados.length,2);
+  igual(gravada.bonusPreparados[0].duracao,'proximo-descanso','a duração foi apagada na gravação');
+  igual(gravada.bonusPreparados[1].duracao,'fim-da-cena','o padrão tem de continuar sendo o da cena');
+
+  // e depois de gravada, o fim da cena continua apagando só o que é dele
+  contexto.ajustarGatilho_(gravada,{gatilho:'fim-da-cena'});
+  igual(gravada.bonusPreparados.length,1);
+  igual(gravada.bonusPreparados[0].duracao,'proximo-descanso');
+
+  // duração inventada por um cliente criativo cai no padrão, não vira lixo
+  const torto=contexto.validarFicha_(Object.assign(JSON.parse(JSON.stringify(f)),{
+    bonusPreparados:[{id:'x',fonte:'y',texto:'z',duracao:'para-sempre'}]
+  }));
+  igual(torto.bonusPreparados[0].duracao,'fim-da-cena');
+});
+
+teste('⚠ o bônus "até o próximo descanso" sobrevive ao fim da cena, e o de cena não',()=>{
+  /*
+   * ⚠ ESTA É A METADE QUE FALTAVA. Antes, `limparBonusPreparadosDaFicha_` apagava
+   * TUDO — então um bônus que vale até o próximo descanso morreria na primeira
+   * virada de cena, sem ninguém notar.
+   */
+  const f=contexto.fichaRapida_({
+    nome:'Duracoes',classe:'Guerreiro',subclasse:'Chamada do Matador',
+    ancestralidade:'Humano',comunidade:'Highborne',cartas:['blade-redemoinho','bone-intocavel'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  contexto.prepararBonusDaFicha_(f,{fonte:'Cena',texto:'+1 no próximo ataque.'});
+  contexto.prepararBonusDaFicha_(f,{fonte:'Periapto',texto:'+2 até o próximo descanso.',duracao:'proximo-descanso'});
+  igual(f.bonusPreparados.length,2);
+  igual(f.bonusPreparados[0].duracao,'fim-da-cena','o padrão não pode ter mudado');
+
+  contexto.ajustarGatilho_(f,{gatilho:'fim-da-cena'});
+  igual(f.bonusPreparados.length,1,'o fim da cena apagou o que não era dele');
+  igual(f.bonusPreparados[0].duracao,'proximo-descanso');
+
+  // e o próximo descanso é que apaga o dele
+  f.recursos.pontosDeVidaMarcados=0; f.recursos.estresseMarcado=0;
+  const sim=contexto.simularDescanso_(f,'curto',[{movimento:'preparar-se'},{movimento:'preparar-se'}]);
+  igual(sim.previa.bonusExpirados,1,'o descanso tinha de expirar o bônus do descanso passado');
+});
+
+teste('⚠ Musgo Doce: o d10 é da mesa e a TRILHA é escolha de quem joga',()=>{
+  /*
+   * Mesmo caminho das seis poções (`recuperar-com-dado`), com uma diferença: o
+   * recurso é escolhido. "Limpar 1d10 Pontos de Vida OU 1d10 Estresses".
+   *
+   * ⚠ E O APP NÃO ESCOLHE PELA PESSOA. Sem a escolha, recusa — decidir por ela
+   * seria gastar o musgo na trilha errada.
+   */
+  const base=()=>{
+    const f=contexto.fichaRapida_({
+      nome:'Musgueira',classe:'Guerreiro',subclasse:'Chamada do Matador',
+      ancestralidade:'Humano',comunidade:'Highborne',cartas:['blade-redemoinho','bone-intocavel'],
+      experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+    });
+    f.recursos.pontosDeVidaMarcados=4; f.recursos.estresseMarcado=4;
+    f.inventario=[{id:'consumivel-56',nome:'Musgo Doce',qtd:2,emUso:false}];
+    return f;
+  };
+
+  // sem escolha, recusa e não consome
+  const semEscolha=base();
+  let r=contexto.aplicarAjustes_(semEscolha,[{tipo:'inventario',acao:'consumir',indice:0,resultadoManual:7}]);
+  igual(r.erros.length,1);
+  verdade(/escolha limpar Pontos de Vida ou Estresse/.test(r.erros[0]),r.erros[0]);
+  igual(semEscolha.inventario[0].qtd,2,'nada foi consumido');
+
+  // sem o dado, pede o d10
+  const semDado=base();
+  r=contexto.aplicarAjustes_(semDado,[{tipo:'inventario',acao:'consumir',indice:0,recurso:'estresse'}]);
+  verdade(r.pendenciaRolagem && r.pendenciaRolagem.dado==='d10',
+    JSON.stringify(r.pendenciaRolagem||r.erros));
+
+  // escolhendo Estresse, limpa o resultado do dado (limitado ao que está marcado)
+  const est=base();
+  r=contexto.aplicarAjustes_(est,[{tipo:'inventario',acao:'consumir',indice:0,recurso:'estresse',resultadoManual:7}]);
+  igual(r.erros,[],JSON.stringify(r.erros));
+  igual(est.recursos.estresseMarcado,0,'os 4 marcados foram limpos pelos 7 do dado');
+  igual(est.recursos.pontosDeVidaMarcados,4,'a outra trilha não foi tocada');
+  igual(est.inventario[0].qtd,1);
+
+  // e escolhendo PV, a outra
+  const pv=base();
+  r=contexto.aplicarAjustes_(pv,[{tipo:'inventario',acao:'consumir',indice:0,recurso:'pontosDeVida',resultadoManual:3}]);
+  igual(r.erros,[],JSON.stringify(r.erros));
+  igual(pv.recursos.pontosDeVidaMarcados,1);
+  igual(pv.recursos.estresseMarcado,4);
+
+  // uma trilha escolhida que já está limpa é recusada, em vez de gastar o musgo
+  const limpa=base(); limpa.recursos.estresseMarcado=0;
+  r=contexto.aplicarAjustes_(limpa,[{tipo:'inventario',acao:'consumir',indice:0,recurso:'estresse',resultadoManual:9}]);
+  igual(r.erros.length,1);
+  igual(limpa.inventario[0].qtd,2,'o musgo não pode ser gasto em troca de nada');
+
+  // e as poções de recurso FIXO continuam funcionando sem escolha nenhuma
+  const pocao=base();
+  pocao.inventario=[{id:'consumivel-07',nome:'Poção de saúde menor',qtd:1,emUso:false}];
+  r=contexto.aplicarAjustes_(pocao,[{tipo:'inventario',acao:'consumir',indice:0,resultadoManual:3}]);
+  igual(r.erros,[],'as poções de recurso fixo não podem ter quebrado: '+JSON.stringify(r.erros));
+  igual(pocao.recursos.pontosDeVidaMarcados,1);
+});
+
+teste('⚠ Pena de Fênix soma +1 na jogada de cicatriz, e o alerta diz o número que valeu',()=>{
+  /*
+   * "Se você tiver pelo menos uma Pena de Fênix consigo quando cair
+   * inconsciente, receberá um bônus de +1 na jogada que fizer para determinar se
+   * ganhará uma cicatriz."
+   *
+   * ⚠ TER BASTA — o texto diz "consigo", e obrigar a marcar "em uso" seria
+   * inventar uma condição que a carta não tem.
+   *
+   * ⚠ E O BÔNUS AJUDA SUBINDO O DADO, porque a cicatriz acontece quando o dado
+   * NÃO PASSA do nível.
+   */
+  const nivel=3;
+  const base=()=>{
+    const f=contexto.fichaRapida_({
+      nome:'Fênix',classe:'Guerreiro',subclasse:'Chamada do Matador',
+      ancestralidade:'Humano',comunidade:'Highborne',cartas:['blade-redemoinho','bone-intocavel'],
+      experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+    });
+    f.identidade.nivel=nivel;
+    f.recursos.pontosDeVidaMarcados=f.recursos.pontosDeVidaMaximos;
+    return f;
+  };
+
+  // CONTROLE: sem a pena, o dado 3 no nível 3 cicatriza ("equal to or under")
+  const sem=base();
+  let r=contexto.aplicarAjustes_(sem,[{tipo:'morte',movimento:'evitar',dadoEsperanca:3}]);
+  igual(r.erros,[],JSON.stringify(r.erros));
+  igual(r.mudancas[0].cicatrizou,true);
+  igual(sem.cicatrizes.length,1);
+
+  // com a pena na mochila, o mesmo 3 vira 4 e passa do nível
+  const com=base();
+  com.inventario=[{id:'loot-33',nome:'Pena de Fênix',qtd:1,emUso:false}];
+  r=contexto.aplicarAjustes_(com,[{tipo:'morte',movimento:'evitar',dadoEsperanca:3}]);
+  igual(r.erros,[],JSON.stringify(r.erros));
+  igual(r.mudancas[0].cicatrizou,false,'a pena evitou a cicatriz');
+  igual(r.mudancas[0].dadoComAjuda,4);
+  igual((com.cicatrizes||[]).length,0);
+  verdade(/Pena de Fênix somou \+1/.test(r.mudancas[0].alerta),r.mudancas[0].alerta);
+  verdade(/a conta usou 4/.test(r.mudancas[0].alerta),
+    'o alerta tem de dizer o número que valeu, senão parece erro do app');
+
+  // ⚠ DUAS PENAS NÃO VIRAM +2: "pelo menos uma" é condição, não multiplicador
+  const duas=base();
+  duas.inventario=[{id:'loot-33',nome:'Pena de Fênix',qtd:2,emUso:false}];
+  r=contexto.aplicarAjustes_(duas,[{tipo:'morte',movimento:'evitar',dadoEsperanca:3}]);
+  igual(r.mudancas[0].dadoComAjuda,4,'a quantidade não multiplica o bônus');
+});
+
+teste('⚠ Relicário do santo sem visão soma +1 no Arriscar Tudo — e fica FORA do crítico',()=>{
+  /*
+   * ⚠ A DECISÃO DE REGRA É A MESMA DA ABENÇOADA, e por isso ela está repetida
+   * aqui: crítico em Daggerheart é os dois DADOS mostrando o mesmo número. Se o
+   * bônus contasse no crítico, ele estaria à venda — bastaria pagar a diferença.
+   */
+  const base=()=>{
+    const f=contexto.fichaRapida_({
+      nome:'Relicária',classe:'Guerreiro',subclasse:'Chamada do Matador',
+      ancestralidade:'Humano',comunidade:'Highborne',cartas:['blade-redemoinho','bone-intocavel'],
+      experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+    });
+    f.recursos.pontosDeVidaMarcados=f.recursos.pontosDeVidaMaximos;
+    f.recursos.estresseMarcado=2;
+    f.inventario=[{id:'loot-srd2-reliquary-of-the-sightless-saint',nome:'Relicário do santo sem visão',qtd:1,emUso:false}];
+    return f;
+  };
+
+  // empate de DADOS (4 e 4) continua crítico, e o bônus não muda isso
+  const critico=base();
+  let r=contexto.aplicarAjustes_(critico,[{tipo:'morte',movimento:'arriscar',dadoEsperanca:4,dadoMedo:4}]);
+  igual(r.erros,[],JSON.stringify(r.erros));
+  igual(r.mudancas[0].resultado,'critico');
+  verdade(/não fez diferença aqui/.test(r.mudancas[0].alerta),r.mudancas[0].alerta);
+
+  /*
+   * ⚠ ACHADO ESCREVENDO ESTE TESTE, e ele me corrigiu: o +1 NÃO SALVA NINGUÉM.
+   *
+   * Perder é `Medo >= Esperança`. Para o +1 virar o jogo, o Medo teria de ser
+   * igual ao dado cru — e dados iguais já saíram como CRÍTICO lá em cima. O
+   * melhor que o +1 alcança é empatar os totais, e empate não é maior.
+   *
+   * Então o Relicário não muda o veredito: ele muda QUANTO SE LIMPA. Eu tinha
+   * escrito o contrário na primeira versão deste teste.
+   */
+  const empatou=base();
+  r=contexto.aplicarAjustes_(empatou,[{tipo:'morte',movimento:'arriscar',dadoEsperanca:4,dadoMedo:5}]);
+  igual(r.erros,[],JSON.stringify(r.erros));
+  igual(r.mudancas[0].resultado,'veu','4+1=5 empata com 5, e empate não é maior');
+  igual(r.mudancas[0].dadoEsperanca,5);
+  igual(r.mudancas[0].dadoEsperancaCru,4);
+
+  // e onde ele vale de verdade: o dado que se reparte passa de 4 para 5
+  const venceu=base();
+  r=contexto.aplicarAjustes_(venceu,[{tipo:'morte',movimento:'arriscar',
+    dadoEsperanca:4,dadoMedo:3,reparticao:{pontosDeVida:3,estresse:2}}]);
+  igual(r.erros,[],JSON.stringify(r.erros));
+  igual(r.mudancas[0].resultado,'esperanca');
+  igual(r.mudancas[0].dadoEsperanca,5,'o dado que se reparte é 4+1');
+  igual(r.mudancas[0].dadoEsperancaCru,4);
+  igual(r.mudancas[0].limpou,{pontosDeVida:3,estresse:2},'os 5 couberam nas duas trilhas');
+  verdade(/Relicário do santo sem visão somou \+1/.test(r.mudancas[0].alerta),r.mudancas[0].alerta);
+
+  // CONTROLE: sem o relicário, o mesmo dado 4 reparte só 4
+  const sem=base(); sem.inventario=[];
+  r=contexto.aplicarAjustes_(sem,[{tipo:'morte',movimento:'arriscar',
+    dadoEsperanca:4,dadoMedo:3,reparticao:{pontosDeVida:3,estresse:2}}]);
+  igual(r.erros.length,1,'sem o relicário, 3+2 não cabe em 4: '+JSON.stringify(r.erros));
+});
+
+teste('⚠ Sino do viajante: o efeito é ficção, mas o "1 por descanso longo" é contável',()=>{
+  /*
+   * Era `pendente-deterministico` por falta de contador. O caminho seguro por 1
+   * hora é da mesa; o app guarda só o que é dele — que o sino já tocou.
+   */
+  const f=contexto.fichaRapida_({
+    nome:'Viajante',classe:'Guerreiro',subclasse:'Chamada do Matador',
+    ancestralidade:'Humano',comunidade:'Highborne',cartas:['blade-redemoinho','bone-intocavel'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  f.inventario=[{id:'loot-srd2-travelers-bell',nome:'Sino do viajante',qtd:1,emUso:false}];
+  let r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]);
+  igual(r.erros,[],JSON.stringify(r.erros));
+  igual(f.contadores['uso:loot:loot-srd2-travelers-bell'].valor,1);
+  r=contexto.aplicarAjustes_(f,[{tipo:'inventario',acao:'usar',indice:0}]);
+  igual(r.erros.length,1);
+  verdade(/já foram gastos|já foi gasto/.test(r.erros[0]),r.erros[0]);
+  // e o descanso longo devolve o toque
+  contexto.aplicarGatilhoContadores_(f,'descanso-longo');
+  verdade(!f.contadores['uso:loot:loot-srd2-travelers-bell'],'o descanso longo não devolveu o toque');
+});
+
+teste('⚠ Diadema do fagófobo: o 4 limpa 1 Estresse, e errar o dado NÃO queima a cena',()=>{
+  /*
+   * ⚠ ESTE ITEM PEDIU UMA COISA NOVA NO USO DE SAQUE: até aqui esse caminho só
+   * sabia COBRAR recurso. Sem `resultadoQueLimpa`, o app pediria o d4 e não faria
+   * nada com o 4 — o silêncio de sempre, com um dado no meio.
+   *
+   * ⚠ E o uso da cena só é gasto quando a consequência acontece. A carta
+   * condiciona o efeito ao RESULTADO, não à tentativa; queimar a única limpeza da
+   * cena num d4 que deu 2 seria cobrar por nada.
+   */
+  const base=contexto.fichaRapida_({
+    nome:'Fagófoba',classe:'Guerreiro',subclasse:'Chamada do Matador',
+    ancestralidade:'Humano',comunidade:'Highborne',cartas:['blade-redemoinho','bone-intocavel'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  const comDiadema=()=>{
+    const f=JSON.parse(JSON.stringify(base));
+    f.inventario=[{id:'loot-srd2-phobophages-circlet',nome:'Diadema do fagófobo',qtd:1,emUso:true}];
+    f.recursos.estresseMarcado=3;
+    return f;
+  };
+
+  // sem o dado, pede o d4 e não mexe em nada
+  const pede=comDiadema();
+  let r=contexto.aplicarAjustes_(pede,[{tipo:'inventario',acao:'usar',indice:0}]);
+  verdade(r.pendenciaRolagem && r.pendenciaRolagem.dado==='d4', JSON.stringify(r.pendenciaRolagem||r.erros));
+  igual(pede.recursos.estresseMarcado,3);
+
+  // d4 = 2: nada acontece, e o uso da cena CONTINUA disponível
+  const errou=comDiadema();
+  r=contexto.aplicarAjustes_(errou,[{tipo:'inventario',acao:'usar',indice:0,dadoDiadema:2}]);
+  igual(r.erros,[],JSON.stringify(r.erros));
+  igual(errou.recursos.estresseMarcado,3,'nada foi limpo');
+  verdade(!errou.contadores['uso:loot:loot-srd2-phobophages-circlet'],
+    'o uso da cena foi queimado por um dado que não acionou nada');
+  verdade(/o uso desta cena continua disponível/.test(r.mudancas[0].aviso),r.mudancas[0].aviso);
+
+  // d4 = 4: limpa 1 Estresse e gasta o uso da cena
+  const acertou=comDiadema();
+  r=contexto.aplicarAjustes_(acertou,[{tipo:'inventario',acao:'usar',indice:0,dadoDiadema:4}]);
+  igual(r.erros,[],JSON.stringify(r.erros));
+  igual(acertou.recursos.estresseMarcado,2,'limpou 1 Estresse');
+  igual(acertou.contadores['uso:loot:loot-srd2-phobophages-circlet'].valor,1);
+  verdade(/limpou 1 Estresse/.test(r.mudancas[0].aviso),r.mudancas[0].aviso);
+  // e não dá duas vezes na mesma cena
+  r=contexto.aplicarAjustes_(acertou,[{tipo:'inventario',acao:'usar',indice:0,dadoDiadema:4}]);
+  igual(r.erros.length,1);
+  // o fim da cena devolve
+  contexto.aplicarGatilhoContadores_(acertou,'fim-da-cena');
+  verdade(!acertou.contadores['uso:loot:loot-srd2-phobophages-circlet']);
+
+  // sem Estresse marcado, o 4 não inventa limpeza — e DIZ que não achou o que limpar
+  const limpa=comDiadema(); limpa.recursos.estresseMarcado=0;
+  r=contexto.aplicarAjustes_(limpa,[{tipo:'inventario',acao:'usar',indice:0,dadoDiadema:4}]);
+  igual(r.erros,[]);
+  igual(limpa.recursos.estresseMarcado,0);
+  verdade(/não havia Estresse marcado para limpar/.test(r.mudancas[0].aviso),r.mudancas[0].aviso);
+  verdade(!limpa.contadores['uso:loot:loot-srd2-phobophages-circlet'],
+    'sem nada para limpar, o uso da cena não pode ser gasto');
+});
+
+teste('⚠ Luvas de alacridade em uso cancelam o Estresse da Recarga, e dizem que cancelaram',()=>{
+  /*
+   * Um dos 13 `pendente-deterministico`: "quando você deveria marcar 1 Estresse
+   * para recarregar uma arma, não o marque". O custo da Recarga já era conhecido
+   * pelo motor; faltava quem o cancelasse.
+   *
+   * ⚠ A DECLARAÇÃO DIZ QUAL CARACTERÍSTICA, não um booleano com o nome de uma
+   * arma dentro — o próximo item que cancelar outro custo entra pela mesma porta.
+   *
+   * ⚠ E CANCELAR NÃO PODE SER SILENCIOSO: se o Estresse não foi marcado, a
+   * próxima recarga SEM as luvas em uso pareceria erro do app.
+   */
+  const a=armaRecargaD1_(); verdade(!!a);
+
+  // CONTROLE primeiro: sem as luvas, o resultado 1 cobra 1 Estresse.
+  const sem=fichaEquipC1_(a);
+  let r=contexto.aplicarAjustes_(sem,[{tipo:'usoEquipamento',itemId:a.id,nome:'Recarga',dadoRecarga:1}]);
+  igual(r.erros,[]); igual(sem.recursos.estresseMarcado,1);
+
+  // com as luvas na mochila mas NÃO em uso, nada muda — `exigeEmUso` é a regra
+  const guardadas=fichaEquipC1_(a);
+  guardadas.inventario=[{id:'loot-srd2-gloves-of-alacrity',nome:'Luvas de alacridade',qtd:1,emUso:false}];
+  r=contexto.aplicarAjustes_(guardadas,[{tipo:'usoEquipamento',itemId:a.id,nome:'Recarga',dadoRecarga:1}]);
+  igual(r.erros,[]); igual(guardadas.recursos.estresseMarcado,1,'guardadas na mochila não valem');
+
+  // em uso: nenhum Estresse, e o aviso nomeia quem cancelou
+  const com=fichaEquipC1_(a);
+  com.inventario=[{id:'loot-srd2-gloves-of-alacrity',nome:'Luvas de alacridade',qtd:1,emUso:true}];
+  r=contexto.aplicarAjustes_(com,[{tipo:'usoEquipamento',itemId:a.id,nome:'Recarga',dadoRecarga:1}]);
+  igual(r.erros,[],JSON.stringify(r.erros));
+  igual(com.recursos.estresseMarcado,0,'as luvas cancelaram o Estresse');
+  igual(r.mudancas[0].custoEstresse,0);
+  igual((r.mudancas[0].custoCancelado||{}).caracteristica,'Recarga');
+  verdade(/Luvas de alacridade cancelou o Estresse de Recarga/.test(r.mudancas[0].aviso),
+    r.mudancas[0].aviso);
+});
+
+teste('⚠ o Pingente do guardião do tempo dá o movimento de descanso que o app PROIBIA',()=>{
+  /*
+   * ⚠ ESTE ERA O PIOR DA LISTA DOS 13, e não por omissão: a tela contava dois
+   * movimentos e RECUSAVA o terceiro — o app proibia o que o item permite.
+   *
+   * A fonte que faltava era saque em uso. O motor já somava movimento adicional
+   * de origem, de estado de carta e de contador; item da mochila não entrava.
+   */
+  const base=contexto.fichaRapida_({
+    nome:'Guardiã do Tempo',classe:'Guerreiro',subclasse:'Chamada do Matador',
+    ancestralidade:'Humano',comunidade:'Highborne',cartas:['blade-redemoinho','bone-intocavel'],
+    experiencias:[{nome:'A',bonus:2},{nome:'B',bonus:2}]
+  });
+  igual(contexto.movimentosPorDescansoDaFicha_(base),2,'o padrão do livro são dois');
+
+  const guardado=JSON.parse(JSON.stringify(base));
+  guardado.inventario=[{id:'loot-srd2-timekeepers-pendant',nome:'Pingente do guardião do tempo',qtd:1,emUso:false}];
+  igual(contexto.movimentosPorDescansoDaFicha_(guardado),2,'guardado na mochila não vale');
+
+  const emUso=JSON.parse(JSON.stringify(base));
+  emUso.inventario=[{id:'loot-srd2-timekeepers-pendant',nome:'Pingente do guardião do tempo',qtd:1,emUso:true}];
+  igual(contexto.movimentosPorDescansoDaFicha_(emUso),3,'em uso, o terceiro movimento existe');
+
+  // o Santuário temporal entra pela mesma porta
+  const santuario=JSON.parse(JSON.stringify(base));
+  santuario.inventario=[{id:'loot-srd2-temporal-sanctuary',nome:'Santuário temporal',qtd:1,emUso:true}];
+  igual(contexto.movimentosPorDescansoDaFicha_(santuario),3);
+
+  // e os dois juntos somam, porque são dois itens diferentes
+  const dois=JSON.parse(JSON.stringify(base));
+  dois.inventario=[
+    {id:'loot-srd2-timekeepers-pendant',nome:'Pingente do guardião do tempo',qtd:1,emUso:true},
+    {id:'loot-srd2-temporal-sanctuary',nome:'Santuário temporal',qtd:1,emUso:true}
+  ];
+  igual(contexto.movimentosPorDescansoDaFicha_(dois),4);
+});
+
+teste('⚠ as Luvas de pele de carniçal NÃO viraram efeito de ficha — e o motivo disso está escrito',()=>{
+  /*
+   * ⚠ CORREÇÃO MINHA, no meio do próprio bloco. Eu ia ligá-las como efeito de
+   * ficha, levado pelo `motivo` que estava no item: "muda quem pode mitigar,
+   * porque a Bladefare e o Manto de Monett proíbem marcar Armadura contra um dos
+   * tipos".
+   *
+   * Só que a Bladefare e o Manto são a armadura DESTE personagem, e valem para
+   * dano RECEBIDO. As luvas falam do dano que ele CAUSA, que o Mestre aplica no
+   * adversário — e a decisão da mesa é "só ficha, sem dados". Não havia número a
+   * mover aqui.
+   */
+  const itens=avaliar('ITENS')||[];
+  const luvas=itens.find((i)=>i.id==='loot-srd2-ghoulskin-gloves');
+  verdade(!!luvas);
+  igual(luvas.automacao.classificacao,'loot-lembrete-em-uso-e21');
+  verdade(/CORRIGIDO/.test(luvas.automacao.motivo),'o motivo antigo não pode voltar sem aviso');
+  verdade(luvas.efeitoSaquePassivo.exigeEmUso===true);
+  verdade(/físico E mágico/.test(luvas.efeitoSaquePassivo.efeitoManual),
+    'o lembrete que a ficha escreve embaixo do item sumiu');
+  verdade(/Mestre/.test(luvas.efeitoSaquePassivo.efeitoManual),
+    'o lembrete precisa dizer quem aplica');
+  // e não pode ter inventado efeito nenhum de dano
+  verdade(!/danoFisicoContaComoMagico/.test(JSON.stringify(luvas)),
+    'sobrou o efeito de ficha que eu quase inventei');
 });
 
 teste('o Estresse condicional da Recarga continua passando pelo Inabalável',()=>{
@@ -15797,20 +17040,20 @@ teste('⚠ E108: a dívida dos itens é contada, item por item', () => {
   const pendentes = itens
     .filter((i) => /pendente-deterministico$/.test((i.automacao || {}).classificacao || ''))
     .map((i) => i.id).sort();
+  /*
+   * ⚠ ERAM TREZE; SÃO NOVE. Quatro saíram, e foi este teste que cobrou a conta:
+   *
+   * - Pingente do guardião do tempo e Santuário temporal → `descanso`. Eram os
+   *   dois piores da lista, porque o app não só deixava de aplicar: ele RECUSAVA
+   *   o terceiro movimento de descanso, proibindo o que o item permite.
+   * - Luvas de alacridade → cancelam o Estresse da Recarga.
+   * - Luvas de pele de carniçal → RECLASSIFICADAS, não ligadas. O `motivo` delas
+   *   dizia que mudavam a mitigação citando a Bladefare e o Manto de Monett, mas
+   *   essas são a armadura DESTE personagem, para dano RECEBIDO; as luvas mudam o
+   *   dano CAUSADO, que o Mestre aplica no adversário. Não havia número a mover
+   *   nesta ficha. Viraram lembrete em uso.
+   */
   igual(pendentes, [
-    'consumivel-56',
-    'consumivel-58',
-    'loot-33',
-    'loot-srd2-ghoulskin-gloves',
-    'loot-srd2-gloves-of-alacrity',
-    'loot-srd2-insomniacs-periapt',
-    'loot-srd2-phobophages-circlet',
-    'loot-srd2-reliquary-of-the-sightless-saint',
-    'loot-srd2-rings-of-camaraderie',
-    'loot-srd2-rings-of-friendship',
-    'loot-srd2-temporal-sanctuary',
-    'loot-srd2-timekeepers-pendant',
-    'loot-srd2-travelers-bell'
   ], 'a dívida dos itens mudou — atualize a lista e a Frente 7.10');
   /*
    * ⚠ E AQUI ESTE TESTE ME PEGOU. A primeira versão cobrava que item pendente

@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 197 cartas e características mandam
+ *  O problema que este arquivo resolve: 200 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -237,6 +237,9 @@ const CONTADORES = {
   "estado:loot:loot-39": { origem: "loot", refId: "loot-39", nome: "Medalhão Hopekeeper", rotulo: "carregado", tipo: "estado", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["manual"], recarregaEm: [] },
   "uso:loot:loot-52": { origem: "loot", refId: "loot-52", nome: "Fragmento de memória", rotulo: "uso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
   "uso:loot:loot-59": { origem: "loot", refId: "loot-59", nome: "Anel de determinação inquebrável", rotulo: "uso da sessão", tipo: "usos", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-de-sessao"], recarregaEm: [] },
+  "uso:loot:loot-srd2-travelers-bell": { origem: "loot", refId: "loot-srd2-travelers-bell", nome: "Sino do viajante", rotulo: "toque gasto", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
+  "uso:loot:loot-srd2-phobophages-circlet": { origem: "loot", refId: "loot-srd2-phobophages-circlet", nome: "Diadema do fagófobo", rotulo: "limpeza usada", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-da-cena"], recarregaEm: [] },
+  "estado:consumivel:consumivel-58": { origem: "consumivel", refId: "consumivel-58", nome: "Chá da Morte", rotulo: "prazo aceso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: [], recarregaEm: [], prazoNoDescansoLongo: {"consequencia":"Pelo Chá da Morte, o personagem morre: o sucesso crítico não veio antes deste descanso longo.","saida":"Se o sucesso crítico veio, apague o marcador do Chá da Morte antes de concluir o descanso."} },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -438,6 +441,9 @@ const CONTADOR_ALIASES = {
   "estado:loot:loot-39": ["Medalhão Hopekeeper"],
   "uso:loot:loot-52": ["Fragmento de memória"],
   "uso:loot:loot-59": ["Anel de determinação inquebrável"],
+  "uso:loot:loot-srd2-travelers-bell": ["Sino do viajante"],
+  "uso:loot:loot-srd2-phobophages-circlet": ["Diadema do fagófobo"],
+  "estado:consumivel:consumivel-58": ["Chá da Morte"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */

@@ -1251,3 +1251,435 @@ continua lá.
 | **Condições sem moldura** | `Abalado`, `Enlaçado`, `Maldito`, `Iluminado`, `Paranoico` — sem consumidor, seriam declarações vazias |
 | **13 itens `pendente-deterministico`** | a dívida da 7.10, pinada e com o motivo de cada um escrito |
 | **As 9 molduras de campanha, os 4 Colossos** | escopo novo, não conserto |
+
+---
+
+## Frente 8 — a janela de dano mostrava a carta e não deixava usar (28/09, pós-deploy)
+
+Achado pela Vanessa no celular, no primeiro uso depois do deploy da v19: o
+**Preparar** aparecia na janela de dano como **texto, sem caixa para marcar**,
+enquanto "Levantar-Se" ao lado tinha a sua.
+
+### 8.1 — Duas listas escritas à mão, uma em cada lado
+
+É o mesmo defeito do `blocoDeReacoesDeEquipamento_`, cujo comentário já o
+descrevia — e desta vez em duplicata:
+
+- **na tela**, `reacoesDeDanoDaFicha_` tinha quatro características fixas e **um
+  `if` para o Levantar-Se**;
+- **no motor**, o resolvedor de dano reconhecia **uma única carta**, com o efeito
+  dela digitado dentro de um `if` no meio do cálculo.
+
+Qualquer outra carta que reaja ao dano ficava invisível **na janela onde a regra
+dela acontece**.
+
+### 8.2 — ⚠ E por que o painel de cartas não resolvia
+
+O Preparar *é* usável pelo painel — tem contrato no motor e teste passando. Mas o
+gatilho da carta é *"quando você marcar 1 Ponto de Armadura para reduzir o dano
+recebido"*, e pelo painel **essa marcação ainda não aconteceu**. Aplicar depois
+marcaria o Ponto de Armadura **sem a redução que ele compra**: cobraria o custo e
+não entregaria o efeito.
+
+Não era desconforto. Era a ordem da regra.
+
+### 8.3 — A carta passou a declarar, como as classes já faziam
+
+`reacaoDano` no catálogo, no mesmo formato de `REACOES_DE_DANO_DE_CLASSE` (o da
+Vontade de Ferro, que marca Armadura adicional e reduz um limiar). O gerador
+publica `REACOES_DE_DANO_DE_CARTA`, o motor consulta a tabela, e a tela monta a
+frase **a partir do contrato** — escrever a frase à mão ao lado do contrato é o
+jeito de as duas discordarem.
+
+Três cartas declaradas:
+
+| carta | custo | efeito | observação |
+| --- | --- | --- | --- |
+| **Levantar-Se** | 1 Estresse | −1 limiar (só Severo) | **já funcionava** — saiu do `if` e virou dado, com os mesmos valores |
+| **Preparar** | 1 Estresse + 1 Ponto de Armadura | −1 limiar | exige a mitigação normal; sem ela o motor **recusa** em vez de cobrar |
+| **Deixe Passar** | 1 Estresse | −1 limiar | o d6 e a ida para o cofre continuam na mesa |
+
+⚠ **`faixas` do Preparar não inclui `nenhum` de propósito:** se a Armadura normal
+já anulou o dano, não há o que reduzir, e o motor recusa em vez de cobrar 1
+Estresse e 1 Ponto de Armadura por nada.
+
+E o bloco de "cartas ativas aplicáveis" parou de repetir quem já tem caixa — a
+mesma regra escrita duas vezes na mesma janela, sendo que a versão sem botão era
+justamente a que fazia parecer que não dava para usar.
+
+### 8.4 — ⚠ O que a medição achou e NÃO foi consertado
+
+A lista de 7 cartas do `lote9-dano.js` é escrita à mão, e a medição contra o texto
+das cartas mostrou que ela **não está completa**. Três cartas reagem ao dano e não
+cabem no contrato de hoje, porque o efeito delas não é reduzir gravidade:
+
+- **Erga-Se** (VALOR 6) — *"quando marcar 1 ou mais PV de um ataque, limpe 1
+  Estresse"*: o efeito é **limpar** recurso, e o contrato só sabe reduzir PV.
+- **Tocado pelo Valor** (VALOR 7) — *"quando marcar 1+ PV sem marcar Ponto de
+  Armadura, limpe 1 Ponto de Armadura"*: limpar recurso **mais** uma condição
+  negativa (ter *não* usado Armadura).
+- **Reflexo Arcano** (ARCANA 8) — gasta qualquer quantidade de Esperança e rola
+  esses d6 na mesa: custo variável e dado da mesa, sem contrato determinístico.
+
+Fechar esses três é acrescentar um tipo de efeito (`limpaEstresse`,
+`limpaArmadura`) e uma condição negativa ao contrato. É bloco próprio, e a decisão
+é sua.
+
+### 8.5 — As três que faltavam: o critério não era o contrato, era o "pode"
+
+Eu tinha escrito em 8.4 que Erga-Se, Tocado pelo Valor e Reflexo Arcano "não
+cabem no contrato". Medindo o texto das seis cartas que reagem ao dano, o que
+aparece é outro critério, e ele é limpo:
+
+| carta | diz "pode"? | o que isso quer dizer |
+| --- | --- | --- |
+| Levantar-Se, Preparar, Deixe Passar | **sim** | é escolha → caixa de marcar |
+| Reflexo Arcano | **sim** | é escolha, mas com custo variável → campo |
+| Erga-Se, Tocado pelo Valor | **não** | é consequência → o motor aplica |
+
+⚠ **Então duas delas nunca deveriam ter sido caixinha.** Uma caixa de marcar
+para uma regra que não é opcional é uma caixa que a mesa pode esquecer de marcar
+— e o motor já sabe tudo o que a caixa perguntaria: se marcou PV, se um Ponto de
+Armadura foi marcado neste dano e quantas cartas do domínio estão ativas.
+
+**Erga-Se** e **Tocado pelo Valor** passaram a declarar `efeitoAoMarcarPv`, que o
+motor resolve depois de `pv` e os custos serem finais — depois de Forrada,
+Impenetrável, Vítreo, Domínio Elemental e Tocado do Esplendor, que ainda mexem no
+PV. A janela **anuncia** o que vai acontecer, e diz quando o requisito não está
+cumprido ("Tocado pelo Valor — inativa: exige 4 cartas de VALOR ativas; há 1").
+
+⚠ **E o botão do painel das duas SAIU.** Ele aplicava o mesmo efeito sem conferir
+gatilho nenhum — o lembrete dizia "use somente quando um ataque acabou de fazer
+você marcar PV", e ninguém validava isso. Com a janela aplicando sozinha, manter
+o botão seria limpar dois Estresses pelo mesmo golpe.
+
+**Reflexo Arcano** ganhou `reacaoDanoComDados`: a janela pergunta quantas
+Esperanças gastar e os resultados dos d6, no mesmo formato do Aparar. Qualquer 6
+reflete — a Esperança é cobrada, nenhum PV é marcado e o recado vai para o painel
+do Mestre com o número pronto, porque **o dano refletido é do conjurador**, que é
+adversário dele. Sem nenhum 6 a Esperança foi gasta do mesmo jeito: é o que a
+carta diz.
+
+⚠ **E a lista de sete do `lote9-dano.js` saiu do código.** Era um `Set` com sete
+nomes digitados — foi ela que deixou estas três cartas fora da janela. Agora quem
+aparece ali declara `contextoNaJanelaDeDano` no catálogo, ao lado do texto da
+própria carta.
+
+⚠ **Uma recusa conservadora que ficou de pé:** com a trilha de Estresse cheia, uma
+reação que cobra Estresse é recusada mesmo com o Erga-Se ativo, que limparia um.
+A validação de custo acontece antes de `pv` ser final, e afrouxá-la exigiria
+partir o bloco em dois. A recusa é explícita, não silenciosa.
+
+### 8.6 — ⚠ E a Armadura Inabalável ficou alcançável
+
+Eu tinha dito que ela era "dado da mesa, sem contrato". Com o `reacaoDanoComDados`
+de pé, ela passa a caber: "role d6 igual à sua Proficiência; com um 6, reduza a
+gravidade em um limiar **sem marcar** um Ponto de Armadura" é a mesma forma do
+Resiliente, que já existe no motor.
+
+O que falta decidir é a interação: Resiliente **também** evita marcar o último
+Ponto de Armadura, e os dois juntos podem descontar o mesmo Ponto duas vezes.
+É bloco próprio, com teste da combinação. A decisão é sua.
+
+## Frente 9 — fechando o que faltava (28/09)
+
+A Vanessa escolheu três frentes antes de commitar: a Armadura Inabalável, os 13
+itens pendentes e uma varredura nova atrás de lista escrita à mão.
+
+### 9.1 — A varredura: sobrou UMA carta digitada dentro do código
+
+Medindo os 1.075 nomes de catálogo contra todo o `js/` e o `backend/` não gerado,
+o que sobrou de verdade foi o **Tocado do Esplendor**: o id, o domínio exigido, o
+número 4 e a chave do contador estavam escritos à mão **no resolvedor de dano e
+de novo no `lote9-dano.js`**. Virou `reacaoSubstituiPv`, e as duas pontas leem o
+contrato.
+
+⚠ **O botão do painel dela saiu.** Ele só MARCAVA o uso ("Registrar substituição
+de PV") e deixava a pessoa mexer nas trilhas à mão — a janela sabe quantos PV o
+dano exigiria, o painel não. Com os dois vivos, clicar no botão gastava o uso por
+descanso longo **sem substituir nada**.
+
+Os outros literais que a medição achou em `ficha.js` são características de
+armadura com controle próprio e forma diferente (Forrada, Vítreo, Absorvente,
+Impenetrável). Generalizar aquilo é refatoração grande, não defeito — e está dito
+aqui para não parecer esquecimento.
+
+### 9.2 — Armadura Inabalável, com a interação resolvida por ORDEM
+
+Eu tinha escrito que ela era "dado da mesa, sem contrato". Era, até o contrato de
+dados existir. Ela também não diz "pode" — quando a marcação de Armadura acontece,
+a rolagem acontece —, então o motor **exige** os dados.
+
+⚠ **O risco era a combinação com o Resiliente**, que também evita marcar Ponto de
+Armadura: os dois podiam descontar o mesmo Ponto. Resolvido por ordem — a
+Inabalável vem primeiro, e o Resiliente recalcula em cima do custo já reduzido.
+Sem Ponto a marcar, ele não tem último Ponto a evitar e nem chega a pedir o d6.
+O teste tem **controle**: sem o 6 na Inabalável, o Resiliente PRECISA pedir o dado.
+
+⚠ **Limite declarado:** uma rolagem por dano, presa à mitigação normal. A carta
+diz "UM Ponto de Armadura", no singular; multiplicar quando o mesmo dano marca
+dois (Preparar, Vítreo) seria inventar.
+
+### 9.3 — ⚠ `hidden` não escondia nada na janela de dano
+
+Achado por um controle de teste que eu **quase reescrevi** achando que o errado
+era o teste. O atributo `hidden` vira `display: none` pela folha do NAVEGADOR, e
+isso perde para `.pilha { display: flex }`, que é regra de classe nossa.
+
+Na prática: os campos de dados do **Aparar** apareciam antes de a pessoa marcar
+que ia usar o Aparar — a janela de dano pedindo resultados de dados que ela não
+vai rolar. É anterior a este lote. `[hidden]` agora ganha, e o teste mede
+**visibilidade**, não presença no DOM.
+
+### 9.4 — Verbetes: o gerador voltou a ser o dono do arquivo
+
+Os fontes em `tools/verbetes/` tinham 93 entradas e o `data/verbetes.json` tinha
+108. Os 15 vinham de outras fontes (Hope & Fear, SRD 2.0) e não cabiam no
+fichário porque a página deles não é a do livro de 368 páginas — agora têm
+fichário próprio e o montador confere a página **contra a fonte declarada**.
+
+⚠ **O estrago silencioso era maior que o susto.** Fora do gerador, aqueles 15 não
+passavam por conferência NENHUMA. E os dois arquivos se afastaram **nos dois
+sentidos**: quatro verbetes tinham texto diferente, três corrigidos só no JSON
+(inclusive a "Jogada em Equipe" do lote passado) e um só no fichário. O pior era o
+**Avanço** — o fichário dizia "a lista do seu patamar" e o JSON já seguia o SRD
+2.0 ("espaços livres do patamar atual **ou de qualquer inferior**"), que é o que
+`data/avanco.json` manda. Rodar o montador teria devolvido a **regra velha** ao
+popup que a mesa lê.
+
+`npm run teste:verbetes` agora confere byte a byte, e a trava continua com o
+motivo certo: montar nunca pode escrever MENOS verbetes do que o arquivo tem.
+
+### 9.5 — Os 13 pendentes: quatro saíram, e um deles por estar MAL CLASSIFICADO
+
+| item | o que aconteceu |
+| --- | --- |
+| **Pingente do guardião do tempo** | movimento de descanso adicional — o app **recusava** o terceiro |
+| **Santuário temporal** | mesma porta; marcar em uso é a mesa dizer "estamos nele" |
+| **Luvas de alacridade** | cancelam o Estresse da Recarga, e **dizem** que cancelaram |
+| **Luvas de pele de carniçal** | ⚠ **reclassificadas, não ligadas** |
+
+Os dois primeiros eram os piores da lista, e não por omissão: o app **proibia o
+que o item permite**. A fonte que faltava era **saque em uso** — o motor já somava
+movimento adicional de origem, de estado de carta e de contador, e item da mochila
+não entrava.
+
+⚠ **A correção das Luvas de pele de carniçal.** Eu ia ligá-las como efeito de
+ficha, levado pelo `motivo` que estava escrito no próprio item: "muda quem pode
+mitigar, porque a Bladefare e o Manto de Monett proíbem marcar Armadura contra um
+dos tipos". Só que a Bladefare e o Manto são a armadura **deste** personagem, e
+valem para dano **recebido**; as luvas mudam o dano **causado**, que o Mestre
+aplica no adversário. Não havia número a mover nesta ficha. Viraram lembrete em
+uso, e o motivo antigo ficou registrado como corrigido.
+
+⚠ **E o E108 cobrou a conta:** a lista da dívida caiu de 13 para 9, e o teste
+quebrou até a lista ser atualizada — que é exatamente o que ele existe para fazer.
+
+⚠ **Eu editei um arquivo GERADO à mão** (`4B_Descanso.gs`) e o `conferir-gerados`
+me pegou, devolvendo o arquivo. A mudança foi para
+`tools/4B_Descanso.rodape.js`, que é onde a lógica dele mora.
+
+### 9.6 — Os 9 que continuam pendentes
+
+| item | o que falta |
+| --- | --- |
+| Pena de Fênix | +1 na jogada de cicatriz, na janela do movimento de morte |
+| Relicário do santo sem visão | +1 no Dado de Esperança do Arriscar Tudo |
+| Periapto do insone | +2 preparado quando o descanso não limpa nada |
+| Sino do viajante | contador de 1 por descanso longo (efeito é ficção) |
+| Diadema do fagófobo | 1 por cena + d4 da mesa, disparado por Medo gasto |
+| Musgo Doce | limpar 1d10 PV ou Estresse no descanso, com o dado informado |
+| Anéis da amizade / da camaradagem | gastar recurso de OUTRA ficha: precisa de par declarado e consentimento |
+| Chá da Morte | prazo com morte no fim — marcador com saída observável, que não existe |
+
+### 9.7 — Mais dois pendentes: os que só precisavam de contador (9 → 7)
+
+O **Sino do viajante** e o **Diadema do fagófobo** eram `pendente-deterministico`
+por falta de **contador**. O efeito de um é ficção (caminho seguro por 1 hora) e o
+do outro depende de um d4 da mesa — mas o **limite** é contável, e limite sem
+contador é a mesa lembrando de cabeça.
+
+⚠ **O Diadema pediu uma coisa nova:** o uso de saque só sabia **cobrar** recurso.
+Sem `resultadoQueLimpa`, o app pediria o d4 e não faria nada com o 4 — o silêncio
+de sempre, com um dado no meio.
+
+⚠ **E o uso da cena só é gasto quando a consequência acontece.** A carta condiciona
+o efeito ao RESULTADO, não à tentativa: queimar a única limpeza da cena num d4 que
+deu 2 seria cobrar por nada. O aviso diz, com essas palavras, que o uso continua
+disponível — e quando não há Estresse marcado, diz que não achou o que limpar em
+vez de gastar o uso em silêncio.
+
+⚠ **Uma armadilha minha, no meio do caminho:** a primeira versão do script
+*ordenou* a lista de `data/contadores.json` para acrescentar dois contadores, e
+produziu um diff de **2.992 linhas**. Acrescentar é acrescentar; a ordem do arquivo
+não é minha para mexer.
+
+### 9.8 — Os dois bônus do movimento de morte (7 → 5)
+
+A janela do movimento de morte já resolvia os três movimentos, e a Placa Heroica
+Sagrada já gastava Esperança dentro dela. Faltava somar dois bônus lá.
+
+- **Pena de Fênix** — +1 na jogada de cicatriz do *Evitar a Morte*. O bônus ajuda
+  **subindo** o dado, porque a cicatriz acontece quando o dado **não passa** do
+  nível.
+- **Relicário do santo sem visão** — +1 no Dado de Esperança do *Arriscar Tudo*.
+
+⚠ **Nenhum dos dois exige "em uso"**, e isso é leitura do texto: a Pena diz "se
+você tiver pelo menos uma Pena de Fênix **consigo**". Ter basta — e "pelo menos
+uma" avisa que **não acumula**: duas penas na mochila não viram +2.
+
+⚠ **O Relicário fica FORA do crítico**, pela mesma razão da Abençoada: crítico é
+os dois **dados** mostrando o mesmo número, e somar ali deixaria o crítico à venda.
+
+### ⚠ 9.8.1 — E o teste me corrigiu: o +1 do Relicário NÃO SALVA NINGUÉM
+
+Escrevi a primeira versão do teste afirmando que o +1 viraria uma derrota em
+vitória. Não vira, e a conta mostra por quê:
+
+- perder é `Medo >= Esperança`;
+- para o +1 virar o jogo, o Medo teria de ser **igual ao dado cru** — e dados
+  iguais já saíram como **crítico** antes de chegar na comparação;
+- o melhor que o +1 alcança é **empatar** os totais, e empate não é maior.
+
+Então o Relicário não muda o veredito: ele muda **quanto se limpa** (o valor que
+se reparte entre PV e Estresse passa de 4 para 5). O teste agora prova as duas
+coisas, com controle: sem o relicário, repartir 3+2 não cabe em 4.
+
+⚠ E o alerta passou a dizer **o número que valeu**. "O dado (3)" quando a conta
+usou 4 faria a mesa achar que o app errou, sem ter como saber que a pena entrou.
+
+### 9.9 — Musgo Doce e Periapto do insone (5 → 3)
+
+**Musgo Doce** foi o mais curto: `recuperar-com-dado` já existia e seis poções
+usam. A diferença é que aqui o **recurso é escolha** de quem joga ("1d10 Pontos de
+Vida **ou** 1d10 Estresses"), então o contrato ganhou `recursoEscolhido`. Sem a
+escolha, o app **recusa** — decidir pela pessoa seria gastar o musgo na trilha
+errada. E uma trilha já limpa também é recusada, em vez de gastar o item por nada.
+
+⚠ **O "durante um descanso" ficou como lembrete, não como trava.** O app não sabe
+que a mesa está num descanso — esse estado não existe —, e inventar uma verificação
+que ele não tem como fazer seria pior que dizer a verdade.
+
+**Periapto do insone** pediu duas coisas, as duas por falta:
+
+1. ⚠ **O bônus preparado só tinha UMA duração, implícita:** o fim da cena apagava
+   tudo. "Até seu próximo descanso" é mais longo — sem duração declarada, este
+   bônus morreria antes da hora, em silêncio. Agora a duração é um campo, com
+   `fim-da-cena` como padrão para nenhum bônus antigo mudar de comportamento.
+2. **O gatilho é uma NÃO-AÇÃO:** o descanso terminar sem nenhuma das duas trilhas
+   ter melhorado. O descanso já comparava antes e depois para montar a lista de
+   recursos que mudaram; a condição saiu dessa mesma comparação, sem conta nova.
+
+⚠ **E o bônus anterior expira primeiro.** "Até seu próximo descanso" quer dizer que
+este descanso encerra o do descanso passado; pendurar o novo antes de apagar o
+velho empilharia dois +2 em quem descansasse duas vezes sem limpar nada.
+
+O bônus aparece na **prévia** do descanso: um +2 que entra na ficha sem ninguém ler
+nada é o mesmo silêncio que este lote inteiro combate — e aqui importa mais, porque
+o bônus só existe se a pessoa **não** limpar nada.
+
+⚠ **Dois erros meus nos testes, os dois de controle:** o primeiro mandava dois
+movimentos de cura sem o resultado do d4, então o descanso não limpava nada e o
+controle passava pelo motivo errado; o segundo chamava a função errada para virar a
+cena. Os dois consertados.
+
+### 9.10 — Chá da Morte, e uma tradução QUEBRADA na regra mais grave do catálogo
+
+O item dizia isto, palavra por palavra:
+
+> "Se você não fizer **uma análise crítica** for bem-sucedido em um ataque antes
+> do seu próximo descanso longo, você morrerá."
+
+"análise crítica" é tradução automática de *critically succeed*, e o **"for
+bem-sucedido" da outra tentativa ficou colado no meio da frase**. O inglês
+guardado responde: *"If you don't critically succeed on an attack before your next
+long rest, you die."* É a consequência mais grave do catálogo — e estava ilegível.
+
+⚠ **A varredura de vocabulário passou por cima disso três vezes**, e não por
+descuido: as regras do E114/E115 procuram **palavra errada** (Rolagem, Coragem,
+slot), não **frase quebrada**. Virou regra nova, porque "análise crítica" *é* uma
+palavra errada — o app diz "sucesso crítico".
+
+**O mecanismo: marcador com prazo e com saída.**
+
+⚠ **O contador não zera em gatilho nenhum, de propósito.** Deixar o descanso longo
+apagá-lo sozinho seria apagar **a única prova de que o prazo venceu** — e o prazo
+vencido é exatamente o que a mesa precisa ver. Ele sai pela saída (o sucesso
+crítico veio) ou fica aceso acusando.
+
+⚠ **E o app NÃO encerra a ficha.** Nem o movimento de morte faz isso sozinho. O
+descanso longo avisa com o texto da carta e diz a saída na mesma frase; quem decide
+é a mesa. Há teste provando que a ficha continua aberta.
+
+⚠ **O gerador de contadores emite uma lista FIXA de campos**, então declarar o
+prazo no JSON não bastou — o campo não chegava ao motor. Quem cobrou foi o teste.
+
+### 9.11 — E116: a porta para outra ficha SÓ LIMPA (os dois Anéis)
+
+Os **Anéis da amizade** e da **camaradagem** pedem gastar a Esperança e marcar o
+Estresse de **outra ficha**. A única porta que existe para outra ficha recusa isso
+de propósito, e o motivo não é técnico:
+
+⚠ **`mutarPersonagemEOutro_` confere a permissão apenas da ficha de ORIGEM** — a do
+aliado é gravada sem conferir nada. Para **curar**, isso é seguro (ninguém se
+ofende com Estresse limpo). Para **tirar recurso**, seria um jogador escrevendo na
+ficha do outro sem o outro saber.
+
+E a carta diz **"com permissão"**: a permissão é parte da regra, não um detalhe de
+implementação. Então o que falta nos dois Anéis **não é código** — é decidir como o
+**par** é declarado (quem usa o outro anel) e como o **consentimento** acontece.
+
+O código já recusava; o que faltava era o **teste**, porque recusa sem teste é
+recusa que alguém apaga sem perceber. O **E116** agora guarda as três pontas: a
+recusa no motor, o comentário que a explica, e que nenhum item do catálogo declare
+efeito em outra ficha sem passar por essa decisão. O motivo dos dois Anéis passou a
+dizer isso, em vez de só "mexe em duas fichas".
+
+**Dívida dos itens: 13 → 2.** Sobram exatamente os dois Anéis, e os dois estão
+parados numa decisão de fluxo que é sua.
+
+### 9.12 — Os Anéis, com o fluxo que a Vanessa decidiu: a dívida dos itens ZEROU
+
+> "os anéis quando usado aparece uma tela para o outro jogador aceitar, se aceito
+> acontece o efeito"
+
+⚠ **Essa decisão resolve o E116 sem abrir exceção nenhuma**, e isso é o melhor
+dela. O que cruza de uma ficha para a outra é o **pedido** — texto, ids e um
+número. O recurso sai da ficha de **quem aceitou**, pela porta normal dela, com a
+permissão dela. Ninguém escreve custo na ficha de ninguém.
+
+| passo | onde acontece | o que muda |
+| --- | --- | --- |
+| usar o anel | `pedirAoPar` | escreve o pedido na ficha do par. **Nada mais.** |
+| aceitar | `ajustarFicha` da própria ficha | o recurso sai/entra **ali** |
+| recusar | idem | o pedido sai, e nada é cobrado |
+
+**Decisões que o texto das cartas mandou:**
+
+- **os dois lados precisam do anel em uso** — "duas criaturas podem usar este par
+  de anéis"; pedir a quem não está usando o par não é a regra. A recusa diz **qual
+  dos dois lados** está faltando;
+- ⚠ **o pedido impossível é recusado na hora de pedir**, não na hora do sim. Pedir
+  3 de Esperança a quem tem 1 faria a outra pessoa aceitar algo que não pode
+  acontecer — e descobrir isso depois de ter dito sim;
+- **"Recusar" não é enfeite:** sem os dois botões, a única saída de um pedido
+  indesejado seria aceitá-lo ou conviver com ele na tela para sempre. Na
+  camaradagem, aceitar é sair prejudicado;
+- **o pedido aparece acima das trilhas** na ficha de quem decide: alguém está
+  esperando resposta, e isso não pode ficar abaixo da primeira dobra do celular;
+- **a mesa fica sabendo:** aceitar manda um recado ao painel do Mestre, porque a
+  ficha de quem pediu não tem como ser avisada daqui.
+
+⚠ **Dois conferidores me pegaram neste bloco, e os dois estavam certos:**
+
+1. **`validarFicha_` RECONSTRÓI cada registro campo por campo** — então a duração
+   do bônus preparado, que eu tinha acabado de criar, **desaparecia na primeira
+   gravação**: o +2 do Periapto voltaria como `fim-da-cena` e morreria horas antes
+   da hora, em silêncio. Os testes do bloco anterior passavam porque nenhum deles
+   gravava a ficha. Consertado, com teste que grava — e o normalizador dos pedidos
+   já nasceu com todos os campos listados.
+2. **`conferir-funcoes-publicadas`** avisou que o app rotearia `pedirAoPar` para
+   uma Edge Function que não trata essa ação — um **404 mudo em produção**. A
+   `engine-api` precisava da ação na lista dela também.
+
+**Dívida dos itens: 13 → 0.**

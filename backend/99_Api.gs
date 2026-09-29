@@ -415,6 +415,32 @@ function executar_(p) {
        * O motor recebe a escolha da regra e fatos da mesa; deltas/custos vêm
        * exclusivamente do catálogo. Se Inabalável pedir d6, nenhuma ficha é gravada.
        */
+      /**
+       * OS ANÉIS PEDEM; QUEM USA O OUTRO É QUE DECIDE.
+       *
+       * ⚠ ESTA CHAMADA NÃO TIRA NADA DE NINGUÉM. Ela escreve um PEDIDO na ficha
+       * do par e para aí — é a única coisa que uma ficha escreve na outra sem a
+       * permissão dela, e é inofensiva por construção: texto, ids e um número.
+       *
+       * O recurso sai depois, em `responderPedido`, na ficha de quem aceitou e
+       * com a permissão dela. É assim que o E116 continua valendo inteiro.
+       */
+      case 'pedirAoPar': {
+        const jogador = exigirSessao_(p.token);
+        const r = mutarPersonagemEOutro_(jogador, p.id, p.aliadoId, p.versao,
+          function (fichaOrigem, fichaAliado) {
+            const rel = criarPedidoDeAnel_(fichaOrigem, fichaAliado, {
+              itemId: p.itemId, quantidade: p.quantidade
+            });
+            if (rel.erro) throw erroApi_(ERRO.DADOS_INVALIDOS, rel.erro);
+            return {
+              fichaOrigem: fichaOrigem, fichaAliado: fichaAliado,
+              extra: rel, evento: 'pedido-de-anel'
+            };
+          });
+        return ok_({ origem: r.origem, aliado: r.aliado, resultado: r.extra });
+      }
+
       case 'usarProtecaoEmAliado': {
         const jogador = exigirSessao_(p.token);
         const r = mutarPersonagemEOutro_(jogador, p.id, p.aliadoId, p.versao,

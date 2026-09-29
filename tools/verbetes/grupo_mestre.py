@@ -103,7 +103,7 @@ VERBETES = [
         'categoria': 'mestre',
         'pagina': 149,
         'ancora': 'movimento',
-        'resumo': 'O que o Mestre faz quando o jogo volta para ele: uma falha, uma rolagem '
+        'resumo': 'O que o Mestre faz quando o jogo volta para ele: uma falha, uma jogada '
                   'com Medo, ou 1 Medo gasto para interromper.',
         'explicacao': [
             'Depois de um movimento, 1 Medo compra um movimento a mais no mesmo turno.'

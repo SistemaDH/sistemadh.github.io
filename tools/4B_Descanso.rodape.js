@@ -72,6 +72,21 @@ function movimentosPorDescansoDaFicha_(ficha) {
       if (ativo > 0) total += Math.max(0, Math.trunc(Number(estado.movimentosAdicionaisNoDescanso)) || 0);
     }
   }
+  /*
+   * ⚠ SAQUE EM USO — a fonte que faltava, e a que fazia o app PROIBIR o que o
+   * item permite. O Pingente do guardião do tempo e o Santuário temporal dão um
+   * movimento de descanso adicional; sem esta fonte, a tela contava dois e
+   * recusava o terceiro. Eram os dois piores itens da lista de pendentes, porque
+   * não era omissão: era o app dizendo "não" a uma regra que diz "sim".
+   */
+  if (typeof saquesAtivosDaFicha_ === 'function') {
+    const ativos = saquesAtivosDaFicha_(ficha);
+    for (let i = 0; i < ativos.length; i++) {
+      const passivo = ((ativos[i] || {}).item || {}).efeitoSaquePassivo || {};
+      total += Math.max(0, Math.trunc(Number(passivo.movimentosAdicionaisNoDescanso)) || 0);
+    }
+  }
+
   // Estados persistentes também podem alterar o número de movimentos.
   // O valor é lido antes de simular/aplicar o gatilho do descanso; por isso
   // uma Poção da Estabilidade vale neste descanso e é zerada logo depois.
@@ -815,6 +830,73 @@ function simularDescanso_(ficha, tipo, escolhas) {
     });
   }
 
+  /*
+   * PERIAPTO DO INSONE: "ao descansar sem limpar Pontos de Vida nem Estresse,
+   * receba +2 em jogadas de ataque e dano até seu próximo descanso."
+   *
+   * ⚠ O GATILHO É UMA NÃO-AÇÃO, e é por isso que ele mora aqui e não num
+   * movimento: a condição é o descanso TERMINAR sem nenhuma das duas trilhas ter
+   * melhorado. A comparação de antes e depois já está feita logo acima, para
+   * montar a lista de recursos que mudaram; a condição sai dela, sem conta nova.
+   *
+   * ⚠ E O BÔNUS ANTERIOR EXPIRA PRIMEIRO. "Até seu próximo descanso" quer dizer
+   * que este descanso encerra o bônus do descanso passado; pendurar o novo antes
+   * de apagar o velho empilharia dois +2 em quem descansasse duas vezes sem
+   * limpar nada.
+   */
+  /*
+   * ⚠ PRAZO ACESO NO DESCANSO LONGO — hoje só o Chá da Morte.
+   *
+   * O contador dele não zera em gatilho nenhum, de propósito: apagar sozinho
+   * seria apagar a única prova de que o prazo venceu. Então o descanso longo
+   * AVISA, com o texto da carta, e a saída fica dita na mesma frase.
+   *
+   * ⚠ E O APP NÃO ENCERRA A FICHA. Nem o movimento de morte faz isso sozinho, e
+   * esta é a consequência mais grave do catálogo: quem decide é a mesa.
+   */
+  const prazosAcesos = [];
+  if (t.id === 'longo' && typeof CONTADORES === 'object') {
+    const acesos = (copia || {}).contadores || {};
+    Object.keys(acesos).forEach(function (chave) {
+      const def = CONTADORES[chave] || {};
+      const prazo = def.prazoNoDescansoLongo || null;
+      if (!prazo) return;
+      const reg = acesos[chave] || {};
+      const valor = Math.max(0, Math.trunc(Number(typeof reg === 'object' ? reg.valor : reg)) || 0);
+      if (valor <= 0) return;
+      prazosAcesos.push({ chave:chave, nome:def.nome || chave,
+        consequencia:String(prazo.consequencia || ''), saida:String(prazo.saida || '') });
+      avisos.push('⚠ ' + (def.nome || chave) + ': ' + String(prazo.consequencia || '') +
+        (prazo.saida ? ' ' + String(prazo.saida) : ''));
+    });
+  }
+
+  let bonusDoDescanso = null;
+  let bonusExpirados = 0;
+  if (typeof limparBonusPreparadosDaFicha_ === 'function') {
+    bonusExpirados = limparBonusPreparadosDaFicha_(copia, 'proximo-descanso');
+  }
+  if (typeof passivosDeSaqueDaMochila_ === 'function' &&
+      typeof prepararBonusDaFicha_ === 'function') {
+    const carregados = passivosDeSaqueDaMochila_(copia);
+    for (let i = 0; i < carregados.length; i++) {
+      const regra = ((carregados[i].passivo || {}).noDescanso) || null;
+      if (!regra || !regra.bonusPreparado) continue;
+      const exige = Array.isArray(regra.exigeDescansoSemLimpar) ? regra.exigeDescansoSemLimpar : [];
+      let limpouAlgo = false;
+      for (let k = 0; k < exige.length; k++) {
+        const chave = String(exige[k]);
+        if ((Number(depois[chave]) || 0) < (Number(antes[chave]) || 0)) { limpouAlgo = true; break; }
+      }
+      if (limpouAlgo) continue;
+      bonusDoDescanso = prepararBonusDaFicha_(copia, {
+        fonte: carregados[i].item.nome || carregados[i].item.id,
+        texto: String(regra.bonusPreparado.texto || ''),
+        duracao: String(regra.bonusPreparado.duracao || 'proximo-descanso')
+      });
+    }
+  }
+
   const precisaRolar = feitos.filter(function (f) { return f.precisaDeRolagem; })
     .map(function (f) { return f.nome; });
 
@@ -838,6 +920,14 @@ function simularDescanso_(ficha, tipo, escolhas) {
     descansosCurtosSeguidos: { antes: seguidosAntes, depois: seguidosDepois,
       maximo: DESCANSO.maxDescansosCurtosSeguidos },
     precisaDeRolagem: precisaRolar,
+    /*
+     * ⚠ O BÔNUS PENDURADO APARECE NA PRÉVIA. Um +2 que entra na ficha sem a
+     * pessoa ler nada é o mesmo silêncio que este lote inteiro combate — e aqui
+     * ela precisa saber, porque o bônus só existe se ela NÃO limpar nada.
+     */
+    bonusPendurado: bonusDoDescanso,
+    bonusExpirados: bonusExpirados,
+    prazosAcesos: prazosAcesos,
     paraAliados: paraAliados,
     erros: erros,
     avisos: avisos

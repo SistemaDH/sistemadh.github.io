@@ -294,7 +294,6 @@ const USOS_CARTAS_DOMINIO = {
   "arcana-explosao-de-camuflagem": {"custo":{"esperanca":1},"condicao":{"chave":"Camuflado","ligar":true},"rotuloAtivar":"Após outro feitiço: Camuflar","lembrete":"Camuflado termina conforme movimento, linha de visão ou ataque descritos na carta."},
   "arcana-tocado-pela-arcana": {"custo":{},"exigeCartasAtivasDominio":{"dominio":"ARCANA","quantidade":4},"marcaUso":{"chave":"uso:carta:arcana:tocado-pela-arcana","maximo":1},"rotuloAtivar":"Trocar Dados de Esperança e Medo","lembrete":"Troque os dois resultados que já foram rolados na mesa; o app não rola dados."},
   "arcana-aura-confusa": {"custo":{},"entradaQuantidade":{"campo":"camadasExtras","rotulo":"Camadas extras","minimo":0,"maximo":12,"custoPorUnidade":{"estresse":1},"ajuda":"A primeira camada é gratuita. Marque 1 Estresse por camada adicional."},"quantidadeLigadaAoEstresse":true,"marcaUso":{"chave":"uso:carta:arcana:aura-confusa","maximo":1},"estado":{"chave":"estado:carta:arcana:aura-confusa:camadas","valorBase":1,"somarQuantidade":true,"permiteEncerrarManual":false,"rotuloAtivo":"Aura Confusa ativa"},"reacaoEstado":{"campo":"dadosAuraConfusa","dado":"d6","lados":6,"sucessoMinimo":5,"rotulo":"Resolver ataque contra você"},"rotuloAtivar":"Sucesso: criar Aura Confusa","lembrete":"Em cada ataque, role 1d6 por camada fora do app. Um 5+ destrói uma camada e faz o ataque falhar; se todos derem 4 ou menos, a aura termina."},
-  "arcana-reflexo-arcano": {"custo":{},"entradaQuantidade":{"campo":"esperancasGastas","rotulo":"Esperanças gastas","minimo":1,"maximo":6,"custoPorUnidade":{"esperanca":1},"ajuda":"Escolha quantas Esperanças gastar; role esse mesmo número de d6 na mesa.","dados":{"campo":"dadosReflexoArcano","lados":6,"quantidadePorUnidade":1,"sucessoMinimo":6,"rotulo":"d6 do Reflexo Arcano","mensagemSucesso":"Há um 6: o ataque é refletido no conjurador. Não aplique este dano à sua ficha.","mensagemFalha":"Nenhum 6: o dano mágico segue normalmente."}},"rotuloAtivar":"Reagir a dano mágico","lembrete":"O app não aplica dano ao conjurador: se houver um 6, a mesa aplica nele o mesmo dano que seria recebido."},
   "arcana-projecao-sensorial": {"custo":{},"marcaUso":{"chave":"uso:carta:arcana:projecao-sensorial","maximo":1},"estado":{"chave":"estado:carta:arcana:projecao-sensorial","valor":1,"permiteEncerrarManual":false,"rotuloAtivo":"Em Projeção Sensorial","encerraAoSofrerDano":true,"encerraAoConjurarOutroFeitico":true},"rotuloAtivar":"Sucesso: entrar na visão","lembrete":"A visão termina automaticamente ao sofrer dano ou ao conjurar outro feitiço."},
   "arcana-terremoto": {"custo":{},"marcaUso":{"chave":"uso:carta:arcana:terremoto","maximo":1},"rotuloAtivar":"Registrar Terremoto bem-sucedido","lembrete":"Resolva Reações (18), 3d10+8, Vulnerável temporário e terreno na mesa; o app não rola nem escolhe alvos."},
   "arcana-ajustar-a-realidade": {"custo":{"esperanca":5},"rotuloAtivar":"Ajustar resultado · 5 Esperanças","lembrete":"Escolha na mesa um resultado plausível dentro da faixa dos dados da jogada original."},
@@ -411,7 +410,6 @@ const USOS_CARTAS_DOMINIO = {
   "splendor-restauracao": {"custo":{},"rotuloAtivar":"Tocar uma criatura · gastar marcadores","lembrete":"Os marcadores saem da sua carta; a cura pousa na ficha de quem você tocou. Alcance e permissão são da mesa.","usoEmCriatura":{"contador":"carta:splendor-restauracao","rotuloMarcadores":"marcadores","rotuloAtivar":"Tocar uma criatura · Restauração","permiteSiMesmo":true,"entradaQuantidade":{"campo":"marcadores","rotulo":"Marcadores a gastar","minimo":1,"maximo":12,"ajuda":"Cada marcador limpa 2 Pontos de Vida ou 2 Estresses da criatura tocada."},"opcoes":[{"id":"pv","rotulo":"Limpar 2 Pontos de Vida por marcador","recurso":"pontosDeVidaMarcados","porMarcador":-2},{"id":"estresse","rotulo":"Limpar 2 Estresses por marcador","recurso":"estresseMarcado","porMarcador":-2},{"id":"vulneravel","rotulo":"Limpar Vulnerável · 1 marcador","marcadoresFixos":1,"limpaCondicao":"Vulnerável"},{"id":"enfermidade","rotulo":"Curar enfermidade física ou mágica","marcadoresALivreEscolha":true,"somenteLembrete":true,"lembrete":"O Mestre pode exigir marcadores adicionais conforme a gravidade; informe aqui o total combinado na mesa."}]}},
   "splendor-zona-de-protecao": {"custo":{},"marcaUso":{"chave":"uso:carta:splendor:zona-de-protecao","maximo":1},"estado":{"chave":"carta:splendor-zona-de-protecao","valor":1,"rotuloAtivo":"Zona de Proteção ativa","rotuloEncerrar":"Encerrar Zona de Proteção","avisoEncerrar":"Zona de Proteção encerrada."},"rotuloAtivar":"Sucesso: criar Zona de Proteção · 1/descanso longo","lembrete":"Comece o d6 em 1. Quando um aliado na zona sofrer dano, reduza pelo valor atual e depois aumente o dado em 1; ao passar de 6, encerre."},
   "splendor-golpe-curativo": {"custo":{"esperanca":2},"rotuloAtivar":"Após causar dano: curar aliado · 2 Esperanças","lembrete":"Um aliado Próximo recupera 1 PV. A cura é aplicada na ficha do alvo/na mesa."},
-  "splendor-tocado-do-esplendor": {"custo":{},"exigeCartasAtivasDominio":{"dominio":"SPLENDOR","quantidade":4},"marcaUso":{"chave":"uso:carta:splendor:tocado-do-esplendor","maximo":1},"rotuloAtivar":"Registrar substituição de PV · 1/descanso longo","lembrete":"Substitua todos os PV exigidos por esse dano pela mesma quantidade de Estresse ou Esperança. Ajuste as trilhas conforme a opção escolhida."},
   "splendor-aura-de-escudo": {"custo":{"estresse":1},"estado":{"chave":"estado:carta:splendor:aura-de-escudo","valor":1,"rotuloAtivo":"Aura de Escudo mantida","rotuloEncerrar":"Encerrar Aura de Escudo","avisoEncerrar":"Aura de Escudo encerrada."},"rotuloAtivar":"Conjurar Aura de Escudo · 1 Estresse","lembrete":"Registre na mesa qual criatura Muito Próxima é o alvo. Só uma criatura pode ter sua aura por vez."},
   "splendor-luz-ofuscante": {"custo":{},"entradaQuantidade":{"campo":"esperancasGastas","rotulo":"Esperanças / alvos escolhidos","minimo":1,"maximo":6,"custoPorUnidade":{"esperanca":1},"ajuda":"Informe quantos alvos atingidos você quer forçar a fazer a jogada de reação; gaste 1 Esperança por alvo."},"rotuloAtivar":"Sucesso: resolver Luz Ofuscante","lembrete":"Cada alvo escolhido faz Reação 14. Sucesso: 3d20+3 mágico. Falha: 4d20+5 mágico e Atordoado temporariamente."},
   "splendor-aura-avassaladora": {"custo":{"esperanca":2},"estado":{"chave":"estado:carta:splendor:aura-avassaladora","valor":1,"rotuloAtivo":"Aura Avassaladora ativa","rotuloEncerrar":"Encerrar Aura Avassaladora","avisoEncerrar":"Aura Avassaladora encerrada."},"rotuloAtivar":"Sucesso: ativar Aura Avassaladora · 2 Esperanças","lembrete":"Até o próximo descanso longo, sua Presença é igual ao traço de Conjuração; adversários marcam 1 Estresse ao escolher você como alvo de ataque."},
@@ -424,15 +422,139 @@ const USOS_CARTAS_DOMINIO = {
   "valor-inspiracao-critica": {"custo":{},"marcaUso":{"chave":"uso:carta:valor:inspiracao-critica","maximo":1},"rotuloAtivar":"Crítico: inspirar aliados · 1/descanso","lembrete":"Cada aliado Muito Próximo escolhe: limpar 1 Estresse ou ganhar 1 Esperança."},
   "valor-tanque-de-suporte": {"custo":{"esperanca":2},"rotuloAtivar":"Permitir rerrolagem do aliado · 2 Esperanças","lembrete":"Depois da falha de um aliado Próximo, ele escolhe rerrolar o dado de Esperança ou o dado de Medo fora do app."},
   "valor-golpe-estimulante": {"custo":{},"marcaUso":{"chave":"uso:carta:valor:golpe-estimulante","maximo":1},"opcoes":[{"id":"pv","rotulo":"Crítico: curar 1 PV","custo":{},"efeitoRecurso":{"chave":"pontosDeVidaMarcados","delta":-1},"lembrete":"Você cura 1 PV. Cada aliado que puder ver ou ouvir você escolhe 1 PV ou d4 Estresses na própria ficha."},{"id":"estresse","rotulo":"Crítico: limpar d4 Estresses","custo":{},"lembrete":"Role d4 fora do app e limpe esse total de Estresses na sua trilha. Cada aliado elegível faz a própria escolha."}],"rotuloAtivar":"Resolver Golpe Estimulante · 1/descanso"},
-  "valor-erga-se": {"custo":{},"efeitoRecurso":{"chave":"estresseMarcado","delta":-1},"rotuloAtivar":"Ataque marcou PV: limpar 1 Estresse","lembrete":"Use somente quando um ataque acabou de fazer você marcar um ou mais PV."},
   "valor-inevitavel": {"custo":{},"estado":{"chave":"estado:carta:valor:inevitavel","valor":1,"permiteEncerrarManual":true,"rotuloAtivo":"Inevitável · próxima ação com vantagem","rotuloEncerrar":"Consumir vantagem de Inevitável","avisoEncerrar":"Vantagem de Inevitável consumida."},"rotuloAtivar":"Falha: preparar vantagem na próxima ação","lembrete":"Sua próxima jogada de ação tem vantagem. Encerre este estado assim que essa jogada for feita."},
   "valor-deixe-passar": {"custo":{"estresse":1},"rotuloAtivar":"Reduzir gravidade em 1 limiar · 1 Estresse","lembrete":"Role 1d6 fora do app depois de reduzir a gravidade. Com 3 ou menos, coloque esta carta no cofre."},
-  "valor-tocado-pelo-valor": {"custo":{},"exigeCartasAtivasDominio":{"dominio":"VALOR","quantidade":4},"efeitoRecurso":{"chave":"armaduraMarcada","delta":-1},"rotuloAtivar":"PV sem Armadura: limpar 1 Ponto de Armadura","lembrete":"Use somente após marcar PV sem marcar Ponto de Armadura no mesmo dano."},
   "valor-golpe-no-chao": {"custo":{"esperanca":2},"rotuloAtivar":"Golpear o chão · 2 Esperanças","lembrete":"Faça uma jogada de Força contra todos em Muito Próximo; atingidos vão para Distante e fazem uma jogada de reação 17. Falha: 4d10+8; sucesso: metade."},
   "valor-surto-total": {"custo":{"estresse":3},"marcaUso":{"chave":"uso:carta:valor:surto-total","maximo":1},"estado":{"chave":"estado:carta:valor:surto-total","valor":1,"rotuloAtivo":"Surto Total ativo · +2 em todos os traços","rotuloEncerrar":"Encerrar Surto Total","avisoEncerrar":"Surto Total encerrado."},"rotuloAtivar":"Ativar Surto Total · 3 Estresses · 1/descanso longo","lembrete":"Até o próximo descanso, todos os seis traços recebem +2."},
   "valor-liderar-pelo-exemplo": {"custo":{"estresse":1},"rotuloAtivar":"Após causar dano: Liderar pelo Exemplo · 1 Estresse","lembrete":"O próximo personagem jogador que atacar esse mesmo adversário escolhe limpar 1 Estresse ou ganhar 1 Esperança."},
   "valor-mantenha-a-posicao": {"custo":{"esperanca":1},"estado":{"chave":"estado:carta:valor:mantenha-a-posicao","valor":1,"permiteEncerrarManual":true,"rotuloAtivo":"Mantenha a Posição ativo","rotuloEncerrar":"Encerrar Mantenha a Posição","avisoEncerrar":"Mantenha a Posição encerrado."},"rotuloAtivar":"Assumir postura · 1 Esperança","lembrete":"Adversário que entrar em Muito Próximo é puxado para Corpo a Corpo e fica Restrito. Encerre no primeiro gatilho da carta."},
 };
+
+/** Reações ao dano declaradas por cartas de domínio (id → contrato). */
+const REACOES_DE_DANO_DE_CARTA = {
+  "blade-levantar-se": {"nome":"Levantar-Se","origem":"carta-dominio","momento":"depois-dos-limiares","tipos":["fisico","magico"],"faixas":["severo"],"custo":{"estresse":1},"efeito":{"reduzPv":1},"fonte":"Carta de domínio ativa Levantar-Se."},
+  "bone-preparar": {"nome":"Preparar","origem":"carta-dominio","momento":"depois-dos-limiares","tipos":["fisico","magico"],"faixas":["menor","maior","severo","massivo"],"custo":{"estresse":1,"armadura":1},"efeito":{"reduzPv":1},"exigeMitigacaoArmadura":true,"fonte":"Carta de domínio ativa Preparar."},
+  "valor-deixe-passar": {"nome":"Deixe Passar","origem":"carta-dominio","momento":"depois-dos-limiares","tipos":["fisico","magico"],"faixas":["menor","maior","severo","massivo"],"custo":{"estresse":1},"efeito":{"reduzPv":1},"fonte":"Carta de domínio ativa Deixe Passar. O d6 e a ida para o cofre continuam na mesa."},
+};
+
+/**
+ * Acha a reação de dano de uma carta pelo NOME, e só quando ela está entre as
+ * cartas ativas da ficha — a regra da carta só existe enquanto ela está na mão.
+ */
+function reacaoDeDanoDeCarta_(nome, ficha) {
+  const alvo = chaveTexto_(nome);
+  if (!alvo) return null;
+  const ids = Object.keys(REACOES_DE_DANO_DE_CARTA);
+  for (let i = 0; i < ids.length; i++) {
+    const def = REACOES_DE_DANO_DE_CARTA[ids[i]];
+    if (chaveTexto_(def.nome) !== alvo) continue;
+    const ativas = Array.isArray((((ficha || {}).cartas || {}).ativas)) ? ficha.cartas.ativas : [];
+    for (let c = 0; c < ativas.length; c++) {
+      const bruto = (ativas[c] && typeof ativas[c] === 'object') ? (ativas[c].id || ativas[c].nome) : ativas[c];
+      const carta = (typeof acharCarta_ === 'function') ? acharCarta_(bruto) : null;
+      if (carta && carta.id === ids[i]) return Object.assign({}, def);
+    }
+    return { exigeAtiva: def.nome };
+  }
+  return null;
+}
+
+/** Efeitos automáticos disparados por MARCAR PV (id → contrato). */
+const EFEITOS_AO_MARCAR_PV = {
+  "valor-erga-se": {"nome":"Erga-Se","limpa":{"estresse":1},"fonte":"Carta de domínio ativa Erga-Se."},
+  "valor-tocado-pelo-valor": {"nome":"Tocado pelo Valor","limpa":{"armadura":1},"exigeSemMarcarArmadura":true,"exigeCartasAtivasDominio":{"dominio":"VALOR","quantidade":4},"fonte":"Carta de domínio ativa Tocado pelo Valor."},
+};
+
+/**
+ * Os efeitos de marcar PV que valem AGORA: carta ativa e requisitos cumpridos.
+ *
+ * Reaproveita `requisitoDeEfeitoDerivadoDeCartaVale_` de propósito — é o mesmo
+ * conferidor que já decide o +1 de Armadura do Tocado pelo Valor. Duas contas
+ * diferentes para as duas metades da MESMA carta é como elas discordariam.
+ */
+function efeitosAoMarcarPvDaFicha_(ficha) {
+  if (typeof EFEITOS_AO_MARCAR_PV === 'undefined') return [];
+  const saida = [];
+  Object.keys(EFEITOS_AO_MARCAR_PV).forEach(function (id) {
+    const e = EFEITOS_AO_MARCAR_PV[id] || {};
+    if (!requisitoDeEfeitoDerivadoDeCartaVale_(ficha, id, e)) return;
+    saida.push(Object.assign({ id: id }, e));
+  });
+  return saida;
+}
+
+/** Reações ao dano com custo variável e dados da mesa (id → contrato). */
+const REACOES_DE_DANO_COM_DADOS = {
+  "arcana-reflexo-arcano": {"nome":"Reflexo Arcano","tipos":["magico"],"campoQuantidade":"esperancasReflexoArcano","campoDados":"dadosReflexoArcano","custoPorDado":{"esperanca":1},"dado":{"lados":6,"sucessoEm":6},"efeito":{"anulaDano":true},"recadoDaMesa":"o ataque é refletido no conjurador, que sofre o dano em vez de você","fonte":"Carta de domínio ativa Reflexo Arcano."},
+};
+
+/**
+ * A reação com dados que o PEDIDO está usando, pelo campo que ele preencheu.
+ *
+ * ⚠ Procurar pelo campo, e não pela carta ativa, é o que faz o motor RECUSAR
+ * quando o cliente manda o campo sem a carta na mão. Olhar só as cartas ativas
+ * faria o pedido ser ignorado em silêncio — e silêncio é o defeito que este
+ * bloco inteiro existe para tirar da janela de dano.
+ */
+function reacaoDeDanoComDadosPedida_(ficha, pedido) {
+  if (typeof REACOES_DE_DANO_COM_DADOS === 'undefined') return null;
+  const ids = Object.keys(REACOES_DE_DANO_COM_DADOS);
+  for (let i = 0; i < ids.length; i++) {
+    const def = REACOES_DE_DANO_COM_DADOS[ids[i]];
+    const campo = String(def.campoQuantidade || '');
+    const valor = campo ? (pedido || {})[campo] : undefined;
+    if (valor === undefined || valor === null || valor === '') continue;
+    if (!requisitoDeEfeitoDerivadoDeCartaVale_(ficha, ids[i], def)) return { exigeAtiva: def.nome };
+    return Object.assign({ id: ids[i] }, def);
+  }
+  return null;
+}
+
+/** Reações disparadas ao marcar Ponto de Armadura (id → contrato). */
+const REACOES_AO_MARCAR_ARMADURA = {
+  "valor-armadura-inabalavel": {"nome":"Armadura Inabalável","campoDados":"dadosArmaduraInabalavel","dado":{"lados":6,"sucessoEm":6},"quantidadePorProficiencia":1,"efeito":{"evitaMarcarArmadura":1},"umaRolagemPorDano":true,"fonte":"Carta de domínio ativa Armadura Inabalável."},
+};
+
+/** A reação ao marcar Armadura de uma carta ATIVA que cumpre os requisitos, ou null. */
+function reacaoAoMarcarArmaduraDaFicha_(ficha) {
+  if (typeof REACOES_AO_MARCAR_ARMADURA === 'undefined') return null;
+  const ids = Object.keys(REACOES_AO_MARCAR_ARMADURA);
+  for (let i = 0; i < ids.length; i++) {
+    const def = REACOES_AO_MARCAR_ARMADURA[ids[i]];
+    if (!requisitoDeEfeitoDerivadoDeCartaVale_(ficha, ids[i], def)) continue;
+    return Object.assign({ id: ids[i] }, def);
+  }
+  return null;
+}
+
+/** Cartas que trocam os PV de um dano por outro recurso (id → contrato). */
+const REACOES_SUBSTITUI_PV = {
+  "splendor-tocado-do-esplendor": {"nome":"Tocado do Esplendor","dominio":"SPLENDOR","campoEscolha":"tocadoDoEsplendor","recursos":["estresse","esperanca"],"exigeCartasAtivasDominio":{"dominio":"SPLENDOR","quantidade":4},"contadorDeUso":"uso:carta:splendor:tocado-do-esplendor","usosPorDescansoLongo":1,"fonte":"Carta de domínio ativa Tocado do Esplendor."},
+};
+
+/**
+ * O contrato de substituição de PV e o ESTADO dele nesta ficha.
+ *
+ * Devolve `ativa` e `doDominio` separados de propósito: o resolvedor precisa
+ * dizer "precisa estar entre as cartas ativas" e "exige 4 cartas do domínio; há
+ * 2" com mensagens diferentes, e um booleano só não carrega as duas.
+ */
+function reacaoSubstituiPvDaFicha_(ficha) {
+  if (typeof REACOES_SUBSTITUI_PV === 'undefined') return null;
+  const ids = Object.keys(REACOES_SUBSTITUI_PV);
+  if (!ids.length) return null;
+  const def = REACOES_SUBSTITUI_PV[ids[0]];
+  const ativas = Array.isArray((((ficha || {}).cartas || {}).ativas)) ? ficha.cartas.ativas : [];
+  let ativa = false, doDominio = 0;
+  for (let i = 0; i < ativas.length; i++) {
+    const bruto = (ativas[i] && typeof ativas[i] === 'object') ? (ativas[i].id || ativas[i].nome) : ativas[i];
+    const carta = (typeof acharCarta_ === 'function') ? acharCarta_(bruto) : null;
+    if (!carta) continue;
+    if (carta.id === ids[0]) ativa = true;
+    if (chaveTexto_(carta.dominio) === chaveTexto_(def.dominio)) doDominio++;
+  }
+  return { id: ids[0], def: def, ativa: ativa, doDominio: doDominio };
+}
 
 /** Regras estruturais especiais de cartas de domínio. */
 const REGRAS_ESPECIAIS_CARTAS_DOMINIO = {

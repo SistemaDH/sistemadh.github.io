@@ -2121,3 +2121,144 @@ atualizar e aposentar segue da Vanessa; a mina está desarmada.
 **Estado:** backend **1134 passaram, 0 falharam**; `teste:tudo` verde; os gerados
 `44`, `46` e `4F` regerados e conferidos byte a byte; mochila mobile 15 estados · 0
 erros, Regras mobile 6 telas · 0 erros.
+
+### Frente 8 (28/09, pós-deploy) — a janela de dano mostrava a carta e não deixava usar
+
+Achado pela Vanessa no celular, no primeiro uso da v19. O **Preparar** aparecia na
+janela de dano como **texto sem caixa de marcar**, com o "Levantar-Se" ao lado
+tendo a sua.
+
+Duas listas escritas à mão, uma de cada lado: a tela tinha quatro características
+fixas e um `if` para o Levantar-Se; o motor reconhecia **uma única carta**, com o
+efeito digitado dentro de um `if` no meio do cálculo de dano.
+
+> ⚠ **E o painel de cartas não resolvia.** O gatilho do Preparar é "quando você
+> marcar 1 Ponto de Armadura para reduzir o dano recebido" — pelo painel essa
+> marcação ainda não aconteceu, e aplicar depois marcaria o Ponto SEM a redução
+> que ele compra: cobraria o custo e não entregaria o efeito.
+
+A carta passou a declarar `reacaoDano` no catálogo, no mesmo formato que as
+classes já usavam (o da Vontade de Ferro). O gerador publica
+`REACOES_DE_DANO_DE_CARTA`, o motor consulta a tabela e a tela monta a frase **a
+partir do contrato**. Três cartas declaradas: Levantar-Se (saiu do `if` sem mudar
+de valor), Preparar (1 Estresse + 1 Ponto de Armadura, −1 limiar, e **recusado**
+sem a mitigação normal) e Deixe Passar (1 Estresse, −1 limiar; o d6 e o cofre
+ficam na mesa).
+
+**Achado e não consertado:** Erga-Se, Tocado pelo Valor e Reflexo Arcano reagem ao
+dano mas não cabem no contrato — as duas primeiras **limpam** recurso em vez de
+reduzir gravidade, e a terceira tem custo variável com dado da mesa. Fechar isso é
+acrescentar um tipo de efeito ao contrato; bloco próprio.
+
+⚠ **ISTO PRECISA DE DEPLOY.** A mudança é no motor (`41_Dominios.gs`,
+`4C_Ajustes.gs`), não só na tela — corrigindo o que eu tinha dito antes de ler o
+resolvedor.
+
+**Estado:** backend **1139 passaram, 0 falharam**; `teste:tudo` verde;
+`testes-reacoes-armadura` 44/44 (eram 38); Dano HUD e baseline mobile sem erros.
+
+### Frente 8.5 (28/09) — as três que faltavam, e o critério que eu tinha errado
+
+Eu tinha escrito que Erga-Se, Tocado pelo Valor e Reflexo Arcano "não cabem no
+contrato". Medindo o texto das seis cartas que reagem ao dano, o critério é
+outro: **toda carta que é escolha diz "pode"**. Erga-Se e Tocado pelo Valor não
+dizem — são consequência de marcar PV, não escolha, e por isso nunca deveriam ter
+sido caixinha.
+
+- **`efeitoAoMarcarPv`** (novo): Erga-Se limpa 1 Estresse; Tocado pelo Valor limpa
+  1 Ponto de Armadura, com a primeira condição NEGATIVA do contrato ("sem marcar
+  um Ponto de Armadura") e o requisito de 4 cartas de Valor ativas, conferido pelo
+  MESMO `requisitoDeEfeitoDerivadoDeCartaVale_` que decide o +1 de Armadura da
+  carta — duas contas para as duas metades da mesma carta é como elas discordam.
+  Resolvido depois de `pv` e dos custos serem finais, e somado ao mesmo delta do
+  custo (o motivo está no comentário do Absorvente).
+- **`reacaoDanoComDados`** (novo): Reflexo Arcano. Custo variável em Esperança e
+  d6 da mesa; qualquer 6 reflete, nenhum PV é marcado, o recado do conjurador vai
+  para o Mestre. Sem 6, a Esperança foi gasta do mesmo jeito. O motor procura pelo
+  CAMPO que o cliente mandou, não pelas cartas ativas — assim um pedido sem a
+  carta é RECUSADO em vez de ignorado em silêncio.
+- **`contextoNaJanelaDeDano`** (novo): a lista de sete nomes digitada dentro do
+  `lote9-dano.js` virou declaração do catálogo. Foi aquela lista que deixou estas
+  três cartas fora da janela.
+- **Os botões do painel dessas três SAÍRAM.** Com a janela aplicando, o botão
+  seria a segunda aplicação do mesmo efeito.
+
+**Achado e não fechado:** a **Armadura Inabalável** ficou alcançável com o
+contrato novo (mesma forma do Resiliente), mas os dois evitam marcar Ponto de
+Armadura e podem descontar o mesmo Ponto duas vezes. Bloco próprio.
+
+⚠ **ISTO PRECISA DE DEPLOY** (`41_Dominios.gs`, `4C_Ajustes.gs`).
+
+**Estado:** backend **1147 passaram, 0 falharam**; `teste:tudo` verde;
+`testes-reacoes-armadura` **57/57** (eram 44); Dano HUD e baseline mobile (36
+telas · 0 erros) sem erros; gerados conferidos byte a byte.
+
+### Frente 9 (28/09) — Armadura Inabalável, os 13 pendentes e a varredura
+
+**Armadura Inabalável** fechada: ela não diz "pode", então o motor EXIGE os d6 da
+Proficiência quando a marcação de Armadura acontece. A interação com o Resiliente
+(os dois evitam marcar Ponto) está resolvida por ORDEM — a Inabalável primeiro, e
+o Resiliente recalcula em cima do custo já reduzido. O teste tem controle: sem o 6,
+o Resiliente PRECISA pedir o dado.
+
+**Varredura:** sobrou uma carta digitada dentro do código, o **Tocado do
+Esplendor** — id, domínio, o número 4 e a chave do contador, no motor e no
+`lote9-dano.js`. Virou `reacaoSubstituiPv`. O botão do painel dela saiu: ele só
+marcava o uso e deixava as trilhas para a mão.
+
+⚠ **`hidden` não escondia nada na janela de dano** (anterior a este lote): o
+atributo perde para `.pilha { display: flex }`. Os campos do Aparar apareciam antes
+de a caixa ser marcada. `[hidden] { display: none !important }` no tema.css, e o
+teste passou a medir visibilidade.
+
+**Verbetes:** o montador voltou a ser o dono de `data/verbetes.json`. Os 15 de
+fora do livro ganharam `tools/verbetes/grupo_suplementos.py` e a página é conferida
+contra a fonte declarada. Quatro verbetes estavam divergindo — o do **Avanço** com
+a regra ANTERIOR ao SRD 2.0 no fichário. `npm run teste:verbetes` confere byte a
+byte.
+
+**Pendentes: 13 → 9.** Saíram o Pingente do guardião do tempo e o Santuário
+temporal (movimento de descanso adicional, que o app RECUSAVA), as Luvas de
+alacridade (cancelam o Estresse da Recarga) e as Luvas de pele de carniçal — estas
+últimas **reclassificadas, não ligadas**: o `motivo` delas confundia dano causado
+com dano recebido, e não havia número a mover nesta ficha.
+
+⚠ **Editei `4B_Descanso.gs`, que é GERADO, e o conferir-gerados me pegou.** A
+mudança foi para `tools/4B_Descanso.rodape.js`.
+
+⚠ **ISTO PRECISA DE DEPLOY** (`41_Dominios.gs`, `44_Equipamento.gs`,
+`4B_Descanso.gs`, `4C_Ajustes.gs`).
+
+**Estado:** 1155 testes de backend, 0 falhando; `teste:tudo` verde;
+`testes-reacoes-armadura` 66/66; descanso mobile 15 estados · 0 erros; gerados e
+verbetes conferidos byte a byte.
+
+### Frente 9.12 (29/09) — os Anéis fecharam, e a dívida dos itens ZEROU
+
+Fluxo decidido pela Vanessa: usar o anel abre uma tela para o outro jogador
+aceitar; aceito, o efeito acontece.
+
+⚠ **Isso resolve o E116 sem abrir exceção.** O que cruza entre fichas é o PEDIDO
+(`pedirAoPar`, que só escreve texto, ids e um número na ficha do par). O recurso
+sai da ficha de quem ACEITOU, por `ajustarFicha` com `{tipo:'pedido'}`, com a
+permissão dela.
+
+- `ficha.pedidos` entrou na forma da ficha, com normalização completa;
+- os dois lados precisam do anel em uso, e a recusa diz qual lado falta;
+- pedido impossível é recusado na hora de PEDIR, não na hora do sim;
+- "Recusar" existe como botão — na camaradagem, aceitar é sair prejudicado;
+- o bloco de pedidos fica ACIMA das trilhas na ficha de quem decide;
+- aceitar manda recado ao painel do Mestre.
+
+⚠ **Dois conferidores me pegaram:**
+1. `validarFicha_` reconstrói cada registro campo por campo, e a duração do bônus
+   preparado (do bloco anterior) DESAPARECIA na primeira gravação — o +2 do
+   Periapto voltaria como `fim-da-cena`. Consertado, com teste que grava.
+2. `conferir-funcoes-publicadas` avisou que `pedirAoPar` não estava na lista de
+   ações da `engine-api` — seria 404 mudo em produção.
+
+⚠ **ISTO PRECISA DE DEPLOY** (`40_Regras.gs`, `44_Equipamento.gs`, `4C_Ajustes.gs`,
+`99_Api.gs`) **e a `engine-api` mudou de fonte** (`supabase/functions/engine-api/index.ts`).
+
+**Estado:** 1168 testes de backend, 0 falhando; `teste:tudo` verde;
+`testes-reacoes-armadura` 73/73; baseline mobile 36 telas · 0 erros.

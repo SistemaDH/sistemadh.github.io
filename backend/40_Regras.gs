@@ -144,6 +144,19 @@ function fichaVazia_() {
      */
     bonusPreparados: [],
     /*
+     * PEDIDOS — a única coisa que uma ficha escreve na ficha de outra pessoa.
+     *
+     * ⚠ E116 diz que a porta para outra ficha SÓ LIMPA, porque
+     * `mutarPersonagemEOutro_` confere permissão apenas na ficha de ORIGEM. Os
+     * Anéis da amizade e da camaradagem precisam tirar recurso de outra ficha, e
+     * a carta diz "com permissão" — a permissão é parte da regra.
+     *
+     * A saída é não tirar nada: quem usa o anel escreve um PEDIDO aqui, e nada
+     * mais. Quem recebe é que aceita, e aí o recurso sai da PRÓPRIA ficha, pela
+     * porta normal. O que cruza entre fichas é a pergunta, nunca o custo.
+     */
+    pedidos: [],
+    /*
      * INCONSCIENTE é estado, não condição.
      *
      * As condições do livro são Oculto, Restrito e Vulnerável (o resto vem de
@@ -472,11 +485,47 @@ function validarFicha_(fichaBruta) {
         id: String(r.id || '').slice(0, 80),
         fonte: String(r.fonte || '').slice(0, 60),
         texto: String(r.texto || '').slice(0, 160),
+        /*
+         * ⚠ A DURAÇÃO PRECISA SOBREVIVER À GRAVAÇÃO, e por um triz não sobrevivia.
+         *
+         * Este normalizador RECONSTRÓI cada registro campo por campo — então um
+         * campo novo que ele não conheça é apagado na primeira gravação, sem erro
+         * nenhum. O bônus do Periapto do insone voltaria como `fim-da-cena` e
+         * morreria na virada de cena seguinte, três horas antes da hora.
+         *
+         * Achei escrevendo outra coisa. Normalizador que reconstrói é sempre o
+         * lugar onde um campo novo desaparece em silêncio.
+         */
+        duracao: (String(r.duracao || '') === 'proximo-descanso') ? 'proximo-descanso' : 'fim-da-cena',
         em: String(r.em || '')
       };
     }).filter(function (b) { return b.id && b.texto; }).slice(-8);
   } else {
     ficha.bonusPreparados = [];
+  }
+  /*
+   * Os pedidos também são só texto, ids e um número — e este normalizador
+   * RECONSTRÓI, então todo campo que importa precisa estar listado aqui. Foi
+   * exatamente assim que a duração do bônus preparado quase se perdeu.
+   */
+  if (Array.isArray(ficha.pedidos)) {
+    ficha.pedidos = ficha.pedidos.map(function (p) {
+      const r = (p && typeof p === 'object') ? p : {};
+      const q = Math.trunc(Number(r.quantidade));
+      return {
+        id: String(r.id || '').slice(0, 80),
+        de: String(r.de || '').slice(0, 80),
+        deNome: String(r.deNome || '').slice(0, 60),
+        item: String(r.item || '').slice(0, 60),
+        itemId: String(r.itemId || '').slice(0, 80),
+        recurso: (String(r.recurso || '') === 'estresseMarcado') ? 'estresseMarcado' : 'esperanca',
+        quantidade: (isFinite(q) && q > 0) ? Math.min(q, 12) : 1,
+        texto: String(r.texto || '').slice(0, 200),
+        em: String(r.em || '')
+      };
+    }).filter(function (p) { return p.id && p.itemId && p.texto; }).slice(-8);
+  } else {
+    ficha.pedidos = [];
   }
   // A multiclasse precisa estar resolvida ANTES das cartas: é ela que define
   // o teto de nível das cartas do domínio novo.

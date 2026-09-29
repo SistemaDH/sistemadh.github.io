@@ -20,16 +20,16 @@ const ROTULO_NOVO = 'Dano';
  * do ataque e resultados de dados continuam sendo decididos/rolados na mesa.
  * O texto oficial da própria carta é mostrado para que o jogador escolha sem
  * sair do modal de dano.
+ *
+ * ⚠ AQUI HAVIA UM SET COM SETE NOMES DIGITADOS. Foi essa lista que deixou o
+ * Reflexo Arcano, o Erga-Se e o Tocado pelo Valor fora da janela de dano: lista
+ * escrita à mão esquece item, e ninguém descobre porque não dá erro nenhum —
+ * dá silêncio. Agora quem aparece aqui é quem DECLARA `contextoNaJanelaDeDano`
+ * no catálogo, ao lado do texto da própria carta.
  */
-const CARTAS_DE_DANO = new Set([
-  'preparar',
-  'na beira',
-  'conjurar enxame',
-  'pele espinhosa',
-  'deixe passar',
-  'armadura inabalavel',
-  'tocado do esplendor'
-].map(chave));
+function ehCartaDeContextoDeDano(carta) {
+  return !!(carta && carta.contextoNaJanelaDeDano);
+}
 
 let catalogoCartasPromise = null;
 function catalogoCartas() {
@@ -139,28 +139,43 @@ function criarCartaoDeDano(carta, ficha, catalogo) {
   nome.textContent = carta.nome || 'Carta de domínio';
   cabecalho.append(nome);
 
-  const ehTocado = chave(carta.nome) === chave('Tocado do Esplendor');
-  if (ehTocado) {
+  /*
+   * ⚠ AQUI O NOME DA CARTA ESTAVA DIGITADO, e com ele o domínio exigido, o
+   * número 4 e a chave do contador — os mesmos quatro dados que estavam
+   * escritos à mão dentro do motor. Agora vêm do contrato que a carta declara.
+   */
+  const contratoSubstituiPv = carta.reacaoSubstituiPv || null;
+  if (contratoSubstituiPv) {
+    const req = contratoSubstituiPv.exigeCartasAtivasDominio || {};
+    const dominioExigido = String(req.dominio || '');
+    const quantasExigidas = Math.max(1, Math.trunc(Number(req.quantidade)) || 1);
+    const limiteDeUsos = Math.max(1, Math.trunc(Number(contratoSubstituiPv.usosPorDescansoLongo)) || 1);
     const refs = referenciasAtivasDaFicha(ficha);
     const ativas = refs.map((ref) => acharCartaNoCatalogo(catalogo, ref)).filter(Boolean);
-    const splendorAtivas = ativas.filter((c) => chave(c?.dominio) === chave('SPLENDOR')).length;
-    const uso = Math.max(0, Number(ficha?.contadores?.['uso:carta:splendor:tocado-do-esplendor']?.valor) || 0);
-    const disponivel = splendorAtivas >= 4 && uso < 1;
+    const doDominio = ativas.filter((c) => chave(c?.dominio) === chave(dominioExigido)).length;
+    const uso = Math.max(0, Number(ficha?.contadores?.[contratoSubstituiPv.contadorDeUso]?.valor) || 0);
+    const disponivel = doDominio >= quantasExigidas && uso < limiteDeUsos;
+    const nomeDoDominio = ativas.find((c) => chave(c?.dominio) === chave(dominioExigido))?.dominioNome
+      || carta.dominioNome || dominioExigido;
 
     const selo = document.createElement('span');
     selo.className = 'texto-xs texto-fraco';
-    selo.textContent = uso >= 1 ? 'já usado' : `${splendorAtivas}/4 Esplendor`;
+    selo.textContent = uso >= limiteDeUsos ? 'já usado' : `${doDominio}/${quantasExigidas} ${nomeDoDominio}`;
     cabecalho.append(selo);
 
     const escolha = document.createElement('select');
     escolha.className = 'campo__entrada';
     escolha.dataset.l9TocadoDoEsplendor = '1';
+    escolha.dataset.l9CampoEscolha = String(contratoSubstituiPv.campoEscolha || '');
     escolha.disabled = !disponivel;
-    escolha.setAttribute('aria-label', 'Usar Tocado do Esplendor neste dano');
+    escolha.setAttribute('aria-label', `Usar ${carta.nome} neste dano`);
+    const ROTULO_DO_RECURSO = { estresse:'Estresse', esperanca:'Esperança' };
     [
-      ['', disponivel ? 'Não usar nesta vez' : (uso >= 1 ? 'Indisponível até o descanso longo' : 'Exige 4 cartas de Esplendor ativas')],
-      ['estresse', 'Substituir os PV por igual quantidade de Estresse'],
-      ['esperanca', 'Substituir os PV por igual quantidade de Esperança']
+      ['', disponivel ? 'Não usar nesta vez'
+        : (uso >= limiteDeUsos ? 'Indisponível até o descanso longo'
+          : `Exige ${quantasExigidas} cartas de ${nomeDoDominio} ativas`)],
+      ...(contratoSubstituiPv.recursos || []).map((r) => [r,
+        `Substituir os PV por igual quantidade de ${ROTULO_DO_RECURSO[r] || r}`])
     ].forEach(([valor, rotulo]) => {
       const option = document.createElement('option');
       option.value = valor;
@@ -211,7 +226,17 @@ async function enriquecerModalDeDano(raiz = document) {
   const cartas = refs
     .map((ref) => acharCartaNoCatalogo(catalogo, ref))
     .filter(Boolean)
-    .filter((carta) => CARTAS_DE_DANO.has(chave(carta.nome)));
+    .filter(ehCartaDeContextoDeDano)
+    /*
+     * ⚠ QUEM JÁ TEM CONTROLE NÃO ENTRA AQUI DE NOVO. Quem declara `reacaoDano`
+     * aparece no bloco "Reações ao dano", com caixa de marcar; quem declara
+     * `reacaoDanoComDados` ganha campo próprio; e quem declara
+     * `efeitoAoMarcarPv` o motor aplica sozinho, e a janela só anuncia.
+     * Mostrá-las também aqui, como texto sem controle, seria a mesma regra
+     * escrita duas vezes na mesma janela — e a versão sem botão é justamente a
+     * que fazia parecer que não dava para usar a carta.
+     */
+    .filter((carta) => !carta.reacaoDano && !carta.reacaoDanoComDados && !carta.efeitoAoMarcarPv);
 
   for (const modal of modais) {
     if (!modal.isConnected || modal.querySelector('[data-l9-cartas-dano="1"]')) continue;

@@ -247,6 +247,18 @@ export const REGRAS_BESTIARIO = [
     conserto: 'Esperança — é o mesmo recurso (SRD: "lose a Hope")' },
   { nome: 'rolagem em vez de jogada', re: /rolage(m|ns)/i, conserto: 'jogada(s)' },
   /*
+   * ⚠ "análise crítica" É TRADUÇÃO AUTOMÁTICA de "critically succeed", e entrou
+   * na regra mais grave do catálogo: o Chá da Morte dizia "se você não fizer uma
+   * análise crítica for bem-sucedido em um ataque" — com as duas tentativas de
+   * tradução coladas, e ilegível.
+   *
+   * A varredura de vocabulário procura PALAVRA errada, não frase quebrada, e por
+   * isso passou por cima disso três vezes. Esta regra pega a palavra: o app diz
+   * "sucesso crítico".
+   */
+  { nome: '⚠ "análise crítica" em vez de sucesso crítico', re: /an[áa]lise cr[íi]tica/i,
+    conserto: 'sucesso crítico (SRD: "critically succeed")' },
+  /*
    * "distância X" onde X é um alcance nomeado. ⚠ "Afetar um PJ à distância com
    * pesadelos acordados" fica de fora: ali "à distância" é a palavra, e por isso
    * a regra exige o nome do alcance depois.

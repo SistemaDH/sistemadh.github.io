@@ -342,6 +342,21 @@ button {
 .coluna { display: flex; flex-direction: column; gap: var(--e3); min-width: 0; }
 
 .pilha  { display: flex; flex-direction: column; gap: var(--e3); }
+
+/*
+ * ⚠ `hidden` PRECISA GANHAR DE `display` DE CLASSE.
+ *
+ * O atributo `hidden` vira `display: none` pela folha do NAVEGADOR, que perde
+ * para qualquer regra de classe nossa. Então `.pilha` com `hidden` continuava
+ * DESENHADO: na janela de dano, os campos de dados do Aparar, do Reflexo Arcano
+ * e da Armadura Inabalável apareciam antes de a pessoa escolher usá-los, pedindo
+ * resultados de dados que ela não vai rolar.
+ *
+ * Achei isto por causa de um controle de teste que eu quase reescrevi achando
+ * que o errado era o teste. Ele estava certo: a pergunta "está escondido?" é
+ * sobre o que se vê, não sobre o que está no DOM.
+ */
+[hidden] { display: none !important; }
 /*
  * Pilha RENTE: a regra escrita e o botão que a executa são a mesma coisa, então
  * eles ficam juntos — com o espaçamento normal a frase parecia pertencer ao

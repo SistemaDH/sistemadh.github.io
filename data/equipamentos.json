@@ -12260,9 +12260,14 @@
       "descricaoIngles": "If you have at least one Phoenix Feather on you when you fall unconscious, you gain a +1 bonus to the roll you make to determine whether you gain a scar.",
       "origemNome": "livro",
       "automacao": {
-        "classificacao": "loot-pendente-deterministico",
+        "classificacao": "loot-bonus-movimento-de-morte-e21",
         "rolaNoApp": false,
-        "motivo": "O +1 vale na jogada de cicatriz, que a ficha já sabe pedir no movimento de morte. Falta publicar o bônus nessa janela."
+        "motivo": "O +1 entra na jogada de cicatriz do Evitar a Morte, que a ficha já pede. Basta TER a pena na mochila — o texto diz \"consigo\" — e \"pelo menos uma\" avisa que não acumula."
+      },
+      "efeitoSaquePassivo": {
+        "movimentoDeMorte": {
+          "bonusJogadaDeCicatriz": 1
+        }
       }
     },
     {
@@ -13217,9 +13222,15 @@
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
       "automacao": {
-        "classificacao": "loot-pendente-deterministico",
+        "classificacao": "loot-uso-por-descanso-e21",
         "rolaNoApp": false,
-        "motivo": "O efeito é ficção (caminho seguro por 1 hora), mas o \"uma vez por descanso longo\" é contável: o app já tem `umaVezPorDescanso`."
+        "motivo": "O efeito é ficção (caminho seguro por 1 hora), mas o \"uma vez por descanso longo\" é contável — e era isso que faltava. O contador zera no descanso longo."
+      },
+      "efeitoSaque": {
+        "tipo": "uso-assistido",
+        "contadorUso": "uso:loot:loot-srd2-travelers-bell",
+        "rolaNoApp": false,
+        "efeitoManual": "Toque o sino: por 1 hora, o caminho seguro mais curto por terreno difícil fica aberto. O caminho e o terreno são da mesa; o app só guarda que o sino já tocou neste descanso longo."
       }
     },
     {
@@ -13415,9 +13426,14 @@
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
       "automacao": {
-        "classificacao": "loot-pendente-deterministico",
+        "classificacao": "loot-bonus-movimento-de-morte-e21",
         "rolaNoApp": false,
-        "motivo": "O +1 no Dado de Esperança vale no Arriscar Tudo, que a ficha JÁ resolve (a Placa Heroica Sagrada gasta Esperança na mesma janela). Falta somar este bônus lá."
+        "motivo": "O +1 soma ao Dado de Esperança do Arriscar Tudo, no mesmo lugar onde a Abençoada já somava. ⚠ E pela mesma razão dela, NÃO entra no crítico: crítico é os dois dados mostrando o mesmo número, e somar aqui deixaria o crítico à venda."
+      },
+      "efeitoSaquePassivo": {
+        "movimentoDeMorte": {
+          "bonusDadoEsperancaArriscarTudo": 1
+        }
       }
     },
     {
@@ -13517,9 +13533,13 @@
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
       "automacao": {
-        "classificacao": "loot-pendente-deterministico",
+        "classificacao": "loot-lembrete-em-uso-e21",
         "rolaNoApp": false,
-        "motivo": "O dano físico passa a contar como físico E mágico — e isso muda quem pode mitigar: a Bladefare e o Manto de Monett proíbem marcar Armadura contra um dos tipos. Determinístico e com consumidor pronto."
+        "motivo": "⚠ CORRIGIDO: o motivo antigo dizia que isto mudava a mitigação, citando a Bladefare e o Manto de Monett — mas essas são a armadura DESTE personagem, para dano RECEBIDO. As luvas mudam o dano CAUSADO, que o Mestre aplica no adversário. Não há número a mover na ficha; o app mostra o lembrete junto da arma."
+      },
+      "efeitoSaquePassivo": {
+        "exigeEmUso": true,
+        "efeitoManual": "Enquanto estas luvas estiverem em uso, o dano físico das suas armas conta como físico E mágico. Quem aplica isso é o Mestre, na mitigação do adversário."
       }
     },
     {
@@ -13533,9 +13553,13 @@
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
       "automacao": {
-        "classificacao": "loot-pendente-deterministico",
+        "classificacao": "loot-cancela-custo-e21",
         "rolaNoApp": false,
-        "motivo": "Cancelar o Estresse da Recarga é determinístico: cinco armas declaram Recarga, e o app já conhece esse custo."
+        "motivo": "Com as luvas em uso, a Recarga deixa de cobrar 1 Estresse. O custo já era conhecido pelo app; faltava quem o cancelasse."
+      },
+      "efeitoSaquePassivo": {
+        "exigeEmUso": true,
+        "cancelaEstresseDaCaracteristica": "Recarga"
       }
     },
     {
@@ -13549,9 +13573,21 @@
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 78",
       "automacao": {
-        "classificacao": "loot-pendente-deterministico",
+        "classificacao": "loot-bonus-por-descanso-vazio-e21",
         "rolaNoApp": false,
-        "motivo": "Descansar sem limpar nada publica +2 em ataque e dano até o próximo descanso: é bônus preparado, uma das três durações honestas que o app já sabe manter."
+        "motivo": "Descansar sem limpar PV nem Estresse pendura +2 em ataque e dano até o próximo descanso. O descanso já compara antes e depois; o bônus preparado ganhou duração declarada para não morrer no fim da cena."
+      },
+      "efeitoSaquePassivo": {
+        "noDescanso": {
+          "exigeDescansoSemLimpar": [
+            "pontosDeVidaMarcados",
+            "estresseMarcado"
+          ],
+          "bonusPreparado": {
+            "texto": "+2 em jogadas de ataque e dano até o seu próximo descanso.",
+            "duracao": "proximo-descanso"
+          }
+        }
       }
     },
     {
@@ -13705,9 +13741,13 @@
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 79",
       "automacao": {
-        "classificacao": "loot-pendente-deterministico",
+        "classificacao": "loot-movimento-de-descanso-adicional-e21",
         "rolaNoApp": false,
-        "motivo": "Um movimento de descanso ADICIONAL. O app conta os dois movimentos e recusa o terceiro — então hoje ele PROÍBE o que o item permite."
+        "motivo": "Com o pingente marcado como em uso, o descanso passa a oferecer um movimento adicional. Antes a tela recusava o terceiro movimento — proibia o que o item permite."
+      },
+      "efeitoSaquePassivo": {
+        "exigeEmUso": true,
+        "movimentosAdicionaisNoDescanso": 1
       }
     },
     {
@@ -13759,9 +13799,13 @@
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 79",
       "automacao": {
-        "classificacao": "loot-pendente-deterministico",
+        "classificacao": "loot-movimento-de-descanso-adicional-e21",
         "rolaNoApp": false,
-        "motivo": "Mesmo caso do Pingente do guardião do tempo: movimento de descanso adicional que a tela hoje recusa."
+        "motivo": "Mesmo caminho do Pingente do guardião do tempo. Como o santuário é um LUGAR, marcar em uso é o jeito de a mesa dizer que está descansando nele."
+      },
+      "efeitoSaquePassivo": {
+        "exigeEmUso": true,
+        "movimentosAdicionaisNoDescanso": 1
       }
     },
     {
@@ -13791,9 +13835,22 @@
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 79",
       "automacao": {
-        "classificacao": "loot-pendente-deterministico",
+        "classificacao": "loot-pedido-com-consentimento-e21",
         "rolaNoApp": false,
-        "motivo": "Gastar a Esperança de quem usa o outro anel mexe em DUAS fichas, e o app já tem como fazer isso num lock só (`mutarPersonagemEOutro_`)."
+        "motivo": "Usar o anel abre um PEDIDO na ficha de quem usa o outro; a Esperança só sai quando essa pessoa aceita, e sai da própria ficha dela. ⚠ Nada de custo cruza entre fichas — o E116 continua valendo inteiro, porque o que cruza é a pergunta."
+      },
+      "efeitoSaquePassivo": {
+        "exigeEmUso": true,
+        "pedeAoPar": {
+          "recurso": "esperanca",
+          "quantidadeEscolhida": {
+            "minimo": 1,
+            "maximo": 6,
+            "campo": "quantidade"
+          },
+          "rotulo": "Pedir Esperança a quem usa o outro anel",
+          "textoDoPedido": "quer gastar {quantidade} de Esperança da sua ficha, pelos Anéis da amizade."
+        }
       }
     },
     {
@@ -13807,9 +13864,22 @@
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 79",
       "automacao": {
-        "classificacao": "loot-pendente-deterministico",
+        "classificacao": "loot-pedido-com-consentimento-e21",
         "rolaNoApp": false,
-        "motivo": "Mesmo caso dos Anéis da amizade, com Estresse em vez de Esperança."
+        "motivo": "Mesmo fluxo dos Anéis da amizade, com Estresse. ⚠ Aqui o consentimento pesa mais: quem aceita sai PREJUDICADO, e é exatamente por isso que o app não marca nada sem a pessoa dizer sim na própria tela dela."
+      },
+      "efeitoSaquePassivo": {
+        "exigeEmUso": true,
+        "pedeAoPar": {
+          "recurso": "estresseMarcado",
+          "quantidadeEscolhida": {
+            "minimo": 1,
+            "maximo": 6,
+            "campo": "quantidade"
+          },
+          "rotulo": "Pedir para quem usa o outro anel marcar o Estresse",
+          "textoDoPedido": "quer marcar {quantidade} de Estresse na sua ficha, pelos Anéis da camaradagem."
+        }
       }
     },
     {
@@ -13839,9 +13909,29 @@
       "origemNome": "traducao-srd2",
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 79",
       "automacao": {
-        "classificacao": "loot-pendente-deterministico",
+        "classificacao": "loot-dado-por-cena-e21",
         "rolaNoApp": false,
-        "motivo": "O d4 é rolado na mesa, mas o \"uma vez por cena\" é contável — e o gatilho (o Mestre gastar 1 Medo) já passa pelo motor da mesa."
+        "motivo": "O d4 é da mesa, mas o \"uma vez por cena\" é contável e o 4 limpa 1 Estresse de verdade. O uso só é gasto quando o 4 sai — errar o dado não queima a cena."
+      },
+      "efeitoSaque": {
+        "tipo": "uso-assistido",
+        "contadorUso": "uso:loot:loot-srd2-phobophages-circlet",
+        "exigeEmUso": true,
+        "rolaNoApp": false,
+        "entradaManual": {
+          "campo": "dadoDiadema",
+          "dado": "d4",
+          "minimo": 1,
+          "maximo": 4,
+          "mensagem": "O Mestre gastou 1 Medo: role 1d4 fora do app e informe o resultado."
+        },
+        "resultadoQueLimpa": {
+          "igual": 4,
+          "limpa": {
+            "estresse": 1
+          }
+        },
+        "efeitoManual": "Use somente quando o Mestre gastar 1 Medo. Fora do resultado 4, nada acontece — e o uso da cena não é gasto."
       }
     },
     {
@@ -15132,9 +15222,20 @@
       "traducaoDescricao": "minha (errata aplicada)",
       "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json",
       "automacao": {
-        "classificacao": "consumivel-pendente-deterministico",
+        "classificacao": "consumivel-recuperacao-escolhida-e21",
         "rolaNoApp": false,
-        "motivo": "Limpar 1d10 Pontos de Vida ou 1d10 Estresses durante um descanso: o app já recebe dado informado e já aplica limpeza no descanso."
+        "motivo": "Mesmo caminho das poções (`recuperar-com-dado`), com o RECURSO escolhido por quem joga. O \"durante um descanso\" fica como lembrete: o app não tem como saber que a mesa está descansando."
+      },
+      "efeitoConsumivel": {
+        "tipo": "recuperar-com-dado",
+        "recursoEscolhido": [
+          "pontosDeVidaMarcados",
+          "estresseMarcado"
+        ],
+        "dado": "d10",
+        "bonus": 0,
+        "rolaNoApp": false,
+        "efeitoManual": "Use durante um descanso: escolha limpar Pontos de Vida ou Estresse e informe o 1d10 rolado na mesa."
       }
     },
     {
@@ -15164,14 +15265,22 @@
       "id": "consumivel-58",
       "rolagem": "58",
       "nome": "Chá da Morte",
-      "descricao": "Depois de beber esse chá, você mata instantaneamente seu alvo quando é criticamente bem-sucedido em um ataque. Se você não fizer uma análise crítica for bem-sucedido em um ataque antes do seu próximo descanso longo, você morrerá.",
+      "descricao": "Depois de beber este chá, você mata o alvo instantaneamente ao obter um sucesso crítico em um ataque. Se você não obtiver um sucesso crítico em um ataque antes do seu próximo descanso longo, você morre.",
       "nomeIngles": "Death Tea",
       "descricaoIngles": "After you drink this tea, you instantly kill your target when you critically succeed on an attack. If you don't critically succeed on an attack before your next long rest, you die.",
       "origemNome": "livro",
       "automacao": {
-        "classificacao": "consumivel-pendente-deterministico",
+        "classificacao": "consumivel-prazo-com-saida-e21",
         "rolaNoApp": false,
-        "motivo": "⚠ O prazo é que pesa: sem sucesso crítico até o próximo descanso longo, o personagem MORRE. É um marcador com saída observável, e hoje não existe nenhum."
+        "motivo": "Marcador com prazo declarado e saída explícita. ⚠ O app NÃO encerra a ficha: nem o movimento de morte faz isso sozinho, e esta é a consequência mais grave do catálogo. Ele guarda o prazo e avisa no descanso longo com o texto da carta; quem decide é a mesa."
+      },
+      "traducaoDescricao": "minha",
+      "efeitoConsumivel": {
+        "tipo": "ativar-estado",
+        "contador": "estado:consumivel:consumivel-58",
+        "duracao": "prazo-descanso-longo",
+        "rolaNoApp": false,
+        "efeitoManual": "O prazo corre até o seu próximo descanso longo. Ao obter o sucesso crítico, apague este marcador — é a saída dele. Se o descanso longo chegar com o marcador aceso, a carta diz que o personagem morre, e o app avisa em vez de decidir."
       }
     },
     {

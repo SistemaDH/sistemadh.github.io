@@ -3665,6 +3665,59 @@
     "fim-de-sessao"
    ],
    "observacao": "Uma vez por sessão."
+  },
+  {
+   "chave": "uso:loot:loot-srd2-travelers-bell",
+   "origem": "loot",
+   "refId": "loot-srd2-travelers-bell",
+   "nome": "Sino do viajante",
+   "rotulo": "toque gasto",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "descanso-longo"
+   ],
+   "observacao": "Ausência/0 = o sino pode tocar; 1 = já tocou neste descanso longo."
+  },
+  {
+   "chave": "uso:loot:loot-srd2-phobophages-circlet",
+   "origem": "loot",
+   "refId": "loot-srd2-phobophages-circlet",
+   "nome": "Diadema do fagófobo",
+   "rotulo": "limpeza usada",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "fim-da-cena"
+   ],
+   "observacao": "Ausência/0 = o diadema pode limpar 1 Estresse nesta cena; 1 = já limpou. Só conta quando o d4 dá 4."
+  },
+  {
+   "chave": "estado:consumivel:consumivel-58",
+   "origem": "consumivel",
+   "refId": "consumivel-58",
+   "nome": "Chá da Morte",
+   "rotulo": "prazo aceso",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [],
+   "prazoNoDescansoLongo": {
+    "consequencia": "Pelo Chá da Morte, o personagem morre: o sucesso crítico não veio antes deste descanso longo.",
+    "saida": "Se o sucesso crítico veio, apague o marcador do Chá da Morte antes de concluir o descanso."
+   },
+   "observacao": "Aceso = o chá foi bebido e o prazo corre. Não zera em gatilho nenhum: sai pela saída (sucesso crítico) ou fica aceso acusando o prazo vencido."
   }
  ]
 }

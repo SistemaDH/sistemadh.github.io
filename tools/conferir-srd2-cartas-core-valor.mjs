@@ -83,7 +83,14 @@ const passar = cartas.get('valor-deixe-passar');
 if (!passar?.texto.includes('sofrer dano') || !passar?.texto.includes('reduzir a gravidade do dano em um limiar') || !passar?.texto.includes('role 1d6') || !passar?.texto.includes('3 ou menos') || passar?.uso?.custo?.estresse !== 1) erros.push('Deixe Passar: custo, redução, d6 ou cofre divergem');
 
 const tocado = cartas.get('valor-tocado-pelo-valor');
-if (!tocado?.texto.includes('4 ou mais cartas de domínio ativas') || !tocado?.texto.includes('limpe 1 Ponto de Armadura') || tocado?.efeitoDerivado?.pontuacaoArmadura !== 1 || tocado?.uso?.exigeCartasAtivasDominio?.quantidade !== 4) erros.push('Tocado pelo Valor: requisito, bônus ou recuperação de Armadura divergem');
+if (!tocado?.texto.includes('4 ou mais cartas de domínio ativas') || !tocado?.texto.includes('limpe 1 Ponto de Armadura') || tocado?.efeitoDerivado?.pontuacaoArmadura !== 1 || tocado?.efeitoAoMarcarPv?.exigeCartasAtivasDominio?.quantidade !== 4 || tocado?.efeitoAoMarcarPv?.limpa?.armadura !== 1 || tocado?.efeitoAoMarcarPv?.exigeSemMarcarArmadura !== true || tocado?.uso) erros.push('Tocado pelo Valor: requisito, bônus ou recuperação de Armadura divergem');
+/*
+ * ⚠ A DECLARAÇÃO MUDOU DE CASA, e este conferidor foi quem avisou. A limpeza de
+ * Ponto de Armadura era um BOTÃO de painel (`uso`), que não conferia gatilho
+ * nenhum; virou `efeitoAoMarcarPv`, que o motor resolve na janela de dano. O
+ * `tocado?.uso` acima exige que o botão continue fora: com os dois, o mesmo
+ * Ponto seria limpo duas vezes pelo mesmo golpe.
+ */
 
 const chao = cartas.get('valor-golpe-no-chao');
 if (!chao?.texto.includes('Gaste 2 Esperanças') || !chao?.texto.includes('jogada de Força') || !chao?.texto.includes('em alcance Muito Próximo') || !chao?.texto.includes('alcance Distante') || !chao?.texto.includes('jogada de reação (17)') || !chao?.texto.includes('4d10+8')) erros.push('Golpe no Chão: custo, jogadas, alcances ou dano divergem');

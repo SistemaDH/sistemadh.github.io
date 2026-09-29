@@ -20,12 +20,17 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(RAIZ, 'tools'))
 
 from verbetes import (grupo_recursos, grupo_dano, grupo_jogadas,
-                      grupo_cena, grupo_ficha, grupo_mestre, grupo_bestiario)
+                      grupo_cena, grupo_ficha, grupo_mestre, grupo_bestiario,
+                      grupo_suplementos)
 
 GRUPOS = [grupo_recursos, grupo_dano, grupo_jogadas, grupo_cena,
-          grupo_ficha, grupo_mestre, grupo_bestiario]
+          grupo_ficha, grupo_mestre, grupo_bestiario, grupo_suplementos]
 
 PAGINAS_DO_LIVRO = 368
+
+# Teto solto para as fontes de fora: pega dígito trocado e página negativa sem
+# fingir que o app sabe a paginação de cada suplemento.
+LIMITE_DE_PAGINA_DE_FORA = 1000
 
 
 def chave(txt):
@@ -46,7 +51,7 @@ def jambo_por_canonico():
     return {chave(t['canonico']): t['jambo'] for t in d['termos']}
 
 
-def montar():
+def montar(conferir=False):
     verbetes = []
     for g in GRUPOS:
         verbetes.extend(g.VERBETES)
@@ -73,8 +78,16 @@ def montar():
         for campo in ('id', 'termo', 'categoria', 'pagina', 'ancora', 'resumo'):
             if not v.get(campo):
                 raise SystemExit('%s: falta "%s"' % (onde, campo))
-        if not isinstance(v['pagina'], int) or not (1 <= v['pagina'] <= PAGINAS_DO_LIVRO):
-            raise SystemExit('%s: página fora do livro (%r)' % (onde, v['pagina']))
+        # ⚠ A PÁGINA NEM SEMPRE É DO LIVRO DA JAMBÔ. Quinze verbetes vêm do
+        # Hope & Fear e do SRD 2.0, e foi por não caberem nesta conferência que
+        # eles acabaram escritos direto no JSON — fora de TODAS as conferências.
+        # Quem declara a fonte é conferido contra ela; quem não declara continua
+        # preso ao livro de 368 páginas.
+        de_fora = v.get('fonteRotulo') or v.get('fonteSrd2')
+        limite = LIMITE_DE_PAGINA_DE_FORA if de_fora else PAGINAS_DO_LIVRO
+        if not isinstance(v['pagina'], int) or not (1 <= v['pagina'] <= limite):
+            raise SystemExit('%s: página fora d%s (%r)'
+                             % (onde, 'a fonte declarada' if de_fora else 'o livro', v['pagina']))
         if len(v['resumo']) > 220:
             raise SystemExit('%s: resumo longo demais (%d) — ele é a PRIMEIRA linha do '
                              'popup, tem de caber no celular' % (onde, len(v['resumo'])))
@@ -124,44 +137,58 @@ def montar():
 
     verbetes.sort(key=lambda v: (v['categoria'], chave(v['termo'])))
 
+    # ⚠ O CABEÇALHO TAMBÉM ESTAVA DEFASADO. O arquivo já dizia versão 2 e SRD 2.0;
+    # o montador ainda escrevia versão 1 e "SRD 1.0 em inglês". Mais uma coisa que
+    # só se descobre quando o gerador volta a ser o dono do arquivo.
     saida = {
-        'versao': 1,
-        'fonte': 'Daggerheart — Livro de Regras, edição Jambô (1ª ed., 2025, 368p), '
-                 'conferido contra a errata oficial de 9/9/2025 e o SRD 1.0 em inglês.',
+        'versao': 2,
+        'fonte': 'Daggerheart System Reference Document 2.0 (25/08/2026), localizado em '
+                 'pt-BR e conferido com a edição Jambô e a errata quando aplicável.',
         'regra': 'O app fala a língua das CARTAS. O verbete traz o termo da carta, o do '
                  'livro entre parênteses quando divergem, e a página para quem quiser ler '
                  'o texto inteiro.',
-        'aviso': 'Os verbetes são resumo escrito para a mesa, não transcrição do livro. '
-                 'Quando a errata muda a regra, o verbete conta a versão CORRIGIDA e diz '
-                 'que corrigiu — a ordem de precedência é errata > SRD > livro.',
+        'aviso': 'Os verbetes são resumos para a mesa, não transcrição do livro. A regra '
+                 'vigente do sistema é o SRD 2.0; a edição Jambô e a errata continuam como '
+                 'referência de tradução e paginação quando aplicáveis.',
         'paginasDoLivro': PAGINAS_DO_LIVRO,
         'verbetes': verbetes,
     }
     caminho = os.path.join(RAIZ, 'data', 'verbetes.json')
+    texto = json.dumps(saida, ensure_ascii=False, indent=2) + '\n'
+
+    # ⚠ MODO CONFERIR — o mesmo contrato do tools/conferir-gerados.mjs para os
+    # .gs: o arquivo entregue tem de ser BYTE A BYTE o que o gerador produz. Sem
+    # isto, "o gerador é o dono do arquivo" é promessa, não fato: foi assim que
+    # 15 verbetes e quatro correções acabaram existindo só no JSON.
+    if conferir:
+        atual = open(caminho, encoding='utf-8').read() if os.path.exists(caminho) else ''
+        if atual == texto:
+            print('data/verbetes.json bate com os fontes — %d verbetes, %d palavras-gatilho'
+                  % (len(verbetes), len(dono)))
+            return
+        print('DIVERGE: data/verbetes.json não é o que tools/verbetes/ produz.\n'
+              'Rode: python3 tools/montar-verbetes.py', file=sys.stderr)
+        raise SystemExit(1)
+
     with open(caminho, 'w', encoding='utf-8') as f:
-        json.dump(saida, f, ensure_ascii=False, indent=2)
-        f.write('\n')
+        f.write(texto)
     print('data/verbetes.json — %d verbetes, %d palavras-gatilho'
           % (len(verbetes), len(dono)))
 
 
-def recusar_se_estiver_defasado():
+def recusar_se_perder_verbete():
     """
-    ⚠ ESTE MONTADOR ESTÁ DEFASADO, E RODÁ-LO APAGA TRABALHO.
+    A TRAVA CONTINUA — mudou só o motivo.
 
-    `data/verbetes.json` seguiu em frente e estes fontes Python não: montar hoje
-    escreve a versão 1, com 93 verbetes, e APAGA os 15 que entraram depois —
-    inclusive `reserva-de-adversario` e `evolucao-de-adversario`, do Esperança e
-    Medo.
+    ⚠ ELA NASCEU DE UM ESTRAGO REAL: os fontes tinham 93 verbetes e o arquivo
+    108, e rodar o montador APAGOU 15 — inclusive os do Esperança e Medo. Foi
+    preciso restaurar de um backup feito minutos antes.
 
-    Isso foi descoberto do pior jeito: rodando, e tendo de restaurar o arquivo.
-    Então o montador agora se recusa em vez de sobrescrever. Enquanto a decisão
-    não for tomada — atualizar os fontes para as 108 entradas, ou aposentar o
-    montador e assumir o JSON como fonte — quem quiser rodar de propósito passa
-    `--sobrescrever-mesmo-sabendo`.
-
-    Um teste em tools/testes-backend.mjs guarda o outro lado: se o JSON cair para
-    a versão 1 ou perder verbetes, a bateria quebra.
+    Hoje os fontes têm as 108 entradas e o montador voltou a ser o dono do
+    arquivo, então a trava não fala mais em "defasado": ela pergunta a única
+    coisa que importa em qualquer dia, hoje ou daqui a um ano — este montar vai
+    escrever MENOS verbetes do que o arquivo tem? Se vai, alguém escreveu direto
+    no JSON de novo, e a resposta é parar, não sobrescrever.
     """
     caminho = os.path.join(RAIZ, 'data', 'verbetes.json')
     if not os.path.exists(caminho):
@@ -169,19 +196,22 @@ def recusar_se_estiver_defasado():
     atual = json.load(open(caminho, encoding='utf-8'))
     quantos_tem = len(atual.get('verbetes') or [])
     quantos_sairiam = sum(len(g.VERBETES) for g in GRUPOS)
-    if quantos_sairiam >= quantos_tem and atual.get('versao', 1) <= 1:
+    if quantos_sairiam >= quantos_tem:
         return
     print(
-        'RECUSADO: montar agora escreveria %d verbetes (versao 1) sobre os %d que o '
-        'arquivo tem (versao %s) — %d entradas seriam APAGADAS.\n'
-        'Os fontes em tools/verbetes/ estão defasados em relação a data/verbetes.json.\n'
-        'Se for de propósito: python3 tools/montar-verbetes.py --sobrescrever-mesmo-sabendo'
-        % (quantos_sairiam, quantos_tem, atual.get('versao'), quantos_tem - quantos_sairiam),
+        'RECUSADO: montar escreveria %d verbetes sobre os %d que o arquivo tem — '
+        '%d entradas seriam APAGADAS.\n'
+        'Alguém escreveu direto em data/verbetes.json; leve a entrada para '
+        'tools/verbetes/ antes de montar.\n'
+        'Se for mesmo de propósito: python3 tools/montar-verbetes.py '
+        '--sobrescrever-mesmo-sabendo'
+        % (quantos_sairiam, quantos_tem, quantos_tem - quantos_sairiam),
         file=sys.stderr)
     raise SystemExit(1)
 
 
 if __name__ == '__main__':
-    if '--sobrescrever-mesmo-sabendo' not in sys.argv:
-        recusar_se_estiver_defasado()
-    montar()
+    conferir = '--conferir' in sys.argv
+    if not conferir and '--sobrescrever-mesmo-sabendo' not in sys.argv:
+        recusar_se_perder_verbete()
+    montar(conferir=conferir)

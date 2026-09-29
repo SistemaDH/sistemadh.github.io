@@ -629,29 +629,24 @@
         "dado": "1d6 por Esperança gasta",
         "resumo": "Use somente ao receber dano mágico. Role fora do app um d6 por Esperança gasta e informe os resultados."
       },
-      "uso": {
-        "custo": {},
-        "entradaQuantidade": {
-          "campo": "esperancasGastas",
-          "rotulo": "Esperanças gastas",
-          "minimo": 1,
-          "maximo": 6,
-          "custoPorUnidade": {
-            "esperanca": 1
-          },
-          "ajuda": "Escolha quantas Esperanças gastar; role esse mesmo número de d6 na mesa.",
-          "dados": {
-            "campo": "dadosReflexoArcano",
-            "lados": 6,
-            "quantidadePorUnidade": 1,
-            "sucessoMinimo": 6,
-            "rotulo": "d6 do Reflexo Arcano",
-            "mensagemSucesso": "Há um 6: o ataque é refletido no conjurador. Não aplique este dano à sua ficha.",
-            "mensagemFalha": "Nenhum 6: o dano mágico segue normalmente."
-          }
+      "reacaoDanoComDados": {
+        "tipos": [
+          "magico"
+        ],
+        "campoQuantidade": "esperancasReflexoArcano",
+        "campoDados": "dadosReflexoArcano",
+        "custoPorDado": {
+          "esperanca": 1
         },
-        "rotuloAtivar": "Reagir a dano mágico",
-        "lembrete": "O app não aplica dano ao conjurador: se houver um 6, a mesa aplica nele o mesmo dano que seria recebido."
+        "dado": {
+          "lados": 6,
+          "sucessoEm": 6
+        },
+        "efeito": {
+          "anulaDano": true
+        },
+        "recadoDaMesa": "o ataque é refletido no conjurador, que sofre o dano em vez de você",
+        "fonte": "Carta de domínio ativa Reflexo Arcano."
       }
     },
     {
@@ -859,6 +854,23 @@
         },
         "rotuloAtivar": "Dano Severo: reduzir um nível",
         "lembrete": "Reduza o dano Severo para Maior nesta resolução. O app não inventa o gatilho do ataque."
+      },
+      "reacaoDano": {
+        "momento": "depois-dos-limiares",
+        "tipos": [
+          "fisico",
+          "magico"
+        ],
+        "faixas": [
+          "severo"
+        ],
+        "custo": {
+          "estresse": 1
+        },
+        "efeito": {
+          "reduzPv": 1
+        },
+        "fonte": "Carta de domínio ativa Levantar-Se."
       }
     },
     {
@@ -1929,7 +1941,30 @@
         },
         "rotuloAtivar": "Preparar: marcar Armadura adicional",
         "lembrete": "Use junto da redução de dano que já marcou 1 Ponto de Armadura; este botão marca o ponto adicional."
-      }
+      },
+      "reacaoDano": {
+        "momento": "depois-dos-limiares",
+        "tipos": [
+          "fisico",
+          "magico"
+        ],
+        "faixas": [
+          "menor",
+          "maior",
+          "severo",
+          "massivo"
+        ],
+        "custo": {
+          "estresse": 1,
+          "armadura": 1
+        },
+        "efeito": {
+          "reduzPv": 1
+        },
+        "exigeMitigacaoArmadura": true,
+        "fonte": "Carta de domínio ativa Preparar."
+      },
+      "contextoNaJanelaDeDano": true
     },
     {
       "id": "bone-tatico",
@@ -2471,7 +2506,8 @@
       },
       "efeitoDerivado": {
         "ignoraDanoMenorSePontosDeVidaNaoMarcadosMaximo": 2
-      }
+      },
+      "contextoNaJanelaDeDano": true
     },
     {
       "id": "bone-corrida-da-morte",
@@ -5495,7 +5531,8 @@
           }
         ],
         "rotuloAtivar": "Conjurar Enxame"
-      }
+      },
+      "contextoNaJanelaDeDano": true
     },
     {
       "id": "sage-familiar-natural",
@@ -5844,7 +5881,8 @@
         },
         "rotuloAtivar": "Ativar Pele Espinhosa · 1 Esperança · 1/descanso",
         "lembrete": "Coloque marcadores iguais à Conjuração. Ao sofrer dano, gaste quantos quiser e role essa quantidade de d6 fora do app."
-      }
+      },
+      "contextoNaJanelaDeDano": true
     },
     {
       "id": "sage-coletor",
@@ -6972,25 +7010,27 @@
         "rolaNoApp": false,
         "resumo": "Quando usar a reação, ajuste os recursos conforme o dano: em vez dos PV que seriam marcados, marque a mesma quantidade de Estresse ou gaste a mesma quantidade de Esperança. A escolha e a quantidade vêm do dano resolvido na mesa."
       },
-      "uso": {
-        "custo": {},
-        "exigeCartasAtivasDominio": {
-          "dominio": "SPLENDOR",
-          "quantidade": 4
-        },
-        "marcaUso": {
-          "chave": "uso:carta:splendor:tocado-do-esplendor",
-          "maximo": 1
-        },
-        "rotuloAtivar": "Registrar substituição de PV · 1/descanso longo",
-        "lembrete": "Substitua todos os PV exigidos por esse dano pela mesma quantidade de Estresse ou Esperança. Ajuste as trilhas conforme a opção escolhida."
-      },
       "efeitoDerivado": {
         "bonusLimiarGrave": 3,
         "exigeCartasAtivasDominio": {
           "dominio": "SPLENDOR",
           "quantidade": 4
         }
+      },
+      "contextoNaJanelaDeDano": true,
+      "reacaoSubstituiPv": {
+        "campoEscolha": "tocadoDoEsplendor",
+        "recursos": [
+          "estresse",
+          "esperanca"
+        ],
+        "exigeCartasAtivasDominio": {
+          "dominio": "SPLENDOR",
+          "quantidade": 4
+        },
+        "contadorDeUso": "uso:carta:splendor:tocado-do-esplendor",
+        "usosPorDescansoLongo": 1,
+        "fonte": "Carta de domínio ativa Tocado do Esplendor."
       }
     },
     {
@@ -7745,17 +7785,14 @@
         "rolaNoApp": false,
         "resumo": "O app não deduz sozinho se o dano veio de um ataque; use a reação somente depois que um ataque tiver feito você marcar um ou mais PV."
       },
-      "uso": {
-        "custo": {},
-        "efeitoRecurso": {
-          "chave": "estresseMarcado",
-          "delta": -1
-        },
-        "rotuloAtivar": "Ataque marcou PV: limpar 1 Estresse",
-        "lembrete": "Use somente quando um ataque acabou de fazer você marcar um ou mais PV."
-      },
       "efeitoDerivado": {
         "limiarGravePorProficiencia": 1
+      },
+      "efeitoAoMarcarPv": {
+        "limpa": {
+          "estresse": 1
+        },
+        "fonte": "Carta de domínio ativa Erga-Se."
       }
     },
     {
@@ -7836,7 +7873,28 @@
         },
         "rotuloAtivar": "Reduzir gravidade em 1 limiar · 1 Estresse",
         "lembrete": "Role 1d6 fora do app depois de reduzir a gravidade. Com 3 ou menos, coloque esta carta no cofre."
-      }
+      },
+      "reacaoDano": {
+        "momento": "depois-dos-limiares",
+        "tipos": [
+          "fisico",
+          "magico"
+        ],
+        "faixas": [
+          "menor",
+          "maior",
+          "severo",
+          "massivo"
+        ],
+        "custo": {
+          "estresse": 1
+        },
+        "efeito": {
+          "reduzPv": 1
+        },
+        "fonte": "Carta de domínio ativa Deixe Passar. O d6 e a ida para o cofre continuam na mesa."
+      },
+      "contextoNaJanelaDeDano": true
     },
     {
       "id": "valor-tocado-pelo-valor",
@@ -7868,25 +7926,23 @@
         "rolaNoApp": false,
         "resumo": "Use a reação somente quando você tiver marcado um ou mais PV sem marcar Ponto de Armadura naquele dano. O gatilho vem da resolução da mesa."
       },
-      "uso": {
-        "custo": {},
-        "exigeCartasAtivasDominio": {
-          "dominio": "VALOR",
-          "quantidade": 4
-        },
-        "efeitoRecurso": {
-          "chave": "armaduraMarcada",
-          "delta": -1
-        },
-        "rotuloAtivar": "PV sem Armadura: limpar 1 Ponto de Armadura",
-        "lembrete": "Use somente após marcar PV sem marcar Ponto de Armadura no mesmo dano."
-      },
       "efeitoDerivado": {
         "pontuacaoArmadura": 1,
         "exigeCartasAtivasDominio": {
           "dominio": "VALOR",
           "quantidade": 4
         }
+      },
+      "efeitoAoMarcarPv": {
+        "limpa": {
+          "armadura": 1
+        },
+        "exigeSemMarcarArmadura": true,
+        "exigeCartasAtivasDominio": {
+          "dominio": "VALOR",
+          "quantidade": 4
+        },
+        "fonte": "Carta de domínio ativa Tocado pelo Valor."
       }
     },
     {
@@ -8085,12 +8141,27 @@
       "errata": null,
       "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
       "automacao": {
-        "classificacao": "manual-com-dados-de-proficiencia",
-        "resumo": "A carta não tem custo nem estado persistente próprio; ela reage no instante em que um Ponto de Armadura seria marcado."
+        "classificacao": "automatizada-com-dados-manuais",
+        "resumo": "A janela de dano pede os d6 da Proficiência quando você marca Ponto de Armadura; com um 6 o Ponto não é marcado e a gravidade cai do mesmo jeito."
       },
       "resolucaoManual": {
         "rolaNoApp": false,
-        "resumo": "Role fora do app uma quantidade de d6 igual à sua Proficiência. Se qualquer dado mostrar 6, reduza a gravidade em um limiar e não marque aquele Ponto de Armadura."
+        "dado": "1d6 por ponto de Proficiência",
+        "resumo": "Role fora do app uma quantidade de d6 igual à sua Proficiência e informe os resultados na janela de dano."
+      },
+      "contextoNaJanelaDeDano": true,
+      "reacaoAoMarcarArmadura": {
+        "campoDados": "dadosArmaduraInabalavel",
+        "dado": {
+          "lados": 6,
+          "sucessoEm": 6
+        },
+        "quantidadePorProficiencia": 1,
+        "efeito": {
+          "evitaMarcarArmadura": 1
+        },
+        "umaRolagemPorDano": true,
+        "fonte": "Carta de domínio ativa Armadura Inabalável."
       }
     },
     {

@@ -20,6 +20,9 @@ const SOURCE_FILES = [
 const ACOES = new Set([
   "criarPersonagem","salvarPersonagem","ajustarFicha","usarHabilidadeEmAliado","usarProtecaoEmAliado",
   "usarCartaEmAliado",
+  // Os Anéis: ESTA ação só escreve um PEDIDO na ficha do par — o recurso sai
+  // depois, por `ajustarFicha`, na ficha de quem aceitou.
+  "pedirAoPar",
   "previaDescanso","movimentosDeDescanso","aplicarDescanso",
   "opcoesDeAvanco","previaDeAvanco","aplicarAvanco","desfazerAvanco","aplicarCartaPermanente",
   "painelDoMestre","configurarTransformacao","definirMoldura","molduraDaMesa",

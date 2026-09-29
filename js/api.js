@@ -57,7 +57,7 @@ const ACOES_APP = new Set([
 const ACOES_FOTO = new Set(['guardarFoto','removerFoto']);
 const ACOES_ENGINE = new Set([
   'criarPersonagem','salvarPersonagem','ajustarFicha','usarHabilidadeEmAliado','usarProtecaoEmAliado',
-  'usarCartaEmAliado',
+  'usarCartaEmAliado','pedirAoPar',
   'previaDescanso','movimentosDeDescanso','aplicarDescanso',
   'opcoesDeAvanco','previaDeAvanco','aplicarAvanco','desfazerAvanco','aplicarCartaPermanente',
   'painelDoMestre','definirMoldura','molduraDaMesa',
@@ -175,6 +175,13 @@ export const api = {
     chamar('usarProtecaoEmAliado',{token,id,nome,aliadoId,...pedido}),
   usarCartaEmAliado: (token,id,carta,aliadoId,opcao,marcadores) =>
     chamar('usarCartaEmAliado',{token,id,carta,aliadoId,opcao,marcadores}),
+  /*
+   * ⚠ ESTA CHAMADA NÃO TIRA NADA DE NINGUÉM. Ela escreve um PEDIDO na ficha de
+   * quem usa o outro anel; o recurso só sai quando essa pessoa aceita, na tela
+   * dela. O que cruza entre fichas é a pergunta, nunca o custo.
+   */
+  pedirAoPar: (token,id,itemId,aliadoId,quantidade) =>
+    chamar('pedirAoPar',{token,id,itemId,aliadoId,quantidade}),
   aliadosDaMesa: (token,id) => chamar('aliadosDaMesa',{token,id}),
   meusProjetos: (token,id) => chamar('meusProjetos',{token,id}),
   previaDescanso: (token,id,tipo,escolhas) => chamar('previaDescanso',{token,id,tipo,escolhas}),

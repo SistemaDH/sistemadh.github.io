@@ -205,12 +205,18 @@ VERBETES = [
         'categoria': 'nivel',
         'pagina': 110,
         'ancora': 'Avanço',
-        'resumo': 'As DUAS escolhas por nível, tiradas da lista do seu patamar.',
+        # ⚠ ESTE VERBETE TINHA FICADO PARA TRÁS. O JSON já seguia o SRD 2.0
+        # (espaços livres do patamar atual OU de qualquer inferior, e a conquista
+        # dos níveis 5 e 8 apagando as marcas antes da escolha) e o fichário ainda
+        # dizia "a lista do seu patamar". Confere com data/avanco.json, que é o
+        # dono da regra.
+        'resumo': 'Duas escolhas por nível, usando espaços livres do patamar atual ou de qualquer patamar inferior.',
         'explicacao': [
-            'Depois dos avanços, os limiares sobem +1 (você sempre soma o nível atual '
-            'aos limiares).',
-            'Por fim, escolha uma carta de domínio nova de nível igual ou menor que o seu.'
+            'Aplique primeiro a conquista do nível. Nos níveis 5 e 8, ela apaga as marcas antigas e permite melhorar esses traços novamente.',
+            'Depois dos avanços, os limiares sobem +1 (você sempre soma o nível atual aos limiares).',
+            'Por fim, escolha uma carta de domínio nova de nível igual ou menor que o seu.',
         ],
+
         'errata': 'A errata (p.110) esclareceu: aumentar Experiências dá +1 permanente em '
                   'DUAS Experiências.',
         'veja': ['conquistas', 'multiclasse', 'limiares-de-dano']
