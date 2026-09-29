@@ -580,7 +580,7 @@ const EFEITOS_DERIVADOS_CARTAS_DOMINIO = {
   "splendor-tocado-do-esplendor": {"bonusLimiarGrave":3,"exigeCartasAtivasDominio":{"dominio":"SPLENDOR","quantidade":4}},
   "valor-pele-dura": {"defesaSemArmadura":{"pontuacaoArmaduraBase":{"base":3,"traco":"Força"},"limiaresBasePorPatamar":{"1":[9,19],"2":[11,24],"3":[13,31],"4":[15,38]}}},
   "valor-quebrador-corporal": {"danoArmaCorpoACorpoPorTraco":"Força"},
-  "valor-armadureiro": {"pontuacaoArmadura":1,"exigeArmaduraEquipada":true},
+  "valor-armadureiro": {"pontuacaoArmadura":1,"exigeArmaduraEquipada":true,"aliadosLimpamNoReparo":1},
   "valor-erga-se": {"limiarGravePorProficiencia":1},
   "valor-tocado-pelo-valor": {"pontuacaoArmadura":1,"exigeCartasAtivasDominio":{"dominio":"VALOR","quantidade":4}},
   "valor-surto-total": {"tracosTodos":2,"exigeEstado":"estado:carta:valor:surto-total"},

@@ -91,7 +91,7 @@
       ],
       "categoria": "adversario",
       "pagina": 61,
-      "fonteRotulo": "Daggerheart: Hope & Fear, p.61 (New Adversary Features)",
+      "fonteRotulo": "Hope & Fear",
       "resumo": "Habilidade que TRANSFORMA o adversário quando um gatilho é cumprido. Normalmente limpa PV ou Estresse, muda o ataque padrão e destrava habilidades novas.",
       "explicacao": [
         "⚠ UMA VEZ POR CENA, e não mais: a evolução de um adversário não pode ser disparada duas vezes na mesma cena.",
@@ -407,7 +407,7 @@
       ],
       "categoria": "adversario",
       "pagina": 61,
-      "fonteRotulo": "Daggerheart: Hope & Fear, p.61 (New Adversary Features)",
+      "fonteRotulo": "Hope & Fear",
       "resumo": "Um punhado de marcadores COMPARTILHADO por vários adversários. Não fica na ficha de nenhum: o Mestre junta à parte. Começa vazia na cena e é limpa no fim dela.",
       "explicacao": [
         "Cada reserva tem um nome próprio, normalmente o nome que os adversários afetados dividem — a Reserva do Mecanorbe, a do Senhor das Presas Guahalan.",
@@ -1340,7 +1340,8 @@
       "resumo": "REGRA OPCIONAL: dano igual ao dobro do limiar Severo marca 4 PV em vez de 3.",
       "explicacao": [
         "O livro apresenta como opcional — \"para deixar o jogo ainda mais perigoso\".",
-        "Esta mesa decidiu usar, e dá para desligar sem mexer em código."
+        "No app ela nasce DESLIGADA, como o livro pede: quem liga é o Mestre, nos Ajustes da mesa, e vale para todo mundo ao mesmo tempo.",
+        "A janela de dano da ficha diz qual das duas regras está valendo antes de você informar o número — inclusive o valor a partir do qual o seu dano marcaria 4."
       ],
       "veja": [
         "limiares-de-dano"

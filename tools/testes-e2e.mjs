@@ -427,6 +427,96 @@ try {
   });
 
 
+
+  /*
+   * ⚠ A REGRA OPCIONAL DO DANO MASSIVO PRECISA APARECER NA JANELA DE DANO.
+   *
+   * Ela valia por padrão e sem botão: o jogador informava o dobro do limiar
+   * Severo, via "4 PV" e não tinha onde descobrir por quê — a régua de limiares
+   * da ficha termina em "Severo · 3 PV". Agora nasce desligada, quem liga é o
+   * Mestre, e a janela diz qual regra está valendo ANTES de a pessoa digitar.
+   *
+   * Este passo mede a CORRENTE INTEIRA: o interruptor do Mestre (pela API real,
+   * como o anúncio de nível faz mais adiante) → a sessão → a frase na janela de
+   * dano do jogador. Nenhum dano é aplicado aqui de propósito: quanto o dano
+   * marca é conta do servidor, e disso cuidam os testes de backend; o que só
+   * este teste vê é se a frase certa chega à tela certa.
+   */
+  await passo('a janela de dano diz qual regra de dano massivo a mesa está usando', async () => {
+    const abrirJanelaDeDano = async () => {
+      await pagina.getByRole('button', { name: 'Aplicar dano recebido' }).click();
+      const caixa = pagina.locator('.modal__caixa').last();
+      await caixa.waitFor({ timeout: 5000 });
+      return (await caixa.textContent()).replace(/\s+/g, ' ');
+    };
+    const fechar = async () => {
+      await pagina.keyboard.press('Escape');
+      await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 5000 });
+    };
+    const virarAChave = (ligado) => {
+      const mestre = ambiente.contexto.executar_({ acao: 'entrarMestre', codigo: 'mestre-teste' });
+      if (!mestre.ok) throw new Error('não consegui autenticar o Mestre para o dano massivo');
+      const r = ambiente.contexto.executar_({
+        acao: 'definirDanoMassivo', token: mestre.dados.token, ligado: ligado
+      });
+      if (!r.ok) throw new Error('não consegui virar a chave: ' + JSON.stringify(r));
+      return r.dados.danoMassivo;
+    };
+
+    // Desligada é o estado de fábrica: a regra é OPCIONAL no livro.
+    igual(virarAChave(false), false, 'a chave do Mestre precisa desligar');
+    await pagina.reload({ waitUntil: 'networkidle' });
+    await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+    await pagina.locator('.ficha-cartao__abrir').first().click();
+    await pagina.waitForSelector('.papel__trilha--pv', { timeout: 15000 });
+
+    const desligada = await abrirJanelaDeDano();
+    if (!/Dano massivo desligado/.test(desligada)) {
+      throw new Error('a janela não avisou que a regra está desligada: ' + desligada);
+    }
+    if (/marca 4 PV/.test(desligada)) {
+      throw new Error('a janela prometeu 4 PV com a regra desligada: ' + desligada);
+    }
+    await fechar();
+
+    // E agora o Mestre liga.
+    igual(virarAChave(true), true, 'a chave do Mestre precisa ligar');
+    await pagina.reload({ waitUntil: 'networkidle' });
+    await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+    await pagina.locator('.ficha-cartao__abrir').first().click();
+    await pagina.waitForSelector('.papel__trilha--pv', { timeout: 15000 });
+
+    const ligada = await abrirJanelaDeDano();
+    if (!/Dano massivo ligado pelo Mestre/.test(ligada)) {
+      throw new Error('a janela não avisou que a regra está valendo: ' + ligada);
+    }
+    if (!/marca 4 PV em vez de 3/.test(ligada)) {
+      throw new Error('a janela não disse o que a regra faz: ' + ligada);
+    }
+    /*
+     * ⚠ E O NÚMERO TEM DE SER O DA FICHA, não um texto genérico. A frase promete
+     * "o dobro do limiar Severo (N ou mais)", e N sai da ficha aberta: se ela
+     * mostrasse o limiar de outra pessoa, a promessa seria pior que o silêncio.
+     */
+    const severo = Number(await pagina.locator('.papel__limiares .papel__limiarNumero')
+      .last().textContent());
+    if (!Number.isFinite(severo) || severo < 1) {
+      throw new Error('não consegui ler o limiar Severo da ficha: ' + severo);
+    }
+    if (!ligada.includes('(' + (severo * 2) + ' ou mais)')) {
+      throw new Error('a janela não usou o dobro do limiar desta ficha (' +
+        (severo * 2) + '): ' + ligada);
+    }
+    await fechar();
+
+    // Devolve a mesa ao estado de fábrica para os passos seguintes.
+    igual(virarAChave(false), false);
+    await pagina.reload({ waitUntil: 'networkidle' });
+    await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+    await pagina.locator('.ficha-cartao__abrir').first().click();
+    await pagina.waitForSelector('.papel__trilha--pv', { timeout: 15000 });
+  });
+
   await passo('perfis ofensivos e Alcance derivados chegam à ficha sem rolar dados', async () => {
     await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
     await pagina.waitForSelector('.ficha-cartao__abrir');
@@ -1901,6 +1991,54 @@ try {
       const c = Array.from(document.querySelectorAll('.cartao'))
         .find((x) => /Ouro em moedas/.test(x.textContent));
       return c && c.querySelector('input[type="checkbox"]').checked;
+    }, null, { timeout: 20000 });
+  });
+
+  await passo('o Mestre liga o dano massivo, e a dobra passa a dizer que a mesa usa', async () => {
+    /*
+     * Mesmo lugar e mesmo motivo das moedas: é regra OPCIONAL do livro (p.91) e
+     * vale para a mesa inteira — duas fichas no mesmo golpe não podem marcar
+     * uma 4 PV e a outra 3.
+     *
+     * ⚠ E O RESUMO DA DOBRA É PARTE DO RECURSO. Ele dizia só "moedas ligadas";
+     * com duas regras aqui dentro, uma ligada ficaria invisível de fora — e é
+     * de fora que o Mestre olha no meio da cena para lembrar como a mesa joga.
+     */
+    await abrirDobra('Ajustes da mesa');
+    const caixa = pagina.locator('.cartao', { hasText: 'Dano massivo' })
+      .locator('input[type="checkbox"]');
+    igual(await caixa.isChecked(), false, 'a regra é opcional: nasce desligada');
+    await caixa.check();
+    await pagina.waitForFunction(() => {
+      const c = Array.from(document.querySelectorAll('.cartao'))
+        .find((x) => /Dano massivo/.test(x.textContent));
+      return c && c.querySelector('input[type="checkbox"]').checked;
+    }, null, { timeout: 20000 });
+
+    /*
+     * ⚠ ESPERAR O `.dobra__resumo`, E NÃO A CAIXA MARCADA. A caixa fica marcada
+     * no instante do clique, pelo próprio navegador — esperar por ela é esperar
+     * por nada. Quem só chega depois da volta do servidor é o resumo da dobra,
+     * que é redesenhado com o painel. Da primeira vez este passo lia o resumo
+     * antes disso e via o texto antigo.
+     */
+    await pagina.waitForFunction(() => {
+      const d = Array.from(document.querySelectorAll('.dobra'))
+        .find((x) => /Ajustes da mesa/.test(x.querySelector('.dobra__nome')?.textContent || ''));
+      const r = d && d.querySelector('.dobra__resumo');
+      return !!r && /moedas · dano massivo/.test(r.textContent);
+    }, null, { timeout: 20000 });
+
+    // Desliga de novo: os passos seguintes desta bateria contam com a ficha
+    // marcando no máximo 3 PV, e deixar uma regra opcional ligada atrás de si
+    // é a forma mais barata de criar uma falha intermitente lá na frente.
+    await pagina.locator('.cartao', { hasText: 'Dano massivo' })
+      .locator('input[type="checkbox"]').uncheck();
+    await pagina.waitForFunction(() => {
+      const d = Array.from(document.querySelectorAll('.dobra'))
+        .find((x) => /Ajustes da mesa/.test(x.querySelector('.dobra__nome')?.textContent || ''));
+      const r = d && d.querySelector('.dobra__resumo');
+      return !!r && !/dano massivo/.test(r.textContent);
     }, null, { timeout: 20000 });
   });
 

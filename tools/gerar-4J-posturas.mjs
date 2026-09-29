@@ -559,6 +559,27 @@ function usarPosturaAtiva_(ficha, a) {
 function recarregarFocoDaFicha_(ficha, maiorResultado) {
   if (!ehArtistaMarcial_(ficha)) return { erro: 'Somente o Artista Marcial tem Foco.' };
   const lados = Math.max(2, Math.trunc(Number((POSTURAS_CONFIG.recarga || {}).lados)) || 6);
+
+  /*
+   * ⚠ SEM DADO NÃO HÁ RECARGA — e esta era a pior parte do defeito.
+   *
+   * O Refocar LIMPA a trilha antes de encher. Com Instinto 0 não se rola dado
+   * nenhum, então o movimento gastaria metade do descanso para zerar o Foco e
+   * não devolver nada. É a mesma perda silenciosa que a regra de "uma vez por
+   * descanso" já existe para evitar.
+   *
+   * ⚠ E ANTES DISTO A FUNÇÃO NEM OLHAVA A QUANTIDADE DE DADOS: ela aceitava
+   * qualquer número de 1 a 6 como "o maior resultado", inclusive vindo de zero
+   * dados. O app estava aceitando o resultado de uma rolagem que não existia.
+   */
+  const quantos = (typeof dadosDeRecargaDeFoco_ === 'function') ? dadosDeRecargaDeFoco_(ficha) : 0;
+  if (quantos < 1) {
+    const traco = String((POSTURAS_CONFIG.recarga || {}).dadosPorTraco || 'instinto');
+    return { erro: 'Refocar rola um d' + lados + ' por ponto de ' +
+      traco.charAt(0).toUpperCase() + traco.slice(1) + ', e o seu é ' + quantos +
+      ': o movimento limparia a trilha de Foco sem devolver nada.' };
+  }
+
   const n = Math.trunc(Number(maiorResultado));
   if (!isFinite(n) || n < 1 || n > lados) {
     return { erro: 'Informe o maior resultado dos seus d' + lados + ' (1 a ' + lados + ').' };
@@ -587,6 +608,19 @@ function ajustarFocoDaFicha_(ficha, a) {
 /** Quantos d6 este personagem rola para recarregar: o Instinto dele. */
 function dadosDeRecargaDeFoco_(ficha) {
   const traco = String((POSTURAS_CONFIG.recarga || {}).dadosPorTraco || 'instinto');
+  /*
+   * ⚠ AQUI HAVIA UM SEGUNDO LEITOR DE TRAÇO, e ele discordava do primeiro.
+   *
+   * Esta função lia \`ficha.tracos[traco]\` CRU. O leitor canônico
+   * (\`valorDoTraco_\`) soma os modificadores que vêm de característica e de
+   * equipamento ativo — e o comentário dele diz, com todas as letras, que esse
+   * bônus vale "não apenas para o número desenhado na tela". Quem tivesse
+   * Instinto por modificador rolava menos dados do que a ficha mostra.
+   *
+   * \`fichasPorTraco_\` é o leitor certo para "role uma quantidade igual ao seu
+   * traço": ele é a regra do livro p.17 — valor negativo conta como zero.
+   */
+  if (typeof fichasPorTraco_ === 'function') return fichasPorTraco_(ficha, traco);
   const tracos = (ficha || {}).tracos || {};
   return Math.max(0, Math.trunc(Number(tracos[traco])) || 0);
 }

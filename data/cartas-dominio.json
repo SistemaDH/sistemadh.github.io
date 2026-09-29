@@ -7685,15 +7685,16 @@
       "observacao": "O rótulo de tipo impresso na carta está em inglês (\"ABILITY\"), não em português (\"Habilidade\").",
       "automacao": {
         "classificacao": "automatizada-passiva-condicionada-a-armadura",
-        "resumo": "Enquanto a carta estiver ativa e houver armadura equipada, o servidor soma +1 à Pontuação de Armadura."
+        "resumo": "Enquanto a carta estiver ativa e houver armadura equipada, o servidor soma +1 à Pontuação de Armadura; e quando esta ficha escolhe reparar a PRÓPRIA armadura como movimento de descanso, o servidor limpa 1 Ponto de Armadura na ficha de cada aliado da mesa, dentro da mesma trava do descanso."
       },
       "resolucaoManual": {
         "rolaNoApp": false,
-        "resumo": "No descanso, o benefício de limpar também 1 Ponto de Armadura dos aliados depende de eles participarem da cena e continua nas fichas deles/mesa."
+        "resumo": "Quem decide quem está na cena continua sendo a mesa: o app manda o conserto para todas as fichas ativas da mesa, e o Mestre desmarca quem não estava descansando junto."
       },
       "efeitoDerivado": {
         "pontuacaoArmadura": 1,
-        "exigeArmaduraEquipada": true
+        "exigeArmaduraEquipada": true,
+        "aliadosLimpamNoReparo": 1
       }
     },
     {

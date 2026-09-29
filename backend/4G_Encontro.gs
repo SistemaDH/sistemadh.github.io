@@ -30,11 +30,42 @@ const ENCONTRO_MAXIMO = 40;
  * REGRA OPCIONAL: DANO MASSIVO (livro p.91).
  *
  * "Se você sofrer dano igual ao dobro de seu limiar grave, marque 4 Pontos de
- * Vida." O livro marca isso como opcional — a mesa da Vanessa decidiu USAR, e
- * a escolha vive em `mesa.danoMassivo` para poder ser desligada sem mexer em
- * código.
+ * Vida."
+ *
+ * ⚠ O PADRÃO ERA `true`, E ISSO ESTAVA ERRADO POR UM MOTIVO SIMPLES: o livro
+ * chama a regra de OPCIONAL, e o app ligava sozinho. Quem nunca tinha ouvido
+ * falar dela via o dano marcar 4 PV e não tinha onde procurar o porquê — não
+ * havia botão nenhum, só uma ação de API sem tela.
+ *
+ * Agora ela nasce desligada e quem liga é o MESTRE, nos Ajustes da mesa, do
+ * lado do ouro em moedas. É o mesmo desenho, porque é o mesmo tipo de regra:
+ * opcional, do livro, e que vale para a mesa inteira — não faria sentido uma
+ * ficha marcar 4 PV no mesmo golpe em que a do lado marca 3.
  */
-const DANO_MASSIVO_PADRAO = true;
+const DANO_MASSIVO_PADRAO = false;
+
+/**
+ * A MESA ESTÁ USANDO A REGRA DO DANO MASSIVO?
+ *
+ * ⚠ ESTA PERGUNTA TINHA TRÊS RESPOSTAS ESPALHADAS. Duas aqui
+ * (`m.danoMassivo !== false`, escritas como se o valor pudesse vir indefinido,
+ * o que a normalização já impede) e uma no 4C, que trazia AINDA POR CIMA o seu
+ * próprio padrão embutido — um `true` cravado no código, que continuaria
+ * dizendo "ligado" no dia em que a constante acima mudasse. Foi o que
+ * aconteceu: mudar o padrão em um lugar não mudava nos outros.
+ *
+ * Uma pergunta, uma resposta. Aceita a mesa já lida (o caso comum, sem custo
+ * de leitura nova) ou lê sozinha; sem mesa legível — teste isolado, ambiente
+ * sem planilha — devolve o padrão do livro.
+ */
+function danoMassivoNaMesa_(m) {
+  try {
+    const mesa = (m && typeof m === 'object') ? m : mesaLer_();
+    return mesa.danoMassivo === true;
+  } catch (e) {
+    return DANO_MASSIVO_PADRAO;
+  }
+}
 
 /**
  * Quanto custa pôr um adversário A MAIS em foco (livro p.100).
@@ -308,8 +339,19 @@ function normalizarEncontro_(m) {
   }
 
   m.encontro = e;
-  m.danoMassivo = (bruto.danoMassivo === undefined && m.danoMassivo === undefined)
-    ? DANO_MASSIVO_PADRAO : (m.danoMassivo !== false);
+  /*
+   * ⚠ A CONDIÇÃO OLHAVA PARA O LUGAR ERRADO. Ela era
+   * `bruto.danoMassivo === undefined && m.danoMassivo === undefined`, e `bruto`
+   * aqui é `m.encontro` — um objeto onde esse campo nunca existiu. A metade da
+   * condição era sempre verdadeira, e o galho restante (`m.danoMassivo !== false`
+   * com o valor indefinido) devolvia `true` sem ninguém ter ligado nada. Só não
+   * dava defeito porque o padrão era `true` de qualquer jeito.
+   *
+   * A regra é da MESA e mora em `m`, não no encontro: quem nunca escolheu fica
+   * com o padrão do livro; quem escolheu fica com a escolha.
+   */
+  m.danoMassivo = (m.danoMassivo === undefined || m.danoMassivo === null)
+    ? DANO_MASSIVO_PADRAO : (m.danoMassivo === true);
   return e;
 }
 
@@ -403,7 +445,7 @@ function ajustarAdversarioEmCena_(m, pedido) {
     const resistencias = resistenciasDaInstancia_(inst, ficha);
     const tipo = (p.tipoDeDano === 'magico' || p.tipoDeDano === 'fisico') ? p.tipoDeDano : '';
     const resistiu = !!tipo && resistencias.indexOf(tipo) !== -1;
-    const conta = pvDoDano_(p.dano, ficha.limiares, m.danoMassivo !== false, resistiu);
+    const conta = pvDoDano_(p.dano, ficha.limiares, danoMassivoNaMesa_(m), resistiu);
     mudancas.dano = { sofrido: Math.max(0, Math.trunc(Number(p.dano)) || 0) };
     for (const k in conta) mudancas.dano[k] = conta[k];
     if (ficha.tipo === 'Lacaio') {
@@ -701,7 +743,7 @@ function encontroParaTela_(m, personagens) {
     medo: m.medo,
     ajustesDePb: m.encontro.ajustesDePb,
     efeitosDisponiveis: efeitosDoAmbiente_(m.encontro.ambiente),
-    danoMassivo: m.danoMassivo !== false,
+    danoMassivo: danoMassivoNaMesa_(m),
     adversarios: itens,
     emPe: itens.filter(function (x) { return !x.derrotado; }).length,
     conta: contaDoEncontro_(m, personagens)

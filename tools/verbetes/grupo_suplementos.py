@@ -12,6 +12,16 @@ Eles vêm de outras fontes, e é por isso que não cabiam no fichário original:
 página deles não é a do livro de 368 páginas. Cada um declara de onde veio —
 `fonteRotulo` (Hope & Fear, SRD 2.0) ou `fonteSrd2` (o registro do corpus), e o
 montador usa isso para saber contra qual fonte a página vale.
+
+⚠ `fonteRotulo` É NOME DE FONTE, NÃO CITAÇÃO. A tela de Regras escreve
+"<fonteRotulo> · p.<pagina>", e o popup escreve "<fonteRotulo>, p.<pagina>": a
+página já entra por conta do app. Estes dois verbetes traziam a citação inteira
+aqui — "Daggerheart: Hope & Fear, p.61 (New Adversary Features)" —, e o
+resultado na tela era "… p.61 (New Adversary Features) · p.61", com a página
+repetida e 55 caracteres numa etiqueta que não quebra linha: o cartão do índice
+estourava 223px para fora da tela no celular. O nome do capítulo virou
+comentário; ele é procedência, não etiqueta. O montador agora recusa rótulo com
+página dentro.
 """
 
 VERBETES = [
@@ -21,7 +31,7 @@ VERBETES = [
         'variantes': ['reserva compartilhada', 'pool'],
         'categoria': 'adversario',
         'pagina': 61,
-        'fonteRotulo': 'Daggerheart: Hope & Fear, p.61 (New Adversary Features)',
+        'fonteRotulo': 'Hope & Fear',  # cap. New Adversary Features
         'resumo': ('Um punhado de marcadores COMPARTILHADO por vários adversários. Não fica na ficha '
                  'de nenhum: o Mestre junta à parte. Começa vazia na cena e é limpa no fim dela.'),
         'explicacao': ['Cada reserva tem um nome próprio, normalmente o nome que os adversários afetados '
@@ -48,7 +58,7 @@ VERBETES = [
         'variantes': ['evoluções', 'evolution'],
         'categoria': 'adversario',
         'pagina': 61,
-        'fonteRotulo': 'Daggerheart: Hope & Fear, p.61 (New Adversary Features)',
+        'fonteRotulo': 'Hope & Fear',  # cap. New Adversary Features
         'resumo': ('Habilidade que TRANSFORMA o adversário quando um gatilho é cumprido. Normalmente '
                  'limpa PV ou Estresse, muda o ataque padrão e destrava habilidades novas.'),
         'explicacao': ['⚠ UMA VEZ POR CENA, e não mais: a evolução de um adversário não pode ser '

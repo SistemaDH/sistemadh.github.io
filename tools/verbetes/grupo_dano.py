@@ -43,7 +43,16 @@ VERBETES = [
                   'de 3.',
         'explicacao': [
             'O livro apresenta como opcional — "para deixar o jogo ainda mais perigoso".',
-            'Esta mesa decidiu usar, e dá para desligar sem mexer em código.'
+            # ⚠ A FRASE ANTIGA ERA "Esta mesa decidiu usar, e dá para desligar sem mexer em
+            # código". Ela nasceu quando a regra vinha LIGADA de fábrica e o único jeito de
+            # desligar era uma ação de API sem tela nenhuma — o verbete estava, na prática,
+            # avisando o jogador de uma decisão que ninguém tinha tomado. Agora a regra nasce
+            # desligada e quem liga é o Mestre, num botão; o verbete diz onde o botão fica, em
+            # vez de afirmar o que a mesa faz.
+            'No app ela nasce DESLIGADA, como o livro pede: quem liga é o Mestre, nos Ajustes '
+            'da mesa, e vale para todo mundo ao mesmo tempo.',
+            'A janela de dano da ficha diz qual das duas regras está valendo antes de você '
+            'informar o número — inclusive o valor a partir do qual o seu dano marcaria 4.'
         ],
         'veja': ['limiares-de-dano']
     },

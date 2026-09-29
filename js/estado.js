@@ -26,6 +26,13 @@ const estado = {
   /* Regra opcional do SRD ("Gold Coins"): quem liga é o Mestre, e a ficha só
      obedece. Ver `ouroComMoedas_` em 4E_Mesa.gs. */
   ouroComMoedas: false,
+  /* Regra opcional do livro (p.91, "dano massivo"): também é do Mestre, e
+     também nasce desligada. ⚠ A FICHA NÃO CALCULA NADA COM ISTO — quem faz a
+     conta é o servidor. Serve só para a janela de dano dizer qual regra está
+     valendo, porque ver "4 PV" sem saber da regra é o que fazia a mesa parar
+     no meio do combate para perguntar. Ver `danoMassivoNaMesa_` em
+     4G_Encontro.gs. */
+  danoMassivo: false,
   versaoServidor: null,
   iniciando: true
 };
@@ -92,6 +99,7 @@ export const acoes = {
         sessaoDaMesa: dados.sessaoDaMesa ?? 0,
         cenaDaMesa: dados.cenaDaMesa ?? 0,
         ouroComMoedas: Boolean(dados.ouroComMoedas),
+        danoMassivo: Boolean(dados.danoMassivo),
         versaoServidor: dados.versao,
         iniciando: false
       });
@@ -128,9 +136,11 @@ export const acoes = {
         nivelDaMesa: para,
         sessaoDaMesa: dados.sessaoDaMesa ?? estado.sessaoDaMesa,
         cenaDaMesa: dados.cenaDaMesa ?? estado.cenaDaMesa,
-        // Pela mesma porta chega a regra das moedas: se o Mestre ligar com o
-        // jogador já dentro do app, a coluna aparece ao voltar para a tela.
-        ouroComMoedas: Boolean(dados.ouroComMoedas)
+        // Pela mesma porta chegam as regras opcionais da mesa: se o Mestre
+        // ligar com o jogador já dentro do app, a coluna de moedas aparece e a
+        // janela de dano passa a explicar o dano massivo ao voltar para a tela.
+        ouroComMoedas: Boolean(dados.ouroComMoedas),
+        danoMassivo: Boolean(dados.danoMassivo)
       });
       return { nivelMudou: para !== de, de: de, para: para };
     } catch (e) {
@@ -523,7 +533,17 @@ export const acoes = {
   limparFoco: () => api.limparFoco(estado.token),
   removerDoEncontro: (id) => api.removerDoEncontro(estado.token, id),
   limparEncontro: () => api.limparEncontro(estado.token),
-  definirDanoMassivo: (ligado) => api.definirDanoMassivo(estado.token, ligado),
+  /*
+   * Liga/desliga a regra opcional do dano massivo. É do Mestre, como as moedas.
+   * ⚠ O ESTADO LOCAL É ATUALIZADO JUNTO: quem está no painel do Mestre também
+   * tem ficha, e sem isto a janela de dano dele continuaria explicando a regra
+   * antiga até o app perguntar a sessão de novo.
+   */
+  async definirDanoMassivo(ligado) {
+    const r = await api.definirDanoMassivo(estado.token, ligado);
+    definir({ danoMassivo: Boolean(r.danoMassivo) });
+    return r;
+  },
   adversariosDaMesa: () => api.adversariosDaMesa(estado.token),
   salvarAdversarioDaMesa: (ficha) => api.salvarAdversarioDaMesa(estado.token, ficha),
   excluirAdversarioDaMesa: (id) => api.excluirAdversarioDaMesa(estado.token, id),

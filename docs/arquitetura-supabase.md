@@ -24,17 +24,40 @@ As tabelas expostas têm RLS habilitado e não possuem policies públicas para `
 
 `engine-api` executa o código mantido em `backend/*.gs` através de uma camada de compatibilidade que substitui as antigas APIs de planilha por estado carregado do PostgreSQL.
 
-Produção atual, após a implantação do SRD 2.0:
+Produção atual:
 
 ```text
-engine-api: v17 ACTIVE (deploy conferido em 21/09/2026)
+engine-api: v20 ACTIVE (deploy conferido em 29/09/2026)
 verify_jwt: false
-ENGINE_COMMIT: 7424846cd88103653359e4fcd31d009b409d3880
-bundle: 175c143335ebdb09c60af6fa603042d29b84e336fc92ae4f1cdc9eeb884e509d
+ENGINE_COMMIT: c6b65b14c7a38f033798e97267f79c5abcd11204
+bundle: 0d05ae7d81fa061b3bf0e562bf97c42c8e6ad1cc2feb1f1a9faa26b7f049046d
 ```
 
-A v17 acrescentou `encerrarCenaDaMesa` ao `ACOES` e moveu o `ENGINE_COMMIT` para o
-commit acima, que traz o lote inteiro do equipamento: a porta única da Esperança
+⚠ **A v20 é a primeira em muito tempo que NÃO é só repin.** A fonte da própria
+função mudou: o `ACOES` ganhou `pedirAoPar`, a ação dos Anéis que escreve um pedido
+na ficha do par. Sem ela na lista, o app chamaria uma ação que a função não trata —
+**404 mudo em produção**, que foi o que o `conferir-funcoes-publicadas` apontou
+antes do deploy.
+
+Os 24 `SOURCE_FILES` servidos pelo GitHub nesse commit foram conferidos **byte a
+byte** contra o que a suíte testou: **0 divergentes**. A árvore do commit é
+idêntica à testada aqui.
+
+⚠ **O que NÃO foi possível conferir neste ambiente:** uma chamada HTTP de ida e
+volta à função. O proxy de saída da sessão recusa o host das Edge Functions (403 no
+CONNECT), então a verificação foi a releitura do código implantado pelo painel — que
+mostra v20 ACTIVE, `verify_jwt: false`, o pin novo e `pedirAoPar` no `ACOES` — mais
+os advisors de segurança, que seguem só com o `rls_enabled_no_policy` esperado nas 6
+tabelas. **A primeira requisição autenticada é que carrega os `.gs`**, então vale a
+pena abrir a ficha uma vez e olhar se a janela de dano responde.
+
+### Histórico
+
+A v17 (21/09/2026) acrescentou `encerrarCenaDaMesa` e pinou
+`7424846cd88103653359e4fcd31d009b409d3880`; a v19 (28/09/2026) pinou
+`7fcead8c79c7d1b37218bcf7895ae139c7bcf78c`, com a varredura do equipamento.
+
+A v17 trouxe o lote inteiro do equipamento: a porta única da Esperança
 (`gastarEsperanca_`), a Resplandecente, o Favorecido pela Fortuna, a Amaldiçoada, o
 mural de recados da mesa e o limite de chave de 120 — sem o qual usar o Impenetrável
 dava erro ao gravar a ficha.

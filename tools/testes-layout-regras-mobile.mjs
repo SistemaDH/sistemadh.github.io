@@ -64,6 +64,40 @@ async function auditar(page, viewport, tela, { exigirSticky = false } = {}) {
     const overflow = Math.max(html.scrollWidth, body ? body.scrollWidth : 0) - largura;
     if (overflow > 1) erros.push(`overflow horizontal de ${overflow}px`);
 
+    /*
+     * ⚠ O OVERFLOW DA PÁGINA NÃO VIA O DEFEITO, e por isso esta bateria passava
+     * enquanto na mesa havia texto saindo do cartão.
+     *
+     * `.modal__caixa` rola, então quando um cartão do índice ficou 223px mais
+     * largo que a tela quem rolou para o lado foi a caixa — `html.scrollWidth`
+     * continuou igual ao `clientWidth` e a medição acima marcou zero. Quem
+     * estoura é o CARTÃO, e é o cartão que tem de ser medido: a caixa que rola
+     * e cada item, um por um.
+     */
+    const caixaSobra = caixa.scrollWidth - caixa.clientWidth;
+    if (caixaSobra > 1) erros.push(`a caixa do modal rola ${caixaSobra}px para o lado`);
+
+    const itens = [...lista.querySelectorAll('.regras__item')];
+    const largos = [];
+    itens.forEach((item) => {
+      const nome = item.querySelector('.regras__nome')?.textContent || '(sem nome)';
+      const sobra = item.scrollWidth - item.clientWidth;
+      if (sobra > 1) {
+        erros.push(`cartão "${nome}" estoura ${sobra}px para fora da própria largura`);
+        largos.push({ nome, sobra });
+        return;
+      }
+      const estilo = getComputedStyle(item);
+      const limite = item.getBoundingClientRect().right - parseFloat(estilo.paddingRight);
+      [...item.children].forEach((filho) => {
+        const passa = filho.getBoundingClientRect().right - limite;
+        if (passa > 1) {
+          erros.push(`"${nome}": ${filho.className} passa ${passa.toFixed(1)}px da borda do cartão`);
+          largos.push({ nome, classe: filho.className, passa: Number(passa.toFixed(1)) });
+        }
+      });
+    });
+
     const cr = caixa.getBoundingClientRect();
     const br = busca.getBoundingClientRect();
     const ir = input.getBoundingClientRect();
@@ -91,6 +125,8 @@ async function auditar(page, viewport, tela, { exigirSticky = false } = {}) {
 
     return {
       erros,
+      itens: itens.length,
+      largos,
       scrollTop: caixa.scrollTop,
       buscaTopo: Number((br.top - cr.top).toFixed(1)),
       alturaModal: Number(cr.height.toFixed(1)),
@@ -143,6 +179,22 @@ async function executar(viewport) {
     await page.waitForTimeout(220);
     const itens = page.locator('.regras__item');
     if (await itens.count() < 1) throw new Error('busca de Regras não retornou resultado após a rolagem');
+
+    /*
+     * ⚠ O CARTÃO NÃO PODE DEPENDER DE O DADO SER CURTO.
+     *
+     * O defeito real entrou por um `fonteRotulo` de 55 caracteres, e o montador
+     * agora recusa rótulo desse tamanho — mas a recusa protege o DADO, não o
+     * layout: um resumo comprido, um termo sem espaços ou uma tradução maior
+     * chegariam pela mesma porta. Aqui o rótulo é esticado de propósito, na
+     * tela, para medir o cartão no pior caso em vez de confiar na sorte do
+     * conteúdo de hoje.
+     */
+    await page.locator('.regras__pagina').first().evaluate((el) => {
+      el.textContent = 'Daggerheart: Hope & Fear, p.61 (New Adversary Features) · p.61';
+    });
+    await page.waitForTimeout(120);
+    await auditar(page, viewport, 'regras-rotulo-longo');
   } finally {
     await contexto.close();
   }

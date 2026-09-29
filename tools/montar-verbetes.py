@@ -13,6 +13,7 @@ A página é conferida à parte, contra o PDF do livro, por tools/conferir-pagin
 """
 import json
 import os
+import re
 import sys
 import unicodedata
 
@@ -31,6 +32,9 @@ PAGINAS_DO_LIVRO = 368
 # Teto solto para as fontes de fora: pega dígito trocado e página negativa sem
 # fingir que o app sabe a paginação de cada suplemento.
 LIMITE_DE_PAGINA_DE_FORA = 1000
+
+# O rótulo da fonte é etiqueta, não citação: cabe em "SRD 2.0" ou "Hope & Fear".
+LIMITE_DO_ROTULO = 24
 
 
 def chave(txt):
@@ -84,6 +88,25 @@ def montar(conferir=False):
         # Quem declara a fonte é conferido contra ela; quem não declara continua
         # preso ao livro de 368 páginas.
         de_fora = v.get('fonteRotulo') or v.get('fonteSrd2')
+        # ⚠ O RÓTULO É NOME DE FONTE, NÃO CITAÇÃO. Quem escreve a página é o
+        # app: a tela de Regras monta "<rótulo> · p.<pagina>" e o popup monta
+        # "<rótulo>, p.<pagina>". Dois verbetes do Hope & Fear traziam a citação
+        # inteira no rótulo — a página saía repetida na tela e a etiqueta ficava
+        # com 55 caracteres sem quebrar linha, estourando o cartão 223px para
+        # fora do celular. Nome curto passa ("Livro", "SRD 2.0", "Hope & Fear");
+        # citação, não.
+        rotulo = v.get('fonteRotulo')
+        if rotulo is not None:
+            if not isinstance(rotulo, str) or not rotulo.strip():
+                raise SystemExit('%s: "fonteRotulo" vazio' % onde)
+            if re.search(r'\bp+\.?\s*\d', rotulo):
+                raise SystemExit('%s: "fonteRotulo" traz a página dentro (%r) — a página vem do '
+                                 'campo "pagina", e é o app que a escreve depois do rótulo'
+                                 % (onde, rotulo))
+            if len(rotulo) > LIMITE_DO_ROTULO:
+                raise SystemExit('%s: "fonteRotulo" tem %d caracteres (%r) — é etiqueta de cartão '
+                                 'no celular, e acima de %d ela estoura a tela'
+                                 % (onde, len(rotulo), rotulo, LIMITE_DO_ROTULO))
         limite = LIMITE_DE_PAGINA_DE_FORA if de_fora else PAGINAS_DO_LIVRO
         if not isinstance(v['pagina'], int) or not (1 <= v['pagina'] <= limite):
             raise SystemExit('%s: página fora d%s (%r)'

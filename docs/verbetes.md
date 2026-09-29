@@ -164,6 +164,18 @@ do arquivo, e o jogador leria a regra errada sem desconfiar.
 Cinco desses limites também viraram teste de backend, para o caso de alguém
 editar o `.json` na mão.
 
+**E um sexto limite, que nasceu de um defeito na tela:** o `fonteRotulo` é
+**nome de fonte, não citação**. Dois verbetes do *Hope & Fear* traziam
+`"Daggerheart: Hope & Fear, p.61 (New Adversary Features)"` nesse campo. Como o
+app escreve `"<rótulo> · p.<página>"` no índice e `"<rótulo>, p.<página>"` no
+popup, a página saía **repetida** — e os 55 caracteres, numa etiqueta que não
+quebrava linha, empurravam o cartão do índice 223px para fora da tela do
+celular. Hoje o rótulo é `"Hope & Fear"`, o capítulo virou comentário no
+fichário (é procedência, não etiqueta), e o montador recusa rótulo com página
+dentro ou acima de 24 caracteres. O CSS foi corrigido no mesmo lote e é
+conferido à parte, porque as duas garantias são diferentes: o dado não pode
+depender de o CSS aguentar, e o CSS não pode depender de o dado ser curto.
+
 ---
 
 ## 8. A varredura das 553 citações (J3)

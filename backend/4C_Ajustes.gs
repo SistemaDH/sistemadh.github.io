@@ -4496,10 +4496,13 @@ function aplicarDanoNaFicha_(ficha, a) {
   // 1) RESISTÊNCIA vem primeiro (livro p.99). Retração/Galapa é um estado
   // persistente; a posse real da característica também é conferida para um
   // contador injetado pelo cliente nunca virar resistência.
-  let comMassivo = (typeof DANO_MASSIVO_PADRAO === 'undefined') ? true : DANO_MASSIVO_PADRAO;
-  try {
-    if (typeof mesaLer_ === 'function') comMassivo = mesaLer_().danoMassivo !== false;
-  } catch (e) { /* teste isolado/ambiente sem mesa: fica no padrão */ }
+  /*
+   * ⚠ AQUI HAVIA UM SEGUNDO LEITOR, COM PADRÃO PRÓPRIO. Ele lia a mesa por
+   * conta e, quando não conseguia, caía num `true` cravado nesta linha — um
+   * padrão paralelo ao do 4G, que continuaria dizendo "ligado" depois de a
+   * regra passar a nascer desligada. Quem responde é o 4G, e só ele.
+   */
+  const comMassivo = (typeof danoMassivoNaMesa_ === 'function') ? danoMassivoNaMesa_() : false;
 
   const retraido = tipo === 'fisico' &&
     typeof fichaTemCaracteristica_ === 'function' && fichaTemCaracteristica_(ficha, 'Retrair') &&

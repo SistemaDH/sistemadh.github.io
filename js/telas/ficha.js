@@ -1870,9 +1870,36 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       if (usarAnelResistencia.checked) usarMarigold.checked = false;
     });
 
+    /*
+     * A REGRA OPCIONAL DO DANO MASSIVO, DITA AQUI — nas duas direções.
+     *
+     * ⚠ O SILÊNCIO ERA O PROBLEMA. A regra já valia, ligada por padrão e sem
+     * botão nenhum: o jogador informava 34 de dano, via "4 PV" e não tinha
+     * onde descobrir por quê — a régua de limiares acima termina em "Severo ·
+     * 3 PV", então o número parecia defeito do app. Agora o Mestre liga, e a
+     * janela diz qual regra está valendo ANTES de a pessoa digitar.
+     *
+     * Ela avisa também quando está DESLIGADA, e isso não é excesso: quem
+     * conhece a regra do livro precisa saber que a mesa dele não a usa — senão
+     * o 3 vira a mesma dúvida que o 4 era.
+     *
+     * ⚠ A FICHA NÃO CALCULA NADA COM ISTO. Quem faz a conta é o servidor, que
+     * lê a mesa na hora. Se este estado estiver velho (o Mestre virou a chave
+     * agora mesmo), o número aplicado continua certo: o que fica desatualizado
+     * é só a frase, até o app reperguntar a sessão.
+     */
+    const severoDaFicha = Math.max(0, Number((ficha.defesas || {}).limiarGrave) || 0);
+    const massivoLigado = obterEstado().danoMassivo === true;
+    const linhaDoMassivo = el('p', { class: 'texto-xs texto-fraco', texto: massivoLigado
+      ? ('Dano massivo ligado pelo Mestre: dano igual ao dobro do limiar Severo' +
+         (severoDaFicha ? ' (' + (severoDaFicha * 2) + ' ou mais)' : '') +
+         ' marca 4 PV em vez de 3.')
+      : 'Dano massivo desligado nesta mesa: o dano nunca marca mais que 3 PV.' });
+
     const conteudo = el('div', { class: 'pilha' }, [
       el('p', { class: 'texto-sm' }, textoAnotado(
         'Informe o dano recebido. O app compara com os limiares e marca PV; nenhuma rolagem é feita aqui.')),
+      linhaDoMassivo,
       el('label', { class: 'campo' }, [
         el('span', { class: 'campo__rotulo', texto: 'Dano recebido' }), dano
       ]),

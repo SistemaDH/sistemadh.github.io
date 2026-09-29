@@ -315,3 +315,43 @@ Encher os Pontos de Vida abre uma jogada com escolha entre três movimentos e
 rolagem de dado. É exatamente o que a decisão "só ficha, sem dados" deixa de
 fora. O app avisa na hora e para por aí.
 
+
+## 16. Armadureiro — a segunda metade entrou, com duas leituras assumidas
+
+A carta (Valor, nível 5) tem duas frases:
+
+> Enquanto estiver usando armadura, ganhe +1 de bônus na sua Pontuação de Armadura.
+> Durante um descanso, ao escolher reparar sua armadura como movimento de
+> descanso, seus aliados também limpam 1 Ponto de Armadura.
+
+O +1 já existia. A segunda frase aparecia na tela e **não fazia nada**: a mesa
+lia e desmarcava à mão em cada ficha. Agora o servidor manda o conserto para as
+fichas dos aliados, na mesma trava do descanso, pelo mesmo caminho que a cura
+mirada em aliado já usava (`paraAliados`).
+
+Três decisões, e duas delas são leitura minha — ficam registradas aqui porque a
+mesa pode discordar:
+
+1. **Vale nos dois reparos, curto e longo.** A carta diz "reparar sua armadura",
+   que não é o nome de um movimento: no curto é *Reparar Armadura*, no longo é
+   *Reparar Armadura por Completo*. E ela começa com "durante um descanso", sem
+   escolher qual. Prender o efeito só ao curto faria a carta emudecer justamente
+   no descanso em que se conserta a armadura inteira.
+2. **Só quando o reparo é na própria armadura.** É "reparar **sua** armadura". O
+   movimento pode ser mirado num aliado, e aí a armadura consertada é a dele: o
+   gatilho não acontece. Isto não é leitura duvidosa; é o pronome.
+3. ⚠ **Uma vez por descanso, mesmo escolhendo reparar duas vezes.** Aqui o livro
+   não fecha a porta: movimentos podem repetir, e a leitura literal dispararia o
+   benefício duas vezes. O app fica com a conta **menor** e escreve na prévia o
+   que fez. Dobrar em silêncio um benefício que ninguém pediu é pior do que
+   ficar um ponto atrás — e a mesa sempre pode marcar o segundo à mão. Se a
+   mesa decidir o contrário, o lugar de mudar é
+   `presentesDeArmadureiroNoDescanso_`, e basta contar quantos reparos próprios
+   houve em `feitos`.
+
+**Quem é "seus aliados": todas as fichas ativas da mesa.** A carta não pergunta,
+então o app não pergunta — mandar uma tela de escolha seria inventar uma decisão
+que a carta não dá. Como o app não sabe quem estava descansando junto (a mesa é
+um grupo só; ver o item 1 deste documento), a prévia **diz com nome** para quem
+o conserto foi, e o Mestre desmarca quem não estava lá. É o mesmo desenho do
+aviso do descanso em grupo.

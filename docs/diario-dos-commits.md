@@ -894,3 +894,103 @@ ponta a ponta, incluindo as baterias de navegador e posturas 22/22.
 
 Nada foi implantado: a engine-api continua na v17, e `usarCartaEmAliado`
 entrou no ACOES esperando o próximo deploy.
+
+---
+
+## Os três defeitos da mesa: um cartão que estourava, o Refocar cego e a metade muda do Armadureiro
+
+Ela testou o app depois do deploy da v20 e achou três coisas. As três eram
+reais, e nenhuma tinha aparecido em teste automático — o interessante de cada
+uma é *por que não*.
+
+**O cartão que estourava.** No índice de Regras, dois verbetes do *Hope & Fear*
+guardavam a citação inteira no campo do rótulo da fonte. Como o app escreve a
+página depois do rótulo, a página saía duas vezes; e como o rótulo tinha 55
+caracteres numa etiqueta com `white-space: nowrap`, dentro de um grid cuja
+coluna `1fr` tem o **conteúdo** como mínimo, o cartão deixou de caber na tela e
+passou a medir a largura do texto: 541px dentro de um modal de 360px.
+
+A bateria mobile não viu porque media `html.scrollWidth`, e quem rolava para o
+lado era o modal, que tem rolagem própria. **Overflow de página não enxerga
+cartão estourado.** Agora ela mede cada cartão, e tem um passo que estica o
+rótulo na tela de propósito — porque o CSS não pode depender de o dado ser
+curto. E o montador de verbetes passou a recusar rótulo com página dentro: o
+dado também não pode depender de o CSS aguentar. As duas garantias existem
+separadas de propósito.
+
+**O Refocar cego.** Duas coisas na mesma função: um segundo leitor de traço que
+discordava do canônico (lia o traço cru, sem modificadores) e uma recarga que
+nunca conferia **quantos dados existiam**, aceitando qualquer 1–6 como "maior
+resultado" de uma rolagem que podia nunca ter acontecido. Com 0 de Instinto o
+movimento limpava a trilha de Foco e não devolvia nada. É a terceira vez neste
+projeto que um **segundo leitor** da mesma pergunta produz defeito.
+
+**A metade muda do Armadureiro.** A carta diz duas coisas e o app cumpria uma. A
+frase "seus aliados também limpam 1 Ponto de Armadura" aparecia na tela e não
+fazia nada. Ela entrou reaproveitando três coisas que já existiam: a lista
+`paraAliados`, aplicada a N fichas dentro da mesma trava; o leitor do 41 que
+decide se um efeito derivado está valendo; e o contexto que o `99_Api` já
+injetava no motor de descanso. De quebra, as duas varreduras de fichas da mesa
+viraram uma — eram duas funções desserializando as mesmas fichas no mesmo
+clique, e dois lugares para discordarem sobre o que é "ficha ativa da mesa".
+
+Três leituras ficaram assumidas na carta e estão escritas nos pontos de
+interesse, com o lugar de mudar: vale nos dois reparos (curto e longo), só
+quando o reparo é na **própria** armadura, e uma vez por descanso mesmo que a
+pessoa repare duas vezes. Nessa última o livro não fecha a porta, e o app ficou
+com a conta **menor** — dobrar em silêncio um benefício que ninguém pediu é pior
+do que ficar um ponto atrás.
+
+Regra conferida na fonte antes de implementar, na precedência do projeto: a
+carta ARMORER do SRD 2.0 (p. 223 do PDF, `domain-cards/armorer` no corpus) e a
+errata de 25/08/2026, que não toca nela.
+
+Suíte: 1178 no backend (eram 1170), 0 falhas; `teste:tudo` verde; Regras mobile
+9 telas · 0 erros; descanso mobile 15 estados · 0 erros.
+
+⚠ Precisa de deploy: `4B_Descanso.gs`, `4J_Posturas.gs`, `41_Dominios.gs` e
+`99_Api.gs` mudaram. A `engine-api` não mudou de fonte — é repin do
+`ENGINE_COMMIT`.
+
+---
+
+## O dano massivo deixa de estar ligado sozinho
+
+O pedido foi de uma linha: que o dano massivo fosse "algo que o mestre ativa, da
+mesma forma que o mestre tem do ouro". O interessante é o que o pedido
+encontrou.
+
+A regra é **opcional** no livro (p.91), e o app a trazia **ligada**, com o único
+interruptor escondido numa ação de API sem tela. Quem não conhecia a regra
+informava o dobro do limiar Severo, via 4 PV e não tinha onde procurar o porquê
+— a régua de limiares da ficha termina em "Severo · 3 PV". Era a regra que mais
+parecia defeito do app.
+
+Mudar o padrão de `true` para `false` revelou o de sempre: **a pergunta tinha
+três leitores**. Dois no 4G, escritos como se o valor pudesse vir indefinido, e
+um no 4C com um `true` cravado na linha como padrão de emergência — um segundo
+padrão, que continuaria dizendo "ligado" depois de a constante mudar. Mudar o
+padrão em um lugar não mudava nos outros. Ficou um leitor só, e um teste de
+fonte recusa o retorno de qualquer paralelo.
+
+Pelo caminho, duas armadilhas menores. A normalização decidia o padrão olhando
+para um campo dentro do `encontro` que nunca existiu — metade da condição era
+sempre verdadeira, e o galho restante devolvia "ligado" sem ninguém ter ligado
+nada; só não dava defeito porque o padrão era "ligado" de qualquer jeito. E
+`definirDanoMassivo` usava `p.ligado !== false`: uma chamada **sem** o campo
+LIGAVA a regra da mesa. Enquanto o padrão era "ligado" ninguém via; com a regra
+nascendo desligada, seria um interruptor que só sabe ir para um lado.
+
+Três testes de backend passavam de carona no padrão e caíram juntos quando ele
+virou. É o comportamento certo de um teste: quem depende de regra opcional
+agora a liga explicitamente.
+
+A janela de dano da ficha passou a dizer qual das duas regras está valendo,
+**nas duas direções** e com o número da própria ficha. Avisar quando está
+desligada não é excesso: quem conhece a regra do livro precisa saber que a mesa
+dele não a usa — senão o 3 vira a mesma dúvida que o 4 era.
+
+Suíte: 1184 no backend (eram 1178), 0 falhas; `teste:tudo` verde; e2e 111 passos,
+com o caminho inteiro medido — interruptor do Mestre, sessão, frase na janela do
+jogador — e a prova ao contrário: tirando o campo do payload da sessão, o passo
+falha.

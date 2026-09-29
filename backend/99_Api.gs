@@ -104,12 +104,23 @@ function falha_(e) {
 }
 
 /**
- * Características que liberam movimentos de descanso para o GRUPO inteiro.
- * A mesa do app é um único grupo; fichas excluídas ou encerradas não contam.
+ * O grupo, lido UMA VEZ, para tudo que o descanso precisa saber da mesa.
+ *
+ * ⚠ ERAM DUAS VARREDURAS EM POTENCIAL. As características que liberam
+ * movimento (Preparação Marcial) já exigiam abrir todas as fichas; o
+ * Armadureiro passou a exigir a lista de aliados. Duas funções, cada uma
+ * abrindo e desserializando as mesmas fichas, é o dobro do custo no mesmo
+ * clique — e, pior, dois lugares para discordarem sobre o que conta como ficha
+ * ativa da mesa. Aqui a resposta é uma só.
+ *
+ * "Ficha ativa da mesa": não excluída e não encerrada. `meuId` sai da lista de
+ * aliados — ninguém é aliado de si mesmo — mas continua contando para as
+ * características, porque a própria ficha também as tem.
  */
-function caracteristicasDoGrupoParaDescanso_() {
+function contextoDoGrupoParaDescanso_(meuId) {
   const procuradas = ['Preparação Marcial'];
   const achadas = {};
+  const aliados = [];
   const linhas = (typeof lerTudo_ === 'function') ? (lerTudo_(ABAS.PERSONAGENS) || []) : [];
   for (let i = 0; i < linhas.length; i++) {
     const linha = linhas[i] || {};
@@ -124,12 +135,36 @@ function caracteristicasDoGrupoParaDescanso_() {
         achadas[chaveTexto_(nome)] = nome;
       }
     }
+    if (meuId !== undefined && meuId !== null && String(linha.id) !== String(meuId)) {
+      aliados.push({ id: String(linha.id), nome: String(linha.nome || '') });
+    }
   }
-  return Object.keys(achadas).map(function (k) { return achadas[k]; });
+  return {
+    caracteristicas: Object.keys(achadas).map(function (k) { return achadas[k]; }),
+    aliados: aliados
+  };
 }
-function prepararContextoDoGrupoParaDescanso_() {
+
+/** Compatibilidade: só as características, quando é só isso que interessa. */
+function caracteristicasDoGrupoParaDescanso_() {
+  return contextoDoGrupoParaDescanso_(null).caracteristicas;
+}
+
+/**
+ * Carrega no motor de descanso o que ele não sabe ler sozinho.
+ *
+ * ⚠ `meuId` NÃO É OPCIONAL POR CAPRICHO: sem ele o motor não sabe para quem
+ * mandar o conserto do Armadureiro, e chamar esta função sem o id deixaria a
+ * carta muda. Os três casos de descanso passam o `p.id`; o padrão vazio existe
+ * só para quem chamar isto fora de um descanso de ficha.
+ */
+function prepararContextoDoGrupoParaDescanso_(meuId) {
+  const ctx = contextoDoGrupoParaDescanso_(meuId === undefined ? null : meuId);
   if (typeof definirCaracteristicasDoGrupoNoDescanso_ === 'function') {
-    definirCaracteristicasDoGrupoNoDescanso_(caracteristicasDoGrupoParaDescanso_());
+    definirCaracteristicasDoGrupoNoDescanso_(ctx.caracteristicas);
+  }
+  if (typeof definirAliadosNoDescanso_ === 'function') {
+    definirAliadosNoDescanso_(ctx.aliados);
   }
 }
 
@@ -249,7 +284,15 @@ function executar_(p) {
           cenaDaMesa: (m.cena || {}).numero || 0,
           // A regra opcional das moedas é da MESA: a ficha do jogador precisa
           // saber para mostrar (ou não) a coluna, e é aqui que ela chega.
-          ouroComMoedas: Boolean(m.ouroComMoedas)
+          ouroComMoedas: Boolean(m.ouroComMoedas),
+          /*
+           * E pela mesma porta o dano massivo. Quem CONTA continua sendo o
+           * servidor — a ficha não recalcula nada com isto. Ela usa só para
+           * escrever uma linha na janela de dano dizendo qual regra está
+           * valendo, porque ver "4 PV" sem nunca ter ouvido falar da regra é
+           * exatamente o que fazia a mesa parar no meio do combate.
+           */
+          danoMassivo: danoMassivoNaMesa_(m)
         });
       }
 
@@ -466,7 +509,7 @@ function executar_(p) {
       /** O que o descanso VAI fazer. Não grava nada. */
       case 'previaDescanso': {
         const jogador = exigirSessao_(p.token);
-        prepararContextoDoGrupoParaDescanso_();
+        prepararContextoDoGrupoParaDescanso_(p.id);
         const atual = obterPersonagem_(jogador, p.id);
         return ok_({
           previa: previaDoDescanso_(atual.ficha, p.tipo, p.escolhas),
@@ -477,7 +520,7 @@ function executar_(p) {
       /** Os movimentos possíveis neste tipo de descanso, para montar a tela. */
       case 'movimentosDeDescanso': {
         const jogador = exigirSessao_(p.token);
-        prepararContextoDoGrupoParaDescanso_();
+        prepararContextoDoGrupoParaDescanso_(p.id);
         const atual = obterPersonagem_(jogador, p.id);
         // O "se for interrompido" viaja junto: é a regra que a mesa mais
         // esquece, e a hora de ler é ANTES de escolher os movimentos.
@@ -501,7 +544,7 @@ function executar_(p) {
        */
       case 'aplicarDescanso': {
         const jogador = exigirSessao_(p.token);
-        prepararContextoDoGrupoParaDescanso_();
+        prepararContextoDoGrupoParaDescanso_(p.id);
         const curados = [];
         const r = mutarPersonagem_(jogador, p.id, p.versao, function (ficha) {
           const feito = aplicarDescanso_(ficha, p.tipo, p.escolhas);
@@ -1066,14 +1109,21 @@ function executar_(p) {
 
       /**
        * A regra OPCIONAL de dano massivo (livro p.91): dano ≥ 2× o limiar
-       * Severo marca 4 PV. A mesa da Vanessa usa; fica aqui para poder
-       * desligar sem mexer em código.
+       * Severo marca 4 PV. Nasce DESLIGADA e quem liga é o Mestre, nos
+       * Ajustes da mesa — do lado do ouro em moedas, porque é o mesmo tipo de
+       * regra: opcional, do livro, e da mesa inteira.
+       *
+       * ⚠ `p.ligado !== false` LIGAVA A REGRA COM O CAMPO AUSENTE. Enquanto o
+       * padrão era "ligado" isso passava despercebido; agora seria um
+       * interruptor que só sabe ir para um lado — uma chamada sem `ligado`
+       * (cliente velho, campo perdido no caminho) LIGARIA a regra da mesa sem
+       * ninguém ter pedido. Quem liga diz que liga.
        */
       case 'definirDanoMassivo': {
         const mestre = exigirMestre_(p.token);
         return comTrava_(function () {
           const m = mesaLer_();
-          m.danoMassivo = p.ligado !== false;
+          m.danoMassivo = p.ligado === true;
           mesaGravar_(m);
           registrarLog_(mestre, 'danoMassivo', m.danoMassivo ? 'ligado' : 'desligado');
           return ok_({ danoMassivo: mesaLer_().danoMassivo });

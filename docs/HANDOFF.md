@@ -2262,3 +2262,186 @@ permissão dela.
 
 **Estado:** 1168 testes de backend, 0 falhando; `teste:tudo` verde;
 `testes-reacoes-armadura` 73/73; baseline mobile 36 telas · 0 erros.
+
+### Deploy da v20 (29/09/2026) — o primeiro que não é só repin
+
+```text
+engine-api: v20 ACTIVE
+verify_jwt: false
+ENGINE_COMMIT: c6b65b14c7a38f033798e97267f79c5abcd11204
+bundle: 0d05ae7d81fa061b3bf0e562bf97c42c8e6ad1cc2feb1f1a9faa26b7f049046d
+```
+
+A ordem foi a de sempre, com um passo a mais:
+
+1. commit imutável escolhido: `c6b65b14c7a38f033798e97267f79c5abcd11204` (main);
+2. **os 24 `SOURCE_FILES` servidos pelo GitHub nesse commit conferidos byte a byte
+   contra o que a suíte testou — 0 divergentes.** E, de quebra, `git diff` entre o
+   commit e a árvore local: **vazio**, o lote inteiro chegou igual;
+3. `ENGINE_COMMIT` movido para esse commit;
+4. ⚠ **deploy com a FONTE NOVA da função**, não só o pin: o `ACOES` ganhou
+   `pedirAoPar`. Sem isso o app chamaria uma ação que a função não trata — 404 mudo,
+   que o `conferir-funcoes-publicadas` apontou antes;
+5. `verify_jwt: false` passado EXPLICITAMENTE, como manda a regra do projeto;
+6. releitura da função no ar: v20 ACTIVE, `verify_jwt: false`, pin novo,
+   `pedirAoPar` presente, os 24 arquivos na lista, e o `autenticar` com o token de
+   sessão em hash intacto;
+7. advisors de segurança: só o `rls_enabled_no_policy` esperado, INFO, nas 6 tabelas
+   — nada novo, e nada a "consertar".
+
+⚠ **O que NÃO deu para conferir daqui:** uma chamada HTTP de ida e volta. O proxy de
+saída desta sessão recusa o host das Edge Functions (403 no CONNECT), e eu não
+contorno isso. A verificação foi a releitura do código implantado. Como é a primeira
+requisição AUTENTICADA que carrega os 24 `.gs`, vale abrir a ficha uma vez e ver a
+janela de dano responder.
+
+---
+
+## Os três defeitos que a mesa achou testando a v20 (29/09/2026)
+
+Ela abriu o app depois do deploy e mandou três coisas, todas reais. Nenhuma
+apareceu em teste automático antes — e a razão de cada uma **não** ter aparecido
+é a parte que vale guardar.
+
+### 1. "Texto saindo da tabela" — o dado era uma citação, e o CSS não encolhia
+
+Dois defeitos empilhados no mesmo lugar, o índice de Regras:
+
+- **O dado.** `fonteRotulo` é **nome de fonte**; o app é que escreve a página
+  (`"<rótulo> · p.<página>"` no índice, `"<rótulo>, p.<página>"` no popup). Dois
+  verbetes do *Hope & Fear* traziam a citação inteira no campo —
+  `"Daggerheart: Hope & Fear, p.61 (New Adversary Features)"` —, então a página
+  saía **repetida** e a etiqueta tinha 55 caracteres.
+- **O CSS.** `.regras__item` era `grid-template-columns: 1fr auto` e
+  `.regras__pagina` tinha `white-space: nowrap`. `1fr` é `minmax(auto, 1fr)`:
+  o mínimo é o conteúdo. Com uma etiqueta que não quebra linha, o cartão
+  **deixou de caber na tela e passou a medir a largura do texto** — 541px dentro
+  de um modal de 360px.
+
+⚠ **Por que a bateria mobile não viu:** ela media `html.scrollWidth`. Quem rolava
+para o lado era o `.modal__caixa`, que tem rolagem própria — o documento nunca
+estourou. **Overflow de página não enxerga cartão estourado.** A bateria agora
+mede a caixa que rola e **cada `.regras__item`, um por um**, e tem um passo que
+**estica o rótulo na tela de propósito**: o CSS não pode depender de o dado ser
+curto. Do outro lado, o montador de verbetes recusa rótulo com página dentro ou
+acima de 24 caracteres, e dois testes de backend conferem o mesmo no `.json` — o
+dado também não pode depender de o CSS aguentar.
+
+Medido antes: cartão 223px além da própria largura, caixa rolando 202px.
+Medido depois: 0 e 0, nos três celulares da bateria.
+
+### 2. Refocar do Monge sem onde digitar o dado — fechado no lote anterior
+
+Dois defeitos numa função: um **segundo leitor de traço** que discordava do
+canônico (lia `ficha.tracos[traço]` cru, sem os modificadores) e uma recarga que
+**nunca conferia quantos dados existiam**, aceitando qualquer 1–6 como "maior
+resultado" de uma rolagem que podia nunca ter acontecido. Com 0 de Instinto o
+movimento limpava a trilha e não devolvia nada. Agora recusa com o motivo, e o
+texto do movimento explica antes de a pessoa escolher.
+
+### 3. Armadureiro sem efeito nos aliados — a carta tinha duas metades
+
+> Durante um descanso, ao escolher reparar sua armadura como movimento de
+> descanso, seus aliados também limpam 1 Ponto de Armadura.
+
+Essa frase estava na carta, aparecia na tela e **não fazia nada**. O +1 de
+Pontuação de Armadura entrava pelo `efeitoDerivado`; a outra metade era trabalho
+manual da mesa em cada ficha.
+
+Como foi feito, reaproveitando o que já existia em vez de abrir caminho novo:
+
+- o `paraAliados` do descanso já era uma **lista** aplicada a N fichas dentro da
+  **mesma trava** (`alterarFichaDeOutroSemTrava_`, em `case 'aplicarDescanso'`).
+  A carta só precisou empurrar presentes para essa lista;
+- quem responde "a carta está valendo?" continua sendo
+  `requisitoDeEfeitoDerivadoDeCartaVale_`, do 41 — carta ativa, armadura
+  equipada, estado aceso. ⚠ **Um segundo leitor aqui era o atalho para o dia em
+  que as duas respostas discordassem**, e este projeto já pagou esse preço mais
+  de uma vez neste mesmo lote (ver o Refocar acima);
+- o motor de descanso trabalha sobre **uma** cópia de **uma** ficha e não sabe
+  abrir aba nenhuma. Quem sabe é o `99_Api`, que já injetava as características
+  do grupo: ganhou `ALIADOS_NO_DESCANSO` pelo mesmo caminho. ⚠ **E as duas
+  varreduras viraram uma:** eram duas funções abrindo e desserializando as
+  mesmas fichas no mesmo clique — o dobro do custo e dois lugares para
+  discordarem sobre o que é "ficha ativa da mesa".
+
+As leituras assumidas (vale nos dois reparos; só na própria armadura; uma vez
+por descanso mesmo repetindo o movimento) estão em
+`docs/pontos-de-interesse-descanso.md` §16, com o lugar exato de mudar se a mesa
+discordar.
+
+**Estado:** 1178 testes de backend, 0 falhando; `teste:tudo` verde; baseline
+mobile 36 telas · 0 erros; Regras mobile 9 telas · 0 erros; descanso mobile 15
+estados · 0 erros; arquivos gerados batendo byte a byte com seus geradores.
+
+⚠ **ISTO PRECISA DE DEPLOY.** Quatro arquivos do motor mudaram desde a v20:
+`4B_Descanso.gs`, `4J_Posturas.gs`, `41_Dominios.gs` e `99_Api.gs`. A
+`engine-api` **não** mudou de fonte (nenhuma ação nova), então é **repin** do
+`ENGINE_COMMIT` — na ordem de sempre, com a conferência byte a byte dos 24
+`SOURCE_FILES` servidos pelo GitHub no commit escolhido e o `verify_jwt: false`
+passado explicitamente.
+
+---
+
+## O dano massivo vira interruptor do Mestre (29/09/2026)
+
+Pedido da mesa, com a frase exata: *"quero que ele seja algo que o mestre ativa,
+da mesma forma que o mestre tem do ouro"*. E era mesmo o desenho certo, porque
+o estado anterior tinha um problema que ninguém tinha nomeado.
+
+**A regra estava ligada e ninguém a tinha ligado.** O livro (p.91) chama o dano
+massivo de **regra opcional**; o app trazia `DANO_MASSIVO_PADRAO = true` e o
+único jeito de desligar era uma ação de API **sem tela nenhuma**. Quem não
+conhecia a regra informava o dobro do limiar Severo, via **4 PV** e não tinha
+onde procurar o porquê — a régua de limiares da ficha termina em "Severo · 3 PV".
+Era a regra que mais parecia defeito do app.
+
+Agora:
+
+- **nasce desligada** (`DANO_MASSIVO_PADRAO = false`), como manda a palavra
+  "opcional";
+- **quem liga é o Mestre**, nos *Ajustes da mesa*, no cartão ao lado do ouro em
+  moedas. Mesmo lugar porque é o mesmo tipo de regra: opcional, do livro, e da
+  mesa inteira — duas fichas no mesmo golpe não podem marcar uma 4 PV e a outra
+  3;
+- **a janela de dano da ficha diz qual regra está valendo**, nas duas direções e
+  com o número desta ficha ("o dobro do limiar Severo (34 ou mais) marca 4 PV").
+  Avisar quando está *desligada* não é excesso: quem conhece a regra do livro
+  precisa saber que a mesa dele não a usa, senão o 3 vira a mesma dúvida que o 4
+  era.
+
+⚠ **O que a mudança de padrão revelou — três leitores para uma pergunta.** A
+pergunta "a mesa usa dano massivo?" tinha três respostas espalhadas: duas no 4G
+escritas como `m.danoMassivo !== false` (como se o valor pudesse vir indefinido,
+o que a normalização já impedia) e **uma no 4C com padrão próprio embutido — um
+`true` cravado na linha**, que continuaria dizendo "ligado" depois de a
+constante do 4G mudar. Mudar o padrão em um lugar não mudava nos outros. Hoje
+há um leitor só, `danoMassivoNaMesa_`, e um teste de fonte recusa o retorno de
+qualquer leitor paralelo.
+
+⚠ **E duas armadilhas menores, encontradas pelo caminho:**
+
+1. A normalização decidia o padrão olhando para `m.encontro.danoMassivo` — um
+   campo que nunca existiu. Metade da condição era sempre verdadeira e o galho
+   restante devolvia `true` sem ninguém ter ligado nada; só não dava defeito
+   porque o padrão era `true` de qualquer jeito.
+2. `definirDanoMassivo` usava `p.ligado !== false`, ou seja, **uma chamada sem o
+   campo LIGAVA a regra**. Com o padrão "ligado" isso passava; com a regra
+   nascendo desligada, seria um interruptor que só sabe ir para um lado. Agora é
+   `p.ligado === true`: quem liga diz que liga.
+
+**Três testes de backend passavam de carona no padrão** (Escamas, uso normal de
+Armadura, Fortificado). Quando o padrão virou "desligado", os três caíram de uma
+vez — e isso é o comportamento certo: quem depende da regra opcional agora a
+LIGA explicitamente, e o dia em que o padrão mudar de novo não mexe em nenhum
+deles.
+
+**Estado:** 1184 testes de backend, 0 falhando; `teste:tudo` verde; e2e 111
+passos · 0 falhas, com o caminho inteiro medido (o interruptor do Mestre → a
+sessão → a frase na janela de dano do jogador, incluindo o dobro do limiar da
+ficha aberta). A prova ao contrário também foi feita: tirando `danoMassivo` do
+payload da sessão, o passo do e2e falha.
+
+⚠ **PRECISA DE DEPLOY** (`4C_Ajustes.gs`, `4G_Encontro.gs`, `99_Api.gs`, além
+dos quatro do bloco anterior). A `engine-api` **não** mudou de fonte —
+`definirDanoMassivo` já estava na lista de ações.

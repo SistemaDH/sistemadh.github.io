@@ -298,6 +298,122 @@ function grupoTemCaracteristicaNoDescanso_(ficha, nome) {
 }
 
 /**
+ * Quem mais está na mesa neste descanso — id e nome, nada além disso.
+ *
+ * ⚠ ISTO É CONTEXTO INJETADO, e não uma leitura de planilha aqui dentro. O 4B
+ * trabalha sobre UMA cópia de UMA ficha e não sabe abrir aba nenhuma; quem sabe
+ * é o 99_Api, que já faz exatamente isso para as características do grupo. Uma
+ * carta como o Armadureiro derrama efeito nas fichas dos aliados, e sem a lista
+ * o motor teria de adivinhar para quem — ou o app teria de PERGUNTAR, e a carta
+ * não pergunta: ela diz "seus aliados".
+ *
+ * Fica vazia por padrão, e vazia significa "descanso sozinho": nenhum presente
+ * é gerado, nenhum erro é levantado.
+ */
+let ALIADOS_NO_DESCANSO = [];
+function definirAliadosNoDescanso_(lista) {
+  ALIADOS_NO_DESCANSO = [];
+  (Array.isArray(lista) ? lista : []).forEach(function (a) {
+    const id = String((a || {}).id || '').slice(0, 60);
+    if (!id) return;
+    ALIADOS_NO_DESCANSO.push({ id: id, nome: String((a || {}).nome || '').slice(0, 40) });
+  });
+}
+function aliadosNoDescanso_() {
+  return ALIADOS_NO_DESCANSO.map(function (a) { return { id: a.id, nome: a.nome }; });
+}
+
+/**
+ * O ARMADUREIRO: "ao escolher reparar sua armadura como movimento de descanso,
+ * seus aliados também limpam 1 Ponto de Armadura."
+ *
+ * A carta tem duas metades e só a primeira estava no app. O +1 de Pontuação de
+ * Armadura entrava pelo `efeitoDerivado`; a segunda metade estava escrita na
+ * carta, aparecia na tela e não fazia NADA — a mesa lia a frase e precisava
+ * lembrar de desmarcar na mão em cada ficha.
+ *
+ * TRÊS DECISÕES, cada uma com um motivo:
+ *
+ * 1. VALE NOS DOIS REPAROS. A frase da carta não é o nome de um movimento: é
+ *    "reparar sua armadura". No descanso curto isso é "Reparar Armadura"; no
+ *    longo, "Reparar Armadura por Completo" — e a carta começa dizendo "durante
+ *    um descanso", sem escolher qual. Prender o efeito só ao movimento curto
+ *    faria a carta emudecer no descanso longo, que é o descanso em que
+ *    justamente se conserta a armadura inteira.
+ *
+ * 2. SÓ QUANDO O REPARO É NA PRÓPRIA ARMADURA. É "reparar SUA armadura". O
+ *    movimento pode ser mirado num aliado (`podeMirarAliado`), e nesse caso a
+ *    armadura consertada é a dele: o gatilho da carta não acontece.
+ *
+ * 3. UMA VEZ POR DESCANSO, mesmo escolhendo reparar duas vezes. Aqui o livro
+ *    não fecha a porta: os movimentos podem repetir, e a leitura literal
+ *    dispararia o benefício duas vezes. Como a dúvida é real, o app fica com a
+ *    conta MENOR e escreve na prévia o que fez — dobrar em silêncio um
+ *    benefício que ninguém pediu é pior do que ficar um ponto atrás, e a mesa
+ *    sempre pode marcar o segundo à mão. ⚠ PONTO DE INTERESSE.
+ *
+ * O "quem é aliado" não é escolhido na tela: a carta não pergunta. Vai para
+ * todas as fichas ativas da mesa, e o aviso na prévia diz isso com nome e
+ * sobrenome, para o Mestre desmarcar quem não estava descansando junto.
+ */
+function presentesDeArmadureiroNoDescanso_(ficha, feitos, avisos) {
+  if (typeof EFEITOS_DERIVADOS_CARTAS_DOMINIO === 'undefined') return [];
+
+  /*
+   * ⚠ QUEM DIZ SE A CARTA ESTÁ VALENDO É O 41, e não um segundo leitor escrito
+   * aqui. `requisitoDeEfeitoDerivadoDeCartaVale_` já resolve carta ativa,
+   * armadura equipada, estado aceso e exigência de domínio. Repetir essa conta
+   * aqui era o caminho mais curto para o dia em que as duas respostas
+   * discordassem — e este projeto já pagou esse preço mais de uma vez.
+   */
+  if (typeof requisitoDeEfeitoDerivadoDeCartaVale_ !== 'function') return [];
+
+  const reparouASuaPropria = feitos.some(function (f) {
+    if (!f || f.alvo !== 'proprio') return false;
+    return f.recurso === 'armaduraMarcada';
+  });
+  if (!reparouASuaPropria) return [];
+
+  const aliados = aliadosNoDescanso_();
+  const presentes = [];
+  Object.keys(EFEITOS_DERIVADOS_CARTAS_DOMINIO).forEach(function (id) {
+    const e = EFEITOS_DERIVADOS_CARTAS_DOMINIO[id] || {};
+    const quanto = Math.max(0, Math.trunc(Number(e.aliadosLimpamNoReparo)) || 0);
+    if (!quanto) return;
+    if (!requisitoDeEfeitoDerivadoDeCartaVale_(ficha, id, e)) return;
+
+    const carta = (typeof acharCarta_ === 'function') ? acharCarta_(id) : null;
+    const nome = (carta && carta.nome) || id;
+
+    if (!aliados.length) {
+      avisos.push('"' + nome + '": não há outra ficha na mesa para receber o conserto de ' +
+        quanto + ' Ponto' + (quanto === 1 ? '' : 's') + ' de Armadura.');
+      return;
+    }
+    aliados.forEach(function (a) {
+      presentes.push({
+        movimento: 'carta:' + id,
+        nomeDoMovimento: nome,
+        recurso: 'armaduraMarcada',
+        rotulo: ROTULO_RECURSO_DESCANSO.armaduraMarcada || 'Armadura',
+        quantidade: quanto,
+        tudo: false,
+        conta: nome + ': ' + quanto,
+        precisaDeRolagem: false,
+        observacao: 'Veio da carta ' + nome + ', no reparo de armadura de quem descansou.',
+        aliadoId: a.id,
+        aliadoNome: a.nome
+      });
+    });
+    avisos.push('"' + nome + '": ' + aliados.length + ' aliado' + (aliados.length === 1 ? '' : 's') +
+      ' da mesa limpa' + (aliados.length === 1 ? '' : 'm') + ' ' + quanto + ' Ponto' +
+      (quanto === 1 ? '' : 's') + ' de Armadura — uma vez neste descanso, mesmo que você repare ' +
+      'duas vezes. Quem não estava descansando com você o Mestre desmarca.');
+  });
+  return presentes;
+}
+
+/**
  * Os movimentos que esta ficha pode escolher neste tipo de descanso.
  * Cada item ganha `deOutroDescanso` quando entrou por uma exceção de regra.
  */
@@ -343,15 +459,26 @@ function movimentosDoDescanso_(tipo, ficha) {
       id: 'foco:refocar',
       nome: 'Refocar',
       nomeJambo: '', tipos: ['curto', 'longo'],
-      texto: 'Limpe a trilha de Foco, role ' + dados + 'd' + lados +
-        ' (seu Instinto) fora do app e informe o MAIOR resultado. Você fica com esse tanto de Foco.',
-      formula: dados + 'd' + lados + ', o maior',
+      /*
+       * ⚠ COM ZERO DADOS O MOVIMENTO É UMA ARMADILHA, e a tela precisa dizer
+       * isso em vez de mostrar "role 0d6". Ele LIMPA a trilha antes de encher:
+       * escolhê-lo com Instinto 0 gastaria metade do descanso para zerar o Foco
+       * e não devolver nada. O motor recusa; aqui a frase explica.
+       */
+      texto: dados >= 1
+        ? ('Limpe a trilha de Foco, role ' + dados + 'd' + lados +
+          ' (seu Instinto) fora do app e informe o MAIOR resultado. Você fica com esse tanto de Foco.')
+        : ('Indisponível: o Refocar rola um d' + lados + ' por ponto de Instinto, e o seu é ' +
+          dados + '. Ele limparia a trilha de Foco sem devolver nada.'),
+      formula: dados >= 1 ? (dados + 'd' + lados + ', o maior') : 'sem dados para rolar',
       podeMirarAliado: false,
-      perguntas: [{
+      // Sem dados não há o que perguntar: um campo que não pode ser respondido
+      // com verdade é pior que campo nenhum.
+      perguntas: dados >= 1 ? [{
         chave: 'maiorResultado', tipo: 'numero',
         texto: 'Maior resultado dos seus ' + dados + 'd' + lados,
         minimo: 1, maximo: lados, padrao: ''
-      }],
+      }] : [],
       deOutroDescanso: '',
       /*
        * ⚠ "ONCE PER REST" É LITERAL, e a falta disto custava Foco.
@@ -908,6 +1035,13 @@ function simularDescanso_(ficha, tipo, escolhas) {
 
     erros.push('Movimento "' + def.nome + '" sem efeito conhecido.');
   }
+
+  // Carta que derrama efeito nas fichas dos aliados por causa de um movimento
+  // desta ficha (Armadureiro). Entra depois dos movimentos, porque depende do
+  // que foi escolhido, e antes dos passivos, que só mexem nesta ficha.
+  presentesDeArmadureiroNoDescanso_(copia, feitos, avisos).forEach(function (presente) {
+    paraAliados.push(presente);
+  });
 
   // Equipamento passivo de descanso (ex.: Vitalizante) entra antes dos gatilhos
   // de contador, mas depois dos dois movimentos escolhidos.

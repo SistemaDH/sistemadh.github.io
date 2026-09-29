@@ -4232,6 +4232,186 @@ teste('a cura pousa na ficha do aliado, pela API', () => {
   verdade(depois.versao > fichaB.versao, 'a versão do aliado subiu');
 });
 
+/*
+ * ⚠ O ARMADUREIRO TINHA DUAS METADES E O APP SÓ CUMPRIA UMA.
+ *
+ * A carta: "+1 na Pontuação de Armadura" e "durante um descanso, ao escolher
+ * reparar sua armadura como movimento de descanso, seus aliados também limpam 1
+ * Ponto de Armadura". O +1 já entrava pelo `efeitoDerivado`; a segunda frase
+ * aparecia na tela, a mesa lia, e nada acontecia na ficha de ninguém — foi
+ * exatamente o que ela viu testando: "carta armadureiro não surtindo efeito ao
+ * reparar armadura, n tem a opção dos aliados receberem o concerto".
+ *
+ * A metade que faltava não podia virar uma PERGUNTA na tela ("qual aliado?"),
+ * porque a carta não pergunta: ela diz "seus aliados", todos.
+ */
+function fichaArmadureiro(comCarta) {
+  const f = contexto.fichaVazia_();
+  f.identidade = { nome: 'Armadureira', nivel: 5, classe: 'guerreiro', subclasse: 'call of the brave' };
+  f.cartas = { ativas: comCarta === false ? [] : ['valor-armadureiro'], cofre: [] };
+  f.equipamento = { primaria: 'Espada Larga', secundaria: null, armadura: 'Armadura de Couro' };
+  f.experiencias = [{ nome: 'Ferraria', bonus: 2 }, { nome: 'Marcha', bonus: 2 }];
+  f.recursos = Object.assign({}, f.recursos, { armaduraMarcada: 2 });
+  return f;
+}
+
+const DOIS_ALIADOS = [{ id: 'id-aliado-1', nome: 'Primeiro' }, { id: 'id-aliado-2', nome: 'Segundo' }];
+
+teste('⚠ Armadureiro: reparar a própria armadura limpa 1 PA de CADA aliado', () => {
+  contexto.definirAliadosNoDescanso_(DOIS_ALIADOS);
+  const p = contexto.previaDoDescanso_(fichaArmadureiro(), 'curto', [
+    { movimento: 'reparar-armadura', rolagem: 2 },
+    { movimento: 'preparar-se' }
+  ]);
+  const daCarta = (p.paraAliados || []).filter((x) => x.movimento === 'carta:valor-armadureiro');
+  igual(daCarta.length, 2, 'um presente para cada aliado da mesa: ' + JSON.stringify(p.paraAliados));
+  igual(daCarta[0].recurso, 'armaduraMarcada');
+  igual(daCarta[0].quantidade, 1, 'a carta dá 1, e não o resultado do d4 de quem descansou');
+  igual(daCarta[0].precisaDeRolagem, false, 'a carta não rola nada');
+  igual(daCarta.map((x) => x.aliadoId).sort(), ['id-aliado-1', 'id-aliado-2']);
+  verdade((p.avisos || []).some((a) => /Armadureiro/.test(a)),
+    'a prévia tem de DIZER que mandou o conserto: ' + JSON.stringify(p.avisos));
+  contexto.definirAliadosNoDescanso_([]);
+});
+
+teste('⚠ Armadureiro: sem a carta, o mesmo descanso não manda nada a ninguém', () => {
+  contexto.definirAliadosNoDescanso_(DOIS_ALIADOS);
+  const p = contexto.previaDoDescanso_(fichaArmadureiro(false), 'curto', [
+    { movimento: 'reparar-armadura', rolagem: 2 },
+    { movimento: 'preparar-se' }
+  ]);
+  igual((p.paraAliados || []).length, 0, JSON.stringify(p.paraAliados));
+  contexto.definirAliadosNoDescanso_([]);
+});
+
+teste('⚠ Armadureiro: é "reparar SUA armadura" — consertar a do aliado não dispara', () => {
+  contexto.definirAliadosNoDescanso_(DOIS_ALIADOS);
+  const p = contexto.previaDoDescanso_(fichaArmadureiro(), 'curto', [
+    { movimento: 'reparar-armadura', alvo: 'aliado', aliadoId: 'id-aliado-1', aliadoNome: 'Primeiro', rolagem: 2 },
+    { movimento: 'preparar-se' }
+  ]);
+  const daCarta = (p.paraAliados || []).filter((x) => x.movimento === 'carta:valor-armadureiro');
+  igual(daCarta.length, 0, 'a armadura consertada foi a do aliado, não a sua: ' + JSON.stringify(p.paraAliados));
+  igual((p.paraAliados || []).length, 1, 'o conserto mirado no aliado continua valendo');
+  contexto.definirAliadosNoDescanso_([]);
+});
+
+teste('⚠ Armadureiro: sem armadura vestida a carta não vale (o +1 e o conserto caem juntos)', () => {
+  contexto.definirAliadosNoDescanso_(DOIS_ALIADOS);
+  const f = fichaArmadureiro();
+  f.equipamento.armadura = null;
+  const p = contexto.previaDoDescanso_(f, 'curto', [
+    { movimento: 'reparar-armadura', rolagem: 2 },
+    { movimento: 'preparar-se' }
+  ]);
+  igual((p.paraAliados || []).length, 0, JSON.stringify(p.paraAliados));
+  contexto.definirAliadosNoDescanso_([]);
+});
+
+teste('⚠ Armadureiro: reparar duas vezes no mesmo descanso não dobra o conserto dos aliados', () => {
+  contexto.definirAliadosNoDescanso_(DOIS_ALIADOS);
+  const p = contexto.previaDoDescanso_(fichaArmadureiro(), 'curto', [
+    { movimento: 'reparar-armadura', rolagem: 1 },
+    { movimento: 'reparar-armadura', rolagem: 1 }
+  ]);
+  const daCarta = (p.paraAliados || []).filter((x) => x.movimento === 'carta:valor-armadureiro');
+  igual(daCarta.length, 2, 'dois aliados, um conserto cada — e não quatro presentes');
+  contexto.definirAliadosNoDescanso_([]);
+});
+
+teste('⚠ Armadureiro: no descanso longo o reparo por completo também dispara', () => {
+  contexto.definirAliadosNoDescanso_([DOIS_ALIADOS[0]]);
+  const p = contexto.previaDoDescanso_(fichaArmadureiro(), 'longo', [
+    { movimento: 'reparar-armadura-por-completo' },
+    { movimento: 'zerar-estresse' }
+  ]);
+  const daCarta = (p.paraAliados || []).filter((x) => x.movimento === 'carta:valor-armadureiro');
+  igual(daCarta.length, 1, '"reparar sua armadura" não é o nome de um movimento só: ' +
+    JSON.stringify(p.paraAliados));
+  igual(daCarta[0].quantidade, 1, 'o aliado limpa 1, não a armadura toda');
+  contexto.definirAliadosNoDescanso_([]);
+});
+
+teste('⚠ Armadureiro descansando sozinho: aviso, e nenhum presente órfão', () => {
+  contexto.definirAliadosNoDescanso_([]);
+  const p = contexto.previaDoDescanso_(fichaArmadureiro(), 'curto', [
+    { movimento: 'reparar-armadura', rolagem: 2 },
+    { movimento: 'preparar-se' }
+  ]);
+  igual((p.paraAliados || []).length, 0);
+  verdade((p.avisos || []).some((a) => /não há outra ficha/i.test(a)), JSON.stringify(p.avisos));
+});
+
+teste('⚠ Armadureiro pela API: o conserto POUSA na ficha do aliado, sem ninguém escolher quem', () => {
+  const tokenA = api('registrar', { nome: 'Ferreira', codigo: 'senha-ferreira' }).dados.token;
+  const tokenB = api('registrar', { nome: 'Companheiro', codigo: 'senha-companheiro' }).dados.token;
+
+  const aliada = contexto.fichaRapida_({
+    nome: 'Aliada', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade: 'Anão', comunidade: 'Ridgeborne',
+    cartas: ['blade-redemoinho', 'bone-intocavel'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  aliada.recursos.armaduraMarcada = 3;
+  const fichaB = api('criarPersonagem', { token: tokenB, ficha: aliada }).dados.personagem;
+
+  const ferreira = contexto.fichaRapida_({
+    nome: 'Ferreira', classe: 'Guardião', subclasse: 'Robusto',
+    ancestralidade: 'Anão', comunidade: 'Ridgeborne',
+    cartas: ['blade-redemoinho', 'valor-pele-dura'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  ferreira.recursos.armaduraMarcada = 2;
+  const fichaA = api('criarPersonagem', { token: tokenA, ficha: ferreira }).dados.personagem;
+
+  /*
+   * ⚠ A CARTA ENTRA DEPOIS DA CRIAÇÃO, e de propósito: ela é de nível 5 e a
+   * criação começa no nível 1. O que este teste mede não é a compra da carta —
+   * isso o 41 já cobre —, é o caminho da ficha do Armadureiro até a ficha do
+   * ALIADO passando pela API de verdade, com a mesma trava do descanso.
+   */
+  const comCarta = JSON.parse(JSON.stringify(fichaA.ficha));
+  comCarta.identidade.nivel = 5;
+  comCarta.cartas = { ativas: ['valor-armadureiro'], cofre: [] };
+  const salva = api('salvarPersonagem', {
+    token: tokenA, id: fichaA.id, versao: fichaA.versao, ficha: comCarta
+  });
+  verdade(salva.ok, JSON.stringify(salva));
+  const guardada = api('obterPersonagem', { token: tokenA, id: fichaA.id }).dados.personagem;
+  verdade((guardada.ficha.cartas.ativas || []).indexOf('valor-armadureiro') >= 0,
+    'a carta não ficou na ficha: ' + JSON.stringify(guardada.ficha.cartas));
+
+  const r = api('aplicarDescanso', {
+    token: tokenA, id: fichaA.id, versao: guardada.versao, tipo: 'curto',
+    escolhas: [
+      { movimento: 'reparar-armadura', rolagem: 1 },
+      { movimento: 'preparar-se' }
+    ]
+  });
+  verdade(r.ok, JSON.stringify(r));
+
+  /*
+   * ⚠ O CONSERTO VAI PARA TODA FICHA ATIVA DA MESA, e é isso que a carta diz —
+   * "seus aliados", sem escolher. Esta bateria acumula fichas de testes
+   * anteriores na mesma planilha de mentira, então contar presentes mediria o
+   * histórico da bateria, não a regra: o que se mede aqui é a ficha que este
+   * teste criou. Quem não estava descansando junto o Mestre desmarca, e o aviso
+   * da prévia diz isso com nome.
+   */
+  const daCarta = (r.dados.curados || []).filter((c) => /Armadureiro/.test(c.movimento || ''));
+  const naAliada = daCarta.filter((c) => c.aliadoId === fichaB.id);
+  igual(naAliada.length, 1, 'o relatório precisa dizer o que foi para a aliada: ' +
+    JSON.stringify(daCarta));
+  igual(naAliada[0].antes, 3);
+  igual(naAliada[0].depois, 2, 'a carta limpa 1 Ponto de Armadura, nem mais nem menos');
+  igual(daCarta.filter((c) => c.aliadoId === fichaA.id).length, 0,
+    'ninguém é aliado de si mesmo: o Armadureiro não se conserta duas vezes');
+
+  const depois = api('obterPersonagem', { token: tokenB, id: fichaB.id }).dados.personagem;
+  igual(depois.ficha.recursos.armaduraMarcada, 2, 'gravou de verdade na ficha do aliado');
+  verdade(depois.versao > fichaB.versao, 'a versão do aliado subiu');
+});
+
 teste('curar um aliado que não existe não derruba o descanso', () => {
   const token = api('registrar', { nome: 'Sozinha', codigo: 'senha-sozinha' }).dados.token;
   const f = contexto.fichaRapida_({
@@ -6858,7 +7038,25 @@ teste('Escamas reduz em 1 PV o dano Severo e cobra 1 Estresse', () => {
   igual(f.recursos.estresseMarcado, 1);
 });
 
+/*
+ * ⚠ A REGRA DO DANO MASSIVO NASCE DESLIGADA, e estes testes pediam 4 PV.
+ *
+ * Enquanto o padrão era "ligada", três testes mediam a regra sem nunca dizer
+ * que a queriam — passavam de carona no padrão. Quando o padrão virou
+ * "desligada" (o livro chama a regra de opcional, e agora quem liga é o
+ * Mestre), os três caíram de uma vez. É o comportamento certo do teste: quem
+ * depende da regra tem de LIGAR a regra, e assim o dia em que o padrão mudar de
+ * novo não mexe em nenhum deles.
+ */
+function comDanoMassivo(ligado) {
+  const m = contexto.mesaLer_();
+  m.danoMassivo = ligado !== false;
+  contexto.mesaGravar_(m);
+  return contexto.mesaLer_().danoMassivo;
+}
+
 teste('Escamas também reduz o 4º PV da regra opcional de dano massivo', () => {
+  igual(comDanoMassivo(true), true, 'a mesa precisa LIGAR a regra opcional');
   const f = fichaDeAncestralidadeParaDano_('Drakona');
   const massivo = Number(f.defesas.limiarGrave) * 2;
   const r = contexto.aplicarAjustes_(f, [{
@@ -7231,6 +7429,102 @@ teste('dano massivo marca 4 PV — e só quando a mesa liga', () => {
   igual(contexto.pvDoDano_(32, l, true).pv, 4, 'com a regra ligada');
   igual(contexto.pvDoDano_(32, l, false).pv, 3, 'com a regra desligada volta a ser Severo');
   igual(contexto.pvDoDano_(32, l, true).faixa, 'massivo');
+});
+
+/*
+ * ⚠ O DANO MASSIVO É REGRA OPCIONAL, E ELA ESTAVA LIGADA SOZINHA.
+ *
+ * O livro (p.91) diz "regra opcional"; o app ligava por conta e não havia
+ * botão nenhum — só uma ação de API sem tela. O jogador via o dano marcar 4 PV
+ * e não tinha onde procurar o porquê. Agora nasce desligada e quem liga é o
+ * Mestre, nos Ajustes da mesa, do lado do ouro em moedas: o mesmo desenho,
+ * porque é o mesmo tipo de regra — opcional, do livro, e da mesa inteira.
+ */
+teste('⚠ dano massivo: uma mesa nova nasce com a regra DESLIGADA', () => {
+  const m = contexto.mesaLer_();
+  delete m.danoMassivo;
+  contexto.mesaGravar_(m);
+  igual(contexto.mesaLer_().danoMassivo, false,
+    'a regra é opcional no livro: quem nunca escolheu não está usando');
+  igual(contexto.danoMassivoNaMesa_(), false);
+});
+
+teste('⚠ dano massivo: quem liga é o Mestre, e ligar não é o padrão do campo ausente', () => {
+  comDanoMassivo(false);
+
+  // sem o campo `ligado`, a chamada NÃO pode ligar a regra da mesa
+  const mudo = api('definirDanoMassivo', { token: tokenMestre });
+  verdade(mudo.ok, JSON.stringify(mudo));
+  igual(mudo.dados.danoMassivo, false, 'chamada sem "ligado" não liga a regra de ninguém');
+
+  igual(api('definirDanoMassivo', { token: tokenMestre, ligado: true }).dados.danoMassivo, true);
+  igual(contexto.danoMassivoNaMesa_(), true);
+  igual(api('definirDanoMassivo', { token: tokenMestre, ligado: false }).dados.danoMassivo, false);
+  igual(contexto.danoMassivoNaMesa_(), false);
+});
+
+teste('⚠ dano massivo: só o Mestre mexe no interruptor', () => {
+  const r = api('definirDanoMassivo', { token: tokenAna, ligado: true });
+  verdade(!r.ok, JSON.stringify(r));
+  igual(contexto.danoMassivoNaMesa_(), false, 'e a mesa não mudou');
+});
+
+teste('⚠ dano massivo: o interruptor do Mestre muda a janela de dano do JOGADOR', () => {
+  const f = fichaEquipamentoDefensivo_(3, null, 'armadura-t2-armadura-de-couro-aprimorada');
+  const dobro = Number(f.defesas.limiarGrave) * 2;
+
+  comDanoMassivo(false);
+  const desligado = contexto.aplicarAjustes_(
+    fichaEquipamentoDefensivo_(3, null, 'armadura-t2-armadura-de-couro-aprimorada'),
+    [{ tipo: 'dano', dano: dobro, tipoDeDano: 'fisico' }]);
+  igual(desligado.erros, []);
+  igual(desligado.mudancas[0].pvPelaFaixa, 3, 'desligada, o dobro do Severo continua Severo');
+  igual(desligado.mudancas[0].dano.faixa, 'severo');
+
+  comDanoMassivo(true);
+  const ligado = contexto.aplicarAjustes_(
+    fichaEquipamentoDefensivo_(3, null, 'armadura-t2-armadura-de-couro-aprimorada'),
+    [{ tipo: 'dano', dano: dobro, tipoDeDano: 'fisico' }]);
+  igual(ligado.mudancas[0].pvPelaFaixa, 4, 'ligada, o mesmo dano marca 4');
+  igual(ligado.mudancas[0].dano.faixa, 'massivo');
+  comDanoMassivo(false);
+  verdade(dobro > 0, 'controle: o dano medido é o dobro do limiar Severo (' + dobro + ')');
+});
+
+teste('⚠ dano massivo: a ficha fica sabendo pela sessão, para poder explicar o número', () => {
+  comDanoMassivo(true);
+  igual(api('sessao', { token: tokenAna }).dados.danoMassivo, true);
+  comDanoMassivo(false);
+  igual(api('sessao', { token: tokenAna }).dados.danoMassivo, false,
+    'e acompanha quando o Mestre desliga — senão a linha da janela de dano mentiria');
+});
+
+teste('⚠ dano massivo: a pergunta tem UM leitor, sem padrão paralelo em outro arquivo', () => {
+  /*
+   * O 4C tinha o seu próprio leitor, com um `true` cravado como padrão de
+   * emergência — um segundo padrão, que continuaria dizendo "ligado" depois de
+   * a constante do 4G mudar. Foi exatamente o que aconteceu. Esta conferência
+   * é de FONTE porque o defeito era de fonte: dois lugares respondendo à mesma
+   * pergunta.
+   */
+  const arquivos = fs.readdirSync(path.join(RAIZ, 'backend')).filter((f) => f.endsWith('.gs'));
+  const fora = [];
+  arquivos.forEach((nome) => {
+    const texto = fs.readFileSync(path.join(RAIZ, 'backend', nome), 'utf8');
+    texto.split('\n').forEach((linha, i) => {
+      if (/^\s*\*/.test(linha) || /^\s*\/\//.test(linha)) return;   // comentário explica, não decide
+      if (/danoMassivo\s*!==\s*false/.test(linha)) fora.push(nome + ':' + (i + 1) + ' ' + linha.trim());
+      if (/danoMassivo\s*\|\|/.test(linha)) fora.push(nome + ':' + (i + 1) + ' ' + linha.trim());
+    });
+  });
+  igual(fora, [], 'voltou a existir leitor paralelo do dano massivo');
+
+  const g = fs.readFileSync(path.join(RAIZ, 'backend/4G_Encontro.gs'), 'utf8');
+  verdade(/function danoMassivoNaMesa_/.test(g), 'o leitor único sumiu');
+  verdade(/const DANO_MASSIVO_PADRAO = false;/.test(g),
+    'a regra opcional voltou a nascer ligada');
+  const c = fs.readFileSync(path.join(RAIZ, 'backend/4C_Ajustes.gs'), 'utf8');
+  verdade(/danoMassivoNaMesa_\(\)/.test(c), 'o 4C deixou de usar o leitor único');
 });
 
 teste('os limiares saem do texto "7/15" da ficha', () => {
@@ -7870,6 +8164,28 @@ teste('⚠ o montador de verbetes voltou a ser o DONO do arquivo',()=>{
   const deFora = d.verbetes.filter((v) => v.fonteRotulo || v.fonteSrd2);
   igual(deFora.length, 15, 'esperava 15 verbetes de outra fonte');
   deFora.forEach((v) => verdade(v.pagina > 0, v.id + ': página inválida'));
+
+  /*
+   * ⚠ O RÓTULO DA FONTE É ETIQUETA, NÃO CITAÇÃO — e foi por confundir os dois
+   * que o índice de Regras aparecia com texto saindo do cartão no celular.
+   *
+   * Dois verbetes do Hope & Fear traziam 'Daggerheart: Hope & Fear, p.61 (New
+   * Adversary Features)' no `fonteRotulo`. A tela escreve "<rótulo> · p.<pág>",
+   * então saía a página REPETIDA, e os 55 caracteres numa etiqueta que não
+   * quebrava linha esticavam o cartão 223px além da tela. Aqui a conferência é
+   * do dado; a do layout está em testes-layout-regras-mobile.mjs, e as duas
+   * precisam existir: o CSS não pode depender de o dado ser curto, e o dado não
+   * pode depender de o CSS aguentar.
+   */
+  d.verbetes.forEach((v) => {
+    if (!v.fonteRotulo) return;
+    verdade(!/\bp+\.?\s*\d/.test(v.fonteRotulo),
+      v.id + ': fonteRotulo traz a página dentro (' + v.fonteRotulo + ')');
+    verdade(v.fonteRotulo.length <= 24,
+      v.id + ': fonteRotulo tem ' + v.fonteRotulo.length + ' caracteres (' + v.fonteRotulo + ')');
+  });
+  verdade(/LIMITE_DO_ROTULO/.test(fs.readFileSync(path.join(RAIZ, 'tools/montar-verbetes.py'), 'utf8')),
+    'o montador voltou a aceitar qualquer rótulo de fonte');
 
   // e o vocabulário corrigido não pode voltar pelo fichário
   const recursos = fs.readFileSync(path.join(RAIZ, 'tools/verbetes/grupo_recursos.py'), 'utf8');
@@ -11885,6 +12201,7 @@ teste('uso normal de 1 PA reduz um degrau de gravidade e é atômico com o dano'
 });
 
 teste('uso normal de Armadura reduz dano massivo para Severo',()=>{
+  comDanoMassivo(true);
   const f=fichaEquipamentoDefensivo_(3,null,'armadura-t2-armadura-de-couro-aprimorada');
   const massivo=Number(f.defesas.limiarGrave)*2;
   const r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:massivo,tipoDeDano:'magico',usarArmadura:true}]);
@@ -11902,6 +12219,7 @@ teste('não dá para usar Armadura sem PA livre e a recusa não toca nos PV',()=
 });
 
 teste('Fortificado faz 1 PA reduzir dois degraus, inclusive Massivo para Maior',()=>{
+  comDanoMassivo(true);
   let f=fichaEquipamentoDefensivo_(8,null,'armadura-t4-armadura-fortificada-completa');
   let r=contexto.aplicarAjustes_(f,[{tipo:'dano',dano:Number(f.defesas.limiarGrave),tipoDeDano:'fisico',usarArmadura:true}]);
   igual(r.erros,[]); igual(r.mudancas[0].pvPelaFaixa,3); igual(r.mudancas[0].pvDepoisArmadura,1);
@@ -16041,6 +16359,73 @@ teste('repetir OUTRO movimento duas vezes continua permitido (a regra geral não
     { movimento:'reduzir-estresse', rolagem:3 }
   ]);
   igual(((r.previa || {}).erros) || [], [], 'o livro permite o mesmo movimento duas vezes');
+});
+
+teste('⚠ Refocar: o leitor do traço era um SEGUNDO leitor, e ele discordava do primeiro',()=>{
+  /*
+   * ⚠ ACHADO PELA VANESSA NO CELULAR: o Refocar do Monge dizia "role 0d6 (seu
+   * Instinto)" — e com zero dados não havia como informar resultado nenhum.
+   *
+   * `dadosDeRecargaDeFoco_` lia `ficha.tracos[traco]` CRU. O leitor canônico,
+   * `valorDoTraco_`, soma os modificadores de característica e de equipamento
+   * ativo — e o comentário dele diz que esse bônus vale "não apenas para o
+   * número desenhado na tela". Quem tivesse Instinto vindo de modificador
+   * rolava menos dados do que a própria ficha mostra.
+   *
+   * O leitor certo para "role uma quantidade igual ao seu traço" é
+   * `fichasPorTraco_`: é a regra do livro p.17, com negativo contando como zero.
+   */
+  const f=fichaArtistaMarcial_(5,null);
+  igual(contexto.dadosDeRecargaDeFoco_(f),contexto.fichasPorTraco_(f,'Instinto'),
+    'os dois leitores têm de dar o mesmo número');
+
+  // traço negativo conta como ZERO, não como número negativo de dados
+  const negativo=JSON.parse(JSON.stringify(f));
+  negativo.tracos.instinto=-1;
+  igual(contexto.dadosDeRecargaDeFoco_(negativo),0);
+
+  // o motor não pode mais ler o traço cru
+  const fonte=fs.readFileSync(path.join(RAIZ,'tools/gerar-4J-posturas.mjs'),'utf8');
+  const bloco=fonte.slice(fonte.indexOf('function dadosDeRecargaDeFoco_'),
+    fonte.indexOf('function posturasParaTela_'));
+  verdade(/fichasPorTraco_/.test(bloco),'o leitor canônico saiu do dadosDeRecargaDeFoco_');
+});
+
+teste('⚠ Refocar com 0 dados é RECUSADO: ele limparia a trilha sem devolver nada',()=>{
+  /*
+   * ⚠ ESTA ERA A PARTE QUE DOÍA. O Refocar LIMPA a trilha antes de encher, então
+   * com Instinto 0 ele gastaria metade do descanso para zerar o Foco e não
+   * devolver nada — a mesma perda silenciosa que a regra de "uma vez por
+   * descanso" já existe para evitar.
+   *
+   * ⚠ E ANTES A FUNÇÃO NEM OLHAVA A QUANTIDADE DE DADOS: aceitava qualquer 1 a 6
+   * como "o maior resultado", inclusive vindo de ZERO dados. O app estava
+   * aceitando o resultado de uma rolagem que não existia.
+   */
+  const f=fichaArtistaMarcial_(5,null);
+  f.tracos.instinto=0;
+  f.recursos.foco=3;
+  const r=contexto.recarregarFocoDaFicha_(f,5);
+  verdade(!!r.erro,'aceitou um resultado de uma rolagem que não aconteceu');
+  verdade(/Instinto/.test(r.erro) && /sem devolver nada/.test(r.erro),r.erro);
+  igual(f.recursos.foco,3,'a trilha não pode ter sido limpa');
+
+  // e a tela explica, em vez de mostrar "role 0d6"
+  const mov=contexto.movimentosDoDescanso_('curto',f).find((m)=>m.id==='foco:refocar');
+  verdade(!!mov,'o movimento sumiu da lista em vez de explicar');
+  verdade(/Indispon[íi]vel/.test(mov.texto),mov.texto);
+  igual(mov.formula,'sem dados para rolar');
+  igual(mov.perguntas,[],'um campo que não pode ser respondido com verdade é pior que campo nenhum');
+
+  // CONTROLE: com Instinto 2 tudo volta ao normal
+  const ok=fichaArtistaMarcial_(5,null);
+  ok.recursos.foco=3;
+  const r2=contexto.recarregarFocoDaFicha_(ok,5);
+  igual(r2.erro,undefined,JSON.stringify(r2));
+  igual(ok.recursos.foco,5);
+  const mov2=contexto.movimentosDoDescanso_('curto',ok).find((m)=>m.id==='foco:refocar');
+  igual(mov2.formula,'2d6, o maior');
+  igual(mov2.perguntas.length,1);
 });
 
 teste('as posturas pertencem ao Artista Marcial, e o motor sabe disso', () => {

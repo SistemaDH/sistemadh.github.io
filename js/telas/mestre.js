@@ -232,8 +232,17 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     pai.append(secao('Descanso do grupo', blocoDeDescanso()));
     pai.append(dobraDoMestre('Sessão e nível', `Sessão ${painel.mesa.sessao.numero || '—'}`,
       blocoDeSessao()));
+    /*
+     * ⚠ O RESUMO DA DOBRA PRECISA CABER NAS DUAS REGRAS. Ele dizia só "moedas
+     * ligadas"; com o dano massivo aqui dentro, uma regra ligada ficaria
+     * invisível de fora da dobra — e é justamente de fora que o Mestre olha no
+     * meio da cena para lembrar como a mesa está jogando.
+     */
     pai.append(dobraDoMestre('Ajustes da mesa',
-      painel.mesa.ouroComMoedas ? 'moedas ligadas' : '', blocoDeAjustesDaMesa()));
+      [painel.mesa.ouroComMoedas ? 'moedas' : '',
+       painel.mesa.danoMassivo === true ? 'dano massivo' : '']
+        .filter(Boolean).join(' · '),
+      blocoDeAjustesDaMesa()));
     pai.append(dobraDoMestre('Como o Medo funciona', '', blocoDeRegrasDoMedo()));
   }
 
@@ -698,7 +707,8 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
   function blocoDeAjustesDaMesa() {
     return el('div', { class: 'pilha' }, [
       blocoDaMoldura(),
-      blocoDasMoedas()
+      blocoDasMoedas(),
+      blocoDoDanoMassivo()
     ]);
   }
 
@@ -750,6 +760,52 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
           'ouro se empresta e se divide, então não dá para cada ficha contar de um jeito.' }),
       ligada ? null : el('p', { class: 'texto-xs texto-fraco', texto:
         'Desligar não apaga: as moedas já anotadas ficam guardadas e voltam se a regra for religada.' })
+    ]);
+  }
+
+  /**
+   * A REGRA OPCIONAL DO DANO MASSIVO (livro p.91), ligada aqui.
+   *
+   * > "Se você sofrer dano igual ao dobro de seu limiar Severo, marque 4
+   * > Pontos de Vida."
+   *
+   * ⚠ ELA JÁ ESTAVA VALENDO, E NINGUÉM TINHA LIGADO. O motor aplicava os 4 PV
+   * por padrão e o único jeito de desligar era uma ação de API sem tela. Quem
+   * não conhecia a regra via o dano marcar 4 e não tinha onde procurar o
+   * porquê. Agora ela nasce desligada, como manda a palavra "opcional" do
+   * livro, e o interruptor mora aqui — do lado do ouro em moedas, pelo mesmo
+   * motivo: é escolha da MESA, não da ficha. Duas fichas no mesmo golpe não
+   * podem marcar uma 4 e a outra 3.
+   */
+  function blocoDoDanoMassivo() {
+    const ligada = painel.mesa.danoMassivo === true;
+
+    const chave = el('input', { type: 'checkbox', class: 'criacao__caixa' });
+    chave.checked = ligada;
+    chave.addEventListener('change', async () => {
+      try {
+        const r = await acoes.definirDanoMassivo(chave.checked);
+        avisarSucesso(r.danoMassivo
+          ? 'Dano massivo ligado: o dobro do limiar Severo marca 4 Pontos de Vida.'
+          : 'Dano massivo desligado: o dano nunca marca mais que 3 Pontos de Vida.');
+        recarregar();
+      } catch (e) { avisarErro(mensagemDoErro(e)); recarregar(); }
+    });
+
+    return el('div', { class: 'cartao' }, [
+      el('h4', { class: 'cartao__titulo', texto: 'Dano massivo (regra opcional)' }),
+      el('label', { class: 'linha' }, [
+        chave,
+        el('span', { class: 'texto-sm', texto:
+          'Dano igual ao dobro do limiar Severo marca 4 Pontos de Vida em vez de 3.' })
+      ]),
+      el('p', { class: 'texto-xs texto-fraco', texto: ligada
+        ? 'Vale para a mesa inteira: a janela de dano de todas as fichas passa a contar assim, ' +
+          'e a tela de Encontro também.'
+        : 'Regra opcional do livro (p.91). Desligada, o dano nunca marca mais que 3 Pontos de ' +
+          'Vida — que é o máximo das faixas normais.' }),
+      el('p', { class: 'texto-xs texto-fraco', texto:
+        'Ligar ou desligar não mexe em nada já marcado: vale do próximo dano em diante.' })
     ]);
   }
 

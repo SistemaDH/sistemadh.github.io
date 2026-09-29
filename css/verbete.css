@@ -255,9 +255,22 @@
   gap: var(--e2);
 }
 
+/*
+ * ⚠ AS COLUNAS ERAM `1fr auto`, E `auto` NÃO ENCOLHE.
+ *
+ * `1fr` é `minmax(auto, 1fr)`: o mínimo dele é o conteúdo, não zero. Junto com
+ * uma segunda coluna `auto` ocupada por uma etiqueta que não quebrava linha, o
+ * cartão deixava de caber na tela e passava a medir a LARGURA DO TEXTO — 541px
+ * dentro de um modal de 360px. E não dava overflow na página: quem rolava para
+ * o lado era o `.modal__caixa`, então nenhuma conferência de scrollWidth do
+ * documento via nada. Na mesa, era texto saindo do cartão pela direita.
+ *
+ * `minmax(0, …)` nas duas devolve o zero como mínimo: o texto volta a quebrar
+ * dentro da largura em vez de esticar o cartão.
+ */
 .regras__item {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) minmax(0, auto);
   gap: 0 var(--e3);
   width: 100%;
   padding: var(--e3);
@@ -289,7 +302,21 @@
   font-family: var(--fonte-mono);
   font-size: var(--txt-xs);
   color: var(--cor-titulo);
-  white-space: nowrap;
+  /*
+   * ⚠ ERA `white-space: nowrap`, e foi o que estourou o cartão.
+   *
+   * O rótulo da fonte é curto na quase totalidade dos verbetes ("Livro",
+   * "SRD 2.0"), e com ele curto o `nowrap` só mantinha "SRD 2.0 · p.184"
+   * inteiro numa linha — bonito. Mas o rótulo é DADO, e um dia um verbete
+   * trouxe 55 caracteres: aí o `nowrap` deixou de ser acabamento e virou uma
+   * ordem para o cartão crescer.
+   *
+   * Agora quebra. `text-align: right` mantém a etiqueta encostada na coluna da
+   * direita quando ela ocupa duas linhas, e `overflow-wrap: anywhere` cobre o
+   * caso do rótulo sem espaço nenhum, que quebrar por palavra não resolveria.
+   */
+  text-align: right;
+  overflow-wrap: anywhere;
 }
 
 .regras__jambo {
