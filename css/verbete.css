@@ -270,7 +270,18 @@
  */
 .regras__item {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+  /*
+   * ⚠ E `fit-content(50%)` NA COLUNA DA DIREITA, que não é firula: é a única
+   * das três formas que serve aos dois casos. `auto` dá a largura do conteúdo
+   * — ótimo para "Livro · p.90" e desastroso para um rótulo comprido, que
+   * espreme o NOME do verbete (o que a pessoa está procurando) contra a
+   * margem. Um teto fixo de 50% faz o contrário: sobra espaço para o rótulo
+   * curto e falta para o nome, e "Gastando recursos" quebra em duas linhas sem
+   * precisar. `fit-content(50%)` é "o tamanho do conteúdo, até no máximo
+   * metade": rótulo curto ocupa só o que precisa, rótulo comprido para na
+   * metade e quebra dentro dela.
+   */
+  grid-template-columns: minmax(0, 1fr) fit-content(50%);
   gap: 0 var(--e3);
   width: 100%;
   padding: var(--e3);

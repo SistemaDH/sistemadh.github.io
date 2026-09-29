@@ -27,29 +27,38 @@ As tabelas expostas têm RLS habilitado e não possuem policies públicas para `
 Produção atual:
 
 ```text
-engine-api: v20 ACTIVE (deploy conferido em 29/09/2026)
+engine-api: v21 ACTIVE (deploy conferido em 29/09/2026)
 verify_jwt: false
-ENGINE_COMMIT: c6b65b14c7a38f033798e97267f79c5abcd11204
-bundle: 0d05ae7d81fa061b3bf0e562bf97c42c8e6ad1cc2feb1f1a9faa26b7f049046d
+ENGINE_COMMIT: 144fb81781d98f592b4bf5fc764fe174cdb4a691
+bundle: e192d53605467660bffccf813a1ac55d98043ed6546ed75e516444a2f3604ae4
 ```
 
-⚠ **A v20 é a primeira em muito tempo que NÃO é só repin.** A fonte da própria
-função mudou: o `ACOES` ganhou `pedirAoPar`, a ação dos Anéis que escreve um pedido
-na ficha do par. Sem ela na lista, o app chamaria uma ação que a função não trata —
-**404 mudo em produção**, que foi o que o `conferir-funcoes-publicadas` apontou
-antes do deploy.
+⚠ **A v21 é REPIN**, e é bom que seja: a fonte da função não mudou uma vírgula —
+o `ACOES` já tinha `definirDanoMassivo` desde antes, e o interruptor novo do Mestre
+usa exatamente essa ação. O que mudou foi o motor `.gs` no commit apontado.
+
+O que o commit `144fb817` traz, em relação ao `c6b65b14` da v20: os três defeitos
+que a mesa achou testando (cartão do índice de Regras estourando no celular,
+Refocar do Monge sem conferir quantos dados existiam, Armadureiro sem efeito nos
+aliados) e o dano massivo virando interruptor do Mestre — quatro arquivos do motor
+no primeiro bloco (`4B_Descanso.gs`, `4J_Posturas.gs`, `41_Dominios.gs`,
+`99_Api.gs`) e três no segundo (`4C_Ajustes.gs`, `4G_Encontro.gs`, `99_Api.gs`).
 
 Os 24 `SOURCE_FILES` servidos pelo GitHub nesse commit foram conferidos **byte a
-byte** contra o que a suíte testou: **0 divergentes**. A árvore do commit é
-idêntica à testada aqui.
+byte** contra o que a suíte de 1184 testes rodou: **0 divergentes**.
 
 ⚠ **O que NÃO foi possível conferir neste ambiente:** uma chamada HTTP de ida e
-volta à função. O proxy de saída da sessão recusa o host das Edge Functions (403 no
-CONNECT), então a verificação foi a releitura do código implantado pelo painel — que
-mostra v20 ACTIVE, `verify_jwt: false`, o pin novo e `pedirAoPar` no `ACOES` — mais
-os advisors de segurança, que seguem só com o `rls_enabled_no_policy` esperado nas 6
-tabelas. **A primeira requisição autenticada é que carrega os `.gs`**, então vale a
-pena abrir a ficha uma vez e olhar se a janela de dano responde.
+volta à função — nem uma autenticada, nem um ping sem token. O proxy de saída da
+sessão recusa o host das Edge Functions (403 no CONNECT), e não se contorna isso. A
+verificação foi a releitura do código implantado pelo painel — v21 ACTIVE,
+`verify_jwt: false`, pin novo, os 24 `SOURCE_FILES`, e o `autenticar` conferindo o
+token de sessão **em hash** contra `sessoes`, com a expiração intacta — mais os
+advisors de segurança, que seguem só com o `rls_enabled_no_policy` esperado nas 6
+tabelas (INFO; é o estado desejado, não um defeito a calar).
+
+**A primeira requisição AUTENTICADA é que baixa os 24 `.gs` do pin novo**, então a
+prova final é da mesa: abrir uma ficha, abrir a janela de dano e ver a linha do dano
+massivo aparecer.
 
 ### Histórico
 

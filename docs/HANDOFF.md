@@ -2445,3 +2445,57 @@ payload da sessão, o passo do e2e falha.
 ⚠ **PRECISA DE DEPLOY** (`4C_Ajustes.gs`, `4G_Encontro.gs`, `99_Api.gs`, além
 dos quatro do bloco anterior). A `engine-api` **não** mudou de fonte —
 `definirDanoMassivo` já estava na lista de ações.
+
+---
+
+## Deploy da v21 (29/09/2026) — repin no commit dos dois blocos
+
+```text
+engine-api: v21 ACTIVE
+verify_jwt: false
+ENGINE_COMMIT: 144fb81781d98f592b4bf5fc764fe174cdb4a691
+bundle: e192d53605467660bffccf813a1ac55d98043ed6546ed75e516444a2f3604ae4
+```
+
+A ordem de sempre:
+
+1. commit imutável escolhido: `144fb81781d98f592b4bf5fc764fe174cdb4a691` (main).
+   ⚠ **Ela juntou os dois blocos num commit só** — os três defeitos da mesa e o
+   dano massivo estão no mesmo `144fb817`, com os 25 arquivos;
+2. **os 24 `SOURCE_FILES` servidos pelo GitHub nesse commit conferidos byte a byte
+   contra o que a suíte de 1184 testes rodou: 0 divergentes**;
+3. `ENGINE_COMMIT` movido para esse commit;
+4. deploy com `verify_jwt: false` passado EXPLICITAMENTE, como manda a regra do
+   projeto. A fonte da função **não** mudou — `definirDanoMassivo` já estava no
+   `ACOES`, então este é repin de verdade;
+5. releitura da função no ar: v21 ACTIVE, `verify_jwt: false`, pin novo, os 24
+   `SOURCE_FILES`, `pedirAoPar` e `definirDanoMassivo` presentes, e o `autenticar`
+   conferindo o token de sessão **em hash** contra `sessoes`, com a expiração
+   intacta;
+6. advisors de segurança: só o `rls_enabled_no_policy` esperado, INFO, nas 6
+   tabelas — nada novo, e nada a "consertar".
+
+⚠ **O que NÃO deu para conferir daqui:** qualquer ida e volta HTTP à função —
+nem autenticada, nem um ping sem token. O proxy de saída desta sessão recusa o
+host das Edge Functions (403 no CONNECT), e eu não contorno isso. Como é a
+primeira requisição **autenticada** que baixa os 24 `.gs` do pin novo, a prova
+final é da mesa: abrir uma ficha e a janela de dano.
+
+### ⚠ Um arquivo do lote NÃO entrou no commit: `css/verbete.css`
+
+O commit `144fb817` traz a versão **anterior** do arquivo, com
+`grid-template-columns: minmax(0, 1fr) minmax(0, auto)`. O refinamento para
+`fit-content(50%)` — escrito depois, quando a captura do caso patológico mostrou
+o rótulo comprido espremendo o NOME do verbete contra a margem esquerda — foi
+gravado na pasta dela **depois** de o GitHub Desktop já ter fotografado os
+arquivos.
+
+**Não afeta o deploy:** `css/verbete.css` é frontend servido pelo GitHub Pages e
+não está entre os `SOURCE_FILES` do motor. E o defeito que a mesa relatou
+("texto saindo da tabela") **está corrigido** no que foi publicado — o cartão não
+estoura mais. O que falta é só o acabamento: com um rótulo muito comprido, o nome
+do verbete quebra em duas linhas sem precisar.
+
+Vai no próximo commit. A bateria `teste:layout-regras-mobile` passa nas duas
+versões (ela mede estouro, e nenhuma das duas estoura), então **isto aqui é o
+registro**: quem for conferir depois não vai achar o defeito no teste.
