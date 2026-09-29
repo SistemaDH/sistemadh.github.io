@@ -2042,6 +2042,93 @@ try {
     }, null, { timeout: 20000 });
   });
 
+  await passo('escolher a campanha pede confirmação, e depois tranca', async () => {
+    /*
+     * ⚠ A CAMPANHA MUDA REGRA EM TODAS AS FICHAS DA MESA. Um toque errado num
+     * select, no meio de uma sessão, mudaria todo mundo de uma vez — e ninguém
+     * perceberia na hora. São duas barreiras, e este passo prova as duas:
+     * a confirmação (contra o toque errado) e a trava (contra a troca no meio
+     * do caminho).
+     *
+     * O cenário escolhido aqui é Cinco Estandartes em Chamas de propósito: é o
+     * único que não mexe em ficha nenhuma — nem equipamento, nem moeda, nem
+     * dano —, então a bateria segue adiante sem carregar efeito colateral.
+     */
+    await abrirDobra('Ajustes da mesa');
+    const select = pagina.locator('.cartao', { hasText: 'Moldura da campanha' }).locator('select');
+    igual(await select.isDisabled(), false, 'sem campanha, a escolha está livre');
+
+    await select.selectOption({ label: 'Cinco Estandartes em Chamas' });
+
+    // O diálogo precisa DIZER o que muda — "tem certeza?" não é confirmação.
+    const caixa = pagina.locator('.modal__caixa').last();
+    await caixa.waitFor({ timeout: 10000 });
+    const texto = (await caixa.textContent()).replace(/\s+/g, ' ');
+    if (!/muda regra em todas as fichas/.test(texto)) {
+      throw new Error('o diálogo não explicou o peso da escolha: ' + texto);
+    }
+    if (!/O que muda em todas as fichas/.test(texto)) {
+      throw new Error('o diálogo não listou o que muda: ' + texto);
+    }
+    if (!/travada/.test(texto)) {
+      throw new Error('o diálogo não avisou que a campanha tranca: ' + texto);
+    }
+
+    // "Agora não" desiste, e nada muda.
+    await caixa.getByRole('button', { name: 'Agora não' }).click();
+    await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 10000 });
+    await abrirDobra('Ajustes da mesa');
+    igual(await pagina.locator('.cartao', { hasText: 'Moldura da campanha' })
+      .locator('select').inputValue(), '', 'desistir não pode deixar a campanha escolhida');
+
+    // Agora escolhe de verdade.
+    await pagina.locator('.cartao', { hasText: 'Moldura da campanha' }).locator('select')
+      .selectOption({ label: 'Cinco Estandartes em Chamas' });
+    const caixa2 = pagina.locator('.modal__caixa').last();
+    await caixa2.waitFor({ timeout: 10000 });
+    await caixa2.getByRole('button', { name: /^Jogar / }).click();
+
+    await pagina.waitForFunction(() => {
+      const c = Array.from(document.querySelectorAll('.cartao'))
+        .find((x) => /Moldura da campanha/.test(x.textContent));
+      const s = c && c.querySelector('select');
+      return !!s && s.disabled;
+    }, null, { timeout: 20000 });
+
+    const depois = (await pagina.textContent('body')).replace(/\s+/g, ' ');
+    if (!/a escolha está travada/.test(depois)) {
+      throw new Error('o painel não disse que a campanha está travada');
+    }
+    if (!/Reiniciar campanha/.test(depois)) {
+      throw new Error('sem o botão de reiniciar, o Mestre fica preso na campanha');
+    }
+
+    /*
+     * ⚠ E A FICHA DE CAMPANHA APARECE. Cinco Estandartes vive inteira no painel:
+     * as cinco nações de Althas, com as relações de −3 a +3.
+     */
+    if (!/Armada/.test(depois) || !/Voldaen/.test(depois)) {
+      throw new Error('a ficha de campanha das cinco nações não apareceu no painel');
+    }
+
+    // Reiniciar: também confirma, e o aviso é honesto sobre o que NÃO volta.
+    await pagina.getByRole('button', { name: 'Reiniciar campanha' }).click();
+    const caixa3 = pagina.locator('.modal__caixa').last();
+    await caixa3.waitFor({ timeout: 10000 });
+    const textoReinicio = (await caixa3.textContent()).replace(/\s+/g, ' ');
+    if (!/CONTINUA nas fichas/.test(textoReinicio)) {
+      throw new Error('o reinício prometeu desfazer o que não desfaz: ' + textoReinicio);
+    }
+    await caixa3.getByRole('button', { name: 'Reiniciar' }).click();
+
+    await pagina.waitForFunction(() => {
+      const c = Array.from(document.querySelectorAll('.cartao'))
+        .find((x) => /Moldura da campanha/.test(x.textContent));
+      const s = c && c.querySelector('select');
+      return !!s && !s.disabled && s.value === '';
+    }, null, { timeout: 20000 });
+  });
+
   await passo('o Medo respeita o teto de 12', async () => {
     // A trilha tem exatamente 12 marcadores — é o teto do livro.
     const pontos = await pagina.locator('.trilha--medoMesa .trilha__ponto').count();

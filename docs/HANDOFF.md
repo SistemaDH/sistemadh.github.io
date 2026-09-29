@@ -2499,3 +2499,278 @@ do verbete quebra em duas linhas sem precisar.
 Vai no próximo commit. A bateria `teste:layout-regras-mobile` passa nas duas
 versões (ela mede estouro, e nenhuma das duas estoura), então **isto aqui é o
 registro**: quem for conferir depois não vai achar o defeito no teste.
+
+---
+
+## As campanhas começam a funcionar: O Surto Selvagem (29/09/2026)
+
+Pedido: *"podemos nos concentrar nas campanhas e finalmente automatizar elas
+para funcionar como devem ser"*. Medido antes de começar, o estado era mais
+magro do que parecia: das seis molduras do Capítulo 5, o app conhecia **só o
+equipamento** de cinco, e **três nem existiam** como moldura para escolher.
+Escolher a moldura no painel trocava as tabelas de equipamento da criação de
+ficha, e nada mais — **nenhuma mecânica de campanha existia**.
+
+Este lote fecha a primeira inteira: **O Surto Selvagem**.
+
+### O que entrou
+
+- **A moldura existe.** `O Surto Selvagem` entra na lista dos Ajustes da mesa,
+  sem equipamento próprio (as personagens usam as tabelas do Capítulo 2).
+- **O conteúdo dela existe**, em `data/molduras.json`: proposta, tom, temas,
+  referências, visão geral, princípios de jogador e de Mestre, o que muda nas
+  origens, as perguntas de sessão zero e a mecânica específica.
+- **A Corrupção está ligada de ponta a ponta:** a janela de dano pergunta se a
+  fonte era Corrompida; sofrendo dano Severo, o marcador entra e o app **pede** o
+  Dado de Medo (d12); resultado igual ou inferior aos marcadores dá uma cicatriz
+  e zera tudo; no fim da sessão o Mestre colhe os marcadores de todas as fichas
+  e recebe o mesmo tanto de Medo.
+
+### Três coisas que o lote ensinou
+
+1. ⚠ **O fim de sessão preguiçoso não servia.** Todo o resto do app aplica o fim
+   de sessão quando o JOGADOR abre a ficha. Para zerar um marcador isso basta;
+   para a Corrupção não, porque **contar é o efeito** — os marcadores viram Medo
+   do Mestre. Ficha que limpasse a sua por conta seria Medo que a mesa nunca
+   recebeu, e a ficha de quem não abrisse o app nunca entregaria nada. Nasceu o
+   gatilho `fim-de-sessao-do-mestre`, que só acontece no botão do painel.
+2. ⚠ **A cicatriz tinha um dono e passou a ter dois.** Empurrar na lista é o de
+   menos: o que importa é que a cicatriz sem espaço de Esperança **aposenta a
+   ficha**. Esse bloco morava dentro do movimento de morte, que era o único
+   caminho para ganhar cicatriz. Virou `acrescentarCicatriz_` antes de a
+   Corrupção nascer — copiá-lo seria copiar a aposentadoria, e no primeiro dia
+   em que um dos dois mudasse uma cicatriz encerraria a ficha por um caminho e
+   não pelo outro.
+3. ⚠ **A moldura passou a ser dona de contador — e ela não está na ficha.** Tudo
+   o que era dono de contador (carta, classe, ancestralidade, comunidade) mora
+   dentro da ficha. A Corrupção não: quem decide se ela existe é a MESA. Por
+   isso `refsDeContadorDaFicha_` aprendeu a perguntar a moldura, e trocar a
+   campanha no painel tira a Corrupção de todas as fichas no mesmo instante.
+
+### E um tropeço meu, apanhado pela trava do projeto
+
+Escrevi as duas funções novas direto no `backend/4E_Mesa.gs` — **que é gerado**.
+O `conferir-gerados` pegou, devolveu o arquivo e me mandou levar a mudança para
+`tools/4E_Mesa.rodape.js`, que é a fonte. É a segunda vez neste projeto que essa
+trava me pega, e as duas vezes ela estava certa.
+
+**Estado:** 1194 testes de backend (eram 1184), 0 falhando; `teste:tudo` verde.
+A prova ao contrário foi feita: desligando o gancho da Corrupção no motor de
+dano, 5 testes caem.
+
+⚠ **O que NÃO entrou, e está registrado em `docs/pontos-de-interesse-molduras.md`:**
+Cinco Estandartes em Chamas e Era da Umbra continuam sem existir; as outras cinco
+molduras seguem só com equipamento; e as oito mecânicas suplementares do SRD 2.0
+seguem como texto. A próxima mais barata é a da Era da Umbra — "dano adicional
+igual à quantidade de cicatrizes" é um efeito derivado, do mesmo tipo dos que a
+ficha já calcula.
+
+⚠ **PRECISA DE DEPLOY** (`4C_Ajustes.gs`, `4E_Mesa.gs`, `44_Equipamento.gs`,
+`47_Contadores.gs`, `99_Api.gs`). A `engine-api` **não** mudou de fonte — nenhuma
+ação nova —, então é repin.
+
+---
+
+## As campanhas, parte 2: Era da Umbra, Cinco Estandartes e as oito com conteúdo
+
+Continuando o pedido das campanhas, e com uma descoberta que mudou o tamanho do
+trabalho.
+
+### Era da Umbra — quatro das cinco mecânicas
+
+É a primeira moldura que **muda uma regra do núcleo**:
+
+- **dano adicional igual ao número de cicatrizes** — efeito derivado, entra na
+  linha da arma como o Treinamento de Combate do Guerreiro;
+- ⚠ **a última cicatriz NÃO aposenta — sucumbe.** O livro básico manda aposentar;
+  esta campanha manda o contrário, com todas as letras. As duas acabam com a
+  ficha, e por isso o que importa é o **motivo** registrado: aposentado saiu de
+  cena, sucumbido virou parte do cenário. Foi exatamente para isto que a
+  cicatriz precisou ter um dono só, no lote anterior;
+- **escuridão à espreita** — 1d12 após descanso fora de uma Chama Sagrada, no
+  descanso da MESA (a jogada é uma, do grupo, e quem rola é o Mestre). O app
+  pede o dado, aplica o Medo e, na faixa 12, dá 1 Esperança a **todas as fichas**
+  de uma vez, dentro da mesma trava;
+- **Montar Guarda** — movimento de descanso extra que a moldura concede.
+  ⚠ O app **não arbitra a troca**: a regra diz que o jogador "pode trocar" depois
+  de ver a jogada do Mestre, e construir um protocolo entre fichas para oferecer
+  isso seria inventar uma negociação que a mesa resolve numa frase. O app guarda
+  o número e mostra;
+- ⏳ **ramo sacro** — pendente. É o mais barato que sobrou: o canal para dar
+  Esperança a todas as fichas já existe.
+
+### Cinco Estandartes em Chamas — a ficha de campanha
+
+A única moldura que vive inteira no painel do Mestre: as cinco nações de Althas,
+com a relação de cada uma para com as outras (−3 a +3), recursos, problemas e
+objetivos. Entrou como **leitura**: o livro manda as relações mudarem conforme a
+campanha anda, e um editor que não guardasse o que o Mestre mudou seria pior que
+nenhum.
+
+⚠ **O teste que essa tabela pediu:** o livro imprime as duas pontas de cada
+relação em quadros separados — Armada diz "+2 Gracien" num lugar, Gracien diz
+"+2 Armada" em outro. Duas listas para o mesmo par é onde um dígito trocado passa
+despercebido, e o Mestre decidiria de dois jeitos dependendo de qual quadro
+tivesse lido por último. O teste confere a **reciprocidade das vinte relações**.
+
+### A descoberta: duas molduras já estavam prontas
+
+Lendo o Capítulo 5 inteiro para planejar os lotes seguintes: a seção "MECÂNICAS
+ESPECÍFICAS" do **Festim das Feras** é, inteira, as tabelas de equipamento
+inicial. A do **Colosso das Terras Áridas** é, inteira, as tabelas de armas de
+fogo. Os dois catálogos já estavam no app, com as características automatizadas,
+e a troca de tabelas na criação já funcionava. **Elas não tinham outra mecânica
+para ligar** — faltava só o texto.
+
+Com isso, **as oito molduras selecionáveis têm conteúdo**, e o painel do Mestre
+mostra o cenário escolhido: proposta para ler em voz alta, tom, temas,
+referências, as mecânicas específicas (dizendo quais o app aplica) e as perguntas
+de sessão zero. Um teste segura esse piso.
+
+**Sobra a Placa-mãe**, e ela sobra por um bom motivo: é a de maior complexidade
+do livro e a única que mexe em sistemas que toda ficha usa — troca o ouro pela
+moeda quantum e as armas principais pela ikonis customizável. A ordem de custo
+está em `docs/pontos-de-interesse-molduras.md` §1c.
+
+**Estado:** 1210 testes de backend (eram 1194), 0 falhando; lint, CSS, sintaxe,
+gerados, funções e verbetes verdes; baseline Mestre mobile 18 telas · 0 erros.
+
+⚠ **PRECISA DE DEPLOY** (além dos do bloco anterior): `48_Criacao.gs`,
+`4B_Descanso.gs`. A `engine-api` continua sem mudar de fonte — é repin.
+
+---
+
+## As campanhas, parte 3: a Placa-mãe entra pela ordem de custo — e para antes da moeda
+
+Três das cinco mecânicas da moldura mais complexa do livro:
+
+- ✅ **Ligação** — bônus de dano igual ao nível. ⚠ Ela é da MOLDURA, e não de
+  uma arma do catálogo: neste cenário a arma principal não vem do catálogo, cada
+  personagem monta a sua ikonis na ficha módulo do livro. Pendurar o bônus numa
+  arma exigiria que o app soubesse montar a ikonis, e até lá a Ligação não
+  existiria para ninguém. Todo mundo tem uma ikonis; o bônus é de todos.
+- ✅ **Dano tecnológico** — o dano mágico passa a se chamar tecnológico (tec) na
+  janela de dano. ⚠ E **só** o nome: o tipo continua sendo `magico` por dentro.
+  Renomear dano é o tipo de coisa que, feita sem cuidado, vira um TIPO novo que
+  as resistências não conhecem — e aí a Escamas do Drakona deixaria de valer em
+  metade do jogo. Há teste para isso.
+- ✅ **Conector de Rede** — sem acesso à Rede não há movimento de repouso.
+  ⚠ O app **pergunta, não adivinha**: ter Rede é situação de ficção e não há
+  nada na ficha de onde deduzir. E o silêncio não bloqueia: só quem responder
+  "não temos" é recusado. Um teste guarda cada uma dessas três frases.
+
+**E parei antes da moeda, de propósito.** Faltam a ikonis com espaços de
+aprimoramento (um subsistema do tamanho das Posturas Marciais) e a troca do ouro
+pelo quantum. Essa última mexe na Mochila de toda ficha, e a decisão de como
+migrar — converter o ouro que já existe? manter as duas escadas, como o
+ouro-em-moedas faz? — é da mesa, não minha.
+
+**Estado:** 1214 testes de backend, 0 falhando; lint, CSS, sintaxe, gerados e
+funções verdes; descanso mobile 15 estados · 0 erros; Mestre mobile 18 telas ·
+0 erros.
+
+---
+
+## A moeda quantum: a pergunta era cara, a resposta era barata
+
+Decisão da mesa: *"se a campanha ser escolhida ela faz a troca do ouro"*. Fui
+implementar esperando a mudança mais invasiva do lote — e ela não era.
+
+**A conversão do livro é 10 quantum = 1 punhado, 100 = 1 bolsa, 1000 = 1 baú. É
+exatamente a escada que o app já usa na regra opcional das moedas do SRD.** Ou
+seja: **1 quantum é 1 moeda.**
+
+Então escolher a Placa-mãe não move número nenhum. Troca o NOME e a
+granularidade; o valor guardado em cada ficha continua o mesmo:
+
+- ninguém converte nada, e nada se perde no arredondamento;
+- ficha antiga não precisa de migração;
+- **sair da campanha devolve a contagem em ouro sozinho**.
+
+Uma conversão de verdade — reescrever o `ouro` de toda ficha ao escolher o
+cenário — seria um caminho **sem volta** para chegar ao mesmo resultado. Era a
+pergunta que eu tinha guardado para você, e a escada respondeu por nós.
+
+⚠ **E a moldura não LIGA a regra das moedas na mesa**, só responde que sim
+enquanto está escolhida. Se gravasse `m.ouroComMoedas = true`, sair da campanha
+deixaria a regra ligada para trás, e o Mestre teria de descobrir sozinho que
+precisa desmarcá-la.
+
+⚠ **Quem nasce no cenário começa com 5 quantum, que é meio punhado** — não 5
+punhados. Escrever o 5 no campo errado daria à mesa dez vezes o dinheiro que o
+livro manda; há teste para esse número.
+
+**Sobra uma coisa na Placa-mãe:** a ikonis com espaços de aprimoramento (dois no
+1º patamar, +1 por patamar, criados e trocados no repouso). É um subsistema do
+tamanho das Posturas Marciais, e o app ainda não monta a arma — o jogador a
+registra no espaço de arma principal com a ficha módulo do livro. Os números já
+estão declarados em `data/molduras.json`.
+
+**Estado:** 1218 testes de backend, 0 falhando; lint, CSS, sintaxe, gerados e
+funções verdes; Mochila em uso mobile 15 estados · 0 erros. Prova ao contrário
+feita: tirando a troca de moeda do leitor, 2 testes caem.
+
+---
+
+## As campanhas fecham: a ikonis, a trava e o conferidor que faltava
+
+### A ikonis — a Placa-mãe em 5 de 5
+
+Os espaços de aprimoramento (dois no 1º patamar, mais um a cada seguinte)
+aparecem no catálogo da ficha, calculados pelo servidor.
+
+⚠ **O app não MONTA a ikonis, e isso é declarado, não esquecido.** A arma é
+customizada na ficha módulo do livro e escrita à mão no espaço de arma
+principal; inventar aqui um construtor de armas seria inventar regra. O que o
+app faz é a conta que a mesa erraria de cabeça no meio da sessão — quantos
+espaços este personagem tem AGORA — e o aviso, no lugar exato onde alguém iria
+procurar a arma, de que ela não está no catálogo.
+
+⚠ **E a conta é do servidor, não da tela.** Regra simples escrita na tela é
+regra que um dia discorda do servidor, e ninguém descobre porque ninguém testa a
+tela. Por isso `molduraDaMesa` passou a aceitar o id da ficha.
+
+### A trava: escolher campanha virou decisão, não toque
+
+Enquanto a moldura só trocava tabelas de equipamento, trocar de cenário no meio
+da campanha era um engano sem consequência. Hoje não é. **Duas barreiras**, cada
+uma contra uma coisa diferente:
+
+1. **A confirmação**, contra o toque errado. O servidor recusa `definirMoldura`
+   sem `confirmado: true` e devolve **a lista do que vai mudar**, montada da
+   própria declaração da moldura. ⚠ "Tem certeza?" não é confirmação — é um
+   botão que todo mundo aperta no automático. O que faz alguém parar é ler "a
+   Mochila de todas as fichas passa a contar em quantum".
+2. **A trava**, contra a troca no meio do caminho. Escolhida, a campanha não
+   muda mais por aquele select, que fica desabilitado. Trocar exige
+   `reiniciarMoldura` — outro botão, outra confirmação.
+
+⚠ **A trava não é segurança contra ninguém, é contra o engano.** E **reiniciar
+não desfaz o que aconteceu**: as cicatrizes continuam, o dinheiro volta a se
+chamar ouro com o mesmo valor, os marcadores somem porque o contador deixa de
+ser das fichas. O aviso diz isso — prometer "desfazer" seria mentira.
+
+⚠ **`conferir-funcoes-publicadas` pegou de novo:** `reiniciarMoldura` não estava
+no `ACOES` da Edge Function. Seria 404 mudo, e o Mestre ficaria **preso** na
+campanha — o oposto do que a trava quer dizer. **Isto muda a fonte da
+`engine-api`: o próximo deploy NÃO é repin.**
+
+### `conferir-molduras`: a pergunta inversa
+
+Cada mecânica tem teste próprio. O que não tinha guarda era o que a mesa
+pergunta: **com esta campanha ligada, o resto do app continua funcionando?**
+
+`npm run teste:molduras` percorre **as oito molduras mais o controle sem
+moldura** e, em cada uma, exercita criação de ficha, as faixas de dano, **todas
+as transformações**, os movimentos de descanso do livro, um descanso aplicado, a
+escada do ouro e a abertura do painel. **72 conferências, 0 erros.** Entrou no
+`teste:tudo`.
+
+**Estado:** 1220 testes de backend, 0 falhando; `teste:tudo` verde de ponta a
+ponta; e2e 112 passos · 0 falhas; molduras 72 conferências · 0 erros; Mestre
+mobile 18 telas · 0 erros. Prova ao contrário da trava: tirando o `disabled` do
+select, o passo do e2e cai.
+
+**As oito molduras estão 100%**, com duas coisas declaradas como fora de escopo
+por serem ficção e não número: o ramo sacro da Era da Umbra (item, não regra de
+ficha) e a montagem da ikonis.

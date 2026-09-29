@@ -591,7 +591,18 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           i === indice ? Object.assign({}, a, { dadosDominioElementalTerra: dados }) : Object.assign({}, a));
         return enviar(repetidos, { soSeMudou });
       }
-      if (r && r.pendenciaRolagem && r.pendenciaRolagem.tipo === 'habilidade-manual') {
+      /*
+       * ⚠ A CORRUPÇÃO ENTRA NESTE MESMO GALHO, de propósito.
+       *
+       * A pendência dela tem a forma exata da rolagem manual — campo, mínimo,
+       * máximo, dado, mensagem — e o diálogo já sabe mostrar tudo isso. Abrir um
+       * sexto bloco quase igual aqui seria copiar cinco linhas para ganhar uma
+       * palavra diferente no título, e essa cópia é justamente onde um dia os
+       * dois deixariam de concordar sobre como um dado da mesa entra no app.
+       */
+      if (r && r.pendenciaRolagem &&
+          (r.pendenciaRolagem.tipo === 'habilidade-manual' ||
+           r.pendenciaRolagem.tipo === 'moldura-corrupcao')) {
         const valor = await pedirResultadoHabilidadeManual(r.pendenciaRolagem);
         if (valor === null) {
           p = r.personagem; desenhar(); return r;
@@ -1631,9 +1642,17 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       type: 'number', class: 'campo__entrada', min: 1, step: 1,
       inputmode: 'numeric', placeholder: 'ex.: 17'
     }));
+    /*
+     * ⚠ "MÁGICO" NEM SEMPRE SE CHAMA MÁGICO. Em Placa-mãe o mesmo dano se chama
+     * TECNOLÓGICO (tec) — é tecnomancia, não magia. Nada muda na regra: mesmos
+     * limiares, mesmas resistências, mesmas reações; muda a palavra que a mesa
+     * usa. Quem manda o rótulo é o servidor, com a moldura escolhida; sem
+     * moldura que renomeie, continua "Mágico".
+     */
+    const rotuloMagico = (obterEstado().rotuloDanoMagico || {}).nome || 'Mágico';
     const tipo = el('select', { class: 'campo__entrada' }, [
       el('option', { value: 'fisico', texto: 'Físico' }),
-      el('option', { value: 'magico', texto: 'Mágico' })
+      el('option', { value: 'magico', texto: rotuloMagico })
     ]);
 
     const recursosDano = ficha.recursos || {};
@@ -1888,6 +1907,21 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
      * agora mesmo), o número aplicado continua certo: o que fica desatualizado
      * é só a frase, até o app reperguntar a sessão.
      */
+    /*
+     * A CAIXA QUE A MOLDURA DE CAMPANHA PEDE — hoje só o Surto Selvagem.
+     *
+     * ⚠ QUEM DECIDE QUE ELA EXISTE É O SERVIDOR, não esta tela. O que chega em
+     * `molduraDoDano` já é a pergunta pronta, com nome e rótulo: se a mesa não
+     * está nessa campanha, não chega nada e a caixa não é desenhada. Montar a
+     * pergunta aqui obrigaria a tela a saber a regra da moldura — e aí a regra
+     * estaria escrita em dois lugares.
+     *
+     * "Corrompido" é um tipo que o Mestre dá ao adversário ao apresentá-lo. Não
+     * há nada na ficha do jogador de onde deduzir isso: só perguntando.
+     */
+    const perguntaDaMoldura = obterEstado().molduraDoDano || null;
+    const usarFonteCorrompida = perguntaDaMoldura ? el('input', { type: 'checkbox' }) : null;
+
     const severoDaFicha = Math.max(0, Number((ficha.defesas || {}).limiarGrave) || 0);
     const massivoLigado = obterEstado().danoMassivo === true;
     const linhaDoMassivo = el('p', { class: 'texto-xs texto-fraco', texto: massivoLigado
@@ -1900,6 +1934,12 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       el('p', { class: 'texto-sm' }, textoAnotado(
         'Informe o dano recebido. O app compara com os limiares e marca PV; nenhuma rolagem é feita aqui.')),
       linhaDoMassivo,
+      usarFonteCorrompida ? el('label', { class:'criacao__alternador' }, [
+        usarFonteCorrompida,
+        el('span', { texto: `${perguntaDaMoldura.rotulo} — ${perguntaDaMoldura.nome}` })
+      ]) : null,
+      usarFonteCorrompida ? el('p', { class:'texto-xs texto-fraco',
+        texto: perguntaDaMoldura.ajuda }) : null,
       el('label', { class: 'campo' }, [
         el('span', { class: 'campo__rotulo', texto: 'Dano recebido' }), dano
       ]),
@@ -2021,6 +2061,13 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
             usarEspelhoMarigold: usarEspelho,
             usarAnelResistencia: usarAnel,
             ataqueBemSucedido: usarAnel,
+            /*
+             * ⚠ VAI SEMPRE, MESMO FALSO. Mandar o campo só quando marcado faria
+             * o servidor não distinguir "a mesa disse que não era Corrompido" de
+             * "este app é velho e nem sabe perguntar" — e a regra da campanha é
+             * exatamente a que não pode ser adivinhada.
+             */
+            fonteCorrompida: !!(usarFonteCorrompida && usarFonteCorrompida.checked),
             reacoes
           };
           if (!usarEspelho && aoMarcarArmadura && pedidoDano.usarArmadura) {
@@ -5816,11 +5863,21 @@ function ouroEmPunhados(ouro) {
      * começa em moedas ou em punhados; a mesma lista serve para a frase e para
      * o diálogo, para os dois nunca discordarem.
      */
+    /*
+     * ⚠ E A MOLDURA PODE TROCAR O NOME DO DINHEIRO. Em Placa-mãe "ouro não é
+     * usado como moeda": conta-se em quantum. A conversão do livro (10 quantum
+     * = 1 punhado) é EXATAMENTE a escada das moedas do SRD, então 1 quantum é 1
+     * moeda: nada é convertido, nada se perde, e o que muda é a palavra na
+     * tela. Sair da campanha devolve "moeda" sozinho.
+     */
+    const moedaDaMesa = obterEstado().moedaDaMesa || null;
     const ESCADA = [
       { chave: 'cofres', um: 'baú', muitos: 'baús' },
       { chave: 'bolsas', um: 'bolsa', muitos: 'bolsas' },
       { chave: 'punhados', um: 'punhado', muitos: 'punhados' },
-      { chave: 'moedas', um: 'moeda', muitos: 'moedas' }
+      { chave: 'moedas',
+        um: moedaDaMesa ? moedaDaMesa.nome : 'moeda',
+        muitos: moedaDaMesa ? moedaDaMesa.nomePlural : 'moedas' }
     ].filter((d) => d.chave !== 'moedas' || comMoedas);
 
     /**
@@ -6252,7 +6309,7 @@ function ouroEmPunhados(ouro) {
       try {
         [eq, molduraDaMesa] = await Promise.all([
           dados.carregar('equipamentos'),
-          emCompra ? Promise.resolve(null) : acoes.molduraDaMesa().catch(() => null)
+          emCompra ? Promise.resolve(null) : acoes.molduraDaMesa(id).catch(() => null)
         ]);
       } catch (e) {
         avisarErro(mensagemDoErro(e));
@@ -6272,6 +6329,13 @@ function ouroEmPunhados(ouro) {
        * que "Do livro" não esconda o equipamento da campanha em andamento.
        */
       const nomeMoldura = String((((molduraDaMesa || {}).moldura || {}).nome) || '');
+      /*
+       * A IKONIS DA PLACA-MÃE não está no catálogo, e não vai estar: ela é
+       * customizada na ficha módulo do livro. O que cabe aqui é o número que a
+       * mesa erraria de cabeça — quantos espaços de aprimoramento este
+       * personagem tem no patamar dele —, e quem o calcula é o servidor.
+       */
+      const aprimoramentosDaMoldura = (molduraDaMesa || {}).aprimoramentos || null;
       const equipamentoMoldura = Array.isArray((molduraDaMesa || {}).equipamento)
         ? molduraDaMesa.equipamento : [];
       const normalizarDaMoldura = (e) => ({
@@ -6531,7 +6595,24 @@ function ouroEmPunhados(ouro) {
 
       modal = abrirModal({
         titulo: emCompra ? 'Itens do livro' : 'Catálogo do livro',
-        conteudo: el('div', { class: 'pilha' }, [abas, busca, ajuda, contagem, lista]),
+        conteudo: el('div', { class: 'pilha' }, [
+          /*
+           * A LINHA DA IKONIS, quando a campanha tem uma. Ela vai no topo do
+           * catálogo de propósito: é o aviso de que a arma principal deste
+           * cenário NÃO está nesta lista — está na ficha módulo do livro —, e
+           * é exatamente aqui que alguém iria procurá-la.
+           */
+          aprimoramentosDaMoldura
+            ? el('div', { class: 'cartao' }, [
+                el('h5', { class: 'cartao__titulo', texto: aprimoramentosDaMoldura.nome }),
+                el('p', { class: 'texto-sm', texto:
+                  `Você tem ${aprimoramentosDaMoldura.espacos} espaço${aprimoramentosDaMoldura.espacos === 1 ? '' : 's'} ` +
+                  `de aprimoramento instalados (patamar ${aprimoramentosDaMoldura.patamar}).` }),
+                el('p', { class: 'texto-xs texto-fraco', texto: aprimoramentosDaMoldura.nota })
+              ])
+            : null,
+          abas, busca, ajuda, contagem, lista
+        ].filter(Boolean)),
         acoes: [el('button', {
           type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar()
         }, 'Fechar')]

@@ -589,6 +589,22 @@ function refsDeContadorDaFicha_(ficha) {
     por(item.id); por(item.nome);
   });
 
+  /*
+   * ⚠ A MOLDURA DA MESA TAMBÉM É DONA DE CONTADOR, e ela não está na ficha.
+   *
+   * Tudo o que entra em "refs" acima vem de dentro da ficha — carta, classe,
+   * ancestralidade, comunidade. A Corrupção do Surto Selvagem não: quem decide
+   * se ela existe é a MESA, no painel do Mestre, e a ficha não guarda nada que
+   * diga qual campanha está sendo jogada.
+   *
+   * Sem esta linha o contador da moldura seria órfão em toda ficha: nunca
+   * entraria pelo gatilho, e contadorEDaFicha_ só o reconheceria depois de
+   * alguém já ter gravado um valor nele. Com ela, trocar a moldura no painel
+   * tira a Corrupção de todas as fichas no mesmo instante — que é o que se
+   * espera de uma regra que é da campanha, não do personagem.
+   */
+  if (typeof molduraDaMesa_ === 'function') por(molduraDaMesa_());
+
   return refs;
 }
 

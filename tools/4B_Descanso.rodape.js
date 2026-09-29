@@ -145,6 +145,55 @@ function aliadosNoDescanso_() {
 }
 
 /**
+ * A condição que a moldura da mesa exige para haver movimento de repouso — ou
+ * null, que é o caso de sete das oito.
+ */
+function exigenciaDeDescansoDaMoldura_() {
+  if (typeof mecanicasDaMolduraDaMesa_ !== 'function') return null;
+  const lista = mecanicasDaMolduraDaMesa_();
+  for (let i = 0; i < lista.length; i++) {
+    const r = ((lista[i] || {}).automacao || {}).exigeParaMovimentosDeDescanso;
+    if (r && r.campo) {
+      return { nome: lista[i].nome, campo: String(r.campo),
+               pergunta: String(r.pergunta || ''),
+               recusa: String(r.recusa || (lista[i].nome + ': condição da campanha não atendida.')) };
+    }
+  }
+  return null;
+}
+
+/**
+ * O movimento de descanso que a moldura da mesa concede — ou null.
+ *
+ * Fora da moldura certa não existe movimento nenhum, e o descanso continua com
+ * os quatro do curto e os cinco do longo que o livro dá.
+ */
+function movimentoDeDescansoDaMoldura_() {
+  if (typeof mecanicasDaMolduraDaMesa_ !== 'function') return null;
+  const lista = mecanicasDaMolduraDaMesa_();
+  for (let i = 0; i < lista.length; i++) {
+    const mec = lista[i] || {};
+    const regra = (mec.automacao || {}).movimentoDeDescanso;
+    if (!regra || !Array.isArray(regra.tipos) || !regra.tipos.length) continue;
+    const dado = regra.dado || {};
+    const lados = Math.max(2, Math.trunc(Number(dado.lados)) || 12);
+    return {
+      id: 'moldura:' + String(regra.id || mec.id),
+      nome: mec.nome,
+      nomeJambo: '',
+      tipos: regra.tipos.slice(),
+      texto: (mec.texto || []).join(' '),
+      formula: 'Dado de Esperança (d' + lados + ')',
+      podeMirarAliado: false,
+      daMoldura: true,
+      efeito: { modo: 'guarda-da-moldura', recurso: null, lados: lados,
+                campo: String(dado.campo || 'dadoDeEsperancaDaGuarda') }
+    };
+  }
+  return null;
+}
+
+/**
  * O ARMADUREIRO: "ao escolher reparar sua armadura como movimento de descanso,
  * seus aliados também limpam 1 Ponto de Armadura."
  *
@@ -273,6 +322,27 @@ function movimentosDoDescanso_(tipo, ficha) {
    * ⚠ E O APP NÃO ROLA. Ele pergunta o MAIOR resultado — é só isso que a regra
    * usa, e pedir os N dados um a um daria no mesmo número com mais trabalho.
    */
+  /*
+   * MONTAR GUARDA — o movimento que a MOLDURA concede, e não a ficha.
+   *
+   * > "Montar Guarda: descreva como você fica alerta para os perigos que
+   * > espreitam além de seu acampamento. Quando o Mestre faz a jogada de
+   * > escuridão à espreita no fim do repouso, você rola seu Dado de Esperança
+   * > e, se quiser, pode trocar o resultado dele pelo resultado da jogada do
+   * > Mestre." (Era da Umbra, livro p.289)
+   *
+   * ⚠ O APP NÃO ARBITRA A TROCA, e isso é decisão, não preguiça. Quem troca é o
+   * JOGADOR, depois de ver a jogada do Mestre — e "se quiser". Inventar um
+   * protocolo entre as duas fichas para oferecer a troca seria construir uma
+   * negociação que a mesa resolve numa frase. O que o app faz é o que ele sabe
+   * fazer: guardar o número, mostrá-lo ao lado do movimento, e deixar o Mestre
+   * digitá-lo como resultado da escuridão se a mesa decidir trocar.
+   */
+  if (typeof movimentoDeDescansoDaMoldura_ === 'function') {
+    const daMoldura = movimentoDeDescansoDaMoldura_();
+    if (daMoldura && daMoldura.tipos.indexOf(t.id) !== -1) saida.push(daMoldura);
+  }
+
   if (typeof ehArtistaMarcial_ === 'function' && ehArtistaMarcial_(ficha)) {
     const dados = (typeof dadosDeRecargaDeFoco_ === 'function') ? dadosDeRecargaDeFoco_(ficha) : 0;
     const lados = 6;
@@ -531,6 +601,28 @@ function simularDescanso_(ficha, tipo, escolhas) {
       ' e você escolheu ' + lista.length + '.');
   }
 
+  /*
+   * A MOLDURA PODE EXIGIR UMA CONDIÇÃO PARA HAVER MOVIMENTO DE REPOUSO.
+   *
+   * Hoje só a Placa-mãe: "personagens devem ter acesso à Rede, por meio de um
+   * conector ou de alguma outra forma, para poder fazer movimentos de repouso"
+   * (livro p.301). Sem Rede o descanso ACONTECE — o grupo para, respira e o
+   * tempo passa —, mas os dois movimentos não.
+   *
+   * ⚠ O APP PERGUNTA, NÃO ADIVINHA. Ter acesso à Rede é situação de ficção: um
+   * conector na mochila, um cabo por perto, um favor de alguém. Não há nada na
+   * ficha de onde deduzir, então a resposta vem da mesa — e a ausência dela não
+   * bloqueia nada: só quem disser "não temos" é recusado.
+   */
+  const exigenciaDaMoldura = exigenciaDeDescansoDaMoldura_();
+  if (exigenciaDaMoldura && (escolhas || []).length) {
+    const respostas = (Array.isArray(escolhas) ? escolhas : [escolhas])
+      .map(function (x) { return (x || {})[exigenciaDaMoldura.campo]; });
+    if (respostas.some(function (v) { return v === false; })) {
+      erros.push(exigenciaDaMoldura.recusa);
+    }
+  }
+
   const disponiveis = movimentosDoDescanso_(t.id, copia);
   const patamar = patamarDaFicha_(copia);
   const feitos = [];
@@ -753,6 +845,28 @@ function simularDescanso_(ficha, tipo, escolhas) {
       feito.observacao = feito.quantidade
         ? 'O dado foi guardado na ficha; a rolagem só acontece quando você decidir gastá-lo.'
         : 'O contador já está no máximo.';
+      feitos.push(feito);
+      continue;
+    }
+
+    if (ef.modo === 'guarda-da-moldura') {
+      const lados = Math.max(2, Math.trunc(Number(ef.lados)) || 12);
+      const campo = String(ef.campo || 'dadoDeEsperancaDaGuarda');
+      const bruto = Math.trunc(Number(escolha[campo]));
+      if (!isFinite(bruto) || bruto < 1 || bruto > lados) {
+        feito.precisaDeRolagem = true;
+        feito.contaDaFormula = 'Dado de Esperança (d' + lados + ')';
+        feito.observacao = 'Role o seu Dado de Esperança na mesa e informe o resultado (1 a ' +
+          lados + '). Ele não muda nada na sua ficha: serve para o Mestre trocar pela jogada de ' +
+          'escuridão à espreita, se você quiser.';
+        feitos.push(feito);
+        continue;
+      }
+      feito.contaDaFormula = 'Dado de Esperança = ' + bruto;
+      feito.observacao = 'Guarda montada com ' + bruto + '. Quando o Mestre fizer a jogada de ' +
+        'escuridão à espreita, você pode trocar o resultado dele por este — a escolha é sua, ' +
+        'depois de ver a jogada.';
+      feito.guardaMontada = bruto;
       feitos.push(feito);
       continue;
     }
@@ -1063,6 +1177,11 @@ function simularDescanso_(ficha, tipo, escolhas) {
     bonusExpirados: bonusExpirados,
     prazosAcesos: prazosAcesos,
     paraAliados: paraAliados,
+    guardaMontada: (function () {
+      const n = feitos.filter(function (f) { return f && f.guardaMontada; })
+        .map(function (f) { return f.guardaMontada; });
+      return n.length ? n : null;
+    })(),
     erros: erros,
     avisos: avisos
   };

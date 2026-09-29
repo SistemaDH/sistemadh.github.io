@@ -707,10 +707,117 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
   function blocoDeAjustesDaMesa() {
     return el('div', { class: 'pilha' }, [
       blocoDaMoldura(),
+      blocoDoCenario(),
       blocoDasMoedas(),
       blocoDoDanoMassivo()
     ]);
   }
+  /**
+   * O CENÁRIO ESCOLHIDO, LEGÍVEL NA MESA.
+   *
+   * ⚠ ISTO NÃO É DECORAÇÃO. Até aqui, escolher a moldura no painel trocava as
+   * tabelas de equipamento da criação de ficha e mais nada — o Mestre via o
+   * nome do cenário num select e precisava do livro aberto ao lado para
+   * qualquer outra coisa. Agora a moldura tem mecânica ligada, e o painel
+   * precisa dizer QUAL, senão o app aplica regra que ninguém leu.
+   *
+   * O que aparece é o que se usa na mesa: a proposta para ler em voz alta, o
+   * tom, os temas, as referências, as mecânicas específicas e — quando a
+   * moldura tem — a ficha de campanha. O resto continua no livro, com a página
+   * anotada.
+   */
+  function blocoDoCenario() {
+    const c = painel.molduraEscolhida;
+    if (!c) return null;
+
+    const linha = (rotulo, lista) => (lista && lista.length)
+      ? el('p', { class: 'texto-sm' }, [
+          el('span', { class: 'texto-suave', texto: rotulo + ': ' }),
+          el('span', { texto: lista.join(', ') })
+        ])
+      : null;
+
+    const mecanicas = (c.mecanicas || []).map((m) => el('div', { class: 'cartao' }, [
+      el('h5', { class: 'cartao__titulo', texto: m.nome }),
+      ...(m.texto || []).map((t) => el('p', { class: 'texto-sm', texto: t })),
+      m.automacao
+        ? el('p', { class: 'texto-xs', texto: '✓ O app aplica esta mecânica.' })
+        : el('p', { class: 'texto-xs texto-fraco', texto: 'Fica com a mesa: o app não aplica.' }),
+      fichaDeCampanha(m)
+    ]));
+
+    const perguntas = (c.perguntasDeSessaoZero || []).length
+      ? el('div', { class: 'cartao' }, [
+          el('h5', { class: 'cartao__titulo', texto: 'Perguntas para a sessão zero' }),
+          /*
+           * ⚠ `lista-simples`, e não uma classe nova. O conferidor de CSS pegou
+           * um `.lista` que eu tinha inventado e que o CSS não conhecia: classe
+           * sem regra é classe que não faz nada, e a lista sairia com o recuo
+           * padrão do navegador no meio de uma tela que não usa nenhum.
+           */
+          el('ul', { class: 'lista-simples' }, c.perguntasDeSessaoZero.map((q) =>
+            el('li', { class: 'texto-sm', texto: q })))
+        ])
+      : null;
+
+    return el('div', { class: 'cartao' }, [
+      el('h4', { class: 'cartao__titulo', texto: c.nome }),
+      c.complexidade ? el('p', { class: 'texto-xs texto-fraco', texto:
+        'Complexidade ' + '•'.repeat(Math.max(1, Number(c.complexidade) || 1)) +
+        (c.criadoPor ? ' · criado por ' + c.criadoPor : '') +
+        (c.paginasLivro ? ' · livro p.' + c.paginasLivro : '') }) : null,
+      c.proposta ? el('p', { class: 'texto-sm', texto: c.proposta }) : null,
+      linha('Tom', c.tom),
+      linha('Temas', c.temas),
+      linha('Referências', c.referencias),
+      ...(c.visaoGeral || []).map((t) => el('p', { class: 'texto-xs texto-fraco', texto: t })),
+      ...mecanicas,
+      perguntas
+    ]);
+  }
+
+  /**
+   * A FICHA DE CAMPANHA — hoje só Cinco Estandartes em Chamas.
+   *
+   * As cinco nações de Althas, com a relação de cada uma para com as outras na
+   * escala de −3 a +3, os recursos, os problemas e os objetivos. É o dado que a
+   * moldura manda "acompanhar numa ficha de campanha", e ele é grande demais
+   * para caber na cabeça de alguém no meio da cena.
+   *
+   * ⚠ É LEITURA, NÃO EDIÇÃO — por enquanto. O livro manda as relações MUDAREM
+   * conforme a campanha anda, e mexer nelas é o próximo passo. Mostrar o estado
+   * inicial já tira o livro da mesa; um editor pela metade, que não guarda o que
+   * o Mestre mudou, seria pior que não ter nenhum.
+   */
+  function fichaDeCampanha(m) {
+    const ficha = ((m || {}).automacao || {}).fichaDeCampanha;
+    if (!ficha || !Array.isArray(ficha.nacoes) || !ficha.nacoes.length) return null;
+
+    const rotuloDa = (valor) => {
+      const achado = (ficha.escala || []).find((x) => Number(x.valor) === Number(valor));
+      return achado ? achado.rotulo : String(valor);
+    };
+    const nomeDe = (id) => {
+      const achado = ficha.nacoes.find((x) => x.id === id);
+      return achado ? achado.nome : id;
+    };
+
+    return el('div', { class: 'pilha' }, ficha.nacoes.map((n) => el('div', { class: 'cartao' }, [
+      el('h5', { class: 'cartao__titulo', texto: n.nome }),
+      el('p', { class: 'texto-sm' }, [
+        el('span', { class: 'texto-suave', texto: 'Relações: ' }),
+        el('span', { texto: Object.keys(n.relacoes || {})
+          .map((id) => `${nomeDe(id)} ${Number(n.relacoes[id]) > 0 ? '+' : ''}${n.relacoes[id]} (${rotuloDa(n.relacoes[id])})`)
+          .join(' · ') })
+      ]),
+      el('p', { class: 'texto-xs texto-fraco', texto: 'Recursos: ' + (n.recursos || []).join('; ') }),
+      el('p', { class: 'texto-xs texto-fraco', texto: 'Problemas: ' + (n.problemas || []).join('; ') }),
+      el('p', { class: 'texto-sm', texto: 'Objetivo principal: ' + (n.objetivoPrincipal || '—') }),
+      el('p', { class: 'texto-xs texto-fraco', texto:
+        'Secundários: ' + (n.objetivosSecundarios || []).join('; ') })
+    ])));
+  }
+
 
   /**
    * A MOLDURA DE CAMPANHA da mesa.
@@ -809,6 +916,47 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     ]);
   }
 
+  /**
+   * A CONFIRMAÇÃO DE ESCOLHER A CAMPANHA.
+   *
+   * ⚠ "TEM CERTEZA?" NÃO É CONFIRMAÇÃO — é um botão que todo mundo aperta no
+   * automático. O que faz alguém parar é a LISTA do que vai mudar, e ela vem
+   * pronta do servidor, montada da própria declaração da moldura: "a Mochila de
+   * todas as fichas passa a contar em quantum", "a ÚLTIMA cicatriz deixa de
+   * aposentar a personagem".
+   *
+   * O diálogo também diz a segunda metade, que é o motivo de existir a trava:
+   * escolhida, a campanha não troca mais sem reiniciar de propósito.
+   */
+  function confirmarMoldura({ titulo, texto, mudancas, rotuloDoBotao, aviso }) {
+    return new Promise((resolve) => {
+      let respondeu = false;
+      const responder = (v) => { if (respondeu) return; respondeu = true; modal.fechar(); resolve(v); };
+      const corpo = el('div', { class: 'pilha' }, [
+        el('p', { class: 'texto-sm', texto: texto }),
+        (mudancas || []).length
+          ? el('div', { class: 'cartao' }, [
+              el('h5', { class: 'cartao__titulo', texto: 'O que muda em todas as fichas' }),
+              el('ul', { class: 'lista-simples' }, mudancas.map((x) =>
+                el('li', { class: 'texto-sm', texto: x })))
+            ])
+          : null,
+        aviso ? el('p', { class: 'texto-xs mestre__atrasado', texto: aviso }) : null
+      ]);
+      const modal = abrirModal({
+        titulo: titulo,
+        conteudo: corpo,
+        acoes: [
+          el('button', { type: 'button', class: 'btn btn--fantasma',
+            onClick: () => responder(false) }, 'Agora não'),
+          el('button', { type: 'button', class: 'btn btn--principal',
+            onClick: () => responder(true) }, rotuloDoBotao)
+        ],
+        aoFechar: () => { if (!respondeu) { respondeu = true; resolve(false); } }
+      });
+    });
+  }
+
   function blocoDaMoldura() {
     const m = painel.mesa;
     const lista = painel.molduras || [];
@@ -823,12 +971,70 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       sel.append(op);
     });
     sel.addEventListener('change', async () => {
+      const escolhido = sel.value;
+      if (!escolhido) { sel.value = m.moldura || ''; return; }
       try {
-        const r = await acoes.definirMoldura(sel.value);
-        avisarSucesso(r.depois ? 'Moldura da campanha definida.' : 'Moldura removida.');
+        /*
+         * ⚠ A PRIMEIRA CHAMADA É DE PROPÓSITO SEM `confirmado`. O servidor
+         * recusa e devolve a lista do que mudaria — é ele quem sabe, porque a
+         * lista sai da declaração da moldura. Montar a pergunta aqui obrigaria
+         * a tela a conhecer a regra de cada campanha, e no dia em que uma
+         * ganhasse mecânica nova a pergunta mentiria.
+         */
+        await acoes.definirMoldura(escolhido, false);
         recarregar();
-      } catch (e) { avisarErro(mensagemDoErro(e)); recarregar(); }
+      } catch (e) {
+        const extra = (e && e.extra) || {};
+        if (extra.travada) { avisarErro(mensagemDoErro(e)); recarregar(); return; }
+        if (!extra.precisaConfirmar) { avisarErro(mensagemDoErro(e)); recarregar(); return; }
+        const nome = (lista.find((x) => x.id === escolhido) || {}).nome || escolhido;
+        const sim = await confirmarMoldura({
+          titulo: 'Jogar ' + nome + '?',
+          texto: 'Escolher uma campanha muda regra em todas as fichas da mesa — não só nas novas.',
+          mudancas: extra.mudancas || [],
+          aviso: 'Escolhida, a campanha fica travada: para trocar depois, você reinicia a ' +
+            'campanha de propósito, aqui mesmo.',
+          rotuloDoBotao: 'Jogar ' + nome
+        });
+        if (!sim) { sel.value = m.moldura || ''; return; }
+        try {
+          const r = await acoes.definirMoldura(escolhido, true);
+          avisarSucesso('A mesa está jogando ' + nomeDaMolduraEscolhida(r.depois) + '.');
+          recarregar();
+        } catch (e2) { avisarErro(mensagemDoErro(e2)); recarregar(); }
+      }
     });
+    if (m.molduraTravada && m.moldura) sel.disabled = true;
+
+    const reiniciar = (m.molduraTravada && m.moldura)
+      ? el('button', {
+          type: 'button', class: 'btn btn--fantasma btn--pequeno',
+          onClick: async () => {
+            try {
+              await acoes.reiniciarMoldura(false);
+              recarregar();
+            } catch (e) {
+              const extra = (e && e.extra) || {};
+              if (!extra.precisaConfirmar) { avisarErro(mensagemDoErro(e)); recarregar(); return; }
+              const sim = await confirmarMoldura({
+                titulo: 'Reiniciar a campanha?',
+                texto: 'Isto tira ' + nomeDaMolduraEscolhida(m.moldura) + ' da mesa e destrava a ' +
+                  'escolha. As regras dela param de valer para todo mundo.',
+                mudancas: extra.mudancas || [],
+                aviso: '⚠ O que a campanha já fez CONTINUA nas fichas: cicatrizes não voltam, e o ' +
+                  'dinheiro volta a se chamar ouro com o mesmo valor que tinha.',
+                rotuloDoBotao: 'Reiniciar'
+              });
+              if (!sim) return;
+              try {
+                const r = await acoes.reiniciarMoldura(true);
+                avisarSucesso(r.aviso, 8000);
+                recarregar();
+              } catch (e2) { avisarErro(mensagemDoErro(e2)); recarregar(); }
+            }
+          }
+        }, 'Reiniciar campanha')
+      : null;
 
     return el('div', { class: 'cartao' }, [
       el('h4', { class: 'cartao__titulo', texto: 'Moldura da campanha' }),
@@ -842,8 +1048,19 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       atual && atual.substituiEquipamentoInicial
         ? el('p', { class: 'texto-xs mestre__atrasado', texto:
           'Fichas novas vão escolher o equipamento inicial nas tabelas desta moldura.' })
-        : null
+        : null,
+      (m.molduraTravada && m.moldura)
+        ? el('p', { class: 'texto-xs texto-fraco', texto:
+          'Campanha em andamento — a escolha está travada para ninguém trocar sem querer.' })
+        : null,
+      reiniciar
     ]);
+  }
+
+  /** O nome da moldura pelo id, para as mensagens. */
+  function nomeDaMolduraEscolhida(id) {
+    const achada = (painel.molduras || []).find((x) => x.id === id);
+    return achada ? achada.nome : (id || 'nenhuma campanha');
   }
 
   function blocoDeRegrasDoMedo() {

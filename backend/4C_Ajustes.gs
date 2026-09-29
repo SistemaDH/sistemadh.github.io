@@ -99,6 +99,189 @@ function substituirFichaEmLugar_(destino, origem) {
   Object.keys(origem || {}).forEach(function (k) { destino[k] = origem[k]; });
 }
 
+/**
+ * UMA CICATRIZ, ESCRITA NUM LUGAR SÓ.
+ *
+ * ⚠ ELA NÃO É "MAIS UM NA LISTA". Cada cicatriz apaga PARA SEMPRE um espaço de
+ * Esperança (p.106), e quando não sobra nenhum a jornada do personagem acaba —
+ * o app aposenta a ficha. Até aqui essa sequência existia dentro do movimento
+ * de morte "Evitar a Morte", que era o único caminho para ganhar cicatriz.
+ *
+ * A Corrupção do Surto Selvagem é o segundo caminho, e copiar o bloco seria
+ * copiar também a aposentadoria — que é a parte que NÃO PODE divergir: uma
+ * cicatriz que encerra a ficha por um caminho e não encerra pelo outro é a
+ * diferença entre a personagem existir ou não.
+ *
+ * @return {{ok:boolean, erro:string, cicatrizes:number, encerrada:Object}}
+ */
+function acrescentarCicatriz_(ficha, nota) {
+  if (!Array.isArray(ficha.cicatrizes)) ficha.cicatrizes = [];
+  if (ficha.cicatrizes.length >= LIMITE_CICATRIZES) {
+    return { ok: false, erro: 'Esta ficha já tem cicatrizes demais.', cicatrizes: ficha.cicatrizes.length, encerrada: null };
+  }
+  ficha.cicatrizes.push({ em: agoraIso_(), nota: String(nota || '').slice(0, 120) });
+  let fim = null;
+  if (esperancaComCicatrizes_(ficha, ficha.cicatrizes.length) <= 0) {
+    ficha.inconsciente = false;
+    /*
+     * ⚠ E AQUI A CAMPANHA PODE TROCAR O FIM.
+     *
+     * A regra do livro é aposentar: "if the character has only one Hope slot
+     * remaining and gains a scar, the player must retire the character". A Era
+     * da Umbra diz o contrário, com todas as letras — "ele NÃO é aposentado; em
+     * vez disso, sucumbe à influência da Umbra e se junta aos horrores que
+     * assombram os espaços sombrios".
+     *
+     * As duas acabam com a ficha, e é por isso que a diferença importa: o
+     * motivo é o que a mesa vai ler depois. Um personagem aposentado saiu de
+     * cena; um que sucumbiu virou adversário. Trocar o texto na mão, no dia,
+     * seria perder a única anotação que diz qual dos dois aconteceu.
+     */
+    const doFim = fimDeCicatrizDaMoldura_();
+    fim = doFim
+      ? encerrarFicha_(ficha, doFim.motivo, doFim.texto)
+      : encerrarFicha_(ficha, 'aposentado', String(nota || ''));
+  }
+  return { ok: true, erro: '', cicatrizes: ficha.cicatrizes.length, encerrada: fim };
+}
+
+/**
+ * A moldura da mesa muda o que acontece na ÚLTIMA cicatriz? Devolve null quando
+ * não muda, que é o caso de cinco das sete.
+ */
+function fimDeCicatrizDaMoldura_() {
+  if (typeof mecanicasDaMolduraDaMesa_ !== 'function') return null;
+  const lista = mecanicasDaMolduraDaMesa_();
+  for (let i = 0; i < lista.length; i++) {
+    const regra = ((lista[i] || {}).automacao || {}).ultimaCicatriz;
+    if (regra && regra.motivo) {
+      return { motivo: String(regra.motivo), texto: String(regra.texto || ''), nome: lista[i].nome };
+    }
+  }
+  return null;
+}
+
+/** A ordem das faixas de gravidade, do nada ao pior. */
+const ORDEM_DAS_FAIXAS_DE_DANO = ['nenhum', 'menor', 'maior', 'severo', 'massivo'];
+function faixaAlcanca_(faixa, minima) {
+  const i = ORDEM_DAS_FAIXAS_DE_DANO.indexOf(String(faixa || ''));
+  const j = ORDEM_DAS_FAIXAS_DE_DANO.indexOf(String(minima || 'severo'));
+  return i >= 0 && j >= 0 && i >= j;
+}
+
+/**
+ * A CORRUPÇÃO DO SURTO SELVAGEM — a primeira regra que vem da CAMPANHA.
+ *
+ * > "Sempre que um personagem sofrer dano Severo de um adversário ou ambiente
+ * > Corrompido, ponha um marcador de Corrupção na ficha dele e role o Dado de
+ * > Medo. Se o resultado for igual ou inferior ao número de marcadores na
+ * > ficha, o personagem recebe uma cicatriz imediatamente e zera todos os
+ * > marcadores." (livro p.261; SRD 2.0 rules/the-witherwild, p.184–189)
+ *
+ * QUATRO DECISÕES, cada uma com o seu motivo:
+ *
+ * 1. QUEM DIZ QUE A FONTE ERA CORROMPIDA É A MESA. "Corrompido" é um tipo que
+ *    o Mestre dá ao adversário na hora de apresentá-lo; não existe nada na
+ *    ficha do jogador que permita ao app deduzir isso. Então a janela de dano
+ *    PERGUNTA, com uma caixa — e sem a caixa marcada nada acontece.
+ *
+ * 2. A FAIXA QUE VALE É A SOFRIDA, não a rolada. Quem gastou Ponto de Armadura
+ *    e derrubou um Severo para Maior NÃO sofreu dano Severo: a regra diz
+ *    "sofrer". Por isso a conta sai de `pvDepoisArmadura`, que é o que o golpe
+ *    custou depois da mitigação, e não de `pvPelaFaixa`, que é o que ele
+ *    custaria. ⚠ E não sai de `pvMarcados`: esse já vem cortado pelo tamanho da
+ *    trilha, e quem estava com 1 PV livre apareceria como "dano Menor".
+ *
+ * 3. MASSIVO CONTA COMO SEVERO. O dano massivo é a mesma pancada, mais forte —
+ *    quem marcou 4 PV sofreu, com folga, dano Severo. Prender a regra à palavra
+ *    "severo" faria o pior golpe do jogo ser o único que não corrompe.
+ *    ⚠ PONTO DE INTERESSE: é leitura minha, e está registrada nos pontos de
+ *    interesse das molduras.
+ *
+ * 4. O APP NÃO ROLA O DADO DE MEDO. Marcador posto, ele devolve uma PENDÊNCIA
+ *    pedindo o d12 da mesa — o mesmo contrato das outras rolagens do app, que
+ *    desfaz a ficha inteira e só grava quando o número chega. É a lei da mesa:
+ *    só ficha, sem dados.
+ */
+function aplicarCorrupcaoDeMolduraNoDano_(ficha, a, r) {
+  if (typeof mecanicasDaMolduraDaMesa_ !== 'function') return null;
+  const mecanicas = mecanicasDaMolduraDaMesa_();
+  if (!mecanicas.length) return null;
+
+  for (let i = 0; i < mecanicas.length; i++) {
+    const mec = mecanicas[i] || {};
+    const auto = mec.automacao || {};
+    const gatilho = auto.gatilho || {};
+    if (chaveTexto_(gatilho.tipo) !== 'dano') continue;
+    if (gatilho.exigeFonteCorrompida === true && (a || {}).fonteCorrompida !== true) continue;
+
+    const custou = Math.max(0, Math.trunc(Number((r || {}).pvDepoisArmadura)) || 0);
+    const faixa = (typeof gravidadeDoPv_ === 'function') ? gravidadeDoPv_(custou).faixa : '';
+    if (!faixaAlcanca_(faixa, gatilho.faixaMinima)) continue;
+
+    const chave = String(auto.contador || '');
+    if (!chave || typeof CONTADORES === 'undefined' || !CONTADORES[chave]) {
+      return { erro: mec.nome + ': o marcador desta campanha não existe no catálogo.' };
+    }
+
+    const posto = ajustarContador_(ficha, { chave: chave, delta: 1 });
+    if (posto && posto.erro) return { erro: mec.nome + ': ' + posto.erro };
+    const marcadores = Math.max(0, Math.trunc(Number(((ficha.contadores || {})[chave] || {}).valor)) || 0);
+
+    const dadoDef = auto.dadoDoMedo || {};
+    const lados = Math.max(2, Math.trunc(Number(dadoDef.lados)) || 12);
+    const campo = String(dadoDef.campo || 'dadoDeMedo');
+    const bruto = (a || {})[campo];
+    if (bruto === undefined || bruto === null || bruto === '') {
+      return { pendenciaRolagem: {
+        tipo: 'moldura-corrupcao', campo: campo, mecanica: mec.id, caracteristica: mec.nome,
+        dado: 'd' + lados, minimo: 1, maximo: lados, marcadores: marcadores,
+        mensagem: mec.nome + ': o marcador entrou (agora são ' + marcadores + '). Role o Dado de ' +
+          'Medo (d' + lados + ') na mesa e informe o resultado — igual ou inferior a ' + marcadores +
+          ' é cicatriz.'
+      } };
+    }
+    const dado = Math.trunc(Number(bruto));
+    if (!isFinite(dado) || dado < 1 || dado > lados || Number(bruto) !== dado) {
+      return { erro: mec.nome + ': informe o Dado de Medo como um inteiro entre 1 e ' + lados + '.' };
+    }
+
+    // ⚠ "igual ou inferior": o resultado IGUAL ao número de marcadores cicatriza.
+    const cicatrizou = dado <= marcadores;
+    const saida = {
+      mecanica: mec.id, nome: mec.nome, contador: chave,
+      marcadores: marcadores, dado: dado, lados: lados, faixa: faixa,
+      cicatrizou: cicatrizou, cicatrizes: (ficha.cicatrizes || []).length, encerrada: null,
+      aviso: ''
+    };
+    if (!cicatrizou) {
+      saida.aviso = mec.nome + ': o Dado de Medo (' + dado + ') passou dos ' + marcadores +
+        ' marcador' + (marcadores === 1 ? '' : 'es') + ' — sem cicatriz desta vez.';
+      return saida;
+    }
+
+    const consequencia = auto.consequencia || {};
+    if (Math.max(0, Math.trunc(Number(consequencia.cicatrizes)) || 0) > 0) {
+      const nova = acrescentarCicatriz_(ficha, mec.nome);
+      if (!nova.ok) return { erro: mec.nome + ': ' + nova.erro };
+      saida.cicatrizes = nova.cicatrizes;
+      saida.encerrada = nova.encerrada;
+    }
+    if (consequencia.zeraOContador === true) {
+      const zerado = ajustarContador_(ficha, { chave: chave, valor: 0 });
+      if (zerado && zerado.erro) return { erro: mec.nome + ': ' + zerado.erro };
+    }
+    saida.aviso = saida.encerrada
+      ? (mec.nome + ': a cicatriz apagou o último espaço de Esperança — a jornada deste ' +
+         'personagem acabou (p.106).')
+      : (mec.nome + ': o Dado de Medo (' + dado + ') não passou dos ' + marcadores + ' marcador' +
+         (marcadores === 1 ? '' : 'es') + '. Uma cicatriz entra agora, os marcadores zeram, e você ' +
+         'descreve como o Surto Selvagem mudou este personagem para sempre.');
+    return saida;
+  }
+  return null;
+}
+
 /** Executa UM ajuste sem a camada de Inabalável. */
 function aplicarAjusteDireto_(ficha, a) {
   const tipo = chaveTexto_((a || {}).tipo);
@@ -110,6 +293,21 @@ function aplicarAjusteDireto_(ficha, a) {
       if (encerrados.length) {
         r.estadosDeCartaEncerrados = encerrados;
         r.aviso = (r.aviso || '') + ' ' + encerrados.join(', ') + ' terminou por você sofrer dano.';
+      }
+      /*
+       * A regra que vem da CAMPANHA entra aqui, depois de o dano estar feito —
+       * porque ela depende da gravidade que o golpe teve de verdade, e não da
+       * que ele teria. Fora da moldura certa, isto devolve null e não custa
+       * nada. Ver aplicarCorrupcaoDeMolduraNoDano_.
+       */
+      const daMoldura = aplicarCorrupcaoDeMolduraNoDano_(ficha, a, r);
+      if (daMoldura && daMoldura.pendenciaRolagem) {
+        return { pendenciaRolagem: daMoldura.pendenciaRolagem };
+      }
+      if (daMoldura && daMoldura.erro) return { erro: daMoldura.erro };
+      if (daMoldura) {
+        r.corrupcaoDeMoldura = daMoldura;
+        if (daMoldura.aviso) r.aviso = (r.aviso || '') + ' ' + daMoldura.aviso;
       }
     }
     return r;
@@ -6754,20 +6952,23 @@ function ajustarMovimentoDeMorte_(ficha, a) {
     const cicatrizou = dadoComAjuda <= nivel;
     let fim = null;
     if (cicatrizou) {
-      if (ficha.cicatrizes.length >= LIMITE_CICATRIZES) {
-        return { erro: 'Esta ficha já tem cicatrizes demais.' };
-      }
-      ficha.cicatrizes.push({ em: agoraIso_(), nota: nota.slice(0, 120) });
-
       /*
-       * "If the character has only one Hope slot remaining and gains a scar,
-       * the player must retire the character." Aqui a conta já foi feita: se
-       * não sobrou espaço nenhum, a jornada acabou.
+       * ⚠ O BLOCO QUE ESTAVA ESCRITO AQUI VIROU acrescentarCicatriz_.
+       *
+       * Ele fazia três coisas: conferir o limite, empurrar a cicatriz e — a
+       * parte que importa — aposentar a ficha quando o último espaço de
+       * Esperança acaba ("If the character has only one Hope slot remaining
+       * and gains a scar, the player must retire the character").
+       *
+       * Enquanto "Evitar a Morte" era o único caminho para uma cicatriz, morar
+       * aqui dentro não incomodava. A Corrupção do Surto Selvagem é o segundo
+       * caminho, e copiar o bloco seria copiar a aposentadoria junto: no dia em
+       * que um dos dois mudasse, uma cicatriz encerraria a ficha por um caminho
+       * e não pelo outro.
        */
-      if (esperancaComCicatrizes_(ficha, ficha.cicatrizes.length) <= 0) {
-        ficha.inconsciente = false;
-        fim = encerrarFicha_(ficha, 'aposentado', nota);
-      }
+      const nova = acrescentarCicatriz_(ficha, nota);
+      if (!nova.ok) return { erro: nova.erro };
+      fim = nova.encerrada;
     }
 
     return {

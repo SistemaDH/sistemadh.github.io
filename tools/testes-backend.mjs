@@ -1026,11 +1026,23 @@ teste('a moldura é da MESA e o Mestre é quem escolhe (fecha C5)', () => {
   igual(api('definirMoldura', { token: tokenJogador, moldura: 'festim-das-feras' }).erro.codigo, 'SEM_PERMISSAO');
 
   // Nome inventado é recusado.
-  igual(api('definirMoldura', { token: doMestre, moldura: 'campanha-do-vizinho' }).erro.codigo, 'DADOS_INVALIDOS');
+  igual(api('definirMoldura', { token: doMestre, moldura: 'campanha-do-vizinho', confirmado: true }).erro.codigo, 'DADOS_INVALIDOS');
 
-  const r = api('definirMoldura', { token: doMestre, moldura: 'Festim das Feras' });
+  /*
+   * ⚠ E AGORA PRECISA CONFIRMAR. Escolher campanha mudou de peso: ela troca
+   * regra em todas as fichas da mesa. Sem `confirmado`, o servidor recusa e
+   * devolve O QUE VAI MUDAR, para a tela poder mostrar antes de perguntar.
+   */
+  const semConfirmar = api('definirMoldura', { token: doMestre, moldura: 'Festim das Feras' });
+  verdade(!semConfirmar.ok, 'escolher sem confirmar precisa ser recusado');
+  igual(semConfirmar.erro.extra.precisaConfirmar, true);
+  verdade(Array.isArray(semConfirmar.erro.extra.mudancas) && semConfirmar.erro.extra.mudancas.length,
+    'a recusa tem de dizer o que mudaria: ' + JSON.stringify(semConfirmar.erro.extra));
+
+  const r = api('definirMoldura', { token: doMestre, moldura: 'Festim das Feras', confirmado: true });
   verdade(r.ok, JSON.stringify(r.erro));
   igual(r.dados.depois, 'festim-das-feras', 'aceita pelo nome e guarda o id');
+  igual(r.dados.travada, true, 'escolhida, a campanha tranca');
 
   // E o jogador consulta para saber de que tabelas tirar o equipamento.
   const vista = api('molduraDaMesa', { token: tokenJogador }).dados;
@@ -1039,9 +1051,34 @@ teste('a moldura é da MESA e o Mestre é quem escolhe (fecha C5)', () => {
   igual(vista.equipamento.length, 36);
   verdade(vista.equipamento.some((e) => e.nome === 'Frigideira de ferro'), 'faltou a frigideira');
 
-  // Tirar a moldura volta tudo ao Capítulo 2.
-  igual(api('definirMoldura', { token: doMestre, moldura: '' }).dados.depois, '');
+  /*
+   * ⚠ E TROCAR NO MEIO DO CAMINHO NÃO PASSA MAIS. A campanha trancou; o único
+   * caminho de saída é reiniciar de propósito, que é outro botão com outra
+   * confirmação. Isto não impede trocar — impede trocar SEM QUERER.
+   */
+  const trocaSolta = api('definirMoldura', { token: doMestre, moldura: 'placa-mae', confirmado: true });
+  verdade(!trocaSolta.ok, 'campanha trancada não troca por este caminho');
+  igual(trocaSolta.erro.extra.travada, true);
+  igual(api('molduraDaMesa', { token: tokenJogador }).dados.moldura.id, 'festim-das-feras',
+    'e a mesa continua na campanha que estava');
+
+  const semConfirmarReinicio = api('reiniciarMoldura', { token: doMestre });
+  verdade(!semConfirmarReinicio.ok, 'reiniciar também pede confirmação');
+  igual(semConfirmarReinicio.erro.extra.precisaConfirmar, true);
+  igual(api('reiniciarMoldura', { token: tokenJogador, confirmado: true }).erro.codigo, 'SEM_PERMISSAO');
+
+  const reiniciada = api('reiniciarMoldura', { token: doMestre, confirmado: true });
+  verdade(reiniciada.ok, JSON.stringify(reiniciada));
+  igual(reiniciada.dados.depois, '');
+  igual(reiniciada.dados.travada, false);
+  verdade(/continua nas fichas/.test(reiniciada.dados.aviso),
+    'o aviso precisa ser honesto sobre o que NÃO volta: ' + reiniciada.dados.aviso);
   igual(api('molduraDaMesa', { token: tokenJogador }).dados.moldura, null);
+
+  // Destravada, dá para escolher outra — com confirmação, como da primeira vez.
+  igual(api('definirMoldura', { token: doMestre, moldura: 'placa-mae', confirmado: true }).dados.depois,
+    'placa-mae');
+  api('reiniciarMoldura', { token: doMestre, confirmado: true });
 });
 
 teste('a ficha do Festim das Feras equipa a frigideira sem reclamar', () => {
@@ -1791,7 +1828,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 200 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 12 de equipamento, 25 de consumível e 18 de loot', () => {
+teste('o catálogo tem 201 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 12 de equipamento, 25 de consumível, 18 de loot e 1 de moldura', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1830,7 +1867,15 @@ teste('o catálogo tem 200 contadores: 113 de carta, 25 de classe/subclasse, 4 d
    * `zeraEm` vazio de propósito: deixar o descanso longo apagá-lo sozinho seria
    * apagar a única prova de que o prazo venceu.
    */
-  igual(Object.keys(CONTADORES).length, 200);
+  /*
+   * ⚠ E O MAIS NOVO NÃO É DO PERSONAGEM: é da CAMPANHA. A Corrupção do Surto
+   * Selvagem é o primeiro contador cujo dono é a MOLDURA DA MESA — ele não
+   * existe em ficha nenhuma enquanto o Mestre não escolher essa campanha no
+   * painel, e some de todas no instante em que ele trocar. Foi por isso que
+   * `refsDeContadorDaFicha_` precisou aprender a perguntar a moldura: até
+   * aqui, tudo o que era dono de contador estava DENTRO da ficha.
+   */
+  igual(Object.keys(CONTADORES).length, 201);
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 113);
@@ -1841,6 +1886,7 @@ teste('o catálogo tem 200 contadores: 113 de carta, 25 de classe/subclasse, 4 d
   igual(porOrigem['caracteristica-comunidade'], 3);
   igual(porOrigem['equipamento'], 12);
   igual(porOrigem['loot'], 18);
+  igual(porOrigem['moldura'], 1);
 });
 
 teste('"uma vez por" conta o uso GASTO, e o gatilho certo o apaga', () => {
@@ -4430,6 +4476,824 @@ teste('curar um aliado que não existe não derruba o descanso', () => {
   });
   verdade(r.ok, JSON.stringify(r));
   verdade(/não encontrada/.test(r.dados.curados[0].erro || ''), JSON.stringify(r.dados.curados));
+});
+
+
+console.log('\nMolduras de campanha — O Surto Selvagem');
+
+/*
+ * ⚠ A PRIMEIRA REGRA QUE VEM DA CAMPANHA, E NÃO DO PERSONAGEM.
+ *
+ * "Sempre que um personagem sofrer dano Severo de um adversário ou ambiente
+ * Corrompido, ponha um marcador de Corrupção na ficha dele e role o Dado de
+ * Medo. Se o resultado for igual ou inferior ao número de marcadores, ele
+ * recebe uma cicatriz imediatamente e zera todos os marcadores." (livro p.261;
+ * SRD 2.0 rules/the-witherwild, p.184–189; a errata de 25/08/2026 não toca.)
+ *
+ * Tudo aqui depende da MOLDURA ESCOLHIDA NO PAINEL — nenhuma ficha guarda que
+ * campanha a mesa joga.
+ */
+function comMoldura(id) {
+  const m = contexto.mesaLer_();
+  m.moldura = id || '';
+  contexto.mesaGravar_(m);
+  return contexto.mesaLer_().moldura;
+}
+
+const CHAVE_CORRUPCAO = 'moldura:o-surto-selvagem:corrupcao';
+
+function fichaDoViço() {
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Viçoriana', classe: 'Guardião', subclasse: 'Robusto',
+    ancestralidade: 'Anão', comunidade: 'Ridgeborne',
+    cartas: ['blade-redemoinho', 'valor-pele-dura'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  return f;
+}
+function marcadores(f) {
+  return Math.max(0, Number(((f.contadores || {})[CHAVE_CORRUPCAO] || {}).valor) || 0);
+}
+
+teste('⚠ Corrupção: fora da moldura, a regra não existe para ninguém', () => {
+  comMoldura('');
+  const f = fichaDoViço();
+  const severo = Number(f.defesas.limiarGrave);
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano: severo, tipoDeDano: 'fisico', fonteCorrompida: true, dadoDeMedo: 1
+  }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].dano.faixa, 'severo', 'controle: o dano medido É Severo');
+  igual(marcadores(f), 0, 'sem a moldura escolhida, nenhum marcador entra');
+  igual((f.cicatrizes || []).length, 0);
+});
+
+teste('⚠ Corrupção: dentro da moldura, mas só com a fonte marcada como Corrompida', () => {
+  comMoldura('o-surto-selvagem');
+  const f = fichaDoViço();
+  const severo = Number(f.defesas.limiarGrave);
+
+  const semFonte = contexto.aplicarAjustes_(f, [{ tipo: 'dano', dano: severo, tipoDeDano: 'fisico' }]);
+  igual(semFonte.erros, []);
+  igual(marcadores(f), 0, '"Corrompido" é um tipo que o Mestre dá — sem a caixa, nada acontece');
+
+  const g = fichaDoViço();
+  const comFonte = contexto.aplicarAjustes_(g, [{
+    tipo: 'dano', dano: Number(g.defesas.limiarGrave), tipoDeDano: 'fisico',
+    fonteCorrompida: true, dadoDeMedo: 12
+  }]);
+  igual(comFonte.erros, []);
+  igual(marcadores(g), 1, 'com a caixa marcada, o marcador entra');
+  comMoldura('');
+});
+
+teste('⚠ Corrupção: o app NÃO rola o Dado de Medo — ele devolve pendência e desfaz a ficha', () => {
+  comMoldura('o-surto-selvagem');
+  const f = fichaDoViço();
+  const pvAntes = Number(f.recursos.pontosDeVidaMarcados) || 0;
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano: Number(f.defesas.limiarGrave), tipoDeDano: 'fisico', fonteCorrompida: true
+  }]);
+  verdade(!!r.pendenciaRolagem, 'faltando o d12, o app tem de PEDIR: ' + JSON.stringify(r));
+  igual(r.pendenciaRolagem.tipo, 'moldura-corrupcao');
+  igual(r.pendenciaRolagem.dado, 'd12');
+  igual(r.pendenciaRolagem.marcadores, 1);
+  /*
+   * ⚠ E A FICHA VOLTA AO QUE ERA. Pendência que deixa metade do efeito gravado
+   * é pior que pendência nenhuma: a pessoa informaria o dado e o dano entraria
+   * duas vezes.
+   */
+  igual(Number(f.recursos.pontosDeVidaMarcados) || 0, pvAntes, 'a ficha não pode ficar pela metade');
+  igual(marcadores(f), 0, 'nem o marcador');
+  comMoldura('');
+});
+
+teste('⚠ Corrupção: "igual ou inferior" — o empate cicatriza, e a cicatriz zera os marcadores', () => {
+  comMoldura('o-surto-selvagem');
+  const f = fichaDoViço();
+  const severo = Number(f.defesas.limiarGrave);
+
+  // primeiro golpe: 1 marcador, d12 = 12 → passa longe
+  contexto.aplicarAjustes_(f, [{ tipo:'dano', dano:severo, tipoDeDano:'fisico', fonteCorrompida:true, dadoDeMedo:12 }]);
+  igual(marcadores(f), 1);
+  igual((f.cicatrizes || []).length, 0);
+
+  // segundo golpe: 2 marcadores, d12 = 2 → IGUAL, cicatriza
+  f.recursos.pontosDeVidaMarcados = 0;
+  const r = contexto.aplicarAjustes_(f, [{ tipo:'dano', dano:severo, tipoDeDano:'fisico', fonteCorrompida:true, dadoDeMedo:2 }]);
+  igual(r.erros, []);
+  const rel = r.mudancas[0].corrupcaoDeMoldura;
+  verdade(!!rel, 'o relatório precisa contar o que aconteceu: ' + JSON.stringify(r.mudancas[0]));
+  igual(rel.marcadores, 2);
+  igual(rel.dado, 2);
+  igual(rel.cicatrizou, true, 'o resultado IGUAL ao número de marcadores também cicatriza');
+  igual((f.cicatrizes || []).length, 1);
+  igual(marcadores(f), 0, 'a cicatriz zera TODOS os marcadores');
+  comMoldura('');
+});
+
+teste('⚠ Corrupção: a faixa que vale é a SOFRIDA — Armadura que derruba para Maior não corrompe', () => {
+  comMoldura('o-surto-selvagem');
+  const f = fichaEquipamentoDefensivo_(3, null, 'armadura-t2-armadura-de-couro-aprimorada');
+  const severo = Number(f.defesas.limiarGrave);
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:severo, tipoDeDano:'fisico', usarArmadura:true,
+    fonteCorrompida:true, dadoDeMedo:1
+  }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].pvPelaFaixa, 3, 'controle: o golpe era Severo');
+  igual(r.mudancas[0].pvDepoisArmadura, 2, 'e a Armadura o derrubou para Maior');
+  igual(marcadores(f), 0, '"sofrer dano Severo": quem mitigou não sofreu');
+  comMoldura('');
+});
+
+teste('⚠ Corrupção: dano massivo conta como Severo — é a mesma pancada, mais forte', () => {
+  comMoldura('o-surto-selvagem');
+  const mesa = contexto.mesaLer_(); mesa.danoMassivo = true; contexto.mesaGravar_(mesa);
+  const f = fichaDoViço();
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo:'dano', dano:Number(f.defesas.limiarGrave) * 2, tipoDeDano:'fisico',
+    fonteCorrompida:true, dadoDeMedo:12
+  }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].dano.faixa, 'massivo', 'controle: a faixa é massivo');
+  igual(marcadores(f), 1, 'o pior golpe do jogo não pode ser o único que não corrompe');
+  const m2 = contexto.mesaLer_(); m2.danoMassivo = false; contexto.mesaGravar_(m2);
+  comMoldura('');
+});
+
+teste('⚠ Corrupção: o marcador NÃO é apagado pelo fim de sessão preguiçoso da ficha', () => {
+  /*
+   * O resto do app aplica o fim de sessão quando o JOGADOR abre a ficha. Para a
+   * Corrupção isso seria perder a conta: os marcadores viram Medo do Mestre, e
+   * marcador limpo por conta própria é Medo que a mesa nunca recebeu.
+   */
+  comMoldura('o-surto-selvagem');
+  const f = fichaDoViço();
+  contexto.aplicarAjustes_(f, [{ tipo:'dano', dano:Number(f.defesas.limiarGrave),
+    tipoDeDano:'fisico', fonteCorrompida:true, dadoDeMedo:12 }]);
+  igual(marcadores(f), 1);
+  contexto.aplicarGatilhoContadores_(f, 'fim-de-sessao');
+  igual(marcadores(f), 1, 'o gatilho preguiçoso não pode levar o marcador embora');
+  const CONTADORES = avaliar('CONTADORES');
+  igual(CONTADORES[CHAVE_CORRUPCAO].zeraEm, ['fim-de-sessao-do-mestre']);
+  comMoldura('');
+});
+
+teste('⚠ Corrupção: trocar a moldura no painel tira o marcador de todas as fichas', () => {
+  comMoldura('o-surto-selvagem');
+  const f = fichaDoViço();
+  const refs = contexto.refsDeContadorDaFicha_(f);
+  igual(refs['o-surto-selvagem'], true, 'a moldura da mesa é dona do contador');
+  comMoldura('festim-das-feras');
+  const refsDepois = contexto.refsDeContadorDaFicha_(f);
+  verdade(!refsDepois['o-surto-selvagem'], 'trocou a campanha, a Corrupção deixa de ser desta ficha');
+  comMoldura('');
+});
+
+
+teste('⚠ Corrupção: o Mestre encerra a sessão e COLHE os marcadores em Medo', () => {
+  const token = api('registrar', { nome: 'Viço', codigo: 'senha-do-vico' }).dados.token;
+  const base = contexto.fichaRapida_({
+    nome: 'Corrompida', classe: 'Guardião', subclasse: 'Robusto',
+    ancestralidade: 'Anão', comunidade: 'Ridgeborne',
+    cartas: ['blade-redemoinho', 'valor-pele-dura'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  base.contadores = Object.assign({}, base.contadores, {
+    'moldura:o-surto-selvagem:corrupcao': { valor: 3 }
+  });
+  /*
+   * ⚠ A MOLDURA PRIMEIRO, A FICHA DEPOIS — e isto não é ordem de conveniência.
+   *
+   * `validarFicha_` reconstrói a ficha campo a campo e joga fora contador que
+   * não seja daquela ficha. O dono deste contador é a MOLDURA DA MESA: gravar
+   * antes de o painel ter escolhido a campanha faz o marcador sumir na
+   * primeira gravação, em silêncio. É o mesmo pé em que a duração dos bônus
+   * preparados tropeçou.
+   */
+  comMoldura('o-surto-selvagem');
+  const criada = api('criarPersonagem', { token, ficha: base }).dados.personagem;
+  verdade(Number((((criada.ficha.contadores || {})['moldura:o-surto-selvagem:corrupcao']) || {}).valor) === 3,
+    'o marcador precisa sobreviver à gravação: ' + JSON.stringify(criada.ficha.contadores));
+
+  const mesa = contexto.mesaLer_();
+  const medoAntesDoTeste = mesa.medo;
+  const sessaoAntesDoTeste = JSON.parse(JSON.stringify(mesa.sessao || {}));
+  mesa.medo = 0;
+  mesa.sessao = { numero: 7, aberta: true, comecouEm: contexto.agoraIso_() };
+  contexto.mesaGravar_(mesa);
+
+  const r = api('encerrarSessaoDaMesa', { token: tokenMestre });
+  verdade(r.ok, JSON.stringify(r));
+  const colheita = r.dados.colheitaDeMoldura;
+  verdade(!!colheita, 'o Mestre precisa ver o que colheu: ' + JSON.stringify(r.dados));
+  verdade(colheita.marcadores >= 3, 'colheu ' + colheita.marcadores + ', esperava ao menos os 3 desta ficha');
+  igual(colheita.medoGanho, colheita.marcadores, 'um marcador vale um Ponto de Medo');
+  igual(contexto.mesaLer_().medo, Math.min(12, colheita.medoGanho), 'o Medo subiu na mesa');
+
+  const depois = api('obterPersonagem', { token, id: criada.id }).dados.personagem;
+  igual(Number((((depois.ficha.contadores || {})['moldura:o-surto-selvagem:corrupcao']) || {}).valor) || 0, 0,
+    'e os marcadores saíram da ficha de verdade');
+  verdade(depois.versao > criada.versao, 'a versão da ficha subiu — senão o app do jogador não recarrega');
+
+  // ⚠ Devolve a mesa ao que era: esta bateria é uma planilha só, e um Medo
+  // deixado para trás vira falha num teste que não tem nada a ver com isto.
+  const limpa = contexto.mesaLer_();
+  limpa.medo = medoAntesDoTeste;
+  limpa.sessao = sessaoAntesDoTeste;
+  contexto.mesaGravar_(limpa);
+  comMoldura('');
+});
+
+teste('⚠ Corrupção: fora da moldura, encerrar a sessão não colhe nada nem mexe no Medo', () => {
+  comMoldura('');
+  const mesa = contexto.mesaLer_();
+  const medoAntesDoTeste = mesa.medo;
+  const sessaoAntesDoTeste = JSON.parse(JSON.stringify(mesa.sessao || {}));
+  mesa.medo = 4;
+  mesa.sessao = { numero: 8, aberta: true, comecouEm: contexto.agoraIso_() };
+  contexto.mesaGravar_(mesa);
+  const r = api('encerrarSessaoDaMesa', { token: tokenMestre });
+  verdade(r.ok, JSON.stringify(r));
+  igual(r.dados.colheitaDeMoldura, null);
+  igual(contexto.mesaLer_().medo, 4, 'o Medo fica onde estava (p.154)');
+  const limpa = contexto.mesaLer_();
+  limpa.medo = medoAntesDoTeste;
+  limpa.sessao = sessaoAntesDoTeste;
+  contexto.mesaGravar_(limpa);
+});
+
+
+console.log('\nMolduras de campanha — Era da Umbra');
+
+/*
+ * ⚠ A MOLDURA QUE MUDA UMA REGRA DO NÚCLEO.
+ *
+ * "Conforme recebem cicatrizes, os personagens também são corrompidos pela
+ * Umbra aos poucos: todos causam dano adicional igual à quantidade de
+ * cicatrizes que têm. Quando um personagem marca o último Ponto de Esperança
+ * com uma cicatriz, ele NÃO é aposentado; em vez disso, sucumbe à influência da
+ * Umbra." (livro p.288)
+ *
+ * A segunda frase é o caso interessante: o livro básico manda APOSENTAR, e esta
+ * campanha manda o contrário, com todas as letras.
+ */
+function fichaDeHalcyon(cicatrizes) {
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Derradeira', classe: 'Guardião', subclasse: 'Robusto',
+    ancestralidade: 'Anão', comunidade: 'Ridgeborne',
+    cartas: ['blade-redemoinho', 'valor-pele-dura'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  f.cicatrizes = [];
+  for (let i = 0; i < (cicatrizes || 0); i++) f.cicatrizes.push({ em: contexto.agoraIso_(), nota: 'antiga' });
+  return f;
+}
+function danoDaMoldura(f) {
+  const b = contexto.bonusDeDanoDaFicha_(f);
+  return (b.caracteristicasFixas || []).filter((x) => /Umbra/.test(x.fonte));
+}
+
+teste('⚠ Umbra: fora da moldura, cicatriz não dá dano nenhum', () => {
+  comMoldura('');
+  igual(danoDaMoldura(fichaDeHalcyon(3)).length, 0);
+});
+
+teste('⚠ Umbra: o dano adicional é igual ao número de cicatrizes, e sobe com elas', () => {
+  comMoldura('era-da-umbra');
+  igual(danoDaMoldura(fichaDeHalcyon(0)).length, 0, 'sem cicatriz não há o que somar');
+
+  const uma = danoDaMoldura(fichaDeHalcyon(1));
+  igual(uma.length, 1, JSON.stringify(uma));
+  igual(uma[0].valor, 1);
+  igual(uma[0].aplicaEm, 'jogada-de-dano');
+  igual(uma[0].tipo, 'fixo', 'não é condicional: não depende de alcance nem de alvo');
+
+  igual(danoDaMoldura(fichaDeHalcyon(3))[0].valor, 3, 'três cicatrizes, +3 de dano');
+  comMoldura('');
+});
+
+teste('⚠ Umbra: a última cicatriz NÃO aposenta — sucumbe', () => {
+  comMoldura('era-da-umbra');
+  const f = fichaDeHalcyon(0);
+  const teto = Math.max(1, Number(f.recursos.esperancaMaxima) || 6);
+  for (let i = 0; i < teto - 1; i++) {
+    const r = contexto.acrescentarCicatriz_(f, 'gasto');
+    igual(r.ok, true);
+    igual(r.encerrada, null, 'ainda sobra espaço de Esperança na cicatriz ' + (i + 1));
+  }
+  const ultima = contexto.acrescentarCicatriz_(f, 'a última');
+  igual(ultima.ok, true);
+  verdade(!!ultima.encerrada, 'a última cicatriz precisa encerrar a ficha: ' + JSON.stringify(ultima));
+  igual(ultima.encerrada.motivo, 'sucumbiu-a-umbra',
+    'nesta campanha a ficha não é aposentada — ela vira parte do cenário');
+  verdade(/Umbra/.test(ultima.encerrada.nota), JSON.stringify(ultima.encerrada));
+  comMoldura('');
+});
+
+teste('⚠ Umbra: fora da moldura, a mesma última cicatriz APOSENTA (a regra do livro)', () => {
+  comMoldura('');
+  const f = fichaDeHalcyon(0);
+  const teto = Math.max(1, Number(f.recursos.esperancaMaxima) || 6);
+  let ultima = null;
+  for (let i = 0; i < teto; i++) ultima = contexto.acrescentarCicatriz_(f, 'gasto');
+  verdade(!!ultima.encerrada, JSON.stringify(ultima));
+  igual(ultima.encerrada.motivo, 'aposentado',
+    'sem moldura que diga o contrário, vale o livro: aposentar');
+});
+
+
+teste('⚠ Escuridão: fora da Era da Umbra, o descanso da mesa não conhece a tabela', () => {
+  comMoldura('');
+  const m = contexto.mesaLer_(); m.medo = 0; contexto.mesaGravar_(m);
+  const previa = contexto.previaDoDescansoDaMesa_(contexto.mesaLer_(), 'curto',
+    { quantosPersonagens: 3, rolagem: 2, foraDaChamaSagrada: true, dadoDaEscuridao: 4 });
+  igual(previa.escuridaoAEspreita, null);
+});
+
+teste('⚠ Escuridão: dentro da moldura, dormir DENTRO da Chama não dispara nada', () => {
+  comMoldura('era-da-umbra');
+  const m = contexto.mesaLer_(); m.medo = 0; contexto.mesaGravar_(m);
+  const previa = contexto.previaDoDescansoDaMesa_(contexto.mesaLer_(), 'curto',
+    { quantosPersonagens: 3, rolagem: 2 });
+  verdade(!!previa.escuridaoAEspreita, 'a mecânica existe na moldura');
+  igual(previa.escuridaoAEspreita.aconteceu, false, 'mas só vale fora do alcance da Chama');
+  igual(previa.medo.ganho, 2, 'o Medo é só o do próprio descanso');
+  comMoldura('');
+});
+
+teste('⚠ Escuridão: o app PEDE o d12 — nunca rola', () => {
+  comMoldura('era-da-umbra');
+  const m = contexto.mesaLer_(); m.medo = 0; contexto.mesaGravar_(m);
+  const previa = contexto.previaDoDescansoDaMesa_(contexto.mesaLer_(), 'curto',
+    { quantosPersonagens: 3, rolagem: 2, foraDaChamaSagrada: true });
+  igual(previa.escuridaoAEspreita.precisaDeRolagem, true);
+  igual(previa.ok, false, 'sem o dado, o descanso não pode ser aplicado');
+  verdade((previa.avisos || []).some((a) => /1d12/.test(a)), JSON.stringify(previa.avisos));
+  comMoldura('');
+});
+
+teste('⚠ Escuridão: cada faixa da tabela, conferida contra o livro (p.289)', () => {
+  comMoldura('era-da-umbra');
+  const faixa = (dado) => {
+    const m = contexto.mesaLer_(); m.medo = 0; contexto.mesaGravar_(m);
+    return contexto.previaDoDescansoDaMesa_(contexto.mesaLer_(), 'curto',
+      { quantosPersonagens: 3, rolagem: 1, foraDaChamaSagrada: true, dadoDaEscuridao: dado });
+  };
+  const um = faixa(1);
+  igual(um.escuridaoAEspreita.medoAoMestre, 0, '1–2 é conflito, não é Medo');
+  igual(um.escuridaoAEspreita.efeitoManual, true, 'e o conflito fica com a mesa');
+  verdade(/monstruoso/.test(um.escuridaoAEspreita.texto), um.escuridaoAEspreita.texto);
+
+  igual(faixa(3).escuridaoAEspreita.medoAoMestre, 2, '3–5 dá 2 de Medo');
+  igual(faixa(5).escuridaoAEspreita.medoAoMestre, 2);
+  igual(faixa(6).escuridaoAEspreita.medoAoMestre, 1, '6–9 dá 1 de Medo');
+  igual(faixa(9).escuridaoAEspreita.medoAoMestre, 1);
+  igual(faixa(10).escuridaoAEspreita.medoAoMestre, 0, '10–11 não faz nada');
+  igual(faixa(11).escuridaoAEspreita.esperancaPorPersonagem, 0);
+
+  const doze = faixa(12);
+  igual(doze.escuridaoAEspreita.medoAoMestre, 0);
+  igual(doze.escuridaoAEspreita.esperancaPorPersonagem, 1, '12 é o bom presságio');
+
+  // ⚠ O Medo da escuridão SOMA ao do próprio descanso, antes do teto.
+  igual(faixa(3).medo.ganho, 1 + 2, 'd4 (1) do descanso + 2 da escuridão');
+  comMoldura('');
+});
+
+teste('⚠ Escuridão: o bom presságio entrega 1 Esperança a TODAS as fichas, pela API', () => {
+  comMoldura('era-da-umbra');
+  const token = api('registrar', { nome: 'Halcyon', codigo: 'senha-halcyon' }).dados.token;
+  const base = contexto.fichaRapida_({
+    nome: 'Guardiã da Chama', classe: 'Guardião', subclasse: 'Robusto',
+    ancestralidade: 'Anão', comunidade: 'Ridgeborne',
+    cartas: ['blade-redemoinho', 'valor-pele-dura'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  base.recursos.esperanca = 0;
+  const criada = api('criarPersonagem', { token, ficha: base }).dados.personagem;
+
+  const m = contexto.mesaLer_();
+  const medoAntes = m.medo;
+  m.medo = 0; contexto.mesaGravar_(m);
+
+  const r = api('aplicarDescansoDaMesa', {
+    token: tokenMestre, tipo: 'curto',
+    escolhas: { quantosPersonagens: 1, rolagem: 1, foraDaChamaSagrada: true, dadoDaEscuridao: 12 }
+  });
+  verdade(r.ok, JSON.stringify(r));
+  const minha = (r.dados.esperancaDada || []).filter((x) => x.id === criada.id)[0];
+  verdade(!!minha, 'a ficha criada aqui precisa estar na lista: ' + JSON.stringify(r.dados.esperancaDada));
+  igual(minha.antes, 0);
+  igual(minha.depois, 1);
+
+  const depois = api('obterPersonagem', { token, id: criada.id }).dados.personagem;
+  igual(Number(depois.ficha.recursos.esperanca), 1, 'gravou de verdade na ficha');
+
+  const limpa = contexto.mesaLer_(); limpa.medo = medoAntes; contexto.mesaGravar_(limpa);
+  comMoldura('');
+});
+
+
+teste('⚠ Montar Guarda: só existe dentro da Era da Umbra', () => {
+  comMoldura('');
+  const f = fichaDeHalcyon(0);
+  const semMoldura = contexto.movimentosDoDescanso_('curto', f).map((m) => m.id);
+  verdade(!semMoldura.some((id) => /montar-guarda/.test(id)), JSON.stringify(semMoldura));
+
+  comMoldura('era-da-umbra');
+  const comMold = contexto.movimentosDoDescanso_('curto', f).map((m) => m.id);
+  verdade(comMold.some((id) => /montar-guarda/.test(id)),
+    'a moldura concede o movimento: ' + JSON.stringify(comMold));
+  const noLongo = contexto.movimentosDoDescanso_('longo', f).map((m) => m.id);
+  verdade(noLongo.some((id) => /montar-guarda/.test(id)), 'e vale nos dois descansos');
+  comMoldura('');
+});
+
+teste('⚠ Montar Guarda: o app PEDE o Dado de Esperança e não mexe na ficha', () => {
+  comMoldura('era-da-umbra');
+  const f = fichaDeHalcyon(0);
+  const pvAntes = Number(f.recursos.pontosDeVidaMarcados) || 0;
+  const esperancaAntes = Number(f.recursos.esperanca) || 0;
+
+  const semDado = contexto.previaDoDescanso_(f, 'curto', [
+    { movimento: 'moldura:montar-guarda' }, { movimento: 'preparar-se' }
+  ]);
+  const feitoSemDado = semDado.movimentos.filter((x) => /montar-guarda/.test(x.id))[0];
+  verdade(!!feitoSemDado, JSON.stringify(semDado.movimentos.map((x) => x.id)));
+  igual(feitoSemDado.precisaDeRolagem, true, 'o app não rola o Dado de Esperança');
+
+  const comDado = contexto.previaDoDescanso_(f, 'curto', [
+    { movimento: 'moldura:montar-guarda', dadoDeEsperancaDaGuarda: 9 }, { movimento: 'preparar-se' }
+  ]);
+  igual(comDado.guardaMontada, [9], 'a prévia publica o número para o Mestre ver');
+  igual(Number(f.recursos.pontosDeVidaMarcados) || 0, pvAntes, 'a guarda não mexe na ficha');
+  verdade(Number(f.recursos.esperanca) >= esperancaAntes);
+  comMoldura('');
+});
+
+
+console.log('\nMolduras de campanha — o painel e a lista');
+
+teste('⚠ Molduras: as três que faltavam passaram a existir', () => {
+  const MOLDURAS = avaliar('MOLDURAS');
+  const ids = MOLDURAS.map((m) => m.id);
+  ['o-surto-selvagem', 'era-da-umbra', 'cinco-estandartes-em-chamas'].forEach((id) => {
+    verdade(ids.indexOf(id) >= 0, id + ' precisa estar na lista de molduras: ' + JSON.stringify(ids));
+  });
+  igual(ids.length, 8, 'cinco do livro com equipamento + as três novas');
+});
+
+teste('⚠ Molduras: a lista é UMA — equipamento e conteúdo casam por id', () => {
+  /*
+   * O equipamento mora em data/equipamentos.json e o conteúdo em
+   * data/molduras.json. Duas listas de molduras seriam duas listas para
+   * discordar; o gerador recusa gerar se um id existir de um lado e não do
+   * outro, e aqui a conferência é do resultado.
+   */
+  const MOLDURAS = avaliar('MOLDURAS');
+  const CONTEUDO = avaliar('MOLDURAS_CONTEUDO');
+  Object.keys(CONTEUDO).forEach((id) => {
+    verdade(MOLDURAS.some((m) => m.id === id), id + ' tem conteúdo mas não está na lista');
+  });
+  MOLDURAS.forEach((m) => {
+    igual(m.temConteudo, Object.prototype.hasOwnProperty.call(CONTEUDO, m.id),
+      m.id + ': o sinalizador de conteúdo discorda do catálogo');
+  });
+});
+
+teste('⚠ Estandartes: a ficha de campanha traz as cinco nações, com relações recíprocas', () => {
+  const CONTEUDO = avaliar('MOLDURAS_CONTEUDO');
+  const mec = (CONTEUDO['cinco-estandartes-em-chamas'].mecanicas || [])
+    .filter((x) => (x.automacao || {}).fichaDeCampanha)[0];
+  verdade(!!mec, 'a mecânica das relações precisa estar lá');
+  const ficha = mec.automacao.fichaDeCampanha;
+  igual(ficha.nacoes.length, 5);
+  igual(ficha.escala.length, 7, 'de −3 a +3');
+
+  /*
+   * ⚠ A RELAÇÃO É RECÍPROCA, e o livro imprime as duas pontas separadas — uma
+   * em cada quadro de nação. Duas listas para o mesmo par é exatamente onde um
+   * dígito trocado passa despercebido: Armada dizer "+2 Gracien" enquanto
+   * Gracien diz "+1 Armada" faria o Mestre decidir de dois jeitos dependendo de
+   * qual quadro tivesse lido por último.
+   */
+  const porId = {};
+  ficha.nacoes.forEach((n) => { porId[n.id] = n; });
+  ficha.nacoes.forEach((n) => {
+    Object.keys(n.relacoes).forEach((outro) => {
+      verdade(!!porId[outro], n.id + ' aponta para "' + outro + '", que não é uma das cinco');
+      igual(porId[outro].relacoes[n.id], n.relacoes[outro],
+        'relação assimétrica entre ' + n.id + ' e ' + outro);
+    });
+    igual(Object.keys(n.relacoes).length, 4, n.id + ' precisa ter relação com as outras quatro');
+  });
+});
+
+teste('⚠ Molduras: o painel do Mestre manda o conteúdo da ESCOLHIDA, e só dela', () => {
+  comMoldura('cinco-estandartes-em-chamas');
+  const r = api('painelDoMestre', { token: tokenMestre });
+  verdade(r.ok, JSON.stringify(r).slice(0, 200));
+  verdade(!!r.dados.molduraEscolhida, 'o painel precisa trazer o cenário escolhido');
+  igual(r.dados.molduraEscolhida.id, 'cinco-estandartes-em-chamas');
+  verdade(!Array.isArray(r.dados.molduraEscolhida), 'é uma moldura, não a lista inteira');
+
+  comMoldura('');
+  const vazio = api('painelDoMestre', { token: tokenMestre });
+  igual(vazio.dados.molduraEscolhida, null, 'sem cenário escolhido, nada de capítulo 5 no payload');
+});
+
+
+teste('⚠ Molduras: as oito têm conteúdo — nenhuma é só um nome no select', () => {
+  /*
+   * ⚠ ESTE É O TESTE QUE MEDE O PEDIDO. "Automatizar as campanhas" começou com
+   * cinco molduras que eram só tabelas de equipamento e três que não existiam.
+   * O piso agora é: toda moldura selecionável tem, no mínimo, o que a mesa
+   * precisa ler — proposta e mecânicas específicas — e o painel mostra.
+   *
+   * O teto (quanto de cada uma o app APLICA) é outra conversa, e está registrada
+   * em docs/pontos-de-interesse-molduras.md moldura por moldura.
+   */
+  const MOLDURAS = avaliar('MOLDURAS');
+  const CONTEUDO = avaliar('MOLDURAS_CONTEUDO');
+  igual(MOLDURAS.length, 8);
+  MOLDURAS.forEach((m) => {
+    verdade(m.temConteudo, m.id + ' voltou a ser só um nome no select');
+    const c = CONTEUDO[m.id];
+    verdade(!!c && !!c.proposta, m.id + ': sem proposta para ler na mesa');
+    verdade(Array.isArray(c.mecanicas) && c.mecanicas.length,
+      m.id + ': sem as mecânicas específicas');
+    c.mecanicas.forEach((x) => {
+      verdade(Array.isArray(x.texto) && x.texto.length, m.id + '/' + x.id + ': mecânica sem texto');
+    });
+  });
+});
+
+
+console.log('\nMolduras de campanha — Placa-mãe');
+
+/*
+ * ⚠ A MOLDURA MAIS COMPLEXA DO LIVRO, e a que entra por último de propósito:
+ * ela troca o OURO pela moeda quantum e as armas principais pela ikonis
+ * customizável. O que entrou neste lote são as três mecânicas que NÃO mexem na
+ * Mochila de ninguém.
+ */
+function fichaDoVale(nivel) {
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Ecoante', classe: 'Guardião', subclasse: 'Robusto',
+    ancestralidade: 'Anão', comunidade: 'Ridgeborne',
+    cartas: ['blade-redemoinho', 'valor-pele-dura'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  if (nivel) f.identidade.nivel = nivel;
+  return f;
+}
+
+teste('⚠ Placa-mãe: a Ligação soma o NÍVEL na jogada de dano, e só nesta moldura', () => {
+  comMoldura('');
+  const fora = contexto.bonusDeDanoDaFicha_(fichaDoVale(3)).caracteristicasFixas
+    .filter((x) => /Ligação/.test(x.fonte));
+  igual(fora.length, 0, 'fora do cenário a ikonis não existe');
+
+  comMoldura('placa-mae');
+  const dentro = contexto.bonusDeDanoDaFicha_(fichaDoVale(3)).caracteristicasFixas
+    .filter((x) => /Ligação/.test(x.fonte));
+  igual(dentro.length, 1, JSON.stringify(dentro));
+  igual(dentro[0].valor, 3, 'nível 3, +3 de dano');
+  igual(dentro[0].aplicaEm, 'jogada-de-dano');
+
+  const noUm = contexto.bonusDeDanoDaFicha_(fichaDoVale(1)).caracteristicasFixas
+    .filter((x) => /Ligação/.test(x.fonte));
+  igual(noUm[0].valor, 1, 'e acompanha o nível');
+  comMoldura('');
+});
+
+teste('⚠ Placa-mãe: o dano mágico passa a se chamar tecnológico — só o nome', () => {
+  comMoldura('placa-mae');
+  const sessao = api('sessao', { token: tokenAna }).dados;
+  verdade(!!sessao.rotuloDanoMagico, JSON.stringify(sessao.rotuloDanoMagico));
+  igual(sessao.rotuloDanoMagico.nome, 'Tecnológico');
+  igual(sessao.rotuloDanoMagico.abreviacao, 'tec');
+
+  /*
+   * ⚠ E A REGRA NÃO MUDA. Renomear dano é o tipo de coisa que, feita sem
+   * cuidado, vira um TIPO novo que as resistências não conhecem — e aí a
+   * Escamas do Drakona deixaria de valer em metade do jogo. O tipo continua
+   * sendo `magico`; só o rótulo muda.
+   */
+  const f = fichaDoVale(1);
+  const r = contexto.aplicarAjustes_(f, [{
+    tipo: 'dano', dano: Number(f.defesas.limiarMaior), tipoDeDano: 'magico'
+  }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].dano.tipo, 'magico', 'por dentro continua sendo dano mágico');
+
+  comMoldura('');
+  igual(api('sessao', { token: tokenAna }).dados.rotuloDanoMagico, null,
+    'fora do cenário, ninguém renomeia nada');
+});
+
+teste('⚠ Placa-mãe: sem acesso à Rede não há movimento de repouso', () => {
+  comMoldura('placa-mae');
+  const f = fichaDoVale(1);
+
+  const semRede = contexto.previaDoDescanso_(f, 'curto', [
+    { movimento: 'reduzir-estresse', rolagem: 2, acessoARede: false },
+    { movimento: 'preparar-se', acessoARede: false }
+  ]);
+  verdade(semRede.erros.length >= 1, 'sem Rede o app precisa recusar: ' + JSON.stringify(semRede.erros));
+  verdade(/Rede/.test(semRede.erros.join(' ')), semRede.erros.join(' '));
+
+  // ⚠ NÃO RESPONDER NÃO BLOQUEIA. Só quem disser "não temos" é recusado.
+  const semResposta = contexto.previaDoDescanso_(f, 'curto', [
+    { movimento: 'reduzir-estresse', rolagem: 2 }, { movimento: 'preparar-se' }
+  ]);
+  igual(semResposta.erros, [], 'silêncio não é recusa: ' + JSON.stringify(semResposta.erros));
+
+  const comRede = contexto.previaDoDescanso_(f, 'curto', [
+    { movimento: 'reduzir-estresse', rolagem: 2, acessoARede: true },
+    { movimento: 'preparar-se', acessoARede: true }
+  ]);
+  igual(comRede.erros, []);
+  comMoldura('');
+});
+
+teste('⚠ Placa-mãe: fora do cenário, a Rede não é exigida de ninguém', () => {
+  comMoldura('');
+  const f = fichaDoVale(1);
+  const r = contexto.previaDoDescanso_(f, 'curto', [
+    { movimento: 'reduzir-estresse', rolagem: 2, acessoARede: false },
+    { movimento: 'preparar-se', acessoARede: false }
+  ]);
+  igual(r.erros, [], 'a exigência é da moldura, não do app');
+});
+
+
+teste('⚠ Placa-mãe: escolher o cenário troca a moeda da mesa — sem converter nada', () => {
+  /*
+   * ⚠ A TROCA NÃO MOVE NENHUM NÚMERO, e foi isso que decidiu o desenho.
+   *
+   * A tabela do livro é 10 quantum = 1 punhado, 100 = 1 bolsa, 1000 = 1 baú —
+   * EXATAMENTE a escada que o app já usa na regra opcional das moedas. Ou seja,
+   * 1 quantum é 1 moeda. Trocar a moeda é trocar o nome e a granularidade, não
+   * o valor: ninguém converte nada, nada se perde no arredondamento, ficha
+   * antiga não precisa de migração, e sair da campanha devolve o ouro sozinho.
+   */
+  comMoldura('');
+  const m = contexto.mesaLer_();
+  m.ouroComMoedas = false;
+  contexto.mesaGravar_(m);
+  igual(contexto.ouroComMoedas_(), false, 'fora do cenário e sem a regra opcional, conta em punhados');
+  igual(contexto.moedaDaMolduraDaMesa_(), null);
+
+  comMoldura('placa-mae');
+  const moeda = contexto.moedaDaMolduraDaMesa_();
+  verdade(!!moeda, 'a moldura precisa declarar a moeda');
+  igual(moeda.nome, 'quantum');
+  igual(moeda.inicialNaCriacao, 5);
+  igual(contexto.ouroComMoedas_(), true, 'o cenário conta na unidade fina, que é o quantum');
+
+  /*
+   * ⚠ E NÃO GRAVA `ouroComMoedas` NA MESA. Se gravasse, sair da campanha
+   * deixaria a regra opcional ligada para trás e o Mestre teria de descobrir
+   * sozinho que precisa desmarcá-la.
+   */
+  igual(contexto.mesaLer_().ouroComMoedas, false, 'a moldura responde, não liga a regra da mesa');
+
+  comMoldura('');
+  igual(contexto.ouroComMoedas_(), false, 'saiu do cenário, voltou a contar em ouro');
+});
+
+teste('⚠ Placa-mãe: 1 quantum é 1 moeda — o mesmo valor, com outro nome', () => {
+  comMoldura('placa-mae');
+  const q = contexto.moedaDaMolduraDaMesa_();
+  /*
+   * O livro: 10 quantum = 1 punhado, 100 = 1 bolsa, 1000 = 1 baú. A escada do
+   * ouro no app: 10 moedas = 1 punhado, 100 = 1 bolsa, 1000 = 1 baú. Se um dia
+   * as duas deixarem de bater, esta conta é a primeira a saber.
+   */
+  const OURO_EM_MOEDAS = avaliar('OURO_EM_MOEDAS');
+  igual(OURO_EM_MOEDAS.punhado, 10);
+  igual(OURO_EM_MOEDAS.bolsa, 100);
+  igual(OURO_EM_MOEDAS.cofre, 1000);
+
+  // Um bolso qualquer vale o mesmo dos dois lados.
+  const bolso = { moedas: 4, punhados: 3, bolsas: 2, cofres: 1 };
+  igual(contexto.ouroEmMoedas_(bolso), 4 + 30 + 200 + 1000, 'o total em moedas É o total em quantum');
+  /*
+   * ⚠ O TETO É 1 BAÚ (1000 moedas / 1000 quantum), e o livro é quem manda:
+   * "não dá para ter mais de 1 baú" (p.104). A docstring de
+   * ouroNormalizadoDeMoedas_ usa 1234 de exemplo, que JÁ estoura esse teto — foi
+   * o que este teste descobriu ao copiá-la. Aqui a conta é abaixo do teto.
+   */
+  igual(contexto.ouroNormalizadoDeMoedas_(999),
+    { moedas: 9, punhados: 9, bolsas: 9, cofres: 0, estourou: false },
+    'e a volta é a mesma escada');
+  igual(contexto.ouroNormalizadoDeMoedas_(1000).cofres, 1, 'mil quantum são um baú cheio');
+  verdade(!!q.nota, 'a nota da moeda precisa explicar isso na tela');
+  comMoldura('');
+});
+
+teste('⚠ Placa-mãe: quem nasce no cenário começa com 5 quantum, não 5 punhados', () => {
+  comMoldura('placa-mae');
+  const f = contexto.fichaRapida_({
+    nome: 'Sucateira', classe: 'Guardião', subclasse: 'Robusto',
+    ancestralidade: 'Anão', comunidade: 'Ridgeborne',
+    cartas: ['blade-redemoinho', 'valor-pele-dura'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  igual(f.ouro, { moedas: 5, punhados: 0, bolsas: 0, cofres: 0 });
+  igual(contexto.ouroEmMoedas_(f.ouro), 5, 'cinco quantum, que é meio punhado');
+
+  comMoldura('');
+  const fora = contexto.fichaRapida_({
+    nome: 'Comum', classe: 'Guardião', subclasse: 'Robusto',
+    ancestralidade: 'Anão', comunidade: 'Ridgeborne',
+    cartas: ['blade-redemoinho', 'valor-pele-dura'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  igual(Number(fora.ouro.punhados), 1, 'fora do cenário, o punhado do livro');
+  igual(Number(fora.ouro.moedas) || 0, 0);
+});
+
+teste('⚠ Placa-mãe: a Mochila aceita ajuste em quantum, e recusa fora do cenário', () => {
+  comMoldura('placa-mae');
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Sucateira', classe: 'Guardião', subclasse: 'Robusto',
+    ancestralidade: 'Anão', comunidade: 'Ridgeborne',
+    cartas: ['blade-redemoinho', 'valor-pele-dura'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'ouro', chave: 'moedas', delta: 20 }]);
+  igual(r.erros, [], JSON.stringify(r.erros));
+  igual(contexto.ouroEmMoedas_(f.ouro), 25, '5 iniciais + 20 de sucata vendida');
+  igual(f.ouro.punhados, 2, 'e a escada sobe sozinha: 25 quantum são 2 punhados e 5');
+  igual(f.ouro.moedas, 5);
+
+  comMoldura('');
+  const m = contexto.mesaLer_(); m.ouroComMoedas = false; contexto.mesaGravar_(m);
+  const g = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Comum', classe: 'Guardião', subclasse: 'Robusto',
+    ancestralidade: 'Anão', comunidade: 'Ridgeborne',
+    cartas: ['blade-redemoinho', 'valor-pele-dura'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  const fora = contexto.aplicarAjustes_(g, [{ tipo: 'ouro', chave: 'moedas', delta: 20 }]);
+  verdade(fora.erros.length >= 1, 'sem cenário e sem a regra opcional, moeda não existe');
+});
+
+
+teste('⚠ Placa-mãe: os espaços de aprimoramento da ikonis sobem por PATAMAR', () => {
+  /*
+   * "Ela começa com dois espaços no 1º patamar e ganha um espaço adicional a
+   * cada patamar subsequente" (livro p.301). Patamar, não nível: um
+   * personagem de nível 4 e um de nível 2 têm os mesmos espaços.
+   */
+  const token = api('registrar', { nome: 'Ikonista', codigo: 'senha-ikonis' }).dados.token;
+  comMoldura('placa-mae');
+  const base = contexto.fichaRapida_({
+    nome: 'Ikonista', classe: 'Guardião', subclasse: 'Robusto',
+    ancestralidade: 'Anão', comunidade: 'Ridgeborne',
+    cartas: ['blade-redemoinho', 'valor-pele-dura'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  const criada = api('criarPersonagem', { token, ficha: base }).dados.personagem;
+
+  const noUm = api('molduraDaMesa', { token, id: criada.id }).dados;
+  verdade(!!noUm.aprimoramentos, 'a resposta precisa trazer os espaços: ' + JSON.stringify(noUm.aprimoramentos));
+  igual(noUm.aprimoramentos.patamar, 1);
+  igual(noUm.aprimoramentos.espacos, 2, 'dois espaços no 1º patamar');
+
+  // sobe para o nível 5 (patamar 3) e confere a progressão
+  const subiu = JSON.parse(JSON.stringify(criada.ficha));
+  subiu.identidade.nivel = 5;
+  const salva = api('salvarPersonagem', { token, id: criada.id, versao: criada.versao, ficha: subiu });
+  verdade(salva.ok, JSON.stringify(salva).slice(0, 160));
+  const noCinco = api('molduraDaMesa', { token, id: criada.id }).dados;
+  igual(noCinco.aprimoramentos.patamar, 3);
+  igual(noCinco.aprimoramentos.espacos, 4, 'patamar 3: 2 + 2 patamares seguintes');
+
+  // ⚠ Sem o id, a resposta é a de sempre — é assim que a CRIAÇÃO consulta,
+  // quando ainda não existe ficha para ter patamar.
+  igual(api('molduraDaMesa', { token }).dados.aprimoramentos, null);
+
+  comMoldura('');
+  igual(api('molduraDaMesa', { token, id: criada.id }).dados.aprimoramentos, null,
+    'fora da campanha não há ikonis');
+});
+
+teste('⚠ Campanha: a resposta diz se está travada, e desde quando', () => {
+  const token = api('registrar', { nome: 'Curiosa2', codigo: 'senha-curiosa2' }).dados.token;
+  comMoldura('');
+  igual(api('molduraDaMesa', { token }).dados.travada, false);
+
+  const doMestre = api('entrarMestre', { codigo: 'codigo-do-mestre' }).dados.token;
+  api('definirMoldura', { token: doMestre, moldura: 'era-da-umbra', confirmado: true });
+  const vista = api('molduraDaMesa', { token }).dados;
+  igual(vista.travada, true, 'escolhida, a campanha tranca para todo mundo ver');
+  verdade(/\d{4}-\d{2}-\d{2}/.test(vista.desde), 'e guarda desde quando: ' + vista.desde);
+  api('reiniciarMoldura', { token: doMestre, confirmado: true });
 });
 
 console.log('\nAvanço — a tabela');

@@ -9,7 +9,8 @@
   "descanso": "Em qualquer descanso, curto ou longo.",
   "fim-da-cena": "Quando a cena termina (ou quando o efeito descrito na carta acaba).",
   "troca-de-alvo": "Quando o efeito é apontado para outro alvo.",
-  "manual": "Só quando o texto da carta mandar — o app não zera sozinho."
+  "manual": "Só quando o texto da carta mandar — o app não zera sozinho.",
+  "fim-de-sessao-do-mestre": "Quando o MESTRE encerra a sessão no painel. ⚠ Diferente de \"fim-de-sessao\": aquele cada ficha aplica sozinha ao abrir, e por isso ninguém conta o que foi apagado. Este existe para o que precisa ser CONTADO antes de sumir — os marcadores de Corrupção viram Pontos de Medo do Mestre, e um marcador limpo por conta própria seria Medo que a mesa nunca recebeu."
  },
  "limiteAberto": 99,
  "contadores": [
@@ -3718,6 +3719,23 @@
     "saida": "Se o sucesso crítico veio, apague o marcador do Chá da Morte antes de concluir o descanso."
    },
    "observacao": "Aceso = o chá foi bebido e o prazo corre. Não zera em gatilho nenhum: sai pela saída (sucesso crítico) ou fica aceso acusando o prazo vencido."
+  },
+  {
+   "chave": "moldura:o-surto-selvagem:corrupcao",
+   "origem": "moldura",
+   "refId": "o-surto-selvagem",
+   "nome": "Corrupção do Surto Selvagem",
+   "rotulo": "marcadores de Corrupção",
+   "tipo": "marcadores",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 20
+   },
+   "zeraEm": [
+    "fim-de-sessao-do-mestre"
+   ],
+   "recarregaEm": [],
+   "observacao": "Entra sozinho quando a ficha sofre dano Severo de fonte Corrompida. O livro manda separar cerca de 20 marcadores; é daí que vem o teto."
   }
  ]
 }

@@ -33,6 +33,16 @@ const estado = {
      no meio do combate para perguntar. Ver `danoMassivoNaMesa_` em
      4G_Encontro.gs. */
   danoMassivo: false,
+  /* A pergunta que a moldura de campanha faz na janela de dano, ou null. Ver
+     `perguntaDeDanoDaMoldura_` em 99_Api.gs — quem decide o que perguntar é o
+     servidor, não a tela. */
+  molduraDoDano: null,
+  /* O nome que a moldura dá ao dano mágico (Placa-mãe chama de tecnológico).
+     Só o nome — a regra é a mesma. */
+  rotuloDanoMagico: null,
+  /* Como a mesa chama o dinheiro. A Placa-mãe conta em quantum; o valor
+     guardado é o mesmo, na mesma escada — muda o nome. */
+  moedaDaMesa: null,
   versaoServidor: null,
   iniciando: true
 };
@@ -100,6 +110,9 @@ export const acoes = {
         cenaDaMesa: dados.cenaDaMesa ?? 0,
         ouroComMoedas: Boolean(dados.ouroComMoedas),
         danoMassivo: Boolean(dados.danoMassivo),
+        molduraDoDano: dados.molduraDoDano || null,
+        rotuloDanoMagico: dados.rotuloDanoMagico || null,
+        moedaDaMesa: dados.moedaDaMesa || null,
         versaoServidor: dados.versao,
         iniciando: false
       });
@@ -140,7 +153,10 @@ export const acoes = {
         // ligar com o jogador já dentro do app, a coluna de moedas aparece e a
         // janela de dano passa a explicar o dano massivo ao voltar para a tela.
         ouroComMoedas: Boolean(dados.ouroComMoedas),
-        danoMassivo: Boolean(dados.danoMassivo)
+        danoMassivo: Boolean(dados.danoMassivo),
+        molduraDoDano: dados.molduraDoDano || null,
+        rotuloDanoMagico: dados.rotuloDanoMagico || null,
+        moedaDaMesa: dados.moedaDaMesa || null
       });
       return { nivelMudou: para !== de, de: de, para: para };
     } catch (e) {
@@ -510,12 +526,26 @@ export const acoes = {
   },
 
   /** A moldura de campanha é do Mestre; quem cria ficha só a consulta. */
-  async definirMoldura(moldura) {
-    return api.definirMoldura(estado.token, moldura);
+  /*
+   * Escolher a campanha é do Mestre, e agora pede CONFIRMAÇÃO: a moldura muda
+   * regra em todas as fichas da mesa. Sem `confirmado`, o servidor recusa e
+   * devolve a lista do que mudaria — é com ela que a tela pergunta.
+   */
+  async definirMoldura(moldura, confirmado) {
+    return api.definirMoldura(estado.token, moldura, confirmado === true);
+  },
+  /** O único caminho para sair de uma campanha trancada. Também confirma. */
+  async reiniciarMoldura(confirmado) {
+    return api.reiniciarMoldura(estado.token, confirmado === true);
   },
 
-  async molduraDaMesa() {
-    return api.molduraDaMesa(estado.token);
+  /*
+   * Com o id da ficha vem também o que a campanha dá A ELA — hoje, os espaços
+   * de aprimoramento da ikonis, que dependem do patamar. Sem o id, a resposta
+   * é a de sempre (a criação de ficha usa assim, porque ainda não há ficha).
+   */
+  async molduraDaMesa(id) {
+    return api.molduraDaMesa(estado.token, id);
   },
 
   /* ----------------------------------------------------------------------

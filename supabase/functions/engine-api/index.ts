@@ -26,6 +26,11 @@ const ACOES = new Set([
   "previaDescanso","movimentosDeDescanso","aplicarDescanso",
   "opcoesDeAvanco","previaDeAvanco","aplicarAvanco","desfazerAvanco","aplicarCartaPermanente",
   "painelDoMestre","configurarTransformacao","definirMoldura","molduraDaMesa",
+  // A campanha escolhida TRANCA: sair dela exige este caminho separado, com
+  // confirmação própria. Sem a ação na lista, o botão de reiniciar daria 404
+  // mudo e o Mestre ficaria preso na moldura — que é o oposto do que a trava
+  // quer dizer.
+  "reiniciarMoldura",
   "abrirSessao","encerrarSessaoDaMesa","voltarParaAPrimeiraSessao","encerrarCenaDaMesa",
   "encontro","definirEncontro","acrescentarAoEncontro","ajustarAdversario",
   "porEmFoco","limparFoco","usarHabilidade","removerDoEncontro","limparEncontro",

@@ -158,6 +158,220 @@ function caracteristicasDoGrupoParaDescanso_() {
  * carta muda. Os três casos de descanso passam o `p.id`; o padrão vazio existe
  * só para quem chamar isto fora de um descanso de ficha.
  */
+/**
+ * A pergunta que a moldura da mesa faz na janela de dano — ou null.
+ *
+ * ⚠ NÃO É "A MESA TEM MOLDURA?". É "a moldura tem regra que depende de algo que
+ * só a mesa sabe?". Festim das Feras tem moldura e não pergunta nada; o Surto
+ * Selvagem pergunta uma coisa só. Devolver a moldura inteira faria a ficha
+ * decidir sozinha o que perguntar — e aí a regra estaria escrita em dois
+ * lugares, no motor e na tela.
+ */
+/**
+ * Dá N Pontos de Esperança a TODAS as fichas ativas da mesa.
+ *
+ * ⚠ RESPEITA O TETO DE CADA UMA, e o teto não é o mesmo para todo mundo: cada
+ * cicatriz apaga um espaço de Esperança para sempre. Somar cegamente encheria a
+ * trilha de quem já não tem onde guardar — e, numa campanha em que a cicatriz é
+ * o preço de tudo, seria justamente o personagem mais castigado recebendo de
+ * graça o que os outros ganharam.
+ */
+function darEsperancaATodasAsFichas_(quanto) {
+  const saida = [];
+  const n = Math.max(0, Math.trunc(Number(quanto)) || 0);
+  if (!n || typeof lerTudo_ !== 'function') return saida;
+  const linhas = lerTudo_(ABAS.PERSONAGENS) || [];
+  for (let i = 0; i < linhas.length; i++) {
+    const linha = linhas[i] || {};
+    const excluido = chaveTexto_(linha.excluido);
+    if (excluido === 'true' || excluido === 'sim' || excluido === '1') continue;
+    let ficha = {};
+    try { ficha = JSON.parse(linha.dados || '{}'); } catch (e) { continue; }
+    if (ficha.encerrada) continue;
+
+    const alvo = alterarFichaDeOutroSemTrava_(linha.id, function (f) {
+      f.recursos = f.recursos || {};
+      const antes = Math.max(0, Number(f.recursos.esperanca) || 0);
+      const teto = Math.max(0, Number(f.recursos.esperancaMaxima) || 6);
+      const depois = Math.min(teto, antes + n);
+      f.recursos.esperanca = depois;
+      /*
+       * ⚠ O QUE ESTA FUNÇÃO DEVOLVE É O `extra` — não um objeto COM um extra
+       * dentro. `alterarFichaDeOutroSemTrava_` faz `const extra = mutar(ficha)`:
+       * embrulhar mais uma vez entrega `{extra:{extra:{…}}}` a quem lê, e o
+       * relatório chega na tela com tudo `undefined`, sem erro nenhum.
+       */
+      return { antes: antes, depois: depois, ganho: depois - antes, teto: teto };
+    });
+    if (!alvo) continue;
+    saida.push(Object.assign({ id: linha.id, nome: alvo.personagem.nome }, alvo.extra));
+  }
+  return saida;
+}
+
+/**
+ * OS ESPAÇOS DE APRIMORAMENTO DA IKONIS, para a ficha que perguntar.
+ *
+ * > "Ela começa com dois espaços de aprimoramento no 1º patamar, demonstrando
+ * > sua evolução a partir da forma mais básica, e ganha um espaço adicional a
+ * > cada patamar subsequente." (Placa-mãe, livro p.301)
+ *
+ * ⚠ O APP NÃO MONTA A IKONIS — e isso é declarado, não esquecido. A arma é
+ * customizada na ficha módulo do livro e escrita à mão no espaço de arma
+ * principal; inventar aqui um construtor de armas seria inventar regra. O que
+ * o app faz é a conta que a mesa erraria de cabeça no meio da sessão: quantos
+ * espaços este personagem tem AGORA, no patamar dele.
+ *
+ * Devolve null fora de uma moldura que tenha ikonis — o caso de sete das oito.
+ */
+function aprimoramentosDaFicha_(ficha) {
+  if (typeof mecanicasDaMolduraDaMesa_ !== 'function') return null;
+  const lista = mecanicasDaMolduraDaMesa_();
+  for (let i = 0; i < lista.length; i++) {
+    const regra = ((lista[i] || {}).automacao || {}).espacosDeAprimoramento;
+    if (!regra) continue;
+    const nivel = Math.max(1, Math.min(10, Math.trunc(Number((((ficha || {}).identidade) || {}).nivel)) || 1));
+    const patamar = (typeof tierDoNivel_ === 'function') ? tierDoNivel_(nivel)
+      : (nivel <= 1 ? 1 : nivel <= 4 ? 2 : nivel <= 7 ? 3 : 4);
+    const base = Math.max(0, Math.trunc(Number(regra.basePorPatamar1)) || 0);
+    const porPatamar = Math.max(0, Math.trunc(Number(regra.maisPorPatamarSeguinte)) || 0);
+    return {
+      nome: lista[i].nome,
+      patamar: patamar,
+      espacos: base + (patamar - 1) * porPatamar,
+      nota: 'Aprimoramentos são criados e trocados durante o repouso; a ikonis em si você monta ' +
+        'na ficha módulo do livro.'
+    };
+  }
+  return null;
+}
+
+/** O id canônico de uma moldura, aceitando id ou nome — como o resto do app. */
+function idDaMoldura_(idOuNome) {
+  const alvo = chaveTexto_(idOuNome || '');
+  if (!alvo || typeof MOLDURAS === 'undefined') return '';
+  for (let i = 0; i < MOLDURAS.length; i++) {
+    if (chaveTexto_(MOLDURAS[i].id) === alvo || chaveTexto_(MOLDURAS[i].nome) === alvo) {
+      return MOLDURAS[i].id;
+    }
+  }
+  return '';
+}
+
+/** O nome de exibição de uma moldura, para as mensagens de erro e de log. */
+function nomeDaMoldura_(idOuNome) {
+  const id = idDaMoldura_(idOuNome);
+  if (!id || typeof MOLDURAS === 'undefined') return String(idOuNome || '');
+  for (let i = 0; i < MOLDURAS.length; i++) {
+    if (MOLDURAS[i].id === id) return MOLDURAS[i].nome;
+  }
+  return String(idOuNome || '');
+}
+
+/**
+ * O QUE ESCOLHER ESTA CAMPANHA VAI MUDAR — em frases, para a tela mostrar ANTES.
+ *
+ * ⚠ ISTO NÃO É TEXTO DECORATIVO: é o que transforma a confirmação em decisão.
+ * "Tem certeza?" sem dizer o que muda é um botão que todo mundo aperta no
+ * automático. "Isto faz a Mochila de todas as fichas contar em quantum" é uma
+ * frase que faz alguém parar.
+ *
+ * Sai da própria declaração da moldura, e não de uma lista escrita à mão aqui:
+ * moldura que ganhar mecânica nova aparece sozinha nesta conversa.
+ */
+function oQueAMolduraMuda_(idOuNome) {
+  const saida = [];
+  /*
+   * ⚠ ACEITA NOME OU ID, como `definirMoldura` sempre aceitou ("Festim das
+   * Feras" ou "festim-das-feras"). Foi o teste que cobrou: a primeira versão
+   * procurava só pelo id e devolvia uma lista VAZIA quando a tela mandava o
+   * nome — ou seja, a confirmação apareceria sem dizer o que ia mudar, que é
+   * justamente a parte que faz alguém parar para pensar.
+   */
+  const id = idDaMoldura_(idOuNome);
+  if (!id || typeof MECANICAS_DE_MOLDURA === 'undefined') return saida;
+  const lista = MECANICAS_DE_MOLDURA[id] || [];
+  for (let i = 0; i < lista.length; i++) {
+    const mec = lista[i] || {};
+    const a = mec.automacao || {};
+    if (a.contador) {
+      saida.push(mec.nome + ': o dano Severo passa a pôr marcador na ficha, e o marcador pode virar cicatriz.');
+    }
+    if (a.danoAdicionalPorCicatriz) {
+      saida.push(mec.nome + ': cada cicatriz passa a somar dano em todas as fichas.');
+    }
+    if (a.ultimaCicatriz) {
+      saida.push(mec.nome + ': a ÚLTIMA cicatriz deixa de aposentar a personagem — ela sucumbe.');
+    }
+    if (a.danoAdicionalPorNivel) {
+      saida.push((a.nomeDoBonus || mec.nome) + ': todas as fichas somam o nível na jogada de dano.');
+    }
+    if (a.rotuloDanoMagico) {
+      saida.push(mec.nome + ': o dano mágico passa a se chamar ' + a.rotuloDanoMagico.nome + '.');
+    }
+    if (a.moeda && a.moeda.substituiOuro) {
+      saida.push(mec.nome + ': a Mochila de todas as fichas passa a contar em ' +
+        a.moeda.nome + ' (mesmo valor, outra unidade), e quem nascer na campanha começa com ' +
+        a.moeda.inicialNaCriacao + '.');
+    }
+    if (a.exigeParaMovimentosDeDescanso) {
+      saida.push(mec.nome + ': ' + a.exigeParaMovimentosDeDescanso.recusa);
+    }
+    if (a.aposDescanso) {
+      saida.push(mec.nome + ': o descanso do grupo passa a pedir uma jogada quando for fora de abrigo.');
+    }
+    if (a.movimentoDeDescanso) {
+      saida.push(mec.nome + ': entra um movimento de descanso a mais para todo mundo.');
+    }
+    if (a.fichaDeCampanha) {
+      saida.push(mec.nome + ': a ficha de campanha aparece no painel do Mestre.');
+    }
+  }
+  if (typeof MOLDURAS !== 'undefined') {
+    for (let i = 0; i < MOLDURAS.length; i++) {
+      if (MOLDURAS[i].id !== id) continue;
+      if (MOLDURAS[i].substituiEquipamentoInicial) {
+        saida.push('A criação de ficha passa a oferecer SÓ as tabelas de equipamento desta campanha.');
+      } else if ((MOLDURAS[i].itens || []).length) {
+        saida.push('A criação de ficha ganha as tabelas de equipamento desta campanha, além das do Capítulo 2.');
+      }
+    }
+  }
+  return saida;
+}
+
+/** O nome que a moldura dá ao dano mágico, ou null quando ela não renomeia. */
+function rotuloDeDanoMagicoDaMoldura_(m) {
+  if (typeof mecanicasDaMolduraDaMesa_ !== 'function') return null;
+  const lista = mecanicasDaMolduraDaMesa_(String((m || {}).moldura || ''));
+  for (let i = 0; i < lista.length; i++) {
+    const r = ((lista[i] || {}).automacao || {}).rotuloDanoMagico;
+    if (r && r.nome) {
+      return { nome: String(r.nome), abreviacao: String(r.abreviacao || ''),
+               nota: String(r.nota || '') };
+    }
+  }
+  return null;
+}
+
+function perguntaDeDanoDaMoldura_(m) {
+  if (typeof mecanicasDaMolduraDaMesa_ !== 'function') return null;
+  const lista = mecanicasDaMolduraDaMesa_(String((m || {}).moldura || ''));
+  for (let i = 0; i < lista.length; i++) {
+    const mec = lista[i] || {};
+    const gatilho = (mec.automacao || {}).gatilho || {};
+    if (chaveTexto_(gatilho.tipo) !== 'dano') continue;
+    if (gatilho.exigeFonteCorrompida !== true) continue;
+    return {
+      id: mec.id,
+      nome: mec.nome,
+      rotulo: 'O dano veio de um adversário ou ambiente Corrompido',
+      ajuda: 'Só vale para dano Severo. O marcador entra e o app pede o Dado de Medo.'
+    };
+  }
+  return null;
+}
+
 function prepararContextoDoGrupoParaDescanso_(meuId) {
   const ctx = contextoDoGrupoParaDescanso_(meuId === undefined ? null : meuId);
   if (typeof definirCaracteristicasDoGrupoNoDescanso_ === 'function') {
@@ -292,7 +506,35 @@ function executar_(p) {
            * valendo, porque ver "4 PV" sem nunca ter ouvido falar da regra é
            * exatamente o que fazia a mesa parar no meio do combate.
            */
-          danoMassivo: danoMassivoNaMesa_(m)
+          danoMassivo: danoMassivoNaMesa_(m),
+          /*
+           * E a MOLDURA, quando ela tem regra que a janela de dano precisa
+           * perguntar. Hoje é uma só: a Corrupção do Surto Selvagem, que só
+           * dispara se a mesa disser que a fonte do dano era Corrompida —
+           * "Corrompido" é um tipo que o Mestre dá ao adversário na hora, e não
+           * existe nada na ficha do jogador de onde deduzir isso.
+           *
+           * Vem nomeada, e não como um booleano: a caixa na janela de dano
+           * escreve o nome da mecânica, para quem nunca leu o capítulo entender
+           * o que está marcando.
+           */
+          molduraDoDano: perguntaDeDanoDaMoldura_(m),
+          /*
+           * O dano mágico muda de NOME em Placa-mãe: lá ele se chama
+           * tecnológico (tec). ⚠ É só o nome — mesmos limiares, mesmas
+           * resistências, mesmas reações. Mandar o rótulo pronto daqui evita
+           * que a tela tenha de conhecer a moldura para saber como chamar a
+           * coisa; se a mesa não está nesse cenário, não vem nada e a janela de
+           * dano continua dizendo "Mágico".
+           */
+          rotuloDanoMagico: rotuloDeDanoMagicoDaMoldura_(m),
+          /*
+           * A MOEDA DA CAMPANHA, quando ela troca o ouro. A Mochila precisa
+           * saber como CHAMAR o que está contando — "quantum", não "moedas" —,
+           * e é só isso: o valor guardado na ficha é o mesmo, na mesma escada.
+           */
+          moedaDaMesa: (typeof moedaDaMolduraDaMesa_ === 'function')
+            ? moedaDaMolduraDaMesa_(String(m.moldura || '')) : null
         });
       }
 
@@ -736,6 +978,16 @@ function executar_(p) {
             return { id: id, nome: TRANSFORMACOES[id].nome };
           }),
           molduras: MOLDURAS,
+          /*
+           * O CONTEÚDO da moldura escolhida, e só dela.
+           *
+           * ⚠ MANDAR `MOLDURAS_CONTEUDO` INTEIRO SERIA MANDAR O CAPÍTULO 5 a
+           * cada abertura do painel — oito páginas por moldura, em toda
+           * chamada, para mostrar uma. O painel abre muitas vezes por sessão; a
+           * moldura muda uma vez por campanha.
+           */
+          molduraEscolhida: (m.moldura && typeof MOLDURAS_CONTEUDO !== 'undefined')
+            ? (MOLDURAS_CONTEUDO[m.moldura] || null) : null,
           medoSugeridoNoInicio: medoInicial_(fichas.length),
           // o bestiário: só os TIPOS e a conta do Guia de Batalha. As 129 fichas
           // vêm de data/adversarios.json, servido estático pelo GitHub Pages.
@@ -843,40 +1095,127 @@ function executar_(p) {
       }
 
       /**
-       * A MOLDURA de campanha da mesa (livro, capítulo 5).
+       * ESCOLHER A CAMPANHA — com confirmação, e com trava depois.
        *
-       * É do Mestre, não do personagem: é ela que decide se os PCs tiram o
-       * equipamento inicial das tabelas do Capítulo 2 ou das da moldura. Mandar
-       * vazio tira a moldura.
+       * ⚠ ESTA AÇÃO MUDA TODAS AS FICHAS DA MESA DE UMA VEZ. Não é exagero:
+       * a Placa-mãe troca a MOEDA que toda Mochila conta; o Surto Selvagem faz
+       * o dano Severo pôr marcador de Corrupção e gastar cicatriz; a Era da
+       * Umbra muda o que acontece na ÚLTIMA cicatriz de um personagem e soma
+       * dano por cicatriz em todo mundo.
+       *
+       * Por isso são duas barreiras, e elas protegem de coisas diferentes:
+       *
+       * 1. `confirmado` — contra o toque errado. Quem escolhe precisa dizer que
+       *    escolheu. A tela mostra ANTES o que vai mudar, e o servidor recusa
+       *    sem a confirmação: uma tela velha, um clique de leve no select ou um
+       *    duplo toque não passam.
+       * 2. A TRAVA — contra a troca no meio do caminho. Escolhida a campanha,
+       *    ela não muda mais por este caminho. Trocar exige reiniciar de
+       *    propósito, em `reiniciarMoldura`, que é outro botão com outra
+       *    confirmação.
+       *
+       * ⚠ A TRAVA NÃO É SEGURANÇA CONTRA NINGUÉM — é contra o engano. Quem
+       * pode escolher continua sendo só o Mestre, como sempre foi.
        */
       case 'definirMoldura': {
         const mestre = exigirMestre_(p.token);
         return comTrava_(function () {
           const m = mesaLer_();
           const antes = m.moldura || '';
-          m.moldura = String(p.moldura || '');
-          mesaGravar_(m);   // normalizarMesa_ recusa id que não existe
+
+          if (antes && m.molduraTravada !== false) {
+            throw erroApi_(ERRO.DADOS_INVALIDOS,
+              'A campanha "' + nomeDaMoldura_(antes) + '" está em andamento e travada. ' +
+              'Para trocar, reinicie a campanha primeiro.',
+              { travada: true, moldura: antes, desde: m.molduraDesde || '' });
+          }
+
+          const pedida = String(p.moldura || '');
+          if (pedida && p.confirmado !== true) {
+            throw erroApi_(ERRO.DADOS_INVALIDOS,
+              'Escolher uma campanha muda regra em todas as fichas da mesa. Confirme para continuar.',
+              { precisaConfirmar: true, moldura: pedida, mudancas: oQueAMolduraMuda_(pedida) });
+          }
+
+          m.moldura = pedida;
+          m.molduraDesde = '';       // normalizarMesa_ carimba a hora
+          m.molduraTravada = true;
+          mesaGravar_(m);            // normalizarMesa_ recusa id que não existe
           const escolhida = mesaLer_().moldura;
-          if (p.moldura && !escolhida) {
-            throw erroApi_(ERRO.DADOS_INVALIDOS, 'Moldura de campanha desconhecida: "' + String(p.moldura) + '".');
+          if (pedida && !escolhida) {
+            throw erroApi_(ERRO.DADOS_INVALIDOS, 'Moldura de campanha desconhecida: "' + pedida + '".');
           }
           registrarLog_(mestre, 'moldura', escolhida || '(nenhuma)');
-          return ok_({ antes: antes, depois: escolhida, mesa: mesaLer_() });
+          return ok_({ antes: antes, depois: escolhida, travada: Boolean(escolhida),
+                       mudancas: oQueAMolduraMuda_(escolhida), mesa: mesaLer_() });
+        });
+      }
+
+      /**
+       * REINICIAR A CAMPANHA — o único caminho para sair de uma moldura.
+       *
+       * ⚠ SAIR NÃO DESFAZ O QUE ACONTECEU NA MESA, e a resposta diz isso com
+       * todas as letras. As cicatrizes que a Corrupção deu continuam lá; o
+       * dinheiro volta a se chamar ouro mas é o mesmo valor; os marcadores de
+       * Corrupção somem porque o contador deixa de ser das fichas. Prometer um
+       * "desfazer" seria mentira: metade do que a campanha fez é história.
+       */
+      case 'reiniciarMoldura': {
+        const mestre = exigirMestre_(p.token);
+        return comTrava_(function () {
+          const m = mesaLer_();
+          const antes = m.moldura || '';
+          if (!antes) {
+            throw erroApi_(ERRO.DADOS_INVALIDOS, 'A mesa não está em nenhuma campanha.');
+          }
+          if (p.confirmado !== true) {
+            throw erroApi_(ERRO.DADOS_INVALIDOS,
+              'Reiniciar tira a campanha "' + nomeDaMoldura_(antes) + '" da mesa e destrava a escolha. ' +
+              'Confirme para continuar.',
+              { precisaConfirmar: true, moldura: antes, desde: m.molduraDesde || '',
+                mudancas: oQueAMolduraMuda_(antes) });
+          }
+          m.moldura = '';
+          m.molduraTravada = false;
+          m.molduraDesde = '';
+          mesaGravar_(m);
+          registrarLog_(mestre, 'moldura-reiniciada', antes);
+          return ok_({
+            antes: antes, depois: '', travada: false,
+            aviso: 'A campanha saiu da mesa e a escolha está destravada. ⚠ O que ela já fez ' +
+              'continua nas fichas: cicatrizes não voltam, e o dinheiro volta a se chamar ouro ' +
+              'com o mesmo valor que tinha.',
+            mesa: mesaLer_()
+          });
         });
       }
 
       /** A moldura da mesa, para a CRIAÇÃO de ficha saber que tabelas oferecer. */
       case 'molduraDaMesa': {
-        exigirSessao_(p.token);
+        const jogador = exigirSessao_(p.token);
         const m = mesaLer_();
         const escolhida = m.moldura
           ? MOLDURAS.filter(function (x) { return x.id === m.moldura; })[0] || null
           : null;
+        /*
+         * ⚠ OS ESPAÇOS DE APRIMORAMENTO SÃO CONTA DO SERVIDOR, e por isso `id`
+         * entrou aqui. A ikonis da Placa-mãe "começa com dois espaços no 1º
+         * patamar e ganha um a cada patamar seguinte" — uma conta simples, que
+         * é exatamente por isso que ela não pode morar na tela: regra simples
+         * escrita na tela é regra que um dia discorda do servidor, e ninguém
+         * descobre porque ninguém testa a tela.
+         *
+         * Sem `id` a resposta é a de sempre. Com `id`, vem também o que aquela
+         * ficha, no patamar dela, tem direito.
+         */
         return ok_({
           moldura: escolhida,
+          travada: Boolean(m.moldura) && m.molduraTravada !== false,
+          desde: String(m.molduraDesde || ''),
           equipamento: escolhida
             ? EQUIPAMENTO_CAMPANHA.filter(function (e) { return escolhida.itens.indexOf(e.id) !== -1; })
-            : []
+            : [],
+          aprimoramentos: p.id ? aprimoramentosDaFicha_(obterPersonagem_(jogador, p.id).ficha) : null
         });
       }
 
@@ -1237,12 +1576,27 @@ function executar_(p) {
         return ok_({ previa: previaDoDescansoDaMesa_(mesaLer_(), p.tipo, p.escolhas) });
       }
 
+      /**
+       * O descanso DA MESA — e, com a Era da Umbra, a escuridão à espreita.
+       *
+       * ⚠ A ESPERANÇA DA FAIXA 12 VAI PARA AS FICHAS, e por isso este caso
+       * deixou de ser só "grava a mesa". "O grupo encontra um bom presságio:
+       * cada personagem ganha 1 Ponto de Esperança" é a única linha da tabela
+       * que sai da mesa e entra em ficha — e sai para TODAS de uma vez, dentro
+       * da mesma trava, como o conserto do Armadureiro e a colheita da
+       * Corrupção. Deixar para cada jogador marcar à mão seria exatamente o
+       * tipo de "lembra de anotar" que este app existe para acabar.
+       */
       case 'aplicarDescansoDaMesa': {
         exigirMestre_(p.token);
         return comTrava_(function () {
           const r = aplicarDescansoDaMesa_(mesaLer_(), p.tipo, p.escolhas);
+          const presente = Math.max(0, Math.trunc(Number(
+            ((r.previa || {}).escuridaoAEspreita || {}).esperancaPorPersonagem)) || 0);
+          const agraciados = presente ? darEsperancaATodasAsFichas_(presente) : [];
           mesaGravar_(r.mesa);
-          return ok_({ resultado: r.previa, mesa: r.mesa });
+          if (agraciados.length) r.previa.esperancaDada = agraciados;
+          return ok_({ resultado: r.previa, mesa: r.mesa, esperancaDada: agraciados });
         });
       }
 
@@ -1313,14 +1667,44 @@ function executar_(p) {
         });
       }
 
+      /**
+       * ENCERRAR A SESSÃO — e, com o Surto Selvagem na mesa, COLHER a Corrupção.
+       *
+       * ⚠ ISTO NÃO PODIA FICAR NO CAMINHO PREGUIÇOSO. Todo o resto do fim de
+       * sessão é aplicado por cada ficha sozinha, quando o jogador abre o app e
+       * percebe que a mesa virou de sessão — `ajustarSessaoDaFicha_`. Para
+       * zerar um marcador isso basta, porque ninguém precisa saber quanto havia.
+       *
+       * A Corrupção precisa: "no fim de cada sessão, os marcadores não usados
+       * são perdidos e o Mestre recebe uma quantidade equivalente de Pontos de
+       * Medo". Contar é o efeito. Se cada ficha limpasse a sua por conta, o
+       * Medo chegaria em pedaços, dias depois, na sessão seguinte — e a ficha de
+       * quem não abrisse o app nunca entregaria nada.
+       *
+       * Por isso o contador da moldura zera no gatilho `fim-de-sessao-do-mestre`,
+       * que SÓ acontece aqui: uma varredura, dentro da mesma trava, que soma,
+       * limpa as fichas e devolve o Medo de uma vez. É o mesmo desenho do
+       * descanso que escreve em N fichas aliadas.
+       */
       case 'encerrarSessaoDaMesa': {
         const jogador = exigirMestre_(p.token);
         return comTrava_(function () {
           const m = mesaLer_();
+          const colheita = colherContadoresDeFimDeSessao_(m);
           const r = encerrarSessaoDaMesa_(m);
+          if (colheita.medoGanho > 0) {
+            const antes = m.medo;
+            m.medo = Math.max(0, Math.min(MEDO_MAXIMO, antes + colheita.medoGanho));
+            colheita.medoAntes = antes;
+            colheita.medoDepois = m.medo;
+            colheita.medoPerdidoNoTeto = colheita.medoGanho - (m.medo - antes);
+            r.medo = m.medo;
+            r.nota = 'O Medo fica em ' + m.medo + ' para a próxima sessão (p.154).';
+          }
           mesaGravar_(m);
-          registrarLog_(jogador, 'sessao-encerrada', 'Sessão ' + r.numero + ' · Medo ' + r.medo);
-          return ok_({ sessao: r, mesa: m });
+          registrarLog_(jogador, 'sessao-encerrada', 'Sessão ' + r.numero + ' · Medo ' + r.medo +
+            (colheita.medoGanho ? ' · +' + colheita.medoGanho + ' de ' + colheita.rotulo : ''));
+          return ok_({ sessao: r, mesa: m, colheitaDeMoldura: colheita.fichas.length ? colheita : null });
         });
       }
 

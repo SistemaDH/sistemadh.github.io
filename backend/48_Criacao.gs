@@ -911,6 +911,66 @@ function bonusDeDanoDaFicha_(ficha) {
     });
   }
 
+  /*
+   * O DANO QUE VEM DA CAMPANHA — hoje só a Era da Umbra.
+   *
+   * > "Conforme recebem cicatrizes, os personagens também são corrompidos pela
+   * > Umbra aos pouco: todos os personagens dos jogadores causam dano adicional
+   * > igual à quantidade de cicatrizes que têm." (livro p.288)
+   *
+   * ⚠ NÃO É CONDICIONAL, e é por isso que entra em caracteristicasFixas: não
+   * depende de alcance, de alvo nem de a jogada ter passado. É um número que a
+   * ficha tem, como o Treinamento de Combate do Guerreiro — e quem joga a Era
+   * da Umbra precisa vê-lo somado na linha da arma, não escondido atrás de uma
+   * condição que nunca deixa de valer.
+   *
+   * ⚠ E ELE SOBE SOZINHO. A cicatriz já apaga um espaço de Esperança em
+   * derivarRecursos_; aqui ela passa a PAGAR alguma coisa também. É a troca
+   * que a moldura faz: cada cicatriz te deixa mais perto da Umbra, e mais
+   * perigoso.
+   */
+  const cicatrizesDaFicha = Array.isArray((ficha || {}).cicatrizes) ? ficha.cicatrizes.length : 0;
+  if (typeof mecanicasDaMolduraDaMesa_ === 'function') {
+    const daMoldura = mecanicasDaMolduraDaMesa_();
+    for (let i = 0; i < daMoldura.length; i++) {
+      const auto = (daMoldura[i] || {}).automacao || {};
+
+      const porCicatriz = Math.max(0, Math.trunc(Number(auto.danoAdicionalPorCicatriz)) || 0);
+      if (porCicatriz && cicatrizesDaFicha > 0) {
+        saida.caracteristicasFixas.push({
+          fonte: daMoldura[i].nome,
+          tipo: 'fixo',
+          valor: cicatrizesDaFicha * porCicatriz,
+          aplicaEm: 'jogada-de-dano',
+          motivo: cicatrizesDaFicha + ' cicatriz' + (cicatrizesDaFicha === 1 ? '' : 'es')
+        });
+      }
+
+      /*
+       * LIGAÇÃO, a habilidade que toda ikonis da Placa-mãe tem de nascença:
+       * "você recebe um bônus em jogadas de dano igual ao seu nível".
+       *
+       * ⚠ ELA É DA MOLDURA, E NÃO DE UMA ARMA DO CATÁLOGO, porque neste cenário
+       * a arma principal NÃO vem do catálogo: cada personagem tem a sua ikonis,
+       * montada na ficha módulo do livro e escrita à mão no espaço de arma
+       * principal. Pendurar o bônus numa arma exigiria que o app soubesse
+       * montar a ikonis — o que ele ainda não faz — e até lá a Ligação
+       * simplesmente não existiria para ninguém. Todo mundo tem uma ikonis;
+       * o bônus é de todos.
+       */
+      const porNivel = Math.max(0, Math.trunc(Number(auto.danoAdicionalPorNivel)) || 0);
+      if (porNivel) {
+        saida.caracteristicasFixas.push({
+          fonte: auto.nomeDoBonus || daMoldura[i].nome,
+          tipo: 'fixo',
+          valor: nivel * porNivel,
+          aplicaEm: 'jogada-de-dano',
+          motivo: 'nível ' + nivel
+        });
+      }
+    }
+  }
+
   if (tem('Treinamento de Combate')) {
     saida.guerreiroFisico = {
       fonte: 'Treinamento de Combate',
@@ -1595,7 +1655,18 @@ function fichaRapida_(escolhas) {
     ? escolhas.itensEscolhidos : escolhasPadraoDoGuia_(guia);
   for (let i = 0; i < extras.length; i++) ficha.inventario.push(String(extras[i]));
 
-  ficha.ouro = { punhados: CRIACAO.ouroInicial.punhados, bolsas: 0, cofres: 0 };
+  /*
+   * O OURO INICIAL — e a moldura pode trocá-lo por outra moeda.
+   *
+   * O livro dá 1 punhado no começo. Em Placa-mãe "todos os personagens começam
+   * com 5 quantum", e 5 quantum não são 5 punhados: 1 quantum é 1 moeda na
+   * escada do ouro, então são 5 moedas — metade de um punhado. Escrever "5" no
+   * campo errado daria à mesa dez vezes o dinheiro que o livro manda.
+   */
+  const moedaDaCampanha = (typeof moedaDaMolduraDaMesa_ === 'function') ? moedaDaMolduraDaMesa_() : null;
+  ficha.ouro = (moedaDaCampanha && moedaDaCampanha.inicialNaCriacao)
+    ? { moedas: moedaDaCampanha.inicialNaCriacao, punhados: 0, bolsas: 0, cofres: 0 }
+    : { punhados: CRIACAO.ouroInicial.punhados, bolsas: 0, cofres: 0 };
 
   ficha.origem = {
     ancestralidadeMista: Array.isArray(escolhas.ancestralidadeMista) ? escolhas.ancestralidadeMista : [],

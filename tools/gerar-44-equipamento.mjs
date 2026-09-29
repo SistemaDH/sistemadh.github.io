@@ -10,6 +10,20 @@ import { fileURLToPath } from 'node:url';
 
 const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/equipamentos.json'), 'utf8'));
+/*
+ * ⚠ A LISTA DE MOLDURAS É UMA SÓ, E ELA VIVE EM DOIS ARQUIVOS DE PROPÓSITO.
+ *
+ * `data/equipamentos.json` tem o EQUIPAMENTO exclusivo de cada moldura;
+ * `data/molduras.json` tem o CONTEÚDO dela — proposta, princípios, perguntas de
+ * sessão zero e as mecânicas específicas. São assuntos diferentes, e juntar
+ * tudo num arquivo só faria o catálogo de equipamento carregar oito páginas de
+ * prosa a cada leitura.
+ *
+ * O que NÃO pode acontecer é uma moldura existir de um lado e não do outro: aí
+ * seriam duas listas, e duas listas discordam no primeiro dia em que alguém
+ * corrigir uma só. Por isso a conferência abaixo ESTOURA antes de escrever.
+ */
+const conteudoMolduras = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/molduras.json'), 'utf8'));
 
 const j = (v) => JSON.stringify(v);
 
@@ -198,14 +212,50 @@ L.push('];\n');
  * O que continua separado é a LISTA por moldura, para a criação de ficha poder
  * oferecer só as tabelas da moldura da mesa.
  */
-L.push('/** As molduras de campanha e o equipamento de cada uma. */');
+const porIdDeConteudo = new Map((conteudoMolduras.molduras || []).map((m) => [m.id, m]));
+const idsDoEquipamento = (d.campanhas || []).map((m) => m.id);
+const soNoConteudo = [...porIdDeConteudo.keys()].filter((id) => !idsDoEquipamento.includes(id));
+if (soNoConteudo.length) {
+  throw new Error('moldura em data/molduras.json que não existe em data/equipamentos.json: ' +
+    soNoConteudo.join(', ') + ' — a lista de molduras é uma só.');
+}
+const semConteudo = idsDoEquipamento.filter((id) => !porIdDeConteudo.has(id));
+
+L.push(`/**
+ * As molduras de campanha: equipamento exclusivo e conteúdo, lado a lado.
+ *
+ * ⚠ ${semConteudo.length} das ${idsDoEquipamento.length} ainda não têm conteúdo em data/molduras.json
+ * (${semConteudo.join(', ') || 'nenhuma'}). Elas continuam selecionáveis e continuam
+ * oferecendo as tabelas de equipamento delas — só não têm texto nem mecânica
+ * própria ligada ainda. Isto é PONTO DE INTERESSE, não defeito: as molduras
+ * entram uma por vez, com a regra conferida na fonte antes.
+ */`);
 L.push('const MOLDURAS = [');
 for (const m of (d.campanhas || [])) {
+  const c = porIdDeConteudo.get(m.id) || null;
   L.push(`  ${j({ id: m.id, nome: m.nome, regra: m.regra || '',
                   substituiEquipamentoInicial: Boolean(m.substituiEquipamentoInicial),
+                  paginasLivro: m.paginasLivro || (c && c.paginasLivro) || '',
+                  temConteudo: Boolean(c),
                   itens: m.itens.map((i) => i.id) })},`);
 }
 L.push('];\n');
+
+L.push(`/** O conteúdo das molduras que já foram lidas na fonte: ${porIdDeConteudo.size} de ${idsDoEquipamento.length}. */`);
+L.push('const MOLDURAS_CONTEUDO = {');
+for (const m of (conteudoMolduras.molduras || [])) {
+  L.push(`  ${j(m.id)}: ${j(m)},`);
+}
+L.push('};\n');
+
+L.push('/** As mecânicas de moldura que o servidor sabe aplicar, por id de moldura. */');
+L.push('const MECANICAS_DE_MOLDURA = {');
+for (const m of (conteudoMolduras.molduras || [])) {
+  const comAutomacao = (m.mecanicas || []).filter((x) => x.automacao);
+  if (!comAutomacao.length) continue;
+  L.push(`  ${j(m.id)}: ${j(comAutomacao.map((x) => ({ id: x.id, nome: x.nome, automacao: x.automacao })))},`);
+}
+L.push('};\n');
 
 L.push('/** Equipamento exclusivo das molduras de campanha. */');
 L.push('const EQUIPAMENTO_CAMPANHA = [');

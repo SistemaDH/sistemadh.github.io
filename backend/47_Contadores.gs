@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 200 cartas e características mandam
+ *  O problema que este arquivo resolve: 201 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -35,7 +35,8 @@ const CONTADOR_GATILHOS = {
   "descanso": "Em qualquer descanso, curto ou longo.",
   "fim-da-cena": "Quando a cena termina (ou quando o efeito descrito na carta acaba).",
   "troca-de-alvo": "Quando o efeito é apontado para outro alvo.",
-  "manual": "Só quando o texto da carta mandar — o app não zera sozinho."
+  "manual": "Só quando o texto da carta mandar — o app não zera sozinho.",
+  "fim-de-sessao-do-mestre": "Quando o MESTRE encerra a sessão no painel. ⚠ Diferente de \"fim-de-sessao\": aquele cada ficha aplica sozinha ao abrir, e por isso ninguém conta o que foi apagado. Este existe para o que precisa ser CONTADO antes de sumir — os marcadores de Corrupção viram Pontos de Medo do Mestre, e um marcador limpo por conta própria seria Medo que a mesa nunca recebeu."
 };
 
 /** Catálogo: chave -> definição. */
@@ -240,6 +241,7 @@ const CONTADORES = {
   "uso:loot:loot-srd2-travelers-bell": { origem: "loot", refId: "loot-srd2-travelers-bell", nome: "Sino do viajante", rotulo: "toque gasto", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["descanso-longo"], recarregaEm: [] },
   "uso:loot:loot-srd2-phobophages-circlet": { origem: "loot", refId: "loot-srd2-phobophages-circlet", nome: "Diadema do fagófobo", rotulo: "limpeza usada", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-da-cena"], recarregaEm: [] },
   "estado:consumivel:consumivel-58": { origem: "consumivel", refId: "consumivel-58", nome: "Chá da Morte", rotulo: "prazo aceso", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: [], recarregaEm: [], prazoNoDescansoLongo: {"consequencia":"Pelo Chá da Morte, o personagem morre: o sucesso crítico não veio antes deste descanso longo.","saida":"Se o sucesso crítico veio, apague o marcador do Chá da Morte antes de concluir o descanso."} },
+  "moldura:o-surto-selvagem:corrupcao": { origem: "moldura", refId: "o-surto-selvagem", nome: "Corrupção do Surto Selvagem", rotulo: "marcadores de Corrupção", tipo: "marcadores", maximo: {"tipo":"fixo","valor":20}, zeraEm: ["fim-de-sessao-do-mestre"], recarregaEm: [] },
 };
 
 /** Nomes alternativos dos dados nomeados (Rally Die, Slayer Dice...). */
@@ -444,6 +446,7 @@ const CONTADOR_ALIASES = {
   "uso:loot:loot-srd2-travelers-bell": ["Sino do viajante"],
   "uso:loot:loot-srd2-phobophages-circlet": ["Diadema do fagófobo"],
   "estado:consumivel:consumivel-58": ["Chá da Morte"],
+  "moldura:o-surto-selvagem:corrupcao": ["Corrupção do Surto Selvagem"],
 };
 
 /** Índice inverso: id da carta/classe -> chaves de contador. */
@@ -940,6 +943,22 @@ function refsDeContadorDaFicha_(ficha) {
     if (!item || typeof item !== 'object') return;
     por(item.id); por(item.nome);
   });
+
+  /*
+   * ⚠ A MOLDURA DA MESA TAMBÉM É DONA DE CONTADOR, e ela não está na ficha.
+   *
+   * Tudo o que entra em "refs" acima vem de dentro da ficha — carta, classe,
+   * ancestralidade, comunidade. A Corrupção do Surto Selvagem não: quem decide
+   * se ela existe é a MESA, no painel do Mestre, e a ficha não guarda nada que
+   * diga qual campanha está sendo jogada.
+   *
+   * Sem esta linha o contador da moldura seria órfão em toda ficha: nunca
+   * entraria pelo gatilho, e contadorEDaFicha_ só o reconheceria depois de
+   * alguém já ter gravado um valor nele. Com ela, trocar a moldura no painel
+   * tira a Corrupção de todas as fichas no mesmo instante — que é o que se
+   * espera de uma regra que é da campanha, não do personagem.
+   */
+  if (typeof molduraDaMesa_ === 'function') por(molduraDaMesa_());
 
   return refs;
 }

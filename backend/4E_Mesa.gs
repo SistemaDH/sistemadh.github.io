@@ -230,6 +230,25 @@ function normalizarMesa_(m) {
     }
   }
   /*
+   * ⚠ A MOLDURA ESCOLHIDA FICA TRANCADA, e isso não é zelo excessivo.
+   *
+   * Enquanto ela só trocava as tabelas de equipamento da criação, trocar de
+   * cenário no meio da campanha era um engano sem consequência. Hoje não é:
+   * escolher a Placa-mãe muda a MOEDA que toda ficha conta; escolher o Surto
+   * Selvagem faz o dano Severo pôr marcador e gastar cicatriz; escolher a Era
+   * da Umbra muda o que acontece na ÚLTIMA cicatriz de um personagem.
+   *
+   * Um toque errado num select, no meio de uma sessão, mudaria todas as fichas
+   * da mesa de uma vez — e ninguém perceberia na hora. A trava não impede
+   * trocar: impede trocar SEM QUERER. Para trocar, o Mestre reinicia a campanha
+   * de propósito, num caminho separado.
+   *
+   * `desde` guarda quando foi escolhida, porque "há quanto tempo estamos nesta
+   * campanha" é a pergunta que decide se a troca é engano ou decisão.
+   */
+  m.molduraTravada = Boolean(m.moldura) && m.molduraTravada !== false;
+  m.molduraDesde = m.moldura ? String(m.molduraDesde || agoraIso_()) : '';
+  /*
    * O ENCONTRO em jogo mora aqui do lado das contagens, pelo mesmo motivo:
    * é do GRUPO, não de um jogador, e ninguém quer perder a trilha de PV do
    * dragão porque o app fechou. A regra fica em 4G_Encontro.gs; aqui só
@@ -308,9 +327,91 @@ function publicarRecadoNaMesa_(m, recado) {
   return novo;
 }
 
-/** A mesa está usando a regra opcional das moedas? */
+/**
+ * QUAL MOLDURA DE CAMPANHA A MESA ESTÁ JOGANDO — a pergunta, com um dono só.
+ *
+ * ⚠ ELA PASSOU A TER CONSEQUÊNCIA MECÂNICA, e por isso ganhou leitor próprio.
+ * Enquanto a moldura só trocava as tabelas de equipamento da criação, cada
+ * lugar que precisava dela abria a mesa e comparava `m.moldura` na mão. Agora
+ * a moldura LIGA REGRA — a Corrupção do Surto Selvagem põe marcador na ficha,
+ * gasta cicatriz e devolve Medo ao Mestre —, e regra ligada por comparação
+ * solta é como o dano massivo acabou com três leitores e dois padrões.
+ *
+ * Devolve o id, ou '' quando a mesa não escolheu moldura (o caso comum).
+ */
+function molduraDaMesa_() {
+  try {
+    return String(mesaLer_().moldura || '');
+  } catch (e) {
+    return '';
+  }
+}
+
+/**
+ * As mecânicas de moldura que valem AGORA, já filtradas pela moldura da mesa.
+ *
+ * Fora da moldura certa, a lista é vazia — e é isso que faz a Corrupção não
+ * existir para quem não está jogando o Surto Selvagem, sem nenhum `if` de
+ * moldura espalhado pelo motor de dano.
+ */
+function mecanicasDaMolduraDaMesa_(moldura) {
+  const id = (moldura === undefined || moldura === null) ? molduraDaMesa_() : String(moldura || '');
+  if (!id || typeof MECANICAS_DE_MOLDURA === 'undefined') return [];
+  const lista = MECANICAS_DE_MOLDURA[id];
+  return Array.isArray(lista) ? lista : [];
+}
+
+/**
+ * A MOEDA DA MOLDURA — quando a campanha troca o ouro por outra coisa.
+ *
+ * Hoje só a Placa-mãe: "ouro não é usado como moeda neste cenário; em vez
+ * disso, personagens podem coletar sucata e vendê-la em troca de quantum"
+ * (livro p.301).
+ *
+ * ⚠ E A TROCA NÃO MOVE NENHUM NÚMERO — esta é a parte que decidiu o desenho.
+ * A tabela de conversão do livro é 10 quantum = 1 punhado, 100 = 1 bolsa,
+ * 1000 = 1 baú. É EXATAMENTE a escada que o app já usa para a regra opcional
+ * das moedas (10 moedas = 1 punhado). Ou seja: 1 quantum é 1 moeda.
+ *
+ * Então trocar a moeda é trocar o NOME e a granularidade, não o valor. Ninguém
+ * converte nada, nada se perde no arredondamento, ficha antiga não precisa de
+ * migração, e sair da campanha devolve a contagem em ouro sozinho. Uma
+ * conversão de verdade — mexer no `ouro` de toda ficha ao escolher o cenário —
+ * seria um caminho sem volta para ganhar o mesmo resultado.
+ */
+function moedaDaMolduraDaMesa_(moldura) {
+  if (typeof mecanicasDaMolduraDaMesa_ !== 'function') return null;
+  const lista = mecanicasDaMolduraDaMesa_(moldura);
+  for (let i = 0; i < lista.length; i++) {
+    const r = ((lista[i] || {}).automacao || {}).moeda;
+    if (r && r.substituiOuro === true && r.nome) {
+      return {
+        nome: String(r.nome),
+        nomePlural: String(r.nomePlural || r.nome),
+        abreviacao: String(r.abreviacao || ''),
+        inicialNaCriacao: Math.max(0, Math.trunc(Number(r.inicialNaCriacao)) || 0),
+        nota: String(r.nota || '')
+      };
+    }
+  }
+  return null;
+}
+
+/**
+ * A mesa está contando na unidade FINA do ouro?
+ *
+ * Duas coisas ligam isso, e por isso a pergunta tem um dono só: a regra
+ * opcional das moedas do SRD, que o Mestre liga nos Ajustes, e a moldura de
+ * campanha que substitui o ouro por uma moeda cuja menor unidade é essa mesma.
+ *
+ * ⚠ A MOLDURA NÃO "LIGA A REGRA DAS MOEDAS" NA MESA, e a diferença importa: se
+ * ela gravasse `m.ouroComMoedas = true`, sair da campanha deixaria a regra
+ * ligada para trás, e o Mestre teria de descobrir sozinho que precisa
+ * desmarcá-la. Aqui a moldura só RESPONDE que sim enquanto está escolhida.
+ */
 function ouroComMoedas_() {
   try {
+    if (moedaDaMolduraDaMesa_()) return true;
     return Boolean(mesaLer_().ouroComMoedas);
   } catch (e) {
     // Sem mesa legível, vale a regra padrão do livro: sem moedas.
@@ -607,6 +708,84 @@ function avancarPerseguicao_(m, id, resultado) {
  * ------------------------------------------------------------------------ */
 
 /**
+ * A ESCURIDÃO À ESPREITA — a tabela que a Era da Umbra cobra de quem dorme fora.
+ *
+ * > "Quando o grupo termina um descanso curto ou longo fora da área de segurança
+ * > de uma Chama Sagrada, role 1d12 para escuridão à espreita e consulte a
+ * > lista." (livro p.289)
+ *
+ * TRÊS DECISÕES:
+ *
+ * 1. MORA NO DESCANSO DA MESA, e não no da ficha. A jogada é UMA, do grupo, no
+ *    fim do repouso — quem rola é o Mestre. Pendurá-la na ficha faria cada
+ *    jogador rolar a sua e a mesa acordar com quatro escuridões diferentes.
+ *
+ * 2. O APP NÃO ROLA. Como o Medo do próprio descanso, o d12 é pedido. E ele só
+ *    é pedido quando o Mestre DIZ que o descanso foi fora da Chama: dormir
+ *    dentro do alcance dela é o caso normal, e a tabela não acontece.
+ *
+ * 3. O QUE É FICÇÃO FICA COM A MESA. A faixa 1–2 manda um adversário começar um
+ *    conflito; o app escreve a frase e para aí. O que ele aplica são os números:
+ *    o Medo que o Mestre recebe e a Esperança que cada personagem ganha.
+ *
+ * Devolve null quando a moldura da mesa não tem esta mecânica — o caso de seis
+ * das sete.
+ */
+function escuridaoAEspreitaDoDescanso_(m, escolhas, avisos) {
+  if (typeof mecanicasDaMolduraDaMesa_ !== 'function') return null;
+  const lista = mecanicasDaMolduraDaMesa_(String((m || {}).moldura || ''));
+  let regra = null;
+  for (let i = 0; i < lista.length; i++) {
+    const apos = ((lista[i] || {}).automacao || {}).aposDescanso;
+    if (apos && Array.isArray(apos.faixas) && apos.faixas.length) {
+      regra = { nome: lista[i].nome, id: lista[i].id, apos: apos };
+      break;
+    }
+  }
+  if (!regra) return null;
+
+  const e = escolhas || {};
+  const campoFora = String(regra.apos.campo || 'foraDaChamaSagrada');
+  if (e[campoFora] !== true) {
+    return { id: regra.id, nome: regra.nome, pergunta: regra.apos.pergunta,
+             aconteceu: false, precisaDeRolagem: false, medoAoMestre: 0,
+             esperancaPorPersonagem: 0, faixa: null, dado: null };
+  }
+
+  const dadoDef = regra.apos.dado || {};
+  const lados = Math.max(2, Math.trunc(Number(dadoDef.lados)) || 12);
+  const campoDado = String(dadoDef.campo || 'dadoDaEscuridao');
+  const bruto = Math.trunc(Number(e[campoDado]));
+  if (!isFinite(bruto) || bruto < 1 || bruto > lados) {
+    avisos.push(regra.nome + ': role 1d' + lados + ' na mesa e informe o resultado (1 a ' + lados + ').');
+    return { id: regra.id, nome: regra.nome, pergunta: regra.apos.pergunta,
+             aconteceu: true, precisaDeRolagem: true, lados: lados, campo: campoDado,
+             medoAoMestre: 0, esperancaPorPersonagem: 0, faixa: null, dado: null };
+  }
+
+  let faixa = null;
+  for (let i = 0; i < regra.apos.faixas.length; i++) {
+    const f = regra.apos.faixas[i] || {};
+    if (bruto >= Number(f.minimo) && bruto <= Number(f.maximo)) { faixa = f; break; }
+  }
+  if (!faixa) {
+    avisos.push(regra.nome + ': o resultado ' + bruto + ' não cai em nenhuma faixa da tabela.');
+    return { id: regra.id, nome: regra.nome, aconteceu: true, precisaDeRolagem: false,
+             medoAoMestre: 0, esperancaPorPersonagem: 0, faixa: null, dado: bruto };
+  }
+
+  return {
+    id: regra.id, nome: regra.nome, pergunta: regra.apos.pergunta,
+    aconteceu: true, precisaDeRolagem: false, dado: bruto, lados: lados,
+    faixa: { de: Number(faixa.minimo), ate: Number(faixa.maximo), texto: String(faixa.texto || '') },
+    texto: String(faixa.texto || ''),
+    efeitoManual: faixa.efeitoManual === true,
+    medoAoMestre: Math.max(0, Math.trunc(Number(faixa.medoAoMestre)) || 0),
+    esperancaPorPersonagem: Math.max(0, Math.trunc(Number(faixa.esperancaPorPersonagem)) || 0)
+  };
+}
+
+/**
  * O que o descanso do GRUPO faz na mesa: o Medo do Mestre e a contagem de
  * longo prazo.
  *
@@ -653,10 +832,23 @@ function simularDescansoDaMesa_(m, tipo, escolhas) {
       ' = ' + medoGanho;
   }
 
+  /*
+   * A ESCURIDÃO ENTRA ANTES DO TETO, e não depois: o Medo dela é Medo igual ao
+   * do descanso, e os dois juntos é que batem (ou não) nos 12 do livro. Somar
+   * depois do limite faria o segundo ganho sumir sem ninguém ver.
+   */
+  const escuridao = escuridaoAEspreitaDoDescanso_(copia, e, avisos);
+  if (escuridao && escuridao.precisaDeRolagem) precisaDeRolagem = true;
+  const medoDaEscuridao = (escuridao && !escuridao.precisaDeRolagem) ? escuridao.medoAoMestre : 0;
+
   const medoAntes = copia.medo;
-  copia.medo = limitar_(medoAntes + medoGanho, 0, MEDO_MAXIMO);
-  if (medoAntes + medoGanho > MEDO_MAXIMO) {
+  copia.medo = limitar_(medoAntes + medoGanho + medoDaEscuridao, 0, MEDO_MAXIMO);
+  if (medoAntes + medoGanho + medoDaEscuridao > MEDO_MAXIMO) {
     avisos.push('O Medo bateu no teto de ' + MEDO_MAXIMO + ' — o excedente se perde.');
+  }
+  if (medoDaEscuridao) {
+    avisos.push(escuridao.nome + ' (' + escuridao.dado + '): ' + escuridao.texto +
+      ' +' + medoDaEscuridao + ' de Medo.');
   }
 
   /* --- a contagem de longo prazo ---------------------------------------- */
@@ -696,6 +888,7 @@ function simularDescansoDaMesa_(m, tipo, escolhas) {
       quantosPersonagens: quantos,
       contagens: contagens,
       contagemDeLongoPrazo: passos,
+      escuridaoAEspreita: escuridao,
       descansosCurtosSeguidos: { antes: seguidosAntes, depois: seguidosDepois, maximo: MAX_DESCANSOS_CURTOS },
       erros: erros,
       avisos: avisos
@@ -805,6 +998,74 @@ function abrirSessaoDaMesa_(m, quantosPersonagens, esperancaDoGrupo) {
       ? 'Começo de campanha: o Medo entra com 1 por personagem (' + m.medo + '), como manda o livro (p.154).'
       : 'O Medo continua de onde parou — o livro (p.154) manda transferir entre sessões.'
   };
+}
+
+/**
+ * A VARREDURA QUE COLHE OS MARCADORES DE MOLDURA NO FIM DA SESSÃO.
+ *
+ * Passa por todas as fichas ativas da mesa, zera os contadores que a moldura
+ * marcou com `fimDaSessao`, soma quantos havia e diz quanto Medo isso vale.
+ * Quem grava o Medo é quem chamou — aqui só se conta e se limpa, dentro da
+ * trava de quem chamou.
+ *
+ * ⚠ SÓ MEXE NO QUE A MOLDURA DA MESA DECLARA. Fora do Surto Selvagem a lista
+ * de mecânicas é vazia e esta função devolve zero sem abrir ficha nenhuma —
+ * encerrar sessão continua custando o que sempre custou.
+ */
+function colherContadoresDeFimDeSessao_(m) {
+  const vazio = { fichas: [], marcadores: 0, medoGanho: 0, rotulo: '', medoAntes: 0, medoDepois: 0, medoPerdidoNoTeto: 0 };
+  if (typeof mecanicasDaMolduraDaMesa_ !== 'function') return vazio;
+  const mecanicas = mecanicasDaMolduraDaMesa_(String((m || {}).moldura || ''))
+    .filter(function (x) { return ((x || {}).automacao || {}).fimDaSessao; });
+  if (!mecanicas.length) return vazio;
+
+  const saida = { fichas: [], marcadores: 0, medoGanho: 0, rotulo: mecanicas[0].nome,
+                  medoAntes: 0, medoDepois: 0, medoPerdidoNoTeto: 0 };
+  const linhas = (typeof lerTudo_ === 'function') ? (lerTudo_(ABAS.PERSONAGENS) || []) : [];
+
+  for (let i = 0; i < linhas.length; i++) {
+    const linha = linhas[i] || {};
+    const excluido = chaveTexto_(linha.excluido);
+    if (excluido === 'true' || excluido === 'sim' || excluido === '1') continue;
+
+    let ficha = {};
+    try { ficha = JSON.parse(linha.dados || '{}'); } catch (e) { continue; }
+    if (ficha.encerrada) continue;
+
+    let mexeu = 0;
+    mecanicas.forEach(function (mec) {
+      const auto = mec.automacao || {};
+      const chave = String(auto.contador || '');
+      const fim = auto.fimDaSessao || {};
+      if (!chave || fim.zera !== true) return;
+      const atual = Math.max(0, Math.trunc(Number(((ficha.contadores || {})[chave] || {}).valor)) || 0);
+      if (atual <= 0) return;
+      delete ficha.contadores[chave];
+      mexeu += atual;
+      saida.marcadores += atual;
+      saida.medoGanho += atual * Math.max(0, Math.trunc(Number(fim.medoAoMestrePorMarcador)) || 0);
+    });
+
+    if (!mexeu) continue;
+    saida.fichas.push({ id: linha.id, nome: linha.nome, marcadores: mexeu });
+    /*
+     * ⚠ GRAVA PELO MESMO CAMINHO QUE O RESTO DO APP. `alterarFichaDeOutroSemTrava_`
+     * é quem sobe a versão da ficha e respeita o controle otimista — escrever a
+     * coluna `dados` na mão aqui deixaria a versão parada, e o app do jogador
+     * continuaria mostrando os marcadores que já não existem.
+     */
+    if (typeof alterarFichaDeOutroSemTrava_ === 'function') {
+      alterarFichaDeOutroSemTrava_(linha.id, function (fichaAlvo) {
+        mecanicas.forEach(function (mec) {
+          const chave = String((mec.automacao || {}).contador || '');
+          if (chave && fichaAlvo.contadores) delete fichaAlvo.contadores[chave];
+        });
+        // O retorno JÁ É o `extra` — ver alterarFichaDeOutroSemTrava_.
+        return { marcadores: mexeu };
+      });
+    }
+  }
+  return saida;
 }
 
 /**

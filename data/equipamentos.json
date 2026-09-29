@@ -18856,6 +18856,33 @@
           "fonteDoTexto": "Daggerheart: Hope & Fear, p.142 (Reign of the Weredragon)"
         }
       ]
+    },
+    {
+      "id": "o-surto-selvagem",
+      "nome": "O Surto Selvagem",
+      "paginasLivro": "254–261",
+      "substituiEquipamentoInicial": false,
+      "regra": "Esta moldura não traz tabelas de equipamento próprias: as personagens usam as tabelas do Capítulo 2 normalmente. O que ela traz é a Corrupção do Surto Selvagem, que vive em data/molduras.json.",
+      "fonteDoTexto": "Daggerheart: Esperança e Medo (Jambô), Capítulo 5, p. 254–261.",
+      "itens": []
+    },
+    {
+      "id": "era-da-umbra",
+      "nome": "Era da Umbra",
+      "paginasLivro": "280–289",
+      "substituiEquipamentoInicial": false,
+      "regra": "Esta moldura não traz tabelas de equipamento próprias: as personagens usam as tabelas do Capítulo 2. O que ela traz — a corrupção pela Umbra, as Chamas Sagradas, a escuridão à espreita e o movimento Montar Guarda — vive em data/molduras.json.",
+      "fonteDoTexto": "Daggerheart: Esperança e Medo (Jambô), Capítulo 5, p. 280–289.",
+      "itens": []
+    },
+    {
+      "id": "cinco-estandartes-em-chamas",
+      "nome": "Cinco Estandartes em Chamas",
+      "paginasLivro": "262–269",
+      "substituiEquipamentoInicial": false,
+      "regra": "Esta moldura não traz tabelas de equipamento próprias. O que ela traz — as relações políticas entre as cinco nações de Althas — vive em data/molduras.json e aparece no painel do Mestre.",
+      "fonteDoTexto": "Daggerheart: Esperança e Medo (Jambô), Capítulo 5, p. 262–269.",
+      "itens": []
     }
   ],
   "ouro": {
