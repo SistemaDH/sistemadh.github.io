@@ -2643,8 +2643,8 @@
           "caracteristicaConjuracao": "Agilidade",
           "cartas": {
             "fundacao": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Guilda dos Executores.png",
+              "imagem": "assets/cartas/subclasses/ASSASSINO/Guilda dos Executores.png",
               "caracteristicas": [
                 {
                   "nomeIngles": "First Strike",
@@ -2674,8 +2674,8 @@
               }
             },
             "especializacao": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Guilda dos Executores(1).png",
+              "imagem": "assets/cartas/subclasses/ASSASSINO/Guilda dos Executores(1).png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Death Strike",
@@ -2712,8 +2712,8 @@
               }
             },
             "maestria": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Guilda dos Executores(2).png",
+              "imagem": "assets/cartas/subclasses/ASSASSINO/Guilda dos Executores(2).png",
               "caracteristicas": [
                 {
                   "nomeIngles": "True Strike",
@@ -2766,8 +2766,8 @@
           "caracteristicaConjuracao": "Conhecimento",
           "cartas": {
             "fundacao": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Guilda dos Envenenadores.png",
+              "imagem": "assets/cartas/subclasses/ASSASSINO/Guilda dos Envenenadores.png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Toxic Concoctions",
@@ -2791,8 +2791,8 @@
               }
             },
             "especializacao": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Guilda dos Envenenadores(1).png",
+              "imagem": "assets/cartas/subclasses/ASSASSINO/Guilda dos Envenenadores(1).png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Poison Compendium",
@@ -2822,8 +2822,8 @@
               }
             },
             "maestria": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Guilda dos Envenenadores(2).png",
+              "imagem": "assets/cartas/subclasses/ASSASSINO/Guilda dos Envenenadores(2).png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Venomancer",
@@ -2950,8 +2950,8 @@
           "caracteristicaConjuracao": null,
           "cartas": {
             "fundacao": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Colosso.png",
+              "imagem": "assets/cartas/subclasses/BRIGÃO/Colosso.png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Rugged",
@@ -2981,8 +2981,8 @@
               }
             },
             "especializacao": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Colosso(1).png",
+              "imagem": "assets/cartas/subclasses/BRIGÃO/Colosso(1).png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Surrounded",
@@ -3012,8 +3012,8 @@
               }
             },
             "maestria": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Colosso(2).png",
+              "imagem": "assets/cartas/subclasses/BRIGÃO/Colosso(2).png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Pummeljoy",
@@ -3066,8 +3066,8 @@
           "caracteristicaConjuracao": null,
           "cartas": {
             "fundacao": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Artista Marcial.png",
+              "imagem": "assets/cartas/subclasses/BRIGÃO/Artista Marcial.png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Stance Fighter",
@@ -3091,8 +3091,8 @@
               }
             },
             "especializacao": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Artista Marcial(1).png",
+              "imagem": "assets/cartas/subclasses/BRIGÃO/Artista Marcial(1).png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Keen Defenses",
@@ -3135,8 +3135,8 @@
               }
             },
             "maestria": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Artista Marcial(2).png",
+              "imagem": "assets/cartas/subclasses/BRIGÃO/Artista Marcial(2).png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Limit Breaker",
@@ -3260,8 +3260,8 @@
           "caracteristicaConjuracao": "Presença",
           "cartas": {
             "fundacao": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Pacto do Eterno.png",
+              "imagem": "assets/cartas/subclasses/BRUXO/Pacto do Eterno.png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Patron’s Mantle",
@@ -3291,8 +3291,8 @@
               }
             },
             "especializacao": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Pacto do Eterno(1).png",
+              "imagem": "assets/cartas/subclasses/BRUXO/Pacto do Eterno(1).png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Harrowing Invocation",
@@ -3322,8 +3322,8 @@
               }
             },
             "maestria": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Pacto do Eterno(2).png",
+              "imagem": "assets/cartas/subclasses/BRUXO/Pacto do Eterno(2).png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Dark Aegis",
@@ -3376,8 +3376,8 @@
           "caracteristicaConjuracao": "Presença",
           "cartas": {
             "fundacao": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Pacto do Colérico.png",
+              "imagem": "assets/cartas/subclasses/BRUXO/Pacto do Colérico.png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Patron’s Fury",
@@ -3407,8 +3407,8 @@
               }
             },
             "especializacao": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Pacto do Colérico(1).png",
+              "imagem": "assets/cartas/subclasses/BRUXO/Pacto do Colérico(1).png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Menacing Reach",
@@ -3438,8 +3438,8 @@
               }
             },
             "maestria": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Pacto do Colérico(2).png",
+              "imagem": "assets/cartas/subclasses/BRUXO/Pacto do Colérico(2).png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Fearsome Attack",
@@ -3563,8 +3563,8 @@
           "caracteristicaConjuracao": "Conhecimento",
           "cartas": {
             "fundacao": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Erveira.png",
+              "imagem": "assets/cartas/subclasses/BRUXA/Erveira.png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Herbal Remedies",
@@ -3594,8 +3594,8 @@
               }
             },
             "especializacao": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Erveira(1).png",
+              "imagem": "assets/cartas/subclasses/BRUXA/Erveira(1).png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Walk Between Worlds",
@@ -3625,8 +3625,8 @@
               }
             },
             "maestria": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Erveira(2).png",
+              "imagem": "assets/cartas/subclasses/BRUXA/Erveira(2).png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Circle of Power",
@@ -3673,8 +3673,8 @@
           "caracteristicaConjuracao": "Instinto",
           "cartas": {
             "fundacao": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Lua.png",
+              "imagem": "assets/cartas/subclasses/BRUXA/Lua.png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Night’s Glamour",
@@ -3698,8 +3698,8 @@
               }
             },
             "especializacao": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Lua(1).png",
+              "imagem": "assets/cartas/subclasses/BRUXA/Lua(1).png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Moonbeam",
@@ -3729,8 +3729,8 @@
               }
             },
             "maestria": {
-              "arquivo": null,
-              "imagem": null,
+              "arquivo": "Lua(2).png",
+              "imagem": "assets/cartas/subclasses/BRUXA/Lua(2).png",
               "caracteristicas": [
                 {
                   "nomeIngles": "Lunar Phases",

@@ -15,6 +15,7 @@
       "nome": "Semideus",
       "nomeEstado": "provisorio",
       "descricao": "Semideuses são criaturas mortais cujo sangue carrega poder divino. Podem herdar esse poder de uma divindade, recebê-lo como dádiva ou conquistá-lo ao realizar um feito extraordinário. Essa centelha traz capacidades excepcionais, mas também expectativas e obrigações difíceis de sustentar.",
+      "descricaoCarta": "Semideuses são criaturas mortais em cujas veias corre o sangue dos deuses.",
       "caracteristicas": [
         {
           "nomeIngles": "Gifted",
@@ -29,6 +30,8 @@
           "automacao": "escolha-obrigatoria-apos-falha"
         }
       ],
+      "imagem": "assets/cartas/transformacoes/Semideus.png",
+      "arquivo": "Semideus.png",
       "perguntas": [
         "Sua divindade afetou um aspecto da sua aparência. De que maneira você parece diferente das outras pessoas?",
         "Quem concedeu a você a condição de semideus e que provação você completou para receber essa dádiva?",
@@ -63,6 +66,7 @@
       "nome": "Fantasma",
       "nomeEstado": "provisorio",
       "descricao": "Fantasmas são espíritos de quem já viveu e permanece preso ao Reino Mortal. Podem ter sido chamados de volta ou nunca ter atravessado o véu da morte. Sua existência entre a vida e a morte permite alternar entre o físico e o espectral, mas depende de um propósito ainda não cumprido.",
+      "descricaoCarta": "Fantasmas são os espíritos de quem já viveu, presos ao Reino Mortal.",
       "caracteristicas": [
         {
           "nomeIngles": "Unfinished Business",
@@ -77,6 +81,8 @@
           "automacao": "resistencia-vulnerabilidade-e-custo-contextual"
         }
       ],
+      "imagem": "assets/cartas/transformacoes/Fantasma.png",
+      "arquivo": "Fantasma.png",
       "perguntas": [
         "Como você morreu e que medo sua morte incutiu em você?",
         "O que trouxe você de volta de além do véu da morte?",
@@ -111,6 +117,7 @@
       "nome": "Reanimado",
       "nomeEstado": "provisorio",
       "descricao": "Reanimados são cadáveres trazidos de volta à vida por magia, ritual, experimento ou outro método antinatural. Presos a corpos em decomposição, precisam repará-los com ossos, carne e materiais obtidos dos mortos recentes.",
+      "descricaoCarta": "Reanimados são cadáveres que foram trazidos de volta à vida.",
       "caracteristicas": [
         {
           "nomeIngles": "Corpse",
@@ -125,6 +132,8 @@
           "automacao": "efeito-permanente-apos-falha-no-movimento-de-morte"
         }
       ],
+      "imagem": "assets/cartas/transformacoes/Reanimado.png",
+      "arquivo": "Reanimado.png",
       "perguntas": [
         "Como você morreu pela primeira vez e como essa morte afetou sua visão sobre a vida?",
         "Um fragmento de memória da sua primeira vida assombra você. Qual é essa lembrança e por que você acredita que ela é importante?",
@@ -159,6 +168,7 @@
       "nome": "Metamorfo",
       "nomeEstado": "provisorio",
       "descricao": "Metamorfos conseguem alterar sua forma física e assumir qualquer ancestralidade, embora não possam copiar uma pessoa específica. Uma característica permanece igual em todas as formas, e encarnar uma nova ancestralidade não concede imediatamente todos os benefícios dela.",
+      "descricaoCarta": "Metamorfos são criaturas capazes de mudar de forma física.",
       "caracteristicas": [
         {
           "nomeIngles": "Change Shape",
@@ -173,6 +183,8 @@
           "automacao": "selecao-de-uma-caracteristica-ancestral"
         }
       ],
+      "imagem": "assets/cartas/transformacoes/Metamorfo.png",
+      "arquivo": "Metamorfo.png",
       "perguntas": [
         "Você acredita que possui uma forma verdadeira, mas nunca a viu. Como imagina que ela seja e como sabe que existe?",
         "Que truque você desenvolveu para identificar outros metamorfos?",
@@ -207,6 +219,7 @@
       "nome": "Vampiro",
       "nomeEstado": "provisorio",
       "descricao": "Vampiros são criaturas mortas-vivas de presas afiadas que se alimentam do sangue dos vivos. Não nascem vampiros: são criados por mordida e troca de sangue, ritual oculto ou outro método misterioso, e precisam consumir a essência vital de outras criaturas.",
+      "descricaoCarta": "Vampiros são criaturas mortas-vivas de presas afiadas que se alimentam do sangue dos vivos.",
       "caracteristicas": [
         {
           "nomeIngles": "Fangs",
@@ -221,6 +234,8 @@
           "automacao": "contador-com-teto-custo-e-modificador-de-dado"
         }
       ],
+      "imagem": "assets/cartas/transformacoes/Vampiro.png",
+      "arquivo": "Vampiro.png",
       "perguntas": [
         "Quem você precisou deixar para trás ao se tornar vampiro e por que foi tão difícil abandonar essa pessoa?",
         "Certa vez você matou uma pessoa inocente por seu sangue. Que característica dela você mais percebe nas outras pessoas?",
@@ -255,6 +270,7 @@
       "nome": "Lobisomem",
       "nomeEstado": "provisorio",
       "descricao": "Lobisomens se transformam em grandes lobos sobrenaturais. Alguns nascem assim; outros mudam por maldição, mordida ou outra causa antinatural. A forma lupina concede enorme poder, mas exige disciplina para conter seus instintos de caça e violência.",
+      "descricaoCarta": "Lobisomens são criaturas que se transformam em grandes lobos sobrenaturais.",
       "caracteristicas": [
         {
           "nomeIngles": "Wolf Form",
@@ -270,6 +286,8 @@
           "automacao": "gatilho-no-ultimo-estresse-e-rolagem-manual"
         }
       ],
+      "imagem": "assets/cartas/transformacoes/Lobisomem.png",
+      "arquivo": "Lobisomem.png",
       "perguntas": [
         "Alguém está caçando você. Quem é e por que quer sua morte?",
         "Do que você tinha medo antes de se tornar lobisomem e como seu novo poder mudou esse medo?",
@@ -297,5 +315,6 @@
         "corpusSha256": "b3846d7b12c329aab6a73644b618ff3487bb3d45b3d8754deb5127d2dba9101e"
       }
     }
-  ]
+  ],
+  "notaDescricaoCarta": "descricaoCarta é a descrição CURTA impressa na própria carta, traduzida da folha de cartas de \"Esperança e Medo\". Ela existe porque `descricao` guarda o parágrafo do CORPO do livro, que é três vezes mais longo e, posto na carta, obrigaria o texto a 5pt. Só os registros que ganharam carta gerada têm este campo."
 }

@@ -920,6 +920,7 @@
       "nomeLivro": "AETHERIS",
       "nomeIngles": "Aetheris",
       "descricao": "Aetheris são humanoides reconhecidos por suas asas e marcas sagradas, descendentes de anjos dos Santuários Celestes. Suas marcas mudam conforme envelhecem e sua aura consagrada pode se manifestar como brilho, símbolos mais intensos ou um halo singular.",
+      "descricaoCarta": "Aetheris são humanoides reconhecidos mais facilmente por suas asas e marcas sagradas.",
       "caracteristicas": [
         {
           "nomeIngles": "Hallowed Aura",
@@ -937,8 +938,8 @@
         }
       ],
       "caracteristicasNoLivro": [],
-      "imagem": null,
-      "arquivo": null,
+      "imagem": "assets/cartas/ancestralidades/Aetheris.png",
+      "arquivo": "Aetheris.png",
       "paginaLivro": 32,
       "observacao": null,
       "problemasDeTraducao": [],
@@ -962,6 +963,7 @@
       "nomeLivro": "EARTHKIN",
       "nomeIngles": "Earthkin",
       "descricao": "O Povo da Terra descende de elementais da terra e tem corpos formados por carne e rocha, cristal, argila, solo, areia ou uma combinação desses materiais. Seus integrantes amadurecem lentamente e, ao morrer, acabam se desfazendo em terra.",
+      "descricaoCarta": "O Povo da Terra é formado por humanoides cujos corpos são feitos de carne e terra.",
       "caracteristicas": [
         {
           "nomeIngles": "Stoneskin",
@@ -979,8 +981,8 @@
         }
       ],
       "caracteristicasNoLivro": [],
-      "imagem": null,
-      "arquivo": null,
+      "imagem": "assets/cartas/ancestralidades/Povo da Terra.png",
+      "arquivo": "Povo da Terra.png",
       "paginaLivro": 33,
       "observacao": null,
       "problemasDeTraducao": [],
@@ -1004,6 +1006,7 @@
       "nomeLivro": "EMBERKIN",
       "nomeIngles": "Emberkin",
       "descricao": "O Povo das Brasas descende de elementais do fogo e tem corpos feitos de carne e chama. Sua herança pode aparecer em cabelos flamejantes, olhos como brasas, pele luminosa ou fumaça, e essas manifestações costumam variar com suas emoções.",
+      "descricaoCarta": "O Povo das Brasas é formado por humanoides cujos corpos são feitos de carne e fogo.",
       "caracteristicas": [
         {
           "nomeIngles": "Fireproof",
@@ -1021,8 +1024,8 @@
         }
       ],
       "caracteristicasNoLivro": [],
-      "imagem": null,
-      "arquivo": null,
+      "imagem": "assets/cartas/ancestralidades/Povo das Brasas.png",
+      "arquivo": "Povo das Brasas.png",
       "paginaLivro": 33,
       "observacao": null,
       "problemasDeTraducao": [],
@@ -1046,6 +1049,7 @@
       "nomeLivro": "GNOME",
       "nomeIngles": "Gnome",
       "descricao": "Gnomos são humanoides pequenos, de cabeça cônica, braços proporcionalmente longos e mãos grandes e hábeis. Herdam de suas famílias a capacidade de se teleportar por distâncias curtas, acompanhada por manifestações particulares como fumaça ou pontos de luz.",
+      "descricaoCarta": "Gnomos são humanoides geralmente pequenos, de cabeça cônica, capazes de se teleportar por distâncias curtas.",
       "caracteristicas": [
         {
           "nomeIngles": "Nimble Fingers",
@@ -1063,8 +1067,8 @@
         }
       ],
       "caracteristicasNoLivro": [],
-      "imagem": null,
-      "arquivo": null,
+      "imagem": "assets/cartas/ancestralidades/Gnomo.png",
+      "arquivo": "Gnomo.png",
       "paginaLivro": 36,
       "observacao": null,
       "problemasDeTraducao": [],
@@ -1088,6 +1092,7 @@
       "nomeLivro": "SKYKIN",
       "nomeIngles": "Skykin",
       "descricao": "O Povo do Céu descende de elementais do ar e tem corpos feitos de carne e ar. Pele semitranslúcida, cabelos como nuvens e brisas constantes podem expressar essa herança, cuja intensidade varia com as emoções.",
+      "descricaoCarta": "O Povo do Céu é formado por humanoides cujos corpos são feitos de carne e ar.",
       "caracteristicas": [
         {
           "nomeIngles": "Gale Force",
@@ -1105,8 +1110,8 @@
         }
       ],
       "caracteristicasNoLivro": [],
-      "imagem": null,
-      "arquivo": null,
+      "imagem": "assets/cartas/ancestralidades/Povo do Céu.png",
+      "arquivo": "Povo do Céu.png",
       "paginaLivro": 34,
       "observacao": null,
       "problemasDeTraducao": [],
@@ -1130,6 +1135,7 @@
       "nomeLivro": "TIDEKIN",
       "nomeIngles": "Tidekin",
       "descricao": "O Povo das Marés descende de elementais da água e tem corpos feitos de carne e água, com orelhas semelhantes a nadadeiras e membranas entre os dedos. Cores e formações de água em seus corpos podem mudar com suas emoções.",
+      "descricaoCarta": "O Povo das Marés é formado por humanoides cujos corpos são feitos de carne e água.",
       "caracteristicas": [
         {
           "nomeIngles": "Amphibious",
@@ -1147,8 +1153,8 @@
         }
       ],
       "caracteristicasNoLivro": [],
-      "imagem": null,
-      "arquivo": null,
+      "imagem": "assets/cartas/ancestralidades/Povo das Marés.png",
+      "arquivo": "Povo das Marés.png",
       "paginaLivro": 34,
       "observacao": null,
       "problemasDeTraducao": [],
@@ -1165,5 +1171,6 @@
         "corpusSha256": "cca0027ad493e0016dd6887d1aeb4ffa8b5edd28b5ff62ad13ea675931c7a4c2"
       }
     }
-  ]
+  ],
+  "notaDescricaoCarta": "descricaoCarta é a descrição CURTA impressa na própria carta, traduzida da folha de cartas de \"Esperança e Medo\". Ela existe porque `descricao` guarda o parágrafo do CORPO do livro, que é três vezes mais longo e, posto na carta, obrigaria o texto a 5pt. Só os registros que ganharam carta gerada têm este campo."
 }

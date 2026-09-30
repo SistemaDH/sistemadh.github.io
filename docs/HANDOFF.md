@@ -2774,3 +2774,290 @@ select, o passo do e2e cai.
 **As oito molduras estão 100%**, com duas coisas declaradas como fora de escopo
 por serem ficção e não número: o ramo sacro da Era da Umbra (item, não regra de
 ficha) e a montagem da ikonis.
+
+---
+
+## Deploy da v22 (29/09/2026) — o primeiro que NÃO é repin desde a v17
+
+```text
+engine-api: v22 ACTIVE
+verify_jwt: false
+ENGINE_COMMIT: 2da0a6721d0558f00dc4edf202f7195102b611fe
+bundle: 815968e78d73574c2b78b4965f0bf7029ada02135a63f8edae85b7bc9324f914
+```
+
+A ordem de sempre — com uma diferença que vale escrever em voz alta:
+
+1. commit imutável escolhido: `2da0a6721d0558f00dc4edf202f7195102b611fe` (main),
+   o das oito molduras do Capítulo 5. `git diff origin/main` na árvore local:
+   **vazio** — o que ela commitou é exatamente o que a suíte testou;
+2. **os 24 `SOURCE_FILES` servidos pelo GitHub nesse commit conferidos byte a byte
+   contra a árvore que rodou os 1220 testes: 0 divergentes**;
+3. `ENGINE_COMMIT` movido para esse commit;
+4. ⚠ **a fonte da função mudou junto**: `reiniciarMoldura` entrou no `ACOES`.
+   Este deploy publica código novo da Edge Function, não só um pin novo. Antes de
+   mandar, o payload foi conferido byte a byte contra
+   `supabase/functions/engine-api/index.ts` (12706 bytes, idêntico) — porque um
+   erro de transcrição aqui não é um defeito, é a API fora do ar;
+5. deploy com `verify_jwt: false` passado EXPLICITAMENTE, como manda a regra do
+   projeto;
+6. releitura da função no ar: v22 ACTIVE, `verify_jwt: false`, pin novo, os 24
+   `SOURCE_FILES`, **`reiniciarMoldura` presente**, e o `autenticar` conferindo o
+   token de sessão **em hash** contra `sessoes`, com a expiração intacta;
+7. advisors de segurança: só o `rls_enabled_no_policy` esperado, INFO, nas 6
+   tabelas — nada novo, e nada a "consertar".
+
+### Por que o `conferir-funcoes-publicadas` salvou este deploy
+
+A guarda compara as ações que o backend sabe responder com as que a Edge Function
+aceita. Ela apontou `reiniciarMoldura` faltando na lista. Sem esse aviso, o deploy
+teria saído como repin: a trava da campanha funcionaria, e o botão de **sair** da
+campanha daria 404 mudo. O Mestre ficaria preso na moldura que acabou de escolher
+— que é exatamente o contrário do que a trava foi feita para dar (segurança para
+não trocar sem querer, não uma cela).
+
+Terceira vez que essa guarda evita um deploy quebrado. Ela é barata; o modo de
+falha que ela pega é caro e silencioso.
+
+### ⚠ O que NÃO deu para conferir daqui
+
+Qualquer ida e volta HTTP à função — nem autenticada, nem um ping sem token. O
+proxy de saída desta sessão recusa o host das Edge Functions (403 no CONNECT), e
+eu não contorno isso. Como é a primeira requisição **autenticada** que baixa os 24
+`.gs` do pin novo, a prova final é da mesa:
+
+1. abrir o painel do Mestre e escolher uma campanha → tem que aparecer a
+   confirmação com a lista do que muda;
+2. confirmar → o select trava;
+3. tocar em "Reiniciar campanha" → tem que responder (com a confirmação própria e
+   o aviso de que nada já aplicado é desfeito), **não** dar erro.
+
+O passo 3 é o teste do que este deploy tem de novo na fonte da função.
+
+### O `css/verbete.css` entrou
+
+O acabamento do `fit-content(50%)`, que tinha ficado de fora do `144fb817` por ter
+sido escrito depois da fotografia do GitHub Desktop, está no `2da0a672`. Ponto de
+interesse fechado.
+
+---
+
+## As 21 cartas do Pavor ganham imagem (29/09/2026)
+
+Nove domínios tinham 21/21 cartas com arte. O Pavor tinha **0 de 21** — era o
+único buraco, e aparecia na mesa como carta sem rosto no meio do baralho.
+
+### O que foi feito
+
+As cartas existem: estão impressas nas folhas das páginas 198-200 do
+*Esperança e Medo*, 9 por folha, em inglês. `tools/gerar-cartas-pavor.py`
+recorta cada uma no tamanho de corte (180×252pt, baralho de pôquer), apaga
+**só** o painel branco do texto e escreve ali o português.
+
+O que ele NÃO toca, de propósito: a arte, a fita do nível, o selo de custo, a
+faixa do tipo (continua "SPELL"/"ABILITY", decisão da mesa para o baralho não
+ficar meio traduzido) e o rodapé com crédito do artista, código da carta e
+copyright da Darrington Press — isso é atribuição de obra de terceiros.
+
+### Onde mora cada coisa (e por que não em dois lugares)
+
+O texto de **regra** mora em `data/cartas-dominio.json`, e só ali. O arquivo
+novo `data/cartas-pavor-marcacao.json` guarda apenas **apresentação**: em
+quantos parágrafos e bolinhas o texto se parte na carta, e o que fica em
+negrito ou itálico — copiando exatamente o que a carta original destaca.
+
+`tools/conferir-cartas-pavor.mjs` (`npm run teste:cartas-pavor`, dentro do
+`teste:tudo`) prova que os dois lados dizem as MESMAS PALAVRAS, na mesma ordem.
+Ele joga fora marcação, pontuação de junção e caixa da letra; qualquer outra
+diferença sobrevive e derruba a bateria. **21 cartas, 0 divergências.**
+
+Prova ao contrário: trocando `1d6+1` por `1d8+1` só na marcação, a bateria
+aponta a carta, a posição e as duas versões — `divergem na palavra 21 — carta
+"1d8+1" · dado "1d6+1"`.
+
+### Dois defeitos que a geração produziu antes de alguém olhar
+
+1. **O rodapé comido.** A primeira versão procurava o rodapé de cima para
+   baixo a partir de 250pt e encontrava a borda inferior da carta, devolvendo
+   um limite ABAIXO do crédito do artista: o texto do corpo descia por cima
+   dele e o retângulo branco apagava metade do rodapé. Sete cartas saíram
+   assim. Agora o rodapé é achado **de baixo para cima**, como a última faixa
+   de tinta da carta.
+2. **O espaço fantasma.** "*Restrita*." saía como "Restrita ." — a quebra de
+   linha tratava cada pedaço estilizado como palavra própria e enfiava um
+   espaço entre a condição em itálico e o ponto final. Acontecia em toda carta
+   que cita uma condição. A unidade da quebra passou a ser a PALAVRA, que pode
+   ter mais de um estilo dentro dela.
+
+### O bloco de texto FLUTUA, e isso é do livro
+
+"Exército Sombrio" tem texto longo demais para começar na altura padrão. O
+livro resolve subindo o conjunto título+texto uns 8pt em vez de diminuir a
+letra. O script faz igual: sobe até encostar na faixa e só então encolhe.
+É a única das 21 que precisou de letra menor (6,2pt em vez de 7pt).
+
+### ⚠ A única substituição tipográfica
+
+O corpo do texto do livro é **Overpass**, que é livre — então é o Overpass de
+verdade. Já o TÍTULO original é **Eveleth Clean**, comercial, embutida no PDF
+só com os glifos do inglês: não tem Ç, Ã nem Ê, e não dá para escrever
+"Retribuição" com ela. O título usa **Overpass Black**, que na caixa alta do
+tamanho da carta fica muito próximo. Está escrito aqui para ninguém descobrir
+por acaso depois.
+
+### Pontos de interesse abertos
+
+- **Faltam 42 das 63 cartas do livro**: 12 de subclasses novas (Assassino,
+  Brigão, Bruxo, Bruxa), 6 ancestralidades, 6 comunidades, 6 transformações e
+  as demais. O texto delas **já está traduzido** em `ancestralidades.json`,
+  `comunidades.json`, `transformacoes.json` e `srd2-subclasses-novas.json`, e
+  também está sem `imagem`. O gabarito dessas cartas é OUTRO (a de subclasse
+  tem "Foundation/Specialization/Mastery" e traço de conjuração no corpo), então
+  o gerador precisa de um segundo molde — não é só repetir a chamada.
+- **A faixa em inglês.** As 210 cartas dizem "SPELL"/"ABILITY". Traduzir exige
+  reprocessar também as 189 que já existem, para o baralho não ficar meio a
+  meio. Decisão da mesa, adiada de propósito.
+- **"BLOOD DOMAIN" na lateral da folha.** As cartas de nível 9-10 do Pavor
+  aparecem sob esse rótulo na margem da página 200, mas são as mesmas 21 do
+  domínio Pavor (`Saborear a Angústia`, `Avatar do Terror`, `Invocar Tormento`
+  estão no `cartas-dominio.json` como DREAD). Parece rótulo de impressão, não
+  um domínio a mais — mas vale confirmar antes de alguém concluir que falta um
+  domínio inteiro no app.
+
+---
+
+## Mais 18 cartas do livro: ancestralidades, comunidades e transformações (30/09/2026)
+
+Depois das 21 do Pavor, faltavam 42 cartas de "Esperança e Medo". Saíram 18:
+**6 ancestralidades, 6 comunidades e 6 transformações**. Sobram as 24 de
+subclasse.
+
+### Um gerador só, dois moldes
+
+`tools/gerar-cartas-pavor.py` virou `tools/gerar-cartas-livro.py`, e
+`data/cartas-pavor-marcacao.json` virou `data/cartas-livro-marcacao.json` com
+as 39 cartas. Guarda única: `npm run teste:cartas-livro` (antes
+`teste:cartas-pavor`). **Antes de aposentar o gerador antigo, as 21 do Pavor
+foram regeradas pelo novo e conferidas byte a byte: idênticas.** Sem essa
+prova, "generalizar" seria só uma reescrita torcendo para nada ter mudado.
+
+O livro diagrama as cartas de dois jeitos, e agora o gerador também:
+
+- **`dominio`** — título centralizado em altura fixa, fita do tipo sobre a arte.
+- **`esquerda`** — título alinhado à esquerda, em altura que **varia carta a
+  carta**, porque a ARTE É RECORTADA para caber o texto: carta com texto longo
+  tem arte mais baixa. É o molde de ancestralidade, comunidade e transformação.
+
+⚠ No molde `esquerda` a altura do título não pode ser constante nem
+recalculada por nós: é ela que casa com o ponto em que a arte acaba. Cada carta
+traz a sua em `layout`, medida uma vez no PDF e congelada — auditável no dado,
+em vez de escondida no código. Quem cede para o português caber é o tamanho da
+letra do corpo, nunca a posição do título.
+
+⚠ **Etiquetas protegidas.** Na carta de ancestralidade a etiqueta "ANCESTRY"
+fica na MESMA linha do título, à direita, já sobre o branco — dentro da área que
+o script apaga. Cada carta desse molde declara em `layout.protegido` o retângulo
+que o apagador tem de pular. Sem isso a etiqueta some e ninguém nota até ver a
+carta ao lado de uma antiga.
+
+### O campo `descricaoCarta`, e por que ele precisou existir
+
+A primeira leva de ancestralidades saiu com o corpo em **5,0pt** — ilegível no
+celular. A causa não era o layout: era o texto. O `descricao` dos JSON guarda o
+parágrafo do CORPO DO LIVRO (208 a 256 caracteres nas novas, até 1300 nas
+antigas); a carta impressa traz **uma frase** ("Aetheris are humanoids most
+easily recognized by their wings and sacred markings.", 80 caracteres).
+
+Pôr o parágrafo do livro na carta obrigava a letra a encolher até sumir. Então
+a frase da carta entrou nos dados como campo próprio, `descricaoCarta`,
+traduzida da folha de cartas — nos 6 registros de ancestralidade e nos 6 de
+transformação que ganharam carta. Fica **um leitor só**: a marcação não guarda
+texto, só aponta.
+
+Resultado: ancestralidades de 5,0-5,8pt para **6,0-7,0pt**; transformações em
+5,8-7,0pt. As comunidades não precisaram de nada — o `descricao` delas já era o
+texto da carta (88 a 214 caracteres).
+
+### O bug do campo nulo que já existia
+
+Ligar os 18 registros à imagem nova falhou em silêncio nas ancestralidades e nas
+comunidades: o script inseria `imagem` depois de uma âncora e, logo em seguida,
+o laço que copiava os campos originais reencontrava a chave `imagem` — que já
+existia nesses registros, com valor `null` — e **sobrescrevia de volta para
+null**. As transformações, que não tinham a chave, funcionaram. O `comunidades.json`
+saiu tão idêntico que nem apareceu no `git status`, o que quase passou.
+
+Lição para o padrão "inserir depois da âncora": se a chave já existe no
+registro, ATRIBUIR; só criar posição nova quando ela não existe.
+
+### A guarda aprendeu a intercalar
+
+O texto da carta é "**Nome do traço:** texto do traço", e no dado o nome e o
+texto moram em campos separados. Pedir os dois campos em sequência devolvia
+todos os nomes e depois todos os textos, e a conferência acusava divergência em
+**toda** carta com dois traços — 18 falsos positivos que esconderiam os
+verdadeiros. `fonte.campos` ganhou a forma `caracteristicas[].nome+texto`, que
+percorre item a item.
+
+**39 cartas · 0 divergências.** Backend 1220 · 0; e2e 112 passos · 0.
+
+### O que falta
+
+As **24 cartas de subclasse** (Assassino, Brigão, Bruxo, Bruxa — 8 subclasses ×
+3 cartas). O molde delas é um terceiro: tem "Foundation/Specialization/Mastery"
+abaixo do título e, em algumas, "SPELLCAST TRAIT: X" antes do corpo.
+
+---
+
+## As 24 de subclasse fecham as 63 cartas do livro (30/09/2026)
+
+Com estas, **todas as 63 cartas de "Esperança e Medo" existem em português no
+app**: 21 do Pavor, 24 de subclasse, 6 ancestralidades, 6 comunidades e 6
+transformações. Nenhum registro do livro aponta mais para imagem inexistente.
+
+As 24: Guilda dos Executores e Guilda dos Envenenadores (Assassino), Colosso e
+Artista Marcial (Brigão), Pacto do Eterno e Pacto do Colérico (Bruxo), Erveira
+e Lua (Bruxa) — cada uma em Fundação, Especialização e Maestria.
+
+### O terceiro molde
+
+`subclasse`: três linhas centralizadas antes do corpo — o nome da subclasse, o
+rótulo do nível e, em algumas, "SPELLCAST TRAIT: X".
+
+⚠ **O rótulo do nível e a linha de conjuração ficam em INGLÊS**, e isso não é
+esquecimento: as 54 cartas de subclasse que já estavam no app imprimem
+"Foundation" e "SPELLCAST TRAIT: PRESENCE" em inglês — está anotado no
+`observacao` de cada uma dentro do `classes.json`. Traduzir só as novas deixaria
+o baralho meio a meio, que é pior que o baralho inteiro em inglês. Elas vêm
+literais do PDF, guardadas em `layout.nivelRotulo` e `layout.conjuracao`.
+
+### A carta que tinha tabela
+
+"Lua · Maestria" imprime as Fases Lunares como uma TABELA desenhada (Roll /
+Phase / Effect, em 6pt). Era a única das 63 com tabela, e a primeira ideia foi
+proteger a região e traduzir só o texto em volta.
+
+Não precisou: o `texto` de "Fases Lunares" no `classes.json` **já descreve a
+tabela em prosa** — "1 (Nova) permite gastar 1 Esperança para negar dano Menor;
+2–3 (Crescente) concede +2 nas jogadas de dano; …". A carta gerada diz
+exatamente o que a ficha diz, em prosa, e a tabela some junto com o inglês. Uma
+diferença visual assumida, e a alternativa seria manter uma tabela em inglês no
+meio de uma carta em português.
+
+### Bolinhas: três cartas, não vinte e quatro
+
+Só as três da Guilda dos Envenenadores usam lista no original. Conferido
+contando os `•` do PDF em cada uma das 24, em vez de olhar as imagens — as
+outras 21 são prosa, e ficaram prosa.
+
+### A guarda aprendeu a descer dois níveis
+
+As cartas de subclasse não moram numa lista de primeiro nível: estão dentro da
+classe, dentro da subclasse, dentro de `cartas.<nível>`. A `fonte` delas ganhou
+um `sub`, e tanto o gerador quanto a bateria resolvem por ele. Antes disso a
+bateria acusava "o registro aponta para nada" nas 24 — que era verdade, e virou
+a lista de trabalho.
+
+**63 cartas · 0 divergências.** Backend 1220 · 0; e2e 112 passos · 0. As 21 do
+Pavor foram regeradas pelo gerador com o molde novo e conferidas byte a byte:
+idênticas às do lote anterior.

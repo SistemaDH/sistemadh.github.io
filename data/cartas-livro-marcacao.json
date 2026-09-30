@@ -1,0 +1,2220 @@
+{
+ "versao": 1,
+ "fonte": "Daggerheart: Esperança e Medo — folhas de cartas das páginas 198 a 204 (DH HF 001/063 a 063/063).",
+ "nota": "MARCAÇÃO DE APRESENTAÇÃO, NÃO É FONTE DE REGRA. O texto de regra mora nos JSON apontados em `fonte`; aqui só se diz COMO ele se parte em blocos na imagem da carta e o que fica em negrito ou itálico, seguindo o que a carta original destaca. tools/conferir-cartas-livro.mjs prova que as PALAVRAS são as mesmas dos dois lados; só pontuação de junção e maiúscula de início de segmento podem diferir.",
+ "total": 63,
+ "cartas": [
+  {
+   "id": "pavor-golpe-definhante",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-golpe-definhante",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Golpe Definhante.png",
+   "pdf": {
+    "pagina": 198,
+    "coluna": 0,
+    "linha": 0
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "Faça uma **jogada de Conjuração** contra um alvo em alcance Distante. Em um sucesso:"
+    },
+    {
+     "tipo": "b",
+     "texto": "Em uma jogada com Esperança, cause **1d6+1** de dano mágico usando sua Proficiência. Em uma jogada com Medo, cause **1d10+1** de dano mágico usando sua Proficiência."
+    },
+    {
+     "tipo": "b",
+     "texto": "O próximo ataque bem-sucedido do alvo causa metade do dano."
+    },
+    {
+     "tipo": "p",
+     "texto": "Em uma falha, você deve gastar 1 Esperança ou marcar 1 Estresse."
+    }
+   ]
+  },
+  {
+   "id": "pavor-veu-umbral",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-veu-umbral",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Véu Umbral.png",
+   "pdf": {
+    "pagina": 198,
+    "coluna": 1,
+    "linha": 0
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "Uma vez por descanso, você pode **marcar 1 Estresse** para se envolver em energia sombria. Quando fizer isso, coloque nesta carta uma quantidade de marcadores igual ao Medo na reserva do Mestre. Depois que uma jogada de ataque for feita contra você, gaste qualquer quantidade de marcadores para impor uma penalidade de −1 ao resultado por marcador gasto."
+    },
+    {
+     "tipo": "p",
+     "texto": "No fim da cena, limpe todos os marcadores não gastos."
+    }
+   ]
+  },
+  {
+   "id": "pavor-voz-do-pavor",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-voz-do-pavor",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Voz do Pavor.png",
+   "pdf": {
+    "pagina": 198,
+    "coluna": 2,
+    "linha": 0
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "Você pode falar magicamente com uma criatura que consiga ver, atormentando-a com suas palavras. Faça uma **jogada de Conjuração** contra ela. Em um sucesso, ela deve marcar 1 Estresse e fica paralisada de terror, tornando-se temporariamente *Restrita*."
+    }
+   ]
+  },
+  {
+   "id": "pavor-retribuicao-horrenda",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-retribuicao-horrenda",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Retribuição Horrenda.png",
+   "pdf": {
+    "pagina": 198,
+    "coluna": 0,
+    "linha": 1
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "Quando um aliado em alcance Próximo sofrer dano de um alvo que você consiga ver, faça uma jogada de reação contra o alvo usando seu traço de Conjuração. Em um sucesso, **marque 1 Estresse** para causar **1d6** de dano mágico usando sua Proficiência."
+    }
+   ]
+  },
+  {
+   "id": "pavor-sifonar-essencia",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-sifonar-essencia",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Sifonar Essência.png",
+   "pdf": {
+    "pagina": 198,
+    "coluna": 1,
+    "linha": 1
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "Faça uma **jogada de Conjuração** contra um alvo em alcance Muito Próximo. Uma vez por descanso longo, em um sucesso, o alvo sofre **1d12+4** de dano mágico usando sua Proficiência. Em um sucesso com Medo, você recebe +1 de bônus em sua Proficiência para esse ataque."
+    },
+    {
+     "tipo": "p",
+     "texto": "Limpe uma quantidade de Pontos de Vida igual à quantidade de Pontos de Vida que o alvo marcou com esse ataque."
+    }
+   ]
+  },
+  {
+   "id": "pavor-trauma-compartilhado",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-trauma-compartilhado",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Trauma Compartilhado.png",
+   "pdf": {
+    "pagina": 198,
+    "coluna": 2,
+    "linha": 1
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "Você pode transferir sofrimento de uma criatura para outra. Uma vez por descanso, marque qualquer quantidade de Pontos de Vida em uma criatura voluntária em alcance Corpo a Corpo para limpar a mesma quantidade de Pontos de Vida de outra criatura voluntária em alcance Corpo a Corpo."
+    }
+   ]
+  },
+  {
+   "id": "pavor-aterrorizar",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-aterrorizar",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Aterrorizar.png",
+   "pdf": {
+    "pagina": 198,
+    "coluna": 0,
+    "linha": 2
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "Faça uma **jogada de Conjuração** contra um alvo em alcance Próximo. Em um sucesso, o alvo marca **1d4** Estresses, e você pode fazê-lo fugir um alcance para longe de você, como de Muito Próximo para Próximo ou de Próximo para Distante. Em um sucesso com Medo, o alvo também fica temporariamente *Vulnerável*."
+    }
+   ]
+  },
+  {
+   "id": "pavor-correntes-da-aflicao",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-correntes-da-aflicao",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Correntes da Aflição.png",
+   "pdf": {
+    "pagina": 198,
+    "coluna": 1,
+    "linha": 2
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "**Marque 2 Estresses** para *acorrentar* temporariamente um alvo em alcance Próximo. Quando uma criatura *Acorrentada* causar dano, o alvo do ataque dela marca 1 Ponto de Vida a menos do que marcaria normalmente. Você não pode manter mais de uma criatura *Acorrentada* por vez."
+    }
+   ]
+  },
+  {
+   "id": "pavor-invocar-horror",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-invocar-horror",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Invocar Horror.png",
+   "pdf": {
+    "pagina": 198,
+    "coluna": 2,
+    "linha": 2
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "Uma vez por cena, **marque 1 Estresse** para invocar uma criatura sobrenatural que causa **1d8+1** de dano mágico usando seu traço de Conjuração contra um alvo em alcance Distante. Se o alvo marcar qualquer quantidade de Pontos de Vida com esse ataque, ele deve obter sucesso em uma **jogada de reação (12)** para resistir ao horror ou marcar a mesma quantidade de Estresses."
+    },
+    {
+     "tipo": "p",
+     "texto": "Depois de fazer o ataque, a criatura desaparece."
+    }
+   ]
+  },
+  {
+   "id": "pavor-golpe-terrivel",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-golpe-terrivel",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Golpe Terrível.png",
+   "pdf": {
+    "pagina": 199,
+    "coluna": 0,
+    "linha": 0
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "Quando um alvo marcar qualquer quantidade de Pontos de Vida com um ataque seu, você pode **gastar 1 Esperança** para drenar o poder dele. O Mestre perde 1 Medo."
+    }
+   ]
+  },
+  {
+   "id": "pavor-nevoa-espectral",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-nevoa-espectral",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Névoa Espectral.png",
+   "pdf": {
+    "pagina": 199,
+    "coluna": 1,
+    "linha": 0
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "**Gaste 2 Esperanças** para conjurar uma névoa sinistra que torna você e aliados à sua escolha em alcance Próximo momentaneamente incorpóreos. Enquanto estiver incorpórea, uma criatura pode atravessar objetos sólidos e é imune a dano físico. Ela volta a ser corpórea depois de atravessar um objeto sólido ou fazer uma jogada de ação. Caso contrário, o efeito dura até o fim da cena."
+    }
+   ]
+  },
+  {
+   "id": "pavor-fogo-sombrio",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-fogo-sombrio",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Fogo Sombrio.png",
+   "pdf": {
+    "pagina": 199,
+    "coluna": 2,
+    "linha": 0
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "Uma vez por cena, **gaste qualquer quantidade de Esperança** para escolher a mesma quantidade de adversários em alcance Próximo. Cada alvo faz uma **jogada de reação (15)**. Alvos que falharem sofrem **1d8+6** de dano mágico usando seu traço de Conjuração enquanto são envolvidos por fogo sombrio. Alvos que obtiverem sucesso sofrem metade do dano."
+    }
+   ]
+  },
+  {
+   "id": "pavor-susto-repentino",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-susto-repentino",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Susto Repentino.png",
+   "pdf": {
+    "pagina": 199,
+    "coluna": 0,
+    "linha": 1
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "Quando você causar dano mágico a um alvo, pode **marcar 1 Estresse** para se teleportar para alcance Corpo a Corpo com ele. Quando fizer isso, o alvo fica *Vulnerável* até marcar 1 ou mais Pontos de Vida."
+    }
+   ]
+  },
+  {
+   "id": "pavor-tocado-pelo-pavor",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-tocado-pelo-pavor",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Tocado pelo Pavor.png",
+   "pdf": {
+    "pagina": 199,
+    "coluna": 1,
+    "linha": 1
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "Quando 4 ou mais cartas de domínio ativas forem do domínio Pavor, você recebe os seguintes benefícios:"
+    },
+    {
+     "tipo": "b",
+     "texto": "Ao obter sucesso com Medo, pode **marcar 2 Estresses** para impedir que o Mestre ganhe 1 Medo."
+    },
+    {
+     "tipo": "b",
+     "texto": "Uma vez por descanso, ao fazer uma jogada de ação, você pode receber um bônus igual à quantidade de Medo na reserva do Mestre."
+    }
+   ]
+  },
+  {
+   "id": "pavor-muralha-de-fome",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-muralha-de-fome",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Muralha de Fome.png",
+   "pdf": {
+    "pagina": 199,
+    "coluna": 2,
+    "linha": 1
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "Faça uma **jogada de Conjuração (10)**. Em caso de sucesso, você pode **gastar 1 Esperança** para criar uma muralha visível de energia necrótica contorcida entre dois pontos em alcance Distante. A muralha dura até você marcar 1 Ponto de Vida ou conjurar este feitiço novamente. Uma criatura dentro da muralha quando ela surge ou que a atravesse deve marcar 2 Estresses."
+    }
+   ]
+  },
+  {
+   "id": "pavor-exercito-sombrio",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-exercito-sombrio",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Exército Sombrio.png",
+   "pdf": {
+    "pagina": 199,
+    "coluna": 0,
+    "linha": 2
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "Faça uma **jogada de Conjuração (14)**. Uma vez por descanso longo, em caso de sucesso, você pode invocar demônios que cercam e se movem com você. Coloque 8 marcadores nesta carta. Quando causar dano a um alvo em alcance Muito Próximo, você pode gastar qualquer quantidade de marcadores para adicionar **1d8** à sua jogada de dano para cada marcador gasto. Além disso, quando sofrer dano, você pode gastar qualquer quantidade de marcadores para reduzir o dano em **1d8** para cada marcador gasto. Sempre que gastar um marcador, um demônio age em seu favor e desaparece."
+    },
+    {
+     "tipo": "p",
+     "texto": "Ao fazer um descanso, limpe todos os marcadores não gastos."
+    }
+   ]
+  },
+  {
+   "id": "pavor-carne-sobrenatural",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-carne-sobrenatural",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Carne Sobrenatural.png",
+   "pdf": {
+    "pagina": 199,
+    "coluna": 1,
+    "linha": 2
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "Receba +1 em seus limiares de dano para cada Estresse marcado."
+    },
+    {
+     "tipo": "p",
+     "texto": "Além disso, quando fizer uma jogada com Medo, você pode **gastar 2 Esperanças** para limpar 1 Ponto de Armadura."
+    }
+   ]
+  },
+  {
+   "id": "pavor-danacao",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-danacao",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Danação.png",
+   "pdf": {
+    "pagina": 199,
+    "coluna": 2,
+    "linha": 2
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "Faça uma **jogada de Conjuração** contra um alvo em alcance Distante. Em caso de sucesso, **marque qualquer quantidade de Estresses** para rolar a mesma quantidade de **d20**, causando dano mágico igual ao resultado total. Se este ataque derrotar o alvo, todos os adversários em alcance Distante do alvo devem marcar 1 Estresse."
+    }
+   ]
+  },
+  {
+   "id": "pavor-saborear-a-angustia",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-saborear-a-angustia",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Saborear a Angústia.png",
+   "pdf": {
+    "pagina": 200,
+    "coluna": 0,
+    "linha": 0
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "Quando um adversário em alcance Próximo sofrer dano Severo, você pode limpar 1 Estresse."
+    }
+   ]
+  },
+  {
+   "id": "pavor-avatar-do-terror",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-avatar-do-terror",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Avatar do Terror.png",
+   "pdf": {
+    "pagina": 200,
+    "coluna": 1,
+    "linha": 0
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "**Marque 1 Estresse** para se transformar em uma criatura alimentada pelo medo. Enquanto estiver nesta forma, receba **1d6** de bônus em suas jogadas de dano para cada Medo na reserva do Mestre. Além disso, você ganha 1 Esperança quando o Mestre gasta 1 Medo para destacar um adversário em alcance Muito Próximo."
+    },
+    {
+     "tipo": "p",
+     "texto": "Antes de fazer uma jogada de ação, você deve gastar 1 Esperança. Se não puder, volta à sua forma normal."
+    }
+   ]
+  },
+  {
+   "id": "pavor-invocar-tormento",
+   "molde": "dominio",
+   "fonte": {
+    "arquivo": "data/cartas-dominio.json",
+    "lista": "cartas",
+    "id": "pavor-invocar-tormento",
+    "campos": [
+     "texto"
+    ]
+   },
+   "destino": "assets/cartas/dominios/DREAD/Invocar Tormento.png",
+   "pdf": {
+    "pagina": 200,
+    "coluna": 2,
+    "linha": 0
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "Você causa o dobro de dano a alvos que estejam com todos os Estresses marcados."
+    },
+    {
+     "tipo": "p",
+     "texto": "Além disso, quando um adversário em alcance Próximo for derrotado com todos os Estresses marcados, você ganha 1 Esperança."
+    }
+   ]
+  },
+  {
+   "id": "nascido-nas-dunas",
+   "molde": "comunidade",
+   "fonte": {
+    "arquivo": "data/comunidades.json",
+    "lista": "comunidades",
+    "id": "nascido-nas-dunas",
+    "campos": [
+     "descricao",
+     "caracteristica.nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/comunidades/Nascido nas Dunas.png",
+   "pdf": {
+    "pagina": 203,
+    "coluna": 0,
+    "linha": 2
+   },
+   "layout": {
+    "tituloTopo": 139.4,
+    "tituloX": 11.6,
+    "tituloTamanho": 13.0,
+    "corpoTopo": 155.3
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "*Fazer parte de uma comunidade Nascida nas Dunas significa ter construído um lar entre areias móveis e o clima árido do deserto, aprendendo a atravessar as dunas e preservar recursos preciosos.*"
+    },
+    {
+     "tipo": "p",
+     "texto": "***Oásis:*** Durante um descanso curto, você ou um aliado pode rerrolar um dado usado em um movimento de descanso e ficar com o resultado maior."
+    }
+   ]
+  },
+  {
+   "id": "nascido-livre",
+   "molde": "comunidade",
+   "fonte": {
+    "arquivo": "data/comunidades.json",
+    "lista": "comunidades",
+    "id": "nascido-livre",
+    "campos": [
+     "descricao",
+     "caracteristica.nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/comunidades/Nascido Livre.png",
+   "pdf": {
+    "pagina": 203,
+    "coluna": 1,
+    "linha": 2
+   },
+   "layout": {
+    "tituloTopo": 139.4,
+    "tituloX": 11.1,
+    "tituloTamanho": 13.0,
+    "corpoTopo": 155.3
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "*Fazer parte de uma comunidade Nascida Livre significa vir de um povo que já viveu sob domínio tirânico e agora é livre, unido pela luta para preservar e celebrar sua cultura.*"
+    },
+    {
+     "tipo": "p",
+     "texto": "***Liberto:*** Uma vez por sessão, quando fizer uma jogada com Medo, você pode transformá-la em uma jogada com Esperança."
+    }
+   ]
+  },
+  {
+   "id": "nascido-no-gelo",
+   "molde": "comunidade",
+   "fonte": {
+    "arquivo": "data/comunidades.json",
+    "lista": "comunidades",
+    "id": "nascido-no-gelo",
+    "campos": [
+     "descricao",
+     "caracteristica.nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/comunidades/Nascido no Gelo.png",
+   "pdf": {
+    "pagina": 203,
+    "coluna": 2,
+    "linha": 2
+   },
+   "layout": {
+    "tituloTopo": 139.9,
+    "tituloX": 11.1,
+    "tituloTamanho": 13.0,
+    "corpoTopo": 155.8
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "*Fazer parte de uma comunidade Nascida no Gelo significa vir de um lugar de neve e gelo, preparado para sobreviver em condições implacáveis e compartilhar os recursos essenciais.*"
+    },
+    {
+     "tipo": "p",
+     "texto": "***Resistente:*** Quando fizer um descanso, limpe 1 Ponto de Vida."
+    }
+   ]
+  },
+  {
+   "id": "nascido-no-lar",
+   "molde": "comunidade",
+   "fonte": {
+    "arquivo": "data/comunidades.json",
+    "lista": "comunidades",
+    "id": "nascido-no-lar",
+    "campos": [
+     "descricao",
+     "caracteristica.nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/comunidades/Nascido no Lar.png",
+   "pdf": {
+    "pagina": 204,
+    "coluna": 0,
+    "linha": 0
+   },
+   "layout": {
+    "tituloTopo": 139.4,
+    "tituloX": 11.6,
+    "tituloTamanho": 13.0,
+    "corpoTopo": 155.3
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "*Fazer parte de uma comunidade Nascida no Lar significa ter origens humildes numa aldeia modesta ou região campestre, onde relações próximas, agricultura, criação e ofícios sustentam a vida coletiva.*"
+    },
+    {
+     "tipo": "p",
+     "texto": "***Laços Estreitos:*** Uma vez por descanso longo, você pode gastar qualquer quantidade de Esperança para conceder a um aliado em alcance Distante a mesma quantidade de Esperança."
+    }
+   ]
+  },
+  {
+   "id": "renascido",
+   "molde": "comunidade",
+   "fonte": {
+    "arquivo": "data/comunidades.json",
+    "lista": "comunidades",
+    "id": "renascido",
+    "campos": [
+     "descricao",
+     "caracteristica.nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/comunidades/Renascido.png",
+   "pdf": {
+    "pagina": 204,
+    "coluna": 1,
+    "linha": 0
+   },
+   "layout": {
+    "tituloTopo": 131.1,
+    "tituloX": 11.1,
+    "tituloTamanho": 13.0,
+    "corpoTopo": 147.0
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "*Você já pertenceu a outra comunidade, mas deixou de fazer parte dela. Renascidos são unidos pela experiência de isolamento, embora possam se voltar ao futuro, redefinir a si mesmos e construir novos vínculos.*"
+    },
+    {
+     "tipo": "p",
+     "texto": "***Família Escolhida:*** Uma vez por descanso, você pode gastar 1 Esperança para usar a Experiência de um aliado como se fosse sua. Ao fazer isso, descreva como o tempo ao lado desse aliado preparou você para este momento. Quando ingressar em uma nova comunidade ou redescobrir sua antiga comunidade, você pode trocar esta carta permanentemente pela carta daquela comunidade."
+    }
+   ]
+  },
+  {
+   "id": "nascido-na-guerra",
+   "molde": "comunidade",
+   "fonte": {
+    "arquivo": "data/comunidades.json",
+    "lista": "comunidades",
+    "id": "nascido-na-guerra",
+    "campos": [
+     "descricao",
+     "caracteristica.nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/comunidades/Nascido na Guerra.png",
+   "pdf": {
+    "pagina": 204,
+    "coluna": 2,
+    "linha": 0
+   },
+   "layout": {
+    "tituloTopo": 139.4,
+    "tituloX": 11.1,
+    "tituloTamanho": 13.0,
+    "corpoTopo": 155.3
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "*Fazer parte de uma comunidade Nascida na Guerra significa vir de um lugar devastado por conflitos. Civis ou militares, seus integrantes aprendem autodefesa e desenvolvem engenhosidade para sobreviver e reconstruir.*"
+    },
+    {
+     "tipo": "p",
+     "texto": "***Cara de Coragem:*** Uma vez por sessão, quando você seria forçado a marcar 1 Estresse, pode gastar 1 Esperança em vez disso."
+    }
+   ]
+  },
+  {
+   "id": "aetheris",
+   "molde": "ancestralidade",
+   "fonte": {
+    "arquivo": "data/ancestralidades.json",
+    "lista": "ancestralidades",
+    "id": "aetheris",
+    "campos": [
+     "descricaoCarta",
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/ancestralidades/Aetheris.png",
+   "pdf": {
+    "pagina": 203,
+    "coluna": 0,
+    "linha": 0
+   },
+   "layout": {
+    "tituloTopo": 145.5,
+    "tituloX": 11.6,
+    "tituloTamanho": 15.0,
+    "corpoTopo": 162.4,
+    "protegido": [
+     [
+      128.7,
+      145.5,
+      175.1,
+      158.0
+     ]
+    ]
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "*Aetheris são humanoides reconhecidos mais facilmente por suas asas e marcas sagradas.*"
+    },
+    {
+     "tipo": "p",
+     "texto": "***Aura Consagrada:*** Uma vez por descanso longo, quando um aliado em alcance Próximo fizer uma jogada com Medo, você pode transformá-la em uma jogada com Esperança."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Asas Celestiais:*** Você tem asas que permitem voar. Uma vez por cena enquanto estiver voando, pode gastar 1 Esperança em vez de marcar 1 Ponto de Armadura."
+    }
+   ]
+  },
+  {
+   "id": "povo-da-terra",
+   "molde": "ancestralidade",
+   "fonte": {
+    "arquivo": "data/ancestralidades.json",
+    "lista": "ancestralidades",
+    "id": "povo-da-terra",
+    "campos": [
+     "descricaoCarta",
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/ancestralidades/Povo da Terra.png",
+   "pdf": {
+    "pagina": 203,
+    "coluna": 1,
+    "linha": 0
+   },
+   "layout": {
+    "tituloTopo": 145.5,
+    "tituloX": 11.1,
+    "tituloTamanho": 15.0,
+    "corpoTopo": 161.9,
+    "protegido": [
+     [
+      128.2,
+      145.5,
+      174.6,
+      158.0
+     ]
+    ]
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "*O Povo da Terra é formado por humanoides cujos corpos são feitos de carne e terra.*"
+    },
+    {
+     "tipo": "p",
+     "texto": "***Pele de Pedra:*** Durante a criação de personagem, receba permanentemente +1 na sua Pontuação de Armadura e nos seus limiares de dano."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Imovível:*** Enquanto estiver tocando o chão, você não pode ser erguido nem movido contra a sua vontade."
+    }
+   ]
+  },
+  {
+   "id": "povo-das-brasas",
+   "molde": "ancestralidade",
+   "fonte": {
+    "arquivo": "data/ancestralidades.json",
+    "lista": "ancestralidades",
+    "id": "povo-das-brasas",
+    "campos": [
+     "descricaoCarta",
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/ancestralidades/Povo das Brasas.png",
+   "pdf": {
+    "pagina": 203,
+    "coluna": 2,
+    "linha": 0
+   },
+   "layout": {
+    "tituloTopo": 135.3,
+    "tituloX": 11.3,
+    "tituloTamanho": 15.0,
+    "corpoTopo": 152.3,
+    "protegido": [
+     [
+      128.2,
+      135.5,
+      174.6,
+      148.0
+     ]
+    ]
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "*O Povo das Brasas é formado por humanoides cujos corpos são feitos de carne e fogo.*"
+    },
+    {
+     "tipo": "p",
+     "texto": "***À Prova de Fogo:*** Você é imune a dano causado por chamas mágicas ou mundanas."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Ignição:*** Marque 1 Estresse para envolver sua arma primária em chamas até o fim da cena. Enquanto estiver em chamas, a arma emite luz intensa e concede um bônus de 1d6 às suas jogadas de dano feitas com ela."
+    }
+   ]
+  },
+  {
+   "id": "povo-do-ceu",
+   "molde": "ancestralidade",
+   "fonte": {
+    "arquivo": "data/ancestralidades.json",
+    "lista": "ancestralidades",
+    "id": "povo-do-ceu",
+    "campos": [
+     "descricaoCarta",
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/ancestralidades/Povo do Céu.png",
+   "pdf": {
+    "pagina": 203,
+    "coluna": 0,
+    "linha": 1
+   },
+   "layout": {
+    "tituloTopo": 129.4,
+    "tituloX": 11.6,
+    "tituloTamanho": 15.0,
+    "corpoTopo": 146.4,
+    "protegido": [
+     [
+      128.7,
+      129.5,
+      175.1,
+      142.0
+     ]
+    ]
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "*O Povo do Céu é formado por humanoides cujos corpos são feitos de carne e ar.*"
+    },
+    {
+     "tipo": "p",
+     "texto": "***Força do Vendaval:*** Marque 1 Estresse para conjurar uma rajada de vento que carregue você ou um aliado em alcance Muito Próximo por até um alcance Longínquo. Além disso, você sempre pode controlar a velocidade da sua queda."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Olho da Tempestade:*** Gaste 2 Esperança para conceder a você ou a um aliado em alcance Corpo a Corpo +1 de Evasão até você sofrer dano Severo ou usar esta característica novamente."
+    }
+   ]
+  },
+  {
+   "id": "povo-das-mares",
+   "molde": "ancestralidade",
+   "fonte": {
+    "arquivo": "data/ancestralidades.json",
+    "lista": "ancestralidades",
+    "id": "povo-das-mares",
+    "campos": [
+     "descricaoCarta",
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/ancestralidades/Povo das Marés.png",
+   "pdf": {
+    "pagina": 203,
+    "coluna": 1,
+    "linha": 1
+   },
+   "layout": {
+    "tituloTopo": 145.5,
+    "tituloX": 11.1,
+    "tituloTamanho": 15.0,
+    "corpoTopo": 162.4,
+    "protegido": [
+     [
+      128.2,
+      145.5,
+      174.6,
+      158.0
+     ]
+    ]
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "*O Povo das Marés é formado por humanoides cujos corpos são feitos de carne e água.*"
+    },
+    {
+     "tipo": "p",
+     "texto": "***Anfíbio:*** Você pode respirar e se mover naturalmente debaixo d'água."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Fonte de Vida:*** Uma vez por descanso, quando tiver acesso a uma pequena quantidade de água, você pode marcar 1 Estresse para limpar 1 Ponto de Vida seu ou de um aliado em alcance Muito Próximo."
+    }
+   ]
+  },
+  {
+   "id": "gnomo",
+   "molde": "ancestralidade",
+   "fonte": {
+    "arquivo": "data/ancestralidades.json",
+    "lista": "ancestralidades",
+    "id": "gnomo",
+    "campos": [
+     "descricaoCarta",
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/ancestralidades/Gnomo.png",
+   "pdf": {
+    "pagina": 203,
+    "coluna": 2,
+    "linha": 1
+   },
+   "layout": {
+    "tituloTopo": 145.5,
+    "tituloX": 11.1,
+    "tituloTamanho": 15.0,
+    "corpoTopo": 162.4,
+    "protegido": [
+     [
+      128.2,
+      145.5,
+      174.6,
+      158.0
+     ]
+    ]
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "*Gnomos são humanoides geralmente pequenos, de cabeça cônica, capazes de se teleportar por distâncias curtas.*"
+    },
+    {
+     "tipo": "p",
+     "texto": "***Dedos Ágeis:*** Quando fizer uma jogada de Finesse, você pode gastar 2 Esperança para rerrolar seu Dado de Esperança."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Passo Cintilante:*** Uma vez por cena, você pode se teleportar para outro ponto que consiga ver em alcance Distante."
+    }
+   ]
+  },
+  {
+   "id": "semideus",
+   "molde": "transformacao",
+   "fonte": {
+    "arquivo": "data/transformacoes.json",
+    "lista": "transformacoes",
+    "id": "semideus",
+    "campos": [
+     "descricaoCarta",
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/transformacoes/Semideus.png",
+   "pdf": {
+    "pagina": 204,
+    "coluna": 0,
+    "linha": 1
+   },
+   "layout": {
+    "tituloTopo": 146.4,
+    "tituloX": 11.6,
+    "tituloTamanho": 15.0,
+    "corpoTopo": 163.4
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "*Semideuses são criaturas mortais em cujas veias corre o sangue dos deuses.*"
+    },
+    {
+     "tipo": "p",
+     "texto": "***Dotado:*** Você recebe +1 em jogadas de ação, reação e dano."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Peso da Divindade:*** Quando falhar em uma jogada, você deve marcar 1 Estresse ou o Mestre ganha 1 Medo."
+    }
+   ]
+  },
+  {
+   "id": "fantasma",
+   "molde": "transformacao",
+   "fonte": {
+    "arquivo": "data/transformacoes.json",
+    "lista": "transformacoes",
+    "id": "fantasma",
+    "campos": [
+     "descricaoCarta",
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/transformacoes/Fantasma.png",
+   "pdf": {
+    "pagina": 204,
+    "coluna": 1,
+    "linha": 1
+   },
+   "layout": {
+    "tituloTopo": 125.5,
+    "tituloX": 11.1,
+    "tituloTamanho": 15.0,
+    "corpoTopo": 142.5
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "*Fantasmas são os espíritos de quem já viveu, presos ao Reino Mortal.*"
+    },
+    {
+     "tipo": "p",
+     "texto": "***Assunto Inacabado:*** Defina com o Mestre qual propósito ou desejo mantém você preso ao Reino Mortal. Quando cumpri-lo, você atravessa o véu da morte."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Efêmero:*** Seu corpo oscila entre o corpóreo e o incorpóreo. Você tem resistência a dano físico, sofre o dobro de dano mágico e pode marcar 2 Estresses para atravessar momentaneamente um objeto sólido."
+    }
+   ]
+  },
+  {
+   "id": "reanimado",
+   "molde": "transformacao",
+   "fonte": {
+    "arquivo": "data/transformacoes.json",
+    "lista": "transformacoes",
+    "id": "reanimado",
+    "campos": [
+     "descricaoCarta",
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/transformacoes/Reanimado.png",
+   "pdf": {
+    "pagina": 204,
+    "coluna": 2,
+    "linha": 1
+   },
+   "layout": {
+    "tituloTopo": 113.9,
+    "tituloX": 11.1,
+    "tituloTamanho": 13.0,
+    "corpoTopo": 129.5
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "*Reanimados são cadáveres que foram trazidos de volta à vida.*"
+    },
+    {
+     "tipo": "p",
+     "texto": "***Cadáver:*** Durante um descanso, você só pode limpar Pontos de Vida se tiver acesso aos restos mortais de uma criatura falecida recentemente. Descreva como usa esses materiais para conservar seu cadáver."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Não Fica Morto:*** Quando escolher o movimento de morte Arriscar Tudo e falhar, você pode marcar permanentemente 1 Ponto de Vida para ter sucesso em vez disso. Quando fizer isso, ainda use o valor do Dado de Esperança para limpar Pontos de Vida e Estresses. Ao marcar permanentemente seu último Ponto de Vida, você atravessa o véu da morte."
+    }
+   ]
+  },
+  {
+   "id": "metamorfo",
+   "molde": "transformacao",
+   "fonte": {
+    "arquivo": "data/transformacoes.json",
+    "lista": "transformacoes",
+    "id": "metamorfo",
+    "campos": [
+     "descricaoCarta",
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/transformacoes/Metamorfo.png",
+   "pdf": {
+    "pagina": 204,
+    "coluna": 0,
+    "linha": 2
+   },
+   "layout": {
+    "tituloTopo": 123.9,
+    "tituloX": 11.6,
+    "tituloTamanho": 12.0,
+    "corpoTopo": 138.8
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "*Metamorfos são criaturas capazes de mudar de forma física.*"
+    },
+    {
+     "tipo": "p",
+     "texto": "***Mudar de Forma:*** Durante um descanso, você pode usar um movimento de descanso para trocar sua ancestralidade atual por outra. Ao fazer isso, descreva como sua aparência muda."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Só na Aparência:*** Você recebe o benefício de apenas uma característica da ancestralidade escolhida, selecionada quando escolhe essa ancestralidade. Pode usar um movimento de descanso para selecionar outra característica dessa ancestralidade."
+    }
+   ]
+  },
+  {
+   "id": "vampiro",
+   "molde": "transformacao",
+   "fonte": {
+    "arquivo": "data/transformacoes.json",
+    "lista": "transformacoes",
+    "id": "vampiro",
+    "campos": [
+     "descricaoCarta",
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/transformacoes/Vampiro.png",
+   "pdf": {
+    "pagina": 204,
+    "coluna": 1,
+    "linha": 2
+   },
+   "layout": {
+    "tituloTopo": 104.4,
+    "tituloX": 11.1,
+    "tituloTamanho": 15.0,
+    "corpoTopo": 120.9
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "*Vampiros são criaturas mortas-vivas de presas afiadas que se alimentam do sangue dos vivos.*"
+    },
+    {
+     "tipo": "p",
+     "texto": "***Presas:*** Faça um ataque usando um traço à sua escolha para morder um alvo em alcance Corpo a Corpo. Em caso de sucesso, cause d6 de dano físico usando sua Proficiência."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Alimentar-se:*** Após um ataque bem-sucedido com Presas contra uma criatura que possa sangrar, você pode marcar 1 Estresse para se alimentar. Coloque nesta carta uma quantidade de marcadores igual aos Pontos de Vida que o alvo marcar. Você pode manter no máximo 6 marcadores. Antes de fazer uma jogada de ação, pode gastar 1 marcador para transformar seu Dado de Medo em um d20. Ao fazer um descanso longo, remova 1 marcador. Enquanto não houver marcadores nesta carta, você faz jogadas de ação e reação com desvantagem."
+    }
+   ]
+  },
+  {
+   "id": "lobisomem",
+   "molde": "transformacao",
+   "fonte": {
+    "arquivo": "data/transformacoes.json",
+    "lista": "transformacoes",
+    "id": "lobisomem",
+    "campos": [
+     "descricaoCarta",
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/transformacoes/Lobisomem.png",
+   "pdf": {
+    "pagina": 204,
+    "coluna": 2,
+    "linha": 2
+   },
+   "layout": {
+    "tituloTopo": 105.7,
+    "tituloX": 11.1,
+    "tituloTamanho": 13.0,
+    "corpoTopo": 121.3
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "*Lobisomens são criaturas que se transformam em grandes lobos sobrenaturais.*"
+    },
+    {
+     "tipo": "p",
+     "texto": "***Forma de Lobo:*** Quando marcar 1 ou mais Pontos de Vida, você pode marcar 1 Estresse para entrar na Forma de Lobo. Nessa forma, recebe um bônus de 1d10 nas jogadas de ataque e dano. Quando fizer uma jogada com Esperança enquanto estiver na Forma de Lobo, deve marcar 1 Estresse. A forma dura até você entrar em Frenesi Uivante ou fazer um descanso."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Frenesi Uivante:*** Quando marcar seu último Estresse enquanto estiver na Forma de Lobo, você entra em frenesi. Role fora do app uma quantidade de d20 igual ao seu patamar e cause dano físico igual à soma dos resultados a todas as criaturas em alcance Muito Próximo; depois, saia da Forma de Lobo."
+    }
+   ]
+  },
+  {
+   "id": "assassino-guilda-dos-executores-fundacao",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "assassino",
+    "sub": {
+     "lista": "subclasses",
+     "id": "assassino-guilda-dos-executores",
+     "carta": "fundacao"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/ASSASSINO/Guilda dos Executores.png",
+   "pdf": {
+    "pagina": 200,
+    "coluna": 0,
+    "linha": 1
+   },
+   "layout": {
+    "tituloTopo": 131.6,
+    "nivelRotulo": "Foundation",
+    "corpoTopo": 163.9,
+    "conjuracao": "AGILITY"
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Primeiro Golpe:*** Na primeira vez em uma cena que tiver sucesso em um ataque, você causa o dobro do dano."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Emboscada:*** Sua característica Marcado para Morrer usa d6 em vez de d4."
+    }
+   ]
+  },
+  {
+   "id": "assassino-guilda-dos-executores-especializacao",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "assassino",
+    "sub": {
+     "lista": "subclasses",
+     "id": "assassino-guilda-dos-executores",
+     "carta": "especializacao"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/ASSASSINO/Guilda dos Executores(1).png",
+   "pdf": {
+    "pagina": 200,
+    "coluna": 1,
+    "linha": 1
+   },
+   "layout": {
+    "tituloTopo": 131.7,
+    "nivelRotulo": "Specialization",
+    "corpoTopo": 153.9
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Golpe Mortal:*** Quando causar dano Severo a uma criatura, você pode marcar 1 Estresse para forçá-la a marcar 1 Ponto de Vida adicional."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Postura do Escorpião:*** Você recebe +2 de Evasão contra ataques feitos por uma criatura que tenha deixado Marcada para Morrer."
+    }
+   ]
+  },
+  {
+   "id": "assassino-guilda-dos-executores-maestria",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "assassino",
+    "sub": {
+     "lista": "subclasses",
+     "id": "assassino-guilda-dos-executores",
+     "carta": "maestria"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/ASSASSINO/Guilda dos Executores(2).png",
+   "pdf": {
+    "pagina": 200,
+    "coluna": 2,
+    "linha": 1
+   },
+   "layout": {
+    "tituloTopo": 131.7,
+    "nivelRotulo": "Mastery",
+    "corpoTopo": 153.9
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Golpe Certeiro:*** Uma vez por descanso longo, quando falhar em um ataque, você pode gastar 1 Esperança para transformá-lo em sucesso."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Ataque pelas Costas:*** Sua característica Marcado para Morrer usa d8 em vez de d6."
+    }
+   ]
+  },
+  {
+   "id": "assassino-guilda-dos-envenenadores-fundacao",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "assassino",
+    "sub": {
+     "lista": "subclasses",
+     "id": "assassino-guilda-dos-envenenadores",
+     "carta": "fundacao"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/ASSASSINO/Guilda dos Envenenadores.png",
+   "pdf": {
+    "pagina": 200,
+    "coluna": 0,
+    "linha": 2
+   },
+   "layout": {
+    "tituloTopo": 111.8,
+    "nivelRotulo": "Foundation",
+    "corpoTopo": 144.9,
+    "conjuracao": "KNOWLEDGE"
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Preparos Tóxicos:*** Marque 1 Estresse e role 1d4 fora do app para colocar uma quantidade de marcadores nesta carta igual ao resultado +1. Quando fizer um ataque bem-sucedido com arma, você pode gastar 1 marcador para afligir o alvo com um veneno."
+    },
+    {
+     "tipo": "b",
+     "texto": "Pétala Fantasma deixa o alvo temporariamente *Vulnerável*."
+    },
+    {
+     "tipo": "b",
+     "texto": "Esporo Tumular força o alvo a marcar também 1 Estresse."
+    },
+    {
+     "tipo": "b",
+     "texto": "Erva-Sanguessuga acrescenta 1d6 de dano ao ataque."
+    },
+    {
+     "tipo": "p",
+     "texto": "Limpe todos os marcadores não gastos ao fazer um descanso longo."
+    }
+   ]
+  },
+  {
+   "id": "assassino-guilda-dos-envenenadores-especializacao",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "assassino",
+    "sub": {
+     "lista": "subclasses",
+     "id": "assassino-guilda-dos-envenenadores",
+     "carta": "especializacao"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/ASSASSINO/Guilda dos Envenenadores(1).png",
+   "pdf": {
+    "pagina": 200,
+    "coluna": 1,
+    "linha": 2
+   },
+   "layout": {
+    "tituloTopo": 124.4,
+    "nivelRotulo": "Specialization",
+    "corpoTopo": 146.6
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Compêndio de Venenos:*** Você também conhece estes venenos:"
+    },
+    {
+     "tipo": "b",
+     "texto": "Trepadeira da Meia-Noite faz o alvo sofrer desvantagem nas jogadas de ataque até marcar 1 Estresse para limpar a condição."
+    },
+    {
+     "tipo": "b",
+     "texto": "Raiz de Górgona deixa o alvo temporariamente *Restrito*."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Presas Gêmeas:*** Ao afligir com um veneno conhecido um alvo Marcado para Morrer, você pode gastar 1 marcador adicional para aplicar também o efeito de um segundo veneno conhecido."
+    }
+   ]
+  },
+  {
+   "id": "assassino-guilda-dos-envenenadores-maestria",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "assassino",
+    "sub": {
+     "lista": "subclasses",
+     "id": "assassino-guilda-dos-envenenadores",
+     "carta": "maestria"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/ASSASSINO/Guilda dos Envenenadores(2).png",
+   "pdf": {
+    "pagina": 200,
+    "coluna": 2,
+    "linha": 2
+   },
+   "layout": {
+    "tituloTopo": 124.6,
+    "nivelRotulo": "Mastery",
+    "corpoTopo": 146.8
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Venomante:*** Você também conhece estes venenos:"
+    },
+    {
+     "tipo": "b",
+     "texto": "Semente da Ruína aplica −3 aos limiares de dano do alvo até o fim da cena, sem acumular."
+    },
+    {
+     "tipo": "b",
+     "texto": "Folha do Medo acrescenta ao ataque dano igual ao resultado do seu Dado de Medo."
+    },
+    {
+     "tipo": "b",
+     "texto": "Espinho Cadavérico impõe desvantagem nas jogadas de reação do alvo até o fim da cena."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Bênção da Víbora:*** Você é imune a venenos e outras toxinas."
+    }
+   ]
+  },
+  {
+   "id": "brigao-colosso-fundacao",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "brigao",
+    "sub": {
+     "lista": "subclasses",
+     "id": "brigao-colosso",
+     "carta": "fundacao"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/BRIGÃO/Colosso.png",
+   "pdf": {
+    "pagina": 201,
+    "coluna": 0,
+    "linha": 0
+   },
+   "layout": {
+    "tituloTopo": 131.9,
+    "nivelRotulo": "Foundation",
+    "corpoTopo": 154.1
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Robusto:*** Receba permanentemente +3 no seu limiar de dano Severo."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Avassalar:*** Quando tiver sucesso em um ataque contra um alvo, você pode gastar 1 Esperança para arremessá-lo para qualquer ponto em alcance Próximo ou forçá-lo a marcar 1 Estresse."
+    }
+   ]
+  },
+  {
+   "id": "brigao-colosso-especializacao",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "brigao",
+    "sub": {
+     "lista": "subclasses",
+     "id": "brigao-colosso",
+     "carta": "especializacao"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/BRIGÃO/Colosso(1).png",
+   "pdf": {
+    "pagina": 201,
+    "coluna": 1,
+    "linha": 0
+   },
+   "layout": {
+    "tituloTopo": 131.8,
+    "nivelRotulo": "Specialization",
+    "corpoTopo": 154.0
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Cercado:*** Ao fazer um ataque com arma Corpo a Corpo, você pode gastar qualquer quantidade de Esperança para escolher a mesma quantidade de criaturas adicionais em alcance Corpo a Corpo como alvos."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Olho por Olho:*** Uma vez por descanso, quando um adversário em alcance Corpo a Corpo fizer você marcar qualquer quantidade de Pontos de Vida, você pode marcar 1 Estresse para fazê-lo marcar a mesma quantidade de Pontos de Vida."
+    }
+   ]
+  },
+  {
+   "id": "brigao-colosso-maestria",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "brigao",
+    "sub": {
+     "lista": "subclasses",
+     "id": "brigao-colosso",
+     "carta": "maestria"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/BRIGÃO/Colosso(2).png",
+   "pdf": {
+    "pagina": 201,
+    "coluna": 2,
+    "linha": 0
+   },
+   "layout": {
+    "tituloTopo": 131.8,
+    "nivelRotulo": "Mastery",
+    "corpoTopo": 154.0
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Gosto pela Pancadaria:*** Ao obter um sucesso crítico num ataque com arma Corpo a Corpo, ganhe 1 Esperança adicional, limpe 1 Estresse adicional e receba +1 de Proficiência nesse ataque."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Ainda Não Acabei:*** Quando sofrer dano Severo, você pode ganhar 1 Esperança ou limpar 1 Estresse."
+    }
+   ]
+  },
+  {
+   "id": "brigao-artista-marcial-fundacao",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "brigao",
+    "sub": {
+     "lista": "subclasses",
+     "id": "brigao-artista-marcial",
+     "carta": "fundacao"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/BRIGÃO/Artista Marcial.png",
+   "pdf": {
+    "pagina": 201,
+    "coluna": 0,
+    "linha": 1
+   },
+   "layout": {
+    "tituloTopo": 131.8,
+    "nivelRotulo": "Foundation",
+    "corpoTopo": 154.0
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Lutador de Posturas:*** Você canaliza sua determinação interior para assumir posturas marciais que concedem benefícios especiais em combate. Pegue a folha de Posturas Marciais e escolha duas posturas de Patamar 1. Sempre que subir de nível, escolha outra postura do seu patamar ou inferior."
+    }
+   ]
+  },
+  {
+   "id": "brigao-artista-marcial-especializacao",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "brigao",
+    "sub": {
+     "lista": "subclasses",
+     "id": "brigao-artista-marcial",
+     "carta": "especializacao"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/BRIGÃO/Artista Marcial(1).png",
+   "pdf": {
+    "pagina": 201,
+    "coluna": 1,
+    "linha": 1
+   },
+   "layout": {
+    "tituloTopo": 131.8,
+    "nivelRotulo": "Specialization",
+    "corpoTopo": 154.0
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Defesas Aguçadas:*** Quando for alvo de um ataque, você pode gastar 1 Foco para receber contra esse ataque um bônus de Evasão igual ao seu patamar."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Canhão de Foco:*** Gaste 1 Foco para fazer uma jogada de Instinto contra um adversário em alcance Distante. Em caso de sucesso, cause d20+3 de dano mágico usando sua Proficiência."
+    }
+   ]
+  },
+  {
+   "id": "brigao-artista-marcial-maestria",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "brigao",
+    "sub": {
+     "lista": "subclasses",
+     "id": "brigao-artista-marcial",
+     "carta": "maestria"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/BRIGÃO/Artista Marcial(2).png",
+   "pdf": {
+    "pagina": 201,
+    "coluna": 2,
+    "linha": 1
+   },
+   "layout": {
+    "tituloTopo": 131.8,
+    "nivelRotulo": "Mastery",
+    "corpoTopo": 154.0
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Romper Limites:*** Uma vez por descanso, você pode realizar um feito atlético inacreditável sem precisar fazer uma jogada, como correr sobre a água, saltar entre telhados distantes ou escalar um prédio. Quando fizer isso, ganhe 1 Esperança e limpe 1 Estresse."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Estado de Fluxo:*** Você pode marcar 1 Estresse em vez de gastar 1 Foco para mudar de postura. Além disso, pode gastar 1 Foco em vez de marcar 1 Estresse para iniciar um Golpe em Combo."
+    }
+   ]
+  },
+  {
+   "id": "bruxo-pacto-do-eterno-fundacao",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "bruxo",
+    "sub": {
+     "lista": "subclasses",
+     "id": "bruxo-pacto-do-eterno",
+     "carta": "fundacao"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/BRUXO/Pacto do Eterno.png",
+   "pdf": {
+    "pagina": 201,
+    "coluna": 0,
+    "linha": 2
+   },
+   "layout": {
+    "tituloTopo": 117.9,
+    "nivelRotulo": "Foundation",
+    "corpoTopo": 150.2,
+    "conjuracao": "PRESENCE"
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Manto do Patrono:*** Gaste 1 Favor para revestir-se com um aspecto aterrorizante de seu patrono. O efeito dura até você sofrer dano Severo ou a cena terminar. Enquanto estiver ativo, receba nos limiares de dano um bônus igual ao seu patamar e tenha vantagem nas jogadas de ação para intimidar um alvo."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Abraço Imortal:*** Uma vez por descanso, gaste qualquer quantidade de Favores e role fora do app a mesma quantidade de Dados do Patrono. Para cada resultado 4 ou maior, limpe 1 Ponto de Vida."
+    }
+   ]
+  },
+  {
+   "id": "bruxo-pacto-do-eterno-especializacao",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "bruxo",
+    "sub": {
+     "lista": "subclasses",
+     "id": "bruxo-pacto-do-eterno",
+     "carta": "especializacao"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/BRUXO/Pacto do Eterno(1).png",
+   "pdf": {
+    "pagina": 201,
+    "coluna": 1,
+    "linha": 2
+   },
+   "layout": {
+    "tituloTopo": 131.7,
+    "nivelRotulo": "Specialization",
+    "corpoTopo": 153.9
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Invocação Atormentadora:*** Quando um adversário atacar você ou um aliado em alcance Muito Próximo, você pode gastar 1 Favor para impor desvantagem à jogada. Se o adversário falhar, ele também deve marcar 1 Estresse."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Absorção de Dano:*** Uma vez por descanso, você pode gastar 1 Favor para reduzir pela metade o dano recebido."
+    }
+   ]
+  },
+  {
+   "id": "bruxo-pacto-do-eterno-maestria",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "bruxo",
+    "sub": {
+     "lista": "subclasses",
+     "id": "bruxo-pacto-do-eterno",
+     "carta": "maestria"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/BRUXO/Pacto do Eterno(2).png",
+   "pdf": {
+    "pagina": 201,
+    "coluna": 2,
+    "linha": 2
+   },
+   "layout": {
+    "tituloTopo": 128.2,
+    "nivelRotulo": "Mastery",
+    "corpoTopo": 150.4
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Égide Sombria:*** Uma vez por descanso longo, quando fosse sofrer dano, você pode gastar 1 Favor em vez de marcar Pontos de Vida."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Flagelo Drenante:*** Quando um adversário atacar você ou um aliado em alcance Muito Próximo, você pode gastar 1 Favor para Drená-lo. Ele deve marcar 1 Estresse e você pode limpar 1 Estresse. Enquanto estiver Drenado, o alvo usa d12 em vez de d20 nas jogadas de ataque, inclusive para vantagem ou desvantagem, até falhar em uma jogada."
+    }
+   ]
+  },
+  {
+   "id": "bruxo-pacto-do-colerico-fundacao",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "bruxo",
+    "sub": {
+     "lista": "subclasses",
+     "id": "bruxo-pacto-do-colerico",
+     "carta": "fundacao"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/BRUXO/Pacto do Colérico.png",
+   "pdf": {
+    "pagina": 202,
+    "coluna": 0,
+    "linha": 0
+   },
+   "layout": {
+    "tituloTopo": 118.0,
+    "nivelRotulo": "Foundation",
+    "corpoTopo": 150.4,
+    "conjuracao": "PRESENCE"
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Fúria do Patrono:*** Gaste 1 Favor para imbuir seus ataques com o poder do patrono até você causar dano Severo ou a cena terminar. Ao rolar dano enquanto o efeito estiver ativo, role também uma quantidade de Dados do Patrono igual ao seu patamar e some os resultados ao dano causado."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Vingança Mortal:*** Quando marcar qualquer quantidade de Pontos de Vida por causa de um ataque, você pode gastar 1 Favor para rolar a mesma quantidade de Dados do Patrono. Para cada resultado 4 ou maior, o atacante marca 1 Ponto de Vida."
+    }
+   ]
+  },
+  {
+   "id": "bruxo-pacto-do-colerico-especializacao",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "bruxo",
+    "sub": {
+     "lista": "subclasses",
+     "id": "bruxo-pacto-do-colerico",
+     "carta": "especializacao"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/BRUXO/Pacto do Colérico(1).png",
+   "pdf": {
+    "pagina": 202,
+    "coluna": 1,
+    "linha": 0
+   },
+   "layout": {
+    "tituloTopo": 131.5,
+    "nivelRotulo": "Specialization",
+    "corpoTopo": 153.7
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Alcance Ameaçador:*** Gaste 1 Favor para aumentar o alcance da sua arma primária em um passo, como de Corpo a Corpo para Muito Próximo ou de Muito Próximo para Próximo, até o máximo de Longínquo. O efeito termina quando você fizer um ataque bem-sucedido com a arma."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Debilitar Meus Inimigos:*** Ao obter sucesso com Esperança numa jogada de ação contra um alvo, você pode gastar qualquer quantidade de Favores para forçá-lo a marcar a mesma quantidade de Estresses."
+    }
+   ]
+  },
+  {
+   "id": "bruxo-pacto-do-colerico-maestria",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "bruxo",
+    "sub": {
+     "lista": "subclasses",
+     "id": "bruxo-pacto-do-colerico",
+     "carta": "maestria"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/BRUXO/Pacto do Colérico(2).png",
+   "pdf": {
+    "pagina": 202,
+    "coluna": 2,
+    "linha": 0
+   },
+   "layout": {
+    "tituloTopo": 131.4,
+    "nivelRotulo": "Mastery",
+    "corpoTopo": 153.6
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Ataque Aterrorizante:*** Gaste 1 Favor para rerrolar qualquer quantidade dos seus dados de dano. Você pode continuar gastando Favores para usar esta característica na mesma jogada de dano."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Ira Sobrenatural:*** Uma vez por descanso, quando sofrer dano, você pode gastar qualquer quantidade de Favores para rolar a mesma quantidade de Dados do Patrono e escolher em alcance Próximo uma quantidade de criaturas igual ao maior resultado. Cada alvo deve marcar 1 Ponto de Vida."
+    }
+   ]
+  },
+  {
+   "id": "bruxa-erveira-fundacao",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "bruxa",
+    "sub": {
+     "lista": "subclasses",
+     "id": "bruxa-erveira",
+     "carta": "fundacao"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/BRUXA/Erveira.png",
+   "pdf": {
+    "pagina": 202,
+    "coluna": 0,
+    "linha": 1
+   },
+   "layout": {
+    "tituloTopo": 109.8,
+    "nivelRotulo": "Foundation",
+    "corpoTopo": 142.1,
+    "conjuracao": "KNOWLEDGE"
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Remédios Herbais:*** Quando você ou um aliado na cena limpar 1 ou mais Pontos de Vida ou Estresses usando um consumível, aumente em 1 a quantidade limpa."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Talismã Encantado:*** Uma vez por descanso, você pode imbuir um objeto pequeno com sua essência protetora. Gaste qualquer quantidade de Esperança para colocar a mesma quantidade de marcadores nesta carta. Quando a pessoa que carrega o talismã sofrer dano, gaste 1 marcador para reduzir em 1 a quantidade de Pontos de Vida que ela marca. Limpe todos os marcadores ao fazer um descanso."
+    }
+   ]
+  },
+  {
+   "id": "bruxa-erveira-especializacao",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "bruxa",
+    "sub": {
+     "lista": "subclasses",
+     "id": "bruxa-erveira",
+     "carta": "especializacao"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/BRUXA/Erveira(1).png",
+   "pdf": {
+    "pagina": 202,
+    "coluna": 1,
+    "linha": 1
+   },
+   "layout": {
+    "tituloTopo": 120.0,
+    "nivelRotulo": "Specialization",
+    "corpoTopo": 142.2
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Caminhar Entre Mundos:*** Durante um momento de calma, faça uma jogada de Conjuração com Dificuldade 13. Uma vez por descanso, em caso de sucesso, você pode marcar 1 Estresse para atravessar o véu da morte e conversar com espíritos próximos. Coloque nesta carta uma quantidade de marcadores igual ao seu traço de Conjuração e remova um sempre que um espírito responder a uma pergunta. Quando remover o último marcador ou a cena terminar, você retorna ao Reino Mortal no mesmo lugar de onde partiu."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Maldição Atormentadora:*** Você tem vantagem nos ataques contra criaturas Amaldiçoadas."
+    }
+   ]
+  },
+  {
+   "id": "bruxa-erveira-maestria",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "bruxa",
+    "sub": {
+     "lista": "subclasses",
+     "id": "bruxa-erveira",
+     "carta": "maestria"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/BRUXA/Erveira(2).png",
+   "pdf": {
+    "pagina": 202,
+    "coluna": 2,
+    "linha": 1
+   },
+   "layout": {
+    "tituloTopo": 131.7,
+    "nivelRotulo": "Mastery",
+    "corpoTopo": 153.9
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Círculo de Poder:*** Uma vez por descanso, trace no chão um círculo que delimite uma área em alcance Muito Próximo ao seu redor e coloque nesta carta uma quantidade de marcadores igual ao seu traço de Conjuração. Dentro do círculo, você e seus aliados recebem +2 nos limiares de dano, nas jogadas de ataque e na Evasão. Remova 1 marcador sempre que você ou um aliado no círculo fizer uma jogada de ação ou evitar um ataque. O feitiço dura até o último marcador ser removido ou você sair do círculo."
+    }
+   ]
+  },
+  {
+   "id": "bruxa-lua-fundacao",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "bruxa",
+    "sub": {
+     "lista": "subclasses",
+     "id": "bruxa-lua",
+     "carta": "fundacao"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/BRUXA/Lua.png",
+   "pdf": {
+    "pagina": 202,
+    "coluna": 0,
+    "linha": 2
+   },
+   "layout": {
+    "tituloTopo": 123.2,
+    "nivelRotulo": "Foundation",
+    "corpoTopo": 155.0,
+    "conjuracao": "INSTINCT"
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Encanto da Noite:*** Faça uma jogada de Conjuração com Dificuldade 13 para envolver-se numa aparência ilusória fascinante. Enquanto estiver sob o Encanto, você tem vantagem nas jogadas que aproveitem essa aparência e adversários em alcance Próximo precisam marcar 1 Estresse para atacar você. A menos que marque 1 Estresse para manter o Encanto, ele termina quando você marcar 1 Ponto de Vida ou causar dano."
+    }
+   ]
+  },
+  {
+   "id": "bruxa-lua-especializacao",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "bruxa",
+    "sub": {
+     "lista": "subclasses",
+     "id": "bruxa-lua",
+     "carta": "especializacao"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/BRUXA/Lua(1).png",
+   "pdf": {
+    "pagina": 202,
+    "coluna": 1,
+    "linha": 2
+   },
+   "layout": {
+    "tituloTopo": 131.7,
+    "nivelRotulo": "Specialization",
+    "corpoTopo": 153.9
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Raio Lunar:*** Uma vez por sessão, você pode conjurar uma coluna de luar que ilumina a área em alcance Próximo até o fim da cena. Sob esse luar, você e seus aliados recebem +1 nas jogadas de Conjuração e enxergam através de ilusões."
+    },
+    {
+     "tipo": "p",
+     "texto": "***Ira da Luz Pálida:*** Quando uma criatura Amaldiçoada em alcance Longínquo falhar em um ataque, ela deve marcar 1 Estresse."
+    }
+   ]
+  },
+  {
+   "id": "bruxa-lua-maestria",
+   "molde": "subclasse",
+   "fonte": {
+    "arquivo": "data/classes.json",
+    "lista": "classes",
+    "id": "bruxa",
+    "sub": {
+     "lista": "subclasses",
+     "id": "bruxa-lua",
+     "carta": "maestria"
+    },
+    "campos": [
+     "caracteristicas[].nome+texto"
+    ]
+   },
+   "destino": "assets/cartas/subclasses/BRUXA/Lua(2).png",
+   "pdf": {
+    "pagina": 202,
+    "coluna": 2,
+    "linha": 2
+   },
+   "layout": {
+    "tituloTopo": 116.1,
+    "nivelRotulo": "Mastery",
+    "corpoTopo": 138.3
+   },
+   "blocos": [
+    {
+     "tipo": "p",
+     "texto": "***Fases Lunares:*** No início de cada sessão, role 1d6 fora do app e coloque-o nesta carta. Até o fim da sessão, 1 (Nova) permite gastar 1 Esperança para negar dano Menor; 2–3 (Crescente) concede +2 nas jogadas de dano; 4 (Cheia) concede +3 nos limiares de dano; 5–6 (Minguante) concede +1 de Evasão. Uma vez por descanso, você pode gastar 1 Esperança para aumentar o valor do dado em 1; ao aumentar um 6, ele se torna 1."
+    }
+   ]
+  }
+ ]
+}
