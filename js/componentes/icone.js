@@ -100,7 +100,3 @@ export function icone(nome, { grande = false, titulo = '' } = {}) {
   return svg;
 }
 
-/** Os nomes que existem — usado pelo teste que impede ícone fantasma. */
-export function nomesDeIcone() {
-  return Object.keys(CAMINHOS);
-}

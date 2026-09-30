@@ -3,7 +3,7 @@
  * Sem dependência de framework: só DOM, focado em toque.
  */
 
-import { el, limpar } from './util.js';
+import { el } from './util.js';
 
 /* --------------------------------------------------------------------------
    Avisos (toasts)
@@ -160,11 +160,6 @@ export function fecharModal() {
   if (topo) topo.fechar();
 }
 
-/** Fecha todos — usado quando a tela inteira troca. */
-export function fecharTodosOsModais() {
-  while (pilhaDeModais.length) pilhaDeModais[pilhaDeModais.length - 1].fechar();
-}
-
 /**
  * Tem algum modal aberto?
  *
@@ -208,13 +203,6 @@ export function confirmar({ titulo = 'Confirmar', mensagem, confirmarTexto = 'Co
    Blocos de tela
    -------------------------------------------------------------------------- */
 
-export function blocoCarregando(texto = 'Carregando…') {
-  return el('div', { class: 'carregando' }, [
-    el('div', { class: 'carregando__roda' }),
-    el('span', { class: 'texto-sm', texto })
-  ]);
-}
-
 export function blocoVazio(titulo, descricao, acao) {
   return el('div', { class: 'vazio' }, [
     el('p', { class: 'vazio__titulo', texto: titulo }),
@@ -223,8 +211,3 @@ export function blocoVazio(titulo, descricao, acao) {
   ]);
 }
 
-/** Troca o conteúdo de um contêiner por um novo nó. */
-export function renderizarEm(container, node) {
-  limpar(container).append(node);
-  return container;
-}

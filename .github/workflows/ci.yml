@@ -31,6 +31,12 @@ jobs:
       - run: npm run teste:sintaxe
       - run: npm run teste
       - run: npm run teste:gerados
+      - name: Cartas do livro — a imagem diz o mesmo que o app
+        run: npm run teste:cartas-livro
+      - name: Campanhas — as oito molduras sem quebrar o resto
+        run: npm run teste:molduras
+      - name: Verbetes — o gerador continua dono do arquivo
+        run: npm run teste:verbetes
       - run: npm run teste:funcoes
       - run: npm run teste:motor-mesa
       - name: Motor — todo nome chamado existe no motor

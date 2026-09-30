@@ -23,14 +23,6 @@ export function carregar(nome) {
   return cache.get(nome);
 }
 
-/** Carrega vários de uma vez e devolve um objeto com os nomes como chave. */
-export async function carregarVarios(...nomes) {
-  const valores = await Promise.all(nomes.map(carregar));
-  const saida = {};
-  nomes.forEach((n, i) => { saida[n] = valores[i]; });
-  return saida;
-}
-
 /* --------------------------------------------------------------------------
    Normalização — a mesma regra do backend (chaveTexto_ em 41_Dominios.gs):
    sem acento, sem caixa, sem espaço sobrando.
@@ -48,10 +40,6 @@ export function chave(texto) {
 
 export async function classes() {
   return (await carregar('classes')).classes;
-}
-
-export async function classePorId(id) {
-  return (await classes()).find((c) => c.id === id) || null;
 }
 
 export async function guiaDaClasse(id) {

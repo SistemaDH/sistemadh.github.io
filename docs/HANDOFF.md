@@ -3061,3 +3061,59 @@ a lista de trabalho.
 **63 cartas · 0 divergências.** Backend 1220 · 0; e2e 112 passos · 0. As 21 do
 Pavor foram regeradas pelo gerador com o molde novo e conferidas byte a byte:
 idênticas às do lote anterior.
+
+---
+
+## Faxina geral, e a auditoria que derrubou a auditoria (30/09/2026)
+
+Varredura completa do repositório atrás de arquivo antigo, código inutilizado e
+coisa quebrada. O laudo está em `docs/varredura-30-09-2026.md`.
+
+### O que vale registrar aqui
+
+**A primeira varredura achou oito problemas. A segunda mostrou que quatro não
+existiam** — e quase mandei apagar 1.077 linhas que sustentam a suíte.
+
+`10_Planilha.gs`, `20_Auth.gs`, `4J_Foto.gs` e `50_Setup.gs` não estão no
+`SOURCE_FILES` da `engine-api`, e eu li isso como "sobra da era Apps Script".
+São o backend do **ambiente de teste**: o `apps-script-mock.mjs` lê todos os
+`.gs` da pasta, e os 1220 testes entram por eles. O
+`tools/conferir-motor-simbolos.mjs` já dizia — *"existem no teste e NÃO existem
+em produção"*. Eu não tinha lido.
+
+Os quatro falsos positivos tinham a mesma causa: medir "quem cita este nome" sem
+perguntar se o ambiente de teste conta. **Antes de apagar qualquer coisa, rodar
+`npm run teste` antes e depois.**
+
+### O que foi feito
+
+- **`teste:tudo` e o CI agora cobrem o mesmo conjunto.** Três baterias estavam
+  no `teste:tudo` e fora do CI (`teste:cartas-livro`, `teste:molduras`,
+  `teste:verbetes` — inclusive a guarda nova das 63 cartas); as 14 de layout
+  estavam no CI e fora do `teste:tudo`. Agora são **94 baterias dos dois lados**,
+  conferido por script.
+- **Duas funções mortas do motor removidas**: `cartasComUsoEmCriaturaDaFicha_`
+  (4C_Ajustes.gs) e `caracteristicasDoGrupoParaDescanso_` (99_Api.gs, a
+  antecessora do `contextoDoGrupoParaDescanso_`). Varredura depois: 0 mortas
+  entre as 438.
+- **Seis ferramentas de uso único** e o script `teste:auditoria` (inventário de
+  uma rodada, não portão) removidos.
+- **Dez funções de topo sem uso no frontend** (104 linhas) e uma imagem órfã.
+
+### ⚠ Duas coisas abertas
+
+1. **O `mesa-api` continua no ar com 159 linhas de regra viva**, `verify_jwt:
+   false`, escrevendo no banco, exigindo sessão de Mestre. O `ACOES_MESA` está
+   vazio desde o Elo 2. É caminho paralelo ao motor testado. O conserto é uma
+   lápide por cima — **deploy, precisa da palavra dela**. O código está no
+   backup de 30/09.
+2. **O Guia de Batalha existe duas vezes**: `pontosDeBatalha_` no motor (com
+   quatro testes, incluindo a dedup de ajustes) atrás de um `case` que ninguém
+   pode chamar, e a mesma conta em JavaScript no `js/telas/bestiario.js`, que é
+   quem a mesa usa. Mesma fonte de dados, mesmo número hoje. Não consertei:
+   escolher qual morre é decisão de projeto.
+
+### Este lote mexeu no motor
+
+`4C_Ajustes.gs` e `99_Api.gs` mudaram → a `engine-api` precisa de
+**ENGINE_COMMIT novo**. A fonte da função não mudou: é **repin**.

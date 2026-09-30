@@ -58,10 +58,6 @@ export function verbetePorId(id) {
   return porId ? (porId.get(id) || null) : null;
 }
 
-export function temVerbetes() {
-  return !!indice;
-}
-
 /** Todos, em ordem, para a tela de consulta. */
 export function todosOsVerbetes() {
   return porId ? [...porId.values()] : [];
@@ -193,57 +189,6 @@ export function gatilho(texto, verbete, { extra } = {}) {
     title: `${verbete.termo} — livro p.${verbete.pagina}`,
     onClick: (ev) => { ev.stopPropagation(); abrirVerbete(verbete.id, { extra }); }
   }, texto);
-}
-
-/**
- * Devolve um fragmento com o texto e as palavras de mecânica já clicáveis.
- *
- * As mesmas regras de poluição do glossário, pelo mesmo motivo:
- *  • só a PRIMEIRA ocorrência de cada verbete;
- *  • palavra inteira, aceitando plural e feminino;
- *  • nunca dentro de um parêntese que já existe no texto — lá dentro mora a
- *    glosa da Jambô, e um botão no meio dela viraria sopa.
- *
- * Sem os verbetes carregados, devolve o texto puro. Nada quebra.
- */
-export function textoComVerbetes(texto) {
-  const bruto = String(texto || '');
-  const frag = document.createDocumentFragment();
-  if (!bruto) return frag;
-  if (!indice) {
-    frag.append(document.createTextNode(bruto));
-    return frag;
-  }
-
-  const base = chave(bruto);
-  // Se a normalização mudou o comprimento (acento raro que decompõe em mais de
-  // uma marca), desiste: cortar o texto na posição errada é pior do que não
-  // marcar nada.
-  if (base.length !== bruto.length) {
-    frag.append(document.createTextNode(bruto));
-    return frag;
-  }
-
-  const marcas = [];
-  const jaUsados = new Set();
-  indice.forEach((v, palavra) => {
-    if (jaUsados.has(v.id)) return;
-    const achado = acharPalavra(base, palavra);
-    if (achado.inicio < 0) return;
-    jaUsados.add(v.id);
-    marcas.push({ ...achado, verbete: v });
-  });
-  marcas.sort((a, b) => a.inicio - b.inicio || b.fim - a.fim);
-
-  let cursor = 0;
-  marcas.forEach((m) => {
-    if (m.inicio < cursor) return;          // já coberto por uma marca maior
-    frag.append(document.createTextNode(bruto.slice(cursor, m.inicio)));
-    frag.append(gatilho(bruto.slice(m.inicio, m.fim), m.verbete));
-    cursor = m.fim;
-  });
-  frag.append(document.createTextNode(bruto.slice(cursor)));
-  return frag;
 }
 
 /**

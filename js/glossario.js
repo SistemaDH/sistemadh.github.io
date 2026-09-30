@@ -70,14 +70,6 @@ export function jamboDe(canonico) {
   return t.jambo;
 }
 
-/** Caminho inverso — serve para a busca aceitar as duas grafias. */
-export function canonicoDe(jambo) {
-  if (!termos) return '';
-  const alvo = chave(jambo);
-  const t = termos.find((x) => chave(x.jambo) === alvo);
-  return t ? t.canonico : '';
-}
-
 /**
  * Nome com a glosa como elemento à parte, para o CSS poder deixá-la discreta.
  * Devolve um fragmento: "Osso" + <span class="glosa">(Falange)</span>
@@ -172,14 +164,6 @@ export function marcasDeGlossa(texto) {
   });
   marcas.sort((a, b) => a.pos - b.pos);
   return marcas;
-}
-
-/** Versão em texto puro — útil para atributos title e para busca. */
-export function textoComGlossaPlano(texto) {
-  const frag = textoComGlossa(texto);
-  const caixa = document.createElement('div');
-  caixa.append(frag);
-  return caixa.textContent;
 }
 
 /**

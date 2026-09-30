@@ -705,37 +705,6 @@ function usoEmCriaturaDaCarta_(cartaId) {
   return (def && def.usoEmCriatura) ? def.usoEmCriatura : null;
 }
 
-/** As cartas em mão que podem ser usadas em uma criatura tocada. */
-function cartasComUsoEmCriaturaDaFicha_(ficha) {
-  const saida = [];
-  const ativas = (((ficha || {}).cartas || {}).ativas) || [];
-  for (let i = 0; i < ativas.length; i++) {
-    const carta = (typeof acharCarta_ === 'function') ? acharCarta_(ativas[i]) : null;
-    if (!carta) continue;
-    const uso = usoEmCriaturaDaCarta_(carta.id);
-    if (!uso) continue;
-    const chave = String(uso.contador || '');
-    const disponiveis = Math.max(0,
-      Math.trunc(Number(((((ficha || {}).contadores || {})[chave]) || {}).valor)) || 0);
-    saida.push({
-      id:carta.id, nome:carta.nome, contador:chave, marcadores:disponiveis,
-      rotuloMarcadores:String(uso.rotuloMarcadores || 'marcadores'),
-      rotuloAtivar:String(uso.rotuloAtivar || ('Usar ' + carta.nome + ' em uma criatura')),
-      permiteSiMesmo:uso.permiteSiMesmo !== false,
-      entradaQuantidade:uso.entradaQuantidade || null,
-      opcoes:(uso.opcoes || []).map(function (o) {
-        return {
-          id:o.id, rotulo:o.rotulo || o.id,
-          marcadoresFixos:(o.marcadoresFixos === undefined ? null : o.marcadoresFixos),
-          marcadoresALivreEscolha:o.marcadoresALivreEscolha === true,
-          lembrete:o.lembrete || ''
-        };
-      })
-    });
-  }
-  return saida;
-}
-
 /**
  * Gasta marcadores da carta na ficha de origem e limpa a trilha de quem tocou.
  *

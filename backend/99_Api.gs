@@ -145,11 +145,6 @@ function contextoDoGrupoParaDescanso_(meuId) {
   };
 }
 
-/** Compatibilidade: só as características, quando é só isso que interessa. */
-function caracteristicasDoGrupoParaDescanso_() {
-  return contextoDoGrupoParaDescanso_(null).caracteristicas;
-}
-
 /**
  * Carrega no motor de descanso o que ele não sabe ler sozinho.
  *
