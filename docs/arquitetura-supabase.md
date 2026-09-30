@@ -27,48 +27,44 @@ As tabelas expostas têm RLS habilitado e não possuem policies públicas para `
 Produção atual:
 
 ```text
-engine-api: v22 ACTIVE (deploy conferido em 29/09/2026)
+engine-api: v23 ACTIVE (deploy conferido em 30/09/2026)
 verify_jwt: false
-ENGINE_COMMIT: 2da0a6721d0558f00dc4edf202f7195102b611fe
-bundle: 815968e78d73574c2b78b4965f0bf7029ada02135a63f8edae85b7bc9324f914
+ENGINE_COMMIT: 89f2790fa0a3dda66ddb80c41da3e4be213097cb
+bundle: b4b52a90249ef0e652d85616c670736452abe0ea12674a1c7967064117913c47
 ```
 
-⚠ **A v22 NÃO é repin.** A fonte da função mudou junto com o motor: a ação
-`reiniciarMoldura` entrou no `ACOES`. Sem ela, o botão "Reiniciar campanha" do
-painel bateria num 404 mudo e o Mestre ficaria **preso** na moldura escolhida —
-exatamente o oposto do que a trava quer dizer. Quem pegou isso antes do deploy foi
-o `conferir-funcoes-publicadas` (terceira vez que essa guarda evita um deploy
-quebrado).
+⚠ **A v23 é REPIN**, e é bom que seja: a fonte da função não mudou uma vírgula —
+a única linha diferente entre a v22 e a v23 é o próprio `ENGINE_COMMIT`, o que
+foi conferido por diff antes de mandar. O que mudou foi o motor `.gs` no commit
+apontado.
 
-O que o commit `2da0a672` traz, em relação ao `144fb817` da v21: as oito molduras
-do Capítulo 5 automatizadas de ponta a ponta — conteúdo em `data/molduras.json`,
-mecânicas por moldura na ficha e no painel, a moeda da campanha substituindo o
-ouro quando a moldura pede (o quantum da Placa-mãe), e a escolha da campanha com
-**confirmação e trava**: escolhida, a moldura só sai por `reiniciarMoldura`, que
-tem confirmação própria e avisa honestamente que nada do que já foi aplicado é
-desfeito. Sete arquivos do motor mudaram: `44_Equipamento.gs`, `47_Contadores.gs`,
-`48_Criacao.gs`, `4B_Descanso.gs`, `4C_Ajustes.gs`, `4E_Mesa.gs` e `99_Api.gs`.
+O que o commit `89f2790` traz, em relação ao `2da0a672` da v22: a faxina geral.
+Dois arquivos do motor mudaram, e só para REMOVER código morto —
+`cartasComUsoEmCriaturaDaFicha_` saiu do `4C_Ajustes.gs` (31 linhas) e
+`caracteristicasDoGrupoParaDescanso_` saiu do `99_Api.gs` (5 linhas, a
+antecessora do `contextoDoGrupoParaDescanso_`). Nenhuma regra mudou de
+comportamento. Varredura depois: 0 funções sem chamador entre as 438 do motor.
 
 Os 24 `SOURCE_FILES` servidos pelo GitHub nesse commit foram conferidos **byte a
-byte** contra o que a suíte de 1220 testes rodou: **0 divergentes**.
+byte** contra a árvore que rodou os testes: **0 divergentes**.
 
 ⚠ **O que NÃO foi possível conferir neste ambiente:** uma chamada HTTP de ida e
-volta à função — nem uma autenticada, nem um ping sem token. O proxy de saída da
-sessão recusa o host das Edge Functions (403 no CONNECT), e não se contorna isso. A
-verificação foi a releitura do código implantado pelo painel — v22 ACTIVE,
-`verify_jwt: false`, pin novo, os 24 `SOURCE_FILES`, `reiniciarMoldura` presente no
-`ACOES`, e o `autenticar` conferindo o token de sessão **em hash** contra `sessoes`,
-com a expiração intacta — mais os advisors de segurança, que seguem só com o
-`rls_enabled_no_policy` esperado nas 6 tabelas (INFO; é o estado desejado, não um
-defeito a calar).
+volta à função. O proxy de saída da sessão recusa o host das Edge Functions (403
+no CONNECT). A verificação foi a releitura do código implantado pelo painel — v23
+ACTIVE, `verify_jwt: false`, pin novo, os 24 `SOURCE_FILES`, e o `autenticar`
+conferindo o token de sessão **em hash** contra `sessoes`, com a expiração
+intacta — mais os advisors de segurança, que seguem só com o
+`rls_enabled_no_policy` esperado nas 6 tabelas (INFO; é o estado desejado).
 
-**A primeira requisição AUTENTICADA é que baixa os 24 `.gs` do pin novo**, então a
-prova final é da mesa: abrir o painel do Mestre, escolher uma campanha, confirmar,
-e ver o select travar — e o botão "Reiniciar campanha" responder em vez de dar erro.
+**A primeira requisição AUTENTICADA é que baixa os 24 `.gs` do pin novo.** Como
+este lote só removeu código morto, a prova da mesa é simples: abrir uma ficha e
+fazer um ajuste. Se responder, o motor novo carregou.
 
 ### Histórico
 
-A v21 (29/09/2026) pinou `144fb81781d98f592b4bf5fc764fe174cdb4a691`, com os
+A v22 (29/09/2026) pinou `2da0a6721d0558f00dc4edf202f7195102b611fe` e acrescentou
+`reiniciarMoldura` ao `ACOES` — o único deploy recente que não foi repin; a v21
+(29/09/2026) pinou `144fb81781d98f592b4bf5fc764fe174cdb4a691`, com os
 três defeitos que a mesa achou testando e o dano massivo virando interruptor do
 Mestre; a v17 (21/09/2026) acrescentou `encerrarCenaDaMesa` e pinou
 `7424846cd88103653359e4fcd31d009b409d3880`; a v19 (28/09/2026) pinou

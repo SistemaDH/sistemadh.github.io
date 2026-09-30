@@ -3117,3 +3117,37 @@ perguntar se o ambiente de teste conta. **Antes de apagar qualquer coisa, rodar
 
 `4C_Ajustes.gs` e `99_Api.gs` mudaram → a `engine-api` precisa de
 **ENGINE_COMMIT novo**. A fonte da função não mudou: é **repin**.
+
+---
+
+## Deploy da v23 (30/09/2026) — repin da faxina
+
+```text
+engine-api: v23 ACTIVE
+verify_jwt: false
+ENGINE_COMMIT: 89f2790fa0a3dda66ddb80c41da3e4be213097cb
+bundle: b4b52a90249ef0e652d85616c670736452abe0ea12674a1c7967064117913c47
+```
+
+1. commit imutável: `89f2790` — a faxina geral;
+2. **os 24 `SOURCE_FILES` conferidos byte a byte: 0 divergentes**;
+3. `ENGINE_COMMIT` movido. Antes de mandar, o payload foi comparado com o da
+   v22: **a única linha diferente é o próprio pin**. É repin de verdade;
+4. deploy com `verify_jwt: false` passado EXPLICITAMENTE;
+5. releitura: v23 ACTIVE, `verify_jwt: false`, pin novo, 24 `SOURCE_FILES`,
+   `autenticar` em hash intacto;
+6. advisors: só o `rls_enabled_no_policy` esperado, INFO, nas 6 tabelas.
+
+O que este pin leva ao ar: só a REMOÇÃO de duas funções mortas do motor. Nenhuma
+regra mudou de comportamento.
+
+### ⚠ Ficou pendente do lado dela
+
+Sete arquivos que a faxina apagou **continuam no repositório** (o commit
+`89f2790` não os removeu): `assets/marca/medo.png` e os seis de `tools/`
+(`aplicar-diff-cartas.py`, `aplicar-revisao-itens.py`,
+`auditar-pendencias-lote8.py`, `integrar-srd2-regras-referenciadas.mjs`,
+`montar-guias-de-classe.py`, `uniformizar-jogada.py`). Eu escrevo no clone dela,
+mas não apago — a remoção é manual. Não quebra nada; é sobra.
+
+O `ci.yml` entrou: as três baterias que faltavam estão no CI.
