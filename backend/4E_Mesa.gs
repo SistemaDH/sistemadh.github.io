@@ -274,6 +274,21 @@ function normalizarMesa_(m) {
   m.ouroComMoedas = Boolean(m.ouroComMoedas);
 
   /*
+   * BANQUETES — a campanha em que se cozinha (SRD 2.0, p.192–194).
+   *
+   * Mesmo lugar e mesmo motivo do ouro em moedas e do dano massivo: é regra
+   * OPCIONAL, do suplemento, e vale para a mesa inteira. Ela TIRA três
+   * movimentos de descanso de todo mundo e põe outro no lugar — uma ficha
+   * jogando com Banquetes ao lado de outra sem seria a mesma pergunta com duas
+   * respostas na mesma conversa.
+   *
+   * ⚠ NASCE DESLIGADA. É a lição do dano massivo, que vinha ligado e parecia
+   * defeito do app para quem não conhecia a regra. Aqui seria pior: a pessoa
+   * abriria o descanso e não acharia "Tratar Feridas".
+   */
+  m.banquetes = Boolean(m.banquetes);
+
+  /*
    * RECADOS: o único canal que vai da ficha do jogador para o Mestre.
    *
    * Nasceu da Amaldiçoada (Placa Sombria) e do Favorecido pela Fortuna (Manto
@@ -415,6 +430,27 @@ function ouroComMoedas_() {
     return Boolean(mesaLer_().ouroComMoedas);
   } catch (e) {
     // Sem mesa legível, vale a regra padrão do livro: sem moedas.
+    return false;
+  }
+}
+
+/**
+ * A MESA ESTÁ JOGANDO COM BANQUETES?
+ *
+ * > "In a feast-based campaign, players can't choose downtime moves to clear
+ * > Stress, clear Hit Points, or gain Hope. Instead, they have a new downtime
+ * > move: Make a Feast." (SRD 2.0, p.193)
+ *
+ * Uma pergunta, um dono — a lição que o dano massivo ensinou com três leitores
+ * e dois padrões embutidos. Aceita a mesa já lida (o caso comum, sem custo de
+ * leitura nova) ou lê sozinha; sem mesa legível devolve o padrão do livro, que
+ * é a campanha SEM banquetes.
+ */
+function banquetesNaMesa_(m) {
+  try {
+    const mesa = (m && typeof m === 'object') ? m : mesaLer_();
+    return mesa.banquetes === true;
+  } catch (e) {
     return false;
   }
 }

@@ -3467,8 +3467,29 @@ function usarConsumivelDaMochila_(ficha, lista, indice, a) {
 
   const gasto=gastarUmaUnidadeDeItem_(lista,indice);
   const efeitoManualFinal=String(efeito.efeitoManual || ((resultadoEfeito || {}).efeitoManual) || '');
+  /*
+   * O CONSUMÍVEL QUE TERMINA NO ADVERSÁRIO DEIXA RECADO NO PAINEL.
+   *
+   * Dezesseis consumíveis acabam fora da ficha: dano num grupo de alvos, uma
+   * condição numa área, uma criatura que sofre 8d10. O app consumia a unidade
+   * e soltava a mão — a pessoa lia o efeito na própria tela e repetia em voz
+   * alta para o Mestre, que anotava no papel.
+   *
+   * ⚠ O RECADO NÃO É TEXTO NOVO. Ele é a própria descrição do item, a mesma
+   * que o catálogo mostra, com o nome na frente. Escrever aqui uma segunda
+   * redação do efeito criaria de novo a duplicata que este lote acabou de
+   * matar nos 67 `efeitoManual` que repetiam a `descricao`.
+   *
+   * ⚠ E ELE NÃO ROLA NADA. Onde há dado, o recado entrega a FÓRMULA — "sofrem
+   * 8d20 de dano físico" —, não um número. Quem rola é a mesa; a decisão
+   * "só ficha, sem dados" não muda por causa de conveniência.
+   */
+  const entregaAoMestre = efeito.entregaAoMestre === true && efeitoManualFinal;
   return {
     tipo:'inventario', acao:'consumir', item:item.nome, itemId:item.id,
+    efeitoMesa: entregaAoMestre
+      ? { recado:item.nome + ': ' + efeitoManualFinal, origemDoRecado:item.nome }
+      : null,
     qtdAntes:gasto.antes, qtdDepois:gasto.depois, consumiu:1,
     efeito:tipo, quantidade:quantidade, resultadoManual:resultadoManual,
     resultadoEfeito:resultadoEfeito,
@@ -3476,7 +3497,8 @@ function usarConsumivelDaMochila_(ficha, lista, indice, a) {
     custoEstresse:(tipo === 'consumir-e-resolver-na-mesa' ? Math.max(0,Math.trunc(Number(efeito.custoEstresse)) || 0) : undefined),
     efeitoManual:efeitoManualFinal || null,
     detalhes:detalhes,
-    aviso:item.nome + ': 1 unidade consumida.' + (efeitoManualFinal ? ' Resolva na mesa: ' + efeitoManualFinal : '')
+    aviso:item.nome + ': 1 unidade consumida.' + (efeitoManualFinal ? ' Resolva na mesa: ' + efeitoManualFinal : '') +
+      (entregaAoMestre ? ' O painel do Mestre recebeu o recado.' : '')
   };
 }
 

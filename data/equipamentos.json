@@ -14263,7 +14263,7 @@
       "id": "consumivel-12",
       "rolagem": "12",
       "nome": "Fragmento Arcano Instável",
-      "descricao": "Você pode fazer uma jogada de Finesse para arremessar esse fragmento em um grupo de adversários dentro do alcance de Longe. Os alvos contra os quais você for bem-sucedido receberão 1d20 de dano mágico.",
+      "descricao": "Você pode fazer uma jogada de Finesse para arremessar esse fragmento em um grupo de adversários em alcance Distante. Os alvos contra os quais você for bem-sucedido sofrem 1d20 de dano mágico.",
       "nomeIngles": "Unstable Arcane Shard",
       "descricaoIngles": "You can make a Finesse Roll to throw this shard at a group of adversaries within Far range. Targets you succeed against take 1d20 magic damage.",
       "origemNome": "livro",
@@ -14274,8 +14274,8 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Você pode fazer uma jogada de Finesse para arremessar esse fragmento em um grupo de adversários dentro do alcance de Longe. Os alvos contra os quais você for bem-sucedido receberão 1d20 de dano mágico.",
-        "rolaNoApp": false
+        "rolaNoApp": false,
+        "entregaAoMestre": true
       }
     },
     {
@@ -14386,7 +14386,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Coma essa raiz para saltar até o alcance distante uma vez sem precisar rolar.",
         "rolaNoApp": false
       }
     },
@@ -14520,7 +14519,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Ao tocar esse pedaço de pergaminho em outro, você pode copiar perfeitamente o conteúdo do segundo pergaminho. Depois de usado, esse pergaminho se transforma em papel comum.",
         "rolaNoApp": false
       }
     },
@@ -14528,7 +14526,7 @@
       "id": "consumivel-24",
       "rolagem": "24",
       "nome": "Fragmento Arcano Aprimorado",
-      "descricao": "Você pode fazer uma jogada de Finesse para arremessar esse fragmento em um grupo de adversários dentro do alcance de Longe. Os alvos contra os quais você for bem-sucedido receberão 2d20 de dano mágico.",
+      "descricao": "Você pode fazer uma jogada de Finesse para arremessar esse fragmento em um grupo de adversários em alcance Distante. Os alvos contra os quais você for bem-sucedido sofrem 2d20 de dano mágico.",
       "nomeIngles": "Improved Arcane Shard",
       "descricaoIngles": "You can make a Finesse Roll to throw this shard at a group of adversaries within Far range. Targets you succeed against take 2d20 magic damage.",
       "origemNome": "livro",
@@ -14539,8 +14537,8 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Você pode fazer uma jogada de Finesse para arremessar esse fragmento em um grupo de adversários dentro do alcance de Longe. Os alvos contra os quais você for bem-sucedido receberão 2d20 de dano mágico.",
-        "rolaNoApp": false
+        "rolaNoApp": false,
+        "entregaAoMestre": true
       }
     },
     {
@@ -14679,7 +14677,7 @@
       "id": "consumivel-31",
       "rolagem": "31",
       "nome": "Sangue do Yorgi",
-      "descricao": "Você pode beber esse sangue para desaparecer de onde você está e imediatamente reaparece em um ponto que você pode ver dentro do alcance de Very Far.",
+      "descricao": "Você pode beber esse sangue para desaparecer de onde está e reaparecer imediatamente em um ponto que você consiga ver em alcance Muito Distante.",
       "nomeIngles": "Blood of the Yorgi",
       "descricaoIngles": "You can drink this blood to disappear from where you are and immediately reappear at a point you can see within very Far range.",
       "origemNome": "livro",
@@ -14690,7 +14688,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Você pode beber esse sangue para desaparecer de onde você está e imediatamente reaparece em um ponto que você pode ver dentro do alcance de Very Far.",
         "rolaNoApp": false
       }
     },
@@ -14825,7 +14822,8 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Faça a jogada de Acuidade/Finesse na mesa contra os alvos Distantes; cada alvo atingido sofre 4d20 de dano mágico rolado fisicamente."
+        "efeitoManual": "Faça a jogada de Acuidade/Finesse na mesa contra os alvos Distantes; cada alvo atingido sofre 4d20 de dano mágico rolado fisicamente.",
+        "entregaAoMestre": true
       }
     },
     {
@@ -14861,7 +14859,8 @@
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
         "custoEstresse": 1,
-        "efeitoManual": "Crie o vazio até alcance Distante: nenhuma magia pode ser conjurada dentro dele e criaturas dentro do vazio são imunes a dano mágico. Controle posição/duração na mesa."
+        "efeitoManual": "Crie o vazio até alcance Distante: nenhuma magia pode ser conjurada dentro dele e criaturas dentro do vazio são imunes a dano mágico. Controle posição/duração na mesa.",
+        "entregaAoMestre": true
       },
       "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
     },
@@ -14924,8 +14923,8 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Uma criatura que consome esse veneno sofre 8d10 de dano mágico direto.",
-        "rolaNoApp": false
+        "rolaNoApp": false,
+        "entregaAoMestre": true
       }
     },
     {
@@ -15034,8 +15033,8 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Você pode abrir esse frasco para liberar um eco ensurdecedor de vozes por um número de minutos igual ao seu Instinto. As criaturas dentro do alcance distante que não estiverem preparadas para o som recebem 6d8 de dano mágico.",
-        "rolaNoApp": false
+        "rolaNoApp": false,
+        "entregaAoMestre": true
       }
     },
     {
@@ -15056,15 +15055,15 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Você pode beber esse chá para liberar um ataque de fôlego ardente. Crie um instinto Jogue contra todos os adversários na frente você a curta distância. Os alvos contra os quais você for bem-sucedido recebem d20 de dano físico usando sua proficiência.",
-        "rolaNoApp": false
+        "rolaNoApp": false,
+        "entregaAoMestre": true
       }
     },
     {
       "id": "consumivel-49",
       "rolagem": "49",
       "nome": "Semente de ponte",
-      "descricao": "Vinhas grossas crescem a partir de sua localização até um ponto de sua escolha dentro do alcance de Far, permitindo que você suba ou atravesse por elas. As vinhas se dissipam em seu próximo descanso curto.",
+      "descricao": "Vinhas grossas crescem do lugar onde você está até um ponto à sua escolha em alcance Distante, permitindo subir por elas ou atravessá-las. As vinhas se dissipam no seu próximo descanso curto.",
       "nomeIngles": "Bridge Seed",
       "descricaoIngles": "Thick vines grow from your location to a point of your choice within Far range, allowing you to climb up or across them. The vines dissipate on your next short rest.",
       "origemNome": "livro",
@@ -15075,7 +15074,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Vinhas grossas crescem a partir de sua localização até um ponto de sua escolha dentro do alcance de Far, permitindo que você suba ou atravesse por elas. As vinhas se dissipam em seu próximo descanso curto.",
         "rolaNoApp": false
       }
     },
@@ -15256,8 +15254,8 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Você pode ativar esse orbe para criar um flash de luz brilhante. Todos os alvos dentro da área de alcance tornam-se vulneráveis até marcarem HP.",
-        "rolaNoApp": false
+        "rolaNoApp": false,
+        "entregaAoMestre": true
       },
       "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
     },
@@ -15328,8 +15326,8 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Você pode usar esta gota estelar para invocar uma tempestade de cometas, que causam 8d20 de dano físico a todos os alvos em alcance Muito Distante.",
-        "rolaNoApp": false
+        "rolaNoApp": false,
+        "entregaAoMestre": true
       }
     },
     {
@@ -15349,7 +15347,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Acenda esta vela para criar um halo de luz em alcance Próximo. Uma criatura fora dele não pode entrar se tiver más intenções contra alguém dentro. A vela queima por uma hora.",
         "rolaNoApp": false
       }
     },
@@ -15370,7 +15367,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Este pó multicolorido adere a tudo e impede que criaturas cobertas por ele fiquem Ocultas.",
         "rolaNoApp": false
       }
     },
@@ -15391,7 +15387,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Use este fragmento de gelo para congelar instantaneamente uma área de água de até alcance Próximo.",
         "rolaNoApp": false
       }
     },
@@ -15412,7 +15407,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Engula este bezoar para ficar imune a venenos até seu próximo descanso longo.",
         "rolaNoApp": false
       }
     },
@@ -15433,7 +15427,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Beba este chá para se camuflar perfeitamente em ambientes naturais até seu próximo descanso.",
         "rolaNoApp": false
       }
     },
@@ -15454,7 +15447,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Dissolva esta pastilha na boca para imitar perfeitamente qualquer voz que já ouviu até o fim da cena.",
         "rolaNoApp": false
       }
     },
@@ -15475,7 +15467,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Beba esta poção para ignorar dano de queda durante os próximos 10 minutos.",
         "rolaNoApp": false
       }
     },
@@ -15496,7 +15487,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Aplique esta saliva a uma arma de dano físico para mudar o tipo de dano para mágico até seu próximo descanso.",
         "rolaNoApp": false
       }
     },
@@ -15517,7 +15507,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Este pó torna tudo que cobre mais leve que o ar. Um pacote cobre o conteúdo de uma cesta de piquenique e dura uma hora.",
         "rolaNoApp": false
       }
     },
@@ -15538,7 +15527,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Ao escolher Limpar Estresse durante um descanso curto, fume esta folha para limpar 1 Estresse adicional. Outros PJs que escolheram o mesmo movimento também recebem o benefício.",
         "rolaNoApp": false
       }
     },
@@ -15559,7 +15547,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Espalhe este pó sobre um cadáver recém-falecido para conjurar uma repetição espectral do último minuto de vida dele.",
         "rolaNoApp": false
       }
     },
@@ -15580,7 +15567,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Espalhe este sal em linha por janelas ou soleiras para criar uma barreira que mortos-vivos não atravessam até a linha ser rompida.",
         "rolaNoApp": false
       }
     },
@@ -15601,7 +15587,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Depois de beber este leite, na próxima vez que limpar um ou mais Pontos de Vida, limpe 1 Ponto de Vida adicional.",
         "rolaNoApp": false
       }
     },
@@ -15622,7 +15607,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Quebre este cogumelo em pedaços para fazê-lo brilhar em azul intenso até seu próximo descanso longo.",
         "rolaNoApp": false
       }
     },
@@ -15643,8 +15627,8 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Cubra sua arma com este óleo. O próximo ataque bem-sucedido causa +1d8 de dano mágico e Incendeia temporariamente o alvo; enquanto Incendiado, ele sofre 1d4 de dano mágico ao assumir o destaque.",
-        "rolaNoApp": false
+        "rolaNoApp": false,
+        "entregaAoMestre": true
       }
     },
     {
@@ -15664,7 +15648,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Desdobre esta pequena caixa mecânica em uma barraca segura para seis pessoas. Ela se recolhe ao fim do seu próximo descanso longo.",
         "rolaNoApp": false
       }
     },
@@ -15685,7 +15668,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Coma estas patas de aranha para caminhar por paredes até seu próximo descanso.",
         "rolaNoApp": false
       }
     },
@@ -15706,7 +15688,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Quebre este frasco para encher a área em alcance Próximo com névoa mágica. Uma criatura que entrar nela limpa 1 Estresse e fica Oculta.",
         "rolaNoApp": false
       }
     },
@@ -15727,7 +15708,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Arremesse esta semente em um ponto visível. Ela explode em vinhas que Restringem temporariamente todas as criaturas em alcance Próximo do ponto.",
         "rolaNoApp": false
       }
     },
@@ -15748,7 +15728,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Quando você marcar seu último Ponto de Vida, esta garrafa se quebra e libera a fada, que limpa todos os seus Pontos de Vida antes de desaparecer.",
         "rolaNoApp": false
       }
     },
@@ -15769,7 +15748,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Arremesse este orbe mecânico em um ponto em alcance Distante. Ele implode e puxa criaturas e objetos em alcance Próximo do ponto para alcance Corpo a Corpo dele.",
         "rolaNoApp": false
       }
     },
@@ -15790,7 +15768,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Plante esta semente. A flor registra tudo que ouve por até uma semana; quando colhida, recita em tempo real o que gravou e murcha.",
         "rolaNoApp": false
       }
     },
@@ -15811,7 +15788,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Engula esta ficha para conjurar duas ilusões controláveis de você. Cada uma dura até sofrer dano ou até seu próximo descanso.",
         "rolaNoApp": false
       }
     },
@@ -15832,7 +15808,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Sopre este pó no rosto de um adversário para impedi-lo de limpar Estresse até seu próximo descanso longo.",
         "rolaNoApp": false
       }
     },
@@ -15853,7 +15828,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Use esta linha para limpar 1 Ponto de Vida ou 2 Espaços de Armadura.",
         "rolaNoApp": false
       }
     },
@@ -15874,7 +15848,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Jogue este tijolo cinza no chão para ele crescer imediatamente em uma parede sólida de pedra de 6 pés de altura, 10 de largura e 2 de profundidade.",
         "rolaNoApp": false
       }
     },
@@ -15895,7 +15868,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Beba esta poção para Utilizar uma Experiência sem gastar Esperança.",
         "rolaNoApp": false
       }
     },
@@ -15916,7 +15888,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Aplique este unguento à pele para ficar imune a calor até seu próximo descanso.",
         "rolaNoApp": false
       }
     },
@@ -15937,8 +15908,8 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Cubra sua arma com este óleo. O próximo ataque bem-sucedido causa +1d8 de dano mágico e Corrói temporariamente o alvo, que sofre −2 nos limiares de dano.",
-        "rolaNoApp": false
+        "rolaNoApp": false,
+        "entregaAoMestre": true
       }
     },
     {
@@ -15958,7 +15929,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Quebre este orbe para fazer a área em alcance Muito Distante parecer iluminada pelo sol durante 24 horas.",
         "rolaNoApp": false
       }
     },
@@ -15979,7 +15949,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Quebre este orbe para fazer a área em alcance Muito Distante parecer iluminada pela lua durante 24 horas.",
         "rolaNoApp": false
       }
     },
@@ -16000,7 +15969,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Derrame este líquido alquímico sobre um item mundano para transformá-lo instantaneamente em um punhado de ouro.",
         "rolaNoApp": false
       }
     },
@@ -16021,7 +15989,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Quebre este cajado contra o chão para reverter uma transformação ou efeito mágico em alcance Distante.",
         "rolaNoApp": false
       }
     },
@@ -16042,7 +16009,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Beba este líquido para receber bônus em Força e penalidade em Finesse e Conhecimento iguais ao seu Instinto (mínimo 1), até realizar um movimento de morte ou descansar.",
         "rolaNoApp": false
       }
     },
@@ -16064,7 +16030,8 @@
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
         "efeitoManual": "Escolha um ponto em alcance Distante. Alvos em alcance Próximo devem passar em Reação (16) ou sofrer 3d6 de dano mágico e ficar temporariamente Em Chamas.",
-        "rolaNoApp": false
+        "rolaNoApp": false,
+        "entregaAoMestre": true
       },
       "traducaoDescricao": "revisada-do-ingles"
     },
@@ -16086,7 +16053,8 @@
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
         "efeitoManual": "Escolha um ponto em alcance Distante. Alvos em alcance Próximo devem passar em Reação (16) ou sofrer 3d6 de dano mágico e ficar temporariamente Restritos pelo gelo.",
-        "rolaNoApp": false
+        "rolaNoApp": false,
+        "entregaAoMestre": true
       },
       "traducaoDescricao": "revisada-do-ingles"
     },
@@ -16108,7 +16076,8 @@
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
         "efeitoManual": "Escolha um ponto em alcance Distante. Alvos em alcance Próximo devem passar em Reação (16) ou sofrer 3d6 de dano mágico e marcar 1d4 Estresse.",
-        "rolaNoApp": false
+        "rolaNoApp": false,
+        "entregaAoMestre": true
       },
       "traducaoDescricao": "revisada-do-ingles"
     },
@@ -16129,7 +16098,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Beba este elixir para receber +1 de Proficiência no próximo ataque bem-sucedido.",
         "rolaNoApp": false
       }
     },
@@ -16150,7 +16118,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Beba este chá para renovar suas características como se tivesse realizado um descanso longo.",
         "rolaNoApp": false
       }
     },
@@ -16171,7 +16138,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Beba esta poção para receber +1 de Evasão até marcar 1 Ponto de Vida.",
         "rolaNoApp": false
       }
     },
@@ -16192,7 +16158,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Durante uma hora após beber esta poção, testemunhas não conseguem relatar nada que você diga ou faça; toda tentativa sai confusa ou sem sentido.",
         "rolaNoApp": false
       }
     },
@@ -16213,7 +16178,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Beba esta poção para descobrir o medo mais profundo da próxima pessoa com quem fizer contato visual. Quando fizer isso, o Mestre recebe 1 Medo.",
         "rolaNoApp": false
       }
     },
@@ -16234,8 +16198,8 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Martele esta estaca no chão e faça uma proclamação. Até seu próximo descanso, uma criatura em alcance Distante que a transgredir marca 1 Estresse; depois a estaca se quebra.",
-        "rolaNoApp": false
+        "rolaNoApp": false,
+        "entregaAoMestre": true
       }
     },
     {
@@ -16255,7 +16219,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Coloque esta mortalha sobre um cadáver recente. O espírito torna-se seu assistente espectral até o próximo nascer do sol, quando atravessa o véu e leva a mortalha.",
         "rolaNoApp": false
       }
     },
@@ -16276,7 +16239,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Beba esta tinta para se transformar por uma hora em um cefalópode do seu tamanho, com pele elástica, ossos moles, respiração aquática e oito membros.",
         "rolaNoApp": false
       }
     },
@@ -16297,7 +16259,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Após beber este tônico, até seu próximo descanso você só consegue ouvir os pensamentos superficiais de criaturas em alcance Muito Próximo.",
         "rolaNoApp": false
       }
     },
@@ -16318,7 +16279,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Você fica Oculto até causar dano a outra criatura ou até seu próximo descanso.",
         "rolaNoApp": false
       }
     },
@@ -16339,7 +16299,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Beba esta poção para se tornar um enxame de 16 milhões de formigas até o fim da cena, mantendo acesso a equipamentos, saque e características.",
         "rolaNoApp": false
       }
     },
@@ -16360,7 +16319,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Aplique este unguento à pele para receber bônus nos limiares de dano igual ao seu patamar até o fim da cena.",
         "rolaNoApp": false
       }
     },
@@ -16381,7 +16339,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Coma esta fruta cítrica para limpar todos os Pontos de Vida e Estresse.",
         "rolaNoApp": false
       }
     },
@@ -16402,7 +16359,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Beba esta poção para trocar a camada externa da pele e curar uma cicatriz.",
         "rolaNoApp": false
       }
     },
@@ -16423,7 +16379,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Liberte a alma aprisionada para conjurar uma magia de uma carta da reserva como se estivesse na sua mão. Não funciona com cartas permanentemente guardadas.",
         "rolaNoApp": false
       }
     },
@@ -16444,7 +16399,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Use esta lâmina mágica para cortar um vínculo mágico ou metafísico; depois, a lâmina se quebra.",
         "rolaNoApp": false
       }
     },
@@ -16465,7 +16419,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Use esta máscara na próxima subida de nível para trocar os valores de quaisquer características; ela então se torna seu rosto permanente.",
         "rolaNoApp": false
       }
     },
@@ -16486,7 +16439,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Quebre este sino enferrujado no chão para invocar uma montaria esquelética que serve você até o próximo nascer do sol.",
         "rolaNoApp": false
       }
     },
@@ -16507,7 +16459,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Use este couro de dragão encantado para voar e receber +5 nos limiares de dano e +1 de Proficiência até o fim da cena, quando ele se desfaz.",
         "rolaNoApp": false
       }
     },
@@ -16528,8 +16479,8 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Deposite qualquer número de punhados de ouro neste jarro e arremesse-o em alcance Distante. Ele causa 1d20 de dano mágico por punhado a criaturas em alcance Próximo; todo o ouro é destruído.",
-        "rolaNoApp": false
+        "rolaNoApp": false,
+        "entregaAoMestre": true
       }
     },
     {
@@ -16549,7 +16500,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Beba este tônico para receber +1 de Proficiência até rolar com Medo.",
         "rolaNoApp": false
       }
     },
@@ -16592,7 +16542,6 @@
       },
       "efeitoConsumivel": {
         "tipo": "consumir-e-resolver-na-mesa",
-        "efeitoManual": "Beba esta poção para criar pequenas asas nos tornozelos e receber bônus de Evasão igual ao seu patamar até seu próximo descanso.",
         "rolaNoApp": false
       }
     }

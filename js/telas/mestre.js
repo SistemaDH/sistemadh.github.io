@@ -709,7 +709,8 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       blocoDaMoldura(),
       blocoDoCenario(),
       blocoDasMoedas(),
-      blocoDoDanoMassivo()
+      blocoDoDanoMassivo(),
+      blocoDosBanquetes()
     ]);
   }
   /**
@@ -743,6 +744,17 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       m.automacao
         ? el('p', { class: 'texto-xs', texto: '✓ O app aplica esta mecânica.' })
         : el('p', { class: 'texto-xs texto-fraco', texto: 'Fica com a mesa: o app não aplica.' }),
+      botaoDaMecanica(m),
+      /*
+       * ⚠ O QUE FICA COM A MESA, ESCRITO AQUI E NÃO NO CÓDIGO. Quando a mecânica
+       * tem parte que o app não resolve — reacender uma Chama apagada, achar
+       * combustível —, o texto vem do dado (`automacao.efeitoManual`), não de uma
+       * frase escrita na tela. Frase na tela é a regra em dois lugares: muda a
+       * moldura no JSON e a tela continua dizendo o que dizia antes.
+       */
+      (m.automacao && m.automacao.efeitoManual)
+        ? el('p', { class: 'texto-xs texto-fraco', texto: m.automacao.efeitoManual })
+        : null,
       fichaDeCampanha(m)
     ]));
 
@@ -773,6 +785,105 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       ...(c.visaoGeral || []).map((t) => el('p', { class: 'texto-xs texto-fraco', texto: t })),
       ...mecanicas,
       perguntas
+    ]);
+  }
+
+  /**
+   * O BOTÃO DA MECÂNICA DE MOLDURA — hoje só o ramo sacro da Era da Umbra.
+   *
+   * ⚠ QUEM DECIDE QUE EXISTE BOTÃO É O DADO, NÃO A TELA. A tela pergunta se a
+   * mecânica declarou `automacao.acenderRamoSacro` e usa o rótulo que vem de lá.
+   * Escrever `if (moldura === 'era-da-umbra')` aqui seria a terceira cópia da
+   * mesma condição — o motor já filtra por moldura em `mecanicasDaMolduraDaMesa_`,
+   * e ele é quem recusa a ação fora da campanha certa.
+   *
+   * ⚠ E O APP NÃO DECIDE QUANDO ACENDER. O ramo é ficção: alguém precisa achar
+   * combustível e chegar vivo até a Chama. O Mestre aperta DEPOIS que a cena
+   * aconteceu; o app só entrega os Pontos de Esperança, respeitando o teto de
+   * cada ficha — que não é o mesmo para todas, porque cada cicatriz apaga um
+   * espaço de Esperança para sempre.
+   */
+  function botaoDaMecanica(m) {
+    const a = (m && m.automacao && m.automacao.acenderRamoSacro) || null;
+    if (!a) return null;
+    return el('button', {
+      type: 'button', class: 'btn btn--fantasma btn--pequeno',
+      onClick: async () => {
+        try {
+          await acoes.acenderRamoSacro(false);
+          recarregar();
+        } catch (e) {
+          const extra = (e && e.extra) || {};
+          /*
+           * ⚠ O TEXTO DA CONFIRMAÇÃO É O DA MENSAGEM DE ERRO — é o motor que
+           * sabe quantos Pontos de Esperança a moldura dá. Repetir o número
+           * aqui daria uma tela prometendo 3 enquanto o servidor entrega outro.
+           */
+          if (!extra.precisaConfirmar) { avisarErro(mensagemDoErro(e)); recarregar(); return; }
+          const sim = await confirmarMoldura({
+            titulo: a.rotulo || m.nome,
+            texto: mensagemDoErro(e),
+            mudancas: [],
+            aviso: a.lembrete || '',
+            rotuloDoBotao: a.rotulo || 'Confirmar'
+          });
+          if (!sim) return;
+          try {
+            const r = await acoes.acenderRamoSacro(true);
+            avisarSucesso(r.aviso, 8000);
+            recarregar();
+          } catch (e2) { avisarErro(mensagemDoErro(e2)); recarregar(); }
+        }
+      }
+    }, a.rotulo || 'Aplicar');
+  }
+
+  /**
+   * BANQUETES — a campanha em que se cozinha (SRD 2.0, p.192–194).
+   *
+   * ⚠ ESTE INTERRUPTOR TIRA COISA DA TELA DE TODO MUNDO, e é o único dos três
+   * que faz isso. Moedas acrescentam uma coluna; dano massivo troca um número.
+   * Este some com "Tratar Feridas", "Reduzir Estresse" e "Preparar-se" do
+   * descanso de todas as fichas da mesa — por isso o texto embaixo diz o que
+   * sai e o que fica, em vez de só dizer o que entra.
+   *
+   * ⚠ E O APP NÃO COZINHA. A reserva de sabores, a jogada de preparo e o livro
+   * de receitas são dados rolando na mesa. O que o app pede é a Nota da
+   * Refeição — o único número da regra que entra em ficha — e cuida da conta
+   * que se erra de madrugada: distribuir até aquele total entre Pontos de Vida,
+   * Estresse e Esperança sem passar do que cada ficha comporta.
+   */
+  function blocoDosBanquetes() {
+    const ligada = painel.mesa.banquetes === true;
+
+    const chave = el('input', { type: 'checkbox', class: 'criacao__caixa' });
+    chave.checked = ligada;
+    chave.addEventListener('change', async () => {
+      try {
+        const r = await acoes.definirBanquetes(chave.checked);
+        avisarSucesso(r.nota, 8000);
+        recarregar();
+      } catch (e) { avisarErro(mensagemDoErro(e)); recarregar(); }
+    });
+
+    return el('div', { class: 'cartao' }, [
+      el('h4', { class: 'cartao__titulo', texto: 'Banquetes (campanha suplementar)' }),
+      el('label', { class: 'linha' }, [
+        chave,
+        el('span', { class: 'texto-sm', texto:
+          'A mesa colhe ingredientes e cozinha no repouso: "Preparar um Banquete" entra no ' +
+          'lugar de limpar Estresse, limpar Pontos de Vida e obter Esperança.' })
+      ]),
+      el('p', { class: 'texto-xs texto-fraco', texto: ligada
+        ? 'Saíram do descanso de todas as fichas: Tratar Feridas, Reduzir Estresse, Preparar-se ' +
+          'e as versões "por completo" do descanso longo. Ficaram: Reparar Armadura e Trabalhar ' +
+          'em um Projeto.'
+        : 'Regra do suplemento (p.192–194). Ligando, o descanso da mesa inteira troca de cara — ' +
+          'não existe metade do grupo cozinhando.' }),
+      el('p', { class: 'texto-xs texto-fraco', texto:
+        'O app não cozinha: os ingredientes, a reserva de sabores e a jogada de preparo ficam na ' +
+        'mesa. Ele pergunta a Nota da Refeição e distribui até esse total entre Pontos de Vida, ' +
+        'Estresse e Esperança, respeitando o que cada ficha comporta.' })
     ]);
   }
 

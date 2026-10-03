@@ -519,6 +519,18 @@ export const acoes = {
     return r;
   },
 
+  /**
+   * BANQUETES — o interruptor da campanha em que se cozinha.
+   *
+   * ⚠ Não guarda nada no estado local de propósito. Quem monta a lista de
+   * movimentos do descanso é o servidor, a cada prévia; um espelho aqui seria
+   * um segundo leitor da mesma pergunta, e o dia em que discordassem a tela
+   * ofereceria um movimento que o motor recusa.
+   */
+  async definirBanquetes(ligar) {
+    return api.definirBanquetes(estado.token, ligar === true);
+  },
+
   async anunciarNivelDaMesa(nivel) {
     const r = await api.anunciarNivelDaMesa(estado.token, nivel);
     definir({ nivelDaMesa: r.depois });
@@ -535,6 +547,18 @@ export const acoes = {
     return api.definirMoldura(estado.token, moldura, confirmado === true);
   },
   /** O único caminho para sair de uma campanha trancada. Também confirma. */
+  /**
+   * ACENDER O RAMO SACRO — Era da Umbra.
+   *
+   * ⚠ Passa pelo mesmo protocolo de confirmação da escolha de campanha: a
+   * primeira chamada volta com erro pedindo confirmação, e é esse erro que
+   * carrega o texto que a tela mostra. O presente cai em TODAS as fichas da
+   * mesa de uma vez; não é coisa de apertar sem querer.
+   */
+  async acenderRamoSacro(confirmado) {
+    return api.acenderRamoSacro(estado.token, confirmado === true);
+  },
+
   async reiniciarMoldura(confirmado) {
     return api.reiniciarMoldura(estado.token, confirmado === true);
   },

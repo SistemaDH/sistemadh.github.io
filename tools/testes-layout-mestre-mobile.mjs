@@ -195,6 +195,102 @@ async function auditarBuscaRolada(page, viewport) {
   registrar(viewport, 'mestre-bestiario-rolado', dados);
 }
 
+/**
+ * B13: O CENÁRIO ESCOLHIDO, COM BOTÃO DENTRO. O ramo sacro da Era da Umbra é o
+ * primeiro botão que nasce DE DADO — ele só existe porque a mecânica declarou
+ * `automacao.acenderRamoSacro` no JSON. Nenhuma tela de baseline escolhia
+ * campanha, então o bloco do cenário nunca foi medido em celular: o botão podia
+ * nascer com 20px de altura no meio de um cartão de texto e a bateria diria
+ * "0 erros" — porque nunca desenhou a tela onde ele aparece.
+ *
+ * ⚠ E A CAMPANHA TRANCA. Escolhida uma vez, o select fica desabilitado para as
+ * viewports seguintes; por isso este estado aceita a mesa já em campanha e só
+ * escolhe quando ainda não há nenhuma.
+ */
+async function auditarCenarioComBotao(page, viewport) {
+  await page.getByRole('tab', { name: 'Mesa', exact: true }).click();
+  await page.waitForTimeout(150);
+
+  /*
+   * ⚠ A DOBRA PRIMEIRO. "Ajustes da mesa" nasce fechada — o select existe no
+   * DOM e não é clicável, e o Playwright ficou 30s esperando um elemento
+   * invisível. Abrir a dobra é parte do estado que se quer medir: é assim que o
+   * Mestre chega ao cenário na mesa.
+   */
+  await page.evaluate(() => {
+    document.querySelectorAll('.dobra').forEach((d) => { d.open = true; });
+  });
+  await page.waitForTimeout(150);
+
+  const sel = page.locator('.mestre select').first();
+  const jaTravado = await page.evaluate(() => {
+    const s = document.querySelector('.mestre select');
+    return !!s && s.disabled && s.value === 'era-da-umbra';
+  });
+  if (!jaTravado) {
+    await sel.selectOption('era-da-umbra');
+    await page.getByRole('button', { name: /^Jogar Era da Umbra$/ }).click();
+    await page.waitForTimeout(400);
+  }
+  await page.waitForSelector('text=Acender o ramo sacro', { timeout: 15000 });
+
+  /*
+   * ⚠ ROLAR ATÉ O BOTÃO ANTES DE MEDIR. O painel rola DENTRO de `.mestre__corpo`:
+   * a página inteira tem a altura da viewport, então o `fullPage` sai idêntico
+   * ao visível e o botão fica fora dele. Medir um elemento que ninguém desenhou
+   * e tirar um screenshot que não o mostra é a bateria dizendo "✓" para uma tela
+   * que não conferiu.
+   */
+  await page.evaluate(() => {
+    const b = [...document.querySelectorAll('.mestre button')]
+      .filter((x) => /Acender o ramo sacro/.test(x.textContent || ''))[0];
+    if (b) b.scrollIntoView({ block: 'center' });
+  });
+  await page.waitForTimeout(200);
+
+  const dados = await page.evaluate(() => {
+    const erros = [];
+    const avisos = [];
+    const largura = document.documentElement.clientWidth;
+    const botoes = [...document.querySelectorAll('.mestre button')]
+      .filter((b) => /Acender o ramo sacro/.test(b.textContent || ''));
+    if (botoes.length !== 1) {
+      erros.push(`esperava 1 botão de ramo sacro; achei ${botoes.length}`);
+      return { erros, avisos, larguraDocumento: document.documentElement.scrollWidth, larguraViewport: largura };
+    }
+    const b = botoes[0];
+    const r = b.getBoundingClientRect();
+    /*
+     * 44px é o alvo de toque da mesa de jogo — a mesma régua que a bateria já
+     * usa para as abas. Um botão que dá 3 Pontos de Esperança a TODAS as fichas
+     * não pode ser do tamanho de um link no meio de um parágrafo.
+     */
+    if (r.height < 44) erros.push(`alvo de toque do ramo sacro tem ${r.height.toFixed(1)}px de altura`);
+    if (r.left < -1 || r.right > largura + 1) erros.push('botão do ramo sacro saiu da viewport');
+    const corpo = document.querySelector('.mestre__corpo');
+    if (corpo) {
+      const c = corpo.getBoundingClientRect();
+      if (r.bottom <= c.top || r.top >= c.bottom) erros.push('botão do ramo sacro não chegou a aparecer no scrollport');
+    }
+    if (b.scrollWidth > b.clientWidth + 1) erros.push('rótulo do ramo sacro cortado');
+
+    // e o texto que FICA COM A MESA precisa estar visível junto do botão
+    const cartao = b.closest('.cartao');
+    if (!cartao || !/ficção da mesa/.test(cartao.textContent || '')) {
+      erros.push('o cartão não diz o que fica com a mesa');
+    }
+
+    const overflow = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - largura;
+    if (overflow > 1) erros.push(`overflow horizontal de ${overflow}px`);
+
+    return { erros, avisos, larguraDocumento: document.documentElement.scrollWidth, larguraViewport: largura };
+  });
+
+  const arquivo = `${PASTA}/${viewport.nome}-mestre-cenario-ramo-sacro.png`;
+  await page.screenshot({ path: arquivo, fullPage: true });
+  registrar(viewport, 'mestre-cenario-ramo-sacro', dados);
+}
+
 async function entrarComoMestre(page) {
   await page.goto(base, { waitUntil: 'networkidle' });
   await page.waitForSelector('.abertura__titulo', { timeout: 10000 });
@@ -236,6 +332,7 @@ async function executar(viewport) {
       await auditar(page, viewport, nome);
       if (rotulo === 'Bestiário') await auditarBuscaRolada(page, viewport);
     }
+    await auditarCenarioComBotao(page, viewport);
   } finally {
     await contexto.close();
   }

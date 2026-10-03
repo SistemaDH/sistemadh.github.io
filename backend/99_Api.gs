@@ -503,6 +503,14 @@ function executar_(p) {
            */
           danoMassivo: danoMassivoNaMesa_(m),
           /*
+           * E os BANQUETES, pela mesma porta. A ficha precisa saber porque a
+           * tela do descanso muda de cara: três movimentos somem e um aparece.
+           * ⚠ Quem MONTA a lista continua sendo o servidor — a ficha não
+           * decide movimento nenhum com isto. Serve para a tela explicar o
+           * sumiço em vez de deixar a pessoa procurando "Tratar Feridas".
+           */
+          banquetes: banquetesNaMesa_(m),
+          /*
            * E a MOLDURA, quando ela tem regra que a janela de dano precisa
            * perguntar. Hoje é uma só: a Corrupção do Surto Selvagem, que só
            * dispara se a mesa disser que a fonte do dano era Corrompida —
@@ -1045,32 +1053,20 @@ function executar_(p) {
         return ok_({ personagem: r.personagem, transformacao: r.extra.transformacao });
       }
 
-      /**
-       * O GUIA DE BATALHA (livro, p.197): quantos Pontos de Batalha o
-       * Mestre tem e quanto o encontro que ele montou já gastou.
+      /*
+       * ⚠ AQUI MORAVA O `case 'guiaDeBatalha'`, E ELE FOI EMBORA.
        *
-       * É só conta — nada é gravado. O encontro em jogo (com trilha de PV e
-       * Estresse por adversário) ainda não existe; quando existir, é esta
-       * função que vai dizer se cabe.
+       * Era a calculadora "e se": recebia um número de personagens e uma lista
+       * de adversários soltos e devolvia a conta sem gravar nada. Escrito
+       * quando o encontro em jogo ainda não existia — e nunca entrou em nenhum
+       * `ACOES`, ou seja, nunca foi possível chamá-lo pelo app.
+       *
+       * O encontro existe desde então: `contaDoEncontro_` (4G) responde a
+       * mesma pergunta sobre a cena DE VERDADE, com `pontosDeBatalha_` e
+       * `custoDoEncontro_` — as mesmas funções, que continuam testadas por
+       * aqueles caminhos. Manter uma segunda porta para a mesma conta era
+       * guardar um leitor a mais de graça.
        */
-      case 'guiaDeBatalha': {
-        exigirMestre_(p.token);
-        const quantos = (p.personagens === undefined || p.personagens === null)
-          ? lerTudo_(ABAS.PERSONAGENS).filter(function (l) {
-              return String(l.excluido).toUpperCase() !== 'TRUE';
-            }).length
-          : Math.trunc(Number(p.personagens)) || 0;
-        const bolso = pontosDeBatalha_(quantos, p.ajustes || []);
-        const conta = custoDoEncontro_(p.encontro || [], quantos);
-        return ok_({
-          personagens: quantos,
-          pontosDeBatalha: bolso,
-          encontro: conta,
-          sobra: bolso.total - conta.gasto,
-          tiposDeAdversario: TIPOS_DE_ADVERSARIO,
-          guia: GUIA_DE_BATALHA
-        });
-      }
 
       /**
        * O catálogo do bestiário, filtrado — para busca do lado do servidor.
@@ -1155,6 +1151,64 @@ function executar_(p) {
        * Corrupção somem porque o contador deixa de ser das fichas. Prometer um
        * "desfazer" seria mentira: metade do que a campanha fez é história.
        */
+      /**
+       * ACENDER O RAMO SACRO — a Era da Umbra, e o único presente da campanha.
+       *
+       * > "Ramo sacro: uma descorada relíquia do Velho Mundo que carrega uma
+       * > centelha divina. Quando é aceso, todos os Derradeiros presentes
+       * > recebem 3 Pontos de Esperança." (Era da Umbra, livro p.283)
+       *
+       * Este ponto ficou aberto por um raciocínio que estava meio certo: o ramo
+       * é ITEM, não regra de ficha, e reacender uma Chama apagada é ficção. Só
+       * que "todos recebem 3 Pontos de Esperança" é número, cai em ficha, e é
+       * exatamente a conta que ninguém quer fazer à mão em cinco fichas.
+       *
+       * ⚠ SÓ EXISTE NA ERA DA UMBRA, e a checagem não é enfeite: sem ela,
+       * qualquer mesa ganharia um botão de +3 Esperança para todo mundo.
+       *
+       * ⚠ O TETO DE CADA FICHA MANDA. Quem tem cicatriz tem menos espaço de
+       * Esperança — `darEsperancaATodasAsFichas_` já respeita isso, e é por
+       * isso que o presente passa por ela e não por uma soma daqui.
+       *
+       * ⚠ O QUE O APP NÃO FAZ: decidir quem está presente, se havia combustível,
+       * ou se a Chama estava apagada. Isso é mesa. O Mestre aperta quando a
+       * ficção disser que o ramo foi aceso.
+       */
+      case 'acenderRamoSacro': {
+        const mestre = exigirMestre_(p.token);
+        const regra = (function () {
+          const lista = (typeof mecanicasDaMolduraDaMesa_ === 'function') ? mecanicasDaMolduraDaMesa_() : [];
+          for (let i = 0; i < lista.length; i++) {
+            const a = (lista[i] || {}).automacao || {};
+            if (a.acenderRamoSacro) return a.acenderRamoSacro;
+          }
+          return null;
+        })();
+        if (!regra) {
+          throw erroApi_(ERRO.DADOS_INVALIDOS,
+            'O ramo sacro é da Era da Umbra. A campanha da mesa não tem essa mecânica.');
+        }
+        const quanto = Math.max(0, Math.trunc(Number(regra.esperancaPorPersonagem)) || 0);
+        if (p.confirmado !== true) {
+          throw erroApi_(ERRO.DADOS_INVALIDOS, String(regra.confirmacao || ''),
+            { precisaConfirmar: true, esperancaPorPersonagem: quanto });
+        }
+        return comTrava_(function () {
+          const agraciados = darEsperancaATodasAsFichas_(quanto);
+          registrarLog_(mestre, 'ramo-sacro-aceso', String(agraciados.length) + ' ficha(s)');
+          return ok_({
+            esperancaPorPersonagem: quanto,
+            fichas: agraciados,
+            lembrete: String(regra.lembrete || ''),
+            aviso: agraciados.length
+              ? ('O ramo sacro foi aceso: ' + agraciados.length + ' ficha' +
+                 (agraciados.length === 1 ? '' : 's') + ' recebeu' + (agraciados.length === 1 ? '' : 'ram') +
+                 ' até ' + quanto + ' Pontos de Esperança, respeitando o teto de cada uma.')
+              : 'Não havia ficha ativa na mesa para receber a Esperança.'
+          });
+        });
+      }
+
       case 'reiniciarMoldura': {
         const mestre = exigirMestre_(p.token);
         return comTrava_(function () {
@@ -1640,6 +1694,37 @@ function executar_(p) {
             nota: m.ouroComMoedas
               ? '10 moedas valem 1 punhado. A coluna aparece nas fichas da mesa.'
               : 'As moedas que já estavam anotadas ficam guardadas — elas voltam se a regra for religada.'
+          });
+        });
+      }
+
+      /**
+       * Liga ou desliga os BANQUETES (SRD 2.0, p.192–194).
+       *
+       * É do Mestre porque é da CAMPANHA: a regra tira três movimentos de
+       * descanso de TODO MUNDO e põe "Preparar um Banquete" no lugar. Não
+       * existe meia mesa cozinhando.
+       *
+       * ⚠ `p.ligar === true`, e não `!== false`. É a lição que o dano massivo
+       * deixou escrita no `definirDanoMassivo`: uma chamada sem o campo —
+       * cliente velho, campo perdido no caminho — LIGARIA a regra sem ninguém
+       * ter pedido, e aqui o estrago seria visível na hora, com o descanso de
+       * todo mundo trocado.
+       */
+      case 'definirBanquetes': {
+        const mestre = exigirMestre_(p.token);
+        return comTrava_(function () {
+          const m = mesaLer_();
+          const antes = Boolean(m.banquetes);
+          m.banquetes = p.ligar === true;
+          mesaGravar_(m);
+          registrarLog_(mestre, 'banquetes', m.banquetes ? 'ligados' : 'desligados');
+          return ok_({
+            antes: antes, depois: m.banquetes, mesa: mesaLer_(),
+            nota: m.banquetes
+              ? 'Limpar Estresse, limpar Pontos de Vida e obter Esperança saem do descanso; ' +
+                'entra "Preparar um Banquete". Reparar Armadura e Trabalhar em um Projeto ficam.'
+              : 'Os movimentos do livro voltaram ao descanso.'
           });
         });
       }

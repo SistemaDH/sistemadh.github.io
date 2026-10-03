@@ -206,7 +206,15 @@
             "Enquanto estiver aceso, todos os monstros, exceto os mais poderosos, são afastados das proximidades. Basta fornecer um pouco de combustível diariamente para mantê-lo aceso.",
             "Personagens que têm um ramo sacro podem reacender uma Chama Sagrada apagada ou criar uma nova."
           ],
-          "automacao": null
+          "automacao": {
+            "acenderRamoSacro": {
+              "esperancaPorPersonagem": 3,
+              "rotulo": "Acender o ramo sacro",
+              "confirmacao": "Acender o ramo sacro dá 3 Pontos de Esperança a TODAS as fichas ativas da mesa, respeitando o teto de cada uma. Confirmar?",
+              "lembrete": "Enquanto a Chama estiver acesa, os monstros — exceto os mais poderosos — são afastados das proximidades. Manter acesa custa um pouco de combustível por dia."
+            },
+            "efeitoManual": "Reacender uma Chama apagada ou criar uma nova é ficção da mesa; o app só entrega os 3 Pontos de Esperança."
+          }
         },
         {
           "id": "escuridao-a-espreita",

@@ -193,7 +193,25 @@ for (const i of [...d.loot, ...d.consumiveis]) {
   L.push(`  ${j({
     id: i.id, nome: i.nome, tipo: i.id.startsWith('loot') ? 'saque' : 'consumivel', conjunto: i.conjunto || 'basico', nomes,
     automacao: i.automacao || null,
-    efeitoConsumivel: i.efeitoConsumivel || null,
+    /*
+     * ⚠ O TEXTO DO CONSUMÍVEL TEM UM DONO SÓ: `descricao`.
+     *
+     * Durante meses `efeitoManual` repetia a `descricao` palavra por palavra em
+     * 67 dos consumíveis — e, como toda cópia, derivou: seis itens tinham a
+     * descrição certa e o efeito manual errado ("Crie um instinto Jogue contra
+     * todos os adversários na frente você a curta distância", "até marcarem
+     * HP", "dentro do alcance de Very Far"). O jogador lia a descrição no
+     * catálogo e o efeito manual ao consumir — dois textos, um corrigido e o
+     * outro não.
+     *
+     * Agora `efeitoManual` só existe no dado quando diz algo que a descrição
+     * NÃO diz — tipicamente um aviso sobre o que o app faz e o que ele não faz.
+     * Quando não existe, quem preenche é este gerador, a partir da descrição.
+     * Um texto, um lugar; a cópia passa a ser derivada.
+     */
+    efeitoConsumivel: (i.efeitoConsumivel && i.efeitoConsumivel.tipo === 'consumir-e-resolver-na-mesa')
+      ? { ...i.efeitoConsumivel, efeitoManual: i.efeitoConsumivel.efeitoManual || i.descricao || '' }
+      : (i.efeitoConsumivel || null),
     reacaoConsumivel: i.reacaoConsumivel || null,
     efeitoSaque: i.efeitoSaque || null,
     efeitoSaquePassivo: i.efeitoSaquePassivo || null

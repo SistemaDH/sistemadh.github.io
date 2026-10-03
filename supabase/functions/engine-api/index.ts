@@ -31,6 +31,13 @@ const ACOES = new Set([
   // mudo e o Mestre ficaria preso na moldura — que é o oposto do que a trava
   // quer dizer.
   "reiniciarMoldura",
+  // O ramo sacro da Era da Umbra: acender dá 3 Esperança a TODAS as fichas,
+  // respeitando o teto de cada uma. Sem a ação aqui, o botão do painel daria
+  // 404 mudo — foi o que quase aconteceu com o reiniciarMoldura.
+  "acenderRamoSacro",
+  // Banquetes: interruptor de mesa. Sem a ação aqui, o Mestre marcaria a
+  // caixa nos Ajustes e a mesa continuaria sem cozinhar.
+  "definirBanquetes",
   "abrirSessao","encerrarSessaoDaMesa","voltarParaAPrimeiraSessao","encerrarCenaDaMesa",
   "encontro","definirEncontro","acrescentarAoEncontro","ajustarAdversario",
   "porEmFoco","limparFoco","usarHabilidade","removerDoEncontro","limparEncontro",

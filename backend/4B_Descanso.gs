@@ -365,11 +365,68 @@ function movimentoDeDescansoDaMoldura_() {
       formula: 'Dado de Esperança (d' + lados + ')',
       podeMirarAliado: false,
       daMoldura: true,
+      /*
+       * ⚠ SEM ISTO, O MOVIMENTO PEDIA UM NÚMERO SEM CAMPO. O motor devolve
+       * `precisaDeRolagem` quando o Dado de Esperança não vem, e a tela do
+       * descanso só desenhava campo para as chaves que ela conhecia de cor.
+       * Declarar a pergunta aqui é o que faz o campo existir lá — a mesma
+       * correção que destravou o Refocar.
+       */
+      perguntas: [{
+        chave: String(dado.campo || 'dadoDeEsperancaDaGuarda'), tipo: 'numero',
+        texto: 'Resultado do seu Dado de Esperança (d' + lados + ')',
+        minimo: 1, maximo: lados
+      }],
       efeito: { modo: 'guarda-da-moldura', recurso: null, lados: lados,
                 campo: String(dado.campo || 'dadoDeEsperancaDaGuarda') }
     };
   }
   return null;
+}
+
+/**
+ * PREPARAR UM BANQUETE — o movimento que substitui os três.
+ *
+ * > "Each PC who partakes in the meal can clear a number of Hit Points, clear a
+ * > number of Stress, and gain a number of Hope such that the total of all
+ * > three numbers is equal to or less than the Meal Rating." (SRD 2.0, p.193)
+ *
+ * ⚠ O APP NÃO COZINHA, E ESSA É A DECISÃO. A reserva de sabores, a jogada de
+ * preparo, os pares separados, o livro de receitas e as fichas do patamar são
+ * dados rolando na mesa — e a mesa desta casa decidiu "só ficha, sem dados". O
+ * app pergunta a NOTA DA REFEIÇÃO, que é o único número da regra que entra em
+ * ficha, e cuida da parte que a mesa erra: a distribuição.
+ *
+ * ⚠ E A DISTRIBUIÇÃO É ONDE O ERRO MORA. Três números que não podem somar mais
+ * que a Nota, cada um limitado pelo que a ficha tem para limpar ou para
+ * guardar. É exatamente o tipo de conta que se faz errado às onze da noite com
+ * o livro aberto — e o tipo que um app faz certo toda vez.
+ */
+function movimentoDeBanquete_(tipo) {
+  return {
+    id: 'banquete:preparar',
+    nome: 'Preparar um Banquete',
+    nomeJambo: '',
+    ingles: 'Make a Feast',
+    tipos: [String(tipo || 'curto')],
+    texto: 'Ofereça seus ingredientes à refeição do grupo. A pessoa chef monta a reserva de ' +
+      'sabores e faz a jogada de preparo na mesa; informe aqui a Nota da Refeição e distribua ' +
+      'até esse total entre Pontos de Vida limpos, Estresse limpo e Esperança obtida.',
+    formula: 'PV + Estresse + Esperança ≤ Nota da Refeição',
+    podeMirarAliado: false,
+    deBanquete: true,
+    perguntas: [
+      { chave: 'notaDaRefeicao', tipo: 'numero', minimo: 0, maximo: 60,
+        texto: 'Qual foi a Nota da Refeição?' },
+      { chave: 'pontosDeVida', tipo: 'numero', minimo: 0, maximo: 60, padrao: 0,
+        texto: 'Quantos Pontos de Vida você limpa?' },
+      { chave: 'estresse', tipo: 'numero', minimo: 0, maximo: 60, padrao: 0,
+        texto: 'Quanto Estresse você limpa?' },
+      { chave: 'esperanca', tipo: 'numero', minimo: 0, maximo: 60, padrao: 0,
+        texto: 'Quanta Esperança você obtém?' }
+    ],
+    efeito: { modo: 'banquete', recurso: null }
+  };
 }
 
 /**
@@ -520,6 +577,39 @@ function movimentosDoDescanso_(tipo, ficha) {
   if (typeof movimentoDeDescansoDaMoldura_ === 'function') {
     const daMoldura = movimentoDeDescansoDaMoldura_();
     if (daMoldura && daMoldura.tipos.indexOf(t.id) !== -1) saida.push(daMoldura);
+  }
+
+  /*
+   * BANQUETES — a troca de três movimentos por um (SRD 2.0, p.193).
+   *
+   * > "In a feast-based campaign, players can't choose downtime moves to clear
+   * > Stress, clear Hit Points, or gain Hope. Instead, they have a new downtime
+   * > move: Make a Feast."
+   *
+   * ⚠ A SUBSTITUIÇÃO ACONTECE AQUI E SÓ AQUI. Filtrar na tela deixaria o motor
+   * aceitando "Tratar Feridas" numa campanha em que ele não existe — e a regra
+   * passaria a ter dois leitores que podem discordar. `movimentosDoDescanso_`
+   * já é a lista que o simulador consulta para dizer "isto não é um movimento
+   * de descanso curto": tirar daqui recusa de graça, na mesma frase.
+   *
+   * ⚠ SÃO CINCO IDS PARA TRÊS EFEITOS. "Limpar Estresse" e "limpar PV" têm um
+   * movimento no curto e outro no longo (o que limpa TUDO), e "obter Esperança"
+   * é o Preparar-se. Listar só os três do curto deixaria o descanso longo
+   * inteiro fora da campanha — que é justamente o descanso em que se cozinha.
+   *
+   * O que NÃO sai: Reparar Armadura e Trabalhar em um Projeto. A regra nomeia
+   * três efeitos e esses dois não estão entre eles.
+   */
+  if (typeof banquetesNaMesa_ === 'function' && banquetesNaMesa_()) {
+    const substituidos = {
+      'reduzir-estresse': 1, 'zerar-estresse': 1,
+      'tratar-feridas': 1, 'tratar-todas-as-feridas': 1,
+      'preparar-se': 1
+    };
+    for (let i = saida.length - 1; i >= 0; i--) {
+      if (substituidos[saida[i].id]) saida.splice(i, 1);
+    }
+    saida.push(movimentoDeBanquete_(t.id));
   }
 
   if (typeof ehArtistaMarcial_ === 'function' && ehArtistaMarcial_(ficha)) {
@@ -1104,6 +1194,89 @@ function simularDescanso_(ficha, tipo, escolhas) {
       feito.contaDaFormula = '+' + ganho + (comGrupo ? ' (preparado em grupo)' : '');
       if (novo === atual) feito.observacao = 'A Esperança já está no máximo (' + max + ').';
       copia.recursos.esperanca = novo;
+      feitos.push(feito);
+      continue;
+    }
+
+    /*
+     * O BANQUETE: um número da mesa, três números da ficha.
+     *
+     * ⚠ A NOTA NÃO É UM DADO, É UMA CONTA JÁ FEITA. A jogada de preparo separa
+     * pares e soma os valores casados; quem faz isso é a pessoa chef, com os
+     * dados na mão. Por isso aqui não existe `precisaDeRolagem` com "role 1 a
+     * N": o que falta não é um dado, é o resultado de um ritual inteiro.
+     *
+     * ⚠ E O TETO DE CADA FICHA VEM DEPOIS DO TETO DA NOTA. São duas paredes
+     * diferentes: a Nota limita quanto se pode distribuir; a ficha limita
+     * quanto cabe. Quem tem 2 PV marcados e pede 6 recebe 2 — e a prévia diz
+     * isso, porque a diferença sumir em silêncio faria a pessoa achar que a
+     * refeição rendeu menos do que rendeu.
+     */
+    if (ef.modo === 'banquete') {
+      const inteiro = function (v) {
+        const n = Math.trunc(Number(v));
+        return isFinite(n) && n > 0 ? n : 0;
+      };
+      const notaBruta = Math.trunc(Number(escolha.notaDaRefeicao));
+      if (!isFinite(notaBruta) || notaBruta < 0) {
+        feito.precisaDeRolagem = true;
+        feito.contaDaFormula = 'PV + Estresse + Esperança ≤ Nota da Refeição';
+        feito.observacao = 'Informe a Nota da Refeição: a pessoa chef soma os conjuntos de ' +
+          'valores iguais da jogada de preparo, e é esse total que o grupo distribui.';
+        feitos.push(feito);
+        continue;
+      }
+      const pedido = {
+        pontosDeVida: inteiro(escolha.pontosDeVida),
+        estresse: inteiro(escolha.estresse),
+        esperanca: inteiro(escolha.esperanca)
+      };
+      const somaPedida = pedido.pontosDeVida + pedido.estresse + pedido.esperanca;
+      if (somaPedida > notaBruta) {
+        erros.push('Banquete: a Nota da Refeição é ' + notaBruta + ' e você distribuiu ' +
+          somaPedida + ' (' + pedido.pontosDeVida + ' PV + ' + pedido.estresse +
+          ' Estresse + ' + pedido.esperanca + ' Esperança).');
+        continue;
+      }
+
+      const pvAntes = Number(copia.recursos.pontosDeVidaMarcados) || 0;
+      const estAntes = Number(copia.recursos.estresseMarcado) || 0;
+      const espAntes = Number(copia.recursos.esperanca) || 0;
+      const tetoEsperanca = maximoDoRecurso_(copia, 'esperanca');
+
+      copia.recursos.pontosDeVidaMarcados = Math.max(0, pvAntes - pedido.pontosDeVida);
+      copia.recursos.estresseMarcado = Math.max(0, estAntes - pedido.estresse);
+      copia.recursos.esperanca = Math.min(tetoEsperanca, espAntes + pedido.esperanca);
+
+      const dados = {
+        pontosDeVida: pvAntes - copia.recursos.pontosDeVidaMarcados,
+        estresse: estAntes - copia.recursos.estresseMarcado,
+        esperanca: copia.recursos.esperanca - espAntes
+      };
+      feito.quantidade = dados.pontosDeVida + dados.estresse + dados.esperanca;
+      feito.banquete = { nota: notaBruta, pedido: pedido, aplicado: dados,
+                         sobra: notaBruta - somaPedida };
+      feito.contaDaFormula = 'Nota ' + notaBruta + ' → ' + dados.pontosDeVida + ' PV + ' +
+        dados.estresse + ' Estresse + ' + dados.esperanca + ' Esperança';
+
+      const sobrou = [];
+      if (dados.pontosDeVida < pedido.pontosDeVida) {
+        sobrou.push('havia ' + pvAntes + ' Ponto' + (pvAntes === 1 ? '' : 's') + ' de Vida marcado' +
+          (pvAntes === 1 ? '' : 's'));
+      }
+      if (dados.estresse < pedido.estresse) {
+        sobrou.push('havia ' + estAntes + ' de Estresse marcado');
+      }
+      if (dados.esperanca < pedido.esperanca) {
+        sobrou.push('a Esperança para em ' + tetoEsperanca);
+      }
+      const notasDoPrato = [];
+      if (sobrou.length) notasDoPrato.push('Parte da refeição não coube: ' + sobrou.join('; ') + '.');
+      if (notaBruta - somaPedida > 0) {
+        notasDoPrato.push('Você deixou ' + (notaBruta - somaPedida) + ' ponto' +
+          (notaBruta - somaPedida === 1 ? '' : 's') + ' da Nota sem usar.');
+      }
+      if (notasDoPrato.length) feito.observacao = notasDoPrato.join(' ');
       feitos.push(feito);
       continue;
     }

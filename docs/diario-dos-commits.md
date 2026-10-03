@@ -994,3 +994,144 @@ Suíte: 1184 no backend (eram 1178), 0 falhas; `teste:tudo` verde; e2e 111 passo
 com o caminho inteiro medido — interruptor do Mestre, sessão, frase na janela do
 jogador — e a prova ao contrário: tirando o campo do payload da sessão, o passo
 falha.
+
+---
+
+## Quatro pendências fechadas: o consumível, o ramo sacro, o Guia de Batalha e os Banquetes
+
+Dois itens da mesma lista de pendências, e os dois esbarraram na mesma pergunta:
+**quem é o leitor?**
+
+### 1. O frasco que o Mestre precisa saber que foi aberto
+
+O app já sabia gastar a unidade da mochila. O que ele não sabia é que
+*metade dos consumíveis não termina em quem bebe* — termina no adversário, na
+cena, na porta. "Jogue este frasco em uma criatura" não é um número que entra
+numa ficha; é uma frase que precisa chegar ao Mestre.
+
+O canal já existia: o **mural de recados** (`efeitoMesa`), aberto no lote da
+moldura. O que faltava era dizer QUAIS itens usam esse canal — e a resposta
+tinha de vir do dado, não de um `if` no motor. Cada item ganhou
+`entregaAoMestre: true` (16 deles), e o `4C_Ajustes.gs` passou a devolver o
+recado quando o item pede E existe texto para entregar.
+
+Pelo caminho, duas coisas que só apareceram porque eu fui contar:
+
+**67 itens guardavam o mesmo texto duas vezes** — em `descricao` e em
+`efeitoManual`, palavra por palavra. Duas cópias da mesma frase é a mesma
+armadilha de sempre em outra roupa: corrigir uma e esquecer a outra. O gerador
+passou a **derivar** `efeitoManual` de `descricao` quando ele falta, e as 67
+cópias saíram do JSON. Há um teste que recusa a volta delas.
+
+**E o preenchimento quase pegou os itens errados.** Eu preenchi `efeitoManual`
+para TODOS os consumíveis, e um teste antigo caiu na hora: o `consumivel-53` é
+`ativar-estado`, e a forma do objeto dele estava provada. Só o tipo
+`consumir-e-resolver-na-mesa` é que termina na mesa. O teste que caiu era o
+teste fazendo exatamente o trabalho dele.
+
+Quatro `descricao` estavam erradas (consumíveis 12, 24, 31 e 49) e foram
+conferidas contra a fonte antes de virarem recado — porque agora o texto errado
+não fica só na ficha: ele aparece no painel do Mestre.
+
+Duas funções mortas saíram junto: `cartasComUsoEmCriaturaDaFicha_` (31 linhas,
+ninguém chamava) e `caracteristicasDoGrupoParaDescanso_` (5 linhas).
+
+### 2. O ramo sacro: o app entrega a Esperança, a mesa acende a Chama
+
+Era da Umbra, "Chamas Sagradas": *quando aceso, todos os Derradeiros presentes
+recebem 3 Pontos de Esperança*. A mecânica estava no painel com a etiqueta
+"fica com a mesa: o app não aplica" — e não precisava estar, porque o canal de
+dar Esperança a todas as fichas **já existia** desde o bom presságio da
+escuridão à espreita, com o teto de cada ficha respeitado.
+
+⚠ **E o teto não é 6 para todo mundo.** Nesta campanha cada cicatriz apaga um
+espaço de Esperança para sempre. Somar 3 cegamente encheria a trilha de quem já
+não tem onde guardar — seria justamente o personagem mais castigado recebendo
+de graça o que os outros ganharam. O teste novo prova isso com duas fichas: uma
+inteira (0 → 3) e uma com duas cicatrizes (3 → 4, não 6).
+
+O que o app **não** faz: decidir quem está presente, se havia combustível, ou
+se a Chama estava apagada. Isso é ficção. O Mestre aperta o botão DEPOIS que a
+cena aconteceu — e o texto do que fica com a mesa vem do próprio JSON da
+moldura, não de uma frase escrita na tela. Frase na tela seria a regra em dois
+lugares outra vez.
+
+O botão nasce do dado: a tela pergunta se a mecânica declarou
+`automacao.acenderRamoSacro` e usa o rótulo e o texto de confirmação que vêm de
+lá. Nenhum `if (moldura === 'era-da-umbra')` no frontend — quem recusa fora da
+campanha certa é o motor, com a lista que ele já filtra por moldura.
+
+**A bateria de celular do Mestre nunca tinha escolhido campanha.** O bloco do
+cenário existe desde o lote da moldura e nunca foi medido em tela pequena: o
+botão podia nascer com 20px de altura e a bateria diria "0 erros", porque nunca
+desenhava a tela onde ele aparece. Agora escolhe a Era da Umbra, abre a dobra,
+rola até o botão e mede o alvo de toque — 21 telas auditadas, eram 18.
+
+### 3. O quadradinho do Guia de Batalha que não fazia nada
+
+Este item entrou na lista como "aritmética duplicada": `(3 × personagens) + 2`
+vivia no `pontosDeBatalha_` do motor e **também** em JS, no modal do Guia de
+Batalha. Duas cópias da mesma conta, concordando por sorte.
+
+Ao ir consertar, o defeito era maior e mais silencioso: **os ajustes marcados no
+modal viviam num `Set` local que morria ao fechar a janela.** O Mestre marcava
+"+2 PB: adversários mais fortes", via o total subir ali, voltava para a cena — e
+a barra do encontro continuava no total antigo, porque ela lê
+`encontro.ajustesDePb`, um campo que existe no motor desde que o encontro nasceu
+e que **ninguém nunca escreveu**. A conta estava certa e não tinha quem a
+alimentasse.
+
+Agora o quadradinho grava por `definirEncontro`, e o número da janela é o número
+da barra — porque é o motor que devolve os dois. A aritmética do JS foi embora.
+
+Saiu junto o `case 'guiaDeBatalha'` do `99_Api.gs`: uma calculadora "e se" que
+nunca entrou em nenhum `ACOES`, ou seja, nunca foi possível chamar pelo app. As
+funções que ela usava continuam vivas e testadas pelo caminho do encontro de
+verdade.
+
+### 4. Banquetes — e o campo que não existia
+
+A campanha em que se colhe ingrediente e se cozinha (SRD 2.0, p.192–194). A
+regra faz uma coisa que nenhuma outra opcional deste app faz: **ela TIRA três
+movimentos de descanso de todo mundo** — limpar Estresse, limpar Pontos de Vida
+e obter Esperança — e põe "Preparar um Banquete" no lugar.
+
+O que o app faz e o que não faz, decidido antes de escrever linha:
+
+- **Não cozinha.** Reserva de sabores, jogada de preparo, pares separados, livro
+  de receitas, fichas do patamar: são dados rolando na mesa, e a decisão desta
+  casa é "só ficha, sem dados".
+- **Pergunta a Nota da Refeição** — o único número da regra que entra em ficha.
+- **Cuida da distribuição**, que é onde o erro mora: três números que não podem
+  somar mais que a Nota, cada um limitado pelo que a ficha tem para limpar ou
+  para guardar. O exemplo do SRD (Nota 11 → 6 PV + 3 Estresse + 2 Esperança) é
+  um dos testes.
+
+⚠ **Foram cinco ids para três efeitos, e isso quase passou.** "Limpar Estresse" e
+"limpar PV" têm um movimento no curto e outro no longo (as versões "por
+completo"). Listar só os três do curto deixaria o descanso longo inteiro com a
+regra do livro — justamente o descanso em que o grupo para para cozinhar.
+
+⚠ **E o buraco que o Banquete revelou é mais velho que ele.** A tela do descanso
+desenhava campo por chave conhecida: `comGrupo`, `principio`, `projeto`, e um
+`if` para cada. O **Refocar** declara `maiorResultado` desde que nasceu e o
+motor o recusa sem ele — escolher Refocar levava a uma prévia dizendo "informe o
+maior d6" **sem lugar nenhum para informar**. O Montar Guarda tinha o mesmo
+destino. Os dois estavam quebrados em silêncio, e o Banquete seria o terceiro.
+
+Agora a tela lê `perguntas` do próprio movimento: todo movimento que pedir
+número já nasce com campo. Há um teste que recusa um movimento que leia
+`escolha.<campo>` sem declarar a pergunta — e a bateria de celular do descanso
+ganhou o estado que nunca existia, o de um cartão com quatro campos de número
+(18 estados, eram 15).
+
+### Números
+
+1236 testes de backend (eram 1220), 0 falhas. `teste:tudo` verde de ponta a
+ponta. Ações roteadas conferidas contra a fonte: **69** (eram 67). Mestre mobile
+21 telas (eram 18); descanso mobile 18 estados (eram 15).
+
+⚠ **ESTE DEPLOY NÃO É REPIN.** O `ACOES` da `engine-api` ganhou
+`acenderRamoSacro` e `definirBanquetes`: o `index.ts` mudou de verdade, e sem
+isso o botão do painel daria 404 mudo. É a mesma lição que o `reiniciarMoldura`
+ensinou três vezes, e que o `conferir-funcoes-publicadas` pegou nas três.

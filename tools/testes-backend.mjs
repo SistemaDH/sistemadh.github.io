@@ -3467,6 +3467,182 @@ teste('quem não é Clank continua sem poder pegar movimento de longo', () => {
   igual(p.erros.length, 1, JSON.stringify(p.erros));
 });
 
+/* ------------------------------------------------------------------ *
+ *  BANQUETES — a campanha em que se cozinha (SRD 2.0, p.192–194)
+ * ------------------------------------------------------------------ */
+
+/** Liga/desliga os Banquetes na mesa de teste, como o Mestre faria. */
+function comBanquetes(ligado) {
+  const m = contexto.mesaLer_();
+  m.banquetes = ligado === true;
+  contexto.mesaGravar_(m);
+  return contexto.mesaLer_().banquetes;
+}
+
+teste('⚠ Todo movimento que PEDE número declara a pergunta — senão a tela não tem campo', () => {
+  /*
+   * ⚠ ESTE TESTE NASCEU DE UM BURACO REAL. O Refocar e o Montar Guarda pediam
+   * um número (`maiorResultado`, `dadoDeEsperancaDaGuarda`) que a tela do
+   * descanso não sabia desenhar: ela tinha um `if` por chave conhecida, e essas
+   * duas não estavam na lista. Escolher o movimento levava a uma prévia dizendo
+   * "informe o resultado" sem lugar nenhum para informar.
+   *
+   * A tela passou a ler `perguntas`. Este teste é a outra ponta: se um
+   * movimento lê `escolha.<campo>` e não declara a pergunta, o campo some de
+   * novo — e desta vez fica vermelho aqui em vez de silencioso no celular.
+   */
+  const pedem = {
+    'foco:refocar': 'maiorResultado',
+    'banquete:preparar': 'notaDaRefeicao'
+  };
+  comBanquetes(true);
+  const lista = contexto.movimentosDoDescanso_('curto', fichaCansada());
+  comBanquetes(false);
+  const ids = Object.keys(pedem);
+  for (let i = 0; i < ids.length; i++) {
+    const m = lista.filter((x) => x.id === ids[i])[0];
+    if (!m) continue;                       // Refocar só existe para o Artista Marcial
+    const chaves = (m.perguntas || []).filter((q) => q.tipo === 'numero').map((q) => q.chave);
+    verdade(chaves.indexOf(pedem[ids[i]]) !== -1,
+      ids[i] + ' precisa declarar a pergunta "' + pedem[ids[i]] + '": ' + JSON.stringify(chaves));
+  }
+
+  // e o Montar Guarda, que só existe dentro da Era da Umbra
+  comMoldura('era-da-umbra');
+  const guarda = contexto.movimentosDoDescanso_('longo', fichaCansada())
+    .filter((x) => String(x.id).indexOf('moldura:') === 0)[0];
+  comMoldura('');
+  verdade(guarda, 'a Era da Umbra precisa conceder o movimento');
+  const daGuarda = (guarda.perguntas || []).filter((q) => q.tipo === 'numero').map((q) => q.chave);
+  igual(daGuarda.length, 1, JSON.stringify(guarda.perguntas));
+  igual(daGuarda[0], guarda.efeito.campo, 'a pergunta precisa usar A MESMA chave que o efeito lê');
+});
+
+teste('⚠ Banquetes: desligados, o descanso é o do livro', () => {
+  comBanquetes(false);
+  const ids = contexto.movimentosDoDescanso_('curto', fichaCansada()).map((m) => m.id);
+  verdade(ids.indexOf('tratar-feridas') !== -1, JSON.stringify(ids));
+  verdade(ids.indexOf('reduzir-estresse') !== -1);
+  verdade(ids.indexOf('preparar-se') !== -1);
+  igual(ids.indexOf('banquete:preparar'), -1, 'sem a regra ligada não existe banquete');
+});
+
+teste('⚠ Banquetes: ligados, os três saem e "Preparar um Banquete" entra — nos dois descansos', () => {
+  comBanquetes(true);
+  const curto = contexto.movimentosDoDescanso_('curto', fichaCansada()).map((m) => m.id);
+  igual(curto.indexOf('tratar-feridas'), -1, 'limpar PV sai: ' + JSON.stringify(curto));
+  igual(curto.indexOf('reduzir-estresse'), -1, 'limpar Estresse sai');
+  igual(curto.indexOf('preparar-se'), -1, 'obter Esperança sai');
+  verdade(curto.indexOf('banquete:preparar') !== -1, 'e o banquete entra');
+  // o que a regra NÃO nomeia continua de pé
+  verdade(curto.indexOf('reparar-armadura') !== -1, 'Reparar Armadura fica');
+
+  /*
+   * ⚠ O DESCANSO LONGO É O QUE MAIS IMPORTA AQUI, e foi o que quase ficou de
+   * fora: "limpar Estresse" e "limpar PV" têm um movimento no curto e outro no
+   * longo (as versões "por completo"). Listar só os três ids do curto deixaria
+   * o descanso longo inteiro com a regra do livro — justamente o descanso em
+   * que o grupo para para cozinhar.
+   */
+  const longo = contexto.movimentosDoDescanso_('longo', fichaCansada()).map((m) => m.id);
+  igual(longo.indexOf('tratar-todas-as-feridas'), -1, JSON.stringify(longo));
+  igual(longo.indexOf('zerar-estresse'), -1);
+  igual(longo.indexOf('preparar-se'), -1);
+  verdade(longo.indexOf('banquete:preparar') !== -1);
+  verdade(longo.indexOf('trabalhar-em-um-projeto') !== -1, 'Trabalhar em um Projeto fica');
+  comBanquetes(false);
+});
+
+teste('⚠ Banquetes: com a regra ligada, o motor RECUSA o movimento que saiu', () => {
+  comBanquetes(true);
+  const p = contexto.previaDoDescanso_(fichaCansada(), 'curto', [{ movimento: 'tratar-feridas', rolagem: 3 }]);
+  igual(p.erros.length, 1, JSON.stringify(p.erros));
+  verdade(/não é um movimento/.test(p.erros[0]), p.erros[0]);
+  comBanquetes(false);
+});
+
+teste('⚠ Banquete: sem a Nota, o app pede — não inventa nem rola', () => {
+  comBanquetes(true);
+  const p = contexto.previaDoDescanso_(fichaCansada(), 'curto', [{ movimento: 'banquete:preparar' }]);
+  igual(p.erros, [], JSON.stringify(p.erros));
+  const feito = p.movimentos[0];
+  igual(feito.precisaDeRolagem, true);
+  verdade(/Nota da Refeição/.test(feito.observacao), feito.observacao);
+  comBanquetes(false);
+});
+
+teste('⚠ Banquete: a distribuição não pode passar da Nota', () => {
+  comBanquetes(true);
+  const p = contexto.previaDoDescanso_(fichaCansada(), 'curto', [
+    { movimento: 'banquete:preparar', notaDaRefeicao: 5, pontosDeVida: 3, estresse: 2, esperanca: 1 }
+  ]);
+  igual(p.erros.length, 1, JSON.stringify(p.erros));
+  verdade(/Nota da Refeição é 5 e você distribuiu 6/.test(p.erros[0]), p.erros[0]);
+  comBanquetes(false);
+});
+
+teste('⚠ Banquete: o exemplo do SRD — Nota 11, 6 PV + 3 Estresse + 2 Esperança', () => {
+  /*
+   * > "if the dish has a Meal Rating of 11, a PC could choose to clear 6 Hit
+   * > Points, clear 3 Stress, and gain 2 Hope" (SRD 2.0, p.193)
+   */
+  comBanquetes(true);
+  const f = fichaCansada();
+  f.recursos.pontosDeVidaMarcados = 6;
+  f.recursos.estresseMarcado = 3;
+  f.recursos.esperanca = 0;
+  const r = contexto.simularDescanso_(f, 'curto', [
+    { movimento: 'banquete:preparar', notaDaRefeicao: 11, pontosDeVida: 6, estresse: 3, esperanca: 2 }
+  ]);
+  const p = r.previa;
+  igual(p.erros, [], JSON.stringify(p.erros));
+  igual(r.ficha.recursos.pontosDeVidaMarcados, 0);
+  igual(r.ficha.recursos.estresseMarcado, 0);
+  igual(r.ficha.recursos.esperanca, 2);
+  const b = p.movimentos[0].banquete;
+  igual(b.nota, 11);
+  igual(b.sobra, 0);
+  igual(b.aplicado.pontosDeVida, 6);
+  comBanquetes(false);
+});
+
+teste('⚠ Banquete: o teto da ficha vem DEPOIS do teto da Nota, e a prévia explica', () => {
+  comBanquetes(true);
+  const f = fichaCansada();
+  f.recursos.pontosDeVidaMarcados = 2;   // pede 6, só há 2
+  f.recursos.estresseMarcado = 0;        // pede 3, não há nada marcado
+  f.recursos.esperanca = 5;
+  f.recursos.esperancaMaxima = 6;        // pede 2, cabe 1
+  const r = contexto.simularDescanso_(f, 'curto', [
+    { movimento: 'banquete:preparar', notaDaRefeicao: 11, pontosDeVida: 6, estresse: 3, esperanca: 2 }
+  ]);
+  const p = r.previa;
+  igual(p.erros, [], JSON.stringify(p.erros));
+  igual(r.ficha.recursos.pontosDeVidaMarcados, 0, 'limpou os 2 que havia');
+  igual(r.ficha.recursos.estresseMarcado, 0);
+  igual(r.ficha.recursos.esperanca, 6, 'a Esperança para no teto da ficha');
+
+  const b = p.movimentos[0].banquete;
+  igual(b.aplicado.pontosDeVida, 2);
+  igual(b.aplicado.estresse, 0);
+  igual(b.aplicado.esperanca, 1);
+  verdade(/não coube/.test(p.movimentos[0].observacao || ''), p.movimentos[0].observacao);
+  comBanquetes(false);
+});
+
+teste('⚠ Banquete: deixar Nota sem usar é permitido, e a prévia avisa', () => {
+  comBanquetes(true);
+  const f = fichaCansada();
+  f.recursos.pontosDeVidaMarcados = 4;
+  const p = contexto.previaDoDescanso_(f, 'curto', [
+    { movimento: 'banquete:preparar', notaDaRefeicao: 9, pontosDeVida: 2 }
+  ]);
+  igual(p.erros, [], JSON.stringify(p.erros));
+  igual(p.movimentos[0].banquete.sobra, 7);
+  verdade(/7 pontos da Nota sem usar/.test(p.movimentos[0].observacao || ''), p.movimentos[0].observacao);
+  comBanquetes(false);
+});
+
 console.log('\nDescanso — a prévia');
 
 teste('a prévia não encosta na ficha original', () => {
@@ -4895,6 +5071,93 @@ teste('⚠ Escuridão: o bom presságio entrega 1 Esperança a TODAS as fichas, 
   comMoldura('');
 });
 
+
+teste('⚠ Banquetes: o interruptor é do Mestre, e uma chamada sem o campo NÃO liga', () => {
+  comBanquetes(false);
+  const doMestre = api('entrarMestre', { codigo: 'codigo-do-mestre' }).dados.token;
+  const token = api('registrar', { nome: 'Chef do Banquete', codigo: 'senha-chef-banquete' }).dados.token;
+  igual(api('definirBanquetes', { token, ligar: true }).erro.codigo, 'SEM_PERMISSAO');
+
+  // a lição do dano massivo: campo ausente é "desligar", nunca "ligar"
+  const semCampo = api('definirBanquetes', { token: doMestre });
+  verdade(semCampo.ok, JSON.stringify(semCampo));
+  igual(semCampo.dados.depois, false, 'chamada sem `ligar` não pode acender a regra da mesa');
+
+  const ligou = api('definirBanquetes', { token: doMestre, ligar: true });
+  igual(ligou.dados.depois, true);
+  verdade(/Preparar um Banquete/.test(ligou.dados.nota), ligou.dados.nota);
+  igual(contexto.banquetesNaMesa_(), true, 'e quem pergunta tem um dono só');
+  api('definirBanquetes', { token: doMestre, ligar: false });
+  igual(contexto.banquetesNaMesa_(), false);
+});
+
+teste('⚠ Ramo sacro: fora da Era da Umbra a ação não existe', () => {
+  comMoldura('');
+  const r = api('acenderRamoSacro', { token: tokenMestre, confirmado: true });
+  igual(r.erro.codigo, 'DADOS_INVALIDOS');
+  verdade(/Era da Umbra/.test(r.erro.mensagem), r.erro.mensagem);
+});
+
+teste('⚠ Ramo sacro: é do Mestre, e pede confirmação antes de mexer em ficha alheia', () => {
+  comMoldura('era-da-umbra');
+  const token = api('registrar', { nome: 'Lanterneiro', codigo: 'senha-lanterneiro' }).dados.token;
+  igual(api('acenderRamoSacro', { token, confirmado: true }).erro.codigo, 'SEM_PERMISSAO',
+    'jogador não acende o ramo da mesa inteira');
+
+  const sem = api('acenderRamoSacro', { token: tokenMestre });
+  igual(sem.erro.codigo, 'DADOS_INVALIDOS');
+  igual(sem.erro.extra.precisaConfirmar, true);
+  igual(sem.erro.extra.esperancaPorPersonagem, 3, 'a moldura diz quantos, não a tela');
+  verdade(/TODAS as fichas/.test(sem.erro.mensagem), sem.erro.mensagem);
+  comMoldura('');
+});
+
+teste('⚠ Ramo sacro: dá 3 Esperança a todas as fichas, respeitando o teto de cada uma', () => {
+  comMoldura('era-da-umbra');
+  const token = api('registrar', { nome: 'Acendedora', codigo: 'senha-acendedora' }).dados.token;
+  /*
+   * ⚠ O TETO NÃO SE ESCREVE, SE CICATRIZA. Eu tentei primeiro mandar
+   * `esperancaMaxima: 4` na ficha e o teste falhou com 6: o campo é DERIVADO
+   * das cicatrizes, e `aplicarDerivados_` o recalcula na entrada. Foi o próprio
+   * motor dizendo que a única maneira de ter um teto menor é ter cicatriz — que
+   * é exatamente a regra que este teste quer provar.
+   */
+  const nova = (nome, esperanca, cicatrizes) => {
+    const f = contexto.fichaRapida_({
+      nome: nome, classe: 'Guardião', subclasse: 'Robusto',
+      ancestralidade: 'Anão', comunidade: 'Ridgeborne',
+      cartas: ['blade-redemoinho', 'valor-pele-dura'],
+      experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+    });
+    f.cicatrizes = [];
+    for (let i = 0; i < cicatrizes; i++) f.cicatrizes.push({ em: '2026-01-0' + (i + 1), nota: 'teste' });
+    f.recursos.esperanca = esperanca;
+    return api('criarPersonagem', { token, ficha: f }).dados.personagem;
+  };
+  const vazia = nova('Trilha vazia', 0, 0);
+  const cicatrizada = nova('Duas cicatrizes', 3, 2);
+
+  const r = api('acenderRamoSacro', { token: tokenMestre, confirmado: true });
+  verdade(r.ok, JSON.stringify(r).slice(0, 200));
+  igual(r.dados.esperancaPorPersonagem, 3);
+  verdade(/ramo sacro foi aceso/.test(r.dados.aviso), r.dados.aviso);
+  verdade(/combustível/.test(r.dados.lembrete), r.dados.lembrete);
+
+  const achar = (id) => (r.dados.fichas || []).filter((x) => x.id === id)[0];
+  const a = achar(vazia.id);
+  verdade(!!a, JSON.stringify(r.dados.fichas));
+  igual(a.antes, 0); igual(a.depois, 3); igual(a.ganho, 3);
+
+  const b = achar(cicatrizada.id);
+  verdade(!!b, JSON.stringify(r.dados.fichas));
+  igual(b.antes, 3);
+  igual(b.depois, 4, 'o teto dela é 4: para em 4, não em 6');
+  igual(b.ganho, 1);
+
+  igual(Number(api('obterPersonagem', { token, id: vazia.id }).dados.personagem.ficha.recursos.esperanca), 3,
+    'gravou de verdade na ficha');
+  comMoldura('');
+});
 
 teste('⚠ Montar Guarda: só existe dentro da Era da Umbra', () => {
   comMoldura('');
@@ -8543,6 +8806,32 @@ teste('a conta de Pontos de Batalha lê a cena montada', () => {
   igual(conta.pontosDeBatalha.total, 14, '(3 x 4) + 2');
   igual(conta.gasto.gasto, 13, 'o encontro do exemplo do livro');
   igual(conta.sobra, 1);
+});
+
+teste('⚠ Guia de Batalha: o ajuste marcado CHEGA na conta da cena, pela API', () => {
+  /*
+   * Este é o teste que faltava. O campo `ajustesDePb` existe no motor desde que
+   * o encontro nasceu, `contaDoEncontro_` sempre o leu — e o app nunca o
+   * escreveu: os quadradinhos do Guia de Batalha viviam num Set que morria ao
+   * fechar o modal. A conta estava certa e ninguém nunca a alimentou.
+   */
+  const doMestre = api('entrarMestre', { codigo: 'codigo-do-mestre' }).dados.token;
+  api('definirEncontro', { token: doMestre, ajustesDePb: [] });
+  const antes = api('encontro', { token: doMestre }).dados.encontro.conta.pontosDeBatalha;
+
+  const r = api('definirEncontro', { token: doMestre, ajustesDePb: ['mais-facil'] });
+  verdade(r.ok, JSON.stringify(r).slice(0, 200));
+  const depois = r.dados.encontro.conta.pontosDeBatalha;
+  igual(depois.total, antes.total - 1, 'o ajuste "mais fácil" vale -1 PB');
+  igual(depois.ajustes.length, 1);
+  igual(depois.ajustes[0].id, 'mais-facil');
+
+  // e fica gravado: quem abrir a cena depois vê o mesmo número
+  const relido = api('encontro', { token: doMestre }).dados.encontro;
+  igual(relido.conta.pontosDeBatalha.total, depois.total, 'gravou, não foi só a resposta');
+  igual(relido.ajustesDePb.length, 1, 'e a tela consegue remarcar o quadradinho ao reabrir');
+
+  api('definirEncontro', { token: doMestre, ajustesDePb: [] });
 });
 
 teste('adversário derrotado continua contando Pontos de Batalha', () => {
@@ -18579,6 +18868,82 @@ teste('a primeira linha é sempre a base, e ela vem marcada', () => {
   igual(d.memoria.evasao[1], { rotulo: 'Ágil', valor: 1 }, 'a característica entra com o nome dela');
   igual(d.memoria.evasao.filter((x) => x.base).length, 1, 'só pode haver uma base');
 });
+/* ==========================================================================
+ *  O CONSUMÍVEL QUE TERMINA NO ADVERSÁRIO DEIXA RECADO NO PAINEL
+ *
+ *  Dezesseis consumíveis acabam fora da ficha — dano num grupo de alvos, uma
+ *  condição numa área, uma criatura que sofre 8d10. O app consumia a unidade
+ *  e soltava a mão: a pessoa lia o efeito na própria tela e repetia em voz
+ *  alta para o Mestre.
+ *
+ *  Três coisas precisam valer, e cada uma tem prova aqui:
+ *    1. quem termina na mesa entrega recado, e quem não termina NÃO entrega;
+ *    2. o recado é a DESCRIÇÃO DO ITEM, não uma segunda redação do efeito;
+ *    3. onde há dado, o recado entrega a FÓRMULA, nunca um número rolado.
+ * ========================================================================== */
+teste('consumível que termina no adversário entrega recado ao Mestre', () => {
+  const acharItem = avaliar('acharItem_');
+
+  const base = (itemId, nome) => {
+    const f = contexto.fichaRapida_({
+      nome: 'Provadora', classe: 'Guerreiro', subclasse: 'Chamada do Matador',
+      ancestralidade: 'Humano', comunidade: 'Highborne',
+      cartas: ['blade-redemoinho', 'bone-intocavel'],
+      experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+    });
+    f.inventario = [{ id: itemId, nome, qtd: 1, emUso: false }];
+    return f;
+  };
+
+  // 1. o Veneno de Dripfang termina numa criatura — recado sai
+  const f = base('consumivel-42', 'Veneno de Dripfang');
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'inventario', acao: 'consumir', indice: 0 }]);
+  igual(r.erros, [], JSON.stringify(r.erros));
+  const m = (r.mudancas || []).find((x) => x && x.itemId === 'consumivel-42');
+  verdade(!!m, 'a mudança do consumo não apareceu');
+  verdade(!!(m.efeitoMesa && m.efeitoMesa.recado), 'o recado não foi emitido: ' + JSON.stringify(m.efeitoMesa));
+
+  // 2. ⚠ o recado É a descrição do item, não outra redação
+  const item = acharItem('consumivel-42');
+  igual(m.efeitoMesa.recado, item.nome + ': ' + item.efeitoConsumivel.efeitoManual,
+    'o recado precisa ser o texto do próprio item');
+  igual(m.efeitoMesa.origemDoRecado, 'Veneno de Dripfang');
+
+  // 3. ⚠ a fórmula viaja; o número, não. O app não rolou 8d10.
+  verdade(/8d10/.test(m.efeitoMesa.recado), 'a fórmula tem de estar no recado: ' + m.efeitoMesa.recado);
+
+  // 4. CONTROLE: a Raiz de salto é ficção pura — nada para o Mestre aplicar
+  const f2 = base('consumivel-17', 'Raiz de salto');
+  const r2 = contexto.aplicarAjustes_(f2, [{ tipo: 'inventario', acao: 'consumir', indice: 0 }]);
+  igual(r2.erros, [], JSON.stringify(r2.erros));
+  const m2 = (r2.mudancas || []).find((x) => x && x.itemId === 'consumivel-17');
+  igual(m2.efeitoMesa, null, 'consumível de ficção não pode escrever no painel do Mestre');
+
+  // 5. a unidade foi gasta nos dois casos
+  igual(f.inventario.length, 0, 'a unidade do veneno tinha de ser consumida');
+  igual(f2.inventario.length, 0, 'a unidade da raiz tinha de ser consumida');
+});
+
+/* ==========================================================================
+ *  O TEXTO DO CONSUMÍVEL TEM UM DONO SÓ
+ *
+ *  `efeitoManual` repetia a `descricao` palavra por palavra em 67 consumíveis,
+ *  e a cópia derivou: seis itens tinham a descrição certa e o efeito manual
+ *  errado. Agora o gerador preenche `efeitoManual` a partir da `descricao`
+ *  quando o dado não traz um texto próprio — e o dado só traz quando tem algo
+ *  a MAIS a dizer.
+ * ========================================================================== */
+teste('nenhum consumível guarda duas vezes o mesmo texto', () => {
+  const dados = JSON.parse(fs.readFileSync(new URL('../data/equipamentos.json', import.meta.url), 'utf8'));
+  const norm = (s) => String(s || '').replace(/\s+/g, ' ').trim().toLowerCase();
+  const repetidos = (dados.consumiveis || []).filter((c) => {
+    const e = c.efeitoConsumivel;
+    return e && e.efeitoManual && norm(e.efeitoManual) === norm(c.descricao);
+  });
+  igual(repetidos.map((c) => c.id), [], 'estes consumíveis voltaram a duplicar o texto');
+});
+
+
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {

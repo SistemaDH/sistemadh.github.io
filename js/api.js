@@ -60,7 +60,7 @@ const ACOES_ENGINE = new Set([
   'usarCartaEmAliado','pedirAoPar',
   'previaDescanso','movimentosDeDescanso','aplicarDescanso',
   'opcoesDeAvanco','previaDeAvanco','aplicarAvanco','desfazerAvanco','aplicarCartaPermanente',
-  'painelDoMestre','definirMoldura','reiniciarMoldura','molduraDaMesa',
+  'painelDoMestre','definirMoldura','reiniciarMoldura','molduraDaMesa','acenderRamoSacro','definirBanquetes',
   'configurarTransformacao',
   'abrirSessao','encerrarSessaoDaMesa','voltarParaAPrimeiraSessao','encerrarCenaDaMesa',
   'encontro','definirEncontro','acrescentarAoEncontro','ajustarAdversario',
@@ -214,6 +214,8 @@ export const api = {
   ouroComMoedas: (token,ligar) => chamar('ouroComMoedas',{token,ligar}),
   definirMoldura: (token,moldura,confirmado) => chamar('definirMoldura',{token,moldura,confirmado}),
   reiniciarMoldura: (token,confirmado) => chamar('reiniciarMoldura',{token,confirmado}),
+  acenderRamoSacro: (token,confirmado) => chamar('acenderRamoSacro',{token,confirmado}),
+  definirBanquetes: (token,ligar) => chamar('definirBanquetes',{token,ligar}),
   molduraDaMesa: (token,id) => chamar('molduraDaMesa',{token,id}),
 
   encontro: token => chamar('encontro',{token}),

@@ -493,20 +493,54 @@ export function abaBestiario(pai, painel, { aoMudarMedo, aoCriarContagem } = {})
     const quantos = (painelAtual && painelAtual.personagens) ? painelAtual.personagens.length : 0;
     return el('button', {
       type: 'button', class: 'btn btn--fantasma bestiario__guia',
-      onClick: () => abrirGuiaDeBatalha(quantos)
+      onClick: () => abrirGuiaDeBatalha(painelAtual, quantos)
     }, `Guia de Batalha (${quantos} ${quantos === 1 ? 'personagem' : 'personagens'})`);
   }
 
-  function abrirGuiaDeBatalha(quantos) {
+  /**
+   * O GUIA DE BATALHA — e o dia em que o quadradinho passou a fazer alguma coisa.
+   *
+   * ⚠ ISTO ERA DUAS COISAS ERRADAS DE UMA VEZ.
+   *
+   * 1. A CONTA ESTAVA ESCRITA DUAS VEZES. `(3 × personagens) + 2`, mais a soma
+   *    dos ajustes, vivia aqui em JS e também no `pontosDeBatalha_` do motor —
+   *    que é quem a barra do encontro usa. Duas cópias da mesma aritmética é o
+   *    defeito de sempre: elas concordavam por sorte, não por construção.
+   *
+   * 2. E O QUADRADINHO NÃO FAZIA NADA. Os ajustes marcados aqui viviam num
+   *    `Set` local que morria ao fechar o modal. O Mestre marcava "+2 PB:
+   *    adversários mais fortes", via o total subir nesta janela, voltava para a
+   *    cena — e a barra do encontro continuava mostrando o total antigo, porque
+   *    ela lê `encontro.ajustesDePb`, que NINGUÉM nunca escrevia. O campo existe
+   *    no motor desde que o encontro nasceu e o app nunca o preencheu.
+   *
+   * Agora o quadradinho grava, e o número que aparece aqui é o mesmo número que
+   * a barra da cena mostra — porque é o motor que devolve os dois.
+   */
+  function abrirGuiaDeBatalha(painelAtual, quantos) {
     const g = catalogo.guia;
-    const marcados = new Set();
+    const doEncontro = (painelAtual && painelAtual.encontro) || {};
+    const marcados = new Set(doEncontro.ajustesDePb || []);
     const total = el('strong', { class: 'bestiario__pbTotal' });
     const base = quantos * g.base.porPersonagem + g.base.mais;
 
-    function atualizar() {
-      let n = base;
-      g.ajustes.forEach((a) => { if (marcados.has(a.id)) n += a.delta; });
-      total.textContent = `${Math.max(0, n)} Pontos de Batalha`;
+    /*
+     * O primeiro número vem junto com o painel — a conta do encontro já está no
+     * payload. Só depois de marcar um quadradinho é que existe ida ao servidor.
+     */
+    const doPainel = ((doEncontro.conta || {}).pontosDeBatalha || {}).total;
+    function mostrar(n) {
+      total.textContent = `${n} Pontos de Batalha`;
+    }
+    mostrar(Number.isFinite(doPainel) ? doPainel : base);
+
+    async function gravar() {
+      try {
+        const r = await acoes.definirEncontro({ ajustesDePb: [...marcados] });
+        mostrar(r.encontro.conta.pontosDeBatalha.total);
+      } catch (e) {
+        avisarErro(mensagemDoErro(e));
+      }
     }
 
     const corpo = el('div', { class: 'guia-batalha' }, [
@@ -516,11 +550,14 @@ export function abaBestiario(pai, painel, { aoMudarMedo, aoCriarContagem } = {})
         gatilhoPara('O que são Pontos de Batalha', 'pontos-de-batalha')
       ]),
       el('h4', { class: 'ficha-adversario__secao', texto: 'Ajustes' }),
+      el('p', { class: 'texto-xs texto-fraco', texto:
+        'O que você marcar aqui vale para a cena montada: a barra do encontro passa a contar com ele.' }),
       ...g.ajustes.map((a) => {
         const marca = el('input', { type: 'checkbox', id: `pb-${a.id}` });
+        if (marcados.has(a.id)) marca.checked = true;
         marca.addEventListener('change', () => {
           if (marca.checked) marcados.add(a.id); else marcados.delete(a.id);
-          atualizar();
+          gravar();
         });
         return el('label', { class: 'guia-batalha__ajuste', for: `pb-${a.id}` }, [
           marca,
@@ -535,7 +572,6 @@ export function abaBestiario(pai, painel, { aoMudarMedo, aoCriarContagem } = {})
         ]))),
       el('p', { class: 'texto-xs texto-suave', texto: g.dica })
     ]);
-    atualizar();
     abrirModal({ titulo: 'Guia de Batalha', conteudo: corpo });
   }
 }

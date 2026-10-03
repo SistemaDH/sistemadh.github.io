@@ -2596,8 +2596,18 @@ trabalho.
   de ver a jogada do Mestre, e construir um protocolo entre fichas para oferecer
   isso seria inventar uma negociação que a mesa resolve numa frase. O app guarda
   o número e mostra;
-- ⏳ **ramo sacro** — pendente. É o mais barato que sobrou: o canal para dar
-  Esperança a todas as fichas já existe.
+- ✅ **ramo sacro** — o botão está no painel. "Quando aceso, todos os Derradeiros
+  presentes recebem 3 Pontos de Esperança": o app entrega os 3 respeitando o
+  **teto de cada ficha**, que nesta campanha não é 6 para todo mundo — cada
+  cicatriz apaga um espaço de Esperança para sempre.
+  ⚠ O app **não decide quando acender**: não sabe quem está presente, se havia
+  combustível, nem se a Chama estava apagada. O Mestre aperta DEPOIS que a cena
+  aconteceu. Reacender uma Chama ou criar uma nova continua sendo ficção da
+  mesa, e o texto que diz isso vem do próprio `automacao.efeitoManual` da
+  moldura — não de uma frase escrita na tela.
+  O botão nasce do dado: a tela procura `automacao.acenderRamoSacro` e usa o
+  rótulo e a confirmação que vêm de lá. Nenhum `if` de moldura no frontend —
+  quem recusa fora da Era da Umbra é o motor, com a lista que ele já filtra.
 
 ### Cinco Estandartes em Chamas — a ficha de campanha
 
@@ -2766,14 +2776,20 @@ as transformações**, os movimentos de descanso do livro, um descanso aplicado,
 escada do ouro e a abertura do painel. **72 conferências, 0 erros.** Entrou no
 `teste:tudo`.
 
-**Estado:** 1220 testes de backend, 0 falhando; `teste:tudo` verde de ponta a
+**Estado:** 1236 testes de backend, 0 falhando; `teste:tudo` verde de ponta a
 ponta; e2e 112 passos · 0 falhas; molduras 72 conferências · 0 erros; Mestre
-mobile 18 telas · 0 erros. Prova ao contrário da trava: tirando o `disabled` do
-select, o passo do e2e cai.
+mobile **21 telas** · 0 erros; descanso mobile **18 estados** · 0 erros. Prova ao contrário da trava: tirando o `disabled`
+do select, o passo do e2e cai.
 
-**As oito molduras estão 100%**, com duas coisas declaradas como fora de escopo
-por serem ficção e não número: o ramo sacro da Era da Umbra (item, não regra de
-ficha) e a montagem da ikonis.
+⚠ **A bateria de celular do Mestre nunca tinha escolhido campanha.** O bloco do
+cenário existe desde este lote da moldura e nunca foi medido em tela pequena: o
+botão do ramo sacro podia nascer com 20px de altura e a bateria diria "0 erros",
+porque nunca desenhava a tela onde ele aparece. Agora ela escolhe a Era da
+Umbra, abre a dobra dos ajustes, rola até o botão e mede o alvo de toque.
+
+**As oito molduras estão 100%.** Sobrou uma coisa declarada como fora de escopo
+por ser ficção e não número: a montagem da ikonis. O ramo sacro saiu dessa lista
+neste lote.
 
 ---
 
@@ -3151,3 +3167,78 @@ Sete arquivos que a faxina apagou **continuam no repositório** (o commit
 mas não apago — a remoção é manual. Não quebra nada; é sobra.
 
 O `ci.yml` entrou: as três baterias que faltavam estão no CI.
+
+---
+
+## Banquetes: o terceiro interruptor do Mestre (30/09/2026)
+
+A campanha suplementar em que o grupo colhe ingredientes e cozinha no repouso
+(SRD 2.0, p.192–194). Fica no mesmo lugar do ouro em moedas e do dano massivo —
+Ajustes da mesa, nos Mestres — e pelo mesmo motivo: é regra **opcional** que vale
+para a mesa inteira.
+
+⚠ **Mas ela faz uma coisa que as outras duas não fazem: TIRA coisa da tela.**
+Moedas acrescentam uma coluna; dano massivo troca um número. Esta some com cinco
+movimentos de descanso de todas as fichas — "Tratar Feridas", "Reduzir
+Estresse", "Preparar-se" e as duas versões "por completo" do descanso longo — e
+põe "Preparar um Banquete" no lugar. Por isso nasce **desligada** e o texto do
+interruptor diz o que sai e o que fica, não só o que entra.
+
+**O que o app faz:** pergunta a **Nota da Refeição** — o único número da regra
+que entra em ficha — e distribui até esse total entre Pontos de Vida limpos,
+Estresse limpo e Esperança obtida, respeitando o teto de cada ficha. Recusa
+distribuição que passe da Nota; avisa quando parte não coube e quando sobrou
+Nota sem usar.
+
+**O que fica com a mesa:** ingredientes, perfis de sabor, reserva de dados,
+jogada de preparo, livro de receitas, fichas do patamar, ingredientes especiais.
+São dados rolando — e a decisão desta casa é "só ficha, sem dados".
+
+⚠ **PONTO DE INTERESSE — os restaurantes.** A mesma regra tem um parágrafo final:
+*"A PC can spend up to 2 handfuls of gold during downtime to order food from a
+nearby restaurant and choose one of the following downtime moves for each
+handful of gold spent: clear Stress, clear Hit Points, or gain Hope."* Ficou de
+fora **de propósito**: "obter Esperança" não é o nome de nenhum movimento (o
+movimento é "Preparar-se", que dá 1 ou 2), então quanto cada punhado entrega é
+ambíguo. Implementar exigiria escolher um número que a fonte não dá — que é
+exatamente o que este projeto não faz. Fica anotado para quando houver errata ou
+decisão da mesa.
+
+### O buraco que o Banquete revelou, e que era mais velho que ele
+
+A tela do descanso desenhava campo de entrada **por chave conhecida**: um `if`
+para `comGrupo`, outro para `principio`, outro para `projeto`. Quem pedisse
+qualquer outra coisa não tinha campo.
+
+- O **Refocar** (Artista Marcial) declara `perguntas: [{ chave: 'maiorResultado',
+  tipo: 'numero' }]` desde que nasceu, e o motor o recusa sem o número.
+- O **Montar Guarda** (Era da Umbra) precisa do Dado de Esperança.
+
+Os dois estavam quebrados **em silêncio**: escolher o movimento levava a uma
+prévia dizendo "informe o resultado" sem lugar nenhum para informar. Nenhum
+teste pegava, porque a bateria de celular do descanso nunca havia desenhado um
+movimento com `perguntas`.
+
+A tela passou a ler `perguntas` do próprio movimento — número com mínimo, máximo
+e padrão. Todo movimento novo que pedir número já nasce com campo. Há um teste
+de fonte que recusa um movimento que leia `escolha.<campo>` sem declarar a
+pergunta, e a bateria ganhou o estado do cartão com quatro campos (18 estados,
+eram 15).
+
+## O Guia de Batalha: o quadradinho que não fazia nada (30/09/2026)
+
+Entrou na lista como "aritmética duplicada" — `(3 × personagens) + 2` vivia no
+`pontosDeBatalha_` e também em JS, no modal. Era isso e mais uma coisa: **os
+ajustes marcados no modal viviam num `Set` local que morria ao fechar a
+janela.** O campo `encontro.ajustesDePb` existe no motor desde que o encontro
+nasceu, `contaDoEncontro_` sempre o leu, e o app **nunca o escreveu**. A conta
+estava certa e não tinha quem a alimentasse.
+
+Agora o quadradinho grava por `definirEncontro` e o total exibido vem da
+resposta do motor — o mesmo número que a barra da cena mostra. A aritmética do
+JS saiu.
+
+Saiu também o `case 'guiaDeBatalha'` do `99_Api.gs`: calculadora "e se" escrita
+quando o encontro em jogo ainda não existia, e que nunca entrou em nenhum
+`ACOES` — nunca foi possível chamá-la pelo app. As funções que ela usava
+continuam vivas e testadas pelo caminho do encontro de verdade.

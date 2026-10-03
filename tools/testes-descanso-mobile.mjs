@@ -87,6 +87,100 @@ async function abrirDescanso(page) {
   await page.waitForTimeout(320);
 }
 
+/**
+ * O BANQUETE NO CELULAR — quatro campos de número num cartão só.
+ *
+ * ⚠ ESTA BATERIA NUNCA TINHA DESENHADO UM MOVIMENTO QUE PEDE NÚMERO. Todos os
+ * estados usavam movimentos sem `perguntas`, e por isso o buraco antigo passou
+ * despercebido aqui também: o Refocar declarava `maiorResultado` e a tela não
+ * tinha campo nenhum para ele. Agora que a tela lê `perguntas`, este estado é a
+ * prova de que ela lê — e de que quatro campos empilhados ainda cabem em 360px.
+ */
+async function abrirDescansoComBanquete(page) {
+  await page.evaluate(async () => {
+    const { acoes } = await import('/js/estado.js');
+    const { abrirDescanso } = await import('/js/telas/descanso.js');
+
+    const banquete = {
+      id: 'banquete:preparar',
+      nome: 'Preparar um Banquete',
+      texto: 'Ofereça seus ingredientes à refeição do grupo. A pessoa chef monta a reserva de ' +
+        'sabores e faz a jogada de preparo na mesa; informe aqui a Nota da Refeição e distribua ' +
+        'até esse total entre Pontos de Vida limpos, Estresse limpo e Esperança obtida.',
+      formula: 'PV + Estresse + Esperança ≤ Nota da Refeição',
+      podeMirarAliado: false,
+      perguntas: [
+        { chave: 'notaDaRefeicao', tipo: 'numero', minimo: 0, maximo: 60,
+          texto: 'Qual foi a Nota da Refeição?' },
+        { chave: 'pontosDeVida', tipo: 'numero', minimo: 0, maximo: 60, padrao: 0,
+          texto: 'Quantos Pontos de Vida você limpa?' },
+        { chave: 'estresse', tipo: 'numero', minimo: 0, maximo: 60, padrao: 0,
+          texto: 'Quanto Estresse você limpa?' },
+        { chave: 'esperanca', tipo: 'numero', minimo: 0, maximo: 60, padrao: 0,
+          texto: 'Quanta Esperança você obtém?' }
+      ]
+    };
+    const reparar = { id: 'armadura', nome: 'Reparar Armadura', texto: 'Conserte a armadura.',
+                      perguntas: [], podeMirarAliado: false };
+
+    acoes.movimentosDeDescanso = async () => ({
+      movimentos: [banquete, reparar],
+      patamar: 2,
+      movimentosPorDescanso: 2,
+      seInterrompido: 'Se o descanso curto for interrompido, seus benefícios não são recebidos.'
+    });
+    acoes.aliadosDaMesa = async () => ({ aliados: [] });
+    acoes.meusProjetos = async () => ({ projetos: [], tabela: [] });
+
+    abrirDescanso({ personagem: { id: 'teste-banquete-mobile', versao: 1 } });
+  });
+
+  await page.waitForSelector('.modal__caixa--descanso .descanso__etapas', { timeout: 10000 });
+  await page.getByRole('button', { name: 'Descanso Curto' }).click();
+  await page.waitForSelector('.descanso__movimento');
+  await page.waitForTimeout(200);
+}
+
+async function auditarBanquete(page, viewport) {
+  const erros = await page.evaluate(() => {
+    const erros = [];
+    const largura = document.documentElement.clientWidth;
+    const cartoes = [...document.querySelectorAll('.descanso__movimento')];
+    const cartao = cartoes.filter((c) => /Preparar um Banquete/.test(c.textContent || ''))[0];
+    if (!cartao) return ['o cartão do Banquete não foi desenhado'];
+
+    const campos = [...cartao.querySelectorAll('input[type="number"]')];
+    if (campos.length !== 4) {
+      erros.push(`esperava 4 campos de número no Banquete; achei ${campos.length}`);
+      return erros;
+    }
+    campos.forEach((c, i) => {
+      const r = c.getBoundingClientRect();
+      // a mesma régua de toque do resto do app: dedo, não mouse
+      if (r.height < 40) erros.push(`campo ${i + 1} tem ${r.height.toFixed(1)}px de altura`);
+      if (r.left < -1 || r.right > largura + 1) erros.push(`campo ${i + 1} saiu da viewport`);
+    });
+
+    // o rótulo precisa caber: quatro perguntas parecidas só se distinguem pelo texto
+    const rotulos = [...cartao.querySelectorAll('.campo__rotulo')];
+    const cortados = rotulos.filter((r) => r.scrollHeight > r.clientHeight + 1);
+    if (cortados.length) {
+      erros.push('rótulo cortado: ' + cortados.map((r) => r.textContent.trim()).join(' | '));
+    }
+    if (!/Nota da Refeição/.test(cartao.textContent || '')) {
+      erros.push('o cartão não pergunta a Nota da Refeição');
+    }
+
+    if (Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) > largura + 1) {
+      erros.push('há overflow horizontal no documento');
+    }
+    return erros;
+  });
+
+  await page.screenshot({ path: `${PASTA}/${viewport.nome}-descanso-banquete.png`, fullPage: true });
+  registrar(viewport, 'descanso-banquete', erros);
+}
+
 async function auditar(page, viewport, estado, {
   etapa,
   resumo = null,
@@ -252,6 +346,12 @@ async function executar(viewport) {
       erros.push('corpo manteve rolagem própria em 768px');
     }
     registrar(viewport, 'restauracao-768px', erros);
+
+    // e o cartão que pede número, do zero: recarrega para limpar os dublês.
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await page.goto(base, { waitUntil: 'networkidle' });
+    await abrirDescansoComBanquete(page);
+    await auditarBanquete(page, viewport);
   } finally {
     await contexto.close();
   }

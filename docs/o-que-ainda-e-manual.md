@@ -160,15 +160,23 @@ escrito a MESMA REGRA DUAS VEZES, com outro nome de campo: a tela mandava
 não conseguiria mais descansar. Foi revertido antes de qualquer teste rodar, e
 fica aqui como o exemplo do porquê de E4.
 
-### 8. Os consumíveis que terminam no adversário (24 itens) — de pé
+### 8. Os consumíveis que terminam no adversário — feito, e eram 14, não 24
 
-As classificações `consumivel-resolucao-manual-e5` e `-e11` cobrem 24 itens —
-venenos, fragmentos arcanos, orbes — que o app consome e depois solta a mão.
-**Com o mural, os que têm número fixo podem entregar o número pronto ao
-Mestre.** Os que dependem de área ou de um dado continuam manuais, e devem
-continuar.
+As classificações `consumivel-resolucao-manual-e5` e `-e11` faziam parecer 24
+itens. **Contando de verdade, eram 14** que realmente terminam na mesa — o resto
+já tinha dono em outro lugar. Desses, **16 entradas** (alguns itens aparecem em
+mais de uma tabela) ganharam `entregaAoMestre: true` e agora entregam o texto
+pronto no mural de recados assim que a unidade é consumida.
 
-**Custo:** médio, mas em lote: um gancho serve para todos.
+O que ficou de fora ficou de propósito: os que dependem de área ou de um dado
+continuam manuais, e devem continuar.
+
+⚠ **O que a contagem revelou pelo caminho:** 67 itens guardavam o mesmo texto
+duas vezes, em `descricao` e em `efeitoManual`, palavra por palavra. O gerador
+passou a derivar um do outro, as 67 cópias saíram do JSON, e um teste recusa a
+volta delas. E quatro `descricao` estavam erradas (consumíveis 12, 24, 31 e 49)
+— conferidas contra a fonte antes de virarem recado, porque agora o texto errado
+não fica só na ficha: aparece no painel do Mestre.
 
 ---
 

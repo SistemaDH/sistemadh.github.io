@@ -234,6 +234,34 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
       placeholder: 'ex.: 3'
     }) : null;
 
+    /*
+     * OS CAMPOS DE NÚMERO SAEM DO PRÓPRIO MOVIMENTO, e isso fecha um buraco
+     * antigo.
+     *
+     * ⚠ O REFOCAR PEDIA UM NÚMERO QUE NÃO TINHA ONDE SER DIGITADO. Ele declara
+     * `perguntas: [{ chave: 'maiorResultado', tipo: 'numero' }]` desde que
+     * nasceu, o motor recusa sem ele — e esta tela só sabia desenhar campo para
+     * `comGrupo`, `principio` e `projeto`, um `if` por chave. Escolher Refocar
+     * levava a uma prévia dizendo "informe o maior d6" sem lugar nenhum para
+     * informar. O Montar Guarda tinha o mesmo destino, e o Banquete seria o
+     * terceiro.
+     *
+     * Um `if` por chave é a regra escrita duas vezes: uma no movimento, outra
+     * aqui. Agora a tela lê o que o movimento declara, e todo movimento novo
+     * que pedir número já nasce com campo.
+     */
+    const numericas = (m.perguntas || []).filter((q) => q.tipo === 'numero');
+    const camposNumericos = numericas.map((q) => ({
+      q,
+      campo: el('input', {
+        type: 'number', class: 'campo__entrada',
+        inputmode: 'numeric',
+        min: Number.isFinite(q.minimo) ? q.minimo : 0,
+        max: Number.isFinite(q.maximo) ? q.maximo : undefined,
+        placeholder: Number.isFinite(q.padrao) ? String(q.padrao) : ''
+      })
+    }));
+
     const comGrupo = (m.perguntas || []).some((q) => q.chave === 'comGrupo')
       ? el('input', { type: 'checkbox', class: 'criacao__caixa' }) : null;
 
@@ -281,6 +309,15 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
           `O app não rola dado. Ele soma o patamar ${patamar} ao que você digitar.` })
       ]));
     }
+    camposNumericos.forEach(({ q, campo }) => {
+      cartao.append(el('label', { class: 'campo' }, [
+        el('span', { class: 'campo__rotulo', texto: q.texto || q.chave }),
+        campo,
+        Number.isFinite(q.padrao)
+          ? el('span', { class: 'campo__ajuda', texto: `Em branco vale ${q.padrao}.` })
+          : el('span', { class: 'campo__ajuda', texto: 'O app não rola nada: informe o número da mesa.' })
+      ]));
+    });
     if (comGrupo) {
       cartao.append(el('label', { class: 'criacao__alternador' }, [
         comGrupo, el('span', { texto: 'Preparei junto com alguém do grupo (2 de Esperança)' })
@@ -347,6 +384,25 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
           return;
         }
         escolha.rolagem = n;
+      }
+      for (let i = 0; i < camposNumericos.length; i++) {
+        const { q, campo } = camposNumericos[i];
+        const cru = String(campo.value).trim();
+        if (!cru) {
+          if (Number.isFinite(q.padrao)) { escolha[q.chave] = q.padrao; continue; }
+          avisarErro(q.texto || `Informe ${q.chave}.`);
+          campo.focus();
+          return;
+        }
+        const n = Number(cru);
+        const min = Number.isFinite(q.minimo) ? q.minimo : 0;
+        const max = Number.isFinite(q.maximo) ? q.maximo : Infinity;
+        if (!Number.isInteger(n) || n < min || n > max) {
+          avisarErro(`${q.texto || q.chave}: um número inteiro de ${min} a ${max === Infinity ? '…' : max}.`);
+          campo.focus();
+          return;
+        }
+        escolha[q.chave] = n;
       }
       if (comGrupo && comGrupo.checked) escolha.comGrupo = true;
       if (principio) {
