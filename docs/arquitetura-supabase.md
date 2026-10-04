@@ -27,40 +27,47 @@ As tabelas expostas têm RLS habilitado e não possuem policies públicas para `
 Produção atual:
 
 ```text
-engine-api: v23 ACTIVE (deploy conferido em 30/09/2026)
+engine-api: v24 ACTIVE (deploy conferido em 03/10/2026)
 verify_jwt: false
-ENGINE_COMMIT: 89f2790fa0a3dda66ddb80c41da3e4be213097cb
-bundle: b4b52a90249ef0e652d85616c670736452abe0ea12674a1c7967064117913c47
+ENGINE_COMMIT: 47fcbffa9c508c9b03ef2716521b2bea6be234af
+bundle: f594ba09067d9583fc4893980f185aad428ae2396e5ffea79e0f4af8c6dc50a8
 ```
 
-⚠ **A v23 é REPIN**, e é bom que seja: a fonte da função não mudou uma vírgula —
-a única linha diferente entre a v22 e a v23 é o próprio `ENGINE_COMMIT`, o que
-foi conferido por diff antes de mandar. O que mudou foi o motor `.gs` no commit
-apontado.
+⚠ **A v24 NÃO É REPIN.** A fonte da função mudou: o `ACOES` ganhou duas ações,
+`acenderRamoSacro` e `definirBanquetes`. Sem elas na lista, o botão do ramo
+sacro e o interruptor dos Banquetes responderiam `404 ACAO_DESCONHECIDA` — o
+mesmo 404 mudo que o `reiniciarMoldura` quase levou para produção três vezes.
+O diff do que foi enviado contra o arquivo do repositório foi conferido antes de
+mandar: **uma única linha diferente**, a do próprio `ENGINE_COMMIT`.
 
-O que o commit `89f2790` traz, em relação ao `2da0a672` da v22: a faxina geral.
-Dois arquivos do motor mudaram, e só para REMOVER código morto —
-`cartasComUsoEmCriaturaDaFicha_` saiu do `4C_Ajustes.gs` (31 linhas) e
-`caracteristicasDoGrupoParaDescanso_` saiu do `99_Api.gs` (5 linhas, a
-antecessora do `contextoDoGrupoParaDescanso_`). Nenhuma regra mudou de
-comportamento. Varredura depois: 0 funções sem chamador entre as 438 do motor.
+O que o commit `47fcbff` traz, em relação ao `89f2790` da v23: as quatro
+pendências. Os consumíveis que terminam no adversário entregando recado ao
+Mestre; o ramo sacro da Era da Umbra; o Guia de Batalha com um leitor só (e o
+`case 'guiaDeBatalha'` inalcançável removido); e os Banquetes, com o interruptor
+de mesa e a troca de cinco movimentos de descanso por "Preparar um Banquete".
 
 Os 24 `SOURCE_FILES` servidos pelo GitHub nesse commit foram conferidos **byte a
-byte** contra a árvore que rodou os testes: **0 divergentes**.
+byte** contra a árvore que rodou os 1236 testes: **0 divergentes**.
 
 ⚠ **O que NÃO foi possível conferir neste ambiente:** uma chamada HTTP de ida e
 volta à função. O proxy de saída da sessão recusa o host das Edge Functions (403
-no CONNECT). A verificação foi a releitura do código implantado pelo painel — v23
-ACTIVE, `verify_jwt: false`, pin novo, os 24 `SOURCE_FILES`, e o `autenticar`
-conferindo o token de sessão **em hash** contra `sessoes`, com a expiração
-intacta — mais os advisors de segurança, que seguem só com o
-`rls_enabled_no_policy` esperado nas 6 tabelas (INFO; é o estado desejado).
+no CONNECT). A verificação foi a releitura do código implantado pelo painel — v24
+ACTIVE, `verify_jwt: false`, pin novo, as duas ações novas presentes no `ACOES`,
+os 24 `SOURCE_FILES`, e o `autenticar` conferindo o token de sessão **em hash**
+contra `sessoes`, com a expiração intacta — mais os advisors de segurança, que
+seguem só com o `rls_enabled_no_policy` esperado nas 6 tabelas (INFO; é o estado
+desejado, e não se cria política pública para calá-lo).
 
-**A primeira requisição AUTENTICADA é que baixa os 24 `.gs` do pin novo.** Como
-este lote só removeu código morto, a prova da mesa é simples: abrir uma ficha e
-fazer um ajuste. Se responder, o motor novo carregou.
+**A primeira requisição AUTENTICADA é que baixa os 24 `.gs` do pin novo.** A
+prova da mesa, nesta ordem: abrir uma ficha e fazer um ajuste (o motor carregou);
+Mestre → Mesa → Ajustes → marcar **Banquetes** e abrir um descanso (os três
+movimentos somem, entra "Preparar um Banquete"); e, em Era da Umbra, o botão
+**Acender o ramo sacro** no cartão das Chamas Sagradas.
 
 ### Histórico
+
+A v23 (30/09/2026) pinou `89f2790fa0a3dda66ddb80c41da3e4be213097cb` — repin da
+faxina geral, que só removeu código morto do motor.
 
 A v22 (29/09/2026) pinou `2da0a6721d0558f00dc4edf202f7195102b611fe` e acrescentou
 `reiniciarMoldura` ao `ACOES` — o único deploy recente que não foi repin; a v21

@@ -1135,3 +1135,52 @@ ponta. Ações roteadas conferidas contra a fonte: **69** (eram 67). Mestre mobi
 `acenderRamoSacro` e `definirBanquetes`: o `index.ts` mudou de verdade, e sem
 isso o botão do painel daria 404 mudo. É a mesma lição que o `reiniciarMoldura`
 ensinou três vezes, e que o `conferir-funcoes-publicadas` pegou nas três.
+
+---
+
+## Deploy da v24 (03/10/2026) — o segundo que NÃO é repin
+
+```text
+engine-api: v24 ACTIVE
+verify_jwt: false
+ENGINE_COMMIT: 47fcbffa9c508c9b03ef2716521b2bea6be234af
+bundle: f594ba09067d9583fc4893980f185aad428ae2396e5ffea79e0f4af8c6dc50a8
+```
+
+A ordem de sempre, com a diferença que vale escrever em voz alta: **a fonte da
+função mudou**. O `ACOES` ganhou `acenderRamoSacro` e `definirBanquetes`, e sem
+elas na lista o botão do ramo sacro e o interruptor dos Banquetes responderiam
+`404 ACAO_DESCONHECIDA` — o mesmo 404 mudo que o `reiniciarMoldura` quase levou
+para produção três vezes.
+
+O que foi conferido, na ordem, antes de qualquer coisa ir:
+
+1. **O commit da Vanessa bate com a árvore testada.** `git diff HEAD origin/main`
+   fora de `assets/`: **0 arquivos**. O que ela commitou é exatamente o que os
+   1236 testes rodaram.
+2. **Os 24 `SOURCE_FILES` servidos pelo GitHub no commit `47fcbff`**, baixados um
+   a um de `raw.githubusercontent.com` e comparados byte a byte com `backend/*.gs`
+   local: **24 de 24 iguais, 0 divergentes**. Este é o passo que impede o motor
+   de carregar um `.gs` diferente do que a suíte provou.
+3. **O payload do deploy contra o arquivo do repositório**: `diff` de uma linha
+   só, a do `ENGINE_COMMIT`. Nada mais mudou no caminho.
+4. **Nenhum segredo literal no payload.** A única menção a
+   `SUPABASE_SERVICE_ROLE_KEY` é um `Deno.env.get` — a chave vive no ambiente da
+   Edge Function, nunca no código e nunca no frontend.
+5. **Releitura da função publicada**: v24 ACTIVE, `verify_jwt: false`, pin novo,
+   as duas ações novas presentes, os 24 `SOURCE_FILES`, e o `autenticar`
+   conferindo o token de sessão em hash contra `sessoes`.
+6. **Advisors de segurança**: só o `rls_enabled_no_policy` esperado nas 6
+   tabelas, nível INFO. É o estado desejado — quem escreve é o motor, com
+   privilégio de serviço, e criar política pública para calar o aviso seria abrir
+   a porta que ele existe para manter fechada.
+
+⚠ **O que NÃO deu para conferir daqui:** uma chamada HTTP de ida e volta à
+função. O proxy de saída desta sessão recusa o host das Edge Functions (403 no
+CONNECT), como na v22 e na v23. A prova de que o motor novo carregou é da mesa,
+e a primeira requisição **autenticada** é que baixa os 24 `.gs` do pin novo.
+
+⚠ **E o `supabase/functions/engine-api/index.ts` do repositório foi atualizado
+junto.** Na v21 isso ficou para trás: o repositório dizia um pin e a produção
+rodava outro, e a diferença só apareceu quando alguém foi conferir. O arquivo
+versionado agora diz `47fcbff`, igual ao que está no ar.
