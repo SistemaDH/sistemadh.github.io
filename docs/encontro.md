@@ -154,7 +154,7 @@ cruzado. Trocar a ficha por baixo seria decidir por ela.
 
 Dentro da chave `mesa`, ao lado das contagens:
 
-```
+```js
 mesa.encontro = {
   nome, ambiente,
   adversarios: [{ id, adversario, apelido, pontosDeVidaMarcados,

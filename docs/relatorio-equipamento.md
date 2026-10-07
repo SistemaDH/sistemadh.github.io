@@ -201,6 +201,7 @@ Ilmari, Aantari, Bellamoi, Bladefare) — são nomes de gente e lugar, não se t
 - `backend/44_Equipamento.gs` — GERADO por `tools/gerar-44-equipamento.mjs`
 
 **Regras validadas no servidor:**
+
 - Uma arma de duas mãos ocupa as duas — não sobra mão para secundária
 - Arma secundária não entra no lugar da primária (e vice-versa)
 - Nível da tabela x nível do personagem (1 / 2-4 / 5-7 / 8-10)

@@ -6,6 +6,13 @@ no app. Quando a parte correspondente for construída, voltar aqui e ligar as po
 
 ## 1. Sistemas que as cartas exigem
 
+> ⚠ **Instantâneo dos 9 domínios originais — hoje são 10.** A tabela sai do
+> campo `dependencias` de `data/cartas-dominio.json`, que **não foi preenchido
+> para o domínio Pavor**: as 21 cartas dele não entram em nenhuma linha abaixo.
+> Contando pelo texto, Esperança vai a 92 cartas (8 de Pavor), Estresse a 95
+> (15 de Pavor) e Medo a 28 (8 de Pavor). A tabela continua boa para saber QUE
+> sistemas as cartas tocam; para contagem, não.
+
 | Sistema | Cartas que dependem | Onde deve ser resolvido |
 |---|---:|---|
 | Esperança | 84 | Parte 4 — Criação de ficha |
@@ -29,6 +36,7 @@ no app. Quando a parte correspondente for construída, voltar aqui e ligar as po
 ## 2. Achados que merecem decisão
 
 ### 2.1 Marcadores guardados na própria carta
+
 16 cartas guardam estado **na carta** (fichas, marcadores, um d6 com valor virado para cima). Isso não é "a carta está no loadout" — é um contador por carta que precisa ser salvo na ficha e zerado em descanso. Não estava previsto em nenhuma parte do plano.
 
 - **Liberar o Caos** (Arcana 1)
@@ -49,6 +57,7 @@ no app. Quando a parte correspondente for construída, voltar aqui e ligar as po
 - **Zona de Proteção** (Esplendor 6)
 
 ### 2.2 Cartas que mudam a ficha de forma permanente — RESOLVIDO (I2)
+
 5 cartas dão bônus permanente ou se removem do jogo. Precisam de tratamento especial na ficha (não dá para simplesmente "desequipar").
 
 Três mexem na **própria ficha**, aplicam pelo botão dentro da carta e vão
@@ -69,22 +78,26 @@ condição ou observação no adversário em cena.
 Arquivo: `backend/4I_CartasPermanentes.gs`. Detalhe em `pontas-h-e-i.md` §I2.
 
 ### 2.3 Cartas que a edição pt-BR deixou em inglês
+
 - **Banir** (Códice 6) — arquivo `Banir.png` — o TEXTO INTEIRO da carta está em inglês
 - **Words of Discord** (Graça 5) — arquivo `Words of Discord.png` — o nome está em inglês
 - **Share the Burden** (Graça 6) — arquivo `Share the Burden.png` — o nome está em inglês
 - **Forest Sprites** (Sábio 8) — arquivo `Forest Sprites.png` — o nome está em inglês
 
 ### 2.4 Rótulo de tipo impresso em inglês
+
 As cartas em pt-BR imprimem o tipo em inglês (Spell / Ability / Grimoire). O JSON guarda
 os dois: `tipoImpresso` (fiel à carta) e `tipo` (Feitiço / Habilidade / Grimório) para exibir.
 
 ### 2.5 Divergência entre carta e errata
+
 - **Redemoinho** (Lâmina 1): Errata p.329 (Whirlwind, Lâmina 1): texto revisado. A carta já está na versão corrigida.
 - **Eu Vi Chegando** (Osso 1): Errata p.331 (I See It Coming, Osso 1): texto revisado. A carta já está na versão corrigida.
 - **Golpe Estilhaçante** (Osso 9): Errata p.332 (Splintering Strike, Osso 9): texto revisado. A carta já está na versão corrigida.
 - **Livro de Grynn** (Códice 4): Errata p.333 (Book of Grynn, Códex 4): "Gaste uma Esperança" virou custo em negrito (a carta já reflete) E a Muralha de Chamas passou a ser "temporária" — ESSA palavra NÃO aparece na carta impressa. Divergência real entre carta e errata.
 
 ### 2.6 Condições citadas pelas cartas
+
 A Parte 6 precisa cobrir pelo menos estas, que já aparecem nas cartas de domínio:
 
 - Vulnerável (6 cartas)
@@ -104,9 +117,9 @@ A Parte 6 precisa cobrir pelo menos estas, que já aparecem nas cartas de domín
 
 ## 3. O que a Parte 2 deixou pronto
 
-- `data/dominios.json` — 9 domínios com nome pt-BR, descrição do livro, cor, classes e aliases
-- `data/cartas-dominio.json` — 189 cartas com nível, tipo, custo de recordar, texto e caminho da imagem
-- `assets/cartas/dominios/<DOMINIO>/*.png` — as 189 imagens oficiais
+- `data/dominios.json` — **10 domínios** (os 9 do livro mais **Pavor**, do SRD 2.0) com nome pt-BR, descrição do livro, cor, classes e aliases
+- `data/cartas-dominio.json` — **210 cartas** (21 por domínio) com nível, tipo, custo de recordar, texto e caminho da imagem
+- `assets/cartas/dominios/<DOMINIO>/*.png` — as **210** imagens oficiais
 - `backend/41_Dominios.gs` — índice e validação no servidor (carta existe, é do domínio da classe, nível permite, sem repetida, máximo de 5 ativas)
 
 ## 4. Ainda NÃO feito nesta parte

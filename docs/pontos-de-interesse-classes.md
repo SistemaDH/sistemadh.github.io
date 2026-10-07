@@ -18,7 +18,7 @@ O mesmo conceito aparece com **três palavras diferentes** no material oficial:
 | Hidden | Cartas de domínio | **Oculto** |
 | Hidden | Livro | "condição Hidden (oculto)" |
 
-**Decisão pendente:** escolher o termo canônico (a maioria aponta para
+~~**Decisão pendente:**~~ ✅ **DECIDIDO: Camuflado**, com *Encoberto* e *Cloaked* como sinônimos (`data/condicoes.json`). O parágrafo abaixo é o registro da dúvida — escolher o termo canônico (a maioria aponta para
 *Camuflado* e *Oculto*) e registrar *Encoberto* como sinônimo, do mesmo jeito que
 `DOMINIO_ALIASES` resolveu a bagunça dos nomes de domínio. Sem isso, uma busca
 por "Camuflado" não acha as cartas do Caminhante Noturno.
@@ -31,14 +31,17 @@ por "Camuflado" não acha as cartas do Caminhante Noturno.
 
 As cartas de subclasse imprimem o atributo de Conjuração **em inglês**:
 AGILITY, STRENGTH, FINESSE, INSTINCT, PRESENCE, KNOWLEDGE. A única exceção
-encontrada são as cartas do Bardo, que imprimem **PRESENÇA** traduzido.
+encontrada **no núcleo** são as cartas do Bardo, que imprimem **PRESENÇA**
+traduzido. Com o SRD 2.0 passaram a ser quatro classes: Assassino (AGILIDADE,
+CONHECIMENTO), Bruxo (PRESENÇA) e Bruxa (CONHECIMENTO, INSTINTO) também
+imprimem em pt-BR.
 
 No livro, a linha de atributos da ficha de exemplo saiu corrompida
 ("AGILIDADE ESTREITO FINESSE InSTInCT PRESENÇA knOWlEDGE"), então ela **não
 serve** para confirmar os nomes.
 
 Confirmados até agora: Agilidade, Instinto, Presença, Conhecimento.
-**Faltam: Strength e Finesse.** Confirmar na Parte 4 antes de gravar qualquer
+~~**Faltam: Strength e Finesse.**~~ ✅ Os dois entraram: `forca` (Força/Strength) e `finesse`, com aliases — é por eles que `conjuracaoDaSubclasse_` resolve o `FINESSE`/`STRENGTH` impresso nas cartas. Confirmar na Parte 4 antes de gravar qualquer
 coisa na ficha. O JSON guarda `caracteristicaConjuracaoImpressa` (fiel) e deixa
 `caracteristicaConjuracao` em `null` quando não há tradução confirmada.
 
@@ -53,7 +56,10 @@ Três classes guardam **um dado com valor corrente** como estado do personagem:
 É exatamente o mesmo problema das **16 cartas de domínio que guardam marcadores**
 (ver `pontos-de-interesse-dominios.md`). Ou seja: o app precisa de um mecanismo
 genérico de "contador com estado, preso a uma carta ou característica, que zera
-em descanso". Não estava previsto no plano original.
+em descanso". Não estava previsto no plano original — e virou um sistema
+inteiro: `47_Contadores.gs` tem hoje **201 contadores**, 113 deles presos a
+cartas de domínio (92 cartas distintas), mais os de equipamento, consumível,
+saque, classe, ancestralidade, comunidade e moldura.
 
 ## 4. Sub-sistemas inteiros que ficaram de fora desta parte
 
@@ -83,7 +89,7 @@ características (ver `pontos-de-interesse-avanco.md` §5): o jogador lia
 > "**Hold Them Off**"
 > "**No Mercy** (Sem piedade)"
 
-Então as 9 classes foram reimportadas: característica de classe,
+Então as 9 classes de então foram reimportadas: característica de classe,
 característica de Esperança, itens de classe e descrição. O texto entra no
 **vocabulário das cartas** (Estresse, Esperança, jogada, traço, dano Severo,
 Oculto/Camuflado) e o glossário mostra o termo do livro entre parênteses,
@@ -140,13 +146,13 @@ divergirem: o jogador não pode ler uma pergunta na tela e outra no livro.
 |---|---|
 | p.42 Ladino, **Encapuzado/Cloaked**: "Depois que você faz um ataque **ou termina um movimento** na linha de visão de um adversário…" | ✅ o livro pt-BR já traz a versão corrigida |
 | p.42 Ladino, característica de Esperança: "Caso contrário, esse bônus dura até seu próximo descanso." | ✅ conferido, sem termos em inglês |
-| p.33-35 Beastform | ⏳ fora do escopo desta parte |
-| p.41/352 Companheiro do Patrulheiro | ⏳ fora do escopo desta parte |
+| p.33-35 Beastform | ✅ aplicada (`data/fichas-filhas.json`, 24 Formas de Fera) |
+| p.41/352 Companheiro do Patrulheiro | ✅ aplicada (`companheiroAnimal.base.dano`, 8 evoluções) |
 | p.15 arte de Divine Wielder e Winged Sentinel trocadas | ✅ a ordem impressa no livro é Portador Divino → Sentinela Alado, como a errata descreve |
 
 ## 7. Nomes de subclasse: carta ≠ livro
 
-Em **12 das 18 subclasses** o livro e a carta discordam. A **carta é canônica**
+Em **24 das 26 subclasses** o livro e a carta discordam (eram 12 de 18 quando esta contagem foi feita; a tabela abaixo lista as 16 do núcleo). A **carta é canônica**
 (mesma decisão da Parte 2); o nome do livro virou alias, então buscar por
 qualquer um dos dois funciona.
 
@@ -173,7 +179,7 @@ qualquer um dos dois funciona.
 
 O livro em pt-BR continua sendo uma tradução automática ruim. Só nesta parte:
 o cabeçalho de domínios da ficha de classe está impresso como **"DOMÉSTICAS"**
-(tradução errada de *Domains*) nas 9 classes, e a seção de Maestria aparece como
+(tradução errada de *Domains*) nas 9 classes do núcleo, e a seção de Maestria aparece como
 **"Recurso de Domínio"**, que colide com o termo "domínio" das cartas. Os títulos
 das classes vêm em inglês (BARD, DRUID, ROGUE, SORCERER, WIZARD, RANGER).
 
@@ -182,21 +188,27 @@ está listado em `problemasDeTraducao` da classe.
 
 ## 9. O que a Parte 3 deixou pronto
 
-- `data/classes.json` — 9 classes: descrição, domínios, evasão e PV iniciais,
+- `data/classes.json` — **13 classes** (9 do livro + Assassino, Brigão, Bruxo e Bruxa, do SRD 2.0): descrição, domínios, evasão e PV iniciais,
   itens de classe, característica de Esperança, características de classe,
   perguntas de fundo, conexões, e as 2 subclasses com as 3 cartas cada
-- `assets/cartas/subclasses/<CLASSE>/*.png` — as 54 imagens oficiais
+- `assets/cartas/subclasses/<CLASSE>/*.png` — as **78** imagens oficiais
 - `backend/42_Classes.gs` — GERADO por `tools/gerar-42-classes.mjs`:
   `normalizarClasse_`, `normalizarSubclasse_`, `validarClasseESubclasse_`,
   `dominiosDaClasse_`, `basesDaClasse_` e `validarCartaParaClasse_`
   (que é onde a Parte 2 e a Parte 3 se encontram)
 
-**Validação estrutural que passou:** 9 classes × 2 subclasses × 3 cartas = 54;
-cada classe com exatamente 2 domínios; cada domínio usado por exatamente 2
-classes; e o mapeamento classe→domínio extraído do livro bate 100% com o que a
-Parte 2 já tinha registrado.
+**Validação estrutural que passou**, no núcleo de 9 classes: 9 × 2 subclasses ×
+3 cartas = 54; cada classe com exatamente 2 domínios; cada domínio usado por
+exatamente 2 classes; e o mapeamento classe→domínio extraído do livro batendo
+100% com o que a Parte 2 já tinha registrado.
 
-## 10. Ainda NÃO feito
+> ⚠ **Duas dessas invariantes não valem mais.** Com as quatro classes do SRD 2.0
+> são **13 classes, 26 subclasses e 78 cartas** — e **seis domínios passaram a
+> ser usados por TRÊS classes** (Graça, Sábio, Meia-Noite, Valor, Lâmina e
+> Osso), não por duas. O que continua valendo: duas subclasses por classe, três
+> cartas por subclasse, dois domínios por classe.
+
+## 10. ~~Ainda NÃO feito~~ — ✅ os quatro fecharam
 
 - Telas de classe e subclasse (frontend — entra quando você acionar a skill de UI)
 - Beastform e Companheiro Animal
@@ -208,7 +220,7 @@ Parte 2 já tinha registrado.
 ## Auditoria das nove classes contra o app (Lote 7)
 
 Depois da segunda passada na Forma de Fera, a pergunta foi: *"as outras classes
-têm o mesmo tipo de problema?"* Têm. A varredura cobriu as 9 classes, as 18
+têm o mesmo tipo de problema?"* Têm. A varredura cobriu as 9 classes de então, as 18
 subclasses e as 54 cartas de subclasse.
 
 **Errata conferida antes de tudo:** a do livro básico continua sendo a de

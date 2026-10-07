@@ -148,7 +148,7 @@ três vezes para descobrir que era uma coisa só. Tem teste garantindo isso.
 
 Mesmo padrão do resto do projeto: `data/verbetes.json` é **gerado**.
 
-```
+```text
 tools/verbetes/grupo_*.py   →  tools/montar-verbetes.py  →  data/verbetes.json
                                         ↓
                             tools/conferir-paginas.py (contra o PDF)

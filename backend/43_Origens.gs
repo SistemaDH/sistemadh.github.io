@@ -580,12 +580,28 @@ const COMUNIDADE_ALIASES = {
  *  Consultas e validação
  * ------------------------------------------------------------------------ */
 
-/** Converte qualquer grafia de ancestralidade no id canônico. */
+/**
+ * Converte qualquer grafia de ancestralidade no id canônico.
+ *
+ * ⚠ O ID CANÔNICO TAMBÉM É UMA GRAFIA VÁLIDA, e isto já não era verdade aqui.
+ * A irmã desta função, normalizarComunidade_, sempre aceitou o id; esta só
+ * olhava a lista de apelidos. Enquanto todo id era igual ao nome sem acento
+ * (anao, goblin, ribbet) ninguém viu diferença. Os suplementos do SRD 2.0
+ * trouxeram nomes de duas e três palavras — povo-das-mares, povo-do-ceu,
+ * povo-da-terra, povo-das-brasas — e para essas quatro o id deixou de ser
+ * reconhecido: normalizarAncestralidade_('povo-das-mares') devolvia null.
+ *
+ * Não chegou a dar defeito porque a tela manda o NOME. Mas é a mesma pergunta
+ * com duas respostas em funções irmãs, que é exatamente o que este projeto
+ * passa a vida caçando.
+ */
 function normalizarAncestralidade_(nome) {
   const alvo = chaveTexto_(nome);
   if (!alvo) return null;
+  if (ANCESTRALIDADES[alvo]) return alvo;
   const ids = Object.keys(ANCESTRALIDADE_ALIASES);
   for (let i = 0; i < ids.length; i++) {
+    if (chaveTexto_(ids[i]) === alvo) return ids[i];
     const lista = ANCESTRALIDADE_ALIASES[ids[i]];
     for (let k = 0; k < lista.length; k++) {
       if (chaveTexto_(lista[k]) === alvo) return ids[i];
@@ -610,19 +626,44 @@ function normalizarComunidade_(nome) {
 }
 
 /** Acha uma característica de ancestralidade pelo nome. Devolve {ancestralidade, ordem, nome}. */
-function acharCaracteristicaAncestral_(nomeCaracteristica) {
+function acharCaracteristicaAncestral_(nomeCaracteristica, idsPreferidos) {
   const alvo = chaveTexto_(nomeCaracteristica);
   if (!alvo) return null;
-  const ids = Object.keys(ANCESTRALIDADES);
-  for (let i = 0; i < ids.length; i++) {
-    const lista = ANCESTRALIDADES[ids[i]].caracteristicas;
-    for (let k = 0; k < lista.length; k++) {
-      if (chaveTexto_(lista[k].nome) === alvo) {
-        return { ancestralidade: ids[i], ordem: lista[k].ordem, nome: lista[k].nome };
+  const procurar = function (ids) {
+    for (let i = 0; i < ids.length; i++) {
+      const anc = ANCESTRALIDADES[ids[i]];
+      if (!anc) continue;
+      const lista = anc.caracteristicas;
+      for (let k = 0; k < lista.length; k++) {
+        if (chaveTexto_(lista[k].nome) === alvo) {
+          return { ancestralidade: ids[i], ordem: lista[k].ordem, nome: lista[k].nome };
+        }
       }
     }
+    return null;
+  };
+  /*
+   * ⚠ O NOME DA CARACTERÍSTICA DEIXOU DE SER ÚNICO, E ISSO QUEBRAVA FICHA.
+   *
+   * Durante muito tempo os 36 nomes de característica de ancestralidade eram
+   * todos distintos — está escrito como invariante em
+   * docs/pontos-de-interesse-origens.md. Os suplementos do SRD 2.0 trouxeram o
+   * Povo das Marés, que tem um "Anfíbio" idêntico ao do Ribbet, e ninguém
+   * releu o documento.
+   *
+   * Procurar só pelo nome devolvia a PRIMEIRA do catálogo. Resultado: a mista
+   * "Povo das Marés + Anão" escolhendo Anfíbio era RECUSADA com "não é de
+   * nenhuma das ancestralidades escolhidas" — uma ficha que o livro permite.
+   *
+   * Quem já sabe quais ancestralidades estão em jogo passa idsPreferidos e a
+   * busca começa por elas. Sem isso, a varredura geral continua valendo: é o
+   * que serve a quem só tem o nome na mão.
+   */
+  if (Array.isArray(idsPreferidos) && idsPreferidos.length) {
+    const naEscolhida = procurar(idsPreferidos.filter(Boolean));
+    if (naEscolhida) return naEscolhida;
   }
-  return null;
+  return procurar(Object.keys(ANCESTRALIDADES));
 }
 
 /**
@@ -659,7 +700,14 @@ function validarOrigem_(origem) {
     if (escolhidas.length !== 2) {
       erros.push('Escolha exatamente duas características de ancestralidade.');
     } else {
-      const achadas = escolhidas.map(acharCaracteristicaAncestral_);
+      /*
+       * ⚠ A SETA EXPLÍCITA NÃO É ENFEITE. Passar a função direto para .map()
+       * entrega (valor, índice, array): o índice chegaria como idsPreferidos e
+       * a busca tentaria procurar dentro de um número.
+       */
+      const achadas = escolhidas.map(function (nome) {
+        return acharCaracteristicaAncestral_(nome, ids);
+      });
       achadas.forEach(function (c, i) {
         if (!c) erros.push('Característica de ancestralidade desconhecida: "' + escolhidas[i] + '".');
       });

@@ -36,7 +36,7 @@ ataque" e tinha de lembrar dele na hora de somar.
 
 Agora o servidor publica o bônus **por arma** e a ficha escreve na linha dela:
 
-```
+```text
 Espada Larga: Corpo a Corpo · ataque +1 (Confiável) · 1d8+3
 Punhal pequeno: Corpo a Corpo · 1d8+1
 ```

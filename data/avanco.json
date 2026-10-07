@@ -328,9 +328,9 @@
     "\"PF\"/\"Fadiga\": o quadro escreve \"PF\", a explicação escreve \"Pontos de Fadiga\" e o exemplo escreve \"Fadiga\". Os três são a mesma coisa — o Estresse das cartas."
   ],
   "pontosDeInteresse": [
-    "SUBIR DE NÍVEL É DO GRUPO — o livro diz que todos sobem juntos. O app deixa cada jogador subir a própria ficha; o Mestre subir a mesa inteira de uma vez entra na Parte 9.",
-    "PERSONAGEM NOVO NO MEIO DA CAMPANHA — o livro (p.109) manda criar no nível atual do grupo. A criação de ficha só faz nível 1; subir logo depois resolve, mas um atalho \"criar já no nível N\" seria melhor. Fica anotado.",
-    "MÓDULO DE MULTICLASSE — o livro fala em \"pegue o módulo de multiclasse apropriado e o anexe ao lado direito de sua ficha\". Esse módulo é um pedaço de papel do jogo físico; no app ele vira a seção de multiclasse da ficha. Não existe PNG dele no acervo de cartas.",
-    "TROCA DE CARTA AO SUBIR — o livro permite trocar uma carta que você já tem por outra de nível igual ou menor. Isso é diferente de mover carta entre mão e cofre (que a Parte 7 já faz): é DESCARTAR uma carta e pegar outra. Entra como passo opcional do avanço."
+    "✅ FEITO — SUBIR DE NÍVEL É DO GRUPO. O livro diz que todos sobem juntos, e a decisão da mesa foi outra: cada jogador sobe a própria ficha, porque cada nível é uma sequência de escolhas que só o dono pode fazer. O que o Mestre tem é `anunciarNivelDaMesa`, que NÃO mexe em ficha nenhuma — ele acende o aviso \"a mesa está no nível 3 e você está no 2\" para quem ficou para trás. Isto não é pendência: é o desenho.",
+    "DECIDIDO — PERSONAGEM NOVO NO MEIO DA CAMPANHA. O livro (p.109) manda criar no nível atual do grupo, e toda ficha aqui nasce no 1 pelo mesmo motivo acima: cada nível é escolha do jogador, não do app. O que existe é o aviso na hora da criação, dizendo quantos degraus faltam para alcançar a mesa. Um atalho \"criar já no nível N\" teria de escolher avanços por alguém — e aí a ficha não seria dessa pessoa.",
+    "⬜ ABERTO — MÓDULO DE MULTICLASSE. A seção de multiclasse existe na ficha (traços, Conjuração e o selo de origem já aparecem). O que não existe é o PNG do módulo no acervo de cartas: o livro o descreve como um pedaço de papel que se anexa à ficha física, e a identidade visual do app ainda não tem esse pedaço.",
+    "✅ FEITO — TROCA DE CARTA AO SUBIR. O livro deixa descartar uma carta que você já tem e pegar outra de nível igual ou menor, e isso é diferente de mover carta entre mão e cofre. O avanço aceita `troca: { sai, entra }` e a resolve ANTES da carta obrigatória do nível, como o livro manda."
   ]
 }

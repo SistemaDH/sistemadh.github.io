@@ -108,6 +108,11 @@ Dados de Matador só zeram no fim da sessão.
 - **Dado de Reunião** (Rally Die). A carta do Maestro escreve "Dado de
   Reunião", a de Poesia Épica escreve "Dado de Motivação" e a característica de
   classe deixa "Rally Die" em inglês — **três nomes para a mesma coisa**.
+  ⚠ **Esta decisão foi revertida depois.** O canônico hoje é **Dado de
+  Inspiração** (e **Dado de Determinação** no lugar de Dado Imparável): as duas
+  cartas do Bardo se contradizem entre si, e o desempate virou o livro. Os nomes
+  antigos continuam valendo como sinônimos. O registro original:
+
   Escolhi *Dado de Reunião* porque o próprio texto da característica diz
   "descreva como você **reúne** o grupo". Os outros dois viraram sinônimos.
 - **Dado Imparável** (Unstoppable Die). O parágrafo do livro alterna entre as
@@ -121,7 +126,7 @@ Arquivos: `data/contadores.json`, `backend/47_Contadores.gs`.
 
 ---
 
-## 4. Fichas paralelas — encaixe reservado
+## 4. Fichas paralelas — ✅ FECHADAS (esta seção descreve o encaixe inicial)
 
 Beastform (Druida, p.33-36) e Companheiro Animal (Patrulheiro Laço Bestial,
 p.41-42) têm ficha própria, com atributos e evolução separados. Não cabem em

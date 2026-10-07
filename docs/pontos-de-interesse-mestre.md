@@ -15,13 +15,18 @@ resultado de uma rolagem e por isso continuam manuais:
 
 Se um dia houver rolagem no app, os três viram automáticos sem mudar a tabela.
 
-## 2. Adversários e ambientes não existem ainda
+## 2. Adversários e ambientes — ✅ EXISTEM (esta seção envelheceu)
 
 Gastar Medo em "habilidade de Medo de um adversário" custa **o número indicado
-na ficha dele**. Não há fichas de adversário no sistema. O painel deixa gastar
-um número livre de Medo; quando houver bestiário, o custo vem de lá.
+na ficha dele** — e as fichas chegaram: **264 adversários e 47 ambientes**, com
+encontro montado, trilha de PV e Estresse por instância.
 
-O mesmo vale para "adicionar a Experiência de um adversário ao teste".
+O custo sai da ficha do próprio adversário, e o cartão **apaga a habilidade que
+a mesa não tem como pagar**. As Experiências também estão lá (83 adversários as
+têm) e aparecem na tela.
+
+O gasto livre de Medo com anotação continua existindo, para o que o catálogo
+não cobre — mas deixou de ser o único caminho.
 
 ## 3. Perseguição — FECHADO na passada do backlog (A8)
 

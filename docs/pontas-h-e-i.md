@@ -12,7 +12,8 @@ que a decisão fique escrita, e não só o código.
 
 O livro gasta dez páginas (p.198-207) ensinando o Mestre a criar os seus, e
 mais uma (p.208) com uma tabela de estatísticas improvisadas por patamar. Sem
-isso, o app sabia 129 fichas e mais nada — e a primeira vez que a mesa
+isso, o app sabia 129 fichas e mais nada (hoje são **264 adversários e 47
+ambientes** — os suplementos do SRD 2.0 entraram depois) — e a primeira vez que a mesa
 inventasse um NPC, a ficha dele voltaria para o papel.
 
 **Uma ficha da mesa é igual a uma do livro em tudo que importa.** Entra na

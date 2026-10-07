@@ -281,14 +281,21 @@ anotações, e qualquer edição que a criação de ficha faça. Texto livre nã
 "toque para marcar" — mandar a cada tecla seria absurdo — então ali existe
 botão de salvar, e ele só acende quando há mudança.
 
-## 14. Custo de recordar: mostrado, não cobrado
+## 14. Custo de recordar: ✅ COBRADO (esta seção dizia o contrário)
 
-Ao trazer uma carta do cofre para a mão o app avisa quanto custaria em
-Estresse, mas NÃO marca. O motivo está no ponto 7: durante um descanso a troca
-é livre, e quem sabe se a mesa está num descanso é a mesa. Quando o painel do
-Mestre souber em que momento o grupo está, isso pode virar automático.
+⚠ **O parágrafo abaixo valeu até o custo passar a ser cobrado de verdade.
+Guardo-o porque o motivo dele continua explicando o desenho atual:**
 
-## 15. Vulnerável e Evitar a Morte — um fechou, o outro não (D1, D2)
+> Ao trazer uma carta do cofre para a mão o app avisa quanto custaria em
+> Estresse, mas NÃO marca. O motivo está no ponto 7: durante um descanso a
+> troca é livre, e quem sabe se a mesa está num descanso é a mesa.
+
+**Hoje o app cobra** — e cobra do jeito que o parágrafo pedia, sem adivinhar o
+momento: quem move a carta diz se é para cobrar (`cobrarCusto`), e a
+Mnemônica isenta. O ponto 7 descreve a cobrança funcionando; esta seção é que
+tinha ficado para trás.
+
+## 15. Vulnerável e Evitar a Morte — ✅ os dois fecharam (D1, D2)
 
 ### Vulnerável ao encher o Estresse — FECHADO (D1)
 

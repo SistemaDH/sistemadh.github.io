@@ -8,7 +8,7 @@ O frontend é publicado pelo GitHub Pages e o backend oficial é Supabase: Edge 
 
 ## Estado atual
 
-> **Produção:** sistema SRD 2.0 publicado no GitHub Pages e motor implantado no Supabase. Última correção operacional: 16/09/2026.
+> **Produção:** sistema SRD 2.0 publicado no GitHub Pages e motor implantado no Supabase. Último deploy do motor: **v24, em 03/10/2026**.
 
 O estado atual inclui:
 
@@ -68,12 +68,15 @@ O navegador não acessa diretamente as tabelas PostgreSQL. `js/api.js` distribui
 Produção atual:
 
 ```text
-engine-api: v17 ACTIVE (deploy conferido em 21/09/2026)
+engine-api: v24 ACTIVE (deploy conferido em 03/10/2026)
 verify_jwt: false
-ENGINE_COMMIT: 7424846cd88103653359e4fcd31d009b409d3880
+ENGINE_COMMIT: 47fcbffa9c508c9b03ef2716521b2bea6be234af
+bundle: f594ba09067d9583fc4893980f185aad428ae2396e5ffea79e0f4af8c6dc50a8
 ```
 
 O arquivo versionado `supabase/functions/engine-api/index.ts` usa o mesmo `ENGINE_COMMIT` do deploy ativo. Esse alinhamento é deliberado para impedir regressão em futuros redeploys.
+
+⚠ **Este bloco já ficou para trás uma vez** — dizia `v17` / `7424846` enquanto o arquivo versionado apontava para outro commit, que é exatamente a regressão que o parágrafo acima promete impedir. O histórico completo dos pins está em `docs/arquitetura-supabase.md`, que é o documento a atualizar a cada deploy; aqui fica só o estado atual.
 
 `verify_jwt=false` é intencional nesta função porque o handler valida o token customizado de sessão antes de operar com privilégios de serviço.
 
@@ -124,15 +127,15 @@ O SRD 2.0 foi integralmente inventariado e conferido: 1.539 registros, 1.538 mec
 
 ## Testes
 
-Estado validado em 16/09/2026: **971 testes do motor**, 3 jornadas completas do nível 1 ao 10, 224/224 fontes de regras SRD2 e 24/24 Formas de Fera. O CI #98 e o GitHub Pages #101 concluíram com sucesso para a correção que garante a presença das transformações no motor publicado.
+Estado validado em 07/10/2026: **1.239 testes do motor**, 3 jornadas completas do nível 1 ao 10, 224/224 fontes de regras SRD2 e 24/24 Formas de Fera.
 
-Gate completo do fechamento funcional do Lote 9: **CI #63** em 11/09/2026.
+⚠ **Os números abaixo são um instantâneo DATADO, não o estado de hoje** — eram o gate do fechamento funcional do Lote 9 (**CI #63**, 11/09/2026) e ficam aqui como registro. Para o estado atual, rode `npm run teste:tudo`.
 
 ```text
-sintaxe                 → 84 arquivos JS/MJS OK
-backend                 → 945 passaram, 0 falharam
-E2E                     → 108 passos OK, 0 falharam
-gerados                 → 14 geradores conferidos
+sintaxe                 → 84 arquivos JS/MJS OK      (hoje: 164)
+backend                 → 945 passaram, 0 falharam   (hoje: 1.239)
+E2E                     → 108 passos OK, 0 falharam  (hoje: 112)
+gerados                 → 14 geradores conferidos    (hoje: 16)
 CSS                     → nada a limpar nem a escrever
 auditoria Core 1.0      → 0 candidatos mecânicos pendentes
 baseline mobile         → 27 telas, 0 erros, 0 avisos

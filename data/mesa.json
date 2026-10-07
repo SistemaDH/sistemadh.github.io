@@ -251,9 +251,8 @@
   "p.162: \"use mostre a face 5 do d6 como seu dado de contagem\" — sobra o \"use\"."
  ],
  "pontosDeInteresse": [
-  "ADVERSÁRIOS E AMBIENTES — o gasto de Medo em \"habilidade de Medo de um adversário\" custa o número indicado na ficha DELE. O app não tem fichas de adversário ainda; o painel deixa gastar um número livre de Medo com uma anotação do que foi.",
-  "ROLAGEM COM MEDO — o livro dá 1 Ponto de Medo ao Mestre sempre que um personagem rola com Medo. Como a decisão da mesa foi \"só ficha, sem dados\", o app não sabe quando isso acontece: o botão de +1 fica na mão do Mestre.",
-  "CONTAGEM PADRÃO EM COMBATE — avança a cada jogada de qualquer jogador. Sem rolagem no app, quem avança é o Mestre. O botão existe; a automação depende de um dia haver rolagem.",
-  "ROLAGEM COM MEDO — o livro dá 1 Ponto de Medo ao Mestre sempre que um personagem rola com Medo. Como a decisão da mesa foi \"só ficha, sem dados\", o app não sabe quando isso acontece: o botão de +1 fica na mão do Mestre."
+  "✅ FEITO — ADVERSÁRIOS E AMBIENTES. O gasto de Medo em \"habilidade de Medo de um adversário\" custa o número indicado na ficha DELE — e as fichas existem: 264 adversários e 47 ambientes, com encontro montado, trilha de PV e Estresse por instância, e `custoDeMedo` cobrado da habilidade do próprio adversário. O cartão apaga a habilidade que a mesa não tem como pagar. O gasto livre de Medo com anotação continua ali, para o que o catálogo não cobre.",
+  "DECIDIDO — ROLAGEM COM MEDO. O livro dá 1 Ponto de Medo ao Mestre sempre que um personagem rola com Medo. Como a decisão da mesa foi \"só ficha, sem dados\", o app não sabe quando isso acontece: o botão de +1 fica na mão do Mestre. Não é pendência enquanto a lei do projeto for essa.",
+  "DECIDIDO — CONTAGEM PADRÃO EM COMBATE. Avança a cada jogada de qualquer jogador. Sem rolagem no app, quem avança é o Mestre; o botão existe. Mesma razão do ponto acima."
  ]
 }

@@ -3479,6 +3479,116 @@ function comBanquetes(ligado) {
   return contexto.mesaLer_().banquetes;
 }
 
+teste('⚠ Ancestralidade mista: "Anfíbio" existe em DUAS ancestralidades e isso recusava ficha legítima', () => {
+  /*
+   * ⚠ ISTO SAIU DE UM INVARIANTE QUE ENVELHECEU EM SILÊNCIO.
+   *
+   * `docs/pontos-de-interesse-origens.md` dizia, e estava certo quando foi
+   * escrito: "36 nomes de característica, todos únicos — por isso dá para achar
+   * uma característica só pelo nome". Os suplementos do SRD 2.0 trouxeram o
+   * Povo das Marés, com um "Anfíbio" idêntico ao do Ribbet. O documento não foi
+   * relido; o código continuou confiando no invariante.
+   *
+   * `acharCaracteristicaAncestral_` devolvia a PRIMEIRA que casasse pelo nome,
+   * e Ribbet vem antes no catálogo. Resultado: "Povo das Marés + Anão"
+   * escolhendo Anfíbio era recusada com "não é de nenhuma das ancestralidades
+   * escolhidas" — uma mista que o livro permite (p.71).
+   */
+  const cat = avaliar('ANCESTRALIDADES');
+  const donas = Object.keys(cat).filter((id) =>
+    (cat[id].caracteristicas || []).some((c) => c.nome === 'Anfíbio'));
+  igual(donas.length, 2, 'o caso só existe enquanto o nome for repetido: ' + JSON.stringify(donas));
+  igual(donas[0], 'ribbet', 'Ribbet é a que vem primeiro no catálogo — a que "ganhava" a busca');
+
+  // A PERDEDORA da ordem é a que sofria. A validação recebe NOMES, como a tela manda.
+  const perdedora = cat[donas[1]].nome;
+  const r = contexto.validarOrigem_({
+    ancestralidadeMista: [perdedora, 'Anão'],
+    caracteristicasEscolhidas: ['Anfíbio', 'Fortitude Aumentada'],
+    comunidade: 'highborne'
+  });
+  igual(r.erros, [], JSON.stringify(r.erros));
+  igual(r.resolvido.caracteristicas[0].ancestralidade, donas[1],
+    'Anfíbio precisa resolver para a ancestralidade ESCOLHIDA, não para a primeira do catálogo');
+
+  // E a de Ribbet continua resolvendo para Ribbet quando é ela que está em jogo.
+  const comRibbet = contexto.validarOrigem_({
+    ancestralidadeMista: ['Ribbet', 'Anão'],
+    caracteristicasEscolhidas: ['Anfíbio', 'Fortitude Aumentada'],
+    comunidade: 'highborne'
+  });
+  igual(comRibbet.erros, [], JSON.stringify(comRibbet.erros));
+  igual(comRibbet.resolvido.caracteristicas[0].ancestralidade, 'ribbet');
+});
+
+teste('⚠ Campo "total" num arquivo de dados não pode mentir', () => {
+  /*
+   * `data/cartas-dominio.json` carregava `"total": 189` enquanto o array tinha
+   * 210 cartas: o domínio Pavor entrou e o número ao lado não. Ninguém lia esse
+   * campo, então nada quebrou — e foi exatamente por isso que ele mentiu por
+   * meses, e a documentação copiou a mentira.
+   *
+   * ⚠ NEM TODO `total` É O TAMANHO DE UM ARRAY. Em `srd2-inventario.json` e em
+   * `srd2-nucleo-auditoria.json` ele é a SOMA das coleções. Por isso o teste
+   * aceita as duas formas, e só reclama quando o número não é nenhuma das duas.
+   */
+  const falhas = [];
+  for (const arq of fs.readdirSync(path.join(RAIZ, 'data'))) {
+    if (!arq.endsWith('.json')) continue;
+    const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data', arq), 'utf8'));
+    if (typeof d.total !== 'number') continue;
+    const tamanhos = Object.keys(d).filter((k) => Array.isArray(d[k])).map((k) => d[k].length);
+    const somas = Object.keys(d).filter((k) => Array.isArray(d[k])).map((k) =>
+      d[k].reduce((n, x) => n + (Number((x || {}).quantidade) ||
+        Number((x || {}).total) ||
+        (Array.isArray((x || {}).registros) ? x.registros.length : 0)), 0));
+    if (tamanhos.indexOf(d.total) === -1 && somas.indexOf(d.total) === -1) {
+      falhas.push(arq + ': total=' + d.total + ' mas os arrays têm ' + JSON.stringify(tamanhos));
+    }
+  }
+  igual(falhas, [], JSON.stringify(falhas));
+});
+
+teste('⚠ Origens: o id canônico vale como grafia — nas duas funções, não só numa', () => {
+  /*
+   * normalizarComunidade_ sempre aceitou o id; normalizarAncestralidade_ só
+   * olhava a lista de apelidos. Enquanto todo id era o nome sem acento (anao,
+   * goblin) ninguém via diferença. Os nomes de duas palavras do SRD 2.0 —
+   * povo-das-mares e companhia — expuseram a assimetria.
+   */
+  const ancs = avaliar('ANCESTRALIDADES');
+  const comus = avaliar('COMUNIDADES');
+  const falhas = [];
+  Object.keys(ancs).forEach((id) => {
+    if (contexto.normalizarAncestralidade_(id) !== id) falhas.push('ancestralidade ' + id);
+    if (contexto.normalizarAncestralidade_(ancs[id].nome) !== id) falhas.push('ancestralidade ' + ancs[id].nome);
+  });
+  Object.keys(comus).forEach((id) => {
+    if (contexto.normalizarComunidade_(id) !== id) falhas.push('comunidade ' + id);
+    if (contexto.normalizarComunidade_(comus[id].nome) !== id) falhas.push('comunidade ' + comus[id].nome);
+  });
+  igual(falhas, [], 'id ou nome que não volta para si mesmo: ' + JSON.stringify(falhas));
+  igual(contexto.normalizarAncestralidade_('inventada'), null, 'e o que não existe continua null');
+});
+
+teste('⚠ Origens: nome de característica repetido é permitido, mas tem de ser declarado', () => {
+  /*
+   * Não dá para proibir o nome repetido — o livro repete mesmo: Ribbet e Povo
+   * das Marés têm "Anfíbio" com o mesmo texto. O que dá é impedir que um
+   * repetido NOVO apareça sem ninguém notar, como este apareceu.
+   */
+  const CONHECIDOS = ['Anfíbio'];
+  const cat = avaliar('ANCESTRALIDADES');
+  const porNome = {};
+  Object.keys(cat).forEach((id) => (cat[id].caracteristicas || []).forEach((c) => {
+    (porNome[c.nome] = porNome[c.nome] || []).push(id);
+  }));
+  const repetidos = Object.keys(porNome).filter((n) => porNome[n].length > 1);
+  igual(repetidos.sort(), CONHECIDOS.slice().sort(),
+    'nome de característica repetido que ninguém declarou: ' + JSON.stringify(
+      repetidos.filter((n) => CONHECIDOS.indexOf(n) === -1).map((n) => n + ' → ' + porNome[n].join(', '))));
+});
+
 teste('⚠ Todo movimento que PEDE número declara a pergunta — senão a tela não tem campo', () => {
   /*
    * ⚠ ESTE TESTE NASCEU DE UM BURACO REAL. O Refocar e o Montar Guarda pediam

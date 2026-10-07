@@ -1184,3 +1184,90 @@ e a primeira requisição **autenticada** é que baixa os 24 `.gs` do pin novo.
 junto.** Na v21 isso ficou para trás: o repositório dizia um pin e a produção
 rodava outro, e a diferença só apareceu quando alguém foi conferir. O arquivo
 versionado agora diz `47fcbff`, igual ao que está no ar.
+
+---
+
+## A varredura dos textos — e os dois defeitos que ela achou
+
+O pedido era documentação: "vê se tem mais algo pra arrumar e já vai arrumando,
+deixar tudo arrumadinho e formatado". A varredura achou o que se espera — número
+velho, seção que descreve como pendente algo que já existe — e, no meio do
+caminho, **dois defeitos de código de verdade**.
+
+### O invariante que envelheceu e quebrou ficha
+
+`docs/pontos-de-interesse-origens.md` dizia, e estava certo quando foi escrito:
+
+> 36 nomes de característica, **todos únicos** — por isso dá para achar uma
+> característica só pelo nome.
+
+Os suplementos do SRD 2.0 trouxeram o **Povo das Marés**, que tem um "Anfíbio"
+idêntico ao do **Ribbet** — o livro repete mesmo, com o mesmo texto. Ninguém
+releu o documento, e o código continuou confiando no invariante:
+`acharCaracteristicaAncestral_` devolvia a PRIMEIRA que casasse pelo nome.
+
+Resultado: a ancestralidade mista **"Povo das Marés + Anão" escolhendo Anfíbio
+era recusada** com "não é de nenhuma das ancestralidades escolhidas" — uma ficha
+que o livro permite (p.71). Reproduzido antes de consertar, e o erro é literal.
+
+O conserto: quem já sabe quais ancestralidades estão em jogo passa
+`idsPreferidos`, e a busca começa por elas; sem isso, a varredura geral continua
+valendo. **Duas regressões** protegem — uma reproduz a mista recusada, e a outra
+recusa um nome repetido NOVO que apareça sem ninguém declarar. Repetir é
+permitido; repetir em silêncio não é.
+
+⚠ **E foi a documentação que achou o defeito.** Não um teste, não a mesa: uma
+frase num `.md` que o código ainda obedecia e que tinha deixado de ser verdade.
+É a melhor razão que eu conheço para manter documento velho honesto.
+
+### A assimetria irmã
+
+Na mesma função, `normalizarAncestralidade_` não aceitava o **id canônico** —
+só a lista de apelidos. A irmã dela, `normalizarComunidade_`, sempre aceitou.
+Enquanto todo id era o nome sem acento (`anao`, `goblin`, `ribbet`) ninguém via
+diferença; os nomes de duas palavras do SRD 2.0 (`povo-das-mares`,
+`povo-do-ceu`, `povo-da-terra`, `povo-das-brasas`) voltavam `null`.
+
+Não chegou a dar defeito porque a tela manda o nome — mas é a mesma pergunta com
+duas respostas em funções irmãs, que é o que este projeto passa a vida caçando.
+Há regressão provando que todo id e todo nome voltam para si mesmos, nas duas.
+
+### O campo que mentia
+
+`data/cartas-dominio.json` carregava `"total": 189` com 210 cartas no array: o
+domínio Pavor entrou e o número ao lado não. Ninguém lia esse campo — e foi por
+isso que ele mentiu por meses, **e a documentação copiou a mentira**. Corrigido,
+com um teste que varre todo `total` dos arquivos de dados e exige que ele seja o
+tamanho de um array ou a soma das coleções.
+
+### O que mudou nos textos
+
+Os 14 **pontos de interesse** dos arquivos de dados foram conferidos um a um
+contra o código. Sobraram 13 — um era cópia literal do outro — e cada um passou
+a dizer a que categoria pertence: ✅ FEITO, DECIDIDO (é desenho, não pendência)
+ou ⬜ ABERTO. Sete descreviam como pendente algo que já existia.
+
+No `BACKLOG.md`, o índice tinha **parado antes dos últimos lotes** — por isso o
+D2 e o K18 descreviam um app que não era mais o atual. Entraram as quatro
+pendências de 10/2026, as 63 cartas e a faxina de 09/2026, e o parágrafo corrido
+de "Última atualização" (um blob de 25 linhas) virou lista por data.
+
+Nos documentos de parte, os números do catálogo: 9 → **13 classes**, 18 → **24
+ancestralidades**, 9 → **15 comunidades**, 9 → **10 domínios**, 189 → **210
+cartas**, 129 → **264 adversários**. Duas tabelas geradas a partir de um campo
+que não existe mais ficaram marcadas como **instantâneo datado**, em vez de eu
+inventar números novos para elas.
+
+E o `README.md` declarava produção na **v17**, com o pin `7424846`, logo acima da
+frase que promete que o arquivo versionado e o deploy ativo andam juntos. Era a
+própria invariante que o parágrafo existe para proteger.
+
+### Formatação
+
+34 documentos varridos: bloco de código sem linguagem (15), lista colada no
+parágrafo, cabeçalho sem linha em branco, espaço no fim da linha e fim de arquivo
+irregular. **34 de 34 limpos** ao fim. As mudanças são só de linha em branco e
+rótulo de bloco — nenhuma palavra do conteúdo foi alterada pelo formatador.
+
+**Suíte:** 1240 testes de backend (eram 1236), 0 falhas; `teste:tudo` verde de
+ponta a ponta.

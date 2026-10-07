@@ -117,10 +117,13 @@ Feiticeiro de verdade é a página 381, `SORCERER`. Registrada como `mago`.
 
 - **Sem armadura não há limiar.** O livro manda escolher uma armadura na etapa 5
   e nunca diz o que fazer sem nenhuma. O app avisa e não deixa fechar a ficha.
-  Se aparecer regra de personagem desarmado, é aqui que entra.
+  ✅ **A regra apareceu e entrou:** a carta **Pele Dura** (Valor 1) declara
+  `efeitoDerivado.defesaSemArmadura`, e `defesaSemArmaduraDeCartas_` calcula a
+  Pontuação base 3+Força e os limiares por patamar. A ficha fecha sem armadura
+  exatamente nesse caso — e só nele.
 - **Proficiência** ainda cai no tier do nível quando a ficha não tem o campo.
   Vira regra de verdade na Parte 8 (subida de nível).
-- **A ficha de jogo ainda não existe.** A criação termina gravando a ficha
+- ~~**A ficha de jogo ainda não existe.**~~ ✅ **Existe** — `js/telas/ficha.js`, com quatro abas, mochila, cartas e anotações. O parágrafo abaixo é o registro de quando não existia. A criação termina gravando a ficha
   completa, mas quem abre o personagem no roster continua vendo a tela simples
   da Parte 1. A tela de ficha é o próximo passo.
 - **Conexões dependem dos outros jogadores.** Hoje são três campos de texto
@@ -132,6 +135,6 @@ Feiticeiro de verdade é a página 381, `SORCERER`. Registrada como `mago`.
 - **Item de classe é texto livre.** "um romance", "uma chave secreta" e afins
   não têm entrada nas tabelas de equipamento — são narrativos mesmo. Ficam no
   inventário como texto.
-- **A moldura de campanha não entra na criação.** Quem jogar Colosso das Terras
+- ~~**A moldura de campanha não entra na criação.**~~ ✅ **Entra:** a criação consulta `molduraDaMesa`, troca as tabelas de equipamento quando a moldura substitui o inicial, e desenha o cartão dela. O parágrafo abaixo é de antes. Quem jogar Colosso das Terras
   Secas ou Placa-mãe precisa adicionar o equipamento da moldura na mão. Vira
   parte própria quando o Mestre puder escolher a moldura da mesa.

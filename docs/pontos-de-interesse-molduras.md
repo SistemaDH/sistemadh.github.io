@@ -66,7 +66,7 @@ dentro da mesma trava, que soma, limpa e devolve o Medo de uma vez.
 o corpo dele é tomado permanentemente pelo Surto Selvagem" é ficção, não número.
 Está no texto da mecânica, dentro do app, e não vira automatismo.
 
-## 1b. A Era da Umbra — FECHADA (menos o ramo sacro)
+## 1b. A Era da Umbra — FECHADA, ramo sacro incluído
 
 A moldura mais mortal do livro (complexidade •••, p.280–289), e a primeira que
 **muda uma regra do núcleo**. Quatro das cinco mecânicas entraram:
@@ -153,11 +153,12 @@ o §5 abaixo.
    fazer movimentos de repouso". ⚠ O app **pergunta, não adivinha**: ter Rede é
    situação de ficção, não há nada na ficha de onde deduzir. E o silêncio não
    bloqueia — só quem responder "não temos" é recusado.
-4. ⏳ **Ikonis e aprimoramentos** — dois espaços no 1º patamar, mais um a cada
-   patamar seguinte; criados no repouso, trocados no repouso. É um subsistema
-   inteiro, do tamanho das Posturas Marciais. O número de espaços por patamar já
-   está declarado em `data/molduras.json`; falta a ficha mostrá-lo e os
-   movimentos de repouso de criar e trocar.
+4. **✅ a metade de cima, ⏳ a de baixo** — **Ikonis e aprimoramentos**: dois
+   espaços no 1º patamar, mais um a cada patamar seguinte; criados no repouso,
+   trocados no repouso. A ficha **já mostra** os espaços por patamar (é o que o
+   item 6 desta mesma lista descreve — este aqui é a cópia antiga). O que falta
+   são os **movimentos de repouso** de criar e trocar aprimoramento; procurados
+   em `4B_Descanso.gs` e em `js/telas/descanso.js`, não existem.
 5. ✅ **Quantum** — escolher o cenário troca a moeda da mesa. E aqui a resposta
    foi melhor do que a pergunta.
 

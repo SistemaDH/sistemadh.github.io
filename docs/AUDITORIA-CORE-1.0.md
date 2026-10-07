@@ -244,4 +244,3 @@ Em 08/09/2026, o bloco Broquel + Chicote + 12 Cadeiras de Rodas de Combate foi m
 - ✅ Ancestralidades ativas — subbloco 1: 10 usos simples + Dobradora da Sorte 1/sessão + Sentido de Perigo 1/descanso; commit `3dd221b35cb4c6ae0062bcf29c0de4baaaab2c0f`, run `34297905984`: **485/485 backend**, **101/101 E2E**, **14 geradores**, CSS limpo;
 - ✅ Ancestralidades ativas — subbloco 2: dano recebido + Pele Grossa/Fortitude Aumentada/Escamas; commit `186be3916fd51a9f74d94e2537aa0304fcfdf93b`, run `34305363724`: **496/496 backend**, **102/102 E2E**, **14 geradores**, CSS limpo;
 - ⏳ Próximo bloco: Retração/Galapa; depois criação, sessão, descanso, perfis de ataque/alcance e demais ancestralidades ativas.
-

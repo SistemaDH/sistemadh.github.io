@@ -829,7 +829,6 @@ Implementação do Lote 8:
 Aceitação: `tools/conferir-classes-lote8.py`, testes backend focados, regressão E2E, conferência dos gerados/CSS e auditoria transversal. A meta deste bloco é reduzir candidatos de classes/subclasses de 25 para 24 e deixar o Guardião sem candidatos.
 
 
-
 ### Diário — Classes, Guerreiro fechado
 
 Fontes: livro básico PT-BR / cartas oficiais do Guerreiro; errata oficial de 09/09/2025 não altera estas cinco características.
@@ -1343,6 +1342,7 @@ Em 10/09/2026, após backup do `main` e snapshot lógico do Supabase, o Lote 8 f
 - `main` avançada por fast-forward, sem force;
 - GitHub Pages: build e deploy concluídos com sucesso;
 - `newedit` permanece como branch de desenvolvimento.
+
 ## Lote 9 — Refino mobile e contrato visual
 
 Iniciado em 10/09/2026 na branch de integração `newedit`, após o fechamento do Core 1.0. Este lote **não altera regras de Daggerheart** nem o motor de dados; seu objetivo é tornar o uso da ficha em celular mais previsível, legível e protegido por testes reproduzíveis em 360×800, 390×844 e 430×932.
@@ -1782,7 +1782,7 @@ ao ar:
 > arquivos de `SOURCE_FILES` **servidos pelo GitHub naquele commit**, byte a
 > byte, com os que a suíte rodou.
 
-```
+```text
 conferidos: 24 | divergentes: 0
 commit no GitHub: feb64393014f2b17e1652e3a62711ae71d8546f1
 ```
@@ -2251,6 +2251,7 @@ permissão dela.
 - aceitar manda recado ao painel do Mestre.
 
 ⚠ **Dois conferidores me pegaram:**
+
 1. `validarFicha_` reconstrói cada registro campo por campo, e a duração do bônus
    preparado (do bloco anterior) DESAPARECIA na primeira gravação — o +2 do
    Periapto voltaria como `fim-da-cena`. Consertado, com teste que grava.

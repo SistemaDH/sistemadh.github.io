@@ -7,56 +7,104 @@ zerar esta lista.
 Cada item aponta para o documento que tem o detalhe. Nada aqui é bug — é
 trabalho reservado de propósito.
 
-**Última atualização:** o **canvas inteiro implementado** (K15–K19) — as cinco telas que a Vanessa desenhou. O caminho até elas foi torto: Claude Design e Claude Code não são interligados, e o desenho acabou chegando **pelo Canva**. Antes disso, a **ficha e o painel** (K15–K18) — as quatro partes fechadas. O topo virou foto + traços em ladrilhos de três letras; o bloco de papel ganhou trilhas grandes (só os espaços que existem) e a característica de Esperança colada na trilha; Marcadores, Características e Ficha paralela viraram linhas que abrem; e a página da Mesa virou o painel de relance — Grupo, Contagens e Cena resumidos, cada um com o seu "Abrir". De quebra, dois defeitos de verdade: o modal roubava o foco de quem já estava digitando, e a Evasão estava desenhada com o losango da Esperança. Antes dele, o **pacote de CSS do Claude Design** (K14) — as seis folhas de estilo entraram e a lista de JS/HTML do LEIA-ME foi fechada: emoji virou ícone de traço único, Estresse ficou azul (violeta é só do Medo), Evasão e Armadura se separam pela forma, subir de nível virou a pílula do cabeçalho, e o título de cada seção virou gatilho de verbete. Antes dele, as **faixas que estavam abertas** — K8 (o conferidor de
-citações voltou a ser alarme, e achou 3 páginas erradas de verdade), K9 (faxina
-das fotos órfãs) e K13 (faxina de CSS, com um conferidor novo) —, mais o flick
-do painel do Mestre. Antes delas, as **moedas do SRD, o marcador à mão e a
-varredura** (K12) — a regra opcional do ouro ligada pelo Mestre, o catálogo do livro também
-na compra, marcadores criados à mão para o que o catálogo não cobre, e 12
-defeitos achados numa passada pelo app inteiro. Antes dela, a rodada dos
-**prints do celular** (K11) — o inventário
-virou item de verdade (catálogo do livro, quantidade, em uso, texto a um
-toque), o ouro coube numa linha e o equipamento parou de escrever em fonte de
-título. Antes dela, o **refino de tamanhos** (K10) — as trilhas com o alvo
-de toque separado do desenho, a moldura da foto maior e a escala de texto 6%
-menor. Antes dele, a **foto do personagem** e o bloco de equipamentos no
-topo da aba Jogo (K5) — recorte no navegador, arquivo no Drive da mesa, só o id
-na ficha, e a lista de equipamento reduzida aos nomes. Antes dela, o **flick ao
-marcar** e a segunda versão dos traços (K7)
-— a tela deixou de ser reconstruída quando o servidor concorda, e o cartão do
-traço passou a dizer só nome e número, com o resto a um toque. Antes dele, o
-**refino do bloco de papel** (K6) — escudos alinhados, o contador da Esperança
-fora, Proficiência dentro da conta do dano, traços em cartões, e Guardar/Comprar
-esperando o servidor. Antes dele, a primeira leva de
-**relatos da mesa** (grupo K) — o corretor do celular trocando nomes de
-personagem, as trilhas viradas ficha de papel e a URL fora dos Ajustes. Detalhe
-em `relatos-da-mesa.md`. Antes deles, o
-**índice das regras** (J4) — 93 verbetes com busca, no
-cabeçalho de todas as telas. Antes dele, a varredura das **553 citações de
-página** (J3): seis afirmações erradas, 22 lugares corrigidos. Detalhe em
-`verbetes.md` §8 e §9.
+## Última atualização
+
+⚠ **Este índice ficou parado entre o K19 e 10/2026.** Os lotes abaixo
+aconteceram e não estavam aqui — era por isso que o D2 e o K18 descreviam um app
+que já não era o atual. A ordem é do mais novo para o mais antigo.
+
+### 10/2026 — as quatro pendências
+
+- **Consumíveis que terminam no adversário.** 16 entradas passaram a entregar o
+  texto pronto no mural de recados do Mestre, em vez de o app consumir a unidade
+  e soltar a mão. De quebra, 67 itens guardavam a mesma frase duas vezes
+  (`descricao` e `efeitoManual`) — o gerador passou a derivar uma da outra.
+- **Ramo sacro** (Era da Umbra). Botão no painel: 3 Pontos de Esperança a todas
+  as fichas, respeitando o teto de cada uma — e o teto não é 6 para todo mundo,
+  porque cada cicatriz apaga um espaço para sempre.
+- **Guia de Batalha.** O quadradinho de ajuste não fazia nada: vivia num `Set`
+  que morria ao fechar o modal, enquanto `encontro.ajustesDePb` — que a barra da
+  cena lê — nunca era escrito. Agora grava, e a aritmética duplicada em JS saiu.
+- **Banquetes** (SRD 2.0, p.192–194). Interruptor do Mestre; cinco movimentos de
+  descanso saem e "Preparar um Banquete" entra. O app pergunta a Nota da
+  Refeição e distribui respeitando o teto de cada ficha.
+- **O buraco que os Banquetes revelaram:** a tela do descanso desenhava campo
+  por chave conhecida, então Refocar e Montar Guarda pediam um número que não
+  tinha onde ser digitado. Agora ela lê `perguntas` do próprio movimento.
+
+### 09/2026 — as 63 cartas e a faxina
+
+- **As 63 cartas do livro** recortadas e traduzidas na própria arte, com um
+  conferidor que prova, palavra por palavra, que o texto da imagem é o texto do
+  app.
+- **Faxina geral** com duas auditorias — a segunda derrubou quatro dos oito
+  achados da primeira, que mediam "quem cita este nome" sem perguntar se o
+  ambiente de teste contava.
+- **Dano massivo** virou interruptor do Mestre, e a pergunta "a mesa usa dano
+  massivo?" deixou de ter três respostas espalhadas.
+- **Molduras de campanha**: as oito com conteúdo, mecânica ligada e ficha de
+  campanha.
+
+### Antes disso — o canvas e os relatos (K5–K19)
+
+- **K15–K19, o canvas inteiro.** As cinco telas desenhadas pela Vanessa. O
+  caminho foi torto: Claude Design e Claude Code não são interligados, e o
+  desenho acabou chegando pelo Canva. O topo da ficha virou foto + traços em
+  ladrilhos; o bloco de papel ganhou trilhas grandes (só os espaços que
+  existem); Marcadores, Características e Ficha paralela viraram linhas que
+  abrem; a Mesa virou painel de relance. Dois defeitos reais de quebra: o modal
+  roubava o foco de quem estava digitando, e a Evasão estava desenhada com o
+  losango da Esperança.
+- **K14 — o pacote de CSS do Claude Design.** Seis folhas de estilo; emoji virou
+  ícone de traço único, Estresse ficou azul (violeta é só do Medo), Evasão e
+  Armadura passaram a se separar pela forma.
+- **K8, K9, K13 — as faixas abertas.** O conferidor de citações voltou a ser
+  alarme e achou 3 páginas erradas de verdade; faxina das fotos órfãs; faxina de
+  CSS, com um conferidor novo.
+- **K12 — moedas do SRD, marcador à mão e varredura.** 12 defeitos achados numa
+  passada pelo app inteiro.
+- **K11 — os prints do celular.** O inventário virou item de verdade: catálogo
+  do livro, quantidade, em uso, texto a um toque.
+- **K10 — refino de tamanhos.** Alvo de toque separado do desenho nas trilhas.
+- **K5, K6, K7 — foto do personagem, refino do bloco de papel e o flick ao
+  marcar.** A tela deixou de ser reconstruída quando o servidor concorda.
+- **Grupo K, primeira leva — relatos da mesa.** O corretor do celular trocando
+  nomes de personagem, as trilhas viradas ficha de papel, a URL fora dos
+  Ajustes. Detalhe em `relatos-da-mesa.md`.
+- **J3, J4 — o índice das regras e as 553 citações de página.** 93 verbetes com
+  busca no cabeçalho (hoje são 108), e seis afirmações erradas corrigidas em 22
+  lugares. Detalhe em `verbetes.md` §8 e §9.
 
 **A lista está zerada de trabalho fazível de novo** — K16, K17 e K18 fecharam
 junto com o K15. Um ponto de interesse ficou aberto e está anotado no K18: os
-mockups trazem uma linha **"Notas da sessão"** na página da Mesa, e anotação de
-sessão não existe em lugar nenhum do sistema. Não é ajuste de tela, é gravar
-texto novo na planilha — entra quando a Vanessa disser o que ela guarda.
+mockups trazem uma linha **"Notas da sessão"** na página da Mesa.
 
-Fora isso, o que resta são duas coisas que não são backlog:
+⚠ **A premissa original deste item envelheceu.** Ele dizia que "anotação não
+existe em lugar nenhum do sistema", e isso deixou de ser verdade: a FICHA tem
+bloco de Anotações, com texto livre de até 5000 caracteres, botão próprio de
+salvar e campo persistido. O que falta é a anotação da MESA — outro dono, outra
+tabela —, e o molde de como gravar já existe pronto para copiar. Entra quando a
+Vanessa disser o que ela guarda ali.
 
-1. **Seis itens parados numa decisão de mesa já tomada** — D2, D4, D5, D6, D7 e
-   H6 dependem, todos, de haver **rolagem de dado** no app, e a decisão foi "só
+Fora isso, o que resta se divide em três:
+
+1. **Quatro itens parados numa decisão de mesa já tomada** — D4, D5, D6 e H6
+   dependem, todos, de haver **rolagem de dado** no app, e a decisão foi "só
    ficha, sem dados". Eles destravam juntos no dia em que essa decisão mudar, e
    só nesse dia.
 2. **Dois itens sem trabalho possível** — o I5 espera uma arte que não existe, e
    o I6 é o baralho físico.
+3. **Um item com trabalho fazível de verdade** — a metade da Jogada em Equipe
+   que NÃO depende de rolagem (D7): gastar Esperança e marcar um uso por sessão.
+   A ficha já sabe fazer as duas coisas; falta ligar.
 
 Nada disso bloqueia uma sessão.
 
 - **Grupo A** (painel do Mestre): **fechado inteiro**. O A7 virou o bestiário:
-  129 adversários e 19 ambientes do livro, conferidos ficha a ficha contra o
-  SRD em inglês e contra a errata, numa quarta aba do painel, mais o Guia de
-  Batalha. Detalhe em `bestiario.md`.
+  **264 adversários e 47 ambientes**, conferidos ficha a ficha contra o SRD em
+  inglês e contra a errata, numa quarta aba do painel, mais o Guia de Batalha.
+  (Eram 129 e 19 quando esta linha foi escrita; os suplementos do SRD 2.0
+  entraram depois.) Detalhe em `bestiario.md`.
 - **Grupo B** (conferir antes de codar): fechado inteiro. O B1 saiu pelo SRD em
   inglês; B2, B3, B4 e o B6 (que nasceu no meio do caminho) pelo
   `DH-DigitalRegras.pdf`; o B5 foi conferido e devolvido à mesa, que é de quem
@@ -101,7 +149,7 @@ que foi feito.
 | ~~A4~~ | ~~Descanso em grupo~~ — **FECHADO.** O movimento de cura usado em aliado atravessa para a ficha dele, gravada dentro da mesma trava. A tela pergunta **em quem**. | `pontos-de-interesse-mestre.md` §7 |
 | ~~A5~~ | ~~Limite de 3 descansos curtos~~ — **FECHADO na Parte 9.** A contagem do grupo mora na mesa. | — |
 | ~~A6~~ | ~~Mestre controla o nível anunciado da mesa~~ — **FECHADO.** Pode avançar ou voltar o anúncio; a ficha atrasada ganha o aviso e o jogador escolhe os avanços. Voltar o anúncio não rebaixa personagens nem desfaz escolhas. | — |
-| ~~A7~~ | ~~Adversários e ambientes~~ — **FECHADO.** O bestiário tem as 129 fichas e os 19 ambientes, com busca por patamar, tipo e nome, e cada habilidade traz o **custo de Medo da ficha dela**, que era o ponto original. O Guia de Batalha calcula os Pontos de Batalha. | `bestiario.md` |
+| ~~A7~~ | ~~Adversários e ambientes~~ — **FECHADO.** O bestiário tem **264 fichas e 47 ambientes** (129 e 19 na entrega original; o resto veio com os suplementos do SRD 2.0), com busca por patamar, tipo e nome, e cada habilidade traz o **custo de Medo da ficha dela**, que era o ponto original. O Guia de Batalha calcula os Pontos de Batalha — e desde 10/2026 os ajustes marcados nele GRAVAM em `encontro.ajustesDePb`, então o total da janela é o mesmo da barra da cena. | `bestiario.md` |
 | ~~A8~~ | ~~Perseguição~~ — **FECHADO.** Duas contagens dinâmicas podem ser **pareadas**; aí o cartão mostra as cinco linhas da tabela com os dois deltas (`Sucesso com Esperança · — / −2`) e um clique avança as duas. | `pontos-de-interesse-mestre.md` §3 |
 | ~~A9~~ | ~~Editor de etapas da trilha~~ — **FECHADO.** Um `<details>` recolhido dentro do editor da contagem, um campo por degrau. | `pontos-de-interesse-mestre.md` §5 |
 
@@ -135,7 +183,7 @@ fechamento — a decisão mudou quando a regra se mostrou determinística.*
 | # | O quê | Decisão tomada |
 |---|-------|----------------|
 | ~~D1~~ | ~~Vulnerável ao encher o Estresse~~ — **FECHADO, e a leitura da regra estava errada.** Eu achava que a condição só chegava quando o personagem PRECISASSE marcar Estresse e não pudesse; o livro bom (p.92) e o SRD dizem que encher já basta. O app liga a condição sozinho e ela sai quando você limpa 1 Estresse — sem tocar numa Vulnerável de outra origem. | `pontos-de-interesse-descanso.md` §15 |
-| D2 | **Evitar a Morte ao encher os PV** — o app avisa; não abre a jogada. Envolve escolha e rolagem, e a decisão foi "só ficha, sem dados". | `pontos-de-interesse-descanso.md` §15 |
+| ~~D2~~ | ~~Evitar a Morte ao encher os PV~~ — **FECHADO, e a linha de cima estava vencida.** Os três movimentos de morte abrem de verdade; o app **pergunta** o Dado de Esperança (d12) e diz, antes de aplicar, se o resultado passa do nível ou vira cicatriz. É a lei "só ficha, sem dados" funcionando: não rolar não quer dizer não participar. | `js/telas/ficha.js` (`abrirMovimentoDeMorte`), `4C_Ajustes.gs` |
 | ~~D3~~ | ~~Custo de recordar~~ — **FECHADO perguntando.** Trazer do cofre abre "cobrar N de Estresse" ou "estou num descanso"; quem sabe em qual caso a mesa está é o jogador. O Estresse é marcado **junto com a troca**, e sem Estresse sobrando a troca é recusada inteira. | `pontos-de-interesse-descanso.md` §7 e §14 |
 
 ## D2. Depende de um dia haver ROLAGEM no app
@@ -149,7 +197,7 @@ botão manual funcionando:
 | D4 | **+1 Medo a cada rolagem com Medo** (livro p.154). | `pontos-de-interesse-mestre.md` §1 |
 | D5 | **Contagem padrão avança a cada teste** (p.162). | `pontos-de-interesse-mestre.md` §1 |
 | D6 | **Contagem dinâmica avança pelo resultado** (p.163) — hoje é um botão por linha da tabela. | `pontos-de-interesse-mestre.md` §1 |
-| D7 | **Jogada em Equipe** (Tag Team) — 1 carta de domínio (Tático, Osso 3) e o livro dependem dela. É gastar Esperança **e rolar**, então cai na mesma decisão. | `pontos-de-interesse-dominios.md` §1 |
+| D7 | **Jogada em Equipe** (Tag Team) — metade está feita e metade não, e vale separar. A **maestria Camaradagem** tem contador real (iniciação extra, 1× por sessão, zerando no fim dela). A Jogada em Equipe **base** — gastar Esperança e marcar o uso da sessão — continua sem lugar: a parte de rolar é da mesa, mas gastar Esperança e contar um uso por sessão é coisa que a ficha já sabe fazer. É o único D que ainda tem trabalho fazível. | `pontos-de-interesse-dominios.md` §1 |
 
 ## H. Nasceu do bestiário (A7)
 
@@ -217,8 +265,9 @@ A primeira leva de relatos de quem jogou. Detalhe em `relatos-da-mesa.md`.
 | K15 | **A ficha desenhada no Claude Design — parte 1: o topo.** ✅ **FECHADO.** Traços viraram ladrilhos de três letras ao lado do retrato (AGI, FOR, FIN, INS, PRE, CON), com a frase da Conjuração como legenda do único ladrilho dourado; o equipamento desceu para uma tabela rótulo→valor abaixo do bloco de papel, com "nenhuma" na linha vazia. As partes 2, 3 e 4 saíram junto: ver K16, K17 e K18. | `relatos-da-mesa.md` §16 |
 | ~~K16~~ | ~~Parte 2: o bloco de papel~~ — **FECHADO.** Trilhas mostrando só os espaços que o personagem TEM (caixas grandes, sem os tracejados do futuro); limiares com o custo em uma linha ("1 PV") e a nota nova; Esperança em pílula com separadores; a carta de Esperança da classe inline logo abaixo; Proficiência saindo de dentro do bloco. | os mockups de 03/09/2026 |
 | ~~K17~~ | ~~Parte 3: seções que colapsam~~ — **FECHADO.** Marcadores, Características e Ficha paralela viram linhas com resumo à direita ("1 ATIVO ›", "4 ›", "NÃO USADA ›") em vez de seções inteiras; condições com contador no cabeçalho e botão "+" redondo no fim das pílulas; contadores nas abas (Cartas 5, Mochila 8); rodapé com "Salvo agora · versão N". | os mockups de 03/09/2026 |
-| ~~K18~~ | ~~Parte 4: o painel do Mestre em página única~~ — **FECHADO.** Medo da mesa (inteiro, que é o mais tocado), Como está o grupo, Contagens em jogo e Em cena resumidos com "ABRIR ›"; descanso logo abaixo; e Sessão/nível, Ajustes da mesa e o texto do Medo em dobras. O `painelDoMestre` passou a trazer o encontro junto, para a página não custar uma segunda chamada de rede no meio do combate. ⚠ **PONTO DE INTERESSE:** a linha **"Notas da sessão"** do mockup ficou de fora — anotação de sessão não existe no sistema, e criá-la é gravar texto novo na planilha, não desenhar uma linha. | os mockups de 03/09/2026 |
+| ~~K18~~ | ~~Parte 4: o painel do Mestre em página única~~ — **FECHADO.** Medo da mesa (inteiro, que é o mais tocado), Como está o grupo, Contagens em jogo e Em cena resumidos com "ABRIR ›"; descanso logo abaixo; e Sessão/nível, Ajustes da mesa e o texto do Medo em dobras. O `painelDoMestre` passou a trazer o encontro junto, para a página não custar uma segunda chamada de rede no meio do combate. ⚠ **PONTO DE INTERESSE:** a linha **"Notas da sessão"** do mockup ficou de fora. (A ficha ganhou bloco de Anotações depois disto; o que falta é o equivalente na MESA, que tem outro dono e outra tabela — mas o molde de gravação já existe.) | os mockups de 03/09/2026 |
 | ~~K19~~ | ~~Roster e bestiário do canvas~~ — **FECHADO.** O canvas do Claude Design chegou **pelo Canva** (as duas ferramentas não são interligadas; o "Send to Claude Code Web" foi para outra sessão). São cinco telas: abertura e ficha já batiam, painel da Mesa fechou no K18, e estas duas eram o que faltava. Roster: **Medo no cabeçalho — Mestre mexe, jogador vê**, "Abrir o painel do Mestre" com ícone no lugar do emoji 👑, e dono+hora numa linha só. Bestiário: aba "Cena" no fim em vez de "Em cena" no começo, "1º · Comandante" numa linha, os quatro números em grade de colunas, e o custo virou frase ("Ataque custa 1 Medo · 2 PB"). | `relatos-da-mesa.md` §18 |
+
 ## E. Invariantes que precisam sobreviver a mudanças futuras
 
 | # | O quê | Protegido por |

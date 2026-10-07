@@ -77,7 +77,7 @@ errado — mas é o que faz o passo 4 parecer que tudo voltou ao normal.
 
 ## Frente 2 — criação: as quatro classes do SRD 2.0 sem Guia de Caráter
 
-```
+```text
 CLASSES (13): bardo druida feiticeiro guardiao guerreiro ladino mago
               patrulheiro seraph assassino brigao bruxo bruxa
 GUIAS   (9):  bardo druida guardiao patrulheiro ladino seraph
@@ -115,7 +115,7 @@ lugar nenhum.
 Como o `return` da linha 331 não limpa nada, trocar de classe **mantém o que o
 guia anterior escreveu**. Medido (rápido, Bardo e depois Bruxa no mesmo passo):
 
-```
+```text
 REVISÃO: botão "Criar personagem" HABILITADO, sem alerta
 Classe: Bruxa · Erveira
 Traços: Agi 0, For -1, Fin +1, Ins 0, Pre +2, Con +1    <- do BARDO
@@ -198,7 +198,7 @@ não é.
 O gerador copia o campo para `backend/4J_Posturas.gs:255` e `:495` — **e é o fim
 da linha: nenhuma função lê `reacaoAtaque`.** Medido, todas as portas recusam:
 
-```
+```text
 {acao:'usar'}                        -> "não tem uso ativo: ela vale sozinha"
 {acao:'reagir'}                      -> "Ação de postura desconhecida"
 {tipo:'reacaoPostura'}               -> "Tipo de ajuste desconhecido"
@@ -222,7 +222,7 @@ Confiável, Rápida, Revigorante e Agarrar.
 
 ### 3.2 — Favorecida: a escolha é guardada, o número nunca nasce
 
-```
+```text
 assumir erros: []
 ativa: "favorecida" | escolhas: {"favorecida":{"traco":"forca"}}
 bonusDeDano: {"caracteristicasFixas":[],"equipamento":[],"condicionais":[]}
@@ -239,7 +239,7 @@ e mostra o bônus na linha da arma"*.
 
 ⚠ **Um traço inexistente é aceito e gravado:**
 
-```
+```text
 escolha:{traco:'banana'} -> erros: []  | gravado: {"favorecida":{"traco":"banana"}}
 ```
 
@@ -255,7 +255,7 @@ O app tem `catalogo.nomeDoTraco` (`ficha.js:6927`) e já o usa em
 
 ### 3.3 — ⚠ Refocar não é "uma vez por descanso", e repetir DESTRÓI o Foco
 
-```
+```text
 1 Refocar (maior=5)               foco final: 5   erros: []
 2 Refocar (5 e depois 2)          foco final: 2   erros: []   <- perdeu 3
 2 Refocar (2 e depois 5)          foco final: 5   erros: []
@@ -435,7 +435,7 @@ faltam peças.
 
 Medido nas três fontes:
 
-```
+```text
 Brigão   no livro: 0 ocorrências
 Bruxo    no livro: 0 ocorrências
 Bruxa    no livro: 0 ocorrências
@@ -1230,7 +1230,7 @@ fontes para as 108 entradas** e **aposentar o montador** segue sua. Mas a mina f
 desarmada: ele agora **conta antes de escrever** e recusa, dizendo quantas
 entradas seriam apagadas:
 
-```
+```text
 RECUSADO: montar agora escreveria 93 verbetes (versao 1) sobre os 108 que o
 arquivo tem (versao 2) — 15 entradas seriam APAGADAS.
 Se for de propósito: python3 tools/montar-verbetes.py --sobrescrever-mesmo-sabendo
@@ -1434,6 +1434,7 @@ vai rolar. É anterior a este lote. `[hidden]` agora ganha, e o teste mede
 ### 9.4 — Verbetes: o gerador voltou a ser o dono do arquivo
 
 Os fontes em `tools/verbetes/` tinham 93 entradas e o `data/verbetes.json` tinha
+
 108. Os 15 vinham de outras fontes (Hope & Fear, SRD 2.0) e não cabiam no
 fichário porque a página deles não é a do livro de 368 páginas — agora têm
 fichário próprio e o montador confere a página **contra a fonte declarada**.

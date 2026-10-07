@@ -8,8 +8,10 @@ decisões que ficaram registradas. Nada aqui está errado; está *reservado*.
 O livro (p.109) é explícito: "Todos do grupo sobem de nível ao mesmo tempo." O
 app deixa **cada jogador subir a própria ficha**, porque as escolhas são
 pessoais e é assim que acontece na mesa. O Mestre marcar "a mesa subiu para o
-nível 3" e liberar o botão nas fichas entra junto com o painel do Mestre
-(Parte 9).
+nível 3" e liberar o botão nas fichas **já existe, e virou a trava**:
+`anunciarNivelDaMesa` grava `nivelDaMesa`, e o avanço recusa com "O Mestre ainda
+não anunciou o nível N". O §2 deste mesmo documento já descreve isso
+funcionando — era este §1 que tinha ficado no futuro.
 
 ## 2. Personagem novo no meio da campanha — FECHADO como AVISO (C4)
 
@@ -124,6 +126,7 @@ Sem multiclasse, nada disso aparece.
 
 `conjuracoesDaFicha_` (45_Tracos.gs) é quem lista as opções; a escolha vive em
 `ficha.conjuracaoEscolhida` e é **limpa sozinha** se a multiclasse for desfeita.
+
 ## 7. O que é automático e o que o app não faz
 
 **Automático ao subir:** nível, conquistas do patamar (Experiência nova,
@@ -178,7 +181,7 @@ sempre recalcula a partir do nível e dos avanços, e há teste para isso.
 
 ## 12. Erros de impressão preservados
 
-Onze, todos guardados em `data/avanco.json` no campo
+Dez, todos guardados em `data/avanco.json` no campo
 `errosDeDigitacaoDoOriginal`. Os que mais aparecem: **"limiarres"** de dano
 (três vezes, no rodapé de cada quadro de patamar) e **"Peque"** por "Pegue" (na
 opção de multiclasse dos patamares 3 e 4). O app mostra o texto corrigido e

@@ -36,7 +36,7 @@ Comum 12, Horda 9, Atirador 9, Manipulador 8, Assistente 7.
 
 `tools/bestiario/` — três passos e uma conferência:
 
-```
+```text
 extrair-adversarios.py            p.210-239  → data/adversarios.json
 extrair-ambientes.py              p.243-251  → data/ambientes.json
 ligar-ambientes-a-adversarios.py             → grava adversarioId nas listas
@@ -100,7 +100,7 @@ dá para pendurar num CI.
 
 Para rodar, precisa do SRD em markdown:
 
-```
+```bash
 git clone --depth 1 https://github.com/seansbox/daggerheart-srd /tmp/srd
 ```
 

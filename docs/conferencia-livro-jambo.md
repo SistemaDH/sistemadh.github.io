@@ -215,7 +215,7 @@ O gerador tem uma guarda: o termo da Jambô não entra como alias quando ele já
 o nome canônico de outra coisa da mesma categoria. Quando a guarda dispara, ela
 avisa em voz alta:
 
-```
+```text
 ⚠ "Oculto" NÃO entrou como sinônimo de "Camuflado":
   já é o nome canônico de outra condicao.
 ```
