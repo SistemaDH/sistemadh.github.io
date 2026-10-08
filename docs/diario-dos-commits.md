@@ -1271,3 +1271,46 @@ rótulo de bloco — nenhuma palavra do conteúdo foi alterada pelo formatador.
 
 **Suíte:** 1240 testes de backend (eram 1236), 0 falhas; `teste:tudo` verde de
 ponta a ponta.
+
+---
+
+## Deploy da v25 (08/10/2026) — repin do conserto do Anfíbio
+
+```text
+engine-api: v25 ACTIVE
+verify_jwt: false
+ENGINE_COMMIT: b2a2eae132121d9628ff1b35f518586814b4e1a7
+bundle: 3d184dfd79c10d677de9c73c7730e13ec57677b8a6a7692c478829a240fc2796
+```
+
+**É REPIN**: a fonte da função não mudou uma vírgula. O `diff` do payload contra
+o arquivo do repositório deu **uma linha**, a do próprio `ENGINE_COMMIT`. O que
+mudou foi o `43_Origens.gs` no commit apontado.
+
+A ordem de sempre:
+
+1. o commit `b2a2eae` bate com a árvore que rodou os 1240 testes — `git diff`
+   fora de `assets/`: **0 arquivos**;
+2. os **24 `SOURCE_FILES`** servidos pelo GitHub nesse commit, baixados um a um
+   e comparados byte a byte com `backend/*.gs`: **24 de 24 iguais**. Conferido
+   duas vezes, com um dia de intervalo, porque o deploy ficou parado no meio;
+3. o `43_Origens.gs` servido já traz o `idsPreferidos`;
+4. payload com uma linha de diferença; nenhum segredo literal (só `Deno.env.get`);
+5. releitura da função publicada: v25 ACTIVE, `verify_jwt: false`, pin novo, os
+   24 arquivos, o `autenticar` conferindo o token em hash contra `sessoes`;
+6. advisors: só o `rls_enabled_no_policy` esperado nas 6 tabelas (INFO).
+
+⚠ **O deploy ficou um dia parado, e isso foi de propósito.** O classificador que
+autoriza as chamadas ao Supabase caiu no meio do caminho — quatro tentativas ao
+longo de oito minutos, inclusive numa chamada só de leitura. Eu **não** escrevi a
+v25 nos documentos enquanto ela não existia: o repositório continuou apontando
+`47fcbff`, que era o que estava de fato no ar. Escrever antes seria o repositório
+mentir sobre a produção, que é exatamente o defeito que o lote anterior
+consertou no README.
+
+⚠ **O que NÃO deu para conferir daqui:** a chamada HTTP de ida e volta. O proxy
+desta sessão recusa o host das Edge Functions, como nas v22, v23 e v24. A prova é
+da mesa, e a primeira requisição **autenticada** é que baixa os 24 `.gs` do pin
+novo. Para este lote a prova é direta: montar uma ficha de **ancestralidade mista
+"Povo das Marés + Anão"** escolhendo **Anfíbio** e **Fortitude Aumentada**. Antes
+da v25 isso era recusado.

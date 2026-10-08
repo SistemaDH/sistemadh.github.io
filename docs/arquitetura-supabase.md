@@ -27,11 +27,27 @@ As tabelas expostas têm RLS habilitado e não possuem policies públicas para `
 Produção atual:
 
 ```text
-engine-api: v24 ACTIVE (deploy conferido em 03/10/2026)
+engine-api: v25 ACTIVE (deploy conferido em 08/10/2026)
 verify_jwt: false
-ENGINE_COMMIT: 47fcbffa9c508c9b03ef2716521b2bea6be234af
-bundle: f594ba09067d9583fc4893980f185aad428ae2396e5ffea79e0f4af8c6dc50a8
+ENGINE_COMMIT: b2a2eae132121d9628ff1b35f518586814b4e1a7
+bundle: 3d184dfd79c10d677de9c73c7730e13ec57677b8a6a7692c478829a240fc2796
 ```
+
+⚠ **A v25 é REPIN** — a fonte da função não mudou uma vírgula; o `diff` do que
+foi enviado contra o arquivo do repositório deu **uma linha**, a do próprio
+`ENGINE_COMMIT`. O que mudou foi o motor `.gs` no commit apontado.
+
+O que o commit `b2a2eae` traz, em relação ao `47fcbff` da v24: o conserto do
+**Anfíbio**. O nome de característica de ancestralidade deixou de ser único
+quando o Povo das Marés entrou pelo SRD 2.0 — ele tem um "Anfíbio" idêntico ao
+do Ribbet —, e `acharCaracteristicaAncestral_` devolvia a primeira do catálogo.
+A mista "Povo das Marés + Anão" escolhendo Anfíbio era **recusada**, uma ficha
+que o livro permite (p.71). Junto, `normalizarAncestralidade_` passou a aceitar
+o id canônico, como a irmã dela sempre aceitou.
+
+⚠ **Este é o primeiro deploy em que o defeito foi achado pela DOCUMENTAÇÃO** —
+uma frase num `.md` que o código ainda obedecia e que tinha deixado de ser
+verdade.
 
 ⚠ **A v24 NÃO É REPIN.** A fonte da função mudou: o `ACOES` ganhou duas ações,
 `acenderRamoSacro` e `definirBanquetes`. Sem elas na lista, o botão do ramo
@@ -66,6 +82,8 @@ movimentos somem, entra "Preparar um Banquete"); e, em Era da Umbra, o botão
 
 ### Histórico
 
+A v24 (03/10/2026) pinou `47fcbffa9c508c9b03ef2716521b2bea6be234af` e
+acrescentou `acenderRamoSacro` e `definirBanquetes` ao `ACOES` — não foi repin.
 A v23 (30/09/2026) pinou `89f2790fa0a3dda66ddb80c41da3e4be213097cb` — repin da
 faxina geral, que só removeu código morto do motor.
 

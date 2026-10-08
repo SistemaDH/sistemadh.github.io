@@ -8,7 +8,7 @@ O frontend é publicado pelo GitHub Pages e o backend oficial é Supabase: Edge 
 
 ## Estado atual
 
-> **Produção:** sistema SRD 2.0 publicado no GitHub Pages e motor implantado no Supabase. Último deploy do motor: **v24, em 03/10/2026**.
+> **Produção:** sistema SRD 2.0 publicado no GitHub Pages e motor implantado no Supabase. Último deploy do motor: **v25, em 08/10/2026**.
 
 O estado atual inclui:
 
@@ -68,10 +68,10 @@ O navegador não acessa diretamente as tabelas PostgreSQL. `js/api.js` distribui
 Produção atual:
 
 ```text
-engine-api: v24 ACTIVE (deploy conferido em 03/10/2026)
+engine-api: v25 ACTIVE (deploy conferido em 08/10/2026)
 verify_jwt: false
-ENGINE_COMMIT: 47fcbffa9c508c9b03ef2716521b2bea6be234af
-bundle: f594ba09067d9583fc4893980f185aad428ae2396e5ffea79e0f4af8c6dc50a8
+ENGINE_COMMIT: b2a2eae132121d9628ff1b35f518586814b4e1a7
+bundle: 3d184dfd79c10d677de9c73c7730e13ec57677b8a6a7692c478829a240fc2796
 ```
 
 O arquivo versionado `supabase/functions/engine-api/index.ts` usa o mesmo `ENGINE_COMMIT` do deploy ativo. Esse alinhamento é deliberado para impedir regressão em futuros redeploys.
