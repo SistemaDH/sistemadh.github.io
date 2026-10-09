@@ -336,6 +336,7 @@ function aplicarAjusteDireto_(ficha, a) {
   if (tipo === 'reacaoconsumivel') return usarReacaoDeConsumivel_(ficha, a);
   if (tipo === 'usoequipamento') return usarCaracteristicaDeEquipamento_(ficha, a);
   if (tipo === 'habilidade') return usarHabilidadeDeClasse_(ficha, a);
+  if (tipo === 'movimentodeesperanca') return usarMovimentoDeEsperanca_(ficha, a);
   if (tipo === 'transformacao') return ajustarTransformacao_(ficha, a);
   if (tipo === 'postura') return ajustarPostura_(ficha, a);
   if (tipo === 'reacaopostura') return usarReacaoDaPosturaAtiva_(ficha, a);
@@ -344,6 +345,108 @@ function aplicarAjusteDireto_(ficha, a) {
   return { erro: 'Tipo de ajuste desconhecido: "' + String((a || {}).tipo) + '".' };
 }
 
+
+/**
+ * UM MOVIMENTO PAGO COM ESPERANÇA — Prestar Ajuda, Utilizar uma Experiência,
+ * iniciar uma Jogada em Equipe.
+ *
+ * O catálogo é `MOVIMENTOS_DE_ESPERANCA`, em 40_Regras.gs. Aqui só se cobra e
+ * se conta; o efeito é da mesa, e o `lembrete` do catálogo é o que a tela
+ * mostra para dizer isso.
+ *
+ * ⚠ TUDO É VALIDADO ANTES DE QUALQUER COBRANÇA. Esperança insuficiente e
+ * iniciação já gasta são recusas, não avisos — e a ordem importa: marcar o uso
+ * e só depois descobrir que falta Esperança deixaria a sessão sem a iniciação
+ * sem nada ter acontecido.
+ *
+ * ⚠ E O LIMITE NÃO PODE SER CONFERIDO POR `ajustarContador_`. Ele CORTA no
+ * teto em vez de recusar: um `delta: +1` com a iniciação já gasta devolveria
+ * "mudou" sem mudar, e a Esperança sairia de graça. Por isso a leitura do
+ * contador é feita aqui, antes.
+ */
+function usarMovimentoDeEsperanca_(ficha, a) {
+  if (typeof movimentoDeEsperanca_ !== 'function') {
+    return { erro: 'Este servidor não conhece os movimentos de Esperança.' };
+  }
+  const mov = movimentoDeEsperanca_((a || {}).movimento);
+  if (!mov) return { erro: 'Movimento de Esperança desconhecido: "' + String((a || {}).movimento) + '".' };
+
+  /*
+   * O PAR DA JOGADA EM EQUIPE, e por que ele é obrigatório.
+   *
+   * O custo depende da ficha do OUTRO: a maestria Camaradagem desconta 1 de
+   * quem inicia COM ela. Sem saber com quem, o app cobraria 3 de quem tinha
+   * direito a pagar 2 — e tirar Esperança a mais é pior que não ter o botão.
+   */
+  let par = null;
+  let descontoDoPar = false;
+  if (mov.pedePar) {
+    const idPar = String((a || {}).par || '').trim();
+    if (!idPar) return { erro: mov.nome + ': diga com quem, para o app saber o preço.' };
+    if (typeof lerTudo_ !== 'function') return { erro: 'Não consigo ler as fichas da mesa.' };
+    const linhas = lerTudo_(ABAS.PERSONAGENS) || [];
+    for (let i = 0; i < linhas.length; i++) {
+      const linha = linhas[i] || {};
+      if (String(linha.id) !== idPar) continue;
+      if (String(linha.excluido).toUpperCase() === 'TRUE') break;
+      let fichaDoPar = {};
+      try { fichaDoPar = JSON.parse(linha.dados || '{}'); } catch (e) { fichaDoPar = {}; }
+      par = { id: String(linha.id), nome: linha.nome || '' };
+      if (mov.caracteristicaDoDesconto && typeof fichaTemCaracteristica_ === 'function') {
+        descontoDoPar = fichaTemCaracteristica_(fichaDoPar, mov.caracteristicaDoDesconto) === true;
+      }
+      break;
+    }
+    if (!par) return { erro: mov.nome + ': não achei essa ficha na mesa.' };
+  }
+
+  const custo = (descontoDoPar && mov.custoComCamaradagemDoPar)
+    ? Math.max(0, Math.trunc(Number(mov.custoComCamaradagemDoPar)) || 0)
+    : Math.max(0, Math.trunc(Number(mov.custoEsperanca)) || 0);
+
+  const recursos = (ficha || {}).recursos || {};
+  if (custo > (Math.max(0, Number(recursos.esperanca) || 0))) {
+    return { erro: 'Não há Esperança suficiente para ' + mov.nome + ' (custa ' + custo + ').' };
+  }
+
+  let usoAntes = 0;
+  let tetoDoUso = 0;
+  if (mov.marcaUso) {
+    const guardado = (((ficha || {}).contadores || {})[mov.marcaUso]) || {};
+    usoAntes = Math.max(0, Math.trunc(Number(guardado.valor)) || 0);
+    tetoDoUso = (typeof maximoDoContador_ === 'function')
+      ? Math.max(1, maximoDoContador_(mov.marcaUso, ficha) || 1) : 1;
+    if (usoAntes >= tetoDoUso) {
+      return { erro: mov.nome + ': a iniciação desta sessão já foi usada — volta na próxima.' };
+    }
+  }
+
+  const detalhes = [];
+  if (mov.marcaUso) {
+    ficha.contadores = ficha.contadores || {};
+    ficha.contadores[mov.marcaUso] = { valor: usoAntes + 1 };
+  }
+  if (custo) detalhes.push(ajustarRecurso_(ficha, { chave: 'esperanca', delta: -custo }));
+
+  const avisoDoDesconto = descontoDoPar
+    ? ' A Camaradagem de ' + (par.nome || 'seu par') + ' deixou o custo em ' + custo + '.'
+    : '';
+
+  return {
+    tipo: 'movimentoDeEsperanca',
+    movimento: mov.id,
+    nome: mov.nome,
+    custoEsperanca: custo,
+    par: par,
+    descontoDoPar: descontoDoPar,
+    usoMarcado: mov.marcaUso || null,
+    usos: mov.marcaUso ? { antes: usoAntes, depois: usoAntes + 1, teto: tetoDoUso } : null,
+    efeitoManual: mov.lembrete || null,
+    detalhes: detalhes,
+    aviso: mov.nome + ': ' + custo + ' de Esperança.' + avisoDoDesconto +
+      (mov.marcaUso ? ' Iniciação da sessão usada.' : '')
+  };
+}
 
 /** Encontra uma característica de uso ativo em equipamento REALMENTE equipado. */
 function regraDeUsoAtivoEquipamento_(ficha, itemId, nome) {

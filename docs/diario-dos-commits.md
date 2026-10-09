@@ -17,11 +17,9 @@ meses, o motivo dela está escrito no lote que a criou.
 
 ---
 
-
 ## Avanço: impedir na hora de escolher, não na hora de gravar
 
 `6c0a54a` · 2026-09-18
-
 
 O backend sempre recusou as duas coisas — e recusava certo:
 
@@ -64,14 +62,11 @@ pontos reprovam.
 Verificação: lint, sintaxe, CSS, rolagem, avanço-limites, 109 passos E2E e as
 baterias de avanço, criação, dano, mobile e responsivo — verdes.
 
-
 ---
-
 
 ## Lobisomem: a Forma de Lobo não é um interruptor
 
 `1720362` · 2026-09-20
-
 
 O texto do livro, conferido no data/transformacoes.json:
 
@@ -121,14 +116,11 @@ Verificação: 974 testes de backend (eram 971; +3 baterias novas de Lobisomem),
 gerados, motor-mesa, motor-símbolos, 109 passos E2E, rolagem, avanço-limites,
 SRD2-transformações e as baterias mobile — verdes.
 
-
 ---
-
 
 ## De onde vem cada número: a conta viaja junto do número
 
 `f2844a1` · 2026-09-20
-
 
 A Vanessa pediu para tocar em Evasão, Armadura, Dano, Vida e Estresse e ver
 o cálculo — de onde vem cada ponto positivo ou negativo.
@@ -175,14 +167,11 @@ Testes:
 974 → 978 testes de backend, 12/12 na tela nova, 36 telas da baseline mobile
 sem erro estrutural.
 
-
 ---
-
 
 ## Equipamento: toda característica declara o que o app faz com ela
 
 `0a06ccb` · 2026-09-20
-
 
 A Vanessa pediu para verificar quais itens, equipamentos e armas não estavam
 automáticos. A medição antiga não respondia: 196 de 304 características tinham
@@ -228,14 +217,11 @@ Anotado e não resolvido, em docs/equipamento-automacao.md:
 978 → 986 testes de backend; bateria nova de tela (5/5); e2e 109/109 (o passo
 do dano cobrava o título antigo e foi atualizado); baseline mobile sem erro.
 
-
 ---
-
 
 ## A conta de cada número mora dentro do verbete dele
 
 `78d0a34` · 2026-09-20
-
 
 Correção de rumo pedida pela Vanessa: "a minha ideia não era ter isso [o botão
 'De onde vêm estes números'] e sim quando ele clicasse em EVASÃO mostrasse o
@@ -276,14 +262,11 @@ página — sem isso, o estouro só aparecia como um timeout esperando a ficha.
 986 backend, 14/14 na bateria da tela (reescrita para a forma nova), e2e
 109/109, baseline mobile sem erro.
 
-
 ---
-
 
 ## Três armaduras saem da fila — e o Impenetrável nunca tinha sido oferecido
 
 `bb417de` · 2026-09-20
-
 
 Primeiro bloco das 17 características de armadura declaradas -pendente. As três
 escolhidas são as que já tinham máquina pronta no app; nenhuma precisou de
@@ -331,14 +314,11 @@ bateria quebra num dia diferente.
 996 backend (+10), 6/6 na bateria nova, 14/14 e 5/5 nas duas refatoradas,
 e2e 109/109, baseline mobile sem erro.
 
-
 ---
-
 
 ## "Fim da cena": o gatilho que o app declarava e nunca disparava
 
 `209e147` · 2026-09-20
-
 
 Fui atrás de como fazer as armaduras "1× por cena" (Absorvente, Resplandecente,
 Mnemônica) e esbarrei no que faltava para as três — e o que já faltava para
@@ -381,14 +361,11 @@ domínio antigo — virou um timeout mudo dez linhas adiante em vez de dizer
 996 → 1000 testes de backend; 7/7 na bateria nova; e2e 109/109; baseline mobile
 sem erro; as três baterias anteriores continuam verdes.
 
-
 ---
-
 
 ## O Mestre encerra a cena para a mesa inteira — e a sessão já fazia isso
 
 `21a98fe` · 2026-09-20
-
 
 Duas perguntas da Vanessa, uma respondida com código e outra com prova.
 
@@ -437,14 +414,11 @@ coisa que o meu tinha a mais — conferir que a recusa DIZ o motivo.
 1000 → 1004 testes de backend; 7/7 na bateria nova; e2e 109/109; baseline
 mobile e do Mestre sem erro.
 
-
 ---
-
 
 ## Absorvente e Mnemônica: as "1× por cena" agora têm cena que termina
 
 `081289e` · 2026-09-20
-
 
 As três armaduras de "uma vez por cena" estavam presas por falta de um fim de
 cena. Com ele no lugar (commits anteriores), duas entraram — e a terceira fica
@@ -486,14 +460,11 @@ equipamento a zerar em fim-da-cena em vez de descanso.
 1004 → 1013 testes de backend; a bateria de reações de armadura foi de 6 para
 9 passos; e2e 109/109; baseline mobile sem erro.
 
-
 ---
-
 
 ## Vítreo e Sedenta por Sangue: a reação que cobra depois, e a que a mesa confirma
 
 `a5ec0bf` · 2026-09-20
-
 
 VÍTREO (Arnês Ressonante) — SRD: 2 Pontos de Armadura negam dano Severo ou
 maior, e os limiares ficam -5 até a armadura ser reparada num movimento de
@@ -534,14 +505,11 @@ existia) e o estado da armadura estilhaçada (192 → 193 contadores).
 1013 → 1021 testes de backend; a bateria de reações de armadura foi de 9 para
 12 passos; e2e 109/109; baselines mobile e de descanso sem erro.
 
-
 ---
-
 
 ## Passos Rápidos, Estelar e Caminhante Fantasma — e "uma vez por" virou genérico
 
 `af366f7` · 2026-09-20
-
 
 De 17 armaduras pendentes sobraram 4, e cada uma das quatro esbarra numa coisa
 concreta que está escrita no doc.
@@ -585,14 +553,11 @@ sessão. A próxima característica assim não precisa de código nenhum.
 1021 → 1027 testes de backend; 194 contadores; e2e 109/109; baselines mobile,
 descanso, reações de armadura e fim da cena sem erro.
 
-
 ---
-
 
 ## Abençoada: a aposta que se faz antes de rolar — e o veredito à vista
 
 `a2243c4` · 2026-09-20
-
 
 A quarta pendente das armaduras, e a única que não dependia de uma decisão
 de arquitetura. O campo fica ACIMA dos dados no Arriscar Tudo, na mesma
@@ -622,14 +587,11 @@ quem se declara automatizada tem efeito ligado (E108).
 Suíte inteira verde. 8 conferências novas na bateria de reações de armadura,
 provadas contra o código antigo antes de valerem.
 
-
 ---
-
 
 ## As três últimas do equipamento — e um defeito mudo que quase foi para a mesa
 
 `939e297` · 2026-09-21
-
 
 RESPLANDECENTE pediu uma porta só para a Esperança. Ela saía da ficha por
 seis lugares, cada um subtraindo por conta própria; pendurada em um deles, a
@@ -672,14 +634,11 @@ Catálogo: 304 características, zero sem registro, zero terminando em
 10 em cena da mesa — cada conferência nova provada contra o código antigo
 antes de valer.
 
-
 ---
-
 
 ## Motor implantado: v17 fixada em 7424846, e duas regras novas de deploy
 
 `04dd476` · 2026-09-21
-
 
 ENGINE_COMMIT sai de 856f025 para 7424846cd88103653359e4fcd31d009b409d3880,
 que traz o lote inteiro do equipamento. ACOES ganha encerrarCenaDaMesa.
@@ -704,14 +663,11 @@ Releitura da função implantada confirma: v17 ACTIVE, pin certo,
 verify_jwt false, encerrarCenaDaMesa no ACOES. Advisors: só o
 RLS Enabled No Policy esperado, nas 6 tabelas.
 
-
 ---
-
 
 ## Posturas Marciais e o Foco: o único subsistema que faltava no app
 
 `3698742` · 2026-09-21
-
 
 Varri o catálogo inteiro — classes, subclasses, ancestralidades, comunidades,
 cartas, transformações — procurando o que se declara não implementado. Era UM
@@ -758,14 +714,11 @@ defeito exato que aquele arquivo existe para impedir. Vai até Z agora.
 Suíte inteira verde: 1075 no backend (20 novos, provados contra o código
 antigo antes de valerem) e 18 na bateria de tela nova, que toca nos botões.
 
-
 ---
-
 
 ## O Foco ganha marca própria, e sai de dentro do par Esperança/característica
 
 `123e0e5` · 2026-09-21
-
 
 Dois acertos pedidos pela Vanessa depois de ver a primeira tela.
 
@@ -793,14 +746,11 @@ não a que eu tinha escrito.
 Suíte inteira verde, incluindo as baselines mobile (36 telas) e responsiva
 (30 telas): o alvo do Foco continua nos 44px do piso do dedo.
 
-
 ---
-
 
 ## Fecha o Artista Marcial (as duas que gastam Foco) e lista o que ainda é manual
 
 `0d923be` · 2026-09-21
-
 
 FINALIZAÇÃO. A trilha de Foco tinha entrado sem as duas características de
 especialização que a gastam — um recurso com destino pela metade, que é
@@ -840,14 +790,11 @@ LISTA. docs/o-que-ainda-e-manual.md: 615 características com classificação,
 
 Suíte inteira verde: 1077 no backend e 22 na bateria de tela das posturas.
 
-
 ---
-
 
 ## As três durações honestas, e as seis características que couberam nelas
 
 `03985d2` · 2026-09-22
-
 
 A pergunta que abriu o lote: "tem alguns buffs que acabam depois de usar,
 ou na cena... ex: ganha +1 no próximo ataque, como ficaria isso?"
@@ -1314,3 +1261,431 @@ da mesa, e a primeira requisição **autenticada** é que baixa os 24 `.gs` do p
 novo. Para este lote a prova é direta: montar uma ficha de **ancestralidade mista
 "Povo das Marés + Anão"** escolhendo **Anfíbio** e **Fortitude Aumentada**. Antes
 da v25 isso era recusado.
+
+---
+
+## O cache-buster, as cartas que ninguém via, e o efeito que eu não previ
+
+### O cache-buster era meio conserto, e meio conserto é pior
+
+Três arquivos levavam `?v=20260911c` e dezoito não levavam nada. Uma versão
+escrita à mão em três lugares **dá a impressão de que o problema está
+resolvido** — e some justamente quando alguém acrescenta o décimo nono arquivo.
+
+⚠ **E o `index.html` era só metade do problema.** Ele carrega `js/app.js`, mas o
+`app.js` importa `./estado.js`, que importa `./api.js`. São **32 módulos e 131
+importações relativas** entre eles. Carimbar só o `index.html` seria um conserto
+que não conserta: o navegador baixaria um `app.js` novo que continua puxando um
+`ficha.js` velho do cache.
+
+Agora a versão é o **sha256 do conteúdo de todos os JS e CSS**, e carimba as
+duas coisas — os `src/href` do HTML e as 131 importações. O detalhe que faz a
+conta fechar: o hash é calculado sobre o conteúdo **com as marcas removidas**.
+Se incluísse as próprias marcas, carimbar mudaria o conteúdo, que mudaria o
+hash, que exigiria carimbar de novo, para sempre.
+
+Há guarda no `teste:tudo` e no CI: mudou um arquivo e não recarimbou, fica
+vermelho.
+
+### ⚠ O efeito que eu não previ, e que a suíte pegou
+
+Para o navegador, **a identidade de um módulo é a URL inteira**. Com o
+cache-buster, `/js/estado.js` e `/js/estado.js?v=abc` passaram a ser **dois
+módulos diferentes, com estados separados**.
+
+Cinco baterias de tela faziam `import('/js/estado.js')` para trocar uma ação por
+um dublê — e passaram a trocar a ação de uma **segunda cópia** do módulo, que o
+app não usa. A tela chamava a ação de verdade e o teste falhava por timeout
+dizendo "o modal não abriu".
+
+O conserto: o `app.js` publica a própria versão (`window.__DH_VERSAO`, lida do
+`import.meta.url`) e as baterias importam pela mesma URL. De quebra, isso
+responde a pergunta prática "o deploy chegou neste celular?" — basta ler a
+constante no console.
+
+### As cartas: o acervo estava perfeito, o problema era quem podia ver
+
+Medido: **333 PNG no acervo, 333 citados pelos dados, zero órfãos, zero
+ponteiros quebrados.** O lado do dado estava certo. O que faltava era gesto.
+
+- **Transformação** — as seis artes e os caminhos em `data/transformacoes.json`
+  estavam no repositório desde que foram adicionados. Faltava o conversor e o
+  toque: o bloco escrevia "Transformação · Lobisomem" como **texto morto**,
+  enquanto classe, subclasse, ancestralidade e comunidade abriam a carta.
+  ⚠ O registro vem do CATÁLOGO, não da ficha: `transformacaoDados` é o que o
+  servidor monta e não carrega `imagem` — carregar seria o motor saber de arte.
+- **Mão e cofre viraram um baralho só.** Abrir uma carta da mão folheava só a
+  mão. Na mesa a pergunta quase nunca é "o que tenho na mão", é "o que eu
+  tenho". Agora atravessa, com selo dizendo onde cada uma está — e o botão sai
+  da CARTA que está na tela, não da seção em que se tocou, senão folhear para o
+  cofre ofereceria "guardar no cofre" para quem já está lá.
+- **Escolher carta ao subir de nível era uma lista de TEXTO.** A arte não
+  aparecia no momento em que se escolhe. O visor já sabia fazer "Escolher esta"
+  desde que nasceu; faltava alguém chamar. A lista virou o segundo caminho,
+  para quem já sabe o nome.
+
+⚠ **E o Mestre não vê carta nenhuma** — nem as do grupo. `resumoDoPersonagem_`
+manda nome, classe, subclasse e transformação; as cartas não vão. Isso é mudança
+de payload, não de tela, e ficou anotado em vez de feito.
+
+### Dois erros meus, no caminho
+
+**Botão dentro de botão.** A primeira versão da escolha de carta punha um "Ver a
+carta" dentro de cada linha — e cada linha já é um `<button>`. HTML inválido, e
+o navegador respondeu mudando o alvo do clique: o passo de ponta a ponta do
+avanço passou a abrir um verbete por cima do modal e travar.
+
+**Um guarda que não guardava.** O teste da transformação pedia que
+`tituloDaTransformacao(` aparecesse no arquivo — e isso casa com a própria
+DEFINIÇÃO da função. Apaguei as duas chamadas à mão para conferir e o teste
+continuou verde. Trocado por `secao(tituloDaTransformacao(` contado duas vezes,
+uma para cada estado. Guarda que não cai quando o defeito volta dá confiança sem
+dar cobertura.
+
+**Suíte:** 1242 testes de backend (eram 1240), 0 falhas; `teste:tudo` verde;
+e2e 112 passos. Uma bateria nova no `teste:tudo` e no CI: `teste:cache-buster`.
+
+---
+
+## O folheador em todo lugar — e o Mestre que não via carta nenhuma
+
+O lote anterior deu ao visor de cartas o gesto de folhear e o ligou em dois
+lugares: mão + cofre na ficha, e a escolha de carta ao subir de nível. Ficou
+dito o que faltava: **bestiário e mochila**, que a Vanessa também marcou, e que
+precisavam de uma extensão no componente. Este lote é essa extensão e os seus
+quatro usos — mais o buraco que a auditoria das cartas tinha achado e eu só
+havia anotado.
+
+### A extensão: e o que não tem PNG?
+
+Até aqui o visor sabia mostrar duas coisas: uma **imagem**, ou o **painel de
+reserva** de três campos (título, rodapé, texto corrido) para quando o PNG não
+estava na pasta.
+
+Nenhuma das duas serve para a ficha de um adversário, que tem limiares, PV,
+Estresse, ataque e habilidades com selo de ação/reação. Nem para o verbete de
+uma arma, que tem dano, traço, alcance e mãos. Adversário, ambiente, arma,
+armadura e consumível **não têm arte** — são fichas, e quem já sabe desenhá-las
+são as telas.
+
+Então um item pode trazer `corpo`: o nó pronto.
+
+⚠ **`corpo` é FUNÇÃO, não nó.** São 264 adversários numa lista só. Montar os 264
+ao abrir o visor é construir 263 fichas que ninguém vai olhar — e cada uma
+registra gatilhos de verbete. Pedir o corpo na hora de mostrar é a mesma
+disciplina que `acoes` já seguia, pelo mesmo motivo. Há guarda nomeando **cada
+conversor** (ver o erro mais abaixo).
+
+⚠ **E o layout muda.** Carta é retrato e cabe inteira; ficha de adversário é
+comprida e rola. Em 390px, uma seta de 48px sobre cada lado do texto come um
+sexto da linha. Quando há `corpo`, a navegação sai de cima da carta e vira uma
+barra embaixo (`‹ 3 de 264 ›`), o palco rola e alinha ao topo — e a rolagem
+volta ao começo a cada carta nova, senão você cai no meio de uma ficha que nunca
+viu o começo.
+
+### Bestiário: abrir um adversário abre a LISTA FILTRADA
+
+O gesto que a mesa pediu para as cartas vale aqui com mais força. Na mesa, ela
+filtra "3º patamar, Horda", abre o primeiro e quer **comparar** — antes era
+fechar, rolar, abrir, fechar, rolar.
+
+⚠ **O "Pôr em cena" vem de `acoes`, recalculado a cada carta.** Montado uma vez,
+folhear até o Rei Cadáver e tocar nele poria em cena o primeiro lacaio da lista
+— com a tela mostrando outro bicho e **nada** avisando.
+
+A **Cena** ganhou o mesmo gesto, e é o uso mais quente: no meio do combate,
+passar do bandido para o capitão sem fechar a ficha e procurar o cartão. Sem
+repetir — três bandidos em jogo são três trilhas de PV, mas **uma** ficha, então
+a lista vai deduplicada por id.
+
+### Equipamento: o arsenal, e um leitor a menos
+
+Aqui o conserto foi maior que o gesto. A **tabela de combate** (três linhas) e a
+**lista da mochila** montavam primária, secundária, armadura e as duas reservas
+**cada uma do seu jeito**, com os botões de remover/equipar escritos na segunda.
+Duas telas respondendo "o que esta personagem possui?" — exatamente a classe de
+defeito que já nos pegou mais de uma vez.
+
+Agora quem responde é `arsenalDaFicha`, uma vez, e as duas leem dela. Tocar num
+nome abre o folheador na posição do item, e a pergunta de mesa — "minha armadura
+segura esse dano?" — passou a ter a resposta na carta vizinha em vez de a três
+fechar-e-abrir de distância.
+
+⚠ **A posição é a identidade, não o id.** A reserva pode ter duas adagas iguais;
+procurar por id abriria sempre a primeira, e "remover a segunda" removeria o
+índice errado.
+
+`verEquipamento` **morreu** — os cinco pontos de chamada viraram
+`abrirArsenal(ficha, posicao)`, com o mesmo desenho e os mesmos botões. Deixá-lo
+sem chamador seria convidar o próximo conserto a ser feito no lugar que ninguém
+abre. Há guarda recusando a volta dele.
+
+⚠ **A mochila de ITENS DO LIVRO ficou de fora, de propósito.** `verItemDoLivro`
+tem formulários com estado — seletor de vínculo da Pedra, três campos de
+registro do Caderno, escolha de trilha do Musgo Doce. Folhear para o lado
+apagaria o que a pessoa acabou de digitar. Gesto bom no lugar errado é defeito.
+
+### Criação de ficha: comparar é o que essa tela faz
+
+Cada nome abria **uma carta só**. Para comparar as 24 ancestralidades você abria
+e fechava 24 vezes, e no meio do caminho já não lembrava o que a terceira fazia.
+A grade existe para **escolher**; a carta existe para **decidir** — e decidir é
+comparar.
+
+A grade de opções passou a montar o baralho inteiro; o nome abre na posição
+daquele cartão; e **"Escolher esta" escolhe a carta que está na tela**, não a do
+cartão de origem — quem passou da 3ª para a 11ª e gostou escolhe ali.
+
+Três casos, três decisões diferentes:
+
+- **Ancestralidade e comunidade** — baralho inteiro, com escolher.
+- **Ancestralidade MISTA** — baralho inteiro, **sem** escolher. A escolha ali não
+  é "esta ancestralidade", é "esta característica, nesta vaga". Um botão
+  genérico teria de inventar qual das duas, e inventaria errado metade das vezes.
+- **Subclasse** — o baralho é das cartas de **todas** as subclasses da classe, em
+  ordem, abrindo na fundação daquela em que se tocou. A pergunta da tela é "qual
+  das duas?", e respondê-la é passar de uma para a outra. Cada carta lembra **de
+  quem ela é**, senão "Escolher esta" escolheria a subclasse errada.
+
+⚠ **E isso obrigou a consertar o rodapé do visor.** As três cartas de uma
+subclasse têm o **mesmo nome**. Enquanto o visor folheava uma só, a contagem
+podia ocupar a linha do rodapé; folheando as três, não havia nada na tela dizendo
+se o dedo parou na fundação ou na maestria. Rodapé e contagem passaram a conviver
+na mesma linha (`Fundação · … · 2 de 6`), e `daSubclasse` passou a nomear qual
+das três é.
+
+A **lista de classes** ficou como estava, e isso é decisão, não esquecimento: ela
+é larga e já mostra chamada, domínios, Evasão e PV de cada classe na própria
+tela. A comparação acontece na lista; o folheador não acrescentaria nada.
+
+### O buraco da auditoria: o Mestre não via carta nenhuma
+
+Estava anotado no lote passado como "mudança de payload, não de tela". É o pedido
+da Vanessa de verificar **se o jogador ou o Mestre conseguem ver as cartas** —
+e do lado dele a resposta era não. O resumo de cada ficha mandava nome, classe,
+subclasse e transformação. Quando a mesa pergunta "o que você tem na mão?", a
+resposta só existia no celular do jogador — e quem conduz a cena decide o que o
+adversário faz no escuro.
+
+`resumoDoPersonagem_` passou a levar `cartas: { ativas, cofre }`.
+
+⚠ **Vão os IDS, não as cartas.** As 189 cartas de domínio já estão no GitHub
+Pages. Mandar texto e caminho de arte de cada carta de cada ficha a **cada**
+abertura do painel — e o painel abre muitas vezes por sessão — seria pagar pelo
+que a tela já tem na mão. É a mesma decisão do bestiário, que manda os tipos e
+deixa as 264 fichas no estático. Há guarda recusando a volta da carta inteira.
+
+⚠ **O cofre vai junto** porque a pergunta da mesa inclui o que está guardado:
+recordar custa Estresse, mas é possível, e saber que a carta existe muda o que o
+Mestre espera do jogador.
+
+No painel, mão e cofre viram **um baralho só com selo de lugar** — a mesma
+decisão da aba Cartas, pelo mesmo motivo. E **só de leitura**: quem guarda,
+recorda e marca é o jogador. Oferecer o botão ali daria dois donos ao mesmo
+gesto, e a ficha tem controle otimista de versão — o segundo dono perderia a
+gravação do primeiro sem explicar por quê.
+
+⚠ **O catálogo carrega NO TOQUE.** `cartas-dominio.json` tem 400 KB e
+`classes.json` 230 KB; puxar 630 KB para desenhar trilhas de PV faria a aba Grupo
+abrir devagar por causa de um gesto que talvez ninguém use naquela sessão. É a
+mesma razão pela qual o catálogo do bestiário chega depois da cena. Memoizado: o
+segundo toque é de graça. Há guarda recusando que isso suba para a abertura.
+
+De quebra, a **subclasse** do jogador e a **transformação concedida** passaram a
+abrir as cartas delas no painel — ele é quem concede, e era o único que não tinha
+como ver a arte do que estava concedendo.
+
+### ⚠ Dois erros meus, e o segundo é o de sempre
+
+**Um guarda que não guardava — de novo, e no mesmo formato.** A guarda do `corpo`
+preguiçoso era `/corpo: \(\) =>/` contra `bestiario.js`. Tirei o `() =>` do
+adversário para conferir e a suíte **continuou verde**: o conversor do
+**ambiente**, no mesmo arquivo, ainda casava com a expressão. Agora cada
+conversor é nomeado (`corpo: () => fichaDeAdversario(f)`,
+`corpo: () => fichaDeAmbiente(x)`,
+`corpo: () => conteudoDeEquipamento(e.rotulo, e.item)`), e cada um foi provado
+falhando antes de passar. **Terceira vez que uma expressão genérica me dá
+confiança sem dar cobertura** — o padrão é claro: guarda que casa com mais de um
+lugar não guarda nenhum.
+
+**Declaração depois do uso.** A lista da mochila virou
+`arsenalDaFicha(ficha).map(linhaDeEquipamentoPossuido)` — escrito **antes** do
+`const linhaDeEquipamentoPossuido`. `const` não é içado: seria `ReferenceError`
+ao abrir a aba. Pegou na primeira leitura do bloco, antes de rodar.
+
+### Uma guarda antiga que tinha de ser reapontada
+
+O teste do lote 8 (`D1 publica 5 Recarga, 4 Seis Balas`) procurava pela **linha
+exata** de `verEquipamento` e usava `indexOf('function verEquipamento')` como
+limite da fatia onde procura `Math.random`. Com a função morta, `indexOf`
+devolvia `-1` e a fatia passava a varrer **o arquivo inteiro** — uma guarda que
+acusaria qualquer sorteio em qualquer lugar da ficha, longe do que ela quer
+dizer. Reapontada para o arsenal, com o limite num marcador estrutural, e as
+duas metades provadas falhando.
+
+### ⚠ Para a ordem de deploy: este lote MEXE NUM `.gs`
+
+`backend/99_Api.gs` mudou (é um dos 24 `SOURCE_FILES`). **Isto não é um
+repin.** A primeira requisição autenticada depois do deploy é que baixa os 24
+arquivos do pin novo — então `ENGINE_COMMIT` tem de apontar para o commit novo,
+e o painel do Mestre só mostra cartas depois disso. Antes do deploy, o bloco
+aparece dizendo "Nenhuma carta de domínio nesta ficha" para todo mundo, o que é
+o comportamento correto para um payload que ainda não traz o campo.
+
+**Suíte:** 1249 testes de backend (eram 1242), 0 falhas; e2e **115 passos**
+(eram 112), 0 falhas; `teste:tudo` verde.
+
+---
+
+## O que a Esperança compra, o laudo do mesa-api e a renomeação dos lote9
+
+Três coisas num lote, as três escolhidas por ela depois que eu mostrei que o
+item do backlog era maior do que o backlog dizia.
+
+### O D7 era maior do que estava escrito
+
+O backlog pedia "a metade da Jogada em Equipe que não depende de rolagem:
+gastar Esperança e marcar um uso por sessão". Ao abrir o SRD para conferir a
+regra antes de implementar — que é a ordem deste projeto — apareceu outra
+coisa: **a Esperança compra QUATRO coisas e a ficha tinha botão para UMA.**
+
+> Players can spend Hope to: • Help an Ally • Utilize an Experience •
+> Initiate a Tag Team Roll • Activate a Hope Feature
+
+Só a quarta tinha botão. As outras três só existiam descendo a trilha com o
+dedo — e a terceira é justamente a única com **limite por sessão**, que
+ninguém guarda de cabeça numa mesa de quatro horas. Pior: a nota que ficava
+colada na trilha dizia *"Gaste 1 Esperança para usar uma Experiência ou ajudar
+um aliado"* — **dois dos quatro**, como texto morto, sem citar o terceiro.
+
+⚠ **A FONTE AQUI É O SRD, E ISSO PRECISA FICAR ESCRITO.** A Jogada em Equipe
+**não está no livro da Jambô**: a lista de gastos de Esperança da ficha de
+exemplo (p.22) diz só *"use uma Experiência ou Preste Ajuda"*. Conferido
+extraindo o texto dos dois PDFs — o termo não aparece em nenhuma página. É
+regra do SRD 2.0, e o nome em português é o uso consolidado deste sistema,
+registrado em `data/srd2-traducao.json`. A errata não toca no assunto.
+
+### O desconto é do PAR, não de quem paga
+
+A maestria **Camaradagem** (Guerreiro, Chamada dos Bravos) diz: *"quando um
+aliado iniciar uma Jogada em Equipe COM VOCÊ, ele precisa gastar apenas 2
+Esperanças"*.
+
+⚠ Quem recebe o desconto é **quem inicia**; quem o concede é **o par**. Então
+o custo depende da ficha do OUTRO — e por isso o movimento **pergunta com
+quem**. Sem perguntar, o app cobraria 3 de quem tem direito a pagar 2, e tirar
+Esperança a mais é pior que não ter o botão.
+
+`aliadosDaMesa` passou a dizer quem tem a maestria, para a lista mostrar o
+preço ANTES da escolha. O servidor confere de novo e cobra: a etiqueta é o que
+a tela mostra, não o que ela decide.
+
+### O primeiro contador que não pende de nada
+
+Os 201 contadores do catálogo vêm de uma carta, de uma característica, de um
+item ou da moldura da mesa — `contadorEDaFicha_` pergunta se a ficha tem
+aquele ref. A iniciação de Jogada em Equipe é **regra do jogo**: toda ficha
+tem. Entrou com `refId: null` e `deTodaFicha: true`, e o gate sai antes de
+perguntar.
+
+⚠ **Sem isso o defeito seria silencioso e sazonal**: o gatilho de fim de sessão
+descartaria como órfão o valor que o próprio movimento acabou de gravar, e a
+iniciação voltaria sozinha no meio da sessão.
+
+⚠ **E o limite NÃO pode ser conferido por `ajustarContador_`.** Ele CORTA no
+teto em vez de recusar: um `delta: +1` com a iniciação gasta devolveria "mudou"
+sem mudar, e a Esperança sairia de graça. A leitura do contador acontece antes,
+no próprio movimento — e há teste que prova isso falhando.
+
+### Duas cópias do preço, e uma guarda no lugar de um gerador
+
+O servidor cobra (`MOVIMENTOS_DE_ESPERANCA`, em `40_Regras.gs`) e a tela
+precisa escrever o preço no botão **antes** do toque — e o Apps Script não lê
+os `data/*.json` do repositório. Nos outros catálogos isso se resolve com um
+gerador (`data/classes.json` → `42_Classes.gs`).
+
+Aqui a tabela tem **três entradas**, e um gerador novo custaria um **25º
+arquivo no `SOURCE_FILES`** do motor, com tudo o que isso arrasta para a ordem
+de deploy. A troca foi uma guarda que compara **campo por campo** os dois
+lados: mudar o preço num lugar só deixa a suíte vermelha. Está escrito dentro
+do JSON e dentro do teste, para quem chegar depois não achar que foi descuido.
+
+⚠ **A habilidade de Esperança da classe NÃO entrou na tabela**, de propósito:
+ela já é paga por `usarHabilidadeDeClasse_`, que lê o custo do catálogo da
+classe. Declará-la de novo criaria o segundo leitor do mesmo preço. O bloco
+**aponta** para a carta dela em uma linha, em vez de oferecer um segundo botão.
+
+### O laudo do mesa-api — levantamento, não execução
+
+Nada foi apagado: está em `docs/laudo-mesa-api.md`. O resumo do que eu achei:
+
+- Ela **autentica bem** — token por hash SHA-256, sessão válida, papel de
+  Mestre. Não há buraco de autenticação.
+- Os campos de `normalizarContagem` **batem um a um** com os do `4E_Mesa.gs`.
+  Não há perda de dado hoje. O risco é outro: ela é uma cópia **congelada**, e
+  a divergência já começou (a mensagem do teto do Medo cita "(livro p.154)" na
+  cópia testada e não na que está no ar).
+- ⚠ **O log NÃO prova que ela parou**, e eu quase escrevi que provava: o motor
+  grava com os **mesmos rótulos** de ação. O que prova é o `ACOES_MESA` vazio
+  no frontend.
+- ⚠ **E há um alcance que eu não tinha visto: o CACHE.** Um celular que abriu
+  o app antes da troca carregou um `api.js` apontando para a função congelada,
+  e continua escrevendo na mesma linha `config.mesa` que o motor lê. **O
+  cache-buster é exatamente o fim disso, e ainda não foi implantado.** É a
+  razão prática de não apagar hoje.
+- Apareceram **onze** funções ACTIVE, não seis. As cinco a mais já estão
+  documentadas como lápides conferidas em 18/09 — mas eu **não consegui
+  reconferir daqui** (o proxy recusa o host das Edge Functions), e isso ficou
+  escrito como afirmação de documento de 20 dias, não como fato medido hoje.
+
+### Os `lote9-*` ganharam nome de assunto
+
+Doze arquivos (6 JS + 6 CSS) chamados pelo lote em que nasceram. Viraram
+`dano.js`, `toast-contexto.js`, `avanco-mobile.*`, `descanso-mobile.*`,
+`mochila-mobile.*`, `conjuracao-mobile.css`, `desktop.css`.
+
+⚠ **`lote9-mobile.*` virou `ajustes-mobile.*` e NÃO um nome de assunto**,
+porque ele não tem um: são quatro retoques de celular sem parentesco nenhum
+(ações da mochila, contador da criação, ajuda da criação, editor de
+adversário). Trocar um nome opaco por um nome errado teria sido pior que
+deixar como estava.
+
+⚠ **Os códigos de seção DENTRO dos arquivos ficaram** (`L9-B7`, `L9-B23`…):
+eles são referência cruzada com `LOTE9-MOBILE-10.md` e com os relatos da mesa.
+Renomeá-los quebraria a ponte entre o código e o registro de onde cada ajuste
+veio.
+
+### ⚠ Um erro meu, e ele é de bulk replace
+
+Para trocar as referências eu varri `js/`, `css/`, `tools/` e `docs/`
+substituindo os nomes. Isso reescreveu **relatórios datados** — a varredura de
+30/09 registrava, como estado daquele dia, que a marca `?v=` estava em
+`js/lote9-dano.js`. Depois da troca ela passou a dizer `js/dano.js`, que é um
+arquivo que **não tinha esse nome naquela data**. Reescrever o passado para
+combinar com o presente é a única coisa que um registro histórico não pode
+fazer.
+
+Os dois relatórios voltaram ao original e ganharam um **bloco de resolução** no
+fim do item, dizendo que ficou feito e quando. O `HANDOFF.md` ficou com os
+nomes novos de propósito: ele é documento vivo, e quem segue aquelas linhas
+hoje tem de achar o arquivo.
+
+### ⚠ E dois tropeços menores
+
+**`igual` da bateria de ponta a ponta compara com `!==`.** Escrevi
+`igual(precos, ['1 Esperança', …])` e a falha mostrou os dois lados
+**idênticos** — porque duas listas nunca são `===`. Juntar antes de comparar é
+o que a bateria já fazia nos outros passos.
+
+**`fichaRapida_` não monta a maestria.** O teste do desconto criava o par como
+Guerreiro de Chamada dos Bravos no nível 10 e verificava que ele tinha
+Camaradagem — e não tinha: `fichaRapida_` força o nível inicial e monta só a
+fundação. Ter a subclasse não é ter a carta (é o E106 de novo). A asserção que
+pegou isso estava no teste de propósito, antes de usar o par.
+
+**Suíte:** 1258 testes de backend (eram 1249), 0 falhas; e2e **116 passos**
+(eram 115); `teste:tudo` verde.
+
+⚠ **Este lote mexe em três `.gs`** — `40_Regras.gs`, `4C_Ajustes.gs`,
+`47_Contadores.gs` — além do `99_Api.gs` do lote anterior. Continua **não
+sendo repin**.

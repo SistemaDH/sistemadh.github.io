@@ -155,9 +155,9 @@ async function executar(viewport) {
   try {
     await page.goto(base, { waitUntil: 'networkidle' });
     const carregado = await page.evaluate(() =>
-      [...document.scripts].some((script) => (script.src || '').includes('/js/lote9-mochila-mobile.js'))
+      [...document.scripts].some((script) => (script.src || '').includes('/js/mochila-mobile.js'))
     );
-    if (!carregado) registrar(viewport, 'script', ['js/lote9-mochila-mobile.js não está carregado no index']);
+    if (!carregado) registrar(viewport, 'script', ['js/mochila-mobile.js não está carregado no index']);
 
     await montarMochila(page);
     await auditar(page, viewport, 'dois-em-uso', { emUso: ['a', 'c'], guardados: ['b'] });

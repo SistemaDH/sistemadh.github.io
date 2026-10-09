@@ -913,6 +913,37 @@ try {
     await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 5000 });
   });
 
+  await passo('o equipamento FOLHEIA: a arma leva até a armadura sem fechar', async () => {
+    /*
+     * ⚠ ISTO É O QUE A MESA PEDIU E O QUE PODE QUEBRAR CALADO.
+     *
+     * A pergunta de mesa é comparativa — "minha armadura segura esse dano?" —
+     * e a resposta estava a três fechar-e-abrir de distância. Agora o nome
+     * abre o ARSENAL na posição do item, e o dedo (ou a seta) leva ao vizinho.
+     *
+     * O teste anda com a tecla de propósito: o `touchend` do visor depende de
+     * evento de toque sintético, que mede gesto e não comportamento. Se a
+     * navegação sumir, a tecla para de mudar a legenda e isto acusa.
+     */
+    await pagina.locator('.equip__valor').first().click();
+    await pagina.waitForSelector('.modal__caixa--carta .carta-visor--ficha', { timeout: 10000 });
+    const visor = pagina.locator('.modal__caixa--carta').last();
+    const primeiro = (await visor.locator('.carta-visor__legenda').textContent()).trim();
+    const marca = (await visor.locator('.carta-visor__contador').textContent()).trim();
+    const quantos = /(\d+) de (\d+)/.exec(marca);
+    if (!quantos) throw new Error(`o visor não disse em que carta está: "${marca}"`);
+    if (Number(quantos[2]) < 2) throw new Error('o arsenal desta ficha tem um item só — o folheador não tem o que provar');
+    await pagina.keyboard.press('ArrowRight');
+    await pagina.waitForTimeout(150);
+    const segundo = (await visor.locator('.carta-visor__legenda').textContent()).trim();
+    if (segundo === primeiro) throw new Error(`a seta não folheou: continuou em "${primeiro}"`);
+    // E o corpo tem de ser a ficha do item NOVO, não a do anterior.
+    const corpoDepois = await visor.locator('.carta-visor__palco').textContent();
+    if (!/Dano|Limiares/.test(corpoDepois)) throw new Error('a carta vizinha abriu sem os números');
+    await pagina.keyboard.press('Escape');
+    await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 5000 });
+  });
+
   await passo('o dano da ficha aplica a Proficiência sem rolar dados', async () => {
     const corpo = pagina.locator('.ficha__corpo');
     /*
@@ -1813,8 +1844,22 @@ try {
     await pagina.getByRole('button', { name: 'Continuar' }).click();
     await pagina.waitForSelector('.avanco__limites');
 
-    // A carta de domínio do nível.
+    /*
+     * A carta de domínio do nível.
+     *
+     * ⚠ ESTE PASSO MUDOU DE PORTA, e o motivo vale escrever. A escolha abria
+     * uma lista de TEXTO: a arte das 210 cartas não aparecia no momento em que
+     * se escolhe. Agora abre o VISOR — a carta em tela cheia, com "Escolher
+     * esta" — e a lista virou o segundo caminho, atrás de "Ver como lista".
+     *
+     * O passo exerce os dois, de propósito: entra pela lista (que é onde dá
+     * para escolher uma carta determinada) e, antes, confirma que o visor
+     * abriu com a arte. Se um dia a porta principal voltar a ser a lista, a
+     * primeira espera falha e alguém vem ler isto.
+     */
     await pagina.getByRole('button', { name: 'Escolher a carta' }).first().click();
+    await pagina.waitForSelector('.modal__caixa--carta .carta-visor', { timeout: 15000 });
+    await pagina.getByRole('button', { name: 'Ver como lista' }).click();
     await pagina.waitForSelector('.modal__caixa .cartao--clicavel');
     await pagina.locator('.modal__caixa .cartao--clicavel').first().click();
 
@@ -2329,6 +2374,43 @@ try {
     if (!/\d+\/\d+/.test(conta)) throw new Error(`conta da trilha: "${conta}"`);
   });
 
+  await passo('o MESTRE vê as cartas do jogador — e pode folheá-las', async () => {
+    /*
+     * ⚠ ESTE BURACO SÓ APARECEU NUMA AUDITORIA, não num defeito relatado.
+     *
+     * O painel mostrava nome, classe, subclasse e transformação, e nenhuma
+     * carta: quem conduz a cena não sabia o que o grupo pode fazer. O resumo
+     * passou a levar os ids (99_Api.gs) e esta tela traduz.
+     *
+     * O teste vai pelo caminho da mesa: ler a conta no cartão, tocar em
+     * folhear, e conferir que o visor abriu com exatamente aquelas cartas.
+     */
+    const bloco = pagina.locator('.mestre__cartas').first();
+    await bloco.waitFor({ timeout: 10000 });
+    const conta = (await bloco.locator('p').first().textContent()).trim();
+    const n = /(\d+) na mão · (\d+) no cofre/.exec(conta);
+    if (!n) throw new Error(`o cartão não disse quantas cartas: "${conta}"`);
+    const total = Number(n[1]) + Number(n[2]);
+    if (!total) throw new Error('a ficha deste teste está sem carta — nada a provar');
+
+    await bloco.getByRole('button', { name: 'Folhear as cartas' }).click();
+    await pagina.waitForSelector('.modal__caixa--carta .carta-visor', { timeout: 15000 });
+    const visor = pagina.locator('.modal__caixa--carta').last();
+    const marca = (await visor.locator('.carta-visor__contador').textContent()).trim();
+    if (total > 1) {
+      const quantos = /(\d+) de (\d+)/.exec(marca);
+      if (!quantos) throw new Error(`sem contagem no visor do Mestre: "${marca}"`);
+      igual(Number(quantos[2]), total,
+        'o visor do Mestre tem de folhear exatamente as cartas que o cartão contou');
+    }
+    // O selo de lugar é o que diz se a carta está guardada.
+    if (!/na mão|no cofre/.test(marca)) {
+      throw new Error(`a carta abriu sem o selo de lugar: "${marca}"`);
+    }
+    await pagina.keyboard.press('Escape');
+    await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 10000 });
+  });
+
   await passo('o bestiário abre com as 264 fichas e filtra por patamar e tipo', async () => {
     await pagina.getByRole('tab', { name: 'Bestiário' }).click();
     await pagina.waitForSelector('.bestiario__linha', { timeout: 20000 });
@@ -2358,6 +2440,56 @@ try {
     if (!anotado) throw new Error('nem glosa nem verbete no texto do bestiário');
     await pagina.keyboard.press('Escape');
     await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 10000 });
+  });
+
+  await passo('o bestiário FOLHEIA a lista filtrada, e o "+ cena" segue a carta', async () => {
+    /*
+     * Abrir um adversário abre a LISTA FILTRADA na posição dele. É o gesto de
+     * mesa: filtrar "1º patamar", abrir o primeiro e comparar passando o dedo.
+     *
+     * ⚠ E o botão tem de seguir a carta. Se "Pôr em cena" fosse montado uma
+     * vez, folhear três cartas e tocar nele poria em cena o PRIMEIRO da lista
+     * — com a tela mostrando outro bicho e nada avisando. Por isso o teste
+     * folheia antes de olhar o botão.
+     */
+    await pagina.fill('.bestiario input[type="search"]', '');
+    await pagina.locator('.bestiario__pilulas').first().getByRole('button', { name: '1º' }).click();
+    await pagina.waitForTimeout(250);
+    const naLista = await pagina.locator('.bestiario__linha').count();
+    if (naLista < 2) throw new Error(`o filtro deixou ${naLista} ficha(s) — nada a folhear`);
+    await pagina.locator('.bestiario__linha').first().click();
+    await pagina.waitForSelector('.modal__caixa--carta .ficha-adversario', { timeout: 10000 });
+    const visor = pagina.locator('.modal__caixa--carta').last();
+    const marca = (await visor.locator('.carta-visor__contador').textContent()).trim();
+    const quantos = /(\d+) de (\d+)/.exec(marca);
+    if (!quantos) throw new Error(`sem contagem no visor do bestiário: "${marca}"`);
+    if (Number(quantos[2]) !== naLista) {
+      throw new Error(`o visor folheia ${quantos[2]} fichas, mas o filtro mostrou ${naLista}`);
+    }
+    const primeiro = (await visor.locator('.carta-visor__legenda').textContent()).trim();
+    await pagina.keyboard.press('ArrowRight');
+    await pagina.waitForTimeout(150);
+    const segundo = (await visor.locator('.carta-visor__legenda').textContent()).trim();
+    if (segundo === primeiro) throw new Error(`a seta não folheou o bestiário: "${primeiro}"`);
+    /*
+     * O rodapé da carta nova tem de ser o DELA — é a prova de que `desenhar()`
+     * correu inteiro e não só trocou a imagem. E o "Pôr em cena" continua
+     * oferecido na carta em que o dedo parou.
+     *
+     * ⚠ Este passo NÃO põe nada em cena, de propósito: os passos seguintes
+     * contam adversários na cena, e um bicho a mais aqui os quebraria num
+     * lugar que não tem nada a ver com o defeito. Que o botão age sobre a
+     * carta MOSTRADA está guardado na suíte de backend, que exige o `acoes`
+     * recalculado por carta em `js/telas/bestiario.js`.
+     */
+    const rodapeNovo = (await visor.locator('.carta-visor__contador').textContent()).trim();
+    if (!/patamar/.test(rodapeNovo)) throw new Error(`a carta nova veio sem rodapé: "${rodapeNovo}"`);
+    igual(await visor.getByRole('button', { name: 'Pôr em cena' }).count(), 1,
+      'a carta folheada tem de continuar oferecendo "Pôr em cena"');
+    await pagina.keyboard.press('Escape');
+    await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 10000 });
+    await pagina.locator('.bestiario__pilulas').first().getByRole('button', { name: 'Todos' }).click();
+    await pagina.waitForTimeout(200);
   });
 
   await passo('o ambiente liga para a ficha do adversário que ele cita', async () => {
@@ -2998,6 +3130,118 @@ try {
   const estresseMarcadoNaTela = () =>
     pagina.locator('.papel__trilha--estresse .papel__caixa.esta-cheio').count();
 
+  await passo('os três usos sem botão ganharam botão — e a iniciação conta', async () => {
+    /*
+     * ⚠ O SRD LISTA QUATRO USOS DA ESPERANÇA e a ficha tinha botão para UM.
+     *
+     * Prestar Ajuda, Utilizar uma Experiência e iniciar uma Jogada em Equipe
+     * só existiam descendo a trilha com o dedo — e a Jogada em Equipe é a
+     * única com LIMITE POR SESSÃO, que ninguém guarda de cabeça numa mesa de
+     * quatro horas.
+     *
+     * O teste anda pelo caminho da mesa: montar a Esperança, tocar em Prestar
+     * Ajuda (1), conferir a trilha, iniciar a Jogada em Equipe escolhendo o
+     * par (3), e conferir que a SEGUNDA iniciação da sessão fica apagada.
+     */
+    const def = noBackend('ABAS.PERSONAGENS');
+    const linhas = ambiente.contexto.lerTudo_(def)
+      .filter((l) => String(l.excluido).toUpperCase() !== 'TRUE');
+    const linha = linhas[0];
+    const original = linha.dados || '{}';
+
+    /*
+     * ⚠ A JOGADA EM EQUIPE PRECISA DE UM PAR, e esta mesa tem uma ficha só.
+     *
+     * O par entra aqui e SAI no `finally`, marcado como excluído: os passos
+     * seguintes contam fichas da mesa, e uma a mais quebraria uma asserção que
+     * não tem nada a ver com este defeito. Foi a mesma razão pela qual o passo
+     * do bestiário não põe ninguém em cena.
+     */
+    const dono = ambiente.contexto.executar_({
+      acao: 'registrar', nome: 'ParDaJogada', codigo: '909090'
+    });
+    if (!dono.ok) throw new Error('não consegui criar o dono do par: ' + JSON.stringify(dono));
+    const par = ambiente.contexto.executar_({
+      acao: 'criarPersonagem', token: dono.dados.token,
+      ficha: ambiente.contexto.fichaRapida_({
+        nome: 'Parceira', classe: 'Bardo', subclasse: 'Músico Errante',
+        ancestralidade: 'Elfo', comunidade: 'Highborne'
+      })
+    });
+    if (!par.ok) throw new Error('não consegui criar o par: ' + JSON.stringify(par));
+
+    try {
+      const dados = JSON.parse(original);
+      dados.recursos = Object.assign({}, dados.recursos, { esperanca: 6 });
+      delete (dados.contadores || {})['regra:jogada-em-equipe'];
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: JSON.stringify(dados) });
+      await pagina.reload({ waitUntil: 'networkidle' });
+      await pagina.waitForSelector('.ficha-cartao__abrir', { timeout: 15000 });
+
+      await pagina.locator('.ficha-cartao__abrir').first().click();
+      await pagina.waitForSelector('.papel__compra', { timeout: 20000 });
+
+      const cheios = () => pagina.locator('.papel__esperancaPonto.esta-cheio').count();
+      igual(await cheios(), 6, 'a montagem devia deixar 6 de Esperança');
+
+      // Os TRÊS estão na tela, com preço escrito.
+      const bloco = pagina.locator('.papel__compra');
+      igual(await bloco.locator('.papel__compraBotao').count(), 3,
+        'os três movimentos sem botão têm de estar aqui');
+      /*
+       * ⚠ `igual` desta bateria compara com `!==`: duas listas NUNCA são
+       * iguais assim, e a mensagem de falha mostrava os dois lados idênticos.
+       * Juntar antes de comparar é o que a bateria já faz nos outros passos.
+       */
+      const precos = (await bloco.locator('.papel__compraPreco').allTextContents())
+        .map((t) => t.trim()).join(' · ');
+      igual(precos, '1 Esperança · 1 Esperança · 3 Esperança',
+        'os preços do bloco não são os do catálogo');
+
+      // 1) PRESTAR AJUDA — 1 de Esperança, sem limite.
+      let antes = await versaoNaTela();
+      await bloco.getByRole('button', { name: /Prestar Ajuda/ }).click();
+      await esperarGravar(antes);
+      igual(await cheios(), 5, 'Prestar Ajuda tinha de gastar 1');
+
+      // 2) JOGADA EM EQUIPE — pede o par, e o par decide o preço.
+      antes = await versaoNaTela();
+      await bloco.getByRole('button', { name: /Jogada em Equipe/ }).click();
+      await pagina.waitForSelector('.modal__caixa select[aria-label="Par da Jogada em Equipe"]',
+        { timeout: 15000 });
+      const caixa = pagina.locator('.modal__caixa').last();
+      const textoDoPreco = await caixa.locator('p.texto-xs').first().textContent();
+      if (!/Custa \d de Esperança/.test(textoDoPreco)) {
+        throw new Error(`o modal não disse o preço: "${textoDoPreco}"`);
+      }
+      await caixa.getByRole('button', { name: 'Iniciar' }).click();
+      await esperarGravar(antes);
+      igual(await cheios(), 2, 'a Jogada em Equipe tinha de gastar 3');
+
+      /*
+       * ⚠ E A SEGUNDA INICIAÇÃO DA SESSÃO FICA APAGADA, com o motivo na tela.
+       * É a única parte desta regra que o app guarda e a mesa não.
+       */
+      const segunda = bloco.getByRole('button', { name: /Jogada em Equipe/ });
+      if (!(await segunda.isDisabled())) {
+        throw new Error('a segunda iniciação da sessão devia estar apagada');
+      }
+      const aviso = await bloco.locator('.papel__compraAviso').first().textContent();
+      if (!/usada nesta sessão/.test(aviso)) {
+        throw new Error(`faltou dizer por que está apagada: "${aviso}"`);
+      }
+    } finally {
+      ambiente.contexto.atualizarLinha_(def, linha._linha, { dados: original });
+      // O par sai da mesa: os passos seguintes contam fichas.
+      const doPar = ambiente.contexto.lerTudo_(def)
+        .find((l) => String(l.id) === String(par.dados.personagem.id));
+      if (doPar) ambiente.contexto.atualizarLinha_(def, doPar._linha, { excluido: 'TRUE' });
+    }
+
+    await pagina.locator('.ficha__topo button[aria-label="Voltar para a lista"]').click();
+    await pagina.waitForSelector('.ficha-cartao__abrir');
+  });
+
   await passo('a habilidade de Esperança GASTA a Esperança (as nove ganharam botão)', async () => {
     /*
      * As nove habilidades de Esperança custam 3 ("gaste 3 de Esperança para…")
@@ -3551,7 +3795,14 @@ try {
      * Página própria, para não sujar a sessão dos outros passos.
      */
     const isolada = await contexto.newPage();
-    await isolada.route('**/css/verbete.css', (rota) => rota.fulfill({ status: 404, body: '' }));
+    /*
+     * ⚠ O `*` NO FIM NÃO É ENFEITE. Desde o cache-buster o href é
+     * `css/verbete.css?v=<hash>`, e o glob do Playwright casa a URL INTEIRA,
+     * query incluída. Sem o curinga, a rota deixava de interceptar, a folha
+     * carregava normalmente e este passo falhava por timeout — dizendo
+     * "o app não avisou" quando na verdade não havia o que avisar.
+     */
+    await isolada.route('**/css/verbete.css*', (rota) => rota.fulfill({ status: 404, body: '' }));
     await isolada.goto(base, { waitUntil: 'load' });
     await isolada.waitForSelector('.aviso--erro', { timeout: 15000 });
     const texto = await isolada.locator('.aviso--erro').first().textContent();

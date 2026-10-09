@@ -302,6 +302,88 @@ async function entrarComoMestre(page) {
   await page.waitForSelector('.mestre__abas', { timeout: 20000 });
 }
 
+/**
+ * B14: O VISOR EM MODO FICHA, no celular.
+ *
+ * O folheador de cartas ganhou um segundo layout para quem não tem PNG — a
+ * ficha de adversário desenhada dentro dele. ⚠ Nenhuma bateria media isso: o
+ * modo carta mostra uma imagem que se encolhe sozinha, e o modo ficha mostra
+ * TEXTO DE REGRA de largura cheia, com setas de navegação ao lado.
+ *
+ * Foi justamente por isso que as setas saíram de cima do conteúdo: em 390px,
+ * 48px de cada lado comem um sexto da linha. Este estado é o que não deixa
+ * alguém devolvê-las para lá sem a conta aparecer.
+ */
+async function auditarVisorDeFicha(page, viewport) {
+  await page.locator('.bestiario__linha').first().click();
+  await page.waitForSelector('.modal__caixa--carta .ficha-adversario', { timeout: 15000 });
+  await page.waitForTimeout(150);
+
+  const dados = await page.evaluate(() => {
+    const erros = [];
+    const avisos = [];
+    const largura = document.documentElement.clientWidth;
+    const visor = document.querySelector('.carta-visor--ficha');
+    if (!visor) {
+      erros.push('o visor não entrou em modo ficha');
+      return { erros, avisos, larguraDocumento: document.documentElement.scrollWidth, larguraViewport: largura };
+    }
+
+    const palco = visor.querySelector('.carta-visor__palco');
+    const ficha = visor.querySelector('.ficha-adversario');
+    const passos = visor.querySelector('.carta-visor__passos');
+    if (!palco || !ficha) erros.push('faltou palco ou ficha dentro do visor');
+    if (!passos) erros.push('a navegação não desceu para a barra de passos');
+
+    // 1. Nada sai pelo lado — nem a caixa, nem a ficha dentro dela.
+    const overflow = Math.max(document.documentElement.scrollWidth,
+      document.body ? document.body.scrollWidth : 0) - largura;
+    if (overflow > 1) erros.push(`overflow horizontal de ${overflow}px`);
+    if (palco && palco.scrollWidth > palco.clientWidth + 1) {
+      erros.push(`a ficha é ${palco.scrollWidth - palco.clientWidth}px mais larga que o palco`);
+    }
+
+    // 2. A ficha ROLA no palco, em vez de esticar o modal até fora da tela.
+    if (palco) {
+      const estilo = getComputedStyle(palco);
+      if (estilo.overflowY !== 'auto' && estilo.overflowY !== 'scroll') {
+        erros.push(`o palco não rola: overflow-y ${estilo.overflowY}`);
+      }
+      const r = palco.getBoundingClientRect();
+      if (r.bottom > window.innerHeight + 1) {
+        erros.push(`o palco passa ${(r.bottom - window.innerHeight).toFixed(1)}px do rodapé da tela`);
+      }
+    }
+
+    // 3. ⚠ AS SETAS NÃO PODEM VOLTAR PARA CIMA DO TEXTO. Se alguém tirar o
+    //    `position: static`, elas voltam a cobrir a linha — e nada quebra.
+    const setas = [...visor.querySelectorAll('.carta-visor__seta')].filter((el) => !el.hidden);
+    setas.forEach((seta) => {
+      if (getComputedStyle(seta).position !== 'static') {
+        erros.push('seta sobreposta ao texto da ficha (position não é static)');
+      }
+      const r = seta.getBoundingClientRect();
+      if (Math.min(r.width, r.height) < 44) {
+        erros.push(`seta de ${Math.round(r.width)}×${Math.round(r.height)}px — alvo menor que 44px`);
+      }
+      if (passos && !passos.contains(seta)) erros.push('a seta não está na barra de passos');
+    });
+    if (setas.length !== 2) avisos.push(`${setas.length} seta(s) visível(eis)`);
+
+    // 4. E a contagem tem de dizer onde o dedo está.
+    const marca = (visor.querySelector('.carta-visor__contador') || {}).textContent || '';
+    if (!/\d+ de \d+/.test(marca)) erros.push(`a barra não disse a posição: "${marca.trim()}"`);
+
+    return { erros, avisos, larguraDocumento: document.documentElement.scrollWidth, larguraViewport: largura };
+  });
+
+  const arquivo = `${PASTA}/${viewport.nome}-mestre-visor-ficha.png`;
+  await page.screenshot({ path: arquivo, fullPage: false });
+  registrar(viewport, 'mestre-visor-ficha', dados);
+  await page.keyboard.press('Escape');
+  await page.waitForSelector('.modal__caixa', { state: 'detached', timeout: 10000 });
+}
+
 async function executar(viewport) {
   const contexto = await navegador.newContext({
     viewport: { width: viewport.width, height: viewport.height },
@@ -330,7 +412,12 @@ async function executar(viewport) {
         await page.waitForSelector('.bestiario__resultado', { timeout: 15000 });
       }
       await auditar(page, viewport, nome);
-      if (rotulo === 'Bestiário') await auditarBuscaRolada(page, viewport);
+      if (rotulo === 'Bestiário') {
+        await auditarBuscaRolada(page, viewport);
+        await page.locator('.mestre__corpo').evaluate((el) => { el.scrollTop = 0; });
+        await page.waitForTimeout(120);
+        await auditarVisorDeFicha(page, viewport);
+      }
     }
     await auditarCenarioComBotao(page, viewport);
   } finally {

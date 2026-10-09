@@ -6,8 +6,8 @@
  * dano, as cartas ATIVAS do personagem que realmente podem interferir nele.
  * ========================================================================== */
 
-import { obterEstado } from './estado.js';
-import { carregar, chave } from './dados.js';
+import { obterEstado } from './estado.js?v=2829e78f50';
+import { carregar, chave } from './dados.js?v=2829e78f50';
 
 const ROTULO_ANTIGO = 'Dano e Vida';
 const ROTULO_NOVO = 'Dano';

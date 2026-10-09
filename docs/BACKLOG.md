@@ -94,9 +94,11 @@ Fora isso, o que resta se divide em três:
    só nesse dia.
 2. **Dois itens sem trabalho possível** — o I5 espera uma arte que não existe, e
    o I6 é o baralho físico.
-3. **Um item com trabalho fazível de verdade** — a metade da Jogada em Equipe
-   que NÃO depende de rolagem (D7): gastar Esperança e marcar um uso por sessão.
-   A ficha já sabe fazer as duas coisas; falta ligar.
+3. ~~**Um item com trabalho fazível de verdade** — a metade da Jogada em Equipe
+   que NÃO depende de rolagem (D7).~~ ✅ **FEITO em 08/10/2026**, e ele era
+   maior: a Esperança compra **quatro** coisas e a ficha tinha botão para uma.
+   Virou o bloco "O que a Esperança compra". **Agora não resta item nenhum com
+   trabalho fazível nesta lista.**
 
 Nada disso bloqueia uma sessão.
 
@@ -131,8 +133,8 @@ Nada disso bloqueia uma sessão.
   o baralho físico.
 
 Ou seja: o que resta é **uma decisão de mesa que já foi tomada** (nada de
-rolagem de dado: D2, D4, D5, D6, D7 e H6) e dois itens sem o que fazer (I5,
-I6). Nada disso bloqueia uma sessão.
+rolagem de dado: D2, D4, D5, D6 e H6 — o D7 saiu desta lista em 08/10/2026,
+feito) e dois itens sem o que fazer (I5, I6). Nada disso bloqueia uma sessão.
 
 Os grupos E, F e G não são trabalho — são registro para o futuro não desfazer o
 que foi feito.
@@ -152,6 +154,7 @@ que foi feito.
 | ~~A7~~ | ~~Adversários e ambientes~~ — **FECHADO.** O bestiário tem **264 fichas e 47 ambientes** (129 e 19 na entrega original; o resto veio com os suplementos do SRD 2.0), com busca por patamar, tipo e nome, e cada habilidade traz o **custo de Medo da ficha dela**, que era o ponto original. O Guia de Batalha calcula os Pontos de Batalha — e desde 10/2026 os ajustes marcados nele GRAVAM em `encontro.ajustesDePb`, então o total da janela é o mesmo da barra da cena. | `bestiario.md` |
 | ~~A8~~ | ~~Perseguição~~ — **FECHADO.** Duas contagens dinâmicas podem ser **pareadas**; aí o cartão mostra as cinco linhas da tabela com os dois deltas (`Sucesso com Esperança · — / −2`) e um clique avança as duas. | `pontos-de-interesse-mestre.md` §3 |
 | ~~A9~~ | ~~Editor de etapas da trilha~~ — **FECHADO.** Um `<details>` recolhido dentro do editor da contagem, um campo por degrau. | `pontos-de-interesse-mestre.md` §5 |
+| ~~A10~~ | ~~O Mestre não vê carta nenhuma~~ — **FECHADO.** Achado numa auditoria, não numa queixa: o cartão da ficha trazia nome, classe, subclasse e trilhas, e nenhuma carta — quem conduz a cena decidia o que o adversário faz sem saber o que o grupo pode fazer. `resumoDoPersonagem_` passou a levar `cartas: { ativas, cofre }` **como ids** (as 189 cartas já estão no estático), o painel folheia mão + cofre com selo de lugar, e a subclasse e a transformação concedida abrem as cartas delas. ⚠ Só de leitura, e depende do pin: `99_Api.gs` é um dos 24 `SOURCE_FILES`. | `pontos-de-interesse-mestre.md` §10 |
 
 ## B. Precisa conferir no livro ou no SRD antes de codar
 
@@ -197,7 +200,7 @@ botão manual funcionando:
 | D4 | **+1 Medo a cada rolagem com Medo** (livro p.154). | `pontos-de-interesse-mestre.md` §1 |
 | D5 | **Contagem padrão avança a cada teste** (p.162). | `pontos-de-interesse-mestre.md` §1 |
 | D6 | **Contagem dinâmica avança pelo resultado** (p.163) — hoje é um botão por linha da tabela. | `pontos-de-interesse-mestre.md` §1 |
-| D7 | **Jogada em Equipe** (Tag Team) — metade está feita e metade não, e vale separar. A **maestria Camaradagem** tem contador real (iniciação extra, 1× por sessão, zerando no fim dela). A Jogada em Equipe **base** — gastar Esperança e marcar o uso da sessão — continua sem lugar: a parte de rolar é da mesa, mas gastar Esperança e contar um uso por sessão é coisa que a ficha já sabe fazer. É o único D que ainda tem trabalho fazível. | `pontos-de-interesse-dominios.md` §1 |
+| ~~D7~~ | ~~Jogada em Equipe~~ — **FECHADO, e maior do que esta linha dizia.** Ao conferir a regra antes de implementar apareceu que a Esperança compra **quatro** coisas (Prestar Ajuda, Utilizar uma Experiência, iniciar a Jogada em Equipe e a habilidade de Esperança da classe) e a ficha tinha botão para **uma** — e a nota colada na trilha citava duas, como texto morto. Virou o bloco "O que a Esperança compra". A iniciação é 1 por sessão, com contador que é o primeiro do catálogo a não pender de carta, característica nem item: é regra do jogo. ⚠ O desconto da Camaradagem é do **par**, não de quem paga — por isso o movimento pergunta com quem. ⚠ Fonte: SRD 2.0; o livro da Jambô não traz esta regra. | `HANDOFF.md` · `docs/diario-dos-commits.md` |
 
 ## H. Nasceu do bestiário (A7)
 

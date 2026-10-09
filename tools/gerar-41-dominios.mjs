@@ -231,7 +231,7 @@ function reacaoAoMarcarArmaduraDaFicha_(ficha) {
  *
  * ⚠ Era a última carta com a regra digitada dentro do código: id, domínio,
  * o número 4 e a chave do contador estavam escritos à mão no resolvedor de dano
- * E no `lote9-dano.js`. Mesmo formato do `if` que segurava o Levantar-Se.
+ * E no `dano.js`. Mesmo formato do `if` que segurava o Levantar-Se.
  */
 const substituemPv = cartas.filter((c) => c.reacaoSubstituiPv);
 L.push('/** Cartas que trocam os PV de um dano por outro recurso (id → contrato). */');

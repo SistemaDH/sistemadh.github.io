@@ -1,4 +1,4 @@
-import { el } from './util.js';
+import { el } from './util.js?v=2829e78f50';
 
 /* ========================================================================== *
  * L9-B22 · RESUMO STICKY DO AVANÇO DE NÍVEL NO MOBILE

@@ -496,6 +496,44 @@
   line-height: 1.5;
 }
 
+/*
+ * O VISOR EM MODO FICHA — quem não tem PNG.
+ *
+ * Adversário, ambiente e equipamento entram no mesmo folheador das cartas,
+ * mas o conteúdo é outro bicho: comprido, de largura cheia e cheio de texto de
+ * regra. Três diferenças, cada uma por um motivo medido:
+ *
+ * 1. A ficha ROLA dentro do palco. A carta cabia inteira em 68vh; a ficha do
+ *    Rei Cadáver não cabe em tela nenhuma.
+ * 2. Alinha ao TOPO, não ao centro — uma ficha curta centralizada parece
+ *    flutuando no meio do nada.
+ * 3. As setas descem para `__passos`. Sobre a arte elas não cobriam nada;
+ *    sobre o texto, em 390px, cada seta de 48px come um sexto da linha.
+ */
+.carta-visor--ficha .carta-visor__palco {
+  align-items: flex-start;
+  min-height: 0;
+  max-height: 64vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.carta-visor--ficha .carta-visor__palco > * { width: 100%; }
+
+.carta-visor__passos {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: var(--e3);
+}
+
+.carta-visor--ficha .carta-visor__seta {
+  position: static;
+  transform: none;
+  flex: 0 0 auto;
+}
+
 /* ------------------------------------------------------------- telas ---- */
 
 .campo__entrada--area {

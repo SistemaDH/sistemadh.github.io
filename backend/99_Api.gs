@@ -43,6 +43,24 @@ function exigirMestre_(token) {
 }
 
 /**
+ * Os ids das cartas de uma lista da ficha, como texto.
+ *
+ * A ficha grava a carta às vezes como id solto, às vezes como objeto com as
+ * marcas dela. Quem lê precisa de uma coisa só — é a mesma normalização que
+ * `refsDaFicha_` faz no frontend, pelo mesmo motivo.
+ */
+function idsDeCartasDaFicha_(ficha, onde) {
+  const lista = (((ficha || {}).cartas || {})[onde]) || [];
+  const saida = [];
+  for (let i = 0; i < lista.length; i++) {
+    const c = lista[i];
+    const id = (c && typeof c === 'object') ? (c.id || c.nome) : c;
+    if (id) saida.push(String(id));
+  }
+  return saida;
+}
+
+/**
  * O resumo de uma ficha para o painel: o que o Mestre precisa ver de relance,
  * sem carregar a ficha inteira de cada jogador.
  */
@@ -65,6 +83,30 @@ function resumoDoPersonagem_(linha) {
     evasao: d.evasao === undefined ? null : d.evasao,
     limiares: { maior: d.limiarMaior, grave: d.limiarGrave },
     condicoes: (ficha.condicoes || []).map(function (c) { return c.nome || c.id; }),
+    /*
+     * AS CARTAS QUE A FICHA CARREGA — e por que isto faltava.
+     *
+     * ⚠ O PAINEL DO MESTRE NÃO MOSTRAVA CARTA NENHUMA. Ele sabia o nome da
+     * classe, da subclasse e da transformação, e mais nada. Na mesa, "o que
+     * você tem na mão?" só tinha resposta no celular do jogador — e quem
+     * conduz a cena precisa saber o que o grupo pode fazer para decidir o que
+     * o adversário faz.
+     *
+     * ⚠ VÃO OS IDS, NÃO AS CARTAS. As 189 cartas de domínio já estão no
+     * GitHub Pages, em data/cartas-dominio.json. Mandar o texto e o caminho da
+     * arte de cada carta de cada ficha a cada abertura do painel — e o painel
+     * abre muitas vezes por sessão — seria pagar por aquilo que a tela já tem
+     * na mão. É a mesma decisão do bestiário, que manda os tipos e deixa as
+     * 264 fichas no estático.
+     *
+     * O COFRE VAI JUNTO porque a pergunta da mesa inclui o que está guardado:
+     * recordar custa Estresse, mas é possível, e saber que a carta existe muda
+     * o que o Mestre espera do jogador.
+     */
+    cartas: {
+      ativas: idsDeCartasDaFicha_(ficha, 'ativas'),
+      cofre: idsDeCartasDaFicha_(ficha, 'cofre')
+    },
     transformacao: ficha.controleTransformacao ? {
       id: ficha.controleTransformacao.id,
       nome: (typeof TRANSFORMACOES === 'object' && TRANSFORMACOES[ficha.controleTransformacao.id])
@@ -877,7 +919,27 @@ function executar_(p) {
               return String(l.excluido).toUpperCase() !== 'TRUE' && String(l.id) !== String(p.id);
             })
             .map(function (l) {
-              return { id: l.id, nome: l.nome, donoNome: l.donoNome, nivel: Number(l.nivel) || 1 };
+              /*
+               * ⚠ `camaradagem` É PREÇO, NÃO ENFEITE.
+               *
+               * A maestria Camaradagem do Guerreiro desconta 1 Esperança de
+               * quem inicia uma Jogada em Equipe COM ela — o desconto é do
+               * PAR, não de quem paga. Sem este campo, a lista de aliados
+               * mostraria "3 Esperança" para um par que cobra 2, e quem
+               * escolhesse pagaria a mais sem nada na tela dizendo por quê.
+               *
+               * O servidor confere de novo na hora de cobrar
+               * (`usarMovimentoDeEsperanca_`): isto aqui é o que a tela
+               * mostra, não o que ela decide.
+               */
+              let fichaDoAliado = {};
+              try { fichaDoAliado = JSON.parse(l.dados || '{}'); } catch (e) { fichaDoAliado = {}; }
+              const temCamaradagem = (typeof fichaTemCaracteristica_ === 'function')
+                && fichaTemCaracteristica_(fichaDoAliado, 'Camaradagem') === true;
+              return {
+                id: l.id, nome: l.nome, donoNome: l.donoNome, nivel: Number(l.nivel) || 1,
+                camaradagem: temCamaradagem
+              };
             })
         });
       }

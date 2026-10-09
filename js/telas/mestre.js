@@ -20,16 +20,67 @@
  *  • Nada destrutivo sem prévia — o descanso do grupo mostra antes.
  */
 
-import { el, limpar, travarBotao, semCorretor } from '../util.js';
-import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js';
-import { acoes } from '../estado.js';
-import { mensagemDoErro } from '../api.js';
-import { prepararGlossario, nomeComGlossa } from '../glossario.js';
-import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js';
-import { botaoDeRegras } from './regras.js';
-import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js';
-import { secaoDoEncontro } from './encontro.js';
-import { icone } from '../componentes/icone.js';
+import { el, limpar, travarBotao, semCorretor } from '../util.js?v=2829e78f50';
+import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=2829e78f50';
+import { acoes } from '../estado.js?v=2829e78f50';
+import { mensagemDoErro } from '../api.js?v=2829e78f50';
+import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=2829e78f50';
+import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=2829e78f50';
+import { botaoDeRegras } from './regras.js?v=2829e78f50';
+import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=2829e78f50';
+import { secaoDoEncontro } from './encontro.js?v=2829e78f50';
+import { icone } from '../componentes/icone.js?v=2829e78f50';
+import * as dados from '../dados.js?v=2829e78f50';
+import {
+  abrirCarta, daCartaDeDominio, daSubclasse, daTransformacao
+} from '../componentes/carta.js?v=2829e78f50';
+
+/*
+ * O BARALHO DA MESA — as cartas dos jogadores, para o lado de cá.
+ *
+ * ⚠ O MESTRE NÃO VIA CARTA NENHUMA. O resumo de cada ficha trazia nome,
+ * classe, subclasse e transformação; as cartas de domínio ficavam só no
+ * celular do jogador. Na mesa isso significa que quem conduz a cena não sabe
+ * o que o grupo pode fazer — e decide o que o adversário faz no escuro.
+ *
+ * O servidor passou a mandar os IDS (ver `resumoDoPersonagem_`). Quem traduz
+ * id em carta é esta tela, com os mesmos arquivos estáticos que a ficha usa.
+ *
+ * ⚠ CARREGA NO TOQUE, não na abertura. `data/cartas-dominio.json` tem 400 KB
+ * e `data/classes.json` 230 KB; puxar 630 KB para desenhar trilhas de PV
+ * faria a aba Grupo abrir devagar por causa de um gesto que talvez ninguém
+ * use naquela sessão. `dados.carregar` é memoizado: o segundo toque é de
+ * graça, e quem já passou pela criação de ficha não paga nem o primeiro.
+ */
+let baralhoDaMesa = null;
+
+async function carregarBaralhoDaMesa() {
+  if (baralhoDaMesa) return baralhoDaMesa;
+  const [cartas, classes, transf] = await Promise.all([
+    dados.carregar('cartas-dominio'),
+    dados.carregar('classes'),
+    dados.carregar('transformacoes')
+  ]);
+  const porId = new Map();
+  (cartas.cartas || []).forEach((c) => porId.set(dados.chave(c.id), c));
+  /*
+   * A subclasse é procurada PELO NOME porque é o nome que a ficha grava —
+   * a mesma razão pela qual `idDeSubclasse_` existe no catálogo da ficha.
+   * Entram também `nomeCarta` e `nomeLivro`, quando houver: é por eles que a
+   * tradução da Jambô e a arte às vezes diferem do nome da tela.
+   */
+  const subPorNome = new Map();
+  (classes.classes || []).forEach((cl) => (cl.subclasses || []).forEach((sub) => {
+    [sub.nome, sub.id, sub.nomeCarta, sub.nomeLivro].forEach((n) => {
+      const k = dados.chave(n);
+      if (k && !subPorNome.has(k)) subPorNome.set(k, sub);
+    });
+  }));
+  const transfPorId = new Map();
+  (transf.transformacoes || []).forEach((t) => transfPorId.set(dados.chave(t.id), t));
+  baralhoDaMesa = { porId, subPorNome, transfPorId };
+  return baralhoDaMesa;
+}
 
 /*
  * ⚠ A CENA GANHOU ABA PRÓPRIA — E ISSO DERRUBA UMA DECISÃO ANTIGA.
@@ -1791,8 +1842,89 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
         ? el('div', { class: 'ficha__chips' }, p.condicoes.map((c) =>
             el('span', { class: 'chip chip--condicao' }, nomeComGlossa(c))))
         : null,
+      cartasDoPersonagem(p),
       controleDeTransformacao(p)
     ]);
+  }
+
+  /**
+   * AS CARTAS DO JOGADOR, DO LADO DO MESTRE.
+   *
+   * Mão e cofre numa lista só, com selo de lugar — a mesma decisão da aba
+   * Cartas da ficha, e pelo mesmo motivo: a pergunta da mesa é "o que essa
+   * personagem tem", não "o que está na mão".
+   *
+   * ⚠ SÓ DE LEITURA. O Mestre vê; quem guarda, recorda e marca é o jogador na
+   * ficha dele. Oferecer aqui o botão de mandar a carta para o cofre daria
+   * dois donos para o mesmo gesto — e a ficha tem controle otimista de versão,
+   * então o segundo dono perderia a gravação do primeiro sem explicar por quê.
+   */
+  function cartasDoPersonagem(p) {
+    const naMao = ((p.cartas || {}).ativas) || [];
+    const noCofre = ((p.cartas || {}).cofre) || [];
+    const quantas = naMao.length + noCofre.length;
+
+    const abrir = async (ev) => {
+      await travarBotao(ev.currentTarget, (async () => {
+        const baralho = await carregarBaralhoDaMesa();
+        const achar = (id) => baralho.porId.get(dados.chave(id)) || null;
+        const itens = [];
+        const marcar = (ids, onde) => ids.forEach((id) => {
+          const c = achar(id);
+          if (!c) return;
+          const base = daCartaDeDominio(c);
+          // O selo de lugar entra no rodapé, como na ficha: folheando de uma
+          // seção para a outra, sem ele não há como saber o que está guardado.
+          itens.push({ ...base, rodape: `${base.rodape} · ${onde}` });
+        });
+        marcar(naMao, 'na mão');
+        marcar(noCofre, 'no cofre');
+        if (!itens.length) {
+          avisarErro('Não achei estas cartas no catálogo.');
+          return;
+        }
+        abrirCarta({ itens, indice: 0 });
+      })());
+    };
+
+    return el('div', { class: 'mestre__cartas' }, [
+      el('strong', { texto: 'Cartas' }),
+      el('p', { class: 'texto-xs texto-fraco', texto: quantas
+        ? `${naMao.length} na mão · ${noCofre.length} no cofre`
+        : 'Nenhuma carta de domínio nesta ficha.' }),
+      quantas ? el('button', {
+        type: 'button', class: 'btn btn--fantasma btn--pequeno', onClick: abrir
+      }, 'Folhear as cartas') : null,
+      subclasseQueAbreCarta(p)
+    ].filter(Boolean));
+  }
+
+  /**
+   * O nome da subclasse, tocável — a arte que o Mestre também não via.
+   *
+   * ⚠ O CATÁLOGO PODE NÃO ESTAR CARREGADO QUANDO O CARTÃO É DESENHADO, e é por
+   * isso que quem abre é uma função `async` por dentro de `obterCarta`: o
+   * `nomeQueAbreCarta` padrão espera um objeto na hora. Aqui o botão é próprio
+   * e carrega antes de abrir, como o "Folhear as cartas" acima.
+   */
+  function subclasseQueAbreCarta(p) {
+    if (!p.subclasse) return null;
+    const abrir = async (ev) => {
+      await travarBotao(ev.currentTarget, (async () => {
+        const baralho = await carregarBaralhoDaMesa();
+        const sub = baralho.subPorNome.get(dados.chave(p.subclasse));
+        if (!sub) { avisarErro(`Não achei a subclasse "${p.subclasse}" no catálogo.`); return; }
+        const itens = ['fundacao', 'especializacao', 'maestria']
+          .filter((k) => (sub.cartas || {})[k])
+          .map((k) => daSubclasse(sub, k));
+        if (!itens.length) { avisarErro('Esta subclasse não tem carta no catálogo.'); return; }
+        abrirCarta({ itens, indice: 0 });
+      })());
+    };
+    return el('button', {
+      type: 'button', class: 'btn btn--fantasma btn--pequeno',
+      'aria-label': `Ver as cartas de ${p.subclasse}`, onClick: abrir
+    }, `Cartas de ${p.subclasse}`);
   }
 
   function controleDeTransformacao(p) {
@@ -1831,11 +1963,32 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       }).catch((e) => avisarErro(mensagemDoErro(e))))
     }, atual.ativa ? 'Desligar transformação' : 'Transformar agora') : null;
 
+    /*
+     * A ARTE DA TRANSFORMAÇÃO, do lado do Mestre.
+     *
+     * Ele é quem concede e quem liga — e era o único que não tinha como ver a
+     * carta do que estava concedendo. As seis artes já estavam em
+     * `assets/cartas/transformacoes/`.
+     */
+    const verCarta = atual ? el('button', {
+      type: 'button', class: 'btn btn--fantasma btn--pequeno',
+      'aria-label': `Ver a carta de ${atual.nome}`,
+      onClick: async (ev) => {
+        await travarBotao(ev.currentTarget, (async () => {
+          const baralho = await carregarBaralhoDaMesa();
+          const t = baralho.transfPorId.get(dados.chave(atual.id));
+          if (!t) { avisarErro(`Não achei a transformação "${atual.nome}" no catálogo.`); return; }
+          abrirCarta({ itens: [daTransformacao(t)] });
+        })());
+      }
+    }, 'Ver a carta') : null;
+
     return el('div', { class: 'mestre__transformacao' }, [
       el('strong', { texto: 'Transformação' }),
       el('p', { class: 'texto-xs texto-fraco', texto: atual
         ? `${atual.nome} · ${atual.ativa ? 'ativa' : 'desligada'} · ${atual.jogadorPodeAlternar ? 'jogador pode alternar' : 'somente o Mestre alterna'}`
         : 'Nenhuma transformação concedida.' }),
+      verCarta,
       el('label', { class: 'campo' }, [
         el('span', { class: 'campo__rotulo', texto: 'Transformação concedida' }), seletor
       ]),

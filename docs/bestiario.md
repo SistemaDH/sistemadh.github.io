@@ -225,3 +225,35 @@ histórico não sumir.
 5. ~~**A Forma Fantasmagórica**~~ da Cidade Assombrada. **FECHADO (H4).** É
    transformação de **instância**, não de ficha: o mesmo urso, em outra cena,
    continua um urso normal.
+
+---
+
+## 9. Folhear as fichas — 10/2026
+
+Abrir um adversário passou a abrir a **lista filtrada**, na posição dele. É o
+gesto da mesa: filtrar "3º patamar, Horda", abrir o primeiro e **comparar** —
+antes era fechar, rolar, abrir, fechar, rolar. O mesmo vale para ambientes.
+
+A **Cena** ganhou o mesmo gesto, e é o uso mais quente dele: no meio do combate,
+passar do bandido para o capitão sem fechar a ficha e procurar o cartão.
+
+Três coisas que têm de ficar escritas:
+
+1. ⚠ **O "Pôr em cena" é recalculado a cada carta.** Montado uma vez, folhear
+   até o Rei Cadáver e tocar nele poria em cena o **primeiro lacaio da lista** —
+   com a tela mostrando outro bicho e nada avisando. É por isso que `acoes` é
+   função no visor (`js/componentes/carta.js`), e há guarda exigindo a forma.
+2. ⚠ **A ficha é desenhada só quando está na tela.** O visor recebe
+   `corpo: () => fichaDeAdversario(f)` — função, não nó. São 264 fichas na lista
+   sem filtro; montar as 264 ao abrir é construir 263 que ninguém vai olhar, e
+   cada uma registra gatilhos de verbete. Há guarda nomeando os dois conversores
+   (adversário e ambiente) separadamente — uma expressão genérica passava com o
+   do adversário quebrado, porque o do ambiente, no mesmo arquivo, ainda casava.
+3. ⚠ **Na Cena a lista vai deduplicada por id.** Três bandidos em jogo são três
+   trilhas de PV, mas **uma** ficha: folhear por cima da mesma página três vezes
+   seria defeito.
+
+O visor não tem PNG para mostrar aqui — adversário e ambiente são fichas, não
+cartas. Por isso ele entra no **modo ficha**: o palco rola, alinha ao topo, e as
+setas descem para uma barra embaixo (`‹ 3 de 264 ›`). Em 390px, uma seta de 48px
+sobre cada lado do texto de regra come um sexto da linha.

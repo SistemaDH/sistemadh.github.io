@@ -1,0 +1,40 @@
+{
+  "versao": 1,
+  "fonte": "SRD 2.0, seções HOPE e TAG TEAM ROLLS.",
+  "explicacao": "O SRD lista QUATRO usos da Esperança: Prestar Ajuda, Utilizar uma Experiência, iniciar uma Jogada em Equipe e ativar a habilidade de Esperança da classe. Até 10/2026 só a quarta tinha botão na ficha — as outras três só existiam descendo a trilha com o dedo, e a Jogada em Equipe, que é a única com limite por sessão, não tinha quem contasse a iniciação. Esta lista alimenta o bloco \"O que a Esperança compra\", logo abaixo da trilha.",
+  "ondeMoraAHabilidadeDaClasse": "Em data/classes.json, campo `uso` da característica de Esperança — ela NÃO entra nesta lista de propósito. Quem a cobra é `usarHabilidadeDeClasse_`, que lê o custo do catálogo da classe; declarar o preço aqui também criaria o segundo leitor do mesmo número, e os dois divergiriam na primeira errata. O bloco aponta para a carta de Esperança em vez de repeti-la.",
+  "ondeMoraNoServidor": "backend/40_Regras.gs, MOVIMENTOS_DE_ESPERANCA. ⚠ O SERVIDOR É QUEM COBRA: esta cópia é o que a TELA mostra (rótulo e preço antes do toque), não o que ela decide. A suíte de backend tem uma guarda que compara campo por campo — divergir aqui deixa a suíte vermelha.",
+  "oLivroNaoTrazAJogadaEmEquipe": "A lista de gastos de Esperança do livro da Jambô (p.22 da ficha de exemplo) cita só \"usar uma Experiência ou Prestar Ajuda\". A Jogada em Equipe é regra do SRD 2.0; o nome em português é o uso consolidado deste sistema — a entrada que liga o termo em inglês ao nosso está em data/srd2-traducao.json, com fonte uso-consolidado-no-sistema.",
+  "movimentos": [
+    {
+      "id": "prestar-ajuda",
+      "nome": "Prestar Ajuda",
+      "custoEsperanca": 1,
+      "verbete": "prestar-ajuda",
+      "lembrete": "Descreva como você ajuda e role um dado de vantagem. Vários aliados podem ajudar a mesma jogada, mas quem age soma só o maior resultado.",
+      "fonte": "SRD 2.0, HOPE: \"Help an Ally\"."
+    },
+    {
+      "id": "utilizar-experiencia",
+      "nome": "Utilizar uma Experiência",
+      "custoEsperanca": 1,
+      "verbete": "experiencia",
+      "lembrete": "Some o modificador da Experiência ao resultado. Dá para gastar mais de uma Esperança para usar mais de uma Experiência na mesma jogada.",
+      "fonte": "SRD 2.0, HOPE: \"Utilize an Experience\"."
+    },
+    {
+      "id": "jogada-em-equipe",
+      "nome": "Iniciar uma Jogada em Equipe",
+      "custoEsperanca": 3,
+      "custoComCamaradagemDoPar": 2,
+      "caracteristicaDoDesconto": "Camaradagem",
+      "pedePar": true,
+      "marcaUso": "regra:jogada-em-equipe",
+      "verbete": null,
+      "lembrete": "Os dois rolam a jogada de ação e, antes de resolver, escolhem qual resultado vale para as duas ações. Com Esperança, todos os envolvidos ganham 1 Esperança; com Medo, o Mestre ganha 1 Ponto de Medo por envolvido. Num ataque bem-sucedido, os dois rolam dano e somam, como se viesse de uma fonte só. Vale como UMA jogada de ação para contagens.",
+      "fonte": "SRD 2.0, TAG TEAM ROLLS: \"Each player can, once per session, initiate a Tag Team Roll between their character and another PC by spending 3 Hope.\"",
+      "observacaoDoDesconto": "⚠ O DESCONTO É DO PAR, NÃO DE QUEM PAGA. A maestria Camaradagem (Guerreiro, Chamada dos Bravos) diz: \"quando um aliado iniciar uma Jogada em Equipe com você, ele precisa gastar apenas 2 Esperanças\". Quem recebe o desconto é quem INICIA; quem o concede é o par. Por isso o movimento pede com quem, e por isso `aliadosDaMesa` passou a dizer quem tem a maestria — sem isso a tela mostraria 3 para um par que cobra 2.",
+      "observacaoDoLimite": "A iniciação EXTRA da Camaradagem tem contador próprio (uso:guerreiro-chamada-dos-bravos:camaradagem). São dois limites de fontes diferentes: somá-los num máximo dinâmico faria o teto mentir para quem perdesse a maestria."
+    }
+  ]
+}

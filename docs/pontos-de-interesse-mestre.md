@@ -113,3 +113,43 @@ segunda: **descanso longo diminui UMA vez; descanso curto, nenhuma.**
 
 É a mesma errata que a Parte 7 já tinha aplicado no lado da ficha. Agora ela
 está aplicada nos dois lados, e há teste nos dois.
+
+## 10. O Mestre não via carta nenhuma — FECHADO
+
+Achado numa auditoria, não numa queixa. O cartão de cada ficha na aba **Grupo**
+trazia nome, classe, subclasse, trilhas, defesas, condições e o controle da
+transformação. Nenhuma carta.
+
+Na mesa isso significa que, quando alguém pergunta "o que você tem na mão?", a
+resposta só existe no celular do jogador — e quem conduz a cena decide o que o
+adversário faz sem saber o que o grupo pode fazer.
+
+**O que mudou:**
+
+- `resumoDoPersonagem_` (`backend/99_Api.gs`) passou a levar
+  `cartas: { ativas, cofre }`, com `idsDeCartasDaFicha_` normalizando — a ficha
+  grava a carta às vezes como id solto, às vezes como objeto com as marcas dela.
+- O cartão do painel mostra `N na mão · M no cofre` e um **"Folhear as
+  cartas"**: mão e cofre num baralho só, com **selo de lugar** no rodapé.
+- O nome da subclasse e a transformação concedida abrem as cartas delas.
+
+**Três decisões que têm de ficar escritas:**
+
+1. ⚠ **Vão os ids, não as cartas.** As 189 cartas de domínio já estão no GitHub
+   Pages. Mandar texto e caminho de arte de cada carta de cada ficha a cada
+   abertura do painel seria pagar pelo que a tela já tem na mão — mesma decisão
+   do bestiário, que manda os tipos e deixa as 264 fichas no estático. Há guarda
+   recusando a volta da carta inteira no resumo.
+2. ⚠ **O catálogo carrega no toque, não na abertura.** São 630 KB entre
+   `cartas-dominio.json` e `classes.json`; puxá-los para desenhar trilhas de PV
+   faria a aba mais olhada esperar por um gesto que talvez ninguém use naquela
+   sessão. Memoizado, e com guarda recusando que suba para a abertura.
+3. ⚠ **Só de leitura.** Quem guarda, recorda e marca é o jogador na ficha dele.
+   O botão aqui daria dois donos ao mesmo gesto — e a ficha tem controle
+   otimista de versão, então o segundo dono perderia a gravação do primeiro sem
+   explicar por quê.
+
+⚠ **Isto depende do pin.** `99_Api.gs` é um dos 24 `SOURCE_FILES`: o painel só
+mostra cartas depois que `ENGINE_COMMIT` apontar para o commit que traz este
+arquivo. Antes disso o bloco diz "Nenhuma carta de domínio nesta ficha", que é o
+comportamento correto para um payload sem o campo.

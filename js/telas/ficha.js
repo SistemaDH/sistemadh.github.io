@@ -21,21 +21,21 @@
  * da criação de ficha.
  */
 
-import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js';
-import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js';
-import { acoes, obterEstado } from '../estado.js';
-import { mensagemDoErro } from '../api.js';
-import { aguardar, temPendente } from '../fila.js';
-import * as dados from '../dados.js';
-import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio } from '../componentes/carta.js';
-import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js';
-import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js';
-import { botaoDeRegras } from './regras.js';
-import { abrirDescanso } from './descanso.js';
-import { abrirAvanco, desfazerAvanco } from './avanco.js';
-import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js';
-import { abrirEditorDeFoto, urlDaFoto } from './foto.js';
-import { icone } from '../componentes/icone.js';
+import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=2829e78f50';
+import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=2829e78f50';
+import { acoes, obterEstado } from '../estado.js?v=2829e78f50';
+import { mensagemDoErro } from '../api.js?v=2829e78f50';
+import { aguardar, temPendente } from '../fila.js?v=2829e78f50';
+import * as dados from '../dados.js?v=2829e78f50';
+import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=2829e78f50';
+import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=2829e78f50';
+import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=2829e78f50';
+import { botaoDeRegras } from './regras.js?v=2829e78f50';
+import { abrirDescanso } from './descanso.js?v=2829e78f50';
+import { abrirAvanco, desfazerAvanco } from './avanco.js?v=2829e78f50';
+import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=2829e78f50';
+import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=2829e78f50';
+import { icone } from '../componentes/icone.js?v=2829e78f50';
 
 /**
  * Teto do livro para PV, Estresse e Armadura (errata de 9/9/2025).
@@ -2029,7 +2029,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
        * dizem "pode" o app aplica sozinho, e prometer o contrário na mesma
        * janela em que isso acontece é pior que não prometer nada.
        *
-       * O prefixo é o mesmo porque o `lote9-dano.js` procura por ele para saber
+       * O prefixo é o mesmo porque o `dano.js` procura por ele para saber
        * onde encaixar o bloco de cartas ativas.
        */
       el('p', { class: 'texto-xs texto-fraco', texto:
@@ -2166,9 +2166,16 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         onClick: () => abrirDanoRecebido(ficha)
       }, 'Aplicar dano recebido'),
       faixa('Esperança'),
-      el('p', { class: 'papel__nota' }, textoAnotado(
-        'Gaste 1 Esperança para usar uma Experiência ou ajudar um aliado.')),
       trilhaDeEsperanca(r),
+      /*
+       * ⚠ AQUI HAVIA UMA NOTA QUE CONTAVA METADE DA REGRA.
+       *
+       * Ela dizia "Gaste 1 Esperança para usar uma Experiência ou ajudar um
+       * aliado" — dois dos QUATRO usos do SRD, como texto morto, sem botão
+       * nenhum. O terceiro (iniciar uma Jogada em Equipe) nem era citado, e é
+       * justamente o único com limite por sessão. Virou o bloco abaixo.
+       */
+      blocoDoQueAEsperancaCompra(ficha),
       /*
        * A característica de Esperança continua inteira e junto do mesmo bloco,
        * mas vem depois do HUD de combate: é referência de regra, não marcador
@@ -2516,6 +2523,162 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           onClick: () => { modal.fechar(); if (!escolhido) resolver(null); } }, 'Cancelar')]
       });
     });
+  }
+
+  /* ======================================================================== *
+   *  O QUE A ESPERANÇA COMPRA
+   * ======================================================================== */
+
+  /**
+   * OS MOVIMENTOS QUE SE PAGAM COM ESPERANÇA — e por que três faltavam.
+   *
+   * ⚠ O SRD LISTA QUATRO USOS e a ficha tinha botão para UM. Prestar Ajuda,
+   * Utilizar uma Experiência e iniciar uma Jogada em Equipe só existiam
+   * descendo a trilha com o dedo: o preço estava na cabeça de quem joga, e a
+   * conta da Jogada em Equipe — uma iniciação por sessão — na memória de uma
+   * mesa de quatro horas.
+   *
+   * O quarto uso, a habilidade de Esperança da classe, JÁ TEM DONO: a carta
+   * logo abaixo (`cartaDeEsperanca`), paga por `usarHabilidadeDeClasse_`.
+   * Repeti-lo aqui seria o segundo botão para o mesmo custo — por isso o bloco
+   * APONTA para ele em uma linha em vez de oferecê-lo de novo.
+   *
+   * O app não rola nada: ele cobra e conta. O que é da mesa está escrito no
+   * `lembrete` de cada movimento, que vem do catálogo e aparece na tela.
+   */
+  function blocoDoQueAEsperancaCompra(ficha) {
+    const movimentos = catalogo.movimentosDeEsperanca();
+    if (!movimentos.length) return null;
+
+    const temHabilidadeDaClasse = !!(ficha.caracteristicas || [])
+      .find((x) => x.origem === 'esperança');
+
+    return el('div', { class: 'papel__compra' }, [
+      el('p', { class: 'papel__compraTitulo', texto: 'O que a Esperança compra' }),
+      el('div', { class: 'papel__compraLista' },
+        movimentos.map((m) => botaoDeMovimentoDeEsperanca(m, ficha))),
+      temHabilidadeDaClasse
+        ? el('p', { class: 'texto-xs texto-fraco', texto:
+          'O quarto uso é a habilidade de Esperança da classe, logo abaixo — ' +
+          'o botão dela fica na própria carta.' })
+        : null
+    ].filter(Boolean));
+  }
+
+  /**
+   * Um botão por movimento, com o preço escrito e apagado quando não dá.
+   *
+   * ⚠ APAGADO, NÃO ESCONDIDO. Quem está com 1 de Esperança precisa ver que a
+   * Jogada em Equipe existe e custa 3 — esconder faria a regra desaparecer
+   * justamente de quem está decidindo se guarda Esperança.
+   */
+  function botaoDeMovimentoDeEsperanca(m, ficha) {
+    const recursos = ficha.recursos || {};
+    const tem = Math.max(0, Number(recursos.esperanca) || 0);
+    const custo = Math.max(0, Number(m.custoEsperanca) || 0);
+
+    /*
+     * O LIMITE DA SESSÃO. Só a Jogada em Equipe tem um, e é o que ninguém
+     * guarda de cabeça: a iniciação volta na sessão seguinte.
+     */
+    let gasto = 0;
+    let teto = 0;
+    if (m.marcaUso) {
+      gasto = Number(((ficha.contadores || {})[m.marcaUso] || {}).valor) || 0;
+      teto = catalogo.maximoDoContador(m.marcaUso, ficha) || 1;
+    }
+    const semIniciacao = !!m.marcaUso && gasto >= teto;
+    const semEsperanca = tem < custo;
+
+    const rotulo = el('span', { class: 'papel__compraNome' }, nomeComGlossa(m.nome));
+    const preco = el('span', { class: 'papel__compraPreco', texto: `${custo} Esperança` });
+
+    const botao = el('button', {
+      type: 'button',
+      class: `papel__compraBotao ${semIniciacao || semEsperanca ? 'esta-apagado' : ''}`,
+      disabled: semIniciacao || semEsperanca,
+      title: semIniciacao
+        ? 'A iniciação desta sessão já foi usada — volta na próxima.'
+        : semEsperanca ? `Falta Esperança: você tem ${tem}.` : m.lembrete,
+      onClick: () => (m.pedePar
+        ? abrirJogadaEmEquipe(m, ficha)
+        : enviar([{ tipo: 'movimentoDeEsperanca', movimento: m.id }]))
+    }, [rotulo, preco]);
+
+    const aviso = semIniciacao
+      ? el('span', { class: 'papel__compraAviso', texto: 'usada nesta sessão' })
+      : null;
+
+    return el('div', { class: 'papel__compraItem' }, [botao, aviso].filter(Boolean));
+  }
+
+  /**
+   * A JOGADA EM EQUIPE PEDE COM QUEM — porque o preço depende do par.
+   *
+   * ⚠ A maestria Camaradagem desconta 1 de quem inicia COM ela: o desconto é
+   * do PAR, não de quem paga. Sem perguntar, o app cobraria 3 de quem tem
+   * direito a pagar 2 — e tirar Esperança a mais é pior que não ter o botão.
+   *
+   * Quem confere de novo e cobra é o servidor; a etiqueta aqui é só para a
+   * pessoa ver o preço ANTES de escolher.
+   */
+  function abrirJogadaEmEquipe(m, ficha) {
+    const custoCheio = Math.max(0, Number(m.custoEsperanca) || 0);
+    const custoComDesconto = Math.max(0, Number(m.custoComCamaradagemDoPar) || custoCheio);
+
+    const corpo = el('div', { class: 'pilha' }, [
+      el('p', { class: 'texto-sm' }, textoAnotado(m.lembrete || '')),
+      el('p', { class: 'texto-sm texto-fraco', texto: 'Lendo as fichas da mesa…' })
+    ]);
+    const modal = abrirModal({
+      titulo: m.nome,
+      conteudo: corpo,
+      acoes: [el('button', { type: 'button', class: 'btn btn--fantasma',
+        onClick: () => modal.fechar() }, 'Cancelar')]
+    });
+
+    acoes.aliadosDaMesa(p.id).then((r) => {
+      const lista = (r.aliados || []);
+      corpo.replaceChildren(el('p', { class: 'texto-sm' }, textoAnotado(m.lembrete || '')));
+      if (!lista.length) {
+        corpo.append(el('p', { class: 'texto-sm texto-fraco', texto:
+          'Não há outra ficha na mesa para fazer par.' }));
+        return;
+      }
+      const par = el('select', { class: 'campo__entrada', 'aria-label': 'Par da Jogada em Equipe' },
+        lista.map((a) => el('option', { value: a.id },
+          `${a.nome}${a.donoNome ? ' · ' + a.donoNome : ''}` +
+          (a.camaradagem ? ` · Camaradagem (${custoComDesconto} Esperança)` : ''))));
+      const preco = el('p', { class: 'texto-xs texto-fraco' });
+      const atualizarPreco = () => {
+        const escolhido = lista.find((a) => String(a.id) === String(par.value));
+        const quanto = (escolhido && escolhido.camaradagem) ? custoComDesconto : custoCheio;
+        preco.textContent = `Custa ${quanto} de Esperança` +
+          ((escolhido && escolhido.camaradagem)
+            ? ` — a Camaradagem de ${escolhido.nome} desconta 1.` : '.');
+      };
+      par.addEventListener('change', atualizarPreco);
+      atualizarPreco();
+
+      const confirmar = el('button', { type: 'button', class: 'btn btn--principal' }, 'Iniciar');
+      confirmar.addEventListener('click', async (ev) => {
+        const ok = await travarBotao(ev.currentTarget,
+          enviar([{ tipo: 'movimentoDeEsperanca', movimento: m.id, par: par.value }]));
+        if (ok) modal.fechar();
+      });
+
+      corpo.append(
+        el('label', { class: 'campo' }, [
+          el('span', { class: 'campo__rotulo', texto: 'Com quem' }), par
+        ]),
+        preco,
+        el('div', { class: 'linha' }, [confirmar])
+      );
+    }).catch((e) => {
+      corpo.replaceChildren(el('p', { class: 'texto-sm texto-fraco', texto: mensagemDoErro(e) }));
+    });
+
+    return modal;
   }
 
   /**
@@ -3439,7 +3602,12 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           ? el('button', {
             type: 'button', class: 'equip__valor',
             'aria-label': `${item.nome} — ver os números`,
-            onClick: () => verEquipamento(rotulo, item)
+            /*
+             * Abre o ARSENAL na posição deste item, não um modal só dele: a
+             * pergunta de mesa é comparativa ("minha armadura segura isso?"),
+             * e a resposta está na carta vizinha.
+             */
+            onClick: () => abrirArsenal(ficha, posicaoNoArsenal(ficha, item))
           }, nomeComGlossa(item.nome))
           : el('span', { class: 'equip__valor equip__valor--vazio', texto: 'nenhuma' })
       ]);
@@ -4068,6 +4236,14 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     pai.append(blocoDeRetrato(ficha));
 
     const td = ficha.transformacaoDados || null;
+    /*
+     * ⚠ `transformacaoDados` é o que o SERVIDOR monta — estado, marcadores,
+     * forma de lobo — e não carrega `imagem`: carregar seria o motor saber de
+     * arte, que não é papel dele. O catálogo é quem tem o PNG. Juntar as duas
+     * metades é trabalho de tela, e é só aqui que `catalogo` existe.
+     */
+    const doCatalogoDaTransformacao = (id) =>
+      (catalogo.transformacoes() || []).find((x) => x.id === id) || null;
     const controleTransformacao = ficha.controleTransformacao || null;
     const transformacaoConcedida = controleTransformacao
       ? catalogo.transformacoes().find((t) => t.id === controleTransformacao.id) : null;
@@ -4112,7 +4288,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         acoesTransformacao.push(el('button',{type:'button',class:'btn btn--pequeno',onClick:async()=>{const n=Number(prompt('Quantos PV o alvo marcou?', '1'));if(n>0)await enviar([{tipo:'transformacao',acao:'alimentar',pontosDeVida:n}])}},`Alimentar-se · ${td.marcadores}/6`));
         acoesTransformacao.push(el('button',{type:'button',class:'btn btn--fantasma btn--pequeno',disabled:td.marcadores<1,onClick:()=>enviar([{tipo:'transformacao',acao:'gastar-marcador'}])},'Gastar marcador'));
       }
-      blocoTransformacao = secao(`Transformação · ${td.nome}`, el('div',{class:'pilha'},[
+      blocoTransformacao = secao(tituloDaTransformacao(td.nome, doCatalogoDaTransformacao(td.id)), el('div',{class:'pilha'},[
         el('p',{class:'texto-sm'},textoAnotado(td.descricao)),
         ...td.caracteristicas.map(c=>el('div',{class:'ficha__carac'},[el('strong',{texto:c.nome}),el('p',{class:'texto-sm'},textoAnotado(c.texto))])),
         el('p',{class:'texto-xs texto-fraco',texto:controleTransformacao && controleTransformacao.jogadorPodeAlternar
@@ -4131,7 +4307,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         ].filter(Boolean))
       ].filter(Boolean)));
     } else if (controleTransformacao && transformacaoConcedida) {
-      blocoTransformacao = secao(`Transformação · ${transformacaoConcedida.nome}`, el('div',{class:'pilha'},[
+      blocoTransformacao = secao(tituloDaTransformacao(transformacaoConcedida.nome, transformacaoConcedida), el('div',{class:'pilha'},[
         el('p',{class:'texto-sm',texto:'A transformação está desligada.'}),
         el('p',{class:'texto-xs texto-fraco',texto:controleTransformacao.jogadorPodeAlternar
           ? 'O Mestre permitiu que você ligue e desligue esta transformação.'
@@ -5056,24 +5232,123 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     ]);
   }
 
-  function verEquipamento(rotulo, item, { montarAcoesExtras, permitirUso = true } = {}) {
-    let modal = null;
-    const fecharModal = () => { if (modal) modal.fechar(); };
-    const extras = typeof montarAcoesExtras === 'function'
-      ? (montarAcoesExtras(fecharModal) || []) : [];
-    modal = abrirModal({
-      titulo: item.nome,
-      conteudo: conteudoDeEquipamento(rotulo, item),
-      acoes: permitirUso ? [
-        el('button', { type: 'button', class: 'btn btn--fantasma', onClick: fecharModal }, 'Fechar'),
-        ...extras,
-        ...botoesDeUsoEquipamento_(item, fecharModal, p.ficha)
-      ] : [
-        el('button', { type: 'button', class: 'btn btn--fantasma', onClick: fecharModal }, 'Fechar'),
-        ...extras
-      ]
+  /*
+   * ⚠ `verEquipamento` MORREU AQUI, e de propósito.
+   *
+   * Era o modal de um item só. Os seus cinco pontos de chamada viraram
+   * `abrirArsenal(ficha, posicao)`, que mostra o mesmo desenho
+   * (`conteudoDeEquipamento`) e os mesmos botões (`botoesDeUsoEquipamento_`,
+   * mais os de guardar/equipar), com a diferença de dar para passar para o
+   * item vizinho. Deixá-lo aqui sem chamador seria convidar o próximo conserto
+   * a ser feito no lugar que ninguém abre.
+   */
+
+  /* ======================================================================== *
+   *  O ARSENAL — folhear o equipamento que o personagem possui
+   * ======================================================================== */
+
+  /**
+   * TUDO O QUE O PERSONAGEM POSSUI, NA ORDEM DE COMBATE.
+   *
+   * Primária, secundária, armadura, depois o que está guardado. É a mesma
+   * ordem da tabela de combate e da lista da mochila, de propósito: são duas
+   * telas lendo UMA lista, e não duas listas que podem discordar.
+   *
+   * ⚠ A POSIÇÃO É A IDENTIDADE AQUI, não o id. A reserva pode ter duas adagas
+   * iguais; procurar por id abriria sempre a primeira, e remover a "segunda"
+   * adaga removeria a de índice errado. Cada entrada leva o `indice` que o
+   * servidor espera.
+   */
+  function arsenalDaFicha(ficha) {
+    const eq = (ficha || {}).equipamento || {};
+    const reservaArmas = Array.isArray(eq.reserva) ? eq.reserva : [];
+    const reservaArmaduras = Array.isArray(eq.reservaArmaduras) ? eq.reservaArmaduras : [];
+    const saida = [];
+
+    const prim = catalogo.acharArma(eq.primaria);
+    const sec = catalogo.acharArma(eq.secundaria);
+    const armaduraAtiva = catalogo.acharArmadura(eq.armadura);
+    if (prim) saida.push({ item: prim, rotulo: 'Arma primária equipada', estado: 'Arma primária · equipada', permitirUso: true });
+    if (sec) saida.push({ item: sec, rotulo: 'Arma secundária equipada', estado: 'Arma secundária · equipada', permitirUso: true });
+    if (armaduraAtiva) saida.push({ item: armaduraAtiva, rotulo: 'Armadura equipada', estado: 'Armadura · equipada', permitirUso: true });
+
+    reservaArmas.forEach((id) => {
+      const arma = catalogo.acharArma(id);
+      // Arma guardada não concede benefício — por isso não leva botão de uso.
+      if (arma) saida.push({ item: arma, rotulo: 'Arma na reserva', estado: 'Arma · reserva', permitirUso: false });
     });
-    return modal;
+
+    reservaArmaduras.forEach((id, indice) => {
+      const armadura = catalogo.acharArmadura(id);
+      if (!armadura) return;
+      saida.push({
+        item: armadura, rotulo: 'Armadura guardada', estado: 'Armadura · guardada', permitirUso: false,
+        extras: (fechar) => [
+          el('button', {
+            type: 'button', class: 'btn btn--fantasma btn--pequeno',
+            onClick: async (ev) => {
+              const r = await travarBotao(ev.currentTarget,
+                enviar([{ tipo: 'armadura', acao: 'remover', indice }]));
+              if (r) fechar();
+            }
+          }, 'Remover'),
+          el('button', {
+            type: 'button', class: 'btn btn--principal btn--pequeno',
+            onClick: async (ev) => {
+              const r = await travarBotao(ev.currentTarget,
+                enviar([{ tipo: 'armadura', acao: 'equipar', armadura: armadura.id }]));
+              if (r) fechar();
+            }
+          }, 'Equipar')
+        ]
+      });
+    });
+
+    return saida;
+  }
+
+  /**
+   * Abre o arsenal no visor, na posição pedida — e dá de folhear.
+   *
+   * Equipamento não tem PNG: o que entra no visor é `conteudoDeEquipamento`, o
+   * mesmo desenho que o modal mostrava. O que muda é poder passar da arma
+   * primária para a armadura com o dedo, que é a comparação que a mesa faz
+   * ("vale a pena trocar?") e que antes custava fechar e abrir três vezes.
+   */
+  function abrirArsenal(ficha, posicao) {
+    const arsenal = arsenalDaFicha(ficha);
+    if (!arsenal.length) return null;
+    const i = Math.max(0, Math.min(Number(posicao) || 0, arsenal.length - 1));
+    return abrirCarta({
+      itens: arsenal.map((e) => ({
+        nome: e.item.nome,
+        rodape: `${e.estado} · patamar ${e.item.tier}`,
+        corpo: () => conteudoDeEquipamento(e.rotulo, e.item)
+      })),
+      indice: i,
+      /*
+       * ⚠ OS BOTÕES VÊM DA CARTA MOSTRADA, não da que abriu o visor. Folhear
+       * até a armadura guardada e tocar em "Equipar" tem de equipar AQUELA.
+       * `acoes` é recalculado a cada desenho justamente para isso.
+       */
+      acoes: (_item, indice, modal) => {
+        const e = arsenal[indice];
+        if (!e) return [];
+        const fechar = () => modal.fechar();
+        return [
+          ...(typeof e.extras === 'function' ? (e.extras(fechar) || []) : []),
+          ...(e.permitirUso ? botoesDeUsoEquipamento_(e.item, fechar, p.ficha) : [])
+        ];
+      }
+    });
+  }
+
+  /** Onde este item está no arsenal — para o visor abrir nele. */
+  function posicaoNoArsenal(ficha, item, estado) {
+    const arsenal = arsenalDaFicha(ficha);
+    const i = arsenal.findIndex((e) => e.item.id === item.id &&
+      (estado === undefined || e.estado === estado));
+    return i >= 0 ? i : 0;
   }
 
   /* ======================================================================== *
@@ -5112,14 +5387,34 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         'cartas. Os que já estavam no ar continuam pela duração normal.')));
     }
 
+    /*
+     * ⚠ O FOLHEADOR ATRAVESSA A MÃO E O COFRE, e isso foi pedido de mesa.
+     *
+     * Antes, abrir uma carta da mão folheava só a mão; abrir uma do cofre,
+     * só o cofre. Na mesa a pergunta quase nunca é "o que tenho na mão" —
+     * é "o que eu tenho", e aí você quer passar o dedo e ver tudo, incluindo
+     * o que está guardado, sem fechar e reabrir em outra seção.
+     *
+     * `baralho` é a ordem única — mão primeiro, cofre depois —, e cada item
+     * leva de onde veio, porque o visor precisa saber que botão oferecer:
+     * carta na mão guarda no cofre, carta no cofre volta para a mão. Antes
+     * disso o destino vinha da SEÇÃO; agora vem da CARTA, senão folhear da
+     * mão para o cofre ofereceria "guardar no cofre" para quem já está lá.
+     */
+    const baralho = [...naMao, ...noCofre];
+    const ondeEsta = new Map([
+      ...naMao.map((c) => [c.id, 'ativas']),
+      ...noCofre.map((c) => [c.id, 'cofre'])
+    ]);
+
     pai.append(secao(`Mão — ${naMao.length} de ${catalogo.maxCartasAtivas}`,
       naMao.length
-        ? el('div', { class: 'ficha__cartas' }, naMao.map((c) => cartaoDeCarta(c, naMao, 'cofre')))
+        ? el('div', { class: 'ficha__cartas' }, naMao.map((c) => cartaoDeCarta(c, baralho, 'cofre', ondeEsta)))
         : el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma carta na mão.' })));
 
     pai.append(secao('Cofre',
       noCofre.length
-        ? el('div', { class: 'ficha__cartas' }, noCofre.map((c) => cartaoDeCarta(c, noCofre, 'ativas')))
+        ? el('div', { class: 'ficha__cartas' }, noCofre.map((c) => cartaoDeCarta(c, baralho, 'ativas', ondeEsta)))
         : el('p', { class: 'texto-sm texto-fraco', texto: 'O cofre está vazio.' })));
 
     pai.append(rodapeDaFicha());
@@ -5303,7 +5598,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     ]);
   }
 
-  function cartaoDeCarta(c, lista, destino) {
+  function cartaoDeCarta(c, lista, destino, ondeEsta) {
     const cor = catalogo.corDoDominio(c.dominio);
     return el('div', {
       class: 'ficha__carta',
@@ -5318,9 +5613,19 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
          * carta que está na tela, mesmo depois de folhear.
          */
         nomeQueAbreCarta(c.nome, () => ({
-          itens: lista.map(daCartaDeDominio),
+          itens: lista.map((x) => comSeloDeLugar(x, ondeEsta)),
           indice: lista.indexOf(c),
-          acoes: (item, i, modal) => botoesDaCarta(lista[i], destino, modal)
+          /*
+           * ⚠ O DESTINO SAI DA CARTA QUE ESTÁ NA TELA, não da seção em que se
+           * tocou. Quem abre uma carta da mão e folheia até uma do cofre
+           * precisa de "Trazer para a mão", não de "Guardar no cofre" — e o
+           * botão errado aqui moveria a carta certa para o lugar errado, sem
+           * nada na tela avisando.
+           */
+          acoes: (item, i, modal) => botoesDaCarta(
+            lista[i],
+            ondeEsta ? (ondeEsta.get(lista[i].id) === 'ativas' ? 'cofre' : 'ativas') : destino,
+            modal)
         })),
         el('span', { class: 'selo', texto: `recordar ${c.custoRecordar}` })
       ]),
@@ -5433,6 +5738,20 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         });
       }
     }, uso.rotuloAtivar || `Usar ${c.nome} em uma criatura`);
+  }
+
+  /**
+   * A carta, com um selo dizendo ONDE ela está.
+   *
+   * Sem isto, folhear da mão para o cofre é uma troca silenciosa: a arte muda,
+   * o número do contador anda, e nada diz que você atravessou a fronteira
+   * entre o que está em jogo e o que está guardado.
+   */
+  function comSeloDeLugar(c, ondeEsta) {
+    const base = daCartaDeDominio(c);
+    if (!ondeEsta) return base;
+    const lugar = ondeEsta.get(c.id) === 'ativas' ? 'na mão' : 'no cofre';
+    return { ...base, rodape: `${base.rodape} · ${lugar}` };
   }
 
   function botoesDaCarta(c, destino, modal) {
@@ -6876,12 +7195,18 @@ function ouroEmPunhados(ouro) {
      * Não duplicamos armas/armaduras em `inventario`: os IDs continuam nos
      * campos mecânicos próprios e esta lista é só a visão unificada de posse.
      */
-    const equipamentoPossuido = ficha.equipamento || {};
-    const reservaArmas = Array.isArray(equipamentoPossuido.reserva) ? equipamentoPossuido.reserva : [];
-    const reservaArmaduras = Array.isArray(equipamentoPossuido.reservaArmaduras)
-      ? equipamentoPossuido.reservaArmaduras : [];
-    const linhasEquipamento = [];
-
+    /*
+     * ⚠ ESTA LISTA ERA UMA SEGUNDA LEITURA DO MESMO EQUIPAMENTO.
+     *
+     * Ela montava primária, secundária, armadura e as duas reservas por conta
+     * própria, com os botões de remover/equipar escritos aqui — enquanto a
+     * tabela de combate montava as três primeiras do seu jeito. Duas telas
+     * respondendo "o que este personagem possui?" é exatamente a classe de
+     * defeito que já nos pegou antes.
+     *
+     * Agora quem responde é `arsenalDaFicha`, uma vez, e as duas telas leem
+     * dela. Tocar num nome abre o folheador na posição certa.
+     */
     const linhaDeEquipamentoPossuido = (item, estado, aoAbrir) => item ? el('li', {
       class: 'ficha__item'
     }, [
@@ -6894,47 +7219,8 @@ function ouroEmPunhados(ouro) {
       ])
     ]) : null;
 
-    const prim = catalogo.acharArma(equipamentoPossuido.primaria);
-    const sec = catalogo.acharArma(equipamentoPossuido.secundaria);
-    const armaduraAtiva = catalogo.acharArmadura(equipamentoPossuido.armadura);
-    if (prim) linhasEquipamento.push(linhaDeEquipamentoPossuido(prim, 'Arma primária · equipada',
-      () => verEquipamento('Arma primária equipada', prim)));
-    if (sec) linhasEquipamento.push(linhaDeEquipamentoPossuido(sec, 'Arma secundária · equipada',
-      () => verEquipamento('Arma secundária equipada', sec)));
-    if (armaduraAtiva) linhasEquipamento.push(linhaDeEquipamentoPossuido(armaduraAtiva, 'Armadura · equipada',
-      () => verEquipamento('Armadura equipada', armaduraAtiva)));
-
-    reservaArmas.forEach((armaId) => {
-      const arma = catalogo.acharArma(armaId);
-      if (arma) linhasEquipamento.push(linhaDeEquipamentoPossuido(arma, 'Arma · reserva',
-        () => verEquipamento('Arma na reserva', arma, { permitirUso: false })));
-    });
-    reservaArmaduras.forEach((armaduraId, indice) => {
-      const armadura = catalogo.acharArmadura(armaduraId);
-      if (!armadura) return;
-      linhasEquipamento.push(linhaDeEquipamentoPossuido(armadura, 'Armadura · guardada', () =>
-        verEquipamento('Armadura guardada', armadura, {
-          permitirUso: false,
-          montarAcoesExtras: (fechar) => [
-            el('button', {
-              type: 'button', class: 'btn btn--fantasma',
-              onClick: async (ev) => {
-                const r = await travarBotao(ev.currentTarget,
-                  enviar([{ tipo: 'armadura', acao: 'remover', indice }]));
-                if (r) fechar();
-              }
-            }, 'Remover'),
-            el('button', {
-              type: 'button', class: 'btn btn--principal',
-              onClick: async (ev) => {
-                const r = await travarBotao(ev.currentTarget,
-                  enviar([{ tipo: 'armadura', acao: 'equipar', armadura: armadura.id }]));
-                if (r) fechar();
-              }
-            }, 'Equipar')
-          ]
-        })));
-    });
+    const linhasEquipamento = arsenalDaFicha(ficha).map((e, posicao) =>
+      linhaDeEquipamentoPossuido(e.item, e.estado, () => abrirArsenal(ficha, posicao)));
 
     pai.append(secao('Equipamentos', el('div', { class: 'coluna' }, [
       linhasEquipamento.length
@@ -7154,6 +7440,29 @@ function dobra(titulo, resumo, conteudo, { aberta = false } = {}) {
  * `comGlossa: false` porque um cabeçalho de meia linha não comporta o
  * parêntese da Jambô — o popup já mostra o termo dela.
  */
+/**
+ * O TÍTULO DA TRANSFORMAÇÃO — e o toque que faltava.
+ *
+ * ⚠ A ARTE SEMPRE ESTEVE NO REPOSITÓRIO. As seis cartas em
+ * `assets/cartas/transformacoes/` e o caminho em `data/transformacoes.json`
+ * esperavam desde que foram adicionadas; só não havia gesto. No app inteiro o
+ * nome de classe, subclasse, ancestralidade, comunidade e carta de domínio
+ * abre a arte — a transformação era a única que ficava como texto morto.
+ *
+ * ⚠ E O REGISTRO VEM DO CATÁLOGO, NÃO DA FICHA. `ficha.transformacaoDados` é o
+ * que o SERVIDOR monta (estado, marcadores, forma de lobo) e não carrega
+ * `imagem` — carregar seria o servidor saber de arte, que não é papel dele. A
+ * busca por id no catálogo é o que junta as duas metades, e o `|| t` garante
+ * que o nome continua aparecendo mesmo se o catálogo não tiver o registro.
+ */
+function tituloDaTransformacao(nome, doCatalogo) {
+  if (!doCatalogo) return `Transformação · ${nome}`;
+  return el('span', {}, [
+    el('span', { texto: 'Transformação · ' }),
+    nomeQueAbreCarta(nome, () => ({ itens: [daTransformacao(doCatalogo)] }), {}, { glosaFora: true })
+  ]);
+}
+
 function secao(titulo, conteudo, acao) {
   const cabeca = el('h2', { class: 'ficha__secao' });
   if (typeof titulo === 'string') cabeca.append(nomeAnotado(titulo, { comGlossa: false }));
@@ -7184,7 +7493,8 @@ function botaoPequeno(texto, aoTocar) {
  * mostrar nome, texto e cor sem uma ida à rede por item.
  */
 export async function carregarCatalogo() {
-  const [, , cartas, doms, cond, cont, eq, classes, tr, anc, com, transformacoes] = await Promise.all([
+  const [, , cartas, doms, cond, cont, eq, classes, tr, anc, com, transformacoes,
+    movsEsperanca] = await Promise.all([
     prepararGlossario(),
     prepararVerbetes(),
     dados.carregar('cartas-dominio'),
@@ -7196,7 +7506,8 @@ export async function carregarCatalogo() {
     dados.carregar('tracos'),
     dados.carregar('ancestralidades'),
     dados.carregar('comunidades'),
-    dados.carregar('transformacoes')
+    dados.carregar('transformacoes'),
+    dados.carregar('movimentos-de-esperanca')
   ]);
 
   /**
@@ -7536,6 +7847,15 @@ export async function carregarCatalogo() {
     /** Usado pela tela de avanço para listar as cartas que cabem no teto. */
     todasAsCartas: () => cartas.cartas,
     transformacoes: () => transformacoes.transformacoes || [],
+    /*
+     * OS MOVIMENTOS QUE A ESPERANÇA PAGA.
+     *
+     * ⚠ ESTA É A CÓPIA DA TELA, e ela existe por um motivo estreito: o botão
+     * precisa escrever o preço ANTES do toque. Quem cobra é o servidor
+     * (`MOVIMENTOS_DE_ESPERANCA`, em 40_Regras.gs) — e há guarda na suíte
+     * comparando campo por campo, porque duas cópias sem guarda divergem.
+     */
+    movimentosDeEsperanca: () => movsEsperanca.movimentos || [],
     nomeDoTraco: (id) => {
       const t = (tr.tracos || []).find((x) => x.id === id);
       return t ? t.nome : id;

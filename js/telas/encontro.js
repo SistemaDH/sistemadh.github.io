@@ -20,11 +20,11 @@
  * a causar o dano reduzido quando marca metade dos PV.
  */
 
-import { el, limpar, travarBotao, guardarRolagem } from '../util.js';
-import { abrirModal, avisar, avisarErro, avisarSucesso, blocoVazio, confirmar } from '../ui.js';
-import { acoes } from '../estado.js';
-import { mensagemDoErro } from '../api.js';
-import { nomeComGlossa } from '../glossario.js';
+import { el, limpar, travarBotao, guardarRolagem } from '../util.js?v=2829e78f50';
+import { abrirModal, avisar, avisarErro, avisarSucesso, blocoVazio, confirmar } from '../ui.js?v=2829e78f50';
+import { acoes } from '../estado.js?v=2829e78f50';
+import { mensagemDoErro } from '../api.js?v=2829e78f50';
+import { nomeComGlossa } from '../glossario.js?v=2829e78f50';
 
 /** As condições que se põem num adversário com um toque (livro p.102). */
 const CONDICOES_RAPIDAS = ['Vulnerável', 'Restrito', 'Oculto'];
@@ -237,10 +237,23 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
     return !!(catalogoAtual && aoAbrirFicha && catalogoAtual.porId.get(a.adversario));
   }
 
-  /** Abre a ficha completa — é onde moram o ataque e os movimentos sem custo. */
+  /**
+   * Abre a ficha completa — é onde moram o ataque e os movimentos sem custo.
+   *
+   * Leva junto as fichas DOS QUE ESTÃO EM CENA, para dar de folhear entre
+   * elas. Sem repetir: três bandidos em jogo são três trilhas de PV, mas uma
+   * ficha só — folhear por cima da mesma página três vezes seria defeito.
+   */
   function abrirFichaDoAdversario(a) {
-    const ficha = catalogoAtual && catalogoAtual.porId.get(a.adversario);
-    if (ficha && aoAbrirFicha) aoAbrirFicha(ficha);
+    if (!catalogoAtual || !aoAbrirFicha) return;
+    const ficha = catalogoAtual.porId.get(a.adversario);
+    if (!ficha) return;
+    const unicas = new Map();
+    for (const x of (dados && dados.adversarios) || []) {
+      const f = catalogoAtual.porId.get(x.adversario);
+      if (f && !unicas.has(f.id)) unicas.set(f.id, f);
+    }
+    aoAbrirFicha(ficha, [...unicas.values()]);
   }
 
   function cartao(a) {

@@ -31,7 +31,7 @@ function registrar(viewport, estado, erros) {
 async function abrirEditor(page) {
   await page.goto(base, { waitUntil: 'networkidle' });
   await page.evaluate(async () => {
-    const { abrirEditorDeAdversario } = await import('/js/telas/adversario-da-mesa.js');
+    const { abrirEditorDeAdversario } = await import(`/js/telas/adversario-da-mesa.js${window.__DH_VERSAO ? '?v=' + window.__DH_VERSAO : ''}`);
     const valores = (a, b, c, d) => [a, b, c, d];
     abrirEditorDeAdversario({
       tabela: {

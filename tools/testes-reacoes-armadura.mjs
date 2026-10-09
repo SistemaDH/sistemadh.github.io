@@ -636,7 +636,7 @@ try {
   /*
    * ⚠ Era a ÚLTIMA carta com a regra digitada dentro do código: o nome dela, o
    * domínio exigido, o número 4 e a chave do contador estavam escritos à mão no
-   * `lote9-dano.js` — e de novo no motor. Esta cena existe para o seletor
+   * `dano.js` — e de novo no motor. Esta cena existe para o seletor
    * continuar funcionando agora que tudo isso vem da declaração da carta.
    */
   escreverNaFichaDeTeste(ambiente, `d.cartas = d.cartas || {};

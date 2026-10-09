@@ -950,6 +950,90 @@
   color: var(--cor-titulo);
 }
 
+/* --- o que a Esperança compra --------------------------------------------- */
+
+/*
+ * OS TRÊS MOVIMENTOS QUE NÃO TINHAM BOTÃO.
+ *
+ * Fica entre a trilha e a carta de Esperança da classe, de propósito: é o
+ * recurso, depois o que se compra com ele, depois a habilidade da classe —
+ * que é o quarto uso e tem botão próprio.
+ *
+ * ⚠ SEM MOLDURA DE CARTÃO. Três botões numa caixa com borda viravam um quinto
+ * bloco competindo com a trilha logo acima, que é o alvo mais tocado do app.
+ * Aqui eles são uma linha de pílulas: presentes, legíveis, e sem puxar o olho.
+ */
+.papel__compra {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+  margin-top: var(--e2);
+}
+
+.papel__compraTitulo {
+  margin: 0;
+  font-size: var(--txt-xs);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--cor-texto-suave);
+}
+
+.papel__compraLista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+}
+
+.papel__compraItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/*
+ * O alvo tem 44px de altura mesmo com o texto pequeno: ele é tocado no meio de
+ * uma cena, com o celular na mão, e o preço precisa caber ao lado do nome sem
+ * quebrar em duas linhas em 390px.
+ */
+.papel__compraBotao {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  min-height: var(--alvo-toque);
+  padding: var(--e2) var(--e3);
+  border: 1px solid var(--cor-esperanca-apagada);
+  border-radius: 999px;
+  background: rgba(255, 201, 74, .06);
+  color: var(--cor-texto);
+  font-size: var(--txt-sm);
+  text-align: left;
+  cursor: pointer;
+}
+
+.papel__compraNome { font-weight: 600; }
+
+.papel__compraPreco {
+  font-size: var(--txt-xs);
+  color: var(--cor-esperanca);
+  white-space: nowrap;
+}
+
+/*
+ * ⚠ APAGADO, NÃO ESCONDIDO. Quem está com 1 de Esperança precisa ver que a
+ * Jogada em Equipe existe e custa 3 — sumir com o botão faria a regra
+ * desaparecer justamente de quem está decidindo se guarda Esperança.
+ */
+.papel__compraBotao.esta-apagado {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.papel__compraAviso {
+  padding-left: var(--e3);
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-suave);
+}
+
 /* --- a característica de Esperança da classe ------------------------------ */
 
 /*

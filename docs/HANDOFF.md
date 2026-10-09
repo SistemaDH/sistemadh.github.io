@@ -570,7 +570,6 @@ Os artefatos temporários de auditoria/materialização foram removidos no commi
 
 Próximo bloco de auditoria/implementação: **características ativas determinísticas** de ancestralidades, subclasses e equipamentos — custos, estados, duração/reset e consequências de resultado de dado informado pelo usuário. Efeitos puramente narrativos/posicionais serão classificados explicitamente em vez de automatizados à força.
 
-
 ### Diário — Ancestralidades, parte 1: usos ativos simples
 
 Fonte: habilidades das 18 ancestralidades do livro básico PT-BR. A errata oficial de 09/09/2025 foi conferida para este subbloco e não altera mecanicamente estas dez habilidades.
@@ -623,7 +622,6 @@ Validação real: GitHub Actions run `34305363724` — **496/496 backend**, **10
 O primeiro run (`34305062404`) já tinha 496/496 backend, 102/102 E2E e 14 geradores, mas foi corretamente bloqueado pelo conferidor de CSS por uma classe sem regra. A classe desnecessária foi removida; não foi criado CSS vazio apenas para satisfazer o teste.
 
 Próximo subbloco: **Retração (Galapa)** integrada a este mesmo fluxo de dano; depois Asas, criação/sessão/descanso e perfis de ataque das ancestralidades restantes.
-
 
 ### Diário — Ancestralidades, parte 2: dano recebido e Retração
 
@@ -828,7 +826,6 @@ Implementação do Lote 8:
 
 Aceitação: `tools/conferir-classes-lote8.py`, testes backend focados, regressão E2E, conferência dos gerados/CSS e auditoria transversal. A meta deste bloco é reduzir candidatos de classes/subclasses de 25 para 24 e deixar o Guardião sem candidatos.
 
-
 ### Diário — Classes, Guerreiro fechado
 
 Fontes: livro básico PT-BR / cartas oficiais do Guerreiro; errata oficial de 09/09/2025 não altera estas cinco características.
@@ -843,7 +840,6 @@ Fechamento da varredura de Guerreiro no Lote 8:
 
 A auditoria transversal deve cair de 24 para 19 candidatos de classes/subclasses e não deve mais listar Guerreiro.
 
-
 ### Diário — Classes, Mago fechado
 
 - **Preparado / Realizado / Brilhante** concedem a carta adicional de domínio na criação/avanço.
@@ -852,7 +848,6 @@ A auditoria transversal deve cair de 24 para 19 candidatos de classes/subclasses
 - **Prosperar no Caos** cobra 1 Estresse e deixa explícito o +1 PV do alvo depois do dano.
 
 A auditoria deve cair de 19 para 12 candidatos de classes/subclasses.
-
 
 ### Lote 8 — Esplendor níveis 1–4
 
@@ -863,7 +858,6 @@ Automatizado onde a ficha consegue ser fonte de verdade: custos de Esperança/Es
 A divergência editorial de nomes entre o catálogo/cartas e o apêndice do livro foi preservada: não renomear ids nem cartas somente por diferença de tradução. A errata oficial não altera a mecânica das cartas de Esplendor deste bloco.
 
 Próximo bloco natural do Lote 8: **Esplendor níveis 5–10**, repetindo a triagem carta a carta e só depois avançando para o próximo domínio.
-
 
 ### Lote 8 — Esplendor níveis 5–10
 
@@ -877,7 +871,6 @@ As diferenças editoriais entre nomes das PNGs/catálogo e o apêndice do livro 
 
 Correção de continuidade: **Falange** é o nome da Jambô para o domínio canônico **Osso** (`BONE`), que já foi revisado integralmente nos blocos Osso 1–4 e 5–10. Portanto, não repetir Falange. O próximo domínio canônico pendente é **Graça**.
 
-
 ### Lote 8 — Graça níveis 1–4
 
 Revisão das nove cartas de Graça dos níveis 1 a 4 contra o Core PT-BR, mantendo a regra global de que o app não rola dados. Todas agora têm classificação explícita e `resolucaoManual.rolaNoApp = false`.
@@ -889,7 +882,6 @@ Não Conte Mentiras permanece resolução de alvo/cena, sem botão que finja alt
 Atenção de vocabulário: o livro da Jambô usa termos diferentes de algumas PNGs; o catálogo continua usando o nome canônico das cartas e o glossário faz a ponte. **Falange = Osso**, portanto esse domínio não deve voltar à fila.
 
 Próximo bloco natural do Lote 8: **Graça níveis 5–10**.
-
 
 ### Lote 8 — Graça níveis 5–10
 
@@ -903,7 +895,6 @@ Tocado pela Graça publica as duas substituições contextuais somente com 4+ ca
 
 Próximo domínio canônico pendente do Lote 8: **Meia-Noite níveis 1–4**.
 
-
 ### Lote 8 — Meia-Noite níveis 1–4
 
 As nove cartas de níveis 1–4 foram classificadas explicitamente, mantendo a regra global de que dados e decisões de cena ficam fora do app.
@@ -913,7 +904,6 @@ Automação segura: Chuva de Lâminas cobra 1 Esperança; Disfarce Incrível cob
 Abrir e Puxar e Vincular Sombras permanecem explicitamente manuais/contextuais: criar botão ou condição global para elas representaria incorretamente vantagens e condições que dependem do alvo e da cena. O mesmo cuidado vale para Oculto de Véu da Noite e Vulnerável de Estrangulamento, que não são marcados globalmente na ficha do conjurador.
 
 Próximo bloco canônico pendente do Lote 8: **Meia-Noite níveis 5–10**.
-
 
 ### Lote 8 — Meia-Noite níveis 5–10
 
@@ -925,7 +915,6 @@ Carga Mágica e Tributo do Crepúsculo preservam seus contadores persistentes j�
 
 Próximo domínio canônico pendente do Lote 8: **Sábio níveis 1–4**.
 
-
 ### Lote 8 — Sábio níveis 1–4
 
 As nove cartas de níveis 1–4 foram classificadas explicitamente. Custos, limites e estados próprios são automatizados; jogadas, dados, alvos e condições de adversários permanecem fora do app.
@@ -935,7 +924,6 @@ Emaranhado Cruel automatiza somente a Esperança do segundo alvo opcional. Líng
 Caule Imponente registra 1/descanso e cobra Estresse somente na modalidade de ataque. Projétil Corrosivo cobra a quantidade escolhida de Estresse depois do sucesso, enquanto a Corrosão permanente fica no adversário/encontro. Aperto da Morte permanece manual. Campo de Cura registra 1/descanso longo e automatiza somente a recuperação da própria ficha; aliados recuperam na própria ficha/mesa.
 
 Próximo bloco canônico pendente do Lote 8: **Sábio níveis 5–10**.
-
 
 ### Lote 8 — Sábio níveis 5–10
 
@@ -947,7 +935,6 @@ Barreira Rejuvenescedora registra uso/estado, mas cura d4 e resistência espacia
 
 Próximo domínio canônico pendente do Lote 8: **Valor níveis 1–4**.
 
-
 ### Lote 8 — Valor níveis 1–4
 
 - As 9 cartas de Valor dos níveis 1 a 4 foram classificadas entre automação segura e resolução de mesa, sem RNG no servidor.
@@ -955,7 +942,6 @@ Próximo domínio canônico pendente do Lote 8: **Valor níveis 1–4**.
 - `Quebrador Corporal` publica o bônus de dano igual à Força como efeito contextual para ataque bem-sucedido com arma Corpo a Corpo.
 - `Presença Audaz`, `Apoie-Se em Mim` e `Inspiração Crítica` ganharam contadores de uso separados, levando o catálogo de 134 para 137 contadores.
 - Efeitos em adversários/aliados (`Provocação`, escolhas dos aliados em `Inspiração Crítica`, rerrolagem de `Tanque de Suporte`) permanecem na mesa; o app cobra apenas custos e registra limites próprios verificáveis.
-
 
 ### Lote 8 — Valor níveis 5–10
 
@@ -966,13 +952,11 @@ Próximo domínio canônico pendente do Lote 8: **Valor níveis 1–4**.
 - `Golpe Estimulante` registra o limite por descanso; `Deixe Passar`, `Armadura Inabalável` e `Inquebrável` mantêm todos os d6 físicos, sem RNG no servidor.
 - O catálogo de estado sobe de 137 para 142 contadores (110 de carta + 25 classe/subclasse + 4 ancestralidade + 3 comunidade).
 
-
 ### Lote 8 — fechamento das quatro cartas legadas
 
 A auditoria global encontrou quatro cartas sem `automacao` explícita. Vitalidade e Símbolo da Retaliação já tinham implementação estrutural; receberam apenas classificação explícita. Teleporte ganhou o limite real de 1/descanso longo (o auditor anterior o confundia com “Teleporte de Batalha” do bestiário). Livro do Ronin ganhou estado de Transformação, encerrado ao sofrer dano, e 1/descanso longo para Enervação Eterna. Dados e efeitos sobre adversários continuam na mesa. Catálogo de contadores: 142 → 145.
 
 Próximo bloco: deduplicar e revisar características ativas/condicionais de equipamento, eliminando falsos positivos por item já tratado antes de implementar lacunas reais.
-
 
 ### Lote 8 — equipamento defensivo A: Vitalizante e Égide
 
@@ -1189,7 +1173,6 @@ Fonte: livro básico PT-BR, Capítulo 2, seção **Consumíveis**. A regra geral
 
 **Próximo bloco natural:** com consumíveis zerados na auditoria, revisar os candidatos de **loot permanente**, agrupando-os por família mecânica e automatizando somente consequências determinísticas da própria ficha.
 
-
 ### Diário — Lote 8 E12: loot ativo reutilizável
 
 Fonte: `DH-DigitalRegras.pdf`, Capítulo 2: Tesouro, pp.129–130. O app continua sob a regra **“só ficha, sem dados”**.
@@ -1207,7 +1190,6 @@ Arquitetura: loot reutilizável recebe `efeitoSaque` no catálogo. A ação `inv
 
 O E12 adiciona 5 contadores canônicos de loot. Próximo bloco deve continuar pelos loots restantes da auditoria, priorizando passivos simples/relics e só depois anexos de arma/reação de dano.
 
-
 ### Diário — Lote 8 E13: relíquias de traço
 
 As seis relíquias de traço (`loot-41` a `loot-46`) foram tratadas como loot permanente **em uso**, não como consumíveis. Cada uma concede +1 ao traço correspondente e todas pertencem ao grupo exclusivo `reliquia`.
@@ -1221,7 +1203,6 @@ As seis relíquias de traço (`loot-41` a `loot-46`) foram tratadas como loot pe
 
 A implementação introduz `efeitoSaquePassivo`, separado de `efeitoSaque`: passivo não ganha botão de “Usar”, pois depende do estado `emUso` já existente na mochila.
 
-
 ### Diário — Lote 8 E14: descanso, dano e contexto de loot
 
 Bloco baseado no Core pt-BR, Tesouro pp.129–130:
@@ -1232,7 +1213,6 @@ Bloco baseado no Core pt-BR, Tesouro pp.129–130:
 - `loot-16` Chave-Mestra: classificada como passivo contextual; vantagem em Finesse/Acuidade ao abrir porta trancada, sem rolagem no app.
 
 O motor genérico de `efeitoSaque` agora suporta contador de uso com máximo maior que 1. O descanso ganhou leitura genérica de `efeitoSaquePassivo.descanso`.
-
 
 ### Diário — Lote 8 E15: contexto, estados e usos de loot
 
@@ -1246,7 +1226,6 @@ Bloco conferido contra o Core pt-BR, Tesouro pp.129–131:
 
 Nenhum destes efeitos rola dados no app.
 
-
 ### Diário — Lote 8 E16: receitas como movimentos de repouso
 
 As quatro receitas de loot passaram a participar do fluxo canônico de descanso, sem RNG:
@@ -1257,7 +1236,6 @@ As quatro receitas de loot passaram a participar do fluxo canônico de descanso,
 - `loot-51`: usando um punhado de ouro em pó, cria `consumivel-35` (Poeira/Pó Mítico).
 
 A receita só aparece entre os movimentos se estiver na mochila. Ingredientes não são inventário mecânico do Core nesta ficha: ao escolher o movimento, a mesa confirma narrativamente que possui o ingrediente; o servidor aplica apenas custo e criação determinísticos. A prévia continua sem tocar a ficha original e a aplicação usa o mesmo simulador.
-
 
 ### Diário — Lote 8 E17: reações defensivas de loot
 
@@ -1272,7 +1250,6 @@ Implementação:
 - nenhuma das três regras gera dados no app.
 
 Arquivos: `data/equipamentos.json`, `data/contadores.json`, `backend/44_Equipamento.gs`, `backend/47_Contadores.gs`, `backend/4C_Ajustes.gs`, `js/telas/ficha.js`, `tools/testes-backend.mjs`, auditoria e este HANDOFF.
-
 
 ### E18 — anexos de arma + relíquia de Experiência + alcance Flickerfly
 
@@ -1290,7 +1267,6 @@ Fonte conferida no livro básico PT-BR, Capítulo 2: Tesouro: itens 25–26 (Ped
 Meta da auditoria desta rodada: **10 → 6 candidatos de loot/consumíveis**, sem reabrir classes, comunidades, cartas ou equipamentos.
 
 Próximo bloco natural: revisar os 6 candidatos restantes da auditoria e separar o que é estado/recurso determinístico do que pertence exclusivamente à mesa.
-
 
 ### Lote 8 E19 — fechamento dos seis últimos saques da auditoria
 
@@ -1471,7 +1447,6 @@ Este bloco sincroniza o HANDOFF com o estado já integrado de B6–B28. **Não a
 
 O CI de `newedit` deve continuar executando, além da suíte funcional existente, o baseline mobile nas três viewports. Mudanças futuras não devem "resolver" alertas simplesmente aumentando tudo: a distinção entre **desenho visual** e **área real de toque** é parte da arquitetura da ficha. Componentes densos só podem permanecer compactos quando estiverem explicitamente cobertos pelo contrato acima; novos casos exigem decisão consciente e teste correspondente.
 
-
 ### Diário — Lote 9: dano recebido e cartas ativas
 
 - O bloco completo de Esperança (título, explicação, trilha e característica) foi posicionado após `Aplicar dano recebido` no HUD de combate.
@@ -1480,7 +1455,7 @@ O CI de `newedit` deve continuar executando, além da suíte funcional existente
 - O modal de dano continua mostrando apenas cartas de dano presentes no loadout ativo. Cartas que dependem de alvo, alcance, origem do ataque ou rolagem manual permanecem informativas em vez de receber automação insegura.
 - `Na Beira` continua passiva no motor; cartas contextuais continuam sem aplicação automática até o fluxo possuir todos os dados necessários.
 - Fonte de regra do Tocado: `data/cartas-dominio.json` / Core 1.0 adotado pelo projeto. A regra atual exige 4+ Esplendor e recupera o uso apenas no descanso longo.
-- Arquivos: `js/telas/ficha.js`, `js/lote9-dano.js`, `backend/4C_Ajustes.gs`, `tools/testes-backend.mjs`.
+- Arquivos: `js/telas/ficha.js`, `js/dano.js`, `backend/4C_Ajustes.gs`, `tools/testes-backend.mjs`.
 
 ## Fechamento operacional — Lote 9 em produção
 
@@ -1543,7 +1518,6 @@ O Lote 9 está **fechado**. Não tratar `newedit` como branch permanente de dese
 ### Limpeza de temporários
 
 No fechamento, `.github/workflows` da `main` contém somente `ci.yml`; os workflows e scripts temporários usados durante os patches do Lote 9 não fazem parte da árvore final. A branch histórica de backup pré-`newedit` deve ser tratada como backup deliberado, não como temporário de execução.
-
 
 ## Produção — inventário, posse e catálogo (11/09/2026)
 
@@ -2178,7 +2152,7 @@ sido caixinha.
   CAMPO que o cliente mandou, não pelas cartas ativas — assim um pedido sem a
   carta é RECUSADO em vez de ignorado em silêncio.
 - **`contextoNaJanelaDeDano`** (novo): a lista de sete nomes digitada dentro do
-  `lote9-dano.js` virou declaração do catálogo. Foi aquela lista que deixou estas
+  `dano.js` virou declaração do catálogo. Foi aquela lista que deixou estas
   três cartas fora da janela.
 - **Os botões do painel dessas três SAÍRAM.** Com a janela aplicando, o botão
   seria a segunda aplicação do mesmo efeito.
@@ -2203,7 +2177,7 @@ o Resiliente PRECISA pedir o dado.
 
 **Varredura:** sobrou uma carta digitada dentro do código, o **Tocado do
 Esplendor** — id, domínio, o número 4 e a chave do contador, no motor e no
-`lote9-dano.js`. Virou `reacaoSubstituiPv`. O botão do painel dela saiu: ele só
+`dano.js`. Virou `reacaoSubstituiPv`. O botão do painel dela saiu: ele só
 marcava o uso e deixava as trilhas para a mão.
 
 ⚠ **`hidden` não escondia nada na janela de dano** (anterior a este lote): o
@@ -3243,3 +3217,162 @@ Saiu também o `case 'guiaDeBatalha'` do `99_Api.gs`: calculadora "e se" escrita
 quando o encontro em jogo ainda não existia, e que nunca entrou em nenhum
 `ACOES` — nunca foi possível chamá-la pelo app. As funções que ela usava
 continuam vivas e testadas pelo caminho do encontro de verdade.
+
+## O folheador em todo lugar (10/2026)
+
+O visor de cartas (`js/componentes/carta.js`) já sabia folheá-las: setas,
+arrastar o dedo, teclas ← →, e um "Escolher esta" opcional. Faltava estar ligado
+onde a mesa compara — e faltava funcionar para quem **não tem PNG**.
+
+### A extensão do componente
+
+Um item pode trazer `corpo`: o nó pronto. Adversário, ambiente, arma, armadura e
+consumível não têm arte — são fichas, e quem já sabe desenhá-las são as telas. O
+painel de reserva de três campos (título, rodapé, texto corrido) nunca serviria
+para uma ficha com limiares, PV, Estresse, ataque e habilidades com selo.
+
+⚠ **`corpo` é FUNÇÃO, não nó.** São 264 adversários numa lista só; montar os 264
+ao abrir é construir 263 fichas que ninguém vai olhar, cada uma registrando
+gatilhos de verbete. Mesma disciplina de `acoes`, mesmo motivo.
+
+⚠ **Com `corpo`, o layout muda** (`carta-visor--ficha`): o palco rola, alinha ao
+topo, volta ao começo a cada carta, e as setas descem para uma barra embaixo.
+Carta é retrato e cabe inteira; ficha é comprida. Em 390px, uma seta de 48px
+sobre cada lado do texto de regra come um sexto da linha.
+
+⚠ **Rodapé e contagem passaram a conviver** na mesma linha. Antes um substituía o
+outro, o que bastava quando todo baralho tinha nomes diferentes — e deixou de
+bastar quando o visor passou a folhear as **três cartas da mesma subclasse**.
+
+### Onde ele foi ligado
+
+| Lugar | Baralho | Ação dentro do visor |
+|---|---|---|
+| Bestiário (adversários e ambientes) | a lista **filtrada**, na posição do tocado | "Pôr em cena" ×1/×2/×4 |
+| Cena | os que estão **em jogo**, deduplicados por id | — (só leitura) |
+| Equipamento (tabela de combate e mochila) | o **arsenal**: equipado + reservas | uso do item, remover, equipar |
+| Criação — ancestralidade e comunidade | o catálogo inteiro | "Escolher esta" |
+| Criação — ancestralidade mista | o catálogo inteiro | — (a escolha é por vaga) |
+| Criação — subclasse | as cartas de **todas** as subclasses da classe | "Escolher esta", pela dona da carta |
+| Painel do Mestre | mão + cofre do jogador, com selo de lugar | — (só leitura) |
+
+### O conserto que veio de carona: um leitor a menos no equipamento
+
+A **tabela de combate** e a **lista da mochila** montavam
+primária/secundária/armadura/reservas **cada uma do seu jeito**, com os botões de
+remover e equipar escritos na segunda. Duas telas respondendo "o que esta
+personagem possui?" — a classe de defeito que já nos pegou mais de uma vez.
+Agora quem responde é `arsenalDaFicha`, e as duas leem dela.
+
+⚠ **A posição é a identidade, não o id.** A reserva pode ter duas adagas iguais;
+procurar por id abriria sempre a primeira, e "remover a segunda" removeria o
+índice errado.
+
+`verEquipamento` **morreu** — os cinco pontos de chamada viraram `abrirArsenal`,
+com o mesmo desenho e os mesmos botões. Há guarda recusando a volta dele.
+
+### O que ficou de fora, de propósito
+
+- **A mochila de ITENS DO LIVRO.** `verItemDoLivro` tem formulários com estado:
+  seletor de vínculo da Pedra, três campos de registro do Caderno, escolha de
+  trilha do Musgo Doce. Folhear para o lado apagaria o que a pessoa acabou de
+  digitar. Gesto bom no lugar errado é defeito.
+- **A lista de classes na criação.** Ela é larga e já mostra chamada, domínios,
+  Evasão e PV na própria tela: a comparação acontece na lista.
+
+### ⚠ Este lote mexe num `.gs` — não é repin
+
+`backend/99_Api.gs` mudou (`resumoDoPersonagem_` passou a levar as cartas da
+ficha; ver `pontos-de-interesse-mestre.md` §10). É um dos 24 `SOURCE_FILES`,
+então `ENGINE_COMMIT` tem de apontar para o commit novo e o painel do Mestre só
+mostra cartas depois do deploy. Antes dele, o bloco diz "Nenhuma carta de
+domínio nesta ficha" — o comportamento correto para um payload sem o campo.
+
+**Estado:** 1249 testes de backend, 0 falhando; e2e **115 passos** · 0 falhas;
+`teste:tudo` verde de ponta a ponta.
+
+## O que a Esperança compra (10/2026)
+
+O SRD lista **quatro** usos da Esperança e a ficha tinha botão para **um**:
+
+| Uso | Custo | Limite | Onde é pago |
+|---|---|---|---|
+| Prestar Ajuda | 1 | — | bloco "O que a Esperança compra" |
+| Utilizar uma Experiência | 1 | — | idem |
+| Iniciar uma Jogada em Equipe | 3 (ou 2) | **1 por sessão** | idem |
+| Habilidade de Esperança da classe | 3 | conforme a habilidade | a carta dela, como sempre |
+
+A nota que ficava colada na trilha citava **dois dos quatro** como texto morto.
+Virou o bloco, entre a trilha e a carta de Esperança: o recurso, o que se
+compra com ele, e a habilidade da classe.
+
+⚠ **A FONTE É O SRD 2.0.** A Jogada em Equipe **não está no livro da Jambô** —
+a lista de gastos da p.22 cita só Experiência e Prestar Ajuda (conferido
+extraindo o texto dos PDFs; o termo não aparece em página nenhuma). A errata
+não toca no assunto. O nome em português é o uso consolidado deste sistema,
+registrado em `data/srd2-traducao.json`.
+
+### Onde cada coisa mora
+
+- **`backend/40_Regras.gs` → `MOVIMENTOS_DE_ESPERANCA`** — quem COBRA.
+- **`data/movimentos-de-esperanca.json`** — o que a TELA mostra antes do toque.
+  ⚠ São duas cópias **de propósito**: o Apps Script não lê os `data/*.json`, e
+  um gerador novo custaria um 25º arquivo no `SOURCE_FILES`. A troca é uma
+  guarda na suíte comparando **campo por campo** — divergir deixa vermelho.
+- **`backend/4C_Ajustes.gs` → `usarMovimentoDeEsperanca_`** — valida tudo antes
+  de cobrar qualquer coisa, e marca o uso junto do custo.
+- **`data/contadores.json` → `regra:jogada-em-equipe`** — o contador da sessão.
+
+### Três coisas que têm de ficar escritas
+
+1. ⚠ **O DESCONTO É DO PAR.** A maestria Camaradagem desconta 1 de quem inicia
+   COM ela: quem recebe é quem inicia, quem concede é o par. O custo depende da
+   ficha do OUTRO — por isso o movimento pergunta com quem, e por isso
+   `aliadosDaMesa` passou a dizer quem tem a maestria.
+2. ⚠ **O PRIMEIRO CONTADOR QUE NÃO PENDE DE NADA.** Os outros 201 vêm de carta,
+   característica, item ou moldura. Este é regra do jogo: `refId: null` e
+   `deTodaFicha: true`, e `contadorEDaFicha_` sai antes de perguntar o ref. Sem
+   isso, o gatilho de fim de sessão descartaria como órfão o valor que o
+   movimento acabou de gravar — e a iniciação voltaria sozinha no meio da sessão.
+3. ⚠ **O LIMITE NÃO PASSA POR `ajustarContador_`.** Ele CORTA no teto em vez de
+   recusar: um `delta: +1` com a iniciação gasta devolveria "mudou" sem mudar, e
+   a Esperança sairia de graça.
+
+### O que ficou de fora
+
+A **habilidade de Esperança da classe** não entra na tabela: já é paga por
+`usarHabilidadeDeClasse_`, que lê o custo do catálogo da classe. O bloco aponta
+para a carta dela em uma linha, em vez de criar o segundo botão para o mesmo
+preço.
+
+## Os `lote9-*` viraram nome de assunto (10/2026)
+
+| Antes | Agora |
+|---|---|
+| `js/lote9-dano.js` | `js/dano.js` |
+| `js/lote9-toast-contexto.js` | `js/toast-contexto.js` |
+| `js/lote9-avanco-mobile.js` · `css/lote9-avanco-mobile.css` | `avanco-mobile.*` |
+| `js/lote9-descanso-mobile.js` · `css/lote9-descanso-mobile.css` | `descanso-mobile.*` |
+| `js/lote9-mochila-mobile.js` · `css/lote9-mochila-mobile.css` | `mochila-mobile.*` |
+| `css/lote9-conjuracao-mobile.css` | `css/conjuracao-mobile.css` |
+| `css/lote9-desktop.css` | `css/desktop.css` |
+| `js/lote9-mobile.js` · `css/lote9-mobile.css` | **`ajustes-mobile.*`** |
+
+⚠ O último **não** ganhou nome de assunto porque não tem um: são quatro
+retoques de celular sem parentesco (ações da mochila, contador da criação,
+ajuda da criação, editor de adversário). Trocar um nome opaco por um nome
+errado seria pior.
+
+⚠ **Os códigos de seção dentro dos arquivos ficaram** (`L9-B7`, `L9-B23`…):
+são referência cruzada com `LOTE9-MOBILE-10.md` e com os relatos da mesa.
+
+## O `mesa-api`: laudo levantado, nada apagado (10/2026)
+
+`docs/laudo-mesa-api.md`. O que decide a aposentadoria não é o log (o motor
+grava com os **mesmos rótulos** e o log não sabe atribuir) — é o `ACOES_MESA`
+vazio no frontend. ⚠ E há um alcance que não estava anotado: **o cache**. Um
+celular que abriu o app antes da troca ainda aponta para a função congelada e
+escreve na mesma linha `config.mesa` que o motor lê. O cache-buster encerra
+isso, e ainda não foi implantado — é a razão prática de não apagar hoje.
+
+**Estado:** 1258 testes de backend, 0 falhando; e2e **116 passos** · 0 falhas.

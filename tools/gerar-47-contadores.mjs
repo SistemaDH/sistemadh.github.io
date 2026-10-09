@@ -82,6 +82,16 @@ for (const c of d.contadores) {
   if (c.modificadorProficiencia !== undefined) campos.push(`modificadorProficiencia: ${j(c.modificadorProficiencia)}`);
   if (c.movimentosAdicionaisNoDescanso !== undefined) campos.push(`movimentosAdicionaisNoDescanso: ${j(c.movimentosAdicionaisNoDescanso)}`);
   if (c.compartilhavel) campos.push('compartilhavel: true');
+  /*
+   * ⚠ O CONTADOR QUE NÃO PENDE DE NADA.
+   *
+   * Os outros 201 pendem de uma carta, característica, item ou moldura, e
+   * `contadorEDaFicha_` pergunta se a ficha tem aquele ref. A Jogada em Equipe
+   * é REGRA DO JOGO: todo personagem tem a iniciação da sessão, sem precisar
+   * de nada. Sem este campo o contador nasceria órfão — o gate descartaria
+   * um valor que o próprio movimento acabou de gravar.
+   */
+  if (c.deTodaFicha) campos.push('deTodaFicha: true');
   L.push(`  ${j(c.chave)}: { ${campos.join(', ')} },`);
 }
 L.push('};\n');
@@ -437,6 +447,15 @@ function validarContadores_(ficha) {
  */
 function contadorEDaFicha_(def, ficha, refs, chave) {
   if (!def) return false;
+  /*
+   * REGRA DO JOGO NÃO PENDE DE NADA.
+   *
+   * A iniciação de Jogada em Equipe é de toda ficha: não vem de carta, de
+   * subclasse nem de item. Sem esta saída antecipada, o ref nulo reprovaria o
+   * contador e o gatilho de fim de sessão descartaria o valor que o próprio
+   * movimento gravou — a iniciação voltaria sozinha no meio da sessão.
+   */
+  if (def.deTodaFicha === true) return true;
   // Alguns dados podem ser concedidos por OUTRA ficha. Preparação Marcial é o
   // caso do Core: o aliado não tem a subclasse, mas pode guardar um Dado de Matador.
   if (def.compartilhavel === true && chave) {

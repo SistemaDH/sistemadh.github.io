@@ -31,8 +31,8 @@ function registrar(viewport, estado, erros) {
 
 async function abrirAvanco(page) {
   await page.evaluate(async () => {
-    const { acoes } = await import('/js/estado.js');
-    const { abrirAvanco } = await import('/js/telas/avanco.js');
+    const { acoes } = await import(`/js/estado.js${window.__DH_VERSAO ? '?v=' + window.__DH_VERSAO : ''}`);
+    const { abrirAvanco } = await import(`/js/telas/avanco.js${window.__DH_VERSAO ? '?v=' + window.__DH_VERSAO : ''}`);
 
     const texto = 'Uma opção de avanço descrita com texto suficiente para manter a lista longa e exigir rolagem no celular durante a comparação.';
     const opcao = (id, nome, consomeEscolhas = 1, negrito = false) => ({

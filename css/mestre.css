@@ -320,6 +320,17 @@
   gap: var(--e1);
 }
 
+/*
+ * As cartas do jogador, no cartão do Mestre.
+ *
+ * Mesma moldura da transformação de propósito: são os dois blocos de "o que
+ * essa personagem tem" dentro do cartão, e um deles ter régua e o outro não
+ * faria o primeiro parecer parte das trilhas acima.
+ *
+ * `align-items: flex-start` para o botão não esticar na largura do cartão: ele
+ * é um atalho, não a ação principal do bloco.
+ */
+.mestre__cartas,
 .mestre__transformacao {
   display: flex;
   flex-direction: column;
@@ -328,6 +339,8 @@
   padding-top: var(--e3);
   border-top: 1px solid var(--cor-borda);
 }
+
+.mestre__cartas { align-items: flex-start; }
 
 .mestre__mini {
   display: flex;

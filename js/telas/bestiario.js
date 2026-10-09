@@ -21,14 +21,15 @@
  * passo seguinte. O botão "Pontos de Batalha" já faz a conta do encontro.
  */
 
-import { el, limpar, adiar, guardarRolagem } from '../util.js';
-import { abrirModal, avisarErro, avisarSucesso, blocoVazio } from '../ui.js';
-import { acoes } from '../estado.js';
-import { mensagemDoErro } from '../api.js';
-import * as dados from '../dados.js';
-import { prepararGlossario } from '../glossario.js';
-import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js';
-import { abrirEditorDeAdversario, confirmarExclusao } from './adversario-da-mesa.js';
+import { el, limpar, adiar, guardarRolagem } from '../util.js?v=2829e78f50';
+import { abrirModal, avisarErro, avisarSucesso, blocoVazio } from '../ui.js?v=2829e78f50';
+import { acoes } from '../estado.js?v=2829e78f50';
+import { mensagemDoErro } from '../api.js?v=2829e78f50';
+import * as dados from '../dados.js?v=2829e78f50';
+import { prepararGlossario } from '../glossario.js?v=2829e78f50';
+import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=2829e78f50';
+import { abrirEditorDeAdversario, confirmarExclusao } from './adversario-da-mesa.js?v=2829e78f50';
+import { abrirCarta } from '../componentes/carta.js?v=2829e78f50';
 
 const PATAMARES = [
   { id: 0, rotulo: 'Todos' },
@@ -343,20 +344,47 @@ export function abaBestiario(pai, painel, { aoMudarMedo, aoCriarContagem } = {})
 
   /* ------------------------------------------------------------ fichas --- */
 
+  /*
+   * ABRIR UM ADVERSÁRIO ABRE A LISTA FILTRADA, NA POSIÇÃO DELE.
+   *
+   * O gesto que a Vanessa pediu para as cartas vale aqui com mais força: na
+   * mesa, ela filtra "3º patamar, Horda", abre o primeiro e quer COMPARAR —
+   * antes era fechar, rolar, abrir, fechar, rolar. Agora é arrastar o dedo.
+   *
+   * ⚠ O "Pôr em cena" vem de `acoes`, que o visor recalcula a cada carta. Se
+   * fosse montado uma vez, folhear até o Rei Cadáver e tocar em "Pôr em cena"
+   * poria em cena o primeiro lacaio da lista — e nada na tela diria isso.
+   */
   function abrirAdversario(f) {
-    const modal = abrirModal({
-      titulo: f.nome,
-      conteudo: fichaDeAdversario(f),
-      acoes: [el('div', { class: 'linha crescer' }, [1, 2, 4].map((n) =>
-        el('button', {
-          type: 'button', class: n === 1 ? 'btn btn--principal' : 'btn btn--fantasma',
-          onClick: () => { modal.fechar(); porEmCena(f, n); }
-        }, n === 1 ? 'Pôr em cena' : `+${n}`)))]
+    const achados = filtrar();
+    const i = achados.findIndex((x) => x.id === f.id);
+    const naLista = i >= 0 ? achados : [f];
+    return abrirCarta({
+      itens: naLista.map(daFichaDeAdversario),
+      indice: i >= 0 ? i : 0,
+      acoes: (item, _indice, modal) => [1, 2, 4].map((n) => el('button', {
+        type: 'button', class: n === 1 ? 'btn btn--principal btn--pequeno' : 'btn btn--fantasma btn--pequeno',
+        onClick: () => { modal.fechar(); porEmCena(item.ficha, n); }
+      }, n === 1 ? 'Pôr em cena' : `+${n}`))
     });
   }
 
   function abrirAmbiente(a) {
-    abrirModal({ titulo: a.nome, conteudo: fichaDeAmbiente(a) });
+    const achados = filtrar();
+    const i = achados.findIndex((x) => x.id === a.id);
+    const naLista = i >= 0 ? achados : [a];
+    return abrirCarta({
+      itens: naLista.map((x) => ({
+        nome: x.nome,
+        rodape: `${x.tipo} · ${x.patamar}º patamar`,
+        // `fichaDeAmbiente` mora no escopo da tela porque lê
+        // `catalogo.porPatamar` — por isso este conversor não subiu para o
+        // módulo junto com o de adversário.
+        corpo: () => fichaDeAmbiente(x),
+        ficha: x
+      })),
+      indice: i >= 0 ? i : 0
+    });
   }
 
 
@@ -656,6 +684,20 @@ function fichaDeAdversario(f) {
   return caixa;
 }
 
+/**
+ * A ficha de adversário no formato do folheador.
+ *
+ * `corpo` é função porque o visor só desenha a que está na tela — são 264
+ * fichas na lista sem filtro. `ficha` volta o registro original, que é o que
+ * os botões de "Pôr em cena" precisam.
+ */
+export const daFichaDeAdversario = (f) => ({
+  nome: f.nome,
+  rodape: `${f.tipo} · ${f.patamar}º patamar`,
+  corpo: () => fichaDeAdversario(f),
+  ficha: f
+});
+
 function blocoDeHabilidade(h) {
   const caixa = el('article', { class: 'habilidade' });
   caixa.append(el('h4', { class: 'habilidade__nome' }, [
@@ -716,14 +758,16 @@ export function catalogoDoBestiario() {
  *
  * Quem chega aqui pela Cena já pôs o bicho em jogo; oferecer "Pôr em cena" de
  * novo seria convidar a duplicar o adversário que ele está justamente olhando.
+ *
+ * `naCena` é a lista de fichas que estão EM JOGO — quando vem, o visor folheia
+ * entre elas. É o uso mais quente do gesto: no meio do combate, passar do
+ * bandido para o capitão sem fechar a ficha e procurar o cartão dele.
  */
-export function abrirFichaDeAdversario(f) {
-  const modal = abrirModal({
-    titulo: f.nome,
-    conteudo: fichaDeAdversario(f),
-    acoes: [el('button', {
-      type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar()
-    }, 'Fechar')]
+export function abrirFichaDeAdversario(f, naCena) {
+  const lista = Array.isArray(naCena) && naCena.length ? naCena : [f];
+  const i = lista.findIndex((x) => x && x.id === f.id);
+  return abrirCarta({
+    itens: lista.map(daFichaDeAdversario),
+    indice: i >= 0 ? i : 0
   });
-  return modal;
 }

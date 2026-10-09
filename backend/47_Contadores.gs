@@ -7,7 +7,7 @@
  *  GERADO por tools/gerar-47-contadores.mjs a partir de data/contadores.json.
  *  NÃO edite à mão.
  *
- *  O problema que este arquivo resolve: 201 cartas e características mandam
+ *  O problema que este arquivo resolve: 202 cartas e características mandam
  *  "coloque um número de fichas igual ao seu traço nesta carta". Na mesa isso
  *  é um token de papel em cima da carta; no app é ESTADO DO PERSONAGEM. Sem
  *  um lugar para guardar, o jogador perde a conta ao trocar de aparelho.
@@ -60,6 +60,7 @@ const CONTADORES = {
   "carta:splendor-zona-de-protecao": { origem: "carta-dominio", refId: "splendor-zona-de-protecao", nome: "Zona de Proteção", rotulo: "valor do dado", tipo: "dado-valor", maximo: {"tipo":"dado"}, zeraEm: ["fim-da-cena","descanso-longo"], recarregaEm: [], dado: {"padrao":"d6"}, inicial: 1 },
   "classe:bardo:rally": { origem: "caracteristica-classe", refId: "bardo", nome: "Dado de Inspiração", rotulo: "dado guardado", tipo: "marcadores", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-de-sessao"], recarregaEm: ["inicio-de-sessao"], dado: {"padrao":"d6","progressao":[{"nivelMinimo":5,"dado":"d8","motivo":"Nível 5 (característica de classe Inspiração)"},{"caracteristica":"Poesia Épica","dado":"d10","motivo":"Maestria do Artífice das Palavras"}]} },
   "classe:guardiao:imparavel": { origem: "caracteristica-classe", refId: "guardiao", nome: "Dado de Determinação", rotulo: "valor do dado", tipo: "dado-valor", maximo: {"tipo":"dado"}, zeraEm: ["fim-da-cena","descanso-longo"], recarregaEm: [], dado: {"padrao":"d4","progressao":[{"nivelMinimo":5,"dado":"d6","motivo":"Nível 5 (característica de classe Determinação)"}]}, inicial: 1, impedeCondicoes: ["vulneravel","restrito"] },
+  "regra:jogada-em-equipe": { origem: "regra", refId: null, nome: "Jogada em Equipe", rotulo: "iniciação usada", tipo: "usos", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-de-sessao"], recarregaEm: [], deTodaFicha: true },
   "uso:guerreiro-chamada-dos-bravos:camaradagem": { origem: "caracteristica-subclasse", refId: "guerreiro-chamada-dos-bravos", nome: "Camaradagem", rotulo: "iniciação extra usada", tipo: "usos", maximo: {"tipo":"fixo","valor":1}, zeraEm: ["fim-de-sessao"], recarregaEm: [], exigeCaracteristica: "Camaradagem" },
   "classe:guerreiro:matador": { origem: "caracteristica-subclasse", refId: "guerreiro-chamada-do-matador", nome: "Dados de Matador", rotulo: "dados", tipo: "dados", maximo: {"tipo":"proficiencia"}, zeraEm: ["fim-de-sessao"], recarregaEm: [], dado: {"padrao":"d6"}, compartilhavel: true },
   "classe:seraph:oracao": { origem: "caracteristica-classe", refId: "seraph", nome: "Dados de Oração", rotulo: "dados", tipo: "dados", maximo: {"tipo":"traco","traco":"Conjuração"}, zeraEm: ["fim-de-sessao"], recarregaEm: ["inicio-de-sessao"], dado: {"padrao":"d4"} },
@@ -265,6 +266,7 @@ const CONTADOR_ALIASES = {
   "carta:splendor-zona-de-protecao": ["Zona de Proteção"],
   "classe:bardo:rally": ["Dado de Inspiração","Dado de Reunião","Dado de Motivação","Rally Die","Rally Dice"],
   "classe:guardiao:imparavel": ["Dado de Determinação","Dado Imparável","Unstoppable Die"],
+  "regra:jogada-em-equipe": ["Jogada em Equipe"],
   "uso:guerreiro-chamada-dos-bravos:camaradagem": ["Camaradagem"],
   "classe:guerreiro:matador": ["Dados de Matador","Dado de Matador","Dado de Matança","Dados de Matança","Slayer Dice","Slayer Die"],
   "classe:seraph:oracao": ["Dados de Oração","Dado de Oração","Prayer Dice","Prayer Die"],
@@ -792,6 +794,15 @@ function validarContadores_(ficha) {
  */
 function contadorEDaFicha_(def, ficha, refs, chave) {
   if (!def) return false;
+  /*
+   * REGRA DO JOGO NÃO PENDE DE NADA.
+   *
+   * A iniciação de Jogada em Equipe é de toda ficha: não vem de carta, de
+   * subclasse nem de item. Sem esta saída antecipada, o ref nulo reprovaria o
+   * contador e o gatilho de fim de sessão descartaria o valor que o próprio
+   * movimento gravou — a iniciação voltaria sozinha no meio da sessão.
+   */
+  if (def.deTodaFicha === true) return true;
   // Alguns dados podem ser concedidos por OUTRA ficha. Preparação Marcial é o
   // caso do Core: o aliado não tem a subclasse, mas pode guardar um Dado de Matador.
   if (def.compartilhavel === true && chave) {

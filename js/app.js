@@ -5,15 +5,15 @@
  * conhece "tem sessão?" e "qual tela desenhar".
  */
 
-import { el, limpar } from './util.js';
-import { obterEstado, assinar, acoes, estaLogado, ehMestre } from './estado.js';
-import { avisarErro, avisar } from './ui.js';
-import { mensagemDoErro } from './api.js';
-import { telaAbertura } from './telas/abertura.js';
-import { telaRoster } from './telas/roster.js?v=20260911c';
-import { abrirAjustes } from './telas/ajustes.js';
-import { botaoDeRegras } from './telas/regras.js';
-import { icone } from './componentes/icone.js';
+import { el, limpar } from './util.js?v=2829e78f50';
+import { obterEstado, assinar, acoes, estaLogado, ehMestre } from './estado.js?v=2829e78f50';
+import { avisarErro, avisar } from './ui.js?v=2829e78f50';
+import { mensagemDoErro } from './api.js?v=2829e78f50';
+import { telaAbertura } from './telas/abertura.js?v=2829e78f50';
+import { telaRoster } from './telas/roster.js?v=2829e78f50';
+import { abrirAjustes } from './telas/ajustes.js?v=2829e78f50';
+import { botaoDeRegras } from './telas/regras.js?v=2829e78f50';
+import { icone } from './componentes/icone.js?v=2829e78f50';
 
 const raiz = document.getElementById('app');
 
@@ -162,6 +162,29 @@ window.addEventListener('online', () => avisar('Conexão de volta.', 'sucesso'))
  * `cssRules` de outro domínio estoura por segurança — não dá para conferir, e
  * a ausência dela não deixa a tela errada do mesmo jeito.
  */
+/**
+ * A VERSÃO QUE ESTE APP ESTÁ RODANDO, publicada para quem precisar.
+ *
+ * ⚠ ISTO NASCEU DE UM EFEITO QUE EU NÃO TINHA PREVISTO. Com o cache-buster,
+ * todo módulo é importado como `./estado.js?v=<hash>`. Para o navegador, a
+ * identidade de um módulo é a URL INTEIRA: `/js/estado.js` e
+ * `/js/estado.js?v=abc` são dois módulos diferentes, com estados separados.
+ *
+ * As baterias de tela faziam `import('/js/estado.js?v=2829e78f50')` para trocar uma ação
+ * por um dublê — e passaram a trocar a ação de uma SEGUNDA cópia do módulo,
+ * que o app não usa. A tela chamava a ação de verdade, a rede respondia o que
+ * responderia, e o teste falhava por timeout dizendo "o modal não abriu".
+ *
+ * Quem precisa importar um módulo do app de fora dele tem de usar a mesma URL
+ * — e é esta constante que diz qual é. Serve também para a pergunta prática
+ * "o deploy chegou neste celular?": basta ler `window.__DH_VERSAO` no console.
+ */
+export const VERSAO = (() => {
+  const marca = /[?&]v=([A-Za-z0-9]+)/.exec(import.meta.url);
+  return marca ? marca[1] : '';
+})();
+if (typeof window !== 'undefined') window.__DH_VERSAO = VERSAO;
+
 function conferirFolhasDeEstilo() {
   const nossas = [...document.querySelectorAll('link[rel="stylesheet"]')]
     .map((l) => l.getAttribute('href'))
@@ -177,7 +200,20 @@ function conferirFolhasDeEstilo() {
     }
   });
 
-  const faltando = nossas.filter((h) => ![...comRegras].some((c) => c.endsWith(h)));
+  /*
+   * ⚠ A COMPARAÇÃO IGNORA A MARCA DE VERSÃO, e a mensagem também.
+   *
+   * Desde o cache-buster todo `href` carrega `?v=<hash>`. O `endsWith` ainda
+   * casaria — o href absoluto termina com o relativo, marca e tudo —, mas o
+   * aviso sairia dizendo "css/verbete.css?v=16ddec05a3 não carregou", e quem
+   * vai conferir se o arquivo subiu procura por `verbete.css`, não por isso.
+   * Quem lê o aviso é gente; o hash é conversa entre o navegador e o servidor.
+   */
+  const semVersao = (u) => String(u).replace(/\?v=[A-Za-z0-9]+/g, '');
+  const carregadas = [...comRegras].map(semVersao);
+  const faltando = nossas
+    .map(semVersao)
+    .filter((h) => !carregadas.some((c) => c.endsWith(h)));
   if (!faltando.length) return;
 
   avisarErro(

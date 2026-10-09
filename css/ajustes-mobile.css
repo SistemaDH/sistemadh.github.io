@@ -218,7 +218,7 @@
 
    O rótulo da criação segue a numeração editorial do livro, que não tem a
    mesma ordem das telas do assistente (Cartas é "Etapa 8", mas é a sexta tela
-   depois da abertura). O contador injetado por lote9-mobile.js mostra o passo
+   depois da abertura). O contador injetado por ajustes-mobile.js mostra o passo
    real do assistente e permanece coerente com a barra de progresso.
 
    As regras ficam fora do @media porque o conferidor de CSS cruza classes

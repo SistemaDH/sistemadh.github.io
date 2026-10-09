@@ -38,9 +38,9 @@ async function executar(viewport) {
     await page.goto(base, { waitUntil: 'networkidle' });
 
     const carregado = await page.evaluate(() =>
-      [...document.scripts].some((script) => (script.src || '').includes('/js/lote9-dano.js'))
+      [...document.scripts].some((script) => (script.src || '').includes('/js/dano.js'))
     );
-    if (!carregado) erros.push('js/lote9-dano.js não está carregado no index');
+    if (!carregado) erros.push('js/dano.js não está carregado no index');
 
     await page.evaluate(() => {
       const raiz = document.createElement('section');

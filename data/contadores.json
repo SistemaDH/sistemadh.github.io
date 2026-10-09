@@ -413,6 +413,25 @@
    "fonteDoImpedimento": "DH-DigitalRegras.pdf (Jambô, Prévia 5) p.44, GUARDIÃO — 'Determinação': \"Enquanto estiver Determinado, você recebe os seguintes benefícios: (…) Você não pode ser Restrito ou ficar Vulnerável.\" SRD 1.0 (09/09/2025), Guardian 'Unstoppable': 'You can't be Restrained or Vulnerable.' A errata de 09/09/2025 não toca nesta habilidade. Vale enquanto o Dado de Determinação estiver na ficha — por isso o impedimento pendura no CONTADOR, e não na característica: ter a habilidade não é estar Determinado."
   },
   {
+   "chave": "regra:jogada-em-equipe",
+   "origem": "regra",
+   "refId": null,
+   "deTodaFicha": true,
+   "nome": "Jogada em Equipe",
+   "rotulo": "iniciação usada",
+   "tipo": "usos",
+   "maximo": {
+    "tipo": "fixo",
+    "valor": 1
+   },
+   "recarregaEm": [],
+   "zeraEm": [
+    "fim-de-sessao"
+   ],
+   "fonte": "SRD 2.0, TAG TEAM ROLLS: \"Each player can, once per session, initiate a Tag Team Roll between their character and another PC by spending 3 Hope.\" O livro da Jamb\u00f4 n\u00e3o traz esta regra \u2014 ela \u00e9 do SRD 2.0, e a lista de gastos de Esperan\u00e7a da p.22 do livro s\u00f3 cita Experi\u00eancia e Prestar Ajuda.",
+   "observacao": "\u26a0 \u00c9 O PRIMEIRO CONTADOR DE TODA FICHA. Os outros 201 pendem de uma carta, caracter\u00edstica, item ou moldura; este \u00e9 regra do jogo, e todo personagem tem a iniciação. Por isso `deTodaFicha`, e por isso `refId` \u00e9 nulo. A inicia\u00e7\u00e3o EXTRA da Camaradagem continua no contador pr\u00f3prio dela: s\u00e3o dois limites de fontes diferentes, e som\u00e1-los num m\u00e1ximo din\u00e2mico faria o teto mentir para quem perdesse a maestria."
+  },
+  {
    "chave": "uso:guerreiro-chamada-dos-bravos:camaradagem",
    "origem": "caracteristica-subclasse",
    "refId": "guerreiro-chamada-dos-bravos",

@@ -6,11 +6,11 @@
  * conexão virou informação, não campo.
  */
 
-import { el, travarBotao } from '../util.js';
-import { CONFIG } from '../config.js';
-import { api, mensagemDoErro } from '../api.js';
-import { abrirModal, fecharModal, avisar, avisarErro, avisarSucesso, confirmar } from '../ui.js';
-import { obterEstado, acoes } from '../estado.js';
+import { el, travarBotao } from '../util.js?v=2829e78f50';
+import { CONFIG } from '../config.js?v=2829e78f50';
+import { api, mensagemDoErro } from '../api.js?v=2829e78f50';
+import { abrirModal, fecharModal, avisar, avisarErro, avisarSucesso, confirmar } from '../ui.js?v=2829e78f50';
+import { obterEstado, acoes } from '../estado.js?v=2829e78f50';
 
 export function abrirAjustes() {
   const { token, jogador } = obterEstado();

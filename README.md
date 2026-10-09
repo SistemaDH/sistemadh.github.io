@@ -127,7 +127,7 @@ O SRD 2.0 foi integralmente inventariado e conferido: 1.539 registros, 1.538 mec
 
 ## Testes
 
-Estado validado em 07/10/2026: **1.239 testes do motor**, 3 jornadas completas do nível 1 ao 10, 224/224 fontes de regras SRD2 e 24/24 Formas de Fera.
+Estado validado em 08/10/2026: **1.249 testes do motor** e **115 passos de ponta a ponta**, 3 jornadas completas do nível 1 ao 10, 224/224 fontes de regras SRD2 e 24/24 Formas de Fera.
 
 ⚠ **Os números abaixo são um instantâneo DATADO, não o estado de hoje** — eram o gate do fechamento funcional do Lote 9 (**CI #63**, 11/09/2026) e ficam aqui como registro. Para o estado atual, rode `npm run teste:tudo`.
 

@@ -147,6 +147,16 @@ verdade.
   no `index.html` e na ordem de carregamento. É seguro (as 14 baterias de
   layout pegariam a quebra), mas é obra cosmética de 13 arquivos: melhor em
   lote próprio, decidido, do que no meio de uma faxina.
+
+  ✅ **FEITO em 08/10/2026**, no lote próprio que esta linha pediu. Os doze
+  viraram nome de assunto: `dano.js`, `toast-contexto.js`, `avanco-mobile.*`,
+  `descanso-mobile.*`, `mochila-mobile.*`, `conjuracao-mobile.css`,
+  `desktop.css`. O `lote9-mobile.*` virou **`ajustes-mobile.*`** e não um nome
+  de assunto, porque ele não tem um: são quatro retoques de celular sem
+  parentesco (ações da mochila, contador da criação, ajuda da criação, editor
+  de adversário). Trocar um nome opaco por um nome errado teria sido pior.
+  ⚠ Os códigos de seção DENTRO dos arquivos (`L9-B7`, `L9-B23`…) ficaram: eles
+  são referência cruzada com `LOTE9-MOBILE-10.md` e com os relatos da mesa.
 - **O cache-buster pela metade**: `?v=20260911c` está em `css/ficha.css`,
   `js/app.js` e `js/lote9-dano.js`, e em nenhum dos outros ~20. Tirar os três
   pode deixar alguém com CSS velho no meio de uma sessão; pôr em todos exige

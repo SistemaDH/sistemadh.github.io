@@ -138,3 +138,38 @@ Feiticeiro de verdade é a página 381, `SORCERER`. Registrada como `mago`.
 - ~~**A moldura de campanha não entra na criação.**~~ ✅ **Entra:** a criação consulta `molduraDaMesa`, troca as tabelas de equipamento quando a moldura substitui o inicial, e desenha o cartão dela. O parágrafo abaixo é de antes. Quem jogar Colosso das Terras
   Secas ou Placa-mãe precisa adicionar o equipamento da moldura na mão. Vira
   parte própria quando o Mestre puder escolher a moldura da mesa.
+
+## Folhear o baralho na criação — 10/2026
+
+Cada nome abria **uma carta só**. Para comparar as 24 ancestralidades você abria
+e fechava 24 vezes, e no meio do caminho já não lembrava o que a terceira fazia.
+A grade existe para **escolher**; a carta existe para **decidir** — e decidir é
+comparar.
+
+`gradeDeOpcoes` passou a receber `paraCarta` e montar o baralho inteiro uma vez.
+O nome abre o visor na posição daquele cartão, e **"Escolher esta" escolhe a
+carta que está na tela** — quem passou da 3ª para a 11ª e gostou escolhe ali, sem
+fechar e procurar o cartão na grade.
+
+⚠ **O índice vem do VISOR, não do cartão de origem.** Escolher a opção do cartão
+em que se tocou seria escolher o que a pessoa **não** está vendo. Há guarda.
+
+Três casos, três decisões diferentes:
+
+- **Ancestralidade e comunidade** — baralho inteiro, com escolher.
+- **Ancestralidade MISTA** — baralho inteiro, **sem** escolher. A escolha ali não
+  é "esta ancestralidade", é "esta característica, nesta vaga". Um botão genérico
+  teria de inventar qual das duas vagas, e inventaria errado metade das vezes.
+  Quem decidiu fecha e toca na vaga.
+- **Subclasse** — o baralho é das cartas de **todas** as subclasses da classe, em
+  ordem, abrindo na fundação daquela em que se tocou. A pergunta desta etapa é
+  "qual das duas?", e respondê-la é passar de uma para a outra. Cada carta lembra
+  **de quem ela é**, senão "Escolher esta" escolheria a subclasse errada.
+  ⚠ Isso obrigou o visor a mostrar **rodapé e contagem juntos**: as três cartas
+  de uma subclasse têm o mesmo nome, e sem o rodapé não havia nada na tela
+  dizendo se o dedo parou na fundação ou na maestria.
+
+**A lista de classes ficou como estava, e isso é decisão.** Ela é larga e já
+mostra chamada, domínios, Evasão e PV de cada classe na própria tela: a
+comparação acontece na lista, e o folheador não acrescentaria nada. O nome
+continua abrindo as cartas das subclasses daquela classe.

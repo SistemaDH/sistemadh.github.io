@@ -1828,7 +1828,7 @@ teste('condição inventada é recusada', () => {
 
 console.log('\nContadores com estado');
 
-teste('o catálogo tem 201 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 12 de equipamento, 25 de consumível, 18 de loot e 1 de moldura', () => {
+teste('o catálogo tem 202 contadores: 113 de carta, 25 de classe/subclasse, 4 de ancestralidade, 3 de comunidade, 12 de equipamento, 25 de consumível, 18 de loot, 1 de moldura e 1 de regra', () => {
   const CONTADORES = avaliar('CONTADORES');
   /*
    * Eram 20 no fim da rodada das cartas. Vieram depois:
@@ -1875,7 +1875,21 @@ teste('o catálogo tem 201 contadores: 113 de carta, 25 de classe/subclasse, 4 d
    * `refsDeContadorDaFicha_` precisou aprender a perguntar a moldura: até
    * aqui, tudo o que era dono de contador estava DENTRO da ficha.
    */
-  igual(Object.keys(CONTADORES).length, 201);
+  /*
+   * ⚠ E O MAIS NOVO DE TODOS NÃO PENDE DE NADA: é REGRA DO JOGO.
+   *
+   * A iniciação de Jogada em Equipe (1 por sessão, SRD 2.0) é o primeiro
+   * contador que TODA ficha tem — os outros 201 vêm de uma carta, de uma
+   * característica, de um item ou da moldura da mesa, e `contadorEDaFicha_`
+   * pergunta se a ficha tem aquele ref. Este tem `refId` nulo e `deTodaFicha`,
+   * e o gate sai antes de perguntar. Sem isso, o gatilho de fim de sessão
+   * descartaria como órfão o valor que o próprio movimento gravou.
+   */
+  igual(Object.keys(CONTADORES).length, 202);
+  igual(CONTADORES['regra:jogada-em-equipe'].deTodaFicha, true,
+    'o contador de regra tem de ser de toda ficha');
+  igual(CONTADORES['regra:jogada-em-equipe'].refId, null,
+    'contador de regra não pende de ref nenhum');
   const porOrigem = {};
   Object.values(CONTADORES).forEach((c) => { porOrigem[c.origem] = (porOrigem[c.origem] || 0) + 1; });
   igual(porOrigem['carta-dominio'], 113);
@@ -1887,6 +1901,7 @@ teste('o catálogo tem 201 contadores: 113 de carta, 25 de classe/subclasse, 4 d
   igual(porOrigem['equipamento'], 12);
   igual(porOrigem['loot'], 18);
   igual(porOrigem['moldura'], 1);
+  igual(porOrigem['regra'], 1);
 });
 
 teste('"uma vez por" conta o uso GASTO, e o gatilho certo o apaga', () => {
@@ -3519,6 +3534,80 @@ teste('⚠ Ancestralidade mista: "Anfíbio" existe em DUAS ancestralidades e iss
   });
   igual(comRibbet.erros, [], JSON.stringify(comRibbet.erros));
   igual(comRibbet.resolvido.caracteristicas[0].ancestralidade, 'ribbet');
+});
+
+teste('⚠ Transformação: toda uma tem arte, e a tela sabe abri-la', () => {
+  /*
+   * ⚠ A ARTE ESTAVA NO REPOSITÓRIO E NINGUÉM PODIA VER. As seis cartas em
+   * `assets/cartas/transformacoes/` e o caminho em `data/transformacoes.json`
+   * existiam desde que foram adicionadas; faltava o conversor e o gesto. O
+   * bloco da ficha escrevia "Transformação · Lobisomem" como texto morto,
+   * enquanto classe, subclasse, ancestralidade e comunidade abriam a carta.
+   *
+   * Este caso prova as três metades: o dado aponta, o arquivo existe, e a
+   * tela tem com que abrir.
+   */
+  const d = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/transformacoes.json'), 'utf8'));
+  const lista = d.transformacoes || [];
+  igual(lista.length, 6, 'são seis transformações no jogo');
+
+  const semImagem = lista.filter((t) => !t.imagem).map((t) => t.id);
+  igual(semImagem, [], 'transformação sem caminho de arte: ' + JSON.stringify(semImagem));
+
+  const semArquivo = lista
+    .filter((t) => !fs.existsSync(path.join(RAIZ, t.imagem)))
+    .map((t) => t.imagem);
+  igual(semArquivo, [], 'caminho que não existe no acervo: ' + JSON.stringify(semArquivo));
+
+  // E o lado da tela: sem o conversor, o caminho acima não vira carta nenhuma.
+  const componente = fs.readFileSync(path.join(RAIZ, 'js/componentes/carta.js'), 'utf8');
+  verdade(/export const daTransformacao/.test(componente),
+    'o componente precisa exportar daTransformacao');
+  const ficha = fs.readFileSync(path.join(RAIZ, 'js/telas/ficha.js'), 'utf8');
+  verdade(/daTransformacao\(/.test(ficha), 'a ficha precisa usar o conversor');
+  /*
+   * ⚠ A PRIMEIRA VERSÃO DESTA LINHA ERA UM TESTE FALSO. Ela pedia só que
+   * `tituloDaTransformacao(` aparecesse no arquivo — e isso casa com a própria
+   * DEFINIÇÃO da função. Apaguei as duas chamadas à mão para conferir, e o
+   * teste continuou verde. Um guarda que não cai quando o defeito volta é pior
+   * que guarda nenhum: ele dá confiança sem dar cobertura.
+   *
+   * O que vale é a função sendo CHAMADA de dentro de `secao(`, que é onde o
+   * título da transformação é montado — as duas pontas, a ligada e a desligada.
+   */
+  const chamadas = (ficha.match(/secao\(tituloDaTransformacao\(/g) || []).length;
+  igual(chamadas, 2,
+    'o título precisa abrir a carta nos dois estados da transformação (ligada e desligada)');
+});
+
+teste('⚠ Acervo de cartas: toda arte é citada por um dado, e todo dado aponta para arte que existe', () => {
+  /*
+   * Os dois lados do mesmo erro, e os dois são silenciosos: um PNG que nenhum
+   * dado cita é arte que ninguém vê; um dado que aponta para arquivo ausente
+   * é um visor que cai no texto de reserva sem dizer por quê.
+   */
+  const pngs = [];
+  const andar = (dir) => {
+    for (const nome of fs.readdirSync(dir)) {
+      const completo = path.join(dir, nome);
+      if (fs.statSync(completo).isDirectory()) andar(completo);
+      else if (nome.endsWith('.png')) pngs.push(path.relative(RAIZ, completo).split(path.sep).join('/'));
+    }
+  };
+  andar(path.join(RAIZ, 'assets/cartas'));
+
+  const citados = new Set();
+  for (const arq of fs.readdirSync(path.join(RAIZ, 'data'))) {
+    if (!arq.endsWith('.json')) continue;
+    const texto = fs.readFileSync(path.join(RAIZ, 'data', arq), 'utf8');
+    for (const m of texto.matchAll(/"(assets\/cartas\/[^"]+\.png)"/g)) citados.add(m[1]);
+  }
+
+  const orfas = pngs.filter((p) => !citados.has(p));
+  igual(orfas.slice(0, 10), [], orfas.length + ' arte(s) que nenhum dado cita');
+
+  const quebrados = [...citados].filter((c) => !fs.existsSync(path.join(RAIZ, c)));
+  igual(quebrados.slice(0, 10), [], quebrados.length + ' dado(s) apontando para arte inexistente');
 });
 
 teste('⚠ Campo "total" num arquivo de dados não pode mentir', () => {
@@ -12005,7 +12094,7 @@ teste('⚠ o Tocado do Esplendor saiu de dentro do motor e virou contrato',()=>{
   /*
    * Era a ÚLTIMA carta com a regra digitada no código: o id, o domínio exigido,
    * o número 4 e a chave do contador estavam escritos à mão no resolvedor de
-   * dano — e de novo no `lote9-dano.js`, que monta o seletor.
+   * dano — e de novo no `dano.js`, que monta o seletor.
    */
   const tabela=avaliar('REACOES_SUBSTITUI_PV');
   igual(Object.keys(tabela),['splendor-tocado-do-esplendor']);
@@ -12021,9 +12110,9 @@ teste('⚠ o Tocado do Esplendor saiu de dentro do motor e virou contrato',()=>{
     'a chave do contador voltou a estar digitada dentro do resolvedor');
   verdade(/reacaoSubstituiPvDaFicha_/.test(motor),'o resolvedor não consulta o contrato');
 
-  const overlay=fs.readFileSync(path.join(RAIZ,'js/lote9-dano.js'),'utf8');
+  const overlay=fs.readFileSync(path.join(RAIZ,'js/dano.js'),'utf8');
   verdade(!/Tocado do Esplendor/.test(overlay),
-    'o nome da carta voltou a estar digitado no lote9-dano.js');
+    'o nome da carta voltou a estar digitado no dano.js');
 
   // e sem as 4 cartas do domínio a janela recusa, dizendo quantas há
   const tres=fichaSplendorAlta_(7,['splendor-tocado-do-esplendor','splendor-golpe-curativo','splendor-zona-de-protecao']);
@@ -13806,8 +13895,30 @@ teste('D1 publica 5 Recarga, 4 Seis Balas e liga os botões no modal sem RNG',()
   verdade(rec.every(x=>x.caracteristica.efeitoEquipamento.usoAtivo.entradaManual.dado==='d6'));
   verdade(seis.every(x=>x.caracteristica.efeitoEquipamento.usoAtivo.tipo==='municao'));
   const front=fs.readFileSync(path.join(RAIZ,'js/telas/ficha.js'),'utf8');
-  verdade(front.includes('...botoesDeUsoEquipamento_(item, fecharModal, p.ficha)'), 'os botões de equipamento precisam estar realmente ligados ao modal');
-  verdade(!/Math\.random/.test(front.slice(front.indexOf('function botoesDeUsoEquipamento_'), front.indexOf('function verEquipamento'))));
+  /*
+   * ⚠ O MODAL DE UM ITEM SÓ VIROU O FOLHEADOR DO ARSENAL.
+   *
+   * Esta guarda protegia a mesma coisa de sempre — os botões de uso de
+   * equipamento têm de estar ligados a quem abre o equipamento na tela — mas
+   * procurava pela linha exata de `verEquipamento`, que deixou de existir
+   * quando os cinco pontos de chamada viraram `abrirArsenal`. Agora ela
+   * aponta para o lugar novo, e ganhou um irmão: no visor, os botões PRECISAM
+   * ser recalculados por carta, senão folhear até a armadura guardada e tocar
+   * em "Equipar" equiparia a arma primária.
+   *
+   * E o limite da fatia que procura Math.random deixou de ser um nome de
+   * função: com `verEquipamento` morto, `indexOf` devolvia -1 e a fatia varria
+   * o arquivo inteiro — uma guarda que passaria a acusar qualquer sorteio em
+   * qualquer lugar da ficha, longe do que ela quer dizer.
+   */
+  verdade(front.includes('botoesDeUsoEquipamento_(e.item, fechar, p.ficha)'),
+    'os botões de equipamento precisam estar ligados ao visor do arsenal');
+  verdade(/acoes:\s*\(_item, indice, modal\)\s*=>/.test(front),
+    'o visor do arsenal tem de recalcular os botões a cada carta');
+  const inicioUso = front.indexOf('function botoesDeUsoEquipamento_');
+  const fimUso = front.indexOf('\n  function ', inicioUso + 1);
+  verdade(inicioUso > 0 && fimUso > inicioUso, 'botoesDeUsoEquipamento_ tem de ser achável');
+  verdade(!/Math\.random/.test(front.slice(inicioUso, fimUso)));
 });
 
 teste('Recarga pede d6 manual e só o resultado 1 cobra 1 Estresse',()=>{
@@ -19053,6 +19164,391 @@ teste('nenhum consumível guarda duas vezes o mesmo texto', () => {
   igual(repetidos.map((c) => c.id), [], 'estes consumíveis voltaram a duplicar o texto');
 });
 
+
+/* ==========================================================================
+ *  O FOLHEADOR — onde o gesto está ligado, e onde ele NÃO pode duplicar
+ *
+ *  Todo o visor de cartas vive num componente só (`js/componentes/carta.js`).
+ *  As telas chegam nele por conversores. O que estas guardas protegem não é a
+ *  estética do gesto: é que ele continue ligado nos lugares onde a mesa
+ *  aprendeu a usá-lo, e que nenhuma tela volte a ter um leitor próprio do
+ *  mesmo dado.
+ * ========================================================================== */
+teste('o visor aceita corpo desenhado — e só desenha o que está na tela', () => {
+  const visor = fs.readFileSync(new URL('../js/componentes/carta.js', import.meta.url), 'utf8');
+  verdade(/typeof item\.corpo === 'function'/.test(visor),
+    'o visor precisa aceitar `corpo` para quem não tem PNG');
+  verdade(/const modoFicha = lista\.some\(\(i\) => typeof i\.corpo === 'function'\)/.test(visor),
+    'o layout de ficha tem de ser decidido pela lista, não por quem chama');
+  /*
+   * ⚠ `corpo` É FUNÇÃO E TEM DE CONTINUAR SENDO. Se alguém trocar por um nó
+   * pronto, abrir o bestiário passa a montar 264 fichas de uma vez — e ninguém
+   * nota num celular de desenvolvimento.
+   */
+  /*
+   * ⚠ E A GUARDA TEM DE NOMEAR CADA CONVERSOR. Um `/corpo: \(\) =>/` solto
+   * passava com o do adversário quebrado, porque o do ambiente, no mesmo
+   * arquivo, ainda casava — provado tirando o `() =>` do adversário e vendo a
+   * suíte seguir verde.
+   */
+  const bestiario = fs.readFileSync(new URL('../js/telas/bestiario.js', import.meta.url), 'utf8');
+  verdade(/corpo: \(\) => fichaDeAdversario\(f\)/.test(bestiario),
+    'a ficha de adversário tem de ser desenhada só quando estiver na tela');
+  verdade(/corpo: \(\) => fichaDeAmbiente\(x\)/.test(bestiario),
+    'a ficha de ambiente tem de ser desenhada só quando estiver na tela');
+  verdade(/corpo: \(\) => conteudoDeEquipamento\(e\.rotulo, e\.item\)/.test(
+    fs.readFileSync(new URL('../js/telas/ficha.js', import.meta.url), 'utf8')),
+  'o equipamento tem de ser desenhado só quando estiver na tela');
+});
+
+teste('o bestiário folheia a lista filtrada e age sobre a carta mostrada', () => {
+  const tela = fs.readFileSync(new URL('../js/telas/bestiario.js', import.meta.url), 'utf8');
+  verdade(/function abrirAdversario\(f\) \{\s*\n\s*const achados = filtrar\(\);/.test(tela),
+    'abrir um adversário tem de abrir a lista FILTRADA, não a ficha sozinha');
+  verdade(/acoes: \(item, _indice, modal\) =>/.test(tela),
+    'os botões do visor têm de ser recalculados por carta');
+  verdade(/porEmCena\(item\.ficha, n\)/.test(tela),
+    '"Pôr em cena" tem de agir sobre a ficha da carta na tela, não sobre a que abriu');
+  // E a ficha do adversário continua sendo desenhada por UMA função.
+  igual((tela.match(/^function fichaDeAdversario\(/gm) || []).length, 1,
+    'a ficha de adversário tem de ter um desenhista só');
+});
+
+teste('o equipamento tem um leitor só: o arsenal', () => {
+  const tela = fs.readFileSync(new URL('../js/telas/ficha.js', import.meta.url), 'utf8');
+  /*
+   * ⚠ A MOCHILA E A TABELA DE COMBATE LIAM O MESMO EQUIPAMENTO SEPARADAMENTE,
+   * cada uma montando primária/secundária/armadura/reservas do seu jeito. É a
+   * classe de defeito que já nos pegou mais de uma vez: a mesma pergunta
+   * respondida em dois lugares. Agora quem responde é `arsenalDaFicha`.
+   */
+  igual((tela.match(/function arsenalDaFicha\(/g) || []).length, 1);
+  verdade(/arsenalDaFicha\(ficha\)\.map\(\(e, posicao\) =>/.test(tela),
+    'a lista da mochila tem de ser montada a partir do arsenal');
+  verdade(/abrirArsenal\(ficha, posicaoNoArsenal\(ficha, item\)\)/.test(tela),
+    'a tabela de combate tem de abrir o arsenal na posição do item');
+  verdade(!/function verEquipamento\(/.test(tela),
+    'verEquipamento voltou — é o segundo leitor que acabamos de tirar');
+});
+
+teste('a criação folheia o baralho inteiro, e escolhe a carta que está na tela', () => {
+  const tela = fs.readFileSync(new URL('../js/telas/criacao.js', import.meta.url), 'utf8');
+  verdade(/const baralho = typeof paraCarta === 'function' \? itens\.map\(paraCarta\) : null;/.test(tela),
+    'a grade de opções tem de montar o baralho inteiro');
+  verdade(/aoEscolher: \(_escolhida, indice\) => aoEscolher\(itens\[indice\]\)/.test(tela),
+    'escolher dentro do visor tem de escolher a opção FOLHEADA, não a de origem');
+  verdade(/paraCarta: \(a\) => daAncestralidade\(a\)/.test(tela) &&
+          /paraCarta: \(c\) => daComunidade\(c\)/.test(tela),
+  'ancestralidade e comunidade têm de passar pelo baralho');
+  // A subclasse folheia as cartas de TODAS as subclasses da classe, e cada
+  // carta lembra de quem é — senão "Escolher esta" escolhe a subclasse errada.
+  verdade(/cartasDaEtapa\.push\(\{ sub: s, carta: daSubclasse\(s, k\) \}\)/.test(tela),
+    'cada carta do baralho da etapa tem de lembrar a subclasse dona');
+  verdade(/const dona = \(cartasDaEtapa\[indice\] \|\| \{\}\)\.sub;/.test(tela),
+    'escolher tem de usar a dona da carta mostrada');
+});
+
+teste('as três cartas de uma subclasse se distinguem na tela', () => {
+  const visor = fs.readFileSync(new URL('../js/componentes/carta.js', import.meta.url), 'utf8');
+  /*
+   * Fundação, Especialização e Maestria têm o MESMO nome. Enquanto o visor
+   * folheava uma só, isso não importava; agora que folheia as três, o rodapé é
+   * a única coisa que diz em qual delas o dedo parou. E o rodapé só aparece se
+   * ele conviver com a contagem — antes um substituía o outro.
+   */
+  verdade(/NOME_DA_CARTA_DE_SUBCLASSE/.test(visor));
+  verdade(/rodape: \[tipo, sub\.chamada \|\| ''\]\.filter\(Boolean\)\.join\(' · '\)/.test(visor),
+    'o rodapé da subclasse tem de dizer qual das três cartas é');
+  verdade(/if \(item\.rodape\) marcas\.push\(item\.rodape\);/.test(visor) &&
+          /if \(lista\.length > 1\) marcas\.push\(`\$\{atual \+ 1\} de \$\{lista\.length\}`\);/.test(visor),
+  'rodapé e contagem têm de conviver na mesma linha');
+});
+
+/* ==========================================================================
+ *  O MESTRE VÊ AS CARTAS — o buraco que a auditoria achou
+ *
+ *  O resumo de cada ficha mandava nome, classe, subclasse e transformação, e
+ *  nada mais. Quem conduz a cena não sabia o que o grupo pode fazer.
+ * ========================================================================== */
+teste('o resumo da ficha leva as cartas da mão e do cofre para o painel', () => {
+  const api = fs.readFileSync(new URL('../backend/99_Api.gs', import.meta.url), 'utf8');
+  verdade(/function idsDeCartasDaFicha_\(ficha, onde\)/.test(api),
+    'falta o normalizador: a ficha grava a carta como id OU como objeto');
+  const resumo = api.slice(api.indexOf('function resumoDoPersonagem_'),
+    api.indexOf('function respostaJson_'));
+  verdade(/cartas: \{\s*\n\s*ativas: idsDeCartasDaFicha_\(ficha, 'ativas'\),\s*\n\s*cofre: idsDeCartasDaFicha_\(ficha, 'cofre'\)/.test(resumo),
+    'o resumo tem de levar a mão E o cofre');
+  /*
+   * ⚠ IDS, NÃO CARTAS. Se alguém trocar por objetos de carta, o painel passa a
+   * carregar texto e caminho de arte de cada carta de cada ficha a cada
+   * abertura — e nada na tela vai avisar, porque funciona.
+   */
+  verdade(!/acharCarta|\.texto|imagem/.test(resumo.slice(resumo.indexOf('cartas: {'),
+    resumo.indexOf('transformacao:'))),
+  'o resumo tem de mandar id, não a carta inteira');
+});
+
+teste('o painel do Mestre traduz os ids em carta, e carrega só no toque', () => {
+  const tela = fs.readFileSync(new URL('../js/telas/mestre.js', import.meta.url), 'utf8');
+  verdade(/async function carregarBaralhoDaMesa\(\)/.test(tela),
+    'o painel precisa de um tradutor de id para carta');
+  verdade(/if \(baralhoDaMesa\) return baralhoDaMesa;/.test(tela),
+    'o baralho tem de ser memoizado — são 630 KB de catálogo');
+  /*
+   * ⚠ E O CARREGAMENTO TEM DE FICAR NO GESTO. Se `carregarBaralhoDaMesa`
+   * subir para a abertura do painel, a aba Grupo passa a esperar 630 KB para
+   * desenhar trilhas de PV. É a mesma razão pela qual o catálogo do bestiário
+   * chega depois da cena.
+   */
+  verdade(!/carregarBaralhoDaMesa\(\)[\s\S]{0,40}\.then\(\(\) => desenhar/.test(tela));
+  verdade(/cartasDoPersonagem\(p\)/.test(tela) && /function cartasDoPersonagem\(p\)/.test(tela),
+    'o cartão do personagem tem de mostrar as cartas');
+  verdade(/rodape: `\$\{base\.rodape\} · \$\{onde\}`/.test(tela),
+    'folheando entre mão e cofre, o selo de lugar é o que distingue as duas');
+  verdade(/function subclasseQueAbreCarta\(p\)/.test(tela),
+    'a subclasse do jogador tem de abrir as cartas dela');
+  verdade(/baralho\.transfPorId\.get\(dados\.chave\(atual\.id\)\)/.test(tela),
+    'a transformação concedida tem de abrir a carta');
+});
+
+
+/* ==========================================================================
+ *  O QUE A ESPERANÇA COMPRA — três dos quatro usos não tinham onde ser pagos
+ *
+ *  O SRD lista quatro: Prestar Ajuda, Utilizar uma Experiência, iniciar uma
+ *  Jogada em Equipe e a habilidade de Esperança da classe. Só a quarta tinha
+ *  botão. E a Jogada em Equipe é a única com LIMITE POR SESSÃO — ninguém
+ *  guarda isso de cabeça numa sessão de quatro horas.
+ * ========================================================================== */
+console.log('\nO que a Esperança compra');
+
+teste('o catálogo tem os três movimentos, e NÃO repete a habilidade de classe', () => {
+  const movs = avaliar('MOVIMENTOS_DE_ESPERANCA');
+  igual(Object.keys(movs).sort(),
+    ['jogada-em-equipe', 'prestar-ajuda', 'utilizar-experiencia']);
+  igual(movs['prestar-ajuda'].custoEsperanca, 1);
+  igual(movs['utilizar-experiencia'].custoEsperanca, 1);
+  igual(movs['jogada-em-equipe'].custoEsperanca, 3);
+  igual(movs['jogada-em-equipe'].custoComCamaradagemDoPar, 2);
+  igual(movs['jogada-em-equipe'].marcaUso, 'regra:jogada-em-equipe');
+  /*
+   * ⚠ A HABILIDADE DE ESPERANÇA DA CLASSE NÃO PODE ENTRAR AQUI. Ela já é paga
+   * por `usarHabilidadeDeClasse_`, que lê o custo do catálogo da classe —
+   * declará-la de novo criaria o segundo leitor do mesmo preço, e os dois
+   * divergiriam na primeira errata.
+   */
+  Object.values(movs).forEach((m) => {
+    verdade(!/habilidade de esperan/i.test(String(m.nome)),
+      'a habilidade de Esperança da classe tem um pagador só');
+  });
+  // Cada movimento diz, por escrito, o que fica com a mesa.
+  Object.values(movs).forEach((m) => {
+    verdade(String(m.lembrete || '').length > 40, m.id + ': falta o lembrete do que é da mesa');
+    verdade(String(m.fonte || '').indexOf('SRD 2.0') === 0, m.id + ': falta a fonte');
+  });
+});
+
+teste('⚠ o JSON da tela e a tabela do servidor dizem o MESMO preço', () => {
+  /*
+   * ⚠ POR QUE HÁ DUAS CÓPIAS, E POR QUE ISTO EXISTE.
+   *
+   * O servidor cobra (40_Regras.gs) e a tela precisa escrever o preço no botão
+   * ANTES do toque — e o Apps Script não lê os data/*.json do repositório. Nos
+   * outros catálogos isso se resolve com um gerador (data/classes.json →
+   * 42_Classes.gs); aqui a tabela tem três entradas e um gerador novo custaria
+   * um 25º arquivo no SOURCE_FILES do motor, com tudo o que isso arrasta para
+   * a ordem de deploy.
+   *
+   * A troca é esta guarda: campo por campo, os dois lados têm de dizer o
+   * mesmo. Mudar o preço num lugar só deixa a suíte vermelha.
+   */
+  const doServidor = avaliar('MOVIMENTOS_DE_ESPERANCA');
+  const daTela = JSON.parse(fs.readFileSync(
+    new URL('../data/movimentos-de-esperanca.json', import.meta.url), 'utf8'));
+
+  igual(daTela.movimentos.map((m) => m.id).sort(), Object.keys(doServidor).sort());
+  const CAMPOS = ['nome', 'custoEsperanca', 'custoComCamaradagemDoPar',
+    'caracteristicaDoDesconto', 'pedePar', 'marcaUso', 'verbete', 'lembrete', 'fonte'];
+  daTela.movimentos.forEach((m) => {
+    const srv = doServidor[m.id];
+    verdade(srv, 'movimento "' + m.id + '" não existe no servidor');
+    CAMPOS.forEach((campo) => {
+      igual(m[campo] === undefined ? null : m[campo],
+        srv[campo] === undefined ? null : srv[campo],
+        m.id + '.' + campo + ' divergiu entre a tela e o servidor');
+    });
+  });
+});
+
+teste('Prestar Ajuda cobra 1 de Esperança e não tem limite', () => {
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Ajudante', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne'
+  }));
+  f.recursos.esperanca = 3;
+  const r1 = contexto.aplicarAjustes_(f, [{ tipo: 'movimentoDeEsperanca', movimento: 'prestar-ajuda' }]);
+  igual(r1.erros, []);
+  igual(f.recursos.esperanca, 2);
+  // Sem limite: dá para ajudar de novo na mesma cena.
+  contexto.aplicarAjustes_(f, [{ tipo: 'movimentoDeEsperanca', movimento: 'prestar-ajuda' }]);
+  igual(f.recursos.esperanca, 1);
+  igual(((f.contadores || {})['regra:jogada-em-equipe'] || {}).valor, undefined,
+    'Prestar Ajuda não encosta na iniciação da Jogada em Equipe');
+});
+
+teste('sem Esperança, o movimento é RECUSADO — não cobra pela metade', () => {
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Seco', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne'
+  }));
+  f.recursos.esperanca = 0;
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'movimentoDeEsperanca', movimento: 'prestar-ajuda' }]);
+  verdade(r.erros.length > 0, 'devia recusar');
+  verdade(/Esperança suficiente/.test(r.erros[0]), r.erros[0]);
+  igual(f.recursos.esperanca, 0);
+});
+
+teste('a Jogada em Equipe exige o PAR — sem ele não há preço', () => {
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Sozinha', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne'
+  }));
+  f.recursos.esperanca = 6;
+  const r = contexto.aplicarAjustes_(f, [{ tipo: 'movimentoDeEsperanca', movimento: 'jogada-em-equipe' }]);
+  verdade(r.erros.length > 0, 'devia recusar sem par');
+  verdade(/diga com quem/.test(r.erros[0]), r.erros[0]);
+  igual(f.recursos.esperanca, 6, 'recusa não cobra');
+});
+
+teste('a Jogada em Equipe cobra 3, marca a iniciação, e a SEGUNDA é recusada', () => {
+  /*
+   * Precisa de DUAS fichas na planilha: o custo depende da ficha do par, e o
+   * par é procurado em `lerTudo_(ABAS.PERSONAGENS)`.
+   */
+  const dono = api('registrar', { nome: 'ParDono', codigo: '778899' });
+  verdade(dono.ok, JSON.stringify(dono));
+  const tokenPar = dono.dados.token;
+  const parCriado = api('criarPersonagem', {
+    token: tokenPar,
+    ficha: contexto.fichaRapida_({
+      nome: 'ParSemCamaradagem', classe: 'Bardo', subclasse: 'Músico Errante',
+      ancestralidade: 'Elfo', comunidade: 'Highborne'
+    })
+  });
+  verdade(parCriado.ok, JSON.stringify(parCriado));
+  const idPar = parCriado.dados.personagem.id;
+
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Iniciadora', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne'
+  }));
+  f.recursos.esperanca = 6;
+
+  const r = contexto.aplicarAjustes_(f,
+    [{ tipo: 'movimentoDeEsperanca', movimento: 'jogada-em-equipe', par: idPar }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].custoEsperanca, 3);
+  igual(r.mudancas[0].descontoDoPar, false);
+  igual(f.recursos.esperanca, 3);
+  igual(f.contadores['regra:jogada-em-equipe'].valor, 1, 'a iniciação da sessão foi marcada');
+
+  /*
+   * ⚠ A SEGUNDA TEM DE SER RECUSADA, não cortada no teto. `ajustarContador_`
+   * corta: um `delta: +1` com a iniciação gasta devolveria "mudou" sem mudar,
+   * e a Esperança sairia de graça.
+   */
+  const r2 = contexto.aplicarAjustes_(f,
+    [{ tipo: 'movimentoDeEsperanca', movimento: 'jogada-em-equipe', par: idPar }]);
+  verdade(r2.erros.length > 0, 'a segunda iniciação da sessão devia ser recusada');
+  verdade(/já foi usada/.test(r2.erros[0]), r2.erros[0]);
+  igual(f.recursos.esperanca, 3, 'a recusa não cobrou de novo');
+
+  // E o fim da sessão devolve a iniciação.
+  contexto.aplicarGatilhoContadores_(f, 'fim-de-sessao');
+  igual(((f.contadores || {})['regra:jogada-em-equipe'] || {}).valor, undefined,
+    'a iniciação volta na sessão seguinte');
+});
+
+/**
+ * A ficha do par COM a maestria.
+ *
+ * ⚠ `fichaRapida_` NÃO SERVE SOZINHA: ela força o nível inicial e monta só a
+ * fundação da subclasse. Camaradagem é carta de MAESTRIA, e ter a subclasse
+ * não é ter a carta (mesma regra do E106) — sem subir o nível e declarar as
+ * três cartas, o teste do desconto provaria o oposto do que quer.
+ */
+function fichaBrava_() {
+  const f = contexto.fichaRapida_({
+    nome: 'BravoComCamaradagem', classe: 'Guerreiro', subclasse: 'Chamada dos Bravos',
+    ancestralidade: 'Humano', comunidade: 'Highborne'
+  });
+  f.identidade.nivel = 10;
+  f.subclasseCartas = ['fundacao', 'especializacao', 'maestria'];
+  return f;
+}
+
+teste('a Camaradagem DO PAR desconta 1 — o desconto é de quem inicia', () => {
+  /*
+   * A maestria diz: "quando um aliado iniciar uma Jogada em Equipe COM VOCÊ,
+   * ele precisa gastar apenas 2 Esperanças". Quem recebe o desconto é quem
+   * INICIA; quem o concede é o par. Se o app lesse a própria ficha, cobraria 3
+   * de quem tem direito a 2 — tirar Esperança a mais é pior que não ter botão.
+   */
+  const dono = api('registrar', { nome: 'DonoBravo', codigo: '667788' });
+  verdade(dono.ok, JSON.stringify(dono));
+  const criado = api('criarPersonagem', {
+    token: dono.dados.token,
+    ficha: fichaBrava_()
+  });
+  verdade(criado.ok, JSON.stringify(criado));
+  const idBravo = criado.dados.personagem.id;
+
+  // A ficha do par REALMENTE tem a maestria — senão o teste provaria o oposto.
+  const fichaDoPar = api('obterPersonagem', { token: dono.dados.token, id: idBravo })
+    .dados.personagem.ficha;
+  verdade(contexto.fichaTemCaracteristica_(fichaDoPar, 'Camaradagem'),
+    'o par precisa ter Camaradagem para este teste valer');
+
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'QuemInicia', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne'
+  }));
+  f.recursos.esperanca = 6;
+  const r = contexto.aplicarAjustes_(f,
+    [{ tipo: 'movimentoDeEsperanca', movimento: 'jogada-em-equipe', par: idBravo }]);
+  igual(r.erros, []);
+  igual(r.mudancas[0].custoEsperanca, 2, 'com Camaradagem no par, custa 2');
+  igual(r.mudancas[0].descontoDoPar, true);
+  igual(f.recursos.esperanca, 4);
+  verdade(/Camaradagem/.test(r.mudancas[0].aviso), r.mudancas[0].aviso);
+});
+
+teste('a lista de aliados diz quem tem Camaradagem — é preço, não enfeite', () => {
+  // Sessão própria: `tokenAna` já passou por testes que a invalidam.
+  const quem = api('registrar', { nome: 'OlhaAliados', codigo: '556677' });
+  verdade(quem.ok, JSON.stringify(quem));
+  const r = api('aliadosDaMesa', { token: quem.dados.token, id: 'nenhum' });
+  verdade(r.ok, JSON.stringify(r));
+  const bravo = (r.dados.aliados || []).find((a) => a.nome === 'BravoComCamaradagem');
+  const outro = (r.dados.aliados || []).find((a) => a.nome === 'ParSemCamaradagem');
+  verdade(bravo, 'o Guerreiro de Chamada dos Bravos tem de estar na lista');
+  igual(bravo.camaradagem, true);
+  verdade(outro, 'o par sem a maestria tem de estar na lista');
+  igual(outro.camaradagem, false);
+});
+
+teste('o par apagado não serve de desconto nem de par', () => {
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Perdida', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne'
+  }));
+  f.recursos.esperanca = 6;
+  const r = contexto.aplicarAjustes_(f,
+    [{ tipo: 'movimentoDeEsperanca', movimento: 'jogada-em-equipe', par: 'id-que-nao-existe' }]);
+  verdade(r.erros.length > 0, 'devia recusar par inexistente');
+  verdade(/não achei essa ficha/.test(r.erros[0]), r.erros[0]);
+  igual(f.recursos.esperanca, 6);
+});
 
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);

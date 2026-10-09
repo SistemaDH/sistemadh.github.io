@@ -61,8 +61,8 @@ await pagina.waitForSelector('.roster', { timeout: 20000 });
  * e ver o segundo cartão esconder os traços do primeiro).
  */
 await pagina.evaluate(async () => {
-  const { acoes } = await import('/js/estado.js');
-  const { abrirAvanco } = await import('/js/telas/avanco.js');
+  const { acoes } = await import(`/js/estado.js${window.__DH_VERSAO ? '?v=' + window.__DH_VERSAO : ''}`);
+  const { abrirAvanco } = await import(`/js/telas/avanco.js${window.__DH_VERSAO ? '?v=' + window.__DH_VERSAO : ''}`);
   const opcao = (id, nome, extra = {}) => ({
     id, nome, patamar: 1, consomeEscolhas: 1, espacos: 3, usados: 0, negrito: false,
     texto: 'Texto do livro.', disponivel: true, doPatamarAnterior: false, ...extra

@@ -114,7 +114,7 @@ async function executar(viewport) {
     await page.waitForSelector('.modal__caixa', { state: 'detached' });
 
     await page.evaluate(async () => {
-      const modulo = await import('/js/api.js');
+      const modulo = await import(`/js/api.js${window.__DH_VERSAO ? '?v=' + window.__DH_VERSAO : ''}`);
       modulo.api.ping = () => Promise.reject(new modulo.ErroApi('SEM_REDE', 'Sem conexão de teste.'));
     });
     await abrirAjustes(page);

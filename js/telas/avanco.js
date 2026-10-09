@@ -16,14 +16,14 @@
  * nenhuma — só desenha e pergunta.
  */
 
-import { el, limpar, travarBotao, semCorretor } from '../util.js';
-import { abrirModal, avisarErro, avisarSucesso, confirmar } from '../ui.js';
-import { acoes } from '../estado.js';
-import { mensagemDoErro } from '../api.js';
-import * as dados from '../dados.js';
-import { nomeQueAbreCarta, daCartaDeDominio } from '../componentes/carta.js';
-import { nomeComGlossa } from '../glossario.js';
-import { textoAnotado } from '../verbete.js';
+import { el, limpar, travarBotao, semCorretor } from '../util.js?v=2829e78f50';
+import { abrirModal, avisarErro, avisarSucesso, confirmar } from '../ui.js?v=2829e78f50';
+import { acoes } from '../estado.js?v=2829e78f50';
+import { mensagemDoErro } from '../api.js?v=2829e78f50';
+import * as dados from '../dados.js?v=2829e78f50';
+import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio } from '../componentes/carta.js?v=2829e78f50';
+import { nomeComGlossa } from '../glossario.js?v=2829e78f50';
+import { textoAnotado } from '../verbete.js?v=2829e78f50';
 
 /**
  * @param {{personagem:Object, catalogo:Object, aoAplicar?:Function}} opcoes
@@ -740,25 +740,72 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
       return c.nivel <= Math.min(nivelMaximo, limite.nivelMaximo);
     }).sort((a, b) => a.nivel - b.nivel || a.nome.localeCompare(b.nome, 'pt-BR'));
 
-    const lista = el('div', { class: 'pilha' }, candidatas.map((c) => el('button', {
-      type: 'button', class: 'cartao cartao--clicavel',
-      onClick: () => { escolha.fechar(); aoEscolher(c); }
-    }, [
-      el('div', { class: 'linha' }, [
-        el('strong', { class: 'crescer' }, nomeComGlossa(c.nome)),
-        el('span', { class: 'selo', texto: `nível ${c.nivel}` })
-      ]),
-      el('p', { class: 'texto-xs texto-fraco' },
-        nomeComGlossa(`${c.dominioNome} · ${c.tipo} · recordar ${c.custoRecordar}`)),
-      el('p', { class: 'texto-sm' }, textoAnotado(c.texto || ''))
-    ])));
+    /*
+     * ⚠ ESCOLHER CARTA SEM VER A CARTA. Esta tela era uma lista de TEXTO: nome,
+     * nível, custo de recordar e o parágrafo da regra. A arte — 210 PNG que
+     * existem no repositório — não aparecia em lugar nenhum do momento em que
+     * você escolhe. No resto do app tocar no nome abre a carta; aqui,
+     * justamente onde a decisão acontece, não havia o que tocar.
+     *
+     * O visor já sabia fazer isto desde que nasceu: aceita `aoEscolher` e
+     * desenha o botão "Escolher esta". Faltava alguém chamar.
+     *
+     * ⚠ A LISTA DE TEXTO NÃO MORREU, virou o outro caminho. Folhear é bom para
+     * comparar e decidir; é ruim para achar uma carta cujo nome você já sabe
+     * entre quarenta. Os dois levam ao mesmo `aoEscolher`.
+     *
+     * ⚠ E A LISTA NÃO GANHOU UM BOTÃO POR LINHA. A primeira versão disto punha
+     * um "Ver a carta" dentro de cada linha — e cada linha JÁ é um `<button>`.
+     * Botão dentro de botão é HTML inválido, e o navegador respondeu mudando o
+     * alvo do clique: o passo de ponta a ponta do avanço passou a abrir um
+     * verbete por cima do modal e travar. A lista escolhe; o visor folheia.
+     */
+    const abrirVisor = (indice = 0) => {
+      if (!candidatas.length) return;
+      abrirCarta({
+        itens: candidatas.map(daCartaDeDominio),
+        indice,
+        textoEscolher: 'Escolher esta',
+        aoEscolher: (_item, i) => aoEscolher(candidatas[i]),
+        acoes: (_item, _i, visor) => [
+          el('button', {
+            type: 'button', class: 'btn btn--fantasma btn--pequeno',
+            onClick: () => { visor.fechar(); abrirLista(); }
+          }, 'Ver como lista')
+        ]
+      });
+    };
 
-    const escolha = abrirModal({
-      titulo: `Cartas até o nível ${nivelMaximo}`,
-      conteudo: candidatas.length ? lista
-        : el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma carta nova cabe neste teto.' }),
-      acoes: [el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => escolha.fechar() }, 'Fechar')]
-    });
+    const abrirLista = () => {
+      const lista = el('div', { class: 'pilha' }, candidatas.map((c) => el('button', {
+        type: 'button', class: 'cartao cartao--clicavel',
+        onClick: () => { escolha.fechar(); aoEscolher(c); }
+      }, [
+        el('div', { class: 'linha' }, [
+          el('strong', { class: 'crescer' }, nomeComGlossa(c.nome)),
+          el('span', { class: 'selo', texto: `nível ${c.nivel}` })
+        ]),
+        el('p', { class: 'texto-xs texto-fraco' },
+          nomeComGlossa(`${c.dominioNome} · ${c.tipo} · recordar ${c.custoRecordar}`)),
+        el('p', { class: 'texto-sm' }, textoAnotado(c.texto || ''))
+      ])));
+
+      const escolha = abrirModal({
+        titulo: `Cartas até o nível ${nivelMaximo}`,
+        conteudo: candidatas.length ? lista
+          : el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma carta nova cabe neste teto.' }),
+        acoes: [
+          el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => escolha.fechar() }, 'Fechar'),
+          candidatas.length
+            ? el('button', { type: 'button', class: 'btn btn--principal',
+                onClick: () => { escolha.fechar(); abrirVisor(0); } }, 'Folhear as cartas')
+            : null
+        ].filter(Boolean)
+      });
+    };
+
+    // A porta principal é a arte; quem quiser texto tem o botão lá dentro.
+    if (candidatas.length) abrirVisor(0); else abrirLista();
   }
 
   /* ======================================================================== *

@@ -15,17 +15,17 @@
  * a pessoa não chegar no fim com a ficha errada.
  */
 
-import { el, limpar, travarBotao, semCorretor } from '../util.js';
-import { avisarErro, avisarSucesso, avisar, confirmar, temModalAberto, abrirModal } from '../ui.js';
-import { acoes, obterEstado } from '../estado.js';
-import { mensagemDoErro } from '../api.js';
-import * as dados from '../dados.js';
+import { el, limpar, travarBotao, semCorretor } from '../util.js?v=2829e78f50';
+import { avisarErro, avisarSucesso, avisar, confirmar, temModalAberto, abrirModal } from '../ui.js?v=2829e78f50';
+import { acoes, obterEstado } from '../estado.js?v=2829e78f50';
+import { mensagemDoErro } from '../api.js?v=2829e78f50';
+import * as dados from '../dados.js?v=2829e78f50';
 import {
   nomeQueAbreCarta,
   daCartaDeDominio, daSubclasse, daAncestralidade, daComunidade
-} from '../componentes/carta.js';
-import { prepararGlossario, nomeComGlossa } from '../glossario.js';
-import { textoAnotado, prepararVerbetes } from '../verbete.js';
+} from '../componentes/carta.js?v=2829e78f50';
+import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=2829e78f50';
+import { textoAnotado, prepararVerbetes } from '../verbete.js?v=2829e78f50';
 
 const TRACOS_ORDEM = ['agilidade', 'forca', 'finesse', 'instinto', 'presenca', 'conhecimento'];
 
@@ -529,17 +529,50 @@ export async function abrirCriacao({ aoCriar } = {}) {
         const classe = catalogo.classes.find((c) => c.id === rascunho.classe);
         if (!classe) return pai.append(el('p', { class: 'texto-suave', texto: 'Escolha a classe primeiro.' }));
 
+        /*
+         * O BARALHO DA ETAPA, não o de uma subclasse.
+         *
+         * Antes, tocar no nome folheava as três cartas DAQUELA subclasse —
+         * fundação, especialização, maestria. Útil, mas responde a pergunta
+         * errada: a desta tela é "qual das duas?", e para isso você precisa
+         * passar de uma para a outra. Agora o baralho é todas as cartas de
+         * todas as subclasses da classe, em ordem, e o visor abre na fundação
+         * da subclasse em que você tocou.
+         *
+         * Cada carta lembra DE QUEM ELA É, para "Escolher esta" escolher a
+         * subclasse da carta na tela — mesmo que você tenha chegado nela
+         * folheando a partir da outra.
+         */
+        const cartasDaEtapa = [];
+        classe.subclasses.forEach((s) => {
+          ['fundacao', 'especializacao', 'maestria']
+            .filter((k) => (s.cartas || {})[k])
+            .forEach((k) => cartasDaEtapa.push({ sub: s, carta: daSubclasse(s, k) }));
+        });
+        const baralhoDaEtapa = cartasDaEtapa.map((x) => x.carta);
+        const escolherSubclasse = (s) => {
+          if (rascunho.subclasse !== s.id) {
+            rascunho.subclasse = s.id;
+            rascunho.escolhasDeClasse = {};
+          }
+          desenhar();
+        };
+
         const lista = el('div', { class: 'lista-escolha' });
         classe.subclasses.forEach((s) => {
           const escolhida = rascunho.subclasse === s.id;
           const fundacao = (s.cartas || {}).fundacao || {};
           const escolhaCriacao = escolhaObrigatoriaDaSubclasse(s);
+          const comecaEm = Math.max(0, cartasDaEtapa.findIndex((x) => x.sub.id === s.id));
           lista.append(el('div', { class: `cartao cartao--alvo lista-escolha__item ${escolhida ? 'esta-escolhido' : ''}` }, [
             el('div', { class: 'lista-escolha__cabecalho' }, [
               nomeQueAbreCarta(s.nome, () => ({
-                itens: ['fundacao', 'especializacao', 'maestria']
-                  .filter((k) => (s.cartas || {})[k])
-                  .map((k) => daSubclasse(s, k))
+                itens: baralhoDaEtapa,
+                indice: comecaEm,
+                aoEscolher: (_carta, indice) => {
+                  const dona = (cartasDaEtapa[indice] || {}).sub;
+                  if (dona) escolherSubclasse(dona);
+                }
               })),
               el('span', { class: 'crescer' }),
               escolhida ? seloEscolhido({ curto: true }) : null,
@@ -579,13 +612,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
             alvoDoCartao({
               rotulo: `Escolher ${s.nome}`,
               escolhido: escolhida,
-              aoEscolher: () => {
-                if (rascunho.subclasse !== s.id) {
-                  rascunho.subclasse = s.id;
-                  rascunho.escolhasDeClasse = {};
-                }
-                desenhar();
-              }
+              aoEscolher: () => escolherSubclasse(s)
             })
           ]));
         });
@@ -640,7 +667,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
         if (!rascunho.usarMista) {
           pai.append(gradeDeOpcoes(catalogo.ancestralidades, {
             escolhido: (a) => rascunho.ancestralidade === a.id,
-            carta: (a) => ({ itens: [daAncestralidade(a)] }),
+            paraCarta: (a) => daAncestralidade(a),
             detalhe: (a) => a.caracteristicas.map((f) => f.nome).join(' · '),
             aoEscolher: (a) => {
               rascunho.ancestralidade = a.id;
@@ -687,7 +714,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
         pai.append(el('h2', { class: 'criacao__secao', texto: 'Comunidade' }));
         pai.append(gradeDeOpcoes(catalogo.comunidades, {
           escolhido: (c) => rascunho.comunidade === c.id,
-          carta: (c) => ({ itens: [daComunidade(c)] }),
+          paraCarta: (c) => daComunidade(c),
           detalhe: (c) => c.caracteristica.nome,
           aoEscolher: (c) => { rascunho.comunidade = c.id; desenhar(); }
         }));
@@ -714,7 +741,19 @@ export async function abrirCriacao({ aoCriar } = {}) {
      */
     function gradeDaMista() {
       const grade = el('div', { class: 'grade-opcoes' });
-      catalogo.ancestralidades.forEach((a) => {
+      /*
+       * O mesmo baralho da grade normal. Aqui ele serve ainda mais: a mista
+       * combina a 1ª característica de uma com a 2ª de outra, então a decisão
+       * é comparativa por definição — e comparar fechando e abrindo 24 cartas
+       * não é comparar.
+       *
+       * ⚠ SEM "Escolher esta" NESTE VISOR. A escolha da mista não é "esta
+       * ancestralidade": é "esta característica, nesta vaga". Um botão
+       * genérico de escolher teria de inventar qual das duas, e inventaria
+       * errado metade das vezes. Quem decidiu fecha e toca na vaga.
+       */
+      const baralho = catalogo.ancestralidades.map(daAncestralidade);
+      catalogo.ancestralidades.forEach((a, posicao) => {
         /*
          * Com as duas vagas cheias, tocar na 1ª de outra ancestralidade TROCA a
          * vaga 1 — não bloqueia. Bloquear obrigaria a desmarcar antes, e trocar
@@ -727,7 +766,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
         grade.append(el('div', {
           class: `cartao grade-opcoes__item ${usada ? 'esta-escolhido' : ''}`
         }, [
-          nomeQueAbreCarta(a.nome, () => ({ itens: [daAncestralidade(a)] }), {}, { glosaFora: true }),
+          nomeQueAbreCarta(a.nome, () => ({ itens: baralho, indice: posicao }), {}, { glosaFora: true }),
           ...a.caracteristicas
             .slice()
             .sort((x, y) => x.ordem - y.ordem)
@@ -775,12 +814,38 @@ export async function abrirCriacao({ aoCriar } = {}) {
   }
 
   /** Grade compacta de opções com nome-que-abre-carta. */
-  function gradeDeOpcoes(itens, { escolhido, carta, detalhe, aoEscolher }) {
+  /**
+   * A grade de cartões — e, desde agora, O BARALHO INTEIRO POR TRÁS DELA.
+   *
+   * ⚠ ANTES, CADA NOME ABRIA UMA CARTA SÓ. Para comparar as 24
+   * ancestralidades você abria e fechava 24 vezes, e no meio do caminho já não
+   * lembrava o que a terceira fazia. A grade existe para ESCOLHER; a carta
+   * existe para DECIDIR — e decidir é comparar.
+   *
+   * Então `paraCarta` monta o baralho uma vez, o nome abre o folheador na
+   * posição daquele cartão, e o botão "Escolher esta" dentro do visor escolhe
+   * a carta que está na tela. Quem passou da 3ª para a 11ª e gostou escolhe
+   * ali, sem fechar e procurar o cartão na grade.
+   *
+   * `carta` (uma carta só) continua aceito para quem não tem lista.
+   */
+  function gradeDeOpcoes(itens, { escolhido, carta, paraCarta, detalhe, aoEscolher }) {
     const grade = el('div', { class: 'grade-opcoes' });
-    itens.forEach((item) => {
+    const baralho = typeof paraCarta === 'function' ? itens.map(paraCarta) : null;
+    itens.forEach((item, posicao) => {
       const esta = escolhido(item);
+      const abrirDaquiAte = baralho
+        ? () => ({
+          itens: baralho,
+          indice: posicao,
+          // ⚠ o índice vem do VISOR, não deste cartão: quem folheou está
+          // olhando outra opção, e escolher a do cartão de origem seria
+          // escolher o que a pessoa não está vendo.
+          aoEscolher: (_escolhida, indice) => aoEscolher(itens[indice])
+        })
+        : () => carta(item);
       grade.append(el('div', { class: `cartao cartao--alvo grade-opcoes__item ${esta ? 'esta-escolhido' : ''}` }, [
-        nomeQueAbreCarta(item.nome, () => carta(item), {}, { glosaFora: true }),
+        nomeQueAbreCarta(item.nome, abrirDaquiAte, {}, { glosaFora: true }),
         el('p', { class: 'texto-sm texto-suave' }, textoAnotado(detalhe(item))),
         esta ? seloEscolhido() : null,
         alvoDoCartao({ rotulo: `Escolher ${item.nome}`, escolhido: esta, aoEscolher: () => aoEscolher(item) })

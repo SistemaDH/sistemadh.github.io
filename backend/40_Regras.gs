@@ -254,6 +254,86 @@ function mesclarComEsqueleto_(ficha) {
  *  Fichas paralelas (Beastform e Companheiro Animal)
  * ------------------------------------------------------------------------ */
 
+/* --------------------------------------------------------------------------
+ *  O QUE A ESPERANÇA COMPRA
+ * ------------------------------------------------------------------------ */
+
+/**
+ * OS MOVIMENTOS QUE SE PAGAM COM ESPERANÇA.
+ *
+ * ⚠ TRÊS DOS QUATRO NÃO TINHAM ONDE SER PAGOS. O SRD lista quatro usos da
+ * Esperança — Prestar Ajuda, Utilizar uma Experiência, iniciar uma Jogada em
+ * Equipe e ativar a habilidade de Esperança da classe. Só a quarta tinha botão
+ * na ficha; as outras três só existiam descendo a trilha com o dedo, e a
+ * Jogada em Equipe, que é a única com LIMITE POR SESSÃO, não tinha quem
+ * contasse a iniciação.
+ *
+ * ⚠ A HABILIDADE DE ESPERANÇA DA CLASSE NÃO ENTRA NESTA TABELA, de propósito.
+ * Ela já é paga por `usarHabilidadeDeClasse_`, que lê o custo do catálogo da
+ * classe. Repeti-la aqui seria o segundo leitor do mesmo preço — e eles
+ * divergiriam na primeira errata.
+ *
+ * FONTE: SRD 2.0, seções HOPE e TAG TEAM ROLLS. O livro da Jambô NÃO traz a
+ * Jogada em Equipe (a lista de gastos da p.22 cita só Experiência e Prestar
+ * Ajuda): é regra do SRD 2.0, e o termo "Jogada em Equipe" é o uso consolidado
+ * deste sistema, registrado em data/srd2-traducao.json.
+ *
+ * O APP NÃO ROLA NADA. Ele cobra o preço e conta o limite. Quem rola os dados,
+ * escolhe qual resultado vale, soma o dano combinado e decide o tipo de dano é
+ * a mesa — está escrito no `lembrete` de cada movimento, que vai para a tela.
+ */
+const MOVIMENTOS_DE_ESPERANCA = {
+  'prestar-ajuda': {
+    id: 'prestar-ajuda',
+    nome: 'Prestar Ajuda',
+    custoEsperanca: 1,
+    verbete: 'prestar-ajuda',
+    lembrete: 'Descreva como você ajuda e role um dado de vantagem. Vários aliados ' +
+      'podem ajudar a mesma jogada, mas quem age soma só o maior resultado.',
+    fonte: 'SRD 2.0, HOPE: "Help an Ally".'
+  },
+  'utilizar-experiencia': {
+    id: 'utilizar-experiencia',
+    nome: 'Utilizar uma Experiência',
+    custoEsperanca: 1,
+    verbete: 'experiencia',
+    lembrete: 'Some o modificador da Experiência ao resultado. Dá para gastar mais ' +
+      'de uma Esperança para usar mais de uma Experiência na mesma jogada.',
+    fonte: 'SRD 2.0, HOPE: "Utilize an Experience".'
+  },
+  'jogada-em-equipe': {
+    id: 'jogada-em-equipe',
+    nome: 'Iniciar uma Jogada em Equipe',
+    custoEsperanca: 3,
+    /*
+     * ⚠ O DESCONTO É DO PAR, NÃO DE QUEM PAGA. A maestria Camaradagem diz:
+     * "quando um aliado iniciar uma Jogada em Equipe COM VOCÊ, ele precisa
+     * gastar apenas 2 Esperanças". Quem recebe o desconto é quem inicia; quem
+     * o concede é o par. Por isso o custo depende da ficha do OUTRO, e por
+     * isso o movimento pede com quem — sem o par, não há como saber o preço.
+     */
+    custoComCamaradagemDoPar: 2,
+    caracteristicaDoDesconto: 'Camaradagem',
+    pedePar: true,
+    marcaUso: 'regra:jogada-em-equipe',
+    verbete: null,
+    lembrete: 'Os dois rolam a jogada de ação e, antes de resolver, escolhem qual ' +
+      'resultado vale para as duas ações. Com Esperança, todos os envolvidos ganham ' +
+      '1 Esperança; com Medo, o Mestre ganha 1 Ponto de Medo por envolvido. Num ' +
+      'ataque bem-sucedido, os dois rolam dano e somam, como se viesse de uma fonte ' +
+      'só. Vale como UMA jogada de ação para contagens.',
+    fonte: 'SRD 2.0, TAG TEAM ROLLS: "Each player can, once per session, initiate a ' +
+      'Tag Team Roll between their character and another PC by spending 3 Hope."'
+  }
+};
+
+/** O movimento de Esperança por id, ou null. */
+function movimentoDeEsperanca_(id) {
+  const chave = String(id || '').trim();
+  return Object.prototype.hasOwnProperty.call(MOVIMENTOS_DE_ESPERANCA, chave)
+    ? MOVIMENTOS_DE_ESPERANCA[chave] : null;
+}
+
 /**
  * PONTO DE INTERESSE — encaixe reservado, conteúdo ainda não modelado.
  *

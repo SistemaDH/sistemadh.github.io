@@ -16,12 +16,12 @@
  * discordar.
  */
 
-import { el, limpar, travarBotao, semCorretor } from '../util.js';
-import { abrirModal, avisarErro, avisarSucesso } from '../ui.js';
-import { acoes } from '../estado.js';
-import { mensagemDoErro } from '../api.js';
-import { nomeComGlossa } from '../glossario.js';
-import { textoAnotado } from '../verbete.js';
+import { el, limpar, travarBotao, semCorretor } from '../util.js?v=2829e78f50';
+import { abrirModal, avisarErro, avisarSucesso } from '../ui.js?v=2829e78f50';
+import { acoes } from '../estado.js?v=2829e78f50';
+import { mensagemDoErro } from '../api.js?v=2829e78f50';
+import { nomeComGlossa } from '../glossario.js?v=2829e78f50';
+import { textoAnotado } from '../verbete.js?v=2829e78f50';
 
 /**
  * @param {{personagem:Object, aoAplicar?:Function}} opcoes

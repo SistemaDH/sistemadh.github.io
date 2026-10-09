@@ -1,4 +1,4 @@
-import { el } from './util.js';
+import { el } from './util.js?v=2829e78f50';
 
 /* ========================================================================== *
  * L9-B25 · MOCHILA MOBILE — O QUE ESTÁ NA MÃO NÃO FICA NO FUNDO DA LISTA

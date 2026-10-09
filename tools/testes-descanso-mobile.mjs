@@ -31,8 +31,8 @@ function registrar(viewport, estado, erros) {
 
 async function abrirDescanso(page) {
   await page.evaluate(async () => {
-    const { acoes } = await import('/js/estado.js');
-    const { abrirDescanso } = await import('/js/telas/descanso.js');
+    const { acoes } = await import(`/js/estado.js${window.__DH_VERSAO ? '?v=' + window.__DH_VERSAO : ''}`);
+    const { abrirDescanso } = await import(`/js/telas/descanso.js${window.__DH_VERSAO ? '?v=' + window.__DH_VERSAO : ''}`);
 
     const texto = 'Movimento de repouso com explicação suficiente para formar uma lista longa e exigir rolagem durante a comparação no celular.';
     const movimentos = [
@@ -98,8 +98,8 @@ async function abrirDescanso(page) {
  */
 async function abrirDescansoComBanquete(page) {
   await page.evaluate(async () => {
-    const { acoes } = await import('/js/estado.js');
-    const { abrirDescanso } = await import('/js/telas/descanso.js');
+    const { acoes } = await import(`/js/estado.js${window.__DH_VERSAO ? '?v=' + window.__DH_VERSAO : ''}`);
+    const { abrirDescanso } = await import(`/js/telas/descanso.js${window.__DH_VERSAO ? '?v=' + window.__DH_VERSAO : ''}`);
 
     const banquete = {
       id: 'banquete:preparar',
