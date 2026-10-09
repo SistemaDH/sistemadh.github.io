@@ -20,12 +20,12 @@
  * "p.98" no código, e nenhuma das três está lá.
  */
 
-import { el } from './util.js?v=2829e78f50';
-import { abrirModal } from './ui.js?v=2829e78f50';
-import { carregar } from './dados.js?v=2829e78f50';
+import { el } from './util.js?v=c6180d3193';
+import { abrirModal } from './ui.js?v=c6180d3193';
+import { carregar } from './dados.js?v=c6180d3193';
 // Mão única de propósito: o glossário NÃO conhece os verbetes, então não há
 // ciclo. Quem compõe as duas camadas é este arquivo.
-import { marcasDeGlossa, nomeComGlossa } from './glossario.js?v=2829e78f50';
+import { marcasDeGlossa, nomeComGlossa } from './glossario.js?v=c6180d3193';
 
 let indice = null;      // chave normalizada -> verbete
 let porId = null;

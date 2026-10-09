@@ -21,15 +21,15 @@
  * passo seguinte. O botão "Pontos de Batalha" já faz a conta do encontro.
  */
 
-import { el, limpar, adiar, guardarRolagem } from '../util.js?v=2829e78f50';
-import { abrirModal, avisarErro, avisarSucesso, blocoVazio } from '../ui.js?v=2829e78f50';
-import { acoes } from '../estado.js?v=2829e78f50';
-import { mensagemDoErro } from '../api.js?v=2829e78f50';
-import * as dados from '../dados.js?v=2829e78f50';
-import { prepararGlossario } from '../glossario.js?v=2829e78f50';
-import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=2829e78f50';
-import { abrirEditorDeAdversario, confirmarExclusao } from './adversario-da-mesa.js?v=2829e78f50';
-import { abrirCarta } from '../componentes/carta.js?v=2829e78f50';
+import { el, limpar, adiar, guardarRolagem } from '../util.js?v=c6180d3193';
+import { abrirModal, avisarErro, avisarSucesso, blocoVazio } from '../ui.js?v=c6180d3193';
+import { acoes } from '../estado.js?v=c6180d3193';
+import { mensagemDoErro } from '../api.js?v=c6180d3193';
+import * as dados from '../dados.js?v=c6180d3193';
+import { prepararGlossario } from '../glossario.js?v=c6180d3193';
+import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=c6180d3193';
+import { abrirEditorDeAdversario, confirmarExclusao } from './adversario-da-mesa.js?v=c6180d3193';
+import { abrirCarta } from '../componentes/carta.js?v=c6180d3193';
 
 const PATAMARES = [
   { id: 0, rotulo: 'Todos' },

@@ -42,6 +42,15 @@ const ACOES = new Set([
   "encontro","definirEncontro","acrescentarAoEncontro","ajustarAdversario",
   "porEmFoco","limparFoco","usarHabilidade","removerDoEncontro","limparEncontro",
   "adversariosDaMesa","salvarAdversarioDaMesa","excluirAdversarioDaMesa",
+  // ⚠ `aliadosDaMesa` VEIO DO player-api, e veio por necessidade.
+  // Lá ela lia só id, nome, dono e nível — não abria a ficha de ninguém. A
+  // Jogada em Equipe precisa saber quem tem a maestria Camaradagem, porque o
+  // desconto é do PAR: sem isso a tela mostra 3 para um par que cobra 2.
+  // ⚠ E o comentário aqui NÃO pode usar aspas duplas: o conferidor lê este
+  // bloco por expressão regular e engoliria o texto como se fosse ação.
+  // Acrescentar a leitura no TypeScript seria a segunda cópia da lista de
+  // fichas da mesa — o mesmo erro que as dez ações da mesa já corrigiram.
+  "aliadosDaMesa",
   // As dez da MESA, que até 17/09/2026 eram servidas pelo mesa-api. Elas já
   // existiam no backend/4E_Mesa.gs — com os comentários, as citações de página
   // e 28 dos 971 testes — mas em produção quem respondia era outro código, em

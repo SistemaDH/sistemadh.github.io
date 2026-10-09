@@ -3,8 +3,8 @@
  * Backend 100% Supabase Edge Functions.
  */
 
-import { CONFIG, MENSAGENS_ERRO } from './config.js?v=2829e78f50';
-import { esperar } from './util.js?v=2829e78f50';
+import { CONFIG, MENSAGENS_ERRO } from './config.js?v=c6180d3193';
+import { esperar } from './util.js?v=c6180d3193';
 
 /*
  * ⚠ O ENDEREÇO É LIDO A CADA CHAMADA, NÃO NA IMPORTAÇÃO.
@@ -48,7 +48,24 @@ const ACOES_AUTH = new Set(['registrar','entrar','entrarMestre','trocarCodigo'])
  * e a mesa tiver jogado uma sessão sobre ele.
  */
 const ACOES_MESA = new Set([]);
-const ACOES_PLAYER = new Set(['aliadosDaMesa','meusProjetos']);
+/*
+ * ⚠ `aliadosDaMesa` SAIU DAQUI, e o motivo vale registrar.
+ *
+ * O `player-api` respondia essa ação lendo só id, nome, dono e nível — nunca
+ * abria a ficha de ninguém. A Jogada em Equipe precisa saber quem tem a
+ * maestria Camaradagem, porque o desconto é do PAR: sem o campo, a tela
+ * mostra 3 de Esperança para um par que cobra 2.
+ *
+ * Eu cheguei a escrever a leitura no `99_Api.gs` achando que bastava — e não
+ * bastava, porque a ação nem passava pelo motor. Quem achou foi o
+ * `teste:motor-simbolos`, que LISTA os `case` do 99_Api.gs que o motor não
+ * roteia; `aliadosDaMesa` estava na lista. Agora há teste que recusa essa
+ * combinação em vez de só imprimi-la.
+ *
+ * `meusProjetos` fica: ele não lê ficha de ninguém, e o player-api continua
+ * sendo o lugar certo para o que é leitura rasa.
+ */
+const ACOES_PLAYER = new Set(['meusProjetos']);
 const ACOES_APP = new Set([
   'ping','sessao','listarPersonagens','obterPersonagem','excluirPersonagem','restaurarPersonagem',
   'sair','lerConfig','gravarConfig','listarJogadores','anunciarNivelDaMesa',
@@ -66,6 +83,8 @@ const ACOES_ENGINE = new Set([
   'encontro','definirEncontro','acrescentarAoEncontro','ajustarAdversario',
   'porEmFoco','limparFoco','usarHabilidade','removerDoEncontro','limparEncontro',
   'adversariosDaMesa','salvarAdversarioDaMesa','excluirAdversarioDaMesa',
+  // veio do player-api: ver o comentário em ACOES_PLAYER.
+  'aliadosDaMesa',
   // As dez da mesa, vindas do mesa-api — veja o comentário em ACOES_MESA.
   'ajustarMedo','criarContagem','avancarContagem','editarContagem','excluirContagem',
   'parearContagens','desparearContagem','avancarPerseguicao',

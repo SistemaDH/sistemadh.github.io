@@ -19550,6 +19550,61 @@ teste('o par apagado não serve de desconto nem de par', () => {
   igual(f.recursos.esperanca, 6);
 });
 
+/* ==========================================================================
+ *  ⚠ O `case` QUE MELHOREI NUM SERVIDOR QUE NÃO RESPONDE POR ELE
+ *
+ *  Eu acrescentei o campo `camaradagem` ao `case 'aliadosDaMesa'` do
+ *  99_Api.gs e dei por feito. Só que essa ação NÃO passava pelo motor: o
+ *  frontend a mandava para o `player-api`, que lê id, nome, dono e nível e
+ *  nunca abre ficha nenhuma. O campo não chegaria à tela, e nada quebraria —
+ *  a Jogada em Equipe continuaria mostrando 3 para um par que cobra 2.
+ *
+ *  O `teste:motor-simbolos` IMPRIMIA a lista dos `case` órfãos e
+ *  `aliadosDaMesa` estava nela. Lista impressa não é guarda: é um aviso que
+ *  ninguém lê na hora certa. Aqui ela vira recusa.
+ * ========================================================================== */
+teste('⚠ todo `case` que lê FICHA no 99_Api.gs tem de ser roteado pelo motor', () => {
+  const api = fs.readFileSync(new URL('../backend/99_Api.gs', import.meta.url), 'utf8');
+  const front = fs.readFileSync(new URL('../js/api.js', import.meta.url), 'utf8');
+  const motor = fs.readFileSync(
+    new URL('../supabase/functions/engine-api/index.ts', import.meta.url), 'utf8');
+
+  const conjunto = (texto, nome) => {
+    const i = texto.indexOf(nome);
+    verdade(i >= 0, 'não achei ' + nome);
+    const corpo = texto.slice(i, texto.indexOf(']);', i));
+    return new Set((corpo.match(/'([a-zA-Z]+)'|"([a-zA-Z]+)"/g) || [])
+      .map((x) => x.slice(1, -1)));
+  };
+  const doMotorNoFront = conjunto(front, 'const ACOES_ENGINE');
+  const doPlayer = conjunto(front, 'const ACOES_PLAYER');
+  const doMotorNaFuncao = conjunto(motor, 'const ACOES = new Set([');
+
+  /*
+   * A prova concreta do defeito: `aliadosDaMesa` lê a ficha do aliado (é o que
+   * o campo `camaradagem` exige) e por isso TEM de estar nos dois lados.
+   */
+  verdade(/case 'aliadosDaMesa'/.test(api), 'o case precisa existir no 99_Api.gs');
+  verdade(/fichaTemCaracteristica_\(fichaDoAliado, 'Camaradagem'\)/.test(api),
+    'aliadosDaMesa tem de ler a maestria do aliado — é dela que sai o preço');
+  verdade(doMotorNoFront.has('aliadosDaMesa'),
+    'o frontend tem de mandar aliadosDaMesa para o MOTOR');
+  verdade(!doPlayer.has('aliadosDaMesa'),
+    'aliadosDaMesa não pode continuar no player-api: lá ela não abre ficha nenhuma');
+  verdade(doMotorNaFuncao.has('aliadosDaMesa'),
+    'o ACOES do engine-api tem de aceitar aliadosDaMesa, senão dá 404 mudo');
+
+  /*
+   * E a regra geral: tudo o que o frontend manda para o motor tem de estar no
+   * ACOES da função E ter `case` no 99_Api.gs. Um 404 mudo é o pior dos dois
+   * mundos — o botão existe, a ação some, e nada aparece na tela.
+   */
+  const semCase = [...doMotorNoFront].filter((a) => api.indexOf(`case '${a}'`) < 0);
+  igual(semCase, [], 'o frontend manda para o motor ações que o 99_Api.gs não tem');
+  const foraDoMotor = [...doMotorNoFront].filter((a) => !doMotorNaFuncao.has(a));
+  igual(foraDoMotor, [], 'o frontend manda para o motor ações que o index.ts recusa');
+});
+
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {

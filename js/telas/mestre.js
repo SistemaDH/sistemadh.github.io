@@ -20,20 +20,20 @@
  *  • Nada destrutivo sem prévia — o descanso do grupo mostra antes.
  */
 
-import { el, limpar, travarBotao, semCorretor } from '../util.js?v=2829e78f50';
-import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=2829e78f50';
-import { acoes } from '../estado.js?v=2829e78f50';
-import { mensagemDoErro } from '../api.js?v=2829e78f50';
-import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=2829e78f50';
-import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=2829e78f50';
-import { botaoDeRegras } from './regras.js?v=2829e78f50';
-import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=2829e78f50';
-import { secaoDoEncontro } from './encontro.js?v=2829e78f50';
-import { icone } from '../componentes/icone.js?v=2829e78f50';
-import * as dados from '../dados.js?v=2829e78f50';
+import { el, limpar, travarBotao, semCorretor } from '../util.js?v=c6180d3193';
+import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=c6180d3193';
+import { acoes } from '../estado.js?v=c6180d3193';
+import { mensagemDoErro } from '../api.js?v=c6180d3193';
+import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=c6180d3193';
+import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=c6180d3193';
+import { botaoDeRegras } from './regras.js?v=c6180d3193';
+import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=c6180d3193';
+import { secaoDoEncontro } from './encontro.js?v=c6180d3193';
+import { icone } from '../componentes/icone.js?v=c6180d3193';
+import * as dados from '../dados.js?v=c6180d3193';
 import {
   abrirCarta, daCartaDeDominio, daSubclasse, daTransformacao
-} from '../componentes/carta.js?v=2829e78f50';
+} from '../componentes/carta.js?v=c6180d3193';
 
 /*
  * O BARALHO DA MESA — as cartas dos jogadores, para o lado de cá.

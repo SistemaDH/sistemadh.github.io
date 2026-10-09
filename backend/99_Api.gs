@@ -941,6 +941,17 @@ function executar_(p) {
                 camaradagem: temCamaradagem
               };
             })
+            /*
+             * ⚠ EM ORDEM ALFABÉTICA, como o `player-api` fazia.
+             *
+             * Lá o `order('nome')` era do banco. Aqui a lista vem na ordem da
+             * planilha — e a mesa já se acostumou a procurar o aliado pelo
+             * nome. Mudar a ordem de um seletor sem ninguém pedir é o tipo de
+             * coisa que parece defeito no meio de uma cena.
+             */
+            .sort(function (a, b) {
+              return String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR');
+            })
         });
       }
 
