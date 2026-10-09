@@ -1689,3 +1689,59 @@ pegou isso estava no teste de propósito, antes de usar o par.
 ⚠ **Este lote mexe em três `.gs`** — `40_Regras.gs`, `4C_Ajustes.gs`,
 `47_Contadores.gs` — além do `99_Api.gs` do lote anterior. Continua **não
 sendo repin**.
+
+---
+
+## Deploy da v26 — e a ordem de deploy segurando o segundo defeito
+
+```text
+engine-api: v26 ACTIVE
+verify_jwt: false
+ENGINE_COMMIT: 6df90df855ff48647229c31bb704b07688d4216d
+bundle: 05021579fb0ed77d77156422bbce27cd6a5376c599a64cddbf2dd4319f6f3514
+```
+
+**Não é repin.** Quatro `.gs` mudaram (`99_Api.gs`, `40_Regras.gs`,
+`4C_Ajustes.gs`, `47_Contadores.gs`) e o `ACOES` da própria função ganhou
+`aliadosDaMesa`.
+
+### ⚠ A ordem de deploy pegou o defeito, de novo
+
+O passo 5 — rodar o `teste:motor-simbolos` antes de implantar — imprimiu a lista
+dos `case` do `99_Api.gs` que o motor **não roteia**, e `aliadosDaMesa` estava
+nela. Eu tinha acrescentado o campo `camaradagem` àquele `case` e dado por
+feito; a ação ia para o `player-api`, que nunca abre ficha de ninguém. O campo
+não chegaria à tela, nada quebraria, e o seletor da Jogada em Equipe mostraria
+3 de Esperança para um par que cobra 2.
+
+O deploy parou ali. O conserto virou o commit `6df90df`, e a lista que só
+**imprimia** virou teste que **recusa** — provado devolvendo a ação ao
+`player-api` e vendo a suíte ficar vermelha.
+
+É a segunda vez que a ordem de deploy segura um defeito que a suíte não pegava:
+na v25 foi a documentação, aqui foi uma saída de teste que ninguém lia.
+
+### O que foi conferido, nesta ordem
+
+1. os **24 `SOURCE_FILES`** servidos pelo GitHub no `6df90df`, byte a byte
+   contra a árvore que rodou a suíte — **24/24 iguais**;
+2. o `index.ts` que estava NO AR foi lido antes de enviar: as 48 ações batiam
+   com as do repositório, e nada havia em produção que o repositório não
+   soubesse;
+3. `ENGINE_COMMIT` trocado para o `6df90df`;
+4. deploy com **`verify_jwt: false` passado explicitamente**;
+5. releitura da função implantada: **v26 ACTIVE**, `verify_jwt: false`, pin
+   certo, `aliadosDaMesa` no `ACOES`;
+6. advisors de segurança: só o `RLS Enabled No Policy` (INFO) nas seis tabelas —
+   o esperado, e que continua sem política pública de propósito.
+
+⚠ **O que NÃO deu para conferir daqui:** a chamada HTTP de ida e volta. O proxy
+desta sessão recusa o host das Edge Functions, como nas v22–v25. A primeira
+requisição **autenticada** é que baixa os 24 `.gs` do pin novo.
+
+**A prova de mesa, para este deploy**, é direta: abrir uma ficha e procurar o
+bloco **"O que a Esperança compra"** logo abaixo da trilha, com os três botões.
+Tocar em "Iniciar uma Jogada em Equipe" tem de abrir o seletor de par; depois
+de iniciar uma vez, o botão fica apagado com "usada nesta sessão". E na aba
+**Grupo** do painel, cada ficha tem de mostrar "N na mão · M no cofre" com o
+botão de folhear.

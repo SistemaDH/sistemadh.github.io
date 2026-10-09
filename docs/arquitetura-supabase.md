@@ -27,13 +27,43 @@ As tabelas expostas têm RLS habilitado e não possuem policies públicas para `
 Produção atual:
 
 ```text
-engine-api: v25 ACTIVE (deploy conferido em 08/10/2026)
+engine-api: v26 ACTIVE (deploy conferido em 09/10/2026)
 verify_jwt: false
-ENGINE_COMMIT: b2a2eae132121d9628ff1b35f518586814b4e1a7
-bundle: 3d184dfd79c10d677de9c73c7730e13ec57677b8a6a7692c478829a240fc2796
+ENGINE_COMMIT: 6df90df855ff48647229c31bb704b07688d4216d
+bundle: 05021579fb0ed77d77156422bbce27cd6a5376c599a64cddbf2dd4319f6f3514
 ```
 
-⚠ **A v25 é REPIN** — a fonte da função não mudou uma vírgula; o `diff` do que
+⚠ **A v26 NÃO É REPIN.** A fonte mudou em duas frentes: quatro `.gs` do motor
+(`99_Api.gs`, `40_Regras.gs`, `4C_Ajustes.gs`, `47_Contadores.gs`) e o `ACOES`
+da própria função, que ganhou **`aliadosDaMesa`**.
+
+O que o commit `6df90df` traz, em relação ao `b2a2eae` da v25:
+
+- **O folheador em todo lugar** — bestiário, cena, equipamento e as três grades
+  da criação. O que toca o motor aqui é o `resumoDoPersonagem_`, que passou a
+  levar as cartas da mão e do cofre (como **ids**) para o painel do Mestre, que
+  até então não mostrava carta nenhuma.
+- **O que a Esperança compra** — `MOVIMENTOS_DE_ESPERANCA` em `40_Regras.gs`,
+  `usarMovimentoDeEsperanca_` em `4C_Ajustes.gs`, e o contador
+  `regra:jogada-em-equipe`, que é o **primeiro do catálogo que não pende de
+  carta, característica nem item**: é regra do jogo, com `refId` nulo e
+  `deTodaFicha`.
+- **`aliadosDaMesa` saiu do `player-api` e veio para o motor.** Lá ela lia só
+  id, nome, dono e nível e nunca abria ficha; a Jogada em Equipe precisa saber
+  quem tem a maestria Camaradagem, porque o desconto é do PAR.
+
+⚠ **E ESTE FOI O SEGUNDO DEPLOY QUE A PRÓPRIA ORDEM SEGUROU.** O passo de rodar
+o `teste:motor-simbolos` antes de implantar achou que `aliadosDaMesa` estava na
+lista de `case` do `99_Api.gs` que o motor **não roteia** — ou seja, o campo
+novo nunca chegaria à tela, calado. O deploy foi interrompido, o conserto virou
+o commit `6df90df`, e a lista que só imprimia virou teste que recusa.
+
+⚠ O `index.ts` enviado difere do que estava no ar em **duas** coisas: a linha do
+`ENGINE_COMMIT` e o bloco de `aliadosDaMesa` no `ACOES`. Conferido antes de
+mandar, relido depois: a função implantada bate com
+`supabase/functions/engine-api/index.ts` na `main`.
+
+⚠ **A v25 era REPIN** — a fonte da função não mudou uma vírgula; o `diff` do que
 foi enviado contra o arquivo do repositório deu **uma linha**, a do próprio
 `ENGINE_COMMIT`. O que mudou foi o motor `.gs` no commit apontado.
 
@@ -133,9 +163,16 @@ Dentro da função, as diferenças são persistidas pela RPC `apply_engine_mutat
 app-api:    v6 ACTIVE (implantada e relida em 18/09/2026)
 auth-api:   v3 ACTIVE
 photo-api:  v1 ACTIVE
-player-api: v1 ACTIVE
+player-api: v1 ACTIVE — só `meusProjetos` desde a v26 do engine-api
 mesa-api:   v2 ACTIVE — implantada, mas sem trânsito desde a v15 do engine-api
 ```
+
+⚠ **O `player-api` encolheu na v26.** `aliadosDaMesa` passou para o motor: a
+Jogada em Equipe precisa saber quem tem a maestria Camaradagem, e a função
+TypeScript nunca abriu ficha de ninguém. Acrescentar a leitura lá seria a
+segunda cópia da lista de fichas da mesa — o erro que as dez ações da mesa já
+corrigiram. Sobrou `meusProjetos`, que é leitura rasa e está no lugar certo.
+Ver também `docs/laudo-mesa-api.md`.
 
 A **v6 do `app-api`** fechou a leitura de configuração da mesa: `lerConfig` passou a
 exigir Mestre, como `gravarConfig` sempre exigiu. Antes, qualquer jogador autenticado

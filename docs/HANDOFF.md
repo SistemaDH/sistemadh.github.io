@@ -3376,3 +3376,30 @@ escreve na mesma linha `config.mesa` que o motor lê. O cache-buster encerra
 isso, e ainda não foi implantado — é a razão prática de não apagar hoje.
 
 **Estado:** 1258 testes de backend, 0 falhando; e2e **116 passos** · 0 falhas.
+
+## Deploy da v26 (09/10/2026)
+
+```text
+engine-api: v26 ACTIVE
+verify_jwt: false
+ENGINE_COMMIT: 6df90df855ff48647229c31bb704b07688d4216d
+bundle: 05021579fb0ed77d77156422bbce27cd6a5376c599a64cddbf2dd4319f6f3514
+```
+
+**Não é repin.** Quatro `.gs` (`99_Api.gs`, `40_Regras.gs`, `4C_Ajustes.gs`,
+`47_Contadores.gs`) e o `ACOES` da função, que ganhou `aliadosDaMesa`.
+
+⚠ **A ordem de deploy segurou o defeito pela segunda vez.** O passo 5
+(`teste:motor-simbolos`) mostrou `aliadosDaMesa` na lista dos `case` que o motor
+não roteia — o campo `camaradagem` que eu acrescentei ao `99_Api.gs` nunca
+chegaria à tela, porque a ação ia para o `player-api`. O deploy parou, o
+conserto virou o `6df90df`, e a lista que só imprimia virou teste que recusa.
+
+Conferido: 24/24 `SOURCE_FILES` byte a byte no pin; o `index.ts` que estava no
+ar lido antes de enviar; releitura depois (pin, status, `verify_jwt`); advisors
+só com o `RLS Enabled No Policy` (INFO) esperado nas seis tabelas.
+
+⚠ Não dá para conferir a ida e volta HTTP desta sessão — o proxy recusa o host
+das Edge Functions. **A prova é de mesa:** o bloco "O que a Esperança compra"
+abaixo da trilha, com os três botões; e, na aba Grupo do painel, "N na mão · M
+no cofre" em cada ficha.
